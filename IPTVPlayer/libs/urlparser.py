@@ -400,6 +400,7 @@ class urlparser:
                        'tusfiles.com':         self.pp.parserUSERSCLOUDCOM ,
                        'hdgo.cc':              self.pp.parserHDGOCC        ,
                        'hdgo.cx':              self.pp.parserHDGOCC        ,
+                       'vio.to':               self.pp.parserHDGOCC        ,
                        'liveonlinetv247.info': self.pp.parserLIVEONLINETV247,
                        'streamable.com':       self.pp.parserSTREAMABLECOM  ,
                        'matchat.online':       self.pp.parserMATCHATONLINE  ,
@@ -418,6 +419,7 @@ class urlparser:
                        'clicknupload.org':     self.pp.parserUPLOAD         ,
                        'suprafiles.org':       self.pp.parserUPLOAD         ,
                        'sfiles.org':           self.pp.parserUPLOAD         ,
+                       'file-up.org':          self.pp.parserUPLOAD         ,
                        'kingfiles.net':        self.pp.parserKINGFILESNET   ,
                        'thevideobee.to':       self.pp.parserTHEVIDEOBEETO  ,
                        'vidabc.com':           self.pp.parserVIDABCCOM      ,
@@ -429,6 +431,7 @@ class urlparser:
                        'ovva.tv':              self.pp.parserOVVATV         ,
                        'streamplay.to':        self.pp.parserSTREAMPLAYTO   ,
                        'streamplay.me':        self.pp.parserSTREAMPLAYTO   ,
+                       'streamp1ay.me':        self.pp.parserSTREAMPLAYTO   ,
                        'streamango.com':       self.pp.parserSTREAMANGOCOM  ,
                        'casacinema.cc':        self.pp.parserCASACINEMACC   ,
                        'indavideo.hu':         self.pp.parserINDAVIDEOHU    ,
@@ -3381,16 +3384,16 @@ class pageParser(CaptchaHelper):
             if not sts: return False
             
             linksData = []
-            tmp = self.cm.ph.getSearchGroups(data, '''\(([^)]+?)\)''')[0].split(',')
-            for t in tmp:
-                linksData.append(t.replace('"', '').strip())
+            tmp = re.compile('''['"]([^'^"]+?)['"]''').findall(data)
             printDBG(linksData)
-            
-            for idx in [1, 2]:
+
+            for t in tmp:
                 try:
-                    linkData = base64.b64decode(linksData[idx])
+                    linkData = base64.b64decode(t).strip()
+                    if linkData[0] == '{' and '"ct"' in linkData: break
                 except Exception:
-                    pass
+                    printExc()
+
             linkData   = json_loads(linkData)
             
             ciphertext = base64.b64decode(linkData['ct'])
@@ -7984,7 +7987,7 @@ class pageParser(CaptchaHelper):
         sts, data = self.cm.getPage(baseUrl, {'header':HTTP_HEADER})
         if not sts: return False
         #printDBG("parserVERYSTREAM data: [%s]" % data )
-        id = ph.search(data, """id="videolink">([^>]+?)<""")[0]
+        id = ph.search(data, '''id\s*?=\s*?['"]videolink['"]>([^>]+?)<''')[0]
         videoUrl = 'https://verystream.com/gettoken/{0}?mime=true'.format(id)
         sts, data = self.cm.getPage(videoUrl, {'max_data_size':0})
         if not sts: return False
