@@ -20,6 +20,7 @@ from Plugins.Extensions.IPTVPlayer.libs.e2ijson import loads as json_loads
 import re
 import urllib
 import random
+import uuid
 import base64
 from time import time
 from Plugins.Extensions.IPTVPlayer.libs.crypto.cipher.aes_cbc import AES_CBC
@@ -375,9 +376,15 @@ class Sport365LiveApi:
                     continue
                 sts, data = self.getPage(playerUrl, self.http_params)
                 if not sts: return []
-                data = self.cm.ph.getDataBeetwenMarkers(data, 'document.write(', '(')[1]
+                playerUrl = self.cm.ph.getSearchGroups(data, '''location\.replace\(\s*?['"]([^'^"]+?)['"]''', 1, True)[0]
+
+                if playerUrl:
+                    sts, data = self.getPage(playerUrl + str(uuid.uuid1()).replace('-', ''), self.http_params)
+                    if not sts: return []
+                data = self.cm.ph.getDataBeetwenNodes(data, 'document.write(', '(')[1] + data
+
                 playerUrl = self.cleanHtmlStr( self.cm.ph.getSearchGroups(data, '''<iframe[^>]+?src=['"](http[^"^']+?)['"]''', 1, True)[0] )
-                
+
                 urlsTab = self.up.getVideoLinkExt(strwithmeta(playerUrl, {'aes_key':aes}))
                 if len(urlsTab):
                     break
