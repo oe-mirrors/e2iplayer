@@ -30,11 +30,25 @@ class Dplayit(CBaseHostClass):
         CBaseHostClass.__init__(self)
 
         self.MAIN_URL = "http://it.dplay.com/"
-        self.TOKEN_URL = "https://dplayproxy.azurewebsites.net/api/config/init"
-        self.PROGRAMS_URL = "https://dplayproxy.azurewebsites.net//api/Show/GetList"
-        self.SHOW_URL="https://dplayproxy.azurewebsites.net/api/Show/GetById/?id={0}"
-        self.VIDEO_URL="https://dplayproxy.azurewebsites.net/api/Video/GetById/?id={0}"
+        self.MAIN_SERVER_URL="https://dplayproxy.azurewebsites.net"
+        self.TOKEN_URL = self.MAIN_SERVER_URL + "/api/config/init"
 
+        self.CHANNEL_MENU_URL = self.MAIN_SERVER_URL + "/api/Channel/GetList"
+        self.CHANNEL_URL = self.MAIN_SERVER_URL + "/api/Channel/GetById?id={0}"
+        
+        self.PROGRAMS_URL = self.MAIN_SERVER_URL + "/api/Show/GetList"
+        self.SHOW_URL = self.MAIN_SERVER_URL + "/api/Show/GetById/?id={0}"
+        self.SHOWBYGENRE_URL = self.MAIN_SERVER_URL + "/api/Show/GetByGenre?genreId={0}"
+
+        self.VIDEO_URL = self.MAIN_SERVER_URL + "/api/Video/GetById/?id={0}"
+        self.POPULAR_URL = self.MAIN_SERVER_URL + "/api/video/GetVideoPopolari"
+        self.LAST_ADDED_URL = self.MAIN_SERVER_URL + "/api/video/GetUltimiVideoAggiunti"
+
+        self.PLAYLIST_MENU_URL = self.MAIN_SERVER_URL + "/api/Playlist/GetList"
+        self.PLAYLIST_URL = self.MAIN_SERVER_URL + "/api/Playlist/GetById/{0}"
+        
+        self.GENRE_URL = self.MAIN_SERVER_URL + "/api/genre/GetList"
+        
         #self.HTTP_HEADER = self.cm.getDefaultHeader(browser='chrome')        
         #self.defaultParams = {'header':self.HTTP_HEADER}
         self.defaultParams = { 'header': {'User-Agent' : 'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:53.0) Gecko/20100101 Firefox/53.0'}}
@@ -72,8 +86,8 @@ class Dplayit(CBaseHostClass):
         printDBG("Dplay getLinksForVideo [%s]" % cItem)
         linksTab=[]
 
-        if cItem["category"] == 'video':
-            video_id=cItem["video_id"]
+        if cItem["category"] == 'video' :
+            video_id = cItem["video_id"] if "video_id" in cItem else ''
             url=cItem["url"]
             h=self.getHeader(True)
         
@@ -98,32 +112,85 @@ class Dplayit(CBaseHostClass):
 
    
     def listMainMenu(self, cItem):
-        MAIN_CAT_TAB = [{'category':'live_tv', 'title': 'Dirette tv'},
-                        {'category':'ondemand', 'title': 'Programmi on demand'}]  
+        MAIN_CAT_TAB = [{'category':'ondemand', 'title': 'Programmi on demand'},
+                        {'category':'channel-menu', 'title': 'Canali'},
+                        {'category':'genre-menu', 'title': 'Generi'},
+                        {'category':'popular', 'title': 'Video popolari'},
+                        {'category':'lastadded', 'title': 'Ultimi aggiunti'}]  
         self.listsTab(MAIN_CAT_TAB, cItem)  
 
     def listChannels(self,cItem):
         printDBG("Dplay start channel list")
+        h=self.getHeader()
+        
+        if h == None or h == "" :
+            printDBG('Dplay wrong initialization')
+            return
+        
+        sts, data = self.getPage(self.CHANNEL_MENU_URL, { 'header': h })
+        if not sts: return
+        
+        #printDBG(data)
+        response=json_loads(data)
+
+        for channel in response["Data"]:
+            title = channel["Name"]
+            desc = channel["Description"] if "Description" in channel else ''
+            icon = channel['Images'][0]['Src']
+            ch_id = channel['Id']
+            params={'category':'channel', 'title': title , 'desc': desc, 'icon': icon, 'id': ch_id}
+            self.addDir(params)     
     
-    
-    def listPrograms(self,cItem):
+    def listChannelById(self,cItem):
+        
+        printDBG("Dplay start single channel list")
+        h=self.getHeader()
+        
+        if h == None or h == "" :
+            printDBG('Dplay wrong initialization')
+            return
+        
+        ch_id=cItem["id"]
+        sts, data = self.getPage(self.CHANNEL_URL.format(ch_id), { 'header': h })
+        if not sts: return
+        
+        printDBG(data)
+        response = json_loads(data)
+
+        channel = response["Data"]
+        for item in channel["MenuItems"]:
+            title = item["Label"]
+            if "ResourceId" in item:
+                resource_id = item["ResourceId"] 
+                params=dict(cItem)
+                params.update({'category':'playlist', 'title': title, 'id' : resource_id })
+                self.addDir(params)     
+            else:
+                url = item["Url"] if "Url" in item else ''
+                params=dict(cItem)
+                params.update({'category':'channel_list', 'title': title, 'url' : url, 'id' : ch_id})
+                self.addDir(params)     
+                
+        
+    def listPrograms(self,cItem,ch_id='0'):
         printDBG("Dplay start alphabetical index" )
 
         # 0-9
         params = dict(cItem)
-        params.update({'category':'programs_az', 'title': "0-9" })
+        params.update({'category':'programs_az', 'title': "0-9", 'ch_id': ch_id })
         self.addDir(params)
         
         #a-z
         for i in range(26):
             params = dict(cItem)
-            params.update({'category':'programs_az', 'title': chr(ord('A')+i) })
+            params.update({'category':'programs_az', 'title': chr(ord('A')+i) , 'ch_id': ch_id})
             self.addDir(params)
 
     
     def listProgramsByLetter(self,cItem):
         printDBG("Dplay start programs list")
         letter=cItem["title"]
+        ch_id=cItem["ch_id"]
         h=self.getHeader()
         
         if h == None or h == "" :
@@ -135,23 +202,24 @@ class Dplayit(CBaseHostClass):
         
         printDBG(data)
         response=json_loads(data)
-        
+
         for show in response["Data"]:
             title = show["Name"]
-            
-            if title[:1].upper() == letter: 
-                desc = show["Description"] if "Description" in show else ''
-                icon = show['Images'][0]['Src']
-                show_id = show['Id']
-                params={'category':'program', 'title': title , 'desc': desc, 'icon': icon, 'id': show_id }
-                self.addDir(params)     
 
-            if letter == "0-9" and title[:1].isdigit():
-                desc = show["Description"] if "Description" in show else ''
-                icon = show['Images'][0]['Src']
-                show_id = show['Id']
-                params={'category':'program', 'title': title , 'desc': desc, 'icon': icon, 'id': show_id }
-                self.addDir(params)     
+            if (ch_id == "0") or (ch_id == show["Channel"]["Id"]):
+                if title[:1].upper() == letter: 
+                    desc = show["Description"] if "Description" in show else ''
+                    icon = show['Images'][0]['Src']
+                    show_id = show['Id']
+                    params={'category':'program', 'title': title , 'desc': desc, 'icon': icon, 'id': show_id }
+                    self.addDir(params)     
+                elif letter == "0-9" and title[:1].isdigit():
+                    desc = show["Description"] if "Description" in show else ''
+                    icon = show['Images'][0]['Src']
+                    show_id = show['Id']
+                    params={'category':'program', 'title': title , 'desc': desc, 'icon': icon, 'id': show_id }
+                    self.addDir(params)     
+
     
     def listProgramItems(self,cItem):
         title = cItem['title']
@@ -183,7 +251,7 @@ class Dplayit(CBaseHostClass):
                         if 'PublishEndDate' in video:
                             date = datetime.strptime(video['PublishEndDate'], '%Y-%m-%dT%H:%M:%SZ')
                             desc = '{0}\n\n{1} {2}'.format(desc, "Disponibile fino a ", date.strftime("%d/%m/%Y"))
-                        title = '{0} ({1} {2} - {3} {4})'.format(name, "Stagione", season_number, "Episodio", num_episode)
+                        title = '{0} ({1} {2} - {3} {4})'.format(name, _("Season"), season_number, _("Episode"), num_episode)
                         videoUrl=video["PlaybackInfoUrl"]
                         params=dict(cItem)
                         params.update ({'title': title,'name': title, 'desc': desc, 'video_id': video_id, 'url':videoUrl, 'icon': icon, 'category': 'video'})
@@ -191,6 +259,93 @@ class Dplayit(CBaseHostClass):
             
                         self.addVideo(params)
     
+    def listGenres (self, cItem):
+        printDBG("Dplay start genres list")
+        h=self.getHeader()
+        
+        if h == None or h == "" :
+            printDBG('Dplay wrong initialization')
+            return
+        
+        sts, data = self.getPage(self.GENRE_URL, { 'header': h })
+        if not sts: return
+        
+        printDBG(data)
+        response = json_loads(data)
+
+        for genre in response ["Data"]:
+            title = genre["Name"]
+            icon = genre["Images"][0]["Src"]
+            url = genre["Url"]
+            gen_id = genre["Id"]
+            params={'category':'genre', 'title': title, 'icon': icon, 'id': gen_id, 'url': url }
+            self.addDir(params)     
+        
+    def listShowsByGenre(self, cItem):
+        printDBG("Dplay start show list by genre")
+        gen_id=cItem["id"]
+        h=self.getHeader()
+        
+        if h == None or h == "" :
+            printDBG('Dplay wrong initialization')
+            return
+        
+        sts, data = self.getPage(self.SHOWBYGENRE_URL.format(gen_id), { 'header': h })
+        if not sts: return
+        
+        printDBG(data)
+        response=json_loads(data)
+        
+        for show in response["Data"]:
+            title = show["Name"]
+            desc = show["Description"] if "Description" in show else ''
+            icon = show['Images'][0]['Src']
+            show_id = show['Id']
+            params={'category':'program', 'title': title , 'desc': desc, 'icon': icon, 'id': show_id }
+            self.addDir(params)     
+
+    def showPlaylist(self,cItem):
+        printDBG("Dplay show playlist")
+        list_id=cItem["id"]
+        h=self.getHeader()
+        
+        if h == None or h == "" :
+            printDBG('Dplay wrong initialization')
+            return
+        
+        sts, data = self.getPage(self.PLAYLIST_URL.format(list_id), { 'header': h })
+        if not sts: return
+        
+        printDBG(data)
+        response = json_loads(data)
+        
+        for video in response["Data"]["Items"]:
+            icon = video['Images'][0]['Src']
+            title = video["Name"]
+            desc = video["Description"]
+            video_id = video["Id"]
+            videoUrl = video["PlaybackInfoUrl"]
+            params=dict(cItem)
+            params.update ({'title': title,'name': title, 'desc': desc, 'video_id': video_id, 'url':videoUrl, 'icon': icon, 'category': 'video'})
+            printDBG ("add video '%s' with playback info url '%s'" % (title,videoUrl)) 
+
+            self.addVideo(params)
+
+        
+    def listPopular(self, cItem, ch_id='0'):
+        printDBG("Dplay start popular list")
+        h=self.getHeader(True)
+        
+        if h == None or h == "" :
+            printDBG('Dplay wrong initialization')
+            return
+        
+        sts, data = self.getPage(self.POPULAR_URL, { 'header': h })
+        if not sts: return
+        
+        printDBG(data)
+        response = json_loads(data)
+        
     def handleService(self, index, refresh = 0, searchPattern = '', searchType = ''):
         printDBG('Dplay handleService start')
         
@@ -209,14 +364,27 @@ class Dplayit(CBaseHostClass):
         #MAIN MENU
         if name == None:
             self.listMainMenu({'name':'category'})
-        elif category == 'live_tv':
+        elif category == 'channel-menu':
             self.listChannels(self.currItem)
         elif category == 'ondemand':
             self.listPrograms(self.currItem)
+        elif category == 'popular':
+            self.listPopular(self.currItem)
         elif category == 'programs_az':
             self.listProgramsByLetter(self.currItem)
         elif category == 'program':
             self.listProgramItems(self.currItem)
+        elif category == 'channel':
+            self.listChannelById(self.currItem)
+        elif category == 'genre-menu':
+            self.listGenres(self.currItem)
+        elif category == 'genre':
+            self.listShowsByGenre(self.currItem)
+        elif category == 'playlist':
+            self.showPlaylist(self.currItem)
+        elif category == 'channel_list':
+            if self.currItem.get("url",'') == '/api/show/GetList':
+                self.listPrograms(self.currItem, self.currItem.get("ch_id",'0'))
         else:
             printExc()
         
