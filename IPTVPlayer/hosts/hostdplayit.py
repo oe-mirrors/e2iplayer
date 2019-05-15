@@ -50,8 +50,8 @@ class Dplayit(CBaseHostClass):
         self.GENRE_URL = self.MAIN_SERVER_URL + "/api/genre/GetList"
         
         #self.HTTP_HEADER = self.cm.getDefaultHeader(browser='chrome')        
-        #self.defaultParams = {'header':self.HTTP_HEADER}
-        self.defaultParams = { 'header': {'User-Agent' : 'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:53.0) Gecko/20100101 Firefox/53.0'}}
+        #self.defaultParams = { 'header': {'User-Agent' : 'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:53.0) Gecko/20100101 Firefox/53.0'}}
+        self.defaultParams = {'header': {'User-Agent' : 'okhttp/3.3.0'}}
         self.AccessToken=""
         
     def getPage(self, url, addParams = {}, post_data = None):
@@ -73,7 +73,7 @@ class Dplayit(CBaseHostClass):
         
         if self.AccessToken != None and self.AccessToken != "":
             # create header with current access token
-            headers = {'User-Agent' : 'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:53.0) Gecko/20100101 Firefox/53.0', 
+            headers = {'User-Agent' : 'okhttp/3.3.0', 
                        'Accept-Encoding' : 'gzip, deflate',
                        'AccessToken' : self.AccessToken}
             if add_bearer:
@@ -114,9 +114,10 @@ class Dplayit(CBaseHostClass):
     def listMainMenu(self, cItem):
         MAIN_CAT_TAB = [{'category':'ondemand', 'title': 'Programmi on demand'},
                         {'category':'channel-menu', 'title': 'Canali'},
-                        {'category':'genre-menu', 'title': 'Generi'},
-                        {'category':'popular', 'title': 'Video popolari'},
-                        {'category':'lastadded', 'title': 'Ultimi aggiunti'}]  
+                        {'category':'genre-menu', 'title': 'Generi'}]
+                        # these item are not working
+                        #{'category':'popular', 'title': 'Video popolari'},
+                        #{'category':'lastadded', 'title': 'Ultimi aggiunti'}]  
         self.listsTab(MAIN_CAT_TAB, cItem)  
 
     def listChannels(self,cItem):
@@ -154,7 +155,7 @@ class Dplayit(CBaseHostClass):
         sts, data = self.getPage(self.CHANNEL_URL.format(ch_id), { 'header': h })
         if not sts: return
         
-        printDBG(data)
+        #printDBG(data)
         response = json_loads(data)
 
         channel = response["Data"]
@@ -167,9 +168,10 @@ class Dplayit(CBaseHostClass):
                 self.addDir(params)     
             else:
                 url = item["Url"] if "Url" in item else ''
-                params=dict(cItem)
-                params.update({'category':'channel_list', 'title': title, 'url' : url, 'id' : ch_id})
-                self.addDir(params)     
+                if url!="/api/video/GetVideoPopolari" and url !="/api/video/GetUltimiVideoAggiunti":
+                    params=dict(cItem)
+                    params.update({'category':'channel_list', 'title': title, 'url' : url, 'id' : ch_id})
+                    self.addDir(params)     
                 
         
     def listPrograms(self,cItem,ch_id='0'):
@@ -200,7 +202,7 @@ class Dplayit(CBaseHostClass):
         sts, data = self.getPage(self.PROGRAMS_URL, { 'header': h })
         if not sts: return
         
-        printDBG(data)
+        #printDBG(data)
         response=json_loads(data)
 
         for show in response["Data"]:
@@ -235,7 +237,7 @@ class Dplayit(CBaseHostClass):
         sts, data = self.getPage(url, { 'header': h })
         if not sts: return
 
-        printDBG(data)
+        #printDBG(data)
         response=json_loads(data)
         
         if len(response["Data"]["Sections"]) > 0:
@@ -270,7 +272,7 @@ class Dplayit(CBaseHostClass):
         sts, data = self.getPage(self.GENRE_URL, { 'header': h })
         if not sts: return
         
-        printDBG(data)
+        #printDBG(data)
         response = json_loads(data)
 
         for genre in response ["Data"]:
@@ -293,7 +295,7 @@ class Dplayit(CBaseHostClass):
         sts, data = self.getPage(self.SHOWBYGENRE_URL.format(gen_id), { 'header': h })
         if not sts: return
         
-        printDBG(data)
+        #printDBG(data)
         response=json_loads(data)
         
         for show in response["Data"]:
@@ -316,7 +318,7 @@ class Dplayit(CBaseHostClass):
         sts, data = self.getPage(self.PLAYLIST_URL.format(list_id), { 'header': h })
         if not sts: return
         
-        printDBG(data)
+        #printDBG(data)
         response = json_loads(data)
         
         for video in response["Data"]["Items"]:
@@ -334,7 +336,7 @@ class Dplayit(CBaseHostClass):
         
     def listPopular(self, cItem, ch_id='0'):
         printDBG("Dplay start popular list")
-        h=self.getHeader(True)
+        h=self.getHeader()
         
         if h == None or h == "" :
             printDBG('Dplay wrong initialization')
@@ -396,3 +398,4 @@ class IPTVHost(CHostBase):
     def __init__(self):
         CHostBase.__init__(self, Dplayit(), True, [])
     
+
