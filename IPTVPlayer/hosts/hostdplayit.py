@@ -163,30 +163,22 @@ class Dplayit(CBaseHostClass):
             title = item["Label"]
             if "ResourceId" in item:
                 resource_id = item["ResourceId"] 
-                params=dict(cItem)
-                params.update({'category':'playlist', 'title': title, 'id' : resource_id })
-                self.addDir(params)     
+                self.addDir(MergeDicts(cItem, {'category':'playlist', 'title': title, 'id' : resource_id }))  
             else:
                 url = item["Url"] if "Url" in item else ''
                 if url!="/api/video/GetVideoPopolari" and url !="/api/video/GetUltimiVideoAggiunti":
-                    params=dict(cItem)
-                    params.update({'category':'channel_list', 'title': title, 'url' : url, 'id' : ch_id})
-                    self.addDir(params)     
+                    self.addDir(MergeDicts(cItem, {'category':'channel_list', 'title': title, 'url' : url, 'id' : ch_id}))  
                 
         
     def listPrograms(self,cItem,ch_id='0'):
         printDBG("Dplay start alphabetical index" )
 
         # 0-9
-        params = dict(cItem)
-        params.update({'category':'programs_az', 'title': "0-9", 'ch_id': ch_id })
-        self.addDir(params)
+        self.addDir(MergeDicts(cItem, {'category':'programs_az', 'title': "0-9", 'ch_id': ch_id }))  
         
         #a-z
         for i in range(26):
-            params = dict(cItem)
-            params.update({'category':'programs_az', 'title': chr(ord('A')+i) , 'ch_id': ch_id})
-            self.addDir(params)
+            self.addDir(MergeDicts(cItem, {'category':'programs_az', 'title': chr(ord('A')+i) , 'ch_id': ch_id}))  
 
     
     def listProgramsByLetter(self,cItem):
@@ -255,11 +247,8 @@ class Dplayit(CBaseHostClass):
                             desc = '{0}\n\n{1} {2}'.format(desc, "Disponibile fino a ", date.strftime("%d/%m/%Y"))
                         title = '{0} ({1} {2} - {3} {4})'.format(name, _("Season"), season_number, _("Episode"), num_episode)
                         videoUrl=video["PlaybackInfoUrl"]
-                        params=dict(cItem)
-                        params.update ({'title': title,'name': title, 'desc': desc, 'video_id': video_id, 'url':videoUrl, 'icon': icon, 'category': 'video'})
                         #printDBG ("add video '%s' with playback info url '%s'" % (title,videoUrl)) 
-            
-                        self.addVideo(params)
+                        self.addVideo(MergeDicts(cItem, {'title': title,'name': title, 'desc': desc, 'video_id': video_id, 'url':videoUrl, 'icon': icon, 'category': 'video'}))  
     
     def listGenres (self, cItem):
         printDBG("Dplay start genres list")
@@ -305,7 +294,7 @@ class Dplayit(CBaseHostClass):
             show_id = show['Id']
             params={'category':'program', 'title': title , 'desc': desc, 'icon': icon, 'id': show_id }
             self.addDir(params)     
-
+            
     def showPlaylist(self,cItem):
         printDBG("Dplay show playlist")
         list_id=cItem["id"]
@@ -327,11 +316,8 @@ class Dplayit(CBaseHostClass):
             desc = video["Description"]
             video_id = video["Id"]
             videoUrl = video["PlaybackInfoUrl"]
-            params=dict(cItem)
-            params.update ({'title': title,'name': title, 'desc': desc, 'video_id': video_id, 'url':videoUrl, 'icon': icon, 'category': 'video'})
             printDBG ("add video '%s' with playback info url '%s'" % (title,videoUrl)) 
-
-            self.addVideo(params)
+            self.addVideo(MergeDicts(cItem, {'title': title,'name': title, 'desc': desc, 'video_id': video_id, 'url':videoUrl, 'icon': icon, 'category': 'video'}))  
 
         
     def listPopular(self, cItem, ch_id='0'):
@@ -398,4 +384,3 @@ class IPTVHost(CHostBase):
     def __init__(self):
         CHostBase.__init__(self, Dplayit(), True, [])
     
-
