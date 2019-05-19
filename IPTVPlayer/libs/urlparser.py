@@ -519,6 +519,7 @@ class urlparser:
                        '1tv.ru':               self.pp.parser1TVRU          ,
                        'videohouse.me':        self.pp.parserVIDEOHOUSE     ,
                        'verystream.com':       self.pp.parserVERYSTREAM     ,
+                       'justupload.io':        self.pp.parserJUSTUPLOAD     ,
                     }
         return
     
@@ -7993,8 +7994,24 @@ class pageParser(CaptchaHelper):
         if not sts: return False
         return self.cm.meta['url']
 
+    def parserJUSTUPLOAD(self, baseUrl):
+        printDBG("parserJUSTUPLOAD baseUrl[%r]" % baseUrl )
+        HTTP_HEADER = MergeDicts(self.cm.getDefaultHeader('firefox'), {'Referer':baseUrl})
+        sts, data = self.cm.getPage(baseUrl, {'header':HTTP_HEADER})
+        if not sts: return False
+        #printDBG("parserJUSTUPLOAD data: [%s]" % data )
+        videoUrl = ph.search(data, '''<source\s*?src=['"]([^'^"]+?)['"]''')[0]
+        if videoUrl.startswith('//'): videoUrl = 'http:' + videoUrl
+        return videoUrl
+
     def parserOPENLOADIO(self, baseUrl):
         printDBG("parserOPENLOADIO baseUrl[%r]" % baseUrl )
+        try:
+            from Plugins.Extensions.IPTVPlayer.tsiplayer.pars_openload import get_video_url as pars_openload
+            return pars_openload(baseUrl)
+        except Exception:
+            printExc()
+
         HTTP_HEADER= { 'User-Agent':"Mozilla/5.0", 'Referer':baseUrl}
         
         HTTP_HEADER = {'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.11 (KHTML, like Gecko) Chrome/23.0.1271.64 Safari/537.11',
