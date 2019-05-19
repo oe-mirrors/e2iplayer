@@ -243,9 +243,9 @@ class Raiplay(CBaseHostClass):
         
             if videoUrl is None:
                 # programme is not available
-                title = startTime + " <I>" + title + "</I>"
+                title = startTime + " " + title 
                 thumbnailImage = thumb
-                params = {'title':title, 'url':'', 'icon': thumb, 'desc': desc, 'category': 'nop'}
+                params = {'title':title, 'url':'', 'icon': thumb, 'desc': desc, 'category': 'nop', 'text_color' : 'red'}
 
             else:
                 title = startTime + " " + title
