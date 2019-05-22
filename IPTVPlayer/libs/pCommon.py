@@ -830,16 +830,35 @@ class common:
         return sts, data
 
     def fillHeaderItems(self, metadata, responseHeaders, camelCase=False, collectAllHeaders=False):
+
         returnKeys = ['content-type', 'content-disposition', 'content-length', 'location']
-        if camelCase: sourceKeys = ['Content-Type', 'Content-Disposition', 'Content-Length', 'Location']
-        else: sourceKeys = returnKeys
+        
+        if camelCase: 
+            sourceKeys = ['Content-Type', 'Content-Disposition', 'Content-Length', 'Location']
+        else: 
+            sourceKeys = returnKeys
+        
         for idx in range(len(returnKeys)):
             if sourceKeys[idx] in responseHeaders:
                 metadata[returnKeys[idx]] = responseHeaders[sourceKeys[idx]]
-
+                #printDBG(sourceKeys[idx] + " ---->  " + responseHeaders[sourceKeys[idx]])
+                
+        #printDBG(str(responseHeaders))
+        
         if collectAllHeaders:
+            if "Access-Control-Allow-Headers" in responseHeaders:
+                acah = responseHeaders["Access-Control-Allow-Headers"]
+                acah_keys= acah.split(',')
+                
+                for key in acah_keys:
+                    key = key.strip()
+                    if key in responseHeaders:
+                        metadata[key.lower()]=responseHeaders[key]
+                        #printDBG(key + " ---->  " + responseHeaders[key])
+
             for header, value in responseHeaders.iteritems():
                 metadata[header.lower()] = responseHeaders[header]
+                #printDBG(header + " ---->  " + value)
 
     def getPage(self, url, addParams = {}, post_data = None):
         ''' wraps getURLRequestData '''
