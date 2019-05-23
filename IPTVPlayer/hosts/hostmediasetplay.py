@@ -46,8 +46,11 @@ class MediasetPlay(CBaseHostClass):
         self.API_BASE_URL = 'https://api-ott-prod-fe.mediaset.net/PROD/play'
         self.API_LIVE_URL = self.API_BASE_URL + '/alive/nownext/v1.0?channelId={0}' 
         self.API_EPG_URL = self.API_BASE_URL + '/alive/allListingFeedFilter/v1.0?byListingTime=%interval%&byVod=true&byCallSign=%cs%'
+        
         self.FEED_URL = 'https://feed.entertainment.tv.theplatform.eu/f/PR1GhC'
+        self.FEED_EPG_URL = self.FEED_URL + '/mediaset-prod-all-listings?byListingTime=%interval%&byCallSign=%cs%'
         self.FEED_CHANNELS_URL = self.FEED_URL + '/mediaset-prod-all-stations?sort=mediasetstation$comscoreVodChId'
+        self.FEED_CHANNEL_URL = self.FEED_URL + '/mediaset-prod-all-stations?byCallSign=%cs%'
         self.FEED_SHOW_URL = self.FEED_URL + '/mediaset-prod-all-brands?byCustomValue={brandId}{%brandId%}&sort=mediasetprogram$order'
         self.FEED_SHOW_SUBITEM_URL = self.FEED_URL + '/mediaset-prod-all-programs?byCustomValue={brandId}{%brandId%},{subBrandId}{%subBrandId%}&sort=mediasetprogram$publishInfo_lastPublished|desc&count=true&entries=true&range=0-200'
         self.FEED_EPISODE_URL = self.FEED_URL + '/mediaset-prod-all-programs?byGuid={0}'
@@ -60,6 +63,31 @@ class MediasetPlay(CBaseHostClass):
         if addParams == {}: addParams = dict(self.defaultParams)
         return self.cm.getPage(baseUrl, addParams, post_data)
 
+
+    def getBestThumb(self, thumbnails, vertical=False):
+        # get best thumbnail available
+        if vertical:
+            target = 'image_vertical-'
+        else:
+            target = 'image_keyframe_poster-'
+
+        thumbs = [];        
+        for t in thumbnails:
+            if t.find(target) != -1:
+                t = t.replace(target, '')
+                thumbs.append({'x': int(t.split('x')[0]) , 'y': int(t.split('x')[1]) })
+
+        thumbs.sort(reverse=True)
+
+        if len(thumbs)> 0:
+                label = target + str(thumbs[0]["x"]) + 'x' + str(thumbs[0]["y"])
+                return thumbnails[label]['url']
+        else:          
+            if vertical:
+                return self.getBestThumb(thumbnails, False)
+            else:
+                return ""
+    
     def getVideoLinks(self, videoUrl):
         printDBG("MediasetPlay.getVideoLinks [%s]" % videoUrl)
         # mark requested link as used one
@@ -80,32 +108,44 @@ class MediasetPlay(CBaseHostClass):
     
     def getLinksForVideo(self, cItem):
         printDBG(": %s" % cItem)
-        self.initApi()
+        #self.initApi()
 
         linksTab=[]
 
         if cItem['category'] == 'onair':
             channelId = cItem.get('call_sign')
-            url = self.API_LIVE_URL.format(channelId)
+            url = self.FEED_CHANNEL_URL.replace("%cs%", channelId)
             sts, data = self.getPage(url)
             if not sts: return
 
             data = json_loads(data)
-            for tuningInstructions in data['response']['tuningInstruction'].itervalues():
+            for tuningInstructions in data['entries'][0]['tuningInstruction'].itervalues():
                 for item in tuningInstructions:
                     printDBG(" ------------>>>>>> " + str(item))
                     url = item['publicUrls'][0]
                     if 'mpegurl' in item['format'].lower():
                         f = 'HLS/M3U8'
-                    
-                    linksTab.append({'name':f, 'url': url})
+                        req=urllib.urlopen(url)
+                        videoUrl=req.geturl()                        
+                        
+                        linksTab.append({'name':f, 'url': videoUrl})
+                        #linksTab.extend(getDirectM3U8Playlist(videoUrl, checkExt=False, variantCheck=True, checkContent=True, sortWithMaxBitrate=999999999))
+                        
         elif cItem['category'] == 'epg_video':
             url = self.FEED_EPISODE_URL.format(cItem["guid"])
+            
             sts, data = self.getPage(url)
             if not sts: return
+
             url = json_loads(data)['entries'][0]['media'][0]['publicUrl']
-            linksTab.append({'name': 'link', 'url': url})
-       
+            req=urllib.urlopen(url)
+            videoUrl=req.geturl()                        
+            
+            linksTab.append({'name': 'link', 'url': videoUrl})
+
+        elif cItem["category"] == 'no_video':
+            printDBG('no video for %s' % str(cItem))
+        
         else:
             linksTab.append({'name': 'link', 'url': cItem["url"]})
 
@@ -139,7 +179,7 @@ class MediasetPlay(CBaseHostClass):
         printDBG("MediasetPlay.listMain")
         MAIN_CAT_TAB = [{'category':'ondemand', 'title': 'Programmi on demand'},
                         {'category':'onair', 'title': 'Dirette tv'},
-                        {'category':'channels', 'title': 'Canali'}]
+                        {'category':'channels', 'title': 'Replay/EPG'}]
         self.listsTab(MAIN_CAT_TAB, cItem)  
 
     def getChannelList(self):
@@ -170,11 +210,10 @@ class MediasetPlay(CBaseHostClass):
         printDBG("MediasetPlay.listChannels")
         channels=self.getChannelList()
         for item in channels:
-            self.addDir(MergeDicts(cItem, {'category': 'channel', 'title': item["title"] , 'icon': item["icon"], 'call_sign': item['call_sign']}))
+            self.addDir(MergeDicts(cItem, {'category': 'list_time', 'title': item["title"] , 'icon': item["icon"], 'call_sign': item['call_sign']}))
 
-    def listChannelItems(self, cItem):
-        printDBG("MediasetPlay.listChannelItems")
-        call_sign = cItem['call_sign']
+    def listDates(self, cItem):
+        printDBG("MediasetPlay.listDates")
 
         days = ["Domenica", "Lunedì", "Martedì", "Mercoledì", "Giovedì", "Venerdì", "Sabato"]
         months = ["gennaio", "febbraio", "marzo", "aprile", "maggio", "giugno", "luglio", "agosto", "settembre", "ottobre", "novembre", "dicembre"]
@@ -188,7 +227,7 @@ class MediasetPlay(CBaseHostClass):
             interval = "%s~%s" % (s, e)
             printDBG("Ricerca fra i tempi unix : " + interval)
             day_str = days[int(day.strftime("%w"))] + " " + day.strftime("%d") + " " + months[int(day.strftime("%m"))-1]
-            self.addDir(MergeDicts(cItem, {'good_for_fav':False, 'category':'list_time', 'title': day_str , 'name': day.strftime("%d-%m-%Y"), 'interval': interval}))              
+            self.addDir(MergeDicts(cItem, {'good_for_fav':False, 'category':'date', 'title': day_str , 'name': day.strftime("%d-%m-%Y"), 'interval': interval}))              
    
     def getDateTimeFromStr(self,s):
         sec=int(s)/1000
@@ -197,12 +236,13 @@ class MediasetPlay(CBaseHostClass):
     
     def listEPG(self,cItem):
         printDBG("MediasetPlay.listEPG")
-        url = self.API_EPG_URL.replace('%interval%',cItem['interval']).replace('%cs%',cItem['call_sign'])
+        url = self.FEED_EPG_URL.replace('%interval%',cItem['interval']).replace('%cs%',cItem['call_sign'])
         
         sts, data = self.getPage(url)
         if not sts: return
         
-        data = json_loads(data)['response']
+        #data = json_loads(data)['response']
+        data=json_loads(data)
         for item2 in data['entries'][0]['listings']:
             d1 = self.getDateTimeFromStr(item2["startTime"])
             d2 = self.getDateTimeFromStr(item2["endTime"])
@@ -210,19 +250,24 @@ class MediasetPlay(CBaseHostClass):
 
             item = item2['program']
             guid = item['guid']
-            icon = item['thumbnails']['image_keyframe_poster-292x165']['url']
-
-            desc = []
-            desc.append(item['mediasetprogram$publishInfo']['last_published'].split('T', 1)[0]) 
-            desc.append(item['mediasetprogram$publishInfo']['description']) 
-            desc.append(str(timedelta(seconds=int(item['mediasetprogram$duration']))))
-            desc.append(_('%s views') % item['mediasetprogram$numberOfViews'] )
-            desc = [' | '.join(desc)]
-            desc.append(item['title'])
-            desc.append(item.get('description', ''))
-            
-            self.addVideo( {'good_for_fav':True, 'category': 'epg_video', 'title':title, 'icon':icon, 'desc':'\n'.join(desc), 'guid':guid})
-    
+            icon = self.getBestThumb(item['thumbnails'], True)
+            if item["mediasetprogram$hasVod"]:
+                # video on demand available
+                desc = []
+                desc.append(item['mediasetprogram$publishInfo']['last_published'].split('T', 1)[0]) 
+                desc.append(item['mediasetprogram$publishInfo']['description']) 
+                desc.append(str(timedelta(seconds=int(item['mediasetprogram$duration']))))
+                desc.append(_('%s views') % item['mediasetprogram$numberOfViews'] )
+                desc = [' | '.join(desc)]
+                desc.append(item['title'])
+                desc.append(item.get('description', ''))
+                desc= '\n'.join(desc)
+                printDBG("----> aggiunta voce" +  title + " " + desc)
+                self.addVideo( {'good_for_fav':True, 'category': 'epg_video', 'title':title, 'desc': desc, 'icon':icon, 'guid':guid})
+            else:
+                # no video on demand
+                self.addVideo( {'good_for_fav': False, 'category': 'no_video', 'title':title, 'icon':icon, 'guid':guid, 'desc' : 'Non disponibile', 'text_color': 'red'})
+                
     def listOnDemand(self, cItem):
         printDBG("MediasetPlay.listMain")
         
@@ -364,9 +409,9 @@ class MediasetPlay(CBaseHostClass):
         elif category == 'list_az_item_next':
             self.listAZItems(self.currItem, self.currItem["page_number"])
         elif category == 'channels':
+            self.listDates(self.currItem)
+        elif category == 'date':
             self.listChannels(self.currItem)
-        elif category == 'channel':
-            self.listChannelItems(self.currItem)
         elif category == 'list_time':
             self.listEPG(self.currItem)
         elif category == 'program':
