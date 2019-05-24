@@ -45,8 +45,8 @@ class MediasetPlay(CBaseHostClass):
         self.MAIN_URL    = 'https://www.mediasetplay.mediaset.it/'
         self.INDEX_URL = "https://static3.mediasetplay.mediaset.it/cataloglisting/azListing.json"
         self.API_BASE_URL = 'https://api-ott-prod-fe.mediaset.net/PROD/play'
-        self.API_LIVE_URL = self.API_BASE_URL + '/alive/nownext/v1.0?channelId={0}' 
-        self.API_EPG_URL = self.API_BASE_URL + '/alive/allListingFeedFilter/v1.0?byListingTime=%interval%&byVod=true&byCallSign=%cs%'
+        #self.API_LIVE_URL = self.API_BASE_URL + '/alive/nownext/v1.0?channelId={0}' 
+        #self.API_EPG_URL = self.API_BASE_URL + '/alive/allListingFeedFilter/v1.0?byListingTime=%interval%&byVod=true&byCallSign=%cs%'
         
         self.FEED_URL = 'https://feed.entertainment.tv.theplatform.eu/f/PR1GhC'
         self.FEED_EPG_URL = self.FEED_URL + '/mediaset-prod-all-listings?byListingTime=%interval%&byCallSign=%cs%'
@@ -404,9 +404,9 @@ class MediasetPlay(CBaseHostClass):
         category = self.currItem.get("category", '')
         printDBG( "handleService: ||| name[%s], category[%s] " % (name, category) )
         self.currList = []
-        self.initApi()
+        #self.initApi()
 
-    #MAIN MENU
+        #MAIN MENU
         if name == None:
             self.listMain(self.currItem)
         elif category == 'onair':
