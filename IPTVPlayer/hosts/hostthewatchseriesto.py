@@ -80,7 +80,7 @@ class TheWatchseriesTo(CBaseHostClass):
         params.update({'header':HTTP_HEADER})
         
         if self.isNeedProxy() and ('thewatchseries.to' in url or 'watch-series.to' in url or 'the-watch-series.to' in url or self.DOMAIN in url):
-            proxy = 'http:/securefor.com/browse.php?u={0}&b=4'.format(urllib.quote(url, ''))
+            proxy = 'http://securefor.com/browse.php?u={0}&b=4'.format(urllib.quote(url, ''))
             params['header']['Referer'] = proxy + '&f=norefer'
             params['header']['Cookie'] = 'flags=2e5;'
             url = proxy
