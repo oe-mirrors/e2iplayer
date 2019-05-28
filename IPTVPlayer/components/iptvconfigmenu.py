@@ -80,7 +80,7 @@ config.plugins.iptvplayer.IPTVWebIterface = ConfigYesNo(default = False)
 config.plugins.iptvplayer.plugin_autostart = ConfigYesNo(default = False)
 config.plugins.iptvplayer.plugin_autostart_method = ConfigSelection(default = "wizard", choices = [("wizard", "wizard"),("infobar", "infobar")])
 
-config.plugins.iptvplayer.preferredupdateserver = ConfigSelection(default = "", choices = [("", _("Default")),("1", "http://iptvplayer.vline.pl/"), ("2", _("http://www.iptvplayer.gitlab.io/")), ("3", _("private"))])
+config.plugins.iptvplayer.preferredupdateserver = ConfigSelection(default = "", choices = [("", _("Default")),("1", "http://iptvplayer.vline.pl/"), ("2", _("http://zadmario.gitlab.io/")), ("3", _("private"))])
 config.plugins.iptvplayer.osk_type = ConfigSelection(default = "", choices = [("", _("Auto")),("system", _("System")), ("own", _("Own model"))])
 config.plugins.iptvplayer.osk_layout = ConfigText(default = "", fixed_size = False)
 config.plugins.iptvplayer.osk_allow_suggestions = ConfigYesNo(default = True)
@@ -145,7 +145,7 @@ config.plugins.iptvplayer.SciezkaCache = ConfigDirectory(default = "/hdd/IPTVCac
 config.plugins.iptvplayer.NaszaTMP = ConfigDirectory(default = "/tmp/") #, fixed_size = False)
 config.plugins.iptvplayer.ZablokujWMV = ConfigYesNo(default = True)
 
-config.plugins.iptvplayer.gitlab_repo = ConfigYesNo(default = False)
+config.plugins.iptvplayer.gitlab_repo = ConfigSelection(default = "", choices = [("1", "mosz_nowy"),("2", "zadmario")])
 
 config.plugins.iptvplayer.vkcom_login    = ConfigText(default="", fixed_size = False)
 config.plugins.iptvplayer.vkcom_password = ConfigText(default="", fixed_size = False)

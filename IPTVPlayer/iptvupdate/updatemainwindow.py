@@ -407,12 +407,16 @@ class UpdateMainAppImpl(IUpdateObjectInterface):
 
     def stepGetGitlab(self):
         printDBG('UpdateMainAppImpl.stepGetGitlab')
+        if config.plugins.iptvplayer.gitlab_repo.value == '1':
+            nick = 'mosz_nowy'
+        else:
+            nick = 'zadmario'
         self.clearTmpData()
         sts, msg = self.createPath(self.tmpDir)
         if not sts:
             self.stepFinished(-1, msg)
             return
-        serverUrl = "https://gitlab.com/e2i/e2iplayer/raw/master/IPTVPlayer/version.py"
+        serverUrl = serverUrl = "https://gitlab.com/{0}/e2iplayer/raw/master/IPTVPlayer/version.py".format(nick)
         self.downloader = UpdateDownloaderCreator(serverUrl)
         self.downloader.subscribersFor_Finish.append( boundFunction(self.downloadFinished, self.__serversListGitlabFinished, None))
         self.downloader.start(serverUrl, os_path.join(self.tmpDir, 'lastversion.py'))
@@ -701,6 +705,10 @@ class UpdateMainAppImpl(IUpdateObjectInterface):
         filePath       = self.downloader.getFullFileName()
         self.downloader = None
         printDBG('UpdateMainAppImpl.__serversListGitlabFinished url[%s], filePath[%s] ' % (url, filePath))
+        if config.plugins.iptvplayer.gitlab_repo.value == '1':
+            nick = 'mosz_nowy'
+        else:
+            nick = 'zadmario'
         if DMHelper.STS.DOWNLOADED != status:
             msg = _("Problem with downloading the packet:\n[%s].") % url
             self.stepFinished(-1, msg)
@@ -715,7 +723,7 @@ class UpdateMainAppImpl(IUpdateObjectInterface):
                 except Exception:
                     printExc()
                 if 13 == len(newVerNum):
-                    sourceUrl = "https://gitlab.com/e2i/e2iplayer/-/archive/master/e2iplayer-master.tar.gz"
+                    sourceUrl = "https://gitlab.com/{0}/e2iplayer/-/archive/master/e2iplayer-master.tar.gz".format(nick)
                     self.gitlabList = {'name':'gitlab.com', 'version':newVerNum, 'url':sourceUrl, 'subdir':'e2iplayer-master/', 'pyver':'X.X', 'packagetype':'sourcecode'}
                     printDBG("__serversListGitlabFinished: [%s]" % str(self.gitlabList))
                 else:
@@ -724,7 +732,7 @@ class UpdateMainAppImpl(IUpdateObjectInterface):
             else:
                 msg = _("File not found:\n[%s].") % filePath
                 self.stepFinished(-1, msg)
-            self.stepFinished(0, _("GitLab version was downloaded successfully."))
+            self.stepFinished(0, _("GitLab version from {0} was downloaded successfully.".format(nick)))
         return
 
     def __serversListDownloadFinished(self, arg, status):

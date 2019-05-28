@@ -29,7 +29,7 @@ import stat
 import codecs
 import datetime
 
-SERVER_DOMAINS = {'vline':'http://iptvplayer.vline.pl/', 'gitlab':'http://www.iptvplayer.gitlab.io/', 'private':'http://www.e2iplayer.gitlab.io/'}
+SERVER_DOMAINS = {'vline':'http://iptvplayer.vline.pl/', 'gitlab':'http://zadmario.gitlab.io/', 'private':'http://www.e2iplayer.gitlab.io/'}
 SERVER_UPDATE_PATH = {'vline':'download/update2/', 'gitlab':'update2/', 'private':'update2/'}
 
 def GetServerKey(serverNum=None):
