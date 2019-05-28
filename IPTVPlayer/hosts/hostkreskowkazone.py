@@ -52,7 +52,7 @@ class KreskowkaZonePL(CBaseHostClass):
         self.AJAX_HEADER = dict(self.HEADER)
         self.AJAX_HEADER.update( {'X-Requested-With': 'XMLHttpRequest'} )
         
-        self.MAIN_URL = 'http://www.kreskowkazone.pl/'
+        self.MAIN_URL = 'https://www.kreskowkazone.pl/'
         self.DEFAULT_ICON_URL = self.MAIN_URL + 'images/sprites.png'
         
         self.MAIN_TAB = [{'category':'main',              'title': 'Główna',       'url':self.MAIN_URL,                   'icon':self.DEFAULT_ICON_URL},
