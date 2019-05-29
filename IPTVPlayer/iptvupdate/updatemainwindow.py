@@ -692,7 +692,7 @@ class UpdateMainAppImpl(IUpdateObjectInterface):
                 if sts:
                     newVerNum = CParsingHelper.getSearchGroups(data, '&quot;([0-9]+\.[0-9]+\.[0-9]+\.[0-9]+)&quot;')[0]
                     sourceUrl = mainUrl + "/repository/archive.tar.gz?ref=%s" % crcSum
-                    server = {'name':'gitlab.com', 'version':newVerNum, 'url':sourceUrl, 'subdir':'iptvplayer-for-e2.git/', 'pyver':'X.X', 'packagetype':'sourcecode'}
+                    server = {'name':'gitlab.com/'+ nick + '/' , 'version':newVerNum, 'url':sourceUrl, 'subdir':'iptvplayer-for-e2.git/', 'pyver':'X.X', 'packagetype':'sourcecode'}
                     printDBG("UpdateMainAppImpl.__addLastVersion server: [%s]" % str(server))
                     servers.append(server)
             else:
@@ -719,7 +719,7 @@ class UpdateMainAppImpl(IUpdateObjectInterface):
                     printExc()
                 if 13 == len(newVerNum):
                     sourceUrl = "https://gitlab.com/{0}/e2iplayer/-/archive/master/e2iplayer-master.tar.gz".format(nick)
-                    self.gitlabList = {'name':'gitlab.com', 'version':newVerNum, 'url':sourceUrl, 'subdir':'e2iplayer-master/', 'pyver':'X.X', 'packagetype':'sourcecode'}
+                    self.gitlabList = {'name':'gitlab.com/'+ nick + '/', 'version':newVerNum, 'url':sourceUrl, 'subdir':'e2iplayer-master/', 'pyver':'X.X', 'packagetype':'sourcecode'}
                     printDBG("__serversListGitlabFinished: [%s]" % str(self.gitlabList))
                 else:
                     msg = _("Wrong version: [%s].") % str(self.gitlabList)
