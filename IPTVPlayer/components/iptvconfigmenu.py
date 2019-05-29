@@ -335,7 +335,11 @@ class ConfigMenu(ConfigBaseWidget):
             list.append(getConfigListEntry(_("%s login") % 'E2iPlayer', config.plugins.iptvplayer.iptvplayer_login))
             list.append(getConfigListEntry(_("%s password") % 'E2iPlayer', config.plugins.iptvplayer.iptvplayer_password))
             list.append( getConfigListEntry(_("Update"), config.plugins.iptvplayer.fakeUpdate) )
-            
+        
+        list.append(getConfigListEntry(_("Allow downgrade"), config.plugins.iptvplayer.downgradePossible))
+        list.append(getConfigListEntry(_("Update packet type"), config.plugins.iptvplayer.possibleUpdateType))
+        list.append(getConfigListEntry(_("Show update icon in service selection menu"), config.plugins.iptvplayer.AktualizacjaWmenu))
+
         list.append( getConfigListEntry(_("Virtual Keyboard type"), config.plugins.iptvplayer.osk_type) )
         if config.plugins.iptvplayer.osk_type.value == 'own':
             list.append( getConfigListEntry(_("    Background color"), config.plugins.iptvplayer.osk_background_color) )
@@ -480,10 +484,7 @@ class ConfigMenu(ConfigBaseWidget):
         list.append(getConfigListEntry(_("Block wmv files"), config.plugins.iptvplayer.ZablokujWMV))
         list.append(getConfigListEntry(_("Show IPTVPlayer in extension list"), config.plugins.iptvplayer.showinextensions))
         list.append(getConfigListEntry(_("Show IPTVPlayer in main menu"), config.plugins.iptvplayer.showinMainMenu))
-        list.append(getConfigListEntry(_("Show update icon in service selection menu"), config.plugins.iptvplayer.AktualizacjaWmenu))
         list.append(getConfigListEntry(_("Debug logs"), config.plugins.iptvplayer.debugprint))
-        list.append(getConfigListEntry(_("Allow downgrade"), config.plugins.iptvplayer.downgradePossible))
-        list.append(getConfigListEntry(_("Update packet type"), config.plugins.iptvplayer.possibleUpdateType))
 
     def runSetup(self):
         self.list = []
