@@ -17,6 +17,6 @@ It's recommended to make a backup copy of folder.
 NEW (version 2019.05.29.01 or newer) 
 After first brutal copy of files, you can perform next updates in GUI, using these settings:
 *  Select update server Gitlab
-*  Select my nickname in choice: maxbambi (you could choice also original e2i no more updated or other forks)
-*  Select all type of files instead of precompliled only (at the end of settings list)
+*  Select my nickname: maxbambi (you can choose also original e2i (no more updated) or other forks)
+*  Select all types of files instead of precompliled only (at the end of settings list)
 *  Do update and click first gitlab item in the list.
