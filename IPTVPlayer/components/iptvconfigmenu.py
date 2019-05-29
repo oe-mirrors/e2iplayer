@@ -80,7 +80,7 @@ config.plugins.iptvplayer.IPTVWebIterface = ConfigYesNo(default = False)
 config.plugins.iptvplayer.plugin_autostart = ConfigYesNo(default = False)
 config.plugins.iptvplayer.plugin_autostart_method = ConfigSelection(default = "wizard", choices = [("wizard", "wizard"),("infobar", "infobar")])
 
-config.plugins.iptvplayer.preferredupdateserver = ConfigSelection(default = "", choices = [("", _("Default")),("1", "http://iptvplayer.vline.pl/"), ("2", _("http://www.iptvplayer.gitlab.io/")), ("3", _("private"))])
+config.plugins.iptvplayer.preferredupdateserver = ConfigSelection(default = "", choices = [("", _("Default")),("1", "http://iptvplayer.vline.pl/"), ("2", _("Gitlab")), ("3", _("private"))])
 config.plugins.iptvplayer.osk_type = ConfigSelection(default = "", choices = [("", _("Auto")),("system", _("System")), ("own", _("Own model"))])
 config.plugins.iptvplayer.osk_layout = ConfigText(default = "", fixed_size = False)
 config.plugins.iptvplayer.osk_allow_suggestions = ConfigYesNo(default = True)
@@ -145,7 +145,7 @@ config.plugins.iptvplayer.SciezkaCache = ConfigDirectory(default = "/hdd/IPTVCac
 config.plugins.iptvplayer.NaszaTMP = ConfigDirectory(default = "/tmp/") #, fixed_size = False)
 config.plugins.iptvplayer.ZablokujWMV = ConfigYesNo(default = True)
 
-config.plugins.iptvplayer.gitlab_repo = ConfigYesNo(default = False)
+config.plugins.iptvplayer.gitlab_repo = ConfigSelection(default = "e2i", choices = [("maxbambi", "maxbambi"), ("e2i", "e2i"), ("mosz_nowy", "mosz_nowy"),("zadmario", "zadmario")])
 
 config.plugins.iptvplayer.vkcom_login    = ConfigText(default="", fixed_size = False)
 config.plugins.iptvplayer.vkcom_password = ConfigText(default="", fixed_size = False)
@@ -326,12 +326,16 @@ class ConfigMenu(ConfigBaseWidget):
 
         list.append( getConfigListEntry(_("Auto check for plugin update"), config.plugins.iptvplayer.autoCheckForUpdate) )
         list.append( getConfigListEntry(_("The preferred update server"), config.plugins.iptvplayer.preferredupdateserver) )
+        
         if config.plugins.iptvplayer.preferredupdateserver.value == '2':
-            list.append(getConfigListEntry(_("Add update from GitLab repository"), config.plugins.iptvplayer.gitlab_repo))
+            list.append(getConfigListEntry(_("Select GitLab repository owner"), config.plugins.iptvplayer.gitlab_repo))
+            list.append( getConfigListEntry(_("Update"), config.plugins.iptvplayer.fakeUpdate) )
+
         if config.plugins.iptvplayer.preferredupdateserver.value == '3':
             list.append(getConfigListEntry(_("%s login") % 'E2iPlayer', config.plugins.iptvplayer.iptvplayer_login))
             list.append(getConfigListEntry(_("%s password") % 'E2iPlayer', config.plugins.iptvplayer.iptvplayer_password))
-        list.append( getConfigListEntry(_("Update"), config.plugins.iptvplayer.fakeUpdate) )
+            list.append( getConfigListEntry(_("Update"), config.plugins.iptvplayer.fakeUpdate) )
+            
         list.append( getConfigListEntry(_("Virtual Keyboard type"), config.plugins.iptvplayer.osk_type) )
         if config.plugins.iptvplayer.osk_type.value == 'own':
             list.append( getConfigListEntry(_("    Background color"), config.plugins.iptvplayer.osk_background_color) )
