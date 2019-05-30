@@ -6794,8 +6794,9 @@ msgstr "Abilita"
 msgid "Search in "
 msgstr "Ricerca in"
 
-#~ msgid "Add update from GitLab repository"
-#~ msgstr "Aggiungi aggiornamento dal repo Gitlab"
+#
+msgid "Alphabet"
+msgstr "Elenco alfabetico"
 
 #~ msgid "Brand"
 #~ msgstr "Marca"
