@@ -1018,8 +1018,14 @@ class common:
                         elif 'hd-streams' in domain:
                             dat = dat.replace("<a href='/'>","<a href='https://hd-streams.org/'>")
                         else:
-                            dat = dat.replace("<a href='/'>","<a href='" + domain + "'>")
+                            if domain[:7] == 'http://':
+                                domain = domain[:4] + "s://" + domain[7:]
                             
+                            if domain[-1] != "/": 
+                                    domain = domain + "/"
+
+                            dat = dat.replace("<a href='/'>","<a href='" + domain + "'>")
+
                         printDBG(">>>>>>>>>>>>>>>>>>>")
                         printDBG(dat)
                         printDBG(">>>>>>>>>>>>>>>>>>>")
