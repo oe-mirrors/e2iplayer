@@ -953,9 +953,9 @@ class common:
                 try:
                     domain = self.getBaseUrl(data.meta['url'])
                     verData = data
-                    printDBG("------------------")
-                    printDBG(verData)
-                    printDBG("------------------")
+                    #printDBG("------------------")
+                    #printDBG(verData)
+                    #printDBG("------------------")
                     if 'sitekey' not in verData and 'challenge' not in verData: break
                     
                     printDBG(">>")
@@ -1009,24 +1009,41 @@ class common:
                             if 'setTimeout' in item and 'submit()' in item:
                                 dat = item
                                 break
+
                         decoded = ''
                         js_params = [{'path':GetJSScriptFile('cf.byte')}]
+
+                        if 'hdfilme' in domain:
+                            dat = dat.replace("<a href='/'>","<a href='https://www.hdfilme.net/'>")
+                        elif 'hd-streams' in domain:
+                            dat = dat.replace("<a href='/'>","<a href='https://hd-streams.org/'>")
+                        else:
+                            dat = dat.replace("<a href='/'>","<a href='" + domain + "'>")
+                            
+                        printDBG(">>>>>>>>>>>>>>>>>>>")
+                        printDBG(dat)
+                        printDBG(">>>>>>>>>>>>>>>>>>>")
+
                         js_params.append({'code':"var location = {hash:''}; var iptv_domain='%s';\n%s\niptv_fun();" % (domain, dat)}) #cfParams['domain']
                         ret = js_execute_ext( js_params )
                         decoded = json_loads(ret['data'].strip())
                         
                         verData = ph.find(verData, ('<form', '>', 'id="challenge-form"'), '</form>')[1]
-                        printDBG(">>")
+                        printDBG(">>>>>>>>>>>>>>>>>>>")
                         printDBG(verData)
-                        printDBG("<<")
+                        printDBG("<<<<<<<<<<<<<<<<<<<")
                         verUrl =  _getFullUrl( ph.getattr(verData, 'action'), domain)
                         get_data = dict(re.findall(r'<input[^>]*name="([^"]*)"[^>]*value="([^"]*)"[^>]*>', verData))
                         get_data['jschl_answer'] = decoded['answer']
+                        
                         verUrl += '?'
                         for key in get_data:
                             verUrl += '%s=%s&' % (key, get_data[key])
                         verUrl = _getFullUrl( ph.getattr(verData, 'action'), domain) + '?s=%s&jschl_vc=%s&pass=%s&jschl_answer=%s' % (get_data['s'], get_data['jschl_vc'], get_data['pass'], get_data['jschl_answer'])
                         verUrl = _getFullUrl2( verUrl, domain)
+                        
+                        printDBG("------->" + verUrl)
+                        
                         params2 = dict(params)
                         params2['load_cookie'] = True
                         params2['save_cookie'] = True
