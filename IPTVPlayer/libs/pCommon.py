@@ -9,7 +9,7 @@ from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, Is
 from Plugins.Extensions.IPTVPlayer.components.asynccall import IsMainThread, IsThreadTerminated, SetThreadKillable
 from Plugins.Extensions.IPTVPlayer.tools.e2ijs import js_execute_ext
 from Plugins.Extensions.IPTVPlayer.libs import ph
-from Plugins.Extensions.IPTVPlayer.libs.e2ijson import loads as json_loads
+from Plugins.Extensions.IPTVPlayer.libs.e2ijson import loads as json_loads, dumps as json_dumps
 ###################################################
 # FOREIGN import
 ###################################################
@@ -991,8 +991,15 @@ class common:
                                 dat = item
                                 break
                         decoded = ''
+                        elemsText = {}
+                        tmp = ph.findall(verData, ('<div', '>', 'hidden'), '</div>', flags=ph.START_S)
+                        for idx in range(1, len(tmp), 2):
+                            eId = ph.getattr(tmp[(idx - 1)], 'id', flags=ph.I)
+                            if eId:
+                                elemsText[eId] = tmp[idx]
+
                         js_params = [{'path':GetJSScriptFile('cf.byte')}]
-                        js_params.append({'code':"var location = {hash:''}; var iptv_domain='%s';\n%s\niptv_fun();" % (domain, dat)}) #cfParams['domain']
+                        js_params.append({'code': "var ELEMS_TEXT = %s; var location = {hash:''}; var iptv_domain='%s';\n%s\niptv_fun();" % (json_dumps(elemsText), domain, dat)})
                         ret = js_execute_ext( js_params )
                         decoded = json_loads(ret['data'].strip())
                         
@@ -1013,9 +1020,11 @@ class common:
                         params2['save_cookie'] = True
                         params2['header'] = dict(params.get('header', {}))
                         params2['header'].update({'Referer':url, 'User-Agent':cfParams.get('User-Agent', ''), 'Accept-Encoding':'text'})
+                        if 'Accept-Encoding' not in params2:
+                            params2['Accept-Encoding'] = '*'
                         printDBG("Time spent: [%s]" % (time.time() - start_time))
                         if current == 1:
-                            GetIPTVSleep().Sleep(1 + (decoded['timeout'] / 1000.0)-(time.time() - start_time))
+                            GetIPTVSleep().Sleep(0.2 + (decoded['timeout'] / 1000.0)-(time.time() - start_time))
                         else:
                             GetIPTVSleep().Sleep((decoded['timeout'] / 1000.0))
                         printDBG("Time spent: [%s]" % (time.time() - start_time))
