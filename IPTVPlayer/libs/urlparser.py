@@ -6309,7 +6309,7 @@ class pageParser(CaptchaHelper):
             tmp = re.compile("""['"]([^'^"]+?\.m3u8[^'^"]*?)['"]""").findall(tmp)
             if len(tmp) == 2:
                 tmpList = getDirectM3U8Playlist(_getFullUrl(tmp[0]), checkContent=True)
-                if len(tmpList):
+                if len(tmpList) and not 'connlimit' in tmp[0]:
                     urlsTab.extend(tmpList)
                 else:
                     return getDirectM3U8Playlist(_getFullUrl(tmp[1]), checkContent=True)
