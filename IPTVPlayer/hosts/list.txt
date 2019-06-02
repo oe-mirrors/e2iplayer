@@ -139,6 +139,7 @@ hostputlockertvto
 hostquesttvcouk
 hostradiostacja
 hostraiplay
+hostredbull
 hostrtbfbe
 hostrteieplayer
 hostrtlmost
