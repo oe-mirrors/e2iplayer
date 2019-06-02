@@ -54,9 +54,8 @@ class CYTSignAlgoExtractor:
         tmp = ph.find(data, 'yt.akamaized.net', '}', 0)[1]
         if tmp:
             printDBG("DATA: %s" % tmp)
-            tmp = ph.rfindall(tmp, 'return', '.set(', flags=0)
+            tmp = ph.rfindall(tmp, 'return', '.set(b,encodeURIComponent', flags=0)
             for name in tmp:
-                name = name.replace('decodeURIComponent(', '').replace('encodeURIComponent(', '')
                 printDBG("ITEM: %s" % name)
                 name = ph.search(name, self.RE_MAIN)[0]
                 if name: return name
@@ -542,6 +541,7 @@ class YoutubeIE(object):
                 video_info_url = videoInfoBase + ('%s&ps=default&eurl=&gl=US&hl=en'% ( el_type))
                 sts, video_info = self.cm.getPage(video_info_url, videoInfoparams)
                 if not sts: continue
+                #printDBG( 'Host video_info: '+video_info )
                 if '&token=' in video_info or '&account_playback_token=' in video_info:
                     break
         if '&token=' not in video_info and '&account_playback_token=' not in video_info:
@@ -756,4 +756,5 @@ class YoutubeIE(object):
         
         return [(f, url_map[f]) for f in existing_formats] # All formats
 
+   
         
