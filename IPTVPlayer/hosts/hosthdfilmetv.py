@@ -199,7 +199,9 @@ class HDFilmeTV(CBaseHostClass):
         sts, data = self.getPageCF(cItem['url'], params)
         #printDBG(data)
         if not sts: return
-        
+
+        movieId = self.cm.ph.getSearchGroups(data, '''data-movie-id=['"]([^'^"]+?)['"]''')[0]
+        printDBG("movieId ------->" + movieId)
         
         trailerUrl = self.getFullUrl(self.cm.ph.getSearchGroups(data, '''<a[^>]*?class="btn btn-xemnow pull-right"[^>]*?href=['"]([^'^"]+?)['"][^>]*?>\s*Trailer\s*<''')[0])
         if trailerUrl.startswith('http'):
@@ -211,7 +213,7 @@ class HDFilmeTV(CBaseHostClass):
         episodesLinks = {}
         
         #data = self.cm.ph.getDataBeetwenMarkers(data, '<section class="box">', '</section>')[1]
-        data = self.cm.ph.getDataBeetwenMarkers(data, 'kostenlos', '</section>')[1]
+        data = self.cm.ph.getDataBeetwenMarkers(data, 'online kostenlos', '</section>')[1]
 
         #printDBG("^^^^^^^^^^^^^^^^^^^")
         #printDBG(data)
@@ -234,7 +236,7 @@ class HDFilmeTV(CBaseHostClass):
                     episodesTab.append(episodeName)
                     episodesLinks[episodeName] = []
                 
-                params={'name':serverName, 'url': strwithmeta(episodeUrl.replace('&amp;', '&'), {'episodeId':episodeId}) , 'need_resolve':1}
+                params={'name':serverName, 'url': strwithmeta(episodeUrl.replace('&amp;', '&'), {'episodeId':episodeId, 'movieId': movieId}) , 'need_resolve':1}
                 #printDBG("------------->" + str(params))
                 episodesLinks[episodeName].append(params)
         
@@ -267,7 +269,11 @@ class HDFilmeTV(CBaseHostClass):
         if isinstance(videoUrl, strwithmeta):
             if 'episodeId' in videoUrl.meta:
                 episode_id = videoUrl.meta['episodeId']
-        
+            if 'movieId' in videoUrl.meta:
+                movie_id = videoUrl.meta['movieId']
+            else:
+                movie_id = ''
+                
         params = MergeDicts(self.defaultParams, {'user-agent': self.USER_AGENT, 'referer': videoUrl, "accept-encoding" : "gzip", "accept" : "text/html"})
 
         sts, data = self.getPageCF(videoUrl, params)
@@ -278,11 +284,14 @@ class HDFilmeTV(CBaseHostClass):
         
         if len(url) > 1: 
             
-            url=self.getFullUrl(url + episode_id + "?")
+            if movie_id == '':
+                url=self.getFullUrl(url + episode_id + "?")
+            else:
+                url=self.getFullUrl(url + movie_id + '/' + episode_id + "?")
             printDBG("video link---->" + url)
             sts, tmp = self.getPage( url, params)
-            printDBG (tmp)
-            printDBG ("+++++++++++++++++")
+            #printDBG (tmp)
+            #printDBG ("+++++++++++++++++")
             
             if sts:
                 url = self.cm.ph.getDataBeetwenMarkers(tmp, 'window.urlVideo = "', '"', False)[1]
