@@ -36,6 +36,8 @@ def GetConfigList():
     # checking should be moved to setup
     if IsExecutable('ffmpeg'): 
         optionList.append(getConfigListEntry(_("Allow dash format:"), config.plugins.iptvplayer.ytShowDash))
+        if config.plugins.iptvplayer.ytShowDash.value != 'false':
+            optionList.append(getConfigListEntry(_("Allow VP9 codec:"), config.plugins.iptvplayer.ytVP9))
     return optionList
 ###################################################
 ###################################################
