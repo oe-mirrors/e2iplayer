@@ -173,28 +173,18 @@ class Altadefinizione(CBaseHostClass):
             params = dict(cItem)
             params.update({'good_for_fav': False, 'title':'%s - %s' % (cItem['title'], _('trailer')), 'url':trailerUrl, 'desc':desc, 'prev_url':cItem['url']})
             self.addVideo(params)
-        
-        return
-    
-        data = self.cm.ph.getDataBeetwenNodes(data, ('<div', '>', 'player'), ('</div', '>'), False)[1]
-        playerUrl = self.getFullUrl(self.cm.ph.getSearchGroups(data, '''<iframe[^>]+?src=['"]([^"^']+?)['"]''', 1, ignoreCase=True)[0])
-        if playerUrl == '': return
-        
-        urlParams = dict(self.defaultParams)
-        urlParams['header'] = dict(urlParams)
-        urlParams['header']['Referer'] = cUrl
-        sts, data = self.getPage(playerUrl, urlParams)
-        if not sts: return
-        
-        data = self.cm.ph.getDataBeetwenNodes(data, '<div id="listRes">', '</div>', False)[1]
-        data = self.cm.ph.getAllItemsBeetwenMarkers(data, '<a', '</a>')
-        for item in data:
-            url = self.getFullUrl( self.cm.ph.getSearchGroups(item, '''href=['"]([^"^']+?)['"]''')[0] )
-            if url == '': continue
+ 
+        url_container = self.cm.ph.getDataBeetwenNodes(data, '<ul id="mirrors"', '</ul>', False)[1]
+        urls = self.cm.ph.getAllItemsBeetwenMarkers(url_container, '<li>', '</li>')
+        for item in urls:
+            printDBG("----->" + item)
             title = self.cleanHtmlStr(item)
-            params = dict(cItem)
-            params.update({'good_for_fav': False, 'title':'%s - %s' % (cItem['title'], title), 'url':url, 'desc':desc, 'prev_url':cItem['url']})
-            self.addVideo(params)
+            url = self.getFullUrl( self.cm.ph.getSearchGroups(item, '''data-target=['"]([^"^']+?)['"]''')[0] )
+            if url !='' : 
+                url = strwithmeta(url, {'Referer':cItem['url']})
+                params = dict(cItem)
+                params.update({'good_for_fav': False, 'title':'%s - %s' % (cItem['title'], title), 'url':url, 'desc':desc, 'prev_url':cItem['url']})
+                self.addVideo(params)
     
     def listSearchResult(self, cItem, searchPattern, searchType):
         printDBG("Altadefinizione.listSearchResult cItem[%s], searchPattern[%s] searchType[%s]" % (cItem, searchPattern, searchType))
