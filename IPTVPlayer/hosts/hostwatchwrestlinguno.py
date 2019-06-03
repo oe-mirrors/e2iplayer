@@ -17,12 +17,12 @@ import urlparse
 ###################################################
 
 def gettytul():
-    return 'http://watchwrestling.ac/'
+    return 'http://watchwrestling.la/'
 
 class WatchwrestlingUNO(CBaseHostClass):
     def __init__(self):
-        CBaseHostClass.__init__(self, {'history':'watchwrestling.uno', 'cookie':'watchwrestling.uno.cookie'})
-        self.MAIN_URL    = 'http://watchwrestling.ac/'
+        CBaseHostClass.__init__(self, {'history': 'watchwrestling.la', 'cookie': 'watchwrestling.uno.cookie'})
+        self.MAIN_URL = 'http://watchwrestling.la/'
         self.SRCH_URL    = self.getFullUrl('index.php?s=')
         self.DEFAULT_ICON_URL = 'http://i.imgur.com/UsYsZ.png'
         
@@ -119,6 +119,7 @@ class WatchwrestlingUNO(CBaseHostClass):
                 desc = ' | '.join(desc)
             params = dict(cItem)
             params.update( {'good_for_fav': True, 'category':nextCategory, 'title': self.cleanHtmlStr(title), 'url':self.getFullUrl(url), 'desc': desc, 'icon':self.getFullIconUrl(icon)} )
+            if '/category/' not in url: params['category'] = nextCategory
             self.addDir(params)
         
         if nextPage:
@@ -135,7 +136,9 @@ class WatchwrestlingUNO(CBaseHostClass):
         
         self.serversCache = []
         matchObj = re.compile('href="([^"]+?)"[^>]*?>([^>]+?)</a>')
-        data = self.cm.ph.getDataBeetwenMarkers(data, '<div class="entry-content rich-content">', '<p class="no-break">', False)[1]
+        tmp = self.cm.ph.getDataBeetwenMarkers(data, '<div class="entry-content rich-content">', '<p class="no-break">', False)[1]
+        if not tmp: tmp = self.cm.ph.getDataBeetwenMarkers(data, '<div class="entry-content rich-content">', '<div id="extras">', False)[1]
+        data = tmp
         sp = '<span style="font-size:'
         if sp in data: 
             data = data.split(sp)
