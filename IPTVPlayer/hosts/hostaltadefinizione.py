@@ -55,6 +55,12 @@ class Altadefinizione(CBaseHostClass):
         
     def listMainMenu(self, cItem):
         self.cacheCategories = []
+
+        MAIN_CAT_TAB = [{'category':'search',          'title': _('Search'), 'search_item':True, },
+                        {'category':'search_history',  'title': _('Search history')},
+                        {'category':'list_categories', 'title': 'Categorie'},
+                        {'category':'az_main', 'title': _('A-Z list')}]
+        self.listsTab(MAIN_CAT_TAB, cItem)
         
         sts, data = self.getPage(self.getMainUrl())
         if sts:
@@ -96,17 +102,13 @@ class Altadefinizione(CBaseHostClass):
             tmp = self.cm.ph.getDataBeetwenNodes(data, ('<ul id="menu-menu-1" class="menu">'), ('</ul', '>'))[1]
             tmp = self.cm.ph.getAllItemsBeetwenMarkers(tmp, '<a', '</a>')
             for item in tmp:
-                url = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''href=['"]([^'^"]+?)['"]''')[0])
-                if url.endswith('richieste/'): break
                 title = self.cleanHtmlStr(item)
+                if title.lower() in ['richieste', 'aggiornamenti 2019', 'guida', 'cineblog01', 'lista film a-z'] : 
+                    break
+                url = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''href=['"]([^'^"]+?)['"]''')[0])
                 params = dict(cItem)
                 params.update({'good_for_fav':True, 'category':'list_items', 'title':title, 'url':url})
                 self.addDir(params)
-                
-        MAIN_CAT_TAB = [{'category':'list_categories', 'title': 'Categorie'},
-                        {'category':'search',          'title': _('Search'), 'search_item':True, },
-                        {'category':'search_history',  'title': _('Search history'),             }]
-        self.listsTab(MAIN_CAT_TAB, cItem)
     
     def listSubItems(self, cItem):
         printDBG("Altadefinizione.listSubItems")
@@ -123,7 +125,7 @@ class Altadefinizione(CBaseHostClass):
         nextPage = self.cm.ph.getDataBeetwenNodes(data, '<div class="paginationC">', ('</ul', '>'), False)[1]
         nextPage = self.getFullUrl( self.cm.ph.getSearchGroups(nextPage, '''<a[^>]+?href=['"]([^"^']+?)['"][^>]*?>%s<''' % (page + 1))[0] )
         
-        data = self.cm.ph.getDataBeetwenNodes(data, '<span class="titleSection titleLastIns">', '<div class="paginationC">', False)[1]
+        #data = self.cm.ph.getDataBeetwenNodes(data, '<span class="titleSection titleLastIns">', '<div class="paginationC">', False)[1]
         data = self.cm.ph.getAllItemsBeetwenMarkers(data, '<div class="box">', '</div>')
         for item in data:
             #printDBG(item)
@@ -189,9 +191,13 @@ class Altadefinizione(CBaseHostClass):
     def listSearchResult(self, cItem, searchPattern, searchType):
         printDBG("Altadefinizione.listSearchResult cItem[%s], searchPattern[%s] searchType[%s]" % (cItem, searchPattern, searchType))
         cItem = dict(cItem)
-        cItem['url'] = self.getFullUrl('/?s=') + urllib.quote_plus(searchPattern)
-        cItem['category'] = 'list_items'
+        cItem['url'] = self.getFullUrl('/index.php?do=search&subaction=search&story=') + urllib.quote_plus(searchPattern)
+        cItem['category'] = 'search_items'
         self.listItems(cItem, 'explore_item')
+    
+    def listAZMain(self, cItem):
+        printDBG("Altadefinizione.listAZMain")
+        
     
     def getLinksForVideo(self, cItem):
         printDBG("Altadefinizione.getLinksForVideo [%s]" % cItem)
@@ -376,7 +382,7 @@ class Altadefinizione(CBaseHostClass):
             self.listSubItems(self.currItem)
         elif category == 'list_categories':
             self.currList = self.cacheCategories
-        elif category == 'list_items':
+        elif category in ['list_items','search_items'] :
             self.listItems(self.currItem, 'explore_item')
         elif category == 'explore_item':
             self.exploreItem(self.currItem)
@@ -402,4 +408,5 @@ class IPTVHost(CHostBase):
         if cItem.get('type', 'video') != 'video' and cItem.get('category', 'unk') != 'explore_item':
             return False
         return True
+
     

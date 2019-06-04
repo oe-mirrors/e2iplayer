@@ -8005,74 +8005,84 @@ class pageParser(CaptchaHelper):
         return videoUrl
 
     def parserOPENLOADIO(self, baseUrl):
-        printDBG("parserOPENLOADIO baseUrl[%r]" % baseUrl )
-        HTTP_HEADER= { 'User-Agent':"Mozilla/5.0", 'Referer':baseUrl}
-        
-        HTTP_HEADER = {'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.11 (KHTML, like Gecko) Chrome/23.0.1271.64 Safari/537.11',
-               'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
-               'Accept-Charset': 'ISO-8859-1,utf-8;q=0.7,*;q=0.3',
-               'Accept-Encoding': 'none',
-               'Accept-Language': 'en-US,en;q=0.8',
-               'Referer':baseUrl}
-
-        sts, data = self.cm.getPage(baseUrl, {'header':HTTP_HEADER})
-        if not sts: return False
-        
+        printDBG('parserOPENLOADIO baseUrl[%r]' % baseUrl)
+        HTTP_HEADER = {'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.11 (KHTML, like Gecko) Chrome/23.0.1271.64 Safari/537.11', 'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8', 
+           'Accept-Charset': 'ISO-8859-1,utf-8;q=0.7,*;q=0.3', 
+           'Accept-Encoding': 'none', 
+           'Accept-Language': 'en-US,en;q=0.8'}
+        referer = strwithmeta(baseUrl).meta.get('Referer', '')
+        if referer:
+            HTTP_HEADER['Referer'] = referer
+        sts, data = self.cm.getPage(baseUrl, {'header': HTTP_HEADER})
+        if not sts:
+            return False
         orgData = data
-        
-        if 'content-blocked' in data:
-            msg = clean_html(self.cm.ph.getDataBeetwenMarkers(data, '<img class="image-blocked"', '</div>')[1]).strip()
-            if msg == '': msg = clean_html(self.cm.ph.getDataBeetwenMarkers(data, '<p class="lead"', '</p>')[1]).strip()
-            if msg == '': msg = _("We can't find the file you are looking for. It maybe got deleted by the owner or was removed due a copyright violation.")
+        msg = clean_html(ph.find(data, ('<div', '>', 'blocked'), '</div>', flags=0)[1])
+        if msg or 'content-blocked' in data:
+            if msg == '':
+                msg = clean_html(ph.find(data, ('<p', '>', 'lead'), '</p>', flags=0)[1])
+            if msg == '':
+                msg = _("We can't find the file you are looking for. It maybe got deleted by the owner or was removed due a copyright violation.")
+        if msg:
             SetIPTVPlayerLastHostError(msg)
         
         subTracksData = self.cm.ph.getAllItemsBeetwenMarkers(data, '<track ', '>', False, False)
         subTracks = []
         for track in subTracksData:
-            if 'kind="captions"' not in track: continue
+            if 'kind="captions"' not in track:
+                continue
             subUrl = self.cm.ph.getSearchGroups(track, 'src="([^"]+?)"')[0]
             if subUrl.startswith('/'):
                 subUrl = 'http://openload.co' + subUrl
             if subUrl.startswith('http'):
                 subLang = self.cm.ph.getSearchGroups(track, 'srclang="([^"]+?)"')[0]
                 subLabel = self.cm.ph.getSearchGroups(track, 'label="([^"]+?)"')[0]
-                subTracks.append({'title':subLabel + '_' + subLang, 'url':subUrl, 'lang':subLang, 'format':'srt'})
-        
+                subTracks.append({'title': subLabel + '_' + subLang, 'url': subUrl, 'lang': subLang, 'format': 'srt'})
+
         videoUrl = ''
-        tmp = self.cm.ph.getAllItemsBeetwenNodes(data, ('<div', '>', 'display:none'), ('</div', '>'))
+        #printDBG(data)
+        tmp = ph.findall(data, ('<div', '>', 'display:none'), '</div>')
+        printDBG('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>')
+        printDBG(str(tmp))
         for item in tmp:
-            encTab = re.compile('''<[^>]+?id="[^"]*?"[^>]*?>([^<]+?)<''').findall(data)
+            encTab = re.compile('<[^>]+?id="[^"]*?"[^>]*?>([^<]+?)<').findall(data)
             for e in encTab:
                 if len(e) > 40:
                     encTab.insert(0, e)
                     break
-        
+
+        printDBG('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>')
+        printDBG(str(encTab))
+                    
         def __decode_k(enc, jscode):
             decoded = ''
             try:
-                js_params = [{'code':'var id = "%s";' % enc}]
-                js_params.append({'path':GetJSScriptFile('openload.byte')})
-                js_params.append({'name':'openload', 'code':'%s; print(decoded);' % jscode})
-                ret = js_execute_ext( js_params )
+                js_params = [{'code': 'var id = "%s";' % enc}]
+                js_params.append({'path': GetJSScriptFile('openload3.byte')})
+                js_params.append({'name': 'openload', 'code': '%s; print(decoded);' % jscode})
+                ret = js_execute_ext(js_params)
                 if ret['sts'] and 0 == ret['code']:
                     decoded = ret['data'].strip()
                     printDBG('DECODED DATA -> [%s]' % decoded)
             except Exception:
                 printExc()
+
             return decoded
-        
-        marker = 'ﾟωﾟﾉ= /｀ｍ´）ﾉ'
+
+        marker = '\xef\xbe\x9f\xcf\x89\xef\xbe\x9f\xef\xbe\x89= /\xef\xbd\x80\xef\xbd\x8d\xc2\xb4\xef\xbc\x89\xef\xbe\x89'
         tmp = self.cm.ph.getDataBeetwenMarkers(orgData, marker, marker, False)[1]
-        if tmp == '': tmp = self.cm.ph.getDataBeetwenMarkers(orgData, marker, '</script>', False)[1]
+        if tmp == '':
+            tmp = self.cm.ph.getDataBeetwenMarkers(orgData, marker, '</script>', False)[1]
         orgData = marker + tmp
-        orgData = re.sub('''if\s*\([^\}]+?typeof[^\}]+?\}''', '', orgData)
-        orgData = re.sub('''if\s*\([^\}]+?document[^\}]+?\}''', '', orgData)
+        printDBG("_______________")
+        printDBG(orgData)
         dec = __decode_k(encTab[0], orgData)
-        if dec == '':
-            SetIPTVPlayerLastHostError(_('%s link extractor error.') % 'https://openload.co/')
+        if not dec:
+            if len(encTab[0]) > 5:
+                SetIPTVPlayerLastHostError(_('%s link extractor error.') % 'https://openload.co/')
             return False
-        
-        videoUrl = 'https://openload.co/stream/{0}?mime=true'.format(dec)
+        videoUrl = ('https://openload.co/stream/{0}?mime=true').format(dec)
+        printDBG("video url -----> " + videoUrl)
         params = dict(HTTP_HEADER)
         params['external_sub_tracks'] = subTracks
         return urlparser.decorateUrl(videoUrl, params)
@@ -11312,10 +11322,15 @@ class pageParser(CaptchaHelper):
 
         vidTab = []
 
-        url = self.cm.ph.getSearchGroups(tmp2, 'sources:\["([^"]+?)"\]')[0]
-        title = self.cm.ph.getSearchGroups(tmp2, 'media:{title:"([^"]+?)"')[0]
+      	title = self.cm.ph.getSearchGroups(tmp2, 'media:{title:"([^"]+?)"')[0]
+        urls_text = self.cm.ph.getDataBeetwenNodes(tmp2, 'sources:[', ']')[1]
+        printDBG(urls_text)
+        urls = eval(urls_text[8:])
+        for u in urls:
+            printDBG(u)
+            if u[-4:] == 'm3u8':
+                vidTab.extend(getDirectM3U8Playlist(u, checkExt=True, variantCheck=True, checkContent=True, sortWithMaxBitrate=99999999))
+            else:
+                vidTab.append({'name':title, 'url':u})
 
-        printDBG(url)
-
-        vidTab.append({'name':title, 'url':url})
         return vidTab
