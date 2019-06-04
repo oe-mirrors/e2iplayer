@@ -4,7 +4,7 @@
 ###################################################
 from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _
 from Plugins.Extensions.IPTVPlayer.components.ihost import CHostBase, CBaseHostClass
-from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, byteify
+from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, byteify, MergeDicts
 from Plugins.Extensions.IPTVPlayer.tools.iptvtypes import strwithmeta
 from Plugins.Extensions.IPTVPlayer.tools.e2ijs import js_execute
 ###################################################
@@ -30,6 +30,7 @@ class Altadefinizione(CBaseHostClass):
         self.AJAX_HEADER = dict(self.HEADER)
         self.AJAX_HEADER.update( {'X-Requested-With': 'XMLHttpRequest'} )
         self.MAIN_URL = 'https://altadefinizione.to/'
+        self.AZ_URL = self.MAIN_URL + 'catalog/%l/page/{0}'
         self.DEFAULT_ICON_URL = 'https://altadefinizione.to/templates/Dark/img/logo.png'
         
         self.cacheCategories = []
@@ -59,7 +60,7 @@ class Altadefinizione(CBaseHostClass):
         MAIN_CAT_TAB = [{'category':'search',          'title': _('Search'), 'search_item':True, },
                         {'category':'search_history',  'title': _('Search history')},
                         {'category':'list_categories', 'title': 'Categorie'},
-                        {'category':'az_main', 'title': _('A-Z list')}]
+                        {'category':'az_main', 'title': _('A-Z List')}]
         self.listsTab(MAIN_CAT_TAB, cItem)
         
         sts, data = self.getPage(self.getMainUrl())
@@ -125,10 +126,8 @@ class Altadefinizione(CBaseHostClass):
         nextPage = self.cm.ph.getDataBeetwenNodes(data, '<div class="paginationC">', ('</ul', '>'), False)[1]
         nextPage = self.getFullUrl( self.cm.ph.getSearchGroups(nextPage, '''<a[^>]+?href=['"]([^"^']+?)['"][^>]*?>%s<''' % (page + 1))[0] )
         
-        #data = self.cm.ph.getDataBeetwenNodes(data, '<span class="titleSection titleLastIns">', '<div class="paginationC">', False)[1]
         data = self.cm.ph.getAllItemsBeetwenMarkers(data, '<div class="box">', '</div>')
         for item in data:
-            #printDBG(item)
             url = self.getFullUrl( self.cm.ph.getSearchGroups(item, '''href=['"]([^"^']+?)['"]''')[0] )
             if url == '': continue
             title = self.cleanHtmlStr( self.cm.ph.getDataBeetwenNodes(item, ('<h', '>', 'title'), ('</h', '>'))[1])
@@ -149,7 +148,7 @@ class Altadefinizione(CBaseHostClass):
         if nextPage and len(self.currList) > 0:
             params = dict(cItem)
             params.update({'good_for_fav': False, 'title':_("Next page"), 'url':nextPage, 'page':page+1})
-            self.addDir(params)
+            self.addMore(params)
     
     def exploreItem(self, cItem):
         printDBG("Altadefinizione.exploreItem")
@@ -197,8 +196,44 @@ class Altadefinizione(CBaseHostClass):
     
     def listAZMain(self, cItem):
         printDBG("Altadefinizione.listAZMain")
-        
+        # 0-9
+        self.addDir(MergeDicts(cItem, {'category':'az_item', 'title': "0-9", 'letter' : '9' } ))              
+        #a-z
+        for i in range(26):
+            self.addDir(MergeDicts(cItem, {'category':'az_item', 'title': chr(ord('A')+i), 'letter': chr(ord('A')+i)} ))       
     
+    def listAZItem(self, cItem):
+        letter = cItem['letter'].upper()
+        page = cItem.get ('page', 1)  
+        list_url = self.AZ_URL.replace('%l',letter).format(page) 
+        printDBG("Altadefinizione.listAZItem for letter %s" % letter )
+        sts, data = self.getPage(list_url)
+        if not sts: return
+
+        data = self.cm.ph.getDataBeetwenNodes(data, '<table>', '</table>', False)[1]
+        #printDBG(data)
+
+        items= self.cm.ph.getAllItemsBeetwenMarkers(data, '<tr class="mlnew">', '</tr>')
+        for item in items:
+            title_and_url = self.cm.ph.getDataBeetwenNodes(item, '<td class="mlnh-2"><h2>', '</h2>', False)[1]
+            url = self.cm.ph.getSearchGroups(title_and_url, '''href=['"]([^'^"]+?)['"]''')[0]
+            title = self.cleanHtmlStr(title_and_url)
+    
+            year = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(item, '<td class="mlnh-3">', '</td>', False)[1])
+            quality = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(item, '<td class="mlnh-4">', '</td>', False)[1])
+            cat = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(item, '<td class="mlnh-5">', '</td>', False)[1])
+            icon_text = self.cm.ph.getDataBeetwenNodes(item, '<td class="mlnh-thumb">', '</td>', False)[1]
+            icon = self.cm.getFullUrl(self.cm.ph.getSearchGroups(icon_text, '''src=['"]([^'^"]+?)['"]''')[0], self.MAIN_URL)
+            desc = quality + " - " + _('Year') + ": " + year + " - " + cat
+            
+            self.addDir(MergeDicts(cItem, {'category': 'explore_item', 'good_for_fav': True, 'title' : title, 'icon' : icon, 'url' : url, 'desc' : desc  }))
+ 
+        # check if more pages
+        pag = self.cm.ph.getDataBeetwenNodes(data, '<div class="paginationC">', '</div>', False)[1]
+        label = ">{0}</a>".format(page+1)
+        if label in pag:
+            self.addMore(MergeDicts(cItem, {'category': 'az_item', 'title' : _('Next page'), 'page': page + 1 }))
+        
     def getLinksForVideo(self, cItem):
         printDBG("Altadefinizione.getLinksForVideo [%s]" % cItem)
         urlTab = []
@@ -386,12 +421,16 @@ class Altadefinizione(CBaseHostClass):
             self.listItems(self.currItem, 'explore_item')
         elif category == 'explore_item':
             self.exploreItem(self.currItem)
-    #SEARCH
+        elif category == 'az_main':
+            self.listAZMain(self.currItem)
+        elif category == 'az_item':
+            self.listAZItem(self.currItem)
+        #SEARCH
         elif category in ["search", "search_next_page"]:
             cItem = dict(self.currItem)
             cItem.update({'search_item':False, 'name':'category'}) 
             self.listSearchResult(cItem, searchPattern, searchType)
-    #HISTORIA SEARCH
+        #HISTORIA SEARCH
         elif category == "search_history":
             self.listsHistory({'name':'history', 'category': 'search'}, 'desc', _("Type: "))
         else:
