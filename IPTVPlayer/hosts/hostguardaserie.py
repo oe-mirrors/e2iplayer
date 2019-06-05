@@ -17,31 +17,38 @@ except Exception: import simplejson as json
 ###################################################
 
 def gettytul():
-    return 'http://guardaserie.watch/'
+    return 'https://www.guardaserie.media/'
 
 class GuardaSerieClick(CBaseHostClass):
 
     def __init__(self):
-        CBaseHostClass.__init__(self, {'history':'guardaserie.click', 'cookie':'guardaserie.click.cookie'})
+        CBaseHostClass.__init__(self, {'history':'guardaserie.media', 'cookie':'guardaserie.media.cookie'})
         
-        self.USER_AGENT = 'Mozilla/5.0'
-        self.HEADER = {'User-Agent': self.USER_AGENT, 'Accept': 'text/html'}
+        self.USER_AGENT = 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/73.0.3683.103 Safari/537.36'
+        self.MAIN_URL = 'https://www.guardaserie.media/'
+
+        self.HEADER = {'User-Agent': self.USER_AGENT, 'Accept': 'text/html', 'Accept-Encoding': 'gzip', 'Referer': self.MAIN_URL}
         self.AJAX_HEADER = MergeDicts(self.HEADER, {'X-Requested-With':'XMLHttpRequest', 'Content-Type':'application/x-www-form-urlencoded; charset=UTF-8'})
         
-        self.MAIN_URL = 'http://www.guardaserie.watch/'
         self.DEFAULT_ICON_URL = self.getFullIconUrl('/wp-content/themes/guardaserie/images/logogd.png')
         
         self.defaultParams = {'header':self.HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
     
+    def getPageCF(self, baseUrl, params = {}, post_data = None):
+        if params == {}: 
+            params = self.defaultParams
+        params['cloudflare_params'] = {'domain':'guardaserie.media', 'cookie_file':self.COOKIE_FILE, 'User-Agent':self.USER_AGENT}
+        return self.cm.getPageCFProtection(baseUrl, params, post_data)
+
     def getPage(self, baseUrl, addParams = {}, post_data = None):
         if addParams == {}: addParams = dict(self.defaultParams)
-        addParams['cloudflare_params'] = {'cookie_file':self.COOKIE_FILE, 'User-Agent':self.USER_AGENT}
-        return self.cm.getPageCFProtection(baseUrl, addParams, post_data)
+        return self.cm.getPage(baseUrl, addParams, post_data)
     
     def listMainMenu(self, cItem):
         printDBG("GuardaSerieClick.listMainMenu")
-
-        sts, data = self.getPage(self.getMainUrl())
+        params = MergeDicts(self.defaultParams, {'user-agent': self.USER_AGENT, 'referer': self.MAIN_URL, "accept-encoding" : "gzip", "accept" : "text/html"})
+        
+        sts, data = self.getPageCF(self.getMainUrl(), params)
         if not sts: return
         self.setMainUrl(self.cm.meta['url'])
 
