@@ -409,8 +409,10 @@ class UpdateMainAppImpl(IUpdateObjectInterface):
         printDBG('UpdateMainAppImpl.stepGetGitlab')
         if config.plugins.iptvplayer.gitlab_repo.value == '1':
             nick = 'mosz_nowy'
-        else:
+        elif config.plugins.iptvplayer.gitlab_repo.value == '2':
             nick = 'zadmario'
+        elif config.plugins.iptvplayer.gitlab_repo.value == '3':
+            nick = 'maxbambi'
         self.clearTmpData()
         sts, msg = self.createPath(self.tmpDir)
         if not sts:
@@ -707,8 +709,10 @@ class UpdateMainAppImpl(IUpdateObjectInterface):
         printDBG('UpdateMainAppImpl.__serversListGitlabFinished url[%s], filePath[%s] ' % (url, filePath))
         if config.plugins.iptvplayer.gitlab_repo.value == '1':
             nick = 'mosz_nowy'
-        else:
+        elif config.plugins.iptvplayer.gitlab_repo.value == '2':
             nick = 'zadmario'
+        elif config.plugins.iptvplayer.gitlab_repo.value == '3':
+            nick = 'maxbambi'
         if DMHelper.STS.DOWNLOADED != status:
             msg = _("Problem with downloading the packet:\n[%s].") % url
             self.stepFinished(-1, msg)
