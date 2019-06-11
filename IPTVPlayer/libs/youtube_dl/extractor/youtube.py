@@ -635,7 +635,10 @@ class YoutubeIE(object):
                         url_item['url'] += '&signature=' + signature
                     elif 's' in url_data:
                         url_item['esign'] = url_data['s']
-                        url_item['url'] += '&signature={0}'
+                        if 'sp' in url_data: 
+                            url_item['url'] += '&%s={0}' % url_data['sp']
+                        else:
+                            url_item['url'] += '&signature={0}'
                     if not 'ratebypass' in url_item['url']:
                         url_item['url'] += '&ratebypass=yes'
                     url_map[url_data['itag']] = url_item
