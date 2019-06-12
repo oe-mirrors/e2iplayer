@@ -634,7 +634,7 @@ class YoutubeIE(object):
                         signature = url_data['sig']
                         url_item['url'] += '&signature=' + signature
                     elif 's' in url_data:
-                        url_item['esign'] = url_data['s']
+                        url_item['esign'] = _unquote(url_data['s'])
                         if 'sp' in url_data: 
                             url_item['url'] += '&%s={0}' % url_data['sp']
                         else:
