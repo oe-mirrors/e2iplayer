@@ -201,7 +201,7 @@ config.plugins.iptvplayer.autoCheckForUpdate = ConfigYesNo(default = True)
 config.plugins.iptvplayer.updateLastCheckedVersion = ConfigText(default = "00.00.00.00", fixed_size = False)
 config.plugins.iptvplayer.fakeUpdate               = ConfigSelection(default = "fake", choices = [("fake", "  ")])
 config.plugins.iptvplayer.downgradePossible        = ConfigYesNo(default = False)
-config.plugins.iptvplayer.possibleUpdateType       = ConfigSelection(default = "precompiled", choices = [("sourcecode", _("with source code")),("precompiled", _("precompiled")), ("all", _("all types"))]) 
+config.plugins.iptvplayer.possibleUpdateType       = ConfigSelection(default = "all", choices = [("sourcecode", _("with source code")),("precompiled", _("precompiled")), ("all", _("all types"))]) 
 
 # Hosts lists
 config.plugins.iptvplayer.fakeHostsList = ConfigSelection(default = "fake", choices = [("fake", "  ")])

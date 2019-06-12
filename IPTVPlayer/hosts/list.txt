@@ -63,8 +63,6 @@ hostfilmpalast
 hostfilmpertutti
 hostfilmstreamhdit
 hostfilmstreamvkcom
-hostfilmydokumentalneeu
-hostfokustv
 hostforjatn
 hostfreediscpl
 hostgamatocom
@@ -90,7 +88,6 @@ hostitvcom
 hostkabarety
 hostkijknl
 hostkinogo
-hostkinomanco
 hostkinotan
 hostkinox
 hostkissanimeto
@@ -119,7 +116,6 @@ hostmusicbox
 hostmusicmp3ru
 hostmyfreemp3
 hostmythewatchseries
-hostnaszekinotv
 hostngolos
 hostninateka
 hostnuteczki
@@ -167,7 +163,6 @@ hostted
 hosttfarjocom
 hostthewatchseriesto
 hosttreetv
-hostturcjatv
 hosttvgrypl
 hosttvjworg
 hosttvn24
