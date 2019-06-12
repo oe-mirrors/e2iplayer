@@ -9,7 +9,7 @@ from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, Is
 from Plugins.Extensions.IPTVPlayer.components.asynccall import IsMainThread, IsThreadTerminated, SetThreadKillable
 from Plugins.Extensions.IPTVPlayer.tools.e2ijs import js_execute_ext
 from Plugins.Extensions.IPTVPlayer.libs import ph
-from Plugins.Extensions.IPTVPlayer.libs.e2ijson import loads as json_loads
+from Plugins.Extensions.IPTVPlayer.libs.e2ijson import loads as json_loads, dumps as json_dumps
 ###################################################
 # FOREIGN import
 ###################################################
@@ -1011,38 +1011,34 @@ class common:
                                 break
 
                         decoded = ''
-                        js_params = [{'path':GetJSScriptFile('cf.byte')}]
+                        
+                        #first part of code
+                        js_params = [{'path' : GetJSScriptFile('cf_max.byte')}]
+                        #particular div element
+                        tmp = ph.findall(verData, ('<div', '>', 'hidden'), '</div>', flags=ph.START_S)
+                        for idx in range(1, len(tmp), 2):
+                            name_id = ph.getattr(tmp[(idx - 1)], 'id', flags=ph.I)
+                            if name_id:
+                                value_id = tmp[idx]
+                                code2 = "document.children.push ( new element('', '%s', 'div')); document.children[6].innerHTML ='%s';" % (name_id, value_id)
+                                                                
+                        #printDBG(code2)
+                        #script part in variable called 'dat'
 
-                        if 'hdfilme' in domain:
-                            dat = dat.replace("<a href='/'>","<a href='https://www.hdfilme.net/'>")
-                        elif 'hd-streams' in domain:
-                            dat = dat.replace("<a href='/'>","<a href='https://hd-streams.org/'>")
-                        else:
-                            if domain[:7] == 'http://':
-                                domain = domain[:4] + "s://" + domain[7:]
-                            
-                            if domain[-1] != "/": 
-                                    domain = domain + "/"
-
-                            dat = dat.replace("<a href='/'>","<a href='" + domain + "'>")
-
-                        printDBG(">>>>>>>>>>>>>>>>>>>")
+                        dat = dat.replace('(function(){\n    var a = function() {try{return !!window.addEventListener} catch(e) {return !1} },\n    b = function(b, c) {a() ? document.addEventListener("DOMContentLoaded", b, c) : document.attachEvent("onreadystatechange", b)};\n    b(function()','function pippo()')
+                        dat = dat.replace('f.submit()','print(a.value)')
+                        dat = dat.replace('setTimeout(function(){','')
+                        dat = dat.replace(', 4000);\n    }, false);\n  })()','')
+                        dat = dat.replace("t = document.createElement('div');\n        t.innerHTML=\"<a href='/'>x</a>\";\n        t = t.firstChild.href;",'t="%domain%";').replace('%domain%',domain)
                         printDBG(dat)
-                        printDBG(">>>>>>>>>>>>>>>>>>>")
-
-                        js_params.append({'code':"var location = {hash:''}; var iptv_domain='%s';\n%s\niptv_fun();" % (domain, dat)}) #cfParams['domain']
+                        
+                        js_params.append({'code': "%s\n%s\n\npippo(); " % (code2, dat)})
                         ret = js_execute_ext( js_params )
-                        decoded = json_loads(ret['data'].strip())
-                        
-                        verData = ph.find(verData, ('<form', '>', 'id="challenge-form"'), '</form>')[1]
-                        printDBG(">>>>>>>>>>>>>>>>>>>")
-                        printDBG(verData)
-                        printDBG("<<<<<<<<<<<<<<<<<<<")
-                        verUrl =  _getFullUrl( ph.getattr(verData, 'action'), domain)
+                        printDBG(ret);
                         get_data = dict(re.findall(r'<input[^>]*name="([^"]*)"[^>]*value="([^"]*)"[^>]*>', verData))
-                        get_data['jschl_answer'] = decoded['answer']
+                        get_data['jschl_answer'] = ret['data'].replace('\n','')
                         
-                        verUrl += '?'
+                        verUrl =  _getFullUrl( ph.getattr(verData, 'action'), domain) + "?"
                         for key in get_data:
                             verUrl += '%s=%s&' % (key, get_data[key])
                         verUrl = _getFullUrl( ph.getattr(verData, 'action'), domain) + '?s=%s&jschl_vc=%s&pass=%s&jschl_answer=%s' % (get_data['s'], get_data['jschl_vc'], get_data['pass'], get_data['jschl_answer'])
@@ -1057,11 +1053,11 @@ class common:
                         params2['header'].update({'Referer':url, 'User-Agent':cfParams.get('User-Agent', ''), 'Accept-Encoding':'text'})
                         printDBG("Time spent: [%s]" % (time.time() - start_time))
                         if current == 1:
-                            GetIPTVSleep().Sleep(1 + (decoded['timeout'] / 1000.0)-(time.time() - start_time))
+                            GetIPTVSleep().Sleep(4 -(time.time() - start_time))
                         else:
-                            GetIPTVSleep().Sleep((decoded['timeout'] / 1000.0))
+                            GetIPTVSleep().Sleep(4)
                         printDBG("Time spent: [%s]" % (time.time() - start_time))
-                        printDBG("Timeout: [%s]" % decoded['timeout'])
+                        printDBG("Timeout: [%s]" % 4000)
                         sts, data = self.getPage(verUrl, params2, post_data)
                 except Exception:
                     printExc()
