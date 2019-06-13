@@ -380,7 +380,7 @@ class UpdateMainAppImpl(IUpdateObjectInterface):
         self.list.append( self.__getStepDesc(title = _("Checking version."),               execFunction = self.stepCheckFiles ) )
         self.list.append( self.__getStepDesc(title = _("Removing unnecessary files."),     execFunction = self.stepRemoveUnnecessaryFiles, breakable=True, ignoreError=True) )
         self.list.append( self.__getStepDesc(title = _("Confirmation of installation."),   execFunction = self.stepConfirmInstalation) )
-        self.list.append( self.__getStepDesc(title = _("Removing the old version."),       execFunction = self.stepRemoveOldVersion, breakable=False, ignoreError=True, repeatCount=2) )
+        #self.list.append( self.__getStepDesc(title = _("Removing the old version."),       execFunction = self.stepRemoveOldVersion, breakable=False, ignoreError=True, repeatCount=2) )
         self.list.append( self.__getStepDesc(title = _("Installing new version."),         execFunction = self.stepInstallNewVersion,   breakable=False, ignoreError=False, repeatCount=3) )
         return self.list
         
@@ -647,9 +647,9 @@ class UpdateMainAppImpl(IUpdateObjectInterface):
                 self.stepFinished(-1, _("Installation has been aborted."))
         
     def stepRemoveOldVersion(self):
-        #cmd = 'rm -rf "%s"/*' % ( os_path.join(self.ExtensionPath, 'IPTVPlayer') )
+        cmd = 'rm -rf "%s"/*' % ( os_path.join(self.ExtensionPath, 'IPTVPlayer') )
         printDBG('UpdateMainAppImpl.stepRemoveOldVersion cmd[%s]' % cmd)
-        #self.cmd = iptv_system( cmd, self.__removeOldVersionCmdFinished )
+        self.cmd = iptv_system( cmd, self.__removeOldVersionCmdFinished )
 
     def stepInstallNewVersion(self):
         cmd = ''
