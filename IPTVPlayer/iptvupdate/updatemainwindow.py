@@ -647,9 +647,9 @@ class UpdateMainAppImpl(IUpdateObjectInterface):
                 self.stepFinished(-1, _("Installation has been aborted."))
         
     def stepRemoveOldVersion(self):
-        cmd = 'rm -rf "%s"/*' % ( os_path.join(self.ExtensionPath, 'IPTVPlayer') )
+        #cmd = 'rm -rf "%s"/*' % ( os_path.join(self.ExtensionPath, 'IPTVPlayer') )
         printDBG('UpdateMainAppImpl.stepRemoveOldVersion cmd[%s]' % cmd)
-        self.cmd = iptv_system( cmd, self.__removeOldVersionCmdFinished )
+        #self.cmd = iptv_system( cmd, self.__removeOldVersionCmdFinished )
 
     def stepInstallNewVersion(self):
         cmd = ''
