@@ -8006,16 +8006,20 @@ class pageParser(CaptchaHelper):
 
     def parserOPENLOADIO(self, baseUrl):
         printDBG('parserOPENLOADIO baseUrl[%r]' % baseUrl)
-        HTTP_HEADER = {'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.11 (KHTML, like Gecko) Chrome/23.0.1271.64 Safari/537.11', 'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8', 
-           'Accept-Charset': 'ISO-8859-1,utf-8;q=0.7,*;q=0.3', 
-           'Accept-Encoding': 'none', 
-           'Accept-Language': 'en-US,en;q=0.8'}
-        referer = strwithmeta(baseUrl).meta.get('Referer', '')
-        if referer:
-            HTTP_HEADER['Referer'] = referer
+        HTTP_HEADER = {
+            'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/73.0.3683.103 Safari/537.36',
+            'Accept': 'text/html', 
+            #'Accept-Charset': 'ISO-8859-1,utf-8;q=0.7,*;q=0.3', 
+            'Accept-Encoding': 'gzip', 
+            'Accept-Language': 'en-US,en;q=0.8'
+        }
+        #referer = strwithmeta(baseUrl).meta.get('Referer', '')
+        #if referer:
+        #    HTTP_HEADER['Referer'] = referer
         sts, data = self.cm.getPage(baseUrl, {'header': HTTP_HEADER})
         if not sts:
             return False
+
         orgData = data
         msg = clean_html(ph.find(data, ('<div', '>', 'blocked'), '</div>', flags=0)[1])
         if msg or 'content-blocked' in data:
@@ -8040,25 +8044,21 @@ class pageParser(CaptchaHelper):
                 subTracks.append({'title': subLabel + '_' + subLang, 'url': subUrl, 'lang': subLang, 'format': 'srt'})
 
         videoUrl = ''
-        #printDBG(data)
-        tmp = ph.findall(data, ('<div', '>', 'display:none'), '</div>')
-        printDBG('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>')
-        printDBG(str(tmp))
+        tmp = ph.findall(data, '<div class=""' ,'</div>')
         for item in tmp:
+            printDBG(item)
             encTab = re.compile('<[^>]+?id="[^"]*?"[^>]*?>([^<]+?)<').findall(data)
             for e in encTab:
                 if len(e) > 40:
                     encTab.insert(0, e)
+                    printDBG("e ---->>>>" + e )
                     break
 
-        printDBG('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>')
-        printDBG(str(encTab))
-                    
         def __decode_k(enc, jscode):
             decoded = ''
             try:
                 js_params = [{'code': 'var id = "%s";' % enc}]
-                js_params.append({'path': GetJSScriptFile('openload3.byte')})
+                js_params.append({'path': GetJSScriptFile('openload.byte')})
                 js_params.append({'name': 'openload', 'code': '%s; print(decoded);' % jscode})
                 ret = js_execute_ext(js_params)
                 if ret['sts'] and 0 == ret['code']:
