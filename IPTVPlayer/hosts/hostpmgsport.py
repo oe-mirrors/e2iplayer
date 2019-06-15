@@ -60,14 +60,23 @@ class PmgSport(CBaseHostClass):
                 printDBG(jdata[0])
                 jdata = json_loads("{" + jdata[0] + "}")
                 if 'bitrates' in jdata:
-                    for v in jdata["bitrates"]:
-                        for vv in jdata['bitrates'][v]:
-                            printDBG("--> link " + v + "  " + vv)
-                            if v=='mp4':
+                    if 'mp4' in jdata['bitrates']:
+                        v = jdata['bitrates']['mp4']
+                        if isinstance(v,list):
+                            for vv in v:
                                 name = re.findall("/(\w*?).mp4", vv)
                                 linksTab.append({'url': vv, 'name': name[0] })
-                            else:
-                                linksTab.append({'url': vv, 'name': 'link' })
+                        else:
+                            name = re.findall("/(\w*?).mp4", v)
+                            linksTab.append({'url': v, 'name': name[0] })
+                            
+                    if 'hls' in jdata['bitrates']:
+                        v = jdata['bitrates']['hls']
+                        if isinstance(v,list): 
+                            for vv in v:
+                                linksTab.extend(getDirectM3U8Playlist(vv, checkExt=False, variantCheck=True, checkContent=True, sortWithMaxBitrate=99999999))  
+                        else:
+                            linksTab.extend(getDirectM3U8Playlist(v, checkExt=False, variantCheck=True, checkContent=True, sortWithMaxBitrate=99999999))  
                             
         return linksTab
 
@@ -176,4 +185,4 @@ class IPTVHost(CHostBase):
 
     def __init__(self):
         CHostBase.__init__(self, PmgSport(), True, [])
-    
+   
