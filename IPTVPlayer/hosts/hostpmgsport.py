@@ -135,7 +135,11 @@ class PmgSport(CBaseHostClass):
             desc = re.findall("div class=\"entry-excerpt\">\n(.*?)</div>", i)[0]
             desc = HTMLParser.HTMLParser().unescape(desc).encode('utf-8').strip()
             
-            icon = re.findall("<img class=\"lazy\" data-original=\"(.*?)\"",i)[0]
+            icon = re.findall("<img class=\"lazy\" data-original=\"(.*?)\"",i)
+            if len(icon) > 0:
+                icon = icon[0]
+            else:
+                icon = self.DEFAULT_ICON_URL
             self.addVideo({'title': title , 'url': url, 'desc': desc, 'icon': icon })
             
         next = re.findall("<li><a class=\"next page-numbers\" href=\"(.*?)\"", data)
