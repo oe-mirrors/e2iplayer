@@ -116,11 +116,11 @@ class FFMPEGDownloader(BaseDownloader):
             try:
                 urlsKeys = self.url.split('merge://', 1)[1].split('|')
                 for item in urlsKeys:
-                    cmdTab.extend(['-i', self.url.meta[item]])
+                    cmdTab.extend(['-reconnect', '1', '-i', self.url.meta[item]])
             except Exception:
                 printExc()
         else:
-            cmdTab.extend(['-i', url])
+            cmdTab.extend(['-reconnect', '1', '-i', url])
         
         cmdTab.extend(['-c:v', 'copy', '-c:a', 'copy', '-f', tmpUri.meta.get('ff_out_container', self.ffmpegOutputContener), self.filePath])
         

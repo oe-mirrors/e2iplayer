@@ -404,6 +404,8 @@ class EkinoTv(CBaseHostClass):
                         urlParams['header']['Referer'] = baseUrl
                         sts, data = self.getPage(vUrl, urlParams, {'verify':token})
                     else:
+                        SetIPTVPlayerLastHostError(_('Link protected with google recaptcha v2.')+'\n wejdź na https://ekino-tv.pl/ i odpal dowolny film przez przeglądarke na komputerze.')
+                        return []
                         break
             
             sts, data = self.getPage(url, urlParams)

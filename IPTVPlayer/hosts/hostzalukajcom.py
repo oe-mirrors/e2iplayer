@@ -256,7 +256,7 @@ class ZalukajCOM(CBaseHostClass):
         printDBG("ZalukajCOM.listSearchResult cItem[%s], searchPattern[%s] searchType[%s]" % (cItem, searchPattern, searchType))
         #searchPattern = urllib.quote_plus(searchPattern)
         post_data = {'searchinput':searchPattern}
-        szukaj = 'https://zalukaj.com/v2/ajax/load.search?html=1&q=%s' % searchPattern
+        szukaj = 'https://zalukaj.com/ajax/load.search?html=1&q=%s' % searchPattern
         params = {'name':'category', 'category':'films_list', 'url': szukaj, 'post_data':None}
         self.listFilms(params)
     
