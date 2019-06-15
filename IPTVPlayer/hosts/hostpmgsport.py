@@ -16,6 +16,7 @@ from Plugins.Extensions.IPTVPlayer.libs.urlparserhelper import getDirectM3U8Play
 ###################################################
 import re
 import urllib
+import HTMLParser
 from datetime import datetime, tzinfo
 ###################################################
 
@@ -29,28 +30,118 @@ class PmgSport(CBaseHostClass):
 
         CBaseHostClass.__init__(self)
 
-        self.MAIN_URL = "http://www.pmgsport/"
-
+        self.MAIN_URL = "https://www.pmgsport.it/"
+        self.DEFAULT_ICON_URL = "https://yt3.ggpht.com/a/AGF-l781bCdM1exHda4m0Ih0VB7phr0EJOPNKxKOnw=s288-mo-c-c0xffffffff-rj-k-no"
+        self.MENU_ITEMS={}
         self.defaultParams = {'header': {'User-Agent' : 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/73.0.3683.103 Safari/537.36'}}
         
     def getPage(self, url, addParams = {}, post_data = None):
         if addParams == {}:
             addParams = dict(self.defaultParams)
-        #printDBG(self.defaultParams)
         return self.cm.getPage(url, addParams, post_data)
 
     
     def getLinksForVideo(self, cItem):
         printDBG("PmgSport.getLinksForVideo [%s]" % cItem)
         
+        linksTab=[]
+        
+        sts, data = self.getPage(cItem['url'])
+        if not sts: return
+        
+        vm_url = re.findall("<iframe src=['\"](.*?)['\"]", data)
+        if len(vm_url) > 0:
+            sts, data = self.getPage(vm_url[0])
+            if not sts: return linksTab
+            
+            jdata = re.findall("var settings=\{(.*?)\};", data)
+            if len(jdata)>0:
+                printDBG("%%%%%%%")
+                printDBG(jdata[0])
+                jdata = json_loads("{" + jdata[0] + "}")
+                if 'bitrates' in jdata:
+                    for v in jdata["bitrates"]:
+                        for vv in jdata['bitrates'][v]:
+                            printDBG("--> link " + v + "  " + vv)
+                            if v=='mp4':
+                                name = re.findall("/(\w*?).mp4", vv)
+                                linksTab.append({'url': vv, 'name': name[0] })
+                            else:
+                                linksTab.append({'url': vv, 'name': 'link' })
+                            
         return linksTab
 
    
-    def listMainMenu(self, cItem):
-        printDBG("PmgSport.getLinksForVideo [%s]" % cItem)
+    def listMainMenu(self):
+        printDBG("PmgSport.listMainMenu")
+        sts, data = self.getPage(self.MAIN_URL)
+        if not sts: return
+        
+        
+        menu_h = ph.findall(data, "id=\"ts_menu_topic\"", "<div id=\"ts-mobile-menu\"")
+        sport_h = ph.findall(menu_h[0], "<li id=\"menu-item-", "</li>")
+        
+        topsports=[]
+        for s in sport_h:
+            url, title = re.findall("<a href=\"(.*?)\">(.*?)</a", s)[0]
+            title = HTMLParser.HTMLParser().unescape(title).encode('utf-8')
+            topsports.append(title)
+            
+            self.addDir({'category': 'sport', 'title': title , 'url': url, 'text_color': 'yellow'})              
+        
+        menu = ph.findall(data, "<ul id=\"menu-main-header\" class=\"main-menu \">", "</ul></nav>")   
+        #printDBG(menu[0])
+        sports = ph.findall(menu[0],"<li id=\"menu-item-", "</ul>")
+                           
+        for s in sports:
+            items = ph.findall(s, "<li id=\"menu-item-", "</a>")
+            url, title = re.findall("<a href=\"(.*?)\">(.*?)</a", items[0])[0]
+            title = HTMLParser.HTMLParser().unescape(title).encode('utf-8')
+            if not title in topsports:
+                self.addDir({'category': 'sport', 'title': title , 'url': url})              
 
+            sport_items=[]
+            for i in range(1,len(items)):
+                url, title_s = re.findall("<a href=\"(.*?)\">(.*?)</a", items[i])[0]
+                title_s = HTMLParser.HTMLParser().unescape(title_s).encode('utf-8')
+                sport_items.append({'category': 'sport_subitem', 'title': title_s , 'url': url })
+                
+            self.MENU_ITEMS[title]=sport_items
         
+        #printDBG(str(self.MENU_ITEMS))
+    
+    def listSportItems(self,cItem):
+        printDBG("PmgSport.listMainMenu")
         
+        category = self.currItem.get("category", '')
+        title     = self.currItem.get("title", '')
+        url     = self.currItem.get("url", '')
+
+        if category == 'sport':
+            if title in self.MENU_ITEMS:
+                for i in self.MENU_ITEMS[title]:
+                    self.addDir({'category': 'sport_subitem', 'title': i['title'] , 'url': i['url'] })
+                    
+        sts, data = self.getPage(url)
+        if not sts: return
+        
+        items = ph.findall(data, "<article ", "</article>")   
+        for i in items:
+            #printDBG(i)
+            #printDBG("%%%%%%%%%%%%%%%%%")
+            url, title = re.findall("<h3 class=\"entry-title\" >\n.*<a href=\"(.*?)\">\n(.*?)<i", i)[0]
+            title = HTMLParser.HTMLParser().unescape(title).encode('utf-8').strip()
+            
+            desc = re.findall("div class=\"entry-excerpt\">\n(.*?)</div>", i)[0]
+            desc = HTMLParser.HTMLParser().unescape(desc).encode('utf-8').strip()
+            
+            icon = re.findall("<img class=\"lazy\" data-original=\"(.*?)\"",i)[0]
+            self.addVideo({'title': title , 'url': url, 'desc': desc, 'icon': icon })
+            
+        next = re.findall("<li><a class=\"next page-numbers\" href=\"(.*?)\"", data)
+        if len(next)>0 :
+            self.addMore({'category': 'sport_subitem', 'title': _('Next page') , 'url': next[0] })
+    
     def handleService(self, index, refresh = 0, searchPattern = '', searchType = ''):
         printDBG('PmgSport.handleService start')
         
@@ -68,7 +159,9 @@ class PmgSport(CBaseHostClass):
         
         #MAIN MENU
         if name == None:
-            self.listMainMenu({'name':'category'})
+            self.listMainMenu()
+        elif category == 'sport' or category == 'sport_subitem':
+            self.listSportItems(self.currItem)
         else:
             printExc()
         
