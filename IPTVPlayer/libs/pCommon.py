@@ -1016,6 +1016,7 @@ class common:
                         js_params = [{'path' : GetJSScriptFile('cf_max.byte')}]
                         #particular div element
                         tmp = ph.findall(verData, ('<div', '>', 'hidden'), '</div>', flags=ph.START_S)
+                        code2=''
                         for idx in range(1, len(tmp), 2):
                             name_id = ph.getattr(tmp[(idx - 1)], 'id', flags=ph.I)
                             if name_id:
