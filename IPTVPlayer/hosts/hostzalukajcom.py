@@ -53,7 +53,7 @@ class ZalukajCOM(CBaseHostClass):
     USER_AGENT = 'Mozilla/5.0 (X11; U; Linux i686; en-US; rv:1.9.2.18) Gecko/20110621 Mandriva Linux/1.9.2.18-0.1mdv2010.2 (2010.2) Firefox/3.6.18'
     HEADER = {'User-Agent': USER_AGENT, 'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8'}
     AJAX_HEADER = dict(HEADER)
-    AJAX_HEADER.update( {'X-Requested-With': 'XMLHttpRequest', 'Connection': 'keep-alive', 'Pragma': 'no-cache', 'Cache-Control': 'no-cache'} )
+    AJAX_HEADER.update( {'X-Requested-With': 'XMLHttpRequest', 'Origin': 'https://zalukaj.com/', 'Referer': 'https://zalukaj.com/'} )
     
     DOMAIN     = 'zalukaj.com'
     MAIN_URL   = 'https://' + DOMAIN + '/'
@@ -67,16 +67,16 @@ class ZalukajCOM(CBaseHostClass):
                     {'category':'search_history', 'title':_('Search history')} ]
                     
     FILMS_SUB_MENU = [{ 'category':'films_category', 'title':'Kategorie',        'url':MAIN_URL },
-                      { 'category':'films_list',     'title':'Ostatnio oglądane', 'url':MAIN_URL + '/cache/lastseen.html' },
-                      { 'category':'films_list',     'title':'Ostatnio dodane',   'url':MAIN_URL + '/cache/lastadded.html'},
-                      { 'category':'films_popular',  'title':'Najpopularniejsze', 'url':'' } ]
+                      { 'category':'films_list',     'title':'Ostatnio oglądane', 'url':MAIN_URL + '/ajax/load.videos?load=2&a=index&' },
+                      { 'category':'films_list',     'title':'Ostatnio dodane',   'url':MAIN_URL + '/ajax/load.videos?load=1&a=index&'},
+                      { 'category':'films_popular',  'title':'Najpopularniejsze', 'url':MAIN_URL + '/ajax/load.videos?load=0&a=index&' } ]
                     
-    FILMS_POPULAR = [{ 'category':'films_list', 'title':'Wczoraj',        'url':MAIN_URL + '/cache/wyswietlenia-wczoraj.html' },
-                     { 'category':'films_list', 'title':'Ostatnie 7 dni', 'url':MAIN_URL + '/cache/wyswietlenia-tydzien.html' },
-                     { 'category':'films_list', 'title':'W tym miesiącu', 'url':MAIN_URL + '/cache/wyswietlenia-miesiac.html'} ]
+    FILMS_POPULAR = [{ 'category':'films_list', 'title':'Wczoraj',        'url':MAIN_URL + '/ajax/load.videos?load=0&a=index&' },
+                     { 'category':'films_list', 'title':'Ostatnie 7 dni', 'url':MAIN_URL + '/ajax/load.videos?load=0.2&a=index&' },
+                     { 'category':'films_list', 'title':'W tym miesiącu', 'url':MAIN_URL + '/ajax/load.videos?load=0.3&a=index&'} ]
                      
     SERIES_SUB_MENU = [{ 'category':'series_list',   'title':'Lista',     'url':MAIN_URL },
-                       { 'category':'series_updated','title':'Ostatnio zaktualizowane', 'url':MAIN_URL + '/seriale' } ]
+                       { 'category':'series_updated','title':'Najpopularniejsze', 'url':MAIN_URL + '/ajax/load.videos?load=0&a=series&' } ]
                     
     LANGS_TAB = [{ 'title':'Wszystkie',     'lang':'wszystkie'      },
                  { 'title':'Z lektorem',    'lang':'tlumaczone'     },
@@ -94,7 +94,10 @@ class ZalukajCOM(CBaseHostClass):
         
     def _getPage(self, url, http_params_base={}, params=None, loggedIn=None):
         if None == loggedIn: loggedIn=self.loggedIn
-        HEADER = ZalukajCOM.HEADER
+        if '/ajax/' in url:
+            HEADER = ZalukajCOM.AJAX_HEADER
+        else:
+            HEADER = ZalukajCOM.HEADER
         if loggedIn: http_params = {'header': HEADER, 'use_cookie': True, 'save_cookie': True, 'load_cookie': True, 'cookiefile': self.COOKIE_FILE}
         else: http_params = {'header': HEADER}
         http_params.update(http_params_base)
@@ -118,6 +121,10 @@ class ZalukajCOM(CBaseHostClass):
         try:
             if 'Duze obciazenie!' in data:
                 message = self.cleanHtmlStr(re.compile('<script.+?</script>', re.DOTALL).sub("", data))
+                GetIPTVNotify().push(message, 'info', 5)
+                SetIPTVPlayerLastHostError(message)
+            if '/sms' in self.cm.meta['url']:
+                message = 'Duze obciazenie!'
                 GetIPTVNotify().push(message, 'info', 5)
                 SetIPTVPlayerLastHostError(message)
         except Exception:
@@ -170,13 +177,19 @@ class ZalukajCOM(CBaseHostClass):
             url  = ZalukajCOM.FILMS_URL % (cat, sort, cItem['lang'], page)
             extract = True
         except Exception: pass
-        sts, data = self._getPage(url, {}, cItem.get('post_data', None))
-        #self.cm.ph.writeToFile("/home/sulge/zalukaj.html", data)
+        post_data = None
+        if '/ajax/load.videos' in url:
+            a = self.cm.ph.getSearchGroups(url, 'a=([^"]+?)&', 1)[0]
+            load = self.cm.ph.getSearchGroups(url, 'load=([^"]+?)&', 1)[0]
+            post_data = {'a': a, 'load': load}
+            url = url.split('?')[0]
+        sts, data = self._getPage(self.getFullUrl(url), {}, post_data)
         if not sts: return
-        printDBG("ZalukajCOM data "+data)
+        printDBG("ZalukajCOM data %s" % data)
 
         sp = '<div class="tivief4">'
-        if not sp in data: sp = '<div class="details">'
+        if not sp in data: sp = '<div class="row">'
+
         if extract:
             if self.cm.ph.getSearchGroups(data, 'strona\-(%d)[^0-9]' % (page+1))[0] != '':
                 nextPage = True
@@ -184,11 +197,18 @@ class ZalukajCOM(CBaseHostClass):
             if m2 not in data: m2 = '<div class="doln">'
             data = self.cm.ph.getDataBeetwenMarkers(data, sp, m2, True)[1]
         data = data.split(sp)
+        #printDBG("ZalukajCOM data %s" % data)
+
         if len(data): del data[0]
         for item in data:
+            printDBG("ZalukajCOM item %s" % item)
+
             year = self.cleanHtmlStr( self.cm.ph.getDataBeetwenMarkers(item, '<p>', '</p>', False)[1] )
+            if '' == year: year = self.cleanHtmlStr( self.cm.ph.getDataBeetwenMarkers(item, 'gen">', '<', False)[1] )
             desc = self.cleanHtmlStr( self.cm.ph.getDataBeetwenMarkers(item, '</h3>', '</div>', False)[1] )
+            if '' == desc: desc = self.cleanHtmlStr( self.cm.ph.getDataBeetwenMarkers(item, 'desc">', '<', False)[1] )
             more = self.cleanHtmlStr( self.cm.ph.getDataBeetwenMarkers(item, '<p class="few_more">', '</p>', False)[1] )
+            if '' == more: more = self.cleanHtmlStr( self.cm.ph.getDataBeetwenMarkers(item, 'tooltip" title="', '"', False)[1] )
             desc = '%s | %s | %s |' % (year, more, desc)
             icon = self.getFullUrl( self.cm.ph.getDataBeetwenMarkers(item, 'background-image:url(', ')', False)[1] )
             if '' == icon: icon = self.getFullUrl( self.cm.ph.getSearchGroups(item, 'src="([^"]+?)"', 1)[0] )
@@ -196,7 +216,14 @@ class ZalukajCOM(CBaseHostClass):
             title = self.cleanHtmlStr( self.cm.ph.getSearchGroups(item, 'title="([^"]+?)"', 1)[0] ) 
             title2 = self.cleanHtmlStr( self.cm.ph.getDataBeetwenMarkers(item, '<h3>', '</h3>', False)[1] ) 
             if len(title) < len(title2): title = title2
-            if '' != url: self.addVideo({'title':title, 'url':url, 'desc':desc, 'icon':icon})
+            if '/ajax/' in cItem['url']:
+                title = self.cleanHtmlStr( self.cm.ph.getSearchGroups(item, 'html"\stitle="([^"]+?)"', 1)[0].replace('\n','') ) 
+            if '/serial/' in url:
+                params = dict(cItem)
+                params.update({'category':'series_seasons', 'title':title +' (serial)', 'url':url, 'desc':desc, 'icon':icon})
+                self.addDir(params)
+            else:
+                if '' != url: self.addVideo({'title':title, 'url':url, 'desc':desc, 'icon':icon})
         if nextPage: 
             params = dict(cItem)
             params.update({'title':_('Next page'), 'page':page+1})
@@ -204,22 +231,25 @@ class ZalukajCOM(CBaseHostClass):
             
     def listUpdatedSeries(self, cItem, category):
         printDBG("ZalukajCOM.listUpdatedSeries")
-        sts, data = self._getPage(cItem['url'])
+        url = cItem['url']
+        post_data = None
+        if '/ajax/load.videos' in url:
+            a = self.cm.ph.getSearchGroups(url, 'a=([^"]+?)&', 1)[0]
+            load = self.cm.ph.getSearchGroups(url, 'load=([^"]+?)&', 1)[0]
+            post_data = {'a': a, 'load': load}
+            url = url.split('?')[0]
+        sts, data = self._getPage(url, {}, post_data)
         if not sts: return
-        sp = '<div class="latest tooltip">'
-        m2 = '<div class="doln">'
-        data = self.cm.ph.getDataBeetwenMarkers(data, sp, m2, True)[1]
-        data = data.split(sp)
-        if len(data): del data[0]
+        printDBG("ZalukajCOM.listUpdatedSeries data: %s" % data)
+        data = self.cm.ph.getAllItemsBeetwenMarkers(data, '<div class="row">', '<div class="clearfix">', False, False)
         for item in data:
+            gen  =  self.cm.ph.getSearchGroups(item, 'gen">([^>]+?)<', 1)[0]
             icon  = self.getFullUrl( self.cm.ph.getSearchGroups(item, 'src="([^"]+?)"', 1)[0] )
             url   = self.getFullUrl( self.cm.ph.getSearchGroups(item, '<a href="([^"]+?)"', 1)[0] )
-            title = self.cleanHtmlStr( self.cm.ph.getDataBeetwenMarkers(item, '<div class="latest_title">', '</div>', False)[1] ) 
-            desc  = self.cleanHtmlStr( self.cm.ph.getDataBeetwenMarkers(item, '<div class="latest_info">', '</div>', False)[1] )
+            title = self.cm.ph.getSearchGroups(item, 'html"\stitle="([^"]+?)"', 1)[0].replace('\n','')
+            desc  = self.cleanHtmlStr( self.cm.ph.getDataBeetwenMarkers(item, 'desc">', '</div>', False)[1] )
             if '' == url: continue
-            params = dict(cItem)
-            params.update({'category':category, 'title':title, 'url':url, 'desc':desc, 'icon':icon})
-            self.addDir(params)
+            self.addVideo({'title':title+'  '+gen, 'url':url, 'desc':gen+' | '+desc, 'icon':icon})
             
     def _listSeriesBase(self, cItem, category, m1, m2, sp):
         printDBG("ZalukajCOM._listSeriesBase")
