@@ -58,16 +58,18 @@ class PmgSport(CBaseHostClass):
             if len(jdata)>0:
                 printDBG("%%%%%%%")
                 printDBG(jdata[0])
-                jdata = json_loads("{" + jdata[0] + "}")
+                jdata_mod = "{" + jdata[0].replace("false","False").replace("true","True") + "}"
+                printDBG(jdata_mod)
+                jdata = eval(jdata_mod)
                 if 'bitrates' in jdata:
                     if 'mp4' in jdata['bitrates']:
                         v = jdata['bitrates']['mp4']
                         if isinstance(v,list):
                             for vv in v:
-                                name = re.findall("/(\w*?).mp4", vv)
+                                name = re.findall("/([\w-]*?).mp4", vv)
                                 linksTab.append({'url': vv, 'name': name[0] })
                         else:
-                            name = re.findall("/(\w*?).mp4", v)
+                            name = re.findall("/([\w-]*?).mp4", v)
                             linksTab.append({'url': v, 'name': name[0] })
                             
                     if 'hls' in jdata['bitrates']:
