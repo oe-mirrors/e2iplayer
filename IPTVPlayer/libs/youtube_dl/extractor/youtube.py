@@ -66,6 +66,11 @@ class CYTSignAlgoExtractor:
             name = name.split(',', 1)[-1].split('(', 1)[0].strip()
             if name and not any((c in name) for c in ''', '";()'''):
                 return name
+
+        name = ph.search(data, r'(?P<sig>[a-zA-Z0-9$]+)\s*=\s*function\(\s*a\s*\)\s*{\s*a\s*=\s*a\.split\(\s*""\s*\)')[0]
+        if name and not any((c in name) for c in ''', '"'''):
+            return name.strip()
+
         return ''
 
     def _findFunctionByMarker(self, marker):

@@ -119,7 +119,7 @@ class ZalukajCOM(CBaseHostClass):
         
         sts, data = self.cm.getPage(url, addParams, post_data)
         try:
-            if 'Duze obciazenie!' in data:
+            if 'Duze obciazenie!' in data and loggedIn==False:
                 message = self.cleanHtmlStr(re.compile('<script.+?</script>', re.DOTALL).sub("", data))
                 GetIPTVNotify().push(message, 'info', 5)
                 SetIPTVPlayerLastHostError(message)
@@ -201,14 +201,14 @@ class ZalukajCOM(CBaseHostClass):
 
         if len(data): del data[0]
         for item in data:
-            printDBG("ZalukajCOM item %s" % item)
+            #printDBG("ZalukajCOM item %s" % item)
 
             year = self.cleanHtmlStr( self.cm.ph.getDataBeetwenMarkers(item, '<p>', '</p>', False)[1] )
             if '' == year: year = self.cleanHtmlStr( self.cm.ph.getDataBeetwenMarkers(item, 'gen">', '<', False)[1] )
             desc = self.cleanHtmlStr( self.cm.ph.getDataBeetwenMarkers(item, '</h3>', '</div>', False)[1] )
             if '' == desc: desc = self.cleanHtmlStr( self.cm.ph.getDataBeetwenMarkers(item, 'desc">', '<', False)[1] )
             more = self.cleanHtmlStr( self.cm.ph.getDataBeetwenMarkers(item, '<p class="few_more">', '</p>', False)[1] )
-            if '' == more: more = self.cleanHtmlStr( self.cm.ph.getDataBeetwenMarkers(item, 'tooltip" title="', '"', False)[1] )
+            #if '' == more: more = self.cleanHtmlStr( self.cm.ph.getDataBeetwenMarkers(item, 'tooltip" title="', '"', False)[1] )
             desc = '%s | %s | %s |' % (year, more, desc)
             icon = self.getFullUrl( self.cm.ph.getDataBeetwenMarkers(item, 'background-image:url(', ')', False)[1] )
             if '' == icon: icon = self.getFullUrl( self.cm.ph.getSearchGroups(item, 'src="([^"]+?)"', 1)[0] )
@@ -284,8 +284,7 @@ class ZalukajCOM(CBaseHostClass):
         
     def listSearchResult(self, cItem, searchPattern, searchType):
         printDBG("ZalukajCOM.listSearchResult cItem[%s], searchPattern[%s] searchType[%s]" % (cItem, searchPattern, searchType))
-        #searchPattern = urllib.quote_plus(searchPattern)
-        post_data = {'searchinput':searchPattern}
+        self.tryTologin()
         szukaj = 'https://zalukaj.com/ajax/load.search?html=1&q=%s' % searchPattern
         params = {'name':'category', 'category':'films_list', 'url': szukaj, 'post_data':None}
         self.listFilms(params)
@@ -317,7 +316,7 @@ class ZalukajCOM(CBaseHostClass):
                 
             sts, data = self._getPage(url, loggedIn=loggedIn)
             if not sts: continue
-            
+
             # First check for premium link
             premium = False
             premiumLinks = self.cm.ph.getSearchGroups(data, '"bitrates"\t?\:\t?(\[[^]]+?\])', 1)[0]
@@ -358,6 +357,7 @@ class ZalukajCOM(CBaseHostClass):
                 # premium link should be checked at first, so if we have free link here break
                 if len(urlTab):
                     break
+
         return urlTab
         
     def captcha(self):
@@ -410,8 +410,12 @@ class ZalukajCOM(CBaseHostClass):
     def tryTologin(self):
         printDBG('tryTologin start')
         
-        config.plugins.iptvplayer.zalukajtv_login   
-        config.plugins.iptvplayer.zalukajtv_password
+        self.USER_AGENT = 'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:40.0) Gecko/20100101 Firefox/40.0'
+        self.HTTP_HEADER = {'User-Agent': self.USER_AGENT, 'DNT':'1', 'Accept': 'application/json, text/javascript, */*; q=0.01', 'Accept-Encoding':'gzip, deflate', 'Referer':'https://zalukaj.com/', 'Origin':'https://zalukaj.com/'}
+        self.defaultParams = {'header':self.HTTP_HEADER, 'with_metadata':True, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
+        httpParams = dict(self.defaultParams)
+        httpParams['header'] = dict(httpParams['header'])
+        httpParams['header']['Referer'] = 'https://zalukaj.com/'
         
         if None == self.loggedIn or self.login != config.plugins.iptvplayer.zalukajtv_login.value or\
             self.password != config.plugins.iptvplayer.zalukajtv_password.value:
@@ -429,30 +433,33 @@ class ZalukajCOM(CBaseHostClass):
             
             rm(self.COOKIE_FILE)
 
-            captcha = self.captcha()
             sts, msg = False, 'Problem z zalogowaniem użytkownika \n"%s".' % self.login
             post_data = None
-            sts, data  = self._getPage(ZalukajCOM.LOGIN_URL, params=post_data, loggedIn=True)
+            sts, data  = self._getPage('https://zalukaj.com/', params=post_data, loggedIn=True)
+            if self.cm.meta['url'] == 'https://zalukaj.com/limit': 
+                httpParams['header']['Referer'] = 'https://zalukaj.com/limit'
+                post_data = {'captcha': self.captcha()}
+                sts, data = self.cm.getPage('https://zalukaj.com/limit', httpParams, post_data)
             if sts:
-                printDBG(data)
+                #printDBG(data)
                 hash = self.cm.ph.getSearchGroups(data, '''name="hash" value=['"]([^'^"]+?)['"]''')[0].strip()
                 expires = self.cm.ph.getSearchGroups(data, '''"expires" value=['"]([^'^"]+?)['"]''')[0].strip()
-                post_data = {'expires': expires, 'hash': hash, 'username': self.login,'password': self.password, 'captcha': captcha} #%(expires,hash,self.login,self.password)
-                self.USER_AGENT = 'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:40.0) Gecko/20100101 Firefox/40.0'
-                self.HTTP_HEADER = {'User-Agent': self.USER_AGENT, 'DNT':'1', 'Accept': 'application/json, text/javascript, */*; q=0.01', 'Accept-Encoding':'gzip, deflate', 'Referer':'https://zalukaj.com/', 'Origin':'https://zalukaj.com/'}
-                self.defaultParams = {'header':self.HTTP_HEADER, 'with_metadata':True, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
-                httpParams = dict(self.defaultParams)
-                httpParams['header'] = dict(httpParams['header'])
-                httpParams['header']['Referer'] = 'https://zalukaj.com/'
+                post_data = {'expires': expires, 'hash': hash, 'username': self.login,'password': self.password} 
                 sts, data = self.cm.getPage('https://zalukaj.com/ajax/login', httpParams, post_data)
                 printDBG(data)
-                #printDBG( 'Host getInitList: chyba zalogowano do premium...' )
-                #if 'error' in data: captcha()
-                sts, data = self._getPage(url=self.getFullUrl('/libs/ajax/login.php?login=1'), loggedIn=True)
-                
-                if sts: 
-                    sts, data2 = self._getPage(self.getFullUrl('/libs/ajax/login.php?login=1'), loggedIn=True)
+                if '"error":[1' in data:
+                    post_data['captcha'] = self.captcha()
+                    sts, data = self.cm.getPage('https://zalukaj.com/ajax/login', httpParams, post_data)
+                    printDBG(data)
+                if '"succes' in data:
+                    cookies = []
+                    cj = self.cm.getCookie(self.COOKIE_FILE)
+                    for cookie in cj:
+                        if cookie.name == '__PHPSESSIDS':
+                            cookies.append('%s=%s;' % (cookie.name, cookie.value))
+                            printDBG(">> \t%s \t%s \t%s \t%s" % (cookie.domain, cookie.path, cookie.name, cookie.value) )
 
+                sts, data = self._getPage(url=self.getFullUrl('/libs/ajax/login.php?login=1'), loggedIn=True)
                 if sts:
                     printDBG(data)
                     sts,tmp = self.cm.ph.getDataBeetwenMarkers(data, '<p>Typ Konta:', '</p>', False)
