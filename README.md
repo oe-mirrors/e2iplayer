@@ -7,7 +7,7 @@ I have made some changes to italian section of plugin, that I'm interesting in.
 If master project reopens, I will send merge request to original one.
 Anyway, thank you @samsamsam for your huge work!
 
-@samsamsam argues that some parts of the code I have found in internet have been stolen from his private repo.
+@samsamsam argues that some parts of the code I have found on the internet have been stolen from his private repo.
 I'm working to change these ones with code written by myself.
 
 If you want to try my changes, simply copy the files in IPTVPlayer folder 
