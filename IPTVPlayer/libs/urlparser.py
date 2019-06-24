@@ -344,6 +344,7 @@ class urlparser:
                        'posiedze.pl':          self.pp.parserPOSIEDZEPL    ,
                        'powvideo.cc':          self.pp.parserPOWVIDEONET    ,
                        'powvideo.net':         self.pp.parserPOWVIDEONET    ,
+					   'primevideos.net':      self.pp.parserPRIMEVIDEOS,	
                        'privatestream.tv':     self.pp.parserPRIVATESTREAM ,
                        'promptfile.com':       self.pp.parserPROMPTFILE    ,
                        'publicvideohost.org':  self.pp.parsePUBLICVIDEOHOST,
@@ -11334,3 +11335,24 @@ class pageParser(CaptchaHelper):
                 vidTab.append({'name':title, 'url':u})
 
         return vidTab
+
+    def parserPRIMEVIDEOS(self, baseUrl):
+        printDBG("parserPRIMEVIDEOS baseUrl[%s]" % baseUrl)
+        #example  http://vdl.primevideos.net/files/rrlMJoCJMTDeCel.html
+
+        code = re.findall('/(\w*?).html',baseUrl)
+
+        vidTab = []
+        if len(code)>0:
+            code = code[0]
+            url = "http://server3.primevideos.net/x264/{code}/{code}.m3u8".replace("{code}",code)
+            url = strwithmeta(url, { 'Referer' : 'http://server3.primevideos.net/', 'Accept':'*/*', 'Accept-Encoding':'gzip' })
+
+            vidTab.extend(getDirectM3U8Playlist(url, checkExt=True, variantCheck=True, checkContent=True, sortWithMaxBitrate=99999999))
+
+        return vidTab
+
+
+
+
+
