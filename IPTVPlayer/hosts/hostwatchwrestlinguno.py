@@ -37,7 +37,7 @@ class WatchwrestlingUNO(CBaseHostClass):
                              {'category':'list_filters',  'title': 'NXT',                   'url':self.getFullUrl('category/latest-wwe-shows/nxt/')               },
                              {'category':'list_filters',  'title': 'Main Event',            'url':self.getFullUrl('category/main-event/')        },
                              {'category':'list_filters',  'title': 'UFC',                   'url':self.getFullUrl('category/ufc/')                   },
-                             {'category':'categories',    'title': 'Indy',                  'url':self.getFullUrl('category/indy/'), 'm1':'>Indy</a>'},
+                             {'category':'categories',    'title': 'Indy Wrestling',        'url':self.getFullUrl('category/indy/'), 'm1':'>Indy Wrestling</a>'},
                              {'category':'list_filters',  'title': 'NJPW',                  'url':self.getFullUrl('category/njpw-wrestling-shows/')                  },
                              {'category':'list_filters',  'title': _('Others'),             'url':self.getFullUrl('category/wrestling-archives/')    },
                              
@@ -136,32 +136,38 @@ class WatchwrestlingUNO(CBaseHostClass):
         self.serversCache = []
         matchObj = re.compile('href="([^"]+?)"[^>]*?>([^>]+?)</a>')
         data = self.cm.ph.getDataBeetwenMarkers(data, '<div class="entry-content rich-content">', '</div><!-- end .entry-content -->', False)[1]
-        printDBG(data);
-        sp = '<span style="font-size:'
-        if sp in data: 
-            data = data.split(sp)
-            sp = '</span>'
-        else: 
-            data = data.split('color:')
-            sp = '</p>'
-        
-        if len(data): del data[0]
-        printDBG(data)
-        for item in data:
-            sts, serverName = self.cm.ph.getDataBeetwenMarkers(item, '>', sp, False)
-            if not sts: continue
-            parts = matchObj.findall(item)
-            partsTab = []
+
+        if '<span style="font-size:' in data: 
+            data = data.split('<span style="font-size:')
+
+            printDBG(str(data))
+            if len(data): 
+                del data[0]
+            for item in data:
+                sts, serverName = self.cm.ph.getDataBeetwenMarkers(item, '>', '</span>', False)
+                if not sts: continue
+                parts = matchObj.findall(item)
+                partsTab = []
+                for part in parts:
+                    url = urlparse.urljoin(baseUrl, part[0])
+                    title = cItem['title'] + '[%s]' % part[1]
+                    partsTab.append({'title':title, 'url':strwithmeta(url, {'live':True, 'Referer':cItem['url']})})
+                if len(partsTab):
+                    params = dict(cItem)
+                    params.update( {'good_for_fav': False, 'category':nextCategory, 'title':serverName, 'part_idx':len(self.serversCache)} )
+                    self.addDir(params)
+                    self.serversCache.append(partsTab)
+        else:
+            parts = matchObj.findall(data)    
+            printDBG(str(parts))
             for part in parts:
                 url = urlparse.urljoin(baseUrl, part[0])
+                url = strwithmeta(url, {'live':True, 'Referer':cItem['url']})
                 title = cItem['title'] + '[%s]' % part[1]
-                partsTab.append({'title':title, 'url':strwithmeta(url, {'live':True, 'Referer':cItem['url']})})
-            if len(partsTab):
                 params = dict(cItem)
-                params.update( {'good_for_fav': False, 'category':nextCategory, 'title':serverName, 'part_idx':len(self.serversCache)} )
-                self.addDir(params)
-                self.serversCache.append(partsTab)
-        
+                params.update({'good_for_fav': True, 'title': title, 'url': url})
+                self.addVideo(params)            
+
     def listParts(self, cItem):
         printDBG("WatchwrestlingUNO.listParts [%s]" % cItem)
         partIdx = cItem['part_idx']
