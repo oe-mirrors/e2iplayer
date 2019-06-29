@@ -81,7 +81,7 @@ class IPTVHostsGroups:
                                                      'freediscpl','ekstraklasatv','kreskowkazone','kreskoweczki','bajeczkiorg','animeodcinki','playpuls','meczykipl','eskago', \
                                                      'tvjworg','artetv','dailymotion', 'vimeo', 'kabarety','twitchtv','hitboxtv','tvgrypl','chomikuj','fighttube','spryciarze','wgrane','wolnelekturypl','tvn24','ninateka', \
                                                      'maxtvgo','wpolscepl','wrealu24tv','wptv','interiatv','dokumentalnenet', 'serialeco','radiostacja','nuteczki','luxveritatis','tvproart','tvrepublika', \
-                                                     'turcjatv','christusvincit']
+                                                     'christusvincit','joemonsterorg']
         self.PREDEFINED_HOSTS['english']          = ['youtube','webstream','liveleak','bbciplayer','bbcsport','tvplayercom','itvcom','uktvplay','appletrailers','classiccinemaonline','seriesonline','mythewatchseries', \
                                                      'thewatchseriesto','icefilmsinfo','movienightws','yifytv', 'artetv',\
                                                      'hdpopcornscom','losmovies','solarmovie','putlockertvto','vumooch','movie4kto','cineto','cartoonhd','worldfree4u','9anime','kisscartoonme','kissanimeto','watchcartoononline','dailymotion', \
