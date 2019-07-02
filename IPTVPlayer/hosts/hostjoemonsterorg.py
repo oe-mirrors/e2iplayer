@@ -4,7 +4,7 @@
 ###################################################
 from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _
 from Plugins.Extensions.IPTVPlayer.components.ihost import CHostBase, CBaseHostClass
-from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc
+from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, rm
 from Plugins.Extensions.IPTVPlayer.libs.urlparserhelper import getDirectM3U8Playlist
 ###################################################
 
@@ -14,8 +14,28 @@ from Plugins.Extensions.IPTVPlayer.libs.urlparserhelper import getDirectM3U8Play
 import re
 try:    import json
 except Exception: import simplejson as json
+from Components.config import config, ConfigText, getConfigListEntry
 ###################################################
 
+###################################################
+# E2 GUI COMMPONENTS
+###################################################
+from Screens.MessageBox import MessageBox
+###################################################
+
+###################################################
+# Config options for HOST
+###################################################
+
+config.plugins.iptvplayer.joemonsterorg_login    = ConfigText(default = "", fixed_size = False)
+config.plugins.iptvplayer.joemonsterorg_password = ConfigText(default = "", fixed_size = False)
+
+def GetConfigList():
+    optionList = []
+    optionList.append(getConfigListEntry("Login:", config.plugins.iptvplayer.joemonsterorg_login))
+    optionList.append(getConfigListEntry("Hasło:", config.plugins.iptvplayer.joemonsterorg_password))
+    return optionList
+###################################################
 
 def gettytul():
     return 'https://joemonster.org/'
@@ -23,7 +43,7 @@ def gettytul():
 class JoeMonster(CBaseHostClass):
  
     def __init__(self):
-        CBaseHostClass.__init__(self, {'history':'joemonster.org', 'cookie':'joemonster.org.cookie'})
+        CBaseHostClass.__init__(self, {'history':'joemonster.org', 'cookie':'joemonster.cookie'})
         
         self.DEFAULT_ICON_URL = 'https://joemonster.org/images/logo/jm-logo-1450873307.png'
         self.HEADER = {'User-Agent': 'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:40.0) Gecko/20100101 Firefox/40.0', 'DNT':'1', 'Accept': 'text/html'}
@@ -31,7 +51,10 @@ class JoeMonster(CBaseHostClass):
         self.AJAX_HEADER.update( {'X-Requested-With': 'XMLHttpRequest'} )
         self.MAIN_URL = 'https://joemonster.org/'
         self.defaultParams = {'with_metadata':True, 'header':self.HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
-    
+
+        self.login    = ''
+        self.password = ''
+
     def getPage(self, url, addParams = {}, post_data = None):
         if addParams == {}:
             addParams = dict(self.defaultParams)
@@ -124,7 +147,8 @@ class JoeMonster(CBaseHostClass):
                 
                 if 'video/mp4' == type: 
                     urlTab.append({'name':name, 'url':self.getFullUrl(url), 'need_resolve':0})
-                elif 'video/youtube' == type:
+#                elif 'video/youtube' == type:
+                else:
                     urlTab.append({'name':name, 'url':self.getFullUrl(url), 'need_resolve':1})
         if 0 == len(urlTab):
             tmp = self.cm.ph.getAllItemsBeetwenNodes(data, ('<iframe', '>'), ('</iframe', '>'))
@@ -140,9 +164,38 @@ class JoeMonster(CBaseHostClass):
         if 1 == self.up.checkHostSupport(videoUrl): 
             urlTab = self.up.getVideoLinkExt(videoUrl)
         return urlTab
-        
+
+    def tryTologin(self, login, password):
+        printDBG('tryTologin start')
+        connFailed = _('Connection to server failed!')
+
+        rm(self.COOKIE_FILE)
+        sts, data = self.cm.getPage(self.MAIN_URL+'user.php', self.defaultParams)
+        if not sts: return False, connFailed
+
+        # login
+        post_data = {'_username':login, '_password':password, 'op':'login'}
+        sts, data = self.cm.getPage('https://joemonster.org/login_check', self.defaultParams, post_data)
+        if not sts: return False, connFailed
+
+        if 'logout' in data:
+            return True, 'OK'
+        else:
+            return False, 'NOT OK'
+
     def handleService(self, index, refresh = 0, searchPattern = '', searchType = ''):
         printDBG('handleService start')
+
+        if self.login != config.plugins.iptvplayer.joemonsterorg_login.value and \
+           self.password != config.plugins.iptvplayer.joemonsterorg_password.value and \
+           '' != config.plugins.iptvplayer.joemonsterorg_login.value.strip() and \
+           '' != config.plugins.iptvplayer.joemonsterorg_password.value.strip():
+            loggedIn, msg = self.tryTologin(config.plugins.iptvplayer.joemonsterorg_login.value, config.plugins.iptvplayer.joemonsterorg_password.value)
+            if not loggedIn:
+                self.sessionEx.open(MessageBox, 'Problem z zalogowaniem użytkownika "%s".' % config.plugins.iptvplayer.joemonsterorg_login.value, type = MessageBox.TYPE_INFO, timeout = 10 )
+            else:
+                self.login    = config.plugins.iptvplayer.joemonsterorg_login.value
+                self.password = config.plugins.iptvplayer.joemonsterorg_password.value
         
         CBaseHostClass.handleService(self, index, refresh, searchPattern, searchType)
 

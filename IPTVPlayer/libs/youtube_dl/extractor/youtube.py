@@ -506,7 +506,7 @@ class YoutubeIE(object):
         printDBG(sub_tracks)
         return sub_tracks
 
-    def _real_extract(self, url, allowVP9 = False):
+    def _real_extract(self, url, allowVP9 = False, allowAgeGate = False):
         # Extract original video URL from URL with redirection, like age verification, using next_url parameter
         mobj = re.search(self._NEXT_URL_RE, url)
         if mobj:
@@ -532,8 +532,9 @@ class YoutubeIE(object):
         if not sts: raise ExtractorError('Unable to download video webpage')
 
         # Get video info
-        if re.search(r'player-age-gate-content">', video_webpage) is not None:
-            self.report_age_confirmation()
+        #if re.search(r'player-age-gate-content">', video_webpage) is not None:
+        if allowAgeGate and re.search(r'"LOGIN_REQUIRED"', video_webpage) is not None:
+            #self.report_age_confirmation()
             age_gate = True
             # We simulate the access to the video from www.youtube.com/v/{video_id}
             # this can be viewed without login into Youtube

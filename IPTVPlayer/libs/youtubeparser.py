@@ -27,6 +27,7 @@ from Components.config import config, ConfigSelection, ConfigYesNo
 config.plugins.iptvplayer.ytformat        = ConfigSelection(default = "mp4", choices = [("flv, mp4", "flv, mp4"),("flv", "flv"),("mp4", "mp4")]) 
 config.plugins.iptvplayer.ytDefaultformat = ConfigSelection(default = "720", choices = [("0", _("the worst")), ("144", "144p"), ("240", "240p"), ("360", "360p"),("720", "720p"), ("1080", "1080p"), ("1440", "1440p"), ("2160", "2160p"), ("9999", _("the best"))])
 config.plugins.iptvplayer.ytUseDF         = ConfigYesNo(default = True)
+config.plugins.iptvplayer.ytAgeGate       = ConfigYesNo(default = False)
 config.plugins.iptvplayer.ytVP9           = ConfigYesNo(default = False)
 config.plugins.iptvplayer.ytShowDash      = ConfigSelection(default = "auto", choices = [("auto", _("Auto")),("true", _("Yes")),("false", _("No"))])
 config.plugins.iptvplayer.ytSortBy        = ConfigSelection(default = "", choices = [("", _("Relevance")),("video_date_uploaded", _("Upload date")),("video_view_count", _("View count")),("video_avg_rating", _("Rating"))]) 
@@ -57,7 +58,13 @@ class YouTubeParser():
         printDBG("2. ALLOW VP9: >> %s" % value)
         return value
 
-    def getDirectLinks(self, url, formats = 'flv, mp4', dash=True, dashSepareteList = False, allowVP9 = None):
+    @staticmethod
+    def isAgeGateAllowed():
+        value = config.plugins.iptvplayer.ytAgeGate.value
+        printDBG("ALLOW Age-Gate bypass: >> %s" % value)
+        return value
+
+    def getDirectLinks(self, url, formats = 'flv, mp4', dash=True, dashSepareteList = False, allowVP9 = None, allowAgeGate = None):
         printDBG("YouTubeParser.getDirectLinks")
         list = []
         try:
@@ -67,7 +74,7 @@ class YouTubeParser():
                     videoId = self.cm.ph.getSearchGroups(data, '''<meta[^>]+?itemprop=['"]videoId['"][^>]+?content=['"]([^'^"]+?)['"]''')[0]
                     if videoId == '': videoId = self.cm.ph.getSearchGroups(data, '''['"]REDIRECT_TO_VIDEO['"]\s*\,\s*['"]([^'^"]+?)['"]''')[0]
                     if videoId != '': url = 'https://www.youtube.com/watch?v=' + videoId
-            list = YoutubeIE()._real_extract(url, allowVP9 = allowVP9)
+            list = YoutubeIE()._real_extract(url, allowVP9 = allowVP9, allowAgeGate = allowAgeGate)
         except Exception:
             printExc()
             if dashSepareteList:
