@@ -271,7 +271,8 @@ class urlparser:
                        'liveonlinetv247.info': self.pp.parserLIVEONLINE247 ,
                        'liveonlinetv247.info': self.pp.parserLIVEONLINETV247,
                        'liveonlinetv247.net':  self.pp.parserLIVEONLINE247 ,
-                       'live-stream.tv':       self.pp.parserLIVESTRAMTV   ,
+                       'livestream.com':	   self.pp.parserLIVESTREAMCOM,
+					   'live-stream.tv':       self.pp.parserLIVESTRAMTV   ,
                        'mastarti.com':         self.pp.parserMOONWALKCC    ,
                        'matchat.online':       self.pp.parserMATCHATONLINE  ,
                        'maxupload.tv':         self.pp.parserTOPUPLOAD     ,
@@ -11353,6 +11354,63 @@ class pageParser(CaptchaHelper):
         return vidTab
 
 
+    def parserLIVESTREAMCOM(self, baseUrl):
+        printDBG("parserLIVESTREAMCOM baseUrl[%s]" % baseUrl)
+        # example https://livestream.com/accounts/3312258/events/8705395
 
+        URL_MODEL=r'https?://(?:www\.|new\.)?livestream\.com/(?:accounts/(?P<account_id>\d+))/(?:events/(?P<event_id>\d+))(?:/videos/(?P<id>\d+))?'
+        API_URL_MODEL= 'https://livestream.com/api/accounts/%s/events/%s'
+        vidTab=[]
 
+        #printDBG(baseUrl)
+        m = re.findall(URL_MODEL, baseUrl)
+        
+        #printDBG(str(m))
+        if len(m)>0:
+            m=m[0]
+            video_id = m[2]
+            event_id = m[1]
+            account_id = m[0]
+            pp=[]
+
+            feed_url = API_URL_MODEL % (account_id, event_id) 
+
+            printDBG(feed_url)
+            printDBG('---> video_id:  ' + video_id)
+            sts, data = self.cm.getPage(feed_url)
+            if not sts: 
+                return vidTab
+
+            printDBG(data)
+            data = json_loads(data)
+
+            # key stream_info
+            if 'stream_info' in data:
+                if data['stream_info'] != None :
+                    i = data['stream_info']
+                    title = i['stream_title']
+                    url = i['m3u8_url']
+                    params = getDirectM3U8Playlist(url, checkExt=False, variantCheck=True, checkContent=True, sortWithMaxBitrate=99999999)
+                    for p in params:
+                        p["name"]= title + " " + p["name"]
+                        p["url"] = strwithmeta(p["url"], {'User-Agent': 'Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/59.0.3071.115 Safari/537.36', 'Accept-Encoding':'gzip', 'use_cookie': True, 'load_cookie': True, 'save_cookie': True })
+                        pp.append(p)
+                                        
+            
+            # key feeds - others streams
+            for i in data['feed']['data']:
+                #printDBG(str(i))
+                if i['type']=='video':
+                    item = i['data']
+                    id = item['id']
+                    if len(video_id) == 0 or (video_id == str(id)):
+                        title = item['caption']
+                        url = item['m3u8_url']
+                        params = getDirectM3U8Playlist(url, checkExt=False, variantCheck=True, checkContent=True, sortWithMaxBitrate=99999999)
+                        for p in params:
+                            p["name"]= title + " " + p["name"]
+                            pp.append(p)
+
+            vidTab.extend(pp)
+        return vidTab
 
