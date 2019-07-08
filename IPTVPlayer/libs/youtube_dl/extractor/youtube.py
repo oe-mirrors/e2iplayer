@@ -596,7 +596,6 @@ class YoutubeIE(object):
         url_map = {}
         if len(video_info.get('url_encoded_fmt_stream_map', [])) >= 1 or len(video_info.get('adaptive_fmts', [])) >= 1:
             encoded_url_map = video_info.get('url_encoded_fmt_stream_map', [''])[0] + ',' + video_info.get('adaptive_fmts',[''])[0]
-            _supported_formats = self._supported_formats
 
             for url_data_str in encoded_url_map.split(','):
                 if 'index=' in url_data_str and 'index=0-0&' in url_data_str: continue
