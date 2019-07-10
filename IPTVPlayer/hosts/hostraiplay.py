@@ -264,7 +264,7 @@ class Raiplay(CBaseHostClass):
         items=response["menu"]
 
         for item in items:
-            if item["sub-type"] in ("RaiPlay Tipologia Page", "RaiPlay Genere Page"):
+            if item["sub-type"] in ("RaiPlay Tipologia Page", "RaiPlay Genere Page", "RaiPlay Tipologia Editoriale Page"):
                 icon_url=self.MAIN_URL + item["image"]
                 self.addDir(MergeDicts(cItem, {'category':'ondemand_items', 'title': item["name"] , 'name': item["name"], 'url': item["PathID"], 'icon': icon_url, 'sub-type': item["sub-type"] }))            
 
@@ -487,7 +487,7 @@ class Raiplay(CBaseHostClass):
         elif category == 'ondemand':
             self.listOnDemandMain(self.currItem)
         elif category == 'ondemand_items':
-            if subtype == "RaiPlay Tipologia Page" or subtype == "RaiPlay Genere Page":
+            if subtype == "RaiPlay Tipologia Page" or subtype == "RaiPlay Genere Page" or subtype == "RaiPlay Tipologia Editoriale Page":
                 self.listOnDemandCategory(self.currItem)
             elif subtype == "Raiplay Tipologia Item":
                 self.listOnDemandAZ(self.currItem)
