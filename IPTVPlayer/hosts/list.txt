@@ -39,6 +39,7 @@ hostdplayit
 hostdokumentalnenet
 hostdpstreamingcx
 hostdrdk
+hostdazn
 hostefilmytv
 hostegybest
 hostekinotv
@@ -66,6 +67,7 @@ hostfilmstreamvkcom
 hostfilmydokumentalneeu
 hostfokustv
 hostforjatn
+hostfrancetv
 hostfreediscpl
 hostgamatocom
 hostgamatotvme
