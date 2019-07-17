@@ -36,8 +36,10 @@ class LivespottingTvApi:
     def getChannelsList(self, cItem):
         printDBG("WkylinewebcamsCom.getChannelsList")
         list = []
-        sts, data = self.cm.getPage('http://livespotting.com/api/api.json')
+        sts, data = self.cm.getPage('https://livespotting.com/showroom.json')
         if not sts: return list
+        printDBG("data: %s" % data)
+        data = data.replace('Showroom.Load(','').replace(');','')
         try:
             data = json_loads(data)
             for item in data:

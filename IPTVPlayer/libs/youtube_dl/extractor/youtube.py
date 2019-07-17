@@ -695,8 +695,13 @@ class YoutubeIE(object):
             if playerUrl:
                 decSignatures = CYTSignAlgoExtractor(self.cm).decryptSignatures(signatures, playerUrl)
                 if len(signatures) == len(signItems):
-                    for idx in range(len(signItems)):
-                        signItems[idx]['url'] = signItems[idx]['url'].format(decSignatures[idx])
+                    try:
+                        for idx in range(len(signItems)):
+                            signItems[idx]['url'] = signItems[idx]['url'].format(decSignatures[idx])
+                    except Exception:
+                        printExc()
+                        SetIPTVPlayerLastHostError(_('Decrypt Signatures Error'))
+                        return []
                 else:
                     return []
 
