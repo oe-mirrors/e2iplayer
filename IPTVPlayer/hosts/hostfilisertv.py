@@ -432,6 +432,7 @@ class FiliserTv(CBaseHostClass):
                     #    rm(self.COOKIE_FILE)
                     
                     if tries > 1 and googleCaptcha: httpParams['header'] = self.getHeaders(tries)
+                    httpParams['header']['Cookie'] = 'adult_warning=true'
                     sts, data = self.getPage(url, httpParams)
                     if not sts: return urlTab
                     
