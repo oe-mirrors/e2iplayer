@@ -158,6 +158,7 @@ hostsolarmovie
 hostsovdub
 hostspiegeltv
 hostsportdeutschland
+hostsportitalia
 hostspryciarze
 hoststreamcomplet
 hoststreaminghdfun
