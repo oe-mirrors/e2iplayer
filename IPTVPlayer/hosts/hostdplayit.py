@@ -242,13 +242,33 @@ class Dplayit(CBaseHostClass):
                         desc=video["Description"]
                         num_episode=video["EpisodeNumber"]
                         video_id=video["Id"]
+                        
+                        plus = False
+                        
+                        if 'Packages' in video:
+                            desc = desc + "\n" + _("Packages") + ":"
+                            for p in video['Packages']:
+                                if p == "Premium" :
+                                    pp = "Dplay plus"
+                                    plus = True
+                                else:
+                                    pp = p
+                                
+                                desc = desc + " " + pp
+                                
+                                
                         if 'PublishEndDate' in video:
                             date = datetime.strptime(video['PublishEndDate'], '%Y-%m-%dT%H:%M:%SZ')
-                            desc = '{0}\n\n{1} {2}'.format(desc, "Disponibile fino a ", date.strftime("%d/%m/%Y"))
+                            desc = '{0}\n{1} {2}'.format(desc, "Disponibile fino a ", date.strftime("%d/%m/%Y"))
+                                
                         title = '{0} ({1} {2} - {3} {4})'.format(name, _("Season"), season_number, _("Episode"), num_episode)
+                        if plus:
+                            title = title + " (PLUS)"
+                            
                         videoUrl=video["PlaybackInfoUrl"]
+                        
                         #printDBG ("add video '%s' with playback info url '%s'" % (title,videoUrl)) 
-                        self.addVideo(MergeDicts(cItem, {'title': title,'name': title, 'desc': desc, 'video_id': video_id, 'url':videoUrl, 'icon': icon, 'category': 'video'}))  
+                        self.addVideo(MergeDicts(cItem, {'title': title,'name': name, 'desc': desc, 'video_id': video_id, 'url':videoUrl, 'icon': icon, 'category': 'video'}))  
     
     def listGenres (self, cItem):
         printDBG("Dplay start genres list")
