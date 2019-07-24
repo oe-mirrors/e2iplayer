@@ -7,6 +7,7 @@ hostakoam
 hostallboxtv
 hostalltubetv
 hostaltadefinizione
+hostaltadefinizione1
 hostaltadefinizione01
 hostandrijaiandjelka
 hostanimeodcinki
@@ -39,7 +40,6 @@ hostdplayit
 hostdokumentalnenet
 hostdpstreamingcx
 hostdrdk
-hostdazn
 hostefilmytv
 hostegybest
 hostekinotv
