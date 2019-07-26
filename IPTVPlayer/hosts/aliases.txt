@@ -8,6 +8,7 @@
 "hostallboxtv": "https://allbox.tv/",
 "hostalltubetv": "http://alltube.pl/",
 "hostaltadefinizione": "https://altadefinizione.cloud/",
+"hostaltadefinizionecool" : "https://altadefinizione.town/",
 "hostaltadefinizione1": "http://altadefinizione1.link/",
 "hostaltadefinizione01": "https://www.altadefinizione01.cc/",
 "hostandrijaiandjelka": "https://andrija-i-andjelka.com/",

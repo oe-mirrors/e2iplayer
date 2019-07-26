@@ -19,7 +19,7 @@ except Exception: import simplejson as json
 def gettytul():
     return 'https://altadefinizione01.cc/'
 
-class Altadefinizione(CBaseHostClass):
+class AltadefinizioneZeroUno(CBaseHostClass):
 
     def __init__(self):
         CBaseHostClass.__init__(self, {'history':'altadefinizione01.zone', 'cookie':'altadefinizione01.zone.cookie'})
@@ -30,7 +30,7 @@ class Altadefinizione(CBaseHostClass):
         self.AJAX_HEADER.update( {'X-Requested-With':'XMLHttpRequest', 'Content-Type':'application/x-www-form-urlencoded; charset=UTF-8'} )
         
         self.MAIN_URL = 'https://www.altadefinizione01.cc/'
-        self.DEFAULT_ICON_URL = 'https://previews.123rf.com/images/yusufsangdes89/yusufsangdes891507/yusufsangdes89150700042/42557652-cinema-camera-icon-movie-lover-series-icon.jpg'
+        self.DEFAULT_ICON_URL = self.MAIN_URL + 'templates/Darktemplate/images/logo.png'
         
         self.defaultParams = {'header':self.HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
     
@@ -151,13 +151,13 @@ class Altadefinizione(CBaseHostClass):
             params.update({'title':_("Next page"), 'page':page+1})
             if nextPage != '#':
                 params['url'] = self.getFullUrl(nextPage)
-                self.addDir(params)
+                self.addMore(params)
             elif postData != {}:
                 postData = dict(postData)
                 postData.pop('titleonly', None)
                 postData.update({'search_start':page+1, 'full_search':'0', 'result_from':10*page+1})
                 params['post_data'] = postData
-                self.addDir(params)
+                self.addMore(params)
             else:
                 printDBG("NextPage [%s] not handled!!!" % nextPage)
 
@@ -210,7 +210,7 @@ class Altadefinizione(CBaseHostClass):
         if nextPage != '':
             params = dict(cItem)
             params.update({'title':_("Next page"), 'url':self.getFullUrl(nextPage), 'page':page+1})
-            self.addDir(params)
+            self.addMore(params)
 
     def exploreItem(self, cItem):
         printDBG("Altadefinizione.exploreItem")
@@ -351,7 +351,7 @@ class Altadefinizione(CBaseHostClass):
 class IPTVHost(CHostBase):
 
     def __init__(self):
-        CHostBase.__init__(self, Altadefinizione(), True, favouriteTypes=[]) 
+        CHostBase.__init__(self, AltadefinizioneZeroUno(), True, favouriteTypes=[]) 
 
     def withArticleContent(self, cItem):
         if 'prev_url' in cItem or cItem.get('category', '') == 'explore_item': return True
