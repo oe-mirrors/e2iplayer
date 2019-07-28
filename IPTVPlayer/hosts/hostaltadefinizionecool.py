@@ -21,10 +21,10 @@ except Exception: import simplejson as json
 def gettytul():
     return 'https://altadefinizione.town/'
 
-class Altadefinizione(CBaseHostClass):
+class AltadefinizioneCool(CBaseHostClass):
  
     def __init__(self):
-        CBaseHostClass.__init__(self, {'history':'altadefinizione', 'cookie':'altadefinizione.cookie'})
+        CBaseHostClass.__init__(self, {'history':'altadefinizionecool', 'cookie':'altadefinizionecool.cookie'})
         self.USER_AGENT = 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/73.0.3683.103 Safari/537.36'
         self.HEADER = {'User-Agent': self.USER_AGENT, 'DNT':'1', 'Accept': 'text/html'}
         self.AJAX_HEADER = dict(self.HEADER)
@@ -443,7 +443,7 @@ class Altadefinizione(CBaseHostClass):
 class IPTVHost(CHostBase):
 
     def __init__(self):
-        CHostBase.__init__(self, Altadefinizione(), True, [])
+        CHostBase.__init__(self, AltadefinizioneCool(), True, [])
     
     def withArticleContent(self, cItem):
         if cItem.get('type', 'video') != 'video' and cItem.get('category', 'unk') != 'explore_item':

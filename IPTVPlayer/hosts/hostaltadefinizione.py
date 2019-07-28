@@ -14,6 +14,7 @@ from Plugins.Extensions.IPTVPlayer.tools.e2ijs import js_execute
 ###################################################
 import re
 import urllib
+from urlparse import urlparse, urljoin
 try:    import json
 except Exception: import simplejson as json
 ###################################################
@@ -49,8 +50,14 @@ class Altadefinizione(CBaseHostClass):
     def getPage(self, baseUrl, addParams = {}, post_data = None):
         if addParams == {}:
             addParams = dict(self.defaultParams)
-
-        addParams['cloudflare_params'] = {'cookie_file':self.COOKIE_FILE, 'User-Agent':self.USER_AGENT}
+        
+        def _getFullUrl(url):
+            if self.cm.isValidUrl(url):
+                return url
+            else:
+                return urljoin(baseUrl, url)
+        
+        addParams['cloudflare_params'] = {'domain':self.up.getDomain(baseUrl), 'cookie_file':self.COOKIE_FILE, 'User-Agent':self.USER_AGENT, 'full_url_handle':_getFullUrl}
         sts, data = self.cm.getPageCFProtection(baseUrl, addParams, post_data)
         return sts, data
         
@@ -125,16 +132,19 @@ class Altadefinizione(CBaseHostClass):
             sts, data = self.getPage(cItem['url'])
             if not sts: return
         
+        #printDBG(data)
+        
         nextPage = self.cm.ph.getDataBeetwenNodes(data, '<div class="paginationC nomobile">', ('</ul', '>'), False)[1]
         nextPage = self.getFullUrl( self.cm.ph.getSearchGroups(nextPage, '''<a[^>]+?href=['"]([^"^']+?)['"][^>]*?>%s<''' % (page + 1))[0] )
         
-        data = self.cm.ph.getAllItemsBeetwenMarkers(data, '<div class="box">', '</div>')
+        data = self.cm.ph.getAllItemsBeetwenMarkers(data, '<div class="wrapperImage">', '</div>')
         for item in data:
+            #printDBG(item)
             url = self.getFullUrl( self.cm.ph.getSearchGroups(item, '''href=['"]([^"^']+?)['"]''')[0] )
             if url == '': continue
             title = self.cleanHtmlStr( self.cm.ph.getDataBeetwenNodes(item, ('<h', '>', 'title'), ('</h', '>'))[1])
             icon = self.getFullIconUrl( self.cm.ph.getSearchGroups(item, '''<img[^>]+?src=['"]([^"^']+?)['"]''')[0] )
-
+            
             desc = []
             tmp = self.cm.ph.getAllItemsBeetwenMarkers(item, '<span', '</span>')
             tmp.append(self.cm.ph.getDataBeetwenNodes(item, ('<div', '>', 'rate'), ('</div', '>'), False)[1])
@@ -144,7 +154,9 @@ class Altadefinizione(CBaseHostClass):
             desc = ' | '.join(desc) 
             
             params = dict(cItem)
-            params = {'good_for_fav': True, 'category':nextCategory, 'title':title, 'url':url, 'icon':icon, 'desc':desc}
+            #params = {'good_for_fav': True, 'category':nextCategory, 'title':title, 'url':url, 'icon':icon, 'desc':desc}
+            params = {'good_for_fav': True, 'category':nextCategory, 'title':title, 'url':url, 'desc':desc}
+            printDBG(params)
             self.addDir(params)
         
         if nextPage and len(self.currList) > 0:
@@ -160,6 +172,10 @@ class Altadefinizione(CBaseHostClass):
         if not sts: return
         cUrl = data.meta['url']
         
+        #printDBG("-------------------------")
+        #printDBG(data)
+        #printDBG("-------------------------")
+        
         descObj = self.getArticleContent(cItem, data)[0]
         desc = []
         for t in ['quality', 'imdb_rating', 'year', 'genres']:
@@ -168,7 +184,7 @@ class Altadefinizione(CBaseHostClass):
         desc = ' | '.join(desc) + '[/br]' + descObj['text'] 
         
         # trailer
-        trailerUrl = self.cm.ph.getDataBeetwenNodes(data, '<div class="collapse" id="showtrailer">', '</div>', False)[1]
+        trailerUrl = self.cm.ph.getDataBeetwenNodes(data, ('<div','>', 'showTrailer'), '</div>', False)[1]
         trailerUrl = self.getFullUrl(self.cm.ph.getSearchGroups(trailerUrl, '''<iframe[^>]+?src=['"]([^"^']+?)['"]''', 1, ignoreCase=True)[0])
         printDBG(trailerUrl)
         if trailerUrl != '':
@@ -177,18 +193,37 @@ class Altadefinizione(CBaseHostClass):
             params.update({'good_for_fav': False, 'title':'%s - %s' % (cItem['title'], _('trailer')), 'url':trailerUrl, 'desc':desc, 'prev_url':cItem['url']})
             self.addVideo(params)
  
-        url_container = self.cm.ph.getDataBeetwenNodes(data, '<ul id="mirrors"', '</ul>', False)[1]
-        urls = self.cm.ph.getAllItemsBeetwenMarkers(url_container, '<li>', '</li>')
+        playerUrl = self.cm.ph.getDataBeetwenNodes(data, ('<div','>', 'frameDown'), '</div>', False)[1]
+        playerUrl = self.getFullUrl(self.cm.ph.getSearchGroups(playerUrl, '''<iframe[^>]+?src=['"]([^"^']+?)['"]''', 1, ignoreCase=True)[0])
+        # example: <iframe width="100%" height="100%" src="https://hdpass.online/film.php?idFilm=21374&download=1?alta"></iframe>
+
+        sts, playerData = self.getPage(playerUrl)
+        
+        if not sts:
+            return
+        
+        #printDBG(playerData)
+        url_container = self.cm.ph.getDataBeetwenNodes(playerData, '<p id="hostLNK">', '</body>', False)[1]
+        #printDBG(url_container)
+        urls = self.cm.ph.getAllItemsBeetwenMarkers(url_container, '<a', '</a>')
+        
         for item in urls:
-            printDBG("----->" + item)
+            #printDBG("----->" + item)
             title = self.cleanHtmlStr(item)
-            url = self.getFullUrl( self.cm.ph.getSearchGroups(item, '''data-target=['"]([^"^']+?)['"]''')[0] )
+            url = self.getFullUrl( self.cm.ph.getSearchGroups(item, '''href=['"]([^"^']+?)['"]''')[0] )
             if url !='' : 
-                url = strwithmeta(url, {'Referer':cItem['url']})
+                url = url.replace('&dLink=none','').replace('u=','prot=')
+                #url = strwithmeta(url, {'need-resolve': True})
+            #        url = strwithmeta(url, {'Referer':cItem['url']})
+                sts, test = self.getPage(url)
+                if sts:
+                    url = test.meta['url']
                 params = dict(cItem)
                 params.update({'good_for_fav': False, 'title':'%s - %s' % (cItem['title'], title), 'url':url, 'desc':desc, 'prev_url':cItem['url']})
+                printDBG(str(params))
                 self.addVideo(params)
-    
+            
+                                                                                                  
     def listSearchResult(self, cItem, searchPattern, searchType):
         printDBG("Altadefinizione.listSearchResult cItem[%s], searchPattern[%s] searchType[%s]" % (cItem, searchPattern, searchType))
         cItem = dict(cItem)
