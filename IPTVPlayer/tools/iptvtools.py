@@ -53,7 +53,7 @@ def GetUpdateServerUri(file='', serverNum=None):
 
 def GetResourcesServerUri(file='', serverNum=None):
     serverKey = GetServerKey(serverNum)
-    uri = SERVER_DOMAINS[serverKey] + 'resources/' + file
+    uri = 'http://e2iplayer.pkteam.pl/resources/' + file
     printDBG("GetResourcesServerUri -> %s" % uri)
     return uri
 
