@@ -265,6 +265,8 @@ class IconMenager:
             domain = urlparser.getDomain(img_url)
             if 'altadefinizione' in domain:
                 params_cfad['cookiefile']='/hdd/IPTVCache//cookies/altadefinizione.cookie'
+            elif 'guardaserie' in domain:
+                params_cfad['cookiefile']='/hdd/IPTVCache//cookies/guardaserie.cookie'
         else:
             params_cfad={}
             

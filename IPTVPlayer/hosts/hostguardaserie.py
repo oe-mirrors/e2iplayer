@@ -22,7 +22,7 @@ def gettytul():
 class GuardaSerieClick(CBaseHostClass):
 
     def __init__(self):
-        CBaseHostClass.__init__(self, {'history':'guardaserie.media', 'cookie':'guardaserie.media.cookie'})
+        CBaseHostClass.__init__(self, {'history':'guardaserie.media', 'cookie':'guardaserie.cookie'})
         
         self.USER_AGENT = 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/73.0.3683.103 Safari/537.36'
         self.MAIN_URL = 'https://www.guardaserie.media/'
@@ -30,7 +30,7 @@ class GuardaSerieClick(CBaseHostClass):
         self.HEADER = {'User-Agent': self.USER_AGENT, 'Accept': 'text/html', 'Accept-Encoding': 'gzip', 'Referer': self.MAIN_URL}
         self.AJAX_HEADER = MergeDicts(self.HEADER, {'X-Requested-With':'XMLHttpRequest', 'Content-Type':'application/x-www-form-urlencoded; charset=UTF-8'})
         
-        self.DEFAULT_ICON_URL = self.getFullIconUrl('/wp-content/themes/guardaserie/images/logogd.png')
+        self.DEFAULT_ICON_URL = self.getFullIconUrl('/wp-content/themes/guardaserie/images/logogd.png|cf')
         
         self.defaultParams = {'header':self.HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
     
@@ -83,7 +83,10 @@ class GuardaSerieClick(CBaseHostClass):
         items = []
         for item in rawItems:
             url = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''href=['"]([^"^']+?)['"]''')[0])
-            icon  = self.getFullIconUrl( self.cm.ph.getSearchGroups(item, '''<img[^>]+?src=['"]([^"^']+?)['"]''')[0] )
+            icon  = self.getFullIconUrl( self.cm.ph.getSearchGroups(item, '''<img[^>]+?src=['"]([^"^']+?)['"]''')[0])  
+            if icon != '':
+                icon = icon + "|cf"
+
             title = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(item, '<p', '</p>')[1])
             if title == '': continue
             desc  = []
@@ -151,7 +154,10 @@ class GuardaSerieClick(CBaseHostClass):
             for item in data:
                 title = '%s - %s' % (cItem['title'], self.cleanHtmlStr(item.split('<p', 1)[0]))
                 icon  = self.cm.ph.getSearchGroups(item, '''<img[^>]+?src=['"]([^"^']+?)['"]''')[0]
-                if icon == '': icon  = self.cm.ph.getSearchGroups(item, '''<img[^>]+?data\-original=['"]([^"^']+?)['"]''')[0]
+                if icon == '': 
+                    icon  = self.cm.ph.getSearchGroups(item, '''<img[^>]+?data\-original=['"]([^"^']+?)['"]''')[0]
+                if icon != '':
+                    icon = icon + "|cf"
                 desc  = self.cleanHtmlStr( self.cm.ph.getDataBeetwenNodes(item, ('<p', '>', 'desc'), ('</p', '>'))[1] )
                 season = self.cm.ph.getSearchGroups(item, '''meta\-stag=['"]([^"^']+?)['"]''')[0]
                 episode = self.cm.ph.getSearchGroups(item, '''meta\-ep=['"]([^"^']+?)['"]''')[0]
@@ -210,6 +216,9 @@ class GuardaSerieClick(CBaseHostClass):
 
         data = self.cm.ph.getDataBeetwenNodes(data, ('<div', '>', 'container-title-single'), ('<input', '>'), False)[1]
         icon = self.getFullUrl( self.cm.ph.getSearchGroups(data, '''<img[^>]+?src=['"]([^'^"]+?)['"]''')[0] )
+        if icon != '':
+            icon = icon + "|cf"
+
         title = self.cleanHtmlStr( self.cm.ph.getDataBeetwenNodes(data, ('<h', '>'), ('</h', '>'), False)[1] )
         desc = self.cleanHtmlStr( self.cm.ph.getDataBeetwenNodes(data, ('<span', '>', 'desc'), ('</span', '>'), False)[1] )
         
