@@ -22,7 +22,7 @@ def gettytul():
 class GuardaSerieClick(CBaseHostClass):
 
     def __init__(self):
-        CBaseHostClass.__init__(self, {'history':'guardaserie.media', 'cookie':'guardaserie.cookie'})
+        CBaseHostClass.__init__(self, {'history':'guardaserie.media', 'cookie':'guardaserie.media.cookie'})
         
         self.USER_AGENT = 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/73.0.3683.103 Safari/537.36'
         self.MAIN_URL = 'https://www.guardaserie.media/'
