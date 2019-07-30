@@ -143,7 +143,7 @@ class Altadefinizione(CBaseHostClass):
             url = self.getFullUrl( self.cm.ph.getSearchGroups(item, '''href=['"]([^"^']+?)['"]''')[0] )
             if url == '': continue
             title = self.cleanHtmlStr( self.cm.ph.getDataBeetwenNodes(item, ('<h', '>', 'title'), ('</h', '>'))[1])
-            icon = self.getFullIconUrl( self.cm.ph.getSearchGroups(item, '''<img[^>]+?src=['"]([^"^']+?)['"]''')[0] )
+            icon = self.getFullIconUrl( self.cm.ph.getSearchGroups(item, '''<img[^>]+?src=['"]([^"^']+?)['"]''')[0] ) + "|cf"
             
             desc = []
             tmp = self.cm.ph.getAllItemsBeetwenMarkers(item, '<span', '</span>')
@@ -154,8 +154,8 @@ class Altadefinizione(CBaseHostClass):
             desc = ' | '.join(desc) 
             
             params = dict(cItem)
-            #params = {'good_for_fav': True, 'category':nextCategory, 'title':title, 'url':url, 'icon':icon, 'desc':desc}
-            params = {'good_for_fav': True, 'category':nextCategory, 'title':title, 'url':url, 'desc':desc}
+            params = {'good_for_fav': True, 'category':nextCategory, 'title':title, 'url':url, 'icon':icon, 'desc':desc}
+            #params = {'good_for_fav': True, 'category':nextCategory, 'title':title, 'url':url, 'desc':desc}
             printDBG(params)
             self.addDir(params)
         
