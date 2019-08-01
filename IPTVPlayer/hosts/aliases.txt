@@ -145,6 +145,7 @@
 "hostquesttvcouk": "http://questtv.co.uk/",
 "hostradiostacja": "http://radiostacja.pl/",
 "hostraiplay":"http://raiplay.it",
+"hostredbull": "https://www.redbull.tv"
 "hostrtbfbe": "https://www.rtbf.be/",
 "hostrteieplayer": "http://rte.ie/player",
 "hostrtlmost": "https://rtlmost.hu/",
