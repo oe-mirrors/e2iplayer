@@ -123,7 +123,7 @@ class VideoPenny(CBaseHostClass):
         
         sts, data = self.getPage(cItem['url'])
         if not sts: return
-        
+
         nextPage = self.getFullUrl(self.cm.ph.getSearchGroups(data, '''<a[^>]+?class=["']nextpostslink['"][^>]+?href=['"]([^"^']+?)['"]''')[0])
         
         data = self.cm.ph.getDataBeetwenMarkers(data, 'listing-content', '</section>')[1]
@@ -154,22 +154,51 @@ class VideoPenny(CBaseHostClass):
             
     def exploreItem(self, cItem, nextCategory):
         printDBG("VideoPenny.exploreItem")
-        
-        params = dict(cItem)
-        self.addVideo(params)
+
+#        params = dict(cItem)
+#        self.addVideo(params)
+#        
+#        sts, data = self.getPage(cItem['url'])
+#        if not sts: return
+#        
+#        data = self.cm.ph.getDataBeetwenNodes(data, ('<div', '>', 'breadcrumbs'), ('</div', '>'))[1]
+#        data = self.cm.ph.rgetDataBeetwenNodes(data, ('</a', '>'), ('<a', '>'))[1]
+#        url = self.getFullUrl(self.cm.ph.getSearchGroups(data, '''\shref=['"]([^'^"]+?)['"]''')[0])
+#        title = self.cleanHtmlStr(data)
+#        printDBG("VideoPenny.exploreItem url [%s] title [%s]" % (url, title))
+#        if url != '':
+#            params = dict(cItem)
+#            params.update({'title':title, 'url':url, 'category':nextCategory, 'was_explored':True})
+#            self.addDir(params)
+        page = cItem.get('page', 1)
         
         sts, data = self.getPage(cItem['url'])
         if not sts: return
+
+        nextPage = self.getFullUrl(self.cm.ph.getSearchGroups(data, '''<a[^>]+?class=["']nextpostslink['"][^>]+?href=['"]([^"^']+?)['"]''')[0])
         
-        data = self.cm.ph.getDataBeetwenNodes(data, ('<div', '>', 'breadcrumbs'), ('</div', '>'))[1]
-        data = self.cm.ph.rgetDataBeetwenNodes(data, ('</a', '>'), ('<a', '>'))[1]
-        url = self.getFullUrl(self.cm.ph.getSearchGroups(data, '''\shref=['"]([^'^"]+?)['"]''')[0])
-        title = self.cleanHtmlStr(data)
-        if url != '':
+        data = self.cm.ph.getDataBeetwenMarkers(data, 'listing-content', '</section>')[1]
+        data = data.split('<div id="post')
+        for item in data:
+            if 'item-head"' not in item: continue
+
+            url = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''href=['"]([^'^"]+?)['"]''')[0])
+            if not self.cm.isValidUrl(url): continue
+            title = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(item, '<h3>', '</h3>')[1])
+            if title == '': title = self.cleanHtmlStr(self.cm.ph.getSearchGroups(item, '''title=['"]([^'^"]+?)['"]''')[0])
+            icon  = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''data-lazy-src=['"]([^'^"]+?)['"]''')[0])
+            if icon == '': icon = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''\ssrc=['"]([^'^"]+?)['"]''')[0])
+            desc = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(item, '<p>', '</p>')[1])
+
             params = dict(cItem)
-            params.update({'title':title, 'url':url, 'category':nextCategory, 'was_explored':True})
+            params.update({'good_for_fav':True, 'title':title, 'url':url, 'icon':icon, 'desc':desc})
+            self.addVideo(params)
+
+        if self.cm.isValidUrl(nextPage):
+            params = dict(cItem)
+            params.update({'good_for_fav':False, 'title':_('Next page'), 'url':nextPage, 'page':page+1})
             self.addDir(params)
-        
+
     def listLast(self, cItem, nextCategory):
         printDBG("VideoPenny.listLast")
         self.cacheLast = {}
