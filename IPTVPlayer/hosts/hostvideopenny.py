@@ -216,7 +216,7 @@ class VideoPenny(CBaseHostClass):
         page = cItem.get('page', 1)
         
         cItem = dict(cItem)
-        cItem['url'] = self.getFullUrl('page/%s/?s=%s' % (page, urllib.quote_plus(searchPattern)))
+        cItem['url'] = self.getFullUrl('page/%s/?s="%s"' % (page, urllib.quote_plus(searchPattern)))
         self.listItems(cItem, 'explore_item')
     
     def getLinksForVideo(self, cItem):
