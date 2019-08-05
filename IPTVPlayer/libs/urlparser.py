@@ -8046,39 +8046,63 @@ class pageParser(CaptchaHelper):
                 subTracks.append({'title': subLabel + '_' + subLang, 'url': subUrl, 'lang': subLang, 'format': 'srt'})
 
         videoUrl = ''
-        tmp = ph.findall(data, '<div class=""' ,'</div>')
-        for item in tmp:
-            printDBG(item)
-            encTab = re.compile('<[^>]+?id="[^"]*?"[^>]*?>([^<]+?)<').findall(data)
-            for e in encTab:
-                if len(e) > 40:
-                    encTab.insert(0, e)
-                    printDBG("e ---->>>>" + e )
-                    break
+        
+        encTab = re.findall('<p style="" id="[^"]+">(.*?)</p>', data)
+        if not encTab:
+            encTab = re.findall('<p id="[^"]+" style="">(.*?)</p>', data)
+        if not encTab:
+            return
 
-        def __decode_k(enc, jscode):
-            decoded = ''
-            try:
-                js_params = [{'code': 'var id = "%s";' % enc}]
-                js_params.append({'path': GetJSScriptFile('openload.byte')})
-                js_params.append({'name': 'openload', 'code': '%s; print(decoded);' % jscode})
-                ret = js_execute_ext(js_params)
-                if ret['sts'] and 0 == ret['code']:
-                    decoded = ret['data'].strip()
-                    printDBG('DECODED DATA -> [%s]' % decoded)
-            except Exception:
-                printExc()
+        def _decode_code(code, t3, t1, t2):
+            import math
+            t4 = ''
+            ke = []
+            for i in range(0, len(code[0:9*8]),8):
+                ke.append(int(code[i:i+8],16))
+            t5 = 0
+            t6 = 0
+            while t5 < len(code[9*8:]):
+                t7 = 64
+                t8 = 0
+                t9 = 0
+                ta = 0
+                while True:
+                    if t5 + 1 >= len(code[9*8:]):
+                        t7 = 143;
+                    ta = int(code[9*8+t5:9*8+t5+2], 16)
+                    t5 +=2
+                    if t9 < 6*5:
+                        tb = ta & 63
+                        t8 += tb << t9
+                    else:
+                        tb = ta & 63
+                        t8 += int(tb * math.pow(2, t9))
+                    t9 += 6
+                    if not ta >= t7: break
+                # tc = t8 ^ ke[t6 % 9] ^ t1 ^ t3 ^ t2
+                tc = t8 ^ ke[t6 % 9] ^ t3 ^ t2
+                td = t7 * 2 + 127
+                for i in range(4):
+                    te = chr(((tc & td) >> (9*8/ 9)* i) - 1)
+                    if te != '$':
+                        t4 += te
+                    td = (td << (9*8/ 9))
+                t6 += 1
+            return t4
 
-            return decoded
+        t1 = re.findall('_0x59ce16=([^;]+)', data)
+        if t1:
+                t1 = eval(t1[0].replace('parseInt', 'int'))
 
-        marker = '\xef\xbe\x9f\xcf\x89\xef\xbe\x9f\xef\xbe\x89= /\xef\xbd\x80\xef\xbd\x8d\xc2\xb4\xef\xbc\x89\xef\xbe\x89'
-        tmp = self.cm.ph.getDataBeetwenMarkers(orgData, marker, marker, False)[1]
-        if tmp == '':
-            tmp = self.cm.ph.getDataBeetwenMarkers(orgData, marker, '</script>', False)[1]
-        orgData = marker + tmp
-        printDBG("_______________")
-        printDBG(orgData)
-        dec = __decode_k(encTab[0], orgData)
+        t2 = re.findall('_1x4bfb36=([^;]+)', data)
+        if t2:
+                t2 = eval(t2[0].replace('parseInt', 'int'))
+
+        t3 = re.findall('_0x30725e,(\(parseInt.*?)\),', data)
+        if t3:
+                t3 = eval(t3[0].replace('parseInt', 'int'))
+
+        dec = _decode_code(encTab[0], t3, t1, t2)
         if not dec:
             if len(encTab[0]) > 5:
                 SetIPTVPlayerLastHostError(_('%s link extractor error.') % 'https://openload.co/')
