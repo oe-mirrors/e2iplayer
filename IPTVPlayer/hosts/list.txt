@@ -108,7 +108,7 @@ hostlaola1tv
 hostlibrestream
 hostliveleak
 hostlocalmedia
-hostlookmovie
+hostlookmovieag
 hostlosmovies
 hostluxveritatis
 hostmaxtvgo

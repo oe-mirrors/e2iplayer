@@ -109,6 +109,7 @@
 "hostlibrestream": "http://ls-streaming.com/",
 "hostliveleak": "https://liveleak.com/",
 "hostlocalmedia": "LocalMedia",
+"hostlookmovieag" : "https://lookmovie.ag/"
 "hostlosmovies": "http://losmovies.cx/",
 "hostluxveritatis": "https://luxveritatis.pl/",
 "hostmaxtvgo": "https://maxtvgo.com/",
