@@ -25,6 +25,7 @@ hostcdapl
 hostchomikuj
 hostchristusvincit
 hostcimaclubcom
+hostcineblog
 hostcinemaxx
 hostcinemay
 hostcineto
@@ -41,6 +42,7 @@ hostdplayit
 hostdokumentalnenet
 hostdpstreamingcx
 hostdrdk
+hostdazn
 hostefilmytv
 hostegybest
 hostekinotv
@@ -106,6 +108,7 @@ hostlaola1tv
 hostlibrestream
 hostliveleak
 hostlocalmedia
+hostlookmovie
 hostlosmovies
 hostluxveritatis
 hostmaxtvgo
