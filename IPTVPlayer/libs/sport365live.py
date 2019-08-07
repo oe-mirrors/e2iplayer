@@ -46,7 +46,7 @@ def GetConfigList():
 ###################################################
 
 class Sport365LiveApi:
-    MAIN_URL   = 'http://www.sport365.live/'
+    MAIN_URL   = 'http://www.sport365.sx/'
     HTTP_HEADER  = { 'User-Agent':'Mozilla/5.0 (X11; Linux i686) AppleWebKit/537.36 (KHTML, like Gecko) Ubuntu Chromium/37.0.2062.120 Chrome/37.0.2062.120 Safari/537.36', 'Accept-Encoding':'gzip, deflate', 'Referer': MAIN_URL }
     CACHE_AES_PASSWORD = ''
     

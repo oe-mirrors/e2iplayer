@@ -550,6 +550,7 @@ class urlparser:
                        'rapidstream.co':       self.pp.parserRAPIDSTREAMCO  ,
                        'videohouse.me':        self.pp.parserVIDEOHOUSE     ,
                        'justupload.io':        self.pp.parserJUSTUPLOAD     ,
+                       'vidspace.io':          self.pp.parserVIDEOSPACE     ,
                     }
         return
     
@@ -12005,6 +12006,17 @@ class pageParser(CaptchaHelper):
     def parserFLIX555COM(self, baseUrl):
         printDBG("parserFLIX555COM baseUrl[%r]" % baseUrl)
         return self._parserUNIVERSAL_A(baseUrl, 'https://flix555.com/embed-{0}-800x600.html', self._findLinks)
+
+    def parserVIDEOSPACE(self, baseUrl):
+        printDBG("parserVIDEOSPACE baseUrl[%r]" % baseUrl)
+        HTTP_HEADER = self.cm.getDefaultHeader(browser='chrome')
+        referer = baseUrl.meta.get('Referer')
+        if referer: HTTP_HEADER['Referer'] = referer
+        urlParams = {'header': HTTP_HEADER}
+        sts, data = self.cm.getPage(baseUrl, urlParams)
+        if not sts: return False
+        videoUrl = ph.find(data, ('player.updateSrc', '"'), '",', flags=0)[1]
+        return videoUrl
 
     def parserVIDEOSTREAMLETNET(self, baseUrl):
         printDBG("parserVIDEOSTREAMLETNET baseUrl[%r]" % baseUrl)
