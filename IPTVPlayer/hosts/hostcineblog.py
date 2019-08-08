@@ -17,7 +17,7 @@ except Exception: import simplejson as json
 ###################################################
 
 def gettytul():
-    return 'https://cb01.dance/'
+    return 'https://cineblog01.kim/'
 
 class Cineblog(CBaseHostClass):
 
@@ -28,7 +28,7 @@ class Cineblog(CBaseHostClass):
         self.HEADER = {'User-Agent': self.USER_AGENT, 'Accept': 'text/html'}
         #self.AJAX_HEADER = dict(self.HEADER)
         
-        self.MAIN_URL = 'https://cb01.dance/'
+        self.MAIN_URL = 'https://cineblog01.kim/'
         self.AJAX_URL = self.MAIN_URL + 'wp-admin/admin-ajax.php'
         self.DEFAULT_ICON_URL = self.MAIN_URL + 'wp-content/uploads/2019/06/cineblog01pazzesca.png'
         

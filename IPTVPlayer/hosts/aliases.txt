@@ -26,7 +26,7 @@
 "hostchomikuj": "http://chomikuj.pl/",
 "hostchristusvincit": "http://christusvincit-tv.pl/",
 "hostcimaclubcom": "http://cimaclub.com/",
-"hostcineblog" : "http://cb01.dance/",
+"hostcineblog" : "http://cineblog01.kim/",
 "hostcinemaxx": "http://cinemaxx.cc/",
 "hostcinemay": "http://cinemay.ws/",
 "hostcineto": "https://cine.to/",
