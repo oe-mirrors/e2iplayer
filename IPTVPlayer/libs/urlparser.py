@@ -132,6 +132,29 @@ class urlparser:
 
     def setHostsMap(self):
         self.hostMap = {
+                       # yep, it can choose from 20.... crazy..
+                       # has to be an easier way to include all 20?
+                       # I'll tidy this up later.  CM
+                       'fe1.lookmovie.ag' : self.pp.parserLOOKMOVIE,
+                       'fe2.lookmovie.ag' : self.pp.parserLOOKMOVIE,
+                       'fe3.lookmovie.ag' : self.pp.parserLOOKMOVIE,
+                       'fe4.lookmovie.ag' : self.pp.parserLOOKMOVIE,
+                       'fe5.lookmovie.ag' : self.pp.parserLOOKMOVIE,
+                       'fe6.lookmovie.ag' : self.pp.parserLOOKMOVIE,
+                       'fe7.lookmovie.ag' : self.pp.parserLOOKMOVIE,
+                       'fe8.lookmovie.ag' : self.pp.parserLOOKMOVIE,
+                       'fe9.lookmovie.ag' : self.pp.parserLOOKMOVIE,
+                       'fe10.lookmovie.ag' : self.pp.parserLOOKMOVIE,
+                       'fe11.lookmovie.ag' : self.pp.parserLOOKMOVIE,
+                       'fe12.lookmovie.ag' : self.pp.parserLOOKMOVIE,
+                       'fe13.lookmovie.ag' : self.pp.parserLOOKMOVIE,
+                       'fe14.lookmovie.ag' : self.pp.parserLOOKMOVIE,
+                       'fe15.lookmovie.ag' : self.pp.parserLOOKMOVIE,
+                       'fe16.lookmovie.ag' : self.pp.parserLOOKMOVIE,
+                       'fe17.lookmovie.ag' : self.pp.parserLOOKMOVIE,
+                       'fe18.lookmovie.ag' : self.pp.parserLOOKMOVIE,
+                       'fe19.lookmovie.ag' : self.pp.parserLOOKMOVIE,
+                       'fe20.lookmovie.ag' : self.pp.parserLOOKMOVIE,
                        '1fichier.com':         self.pp.parser1FICHIERCOM    ,
                        '1tv.ru':               self.pp.parser1TVRU          ,
                        '37.220.36.15':         self.pp.parserMOONWALKCC    ,
@@ -1287,6 +1310,9 @@ class pageParser(CaptchaHelper):
         except Exception:
             printExc()
         return videoTab
+
+    def parserLOOKMOVIE(self, url):
+        return url
         
     def __parseJWPLAYER_A(self, baseUrl, serverName='', customLinksFinder=None, folowIframe=False, sleep_time=None):
         printDBG("pageParser.__parseJWPLAYER_A serverName[%s], baseUrl[%r]" % (serverName, baseUrl))
