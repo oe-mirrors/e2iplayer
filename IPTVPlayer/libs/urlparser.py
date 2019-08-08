@@ -1310,7 +1310,7 @@ class pageParser(CaptchaHelper):
         except Exception:
             printExc()
         return videoTab
-
+        
     def parserLOOKMOVIE(self, url):
         return url
         
@@ -11408,30 +11408,31 @@ class pageParser(CaptchaHelper):
         printDBG("parserLIVESTREAMCOM baseUrl[%s]" % baseUrl)
         # example https://livestream.com/accounts/3312258/events/8705395
 
-        URL_MODEL=r'https?://(?:www\.|new\.)?livestream\.com/(?:accounts/(?P<account_id>\d+))/(?:events/(?P<event_id>\d+))(?:/videos/(?P<id>\d+))?'
+        URL_MODEL = r'https?://(?:new\.)?(?:www\.)?livestream\.com/(?:accounts/(?P<account_id>\d+)|(?P<account_name>[^/]+))/(?:events/(?P<event_id>\d+)|(?P<event_name>[^/]+))(?:/videos/(?P<id>\d+))?'  
         API_URL_MODEL= 'https://livestream.com/api/accounts/%s/events/%s'
         vidTab=[]
 
-        #printDBG(baseUrl)
-        m = re.findall(URL_MODEL, baseUrl)
-        
-        #printDBG(str(m))
-        if len(m)>0:
-            m=m[0]
-            video_id = m[2]
-            event_id = m[1]
-            account_id = m[0]
+        m = re.match(URL_MODEL, baseUrl)
+
+        if m:
+            video_id = m.group('id')
+            if video_id:
+                printDBG('---> video_id:  ' + video_id)
+            else:
+                video_id = ''
+            event_id = m.group('event_id') or m.group('event_name')
+            account_id = m.group('account_id') or m.group('account_name')
             pp=[]
 
             feed_url = API_URL_MODEL % (account_id, event_id) 
 
             printDBG(feed_url)
-            printDBG('---> video_id:  ' + video_id)
+            
             sts, data = self.cm.getPage(feed_url)
             if not sts: 
                 return vidTab
 
-            printDBG(data)
+            #printDBG(data)
             data = json_loads(data)
 
             # key stream_info
