@@ -8432,84 +8432,117 @@ class pageParser(CaptchaHelper):
         return videoUrl
 
     def parserOPENLOADIO(self, baseUrl):
-        printDBG("parserOPENLOADIO baseUrl[%r]" % baseUrl )
-        try:
-            from Plugins.Extensions.IPTVPlayer.tsiplayer.pars_openload import get_video_url as pars_openload
-            return pars_openload(baseUrl)
-        except Exception:
-            printExc()
+        printDBG('parserOPENLOADIO baseUrl[%r]' % baseUrl)
+        HTTP_HEADER = {
+            'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/73.0.3683.103 Safari/537.36',
+            'Accept': 'text/html', 
+            #'Accept-Charset': 'ISO-8859-1,utf-8;q=0.7,*;q=0.3', 
+            'Accept-Encoding': 'gzip', 
+            'Accept-Language': 'en-US,en;q=0.8'
+        }
+        #referer = strwithmeta(baseUrl).meta.get('Referer', '')
+        #if referer:
+        #    HTTP_HEADER['Referer'] = referer
+        sts, data = self.cm.getPage(baseUrl, {'header': HTTP_HEADER})
+        if not sts:
+            return False
 
-        HTTP_HEADER= { 'User-Agent':"Mozilla/5.0", 'Referer':baseUrl}
-        
-        HTTP_HEADER = {'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.11 (KHTML, like Gecko) Chrome/23.0.1271.64 Safari/537.11',
-               'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
-               'Accept-Charset': 'ISO-8859-1,utf-8;q=0.7,*;q=0.3',
-               'Accept-Encoding': 'none',
-               'Accept-Language': 'en-US,en;q=0.8',
-               'Referer':baseUrl}
-
-        sts, data = self.cm.getPage(baseUrl, {'header':HTTP_HEADER})
-        if not sts: return False
-        
         orgData = data
-        
-        if 'content-blocked' in data:
-            msg = clean_html(self.cm.ph.getDataBeetwenMarkers(data, '<img class="image-blocked"', '</div>')[1]).strip()
-            if msg == '': msg = clean_html(self.cm.ph.getDataBeetwenMarkers(data, '<p class="lead"', '</p>')[1]).strip()
-            if msg == '': msg = _("We can't find the file you are looking for. It maybe got deleted by the owner or was removed due a copyright violation.")
+        msg = clean_html(ph.find(data, ('<div', '>', 'blocked'), '</div>', flags=0)[1])
+        if msg or 'content-blocked' in data:
+            if msg == '':
+                msg = clean_html(ph.find(data, ('<p', '>', 'lead'), '</p>', flags=0)[1])
+            if msg == '':
+                msg = _("We can't find the file you are looking for. It maybe got deleted by the owner or was removed due a copyright violation.")
+        if msg:
             SetIPTVPlayerLastHostError(msg)
         
         subTracksData = self.cm.ph.getAllItemsBeetwenMarkers(data, '<track ', '>', False, False)
         subTracks = []
         for track in subTracksData:
-            if 'kind="captions"' not in track: continue
+            if 'kind="captions"' not in track:
+                continue
             subUrl = self.cm.ph.getSearchGroups(track, 'src="([^"]+?)"')[0]
             if subUrl.startswith('/'):
                 subUrl = 'http://openload.co' + subUrl
             if subUrl.startswith('http'):
                 subLang = self.cm.ph.getSearchGroups(track, 'srclang="([^"]+?)"')[0]
                 subLabel = self.cm.ph.getSearchGroups(track, 'label="([^"]+?)"')[0]
-                subTracks.append({'title':subLabel + '_' + subLang, 'url':subUrl, 'lang':subLang, 'format':'srt'})
-        
+                subTracks.append({'title': subLabel + '_' + subLang, 'url': subUrl, 'lang': subLang, 'format': 'srt'})
+
         videoUrl = ''
-        tmp = self.cm.ph.getAllItemsBeetwenNodes(data, ('<div', '>', 'display:none'), ('</div', '>'))
-        for item in tmp:
-            encTab = re.compile('''<[^>]+?id="[^"]*?"[^>]*?>([^<]+?)<''').findall(data)
-            for e in encTab:
-                if len(e) > 40:
-                    encTab.insert(0, e)
-                    break
         
-        def __decode_k(enc, jscode):
-            decoded = ''
+        encTab = re.findall('<p style="" id="[^"]+">(.*?)</p>', data)
+        if not encTab:
+            encTab = re.findall('<p id="[^"]+" style="">(.*?)</p>', data)
+        if not encTab:
+            return
+
+        def _decode_code(code, t3, t1, t2):
+            import math
+            t4 = ''
+            ke = []
+            for i in range(0, len(code[0:9*8]),8):
+                ke.append(int(code[i:i+8],16))
+            t5 = 0
+            t6 = 0
+            while t5 < len(code[9*8:]):
+                t7 = 64
+                t8 = 0
+                t9 = 0
+                ta = 0
+                while True:
+                    if t5 + 1 >= len(code[9*8:]):
+                        t7 = 143;
+                    ta = int(code[9*8+t5:9*8+t5+2], 16)
+                    t5 +=2
+                    if t9 < 6*5:
+                        tb = ta & 63
+                        t8 += tb << t9
+                    else:
+                        tb = ta & 63
+                        t8 += int(tb * math.pow(2, t9))
+                    t9 += 6
+                    if not ta >= t7: break
+                # tc = t8 ^ ke[t6 % 9] ^ t1 ^ t3 ^ t2
+                tc = t8 ^ ke[t6 % 9] ^ t3 ^ t2
+                td = t7 * 2 + 127
+                for i in range(4):
+                    te = chr(((tc & td) >> (9*8/ 9)* i) - 1)
+                    if te != '$':
+                        t4 += te
+                    td = (td << (9*8/ 9))
+                t6 += 1
+            return t4
+
+        t1 = re.findall('_0x59ce16=([^;]+)', data)
+        if t1:
+                t1 = eval(t1[0].replace('parseInt', 'int'))
+
+        t2 = re.findall('_1x4bfb36=([^;]+)', data)
+        if t2:
+                t2 = eval(t2[0].replace('parseInt', 'int'))
+
+        t3 = re.findall('_0x30725e,(\(parseInt.*?)\),', data)
+        if t3:
+                t3 = eval(t3[0].replace('parseInt', 'int'))
+
+        dec = _decode_code(encTab[0], t3, t1, t2)
+        if not dec:
             try:
-                js_params = [{'code':'var id = "%s";' % enc}]
-                js_params.append({'path':GetJSScriptFile('openload.byte')})
-                js_params.append({'name':'openload', 'code':'%s; print(decoded);' % jscode})
-                ret = js_execute_ext( js_params )
-                if ret['sts'] and 0 == ret['code']:
-                    decoded = ret['data'].strip()
-                    printDBG('DECODED DATA -> [%s]' % decoded)
+                from Plugins.Extensions.IPTVPlayer.tsiplayer.pars_openload import get_video_url as pars_openload
+                return pars_openload(baseUrl)
             except Exception:
                 printExc()
-            return decoded
-        
-        marker = 'ﾟωﾟﾉ= /｀ｍ´）ﾉ'
-        tmp = self.cm.ph.getDataBeetwenMarkers(orgData, marker, marker, False)[1]
-        if tmp == '': tmp = self.cm.ph.getDataBeetwenMarkers(orgData, marker, '</script>', False)[1]
-        orgData = marker + tmp
-        orgData = re.sub('''if\s*\([^\}]+?typeof[^\}]+?\}''', '', orgData)
-        orgData = re.sub('''if\s*\([^\}]+?document[^\}]+?\}''', '', orgData)
-        dec = __decode_k(encTab[0], orgData)
-        if dec == '':
-            SetIPTVPlayerLastHostError(_('%s link extractor error.') % 'https://openload.co/')
+            if len(encTab[0]) > 5:
+                SetIPTVPlayerLastHostError(_('%s link extractor error.') % 'https://openload.co/')
             return False
-        
-        videoUrl = 'https://openload.co/stream/{0}?mime=true'.format(dec)
+        videoUrl = ('https://openload.co/stream/{0}?mime=true').format(dec)
+        printDBG("video url -----> " + videoUrl)
         params = dict(HTTP_HEADER)
         params['external_sub_tracks'] = subTracks
         return urlparser.decorateUrl(videoUrl, params)
-        
+
     def parserGAMETRAILERS(self, baseUrl):
         printDBG("parserGAMETRAILERS baseUrl[%r]" % baseUrl )
         list = GametrailersIE()._real_extract(baseUrl)[0]['formats']
