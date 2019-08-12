@@ -347,6 +347,8 @@ class urlparser:
                        'oload.site':           self.pp.parserOPENLOADIO    ,
                        'oload.stream':         self.pp.parserOPENLOADIO    ,
                        'oload.tv':             self.pp.parserOPENLOADIO    ,
+                       'oms.viuclips.net':	   self.pp.parserVIUCLIPS	   ,
+					   'player.veuclips.com': 	self.pp.parserVIUCLIPS	   ,	   
                        'onet.pl':              self.pp.parserONETTV        ,
                        'onet.tv':              self.pp.parserONETTV        ,
                        'openlive.org':         self.pp.parserOPENLIVEORG   ,
@@ -607,7 +609,9 @@ class urlparser:
                 if not self.cm.isValidUrl(url): continue
                 url = strwithmeta(videoTab[idx]['url'])
                 if 'User-Agent' not in url.meta:
-                    url.meta['User-Agent'] = 'Mozilla/5.0 (X11; Ubuntu; Linux i686; rv:21.0) Gecko/20100101 Firefox/21.0'
+                    #url.meta['User-Agent'] = 'Mozilla/5.0 (X11; Ubuntu; Linux i686; rv:21.0) Gecko/20100101 Firefox/21.0'
+                    url.meta['User-Agent'] = 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/73.0.3683.103 Safari/537.36'
+                    
                     videoTab[idx]['url'] = url
         except Exception:
             printExc()
@@ -1310,9 +1314,6 @@ class pageParser(CaptchaHelper):
         except Exception:
             printExc()
         return videoTab
-
-    def parserLOOKMOVIE(self, url):
-        return url
         
     def parserLOOKMOVIE(self, url):
         return url
@@ -2660,30 +2661,40 @@ class pageParser(CaptchaHelper):
         return self.cm.meta['url']
 
     def parserRUTUBE(self, url):
+        printDBG("parserRUTUBE baseUrl[%s]" % url)
+
         videoUrls = []
         videoID = ''
         videoPrivate = ''
-        url += '/'
+        url = url + '/'
         
-        if '//rutube.ru/video/embed' in url or '//rutube.ru/play/embed/' in url:
-            sts, data = self.cm.getPage(url)
-            if not sts: return False
-            url = self.cm.ph.getSearchGroups(data, '''<link[^>]+?href=['"]([^'^"]+?)['"]''')[0]
-
-        videoID = self.cm.ph.getSearchGroups(url+'/', '''[^0-9^a-z]([0-9a-z]{32})[^0-9^a-z]''')[0]
-        if '/private/' in url: videoPrivate = self.cm.ph.getSearchGroups(url+'&', '''[&\?]p=([^&^/]+?)[&/]''')[0]
+        #if '//rutube.ru/video/embed' in url or '//rutube.ru/play/embed/' in url:
+        #    sts, data = self.cm.getPage(url)
+        #    if not sts: 
+        #        return False
+        #    url = self.cm.ph.getSearchGroups(data, '''<link[^>]+?href=['"]([^'^"]+?)['"]''')[0]
         
-        if '' != videoID:
+        
+        videoID = re.findall("[^0-9^a-z]([0-9a-z]{32})[^0-9^a-z]", url)
+        if not videoID:
+            videoID = re.findall("/([0-9]+)[/\?]", url)
+        
+        if '/private/' in url: 
+            videoPrivate = self.cm.ph.getSearchGroups(url+'&', '''[&\?]p=([^&^/]+?)[&/]''')[0]
+        
+        if videoID:
+            videoID = videoID[0]
             printDBG('parserRUTUBE: videoID[%s]' % videoID)
             # get videoInfo:
             #vidInfoUrl = 'http://rutube.ru/api/play/trackinfo/%s/?format=json' % videoID
             vidInfoUrl = 'http://rutube.ru/api/play/options/%s/?format=json&referer=&no_404=true&sqr4374_compat=1' % videoID
-            if videoPrivate != '': vidInfoUrl += '&p=' + videoPrivate
+            if videoPrivate != '': 
+                vidInfoUrl += '&p=' + videoPrivate
             
             sts, data = self.cm.getPage(vidInfoUrl)
             data = json_loads(data)
             if 'm3u8' in data['video_balancer'] and self.cm.isValidUrl(data['video_balancer'].get('m3u8', '')):
-                videoUrls = getDirectM3U8Playlist(data['video_balancer']['m3u8'])
+                videoUrls = getDirectM3U8Playlist(data['video_balancer']['m3u8'], checkExt=False, variantCheck=True, checkContent=True, sortWithMaxBitrate=99999999)
             elif 'json' in data['video_balancer'] and self.cm.isValidUrl(data['video_balancer'].get('json', '')): 
                 sts, data = self.cm.getPage(data['video_balancer']['json'])
                 printDBG(data)
@@ -6404,7 +6415,7 @@ class pageParser(CaptchaHelper):
         sts, data = self.cm.getPage(baseUrl)
         if not sts: return []
         
-        printDBG(data)
+        #printDBG(data)
         
         urlsTab = []
         for item in ['hd_src_no_ratelimit', 'hd_src', 'sd_src_no_ratelimit', 'sd_src']:
@@ -11444,10 +11455,12 @@ class pageParser(CaptchaHelper):
                     i = data['stream_info']
                     title = i['stream_title']
                     url = i['m3u8_url']
+                    pp.append({'name': title + " hls", "url": url})
+
                     params = getDirectM3U8Playlist(url, checkExt=False, variantCheck=True, checkContent=True, sortWithMaxBitrate=99999999)
                     for p in params:
                         p["name"]= title + " " + p["name"]
-                        p["url"] = strwithmeta(p["url"], {'User-Agent': 'Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/59.0.3071.115 Safari/537.36', 'Accept-Encoding':'gzip', 'use_cookie': True, 'load_cookie': True, 'save_cookie': True })
+                        #p["url"] = strwithmeta(p["url"], {'Connection': 'keep-alive', 'Accept-Encoding': 'gzip, deflate', 'Accept': '*/*', 'User-Agent': 'python-requests/2.9.1'})
                         pp.append(p)
                                         
             
@@ -11468,3 +11481,28 @@ class pageParser(CaptchaHelper):
             vidTab.extend(pp)
         return vidTab
 
+    def parserVIUCLIPS(self, baseUrl):
+        printDBG("parserVIUCLIPS baseUrl[%s]" % baseUrl)
+        # example http://oms.viuclips.net/player/PopUpIframe/JwB2kRDt7Y?iframe=popup&u=
+        # 		  http://player.veuclips.com/embed/JwB2kRDt7Y
+
+        baseUrl = baseUrl + "?"
+        video_id = re.findall("viuclips.net/player/PopUpIframe/(.*?)\?", baseUrl)
+        if not video_id:
+            video_id = re.findall("player.veuclips.com/embed/(.*?)\?", baseUrl)
+        if not video_id:
+            return []
+
+        player_url = "player.veuclips.com/embed/%s" % video_id[0]
+        sts, data = self.cm.getPage(player_url)
+        if not sts: 
+            return []
+
+        vidTab=[]
+        links = re.findall("hls:\"(.*?)\"", data)
+        for l in links:
+            if l.startswith("//"):
+                l = "http:" + l
+            vidTab.extend(getDirectM3U8Playlist(l, checkExt=False, variantCheck=True, checkContent=True, sortWithMaxBitrate=99999999))
+
+        return vidTab
