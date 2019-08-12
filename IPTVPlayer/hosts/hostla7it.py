@@ -41,8 +41,6 @@ class La7it(CBaseHostClass):
         self.TG_LA7D_URL = "http://tg.la7.it/listing/tgla7d"
         
         self.USER_AGENT = "Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/49.0.2623.110 Safari/537.36"      
-        #self.defaultParams = {'header':self.HTTP_HEADER}
-        #self.defaultParams = { 'header': {'User-Agent': 'Mozilla/5.0 (Windows NT 6.1; rv:17.0) Gecko/20100101 Firefox/17.0'}}
         self.defaultParams = { 'header': {'User-Agent': self.USER_AGENT}}
 
     def getPage(self, url, addParams = {}, post_data = None):
@@ -56,8 +54,12 @@ class La7it(CBaseHostClass):
         
         # Add the server to the URL if missing
         if url.find("://") == -1:
-            url = self.MAIN_URL + url
-
+            if url.startswith("//"):
+                url = "http:" + url
+            elif url.startswith("/"):
+                url = self.MAIN_URL + url
+            else:
+                url = self.MAIN_URL + "/" + url
         return url
 
     
@@ -77,30 +79,35 @@ class La7it(CBaseHostClass):
 
     def findUrlInPage(self, url):
         url = self.getFullUrl(url)
-        link_video=""
         sts, html = self.getPage(url)
         if not sts: return ""
         
-        regex1 = "vS = '(.*?)'"
-        regex2 = 'm3u8" : "(.*?)"'
-        regex3 = 'm3u8: "(.*?)"'
-        regex4 = '  <iframe src="(.*?)"'
-
-        if re.findall(regex1, html):
-            link_video = re.findall(regex1, html)[0]
+        link_video = re.findall("vS = [\"'](.*?)[\"']", html)
+        if link_video:
+            link_video = link_video[0]
+            printDBG("findUrlInPage.Case 1")
         else:
-            if re.findall(regex2, html):
-                link_video = re.findall(regex2, html)[0]
-            elif re.findall(regex3, html):
-                link_video = re.findall(regex3, html)[0]
-            elif re.findall(regex4, html):
-                iframe = re.findall(regex4, html)[0]
-                sts, html2 = self.getPage(iframe)
-                if not sts: return ""
-
-                if re.findall(regex2, html2):
-                    link_video = str("http:") + re.findall(regex2, html2)[0]
-        
+            link_video = re.findall('/content/(.*?).mp4', html)
+            if link_video:
+                link_video = 'https://awsvodpkg.iltrovatore.it/local/hls/,/content/' + link_video[0] + '.mp4.urlset/master.m3u8'
+                printDBG("findUrlInPage.Case 2")
+            else: 
+                link_video = re.findall('m3u8: "(.*?)"', html)
+                if link_video:
+                    link_video = link_video[0]
+                    printDBG("findUrlInPage.Case 3")
+                else:
+                    iframe = re.findall('  <iframe src="(.*?)"', html)
+                    if iframe:
+                        printDBG("findUrlInPage.Case 4")
+                        sts, html2 = self.getPage(iframe[0])
+                        if not sts: 
+                            return ""
+                        link_video = re.findall('/content/(.*?).mp4')
+                        if link_video:
+                            link_video = str("https:") + link_video[0]
+                            
+        printDBG("Found link %s " % str(link_video))
         return link_video
         
 
@@ -138,46 +145,87 @@ class La7it(CBaseHostClass):
         
         if not sts: return
         
-        guida_tv = ph.findall(html, "<div id=\"content_guida_tv\" class=\"contentGuidaTv clearfix\">", "</ul>\n  </div>\n</div>")   
+        guida_tv = ph.findall(html, "<div id=\"content_guida_tv_rivedi", "<!-- THEME DEBUG -->")   
         if len(guida_tv)>0:
-            items=ph.findall(guida_tv[0], '<div id="item', ' </div>\n                            </div>')
+            #printDBG(guida_tv[0])
+
+            items=ph.findall(guida_tv[0], '<div id="item', '</div>\r\n                  </div>\r\n')
             for item in items:
                 t, orario = ph.find(item,"<div class=\"orario\">", "</div>", flags=0)
-                t, desc = ph.find(item,"<div class=\"descrizione\"><p>", "</p>", flags=0)
+                t, desc = ph.find(item,"<div class=\"occhiello\">", "</div>", flags=0)
+                if desc:
+                    desc = self.cleanHtmlStr(desc)
+                
                 # search for icon
-                regex_icon="<img src=\"(.*?)\""
-                icon = re.findall(regex_icon,item)[0]
-                # search for url and title
-                try:
-                    regex_url="<a href=\"(.*?)\">(.*?)<"
-                    url, title = re.findall(regex_url,item)[0]
+                icon = re.findall("data-background-image=\"(.*?)\"",item)
+                if icon:
+                    icon = icon[0]
+                    if icon.startswith('//'):
+                        icon = 'https:' + icon 
+                #search for url
+                url = re.findall("href=\"(.*?)\"", item)
+                if url:
+                    url = url[0]
+                    cat = 'epg_item'
+                    tc = 'white'
+                else:
+                    url = ' '
+                    desc = "NON DISPONIBILE \n" + desc
+                    cat = 'epg_item_nop'
+                    tc = 'red'
+                    
+                # search for title    
+                title = ph.findall(item, '<h2>', '</h2>')
+                if title:
+                    title = self.cleanHtmlStr(title[0])
                     title = "{0} {1}".format(orario,title)
-                    self.addVideo(MergeDicts(cItem, {'category': 'epg_item', 'title': title , 'url': url, 'desc': desc, 'icon': icon }))              
-                except:
-                    regex_title="<div class=\"titolo clearfix\">\n(.*?)</div>"                    
-                    title = re.findall(regex_title,item)[0].strip() 
-                    title = "{0} {1}".format(orario,title)
-                    self.addVideo(MergeDicts(cItem, {'category': 'epg_item_nop', 'title': title , 'url': '', 'desc': "NON DISPONIBILE \n" + desc, 'icon': icon, 'text_color': 'red' }))              
-                #printDBG ('La7 add epg item ' + orario + ' ' + title + ' ' + url)
+
+                params = MergeDicts(cItem, {'category': cat , 'title': title , 'url': url, 'desc': desc, 'icon': icon, 'text_color': tc })
+                printDBG(str(params))
+                self.addVideo(params)              
     
     def listPrograms(self,cItem):
         printDBG('La7 - start ondemand list')
         sts, html = self.getPage(self.PROGRAM_URL) 
         if not sts: return
         
-        items=ph.findall(html, "<div class=\"itemTuttiProgrammi", "</a></span>")
+        shows={}
+        for i in range(10):
+            shows[str(i)] = []
+        for i in range(26):
+            shows[chr(ord('A')+i)] = []
+        
+        items = re.findall("<a href=\"(.*?)\" data-anchor=\"(.*?)\">(.|\n)*?background-image=\"(.*?)\">((.|\n)*?)</a>", html)
 
         for item in items:
-            regex_url="<a href=\"(.*?)\">(.*?)<"
-            url, title = re.findall(regex_url,item)[0]
-            title = HTMLParser.HTMLParser().unescape(title).encode('utf-8')
-            try:
-                regex_icon="<img src=\"(.*?)\""
-                icon = re.findall(regex_icon,item)[0]
-                self.addDir(MergeDicts(cItem, {'category': 'program', 'title': title , 'url': url, 'icon': icon }))              
-            except:
-                self.addDir(MergeDicts(cItem, {'category': 'program', 'title': title , 'url': url}))              
+            url = item[0]
+            anchor = item[1]
+            icon = self.getFullUrl(item[3])
+            title = self.cleanHtmlStr(item[4])
+            #title = HTMLParser.HTMLParser().unescape(title).encode('utf-8')
+            params = MergeDicts(cItem, {'category': 'program', 'title': title , 'url': url, 'icon': icon })                
+            printDBG(str(params))
+            shows[anchor].append(params)            
 
+        for i in range(10):
+            letter = str(i)
+            if shows[letter]:
+                params = MergeDicts(cItem, {'category': 'program_list', 'title': letter, 'icon': icon, 'sub_items' : shows[letter] })               
+                printDBG(str(params))
+                self.addDir(params)    
+        
+        for i in range(26):
+            letter = chr(ord('A')+i)
+            if shows[letter]:
+                params = MergeDicts(cItem, {'category': 'program_list', 'title': letter, 'icon': icon, 'sub_items' : shows[letter] })               
+                printDBG(str(params))
+                self.addDir(params)    
+
+    def listProgramsByLetter(self,cItem):
+        printDBG('La7 - start ondemand list by letter')
+        for i in cItem['sub_items']:
+            self.addDir(i)
+                
     def listTgMenu (self, cItem):
         printDBG('La7 - start news menu')
         MAIN_CAT_TAB = [{'category':'program', 'title': 'Tg La7', 'url': '/tgla7'},
@@ -193,67 +241,68 @@ class La7it(CBaseHostClass):
         url = self.getFullUrl(cItem["url"] + "/rivedila7")
         
         sts, html = self.getPage(url) 
-        if not sts: return
+        if not sts: 
+            return
 
         if pagenum == 0 : 
             # last episode
-            try:
-                replica = ph.findall(html, "<div class=\"contenitoreUltimaReplica", "<div class=\"clearfix\"></div>")[0]
-                regex_icon="<img src=\"(.*?)\""
-                icon = re.findall(regex_icon,replica)[0]
-                regex_url="<a href=\"(.*?)\""
-                url = re.findall(regex_url,replica)[0]
-                t, title = ph.find(replica, "<div class=\"title\">", "</div>", flags=0)
-                t, data = ph.find(replica, "<div class=\"dataPuntata\">", "</div>", flags=0)
-                t, desc = ph.find(replica, "<div class=\"views-field views-field-field-testo-lancio\"><p>", "</", flags=0)
+            t, replica = ph.find(html, "<div class=\"ultima_puntata\">", "</div>\r\n                                    </div>", flags=0)
+            if replica:
+                icon = re.findall("background-image=\"(.*?)\"",replica)[0]
+                url = re.findall("<a href=\"(.*?)\"",replica)[0]
+                t, title = ph.find(replica, "<div class=\"title_puntata\">", "</div>", flags=0)
+                t, data = ph.find(replica, "<div class=\"scritta_ultima\">", "</div>", flags=0)
+                data = self.cleanHtmlStr(data)
+                t, desc = ph.find(replica, "<div class=\"occhiello\">", "</div>", flags=0)
+
                 title = title + " (" + data + ")"
                 title = HTMLParser.HTMLParser().unescape(title).encode('utf-8')
                 desc = HTMLParser.HTMLParser().unescape(desc).encode('utf-8')
                 self.addVideo(MergeDicts(cItem, {'category': 'epg_item', 'title': title , 'url': url, 'icon': icon , 'desc' : desc}))              
-
-            except:
+            else:
                 printDBG("la7 - no last episode video box for program '{0}'".format(cItem["title"]))
         
             # last week episodes
-            url = self.getFullUrl(cItem["url"] + "/rivedila7/settimana")
-            sts, html = self.getPage(url) 
-            if sts:
-                try:
-                    repliche = ph.findall(html, "<div class=\"itemPuntata", "</span></div>")
-                    for replica in repliche:
-                            regex_icon="<img.*data-src=\"(.*?)\""
-                            icon = re.findall(regex_icon,replica)[0]
-                            regex_url="div class=\"title\"><a href=\"(.*?)\">(.*?)</a>"                
-                            url, title = re.findall(regex_url,replica)[0]
-                            t, data = ph.find(replica, "<div class=\"dataPuntata\">", "</div>", flags=0)
-                            t, desc = ph.find(replica, "<div class=\"views-field views-field-field-testo-lancio\">", "</div>", flags=0)
+            t, settimana = ph.find(html, "> LA SETTIMANA <", "Puntate Cult", flags=0)
+            if not settimana:
+                t, settimana = ph.find(html, "> LA SETTIMANA <", "</body>", flags=0)
+            if settimana:
+                episodi = re.findall("<a.*href=\"(.*?)\">\r\n.*<div class=\"holder-bg\">\r\n.*<div.*-image=\"(.*?)\"((.|\n)*?)</a>", settimana)
+
+                for r in episodi:
+                        url = r[0]
+                        icon = self.getFullUrl(r[1])
+                        t, title = ph.find(r[2], "<div class=\"title\">", "</div>", flags=0)
+                        if title:
+                            title = self.cleanHtmlStr(title)
+                        t, data = ph.find(r[2], "<div class=\"data\">", "</div>", flags=0)
+                        if data:
                             title = title + " (" + data + ")"
-                            title = HTMLParser.HTMLParser().unescape(title).encode('utf-8')
-                            desc = HTMLParser.HTMLParser().unescape(desc).encode('utf-8')
-                            self.addVideo(MergeDicts(cItem, {'category': 'epg_item', 'title': title , 'url': url, 'icon': icon , 'desc' : desc}))              
-                except:
-                    printDBG("la7 - no last week episodes for program '{0}'".format(cItem["title"]))
+                        title = HTMLParser.HTMLParser().unescape(title).encode('utf-8')
+                        self.addVideo(MergeDicts(cItem, {'category': 'epg_item', 'title': title , 'url': url, 'icon': icon }))              
             else:
                 printDBG("la7 - error searching last week episodes for program '{0}'".format(cItem["title"]))
         
         # older episodes
-        url = self.getFullUrl(cItem["url"] + "/rivedila7/archivio?page={0}".format(pagenum))
+        url = self.getFullUrl(cItem["url"] + "/rivedila7/?page={0}".format(pagenum))
         
         sts, html = self.getPage(url) 
         if not sts: return
 
-        repliche = ph.findall(html, "<div class=\"itemPuntata", "</span></div>")
-        for replica in repliche:
-                regex_icon="<img.*data-src=\"(.*?)\""
-                icon = re.findall(regex_icon,replica)[0]
-                regex_url="div class=\"title\"><a href=\"(.*?)\">(.*?)</a>"                
-                url, title = re.findall(regex_url,replica)[0]
-                t, data = ph.find(replica, "<div class=\"dataPuntata\">", "</div>", flags=0)
-                t, desc = ph.find(replica, "<div class=\"views-field views-field-field-testo-lancio\">", "</div>", flags=0)
-                title = title + " (" + data + ")"
+        t, finale = ph.find(html, "Puntate Cult", "</body>", flags=0)
+        repliche = re.findall("<a.*href=\"(.*?)\">\r\n.*<div class=\"holder-bg\">\r\n.*<div.*-image=\"(.*?)\"((.|\n)*?)</a>", finale)
+        
+        for r in repliche:
+                url = r[0]
+                icon = self.getFullUrl(r[1])
+                t, title = ph.find(r[2], "<div class=\"title\">", "</div>", flags=0)
+                if title:
+                    title = self.cleanHtmlStr(title)
+                t, data = ph.find(r[2], "<div class=\"data\">", "</div>", flags=0)
+                if data:
+                    title = title + " (" + data + ")"
                 title = HTMLParser.HTMLParser().unescape(title).encode('utf-8')
-                desc = HTMLParser.HTMLParser().unescape(desc).encode('utf-8')
-                self.addVideo(MergeDicts(cItem, {'category': 'epg_item', 'title': title , 'url': url, 'icon': icon , 'desc' : desc}))              
+                self.addVideo(MergeDicts(cItem, {'category': 'epg_item', 'title': title , 'url': url, 'icon': icon }))              
             
         # look for next button in page
         if html.find("<li class=\"pager-next\">") != -1:   
@@ -287,6 +336,8 @@ class La7it(CBaseHostClass):
             self.listPrograms(self.currItem)
         elif category == 'program':
             self.showProgram(self.currItem)
+        elif category == 'program_list':
+            self.listProgramsByLetter(self.currItem)
         elif category == 'program_next':
             self.showProgram(self.currItem, self.currItem["page_number"])
         else:
