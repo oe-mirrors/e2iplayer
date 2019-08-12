@@ -48,7 +48,7 @@ class LookMovieag(CBaseHostClass):
 
         self.defaultParams = {'header':self.HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}     
         
-        self.HOST_VER = '1.1 (04/08/2019)'
+        self.HOST_VER = '1.3 (10/08/2019)'
 
         self.MAIN_CAT_TAB =     [
                                     {'category':'movies',         'title': _('Movies'),       'url':self.MAIN_URL, 'desc': '\c00????00 Info: \c00??????Movies\\n \c00????00Version: \c00??????'+self.HOST_VER+'\\n \c00????00Developer: \c00??????Codermik\\n', 'icon':self.DEFAULT_ICON_URL},
@@ -58,7 +58,8 @@ class LookMovieag(CBaseHostClass):
 
         self.MOVIE_SUB_CAT =    [
                                     {'category':'allmovies',      'title': _('All'),       'url':self.MAIN_URL, 'desc': '\c00????00 Info: \c00??????Show all available movies (no filtering).\\n \c00????00Version: \c00??????'+self.HOST_VER+'\\n \c00????00Developer: \c00??????Codermik\\n', 'icon':self.DEFAULT_ICON_URL},
-                                    {'category':'latestmovies',   'title': _('Latest Added Movies'),       'url':self.MAIN_URL + '/movies/', 'desc': '\c00????00 Info: \c00??????Show all moves just added.\\n \c00????00Version: \c00??????'+self.HOST_VER+'\\n \c00????00Developer: \c00??????Codermik\\n', 'icon':self.DEFAULT_ICON_URL},
+                                    {'category':'latestmovies',   'title': _('Latest Added Movies'),       'url':self.MAIN_URL + '/movies/', 'desc': '\c00????00 Info: \c00??????Show all movies just added.\\n \c00????00Version: \c00??????'+self.HOST_VER+'\\n \c00????00Developer: \c00??????Codermik\\n', 'icon':self.DEFAULT_ICON_URL},
+                                    {'category':'sortbyyear',   'title': _('Filter By Year'),       'url':self.MAIN_URL + '/movies/', 'desc': '\c00????00 Info: \c00??????Show all movies in a chosen year.\\n \c00????00Version: \c00??????'+self.HOST_VER+'\\n \c00????00Developer: \c00??????Codermik\\n', 'icon':self.DEFAULT_ICON_URL},
                                     {'category':'moviegenres',    'title': _('Genres'),       'url':self.MAIN_URL + '/genres/', 'desc': '\c00????00 Info: \c00??????Browse movies by Genre.\\n \c00????00Version: \c00??????'+self.HOST_VER+'\\n \c00????00Developer: \c00??????Codermik\\n', 'icon':self.DEFAULT_ICON_URL}                               
                                 ]
 
@@ -83,6 +84,7 @@ class LookMovieag(CBaseHostClass):
                                     {'category':'listgenre',    'title': _('Western Movies'),       'url':self.MAIN_URL + '/movies/genre/western', 'desc': '\c00????00 Info: \c00??????Filter by western movies.\\n \c00????00Version: \c00??????'+self.HOST_VER+'\\n \c00????00Developer: \c00??????Codermik\\n', 'icon':self.DEFAULT_ICON_URL},                               
                                 ]
     
+
     def _getFullUrl(self, url):
         if 0 < len(url) and not url.startswith('http'):
             url = self.MAIN_URL + url
@@ -99,8 +101,21 @@ class LookMovieag(CBaseHostClass):
         addParams['cloudflare_params'] = {'domain':self.up.getDomain(baseUrl), 'cookie_file':self.COOKIE_FILE, 'User-Agent':self.USER_AGENT, 'full_url_handle':_getFullUrl}
         return self.cm.getPageCFProtection(baseUrl, addParams, post_data)
 
-    def listItems(self, cItem):  
-        
+    def buildYears(self, cItem):
+        # years 1921 - 2019, newest first
+        year = 2019
+        while year >= 1921:
+            tmpyear = '%s' % year
+            params = dict(cItem)
+            url = 'https://lookmovie.ag/?y[]=%s&r=&so=' % year
+            params.update({'category':'listyears', 'title':tmpyear, 'url':url})
+            self.addDir(params)
+            year-=1
+
+    def buildGenres(self, cItem):
+        printDBG('E2iStream >>>>>> buildGenres!')
+
+    def listItems(self, cItem):          
         page = cItem.get('page', 1)        
         sts, data = self.getPage(cItem['url'])
         if not sts: return
@@ -111,41 +126,46 @@ class LookMovieag(CBaseHostClass):
         if 'Found 0' in data:
             printDBG('E2iStream >>>>>> listItems >>>>>>> No results found!')
         else:
-            if 'a class="pagination_next"' in data:
-                nextPage = self.cm.ph.getAllItemsBeetwenNodes(data, ('a class="pagination_next"', 'ion-arrow-right-b'), ('</a>'))[0]
-                nextPage = self.MAIN_URL + self.cm.ph.getAllItemsBeetwenNodes(nextPage,'href="//lookmovie.ag/', ('">'),False)[0]
-            block = self.cm.ph.getAllItemsBeetwenNodes(data, ('div class="flex-wrap-movielist"', 'movie-item'), ('<div class="pagination-template"'))[0]
-            block = self.cm.ph.getAllItemsBeetwenNodes(block, ('div class="movie-item', 'movie-item'), ('</h6>'))
-            # site contains "next page" arrow even if we have 1 result, lets patch this otherwise we will have a "Next Page" where its not needed.
-            # For info: website has 40 items per page therefore anything lower than that requires no "next page".
-            if len(block) < 40: nextPage = ''
-            for items in block:
-                title = self.cleanHtmlStr(self.cm.ph.getAllItemsBeetwenNodes(items,'alt="', ('"'),False)[0])
-                year = self.cm.ph.getAllItemsBeetwenNodes(items,'<p class="year">', ('</p>'),False)[0]
+            try:
+                if 'a class="pagination_next"' in data:
+                    nextPage = self.cm.ph.getAllItemsBeetwenNodes(data, ('a class="pagination_next"', 'ion-arrow-right-b'), ('</a>'))[0]
+                    nextPage = self.MAIN_URL + self.cm.ph.getAllItemsBeetwenNodes(nextPage,'href="//lookmovie.ag/', ('">'),False)[0]
 
-                if '<div class="quality-tag tooltip">' in items: 
-                    quality = self.cm.ph.getAllItemsBeetwenNodes(items,'<div class="quality-tag tooltip">', ('<span'),False)[0]
-                    if 'HD' in quality: 
-                        quality = 'HD' 
-                        tooltip = '720p HD Quality Movie.'
-                        title += '  \c00????00('+quality+')'
-                elif '<div class="bad quality-tag tooltip">' in items:
-                    quality = self.cm.ph.getAllItemsBeetwenNodes(items,'<div class="bad quality-tag tooltip">', ('<span'),False)[0]
-                    if 'LQ' in quality: 
-                        quality = 'LQ' 
-                        tooltip = 'Low Quality (Cam?) - Sometimes the website does not update LQ to HQ when a cam version is replaced - its always good to check manually.'
-                        title += '  \c00????00('+quality+')'
-                else:
-                    quality = ''
-                    tooltip = 'No quality has been specified on the website, please test manually.'
-
-                videoUrl = self.cm.ph.getSearchGroups(items, 'href="([^"]+?)"')[0]
-                videoUrl = self.MAIN_URL + videoUrl[:0] + videoUrl[1:]  # removing the the double // at the start of the url
-                imageUrl = self.cm.ph.getAllItemsBeetwenNodes(items,' data-src="', ('"'),False)[0]
-                desc = '\c00????00 Title: \c00??????'+title+'\\n \c00????00Year: \c00??????'+year+'\\n \c00????00Description: \c00??????'+tooltip
-                params = dict(cItem)
-                params.update({'good_for_fav':True, 'title':self.cleanHtmlStr(title), 'url':videoUrl, 'icon':imageUrl, 'desc':self.cleanHtmlStr(desc)})
-                self.addVideo(params)
+                block = self.cm.ph.getAllItemsBeetwenNodes(data, ('div class="flex-wrap-movielist"', 'movie-item'), ('<div class="pagination-template"'))[0]
+                block = self.cm.ph.getAllItemsBeetwenNodes(block, ('div class="movie-item', 'movie-item'), ('</h6>'))
+                # site contains "next page" arrow even if we have 1 result, lets patch this otherwise we will have a "Next Page" where its not needed.
+                # For info: website has 40 items per page therefore anything lower than that requires no "next page".
+                if len(block) < 40: nextPage = ''
+                for items in block:
+                    title = self.cm.ph.getAllItemsBeetwenNodes(items,'<div class="mv-item-infor">', ('</h6>'),False)[0]
+                    title = self.cm.ph.getAllItemsBeetwenNodes(title,'">', ('</a>'),False)[0]
+                    title = title.replace(' ', ' ')
+                    self.cleanHtmlStr(data)
+                    year = self.cm.ph.getAllItemsBeetwenNodes(items,'<p class="year">', ('</p>'),False)[0]
+                    if '<div class="quality-tag tooltip">' in items: 
+                        quality = self.cm.ph.getAllItemsBeetwenNodes(items,'<div class="quality-tag tooltip">', ('<span'),False)[0]
+                        if 'HD' in quality: 
+                            quality = 'HD' 
+                            tooltip = '720p HD Quality Movie.'
+                            title += '  \c00????00('+quality+')'
+                    elif '<div class="bad quality-tag tooltip">' in items:
+                        quality = self.cm.ph.getAllItemsBeetwenNodes(items,'<div class="bad quality-tag tooltip">', ('<span'),False)[0]
+                        if 'LQ' in quality: 
+                            quality = 'LQ' 
+                            tooltip = 'Low Quality (Cam?) - Sometimes the website does not update LQ to HQ when a cam version is replaced - its always good to check manually.'
+                            title += '  \c00????00('+quality+')'
+                    else:
+                        quality = ''
+                        tooltip = 'No quality has been specified on the website, please test manually.'
+                    videoUrl = self.cm.ph.getSearchGroups(items, 'href="([^"]+?)"')[0]
+                    videoUrl = self.MAIN_URL + videoUrl[:0] + videoUrl[1:]  # removing the the double // at the start of the url
+                    imageUrl = self.cm.ph.getSearchGroups(items, 'data-src="([^"]+?)"')[0]
+                    desc = '\c00????00 Title: \c00??????'+title+'\\n \c00????00Year: \c00??????'+year+'\\n \c00????00Description: \c00??????'+tooltip
+                    params = dict(cItem)
+                    params.update({'good_for_fav':True, 'title':self.cleanHtmlStr(title), 'url':videoUrl, 'icon':imageUrl, 'desc':self.cleanHtmlStr(desc)})
+                    self.addVideo(params)
+            except:
+                printDBG('e2iStream >>>>>>>>>>> failed to parse website data - please report!')
 
         if nextPage != '':
            params = dict(cItem)
@@ -203,6 +223,10 @@ class LookMovieag(CBaseHostClass):
         elif category == 'allmovies':
             self.listItems(self.currItem)
         elif category == 'latestmovies':
+            self.listItems(self.currItem)
+        elif category == 'sortbyyear':
+            self.buildYears(self.currItem)
+        elif category == 'listyears':
             self.listItems(self.currItem)
         elif category == 'moviegenres':
             self.listsTab(self.GENRE_SUB_CAT, self.currItem)
