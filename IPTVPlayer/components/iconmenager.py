@@ -31,8 +31,10 @@ from Components.config import config
 #config.plugins.iptvplayer.SciezkaCache = ConfigText(default = "/hdd/IPTVCache")
 
 class IconMenager:
-    HEADER = {'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/73.0.3683.103 Safari/537.36', 'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8'}
-    
+    HEADER = {'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/73.0.3683.103 Safari/537.36', 'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8', 'Accept-Encoding': 'gzip, deflate'}
+    #HEADER = {'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/73.0.3683.103 Safari/537.36'}
+
+	
     def __init__(self, updateFun = None, downloadNew = True):
         printDBG( "IconMenager.__init__" )
         self.DOWNLOADED_IMAGE_PATH_BASE = config.plugins.iptvplayer.SciezkaCache.value
@@ -256,8 +258,10 @@ class IconMenager:
             if 'jpeg' in subtypes: params['check_first_bytes'].extend(['\xFF\xD8','\xFF\xD9'])
             if 'png' in subtypes: params['check_first_bytes'].append('\x89\x50\x4E\x47')
             if 'gif' in subtypes: params['check_first_bytes'].extend(['GIF87a','GIF89a'])
+            # formato webp	'RI'
+            if 'webp' in subtypes: params['check_first_bytes'].extend(['RI'])
         else:
-            params['check_first_bytes'] = ['\xFF\xD8', '\xFF\xD9', '\x89\x50\x4E\x47','GIF87a','GIF89a']
+            params['check_first_bytes'] = ['\xFF\xD8', '\xFF\xD9', '\x89\x50\x4E\x47','GIF87a','GIF89a','RI']
         
         if img_url.endswith('|cf'):
             img_url = img_url[:-3]
@@ -335,5 +339,5 @@ class IconMenager:
         
         params = MergeDicts(params, params_cfad)
         
-        return self.cm.saveWebFile(file_path, img_url, params)['sts']
+        return self.cm.saveWebFile(file_path, img_url, addParams = params)['sts']
     

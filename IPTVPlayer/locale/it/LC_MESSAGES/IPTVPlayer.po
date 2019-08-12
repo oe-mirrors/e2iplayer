@@ -6834,32 +6834,26 @@ msgstr "Si, nella console"
 msgid "yes, to file /hdd/iptv.dbg"
 msgstr "Si, nel file /hdd/iptv.dbg"
 
-#~ msgid "iMPACT Wrestling"
-#~ msgstr "iMPACT Wrestling"
+#: ../hosts/hostourmatchnet.py
+msgid "England"
+msgstr "Inghilterra"
 
-#~ msgid "Main Event"
-#~ msgstr "Programma principale"
+#: ../hosts/hostourmatchnet.py
+msgid "Europe"
+msgstr "Europa"
 
-#~ msgid "UFC"
-#~ msgstr "UFC"
+#: ../hosts/hostourmatchnet.py
+msgid "Holland"
+msgstr "Olanda"
 
-#~ msgid "Indy"
-#~ msgstr "Indy"
+#: ../hosts/hostourmatchnet.py
+msgid "International"
+msgstr "Internazionale"
 
-#~ msgid "Removing the old version."
-#~ msgstr "Rimozione versione precedente"
+#: ../hosts/hostourmatchnet.py
+msgid "International Friendlies"
+msgstr "Amichevoli fra nazionali"
 
-#~ msgid "Brand"
-#~ msgstr "Marca"
-
-#~ msgid "Clip"
-#~ msgstr "Filmato"
-
-#~ msgid "GitLab version was downloaded successfully."
-#~ msgstr "La versione di Gitlab è stata scaricata con successo."
-
-#~ msgid "http://www.iptvplayer.gitlab.io/"
-#~ msgstr "http://www.iptvplayer.gitlab.io/"
-
-#~ msgid "live"
-#~ msgstr "Live"
+#: ../hosts/hostourmatchnet.py
+msgid "Club Friendlies"
+msgstr "Amichevoli fra club"
