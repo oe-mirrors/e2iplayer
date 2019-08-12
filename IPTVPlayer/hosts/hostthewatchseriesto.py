@@ -1,4 +1,17 @@
 # -*- coding: utf-8 -*-
+
+#
+#
+# @Codermik release, based on @Samsamsam's E2iPlayer public.
+# Released with kind permission of Samsamsam.
+# All code developed by Samsamsam is the property of the Samsamsam and the E2iPlayer project,  
+# all other work is © E2iStream Team, aka Codermik.  TSiPlayer is © Rgysoft, his group can be
+# found here:  https://www.facebook.com/E2TSIPlayer/
+#
+# https://www.facebook.com/e2iStream/
+#
+#
+
 ###################################################
 # LOCAL import
 ###################################################
@@ -24,10 +37,12 @@ from Components.config import config, ConfigSelection, getConfigListEntry
 # Config options for HOST
 ###################################################
 config.plugins.iptvplayer.swatchseries_web_proxy_gateway = ConfigSelection(default = "auto", choices = [("auto", _("Auto")), ("always", _("Always")), ("never",  _("Never"))])
+config.plugins.iptvplayer.swatchseries_web_proxy_gateway_provider = ConfigSelection(default = "hideproxymeus", choices = [("hideproxymenl", _("hideproxy.me (NL)")),("hideproxymeus", _("hideproxy.me (US)")),("hideproxymede", _("hideproxy.me (DE)"))])
 
 def GetConfigList():
     optionList = []
     optionList.append(getConfigListEntry(_("Use web proxy gateway"), config.plugins.iptvplayer.swatchseries_web_proxy_gateway))
+    optionList.append(getConfigListEntry(_("Web proxy provider"), config.plugins.iptvplayer.swatchseries_web_proxy_gateway_provider))
     return optionList
 ###################################################
 
@@ -45,13 +60,14 @@ class TheWatchseriesTo(CBaseHostClass):
     AJAX_HEADER = dict(HEADER)
     AJAX_HEADER.update( {'X-Requested-With': 'XMLHttpRequest'} )
     
-    MAIN_CAT_TAB = [{'icon':DEFAULT_ICON, 'category':'list_series',     'title': _('Series list'),           'url':MAIN_URL+'series'},
-                    {'icon':DEFAULT_ICON, 'category':'episodes',        'title': _('Popular Episodes'),      'url':MAIN_URL+'new'},
-                    {'icon':DEFAULT_ICON, 'category':'episodes',        'title': _('Newest Episodes'),       'url':MAIN_URL+'latest'},
-                    {'icon':DEFAULT_ICON, 'category':'categories',      'title': _('All A-Z'),               'url':MAIN_URL+'letters/A'},
-                    {'icon':DEFAULT_ICON, 'category':'categories',      'title': _('Genres'),                'url':MAIN_URL+'genres/action'},
+    MAIN_CAT_TAB = [{'icon':DEFAULT_ICON, 'category':'list_series',     'title': _('Series list'),           'url':MAIN_URL+'series'},                  # https://www1.swatchseries.to/series
+                    {'icon':DEFAULT_ICON, 'category':'episodes',        'title': _('Popular Episodes'),      'url':MAIN_URL+'new'},                     # https://www1.swatchseries.to/new
+                    {'icon':DEFAULT_ICON, 'category':'episodes',        'title': _('Newest Episodes'),       'url':MAIN_URL+'latest'},                  # https://www1.swatchseries.to/latest
+                    {'icon':DEFAULT_ICON, 'category':'categories',      'title': _('All A-Z'),               'url':MAIN_URL+'letters/A'},               # https://www1.swatchseries.to/letters/A
+                    {'icon':DEFAULT_ICON, 'category':'categories',      'title': _('Genres'),                'url':MAIN_URL+'genres/action'},           # https://www1.swatchseries.to/genres/action   
                     {'icon':DEFAULT_ICON, 'category':'search',          'title': _('Search'), 'search_item':True},
                     {'icon':DEFAULT_ICON, 'category':'search_history',  'title': _('Search history')} ]
+
  
     def __init__(self):
         CBaseHostClass.__init__(self, {'history':'TheWatchseriesTo.tv', 'cookie':'thewatchseriesto.cookie'})
@@ -59,7 +75,21 @@ class TheWatchseriesTo(CBaseHostClass):
         self.seasonCache = {}
         self.cacheLinks = {}
         self.needProxy = None
-        
+    
+    def getProxyProvider(self):
+        # provides support for end user to select an alternative
+        # proxy from the host configuration -i'll be adding more
+        # proxies in the next update of this host.  CM
+        val = config.plugins.iptvplayer.swatchseries_web_proxy_gateway_provider.value
+        if val == 'hideproxymenl':
+            return 'https://nl.hideproxy.me/go.php?u={0}&b=4'
+        elif val == 'hideproxymeus':
+            return 'https://us.hideproxy.me/go.php?u={0}&b=4'
+        elif val == 'hideproxymede':
+            return 'https://de.hideproxy.me/go.php?u={0}&b=4'
+        else:
+            return 'https://nl.hideproxy.me/go.php?u={0}&b=4'
+
     def isNeedProxy(self):
         val = config.plugins.iptvplayer.swatchseries_web_proxy_gateway.value
         if val == 'always':
@@ -80,9 +110,9 @@ class TheWatchseriesTo(CBaseHostClass):
         params.update({'header':HTTP_HEADER})
         
         if self.isNeedProxy() and ('thewatchseries.to' in url or 'watch-series.to' in url or 'the-watch-series.to' in url or self.DOMAIN in url):
-            proxy = 'http://securefor.com/browse.php?u={0}&b=4'.format(urllib.quote(url, ''))
-            params['header']['Referer'] = proxy + '&f=norefer'
-            params['header']['Cookie'] = 'flags=2e5;'
+            proxy = self.getProxyProvider()
+            proxy = proxy.format(urllib.quote(url, ''))
+            params['header']['Referer'] = proxy # + '&f=norefer'
             url = proxy
         sts, data = self.cm.getPage(url, params, post_data)
         if sts and None == data:
@@ -92,16 +122,17 @@ class TheWatchseriesTo(CBaseHostClass):
     def getIconUrl(self, url):
         url = self.getFullUrl(url)
         if self.isNeedProxy() and ('thewatchseries.to' in url or 'watch-series.to' in url or 'the-watch-series.to' in url or self.DOMAIN in url):
-            proxy = 'http://securefor.com/browse.php?u={0}&b=4&f=norefer'.format(urllib.quote(url, ''))
+            proxy = self.getProxyProvider()
+            proxy = proxy.format(urllib.quote(url, ''))
             params = {}
             params['User-Agent'] = self.HEADER['User-Agent'],
             params['Referer'] = proxy
-            params['Cookie'] = 'flags=2e5;'
             url = strwithmeta(proxy, params) 
         return url
         
     def getFullUrl(self, url):
-        if self.isNeedProxy() and ('securefor.com' in url or '/browse.php' in url):
+        # i'll need to adjust this if adding new proxy providers CM
+        if self.isNeedProxy() and ('hideproxy.me' in url or '/browse.php' in url):
             url2 = urllib.unquote( self.cm.ph.getSearchGroups(url+'&', '''\?u=(http[^&]+?)&''')[0] ).replace('&amp;', '&')
             printDBG("[%s] --> [%s]" % (url, url2))
             url = url2
@@ -145,7 +176,6 @@ class TheWatchseriesTo(CBaseHostClass):
             self.addDir(params)
             
     def listItems(self, cItem, nextCategory):
-        printDBG("TheWatchseriesTo.listItems")
         page      = cItem.get('page', 1)
         post_data = cItem.get('post_data', None) 
         url       = cItem['url']
@@ -188,7 +218,7 @@ class TheWatchseriesTo(CBaseHostClass):
             if title == '': title = item.split('<span class="epnum"')[0]
             desc = self.cleanHtmlStr( self.cm.ph.getDataBeetwenMarkers(item, '<div class="info">', '</div>', False)[1] )
             if desc == '': desc = self.cleanHtmlStr(item)
-            
+           
             params = dict(cItem)
             params.update({'good_for_fav': True, 'category':nextCategory, 'title':self.cleanHtmlStr(title), 'url':self.getFullUrl(url), 'icon':icon, 'desc':desc})
             
@@ -196,23 +226,21 @@ class TheWatchseriesTo(CBaseHostClass):
                 self.addVideo(params)
             else:
                 self.addDir(params)
+
         if nextPage:
                 params = dict(cItem)
                 params.update({'title':_('Next page'), 'page':page+1})
                 self.addDir(params)
         
     def listSeasons(self, cItem, nextCateogry):
-        printDBG("TheWatchseriesTo.listSeasons")
         self.seasonCache = {}
         
         sts, data = self.getPage(cItem['url'])
-        if not sts: return
-        
+        if not sts: return        
         seasons = self.cm.ph.getAllItemsBeetwenMarkers(data, '<h2 class="lists"', '</ul>')
         for season in seasons:
             seasonName = self.cleanHtmlStr( self.cm.ph.getDataBeetwenMarkers(season, 'itemprop="name">', '</span>', False)[1] )
-            seasonNum = self.cm.ph.getSearchGroups(seasonName+'|', '''Season\s+?([0-9]+?)[^0-9]''', 1, True)[0]
-            
+            seasonNum = self.cm.ph.getSearchGroups(seasonName+'|', '''Season\s+?([0-9]+?)[^0-9]''', 1, True)[0]            
             episodesTab = []
             data = self.cm.ph.getAllItemsBeetwenMarkers(season, '<li ', '</li>')
             for item in data:
@@ -220,9 +248,9 @@ class TheWatchseriesTo(CBaseHostClass):
                 title = self.cleanHtmlStr( self.cm.ph.getDataBeetwenReMarkers(item, re.compile('itemprop="name"[^>]*?>'), re.compile('</span>'), False)[1] )
                 url = self.cm.ph.getSearchGroups(item, '''href=['"]([^'^"]+?)['"]''')[0]
                 episodeNum = self.cm.ph.getSearchGroups(title + '|', '''Episode\s+?([0-9]+?)[^0-9]''', 1, True)[0]
-                printDBG(">> e[%s] s[%s]" % (episodeNum, seasonNum) )
                 if '' != episodeNum and '' != seasonNum:
                     title = 's%se%s'% (seasonNum.zfill(2), episodeNum.zfill(2)) + ' - ' + title.replace('Episode %s' % episodeNum, '')
+
                 params = dict(cItem)
                 params.update({'good_for_fav': True, 'title':'{0}: {1}'.format(cItem['title'], title), 'url':self.getFullUrl(url), 'desc':self.cleanHtmlStr(item)})
                 episodesTab.append(params)
@@ -234,20 +262,15 @@ class TheWatchseriesTo(CBaseHostClass):
                 self.addDir(params)
                 
     def listEpisodes(self, cItem):
-        printDBG("TheWatchseriesTo.listEpisodes")
         tab = self.seasonCache.get(cItem['season_key'], [])
         self.listsTab(tab, cItem, 'video')
             
     def getLinksForVideo(self, cItem):
-        printDBG("TheWatchseriesTo.getLinksForVideo [%s]" % cItem)
         urlTab = []
-
         if len(self.cacheLinks.get(cItem['url'], [])):
             return self.cacheLinks[cItem['url']]
-
         sts, data = self.getPage(cItem['url'])
         if not sts: return []
-
         data = ph.findall(data, ('<tr', '>', 'download_link_'), '</tr>')
         for item in data:
             host = ph.search(item, '''"download_link_([^'^"]+?)['"]''')[0]
@@ -276,7 +299,6 @@ class TheWatchseriesTo(CBaseHostClass):
         return urlTab
         
     def getVideoLinks(self, videoUrl):
-        printDBG("TheWatchseriesTo.getVideoLinks [%s]" % videoUrl)
         urlTab = []
         for key in self.cacheLinks:
             for idx in range(len(self.cacheLinks[key])):
@@ -341,3 +363,4 @@ class IPTVHost(CHostBase):
 
     def __init__(self):
         CHostBase.__init__(self, TheWatchseriesTo(), True)
+

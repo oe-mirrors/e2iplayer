@@ -1310,6 +1310,9 @@ class pageParser(CaptchaHelper):
         except Exception:
             printExc()
         return videoTab
+
+    def parserLOOKMOVIE(self, url):
+        return url
         
     def parserLOOKMOVIE(self, url):
         return url
