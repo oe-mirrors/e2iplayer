@@ -4,11 +4,12 @@
 ###################################################
 from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _, SetIPTVPlayerLastHostError
 from Plugins.Extensions.IPTVPlayer.components.ihost import CHostBase, CBaseHostClass
-from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, byteify, rm, GetTmpDir
+from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, byteify, rm, GetTmpDir, MergeDicts
 from Plugins.Extensions.IPTVPlayer.tools.iptvtypes import strwithmeta
 from Plugins.Extensions.IPTVPlayer.components.sweetcaptcha_v2widget import UnCaptchaSweetCaptchaWidget
 from Plugins.Extensions.IPTVPlayer.libs.e2ijson import loads as json_loads
 from Plugins.Extensions.IPTVPlayer.libs import ph
+from Plugins.Extensions.IPTVPlayer.tools.e2ijs import js_execute
 ###################################################
 
 ###################################################
@@ -18,6 +19,8 @@ import urlparse
 import re
 import urllib
 import base64
+try:    import json
+except Exception: import simplejson as json
 from datetime import datetime
 from time import sleep, time
 from copy import deepcopy
@@ -44,7 +47,7 @@ class FiliserTv(CBaseHostClass):
         self.AJAX_HEADER = dict(self.HEADER)
         self.AJAX_HEADER.update( {'X-Requested-With': 'XMLHttpRequest'} )
         self.defaultParams = {'header':self.HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
-        
+
         self.MAIN_URL = 'https://fili.cc/'
         self.DEFAULT_ICON_URL = 'https://fili.cc/assets/img/logo2.png'
         
@@ -67,8 +70,59 @@ class FiliserTv(CBaseHostClass):
         return str(item[key])
 
     def getPage(self, baseUrl, addParams = {}, post_data = None):
-        if addParams == {}: addParams = dict(self.defaultParams)
-        addParams['cloudflare_params'] = {'cookie_file':self.COOKIE_FILE, 'User-Agent':self.USER_AGENT}
+        if addParams == {}:
+            addParams = dict(self.defaultParams)
+
+        def _getFullUrl(url):
+            if url == '': return ''
+
+            if self.cm.isValidUrl(url):
+                return url
+            else:
+                return urlparse.urljoin(baseUrl, url)
+
+        addParams['cloudflare_params'] = {'domain':self.up.getDomain(baseUrl), 'cookie_file':self.COOKIE_FILE, 'User-Agent':self.USER_AGENT, 'full_url_handle':_getFullUrl}
+
+        url = baseUrl
+        urlParams = deepcopy(addParams)
+        urlData = deepcopy(post_data)
+        unloadUrl = None #
+        tries = 0
+        removeCookieItems = False
+        while tries < 20:
+            tries += 1
+            sts, data = self.cm.getPageCFProtection(url, urlParams, urlData)
+            if not sts: return sts, data
+
+            if unloadUrl != None:
+                self.cm.getPageCFProtection(unloadUrl, urlParams)
+                unloadUrl = None
+
+            if 'sucuri_cloudproxy' in data:
+                cookieItems = {}
+                jscode = self.cm.ph.getDataBeetwenNodes(data, ('<script', '>'), ('</script', '>'), False)[1]
+                if 'eval' in jscode:
+                    jscode = '%s\n%s' % (base64.b64decode('''dmFyIGlwdHZfY29va2llcz1bXSxkb2N1bWVudD17fTtPYmplY3QuZGVmaW5lUHJvcGVydHkoZG9jdW1lbnQsImNvb2tpZSIse2dldDpmdW5jdGlvbigpe3JldHVybiIifSxzZXQ6ZnVuY3Rpb24obyl7bz1vLnNwbGl0KCI7IiwxKVswXS5zcGxpdCgiPSIsMiksb2JqPXt9LG9ialtvWzBdXT1vWzFdLGlwdHZfY29va2llcy5wdXNoKG9iail9fSk7dmFyIHdpbmRvdz10aGlzLGxvY2F0aW9uPXt9O2xvY2F0aW9uLnJlbG9hZD1mdW5jdGlvbigpe3ByaW50KEpTT04uc3RyaW5naWZ5KGlwdHZfY29va2llcykpfTs='''), jscode)
+                    ret = js_execute( jscode )
+                    if ret['sts'] and 0 == ret['code']:
+                        try:
+                            cookies = byteify(json.loads(ret['data'].strip()))
+                            for cookie in cookies: cookieItems.update(cookie)
+                        except Exception:
+                            printExc()
+                cookieItems.update({'adult_warning':'true'})
+                self.defaultParams['cookie_items'] = cookieItems
+                urlParams['cookie_items'] = cookieItems
+                removeCookieItems = False
+                sts, data = self.cm.getPageCFProtection(url, urlParams, urlData)
+
+            # remove not needed used cookie
+            if removeCookieItems:
+                self.defaultParams.pop('cookie_items', None)
+            self.cm.clearCookie(self.COOKIE_FILE, removeNames=['___utmvc'])
+            printDBG(data)
+            return sts, data
+
         return self.cm.getPageCFProtection(baseUrl, addParams, post_data)
 
     def getFullIconUrl(self, url):
@@ -172,7 +226,7 @@ class FiliserTv(CBaseHostClass):
         if '>Następna<' in data:
             nextPage = True
         else: nextPage = False
-        
+
         data = self.cm.ph.getAllItemsBeetwenMarkers(data, '<section class="item"', '</section>', withMarkers=True)
         for item in data:
             url    = self.getFullUrl(ph.search(item, ph.A)[1])
@@ -432,7 +486,7 @@ class FiliserTv(CBaseHostClass):
                     #    rm(self.COOKIE_FILE)
                     
                     if tries > 1 and googleCaptcha: httpParams['header'] = self.getHeaders(tries)
-                    httpParams['header']['Cookie'] = 'adult_warning=true'
+#                    httpParams['header']['Cookie'] = 'adult_warning=true'
                     sts, data = self.getPage(url, httpParams)
                     if not sts: return urlTab
                     
