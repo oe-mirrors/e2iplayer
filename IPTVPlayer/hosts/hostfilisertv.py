@@ -82,6 +82,7 @@ class FiliserTv(CBaseHostClass):
                 return urlparse.urljoin(baseUrl, url)
 
         addParams['cloudflare_params'] = {'domain':self.up.getDomain(baseUrl), 'cookie_file':self.COOKIE_FILE, 'User-Agent':self.USER_AGENT, 'full_url_handle':_getFullUrl}
+        addParams['cookie_items'] = {'adult_warning':'true'}
 
         url = baseUrl
         urlParams = deepcopy(addParams)
@@ -120,7 +121,7 @@ class FiliserTv(CBaseHostClass):
             if removeCookieItems:
                 self.defaultParams.pop('cookie_items', None)
             self.cm.clearCookie(self.COOKIE_FILE, removeNames=['___utmvc'])
-            printDBG(data)
+#            printDBG(data)
             return sts, data
 
         return self.cm.getPageCFProtection(baseUrl, addParams, post_data)
