@@ -12134,7 +12134,7 @@ class pageParser(CaptchaHelper):
         if not video_id:
             return []
 
-        player_url = "player.veuclips.com/embed/%s" % video_id[0]
+        player_url = "http://player.veuclips.com/embed/%s" % video_id[0]
         sts, data = self.cm.getPage(player_url)
         if not sts: 
             return []
