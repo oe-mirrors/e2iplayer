@@ -43,7 +43,24 @@ class OkGoals(CBaseHostClass):
         if url.startswith('//'): url = 'http:' + url
         url = CBaseHostClass.getFullUrl(self, url)
         return url
-        
+    
+    def getBiggerImage(self, icon):
+        ICON_PATH = [
+                    {'orig':'images/it.png',    'new':'https://www.bandiere-mondo.it/data/flags/h80/it.png'},
+                    {'orig':'images/pt.png',    'new':'https://www.bandiere-mondo.it/data/flags/h80/pt.png'},
+                    {'orig':'images/fr.png',    'new':'https://www.bandiere-mondo.it/data/flags/h80/fr.png'},
+                    {'orig':'images/de.png',    'new':'https://www.bandiere-mondo.it/data/flags/h80/de.png'},
+                    {'orig':'images/cl.png',    'new':'https://www.calcioweb.eu/wp-content/uploads/2014/04/Logo-Champions-League-bianco.jpg'},
+                    {'orig':'images/uef.png',   'new':'https://img.uefa.com/imgml/uefaorg/new/logo.png'},
+                     ]
+
+        for i in ICON_PATH:
+            if i['orig'] in icon:
+                icon = i['new']
+                break
+                
+        return self.getFullIconUrl(icon)
+    
     def listCategories(self, cItem, nextCategory):
         printDBG("OkGoals.listCategories")
         
@@ -55,9 +72,9 @@ class OkGoals(CBaseHostClass):
         for item in data:
             url   = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''href=['"]([^'^"]+?)['"]''')[0])
             if not self.cm.isValidUrl(url): continue
-            icon  = self.getFullIconUrl(self.cm.ph.getSearchGroups(item, '''src=['"]([^'^"]+?)['"]''')[0])
+            icon  = self.getBiggerImage(self.cm.ph.getSearchGroups(item, '''src=['"]([^'^"]+?)['"]''')[0])
             title = self.cleanHtmlStr(item)
-            
+            title = _( title.capitalize() )
             params = {'good_for_fav': True, 'category':nextCategory, 'title':title, 'url':url, 'icon':icon}
             self.addDir(params)
         
@@ -75,7 +92,7 @@ class OkGoals(CBaseHostClass):
         data = self.cm.ph.getAllItemsBeetwenMarkers(data, '<div id="matchlistng">', '</a>', withMarkers=False)
         for item in data:
             url   = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''href=['"]([^'^"]+?)['"]''')[0])
-            icon  = self.getFullIconUrl(self.cm.ph.getSearchGroups(item, '''src=['"]([^'^"]+?)['"]''')[0])
+            icon  = self.getBiggerImage(self.cm.ph.getSearchGroups(item, '''src=['"]([^'^"]+?)['"]''')[0])
             desc  = self.cleanHtmlStr(self.cm.ph.getSearchGroups(item, '''alt=['"]([^'^"]+?)['"]''')[0].replace('icon', ''))
             title = self.cleanHtmlStr(item)
 

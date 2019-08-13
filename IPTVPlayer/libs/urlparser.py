@@ -347,8 +347,6 @@ class urlparser:
                        'oload.site':            self.pp.parserOPENLOADIO    ,
                        'oload.stream':          self.pp.parserOPENLOADIO    ,
                        'oload.tv':              self.pp.parserOPENLOADIO    ,
-                       'oms.viuclips.net':      self.pp.parserVIUCLIPS	   ,
-                       'oms.veuclips.com':      self.pp.parserVIUCLIPS	   ,
                        'player.veuclips.com':   self.pp.parserVIUCLIPS	   ,   
                        'onet.pl':               self.pp.parserONETTV        ,
                        'onet.tv':               self.pp.parserONETTV        ,
@@ -470,6 +468,7 @@ class urlparser:
                        'veehd.com':             self.pp.parseVEEHDCOM       ,
                        'veoh.com':              self.pp.parserVEOHCOM        ,
                        'verystream.com':        self.pp.parserVERYSTREAM     ,
+                       'veuclips.com':          self.pp.parserVIUCLIPS	   ,
                        'vev.io':                self.pp.parserTHEVIDEOME    ,
                        'vevo.com':              self.pp.parserVEVO          ,
                        'vid.ag':                self.pp.parserVIDAG         ,
@@ -512,6 +511,7 @@ class urlparser:
                        'vidzer.net':            self.pp.parserVIDZER        ,
                        'vidzi.tv':              self.pp.parserVIDZITV       ,
                        'vimeo.com':             self.pp.parseVIMEOCOM       ,
+                       'viuclips.net':          self.pp.parserVIUCLIPS	   ,
                        'vivo.sx':               self.pp.parserVIVOSX        ,
                        'vk.com':                self.pp.parserVK            ,
                        'vodlocker.com':         self.pp.parserVODLOCKER     ,
@@ -989,8 +989,8 @@ class urlparser:
             return []
 
 class pageParser(CaptchaHelper):
-    HTTP_HEADER= {  'User-Agent'  : 'Mozilla/5.0 (X11; Ubuntu; Linux i686; rv:21.0) Gecko/20100101 Firefox/21.0',
-                    'Accept'      :  'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
+    HTTP_HEADER= {  'User-Agent'  : 'Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/59.0.3071.115 Safari/537.36',
+                    'Accept'      : 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
                     'Content-type': 'application/x-www-form-urlencoded' }
     FICHIER_DOWNLOAD_NUM = 0
     def __init__(self):
@@ -9611,6 +9611,17 @@ class pageParser(CaptchaHelper):
         sts, data = self.cm.getPage(baseUrl)
         if not sts: return []
         
+        #example "//vsports.videos.sapo.pt/qS105THDPkJB9nzFNA5h/mov/"
+        if "vsports.videos.sapo.pt" in data:
+            videoUrl = re.findall("(vsports\.videos\.sapo\.pt/[\w]+/mov/)", data)
+            if videoUrl:
+                videoUrl = "http://" + videoUrl[0] + "?videosrc=true"
+                sts, link = self.cm.getPage(videoUrl)
+                if sts:
+                    printDBG(" '%s' ---> '%s' " % (videoUrl, link))
+                    urlsTab.append({'name':'link', 'url': link })
+                    return urlsTab
+
         tmp = self.cm.ph.getDataBeetwenReMarkers(data, re.compile('''['"]?sources['"]?\s*:\s*\['''), re.compile('\]'), False)[1]
         tmp = tmp.split('}')
         for item in tmp:
@@ -11485,10 +11496,13 @@ class pageParser(CaptchaHelper):
         printDBG("parserVIUCLIPS baseUrl[%s]" % baseUrl)
         # example http://oms.viuclips.net/player/PopUpIframe/JwB2kRDt7Y?iframe=popup&u=
         #         http://oms.veuclips.com/player/PopUpIframe/HGXPBPodVx?iframe=popup&u=
-        # 		  http://player.veuclips.com/embed/JwB2kRDt7Y
+        #         https://footy11.viuclips.net/player/html/D7o5OVWU9C?popup=yes&autoplay=1
+		# 		  http://player.veuclips.com/embed/JwB2kRDt7Y
 
         baseUrl = baseUrl + "?"
         video_id = re.findall("v[ei]uclips\.[nc][eo][tm]/player/PopUpIframe/(.*?)\?", baseUrl)
+        if not video_id:
+            video_id = re.findall("v[ei]uclips\.[nc][eo][tm]/player/html/(.*?)\?", baseUrl)
         if not video_id:
             video_id = re.findall("player.veuclips.com/embed/(.*?)\?", baseUrl)
         if not video_id:
