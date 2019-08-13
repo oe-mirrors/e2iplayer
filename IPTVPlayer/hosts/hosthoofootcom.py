@@ -16,14 +16,14 @@ except Exception: import simplejson as json
 ###################################################
 
 def gettytul():
-    return 'http://hoofoot.com/'
+    return 'https://hoofoot.com/'
 
 class HoofootCom(CBaseHostClass):
     HEADER = {'User-Agent': 'Mozilla/5.0', 'Accept': 'text/html'}
     AJAX_HEADER = dict(HEADER)
     AJAX_HEADER.update( {'X-Requested-With': 'XMLHttpRequest'} )
     
-    MAIN_URL   = 'http://hoofoot.com/'
+    MAIN_URL   = 'https://hoofoot.com/'
     DEFAULT_ICON_URL  = "http://th.hoofoot.com/pics/default.jpg"
     
     MAIN_CAT_TAB = [{'category':'list_cats',       'title': _('Main'),              'url':MAIN_URL,},
@@ -96,11 +96,13 @@ class HoofootCom(CBaseHostClass):
                 for catItem in catData:
                     url   = self.cm.ph.getSearchGroups(catItem, '''href=['"]([^'^"]+?)['"]''')[0]
                     if '' == url: continue
-                    title = self.cleanHtmlStr(catItem)
-                    catTab.append({'title':title, 'url':self._getFullUrl(url)})
+                    title = self.cleanHtmlStr(catItem) 
+                    params = {'title': _(title), 'url':self._getFullUrl(url)}
+                    printDBG(params)
+                    catTab.append(params)
             
             params = dict(cItem)
-            params['title'] = catTitle
+            params['title'] = _(catTitle)
             if len(catTab):
                 params.update({'category':category, 'idx':len(self.cache)})
                 self.cache.append(catTab)
@@ -121,7 +123,7 @@ class HoofootCom(CBaseHostClass):
             if '' == url: continue
             title = self.cleanHtmlStr(catItem)
             params = dict(cItem)
-            params.update({'category':category, 'title':title, 'url':self._getFullUrl(url)})
+            params.update({'category':category, 'title':_(title), 'url':self._getFullUrl(url)})
             self.addDir(params)
             
     def listCats3(self, cItem, category):
@@ -144,7 +146,7 @@ class HoofootCom(CBaseHostClass):
             if title == '': title = self.cleanHtmlStr(self.cm.ph.getSearchGroups(catItem, '''alt=['"]([^'^"]+?)['"]''')[0])
             icon  = self.cm.ph.getSearchGroups(catItem, '''src=['"]([^'^"]+?)['"]''')[0]
             params = dict(cItem)
-            params.update({'category':category, 'title':title, 'ff':ff, 'url':self._getFullUrl('/pagerg.php'), 'icon':self._getFullUrl(icon)})
+            params.update({'category':category, 'title':_(title), 'ff':ff, 'url':self._getFullUrl('/pagerg.php'), 'icon':self._getFullUrl(icon)})
             self.addDir(params)
         
     def listSubCats(self, cItem, category):
@@ -191,7 +193,7 @@ class HoofootCom(CBaseHostClass):
             
             desc  = self.cleanHtmlStr( self.cm.ph.getDataBeetwenMarkers(item, 'class="info">', '</div>', False)[1] )
             params = dict(cItem)
-            params.update({'title':title, 'url':self._getFullUrl(url), 'icon':icon, 'desc':desc})
+            params.update({'title': _(title), 'url':self._getFullUrl(url), 'icon':icon, 'desc':desc})
             self.addVideo(params)
             hasItems = True
         
@@ -214,13 +216,17 @@ class HoofootCom(CBaseHostClass):
         tmpTab = []
         tmp = self.cm.ph.getDataBeetwenMarkers(data, 'Alternatives', '</div>', False)[1]
         tmp = self.cm.ph.getAllItemsBeetwenMarkers(tmp, '<a ', '</a>')
+        n_link = 0
         for item in tmp:
             name  = self.cleanHtmlStr(item)
             if 'focusd' in item:
                 url = cItem['url']
             else:
                 url = self.cm.ph.getSearchGroups(item, '''rruta\('([0-9,]+?)'\)''')[0]
-            if url == '': continue
+            if url == '': 
+                continue
+            n_link += 1
+            name = _("Alternative") + " %s - %s" % (n_link, name)
             urlTab.append({'name':name, 'url':url, 'need_resolve':1})
         return urlTab
         
@@ -234,11 +240,13 @@ class HoofootCom(CBaseHostClass):
             videoUrl  = self._getFullUrl('videosx.php')
         
         sts, data = self.cm.getPage(videoUrl, {}, post_data)
-        if not sts: return []
+        if not sts: 
+            return []
         
         data = self.cm.ph.getDataBeetwenMarkers(data, 'id="player"', '</div>', False)[1]
         videoUrl = self.cm.ph.getSearchGroups(data, '<iframe[^>]+?src="([^"]+?)"', 1, ignoreCase=True)[0]
         
+        printDBG(videoUrl)
         if videoUrl.startswith('//'):
             videoUrl = 'http:' + videoUrl
         if self.cm.isValidUrl(videoUrl):

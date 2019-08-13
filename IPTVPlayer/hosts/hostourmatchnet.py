@@ -36,7 +36,7 @@ class OurmatchNet(CBaseHostClass):
                     {'category':'popular',         'title': _('Popular'),           'url':MAIN_URL,                     'icon':DEFAULT_ICON},
                     {'category':'allleagues',      'title': _('All Leagues'),       'url':MAIN_URL,                     'icon':DEFAULT_ICON},
                     {'category':'seasons',         'title': _('Previous Seasons'),  'url':MAIN_URL+'previous-seasons/', 'icon':DEFAULT_ICON},
-                    {'category':'video',           'title': _('Goal Of The Month'), 'url':MAIN_URL+'goal-of-the-month/','icon':DEFAULT_ICON},                    
+                    {'category':'video',           'title': _('Goal Of The Month'), 'url':MAIN_URL+'goal-of-the-month/','icon':DEFAULT_ICON, 'type': 'video'},                    
                     {'category':'search',          'title': _('Search'), 'search_item':True,                            'icon':DEFAULT_ICON},
                     {'category':'search_history',  'title': _('Search history'),                                        'icon':DEFAULT_ICON} ]
  
@@ -121,7 +121,7 @@ class OurmatchNet(CBaseHostClass):
         for idx in range(len(tab)):
             item = tab[idx]
             params = dict(cItem)
-            params.update({'category':category, 'title':item['title'], 'idx':idx})
+            params.update({'category':category, 'title':_(item['title']), 'idx':idx})
             self.addDir(params)
             
     def listLeagueItems(self, cItem, category):
@@ -133,7 +133,7 @@ class OurmatchNet(CBaseHostClass):
         params['category'] = category
         self.listsTab(tab, params)
             
-    def listYersTabs(self, cItem, category):
+    def listYearsTabs(self, cItem, category):
         printDBG("OurmatchNet.listYersTabs [%s]" % cItem)
         
         self.cache2 = {}
@@ -177,7 +177,7 @@ class OurmatchNet(CBaseHostClass):
         for idx in range(len(tab)):
             item = tab[idx]
             params = dict(cItem)
-            params.update({'category':category, 'title':item['title'], 'idx':idx})
+            params.update({'category':category, 'title':_(item['title']), 'idx':idx})
             self.addDir(params)
             
     def listLeagueItems2(self, cItem, category):
@@ -212,6 +212,12 @@ class OurmatchNet(CBaseHostClass):
             icon  = self.cm.ph.getSearchGroups(item, '''src=['"]*(http[^'^"^>]+?)[>'"]''')[0]
             title = self.cm.ph.getSearchGroups(item, '''title=['"]([^'^"]+?)['"]''')[0] 
             desc  = self.cleanHtmlStr( self.cm.ph.getDataBeetwenMarkers(item, '<div class="vidinfo">', '</div>')[1] )
+            
+            if ' vs ' in title:
+                team1 = title[:title.find(' vs ')]
+                team2 = title[title.find(' vs ')+4:]
+                title = _(team1) + " vs " + _(team2)
+            
             params = dict(cItem)
             params.update({'title':title, 'url':url, 'icon':icon, 'desc':desc})
             self.addVideo(params)
@@ -219,7 +225,7 @@ class OurmatchNet(CBaseHostClass):
         if nextPage:
             params = dict(cItem)
             params.update({'title':_('Next page'), 'page':page+1})
-            self.addDir(params)
+            self.addMore(params)
         
     def getLinksForVideo(self, cItem):
         printDBG("OurmatchNet.getLinksForVideo [%s]" % cItem)
@@ -233,15 +239,16 @@ class OurmatchNet(CBaseHostClass):
             name = self.cleanHtmlStr(item)
             url  = self.cm.ph.getDataBeetwenMarkers(item, 'data-config=&quot;', '&quot;', False)[1]
             if url != '':
-                urlTab.append({'name':name, 'url':self._getFullUrl(url), 'need_resolve':1})
+                urlTab.append({'name':name, 'url': self._getFullUrl(url), 'need_resolve':1})
         
         videoContents = self.cm.ph.getDataBeetwenMarkers(data, 'var video_contents', '</script>', False)[1]
         tmp = self.cm.ph.getAllItemsBeetwenMarkers(videoContents, '{embed:', '}')
         for item in tmp:
             nameTab = []
-            for key in ['lang', 'type', 'qualty', 'source']:
+            for key in ['lang', 'type', 'quality', 'source']:
                 name = self.cm.ph.getSearchGroups(item, '''['"]?%s['"]?:['"]([^'^"]+?)['"]''' % key)[0]
-                if name != '': nameTab.append( name )
+                if name != '': 
+                    nameTab.append( name )
             
             needResolve = 1
             url = self.cm.ph.getSearchGroups(item, '<iframe[^>]+?src="([^"]+?)"', 1, ignoreCase=True)[0]
@@ -250,7 +257,7 @@ class OurmatchNet(CBaseHostClass):
                 needResolve = 0
             url = self._getFullUrl(url)
             if url != '':
-                urlTab.append({'name':' '.join( nameTab ), 'url':self._getFullUrl(url), 'need_resolve':needResolve})
+                urlTab.append({'name':', '.join( nameTab ), 'url':self._getFullUrl(url), 'need_resolve':needResolve})
         
         tmp = self.cm.ph.getDataBeetwenMarkers(data, '<div id="details" class="section-box">', '</div>', False)[1]
         tmp = self.cm.ph.getAllItemsBeetwenMarkers(tmp, '<p>', '</p>')
@@ -350,7 +357,7 @@ class OurmatchNet(CBaseHostClass):
         elif category == 'list_league':
             self.listLeagueItems(self.currItem, 'list_items')
         elif category == 'seasons':
-            self.listYersTabs(self.currItem, 'allleagues2')
+            self.listYearsTabs(self.currItem, 'allleagues2')
         elif category == 'allleagues2':
             self.listLeagues2(self.currItem, 'list_league2')
         elif category == 'list_league2':
