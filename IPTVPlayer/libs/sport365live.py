@@ -9,7 +9,9 @@ from Plugins.Extensions.IPTVPlayer.tools.iptvtypes import strwithmeta
 from Plugins.Extensions.IPTVPlayer.libs.pCommon import common
 from Plugins.Extensions.IPTVPlayer.libs.urlparser import urlparser
 from Plugins.Extensions.IPTVPlayer.components.ihost import CBaseHostClass
-from Plugins.Extensions.IPTVPlayer.libs.urlparserhelper import unpackJSPlayerParams, VIDEOWEED_decryptPlayerParams, VIDEOWEED_decryptPlayerParams2, SAWLIVETV_decryptPlayerParams
+from Plugins.Extensions.IPTVPlayer.libs.urlparserhelper import unpackJSPlayerParams, VIDEOWEED_decryptPlayerParams, VIDEOWEED_decryptPlayerParams2,\
+                                                                SAWLIVETV_decryptPlayerParams, getDirectM3U8Playlist
+
 from Plugins.Extensions.IPTVPlayer.tools.e2ijs import js_execute
 from Plugins.Extensions.IPTVPlayer.libs.e2ijson import loads as json_loads
 ###################################################
@@ -60,11 +62,11 @@ class Sport365LiveApi:
     def getPage(self, url, params={}, post_data=None):
         sts, data = self.cm.getPage(url, params, post_data)
         if sts:
-            printDBG("---")
-            printDBG("url: %s" % url)
-            printDBG(data)
-            printDBG("---")
-        return sts, data
+            #printDBG("---")
+            #printDBG("url: %s" % url)
+            #printDBG(data)
+            #printDBG("---")
+            return sts, data
         
     def getFullUrl(self, url):
         if url.startswith('http'):
@@ -79,6 +81,8 @@ class Sport365LiveApi:
         return CBaseHostClass.cleanHtmlStr(str)
         
     def cryptoJS_AES_decrypt(self, encrypted, password, salt):
+        printDBG("cryptoJS_AES_decrypt")
+        
         def derive_key_and_iv(password, salt, key_length, iv_length):
             d = d_i = ''
             while len(d) < key_length + iv_length:
@@ -89,7 +93,23 @@ class Sport365LiveApi:
         key, iv = derive_key_and_iv(password, salt, 32, 16)
         cipher = AES_CBC(key=key, keySize=32)
         return cipher.decrypt(encrypted, iv)
-    
+
+    def decryptUrl(self, linkData, aes):
+        playerUrl = ''
+        if linkData:
+            try:
+                linkData   = json_loads(base64.b64decode(linkData))
+                ciphertext = base64.b64decode(linkData['ct'])
+                iv         = a2b_hex(linkData['iv'])
+                salt       = a2b_hex(linkData['s'])
+
+                playerUrl = json_loads(self.cryptoJS_AES_decrypt(ciphertext, aes, salt))
+                printDBG("player Url -->  %s " % str(playerUrl))
+            except Exception:
+                printExc()
+        
+        return playerUrl
+
     def getMarketCookie(self, url, referer, num=1):
         try:
             id = url.split('.')[-2]
@@ -168,8 +188,8 @@ class Sport365LiveApi:
         
         return
         
-    def getMainCategries(self, cItem):
-        printDBG("Sport365LiveApi.getMainCategries")
+    def getMainCategories(self, cItem):
+        printDBG("Sport365LiveApi.getMainCategories")
         channelsTab = []
         dt = datetime.now() - datetime.utcnow()
         OFFSET = (dt.microseconds + (dt.seconds + dt.days * 24 * 3600) * 10**6) / 10**6
@@ -200,10 +220,11 @@ class Sport365LiveApi:
                 tmp = self.cm.ph.getSearchGroups(item, '''onClick=[^(]*?\(([^)]+?)\)''')[0].split(',')
                 for t in tmp:
                     linksData.append(t.replace('"', '').strip())
-                printDBG(linksData)
                 params = dict(cItem)
                 params.update({'type':'category', 'priv_cat':'streams_links', 'links_data':linksData, 'title':title, 'desc':desc})
+                printDBG(str(params))
                 channelsTab.append(params)
+
         return channelsTab
         
     def getStreamsLinks(self, cItem):
@@ -231,6 +252,7 @@ class Sport365LiveApi:
                 if linkData != '':
                     params = dict(cItem)
                     params.update({'type':'video', 'link_data':linkData, 'event_id':eventId, 'desc':desc, 'title':sourceTitle + ' ' + linkTitle})
+                    printDBG(str(params))
                     channelsTab.append(params)
         
         return channelsTab
@@ -241,7 +263,7 @@ class Sport365LiveApi:
         
         category = cItem.get('priv_cat', None)
         if None == category:
-            return self.getMainCategries(cItem)
+            return self.getMainCategories(cItem)
         elif 'streams_links' == category:
             return self.getStreamsLinks(cItem)
         
@@ -297,21 +319,30 @@ class Sport365LiveApi:
         data = re.compile('''src=['"](http[^"^']*?/js/[0-9a-fA-F]{32}\.js[^'^"]*?)["']''').findall(data)[::-1]
         num = 0
         deObfuscatedData = ''
+        aes_password=[]
+        
         for commonUrl in data:
             num += 1
+            printDBG("common url n. %s : %s " % (str(num), commonUrl) )
+
             sts, tmpData = self.getPage(commonUrl, self.http_params)
-            if not sts: return []
+            if not sts: 
+                continue
             aes = ''
             try:
-                while 'eval' in tmpData:
+                while ('eval' in tmpData) and (not aes):
                     tmp = tmpData.split('eval(')
                     if len(tmp): del tmp[0]
                     tmpData = ''
                     for item in tmp:
                         for decFun in [VIDEOWEED_decryptPlayerParams, VIDEOWEED_decryptPlayerParams2, SAWLIVETV_decryptPlayerParams]:
-                            tmpData = unpackJSPlayerParams('eval('+item, decFun, 0)
-                            if '' != tmpData:   
-                                break
+                            if not (item.startswith('function(w,i,s,e){for') and decFun == VIDEOWEED_decryptPlayerParams):
+                                tmpData = unpackJSPlayerParams('eval(' + item, decFun, 0)
+                                if '' != tmpData:   
+                                    printDBG ('**********************************')
+                                    printDBG (tmpData)
+                                    printDBG ('**********************************')
+                                    break
                         
                         aes = self.cm.ph.getSearchGroups(tmpData, 'aes_key="([^"]+?)"')[0]
                         if '' == aes: 
@@ -327,19 +358,18 @@ class Sport365LiveApi:
                                 try: aes = self.cm.ph.getSearchGroups(tmp, '"([^"]+?)"')[0].encode('utf-8')
                                 except Exception: printExc()
                             
-                        if aes != '':
-                            break
                 aes = aes.encode('utf-8')
             except Exception:
                 printExc()
                 aes = ''
                 
-            if aes != '':
-                break;
+            if aes:
+                printDBG("Added password %s" % aes)
+                aes_password.append(aes)
         
-        if aes != '':
-            Sport365LiveApi.CACHE_AES_PASSWORD = aes
-        return aes
+        if aes_password:
+            Sport365LiveApi.CACHE_AES_PASSWORD = aes_password
+        return aes_password
         
     def getVideoLink(self, cItem):
         printDBG("Sport365LiveApi.getVideoLink")
@@ -352,37 +382,102 @@ class Sport365LiveApi:
         urlsTab = []
         for checkIdx in range(tries):
             if checkIdx > 0:
-                aes = self.getAesPassword(cItem, True)
+                aes_password = self.getAesPassword(cItem, True)
             else:
-                aes = self.getAesPassword(cItem)
+                aes_password = self.getAesPassword(cItem)
 
-            if aes == '': 
+            if not aes_password: 
                 return []
+            
+            printDBG("aes -----> %s" % str(aes_password))
+            for aes in aes_password:
+                try:
+                    printDBG("link_data -----> " + str(cItem['link_data']))
+                    
+                    playerUrl = self.decryptUrl(cItem['link_data'], aes)
 
-            try:
-                linkData   = base64.b64decode(cItem['link_data'])
-                linkData   = json_loads(linkData)
-                
-                ciphertext = base64.b64decode(linkData['ct'])
-                iv         = a2b_hex(linkData['iv'])
-                salt       = a2b_hex(linkData['s'])
+                    if not playerUrl.startswith('http'): 
+                        continue
+                    
+                    sts, data = self.getPage(playerUrl, self.http_params)
+                    if not sts: 
+                        return []
+                    
+                    links = re.compile('(http://www.[^\.]+.pw/(?!&#)[^"]+)', re.IGNORECASE + re.DOTALL + re.MULTILINE + re.UNICODE).findall(data)
+                    link = [x for x in links if '&#' in x]
+                    if link:
+                        link = re.sub(r'&#(\d+);', lambda x: chr(int(x.group(1))), link[0])
+                        printDBG("Found *.pw link ------> %s " % link)
 
-                playerUrl = self.cryptoJS_AES_decrypt(ciphertext, aes, salt)
-                printDBG(playerUrl)
-                playerUrl = json_loads(playerUrl)
+                        h = self.http_params 
+                        h['header']['Referer'] = playerUrl
+                        sts, data = self.getPage(link, h)
+                        
+                        if sts:
+                            #printDBG("*****************")
+                            #printDBG(data)
+                            #printDBG("*****************")
 
-                if not playerUrl.startswith('http'): 
-                    continue
-                sts, data = self.getPage(playerUrl, self.http_params)
-                if not sts: return []
-                data = self.cm.ph.getDataBeetwenMarkers(data, 'document.write(', '(')[1]
-                playerUrl = self.cleanHtmlStr( self.cm.ph.getSearchGroups(data, '''<iframe[^>]+?src=['"](http[^"^']+?)['"]''', 1, True)[0] )
-                
-                urlsTab = self.up.getVideoLinkExt(strwithmeta(playerUrl, {'aes_key':aes}))
-                if len(urlsTab):
-                    break
+                            # search form data in page
+                            action = re.compile('[\'"]action[\'"][,\s]*[\'"](http.*?)[\'"]').findall(data)
 
-            except Exception:
-                printExc()
+                            r = re.compile('.*?name="r"\s*value=["\']([^"\']+)["\']').findall(data)
+                            d = re.compile('.*?name="d"\s*value=["\']([^"\']+)["\']').findall(data)
+                            f = re.compile('.*?name="f"\s*value=["\']([^"\']+)["\']').findall(data)
+
+                            srcs = re.compile('src=[\'"](.*?)[\'"]').findall(data)
+
+                            if f and r and d and action:
+                                postData = {'r': r[0], 'd': d[0], 'f': f[0]}
+                                h['header']['Referer'] = link
+                                sts, data = self.getPage(action[0], h, postData)    
+                                if sts:
+                                    #printDBG("*****************")
+                                    #printDBG(data)
+                                    #printDBG("*****************")
+
+                                    try:
+                                        #######ads banners#########
+                                        # simulate ads viewing
+                                        bheaders = h 
+                                        bheaders['header']['Referer'] = action[0]
+                                        banner = re.findall(r'<script\s*src=[\'"](.+?)[\'"]', data)[-1]
+                                        sts, bsrc = self.getPage(banner, bheaders)
+                                        banner = re.findall(r"url:'([^']+)", bsrc)[0]
+                                        sts, bsrc = self.getPage(banner, bheaders)
+                                        bheaders['header']['Referer'] = banner
+                                        banner = re.findall(r'window.location.replace\("([^"]+)"\);\s*}\)<\/script><div', bsrc)[0]
+                                        banner = urllib.quote(banner, ':/()!@#$%^&;><?')
+                                        sts, bsrc = self.getPage(banner, bheaders)
+                                        ###########################
+                                    except BaseException:
+                                        pass
+                                    
+                                    
+                                    link2 = re.compile('\([\'"][^"\']+[\'"], [\'"][^"\']+[\'"], [\'"]([^"\']+)[\'"], 1\)').findall(data)
+                                    if link2:
+                                        printDBG(link2[0])           
+                                        playerUrl = self.decryptUrl(link2[0], aes).replace("/i","/master.m3u8")
+                                        printDBG("Final player Url ----------->  %s " % str(playerUrl))
+                                        
+                                        playerUrl = strwithmeta(playerUrl, {'User-Agent' : h['header']['User-Agent'], 'Referer': action[0] })
+                                        urlsTab.extend(getDirectM3U8Playlist(playerUrl, checkExt=False, variantCheck=True, checkContent=True, sortWithMaxBitrate=99999999))  
+                                        
+                    else:    
+                        # old system
+                        playerUrl = self.cm.ph.getSearchGroups(data, '''location\.replace\(\s*?['"]([^'^"]+?)['"]''', 1, True)[0]
+                        if playerUrl:
+                            printDBG("player Url 2 ------> %s " % playerUrl)
+
+                        else:
+                            data = self.cm.ph.getDataBeetwenMarkers(data, 'document.write(', '(')[1]
+                            playerUrl = self.cleanHtmlStr( self.cm.ph.getSearchGroups(data, '''<iframe[^>]+?src=['"](http[^"^']+?)['"]''', 1, True)[0] )
+
+                        urlsTab = self.up.getVideoLinkExt(strwithmeta(playerUrl, {'aes_key':aes}))
+                        if len(urlsTab):
+                            break
+
+                except Exception:
+                    printExc()
 
         return urlsTab
