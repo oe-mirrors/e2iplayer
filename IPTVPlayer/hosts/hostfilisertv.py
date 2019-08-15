@@ -528,7 +528,10 @@ class FiliserTv(CBaseHostClass):
                     break
             else:
                 videoUrl = base64.b64decode(FiliserTv.SALT_CACHE[salt])
-        
+
+        from Plugins.Extensions.IPTVPlayer.libs.urlparser import urlparser 
+        videoUrl = urlparser.decorateUrl(videoUrl, {'Referer': url}) 
+
         if self.cm.isValidUrl(videoUrl):
             urlTab = self.up.getVideoLinkExt(videoUrl)
             
