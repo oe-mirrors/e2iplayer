@@ -480,7 +480,6 @@ class urlparser:
                        'nadaje.com':           self.pp.parserNADAJECOM      ,
                        'vidshare.tv':          self.pp.parserVIDSHARETV     ,
                        'widestream.io':        self.pp.parserWIDESTREAMIO   ,
-                       'gounlimited.to':       self.pp.parserGOUNLIMITEDTO  ,
                        'vidbom.com':           self.pp.parserVIDBOMCOM      ,
                        'hxload.io':            self.pp.parserVIDBOMCOM      ,
                        'interia.tv':           self.pp.parserINTERIATV      ,
@@ -10627,42 +10626,7 @@ class pageParser(CaptchaHelper):
             if self.cm.isValidUrl(videoUrl):
                 return videoUrl
         return False
-    
-    def parserGOUNLIMITEDTO(self, baseUrl):
-        printDBG("parserGOUNLIMITEDTO baseUrl[%s]" % baseUrl)
-        domain = urlparser.getDomain(baseUrl) 
-        
-        baseUrl = strwithmeta(baseUrl)
-        referer = baseUrl.meta.get('Referer', '')
-        
-        HTTP_HEADER = self.cm.getDefaultHeader(browser='chrome')
-        if referer != '': HTTP_HEADER['Referer'] = referer
-        
-        sts, data = self.cm.getPage(baseUrl, {'header': HTTP_HEADER})
-        if not sts: return False
-        
-        jscode = [self.jscode['jwplayer']]
-        jscode.append('var element=function(n){print(JSON.stringify(n)),this.on=function(){}},Clappr={};Clappr.Player=element,Clappr.Events={PLAYER_READY:1,PLAYER_TIMEUPDATE:1,PLAYER_PLAY:1,PLAYER_ENDED:1};')
-        tmp = self.cm.ph.getAllItemsBeetwenNodes(data, ('<script', '>'), ('</script', '>'), False)
-        for item in tmp:
-            if 'eval(' in item: jscode.append(item)
-        urlTab = []
-        ret = js_execute( '\n'.join(jscode) )
-        if ret['sts'] and 0 == ret['code']:
-            data = json_loads(ret['data'].strip())
-            for item in data['sources']:
-                name = 'direct'
-                if isinstance(item, dict):
-                    url = item['file']
-                    name = item.get('label', name)
-                else:
-                    url = item
-                if self.cm.isValidUrl(url):
-                    url = strwithmeta(url, {'User-Agent':HTTP_HEADER['User-Agent'], 'Referer':baseUrl})
-                    urlTab.append({'name':name, 'url':url})
-        printDBG(urlTab)
-        return urlTab
-        
+           
     def parserWSTREAMVIDEO(self, baseUrl):
         printDBG("parserWSTREAMVIDEO baseUrl[%s]" % baseUrl)
         domain = urlparser.getDomain(baseUrl) 
@@ -11297,7 +11261,7 @@ class pageParser(CaptchaHelper):
         if not sts: return False
         cUrl = self.cm.meta['url']
         domain = urlparser.getDomain(cUrl)
-        
+       
         if 'embed' not in cUrl:
             url = self.cm.getFullUrl(self.cm.ph.getSearchGroups(data, '''<iframe[^>]+?src=['"]([^"^']+?)['"]''', 1, True)[0], domain)
             if 'embed' in url:
