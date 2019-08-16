@@ -3427,16 +3427,16 @@ class pageParser(CaptchaHelper):
             if not sts: return False
             
             linksData = []
-            tmp = self.cm.ph.getSearchGroups(data, '''\(([^)]+?)\)''')[0].split(',')
-            for t in tmp:
-                linksData.append(t.replace('"', '').strip())
+            tmp = re.compile('''['"]([^'^"]+?)['"]''').findall(data)
             printDBG(linksData)
-            
-            for idx in [1, 2]:
+
+            for t in tmp:
                 try:
-                    linkData = base64.b64decode(linksData[idx])
+                    linkData = base64.b64decode(t).strip()
+                    if linkData[0] == '{' and '"ct"' in linkData: break
                 except Exception:
-                    pass
+                    printExc()
+
             linkData   = json_loads(linkData)
             
             ciphertext = base64.b64decode(linkData['ct'])
@@ -11508,7 +11508,7 @@ class pageParser(CaptchaHelper):
         if not video_id:
             return []
 
-        player_url = "player.veuclips.com/embed/%s" % video_id[0]
+        player_url = "http://player.veuclips.com/embed/%s" % video_id[0]
         sts, data = self.cm.getPage(player_url)
         if not sts: 
             return []
@@ -11525,3 +11525,4 @@ class pageParser(CaptchaHelper):
             vidTab.extend(getDirectM3U8Playlist(l, checkExt=False, variantCheck=True, checkContent=True, sortWithMaxBitrate=99999999))
 
         return vidTab
+

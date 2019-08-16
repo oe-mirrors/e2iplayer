@@ -461,8 +461,12 @@ class Sport365LiveApi:
                                         printDBG("Final player Url ----------->  %s " % str(playerUrl))
                                         
                                         playerUrl = strwithmeta(playerUrl, {'User-Agent' : h['header']['User-Agent'], 'Referer': action[0] })
-                                        urlsTab.extend(getDirectM3U8Playlist(playerUrl, checkExt=False, variantCheck=True, checkContent=True, sortWithMaxBitrate=99999999))  
                                         
+                                        COOKIE_FILE_M3U8 = GetCookieDir('sport365live.cookie')
+                                        params = {'cookiefile':COOKIE_FILE_M3U8, 'use_cookie': True, 'load_cookie':False, 'save_cookie':True} 
+
+                                        urlsTab.extend(getDirectM3U8Playlist(playerUrl, checkExt=False, variantCheck=True, cookieParams=params, checkContent=True, sortWithMaxBitrate=99999999))  
+
                     else:    
                         # old system
                         playerUrl = self.cm.ph.getSearchGroups(data, '''location\.replace\(\s*?['"]([^'^"]+?)['"]''', 1, True)[0]
