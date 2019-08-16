@@ -149,7 +149,7 @@ class HasBahCa(CBaseHostClass):
                         {'alias_id':'meteo.pl',                'name': 'meteo.pl',            'title': 'http://meteo.pl/',                  'url': 'http://meteo.pl/',                                                   'icon': 'http://www.meteo.pl/img/napis_glowny_pl_2.png'}, \
                         {'alias_id':'webcamera.pl',            'name': 'webcamera.pl',        'title': 'https://webcamera.pl/',             'url': 'https://www.webcamera.pl/',                                          'icon': 'http://static.webcamera.pl/webcamera/img/loader-min.png'}, \
                         {'alias_id':'skylinewebcams.com',      'name': 'skylinewebcams.com',  'title': 'https://skylinewebcams.com/',       'url': 'https://www.skylinewebcams.com/',                                    'icon': 'https://cdn.skylinewebcams.com/skylinewebcams.png'}, \
-                        {'alias_id':'livespotting.com',        'name': 'livespotting.com',    'title': 'http://livespotting.com/',          'url': 'http://livespotting.com/',                                           'icon': 'https://livespotting.com/static/images/logo.png'}, \
+                        {'alias_id':'livespotting.tv',         'name': 'livespotting.tv',     'title': 'http://livespotting.tv/',           'url': 'http://livespotting.tv/',                                            'icon': 'https://livespotting.com/static/images/apple-touch-icon.png'},\
                         {'alias_id':'filmon.com',              'name': 'filmon_groups',       'title': 'http://filmon.com/',                'url': 'http://www.filmon.com/',                                             'icon': 'http://static.filmon.com/theme/img/filmon_tv_logo_white.png'}, \
                         {'alias_id':'ustvnow.com',             'name': 'ustvnow',             'title': 'https://ustvnow.com/',              'url': 'https://www.ustvnow.com/',                                           'icon': 'http://2.bp.blogspot.com/-SVJ4uZ2-zPc/UBAZGxREYRI/AAAAAAAAAKo/lpbo8OFLISU/s1600/ustvnow.png'}, \
                         {'alias_id':'showsport-tv.com',        'name': 'showsport-tv.com',    'title': 'http://showsport-tv.com/',          'url': 'http://showsport-tv.com/',                                           'icon': 'http://showsport-tv.com/images/sstv-logo.png'}, \
@@ -931,7 +931,7 @@ class HasBahCa(CBaseHostClass):
         elif name == 'meteo.pl':            self.getMeteoPLList(self.currItem)
         elif name == 'edem.tv':             self.getEdemTvList(self.currItem)
         elif name == 'skylinewebcams.com':  self.getWkylinewebcamsComList(self.currItem)
-        elif name == 'livespotting.com':     self.getLivespottingTvList(self.currItem)
+        elif name == 'livespotting.tv':     self.getLivespottingTvList(self.currItem)
         elif name == 'live-stream.tv':      self.getLiveStreamTvList(self.currItem)
         elif name == "wagasworld.com":      self.getWagasWorldList(self.currItem)
         elif name == 'weeb.tv':             self.getWeebTvList(url)
