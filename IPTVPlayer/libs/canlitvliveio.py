@@ -28,6 +28,27 @@ class CanlitvliveIoApi(CBaseHostClass):
         
         self.defaultParams = {}
         self.defaultParams.update({'header':self.HTTP_HEADER, 'save_cookie': True, 'load_cookie': True, 'cookiefile': self.COOKIE_FILE})
+    
+    def translateFromTurkish(self, word):
+        TRANSLATED_WORDS={
+            'Genel'     : 'General', 
+            'Haber'     : 'News', 
+            'Spor'      : 'Sport', 
+            'Çocuk'     : 'Children', 
+            'Müzik'     : 'Music', 
+            'Sinema'    : 'Cinema', 
+            'Belgesel'  : 'Documentaries', 
+            'Yerel'     : 'Local', 
+            'Dini'      : 'Religious', 
+            'Yabancı'   : 'Foreign',
+            'Arabesk'   : 'Arabesque', 
+            'Türkü'     : 'Folk', 
+            'Eğlence'   : 'Entertainment'
+        }
+        if word in TRANSLATED_WORDS:
+            return TRANSLATED_WORDS[word]
+        else:
+            return ''
         
     def getCategories(self, cItem, nextCategory):
         printDBG("CanlitvliveIoApi.getCategories")
@@ -48,7 +69,11 @@ class CanlitvliveIoApi(CBaseHostClass):
             url   = self.getFullUrl( self.cm.ph.getSearchGroups(item, '''href=['"]([^'^"]+?)['"]''')[0] )
             if not self.cm.isValidUrl(url): continue
             title = self.cleanHtmlStr( item )
+            title_en = self.translateFromTurkish(title)
+            if title_en:
+                title = title + "  [ %s ]" % _(title_en)
             params = {'name':cItem['name'], 'priv_category':nextCategory, 'priv_next_type':nextType, 'type':'dir', 'title':title, 'url':url, 'icon':self.DEFAULT_ICON_URL}
+            #printDBG("translate ' %s ':' ', " % title)
             itemsList.append(params)
         
         return itemsList
