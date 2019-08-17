@@ -113,11 +113,11 @@ class IPTVSetupImpl:
         
         # duk
         self.dukVersion = 5 # "2.1.99" # real version
-        self.dukPaths = [resolveFilename(SCOPE_PLUGINS, 'Extensions/IPTVPlayer/bin/duk'), "/usr/bin/duk", ]
+        self.dukPaths = [resolveFilename(SCOPE_PLUGINS, 'Extensions/IPTVPlayer/bin/duk'), "/usr/bin/duk"]
         
 	# duk v6
         self.duk6Version = 6 # "2.3.0" # real version
-        self.duk6Paths = [resolveFilename(SCOPE_PLUGINS, 'Extensions/IPTVPlayer/bin/duk6'), "/usr/bin/duk6", ]
+        self.duk6Paths = [resolveFilename(SCOPE_PLUGINS, 'Extensions/IPTVPlayer/bin/duk6'), "/usr/bin/duk6"]
         
         self.binaryInstalledSuccessfully = False
         self.tries = 0
