@@ -28,8 +28,8 @@ config.plugins.iptvplayer.ekstraklasa_proxy = ConfigYesNo(default = False)
 
 def GetConfigList():
     optionList = []
-    optionList.append( getConfigListEntry( "Domyślny format video:", config.plugins.iptvplayer.ekstraklasa_defaultformat ) )
-    optionList.append( getConfigListEntry( "Używaj domyślnego format video:", config.plugins.iptvplayer.ekstraklasa_usedf ) )
+    #optionList.append( getConfigListEntry( "Domyślny format video:", config.plugins.iptvplayer.ekstraklasa_defaultformat ) )
+    #optionList.append( getConfigListEntry( "Używaj domyślnego format video:", config.plugins.iptvplayer.ekstraklasa_usedf ) )
     optionList.append( getConfigListEntry( "Ekstraklasa korzystaj z proxy?", config.plugins.iptvplayer.ekstraklasa_proxy) )
     return optionList
 ###################################################
@@ -40,18 +40,18 @@ def gettytul():
 class Ekstraklasa(CBaseHostClass):
 
     EORG_MAIN_URL = 'http://ekstraklasa.org/'
-    EORG_MAIN_MENU = [ {'name': 'Nowości', 'navi': 'nowosci'},
-                       {'name': 'Bramki i skróty', 'navi': 'galeria-i-wideo'},
+    EORG_MAIN_MENU = [ {'name': 'Kulisy', 'navi': 'aktualnosci/kategoria/5'},
+                       {'name': 'Bramki i skróty', 'navi': 'aktualnosci/kategoria/4'},
                      ]
     
-    ETV_MAIN_URL  = 'http://ekstraklasa.tv/'
+    ETV_MAIN_URL  = 'http://ekstraklasa.org/'
     ETV_MAIN_MENU = [ {'name': 'Bramki', 'navi': 'bramki'},
                       {'name': 'Skróty', 'navi': 'skroty'},
                       {'name': 'Bramka kolejki', 'navi': 'bramka-kolejki'},
                       {'name': 'Magazyn', 'navi': 'magazyny/magazyn-ekstraklasy'},
                     ]
     ETV_CATEGORY  = 'etv_category'
-    MAIN_URL = ETV_MAIN_URL
+    MAIN_URL = EORG_MAIN_URL
     def __init__(self):
         printDBG("Ekstraklasa.__init__")
         CBaseHostClass.__init__(self, {'proxyURL': config.plugins.iptvplayer.proxyurl.value, 'useProxy': config.plugins.iptvplayer.ekstraklasa_proxy.value})
@@ -60,27 +60,28 @@ class Ekstraklasa(CBaseHostClass):
     def listsCategories_ETV(self):
         printDBG("Ekstraklasa.listsCategories_ETV")
         
-        for item in Ekstraklasa.ETV_MAIN_MENU:
+        for item in Ekstraklasa.EORG_MAIN_MENU:
             params = { 'name'     : 'category',
                        'category' : Ekstraklasa.ETV_CATEGORY,
                        'url'      : Ekstraklasa.ETV_MAIN_URL + item['navi'],
                        'title'    : item['name'],
-                       'desc'     : 'ekstraklasa.tv',
+                       'desc'     : 'ekstraklasa.org',
                        'depth'    : 0,
-                       'host'     : 'ekstraklasa.tv'
+                       'host'     : 'ekstraklasa.org'
                      }  
             self.addDir(params)
 
     def listsCategory_ETV(self, cItem):
-        printDBG("Ekstraklasa.listsCategory_ETV")
+        printDBG("Ekstraklasa.listsCategory_ETV [%s]" % cItem)
         page = cItem.get('page', 0)
         url = cItem['url']
         if page > 0: url += str(page)
 
-        ITEM_MARKER = '<div class="listItem'
+        ITEM_MARKER = '<div class="col-md-4 col-sm-6 col-xs-12 pad-0">'
         sts, data = self.cm.getPage(url)
         if not sts: return
         moreData = ph.find(data, ('<div', '>', 'data-preset'))[1]
+        printDBG("Ekstraklasa.listsCategory_ETV [%s]" % data)
 
         # check if we should check for sub categories
         if 0 == cItem['depth']:
@@ -101,11 +102,11 @@ class Ekstraklasa(CBaseHostClass):
         data = data.split(ITEM_MARKER)
         del data[0]
         for item in data:
-            icon  = ph.search(item, '<img[^>]+?data-original="([^"]+?)"')[0]
-            title = ph.find(item, '<h3 class="itemTitle">', '</h3>', flags=0)[1].strip() + ', ' + ph.find(item, '<div class="datePublished">', '</div>', flags=0)[1].strip()
+            icon  = ph.search(item, 'image:\surl\(([^"]+?)\)')[0]
+            title = self.cleanHtmlStr(ITEM_MARKER + item) 
             desc  = self.cleanHtmlStr(ITEM_MARKER + item)
-            url   = self.cm.ph.getSearchGroups(item, '<a href="([^"]+?)" title="([^"]+?)"', 2)[0]
-            params = {'title':ph.clean_html(title), 'url':url, 'icon':icon, 'desc': desc, 'host':'ekstraklasa.tv'}
+            url   = self.cm.ph.getSearchGroups(item, 'href="([^"]+?)"')[0]
+            params = {'title':ph.clean_html(title), 'url':url, 'icon':icon, 'desc': title, 'host':'ekstraklasa.org'}
             self.addVideo(params)
 
         if page == 0 and moreData and len(self.currList):
@@ -121,7 +122,15 @@ class Ekstraklasa(CBaseHostClass):
 
     def getLinks_ETV(self, url):
         printDBG("Ekstraklasa.getLinks_ETV url[%r]" % url )
-        return self.up.getVideoLinkExt(url)
+
+        sts, data = self.cm.getPage(url)
+        if not sts: return
+        printDBG("Ekstraklasa.getLinks_ETV [%s]" % data)
+        videoUrl = self.cm.ph.getSearchGroups(data, '''<iframe[^>]+?src=['"]([^"^']+?)['"]''')[0] 
+        if videoUrl.startswith('//'): videoUrl = 'http:' + videoUrl
+        from Plugins.Extensions.IPTVPlayer.libs.urlparser import urlparser 
+        videoUrl = urlparser.decorateUrl(videoUrl, {'Referer': url})
+        return self.up.getVideoLinkExt(videoUrl)
 
     def getArticleContent(self, cItem):
         printDBG("Ekstraklasa.getArticleContent [%s]" % cItem)
@@ -179,17 +188,17 @@ class IPTVHost(CHostBase):
             printDBG( "ERROR getLinksForVideo - current list is to short len: %d, Index: %d" % (listLen, Index) )
             return RetHost(RetHost.ERROR, value = [])
         retlist = []
-        if 'ekstraklasa.tv' in self.host.currList[Index].get('host', ''):
+        if 'ekstraklasa.org' in self.host.currList[Index].get('host', ''):
             tab = self.host.getLinks_ETV(self.host.currList[Index].get('url', ''))
 
-            def __getLinkQuality( itemLink ):
-                return int(itemLink['bitrate'])
-
-            maxRes = int(config.plugins.iptvplayer.ekstraklasa_defaultformat.value) * 1.1
-            tab = CSelOneLink(tab, __getLinkQuality, maxRes).getSortedLinks()
-            printDBG(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>. tab[%s]" % tab)
-            if config.plugins.iptvplayer.ekstraklasa_usedf.value and len(tab):
-                tab = [tab[0]]
+#            def __getLinkQuality( itemLink ):
+#                return int(itemLink['bitrate'])
+#
+#            maxRes = int(config.plugins.iptvplayer.ekstraklasa_defaultformat.value) * 1.1
+#            tab = CSelOneLink(tab, __getLinkQuality, maxRes).getSortedLinks()
+#            printDBG(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>. tab[%s]" % tab)
+#            if config.plugins.iptvplayer.ekstraklasa_usedf.value and len(tab):
+#                tab = [tab[0]]
 
             for item in tab:
                 retlist.append(CUrlItem(item['name'], item['url'], 0))

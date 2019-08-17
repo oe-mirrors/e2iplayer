@@ -244,7 +244,7 @@ class SerialeCO(CBaseHostClass):
         httpParams['header']['Referer'] = cItem['url']
         httpParams['header']['Origin']  = self.getMainUrl()[:-1]
         
-        sts, data = self.getPage(playerUrl, httpParams, {'fid_name':fid, 'sezon':sNum, 'odcinek':eNum})
+        sts, data = self.getPage(playerUrl, httpParams, {'fid_name':fid, 'sezon':sNum, 'odcinek':eNum, 'title': fid, 'blocked':''})
         if not sts: return []
         
         printDBG(data)
