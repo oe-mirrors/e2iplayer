@@ -40,6 +40,7 @@ from Plugins.Extensions.IPTVPlayer.libs.internetowa       import InternetowaApi,
 from Plugins.Extensions.IPTVPlayer.libs.firstonetvnet     import FirstOneTvApi, GetConfigList as FirstOneTv_GetConfigList
 from Plugins.Extensions.IPTVPlayer.libs.beinmatch         import BeinmatchApi
 from Plugins.Extensions.IPTVPlayer.libs.wiz1net           import Wiz1NetApi
+from Plugins.Extensions.IPTVPlayer.libs.wiziwig1          import Wiziwig1Api
 ###################################################
 
 ###################################################
@@ -169,6 +170,7 @@ class HasBahCa(CBaseHostClass):
             {'alias_id' : 'webcamera.pl',       'name' : 'webcamera.pl',        'title' : 'https://webcamera.pl/',      'url' : 'https://www.webcamera.pl/',        'icon' : 'http://static.webcamera.pl/webcamera/img/loader-min.png'},\
             {'alias_id' : 'weeb.tv',            'name' : 'weeb.tv',             'title' : 'http://weeb.tv/',            'url' : '',                                 'icon' : 'http://xmtvplayer.com/wp-content/uploads/2014/07/weebtv.png'},\
             {'alias_id' : 'wiz1.net',           'name' : 'wiz1.net',            'title' : 'http://wiz1.net/',           'url' : '',                                 'icon' : 'http://i.imgur.com/yBX7fZA.jpg'},\
+            {'alias_id' : 'wiziwig1.com',       'name' : 'wiziwig1.com',        'title' : 'http://wiziwig1.com/',       'url' : '',                                 'icon' : 'http://i.imgur.com/yBX7fZA.jpg'},\
             {'alias_id' : 'wizja.tv',           'name' : 'wizja.tv',            'title' : 'http://wizja.tv/',           'url' : 'http://wizja.tv/',                 'icon' : 'http://wizja.tv/logo.png'}
     ] 
     
@@ -210,6 +212,7 @@ class HasBahCa(CBaseHostClass):
         self.FirstOneTvApi        = None
         self.BeinmatchApi         = None
         self.Wiz1NetApi           = None
+        self.Wiziwig1Api          = None
         
         self.hasbahcaiptv = {}
         self.webcameraSubCats = {}
@@ -636,6 +639,23 @@ class HasBahCa(CBaseHostClass):
     #############################################################
 
     #############################################################
+    def getWiziwig1List(self, cItem):
+        printDBG("getWiziwig1List start")
+        if None == self.Wiziwig1Api: self.Wiziwig1Api = Wiziwig1Api()
+        tmpList = self.Wiziwig1Api.getList(cItem)
+        for item in tmpList:
+            if 'video' == item['type']: self.addVideo(item) 
+            elif 'audio' == item['type']: self.addAudio(item) 
+            else: self.addDir(item)
+
+    def getWiziwig1Link(self, cItem):
+        printDBG("getWiziwig1Link start")
+        urlsTab = self.Wiziwig1Api.getVideoLink(cItem)
+        return urlsTab
+    #############################################################
+
+    #############################################################
+   
     def getUstvnowList(self, cItem):
         printDBG("getUstvnowList start")
         if None == self.ustvnowApi:
@@ -946,6 +966,7 @@ class HasBahCa(CBaseHostClass):
         elif name == 'firstonetv.net':      self.getFirstOneTvList(self.currItem)
         elif name == 'beinmatch.com':       self.getBeinmatchList(self.currItem)
         elif name == 'wiz1.net':            self.getWiz1NetList(self.currItem)
+        elif name == 'wiziwig1.com':        self.getWiziwig1List(self.currItem)
         
         CBaseHostClass.endHandleService(self, index, refresh)
 
@@ -1006,6 +1027,7 @@ class IPTVHost(CHostBase):
         elif name == "firstonetv.net":             urlList = self.host.getFirstOneTvLink(cItem)
         elif name == "beinmatch.com":              urlList = self.host.getBeinmatchLink(cItem)
         elif name == "wiz1.net":                   urlList = self.host.getWiz1NetLink(cItem)
+        elif name == "wiziwig1.com":               urlList = self.host.getWiziwig1Link(cItem)
 
         if isinstance(urlList, list):
             for item in urlList:
