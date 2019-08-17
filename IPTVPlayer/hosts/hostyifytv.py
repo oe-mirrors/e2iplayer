@@ -39,7 +39,7 @@ def GetConfigList():
 
 
 def gettytul():
-    return 'https://ymovies.tv/'
+    return 'https://ymovies.to/'
 
 class YifyTV(CBaseHostClass):
     def __init__(self):
@@ -56,7 +56,7 @@ class YifyTV(CBaseHostClass):
         self.AJAX_HEADER.update( {'X-Requested-With': 'XMLHttpRequest'} )
         
         
-        self.MAIN_URL    = 'https://ymovies.tv/'
+        self.MAIN_URL    = 'https://ymovies.to/'
         self.SRCH_URL    = self.getFullUrl('?s=')
         
         self.MAIN_CAT_TAB = [{'category':'list_items',            'title': _('Releases'),          'url':self.getFullUrl('files/releases/') },
@@ -237,8 +237,14 @@ class YifyTV(CBaseHostClass):
             nextPage = True
         else: nextPage = False
         
-        data = self.cm.ph.getDataBeetwenMarkers(data, 'var posts = {', '};', False)[1]
+        # fix to check both combinations of var posts.. yifi periodically changes and takes 
+        # out the spaces for some reason.. probably to break kodi boxes etc.  Here i'll be
+        # checking for both to help prevent a further break when they change again. CM
+
+        if 'var posts = {' in data: data = self.cm.ph.getDataBeetwenMarkers(data, 'var posts = {', '};', False)[1]
+        elif 'var posts={' in data: data = self.cm.ph.getDataBeetwenMarkers(data, 'var posts={', '};', False)[1]
         data = '{' + data + '}'
+        
         self._listItems(cItem, data, nextPage)
         
     def listItems2(self, cItem):
