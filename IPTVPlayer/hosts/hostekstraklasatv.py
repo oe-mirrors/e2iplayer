@@ -80,7 +80,9 @@ class Ekstraklasa(CBaseHostClass):
         ITEM_MARKER = '<div class="col-md-4 col-sm-6 col-xs-12 pad-0">'
         sts, data = self.cm.getPage(url)
         if not sts: return
-        moreData = ph.find(data, ('<div', '>', 'data-preset'))[1]
+        categoryId = ph.search(data, '''var\s*?categoryId\s*?=\s*?([^=]+?)\n''')[0].strip()
+        pageId = ph.search(data, '''var\s*?pageId\s*?=\s*?([^=]+?);''')[0].strip()
+
         printDBG("Ekstraklasa.listsCategory_ETV [%s]" % data)
 
         # check if we should check for sub categories
@@ -97,7 +99,7 @@ class Ekstraklasa(CBaseHostClass):
                     self.addDir(params)
                 return
 
-        data = self.cm.ph.getDataBeetwenMarkers(data, ITEM_MARKER, '<script')[1]
+        if '<script' in data: data = self.cm.ph.getDataBeetwenMarkers(data, ITEM_MARKER, '<script')[1]
 
         data = data.split(ITEM_MARKER)
         del data[0]
@@ -109,10 +111,10 @@ class Ekstraklasa(CBaseHostClass):
             params = {'title':ph.clean_html(title), 'url':url, 'icon':icon, 'desc': title, 'host':'ekstraklasa.org'}
             self.addVideo(params)
 
-        if page == 0 and moreData and len(self.currList):
+        if page == 0 and pageId and len(self.currList):
             try:
-                url = self.getFullUrl(ph.getattr(moreData, 'data-preset').replace('&amp;', '&'), self.cm.meta['url'])
-                page = int(ph.getattr(moreData, 'data-page'))
+                url = self.getFullUrl('/articles/getnewsbycategory/%s/' % categoryId )
+                page = int(pageId)
                 if url: self.addDir(MergeDicts(cItem, {'title':_('Next page'), 'url':url, 'page':page}))
             except Exception:
                 printExc()
