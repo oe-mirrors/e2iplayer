@@ -5786,8 +5786,17 @@ class pageParser(CaptchaHelper):
 
         sts, data = self.cm.getPage(embedUrl, {'header': HTTP_HEADER})
         if not sts: return False
-        printDBG(data)
+        #printDBG(data)
 
+        remote_js_scripts = re.findall("<script type=\"text/javascript\" src=\"(http://sawlive\.tv/[a-z]{2}\.js)\">", data)
+        
+        code_remote = ''
+        for j in remote_js_scripts:
+            printDBG(j)
+            sts , data2 = self.cm.getPage(j, {'header': HTTP_HEADER})
+            if sts:
+                code_remote = data2
+                
         js_params = [{'path':GetJSScriptFile('sawlive2.byte')}]
         interHtmlElements = {}
         tmp = ph.findall(data, ('<span', '>', ph.check(ph.all, ('display', 'none'))), '</span>', flags=ph.START_S)
@@ -5795,14 +5804,16 @@ class pageParser(CaptchaHelper):
             if '<' in tmp[idx] or '>' in tmp[idx]: continue
             elemId = ph.getattr(tmp[idx-1], 'id')
             interHtmlElements[elemId] = tmp[idx].strip()
-        js_params.append({'code':'var interHtmlElements=%s;' % json_dumps(interHtmlElements)})
-        data = ph.findall(data, ('<script', '>', ph.check(ph.none, ('src=',))), '</script>', flags=0)
-        for item in data:
-            printDBG("+++++++++++++++++++++")
-            printDBG(item)
-            js_params.append({'code':item})
+        
+        code_var = 'var interHtmlElements=%s;' % json_dumps(interHtmlElements)
+        codes = ph.findall(data, ('<script', '>', ph.check(ph.none, ('src=',))), '</script>', flags=0)
+        code = code_remote + '\n' + code_var + '\n' + '\n'.join(codes)
+
+        js_params.append({'code': code})
         ret = js_execute_ext( js_params )
+        
         printDBG(ret['data'])
+        
         data = json_loads(ret['data'])
         swfUrl = data['0']
         decoded = data['6']
