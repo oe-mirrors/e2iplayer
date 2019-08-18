@@ -48,7 +48,7 @@ class LookMovieag(CBaseHostClass):
 
         self.defaultParams = {'header':self.HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}     
         
-        self.HOST_VER = '1.3 (10/08/2019)'
+        self.HOST_VER = '1.4 (18/08/2019)'
 
         self.MAIN_CAT_TAB =     [
                                     {'category':'movies',         'title': _('Movies'),       'url':self.MAIN_URL, 'desc': '\c00????00 Info: \c00??????Movies\\n \c00????00Version: \c00??????'+self.HOST_VER+'\\n \c00????00Developer: \c00??????Codermik\\n', 'icon':self.DEFAULT_ICON_URL},
@@ -185,25 +185,34 @@ class LookMovieag(CBaseHostClass):
         urlTab = []
         sts, data = self.getPage(cItem['url'])
         if not sts: return []
-        self.setMainUrl(self.cm.meta['url'])   
-        
+        self.setMainUrl(self.cm.meta['url'])           
         tmpurl = self.cm.meta['url']
-
         movieId = self.cm.ph.getAllItemsBeetwenNodes(data,'window.id_movie=\'', ('\';</script>'),False)[0]  
         tmpUrl = 'https://lookmovie.ag/manifests/movies/json/%s/1564684248/kSrTkeFjYz3FUOpCjEHiGw/master.m3u8?extClient=true' % movieId
         sts, tmpData = self.getPage(tmpUrl)
         videoUrls = self.cm.ph.getAllItemsBeetwenNodes(tmpData,'p":"', ('"'),False)
         quality = ''
+        avail1080 = False
         for links in videoUrls:
-            # ive not included 1080p yet as it requires a user account
-            # which I will add support for in a later date. The lower
-            # quality links I am not worried about as this is a enigma2
-            # box and not a mobile device.
-            if '720p' in links: 
-                quality = '720p Quality'
-                urlTab.append({'name': quality, 'url': links, 'need_resolve': 1})
+            if '1080p' in links:
+                avail1080 = True
                 continue
-            
+            if '720p' in links: 
+                if avail1080:
+                    # option was there for the fake 1080p link so it must exist for
+                    # the vip members with an account.  Backup the 720p link so that 
+                    # I can include it once I write the 1080p link.  CM
+                    avail1080 = False
+                    tmpUrl = links    # temporarily store the 720p url
+                    links = links.replace("720p", "1080p")
+                    urlTab.append({'name': '1080p Quality', 'url': links, 'need_resolve': 1})
+                    urlTab.append({'name': '720p Quality', 'url': tmpUrl, 'need_resolve': 1})                
+                    continue
+                else: quality = '720p Quality'
+            elif '480p' in links: quality = '480p Quality'
+            elif '360p' in links: quality = '360p Quality'
+            else: continue            
+            urlTab.append({'name': quality, 'url': links, 'need_resolve': 1})
         return urlTab
     
     def handleService(self, index, refresh = 0, searchPattern = '', searchType = ''):        
