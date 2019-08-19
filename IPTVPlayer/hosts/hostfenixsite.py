@@ -21,17 +21,17 @@ import re
 
 
 def gettytul():
-    return 'http://fenixsite.com/'
+    return 'http://fenixsite.co/'
 
 class Fenixsite(CBaseHostClass):
 
     def __init__(self):
-        CBaseHostClass.__init__(self, {'history':'fenixsite.com', 'cookie':'fenixsite.com.cookie'})
+        CBaseHostClass.__init__(self, {'history':'fenixsite.co', 'cookie':'fenixsite.co.cookie'})
 
         self.HTTP_HEADER = self.cm.getDefaultHeader(browser='chrome')
         self.defaultParams = {'header':self.HTTP_HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
 
-        self.MAIN_URL    = 'http://www.fenixsite.com/'
+        self.MAIN_URL    = 'http://www.fenixsite.co/'
         self.DEFAULT_ICON_URL = 'https://i.pinimg.com/originals/67/70/a3/6770a3fa9bdcc1bd33770106cd70fb22.png'
 
         self.cacheFilters  = {}
@@ -89,7 +89,6 @@ class Fenixsite(CBaseHostClass):
                     letters.append(letter)
                 subItems[letter].append(item)
 
-            self.addDir(MergeDicts(cItem, {'title':_('--All--'), 'category':nextCategory}))
             for letter in letters:
                 self.addDir(MergeDicts(cItem, {'good_for_fav':False, 'category':'sub_items', 'sub_items':subItems[letter], 'title':'%s [%d]' % (letter.encode('utf-8'), len(subItems[letter]))}))
         else:
