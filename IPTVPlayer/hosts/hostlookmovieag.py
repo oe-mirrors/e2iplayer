@@ -48,11 +48,12 @@ class LookMovieag(CBaseHostClass):
 
         self.defaultParams = {'header':self.HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}     
         
-        self.HOST_VER = '1.4 (18/08/2019)'
+        self.HOST_VER = '1.5 (19/08/2019)'
 
         self.MAIN_CAT_TAB =     [
                                     {'category':'movies',         'title': _('Movies'),       'url':self.MAIN_URL, 'desc': '\c00????00 Info: \c00??????Movies\\n \c00????00Version: \c00??????'+self.HOST_VER+'\\n \c00????00Developer: \c00??????Codermik\\n', 'icon':self.DEFAULT_ICON_URL},
-                                    {'category':'search',   'title': _('Search Movies'), 'desc': '\c00????00 Info: \c00??????Search for Movies\\n \c00????00Version: \c00??????'+self.HOST_VER+'\\n \c00????00Developer: \c00??????Codermik\\n', 'search_item':True},
+                                    {'category':'tvseries',       'title': _('TV Series'),    'url':self.MAIN_URL + '/shows/filter?r=&so=', 'desc': '\c00????00 Info: \c00??????TV Series and Episodes\\n \c00????00Version: \c00??????'+self.HOST_VER+'\\n \c00????00Developer: \c00??????Codermik\\n', 'icon':self.DEFAULT_ICON_URL},
+                                    {'category':'search',   'title': _('Search'), 'desc': '\c00????00 Info: \c00??????Search for Movies\\n \c00????00Version: \c00??????'+self.HOST_VER+'\\n \c00????00Developer: \c00??????Codermik\\n', 'search_item':True},
                                     {'category':'search_history', 'desc': '\c00????00 Info: \c00??????Select from your search history\\n \c00????00Version: \c00??????'+self.HOST_VER+'\\n \c00????00Developer: \c00??????Codermik\\n', 'title': _('Search history')} 
                                 ]
 
@@ -115,6 +116,27 @@ class LookMovieag(CBaseHostClass):
     def buildGenres(self, cItem):
         printDBG('E2iStream >>>>>> buildGenres!')
 
+    def listEpisodes(self, cItem):
+        sts, data = self.getPage(cItem['url'])
+        if not sts: return
+        block = self.cleanHtmlStr(self.cm.ph.getAllItemsBeetwenNodes(data,'<script>window.route="shows/view";', ('</script>'))[0])
+        block = block.replace('\\','')
+        block = self.cm.ph.getAllItemsBeetwenNodes(block,'{', '}')
+        for episodes in block:
+            if 'id_episode' in episodes:
+                title = self.cm.ph.getAllItemsBeetwenNodes(episodes,'title":"', '",',False)[0]  
+                episodeId = self.cm.ph.getAllItemsBeetwenNodes(episodes,'id_episode\":\"', '\"',False)[0]
+                m3u8Url = 'https://lookmovie.ag/manifests/shows/9C60XF7yiUOfSOXUlkk4jg/4066244082/%s/master.m3u8' % episodeId
+                season = self.cm.ph.getAllItemsBeetwenNodes(episodes,'season":"', '",',False)[0]  
+                episode = self.cm.ph.getAllItemsBeetwenNodes(episodes,'"episode":"', '",',False)[0]
+                desc = self.cm.ph.getAllItemsBeetwenNodes(episodes,'description":"', '",',False)[0]  
+                airing = self.cm.ph.getAllItemsBeetwenNodes(episodes,'air_date":"', '"}',False)[0]
+                title = '%s   \c00????00[Season %s Episode %s]' %(title, season, episode)
+                desc = '\c00????00 Title: \c00??????%s\\n \c00????00Aired: \c00??????%s\\n \c00????00Description: \c00??????%s\\n' %(title, airing, desc)
+                params = dict(cItem) 
+                params.update({'good_for_fav':True, 'title':self.cleanHtmlStr(title), 'url':m3u8Url, 'desc':self.cleanHtmlStr(desc)})
+                self.addVideo(params)
+
     def listItems(self, cItem):          
         page = cItem.get('page', 1)        
         sts, data = self.getPage(cItem['url'])
@@ -130,7 +152,6 @@ class LookMovieag(CBaseHostClass):
                 if 'a class="pagination_next"' in data:
                     nextPage = self.cm.ph.getAllItemsBeetwenNodes(data, ('a class="pagination_next"', 'ion-arrow-right-b'), ('</a>'))[0]
                     nextPage = self.MAIN_URL + self.cm.ph.getAllItemsBeetwenNodes(nextPage,'href="//lookmovie.ag/', ('">'),False)[0]
-
                 block = self.cm.ph.getAllItemsBeetwenNodes(data, ('div class="flex-wrap-movielist"', 'movie-item'), ('<div class="pagination-template"'))[0]
                 block = self.cm.ph.getAllItemsBeetwenNodes(block, ('div class="movie-item', 'movie-item'), ('</h6>'))
                 # site contains "next page" arrow even if we have 1 result, lets patch this otherwise we will have a "Next Page" where its not needed.
@@ -146,24 +167,29 @@ class LookMovieag(CBaseHostClass):
                         quality = self.cm.ph.getAllItemsBeetwenNodes(items,'<div class="quality-tag tooltip">', ('<span'),False)[0]
                         if 'HD' in quality: 
                             quality = 'HD' 
-                            tooltip = '720p HD Quality Movie.'
+                            tooltip = 'High Definition. Look Movie brings you this movie in multiple Definitions. 1080p, 720p, 480p, 360p - for all types of connection speeds.  This movie was encoded directly from a Blu-ray disc to 4 variations.'
                             title += '  \c00????00('+quality+')'
                     elif '<div class="bad quality-tag tooltip">' in items:
                         quality = self.cm.ph.getAllItemsBeetwenNodes(items,'<div class="bad quality-tag tooltip">', ('<span'),False)[0]
                         if 'LQ' in quality: 
                             quality = 'LQ' 
-                            tooltip = 'Low Quality (Cam?) - Sometimes the website does not update LQ to HQ when a cam version is replaced - its always good to check manually.'
+                            tooltip = 'Low Quality (Cam?) - Sometimes Look Movie does not update LQ to HQ when a cam version is replaced on the website - its always good practice to check the movie manually. CM'
                             title += '  \c00????00('+quality+')'
                     else:
                         quality = ''
-                        tooltip = 'No quality has been specified on the website, please test manually.'
+                        if '/shows/' in tmpurl: tooltip = 'Minimum 720p Quality'
+                        else: tooltip = 'No quality has been specified.'
                     videoUrl = self.cm.ph.getSearchGroups(items, 'href="([^"]+?)"')[0]
                     videoUrl = self.MAIN_URL + videoUrl[:0] + videoUrl[1:]  # removing the the double // at the start of the url
                     imageUrl = self.cm.ph.getSearchGroups(items, 'data-src="([^"]+?)"')[0]
                     desc = '\c00????00 Title: \c00??????'+title+'\\n \c00????00Year: \c00??????'+year+'\\n \c00????00Description: \c00??????'+tooltip
-                    params = dict(cItem)
-                    params.update({'good_for_fav':True, 'title':self.cleanHtmlStr(title), 'url':videoUrl, 'icon':imageUrl, 'desc':self.cleanHtmlStr(desc)})
-                    self.addVideo(params)
+                    params = dict(cItem)                    
+                    if '/shows/' in tmpurl: 
+                        params.update({'category':'tvshow', 'title':self.cleanHtmlStr(title), 'url':videoUrl, 'icon':imageUrl, 'desc':self.cleanHtmlStr(desc)})
+                        self.addDir(params)
+                    else: 
+                        params.update({'good_for_fav':True, 'title':self.cleanHtmlStr(title), 'url':videoUrl, 'icon':imageUrl, 'desc':self.cleanHtmlStr(desc)})
+                        self.addVideo(params)
             except:
                 printDBG('e2iStream >>>>>>>>>>> failed to parse website data - please report!')
 
@@ -174,7 +200,8 @@ class LookMovieag(CBaseHostClass):
               
     def listSearchResult(self, cItem, searchPattern, searchType):   
         cItem = dict(cItem)
-        cItem['url'] = self.getFullUrl('/movies/search/?q=') + urllib.quote(searchPattern) 
+        if searchType == 'movies': cItem['url'] = self.getFullUrl('/movies/search/?q=') + urllib.quote(searchPattern) 
+        elif searchType == 'tvseries': cItem['url'] = self.getFullUrl('/shows/search/?q=') + urllib.quote(searchPattern)
         cItem['category'] = 'list_items'
         self.listItems(cItem)
 
@@ -187,32 +214,37 @@ class LookMovieag(CBaseHostClass):
         if not sts: return []
         self.setMainUrl(self.cm.meta['url'])           
         tmpurl = self.cm.meta['url']
-        movieId = self.cm.ph.getAllItemsBeetwenNodes(data,'window.id_movie=\'', ('\';</script>'),False)[0]  
-        tmpUrl = 'https://lookmovie.ag/manifests/movies/json/%s/1564684248/kSrTkeFjYz3FUOpCjEHiGw/master.m3u8?extClient=true' % movieId
-        sts, tmpData = self.getPage(tmpUrl)
-        videoUrls = self.cm.ph.getAllItemsBeetwenNodes(tmpData,'p":"', ('"'),False)
-        quality = ''
-        avail1080 = False
-        for links in videoUrls:
-            if '1080p' in links:
-                avail1080 = True
-                continue
-            if '720p' in links: 
-                if avail1080:
-                    # option was there for the fake 1080p link so it must exist for
-                    # the vip members with an account.  Backup the 720p link so that 
-                    # I can include it once I write the 1080p link.  CM
-                    avail1080 = False
-                    tmpUrl = links    # temporarily store the 720p url
-                    links = links.replace("720p", "1080p")
-                    urlTab.append({'name': '1080p Quality', 'url': links, 'need_resolve': 1})
-                    urlTab.append({'name': '720p Quality', 'url': tmpUrl, 'need_resolve': 1})                
+        if '/shows/' in tmpurl:
+            # episodes only have one quality and feed (720p), 
+            # just return the 720p full url.
+            urlTab.append({'name': 'episodeplay', 'url': tmpurl, 'need_resolve': 1})
+        else:
+            movieId = self.cm.ph.getAllItemsBeetwenNodes(data,'window.id_movie=\'', ('\';</script>'),False)[0]  
+            tmpUrl = 'https://lookmovie.ag/manifests/movies/json/%s/1564684248/kSrTkeFjYz3FUOpCjEHiGw/master.m3u8?extClient=true' % movieId
+            sts, tmpData = self.getPage(tmpUrl)
+            videoUrls = self.cm.ph.getAllItemsBeetwenNodes(tmpData,'p":"', ('"'),False)
+            quality = ''
+            avail1080 = False
+            for links in videoUrls:
+                if '1080p' in links:
+                    avail1080 = True
                     continue
-                else: quality = '720p Quality'
-            elif '480p' in links: quality = '480p Quality'
-            elif '360p' in links: quality = '360p Quality'
-            else: continue            
-            urlTab.append({'name': quality, 'url': links, 'need_resolve': 1})
+                if '720p' in links: 
+                    if avail1080:
+                        # option was there for the fake 1080 so it must exist for
+                        # those vip members.  Backup the 720 link and also include
+                        # it once we update 1080p link.
+                        avail1080 = False
+                        tmpUrl = links    # temporarily store the 720p url
+                        links = links.replace("720p", "1080p")
+                        urlTab.append({'name': '1080p Quality', 'url': links, 'need_resolve': 1})
+                        urlTab.append({'name': '720p Quality', 'url': tmpUrl, 'need_resolve': 1})                
+                        continue
+                    else: quality = '720p Quality'
+                elif '480p' in links: quality = '480p Quality'
+                elif '360p' in links: quality = '360p Quality'
+                else: continue            
+                urlTab.append({'name': quality, 'url': links, 'need_resolve': 1})
         return urlTab
     
     def handleService(self, index, refresh = 0, searchPattern = '', searchType = ''):        
@@ -227,20 +259,15 @@ class LookMovieag(CBaseHostClass):
         if name == None:
             self.listsTab(self.MAIN_CAT_TAB, self.currItem)        
         # movie section
-        elif category == 'movies':
-            self.listsTab(self.MOVIE_SUB_CAT, self.currItem)
-        elif category == 'allmovies':
-            self.listItems(self.currItem)
-        elif category == 'latestmovies':
-            self.listItems(self.currItem)
-        elif category == 'sortbyyear':
-            self.buildYears(self.currItem)
-        elif category == 'listyears':
-            self.listItems(self.currItem)
-        elif category == 'moviegenres':
-            self.listsTab(self.GENRE_SUB_CAT, self.currItem)
-        elif category == 'listgenre':
-            self.listItems(self.currItem)
+        elif category == 'movies': self.listsTab(self.MOVIE_SUB_CAT, self.currItem)
+        elif category == 'allmovies': self.listItems(self.currItem)
+        elif category == 'latestmovies': self.listItems(self.currItem)
+        elif category == 'sortbyyear': self.buildYears(self.currItem)
+        elif category == 'listyears': self.listItems(self.currItem)
+        elif category == 'moviegenres': self.listsTab(self.GENRE_SUB_CAT, self.currItem)
+        elif category == 'listgenre': self.listItems(self.currItem)
+        elif category == 'tvseries': self.listItems(self.currItem)
+        elif category == 'tvshow': self.listEpisodes(self.currItem)
         elif category in ["search", "search_next_page"]:
             cItem = dict(self.currItem)
             cItem.update({'search_item':False, 'name':'category'}) 
@@ -257,5 +284,9 @@ class IPTVHost(CHostBase):
     def __init__(self):
         CHostBase.__init__(self, LookMovieag(), True, favouriteTypes=[]) 
 
-
+    def getSearchTypes(self):
+        searchTypesOptions = []
+        searchTypesOptions.append((_("Movies"), "movies"))
+        searchTypesOptions.append((_("TV Series"), "tvseries"))
+        return searchTypesOptions
 
