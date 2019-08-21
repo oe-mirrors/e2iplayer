@@ -27,7 +27,7 @@ class KreskoweczkiPL(CBaseHostClass):
         self.defaultParams = {'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
         self.abcCache = {}
         
-        self.HEADER = {'User-Agent': 'Mozilla/5.0', 'Accept': 'text/html'}
+        self.HEADER = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:68.0) Gecko/20100101 Firefox/68.0', 'Accept': 'text/html'}
         self.AJAX_HEADER = dict(self.HEADER)
         self.AJAX_HEADER.update( {'X-Requested-With': 'XMLHttpRequest'} )
         
