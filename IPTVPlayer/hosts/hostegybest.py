@@ -14,6 +14,7 @@ from Plugins.Extensions.IPTVPlayer.libs.urlparserhelper import getDirectM3U8Play
 ###################################################
 import urlparse
 import urllib
+import re
 try:    import json
 except Exception: import simplejson as json
 from Components.config import config, ConfigText, getConfigListEntry
@@ -39,7 +40,7 @@ def GetConfigList():
     return optionList
 ###################################################
 def gettytul():
-    return 'http://egy.best/'
+    return 'http://bear.egybest.site/'
 
 class EgyBest(CBaseHostClass):
     
@@ -47,7 +48,7 @@ class EgyBest(CBaseHostClass):
         CBaseHostClass.__init__(self, {'history':'egy.best', 'cookie':'egy.best.cookie'})
         self.DEFAULT_ICON_URL = 'http://cdn.egy.best/static/img/egybest_logo.png'
         self.USER_AGENT = 'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:40.0) Gecko/20100101 Firefox/40.0'
-        self.MAIN_URL = 'http://egy.best/'
+        self.MAIN_URL = 'http://bear.egybest.site/'
         self.HEADER = {'User-Agent': self.USER_AGENT, 'DNT':'1', 'Accept': 'text/html', 'Accept-Encoding':'gzip, deflate', 'Referer':self.getMainUrl(), 'Origin':self.getMainUrl()}
         self.AJAX_HEADER = dict(self.HEADER)
         self.AJAX_HEADER.update( {'X-Requested-With': 'XMLHttpRequest', 'Accept-Encoding':'gzip, deflate', 'Content-Type':'application/x-www-form-urlencoded; charset=UTF-8', 'Accept':'application/json, text/javascript, */*; q=0.01'} )
@@ -162,21 +163,26 @@ class EgyBest(CBaseHostClass):
         nextPage = False
         try:
             data = byteify(json.loads(data), '', True)['html']
+            #printDBG(data)
             data  = self.cm.ph.getAllItemsBeetwenMarkers(data, '<a', '</a>')
             if len(data) and '' != self.cm.ph.getSearchGroups(data[-1], '''[/\?&]page=(%s)[^0-9]''' % (page+1))[0]:
                 nextPage = True
             for item in data:
                 url   = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''href=['"]([^'^"]+?)['"]''')[0])
+                if url.endswith('?ref=trends-p1'):
+                    url = url.replace('?ref=trends-p1','explore')
                 icon  = self.getFullIconUrl(self.cm.ph.getSearchGroups(item, '''src=['"]([^'^"]+?)['"]''')[0])
                 tmp = self.cm.ph.getAllItemsBeetwenMarkers(item, '<span', '</span>')
                 if tmp == []: continue
-                title = self.cleanHtmlStr(tmp[0]) 
+                rate = self.cleanHtmlStr(tmp[0])
+                title = self.cleanHtmlStr(tmp[1])				
                 desc  = ''
                 for d in tmp[1:]:
                     d = self.cleanHtmlStr(d)
                     if d != '': desc = d + '[/br]'
                 params = dict(cItem)
-                params.update({'good_for_fav':True, 'category':nextCategory, 'title':title, 'url':url, 'icon':icon, 'desc':desc})
+                params.update({'good_for_fav':True, 'category':nextCategory, 'title':title, 'url':url, 'icon':icon, 'desc':' '+desc+' Rate:'+rate})
+                printDBG(str(params))
                 self.addDir(params)
         except Exception: 
             printExc()
@@ -202,9 +208,18 @@ class EgyBest(CBaseHostClass):
             if num > 1: title += ' %s' % num
             params = dict(cItem)
             params.update({'good_for_fav':False, 'url':url, 'title':title, 'icon':icon})
+            printDBG(str(params))
             self.addVideo(params)
             num += 1
-            
+        
+        # embedded player
+        frame_url = self.cm.ph.getSearchGroups(data, '''<iframe.*?src=['"]([^'^"]+?)['"]''')[0]
+        params = dict(cItem)
+        params.update({'good_for_fav':False, 'url': frame_url, 'title': cItem['title'], 'icon':cItem['icon'], 'need_resolve':1})
+        printDBG(str(params))
+        self.addVideo(params)
+        
+        # da qui
         url = self.getFullUrl(self.cm.ph.getSearchGroups(data, '''href=['"]([^'^"]+?/episodes)['"]''')[0])
         if self.cm.isValidUrl(url):
             sts, data = self.getPage(url)
@@ -223,9 +238,9 @@ class EgyBest(CBaseHostClass):
                 params = dict(cItem)
                 params.update({'good_for_fav':True, 'category':nextCategory, 'title':title, 'url':url, 'icon':icon})
                 self.addDir(params)
-        elif 'watch_video' in data or 'data-call' in data:
-            params = dict(cItem)
-            self.addVideo(params)
+        #elif 'watch_video' in data or 'data-call' in data:
+        #    params = dict(cItem)
+        #    self.addVideo(params)
             
     def listEpisodes(self, cItem):
         printDBG("EgyBest.listEpisodes")
@@ -254,62 +269,13 @@ class EgyBest(CBaseHostClass):
         printDBG("EgyBest.getLinksForVideo [%s]" % cItem)
         self.tryTologin()
         
-        retTab = []
-        playTab = []
-        dwnTab = []
-        if 1 == self.up.checkHostSupport(cItem.get('url', '')):
-            videoUrl = cItem['url'].replace('youtu.be/', 'youtube.com/watch?v=')
-            return self.up.getVideoLinkExt(videoUrl)
+        videoUrl=cItem['url']
+        #if 1 == self.up.checkHostSupport(cItem.get('url', '')):
+        videoUrl = videoUrl.replace('youtu.be/', 'youtube.com/watch?v=')
         
-        cacheKey = cItem['url']
-        cacheTab = self.cacheLinks.get(cacheKey, [])
-        if len(cacheTab): return cacheTab
-        
-        self.cacheLinks = {}
-        
-        sts, data = self.getPage(cItem['url'])
-        if not sts: return
-        cUrl = data.meta['url']
-        
-        tmp = self.cm.ph.getDataBeetwenMarkers(data, '<video', '</video>', False, False)[1]
-        tmp = self.cm.ph.getAllItemsBeetwenMarkers(tmp, '<source', '>', caseSensitive=False)
-        for item in tmp:
-            url = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''\ssrc=['"]([^'^"]+?)['"]''')[0])
-            type = self.cm.ph.getSearchGroups(item, '''\stype=['"]([^'^"]+?)['"]''')[0].lower()
-            printDBG(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> ]]]]]]]]]]]]]]]]]]]]]]]] >>>>>>>>> " + url)
-            printDBG(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> ]]]]]]]]]]]]]]]]]]]]]]]] >>>>>>>>> " + type)
-            if url == '': continue
-            if 'application/x-mpegurl' == type:
-                name = '[HLS/m3u8]'
-                meta = {'iptv_proto':'m3u8'}
-            elif 'video/mp4' == type:
-                name = '[mp4]'
-                meta = {'direct':True}
-            else: continue
-            meta.update({'Referer':cUrl})
-            playTab.append({'name':name, 'url':strwithmeta(self.getFullUrl(url, cUrl), meta), 'need_resolve':1})
-        
-        data = self.cm.ph.getDataBeetwenNodes(data, ('<table', '>', 'dls_table'), ('</table', '>'), False)[1]
-        data = self.cm.ph.getDataBeetwenMarkers(data, '<tbody>', '</tbody>')[1]
-        data = self.cm.ph.getAllItemsBeetwenMarkers(data, '<tr', '</tr>')
-        for item in data:
-            item = self.cm.ph.getAllItemsBeetwenMarkers(item,  '<td', '</td>')[::-1]
-            if len(item) < 2: continue
-            
-            name = '|'.join([self.cleanHtmlStr(t) for t in item[1:]])
-            item = self.cm.ph.getAllItemsBeetwenMarkers(item[0],  '<a', '</a>')
-            for it in item:
-                url = self.cm.ph.getSearchGroups(it, '''href=['"]([^'^"]+?)['"]''')[0]
-                if url == '': url = self.cm.ph.getSearchGroups(it, '''url=['"]([^'^"]+?)['"]''')[0]
-                call = self.cm.ph.getSearchGroups(it, '''data\-call=['"]([^'^"]+?)['"]''')[0]
-                if url != '': retTab.append({'name':'%s: %s' % (self.cleanHtmlStr(it), name), 'url':strwithmeta(self.getFullUrl(url), {'Referer':cItem['url']}), 'need_resolve':1})
-                if call != '': dwnTab.append({'name':'%s: %s' % (self.cleanHtmlStr(it), name), 'url':strwithmeta(call, {'priv_api_call':True, 'Referer':cItem['url']}), 'need_resolve':1})
-        
-        retTab.extend(playTab)
-        retTab.extend(dwnTab)
-        if len(retTab): self.cacheLinks[cacheKey] = retTab
-        return retTab
-        
+        return self.up.getVideoLinkExt(videoUrl)
+
+    
     def getVideoLinks(self, videoUrl):
         printDBG("EgyBest.getVideoLinks [%s]" % videoUrl)
         videoUrl = strwithmeta(videoUrl)
