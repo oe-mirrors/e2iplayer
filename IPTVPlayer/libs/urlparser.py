@@ -12094,7 +12094,7 @@ class pageParser(CaptchaHelper):
         if not video_id:
             video_id = re.findall("v[ei]uclips\.[nc][eo][tm]/player/html/(.*?)\?", baseUrl)
         if not video_id:
-            video_id = re.findall("player.veuclips.com/embed/(.*?)\?", baseUrl)
+            video_id = re.findall("v[ei]uclips.[nc][eo][tm]/embed/(.*?)\?", baseUrl)
         if not video_id:
             return []
 
