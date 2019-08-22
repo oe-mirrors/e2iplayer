@@ -32,14 +32,7 @@ class BeinmatchApi(CBaseHostClass):
         self.http_params = {'header':self.HTTP_HEADER}
         self.getLinkJS = ''
 
-    def getPage(self, baseUrl, addParams = {}, post_data = None):
-        if addParams == {}: addParams = dict(self.http_params)
-        origBaseUrl = baseUrl
-        baseUrl = self.cm.iriToUri(baseUrl)
-        return self.cm.getPage(baseUrl, addParams, post_data)
-
-    def translateTeamNames(self, name):
-        TRANSLATED_NAMES={     
+        self.TRANSLATED_NAMES={     
         'أستون فيلا': 'Aston Villa F.C.',
         'أنغولا': 'Angola',
         'أوروجواي': 'Uruguay',
@@ -82,8 +75,8 @@ class BeinmatchApi(CBaseHostClass):
         'سيمونا هاليب': 'Simona Halep',
         'غانا': 'Ghana',
         'غولدن ستيت واريورز': '',
-        'غينيا بيساو': 'Guinea-Bissau',
         'غينيا': 'Guinea',
+        'غينيا بيساو': 'Guinea-Bissau',
         'فنزويلا': 'Venezuela',
         'قطر': 'Qatar',
         'كولومبيا': 'Colombia',
@@ -104,10 +97,37 @@ class BeinmatchApi(CBaseHostClass):
         'نيوكاسل يونايتد': 'Newcastle United F.C.',
         'وست هام يونايتد': 'West Ham United F.C.',
         'وولفرهامبتون': 'Wolverhampton',
+        'آرسنال': 'Arsenal F.C.',
+        'أتلتيك بيلباو': 'Athletic Bilbao',
+        'الأهلي المصري': 'Al Ahly SC',
+        'الدوري الألماني': 'Bundesliga',
+        'الدوري الإسباني': 'La Liga',
+        'الدوري الإنجليزي الممتاز': 'Premier League',
+        'بايرن ميونيخ': 'FC Bayern Munich',
+        'بطولة ويمبلدون للتنس': 'Wimbledon',
+        'ريال مدريد': 'Real Madrid CF',
+        'سيلتا فيغو': 'RC Celta de Vigo',
+        'كأس الأمم الأفريقية': 'Africa Cup of Nations',
+        'كأس السوبر الأوروبي': 'UEFA Super Cup',
+        'كأس جوهان غامبر': '',
+        'كأس مصر': 'Egypt Cup',
+        'بيرنلي': 'Burnley',
+        'ساوثهامتون': 'Southampton FC',
+        'بيراميدز': 'Pyramids F.C.'
         }
+
+        
+    def getPage(self, baseUrl, addParams = {}, post_data = None):
+        if addParams == {}: addParams = dict(self.http_params)
+        origBaseUrl = baseUrl
+        baseUrl = self.cm.iriToUri(baseUrl)
+        return self.cm.getPage(baseUrl, addParams, post_data)
+
+    def translateTeamNames(self, name):
         name2=''
-        if name in TRANSLATED_NAMES:
-            name2 = TRANSLATED_NAMES[name]
+        if name in self.TRANSLATED_NAMES:
+            name2 = self.TRANSLATED_NAMES[name]
+            printDBG("found in list")
         else:
             # try wikipedia for translation
             url = "https://ar.wikipedia.org/wiki/" + name.replace(" ","_")
@@ -122,7 +142,7 @@ class BeinmatchApi(CBaseHostClass):
                         #printDBG(name2[0])
                         name2 = urllib.unquote(name2[0].replace("_"," "))
         
-            TRANSLATED_NAMES[name] = name2
+            self.TRANSLATED_NAMES[name] = name2
         return name2
         
     def getList(self, cItem):
