@@ -551,7 +551,6 @@ class urlparser:
                        'videohouse.me':        self.pp.parserVIDEOHOUSE     ,
                        'justupload.io':        self.pp.parserJUSTUPLOAD     ,
                        'vidspace.io':          self.pp.parserVIDEOSPACE     ,
-                       'player.veuclips.com':  self.pp.parserVIUCLIPS       ,
                        'veuclips.com':         self.pp.parserVIUCLIPS       ,
                        'viuclips.net':         self.pp.parserVIUCLIPS       ,					   
                     }
@@ -12087,25 +12086,19 @@ class pageParser(CaptchaHelper):
         # example http://oms.viuclips.net/player/PopUpIframe/JwB2kRDt7Y?iframe=popup&u=
         #         http://oms.veuclips.com/player/PopUpIframe/HGXPBPodVx?iframe=popup&u=
         #         https://footy11.viuclips.net/player/html/D7o5OVWU9C?popup=yes&autoplay=1
-		# 		  http://player.veuclips.com/embed/JwB2kRDt7Y
+        #         http://player.veuclips.com/embed/JwB2kRDt7Y
 
-        baseUrl = baseUrl + "?"
-        video_id = re.findall("v[ei]uclips\.[nc][eo][tm]/player/PopUpIframe/(.*?)\?", baseUrl)
-        if not video_id:
-            video_id = re.findall("v[ei]uclips\.[nc][eo][tm]/player/html/(.*?)\?", baseUrl)
-        if not video_id:
-            video_id = re.findall("v[ei]uclips.[nc][eo][tm]/embed/(.*?)\?", baseUrl)
-        if not video_id:
-            return []
+        if 'embed' not in baseUrl:
+            video_id  = ph.search(baseUrl, r'''https?://.*/player/.*/([a-zA-Z0-9]{10})\?''')[0]
+            printDBG("parserVIUCLIPS video_id[%s]" % video_id)
+            baseUrl = 'http://player.veuclips.com/embed/{0}'.format(video_id)
 
-        player_url = "http://player.veuclips.com/embed/%s" % video_id[0]
-        sts, data = self.cm.getPage(player_url)
-        if not sts: 
-            return []
+        sts, data = self.cm.getPage(baseUrl)
+        if not sts: return False
 
         if 'This video has been removed' in data:
             SetIPTVPlayerLastHostError( 'This video has been removed')
-            return []
+            return False
         
         vidTab=[]
         links = re.findall("hls:\"(.*?)\"", data)
