@@ -45,15 +45,14 @@ class MediasetPlay(CBaseHostClass):
         self.MAIN_URL    = 'https://www.mediasetplay.mediaset.it/'
         self.INDEX_URL = "https://static3.mediasetplay.mediaset.it/cataloglisting/azListing.json"
         self.API_BASE_URL = 'https://api-ott-prod-fe.mediaset.net/PROD/play'
-        #self.API_LIVE_URL = self.API_BASE_URL + '/alive/nownext/v1.0?channelId={0}' 
-        #self.API_EPG_URL = self.API_BASE_URL + '/alive/allListingFeedFilter/v1.0?byListingTime=%interval%&byVod=true&byCallSign=%cs%'
         
         self.FEED_URL = 'https://feed.entertainment.tv.theplatform.eu/f/PR1GhC'
         self.FEED_EPG_URL = self.FEED_URL + '/mediaset-prod-all-listings?byListingTime=%interval%&byCallSign=%cs%'
         self.FEED_CHANNELS_URL = self.FEED_URL + '/mediaset-prod-all-stations?fields=title,callsign,thumbnails&sort=mediasetstation$comscoreVodChId'
         self.FEED_CHANNEL_URL = self.FEED_URL + '/mediaset-prod-all-stations?byCallSign=%cs%'
         self.FEED_SHOW_URL = self.FEED_URL + '/mediaset-prod-all-brands?byCustomValue={brandId}{%brandId%}&sort=mediasetprogram$order'
-        self.FEED_SHOW_INDEX_URL = self.FEED_URL + '/mediaset-prod-all-brands?byTags=%cat%&fields=title,description,thumbnails,mediasetprogram$brandId,mediasetprogram$seasonTitle,mediasetprogram$brandChannelCode&sort=title,mediasetprogram$seasonTitle&range=0-3000'       
+        self.FEED_SHOW_COUNT = self.FEED_URL + '/mediaset-prod-all-brands?byTags=%cat%&count=true&entries=false'
+        self.FEED_SHOW_INDEX_URL = self.FEED_URL + '/mediaset-prod-all-brands?byTags=%cat%&fields=title,description,thumbnails,mediasetprogram$brandId,mediasetprogram$seasonTitle,mediasetprogram$brandChannelCode&sort=title,mediasetprogram$seasonTitle&range=%range%'       
         self.FEED_SHOW_SUBITEM_URL = self.FEED_URL + '/mediaset-prod-all-programs?byCustomValue={brandId}{%brandId%},{subBrandId}{%subBrandId%}&sort=mediasetprogram$publishInfo_lastPublished|desc&count=true&entries=true&range=0-200'
         self.FEED_EPISODE_URL = self.FEED_URL + '/mediaset-prod-all-programs?byGuid={0}'
         self.DEFAULT_ICON_URL = 'https://i.pinimg.com/originals/34/67/9b/34679b83e426516b478ba9d63dcebfa2.png' #'http://www.digitaleterrestrefacile.it/wp-content/uploads/2018/07/mediaset-play.jpg' #'https://cdn.one.accedo.tv/files/5b0d3b6e23eec6000dd56c7f'
@@ -327,35 +326,52 @@ class MediasetPlay(CBaseHostClass):
 
         if 'f_category' in cItem: 
             url = self.FEED_SHOW_INDEX_URL.replace("%cat%", cItem['f_category'].replace(" ", "%20"))
+            url_count = self.FEED_SHOW_COUNT.replace("%cat%", cItem['f_category'].replace(" ", "%20"))
         else:
             url = self.FEED_SHOW_INDEX_URL.replace("%cat%", "Brand")
+            url_count = self.FEED_SHOW_COUNT.replace("%cat%", "Brand")
         
-        sts, data = self.getPage(url)
+        sts, data = self.getPage(url_count)
         if not sts: return
         
         data = json_loads(data)
-        for item in data['entries']:
-            # control if program is on air now, if requested 
-            title = item['title']
-            f_query = cItem.get('f_query','*')
-            if (not ('f_onair' in cItem)) or (('f_onair' in cItem) and ("mediasetprogram$brandChannelCode" in item)) : 
-                # control starting letter
-                if (f_query == '*') or ((f_query == '0') and title[:1].isdigit() ) or ( not(f_query in ['0','*']) and title[:1] == f_query ) :  
-                    # can add program to list    
-                    printDBG(title)
-                    icon = self.getBestThumb(item['thumbnails'], True)
-                    brandId = item.get("mediasetprogram$brandId",'')
-                    desc = ["Id:" + brandId, item.get('description', '')]
-                    if desc[1] == None:
-                        desc = "Id:" + brandId
-                    else:
-                        desc = '\n'.join(desc)
-                    if "mediasetprogram$seasonTitle" in item:
-                        if item["mediasetprogram$seasonTitle"] != "0":
-                            title = item["mediasetprogram$seasonTitle"]
-                    params = {'good_for_fav':True, 'title':title, 'url':url, 'icon': icon, 'desc': desc, 'category': 'program', 'brandId': brandId}
-                    self.addDir(MergeDicts(cItem, params))
+        number_of_entries = data["totalResults"]
+        printDBG("entries: %s " % number_of_entries)
+        
+        range_start = 1 
+        while range_start < number_of_entries:
+            range_end = range_start + 299
+            range_str = "%s-%s" % (range_start,range_end)
 
+            sts, data = self.getPage(url.replace("%range%", range_str))
+            if sts: 
+
+                data = json_loads(data)
+
+                for item in data['entries']:
+                    # control if program is on air now, if requested 
+                    title = item['title']
+                    f_query = cItem.get('f_query','*')
+                    if (not ('f_onair' in cItem)) or (('f_onair' in cItem) and ("mediasetprogram$brandChannelCode" in item)) : 
+                        # control starting letter
+                        if (f_query == '*') or ((f_query == '0') and title[:1].isdigit() ) or ( not(f_query in ['0','*']) and title[:1] == f_query ) :  
+                            # can add program to list    
+                            printDBG(title)
+                            icon = self.getBestThumb(item['thumbnails'], True)
+                            brandId = item.get("mediasetprogram$brandId",'')
+                            desc = ["Id:" + brandId, item.get('description', '')]
+                            if desc[1] == None:
+                                desc = "Id:" + brandId
+                            else:
+                                desc = '\n'.join(desc)
+                            if "mediasetprogram$seasonTitle" in item:
+                                if item["mediasetprogram$seasonTitle"] != "0":
+                                    title = item["mediasetprogram$seasonTitle"]
+                            params = {'good_for_fav':True, 'title':title, 'url':url, 'icon': icon, 'desc': desc, 'category': 'program', 'brandId': brandId}
+                            self.addDir(MergeDicts(cItem, params))
+
+            range_start= range_start + 300
+                                     
     def listProgramItems(self, cItem):
         brandId=cItem["brandId"]    
         url = self.FEED_SHOW_URL.replace('%brandId%',brandId)
