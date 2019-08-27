@@ -191,22 +191,22 @@ class MediasetPlay(CBaseHostClass):
 
     def getChannelList(self):
         printDBG("MediasetPlay.getChannelList")
-        sts, data = self.getPage(self.FEED_CHANNELS_URL)
-        if not sts: return
-        channels=[]
+        channels = []
 
-        data = json_loads(data)
-        for item in data['entries']:
-            icon = self.getFullIconUrl( item['thumbnails']['channel_logo-100x100']['url']) #next(iter(item['thumbnails']))['url'] )
-            title = item['title']
-            channels.append ( {'title':title, 'icon':icon, 'call_sign':item['callSign']})
+        sts, data = self.getPage(self.FEED_CHANNELS_URL)
+        if sts: 
+            data = json_loads(data)
+            for item in data['entries']:
+                icon = self.getFullIconUrl( item['thumbnails']['channel_logo-100x100']['url']) #next(iter(item['thumbnails']))['url'] )
+                title = item['title']
+                channels.append ( {'title':title, 'icon':icon, 'call_sign':item['callSign']})
             
         return channels
     
     def listOnAir(self, cItem):
         printDBG("MediasetPlay.listOnAir")
 
-        channels=self.getChannelList()
+        channels = self.getChannelList()
         for item in channels:
             self.addVideo(MergeDicts(cItem, {'category': 'onair', 'good_for_fav':True, 'title': item["title"], 'icon': item["icon"], 'call_sign': item['call_sign']}))
 
@@ -260,16 +260,23 @@ class MediasetPlay(CBaseHostClass):
                 desc.append(item['mediasetprogram$publishInfo']['last_published'].split('T', 1)[0]) 
                 desc.append(item['mediasetprogram$publishInfo']['description']) 
                 desc.append(str(timedelta(seconds=int(item['mediasetprogram$duration']))))
-                desc.append(_('%s views') % item['mediasetprogram$numberOfViews'] )
+                if 'mediasetprogram$numberOfViews' in item:
+                    desc.append(_('%s views') % item['mediasetprogram$numberOfViews'] )
                 desc = [' | '.join(desc)]
                 desc.append(item['title'])
-                desc.append(item.get('description', ''))
+                if item.get('description', ''):
+                    desc.append(item.get('description', ''))
+                printDBG(str(desc))
                 desc= '\n'.join(desc)
-                printDBG("----> aggiunta voce" +  title + " " + desc)
-                self.addVideo( {'good_for_fav':True, 'category': 'epg_video', 'title':title, 'desc': desc, 'icon':icon, 'guid':guid})
+                params = {'good_for_fav':True, 'category': 'epg_video', 'title':title, 'desc': desc, 'icon':icon, 'guid':guid}
+                printDBG(str(params))
+                self.addVideo( params)
             else:
                 # no video on demand
-                self.addVideo( {'good_for_fav': False, 'category': 'no_video', 'title':title, 'icon':icon, 'guid':guid, 'desc' : 'Non disponibile', 'text_color': 'red'})
+                title = title + "\c00??8800 [" + _("not available") + "]"
+                params = {'good_for_fav': False, 'category': 'no_video', 'title':title, 'icon':icon, 'guid':guid, 'desc' : 'Non disponibile'}
+                printDBG(str(params))
+                self.addVideo(params)
                 
     def listOnDemand(self, cItem):
         printDBG("MediasetPlay.listMain")
