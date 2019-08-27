@@ -27,29 +27,25 @@ class Raiplay(CBaseHostClass):
  
     def __init__(self):
 
-        CBaseHostClass.__init__(self)
-
+        CBaseHostClass.__init__(self, {'history':'raiplay', 'cookie':'raiplay.it.cookie'})
         self.MAIN_URL = 'http://raiplay.it/'
+        self.RAISPORT_URL = 'https://www.raisport.rai.it'
         self.MENU_URL="http://www.rai.it/dl/RaiPlay/2016/menu/PublishingBlock-20b274b1-23ae-414f-b3bf-4bdc13b86af2.html?homejson"
         self.CHANNELS_URL= "http://www.rai.it/dl/RaiPlay/2016/PublishingBlock-9a2ff311-fcf0-4539-8f8f-c4fee2a71d58.html?json"
         self.CHANNELS_RADIO_URL="http://rai.it/dl/portaleRadio/popup/ContentSet-003728e4-db46-4df8-83ff-606426c0b3f5-json.html"
         self.EPG_URL= "http://www.rai.it/dl/palinsesti/Page-e120a813-1b92-4057-a214-15943d95aa68-json.html?canale=[nomeCanale]&giorno=[dd-mm-yyyy]"
         self.TG_URL = "http://www.tgr.rai.it/dl/tgr/mhp/home.xml"
-        self.RELINKER_USER_AGENT = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/57.0.2956.0 Safari/537.36"
-
         self.DEFAULT_ICON_URL = "https://images-eu.ssl-images-amazon.com/images/I/41%2B5P94pGPL.png"
         self.NOTHUMB_URL = "http://www.rai.it/cropgd/256x144/dl/components/img/imgPlaceholder.png"
 
         self.HTTP_HEADER = self.cm.getDefaultHeader(browser='chrome')        
-        self.defaultParams = {'header':self.HTTP_HEADER}
-        #self.defaultParams = { 'header': {'User-Agent': 'Mozilla/5.0 (Windows NT 6.1; rv:17.0) Gecko/20100101 Firefox/17.0'}}
-        self.defaultParams = { 'header': {'User-Agent': "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/57.0.2956.0 Safari/537.36"}}
+        self.RELINKER_USER_AGENT = "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/73.0.3683.103 Safari/537.36"
 
+        self.defaultParams = {'header':self.HTTP_HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
         
     def getPage(self, url, addParams = {}, post_data = None):
         if addParams == {}:
             addParams = dict(self.defaultParams)
-        #printDBG(self.defaultParams)
         return self.cm.getPage(url, addParams, post_data)
 
     def getThumbnailUrl(self, pathId):
@@ -89,8 +85,10 @@ class Raiplay(CBaseHostClass):
 
         linksTab=[]
         if (cItem["category"] == "live_tv") or (cItem["category"] == "live_radio") or (cItem["category"]=="video_link"): 
+            url = cItem['url']
+            linksTab.append({'name': 'hls', 'url': url})           
             
-            url=strwithmeta(cItem["url"], {'User-Agent': self.RELINKER_USER_AGENT })
+            url = strwithmeta( url, {'User-Agent': self.RELINKER_USER_AGENT})
             linksTab.extend(getDirectM3U8Playlist(url, checkExt=False, variantCheck=True, checkContent=True, sortWithMaxBitrate=99999999))  
             
         elif (cItem["category"] == "program"):
@@ -103,6 +101,7 @@ class Raiplay(CBaseHostClass):
             video_url=response["video"]["contentUrl"]
             printDBG(video_url);
             video_url=strwithmeta(video_url, {'User-Agent': self.RELINKER_USER_AGENT })
+            linksTab.append({'name': 'hls', 'url': video_url})           
             linksTab.extend(getDirectM3U8Playlist(video_url, checkExt=False, variantCheck=True, checkContent=True, sortWithMaxBitrate=99999999))  
             
         else:
@@ -133,12 +132,44 @@ class Raiplay(CBaseHostClass):
         for station in tv_stations:
             title = station["channel"]
             desc = station["description"]
-            icon = self.MAIN_URL + station["icon"]          
+            icon = self.getThumbnailUrl(station["transparent-icon"])           
             url = station["video"]["contentUrl"]
             params = dict(cItem)
             params = {'title':title, 'url':url, 'icon':icon, 'category': 'live_tv', 'desc': desc}
             self.addVideo(params)
+        
+        #add raisport webstreams
+        sts, data = self.getPage(self.RAISPORT_URL)
+        if not sts: 
+            return
+         
+        tmp = self.cm.ph.getDataBeetwenNodes(data, '<!--RAI 24 Area Tematica Block: Dirette Web Streaming', '<!--RAI')[1]
+        items = self.cm.ph.getAllItemsBeetwenMarkers(tmp, '<section', '</section>')
+        for i in items:
+            url = self.cm.ph.getSearchGroups(i, '''data-videolive=['"]([^'^"]+?)['"]''')[0]
+            if url:
+                icon = self.cm.ph.getSearchGroups(i, '''data-original=['"]([^'^"]+?)['"]''')[0]
+                if icon:
+                    icon = self.RAISPORT_URL + icon
+                sport = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(i, '<div class="etichetta">', '</div>', False)[1])
+                title = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(i, '<h3>', '</h3>', False)[1])
+                desc = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(i, '<div class="text">', '</div>', False)[1])
 
+                if sport:
+                     if title:
+                        title = "Rai sport web: " + sport + " " + title 
+                     else:
+                        title = "Rai sport web: " + sport
+                else:
+                    if title:
+                        title = "Rai sport web: " + sport
+                    else:
+                        title = "Rai sport web"
+
+                params = dict(cItem)
+                params = {'title':title, 'url':url, 'icon':icon, 'category': 'live_tv', 'desc': desc}
+                self.addVideo(params)
+            
     def listLiveRadioChannels(self, cItem):
         printDBG("Raiplay - start live radio list")
         sts, data = self.getPage(self.CHANNELS_RADIO_URL)
@@ -243,9 +274,9 @@ class Raiplay(CBaseHostClass):
         
             if videoUrl is None:
                 # programme is not available
-                title = startTime + " " + title 
+                title = startTime + " " + title + "\c00??8800 [" + _("not available") + "]"
                 thumbnailImage = thumb
-                params = {'title':title, 'url':'', 'icon': thumb, 'desc': desc, 'category': 'nop', 'text_color' : 'red'}
+                params = {'title':title, 'url':'', 'icon': thumb, 'desc': desc, 'category': 'nop'}
 
             else:
                 title = startTime + " " + title
@@ -506,7 +537,7 @@ class Raiplay(CBaseHostClass):
         elif category in ['tg1','tg2','tg3']:
             self.searchLastTg(self.currItem)
         elif category == 'nop':
-            printDGB('raiplay no link')
+            printDBG('raiplay no link')
         else:
             printExc()
         
