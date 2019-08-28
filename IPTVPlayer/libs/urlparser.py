@@ -510,6 +510,7 @@ class urlparser:
                        'wholecloud.net':        self.pp.parserWHOLECLOUD    ,
                        'widestream.io':         self.pp.parserWIDESTREAMIO   ,
                        'wiiz.tv':               self.pp.parserWIIZTV         ,
+                       'woof.tube':             self.pp.parserWOOFTUBE,
                        'wrzuta.pl':             self.pp.parserWRZUTA        ,
                        'wstream.video':         self.pp.parserWSTREAMVIDEO   ,
                        'xage.pl':               self.pp.parserXAGEPL        ,
@@ -2664,20 +2665,21 @@ class pageParser(CaptchaHelper):
                             printDBG("------------")
                             printDBG(bigString)
 
-                            cookie_PHPSID = self.cm.getCookieItem(COOKIE_FILE, 'PHPSID')
-                            printDBG("cookie_PHPSID '%s' " % cookie_PHPSID)
-                            cookie_cfduid = self.cm.getCookieItem(COOKIE_FILE, '__cfduid')
-                            printDBG("cookie_cfduid '%s' " % cookie_cfduid)
-                            
-                            cv_url = "http://vidstream.top/cv.php?verify=" + bigString
-                            postData={ post_key : 'ok', 'cache' : 0}
-                            
-                            AJAX_HEADER = dict(HTTP_HEADER)
-                            AJAX_HEADER.update( {'X-Requested-With': 'XMLHttpRequest', 'Accept-Encoding':'gzip, deflate', 'Content-Type':'application/x-www-form-urlencoded; charset=UTF-8', 'Accept':'application/json, text/javascript, */*; q=0.01', 'Referer': url} )
-                            http_params2 = {'header':AJAX_HEADER, 'cookiefile':COOKIE_FILE, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True}
-
                             GetIPTVSleep().Sleep(2)
-                            sts, ret = self.cm.getPage(cv_url, http_params2, postData)
+                            
+                            cv_url = "https://vidstream.top/cv.php?verify=" + bigString
+                            postData={ post_key : 'ok'}
+                            
+                            AJAX_HEADER = {
+                                'Accept': '*/*',
+                                'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
+                                'Origin': self.cm.getBaseUrl(url),
+                                'Referer': url,
+                                'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/73.0.3683.103 Safari/537.36',
+                                'X-Requested-With': 'XMLHttpRequest'
+                            }
+
+                            sts, ret = self.cm.getPage(cv_url, {'header':AJAX_HEADER, 'cookiefile':COOKIE_FILE, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True}, postData)
                             if sts:
                                 printDBG("------------")
                                 printDBG(ret)
@@ -2686,13 +2688,9 @@ class pageParser(CaptchaHelper):
                                         url2 = url + "&r"
                                     else:
                                         url2 = url + "?r"
-                                    cookie_PHPSID = self.cm.getCookieItem(COOKIE_FILE, 'PHPSID')
-                                    printDBG("cookie_PHPSID '%s' " % cookie_PHPSID)
-                                    cookie_cfduid = self.cm.getCookieItem(COOKIE_FILE, '__cfduid')
-                                    printDBG("cookie_cfduid '%s' " % cookie_cfduid)
 
                                     # retry to load the page
-                                    GetIPTVSleep().Sleep(2)
+                                    GetIPTVSleep().Sleep(3)
                                     http_params['header']['Referer'] = url
                                     sts, data = self.cm.getPage(url2, http_params)
                                     if sts:
@@ -11634,7 +11632,7 @@ class pageParser(CaptchaHelper):
         # example http://oms.viuclips.net/player/PopUpIframe/JwB2kRDt7Y?iframe=popup&u=
         #         http://oms.veuclips.com/player/PopUpIframe/HGXPBPodVx?iframe=popup&u=
         #         https://footy11.viuclips.net/player/html/D7o5OVWU9C?popup=yes&autoplay=1
-		# 		  http://player.veuclips.com/embed/JwB2kRDt7Y
+        #         http://player.veuclips.com/embed/JwB2kRDt7Y
 
         baseUrl = baseUrl + "?"
         video_id = re.findall("v[ei]uclips\.[nc][eo][tm]/player/PopUpIframe/(.*?)\?", baseUrl)
@@ -11663,3 +11661,16 @@ class pageParser(CaptchaHelper):
 
         return vidTab
 
+    def parserWOOFTUBE(self, baseUrl):
+        printDBG("parserWOOFTUBE baseUrl[%s]" % baseUrl)
+        # example https://woof.tube/stream/eAqP9XtSbC2/John_Wick_3_%E2%80%93_Parabellum_%5Bm1080p%5D_%282019%29.mp4
+
+        sts, data = self.cm.getPage(baseUrl)
+        if not sts: 
+            return []
+        
+        videoLink = re.findall("id=\"videolink\">(.*?)</p>",data)
+        if videoLink:
+            url = "https://woof.tube/gettoken/" + videoLink[0] + "?mime=true"
+        
+        return url

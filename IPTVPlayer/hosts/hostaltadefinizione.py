@@ -193,36 +193,47 @@ class Altadefinizione(CBaseHostClass):
             params.update({'good_for_fav': False, 'title':'%s - %s' % (cItem['title'], _('trailer')), 'url':trailerUrl, 'desc':desc, 'prev_url':cItem['url']})
             self.addVideo(params)
  
-        playerUrl = self.cm.ph.getDataBeetwenNodes(data, ('<div','>', 'frameDown'), '</div>', False)[1]
-        playerUrl = self.getFullUrl(self.cm.ph.getSearchGroups(playerUrl, '''<iframe[^>]+?src=['"]([^"^']+?)['"]''', 1, ignoreCase=True)[0])
-        # example: <iframe width="100%" height="100%" src="https://hdpass.online/film.php?idFilm=21374&download=1?alta"></iframe>
 
-        sts, playerData = self.getPage(playerUrl)
+        iframes_url = re.findall('''<iframe[^>]+?src=['"]([^"^']+?)['"]''', data)
+        player_url =''
+        download_url=''
         
-        if not sts:
-            return
-        
-        #printDBG(playerData)
-        url_container = self.cm.ph.getDataBeetwenNodes(playerData, '<p id="hostLNK">', '</body>', False)[1]
-        #printDBG(url_container)
-        urls = self.cm.ph.getAllItemsBeetwenMarkers(url_container, '<a', '</a>')
-        
-        for item in urls:
-            #printDBG("----->" + item)
-            title = self.cleanHtmlStr(item)
-            url = self.getFullUrl( self.cm.ph.getSearchGroups(item, '''href=['"]([^"^']+?)['"]''')[0] )
-            if url !='' : 
-                url = url.replace('&dLink=none','').replace('u=','prot=')
-                #url = strwithmeta(url, {'need-resolve': True})
-            #        url = strwithmeta(url, {'Referer':cItem['url']})
-                sts, test = self.getPage(url)
-                if sts:
-                    url = test.meta['url']
-                params = dict(cItem)
-                params.update({'good_for_fav': False, 'title':'%s - %s' % (cItem['title'], title), 'url':url, 'desc':desc, 'prev_url':cItem['url']})
-                printDBG(str(params))
-                self.addVideo(params)
-            
+        for u in iframes_url:
+            if 'iu=1' in u:
+                # example: https://hdpass.online/film.php?idFilm=21158&iu=1?alta
+                player_url = u
+            elif 'download=1' in u:
+                # example: "https://hdpass.online/film.php?idFilm=21374&download=1?alta"
+                download_url = u
+        if player_url:
+            sts, playerData = self.getPage(player_url)
+            if sts:
+                printDBG(playerData)
+
+        if download_url:
+            # download link section of page
+            sts, playerData = self.getPage(download_url)
+            if sts:
+                #printDBG(playerData)
+                url_container = self.cm.ph.getDataBeetwenNodes(playerData, '<p id="hostLNK">', '</body>', False)[1]
+                #printDBG(url_container)
+                urls = self.cm.ph.getAllItemsBeetwenMarkers(url_container, '<a', '</a>')
+
+                for item in urls:
+                    #printDBG("----->" + item)
+                    title = self.cleanHtmlStr(item)
+                    url = self.getFullUrl( self.cm.ph.getSearchGroups(item, '''href=['"]([^"^']+?)['"]''')[0] )
+                    if url !='' : 
+                        url = url.replace('&dLink=none','').replace('u=','prot=')
+                        #url = strwithmeta(url, {'need-resolve': True})
+                    #        url = strwithmeta(url, {'Referer':cItem['url']})
+                        sts, test = self.getPage(url)
+                        if sts:
+                            url = test.meta['url']
+                        params = dict(cItem)
+                        params.update({'good_for_fav': False, 'title':'%s - %s [%s]' % (cItem['title'], title, 'DL section'), 'url':url, 'desc':desc, 'prev_url':cItem['url']})
+                        printDBG(str(params))
+                        self.addVideo(params)
                                                                                                   
     def listSearchResult(self, cItem, searchPattern, searchType):
         printDBG("Altadefinizione.listSearchResult cItem[%s], searchPattern[%s] searchType[%s]" % (cItem, searchPattern, searchType))
