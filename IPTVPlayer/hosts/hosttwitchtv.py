@@ -56,7 +56,7 @@ class Twitch(CBaseHostClass):
                                             {'lang':"21d85c73-701f-4259-8c4e-4321265847b5",'title':"български"},
                                             {'lang':"a6cddaba-f0ce-4526-9087-6de2f603a24d",'title':"Čeština"},
                                             {'lang':"43e598cc-918b-4247-b02c-b13543a1eac9",'title':"Dansk"},
-                                            {'lang':"e13e6734-37ae-4d85-897b-3015f0168355",'title':"Deutsch"},
+                                            {'lang':"9166ad14-41f1-4b04-a3b8-c8eb838c6be6",'title':"Deutsch"},
                                             {'lang':"902f6815-a655-4918-99e7-48c74a71feac",'title':"Ελληνικά"},
                                             {'lang':"6ea6bca4-4712-4ab9-a906-e3336a9d8039",'title':"English"},
                                             {'lang':"d4bb9c58-2141-4881-bcdc-3fe0505457d1",'title':"Español"},
