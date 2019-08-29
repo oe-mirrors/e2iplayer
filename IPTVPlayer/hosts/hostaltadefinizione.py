@@ -17,6 +17,7 @@ import urllib
 from urlparse import urlparse, urljoin
 try:    import json
 except Exception: import simplejson as json
+import base64
 ###################################################
 
 def gettytul():
@@ -208,8 +209,21 @@ class Altadefinizione(CBaseHostClass):
         if player_url:
             sts, playerData = self.getPage(player_url)
             if sts:
-                printDBG(playerData)
+                #printDBG(playerData)
+                tmp = self.cm.ph.getDataBeetwenNodes(playerData, ('<select id="mirrorsMobile"', '>'), '</select>', False)[1]
+                players = self.cm.ph.getAllItemsBeetwenMarkers(tmp, '<option', '</value>')
+                for p in players:
+                    #printDBG(p)
+                    url = self.cm.ph.getSearchGroups(p, '''value=['"]([^"^']+?)['"]''')[0] 
+                    if not self.cm.isValidUrl(url):
+                        url = urljoin("https://hdpass.online/", url)
 
+                    title = self.cleanHtmlStr(p) 
+                    params = dict(cItem)
+                    params.update({'good_for_fav': False, 'title': '%s - %s [%s]' % (cItem['title'], title, _('embed in page')) , 'url': url, 'category' : 'embed_player', 'prev_url':cItem['url']})
+                    printDBG(str(params))
+                    self.addVideo(params)
+                    
         if download_url:
             # download link section of page
             sts, playerData = self.getPage(download_url)
@@ -226,12 +240,12 @@ class Altadefinizione(CBaseHostClass):
                     if url !='' : 
                         url = url.replace('&dLink=none','').replace('u=','prot=')
                         #url = strwithmeta(url, {'need-resolve': True})
-                    #        url = strwithmeta(url, {'Referer':cItem['url']})
+                        #url = strwithmeta(url, {'Referer':cItem['url']})
                         sts, test = self.getPage(url)
                         if sts:
                             url = test.meta['url']
                         params = dict(cItem)
-                        params.update({'good_for_fav': False, 'title':'%s - %s [%s]' % (cItem['title'], title, 'DL section'), 'url':url, 'desc':desc, 'prev_url':cItem['url']})
+                        params.update({'good_for_fav': False, 'title':'%s - %s [%s]' % (cItem['title'], title, _('download link')), 'url':url, 'prev_url':cItem['url']})
                         printDBG(str(params))
                         self.addVideo(params)
                                                                                                   
@@ -281,113 +295,60 @@ class Altadefinizione(CBaseHostClass):
         label = ">{0}</a>".format(page+1)
         if label in pag:
             self.addMore(MergeDicts(cItem, {'category': 'az_item', 'title' : _('Next page'), 'page': page + 1 }))
+    
+    def clearify(self, url): 
+        size = len(url)
+        lastChar = ''
+        if (size % 2) != 0:
+            printDBG("odd length")
+            return ''
+            lastChar = url[size - 1]
+            url = url[:(size - 1)]
         
+        url = url[(size /2):] + url[:(size /2)]
+        base = "" 
+        for i in url: 
+            base = i + base
+        if lastChar:
+            base = base + lastChar
+        if len(base) % 4 == 3:
+            base = base + "="
+        elif len(base) % 4 == 2:
+            base = base + "=="
+        return base64.b64decode(base)
+    
     def getLinksForVideo(self, cItem):
         printDBG("Altadefinizione.getLinksForVideo [%s]" % cItem)
-        urlTab = []
-        
         url = cItem.get('url', '')
+        
+        if cItem.get('category','') == 'embed_player':
+            urlParams = dict(self.defaultParams)
+            urlParams['header'] = dict(urlParams['header'])
+            urlParams['header']['Referer'] = cItem.get('prev_url','')
+
+            sts, data = self.getPage(url, urlParams)
+            if not sts: 
+                return []
+            
+            #printDBG(data)
+            
+            # search urlEnc and urlEmbed
+            #<input type="hidden" id="urlEnc" name="urlEnc" value="aHR0cHM6Ly9hbHRhZGVmaW5pemlvbmUuY2xvdWQvam9obi13aWNrLTMtcGFyYWJlbGx1bS1pdGFsaWFuby8=" />
+            #<input type="hidden" name="urlEmbed" data-mirror="verystream" id="urlEmbed" value="TRl81Mft2Ypd1Xuh2bK9iMDJ2U0hVOQFXQl9SZvUmY1RnLm92b39yL6MHc0RHa=QDct5SOyUSOxAjM4ITJfRUNlAHM4ATMtJUNl8Vb1xGblJWYyFGUfNTOlADOlI" />        
+
+            urlEnc = self.cm.ph.getSearchGroups(data, "<input.*?name=\"urlEnc\".*?value=['\"](.*?)['\"]")[0]
+            printDBG('urlEnc: %s' % urlEnc)
+            
+            urlEmbed = self.cm.ph.getSearchGroups(data, "<input.*?name=\"urlEmbed\".*?value=['\"](.*?)['\"]")[0]
+            printDBG('urlEmbed: %s' % urlEmbed)
+            
+            url = self.clearify(urlEmbed)
+            printDBG("Decoded url: %s" % url)
+        
         if 1 == self.up.checkHostSupport(url):
             return self.up.getVideoLinkExt(url)
-        
-        key = url
-        if key in self.cacheLinks:
-            return self.cacheLinks[key]
-        
-        urlParams = dict(self.defaultParams)
-        urlParams['header'] = dict(urlParams)
-        urlParams['header']['Referer'] = cItem.get('prev_url', '')
-        sts, data = self.getPage(cItem['url'], urlParams)
-        if not sts: return urlTab
-        
-        cUrl = data.meta['url']
-        
-        data = self.cm.ph.getDataBeetwenNodes(data, ('<ul', '>', 'mirrors'), ('</ul', '>'), False)[1]
-        data = self.cm.ph.getAllItemsBeetwenMarkers(data, '<form', '</form>')
-        for item in data:
-            actionUrl = self.cm.getFullUrl(self.cm.ph.getSearchGroups(item, '''action=['"]([^'^"]+?)['"]''')[0].replace('&amp;', '&'), self.cm.getBaseUrl(cUrl))
-            if actionUrl == '': actionUrl = cUrl
-            item = self.cm.ph.getAllItemsBeetwenMarkers(item, '<input', '>')
-            title = ''
-            query = {}
-            for it in item:
-                name  = self.cm.ph.getSearchGroups(it, '''name=['"]([^'^"]+?)['"]''')[0]
-                value = self.cm.ph.getSearchGroups(it, '''value=['"]([^'^"]+?)['"]''')[0]
-                query[name] = value
-                if title == '' and name.startswith('mir'): title = value
-            
-            if '?' in actionUrl: actionUrl += '&'
-            else: actionUrl += '?'
-            actionUrl += urllib.urlencode(query)
-            urlTab.append({'name':title, 'url':strwithmeta(actionUrl, {'Referer':cUrl}), 'need_resolve':1})
-        
-        if len(urlTab):
-            self.cacheLinks[key] = urlTab
-        return urlTab
-    
-    def getVideoLinks(self, videoUrl):
-        printDBG("Altadefinizione.getVideoLinks [%s]" % videoUrl)
-        videoUrl = strwithmeta(videoUrl)
-        urlTab = []
-        
-        # mark requested link as used one
-        if len(self.cacheLinks.keys()):
-            for key in self.cacheLinks:
-                for idx in range(len(self.cacheLinks[key])):
-                    if videoUrl in self.cacheLinks[key][idx]['url']:
-                        if not self.cacheLinks[key][idx]['name'].startswith('*'):
-                            self.cacheLinks[key][idx]['name'] = '*' + self.cacheLinks[key][idx]['name']
-                        break
-        
-        urlParams = dict(self.defaultParams)
-        urlParams['header'] = dict(urlParams['header'])
-        urlParams['header']['Referer'] = str(videoUrl.meta.get('Referer', self.getMainUrl()))
-        
-        sts, data = self.getPage(videoUrl, urlParams)
-        if not sts: return urlTab
-        cUrl = data.meta['url']
-        
-        playerData = self.cm.ph.getDataBeetwenNodes(data, ('<input', '>', 'urlEmbed'), ('<iframe', '>'))[1]
-        if playerData == '':
-            printDBG('Missig player data')
-            return urlTab
-        playerData = self.cm.ph.getSearchGroups(playerData, '''value=['"]([^'^"]+?)['"]''')[0]
-        printDBG('PLAYER_DATA: %s\n' % playerData)
-        
-        
-        if self.cacheJSCode == '':
-            jsUrl = ''
-            data = re.compile('''<script[^>]+?src=['"]([^'^"]+?)['"]''', re.I).findall(data)
-            for item in data:
-                if 'filmlive' not in item: continue
-                jsUrl = self.cm.getFullUrl(item, self.cm.getBaseUrl(cUrl))
-                break
-            
-            sts, data = self.getPage(jsUrl, urlParams)
-            if not sts: return urlTab
-            try:
-                idxS = data.find('function clearify')
-                num = 1
-                idx = data.find('{', idxS)
-                for idx in range(idx+1, len(data), 1):
-                    if data[idx] == '{': num += 1
-                    if data[idx] == '}': num -= 1
-                    if num == 0:
-                        printDBG("JS_CODE_IDX: [%s:%s]" % (idxS, idx))
-                        break
-                  
-                jscode = data[idxS:idx+1]
-                printDBG('JS_CODE: %s\n' % jscode)
-                self.cacheJSCode = jscode
-            except Exception:
-                printExc()
-            
-        jscode = ['var $={base64:function(not_used,e){e.length%4==3&&(e+="="),e.length%4==2&&(e+="=="),e=Duktape.dec("base64",e),decText="";for(var t=0;t<e.byteLength;t++)decText+=String.fromCharCode(e[t]);return decText},trim:function(e){return null==e?"":(e+"").replace(n,"")}};', self.cacheJSCode, 'print(clearify("%s"))' % playerData]
-        ret = js_execute( '\n'.join(jscode) )
-        if ret['sts'] and 0 == ret['code']:
-            printDBG(ret['data'])
-            urlTab = self.up.getVideoLinkExt(ret['data'])
-        return urlTab
+        else:
+            return url
         
     def getArticleContent(self, cItem, data=None):
         printDBG("Altadefinizione.getArticleContent [%s]" % cItem)
