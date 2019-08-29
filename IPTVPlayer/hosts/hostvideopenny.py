@@ -141,12 +141,13 @@ class VideoPenny(CBaseHostClass):
             
             params = dict(cItem)
             params.update({'good_for_fav':True, 'title':title, 'url':url, 'icon':icon, 'desc':desc})
-            if nextCategory != None and ('/seriale' in url or '/programy' in url) and not cItem.get('was_explored', False):
-                params['category'] = nextCategory
-                self.addDir(params)
-            else:
-                self.addVideo(params)
-        
+#            if nextCategory != None and ('/seriale' in url or '/programy' in url) and not cItem.get('was_explored', False):
+#                params['category'] = nextCategory
+#                self.addDir(params)
+#            else:
+#                self.addVideo(params)
+            self.addVideo(params)
+
         if self.cm.isValidUrl(nextPage):
             params = dict(cItem)
             params.update({'good_for_fav':False, 'title':_('Next page'), 'url':nextPage, 'page':page+1})
