@@ -9537,51 +9537,70 @@ class pageParser(CaptchaHelper):
 
         if not sts: 
             return videoTab
+        
         cUrl = self.cm.meta['url']
 
         timestamp = time.time()
 
         errMsg = self.cm.ph.getDataBeetwenNodes(data, ('<', '>', 'important'), ('<', '>', 'div'))[1]
         SetIPTVPlayerLastHostError(clean_html(errMsg))
+
+        mp4Tab=[]
+        hlsTab=[]
+        dashTab=[]
         
         # select valid section
-        data = self.cm.ph.getAllItemsBeetwenMarkers(data, '<script', '</script>')
-        for item in data:
-            if 'srces.push' in item:
-                data = item
-                break
+        for video_data in re.findall(r'({[^}]*\bsrc\s*:\s*[^}]*})', data):
+            mobj = re.search(r'(src\s*:\s*[^(]+\(([^)]*)\)[\s,]*)', video_data)
+            if mobj is None:
+                continue
 
-        jscode = 'var document = {};\nvar window = this;\n' + self.cm.ph.getDataBeetwenReMarkers(data, re.compile('<script[^>]*?>'), re.compile('var\s*srces\s*=\s*\[\];'), False)[1]
-        js_params = [{'name':'streamgo', 'code':jscode}]
-        
-        data = self.cm.ph.getAllItemsBeetwenMarkers(data, 'srces.push(', ');')
-        jscode = '\nvar srces=[];\n' + '\n'.join(data) + '\nprint(JSON.stringify(srces));'
-        js_params.append({'code':jscode})
-        ret = js_execute_ext( js_params )
-        data = ret['data'].strip()
-        data = json_loads(data)
-        
-        dashTab = []
-        hlsTab = []
-        mp4Tab = []
-        printDBG(data)
-        for tmp in data:
-            tmp = str(tmp).split('}')
-            for item in tmp:
-                item += ','
-                url = self.cm.ph.getSearchGroups(item, r'''['"]?src['"]?\s*:\s*['"]([^"^']+)['"]''')[0]
-                if url.startswith('//'): url = cUrl.split('//', 1)[0] + url
-                type = self.cm.ph.getSearchGroups(item, r'''['"]?type['"]?\s*:\s*['"]([^"^']+)['"]''')[0]
-                if not self.cm.isValidUrl(url): continue
+            video_data = video_data.replace(mobj.group(0), '')
             
-                url = strwithmeta(url, {'User-Agent':HTTP_HEADER['User-Agent'], 'Referer':self.cm.meta['url'], 'Range':'bytes=0-'})
-                if 'dash' in type:
-                    dashTab.extend(getMPDLinksWithMeta(url, False))
-                elif 'hls' in type:
-                    hlsTab.extend(getDirectM3U8Playlist(url, checkExt=False, checkContent=True))
-                elif 'mp4' in type or 'mpegurl' in type:
-                    name = self.cm.ph.getSearchGroups(item, '''['"]?height['"]?\s*\:\s*([^\,]+?)[\,]''')[0]
-                    mp4Tab.append({'name':'[%s] %sp' % (type, name), 'url':url})
+            printDBG("video format : %s" % video_data)
+            m2obj = re.search(r'([\'"])(?P<src>(?:(?!\1).)+)\1\s*,\s*(?P<val>\d+)', mobj.group(1))
+            if m2obj is None:
+                continue
+
+            src = m2obj.group('src')
+            val = m2obj.group('val')
+            
+            if not (src and val):
+                continue
+            
+            printDBG('src: %s - val: %s' % (src,val))
+            ALPHABET = '=/+9876543210zyxwvutsrqponmlkjihgfedcbaZYXWVUTSRQPONMLKJIHGFEDCBA'
+            encoded = re.sub(r'[^A-Za-z0-9+/=]', '', src)
+            decoded = ''
+            sm = [None] * 4
+            i = 0
+            str_len = len(encoded)
+            while i < str_len:
+                for j in range(4):
+                    sm[j % 4] = ALPHABET.index(encoded[i])
+                    i += 1
+                char_code = ((sm[0] << 0x2) | (sm[1] >> 0x4)) ^ int(val)
+                decoded += chr(char_code)
+                if sm[2] != 0x40:
+                    char_code = ((sm[1] & 0xf) << 0x4) | (sm[2] >> 0x2)
+                    decoded += chr(char_code)
+                if sm[3] != 0x40:
+                    char_code = ((sm[2] & 0x3) << 0x6) | sm[3]
+                    decoded += chr(char_code)
+            
+            if decoded.startswith('//'):
+                decoded =  "http:" + decoded
+            
+            printDBG("decoded url: %s" % decoded )
+            
+            url = strwithmeta(decoded, {'User-Agent':HTTP_HEADER['User-Agent'], 'Referer':self.cm.meta['url'], 'Range':'bytes=0-'})
+            
+            if 'dash' in video_data:
+                dashTab.extend(getMPDLinksWithMeta(url, False))
+            elif 'hls' in video_data:
+                hlsTab.extend(getDirectM3U8Playlist(url, checkExt=False, checkContent=True))
+            elif 'mp4' in video_data or 'mpegurl' in video_data:
+                mp4Tab.append({'name': video_data , 'url':url})
 
         videoTab.extend(mp4Tab)
         videoTab.extend(hlsTab)

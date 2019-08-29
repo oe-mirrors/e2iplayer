@@ -67,8 +67,8 @@ class Altadefinizione(CBaseHostClass):
 
         MAIN_CAT_TAB = [{'category':'search',          'title': _('Search'), 'search_item':True, },
                         {'category':'search_history',  'title': _('Search history')},
-                        {'category':'list_categories', 'title': 'Categorie'},
-                        {'category':'az_main', 'title': _('A-Z List')}]
+                        {'category':'list_categories', 'title': 'Categorie'}]
+                        #{'category':'az_main', 'title': _('A-Z List')}]
         self.listsTab(MAIN_CAT_TAB, cItem)
         
         sts, data = self.getPage(self.getMainUrl())
@@ -138,11 +138,14 @@ class Altadefinizione(CBaseHostClass):
         nextPage = self.cm.ph.getDataBeetwenNodes(data, '<div class="paginationC nomobile">', ('</ul', '>'), False)[1]
         nextPage = self.getFullUrl( self.cm.ph.getSearchGroups(nextPage, '''<a[^>]+?href=['"]([^"^']+?)['"][^>]*?>%s<''' % (page + 1))[0] )
         
-        data = self.cm.ph.getAllItemsBeetwenMarkers(data, '<div class="wrapperImage">', '</div>')
+        data = self.cm.ph.getDataBeetwenNodes(data, '<div class="row nomobile">', ('<div class="','">', 'ismobile'), False)[1]
+        printDBG(data)
+        data = self.cm.ph.getAllItemsBeetwenMarkers(data, ('<div class="', '">', 'col-xs-3'), '</div>')
         for item in data:
             #printDBG(item)
             url = self.getFullUrl( self.cm.ph.getSearchGroups(item, '''href=['"]([^"^']+?)['"]''')[0] )
-            if url == '': continue
+            if url == '': 
+                continue
             title = self.cleanHtmlStr( self.cm.ph.getDataBeetwenNodes(item, ('<h', '>', 'title'), ('</h', '>'))[1])
             icon = self.getFullIconUrl( self.cm.ph.getSearchGroups(item, '''<img[^>]+?src=['"]([^"^']+?)['"]''')[0] ) + "|cf"
             
@@ -151,13 +154,14 @@ class Altadefinizione(CBaseHostClass):
             tmp.append(self.cm.ph.getDataBeetwenNodes(item, ('<div', '>', 'rate'), ('</div', '>'), False)[1])
             for t in tmp:
                 t = self.cleanHtmlStr(t)
-                if t != '': desc.append(t)
+                if t != '': 
+                    desc.append(t)
             desc = ' | '.join(desc) 
             
             params = dict(cItem)
             params = {'good_for_fav': True, 'category':nextCategory, 'title':title, 'url':url, 'icon':icon, 'desc':desc}
             #params = {'good_for_fav': True, 'category':nextCategory, 'title':title, 'url':url, 'desc':desc}
-            printDBG(params)
+            printDBG(str(params))
             self.addDir(params)
         
         if nextPage and len(self.currList) > 0:
@@ -252,7 +256,7 @@ class Altadefinizione(CBaseHostClass):
     def listSearchResult(self, cItem, searchPattern, searchType):
         printDBG("Altadefinizione.listSearchResult cItem[%s], searchPattern[%s] searchType[%s]" % (cItem, searchPattern, searchType))
         cItem = dict(cItem)
-        cItem['url'] = self.getFullUrl('/index.php?do=search&subaction=search&story=') + urllib.quote_plus(searchPattern)
+        cItem['url'] = self.getFullUrl('/?s=') + urllib.quote_plus(searchPattern)
         cItem['category'] = 'search_items'
         self.listItems(cItem, 'explore_item')
     
@@ -344,7 +348,8 @@ class Altadefinizione(CBaseHostClass):
             
             url = self.clearify(urlEmbed)
             printDBG("Decoded url: %s" % url)
-        
+            url = strwithmeta(url, {'Referer':cItem['url']})
+            
         if 1 == self.up.checkHostSupport(url):
             return self.up.getVideoLinkExt(url)
         else:
