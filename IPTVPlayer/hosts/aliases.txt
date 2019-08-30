@@ -44,6 +44,7 @@
 "hostdplayit":"https://it.dplay.com/",
 "hostdpstreamingcx": "https://streaming-series.watch/",
 "hostdrdk": "http://dr.dk/",
+"hostdsda": "https://documentari-streaming-da.com/",
 "hostefilmytv": "http://www.efilmy.tv/",
 "hostegybest": "http://egy.best/",
 "hostekinotv": "http://ekino-tv.pl/",
