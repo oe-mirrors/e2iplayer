@@ -16,8 +16,7 @@ from Plugins.Extensions.IPTVPlayer.tools.iptvtypes import strwithmeta
 # FOREIGN import
 ###################################################
 import re
-try:    import json
-except Exception: import simplejson as json
+import HTMLParser
 ###################################################
 
 def gettytul():
@@ -40,14 +39,15 @@ class DSDA(CBaseHostClass):
     def getPage(self, baseUrl, addParams = {}, post_data = None):
         printDBG("<<<<<<<<<<<<< DSDA.getPage <<<<<<<<<<<<<<<<<<<<<<")
 
+        sts, data = self.cm.getPage(baseUrl, addParams, post_data)
+        return sts, data
     
     def getFullUrl(self, url):
         printDBG("<<<<<<<<<<<<< DSDA.getFullUrl <<<<<<<<<<<<<<<<<<<<<<")
         if url[:1] == "/":
             url = self.MAIN_URL + url[1:]
-        printDBG(url)
+        #printDBG(url)
         return url        
-
     
     def listMainMenu(self, cItem):
         printDBG("<<<<<<<<<<<<< DSDA.listMainMenu <<<<<<<<<<<<<<<<<<<<<<")
@@ -65,24 +65,23 @@ class DSDA(CBaseHostClass):
 
         cats = re.findall('''has-menu-child"><a href=(.*)</a></li>''', str(data))
         for cat in cats:
-         printDBG(str(cat))
-         
-         url = re.findall('''"(.*?)"''', cat)[0]
-         #title = re.findall('''">(.*?)''', cat)[0]
-         title = cat.split('"')[2]
-         title = title.replace(">", "")
-         liststr = ["Presentazione", "Contatto", "Sostieni DSDA", "Categorie"]
-         
-         if title not in liststr:
+            printDBG(str(cat))
+            url = re.findall('''"(.*?)"''', cat)[0]
+            #title = re.findall('''">(.*?)''', cat)[0]
+            title = cat.split('"')[2]
+            title = title.replace(">", "")
+            liststr = ["Presentazione", "Contatto", "Sostieni DSDA", "Categorie"]
 
-          if title == "Home":
-            title = "Documentari Ultime uscite"
-            url = self.MAIN_URL+"page/1/?searchtype=movie&post_type=movie&sl=lasts&s#038;post_type=movie&sl=lasts&s"
+            if title not in liststr:
 
-          params = dict(cItem)
-          params.update({'name':'category', 'category':'list_items', 'title':title, 'url':url})
-          printDBG(str(params))
-          self.addDir(params)
+                if title == "Home":
+                    title = "Documentari Ultime uscite"
+                    url = self.MAIN_URL+"page/1/?searchtype=movie&post_type=movie&sl=lasts&s#038;post_type=movie&sl=lasts&s"
+
+                params = dict(cItem)
+                params.update({'name':'category', 'category':'list_items', 'title':title, 'url':url})
+                printDBG(str(params))
+                self.addDir(params)
 
 
         MAIN_CAT_TAB = [{'category':'search',          'title': _('Search'), 'search_item':True},
@@ -110,8 +109,7 @@ class DSDA(CBaseHostClass):
             #url = "https://documentari-streaming-da.com/?searchtype=movie&post_type=movie&s="+searchPattern
  
         else:
-            #https://documentari-streaming-da.com/page/3/?searchtype=movie&post_type=movie&sl=lasts&cat=seminari-e-conferenze&s
-            #038;post_type=movie&sl=lasts&cat=seminari-e-conferenze&s
+            #https://documentari-streaming-da.com/page/3/?searchtype=movie&post_type=movie&sl=lasts&cat=seminari-e-conferenze&s=
             t = title.replace("Documentari ", "")
             t = t.replace(" ", "-")
             t = t.lower()
@@ -120,7 +118,7 @@ class DSDA(CBaseHostClass):
             if "societ" in t: t = "societa"
             #t = title.replace("documentari-", "")
             printDBG("page<<< "+str(page))
-            url = self.MAIN_URL+"page/"+str(page)+"/?searchtype=movie&post_type=movie&sl=lasts&cat="+t+"&s#038;post_type=movie&sl=lasts&cat="+t+"&s"
+            url = self.MAIN_URL+"page/"+str(page)+"/?searchtype=movie&post_type=movie&sl=lasts&cat="+t+"&s"
             urlnext = url
             printDBG(url)
 
@@ -131,20 +129,18 @@ class DSDA(CBaseHostClass):
         #print (str(pntemp))
 
         for t in pntemp:
-         #print(t)
-         print("\n")
-         icon = re.findall('''src="(.*?)"''', t, re.S)[0]
-         url = re.findall('''href="(.*?)"''', t, re.S)[0]
-         title = re.findall('''/">(.*?)<\/a><\/h4>''', t)[0]
-         print (icon)
-         print (url)
-         print (title)
-         params = dict(cItem)
-         params.update({'good_for_fav': True, 'category':nextCategory, 'title':title, 'url':url, 'icon':icon, 'desc':title})
-         self.addDir(params)
+            #print(t)
+            icon = re.findall('''src="(.*?)"''', t, re.S)[0]
+            url = re.findall('''href="(.*?)"''', t, re.S)[0]
+            title = re.findall('''/">(.*?)<\/a><\/h4>''', t)[0]
+            title = HTMLParser.HTMLParser().unescape(title).encode('utf-8')
+            params = dict(cItem)
+            params.update({'good_for_fav': True, 'category':nextCategory, 'title':title, 'url':url, 'icon':icon, 'desc':title})
+            printDBG(str(params))
+            self.addDir(params)
 
 
-       #mext page
+        #next page
         if "next page-numbers" in data:
             tmp = urlnext.split("/"+str(page))
             printDBG("next page-numbers<<< ")
@@ -155,8 +151,8 @@ class DSDA(CBaseHostClass):
             params.update({'title':_("Next page"), 'page':page+1, 'url': urlnext})
             self.addMore(params)
         
-
         #titems = 
+
     def exploreItem(self, cItem):
         printDBG("<<<<<<<<<<<<< DSDA.exploreItem <<<<<<<<<<<<<<<<<<<<<<")
         url = cItem.get('url', '')
@@ -166,7 +162,7 @@ class DSDA(CBaseHostClass):
 
         #video link
         d = re.findall('''</div><h2>(.*?)</div>''', data, re.S)[0]
-        printDBG("desc <<<<< "+ d+"\n<<<<<<<<<<<<<<<")
+        #printDBG("desc <<<<< "+ d+"\n<<<<<<<<<<<<<<<")
         dd = re.findall('''<p>(.*?)</p>''', data, re.S)
         ddd = ""
         for d in dd:
@@ -175,6 +171,8 @@ class DSDA(CBaseHostClass):
             d = d.replace(">", "")
             printDBG("d <<< "+d+"<<<")
             ddd = ddd+d+"\n"
+        ddd = HTMLParser.HTMLParser().unescape(ddd).encode('utf-8')
+        
         desc = re.findall('''<b style="color:#333333;">(.*?)</div>''', data, re.S)[0]
         desc = '''<b style="color:#333333;">'''+desc
         tmp = desc.split("</b></a> <br><br>")
@@ -182,23 +180,25 @@ class DSDA(CBaseHostClass):
 
         for t in tmp:
             t = t+'''</b>'''
-            print (str(t))
+            #print (str(t))
             title = re.findall('''>(.*?)</b><br>''', t, re.S)[0]
-            print (title)
+            title = HTMLParser.HTMLParser().unescape(title).encode('utf-8')
+            #print (title)
             names = re.findall('''<b>(.*?)</b>''', t, re.S)
-            print(names)
+            #print(names)
             vurl = re.findall('''href="(.*?)"''', t, re.S)
-            print(vurl)
+            #print(vurl)
 
             urlTab = []
             i = 0
             for name in names:
-               urlTab.append({'name':name, 'url':vurl[i], 'need_resolve':1})
-               i = i + 1
+                urlTab.append({'name':name, 'url':vurl[i], 'need_resolve':1})
+                i = i + 1
 
             params = dict(cItem)
             params.update({'good_for_fav':False, 'title': title, 'urls_tab':urlTab, 'desc':ddd})
             #params.update({'good_for_fav':False, 'url':url, 'title':'%s %s' % (title, cItem['title'])})
+            printDBG(str(params))
             self.addVideo(params)
 
 
@@ -245,25 +245,23 @@ class DSDA(CBaseHostClass):
         self.currItem = dict(self.currItem)
         self.currItem.pop('good_for_fav', None)
         
-        
-    #MAIN MENU
+        #MAIN MENU
         if name == None:
             self.listMainMenu({'name':'category', 'type':'category'})
         elif category == 'list_items':
             self.listItems(self.currItem, 'explore_item')
         elif category == 'explore_item':
             self.exploreItem(self.currItem)
-    #SEARCH
+        #SEARCH
         elif category in ["search", "search_next_page"]:
             cItem = dict(self.currItem)
             cItem.update({'search_item':False, 'name':'category'}) 
             self.listSearchResult(cItem, searchPattern, searchType)
-    #HISTORIA SEARCH
+        #HISTORIA SEARCH
         elif category == "search_history":
             self.listsHistory({'name':'history', 'category': 'search'}, 'desc', _("Type: "))
         else:
             printExc()
-
 
         printDBG('handleService end')
         CBaseHostClass.endHandleService(self, index, refresh)
