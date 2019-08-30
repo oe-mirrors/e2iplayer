@@ -245,6 +245,7 @@ class urlparser:
                        'hdfilmstreaming.com':   self.pp.parserHDFILMSTREAMING,
                        'hdgo.cc':               self.pp.parserHDGOCC        ,
                        'hdgo.cx':               self.pp.parserHDGOCC        ,
+                       'hdpass.online':         self.pp.parserHDPASSONLINE,
                        'hdvid.tv':              self.pp.parserHDVIDTV       ,
                        'hqq.none':              self.pp.parseNETUTV         ,
                        'hqq.tv':                self.pp.parseNETUTV         ,
@@ -11693,3 +11694,21 @@ class pageParser(CaptchaHelper):
             url = "https://woof.tube/gettoken/" + videoLink[0] + "?mime=true"
         
         return url
+    
+    def parserHDPASSONLINE(self, baseUrl):
+        printDBG("parserHDPASSONLINE baseUrl[%s]" % baseUrl)
+        # example https://hdload.hdpass.online/public/dist/index.html?id=a84def6cc4cad7e61add7f9315299d25
+        
+        videoId = re.findall("id=(.*?)$",baseUrl)
+        if not videoId:
+            videoId = re.findall("id=(.*?)&",baseUrl)
+        
+        if videoId:
+            vidTab = []
+            videoId = videoId[0]
+            url = 'https://hdload.hdpass.online/hls/' + videoId + '/' + videoId + ".playlist.m3u8"
+            vidTab.extend(getDirectM3U8Playlist(url, checkExt=False, variantCheck=True, checkContent=True, sortWithMaxBitrate=99999999))
+            return vidTab
+        else:
+            return []
+
