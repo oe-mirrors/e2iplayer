@@ -42,6 +42,7 @@ hostdplayit
 hostdokumentalnenet
 hostdpstreamingcx
 hostdrdk
+hostdsda
 hostdazn
 hostefilmytv
 hostegybest

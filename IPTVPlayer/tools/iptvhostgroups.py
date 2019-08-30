@@ -74,8 +74,8 @@ class IPTVHostsGroups:
         self.PREDEFINED_HOSTS['sport']            = ['webstream','meczykipl','ekstraklasatv','laola1tv','bbcsport','ourmatchnet','hoofootcom','okgoals','ngolos','watchwrestlinguno','watchwrestling','fighttube','fightvideo', \
                                                      'twitchtv','hitboxtv','pinkbike','sportdeutschland','eurosportplayer','del', 'sportitalia','redbull']
         self.PREDEFINED_HOSTS['live']             = ['webstream','streamliveto','ustreamtv','youtube','dailymotion','fokustv','eskago','arconaitvme','eurosportplayer']
-        self.PREDEFINED_HOSTS['documentary']      = ['fokustv','dokumentalnenet','filmydokumentalneeu','greekdocumentaries3','dailymotion','orthobulletscom','vumedicom']
-        self.PREDEFINED_HOSTS['science']          = ['questtvcouk','fokustv','dailymotion','ustreamtv','dokumentalnenet','orthobulletscom','vumedicom']
+        self.PREDEFINED_HOSTS['documentary']      = ['fokustv','dokumentalnenet','filmydokumentalneeu','greekdocumentaries3','dailymotion','orthobulletscom','vumedicom', 'dsda']
+        self.PREDEFINED_HOSTS['science']          = ['questtvcouk','fokustv','dailymotion','ustreamtv','dokumentalnenet','orthobulletscom','vumedicom', 'dsda']
         
         self.PREDEFINED_HOSTS['polish']           = ['youtube','webstream','efilmytv','alltubetv','allboxtv','filisertv','ekinotv','cdapl','kinomanco','iitvpl','videopenny','zalukajcom','serialnet','tvpvod','ipla','tvnvod','vodpl', \
                                                      'freediscpl','ekstraklasatv','kreskowkazone','kreskoweczki','bajeczkiorg','animeodcinki','playpuls','meczykipl','fokustv','eskago','filmydokumentalneeu', \
@@ -98,7 +98,7 @@ class IPTVHostsGroups:
         self.PREDEFINED_HOSTS['latino']           = ['youtube','mrpiracy','solarmovie','artetv','dailymotion','vimeo','twitchtv','hitboxtv','plusdede','hdsto','hdfull','vidcorncom','dixmax']
         self.PREDEFINED_HOSTS['italian']          = ['youtube','mediasetplay','filmpertutti','altadefinizione01','tantifilmorg','filmstreamhdit','dailymotion','vimeo','twitchtv','hitboxtv','playrtsiw','altadefinizione','streaminghdfun', \
                                                      'guardaserie','raiplay','dplayit','la7it', 'pmgsport','dazn', 'sportitalia','altadefinizione1','altadefinizionecool', 'cineblog']
-        self.PREDEFINED_HOSTS['swedish']          = ['youtube','dailymotion','vimeo','svtplayse','twitchtv','hitboxtv']
+        self.PREDEFINED_HOSTS['swedish']          = ['youtube','dailymotion','vimeo','svtplayse','twitchtv','hitboxtv', 'dsda']
         self.PREDEFINED_HOSTS['balkans']          = ['youtube','andrijaiandjelka','filmehdnet','gledalica','filmativa','filmovizijastudio','filma24hdcom','filma24io','filmaoncom','crtankocom','serijeonline','filmeonlineto', 'fenixsite', \
                                                      'dailymotion','vimeo','twitchtv','hitboxtv']
         self.PREDEFINED_HOSTS['music']            = ['youtube','vevo','myfreemp3','musicmp3ru','dancetrippin','musicbox','vimeo','dailymotion','shoutcast','eskago','radiostacja','nuteczki']
