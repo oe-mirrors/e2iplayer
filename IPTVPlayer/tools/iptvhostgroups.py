@@ -97,8 +97,8 @@ class IPTVHostsGroups:
         self.PREDEFINED_HOSTS['greek']            = ['youtube','gamatotvme','xrysoise','tainieskaiseirestv','gamatocom','greekdocumentaries3','dailymotion','vimeo','twitchtv','hitboxtv','oipeirates']
         self.PREDEFINED_HOSTS['latino']           = ['youtube','mrpiracy','solarmovie','artetv','dailymotion','vimeo','twitchtv','hitboxtv','plusdede','hdsto','hdfull','vidcorncom','dixmax']
         self.PREDEFINED_HOSTS['italian']          = ['youtube','mediasetplay','filmpertutti','altadefinizione01','tantifilmorg','filmstreamhdit','dailymotion','vimeo','twitchtv','hitboxtv','playrtsiw','altadefinizione','streaminghdfun', \
-                                                     'guardaserie','raiplay','dplayit','la7it', 'pmgsport','dazn', 'sportitalia','altadefinizione1','altadefinizionecool', 'cineblog']
-        self.PREDEFINED_HOSTS['swedish']          = ['youtube','dailymotion','vimeo','svtplayse','twitchtv','hitboxtv', 'dsda']
+                                                     'guardaserie','raiplay','dplayit','la7it', 'pmgsport','sportitalia','altadefinizione1','altadefinizionecool', 'cineblog', 'dsda']
+        self.PREDEFINED_HOSTS['swedish']          = ['youtube','dailymotion','vimeo','svtplayse','twitchtv','hitboxtv']
         self.PREDEFINED_HOSTS['balkans']          = ['youtube','andrijaiandjelka','filmehdnet','gledalica','filmativa','filmovizijastudio','filma24hdcom','filma24io','filmaoncom','crtankocom','serijeonline','filmeonlineto', 'fenixsite', \
                                                      'dailymotion','vimeo','twitchtv','hitboxtv']
         self.PREDEFINED_HOSTS['music']            = ['youtube','vevo','myfreemp3','musicmp3ru','dancetrippin','musicbox','vimeo','dailymotion','shoutcast','eskago','radiostacja','nuteczki']

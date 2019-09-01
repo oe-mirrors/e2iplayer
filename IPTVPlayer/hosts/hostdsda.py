@@ -225,12 +225,6 @@ class DSDA(CBaseHostClass):
         printDBG("DSDA.getVideoLinks [%s]" % videoUrl)
         return  self.up.getVideoLinkExt(videoUrl)
 
-
-    def getArticleContent(self, cItem):
-        printDBG("<<<<<<<<<<<<< DSDA.getArticleContent <<<<<<<<<<<<<<<<<<<<<<")
-        printDBG("DSDA.getVideoLinks [%s]" % cItem)
-
-
     def handleService(self, index, refresh = 0, searchPattern = '', searchType = ''):
         printDBG("<<<<<<<<<<<<< DSDA.handleService <<<<<<<<<<<<<<<<<<<<<<")
         printDBG('handleService start')
