@@ -552,7 +552,8 @@ class urlparser:
                        'justupload.io':        self.pp.parserJUSTUPLOAD     ,
                        'vidspace.io':          self.pp.parserVIDEOSPACE     ,
                        'veuclips.com':         self.pp.parserVIUCLIPS       ,
-                       'viuclips.net':         self.pp.parserVIUCLIPS       ,					   
+                       'viuclips.net':         self.pp.parserVIUCLIPS       ,
+                       'onlystream.tv':        self.pp.parserONLYSTREAMTV   ,
                     }
         return
     
@@ -12108,3 +12109,18 @@ class pageParser(CaptchaHelper):
             vidTab.extend(getDirectM3U8Playlist(l, checkExt=False, variantCheck=True, checkContent=True, sortWithMaxBitrate=99999999))
 
         return vidTab
+
+    def parserONLYSTREAMTV(self, baseUrl):
+        printDBG("parserONLYSTREAMTV baseUrl[%s]" % baseUrl)
+
+        HTTP_HEADER = self.cm.getDefaultHeader(browser='chrome')
+        referer = baseUrl.meta.get('Referer')
+        if referer: HTTP_HEADER['Referer'] = referer
+        urlParams = {'header': HTTP_HEADER}
+        sts, data = self.cm.getPage(baseUrl, urlParams)
+        if not sts: return False
+
+        hlsUrl = self.cm.ph.getSearchGroups(data, '''["'](https?://[^'^"]+?\.m3u8(?:\?[^"^']+?)?)["']''', ignoreCase=True)[0]
+        if hlsUrl != '':
+            return getDirectM3U8Playlist(hlsUrl, checkExt=False, variantCheck=True, checkContent=True, sortWithMaxBitrate=99999999)
+        return False
