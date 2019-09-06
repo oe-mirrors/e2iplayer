@@ -21,6 +21,7 @@ hostbbciplayer
 hostbbcsport
 hostbsto
 hostcartoonhd
+hostcb01
 hostcdapl
 hostchomikuj
 hostchristusvincit
