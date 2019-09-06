@@ -453,10 +453,11 @@ class urlparser:
                        'vid.ag':                self.pp.parserVIDAG         ,
                        'vid.gg':                self.pp.parserVIDGGTO       ,
                        'vid.me':                self.pp.parseVIDME          ,
-                       'vidabc.com':            self.pp.parserVIDABCCOM      ,
-                       'vidbom.com':            self.pp.parserVIDBOMCOM      ,
+                       'vidabc.com':            self.pp.parserVIDABCCOM     ,
+                       'vidbom.com':            self.pp.parserVIDBOMCOM     ,
                        'vidbull.com':           self.pp.parserVIDBULL       ,
-                       'vidcloud.icu':          self.pp.parserVIDCLOUDICU    ,
+                       'vidcloud.co':           self.pp.parserVIDCLOUD      ,
+                       'vidcloud.icu':          self.pp.parserVIDCLOUD      ,
                        'videa.hu':              self.pp.parserVIDEA         ,
                        'videa.hu':              self.pp.parserVIDEAHU        ,
                        'video.meta.ua':         self.pp.parseMETAUA         ,
@@ -10575,8 +10576,8 @@ class pageParser(CaptchaHelper):
                     videoTab.append({'name':'[%s] %s %s' % (type, domain, label), 'url':url})
         return videoTab
         
-    def parserVIDCLOUDICU(self, baseUrl):
-        printDBG("parserVIDCLOUDICU baseUrl[%r]" % baseUrl)
+    def parserVIDCLOUD(self, baseUrl):
+        printDBG("parserVIDCLOUD baseUrl[%r]" % baseUrl)
         baseUrl = strwithmeta(baseUrl)
         cUrl = baseUrl
         HTTP_HEADER= self.cm.getDefaultHeader(browser='chrome')
@@ -10589,20 +10590,52 @@ class pageParser(CaptchaHelper):
         
         urlsTab = []
         data = self.cm.ph.getAllItemsBeetwenMarkers(data, 'sources', ']', False)
-        printDBG(data)
-        for sourceData in data:
-            sourceData = self.cm.ph.getAllItemsBeetwenMarkers(sourceData, '{', '}')
-            for item in sourceData:
-                type = self.cm.ph.getSearchGroups(item, '''['"\{\,\s]type['"]?\s*:\s*['"]([^'^"]+?)['"]''')[0].lower()
-                if 'mp4' not in type: continue
-                url = self.cm.ph.getSearchGroups(item, '''['"\{\,\s]src['"]?\s*:\s*['"]([^'^"]+?)['"]''')[0]
-                if url == '': url = self.cm.ph.getSearchGroups(item, '''['"\{\,\s]file['"]?\s*:\s*['"]([^'^"]+?)['"]''')[0]
-                name = self.cm.ph.getSearchGroups(item, '''['"\{\,\s]label['"]?\s*:\s*['"]([^'^"]+?)['"]''')[0]
-                if name == '': name = urlparser.getDomain(url) + ' ' + name
-                url = strwithmeta(url.replace('\\/', '/'), {'Referer':cUrl})
-                urlsTab.append({'name':name, 'url':url})
-        return urlsTab
+        if not data:
+            videoId = re.findall("embed/([0-9a-z]*?)(/.*|)$", baseUrl)
+            if videoId:
+                videoId=videoId[0][0]
+                url = "https://vidcloud.co/player?fid={0}&page=embed".format(videoId)
+                sts, data = self.cm.getPage(url, urlParams)
+                if sts: 
+                    data = json_loads(data)
+                    ret= data["html"]
+                    printDBG(ret)
+                    data = self.cm.ph.getAllItemsBeetwenMarkers(ret, 'sources', ']', False)
+                else:
+                    data = ''
+        if data:
+            printDBG(str(data))
+            for sourceData in data:
+                sourceData = self.cm.ph.getAllItemsBeetwenMarkers(sourceData, '{', '}')
+                for item in sourceData:
+                    #printDBG(item)
+                    item_data = json_loads(item)
+                    printDBG(str(item_data))
+                    if 'file' in item_data:
+                        video_url = item_data['file']
+                    elif 'src' in item_data: 
+                        video_url = item_data['src']
+                    else:
+                        video_url = ''
+                    if video_url:
+                        if 'type' in item_data:
+                            video_type = item_data['type']
+                        else:
+                            video_type = ''
+
+                        if 'name' in item_data:
+                            video_name = item_data['name']
+                        else:
+                            video_name = urlparser.getDomain(url)
+                        
+                        video_name = video_name + ' ' + video_type
+
+                        video_url = strwithmeta(video_url, {'Referer':cUrl})
+                        urlsTab.append({'name':video_name, 'url': video_url})
         
+        return urlsTab
+                    
+            
     def parserUPLOADUJNET(self, baseUrl):
         printDBG("parserUPLOADUJNET baseUrl[%r]" % baseUrl)
         baseUrl = strwithmeta(baseUrl)
