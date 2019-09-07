@@ -486,7 +486,8 @@ class urlparser:
                        'vidstodo.me':           self.pp.parserVIDSTODOME     ,
                        'vidstream.in':          self.pp.parserVIDSTREAM     ,
                        'vidstream.top':         self.pp.parserVIDSTREAM     ,
-					   'vidto.me':              self.pp.parserVIDTO         ,
+                       'vidstreamup.com':       self.pp.parserVIUCLIPS    ,
+                       'vidto.me':              self.pp.parserVIDTO         ,
                        'vidtodo.com':           self.pp.parserVIDSTODOME     ,
                        'vidup.me':              self.pp.parserVIDUPME       ,
                        'vidzer.net':            self.pp.parserVIDZER        ,
@@ -2704,7 +2705,7 @@ class pageParser(CaptchaHelper):
                                         printDBG("---------> %s " % url )
                                         videoUrls = getDirectM3U8Playlist(url3, checkExt=False, variantCheck=True, checkContent=True, sortWithMaxBitrate=99999999)
                                         return videoUrls
-                                        
+
     def parserYANDEX(self, url):
         DEFAULT_FORMAT = 'mpeg4_low'
         # authorization
@@ -11686,17 +11687,21 @@ class pageParser(CaptchaHelper):
         #         http://oms.veuclips.com/player/PopUpIframe/HGXPBPodVx?iframe=popup&u=
         #         https://footy11.viuclips.net/player/html/D7o5OVWU9C?popup=yes&autoplay=1
         #         http://player.veuclips.com/embed/JwB2kRDt7Y
-
+        #         https://oms.vidstreamup.com/embed/vElkr1qfLm
+        #         https://oms.vidstreamup.com/player/PopUpIframe/vElkr1qfLm?iframe=popup&u=
+        #         https://oms.vidstreamup.com/player/html/vElkr1qfLm?popup=yes&autoplay=1
+        
         baseUrl = baseUrl + "?"
-        video_id = re.findall("v[ei]uclips\.[nc][eo][tm]/player/PopUpIframe/(.*?)\?", baseUrl)
+            
+        video_id = re.findall("/player/PopUpIframe/(.*?)\?", baseUrl)
         if not video_id:
-            video_id = re.findall("v[ei]uclips\.[nc][eo][tm]/player/html/(.*?)\?", baseUrl)
+            video_id = re.findall("/player/html/(.*?)\?", baseUrl)
         if not video_id:
-            video_id = re.findall("player.veuclips.com/embed/(.*?)\?", baseUrl)
+            video_id = re.findall("/embed/(.*?)\?", baseUrl)
         if not video_id:
             return []
 
-        player_url = "http://player.veuclips.com/embed/%s" % video_id[0]
+        player_url = urlparser.getDomain(baseUrl, False) + "/embed/%s" % video_id[0]
         sts, data = self.cm.getPage(player_url)
         if not sts: 
             return []
