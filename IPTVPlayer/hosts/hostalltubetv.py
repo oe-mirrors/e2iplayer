@@ -426,7 +426,10 @@ class AlltubeTV(CBaseHostClass):
             videoUrl = url
             if url.startswith('//'):
                 videoUrl = 'http:' + videoUrl
+            from Plugins.Extensions.IPTVPlayer.libs.urlparser import urlparser 
+            videoUrl = urlparser.decorateUrl(videoUrl, {'Referer': baseUrl}) 
             urlTab = self.up.getVideoLinkExt(videoUrl)
+
         return urlTab
 
     def handleService(self, index, refresh = 0, searchPattern = '', searchType = ''):
