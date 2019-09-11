@@ -552,6 +552,7 @@ class urlparser:
                        'vidspace.io':          self.pp.parserVIDEOSPACE     ,
                        'veuclips.com':         self.pp.parserVIUCLIPS       ,
                        'viuclips.net':         self.pp.parserVIUCLIPS       ,
+                       'vidstreamup.com':      self.pp.parserVIUCLIPS       ,
                        'onlystream.tv':        self.pp.parserONLYSTREAMTV   ,
                     }
         return
@@ -12082,7 +12083,7 @@ class pageParser(CaptchaHelper):
         if 'embed' not in baseUrl:
             video_id  = ph.search(baseUrl, r'''https?://.*/player/.*/([a-zA-Z0-9]{10})\?''')[0]
             printDBG("parserVIUCLIPS video_id[%s]" % video_id)
-            baseUrl = 'http://player.veuclips.com/embed/{0}'.format(video_id)
+            baseUrl = '{0}/embed/{1}'.format(urlparser.getDomain(baseUrl, False), video_id)
 
         sts, data = self.cm.getPage(baseUrl)
         if not sts: return False
