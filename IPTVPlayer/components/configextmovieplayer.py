@@ -30,6 +30,7 @@ config.plugins.iptvplayer.iframe_file = ConfigIPTVFileSelection(fileMatch = "^.*
 config.plugins.iptvplayer.clear_iframe_file = ConfigIPTVFileSelection(fileMatch = "^.*\.mvi$", default = "/usr/share/enigma2/black.mvi")
 
 config.plugins.iptvplayer.remember_last_position = ConfigYesNo(default = False)
+config.plugins.iptvplayer.remember_last_position_ignore = ConfigYesNo(default = False)
 config.plugins.iptvplayer.fakeExtePlayer3 = ConfigSelection(default = "fake", choices = [("fake", " ")])
 config.plugins.iptvplayer.rambuffer_sizemb_network_proto = ConfigInteger(0, (0, 999))
 config.plugins.iptvplayer.rambuffer_sizemb_files = ConfigInteger(0, (0, 999))
