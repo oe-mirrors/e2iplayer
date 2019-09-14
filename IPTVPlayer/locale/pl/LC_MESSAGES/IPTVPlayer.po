@@ -243,6 +243,10 @@ msgstr ""
 msgid "Remember last watched position"
 msgstr "Pamiętać ostatnią pozycję filmu"
 
+#: hosts/hostyoutube.py:38
+msgid "Ignore remember last watched position:"
+msgstr "Ignoruj zapamiętaną ostatnią pozycję filmu:"
+
 #: components/configextmovieplayer.py:298
 msgid "Info bar clock format"
 msgstr "Format czasu na pasek info"
@@ -4754,6 +4758,10 @@ msgstr "Preferowany format wideo:"
 msgid "Allow dash format:"
 msgstr "Akceptuj format DASH:"
 
+#: hosts/hostyoutube.py:36
+msgid "Age-gate bypass:"
+msgstr "Omijaj ograniczenie wiekowe:"
+
 #: hosts/hostyoutube.py:53
 msgid "User links"
 msgstr "Linki użytkownika"
@@ -5081,43 +5089,47 @@ msgstr ""
 msgid "Pending"
 msgstr "W oczekiwaniu"
 
-#: iptvupdate/updatemainwindow.py:367
+#: iptvupdate/updatemainwindow.py:374
+msgid "Add repository last version."
+msgstr "Dodaj najnowszą wersję z repozytorium."
+
+#: iptvupdate/updatemainwindow.py:375
 msgid "Obtaining server list."
 msgstr "Uzyskiwanie listy serwerów."
 
-#: iptvupdate/updatemainwindow.py:368
+#: iptvupdate/updatemainwindow.py:376
 msgid "Downloading an update packet."
 msgstr "Pobieranie aktualizacji pakietów."
 
-#: iptvupdate/updatemainwindow.py:369
+#: iptvupdate/updatemainwindow.py:377
 msgid "Extracting an update packet."
 msgstr "Wyodrębnianie pakietów aktualizacji."
 
-#: iptvupdate/updatemainwindow.py:370
+#: iptvupdate/updatemainwindow.py:378
 msgid "Copy post installed binaries."
 msgstr "Kopiowanie zainstalowanych plików binarnych."
 
-#: iptvupdate/updatemainwindow.py:371
+#: iptvupdate/updatemainwindow.py:379
 msgid "Executing user scripts."
 msgstr "Wykonywanie skryptów użytkownika."
 
-#: iptvupdate/updatemainwindow.py:372
+#: iptvupdate/updatemainwindow.py:380
 msgid "Checking version."
 msgstr "Sprawdzanie wersji."
 
-#: iptvupdate/updatemainwindow.py:373
+#: iptvupdate/updatemainwindow.py:381
 msgid "Removing unnecessary files."
 msgstr "Usuwanie zbędnych plików."
 
-#: iptvupdate/updatemainwindow.py:374
+#: iptvupdate/updatemainwindow.py:382
 msgid "Confirmation of installation."
 msgstr "Potwierdzenie instalacji."
 
-#: iptvupdate/updatemainwindow.py:375
+#: iptvupdate/updatemainwindow.py:383
 msgid "Removing the old version."
 msgstr "Usuwanie starej wersji."
 
-#: iptvupdate/updatemainwindow.py:376
+#: iptvupdate/updatemainwindow.py:384
 msgid "Installing new version."
 msgstr "Instalowanie nowej wersji."
 
