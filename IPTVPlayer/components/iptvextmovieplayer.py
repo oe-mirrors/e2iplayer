@@ -1284,13 +1284,13 @@ class IPTVExtMoviePlayer(Screen):
         
     def saveLastPlaybackTime(self):
         lastPosition = self.playback.get('ConfirmedCTime', 0)
-        if config.plugins.iptvplayer.remember_last_position.value and lastPosition > 0 and not config.plugins.iptvplayer.remember_last_position_ignore.value:
-            self.metaHandler.setLastPosition( lastPosition )
-    
+        if config.plugins.iptvplayer.remember_last_position.value and lastPosition > 0 and self.playback['Length'] > (config.plugins.iptvplayer.remember_last_position_time.value * 60):
+                self.metaHandler.setLastPosition( lastPosition )
+
     def loadLastPlaybackTime(self):
-        if config.plugins.iptvplayer.remember_last_position.value and self.lastPosition < 1 and not config.plugins.iptvplayer.remember_last_position_ignore.value:
+        if config.plugins.iptvplayer.remember_last_position.value and self.lastPosition < 1:
             self.lastPosition = self.metaHandler.getLastPosition()
-    
+
     # handling of RCU keys
     def key_stop(self, requestedByUser="key_stop"):
         self['pleaseWait'].setText(_("Closing. Please wait..."))

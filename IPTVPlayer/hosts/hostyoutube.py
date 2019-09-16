@@ -33,8 +33,6 @@ def GetConfigList():
     optionList.append(getConfigListEntry(_("Default video quality:"), config.plugins.iptvplayer.ytDefaultformat))
     optionList.append(getConfigListEntry(_("Use default video quality:"), config.plugins.iptvplayer.ytUseDF))
     optionList.append(getConfigListEntry(_("Age-gate bypass:"), config.plugins.iptvplayer.ytAgeGate))
-    if config.plugins.iptvplayer.remember_last_position.value != 'false': 
-        optionList.append(getConfigListEntry(_("Ignore remember last watched position:"), config.plugins.iptvplayer.remember_last_position_ignore))
     # temporary, the ffmpeg must be in right version to be able to merge file without transcoding
     # checking should be moved to setup
     if IsExecutable('ffmpeg'): 

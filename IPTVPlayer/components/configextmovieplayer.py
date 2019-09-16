@@ -30,7 +30,7 @@ config.plugins.iptvplayer.iframe_file = ConfigIPTVFileSelection(fileMatch = "^.*
 config.plugins.iptvplayer.clear_iframe_file = ConfigIPTVFileSelection(fileMatch = "^.*\.mvi$", default = "/usr/share/enigma2/black.mvi")
 
 config.plugins.iptvplayer.remember_last_position = ConfigYesNo(default = False)
-config.plugins.iptvplayer.remember_last_position_ignore = ConfigYesNo(default = False)
+config.plugins.iptvplayer.remember_last_position_time = ConfigInteger(0, (0, 99))
 config.plugins.iptvplayer.fakeExtePlayer3 = ConfigSelection(default = "fake", choices = [("fake", " ")])
 config.plugins.iptvplayer.rambuffer_sizemb_network_proto = ConfigInteger(0, (0, 999))
 config.plugins.iptvplayer.rambuffer_sizemb_files = ConfigInteger(0, (0, 999))
@@ -295,6 +295,8 @@ class ConfigExtMoviePlayer(ConfigBaseWidget, ConfigExtMoviePlayerBase):
         list = []
         
         list.append(getConfigListEntry(_("Remember last watched position"), config.plugins.iptvplayer.remember_last_position))
+        if config.plugins.iptvplayer.remember_last_position.value:
+            list.append(getConfigListEntry("    " + _("Skip video shorter than [min]"), config.plugins.iptvplayer.remember_last_position_time))
         if getDesktop(0).size().width() >= 800:
             list.append(getConfigListEntry(_("Info bar clock format"), config.plugins.iptvplayer.extplayer_infobanner_clockformat))
         list.append(getConfigListEntry(_("Create LCD/VFD summary screen"), config.plugins.iptvplayer.extplayer_summary))
