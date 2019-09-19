@@ -1022,7 +1022,7 @@ class common:
                         verUrl += '?'
                         for key in get_data:
                             verUrl += '%s=%s&' % (key, get_data[key])
-                        verUrl = _getFullUrl( ph.getattr(verData, 'action'), domain) + '?s=%s&jschl_vc=%s&pass=%s&jschl_answer=%s' % (get_data['s'], get_data['jschl_vc'], get_data['pass'], get_data['jschl_answer'])
+                        verUrl = _getFullUrl( ph.getattr(verData, 'action'), domain) + '?s=%s&jschl_vc=%s&pass=%s&jschl_answer=%s' % (urllib.quote(get_data['s'],safe=''), urllib.quote(get_data['jschl_vc'],safe=''), urllib.quote(get_data['pass'],safe=''), get_data['jschl_answer'])
                         verUrl = _getFullUrl2( verUrl, domain)
                         params2 = dict(params)
                         params2['load_cookie'] = True
