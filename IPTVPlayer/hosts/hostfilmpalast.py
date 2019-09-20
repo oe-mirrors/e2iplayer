@@ -13,6 +13,7 @@ from Plugins.Extensions.IPTVPlayer.libs import ph
 ###################################################
 # FOREIGN import
 ###################################################
+import re
 import urllib
 from urlparse import urljoin
 ###################################################
@@ -247,15 +248,23 @@ class FilmPalastTo(CBaseHostClass):
         sts, data = self.getPage(cItem['url'], self.defaultParams)
         if not sts: return []
         
-        data = ph.findall(data, ('<ul', '>', 'currentStreamLinks'), '</ul>', flags=0)
-        for item in data:
-            data_id    = ph.getattr(item, 'data-id')
-            data_stamp = ph.getattr(item, 'data-stamp')
-            if data_id and data_stamp: url = strwithmeta('%s|%s' % (data_id, data_stamp), {'data_id':data_id, 'data_stamp':data_stamp, 'links_key':cItem['url']}) 
-            else: url = strwithmeta(self.getFullUrl(ph.search(item, ph.A_HREF_URI_RE)[1]), {'links_key':cItem['url']})
-
+        items = ph.findall(data, ('<ul', '>', 'currentStreamLinks'), '</ul>', flags=0)
+        for item in items:
+            #printDBG(item)
             title = ph.clean_html(ph.find(item, ('<p', '>'), '</p>', flags=0)[1])
-            if title == '': title = ph.clean_html(item)
+            if not title: 
+                title = ph.clean_html(item)
+            
+            url = re.findall("data-player-url=\"(.*?)\"", item)
+            if url:
+                url = url[0]
+            else:
+                url = re.findall("data-player-url=\"(.*?)\"", item)
+                if url:
+                    url = url[0]
+                else:
+                    continue
+            
             linksTab.append({'name':title, 'url':url, 'need_resolve':1})
         
         if len(linksTab):
