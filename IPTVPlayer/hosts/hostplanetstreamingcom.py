@@ -15,38 +15,24 @@ import re
 from Components.config import config, ConfigSelection, ConfigText, getConfigListEntry
 ###################################################
 
-###################################################
-# Config options for HOST
-###################################################
-config.plugins.iptvplayer.planetstreaming_proxy = ConfigSelection(default = "None", choices = [("None",     _("None")),
-                                                                                               ("proxy_1",  _("Alternative proxy server (1)")),
-                                                                                               ("proxy_2",  _("Alternative proxy server (2)"))])
-config.plugins.iptvplayer.planetstreaming_alt_domain = ConfigText(default = "", fixed_size = False)
-
-def GetConfigList():
-    optionList = []
-    optionList.append(getConfigListEntry(_("Use proxy server:"), config.plugins.iptvplayer.planetstreaming_proxy))
-    if config.plugins.iptvplayer.planetstreaming_proxy.value == 'None':
-        optionList.append(getConfigListEntry(_("Alternative domain:"), config.plugins.iptvplayer.planetstreaming_alt_domain))
-    return optionList
-###################################################
-
-
 def gettytul():
-    return 'http://ww4.planet-streaming.com/'
+    return 'https://www.planet-streaming.net'
 
 class PlanetStreaming(CBaseHostClass):
  
     def __init__(self):
-        CBaseHostClass.__init__(self, {'history':'planet-streaming.com', 'cookie':'planet-streaming.com.cookie'})
+        CBaseHostClass.__init__(self, {'history':'planet-streaming.net', 'cookie':'planet-streaming.net.cookie'})
         
         self.DEFAULT_ICON_URL = 'http://cdn-thumbshot.pearltrees.com/4d/72/4d725324089e9adab59eee4aa32f548f-pearlsquare.jpg'
-        self.HEADER = {'User-Agent': 'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:40.0) Gecko/20100101 Firefox/40.0', 'DNT':'1', 'Accept': 'text/html'}
+        self.USER_AGENT = "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/76.0.3809.132 Safari/537.36"
+        self.HEADER = {'User-Agent': self.USER_AGENT, 'DNT':'1', 'Accept': 'text/html'}
         self.AJAX_HEADER = dict(self.HEADER)
         self.AJAX_HEADER.update( {'X-Requested-With': 'XMLHttpRequest'} )
-        self.MAIN_URL = None
-        self.MAIN_MOVIES_URL = None
-        self.MAIN_SERIES_URL = None
+
+        self.MAIN_MOVIES_URL = 'https://www.planet-streaming.net/'
+        self.MAIN_SERIES_URL = 'https://www.serie-streaminghd.org/'
+        self.MAIN_URL = self.MAIN_MOVIES_URL
+
         self.cacheFilters = {}
         self.cacheLinks = {}
         self.defaultParams = {'header':self.HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE, 'with_metadata':True}
@@ -54,31 +40,19 @@ class PlanetStreaming(CBaseHostClass):
     def getPage(self, url, addParams = {}, post_data = None):
         if addParams == {}:
             addParams = dict(self.defaultParams)
-            
-        proxy = config.plugins.iptvplayer.planetstreaming_proxy.value
-        if proxy != 'None':
-            if proxy == 'proxy_1':
-                proxy = config.plugins.iptvplayer.alternative_proxy1.value
-            else:
-                proxy = config.plugins.iptvplayer.alternative_proxy2.value
-            addParams = dict(addParams)
-            addParams.update({'http_proxy':proxy})
         
-        return self.cm.getPage(url, addParams, post_data)
+        addParams['cloudflare_params'] = {'domain': 'planet-streaming.net' , 'cookie_file':self.COOKIE_FILE, 'User-Agent':self.USER_AGENT}
+        return self.cm.getPageCFProtection(url, addParams, post_data)
         
     def getFullIconUrl(self, url):
         url = self.getFullUrl(url)
-        proxy = config.plugins.iptvplayer.planetstreaming_proxy.value
-        if proxy != 'None':
-            if proxy == 'proxy_1':
-                proxy = config.plugins.iptvplayer.alternative_proxy1.value
-            else:
-                proxy = config.plugins.iptvplayer.alternative_proxy2.value
-            url = strwithmeta(url, {'iptv_http_proxy':proxy})
+
+        if not url.endswith("|cf"):
+            url = url + "|cf"
         return url
         
     def selectDomain(self):
-        domains = ['http://ww4.planet-streaming.com/']
+        domains = ['https://www.planet-streaming.net/']
         domain = config.plugins.iptvplayer.planetstreaming_alt_domain.value.strip()
         if self.cm.isValidUrl(domain):
             if domain[-1] != '/': domain += '/'
@@ -97,19 +71,21 @@ class PlanetStreaming(CBaseHostClass):
                 break
                 
         if self.MAIN_URL == None:
-            self.MAIN_MOVIES_URL = 'http://ww4.planet-streaming.com/'
-            self.MAIN_SERIES_URL = 'http://ww4.serie-streaminghd.com/'
+            self.MAIN_MOVIES_URL = 'https://www.planet-streaming.net/'
+            self.MAIN_SERIES_URL = 'https://www.serie-streaminghd.org/'
             self.MAIN_URL = self.MAIN_MOVIES_URL
     
     def listMainMenu(self, cItem):
         printDBG("PlanetStreaming.listMainMenu")
+        
         MAIN_CAT_TAB = [
                         {'category':'search',          'title': _('Search'), 'search_item':True,                        },
                         {'category':'search_history',  'title': _('Search history'),                                    } 
                        ]
         
-        sts, data = self.getPage(self.getMainUrl())
+        sts, data = self.getPage(self.MAIN_URL)
         if sts:
+            #printDBG(data)
             data = self.cm.ph.getDataBeetwenNodes(data, ('<ul', '>', 'menu'), ('<li', '>', 'right'))[1]
             data = re.compile('(<li[^>]*?>|</li>|<ul[^>]*?>|</ul>)').split(data)
             if len(data) > 1:
@@ -324,9 +300,9 @@ class PlanetStreaming(CBaseHostClass):
         printDBG('handleService start')
         
         CBaseHostClass.handleService(self, index, refresh, searchPattern, searchType)
-        if self.MAIN_URL == None:
+        #if self.MAIN_URL == None:
             #rm(self.COOKIE_FILE)
-            self.selectDomain()
+            #self.selectDomain()
 
         name     = self.currItem.get("name", '')
         category = self.currItem.get("category", '')
