@@ -12111,8 +12111,11 @@ class pageParser(CaptchaHelper):
         urlParams = {'header': HTTP_HEADER}
         sts, data = self.cm.getPage(baseUrl, urlParams)
         if not sts: return False
-
+        urlTab=[]
+        urlTab = self._getSources(data)
+        if len(urlTab)==0: urlTab = self._findLinks(data, contain='mp4')
         hlsUrl = self.cm.ph.getSearchGroups(data, '''["'](https?://[^'^"]+?\.m3u8(?:\?[^"^']+?)?)["']''', ignoreCase=True)[0]
         if hlsUrl != '':
-            return getDirectM3U8Playlist(hlsUrl, checkExt=False, variantCheck=True, checkContent=True, sortWithMaxBitrate=99999999)
-        return False
+            hlsUrl = strwithmeta(hlsUrl, {'Origin':"https://" + urlparser.getDomain(baseUrl), 'Referer':baseUrl})
+            urlTab.extend(getDirectM3U8Playlist(hlsUrl, checkExt=False, variantCheck=True, checkContent=True, sortWithMaxBitrate=99999999))
+        return urlTab
