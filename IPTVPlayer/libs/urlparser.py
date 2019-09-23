@@ -8199,7 +8199,7 @@ class pageParser(CaptchaHelper):
         #if referer:
         #    HTTP_HEADER['Referer'] = referer
         if "openloads.co" in baseUrl:
-            video_id = re.findall("openloads.co/f2/([a-zA-Z0-9]+?)/", baseUrl)
+            video_id = re.findall("openloads.co/f2/([a-zA-Z0-9_-]+?)/", baseUrl)
             if not video_id:
                 return []
             printDBG("video_id: %s" % video_id[0])
