@@ -22,11 +22,11 @@ hostbbcsport
 hostbsto
 hostcartoonhd
 hostcb01
+hostcb01uno
 hostcdapl
 hostchomikuj
 hostchristusvincit
 hostcimaclubcom
-hostcineblog
 hostcinemaxx
 hostcinemay
 hostcineto
@@ -44,7 +44,6 @@ hostdokumentalnenet
 hostdpstreamingcx
 hostdrdk
 hostdsda
-hostdazn
 hostefilmytv
 hostegybest
 hostekinotv

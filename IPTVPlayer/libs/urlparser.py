@@ -90,7 +90,7 @@ class urlparser:
         
     @staticmethod
     def decorateParamsFromUrl(baseUrl, overwrite=False):
-        printDBG("urlparser.decorateParamsFromUrl >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>" + baseUrl)
+        printDBG("urlparser.decorateParamsFromUrl ---> %s" % baseUrl)
         tmp        = baseUrl.split('|')
         baseUrl    = strwithmeta(tmp[0].strip(), strwithmeta(baseUrl).meta)
         KEYS_TAB = list(DMHelper.HANDLED_HTTP_HEADER_PARAMS)
@@ -333,6 +333,7 @@ class urlparser:
                        'openload.co':           self.pp.parserOPENLOADIO    ,
                        'openload.info':         self.pp.parserEXASHARECOM   ,
                        'openload.io':           self.pp.parserOPENLOADIO    ,
+                       'openloads.co':          self.pp.parserOPENLOADIO    ,
                        'ovva.tv':               self.pp.parserOVVATV         ,
                        'owndrives.com':         self.pp.parserUPLOAD         ,
                        'p2pcast.tv':            self.pp.paserP2PCASTTV      ,
@@ -386,6 +387,7 @@ class urlparser:
                        'spruto.tv':             self.pp.parserSPRUTOTV       ,
                        'srkcast.com':           self.pp.parserSRKCASTCOM    ,
                        'ssh101.com':            self.pp.parserSSH101COM     ,
+                       'swzz.xyz':              self.pp.parserSWZZ,
                        'st.dwn.so':             self.pp.parserDWN           ,
                        'stopbot.tk':            self.pp.parserSTOPBOTTK      ,
                        'stream.moe':            self.pp.parseSTREAMMOE      ,
@@ -8196,10 +8198,19 @@ class pageParser(CaptchaHelper):
         #referer = strwithmeta(baseUrl).meta.get('Referer', '')
         #if referer:
         #    HTTP_HEADER['Referer'] = referer
+        if "openloads.co" in baseUrl:
+            video_id = re.findall("openloads.co/f2/([a-zA-Z0-9]+?)/", baseUrl)
+            if not video_id:
+                return []
+            printDBG("video_id: %s" % video_id[0])
+            baseUrl = "http://openload.co/embed/%s/" % video_id[0]
+            printDBG("new url: %s" % baseUrl)
+
         sts, data = self.cm.getPage(baseUrl, {'header': HTTP_HEADER})
         if not sts:
             return False
-
+        
+        printDBG(data)
         orgData = data
         msg = clean_html(ph.find(data, ('<div', '>', 'blocked'), '</div>', flags=0)[1])
         if msg or 'content-blocked' in data:
@@ -8807,12 +8818,13 @@ class pageParser(CaptchaHelper):
         HTTP_HEADER= { 'User-Agent':'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/52.0.2743.116 Safari/537.36',
                        'Accept':'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
                        'Referer':baseUrl,
-                       'Cookie':'_flashVersion=18',
-                       'X-Requested-With':'XMLHttpRequest'}
-        
+                       'Sec-Fetch-Mode':'cors'
+                     }
+        COOKIE_FILE = GetCookieDir('ok.cookie')
+        http_params = {'header':HTTP_HEADER, 'use_cookie':True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': COOKIE_FILE}
         metadataUrl = ''
         if 'videoPlayerMetadata' not in baseUrl:
-            sts, data = self.cm.getPage(baseUrl, {'header':HTTP_HEADER})
+            sts, data = self.cm.getPage(baseUrl, http_params)
             if not sts: return False
             error = clean_html(self.cm.ph.getDataBeetwenNodes(data, ('<div', '>', 'vp_video_stub_txt'), ('</div', '>'), False)[1])
             if error == '': error = clean_html(self.cm.ph.getDataBeetwenNodes(data, ('<', '>', 'page-not-found'), ('</', '>'), False)[1])
@@ -8845,20 +8857,22 @@ class pageParser(CaptchaHelper):
         urlsTab = []
         for item in data['videos']:
             url = item['url'] #.replace('&ct=4&', '&ct=0&') #+ '&bytes'#=0-7078'
-            url = strwithmeta(url, {'Referer':baseUrl, 'User-Agent':HTTP_HEADER['User-Agent']})
+            url = urlparser.decorateUrl(url, {'iptv_proto':'m3u8', 'Referer': baseUrl,'User-Agent': HTTP_HEADER['User-Agent']})
             urlsTab.append({'name':item['name'], 'url':url})
         urlsTab = urlsTab[::-1]
         
         if 1: #0 == len(urlsTab):
-            url = urlparser.decorateUrl(data['hlsManifestUrl'], {'iptv_proto':'m3u8', 'Referer':baseUrl, 'User-Agent':HTTP_HEADER['User-Agent']})
-            linksTab = getDirectM3U8Playlist(url, checkExt=False, checkContent=True)
+            url = urlparser.decorateUrl(data['hlsManifestUrl'], {'iptv_proto':'m3u8', 'Referer': baseUrl,'User-Agent': HTTP_HEADER['User-Agent']})
+
+            urlsTab.append({'name': 'hls', 'url': url})
+            linksTab = getDirectM3U8Playlist(url, checkExt=False, checkContent=True, cookieParams = http_params)
             
             for idx in range(len(linksTab)):
                 meta = dict(linksTab[idx]['url'].meta)
                 meta['iptv_proto'] = 'm3u8'
                 url = linksTab[idx]['url']
                 if url.endswith('/'):
-                    linksTab[idx]['url'] = strwithmeta(url+'playlist.m3u8', meta)
+                    linksTab[idx]['url'] = strwithmeta(url + 'playlist.m3u8', meta)
                     
             try:
                 tmpUrlTab = sorted(linksTab, key=lambda item: -1 * int(item.get('bitrate', 0)))
@@ -11750,3 +11764,58 @@ class pageParser(CaptchaHelper):
         else:
             return []
 
+    def parserSWZZ(self, baseUrl):
+        printDBG("parserSWZZ baseUrl[%s]" % baseUrl)
+        # example http://swzz.xyz/link/22D1N/
+        # http://swzz.xyz/HR/go.php?id=84662
+        # http://swzz.xyz/RG/go.php?id=35096
+        
+        sts, data = self.cm.getPage(baseUrl)
+        if not sts:
+            return []
+        
+        url = ""
+        urlsTab =[]
+        link = re.findall('link = "([^"]+)"',data)
+        if link:
+            url = link[0]
+        else:
+            link = re.findall(r'<meta name="og:url" content="([^"]+)"', data)
+            if link:
+                url = link[0]
+            else:
+                link = re.findall(r'URL=([^"]+)">', data)
+                if link:
+                    url = link[0]
+                else:
+                    link = re.findall(r'<a href="(.*?)" class="btn-wrapper">', data)
+                    if link:
+                        url = link[0]
+
+        if not url:
+            # need to unpack
+            printDBG("-----------------------")
+            script = re.findall(r"(eval\s?\(function\(p,a,c,k,e,d.*?)</script>",data.replace('\n', ''),re.S)
+            if script:
+                script = script[0] + "\n"
+                # mods
+                script = script.replace("eval(function(p,a,c,k,e,d","pippo = function(p,a,c,k,e,d")
+                script = script.replace("return p}(", "print(p)}\n\npippo(")
+                script = script.replace("))\n",");\n")
+
+                printDBG("-----------------------")
+                printDBG(script)
+                printDBG("-----------------------")
+
+                # duktape
+                ret = js_execute( script )
+                #printDBG(ret['data'])
+                link = re.findall(r'var link(?:\s)?=(?:\s)?"([^"]+)";', ret['data'])
+                if link:
+                    url = link[0]
+        if url:
+            printDBG("found url %s " % url)
+            
+            return urlparser().getVideoLinkExt(url)
+        else:
+            return []
