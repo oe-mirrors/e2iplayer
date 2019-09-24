@@ -37,7 +37,6 @@
 "hostdancetrippin": "http://dancetrippin.tv/",
 "hostdardarkomcom": "http://dardarkom.com/",
 "hostdarshowcom": "http://darshow.com/",
-"hostdazn": "https://www.dazn.com/",
 "hostddl": "http://ddl.me/",
 "hostdel": "https://del.org/",
 "hostdixmax": "https://dixmax.com/",
