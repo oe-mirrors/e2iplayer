@@ -46,9 +46,15 @@ class PlanetStreaming(CBaseHostClass):
         
     def getFullIconUrl(self, url):
         url = self.getFullUrl(url)
+        
+        m = re.match("http(s|)://(?P<domain>[^/]+)/(?P<link>.+)$", url)
+        if m:
+            if 'planet-streaming' in m.group('domain'):
+                url = m.group('link')
+                url = self.getFullUrl(url)
 
-        if not url.endswith("|cf"):
-            url = url + "|cf"
+                #if not url.endswith("|cf"):
+                #    url = url + "|cf"
         return url
         
     def selectDomain(self):
