@@ -24,12 +24,12 @@ from copy import deepcopy
 
 
 def gettytul():
-    return 'https://www.hdfilme.net/'
+    return 'https://www.hdfilme.cc/'
 
 class HDFilmeTV(CBaseHostClass):
     USER_AGENT = 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/73.0.3683.103 Safari/537.36'
     
-    MAIN_URL      = 'https://www.hdfilme.net/'
+    MAIN_URL      = 'https://www.hdfilme.cc/'
     SEARCH_URL    = MAIN_URL + 'movie-search'
     DEFAULT_ICON  = "https://raw.githubusercontent.com/StoneOffStones/plugin.video.xstream/c88b2a6953febf6e46cf77f891d550a3c2ee5eea/resources/art/sites/hdfilme.png" #"http://hdfilme.tv/public/site/images/logo.png"
 
@@ -40,7 +40,7 @@ class HDFilmeTV(CBaseHostClass):
                     {'icon':DEFAULT_ICON, 'category':'search_history',  'title': _('Search history')} ]
  
     def __init__(self):
-        CBaseHostClass.__init__(self, {'history':'  HDFilmeTV.net', 'cookie':'hdfilmenet.cookie'})
+        CBaseHostClass.__init__(self, {'history':'  HDFilmeTV.cc', 'cookie':'hdfilmenet.cookie'})
         self.defaultParams = {'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
         self.filtersCache = {'genre':[], 'country':[], 'sort':[]}
         self.seasonCache = {}
@@ -63,7 +63,7 @@ class HDFilmeTV(CBaseHostClass):
     def getPageCF(self, baseUrl, params={}, post_data=None):
         if params == {}: 
             params = self.defaultParams  
-        params['cloudflare_params'] = {'domain':'hdfilme.net', 'cookie_file':self.COOKIE_FILE, 'User-Agent':self.USER_AGENT, 'full_url_handle':self.getFullUrl}
+        params['cloudflare_params'] = {'domain':'hdfilme.cc', 'cookie_file':self.COOKIE_FILE, 'User-Agent':self.USER_AGENT, 'full_url_handle':self.getFullUrl}
         return self.cm.getPageCFProtection(baseUrl, params, post_data)
     
     def getIconUrl(self, url):
