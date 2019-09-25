@@ -23,15 +23,15 @@ def GetConfigList():
 ###################################################
 
 def gettytul():
-    return 'http://cinemay.ws/'
+    return 'https://www.cinemay.vip/'
 
 class Cinemay(CBaseHostClass):
     
     def __init__(self):
-        CBaseHostClass.__init__(self, {'history':'Cinemay', 'cookie':'Cinemay.cookie'})
-        self.DEFAULT_ICON_URL = 'http://cinemay.ws/image/logo.png' 
-        self.USER_AGENT = 'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:40.0) Gecko/20100101 Firefox/40.0'
-        self.MAIN_URL = 'http://cinemay.ws/'
+        CBaseHostClass.__init__(self, {'history':'cinemay', 'cookie':'cinemay.cookie'})
+        self.DEFAULT_ICON_URL = 'http://www.cinemay.vip/image/logo.png' 
+        self.USER_AGENT = 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/73.0.3683.103 Safari/537.36'
+        self.MAIN_URL = 'https://www.cinemay.vip/'
         self.HEADER = {'User-Agent': self.USER_AGENT, 'DNT':'1', 'Accept': 'text/html', 'Accept-Encoding':'gzip, deflate', 'Referer':self.getMainUrl(), 'Origin':self.getMainUrl()}
         self.AJAX_HEADER = dict(self.HEADER)
         self.AJAX_HEADER.update( {'X-Requested-With': 'XMLHttpRequest', 'Accept-Encoding':'gzip, deflate', 'Content-Type':'application/x-www-form-urlencoded; charset=UTF-8', 'Accept':'application/json, text/javascript, */*; q=0.01'} )
@@ -58,11 +58,13 @@ class Cinemay(CBaseHostClass):
 
         addParams['cloudflare_params'] = {'cookie_file':self.COOKIE_FILE, 'User-Agent':self.USER_AGENT}
         sts, data = self.cm.getPageCFProtection(baseUrl, addParams, post_data)
-        printDBG("++++++++++++++++++++++++++++++++++++++++")
-        printDBG("url: %s" % baseUrl)
-        printDBG("sts: %s" % sts)
-        printDBG(data)
-        printDBG("++++++++++++++++++++++++++++++++++++++++")
+        
+        #printDBG("++++++++++++++++++++++++++++++++++++++++")
+        #printDBG("url: %s" % baseUrl)
+        #printDBG("sts: %s" % sts)
+        #printDBG(data)
+        #printDBG("++++++++++++++++++++++++++++++++++++++++")
+        
         return sts, data
     
     def listMainMenu(self, cItem):
@@ -150,7 +152,8 @@ class Cinemay(CBaseHostClass):
         printDBG("Cinemay.exploreItem")
         
         sts, data = self.getPage(cItem['url'])
-        if not sts: return
+        if not sts: 
+            return
         self.setMainUrl(self.cm.meta['url'])
         
         descTab = ['']
@@ -166,7 +169,17 @@ class Cinemay(CBaseHostClass):
         trailerUrl = self.cm.ph.getSearchGroups(trailerUrl, '''<ifram[^>]+?src=['"]([^'^"]+?)['"]''')[0]
         if self.cm.isValidUrl(trailerUrl):
             params = dict(cItem)
-            params.update({'good_for_fav':False, 'title':'%s [TRAILER]' % cItem['title'], 'url':trailerUrl, 'desc':desc})
+            params.update({'good_for_fav':False, 'title':'%s [TRAILER]' % cItem['title'], 'url': trailerUrl, 'desc':desc})
+            printDBG(params)
+            self.addVideo(params)
+        
+        items = re.findall("<input.*?id=\"videov\" value=\"(?P<link>.*?)\">.*?</b> (?P<name>.*?)\n", data, re.S)
+        
+        for item in items:
+            videoUrl=strwithmeta(item[0],{'Referer' : cItem['url']})
+            params = dict(cItem)
+            params.update({'good_for_fav':False, 'title': '%s - %s' % (cItem['title'], item[1].capitalize() ), 'url': videoUrl })
+            printDBG(params)
             self.addVideo(params)
         
         if 'var movie' in data:
@@ -212,50 +225,12 @@ class Cinemay(CBaseHostClass):
         
     def getLinksForVideo(self, cItem):
         printDBG("Cinemay.getLinksForVideo [%s]" % cItem)
+        videoUrl = cItem.get('url', '')
         retTab = []
-        if 1 == self.up.checkHostSupport(cItem.get('url', '')):
-            videoUrl = cItem['url'].replace('youtu.be/', 'youtube.com/watch?v=')
+        if self.up.checkHostSupport(videoUrl) == 1:
             return self.up.getVideoLinkExt(videoUrl)
-
-        cacheKey = cItem['url']
-        cacheTab = self.cacheLinks.get(cacheKey, [])
-        if len(cacheTab):
-            return cacheTab
-        
-        sts, data = self.getPage(cItem['url'])
-        if not sts: return []
-        
-        id = ''
-        header = {'Referer':cItem['url']}
-        data = self.cm.ph.getAllItemsBeetwenMarkers(data, '<script', '</script>')
-        for item in data:
-            if 'headers' in item:
-                id = self.cm.ph.getSearchGroups(item, '''['"]?id['"]?\s*:\s*['"]([^'^"]+?)['"]''')[0]
-                tmp = self.cm.ph.getDataBeetwenMarkers(item, 'headers', '}')[1]
-                tmp = self.cm.ph.getSearchGroups(tmp, '''\{\s*['"]?([^'^"]+?)['"]?\s*:\s*['"]([^'^"]+?)['"]''', 2)
-                header[tmp[0]] = tmp[1]
-        
-        if id == '': return []
-        
-        params = dict(self.defaultParams)
-        params['header'] = dict(params['header'])
-        params['header'].update(header)
-        url = self.getFullUrl("playery/?id=" + id)
-        sts, data = self.getPage(url, params)
-        if not sts: return []
-        
-        data = self.cm.ph.getDataBeetwenMarkers(data, 'linktabslink', '</ul>')[1]
-        data = self.cm.ph.getAllItemsBeetwenMarkers(data, '<li', '</li>')
-        for item in data:
-            lang = self.cm.ph.getSearchGroups(item, '''/flags/(.+?)\.png''')[0]
-            name = self.cleanHtmlStr(item)
-            url  = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''value=['"]([^'^"]+?)['"]''')[0])
-            retTab.append({'name':'[%s] %s' % (lang, name), 'url':strwithmeta(url, {'Referer':cItem['url']}), 'need_resolve':1})
-        
-        if len(retTab):
-            self.cacheLinks[cacheKey] = retTab
-        
-        return retTab
+        else:
+            return videoUrl
         
     def getVideoLinks(self, videoUrl):
         printDBG("Cinemay.getVideoLinks [%s]" % videoUrl)
