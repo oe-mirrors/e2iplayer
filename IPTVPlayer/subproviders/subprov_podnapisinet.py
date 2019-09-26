@@ -80,6 +80,7 @@ class PodnapisiNetProvider(CBaseSubProviderClass):
                 printDBG('my_session [%s], phpbb3_session[%s]' % (checkSession, session))
                 if checkSession != session:
                     sts, data = self.cm.getPage(url, params, post_data)
+        
         return sts, data
         
     def fillCacheFilters(self):
@@ -165,11 +166,11 @@ class PodnapisiNetProvider(CBaseSubProviderClass):
         for key in ['movie_type', 'episode_type', 'fps', 'flags']:
             if cItem.get(key, '') != '':
                 baseUrl += '&' + key + '=' + cItem[key]
-        
         url = self.getFullUrl(baseUrl)
-        sts, data = self.cm.getPage(url)
-        if not sts: return
-        
+        sts, data = self.getPage(url)
+        if not sts: 
+            return
+
         tmp = self.cm.ph.getDataBeetwenMarkers(data, '<thead', '</thead>')[1]
         tmp = self.cm.ph.getAllItemsBeetwenMarkers(tmp, '<th', '</th>')
         rawDesc = []
