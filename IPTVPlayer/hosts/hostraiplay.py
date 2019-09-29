@@ -29,7 +29,7 @@ class Raiplay(CBaseHostClass):
 
         CBaseHostClass.__init__(self, {'history':'raiplay', 'cookie':'raiplay.it.cookie'})
         self.MAIN_URL = 'http://raiplay.it/'
-        self.RAISPORT_URL = 'https://www.raisport.rai.it'
+        self.RAISPORT_URL = 'https://www.raisport.rai.it/dirette.html'
         self.MENU_URL="http://www.rai.it/dl/RaiPlay/2016/menu/PublishingBlock-20b274b1-23ae-414f-b3bf-4bdc13b86af2.html?homejson"
         self.CHANNELS_URL= "http://www.rai.it/dl/RaiPlay/2016/PublishingBlock-9a2ff311-fcf0-4539-8f8f-c4fee2a71d58.html?json"
         self.CHANNELS_RADIO_URL="http://rai.it/dl/portaleRadio/popup/ContentSet-003728e4-db46-4df8-83ff-606426c0b3f5-json.html"
@@ -143,28 +143,15 @@ class Raiplay(CBaseHostClass):
         if not sts: 
             return
          
-        tmp = self.cm.ph.getDataBeetwenNodes(data, '<!--RAI 24 Area Tematica Block: Dirette Web Streaming', '<!--RAI')[1]
-        items = self.cm.ph.getAllItemsBeetwenMarkers(tmp, '<section', '</section>')
+        tmp = self.cm.ph.getDataBeetwenNodes(data, '<ul class="canali">', '</ul>')[1]
+        items = self.cm.ph.getAllItemsBeetwenMarkers(tmp, '<li>', '</li>')
         for i in items:
-            url = self.cm.ph.getSearchGroups(i, '''data-videolive=['"]([^'^"]+?)['"]''')[0]
+            url = self.cm.ph.getSearchGroups(i, '''data-video-url=['"]([^'^"]+?)['"]''')[0]
             if url:
-                icon = self.cm.ph.getSearchGroups(i, '''data-original=['"]([^'^"]+?)['"]''')[0]
-                if icon:
-                    icon = self.RAISPORT_URL + icon
-                sport = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(i, '<div class="etichetta">', '</div>', False)[1])
-                title = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(i, '<h3>', '</h3>', False)[1])
-                desc = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(i, '<div class="text">', '</div>', False)[1])
-
-                if sport:
-                     if title:
-                        title = "Rai sport web: " + sport + " " + title 
-                     else:
-                        title = "Rai sport web: " + sport
-                else:
-                    if title:
-                        title = "Rai sport web: " + sport
-                    else:
-                        title = "Rai sport web"
+                icon = self.cm.ph.getSearchGroups(i, '''stillframe=['"]([^'^"]+?)['"]''')[0]
+                #if icon:
+                #    icon = icon
+                title = self.cleanHtmlStr(i)
 
                 params = dict(cItem)
                 params = {'title':title, 'url':url, 'icon':icon, 'category': 'live_tv', 'desc': desc}
