@@ -33,7 +33,9 @@ class Raiplay(CBaseHostClass):
         self.MENU_URL="http://www.rai.it/dl/RaiPlay/2016/menu/PublishingBlock-20b274b1-23ae-414f-b3bf-4bdc13b86af2.html?homejson"
         self.CHANNELS_URL= "http://www.rai.it/dl/RaiPlay/2016/PublishingBlock-9a2ff311-fcf0-4539-8f8f-c4fee2a71d58.html?json"
         self.CHANNELS_RADIO_URL="http://rai.it/dl/portaleRadio/popup/ContentSet-003728e4-db46-4df8-83ff-606426c0b3f5-json.html"
-        self.EPG_URL= "http://www.rai.it/dl/palinsesti/Page-e120a813-1b92-4057-a214-15943d95aa68-json.html?canale=[nomeCanale]&giorno=[dd-mm-yyyy]"
+        self.EPG_URL_OLD = "http://www.rai.it/dl/palinsesti/Page-e120a813-1b92-4057-a214-15943d95aa68-json.html?canale=[nomeCanale]&giorno=[dd-mm-yyyy]"
+        #self.EPG_URL = "https://www.raiplay.it/guidatv/lista?canale=[nomeCanale]&giorno=[dd-mm-yyyy]"
+        self.EPG_URL = 'https://www.raiplay.it/palinsesto/guidatv/lista/[idCanale]/[dd-mm-yyyy].html'
         self.TG_URL = "http://www.tgr.rai.it/dl/tgr/mhp/home.xml"
         self.DEFAULT_ICON_URL = "https://images-eu.ssl-images-amazon.com/images/I/41%2B5P94pGPL.png"
         self.NOTHUMB_URL = "http://www.rai.it/cropgd/256x144/dl/components/img/imgPlaceholder.png"
@@ -213,66 +215,60 @@ class Raiplay(CBaseHostClass):
 
             
     def listEPG(self, cItem):
-        str=cItem['name']
-        epgDate=str[:10]
-        channelName=str[11:]
+        str1 = cItem['name']
+        epgDate = str1[:10]
+        channelName = str1[11:]
         printDBG("Raiplay - start EPG for channel %s and day %s" % (channelName,epgDate))
-
-        channel_id = channelName.replace(" ", "")
+        
+        channel_id = channelName.replace(" ", "-").lower()
         url = self.EPG_URL
-        url = url.replace("[nomeCanale]", channel_id)
+        url = url.replace("[idCanale]", channel_id)
         url = url.replace("[dd-mm-yyyy]", epgDate)
         
         sts, data = self.getPage(url)
-        if not sts: return
- 
-        response = json_loads(data)
-        programmes = response [channelName][0]["palinsesto"][0]["programmi"]
-
-        for programme in programmes:
-            if not programme:
-                    continue
-    
-            startTime = programme["timePublished"]
-            title = programme["name"]
+        if not sts: 
+            return
         
-            if programme["images"]["portrait"] != "":
-                    thumb = self.getThumbnailUrl(programme["images"]["portrait"])
-            elif programme["images"]["landscape"] != "":
-                    thumb = self.getThumbnailUrl(programme["images"]["landscape"])
-            elif programme["isPartOf"] and programme["isPartOf"]["images"]["portrait"] != "":
-                    thumb = self.getThumbnailUrl(programme["isPartOf"]["images"]["portrait"])
-            elif programme["isPartOf"] and programme["isPartOf"]["images"]["landscape"] != "":
-                    thumb = self.getThumbnailUrl(programme["isPartOf"]["images"]["landscape"])
-            else:
-                    thumb = self.NOTHUMB_URL
+        items = self.cm.ph.getAllItemsBeetwenMarkers(data, ('<li', '>', 'eventSpan'), '</li>')
         
-            if programme["testoBreve"] != "":
-                desc = programme["testoBreve"]
-            else:
-                desc = programme["description"] 
-                
-            if programme["hasVideo"]:
-                    videoUrl = programme["pathID"]
-            else:
-                    videoUrl = None
-
-            params = dict(cItem)
-        
-            if videoUrl is None:
-                # programme is not available
-                title = startTime + " " + title + "\c00??8800 [" + _("not available") + "]"
-                thumbnailImage = thumb
-                params = {'title':title, 'url':'', 'icon': thumb, 'desc': desc, 'category': 'nop'}
-
-            else:
-                title = startTime + " " + title
-                thumbnailImage=thumb
-                params = {'title':title, 'url':videoUrl, 'icon': thumb, 'category': 'program', 'desc': desc}
-                printDBG ("add program %s with pathId %s" % (title,videoUrl)) 
+        for i in items:
+            videoUrl = self.getFullUrl(self.cm.ph.getSearchGroups(i, '''data-href=['"]([^'^"]+?)['"]''')[0])
             
+            icon = self.cm.ph.getSearchGroups(i, '''data-img=['"]([^'^"]+?)['"]''')[0]
+            if icon:
+                icon = self.getFullUrl(icon)
+            else:
+                icon =''
+            title = re.findall("<p class=\"info\">([^<]+?)</p>", i)
+            if title:
+                title = title[0]
+            else:
+                title = ''
+            
+            startTime = re.findall("<p class=\"time\">([^<]+?)</p>", i)
+            if startTime:
+                title = startTime[0] + " " + title
+            
+            desc = re.findall("<p class=\"descProgram\">([^<]+?)</p>", i, re.S)
+            if desc:
+                desc= desc[0]
+            else:
+                desc=""
+            
+            params={}
+            if videoUrl:
+                if not videoUrl.endswith('json'):
+                    videoUrl = videoUrl + "?json"
+                params = {'title':title, 'url':videoUrl, 'icon': icon, 'category': 'program', 'desc': desc}
+            else:
+                # programme is not available
+                title = title + "\c00??8800 [" + _("not available") + "]"
+                params = {'title':title, 'url':'', 'icon': icon, 'desc': desc, 'category': 'nop'}
+                
+            printDBG(str(params)) 
             self.addVideo(params)
-
+            
+        
     def listOnDemandMain(self, cItem):
         printDBG("Raiplay - start on demand main list")
         sts, data = self.getPage(self.MENU_URL)
