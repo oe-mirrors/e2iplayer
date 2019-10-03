@@ -71,7 +71,48 @@ class HDFilmeTV(CBaseHostClass):
         if url == '': return ''
         cookieHeader = self.cm.getCookieHeader(self.COOKIE_FILE)
         return strwithmeta(url, {'Cookie':cookieHeader, 'User-Agent':self.USER_AGENT})
-            
+    
+    def getMovieDatainJS(self, data):
+        printDBG("HDFilmeTV.getMovieDatainJs")
+        # example:
+        #    var movieData = {
+        #            id : 13810,
+        #            name : "The Super",
+        #            url : "https://hdfilme.cc/the-super-13810-stream"
+        #    };
+
+        movieData={}
+        code = self.cm.ph.getDataBeetwenMarkers(data, 'var movieData = {', '}', False)[1]
+        printDBG("movie data code: -----------------")
+        printDBG(code)
+        printDBG("-----------------")
+        movie_id = self.cm.ph.getSearchGroups(code, "id : ([0-9]+?),")[0]
+        movie_name = self.cm.ph.getSearchGroups(code, '''name : ['"]([^'^"]+?)['"]''')[0]
+        movie_url= self.cm.ph.getSearchGroups(code, '''url : ['"]([^'^"]+?)['"]''')[0]
+        movieData = { 'id' : movie_id , 'name': movie_name, 'url': movie_url }
+        printDBG(str(movieData))
+        return movieData
+    
+    def getTrailerUrlinJS(self, data, movieData):
+        printDBG("HDFilmeTV.getTrailerUrlinJs")
+
+        #    function load_trailer() {
+        #           $( "#play-area-wrapper" ).load( "/movie/load-trailer/" + movieData.id + "/0?trailer=bEplMVBHYVRHNDJoNjFWRWNXMFNiNm1zc0NvbllFNG1XU3JYM2xPbWVCcHVGMHNBU3FPRzJlTGdCWTBqcjZ5bg==", function() {
+        #               $("html, body").animate({ scrollTop: $('#play-area-wrapper').offset().top }, 1000);
+        #           console.log( "Load was performed." );
+        #
+        #           });
+        #    }
+
+        trailerUrl=''
+        code = self.cm.ph.getDataBeetwenMarkers(data, 'function load_trailer() {', '}', False)[1]
+        printDBG("load_trailer code: -----------------")
+        printDBG(code)
+        printDBG("-----------------")
+        trailerUrl = self.cm.ph.getSearchGroups(code, ".load\( \"(.*?)\",")[0]
+        trailerUrl = self.getFullUrl(trailerUrl.replace("\" + movieData.id + \"", movieData['id']))
+        return trailerUrl
+    
     def fillFiltersCache(self, cItem):
         printDBG("HDFilmeTV.fillFiltersCache")
         self.filtersCache = {'genre':[], 'country':[], 'sort':[]}
@@ -203,24 +244,67 @@ class HDFilmeTV(CBaseHostClass):
         movieId = self.cm.ph.getSearchGroups(data, '''data-movie-id=['"]([^'^"]+?)['"]''')[0]
         printDBG("movieId ------->" + movieId)
         
-        trailerUrl = self.getFullUrl(self.cm.ph.getSearchGroups(data, '''<a[^>]*?class="btn btn-xemnow pull-right"[^>]*?href=['"]([^'^"]+?)['"][^>]*?>\s*Trailer\s*<''')[0])
-        if trailerUrl.startswith('http'):
-            params = dict(cItem)
-            params.update({'good_for_fav': False, 'title':'%s [%s]' % (cItem['title'], _('Trailer')), 'urls':[{'name':'trailer', 'url':trailerUrl.replace('&amp;', '&'), 'need_resolve':1}]})
-            self.addVideo(params)
+        trailerUrl = ''
+        linksPageUrl = ''
+        
+        links = re.findall('''<a[^>]*?class="btn btn-xemnow pull-right"[^>]*?href=['"]([^'^"]+?)['"][^>]*?>(.*?)</a>''', data, re.S)
+        for l in links:
+            if 'Trailer' in l[1]:
+                trailerUrl = l[0]
+            elif 'STREAM' in l[1]:
+                linksPageUrl = l[0]
+        
+        # trailer section
+        if trailerUrl:
+            if trailerUrl == "javascript:":
+                # find url in javascript code
+                printDBG("HDFilmeTV.exploreItem. Find trailer url in javascript code")
+                movieData = self.getMovieDatainJS(data)
+                if 'id' in movieData:
+                    trailerUrl = self.getTrailerUrlinJS(data, movieData)
+                    printDBG("trailerUrl: \"%s\" " % trailerUrl)
+                    params['referer'] = movieData['url']
+                    sts, trailer_data = self.getPageCF(trailerUrl, params)
+                    if not sts: 
+                        return
+                    #printDBG(data)
+
+                    # find url in iframe
+                    #<iframe class="film-screen-content" width="100%" height="100%" frameborder="0" allowfullscreen="" allow="autoplay" src="https://www.youtube.com/embed/JH0WldpM8Hw?autohide=1&fs=1&modestbranding=1&iv_load_policy=3&rel=0&showinfo=0&version=2&hd=0&fs=0&enablejsapi=1&playerapiid=ytplayer&autoplay=1&loop=1"></iframe>
+
+                    tmp = self.cm.ph.getDataBeetwenMarkers(trailer_data, '<iframe', '</iframe>')[1] 
+                    trailerUrl = self.cm.ph.getSearchGroups(tmp, '''src=['"]([^'^"]+?)['"]''')[0]
+                    params = dict(cItem)
+                    params.update({'good_for_fav': False, 'title':'%s [%s]' % (cItem['title'], _('Trailer')), 'urls':[{'name':'trailer', 'url': strwithmeta(trailerUrl.replace('&amp;', '&'), {'trailer': 1}), 'need_resolve':1}]})
+                    self.addVideo(params)
+            else:
+                trailerUrl = self.getFullUrl(trailerUrl)
+                params = dict(cItem)
+                params.update({'good_for_fav': False, 'title':'%s [%s]' % (cItem['title'], _('Trailer')), 'urls':[{'name':'trailer', 'url' : strwithmeta(trailerUrl.replace('&amp;', '&'), {'trailer': 1}), 'need_resolve':1}]})
+                self.addVideo(params)
+        
+        # find links page url
+        # example
+        #<a title="The Ranch staffel 4 Stream" class="btn btn-xemnow pull-right" style="margin-left:5px" href="https://hdfilme.cc/the-ranch-staffel-4-13803-stream/folge-1">
+        printDBG("HDFilmeTV.exploreItem. Find url of page with links - often url + '/deutsch' ")
+
+        sts, linkspage_data = self.getPageCF(linksPageUrl, params)
+        if not sts: 
+            return
+        
+        #printDBG(data)
+        #printDBG(">>>>>>>>>>>>>>>>>>>>>>>>")
         
         episodesTab = []
         episodesLinks = {}
+
+        data=[]
+        parts = self.cm.ph.getAllItemsBeetwenMarkers(linkspage_data, '<section class="box">', '</section>')
+        for part in parts:
+            data_part = self.cm.ph.getAllItemsBeetwenMarkers(part, '<i class="fa fa-chevron-right">', '</ul>') #'<ul class="list-inline list-film"'
+            if data_part:
+                data.extend(data_part)
         
-        #data = self.cm.ph.getDataBeetwenMarkers(data, '<section class="box">', '</section>')[1]
-        data = self.cm.ph.getDataBeetwenMarkers(data, 'online kostenlos', '</section>')[1]
-
-        #printDBG("^^^^^^^^^^^^^^^^^^^")
-        #printDBG(data)
-        data = self.cm.ph.getAllItemsBeetwenMarkers(data, '<i class="fa fa-chevron-right">', '</ul>') #'<ul class="list-inline list-film"'
-        #printDBG("^^^^^^^^^^^^^^^^^^^")
-        #printDBG(str(data))
-
         for server in data:
             serverName = self.cleanHtmlStr( self.cm.ph.getDataBeetwenMarkers(server, '<i ', '</div>')[1] )
             serverData = ph.findall(server, '<li>', '</li>')
@@ -265,8 +349,12 @@ class HDFilmeTV(CBaseHostClass):
     def getVideoLinks(self, videoUrl):
         printDBG("HDFilmeTV.getVideoLinks [%s]" % videoUrl)
         urlTab = []
-
+        
         if isinstance(videoUrl, strwithmeta):
+            if 'trailer' in videoUrl.meta:
+                printDBG("--------> Trailer Url: %s" % videoUrl)
+                return self.up.getVideoLinkExt(videoUrl)  
+
             if 'episodeId' in videoUrl.meta:
                 episode_id = videoUrl.meta['episodeId']
             if 'movieId' in videoUrl.meta:
@@ -277,7 +365,7 @@ class HDFilmeTV(CBaseHostClass):
         params = MergeDicts(self.defaultParams, {'user-agent': self.USER_AGENT, 'referer': videoUrl, "accept-encoding" : "gzip", "accept" : "text/html"})
 
         sts, data = self.getPageCF(videoUrl, params)
-        #printDBG(data)
+        printDBG(data)
         if not sts: return []
         
         url = self.cm.ph.getDataBeetwenMarkers(data, '$( "#play-area-wrapper" ).load( "', '"', False)[1]
