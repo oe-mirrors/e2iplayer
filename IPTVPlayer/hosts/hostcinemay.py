@@ -78,15 +78,17 @@ class Cinemay(CBaseHostClass):
         page = cItem.get('page', 1)
         url = cItem['url']
         if page > 1:
-            url += 'page/%s/' % page
+            url += '%s/' % page
             
         sts, data = self.getPage(url)
         if not sts: return
         self.setMainUrl(self.cm.meta['url'])
         
-        nextPage = self.cm.ph.getDataBeetwenMarkers(data, 'class="pagination"', '</div>')[1]
-        if ('/page/%s/' % (page + 1)) in nextPage: nextPage = True
-        else: nextPage = False
+        nextPage = self.cm.ph.getDataBeetwenMarkers(data, ('<div','>','class="pagination"'), '</div>')[1]
+        if ('>%s</a>' % (page + 1)) in nextPage: 
+            nextPage = True
+        else: 
+            nextPage = False
         
         flagsReObj = re.compile('''/flags/(.+?)\.png''') 
         data = self.cm.ph.getAllItemsBeetwenMarkers(data, '<article', '</article>')
@@ -105,9 +107,15 @@ class Cinemay(CBaseHostClass):
         
         if nextPage:
             params = dict(cItem)
-            params.update({'good_for_fav':False, 'title':_("Next page"), 'page':page+1})
-            self.addDir(params)
-            
+            params.update({'good_for_fav':False, 'title':_("Next page"), 'page': (page+1)})
+            self.addMore(params)
+    
+    def listSeriesNewVersion(self,cItem,nextCategory):
+        printDBG("Cinemay.listSeriesNewVersion [%s]" % cItem)
+        printDBG("Use function listItems1")
+        self.listItems1(cItem, nextCategory)
+
+        
     def listSeriesLetters(self, cItem, nextCategory):
         printDBG("Cinemay.listSeriesLetters [%s]" % cItem)
         if 0 == len(self.cacheSeriesLetters):
@@ -220,7 +228,7 @@ class Cinemay(CBaseHostClass):
     def listSearchResult(self, cItem, searchPattern, searchType):
         printDBG("Cinemay.listSearchResult cItem[%s], searchPattern[%s] searchType[%s]" % (cItem, searchPattern, searchType))
         cItem = dict(cItem)
-        cItem['url'] = self.getFullUrl('/?s=') + urllib.quote_plus(searchPattern)
+        cItem['url'] = self.getFullUrl('/?keyword=') + urllib.quote_plus(searchPattern)
         self.listItems1(cItem, 'explore_item')
         
     def getLinksForVideo(self, cItem):
@@ -345,9 +353,10 @@ class Cinemay(CBaseHostClass):
         elif category == 'list_movies':
             self.listItems1(self.currItem, 'explore_item')
         elif category == 'list_series':
-            self.listSeriesLetters(self.currItem, 'list_series_by_letter')
-        elif category == 'list_series_by_letter':
-            self.listSeriesByLetters(self.currItem, 'explore_item')
+            #self.listSeriesLetters(self.currItem, 'list_series_by_letter')
+            self.listSeriesNewVersion(self.currItem, 'explore_item')
+        #elif category == 'list_series_by_letter':
+        #    self.listSeriesByLetters(self.currItem, 'explore_item')
         elif category == 'explore_item':
             self.exploreItem(self.currItem, 'list_episodes')
         elif category == 'list_episodes':
