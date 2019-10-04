@@ -23,15 +23,15 @@ def GetConfigList():
 ###################################################
 
 def gettytul():
-    return 'https://www.cinemay.vip/'
+    return 'https://www.cinemay.bz/'
 
 class Cinemay(CBaseHostClass):
     
     def __init__(self):
         CBaseHostClass.__init__(self, {'history':'cinemay', 'cookie':'cinemay.cookie'})
-        self.DEFAULT_ICON_URL = 'http://www.cinemay.vip/image/logo.png' 
+        self.DEFAULT_ICON_URL = 'http://www.cinemay.bz/image/logo.png' 
         self.USER_AGENT = 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/73.0.3683.103 Safari/537.36'
-        self.MAIN_URL = 'https://www.cinemay.vip/'
+        self.MAIN_URL = 'https://www.cinemay.bz/'
         self.HEADER = {'User-Agent': self.USER_AGENT, 'DNT':'1', 'Accept': 'text/html', 'Accept-Encoding':'gzip, deflate', 'Referer':self.getMainUrl(), 'Origin':self.getMainUrl()}
         self.AJAX_HEADER = dict(self.HEADER)
         self.AJAX_HEADER.update( {'X-Requested-With': 'XMLHttpRequest', 'Accept-Encoding':'gzip, deflate', 'Content-Type':'application/x-www-form-urlencoded; charset=UTF-8', 'Accept':'application/json, text/javascript, */*; q=0.01'} )
@@ -42,8 +42,8 @@ class Cinemay(CBaseHostClass):
         self.defaultParams = {'header':self.HEADER, 'raw_post_data':True, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
         
         self.MAIN_CAT_TAB = [{'category':'list_movies',           'title': 'Film Box Office',   'url':self.getFullUrl('/film-box-office/')    },
-                             {'category':'list_movies',           'title': 'Films',             'url':self.getFullUrl('/films/')              },
-                             {'category':'list_series',           'title': 'Series',            'url':self.getFullUrl('/series-tv-streaming/')},
+                             {'category':'list_movies',           'title': 'Films',             'url':self.getFullUrl('/film-vf-streaming/')  },
+                             {'category':'list_series',           'title': 'Series',            'url':self.getFullUrl('/serie-streaming/')},
                              
                              {'category':'search',                'title': _('Search'),              'search_item':True, },
                              {'category':'search_history',        'title': _('Search history'),                          } 
