@@ -24,18 +24,18 @@ from copy import deepcopy
 
 
 def gettytul():
-    return 'https://www.hdfilme.cc/'
+    return 'https://hdfilme.cc/'
 
 class HDFilmeTV(CBaseHostClass):
     USER_AGENT = 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/73.0.3683.103 Safari/537.36'
     
-    MAIN_URL      = 'https://www.hdfilme.cc/'
+    MAIN_URL      = 'https://hdfilme.cc/'
     SEARCH_URL    = MAIN_URL + 'movie-search'
     DEFAULT_ICON  = "https://raw.githubusercontent.com/StoneOffStones/plugin.video.xstream/c88b2a6953febf6e46cf77f891d550a3c2ee5eea/resources/art/sites/hdfilme.png" #"http://hdfilme.tv/public/site/images/logo.png"
 
-    MAIN_CAT_TAB = [{'icon':DEFAULT_ICON, 'category':'list_filters',    'filter':'genre',    'title': _('Movies'),  'url':MAIN_URL+'filme'},
-                    {'icon':DEFAULT_ICON, 'category':'list_filters',    'filter':'genre',    'title': _('Series'),  'url':MAIN_URL+'serien'},
-                    {'icon':DEFAULT_ICON, 'category':'list_filters',    'filter':'genre',    'title': _('Trailers'),'url':MAIN_URL+'trailer'},
+    MAIN_CAT_TAB = [{'icon':DEFAULT_ICON, 'category':'list_filters',    'filter':'genre',    'title': _('Movies'),  'url' : MAIN_URL + 'filme1'},
+                    {'icon':DEFAULT_ICON, 'category':'list_filters',    'filter':'genre',    'title': _('Series'),  'url' : MAIN_URL + 'serien1'},
+                    {'icon':DEFAULT_ICON, 'category':'list_filters',    'filter':'genre',    'title': _('Trailers'),'url' : MAIN_URL + 'trailer'},
                     {'icon':DEFAULT_ICON, 'category':'search',          'title': _('Search'), 'search_item':True},
                     {'icon':DEFAULT_ICON, 'category':'search_history',  'title': _('Search history')} ]
  
@@ -186,10 +186,10 @@ class HDFilmeTV(CBaseHostClass):
         if 'search_pattern' in cItem:
             query={'key':cItem['search_pattern'],'page': page}
         else:
-            query={'category':cItem['genre'],'country': cItem['country'], 'sort': cItem['sort'], 'page': page, 'sort_type': cItem['sort_type']}
+            query={'page': page, 'category':cItem['genre'],'country': cItem['country'], 'sort': cItem['sort'], 'sort_type': cItem['sort_type']}
         
         url += "?" + urllib.urlencode(query)
-        sts, data = self.getPage(url, params, query)
+        sts, data = self.getPageCF(url, params, post_data = {'load':'full-page'})
         #printDBG(data)
         if not sts: return
         
@@ -229,8 +229,8 @@ class HDFilmeTV(CBaseHostClass):
         
         if nextPage or numOfItems >= itemsPerPage:
             params = dict(cItem)
-            params.update({'good_for_fav': False, 'title':_('Next page'), 'page':page+1})
-            self.addDir(params)
+            params.update({'good_for_fav': False, 'title':_('Next page'), 'page': (page+1)})
+            self.addMore(params)
             
     def exploreItem(self, cItem):
         printDBG("HDFilmeTV.exploreItem")
