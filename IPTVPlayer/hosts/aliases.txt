@@ -23,7 +23,7 @@
 "hostbsto": "https://bs.to/",
 "hostcartoonhd": "https://cartoonhd.care/",
 "hostcb01": "https://cb01.love/",
-"hostcb01uno": "https://cb01.productions/",
+"hostcb01uno": "https://cb01.social/",
 "hostcdapl": "https://cda.pl/",
 "hostchomikuj": "http://chomikuj.pl/",
 "hostchristusvincit": "http://christusvincit-tv.pl/",

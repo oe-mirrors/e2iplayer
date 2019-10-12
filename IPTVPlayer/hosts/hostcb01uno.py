@@ -16,20 +16,20 @@ except Exception: import simplejson as json
 ###################################################
 
 def gettytul():
-    return 'https://cb01.productions/'
+    return 'https://cb01.social/'
 
 class Cb01(CBaseHostClass):
 
     def __init__(self):
-        CBaseHostClass.__init__(self, {'history':'cb01.productions', 'cookie':'cb01.productions.cookie'})
+        CBaseHostClass.__init__(self, {'history':'cb01.social', 'cookie':'cb01.social.cookie'})
         
         self.USER_AGENT = 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/73.0.3683.103 Safari/537.36'
         self.HEADER = {'User-Agent': self.USER_AGENT, 'Accept': 'text/html'}
         self.AJAX_HEADER = dict(self.HEADER)
         self.AJAX_HEADER.update( {'X-Requested-With':'XMLHttpRequest', 'Content-Type':'application/x-www-form-urlencoded; charset=UTF-8'} )
         
-        self.MAIN_URL = 'https://cb01.productions/'
-        self.DEFAULT_ICON_URL = 'https://cb01.productions/wp-content/uploads/2019/03/logocb2-1.jpg'
+        self.MAIN_URL = 'https://cb01.social/'
+        self.DEFAULT_ICON_URL = 'https://cb01.social/wp-content/uploads/2019/03/logocb2-1.jpg'
         
         self.defaultParams = {'header':self.HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
     
@@ -68,7 +68,7 @@ class Cb01(CBaseHostClass):
             for item in items:
                 #printDBG(item)    
                 title = self.cleanHtmlStr(item)
-                url = re.findall("href=([^> ]+?)>", item)
+                url = re.findall("href=['\"]?([^>'\"]+?)['\"]?>", item)
                 if url:
                     url = self.getFullUrl(url[0])
                     params = dict(cItem)
@@ -96,19 +96,24 @@ class Cb01(CBaseHostClass):
         self.listsTab(MAIN_CAT_TAB, cItem)
         
     def listItems(self, cItem, nextCategory):
-        printDBG("cb01uno.listItems")
+        printDBG("cb01uno.listItems '%s'" % cItem['url'])
         printDBG(str(cItem))
         page = cItem.get('page', 1)
         postData = cItem.get('post_data')
-
-        sts, data = self.getPage(cItem['url'], post_data = postData)
+        
+        url = self.getFullUrl(cItem['url'])
+        if postData:
+            sts, data = self.getPage(url, post_data = postData)
+        else:
+            sts, data = self.getPage(url)
+            
         if not sts: 
             return
         
         self.setMainUrl(self.cm.meta['url'])
         #printDBG(data)
         
-        movies = self.cm.ph.getAllItemsBeetwenNodes(data,('<div','>','card mp-post horizontal'), '</div></div></div>', False)
+        movies = self.cm.ph.getAllItemsBeetwenNodes(data,('<div','>','card mp-post horizontal'), '</div>\n    </div> \n</div>\n', False)
         if not movies:
             movies = self.cm.ph.getAllItemsBeetwenNodes(data,('<div','>','card mp-post horizontal'), '<!-- </div>-->', False)
 
@@ -126,7 +131,7 @@ class Cb01(CBaseHostClass):
                 else:
                     continue
 
-            icon = re.findall("src=([^ >'\"]+?)[ >'\"]", m, re.S)
+            icon = re.findall("src=\"([^ >'\"]+?)[ >'\"]", m, re.S)
             if icon:
                 icon = self.getFullUrl(icon[0])
                     
@@ -142,7 +147,7 @@ class Cb01(CBaseHostClass):
             self.addDir(params)
 
         #search if exsts a next page
-        pntemp = re.findall("value=([^ >]+?)>%s</option>" % (page + 1), data, re.S)            
+        pntemp = re.findall("value=\"([^ >]+?)\">%s</option>" % (page + 1), data, re.S)            
         if pntemp:
             params = dict(cItem)
             params.update({'title':_("Next page"), 'page': page + 1, 'url': pntemp[0]})
@@ -194,7 +199,7 @@ class Cb01(CBaseHostClass):
         #trailer
         trailer = self.cm.ph.getDataBeetwenNodes(data, 'Guarda il Trailer:', ('</div', '>'), False)[1]
         if trailer:
-            url = re.findall("src=([^ >]+?)[ >]",trailer)
+            url = re.findall("src=['\"]?([^ >'\"]+?)['\"]?[ >]",trailer)
             if url:
                 if self.cm.isValidUrl(url[0]):
                     title = "Trailer"
@@ -205,7 +210,9 @@ class Cb01(CBaseHostClass):
         #video links
         urlTab = []
         
-        links = re.findall("href=([^ ]+?) target=_blank rel=\"noopener noreferrer\">(.*?)</a>", data)
+        links = re.findall("href=['\"]?([^ '\"]+?)['\"]? target=\"?_blank\"? rel=\"noopener noreferrer\">(.*?)</a>", data)
+        #example: <a href="http://swzz.xyz/link/479Pq/" target="_blank" rel="noopener noreferrer">Akvideo</a>
+        
         for l in links:
             url = l[0]
             if url.startswith('"'):
