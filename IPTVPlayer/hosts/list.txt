@@ -177,6 +177,7 @@ hosttwitchtv
 hostuktvplay
 hosturllist
 hostustreamtv
+hostustvgo
 hostvevo
 hostvidcorncom
 hostvideopenny

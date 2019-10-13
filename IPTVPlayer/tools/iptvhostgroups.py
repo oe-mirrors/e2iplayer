@@ -73,7 +73,7 @@ class IPTVHostsGroups:
                                                      'otakufr','crtankocom']
         self.PREDEFINED_HOSTS['sport']            = ['webstream','meczykipl','ekstraklasatv','laola1tv','bbcsport','ourmatchnet','hoofootcom','okgoals','ngolos','watchwrestlinguno','watchwrestling','fighttube','fightvideo', \
                                                      'twitchtv','hitboxtv','pinkbike','sportdeutschland','eurosportplayer','del','redbull']
-        self.PREDEFINED_HOSTS['live']             = ['webstream','streamliveto','ustreamtv','youtube','dailymotion','eskago','arconaitvme','eurosportplayer']
+        self.PREDEFINED_HOSTS['live']             = ['webstream','streamliveto','ustreamtv','youtube','dailymotion','eskago','arconaitvme','eurosportplayer','ustvgo']
         self.PREDEFINED_HOSTS['documentary']      = ['fokustv','dokumentalnenet','greekdocumentaries3','dailymotion','orthobulletscom','vumedicom']
         self.PREDEFINED_HOSTS['science']          = ['questtvcouk','dailymotion','ustreamtv','dokumentalnenet','orthobulletscom','vumedicom']
         
