@@ -111,15 +111,19 @@ class Cb01(CBaseHostClass):
             return
         
         self.setMainUrl(self.cm.meta['url'])
+        # remove all problems with new lines and spaces between tags
+        data = data.replace("\n", " ")
+        data = re.sub(r">[ ]{1,5}<", "><", data)
         #printDBG(data)
         
-        movies = self.cm.ph.getAllItemsBeetwenNodes(data,('<div','>','card mp-post horizontal'), '</div>\n    </div> \n</div>\n', False)
+        movies = self.cm.ph.getAllItemsBeetwenNodes(data,('<div','>','card mp-post horizontal'), '</div></div></div>', False)
         if not movies:
             movies = self.cm.ph.getAllItemsBeetwenNodes(data,('<div','>','card mp-post horizontal'), '<!-- </div>-->', False)
 
+        
         for m in movies:
-            #printDBG("------------------------------------------------------------")
-            #printDBG(m)
+            printDBG("------------------------------------------------------------")
+            printDBG(m)
             
             url = re.findall("href=\"(.*?)\"", m, re.S)
             if url:
@@ -131,7 +135,7 @@ class Cb01(CBaseHostClass):
                 else:
                     continue
 
-            icon = re.findall("src=\"([^ >'\"]+?)[ >'\"]", m, re.S)
+            icon = re.findall("src=\"?([^ >'\"]+?)[ >'\"]", m, re.S)
             if icon:
                 icon = self.getFullUrl(icon[0])
                     
@@ -147,7 +151,7 @@ class Cb01(CBaseHostClass):
             self.addDir(params)
 
         #search if exsts a next page
-        pntemp = re.findall("value=\"([^ >]+?)\">%s</option>" % (page + 1), data, re.S)            
+        pntemp = re.findall("value=['\"]?([^ >'\"]+?)[ '\"]?>%s</option>" % (page + 1), data, re.S)            
         if pntemp:
             params = dict(cItem)
             params.update({'title':_("Next page"), 'page': page + 1, 'url': pntemp[0]})
