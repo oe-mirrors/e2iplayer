@@ -418,6 +418,7 @@ class urlparser:
                        'tiny.cc':               self.pp.parserTINYCC        ,
                        'tinymov.net':           self.pp.parserTINYMOV       ,
                        'topupload.tv':          self.pp.parserTOPUPLOAD     ,
+                       'toclipit.com':          self.pp.parserTOCLIPIT,
                        'tubecloud.net':         self.pp.parserTUBECLOUD     ,
                        'tune.pk':               self.pp.parseTUNEPK         ,
                        'tunein.com':            self.pp.parserTUNEINCOM      ,
@@ -8168,14 +8169,19 @@ class pageParser(CaptchaHelper):
         printDBG("parserVERYSTREAM baseUrl[%r]" % baseUrl )
         HTTP_HEADER = MergeDicts(self.cm.getDefaultHeader('firefox'), {'Referer':baseUrl})
         sts, data = self.cm.getPage(baseUrl, {'header':HTTP_HEADER})
-        if not sts: return False
+        if not sts: 
+            return False
         #printDBG("parserVERYSTREAM data: [%s]" % data )
         id = ph.search(data, '''id\s*?=\s*?['"]videolink['"]>([^>]+?)<''')[0]
-        videoUrl = 'https://verystream.com/gettoken/{0}?mime=true'.format(id)
-        sts, data = self.cm.getPage(videoUrl, {'max_data_size':0})
-        if not sts: return False
-        return self.cm.meta['url']
-
+        if id:
+            videoUrl = 'https://verystream.com/gettoken/{0}?mime=true'.format(id)
+            sts, data = self.cm.getPage(videoUrl, {'max_data_size':0})
+            if not sts: 
+                return False
+            return self.cm.meta['url']
+        else:
+            return False
+        
     def parserJUSTUPLOAD(self, baseUrl):
         printDBG("parserJUSTUPLOAD baseUrl[%r]" % baseUrl )
         HTTP_HEADER = MergeDicts(self.cm.getDefaultHeader('firefox'), {'Referer':baseUrl})
@@ -11819,3 +11825,41 @@ class pageParser(CaptchaHelper):
             return urlparser().getVideoLinkExt(url)
         else:
             return []
+        
+        
+    def parserTOCLIPIT(self, baseUrl):
+        # example : 
+        # https://hofoot.toclipit.com/player/PopUpIframe/CsAJ8IjxE8?iframe=popup&u=
+        
+        videoUrl = ""
+        baseUrl = baseUrl + '?'
+        videoId = re.findall("PopUpIframe/([a-zA-Z0-9_]+)\?", baseUrl)
+        if not videoId:
+            videoId = re.findall("player/html/([a-zA-Z0-9_]+)\?", baseUrl)
+        if not videoId:
+            videoId = re.findall("embed/([a-zA-Z0-9_]+)\?", baseUrl)
+            
+        if not videoId:
+            return []
+        
+        videoId = videoId[0]
+        printDBG("found video id: %s" % videoId)
+        
+        url = urlparser.getDomain(baseUrl, False) + "embed/" + videoId
+        printDBG("reading from url: %s" % url)
+        
+        sts, data = self.cm.getPage(url)
+        
+        if not sts:
+            return []
+        
+        m = re.findall("sources: \[\{(.*?)\}\]", data, re.S)
+        
+        if m:
+            videoUrl = re.findall ("src: ['\"](.*?)['\"]", m[0])
+            if videoUrl:
+                videoUrl = videoUrl[0]
+                if videoUrl.startswith("//"):
+                    videoUrl = "https:" + videoUrl 
+        
+        return videoUrl
