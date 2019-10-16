@@ -12105,12 +12105,29 @@ class pageParser(CaptchaHelper):
     def parserONLYSTREAMTV(self, baseUrl):
         printDBG("parserONLYSTREAMTV baseUrl[%s]" % baseUrl)
 
+        def baseN(num,b,numerals="0123456789abcdefghijklmnopqrstuvwxyz"):
+            return ((num == 0) and numerals[0]) or (baseN(num // b, b, numerals).lstrip(numerals[0]) + numerals[num % b])
+
+        def unpack(p, a, c, k, e=None, d=None):
+            while (c):
+                c-=1
+                if (k[c]):
+                    p = re.sub("\\b" + baseN(c, a) + "\\b",  k[c], p)
+            return p
+
         HTTP_HEADER = self.cm.getDefaultHeader(browser='chrome')
         referer = baseUrl.meta.get('Referer')
         if referer: HTTP_HEADER['Referer'] = referer
         urlParams = {'header': HTTP_HEADER}
         sts, data = self.cm.getPage(baseUrl, urlParams)
         if not sts: return False
+
+        if "eval(function(p,a,c,k,e,d)" in data:
+            printDBG( 'Host resolveUrl packed' )
+            encrypted = self.cm.ph.getDataBeetwenMarkers(data, "eval(function(p,a,c,k,e,d)", '</script>')[1].replace('\n','').replace('</script>','')
+            encrypted = encrypted.split('}(')[1][:-1]
+            data = eval('unpack(' + encrypted)
+
         urlTab=[]
         urlTab = self._getSources(data)
         if len(urlTab)==0: urlTab = self._findLinks(data, contain='mp4')

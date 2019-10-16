@@ -412,7 +412,7 @@ class UpdateMainAppImpl(IUpdateObjectInterface):
         if not sts:
             self.stepFinished(-1, msg)
             return
-        serverUrl = serverUrl = "https://gitlab.com/{0}/e2iplayer/raw/master/IPTVPlayer/version.py".format(config.plugins.iptvplayer.gitlab_repo.value)
+        serverUrl = "https://gitlab.com/{0}/e2iplayer/raw/master/IPTVPlayer/version.py".format(config.plugins.iptvplayer.gitlab_repo.value)
         self.downloader = UpdateDownloaderCreator(serverUrl)
         self.downloader.subscribersFor_Finish.append( boundFunction(self.downloadFinished, self.__serversListGitlabFinished, None))
         self.downloader.start(serverUrl, os_path.join(self.tmpDir, 'lastversion.py'))
