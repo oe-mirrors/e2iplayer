@@ -418,7 +418,7 @@ class urlparser:
                        'tiny.cc':               self.pp.parserTINYCC        ,
                        'tinymov.net':           self.pp.parserTINYMOV       ,
                        'topupload.tv':          self.pp.parserTOPUPLOAD     ,
-                       'toclipit.com':          self.pp.parserTOCLIPIT,
+                       'toclipit.com':          self.pp.parserVIUCLIPS,
                        'tubecloud.net':         self.pp.parserTUBECLOUD     ,
                        'tune.pk':               self.pp.parseTUNEPK         ,
                        'tunein.com':            self.pp.parserTUNEINCOM      ,
@@ -430,6 +430,7 @@ class urlparser:
                        'twitch.tv':             self.pp.parserTWITCHTV      ,
                        'ultimatedown.com':      self.pp.parserULTIMATEDOWN   ,
                        'up2stream.com':         self.pp.parserVIDEOMEGA     ,
+                       'upclips.online':        self.pp.parserVIUCLIPS,
                        'upfile.mobi':           self.pp.parserUPFILEMOBI     ,
                        'upload.af':             self.pp.parserUPLOAD         ,
                        'upload.mn':             self.pp.parserUPLOAD2        ,
@@ -11710,6 +11711,9 @@ class pageParser(CaptchaHelper):
         #         https://oms.vidstreamup.com/embed/vElkr1qfLm
         #         https://oms.vidstreamup.com/player/PopUpIframe/vElkr1qfLm?iframe=popup&u=
         #         https://oms.vidstreamup.com/player/html/vElkr1qfLm?popup=yes&autoplay=1
+        #         http://oms.upclips.online/player/PopUpIframe/CsAJ8IjxE8?iframe=popup&u=
+        #         https://hofoot.toclipit.com/player/PopUpIframe/CsAJ8IjxE8?iframe=popup&u=
+        
         
         baseUrl = baseUrl + "?"
             
@@ -11736,7 +11740,16 @@ class pageParser(CaptchaHelper):
             if l.startswith("//"):
                 l = "http:" + l
             vidTab.extend(getDirectM3U8Playlist(l, checkExt=False, variantCheck=True, checkContent=True, sortWithMaxBitrate=99999999))
+        
+        m = re.findall("sources: \[\{(.*?)\}\]", data, re.S)
+        if m:
+            links = re.findall ("src: ['\"](.*?)['\"]", m[0])
+            for l in links: 
+                if l.startswith("//"):
+                    l = "https:" + l 
 
+            vidTab.extend(getDirectM3U8Playlist(l, checkExt=False, variantCheck=True, checkContent=True, sortWithMaxBitrate=99999999))
+        
         return vidTab
 
     def parserWOOFTUBE(self, baseUrl):
@@ -11826,40 +11839,3 @@ class pageParser(CaptchaHelper):
         else:
             return []
         
-        
-    def parserTOCLIPIT(self, baseUrl):
-        # example : 
-        # https://hofoot.toclipit.com/player/PopUpIframe/CsAJ8IjxE8?iframe=popup&u=
-        
-        videoUrl = ""
-        baseUrl = baseUrl + '?'
-        videoId = re.findall("PopUpIframe/([a-zA-Z0-9_]+)\?", baseUrl)
-        if not videoId:
-            videoId = re.findall("player/html/([a-zA-Z0-9_]+)\?", baseUrl)
-        if not videoId:
-            videoId = re.findall("embed/([a-zA-Z0-9_]+)\?", baseUrl)
-            
-        if not videoId:
-            return []
-        
-        videoId = videoId[0]
-        printDBG("found video id: %s" % videoId)
-        
-        url = urlparser.getDomain(baseUrl, False) + "embed/" + videoId
-        printDBG("reading from url: %s" % url)
-        
-        sts, data = self.cm.getPage(url)
-        
-        if not sts:
-            return []
-        
-        m = re.findall("sources: \[\{(.*?)\}\]", data, re.S)
-        
-        if m:
-            videoUrl = re.findall ("src: ['\"](.*?)['\"]", m[0])
-            if videoUrl:
-                videoUrl = videoUrl[0]
-                if videoUrl.startswith("//"):
-                    videoUrl = "https:" + videoUrl 
-        
-        return videoUrl
