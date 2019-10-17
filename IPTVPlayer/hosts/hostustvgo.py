@@ -156,13 +156,6 @@ class ustvgo(CBaseHostClass):
 
         return getDirectM3U8Playlist(url)
     
-    def getVideoLinks(self, videoUrl):
-        printDBG("ustvgo.getVideoLinks [%s]" % videoUrl)
-        urlTab = []
-        if 1 == self.up.checkHostSupport(videoUrl): 
-            urlTab = self.up.getVideoLinkExt(videoUrl)
-        return urlTab
-
     def handleService(self, index, refresh = 0, searchPattern = '', searchType = ''):
         printDBG('handleService start')
 

@@ -554,6 +554,8 @@ class urlparser:
                        'veuclips.com':         self.pp.parserVIUCLIPS       ,
                        'viuclips.net':         self.pp.parserVIUCLIPS       ,
                        'vidstreamup.com':      self.pp.parserVIUCLIPS       ,
+                       'upclips.online':       self.pp.parserVIUCLIPS       ,
+                       'toclipit.com':         self.pp.parserVIUCLIPS       ,
                        'onlystream.tv':        self.pp.parserONLYSTREAMTV   ,
                     }
         return
@@ -12098,6 +12100,15 @@ class pageParser(CaptchaHelper):
         for l in links:
             if l.startswith("//"):
                 l = "http:" + l
+            vidTab.extend(getDirectM3U8Playlist(l, checkExt=False, variantCheck=True, checkContent=True, sortWithMaxBitrate=99999999))
+
+        m = re.findall("sources: \[\{(.*?)\}\]", data, re.S)
+        if m:
+            links = re.findall ("src: ['\"](.*?)['\"]", m[0])
+            for l in links:
+                if l.startswith("//"):
+                    l = "https:" + l
+
             vidTab.extend(getDirectM3U8Playlist(l, checkExt=False, variantCheck=True, checkContent=True, sortWithMaxBitrate=99999999))
 
         return vidTab
