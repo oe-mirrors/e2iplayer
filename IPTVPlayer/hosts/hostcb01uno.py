@@ -44,6 +44,13 @@ class Cb01(CBaseHostClass):
             url = self.MAIN_URL + url[1:]
         return url        
     
+    def cleanHtmlFromCR(self, data):
+        # remove all problems with new lines and spaces between tags
+        data = data.replace("\n", " ")
+        data = re.sub(r">[ ]{1,5}<", "><", data)
+        #printDBG(data)
+        return data
+    
     def listMainMenu(self, cItem):
         printDBG("cb01uno.listMainMenu")
         params = dict(cItem)
@@ -54,7 +61,8 @@ class Cb01(CBaseHostClass):
         if not sts: 
             return
 
-        #printDBG(data)
+        data = self.cleanHtmlFromCR(data)
+
         self.setMainUrl(self.cm.meta['url'])
         tabs = []
         
@@ -109,12 +117,9 @@ class Cb01(CBaseHostClass):
             
         if not sts: 
             return
+        data = self.cleanHtmlFromCR(data)
         
         self.setMainUrl(self.cm.meta['url'])
-        # remove all problems with new lines and spaces between tags
-        data = data.replace("\n", " ")
-        data = re.sub(r">[ ]{1,5}<", "><", data)
-        #printDBG(data)
         
         movies = self.cm.ph.getAllItemsBeetwenNodes(data,('<div','>','card mp-post horizontal'), '</div></div></div>', False)
         if not movies:
@@ -196,8 +201,9 @@ class Cb01(CBaseHostClass):
         if not sts: 
             return
         
-        self.setMainUrl(self.cm.meta['url'])
+        data = self.cleanHtmlFromCR(data)
         
+        self.setMainUrl(self.cm.meta['url'])
         cItem['prev_url'] = cItem['url']
 
         #trailer
@@ -214,7 +220,7 @@ class Cb01(CBaseHostClass):
         #video links
         urlTab = []
         
-        links = re.findall("href=['\"]?([^ '\"]+?)['\"]? target=\"?_blank\"? rel=\"noopener noreferrer\">(.*?)</a>", data)
+        links = re.findall("href=['\"]?([^ '\"]+?)['\"]? target=\"?_blank\"? rel=\"[^\"]+\">(.*?)</a>", data)
         #example: <a href="http://swzz.xyz/link/479Pq/" target="_blank" rel="noopener noreferrer">Akvideo</a>
         
         for l in links:
