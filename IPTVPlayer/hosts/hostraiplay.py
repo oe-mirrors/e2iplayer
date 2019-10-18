@@ -106,12 +106,18 @@ class Raiplay(CBaseHostClass):
             program_url=program_url.replace ("/raiplay/",self.MAIN_URL)
             
             sts, data = self.getPage(program_url)
-            response =json_loads(data)
-            video_url=response["video"]["contentUrl"]
-            printDBG(video_url);
-            video_url=strwithmeta(video_url, {'User-Agent': self.RELINKER_USER_AGENT })
-            linksTab.append({'name': 'hls', 'url': video_url})           
-            linksTab.extend(getDirectM3U8Playlist(video_url, checkExt=False, variantCheck=True, checkContent=True, sortWithMaxBitrate=99999999))  
+            if sts:
+                # bypass an error of delimiters in json
+                s_name = re.findall("\"name\": \"(.*?)\",",data)
+                for s in s_name:
+                    data = data.replace(s, s.replace("\""," "))   
+                #
+                response =json_loads(data)
+                video_url=response["video"]["contentUrl"]
+                printDBG(video_url);
+                video_url=strwithmeta(video_url, {'User-Agent': self.RELINKER_USER_AGENT })
+                linksTab.append({'name': 'hls', 'url': video_url})           
+                linksTab.extend(getDirectM3U8Playlist(video_url, checkExt=False, variantCheck=True, checkContent=True, sortWithMaxBitrate=99999999))  
             
         else:
             printDBG("Raiplay: video form category %s with url %s not handled" % (cItem["category"],cItem["url"]));
@@ -543,7 +549,7 @@ class Raiplay(CBaseHostClass):
         printDBG("Raiplay.listRaiSportItem %s" % cItem['title'])
         key= cItem.get('key','')
         dominio = cItem.get('dominio','')
-        page = cItem.get('page',0)
+        page = int(cItem.get('page',0))
         
         header = {
                   'Accept': 'application/json, text/javascript, */*; q=0.01' ,
