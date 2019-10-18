@@ -3695,8 +3695,8 @@ class pageParser(CaptchaHelper):
         params = {'header':HTTP_HEADER, 'with_metadata':True, 'cookie_items':{}, 'cookiefile':COOKIE_FILE, 'use_cookie': True, 'save_cookie':True}
         params.update(baseParams)
         
-        sts, data = self.cm.getPage('http://185.35.139.177/myip.php', params)
-        params['cookie_items'].update({'my-ip':data.strip()})
+        sts, data = self.cm.getPage('https://myip.is', params)
+        if sts: params['cookie_items'].update({'my-ip':self.cm.ph.getDataBeetwenNodes(data, ('<a', '>', 'copy ip address'), ('</a', '>'), False)[1]})
         
         sts, data = self.cm.getPage(baseUrl, params)
         cUrl = data.meta['url']
