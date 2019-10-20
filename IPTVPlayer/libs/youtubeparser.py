@@ -73,6 +73,7 @@ class YouTubeParser():
                 if sts:
                     videoId = self.cm.ph.getSearchGroups(data, '''<meta[^>]+?itemprop=['"]videoId['"][^>]+?content=['"]([^'^"]+?)['"]''')[0]
                     if videoId == '': videoId = self.cm.ph.getSearchGroups(data, '''['"]REDIRECT_TO_VIDEO['"]\s*\,\s*['"]([^'^"]+?)['"]''')[0]
+                    if videoId == '': videoId = ph.search(data, 'video_id=(.*?)"')[0]
                     if videoId != '': url = 'https://www.youtube.com/watch?v=' + videoId
             list = YoutubeIE()._real_extract(url, allowVP9 = allowVP9, allowAgeGate = allowAgeGate)
         except Exception:
