@@ -201,6 +201,7 @@ class urlparser:
                        'easyvid.org':           self.pp.parserEASYVIDORG    ,
                        'easyvideo.me':          self.pp.parserEASYVIDEOME   ,
                        'ebd.cda.pl':            self.pp.parserCDA           ,
+                       'educadegree.com':       self.pp.parserEDUCADEGREE,
                        'ekstraklasa.tv':        self.pp.parserEKSTRAKLASATV  ,
                        'emb.aliez.tv':          self.pp.parserALIEZ         ,
                        'embed.trilulilu.ro':    self.pp.parserTRILULILU     ,
@@ -11835,6 +11836,23 @@ class pageParser(CaptchaHelper):
         if url:
             printDBG("found url %s " % url)
             
+            return urlparser().getVideoLinkExt(url)
+        else:
+            return []
+    
+    def parserEDUCADEGREE(self, baseUrl):
+        printDBG("parserEDUCADEGREE baseUrl[%s]" % baseUrl)
+        
+        sts, data = self.cm.getPage(baseUrl)
+        if not sts:
+            return []
+        
+        #<iframe width='640' height='360' src='https://verystream.com/e/cvJAjWreM3N' frameborder='0' allowfullscreen></iframe><br />
+        url = self.cm.ph.getSearchGroups(data, "<iframe[^>]+?src=[\"']([^\"^']+?)[\"']", 1, True)[0]
+
+        if url:
+            printDBG("found url %s " % url)
+            url = strwithmeta(url, {'Referer': baseUrl})
             return urlparser().getVideoLinkExt(url)
         else:
             return []
