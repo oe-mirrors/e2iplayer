@@ -198,7 +198,7 @@ class Twitch(CBaseHostClass):
         printDBG("Twitch.listDirGames")
 
         cursor = ',"cursor":"%s"' % cItem['cursor'] if 'cursor' in cItem else ''
-        post_data = '[{"operationName":"BrowsePage_AllDirectories","variables":{"limit":30,"directoryFilters":["GAMES"],"isTagsExperiment":false,"tags":[]%s},"extensions":{"persistedQuery":{"version":1,"sha256Hash":"dd3c574a80407f76e94a6e6c90e427cdca29a74791308b686aa2f35895f50a8f"}}}]' % (cursor)
+        post_data = '[{"operationName":"BrowsePage_AllDirectories","variables":{"limit":30,"options":{"recommendationsContext":{"platform":"web"},"sort":"VIEWER_COUNT","tags":[]%s}},"extensions":{"persistedQuery":{"version":1,"sha256Hash":"78957de9388098820e222c88ec14e85aaf6cf844adf44c8319c545c75fd63203"}}}]' % cursor
         url = self.getFullUrl('/gql', self.API2_URL)
         sts, data = self.getPage(url, MergeDicts(self.defaultParams, {'raw_post_data':True}), post_data)
         if not sts: return
@@ -208,7 +208,7 @@ class Twitch(CBaseHostClass):
             for item in data[0]['data']['directories']['edges']:
                 cursor = jstr(item, 'cursor')
                 item = item['node']
-                if item['directoryType'] == 'GAME':
+                if item['__typename'] == 'Game':
                     title = jstr(item, 'displayName')
                     icon = self.getFullIconUrl(jstr(item, 'avatarURL'), self.cm.meta['url'])
                     desc = jstr(item, '__typename') + ' | ' + _('%s viewers') % item['viewersCount']
