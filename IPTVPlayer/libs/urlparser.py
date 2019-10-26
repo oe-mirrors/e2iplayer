@@ -11726,7 +11726,8 @@ class pageParser(CaptchaHelper):
         if not video_id:
             return []
 
-        player_url = urlparser.getDomain(baseUrl, False) + "/embed/%s" % video_id[0]
+        player_url = urlparser.getDomain(baseUrl, False) + "embed/%s" % video_id[0]
+        printDBG("reading from url %s" % player_url)
         sts, data = self.cm.getPage(player_url)
         if not sts: 
             return []
@@ -11751,6 +11752,14 @@ class pageParser(CaptchaHelper):
 
             vidTab.extend(getDirectM3U8Playlist(l, checkExt=False, variantCheck=True, checkContent=True, sortWithMaxBitrate=99999999))
         
+        m = re.findall( "hlsSource:['\"](.*?)['\"]", data, re.S)
+        if m:
+            l = m[0]
+            if l.startswith("//"):
+                l = "https:" + l 
+
+            vidTab.extend(getDirectM3U8Playlist(l, checkExt=False, variantCheck=True, checkContent=True, sortWithMaxBitrate=99999999))
+		
         return vidTab
 
     def parserWOOFTUBE(self, baseUrl):
