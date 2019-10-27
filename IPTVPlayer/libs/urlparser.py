@@ -12086,7 +12086,7 @@ class pageParser(CaptchaHelper):
         if 'embed' not in baseUrl:
             video_id  = ph.search(baseUrl, r'''https?://.*/player/.*/([a-zA-Z0-9]{10})\?''')[0]
             printDBG("parserVIUCLIPS video_id[%s]" % video_id)
-            baseUrl = '{0}/embed/{1}'.format(urlparser.getDomain(baseUrl, False), video_id)
+            baseUrl = '{0}embed/{1}'.format(urlparser.getDomain(baseUrl, False), video_id)
 
         sts, data = self.cm.getPage(baseUrl)
         if not sts: return False
@@ -12108,6 +12108,14 @@ class pageParser(CaptchaHelper):
             for l in links:
                 if l.startswith("//"):
                     l = "https:" + l
+
+            vidTab.extend(getDirectM3U8Playlist(l, checkExt=False, variantCheck=True, checkContent=True, sortWithMaxBitrate=99999999))
+
+        m = re.findall( "hlsSource:['\"](.*?)['\"]", data, re.S)
+        if m:
+            l = m[0]
+            if l.startswith("//"):
+                l = "https:" + l
 
             vidTab.extend(getDirectM3U8Playlist(l, checkExt=False, variantCheck=True, checkContent=True, sortWithMaxBitrate=99999999))
 
