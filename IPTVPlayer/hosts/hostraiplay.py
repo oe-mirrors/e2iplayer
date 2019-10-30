@@ -69,7 +69,7 @@ class Raiplay(CBaseHostClass):
         if url == "" : return
         
         if url[:9] == "/raiplay/":
-            url = url.replace ("/raiplay/",self.MAIN_URL)
+            url = url.replace ("/raiplay/", self.MAIN_URL)
 
         while url[:1] == "/" :
             url=url[1:]
@@ -80,17 +80,35 @@ class Raiplay(CBaseHostClass):
 
         url = url.replace(" ", "%20")
         #url = urllib.quote(url, safe="%/:=&?~#+!$,;'@()*[]")
-            
-        #printDBG("PathID: " + url)
-        
+
+        # fix old format of url for json
+        if url.endswith(".html?json"):
+            url = url.replace(".html?json", ".json")
+        elif url.endswith("/?json"):
+            url = url.replace("/?json","/index.json")
+        elif url.endswith("?json"):
+            url = url.replace("?json",".json")
+
         return url
+    
+    def getIndexFromJSON(self, pathId):
+        url = self.getFullUrl(pathId)
+        sts, data = self.getPage(url)
+        if not sts:
+            return []
+        else:
+            response = json_loads(data)
+        
+        index = []
+        for i in response["contents"]:
+            if len(response["contents"][i])>0:
+                index.append(i)
+        
+        index.sort()
+        return index
     
     def getLinksForVideo(self, cItem):
         printDBG("Raiplay.getLinksForVideo [%s]" % cItem)
-        #sts, data=self.getPage(cItem["url"])
-        #if not sts: return
-
-        #printDBG(data)
 
         linksTab=[]
         if (cItem["category"] == "live_tv") or (cItem["category"] == "live_radio") or (cItem["category"]=="video_link") or (cItem["category"] == "raisport_video"):   
@@ -102,18 +120,12 @@ class Raiplay(CBaseHostClass):
             
         elif (cItem["category"] == "program"):
             # read relinker page
-            program_url=cItem["url"]
-            program_url=program_url.replace ("/raiplay/",self.MAIN_URL)
+            program_url = self.getFullUrl(cItem["url"])
             
             sts, data = self.getPage(program_url)
             if sts:
-                # bypass an error of delimiters in json
-                s_name = re.findall("\"name\": \"(.*?)\",",data)
-                for s in s_name:
-                    data = data.replace(s, s.replace("\""," "))   
-                #
                 response =json_loads(data)
-                video_url=response["video"]["contentUrl"]
+                video_url=response["video"]["content_url"]
                 printDBG(video_url);
                 video_url=strwithmeta(video_url, {'User-Agent': self.RELINKER_USER_AGENT })
                 linksTab.append({'name': 'hls', 'url': video_url})           
@@ -304,66 +316,62 @@ class Raiplay(CBaseHostClass):
         if not sts: return
  
         response = json_loads(data)
-        blocks=response["blocchi"]
 
-        if len(blocks) > 1:
-            printDBG("Blocchi: " + str(len(blocks)))
-        
-        for item in blocks[0]["lanci"]:
-            if item["images"]["portrait"]!="" :
-                icon_url=self.getThumbnailUrl(item["images"]["portrait"])
-            else:
-                icon_url=self.getThumbnailUrl(item["images"]["landscape"])
-
-            self.addDir(MergeDicts(cItem, {'category':'ondemand_items', 'title': item["name"] , 'name': item["name"], 'url': item["PathID"], 'sub-type': item["sub-type"], 'icon': icon_url }))           
+        for b in response["contents"]:
+            if b["type"] == "RaiPlay Slider Generi Block":
+                for item in b["contents"]:
+                    params = MergeDicts(cItem, {'category':'ondemand_items', 'title': item["name"] , 'name': item["name"], 'url': item["path_id"], 'sub-type': item["sub_type"], 'icon': item['image'] })
+                    printDBG(str(params))
+                    self.addDir(params)           
 
             
     def listOnDemandAZ(self,cItem):
-        pathId=cItem["url"]
-        pathId=self.getFullUrl(pathId)
+        pathId = self.getFullUrl(cItem["url"])
         printDBG("Raiplay - processing list with pathId %s" % pathId )
+            
+        index = self.getIndexFromJSON(pathId)
 
-        # 0-9
-        self.addDir(MergeDicts(cItem, {'category':'ondemand_list', 'title': "0-9" , 'name': "0-9", 'url': pathId} ))              
-        
-        #a-z
-        for i in range(26):
-            self.addDir(MergeDicts(cItem, {'category':'ondemand_list', 'title': chr(ord('A')+i) , 'name': chr(ord('A')+i), 'url': pathId} ))              
+        for i in index:
+            self.addDir(MergeDicts(cItem, {'category':'ondemand_list', 'title': i , 'name': i, 'url': pathId} ))              
 
             
     def listOnDemandIndex(self,cItem):
-        pathId=cItem["url"]
-        pathId=self.getFullUrl(pathId)
+        pathId = self.getFullUrl(cItem["url"])
+        printDBG("Raiplay.listOnDemandIndex with index %s and url %s" % (cItem["name"], pathId))
         
         sts, data = self.getPage(pathId)
         if not sts: return
  
         response = json_loads(data)
-        items=response[cItem["name"]]
+        items = response["contents"][cItem["name"]]
         for item in items:
-            name=item["name"]
-            url=item["PathID"]
-            self.addDir(MergeDicts(cItem, {'category':'ondemand_items', 'title': name , 'name': name, 'url': url, 'sub-type': 'PLR programma Page' } ))              
+            name = item["name"]
+            url = item["path_id"]
+            icon = item["images"]["landscape"]
+            sub_type = item["type"]
+            params = MergeDicts(cItem, {'category':'ondemand_items', 'title': name , 'name': name, 'url': url, 'icon': icon, 'sub-type': sub_type } )
+            printDBG(str(params))
+            self.addDir(params)              
             
     def listOnDemandProgram(self,cItem):
-        pathId=cItem["url"]
-        pathId=self.getFullUrl(pathId)
+        pathId=self.getFullUrl(cItem["url"])
+        printDBG("Raiplay.listOnDemandProgram with url %s" % pathId)
 
         sts, data = self.getPage(pathId)
         if not sts: return
         
         response = json_loads(data)
-        blocks=response["Blocks"]
+        blocks=response["blocks"]
 
         for block in blocks:
-            for set in block["Sets"]:
-                name = set["Name"]
-                url=set["url"]
+            for set in block["sets"]:
+                name = set["name"]
+                url = set["path_id"]
                 self.addDir(MergeDicts(cItem, {'category':'ondemand_program', 'title': name , 'name': name, 'url': url} ))              
                 
     def listOnDemandProgramItems(self,cItem):
-        pathId=cItem["url"]
-        pathId=self.getFullUrl(pathId)
+        pathId=self.getFullUrl(cItem["url"])
+        printDBG("Raiplay.listOnDemandProgram with url %s" % pathId)
 
         sts, data = self.getPage(pathId)
         if not sts: return
@@ -376,7 +384,7 @@ class Raiplay(CBaseHostClass):
             if "subtitle" in item and item["subtitle"] != "" and item["subtitle"] != item["name"]:
                 title = title + " (" + item["subtitle"] + ")"
             
-            videoUrl=item["pathID"]
+            videoUrl = item["path_id"]
             if item["images"]["portrait"]!="" :
                 icon_url=self.getThumbnailUrl(item["images"]["portrait"])
             else:
@@ -643,9 +651,9 @@ class Raiplay(CBaseHostClass):
         elif category == 'ondemand_items':
             if subtype == "RaiPlay Tipologia Page" or subtype == "RaiPlay Genere Page" or subtype == "RaiPlay Tipologia Editoriale Page":
                 self.listOnDemandCategory(self.currItem)
-            elif subtype == "Raiplay Tipologia Item":
+            elif subtype in ("Raiplay Tipologia Item" , "RaiPlay V2 Genere Page"):
                 self.listOnDemandAZ(self.currItem)
-            elif subtype == "PLR programma Page":
+            elif subtype in ("PLR programma Page", "RaiPlay Programma Item"):
                 self.listOnDemandProgram(self.currItem)
             else:
                 printDBG("Raiplay - item '%s' - Sub-type not handled '%s' " % (name, subtype))
