@@ -3255,7 +3255,14 @@ class pageParser(CaptchaHelper):
         
     def parserCLIPWATCHINGCOM(self, baseUrl):
         printDBG("parserCLIPWATCHINGCOM baseUrl[%r]" % baseUrl)
-        return self._parserUNIVERSAL_A(baseUrl, 'http://clipwatching.com/embed-{0}.html', self._findLinks)
+
+        if 'embed' not in baseUrl:
+            video_id = self.cm.ph.getSearchGroups(baseUrl+'/', '/([A-Za-z0-9]{12})[/.-]')[0]
+            url = 'http://clipwatching.com/embed-{0}.html'.format(video_id)
+        else:
+            url = baseUrl
+
+        return self.parserONLYSTREAMTV(baseUrl)
         
     def parserVIDABCCOM(self, baseUrl):
         printDBG("parserVIDABCCOM baseUrl[%r]" % baseUrl)
@@ -12124,16 +12131,6 @@ class pageParser(CaptchaHelper):
     def parserONLYSTREAMTV(self, baseUrl):
         printDBG("parserONLYSTREAMTV baseUrl[%s]" % baseUrl)
 
-        def baseN(num,b,numerals="0123456789abcdefghijklmnopqrstuvwxyz"):
-            return ((num == 0) and numerals[0]) or (baseN(num // b, b, numerals).lstrip(numerals[0]) + numerals[num % b])
-
-        def unpack(p, a, c, k, e=None, d=None):
-            while (c):
-                c-=1
-                if (k[c]):
-                    p = re.sub("\\b" + baseN(c, a) + "\\b",  k[c], p)
-            return p
-
         HTTP_HEADER = self.cm.getDefaultHeader(browser='chrome')
         referer = baseUrl.meta.get('Referer')
         if referer: HTTP_HEADER['Referer'] = referer
@@ -12143,9 +12140,16 @@ class pageParser(CaptchaHelper):
 
         if "eval(function(p,a,c,k,e,d)" in data:
             printDBG( 'Host resolveUrl packed' )
-            encrypted = self.cm.ph.getDataBeetwenMarkers(data, "eval(function(p,a,c,k,e,d)", '</script>')[1].replace('\n','').replace('</script>','')
-            encrypted = encrypted.split('}(')[1][:-1]
-            data = eval('unpack(' + encrypted)
+            packed = re.compile('>eval\(function\(p,a,c,k,e,d\)(.+?)</script>', re.DOTALL).findall(data)
+            if packed:
+                data2 = packed[-1]
+            else:
+                return ''
+            printDBG( 'Host pack: [%s]' % data2)
+            try:
+                data = unpackJSPlayerParams(data2, TEAMCASTPL_decryptPlayerParams, 0, True, True)
+                printDBG( 'OK unpack: [%s]' % data)
+            except Exception: pass
 
         urlTab=[]
         urlTab = self._getSources(data)
