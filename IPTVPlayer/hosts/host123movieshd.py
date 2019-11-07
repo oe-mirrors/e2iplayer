@@ -36,7 +36,7 @@ def GetConfigList():
 
 
 def gettytul():
-    return 'https://123movieshd.sc/'
+    return 'https://123movieshd.cloud/'
 
 class GoMovies(CBaseHostClass):
  
@@ -44,7 +44,7 @@ class GoMovies(CBaseHostClass):
         CBaseHostClass.__init__(self, {'history':'123movieshd', 'cookie':'123movieshd.cookie'})
         self.defaultParams = {'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
         
-        self.DEFAULT_ICON_URL = 'https://123movieshd.sc/wp-content/themes/assets/images/gomovies-logo-light.png'
+        self.DEFAULT_ICON_URL = 'https://123movieshd.cloud/wp-content/themes/assets/images/gomovies-logo-light.png'
         self.USER_AGENT = 'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:40.0) Gecko/20100101 Firefox/40.0'
         self.HEADER = {'User-Agent': self.USER_AGENT, 'DNT':'1', 'Accept': 'text/html'}
         self.AJAX_HEADER = dict(self.HEADER)
@@ -91,7 +91,7 @@ class GoMovies(CBaseHostClass):
         return strwithmeta(url, {'Cookie':cookieHeader, 'User-Agent':self.USER_AGENT})
         
     def selectDomain(self):
-        domains = ['https://123movieshd.sc/', 'https://www3.123movieshub.sc/', 'https://www3.gomovies.sc/']
+        domains = ['https://123movieshd.cloud/', 'https://www3.123movieshub.sc/', 'https://www3.gomovies.sc/']
         domain = config.plugins.iptvplayer.gomovies_alt_domain.value.strip()
         if self.cm.isValidUrl(domain):
             if domain[-1] != '/': domain += '/'
