@@ -213,6 +213,7 @@ class urlparser:
                        'fastplay.cc':           self.pp.parserFASTPLAYCC     ,
                        'faststream.in':         self.pp.parserVIDSTREAM     ,
                        'fastvideo.in':          self.pp.parserFASTVIDEOIN   ,
+                       'fembed.com':            self.pp.parserFEMBED,
                        'filecandy.net':         self.pp.parserFILECANDYNET   ,
                        'filecloud.io':          self.pp.parserFILECLOUDIO    ,
                        'filefactory.com':       self.pp.parserFILEFACTORYCOM ,
@@ -11737,7 +11738,10 @@ class pageParser(CaptchaHelper):
             return []
         
         vidTab=[]
-        links = re.findall("hls:\"(.*?)\"", data)
+        links = re.findall("hls:\"(.*?)\"", data) 
+        if not links: 
+            links = re.findall( "hlsSource:['\"](.*?)['\"]", data, re.S)
+        
         for l in links:
             if l.startswith("//"):
                 l = "http:" + l
@@ -11752,14 +11756,6 @@ class pageParser(CaptchaHelper):
 
             vidTab.extend(getDirectM3U8Playlist(l, checkExt=False, variantCheck=True, checkContent=True, sortWithMaxBitrate=99999999))
         
-        m = re.findall( "hlsSource:['\"](.*?)['\"]", data, re.S)
-        if m:
-            l = m[0]
-            if l.startswith("//"):
-                l = "https:" + l 
-
-            vidTab.extend(getDirectM3U8Playlist(l, checkExt=False, variantCheck=True, checkContent=True, sortWithMaxBitrate=99999999))
-		
         return vidTab
 
     def parserWOOFTUBE(self, baseUrl):
@@ -11865,4 +11861,39 @@ class pageParser(CaptchaHelper):
             return urlparser().getVideoLinkExt(url)
         else:
             return []
+    
+    def parserFEMBED(self, baseUrl):
+        printDBG("parserFEMBED baseUrl[%s]" % baseUrl)
+        #example:
+        #https://www.fembed.com/v/e706eb-elm180dp
+        #https://www.fembed.com/api/source/e706eb-elm180dp
         
+        baseUrl = baseUrl + '?'
+        m = re.search("/(v|api/source)/(?P<id>.+)\?", baseUrl)
+        
+        if not m:
+            return []
+        
+        video_id = m.group('id')
+        url = 'https://www.fembed.com/api/source/' + video_id
+        h = {
+                'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/76.0.3809.132 Safari/537.36',
+                'Accept': '*/*',
+                'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
+                'Referer' : baseUrl,
+                'X-Requested-With': 'XMLHttpRequest',
+        }
+        
+        sts, data = self.cm.getPage(url, {'header': h},post_data={'r':'', 'd': 'www.fembed.com'})
+        
+        if not sts:
+            return []
+        
+        printDBG(data)
+        data = json_loads(data)
+        
+        urlsTab=[]
+        for v in data['data']:
+            urlsTab.append({'name': v['label'], 'url': v['file']})
+            
+        return urlsTab
