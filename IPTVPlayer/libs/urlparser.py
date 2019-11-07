@@ -301,7 +301,6 @@ class urlparser:
                        'mp4upload.com':         self.pp.parserMP4UPLOAD      ,
                        'my.mail.ru':            self.pp.parserVIDEOMAIL     ,
                        'mycloud.to':            self.pp.parserMYCLOUDTO      ,
-                       'mystream.io':           self.pp.parserMYSTREAMTO     ,
                        'mystream.la':           self.pp.parserMYSTREAMLA    ,
                        'mystream.to':           self.pp.parserMYSTREAMTO     ,
                        'myvi.ru':               self.pp.parserMYVIRU        ,
@@ -10693,8 +10692,9 @@ class pageParser(CaptchaHelper):
         cUrl = baseUrl
         HTTP_HEADER= self.cm.getDefaultHeader(browser='chrome')
         HTTP_HEADER['Referer'] = baseUrl.meta.get('Referer', baseUrl)
-
-        urlParams = {'header':HTTP_HEADER}
+        COOKIE_FILE = GetCookieDir('mystream.cookie')
+        
+        urlParams = {'header':HTTP_HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': COOKIE_FILE }
         sts, data = self.cm.getPage(baseUrl, urlParams)
         if not sts: return False
         cUrl = self.cm.meta['url']
@@ -10716,6 +10716,18 @@ class pageParser(CaptchaHelper):
                 videoTab.append({'name':'[%s] %s %s' % (type, domain, label), 'url':strwithmeta(url, {'User-Agent': HTTP_HEADER['User-Agent'], 'Referer':cUrl})})
 
         if not videoTab:
+            
+            # search for string similar to "(new Image()).src = '/view/i7AuNg/dWdgAx/g28eeoODv7?msql7c=' + msql7c;"
+            view_url = re.findall("\(new Image\(\)\)\.src = '([^']+)' \+", data)
+            if view_url:
+                view_url = 'https://' + domain + view_url[0] + "0"
+                HTTP_HEADER['accept'] = 'image/webp,image/apng,image/*,*/*;q=0.8'
+                HTTP_HEADER['accept-encoding'] = 'gzip, deflate, br'
+                urlParams = {'header':HTTP_HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': COOKIE_FILE }
+                
+                sts, view_data = self.cm.getPage(view_url, urlParams)
+            
+            # search for javascript to decode with link to video
             data = ph.findall(data, ('<script', '>'), '</script>', flags=0)
             for item in data:
                 if 'ﾟωﾟﾉ=' in item:
@@ -10727,11 +10739,12 @@ class pageParser(CaptchaHelper):
 
                     urls = re.findall("'src', '([^']+)'", decoded)
                     for url in urls:
-                        url = strwithmeta( url, {'Referer':self.cm.meta['url']})
+                        url = strwithmeta( url, urlParams )
                         if 'mp4' in decoded:
-                            videoTab.append({'name': 'mp4', 'url': url, 'need_resolve':1})
+                            videoTab.append({'name': 'mp4', 'url': url})
                         elif 'mpeg' in decoded:
                             videoTab.extend(getDirectM3U8Playlist(url))
+                    
                     break
                     
         return videoTab
