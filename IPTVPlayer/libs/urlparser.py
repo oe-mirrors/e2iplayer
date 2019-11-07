@@ -36,6 +36,8 @@ from Plugins.Extensions.IPTVPlayer.iptvdm.iptvdh import DMHelper
 from Plugins.Extensions.IPTVPlayer.components.asynccall import iptv_execute, MainSessionWrapper
 from Plugins.Extensions.IPTVPlayer.tools.e2ijs import js_execute, js_execute_ext
 from Plugins.Extensions.IPTVPlayer.libs.e2ijson import loads as json_loads, dumps as json_dumps
+from Plugins.Extensions.IPTVPlayer.libs.aadecode import decode as aadecode 
+
 from Screens.MessageBox import MessageBox
 ###################################################
 # FOREIGN import
@@ -10717,20 +10719,21 @@ class pageParser(CaptchaHelper):
             data = ph.findall(data, ('<script', '>'), '</script>', flags=0)
             for item in data:
                 if 'ﾟωﾟﾉ=' in item:
-                    jscode = ['var e2i_sources=[],document={},element=function(e){this.name=e,this.data={},this.setAttribute=function(e,t){this.data[e]=t}},$=function(e){};document.createElement=function(e){if("source"==e)return e2i_sources.push(new element(e)),e2i_sources[e2i_sources.length-1]},document.append=function(e){},document.getElementById=function(){return document};']
-                    jscode.append(item)
-                    jscode.append('print(JSON.stringify(e2i_sources));')
-                    ret = js_execute( '\n'.join(jscode) )
-                    item = json_loads(ret['data'])
-                    for it in item:
-                        it = it['data']
-                        it['type'] = it.get('type', it['src'].split('?', 1)[0].rsplit('.', 1)[-1]).lower()
-                        url = strwithmeta(self.cm.getFullUrl(it['src'], self.cm.meta['url']), {'Referer':self.cm.meta['url']})
-                        if 'mp4' in it['type']:
-                            videoTab.append({'name':it.get('label', it['type']), 'url':url, 'need_resolve':1})
-                        elif 'mpeg' in it['type']:
+                    
+                    decoded = aadecode(item)
+                    printDBG('---------------------')
+                    printDBG(decoded)
+                    printDBG('---------------------')
+
+                    urls = re.findall("'src', '([^']+)'", decoded)
+                    for url in urls:
+                        url = strwithmeta( url, {'Referer':self.cm.meta['url']})
+                        if 'mp4' in decoded:
+                            videoTab.append({'name': 'mp4', 'url': url, 'need_resolve':1})
+                        elif 'mpeg' in decoded:
                             videoTab.extend(getDirectM3U8Playlist(url))
                     break
+                    
         return videoTab
     
     def parserVIDLOADCO(self, baseUrl):
