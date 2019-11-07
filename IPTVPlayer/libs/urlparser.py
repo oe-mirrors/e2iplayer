@@ -187,6 +187,7 @@ class urlparser:
                        'up2stream.com':        self.pp.parserVIDEOMEGA     ,
                        'vidto.me':             self.pp.parserVIDTO         ,
                        'vidstream.in':         self.pp.parserVIDSTREAM     ,
+                       'vidstream.to':         self.pp.parserVIDSTREAM     ,
                        'faststream.in':        self.pp.parserVIDSTREAM     ,
                        'video.rutube.ru':      self.pp.parserRUTUBE        ,
                        'rutube.ru':            self.pp.parserRUTUBE        ,
@@ -2568,11 +2569,27 @@ class pageParser(CaptchaHelper):
         return linksTab
 
     def parserVIDSTREAM(self, url):
-        sts, link = self.cm.getPage(url)
-        ID = re.search('name="id" value="(.+?)">', link)
-        FNAME = re.search('name="fname" value="(.+?)">', link)
-        HASH = re.search('name="hash" value="(.+?)">', link)
+        printDBG('parserVIDSTREAM baseUrl[%s]' % url)
+        HTTP_HEADER= {'User-Agent': 'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:68.0) Gecko/20100101 Firefox/68.0',
+                      'Accept': 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
+                      'Accept-Encoding':'gzip, deflate'
+                     }
+        COOKIE_FILE = GetCookieDir('vidstream.cookie')
+        http_params={'header':HTTP_HEADER, 'cookiefile':COOKIE_FILE, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True}
+
+        sts, data = self.cm.getPage(url, http_params)
+
+        if not sts: return
+#        printDBG("------------")
+#        printDBG(data)
+#        printDBG("------------")
+
+        ID = re.search('name="id" value="(.+?)">', data)
+        FNAME = re.search('name="fname" value="(.+?)">', data)
+        HASH = re.search('name="hash" value="(.+?)">', data)
+
         if ID and FNAME and HASH > 0:
+            # previous version
             GetIPTVSleep().Sleep(55)
             postdata = {'fname' : FNAME.group(1), 'id' : ID.group(1), 'hash' : HASH.group(1), 'imhuman' : 'Proceed to video', 'op' : 'download1', 'referer' : url, 'usr_login' : '' }
             sts, link = self.cm.getPage(url, {}, postdata)
@@ -2584,7 +2601,138 @@ class pageParser(CaptchaHelper):
             else:
                 return False
         else:
-            return False
+            # new
+            url2 = re.findall("<source src=[\"'](.*?)[\"']", data)
+            if '/' not in url2:
+                # look for javascript
+                script =''
+                tmp_script = re.findall("<script.*?>(.*?)</script>", data, re.S)
+                for s in tmp_script:
+                    if s.startswith('function'):
+                        script = s
+                        break
+
+                if script:
+                    #printDBG("------------")
+                    printDBG(script)
+                    printDBG("------------")
+
+                    #  model for step }(a, 0x1b4));
+                    # search for big list of words
+                    tmpStep = re.findall("}\(a ?,(0x[0-9a-f]{1,3})\)\);", script)
+                    if tmpStep:
+                        step = eval(tmpStep[0])
+                    else:
+                        step = 128
+
+                    printDBG("----> step: %s -> %s" % (tmpStep[0], step))
+
+                    # search post data
+                    # ,'data':{'_OvhoOHFYjej7GIe':'ok'}
+                    post_key = re.findall("'data':{'(_[0-9a-zA-Z]{10,20})':'ok'", script)
+                    if post_key:
+                        post_key = post_key[0]
+                        printDBG("post_key : '%s'" % post_key)
+                    else:
+                        printDBG("Not found post_key ... check code")
+                        return
+
+                    tmpVar = re.findall("(var a=\[.*?\];)", script)
+                    if tmpVar:
+                        wordList=[]
+                        var_list = tmpVar[0].replace('var a=','wordList=').replace("];","]").replace(";","|")
+                        printDBG("-----var_list-------")
+                        printDBG(var_list)
+                        #printDBG("------------")
+                        exec(var_list)
+                        #for i in range(0, 20):
+                        #    printDBG(wordList[i])
+
+                        # search for second list of vars
+                        tmpVar2 = re.findall(";e\(\);(var .*?)\$\('\*'\)", script, re.S)
+                        if tmpVar2:
+                            printDBG("------------")
+                            printDBG(tmpVar2[0])
+                            threeListNames = re.findall("var (_[a-zA-z0-9]{4,8})=\[\];" , tmpVar2[0])
+                            printDBG(str(threeListNames))
+                            for n in range(0, len(threeListNames)):
+                                tmpVar2[0] = tmpVar2[0].replace(threeListNames[n],"charList%s" % n)
+                            printDBG("-------tmpVar2-----")
+                            printDBG(tmpVar2[0])
+
+                            # substitutions of terms from first list
+                            printDBG("------------ len(wordList) %s" % len(wordList))
+                            for i in range(0,len(wordList)):
+                                r = "b('0x{0:x}')".format(i)
+                                j = i + step
+                                while j >= len(wordList):
+                                    j = j - len(wordList)
+                                tmpVar2[0] = tmpVar2[0].replace(r, "'%s'" % wordList[j])
+
+                            var2_list=tmpVar2[0].split(';')
+                            printDBG("------------ var2_list %s" % str(var2_list))
+                            # populate array
+                            charList0={}
+                            charList1={}
+                            charList2={}
+                            for v in var2_list:
+                                if v.startswith('charList'):
+                                    exec(v)
+
+                            bigString=''
+                            for i in range(0,len(charList2)):
+                                #printDBG(charList2[i])
+                                if charList2[i] in charList1:
+                                    bigString = bigString + charList1[charList2[i]]
+                                #else:
+                                    #printDBG("missing key %s " % charList2[i])
+                            printDBG("------------ bigString %s" % bigString)
+
+#                            self.cm.clearCookie(COOKIE_FILE, ['PHPSID'])
+
+                            sts, data = self.cm.getPage("https://vidstream.to/cv.php", http_params)
+                            zone = self.cm.ph.getSearchGroups(data, '''name=['"]zone['"] value=['"]([^'^"]+?)['"]''')[0]
+                            rb = self.cm.ph.getSearchGroups(data, '''name=['"]rb['"] value=['"]([^'^"]+?)['"]''')[0]
+                            printDBG("------------ zone[%s] rb[%s]" % (zone, rb))
+
+#                            postData={ 'rb' : rb, 'zone' : zone}
+#                            sts, data = self.cm.getPage("http://deloplen.com/?z={0}".format(zone), http_params, postData)
+#                            printDBG("------------ deloplen[%s]" % data)
+
+                            cv_url = "https://vidstream.to/cv.php?verify=" + bigString
+                            postData={ post_key : 'ok'}
+                            AJAX_HEADER = {
+                                'Accept': '*/*',
+                                'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
+                                'Origin': self.cm.getBaseUrl(url),
+                                'Referer': url,
+                                'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/73.0.3683.103 Safari/537.36',
+                                'X-Requested-With': 'XMLHttpRequest'
+                            }
+                            sts, ret = self.cm.getPage(cv_url, {'header':AJAX_HEADER, 'cookiefile':COOKIE_FILE, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True}, postData)
+                            if sts:
+                                printDBG("------------ ret[%s]" % ret)
+                                if 'ok' in ret:
+                                    if '?' in url:
+                                        url2 = url + "&r"
+                                    else:
+                                        url2 = url + "?r"
+                                    # retry to load the page
+                                    GetIPTVSleep().Sleep(1)
+                                    http_params['header']['Referer'] = url
+                                    sts, data = self.cm.getPage(url2, http_params)
+#                                    if sts:
+#                                        printDBG("------------")
+#                                        printDBG(data)
+            urlTab=[]
+            urlTab = self._getSources(data)
+            if len(urlTab)==0: urlTab = self._findLinks(data, contain='mp4')
+            url3 = re.findall("<source src=[\"'](.*?)[\"']", data)
+            if len(urlTab)==0 and url3:
+                printDBG("------------ url3 %s" % url3)
+                url3 = self.cm.getFullUrl(url3[0], self.cm.getBaseUrl(url))
+                urlTab.extend(getDirectM3U8Playlist(url3, checkExt=False, variantCheck=True, checkContent=True, sortWithMaxBitrate=99999999))
+            return urlTab
         
     def parserYANDEX(self, url):
         DEFAULT_FORMAT = 'mpeg4_low'

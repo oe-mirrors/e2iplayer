@@ -170,7 +170,7 @@ class EgyBest(CBaseHostClass):
                 icon  = self.getFullIconUrl(self.cm.ph.getSearchGroups(item, '''src=['"]([^'^"]+?)['"]''')[0])
                 tmp = self.cm.ph.getAllItemsBeetwenMarkers(item, '<span', '</span>')
                 if tmp == []: continue
-                title = self.cleanHtmlStr(tmp[0]) 
+                title = self.cleanHtmlStr(tmp[1])
                 desc  = ''
                 for d in tmp[1:]:
                     d = self.cleanHtmlStr(d)
@@ -204,7 +204,14 @@ class EgyBest(CBaseHostClass):
             params.update({'good_for_fav':False, 'url':url, 'title':title, 'icon':icon})
             self.addVideo(params)
             num += 1
-            
+
+        # embedded player
+        frame_url = self.cm.ph.getSearchGroups(data, '''<iframe.*?src=['"]([^'^"]+?)['"]''')[0]
+        params = dict(cItem)
+        params.update({'good_for_fav':False, 'url': frame_url, 'title': (cItem['title'] + ' - embed player'), 'icon':cItem['icon'], 'need_resolve':1})
+        printDBG(str(params))
+        self.addVideo(params)
+
         url = self.getFullUrl(self.cm.ph.getSearchGroups(data, '''href=['"]([^'^"]+?/episodes)['"]''')[0])
         if self.cm.isValidUrl(url):
             sts, data = self.getPage(url)
@@ -302,7 +309,7 @@ class EgyBest(CBaseHostClass):
                 url = self.cm.ph.getSearchGroups(it, '''href=['"]([^'^"]+?)['"]''')[0]
                 if url == '': url = self.cm.ph.getSearchGroups(it, '''url=['"]([^'^"]+?)['"]''')[0]
                 call = self.cm.ph.getSearchGroups(it, '''data\-call=['"]([^'^"]+?)['"]''')[0]
-                if url != '': retTab.append({'name':'%s: %s' % (self.cleanHtmlStr(it), name), 'url':strwithmeta(self.getFullUrl(url), {'Referer':cItem['url']}), 'need_resolve':1})
+                if url != '' and '&v=1' in url: retTab.append({'name':'%s: %s' % (self.cleanHtmlStr(it), name), 'url':strwithmeta(self.getFullUrl(url), {'Referer':cItem['url']}), 'need_resolve':1})
                 if call != '': dwnTab.append({'name':'%s: %s' % (self.cleanHtmlStr(it), name), 'url':strwithmeta(call, {'priv_api_call':True, 'Referer':cItem['url']}), 'need_resolve':1})
         
         retTab.extend(playTab)
