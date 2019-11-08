@@ -517,7 +517,8 @@ class Raiplay(CBaseHostClass):
                 dataDominio= re.findall("data-dominio=\"(.*?)\"", data)
                 dataTematica = re.findall("data-tematica=\"(.*?)\"", data)
                 if dataTematica:
-                    del(dataTematica[0])
+                    if len(dataTematica)>1:
+                        del(dataTematica[0])
                     #printDBG(str(dataDominio))
                     #printDBG(str(dataTematica))
                     title=dataTematica[0].split('|')[0]
