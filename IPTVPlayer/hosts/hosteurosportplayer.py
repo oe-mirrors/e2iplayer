@@ -486,7 +486,9 @@ class EuroSportPlayer(CBaseHostClass):
         if sts:
             data = json_loads(data)
             if data['data']['attributes']['anonymous']:
-                GetIPTVNotify().push(_("Connected as anonymous") + "\n" + _("Login needed"), 'error', 10)
+                printDBG("------------------------EUROSPORT------------------------------------")
+                printDBG("connected as anonymous: login needed")
+                printDBG("---------------------------------------------------------------------")
                 self.tryTologin()
             else:
                 printDBG("------------------------EUROSPORT------------------------------------")
