@@ -147,9 +147,14 @@ class ustvgo(CBaseHostClass):
         
     def getLinksForVideo(self, cItem):
         printDBG("ustvgo.getLinksForVideo [%s]" % cItem)
-        
+
         sts, data = self.getPage(cItem['url'])
         if not sts: return
+
+        if 'player.setup' not in data:
+            url = self.cm.ph.getSearchGroups(data, '''src=['"]([^"^']+?link\.php[^"^']*?)['"]''', 1, True)[0]
+            sts, data = self.getPage(url)
+            if not sts: return
 
         data = self.cm.ph.getDataBeetwenMarkers(data, 'player.setup({', '})', False)[1]
         url  = self.cm.ph.getSearchGroups(data, '''(https?://[^'^"]+?)['"]''')[0] 
