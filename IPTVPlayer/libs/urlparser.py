@@ -492,6 +492,7 @@ class urlparser:
                        'vidsso.com':            self.pp.parserVIDSSO        ,
                        'vidstodo.me':           self.pp.parserVIDSTODOME     ,
                        'vidstream.in':          self.pp.parserVIDSTREAM     ,
+                       'vidstream.to':          self.pp.parserVIDSTREAM     ,
                        'vidstream.top':         self.pp.parserVIDSTREAM     ,
                        'vidstreamup.com':       self.pp.parserVIUCLIPS    ,
                        'vidto.me':              self.pp.parserVIDTO         ,
@@ -2586,6 +2587,7 @@ class pageParser(CaptchaHelper):
         else:
             # new
             url2 = re.findall("<source src=[\"'](.*?)[\"']", data)
+            # controllare
             if url2:
                 url2 = self.cm.getFullUrl(url2[0], self.cm.getBaseUrl(url))
                 printDBG("---------> %s " % url )
@@ -9222,8 +9224,9 @@ class pageParser(CaptchaHelper):
         
     def parseNETUTV(self, url):
         printDBG("parseNETUTV url[%s]" % url)
-        if 'hqq.none' in urlparser.getDomain(url):
-            url = strwithmeta(url.replace('hqq.none', 'hqq.watch'), strwithmeta(url).meta)
+        
+        new_url = url.replace("/watch_video.php?v=", "/player/embed_player.php?vid=").replace('https://netu.tv/', 'http://hqq.watch/').replace('https://waaw.tv/', 'http://hqq.watch/')
+        url = strwithmeta(new_url, strwithmeta(url).meta)
         
         url += '&'
         vid = self.cm.ph.getSearchGroups(url, '''vid=([0-9a-zA-Z]+?)[^0-9^a-z^A-Z]''')[0]
@@ -9243,7 +9246,7 @@ class pageParser(CaptchaHelper):
         ipData = json_loads(ipData)
 
         printDBG("===")
-        printDBG(ipData)
+        printDBG(str(ipData))
         printDBG("===")
 
         if 'hash.php?hash' in url:
@@ -9258,12 +9261,14 @@ class pageParser(CaptchaHelper):
             return False
         
         playerUrl = "https://hqq.watch/player/embed_player.php?vid=%s&autoplay=no" % vid
-        if hashFrom != '': playerUrl += '&hash_from=' + hashFrom
+        if hashFrom != '': 
+            playerUrl += '&hash_from=' + hashFrom
         referer = strwithmeta(url).meta.get('Referer', playerUrl)
         
         #HTTP_HEADER['Referer'] = url
         sts, data = self.cm.getPage(playerUrl, params)
-        if not sts: return False
+        if not sts: 
+            return False
         cUrl = data.meta['url']
         
         def _getEvalData(data):
@@ -9840,11 +9845,12 @@ class pageParser(CaptchaHelper):
         baseUrl = strwithmeta(baseUrl)
         referer = baseUrl.meta.get('Referer', baseUrl)
         
-        HTTP_HEADER = { 'User-Agent':'Mozilla/5.0', 'Referer':referer}
+        HTTP_HEADER = { 'User-Agent':'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/76.0.3809.132 Safari/537.36', 'Referer':referer}
         params = {'header':HTTP_HEADER}
         
         sts, data = self.cm.getPage(baseUrl, params)
-        if not sts: return []
+        if not sts: 
+            return []
         
         urlTab = []
         tmp = self.cm.ph.getAllItemsBeetwenMarkers(data, '<source ', '>', False, False)
@@ -9854,32 +9860,44 @@ class pageParser(CaptchaHelper):
             tmp.extend(item.split('},'))
         
         uniqueUrls = []
+        printDBG("-------found sources-----")
+        printDBG(str(tmp))
+        n_link=0
         for item in tmp:
             url  = self.cm.ph.getSearchGroups(item, '''src['"]?\s*[:=]\s*?['"]([^"^']+?)['"]''')[0]
-            if url == '': url = self.cm.ph.getSearchGroups(item, '''file['"]?\s*[:=]\s*?['"]([^"^']+?)['"]''')[0]
-            if 'error' in url: continue
-            if url.startswith('//'): url = 'http:' + url
-            if not self.cm.isValidUrl(url): continue
-                
+            if url == '': 
+                url = self.cm.ph.getSearchGroups(item, '''file['"]?\s*[:=]\s*?['"]([^"^']+?)['"]''')[0]
+            if 'error' in url: 
+                continue
+            if url.startswith('//'): 
+                url = 'http:' + url
+            if not self.cm.isValidUrl(url): 
+                continue
+
+            n_link = n_link + 1
             type = self.cm.ph.getSearchGroups(item, '''type['"]?\s*[:=]\s*?['"]([^"^']+?)['"]''')[0].lower()
             if 'video/mp4' in item or 'mp4' in type:
                 res  = self.cm.ph.getSearchGroups(item, '''res['"]?\s*[:=]\s*?['"]([^"^']+?)['"]''')[0]
                 label = self.cm.ph.getSearchGroups(item, '''label['"]?\s*[:=]\s*?['"]([^"^']+?)['"]''')[0]
-                if label == '': label = res
+                if label == '': 
+                    label = res
                 if url not in uniqueUrls:
                     url = urlparser.decorateUrl(url, {'Referer':baseUrl,  'User-Agent':HTTP_HEADER['User-Agent']})
                     urlTab.append({'name':'{0}'.format(label), 'url':url})
                     uniqueUrls.append(url)
-            elif 'mpegurl' in item or 'mpegurl' in type:
+            elif 'mpegurl' in item or 'mpegurl' in type or 'hls' in type:
                 if url not in uniqueUrls:
                     url = urlparser.decorateUrl(url, {'iptv_proto':'m3u8', 'Referer':baseUrl, 'Origin':urlparser.getDomain(baseUrl, False), 'User-Agent':HTTP_HEADER['User-Agent']})
-                    tmpTab = getDirectM3U8Playlist(url, checkExt=True, checkContent=True)
-                    urlTab.extend(tmpTab)
+                    tmpTab = getDirectM3U8Playlist(url, checkExt=True, checkContent=True, sortWithMaxBitrate=99999999)
+                    for t in tmpTab:
+                        t2 = t
+                        t2['name'] = 'link %s|%s' % (n_link, t['name'])
+                        urlTab.append(t2)
                     uniqueUrls.append(url)
         
         if 0 == len(urlTab):
             tmp = self.cm.ph.getDataBeetwenNodes(data, ('<div ', 'videocontent'), ('</div', '>'))[1]
-            printDBG(tmp)
+            #printDBG(tmp)
             url = self.cm.ph.getSearchGroups(data, '''<iframe[^>]+?src=["'](https?://[^"^']+?)["']''', 1, True)[0]
             up =  urlparser()
             if self.cm.isValidUrl(url) and up.getDomain(url) != up.getDomain(baseUrl):
