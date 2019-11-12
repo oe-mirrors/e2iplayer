@@ -1,5 +1,8 @@
 # E2iPlayer for E2
 
+If you want to join the project, read wiki page 
+https://gitlab.com/maxbambi/e2iplayer/wikis/Adding-a-new-host-in-E2iplayer-(WIP)
+
 This is a fork of original @samsamsam E2iPlayer.
 It's not a copy of PRIVATE version, that I haven't got!!
 I have made some changes to italian section of plugin, that I'm interesting in.
