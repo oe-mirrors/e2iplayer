@@ -332,6 +332,7 @@ class urlparser:
                        'player.veuclips.com':   self.pp.parserVIUCLIPS	   ,   
                        'onet.pl':               self.pp.parserONETTV        ,
                        'onet.tv':               self.pp.parserONETTV        ,
+                       'onlystream.tv':         self.pp.parserONLYSTREAM    ,
                        'openlive.org':          self.pp.parserOPENLIVEORG   ,
                        'openload.co':           self.pp.parserOPENLOADIO    ,
                        'openload.info':         self.pp.parserEXASHARECOM   ,
@@ -11930,4 +11931,62 @@ class pageParser(CaptchaHelper):
         for v in data['data']:
             urlsTab.append({'name': v['label'], 'url': v['file']})
             
+        return urlsTab
+
+    def parserONLYSTREAM(self, baseUrl):
+        printDBG("parserONLYSTREAM baseUrl[%s]" % baseUrl)
+
+        def checkTxt(txt):
+            txt = txt.replace('\n', ' ')
+            if txt.find('file:'):
+                txt = txt.replace('file:', '"file":')
+            if txt.find('label:'):
+                txt = txt.replace('label:', '"label":')
+            if txt.find('kind:'):
+                txt = txt.replace('kind:', '"kind":')
+            return txt
+                
+        sts, data = self.cm.getPage(baseUrl)
+        if not sts:
+            return []
+
+        urlsTab=[]
+        subTracks = []
+        
+        # subtitles search
+        t = re.findall("tracks: \[(.*?)\]", data, re.S)
+        if t:
+            txt = checkTxt("[" + t[0] + "]")
+            printDBG(txt)
+            tracks = json_loads(txt)
+            printDBG(str(tracks))
+            
+            for tr in tracks:
+                if tr.get('kind','') == 'captions':
+                    printDBG(str(tr))
+                    srtUrl = tr.get('file','')
+                    if srtUrl != '' and not ('empty.srt' in srtUrl):
+                        label = tr.get('label', 'srt')
+                        srtFormat = srtUrl[-3:]
+                        params = {'title': label, 'url': srtUrl, 'lang': label.lower()[:3], 'format': srtFormat}
+                        printDBG(str(params))
+                        subTracks.append(params)
+                    
+        # stream search
+        s = re.findall("sources: \[(.*?)\]", data, re.S)
+        if not s:
+            return []
+        
+        txt = checkTxt("[" + s[0] + "]")
+        printDBG(txt)
+        
+        links = json_loads(txt)
+        #printDBG(str(links))
+        for l in links:
+            if 'file' in l:
+                url = urlparser.decorateUrl(l['file'], {'Referer' : baseUrl, 'external_sub_tracks':subTracks})
+                params = {'name': l.get('label', 'link') , 'url': url}
+                printDBG(params)
+                urlsTab.append(params)
+        
         return urlsTab
