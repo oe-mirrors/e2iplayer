@@ -65,6 +65,7 @@ hostfilmstreamhdit
 hostfilmstreamvkcom
 hostforjatn
 hostfreediscpl
+hostfullmatchtvcom
 hostgamatocom
 hostgamatotvme
 hostgledalica
