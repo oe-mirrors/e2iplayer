@@ -11634,28 +11634,43 @@ class pageParser(CaptchaHelper):
         #example  https://supervideo.tv/embed-k9aicjz32dcj.html
 
         sts, data = self.cm.getPage(baseUrl)
-        if not sts: return False
+        if not sts: 
+            return False
+
+        vidTab = []
+        
+        # readable script
+        if 'player.updateSrc({src:' in data:
             
+            url = self.cm.ph.getSearchGroups(data, "player.updateSrc\({src: \"([^\"]+?)\"")[0]
+            printDBG(url)
+            if url[-4:] == 'm3u8':
+                vidTab.extend(getDirectM3U8Playlist(url, checkExt=True, variantCheck=True, checkContent=True, sortWithMaxBitrate=99999999))
+            else:
+                vidTab.append({'name':title, 'url':url})
+        
+        return vidTab
+    
+        # with crypted script
         tmpTab = self.cm.ph.getAllItemsBeetwenMarkers(data, ">eval(", '</script>')
         for tmp in tmpTab:
             tmp2 = unpackJSPlayerParams(tmp, VIDUPME_decryptPlayerParams, 0, r2=True)
 
-        printDBG("=======================================")
-        printDBG(tmp2)
-        printDBG("=======================================")
+            printDBG("=======================================")
+            printDBG(tmp2)
+            printDBG("=======================================")
 
-        vidTab = []
 
-      	title = self.cm.ph.getSearchGroups(tmp2, 'media:{title:"([^"]+?)"')[0]
-        urls_text = self.cm.ph.getDataBeetwenNodes(tmp2, 'sources:[', ']')[1]
-        printDBG(urls_text)
-        urls = eval(urls_text[8:])
-        for u in urls:
-            printDBG(u)
-            if u[-4:] == 'm3u8':
-                vidTab.extend(getDirectM3U8Playlist(u, checkExt=True, variantCheck=True, checkContent=True, sortWithMaxBitrate=99999999))
-            else:
-                vidTab.append({'name':title, 'url':u})
+            title = self.cm.ph.getSearchGroups(tmp2, 'media:{title:"([^"]+?)"')[0]
+            urls_text = self.cm.ph.getDataBeetwenNodes(tmp2, 'sources:[', ']')[1]
+            printDBG(urls_text)
+            urls = eval(urls_text[8:])
+            for u in urls:
+                printDBG(u)
+                if u[-4:] == 'm3u8':
+                    vidTab.extend(getDirectM3U8Playlist(u, checkExt=True, variantCheck=True, checkContent=True, sortWithMaxBitrate=99999999))
+                else:
+                    vidTab.append({'name':title, 'url':u})
 
         return vidTab
 
