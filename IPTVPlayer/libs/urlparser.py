@@ -291,6 +291,7 @@ class urlparser:
                        'megustavid.com':        self.pp.parserMEGUSTAVID    ,
                        'mightyupload.com':      self.pp.parserMIGHTYUPLOAD  ,
                        'miplayer.net':          self.pp.parserMIPLAYERNET   ,
+                       'mixdrop.co':            self.pp.parserMIXDROP       ,
                        'moevideo.net':          self.pp.parserPLAYEREPLAY   ,
                        'moonwalk.cc':           self.pp.parserMOONWALKCC    ,
                        'moshahda.net':          self.pp.parseMOSHAHDANET    ,
@@ -12005,3 +12006,52 @@ class pageParser(CaptchaHelper):
                 urlsTab.append(params)
         
         return urlsTab
+    
+    def parserMIXDROP(self, baseUrl):
+        printDBG("parserMIXDROP baseUrl[%s]" % baseUrl)
+        # example :https://mixdrop.co/f/1f13jq
+        #          https://mixdrop.co/e/1f13jq
+
+        
+        if '/f/' in baseUrl:
+            url = baseUrl.replace('/f/','/e/')
+        else:
+            url = baseUrl
+            
+        sts, data = self.cm.getPage(url)
+        if not sts:
+            return []
+
+        urlsTab=[]
+        # decrypt packed scripts
+        scripts = re.findall(r"(eval\s?\(function\(p,a,c,k,e,d.*?)</script>", data,re.S)
+        for script in scripts:
+            script = script + "\n"
+            # mods
+            script = script.replace("eval(function(p,a,c,k,e,d","pippo = function(p,a,c,k,e,d")
+            script = script.replace("return p}(", "print(p)}\n\npippo(")
+            script = script.replace("))\n",");\n")
+
+            # duktape
+            ret = js_execute( script )
+            decoded = ret['data']
+            printDBG('------------------------------')
+            printDBG(decoded)
+            printDBG('------------------------------')
+            
+            # found a part similar to this one:
+            #MDCore.vsrc="//s-delivery4.mixdrop.co/v/cd5b9db3d4d79b8e27f4b8e9e01b0f89.mp4?s=n4gHzKKmauonkMNudSwDkQ&e=1573868130"
+            link = re.findall("vsrc=\"([^\"]+?)\"", decoded)
+            if link:
+                if link[0].startswith('//'):
+                    video_url = "https:" + link[0]
+                else:
+                    video_url = link[0]
+                video_url = urlparser.decorateUrl(video_url, {'Referer' : baseUrl})
+                
+                params = {'name': 'link', 'url': video_url}
+                printDBG(params)
+                urlsTab.append(params)
+        
+        return urlsTab
+                
