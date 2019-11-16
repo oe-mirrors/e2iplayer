@@ -454,6 +454,7 @@ class urlparser:
                        'userscloud.com':        self.pp.parserUSERSCLOUDCOM ,
                        'ustream.tv':            self.pp.parserUSTREAMTV     ,
                        'ustreamix.com':         self.pp.parserUSTREAMIXCOM  ,
+                       'vcrypt.net':            self.pp.parserVCRYPT        ,
                        'vcstream.to':           self.pp.parserVCSTREAMTO     ,
                        'veehd.com':             self.pp.parseVEEHDCOM       ,
                        'veoh.com':              self.pp.parserVEOHCOM        ,
@@ -9229,6 +9230,7 @@ class pageParser(CaptchaHelper):
     def parseNETUTV(self, url):
         printDBG("parseNETUTV url[%s]" % url)
         
+		
         new_url = url.replace("/watch_video.php?v=", "/player/embed_player.php?vid=").replace('https://netu.tv/', 'http://hqq.watch/').replace('https://waaw.tv/', 'http://hqq.watch/')
         url = strwithmeta(new_url, strwithmeta(url).meta)
         
@@ -12041,6 +12043,14 @@ class pageParser(CaptchaHelper):
         if not sts:
             return []
 
+        error = self.cm.ph.getDataBeetwenNodes(data, '<div class="tb error">', '</p>')[1]
+
+        if error:
+            text = clean_html(error)
+            SetIPTVPlayerLastHostError(text)
+            return []
+
+
         urlsTab=[]
         # decrypt packed scripts
         scripts = re.findall(r"(eval\s?\(function\(p,a,c,k,e,d.*?)</script>", data,re.S)
@@ -12074,3 +12084,87 @@ class pageParser(CaptchaHelper):
         
         return urlsTab
                 
+    def parserVCRYPT(self, baseUrl):
+        printDBG("parserVCRYPT baseUrl[%s]" % baseUrl)
+
+        for i in range(3):
+            sts, data = self.cm.getPage(baseUrl, {'header':{'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/76.0.3809.132 Safari/537.36'}, 'use_cookie':1, 'save_cookie':1,'load_cookie':1, 'cookiefile': GetCookieDir("vcrypt.cookie")})
+            if not sts:
+                return []
+
+        printDBG('**********************')
+        printDBG(data)
+        printDBG('**********************')
+        
+        link_tag = self.cm.ph.getDataBeetwenNodes(data, ('<a','>',"'stream'"), '<a>')[1]
+        printDBG(link_tag)
+        link_url = self.cm.ph.getSearchGroups(link_tag, "href=[\"']([^\"^']+?)[\"']", 1, True)[0]
+        
+        if link_url:
+            return urlparser().getVideoLinkExt(link_url)
+        else:
+            return []
+
+    def parserWSTREAMVIDEO(self, baseUrl):
+        printDBG("parserWSTREAMVIDEO baseUrl[%s]" % baseUrl)
+
+        def checkTxt(txt):
+            txt = txt.replace('\n', ' ')
+            if txt.find('file:'):
+                txt = txt.replace('file:', '"file":')
+            if txt.find('label:'):
+                txt = txt.replace('label:', '"label":')
+            if txt.find('kind:'):
+                txt = txt.replace('kind:', '"kind":')
+            if txt.find('res:'):
+                txt = txt.replace('res:', '"res":')
+            if txt.find('src:'):
+                txt = txt.replace('src:', '"src":')
+            if txt.find('type:'):
+                txt = txt.replace('type:', '"type":')
+                return txt
+
+        sts, data = self.cm.getPage(baseUrl)
+        if not sts:
+            return []
+
+        #printDBG(data)
+        
+        urlsTab = []
+        # decrypt packed scripts
+        scripts = re.findall(r"(eval\s?\(function\(p,a,c,k,e,d.*?)</script>", data,re.S)
+        for script in scripts:
+            script = script + "\n"
+            # mods
+            script = script.replace("eval(function(p,a,c,k,e,d","pippo = function(p,a,c,k,e,d")
+            script = script.replace("return p}(", "print(p)}\n\npippo(")
+            script = script.replace("))\n",");\n")
+
+            # duktape
+            ret = js_execute( script )
+            decoded = ret['data']
+            printDBG('------------------------------')
+            printDBG(decoded)
+            printDBG('------------------------------')
+
+            # stream search
+            s = re.findall("sources: ?\[(.*?)\]", decoded, re.S)
+            if not s:
+                return []
+
+            txt = checkTxt("[" + s[0] + "]")
+            printDBG(txt)
+
+            links = json_loads(txt)
+            #printDBG(str(links))
+            for l in links:
+                if 'src' in l:
+                    url = urlparser.decorateUrl(l['src'], {'Referer' : baseUrl})
+                    if url.endswith('.m3u8'):
+                        urlsTab.extend(getDirectM3U8Playlist(url, checkExt=False, variantCheck=True, checkContent=True, sortWithMaxBitrate=99999999))
+                    else:
+                        params = {'name': l.get('label', 'link') , 'url': url}
+                        printDBG(params)
+                        urlsTab.append(params)
+
+            return urlsTab
