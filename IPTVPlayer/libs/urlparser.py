@@ -427,6 +427,7 @@ class urlparser:
                        'tubecloud.net':         self.pp.parserTUBECLOUD     ,
                        'tune.pk':               self.pp.parseTUNEPK         ,
                        'tunein.com':            self.pp.parserTUNEINCOM      ,
+                       'tunestream.net':        self.pp.parserONLYSTREAM    ,
                        'tusfiles.com':          self.pp.parserUSERSCLOUDCOM ,
                        'tusfiles.net':          self.pp.parserUSERSCLOUDCOM ,
                        'tvad.me':               self.pp.parserTHEVIDEOME    ,
@@ -12001,9 +12002,12 @@ class pageParser(CaptchaHelper):
         for l in links:
             if 'file' in l:
                 url = urlparser.decorateUrl(l['file'], {'Referer' : baseUrl, 'external_sub_tracks':subTracks})
-                params = {'name': l.get('label', 'link') , 'url': url}
-                printDBG(params)
-                urlsTab.append(params)
+                if url.endswith('.m3u8'):
+                    urlsTab.extend(getDirectM3U8Playlist(url, checkExt=False, variantCheck=True, checkContent=True, sortWithMaxBitrate=99999999))
+                else:
+                    params = {'name': l.get('label', 'link') , 'url': url}
+                    printDBG(params)
+                    urlsTab.append(params)
         
         return urlsTab
     
