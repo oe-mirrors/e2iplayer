@@ -406,6 +406,7 @@ class urlparser:
                        'streamix.cloud':        self.pp.parserSTREAMIXCLOUD  ,
                        'streamlive.to':         self.pp.paserSTREAMLIVETO   ,
                        'streamo.tv':            self.pp.parserIITV          ,
+                       'streamhoe.online':      self.pp.parserFEMBED     ,
                        'streamplay.cc':         self.pp.parserSTREAMPLAYCC  ,
                        'streamplay.me':         self.pp.parserSTREAMPLAYTO   ,
                        'streamplay.to':         self.pp.parserSTREAMPLAYTO   ,
@@ -10723,6 +10724,14 @@ class pageParser(CaptchaHelper):
         domain = self.cm.getBaseUrl(cUrl, True)
 
         videoTab = []
+        
+        error = self.cm.ph.getDataBeetwenMarkers(data, '<span id="my-span">', '</span>',False)[1]
+        
+        if 'unable to find' in error:
+            SetIPTVPlayerLastHostError(error)
+            
+            return []
+        
         tmp = self.cm.ph.getDataBeetwenMarkers(data, '<video', '</video>')[1]
         tmp = self.cm.ph.getAllItemsBeetwenMarkers(tmp, '<source', '>')
         printDBG(tmp)
@@ -11919,6 +11928,7 @@ class pageParser(CaptchaHelper):
         #example:
         #https://www.fembed.com/v/e706eb-elm180dp
         #https://www.fembed.com/api/source/e706eb-elm180dp
+        #https://streamhoe.online/v/0w6p8blx3krz3r0
         
         baseUrl = baseUrl + '?'
         m = re.search("/(v|api/source)/(?P<id>.+)\?", baseUrl)
@@ -11943,6 +11953,11 @@ class pageParser(CaptchaHelper):
         
         printDBG(data)
         data = json_loads(data)
+        
+        if ('not found' in data['data']) or ('removed' in data['data']):
+            SetIPTVPlayerLastHostError(data['data'])
+            
+            return []
         
         urlsTab=[]
         for v in data['data']:
