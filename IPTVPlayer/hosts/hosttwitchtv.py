@@ -205,7 +205,7 @@ class Twitch(CBaseHostClass):
         try:
             cursor = ''
             data = json.loads(data)
-            for item in data[0]['data']['directories']['edges']:
+            for item in data[0]['data']['directoriesWithTags']['edges']:
                 cursor = jstr(item, 'cursor')
                 item = item['node']
                 if item['__typename'] == 'Game':
