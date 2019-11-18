@@ -560,6 +560,7 @@ class urlparser:
                        'toclipit.com':         self.pp.parserVIUCLIPS       ,
                        'onlystream.tv':        self.pp.parserONLYSTREAMTV   ,
                        'tunestream.net':       self.pp.parserONLYSTREAMTV   ,
+                       'jetload.net':          self.pp.parserONLYSTREAMTV   ,
                        'mixdrop.co':           self.pp.parserMIXDROP        ,
                     }
         return
@@ -12344,7 +12345,9 @@ class pageParser(CaptchaHelper):
             except Exception: pass
 
         urlTab=[]
-        urlTab = self.cm.ph.getSearchGroups(data, '''["'](https?://[^'^"]+?\.mp4(?:\?[^"^']+?)?)["']''', ignoreCase=True)[0]
+        url = self.cm.ph.getSearchGroups(data, '''["'](https?://[^'^"]+?\.mp4(?:\?[^"^']+?)?)["']''', ignoreCase=True)[0]
+        if url != '':
+            urlTab.append({'name':'mp4', 'url':url})
         hlsUrl = self.cm.ph.getSearchGroups(data, '''["'](https?://[^'^"]+?\.m3u8(?:\?[^"^']+?)?)["']''', ignoreCase=True)[0]
         if hlsUrl != '':
             hlsUrl = strwithmeta(hlsUrl, {'Origin':"https://" + urlparser.getDomain(baseUrl), 'Referer':baseUrl})

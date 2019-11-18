@@ -419,6 +419,11 @@ class EkinoTv(CBaseHostClass):
                 continue
             
             url = self.getFullUrl(self.cm.ph.getSearchGroups(data, '<iframe[^>]+?src="([^"]+?)"')[0])
+
+            if 'window.atob' in url:
+                player = self.cm.ph.getSearchGroups(data, '''player\s*=\s*['"]([^'^"]+?)['"]''')[0]
+                url = base64.b64decode(player)
+
             if not self.cm.isValidUrl(url):
                 url = self.getFullUrl(self.cm.ph.getSearchGroups(data, '''var\s+url\s*=\s*['"]([^'^"]+?)['"]''')[0])
             
