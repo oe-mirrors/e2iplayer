@@ -89,6 +89,22 @@ class VideoStarApi(CBaseHostClass, CaptchaHelper):
         printDBG("VideoStarApi.doLogin")
         
         logged = False
+
+        httpParams = dict(self.defaultParams)
+        actionUrl = self.getFullUrl('v1/user', 'api')
+        sts, data = self.cm.getPage(actionUrl, httpParams)
+        printDBG(">>> user >>>")
+        printDBG(data)
+        printDBG("<<<")
+        if sts:
+            try:
+                data = json_loads(data, '', True)
+                if '' != data['data']['token']:
+                    self.userToken = data['data']['token']
+                    return True, ''
+            except Exception:
+                printExc()
+
         loginUrl = self.getFullUrl('/login')
         errMessage = _("Get page \"%s\" error.")
         
@@ -104,18 +120,17 @@ class VideoStarApi(CBaseHostClass, CaptchaHelper):
                 token, errorMsgTab = self.processCaptcha(sitekey, loginUrl)
                 if token == '':
                     return False, errorMsgTab
-            post_data = '{"login":"%s","password":"%s","g-recaptcha-response":"%s","device":"web"}' % (login, password, token)
+            post_data = '{"login":"%s","password":"%s","g-recaptcha-response":"%s","permanent":"1","device":"web"}' % (login, password, token)
         else:
-            post_data = '{"login":"%s","password":"%s","device":"web"}' % (login, password)
+            post_data = '{"login":"%s","password":"%s","permanent":"1","device":"web"}' % (login, password)
 
         actionUrl = self.getFullUrl('v1/user_auth/login', 'api')
 
-        httpParams = dict(self.defaultParams)
         httpParams['header'] = dict(httpParams['header'])
         httpParams['header']['Referer'] = loginUrl
         httpParams['raw_post_data'] = True
         sts, data = self.cm.getPage(actionUrl, httpParams, post_data)
-        printDBG(">>>")
+        printDBG(">>> user_auth/login >>>")
         printDBG(data)
         printDBG("<<<")
         if sts:
@@ -134,13 +149,13 @@ class VideoStarApi(CBaseHostClass, CaptchaHelper):
                 return False, errMessage
         else:
             return False, (errMessage % actionUrl)
-        
+
         return False, _("Unknown error.")
     
     def getList(self, cItem):
         printDBG("VideoStarApi.getList")
         
-        rm(self.COOKIE_FILE)
+#        rm(self.COOKIE_FILE)
         
         self.informAboutGeoBlockingIfNeeded('PL')
         
