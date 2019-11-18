@@ -11939,7 +11939,7 @@ class pageParser(CaptchaHelper):
             return []
         
         video_id = m.group('id')
-        url = 'https://www.fembed.com/api/source/' + video_id
+        url = urlparser.getDomain(baseUrl, False) + 'api/source/' + video_id
         h = {
                 'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/76.0.3809.132 Safari/537.36',
                 'Accept': '*/*',
@@ -11965,6 +11965,7 @@ class pageParser(CaptchaHelper):
         for v in data['data']:
             urlsTab.append({'name': v['label'], 'url': v['file']})
             
+        
         return urlsTab
 
     def parserONLYSTREAM(self, baseUrl):
