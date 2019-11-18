@@ -12342,8 +12342,7 @@ class pageParser(CaptchaHelper):
             except Exception: pass
 
         urlTab=[]
-        urlTab = self._getSources(data)
-        if len(urlTab)==0: urlTab = self._findLinks(data, contain='mp4')
+        urlTab = self.cm.ph.getSearchGroups(data, '''["'](https?://[^'^"]+?\.mp4(?:\?[^"^']+?)?)["']''', ignoreCase=True)[0]
         hlsUrl = self.cm.ph.getSearchGroups(data, '''["'](https?://[^'^"]+?\.m3u8(?:\?[^"^']+?)?)["']''', ignoreCase=True)[0]
         if hlsUrl != '':
             hlsUrl = strwithmeta(hlsUrl, {'Origin':"https://" + urlparser.getDomain(baseUrl), 'Referer':baseUrl})
