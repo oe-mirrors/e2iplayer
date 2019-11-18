@@ -170,6 +170,7 @@ class urlparser:
                        'caston.tv':             self.pp.parseCASTONTV       ,
                        'castto.me':             self.pp.parserCASTTOME      ,
                        'cda.pl':                self.pp.parserCDA           ,
+                       'cercafilm.net':         self.pp.parserFEMBED        ,
                        'cfiles.net':            self.pp.parserUPLOAD         ,
                        'chefti.info':           self.pp.parserEXASHARECOM   ,
                        'clicknupload.link':     self.pp.parserUPLOAD         ,
@@ -11931,6 +11932,7 @@ class pageParser(CaptchaHelper):
         #https://www.fembed.com/v/e706eb-elm180dp
         #https://www.fembed.com/api/source/e706eb-elm180dp
         #https://streamhoe.online/v/0w6p8blx3krz3r0
+        #https://cercafilm.net/v/80w1lh8z4w8-1en
         
         baseUrl = baseUrl + '?'
         m = re.search("/(v|api/source)/(?P<id>.+)\?", baseUrl)
