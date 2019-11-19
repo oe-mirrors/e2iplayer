@@ -2559,15 +2559,16 @@ class pageParser(CaptchaHelper):
 
     def parserVIDSTREAM(self, url):
         printDBG('parserVIDSTREAM baseUrl[%s]' % url)
-        HTTP_HEADER= {'User-Agent': 'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:68.0) Gecko/20100101 Firefox/68.0', 
+        HTTP_HEADER= {'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/73.0.3683.103 Safari/537.36', 
                       'Accept': 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8', 
                       'Accept-Encoding':'gzip, deflate' 
                      }
         COOKIE_FILE = GetCookieDir('vidstream.cookie') 
-        http_params={'header':HTTP_HEADER, 'cookiefile':COOKIE_FILE, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True}
+        http_params={'header': HTTP_HEADER, 'cookiefile':COOKIE_FILE, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True}
         
         sts, data = self.cm.getPage(url, http_params)
 
+		
         if not sts: return
         printDBG("------------")
         printDBG(data)
@@ -2683,9 +2684,9 @@ class pageParser(CaptchaHelper):
                             printDBG("------------")
                             printDBG(bigString)
 
-                            GetIPTVSleep().Sleep(2)
+                            sts, data = self.cm.getPage(urlparser.getDomain(url, False) + "cv.php", http_params)
                             
-                            cv_url = "https://vidstream.top/cv.php?verify=" + bigString
+                            cv_url = urlparser.getDomain(url, False) + "cv.php?verify=" + bigString
                             postData={ post_key : 'ok'}
                             
                             AJAX_HEADER = {
@@ -2697,7 +2698,7 @@ class pageParser(CaptchaHelper):
                                 'X-Requested-With': 'XMLHttpRequest'
                             }
 
-                            sts, ret = self.cm.getPage(cv_url, {'header':AJAX_HEADER, 'cookiefile':COOKIE_FILE, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True}, postData)
+                            sts, ret = self.cm.getPage(cv_url, {'header': AJAX_HEADER, 'cookiefile':COOKIE_FILE, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True}, postData)
                             if sts:
                                 printDBG("------------")
                                 printDBG(ret)
@@ -2708,7 +2709,7 @@ class pageParser(CaptchaHelper):
                                         url2 = url + "?r"
 
                                     # retry to load the page
-                                    GetIPTVSleep().Sleep(3)
+                                    GetIPTVSleep().Sleep(1)
                                     http_params['header']['Referer'] = url
                                     sts, data = self.cm.getPage(url2, http_params)
                                     if sts:

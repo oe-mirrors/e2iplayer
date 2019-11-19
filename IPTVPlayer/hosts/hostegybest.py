@@ -40,15 +40,15 @@ def GetConfigList():
     return optionList
 ###################################################
 def gettytul():
-    return 'http://bear.egybest.site/'
+    return 'https://beal.egybest.xyz/'
 
 class EgyBest(CBaseHostClass):
     
     def __init__(self):
         CBaseHostClass.__init__(self, {'history':'egy.best', 'cookie':'egy.best.cookie'})
-        self.DEFAULT_ICON_URL = 'http://cdn.egy.best/static/img/egybest_logo.png'
+        self.DEFAULT_ICON_URL = 'https://cdn-static.egybest.net/static/img/egybest_logo_small.png'
         self.USER_AGENT = 'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:40.0) Gecko/20100101 Firefox/40.0'
-        self.MAIN_URL = 'http://bear.egybest.site/'
+        self.MAIN_URL = 'https://beal.egybest.xyz/'
         self.HEADER = {'User-Agent': self.USER_AGENT, 'DNT':'1', 'Accept': 'text/html', 'Accept-Encoding':'gzip, deflate', 'Referer':self.getMainUrl(), 'Origin':self.getMainUrl()}
         self.AJAX_HEADER = dict(self.HEADER)
         self.AJAX_HEADER.update( {'X-Requested-With': 'XMLHttpRequest', 'Accept-Encoding':'gzip, deflate', 'Content-Type':'application/x-www-form-urlencoded; charset=UTF-8', 'Accept':'application/json, text/javascript, */*; q=0.01'} )
@@ -61,7 +61,7 @@ class EgyBest(CBaseHostClass):
         self.MAIN_CAT_TAB = [{'category':'list_filters',   'title': _('Trending'),        'url':self.getFullUrl('/trending/')},
                              {'category':'list_filters',   'title': _('Movies'),          'url':self.getFullUrl('/movies/')},
                              {'category':'list_filters',   'title': _('Arabic movies'),   'url':self.getFullUrl('/movies/'),  'f_sort':'arab'},
-                             {'category':'list_filters',   'title': _('With subtitles'),   'url':self.getFullUrl('/movies/'), 'f_sort':'subbed'},
+                             {'category':'list_filters',   'title': _('With subtitles'),  'url':self.getFullUrl('/movies/'), 'f_sort':'subbed'},
                              {'category':'list_filters',   'title': _('TV series'),       'url':self.getFullUrl('/tv/')},
                              {'category':'search',         'title': _('Search'),          'search_item':True}, 
                              {'category':'search_history', 'title': _('Search history')},
@@ -97,7 +97,7 @@ class EgyBest(CBaseHostClass):
                 if value == '': 
                     if allTitle == None: allTitle = title
                     continue
-                self.cacheFilters[key].append({'title':title.title(), key:value})
+                self.cacheFilters[key].append({'title': "%s [%s]" % (title.title(), value), key:value})
                 
             if len(self.cacheFilters[key]):
                 if allTitle != None: self.cacheFilters[key].insert(0, {'title':_('All')})
@@ -114,6 +114,7 @@ class EgyBest(CBaseHostClass):
             tmp = data[idx]
             key = keyMap.get(idx, '')
             tmp = self.cm.ph.getAllItemsBeetwenMarkers(tmp, '<a', '</a>')
+            printDBG("%s - %s" % (key, str(tmp)))
             addFilter(tmp, 'href', key, _('--Any--'))
         
         printDBG(self.cacheFilters)
@@ -190,7 +191,7 @@ class EgyBest(CBaseHostClass):
         if nextPage:
             params = dict(cItem)
             params.update({'good_for_fav':False, 'title':_("Next page"), 'page':page+1})
-            self.addDir(params)
+            self.addMore(params)
         
     def exploreItem(self, cItem, nextCategory):
         printDBG("EgyBest.exploreItem")
