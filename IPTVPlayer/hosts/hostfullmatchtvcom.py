@@ -32,8 +32,10 @@ class Fullmatchtv(CBaseHostClass):
         self.MAIN_URL = 'https://fullmatchtv.com/'
         self.defaultParams = {'with_metadata':True, 'header':self.HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
 
-        self.login    = ''
-        self.password = ''
+        self.login      = ''
+        self.password   = ''
+        self.categoryId = ''
+        self.maxPage    = ''
 
     def getPage(self, url, addParams = {}, post_data = None):
         if addParams == {}:
@@ -51,10 +53,10 @@ class Fullmatchtv(CBaseHostClass):
             for item in data:
                 nextCategory = ''
                 url = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''\shref=['"]([^'^"]+?)['"]''')[0])
-                if url == '' or 'index.php' not in url: continue
-                if 'category' not in url: url = url.replace('index.php', 'index.php/category')
-                nextCategory = 'list_items'
+                if 'category' not in url: url = url.replace('.com', '.com/category')
                 title = self.cleanHtmlStr(item)
+                if url == '' or title == 'Home': continue
+                nextCategory = 'list_items'
                 printDBG(">>>>>>>>>>>>>>>>> title[%s] url[%s]" % (title, url))
                 params = dict(cItem)
                 params.update({'good_for_fav':False, 'category':nextCategory, 'title':title, 'url':url})
@@ -68,11 +70,17 @@ class Fullmatchtv(CBaseHostClass):
         sts, data = self.getPage(cItem['url'])
         if not sts: return
 
-        nextPage = self.cm.ph.getDataBeetwenNodes(data, ('<div', '>', 'page-nav td-pb-padding-side'), ('</div', '>'), False)[1]
-        nextPage = self.cm.ph.getDataBeetwenNodes(nextPage, ('<span', '>', 'current'), ('</a', '>'), False)[1]
-        nextPage = self.cm.ph.getSearchGroups(nextPage, '''href=['"]([^"^']+?)['"]''')[0]
+        if page == 1:
+            data = self.cm.ph.getDataBeetwenNodes(data, ('jQuery(window)', '{'), '});')[1]
+            self.categoryId  =self.cm.ph.getSearchGroups(data, '''['"]category_id['"]\s*?:?\s*?([0-9]+?)[^0-9]''')[0]
+            data = self.cm.ph.getDataBeetwenNodes(data, ('else', '{'), '}')[1]
+            self.maxPage = self.cm.ph.getSearchGroups(data, '''max_num_pages\s=\s([0-9]+?);''')[0]
+            printDBG("fullmatchtv.listItems categoryId[%s] maxPage[%s]" % (self.categoryId, self.maxPage))
 
-        data = self.cm.ph.getDataBeetwenNodes(data, ('<div', '>', 'td-main-content-wrap'), ('<aside', '>'))[1]
+        post_data = {'action':'td_ajax_loop', 'loopState[moduleId]':'1', 'loopState[currentPage]':page, 'loopState[atts][category_id]':self.categoryId}
+        sts, data = self.getPage('https://fullmatchtv.com/wp-admin/admin-ajax.php?td_theme_name=Newspaper&v=10.1', self.defaultParams, post_data)
+        if not sts: return
+        data = data.replace('\\','')
         data = self.cm.ph.getAllItemsBeetwenNodes(data, ('<div', '>', 'td-module-thumb'), ('</div', '>'))
         for item in data:
             url = self.getFullUrl( self.cm.ph.getSearchGroups(item, '''\shref=['"]([^"^']+?)['"]''')[0] )
@@ -83,10 +91,12 @@ class Fullmatchtv(CBaseHostClass):
             params = {'good_for_fav': True, 'title':title, 'url':url, 'icon':icon}
             self.addVideo(params)
 
-        if nextPage != '':
-            params = dict(cItem)
-            params.update({'title':_("Next page"), 'url':self.getFullUrl(nextPage), 'page':page+1})
-            self.addDir(params)
+        if self.maxPage != '':
+            page += 1
+            if page < int(self.maxPage):
+                params = dict(cItem)
+                params.update({'title':_("Next page"), 'url':cItem['url'], 'page':page})
+                self.addDir(params)
 
     def getLinksForVideo(self, cItem):
         printDBG("fullmatchtv.getLinksForVideo [%s]" % cItem)
