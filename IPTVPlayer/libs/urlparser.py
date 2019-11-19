@@ -262,6 +262,7 @@ class urlparser:
                        'interia.tv':            self.pp.parserINTERIATV      ,
                        'jacvideo.com':          self.pp.parseJACVIDEOCOM    ,
                        'jawcloud.co':           self.pp.parserJAWCLOUDCO     ,
+                       'jetload.net':           self.pp.parserJETLOAD       ,
                        'junkyvideo.com':        self.pp.parserJUNKYVIDEO    ,
                        'justupload.io':         self.pp.parserJUSTUPLOAD     ,
                        'kabab.lima-city.de':    self.pp.parserKABABLIMA     ,
@@ -12172,3 +12173,27 @@ class pageParser(CaptchaHelper):
                         urlsTab.append(params)
 
             return urlsTab
+
+    def parserJETLOAD(self, baseUrl):
+        printDBG("parserJETLOAD baseUrl[%s]" % baseUrl)
+        
+        sts, data = self.cm.getPage(baseUrl)
+        if not sts:
+            return []
+
+        #printDBG(data)
+        
+        urlsTab=[]
+        
+        #<video src="https://nlw02.hlssrv.com/hls_serve_mp4/d13TcR4aZH4zfHvRTgvQ.mp4" preload="none"
+        
+        videoUrls = re.findall("<video.*?src=\"([^\"]+?)\"", data)
+        
+        if videoUrls:
+            for l in videoUrls:
+                url = urlparser.decorateUrl(l, {'Referer' : baseUrl})
+                params = {'name': 'link' , 'url': url}
+                printDBG(params)
+                urlsTab.append(params)
+            
+        return urlsTab
