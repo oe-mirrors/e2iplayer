@@ -7,6 +7,7 @@ from Plugins.Extensions.IPTVPlayer.components.ihost import CHostBase, CBaseHostC
 from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, rm
 from Plugins.Extensions.IPTVPlayer.tools.iptvtypes import strwithmeta
 from Plugins.Extensions.IPTVPlayer.libs import ph
+from Plugins.Extensions.IPTVPlayer.libs.e2ijson import loads as json_loads, dumps as json_dumps
 ###################################################
 
 ###################################################
@@ -229,11 +230,42 @@ class GoMovies(CBaseHostClass):
         params['header'] = dict(params['header'])
         params['header']['Referer'] = self.cm.meta['url']
         sts, data = self.getPage(playerUrl, params)
-        if not sts: return
+        if not sts: 
+            return
         
         titlesTab = []
         self.cacheLinks  = {}
         
+        # var ajax_var = {"url":"https:\/\/123movieshd.cloud\/wp-admin\/admin-ajax.php","nonce":"deefd6cf42"};
+        ajaxJson = ph.search(data, "var ajax_var = ({[^}]+?});")[0]
+        
+        if ajaxJson:
+            ajaxJson = json_loads(ajaxJson)
+            printDBG("ajax json : %s" % str(ajaxJson))
+        
+        functionAnnoying = self.cm.ph.getDataBeetwenMarkers(data, 'function annoying(s){', '});', False)[1]
+
+        if functionAnnoying:
+            printDBG("----------------- function annoying --------------")
+            printDBG(functionAnnoying)
+        
+            post_data_raw = ph.search(functionAnnoying,"data: ({[^}]+?})")[0]
+            # example{ action: "fkingyrfather", id: 94579, annoying: s }
+            printDBG("Post data: % s" % post_data_raw)
+            
+            postData={}
+            if 'action' in post_data_raw:
+                postData["action"] = ph.search(functionAnnoying,"action ?: ?\"([^\"]+?)\"")[0]
+            if 'id' in post_data_raw:
+                postData["id"] = ph.search(functionAnnoying,"id ?: ?([0-9]{1,5})")[0]
+            if 'annoying' in post_data_raw:
+                postData["annoying"] = "videospider"
+            
+            printDBG(json_dumps(postData))
+            
+        else:
+            printDBG(" javascript function annoying not found! ")
+            
         data = ph.findall(data, ('<div', '>', 'server-'), ('<div', '>', 'clearfix'))
         for tmp in data:
             serverName = ph.clean_html(ph.find(tmp, '<strong', '</strong>')[1])
@@ -247,7 +279,39 @@ class GoMovies(CBaseHostClass):
                     url = 'https://vidload.co/player/' + playerData[1]
                 elif playerData[0] == 'openload':
                     url = 'https://openload.co/embed/' + playerData[1]
+                elif playerData[0] == 'onlystream':
+                    url = 'https://onlystream.tv/e/' + playerData[1]
+                    #url = 'https://very.streamango.to/e/' + playerData[1]
+                elif playerData[0] == 'svbackup':
+                    url = self.getFullUrl(playerData[1])
+                elif playerData[0] == 'vs':
+                    # javascript : annoying("videospider")
+                    #function annoying(s){
+                    #    $.ajax({
+                    #            url: ajax_var.url,
+                    #            method: "POST",
+                    #            data: { action: "fkingyrfather", id: 94579, annoying: s },
+                    #            dataType: "json",
+                    #            success:function(data){
+                    #                if(data.status == 1)
+                    #                    $("#iframe-embed").attr("src",  data.url);
+                    #            }
+                    #        });
+                    #}
+                    # https://videospider.stream/getvideo?key=IfntUpFt05WyyQAJ&video_id=tt8890058&ticket=gf08gdk436duua0914ohsocay5o0qn
+                    # temporary because not working
+                    if ajaxJson:
+                        sts, ajaxData = self.getPage(ajaxJson['url'], post_data = postData)
+                    
+                        if sts:
+                            try:
+                                printDBG("ajax data: %s" % ajaxData)
+                                ajaxData = json_loads(ajaxData)
+                                url = ajaxData['url']
+                            except:
+                                url = "https://videospider.stream/getvideo?video_id=%s" % playerData[1]
                 else:
+                    printDBG("123MovieHd.exploreItem - Not handled server with code: data-%s" % playerData[0])
                     url = self.getFullUrl(playerData[1])
                 
                 if title not in titlesTab:
