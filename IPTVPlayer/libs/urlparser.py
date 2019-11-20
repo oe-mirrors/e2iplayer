@@ -12348,6 +12348,7 @@ class pageParser(CaptchaHelper):
         urlTab=[]
         url = self.cm.ph.getSearchGroups(data, '''["'](https?://[^'^"]+?\.mp4(?:\?[^"^']+?)?)["']''', ignoreCase=True)[0]
         if url != '':
+            url = strwithmeta(url, {'Origin':"https://" + urlparser.getDomain(baseUrl), 'Referer':baseUrl})
             urlTab.append({'name':'mp4', 'url':url})
         hlsUrl = self.cm.ph.getSearchGroups(data, '''["'](https?://[^'^"]+?\.m3u8(?:\?[^"^']+?)?)["']''', ignoreCase=True)[0]
         if hlsUrl != '':
