@@ -561,6 +561,7 @@ class urlparser:
                        'onlystream.tv':        self.pp.parserONLYSTREAMTV   ,
                        'tunestream.net':       self.pp.parserONLYSTREAMTV   ,
                        'jetload.net':          self.pp.parserONLYSTREAMTV   ,
+                       'vidia.tv':             self.pp.parserONLYSTREAMTV   ,
                        'mixdrop.co':           self.pp.parserMIXDROP        ,
                     }
         return
