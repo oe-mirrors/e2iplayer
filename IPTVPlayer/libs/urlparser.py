@@ -12192,8 +12192,11 @@ class pageParser(CaptchaHelper):
         if videoUrls:
             for l in videoUrls:
                 url = urlparser.decorateUrl(l, {'Referer' : baseUrl})
-                params = {'name': 'link' , 'url': url}
-                printDBG(params)
-                urlsTab.append(params)
+                if l.endswith('.m3u8'):
+                    urlsTab.extend(getDirectM3U8Playlist(url, checkExt=False, variantCheck=True, checkContent=True, sortWithMaxBitrate=99999999))
+                else:
+                    params = {'name': 'link' , 'url': url}
+                    printDBG(params)
+                    urlsTab.append(params)
             
         return urlsTab
