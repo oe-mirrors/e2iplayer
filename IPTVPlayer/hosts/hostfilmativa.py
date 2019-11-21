@@ -149,13 +149,12 @@ class Filmotopia(CBaseHostClass):
             
             if '' != linkUrl:  linkUrl = 'http://videomega.tv/view.php?ref={0}&width=700&height=460&val=1'.format(linkUrl)
             if '' == linkUrl:
-                linkUrl = self.cm.ph.getSearchGroups(tmp[-1], 'data-open="([^"]+?)"')[0]
-                linkHosting = self.cm.ph.getSearchGroups(tmp[-1], 'data-source="([^"]+?)"')[0]
+                linkUrl = self.cm.ph.getSearchGroups(tmp[-1], 'data-vidoza="([^"]+?)"')[0]
                 if '' != linkUrl: 
-                    if 'vidoza' in linkHosting: linkUrl = 'https://vidoza.net/embed-{0}.html'.format(linkUrl)
-                    else: linkUrl = 'http://openload.co/embed/{0}/'.format(linkUrl)
-            if '' == linkUrl: linkUrl = self.cm.ph.getSearchGroups(item, '''['"](http[^'^"]+?openload[^'^"]+?)['"]''')[0]
-            if '' == linkUrl: continue
+                    linkUrl = 'https://vidoza.net/embed-{0}.html'.format(linkUrl)
+                linkUrl = self.cm.ph.getSearchGroups(tmp[-1], 'data-only="([^"]+?)"')[0]
+                if '' != linkUrl: 
+                    linkUrl = 'https://onlystream.tv/e/{0}'.format(linkUrl)
             episodeTitle = self.cleanHtmlStr( tmp[0] )
             if 0 == len(self.seriesCache.get(season, [])):
                 self.seriesCache[season] = []

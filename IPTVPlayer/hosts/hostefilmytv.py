@@ -488,7 +488,6 @@ class EFilmyTv(CBaseHostClass):
 
             item = self.cm.ph.getAllItemsBeetwenMarkers(item, '<input', '>')
             for it in item:
-                printDBG("EFilmyTv.getLinksForVideo it[%s]" % it)
                 val = self.cm.ph.getSearchGroups(it, '''\svalue=['"]([^'^"]+?)['"]''')[0]
                 if 'bez' in val.lower(): 
                     if not self.loggedIn: continue
@@ -496,7 +495,6 @@ class EFilmyTv(CBaseHostClass):
                 else: 
                     type = 'show_player'
                 url = self.getFullUrl(baseUrl + '?cmd=%s&id=%s' % (type, movieId), cUrl)
-                printDBG("EFilmyTv.getLinksForVideo url[%s]" % url)
                 retTab.append({'name':'%s - %s' % (name, val), 'url':strwithmeta(url, {'Referer':cUrl, 'f_type':type}), 'need_resolve':1})
         if len(retTab):
             self.cacheLinks[cacheKey] = retTab
