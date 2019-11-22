@@ -356,53 +356,112 @@ class ArteTV(CBaseHostClass):
         printDBG("ArteTV.getLinksForVideo [%s]" % cItem)
         self.cacheLinks = {}
 
-        sts, data = self.getPage(cItem['url'])
-        if not sts: return
+        linksTab = []
+        baseUrl = cItem['url']
+        sts, data = self.getPage(baseUrl)
+        if not sts: 
+            return
 
         url = self.getFullUrl(self.cm.ph.getSearchGroups(data, '''<iframe[^>]+?src=['"]([^"^']+?)['"]''', 1, True)[0])
-        jsonUrl = url.split('json_url=', 1)[-1].split('&', 1)[0]
+        if url:
+            printDBG("ArteTv.Found iframe in page - old mode")
+            jsonUrl = url.split('json_url=', 1)[-1].split('&', 1)[0]
+            
+            if not jsonUrl:
+                sts, data = self.getPage(url)
+                if not sts: 
+                    return
+            
+                data = self.cm.ph.getDataBeetwenNodes(data, ('var', '=', 'js_json'), ('</script', '>'), False)[1]
+                data[:data.find('};')+1]
+            else:
+                sts, data = self.getPage(urllib.unquote(jsonUrl))
+                if not sts: 
+                    return
 
-        if not jsonUrl:
-            sts, data = self.getPage(url)
-            if not sts: return
-            data = self.cm.ph.getDataBeetwenNodes(data, ('var', '=', 'js_json'), ('</script', '>'), False)[1]
-            data[:data.find('};')+1]
+            try:
+                langsMap = {'FR':'fr', 'ESP':'es', 'DE':'de', 'POL':'pl', 'ANG':'en'}
+                self.cacheLinks = {}
+                cacheLabels = {}
+
+                data = json_loads(data)
+                for key in data['videoJsonPlayer']['VSR']:
+                    item = data['videoJsonPlayer']['VSR'][key]
+                    if item['mediaType'] not in ['mp4', 'hls']: continue
+                    lang = item.get('versionShortLibelle', '').split('-')[-1]
+                    lang = langsMap.get(lang, '')
+                    res = '%sx%s' % (item['width'], item['height'])
+                    name = '[%s] %s' % (item['mediaType'], res)
+
+                    if lang not in self.cacheLinks:
+                        self.cacheLinks[lang] = []
+                        cacheLabels[lang] = item['versionLibelle']
+                    self.cacheLinks[lang].append({'name':name, 'url':item['url'], 'bitrate':item['bitrate'], 'type':item['mediaType'], 'quality':item['quality']})
+
+                currLang = cItem.get('f_lang', '')
+                printDBG("+++> lang[%s]" % currLang)
+
+                if currLang in self.cacheLinks:
+                    linksTab.append({'name':cacheLabels.get(currLang, currLang), 'url':'https://|' + currLang, 'need_resolve':1})
+
+                for lang in self.cacheLinks:
+                    if lang == currLang: continue
+                    linksTab.append({'name':cacheLabels.get(lang, lang), 'url':'https://|' +lang, 'need_resolve':1})
+            
+            except Exception:
+                printExc()
+
         else:
-            sts, data = self.getPage(urllib.unquote(jsonUrl))
-            if not sts: return
-
-        linksTab = []
-        try:
-            langsMap = {'FR':'fr', 'ESP':'es', 'DE':'de', 'POL':'pl', 'ANG':'en'}
-            self.cacheLinks = {}
-            cacheLabels = {}
+            printDBG("ArteTv.Not found iframe in page")
+            #open general json
+            # "".concat(n.cdnUrl, "/").concat(n.version, "/config/json/general.json")
+            # now: 
+            generalJsonUrl = "https://static-cdn.arte.tv/static/artevp/5.0.6/config/json/general.json"
+            
+            sts, dataJson = self.getPage(generalJsonUrl)
+            
+            if not sts:
+                return
+            
+            printDBG(dataJson)
+            
+            dataJson = json_loads(dataJson)
+            token = dataJson['apiplayer']['token']
+            printDBG("Api Token: %s" % token)
+            
+            currentCode = self.cm.ph.getSearchGroups(data, "\"currentCode\":\"([^{}\"]+?)\{\}\"", 1 , True)[0]
+            if not currentCode:
+                printDBG("Not found video code")
+                return
+            
+            currentCode = currentCode.split("_")
+            printDBG("Video code: %s" % str(currentCode))
+            
+            apiUrl = "https://api.arte.tv/api/player/v2/config/" + currentCode[1] + "/" + currentCode[0]
+            printDBG("Api Url: %s " % apiUrl)
+            
+            header = {
+                'Accept': 'application/json, text/javascript, */*; q=0.01',
+                'Authorization': 'Bearer %s' % token,
+                'Referer': baseUrl,
+                'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/78.0.3904.108 Safari/537.36'
+            }
+            
+            sts, data = self.getPage(apiUrl, {"header" : header})
+            
+            if not sts:
+                return 
             
             data = json_loads(data)
-            for key in data['videoJsonPlayer']['VSR']:
-                item = data['videoJsonPlayer']['VSR'][key]
-                if item['mediaType'] not in ['mp4', 'hls']: continue
-                lang = item.get('versionShortLibelle', '').split('-')[-1]
-                lang = langsMap.get(lang, '')
-                res = '%sx%s' % (item['width'], item['height'])
-                name = '[%s] %s' % (item['mediaType'], res)
-                if lang not in self.cacheLinks:
-                    self.cacheLinks[lang] = []
-                    cacheLabels[lang] = item['versionLibelle']
-                self.cacheLinks[lang].append({'name':name, 'url':item['url'], 'bitrate':item['bitrate'], 'type':item['mediaType'], 'quality':item['quality']})
             
-            currLang = cItem.get('f_lang', '')
-            printDBG("+++> lang[%s]" % currLang)
-            
-            if currLang in self.cacheLinks:
-                linksTab.append({'name':cacheLabels.get(currLang, currLang), 'url':'https://|' + currLang, 'need_resolve':1})
-            
-            for lang in self.cacheLinks:
-                if lang == currLang: continue
-                linksTab.append({'name':cacheLabels.get(lang, lang), 'url':'https://|' +lang, 'need_resolve':1})
-            
-        except Exception:
-            printExc()
-        
+            try:
+                for s in data["data"]["attributes"]["streams"]:
+                    if s["protocol"].lower() == "hls":
+                        linksTab.extend(getDirectM3U8Playlist(s['url'], checkExt=False, variantCheck=True, checkContent=True, sortWithMaxBitrate=99999999))
+                    
+            except Exception:
+                printExc()
+
         return linksTab
         
     def getVideoLinks(self, videoLink):
@@ -436,7 +495,7 @@ class ArteTV(CBaseHostClass):
         self.cacheLinks = {}
         self.currList = []
         
-    #MAIN MENU
+        #MAIN MENU
         if name == None:
             self.listMainMenu({'name':'category'}, 'list_lang')
         elif category == 'list_lang':
@@ -449,12 +508,12 @@ class ArteTV(CBaseHostClass):
             self.listPlaylistItems(self.currItem)
         elif category == 'list_json_items':
             self.listJSONItems(self.currItem, 'list_items')
-    #SEARCH
+        #SEARCH
         elif category in ["search", "search_next_page"]:
             cItem = dict(self.currItem)
             cItem.update({'search_item':False, 'name':'category'}) 
             self.listSearchResult(cItem, searchPattern, searchType)
-    #HISTORIA SEARCH
+        #HISTORIA SEARCH
         elif category == "search_history":
             self.listsHistory({'name':'history', 'category': 'search'}, 'desc', _("Type: "))
         else:
