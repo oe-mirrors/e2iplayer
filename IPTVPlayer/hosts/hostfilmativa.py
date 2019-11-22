@@ -190,7 +190,16 @@ class Filmotopia(CBaseHostClass):
         else:
             sts, data = self.cm.getPage(cItem['url'])
             if not sts: return urlTab
-            tmp = self.cm.ph.getDataBeetwenMarkers(data, '<div class="trailer">', '</div>', False)[1]
+
+            tmp = self.cm.ph.getAllItemsBeetwenNodes(data, ('<button', '>', 'myButton'), ('</button', '>'))
+            for item in tmp:
+                url = self.getFullUrl( self.cm.ph.getSearchGroups(item, '''\sdata-url=['"]([^"^']+?)['"]''')[0] )
+                title  = self.cleanHtmlStr(item)
+                if not self.cm.isValidUrl(url): continue
+                urlTab.append({'name':title, 'url':url, 'need_resolve':1})
+            if len(urlTab): return urlTab
+
+            tmp = self.cm.ph.getDataBeetwenMarkers(data, '="trailer">', '</div>', False)[1]
             url = self.cm.ph.getSearchGroups(tmp, 'src="([^"]+?)"')[0]
             if 'videomega.tv/validatehash.php?' in url:
                 sts, data = self.cm.getPage(url, {'header':{'Referer':cItem['url'], 'User-Agent':'Mozilla/5.0'}})
@@ -200,13 +209,6 @@ class Filmotopia(CBaseHostClass):
                     urlTab.append({'name':'videomega.tv', 'url':linkUrl, 'need_resolve':1})
             elif url.startswith('http://') or url.startswith('https://'):
                 urlTab.append({'name':'link', 'url':url, 'need_resolve':1})
-
-            data = self.cm.ph.getAllItemsBeetwenNodes(data, ('<button', '>', 'myButton'), ('</button', '>'))
-            for item in data:
-                url = self.getFullUrl( self.cm.ph.getSearchGroups(item, '''\sdata-url=['"]([^"^']+?)['"]''')[0] )
-                title  = self.cleanHtmlStr(item)
-                if not self.cm.isValidUrl(url): continue
-                urlTab.append({'name':title, 'url':url, 'need_resolve':1})
 
         return urlTab
         
