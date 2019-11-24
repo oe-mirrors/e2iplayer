@@ -9,6 +9,7 @@ from Plugins.Extensions.IPTVPlayer.tools.iptvtools import CSelOneLink, printDBG,
 from Plugins.Extensions.IPTVPlayer.libs.urlparserhelper import getDirectM3U8Playlist
 from Plugins.Extensions.IPTVPlayer.libs import ph
 from Plugins.Extensions.IPTVPlayer.libs.e2ijson import loads as json_loads, dumps as json_dumps
+from Plugins.Extensions.IPTVPlayer.components.recaptcha_v2helper import CaptchaHelper
 ###################################################
 
 ###################################################
@@ -65,7 +66,7 @@ def GetConfigList():
 def gettytul():
     return 'https://vod.tvp.pl/'
 
-class TvpVod(CBaseHostClass):
+class TvpVod(CBaseHostClass, CaptchaHelper):
     DEFAULT_ICON_URL = 'https://s.tvp.pl/files/vod.tvp.pl/img/menu/logo_vod.png' #'http://sd-xbmc.org/repository/xbmc-addons/tvpvod.png'
     PAGE_SIZE = 12
     ALL_FORMATS = [{"video/mp4":"mp4"}, {"application/x-mpegurl":"m3u8"}, {"video/x-ms-wmv":"wmv"}] 
@@ -199,15 +200,23 @@ class TvpVod(CBaseHostClass):
         params.update({'load_cookie': False})
         sts, data = self._getPage(TvpVod.LOGIN_URL, params)
         if sts:
-            data = self.cm.ph.getDataBeetwenMarkers(data, '<fieldset>', '</fieldset>', False)[1]
+#            data = self.cm.ph.getDataBeetwenMarkers(data, '<fieldset>', '</fieldset>', False)[1]
             ref = self.cm.ph.getSearchGroups(data, 'name="ref".+?value="([^"]+?)"')[0]
-            login = self.cm.ph.getSearchGroups(data, 'name="login".+?value="([^"]+?)"')[0]
-            post_data = {'ref':ref, 'email':email, 'password':password, 'login':login, 'action':'login'}
+#            login = self.cm.ph.getSearchGroups(data, 'name="login".+?value="([^"]+?)"')[0]
+            post_data = {'ref':ref, 'email':email, 'password':password, 'action':'login'}
+            sitekey = self.cm.ph.getSearchGroups(data, '''sitekey=['"]([^'^"]+?)['"]''')[0]
+            if sitekey != '':
+                token, errorMsgTab = self.processCaptcha(sitekey, self.cm.meta['url'])
+                if token == '':
+                    return False
+                post_data['g-recaptcha-response'] = token 
             sts, data = self._getPage(TvpVod.LOGIN_URL + ref, self.defaultParams, post_data)
             if sts and 'action=sign-out' in data:
                 printDBG(">>>\n%s\n<<<" % data)
-                data = self.cm.ph.getDataBeetwenNodes(data, ('<section', '>', 'abo__section'), ('</section', '>'), False)[1]
-                data = self.cleanHtmlStr( self.cm.ph.getDataBeetwenNodes(data, ('<p', '>'), ('</p', '>'), False)[1] )
+                tmp = self.cm.ph.getDataBeetwenNodes(data, ('<section', '>', 'abo__section'), ('</section', '>'), False)[1]
+                if tmp == '':
+                    tmp = self.cm.ph.getDataBeetwenNodes(data, ('<section', '>', 'abo-inactive'), ('</section', '>'), False)[1]
+                data = self.cleanHtmlStr( self.cm.ph.getDataBeetwenNodes(tmp, ('<p', '>'), ('</p', '>'), False)[1] )
                 msg = ['Użytkownik "%s"' % email]
                 msg.append('Strefa Abo %s' % data)
                 self.loginMessage = '[/br]'.join(msg)
