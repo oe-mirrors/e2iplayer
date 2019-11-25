@@ -230,8 +230,10 @@ class SolarMovie(CBaseHostClass):
             tmp  = item.split('</a>')
             title = self.cleanHtmlStr( tmp[-1] )
             desc  = self.cleanHtmlStr( tmp[0] )
-            if title == '': title = self.cleanHtmlStr(self.cm.ph.getSearchGroups(item, '''alt=['"]([^'^"]+?)['"]''')[0])
-            if title == '': title = self.cleanHtmlStr(self.cm.ph.getSearchGroups(item, '''title=['"]([^'^"]+?)['"]''')[0])
+            if title == '': 
+                title = self.cleanHtmlStr(self.cm.ph.getSearchGroups(item, '''alt=['"]([^'^"]+?)['"]''')[0])
+            if title == '': 
+                title = self.cleanHtmlStr(self.cm.ph.getSearchGroups(item, '''title=['"]([^'^"]+?)['"]''')[0])
 
             params = dict(cItem)
             params = {'good_for_fav': True, 'title':title, 'url':url, 'desc':desc, 'tip_url':tip, 'icon':icon}
@@ -279,26 +281,31 @@ class SolarMovie(CBaseHostClass):
             #printDBG(frame)
             #frame_url = self.cm.ph.getSearchGroups(frame, "src=['\"]([^'^\"]+?)['\"]")[0]
             #printDBG("found iframe with url %s" % frame_url)
-            les_content = self.cm.ph.getDataBeetwenNodes(data, '<div class="les-content">', '</div>')[1]
-            eps = self.cm.ph.getAllItemsBeetwenMarkers(les_content,'<a','</a>')
-            for ep in eps:
-                printDBG(ep)
-                #<a title="Episode 18" data-server="30" data-id="37772" data-file="https://vidnode.net/streaming.php?id=MjkyNDUy&title=The Larry Sanders Show - Season 2" href="javascript:void(0)" class="btn-eps first-ep last-ep">Episode 18</a>
-                item = self.cleanHtmlStr(ep)
-                title = item
-                url = self.cm.ph.getSearchGroups(ep, "data-file=['\"]([^'^\"]+?)['\"]")[0]
-                if title not in titlesTab:
-                    titlesTab.append(title)
-                    self.cacheLinks[title] = []
-        
-                self.cacheLinks[title].append({'name': item , 'url': strwithmeta(url, {'Referer': watching_url})})
+            list_eps = self.cm.ph.getDataBeetwenNodes(data, '<div id="list-eps">', '<div id="mv-info">')[1]
+            servers = list_eps.split('<div class="les-title">')
+            if len(servers)>0:
+                del(servers[0])
+
+            for s in servers:
+                serverTitle = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(s, '<strong>', '</strong>')[1])
+
+                eps = self.cm.ph.getAllItemsBeetwenMarkers(s,'<a','</a>')
+                for ep in eps:
+                    printDBG(ep)
+                    #<a title="Episode 18" data-server="30" data-id="37772" data-file="https://vidnode.net/streaming.php?id=MjkyNDUy&title=The Larry Sanders Show - Season 2" href="javascript:void(0)" class="btn-eps first-ep last-ep">Episode 18</a>
+                    item = self.cleanHtmlStr(ep)
+                    title = "%s - %s" % (serverTitle,item)
+                    url = self.cm.ph.getSearchGroups(ep, "data-file=['\"]([^'^\"]+?)['\"]")[0]
+                    if title not in titlesTab:
+                        titlesTab.append(title)
+                        self.cacheLinks[title] = []
+
+                    self.cacheLinks[title].append({'name': item , 'url': strwithmeta(url, {'Referer': watching_url})})
         
         for item in titlesTab:
             params = dict(cItem)
             params.update({'good_for_fav': False, 'title': "%s : %s" % (cItem['title'], item), 'links_key':item})
             self.addVideo(params)
-        
-        
         
     def listSearchResult(self, cItem, searchPattern, searchType):
         printDBG("AnimeTo.listSearchResult cItem[%s], searchPattern[%s] searchType[%s]" % (cItem, searchPattern, searchType))
@@ -383,34 +390,44 @@ class SolarMovie(CBaseHostClass):
         
         icon  = self.getFullUrl( self.cm.ph.getSearchGroups(data, '<meta property="og:image"[^>]+?content="([^"]+?)"')[0] )
         
-        if title == '': title = cItem['title']
-        if desc == '':  desc = cItem['desc']
-        if icon == '':  icon = cItem['icon']
+        if title == '': 
+            title = cItem['title']
+        if desc == '':  
+            desc = cItem['desc']
+        if icon == '':  
+            icon = cItem['icon']
         
         otherInfo = {}
         tmp = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(data, '<span class="duration"', '</span>')[1])
-        if tmp != '': otherInfo['duration'] = tmp
+        if tmp != '': 
+            otherInfo['duration'] = tmp
         
         tmp = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(data, '<span class="imdb"', '</span>')[1])
-        if tmp != '': otherInfo['imdb_rating'] = tmp
+        if tmp != '': 
+            otherInfo['imdb_rating'] = tmp
         
         tmp = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(data, '<span class="quality"', '</span>')[1])
-        if tmp != '': otherInfo['quality'] = tmp
+        if tmp != '': 
+            otherInfo['quality'] = tmp
         
         tmp = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(data, 'Country:', '</div>', False)[1])
-        if tmp != '': otherInfo['country'] = tmp
+        if tmp != '': 
+            otherInfo['country'] = tmp
         
         tmp = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(data, 'Stars:', '</div>', False)[1])
-        if tmp != '': otherInfo['stars'] = tmp
+        if tmp != '': 
+            otherInfo['stars'] = tmp
         
         tmp = self.cm.ph.getDataBeetwenMarkers(data, 'Genre:', '</div>', False)[1]
         tmp = self.cm.ph.getAllItemsBeetwenMarkers(tmp, '<a', '</a>')
         tmp = ', '.join([self.cleanHtmlStr(item) for item in tmp])
-        if tmp != '': otherInfo['genre'] = tmp
+        if tmp != '': 
+            otherInfo['genre'] = tmp
         
         tmp = self.cm.ph.getDataBeetwenMarkers(data, '<h1>', '</div>', False)[1]
         tmp = self.cm.ph.getSearchGroups(tmp, '''<span[^>]*?>\s*([0-9]+?)\s*<''')[0]
-        if tmp != '': otherInfo['year'] = tmp
+        if tmp != '': 
+            otherInfo['year'] = tmp
         
         return [{'title':self.cleanHtmlStr( title ), 'text': self.cleanHtmlStr( desc ), 'images':[{'title':'', 'url':self.getFullUrl(icon)}], 'other_info':otherInfo}]
     
@@ -426,7 +443,8 @@ class SolarMovie(CBaseHostClass):
         try:
             cItem = byteify(json.loads(fav_data))
             links = self.getLinksForVideo(cItem)
-        except Exception: printExc()
+        except Exception: 
+            printExc()
         return links
         
     def setInitListFromFavouriteItem(self, fav_data):
