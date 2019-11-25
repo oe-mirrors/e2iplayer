@@ -72,7 +72,8 @@ class TvpVod(CBaseHostClass, CaptchaHelper):
     ALL_FORMATS = [{"video/mp4":"mp4"}, {"application/x-mpegurl":"m3u8"}, {"video/x-ms-wmv":"wmv"}] 
     REAL_FORMATS = {'m3u8':'ts', 'mp4':'mp4', 'wmv':'wmv'}
     MAIN_VOD_URL = "https://vod.tvp.pl/"
-    LOGIN_URL = "https://www.tvp.pl/sess/user-2.0/login.php?ref="
+    LOGIN_URL    = "https://www.tvp.pl/sess/user-2.0/login.php?ref="
+    ACCOUNT_URL  = "https://www.tvp.pl/sess/user-2.0/account.php"
     STREAMS_URL_TEMPLATE = 'http://www.api.v3.tvp.pl/shared/tvpstream/listing.php?parent_id=13010508&type=epg_item&direct=false&filter={%22release_date_dt%22:%22[iptv_date]%22,%22epg_play_mode%22:{%22$in%22:[0,1,3]}}&count=-1&dump=json'
     SEARCH_VOD_URL = MAIN_VOD_URL + 'szukaj?query=%s'
     IMAGE_URL = 'http://s.v3.tvp.pl/images/%s/%s/%s/uid_%s_width_500_gs_0.%s'
@@ -197,32 +198,32 @@ class TvpVod(CBaseHostClass, CaptchaHelper):
         password = config.plugins.iptvplayer.tvpvod_password.value
         msg = 'Wystąpił problem z zalogowaniem użytkownika "%s"!' % email
         params = dict(self.defaultParams)
-        params.update({'load_cookie': False})
-        sts, data = self._getPage(TvpVod.LOGIN_URL, params)
-        if sts:
-#            data = self.cm.ph.getDataBeetwenMarkers(data, '<fieldset>', '</fieldset>', False)[1]
-            ref = self.cm.ph.getSearchGroups(data, 'name="ref".+?value="([^"]+?)"')[0]
-#            login = self.cm.ph.getSearchGroups(data, 'name="login".+?value="([^"]+?)"')[0]
-            post_data = {'ref':ref, 'email':email, 'password':password, 'action':'login'}
-            sitekey = self.cm.ph.getSearchGroups(data, '''sitekey=['"]([^'^"]+?)['"]''')[0]
-            if sitekey != '':
-                token, errorMsgTab = self.processCaptcha(sitekey, self.cm.meta['url'])
-                if token == '':
-                    return False
-                post_data['g-recaptcha-response'] = token 
-            sts, data = self._getPage(TvpVod.LOGIN_URL + ref, self.defaultParams, post_data)
-            if sts and 'action=sign-out' in data:
-                printDBG(">>>\n%s\n<<<" % data)
-                tmp = self.cm.ph.getDataBeetwenNodes(data, ('<section', '>', 'abo__section'), ('</section', '>'), False)[1]
-                if tmp == '':
-                    tmp = self.cm.ph.getDataBeetwenNodes(data, ('<section', '>', 'abo-inactive'), ('</section', '>'), False)[1]
-                data = self.cleanHtmlStr( self.cm.ph.getDataBeetwenNodes(tmp, ('<p', '>'), ('</p', '>'), False)[1] )
-                msg = ['Użytkownik "%s"' % email]
-                msg.append('Strefa Abo %s' % data)
-                self.loginMessage = '[/br]'.join(msg)
-                msg = self.loginMessage.replace('[/br]', '\n')
-            else: 
-                sts = False
+        sts, data = self._getPage(TvpVod.ACCOUNT_URL, params)
+        if not sts or 'action=sign-out' not in data:
+            params.update({'load_cookie': False})
+            sts, data = self._getPage(TvpVod.LOGIN_URL, params)
+            if sts:
+                ref = self.cm.ph.getSearchGroups(data, 'name="ref".+?value="([^"]+?)"')[0]
+                post_data = {'ref':ref, 'email':email, 'password':password, 'action':'login'}
+                sitekey = self.cm.ph.getSearchGroups(data, '''sitekey=['"]([^'^"]+?)['"]''')[0]
+                if sitekey != '':
+                    token, errorMsgTab = self.processCaptcha(sitekey, self.cm.meta['url'])
+                    if token == '':
+                        return False
+                    post_data['g-recaptcha-response'] = token 
+                sts, data = self._getPage(TvpVod.LOGIN_URL + ref, self.defaultParams, post_data)
+        if sts and 'action=sign-out' in data:
+            printDBG(">>>\n%s\n<<<" % data)
+            tmp = self.cm.ph.getDataBeetwenNodes(data, ('<section', '>', 'abo__section'), ('</section', '>'), False)[1]
+            if tmp == '':
+                tmp = self.cm.ph.getDataBeetwenNodes(data, ('<section', '>', 'abo-inactive'), ('</section', '>'), False)[1]
+            data = self.cleanHtmlStr( self.cm.ph.getDataBeetwenNodes(tmp, ('<p', '>'), ('</p', '>'), False)[1] )
+            msg = ['Użytkownik "%s"' % email]
+            msg.append('Strefa Abo %s' % data)
+            self.loginMessage = '[/br]'.join(msg)
+            msg = self.loginMessage.replace('[/br]', '\n')
+        else: 
+            sts = False
         return sts, msg
         
     def _addNavCategories(self, data, cItem, category):
