@@ -351,58 +351,51 @@ class TvpVod(CBaseHostClass, CaptchaHelper):
         printDBG("TvpVod.listTVPSportCategories")
         sts, data = self._getPage(cItem['url'], self.defaultParams)
         if not sts: return
-        data = self.cm.ph.getDataBeetwenMarkers(data, '<div class="vod-select">', '<div class="vod-items">', False)[1]
-        data = self.cm.ph.getAllItemsBeetwenMarkers(data, '<div class="option" ', '</div>', withMarkers=True, caseSensitive=False)
-        for item in data:
-            mode  = self.cm.ph.getSearchGroups(item, 'data-type="([^"]+?)"')[0]
-            id    = self.cm.ph.getSearchGroups(item, 'data-id="([0-9]+?)"')[0]
-            title = self.cleanHtmlStr(item)
-            if id != '':
-                if mode == 'popular':
-                    copy   = 'true'
-                    direct = 'true'
-                    order  = 'position,1'
-                    filter = '{"types.1":"video","play_mode":1}'
-                else:
-                    copy   = 'false'
-                    direct = 'false'
-                    order  = 'release_date_long,-1'
-                    if mode == 'newest': filter = '{"types.1":"video","parents":{"$in":[432801,434339,548368]},"copy":false,"play_mode":1}'
-                    else: filter = '{"types.1":"video","copy":false,"play_mode":1}'
-                    
-                url = 'http://sport.tvp.pl/shared/listing.php?parent_id=' + id + '&type=v_listing_typical_a&direct=' + direct +'&order=' + order + '&copy=' + copy + '&mode=' + mode + '&filter=' + urllib.quote(filter) + '&template=vod/items-listing.html&count=' + str(self.PAGE_SIZE)
+        data = self.cm.ph.getDataBeetwenMarkers(data, '__directoryData ', '</script>', False)[1]
+        data = self.cm.ph.getDataBeetwenMarkers(data, '[', ']', True)[1]
+        printDBG(">>> %s" % data)
+        try:
+            data = json_loads(data)
+            for item in data:
+                if item['url'].startswith('?'):
+                    url = cItem['url'] + item['url']
+                sts, tmp = self._getPage(url, self.defaultParams)
+                if not sts: continue
+                tmp = self.cm.ph.getDataBeetwenMarkers(tmp, '__blockList[0]', '"items":', False)[1]
+                url = self.cm.ph.getSearchGroups(tmp, '''['"]urlShowMore['"]\s*:\s*['"]([^'^"]+?)['"]''')[0]
+                url = self._getFullUrl(url.replace('\\', ''), 'http://sport.tvp.pl')
                 params = dict(cItem)
-                params.update({'category':nextCategory, 'good_for_fav':True, 'title':title, 'url':url})
+                params.update({'category':nextCategory, 'good_for_fav':True, 'title':item['title'], 'url':url})
                 self.addDir(params)
-              
+        except Exception:
+            printExc()
+
     def listTVPSportVideos(self, cItem):
         printDBG("TvpVod.listTVPSportVideos")
         
         page = cItem.get('page', 1)
         videosNum = 0
-        
+
         url  = cItem['url']
-        url += '&page=%d' %(page)
+        url += '?page=%d' %(page)
         
         sts, data = self._getPage(url, self.defaultParams)
         if not sts: return
-        data = data.split('<div class="item')
-        if len(data): del data[0]
-        
-        for item in data:
-            url   = self.cm.ph.getSearchGroups(item, 'data-url="([^"]+?)"')[0]
-            if url.startswith('/'):
-                url = 'http://sport.tvp.pl/' + url
-            
-            item  = item.split('class="item-data">')[-1]
-            desc  = self.cleanHtmlStr(item)
-            icon  = self.cm.ph.getSearchGroups(item, 'src="([^"]+?)"')[0]
-            title = self.cleanHtmlStr( self.cm.ph.getDataBeetwenMarkers(item, '<h3', '</h3>')[1] )
-            if url.startswith('http'):
-                videosNum += 1
-                params = dict(cItem)
-                params.update({'title':title, 'icon':icon, 'url':url, 'desc':desc})
-                self.addVideo(params)
+        data = self.cm.ph.getDataBeetwenMarkers(data, 'window.__directoryData =', '</script>', False)[1]
+        try:
+            data = json_loads(data.replace(';', ''))
+            for item in data['items']:
+                url   = self._getFullUrl(item['url'], 'http://sport.tvp.pl')
+                desc  = item['lead']
+                title = item['title']
+                icon  = item['image']['url'].format(width = '480', height = '360')
+                if url.startswith('http'):
+                    videosNum += 1
+                    params = dict(cItem)
+                    params.update({'title':title, 'icon':icon, 'url':url, 'desc':desc})
+                    self.addVideo(params)
+        except Exception:
+            printExc()
                 
         if videosNum >= self.PAGE_SIZE:
             params = dict(cItem)
