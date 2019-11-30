@@ -69,6 +69,7 @@ def gettytul():
 class TvpVod(CBaseHostClass, CaptchaHelper):
     DEFAULT_ICON_URL = 'https://s.tvp.pl/files/vod.tvp.pl/img/menu/logo_vod.png' #'http://sd-xbmc.org/repository/xbmc-addons/tvpvod.png'
     PAGE_SIZE = 12
+    SPORT_PAGE_SIZE = 20
     ALL_FORMATS = [{"video/mp4":"mp4"}, {"application/x-mpegurl":"m3u8"}, {"video/x-ms-wmv":"wmv"}] 
     REAL_FORMATS = {'m3u8':'ts', 'mp4':'mp4', 'wmv':'wmv'}
     MAIN_VOD_URL = "https://vod.tvp.pl/"
@@ -397,7 +398,7 @@ class TvpVod(CBaseHostClass, CaptchaHelper):
         except Exception:
             printExc()
                 
-        if videosNum >= self.PAGE_SIZE:
+        if videosNum >= self.SPORT_PAGE_SIZE:
             params = dict(cItem)
             params.update({'page':page+1})
             if config.plugins.iptvplayer.tvpVodNextPage.value:

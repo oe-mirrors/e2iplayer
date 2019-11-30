@@ -558,6 +558,7 @@ class urlparser:
                        'vidstreamup.com':      self.pp.parserVIUCLIPS       ,
                        'upclips.online':       self.pp.parserVIUCLIPS       ,
                        'toclipit.com':         self.pp.parserVIUCLIPS       ,
+                       'forstreams.com':       self.pp.parserVIUCLIPS       ,
                        'onlystream.tv':        self.pp.parserONLYSTREAMTV   ,
                        'tunestream.net':       self.pp.parserONLYSTREAMTV   ,
                        'jetload.net':          self.pp.parserONLYSTREAMTV   ,
