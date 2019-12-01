@@ -159,7 +159,7 @@ class ustvgo(CBaseHostClass):
 
         data = self.cm.ph.getDataBeetwenMarkers(data, 'player.setup({', '})', False)[1]
         url  = self.cm.ph.getSearchGroups(data, '''(https?://[^'^"]+?)['"]''')[0] 
-        url = strwithmeta(url, {'Origin':'http://ustvgo.tv', 'Referer':cItem['url']})
+        url = strwithmeta(url, {'User-Agent': self.USER_AGENT, 'Origin':'http://ustvgo.tv', 'Referer':cItem['url']})
 
         return getDirectM3U8Playlist(url)
     
