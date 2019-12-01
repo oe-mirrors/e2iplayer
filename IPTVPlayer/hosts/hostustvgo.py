@@ -6,6 +6,7 @@ from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT
 from Plugins.Extensions.IPTVPlayer.components.ihost import CHostBase, CBaseHostClass
 from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, rm, byteify
 from Plugins.Extensions.IPTVPlayer.libs.urlparserhelper import getDirectM3U8Playlist
+from Plugins.Extensions.IPTVPlayer.tools.iptvtypes import strwithmeta
 from Plugins.Extensions.IPTVPlayer.tools.e2ijs import js_execute
 ###################################################
 
@@ -158,6 +159,7 @@ class ustvgo(CBaseHostClass):
 
         data = self.cm.ph.getDataBeetwenMarkers(data, 'player.setup({', '})', False)[1]
         url  = self.cm.ph.getSearchGroups(data, '''(https?://[^'^"]+?)['"]''')[0] 
+        url = strwithmeta(url, {'Origin':'http://ustvgo.tv', 'Referer':cItem['url']})
 
         return getDirectM3U8Playlist(url)
     
