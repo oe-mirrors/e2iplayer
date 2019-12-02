@@ -38,7 +38,7 @@ class MyFreeMp3(CBaseHostClass):
                              {'category':'search',         'title': _('Search'),          'search_item':True}, 
                              {'category':'search_history', 'title': _('Search history')},
                             ]
-        self.streamUrl = 'http://newtabz.stream/'
+        self.streamUrl = 'http://s.mp3-send.com/'
         
     def getPage(self, baseUrl, addParams = {}, post_data = None):
         if addParams == {}: addParams = dict(self.defaultParams)
