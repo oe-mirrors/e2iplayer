@@ -666,12 +666,14 @@ class YoutubeIE(object):
                 manifest_url = manifest.group(1)
                 url_map = self._extract_from_m3u8(manifest_url, video_id)
                 video_url_list = self._get_video_url_list(url_map, allowVP9)
+
+        if video_info.get('player_response') and not video_url_list:
             try:
                 is_m3u8 = 'no'
                 cipher = {}
-                url_data_str = json_loads(manifest_url)['streamingData']['formats']
+                url_data_str = json_loads(_unquote(video_info['player_response'], None))['streamingData']['formats']
                 try:
-                    url_data_str += json_loads(manifest_url)['streamingData']['adaptiveFormats']
+                    url_data_str += json_loads(_unquote(video_info['player_response'], None))['streamingData']['adaptiveFormats']
                 except Exception:
                     printExc()
                 for url_data in url_data_str:
