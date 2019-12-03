@@ -609,6 +609,8 @@ class YoutubeIE(object):
 
         is_m3u8 = 'no'
         url_map = {}
+        video_url_list = {}
+
         if len(video_info.get('url_encoded_fmt_stream_map', [])) >= 1 or len(video_info.get('adaptive_fmts', [])) >= 1:
             encoded_url_map = video_info.get('url_encoded_fmt_stream_map', [''])[0] + ',' + video_info.get('adaptive_fmts',[''])[0]
             _supported_formats = self._supported_formats
@@ -649,7 +651,7 @@ class YoutubeIE(object):
                         url_item['url'] += '&ratebypass=yes'
                     url_map[url_data['itag']] = url_item
                 video_url_list = self._get_video_url_list(url_map, allowVP9)
-   
+
         if video_info.get('hlsvp') and not video_url_list:
             is_m3u8 = 'yes'
             manifest_url = _unquote(video_info['hlsvp'], None)
@@ -660,9 +662,48 @@ class YoutubeIE(object):
             is_m3u8 = 'yes'
             manifest_url = _unquote(video_info['player_response'], None)
             manifest = re.search('"hlsManifestUrl":"(.*?)"', manifest_url)
-            if manifest: manifest_url = manifest.group(1)
-            url_map = self._extract_from_m3u8(manifest_url, video_id)
-            video_url_list = self._get_video_url_list(url_map, allowVP9)
+            if manifest: 
+                manifest_url = manifest.group(1)
+                url_map = self._extract_from_m3u8(manifest_url, video_id)
+                video_url_list = self._get_video_url_list(url_map, allowVP9)
+            try:
+                is_m3u8 = 'no'
+                cipher = {}
+                url_data_str = json_loads(manifest_url)['streamingData']['formats']
+                try:
+                    url_data_str += json_loads(manifest_url)['streamingData']['adaptiveFormats']
+                except Exception:
+                    printExc()
+                for url_data in url_data_str:
+                    try:
+                        url_item = {'url': url_data['url']}
+                    except Exception:
+                        printExc()
+                        cipher = url_data['cipher']
+                        cipher = cipher.split('&')
+                        for item in cipher:
+                            #sig_item = ''
+                            #s_item = ''
+                            #sp_item = ''
+                            if 'url=' in item: url_item = {'url':_unquote(item.replace('url=',''), None)}
+                            if 'sig=' in item: sig_item = item.replace('sig=','')
+                            if 's=' in item: s_item = item.replace('s=','')
+                            if 'sp=' in item: sp_item = item.replace('sp=','')
+                        if 'sig' in cipher:
+                            signature = sig_item
+                            url_item['url'] += '&signature=' + signature
+                        elif len(s_item):
+                            url_item['esign'] = _unquote(s_item)
+                            if len(sp_item): 
+                                url_item['url'] += '&%s={0}' % sp_item
+                            else:
+                                url_item['url'] += '&signature={0}'
+                        if not 'ratebypass' in url_item['url']:
+                            url_item['url'] += '&ratebypass=yes'
+                    url_map[str(url_data['itag'])] = url_item
+                video_url_list = self._get_video_url_list(url_map, allowVP9)
+            except Exception:
+                printExc()
 
         if not video_url_list:
             return []
@@ -778,7 +819,8 @@ class YoutubeIE(object):
         if allowVP9:
             format_list.extend(['313', '271'])
         existing_formats = [x for x in format_list if x in url_map]
-        
+        #printDBG('url_mapxxx: %s' %  [(f, url_map[f]) for f in existing_formats])
+
         return [(f, url_map[f]) for f in existing_formats] # All formats
 
         
