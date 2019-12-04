@@ -555,9 +555,9 @@ class YoutubeIE(object):
                 video_info_url = videoInfoBase + ('%s&ps=default&eurl=&gl=US&hl=en'% ( el_type))
                 sts, video_info = self.cm.getPage(video_info_url, videoInfoparams)
                 if not sts: continue
-                if '&token=' in video_info or '&account_playback_token=' in video_info:
+                if 'channel_creation_token' in video_info or '&account_playback_token=' in video_info:
                     break
-        if '&token=' not in video_info and '&account_playback_token=' not in video_info:
+        if 'channel_creation_token' not in video_info and '&account_playback_token=' not in video_info:
             raise ExtractorError('"token" parameter not in video info')
         
         # Check for "rental" videos
