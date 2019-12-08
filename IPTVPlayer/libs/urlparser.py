@@ -252,6 +252,7 @@ class urlparser:
                        'hdgo.cx':               self.pp.parserHDGOCC        ,
                        'hdpass.online':         self.pp.parserHDPASSONLINE,
                        'hdvid.tv':              self.pp.parserHDVIDTV       ,
+                       'hlstester.com':         self.pp.parserHLSTESTER,
                        'hofoot.allvidview.tk':  self.pp.parserVIUCLIPS, 
                        'hqq.none':              self.pp.parseNETUTV         ,
                        'hqq.tv':                self.pp.parseNETUTV         ,
@@ -12215,3 +12216,20 @@ class pageParser(CaptchaHelper):
             
         return urlsTab
     
+    def parserHLSTESTER(self, baseUrl):
+        printDBG("parserHLSTESTER baseUrl[%s]" % baseUrl)
+                #example: https://hlstester.com/embed/?url=https://1107942067.rsc.cdn77.org/UpFiles/2019/12/7/34/131917/720p.m3u8
+        
+        link = re.findall("url=(.*?)&", baseUrl + "&")
+        
+        urlsTab=[]
+        
+        if link:
+            params = {'name': 'link' , 'url': link[0]}
+            printDBG(params)
+            urlsTab.append(params)
+        
+        return urlsTab
+        
+        
+        
