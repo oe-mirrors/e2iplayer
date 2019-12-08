@@ -461,6 +461,7 @@ class urlparser:
                        'veehd.com':             self.pp.parseVEEHDCOM       ,
                        'veoh.com':              self.pp.parserVEOHCOM        ,
                        'verystream.com':        self.pp.parserVERYSTREAM     ,
+                       'very.streamango.to':    self.pp.parserONLYSTREAM  , 
                        'veuclips.com':          self.pp.parserVIUCLIPS	   ,
                        'vev.io':                self.pp.parserTHEVIDEOME    ,
                        'vevo.com':              self.pp.parserVEVO          ,
@@ -11973,6 +11974,7 @@ class pageParser(CaptchaHelper):
         return urlsTab
 
     def parserONLYSTREAM(self, baseUrl):
+		#links like this: https://very.streamango.to/e/1wu3s8ocmuex redirect to onlystream.tv
         printDBG("parserONLYSTREAM baseUrl[%s]" % baseUrl)
 
         def checkTxt(txt):
