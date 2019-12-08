@@ -252,6 +252,7 @@ class urlparser:
                        'hdgo.cx':               self.pp.parserHDGOCC        ,
                        'hdpass.online':         self.pp.parserHDPASSONLINE,
                        'hdvid.tv':              self.pp.parserHDVIDTV       ,
+                       'hofoot.allvidview.tk':  self.pp.parserVIUCLIPS, 
                        'hqq.none':              self.pp.parseNETUTV         ,
                        'hqq.tv':                self.pp.parseNETUTV         ,
                        'hqq.watch':             self.pp.parseNETUTV         ,
@@ -11782,7 +11783,7 @@ class pageParser(CaptchaHelper):
         #         https://oms.vidstreamup.com/player/html/vElkr1qfLm?popup=yes&autoplay=1
         #         http://oms.upclips.online/player/PopUpIframe/CsAJ8IjxE8?iframe=popup&u=
         #         https://hofoot.toclipit.com/player/PopUpIframe/CsAJ8IjxE8?iframe=popup&u=
-        
+        #         https://hofoot.allvidview.tk/player/PopUpIframe/rU81KreFct?iframe=popup&u=
         
         baseUrl = baseUrl + "?"
             
@@ -12213,3 +12214,4 @@ class pageParser(CaptchaHelper):
                     urlsTab.append(params)
             
         return urlsTab
+    
