@@ -254,6 +254,7 @@ class urlparser:
                        'hdvid.tv':              self.pp.parserHDVIDTV       ,
                        'hlstester.com':         self.pp.parserHLSTESTER,
                        'hofoot.allvidview.tk':  self.pp.parserVIUCLIPS, 
+                       'hofoot.vidcrt.net':     self.pp.parserVIUCLIPS,
                        'hqq.none':              self.pp.parseNETUTV         ,
                        'hqq.tv':                self.pp.parseNETUTV         ,
                        'hqq.watch':             self.pp.parseNETUTV         ,
@@ -402,6 +403,7 @@ class urlparser:
                        'stream.moe':            self.pp.parseSTREAMMOE      ,
                        'stream4k.to':           self.pp.parserSTREAM4KTO    ,
                        'streamable.com':        self.pp.parserSTREAMABLECOM  ,
+                       'streamatus.tk':         self.pp.parserVIUCLIPS,
                        'streamango.com':        self.pp.parserSTREAMANGOCOM  ,
                        'streamcherry.com':      self.pp.parserSTREAMANGOCOM  ,
                        'streamcloud.eu':        self.pp.parserSTREAMCLOUD   ,
@@ -11785,6 +11787,8 @@ class pageParser(CaptchaHelper):
         #         http://oms.upclips.online/player/PopUpIframe/CsAJ8IjxE8?iframe=popup&u=
         #         https://hofoot.toclipit.com/player/PopUpIframe/CsAJ8IjxE8?iframe=popup&u=
         #         https://hofoot.allvidview.tk/player/PopUpIframe/rU81KreFct?iframe=popup&u=
+        #         https://oms.streamatus.tk/player/html/Mi5nzmttSZ?popup=yes&autoplay=1
+        #         https://hofoot.vidcrt.net
         
         baseUrl = baseUrl + "?"
             
