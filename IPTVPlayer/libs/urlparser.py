@@ -560,6 +560,7 @@ class urlparser:
                        'toclipit.com':         self.pp.parserVIUCLIPS       ,
                        'forstreams.com':       self.pp.parserVIUCLIPS       ,
                        'veuclipstoday.tk':     self.pp.parserVIUCLIPS       ,
+                       'streamatus.tk':        self.pp.parserVIUCLIPS       ,
                        'onlystream.tv':        self.pp.parserONLYSTREAMTV   ,
                        'tunestream.net':       self.pp.parserONLYSTREAMTV   ,
                        'jetload.net':          self.pp.parserONLYSTREAMTV   ,
@@ -1877,7 +1878,8 @@ class pageParser(CaptchaHelper):
                     tmpTab = getDirectM3U8Playlist(media_url, False, checkContent=True, cookieParams={'header':HTTP_HEADER, 'cookiefile':COOKIE_FILE, 'use_cookie': True, 'save_cookie':True})
                     cookieHeader = self.cm.getCookieHeader(COOKIE_FILE)
                     for tmp in tmpTab:
-                        redirectUrl =  strwithmeta(tmp['url'], {'iptv_proto':'m3u8', 'Cookie':cookieHeader, 'User-Agent': HTTP_HEADER['User-Agent']})
+                        hlsUrl = self.cm.ph.getSearchGroups(tmp['url'], """(https?://[^'^"]+?\.m3u8[^'^"]*?)#?""")[0]
+                        redirectUrl =  strwithmeta(hlsUrl, {'iptv_proto':'m3u8', 'Cookie':cookieHeader, 'User-Agent': HTTP_HEADER['User-Agent']})
                         vidTab.append({'name':'dailymotion.com: %sp hls' % (tmp.get('heigth', '0')), 'url':redirectUrl, 'quality':tmp.get('heigth', '0')})
                         
         if 0 == len(vidTab):
@@ -12286,6 +12288,10 @@ class pageParser(CaptchaHelper):
         #         https://footy11.viuclips.net/player/html/D7o5OVWU9C?popup=yes&autoplay=1
         #         http://player.veuclips.com/embed/JwB2kRDt7Y
 
+        if 'parserVIUCLIPS' in baseUrl:
+            baseUrl = ph.search(baseUrl, r'''https?://.*parserVIUCLIPS\[([^"]+?)\]''')[0]
+            printDBG("force parserVIUCLIPS baseUrl[%s]" % baseUrl)
+
         if 'embed' not in baseUrl:
             video_id  = ph.search(baseUrl, r'''https?://.*/player/.*/([a-zA-Z0-9]{10})\?''')[0]
             printDBG("parserVIUCLIPS video_id[%s]" % video_id)
@@ -12299,29 +12305,12 @@ class pageParser(CaptchaHelper):
             return False
         
         vidTab=[]
-        links = re.findall("hls:\"(.*?)\"", data)
-        for l in links:
-            if l.startswith("//"):
-                l = "http:" + l
-            vidTab.extend(getDirectM3U8Playlist(l, checkExt=False, variantCheck=True, checkContent=True, sortWithMaxBitrate=99999999))
-
-        m = re.findall("sources: \[\{(.*?)\}\]", data, re.S)
-        if m:
-            links = re.findall ("src: ['\"](.*?)['\"]", m[0])
-            for l in links:
-                if l.startswith("//"):
-                    l = "https:" + l
-
-            vidTab.extend(getDirectM3U8Playlist(l, checkExt=False, variantCheck=True, checkContent=True, sortWithMaxBitrate=99999999))
-
-        m = re.findall( "hlsSource:['\"](.*?)['\"]", data, re.S)
-        if m:
-            l = m[0]
-            if l.startswith("//"):
-                l = "https:" + l
-
-            vidTab.extend(getDirectM3U8Playlist(l, checkExt=False, variantCheck=True, checkContent=True, sortWithMaxBitrate=99999999))
-
+        hlsUrl = self.cm.ph.getSearchGroups(data, '''["']([^'^"]+?\.m3u8(?:\?[^"^']+?)?)["']''', ignoreCase=True)[0]
+        if hlsUrl != '':
+            if hlsUrl.startswith("//"):
+                hlsUrl = "https:" + hlsUrl
+            hlsUrl = strwithmeta(hlsUrl, {'Origin':"https://" + urlparser.getDomain(baseUrl), 'Referer':baseUrl})
+            vidTab.extend(getDirectM3U8Playlist(hlsUrl, checkExt=False, variantCheck=True, checkContent=True, sortWithMaxBitrate=99999999))
         return vidTab
 
     def parserONLYSTREAMTV(self, baseUrl):
