@@ -12352,12 +12352,21 @@ class pageParser(CaptchaHelper):
         # example :https://mixdrop.co/f/1f13jq
         #          https://mixdrop.co/e/1f13jq
 
+        baseUrl = strwithmeta(baseUrl)
+        HTTP_HEADER = self.cm.getDefaultHeader(browser='firefox')
+        referer = baseUrl.meta.get('Referer')
+        if referer:
+            HTTP_HEADER['Referer'] = referer
+        else:
+            HTTP_HEADER['Referer'] = baseUrl
+        urlParams = {'header': HTTP_HEADER}
+
         if '/f/' in baseUrl:
             url = baseUrl.replace('/f/','/e/')
         else:
             url = baseUrl
 
-        sts, data = self.cm.getPage(url)
+        sts, data = self.cm.getPage(url, urlParams)
         if not sts:
             return []
 
@@ -12387,7 +12396,7 @@ class pageParser(CaptchaHelper):
 
             # found a part similar to this one:
             #MDCore.vsrc="//s-delivery4.mixdrop.co/v/cd5b9db3d4d79b8e27f4b8e9e01b0f89.mp4?s=n4gHzKKmauonkMNudSwDkQ&e=1573868130"
-            link = re.findall("vsrc=\"([^\"]+?)\"", decoded)
+            link = re.findall("vsrc?=\"([^\"]+?)\"", decoded)
             if link:
                 if link[0].startswith('//'):
                     video_url = "https:" + link[0]
