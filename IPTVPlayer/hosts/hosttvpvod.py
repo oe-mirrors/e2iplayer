@@ -210,8 +210,10 @@ class TvpVod(CBaseHostClass, CaptchaHelper):
                 if sitekey != '':
                     token, errorMsgTab = self.processCaptcha(sitekey, self.cm.meta['url'])
                     if token == '':
-                        return False
-                    post_data['g-recaptcha-response'] = token 
+                        msg = _('Link protected with google recaptcha v2.') + '\n' + msg
+                        sts = False
+                    else:
+                        post_data['g-recaptcha-response'] = token
                 sts, data = self._getPage(TvpVod.LOGIN_URL + ref, self.defaultParams, post_data)
         if sts and 'action=sign-out' in data:
             printDBG(">>>\n%s\n<<<" % data)
@@ -757,7 +759,8 @@ class TvpVod(CBaseHostClass, CaptchaHelper):
             
             params = dict(self.defaultParams)
             params['header'] = {'User-Agent':'okhttp/3.8.1', 'Authorization':'Basic YXBpOnZvZA==', 'Accept-Encoding':'gzip'}
-            sts, data = self.cm.getPage( 'https://apivod.tvp.pl/tv/video/%s/default/default?device=android' % asset_id, params)
+#            sts, data = self.cm.getPage( 'https://apivod.tvp.pl/tv/video/%s/default/default?device=android' % asset_id, params)
+            sts, data = self.cm.getPage( 'https://apivod.tvp.pl/tv/video/%s/' % asset_id, params)
             printDBG("%s -> [%s]" % (sts, data))
             try:
                 data = json_loads(data, '', True)

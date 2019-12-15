@@ -95,12 +95,12 @@ class ustvgo(CBaseHostClass):
         return self.cm.getPageCFProtection(baseUrl, addParams, post_data)
         
     def listMainMenu(self, cItem):
-        MAIN_CAT_TAB = [{'category':'list_items',          'title': _('All')       ,   'url':self.getFullUrl('/')                         },
-                        {'category':'list_category',       'title': 'Home'          ,   'url':self.getFullUrl('/')                         },
+        MAIN_CAT_TAB = [{'category':'list_category',       'title': 'Home'          ,   'url':self.getFullUrl('/')                         },
                         {'category':'list_category',       'title': 'Entertainment' ,   'url':self.getFullUrl('/category/entertainment/')  },
                         {'category':'list_category',       'title': 'News'          ,   'url':self.getFullUrl('/category/news/')           },
                         {'category':'list_category',       'title': 'Sports'        ,   'url':self.getFullUrl('/category/sports/')         },
-                        {'category':'list_category',       'title': 'Kids'          ,   'url':self.getFullUrl('/category/kids/')           },]
+                        {'category':'list_category',       'title': 'Kids'          ,   'url':self.getFullUrl('/category/kids/')           },
+                        {'category':'list_items',          'title': _('All')        ,   'url':self.getFullUrl('/')                         },]
         self.listsTab(MAIN_CAT_TAB, cItem)
     
     def listItems(self, cItem):
@@ -136,7 +136,7 @@ class ustvgo(CBaseHostClass):
             url = self.getFullUrl( self.cm.ph.getSearchGroups(tmp, '''\shref=['"]([^"^']+?)['"]''')[0] )
             title  = self.cleanHtmlStr(tmp)
             if not self.cm.isValidUrl(url): continue
-            icon = self.getFullIconUrl( self.cm.ph.getSearchGroups(item, '''\ssrc=['"]([^"^']+?)['"]''')[0] )
+            icon = self.getFullIconUrl( self.cm.ph.getSearchGroups(item, '''\sdata-lazy-src=['"]([^"^']+?)['"]''')[0] )
             params = dict(cItem)
             params = {'good_for_fav': True, 'title':title, 'url':url, 'icon':icon}
             self.addVideo(params)
@@ -153,7 +153,7 @@ class ustvgo(CBaseHostClass):
         if not sts: return
 
         if 'player.setup' not in data:
-            url = self.cm.ph.getSearchGroups(data, '''src=['"]([^"^']+?link\.php[^"^']*?)['"]''', 1, True)[0]
+            url = self.getFullUrl(self.cm.ph.getSearchGroups(data, '''src=['"]([^"^']+?player\.php[^"^']*?)['"]''', 1, True)[0])
             sts, data = self.getPage(url)
             if not sts: return
 
