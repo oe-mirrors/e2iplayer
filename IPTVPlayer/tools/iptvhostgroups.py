@@ -77,7 +77,7 @@ class IPTVHostsGroups:
         self.PREDEFINED_HOSTS['documentary']      = ['fokustv','dokumentalnenet','greekdocumentaries3','dailymotion','orthobulletscom','vumedicom']
         self.PREDEFINED_HOSTS['science']          = ['questtvcouk','dailymotion','ustreamtv','dokumentalnenet','orthobulletscom','vumedicom']
         
-        self.PREDEFINED_HOSTS['polish']           = ['youtube','webstream','efilmytv','alltubetv','allboxtv','filisertv','ekinotv','cdapl','cdafilmy','iitvpl','videopenny','zalukajcom','serialnet','tvpvod','ipla','tvnvod','vodpl', \
+        self.PREDEFINED_HOSTS['polish']           = ['youtube','webstream','3filmy','efilmytv','alltubetv','allboxtv','filisertv','ekinotv','cdapl','cdafilmy','iitvpl','videopenny','zalukajcom','serialnet','tvpvod','ipla','tvnvod','vodpl', \
                                                      'freediscpl','ekstraklasatv','kreskowkazone','kreskoweczki','bajeczkiorg','animeodcinki','playpuls','meczykipl','eskago', \
                                                      'tvjworg','artetv','dailymotion', 'vimeo', 'kabarety','twitchtv','hitboxtv','tvgrypl','chomikuj','fighttube','spryciarze','wgrane','wolnelekturypl','tvn24','ninateka', \
                                                      'maxtvgo','wpolscepl','wrealu24tv','wptv','interiatv','dokumentalnenet', 'serialeco','radiostacja','nuteczki','luxveritatis','tvproart','tvrepublika', \
