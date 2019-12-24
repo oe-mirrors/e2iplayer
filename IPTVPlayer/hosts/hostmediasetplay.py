@@ -257,7 +257,9 @@ class MediasetPlay(CBaseHostClass):
             if item["mediasetprogram$hasVod"]:
                 # video on demand available
                 desc = []
-                desc.append(item['mediasetprogram$publishInfo']['last_published'].split('T', 1)[0]) 
+                if 'last_published' in item['mediasetprogram$publishInfo']: 
+                    desc.append(item['mediasetprogram$publishInfo']['last_published'].split('T', 1)[0]) 
+                
                 desc.append(item['mediasetprogram$publishInfo']['description']) 
                 desc.append(str(timedelta(seconds=int(item['mediasetprogram$duration']))))
                 if 'mediasetprogram$numberOfViews' in item:
