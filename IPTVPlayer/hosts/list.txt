@@ -51,7 +51,6 @@ hostfaselhdcom
 hostfavourites
 hostfenixsite
 hostfightvideo
-hostfilisertv
 hostfilma24hdcom
 hostfilma24io
 hostfilmaoncom

@@ -8,6 +8,7 @@ from Plugins.Extensions.IPTVPlayer.components.ihost import CHostBase, CBaseHostC
 from Plugins.Extensions.IPTVPlayer.tools.iptvtools import  printDBG, printExc, GetDefaultLang, rm, byteify
 from Plugins.Extensions.IPTVPlayer.tools.iptvtypes import strwithmeta
 from Plugins.Extensions.IPTVPlayer.libs.recaptcha_v2 import UnCaptchaReCaptcha
+from Plugins.Extensions.IPTVPlayer.components.recaptcha_v2helper import CaptchaHelper
 from Plugins.Extensions.IPTVPlayer.tools.e2ijs import js_execute
 from Plugins.Extensions.IPTVPlayer.libs.e2ijson import loads as json_loads
 from Plugins.Extensions.IPTVPlayer.libs import ph
@@ -48,7 +49,7 @@ def GetConfigList():
 def gettytul():
     return 'http://ekino-tv.pl/'
 
-class EkinoTv(CBaseHostClass):
+class EkinoTv(CBaseHostClass, CaptchaHelper):
     
     def __init__(self):
         printDBG("EkinoTv.__init__")
@@ -393,27 +394,36 @@ class EkinoTv(CBaseHostClass):
             
             if self.up.getDomain(self.getMainUrl()) not in self.up.getDomain(url):
                 break
-            
+
+            printDBG(">>>\n%s\n<<<" % data)
             if 'recaptcha' in data:
                 SetIPTVPlayerLastHostError(_('Link protected with google recaptcha v2.')) 
                 sitekey  = self.cm.ph.getSearchGroups(data, 'data-sitekey="([^"]+?)"')[0]
                 if sitekey == '': sitekey = self.cm.ph.getSearchGroups(data, '''['"]?sitekey['"]?\s*:\s*['"]([^"^']+?)['"]''')[0]
                 if sitekey != '':
-                    recaptcha = UnCaptchaReCaptcha(lang=GetDefaultLang())
-                    recaptcha.HTTP_HEADER['Referer'] = baseUrl
-                    token = recaptcha.processCaptcha(sitekey)
+                    token, errorMsgTab = self.processCaptcha(sitekey, self.cm.meta['url'])
                     if token != '':
                         vUrl = self.getFullUrl('/watch/verify.php')
                         urlParams['header']['Referer'] = baseUrl
                         sts, data = self.getPage(vUrl, urlParams, {'verify':token})
                     else:
-                        SetIPTVPlayerLastHostError(_('Link protected with google recaptcha v2.')+'\n wejdź na https://ekino-tv.pl/ i odpal dowolny film przez przeglądarke na komputerze.')
+                        SetIPTVPlayerLastHostError(_('Link protected with google recaptcha v2.')+'\nWejdź na https://ekino-tv.pl/ i odpal dowolny film przez przeglądarke na komputerze.\nJak nie pomogło użyj MyJDownloader.')
                         return []
                         break
             
             sts, data = self.getPage(url, urlParams)
             if not sts: return urlTab
-            
+
+            if 'replace(atob' in data:
+                urlParams['header']['Referer'] = url
+                urlParams['ignore_http_code_ranges'] = [(403, 403)]
+                url = self.cm.ph.getSearchGroups(data, '''atob\(['"]([^'^"]+?)['"]\)''')[0]
+                printDBG("EkinoTv.getVideoLinks url[%s]" % url)
+                url = base64.b64decode(url)
+                printDBG("EkinoTv.getVideoLinks url_d[%s]" % url)
+                sts, data = self.getPage(url, urlParams)
+                if not sts: return urlTab
+
             if 'recaptcha' in data:
                 SetIPTVPlayerLastHostError(_('Link protected with google recaptcha v2.')) 
                 continue
