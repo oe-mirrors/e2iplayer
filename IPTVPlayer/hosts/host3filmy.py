@@ -1,4 +1,4 @@
-# -*- coding: utf-8 -*-
+﻿# -*- coding: utf-8 -*-
 ###################################################
 # LOCAL import
 ###################################################
@@ -11,13 +11,29 @@ from Plugins.Extensions.IPTVPlayer.libs.e2ijson import loads as json_loads
 ###################################################
 
 ###################################################
+# E2 GUI COMMPONENTS 
+###################################################
+from Screens.MessageBox import MessageBox
+###################################################
 # FOREIGN import
 ###################################################
 import urlparse
 import re
 import urllib
-try:    import json
-except Exception: import simplejson as json
+from Components.config import config, ConfigText, ConfigSelection, getConfigListEntry
+###################################################
+
+###################################################
+# Config options for HOST
+###################################################
+config.plugins.iptvplayer._3filmy_login = ConfigText(default = "", fixed_size = False)
+config.plugins.iptvplayer._3filmy_password = ConfigText(default = "", fixed_size = False)
+
+def GetConfigList():
+    optionList = []
+    optionList.append(getConfigListEntry("3filmy login:", config.plugins.iptvplayer._3filmy_login))
+    optionList.append(getConfigListEntry("3filmy hasło:", config.plugins.iptvplayer._3filmy_password))
+    return optionList
 ###################################################
 
 
@@ -44,6 +60,10 @@ class _3Filmy(CBaseHostClass):
                              {'category':'search_history',     'title': _('Search history')} ]
 
         self.cacheMovieFilters = {'a':[], 'm':[], 'g':[], 'y':[], 'v':[]}
+        self.loggedIn = None
+        self.login    = ''
+        self.password = ''
+        self.loginMessage = ''
         
     def getPage(self, baseUrl, addParams = {}, post_data = None):
         if addParams == {}: addParams = dict(self.defaultParams)
@@ -133,7 +153,7 @@ class _3Filmy(CBaseHostClass):
         if not sts: return
 
         nextPage = re.findall('^(\d+)<div',data)
-        printDBG("3filmy.listMovies nextPage[%s]" % nextPage)
+#        printDBG("3filmy.listMovies nextPage[%s]" % nextPage)
 
         data = self.cm.ph.getAllItemsBeetwenNodes(data, ('<img', '>'), ('</div></div></div></div></div', '>'))
         for item in data:
@@ -149,9 +169,9 @@ class _3Filmy(CBaseHostClass):
                 params = {'good_for_fav':True, 'url':url, 'title':title, 'desc':desc, 'icon':icon}
                 self.addVideo(params)
             
-        if nextPage != '0':
+        if nextPage[0] != '0':
             params = dict(cItem)
-            params.update({'title':_('Next page'), 'url':nextPage, 'page':page + 1})
+            params.update({'title':_('Next page'), 'url':cItem['url'], 'page':page + 1})
             self.addDir(params)
 
     def listSeries(self, cItem):
@@ -161,12 +181,11 @@ class _3Filmy(CBaseHostClass):
         self.setMainUrl(data.meta['url'])
 
         tmp = self.cm.ph.getDataBeetwenNodes(data, ('<div', '>', 'player-ajax'), ('</div', '>'))[1]
-        printDBG("3filmy.listSeries tmp [%s]" % tmp)
         hash = self.cm.ph.getSearchGroups(tmp, '''data\-hash=['"]([^"^']+?)['"]''')[0]
 
         data = self.cm.ph.getAllItemsBeetwenNodes(data, ('<li', '>', 'data-id'), ('</li', '>'))
         for item in data:
-            printDBG("3filmy.listSeries item %s" % item)
+#            printDBG("3filmy.listSeries item %s" % item)
             url   = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''href=['"]([^"^']+?)['"]''')[0])
             title = self.cm.ph.getSearchGroups(item, '''data\-title=['"]([^"^']+?)['"]''')[0]
             id    = self.cm.ph.getSearchGroups(item, '''data\-id=['"]([^"^']+?)['"]''')[0]
@@ -179,12 +198,12 @@ class _3Filmy(CBaseHostClass):
         http_params = dict(self.defaultParams)
         sts, data = self.getPage(url, http_params)
         if not sts: return
-        printDBG("3filmy.listSearchResult data[%s]" % data)
+#        printDBG("3filmy.listSearchResult data[%s]" % data)
 
         try:
-            jsond = json_loads(data)
-            for item in jsond:
-                printDBG("3filmy.getLinksForVideo oitem %s" % item)
+            data = json_loads(data)
+            for item in data:
+#                printDBG("3filmy.getLinksForVideo oitem %s" % item)
                 url = self.getFullUrl(item['link'])
                 icon = item['img']
                 title = item['t']
@@ -219,7 +238,7 @@ class _3Filmy(CBaseHostClass):
             sts, data = self.getPage(cUrl, params)
             if not sts: return []
             tmp = self.cm.ph.getDataBeetwenNodes(data, ('<div', '>', 'player-ajax'), ('</div', '>'))[1]
-            printDBG("3filmy.getLinksForVideo tmp [%s]" % tmp)
+#            printDBG("3filmy.getLinksForVideo tmp [%s]" % tmp)
             hash = self.cm.ph.getSearchGroups(tmp, '''data\-hash=['"]([^"^']+?)['"]''')[0]
             id   = self.cm.ph.getSearchGroups(tmp, '''data\-id=['"]([^"^']+?)['"]''')[0]
             post_data = {'id':id, 'hash':hash, 'd':'-1', 'q':'-1', 'w':'-1'}
@@ -228,15 +247,15 @@ class _3Filmy(CBaseHostClass):
         
         sts, data = self.getPage('https://3filmy.com/ajax/video.details', params, post_data)
         if not sts: return []
-        printDBG("3filmy.getLinksForVideo data[%s]" % data)
+#        printDBG("3filmy.getLinksForVideo data[%s]" % data)
         
         retTab = []
         
         try:
-            jsond = json_loads(data)
-            qual = jsond['q_avb']
-            opts = [jsond['ch']]
-            opts.extend(jsond['opts'])
+            data = json_loads(data)
+            qual = data['q_avb']
+            opts = [data['ch']]
+            opts.extend(data['opts'])
 #            printDBG("3filmy.getLinksForVideo qual: %s opts: %s" % (qual, opts))
             for qitem in qual:
                 post_data.update({'q':qitem})
@@ -245,8 +264,8 @@ class _3Filmy(CBaseHostClass):
                     post_data.update({'d':oitem[0]})
                     sts, data = self.getPage('https://3filmy.com/ajax/video.details', params, post_data)
                     if not sts: return []
-                    jsond = json_loads(data)
-                    link = urllib.unquote(jsond['link'])
+                    data = json_loads(data)
+                    link = urllib.unquote(data['link'])
                     url = _link(link)
                     retTab.append({'name':str(qitem) + ' - ' +  oitem[1], 'url':strwithmeta(url, {'Referer':url}), 'need_resolve':0})
         except Exception:
@@ -263,12 +282,47 @@ class _3Filmy(CBaseHostClass):
     def tryTologin(self):
         printDBG('tryTologin start')
         
-        return        
+        if None == self.loggedIn or self.login != config.plugins.iptvplayer._3filmy_login.value or\
+            self.password != config.plugins.iptvplayer._3filmy_password.value:
+
+            self.login = config.plugins.iptvplayer._3filmy_login.value
+            self.password = config.plugins.iptvplayer._3filmy_password.value
+
+            #rm(self.COOKIE_FILE)
+            self.cm.clearCookie(self.COOKIE_FILE, ['__cfduid', 'cf_clearance'])
+
+            self.loggedIn = False
+
+            if '' == self.login.strip() or '' == self.password.strip():
+                return False
+
+            httpParams = dict(self.ajaxParams)
+            httpParams['header'] = dict(httpParams['header'])
+            post_data = {'a':'signin-modal'}
+            sts, data = self.getPage('https://3filmy.com/ajax/modal', httpParams, post_data)
+            if not sts: return False
+
+            expires = self.cm.ph.getSearchGroups(data, '''<input[^>]*?name=['"]expires['"][^>]*?value=['"]([^'^"]+?)['"]''')[0]
+            hash    = self.cm.ph.getSearchGroups(data, '''<input[^>]*?name=['"]hash['"][^>]*?value=['"]([^'^"]+?)['"]''')[0]
+            post_data = 'expires=%s&hash=%s&username=%s&password=%s&remember_me=ON' % (expires, hash, self.login, self.password)
+
+            httpParams['raw_post_data'] = True
+            sts, data = self.getPage('https://3filmy.com/ajax/login', httpParams, post_data)
+            if sts and 'success' in data:
+                self.loggedIn = True
+            else:
+                if sts: message = self.cm.ph.getSearchGroups(data, '''['"]error['"][^>]*?['"]([^'^"]+?)['"]''')[0]
+                else: message = ''
+                message = message.decode('unicode-escape').encode('UTF-8')
+                self.sessionEx.open(MessageBox, _('Login failed.') + '\n' + message, type = MessageBox.TYPE_ERROR, timeout = 10)
+                printDBG('tryTologin failed')
+
+        return self.loggedIn
 
     def handleService(self, index, refresh=0, searchPattern='', searchType=''):
         printDBG('3filmy.handleService start')
         
-#        self.tryTologin()
+        self.tryTologin()
                 
         CBaseHostClass.handleService(self, index, refresh, searchPattern, searchType)
         
