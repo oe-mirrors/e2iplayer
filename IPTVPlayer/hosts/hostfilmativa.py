@@ -17,10 +17,10 @@ except Exception: import simplejson as json
 
 
 def gettytul():
-    return 'http://filmativa.ws/'
+    return 'http://filmativa.net/'
 
 class Filmotopia(CBaseHostClass):
-    MAIN_URL    = 'http://filmativa.ws/'
+    MAIN_URL    = 'http://filmativa.net/'
     SRCH_URL    = MAIN_URL + '?s='
     DEFAULT_ICON_URL = 'http://athensmoviepalace.com/wp-content/uploads/2014/07/FilmReel.png'
     

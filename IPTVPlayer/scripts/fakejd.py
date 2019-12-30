@@ -78,6 +78,11 @@ def getPage(url, headers={}, post_data=None):
         printExc()
     return sts, data 
 
+def _fromhex(hex):
+    if sys.version_info < (2,7,0):
+        return hex.decode('hex')
+    else:
+        return bytearray.fromhex(hex)
 
 class MYJDException(BaseException):
     pass
@@ -163,10 +168,10 @@ class Myjdapi:
         else:
             old_token = self._server_encryption_token
         new_token = hashlib.sha256()
-        new_token.update(old_token + bytearray.fromhex(self._session_token))
+        new_token.update(old_token + _fromhex(self._session_token))
         self._server_encryption_token = new_token.digest()
         new_token = hashlib.sha256()
-        new_token.update(self._device_secret+bytearray.fromhex(self._session_token))
+        new_token.update(self._device_secret + _fromhex(self._session_token))
         self._device_encryption_token = new_token.digest()
 
     def _signature_create(self,key,data):
@@ -328,7 +333,7 @@ class MyjdRequestHandler(BaseHTTPRequestHandler):
         
         session_token = self.path.split('/t_', 1)[-1].split('_', 1)[0]
         new_token = hashlib.sha256()
-        new_token.update(jd.get_device_secret() + bytearray.fromhex(session_token))
+        new_token.update(jd.get_device_secret() + _fromhex(session_token))
         encryption_token = new_token.digest()
         
         printDBG("SESSION TOKEN: %s" % session_token)

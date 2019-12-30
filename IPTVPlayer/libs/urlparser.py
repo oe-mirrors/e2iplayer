@@ -11720,6 +11720,11 @@ class pageParser(CaptchaHelper):
         HTTP_HEADER['Referer'] = baseUrl.meta.get('Referer', baseUrl)
         urlParams = {'header':HTTP_HEADER}
 
+        if 'embed' not in baseUrl:
+            videoID = self.cm.ph.getSearchGroups(baseUrl+'/', '[^A-Za-z0-9]([A-Za-z0-9]{12})[^A-Za-z0-9]')[0]
+            printDBG("parserCLOUDVIDEOTV videoID[%s]" % videoID)
+            baseUrl = '{0}embed-{1}.html'.format(urlparser.getDomain(baseUrl, False), videoID)
+
         sts, data = self.cm.getPage(baseUrl, urlParams)
         if not sts: return False
         cUrl = self.cm.meta['url']
@@ -12404,7 +12409,7 @@ class pageParser(CaptchaHelper):
 
             # found a part similar to this one:
             #MDCore.vsrc="//s-delivery4.mixdrop.co/v/cd5b9db3d4d79b8e27f4b8e9e01b0f89.mp4?s=n4gHzKKmauonkMNudSwDkQ&e=1573868130"
-            link = re.findall("vsrc?=\"([^\"]+?)\"", decoded)
+            link = re.findall("vsr.*?=\"([^\"]+?)\"", decoded)
             if link:
                 if link[0].startswith('//'):
                     video_url = "https:" + link[0]

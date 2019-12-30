@@ -302,7 +302,7 @@ class AlltubeTV(CBaseHostClass):
         
         printDBG(data)
         
-        data = self.cm.ph.rgetDataBeetwenMarkers(data, '<div class="container-fluid">', 'Kontakt')[1]
+        data = self.cm.ph.rgetDataBeetwenMarkers(data, '<div class="container-fluid">', 'Regulamin')[1]
         data = data.split('<h2 class="headline">')
         if len(data): del data[0]
         
