@@ -5,7 +5,7 @@
 from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _
 from Plugins.Extensions.IPTVPlayer.components.ihost import CHostBase, CBaseHostClass, RetHost, CUrlItem
 from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, GetLogoDir, GetCookieDir, GetHostsOrderList
-from Plugins.Extensions.IPTVPlayer.libs.e2ijson import loads as json_loads
+from Plugins.Extensions.IPTVPlayer.libs.e2ijson import loads as json_loads, dumps as json_dumps
 
 from Plugins.Extensions.IPTVPlayer.libs.pCommon import  CParsingHelper
 from Plugins.Extensions.IPTVPlayer.libs.urlparserhelper import getDirectM3U8Playlist, getF4MLinksWithMeta
@@ -170,6 +170,7 @@ class HasBahCa(CBaseHostClass):
                         {'alias_id':'livemass.net',            'name': 'livemass.net',        'title': 'http://livemass.net/',              'url': 'http://www.livemass.net/',                                           'icon': 'http://s3.amazonaws.com/livemass/warrington/images/warrington/iconclr.png'}, \
 #                        {'alias_id':'wizja.tv',                'name': 'wizja.tv',            'title': 'http://wizja.tv/',                  'url': 'http://wizja.tv/',                                                   'icon': 'http://wizja.tv/logo.png'}, \
                         {'alias_id':'crackstreams.com',        'name': 'crackstreams.com',    'title': 'http://crackstreams.com/',          'url': 'http://crackstreams.com/',                                           'icon': ''}, \
+                        {'alias_id':'nhl66.ir',                'name': 'nhl66.ir',            'title': 'https://nhl66.ir',                  'url': 'https://mirror.nhl66.ir/api/get_anonymous_data',                     'icon': 'https://nhl66.ir/cassets/logo.png'}, \
                        ] 
     
     def __init__(self):
@@ -476,11 +477,18 @@ class HasBahCa(CBaseHostClass):
             self.addVideo(params)
     
     def getOthersLinks(self, cItem):
-        urlTab = []
+        printDBG("getOthersLinks cItem[%s]" % cItem)
+        hlsTab = []
         url = cItem.get('url', '')
         if url != '':
-            urlTab = getDirectM3U8Playlist(url, False)
-        return urlTab
+            if cItem['urlkey'] == '' and cItem['replacekey'] == '':
+                hlsTab = getDirectM3U8Playlist(url, False)
+            else:
+                hlsTab = getDirectM3U8Playlist(url, checkContent=True, sortWithMaxBitrate=9000000)
+                for idx in range(len(hlsTab)):
+                    hlsTab[idx]['url'] = strwithmeta(hlsTab[idx]['url'], {'iptv_m3u8_key_uri_replace_old':cItem['replacekey'], 'iptv_m3u8_key_uri_replace_new':cItem['urlkey']})
+
+        return hlsTab
     
     def getWeebTvList(self, url):
         printDBG('getWeebTvList start')
@@ -947,6 +955,30 @@ class HasBahCa(CBaseHostClass):
         if '///' in _url: return []
         return [{'name':'others', 'url':_url}]
 
+    def getNhl66List(self, url):
+        printDBG("nhl66List start")
+        sts,data = self.cm.getPage(url)
+        if not sts: return
+        try:
+            data = json_loads(data)
+            for item in data['games']:
+                tmp = json_dumps(item['stream_full'])
+                tmp = self.cm.ph.getAllItemsBeetwenMarkers(tmp, '"name":', ']')
+                for sitem in tmp:
+                    url   = self.getFullUrl(self.cm.ph.getSearchGroups(sitem, '''urls":.*?['"]([^"^']+?)['"]''')[0])
+                    if url == '': continue
+                    live  = self.cm.ph.getSearchGroups(sitem, '''is_live":([^"^']+?)['"]''')[0]
+                    if 'true' in live: title = '[LIVE]  '
+                    else: title = ''
+                    name  = self.cm.ph.getSearchGroups(sitem, '''name":.*?['"]([^"^']+?)['"]''')[0]
+                    dtime = item['start_datetime'].replace('T', ' - ').replace('Z', ' GMT')
+                    title = title + item['home_abr'] + ' vs. ' + item['away_abr'] + ' - ' + dtime + ' - ' + name
+                    desc = dtime + ' - ' + item['home_name'] + ' vs. ' + item['away_name'] + ' - ' + name
+                    params = {'good_for_fav':True, 'name':"others", 'url':url, 'title':title, 'desc':desc, 'replacekey':'https://mf.svc.nhl.com/', 'urlkey':'https://mirror.nhl66.ir/api/get_key_url/'}
+                    self.addVideo(params)
+        except Exception:
+            printExc()
+
     def handleService(self, index, refresh = 0, searchPattern = '', searchType = ''):
         printDBG('handleService start')
         
@@ -995,7 +1027,9 @@ class HasBahCa(CBaseHostClass):
         elif name == 'wiz1.net':            self.getWiz1NetList(self.currItem)
         elif name == "crackstreams_streams":self.getCrackstreamsList(url)
         elif name == 'crackstreams.com':    self.getCrackstreamsGroups(url)
-        
+        elif name == 'nhl66.ir':            self.getNhl66List(url)
+
+
         CBaseHostClass.endHandleService(self, index, refresh)
 
 class IPTVHost(CHostBase):
