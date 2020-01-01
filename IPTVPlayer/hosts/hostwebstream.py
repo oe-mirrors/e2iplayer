@@ -972,8 +972,8 @@ class HasBahCa(CBaseHostClass):
                     else: title = ''
                     name  = self.cm.ph.getSearchGroups(sitem, '''name":.*?['"]([^"^']+?)['"]''')[0]
                     dtime = item['start_datetime'].replace('T', ' - ').replace('Z', ' GMT')
-                    title = title + item['home_abr'] + ' vs. ' + item['away_abr'] + ' - ' + dtime + ' - ' + name
-                    desc = dtime + ' - ' + item['home_name'] + ' vs. ' + item['away_name'] + ' - ' + name
+                    title = title + item['away_abr'] + ' vs. ' + item['home_abr'] + ' - ' + dtime + ' - ' + name
+                    desc = dtime + '[/br]' + item['away_name'] + ' vs. ' + item['home_name'] + '[/br]' + name
                     params = {'good_for_fav':True, 'name':"others", 'url':url, 'title':title, 'desc':desc, 'replacekey':'https://mf.svc.nhl.com/', 'urlkey':'https://mirror.nhl66.ir/api/get_key_url/'}
                     self.addVideo(params)
         except Exception:
@@ -1028,7 +1028,6 @@ class HasBahCa(CBaseHostClass):
         elif name == "crackstreams_streams":self.getCrackstreamsList(url)
         elif name == 'crackstreams.com':    self.getCrackstreamsGroups(url)
         elif name == 'nhl66.ir':            self.getNhl66List(url)
-
 
         CBaseHostClass.endHandleService(self, index, refresh)
 

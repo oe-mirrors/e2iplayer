@@ -155,6 +155,9 @@ class Filmotopia(CBaseHostClass):
                 linkUrl = self.cm.ph.getSearchGroups(tmp[-1], 'data-only="([^"]+?)"')[0]
                 if '' != linkUrl: 
                     linkUrl = 'https://onlystream.tv/e/{0}'.format(linkUrl)
+                linkUrl = self.cm.ph.getSearchGroups(tmp[-1], 'data-mix="([^"]+?)"')[0]
+                if '' != linkUrl: 
+                    linkUrl = 'https://mixdrop.co/e/{0}'.format(linkUrl)
             episodeTitle = self.cleanHtmlStr( tmp[0] )
             if 0 == len(self.seriesCache.get(season, [])):
                 self.seriesCache[season] = []
