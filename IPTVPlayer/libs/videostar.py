@@ -111,11 +111,15 @@ class VideoStarApi(CBaseHostClass, CaptchaHelper):
         sts, data = self.cm.getPage(loginUrl, self.defaultParams)
         if not sts: return False, (errMessage % loginUrl)
 
-        sts, data = self.cm.ph.getDataBeetwenNodes(data, ('<form', '>', 'login'), ('</form', '>'))
-        if not sts: return False, ""
+#        sts, data = self.cm.ph.getDataBeetwenNodes(data, ('<form', '>', 'login'), ('</form', '>'))
+#        if not sts: return False, ""
+
+        link = self.cm.ph.getSearchGroups(data, '''<link as="script" rel="preload" href=['"](\/gatsby\-statics\/app\-[^'^"]+?)['"]''')[0]
+        sts, data = self.cm.getPage(self.getFullUrl(link), self.defaultParams)
+        if not sts: return False, (errMessage % loginUrl)
 
         if login != 'guest':
-            sitekey = self.cm.ph.getSearchGroups(data, '''sitekey=['"]([^'^"]+?)['"]''')[0]
+            sitekey = self.cm.ph.getSearchGroups(data, '''sitekey:['"]([^'^"]+?)['"]''')[0]
             if sitekey != '':
                 token, errorMsgTab = self.processCaptcha(sitekey, loginUrl)
                 if token == '':
