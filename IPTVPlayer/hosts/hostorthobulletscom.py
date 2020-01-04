@@ -63,13 +63,15 @@ class OrthoBullets(CBaseHostClass):
         self.loggedIn = None
         self.login    = ''
         self.password = ''
-               
+             
         self.MAIN_CAT_TAB =     [
                                     {'category':'categories',           'title': _('Categories'),       'url':self.MAIN_URL, 'icon':self.DEFAULT_ICON_URL},
                                     {'category':'subspeciality',        'title': _('Subspecialities'),    'url':self.MAIN_URL, 'icon':self.DEFAULT_ICON_URL},
                                     {'category':'search',           'title': _('Search'), 'search_item':True},
                                     {'category':'search_history',   'title': _('Search history')} 
                                 ]
+
+
 
         self.CATEGORIES_TAB =   [
                                     {'category':'list_categories',  'title': _('All'), 'url':self.MAIN_URL + 'video/list.aspx'},
@@ -143,30 +145,25 @@ class OrthoBullets(CBaseHostClass):
         nextPage = self.cm.ph.getSearchGroups(nextPage, '''<a[^>]+?href=['"]([^'^"]+?)['"][^>]*?>%s</a>''' % (page + 1))[0]
         nextPage = ph.clean_html(nextPage)   
                      
-        block = self.cm.ph.getAllItemsBeetwenNodes(data, ('<a class="', '>', 'dashboard-item dashboard-item--video'), ('</a', '>'))      
-                         
-        while i<len(block):
-            desc = []
-            title = self.cm.ph.getAllItemsBeetwenNodes(block[i], ('<div class="', '>', 'dashboard-item__title'), ('</div', '>'),False)
+        block = self.cm.ph.getAllItemsBeetwenNodes(data, '<div class="videos ">', '<div class="group-items-list__bottom-paging"',False)[0]  
+        block = self.cm.ph.getAllItemsBeetwenNodes(block, '<a class="dashboard-item__link"', '</a>')     
+
+        for videos in block:
+            title = self.cm.ph.getAllItemsBeetwenNodes(videos, '<div class="dashboard-item__title">', '</div>',False)
             title = map(lambda cleanTitle: cleanTitle.replace('\r\n                    ', ''), title)
             title = map(lambda cleanTitle: cleanTitle.replace('\r\n                ', ''), title)
             title = title[0]
             title  = ph.clean_html(title)
-            videourl = ph.find(block[i], 'href="/video', '"', False)[1]
-            videourl = self.MAIN_URL + 'video' + videourl
-            imageurl = self.cm.ph.getAllItemsBeetwenNodes(block[i],'style="background-image: url(\'', ('\');">'),False)[1]
-            vidviews = self.cm.ph.getAllItemsBeetwenNodes(block[i], ('<div class="', '>', 'dashboard-item__views'), ('</div', '>'),False)
-            vidviews = map(lambda cleanTitle: cleanTitle.replace('\r\n                        ', ''), vidviews)
-            vidviews = map(lambda cleanTitle: cleanTitle.replace('\r\n                ', ''), vidviews)
-            vidviews = vidviews[0]
-            numstars = self.cm.ph.getAllItemsBeetwenNodes(block[i], ('<li><i class=\'', '>', 'icon icon-star blank'), ('\'></i></li>'),False)
-            numstars = len(numstars)            
-            desc.append('%s Rated %s/%s' % (vidviews, 5-numstars, 5))
-            desc = [' | '.join(desc)]                       
+            videourl = self.MAIN_URL + self.cm.ph.getSearchGroups(videos, 'href="([^"]+?)"')[0]
+            imageurl = self.cm.ph.getAllItemsBeetwenNodes(videos,'style="background-image: url(\'', ('\');">'),False)[1]
+            viddate = self.cm.ph.getAllItemsBeetwenNodes(videos, '<div class="dashboard-item__date">', '</div>',False)[0]
+            viddate = viddate.strip()
+            vidviews = self.cm.ph.getAllItemsBeetwenNodes(videos, '<div class="dashboard-item__views">', '</div>',False)[0]
+            vidviews = vidviews.strip()
+            desc = '\c00????00 Title: \c00??????%s\\n \c00????00Date: \c00??????%s\\n \c00????00Views: \c00??????%s\\n' %(title, viddate, vidviews)
             params = dict(cItem)
-            params.update({'good_for_fav':True, 'title':title, 'url':videourl, 'icon':imageurl, 'desc':'[/br]'.join(desc)})
+            params.update({'good_for_fav':True, 'title':title, 'url':videourl, 'icon':imageurl, 'desc':desc})
             self.addVideo(params)                    
-            i+=1
             
         if nextPage:
             params = dict(cItem)
