@@ -2658,7 +2658,7 @@ class pageParser(CaptchaHelper):
                         #    printDBG(wordList[i])
 
                         # search for second list of vars
-                        tmpVar2 = re.findall(";e\(\);(var .*?)\$\('\*'\)", script, re.S)
+                        tmpVar2 = re.findall(";q\(\);(var .*?)\$\('\*'\)", script, re.S)
                         if tmpVar2:
                             printDBG("------------")
                             printDBG(tmpVar2[0])
@@ -12391,6 +12391,7 @@ class pageParser(CaptchaHelper):
             return []
 
         urlsTab=[]
+        sub_tracks = []
         # decrypt packed scripts
         scripts = re.findall(r"(eval\s?\(function\(p,a,c,k,e,d.*?)</script>", data,re.S)
         for script in scripts:
@@ -12403,20 +12404,18 @@ class pageParser(CaptchaHelper):
             # duktape
             ret = js_execute( script )
             decoded = ret['data']
-            printDBG('------------------------------')
-            printDBG(decoded)
-            printDBG('------------------------------')
 
-            # found a part similar to this one:
-            #MDCore.vsrc="//s-delivery4.mixdrop.co/v/cd5b9db3d4d79b8e27f4b8e9e01b0f89.mp4?s=n4gHzKKmauonkMNudSwDkQ&e=1573868130"
-            link = re.findall("furl=\"([^\"]+?)\"", decoded)
+            subData = urllib.unquote(self.cm.ph.getSearchGroups(decoded, '''remotesub=['"](http[^'^"]+?)['"]''')[0])
+            if (subData.startswith('https://') or subData.startswith('http://')) and (subData.endswith('.srt') or subData.endswith('.vtt')):
+                sub_tracks.append({'title':'attached', 'url':subData, 'lang':'unk', 'format':'srt'})
+
+            link = self.cm.ph.getSearchGroups(decoded, '''["']((?:https?:)?//[^'^"]+?\.mp4(?:\?[^"^']+?)?)["']''', ignoreCase=True)[0]
             if link:
-                if link[0].startswith('//'):
-                    video_url = "https:" + link[0]
+                if link.startswith('//'):
+                    video_url = "https:" + link
                 else:
-                    video_url = link[0]
-                video_url = urlparser.decorateUrl(video_url, {'Referer' : baseUrl})
-
+                    video_url = link
+                video_url = urlparser.decorateUrl(video_url, {'Referer' : baseUrl, 'external_sub_tracks':sub_tracks})
                 params = {'name': 'link', 'url': video_url}
                 printDBG(params)
                 urlsTab.append(params)
