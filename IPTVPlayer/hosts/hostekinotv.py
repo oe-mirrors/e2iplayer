@@ -414,13 +414,11 @@ class EkinoTv(CBaseHostClass, CaptchaHelper):
             sts, data = self.getPage(url, urlParams)
             if not sts: return urlTab
 
-            if 'replace(atob' in data:
-                urlParams['header']['Referer'] = url
+            url = self.cm.ph.getSearchGroups(data, '''\shref=['"]([^'^"]+?)['"]''')[0]
+
+            if self.cm.isValidUrl(url):
+                urlParams['header']['Referer'] = baseUrl
                 urlParams['ignore_http_code_ranges'] = [(403, 403)]
-                url = self.cm.ph.getSearchGroups(data, '''atob\(['"]([^'^"]+?)['"]\)''')[0]
-                printDBG("EkinoTv.getVideoLinks url[%s]" % url)
-                url = base64.b64decode(url)
-                printDBG("EkinoTv.getVideoLinks url_d[%s]" % url)
                 sts, data = self.getPage(url, urlParams)
                 if not sts: return urlTab
 
@@ -429,10 +427,6 @@ class EkinoTv(CBaseHostClass, CaptchaHelper):
                 continue
             
             url = self.getFullUrl(self.cm.ph.getSearchGroups(data, '<iframe[^>]+?src="([^"]+?)"')[0])
-
-            if 'window.atob' in url:
-                player = self.cm.ph.getSearchGroups(data, '''player\s*=\s*['"]([^'^"]+?)['"]''')[0]
-                url = base64.b64decode(player)
 
             if not self.cm.isValidUrl(url):
                 url = self.getFullUrl(self.cm.ph.getSearchGroups(data, '''var\s+url\s*=\s*['"]([^'^"]+?)['"]''')[0])
