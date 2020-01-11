@@ -116,11 +116,13 @@ class ZalukajCOM(CBaseHostClass):
                 proxy = config.plugins.iptvplayer.alternative_proxy2.value
             addParams = dict(addParams)
             addParams.update({'http_proxy':proxy})
-        
+
+        addParams['ignore_http_code_ranges'] = [(503, 503)]
         sts, data = self.cm.getPage(url, addParams, post_data)
+
         try:
-            if 'Duze obciazenie!' in data and loggedIn==False:
-                message = self.cleanHtmlStr(re.compile('<script.+?</script>', re.DOTALL).sub("", data))
+            if 'Duze obciazenie!' in data and self.loggedIn==False:
+                message = self.cleanHtmlStr(data)
                 GetIPTVNotify().push(message, 'info', 5)
                 SetIPTVPlayerLastHostError(message)
             if '/sms' in self.cm.meta['url']:
