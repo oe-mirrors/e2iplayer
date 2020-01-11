@@ -215,7 +215,7 @@ class Twitch(CBaseHostClass):
                     params = {'good_for_fav':True, 'name':'category', 'category':nextCategory, 'title':title, 'game_id':str(item['id']), 'game_name':jstr(item, 'name'), 'icon':icon, 'desc':desc}
                     self.addDir(params)
 
-            if cursor != '' and data[0]['data']['directories']['pageInfo']['hasNextPage']:
+            if cursor != '' and data[0]['data']['directoriesWithTags']['pageInfo']['hasNextPage']:
                 self.addDir( MergeDicts(cItem, {'title':_('Next page'), 'cursor':cursor}) )
 
         except Exception:
