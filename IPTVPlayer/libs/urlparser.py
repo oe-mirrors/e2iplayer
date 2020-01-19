@@ -565,6 +565,7 @@ class urlparser:
                        'tunestream.net':       self.pp.parserONLYSTREAMTV   ,
                        'jetload.net':          self.pp.parserONLYSTREAMTV   ,
                        'vidia.tv':             self.pp.parserONLYSTREAMTV   ,
+                       'youdbox.com':          self.pp.parserONLYSTREAMTV   ,
                        'mixdrop.co':           self.pp.parserMIXDROP        ,
                     }
         return
