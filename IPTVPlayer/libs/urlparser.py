@@ -418,6 +418,7 @@ class urlparser:
                        'streamplay.to':         self.pp.parserSTREAMPLAYTO   ,
                        'superfilm.pl':          self.pp.parserSUPERFILMPL   ,
                        'supervideo.tv':         self.pp.parserSUPERVIDEO    ,
+                       'supergoodtvlive.com':   self.pp.parserSUPERGOODLIVE ,
                        'suprafiles.org':        self.pp.parserUPLOAD         ,
                        'suspents.info':         self.pp.parserFASTVIDEOIN   ,
                        'swirownia.com.usrfiles.com': self.pp.parserSWIROWNIA,
@@ -431,6 +432,7 @@ class urlparser:
                        'tinymov.net':           self.pp.parserTINYMOV       ,
                        'topupload.tv':          self.pp.parserTOPUPLOAD     ,
                        'toclipit.com':          self.pp.parserVIUCLIPS,
+                       'tronpriceprediction2020.com': self.pp.parserTRONPRICE,
                        'tubecloud.net':         self.pp.parserTUBECLOUD     ,
                        'tune.pk':               self.pp.parseTUNEPK         ,
                        'tunein.com':            self.pp.parserTUNEINCOM      ,
@@ -501,6 +503,7 @@ class urlparser:
                        'vidoza.net':            self.pp.parserVIDOZANET      ,
                        'vidshare.tv':           self.pp.parserVIDSHARETV     ,
                        'vidspot.net':           self.pp.parserVIDSPOT       ,
+                       'vidsrc.me':             self.pp.parserVIDSRC        ,
                        'vidsso.com':            self.pp.parserVIDSSO        ,
                        'vidstodo.me':           self.pp.parserVIDSTODOME     ,
                        'vidstream.in':          self.pp.parserVIDSTREAM     ,
@@ -12127,6 +12130,30 @@ class pageParser(CaptchaHelper):
         if link_url:
             return urlparser().getVideoLinkExt(link_url)
         else:
+            printDBG("parserVcrypt: Not found a valid url in html")
+            printDBG("parserVcrypt: Looking for an input form")
+            #search input tag like <input type='hidden' id='vidzzx' name='vidzzx' value='o0hevvp5zrpv'>
+            inputs = self.cm.ph.getAllItemsBeetwenMarkers(data, '<input', '>')
+            for i in inputs:
+                i_name = self.cm.ph.getSearchGroups(i, "name=['\"]([^\"^']+?)[\"']")[0]
+                i_value = self.cm.ph.getSearchGroups(i, "value=['\"]([^\"^']+?)[\"']")[0]
+                
+                #https://wstream.video/videoKp/o0hevvp5zrpv
+                #https://wstream.video/video.php?file_code=o0hevvp5zrpv
+                #post data = vidzzx: o0hevvp5zrpv
+                printDBG("%s - %s - %s" % (i, i_name, i_value))
+            
+                if i_name == 'vidzzx':
+                    url2 = 'https://wstream.video/video.php?file_code=' + i_value 
+                    postData = {i_name : i_value}
+                    
+                    sts, data = self.cm.getPage(url2, {'header':{'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/76.0.3809.132 Safari/537.36'}, 'use_cookie':1, 'save_cookie':1,'load_cookie':1, 'cookiefile': GetCookieDir("vcrypt.cookie")}, post_data = postData)
+                    
+                    red_url = self.cm.meta['url']
+                    printDBG('redirect to url: %s' % red_url)
+                    
+                    return urlparser().getVideoLinkExt(red_url)
+                    
             return []
 
     def parserWSTREAMVIDEO(self, baseUrl):
@@ -12157,6 +12184,8 @@ class pageParser(CaptchaHelper):
         urlsTab = []
         # decrypt packed scripts
         scripts = re.findall(r"(eval\s?\(function\(p,a,c,k,e,d.*?)</script>", data,re.S)
+        printDBG("Packed scripts found :%s" % len(scripts))
+        
         for script in scripts:
             script = script + "\n"
             # mods
@@ -12173,25 +12202,23 @@ class pageParser(CaptchaHelper):
 
             # stream search
             s = re.findall("sources: ?\[(.*?)\]", decoded, re.S)
-            if not s:
-                return []
+            if s:
+                txt = checkTxt("[" + s[0] + "]")
+                printDBG(txt)
 
-            txt = checkTxt("[" + s[0] + "]")
-            printDBG(txt)
+                links = json_loads(txt)
+                #printDBG(str(links))
+                for l in links:
+                    if 'src' in l:
+                        url = urlparser.decorateUrl(l['src'], {'Referer' : baseUrl})
+                        if url.endswith('.m3u8'):
+                            urlsTab.extend(getDirectM3U8Playlist(url, checkExt=False, variantCheck=True, checkContent=True, sortWithMaxBitrate=99999999))
+                        else:
+                            params = {'name': l.get('label', 'link') , 'url': url}
+                            printDBG(params)
+                            urlsTab.append(params)
 
-            links = json_loads(txt)
-            #printDBG(str(links))
-            for l in links:
-                if 'src' in l:
-                    url = urlparser.decorateUrl(l['src'], {'Referer' : baseUrl})
-                    if url.endswith('.m3u8'):
-                        urlsTab.extend(getDirectM3U8Playlist(url, checkExt=False, variantCheck=True, checkContent=True, sortWithMaxBitrate=99999999))
-                    else:
-                        params = {'name': l.get('label', 'link') , 'url': url}
-                        printDBG(params)
-                        urlsTab.append(params)
-
-            return urlsTab
+        return urlsTab
 
     def parserJETLOAD(self, baseUrl):
         printDBG("parserJETLOAD baseUrl[%s]" % baseUrl)
@@ -12235,5 +12262,54 @@ class pageParser(CaptchaHelper):
         
         return urlsTab
         
+    def parserVIDSRC(self, baseUrl):
+        printDBG("parserVIDSRC baseUrl[%s]" % baseUrl)
+        #example: https://vidsrc.me/embed/tt5503686/
+
+        baseUrl = baseUrl + "/"
         
+        video_id = re.findall('embed/(.*?)/', baseUrl)
+        if video_id:
+            video_id = video_id[0]
+            url = "https://vidsrc.me/watching?i=%videoId%&srv=1".replace("%videoId%", video_id)
+            
+            httpParams = {
+                'header': {
+                    'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/73.0.3683.103 Safari/537.36',
+                    'Referer' : baseUrl.replace("embed", "server1").replace("//","/")
+                }
+            }
+            sts, data = self.cm.getPage(url, httpParams )
+            printDBG("---------")
+            printDBG(data)
+            
+            if sts:
+                printDBG("---------")
+                printDBG(data)
+                
+        else:
+            return []
+     
+    def parserTRONPRICE(self, baseUrl):
+        printDBG("parserTRONPRICE baseUrl[%s]" % baseUrl)
+
+        sts, data = self.cm.getPage(baseUrl)
+        
+        if sts:
+            printDBG(data)
+            
+        else:
+            return []
+        
+    def parserSUPERGOODLIVE(self, baseUrl):
+        printDBG("parserSUPERGOODLIVE baseUrl[%s]" % baseUrl)
+
+        sts, data = self.cm.getPage(baseUrl)
+        
+        if sts:
+            printDBG(data)
+            
+        else:
+            return []
+
         
