@@ -949,11 +949,20 @@ class HasBahCa(CBaseHostClass):
         data = CParsingHelper.getDataBeetwenNodes(data, ('<iframe', '>', 'allowfullscreen'), ('</iframe', '>'))[1]
         _url  = self.cm.ph.getSearchGroups(data, '''src=['"]([^"^']+?)['"]''')[0]
         if len(_url) and not _url.startswith('http'): _url = url+_url
+        if 'youtube' in _url:
+            urlsTab = self.up.getVideoLinkExt(_url)
+            return urlsTab
         sts,data = self.cm.getPage(_url)
         if not sts: return []
-        _url = self.cm.ph.getSearchGroups(data, '''source: ['"]([^"^']+?)['"]''')[0]
+        printDBG("crackstreamsLink data[%r]" % data)
+        _url = self.cm.ph.getSearchGroups(data, '''source:\swindow.atob\(['"]([^"^']+?)['"]''')[0]
+        if _url != '':
+            import base64
+            return [{'name':'others', 'url':urllib.unquote(base64.b64decode(_url))}]
+        else:
+            _url = self.cm.ph.getSearchGroups(data, '''source:\s['"]([^"^']+?)['"]''')[0]
+            return [{'name':'others', 'url':_url}]
         if '///' in _url: return []
-        return [{'name':'others', 'url':_url}]
 
     def getNhl66List(self, url):
         printDBG("nhl66List start")
