@@ -30,7 +30,7 @@ class VideoPenny(CBaseHostClass):
         self.AJAX_HEADER = dict(self.HEADER)
         self.AJAX_HEADER.update( {'X-Requested-With': 'XMLHttpRequest'} )
         
-        self.DEFAULT_ICON_URL = 'https://videopenny.net/wp-content/uploads/icons/VideoPennyNet-logo_126x30.png'
+        self.DEFAULT_ICON_URL = 'https://www1.videopenny.net/wp-content/uploads/icons/VideoPennyNet-logo_126x30.png'
         self.MAIN_URL = None
         self.cacheSeries = []
         self.cachePrograms = []
@@ -82,16 +82,21 @@ class VideoPenny(CBaseHostClass):
         try: url.encode('ascii')
         except Exception: url = urllib.quote(url, safe="/:&?%@[]()*$!+-=|<>;")
         return url
+
+    def getFullIconUrl(self, url):
+        url = self.getFullUrl(url)
+        cookieHeader = self.cm.getCookieHeader(self.COOKIE_FILE)
+        return strwithmeta(url, {'Cookie':cookieHeader, 'User-Agent':self.USER_AGENT})
         
     def selectDomain(self):
-        self.MAIN_URL = 'https://videopenny.net/'
+        self.MAIN_URL = 'https://www1.videopenny.net/'
         sts, data = self.getPage(self.getMainUrl())
 
-        self.MAIN_CAT_TAB = [{'category':'list_sort_filter',    'title': 'Seriale',           'url':self.getFullUrl('/kategoria-2/seriale-pol'),           'icon':self.getFullIconUrl('/wp-content/uploads/2014/05/Seriale-tv.png')},
-                             {'category':'list_sort_filter',    'title': 'Programy online',   'url':self.getFullUrl('/kategoria-2/programy-rozrywkowe_pol'),  'icon':self.getFullIconUrl('/wp-content/uploads/2014/05/Programy-online.png')},
-                             {'category':'list_sort_filter',    'title': 'Filmy',             'url':self.getFullUrl('/category/filmy-pol/'),               'icon':self.getFullIconUrl('/wp-content/uploads/2014/05/Filmy.png')},
-                             {'category':'list_sort_filter',    'title': 'Bajki',             'url':self.getFullUrl('/category/bajki_pol/'),                  'icon':self.getFullIconUrl('/wp-content/uploads/2014/05/Bajki-tv.png')},
-                             {'category':'list_last',           'title': 'Ostatnio dodane',   'url':self.getFullUrl('/ostatnio-dodane/')},
+        self.MAIN_CAT_TAB = [{'category':'list_sort_filter',    'title': 'Seriale',           'url':self.getFullUrl('/kat/seriale-pol'),           'icon':self.getFullIconUrl('/wp-content/uploads/2014/05/Seriale-tv.png')},
+                             {'category':'list_sort_filter',    'title': 'Programy online',   'url':self.getFullUrl('/kat/programy-rozrywkowe_pol'),  'icon':self.getFullIconUrl('/wp-content/uploads/2014/05/Programy-online.png')},
+                             {'category':'list_sort_filter',    'title': 'Filmy',             'url':self.getFullUrl('/kat/filmy-pol'),               'icon':self.getFullIconUrl('/wp-content/uploads/2014/05/Filmy.png')},
+                             {'category':'list_sort_filter',    'title': 'Bajki',             'url':self.getFullUrl('/kat/bajki_pol'),                  'icon':self.getFullIconUrl('/wp-content/uploads/2014/05/Bajki-tv.png')},
+                             {'category':'list_last',           'title': 'Ostatnio dodane',   'url':self.getFullUrl('/ostatnio-dodane')},
                              
                              {'category':'search',          'title': _('Search'), 'search_item':True, },
                              {'category':'search_history',  'title': _('Search history'),             } 
