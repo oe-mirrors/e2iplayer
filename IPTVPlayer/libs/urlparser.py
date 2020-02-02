@@ -566,6 +566,8 @@ class urlparser:
                        'jetload.net':          self.pp.parserONLYSTREAMTV   ,
                        'vidia.tv':             self.pp.parserONLYSTREAMTV   ,
                        'youdbox.com':          self.pp.parserONLYSTREAMTV   ,
+                       'upstream.to':          self.pp.parserONLYSTREAMTV   ,
+                       'supervideo.tv':        self.pp.parserONLYSTREAMTV   ,
                        'mixdrop.co':           self.pp.parserMIXDROP        ,
                     }
         return
