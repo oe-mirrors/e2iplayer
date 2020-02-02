@@ -37,38 +37,41 @@ class Wiziwig1Api(CBaseHostClass):
         #self.setMainUrl(self.cm.meta['url'])
         #self.http_params['header']['Referer'] = self.cm.meta['url']
 
-        items = re.findall("(<tr>\n<td class='icon'(.|\n)*?</tr>)", data)
+        items = re.findall("(<tr>\n<td class='icon'.*?</tr>)", data, re.S)
 
         for item in items:
-            url=''
-            anchors = re.findall("href=['\"](.*?)['\"]", item[0])
+            urls=[]
+            n_link = 0
+            anchors = re.findall("href=['\"](.*?)['\"]", item, re.S)
             if anchors:
                 for a in anchors:
                     if a.startswith("http"):
-                        url = a
-                        break
-            if url: 
-                title = re.findall("<h4>(.*?)</h4>", item[0])
+                        n_link = n_link + 1
+                        name = "Link %s " % n_link
+                        urls.append({"name" : name, "url" : a})
+
+            if urls: 
+                title = re.findall("<h4>(.*?)</h4>", item)
                 if title:
                     title = ph.clean_html(title[0])
 
-                    cat= re.findall("<td class='category'>(.*?)</td>", item[0])
+                    cat= re.findall("<td class='category'>(.*?)</td>", item)
                     if cat:
                         cat = ph.clean_html(cat[0])
                         title = cat + ' - ' + title
                     
-                    time = re.findall("<td class='time'>(.*?)</td>", item[0])
+                    time = re.findall("<td class='time'>(.*?)</td>", item)
                     if time:
                         time = time[0]
                         title = time + " - " + title
                     
-                    icon = re.findall("src='(.*?)'",item[0])
+                    icon = re.findall("src='(.*?)'",item)
                     if icon:
                         icon = self.getFullUrl(icon[0])
                     else:
                         icon = ''
                         
-                    params = MergeDicts(cItem, {'type':'video', 'title':title, 'url':url, 'icon': icon})
+                    params = MergeDicts(cItem, {'type':'video', 'title':title, 'url_list': urls, 'icon': icon})
                     printDBG(str(params))
                     channelsTab.append(params)
 
@@ -78,12 +81,21 @@ class Wiziwig1Api(CBaseHostClass):
         printDBG("Wiziwig1Api.getVideoLink")
         urlsTab = []
 
-        sts, data = self.getPage(cItem['url'], self.http_params)
-        if not sts: return urlsTab
-        self.http_params['header']['Referer'] = self.cm.meta['url']
+        for u in cItem.get("url_list",[]):
 
-        url = self.getFullUrl(ph.search(data, ph.IFRAME)[1])
-        sts, data = self.getPage(url, self.http_params)
-        if not sts: return []
-
-        return self.up.getAutoDetectedStreamLink(self.cm.meta['url'], data)
+            sts, data = self.getPage(u['url'], self.http_params)
+            if not sts: 
+                continue
+            
+            iframes = re.findall("<iframe width='650' height='500' src='(.*?)'", data, re.S)
+            
+            if iframes:
+                url = self.getFullUrl(iframes[0])
+                name = u["name"] + " - " + self.up.getDomain(url, onlyDomain=True)
+                if self.up.checkHostSupport(url): 
+                    printDBG("getVideoLinkExt %s " % str(self.up.getVideoLinkExt(url)))
+                    urlsTab.extend(self.up.getVideoLinkExt(url))
+                else:
+                    urlsTab.append({"name": name, "url" : url})
+        return urlsTab
+    

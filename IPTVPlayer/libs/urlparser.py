@@ -12296,8 +12296,49 @@ class pageParser(CaptchaHelper):
         sts, data = self.cm.getPage(baseUrl)
         
         if sts:
-            printDBG(data)
-            
+            #printDBG(data)
+
+            next_link = re.findall("<script src=\"(.*tronprice.*)\">", data)
+            if next_link:
+                sts, data = self.cm.getPage(next_link[0])
+
+                if not sts:
+                    return []
+                
+                printDBG("********************")
+                printDBG(data)
+                next_link = re.findall("src=([a-zA-Z0-9/:.]+)", data)
+                
+                if next_link:
+                    sts, data = self.cm.getPage(next_link[0])
+                    
+                    if not sts:
+                        return[]
+                    
+                    printDBG("********************")
+                    printDBG(data)
+                    
+                    m3u_url = re.findall("\"(.*charte.*).php\"", data)
+                    if m3u_url:
+                        m3u_url = m3u_url[0] + ".php"
+                        printDBG("Found link '%s'" % m3u_url)
+                        
+                        #return urlparser.decorateUrl(m3u_url, {'iptv_proto':'m3u8'})
+                        
+                        urlTabs = getDirectM3U8Playlist(m3u_url, checkExt=False, variantCheck=True, checkContent=True, sortWithMaxBitrate=99999999)
+                        printDBG(str(urlTabs))
+                        #urlTabs.extend()
+                        return urlTabs
+                    
+                    else:
+                        return []
+                    
+                else:
+                    return []
+            else:
+                return []
+
+
         else:
             return []
         
