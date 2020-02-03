@@ -435,7 +435,7 @@ class urlparser:
                        'streamplay.to':        self.pp.parserSTREAMPLAYTO   ,
                        'streamplay.me':        self.pp.parserSTREAMPLAYTO   ,
                        'streamp1ay.me':        self.pp.parserSTREAMPLAYTO   ,
-                       'streamango.com':       self.pp.parserSTREAMANGOCOM  ,
+#                       'streamango.com':       self.pp.parserSTREAMANGOCOM  ,
                        'casacinema.cc':        self.pp.parserCASACINEMACC   ,
                        'indavideo.hu':         self.pp.parserINDAVIDEOHU    ,
                        '1fichier.com':         self.pp.parser1FICHIERCOM    ,
@@ -461,7 +461,7 @@ class urlparser:
                        'publicvideohost.org':  self.pp.parserPUBLICVIDEOHOST,
                        'vidnode.net':          self.pp.parserVIDNODENET     ,
                        'videa.hu':             self.pp.parserVIDEAHU        ,
-                       'streamcherry.com':     self.pp.parserSTREAMANGOCOM  ,
+#                       'streamcherry.com':     self.pp.parserSTREAMANGOCOM  ,
                        'aflamyz.com':          self.pp.parserAFLAMYZCOM     ,
                        'gdriveplayer.us':      self.pp.parserAFLAMYZCOM     , 
                        'polsatsport.pl':       self.pp.parserPOLSATSPORTPL  ,
@@ -563,7 +563,7 @@ class urlparser:
                        'streamatus.tk':        self.pp.parserVIUCLIPS       ,
                        'onlystream.tv':        self.pp.parserONLYSTREAMTV   ,
                        'tunestream.net':       self.pp.parserONLYSTREAMTV   ,
-                       'jetload.net':          self.pp.parserONLYSTREAMTV   ,
+                       'jetload.net':          self.pp.parserJETLOADNET     ,
                        'vidia.tv':             self.pp.parserONLYSTREAMTV   ,
                        'youdbox.com':          self.pp.parserONLYSTREAMTV   ,
                        'upstream.to':          self.pp.parserONLYSTREAMTV   ,
@@ -12424,3 +12424,53 @@ class pageParser(CaptchaHelper):
                 urlsTab.append(params)
 
         return urlsTab
+
+    def parserJETLOADNET(self, baseUrl):
+        printDBG("parserJETLOADNET baseUrl[%s]" % baseUrl)
+
+        video_id = self.cm.ph.getSearchGroups(baseUrl+'/', '/([A-Za-z0-9]{12})[/.]')[0]
+        printDBG("parserJETLOADNET video_id[%s]" % video_id)
+
+        HTTP_HEADER = self.cm.getDefaultHeader(browser='chrome')
+        referer = baseUrl.meta.get('Referer')
+        if referer: HTTP_HEADER['Referer'] = referer
+        urlParams = {'header': HTTP_HEADER}
+
+        urlParams['ignore_http_code_ranges'] = [(502, 502)]
+        urlParams['header'].update({'Accept':'application/json, text/javascript, */*', 'Content-Type':'application/x-www-form-urlencoded', 'X-Requested-With':'XMLHttpRequest' })
+        url = 'https://jetload.net/api/fetch/{0}'.format(video_id)
+        sts, data = self.cm.getPage(url, urlParams)
+        if not sts: return False
+
+        if '"err":' in data:
+            sts, data = self.cm.getPage('http://jlpair.net', urlParams)
+            if not sts: return False
+            cUrl = self.cm.meta['url']
+
+            sitekey = ph.search(data, '''sitekey=['"]([^"^']+?)['"]''')[0]
+            token = ''
+            if sitekey != '':
+                token, errorMsgTab = self.processCaptcha(sitekey, cUrl)
+                if token == '':
+                    SetIPTVPlayerLastHostError('\n'.join(errorMsgTab))
+                    return False
+
+            post_data = {'g-recaptcha-response':token}
+            sts, data = self.cm.getPage('http://jlpair.net', urlParams, post_data)
+            if not sts: return False
+
+            url = 'https://jetload.net/api/fetch/{0}'.format(video_id)
+            sts, data = self.cm.getPage(url, urlParams)
+            if not sts: return False
+
+        printDBG("parserJETLOADNET data[%s]" % data)
+        urlTab=[]
+        url = self.cm.ph.getSearchGroups(data, '''['"]src['"]:['"]([^'^"]+?)['"]''')[0]
+        if url != '' and 'm3u8' not in url :
+            url = strwithmeta(url, {'Origin':"https://" + urlparser.getDomain(baseUrl), 'Referer':baseUrl})
+            urlTab.append({'name':'mp4', 'url':url})
+        hlsUrl = self.cm.ph.getSearchGroups(data, '''["'](https?://[^'^"]+?\.m3u8(?:\?[^"^']+?)?)["']''', ignoreCase=True)[0]
+        if hlsUrl != '':
+            hlsUrl = strwithmeta(hlsUrl, {'Origin':"https://" + urlparser.getDomain(baseUrl), 'Referer':baseUrl})
+            urlTab.extend(getDirectM3U8Playlist(hlsUrl, checkExt=False, variantCheck=True, checkContent=True, sortWithMaxBitrate=99999999))
+        return urlTab
