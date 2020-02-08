@@ -119,11 +119,12 @@ class VideoStarApi(CBaseHostClass, CaptchaHelper):
         if not sts: return False, (errMessage % loginUrl)
 
         if login != 'guest':
-            sitekey = self.cm.ph.getSearchGroups(data, '''sitekey:['"]([^'^"]+?)['"]''')[0]
+            sitekey = self.cm.ph.getSearchGroups(data, '''GRECAPTCHA_SITEKEY.*?['"]([^'^"]+?)['"]''')[0]
             if sitekey != '':
                 token, errorMsgTab = self.processCaptcha(sitekey, loginUrl)
                 if token == '':
                     return False, errorMsgTab
+            else: return False, errorMsgTab
             post_data = '{"login":"%s","password":"%s","g-recaptcha-response":"%s","permanent":"1","device":"web"}' % (login, password, token)
         else:
             post_data = '{"login":"%s","password":"%s","permanent":"1","device":"web"}' % (login, password)
