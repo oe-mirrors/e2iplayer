@@ -93,9 +93,18 @@ class Wiziwig1Api(CBaseHostClass):
                 url = self.getFullUrl(iframes[0])
                 name = u["name"] + " - " + self.up.getDomain(url, onlyDomain=True)
                 if self.up.checkHostSupport(url): 
-                    printDBG("getVideoLinkExt %s " % str(self.up.getVideoLinkExt(url)))
-                    urlsTab.extend(self.up.getVideoLinkExt(url))
+                    if len(name) > 18:
+                        name = name[:18]+ "..."
+                    uuu = self.up.getVideoLinkExt(url)
+                    printDBG("getVideoLinkExt %s " % str(uuu))
+                    urlsTab2 = [] 
+                    for u2 in uuu:
+                        printDBG(str(u2))
+                        u2['name']= name + ' '+ u2.get('name','')
+                        urlsTab2.append(u2)
+                        
+                    urlsTab.extend(urlsTab2)
                 else:
-                    urlsTab.append({"name": name, "url" : url})
+                    urlsTab.append({"name": name + " (not in urlparser)", "url" : url})
         return urlsTab
     

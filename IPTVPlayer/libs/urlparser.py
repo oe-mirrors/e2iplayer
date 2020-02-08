@@ -442,6 +442,7 @@ class urlparser:
                        'tvad.me':               self.pp.parserTHEVIDEOME    ,
                        'tvope.com':             self.pp.parserTVOPECOM      ,
                        'tvp.pl':                self.pp.parserTVP           ,
+                       'txnewsnetwork.net':     self.pp.parserTXNEWSNETWORK,
                        'twitch.tv':             self.pp.parserTWITCHTV      ,
                        'ultimatedown.com':      self.pp.parserULTIMATEDOWN   ,
                        'up2stream.com':         self.pp.parserVIDEOMEGA     ,
@@ -12353,4 +12354,51 @@ class pageParser(CaptchaHelper):
         else:
             return []
 
+    def parserTXNEWSNETWORK(self, baseUrl):
+        printDBG("parserTXNEWSNETWORK baseUrl[%s]" % baseUrl)
+        #http://txnewsnetwork.net/ada5.php
         
+        httpParams = {'header':{'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/76.0.3809.132 Safari/537.36'}, 'use_cookie':1, 'save_cookie':1,'load_cookie':1, 'cookiefile': GetCookieDir("TXNEWSNETWORK.cookie")}
+        
+        urlTabs= []
+        
+        sts, data = self.cm.getPage(baseUrl, httpParams)
+        
+        if sts:
+            #printDBG("********************")
+            #printDBG(data)
+            
+            #<script src="http://jscdn-master.today/n1.php?hash=ada5"></script>
+            link = re.findall("<script src=\"(.*?ada.*?)\"></script>", data)
+            
+            if link:
+                printDBG("Found link %s" % link[0])
+                sts, data = self.cm.getPage(link[0], httpParams)
+                
+                if sts:
+                    #printDBG("********************")
+                    #printDBG(data)
+                    
+                    #'src="http://www.vaudevile.cz/page.php?hash=ada5&ad=3587580&ud=OTUuMjUyLjEwMi43&td=1581017743">
+                    link2 = re.findall("src=\"([^\"]+?)\"", data)
+                    if link2:
+                        printDBG("Found link %s" % link2[0])
+                        httpParams['header']['Referer'] = baseUrl
+                        sts, data = self.cm.getPage(link2[0], httpParams)
+                
+                        if sts:
+                            #printDBG("********************")
+                            #printDBG(data)
+                            #source: "http://www.vaudevile.cz/mount/ada5/index.m3u8"
+                            
+                            link3 = re.findall("source: \"([^\"]+?)\"", data)
+                            
+                            if link3:
+                                printDBG("Found link %s" % link3[0])
+                                httpParams['header']['Referer'] = link2[0]
+                                m3u_url = urlparser.decorateUrl(link3[0], {'Referer': link2[0]})
+                                urlTabs = getDirectM3U8Playlist(m3u_url, checkExt=True, variantCheck=True, checkContent=True, sortWithMaxBitrate=99999999)
+                                printDBG(str(urlTabs))
+                                #urlTabs.extend()
+        
+        return urlTabs
