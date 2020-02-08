@@ -168,11 +168,14 @@ class _3Filmy(CBaseHostClass):
             else:
                 params = {'good_for_fav':True, 'url':url, 'title':title, 'desc':desc, 'icon':icon}
                 self.addVideo(params)
-            
-        if nextPage[0] != '0':
-            params = dict(cItem)
-            params.update({'title':_('Next page'), 'url':cItem['url'], 'page':page + 1})
-            self.addDir(params)
+
+        try:
+            if nextPage[0] != '0':
+                params = dict(cItem)
+                params.update({'title':_('Next page'), 'url':cItem['url'], 'page':page + 1})
+                self.addDir(params)
+        except Exception:
+            printExc()
 
     def listSeries(self, cItem):
         printDBG("3filmy.listSeries [%s]" % cItem)
