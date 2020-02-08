@@ -437,7 +437,7 @@ class ZalukajCOM(CBaseHostClass):
 
             sts, msg = False, 'Problem z zalogowaniem użytkownika \n"%s".' % self.login
             post_data = None
-            sts, data  = self._getPage('https://zalukaj.com/', params=post_data, loggedIn=True)
+            sts, data  = self._getPage('https://zalukaj.com/rejestracja', params=post_data, loggedIn=True)
             if self.cm.meta['url'] == 'https://zalukaj.com/limit': 
                 httpParams['header']['Referer'] = 'https://zalukaj.com/limit'
                 post_data = {'captcha': self.captcha()}
