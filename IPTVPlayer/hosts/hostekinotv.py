@@ -414,7 +414,7 @@ class EkinoTv(CBaseHostClass, CaptchaHelper):
             sts, data = self.getPage(url, urlParams)
             if not sts: return urlTab
 
-            url = self.cm.ph.getSearchGroups(data, '''\shref=['"]([^'^"]+?)['"]''')[0]
+            url = self.getFullUrl(self.cm.ph.getSearchGroups(data, '''\shref=['"]([^'^"]+?)['"]''')[0])
 
             if self.cm.isValidUrl(url):
                 urlParams['header']['Referer'] = baseUrl
