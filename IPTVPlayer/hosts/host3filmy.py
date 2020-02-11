@@ -160,7 +160,7 @@ class _3Filmy(CBaseHostClass):
             url = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''href=['"]([^"^']+?)['"]''')[0])
             icon = self.getFullIconUrl(self.cm.ph.getSearchGroups(item, '''src=['"]([^"^']+?)['"]''')[0])
             title = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(item, ('<a', '>'), ('</a', '>'), False)[1])
-            desc = self.cleanHtmlStr(item)
+            desc = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(item, ('<span', '>'), ('</span', '>'), False)[1])
             params = dict(cItem)
             if type == 1:
                 params = {'good_for_fav':True, 'name':'category', 'category':'list_series', 'url':url, 'title':title, 'desc':desc, 'icon':icon}
@@ -322,6 +322,31 @@ class _3Filmy(CBaseHostClass):
 
         return self.loggedIn
 
+    def getArticleContent(self, cItem):
+        printDBG("cda-filmy.getArticleContent [%s]" % cItem)
+        itemsList = []
+
+        sts, data = self.cm.getPage(cItem['url'])
+        if not sts: return []
+
+        title = cItem['title']
+        icon = cItem.get('icon', '')
+        desc = cItem.get('desc', '')
+
+        title = self.cm.ph.getDataBeetwenMarkers(data, '<h1 class="name">', '<br />', True)[1]
+        if title == '': title = self.cm.ph.getDataBeetwenMarkers(data, '<h1>', '</h1>', True)[1]
+#        icon = self.getFullIconUrl(self.cm.ph.getSearchGroups(title, '''this\.src=['"]([^"^']+?)['"]''', 1, True)[0])
+        desc = self.cm.ph.getDataBeetwenMarkers(data, '<div class="col-lg-8">', '</div>', False)[1]
+        if '.. więcej</a>' in desc: desc = desc.replace('.. więcej</a>', '</a>')
+        if desc == '': desc = self.cm.ph.getDataBeetwenMarkers(data, '<div class="clearfix"><img', '</div>', True)[1]
+        itemsList.append((_('Info'), self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(data, '<small>', '</small>', False)[1])))
+
+        if title == '': title = cItem['title']
+        if icon  == '': icon  = cItem.get('icon', '')
+        if desc  == '': desc  = cItem.get('desc', '')
+
+        return [{'title':self.cleanHtmlStr( title ), 'text': self.cleanHtmlStr( desc ), 'images':[{'title':'', 'url':self.getFullUrl(icon)}], 'other_info':{'custom_items_list':itemsList}}]
+
     def handleService(self, index, refresh=0, searchPattern='', searchType=''):
         printDBG('3filmy.handleService start')
         
@@ -377,4 +402,7 @@ class IPTVHost(CHostBase):
 
     def __init__(self):
         CHostBase.__init__(self, _3Filmy(), True, [])
+
+    def withArticleContent(self, cItem):
+        return True
 

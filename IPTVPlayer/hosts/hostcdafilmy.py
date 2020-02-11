@@ -229,6 +229,29 @@ class CdaFilmy(CBaseHostClass):
                         break
                         
         return self.up.getVideoLinkExt(baseUrl)
+
+    def getArticleContent(self, cItem):
+        printDBG("cda-filmy.getArticleContent [%s]" % cItem)
+        itemsList = []
+
+        sts, data = self.cm.getPage(cItem['url'])
+        if not sts: return []
+
+        title = cItem['title']
+        icon = cItem.get('icon', '')
+        desc = cItem.get('desc', '')
+
+        title = self.cm.ph.getDataBeetwenMarkers(data, '<h1 class="Title">', '</h1>', True)[1]
+#        icon = self.getFullIconUrl(self.cm.ph.getSearchGroups(title, '''this\.src=['"]([^"^']+?)['"]''', 1, True)[0])
+        desc = self.cm.ph.getDataBeetwenMarkers(data, '<div class="Description">', '</div>', False)[1]
+        itemsList.append((_('Info'), self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(data, '<p class="Info">', '</p>', False)[1])))
+        itemsList.append((_('Genres'), self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(data, '<strong>Gatunek:', '</li>', False)[1])))
+
+        if title == '': title = cItem['title']
+        if icon  == '': icon  = cItem.get('icon', '')
+        if desc  == '': desc  = cItem.get('desc', '')
+
+        return [{'title':self.cleanHtmlStr( title ), 'text': self.cleanHtmlStr( desc ), 'images':[{'title':'', 'url':self.getFullUrl(icon)}], 'other_info':{'custom_items_list':itemsList}}]
         
     def handleService(self, index, refresh = 0, searchPattern = '', searchType = ''):
         printDBG('handleService start')
@@ -277,7 +300,4 @@ class IPTVHost(CHostBase):
         CHostBase.__init__(self, CdaFilmy(), True, [])
         
     def withArticleContent(self, cItem):
-        if '-video_' in cItem.get('url', ''):
-            return True
-        else: return False
-    
+        return True
