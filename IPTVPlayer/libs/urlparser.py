@@ -223,6 +223,7 @@ class urlparser:
                        'hqq.watch':            self.pp.parseNETUTV         ,
                        'hqq.none':             self.pp.parseNETUTV         ,
                        'waaw.tv':              self.pp.parseNETUTV         ,
+                       'video.filmoviplex.com':self.pp.parseNETUTV         ,
                        'vshare.io':            self.pp.parseVSHAREIO       ,
                        'vidspot.net':          self.pp.parserVIDSPOT       ,
                        'video.tt':             self.pp.parserVIDEOTT       ,
@@ -9755,15 +9756,19 @@ class pageParser(CaptchaHelper):
 #            return ret['data']
         
 #        tmp = _getEvalData(data)
-
-        orig_vid = self.cm.ph.getDataBeetwenMarkers(data, 'orig_vid = "', '";', False)[1]
+        data = self.cm.ph.getAllItemsBeetwenMarkers(data, '<script>', '</script>')
+        for item in data:
+            if 'orig_vid = "' in item:
+                data = item
+                break
+        orig_vid = self.cm.ph.getDataBeetwenMarkers(data, 'orig_vid = "', '"', False)[1]
         jscode = self.cm.ph.getDataBeetwenMarkers(data, 'location.replace(', ');', False)[1]
         jscode = 'var need_captcha="0"; var server_referer="http://hqq.watch/"; var orig_vid="'+orig_vid+'"; print(' + jscode + ');'
 
         gt = self.cm.getCookieItem(COOKIE_FILE,'gt')
         ret = js_execute( jscode )
         if ret['sts'] and 0 == ret['code']:
-            secPlayerUrl = self.cm.getFullUrl(ret['data'].strip(), self.cm.getBaseUrl(cUrl)) #'https://hqq.tv/'
+            secPlayerUrl = self.cm.getFullUrl(ret['data'].strip(), self.cm.getBaseUrl(cUrl)).replace('$secured', '0') #'https://hqq.tv/'
             if 'need_captcha=1' in secPlayerUrl and ipData['need_captcha'] == 0 and gt != '':
                 secPlayerUrl = secPlayerUrl.replace('need_captcha=1', 'need_captcha=0')
 
