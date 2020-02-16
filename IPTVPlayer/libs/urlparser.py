@@ -9756,6 +9756,13 @@ class pageParser(CaptchaHelper):
 #            return ret['data']
         
 #        tmp = _getEvalData(data)
+
+        sub_tracks = []
+        subData = self.cm.ph.getDataBeetwenMarkers(data, 'addRemoteTextTrack({', ');', False)[1]
+        subData = self.cm.getFullUrl(self.cm.ph.getSearchGroups(subData, '''src:\s?['"]([^'^"]+?)['"]''')[0], cUrl)
+        if (subData.endswith('.srt') or subData.endswith('.vtt')):
+            sub_tracks.append({'title':'attached', 'url':subData, 'lang':'unk', 'format':'srt'})
+
         data = self.cm.ph.getAllItemsBeetwenMarkers(data, '<script>', '</script>')
         for item in data:
             if 'orig_vid = "' in item:
@@ -9850,7 +9857,7 @@ class pageParser(CaptchaHelper):
             if file_url.startswith('#') and 3 < len(file_url): file_url = getUtf8Str(file_url[1:])
             if file_url.startswith('//'): file_url = 'https:' + file_url
             if self.cm.isValidUrl(file_url): 
-                file_url = urlparser.decorateUrl(file_url, {'iptv_livestream':False, 'User-Agent':HTTP_HEADER['User-Agent'], 'Referer':cUrl})
+                file_url = urlparser.decorateUrl(file_url, {'iptv_livestream':False, 'User-Agent':HTTP_HEADER['User-Agent'], 'Referer':cUrl, 'external_sub_tracks':sub_tracks})
                 if file_url.split('?')[0].endswith('.m3u8') or '/hls-' in file_url:
                     file_url = strwithmeta(file_url, {'iptv_proto':'m3u8'})
                     retUrls.extend( getDirectM3U8Playlist(file_url, False, checkContent=True) )
