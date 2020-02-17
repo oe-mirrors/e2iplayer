@@ -9696,7 +9696,9 @@ class pageParser(CaptchaHelper):
             vidTab = []
             for item in decoded['sources']:
                 if 'mp4' in item['type']:
-                    vidTab.append({'url':item['src'], 'name':item['label']})
+                    url = item['src']
+                    if url.startswith('//'): url = 'http:' + url
+                    vidTab.append({'url':url, 'name':item['label']})
             return vidTab
         return False 
         
