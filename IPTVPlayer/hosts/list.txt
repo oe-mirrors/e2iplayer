@@ -188,6 +188,7 @@ hostvimeo
 hostvodpl
 hostvumedicom
 hostwatchcartoononline
+hostwatchmovies
 hostwatchwrestling
 hostwatchwrestlinguno
 hostwebstream
