@@ -59,7 +59,7 @@ class IPTVHostsGroups:
         # hosts
         self.PREDEFINED_HOSTS = {}
         self.PREDEFINED_HOSTS['userdefined']      = ['favourites','localmedia']
-        self.PREDEFINED_HOSTS['moviesandseries']  = ['appletrailers','3filmy','efilmytv','alltubetv','ekinotv','cdapl','iitvpl','videopenny','zalukajcom','serialnet','freediscpl', \
+        self.PREDEFINED_HOSTS['moviesandseries']  = ['appletrailers','3filmy','efilmytv','alltubetv','ekinomaniak''ekinotv','cdapl','iitvpl','videopenny','zalukajcom','serialnet','freediscpl', \
                                                      'movienightws','yifytv','hdpopcornscom','losmovies', \
                                                      'solarmovie','mythewatchseries','thewatchseriesto','classiccinemaonline','seriesonline','vumooch','movie4kto','dardarkomcom','movs4ucom','movizlandcom', \
                                                      'sovdub','kinopokaz','cinemay','icefilmsinfo','hdkinomir','kinotan','egybest','dpstreamingcx','librestream','streamcomplet','skstream','filmstreamvkcom', \
@@ -77,7 +77,7 @@ class IPTVHostsGroups:
         self.PREDEFINED_HOSTS['documentary']      = ['fokustv','dokumentalnenet','greekdocumentaries3','dailymotion','orthobulletscom','vumedicom']
         self.PREDEFINED_HOSTS['science']          = ['questtvcouk','dailymotion','ustreamtv','dokumentalnenet','orthobulletscom','vumedicom']
         
-        self.PREDEFINED_HOSTS['polish']           = ['youtube','webstream','3filmy','efilmytv','alltubetv','allboxtv','ekinotv','cdapl','cdafilmy','iitvpl','videopenny','zalukajcom','serialnet','tvpvod','ipla','tvnvod','vodpl', \
+        self.PREDEFINED_HOSTS['polish']           = ['youtube','webstream','3filmy','efilmytv','alltubetv','allboxtv','ekinomaniak''ekinotv','cdapl','cdafilmy','iitvpl','videopenny','zalukajcom','serialnet','tvpvod','ipla','tvnvod','vodpl', \
                                                      'freediscpl','ekstraklasatv','kreskowkazone','kreskoweczki','bajeczkiorg','animeodcinki','playpuls','meczykipl','eskago', \
                                                      'tvjworg','artetv','dailymotion', 'vimeo', 'kabarety','twitchtv','hitboxtv','tvgrypl','chomikuj','fighttube','spryciarze','wgrane','wolnelekturypl','tvn24','ninateka', \
                                                      'maxtvgo','wpolscepl','wrealu24tv','wptv','interiatv','dokumentalnenet', 'serialeco','radiostacja','nuteczki','luxveritatis','tvproart','tvrepublika', \
