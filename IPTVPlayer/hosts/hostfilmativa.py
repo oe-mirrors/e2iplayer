@@ -45,7 +45,14 @@ class Filmotopia(CBaseHostClass):
     
  
     def __init__(self):
-        CBaseHostClass.__init__(self, {'history':'Filmotopia', 'cookie':'filmotopia.cookie'})
+        CBaseHostClass.__init__(self, {'history':'Filmotopia', 'cookie':'filmativa.net.cookie'})
+        self.USER_AGENT = 'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:40.0) Gecko/20100101 Firefox/40.0'
+        self.HTTP_HEADER = {'User-Agent': self.USER_AGENT, 'DNT':'1', 'Accept': 'text/html', 'Accept-Encoding':'gzip, deflate', 'Referer':self.getMainUrl(), 'Origin':self.getMainUrl()}
+        self.AJAX_HEADER = dict(self.HTTP_HEADER)
+        self.AJAX_HEADER.update( {'X-Requested-With': 'XMLHttpRequest', 'Accept-Encoding':'gzip, deflate', 'Content-Type':'application/x-www-form-urlencoded; charset=UTF-8', 'Accept':'application/json, text/javascript, */*; q=0.01'} )
+
+        self.defaultParams = {'header':self.HTTP_HEADER, 'with_metadata':True, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
+
         self.seriesCache = {}
         self.seasons = []
         
@@ -59,6 +66,13 @@ class Filmotopia(CBaseHostClass):
         if not mainUrl.startswith('https://'):
             url = url.replace('https://', 'http://')
         return url
+
+    def getPage(self, baseUrl, addParams = {}, post_data = None):
+        if addParams == {}: addParams = dict(self.defaultParams)
+        origBaseUrl = baseUrl
+        baseUrl = self.cm.iriToUri(baseUrl)
+        addParams['cloudflare_params'] = {'domain':self.up.getDomain(baseUrl), 'cookie_file':self.COOKIE_FILE, 'User-Agent':self.USER_AGENT, 'full_url_handle':self._getFullUrl}
+        return self.cm.getPageCFProtection(baseUrl, addParams, post_data)
         
     def listMoviesTab(self, cItem, category):
         printDBG("Filmotopia.listMoviesTab")
@@ -79,7 +93,7 @@ class Filmotopia(CBaseHostClass):
         if page > 1:
             url += 'page/%d/' % page
         
-        sts, data = self.cm.getPage(url)
+        sts, data = self.getPage(url)
         if not sts: return 
         
         if ('/page/%d/' % (page + 1)) in data:
@@ -127,7 +141,7 @@ class Filmotopia(CBaseHostClass):
         
     def listSeasons(self, cItem, category):
         printDBG("Filmotopia.listSeasons")
-        sts, data = self.cm.getPage(cItem['url'])
+        sts, data = self.getPage(cItem['url'])
         if not sts: return
         
         tvShowTitle = cItem['title']
@@ -191,7 +205,7 @@ class Filmotopia(CBaseHostClass):
         if cItem.get('direct', False):
             urlTab.append({'name':'link', 'url':cItem['url'], 'need_resolve':1})
         else:
-            sts, data = self.cm.getPage(cItem['url'])
+            sts, data = self.getPage(cItem['url'])
             if not sts: return urlTab
 
             tmp = self.cm.ph.getAllItemsBeetwenNodes(data, ('<button', '>', 'myButton'), ('</button', '>'))
@@ -205,7 +219,7 @@ class Filmotopia(CBaseHostClass):
             tmp = self.cm.ph.getDataBeetwenMarkers(data, '="trailer">', '</div>', False)[1]
             url = self.cm.ph.getSearchGroups(tmp, 'src="([^"]+?)"')[0]
             if 'videomega.tv/validatehash.php?' in url:
-                sts, data = self.cm.getPage(url, {'header':{'Referer':cItem['url'], 'User-Agent':'Mozilla/5.0'}})
+                sts, data = self.getPage(url, {'header':{'Referer':cItem['url'], 'User-Agent':'Mozilla/5.0'}})
                 if sts:
                     data = self.cm.ph.getSearchGroups(data, 'ref="([^"]+?)"')[0]
                     linkUrl = 'http://videomega.tv/view.php?ref={0}&width=700&height=460&val=1'.format(data)
