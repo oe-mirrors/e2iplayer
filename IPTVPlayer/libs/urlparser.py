@@ -569,6 +569,7 @@ class urlparser:
                        'youdbox.com':          self.pp.parserONLYSTREAMTV   ,
                        'upstream.to':          self.pp.parserONLYSTREAMTV   ,
                        'supervideo.tv':        self.pp.parserONLYSTREAMTV   ,
+                       'streamwire.net':       self.pp.parserONLYSTREAMTV   ,
                        'mixdrop.co':           self.pp.parserMIXDROP        ,
                     }
         return
