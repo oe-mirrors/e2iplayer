@@ -76,19 +76,19 @@ class watchMovies(CBaseHostClass):
         dat = self.cm.ph.getDataBeetwenMarkers(data, '<nav class="genres">', '</nav>', False)[1]
         dat = re.compile('<a[^>]+?href="([^"]+?)"[^>]*?>(.+?)</a>').findall(dat)
         for item in dat:
-            self.cacheMovieFilters['cats'].append({'title': self.cleanHtmlStr(item[1]), 'furl': item[0]})
+            self.cacheMovieFilters['cats'].append({'title': self.cleanHtmlStr(item[1]), 'url': item[0]})
             
         # fill years
         dat = self.cm.ph.getDataBeetwenMarkers(data, '<nav class="releases">', '</nav>', False)[1]
         dat = re.compile('<a[^>]+?href="([^"]+?)"[^>]*?>(.+?)</a>').findall(dat)
         for item in dat:
-            self.cacheMovieFilters['years'].append({'title': self.cleanHtmlStr(item[1]), 'furl': item[0]})
+            self.cacheMovieFilters['years'].append({'title': self.cleanHtmlStr(item[1]), 'url': item[0]})
 
         # fill az
         dat = self.cm.ph.getDataBeetwenMarkers(data, '<ul class="glossary">', '</ul>', False)[1]
         dat = re.compile('<a[^>]+?href="([^"]+?)"[^>]*?>(.+?)</a>').findall(dat)
         for item in dat:
-            self.cacheMovieFilters['az'].append({'title': self.cleanHtmlStr(item[1]), 'furl': item[0]})
+            self.cacheMovieFilters['az'].append({'title': self.cleanHtmlStr(item[1]), 'url': item[0]})
     
     ###################################################
     def listMovieFilters(self, cItem, category):
@@ -116,11 +116,6 @@ class watchMovies(CBaseHostClass):
         page = cItem.get('page', 1)
 
         url  = cItem['url']
-
-        try:
-            url  = self.getFullUrl(cItem['furl'])
-        except Exception:
-            printExc()
 
         sts, data = self.getPage(url)
         if not sts: return

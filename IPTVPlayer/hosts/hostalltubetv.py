@@ -326,6 +326,7 @@ class AlltubeTV(CBaseHostClass):
 
         for item in data:
             url    = self.cm.ph.getSearchGroups(item, 'href="([^"]+?)"')[0]
+            if 'alltube.com.pl' in url: continue
             icon   = self.cm.ph.getSearchGroups(item, 'src="([^"]+?)"')[0]
             title  = self.cm.ph.getDataBeetwenMarkers(item, '<div class="title">', '</div>', False)[1]
             if '' == title: title = self.cm.ph.getDataBeetwenMarkers(item, '<h3>', '</h3>', False)[1]

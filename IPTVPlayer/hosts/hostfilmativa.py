@@ -5,6 +5,7 @@
 from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _
 from Plugins.Extensions.IPTVPlayer.components.ihost import CHostBase, CBaseHostClass, CDisplayListItem, RetHost, CUrlItem
 from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, GetLogoDir
+from Plugins.Extensions.IPTVPlayer.tools.iptvtypes import strwithmeta
 ###################################################
 
 ###################################################
@@ -74,6 +75,12 @@ class Filmotopia(CBaseHostClass):
         addParams['cloudflare_params'] = {'domain':self.up.getDomain(baseUrl), 'cookie_file':self.COOKIE_FILE, 'User-Agent':self.USER_AGENT, 'full_url_handle':self._getFullUrl}
         return self.cm.getPageCFProtection(baseUrl, addParams, post_data)
         
+    def getFullIconUrl(self, url):
+        url = CBaseHostClass.getFullIconUrl(self, url.strip())
+        if url == '': return ''
+        cookieHeader = self.cm.getCookieHeader(self.COOKIE_FILE, ['__cfduid', 'cf_clearance'])
+        return strwithmeta(url, {'Cookie':cookieHeader, 'User-Agent':self.USER_AGENT})
+
     def listMoviesTab(self, cItem, category):
         printDBG("Filmotopia.listMoviesTab")
         cItem = dict(cItem)
@@ -115,11 +122,11 @@ class Filmotopia(CBaseHostClass):
             url    = self.cm.ph.getSearchGroups(item, 'href="([^"]+?)"')[0]
             icon   = self.cm.ph.getSearchGroups(item, 'src="([^"]+?)"')[0]
             title  = tmp[0]
-            desc   = ""
+            desc   = title
             if len(tmp) > 1:
                 desc = self.cm.ph.getSearchGroups(tmp[1], 'title="([^"]+?)"')[0]
             params = dict(cItem)
-            params.update( {'title': self.cleanHtmlStr( title ), 'url':self._getFullUrl(url), 'desc': self.cleanHtmlStr( desc ), 'icon':self._getFullUrl(icon)} )
+            params.update( {'title': self.cleanHtmlStr( title ), 'url':self._getFullUrl(url), 'desc': self.cleanHtmlStr( desc ), 'icon':self.getFullIconUrl(icon)} )
             if category == 'video':
                 self.addVideo(params)
             else:
