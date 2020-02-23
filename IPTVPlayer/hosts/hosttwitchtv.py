@@ -242,11 +242,11 @@ class Twitch(CBaseHostClass):
 
         login = cItem['user_login']
         post_data = []
-        post_data.append('{"operationName":"ChannelPage_StreamType_User","variables":{"channelLogin":"%s"},"extensions":{"persistedQuery":{"version":1,"sha256Hash":"43b152e4f17090ece0b50a5bc41e4690c7a6992ad3ed876d88bf7292be2d2cba"}}}' % login)
-        post_data.append('{"operationName":"ChannelPage__ChannelViewersCount","variables":{"login":"%s"},"extensions":{"persistedQuery":{"version":1,"sha256Hash":"3b5b233b59cc71f5ab273c74a30c46485fa52901d98d7850d024ad0669270184"}}}' % login)
-        post_data.append('{"operationName":"ChannelPage_ChannelInfoBar_User_RENAME1","variables":{"login":"%s"},"extensions":{"persistedQuery":{"version":1,"sha256Hash":"07256d20a34cd864e68e39cd5d4235e795895b5e4717b4ed041ad7f94982f78f"}}}' % login)
+        post_data.append('{"operationName":"ChannelRoot_Channel","variables":{"currentChannelLogin":"%s","includeChanlets": true},"extensions":{"persistedQuery":{"version":1,"sha256Hash":"90a23e279e3ed997efcf53550abc3570bbaabee73f78d2f36bef770fa232e91b"}}}' % login)
         post_data.append('{"operationName":"ChannelPage_ChannelHeader","variables":{"login":"%s"},"extensions":{"persistedQuery":{"version":1,"sha256Hash":"32f05e9f36086c6e6930e3f3d0d515eea61cc3263bf7f92870f97c9aae024593"}}}' % login)
+        
         url = self.getFullUrl('/gql', self.API2_URL)
+
         sts, data = self.getPage(url, MergeDicts(self.defaultParams, {'raw_post_data':True}), '[%s]' % ','.join(post_data))
         if not sts: return
         printDBG("Twitch.listChannel data [%s]" % data)
@@ -256,9 +256,9 @@ class Twitch(CBaseHostClass):
             try:
                 if data[0]['data']['user']['stream']['type'] == 'live':
                     descTab = []
-                    viewers = str(data[1]['data']['user']['stream']['viewersCount'])
+                    viewers = str(data[0]['data']['user']['stream']['viewersCount'])
                     descTab.append(_('%s viewers') % viewers)
-                    item = data[2]['data']['user']['lastBroadcast']
+                    item = data[0]['data']['user']['lastBroadcast']
                     title = jstr(item, 'title')
                     if item.get('game'):
                         descTab.append( '%s: %s' % (jstr(item['game'], '__typename'), jstr(item['game'], 'name')) )
@@ -271,7 +271,7 @@ class Twitch(CBaseHostClass):
             except Exception:
                 printExc()
             
-            item = data[3]['data']['user']
+            item = data[1]['data']['user']
             icon = self.getFullIconUrl(jstr(item, 'profileImageURL'), self.cm.meta['url'])
             videosCount = int(item['videos']['totalCount'])
             if videosCount:
