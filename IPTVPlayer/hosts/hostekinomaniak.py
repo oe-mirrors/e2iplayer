@@ -84,19 +84,19 @@ class eKinomaniak(CBaseHostClass):
         dat = self.cm.ph.getDataBeetwenMarkers(data, '<b class="icon-hdd"', '</ul>', False)[1]
         dat = re.compile('<a[^>]+?href="([^"]+?)"[^>]*?>(.+?)</a>').findall(dat)
         for item in dat:
-            self.cacheMovieFilters['cats'].append({'title': self.cleanHtmlStr(item[1]), 'furl': item[0]})
+            self.cacheMovieFilters['cats'].append({'title': self.cleanHtmlStr(item[1]), 'url': self.getFullUrl(item[0])})
             
         # fill years
         dat = self.cm.ph.getDataBeetwenMarkers(data, '<ul class="dropdown-menu year-dropdown"', '</ul>', False)[1]
         dat = re.compile('<a[^>]+?href="([^"]+?)"[^>]*?>(.+?)</a>').findall(dat)
         for item in dat:
-            self.cacheMovieFilters['years'].append({'title': self.cleanHtmlStr(item[1]), 'furl': item[0]})
+            self.cacheMovieFilters['years'].append({'title': self.cleanHtmlStr(item[1]), 'url': self.getFullUrl(item[0])})
 
         # fill az
         dat = self.cm.ph.getDataBeetwenMarkers(data, '<ul class=starting-letter>', '</ul>', False)[1]
         dat = re.compile('<a[^>]+?href="([^"]+?)"[^>]*?>(.+?)</a>').findall(dat)
         for item in dat:
-            self.cacheMovieFilters['az'].append({'title': self.cleanHtmlStr(item[1]), 'furl': item[0]})
+            self.cacheMovieFilters['az'].append({'title': self.cleanHtmlStr(item[1]), 'url': self.getFullUrl(item[0])})
     
     ###################################################
     def listMovieFilters(self, cItem, category):
@@ -124,13 +124,9 @@ class eKinomaniak(CBaseHostClass):
         page = cItem.get('page', 1)
 
         url  = cItem['url']
-        sort = ''
-        try:
-            sort = cItem['sort']
-            url  = self.getFullUrl(cItem['furl'])
-        except Exception:
-            printExc()
-        url = url + sort
+        sort = cItem.get('sort', '')
+        if sort not in url:
+            url = url + sort
 
         sts, data = self.getPage(url)
         if not sts: return
