@@ -246,6 +246,7 @@ class Twitch(CBaseHostClass):
         post_data.append('{"operationName":"ChannelPage__ChannelViewersCount","variables":{"login":"%s"},"extensions":{"persistedQuery":{"version":1,"sha256Hash":"3b5b233b59cc71f5ab273c74a30c46485fa52901d98d7850d024ad0669270184"}}}' % login)
         post_data.append('{"operationName":"ChannelPage_ChannelInfoBar_User_RENAME1","variables":{"login":"%s"},"extensions":{"persistedQuery":{"version":1,"sha256Hash":"07256d20a34cd864e68e39cd5d4235e795895b5e4717b4ed041ad7f94982f78f"}}}' % login)
         post_data.append('{"operationName":"ChannelPage_ChannelHeader","variables":{"login":"%s"},"extensions":{"persistedQuery":{"version":1,"sha256Hash":"32f05e9f36086c6e6930e3f3d0d515eea61cc3263bf7f92870f97c9aae024593"}}}' % login)
+        post_data.append('{"operationName":"ComscoreStreamingQuery","variables":{"channel":"%s","clipSlug":null,"isClip":false,"isLive":true,"isVodOrCollection":false,"vodID":null},"extensions":{"persistedQuery":{"version":1,"sha256Hash":"e1edae8122517d013405f237ffcc124515dc6ded82480a88daef69c83b53ac01"}}}' % login)
         url = self.getFullUrl('/gql', self.API2_URL)
         sts, data = self.getPage(url, MergeDicts(self.defaultParams, {'raw_post_data':True}), '[%s]' % ','.join(post_data))
         if not sts: return
@@ -258,8 +259,8 @@ class Twitch(CBaseHostClass):
                     descTab = []
                     viewers = str(data[1]['data']['user']['stream']['viewersCount'])
                     descTab.append(_('%s viewers') % viewers)
-                    item = data[2]['data']['user']['lastBroadcast']
-                    title = jstr(item, 'title')
+                    item = data[4]['data']['user']['stream']
+                    title = jstr(data[4]['data']['user']['broadcastSettings'], 'title')
                     if item.get('game'):
                         descTab.append( '%s: %s' % (jstr(item['game'], '__typename'), jstr(item['game'], 'name')) )
                         icon = self.getFullIconUrl(jstr(item['game'], 'boxArtURL'), self.cm.meta['url'])
