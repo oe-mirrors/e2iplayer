@@ -49,7 +49,7 @@ class VidCorn(CBaseHostClass, CaptchaHelper):
         self.HTTP_HEADER = self.cm.getDefaultHeader(browser='chrome')
         self.defaultParams = {'header':self.HTTP_HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
 
-        self.MAIN_URL    = 'https://vidcorn.tv/'
+        self.MAIN_URL    = 'https://vidcorn.org/'
         self.DEFAULT_ICON_URL = 'https://www.trackalytics.com/assets/thumbnails/vidcorn.com.jpg'
 
         self.filters = []
