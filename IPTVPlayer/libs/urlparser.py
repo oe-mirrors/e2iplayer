@@ -570,6 +570,7 @@ class urlparser:
                        'upstream.to':          self.pp.parserONLYSTREAMTV   ,
                        'supervideo.tv':        self.pp.parserONLYSTREAMTV   ,
                        'streamwire.net':       self.pp.parserONLYSTREAMTV   ,
+                       'vidoo.tv':             self.pp.parserONLYSTREAMTV   ,
                        'mixdrop.co':           self.pp.parserMIXDROP        ,
                     }
         return

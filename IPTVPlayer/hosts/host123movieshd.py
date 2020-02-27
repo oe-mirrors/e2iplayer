@@ -243,10 +243,14 @@ class GoMovies(CBaseHostClass):
                 title = ph.clean_html(item)
                 id = ph.getattr(item, 'sid')
                 playerData = ph.search(item, '''data\-([^=]+?)=['"]([^'^"]+?)['"]''')
+                if 'https://mystream.streamango.to/' in playerData[1]:
+                    playerData[1] = playerData[1].replace('https://mystream.streamango.to/', '')
                 if playerData[0] == 'strgo':
                     url = 'https://vidload.co/player/' + playerData[1]
-                elif playerData[0] == 'openload':
-                    url = 'https://openload.co/embed/' + playerData[1]
+                elif playerData[0] == 'onlystream':
+                    url = 'https://vidoo.tv/e/' + playerData[1]
+                elif playerData[0] == 'svbackup':
+                    url = 'https://mstream.xyz/' + playerData[1]
                 else:
                     url = self.getFullUrl(playerData[1])
                 
