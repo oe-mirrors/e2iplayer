@@ -198,19 +198,19 @@ class Gledalica(CBaseHostClass):
         nextPage = self.cm.ph.getDataBeetwenNodes(data, ('<div', '>', 'pagination'), ('</div', '>'))[1]
         nextPage = self.getFullUrl(self.cm.ph.getSearchGroups(nextPage, '''<a[^>]+?href=['"]([^"^']+?)['"][^>]*?>\s*?{0}\s*?<'''.format(page + 1))[0])
 
-        data = self.cm.ph.getDataBeetwenMarkers(data, 'browse_results', '</ul>')[1]
+        data = self.cm.ph.getDataBeetwenNodes(data, ('<ul', '>', 'cbp-rfgrid'), '</ul>')[1]
         data = self.cm.ph.getAllItemsBeetwenNodes(data, ('<li', '>'), ('</li', '>'))
         for item in data:
             url = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''href=['"]([^"^']+?)['"]''')[0])
-            icon = self.getFullIconUrl(self.cm.ph.getSearchGroups(item, '''src=['"]([^"^']+?)['"]''')[0])
-            title = self.cleanHtmlStr(self.cm.ph.getSearchGroups(item, '''alt=['"]([^"^']+?)['"]''')[0])
+            icon = self.getFullIconUrl(self.cm.ph.getSearchGroups(item, '''data-original=['"]([^"^']+?)['"]''')[0])
+            title = self.cleanHtmlStr(self.cm.ph.getSearchGroups(item, '''title=['"]([^"^']+?)['"]''')[0])
             desc = []
             tmp =  self.cm.ph.getAllItemsBeetwenMarkers(item, '<a', '</a>')
             for t in tmp:
                 t = self.cleanHtmlStr(t)
                 if t != '': desc.append(t)
             params = {'good_for_fav':True, 'url':url, 'title':title, 'desc':' | '.join(desc), 'icon':icon}
-            if '>serija<' in item:
+            if 'SERIJA' in item:
                 params['category'] = 'list_series'
                 self.addDir(params)
             else: self.addVideo(params)
