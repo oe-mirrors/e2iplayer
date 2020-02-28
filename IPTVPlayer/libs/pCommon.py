@@ -1008,6 +1008,7 @@ class common:
                                 elemsText[eId] = tmp[idx]
 
                         js_params = [{'path':GetJSScriptFile('cf.byte')}]
+                        dat = dat.replace(dat[dat.index('var isIE'):dat.index('setTimeout')],'')
                         js_params.append({'code': "var ELEMS_TEXT = %s; var location = {hash:''}; var iptv_domain='%s';\n%s\niptv_fun();" % (json_dumps(elemsText), domain, dat)})
                         ret = js_execute_ext( js_params )
                         decoded = json_loads(ret['data'].strip())
