@@ -12325,7 +12325,7 @@ class pageParser(CaptchaHelper):
             printDBG("force parserVIUCLIPS baseUrl[%s]" % baseUrl)
 
         if 'embed' not in baseUrl:
-            video_id  = ph.search(baseUrl, r'''https?://.*/player/.*/([a-zA-Z0-9]{10})\?''')[0]
+            video_id  = ph.search(baseUrl, r'''https?://.*/player/.*/([a-zA-Z0-9]{13})\?''')[0]
             printDBG("parserVIUCLIPS video_id[%s]" % video_id)
             baseUrl = '{0}embed/{1}'.format(urlparser.getDomain(baseUrl, False), video_id)
 
