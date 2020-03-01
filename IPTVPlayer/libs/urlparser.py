@@ -11112,39 +11112,27 @@ class pageParser(CaptchaHelper):
         HTTP_HEADER['Referer'] = baseUrl.meta.get('Referer', baseUrl)
 
         urlParams = {'header':HTTP_HEADER}
-        sts, data = self.cm.getPage(baseUrl, urlParams)
-        if not sts: return False
-        cUrl = self.cm.meta['url']
 
-        domain = self.cm.getBaseUrl(cUrl, True)
+        urlTab = []
+        try:
+            from Plugins.Extensions.IPTVPlayer.tsiplayer.libs.vstream.hosters.mystream import cHoster
+            UA = urlParams['header']['User-Agent']
+            oHoster = cHoster()
+            oHoster.setUrl(baseUrl)
+            aLink = oHoster.getMediaLink()
+            printDBG('aLink='+str(aLink))
+            if (aLink[0] == True):
+                URL = aLink[1]
+                if '|User-Agent=' in URL:
+                    URL,UA=aLink[1].split('|User-Agent=',1)
+                URL = strwithmeta(URL, {'User-Agent':UA})
+                printDBG('URL='+URL)
+                urlTab.append({'url':URL , 'name': 'mystream'})
+        except Exception:
+            printExc()
 
-        videoTab = []
-        tmp = self.cm.ph.getDataBeetwenMarkers(data, '<video', '</video>')[1]
-        tmp = self.cm.ph.getAllItemsBeetwenMarkers(tmp, '<source', '>')
-        printDBG(tmp)
-        for item in tmp:
-            marker = item.lower()
-            if 'video/mp4' not in marker and 'video/x-flv' not in marker: continue
-            type = self.cm.ph.getSearchGroups(item, '''type=['"]([^'^"]+?)['"]''')[0].split('/', 1)[-1]
-            url  = self.cm.getFullUrl(self.cm.ph.getSearchGroups(item, '''src=['"]([^'^"]+?)['"]''')[0], self.cm.getBaseUrl(cUrl))
-            label  = self.cm.ph.getSearchGroups(item, '''label=['"]([^'^"]+?)['"]''')[0]
-            printDBG(url)
-            if url != '':
-                videoTab.append({'name':'[%s] %s %s' % (type, domain, label), 'url':strwithmeta(url, {'User-Agent': HTTP_HEADER['User-Agent'], 'Referer':cUrl})})
+        return urlTab
 
-        if not videoTab:
-            data = ph.findall(data, ('<script', '>'), '</script>', flags=0)
-            for item in data:
-                if 'ﾟωﾟﾉ=' in item:
-                    aa_decoded = AADecoder(item).decode()
-                    url = self.cm.ph.getSearchGroups(aa_decoded, r'''['"](https?://[^"^']+?)['"]''')[0]
-                    url = strwithmeta(url, {'User-Agent': HTTP_HEADER['User-Agent'], 'Referer':baseUrl})
-                    if not url.endswith('.m3u8'):
-                        videoTab.append({'name':'mp4', 'url':url})
-                    else:
-                        videoTab.extend(getDirectM3U8Playlist(url, checkExt=False, checkContent=True, sortWithMaxBitrate=999999999))
-        return videoTab
-    
     def parserVIDLOADCO(self, baseUrl):
         printDBG("parserVIDLOADCO baseUrl[%r]" % baseUrl)
         baseUrl = strwithmeta(baseUrl)

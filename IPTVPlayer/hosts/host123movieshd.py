@@ -250,7 +250,7 @@ class GoMovies(CBaseHostClass):
                 elif playerData[0] == 'onlystream':
                     url = 'https://vidoo.tv/e/' + playerData[1]
                 elif playerData[0] == 'svbackup':
-                    url = 'https://mstream.xyz/' + playerData[1]
+                    url = 'https://embed.mystream.to/' + playerData[1]
                 else:
                     url = self.getFullUrl(playerData[1])
                 
