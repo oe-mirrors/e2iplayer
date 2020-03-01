@@ -414,13 +414,15 @@ class EkinoTv(CBaseHostClass, CaptchaHelper):
             sts, data = self.getPage(url, urlParams)
             if not sts: return urlTab
 
-            url = self.getFullUrl(self.cm.ph.getSearchGroups(data, '''\shref=['"]([^'^"]+?)['"]''')[0])
+            premium = self.cm.ph.getDataBeetwenMarkers(data, '<video', '</video>', False)[1]
 
-            if self.cm.isValidUrl(url):
-                urlParams['header']['Referer'] = baseUrl
-                urlParams['ignore_http_code_ranges'] = [(403, 403)]
-                sts, data = self.getPage(url, urlParams)
-                if not sts: return urlTab
+            if not self.loggedIn:
+                url = self.getFullUrl(self.cm.ph.getSearchGroups(data, '''\shref=['"]([^'^"]+?)['"]''')[0])
+                if self.cm.isValidUrl(url):
+                    urlParams['header']['Referer'] = baseUrl
+                    urlParams['ignore_http_code_ranges'] = [(403, 403)]
+                    sts, data = self.getPage(url, urlParams)
+                    if not sts: return urlTab
 
             if 'recaptcha' in data:
                 SetIPTVPlayerLastHostError(_('Link protected with google recaptcha v2.')) 
@@ -438,6 +440,13 @@ class EkinoTv(CBaseHostClass, CaptchaHelper):
                 vidUrl = self.cm.ph.getSearchGroups(data, '''var\s+[^=]+?\s*=\s*['"](https?://[^'^"]+?\.mp4(:?\?[^'^"]*?)?)['"]''', ignoreCase=True)[0]
                 if self.cm.isValidUrl(vidUrl):
                     urlTab.append({'name':'direct', 'url':vidUrl})
+                    return urlTab
+
+            if self.loggedIn and premium != '':
+                vidUrl = self.cm.ph.getSearchGroups(premium, '''\ssrc=['"]([^'^"]+?)['"]''')[0]
+                name = self.cm.ph.getSearchGroups(premium, '''\stype=['"]([^'^"]+?)['"]''')[0]
+                if self.cm.isValidUrl(vidUrl):
+                    urlTab.append({'name':name, 'url':vidUrl, 'need_resolve':0})
                     return urlTab
             
             printDBG("|||"  + url)
