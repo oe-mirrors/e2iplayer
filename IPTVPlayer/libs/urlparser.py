@@ -572,6 +572,7 @@ class urlparser:
                        'streamwire.net':       self.pp.parserONLYSTREAMTV   ,
                        'vidoo.tv':             self.pp.parserONLYSTREAMTV   ,
                        'mixdrop.co':           self.pp.parserMIXDROP        ,
+                       'vidload.net':          self.pp.parserVIDLOADNET     ,
                     }
         return
     
@@ -12470,6 +12471,44 @@ class pageParser(CaptchaHelper):
         printDBG("parserJETLOADNET data[%s]" % data)
         urlTab=[]
         url = self.cm.ph.getSearchGroups(data, '''['"]src['"]:['"]([^'^"]+?)['"]''')[0]
+        if url != '' and 'm3u8' not in url :
+            url = strwithmeta(url, {'Origin':"https://" + urlparser.getDomain(baseUrl), 'Referer':baseUrl})
+            urlTab.append({'name':'mp4', 'url':url})
+        hlsUrl = self.cm.ph.getSearchGroups(data, '''["'](https?://[^'^"]+?\.m3u8(?:\?[^"^']+?)?)["']''', ignoreCase=True)[0]
+        if hlsUrl != '':
+            hlsUrl = strwithmeta(hlsUrl, {'Origin':"https://" + urlparser.getDomain(baseUrl), 'Referer':baseUrl})
+            urlTab.extend(getDirectM3U8Playlist(hlsUrl, checkExt=False, variantCheck=True, checkContent=True, sortWithMaxBitrate=99999999))
+        return urlTab
+
+    def parserVIDLOADNET(self, baseUrl):
+        printDBG("parserVIDLOADNET baseUrl[%s]" % baseUrl)
+
+        HTTP_HEADER = self.cm.getDefaultHeader(browser='chrome')
+        referer = baseUrl.meta.get('Referer')
+        if referer: HTTP_HEADER['Referer'] = referer
+        urlParams = {'header': HTTP_HEADER}
+
+        sts, data = self.cm.getPage(baseUrl, urlParams)
+        if not sts: return False
+        cUrl = self.cm.meta['url']
+
+        data = self.cm.ph.getAllItemsBeetwenMarkers(data, '<input type="hidden"', '>')
+        for item in data:
+            data = self.cm.ph.getSearchGroups(item, '''\svalue=['"]([^'^"]+?)['"]''')[0]
+            if '==' in data: myreason = data[:-2]
+            if '=' not in data: url = data
+
+        url = "https://www.vidload.net/streamurl/{0}/".format(url)
+        post_data = {'myreason':myreason, 'saveme':'undefined'}
+        sts, data = self.cm.getPage(url, urlParams, post_data)
+        if not sts: return False
+        printDBG("parserVIDLOADNET data 1 [%s]" % data)
+
+        sts, data = self.cm.getPage(self.cm.getFullUrl(data, cUrl), urlParams)
+        if not sts: return False
+
+        urlTab=[]
+        url = self.cm.getFullUrl(self.cm.ph.getSearchGroups(data, '''<source[^>]+?src=['"]([^'^"]+?)['"][^>]+?video/mp4''')[0], cUrl)
         if url != '' and 'm3u8' not in url :
             url = strwithmeta(url, {'Origin':"https://" + urlparser.getDomain(baseUrl), 'Referer':baseUrl})
             urlTab.append({'name':'mp4', 'url':url})
