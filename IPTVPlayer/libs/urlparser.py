@@ -452,6 +452,7 @@ class urlparser:
                        'vod-share.com':        self.pp.parserVODSHARECOM    ,
                        'vidoza.net':           self.pp.parserVIDOZANET      ,
                        'vidoza.co':            self.pp.parserVIDOZANET      ,
+                       'vidoza.org':           self.pp.parserVIDOZANET      ,
                        'clipwatching.com':     self.pp.parserCLIPWATCHINGCOM,
                        'kingvid.tv':           self.pp.parserKINGVIDTV      ,
                        'ekstraklasa.tv':       self.pp.parserEKSTRAKLASATV  ,
