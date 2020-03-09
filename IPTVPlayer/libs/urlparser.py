@@ -12496,17 +12496,18 @@ class pageParser(CaptchaHelper):
         if not sts: return False
         cUrl = self.cm.meta['url']
 
+        url = ''
         data = self.cm.ph.getAllItemsBeetwenMarkers(data, '<input type="hidden"', '>')
         for item in data:
             data = self.cm.ph.getSearchGroups(item, '''\svalue=['"]([^'^"]+?)['"]''')[0]
             if '==' in data: myreason = data[:-2]
             if '=' not in data: url = data
+        if url == '': return False
 
         url = "https://www.vidload.net/streamurl/{0}/".format(url)
         post_data = {'myreason':myreason, 'saveme':'undefined'}
         sts, data = self.cm.getPage(url, urlParams, post_data)
         if not sts: return False
-        printDBG("parserVIDLOADNET data 1 [%s]" % data)
 
         sts, data = self.cm.getPage(self.cm.getFullUrl(data, cUrl), urlParams)
         if not sts: return False
