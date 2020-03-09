@@ -338,9 +338,8 @@ class EkinoTv(CBaseHostClass, CaptchaHelper):
                     continue
                 for p in players:
                     if p['id'] == id:
-                        if premium: title = '[premium] %s' % p['title']
-                        else: title = p['title']
-                        linkTab.append({'name':title, 'url':strwithmeta(url, {'Referer':cItem['url']}), 'need_resolve':1})
+                        if premium: linkTab.append({'name':'[premium] %s' % p['title'], 'url':strwithmeta(url, {'Referer':cItem['url'], 'is_premium':True}), 'need_resolve':1})
+                        else: linkTab.append({'name':p['title'], 'url':strwithmeta(url, {'Referer':cItem['url']}), 'need_resolve':1})
                         break
         
         _findHostingLinks(data, urlTab, False)
@@ -414,9 +413,8 @@ class EkinoTv(CBaseHostClass, CaptchaHelper):
             sts, data = self.getPage(url, urlParams)
             if not sts: return urlTab
 
-            premium = self.cm.ph.getDataBeetwenMarkers(data, '<video', '</video>', False)[1]
-
-            if not self.loggedIn:
+            if not meta.get('is_premium', False):
+                printDBG("EkinoTv.getVideoLinks not premium")
                 url = self.getFullUrl(self.cm.ph.getSearchGroups(data, '''\shref=['"]([^'^"]+?)['"]''')[0])
                 if self.cm.isValidUrl(url):
                     urlParams['header']['Referer'] = baseUrl
@@ -435,20 +433,15 @@ class EkinoTv(CBaseHostClass, CaptchaHelper):
             
             if not self.cm.isValidUrl(url):
                 url = data.meta.get('url', '')
-                
-            if meta.get('is_premium', False) and 'video-player' in data:
-                vidUrl = self.cm.ph.getSearchGroups(data, '''var\s+[^=]+?\s*=\s*['"](https?://[^'^"]+?\.mp4(:?\?[^'^"]*?)?)['"]''', ignoreCase=True)[0]
-                if self.cm.isValidUrl(vidUrl):
-                    urlTab.append({'name':'direct', 'url':vidUrl})
-                    return urlTab
 
-            if self.loggedIn and premium != '':
-                vidUrl = self.cm.ph.getSearchGroups(premium, '''\ssrc=['"]([^'^"]+?)['"]''')[0]
-                name = self.cm.ph.getSearchGroups(premium, '''\stype=['"]([^'^"]+?)['"]''')[0]
+            if meta.get('is_premium', False):
+                data = self.cm.ph.getDataBeetwenMarkers(data, '<video', '</video>', False)[1]
+                vidUrl = self.cm.ph.getSearchGroups(data, '''\ssrc=['"]([^'^"]+?)['"]''')[0]
+                name = self.cm.ph.getSearchGroups(data, '''\stype=['"]([^'^"]+?)['"]''')[0]
                 if self.cm.isValidUrl(vidUrl):
                     urlTab.append({'name':name, 'url':vidUrl, 'need_resolve':0})
                     return urlTab
-            
+
             printDBG("|||"  + url)
             printDBG("#################################################################")
             printDBG(data)
