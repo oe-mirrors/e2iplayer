@@ -414,7 +414,6 @@ class EkinoTv(CBaseHostClass, CaptchaHelper):
             if not sts: return urlTab
 
             if not meta.get('is_premium', False):
-                printDBG("EkinoTv.getVideoLinks not premium")
                 url = self.getFullUrl(self.cm.ph.getSearchGroups(data, '''\shref=['"]([^'^"]+?)['"]''')[0])
                 if self.cm.isValidUrl(url):
                     urlParams['header']['Referer'] = baseUrl

@@ -243,7 +243,7 @@ class Spryciarze(CBaseHostClass):
             
             ignore = False
             for it in searchItems:
-                match = re.compile(it['pattern'], re.DOTALL).findall(tab[i])
+                match = re.compile(it['pattern'], re.DOTALL).findall(tab[i].replace('&quot;', ''))
                 
                 if 1 != len(match):
                     printDBG('Brak ' + it['keys'][0])
@@ -308,7 +308,7 @@ class Spryciarze(CBaseHostClass):
                 url = self.getFullUrl(self.cm.ph.getSearchGroups(player, '''<iframe[^>]+?src=['"]([^"^']*?)['"]''', 1, True)[0])
                 if 1 == self.up.checkHostSupport(url):
                     linkstTab = self.up.getVideoLinkExt(url)
-                player = self.cm.ph.getSearchGroups(player, 'const data[^=]*?=[^\{]*?(\{[^;]+?);')[0]
+                player = self.cm.ph.getSearchGroups(player.replace('&quot;', ''), 'const data[^=]*?=[^\{]*?(\{[^;]+?);')[0]
                 try:
 #                    printDBG(player)
                     player = player[:player.find('"relatedMovies"')].replace('}],', '}]}')
