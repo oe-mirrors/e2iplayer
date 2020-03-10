@@ -176,8 +176,8 @@ class ustvgo(CBaseHostClass):
         jscode.append('print(%s);' % jsfunc)
         ret = js_execute( '\n'.join(jscode) )
         if ret['sts'] and 0 == ret['code']:
-            url = ret['data']
-            url = strwithmeta(url, {'User-Agent': self.USER_AGENT, 'Origin':'http://ustvgo.tv', 'Referer':cItem['url']})
+            url = "".join(ret['data'].split())
+            url = strwithmeta(url, {'User-Agent': self.USER_AGENT, 'Origin':self.MAIN_URL, 'Referer':cItem['url']})
             return getDirectM3U8Playlist(url)
         else:
             return []
