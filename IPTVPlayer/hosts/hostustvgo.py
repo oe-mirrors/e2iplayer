@@ -6,6 +6,8 @@ from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT
 from Plugins.Extensions.IPTVPlayer.components.ihost import CHostBase, CBaseHostClass
 from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, rm, byteify
 from Plugins.Extensions.IPTVPlayer.libs.urlparserhelper import getDirectM3U8Playlist
+from Plugins.Extensions.IPTVPlayer.libs.e2ijson import loads as json_loads, dumps as json_dumps
+from Plugins.Extensions.IPTVPlayer.libs import ph
 from Plugins.Extensions.IPTVPlayer.tools.iptvtypes import strwithmeta
 from Plugins.Extensions.IPTVPlayer.tools.e2ijs import js_execute
 ###################################################
@@ -76,7 +78,7 @@ class ustvgo(CBaseHostClass):
                     ret = js_execute( jscode )
                     if ret['sts'] and 0 == ret['code']:
                         try:
-                            cookies = byteify(json.loads(ret['data'].strip()))
+                            cookies = byteify(json_loads(ret['data'].strip()))
                             for cookie in cookies: cookieItems.update(cookie)
                         except Exception:
                             printExc()
@@ -157,11 +159,28 @@ class ustvgo(CBaseHostClass):
             sts, data = self.getPage(url)
             if not sts: return
 
-        data = self.cm.ph.getDataBeetwenMarkers(data, 'player.setup({', '})', False)[1]
-        url  = self.cm.ph.getSearchGroups(data, '''(https?://[^'^"]+?)['"]''')[0] 
-        url = strwithmeta(url, {'User-Agent': self.USER_AGENT, 'Origin':'http://ustvgo.tv', 'Referer':cItem['url']})
-
-        return getDirectM3U8Playlist(url)
+        jsfunc = self.cm.ph.getDataBeetwenMarkers(data, 'player.setup({', '})', False)[1]
+        jsfunc = self.cm.ph.getSearchGroups(jsfunc, '''file:\s([^,]+?),''', 1, True)[0]
+        jscode = [base64.b64decode('''dmFyIHBsYXllcj17fTtmdW5jdGlvbiBzZXR1cChlKXt0aGlzLm9iaj1lfWZ1bmN0aW9uIGp3cGxheWVyKCl7cmV0dXJuIHBsYXllcn1wbGF5ZXIuc2V0dXA9c2V0dXAsZG9jdW1lbnQ9e30sZG9jdW1lbnQuZ2V0RWxlbWVudEJ5SWQ9ZnVuY3Rpb24oZSl7cmV0dXJue2lubmVySFRNTDppbnRlckh0bWxFbGVtZW50c1tlXX19Ow==''')]
+        interHtmlElements = {}
+        tmp = ph.findall(data, ('<span', '>', 'display:none'), '</span>', flags=ph.START_S)
+        for idx in range(1, len(tmp), 2):
+            elemId = self.cm.ph.getSearchGroups(tmp[idx-1], '''id=([^>]+?)>''', 1, True)[0]
+            interHtmlElements[elemId] = tmp[idx].strip()
+        jscode.append('var interHtmlElements=%s;' % json_dumps(interHtmlElements))
+        data = self.cm.ph.getAllItemsBeetwenNodes(data, ('<script', '>'), ('</script', '>'), False)
+        for item in data:
+            if jsfunc in item:
+                data = item
+        jscode.append(data)
+        jscode.append('print(%s);' % jsfunc)
+        ret = js_execute( '\n'.join(jscode) )
+        if ret['sts'] and 0 == ret['code']:
+            url = ret['data']
+            url = strwithmeta(url, {'User-Agent': self.USER_AGENT, 'Origin':'http://ustvgo.tv', 'Referer':cItem['url']})
+            return getDirectM3U8Playlist(url)
+        else:
+            return []
     
     def handleService(self, index, refresh = 0, searchPattern = '', searchType = ''):
         printDBG('handleService start')
