@@ -576,6 +576,7 @@ class urlparser:
                        'vidoo.tv':             self.pp.parserONLYSTREAMTV   ,
                        'mixdrop.co':           self.pp.parserMIXDROP        ,
                        'vidload.net':          self.pp.parserVIDLOADNET     ,
+                       'vidcloud9.com':        self.pp.parserVIDCLOUD9      ,
                     }
         return
     
@@ -12522,3 +12523,33 @@ class pageParser(CaptchaHelper):
             hlsUrl = strwithmeta(hlsUrl, {'Origin':"https://" + urlparser.getDomain(baseUrl), 'Referer':baseUrl})
             urlTab.extend(getDirectM3U8Playlist(hlsUrl, checkExt=False, variantCheck=True, checkContent=True, sortWithMaxBitrate=99999999))
         return urlTab
+
+    def parserVIDCLOUD9(self, baseUrl):
+        printDBG("parserVIDCLOUD9 baseUrl[%r]" % baseUrl)
+        baseUrl = strwithmeta(baseUrl)
+        HTTP_HEADER = self.cm.getDefaultHeader(browser='firefox')
+        urlParams = {'header': HTTP_HEADER}
+        urlParams['header'].update({'Referer': urlparser.getDomain(baseUrl, False), 'X-Requested-With': 'XMLHttpRequest'})
+        _url = self.cm.ph.getSearchGroups(baseUrl, '''https?://.+?/(.+?)\.php.+?''', ignoreCase=True)[0]
+        sts, data = self.cm.getPage(baseUrl.replace(_url, 'ajax'), urlParams)
+        if not sts: return False
+        data = json_loads(data)
+        urlTab = []
+        for item in data['source']:
+            url = item.get('file', '')
+            url = strwithmeta(url, {'Referer':baseUrl})
+            label = item.get('label', '')
+            if 'm3u8' in url:
+                urlTab.extend(getDirectM3U8Playlist(url, checkContent=True, sortWithMaxBitrate=999999999))
+            elif 'mp4' in url:
+                urlTab.append({'name': 'res: ' + label, 'url': url})
+        for item in data['source_bk']:
+            url = item.get('file', '')
+            url = strwithmeta(url, {'Referer':baseUrl})
+            label = item.get('label', '')
+            if 'm3u8' in url:
+                urlTab.extend(getDirectM3U8Playlist(url, checkContent=True, sortWithMaxBitrate=999999999))
+            elif 'mp4' in url:
+                urlTab.append({'name': 'res: ' + label, 'url': url})
+        return urlTab
+

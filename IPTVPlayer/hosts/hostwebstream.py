@@ -170,7 +170,7 @@ class HasBahCa(CBaseHostClass):
                         {'alias_id':'livemass.net',            'name': 'livemass.net',        'title': 'http://livemass.net/',              'url': 'http://www.livemass.net/',                                           'icon': 'http://s3.amazonaws.com/livemass/warrington/images/warrington/iconclr.png'}, \
 #                        {'alias_id':'wizja.tv',                'name': 'wizja.tv',            'title': 'http://wizja.tv/',                  'url': 'http://wizja.tv/',                                                   'icon': 'http://wizja.tv/logo.png'}, \
                         {'alias_id':'crackstreams.com',        'name': 'crackstreams.com',    'title': 'http://crackstreams.com/',          'url': 'http://crackstreams.com/',                                           'icon': ''}, \
-                        {'alias_id':'nhl66.ir',                'name': 'nhl66.ir',            'title': 'https://nhl66.ir',                  'url': 'https://mirror.nhl66.ir/api/get_anonymous_data',                     'icon': 'https://nhl66.ir/cassets/logo.png'}, \
+                        {'alias_id':'nhl66.ir',                'name': 'nhl66.ir',            'title': 'https://nhl66.ir',                  'url': 'https://pro.nhl66.ir/api/get_anonymous_data',                     'icon': 'https://nhl66.ir/cassets/logo.png'}, \
                        ] 
     
     def __init__(self):
@@ -983,7 +983,7 @@ class HasBahCa(CBaseHostClass):
                     dtime = item['start_datetime'].replace('T', ' - ').replace('Z', ' GMT')
                     title = title + item['away_abr'] + ' vs. ' + item['home_abr'] + ' - ' + dtime + ' - ' + name
                     desc = dtime + '[/br]' + item['away_name'] + ' vs. ' + item['home_name'] + '[/br]' + name
-                    params = {'good_for_fav':True, 'name':"others", 'url':url, 'title':title, 'desc':desc, 'replacekey':'https://mf.svc.nhl.com/', 'urlkey':'https://mirror.nhl66.ir/api/get_key_url/'}
+                    params = {'good_for_fav':True, 'name':"others", 'url':url, 'title':title, 'desc':desc, 'replacekey':'https://mf.svc.nhl.com/', 'urlkey':'https://pro.nhl66.ir/api/get_key_url/'}
                     self.addVideo(params)
         except Exception:
             printExc()
