@@ -252,11 +252,11 @@ class TheWatchseriesTo(CBaseHostClass):
         for item in data:
             host = ph.search(item, '''"download_link_([^'^"]+?)['"]''')[0]
             #if self.up.checkHostSupport('http://'+host+'/') != 1: continue
-            printDBG(item)
-            printDBG('------')
+#            printDBG(item)
+#            printDBG('------')
             url = ''
-            item = ph.findall(item, '<a', '</a>')
-            for it in item:
+            tmp = ph.findall(item, '<a', '</a>')
+            for it in tmp:
                 if self.isNeedProxy():
                     url = urllib.unquote(ph.search(it, '''href=['"][^'^"]*?%3Fr%3D([^'^"^&]+?)['"&]''')[0])
                 else:
@@ -267,7 +267,9 @@ class TheWatchseriesTo(CBaseHostClass):
                 except Exception:
                     continue
                 break
-            if url == '': continue
+#            if url == '': continue
+            if 'http' not in url:
+                url = self.cm.ph.getSearchGroups(item, '''['"]Delete\slink\s(http.+?)['"]''')[0]
             if self.up.checkHostSupport(url) != 1: continue
             url = strwithmeta(self.getFullUrl(url), {'Referer':self.cm.meta['url']})
             urlTab.append({'name':host, 'url':url, 'need_resolve':1})
