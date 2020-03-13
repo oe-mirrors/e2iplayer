@@ -247,7 +247,7 @@ class cda(CBaseHostClass, CaptchaHelper):
             if page == None:
                 page = cItem.get('page', 1)
                 nextPage = ph.find(data, ('<span', '>', 'next-wrapper'), '</span>', flags=0)[1]
-                if not nextPage: nextPage = ph.find(data, ('<a', '>', 'btn-large'))[1]
+                if not nextPage: nextPage = ph.find(data, ('<a', '>', 'btn-large '))[1]
                 nextPage = self.getFullUrl(ph.clean_html(ph.getattr(nextPage, 'href')), self.cm.meta['url'])
             else:
                 nextPage = url if 'Następna strona' in data else ''
