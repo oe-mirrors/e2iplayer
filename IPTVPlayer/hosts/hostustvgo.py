@@ -159,8 +159,9 @@ class ustvgo(CBaseHostClass):
             sts, data = self.getPage(url)
             if not sts: return
 
-        jsfunc = self.cm.ph.getDataBeetwenMarkers(data, 'var setup', '}', False)[1]
-        jsfunc = self.cm.ph.getSearchGroups(jsfunc, '''source:\s([^,]+?),''', 1, True)[0]
+#        jsfunc = self.cm.ph.getDataBeetwenMarkers(data, 'var setup', '}', False)[1]
+        jsfunc = self.cm.ph.getSearchGroups(data, '''source:\s([^,]+?),''', 1, True)[0]
+        if jsfunc == '': jsfunc = self.cm.ph.getSearchGroups(data, '''file:\s([^,]+?),''', 1, True)[0]
         jscode = [base64.b64decode('''dmFyIHBsYXllcj17fTtmdW5jdGlvbiBzZXR1cChlKXt0aGlzLm9iaj1lfWZ1bmN0aW9uIGp3cGxheWVyKCl7cmV0dXJuIHBsYXllcn1wbGF5ZXIuc2V0dXA9c2V0dXAsZG9jdW1lbnQ9e30sZG9jdW1lbnQuZ2V0RWxlbWVudEJ5SWQ9ZnVuY3Rpb24oZSl7cmV0dXJue2lubmVySFRNTDppbnRlckh0bWxFbGVtZW50c1tlXX19Ow==''')]
         interHtmlElements = {}
         tmp = ph.findall(data, ('<span', '>', 'display:none'), '</span>', flags=ph.START_S)
