@@ -159,8 +159,8 @@ class ustvgo(CBaseHostClass):
             sts, data = self.getPage(url)
             if not sts: return
 
-        jsfunc = self.cm.ph.getDataBeetwenMarkers(data, 'player.setup({', '})', False)[1]
-        jsfunc = self.cm.ph.getSearchGroups(jsfunc, '''file:\s([^,]+?),''', 1, True)[0]
+        jsfunc = self.cm.ph.getDataBeetwenMarkers(data, 'var setup', '}', False)[1]
+        jsfunc = self.cm.ph.getSearchGroups(jsfunc, '''source:\s([^,]+?),''', 1, True)[0]
         jscode = [base64.b64decode('''dmFyIHBsYXllcj17fTtmdW5jdGlvbiBzZXR1cChlKXt0aGlzLm9iaj1lfWZ1bmN0aW9uIGp3cGxheWVyKCl7cmV0dXJuIHBsYXllcn1wbGF5ZXIuc2V0dXA9c2V0dXAsZG9jdW1lbnQ9e30sZG9jdW1lbnQuZ2V0RWxlbWVudEJ5SWQ9ZnVuY3Rpb24oZSl7cmV0dXJue2lubmVySFRNTDppbnRlckh0bWxFbGVtZW50c1tlXX19Ow==''')]
         interHtmlElements = {}
         tmp = ph.findall(data, ('<span', '>', 'display:none'), '</span>', flags=ph.START_S)
@@ -172,7 +172,10 @@ class ustvgo(CBaseHostClass):
         for item in data:
             if jsfunc in item:
                 data = item
-        jscode.append(data)
+        tmp = re.compile('''(var\s.+?\s\[.+?\];)''').findall(data)
+        jscode.append('\n'.join(tmp))
+        tmp = self.cm.ph.getDataBeetwenNodes(data, ('function', '{', jsfunc), '}')[1]
+        jscode.append(tmp)
         jscode.append('print(%s);' % jsfunc)
         ret = js_execute( '\n'.join(jscode) )
         if ret['sts'] and 0 == ret['code']:
