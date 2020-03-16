@@ -419,8 +419,8 @@ class ZalukajCOM(CBaseHostClass):
         httpParams['header'] = dict(httpParams['header'])
         httpParams['header']['Referer'] = 'https://zalukaj.com/'
         
-        if None == self.loggedIn or self.login != config.plugins.iptvplayer.zalukajtv_login.value or\
-            self.password != config.plugins.iptvplayer.zalukajtv_password.value:
+        if (None == self.loggedIn or self.login != config.plugins.iptvplayer.zalukajtv_login.value or\
+            self.password != config.plugins.iptvplayer.zalukajtv_password.value) and config.plugins.iptvplayer.zalukajtvPREMIUM.value:
         
             self.login = config.plugins.iptvplayer.zalukajtv_login.value
             self.password = config.plugins.iptvplayer.zalukajtv_password.value
