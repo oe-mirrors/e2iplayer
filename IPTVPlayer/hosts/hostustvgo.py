@@ -190,7 +190,7 @@ class ustvgo(CBaseHostClass):
         if not sts: return
 
         if 'player.setup' not in data:
-            url = self.getFullUrl(self.cm.ph.getSearchGroups(data, '''src=['"]([^"^']+?player\.php[^"^']*?)['"]''', 1, True)[0])
+            url = self.getFullUrl(self.cm.ph.getSearchGroups(data, '''src=['"]([^"^']+?player2?\.php[^"^']*?)['"]''', 1, True)[0])
             sts, data = self.getPage(url)
             if not sts: return
 
