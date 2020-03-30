@@ -9860,7 +9860,7 @@ class pageParser(CaptchaHelper):
 #                    jscode.append(item)
 #                    break
 #            jscode.append('var adb = "0/"; ext = "";')
-            jscode = ['var token = ""; var adb = "0/";']
+            jscode = ['var token = ""; var adb = "0/"; var wasmcheck="1";']
             tmp = ph.search(data, '''(['"][^'^"]*?get_md5\.php[^;]+?);''')[0]
             jscode.append('print(%s)' % tmp)
             ret = js_execute( '\n'.join(jscode) )
