@@ -1561,10 +1561,6 @@ class pageParser(CaptchaHelper):
                    else:
                        x.append(s[i])
                return ''.join(x)
-            dat47 = rot47(urllib.unquote(dat))
-            if not dat47.startswith('http'):
-                dat47 = 'http://' + dat47 + '.mp4'
-            return str(dat47)
 
             def __replace(c):
                 code = ord(c.group(1))
@@ -1579,7 +1575,11 @@ class pageParser(CaptchaHelper):
             
             if not self.cm.isValidUrl(dat):
                 try:
-                    dat = re.sub('([a-zA-Z])', __replace, dat)
+                    if 'uggcf' in dat:
+                        dat = re.sub('([a-zA-Z])', __replace, dat)
+                    else:
+                        dat = rot47(urllib.unquote(dat))
+                        dat = 'https://' + str(dat) + '.mp4'
                     if not dat.endswith('.mp4'):
                         dat += '.mp4'
                     dat = dat.replace("adc.mp4", ".mp4")
