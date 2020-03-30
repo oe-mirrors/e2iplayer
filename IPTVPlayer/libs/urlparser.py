@@ -11526,28 +11526,30 @@ class pageParser(CaptchaHelper):
         domain = urlparser.getDomain(cUrl)
        
         if 'embed' not in cUrl:
-            url = self.cm.getFullUrl(self.cm.ph.getSearchGroups(data, '''<iframe[^>]+?src=['"]([^"^']+?)['"]''', 1, True)[0], domain)
-            if 'embed' in url:
-                urlParams['header']['Referer'] = cUrl
-                sts, data = self.cm.getPage(url, urlParams)
-                if not sts: return False
-        
-        jscode = [self.jscode['jwplayer'], "Clappr={Player:jwplayer()['setup']};"]
-        tmp = self.cm.ph.getAllItemsBeetwenNodes(data, ('<script', '>'), ('</script', '>'), False)
-        for item in tmp:
-            if 'eval(' in item and 'sources' in item:
-                jscode.append(item)
-        urlTab = []
-        jscode = '\n'.join(jscode)
-        ret = js_execute( jscode )
-        printDBG(ret['data'])
-        data = json_loads(ret['data'])
-        for item in data['sources']:
-            url = self.cm.getFullUrl(item, domain)
-            url = strwithmeta(url, {'Referer':baseUrl, 'User-Agent':HTTP_HEADER['User-Agent'], 'Range':'bytes=0-'})
-            urlTab.append({'name':domain, 'url':url})
-            
-        return urlTab
+            baseUrl = self.cm.getFullUrl(self.cm.ph.getSearchGroups(data, '''<iframe[^>]+?src=['"]([^"^']+?)['"]''', 1, True)[0], domain)
+#            if 'embed' in url:
+#                urlParams['header']['Referer'] = cUrl
+#                sts, data = self.cm.getPage(url, urlParams)
+#                if not sts: return False
+#        
+#        jscode = [self.jscode['jwplayer'], "Clappr={Player:jwplayer()['setup']};"]
+#        tmp = self.cm.ph.getAllItemsBeetwenNodes(data, ('<script', '>'), ('</script', '>'), False)
+#        for item in tmp:
+#            if 'eval(' in item and 'sources' in item:
+#                jscode.append(item)
+#        urlTab = []
+#        jscode = '\n'.join(jscode)
+#        ret = js_execute( jscode )
+#        printDBG(ret['data'])
+#        data = json_loads(ret['data'])
+#        for item in data['sources']:
+#            url = self.cm.getFullUrl(item, domain)
+#            url = strwithmeta(url, {'Referer':baseUrl, 'User-Agent':HTTP_HEADER['User-Agent'], 'Range':'bytes=0-'})
+#            urlTab.append({'name':domain, 'url':url})
+#            
+#        return urlTab
+
+        return self.parserONLYSTREAMTV(strwithmeta(baseUrl, {'Referer':cUrl}))
 
     def parserKRAKENFILESCOM(self, baseUrl):
         printDBG("parserKRAKENFILESCOM baseUrl[%r]" % baseUrl)
