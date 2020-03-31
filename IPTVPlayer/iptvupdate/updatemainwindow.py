@@ -869,7 +869,10 @@ class UpdateMainAppImpl(IUpdateObjectInterface):
                     elif config.plugins.iptvplayer.ListaGraficzna.value:
                         list.append( self.__getStepDesc(title = _("Copy icons."),    execFunction = self.stepCopyOnlyIcons ) )
 
-            self.list[3:3] = list
+            if config.plugins.iptvplayer.gitlab_repo.value and config.plugins.iptvplayer.preferredupdateserver.value == '2':
+                self.list[4:4] = list
+            else:
+                self.list[3:3] = list
             if 'enc' in self.serversList[self.currServIdx]:
                 self.list.insert(1, self.__getStepDesc(title = _("Get decryption key."),    execFunction = self.stepGetEncKey ) )
                 self.list.insert(3, self.__getStepDesc(title = _("Decrypt archive."),       execFunction = self.stepDecryptArchive ) )
