@@ -9789,13 +9789,17 @@ class pageParser(CaptchaHelper):
         if (subData.endswith('.srt') or subData.endswith('.vtt')):
             sub_tracks.append({'title':'attached', 'url':subData, 'lang':'unk', 'format':'srt'})
 
-        data = self.cm.ph.getAllItemsBeetwenMarkers(data, '<script>', '</script>')
+        data = self.cm.ph.getAllItemsBeetwenMarkers(data, '<script>', '</script>', False)
+        wise = ''
+        tmp  = ''
         for item in data:
             if 'orig_vid = "' in item:
-                data = item
-                break
-        orig_vid = self.cm.ph.getDataBeetwenMarkers(data, 'orig_vid = "', '"', False)[1]
-        jscode = self.cm.ph.getDataBeetwenMarkers(data, 'location.replace(', ');', False)[1]
+                tmp = item
+            if "w,i,s,e" in item:
+                wise = item
+
+        orig_vid = self.cm.ph.getDataBeetwenMarkers(tmp, 'orig_vid = "', '"', False)[1]
+        jscode = self.cm.ph.getDataBeetwenMarkers(tmp, 'location.replace(', ');', False)[1]
         jscode = 'var need_captcha="0"; var server_referer="http://hqq.watch/"; var orig_vid="'+orig_vid+'"; print(' + jscode + ');'
 
         gt = self.cm.getCookieItem(COOKIE_FILE,'gt')
@@ -9860,7 +9864,8 @@ class pageParser(CaptchaHelper):
 #                    jscode.append(item)
 #                    break
 #            jscode.append('var adb = "0/"; ext = "";')
-            jscode = ['var token = ""; var adb = "0/"; var wasmcheck="1";']
+            jscode = ['var token = ""; var adb = "0/"; var wasmcheck="1"; var videokeyorig="%s";' % vid]
+            jscode.append(wise)
             tmp = ph.search(data, '''(['"][^'^"]*?get_md5\.php[^;]+?);''')[0]
             jscode.append('print(%s)' % tmp)
             ret = js_execute( '\n'.join(jscode) )
