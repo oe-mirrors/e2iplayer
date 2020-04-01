@@ -11527,6 +11527,7 @@ class pageParser(CaptchaHelper):
        
         if 'embed' not in cUrl:
             baseUrl = self.cm.getFullUrl(self.cm.ph.getSearchGroups(data, '''<iframe[^>]+?src=['"]([^"^']+?)['"]''', 1, True)[0], domain)
+
 #            if 'embed' in url:
 #                urlParams['header']['Referer'] = cUrl
 #                sts, data = self.cm.getPage(url, urlParams)
@@ -11549,7 +11550,7 @@ class pageParser(CaptchaHelper):
 #            
 #        return urlTab
 
-        return self.parserONLYSTREAMTV(strwithmeta(baseUrl, {'Referer':cUrl}))
+        return self.parserONLYSTREAMTV(strwithmeta(baseUrl, {'Host':domain}))
 
     def parserKRAKENFILESCOM(self, baseUrl):
         printDBG("parserKRAKENFILESCOM baseUrl[%r]" % baseUrl)
