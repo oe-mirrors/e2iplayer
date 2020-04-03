@@ -17,7 +17,7 @@ except Exception: import simplejson as json
 ###################################################
 
 def gettytul():
-    return 'http://guardaserie.watch/'
+    return 'https://www.guardaserie.digital/'
 
 class GuardaSerieClick(CBaseHostClass):
 
@@ -28,14 +28,14 @@ class GuardaSerieClick(CBaseHostClass):
         self.HEADER = {'User-Agent': self.USER_AGENT, 'Accept': 'text/html'}
         self.AJAX_HEADER = MergeDicts(self.HEADER, {'X-Requested-With':'XMLHttpRequest', 'Content-Type':'application/x-www-form-urlencoded; charset=UTF-8'})
         
-        self.MAIN_URL = 'http://www.guardaserie.watch/'
+        self.MAIN_URL = 'https://www.guardaserie.digital/'
         self.DEFAULT_ICON_URL = self.getFullIconUrl('/wp-content/themes/guardaserie/images/logogd.png')
         
         self.defaultParams = {'header':self.HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
     
     def getPage(self, baseUrl, addParams = {}, post_data = None):
         if addParams == {}: addParams = dict(self.defaultParams)
-        addParams['cloudflare_params'] = {'cookie_file':self.COOKIE_FILE, 'User-Agent':self.USER_AGENT}
+        addParams['cloudflare_params'] = {'domain': 'guardaserie.digital', 'cookie_file':self.COOKIE_FILE, 'User-Agent':self.USER_AGENT}
         return self.cm.getPageCFProtection(baseUrl, addParams, post_data)
     
     def listMainMenu(self, cItem):

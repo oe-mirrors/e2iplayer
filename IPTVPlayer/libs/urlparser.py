@@ -548,6 +548,7 @@ class urlparser:
                        'upzone.cc':            self.pp.parserUPZONECC       , 
                        'xstreamcdn.com':       self.pp.parserXSTREAMCDNCOM  , 
                        'fembed.com':           self.pp.parserXSTREAMCDNCOM  , 
+                       'sonline.pro':          self.pp.parserXSTREAMCDNCOM  , 
                        'thevid.tv':            self.pp.parserTHEVIDTV       , 
                        'clooud.cc':            self.pp.parserCLOOUDCC       , 
                        'veuclips.com':         self.pp.parserVEUCLIPS       , 
