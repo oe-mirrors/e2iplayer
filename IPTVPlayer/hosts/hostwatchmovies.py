@@ -55,11 +55,11 @@ class watchMovies(CBaseHostClass):
     def listMainMenu(self, cItem):
         printDBG("watchMovies.listMainMenu")
 
-        MAIN_CAT_TAB = [{'category':'list_items',     'title': _('Movies'),          'url':self.getFullUrl('/movies/')},
-                        {'category':'list_items',     'title': _('Series'),          'url':self.getFullUrl('/tvshows/')},
+        MAIN_CAT_TAB = [{'category':'list_items',     'title': _('Movies'),          'url':self.getFullUrl('/?post_type=movies')},
+                        {'category':'list_items',     'title': _('Series'),          'url':self.getFullUrl('/?post_type=tvshows')},
                         {'category':'list_years',     'title': _('Movies by year'),  'url':self.MAIN_URL},
                         {'category':'list_cats',      'title': _('Movies genres'),   'url':self.MAIN_URL},
-                        {'category':'list_top',       'title': _('Top rated'),       'url':self.getFullUrl('/imdb/')},
+#                        {'category':'list_top',       'title': _('Top rated'),       'url':self.getFullUrl('/imdb/')},
 #                        {'category':'list_az',        'title': _('Alphabetically'), 'url':self.MAIN_URL},
                         {'category':'search',         'title': _('Search'),         'search_item':True}, 
                         {'category':'search_history', 'title': _('Search history')},]
@@ -135,7 +135,7 @@ class watchMovies(CBaseHostClass):
 #                title = '[' + _('Featured') + '] ' + self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(item, ('<h3', '>'), ('</h3', '>'), False)[1])
                 continue
             desc = self.cleanHtmlStr(item)
-            if '/tvshows/' in url:
+            if 'tvshows' in url:
                 params = {'good_for_fav':True,'category':'list_series', 'url':url, 'title':title, 'desc':desc, 'icon':icon}
                 self.addDir(params)
             else:
