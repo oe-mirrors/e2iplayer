@@ -89,7 +89,7 @@ class JoeMonster(CBaseHostClass):
             if len(time) > 0: time = '[%s] ' % time
             desc  = time + self.cleanHtmlStr( self.cm.ph.getDataBeetwenNodes(item, ('<div', '>', 'mtv-desc-text'), ('</div', '>'))[1])
             if not self.cm.isValidUrl(url): continue
-            icon = self.getFullIconUrl( self.cm.ph.getSearchGroups(item, '''\surl\(([^\)]+?)\)''')[0] )
+            icon = self.getFullIconUrl( self.cm.ph.getSearchGroups(item, '''\ssrc=['"]([^"^']+?)['"]''')[0] )
             params = dict(cItem)
             params = {'good_for_fav': True, 'title':title, 'url':url, 'icon':icon, 'desc':desc}
             self.addVideo(params)
