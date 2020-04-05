@@ -576,6 +576,7 @@ class urlparser:
                        'streamwire.net':       self.pp.parserONLYSTREAMTV   ,
                        'vidoo.tv':             self.pp.parserONLYSTREAMTV   ,
                        'vup.to':               self.pp.parserONLYSTREAMTV   ,
+                       'upvideo.cc':           self.pp.parserONLYSTREAMTV   ,
                        'mixdrop.co':           self.pp.parserMIXDROP        ,
                        'vidload.net':          self.pp.parserVIDLOADNET     ,
                        'vidcloud9.com':        self.pp.parserVIDCLOUD9      ,
