@@ -183,7 +183,6 @@ hostustreamtv
 hostustvgo
 hostvevo
 hostvidcorncom
-hostvideopenny
 hostvimeo
 hostvodpl
 hostvumedicom
@@ -203,4 +202,5 @@ hostyesmoviesto
 hostyifytv
 hostyoutube
 hostzalukajcom
+hostzalukajvip
 hostzdfmediathek
