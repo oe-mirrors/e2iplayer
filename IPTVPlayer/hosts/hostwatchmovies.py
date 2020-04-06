@@ -144,7 +144,7 @@ class watchMovies(CBaseHostClass):
             
         if nextPage != '':
             params = dict(cItem)
-            params.update({'title':_('Next page'), 'url':self.getFullUrl(nextPage), 'page':page + 1})
+            params.update({'title':_('Next page'), 'url':self.getFullUrl(nextPage).replace('&#038;', '&'), 'page':page + 1})
             self.addDir(params)
 
     def listTop(self, cItem):
