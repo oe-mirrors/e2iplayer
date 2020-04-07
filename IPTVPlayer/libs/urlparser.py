@@ -568,7 +568,6 @@ class urlparser:
                        'streamatus.tk':        self.pp.parserVIUCLIPS       ,
                        'onlystream.tv':        self.pp.parserONLYSTREAMTV   ,
                        'tunestream.net':       self.pp.parserONLYSTREAMTV   ,
-                       'jetload.net':          self.pp.parserJETLOADNET     ,
                        'vidia.tv':             self.pp.parserONLYSTREAMTV   ,
                        'youdbox.com':          self.pp.parserONLYSTREAMTV   ,
                        'upstream.to':          self.pp.parserONLYSTREAMTV   ,
@@ -577,6 +576,7 @@ class urlparser:
                        'vidoo.tv':             self.pp.parserONLYSTREAMTV   ,
                        'vup.to':               self.pp.parserONLYSTREAMTV   ,
                        'upvideo.cc':           self.pp.parserONLYSTREAMTV   ,
+                       'jetload.net':          self.pp.parserJETLOADNET     ,
                        'mixdrop.co':           self.pp.parserMIXDROP        ,
                        'vidload.net':          self.pp.parserVIDLOADNET     ,
                        'vidcloud9.com':        self.pp.parserVIDCLOUD9      ,
@@ -1590,7 +1590,26 @@ class pageParser(CaptchaHelper):
                     dat = ''
                     printExc()
             return str(dat)
-        
+
+        def __jsplayer(dat):
+            sts, jsdata = self.cm.getPage('https://ebd.cda.pl/js/player.js', defaultParams)
+            if not sts: return ''
+
+            jscode = self.cm.ph.getSearchGroups(jsdata, '''var\s([a-z]+?,[a-z]+?,.*?);''')[0]
+            tmp = jscode.split(',')
+            jscode = self.cm.ph.getSearchGroups(jsdata, '''(var\s[a-z]+?,[a-z]+?,.*?;)''')[0]
+            for item in tmp:
+                jscode += self.cm.ph.getSearchGroups(jsdata, '(%s=function\(.*?};)' % item)[0]
+            jscode += "file = '%s';" % dat;
+            tmp = self.cm.ph.getSearchGroups(jsdata, '''\(this\.options,"video"\)&&\((.*?)=this\.options\.video\);''')[0] + "."
+            jscode += self.cm.ph.getDataBeetwenMarkers(jsdata, "%sfile" % tmp, ';', True)[1].replace(tmp, '')
+            jscode += 'print(file);'
+            ret = js_execute( jscode )
+            if ret['sts'] and 0 == ret['code']:
+                return  ret['data'].strip('\n')
+            else:
+                return ''
+
         for urlItem in tmpUrls:
             if urlItem['url'].startswith('/'): inUrl = 'http://www.cda.pl/' + urlItem['url']
             else: inUrl = urlItem['url']
@@ -1615,8 +1634,9 @@ class pageParser(CaptchaHelper):
             printDBG("<<")
             try:
                 if tmp != '':
-                    tmp = json_loads(tmp)
-                    tmp = __ca(tmp['video']['file'])
+                    _tmp = json_loads(tmp)
+                    tmp = __jsplayer(_tmp['video']['file'])
+                    if 'cda.pl' not in tmp: tmp = __ca(_tmp['video']['file'])
             except Exception:
                 tmp = ''
                 printExc()
@@ -12587,4 +12607,3 @@ class pageParser(CaptchaHelper):
             elif 'mp4' in url:
                 urlTab.append({'name': 'res: ' + label, 'url': url})
         return urlTab
-
