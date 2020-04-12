@@ -42,27 +42,38 @@ class CYTSignAlgoExtractor:
 
     def _findMainFunctionName(self):
         data = self.playerData
-        patterns = [
-                 r'\b[cs]\s*&&\s*[adf]\.set\([^,]+\s*,\s*encodeURIComponent\s*\(\s*(?P<sig>[a-zA-Z0-9$]+)\(',
-                 r'\b[a-zA-Z0-9]+\s*&&\s*[a-zA-Z0-9]+\.set\([^,]+\s*,\s*encodeURIComponent\s*\(\s*(?P<sig>[a-zA-Z0-9$]+)\(',
-                 r'(?P<sig>[a-zA-Z0-9$]+)\s*=\s*function\(\s*a\s*\)\s*{\s*a\s*=\s*a\.split\(\s*""\s*\)',
-                 # Obsolete patterns
-                 r'(["\'])signature\1\s*,\s*(?P<sig>[a-zA-Z0-9$]+)\(',
-                 r'\.sig\|\|(?P<sig>[a-zA-Z0-9$]+)\(',
-                 r'yt\.akamaized\.net/\)\s*\|\|\s*.*?\s*[cs]\s*&&\s*[adf]\.set\([^,]+\s*,\s*(?:encodeURIComponent\s*\()?\s*(?P<sig>[a-zA-Z0-9$]+)\(',
-                 r'\b[cs]\s*&&\s*[adf]\.set\([^,]+\s*,\s*(?P<sig>[a-zA-Z0-9$]+)\(',
-                 r'\b[a-zA-Z0-9]+\s*&&\s*[a-zA-Z0-9]+\.set\([^,]+\s*,\s*(?P<sig>[a-zA-Z0-9$]+)\(',
-                 r'\bc\s*&&\s*a\.set\([^,]+\s*,\s*\([^)]*\)\s*\(\s*(?P<sig>[a-zA-Z0-9$]+)\(',
-                 r'\bc\s*&&\s*[a-zA-Z0-9]+\.set\([^,]+\s*,\s*\([^)]*\)\s*\(\s*(?P<sig>[a-zA-Z0-9$]+)\(',
-                 r'\bc\s*&&\s*[a-zA-Z0-9]+\.set\([^,]+\s*,\s*\([^)]*\)\s*\(\s*(?P<sig>[a-zA-Z0-9$]+)\(']
-        
-        for reg in patterns:
-            tmp = re.findall(reg,data)                    
+
+        name = ph.search(data, r'\b(?P<sig>[a-zA-Z0-9$]{2})\s*=\s*function\(\s*a\s*\)\s*{\s*a\s*=\s*a\.split\(\s*""\s*\)')[0]
+        if name and not any((c in name) for c in ''', '"'''):
+            return name.strip()
+
+        name = ph.search(data, r'(?P<sig>[a-zA-Z0-9$]+)\s*=\s*function\(\s*a\s*\)\s*{\s*a\s*=\s*a\.split\(\s*""\s*\)')[0]
+        if name and not any((c in name) for c in ''', '"'''):
+            return name.strip()
+
+        name = ph.find(data, '"signature",', '}', 0)[1].split('(', 1)[0].strip()
+        if name and not any((c in name) for c in ''', '"'''):
+            return name.strip()
+
+        name = ph.find(data, '.sig||', '}', 0)[1].split('(', 1)[0].strip()
+        if name and not any((c in name) for c in ''', '"'''):
+            return name.strip()
+
+        tmp = ph.find(data, 'yt.akamaized.net', '}', 0)[1]
+        if tmp:
+            printDBG("DATA: %s" % tmp)
+            tmp = ph.rfindall(tmp, 'return', '.set(', flags=0)
             for name in tmp:
-                if name and not any((c in name) for c in ''', '"'''):
-                    printDBG('pattern: ' + reg)
-                    printDBG('name: ' + name)
-                    return name.strip()
+                name = name.replace('decodeURIComponent(', '').replace('encodeURIComponent(', '')
+                printDBG("ITEM: %s" % name)
+                name = ph.search(name, self.RE_MAIN)[0]
+                if name: return name
+
+        tmp = ph.findall(data, ('.set(', '));', lambda d, l, s, e: not ph.any(')-";', l, s, e)))
+        for name in tmp:
+            name = name.split(',', 1)[-1].split('(', 1)[0].strip()
+            if name and not any((c in name) for c in ''', '";()'''):
+                return name
 
         return ''
 
@@ -165,6 +176,7 @@ def ExtractorError(text):
 
 class YoutubeIE(object):
     """Information extractor for youtube.com."""
+
     _VALID_URL = r"""^
                      (
                          (?:https?://)?                                       # http(s):// (optional)
@@ -198,6 +210,7 @@ class YoutubeIE(object):
                           # Dash video
                           '138', '137', '248', '136', '247', '135', '246',
                           '245', '244', '134', '243', '133', '242', '160','298','299',
+                          '313', '271',
                           # Dash audio
                           '141', '172', '140', '171', '139',
                           ]
@@ -283,6 +296,8 @@ class YoutubeIE(object):
         '246': 'webm',
         '247': 'webm',
         '248': 'webm',
+        '271': 'webmv', 
+        '313': 'webmv', 
 
         'mpd': 'mpd'
     }
@@ -337,6 +352,8 @@ class YoutubeIE(object):
         '248': '1080p',
         '298': '720p60',
         '299': '1080p60',
+        '271': '1440p', 
+        '313': '2160p',
     }
 
     _special_itags = {
@@ -368,6 +385,8 @@ class YoutubeIE(object):
         '248': 'DASH Video',
         '298': 'DASH Video',
         '299': 'DASH Video',
+        '271': 'DASH Video', 
+        '313': 'DASH Video',
     }
     IE_NAME = u'youtube'
 
@@ -491,9 +510,8 @@ class YoutubeIE(object):
         printDBG(sub_tracks)
         return sub_tracks
 
-    def _real_extract(self, url):
+    def _real_extract(self, url, allowVP9 = False, allowAgeGate = False):
         # Extract original video URL from URL with redirection, like age verification, using next_url parameter
-        
         mobj = re.search(self._NEXT_URL_RE, url)
         if mobj:
             #https
@@ -518,8 +536,9 @@ class YoutubeIE(object):
         if not sts: raise ExtractorError('Unable to download video webpage')
 
         # Get video info
-        if re.search(r'player-age-gate-content">', video_webpage) is not None:
-            self.report_age_confirmation()
+        #if re.search(r'player-age-gate-content">', video_webpage) is not None:
+        if allowAgeGate and re.search(r'"LOGIN_REQUIRED"', video_webpage) is not None:
+            #self.report_age_confirmation()
             age_gate = True
             # We simulate the access to the video from www.youtube.com/v/{video_id}
             # this can be viewed without login into Youtube
@@ -540,9 +559,9 @@ class YoutubeIE(object):
                 video_info_url = videoInfoBase + ('%s&ps=default&eurl=&gl=US&hl=en'% ( el_type))
                 sts, video_info = self.cm.getPage(video_info_url, videoInfoparams)
                 if not sts: continue
-                if '&token=' in video_info or '&account_playback_token=' in video_info:
+                if 'channel_creation_token' in video_info or '&account_playback_token=' in video_info:
                     break
-        if '&token=' not in video_info and '&account_playback_token=' not in video_info:
+        if 'channel_creation_token' not in video_info and '&account_playback_token=' not in video_info:
             raise ExtractorError('"token" parameter not in video info')
         
         # Check for "rental" videos
@@ -594,9 +613,13 @@ class YoutubeIE(object):
 
         is_m3u8 = 'no'
         url_map = {}
+        video_url_list = {}
+
         if len(video_info.get('url_encoded_fmt_stream_map', [])) >= 1 or len(video_info.get('adaptive_fmts', [])) >= 1:
             encoded_url_map = video_info.get('url_encoded_fmt_stream_map', [''])[0] + ',' + video_info.get('adaptive_fmts',[''])[0]
-
+            _supported_formats = self._supported_formats
+            if allowVP9:
+                _supported_formats.extend(['313', '271'])
             for url_data_str in encoded_url_map.split(','):
                 if 'index=' in url_data_str and 'index=0-0&' in url_data_str: continue
                 if 'itag=' in url_data_str and 'url=' in url_data_str:
@@ -623,7 +646,6 @@ class YoutubeIE(object):
                         signature = url_data['sig']
                         url_item['url'] += '&signature=' + signature
                     elif 's' in url_data:
-                        url_item['esign'] = url_data['s']
                         url_item['esign'] = _unquote(url_data['s'])
                         if 'sp' in url_data: 
                             url_item['url'] += '&%s={0}' % url_data['sp']
@@ -632,21 +654,62 @@ class YoutubeIE(object):
                     if not 'ratebypass' in url_item['url']:
                         url_item['url'] += '&ratebypass=yes'
                     url_map[url_data['itag']] = url_item
-                video_url_list = self._get_video_url_list(url_map)
-   
+                video_url_list = self._get_video_url_list(url_map, allowVP9)
+
         if video_info.get('hlsvp') and not video_url_list:
             is_m3u8 = 'yes'
             manifest_url = _unquote(video_info['hlsvp'], None)
             url_map = self._extract_from_m3u8(manifest_url, video_id)
-            video_url_list = self._get_video_url_list(url_map)
+            video_url_list = self._get_video_url_list(url_map, allowVP9)
 
         if video_info.get('player_response') and not video_url_list:
             is_m3u8 = 'yes'
             manifest_url = _unquote(video_info['player_response'], None)
             manifest = re.search('"hlsManifestUrl":"(.*?)"', manifest_url)
-            if manifest: manifest_url = manifest.group(1)
-            url_map = self._extract_from_m3u8(manifest_url, video_id)
-            video_url_list = self._get_video_url_list(url_map)
+            if manifest: 
+                manifest_url = manifest.group(1)
+                url_map = self._extract_from_m3u8(manifest_url, video_id)
+                video_url_list = self._get_video_url_list(url_map, allowVP9)
+
+        if video_info.get('player_response') and not video_url_list:
+            try:
+                is_m3u8 = 'no'
+                cipher = {}
+                url_data_str = json_loads(_unquote(video_info['player_response'], None))['streamingData']['formats']
+                try:
+                    url_data_str += json_loads(_unquote(video_info['player_response'], None))['streamingData']['adaptiveFormats']
+                except Exception:
+                    printExc()
+                for url_data in url_data_str:
+                    try:
+                        url_item = {'url': url_data['url']}
+                    except Exception:
+                        printExc()
+                        cipher = url_data['cipher']
+                        cipher = cipher.split('&')
+                        for item in cipher:
+                            #sig_item = ''
+                            #s_item = ''
+                            #sp_item = ''
+                            if 'url=' in item: url_item = {'url':_unquote(item.replace('url=',''), None)}
+                            if 'sig=' in item: sig_item = item.replace('sig=','')
+                            if 's=' in item: s_item = item.replace('s=','')
+                            if 'sp=' in item: sp_item = item.replace('sp=','')
+                        if 'sig' in cipher:
+                            signature = sig_item
+                            url_item['url'] += '&signature=' + signature
+                        elif len(s_item):
+                            url_item['esign'] = _unquote(s_item)
+                            if len(sp_item): 
+                                url_item['url'] += '&%s={0}' % sp_item
+                            else:
+                                url_item['url'] += '&signature={0}'
+                        if not 'ratebypass' in url_item['url']:
+                            url_item['url'] += '&ratebypass=yes'
+                    url_map[str(url_data['itag'])] = url_item
+                video_url_list = self._get_video_url_list(url_map, allowVP9)
+            except Exception:
+                printExc()
 
         if not video_url_list:
             return []
@@ -679,8 +742,13 @@ class YoutubeIE(object):
             if playerUrl:
                 decSignatures = CYTSignAlgoExtractor(self.cm).decryptSignatures(signatures, playerUrl)
                 if len(signatures) == len(signItems):
-                    for idx in range(len(signItems)):
-                        signItems[idx]['url'] = signItems[idx]['url'].format(decSignatures[idx])
+                    try:
+                        for idx in range(len(signItems)):
+                            signItems[idx]['url'] = signItems[idx]['url'].format(decSignatures[idx])
+                    except Exception:
+                        printExc()
+                        SetIPTVPlayerLastHostError(_('Decrypt Signatures Error'))
+                        return []
                 else:
                     return []
 
@@ -716,7 +784,7 @@ class YoutubeIE(object):
             })
             
         return results
-        
+
     def _extract_from_m3u8(self, manifest_url, video_id):
         url_map = {}
         def _get_urls(_manifest):
@@ -752,11 +820,13 @@ class YoutubeIE(object):
             printDBG('unable to extract %s; please report this issue on http://yt-dl.org/bug' % name)
             return None
             
-    def _get_video_url_list(self, url_map):
-        format_list = self._available_formats_prefer_free # available_formats
+    def _get_video_url_list(self, url_map, allowVP9 = False):
+        format_list = list(self._available_formats_prefer_free) # available_formats
+        if allowVP9:
+            format_list.extend(['313', '271'])
         existing_formats = [x for x in format_list if x in url_map]
-        
+        #printDBG('url_mapxxx: %s' %  [(f, url_map[f]) for f in existing_formats])
+
         return [(f, url_map[f]) for f in existing_formats] # All formats
 
-   
         
