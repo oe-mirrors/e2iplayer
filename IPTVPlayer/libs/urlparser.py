@@ -3490,13 +3490,9 @@ class pageParser(CaptchaHelper):
             except Exception: pass
 
         urlTab=[]
-        tmp = re.compile('''\{[^}]*?src[^}]+?video/mp4[^}]+?\}''').findall(data)
+        tmp = re.compile('''["'](https?://[^'^"]+?\.mp4)["']''').findall(data)
         for item in tmp:
-            label = self.cm.ph.getSearchGroups(item, '''['"]?label['"]?\s*:\s*['"]([^"^']+?)['"]''')[0]
-            res = self.cm.ph.getSearchGroups(item, '''['"]?res['"]?\s*:\s*[^0-9]?([0-9]+?)[^0-9]''')[0]
-            name = 'video/mp4 %s - %s' % (res, label)
-            url = self.cm.ph.getSearchGroups(item, '''['"]?src['"]?\s*:\s*['"]([^"^']+?)['"]''')[0]
-            params = {'name':name, 'url':url}
+            params = {'name':'video/mp4', 'url':item}
             if params not in urlTab: urlTab.append(params)
 
         hlsUrl = self.cm.ph.getSearchGroups(data, '''["'](https?://[^'^"]+?\.m3u8(?:\?[^"^']+?)?)["']''', ignoreCase=True)[0]
