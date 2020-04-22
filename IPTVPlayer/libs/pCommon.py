@@ -955,12 +955,12 @@ class common:
                     sitekey = self.ph.getSearchGroups(verData, 'data-sitekey="([^"]+?)"')[0]
                     id = self.ph.getSearchGroups(verData, 'data-ray="([^"]+?)"')[0]
                     if sitekey != '':
-                        from Plugins.Extensions.IPTVPlayer.libs.recaptcha_v2 import UnCaptchaReCaptcha
+                        from Plugins.Extensions.IPTVPlayer.libs.hcaptcha_2captcha import UnCaptchahCaptcha
                         # google captcha
-                        recaptcha = UnCaptchaReCaptcha(lang=GetDefaultLang())
-                        recaptcha.HTTP_HEADER['Referer'] = baseUrl
-                        if '' != cfParams.get('User-Agent', ''): recaptcha.HTTP_HEADER['User-Agent'] = cfParams['User-Agent']
-                        token = recaptcha.processCaptcha(sitekey)
+                        recaptcha = UnCaptchahCaptcha(lang=GetDefaultLang())
+#                        recaptcha.HTTP_HEADER['Referer'] = baseUrl
+#                        if '' != cfParams.get('User-Agent', ''): recaptcha.HTTP_HEADER['User-Agent'] = cfParams['User-Agent']
+                        token = recaptcha.processCaptcha(sitekey, domain)
                         if token == '': return False, None
                         
                         sts, tmp = self.ph.getDataBeetwenMarkers(verData, '<form', '</form>', caseSensitive=False)
@@ -973,7 +973,7 @@ class common:
                         post_data2 = dict(re.findall(r'<input[^>]*name="([^"]*)"[^>]*value="([^"]*)"[^>]*>', tmp))
                         #post_data2['id'] = id
                         if '' != token:
-                            post_data2['g-recaptcha-response'] = token
+                            post_data2['h-captcha-response'] = token
                         else:
                             continue
                         params2 = dict(params)
@@ -1021,7 +1021,13 @@ class common:
                         printDBG(verData)
                         printDBG("<<")
                         verUrl =  _getFullUrl( ph.getattr(verData, 'action'), domain)
-                        get_data = dict(re.findall(r'<input[^>]*name="([^"]*)"[^>]*value="([^"]*)"[^>]*>', verData))
+                        get_data = {}
+                        verData = re.findall(r'(<input[^>]*)>', verData)
+                        for item in verData:
+                            name = self.ph.getSearchGroups(item, '''\sname=['"]([^'^"]+?)['"]''')[0]
+                            value = self.ph.getSearchGroups(item, '''\svalue=['"]([^'^"]+?)['"]''')[0]
+                            get_data[name] = value
+#                        get_data = dict(re.findall(r'<input[^>]*name="([^"]*)"[^>]*value="([^"]*)"[^>]*>', verData))
                         get_data['jschl_answer'] = decoded['answer']
                         post_data = 'r=%s&jschl_vc=%s&pass=%s&jschl_answer=%s' % (urllib.quote(get_data['r'],safe=''), urllib.quote(get_data['jschl_vc'],safe=''), urllib.quote(get_data['pass'],safe=''), get_data['jschl_answer'])
                         verUrl = _getFullUrl2( verUrl, domain).replace('&amp;','&')
