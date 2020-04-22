@@ -251,7 +251,7 @@ class EkinoTv(CBaseHostClass, CaptchaHelper):
         printDBG("EkinoTv.listSearchResult cItem[%s], searchPattern[%s] searchType[%s]" % (cItem, searchPattern, searchType))
         searchPattern = searchPattern.replace(' ', '+')
         
-        url = 'https://ekino-tv.pl/search/q/?q=' + urllib.quote_plus(searchPattern)
+        url = 'https://ekino-tv.pl/search/qf/?q=' + urllib.quote_plus(searchPattern)
         sts, data = self.getPage(url)
         if not sts: return
 #        if not 'search' in self.cm.meta['url']:
