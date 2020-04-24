@@ -580,6 +580,7 @@ class urlparser:
                        'mixdrop.co':           self.pp.parserMIXDROP        ,
                        'vidload.net':          self.pp.parserVIDLOADNET     ,
                        'vidcloud9.com':        self.pp.parserVIDCLOUD9      ,
+                       'abcvideo.cc':          self.pp.parserABCVIDEO       ,
                     }
         return
     
@@ -12602,4 +12603,52 @@ class pageParser(CaptchaHelper):
                 urlTab.extend(getDirectM3U8Playlist(url, checkContent=True, sortWithMaxBitrate=999999999))
             elif 'mp4' in url:
                 urlTab.append({'name': 'res: ' + label, 'url': url})
+        return urlTab
+
+    def parserABCVIDEO(self, baseUrl):
+        printDBG("parserABCVIDEO baseUrl[%s]" % baseUrl)
+
+        HTTP_HEADER = self.cm.getDefaultHeader(browser='chrome')
+        referer = baseUrl.meta.get('Referer')
+        if referer: HTTP_HEADER['Referer'] = referer
+        COOKIE_FILE = GetCookieDir('abcvideo.cookie')
+        urlParams = {'header': HTTP_HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': COOKIE_FILE}
+        sts, data = self.cm.getPage(baseUrl, urlParams)
+        if not sts: return False
+        cUrl = self.cm.meta['url']
+
+        sitekey = self.cm.ph.getSearchGroups(data, '''sitekey=['"]([^'^"]+?)['"]''')[0]
+        if sitekey != '':
+            url = baseUrl + '&'
+            vid = self.cm.ph.getSearchGroups(url, '''[^/]/([0-9a-zA-Z]+?)[^0-9^a-z^A-Z]''')[0]
+            token, errorMsgTab = self.processCaptcha(sitekey, cUrl)
+            if token == '':
+                SetIPTVPlayerLastHostError('\n'.join(errorMsgTab))
+                return False
+            post_data = {'op':'download1', 'id':vid, 'g-recaptcha-response':token}
+            sts, data = self.cm.getPage(baseUrl, urlParams, post_data)
+            if not sts: return False
+
+        if "eval(function(p,a,c,k,e,d)" in data:
+            printDBG( 'Host resolveUrl packed' )
+            packed = re.compile('>eval\(function\(p,a,c,k,e,d\)(.+?)</script>', re.DOTALL).findall(data)
+            if packed:
+                data2 = packed[-1]
+            else:
+                return ''
+            printDBG( 'Host pack: [%s]' % data2)
+            try:
+                data = unpackJSPlayerParams(data2, TEAMCASTPL_decryptPlayerParams, 0, True, True)
+                printDBG( 'OK unpack: [%s]' % data)
+            except Exception: pass
+
+        urlTab=[]
+        url = self.cm.ph.getSearchGroups(data, '''["'](https?://[^'^"]+?\.mp4(?:\?[^"^']+?)?)["']''', ignoreCase=True)[0]
+        if url != '':
+            url = strwithmeta(url, {'Origin':"https://" + urlparser.getDomain(baseUrl), 'Referer':baseUrl})
+            urlTab.append({'name':'mp4', 'url':url})
+        hlsUrl = self.cm.ph.getSearchGroups(data, '''["'](https?://[^'^"]+?\.m3u8(?:\?[^"^']+?)?)["']''', ignoreCase=True)[0]
+        if hlsUrl != '':
+            hlsUrl = strwithmeta(hlsUrl, {'Origin':"https://" + urlparser.getDomain(baseUrl), 'Referer':baseUrl})
+            urlTab.extend(getDirectM3U8Playlist(hlsUrl, checkExt=False, variantCheck=True, checkContent=True, sortWithMaxBitrate=99999999))
         return urlTab
