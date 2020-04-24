@@ -38,6 +38,8 @@ class CaptchaHelper():
         
         if token == '':
             recaptcha = None
+            if config.plugins.iptvplayer.captcha_bypass.value != '' and bypassCaptchaService == None:
+                bypassCaptchaService = config.plugins.iptvplayer.captcha_bypass.value
             if bypassCaptchaService == '9kw.eu':
                 recaptcha = UnCaptchaReCaptcha_9kw()
             elif bypassCaptchaService == '2captcha.com':
