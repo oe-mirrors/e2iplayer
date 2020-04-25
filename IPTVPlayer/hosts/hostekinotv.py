@@ -395,18 +395,20 @@ class EkinoTv(CBaseHostClass, CaptchaHelper):
                 break
 
             printDBG(">>>\n%s\n<<<" % data)
-            if 'recaptcha' in data:
-                SetIPTVPlayerLastHostError(_('Link protected with google recaptcha v2.')) 
+            if 'hcaptcha' in data:
+                SetIPTVPlayerLastHostError(_('Link protected with hCaptcha.')) 
                 sitekey  = self.cm.ph.getSearchGroups(data, 'data-sitekey="([^"]+?)"')[0]
                 if sitekey == '': sitekey = self.cm.ph.getSearchGroups(data, '''['"]?sitekey['"]?\s*:\s*['"]([^"^']+?)['"]''')[0]
                 if sitekey != '':
-                    token, errorMsgTab = self.processCaptcha(sitekey, self.cm.meta['url'])
+                    from Plugins.Extensions.IPTVPlayer.libs.hcaptcha_2captcha import UnCaptchahCaptcha
+                    recaptcha = UnCaptchahCaptcha(lang=GetDefaultLang())
+                    token = recaptcha.processCaptcha(sitekey, self.cm.meta['url'])
                     if token != '':
                         vUrl = self.getFullUrl('/watch/verify.php')
                         urlParams['header']['Referer'] = baseUrl
                         sts, data = self.getPage(vUrl, urlParams, {'verify':token})
                     else:
-                        SetIPTVPlayerLastHostError(_('Link protected with google recaptcha v2.')+'\nWejdź na https://ekino-tv.pl/ i odpal dowolny film przez przeglądarke na komputerze.\nJak nie pomogło użyj MyJDownloader.')
+                        SetIPTVPlayerLastHostError(_('Link protected with hCaptcha.'))
                         return []
                         break
             
