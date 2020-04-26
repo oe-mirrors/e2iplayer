@@ -581,6 +581,7 @@ class urlparser:
                        'vidload.net':          self.pp.parserVIDLOADNET     ,
                        'vidcloud9.com':        self.pp.parserVIDCLOUD9      ,
                        'abcvideo.cc':          self.pp.parserABCVIDEO       ,
+                       'easyload.io':          self.pp.parserEASYLOAD       ,
                     }
         return
     
@@ -12651,4 +12652,36 @@ class pageParser(CaptchaHelper):
         if hlsUrl != '':
             hlsUrl = strwithmeta(hlsUrl, {'Origin':"https://" + urlparser.getDomain(baseUrl), 'Referer':baseUrl})
             urlTab.extend(getDirectM3U8Playlist(hlsUrl, checkExt=False, variantCheck=True, checkContent=True, sortWithMaxBitrate=99999999))
+        return urlTab
+    def parserEASYLOAD(self, baseUrl):
+        printDBG("parserEASYLOAD baseUrl[%s]" % baseUrl)
+
+        def _link(link):
+            idx = 0
+            st  = ''
+            while idx < len(link):
+                st  += chr(ord(link[idx]) ^ ord('1'))
+                if idx + 1 < len(link): st  += chr(ord(link[idx+1]) ^ ord('5'))
+                idx += 2
+            return st
+
+        HTTP_HEADER = self.cm.getDefaultHeader(browser='chrome')
+        referer = baseUrl.meta.get('Referer')
+        if referer: HTTP_HEADER['Referer'] = referer
+        urlParams = {'header': HTTP_HEADER}
+        sts, data = self.cm.getPage(baseUrl, urlParams)
+        if not sts: return False
+        cUrl = self.cm.meta['url']
+
+        data = self.cm.ph.getSearchGroups(data, '''v-bind:data="([^"]+?)"''', ignoreCase=True)[0].replace('\/', '/')
+        data = re.compile('''src&quot;:&quot;(.+?)&quot;.+?type&quot;:&quot;(.+?)&quot;''').findall(data)
+        urlTab = []
+        for item in data:
+            type  = item[1]
+            url   = item[0]
+            url = _link(url.decode("unicode-escape"))
+            if 'm3u8' in url:
+                urlTab.extend(getDirectM3U8Playlist(url, checkContent=True, sortWithMaxBitrate=999999999))
+            else:
+                urlTab.append({'name': type, 'url': url})
         return urlTab
