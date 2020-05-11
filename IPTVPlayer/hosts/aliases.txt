@@ -30,6 +30,7 @@
 "hostcimaclubcom": "http://cimaclub.com/",
 "hostcinemaxx": "http://cinemaxx.cc/",
 "hostcinemay": "http://cinemay.ws/",
+"hostcinemalibero": "https://cinemalibero.plus/"
 "hostcineto": "https://cine.to/",
 "hostclassiccinemaonline": "http://classiccinemaonline.com/",
 "hostcrtankocom": "http://www.crtanko.com/",
@@ -82,7 +83,7 @@
 "hostgreekdocumentaries3": "http://greekdocumentaries2.blogspot.gr/",
 "hostguardaserie": "http://guardaserie.media/",
 "hosthd1080online": "https://hd1080.online/",
-"hosthdfilmetv": "http://hdfilme.cc/",
+"hosthdfilmetv": "http://hdfilme.cx/",
 "hosthdfull": "https://hdfull.me/",
 "hosthdkinomir": "http://hdkinomir.com/",
 "hosthdpopcornscom": "http://hdpopcorns.co/",

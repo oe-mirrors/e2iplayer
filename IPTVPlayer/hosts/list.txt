@@ -27,6 +27,7 @@ hostcdapl
 hostchomikuj
 hostchristusvincit
 hostcimaclubcom
+hostcinemalibero
 hostcinemaxx
 hostcinemay
 hostcineto

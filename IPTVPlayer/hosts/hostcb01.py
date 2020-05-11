@@ -21,19 +21,19 @@ except Exception: import simplejson as json
 ###################################################
 
 def gettytul():
-    return 'https://cb01.love/'
+    return 'https://cb01.ac/'
 
 class Cb01(CBaseHostClass):
 
     def __init__(self):
-        CBaseHostClass.__init__(self, {'history':'cb01.love', 'cookie':'cb01.love.cookie'})
+        CBaseHostClass.__init__(self, {'history':'cb01.ac', 'cookie':'cb01.ac.cookie'})
         
         self.USER_AGENT = 'Mozilla/5.0'
         self.HEADER = {'User-Agent': self.USER_AGENT, 'Accept': 'text/html'}
         self.AJAX_HEADER = dict(self.HEADER)
         self.AJAX_HEADER.update( {'X-Requested-With':'XMLHttpRequest', 'Content-Type':'application/x-www-form-urlencoded; charset=UTF-8'} )
         
-        self.MAIN_URL = 'https://www.cb01.love/'
+        self.MAIN_URL = 'https://www.cb01.ac/'
         self.DEFAULT_ICON_URL = 'https://www.yourlifeupdated.net/wp-content/uploads/2019/04/Cineblog01.jpg'
         
         self.defaultParams = {'header':self.HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
@@ -43,7 +43,7 @@ class Cb01(CBaseHostClass):
         if addParams == {}:
             addParams = dict(self.defaultParams)
         
-        addParams['cloudflare_params'] = {'domain':'cb01.love', 'cookie_file':self.COOKIE_FILE, 'User-Agent':self.USER_AGENT}
+        addParams['cloudflare_params'] = {'domain':'cb01.ac', 'cookie_file':self.COOKIE_FILE, 'User-Agent':self.USER_AGENT}
         printDBG("<<<<< post_data: "+str(post_data))
         printDBG("<<<<< baseUrl: "+str(baseUrl))
         printDBG("<<<<< addParams: "+str(addParams))
@@ -139,7 +139,7 @@ class Cb01(CBaseHostClass):
         postData = cItem.get('post_data')
 
 #<<<<<<<<<< print cItem <<<<<<<<<<<<<<<<<<
-#{'category': 'list_items', 'name': 'category', 'title': 'Search', 'url': 'https://cb01.love/', 
+#{'category': 'list_items', 'name': 'category', 'title': 'Search', 'url': 'https://cb01.ac/', 
 #'post_data': {'do': 'search', 'story': 'pirati', 'titleonly': '3', 'subaction': 'search'}, 'type': 'category', 'search_item': False}
 
         sts, data = self.getPage(cItem['url'], post_data=postData)

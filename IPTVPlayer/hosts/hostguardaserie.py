@@ -17,15 +17,15 @@ except Exception: import simplejson as json
 ###################################################
 
 def gettytul():
-    return 'https://www.guardaserie.media/'
+    return 'https://www.guardaserie.style/'
 
 class GuardaSerieClick(CBaseHostClass):
 
     def __init__(self):
-        CBaseHostClass.__init__(self, {'history':'guardaserie.media', 'cookie':'guardaserie.media.cookie'})
+        CBaseHostClass.__init__(self, {'history':'guardaserie.style', 'cookie':'guardaserie.style.cookie'})
         
         self.USER_AGENT = 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/73.0.3683.103 Safari/537.36'
-        self.MAIN_URL = 'https://www.guardaserie.media/'
+        self.MAIN_URL = 'https://www.guardaserie.style/'
 
         self.HEADER = {'User-Agent': self.USER_AGENT, 'Accept': 'text/html', 'Accept-Encoding': 'gzip', 'Referer': self.MAIN_URL}
         self.AJAX_HEADER = MergeDicts(self.HEADER, {'X-Requested-With':'XMLHttpRequest', 'Content-Type':'application/x-www-form-urlencoded; charset=UTF-8'})
@@ -37,7 +37,7 @@ class GuardaSerieClick(CBaseHostClass):
     def getPageCF(self, baseUrl, params = {}, post_data = None):
         if params == {}: 
             params = self.defaultParams
-        params['cloudflare_params'] = {'domain':'guardaserie.media', 'cookie_file':self.COOKIE_FILE, 'User-Agent':self.USER_AGENT}
+        params['cloudflare_params'] = {'domain':'guardaserie.style', 'cookie_file':self.COOKIE_FILE, 'User-Agent':self.USER_AGENT}
         return self.cm.getPageCFProtection(baseUrl, params, post_data)
 
     def getPage(self, baseUrl, addParams = {}, post_data = None):
@@ -52,11 +52,13 @@ class GuardaSerieClick(CBaseHostClass):
         if not sts: return
         self.setMainUrl(self.cm.meta['url'])
 
-        item = self.cm.ph.getDataBeetwenNodes(data, ('<a', '>', 'lista-serie'), ('</a', '>'))[1]
-        title = self.cleanHtmlStr(item)
-        url = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''href=['"]([^"^']+?)['"]''')[0])
+        #item = self.cm.ph.getDataBeetwenNodes(data, ('<a', '>', 'lista-serie'), ('</a', '>'))[1]
+        #title = self.cleanHtmlStr(item)
+        #url = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''href=['"]([^"^']+?)['"]''')[0])
         params = dict(cItem)
-        params.update({'name':'category', 'category':'sections', 'title':title, 'url':url})
+        #params.update({'name':'category', 'category':'sections', 'title':title, 'url':url})
+        params.update({'name':'category', 'category':'sections', 'title': 'LISTA SERIE', 'url': self.getFullUrl('/lista-serie-tv')})
+
         self.addDir(params)
         
         data = self.cm.ph.getDataBeetwenNodes(data, ('<a', '>', 'dropdown'), ('</ul', '>'))[1].split('<ul', 1)

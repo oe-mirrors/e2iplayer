@@ -19,7 +19,7 @@ except Exception: import simplejson as json
 ###################################################
 
 def gettytul():
-    return 'https://tantifilm.eu/'
+    return 'https://tantifilm.pizza/'
 
 class TantiFilmOrg(CBaseHostClass):
     REMOVE_COOKIE = True
@@ -32,7 +32,7 @@ class TantiFilmOrg(CBaseHostClass):
         self.cm.HEADER = self.HEADER # default header
         self.defaultParams = {'header':self.HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
         
-        self.MAIN_URL = 'https://www.tantifilm.eu/'
+        self.MAIN_URL = 'https://www.tantifilm.pizza/'
         self.DEFAULT_ICON_URL = 'https://raw.githubusercontent.com/Zanzibar82/images/master/posters/tantifilm.png'
         
         self.MAIN_CAT_TAB = [{'category':'list_categories',    'title': _('Categories'),                           'url':self.MAIN_URL  },
@@ -354,8 +354,11 @@ class TantiFilmOrg(CBaseHostClass):
                 id = self.cm.ph.getSearchGroups(item, '''id=['"]([^'^"]+?)['"]''', ignoreCase=True)[0]
                 title = self.cm.ph.getDataBeetwenReMarkers(data, re.compile('''<a[^>]+?href=['"]\#%s['"][^>]*?>''' % re.escape(id)), re.compile('</a>'))[1]
                 title = self.cleanHtmlStr(title)
-                if title == '': title = self.up.getDomain(url)
-                urlTab.append({'name':title, 'url':strwithmeta(url, {'url':cItem['url']}), 'need_resolve':1})
+                if title == '': 
+                    title = self.up.getDomain(url)
+                url_params = {'name':title, 'url':strwithmeta(url, {'url':cItem['url']}), 'need_resolve':1}
+                printDBG(str(url_params))
+                urlTab.append(url_params)
         elif type == 'episode':
             data = self.cm.ph.getAllItemsBeetwenMarkers(data, '<nav class="', '</select>')
             if len(data) < 3: 
@@ -370,63 +373,20 @@ class TantiFilmOrg(CBaseHostClass):
                 url   = self.cm.ph.getSearchGroups(item, '''href=['"]([^'^"]+?)['"]''')[0]
                 if not self.cm.isValidUrl(url): continue
                 title = self.cleanHtmlStr(item)
-                if title == '': continue
-                urlTab.append({'name':title, 'url':strwithmeta(url, {'url':cItem['url']}), 'need_resolve':1})
+                if title == '': 
+                    continue
+                url_params = {'name':title, 'url':strwithmeta(url, {'url':cItem['url']}), 'need_resolve':1} 
+                printDBG(str(url_params))
+                urlTab.append(url_params)
         
         self.cacheLinks[cItem['url']] = urlTab
         return urlTab
         
     def getVideoLinks(self, videoUrl):
-        printDBG("TantiFilmOrg.getVideoLinks [%s]" % videoUrl)
-        urlTab = []
-        
-        # mark requested link as used one
-        if len(self.cacheLinks.keys()):
-            key = self.cacheLinks.keys()[0]
-            for idx in range(len(self.cacheLinks[key])):
-                if videoUrl in self.cacheLinks[key][idx]['url']:
-                    if not self.cacheLinks[key][idx]['name'].startswith('*'):
-                        self.cacheLinks[key][idx]['name'] = '*' + self.cacheLinks[key][idx]['name']
-                    break
-        tries = 0
-        while tries < 4:
-            tries += 1
-            printDBG(">> tries [%d]" % tries)
-            if not self.cm.isValidUrl(videoUrl):
-                break
-            if 1 != self.up.checkHostSupport(videoUrl):
-                addParams = dict(self.defaultParams)
-                addParams['with_metadata'] = True
-                sts, data = self.getPage(videoUrl, addParams)
-                if sts:
-                    videoUrl = data.meta['url']
-                    jscode = ['var document={},window=this;function typeOf(r){return{}.toString.call(r).match(/\s(\w+)/)[1].toLowerCase()}function jQuery(){return"function"==typeOf(arguments[0])&&arguments[0](),jQuery}jQuery.ready=jQuery,jQuery.attr=function(r,t){"src"==r&&print(t)},$=jQuery;']
-                    tmp = self.cm.ph.getAllItemsBeetwenNodes(data, ('<script', '>'), ('</script', '>'), False)
-                    for item in tmp:
-                        jscode.append(item)
-                    ret = js_execute( '\n'.join(jscode) )
-                    if ret['sts'] and 0 == ret['code']:
-                        data = ret['data'].strip()
-                        if self.cm.isValidUrl(data):
-                            videoUrl = data
-            
-            if 'hostvid.xyz' in self.up.getDomain(videoUrl):
-                sts, data = self.getPage(videoUrl)
-                if not sts: return []
-                videoUrl = self.cm.ph.getSearchGroups(data, '''<iframe[^>]+?src=['"]([^'^"]+?)['"]''', ignoreCase=True)[0]
-            if self.cm.isValidUrl(videoUrl):
-                urlTab = self.up.getVideoLinkExt(videoUrl)
-                if len(urlTab):
-                    break
-            try:
-                data = self.cm.ph.getSearchGroups(data, '''<iframe[^>]+?src=['"]([^'^"]+?)['"]''', ignoreCase=True)[0]
-                if self.cm.isValidUrl(data):
-                    videoUrl = data
-            except Exception: 
-                printExc()
-                break
-        return urlTab
+        printDBG("Tantifilm.getVideoLinks [%s]" % videoUrl)
+        return  self.up.getVideoLinkExt(videoUrl)
 
+        
     def handleService(self, index, refresh = 0, searchPattern = '', searchType = ''):
         printDBG('handleService start')
         
