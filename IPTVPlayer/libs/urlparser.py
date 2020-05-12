@@ -153,7 +153,8 @@ class urlparser:
                        'anime-shinden.info':    self.pp.parserANIMESHINDEN  ,
                        'api.video.mail.ru':     self.pp.parserVIDEOMAIL     ,
                        'archive.org':           self.pp.parserARCHIVEORG    ,
-                       'auroravid.to':          self.pp.parserAURORAVIDTO    ,
+                       'auroravid.to':          self.pp.parserAURORAVIDTO   ,
+                       'backin.net':            self.pp.parserBACKIN,
                        'bbc.co.uk':             self.pp.parserBBC           ,
                        'bestreams.net':         self.pp.parserBESTREAMS     ,
                        'biggestplayer.me':      self.pp.parserBIGGESTPLAYER ,
@@ -12263,10 +12264,9 @@ class pageParser(CaptchaHelper):
             sitekey = re.findall("grecaptcha.execute\('([^']+)'", data)
             if sitekey:
                 # solve captcha to login
-                #(token, errorMsgTab) = CaptchaHelper().processCaptcha(sitekey[0], baseUrl)
-                obj = UnCaptchaReCaptcha(lang=GetDefaultLang())
-                obj.HTTP_HEADER.update({'Referer': baseUrl})
-                token = obj.processCaptcha(sitekey[0])
+                #(token, errorMsgTab) = CaptchaHelper().processCaptcha(sitekey[-1], baseUrl)
+
+                token = UnCaptchaReCaptcha(lang=GetDefaultLang()).processCaptcha(sitekey[-1], referer= baseUrl, lang=GetDefaultLang() )
 
                 printDBG("----------- Recaptcha token -----------------")
                 printDBG(token)
@@ -12591,4 +12591,98 @@ class pageParser(CaptchaHelper):
                             u = urlparser.decorateUrl(u, {'Referer': baseUrl})
                             urlTabs.append({'name': 'link' , 'url': u}) 
                             
+        return urlTabs
+
+    def parserBACKIN(self, baseUrl):
+        printDBG("parserBACKIN baseUrl[%s]" % baseUrl)
+        
+        # examples:
+        # "http://backin.net/nplr7n8c1qla"
+        # "http://backin.net/s/nplr7n8c1qla"
+        # "http://backin.net/s/streams.php?s=nplr7n8c1qla"
+
+        
+        def checkTxt(txt):
+            txt = txt.replace('\n', ' ')
+            if txt.find('file:'):
+                txt = txt.replace('file:', '"file":')
+            if txt.find('label:'):
+                txt = txt.replace('label:', '"label":')
+            if txt.find('kind:'):
+                txt = txt.replace('kind:', '"kind":')
+            if txt.find('res:'):
+                txt = txt.replace('res:', '"res":')
+            if txt.find('src:'):
+                txt = txt.replace('src:', '"src":')
+            if txt.find('type:'):
+                txt = txt.replace('type:', '"type":')
+                return txt
+
+        
+        USER_AGENT = 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/73.0.3683.103 Safari/537.36'
+        COOKIE_FILE = GetCookieDir('backin.cookie')
+        HttpHeader = {
+            'User-Agent': USER_AGENT, 
+            'Accept': 'text/html', 
+            'Accept-Encoding': 'gzip', 
+            'Referer': baseUrl
+        }
+        
+        #AJAX_HEADER = MergeDicts(self.HEADER, {'X-Requested-With':'XMLHttpRequest', 'Content-Type':'application/x-www-form-urlencoded; charset=UTF-8'})
+        HttpParams = {'header': HttpHeader , 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': COOKIE_FILE}
+        HttpParams['cloudflare_params'] = {'domain':'backin.net', 'cookie_file': COOKIE_FILE, 'User-Agent': USER_AGENT}
+
+        sts, data = self.cm.getPageCFProtection(baseUrl, HttpParams)
+
+        urlTabs=[]
+
+        if sts:
+            printDBG("--------- html page after cloudflare javascript challenge ---------")
+            printDBG(data)
+            printDBG("-------------------------------------------------------------------")
+        
+        m = re.search("backin\.net/(s/streams\.php\?s=|s/|)(?P<id>.*)$", baseUrl)
+        
+        if m:
+            video_id = m.group('id')
+            #http://backin.net/stream-nplr7n8c1qla-500x400.html
+            red_url = "http://backin.net/stream-%s-500x400.html" % video_id 
+            
+            sts, data = self.cm.getPageCFProtection(red_url, HttpParams)
+            
+            if sts:
+                printDBG("--------- ")
+                printDBG(data)
+                printDBG("----------")
+
+                scripts = re.findall(r"(eval\s?\(function\(p,a,c,k,e,d.*?)</script>", data,re.S)
+                printDBG("Packed scripts found :%s" % len(scripts))
+        
+                for script in scripts:
+                    script = script + "\n"
+                    # mods
+                    script = script.replace("eval(function(p,a,c,k,e,d","pippo = function(p,a,c,k,e,d")
+                    script = script.replace("return p}(", "print(p)}\n\npippo(")
+                    script = script.replace("))\n",");\n")
+
+                    # duktape
+                    ret = js_execute( script )
+                    decoded = ret['data']
+                    printDBG('------------------------------')
+                    printDBG(decoded)
+                    printDBG('------------------------------')
+
+                    data = data + '\n' + decoded
+
+                # stream search
+                urls = re.findall(r'file\s*:\s*"([^"]+)"', data, re.S)
+
+                for u in urls:
+                    if self.cm.isValidUrl(u):
+                        printDBG("Found link %s" % u)
+                        u = urlparser.decorateUrl(u, {'Referer': baseUrl})
+                        params = {'name': 'link' , 'url': u}
+                        printDBG(params)
+                        urlTabs.append(params)
+
         return urlTabs
