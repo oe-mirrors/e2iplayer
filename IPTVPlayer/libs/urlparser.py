@@ -290,8 +290,9 @@ class urlparser:
                        'mastarti.com':          self.pp.parserMOONWALKCC    ,
                        'matchat.online':        self.pp.parserMATCHATONLINE  ,
                        'maxupload.tv':          self.pp.parserTOPUPLOAD     ,
-                       'mcloud.to':             self.pp.parserMYCLOUDTO      ,
-                       'mediafire.com':         self.pp.parserMEDIAFIRECOM   ,
+                       'mcloud.to':             self.pp.parserMYCLOUDTO     ,
+                       'mcloud2.to':            self.pp.parserMYCLOUDTO     ,
+                       'mediafire.com':         self.pp.parserMEDIAFIRECOM  ,
                        'mediasetplay.mediaset.it': self.pp.parserMEDIASET   ,
                        'megadrive.co':          self.pp.parserMEGADRIVECO    ,
                        'megadrive.tv':          self.pp.parserMEGADRIVETV    ,
@@ -300,6 +301,7 @@ class urlparser:
                        'mightyupload.com':      self.pp.parserMIGHTYUPLOAD  ,
                        'miplayer.net':          self.pp.parserMIPLAYERNET   ,
                        'mixdrop.co':            self.pp.parserMIXDROP       ,
+                       'mixdrop.club':          self.pp.parserMIXDROP       ,
                        'moevideo.net':          self.pp.parserPLAYEREPLAY   ,
                        'moonwalk.cc':           self.pp.parserMOONWALKCC    ,
                        'moshahda.net':          self.pp.parseMOSHAHDANET    ,
@@ -3329,20 +3331,30 @@ class pageParser(CaptchaHelper):
     def parserMYCLOUDTO(self, baseUrl):
         printDBG("parserMYCLOUDTO baseUrl[%r]" % baseUrl)
         baseUrl = strwithmeta(baseUrl)
-        header = {'User-Agent':'Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/60.0.3112.90 Safari/537.36', 'Referer':baseUrl.meta.get('Referer', baseUrl), 'Accept':'*/*', 'Accept-Encoding':'gzip, deflate'}
+        header = {
+            'User-Agent':'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/81.0.4044.138 Safari/537.36', 'Referer':baseUrl.meta.get('Referer', baseUrl), 
+            'Accept':'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9', 
+            'Accept-Encoding':'gzip, deflate',
+            'sec-fetch-dest': 'iframe', 'sec-fetch-mode': 'navigate', 'sec-fetch-site': 'cross-site'
+        }
+        httpParams={'use_cookie': True, 'save_cookie':True, 'load_cookie': True, 'cookiefile': GetCookieDir('mycloud.cookie'), 'header': header}
         
-        sts, data = self.cm.getPage(baseUrl, {'header': header})
-        if not sts: return False
-        
+        sts, data = self.cm.getPage(baseUrl, httpParams)
+        if not sts: 
+            return False
+
+        printDBG(data)
+
         data = data.replace('\\/', '/')
-        
+
         url = self.cm.ph.getSearchGroups(data, '''['"]((?:https?:)?//[^"^']+\.m3u8[^'^"]*?)['"]''')[0]
         if url.startswith('//'):
             url = 'http:' + url
-        
+
         url = strwithmeta(url, {'User-Agent':header['User-Agent'], 'Origin':"https://" + urlparser.getDomain(baseUrl), 'Referer':baseUrl})
         tab =  getDirectM3U8Playlist(url, checkContent=True, sortWithMaxBitrate=999999999)
         printDBG("parserMYCLOUDTO tab[%s]" % tab)
+            
         return tab
         
     def parserVODSHARECOM(self, baseUrl):
@@ -12065,17 +12077,22 @@ class pageParser(CaptchaHelper):
         printDBG("parserMIXDROP baseUrl[%s]" % baseUrl)
         # example :https://mixdrop.co/f/1f13jq
         #          https://mixdrop.co/e/1f13jq
-
+        #          https://mixdrop.club/f/vn7de6q7t0j868/2/La_Missy_sbagliata_HD_2020_WEBDL_1080p.mp4
         
-        if '/f/' in baseUrl:
-            url = baseUrl.replace('/f/','/e/')
+        m = re.search("mixdrop\.(co|club)/[ef]/(?P<id>.*?)($|/)", baseUrl)
+        
+        if m:
+            video_id = m.group('id')
+            url = "https://mixdrop.co/e/%s" % video_id
         else:
             url = baseUrl
             
         sts, data = self.cm.getPage(url)
         if not sts:
             return []
-
+        
+        printDBG(data)
+        
         error = self.cm.ph.getDataBeetwenNodes(data, '<div class="tb error">', '</p>')[1]
 
         if error:
@@ -12104,12 +12121,22 @@ class pageParser(CaptchaHelper):
             # found a part similar to this one:
             #MDCore.vsrc="//s-delivery4.mixdrop.co/v/cd5b9db3d4d79b8e27f4b8e9e01b0f89.mp4?s=n4gHzKKmauonkMNudSwDkQ&e=1573868130"
             link = re.findall("vsrc=\"([^\"]+?)\"", decoded)
+            
+            if not link:
+                link = re.findall(r'MDCore\.\w+\s*=\s*"([^"]+)"', decoded)
+                i=0
+                while i < len(link):
+                    if not ('mp4' in link[i] and '//' in link[i]):
+                        link.pop(i)
+                    else:
+                        i = i + 1
+            
             if link:
                 if link[0].startswith('//'):
                     video_url = "https:" + link[0]
                 else:
                     video_url = link[0]
-                video_url = urlparser.decorateUrl(video_url, {'Referer' : baseUrl})
+                video_url = urlparser.decorateUrl(video_url, {'Referer' : url})
                 
                 params = {'name': 'link', 'url': video_url}
                 printDBG(params)
@@ -12686,3 +12713,4 @@ class pageParser(CaptchaHelper):
                         urlTabs.append(params)
 
         return urlTabs
+
