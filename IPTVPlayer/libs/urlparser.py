@@ -426,6 +426,7 @@ class urlparser:
                        'streamplay.cc':         self.pp.parserSTREAMPLAYCC  ,
                        'streamplay.me':         self.pp.parserSTREAMPLAYTO   ,
                        'streamplay.to':         self.pp.parserSTREAMPLAYTO   ,
+                       'streamtape.com':        self.pp.parserSTREAMTAPE    ,
                        'superfilm.pl':          self.pp.parserSUPERFILMPL   ,
                        'supervideo.tv':         self.pp.parserSUPERVIDEO    ,
                        'supergoodtvlive.com':   self.pp.parserSUPERGOODLIVE ,
@@ -12714,3 +12715,28 @@ class pageParser(CaptchaHelper):
 
         return urlTabs
 
+    def parserSTREAMTAPE(self, baseUrl):
+        printDBG("parserSTREAMTAPE baseUrl[%s]" % baseUrl)
+        
+        sts, data = self.cm.getPage(baseUrl)
+
+        urlTabs=[]
+        
+        if sts:
+            printDBG("---------")
+            printDBG(data)
+            printDBG("---------")
+            
+            #search url in tag like <div id="videolink" style="display:none;">//streamtape.com/get_video?id=27Lbk7KlQBCZg02&expires=1589450415&ip=DxWsE0qnDS9X&token=Og-Vxdpku4x8</div>
+            tmp = self.cm.ph.getAllItemsBeetwenNodes(data, ('<div', '>', 'videolink'), ('</div', '>'), False)
+            for t in tmp:
+                printDBG(t)
+                if t.startswith('//'):
+                    t = "http:" + t
+                    if self.cm.isValidUrl(t):
+                        t = urlparser.decorateUrl(t, {'Referer': baseUrl})
+                        params = {'name': 'link' , 'url': t}
+                        printDBG(params)
+                        urlTabs.append(params)
+                        
+        return urlTabs
