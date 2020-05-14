@@ -1087,27 +1087,39 @@ class common:
                         #first part of code
                         js_params = [{'path' : GetJSScriptFile('cf_max.byte')}]
                         #particular div element
-                        tmp = ph.findall(verData, ('<div', '>', 'hidden'), '</div>', flags=ph.START_S)
+                        #tmp = ph.findall(verData, ('<div', '>', 'id'), '</div>', flags=ph.START_S)
+                        
+                        
                         code2=''
-                        for idx in range(1, len(tmp), 2):
-                            name_id = ph.getattr(tmp[(idx - 1)], 'id', flags=ph.I)
-                            if name_id:
-                                value_id = tmp[idx]
-                                code2 = "document.children.push ( new element('', '%s', 'div')); document.children[6].innerHTML ='%s';" % (name_id, value_id)
+                        numChildren = 5
+                        #<div style="display:none;visibility:hidden;">
+                        
+                        tmp = divs = re.findall("<div.*?id=\"([^\"]+)\">(.*?)</div>", data)
+                        for t in tmp:
+                            name_id = t[0]
+                            if len(name_id)>=8 and len(name_id)<=12:
+                                numChildren = numChildren + 1
+                                value_id = t[1]
+                                code2 = code2 + "\ndocument.children.push ( new element('', '%s', 'div')); document.children[%d].innerHTML ='%s';" % (name_id, numChildren,value_id)
                                                                 
-                        #printDBG("--------------- code 2 ------------------")
-                        #printDBG(code2)
-                        #printDBG("-----------------------------------------")
+                        printDBG("--------------- code 2 ------------------")
+                        printDBG(code2)
+                        printDBG("-----------------------------------------")
                         #script part in variable called 'dat'
-                        #printDBG("-------------- dat prima delle sostituzioni----------------------")
-                        #printDBG(dat)
-                        #printDBG("-----------------------------------------")
+                        printDBG("-------------- dat prima delle sostituzioni----------------------")
+                        printDBG(dat)
+                        printDBG("-----------------------------------------")
                         #dat = dat.replace('(function(){\n\n    var a = function() {try{return !!window.addEventListener} catch(e) {return !1} },\n    b = function(b, c) {a() ? document.addEventListener("DOMContentLoaded", b, c) : document.attachEvent("onreadystatechange", b)};\n    b(function()','function pippo()')
                         pattern = re.compile("\(function\(\)\{.*?b\(function\(\)", re.S)
                         dat = re.sub(pattern, "function pippo()", dat)
                         
                         dat = dat.replace('f.submit()','print(a.value);')
                         dat = dat.replace('setTimeout(function(){','')
+                        
+                        #var cookiesEnabled=(navigator.cookieEnabled)? true : false;
+                        #var cookieSupportInfix=cookiesEnabled?'/nocookie':'/cookie';
+                        dat = dat.replace("var cookiesEnabled=(navigator.cookieEnabled)? true : false;","")
+                        dat = dat.replace("var cookieSupportInfix=cookiesEnabled?'/nocookie':'/cookie';","")
                         
                         pattern2= re.compile("\},4000\);.*?\)\(\)",re .S)
                         dat = re.sub(pattern2,'}', dat)
@@ -1125,9 +1137,9 @@ class common:
                         pattern3 = re.compile("var a = document.*?appendChild\(.*?\);",re.S)
                         dat = re.sub(pattern3, "", dat)
                         
-                        #printDBG("-------------- dat dopo le sostituzioni----------------------")
-                        #printDBG(dat)
-                        #printDBG("-----------------------------------------")
+                        printDBG("-------------- dat dopo le sostituzioni----------------------")
+                        printDBG(dat)
+                        printDBG("-----------------------------------------")
                         
                         js_params.append({'code': "%s\n%s\n\npippo(); " % (code2, dat)})
                         ret = js_execute_ext( js_params )
@@ -1137,10 +1149,25 @@ class common:
                         get_data_2 = dict(re.findall(r'<input[^>]*value="([^"]*)"[^>]*name="([^"]*)"[^>]*>', verData))
                         get_data_2_swap = dict([(value, key) for key, value in get_data_2.items()])
 
+                        printDBG("get_data_1: %s" % str(get_data_1))
+                        printDBG("get_data_2: %s" % str(get_data_2))
+                        printDBG("get_data_2_swap: %s" % str(get_data_2_swap))
+
                         get_data={}
-                        get_data.update(get_data_1)
-                        get_data.update(get_data_2_swap)
+                        
+                        for xx in get_data_1:
+                            if not get_data.get(xx,''):
+                                get_data[xx] = get_data_1[xx]
+                                    
+                        #get_data.update(get_data_1)
+                        
+                        for xx in get_data_2_swap:
+                            if not get_data.get(xx,''):
+                                get_data[xx] = get_data_2_swap[xx]
+                                
+                        #get_data.update(get_data_2_swap)
                         #get_data['cf_ch_verify']='plat'
+                        
                         get_data['jschl_answer'] = ret['data'].replace('\n','')
                         
                         verUrl =  _getFullUrl( ph.getattr(verData, 'action'), domain)
