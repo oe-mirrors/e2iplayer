@@ -21,19 +21,20 @@ import base64
 ###################################################
 
 def gettytul():
-    return 'https://altadefinizione.cloud/'
+    return 'https://altadefinizione.family/'
 
 class Altadefinizione(CBaseHostClass):
  
     def __init__(self):
-        CBaseHostClass.__init__(self, {'history':'altadefinizione', 'cookie':'altadefinizione.cloud.cookie'})
+        CBaseHostClass.__init__(self, {'history':'altadefinizione', 'cookie':'altadefinizione.family.cookie'})
         self.USER_AGENT = 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/73.0.3683.103 Safari/537.36'
         self.HEADER = {'User-Agent': self.USER_AGENT, 'DNT':'1', 'Accept': 'text/html'}
         self.AJAX_HEADER = dict(self.HEADER)
         self.AJAX_HEADER.update( {'X-Requested-With': 'XMLHttpRequest'} )
-        self.MAIN_URL = 'https://altadefinizione.cloud/'
+        self.MAIN_URL = 'https://altadefinizione.family/'
         self.AZ_URL = self.MAIN_URL + 'catalog/%l/page/{0}'
-        self.DEFAULT_ICON_URL = 'https://altadefinizione-nuovo.link/wp-content/uploads/2019/07/logo.png'
+        self.NEW_URL_URL = 'https://altadefinizione-nuovo.info/'
+        self.DEFAULT_ICON_URL = self.NEW_URL_URL + 'wp-content/uploads/2019/07/logo.png'
         
         self.cacheCategories = []
         
@@ -43,7 +44,8 @@ class Altadefinizione(CBaseHostClass):
         self.cacheFiltersKeys = []
         self.defaultParams = {'with_metadata':True, 'header':self.HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
         self._myFun = None
-    
+        self.updatedUrl = False
+        
     def setMainUrl(self, url):
         if self.cm.isValidUrl(url):
             self.MAIN_URL = self.cm.getBaseUrl(url)
@@ -62,6 +64,25 @@ class Altadefinizione(CBaseHostClass):
         sts, data = self.cm.getPageCFProtection(baseUrl, addParams, post_data)
         return sts, data
         
+    def updateUrl(self):
+        self.updatedUrl = True
+        
+        sts, data  = self.cm.getPage( self.NEW_URL_URL , self.defaultParams)
+        
+        if sts:
+            tmp = self.cm.ph.getDataBeetwenNodes(data, ('<div' , '>', '3a0d359'), ('</div', '>'))[1]
+            newUrl = self.cm.ph.getSearchGroups(tmp, '''href=['"]([^'^"]+?)['"]''')[0]
+            
+            if self.cm.isValidUrl(newUrl) and self.MAIN_URL != newUrl:
+                printDBG("Main url has changed from '%s' to '%s'" % (self.MAIN_URL, newUrl)) 
+                self.MAIN_URL = newUrl
+                gettytul = self.getMainUrl()
+                
+        return
+    
+    def getMainUrl(self):
+        return self.MAIN_URL
+    
     def listMainMenu(self, cItem):
         self.cacheCategories = []
 
@@ -197,62 +218,65 @@ class Altadefinizione(CBaseHostClass):
             params = dict(cItem)
             params.update({'good_for_fav': False, 'title':'%s - %s' % (cItem['title'], _('trailer')), 'url':trailerUrl, 'desc':desc, 'prev_url':cItem['url']})
             self.addVideo(params)
- 
 
+        # urls
         iframes_url = re.findall('''<iframe[^>]+?src=['"]([^"^']+?)['"]''', data)
         player_url =''
         download_url=''
         
         for u in iframes_url:
-            if 'iu=1' in u:
-                # example: https://hdpass.online/film.php?idFilm=21158&iu=1?alta
+            if '/movie/' in u and (not 'faq' in u):
+                # example: https://hdpass.casa/movie/24845?alta=1&u=aHR0cHM6Ly9hbHRhZGVmaW5pemlvbmUuZmFtaWx5L2lsLWNhc28tY29sbGluaS1zdHJlYW1pbmcv
                 player_url = u
-            elif 'download=1' in u:
-                # example: "https://hdpass.online/film.php?idFilm=21374&download=1?alta"
+            elif '/download/' in u:
+                # example: https://hdpass.casa/download/24845?alta=1&u=aHR0cHM6Ly9hbHRhZGVmaW5pemlvbmUuZmFtaWx5L2lsLWNhc28tY29sbGluaS1zdHJlYW1pbmcv
                 download_url = u
+        
         if player_url:
             sts, playerData = self.getPage(player_url)
             if sts:
                 #printDBG(playerData)
-                tmp = self.cm.ph.getDataBeetwenNodes(playerData, ('<select id="mirrorsMobile"', '>'), '</select>', False)[1]
-                players = self.cm.ph.getAllItemsBeetwenMarkers(tmp, '<option', '</value>')
-                for p in players:
-                    #printDBG(p)
-                    url = self.cm.ph.getSearchGroups(p, '''value=['"]([^"^']+?)['"]''')[0] 
-                    if not self.cm.isValidUrl(url):
-                        url = urljoin("https://hdpass.online/", url)
+                #example <ul class="buttons-list d-flex">
+                tmp = self.cm.ph.getAllItemsBeetwenMarkers(playerData, ('<ul','>', 'buttons-list'), '</ul>')
+                for tmp2 in tmp:
+                    #example <li id="host-20"><a href="https://hdpass.casa/movie/24845?resolution=3&amp;host=20&amp;alta=1&amp;u=aHR0cHM6Ly9hbHRhZGVmaW5pemlvbmUuZmFtaWx5L2lsLWNhc28tY29sbGluaS1zdHJlYW1pbmcv" class="active">Streamtape</a></li>
+                    players = self.cm.ph.getAllItemsBeetwenMarkers(tmp2, '<li', '</li>')
+                    for p in players:
+                        if 'host' in p:
+                            #printDBG(p)
+                            url = self.cm.ph.getSearchGroups(p, '''href=['"]([^"^']+?)['"]''')[0] 
+                            if url:
+                                url = url.replace("&amp;","&")
+                                
+                                if not self.cm.isValidUrl(url):
+                                    url = urljoin("https://hdpass.online/", url)
 
-                    title = self.cleanHtmlStr(p) 
-                    params = dict(cItem)
-                    params.update({'good_for_fav': False, 'title': '%s - %s [%s]' % (cItem['title'], title, _('embed in page')) , 'url': url, 'category' : 'embed_player', 'prev_url':cItem['url']})
-                    printDBG(str(params))
-                    self.addVideo(params)
+                                title = self.cleanHtmlStr(p) 
+                                params = dict(cItem)
+                                params.update({'good_for_fav': False, 'title': '%s - %s [%s]' % (cItem['title'], title, _('embed in page')) , 'url': url, 'category' : 'embed_player', 'prev_url':cItem['url']})
+                                printDBG(str(params))
+                                self.addVideo(params)
                     
         if download_url:
             # download link section of page
             sts, playerData = self.getPage(download_url)
             if sts:
                 #printDBG(playerData)
-                url_container = self.cm.ph.getDataBeetwenNodes(playerData, '<p id="hostLNK">', '</body>', False)[1]
-                #printDBG(url_container)
-                urls = self.cm.ph.getAllItemsBeetwenMarkers(url_container, '<a', '</a>')
+                #<tr onclick="window.open( 'https://streamtape.com/v/pLX7ZZmrbwFr2Ow/Il_caso_Collini_%5Bm1080p%5D_%282019%29.mp4' )">
+                #<td>Streamtape</td>
+                urls = self.cm.ph.getAllItemsBeetwenMarkers(playerData, ('<tr','>','onclick'), '</td>')
 
                 for item in urls:
-                    #printDBG("----->" + item)
+                    printDBG("----->" + item)
                     title = self.cleanHtmlStr(item)
-                    url = self.getFullUrl( self.cm.ph.getSearchGroups(item, '''href=['"]([^"^']+?)['"]''')[0] )
-                    if url !='' : 
-                        url = url.replace('&dLink=none','').replace('u=','prot=')
-                        #url = strwithmeta(url, {'need-resolve': True})
-                        #url = strwithmeta(url, {'Referer':cItem['url']})
-                        sts, test = self.getPage(url)
-                        if sts:
-                            url = test.meta['url']
+                    url = self.cm.ph.getSearchGroups(item, "window.open\( ['\"]([^'\"]+)['\"]")[0] 
+                    if url: 
+                        url = url.replace("&amp;","&")
                         params = dict(cItem)
                         params.update({'good_for_fav': False, 'title':'%s - %s [%s]' % (cItem['title'], title, _('download link')), 'url':url, 'prev_url':cItem['url']})
                         printDBG(str(params))
                         self.addVideo(params)
-                                                                                                  
+                                                                                
     def listSearchResult(self, cItem, searchPattern, searchType):
         printDBG("Altadefinizione.listSearchResult cItem[%s], searchPattern[%s] searchType[%s]" % (cItem, searchPattern, searchType))
         cItem = dict(cItem)
@@ -300,27 +324,6 @@ class Altadefinizione(CBaseHostClass):
         if label in pag:
             self.addMore(MergeDicts(cItem, {'category': 'az_item', 'title' : _('Next page'), 'page': page + 1 }))
     
-    def clearify(self, url): 
-        size = len(url)
-        lastChar = ''
-        if (size % 2) != 0:
-            printDBG("odd length")
-            return ''
-            lastChar = url[size - 1]
-            url = url[:(size - 1)]
-        
-        url = url[(size /2):] + url[:(size /2)]
-        base = "" 
-        for i in url: 
-            base = i + base
-        if lastChar:
-            base = base + lastChar
-        if len(base) % 4 == 3:
-            base = base + "="
-        elif len(base) % 4 == 2:
-            base = base + "=="
-        return base64.b64decode(base)
-    
     def getLinksForVideo(self, cItem):
         printDBG("Altadefinizione.getLinksForVideo [%s]" % cItem)
         url = cItem.get('url', '')
@@ -335,18 +338,11 @@ class Altadefinizione(CBaseHostClass):
                 return []
             
             #printDBG(data)
-            
-            # search urlEnc and urlEmbed
-            #<input type="hidden" id="urlEnc" name="urlEnc" value="aHR0cHM6Ly9hbHRhZGVmaW5pemlvbmUuY2xvdWQvam9obi13aWNrLTMtcGFyYWJlbGx1bS1pdGFsaWFuby8=" />
-            #<input type="hidden" name="urlEmbed" data-mirror="verystream" id="urlEmbed" value="TRl81Mft2Ypd1Xuh2bK9iMDJ2U0hVOQFXQl9SZvUmY1RnLm92b39yL6MHc0RHa=QDct5SOyUSOxAjM4ITJfRUNlAHM4ATMtJUNl8Vb1xGblJWYyFGUfNTOlADOlI" />        
-
-            urlEnc = self.cm.ph.getSearchGroups(data, "<input.*?name=\"urlEnc\".*?value=['\"](.*?)['\"]")[0]
+            # search urlEnc
+            urlEnc = self.cm.ph.getSearchGroups(data, "<iframe allowfullscreen custom-src=\"([^\"]+)")[0]
             printDBG('urlEnc: %s' % urlEnc)
             
-            urlEmbed = self.cm.ph.getSearchGroups(data, "<input.*?name=\"urlEmbed\".*?value=['\"](.*?)['\"]")[0]
-            printDBG('urlEmbed: %s' % urlEmbed)
-            
-            url = self.clearify(urlEmbed)
+            url = base64.b64decode(urlEnc)
             printDBG("Decoded url: %s" % url)
             url = strwithmeta(url, {'Referer':cItem['url']})
             
@@ -391,7 +387,7 @@ class Altadefinizione(CBaseHostClass):
         
         descMap = {'genere':    'genres',
                    'anno'  :    'year',
-                   'qualitá':   'quality',
+                   'qualità':   'quality',
                    'scrittore': 'writers',
                    'attori':    'actors',
                    'regia':     'directors' } #stars
@@ -415,6 +411,9 @@ class Altadefinizione(CBaseHostClass):
     def handleService(self, index, refresh = 0, searchPattern = '', searchType = ''):
         printDBG('Altadefinizione.handleService start')
         
+        if not self.updatedUrl:
+            self.updateUrl()
+            
         CBaseHostClass.handleService(self, index, refresh, searchPattern, searchType)
 
         name     = self.currItem.get("name", '')
