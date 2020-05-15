@@ -305,11 +305,17 @@ class _3Filmy(CBaseHostClass):
             sts, data = self.getPage('https://3filmy.com/ajax/modal', httpParams, post_data)
             if not sts: return False
 
-            expires = self.cm.ph.getSearchGroups(data, '''<input[^>]*?name=['"]expires['"][^>]*?value=['"]([^'^"]+?)['"]''')[0]
-            hash    = self.cm.ph.getSearchGroups(data, '''<input[^>]*?name=['"]hash['"][^>]*?value=['"]([^'^"]+?)['"]''')[0]
-            post_data = 'expires=%s&hash=%s&username=%s&password=%s&remember_me=ON' % (expires, hash, self.login, self.password)
+#            expires = self.cm.ph.getSearchGroups(data, '''<input[^>]*?name=['"]expires['"][^>]*?value=['"]([^'^"]+?)['"]''')[0]
+#            hash    = self.cm.ph.getSearchGroups(data, '''<input[^>]*?name=['"]hash['"][^>]*?value=['"]([^'^"]+?)['"]''')[0]
+#            post_data = 'expires=%s&hash=%s&username=%s&password=%s&remember_me=ON' % (expires, hash, self.login, self.password)
+            post_data = {'remember_me':'ON', 'username':self.login, 'password':self.password}
+            inputData = self.cm.ph.getAllItemsBeetwenMarkers(data, '<input type="hidden"', '>')
+            for item in inputData:
+                name  = self.cm.ph.getSearchGroups(item, '''name=['"]([^'^"]+?)['"]''')[0]
+                value = self.cm.ph.getSearchGroups(item, '''value=['"]([^'^"]+?)['"]''')[0]
+                post_data[name] = value
 
-            httpParams['raw_post_data'] = True
+#            httpParams['raw_post_data'] = True
             sts, data = self.getPage('https://3filmy.com/ajax/login', httpParams, post_data)
             if sts and 'success' in data:
                 self.loggedIn = True
