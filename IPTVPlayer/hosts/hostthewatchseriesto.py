@@ -17,10 +17,12 @@
 ###################################################
 from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _
 from Plugins.Extensions.IPTVPlayer.components.ihost import CHostBase, CBaseHostClass, CDisplayListItem
-from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, byteify
+from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, byteify, GetJSScriptFile
 from Plugins.Extensions.IPTVPlayer.tools.iptvtypes import strwithmeta
-from Plugins.Extensions.IPTVPlayer.libs.e2ijson import dumps as json_dumps
+from Plugins.Extensions.IPTVPlayer.libs.e2ijson import dumps as json_dumps, loads as json_loads
 from Plugins.Extensions.IPTVPlayer.libs import ph
+from Plugins.Extensions.IPTVPlayer.tools.e2ijs import js_execute_ext
+
 ###################################################
 
 ###################################################
@@ -275,25 +277,34 @@ class TheWatchseriesTo(CBaseHostClass):
         for item in data:
             host = ph.search(item, '''"download_link_([^'^"]+?)['"]''')[0]
             #if self.up.checkHostSupport('http://'+host+'/') != 1: continue
-            printDBG(item)
+            #printDBG(item)
             printDBG('------')
             url = ''
             item = ph.findall(item, '<a', '</a>')
             for it in item:
+                #printDBG(it)
                 if self.isNeedProxy():
                     url = urllib.unquote(ph.search(it, '''href=['"][^'^"]*?%3Fr%3D([^'^"^&]+?)['"&]''')[0])
                 else:
                     url = ph.search(it, '''href=['"][^'^"]*?\?r=([^'^"]+?)['"]''')[0]
-                if url == '': continue
-                try:
-                    url = base64.b64decode(url)
-                except Exception:
-                    continue
-                break
-            if url == '': continue
-            if self.up.checkHostSupport(url) != 1: continue
-            url = strwithmeta(self.getFullUrl(url), {'Referer':self.cm.meta['url']})
-            urlTab.append({'name':host, 'url':url, 'need_resolve':1})
+                if url: 
+                    #use javascript function to decode url
+                    printDBG("crypted url -----> %s" % url)
+                    js_params = [{'path' : GetJSScriptFile('swatchseries_max.byte')}]
+                    js_params.append({'code': "pippo('%s'); " % url})
+                    ret = js_execute_ext( js_params )
+                    printDBG(ret)
+                    
+                    if ret:
+                        url = ret['data'].replace('\n','').replace('\/','/').replace('"','')
+                        if self.up.checkHostSupport(url): 
+                            url = strwithmeta(self.getFullUrl(url), {'Referer':self.cm.meta['url']})
+                            urlTab.append({'name':host, 'url':url, 'need_resolve':1})
+                            break
+                    else:
+                        continue
+                        
+                        
         if len(urlTab):
             self.cacheLinks[cItem['url']] = urlTab
         return urlTab

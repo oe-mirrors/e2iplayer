@@ -1135,7 +1135,7 @@ class common:
                         
                         js_params.append({'code': "%s\n%s\n\npippo(); " % (code2, dat)})
                         ret = js_execute_ext( js_params )
-                        printDBG(ret);
+                        printDBG(ret)
                         
                         formTag = self.ph.getDataBeetwenNodes(verData, ('<form','>', 'challenge'), ('</form','>'))[1]
                         formTag = re.sub("<!--.*?-->", "<!-- -->", formTag)
