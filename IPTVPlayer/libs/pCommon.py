@@ -1007,11 +1007,10 @@ class common:
                                 break
                         decoded = ''
                         elemsText = {}
-                        tmp = ph.findall(verData, ('<div', '>', 'hidden'), '</div>', flags=ph.START_S)
-                        for idx in range(1, len(tmp), 2):
-                            eId = ph.getattr(tmp[(idx - 1)], 'id', flags=ph.I)
-                            if eId:
-                                elemsText[eId] = tmp[idx]
+                        tmp = re.findall("<div.*?id=\"([^\"]+)\">(.*?)</div>", verData)
+                        for item in tmp:
+                            if item[0] and re.search(r'\w+\d', item[0]):
+                                elemsText[item[0]] = item[1]
 
                         js_params = [{'path':GetJSScriptFile('cf.byte')}]
                         try:
