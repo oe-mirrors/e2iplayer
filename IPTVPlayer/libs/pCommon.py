@@ -1126,14 +1126,6 @@ class common:
                         
                         dat = dat.replace("t = document.createElement('div');\n        t.innerHTML=\"<a href='/'>x</a>\";\n        t = t.firstChild.href;",'t="%domain%";').replace('%domain%',domain)
                         
-                        #var a = document.getElementById('cf-content');a.style.display = 'block';
-                        #var isIE = /(MSIE|Trident\/|Edge\/)/i.test(window.navigator.userAgent);
-                        #var trkjs = isIE ? new Image() : document.createElement('img');
-                        #trkjs.setAttribute("src", "/cdn-cgi/images/trace/jschal/js/transparent.gif?ray=58d47f194808a85b");
-                        #trkjs.id = "trk_jschal_js";
-                        #trkjs.setAttribute("alt", "");
-                        #document.body.appendChild(trkjs);
-                        
                         pattern3 = re.compile("var a = document.*?appendChild\(.*?\);",re.S)
                         dat = re.sub(pattern3, "", dat)
                         
@@ -1144,14 +1136,20 @@ class common:
                         js_params.append({'code': "%s\n%s\n\npippo(); " % (code2, dat)})
                         ret = js_execute_ext( js_params )
                         printDBG(ret);
-                        get_data_1 = dict(re.findall(r'<input[^>]*name="([^"]*)"[^>]*value="([^"]*)"[^>]*>', verData))
                         
-                        get_data_2 = dict(re.findall(r'<input[^>]*value="([^"]*)"[^>]*name="([^"]*)"[^>]*>', verData))
-                        get_data_2_swap = dict([(value, key) for key, value in get_data_2.items()])
+                        formTag = self.ph.getDataBeetwenNodes(verData, ('<form','>', 'challenge'), ('</form','>'))[1]
+                        formTag = re.sub("<!--.*?-->", "<!-- -->", formTag)
+
+                        printDBG("--------challenge form-----------")
+                        printDBG(formTag)
+                        printDBG("--------challenge form-----------")
+                        
+                        get_data_1 = dict(re.findall(r'<input[^>]*name="([^"]*)"[^>]*value="([^"]*)"[^>]*>', formTag))
+                        
+                        get_data_2 = dict(re.findall(r'<input[^>]*value="([^"]*)"[^>]*name="([^"]*)"[^>]*>', formTag))
 
                         printDBG("get_data_1: %s" % str(get_data_1))
                         printDBG("get_data_2: %s" % str(get_data_2))
-                        printDBG("get_data_2_swap: %s" % str(get_data_2_swap))
 
                         get_data={}
                         
@@ -1161,9 +1159,9 @@ class common:
                                     
                         #get_data.update(get_data_1)
                         
-                        for xx in get_data_2_swap:
-                            if not get_data.get(xx,''):
-                                get_data[xx] = get_data_2_swap[xx]
+                        for xx in get_data_2:
+                            if not get_data.get(get_data_2[xx],''):
+                                get_data[get_data_2[xx]] = xx
                                 
                         #get_data.update(get_data_2_swap)
                         #get_data['cf_ch_verify']='plat'
