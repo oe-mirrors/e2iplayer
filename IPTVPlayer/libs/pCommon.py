@@ -970,7 +970,13 @@ class common:
                         if url != '': url = _getFullUrl( url, domain )
                         else: url = data.meta['url']
                         actionType = self.ph.getSearchGroups(tmp, 'method="([^"]+?)"', 1, True)[0].lower()
-                        post_data2 = dict(re.findall(r'<input[^>]*name="([^"]*)"[^>]*value="([^"]*)"[^>]*>', tmp))
+#                        post_data2 = dict(re.findall(r'<input[^>]*name="([^"]*)"[^>]*value="([^"]*)"[^>]*>', tmp))
+                        post_data2 = {}
+                        verData = re.findall(r'(<input[^>]*)>', re.sub("<!--.*?-->", "<!-- -->", verData))
+                        for item in verData:
+                            name = self.ph.getSearchGroups(item, '''\sname=['"]([^'^"]+?)['"]''')[0]
+                            value = self.ph.getSearchGroups(item, '''\svalue=['"]([^'^"]+?)['"]''')[0]
+                            post_data2[name] = value
                         #post_data2['id'] = id
                         if '' != token:
                             post_data2['h-captcha-response'] = token
@@ -1012,7 +1018,7 @@ class common:
                             dat = dat.replace(dat[dat.index('var isIE'):dat.index('setTimeout')],'')
                         except Exception:
                             printExc()
-                        js_params.append({'code': "var ELEMS_TEXT = %s; var location = {hash:''}; var iptv_domain='%s';\n%s\niptv_fun();" % (json_dumps(elemsText), domain, dat)})
+                        js_params.append({'code': "var navigator={cookieEnabled:1}; var ELEMS_TEXT = %s; var location = {hash:''}; var iptv_domain='%s';\n%s\niptv_fun();" % (json_dumps(elemsText), domain, dat)})
                         ret = js_execute_ext( js_params )
                         decoded = json_loads(ret['data'].strip())
                         
@@ -1022,7 +1028,7 @@ class common:
                         printDBG("<<")
                         verUrl =  _getFullUrl( ph.getattr(verData, 'action'), domain)
                         get_data = {}
-                        verData = re.findall(r'(<input[^>]*)>', verData)
+                        verData = re.findall(r'(<input[^>]*)>', re.sub("<!--.*?-->", "<!-- -->", verData))
                         for item in verData:
                             name = self.ph.getSearchGroups(item, '''\sname=['"]([^'^"]+?)['"]''')[0]
                             value = self.ph.getSearchGroups(item, '''\svalue=['"]([^'^"]+?)['"]''')[0]
