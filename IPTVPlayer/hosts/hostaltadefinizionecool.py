@@ -125,7 +125,7 @@ class AltadefinizioneCool(CBaseHostClass):
             sts, data = self.getPage(cItem['url'])
             if not sts: return
         
-        nextPage = self.cm.ph.getDataBeetwenNodes(data, '<div class="paginationC nomobile">', ('</ul', '>'), False)[1]
+        nextPage = self.cm.ph.getDataBeetwenNodes(data, ('<div','>', 'paginationC'), ('</div', '>'), False)[1]
         nextPage = self.getFullUrl( self.cm.ph.getSearchGroups(nextPage, '''<a[^>]+?href=['"]([^"^']+?)['"][^>]*?>%s<''' % (page + 1))[0] )
         
         data = self.cm.ph.getAllItemsBeetwenMarkers(data, '<div class="box">', '</div>')
