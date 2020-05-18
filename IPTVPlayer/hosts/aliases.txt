@@ -21,7 +21,7 @@
 "hostbbcsport": "https://www.bbc.co.uk/sport",
 "hostbsto": "https://bs.to/",
 "hostcartoonhd": "https://cartoonhd.care/",
-"hostcb01": "https://cb01.love/",
+"hostcb01": "https://cb01.run/",
 "hostcb01uno": "https://cb01.social/",
 "hostcdapl": "https://cda.pl/",
 "hostchomikuj": "http://chomikuj.pl/",
@@ -68,7 +68,7 @@
 "hostfilmovizijastudio": "https://filmovizija.fun/",
 "hostfilmowood": "https://filmowood.com/"
 "hostfilmpalast": "http://filmpalast.to/",
-"hostfilmpertutti": "https://filmpertutti.uno/",
+"hostfilmpertutti": "https://filmpertutti.pro/",
 "hostfilmstreamhdit": "http://filmstreamhd.it/",
 "hostfilmstreamvkcom": "http://filmstreamvk.club/",
 "hostfilmydokumentalneeu": "http://filmydokumentalne.eu/",
