@@ -4554,10 +4554,10 @@ class pageParser(CaptchaHelper):
         # https://akvideo.stream/video.php?file_code=mo2iqr25yds3
         # try to convert to
         # https://akvideo.stream/video/mo2iqr25yds3
+        #https://akvideo.stream/swvideoid/246231.html
         
-        i = baseUrl.index("file_code=")
+        i = baseUrl.find("file_code=")
         if i>0 :
-            i = baseUrl.index("file_code=")
             video_id = baseUrl[ i+10 :]
             baseUrl = "https://akvideo.stream/video/" + video_id
             printDBG("try similar url '%s':" % baseUrl)
@@ -12155,11 +12155,16 @@ class pageParser(CaptchaHelper):
         red_url = self.cm.meta['url']
         printDBG('redirect to url: %s' % red_url)
                     
-        if not "vcrypt" in red_url:
+        if red_url != baseUrl:
             return urlparser().getVideoLinkExt(red_url)
         else:
-            printDBG(data)
-            return []
+            # search <meta http-equiv="refresh" content="1;URL=https://vcrypt.net/wss1/uadzaa31nr4r">
+            red_url = re.findall("URL=([^\"]+)",data)
+            if red_url:
+                return urlparser().getVideoLinkExt(red_url[0])
+            else:
+                printDBG(data)
+                return []
 
     def parserWSTREAMVIDEO(self, baseUrl):
         printDBG("parserWSTREAMVIDEO baseUrl[%s]" % baseUrl)
