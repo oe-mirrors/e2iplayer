@@ -7758,8 +7758,9 @@ class pageParser(CaptchaHelper):
             url = baseUrl
         
         HTTP_HEADER= {'User-Agent':"Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.106 Safari/537.36"}
-        defaultParams = {'header':HTTP_HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': GetCookieDir('speedvideo.cookie')}
-
+        #defaultParams = {'header':HTTP_HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': GetCookieDir('speedvideo.cookie')}
+        defaultParams = {'header': HTTP_HEADER}
+        
         sts, data = self.cm.getPage(url, defaultParams)
         if not sts: return False
         
@@ -12750,7 +12751,7 @@ class pageParser(CaptchaHelper):
     def parserBUCKLER(self, baseUrl):
         printDBG("parserBUCKLER baseUrl[%s]" % baseUrl)
 
-        sts, data = self.cm.getPage(baseUrl, {'header':{'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/76.0.3809.132 Safari/537.36'}, 'use_cookie':1, 'save_cookie':1,'load_cookie':1, 'cookiefile': GetCookieDir("vcrypt.cookie"), 'with_metadata':1})
+        sts, data = self.cm.getPage(baseUrl, {'header':{'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/76.0.3809.132 Safari/537.36'}, 'use_cookie':1, 'save_cookie':1,'load_cookie':1, 'cookiefile': GetCookieDir("buckler.cookie"), 'with_metadata':1})
         #if not sts:
         #    return []
 
