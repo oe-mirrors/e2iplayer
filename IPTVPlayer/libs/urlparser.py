@@ -162,6 +162,7 @@ class urlparser:
                        'bojem3a.info':          self.pp.parserEXASHARECOM   ,
                        'bro.adca.st':           self.pp.parserBROADCAST      ,
                        'bro.adcast.tech':       self.pp.parserBROADCAST      ,
+                       'buckler.link':          self.pp.parserBUCKLER       ,
                        'byetv.org':             self.pp.parserBYETVORG       ,
                        'casacinema.cc':         self.pp.parserCASACINEMACC   ,
                        'cast4u.tv':             self.pp.parserCAST4UTV      ,
@@ -12745,3 +12746,19 @@ class pageParser(CaptchaHelper):
                         urlTabs.append(params)
                         
         return urlTabs
+
+    def parserBUCKLER(self, baseUrl):
+        printDBG("parserBUCKLER baseUrl[%s]" % baseUrl)
+
+        sts, data = self.cm.getPage(baseUrl, {'header':{'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/76.0.3809.132 Safari/537.36'}, 'use_cookie':1, 'save_cookie':1,'load_cookie':1, 'cookiefile': GetCookieDir("vcrypt.cookie"), 'with_metadata':1})
+        #if not sts:
+        #    return []
+
+        red_url = self.cm.meta['url']
+        printDBG('redirect to url: %s' % red_url)
+                    
+        if red_url != baseUrl:
+            return urlparser().getVideoLinkExt(red_url)
+        else:
+            printDBG(data)
+            return []
