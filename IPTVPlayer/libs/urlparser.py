@@ -301,6 +301,7 @@ class urlparser:
                        'megustavid.com':        self.pp.parserMEGUSTAVID    ,
                        'mightyupload.com':      self.pp.parserMIGHTYUPLOAD  ,
                        'miplayer.net':          self.pp.parserMIPLAYERNET   ,
+                       'mirrorace.com':         self.pp.parserMIRRORACE     ,
                        'mixdrop.co':            self.pp.parserMIXDROP       ,
                        'mixdrop.club':          self.pp.parserMIXDROP       ,
                        'moevideo.net':          self.pp.parserPLAYEREPLAY   ,
@@ -12518,10 +12519,33 @@ class pageParser(CaptchaHelper):
         sts, data = self.cm.getPage(baseUrl)
 
         if sts:
-            printDBG("---------")
-            printDBG(data)
-            printDBG("---------")
+            #printDBG("---------")
+            #printDBG(data)
+            #printDBG("---------")
             
+            #search view url
+            id = re.findall("/view/([^\"]+)\"", data)
+            
+            if id:
+                view_url = "https://linkhub.icu/view/%s" % id[0]
+                
+                sts, data = self.cm.getPage(view_url)
+                
+                if sts:
+                    #printDBG("---------")
+                    #printDBG(data)
+                    #printDBG("---------")
+                    
+                    anchors = re.findall("(<a.*?>)",data)
+                    
+                    for a in anchors:
+                        if 'title' in a:
+                            new_url = self.cm.ph.getSearchGroups(a, '''href=['"]([^'^"]+?)['"]''')[0]  
+                            printDBG(new_url)
+                            if self.cm.isValidUrl(new_url):
+                                return urlparser().getVideoLinkExt(new_url)
+                          
+                    
             return []
         
         else:
@@ -12813,3 +12837,64 @@ class pageParser(CaptchaHelper):
         
         return urlTabs
         
+    def parserMIRRORACE(self, baseUrl):
+        printDBG("parserMIRRORACE baseUrl [%s]" % baseUrl)
+ 
+        params = {'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': GetCookieDir('mirrorace.cookie')}
+        ajax_url = "https://mirrorace.com/ajax/embed_link"
+        
+        ajax_header = {
+                    'Accept': 'application/json',
+                    'Accept-Encoding': 'gzip',
+                    'Referer': baseUrl,
+                    'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/81.0.4044.138 Safari/537.36',
+                    'X-Requested-With': 'XMLHttpRequest'
+        }
+        ajax_params = {'header': ajax_header, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': GetCookieDir('mirrorace.cookie')}
+        
+        urlTabs=[]
+        
+        sts, data = self.cm.getPage(baseUrl, params)
+        
+        if sts:
+            tmp = self.cm.ph.getDataBeetwenNodes(data, ('<ul', '>', 'slider'), ('</ul', '>'))[1]
+            #printDBG(tmp)
+            
+            mirrors = self.cm.ph.getAllItemsBeetwenMarkers(tmp, ('<li','>'), '</li>', False)
+            for m in mirrors:
+                # example
+                # <button class="..." data-file="2iL2g" data-link="58066810" data-t="39208f664a39a86752b03063296b573aae3440a7"  type="button">
+
+                mirror_name = clean_html(m)
+                printDBG("--------------------")
+                printDBG(mirror_name)
+                
+                mirror_file = self.cm.ph.getSearchGroups(m, '''data-file=['"]([^'^"]+?)['"]''')[0]
+                mirror_link = self.cm.ph.getSearchGroups(m, '''data-link=['"]([^'^"]+?)['"]''')[0]
+                mirror_t = self.cm.ph.getSearchGroups(m, '''data-t=['"]([^'^"]+?)['"]''')[0]
+                
+                if (mirror_file != "") and (mirror_link !="") and (mirror_t != "") :
+                    ajax_pd = {'file': mirror_file, 'link': mirror_link, 't': mirror_t}
+                    
+                    sts, ajax_data = self.cm.getPage(ajax_url, ajax_params, post_data=ajax_pd)
+                    
+                    if sts:
+                        #{"type":"success","msg":"https:\/\/uptostream.com\/iframe\/ku43i8szvyjx"}
+                        response = json_loads(ajax_data)
+                        printDBG(str(response))
+                        
+                        if response.get('type','') == "success":
+                            mirror_url = response.get("msg","")
+                            if self.cm.isValidUrl(mirror_url):
+                                url2 = urlparser().getVideoLinkExt(mirror_url)
+                                if url2:
+                                    for u in url2:
+                                        params = {'name': mirror_name , 'url': u.get('url','')}
+                                        printDBG(str(params))
+                                        urlTabs.append(params)
+                                else:
+                                    params = {'name': mirror_name + "*", 'url': mirror_url, 'need_resolve': True}
+                                    printDBG(str(params))
+                                    urlTabs.append(params)
+                                
+        return urlTabs
