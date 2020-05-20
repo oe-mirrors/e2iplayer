@@ -37,25 +37,28 @@ def GetConfigList():
 
 
 def gettytul():
-    return 'https://series9.io/'
+    return 'https://series9.to/'
 
 class SeriesOnlineIO(CBaseHostClass):
  
     def __init__(self):
-        CBaseHostClass.__init__(self, {'history':'SeriesOnlineIO.tv', 'cookie':'seriesonlineio.cookie'})
-        self.DEFAULT_ICON_URL = 'https://www2.series9.io/images/gomovies-logo-light.png'
+        CBaseHostClass.__init__(self, {'history':'SeriesOnline.tv', 'cookie':'seriesonline.cookie'})
         self.USER_AGENT = 'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:56.0) Gecko/20100101 Firefox/56.0'
         self.HEADER = {'User-Agent': self.USER_AGENT, 'DNT':'1', 'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8', 'Accept-Encoding':'gzip, deflate'}
         
         self.AJAX_HEADER = dict(self.HEADER)
         self.AJAX_HEADER.update( {'X-Requested-With': 'XMLHttpRequest'} )
         self.MAIN_URL = None
+ 
+        self.defaultParams = {'header':self.HEADER, 'use_new_session':True, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
+
+        self.DEFAULT_ICON_URL = 'https://uptime.com/media/website_profiles/series9.io.png'
+        self.userInformedAboutCaptchaProtection = False
+ 
         self.cacheFilters = {}
         self.cacheLinks = {}
-        self.defaultParams = {'header':self.HEADER, 'use_new_session':True, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
         self.MAIN_CAT_TAB = []
-        
-        self.userInformedAboutCaptchaProtection = False
+ 
         
     def getPage(self, baseUrl, addParams = {}, post_data = None):
         if addParams == {}:
@@ -93,7 +96,8 @@ class SeriesOnlineIO(CBaseHostClass):
         return sts, data
     
     def getFullUrl(self, url):
-        if url.startswith('//'): return 'https:' + url
+        if url.startswith('//'): 
+            return 'https:' + url
         return CBaseHostClass.getFullUrl(self, url)
     
     def getFullIconUrl(self, url):
@@ -112,7 +116,7 @@ class SeriesOnlineIO(CBaseHostClass):
         return strwithmeta(url, {'Cookie':cookieHeader, 'User-Agent':self.USER_AGENT})
         
     def selectDomain(self):
-        domains = ['https://www2.series9.io/'] #'http://123movieshd.us/'
+        domains = ['https://series9.to/'] 
         domain = config.plugins.iptvplayer.seriesonlineio_alt_domain.value.strip()
         if self.cm.isValidUrl(domain):
             if domain[-1] != '/': domain += '/'
@@ -137,6 +141,9 @@ class SeriesOnlineIO(CBaseHostClass):
                              {'category':'search',          'title': _('Search'), 'search_item':True,                        },
                              {'category':'search_history',  'title': _('Search history'),                                    } 
                             ]
+
+        self.DEFAULT_ICON_URL = self.getFullIconUrl(self.MAIN_URL + '/images/gomovies-logo-light.png')
+
         
     def fillCacheFilters(self):
         self.cacheFilters = {}
