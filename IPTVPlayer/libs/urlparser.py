@@ -305,7 +305,8 @@ class urlparser:
                        'mixdrop.club':          self.pp.parserMIXDROP       ,
                        'moevideo.net':          self.pp.parserPLAYEREPLAY   ,
                        'moonwalk.cc':           self.pp.parserMOONWALKCC    ,
-                       'moshahda.net':          self.pp.parserMOSHAHDANET    ,
+                       'moshahda.net':          self.pp.parserMOSHAHDANET   ,
+                       'movcloud.net':          self.pp.parserMOVCLOUD      ,
                        'movdivx.com':           self.pp.parserMODIVXCOM     ,
                        'movpod.in':             self.pp.parserFASTVIDEOIN   ,
                        'movreel.com':           self.pp.parserMOVRELLCOM    ,
@@ -4577,13 +4578,26 @@ class pageParser(CaptchaHelper):
         if GetFileSize(COOKIE_FILE) > 16 * 1024: rm(COOKIE_FILE)
         paramsUrl.update({'use_cookie': True, 'save_cookie': True, 'load_cookie': True, 'cookiefile': COOKIE_FILE})
         
-        sts, data = self.getPageCF(baseUrl, paramsUrl)
+        sts, data = self.getPage(baseUrl, paramsUrl)
         
         if not sts: 
             return False
         
         printDBG(data)
         
+        
+        # test if there is a captcha to solve
+        if 'sitekey' in data:
+            # captcha to solve
+            sitekey = re.findall("data-sitekey='([^']+)'", data)
+            if sitekey:
+                # solve captcha to login
+                (token, errorMsgTab) = CaptchaHelper().processCaptcha(sitekey[0], baseUrl)
+                
+                printDBG(token)
+                
+                return
+                
         names = {}
         tmp = self.cm.ph.getAllItemsBeetwenNodes(data, ('<a', '>', 'pure-button'), ('</td', '>'))
         for idx in range(len(tmp)):
@@ -12763,3 +12777,39 @@ class pageParser(CaptchaHelper):
         else:
             printDBG(data)
             return []
+
+    def parserMOVCLOUD(self, baseUrl):
+        printDBG("parserMOVCLOUD baseUrl[%s]" % baseUrl)
+        #example: https://movcloud.net/embed/ei-RkZ9lI_Bg
+        #api url format: https://api.movcloud.net/stream/ei-RkZ9lI_Bg
+        
+        urlTabs=[]
+        m = re.search("embed/(?P<id>[^/]+)($|/)",baseUrl)
+        
+        if m:
+            video_id = m.groupdict().get('id','')
+            if video_id:
+                url = "https://api.movcloud.net/stream/" + video_id
+                
+                sts, data = self.cm.getPage(url)
+                if sts:
+                    response = json_loads(data)
+                    printDBG(str(response))
+                    
+                    if response.get('success', False):
+                        for s in response['data']['sources']:
+                            link_url = s.get('file','')
+                            if  self.cm.isValidUrl(link_url):
+                                link_url = urlparser.decorateUrl(link_url, {'Referer': baseUrl})
+                                if 'm3u8' in link_url:
+                                    params = getDirectM3U8Playlist(link_url, checkExt=True, variantCheck=True, checkContent=True, sortWithMaxBitrate=99999999)
+                                    printDBG(str(params))    
+                                    urlTabs.extend(params)
+                                else:
+                                    params = {'name': 'link' , 'url': link_url}
+                                    printDBG(str(params))
+                                    urlTabs.append(params)
+                               
+        
+        return urlTabs
+        
