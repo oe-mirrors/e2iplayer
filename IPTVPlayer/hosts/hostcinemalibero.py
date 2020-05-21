@@ -1,4 +1,7 @@
 # -*- coding: utf-8 -*-
+#
+# Host by Mark - Thanks to my bro, and to Maxbambi
+# 
 # typical import for a standard host
 ###################################################
 # LOCAL import
