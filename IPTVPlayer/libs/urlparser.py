@@ -7522,121 +7522,74 @@ class pageParser(CaptchaHelper):
         
     def parserUPTOSTREAMCOM(self, baseUrl):
         printDBG("parserUPTOSTREAMCOM baseUrl[%s]" % baseUrl)
+        #example https://uptostream.com/iframe/kfaru03fqthy
         
-        sts, baseData = self.cm.getPage(baseUrl)
-        if not sts: return False
-        baseUrl = self.cm.meta['url']
-        
-        timestamp = time.time()
-        cUrl = baseUrl
-        url = baseUrl
-        domain = urlparser.getDomain(baseUrl) 
-        if '/iframe/' not in url:
-            url = 'https://' + domain + '/iframe/' + url.split('/')[-1]
-        else:
-            url = baseUrl
+        def checkTxt(txt):
+            txt = txt.replace('\n', ' ')
+            if txt.find('file:'):
+                txt = txt.replace('file:', '"file":')
+            if txt.find('label:'):
+                txt = txt.replace('label:', '"label":')
+            if txt.find('kind:'):
+                txt = txt.replace('lang:', '"lang":')
+            if txt.find('src:'):
+                txt = txt.replace('src:', '"src":')
+            if txt.find('res:'):
+                txt = txt.replace('res:', '"res":')
+            if txt.find('type:'):
+                txt = txt.replace('type:', '"type":')
+            if txt.find('idLang:'):
+                txt = txt.replace('idLang:', '"idLang":')
+            
+            return txt
+
         
         urlTab = []
-        tries = 0
-        while tries < 2:
-            tries += 1
-            
-            if tries == 2 and domain != 'uptostream.com':
-                url = url.replace(domain, 'uptostream.com')
-                domain = 'uptostream.com'
-            
-            sts, data = self.cm.getPage(url)
-            if not sts: return False
-            
-            errMsg = self.cm.ph.getDataBeetwenNodes(data, ('<div', '>', 'error'), ('</div', '>'))[1]
-            SetIPTVPlayerLastHostError(clean_html(errMsg).strip())
+        video_id = re.findall("iframe/(.*?)$", baseUrl)
         
-            subTracks = []
-            tmp = self.cm.ph.getAllItemsBeetwenMarkers(data, '<track', '</track>', False, False)
-            for item in tmp:
-                if 'subtitles' not in item: continue
-                type  = self.cm.ph.getSearchGroups(item, '''type=['"]([^"^']+?)['"]''')[0]
-                lang  = self.cm.ph.getSearchGroups(item, '''lang=['"]([^"^']+?)['"]''')[0]
-                label = self.cm.ph.getSearchGroups(item, '''label=['"]([^"^']+?)['"]''')[0]
-                url   = self.cm.ph.getSearchGroups(item, '''src=['"]([^"^']+?)['"]''')[0]
-                if url.startswith('//'):
-                    url = 'http:' + url
-                if '://' not in url: continue
-                subTracks.append({'title':label, 'url':url, 'lang':label, 'format':type})
-            
-            #'<font color="red">', '</font>'
-            items = self.cm.ph.getAllItemsBeetwenMarkers(data, '<source ', '>', False, False)
-            if 0 == len(items):
-                sts, items = self.cm.ph.getDataBeetwenReMarkers(data, re.compile('''var\s+sources\s*=\s*\['''), re.compile('''\]'''), False)
-                if not sts: sts, items = self.cm.ph.getDataBeetwenMarkers(data, 'sources', ']', False)
-                items = items.split('},')
-            
-            printDBG(items)
-            for item in items:
-                item = item.replace('\/', '/')
-                if 'video/mp4' not in item: continue
-                type = self.cm.ph.getSearchGroups(item, '''type['"]?\s*[=:]\s*['"]([^"^']+?)['"]''')[0]
-                res  = self.cm.ph.getSearchGroups(item, '''res['"]?\s*[=:]\s*['"]([^"^']+?)['"]''')[0]
-                lang = self.cm.ph.getSearchGroups(item, '''lang['"]?\s*[=:]\s*['"]([^"^']+?)['"]''')[0]
-                url  = self.cm.ph.getSearchGroups(item, '''src['"]?\s*[=:]\s*['"]([^"^']+?)['"]''')[0]
-                if url.startswith('//'):
-                    url = 'http:' + url
-                if self.cm.isValidUrl(url):
-                    url = strwithmeta(url, {'Referer':self.cm.meta['url'], 'external_sub_tracks':subTracks})
-                    urlTab.append({'name':domain + ' {0} {1}'.format(lang, res), 'url':url})
-            if len(urlTab):
-                break
-        urlTab.reverse()
+        #if '/iframe/' not in baseUrl:
+        #    url = 'https://' + domain + '/iframe/' + baseUrl.split('/')[-1]
+        #else:
+        #    url = baseUrl
         
-        if len(urlTab) == 0:
-            sleep_time = self.cm.ph.getSearchGroups(baseData, '''data\-remaining\-time=['"]([0-9]+?)['"]''')[0]
-            if sleep_time != '':
-                sleep_time = float(sleep_time)
-                sleep_time -= time.time() - timestamp
-                if  sleep_time > 0:
-                    GetIPTVSleep().Sleep(int(math.ceil(sleep_time)) + 1)
-                
-            errMsg = self.cm.ph.getDataBeetwenNodes(baseData, ('<', '>', 'fa-times'), ('</p', '>'))[1]
-            if errMsg == '':
-                errMsg = self.cm.ph.getDataBeetwenNodes(baseData, ('<form', '>'), ('</form', '>'))[1]
-            SetIPTVPlayerLastHostError(clean_html(errMsg).strip())
+        if video_id:
+            url2 = "https://uptostream.com/api/streaming/source/get?token=null&file_code=%s" % video_id[0] 
             
-            tmp = ''
-            tmpTab = self.cm.ph.getAllItemsBeetwenNodes(baseData, ('<form', '>', 'post'), ('</form', '>'), True, caseSensitive=False)
-            for tmpItem in tmpTab:
-                if 'waitingToken' in tmpItem:
-                    tmp = tmpItem
-                    break
+            sts, data = self.cm.getPage(url2)
             
-            if tmp != '':
-                action = self.cm.getFullUrl(self.cm.ph.getSearchGroups(tmp, '''action=['"]([^'^"]+?)['"]''', ignoreCase=True)[0], baseUrl)
-                if action == '': action = baseUrl
-                
-                tmp = self.cm.ph.getAllItemsBeetwenMarkers(tmp, '<input', '>', False, False)
-                post_data = {}
-                for item in tmp:
-                    name  = self.cm.ph.getSearchGroups(item, '''name=['"]([^'^"]+?)['"]''', ignoreCase=True)[0]
-                    value = self.cm.ph.getSearchGroups(item, '''value=['"]([^'^"]+?)['"]''', ignoreCase=True)[0]
-                    if name != '' and value != '': post_data[name] = value
-                
-                sts, baseData = self.cm.getPage(action, post_data=post_data)
-                if not sts: return urlTab
-                baseUrl = self.cm.meta['url']
-            
-            printDBG(baseData)
-            
-            tries = 0
-            while tries < 2:
-                tries += 1
-                downloadLink = self.cm.ph.getDataBeetwenNodes(baseData, ('<a', '>', 'button-green-flat '), ('</a', '>'))[1]
-                downloadLink = self.cm.getFullUrl(self.cm.ph.getSearchGroups(downloadLink, '''href=['"]([^'^"]+?)['"]''')[0], baseUrl)
-                if downloadLink != '': 
-                    urlTab.append({'name':'%s - download' % domain, 'url':strwithmeta(downloadLink, {'Referer':baseUrl})})
-                    break
-                
-                sts, baseData = self.cm.getPage(baseUrl)
-                if not sts: return urlTab
-            
+            if sts:
+                #printDBG(data)
+                response=json_loads(data)
+                if response.get("message",'') == "Success":
+                    code = response["data"]["sources"]
+                    
+                    code = code.replace(";let",";var")
+                    code = code + "\n console.log(sources);"
+                    printDBG("---------- javascript code -----------")
+                    printDBG(code)
+                    
+                    ret = js_execute( code )
+                    if ret['sts'] and 0 == ret['code']:
+                        response = eval(checkTxt(ret['data']))
+
+                        #printDBG(str(response))
+                        
+                        for u in response:
+                            printDBG(u)
+
+                            url = u.get('src','')
+                    
+                            if url:
+                                if 'label' in u:
+                                    title = u.get('label', '')
+                                else:
+                                    title=''
+                        
+                                if url[-4:] == 'm3u8':
+                                    urlTab.extend(getDirectM3U8Playlist(url, checkExt=True, variantCheck=True, checkContent=True, sortWithMaxBitrate=99999999))
+                                else:
+                                    urlTab.append({'name': title, 'url':url})
+  
         return urlTab
         
     def parserVIMEOCOM(self, baseUrl):
