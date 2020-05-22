@@ -7523,6 +7523,7 @@ class pageParser(CaptchaHelper):
     def parserUPTOSTREAMCOM(self, baseUrl):
         printDBG("parserUPTOSTREAMCOM baseUrl[%s]" % baseUrl)
         #example https://uptostream.com/iframe/kfaru03fqthy
+        #        https://uptostream.com/xjo9gegjzf8c
         
         def checkTxt(txt):
             txt = txt.replace('\n', ' ')
@@ -7547,13 +7548,13 @@ class pageParser(CaptchaHelper):
         urlTab = []
         video_id = re.findall("iframe/(.*?)$", baseUrl)
         
-        #if '/iframe/' not in baseUrl:
-        #    url = 'https://' + domain + '/iframe/' + baseUrl.split('/')[-1]
-        #else:
-        #    url = baseUrl
-        
         if video_id:
-            url2 = "https://uptostream.com/api/streaming/source/get?token=null&file_code=%s" % video_id[0] 
+            video_id = video_id[0]
+        else:
+            video_id = baseUrl.split("/")[-1] 
+            
+        if video_id:
+            url2 = "https://uptostream.com/api/streaming/source/get?token=null&file_code=%s" % video_id
             
             sts, data = self.cm.getPage(url2)
             
