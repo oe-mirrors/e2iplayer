@@ -279,7 +279,8 @@ class IPTVHostsGroups:
         'yesmoviesto' : [ 'english', 'moviesandseries'] ,
         'yifytv' : [ 'english', 'moviesandseries'] ,
         'youtube' : [ 'arabic', 'balkans', 'english', 'french', 'german', 'greek', 'hungarian', 'italian', 'latino', 'live', 'music', 'others', 'polish', 'russian', 'swedish'] ,
-        'zalukajcom' : [ 'moviesandseries', 'polish'] 
+        'zalukajcom' : [ 'moviesandseries', 'polish'], 
+        'zdfmediathek' : ['german']
         }        
         
         for h in HOST_AND_GROUPS:
