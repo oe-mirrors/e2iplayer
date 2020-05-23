@@ -239,9 +239,10 @@ class urlparser:
                        'freedisc.pl':           self.pp.parserFREEDISC      ,
                        'fxstream.biz':          self.pp.parserFXSTREAMBIZ   ,
                        'gametrailers.com':      self.pp.parserGAMETRAILERS  , 
-                       'gamovideo.com':         self.pp.parserGAMOVIDEOCOM   ,
+                       'gamovideo.com':         self.pp.parserGAMOVIDEOCOM  ,
+                       'gcloud.live':           self.pp.parserFEMBED        ,
                        'ginbig.com':            self.pp.parserGINBIG        ,
-                       'gogoanime.to':          self.pp.parserGOGOANIMETO    ,
+                       'gogoanime.to':          self.pp.parserGOGOANIMETO   ,
                        'goldvod.tv':            self.pp.parserGOLDVODTV     ,
                        'goodcast.co':           self.pp.parserGOODCASTCO    ,
                        'goodrtmp.com':          self.pp.parserGOODRTMP      ,
@@ -495,6 +496,8 @@ class urlparser:
                        'vidbull.com':           self.pp.parserVIDBULL       ,
                        'vidcloud.co':           self.pp.parserVIDCLOUD      ,
                        'vidcloud.icu':          self.pp.parserVIDCLOUD      ,
+                       'vidcloud.net':          self.pp.parserVIDCLOUD      ,
+                       'vidcloud9.com':         self.pp.parserVIDCLOUD9     ,
                        'videa.hu':              self.pp.parserVIDEA         ,
                        'videa.hu':              self.pp.parserVIDEAHU        ,
                        'video.meta.ua':         self.pp.parserMETAUA         ,
@@ -10620,6 +10623,44 @@ class pageParser(CaptchaHelper):
                 else:
                     videoTab.append({'name':'[%s] %s %s' % (type, domain, label), 'url':url})
         return videoTab
+    
+    def parserVIDCLOUD9(self, baseUrl):
+        printDBG("parserVIDCLOUD baseUrl[%r]" % baseUrl)
+
+        urlTabs = []
+        
+        sts, data = self.cm.getPage(baseUrl)
+        if sts: 
+            # search main link
+        
+        
+            # search for others servers in html
+            #<ul class="list-server-items">
+            tmp = self.cm.ph.getDataBeetwenMarkers(data, ('<ul', '>', 'list-server') , '</ul>')[1]
+            #example <li class="linkserver" data-status="1" data-video="https://movcloud.net/embed/bq-2HuG5v7L-?sub_en=https://subcdnfile.xyz/sub/scoob/scoob.vtt&default=sub_en">Movcloud</li>
+            servers = self.cm.ph.getAllItemsBeetwenMarkers(tmp, ('<li','>'), '</li>')
+            for s in servers:
+                mirror_url=self.cm.ph.getSearchGroups(s, '''data-video=['"]([^'^"]+?)['"]''')[0]
+                mirror_name = clean_html(s)
+                
+                if mirror_url.startswith('//'):
+                    mirror_url= "https:" + mirror_url
+                    
+                if self.cm.isValidUrl(mirror_url):
+                    if 1 == urlparser().checkHostSupport(mirror_url):
+                        printDBG("----- > Found url '%s' supported in urlparser... try to get direct link" % mirror_url)
+                        url2 = urlparser().getVideoLinkExt(mirror_url)
+                        if url2:
+                            for u in url2:
+                                u['name'] = mirror_name + " - " + u.get('name','')
+                                printDBG(str(u))
+                                urlTabs.append(u)
+                    else:
+                        printDBG("------> Found url '%s' not supported in urlparser" % mirror_url)
+            
+            return urlTabs
+        else:
+            return []
         
     def parserVIDCLOUD(self, baseUrl):
         printDBG("parserVIDCLOUD baseUrl[%r]" % baseUrl)
@@ -11934,6 +11975,7 @@ class pageParser(CaptchaHelper):
         #https://streamhoe.online/v/0w6p8blx3krz3r0
         #https://cercafilm.net/v/80w1lh8z4w8-1en
         #https://sonline.pro/v/g3drwf-mwjelpwr
+        #https://gcloud.live/v/ln5grsnn05rp1w8
         
         baseUrl = baseUrl + '?'
         m = re.search("/(v|api/source)/(?P<id>.+)\?", baseUrl)
