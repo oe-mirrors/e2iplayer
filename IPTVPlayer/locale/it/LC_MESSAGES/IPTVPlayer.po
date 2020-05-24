@@ -4887,7 +4887,7 @@ msgstr "Seleziona %s"
 
 #: ../components/iptvconfigmenu.py:331
 msgid "Select GitLab repository owner"
-msgstr "Seleziona il possessore dell'archivio GitLab"
+msgstr "Seleziona il proprietario dell'archivio GitLab"
 
 #: ../components/iptvplayerwidget.py:2153 ../iptvdm/iptvdmui.py:291
 msgid "Select action"
