@@ -10564,9 +10564,28 @@ class pageParser(CaptchaHelper):
 
         urlTabs = []
         subTracks=[]
-        
+
         sts, data = self.cm.getPage(baseUrl)
-        if sts: 
+        
+        if sts:
+            if '/videos' in baseUrl:
+                #search iframe in html
+                tmp = self.cm.ph.getDataBeetwenMarkers(data, '<iframe', '</iframe>')[1]
+                iframe_url = self.cm.ph.getSearchGroups(tmp, "src=['\"]([^\"^']+?)['\"]")[0]
+                
+                if  iframe_url:
+                    if iframe_url.startswith('//'):
+                        iframe_url= "https:" + iframe_url
+                        
+                    if 1 == urlparser().checkHostSupport(iframe_url):
+                        printDBG("----- > Found url '%s' supported in urlparser... try to get direct link" % iframe_url)
+                        return urlparser().getVideoLinkExt(iframe_url)
+                        if url2:
+                            for u in url2:
+                                u['name'] = 'Vidcloud9 - ' + u.get('name','')
+                                printDBG(str(u))
+                                urlTabs.append(u)
+                    
             # search main link
             php_file = self.cm.ph.getSearchGroups(baseUrl, "https?://.+?/(.+?)\.php.+?", ignoreCase=True)[0]
             if php_file:
@@ -10590,7 +10609,10 @@ class pageParser(CaptchaHelper):
                     decor_url = {'Referer':baseUrl}
                     
                     #look for subtitles
-                    track = response.get('track',{'tracks':[]})
+                    track = response.get('track',[])
+                    if len(track) == 0:
+                        track = {'tracks': []}
+                        
                     for t in track.get('tracks',[]):
                         sub_type = t.get('kind', '')
                         sub_url = t.get('file', '')
