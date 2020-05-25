@@ -515,12 +515,12 @@ class urlparser:
                        'videowood.tv':          self.pp.parserVIDEOWOODTV   ,
                        'vidfile.net':           self.pp.parserVIDFILENET    ,
                        'vidgg.to':              self.pp.parserVIDGGTO       ,
-                       'vidload.co':            self.pp.parserVIDLOADCO      ,
-                       'vidlox.me':             self.pp.parserVIDLOXTV       ,
-                       'vidlox.tv':             self.pp.parserVIDLOXTV       ,
-                       'vidnode.net':           self.pp.parserVIDNODENET     ,
-                       'vidoza.net':            self.pp.parserVIDOZANET      ,
-                       'vidshare.tv':           self.pp.parserVIDSHARETV     ,
+                       'vidload.co':            self.pp.parserVIDLOADCO     ,
+                       'vidlox.me':             self.pp.parserVIDLOXTV      ,
+                       'vidlox.tv':             self.pp.parserVIDLOXTV      ,
+                       'vidnode.net':           self.pp.parserVIDCLOUD      ,
+                       'vidoza.net':            self.pp.parserVIDOZANET     ,
+                       'vidshare.tv':           self.pp.parserVIDSHARETV    ,
                        'vidspot.net':           self.pp.parserVIDSPOT       ,
                        'vidsrc.me':             self.pp.parserVIDSRC        ,
                        'vidsso.com':            self.pp.parserVIDSSO        ,
@@ -9876,71 +9876,6 @@ class pageParser(CaptchaHelper):
             return videoUrl
         return False
         
-    def parserVIDNODENET(self, baseUrl):
-        printDBG("parserVIDNODENET baseUrl[%s]\n" % baseUrl)
-        
-        baseUrl = strwithmeta(baseUrl)
-        referer = baseUrl.meta.get('Referer', baseUrl)
-        
-        HTTP_HEADER = { 'User-Agent':'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/76.0.3809.132 Safari/537.36', 'Referer':referer}
-        params = {'header':HTTP_HEADER}
-        
-        sts, data = self.cm.getPage(baseUrl, params)
-        if not sts: 
-            return []
-        
-        urlTab = []
-        tmp = self.cm.ph.getAllItemsBeetwenMarkers(data, '<source ', '>', False, False)
-        items = re.compile('''\ssources\s*[=:]\s*\[([^\]]+?)\]''').findall(data)
-        items.extend(re.compile('''\.load\(([^\)]+?mp4[^\)]+?)\)''').findall(data))
-        for item in items:
-            tmp.extend(item.split('},'))
-        
-        uniqueUrls = []
-        printDBG("-------found sources-----")
-        printDBG(str(tmp))
-        n_link=0
-        for item in tmp:
-            url  = self.cm.ph.getSearchGroups(item, '''src['"]?\s*[:=]\s*?['"]([^"^']+?)['"]''')[0]
-            if url == '': 
-                url = self.cm.ph.getSearchGroups(item, '''file['"]?\s*[:=]\s*?['"]([^"^']+?)['"]''')[0]
-            if 'error' in url: 
-                continue
-            if url.startswith('//'): 
-                url = 'http:' + url
-            if not self.cm.isValidUrl(url): 
-                continue
-
-            n_link = n_link + 1
-            type = self.cm.ph.getSearchGroups(item, '''type['"]?\s*[:=]\s*?['"]([^"^']+?)['"]''')[0].lower()
-            if 'video/mp4' in item or 'mp4' in type:
-                res  = self.cm.ph.getSearchGroups(item, '''res['"]?\s*[:=]\s*?['"]([^"^']+?)['"]''')[0]
-                label = self.cm.ph.getSearchGroups(item, '''label['"]?\s*[:=]\s*?['"]([^"^']+?)['"]''')[0]
-                if label == '': 
-                    label = res
-                if url not in uniqueUrls:
-                    url = urlparser.decorateUrl(url, {'Referer':baseUrl,  'User-Agent':HTTP_HEADER['User-Agent']})
-                    urlTab.append({'name':'{0}'.format(label), 'url':url})
-                    uniqueUrls.append(url)
-            elif 'mpegurl' in item or 'mpegurl' in type or 'hls' in type:
-                if url not in uniqueUrls:
-                    url = urlparser.decorateUrl(url, {'iptv_proto':'m3u8', 'Referer':baseUrl, 'Origin':urlparser.getDomain(baseUrl, False), 'User-Agent':HTTP_HEADER['User-Agent']})
-                    tmpTab = getDirectM3U8Playlist(url, checkExt=True, checkContent=True, sortWithMaxBitrate=99999999)
-                    for t in tmpTab:
-                        t2 = t
-                        t2['name'] = 'link %s|%s' % (n_link, t['name'])
-                        urlTab.append(t2)
-                    uniqueUrls.append(url)
-        
-        if 0 == len(urlTab):
-            tmp = self.cm.ph.getDataBeetwenNodes(data, ('<div ', 'videocontent'), ('</div', '>'))[1]
-            #printDBG(tmp)
-            url = self.cm.ph.getSearchGroups(data, '''<iframe[^>]+?src=["'](https?://[^"^']+?)["']''', 1, True)[0]
-            up =  urlparser()
-            if self.cm.isValidUrl(url) and up.getDomain(url) != up.getDomain(baseUrl):
-                return up.getVideoLinkExt(url)
-        return urlTab
-        
     def parserVIDEAHU(self, baseUrl):
         printDBG("parserVIDEAHU baseUrl[%s]\n" % baseUrl)
         
@@ -10628,11 +10563,57 @@ class pageParser(CaptchaHelper):
         printDBG("parserVIDCLOUD baseUrl[%r]" % baseUrl)
 
         urlTabs = []
+        subTracks=[]
         
         sts, data = self.cm.getPage(baseUrl)
         if sts: 
             # search main link
-        
+            php_file = self.cm.ph.getSearchGroups(baseUrl, "https?://.+?/(.+?)\.php.+?", ignoreCase=True)[0]
+            if php_file:
+                ajax_url = baseUrl.replace(php_file, 'ajax')
+                ajax_params = {'header' :{
+                                'Accept-Encoding': 'gzip', 
+                               'Accept': '*/*', 
+                                'X-Requested-With': 'XMLHttpRequest', 
+                                'Referer': baseUrl
+                                }
+                                }
+                sts, ajax_data = self.cm.getPage(ajax_url, ajax_params)
+                
+                if sts:
+                    printDBG("---------- vidcloud9 ajax data -------------")
+                    printDBG(ajax_data)
+                    
+                    response = json_loads(ajax_data)
+                    sources = response.get('source',[])
+                    sources.extend(response.get('source_bk',[]))
+                    decor_url = {'Referer':baseUrl}
+                    
+                    #look for subtitles
+                    track = response.get('track',{'tracks':[]})
+                    for t in track.get('tracks',[]):
+                        sub_type = t.get('kind', '')
+                        sub_url = t.get('file', '')
+                        sub_lang = t.get('label','')
+                        if sub_type == "captions" and (sub_url.endswith('vtt') or sub_url.endswith('srt')):
+                            params = {'title': sub_lang, 'url': sub_url, 'lang':sub_lang.lower()[:3], 'format':'srt'}
+                            printDBG(str(params))
+                            subTracks.append(params)
+
+                    decor_url.update({'external_sub_tracks':subTracks})
+                    
+                    #look for links
+                    for s in sources:
+                        url = s.get('file', '')
+                        url = urlparser().decorateUrl(url, decor_url)
+                        label = s.get('label', '')
+                        url_type = s.get('type','')
+                        if url_type == 'hls':
+                            urlTabs.extend(getDirectM3U8Playlist(url, checkContent=True, sortWithMaxBitrate=999999999))
+                        else :
+                            params = {'name': 'movcloud9 - ' + label, 'url': url}
+                            printDBG(str(params))
+                            urlTabs.append(params)
         
             # search for others servers in html
             #<ul class="list-server-items">
