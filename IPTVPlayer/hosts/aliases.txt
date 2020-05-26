@@ -194,7 +194,6 @@
 "hostuktvplay": "https://uktvplay.uktv.co.uk/",
 "hosturllist": "Urllists player",
 "hostustreamtv": "http://ustream.tv/",
-"hostvevo": "https://vevo.com/",
 "hostvidcorncom": "https://vidcorn.tv/",
 "hostvideopenny": "https://videopenny.net/",
 "hostvimeo": "https://vimeo.com/",
