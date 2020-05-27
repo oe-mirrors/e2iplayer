@@ -603,7 +603,9 @@ class YoutubeIE(object):
             _supported_formats = self._supported_formats
 
             for url_data_str in encoded_url_map.split(','):
-                if 'index=' in url_data_str and 'index=0-0&' in url_data_str: continue
+                if 'index=' in url_data_str and 'index=0-0&' in url_data_str: 
+                    continue
+                
                 if 'itag=' in url_data_str and 'url=' in url_data_str:
                     url_data_str = url_data_str.split('&')
                     url_data = {}
@@ -662,12 +664,17 @@ class YoutubeIE(object):
                     url_data_str += json_loads(_unquote(video_info['player_response'], None))['streamingData']['adaptiveFormats']
                 except Exception:
                     printExc()
+                
                 for url_data in url_data_str:
-                    try:
+                    
+                    printDBG(str(url_data))
+                    
+                    if 'url' in url_data:
                         url_item = {'url': url_data['url']}
-                    except Exception:
-                        printExc()
-                        cipher = url_data['cipher']
+                    else:
+                        cipher = url_data.get('cipher','') + url_data.get('signatureCipher','')
+                        printDBG(cipher)
+                        
                         cipher = cipher.split('&')
                         for item in cipher:
                             #sig_item = ''
@@ -688,6 +695,7 @@ class YoutubeIE(object):
                                 url_item['url'] += '&signature={0}'
                         if not 'ratebypass' in url_item['url']:
                             url_item['url'] += '&ratebypass=yes'
+                        
                     url_map[str(url_data['itag'])] = url_item
                 video_url_list = self._get_video_url_list(url_map)
             except Exception:
