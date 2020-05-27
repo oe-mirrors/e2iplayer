@@ -3426,7 +3426,35 @@ class pageParser(CaptchaHelper):
         
     def parserCLIPWATCHINGCOM(self, baseUrl):
         printDBG("parserCLIPWATCHINGCOM baseUrl[%r]" % baseUrl)
-        return self._parserUNIVERSAL_A(baseUrl, 'http://clipwatching.com/embed-{0}.html', self._findLinks)
+        urlTabs= []
+        
+        sts, data = self.cm.getPage(baseUrl)
+        
+        if sts:
+            printDBG("----------------------")
+            printDBG(data)
+            printDBG("----------------------")
+            
+            tmp = self.cm.ph.getAllItemsBeetwenMarkers(data, 'window.hola_player({', '}, ', False)
+            printDBG(str(tmp))
+            
+            for t in tmp:
+                if 'sources' in t:
+                    links= re.findall("src\s?:\s?['\"]([^\"^']+?)['\"]",t,re.S)
+                    
+                    for link_url in links:
+                        if  self.cm.isValidUrl(link_url):
+                            link_url = urlparser.decorateUrl(link_url, {'Referer': baseUrl})
+                            if 'm3u8' in link_url:
+                                params = getDirectM3U8Playlist(link_url, checkExt=True, variantCheck=True, checkContent=True, sortWithMaxBitrate=99999999)
+                                printDBG(str(params))    
+                                urlTabs.extend(params)
+                            else:
+                                params = {'name': 'link' , 'url': link_url}
+                                printDBG(str(params))
+                                urlTabs.append(params)
+                    
+        return urlTabs
         
     def parserVIDABCCOM(self, baseUrl):
         printDBG("parserVIDABCCOM baseUrl[%r]" % baseUrl)
