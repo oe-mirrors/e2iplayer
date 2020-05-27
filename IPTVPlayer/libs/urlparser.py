@@ -10752,6 +10752,9 @@ class pageParser(CaptchaHelper):
         
     def parserMYSTREAMTO(self, baseUrl):
         printDBG("parserMYSTREAMTO baseUrl[%r]" % baseUrl)
+        
+        # https://mystream.to/watch/b1rhj6vg62lh
+        
         baseUrl = strwithmeta(baseUrl)
         cUrl = baseUrl
         HTTP_HEADER= self.cm.getDefaultHeader(browser='chrome')
@@ -10762,8 +10765,13 @@ class pageParser(CaptchaHelper):
         sts, data = self.cm.getPage(baseUrl, urlParams)
         if not sts: 
             return False
+        
+        #printDBG("-------------------")
+        #printDBG(data)
+        #printDBG("-------------------")
+        
+        
         cUrl = self.cm.meta['url']
-
         domain = self.cm.getBaseUrl(cUrl, True)
 
         videoTab = []
@@ -10801,7 +10809,7 @@ class pageParser(CaptchaHelper):
                 sts, view_data = self.cm.getPage(view_url, urlParams)
                 if sts:
                     printDBG(view_data)
-            
+        
             # search for javascript to decode with link to video
             data = ph.findall(data, ('<script', '>'), '</script>', flags=0)
             for item in data:
@@ -10822,6 +10830,15 @@ class pageParser(CaptchaHelper):
                     
                     break
                     
+        if not videoTab and '/watch/' in baseUrl:
+            # try alternative url in format embed.mystream.to/video_id
+            m = re.search("watch/(?P<id>.*?)$", baseUrl)
+            if m:
+                video_id = m.groupdict().get('id','')
+                new_url = "https://embed.mystream.to/%s" % video_id
+                
+                return urlparser().getVideoLinkExt(new_url)
+                
         return videoTab
     
     def parserVIDLOADCO(self, baseUrl):
