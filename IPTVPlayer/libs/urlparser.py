@@ -370,6 +370,7 @@ class urlparser:
                        'posiedze.pl':           self.pp.parserPOSIEDZEPL    ,
                        'powvideo.cc':           self.pp.parserPOWVIDEONET    ,
                        'powvideo.net':          self.pp.parserPOWVIDEONET    ,
+                       'powv1deo.cc':           self.pp.parserPOWVIDEONET  ,
                        'primevideos.net':       self.pp.parserPRIMEVIDEOS,  
                        'privatestream.tv':      self.pp.parserPRIVATESTREAM ,
                        'promptfile.com':        self.pp.parserPROMPTFILE    ,
@@ -3231,12 +3232,97 @@ class pageParser(CaptchaHelper):
     def parserPOWVIDEONET(self, videoUrl):
         printDBG("parserPOWVIDEONET baseUrl[%r]" % videoUrl)
         HEADER = {'User-Agent':'Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/59.0.3071.115 Safari/537.36', 'Accept':'*/*', 'Accept-Encoding':'gzip, deflate'}
+        
+        
+        video_id = videoUrl.split('/')[-1]
+        linksTab = []
+        
         sts, data = self.cm.getPage(videoUrl, {'header': HEADER})
-        if not sts: return False
+        if not sts: 
+            return False
         
         baseUrl = urlparser.getDomain(self.cm.meta['url'], False)
+        
+        if 'sitekey' in data:
+            # need to solve a reCaptcha
+            #sitekey: '6LfsXx4TAAAAAG7fRIpL2LpS_NLxj1HBlotEDhT7'
+            key = re.findall("sitekey:\s'([^']+?)'", data)
+            if key:
+                key = key[0]
+                printDBG("sitekey = %s" % key)
+                (token, errorMsgTab) = CaptchaHelper().processCaptcha(key, baseUrl)
+                
+                if token:
+                    printDBG(token)
+                    
+                    #<form method="POST" action='' id="d0Form">
+                    form_html = self.cm.ph.getDataBeetwenMarkers(data, ('<form','>','POST'), '</form>')[1]
+                    inputs = self.cm.ph.getAllItemsBeetwenMarkers(form_html, '<input','>', False, caseSensitive=False)
+                    post_data = {}
+                    
+                    for item in inputs:
+                        name  = self.cm.ph.getSearchGroups(item, '''name=['"]([^'^"]+?)['"]''', ignoreCase=True)[0]
+                        value = self.cm.ph.getSearchGroups(item, '''value=['"]([^'^"]+?)['"]''', ignoreCase=True)[0]
+                        if name:
+                            post_data[name] = value
+                        
+                    post_data['g-recaptcha-response'] = token
+                    post_data['token'] = token
+                    
+                    printDBG(json_dumps(post_data))
+                    
+                    sts, data = self.cm.getPage(videoUrl, {'header': HEADER}, post_data)
+ 
+                    if not sts:
+                        return[]
+                    
+                    #printDBG("-------------- after recaptcha ---------------")
+                    #printDBG(data)
+                    #printDBG("----------------------------------------------")
+                        
+        
+        scripts = re.findall("<script type=[\"']text/javascript[\"']>(eval.*?)</script>", data, re.S)
+        
+        if scripts:
+            for script in scripts:
+                printDBG("----------- pack -----------------")
+                printDBG(script)
+                
+                script = script + "\n"
+                # mods
+                script = script.replace("eval(function(p,a,c,k,e,d","pippo = function(p,a,c,k,e,d")
+                script = script.replace("return p}(", "print(p)}\n\npippo(")
+                script = script.replace("))\n",");\n")
+
+                # duktape
+                ret = js_execute( script )
+                decoded = ret['data']
+                printDBG('------------------------------')
+                printDBG(decoded)
+                printDBG('------------------------------')
+
+                sources = re.findall("src:\s?[\"']([^\"^']+.m3u8)[\"']", decoded)  
+                sources.extend(re.findall("src:\s?[\"']([^\"^']+.mp4)[\"']", decoded))
+                
+                for link_url in sources:
+                    if  self.cm.isValidUrl(link_url):
+                        link_url = urlparser.decorateUrl(link_url, {'Referer': videoUrl})
+                        if 'm3u8' in link_url:
+                            params = getDirectM3U8Playlist(link_url, checkExt=True, variantCheck=True, checkContent=True, sortWithMaxBitrate=99999999)
+                            printDBG(str(params))    
+                            linksTab.extend(params)
+                        else:
+                            params = {'name': 'link' , 'url': link_url}
+                            printDBG(str(params))
+                            linksTab.append(params)
+                
+        if linksTab:
+            return linksTab
+        
         vidId = self.cm.ph.getSearchGroups(videoUrl, '''[^-]*?\-([^-^.]+?)[-.]''')[0]
-        if not vidId: vidId = videoUrl.rsplit('/')[-1].split('.', 1)[0]
+        if not vidId: 
+            vidId = videoUrl.rsplit('/')[-1].split('.', 1)[0]
+        
         printDBG('parserPOWVIDEONET VID ID: %s' % vidId)
         referer = baseUrl + ('preview-%s-1920x882.html' % vidId)
         videoUrl = baseUrl + ('iframe-%s-1920x882.html' % vidId)
@@ -3263,7 +3349,6 @@ class pageParser(CaptchaHelper):
         if not sts: return False
         
         hlsTab = []
-        linksTab = []
         jscode.insert(0, 'location={};jQuery.cookie = function(){};function ga(){};document.getElementsByTagName = function(){return [document]}; document.createElement = function(){return document};document.parentNode = {insertBefore: function(){return document}};')
         jscode.insert(0, data[data.find('var S='):])
         jscode.insert(0, base64.b64decode('''aXB0dl9zb3VyY2VzPVtdO3ZhciBkb2N1bWVudD17fTt3aW5kb3c9dGhpcyx3aW5kb3cuYXRvYj1mdW5jdGlvbih0KXt0Lmxlbmd0aCU0PT09MyYmKHQrPSI9IiksdC5sZW5ndGglND09PTImJih0Kz0iPT0iKSx0PUR1a3RhcGUuZGVjKCJiYXNlNjQiLHQpLGRlY1RleHQ9IiI7Zm9yKHZhciBlPTA7ZTx0LmJ5dGVMZW5ndGg7ZSsrKWRlY1RleHQrPVN0cmluZy5mcm9tQ2hhckNvZGUodFtlXSk7cmV0dXJuIGRlY1RleHR9LGpRdWVyeT17fSxqUXVlcnkubWFwPUFycmF5LnByb3RvdHlwZS5tYXAsalF1ZXJ5Lm1hcD1mdW5jdGlvbigpe3JldHVybiBhcmd1bWVudHNbMF0ubWFwKGFyZ3VtZW50c1sxXSksaXB0dl9zb3VyY2VzLnB1c2goYXJndW1lbnRzWzBdKSxhcmd1bWVudHNbMF19LCQ9alF1ZXJ5LGlwdHZvYmo9e30saXB0dm9iai5zZXR1cD1mdW5jdGlvbigpe3JldHVybiBpcHR2b2JqfSxpcHR2b2JqLm9uPWZ1bmN0aW9uKCl7cmV0dXJuIGlwdHZvYmp9LGp3cGxheWVyPWZ1bmN0aW9uKCl7cmV0dXJuIGlwdHZvYmp9Ow=='''))
