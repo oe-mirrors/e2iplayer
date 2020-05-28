@@ -3232,12 +3232,12 @@ class pageParser(CaptchaHelper):
     def parserPOWVIDEONET(self, videoUrl):
         printDBG("parserPOWVIDEONET baseUrl[%r]" % videoUrl)
         HEADER = {'User-Agent':'Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/59.0.3071.115 Safari/537.36', 'Accept':'*/*', 'Accept-Encoding':'gzip, deflate'}
-        
+        httpParams = {'header': HEADER, 'use_cookie':True, 'load_cookie': True, 'save_cookie':True, 'cookiefile': GetCookieDir('powvideo.cookie')}
         
         video_id = videoUrl.split('/')[-1]
         linksTab = []
         
-        sts, data = self.cm.getPage(videoUrl, {'header': HEADER})
+        sts, data = self.cm.getPage(videoUrl, httpParams)
         if not sts: 
             return False
         
@@ -3271,7 +3271,7 @@ class pageParser(CaptchaHelper):
                     
                     printDBG(json_dumps(post_data))
                     
-                    sts, data = self.cm.getPage(videoUrl, {'header': HEADER}, post_data)
+                    sts, data = self.cm.getPage(videoUrl, httpParams, post_data)
  
                     if not sts:
                         return[]
@@ -3306,6 +3306,18 @@ class pageParser(CaptchaHelper):
                 
                 for link_url in sources:
                     if  self.cm.isValidUrl(link_url):
+                        if 'pvdcdn' in link_url:
+                            # modify url
+                            link_parts = link_url.split("/")
+                            code = link_parts[3]
+                            code2 = ""
+                            for x in code:
+                                code2 = x + code2
+                            
+                            # order 018965724 
+                            link_parts[3] = code2[0] + code2[1] + code2[8] + code2[9] + code2[6] + code2[5] + code2[7] + code2[2] + code2[4] + code2[10:]             
+                            link_url = '/'.join(link_parts)
+                        
                         link_url = urlparser.decorateUrl(link_url, {'Referer': videoUrl})
                         if 'm3u8' in link_url:
                             params = getDirectM3U8Playlist(link_url, checkExt=True, variantCheck=True, checkContent=True, sortWithMaxBitrate=99999999)
