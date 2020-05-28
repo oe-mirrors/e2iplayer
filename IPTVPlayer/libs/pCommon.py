@@ -1124,7 +1124,16 @@ class common:
                         pattern2= re.compile("\},4000\);.*?\)\(\)",re .S)
                         dat = re.sub(pattern2,'}', dat)
                         
+                        
+                        #new version
+                        #t = document.createElement('div');
+                        #t.innerHTML="<a href='/'>x</a>";
+                        #t = t.firstChild.href;r = (setInterval(function(){}, 100),t.match(/https?:\/\//)[0]);
+                        dat = dat.replace("r = (setInterval(function(){}, 100),t.match(/https?:\/\//)[0]);","r = t.match(/https?:\/\//)[0];")
+                        #old version
                         dat = dat.replace("t = document.createElement('div');\n        t.innerHTML=\"<a href='/'>x</a>\";\n        t = t.firstChild.href;",'t="%domain%";').replace('%domain%',domain)
+                        
+                        
                         
                         pattern3 = re.compile("var a = document.*?appendChild\(.*?\);",re.S)
                         dat = re.sub(pattern3, "", dat)
