@@ -16,20 +16,20 @@ except Exception: import simplejson as json
 ###################################################
 
 def gettytul():
-    return 'https://cb01.work/'
+    return 'https://cb01.email/'
 
 class Cb01(CBaseHostClass):
 
     def __init__(self):
-        CBaseHostClass.__init__(self, {'history':'cb01.work', 'cookie':'cb01.work.cookie'})
+        CBaseHostClass.__init__(self, {'history':'cb01.email', 'cookie':'cb01.email.cookie'})
         
         self.USER_AGENT = 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/73.0.3683.103 Safari/537.36'
         self.HEADER = {'User-Agent': self.USER_AGENT, 'Accept': 'text/html'}
         self.AJAX_HEADER = dict(self.HEADER)
         self.AJAX_HEADER.update( {'X-Requested-With':'XMLHttpRequest', 'Content-Type':'application/x-www-form-urlencoded; charset=UTF-8'} )
         
-        self.MAIN_URL = 'https://cb01.work/'
-        self.DEFAULT_ICON_URL = 'https://cb01.work/wp-content/uploads/2019/03/logocb2-1.jpg'
+        self.MAIN_URL = 'https://cb01.email/'
+        self.DEFAULT_ICON_URL = 'https://cb01.email/wp-content/uploads/2019/03/logocb2-1.jpg'
         
         self.defaultParams = {'header':self.HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
     
@@ -220,25 +220,39 @@ class Cb01(CBaseHostClass):
         #video links
         urlTab = []
         
-        links = re.findall("href=['\"]?([^ '\"]+?)['\"]? target=\"?_blank\"? rel=\"[^\"]+\">(.*?)</a>", data)
+        #links = re.findall("href=['\"]?([^ '\"]+?)['\"]? target=\"?_blank\"? rel=\"[^\"]+\">(.*?)</a>", data)
         #example: <a href="http://swzz.xyz/link/479Pq/" target="_blank" rel="noopener noreferrer">Akvideo</a>
+        links = re.findall("href=['\"]?([^ '\"]+?)['\"]? target=\"?_blank\"? rel=\"[^\"]+\">(.*?)</a>|<strong>(.*?)</strong>", data)
+        categ = ''
         
         for l in links:
-            url = l[0]
-            if url.startswith('"'):
-                url = url[1:]
-            if url.endswith('"'):
-                url = url[:-1]
-            if self.cm.isValidUrl(url) and not (('feeds' in url) or ('cb01' in url) or ('feedburner' in url) ):
-                url = strwithmeta(url, {'Referer':cItem['url']})
-                if l[1]:
-                    urlTab.append({'name': l[1], 'url':url, 'need_resolve':1})
-                else:
-                    urlTab.append({'name': self.cm.getBaseUrl(url, True), 'url':url, 'need_resolve':1})
+            if not l[0]:
+                if 'streaming hd' in l[2].lower():
+                    categ = 'HD'
+                elif 'streaming' in l[2].lower():
+                    categ = 'SD'
+                elif 'download hd' in l[2].lower():
+                    categ = 'download HD'
+                elif 'download' in l[2].lower():
+                    categ = 'download SD'
+                    
+            else:
+                url = l[0]
+                if url.startswith('"'):
+                    url = url[1:]
+                if url.endswith('"'):
+                    url = url[:-1]
+                if self.cm.isValidUrl(url) and not (('feeds' in url) or ('cb01' in url) or ('feedburner' in url) ):
+                    url = strwithmeta(url, {'Referer':cItem['url']})
+                    if l[1]:
+                        urlTab.append({'name': "%s [%s]" % (l[1], categ), 'url':url, 'need_resolve':1})
+                    else:
+                        urlTab.append({'name': "%s [%s]" % (self.cm.getBaseUrl(url, True), categ), 'url':url, 'need_resolve':1})
                     
         if len(urlTab):
             params = dict(cItem)
             params.update({'good_for_fav':False, 'urls_tab':urlTab})
+            printDBG(str(params))
             self.addVideo(params)
 
     def listSearchResult(self, cItem, searchPattern, searchType):
