@@ -315,11 +315,13 @@ class urlparser:
                        'movshare.net':          self.pp.parserWHOLECLOUD     ,
                        'mp4upload.com':         self.pp.parserMP4UPLOAD      ,
                        'mstream.icu':           self.pp.parserMSTREAMICU    ,
+                       'mstream.xyz':           self.pp.parserMSTREAMICU    ,
                        'my.mail.ru':            self.pp.parserVIDEOMAIL     ,
                        'mycloud.to':            self.pp.parserMYCLOUDTO      ,
                        'mystream.la':           self.pp.parserMYSTREAMLA    ,
                        'mystream.to':           self.pp.parserMYSTREAMTO     ,
                        'mystream.premiumserver.club': self.pp.parserMSTREAMICU,
+                       'mystream.streamango.to': self.pp.parserMSTREAMICU   ,
                        'myvi.ru':               self.pp.parserMYVIRU        ,
                        'myvi.tv':               self.pp.parserMYVIRU        ,
                        'myvideo.de':            self.pp.parserMYVIDEODE     ,
@@ -4696,20 +4698,21 @@ class pageParser(CaptchaHelper):
             
         urlTab = []
         
-        baseUrl = strwithmeta(baseUrl)
-        referer = baseUrl.meta.get('Referer', baseUrl)
+
+        USER_AGENT = 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/73.0.3683.103 Safari/537.36'
+        COOKIE_FILE = GetCookieDir('akvideo.stream.cookie')
+        HttpHeader = {
+            'User-Agent': USER_AGENT, 
+            'Accept': 'text/html', 
+            'Accept-Encoding': 'gzip', 
+            'Referer': baseUrl
+        }
         
-        HTTP_HEADER = self.cm.getDefaultHeader(browser='chrome')
-        if referer != '': 
-            HTTP_HEADER['Referer'] = referer
-        paramsUrl = {'header':HTTP_HEADER, 'with_metadata':True}
+        HttpParams = {'header': HttpHeader , 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': COOKIE_FILE}
+        HttpParams['cloudflare_params'] = {'domain':'akvideo.stream', 'cookie_file': COOKIE_FILE, 'User-Agent': USER_AGENT}
         
-        COOKIE_FILE = self.COOKIE_PATH + "akvideo.stream.cookie"
-        if GetFileSize(COOKIE_FILE) > 16 * 1024: rm(COOKIE_FILE)
-        paramsUrl.update({'use_cookie': True, 'save_cookie': True, 'load_cookie': True, 'cookiefile': COOKIE_FILE})
-        
-        sts, data = self.getPage(baseUrl, paramsUrl)
-        
+        sts, data = self.cm.getPageCFProtection(baseUrl, HttpParams)
+
         if not sts: 
             return False
         
