@@ -507,9 +507,10 @@ class urlparser:
                        'video.tt':              self.pp.parserVIDEOTT       ,
                        'video.yandex.ru':       self.pp.parserYANDEX        ,
                        'videoapi.my.mail.ru':   self.pp.parserVIDEOMAIL     ,
-                       'videohouse.me':         self.pp.parserVIDEOHOUSE     ,
+                       'videobin.co':           self.pp.parserVIDEOBIN      ,
+                       'videohouse.me':         self.pp.parserVIDEOHOUSE    ,
                        'videomega.tv':          self.pp.parserVIDEOMEGA     ,
-                       'videomore.ru':          self.pp.parserVIDEOMORERU    ,
+                       'videomore.ru':          self.pp.parserVIDEOMORERU   ,
                        'videoslasher.com':      self.pp.parserVIDEOSLASHER  ,
                        'videoweed.com':         self.pp.parserVIDEOWEED     ,
                        'videoweed.es':          self.pp.parserVIDEOWEED     ,
@@ -13040,3 +13041,34 @@ class pageParser(CaptchaHelper):
                                     urlTabs.append(params)
                                 
         return urlTabs
+
+    def parserVIDEOBIN(self, baseUrl):
+        printDBG("parserVIDEOBIN baseUrl [%s]" % baseUrl)
+        # example: https://videobin.co/embed-n7uoq6qlj2du.html
+        #          https://videobin.co/n7uoq6qlj2du
+
+        urlTabs = []
+        
+        sts, data = self.cm.getPage(baseUrl)
+        
+        if sts:
+            s = re.findall("sources: ?\[(.*?)\]", data, re.S)
+            if s:
+                for ss in s:
+                    printDBG("Found sources: %s" % ss)
+                    links = re.findall("[\"']([^\"']+?)[\"']",ss)
+                    for link_url in links:
+                        if  self.cm.isValidUrl(link_url):
+                            link_url = urlparser.decorateUrl(link_url, {'Referer': baseUrl})
+                            if 'm3u8' in link_url:
+                                params = getDirectM3U8Playlist(link_url, checkExt=True, variantCheck=True, checkContent=True, sortWithMaxBitrate=99999999)
+                                printDBG(str(params))    
+                                urlTabs.extend(params)
+                            else:
+                                params = {'name': 'link' , 'url': link_url}
+                                printDBG(str(params))
+                                urlTabs.append(params)
+
+                
+        return urlTabs
+
