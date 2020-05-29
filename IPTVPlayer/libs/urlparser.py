@@ -429,10 +429,11 @@ class urlparser:
                        'streamix.cloud':        self.pp.parserSTREAMIXCLOUD  ,
                        'streamlive.to':         self.pp.parserSTREAMLIVETO   ,
                        'streamo.tv':            self.pp.parserIITV          ,
-                       'streamhoe.online':      self.pp.parserFEMBED     ,
+                       'streamhoe.online':      self.pp.parserFEMBED        ,
+                       'streamp1ay.cc':         self.pp.parserSTREAMPLAYCC  ,
                        'streamplay.cc':         self.pp.parserSTREAMPLAYCC  ,
-                       'streamplay.me':         self.pp.parserSTREAMPLAYTO   ,
-                       'streamplay.to':         self.pp.parserSTREAMPLAYTO   ,
+                       'streamplay.me':         self.pp.parserSTREAMPLAYTO  ,
+                       'streamplay.to':         self.pp.parserSTREAMPLAYTO  ,
                        'streamtape.com':        self.pp.parserSTREAMTAPE    ,
                        'superfilm.pl':          self.pp.parserSUPERFILMPL   ,
                        'supervideo.tv':         self.pp.parserSUPERVIDEO    ,
@@ -3312,13 +3313,13 @@ class pageParser(CaptchaHelper):
                         if 'pvdcdn' in link_url:
                             # modify url
                             link_parts = link_url.split("/")
-                            code = link_parts[3]
+                            code = link_parts[-2]
                             code2 = ""
                             for x in code:
                                 code2 = x + code2
                             
                             # order 018965724 
-                            link_parts[3] = code2[0] + code2[1] + code2[8] + code2[9] + code2[6] + code2[5] + code2[7] + code2[2] + code2[4] + code2[10:]             
+                            link_parts[-2] = code2[0] + code2[1] + code2[8] + code2[9] + code2[6] + code2[5] + code2[7] + code2[2] + code2[4] + code2[10:]             
                             link_url = '/'.join(link_parts)
                         
                         link_url = urlparser.decorateUrl(link_url, {'Referer': videoUrl})
@@ -7931,20 +7932,127 @@ class pageParser(CaptchaHelper):
             return videoUrl
         return False
         
-    def parserSTREAMPLAYCC(self, baseUrl):
-        printDBG("parserSTREAMPLAYCC baseUrl[%s]" % baseUrl)
-        HTTP_HEADER= { 'User-Agent':"Mozilla/5.0", 'Referer':baseUrl }
+    def parserSTREAMPLAYCC(self, videoUrl):
+        printDBG("parserSTREAMPLAYCC baseUrl[%s]" % videoUrl)
+
+        HEADER = {'User-Agent':'Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/59.0.3071.115 Safari/537.36', 'Accept':'*/*', 'Accept-Encoding':'gzip, deflate'}
+        httpParams = {'header': HEADER, 'use_cookie':True, 'load_cookie': True, 'save_cookie':True, 'cookiefile': GetCookieDir('streamplay.cookie')}
+        
+        video_id = videoUrl.split('/')[-1]
+        linksTab = []
+        
+        sts, data = self.cm.getPage(videoUrl, httpParams)
+        if not sts: 
+            return False
+        
+        baseUrl = urlparser.getDomain(self.cm.meta['url'], False)
+        
+        if 'sitekey' in data:
+            # need to solve a reCaptcha
+            #sitekey: '6LfsXx4TAAAAAG7fRIpL2LpS_NLxj1HBlotEDhT7'
+            key = re.findall("sitekey:\s'([^']+?)'", data)
+            if key:
+                key = key[0]
+                printDBG("sitekey = %s" % key)
+                (token, errorMsgTab) = CaptchaHelper().processCaptcha(key, baseUrl)
+                
+                if token:
+                    printDBG(token)
+                    
+                    #<form method="POST" action='' id="d0Form">
+                    form_html = self.cm.ph.getDataBeetwenMarkers(data, ('<form','>','POST'), '</form>')[1]
+                    inputs = self.cm.ph.getAllItemsBeetwenMarkers(form_html, '<input','>', False, caseSensitive=False)
+                    post_data = {}
+                    
+                    for item in inputs:
+                        name  = self.cm.ph.getSearchGroups(item, '''name=['"]([^'^"]+?)['"]''', ignoreCase=True)[0]
+                        value = self.cm.ph.getSearchGroups(item, '''value=['"]([^'^"]+?)['"]''', ignoreCase=True)[0]
+                        if name:
+                            post_data[name] = value
+                        
+                    post_data['g-recaptcha-response'] = token
+                    post_data['token'] = token
+                    
+                    printDBG(json_dumps(post_data))
+                    
+                    sts, data = self.cm.getPage(videoUrl, httpParams, post_data)
+ 
+                    if not sts:
+                        return[]
+                    
+                    #printDBG("-------------- after recaptcha ---------------")
+                    #printDBG(data)
+                    #printDBG("----------------------------------------------")
+                        
+        
+        scripts = re.findall("<script type=[\"']text/javascript[\"']>(eval.*?)</script>", data, re.S)
+        
+        if scripts:
+            for script in scripts:
+                printDBG("----------- pack -----------------")
+                printDBG(script)
+                
+                script = script + "\n"
+                # mods
+                script = script.replace("eval(function(p,a,c,k,e,d","pippo = function(p,a,c,k,e,d")
+                script = script.replace("return p}(", "print(p)}\n\npippo(")
+                script = script.replace("))\n",");\n")
+
+                # duktape
+                ret = js_execute( script )
+                decoded = ret['data']
+                printDBG('------------------------------')
+                printDBG(decoded)
+                printDBG('------------------------------')
+
+                sources = re.findall("src:\s?[\"']([^\"^']+.m3u8)[\"']", decoded)  
+                sources.extend(re.findall("file:\s?[\"']([^\"^']+.m3u8)[\"']", decoded))  
+                sources.extend(re.findall("src:\s?[\"']([^\"^']+.mp4)[\"']", decoded))
+                sources.extend(re.findall("file:\s?[\"']([^\"^']+.mp4)[\"']", decoded))
+                
+                for link_url in sources:
+                    if  self.cm.isValidUrl(link_url):
+                        if 'spcdn' in link_url:
+                            # modify url
+                            link_parts = link_url.split("/")
+                            code = link_parts[-2]
+                            code2 = ""
+                            for x in code:
+                                code2 = x + code2
+                            
+                            # order 013x785694 
+                            link_parts[-2] = code2[0] + code2[1] + code2[3] + code2[10] + code2[7] + code2[8] + code2[5] + code2[6] + code2[9] + code2[4] + code2[11:]             
+                            link_url = '/'.join(link_parts)
+                        
+                        link_url = urlparser.decorateUrl(link_url, {'Referer': videoUrl})
+                        if 'm3u8' in link_url:
+                            params = getDirectM3U8Playlist(link_url, checkExt=True, variantCheck=True, checkContent=True, sortWithMaxBitrate=99999999)
+                            printDBG(str(params))    
+                            linksTab.extend(params)
+                        else:
+                            params = {'name': 'link' , 'url': link_url}
+                            printDBG(str(params))
+                            linksTab.append(params)
+                
+        if linksTab:
+            return linksTab
+
         if '/embed/' not in baseUrl:
-            video_id = self.cm.ph.getSearchGroups(baseUrl+'/', '/([A-Za-z0-9]{16})/')[0]
+            video_id = self.cm.ph.getSearchGroups(videoUrl+'/', '/([A-Za-z0-9]{16})/')[0]
             url = 'http://www.streamplay.cc/embed/{0}'.format(video_id)
         else:
             url = baseUrl
         post_data = None
-        sts, data = self.cm.getPage(url, {'header':HTTP_HEADER}, post_data)
-        if not sts: return False
+
+        sts, data = self.cm.getPage(url, httpParams, post_data)
+        if not sts: 
+            return False
+        
         data = CParsingHelper.getDataBeetwenMarkers(data, 'id="playerStream"', '</a>', False)[1]
         videoUrl = self.cm.ph.getSearchGroups(data, 'href="(http[^"]+?)"')[0]
-        if '' != videoUrl: return videoUrl
+        if '' != videoUrl: 
+            return videoUrl
+        
         return False
         
     def parserYOURVIDEOHOST(self, baseUrl):
