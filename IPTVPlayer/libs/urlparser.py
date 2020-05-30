@@ -37,6 +37,8 @@ from Plugins.Extensions.IPTVPlayer.components.asynccall import iptv_execute, Mai
 from Plugins.Extensions.IPTVPlayer.tools.e2ijs import js_execute, js_execute_ext
 from Plugins.Extensions.IPTVPlayer.libs.e2ijson import loads as json_loads, dumps as json_dumps
 from Plugins.Extensions.IPTVPlayer.libs.aadecode import decode as aadecode 
+from Plugins.Extensions.IPTVPlayer.libs.powvideo import swapUrl as powvideo_swapUrl
+
 
 from Screens.MessageBox import MessageBox
 ###################################################
@@ -3312,16 +3314,8 @@ class pageParser(CaptchaHelper):
                     if  self.cm.isValidUrl(link_url):
                         if 'pvdcdn' in link_url:
                             # modify url
-                            link_parts = link_url.split("/")
-                            code = link_parts[-2]
-                            code2 = ""
-                            for x in code:
-                                code2 = x + code2
+                            link_url = powvideo_swapUrl(data, link_url)
                             
-                            # order 018965724 
-                            link_parts[-2] = code2[0] + code2[1] + code2[8] + code2[9] + code2[6] + code2[5] + code2[7] + code2[2] + code2[4] + code2[10:]             
-                            link_url = '/'.join(link_parts)
-                        
                         link_url = urlparser.decorateUrl(link_url, {'Referer': videoUrl})
                         if 'm3u8' in link_url:
                             params = getDirectM3U8Playlist(link_url, checkExt=True, variantCheck=True, checkContent=True, sortWithMaxBitrate=99999999)
@@ -8014,15 +8008,7 @@ class pageParser(CaptchaHelper):
                     if  self.cm.isValidUrl(link_url):
                         if 'spcdn' in link_url:
                             # modify url
-                            link_parts = link_url.split("/")
-                            code = link_parts[-2]
-                            code2 = ""
-                            for x in code:
-                                code2 = x + code2
-                            
-                            # order 013x785694 
-                            link_parts[-2] = code2[0] + code2[1] + code2[3] + code2[10] + code2[7] + code2[8] + code2[5] + code2[6] + code2[9] + code2[4] + code2[11:]             
-                            link_url = '/'.join(link_parts)
+                            link_url = powvideo_swapUrl(data, link_url)
                         
                         link_url = urlparser.decorateUrl(link_url, {'Referer': videoUrl})
                         if 'm3u8' in link_url:
