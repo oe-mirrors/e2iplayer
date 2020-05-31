@@ -83,6 +83,7 @@ class IPTVHostsGroups:
         'bbcsport' : [ 'english', 'sport'] ,
         'bsto' : [ 'german', 'moviesandseries'] ,
         'cartoonhd' : [ 'english', 'moviesandseries'] ,
+        'casacinema': [ 'italian', 'moviesandseries'] ,
         'cb01' : [ 'italian', 'moviesandseries'] ,
         'cb01uno' : [ 'italian', 'moviesandseries'] ,
         'cdapl' : [ 'moviesandseries', 'others', 'polish'] ,

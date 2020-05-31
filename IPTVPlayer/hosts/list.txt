@@ -20,6 +20,7 @@ hostbbciplayer
 hostbbcsport
 hostbsto
 hostcartoonhd
+hostcasacinema
 hostcb01
 hostcb01uno
 hostcdapl
@@ -46,6 +47,7 @@ hostdrdk
 hostdsda
 hostefilmytv
 hostegybest
+hostekinomaniac
 hostekinotv
 hostekstraklasatv
 hosteskago
