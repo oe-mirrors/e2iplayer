@@ -10,37 +10,41 @@ from Plugins.Extensions.IPTVPlayer.libs.e2ijson import loads as json_loads
 from Plugins.Extensions.IPTVPlayer.libs.pCommon import  CParsingHelper
 from Plugins.Extensions.IPTVPlayer.libs.urlparserhelper import getDirectM3U8Playlist, getF4MLinksWithMeta
 from Plugins.Extensions.IPTVPlayer.libs.youtube_dl.utils  import clean_html
-from Plugins.Extensions.IPTVPlayer.libs.teledunet         import TeledunetParser
-from Plugins.Extensions.IPTVPlayer.libs.urlparser         import urlparser
-from Plugins.Extensions.IPTVPlayer.libs.filmonapi         import FilmOnComApi, GetConfigList as FilmOn_GetConfigList
-from Plugins.Extensions.IPTVPlayer.libs.videostar         import VideoStarApi, GetConfigList as VideoStar_GetConfigList
-from Plugins.Extensions.IPTVPlayer.libs.webcamera         import WebCameraApi
+from Plugins.Extensions.IPTVPlayer.tools.iptvtypes        import strwithmeta
+
+from Plugins.Extensions.IPTVPlayer.libs.beinmatch         import BeinmatchApi
 from Plugins.Extensions.IPTVPlayer.libs.bilasportpw       import BilaSportPwApi, GetConfigList as BilaSportPw_GetConfigList
 from Plugins.Extensions.IPTVPlayer.libs.canlitvliveio     import CanlitvliveIoApi
-from Plugins.Extensions.IPTVPlayer.libs.weebtv            import WeebTvApi, GetConfigList as WeebTv_GetConfigList
-from Plugins.Extensions.IPTVPlayer.libs.wagasworld        import WagasWorldApi, GetConfigList as WagasWorld_GetConfigList
-from Plugins.Extensions.IPTVPlayer.libs.ustvnow           import UstvnowApi, GetConfigList as Ustvnow_GetConfigList
-from Plugins.Extensions.IPTVPlayer.libs.meteopl           import MeteoPLApi, GetConfigList as MeteoPL_GetConfigList
-from Plugins.Extensions.IPTVPlayer.libs.edemtv            import EdemTvApi, GetConfigList as EdemTv_GetConfigList
-from Plugins.Extensions.IPTVPlayer.libs.livestreamtv      import LiveStreamTvApi 
-from Plugins.Extensions.IPTVPlayer.libs.skylinewebcamscom import WkylinewebcamsComApi, GetConfigList as WkylinewebcamsCom_GetConfigList
-from Plugins.Extensions.IPTVPlayer.libs.livespottingtv    import LivespottingTvApi
-from Plugins.Extensions.IPTVPlayer.libs.goldvodtv         import GoldVodTVApi, GetConfigList as GoldVodTV_GetConfigList
-from Plugins.Extensions.IPTVPlayer.libs.showsporttvcom    import ShowsportTVApi
-from Plugins.Extensions.IPTVPlayer.libs.sport365live      import Sport365LiveApi
-from Plugins.Extensions.IPTVPlayer.libs.livemassnet       import LivemassNetApi
-from Plugins.Extensions.IPTVPlayer.libs.livetvhdnet       import LivetvhdNetApi
-from Plugins.Extensions.IPTVPlayer.libs.karwantv          import KarwanTvApi
-from Plugins.Extensions.IPTVPlayer.libs.wizjatv           import WizjaTvApi, GetConfigList as WizjaTV_GetConfigList
-from Plugins.Extensions.IPTVPlayer.tools.iptvtypes        import strwithmeta
 from Plugins.Extensions.IPTVPlayer.libs.djingcom          import DjingComApi
-from Plugins.Extensions.IPTVPlayer.libs.sportstream365    import SportStream365Api, GetConfigList as SportStream365_GetConfigList
-from Plugins.Extensions.IPTVPlayer.libs.mlbstreamtv       import MLBStreamTVApi, GetConfigList as MLBStreamTV_GetConfigList
-from Plugins.Extensions.IPTVPlayer.libs.internetowa       import InternetowaApi, GetConfigList as Internetowa_GetConfigList
+from Plugins.Extensions.IPTVPlayer.libs.edemtv            import EdemTvApi, GetConfigList as EdemTv_GetConfigList
+from Plugins.Extensions.IPTVPlayer.libs.filmonapi         import FilmOnComApi, GetConfigList as FilmOn_GetConfigList
 from Plugins.Extensions.IPTVPlayer.libs.firstonetvnet     import FirstOneTvApi, GetConfigList as FirstOneTv_GetConfigList
-from Plugins.Extensions.IPTVPlayer.libs.beinmatch         import BeinmatchApi
+from Plugins.Extensions.IPTVPlayer.libs.goldvodtv         import GoldVodTVApi, GetConfigList as GoldVodTV_GetConfigList
+from Plugins.Extensions.IPTVPlayer.libs.internetowa       import InternetowaApi, GetConfigList as Internetowa_GetConfigList
+from Plugins.Extensions.IPTVPlayer.libs.karwantv          import KarwanTvApi
+from Plugins.Extensions.IPTVPlayer.libs.livemassnet       import LivemassNetApi
+from Plugins.Extensions.IPTVPlayer.libs.livespottingtv    import LivespottingTvApi
+from Plugins.Extensions.IPTVPlayer.libs.livestreamtv      import LiveStreamTvApi 
+from Plugins.Extensions.IPTVPlayer.libs.livetvhdnet       import LivetvhdNetApi
+from Plugins.Extensions.IPTVPlayer.libs.meteopl           import MeteoPLApi, GetConfigList as MeteoPL_GetConfigList
+from Plugins.Extensions.IPTVPlayer.libs.mlbstreamtv       import MLBStreamTVApi, GetConfigList as MLBStreamTV_GetConfigList
+from Plugins.Extensions.IPTVPlayer.libs.showsporttvcom    import ShowsportTVApi
+from Plugins.Extensions.IPTVPlayer.libs.skylinewebcamscom import WkylinewebcamsComApi, GetConfigList as WkylinewebcamsCom_GetConfigList
+from Plugins.Extensions.IPTVPlayer.libs.sport365live      import Sport365LiveApi
+from Plugins.Extensions.IPTVPlayer.libs.sportstream365    import SportStream365Api, GetConfigList as SportStream365_GetConfigList
+from Plugins.Extensions.IPTVPlayer.libs.teledunet         import TeledunetParser
+from Plugins.Extensions.IPTVPlayer.libs.urlparser         import urlparser
+
+from Plugins.Extensions.IPTVPlayer.libs.ustvgo            import UstvgoApi
+from Plugins.Extensions.IPTVPlayer.libs.ustvnow           import UstvnowApi, GetConfigList as Ustvnow_GetConfigList
+from Plugins.Extensions.IPTVPlayer.libs.videostar         import VideoStarApi, GetConfigList as VideoStar_GetConfigList
+from Plugins.Extensions.IPTVPlayer.libs.wagasworld        import WagasWorldApi, GetConfigList as WagasWorld_GetConfigList
+from Plugins.Extensions.IPTVPlayer.libs.webcamera         import WebCameraApi
+from Plugins.Extensions.IPTVPlayer.libs.weebtv            import WeebTvApi, GetConfigList as WeebTv_GetConfigList
 from Plugins.Extensions.IPTVPlayer.libs.wiz1net           import Wiz1NetApi
 from Plugins.Extensions.IPTVPlayer.libs.wiziwig1          import Wiziwig1Api
+from Plugins.Extensions.IPTVPlayer.libs.wizjatv           import WizjaTvApi, GetConfigList as WizjaTV_GetConfigList
+
 ###################################################
 
 ###################################################
@@ -164,6 +168,7 @@ class HasBahCa(CBaseHostClass):
             {'alias_id' : 'skylinewebcams.com', 'name' : 'skylinewebcams.com',  'title' : 'https://skylinewebcams.com/', 'url' : 'https://www.skylinewebcams.com/', 'icon' : 'https://cdn.skylinewebcams.com/skylinewebcams.png'},\
             {'alias_id' : 'sport365.live',      'name' : 'sport365.live',       'title' : 'http://sport365.live/',      'url' : 'http://www.sport365.live/',        'icon' : 'http://s1.medianetworkinternational.com/images/icons/48x48px.png'},\
             {'alias_id' : 'sportstream365.com', 'name' : 'sportstream365.com',  'title' : 'http://sportstream365.com/', 'url' : 'http://sportstream365.com/',       'icon' : 'http://sportstream365.com/img/logo.png'},\
+            {'alias_id' : 'ustvgo.tv',          'name' : 'ustvgo',              'title' : 'https://ustvgo.tv/',         'url' : 'https://www.ustvgo.tv/',           'icon' : 'https://image.winudf.com/v2/image1/dXN0dmdvLmdvdHYudXNfaWNvbl8xNTcyNDU4Nzc3XzAzMg/icon.png?w=170&fakeurl=1'},\
             {'alias_id' : 'ustvnow.com',        'name' : 'ustvnow',             'title' : 'https://ustvnow.com/',       'url' : 'https://www.ustvnow.com/',         'icon' : 'http://2.bp.blogspot.com/-SVJ4uZ2-zPc/UBAZGxREYRI/AAAAAAAAAKo/lpbo8OFLISU/s1600/ustvnow.png'},\
             {'alias_id' : 'videostar.pl',       'name' : 'videostar.pl',        'title' : 'https://pilot.wp.pl/',       'url' : '',                                 'icon' : 'http://satkurier.pl/uploads/53612.jpg'},\
             {'alias_id' : 'wagasworld',         'name' : 'wagasworld.com',      'title' : 'http://wagasworld.com/',     'url' : 'http://www.wagasworld.com/channels.php', 'icon' : 'http://upload.wikimedia.org/wikipedia/commons/thumb/b/ba/Flag_of_Germany.svg/1000px-Flag_of_Germany.svg.png'},\
@@ -184,35 +189,37 @@ class HasBahCa(CBaseHostClass):
         #Login data
         self.sort = config.plugins.iptvplayer.SortowanieWebstream.value
         self.sessionEx = MainSessionWrapper()
-        
-        self.filmOnApi            = None
-        self.videoStarApi         = None
-        self.webCameraApi         = None
-        self.wagasWorldApi        = None
-        self.ustvnowApi           = None
-        self.livetvhdNetApi       = None
-        self.meteoPLApi           = None
-        self.liveStreamTvApi      = None
-        self.livemassNetApi       = None
-        self.goldvodTvApi         = None
-        self.showsportTvApi       = None
-        self.sport365LiveApi      = None
-        self.edemTvApi            = None
-        self.wkylinewebcamsComApi = None
-        self.livespottingTvApi    = None
-        self.karwanTvApi          = None
-        self.wizjaTvApi           = None
+
+        self.BeinmatchApi         = None
         self.bilaSportPwApi       = None
         self.canlitvliveIoApi     = None
-        self.weebTvApi            = None
         self.djingComApi          = None
-        self.sportStream365Api    = None
-        self.MLBStreamTVApi       = None
-        self.InternetowaApi       = None
+        self.edemTvApi            = None
+        self.filmOnApi            = None
         self.FirstOneTvApi        = None
-        self.BeinmatchApi         = None
+        self.goldvodTvApi         = None
+        self.InternetowaApi       = None
+        self.karwanTvApi          = None
+        self.livemassNetApi       = None
+        self.livespottingTvApi    = None
+        self.liveStreamTvApi      = None
+        self.livetvhdNetApi       = None
+        self.meteoPLApi           = None
+        self.MLBStreamTVApi       = None
+        self.showsportTvApi       = None
+        self.sport365LiveApi      = None
+        self.sportStream365Api    = None
+        self.ustvnowApi           = None
+        self.ustvgoApi            = None
+        self.videoStarApi         = None
+        self.wagasWorldApi        = None
+        self.webCameraApi         = None
+        self.weebTvApi            = None
         self.Wiz1NetApi           = None
         self.Wiziwig1Api          = None
+        self.wizjaTvApi           = None
+        self.wkylinewebcamsComApi = None
+
         
         self.hasbahcaiptv = {}
         self.webcameraSubCats = {}
@@ -652,7 +659,21 @@ class HasBahCa(CBaseHostClass):
         printDBG("getWiziwig1Link start")
         urlsTab = self.Wiziwig1Api.getVideoLink(cItem)
         return urlsTab
+    
     #############################################################
+
+    def getUstvgoList(self, cItem):
+        printDBG("getUstvgoList start")
+        if None == self.ustvgoApi:
+            self.ustvgoApi = UstvgoApi()
+        tmpList = self.ustvgoApi.getChannelsList(cItem)
+        for item in tmpList:
+            self.addVideo(item)
+        
+    def getUstvgoLink(self, cItem):
+        printDBG("getUstvgoLink start")
+        urlsTab = self.ustvgoApi.getVideoLink(cItem)
+        return urlsTab
 
     #############################################################
    
@@ -934,39 +955,40 @@ class HasBahCa(CBaseHostClass):
         
     #MAIN MENU
         if name == None:                    self.listsMainMenu(self.MAIN_GROUPED_TAB)
-        elif name == "HasBahCa":            self.listHasBahCa(self.currItem)
-        elif name == "m3u":                 self.m3uList(url)
-        elif name == "prognoza.pogody.tv":  self.prognozaPogodyList(url)
-        elif name == 'livemass.net':        self.getLivemassNetList(self.currItem)
-        elif name == "goldvod.tv":          self.getGoldVodTvList(url)
-        elif name == "showsport-tv.com":    self.getShowsportTvList(self.currItem)
-        elif name == "sport365.live":       self.getSport365LiveList(self.currItem)
-        elif name == "videostar.pl":        self.getVideostarList(self.currItem)
         elif name == "bilasport.com":       self.getBilaSportPwList(self.currItem)
         elif name == "canlitvlive.io":      self.getCanlitvliveIoList(self.currItem)
         elif name == "djing.com":           self.getDjingComList(self.currItem)
-        elif name == 'ustvnow':             self.getUstvnowList(self.currItem)
-        elif name == 'livetvhd.net':        self.geLivetvhdNetList(self.currItem)
-        elif name == 'karwan.tv':           self.getKarwanTvList(self.currItem)
-        elif name == 'wizja.tv':            self.getWizjaTvList(self.currItem)
-        elif name == 'meteo.pl':            self.getMeteoPLList(self.currItem)
+        elif name == "filmon_channels":     self.getFilmOnChannels()
+        elif name == "filmon_groups":       self.getFilmOnGroups()
+        elif name == "goldvod.tv":          self.getGoldVodTvList(url)
+        elif name == "HasBahCa":            self.listHasBahCa(self.currItem)
+        elif name == "m3u":                 self.m3uList(url)
+        elif name == "prognoza.pogody.tv":  self.prognozaPogodyList(url)
+        elif name == "showsport-tv.com":    self.getShowsportTvList(self.currItem)
+        elif name == "sport365.live":       self.getSport365LiveList(self.currItem)
+        elif name == "videostar.pl":        self.getVideostarList(self.currItem)
+        elif name == "wagasworld.com":      self.getWagasWorldList(self.currItem)
+        elif name == "webcamera.pl":        self.getWebCamera(self.currItem)
+        elif name == 'beinmatch.com':       self.getBeinmatchList(self.currItem)
         elif name == 'edem.tv':             self.getEdemTvList(self.currItem)
-        elif name == 'skylinewebcams.com':  self.getWkylinewebcamsComList(self.currItem)
+        elif name == 'firstonetv.net':      self.getFirstOneTvList(self.currItem)
+        elif name == 'internetowa.ws':      self.getInternetowaList(self.currItem)
+        elif name == 'karwan.tv':           self.getKarwanTvList(self.currItem)
+        elif name == 'livemass.net':        self.getLivemassNetList(self.currItem)
         elif name == 'livespotting.tv':     self.getLivespottingTvList(self.currItem)
         elif name == 'live-stream.tv':      self.getLiveStreamTvList(self.currItem)
-        elif name == "wagasworld.com":      self.getWagasWorldList(self.currItem)
-        elif name == 'weeb.tv':             self.getWeebTvList(url)
-        elif name == "webcamera.pl":        self.getWebCamera(self.currItem)
-        elif name == "filmon_groups":       self.getFilmOnGroups()
-        elif name == "filmon_channels":     self.getFilmOnChannels()
-        elif name == 'others':              self.getOthersList(self.currItem)
-        elif name == 'sportstream365.com':  self.getSportStream365List(self.currItem)
+        elif name == 'livetvhd.net':        self.geLivetvhdNetList(self.currItem)
+        elif name == 'meteo.pl':            self.getMeteoPLList(self.currItem)
         elif name == 'mlbstream.tv':        self.getMLBStreamTVList(self.currItem)
-        elif name == 'internetowa.ws':      self.getInternetowaList(self.currItem)
-        elif name == 'firstonetv.net':      self.getFirstOneTvList(self.currItem)
-        elif name == 'beinmatch.com':       self.getBeinmatchList(self.currItem)
+        elif name == 'others':              self.getOthersList(self.currItem)
+        elif name == 'skylinewebcams.com':  self.getWkylinewebcamsComList(self.currItem)
+        elif name == 'sportstream365.com':  self.getSportStream365List(self.currItem)
+        elif name == 'ustvgo':              self.getUstvgoList(self.currItem)
+        elif name == 'ustvnow':             self.getUstvnowList(self.currItem)
+        elif name == 'weeb.tv':             self.getWeebTvList(url)
         elif name == 'wiz1.net':            self.getWiz1NetList(self.currItem)
         elif name == 'wiziwig1.com':        self.getWiziwig1List(self.currItem)
+        elif name == 'wizja.tv':            self.getWizjaTvList(self.currItem)
         
         CBaseHostClass.endHandleService(self, index, refresh)
 
@@ -1012,6 +1034,7 @@ class IPTVHost(CHostBase):
         elif name == 'bilasport.com':              urlList = self.host.getBilaSportPwLink(cItem)
         elif name == 'canlitvlive.io':             urlList = self.host.getCanlitvliveIoLink(cItem)
         elif name == 'djing.com':                  urlList = self.host.getDjingComLink(cItem)
+        elif name == 'ustvgo':                     urlList = self.host.getUstvgoLink(cItem)
         elif name == 'ustvnow':                    urlList = self.host.getUstvnowLink(cItem)
         elif name == 'livetvhd.net':               urlList = self.host.getLivetvhdNetLink(cItem)
         elif name == 'karwan.tv':                  urlList = self.host.getKarwanTvLink(cItem)
