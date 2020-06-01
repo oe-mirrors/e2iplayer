@@ -477,6 +477,7 @@ class urlparser:
                        'uploadx.org':           self.pp.parserUPLOAD         ,
                        'uploadz.co':            self.pp.parserUPLOAD         ,
                        'uploadz.org':           self.pp.parserUPLOAD         ,
+                       'upmela.com':            self.pp.parserVIUCLIPS       ,
                        'upstream.to':           self.pp.parserONLYSTREAM  ,
                        'uptobox.com':           self.pp.parserUPTOSTREAMCOM  ,
                        'uptostream.com':        self.pp.parserUPTOSTREAMCOM  ,
@@ -12064,6 +12065,7 @@ class pageParser(CaptchaHelper):
         #         https://hofoot.allvidview.tk/player/PopUpIframe/rU81KreFct?iframe=popup&u=
         #         https://oms.streamatus.tk/player/html/Mi5nzmttSZ?popup=yes&autoplay=1
         #         https://hofoot.vidcrt.net
+        #         http://oms.upmela.com/player/PopUpIframe/xbVz4HBVkMpLr?iframe=popup&u=
         
         baseUrl = baseUrl + "?"
             
