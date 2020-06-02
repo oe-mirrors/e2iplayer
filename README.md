@@ -3,7 +3,7 @@
 If you want to join the project, read wiki page 
 https://gitlab.com/maxbambi/e2iplayer/wikis/home
 
-If you like it, GIVE MY A STAR in project overview!
+If you like it, GIVE ME A STAR in project overview!
 
 This is a fork of original @samsamsam E2iPlayer.
 It's not a copy of PRIVATE version, that I haven't got!!
