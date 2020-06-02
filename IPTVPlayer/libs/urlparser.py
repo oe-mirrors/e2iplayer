@@ -437,6 +437,7 @@ class urlparser:
                        'streamplay.me':         self.pp.parserSTREAMPLAYTO  ,
                        'streamplay.to':         self.pp.parserSTREAMPLAYTO  ,
                        'streamtape.com':        self.pp.parserSTREAMTAPE    ,
+                       'superfastvideos.xyz':   self.pp.parserSUPERGOODLIVE ,
                        'superfilm.pl':          self.pp.parserSUPERFILMPL   ,
                        'supervideo.tv':         self.pp.parserSUPERVIDEO    ,
                        'supergoodtvlive.com':   self.pp.parserSUPERGOODLIVE ,
@@ -529,6 +530,7 @@ class urlparser:
                        'vidnode.net':           self.pp.parserVIDCLOUD      ,
                        'vidoza.net':            self.pp.parserVIDOZANET     ,
                        'vidshare.tv':           self.pp.parserVIDSHARETV    ,
+                       'vidsource.me':          self.pp.parserVIDSOURCE     ,
                        'vidspot.net':           self.pp.parserVIDSPOT       ,
                        'vidsrc.me':             self.pp.parserVIDSRC        ,
                        'vidsso.com':            self.pp.parserVIDSSO        ,
@@ -12602,23 +12604,71 @@ class pageParser(CaptchaHelper):
             video_id = video_id[0]
             url = "https://vidsrc.me/watching?i=%videoId%&srv=1".replace("%videoId%", video_id)
             
+            refererUrl = baseUrl.replace("embed", "server1").replace('//','/').replace('//','/').replace(":/","://")
+            
             httpParams = {
                 'header': {
                     'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/73.0.3683.103 Safari/537.36',
-                    'Referer' : baseUrl.replace("embed", "server1").replace("//","/")
-                }
+                    'Referer' : refererUrl
+                },
+                'with_metadata':True
             }
             sts, data = self.cm.getPage(url, httpParams )
-            printDBG("---------")
-            printDBG(data)
             
             if sts:
-                printDBG("---------")
-                printDBG(data)
-                
+                newUrl = data.meta['url']
+                printDBG("Redirect to url %s " % newUrl) 
+
+                if newUrl != baseUrl:
+                    return urlparser().getVideoLinkExt(newUrl)
+                else:
+                    return []
+                    
         else:
             return []
-     
+    
+    def parserVIDSOURCE(self, baseUrl):
+        printDBG("parserVIDSOURCE baseUrl[%s]" % baseUrl)
+        # https://www.vidsource.me/v/4lo00l6l-xo
+        # https://www.vidsource.me/api/source/4lo00l6l-xo
+
+        httpParams = {
+            'header': {
+                'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/73.0.3683.103 Safari/537.36',
+            }
+        }
+        
+        urlsTab=[]
+        
+        if not '/api/' in baseUrl:
+            url = 'https://www.vidsource.me/api/source/' +baseUrl.split('/')[-1]
+        else:
+            url = baseUrl
+            
+        pd={'d':'www.vidsource.me'}
+        sts, data = self.cm.getPage(url, httpParams , post_data = pd)
+        
+        if sts:
+            printDBG("********************")
+            printDBG(data)
+            printDBG("********************")
+        
+            response = json_loads(data)
+            json_data = response.get('data','')
+            if json_data:
+                for j in json_data:
+                    url = j.get('file','')
+                    if self.cm.isValidUrl(url):
+                        label = j.get('label','link')
+                        url_type = j.get('type','')
+
+                        printDBG("Found link %s" % url)
+                        url = urlparser.decorateUrl(url, {'Referer': baseUrl})
+                        urlsTab.append({'name': label , 'url': url}) 
+                         
+        
+        return urlsTab
+            
     def parserTRONPRICE(self, baseUrl):
         printDBG("parserTRONPRICE baseUrl[%s]" % baseUrl)
 
