@@ -12599,14 +12599,27 @@ class pageParser(CaptchaHelper):
         printDBG("parserVIDSRC baseUrl[%s]" % baseUrl)
         #example: https://vidsrc.me/embed/tt5503686/
 
+        
+        sts, data = self.cm.getPage(baseUrl)
+        
+        if not sts:
+            return []
+        
+        tmp = self.cm.ph.getDataBeetwenNodes(data, '<iframe', ('</iframe', '>'))[1]
+        serverNumber = re.findall("/server([0-9]{1,2}?)/", tmp)
+        if serverNumber:
+            serverNumber = serverNumber[0]
+        else:
+            serverNumber = "1"
+            
         baseUrl = baseUrl + "/"
         
         video_id = re.findall('embed/(.*?)/', baseUrl)
         if video_id:
             video_id = video_id[0]
-            url = "https://vidsrc.me/watching?i=%videoId%&srv=1".replace("%videoId%", video_id)
+            url = "https://vidsrc.me/watching?i=%videoId%&srv=%num%".replace("%videoId%", video_id).replace("%num%", serverNumber) 
             
-            refererUrl = baseUrl.replace("embed", "server1").replace('//','/').replace('//','/').replace(":/","://")
+            refererUrl = baseUrl.replace("embed", "server" + serverNumber).replace('//','/').replace('//','/').replace(":/","://")
             
             httpParams = {
                 'header': {
@@ -12621,7 +12634,7 @@ class pageParser(CaptchaHelper):
                 newUrl = data.meta['url']
                 printDBG("Redirect to url %s " % newUrl) 
 
-                if newUrl != baseUrl:
+                if newUrl != baseUrl and newUrl != url:
                     return urlparser().getVideoLinkExt(newUrl)
                 else:
                     printDBG("New url is equal to previous one!")
