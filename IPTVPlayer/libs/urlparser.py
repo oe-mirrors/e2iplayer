@@ -223,6 +223,7 @@ class urlparser:
                        'faststream.in':         self.pp.parserVIDSTREAM     ,
                        'fastvideo.in':          self.pp.parserFASTVIDEOIN   ,
                        'fembed.com':            self.pp.parserFEMBED,
+                       'feurl.com':             self.pp.parserFEMBED,
                        'filecandy.net':         self.pp.parserFILECANDYNET   ,
                        'filecloud.io':          self.pp.parserFILECLOUDIO    ,
                        'filefactory.com':       self.pp.parserFILEFACTORYCOM ,
@@ -314,12 +315,13 @@ class urlparser:
                        'movdivx.com':           self.pp.parserMODIVXCOM     ,
                        'movpod.in':             self.pp.parserFASTVIDEOIN   ,
                        'movreel.com':           self.pp.parserMOVRELLCOM    ,
-                       'movshare.net':          self.pp.parserWHOLECLOUD     ,
-                       'mp4upload.com':         self.pp.parserMP4UPLOAD      ,
+                       'movshare.net':          self.pp.parserWHOLECLOUD    ,
+                       'mp4upload.com':         self.pp.parserMP4UPLOAD     ,
+                       'mstream.fun':           self.pp.parserMSTREAMICU    ,
                        'mstream.icu':           self.pp.parserMSTREAMICU    ,
                        'mstream.xyz':           self.pp.parserMSTREAMICU    ,
                        'my.mail.ru':            self.pp.parserVIDEOMAIL     ,
-                       'mycloud.to':            self.pp.parserMYCLOUDTO      ,
+                       'mycloud.to':            self.pp.parserMYCLOUDTO     ,
                        'mystream.la':           self.pp.parserMYSTREAMLA    ,
                        'mystream.to':           self.pp.parserMYSTREAMTO     ,
                        'mystream.premiumserver.club': self.pp.parserMSTREAMICU,
@@ -12622,6 +12624,7 @@ class pageParser(CaptchaHelper):
                 if newUrl != baseUrl:
                     return urlparser().getVideoLinkExt(newUrl)
                 else:
+                    printDBG("New url is equal to previous one!")
                     return []
                     
         else:
@@ -12927,10 +12930,12 @@ class pageParser(CaptchaHelper):
         urlTabs=[]
         
         if sts:
-            #printDBG("---------")
-            #printDBG(data)
-            #printDBG("---------")
+            printDBG("---------")
+            printDBG(data)
+            printDBG("---------")
 
+            
+            # find string to decode
             decode = re.findall('(\$=~\[\];.*?\(\)\))\(\);', data)
 
             for d in decode:
