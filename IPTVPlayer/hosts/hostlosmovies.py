@@ -163,7 +163,16 @@ class LosMovies(CBaseHostClass):
         for item in data:
             url  = self.getFullUrl( self.cm.ph.getSearchGroups(item, 'href="([^"]+?)"')[0] )
             if not self.cm.isValidUrl(url): continue
-            icon = self.getFullUrl( self.cm.ph.getSearchGroups(item, 'src="([^"]+?)"')[0] )
+            icon = re.findall('src="([^"]+?)"', item) 
+            #self.getFullUrl( self.cm.ph.getSearchGroups(item, 'src="([^"]+?)"')[0] )
+            if icon:
+                if len(icon)>1:
+                    icon = self.getFullUrl(icon[1])
+                else:
+                    icon = self.getFullUrl(icon[0])
+            else:
+                icon = ''
+            
             desc = self.cleanHtmlStr( item )
             title = self.cleanHtmlStr( self.cm.ph.getDataBeetwenMarkers(item, '<h4', '</h4>')[1] )
             if title == '': title  = self.cleanHtmlStr( self.cm.ph.getSearchGroups(item, 'title="([^"]+?)"')[0] )
