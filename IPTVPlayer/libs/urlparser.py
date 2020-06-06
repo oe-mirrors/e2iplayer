@@ -244,6 +244,7 @@ class urlparser:
                        'gametrailers.com':      self.pp.parserGAMETRAILERS  , 
                        'gamovideo.com':         self.pp.parserGAMOVIDEOCOM  ,
                        'gcloud.live':           self.pp.parserFEMBED        ,
+                       'gdriveplayer.me':       self.pp.parserGDRIVEPLAYER  ,
                        'ginbig.com':            self.pp.parserGINBIG        ,
                        'gogoanime.to':          self.pp.parserGOGOANIMETO   ,
                        'goldvod.tv':            self.pp.parserGOLDVODTV     ,
@@ -12600,48 +12601,73 @@ class pageParser(CaptchaHelper):
         #example: https://vidsrc.me/embed/tt5503686/
 
         
-        sts, data = self.cm.getPage(baseUrl)
+        sts, data = self.cm.getPage(baseUrl, {'with_metadata': True})
         
         if not sts:
             return []
         
+        if baseUrl != data.meta['url']:
+            printDBG("new url: %s" % data.meta['url'])
+            baseUrl = data.meta['url']
+            
         tmp = self.cm.ph.getDataBeetwenNodes(data, '<iframe', ('</iframe', '>'))[1]
         serverNumber = re.findall("/server([0-9]{1,2}?)/", tmp)
+        
         if serverNumber:
             serverNumber = serverNumber[0]
+
+            baseUrl = baseUrl + "/"
+            
+            video_id = re.findall('embed/(.*?)/', baseUrl)
+            if video_id:
+                video_id = video_id[0]
+                url = "https://vidsrc.me/watching?i=%videoId%&srv=%num%".replace("%videoId%", video_id).replace("%num%", serverNumber) 
+                
+                refererUrl = baseUrl.replace("embed", "server" + serverNumber).replace('//','/').replace('//','/').replace(":/","://")
+                
+                httpParams = {
+                    'header': {
+                        'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/73.0.3683.103 Safari/537.36',
+                        'Referer' : refererUrl
+                    },
+                    'with_metadata':True
+                }
+                sts, data = self.cm.getPage(url, httpParams )
+                
+                if sts:
+                    newUrl = data.meta['url']
+                    printDBG("Redirect to url %s " % newUrl) 
+
+                    if newUrl != baseUrl and newUrl != url:
+                        return urlparser().getVideoLinkExt(newUrl)
+                    else:
+                        printDBG("New url is equal to previous one!")
+                        return []
+
         else:
             serverNumber = "1"
-            
-        baseUrl = baseUrl + "/"
-        
-        video_id = re.findall('embed/(.*?)/', baseUrl)
-        if video_id:
-            video_id = video_id[0]
-            url = "https://vidsrc.me/watching?i=%videoId%&srv=%num%".replace("%videoId%", video_id).replace("%num%", serverNumber) 
-            
-            refererUrl = baseUrl.replace("embed", "server" + serverNumber).replace('//','/').replace('//','/').replace(":/","://")
-            
-            httpParams = {
-                'header': {
-                    'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/73.0.3683.103 Safari/537.36',
-                    'Referer' : refererUrl
-                },
-                'with_metadata':True
-            }
-            sts, data = self.cm.getPage(url, httpParams )
-            
-            if sts:
-                newUrl = data.meta['url']
-                printDBG("Redirect to url %s " % newUrl) 
+            #example
+            #<iframe src="/source/YVVrNVFqUjRLMlEyYjI1UVluRlZSblIwVHpCc1VqVmhWbXBqUVNzMUt6bEhTbWwyVEVkblkxVkhiVmxXVkVZM2RGTXZTemhQYmtVeGNVMVVPVXBYVW1oM2JUUmtUak5VWW5kbk5rVjJla1F2VDIwM1FXeHFjV1JRV0dWcGEzUXdjV1JzZWxkUGR6Y3pNVE5GT0hvNVltUlhWR2xrWjNkMFR6VkJWMko0V1hwVU1FcDZWMmt5YVRkQlRUMD0-" frameborder="0" scrolling="no" allowfullscreen="yes" style="height: 100%; width: 100%;"></iframe>
+            newUrl = self.cm.ph.getSearchGroups(tmp, "src=[\"']([^\"^']+?)[\"']", 1, True)[0]
+            if newUrl:
+                
+                newUrl = self.cm.getFullUrl(newUrl, self.cm.getBaseUrl(baseUrl))
+                printDBG("redirect to %s" % newUrl)
 
-                if newUrl != baseUrl and newUrl != url:
-                    return urlparser().getVideoLinkExt(newUrl)
-                else:
-                    printDBG("New url is equal to previous one!")
-                    return []
-                    
-        else:
-            return []
+                httpParams = {
+                    'header': {
+                        'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/73.0.3683.103 Safari/537.36',
+                        'Referer' : baseUrl
+                    },
+                    'with_metadata':True
+                }
+                
+                sts, data = self.cm.getPage(newUrl, httpParams )
+                
+                printDBG(data)
+                
+                
+        return []
     
     def parserVIDSOURCE(self, baseUrl):
         printDBG("parserVIDSOURCE baseUrl[%s]" % baseUrl)
@@ -13239,3 +13265,111 @@ class pageParser(CaptchaHelper):
                 
         return urlTabs
 
+    def parserGDRIVEPLAYER(self, baseUrl):
+        printDBG("parserGDRIVEPLAYER baseUrl [%s]" % baseUrl)
+        
+        def cryptoJS_AES_decrypt(encrypted, password, salt):
+            def derive_key_and_iv(password, salt, key_length, iv_length):
+                d = d_i = ''
+                while len(d) < key_length + iv_length:
+                    d_i = md5(d_i + password + salt).digest()
+                    d += d_i
+                return d[:key_length], d[key_length:key_length+iv_length]
+            bs = 16
+            key, iv = derive_key_and_iv(password, salt, 32, 16)
+            cipher = AES_CBC(key=key, keySize=32)
+            return cipher.decrypt(encrypted, iv)
+        
+        urlTabs = []
+        
+        sts, data = self.cm.getPage(baseUrl)
+        
+        if sts:
+            printDBG("-----------------------")
+            printDBG(data)
+            printDBG("-----------------------")
+            
+            scripts = re.findall("<script type=[\"']text/javascript[\"']>.*?(eval.*?)</script>", data, re.S)
+            
+            if scripts:
+                for script in scripts:
+                    
+                    num = 0
+                    while len(script)>0 and num < 2:
+                        printDBG("----------- pack -----------------")
+                        printDBG(script)
+
+                        script = script + "\n"
+                        # mods
+                        script = script.replace("eval(function(p,a,c,k,e,d","pippo = function(p,a,c,k,e,d")
+                        script = script.replace("return p}(", "print(p)}\n\npippo(")
+                        script = script.replace("))\n",");\n")
+
+                        # duktape
+                        ret = js_execute( script )
+                        decoded = ret['data']
+                        printDBG('------------------------------')
+                        printDBG(decoded)
+                        printDBG('------------------------------')
+                
+                        if num == 0:
+                            #reading cypher informations in decoded 
+                            dataStr = self.cm.ph.getSearchGroups(decoded, "data='(\{.*?\})")[0]
+                            linkData = json_loads(dataStr)
+                            printDBG(str(linkData))
+
+                            bigString = self.cm.ph.getSearchGroups(decoded.split(';')[1], "[a-zA-Z0-9]{40,}" )[0]
+                            printDBG(str(bigString))
+                            numList = re.split("[a-zA-Z]{1,}", bigString)
+                            charList = []
+                            for n in numList:
+                                if n:
+                                    charList.append(int(n))
+                            
+                            decypher_code = ''.join(map(unichr, charList))
+                            
+                            #printDBG(" --------- decypher code --------")
+                            #printDBG(decypher_code)
+                            #printDBG(" ---------------------------------")
+
+                            aesKey = re.findall("var pass = \"([^\"]+?)\"", decypher_code)
+                            
+                            if aesKey:
+                                aesKey = aesKey[0]
+                            else:
+                                aesKey = "alsfheafsjklNIWORNiolNIOWNKLNXakjsfwnBdwjbwfkjbJjkopfjweopjASoiwnrflakefneiofrt"
+                            
+                            printDBG(" ----------- AES key -------------")
+                            printDBG(aesKey)
+                            printDBG(" ---------------------------------")
+                            
+                            ciphertext = base64.b64decode(linkData['ct'])
+                            iv         = a2b_hex(linkData['iv'])
+                            salt       = a2b_hex(linkData['s'])
+                    
+                            script = cryptoJS_AES_decrypt(ciphertext, aesKey, salt)
+                            
+                            script = json_loads(script) 
+                            
+                        num = num + 1
+                
+                # stream search
+                srcJson = re.findall("sources\s*:\s*\[(.*?)\]", decoded, re.S)
+                
+                if srcJson:
+                    srcJson = srcJson[0]
+                    printDBG(srcJson)
+                    
+                    sources = json_loads("[" + srcJson + "]")
+                    
+                    for s in sources:
+                        u = s.get('file','')
+                        if self.cm.isValidUrl(u):
+                            printDBG("Found link %s" % u)
+                            label = s.get('label','')
+                            u = urlparser.decorateUrl(u, {'Referer': baseUrl})
+                            params = {'name': label , 'url': u}
+                            printDBG(str(params))
+                            urlTabs.append(params)
+                        
+        return urlTabs
