@@ -245,6 +245,7 @@ class urlparser:
                        'gamovideo.com':         self.pp.parserGAMOVIDEOCOM  ,
                        'gcloud.live':           self.pp.parserFEMBED        ,
                        'gdriveplayer.me':       self.pp.parserGDRIVEPLAYER  ,
+                       'gdriveplayer.us':       self.pp.parserGDRIVEPLAYER  ,
                        'ginbig.com':            self.pp.parserGINBIG        ,
                        'gogoanime.to':          self.pp.parserGOGOANIMETO   ,
                        'goldvod.tv':            self.pp.parserGOLDVODTV     ,
@@ -13268,6 +13269,18 @@ class pageParser(CaptchaHelper):
     def parserGDRIVEPLAYER(self, baseUrl):
         printDBG("parserGDRIVEPLAYER baseUrl [%s]" % baseUrl)
         
+        httpParams = {
+            'header' : {
+                'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.61 Safari/537.36',
+                'Accept': '*/*',
+                'Accept-Encoding': 'gzip'
+            },
+            'use_cookie':True,
+            'load_cookie':True,
+            'save_cookie':True,
+            'cookiefile': GetCookieDir('gdriveplayer.cookie')
+        }
+        
         def cryptoJS_AES_decrypt(encrypted, password, salt):
             def derive_key_and_iv(password, salt, key_length, iv_length):
                 d = d_i = ''
@@ -13282,7 +13295,7 @@ class pageParser(CaptchaHelper):
         
         urlTabs = []
         
-        sts, data = self.cm.getPage(baseUrl)
+        sts, data = self.cm.getPage(baseUrl, httpParams)
         
         if sts:
             printDBG("-----------------------")
@@ -13366,6 +13379,19 @@ class pageParser(CaptchaHelper):
                         u = s.get('file','')
                         if self.cm.isValidUrl(u):
                             printDBG("Found link %s" % u)
+                            if 'redirector.gdriveplayer.me' in u:
+                                # try to read redirection 
+                                httpParams['header']['Referer'] = baseUrl
+                                httpParams['with_metadata'] = True
+                                
+                                sts, data = self.cm.getPage(u, httpParams)
+                                
+                                if sts:
+                                    printDBG(data.meta['url'])
+                                    printDBG(data)
+                                else:
+                                    printDBG("PROBLEMS!!!")
+                                    
                             label = s.get('label','')
                             u = urlparser.decorateUrl(u, {'Referer': baseUrl})
                             params = {'name': label , 'url': u}
