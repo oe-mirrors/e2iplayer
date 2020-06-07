@@ -264,6 +264,7 @@ class urlparser:
                        'hlstester.com':         self.pp.parserHLSTESTER,
                        'hofoot.allvidview.tk':  self.pp.parserVIUCLIPS, 
                        'hofoot.vidcrt.net':     self.pp.parserVIUCLIPS,
+                       'hofoot.uprafa.com':     self.pp.parserVIUCLIPS,
                        'hqq.none':              self.pp.parserNETUTV         ,
                        'hqq.tv':                self.pp.parserNETUTV         ,
                        'hqq.watch':             self.pp.parserNETUTV         ,
