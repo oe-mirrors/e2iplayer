@@ -496,6 +496,7 @@ class urlparser:
                        'veehd.com':             self.pp.parserVEEHDCOM       ,
                        'veoh.com':              self.pp.parserVEOHCOM        ,
                        'verystream.com':        self.pp.parserVERYSTREAM     ,
+                       'verystream.info':       self.pp.parserFEMBED  ,
                        'very.streamango.to':    self.pp.parserONLYSTREAM  , 
                        'veuclips.com':          self.pp.parserVIUCLIPS     ,
                        'vev.io':                self.pp.parserTHEVIDEOME    ,
@@ -8443,8 +8444,10 @@ class pageParser(CaptchaHelper):
         sts, data = self.cm.getPage(baseUrl, {'header':HTTP_HEADER})
         if not sts: 
             return False
+        
         #printDBG("parserVERYSTREAM data: [%s]" % data )
         id = ph.search(data, '''id\s*?=\s*?['"]videolink['"]>([^>]+?)<''')[0]
+        
         if id:
             videoUrl = 'https://verystream.com/gettoken/{0}?mime=true'.format(id)
             sts, data = self.cm.getPage(videoUrl, {'max_data_size':0})
@@ -12227,6 +12230,15 @@ class pageParser(CaptchaHelper):
         #https://cercafilm.net/v/80w1lh8z4w8-1en
         #https://sonline.pro/v/g3drwf-mwjelpwr
         #https://gcloud.live/v/ln5grsnn05rp1w8
+        
+        sts, data = self.cm.getPage(baseUrl, {'with_metadata': True})
+        
+        if sts:
+            new_url = data.meta['url']
+            if new_url != baseUrl:
+                printDBG("redirect to %s" % new_url)
+                baseUrl = new_url
+            
         
         baseUrl = baseUrl + '?'
         m = re.search("/(v|api/source)/(?P<id>.+)\?", baseUrl)
