@@ -326,8 +326,8 @@ class urlparser:
                        'my.mail.ru':            self.pp.parserVIDEOMAIL     ,
                        'mycloud.to':            self.pp.parserMYCLOUDTO     ,
                        'mystream.la':           self.pp.parserMYSTREAMLA    ,
-                       'mystream.to':           self.pp.parserMYSTREAMTO     ,
-                       'mystream.premiumserver.club': self.pp.parserMSTREAMICU,
+                       'mystream.to':           self.pp.parserMYSTREAMTO    ,
+                       'premiumserver.club':    self.pp.parserMSTREAMICU    ,
                        'mystream.streamango.to': self.pp.parserMSTREAMICU   ,
                        'myvi.ru':               self.pp.parserMYVIRU        ,
                        'myvi.tv':               self.pp.parserMYVIRU        ,
@@ -12994,6 +12994,14 @@ class pageParser(CaptchaHelper):
             printDBG(data)
             printDBG("---------")
 
+            #search if there is an iframe with a link to mystream
+            new_link = re.findall("src=\"([^\"]+mystream.premiumserver[^\"]+?)\"", data)
+            
+            if new_link:
+                new_link = new_link[0]
+                if new_link != baseUrl:
+                    printDBG("redirect to %s" % new_link)
+                    return urlparser().getVideoLinkExt(new_link)
             
             # find string to decode
             decode = re.findall('(\$=~\[\];.*?\(\)\))\(\);', data)
