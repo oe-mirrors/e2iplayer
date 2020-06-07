@@ -441,7 +441,7 @@ class urlparser:
                        'streamplay.me':         self.pp.parserSTREAMPLAYTO  ,
                        'streamplay.to':         self.pp.parserSTREAMPLAYTO  ,
                        'streamtape.com':        self.pp.parserSTREAMTAPE    ,
-                       'superfastvideos.xyz':   self.pp.parserSUPERGOODLIVE ,
+                       'superfastvideos.xyz':   self.pp.parserTXNEWSNETWORK ,
                        'superfilm.pl':          self.pp.parserSUPERFILMPL   ,
                        'supervideo.tv':         self.pp.parserSUPERVIDEO    ,
                        'supergoodtvlive.com':   self.pp.parserSUPERGOODLIVE ,
@@ -12784,12 +12784,14 @@ class pageParser(CaptchaHelper):
         if sts:
             printDBG(data)
             
+            
         else:
             return []
 
     def parserTXNEWSNETWORK(self, baseUrl):
         printDBG("parserTXNEWSNETWORK baseUrl[%s]" % baseUrl)
         #http://txnewsnetwork.net/ada5.php
+        #http://superfastvideos.xyz/avi5.php
         
         httpParams = {'header':{'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/76.0.3809.132 Safari/537.36'}, 'use_cookie':1, 'save_cookie':1,'load_cookie':1, 'cookiefile': GetCookieDir("TXNEWSNETWORK.cookie")}
         
@@ -12798,19 +12800,24 @@ class pageParser(CaptchaHelper):
         sts, data = self.cm.getPage(baseUrl, httpParams)
         
         if sts:
-            #printDBG("********************")
-            #printDBG(data)
+            printDBG("********************")
+            printDBG(data)
             
             #<script src="http://jscdn-master.today/n1.php?hash=ada5"></script>
+            #<script src="http://mastercdn.hu/n1.php?hash=avi2"></script>
+
             link = re.findall("<script src=\"(.*?ada.*?)\"></script>", data)
+            if not link:
+                link = re.findall("<script src=\"(.*?avi.*?)\"></script>", data)
+                
             
             if link:
                 printDBG("Found link %s" % link[0])
                 sts, data = self.cm.getPage(link[0], httpParams)
                 
                 if sts:
-                    #printDBG("********************")
-                    #printDBG(data)
+                    printDBG("********************")
+                    printDBG(data)
                     
                     #'src="http://www.vaudevile.cz/page.php?hash=ada5&ad=3587580&ud=OTUuMjUyLjEwMi43&td=1581017743">
                     link2 = re.findall("src=\"([^\"]+?)\"", data)
@@ -12820,8 +12827,8 @@ class pageParser(CaptchaHelper):
                         sts, data = self.cm.getPage(link2[0], httpParams)
                 
                         if sts:
-                            #printDBG("********************")
-                            #printDBG(data)
+                            printDBG("********************")
+                            printDBG(data)
                             #source: "http://www.vaudevile.cz/mount/ada5/index.m3u8"
                             
                             link3 = re.findall("source: \"([^\"]+?)\"", data)
