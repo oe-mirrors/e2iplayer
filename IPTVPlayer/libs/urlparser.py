@@ -525,6 +525,7 @@ class urlparser:
                        'videomega.tv':          self.pp.parserVIDEOMEGA     ,
                        'videomore.ru':          self.pp.parserVIDEOMORERU   ,
                        'videoslasher.com':      self.pp.parserVIDEOSLASHER  ,
+                       'videos.sapo.pt':        self.pp.parserVSPORTSPT     ,
                        'videoweed.com':         self.pp.parserVIDEOWEED     ,
                        'videoweed.es':          self.pp.parserVIDEOWEED     ,
                        'videowood.tv':          self.pp.parserVIDEOWOODTV   ,
@@ -10065,19 +10066,28 @@ class pageParser(CaptchaHelper):
     def parserVSPORTSPT(self, baseUrl):
         printDBG("parserVSPORTSPT baseUrl[%s]\n" % baseUrl)
         urlsTab = []
-        sts, data = self.cm.getPage(baseUrl)
-        if not sts: return []
         
+        #example http://rd3.videos.sapo.pt/playhtml?file=http://rd3.videos.sapo.pt/iMw78N7Nhv4rEz00MIN5/mov/1&
         #example "//vsports.videos.sapo.pt/qS105THDPkJB9nzFNA5h/mov/"
-        if "vsports.videos.sapo.pt" in data:
-            videoUrl = re.findall("(vsports\.videos\.sapo\.pt/[\w]+/mov/)", data)
-            if videoUrl:
-                videoUrl = "http://" + videoUrl[0] + "?videosrc=true"
-                sts, link = self.cm.getPage(videoUrl)
-                if sts:
-                    printDBG(" '%s' ---> '%s' " % (videoUrl, link))
-                    urlsTab.append({'name':'link', 'url': link })
-                    return urlsTab
+
+        videoUrl =  re.findall("(//[a-zA-Z0-9]+\.videos\.sapo\.pt/[\w]+/mov/)", baseUrl)
+        
+        if not videoUrl:
+            # look for link in page
+            sts, data = self.cm.getPage(baseUrl)
+            if not sts: 
+                return []
+        
+            videoUrl = re.findall("(//[a-zA-Z0-9]+\.videos\.sapo\.pt/[\w]+/mov/)", data)
+
+        if videoUrl:
+            videoUrl = "http:" + videoUrl[0] + "?videosrc=true"
+            
+            sts, link = self.cm.getPage(videoUrl)
+            if sts:
+                printDBG(" '%s' ---> '%s' " % (videoUrl, link))
+                urlsTab.append({'name':'link', 'url': link })
+                return urlsTab
 
         tmp = self.cm.ph.getDataBeetwenReMarkers(data, re.compile('''['"]?sources['"]?\s*:\s*\['''), re.compile('\]'), False)[1]
         tmp = tmp.split('}')
