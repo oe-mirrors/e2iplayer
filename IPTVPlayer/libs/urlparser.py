@@ -322,6 +322,7 @@ class urlparser:
                        'mp4upload.com':         self.pp.parserMP4UPLOAD     ,
                        'mstream.fun':           self.pp.parserMSTREAMICU    ,
                        'mstream.icu':           self.pp.parserMSTREAMICU    ,
+                       'mstream.press':         self.pp.parserMSTREAMICU    ,
                        'mstream.xyz':           self.pp.parserMSTREAMICU    ,
                        'my.mail.ru':            self.pp.parserVIDEOMAIL     ,
                        'mycloud.to':            self.pp.parserMYCLOUDTO     ,
@@ -525,7 +526,7 @@ class urlparser:
                        'videomega.tv':          self.pp.parserVIDEOMEGA     ,
                        'videomore.ru':          self.pp.parserVIDEOMORERU   ,
                        'videoslasher.com':      self.pp.parserVIDEOSLASHER  ,
-                       'videos.sapo.pt':        self.pp.parserVSPORTSPT     ,
+                       'videos.sapo.pt':        self.pp.parserSAPOPT     ,
                        'videoweed.com':         self.pp.parserVIDEOWEED     ,
                        'videoweed.es':          self.pp.parserVIDEOWEED     ,
                        'videowood.tv':          self.pp.parserVIDEOWOODTV   ,
@@ -560,7 +561,7 @@ class urlparser:
                        'voodaith7e.com':        self.pp.parserYOUWATCH      ,
                        'vshare.eu':             self.pp.parserVSHAREEU      ,
                        'vshare.io':             self.pp.parserVSHAREIO       ,
-                       'vsports.pt':            self.pp.parserVSPORTSPT     ,
+                       'vsports.pt':            self.pp.parserSAPOPT     ,
                        'vup.to':                self.pp.parserONLYSTREAM    ,
                        'waaw.tv':               self.pp.parserNETUTV         ,
                        'wat.tv':                self.pp.parserWATTV          ,
@@ -10063,8 +10064,8 @@ class pageParser(CaptchaHelper):
 
         return urlTab
         
-    def parserVSPORTSPT(self, baseUrl):
-        printDBG("parserVSPORTSPT baseUrl[%s]\n" % baseUrl)
+    def parserSAPOPT(self, baseUrl):
+        printDBG("parserSAPOPT baseUrl[%s]\n" % baseUrl)
         urlsTab = []
         
         #example http://rd3.videos.sapo.pt/playhtml?file=http://rd3.videos.sapo.pt/iMw78N7Nhv4rEz00MIN5/mov/1&
