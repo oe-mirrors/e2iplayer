@@ -132,6 +132,75 @@ class Ekstraklasa(CBaseHostClass):
                 GetIPTVNotify().push(msg, 'error', 10)
                 return False
 
+    def getVideoInfo(self, video_json):
+        printDBG("Ekstraklasa.getVideoInfo")
+
+        descStr = []
+
+        if 'streamUrl' in video_json['_links']:
+            url = video_json['_links']['streamUrl']
+        else:
+            url = ''
+
+
+        title = video_json.get('title','')
+
+        if "scheduledAirDate" in video_json: 
+            date_time_str = video_json["scheduledAirDate"] 
+            date_time_obj = datetime.datetime.strptime(date_time_str, '%Y-%m-%dT%H:%M:%S.%fZ') + self.timeoffset #"2020-06-09T15:55:00.000Z"
+            date_time_text = date_time_obj.strftime("%d/%m/%Y, %H:%M")
+            title = title + " (" + date_time_text + ")"
+
+
+        icon = video_json.get('posterUrl','')
+
+        duration = video_json.get("duration", 0)
+        if duration>0:
+            descStr.append( _("Duration") + ": " + str(datetime.timedelta(seconds = int(duration))))
+
+        vtype = video_json.get("sourceType", "")
+
+        if vtype:
+            descStr.append( _("Source type") + ": " + vtype)
+            
+        free = video_json.get("isFree", False)
+        if free:
+            descStr.append( _("Free") )
+        else:
+            descStr.append( _("Not Free") )
+            
+        playFrom = video_json.get("playableFrom",'') #"2020-06-07T17:55:00.000Z"
+        if playFrom:
+            date_time_str = playFrom
+            date_time_obj = datetime.datetime.strptime(date_time_str, '%Y-%m-%dT%H:%M:%S.%fZ') + self.timeoffset #"2020-06-09T15:55:00.000Z"
+            date_time_text = date_time_obj.strftime("%d/%m/%Y, %H:%M")
+
+            descStr.append( _("Playable from ") + date_time_text) 
+
+        desc = '|'.join(descStr)
+        
+        params = {'url':url, 'title':title, 'icon':icon, 'desc': desc}
+        
+        return params
+    
+    def getCollectionInfo(self, coll_json):
+        printDBG("Ekstraklasa.getCollectionInfo")
+        
+        descStr = []
+
+        icon = coll_json.get('posterUrl','')
+        title = coll_json.get('name','') 
+        count = coll_json.get('videoCount',0)
+        if count>0:
+            title = '%s [%s]' % (title,count)
+
+        url = coll_json['_links']['videosCollectionsV2']
+
+        desc = '|'.join(descStr)
+
+        params = {'title': title ,'url': url, 'icon': icon , 'category': 'cat', 'desc': desc}    
+
+        return params
         
     def listMainMenu(self,cItem):
         printDBG("Ekstraklasa.listMainMenu")
@@ -156,22 +225,13 @@ class Ekstraklasa(CBaseHostClass):
                 
                 for item in response['data']['data']:
 
-                    if 'streamUrl' in item['video']['_links']:
-                        url = item['video']['_links']['streamUrl']
-                    else:
-                        url = ''
-                    title = item['video']['title']
-                    icon = item['video']['posterUrl']
-                    if "scheduledAirDate" in item['video']: 
-                        date_time_str = item['video']["scheduledAirDate"] 
-                        date_time_obj = datetime.datetime.strptime(date_time_str, '%Y-%m-%dT%H:%M:%S.%fZ') + self.timeoffset #"2020-06-09T15:55:00.000Z"
-                        date_time_text = date_time_obj.strftime("%d/%m/%Y, %H:%M")
-                    
-                        title = title + " (" + date_time_text + ")"
-                    params = dict(cItem)
-                    params.update({'url':url, 'title':title, 'icon':icon})
-                    printDBG(str(params))
-                    self.addVideo(params)
+                    v_json = item.get('video','')
+                    if v_json:
+                        params2= self.getVideoInfo(v_json)
+                        params = dict(cItem)
+                        params.update(params2)
+                        printDBG(str(params))
+                        self.addVideo(params)
 
         
     def listCategories(self,cItem):
@@ -192,16 +252,16 @@ class Ekstraklasa(CBaseHostClass):
                 response = json_loads(data)
                 
                 for item in response['data']:
-                    icon = item['collection']['posterUrl']
-                    title = item['collection']['name'] 
-                    count = item['collection']['videoCount']
-                    title = '%s [%s]' % (title,count)
-
-                    url = item['collection']['_links']['videosCollectionsV2']
-
-                    params = {'title': title ,'url': url, 'icon': icon , 'category': 'cat'}    
-                    printDBG(str(params))
-                    self.addDir(params)
+                    
+                    c_json = item.get('collection','')
+                    
+                    if c_json:
+                        params2 = self.getCollectionInfo(c_json)
+                        params = dict(cItem)
+                        params.update(params2)    
+                        printDBG(str(params))
+                        self.addDir(params)
+   
    
     def exploreCategory(self, cItem):
         printDBG("Ekstraklasa.exploreCategory '%s'" % cItem)
@@ -222,23 +282,21 @@ class Ekstraklasa(CBaseHostClass):
             response = json_loads(data)
             
             for item in response['data']:
-                
-                if 'collection' in item:
-                    url = item['collection']['_links']['videosCollectionsV2']
-                    title = item['collection']['name']
-                    icon = data['collection']['posterUrl']
-                    
+
+                c_json = item.get('collection','')
+                if c_json:
+                    params2 = self.getCollectionInfo(c_json)
                     params = dict(cItem)
-                    params.update({'url':url, 'title':title, 'icon':icon})
+                    params.update(params2)    
                     printDBG(str(params))
                     self.addDir(params)
-                else:
-                    url = item['video']['_links']['streamUrl']
-                    title = item['video']['title']
-                    icon = item['video']['posterUrl']
+                
+                v_json = item.get('video','')
+                if v_json:
+                    params2 = self.getVideoInfo(v_json)
                     
                     params = dict(cItem)
-                    params.update({'url':url, 'title':title, 'icon':icon})
+                    params.update(params2)
                     printDBG(str(params))
                     self.addVideo(params)
               
