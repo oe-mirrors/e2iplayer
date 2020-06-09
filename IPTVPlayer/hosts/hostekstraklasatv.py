@@ -150,7 +150,10 @@ class Ekstraklasa(CBaseHostClass):
             date_time_obj = datetime.datetime.strptime(date_time_str, '%Y-%m-%dT%H:%M:%S.%fZ') + self.timeoffset #"2020-06-09T15:55:00.000Z"
             date_time_text = date_time_obj.strftime("%d/%m/%Y, %H:%M")
             title = title + " (" + date_time_text + ")"
-
+            
+            scheduleDate = date_time_text
+        else:
+            scheduleDate = ""
 
         icon = video_json.get('posterUrl','')
 
@@ -179,7 +182,10 @@ class Ekstraklasa(CBaseHostClass):
 
         desc = '|'.join(descStr)
         
-        params = {'url':url, 'title':title, 'icon':icon, 'desc': desc}
+        if url:
+            params = {'url': url, 'title':title, 'icon':icon, 'desc': desc}
+        else:
+            params = {'url': '', 'title':title, 'icon':icon, 'desc': desc, 'schedule_date': scheduleDate}
         
         return params
     
@@ -224,10 +230,19 @@ class Ekstraklasa(CBaseHostClass):
                 response = json_loads(data)
                 
                 for item in response['data']['data']:
-
+                    tmp = item.get('_meta',{})
+                    playing = tmp.get('isNowPlaying', False)
+                    
                     v_json = item.get('video','')
+                    
                     if v_json:
                         params2= self.getVideoInfo(v_json)
+
+                        if playing:
+                            params2['title'] = '\c00????00 ' + params2['title'] + ' [Live]'
+                            params2['url'] = item['_links']['streamUrl']
+                            params2['desc'] = params2['desc'] + "|" + _("Now playing") 
+
                         params = dict(cItem)
                         params.update(params2)
                         printDBG(str(params))
@@ -312,6 +327,10 @@ class Ekstraklasa(CBaseHostClass):
         
         url = cItem.get('url','')
         if not url:
+            scheduleDate = cItem.get('schedule_date','')
+            if scheduleDate:
+                msg = _("Stream starts from %s") % scheduleDate 
+                GetIPTVNotify().push(msg, 'info', 10)
             return []
             
         if not self.loggedIn:
@@ -346,6 +365,10 @@ class Ekstraklasa(CBaseHostClass):
         
             linksTab.extend(getDirectM3U8Playlist(url, checkExt=False, variantCheck=True, checkContent=True, sortWithMaxBitrate=99999999)) 
         
+        else:
+            msg = _("You are not allowed to play this video")
+            GetIPTVNotify().push(msg, 'info', 10)
+            
         return linksTab
         
     def handleService(self, index, refresh = 0, searchPattern = '', searchType = ''):
