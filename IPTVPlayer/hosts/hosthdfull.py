@@ -44,10 +44,10 @@ def GetConfigList():
 ###################################################
 
 def gettytul():
-    return 'https://hdfull.me/'
+    return 'https://hdfull.io/'
     
 class SuggestionsProvider:
-    MAIN_URL = 'https://hdfull.me/'
+    MAIN_URL = 'https://hdfull.io/'
     COOKIE_FILE = ''
     def __init__(self):
         self.cm = common()
@@ -82,14 +82,14 @@ def jstr(item, key, default=''):
 class HDFull(CBaseHostClass, CaptchaHelper):
 
     def __init__(self):
-        CBaseHostClass.__init__(self, {'history':'hdfull.me', 'cookie':'hdfull.me.cookie'})
+        CBaseHostClass.__init__(self, {'history':'hdfull.io', 'cookie':'hdfull.io.cookie'})
         SuggestionsProvider.COOKIE_FILE = self.COOKIE_FILE
 
         self.HTTP_HEADER = self.cm.getDefaultHeader(browser='chrome')
         language = config.plugins.iptvplayer.hdfull_language.value
         self.defaultParams = {'header':self.HTTP_HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE, 'cookie_items':{'language':language}}
 
-        self.MAIN_URL    = 'https://hdfull.me/'
+        self.MAIN_URL    = 'https://hdfull.io/'
         self.DEFAULT_ICON_URL = 'https://ocio.farodevigo.es/img_contenido/noticias/2018/02/642946/web_cine_pirata.jpg'
 
         self.filters = []
@@ -272,7 +272,7 @@ class HDFull(CBaseHostClass, CaptchaHelper):
                 tabJs['view'] = {'url':self.getFullUrl(item), 'hash':version + '.1'}
 
         for key in tabJs.iterkeys():
-            tabJs[key]['name'] = 'hdfull.me_%s' % key
+            tabJs[key]['name'] = 'hdfull.io_%s' % key
             if not is_js_cached(tabJs[key]['name'], tabJs[key]['hash']):
                 sts, jsdata = self.getPage(tabJs[key]['url'])
                 if sts: 
@@ -337,12 +337,14 @@ class HDFull(CBaseHostClass, CaptchaHelper):
         self.cacheLinks = {}
 
         sts, data = self.getPage(cItem['url'])
-        if not sts: return
+        if not sts: 
+            return
         cUrl = self.getFullUrl(self.cm.meta['url'])
         self.setMainUrl(cUrl)
 
         desc = []
         descObj = self.getArticleContent(cItem, data)[0]
+        
         for item in descObj['other_info']['custom_items_list']:
             desc.append(item[1])
         desc = ' | '.join(desc) + '[/br]' + descObj['text']
@@ -522,8 +524,13 @@ class HDFull(CBaseHostClass, CaptchaHelper):
         if data == None:
             self.tryTologin()
             sts, data = self.getPage(url)
-            if not sts: data = ''
+            if not sts: 
+                data = ''
 
+        printDBG("***********************************")
+        printDBG(data)
+        printDBG("***********************************")
+        
         data = self.cm.ph.getDataBeetwenNodes(data, ('<div', '>', 'summary-title'), ('<div', '>', 'breakaway-wrapper'), False)[1]
         title = self.cleanHtmlStr(data[:data.find('</div')])
         icon = self.cm.ph.getSearchGroups(data, '''<img([^>]+?video\-page\-thumbnail[^>]+?)>''')[0]
@@ -562,7 +569,7 @@ class HDFull(CBaseHostClass, CaptchaHelper):
 
             self.cm.clearCookie(self.COOKIE_FILE, removeNames=['language'])
 
-            loginCookie = GetCookieDir('hdfull.me.login')
+            loginCookie = GetCookieDir('hdfull.io.login')
             self.login = config.plugins.iptvplayer.hdfull_login.value
             self.password = config.plugins.iptvplayer.hdfull_password.value
 

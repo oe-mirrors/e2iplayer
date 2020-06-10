@@ -1007,7 +1007,7 @@ class common:
                                 'use_cookie': True, 
                                 'load_cookie': True,
                                 'save_cookie': True,
-                                #'raw_post_data': True, 
+                                'raw_post_data': True, 
                                 'return_data': True, 
                                 'cookiefile': params['cloudflare_params']['cookie_file']
                             }
@@ -1020,7 +1020,7 @@ class common:
                                 'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.106 Safari/537.36'
                             }
                             
-                            #post_data2= json_dumps(post_data2)
+                            post_data2= json_dumps(post_data2)
                             
                         else:
                             printDBG("*************** CloudFlare prompts reCaptcha *************")
@@ -1078,143 +1078,147 @@ class common:
                             if 'setTimeout' in item and 'submit()' in item:
                                 dat = item
                                 break
+
                         if not dat:
                             GetIPTVNotify().push(_("New javascript not yet supported!"), 'info', 5)
-                            break
-                        
-                        decoded = ''
-                        
-                        #first part of code
-                        js_params = [{'path' : GetJSScriptFile('cf_max.byte')}]
-                        #particular div element
-                        #tmp = ph.findall(verData, ('<div', '>', 'id'), '</div>', flags=ph.START_S)
-                        
-                        
-                        code2=''
-                        numChildren = 5
-                        #<div style="display:none;visibility:hidden;">
-                        
-                        tmp = divs = re.findall("<div.*?id=\"([^\"]+)\">(.*?)</div>", data)
-                        for t in tmp:
-                            name_id = t[0]
-                            if len(name_id)>=8 and len(name_id)<=12:
-                                numChildren = numChildren + 1
-                                value_id = t[1]
-                                code2 = code2 + "\ndocument.children.push ( new element('', '%s', 'div')); document.children[%d].innerHTML ='%s';" % (name_id, numChildren,value_id)
-                                                                
-                        printDBG("--------------- code 2 ------------------")
-                        printDBG(code2)
-                        printDBG("-----------------------------------------")
-                        #script part in variable called 'dat'
-                        printDBG("-------------- dat prima delle sostituzioni----------------------")
-                        printDBG(dat)
-                        printDBG("-----------------------------------------")
-                        #dat = dat.replace('(function(){\n\n    var a = function() {try{return !!window.addEventListener} catch(e) {return !1} },\n    b = function(b, c) {a() ? document.addEventListener("DOMContentLoaded", b, c) : document.attachEvent("onreadystatechange", b)};\n    b(function()','function pippo()')
-                        pattern = re.compile("\(function\(\)\{.*?b\(function\(\)", re.S)
-                        dat = re.sub(pattern, "function pippo()", dat)
-                        
-                        dat = dat.replace('f.submit()','print(a.value);')
-                        dat = dat.replace('setTimeout(function(){','')
-                        
-                        #var cookiesEnabled=(navigator.cookieEnabled)? true : false;
-                        #var cookieSupportInfix=cookiesEnabled?'/nocookie':'/cookie';
-                        dat = dat.replace("var cookiesEnabled=(navigator.cookieEnabled)? true : false;","")
-                        dat = dat.replace("var cookieSupportInfix=cookiesEnabled?'/nocookie':'/cookie';","")
-                        
-                        pattern2= re.compile("\},4000\);.*?\)\(\)",re .S)
-                        dat = re.sub(pattern2,'}', dat)
-                        
-                        
-                        #new version
-                        #t = document.createElement('div');
-                        #t.innerHTML="<a href='/'>x</a>";
-                        #t = t.firstChild.href;r = (setInterval(function(){}, 100),t.match(/https?:\/\//)[0]);
-                        dat = dat.replace("r = (setInterval(function(){}, 100),t.match(/https?:\/\//)[0]);","r = t.match(/https?:\/\//)[0];")
-                        #old version
-                        dat = dat.replace("t = document.createElement('div');\n        t.innerHTML=\"<a href='/'>x</a>\";\n        t = t.firstChild.href;",'t="%domain%";').replace('%domain%',domain)
-                        
-                        
-                        
-                        pattern3 = re.compile("var a = document.*?appendChild\(.*?\);",re.S)
-                        dat = re.sub(pattern3, "", dat)
-                        
-                        printDBG("-------------- dat dopo le sostituzioni----------------------")
-                        printDBG(dat)
-                        printDBG("-----------------------------------------")
-                        
-                        js_params.append({'code': "%s\n%s\n\npippo(); " % (code2, dat)})
-                        ret = js_execute_ext( js_params )
-                        printDBG(ret)
-                        
-                        formTag = self.ph.getDataBeetwenNodes(verData, ('<form','>', 'challenge'), ('</form','>'))[1]
-                        formTag = re.sub("<!--.*?-->", "<!-- -->", formTag)
-
-                        printDBG("--------challenge form-----------")
-                        printDBG(formTag)
-                        printDBG("--------challenge form-----------")
-                        
-                        get_data_1 = dict(re.findall(r'<input[^>]*name="([^"]*)"[^>]*value="([^"]*)"[^>]*>', formTag))
-                        
-                        get_data_2 = dict(re.findall(r'<input[^>]*value="([^"]*)"[^>]*name="([^"]*)"[^>]*>', formTag))
-
-                        printDBG("get_data_1: %s" % str(get_data_1))
-                        printDBG("get_data_2: %s" % str(get_data_2))
-
-                        get_data={}
-                        
-                        for xx in get_data_1:
-                            if not get_data.get(xx,''):
-                                get_data[xx] = get_data_1[xx]
-                                    
-                        #get_data.update(get_data_1)
-                        
-                        for xx in get_data_2:
-                            if not get_data.get(get_data_2[xx],''):
-                                get_data[get_data_2[xx]] = xx
-                                
-                        #get_data.update(get_data_2_swap)
-                        #get_data['cf_ch_verify']='plat'
-                        
-                        get_data['jschl_answer'] = ret['data'].replace('\n','')
-                        
-                        verUrl =  _getFullUrl( ph.getattr(verData, 'action'), domain)
-                        
-                        #unescape html code of & 
-                        verUrl = verUrl.replace("&amp;",'&')
-                        
-                        postDataCF = {}
-                        for key in get_data:
-                            #postDataCF[key] = urllib.quote(get_data[key])
-                            postDataCF[key] = get_data[key]
-                            if key == "r":
-                                r = get_data[key]
-                                
-                        printDBG("CF verification url: %s" % verUrl)
-                        printDBG("CF post data: %s" % str(postDataCF))
-                        
-                        params2 = dict(params)
-                        params2['load_cookie'] = True
-                        params2['save_cookie'] = True
-                        params2['header'] = dict(params.get('header', {}))
-                        params2['header'].update({'Referer':url, 'User-Agent':cfParams.get('User-Agent', ''), 'Accept': 'text/html,application/xhtml+xml,application/xml','Accept-Encoding':'gzip', 'Content-Type':'application/x-www-form-urlencoded'})
-                        if params2.get('raw_post_data',False):
-                            params2.pop('raw_post_data')
-                        
-                        printDBG("Time spent: [%s]" % (time.time() - start_time))
-                        if current == 1:
-                            GetIPTVSleep().Sleep(4 -(time.time() - start_time))
+                             
+                            sts, data = self.getPage(url, params, post_data)
+                            
                         else:
-                            GetIPTVSleep().Sleep(4)
-                        printDBG("Time spent: [%s]" % (time.time() - start_time))
-                        printDBG("Timeout: [%s]" % 4000)
-                        
-                        sts, data = self.getPage(verUrl, params2, postDataCF)
-  
-                        #printDBG("Cloudflare Url: %s" % data.meta["url"])
+                            
+                            decoded = ''
+                            
+                            #first part of code
+                            js_params = [{'path' : GetJSScriptFile('cf_max.byte')}]
+                            #particular div element
+                            #tmp = ph.findall(verData, ('<div', '>', 'id'), '</div>', flags=ph.START_S)
+                            
+                            
+                            code2=''
+                            numChildren = 5
+                            #<div style="display:none;visibility:hidden;">
+                            
+                            tmp = divs = re.findall("<div.*?id=\"([^\"]+)\">(.*?)</div>", data)
+                            for t in tmp:
+                                name_id = t[0]
+                                if len(name_id)>=8 and len(name_id)<=12:
+                                    numChildren = numChildren + 1
+                                    value_id = t[1]
+                                    code2 = code2 + "\ndocument.children.push ( new element('', '%s', 'div')); document.children[%d].innerHTML ='%s';" % (name_id, numChildren,value_id)
+                                                                    
+                            printDBG("--------------- code 2 ------------------")
+                            printDBG(code2)
+                            printDBG("-----------------------------------------")
+                            #script part in variable called 'dat'
+                            printDBG("-------------- dat prima delle sostituzioni----------------------")
+                            printDBG(dat)
+                            printDBG("-----------------------------------------")
+                            #dat = dat.replace('(function(){\n\n    var a = function() {try{return !!window.addEventListener} catch(e) {return !1} },\n    b = function(b, c) {a() ? document.addEventListener("DOMContentLoaded", b, c) : document.attachEvent("onreadystatechange", b)};\n    b(function()','function pippo()')
+                            pattern = re.compile("\(function\(\)\{.*?b\(function\(\)", re.S)
+                            dat = re.sub(pattern, "function pippo()", dat)
+                            
+                            dat = dat.replace('f.submit()','print(a.value);')
+                            dat = dat.replace('setTimeout(function(){','')
+                            
+                            #var cookiesEnabled=(navigator.cookieEnabled)? true : false;
+                            #var cookieSupportInfix=cookiesEnabled?'/nocookie':'/cookie';
+                            dat = dat.replace("var cookiesEnabled=(navigator.cookieEnabled)? true : false;","")
+                            dat = dat.replace("var cookieSupportInfix=cookiesEnabled?'/nocookie':'/cookie';","")
+                            
+                            pattern2= re.compile("\},4000\);.*?\)\(\)",re .S)
+                            dat = re.sub(pattern2,'}', dat)
+                            
+                            
+                            #new version
+                            #t = document.createElement('div');
+                            #t.innerHTML="<a href='/'>x</a>";
+                            #t = t.firstChild.href;r = (setInterval(function(){}, 100),t.match(/https?:\/\//)[0]);
+                            dat = dat.replace("r = (setInterval(function(){}, 100),t.match(/https?:\/\//)[0]);","r = t.match(/https?:\/\//)[0];")
+                            #old version
+                            dat = dat.replace("t = document.createElement('div');\n        t.innerHTML=\"<a href='/'>x</a>\";\n        t = t.firstChild.href;",'t="%domain%";').replace('%domain%',domain)
+                            
+                            
+                            
+                            pattern3 = re.compile("var a = document.*?appendChild\(.*?\);",re.S)
+                            dat = re.sub(pattern3, "", dat)
+                            
+                            printDBG("-------------- dat dopo le sostituzioni----------------------")
+                            printDBG(dat)
+                            printDBG("-----------------------------------------")
+                            
+                            js_params.append({'code': "%s\n%s\n\npippo(); " % (code2, dat)})
+                            ret = js_execute_ext( js_params )
+                            printDBG(ret)
+                            
+                            formTag = self.ph.getDataBeetwenNodes(verData, ('<form','>', 'challenge'), ('</form','>'))[1]
+                            formTag = re.sub("<!--.*?-->", "<!-- -->", formTag)
 
-                        #printDBG("--------- cf verification server answer -------")
-                        #printDBG(data)
-                        #printDBG(" ----------------------------------------------")
+                            printDBG("--------challenge form-----------")
+                            printDBG(formTag)
+                            printDBG("--------challenge form-----------")
+                            
+                            get_data_1 = dict(re.findall(r'<input[^>]*name="([^"]*)"[^>]*value="([^"]*)"[^>]*>', formTag))
+                            
+                            get_data_2 = dict(re.findall(r'<input[^>]*value="([^"]*)"[^>]*name="([^"]*)"[^>]*>', formTag))
+
+                            printDBG("get_data_1: %s" % str(get_data_1))
+                            printDBG("get_data_2: %s" % str(get_data_2))
+
+                            get_data={}
+                            
+                            for xx in get_data_1:
+                                if not get_data.get(xx,''):
+                                    get_data[xx] = get_data_1[xx]
+                                        
+                            #get_data.update(get_data_1)
+                            
+                            for xx in get_data_2:
+                                if not get_data.get(get_data_2[xx],''):
+                                    get_data[get_data_2[xx]] = xx
+                                    
+                            #get_data.update(get_data_2_swap)
+                            #get_data['cf_ch_verify']='plat'
+                            
+                            get_data['jschl_answer'] = ret['data'].replace('\n','')
+                            
+                            verUrl =  _getFullUrl( ph.getattr(verData, 'action'), domain)
+                            
+                            #unescape html code of & 
+                            verUrl = verUrl.replace("&amp;",'&')
+                            
+                            postDataCF = {}
+                            for key in get_data:
+                                #postDataCF[key] = urllib.quote(get_data[key])
+                                postDataCF[key] = get_data[key]
+                                if key == "r":
+                                    r = get_data[key]
+                                    
+                            printDBG("CF verification url: %s" % verUrl)
+                            printDBG("CF post data: %s" % str(postDataCF))
+                            
+                            params2 = dict(params)
+                            params2['load_cookie'] = True
+                            params2['save_cookie'] = True
+                            params2['header'] = dict(params.get('header', {}))
+                            params2['header'].update({'Referer':url, 'User-Agent':cfParams.get('User-Agent', ''), 'Accept': 'text/html,application/xhtml+xml,application/xml','Accept-Encoding':'gzip', 'Content-Type':'application/x-www-form-urlencoded'})
+                            if params2.get('raw_post_data',False):
+                                params2.pop('raw_post_data')
+                            
+                            printDBG("Time spent: [%s]" % (time.time() - start_time))
+                            if current == 1:
+                                GetIPTVSleep().Sleep(4 -(time.time() - start_time))
+                            else:
+                                GetIPTVSleep().Sleep(4)
+                            printDBG("Time spent: [%s]" % (time.time() - start_time))
+                            printDBG("Timeout: [%s]" % 4000)
+                        
+                            sts, data = self.getPage(verUrl, params2, postDataCF)
+  
+                    #printDBG("Cloudflare Url: %s" % data.meta["url"])
+
+                    #printDBG("--------- cf verification server answer -------")
+                    #printDBG(data)
+                    #printDBG(" ----------------------------------------------")
                         
                 except Exception:
                     printExc()
@@ -1247,7 +1251,7 @@ class common:
         outParams, postData = self.getParamsFromUrlWithMeta(url)
         addParams.update(outParams)
         if 'header' not in addParams and 'host' not in addParams:
-            host = 'Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/59.0.3071.115 Safari/537.36'
+            host = 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.61 Safari/537.36'
             header = {'User-Agent': host, 'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8'}
             addParams['header'] = header
         addParams['return_data'] = False
