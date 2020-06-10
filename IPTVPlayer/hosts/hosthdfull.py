@@ -277,14 +277,14 @@ class HDFull(CBaseHostClass, CaptchaHelper):
                 sts, jsdata = self.getPage(tabJs[key]['url'])
                 if sts: 
                     if 'providers' == key:
-                        idx1 = jsdata.find('providers')
-                        idx2 = jsdata.find(';', idx1+9)
-                        funName = self.cm.ph.getSearchGroups(jsdata[idx2+1:], '''function\s+?([^\(]+?)\(''')[0]
-                        tabJs[key]['code'] = 'function buildIframeEmbed(){return arguments[0];}\nbuildIframeGenericEmbed=buildIframeEmbed;\n'  + jsdata[:idx2+1] + '; function %s(){return function(){};}' % funName
-                        printDBG(">>>>")
+                        
+                        tabJs[key]['code'] =  jsdata + "\nfunction buildIframeEmbed(){return arguments[0];}\n"
+                        
+                        printDBG(">>>> javascript code from tabJs['%s'] >>>>" % key)
                         printDBG(tabJs[key]['code'])
                         printDBG("<<<<")
-                    else:
+                        
+                    elif 'view' == key:
                         tmp = ['window=this,window.atob=function(e){e.length%4==3&&(e+="="),e.length%4==2&&(e+="=="),e=Duktape.dec("base64",e),decText="";for(var t=0;t<e.byteLength;t++)decText+=String.fromCharCode(e[t]);return decText};']
                         start = 0
                         while True:
@@ -312,7 +312,7 @@ class HDFull(CBaseHostClass, CaptchaHelper):
                         tt = 'function e2iLinks(r){r=%s;for(var i in r)provider=providers[r[i].provider],r[i].provider=provider.d.split("://")[1],r[i].embed=provider.e(r[i].code,"800","600"),r[i].download=provider.l(r[i].code,"800","600");print(JSON.stringify(r))}'
                         tmp.append( tt % self.cm.ph.getDataBeetwenMarkers(jsdata, mark + '=', ';', False)[1].replace(mark, 'r') )
                         tabJs[key]['code'] = '\n'.join(tmp)
-                        printDBG(">>>>")
+                        printDBG(">>>> javascript code from tabJs['%s'] >>>>" % key)
                         printDBG(tabJs[key]['code'])
                         printDBG("<<<<")
         try:
@@ -527,9 +527,9 @@ class HDFull(CBaseHostClass, CaptchaHelper):
             if not sts: 
                 data = ''
 
-        printDBG("***********************************")
-        printDBG(data)
-        printDBG("***********************************")
+        #printDBG("***********************************")
+        #printDBG(data)
+        #printDBG("***********************************")
         
         data = self.cm.ph.getDataBeetwenNodes(data, ('<div', '>', 'summary-title'), ('<div', '>', 'breakaway-wrapper'), False)[1]
         title = self.cleanHtmlStr(data[:data.find('</div')])
