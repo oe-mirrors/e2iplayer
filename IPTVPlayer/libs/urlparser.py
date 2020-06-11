@@ -578,10 +578,12 @@ class urlparser:
                        'upvideo.cc':           self.pp.parserONLYSTREAMTV   ,
                        'jetload.net':          self.pp.parserJETLOADNET     ,
                        'mixdrop.co':           self.pp.parserMIXDROP        ,
+                       'mixdrop.club':         self.pp.parserMIXDROP        ,
                        'vidload.net':          self.pp.parserVIDLOADNET     ,
                        'vidcloud9.com':        self.pp.parserVIDCLOUD9      ,
                        'abcvideo.cc':          self.pp.parserABCVIDEO       ,
                        'easyload.io':          self.pp.parserEASYLOAD       ,
+                       'videobin.co':          self.pp.parserVIDEOBIN       ,
                     }
         return
     
@@ -12653,6 +12655,7 @@ class pageParser(CaptchaHelper):
             hlsUrl = strwithmeta(hlsUrl, {'Origin':"https://" + urlparser.getDomain(baseUrl), 'Referer':baseUrl})
             urlTab.extend(getDirectM3U8Playlist(hlsUrl, checkExt=False, variantCheck=True, checkContent=True, sortWithMaxBitrate=99999999))
         return urlTab
+
     def parserEASYLOAD(self, baseUrl):
         printDBG("parserEASYLOAD baseUrl[%s]" % baseUrl)
 
@@ -12685,3 +12688,33 @@ class pageParser(CaptchaHelper):
             else:
                 urlTab.append({'name': type, 'url': url})
         return urlTab
+
+    def parserVIDEOBIN(self, baseUrl):
+        printDBG("parserVIDEOBIN baseUrl [%s]" % baseUrl)
+        # example: https://videobin.co/embed-n7uoq6qlj2du.html
+        #          https://videobin.co/n7uoq6qlj2du
+
+        urlTabs = []
+        
+        sts, data = self.cm.getPage(baseUrl)
+        
+        if sts:
+            s = re.findall("sources: ?\[(.*?)\]", data, re.S)
+            if s:
+                for ss in s:
+                    printDBG("Found sources: %s" % ss)
+                    links = re.findall("[\"']([^\"']+?)[\"']",ss)
+                    for link_url in links:
+                        if  self.cm.isValidUrl(link_url):
+                            link_url = urlparser.decorateUrl(link_url, {'Referer': baseUrl})
+                            if 'm3u8' in link_url:
+                                params = getDirectM3U8Playlist(link_url, checkExt=True, variantCheck=True, checkContent=True, sortWithMaxBitrate=99999999)
+                                printDBG(str(params))    
+                                urlTabs.extend(params)
+                            else:
+                                params = {'name': 'link' , 'url': link_url}
+                                printDBG(str(params))
+                                urlTabs.append(params)
+
+                
+        return urlTabs
