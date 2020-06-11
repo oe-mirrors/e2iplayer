@@ -19,7 +19,7 @@ except Exception: import simplejson as json
 ###################################################
 
 def gettytul():
-    return 'https://tantifilm.red/'
+    return 'https://tantifilm.tube/'
 
 class TantiFilmOrg(CBaseHostClass):
     REMOVE_COOKIE = True
@@ -32,7 +32,7 @@ class TantiFilmOrg(CBaseHostClass):
         self.cm.HEADER = self.HEADER # default header
         self.defaultParams = {'header':self.HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
         
-        self.MAIN_URL = 'https://www.tantifilm.red/'
+        self.MAIN_URL = 'https://www.tantifilm.tube/'
         self.DEFAULT_ICON_URL = 'https://raw.githubusercontent.com/Zanzibar82/images/master/posters/tantifilm.png'
         
         self.MAIN_CAT_TAB = [{'category':'list_categories',    'title': _('Categories'),                           'url':self.MAIN_URL  },
@@ -350,7 +350,10 @@ class TantiFilmOrg(CBaseHostClass):
             printDBG(tmp)
             for item in tmp:
                 url = self.cm.ph.getSearchGroups(item, '''<iframe[^>]+?src=['"]([^'^"]+?)['"]''', ignoreCase=True)[0]
-                if not self.cm.isValidUrl(url): continue
+                if url.startswith('//'):
+                    url = "https:" + url
+                if not self.cm.isValidUrl(url): 
+                    continue
                 id = self.cm.ph.getSearchGroups(item, '''id=['"]([^'^"]+?)['"]''', ignoreCase=True)[0]
                 title = self.cm.ph.getDataBeetwenReMarkers(data, re.compile('''<a[^>]+?href=['"]\#%s['"][^>]*?>''' % re.escape(id)), re.compile('</a>'))[1]
                 title = self.cleanHtmlStr(title)
