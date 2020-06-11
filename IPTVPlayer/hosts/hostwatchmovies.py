@@ -236,8 +236,9 @@ class watchMovies(CBaseHostClass):
             post_data = {'action':'doo_player_ajax', 'post':data_post, 'nume':data_nume, 'type':data_type}
             sts, data = self.getPage('https://watch-movies.pl/wp-admin/admin-ajax.php', params, post_data)
             if not sts: return []
-            printDBG("watchMovies.getLinksForVideo data ajax[%s]" % item)
-            playerUrl = self.cm.ph.getSearchGroups(data, '''src=['"]([^"^']+?)['"]''', 1, True)[0]
+            printDBG("watchMovies.getLinksForVideo data ajax[%s]" % data)
+#            playerUrl = self.cm.ph.getSearchGroups(data, '''src=['"]([^"^']+?)['"]''', 1, True)[0]
+            playerUrl = self.cm.ph.getSearchGroups(data, '''(https?:[^"^']+?)['"]''')[0].replace("\/", "/")
             retTab.append({'name':self.up.getHostName(playerUrl), 'url':strwithmeta(playerUrl, {'Referer':url}), 'need_resolve':1})
             
         if len(retTab):
