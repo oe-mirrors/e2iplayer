@@ -511,6 +511,7 @@ class urlparser:
                        'cloudcartel.net':      self.pp.parserCLOUDCARTELNET ,
                        'haxhits.com':          self.pp.parserHAXHITSCOM     ,
                        'jawcloud.co':          self.pp.parserJAWCLOUDCO     ,
+                       'uploadit.cc':          self.pp.parserJAWCLOUDCO     ,
                        'gounlimited.to':       self.pp.parserGOUNLIMITEDTO  ,
                        'wstream.video':        self.pp.parserWSTREAMVIDEO   ,
                        'share-online.biz':     self.pp.parserSHAREONLINEBIZ ,
