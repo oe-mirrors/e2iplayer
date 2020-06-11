@@ -145,7 +145,7 @@ class eKinomaniak(CBaseHostClass):
 #            printDBG("eKinomaniak.listItems item %s" % item)
             url = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''href=['"]([^"^']+?)['"]''')[0])
             if '<hr style' in item or url == '': continue
-            icon = self.getFullIconUrl(self.cm.ph.getSearchGroups(item, '''this\.src=['"]([^"^']+?)['"]''')[0])
+            icon = self.getFullIconUrl(self.cm.ph.getSearchGroups(item, '''data-src=['"]([^"^']+?)['"]''')[0])
             if icon == '':
                 icon = self.getFullIconUrl(self.cm.ph.getSearchGroups(item, '''src=['"]([^"^']+?)['"]''')[0])
             title = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(item, ('</a', '>'), ('</a', '>'), False)[1])
