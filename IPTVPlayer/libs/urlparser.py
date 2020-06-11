@@ -415,6 +415,7 @@ class urlparser:
                        'sostart.pw':            self.pp.parserSOSTARTPW     ,
                        'soundcloud.com':        self.pp.parserSOUNDCLOUDCOM  ,
                        'speedvid.net':          self.pp.parserSPEEDVIDNET    ,
+                       'speedwatch.io':         self.pp.parserSPEEDWATCH    ,
                        'speedvideo.net':        self.pp.parserSPEEDVIDEONET  ,
                        'sportstream365.com':    self.pp.parserSPORTSTREAM365 ,
                        'sprocked.com':          self.pp.parserSPROCKED      ,
@@ -13375,3 +13376,34 @@ class pageParser(CaptchaHelper):
                             urlTabs.append(params)
                         
         return urlTabs
+
+    def parserSPEEDWATCH(self, baseUrl):
+        printDBG("parserSPEEDWATCH baseUrl [%s]" % baseUrl)
+        #example https://www.speedwatch.io/e/41GbMdRzHUZY.html
+        
+        urlTabs = []
+        
+        sts, data = self.cm.getPage(baseUrl)
+        
+        if sts:
+            printDBG("-----------------------")
+            printDBG(data)
+            printDBG("-----------------------")
+        
+            sources = re.findall("sources\s?:\s?\[(.*?)\]", data)  
+            
+            if sources:
+                sources = eval("[" + sources[0] + "]")
+                for s in sources:
+                    if s.startswith('//'):
+                        s = "https:" + s
+                        if self.cm.isValidUrl(s): 
+                            s = urlparser.decorateUrl(s, {'Referer': baseUrl})
+                            if '.m3u8' in s:
+                                urlTabs.extend(getDirectM3U8Playlist(s, checkExt=False, checkContent=True, sortWithMaxBitrate=999999999))
+                            else:
+                                urlTabs.append({'name':'link', 'url': s})
+        
+        return urlTabs
+        
+        
