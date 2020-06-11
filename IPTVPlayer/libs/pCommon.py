@@ -1017,7 +1017,7 @@ class common:
                             dat = dat.replace(dat[dat.index('var isIE'):dat.index('setTimeout')],'')
                         except Exception:
                             printExc()
-                        js_params.append({'code': "var navigator={cookieEnabled:1}; var ELEMS_TEXT = %s; var location = {hash:''}; var iptv_domain='%s';\n%s\niptv_fun();" % (json_dumps(elemsText), domain, dat)})
+                        js_params.append({'code': "function setInterval(func, delay) { return 1 };var navigator={cookieEnabled:1}; var ELEMS_TEXT = %s; var location = {hash:''}; var iptv_domain='%s';\n%s\niptv_fun();" % (json_dumps(elemsText), domain, dat)})
                         ret = js_execute_ext( js_params )
                         decoded = json_loads(ret['data'].strip())
                         
