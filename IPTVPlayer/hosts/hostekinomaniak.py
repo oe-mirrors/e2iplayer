@@ -29,7 +29,7 @@ class eKinomaniak(CBaseHostClass):
         CBaseHostClass.__init__(self, {'history':'ekinomaniak.online', 'cookie':'ekinomaniak.online.cookie'})
         self.USER_AGENT = 'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:40.0) Gecko/20100101 Firefox/40.0'
         self.MAIN_URL = 'https://ekinomaniak.net/'
-        self.DEFAULT_ICON_URL = 'https://ekinomaniak.net/img/video.png'
+        #self.DEFAULT_ICON_URL = 'https://ekinomaniak.net/img/video.png'
         self.HTTP_HEADER = {'User-Agent': self.USER_AGENT, 'DNT':'1', 'Accept': 'text/html', 'Accept-Encoding':'gzip, deflate', 'Referer':self.getMainUrl(), 'Origin':self.getMainUrl()}
         self.AJAX_HEADER = dict(self.HTTP_HEADER)
         self.AJAX_HEADER.update( {'X-Requested-With': 'XMLHttpRequest', 'Accept-Encoding':'gzip, deflate', 'Content-Type':'application/x-www-form-urlencoded; charset=UTF-8', 'Accept':'application/json, text/javascript, */*; q=0.01'} )
@@ -145,7 +145,7 @@ class eKinomaniak(CBaseHostClass):
 #            printDBG("eKinomaniak.listItems item %s" % item)
             url = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''href=['"]([^"^']+?)['"]''')[0])
             if '<hr style' in item or url == '': continue
-            icon = self.getFullIconUrl(self.cm.ph.getSearchGroups(item, '''this\.src=['"]([^"^']+?)['"]''')[0])
+            icon = self.getFullIconUrl(self.cm.ph.getSearchGroups(item, '''data-src=['"]([^"^']+?)['"]''')[0])
             if icon == '':
                 icon = self.getFullIconUrl(self.cm.ph.getSearchGroups(item, '''src=['"]([^"^']+?)['"]''')[0])
             title = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(item, ('</a', '>'), ('</a', '>'), False)[1])
