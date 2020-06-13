@@ -206,6 +206,7 @@ class urlparser:
                        'donevideo.com':         self.pp.parserLIMEVIDEO     ,
                        'dotstream.tv':          self.pp.parserDOTSTREAMTV   ,
                        'dwn.so':                self.pp.parserDWN           ,
+                       'easyload.io':           self.pp.parserEASYLOAD      ,
                        'easyvid.org':           self.pp.parserEASYVIDORG    ,
                        'easyvideo.me':          self.pp.parserEASYVIDEOME   ,
                        'ebd.cda.pl':            self.pp.parserCDA           ,
@@ -13406,4 +13407,81 @@ class pageParser(CaptchaHelper):
         
         return urlTabs
         
+    def parserEASYLOAD(self, baseUrl):
+        printDBG("parserEASYLOAD baseUrl [%s]" % baseUrl)
+        
+        def xor_string(a, b):     
+            if len(a) > len(b):
+                return "".join([chr(ord(x) ^ ord(y)) for (x, y) in zip(a[:len(b)], b)])
+            else:
+                return "".join([chr(ord(x) ^ ord(y)) for (x, y) in zip(a, b[:len(a)])])
+        
+        def real_url(encoded_url):
+            # search string to xor with
+            xurl_tmp = xor_string(encoded_url[:4],"http")
+            xurl= "" 
+            for i in range(int(len(encoded_url) / 4 + 1)):
+                xurl = xurl + xurl_tmp
+            printDBG("pattern to xor: %s " % xurl)
+            final_url = xor_string(encoded_url, xurl)
+            printDBG("final url: %s " % final_url)
+            return final_url
+        
+        httpParams = {
+            'header' : {
+                'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.61 Safari/537.36',
+                'Accept': '*/*',
+                'Accept-Encoding': 'gzip'
+            },
+            'use_cookie':True,
+            'load_cookie':True,
+            'save_cookie':True,
+            'cookiefile': GetCookieDir('easyload.cookie')
+        }
+      
+        m = re.search("/(e|f)/(?P<id>[a-zA-Z0-9]{9,12})", baseUrl)
+        
+        if m:
+            video_id = m.groupdict().get('id','')
+            url = self.cm.getBaseUrl(baseUrl) + "e/" + video_id
+            httpParams['header']['Referer'] = baseUrl
+        else:
+            url = baseUrl
+            
+        urlTabs = []
+        
+        sts, data = self.cm.getPage(url, httpParams)
+        
+        if sts:
+            printDBG("-----------------------")
+            printDBG(data)
+            printDBG("-----------------------")
+        
+            code = re.findall("exdata=\"(.*?)\"", data)
+            
+            if code:
+                code = code[0]
+                printDBG("Code : %s" % code)
+                c2 =  base64.b64decode(code)
+                printDBG("First conversion from b64: %s" % c2)
+                c3 = base64.b64decode(c2)
+                printDBG("Second conversion from b64: %s" % c3)
+        
+                j = json_loads(c3)
+                printDBG("------------ json ------------")
+                printDBG(str(j))
+        
+                url = real_url(j['streams']['0']['src'])
+                if self.cm.isValidUrl(url):
+                    url = urlparser.decorateUrl(url, {'Referer': baseUrl})
+                    if 'm3u8' in url:
+                        params = getDirectM3U8Playlist(url, checkExt=True, variantCheck=True, checkContent=True, sortWithMaxBitrate=99999999)
+                        printDBG(str(params))    
+                        urlTabs.extend(params)
+                    else:
+                        params = {'name': 'link' , 'url': url}
+                        printDBG(str(params))
+                        urlTabs.append(params)
+    
+        return urlTabs
         
