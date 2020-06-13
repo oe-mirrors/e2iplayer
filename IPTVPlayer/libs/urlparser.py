@@ -11579,13 +11579,37 @@ class pageParser(CaptchaHelper):
     def parserCLOUDVIDEOTV(self, baseUrl):
         printDBG("parserCLOUDVIDEOTV baseUrl[%r]" % baseUrl)
         # example video: https://cloudvideo.tv/embed-1d3w4w97woun.html
+
+        def checkTxt(txt):
+            txt = txt.replace('\n', ' ')
+            if txt.find('file:'):
+                txt = txt.replace('file:', '"file":')
+            if txt.find('label:'):
+                txt = txt.replace('label:', '"label":')
+            if txt.find('kind:'):
+                txt = txt.replace('kind:', '"kind":')
+            if txt.find('src:'):
+                txt = txt.replace('src:', '"file":')
+            if txt.find('res:'):
+                txt = txt.replace('res:', '"res":')
+            if txt.find('type:'):
+                txt = txt.replace('type:', '"type":')
+            
+            return txt
+
+
         baseUrl = strwithmeta(baseUrl)
         HTTP_HEADER= self.cm.getDefaultHeader(browser='chrome')
         HTTP_HEADER['Referer'] = baseUrl.meta.get('Referer', baseUrl)
         urlParams = {'header':HTTP_HEADER}
 
         sts, data = self.cm.getPage(baseUrl, urlParams)
-        if not sts: return False
+        if not sts: 
+            return False
+        
+        printDBG("------------------------------------")
+        printDBG(data)
+        printDBG("------------------------------------")
         cUrl = self.cm.meta['url']
         domain = urlparser.getDomain(cUrl)
 
@@ -11602,6 +11626,51 @@ class pageParser(CaptchaHelper):
                     retTab.append({'name':'[%s]' % type, 'url':url})
                 elif 'x-mpeg' in type:
                     retTab.extend(getDirectM3U8Playlist(url, checkContent=True, sortWithMaxBitrate=999999999))
+        
+        
+        if retTab: 
+            return retTab
+        
+        # search for packed javascript code
+        scripts = re.findall("<script type=[\"'][a-z0-9]{12,}-text/javascript[\"']>.*?(eval\(function.*?)</script>", data, re.S)
+            
+        if scripts:
+            for script in scripts:
+                printDBG("----------- pack -----------------")
+                printDBG(script)
+
+                script = script + "\n"
+                # mods
+                script = script.replace("eval(function(p,a,c,k,e,d","pippo = function(p,a,c,k,e,d")
+                script = script.replace("return p}(", "print(p)}\n\npippo(")
+                script = script.replace("))\n",");\n")
+
+                # duktape
+                ret = js_execute( script )
+                decoded = ret['data']
+                printDBG('------------------------------')
+                printDBG(decoded)
+                printDBG('------------------------------')
+
+                # stream search
+                s = re.findall("sources\s?:\s?\[(.*?)\]", decoded, re.S)
+                if s:
+                    txt = checkTxt("[" + s[0] + "]")
+                    printDBG(txt)
+                    
+                    links = json_loads(txt)
+                    printDBG(str(links))
+                    
+                    for l in links:
+                        if 'file' in l:
+                            url = urlparser.decorateUrl(l['file'], {'Referer' : baseUrl})
+                            if url.endswith('.m3u8'):
+                                retTab.extend(getDirectM3U8Playlist(url, checkExt=False, variantCheck=True, checkContent=True, sortWithMaxBitrate=99999999))
+                            else:
+                                params = {'name': l.get('label', 'link') , 'url': url}
+                                printDBG(params)
+                                retTab.append(params)
+        
         return retTab
 
     def parserGOGOANIMETO(self, baseUrl):
