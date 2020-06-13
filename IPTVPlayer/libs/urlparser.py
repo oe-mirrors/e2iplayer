@@ -314,6 +314,7 @@ class urlparser:
                        'mirrorace.com':         self.pp.parserMIRRORACE     ,
                        'mixdrop.co':            self.pp.parserMIXDROP       ,
                        'mixdrop.club':          self.pp.parserMIXDROP       ,
+                       'mixdrop.to':            self.pp.parserMIXDROP       ,
                        'moevideo.net':          self.pp.parserPLAYEREPLAY   ,
                        'moonwalk.cc':           self.pp.parserMOONWALKCC    ,
                        'moshahda.net':          self.pp.parserMOSHAHDANET   ,
