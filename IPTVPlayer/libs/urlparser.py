@@ -487,7 +487,7 @@ class urlparser:
                        'uploadz.co':            self.pp.parserUPLOAD         ,
                        'uploadz.org':           self.pp.parserUPLOAD         ,
                        'upmela.com':            self.pp.parserVIUCLIPS       ,
-                       'upstream.to':           self.pp.parserONLYSTREAM  ,
+                       'upstream.to':           self.pp.parserONLYSTREAM    ,
                        'uptobox.com':           self.pp.parserUPTOSTREAMCOM  ,
                        'uptostream.com':        self.pp.parserUPTOSTREAMCOM  ,
                        'upvid.co':              self.pp.parserWATCHUPVIDCO   ,
@@ -533,6 +533,7 @@ class urlparser:
                        'videoweed.es':          self.pp.parserVIDEOWEED     ,
                        'videowood.tv':          self.pp.parserVIDEOWOODTV   ,
                        'vidfile.net':           self.pp.parserVIDFILENET    ,
+                       'vidia.tv':              self.pp.parserSUPERVIDEO    ,
                        'vidgg.to':              self.pp.parserVIDGGTO       ,
                        'vidload.co':            self.pp.parserVIDLOADCO     ,
                        'vidlox.me':             self.pp.parserVIDLOXTV      ,
@@ -11887,7 +11888,7 @@ class pageParser(CaptchaHelper):
             if url[-4:] == 'm3u8':
                 vidTab.extend(getDirectM3U8Playlist(url, checkExt=True, variantCheck=True, checkContent=True, sortWithMaxBitrate=99999999))
             else:
-                vidTab.append({'name':title, 'url':url})
+                vidTab.append({'name': 'link', 'url':url})
         
             return vidTab
     
@@ -11921,8 +11922,9 @@ class pageParser(CaptchaHelper):
                     
                     if 'label' in u:
                         title = u.get('label', '')
-                    else:
-                        title=''
+                    
+                    if not title:
+                        title='link'
                     
                     if url[-4:] == 'm3u8':
                         vidTab.extend(getDirectM3U8Playlist(url, checkExt=True, variantCheck=True, checkContent=True, sortWithMaxBitrate=99999999))
