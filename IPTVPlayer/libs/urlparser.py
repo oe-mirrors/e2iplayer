@@ -194,6 +194,7 @@ class urlparser:
                        'content.peteava.ro':    self.pp.parserPETEAVA       ,
                        'coolcast.eu':           self.pp.parserCOOLCASTEU    ,
                        'crichd.tv':             self.pp.parserCRICHDTV      ,
+                       'cryptodialynews.com':   self.pp.parserTXNEWSNETWORK , 
                        'daaidaij.com':          self.pp.parserMOONWALKCC    ,
                        'daclips.in':            self.pp.parserFASTVIDEOIN   ,
                        'dailymotion.com':       self.pp.parserDAILYMOTION   ,
@@ -288,6 +289,7 @@ class urlparser:
                        'life-rtmp.com':         self.pp.parserLIFERTMP      ,
                        'limevideo.net':         self.pp.parserLIMEVIDEO     ,
                        'linkhub.icu':           self.pp.parserLINKHUB,
+                       'litcun.net':            self.pp.parserTXNEWSNETWORK ,
                        'live.bvbtotal.de':      self.pp.parserLIVEBVBTOTALDE,
                        'liveall.tv':            self.pp.parserLIVEALLTV      ,
                        'liveleak.com':          self.pp.parserLIVELEAK      ,
@@ -448,7 +450,7 @@ class urlparser:
                        'superfastvideos.xyz':   self.pp.parserTXNEWSNETWORK ,
                        'superfilm.pl':          self.pp.parserSUPERFILMPL   ,
                        'supervideo.tv':         self.pp.parserSUPERVIDEO    ,
-                       'supergoodtvlive.com':   self.pp.parserSUPERGOODLIVE ,
+                       'supergoodtvlive.com':   self.pp.parserTXNEWSNETWORK ,
                        'suprafiles.org':        self.pp.parserUPLOAD         ,
                        'suspents.info':         self.pp.parserFASTVIDEOIN   ,
                        'swirownia.com.usrfiles.com': self.pp.parserSWIROWNIA,
@@ -12798,22 +12800,11 @@ class pageParser(CaptchaHelper):
         else:
             return []
         
-    def parserSUPERGOODLIVE(self, baseUrl):
-        printDBG("parserSUPERGOODLIVE baseUrl[%s]" % baseUrl)
-
-        sts, data = self.cm.getPage(baseUrl)
-        
-        if sts:
-            printDBG(data)
-            
-            
-        else:
-            return []
-
     def parserTXNEWSNETWORK(self, baseUrl):
         printDBG("parserTXNEWSNETWORK baseUrl[%s]" % baseUrl)
         #http://txnewsnetwork.net/ada5.php
         #http://superfastvideos.xyz/avi5.php
+        #http://cryptodialynews.com/2021/name5.html
         
         httpParams = {'header':{'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/76.0.3809.132 Safari/537.36'}, 'use_cookie':1, 'save_cookie':1,'load_cookie':1, 'cookiefile': GetCookieDir("TXNEWSNETWORK.cookie")}
         
@@ -12824,14 +12815,20 @@ class pageParser(CaptchaHelper):
         if sts:
             printDBG("********************")
             printDBG(data)
+            printDBG("********************")
             
             #<script src="http://jscdn-master.today/n1.php?hash=ada5"></script>
             #<script src="http://mastercdn.hu/n1.php?hash=avi2"></script>
-
+            #<script src="http://cryptodialynews.com/js/trxnews5.js">
+            #<script src="http://mastercdn.hu/n1.js?hash=z110"></script>
+            
             link = re.findall("<script src=\"(.*?ada.*?)\"></script>", data)
             if not link:
                 link = re.findall("<script src=\"(.*?avi.*?)\"></script>", data)
-                
+            if not link:
+                link = re.findall("<script src=\"(.*?trx.*?)\"></script>", data)
+            if not link:
+                link = re.findall("<script src=\"(.*?hash.*?)\"></script>", data)
             
             if link:
                 printDBG("Found link %s" % link[0])
@@ -12843,6 +12840,9 @@ class pageParser(CaptchaHelper):
                     
                     #'src="http://www.vaudevile.cz/page.php?hash=ada5&ad=3587580&ud=OTUuMjUyLjEwMi43&td=1581017743">
                     link2 = re.findall("src=\"([^\"]+?)\"", data)
+                    if not link2:
+                        link2 = re.findall("src=([a-zA-Z0-9/:\.]+?)\s?>", data)
+                    
                     if link2:
                         printDBG("Found link %s" % link2[0])
                         httpParams['header']['Referer'] = baseUrl
@@ -12852,16 +12852,18 @@ class pageParser(CaptchaHelper):
                             printDBG("********************")
                             printDBG(data)
                             #source: "http://www.vaudevile.cz/mount/ada5/index.m3u8"
+                            #var data = {source:"http://www.cryptodialynews.com/charte/charte5.php",
                             
-                            link3 = re.findall("source: \"([^\"]+?)\"", data)
+                            link3 = re.findall("source:\s?\"([^\"]+?)\"", data)
                             
                             if link3:
                                 printDBG("Found link %s" % link3[0])
                                 httpParams['header']['Referer'] = link2[0]
                                 m3u_url = urlparser.decorateUrl(link3[0], {'Referer': link2[0]})
-                                urlTabs = getDirectM3U8Playlist(m3u_url, checkExt=True, variantCheck=True, checkContent=True, sortWithMaxBitrate=99999999)
-                                printDBG(str(urlTabs))
-                                #urlTabs.extend()
+                                tabs = getDirectM3U8Playlist(m3u_url, checkExt=False, variantCheck=False, checkContent=True, sortWithMaxBitrate=99999999)
+                                printDBG(str(tabs))
+                                if len(tabs)>0:
+                                    urlTabs.append(tabs[0])
         
         return urlTabs
 
