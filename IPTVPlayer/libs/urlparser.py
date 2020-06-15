@@ -484,6 +484,7 @@ class urlparser:
                        'upload.af':             self.pp.parserUPLOAD         ,
                        'upload.mn':             self.pp.parserUPLOAD2        ,
                        'uploadc.com':           self.pp.parserUPLOADCCOM    ,
+                       'uploadit.cc':           self.pp.parserUPLOADIT       ,
                        'uploaduj.net':          self.pp.parserUPLOADUJNET    ,
                        'uploadx.link':          self.pp.parserUPLOAD         ,
                        'uploadx.org':           self.pp.parserUPLOAD         ,
@@ -13557,5 +13558,42 @@ class pageParser(CaptchaHelper):
                         printDBG(str(params))
                         urlTabs.append(params)
     
+        return urlTabs
+
+    def parserUPLOADIT(self, baseUrl):
+        printDBG("parserUPLOADIT baseUrl [%s]" % baseUrl)
+        
+        httpParams = {
+            'header' : {
+                'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.61 Safari/537.36',
+                'Accept': '*/*',
+                'Accept-Encoding': 'gzip',
+                'Referer' : baseUrl.meta.get('Referer', baseUrl)
+            }
+        }
+
+        urlTabs = []
+        
+        sts, data = self.cm.getPage(baseUrl, httpParams)
+        
+        if sts:
+            printDBG("-----------------------")
+            printDBG(data)
+            printDBG("-----------------------")
+        
+            urls = re.findall("<source src=\"(.*?)\"", data)
+            
+            for url in urls:
+                if self.cm.isValidUrl(url):
+                    url = urlparser.decorateUrl(url, {'Referer': baseUrl})
+                    if 'm3u8' in url:
+                        params = getDirectM3U8Playlist(url, checkExt=True, variantCheck=True, checkContent=True, sortWithMaxBitrate=99999999)
+                        printDBG(str(params))    
+                        urlTabs.extend(params)
+                    else:
+                        params = {'name': 'link' , 'url': url}
+                        printDBG(str(params))
+                        urlTabs.append(params)
+
         return urlTabs
         
