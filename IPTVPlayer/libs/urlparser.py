@@ -1514,24 +1514,32 @@ class pageParser(CaptchaHelper):
         url = clean_html(data.group(1))
         return url
         
-    def parserCDA(self, inUrl):
+    def parserCDA(self, baseUrl):
+        printDBG("parserCDA baseUrl [%r]" % baseUrl)
+
         COOKIE_FILE = GetCookieDir('cdapl.cookie')
         self.cm.clearCookie(COOKIE_FILE, removeNames=['vToken'])
-
-        #HEADER = {'User-Agent': 'Mozilla/5.0', 'Accept': 'text/html'}
-        HTTP_HEADER = self.cm.getDefaultHeader(browser='chrome') #iphone_3_0
-        defaultParams = {'header': HTTP_HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': COOKIE_FILE}
         
-        def _decorateUrl(inUrl, host, referer):
+        HTTP_HEADER = self.cm.getDefaultHeader(browser='chrome') 
+        defaultParams = {
+            'header': HTTP_HEADER, 
+            'use_cookie': True, 
+            'load_cookie': True, 
+            'save_cookie': True, 
+            'cookiefile': COOKIE_FILE
+        }
+        
+        def _decorateUrl(baseUrl, host, referer):
+            #add cookies
             cookies = []
             cj = self.cm.getCookie(COOKIE_FILE)
             for cookie in cj:
-                if (cookie.name == 'vToken' and cookie.path in inUrl) or cookie.name == 'PHPSESSID':
+                if (cookie.name == 'vToken' and cookie.path in baseUrl) or cookie.name == 'PHPSESSID':
                     cookies.append('%s=%s;' % (cookie.name, cookie.value))
-                    printDBG(">> \t%s \t%s \t%s \t%s" % (cookie.domain, cookie.path, cookie.name, cookie.value) )
+                    printDBG("Cookie ----> \t%s \t%s \t%s \t%s" % (cookie.domain, cookie.path, cookie.name, cookie.value) )
 
             # prepare extended link
-            retUrl = strwithmeta( inUrl )
+            retUrl = strwithmeta( baseUrl )
             retUrl.meta['User-Agent']        = HTTP_HEADER['User-Agent']
             retUrl.meta['Referer']           = referer
             retUrl.meta['Cookie']            = ' '.join(cookies)
@@ -1540,23 +1548,29 @@ class pageParser(CaptchaHelper):
             retUrl.meta['iptv_livestream']   = False
             return retUrl
             
-        vidMarker = '/video/'
         videoUrls = []
         uniqUrls  = []
         tmpUrls = []
-        if vidMarker not in inUrl:
-            sts, data = self.cm.getPage(inUrl, defaultParams)
-            if sts:
-                sts,match = self.cm.ph.getDataBeetwenMarkers(data, "Link do tego video:", '</a>', False)
-                if sts: match = self.cm.ph.getSearchGroups(match, 'href="([^"]+?)"')[0] 
-                else: match = self.cm.ph.getSearchGroups(data, "link[ ]*?:[ ]*?'([^']+?/video/[^']+?)'")[0]
-                if match.startswith('http'): inUrl = match
-        if vidMarker in inUrl: 
-            vid = self.cm.ph.getSearchGroups(inUrl + '/', "/video/([^/]+?)/")[0]
-            inUrl = 'http://ebd.cda.pl/620x368/' + vid
+        
+        if '/video/' in baseUrl: 
+            video_id = self.cm.ph.getSearchGroups(baseUrl + '/', "/video/([^/]+?)/")[0]
+            baseUrl = 'http://ebd.cda.pl/620x368/' + video_id
+            printDBG("Url transformed into %s " % baseUrl)
+
+        sts, data = self.cm.getPage(baseUrl, defaultParams)
+        
+        if sts:
+            sts, match = self.cm.ph.getDataBeetwenMarkers(data, "Link do tego video:", '</a>', False)
+            if sts: 
+                match = self.cm.ph.getSearchGroups(match, 'href="([^"]+?)"')[0] 
+            else: 
+                match = self.cm.ph.getSearchGroups(data, "link[ ]*?:[ ]*?'([^']+?/video/[^']+?)'")[0]
+            
+            if match.startswith('http'): 
+                baseUrl = match
         
         # extract qualities
-        sts, data = self.cm.getPage(inUrl, defaultParams)
+        sts, data = self.cm.getPage(baseUrl, defaultParams)
         if sts:
             sts, data = self.cm.ph.getDataBeetwenMarkers(data, 'Jakość:', '</div>', False)
             if sts:
@@ -1564,8 +1578,8 @@ class pageParser(CaptchaHelper):
                 for urlItem in data:
                     tmpUrls.append({'name':'cda.pl ' + urlItem[1], 'url':urlItem[0]})
         
-        if 0 == len(tmpUrls):
-            tmpUrls.append({'name':'cda.pl', 'url':inUrl})
+        if not tmpUrls:
+            tmpUrls.append({'name':'cda.pl', 'url':baseUrl})
             
         def __appendVideoUrl(params):
             if params['url'] not in uniqUrls:
@@ -1573,6 +1587,16 @@ class pageParser(CaptchaHelper):
                 uniqUrls.append(params['url'])
         
         def __ca(dat):
+            def __rot47(s):
+               x = []
+               for i in xrange(len(s)):
+                   j = ord(s[i])
+                   if j >= 33 and j <= 126:
+                       x.append(chr(33 + ((j + 14) % 94)))
+                   else:
+                       x.append(s[i])
+               return ''.join(x)
+
             def __replace(c):
                 code = ord(c.group(1))
                 if code <= ord('Z'):
@@ -1586,59 +1610,130 @@ class pageParser(CaptchaHelper):
             
             if not self.cm.isValidUrl(dat):
                 try:
-                    dat = re.sub('([a-zA-Z])', __replace, dat)
+                    if 'uggcf' in dat:
+                        dat = re.sub('([a-zA-Z])', __replace, dat)
+                        # 'uggc' becomes 'http'
+                    else:
+                        dat = __rot47(urllib.unquote(dat))
+                        dat = dat.replace(".cda.mp4", "").replace(".2cda.pl", ".cda.pl").replace(".3cda.pl", ".cda.pl");
+                        dat = 'https://' + str(dat) + '.mp4'
                     if not dat.endswith('.mp4'):
                         dat += '.mp4'
-                    dat = dat.replace("adc.mp4", ".mp4")
+                    dat = dat.replace("0)sss", "")
                 except Exception:
                     dat = ''
                     printExc()
             return str(dat)
+
+        def __jsplayer(dat):
+            sts, jsdata = self.cm.getPage('https://ebd.cda.pl/js/player.js', defaultParams)
+            
+            if not sts: 
+                return ''
+
+            jscode = self.cm.ph.getSearchGroups(jsdata, '''var\s([a-z]+?,[a-z]+?,.*?);''')[0]
+            tmp = jscode.split(',')
+            jscode = self.cm.ph.getSearchGroups(jsdata, '''(var\s[a-z]+?,[a-z]+?,.*?;)''')[0]
+            
+            for item in tmp:
+                jscode += self.cm.ph.getSearchGroups(jsdata, '(%s=function\(.*?};)' % item)[0]
+            
+            jscode += "file = '%s';" % dat;
+            
+            tmp = self.cm.ph.getSearchGroups(jsdata, '''\(this\.options,"video"\)&&\((.*?)=this\.options\.video\);''')[0] + "."
+            
+            jscode += self.cm.ph.getDataBeetwenMarkers(jsdata, "%sfile" % tmp, ';', True)[1].replace(tmp, '')
+            
+            jscode += 'print(file);'
+            
+            printDBG("--------------- jscode -------------")
+            printDBG(jscode)
+            printDBG("------------------------------------")
+            
+            ret = js_execute( jscode )
+            
+            if ret['sts'] and 0 == ret['code']:
+                printDBG("-------- return javascript exec ---------")
+                printDBG(ret['data'])
+                
+                return  ret['data'].strip('\n')
+            else:
+                return ''
         
         for urlItem in tmpUrls:
-            if urlItem['url'].startswith('/'): inUrl = 'http://www.cda.pl/' + urlItem['url']
-            else: inUrl = urlItem['url']
-            sts, pageData = self.cm.getPage(inUrl, defaultParams)
-            if not sts: continue
+            if urlItem['url'].startswith('/'): 
+                baseUrl = 'http://www.cda.pl/' + urlItem['url']
+            else: 
+                baseUrl = urlItem['url']
+            
+            sts, pageData = self.cm.getPage(baseUrl, defaultParams)
+            
+            if not sts: 
+                continue
             
             tmpData = self.cm.ph.getDataBeetwenMarkers(pageData, "eval(", '</script>', False)[1]
-            if tmpData != '':
+            
+            if tmpData:
                 m1 = '$.get' 
                 if m1 in tmpData:
                     tmpData = tmpData[:tmpData.find(m1)].strip() + '</script>'
-                try: tmpData = unpackJSPlayerParams(tmpData, TEAMCASTPL_decryptPlayerParams, 0, True, True)
-                except Exception: pass
+                try: 
+                    tmpData = unpackJSPlayerParams(tmpData, TEAMCASTPL_decryptPlayerParams, 0, True, True)
+                except Exception: 
+                    pass
+            
             tmpData += pageData
             
             tmp = self.cm.ph.getDataBeetwenMarkers(tmpData, "player_data='", "'", False)[1].strip()
-            if tmp == '': tmp = self.cm.ph.getDataBeetwenMarkers(tmpData, 'player_data="', '"', False)[1].strip()
+            
+            if tmp == '': 
+                tmp = self.cm.ph.getDataBeetwenMarkers(tmpData, 'player_data="', '"', False)[1].strip()
+            
             tmp = clean_html(tmp).replace('&quot;', '"')
             
-            printDBG(">>")
+            printDBG("------------- tmp -------------")
             printDBG(tmp)
-            printDBG("<<")
+            printDBG("-------------------------------")
             try:
-                if tmp != '':
-                    tmp = json_loads(tmp)
-                    tmp = __ca(tmp['video']['file'])
+                if tmp:
+                    tmpJson = json_loads(tmp)
+                    tmp = __jsplayer(tmpJson['video']['file'])
+                    if 'cda.pl' not in tmp: 
+                        tmp = __ca(tmpJson['video']['file'])
+            
             except Exception:
                 tmp = ''
                 printExc()
             
-            if tmp == '':
+            if not tmp:
                 data = self.cm.ph.getDataBeetwenReMarkers(tmpData, re.compile('''modes['"]?[\s]*:'''), re.compile(']'), False)[1]
                 data = re.compile("""file:[\s]*['"]([^'^"]+?)['"]""").findall(data)
-            else: data = [tmp]
-            if 0 < len(data) and data[0].startswith('http'): __appendVideoUrl( {'name': urlItem['name'] + ' flv', 'url':_decorateUrl(data[0], 'cda.pl', urlItem['url']) } )
-            if 1 < len(data) and data[1].startswith('http'): __appendVideoUrl( {'name': urlItem['name'] + ' mp4', 'url':_decorateUrl(data[1], 'cda.pl', urlItem['url']) } )
-            if 0 == len(data):
+            else: 
+                data = [tmp]
+            
+            for index in range(len(data)):
+                if data[index].startswith('http'): 
+                    if (index == 0):
+                        typestr = 'flv'
+                    elif (index == 1):
+                        typestr = 'mp4'
+                    
+                    new_url = _decorateUrl(data[index], 'cda.pl', urlItem['url'])
+                    
+                    __appendVideoUrl({'name': "%s [%s]" % (urlItem['name'], typestr), 'url': new_url})
+            
+            if not data:
                 data = self.cm.ph.getDataBeetwenReMarkers(tmpData, re.compile('video:[\s]*{'), re.compile('}'), False)[1]
-                data = self.cm.ph.getSearchGroups(data, "'(http[^']+?(?:\.mp4|\.flv)[^']*?)'")[0]
-                if '' != data:
-                    type = ' flv '
+                new_url = self.cm.ph.getSearchGroups(data, "'(http[^']+?(?:\.mp4|\.flv)[^']*?)'")[0]
+                if new_url:
+                    typestr = 'flv'
                     if '.mp4' in data:
-                        type = ' mp4 '
-                    __appendVideoUrl( {'name': urlItem['name'] + type, 'url':_decorateUrl(data, 'cda.pl', urlItem['url']) } )
+                        typestr = 'mp4'
+
+                    new_url = _decorateUrl(new_url , 'cda.pl', urlItem['url'])
+                        
+                    __appendVideoUrl({'name': "%s [%s]" % (urlItem['name'], typestr), 'url': new_url })
+
         return videoUrls[::-1]
 
     def parserDWN(self,url):
