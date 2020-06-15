@@ -137,6 +137,7 @@
 "hostninateka": "http://ninateka.pl/",
 "hostnuteczki": "https://nuteczki.eu/",
 "hostofficialfilmillimite": "https://official-film-illimite.ws/",
+"hostogladajto": "https://www.ogladaj.to"
 "hostoipeirates": "https://oipeirates.tv/",
 "hostokgoals": "http://okgoals.com/",
 "hostororotv": "https://ororo.tv/",
@@ -202,6 +203,7 @@
 "hostvodpl": "https://vod.pl/",
 "hostvumedicom": "https://vumedi.com/",
 "hostwatchcartoononline": "https://watchcartoononline.com/",
+"hostwatchmovies": "https://watch-movies.pl"
 "hostwatchwrestling": "http://watchwrestling.nl/",
 "hostwatchwrestlinguno": "http://watchwrestling.la/",
 "hostwebstream": "\"Web\" streams player",
