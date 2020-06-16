@@ -13710,55 +13710,50 @@ class pageParser(CaptchaHelper):
         sts, data = self.cm.getPage(baseUrl, httpParams)
         
         if sts:
-            printDBG("-----------------------")
-            printDBG(data)
-            printDBG("-----------------------")
+            #printDBG("-----------------------")
+            #printDBG(data)
+            #printDBG("-----------------------")
 
-            # search data to post
-            #<Form method="POST" action=''>
-            #<input type="hidden" name="op" value="download1">
-            #<input type="hidden" name="usr_login" value="">
-            #<input type="hidden" name="id" value="xvkgxs6ktct6">
-            #<input type="hidden" name="fname" value="WWE.Backlash.2020.PPV.mp4">
-            #<input type="hidden" name="referer" value=""><br /><br /><br /><br /><br />
-            #<input type="submit" id="method_free" name="method_free" value="Continue To Video >>">
-            #</Form>
+            urls = re.findall("<source src=[\"'](.*?)[\"']", data)
 
-            form = self.cm.ph.getDataBeetwenMarkers(data, ('<form', '>'), ('</form', '>'), caseSensitive=False)[1]
-            # little trick
-            form = form.replace('>>"','!!"')
-            printDBG(form)
-            
-            inputs = self.cm.ph.getAllItemsBeetwenMarkers(form, '<input', '>', withMarkers=True)
-            postData={}
-            for i in inputs:
-                inputName = self.cm.ph.getSearchGroups(i, "name=['\"]([^\"^']+?)['\"]")[0]
-                inputValue = self.cm.ph.getSearchGroups(i, "value=['\"]([^\"^']+?)['\"]")[0]
-                if inputName:
-                    inputValue = inputValue.replace("!!",">>")
-                    postData[inputName]=inputValue
-                    
-            printDBG("post data : %s" % json_dumps(postData))
-        
-            sts, data = self.cm.getPage(baseUrl, httpParams, post_data=postData)
-            
-            if sts:
-                printDBG("------------ after post  -----------")
-                printDBG(data)
-                printDBG("------------------------------------")
-            
-                urls = re.findall("<source src=[\"'](.*?)[\"']", data)
+            if not urls:
+                # search data to post
 
-                for url in urls:
-                    if self.cm.isValidUrl(url):
-                        url = urlparser.decorateUrl(url, {'Referer': baseUrl})
-                        if 'm3u8' in url:
-                            params = getDirectM3U8Playlist(url, checkExt=True, variantCheck=True, checkContent=True, sortWithMaxBitrate=99999999)
-                            printDBG(str(params))    
-                            urlTabs.extend(params)
-                        else:
-                            params = {'name': 'link' , 'url': url}
-                            printDBG(str(params))
-                            urlTabs.append(params)
+                form = self.cm.ph.getDataBeetwenMarkers(data, ('<form', '>'), ('</form', '>'), caseSensitive=False)[1]
+                # little trick
+                form = form.replace('>>"','!!"')
+                printDBG(form)
+                
+                inputs = self.cm.ph.getAllItemsBeetwenMarkers(form, '<input', '>', withMarkers=True)
+                postData={}
+                for i in inputs:
+                    inputName = self.cm.ph.getSearchGroups(i, "name=['\"]([^\"^']+?)['\"]")[0]
+                    inputValue = self.cm.ph.getSearchGroups(i, "value=['\"]([^\"^']+?)['\"]")[0]
+                    if inputName:
+                        inputValue = inputValue.replace("!!",">>")
+                        postData[inputName]=inputValue
+                        
+                printDBG("post data : %s" % json_dumps(postData))
+            
+                sts, data = self.cm.getPage(baseUrl, httpParams, post_data=postData)
+                
+                if sts:
+                    #printDBG("------------ after post  -----------")
+                    #printDBG(data)
+                    #printDBG("------------------------------------")
+                
+                    urls = re.findall("<source src=[\"'](.*?)[\"']", data)
+
+            for url in urls:
+                if self.cm.isValidUrl(url):
+                    url = urlparser.decorateUrl(url, {'Referer': baseUrl})
+                    if 'm3u8' in url:
+                        params = getDirectM3U8Playlist(url, checkExt=True, variantCheck=True, checkContent=True, sortWithMaxBitrate=99999999)
+                        printDBG(str(params))    
+                        urlTabs.extend(params)
+                    else:
+                        params = {'name': 'link' , 'url': url}
+                        printDBG(str(params))
+                        urlTabs.append(params)
         
         return urlTabs
