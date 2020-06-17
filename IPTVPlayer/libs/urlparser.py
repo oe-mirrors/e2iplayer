@@ -438,6 +438,7 @@ class urlparser:
                        'streamango.com':        self.pp.parserSTREAMANGOCOM  ,
                        'streamcherry.com':      self.pp.parserSTREAMANGOCOM  ,
                        'streamcloud.eu':        self.pp.parserSTREAMCLOUD   ,
+                       'streamcrypt.net':       self.pp.parserVCRYPT        ,
                        'streame.net':           self.pp.parserSTREAMENET    ,
                        'streamin.to':           self.pp.parserSTREAMINTO    ,
                        'streamix.cloud':        self.pp.parserSTREAMIXCLOUD  ,
@@ -461,6 +462,7 @@ class urlparser:
                        'thefile.me':            self.pp.parserTHEFILEME     ,
                        'thevideo.cc':           self.pp.parserTHEVIDEOME    ,
                        'thevideo.me':           self.pp.parserTHEVIDEOME    ,
+                       'thevideos.ga':           self.pp.parserTHEVIDEOME    ,
                        'thevideobee.to':        self.pp.parserTHEVIDEOBEETO  ,
                        'tiny.cc':               self.pp.parserTINYCC        ,
                        'tinymov.net':           self.pp.parserTINYMOV       ,
@@ -6994,33 +6996,104 @@ class pageParser(CaptchaHelper):
         rm(COOKIE_FILE)
         params = {'header':HTTP_HEADER, 'with_metadata':True, 'cookiefile':COOKIE_FILE, 'use_cookie': True, 'save_cookie':True}
         
-        sts, pageData = self.cm.getPage(baseUrl, params)
-        if not sts: return False
-        baseUrl = pageData.meta['url']
+        def checkTxt(txt):
+            txt = txt.replace('\n', ' ')
+            if txt.find('file:'):
+                txt = txt.replace('file:', '"file":')
+            if txt.find('label:'):
+                txt = txt.replace('label:', '"label":')
+            if txt.find('kind:'):
+                txt = txt.replace('lang:', '"lang":')
+            if txt.find('src:'):
+                txt = txt.replace('src:', '"src":')
+            if txt.find('res:'):
+                txt = txt.replace('res:', '"res":')
+            if txt.find('type:'):
+                txt = txt.replace('type:', '"type":')
+            if txt.find('idLang:'):
+                txt = txt.replace('idLang:', '"idLang":')
+            
+            return txt
         
-        if '/embed/' in baseUrl: 
+        
+        sts, data = self.cm.getPage(baseUrl, params)
+        if not sts: 
+            return False
+        
+        baseUrl = data.meta['url']
+        urlsTab = []
+        
+        if '/embed/' in baseUrl or 'embed-' in baseUrl: 
             url = baseUrl
         else:
             parsedUri = urlparse( baseUrl )
             path = '/embed/' + parsedUri.path[1:]
             parsedUri = parsedUri._replace(path=path)
             url = urlunparse(parsedUri)
-            sts, pageData = self.cm.getPage(url, params)
-            if not sts: return False
+            sts, data = self.cm.getPage(url, params)
+            if not sts: 
+                return False
         
-        videoCode = self.cm.ph.getSearchGroups(pageData, r'''['"]video_code['"]\s*:\s*['"]([^'^"]+?)['"]''')[0]
+        videoCode = self.cm.ph.getSearchGroups(data, r'''['"]video_code['"]\s*:\s*['"]([^'^"]+?)['"]''')[0]
         
-        params['header']['Referer'] = url
-        params['raw_post_data'] = True
-        sts, data = self.cm.getPage(self.cm.getBaseUrl(baseUrl) + 'api/serve/video/' + videoCode, params, post_data='{}') 
-        if not sts: return False
-        printDBG(data)
+        if videoCode:
         
-        urlsTab = []
-        data = json_loads(data)
-        for key in data['qualities']:
-            urlsTab.append({'name':'[%s] %s' % (key, self.cm.getBaseUrl(baseUrl)), 'url':strwithmeta(data['qualities'][key], {'User-Agent':HTTP_HEADER['User-Agent'], 'Referer':self.cm.getBaseUrl(baseUrl)})})
+            params['header']['Referer'] = url
+            params['raw_post_data'] = True
+            sts, data = self.cm.getPage(self.cm.getBaseUrl(baseUrl) + 'api/serve/video/' + videoCode, params, post_data='{}') 
+            if sts: 
+                printDBG("----------------")
+                printDBG(data)
+                printDBG("----------------")
         
+                dataJson = json_loads(data)
+                for key in dataJson['qualities']:
+                    urlsTab.append({'name':'[%s] %s' % (key, self.cm.getBaseUrl(baseUrl)), 'url':strwithmeta(dataJson['qualities'][key], {'User-Agent':HTTP_HEADER['User-Agent'], 'Referer':self.cm.getBaseUrl(baseUrl)})})
+        
+        else:
+            #search for packed code
+            scripts = re.findall("<script>.*?(eval\(function.*?)</script>", data, re.S)
+            
+            if scripts:
+                for script in scripts:
+                    printDBG("----------- pack -----------------")
+                    printDBG(script)
+
+                    script = script + "\n"
+                    # mods
+                    script = script.replace("eval(function(p,a,c,k,e,d","pippo = function(p,a,c,k,e,d")
+                    script = script.replace("return p}(", "print(p)}\n\npippo(")
+                    script = script.replace("))\n",");\n")
+
+                    # duktape
+                    ret = js_execute( script )
+                    decoded = ret['data']
+                    printDBG('------------------------------')
+                    printDBG(decoded)
+                    printDBG('------------------------------')
+
+                    #video.src({type:'video/mp4',src:'stream9253bce1c89c262dc27e84e36a137f23.mp4'})
+                    sources = re.findall("src\((\{.*?\})\)", decoded)
+
+                    for s in sources:
+                        src = eval(checkTxt(s))
+                        url = src.get('src','')
+                        if url:
+                            if not url.startswith('http'):
+                                url = self.cm.getFullUrl(url, self.cm.getBaseUrl(baseUrl))
+                            
+                            srcType = src.get('type','')
+                            
+                        url = urlparser.decorateUrl(url, {'Referer': baseUrl})
+                        if 'm3u' in srcType or 'hls' in srcType:
+                            params = getDirectM3U8Playlist(url, checkExt=True, variantCheck=True, checkContent=True, sortWithMaxBitrate=99999999)
+                            printDBG(str(params))    
+                            urlsTab.extend(params)
+                        else:
+                            params = {'name': 'link' , 'url': url}
+                            printDBG(str(params))
+                            urlsTab.append(params)
+
         return urlsTab
     
     def parserMODIVXCOM(self, baseUrl):
