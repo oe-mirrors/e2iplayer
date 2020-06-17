@@ -450,6 +450,8 @@ class urlparser:
                        'streamplay.me':         self.pp.parserSTREAMPLAY    ,
                        'streamplay.to':         self.pp.parserSTREAMPLAY    ,
                        'streamtape.com':        self.pp.parserSTREAMTAPE    ,
+                       'streamz.cc':            self.pp.parserSTREAMZ       ,
+                       'streamz.vg':            self.pp.parserSTREAMZ       ,
                        'superfastvideos.xyz':   self.pp.parserTXNEWSNETWORK ,
                        'superfilm.pl':          self.pp.parserSUPERFILMPL   ,
                        'supervideo.tv':         self.pp.parserSUPERVIDEO    ,
@@ -13830,3 +13832,88 @@ class pageParser(CaptchaHelper):
                         urlTabs.append(params)
         
         return urlTabs
+
+    def parserSTREAMZ(self, baseUrl):
+        printDBG("parserSTREAMZ baseUrl [%s]" % baseUrl)
+        
+        httpParams = {
+            'header' : {
+                'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.61 Safari/537.36',
+                'Accept': '*/*',
+                'Accept-Encoding': 'gzip',
+                'Referer' : baseUrl.meta.get('Referer', baseUrl)
+            }
+        }
+
+        def checkTxt(txt):
+            txt = txt.replace('\n', ' ')
+            if txt.find('file:'):
+                txt = txt.replace('file:', '"file":')
+            if txt.find('label:'):
+                txt = txt.replace('label:', '"label":')
+            if txt.find('kind:'):
+                txt = txt.replace('lang:', '"lang":')
+            if txt.find('src:'):
+                txt = txt.replace('src:', '"src":')
+            if txt.find('res:'):
+                txt = txt.replace('res:', '"res":')
+            if txt.find('type:'):
+                txt = txt.replace('type:', '"type":')
+            if txt.find('idLang:'):
+                txt = txt.replace('idLang:', '"idLang":')
+            
+            return txt
+
+        urlsTab = []
+        
+        sts, data = self.cm.getPage(baseUrl, httpParams)
+        
+        if sts:
+            printDBG("-----------------------")
+            printDBG(data)
+            printDBG("-----------------------")
+        
+            #search for packed code
+            scripts = re.findall("<script>.*?(eval\(function.*?)</script>", data, re.S)
+            
+            if scripts:
+                for script in scripts:
+                    printDBG("----------- pack -----------------")
+                    printDBG(script)
+
+                    script = script + "\n"
+                    # mods
+                    script = script.replace("eval(function(p,a,c,k,e,d","pippo = function(p,a,c,k,e,d")
+                    script = script.replace("return p}(", "print(p)}\n\npippo(")
+                    script = script.replace("))\n",");\n")
+
+                    # duktape
+                    ret = js_execute( script )
+                    decoded = ret['data']
+                    printDBG('------------------------------')
+                    printDBG(decoded)
+                    printDBG('------------------------------')
+
+                    #video.src({type:'video/mp4',src:'stream9253bce1c89c262dc27e84e36a137f23.mp4'})
+                    sources = re.findall("src\((\{.*?\})\)", decoded, re.S)
+
+                    for s in sources:
+                        src = eval(checkTxt(s))
+                        url = src.get('src','')
+                        if url:
+                            if not url.startswith('http'):
+                                url = self.cm.getFullUrl(url, self.cm.getBaseUrl(baseUrl))
+                            
+                            srcType = src.get('type','')
+                            
+                        url = urlparser.decorateUrl(url, {'Referer': baseUrl})
+                        if 'm3u' in srcType or 'hls' in srcType:
+                            params = getDirectM3U8Playlist(url, checkExt=True, variantCheck=True, checkContent=True, sortWithMaxBitrate=99999999)
+                            printDBG(str(params))    
+                            urlsTab.extend(params)
+                        else:
+                            params = {'name': 'link' , 'url': url}
+                            printDBG(str(params))
+                            urlsTab.append(params)
+        
+        return urlsTab
