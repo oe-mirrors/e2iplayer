@@ -29,7 +29,7 @@ config.plugins.iptvplayer.MusicBox_login = ConfigText(default="", fixed_size=Fal
 # Api keys
 ####################################################
 audioscrobbler_api_key = "d49b72ffd881c2cb13b4595e67005ac4"
-youtube_api_key = 'AIzaSyBbDY0UzvF5Es77M7S1UChMzNp0KsbaDPI'
+youtube_api_key = 'AIzaSyAnWEByKdGdDQjN89KRmVNKty9F57qa6TY'
 HEADER = {'User-Agent': 'Mozilla/5.0 (Windows NT 6.1; rv:33.0) Gecko/20100101 Firefox/33.0'}
 
 def GetConfigList():
