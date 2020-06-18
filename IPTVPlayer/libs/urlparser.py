@@ -13762,6 +13762,7 @@ class pageParser(CaptchaHelper):
                         printDBG(str(params))    
                         urlTabs.extend(params)
                     else:
+                        url = strwithmeta(url, {'Referer':baseUrl, 'iptv_wget_continue':True, 'iptv_wget_timeout':100})
                         params = {'name': 'link' , 'url': url}
                         printDBG(str(params))
                         urlTabs.append(params)
