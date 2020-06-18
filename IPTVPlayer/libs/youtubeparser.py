@@ -339,30 +339,34 @@ class YouTubeParser():
     def getVideosFromChannelList(self, url, category, page, cItem):
         printDBG('YouTubeParser.getVideosFromChannelList page[%s]' % (page) )
         currList = []
-        try:
-            sts,data =  self.cm.getPage(url, {'host': self.HOST})
-            if sts:
-                if '1' == page:
-                    sts,data = CParsingHelper.getDataBeetwenMarkers(data, 'feed-item-container', 'footer-container', False)
-                else:
-                    data = json_loads(data)
-                    data = data['load_more_widget_html'] + '\n' + data['content_html']
+        tries = 0
+        while tries < 10 and not currList:
+            tries = tries + 1
+            printDBG("try n. %s" % tries)
+            try:
+                sts,data =  self.cm.getPage(url, {'host': self.HOST})
+                if sts:
+                    if '1' == page:
+                        sts,data = CParsingHelper.getDataBeetwenMarkers(data, 'feed-item-container', 'footer-container', False)
+                    else:
+                        data = json_loads(data)
+                        data = data['load_more_widget_html'] + '\n' + data['content_html']
+                        
+                    # nextPage
+                    match = re.search('data-uix-load-more-href="([^"]+?)"', data)
+                    if not match: nextPage = ""
+                    else: nextPage = match.group(1).replace('&amp;', '&')
+        
+                    data = data.split('feed-item-container')
+                    currList = self.parseListBase(data)
                     
-                # nextPage
-                match = re.search('data-uix-load-more-href="([^"]+?)"', data)
-                if not match: nextPage = ""
-                else: nextPage = match.group(1).replace('&amp;', '&')
-    
-                data = data.split('feed-item-container')
-                currList = self.parseListBase(data)
-                
-                if '' != nextPage:
-                    item = dict(cItem)
-                    item.update({'title': _("Next page"), 'page': str(int(page) + 1), 'url': 'http://www.youtube.com' + nextPage})
-                    currList.append(item)
-        except Exception:
-            printExc()
-            return []
+                    if '' != nextPage:
+                        item = dict(cItem)
+                        item.update({'title': _("Next page"), 'page': str(int(page) + 1), 'url': 'http://www.youtube.com' + nextPage})
+                        currList.append(item)
+            except Exception:
+                printExc()
+
         return currList
     # end getVideosFromChannel
 
@@ -373,34 +377,39 @@ class YouTubeParser():
     def getSearchResult(self, pattern, searchType, page, nextPageCategory, sortBy=''):
         printDBG('YouTubeParser.getSearchResult pattern[%s], searchType[%s], page[%s]' % (pattern, searchType, page))
         currList = []
-        try:
-            url = 'http://www.youtube.com/results?search_query=%s&filters=%s&search_sort=%s&page=%s' % (pattern, searchType, sortBy, page) 
-            sts,data =  self.cm.getPage(url, {'host': self.HOST})
-            if sts:
-                nextPage = self.cm.ph.getDataBeetwenMarkers(data, 'page-box', '</div>', False)[1]
-                if nextPage.find('>%d<' % (int(page) + 1)) > -1: 
-                    nextPage = True
-                else: 
-                    nextPage = False
-                
-                sp = '<li><div class="yt-lockup'
-                if searchType == 'playlist':
-                    m2 = '<div class="branded-page-box'
-                else:
-                    m2 = '</ol>'
-                
-                data = CParsingHelper.getDataBeetwenMarkers(data, sp, m2, False)[1]
-                data = data.split(sp)
-                currList = self.parseListBase(data, searchType)
-                
-                if len(currList) and nextPage:
-                    item = {'name': 'history', 'type': 'category', 'category': nextPageCategory, 'pattern':pattern, 'search_type':searchType, 'title': _("Next page"), 'page': str(int(page) + 1)}
-                    currList.append(item)
-        except Exception:
-            printExc()
-            return []
+        tries = 0
+        while tries < 10 and not currList:
+            tries = tries + 1
+            printDBG("try n. %s" % tries)
+              
+            try:
+                url = 'http://www.youtube.com/results?search_query=%s&filters=%s&search_sort=%s&page=%s' % (pattern, searchType, sortBy, page) 
+                sts,data =  self.cm.getPage(url, {'host': self.HOST})
+                if sts:
+                    nextPage = self.cm.ph.getDataBeetwenMarkers(data, 'page-box', '</div>', False)[1]
+                    if nextPage.find('>%d<' % (int(page) + 1)) > -1: 
+                        nextPage = True
+                    else: 
+                        nextPage = False
+                    
+                    sp = '<li><div class="yt-lockup'
+                    if searchType == 'playlist':
+                        m2 = '<div class="branded-page-box'
+                    else:
+                        m2 = '</ol>'
+                    
+                    data = CParsingHelper.getDataBeetwenMarkers(data, sp, m2, False)[1]
+                    data = data.split(sp)
+                    currList = self.parseListBase(data, searchType)
+                    
+                    if len(currList) and nextPage:
+                        item = {'name': 'history', 'type': 'category', 'category': nextPageCategory, 'pattern':pattern, 'search_type':searchType, 'title': _("Next page"), 'page': str(int(page) + 1)}
+                        currList.append(item)
+            except Exception:
+                printExc()
+
         return currList
-    # end getVideosFromSearch
+    
     
     ########################################################
     # PLAYLISTS PARSER
@@ -408,32 +417,38 @@ class YouTubeParser():
     def getListPlaylistsItems(self, url, category, page, cItem):
         printDBG('YouTubeParser.getListPlaylistsItems page[%s]' % (page))
         currList = []
-        try:
-            sts,data =  self.cm.getPage(url, {'host': self.HOST})
-            if sts:
-                #self.cm.ph.writeToFile('/mnt/new2/yt.html', data)
-                if '1' == page:
-                    sts,data = CParsingHelper.getDataBeetwenMarkers(data, '<div class="yt-lockup clearfix', 'footer-container')
-                else:
-                    data = json_loads(data)
-                    data = data['load_more_widget_html'] + '\n' + data['content_html']
+        
+        tries = 0
+        while tries < 10 and not currList:
+            tries = tries + 1
+            printDBG("try n. %s" % tries)
+        
+            try:
+                sts,data =  self.cm.getPage(url, {'host': self.HOST})
+                if sts:
+                    #self.cm.ph.writeToFile('/mnt/new2/yt.html', data)
+                    if '1' == page:
+                        sts,data = CParsingHelper.getDataBeetwenMarkers(data, '<div class="yt-lockup clearfix', 'footer-container')
+                    else:
+                        data = json_loads(data)
+                        data = data['load_more_widget_html'] + '\n' + data['content_html']
+                        
+                    # nextPage
+                    match = re.search('data-uix-load-more-href="([^"]+?)"', data)
+                    if not match: 
+                        nextPage = ""
+                    else: 
+                        nextPage = match.group(1).replace('&amp;', '&')
                     
-                # nextPage
-                match = re.search('data-uix-load-more-href="([^"]+?)"', data)
-                if not match: 
-                    nextPage = ""
-                else: 
-                    nextPage = match.group(1).replace('&amp;', '&')
-                
-                itemsTab = data.split('<div class="yt-lockup clearfix')
-                printDBG(itemsTab[0])
-                currList = self.parseListBase(itemsTab, 'playlist')
-                if '' != nextPage:
-                    item = dict(cItem)
-                    item.update({'title': 'Następna strona', 'page': str(int(page) + 1), 'url': 'http://www.youtube.com' + nextPage})
-                    currList.append(item)
-        except Exception:
-            printExc()
+                    itemsTab = data.split('<div class="yt-lockup clearfix')
+                    printDBG(itemsTab[0])
+                    currList = self.parseListBase(itemsTab, 'playlist')
+                    if '' != nextPage:
+                        item = dict(cItem)
+                        item.update({'title': 'Następna strona', 'page': str(int(page) + 1), 'url': 'http://www.youtube.com' + nextPage})
+                        currList.append(item)
+            except Exception:
+                printExc()
             
         return currList
     # end getListPlaylistsItems
