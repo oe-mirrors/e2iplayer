@@ -205,6 +205,9 @@ class urlparser:
                        'divxstage.eu':          self.pp.parserDIVXSTAGE     ,
                        'divxstage.to':          self.pp.parserDIVXSTAGE     ,
                        'donevideo.com':         self.pp.parserLIMEVIDEO     ,
+                       'dood.to':               self.pp.parserDOOD          ,
+                       'dood.watch':            self.pp.parserDOOD          ,
+                       'doodstream.com':        self.pp.parserDOOD          ,
                        'dotstream.tv':          self.pp.parserDOTSTREAMTV   ,
                        'dwn.so':                self.pp.parserDWN           ,
                        'easyload.io':           self.pp.parserEASYLOAD      ,
@@ -13952,7 +13955,7 @@ class pageParser(CaptchaHelper):
                     if  urlparser().checkHostSupport(url)== 1:
                         urls = urlparser().getVideoLinkExt(url)
                         for u in urls:
-                            urlsTab.append({'name': self.cm.getBaseUrl(url), 'url' : u})
+                            urlsTab.append({'name': self.cm.getBaseUrl(url) + " " + u.get("name","") , 'url' : u.get('url','')})
                     else:
                         urlsTab.append({'name': self.cm.getBaseUrl(url) + "(not in urlparser)", 'url' : url})
         
@@ -13977,10 +13980,11 @@ class pageParser(CaptchaHelper):
                             if self.cm.isValidUrl(url):
                                 if  urlparser().checkHostSupport(url)== 1:
                                     urls = urlparser().getVideoLinkExt(url)
+                                    printDBG(str(urls))
                                     for u in urls:
-                                        urlsTab.append({'name': self.cm.getBaseUrl(url), 'url' : u.get('url','')})
+                                        urlsTab.append({'name': self.cm.getBaseUrl(url) + " " + u.get("name","") , 'url' : u.get('url','')})
                                 else:
-                                    urlsTab.append({'name': self.cm.getBaseUrl(url) + "(not in urlparser)", 'url' : url})
+                                    urlsTab.append({'name': self.cm.getBaseUrl(url) + " (" + _("not in urlparser") + ")", 'url' : url})
                 
         return urlsTab
 
@@ -14088,3 +14092,34 @@ class pageParser(CaptchaHelper):
                             urlsTab.append(params)
                     
         return urlsTab
+
+    def parserDOOD(self, baseUrl):
+        printDBG("parserDOOD baseUrl [%s]" % baseUrl)
+        
+        httpParams = {
+            'header' : {
+                'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.61 Safari/537.36',
+                'Accept': '*/*',
+                'Accept-Encoding': 'gzip',
+                'Referer' : baseUrl.meta.get('Referer', baseUrl)
+            }, 
+            #'use_cookie':True,
+            #'load_cookie':True,
+            #'save_cookie':True,
+            #'cookiefile': GetCookieDir("dood.cookie")
+        }
+
+        urlsTab = []
+        
+        sts, data = self.cm.getPage(baseUrl, httpParams)
+        
+        if sts:
+            printDBG("-----------------------")
+            printDBG(data)
+            printDBG("-----------------------")
+
+
+
+
+        return urlsTab
+        
