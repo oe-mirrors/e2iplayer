@@ -356,30 +356,34 @@ class YouTubeParser():
     def getVideosFromChannelList(self, url, category, page, cItem):
         printDBG('YouTubeParser.getVideosFromChannelList page[%s]' % (page) )
         currList = []
-        try:
-            sts,data =  self.cm.getPage(url, {'host': self.HOST})
-            if sts:
-                if '1' == page:
-                    sts,data = CParsingHelper.getDataBeetwenMarkers(data, 'feed-item-container', 'footer-container', False)
-                else:
-                    data = json_loads(data)
-                    data = data['load_more_widget_html'] + '\n' + data['content_html']
+        tries = 10
+        while tries > 0:
+            tries -= 1
+            try:
+                sts,data =  self.cm.getPage(url, {'host': self.HOST})
+                if sts:
+                    if '1' == page:
+                        sts,data = CParsingHelper.getDataBeetwenMarkers(data, 'feed-item-container', 'footer-container', False)
+                    else:
+                        data = json_loads(data)
+                        data = data['load_more_widget_html'] + '\n' + data['content_html']
                     
-                # nextPage
-                match = re.search('data-uix-load-more-href="([^"]+?)"', data)
-                if not match: nextPage = ""
-                else: nextPage = match.group(1).replace('&amp;', '&')
+                    # nextPage
+                    match = re.search('data-uix-load-more-href="([^"]+?)"', data)
+                    if not match: nextPage = ""
+                    else: nextPage = match.group(1).replace('&amp;', '&')
     
-                data = data.split('feed-item-container')
-                currList = self.parseListBase(data)
-                
-                if '' != nextPage:
-                    item = dict(cItem)
-                    item.update({'title': _("Next page"), 'page': str(int(page) + 1), 'url': 'http://www.youtube.com' + nextPage})
-                    currList.append(item)
-        except Exception:
-            printExc()
-            return []
+                    data = data.split('feed-item-container')
+                    currList = self.parseListBase(data)
+                    
+                    if '' != nextPage:
+                        item = dict(cItem)
+                        item.update({'title': _("Next page"), 'page': str(int(page) + 1), 'url': 'http://www.youtube.com' + nextPage})
+                        currList.append(item)
+                    if currList: break
+            except Exception:
+                printExc()
+                return []
         return currList
     # end getVideosFromChannel
 
@@ -477,7 +481,12 @@ class YouTubeParser():
                     if '' != time: time = str( timedelta( seconds = int(time) ) )
                     if time.startswith("0:"): time = time[2:]
                     desc  = item['description']
-                    params = {'type': 'video', 'category': 'video', 'title': title, 'url': url, 'icon': img, 'time': time, 'desc': desc}
+                    try:
+                        added = item['added']
+                    except Exception:
+                        printExc()
+                        added = ''
+                    params = {'type': 'video', 'category': 'video', 'title': title, 'url': url, 'icon': img, 'time': time, 'desc': added +'\n'+ desc}
                     currList.append(params)
             except Exception:
                 printExc()
