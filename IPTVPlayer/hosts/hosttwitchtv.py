@@ -184,7 +184,7 @@ class Twitch(CBaseHostClass):
         lang = '"%s"' % cItem['lang'].upper() if 'lang' in cItem else ''
         cursor = ',"cursor":"%s"' % cItem['cursor'] if 'cursor' in cItem else ''
         type = cItem.get('platform_type', 'all')
-        post_data = '[{"operationName":"BrowsePage_Popular","variables":{"limit":30,"platformType":"%s","tags":[%s],"isTagsExperiment":false},"extensions":{"persistedQuery":{"version":1,"sha256Hash":"4a3254b9537ad005b6fbc6e7a811a4045312d4a4b5c0541bea86df60383972fd"}}}]' % (type, lang)
+        post_data = '[{"operationName":"BrowsePage_Popular","variables":{"limit":30,"platformType":"%s","tags":[%s],"isTagsExperiment":false%s},"extensions":{"persistedQuery":{"version":1,"sha256Hash":"4a3254b9537ad005b6fbc6e7a811a4045312d4a4b5c0541bea86df60383972fd"}}}]' % (type, lang, cursor)
         url = self.getFullUrl('/gql', self.API2_URL)
         sts, data = self.getPage(url, MergeDicts(self.defaultParams, {'raw_post_data':True}), post_data)
         if not sts: return
@@ -198,7 +198,7 @@ class Twitch(CBaseHostClass):
         printDBG("Twitch.listDirGames")
 
         cursor = ',"cursor":"%s"' % cItem['cursor'] if 'cursor' in cItem else ''
-        post_data = '[{"operationName":"BrowsePage_AllDirectories","variables":{"limit":30,"options":{"recommendationsContext":{"platform":"web"},"sort":"VIEWER_COUNT","tags":[]%s}},"extensions":{"persistedQuery":{"version":1,"sha256Hash":"78957de9388098820e222c88ec14e85aaf6cf844adf44c8319c545c75fd63203"}}}]' % cursor
+        post_data = '[{"operationName":"BrowsePage_AllDirectories","variables":{"limit":30,"options":{"recommendationsContext":{"platform":"web"},"sort":"VIEWER_COUNT","tags":[]}%s},"extensions":{"persistedQuery":{"version":1,"sha256Hash":"78957de9388098820e222c88ec14e85aaf6cf844adf44c8319c545c75fd63203"}}}]' % cursor
         url = self.getFullUrl('/gql', self.API2_URL)
         sts, data = self.getPage(url, MergeDicts(self.defaultParams, {'raw_post_data':True}), post_data)
         if not sts: return
@@ -226,10 +226,11 @@ class Twitch(CBaseHostClass):
         lang = '"%s"' % cItem['lang'].upper() if 'lang' in cItem else ''
         cursor = ',"cursor":"%s"' % cItem['cursor'] if 'cursor' in cItem else ''
         # post_data updated as per changes to their api.  CM
-        post_data = '[{"operationName":"DirectoryPage_Game","variables":{"name":"%s","options":{"sort":"VIEWER_COUNT","recommendationsContext":{"platform":"web"},"requestID":"a40436b85daf0810","tags":[%s]},"sortTypeIsRecency":false,"limit":30%s},"extensions":{"persistedQuery":{"version":1,"sha256Hash":"c250a5fa4134a24c3d96abff9450391fd621b1c973c47f3d6adda3be6098c850"}}}]' % (cItem['game_name'], lang, cursor)        
+        post_data = '[{"operationName":"DirectoryPage_Game","variables":{"name":"%s","options":{"sort":"VIEWER_COUNT","recommendationsContext":{"platform":"web"},"requestID":"a40436b85daf0810","tags":[%s]},"sortTypeIsRecency":false,"limit":30%s},"extensions":{"persistedQuery":{"version":1,"sha256Hash":"c250a5fa4134a24c3d96abff9450391fd621b1c973c47f3d6adda3be6098c850"}}}]' % (cItem['game_name'], lang, cursor)
         url = self.getFullUrl('/gql', self.API2_URL)
         sts, data = self.getPage(url, MergeDicts(self.defaultParams, {'raw_post_data':True}), post_data)
         if not sts: return
+        printDBG("Twitch.listGameChannels data[%s]" % data)
         try:
             data = json.loads(data)
             self._listChannels(cItem, nextCategory, data[0]['data']['game']['streams'])
@@ -241,10 +242,12 @@ class Twitch(CBaseHostClass):
 
         login = cItem['user_login']
         post_data = []
+        post_data.append('{"operationName":"ChannelShell","variables":{"login":"%s"},"extensions":{"persistedQuery":{"version":1,"sha256Hash":"d6b850262351d0a1e01369809ca87ef837c45e148301053a8f6a9dc440d3c806"}}}' % login)
+        post_data.append('{"operationName":"ChannelPage_ChannelHeader","variables":{"login":"%s"},"extensions":{"persistedQuery":{"version":1,"sha256Hash":"32f05e9f36086c6e6930e3f3d0d515eea61cc3263bf7f92870f97c9aae024593"}}}' % login)
         post_data.append('{"operationName":"ChannelPage_StreamType_User","variables":{"channelLogin":"%s"},"extensions":{"persistedQuery":{"version":1,"sha256Hash":"43b152e4f17090ece0b50a5bc41e4690c7a6992ad3ed876d88bf7292be2d2cba"}}}' % login)
         post_data.append('{"operationName":"ChannelPage__ChannelViewersCount","variables":{"login":"%s"},"extensions":{"persistedQuery":{"version":1,"sha256Hash":"3b5b233b59cc71f5ab273c74a30c46485fa52901d98d7850d024ad0669270184"}}}' % login)
-        post_data.append('{"operationName":"ChannelPage_ChannelInfoBar_User_RENAME1","variables":{"login":"%s"},"extensions":{"persistedQuery":{"version":1,"sha256Hash":"07256d20a34cd864e68e39cd5d4235e795895b5e4717b4ed041ad7f94982f78f"}}}' % login)
-        post_data.append('{"operationName":"ChannelPage_ChannelHeader","variables":{"login":"%s"},"extensions":{"persistedQuery":{"version":1,"sha256Hash":"32f05e9f36086c6e6930e3f3d0d515eea61cc3263bf7f92870f97c9aae024593"}}}' % login)
+        post_data.append('{"operationName":"StreamMetadata","variables":{"channelLogin":"%s"},"extensions":{"persistedQuery":{"version":1,"sha256Hash":"1c719a40e481453e5c48d9bb585d971b8b372f8ebb105b17076722264dfa5b3e"}}}' % login)
+
         url = self.getFullUrl('/gql', self.API2_URL)
         sts, data = self.getPage(url, MergeDicts(self.defaultParams, {'raw_post_data':True}), '[%s]' % ','.join(post_data))
         if not sts: return
@@ -253,12 +256,12 @@ class Twitch(CBaseHostClass):
         try:
             data = json.loads(data)
             try:
-                if data[0]['data']['user']['stream']['type'] == 'live':
+                if data[2]['data']['user']['stream']['type'] == 'live':
                     descTab = []
-                    viewers = str(data[1]['data']['user']['stream']['viewersCount'])
+                    viewers = str(data[3]['data']['user']['stream']['viewersCount'])
                     descTab.append(_('%s viewers') % viewers)
-                    item = data[2]['data']['user']['lastBroadcast']
-                    title = jstr(item, 'title')
+                    title = jstr(data[4]['data']['user']['lastBroadcast'], 'title')
+                    item = data[4]['data']['user']['stream']
                     if item.get('game'):
                         descTab.append( '%s: %s' % (jstr(item['game'], '__typename'), jstr(item['game'], 'name')) )
                         icon = self.getFullIconUrl(jstr(item['game'], 'boxArtURL'), self.cm.meta['url'])
@@ -270,7 +273,7 @@ class Twitch(CBaseHostClass):
             except Exception:
                 printExc()
             
-            item = data[3]['data']['user']
+            item = data[1]['data']['user']
             icon = self.getFullIconUrl(jstr(item, 'profileImageURL'), self.cm.meta['url'])
             videosCount = int(item['videos']['totalCount'])
             if videosCount:
@@ -456,7 +459,7 @@ class Twitch(CBaseHostClass):
         try:
             data = json.loads(data)
             for item in data['games']:
-                params = {'good_for_fav':True, 'name':'category', 'type':'category', 'category':'browse_game', 'game_name':jstr(item, 'name'), 'game_id':str(item['_id']), 'title':jstr(item, 'localized_name'), 'icon':jstr(item['box'], 'medium'), 'desc':_('Popularity: %s') % item['popularity']}
+                params = {'good_for_fav':True, 'name':'category', 'type':'category', 'category':'browse_game', 'game_name':jstr(item, 'name'), 'game_id':str(item['_id']), 'title':jstr(item, 'localized_name'), 'icon':jstr(item['box'], 'medium'), 'desc':_('Popularity: ?')}
                 self.addDir(params)
             offset += len(self.currList)
             if offset < data.get('_total', 0):
@@ -506,13 +509,15 @@ class Twitch(CBaseHostClass):
         
         id = ''
         if cItem['video_type'] == 'clip':
-            url = 'https://clips.twitch.tv/api/v2/clips/%s/status' % cItem['clip_slug']
-            sts, data = self.getPage(url)
+            post_data = '[{"operationName":"VideoAccessToken_Clip","variables":{"slug":"%s"},"extensions":{"persistedQuery":{"version":1,"sha256Hash":"9bfcc0177bffc730bd5a5a89005869d2773480cf1738c592143b5173634b7d15"}}}]' % cItem['clip_slug']
+            url = self.getFullUrl('/gql', self.API2_URL)
+            sts, data = self.getPage(url, MergeDicts(self.defaultParams, {'raw_post_data':True}), post_data)
             if not sts: return urlTab
             try:
                 data = byteify(json.loads(data))
-                for item in data['quality_options']:
-                    urlTab.append({'name':'%sp, %sfps' % (item['quality'], item['frame_rate']), 'url':item['source'], 'need_resolve':0})
+                printDBG("Twitch.getLinksForVideo data: %s" % data)
+                for item in data[0]['data']['clip']['videoQualities']:
+                    urlTab.append({'name':'%sp, %sfps' % (item['quality'], item['frameRate']), 'url':item['sourceURL'], 'need_resolve':0})
             except Exception:
                 printExc()
         elif cItem['video_type'] == 'live':
