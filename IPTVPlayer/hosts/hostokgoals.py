@@ -110,24 +110,34 @@ class OkGoals(CBaseHostClass):
         sts, data = self.cm.getPage(cItem['url'])
         if not sts: return
         
-        tmp = self.cm.ph.getDataBeetwenMarkers(data, 'class="matchcontainer">', '<div align="center">', False)[1]
+        tmp = self.cm.ph.getDataBeetwenMarkers(data, ('<div','>','matchcontainer'), '</div>', False)[1]
         tmp = tmp.split('</script>')
         for item in tmp:
             url = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''['"]([^'^"]*?//config\.playwire\.com[^'^"]+?\.json)['"]''')[0])
-            if not self.cm.isValidUrl(url): url = self.getFullUrl(self.cm.ph.getSearchGroups(item, '<iframe[^>]+?src="([^"]+?)"', 1, True)[0])
             
-            if not self.cm.isValidUrl(url): continue
-            if 'playwire.com' not in url and  self.up.checkHostSupport(url) != 1: continue
+            if not url:
+                url = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''loadSource\(['"]([^'^"]+?)['"]''')[0])
             
-            title = self.cleanHtmlStr(item)
-            if title == '': title = cItem['title']
-            params = {'good_for_fav': True, 'title':title, 'url':url}
-            self.addVideo(params)
+            if not url:
+                url = self.getFullUrl(self.cm.ph.getSearchGroups(item, "src\s?=\s?['\"]([^'^\"]+?)['\"]")[0])
+            
+            if self.cm.isValidUrl(url): 
+                title = cItem['title']
+                params = {'good_for_fav': True, 'title':title, 'url':url}
+                self.addVideo(params)
     
     def getLinksForVideo(self, cItem):
         printDBG("OkGoals.getLinksForVideo [%s]" % cItem)
         urlTab = []
         videoUrl = cItem['url']
+        
+        if 'm3u8' in videoUrl:
+            params = getDirectM3U8Playlist(videoUrl)
+            if params:
+                printDBG(str(params))
+                urlTab.extend(params)
+                return urlTab
+                
         if 'playwire.com' in videoUrl:
             sts, data = self.cm.getPage(videoUrl)
             if not sts: return []
