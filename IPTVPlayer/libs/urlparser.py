@@ -460,6 +460,7 @@ class urlparser:
                        'suprafiles.org':        self.pp.parserUPLOAD         ,
                        'suspents.info':         self.pp.parserFASTVIDEOIN   ,
                        'swirownia.com.usrfiles.com': self.pp.parserSWIROWNIA,
+                       'tantifilm.top':         self.pp.parserTANTIFILM     ,
                        'telerium.tv':           self.pp.parserTELERIUMTV     ,
                        'theactionlive.com':     self.pp.parserTHEACTIONLIVE ,
                        'thefile.me':            self.pp.parserTHEFILEME     ,
@@ -13937,9 +13938,9 @@ class pageParser(CaptchaHelper):
         sts, data = self.cm.getPage(baseUrl, httpParams)
         
         if sts:
-            printDBG("-----------------------")
-            printDBG(data)
-            printDBG("-----------------------")
+            #printDBG("-----------------------")
+            #printDBG(data)
+            #printDBG("-----------------------")
         
             # find embedded video
             iframes = self.cm.ph.getAllItemsBeetwenMarkers(data, '<iframe', '>', withMarkers=True)
@@ -13981,4 +13982,109 @@ class pageParser(CaptchaHelper):
                                 else:
                                     urlsTab.append({'name': self.cm.getBaseUrl(url) + "(not in urlparser)", 'url' : url})
                 
+        return urlsTab
+
+    def parserTANTIFILM(self, baseUrl):
+        printDBG("parserTANTIFILM baseUrl [%s]" % baseUrl)
+        
+        httpParams = {
+            'header' : {
+                'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.61 Safari/537.36',
+                'Accept': '*/*',
+                'Accept-Encoding': 'gzip',
+                'Referer' : baseUrl.meta.get('Referer', baseUrl)
+            }, 
+            'use_cookie':True,
+            'load_cookie':True,
+            'save_cookie':True,
+            'cookiefile': GetCookieDir("tantifilm.cookie")
+        }
+
+        urlsTab = []
+        
+        sts, data = self.cm.getPage(baseUrl, httpParams)
+        
+        if sts:
+            printDBG("-----------------------")
+            printDBG(data)
+            printDBG("-----------------------")
+
+            # search data to auth stream
+            scripts = re.findall("window.application\s?=\s?\{(.*?)\};", data)
+            if scripts:
+                apiJson = json_loads("{" + scripts[0] + "}")
+                printDBG("----------- api data ------------")
+                printDBG(str(apiJson))
+                printDBG("---------------------------------")
+                
+                video_uuid = apiJson["data"]["uuid"]
+                apiPingUrl = apiJson["baseURL"] + "/" + apiJson["routes"]["api.videos.ping"].replace('{video}', video_uuid)
+                apiLinksUrl = apiJson["baseURL"] + "/" + apiJson["routes"]["api.videos.links"].replace('{video}', video_uuid)
+                token = apiJson['token']
+                
+                #post to apiPingUrl
+                postData = {'pingId': token ,'__type':'dawn'}
+                sts, pingData = self.cm.getPage(apiPingUrl, httpParams, post_data=postData)
+                
+                if sts:
+                    printDBG("-----------------------")
+                    printDBG(pingData)
+                    printDBG("-----------------------")
+                    
+                    
+            #search script with juicycodes
+            scripts = re.findall("juicycodes\((.*?)\)", data, re.S)
+            for s in scripts:
+                try:
+                    code = eval(s)
+                    tmpCode = code[0:-3]
+                    tmpCode += "==="[((len(tmpCode) + 3) % 4):]
+                    
+                    jsCode = base64.b64decode(tmpCode)
+                    symbolMap = ["`", "%", "-", "+", "*", "$", "!", "_", "^", "="]
+                    ordString=""
+                    for x in jsCode:
+                        ordString += '%d' % symbolMap.index(x)
+                    
+                    decoded = ""
+                    tmpSalt = code[-3:]
+                    salt = 0
+                    for x in tmpSalt:
+                        salt = salt * 10 + ord(x)-100
+                    
+                    splittedOrd = [ordString[i:i+4] for i in range(0, len(ordString), 4)]
+                    
+                    for x in splittedOrd:
+                        j = int(x) % 1000 - salt
+                        decoded += chr(j)
+                    
+                    printDBG(" ------------------ decoded ------------------")
+                    printDBG(decoded)
+                    printDBG(" ------------------------------------")
+
+                except:
+                    printExc()   
+
+                srcJson = re.findall("sources\"\s?:\s?\[(.*?)\]", decoded, re.S)
+                
+                if srcJson:
+                    srcJson = srcJson[0]
+                    sources = json_loads("[" + srcJson + "]")
+                    printDBG(str(sources))
+                    
+                    for s in sources:
+                        u = s.get('src','')
+                        if self.cm.isValidUrl(u):
+                            u = urlparser.decorateUrl(u, {'Referer': baseUrl})
+                            label = s.get('label','')
+                            srcType = s.get('type','')
+                        if 'm3u' in srcType or 'hls' in srcType:
+                            params = getDirectM3U8Playlist(u, checkExt=True, variantCheck=True, checkContent=True, sortWithMaxBitrate=99999999)
+                            printDBG(str(params))    
+                            urlsTab.extend(params)
+                        else:
+                            params = {'name': label , 'url': u}
+                            printDBG(str(params))
+                            urlsTab.append(params)
+                    
         return urlsTab
