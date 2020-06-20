@@ -261,7 +261,8 @@ class urlparser:
                        'hdfilmstreaming.com':   self.pp.parserHDFILMSTREAMING,
                        'hdgo.cc':               self.pp.parserHDGOCC        ,
                        'hdgo.cx':               self.pp.parserHDGOCC        ,
-                       'hdpass.online':         self.pp.parserHDPASSONLINE,
+                       'hdpass.online':         self.pp.parserHDPASSONLINE  ,
+                       'hdplayer.casa':         self.pp.parserHDPLAYERCASA  ,
                        'hdvid.tv':              self.pp.parserHDVIDTV       ,
                        'hlstester.com':         self.pp.parserHLSTESTER,
                        'hofoot.allvidview.tk':  self.pp.parserVIUCLIPS, 
@@ -13917,4 +13918,67 @@ class pageParser(CaptchaHelper):
                             printDBG(str(params))
                             urlsTab.append(params)
         
+        return urlsTab
+
+    def parserHDPLAYERCASA(self, baseUrl):
+        printDBG("parserHDPLAYERCASA baseUrl [%s]" % baseUrl)
+        
+        httpParams = {
+            'header' : {
+                'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.61 Safari/537.36',
+                'Accept': '*/*',
+                'Accept-Encoding': 'gzip',
+                'Referer' : baseUrl.meta.get('Referer', baseUrl)
+            }
+        }
+
+        urlsTab = []
+        
+        sts, data = self.cm.getPage(baseUrl, httpParams)
+        
+        if sts:
+            printDBG("-----------------------")
+            printDBG(data)
+            printDBG("-----------------------")
+        
+            # find embedded video
+            iframes = self.cm.ph.getAllItemsBeetwenMarkers(data, '<iframe', '>', withMarkers=True)
+            
+            for iframe in iframes:
+                url = self.cm.ph.getSearchGroups(iframe, "src=['\"]([^\"^']+?)['\"]")[0]
+                printDBG("Found url: %s" % url)
+                if self.cm.isValidUrl(url):
+                    if  urlparser().checkHostSupport(url)== 1:
+                        urls = urlparser().getVideoLinkExt(url)
+                        for u in urls:
+                            urlsTab.append({'name': self.cm.getBaseUrl(url), 'url' : u})
+                    else:
+                        urlsTab.append({'name': self.cm.getBaseUrl(url) + "(not in urlparser)", 'url' : url})
+        
+        
+            # find alternative mirrors
+            #<li class="dropdown"> 
+            #<a class="" href="https://hdplayer.casa/series/names/12/12/12/label1/HDPlayer"><i class="fa fa-home fa-fw"></i> HDPlayer</a>
+            #</li>
+            mirrors = self.cm.ph.getAllItemsBeetwenMarkers(data, ('<li','>','"dropdown"'), '</li>')
+            for m in mirrors:
+                mirrorUrl = self.cm.ph.getSearchGroups(m, "href=['\"]([^\"^']+?)['\"]")[0]
+                if self.cm.isValidUrl(mirrorUrl):
+                    if not 'label1' in mirrorUrl:
+                        sts, mirrorData = self.cm.getPage(mirrorUrl, httpParams)
+
+                        # find embedded videos
+                        iframes = self.cm.ph.getAllItemsBeetwenMarkers(mirrorData, '<iframe', '>', withMarkers=True)
+                        
+                        for iframe in iframes:
+                            url = self.cm.ph.getSearchGroups(iframe, "src=['\"]([^\"^']+?)['\"]")[0]
+                            printDBG("Found url: %s" % url)
+                            if self.cm.isValidUrl(url):
+                                if  urlparser().checkHostSupport(url)== 1:
+                                    urls = urlparser().getVideoLinkExt(url)
+                                    for u in urls:
+                                        urlsTab.append({'name': self.cm.getBaseUrl(url), 'url' : u.get('url','')})
+                                else:
+                                    urlsTab.append({'name': self.cm.getBaseUrl(url) + "(not in urlparser)", 'url' : url})
+                
         return urlsTab
