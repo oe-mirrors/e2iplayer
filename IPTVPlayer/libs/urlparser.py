@@ -5439,16 +5439,47 @@ class pageParser(CaptchaHelper):
     def parserVIVOSX(self, baseUrl):
         printDBG("parserVIVOSX baseUrl[%s]" % baseUrl)
         HTTP_HEADER = {'User-Agent': 'Mozilla/5.0', 'Accept': 'text/html', 'Accept-Encoding':'gzip, deflate'}
-        sts, data = self.cm.getPage(baseUrl, {'header':HTTP_HEADER})
-        if not sts: return False
-        
-        data = self.cm.ph.getDataBeetwenMarkers(data, 'InitializeStream', ';', False)[1]
-        data = self.cm.ph.getSearchGroups(data, '''['"]([^'^"]+?)['"]''')[0]
-        data = json_loads(base64.b64decode(data))
+
         urlTab = []
-        for idx in range(len(data)):
-            if not self.cm.isValidUrl(data[idx]): continue
-            urlTab.append({'name':_('Source %s') % (idx+1), 'url':strwithmeta(data[idx], {'Referer':baseUrl, 'User-Agent':HTTP_HEADER['User-Agent']})})
+
+        sts, data = self.cm.getPage(baseUrl, {'header':HTTP_HEADER})
+        if not sts: 
+            return urlTab
+        
+        #printDBG("----------------------")
+        #printDBG(data)
+        #printDBG("----------------------")
+        
+        
+        tmp = re.findall("InitializeStream\s?\((.*?)\)", data, re.S)
+        
+        #printDBG("*********")
+        #printDBG(str(tmp))
+        #printDBG("*********")
+        
+        if not tmp:
+            return []
+        
+        j = demjson_loads(tmp[0])
+        
+        src = j.get('source','')
+        if src:
+            jsCode = '''function Normalize(a, b) { return ++b ? String.fromCharCode((a = a.charCodeAt() + 47, a > 126 ? a - 94 : a)) : decodeURIComponent(a).replace(/[^ ]/g, this.Normalize) } ; s = Normalize('%s'); console.log(s);'''
+            jsCode = jsCode % src
+            ret = js_execute(jsCode)
+            
+            if ret['sts'] and 0 == ret['code']:
+                url = ret['data'].replace('\n','')
+                
+                printDBG("Found url %s" % url)
+        
+                if self.cm.isValidUrl(url):
+                    u = urlparser.decorateUrl(url, {'Referer': baseUrl})
+                    label = j.get('quality','link')
+                    params = {'name': label , 'url': u}
+                    printDBG(str(params))
+                    urlTab.append(params)
+        
         return urlTab
         
     def parserZSTREAMTO(self, baseUrl):
