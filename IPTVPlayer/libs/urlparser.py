@@ -153,6 +153,7 @@ class urlparser:
                        'allocine.fr':           self.pp.parserALLOCINEFR    ,
                        'allvid.ch':             self.pp.parserALLVIDCH      ,
                        'anime-shinden.info':    self.pp.parserANIMESHINDEN  ,
+                       'aparat.cam':            self.pp.parserAPARAT        ,
                        'api.video.mail.ru':     self.pp.parserVIDEOMAIL     ,
                        'archive.org':           self.pp.parserARCHIVEORG    ,
                        'auroravid.to':          self.pp.parserAURORAVIDTO   ,
@@ -14123,3 +14124,68 @@ class pageParser(CaptchaHelper):
 
         return urlsTab
         
+
+    def parserAPARAT(self, baseUrl):
+        printDBG("parserAPARAT baseUrl[%r]" % baseUrl)
+
+        def checkTxt(txt):
+            txt = txt.replace('\n', ' ')
+            if txt.find('file:'):
+                txt = txt.replace('file:', '"file":')
+            if txt.find('label:'):
+                txt = txt.replace('label:', '"label":')
+            if txt.find('kind:'):
+                txt = txt.replace('lang:', '"lang":')
+            if txt.find('src:'):
+                txt = txt.replace('src:', '"src":')
+            if txt.find('res:'):
+                txt = txt.replace('res:', '"res":')
+            if txt.find('type:'):
+                txt = txt.replace('type:', '"type":')
+            if txt.find('idLang:'):
+                txt = txt.replace('idLang:', '"idLang":')
+            
+            return txt
+
+
+        httpParams = {
+            'header' : {
+                'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.61 Safari/537.36',
+                'Accept': '*/*',
+                'Accept-Encoding': 'gzip',
+                'Referer' : baseUrl.meta.get('Referer', baseUrl)
+            } 
+        }
+
+        urlsTab = []
+        
+        sts, data = self.cm.getPage(baseUrl, httpParams)
+        
+        if sts:
+            #printDBG("-----------------------")
+            #printDBG(data)
+            #printDBG("-----------------------")
+        
+            srcJson = re.findall("sources\s?:\s?\[(.*?)\]", data, re.S)
+            
+            if srcJson:
+                srcJson = srcJson[0]
+                sources = json_loads("[" + checkTxt(srcJson) + "]")
+                printDBG(str(sources))
+                
+                for s in sources:
+                    u = s.get('src','')
+                    if self.cm.isValidUrl(u):
+                        u = urlparser.decorateUrl(u, {'Referer': baseUrl})
+                        label = s.get('label','')
+                        srcType = s.get('type','')
+                    if 'm3u' in u or 'hls' in srcType or 'x-mpeg' in srcType :
+                        params = getDirectM3U8Playlist(u, checkExt=True, variantCheck=True, checkContent=True, sortWithMaxBitrate=99999999)
+                        printDBG(str(params))    
+                        urlsTab.extend(params)
+                    else:
+                        params = {'name': label , 'url': u}
+                        printDBG(str(params))
+                        urlsTab.append(params)
+
+        return urlsTab
