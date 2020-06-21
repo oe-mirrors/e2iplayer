@@ -36,6 +36,7 @@ from Plugins.Extensions.IPTVPlayer.iptvdm.iptvdh import DMHelper
 from Plugins.Extensions.IPTVPlayer.components.asynccall import iptv_execute, MainSessionWrapper
 from Plugins.Extensions.IPTVPlayer.tools.e2ijs import js_execute, js_execute_ext
 from Plugins.Extensions.IPTVPlayer.libs.e2ijson import loads as json_loads, dumps as json_dumps
+from Plugins.Extensions.IPTVPlayer.libs.demjson import decode as demjson_loads
 from Plugins.Extensions.IPTVPlayer.libs.aadecode import decode as aadecode 
 from Plugins.Extensions.IPTVPlayer.libs.powvideo import swapUrl as powvideo_swapUrl
 
@@ -14128,26 +14129,6 @@ class pageParser(CaptchaHelper):
     def parserAPARAT(self, baseUrl):
         printDBG("parserAPARAT baseUrl[%r]" % baseUrl)
 
-        def checkTxt(txt):
-            txt = txt.replace('\n', ' ')
-            if txt.find('file:'):
-                txt = txt.replace('file:', '"file":')
-            if txt.find('label:'):
-                txt = txt.replace('label:', '"label":')
-            if txt.find('kind:'):
-                txt = txt.replace('lang:', '"lang":')
-            if txt.find('src:'):
-                txt = txt.replace('src:', '"src":')
-            if txt.find('res:'):
-                txt = txt.replace('res:', '"res":')
-            if txt.find('type:'):
-                txt = txt.replace('type:', '"type":')
-            if txt.find('idLang:'):
-                txt = txt.replace('idLang:', '"idLang":')
-            
-            return txt
-
-
         httpParams = {
             'header' : {
                 'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.61 Safari/537.36',
@@ -14170,7 +14151,7 @@ class pageParser(CaptchaHelper):
             
             if srcJson:
                 srcJson = srcJson[0]
-                sources = json_loads("[" + checkTxt(srcJson) + "]")
+                sources = demjson_loads("[" + srcJson + "]")
                 printDBG(str(sources))
                 
                 for s in sources:
