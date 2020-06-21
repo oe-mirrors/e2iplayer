@@ -48,7 +48,7 @@ class LookMovieag(CBaseHostClass):
 
         self.defaultParams = {'header':self.HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}     
         
-        self.HOST_VER = '1.5 (19/08/2019)'
+        self.HOST_VER = '1.7 (02/01/2020)'
 
         self.MAIN_CAT_TAB =     [
                                     {'category':'movies',         'title': _('Movies'),       'url':self.MAIN_URL, 'desc': '\c00????00 Info: \c00??????Movies\\n \c00????00Version: \c00??????'+self.HOST_VER+'\\n \c00????00Developer: \c00??????Codermik\\n', 'icon':self.DEFAULT_ICON_URL},
@@ -59,9 +59,8 @@ class LookMovieag(CBaseHostClass):
 
         self.MOVIE_SUB_CAT =    [
                                     {'category':'allmovies',      'title': _('All'),       'url':self.MAIN_URL, 'desc': '\c00????00 Info: \c00??????Show all available movies (no filtering).\\n \c00????00Version: \c00??????'+self.HOST_VER+'\\n \c00????00Developer: \c00??????Codermik\\n', 'icon':self.DEFAULT_ICON_URL},
-                                    {'category':'latestmovies',   'title': _('Latest Added Movies'),       'url':self.MAIN_URL + '/movies/', 'desc': '\c00????00 Info: \c00??????Show all movies just added.\\n \c00????00Version: \c00??????'+self.HOST_VER+'\\n \c00????00Developer: \c00??????Codermik\\n', 'icon':self.DEFAULT_ICON_URL},
-                                    {'category':'sortbyyear',   'title': _('Filter By Year'),       'url':self.MAIN_URL + '/movies/', 'desc': '\c00????00 Info: \c00??????Show all movies in a chosen year.\\n \c00????00Version: \c00??????'+self.HOST_VER+'\\n \c00????00Developer: \c00??????Codermik\\n', 'icon':self.DEFAULT_ICON_URL},
-                                    {'category':'moviegenres',    'title': _('Genres'),       'url':self.MAIN_URL + '/genres/', 'desc': '\c00????00 Info: \c00??????Browse movies by Genre.\\n \c00????00Version: \c00??????'+self.HOST_VER+'\\n \c00????00Developer: \c00??????Codermik\\n', 'icon':self.DEFAULT_ICON_URL}                               
+                                    {'category':'sortbyyear',   'title': _('Filter By Year'),       'url':self.MAIN_URL + '/movies', 'desc': '\c00????00 Info: \c00??????Show all movies in a chosen year.\\n \c00????00Version: \c00??????'+self.HOST_VER+'\\n \c00????00Developer: \c00??????Codermik\\n', 'icon':self.DEFAULT_ICON_URL},
+                                    {'category':'moviegenres',    'title': _('Genres'),       'url':self.MAIN_URL + '/movies/genres', 'desc': '\c00????00 Info: \c00??????Browse movies by Genre.\\n \c00????00Version: \c00??????'+self.HOST_VER+'\\n \c00????00Developer: \c00??????Codermik\\n', 'icon':self.DEFAULT_ICON_URL}                               
                                 ]
 
         self.GENRE_SUB_CAT =    [
@@ -103,8 +102,7 @@ class LookMovieag(CBaseHostClass):
         return self.cm.getPageCFProtection(baseUrl, addParams, post_data)
 
     def buildYears(self, cItem):
-        # years 1921 - 2019, newest first
-        year = 2019
+        year = 2020
         while year >= 1921:
             tmpyear = '%s' % year
             params = dict(cItem)
@@ -113,25 +111,29 @@ class LookMovieag(CBaseHostClass):
             self.addDir(params)
             year-=1
 
-    def buildGenres(self, cItem):
-        printDBG('E2iStream >>>>>> buildGenres!')
-
     def listEpisodes(self, cItem):
         sts, data = self.getPage(cItem['url'])
         if not sts: return
         block = self.cleanHtmlStr(self.cm.ph.getAllItemsBeetwenNodes(data,'<script>window.route="shows/view";', ('</script>'))[0])
         block = block.replace('\\','')
         block = self.cm.ph.getAllItemsBeetwenNodes(block,'{', '}')
+        series = cItem['title']
         for episodes in block:
             if 'id_episode' in episodes:
-                title = self.cm.ph.getAllItemsBeetwenNodes(episodes,'title":"', '",',False)[0]  
+                title = self.cm.ph.getAllItemsBeetwenNodes(episodes,'title":"', '",',False)
+                if title: title = title[0]
+                else: title = " "
                 episodeId = self.cm.ph.getAllItemsBeetwenNodes(episodes,'id_episode\":\"', '\"',False)[0]
                 m3u8Url = 'https://lookmovie.ag/manifests/shows/9C60XF7yiUOfSOXUlkk4jg/4066244082/%s/master.m3u8' % episodeId
                 season = self.cm.ph.getAllItemsBeetwenNodes(episodes,'season":"', '",',False)[0]  
                 episode = self.cm.ph.getAllItemsBeetwenNodes(episodes,'"episode":"', '",',False)[0]
-                desc = self.cm.ph.getAllItemsBeetwenNodes(episodes,'description":"', '",',False)[0]  
-                airing = self.cm.ph.getAllItemsBeetwenNodes(episodes,'air_date":"', '"}',False)[0]
-                title = '%s   \c00????00[Season %s Episode %s]' %(title, season, episode)
+                desc = self.cm.ph.getAllItemsBeetwenNodes(episodes,'description":"', '",',False)  
+                airing = self.cm.ph.getAllItemsBeetwenNodes(episodes,'air_date":"', '"}',False)
+                if desc: desc = desc[0]
+                else: desc = " "
+                if airing: airing = airing[0]
+                else: airing = " "
+                title = '%s - %s   \c00????00[Season %s Episode %s]' %(series, title, season, episode)
                 desc = '\c00????00 Title: \c00??????%s\\n \c00????00Aired: \c00??????%s\\n \c00????00Description: \c00??????%s\\n' %(title, airing, desc)
                 params = dict(cItem) 
                 params.update({'good_for_fav':True, 'title':self.cleanHtmlStr(title), 'url':m3u8Url, 'desc':self.cleanHtmlStr(desc)})
@@ -154,8 +156,6 @@ class LookMovieag(CBaseHostClass):
                     nextPage = self.MAIN_URL + self.cm.ph.getAllItemsBeetwenNodes(nextPage,'href="//lookmovie.ag/', ('">'),False)[0]
                 block = self.cm.ph.getAllItemsBeetwenNodes(data, ('div class="flex-wrap-movielist"', 'movie-item'), ('<div class="pagination-template"'))[0]
                 block = self.cm.ph.getAllItemsBeetwenNodes(block, ('div class="movie-item', 'movie-item'), ('</h6>'))
-                # site contains "next page" arrow even if we have 1 result, lets patch this otherwise we will have a "Next Page" where its not needed.
-                # For info: website has 40 items per page therefore anything lower than that requires no "next page".
                 if len(block) < 40: nextPage = ''
                 for items in block:
                     title = self.cm.ph.getAllItemsBeetwenNodes(items,'<div class="mv-item-infor">', ('</h6>'),False)[0]
@@ -177,7 +177,7 @@ class LookMovieag(CBaseHostClass):
                             title += '  \c00????00('+quality+')'
                     else:
                         quality = ''
-                        if '/shows/' in tmpurl: tooltip = 'Minimum 720p Quality'
+                        if '/shows/' in tmpurl: tooltip = '720p Quality'
                         else: tooltip = 'No quality has been specified.'
                     videoUrl = self.cm.ph.getSearchGroups(items, 'href="([^"]+?)"')[0]
                     videoUrl = self.MAIN_URL + videoUrl[:0] + videoUrl[1:]  # removing the the double // at the start of the url
@@ -185,7 +185,7 @@ class LookMovieag(CBaseHostClass):
                     desc = '\c00????00 Title: \c00??????'+title+'\\n \c00????00Year: \c00??????'+year+'\\n \c00????00Description: \c00??????'+tooltip
                     params = dict(cItem)                    
                     if '/shows/' in tmpurl: 
-                        params.update({'category':'tvshow', 'title':self.cleanHtmlStr(title), 'url':videoUrl, 'icon':imageUrl, 'desc':self.cleanHtmlStr(desc)})
+                        params.update({'good_for_fav':True, 'category':'tvshow', 'title':self.cleanHtmlStr(title), 'url':videoUrl, 'icon':imageUrl, 'desc':self.cleanHtmlStr(desc)})
                         self.addDir(params)
                     else: 
                         params.update({'good_for_fav':True, 'title':self.cleanHtmlStr(title), 'url':videoUrl, 'icon':imageUrl, 'desc':self.cleanHtmlStr(desc)})
@@ -231,9 +231,6 @@ class LookMovieag(CBaseHostClass):
                     continue
                 if '720p' in links: 
                     if avail1080:
-                        # option was there for the fake 1080 so it must exist for
-                        # those vip members.  Backup the 720 link and also include
-                        # it once we update 1080p link.
                         avail1080 = False
                         tmpUrl = links    # temporarily store the 720p url
                         links = links.replace("720p", "1080p")
@@ -261,7 +258,6 @@ class LookMovieag(CBaseHostClass):
         # movie section
         elif category == 'movies': self.listsTab(self.MOVIE_SUB_CAT, self.currItem)
         elif category == 'allmovies': self.listItems(self.currItem)
-        elif category == 'latestmovies': self.listItems(self.currItem)
         elif category == 'sortbyyear': self.buildYears(self.currItem)
         elif category == 'listyears': self.listItems(self.currItem)
         elif category == 'moviegenres': self.listsTab(self.GENRE_SUB_CAT, self.currItem)
