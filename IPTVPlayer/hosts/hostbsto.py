@@ -9,6 +9,7 @@ from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, by
 from Plugins.Extensions.IPTVPlayer.tools.iptvtypes import strwithmeta
 from Plugins.Extensions.IPTVPlayer.libs.crypto.cipher.aes_cbc import AES_CBC
 from Plugins.Extensions.IPTVPlayer.libs import ph
+from Plugins.Extensions.IPTVPlayer.libs.e2ijson import loads as json_loads, dumps as json_dumps
 ###################################################
 
 ###################################################
@@ -260,66 +261,69 @@ class BSTO(CBaseHostClass, CaptchaHelper):
                     self.cacheLinks[key][idx]['name'] = '*' + self.cacheLinks[key][idx]['name']
         
         sts, data = self.getPage(videoUrl)
-        if not sts: return []
+        if not sts: 
+            return []
+        
+        #printDBG("---------------------------")
+        #printDBG(data)
+        #printDBG("---------------------------")
         
         errorMsgTab = []
         
-        baseUrl  = self.cm.ph.getSearchGroups(data, '''href=['"][^'^"]*?(/out/[^'^"]+?)['"]''')[0]
-        url = self.getFullUrl(baseUrl)
-        prevUrl = url
+        # LID
+        #<div class="hoster-player" data-lid="4778534">
+        # token
+        #<meta name="security_token" content="edfafd7a9fa9a7d005f88c96" />
+        # ticket <- token from recaptcha
+        # recaptcha sitekey
+        #series.init (1, 1, '6LeiZSYUAAAAAI3JZXrRnrsBzAdrZ40PmD57v_fs')
         
-        linkId = self.cm.ph.getSearchGroups(url, '''/out/([0-9]+)''')[0]
-        hostUrl = BSTO.LINKS_CACHE.get(linkId, '')
-        if hostUrl == '' and config.plugins.iptvplayer.bsto_linkcache.value:
-            hostUrl = ReadTextFile(GetCacheSubDir('bs.to', linkId))[1]
+        lid = self.cm.ph.getSearchGroups(data, "data-lid=['\"]([^'^\"]+?)['\"]")[0]
+        printDBG("Data LID : %s " % lid)
         
-        if hostUrl == '':
-            sts, data = self.cm.getPage(prevUrl, self.defaultParams)
-            if not sts: return []
-            url = data.meta['url']
-            
-            if url == prevUrl:
-                query = {}
-                tmp = self.cm.ph.getDataBeetwenNodes(data, ('<form', '>'), ('</form', '>'), False)[1]
-                tmp = self.cm.ph.getAllItemsBeetwenMarkers(tmp, '<input', '>', False)
-                for item in tmp:
-                    name = self.cm.ph.getSearchGroups(item, '''name=['"]([^'^"]+?)['"]''')[0]
-                    value = self.cm.ph.getSearchGroups(item, '''value=['"]([^'^"]+?)['"]''')[0]
-                    if name != '':
-                        query[name] = value
+        token = self.cm.ph.getSearchGroups(data, "<meta.*security_token.*content=\"(.*?)\"")[0]
+        printDBG("Security token : %s " % token)
+        
+        if not lid or not token:
+            return []
+        
+        sitekey = self.cm.ph.getSearchGroups(data, "'([0-9a-zA-Z_]{38,}?)'\)")[0]
+        
+        if sitekey != '':
+            ticket, errorMsgTab = self.processCaptcha(sitekey,  self.cm.meta['url'], config.plugins.iptvplayer.bsto_bypassrecaptcha.value)
+            if not ticket :
+                return []
+        
+        printDBG("ticket: %s" % ticket)
                 
-                sitekey = self.cm.ph.getSearchGroups(data, '''['"]sitekey['"]\s*?:\s*?['"]([^'^"]+?)['"]''')[0]
-                if sitekey != '' and 'bitte das Captcha' in data:
-                    token, errorMsgTab = self.processCaptcha(sitekey,  self.cm.meta['url'], config.plugins.iptvplayer.bsto_bypassrecaptcha.value)
-                    if token != '':
-                        sts, data = self.cm.getPage(url + '?t=%s&s=%s' % (token, query.get('s', '')), self.defaultParams)
-                        if not sts: return []
-                        url = data.meta['url']
-            
-            if 1 != self.up.checkHostSupport(url):
-                url  = baseUrl.replace('/out/', '/watch/')[1:]
-                
-                hostUrl = ''
-                try:
-                    sts, data = self.cm.getPage(self.getFullUrl('/api/' + url), self.getHeaders(url))
-                    if not sts: return []
-                    
-                    data = byteify(json.loads(data))
-                    printDBG(data)
-                    
-                    hostUrl = data['fullurl']
-                except Exception:
-                    printExc()
-            else:
-                hostUrl = url
-            
-        if 1 != self.up.checkHostSupport(hostUrl):
-            SetIPTVPlayerLastHostError('\n'.join(errorMsgTab)) 
-        elif self.cm.isValidUrl(hostUrl):
-            BSTO.LINKS_CACHE[linkId] = hostUrl
-            if config.plugins.iptvplayer.bsto_linkcache.value:
-                WriteTextFile(GetCacheSubDir('bs.to', linkId), hostUrl)
-            urlTab = self.up.getVideoLinkExt(hostUrl)
+        # post data
+        postData = {'token': token, 'LID': lid, 'ticket': ticket}
+        ajaxUrl = self.MAIN_URL + "ajax/embed.php"
+        ajaxParams = self.defaultParams
+        ajaxParams['header']= self.AJAX_HEADER
+        ajaxParams['header']['Referer'] = videoUrl
+         
+        sts, ajaxData = self.cm.getPage(ajaxUrl, ajaxParams, post_data=postData)
+        if not sts: 
+            return []
+
+        printDBG("----------- ajax data ----------")
+        printDBG(ajaxData)
+        printDBG("--------------------------------")
+        # {"success":true,"link":"https:\/\/vivo.sx\/2eaf981402","embed":"0"}
+        
+        jsonData = json_loads(ajaxData) 
+        
+        hostUrl = jsonData.get('link','')
+        
+        if hostUrl:
+            if 1 != self.up.checkHostSupport(hostUrl):
+                SetIPTVPlayerLastHostError('\n'.join(errorMsgTab)) 
+            elif self.cm.isValidUrl(hostUrl):
+                BSTO.LINKS_CACHE[lid] = hostUrl
+                if config.plugins.iptvplayer.bsto_linkcache.value:
+                    WriteTextFile(GetCacheSubDir('bs.to', lid), hostUrl)
+                urlTab = self.up.getVideoLinkExt(hostUrl)
         
         return urlTab
         
