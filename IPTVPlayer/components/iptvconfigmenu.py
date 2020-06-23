@@ -189,6 +189,13 @@ config.plugins.iptvplayer.ukrainian_proxyurl = ConfigText(default = "http://user
 config.plugins.iptvplayer.alternative_proxy1 = ConfigText(default = "http://user:pass@ip:port", fixed_size = False)
 config.plugins.iptvplayer.alternative_proxy2 = ConfigText(default = "http://user:pass@ip:port", fixed_size = False)
 
+
+config.plugins.iptvplayer.captcha_bypass = ConfigSelection(default = "", choices = [("", _("Auto")), ("2captcha.com", "2captcha.com"), ("9kw.eu", "9kw.eu")])
+config.plugins.iptvplayer.captcha_bypass_order = ConfigSelection(default = "", choices = [("", _("Internal, then external")), ("free", _("Only free")), ("free_pay", _("External free, then paid")), ("pay", _("External paid"))])
+config.plugins.iptvplayer.captcha_bypass_free = ConfigSelection(default = "", choices = [("", _("None")), ("myjd", "MyJDownloader")])
+config.plugins.iptvplayer.captcha_bypass_pay = ConfigSelection(default = "", choices = [("", _("None")), ("2captcha.com", "2captcha.com"), ("9kw.eu", "9kw.eu")])
+
+
 config.plugins.iptvplayer.api_key_9kweu = ConfigText(default = "", fixed_size = False)
 config.plugins.iptvplayer.api_key_2captcha = ConfigText(default = "", fixed_size = False)
 
@@ -396,13 +403,23 @@ class ConfigMenu(ConfigBaseWidget):
         list.append(getConfigListEntry(_("Start download manager per default"), config.plugins.iptvplayer.IPTVDMRunAtStart))
         list.append(getConfigListEntry(_("Show download manager after adding new item"), config.plugins.iptvplayer.IPTVDMShowAfterAdd))
         list.append(getConfigListEntry(_("Number of downloaded files simultaneously"), config.plugins.iptvplayer.IPTVDMMaxDownloadItem))
-        
-        list.append(getConfigListEntry(_("%s e-mail") % ('My JDownloader'), config.plugins.iptvplayer.myjd_login))
-        list.append(getConfigListEntry(_("%s password") % ('My JDownloader'), config.plugins.iptvplayer.myjd_password))
-        list.append(getConfigListEntry(_("%s device name") % ('My JDownloader'), config.plugins.iptvplayer.myjd_jdname))
-        
-        list.append(getConfigListEntry(_("%s API KEY") % 'https://9kw.eu/', config.plugins.iptvplayer.api_key_9kweu))
-        list.append(getConfigListEntry(_("%s API KEY") % 'http://2captcha.com/', config.plugins.iptvplayer.api_key_2captcha))
+
+        list.append(getConfigListEntry(_("Default captcha bypass (old routine)"), config.plugins.iptvplayer.captcha_bypass))
+        list.append(getConfigListEntry(_("Captcha solver order"), config.plugins.iptvplayer.captcha_bypass_order))
+        list.append(getConfigListEntry(_("Captcha bypass free service"), config.plugins.iptvplayer.captcha_bypass_free))
+
+        if config.plugins.iptvplayer.captcha_bypass_free.value == "myjd":
+            list.append(getConfigListEntry(_("%s e-mail") % ('My JDownloader'), config.plugins.iptvplayer.myjd_login))
+            list.append(getConfigListEntry(_("%s password") % ('My JDownloader'), config.plugins.iptvplayer.myjd_password))
+            list.append(getConfigListEntry(_("%s device name") % ('My JDownloader'), config.plugins.iptvplayer.myjd_jdname))
+
+        list.append(getConfigListEntry(_("Captcha bypass paid service"), config.plugins.iptvplayer.captcha_bypass_pay))
+
+        if config.plugins.iptvplayer.captcha_bypass_pay.value == "9kw.eu":
+            list.append(getConfigListEntry(_("%s API KEY") % 'https://9kw.eu/', config.plugins.iptvplayer.api_key_9kweu))
+
+        if config.plugins.iptvplayer.captcha_bypass_pay.value == "2captcha.com":
+            list.append(getConfigListEntry(_("%s API KEY") % 'http://2captcha.com/', config.plugins.iptvplayer.api_key_2captcha))
         
         list.append(getConfigListEntry(_("Use subtitles parser extension if available"), config.plugins.iptvplayer.useSubtitlesParserExtension))
         list.append(getConfigListEntry("http://opensubtitles.org/ " + _("login"), config.plugins.iptvplayer.opensuborg_login))
@@ -606,6 +623,8 @@ class ConfigMenu(ConfigBaseWidget):
               config.plugins.iptvplayer.plarform,
               config.plugins.iptvplayer.osk_type,
               config.plugins.iptvplayer.preferredupdateserver,
+              config.plugins.iptvplayer.captcha_bypass_free,
+              config.plugins.iptvplayer.captcha_bypass_pay
               ]
         players = []
         if 'sh4' == config.plugins.iptvplayer.plarform.value:
