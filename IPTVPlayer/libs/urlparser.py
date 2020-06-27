@@ -149,7 +149,8 @@ class urlparser:
                        '7cast.net':             self.pp.parser7CASTNET      ,
                        'abcast.biz':            self.pp.parserABCASTBIZ     ,
                        'abcast.net':            self.pp.parserABCASTBIZ     ,
-                       'aflamyz.com':           self.pp.parserAFLAMYZCOM     ,
+                       'abcvideo.cc':           self.pp.parserABCVIDEO      ,
+                       'aflamyz.com':           self.pp.parserAFLAMYZCOM    ,
                        'akvideo.stream':        self.pp.parserAKVIDEOSTREAM ,
                        'albfilm.com':           self.pp.parserALBFILMCOM    ,
                        'aliez.me':              self.pp.parserALIEZME       ,
@@ -9721,7 +9722,7 @@ class pageParser(CaptchaHelper):
         COOKIE_FILE = GetCookieDir("netu.tv.cookie")
         
         # remove old cookie file
-        rm(COOKIE_FILE)
+        # rm(COOKIE_FILE)
         params = {'with_metadata':True, 'header':HTTP_HEADER, 'use_cookie': True, 'save_cookie': True, 'load_cookie': True, 'cookiefile': COOKIE_FILE}
         
         urlsTab = []
@@ -14126,4 +14127,93 @@ class pageParser(CaptchaHelper):
                         printDBG(str(params))
                         urlsTab.append(params)
 
+        return urlsTab
+
+    def parserABCVIDEO(self, baseUrl):
+        printDBG("parserABCVIDEO baseUrl[%r]" % baseUrl)
+
+        httpParams = {
+            'header' : {
+                'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.61 Safari/537.36',
+                'Accept': '*/*',
+                'Accept-Encoding': 'gzip',
+                'Referer' : baseUrl.meta.get('Referer', baseUrl)
+            } 
+        }
+
+        urlsTab = []
+        
+        sts, data = self.cm.getPage(baseUrl, httpParams)
+        
+        if sts:
+        
+            '''
+            grecaptcha.ready(function() {
+
+                grecaptcha.execute('6LcOeuUUAAAAANS5Gb3oKwWkBjOdMXxqbj_2cPCy', {action: 'homepage'}).then(function(token) {
+                    
+                    jQuery.get("/dl?op=video_src&file_code=q9za1xe42hef&g-recaptcha-response="+token, function(data){
+                            
+                            data = JSON.parse(data);
+                            console.log( 'dataaaaaaa');
+                            console.log( data );
+                            load_jw_player( data );
+
+                            
+                    });     
+                });     
+            });
+            '''
+        
+            sitekey = self.cm.ph.getSearchGroups(data, "grecaptcha.execute\('([^']+?)'")[0]
+            if not sitekey:
+                printDBG("-----------------------")
+                printDBG(data)
+                printDBG("-----------------------")
+                printDBG("parserABCVideo.Catpcha sitekey not found")
+            else:    
+                #process captcha
+                printDBG("parserABCVideo.sitekey: % s" % sitekey)
+                query_url = self.cm.ph.getSearchGroups(data, "jQuery.get\(([^,]+?),")[0]
+                printDBG("parserABCVideo.query url: % s" % query_url)
+                
+                token, errorMsgTab = self.processCaptcha(sitekey, baseUrl, captchaType="v3")
+                if token == '':
+                    SetIPTVPlayerLastHostError('\n'.join(errorMsgTab)) 
+                    return False
+                
+                query_url = self.cm.getFullUrl(eval(query_url), baseUrl)
+                printDBG("parserABCVideo.query url after captcha: %s" % query_url)
+                
+                if self.cm.isValidUrl(query_url):
+                    httpParams['header'].update({
+                                'x-requested-with': 'XMLHttpRequest',
+                                'Referer': baseUrl
+                                })
+                                
+                    sts, data = self.cm.getPage(query_url, httpParams)
+                    
+                    if sts:
+                        printDBG("-----------------------")
+                        printDBG(data)
+                        printDBG("-----------------------")
+                        
+                        try:
+                            response = json_loads(data)
+                            for u in response:
+                                url = u.get('file','')
+                                if self.cm.isValidUrl(url):
+                                    url = urlparser.decorateUrl(url, {'Referer': baseUrl})
+                                    label = u.get('label','')
+                                if 'm3u' in url :
+                                    params = getDirectM3U8Playlist(url, checkExt=True, variantCheck=True, checkContent=True, sortWithMaxBitrate=99999999)
+                                    printDBG(str(params))    
+                                    urlsTab.extend(params)
+                                else:
+                                    params = {'name': label , 'url': url}
+                                    printDBG(str(params))
+                                    urlsTab.append(params)
+                                
+                        except:
+                            printExc()
         return urlsTab

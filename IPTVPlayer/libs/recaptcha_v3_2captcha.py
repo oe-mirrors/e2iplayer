@@ -31,7 +31,7 @@ class UnCaptchaReCaptcha:
         if mainUrl == None: mainUrl = self.getMainUrl()
         return self.cm.getFullUrl(url, mainUrl)
 
-    def processCaptcha(self, sitekey, action='verify', referer=''):
+    def processCaptcha(self, sitekey, referer='', action='verify'):
         sleepObj = None
         token = ''
         errorMsgTab = []
