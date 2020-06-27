@@ -110,7 +110,7 @@ class IPTVHostsGroups:
         'dsda' : [ 'documentary', 'italian', 'science'] ,
         'efilmytv' : [ 'moviesandseries', 'polish'] ,
         'egybest' : [ 'arabic', 'moviesandseries'] ,
-        'ekinomaniac' : ['moviesandseries', 'polish'], 
+        'ekinomaniak' : ['moviesandseries', 'polish'], 
         'ekinotv' : [ 'moviesandseries', 'polish'] ,
         'ekstraklasatv' : [ 'polish', 'sport'] ,
         'eskago' : [ 'live', 'music', 'polish'] ,

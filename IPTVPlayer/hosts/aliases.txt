@@ -49,7 +49,7 @@
 "hostdsda": "https://documentari-streaming-da.com/",
 "hostefilmytv": "http://www.efilmy.tv/",
 "hostegybest": "https://beal.egybest.xyz/",
-"hostekinomaniac": "https://ekinomaniak.net/",
+"hostekinomaniak": "https://ekinomaniak.net/",
 "hostekinotv": "http://ekino-tv.pl/",
 "hostekstraklasatv": "http://ekstraklasa.tv/",
 "hosteskago": "http://www.eskago.pl/",

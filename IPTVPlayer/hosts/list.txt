@@ -47,7 +47,7 @@ hostdrdk
 hostdsda
 hostefilmytv
 hostegybest
-hostekinomaniac
+hostekinomaniak
 hostekinotv
 hostekstraklasatv
 hosteskago
