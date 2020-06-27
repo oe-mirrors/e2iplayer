@@ -9917,13 +9917,15 @@ class pageParser(CaptchaHelper):
                             # readable link
                             l = "http:" + l
                         if self.cm.isValidUrl(l): 
-                            file_url = urlparser.decorateUrl(l, {'iptv_livestream':False, 'User-Agent':HTTP_HEADER['User-Agent'], 'Referer': final_url})
-                            if file_url.split('?')[0].endswith('.m3u8') or '/hls-' in file_url:
-                                file_url = strwithmeta(file_url, {'iptv_proto':'m3u8'})
-                                urlsTab.extend( getDirectM3U8Playlist(file_url, False, checkContent=True) )
-                            else:
-                                urlsTab.append({"name":"link", "url": file_url})
-        
+                            tabs = []
+                            if l.split('?')[0].endswith('.m3u8') or '/hls-' in l:
+                                file_url = urlparser.decorateUrl(l, {'iptv_livestream':False, 'User-Agent':HTTP_HEADER['User-Agent'], 'Referer': final_url, 'iptv_proto':'m3u8'})
+                                tabs = getDirectM3U8Playlist(file_url, checkExt=False, checkContent=True, cookieParams = params) 
+                            if not tabs:
+                                file_url = urlparser.decorateUrl(l, {'iptv_livestream':False, 'User-Agent':HTTP_HEADER['User-Agent'], 'Referer': final_url})
+                                tabs = [{"name":"link", "url": file_url}]
+                            printDBG(str(tabs))
+                            urlsTab.extend(tabs)
         return urlsTab
 
     def parserVEOHCOM(self, baseUrl):
