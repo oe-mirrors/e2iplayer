@@ -19,12 +19,12 @@ msgstr ""
 #: ../components/iptvplayerwidget.py:1685
 #, python-format
 msgid "\tDisk space available: %s"
-msgstr ""
+msgstr "tDisk przestrzeń dostępna: %s"
 
 #: ../components/iptvplayerwidget.py:1684
 #, python-format
 msgid "\tDisk space required: %s"
-msgstr ""
+msgstr "\tDisk wymagane miejsce: %s"
 
 #: ../hosts/hostbbcsport.py:431
 msgid ""
@@ -880,7 +880,7 @@ msgstr "Filmy arabskie"
 
 #: ../hosts/hosttwitchtv.py:105 ../iptvdm/iptvdmui.py:76 ../Web/webParts.py:254
 msgid "Archive"
-msgstr "Archiwum"
+msgstr "Pobrane"
 
 #: ../hosts/hostlocalmedia.py:611
 #, python-format
@@ -909,7 +909,7 @@ msgstr "sierpień"
 
 #: ../hosts/hostwatchmovies.py:282
 msgid "Author"
-msgstr ""
+msgstr "Autor"
 
 #: ../components/configextmovieplayer.py:26 ../components/iptvconfigmenu.py:84
 #: ../components/iptvconfigmenu.py:87 ../components/iptvconfigmenu.py:193
@@ -1076,12 +1076,12 @@ msgstr "Captcha"
 #: ../components/iptvconfigmenu.py:409
 #, fuzzy
 msgid "Captcha bypass free service"
-msgstr "Serwis rozwiązujący Captcha"
+msgstr "Darmowy serwis rozwiązujący Captcha"
 
 #: ../components/iptvconfigmenu.py:416
 #, fuzzy
 msgid "Captcha bypass paid service"
-msgstr "Serwis rozwiązujący Captcha"
+msgstr "Płatny serwis rozwiązujący Captcha"
 
 #: ../components/recaptcha_v2myjd_widget.py:121
 msgid ""
@@ -1094,7 +1094,7 @@ msgstr ""
 #: ../components/iptvconfigmenu.py:408
 #, fuzzy
 msgid "Captcha solver order"
-msgstr "hCaptcha rozwiązany!"
+msgstr "Kolejność rozwiązywania Captcha"
 
 #: ../hosts/hostbsto.py:42 ../hosts/hostmrpiracy.py:52
 msgid "Captcha solving service"
@@ -1470,7 +1470,7 @@ msgstr "Domyślny"
 
 #: ../components/iptvconfigmenu.py:407
 msgid "Default captcha bypass (old routine)"
-msgstr ""
+msgstr "Domyślne obejście Captcha"
 
 #: ../components/configextmovieplayer.py:322
 msgid "Default video aspect ratio"
@@ -1563,7 +1563,7 @@ msgstr "Reżyserowie:"
 #: ../components/iptvplayerwidget.py:1677
 #, python-format
 msgid "Directory \"%s\" does not exists."
-msgstr ""
+msgstr "Katalog \"%s\" nie istnieje."
 
 #: ../Web/webThreads.py:198
 msgid "Disable"
@@ -1714,13 +1714,13 @@ msgstr ""
 
 #: ../Web/webParts.py:119 ../Web/webParts.py:134
 msgid "Download log file"
-msgstr ""
+msgstr "Pobierz plik dziennika"
 
 #: ../components/iptvplayerwidget.py:611 ../components/playerselector.py:462
 #: ../components/playerselector.py:475 ../Web/webParts.py:63
 #: ../Web/webParts.py:80
 msgid "Download manager"
-msgstr ""
+msgstr "Menadżer pobierania"
 
 #: ../Web/webParts.py:240
 msgid "Download manager is not initialized"
@@ -1835,7 +1835,7 @@ msgstr ""
 #: ../hosts/hostlocalmedia.py:120 ../iptvdm/iptvdmui.py:77
 #: ../Web/webParts.py:255
 msgid "Downloads"
-msgstr "Pobrane"
+msgstr "Pobierane"
 
 #: ../components/iptvconfigmenu.py:402
 msgid "Downloads location"
@@ -2121,7 +2121,7 @@ msgstr "Wyjdź"
 
 #: ../components/iptvconfigmenu.py:194
 msgid "External free, then paid"
-msgstr ""
+msgstr "Zewnętrzne bezpłatne, a następnie płatne"
 
 #: ../components/iptvconfigmenu.py:497
 msgid "External movie player config"
@@ -2130,7 +2130,7 @@ msgstr "Konfiguracja exteplayer3/gstplayer"
 #: ../components/iptvconfigmenu.py:194
 #, fuzzy
 msgid "External paid"
-msgstr "zewnętrzny eplayer3"
+msgstr "Zewnętrzne płatne"
 
 #: ../iptvupdate/updatemainwindow.py:377
 msgid "Extracting an update packet."
@@ -2675,7 +2675,7 @@ msgstr "Rozmiar ikon"
 
 #: ../components/captcha_helper.py:127
 msgid "If you want to use MyJDownloader, fill login and password in settings menu"
-msgstr ""
+msgstr "Jeśli chcesz korzystać z MyJDownloadera, wpisz login i hasło w menu ustawień"
 
 #: ../hosts/hostorthobulletscom.py:84
 msgid "Industry"
@@ -2772,7 +2772,7 @@ msgstr "Wewnętrzny błąd serwera. Kod odpowiedzi serwera: %s"
 #: ../components/iptvconfigmenu.py:194
 #, fuzzy
 msgid "Internal, then external"
-msgstr "Wprowadź tekst"
+msgstr "Wewnętrzny, a następnie zewnętrzny (zalecane)"
 
 #: ../components/recaptcha_v2myjd_widget.py:126
 msgid "Invalid email."
@@ -3090,7 +3090,7 @@ msgstr "Link nie jest wspierany przez gstplayer . Proszę użyć exteplayer3 je�
 #: ../components/captcha_helper.py:41
 #, fuzzy, python-format
 msgid "Link protected with %s"
-msgstr "Link zabezpieczony DRM."
+msgstr "Link zabezpieczony %s"
 
 #: ../hosts/host3player.py:356 ../hosts/host7tvde.py:286
 msgid "Link protected with DRM."
@@ -3782,7 +3782,7 @@ msgstr ""
 
 #: ../Web/webSite.py:451
 msgid "No materials waiting in the downloader queue"
-msgstr ""
+msgstr "Brak materiałów oczekujących w kolejce pobierania"
 
 #: ../hosts/hosttvplayercom.py:235
 msgid "No playable sources found."
@@ -3897,7 +3897,7 @@ msgstr "Only available in Sweden.\n"
 #: ../components/iptvconfigmenu.py:194
 #, fuzzy
 msgid "Only free"
-msgstr "Tylko filmy"
+msgstr "Tylko za darmo"
 
 #: ../libs/urlparser.py:8566
 msgid ""
@@ -3948,7 +3948,7 @@ msgstr "Sortuj według komentarzy"
 
 #: ../hosts/hostwatchwrestling.py:44 ../hosts/hostwatchwrestlinguno.py:48
 msgid "Order by date"
-msgstr "Zamów według daty"
+msgstr "Sortuj według daty"
 
 #: ../hosts/hostwatchwrestling.py:46 ../hosts/hostwatchwrestlinguno.py:50
 msgid "Order by likes"
@@ -4004,7 +4004,7 @@ msgstr ""
 
 #: ../hosts/hostdplayit.py:249
 msgid "Packages"
-msgstr ""
+msgstr "paczki"
 
 #: ../hosts/hosthdsto.py:65
 msgid "Page accessible to logged in members only."
@@ -4223,7 +4223,7 @@ msgstr "Popularne odcinki"
 #: ../hosts/hosttwitchtv.py:462
 #, fuzzy
 msgid "Popularity: ?"
-msgstr "Popularność: %s"
+msgstr "Popularność: ?"
 
 #: ../hosts/hostlaola1tv.py:38
 msgid "Portal:"
@@ -4620,7 +4620,7 @@ msgid ""
 "Resolving hCaptcha with %s failed!\n"
 "\n"
 msgstr ""
-"Rozwiązywanie zadania reCaptcha przez %s nie powiodło się!\n"
+"Rozwiązanie hCaptcha przez %s nie powiodło się!\n"
 "\n"
 
 #: ../libs/recaptcha_v2_2captcha.py:88 ../libs/recaptcha_v2_9kw.py:88
@@ -4630,7 +4630,7 @@ msgid ""
 "Resolving reCaptcha with %s failed!\n"
 "\n"
 msgstr ""
-"Rozwiązywanie zadania reCaptcha przez %s nie powiodło się!\n"
+"Rozwiązywanie reCaptcha przez %s nie powiodło się!\n"
 "\n"
 
 #: ../iptvupdate/updatemainwindow.py:334
@@ -5295,7 +5295,7 @@ msgstr "Oprogramowanie zmiennoprzecinkowe FPU"
 #: ../components/captcha_helper.py:153
 #, python-format
 msgid "Solution of %s with %s has not been implemented yet"
-msgstr ""
+msgstr "Rozwiązanie %s z %s nie zostało jeszcze zaimplementowane"
 
 #: ../components/configextmovieplayer.py:268
 msgid "Some changes will be applied only after movie player restart."
@@ -6861,7 +6861,7 @@ msgstr "zielony"
 
 #: ../libs/hcaptcha.py:82
 msgid "hCaptcha already solved!"
-msgstr ""
+msgstr "hCaptcha już rozwiązany!"
 
 #: ../libs/hcaptcha.py:1158
 msgid "hCaptcha not solved!"
@@ -7016,7 +7016,7 @@ msgstr "niedostępne"
 
 #: ../libs/urlparser.py:13946
 msgid "not in urlparser"
-msgstr ""
+msgstr "nie w urlparser"
 
 #: ../components/configbase.py:33
 msgid "olive"
