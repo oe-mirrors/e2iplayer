@@ -1072,14 +1072,12 @@ msgstr "Anuluj"
 #: ../hosts/hostzalukajcom.py:376
 msgid "Captcha"
 msgstr "Captcha"
-
 #: ../components/iptvconfigmenu.py:409
-#, fuzzy
+
 msgid "Captcha bypass free service"
 msgstr "Darmowy serwis rozwiązujący Captcha"
 
 #: ../components/iptvconfigmenu.py:416
-#, fuzzy
 msgid "Captcha bypass paid service"
 msgstr "Płatny serwis rozwiązujący Captcha"
 
@@ -1092,7 +1090,6 @@ msgstr ""
 "Oczekiwanie na potwierdzenie."
 
 #: ../components/iptvconfigmenu.py:408
-#, fuzzy
 msgid "Captcha solver order"
 msgstr "Kolejność rozwiązywania Captcha"
 
@@ -1435,7 +1432,6 @@ msgid "Debug option set to console - nothing to display"
 msgstr "Opcja debugowania ustawiona na konsolę - nic do wyświetlenia"
 
 #: ../Web/webParts.py:117
-#, fuzzy
 msgid "Debug option set to debugfile, but file does not exist - nothing to display"
 msgstr "Opcja debugowania ustawiona na plik debugowania, ale plik nie istnieje - nic do wyświetlenia"
 
@@ -2128,7 +2124,6 @@ msgid "External movie player config"
 msgstr "Konfiguracja exteplayer3/gstplayer"
 
 #: ../components/iptvconfigmenu.py:194
-#, fuzzy
 msgid "External paid"
 msgstr "Zewnętrzne płatne"
 
@@ -2770,7 +2765,6 @@ msgid "Internal Server Error. Server response code: %s"
 msgstr "Wewnętrzny błąd serwera. Kod odpowiedzi serwera: %s"
 
 #: ../components/iptvconfigmenu.py:194
-#, fuzzy
 msgid "Internal, then external"
 msgstr "Wewnętrzny, a następnie zewnętrzny (zalecane)"
 
@@ -3088,7 +3082,7 @@ msgid "Link is not supported by the gstplayer. Please use the extelayer3 if avai
 msgstr "Link nie jest wspierany przez gstplayer . Proszę użyć exteplayer3 jeśli jest dostępny."
 
 #: ../components/captcha_helper.py:41
-#, fuzzy, python-format
+#, python-format
 msgid "Link protected with %s"
 msgstr "Link zabezpieczony %s"
 
@@ -3895,7 +3889,6 @@ msgid "Only available in Sweden.\n"
 msgstr "Only available in Sweden.\n"
 
 #: ../components/iptvconfigmenu.py:194
-#, fuzzy
 msgid "Only free"
 msgstr "Tylko za darmo"
 
@@ -4221,7 +4214,6 @@ msgid "Popular Episodes"
 msgstr "Popularne odcinki"
 
 #: ../hosts/hosttwitchtv.py:462
-#, fuzzy
 msgid "Popularity: ?"
 msgstr "Popularność: ?"
 
@@ -4615,7 +4607,7 @@ msgid "Reset State"
 msgstr "zresetować stan"
 
 #: ../libs/hcaptcha_2captcha.py:100
-#, fuzzy, python-format
+#, python-format
 msgid ""
 "Resolving hCaptcha with %s failed!\n"
 "\n"
