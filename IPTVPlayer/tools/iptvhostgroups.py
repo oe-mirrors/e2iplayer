@@ -87,6 +87,7 @@ class IPTVHostsGroups:
         'cb01' : [ 'italian', 'moviesandseries'] ,
         'cb01uno' : [ 'italian', 'moviesandseries'] ,
         'cdapl' : [ 'moviesandseries', 'others', 'polish'] ,
+        'cdafilmy' : [ 'moviesandseries', 'polish'] ,
         'chomikuj' : [ 'others', 'polish'] ,
         'christusvincit' : [ 'polish'] ,
         'cimaclubcom' : [ 'arabic', 'moviesandseries'] ,
