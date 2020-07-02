@@ -1117,7 +1117,10 @@ class common:
                             pattern = re.compile("\(function\(\)\{.*?b\(function\(\)", re.S)
                             dat = re.sub(pattern, "function pippo()", dat)
                             
-                            dat = dat.replace('f.submit()','print(a.value);')
+                            if 'return  f.submit();' in dat:
+                                dat = dat.replace('return  f.submit();','print(a.value); return (a.value);')
+                            else:
+                                dat = dat.replace('f.submit()','print(a.value);')
                             dat = dat.replace('setTimeout(function(){','')
                             
                             #var cookiesEnabled=(navigator.cookieEnabled)? true : false;
@@ -1135,7 +1138,10 @@ class common:
                             #t = t.firstChild.href;r = (setInterval(function(){}, 100),t.match(/https?:\/\//)[0]);
                             dat = dat.replace("r = (setInterval(function(){}, 100),t.match(/https?:\/\//)[0]);","r = t.match(/https?:\/\//)[0];")
                             #old version
-                            dat = dat.replace("t = document.createElement('div');\n        t.innerHTML=\"<a href='/'>x</a>\";\n        t = t.firstChild.href;",'t="%domain%";').replace('%domain%',domain)
+                            if 'cpo' in dat:
+                                dat = dat.replace("t = document.createElement('div');\n        cpo = {};\n        t.innerHTML=\"<a href='/'>x</a>\";\n        cpo.src = \"/cdn-cgi/challenge-platform/orchestrate/jsch/v1\";\n        t = t.firstChild.href;",'t="%domain%";').replace('%domain%',domain)
+                            else:
+                                dat = dat.replace("t = document.createElement('div');\n        t.innerHTML=\"<a href='/'>x</a>\";\n        t = t.firstChild.href;",'t="%domain%";').replace('%domain%',domain)
                             
                             
                             
