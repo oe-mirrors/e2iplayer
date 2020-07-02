@@ -239,19 +239,25 @@ class CdaFilmy(CBaseHostClass):
         
         tmp = self.cm.ph.getDataBeetwenNodes(data, ('<div', '>', 'TPlayerTb'), ('<span', '>'))[1]
         tmp = unescapeHTML(tmp).replace('#038;', '')
+        
+        labels = self.cm.ph.getAllItemsBeetwenMarkers(data, ('<li','>','data-tplayernv'),'</li>')
+        
         items = self.cm.ph.getAllItemsBeetwenMarkers(tmp, '<div', '</div>')
     
+        n_item = 0
         for item in items:
             printDBG("cda-filmy.getLinksForVideo item[%s]" % item)
+            label = self.cleanHtmlStr(labels[n_item])
             url = self.cm.ph.getSearchGroups(item, '''src=['"]([^"^']+?)['"]''', 1, True)[0]
             
             sts, dataLink = self.getPage(url, params)
             if sts: 
                 playerUrl = self.cm.ph.getSearchGroups(dataLink, '''src=['"]([^"^']+?)['"]''', 1, True)[0]
-                params = {'name':self.up.getHostName(playerUrl), 'url':strwithmeta(playerUrl, {'Referer':url}), 'need_resolve':1}
-                printDBG(str(params))
-                urlsTab.append(params)
+                urlParams = {'name': "%s (%s)" % (label , self.up.getHostName(playerUrl)), 'url': strwithmeta(playerUrl, {'Referer':url}), 'need_resolve':1}
+                printDBG(str(urlParams))
+                urlsTab.append(urlParams)
              
+            n_item = n_item + 1
         if urlsTab:
             self.cacheLinks[cacheKey] = urlsTab
         
