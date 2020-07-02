@@ -17,15 +17,15 @@ except Exception: import simplejson as json
 ###################################################
 
 def gettytul():
-    return 'https://www.guardaserie.show/'
+    return 'https://www.guardaserie.work/'
 
 class GuardaSerieClick(CBaseHostClass):
 
     def __init__(self):
-        CBaseHostClass.__init__(self, {'history':'guardaserie.show', 'cookie':'guardaserie.show.cookie'})
+        CBaseHostClass.__init__(self, {'history':'guardaserie.work', 'cookie':'guardaserie.work.cookie'})
         
         self.USER_AGENT = 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/73.0.3683.103 Safari/537.36'
-        self.MAIN_URL = 'https://www.guardaserie.show/'
+        self.MAIN_URL = 'https://www.guardaserie.work/'
 
         self.HEADER = {'User-Agent': self.USER_AGENT, 'Accept': 'text/html', 'Accept-Encoding': 'gzip', 'Referer': self.MAIN_URL}
         self.AJAX_HEADER = MergeDicts(self.HEADER, {'X-Requested-With':'XMLHttpRequest', 'Content-Type':'application/x-www-form-urlencoded; charset=UTF-8'})
@@ -37,7 +37,7 @@ class GuardaSerieClick(CBaseHostClass):
     def getPageCF(self, baseUrl, params = {}, post_data = None):
         if params == {}: 
             params = self.defaultParams
-        params['cloudflare_params'] = {'domain':'guardaserie.show', 'cookie_file':self.COOKIE_FILE, 'User-Agent':self.USER_AGENT}
+        params['cloudflare_params'] = {'domain':'guardaserie.work', 'cookie_file':self.COOKIE_FILE, 'User-Agent':self.USER_AGENT}
         return self.cm.getPageCFProtection(baseUrl, params, post_data)
 
     def getPage(self, baseUrl, addParams = {}, post_data = None):
