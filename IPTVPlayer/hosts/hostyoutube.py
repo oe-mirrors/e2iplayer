@@ -49,10 +49,11 @@ class Youtube(CBaseHostClass):
         printDBG("Youtube.__init__")
         CBaseHostClass.__init__(self, {'history':'ytlist', 'cookie':'youtube.cookie'})
         self.UTLIST_FILE      = 'ytlist.txt'
-        self.DEFAULT_ICON_URL = 'https://ortlerskytrails.it/wp-content/uploads/2019/03/Youtube-logo-square.png'
+        self.DEFAULT_ICON_URL = 'https://www.vippng.com/png/full/85-853653_patreon-logo-png-transparent-background-youtube-logo.png'
         self.MAIN_GROUPED_TAB = [{'category': 'from_file',             'title': _("User links"),     'desc': _("User links stored in the ytlist.txt file.")}, \
                                  {'category': 'search',                'title': _("Search"),         'desc': _("Search youtube materials "), 'search_item':True}, \
                                  {'category': 'search_history',        'title': _("Search history"), 'desc': _("History of searched phrases.")}]
+        
         self.SEARCH_TYPES = [  (_("Video"),    "video"   ), 
                                (_("Channel"),  "channel" ),
                                (_("Playlist"), "playlist"),
@@ -77,7 +78,7 @@ class Youtube(CBaseHostClass):
             category = 'video'
         return category
         
-    def listsMainMenu(self):
+    def listMainMenu(self):
         printDBG("Youtube.listsMainMenu")
         for item in self.MAIN_GROUPED_TAB:
             params = {'name': 'category'}
@@ -155,7 +156,7 @@ class Youtube(CBaseHostClass):
         page     = cItem.get("page", '1')
                 
         if "channel" == category:
-            if -1 == url.find('browse_ajax'):
+            if not ('browse_ajax' in url) and (not 'ctoken' in url):
                 if url.endswith('/videos'): 
                     url = url + '?flow=list&view=0&sort=dd'
                 else:
@@ -232,19 +233,19 @@ class Youtube(CBaseHostClass):
         self.currList = []
         
         if None == name:
-            self.listsMainMenu()
+            self.listMainMenu()
         elif 'from_file' == category :
             self.listCategory(self.currItem)
         elif category in ["channel","playlist","movie","traylist"]:
             self.getVideos(self.currItem)
         elif category == 'playlists':
             self.listItems(self.currItem)
-    #SEARCH
+        #SEARCH
         elif category in ["search", "search_next_page"]:
             cItem = dict(self.currItem)
             cItem.update({'search_item':False, 'name':'category'}) 
             self.listSearchResult(cItem, searchPattern, searchType)
-    #HISTORIA SEARCH
+        #HISTORIA SEARCH
         elif category == "search_history":
             self.listsHistory({'name':'history', 'category': 'search'}, 'desc', _("Type: "))
         else:

@@ -203,6 +203,18 @@ class YouTubeParser():
                 title = videoJson['title']['runs'][0]['text']
             except:
                 title = videoJson['title']['simpleText']
+            
+            badges = []
+            bb = videoJson.get("badges",[])
+            for b in bb:
+                try:
+                    bLabel = b["metadataBadgeRenderer"]["label"]
+                    badges.append(bLabel.upper())
+                except:
+                    pass
+            
+            if badges:
+                title = title + " [" + (' , '.join(badges)) + "]"
                 
             icon = videoJson["thumbnail"]["thumbnails"][-1]["url"]
             
@@ -287,102 +299,6 @@ class YouTubeParser():
         else:
             return {}
         
-        
-    ########################################################
-    # List Base PARSER
-    ########################################################
-    def parseListBase(self, data, type='video'):
-        printDBG("parseListBase----------------")
-        urlPatterns = { 'video'    :    ['video'   , 'href="[ ]*?(/watch\?v=[^"]+?)"'            , ''], 
-                        'channel'  :    ['category', 'href="(/[^"]+?)"'                     , ''],
-                        'playlist' :    ['category', 'list=([^"]+?)"'                       , '/playlist?list='],
-                        'movie'    :    ['video'   , 'data-context-item-id="([^"]+?)"'      , '/watch?v='],
-                        'live'     :    ['video'   , 'href="(/watch\?v=[^"]+?)"'            , ''],
-                        'tray'     :    ['video'   , 'data-video-id="([^"]+?)"'             , '/watch?v='], }
-        currList = []
-        for i in range(len(data)):
-            #printDBG("+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++")
-            # get requaired params
-            url   = urlPatterns[type][2] + self.getAttributes(urlPatterns[type][1], data[i])
-            
-            # get title
-            title = '' #self.getAttributes('title="([^"]+?)"', data[i])
-            if '' == title: title = self.getAttributes('data-context-item-title="([^"]+?)"', data[i])
-            if '' == title: title = self.getAttributes('data-video-title="([^"]+?)"', data[i])
-            if '' == title: sts,title = CParsingHelper.getDataBeetwenMarkers(data[i], '<h3 class="yt-lockup-title">', '</h3>', False) 
-            if '' == title: sts,title = CParsingHelper.getDataBeetwenReMarkers(data[i], re.compile('<span [^>]*?class="title[^>]*?>'), re.compile('</span>'), False) 
-            if '' == title: sts,title = CParsingHelper.getDataBeetwenReMarkers(data[i], re.compile('class="pl-video-title-link[^>]*?>'), re.compile('<'), False)
-            
-            if '' == title:
-                titleMarker = self.cm.ph.getSearchGroups(data[i], '(<[^">]+?"yt-lockup-title[^"]*?"[^>]*?>)')[0]
-                if '' != titleMarker:
-                    tidx = titleMarker.find(' ')
-                    if tidx > 0:
-                        tmarker = titleMarker[1:tidx]
-                        title = self.cm.ph.getDataBeetwenMarkers(data[i],  titleMarker, '</%s>' % tmarker)[1]
-            
-            if '' != title:
-                title = CParsingHelper.cleanHtmlStr(title)
-            if i == 0:
-                printDBG(data[i])
-                
-            img   = self.getAttributes('data-thumb="([^"]+?\.jpg[^"]*?)"', data[i])
-            if '' == img:  img = self.getAttributes('src="([^"]+?\.jpg[^"]*?)"', data[i])
-            if '' == img:  img = self.getAttributes('<img[^>]+?data\-thumb="([^"]+?)"', data[i])
-            if '' == img:  img = self.getAttributes('<img[^>]+?src="([^"]+?)"', data[i])
-            if '.gif' in img: img = ''
-            time  = self.getAttributes('data-context-item-time="([^"]+?)"', data[i])
-            if '' == time: time  = self.getAttributes('class="video-time">([^<]+?)</span>', data[i])
-            if '' == time: sts, time = CParsingHelper.getDataBeetwenReMarkers(data[i], re.compile('pl-video-time"[^>]*?>'), re.compile('<'), False)
-            if '' == time: sts, time = CParsingHelper.getDataBeetwenReMarkers(data[i], re.compile('timestamp"[^>]*?>'), re.compile('<'), False)
-            time = time.strip()
-            
-            # desc
-            descTab = []
-            
-            desc = self.cm.ph.getDataBeetwenMarkers(data[i], '<div class="yt-lockup-meta', '</div>')[1]
-            if desc != '': descTab.append(desc)
-            desc = self.cm.ph.getDataBeetwenMarkers(data[i], '<span class="formatted-video-count', '</span>')[1]
-            if desc != '': descTab.append(desc)
-            
-            desc  = self.cm.ph.getDataBeetwenReMarkers(data[i], re.compile('class="video-description[^>]+?>'), re.compile('</p>'), False)[1]
-            if '' == desc: desc = self.cm.ph.getDataBeetwenReMarkers(data[i], re.compile('class="yt-lockup-description[^>]+?>'), re.compile('</div>'), False)[1]
-            if desc != '': descTab.append(desc)
-            
-            newDescTab = []
-            for desc in descTab:
-                desc = CParsingHelper.cleanHtmlStr(desc)
-                if desc != '':
-                    newDescTab.append(desc)
-            
-            urlTmp = url.split(';')
-            if len(urlTmp) > 0: url = urlTmp[0]
-            if type == 'video': url = url.split('&')[0] 
-            #printDBG("#####################################") 
-            #printDBG('url   [%s] ' % url)
-            #printDBG('title [%s] ' % title)
-            #printDBG('img   [%s] ' % img)
-            #printDBG('time  [%s] ' % time)
-            #printDBG('desc  [%s] ' % desc)
-            if title != '' and url != '' and img != '':
-                correctUrlTab = [url, img]
-                for i in range(len(correctUrlTab)):
-                    if not correctUrlTab[i].startswith('http:') and not correctUrlTab[i].startswith('https:'):
-                        if correctUrlTab[i].startswith("//"):
-                            correctUrlTab[i] = 'http:' + correctUrlTab[i]
-                        else:
-                            correctUrlTab[i] = 'http://www.youtube.com' + correctUrlTab[i]
-                    #else:
-                    #    if correctUrlTab[i].startswith('https:'):
-                    #        correctUrlTab[i] = "http:" + correctUrlTab[i][6:]
-
-                title = CParsingHelper.cleanHtmlStr(title)
-                params = {'type': urlPatterns[type][0], 'category': type, 'title': title, 'url': correctUrlTab[0], 'icon': correctUrlTab[1].replace('&amp;', '&'), 'time': time, 'desc': '[/br]'.join(newDescTab)}
-                currList.append(params)
-
-        return currList
-    #end parseListBase
-    
     ########################################################
     # Tray List PARSER
     ########################################################
@@ -397,7 +313,7 @@ class YouTubeParser():
                 sts,data = CParsingHelper.getDataBeetwenMarkers(data, 'class="playlist-videos-container', '<div class="watch-sidebar-body">', False)
                 data = data.split('class="yt-uix-scroller-scroll-unit')
                 del data[0]
-                return self.parseListBase(data, 'tray')
+                return 
         except Exception:
             printExc()
             return []
@@ -414,6 +330,8 @@ class YouTubeParser():
         try:
             sts,data =  self.cm.getPage(url, self.http_params)
             if sts:
+                self.checkSessionToken(data)
+
                 data2 = self.cm.ph.getDataBeetwenMarkers(data,"window[\"ytInitialData\"] =", "};", False)[1]
                 
                 response = json_loads(data2 + "}")
@@ -450,38 +368,55 @@ class YouTubeParser():
     ########################################################
     # CHANNEL LIST PARSER
     ########################################################
-    def getAttributes(self, regx, data, num=1):
-        match = re.search(regx, data)
-        if not match: return ''
-        else: return match.group(1)
         
     def getVideosFromChannelList(self, url, category, page, cItem):
         printDBG('YouTubeParser.getVideosFromChannelList page[%s]' % (page) )
         currList = []
 
         try:
-            sts,data =  self.cm.getPage(url, self.http_params)
+            sts,data =  self.cm.getPage(url, self.http_params, self.postdata)
             
             if sts:
-                data2 = self.cm.ph.getDataBeetwenMarkers(data,"window[\"ytInitialData\"] =", "};", False)[1]
-
-                response = json_loads(data2 + "}")
-
-                r1 = response['contents']['twoColumnBrowseResultsRenderer']['tabs']
-                
-                r2 = {}
-                for tab in r1:
-                    try:
-                        if tab['tabRenderer']['content']:
-                            r2 = tab['tabRenderer']['content']
-                    except:
-                        pass
+                if 'browse_ajax' in url:
+                    # next pages 
+                    response = json_loads(data)
                     
-                    if r2:
-                        break
+                    rr = {}
+                    for r in response:
+                        if r.get("response",""):
+                            rr = r
+                            break
+
+                    if not rr:
+                        return []
+                        
+                    r1 = rr["response"]["continuationContents"]["gridContinuation"]
+                    r4 = r1.get("items",[])
+                    nP = r1.get('continuations','')
+                    
+                else:
+                    # first page of videos
+                    self.checkSessionToken(data)
+                    data2 = self.cm.ph.getDataBeetwenMarkers(data,"window[\"ytInitialData\"] =", "};", False)[1]
+
+                    response = json_loads(data2 + "}")
+
+                    r1 = response['contents']['twoColumnBrowseResultsRenderer']['tabs']
+                    
+                    r2 = {}
+                    for tab in r1:
+                        try:
+                            if tab['tabRenderer']['content']:
+                                r2 = tab['tabRenderer']['content']
+                        except:
+                            pass
+                        
+                        if r2:
+                            break
                 
-                r3 = r2['sectionListRenderer']['contents'][0]['itemSectionRenderer']['contents']
-                r4 = r3[0]['gridRenderer']['items']
+                    r3 = r2['sectionListRenderer']['contents'][0]['itemSectionRenderer']['contents']
+                    r4 = r3[0]['gridRenderer'].get('items','')
+                    nP = r3[0]['gridRenderer'].get('continuations','')
                 
                 for r5 in r4:
                     videoJson = r5.get("gridVideoRenderer","") 
@@ -490,12 +425,26 @@ class YouTubeParser():
                         if params:
                             printDBG(str(params))
                             currList.append(params)
-
+                
+                if nP:
+                    nextPage = nP[0]
+                    ctoken = nextPage["nextContinuationData"]["continuation"]
+                    ctit = nextPage["nextContinuationData"]["clickTrackingParams"]
+                    try:
+                        label = nextPage["nextContinuationData"]["label"]["runs"][0]["text"]
+                    except:
+                        label = _("Next Page")
+                    
+                    urlNextPage = "https://www.youtube.com/browse_ajax?ctoken=%s&continuation=%s&itct=%s" % (ctoken, ctoken, ctit)
+                    
+                    params = {'type':'more', 'category': category , 'title': label, 'page': str(int(page) + 1), 'url': urlNextPage}
+                    printDBG(str(params))
+                    currList.append(params)
+                
         except Exception:
             printExc()
 
         return currList
-    # end getVideosFromChannel
 
     ########################################################
     # SEARCH PARSER
@@ -516,11 +465,20 @@ class YouTubeParser():
                 
                 if sts:
                     response = json_loads(data)
-                    printDBG("--------------------")
-                    printDBG(json_dumps(response))
-                    printDBG("--------------------")
+                    #printDBG("--------------------")
+                    #printDBG(json_dumps(response))
+                    #printDBG("--------------------")
 
-                    r1 = response["response"]["continuationContents"]["itemSectionContinuation"]
+                    rr = {}
+                    for r in response:
+                        if r.get("response",""):
+                            rr = r
+                            break
+
+                    if not rr:
+                        return []
+                        
+                    r1 = rr["response"]["continuationContents"]["itemSectionContinuation"]
                     r2 = r1.get("contents",[])
                     nP = r1.get('continuations','')
             else:
@@ -545,12 +503,6 @@ class YouTubeParser():
 
             if not sts:
                 return []
-            
-            if nP:
-                nextPage = nP[0]
-                printDBG("-------------------------------------------------")
-                printDBG(json_dumps(nextPage))
-                printDBG("-------------------------------------------------")
                     
             for item in r2:
                 chJson = item.get('channelRenderer', '')
@@ -572,14 +524,12 @@ class YouTubeParser():
                     printDBG(str(params))
                     currList.append(params)
 
-            #next page
-            #https://www.youtube.com/results?search_query=pattini&filters=video&search_sort=
-            #&pbj=1
-            #&ctoken=EpQDEgdwYXR0aW5pGoQDRWdJUUFVZ29nZ0VMYUdOWFl6ZHBXRUowUjItQ0FRdE5SR2w2WDNCWVowUlRPSUlCQzJ0YWRtczBMVE5MZFRWamdnRUxNMDlGTmtGeFZuUjFXbG1DQVF0SE5FTm5abmx2TWpGdVRZSUJDMUZTVFVveE1raEpTVTVGZ2dFTFQzbG1NWGx5U3pCMWRVV0NBUXRZU1ZBeVJsQmxiRmxtYjRJQkMyNUpRM3BJU21sRWJWaE5nZ0VMU1doSVdrRkxVRkI0UW0tQ0FRdHpWWE5IU0ZkZlUzVktVWUlCQzJGMVJEVlNWalF4ZGxvNGdnRUxlbDkwZDFwaldFcGhhbk9DQVF0aU9XNTVNVGRYT1dkWFo0SUJDMUk1U1RkWVVIUk5abFUwZ2dFTE5XMU5MV293VjI1UlFsbUNBUXMzVjBGMVVuTmFNM3BaT0lJQkMzQkpNVnB2UTFGdWVtbHZnZ0VMZUZoNmNHdFdhVnA1V1hlQ0FRdFZUR0l3Vmxsb2VrOWlZdyUzRCUzRFoCEAEYvN7oGA%253D%253D
-            #&continuation=EpQDEgdwYXR0aW5pGoQDRWdJUUFVZ29nZ0VMYUdOWFl6ZHBXRUowUjItQ0FRdE5SR2w2WDNCWVowUlRPSUlCQzJ0YWRtczBMVE5MZFRWamdnRUxNMDlGTmtGeFZuUjFXbG1DQVF0SE5FTm5abmx2TWpGdVRZSUJDMUZTVFVveE1raEpTVTVGZ2dFTFQzbG1NWGx5U3pCMWRVV0NBUXRZU1ZBeVJsQmxiRmxtYjRJQkMyNUpRM3BJU21sRWJWaE5nZ0VMU1doSVdrRkxVRkI0UW0tQ0FRdHpWWE5IU0ZkZlUzVktVWUlCQzJGMVJEVlNWalF4ZGxvNGdnRUxlbDkwZDFwaldFcGhhbk9DQVF0aU9XNTVNVGRYT1dkWFo0SUJDMUk1U1RkWVVIUk5abFUwZ2dFTE5XMU5MV293VjI1UlFsbUNBUXMzVjBGMVVuTmFNM3BaT0lJQkMzQkpNVnB2UTFGdWVtbHZnZ0VMZUZoNmNHdFdhVnA1V1hlQ0FRdFZUR0l3Vmxsb2VrOWlZdyUzRCUzRFoCEAEYvN7oGA%253D%253D
-            #&itct=CB0QybcCIhMIhoP76_-16gIV20DgCh1SmQq-
-            
-            if nextPage:
+            if nP:
+                nextPage = nP[0]
+                #printDBG("-------------------------------------------------")
+                #printDBG(json_dumps(nextPage))
+                #printDBG("-------------------------------------------------")
+
                 ctoken = nextPage["nextContinuationData"]["continuation"]
                 ctit = nextPage["nextContinuationData"]["clickTrackingParams"]
                 try:
@@ -596,50 +546,6 @@ class YouTubeParser():
             printExc()
 
         return currList
-    
-    
-    ########################################################
-    # PLAYLISTS PARSER
-    ########################################################
-    def getListPlaylistsItems(self, url, category, page, cItem):
-        printDBG('YouTubeParser.getListPlaylistsItems page[%s]' % (page))
-        currList = []
-        
-        tries = 0
-        while tries < 10 and not currList:
-            tries = tries + 1
-            printDBG("try n. %s" % tries)
-        
-            try:
-                sts,data =  self.cm.getPage(url, {'host': self.HOST})
-                if sts:
-                    #self.cm.ph.writeToFile('/mnt/new2/yt.html', data)
-                    if '1' == page:
-                        sts,data = CParsingHelper.getDataBeetwenMarkers(data, '<div class="yt-lockup clearfix', 'footer-container')
-                    else:
-                        data = json_loads(data)
-                        data = data['load_more_widget_html'] + '\n' + data['content_html']
-                        
-                    # nextPage
-                    match = re.search('data-uix-load-more-href="([^"]+?)"', data)
-                    if not match: 
-                        nextPage = ""
-                    else: 
-                        nextPage = match.group(1).replace('&amp;', '&')
-                    
-                    itemsTab = data.split('<div class="yt-lockup clearfix')
-                    printDBG(itemsTab[0])
-                    currList = self.parseListBase(itemsTab, 'playlist')
-                    if '' != nextPage:
-                        item = dict(cItem)
-                        item.update({'title': 'Następna strona', 'page': str(int(page) + 1), 'url': 'http://www.youtube.com' + nextPage})
-                        currList.append(item)
-            except Exception:
-                printExc()
-            
-        return currList
-    # end getListPlaylistsItems
-    
     
     ########################################################
     # PLAYLIST API
