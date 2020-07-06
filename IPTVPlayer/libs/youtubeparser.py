@@ -204,7 +204,7 @@ class YouTubeParser():
         new_url = urlunparse((urlParts[0],urlParts[1],urlParts[2],urlParts[3], new_query, urlParts[5]))
         return new_url
 
-    def getThumbnailUrl(self, thumbJson, maxWidth = 200):
+    def getThumbnailUrl(self, thumbJson, maxWidth = 1000, hq=False):
         
         url = ''
         width = 0
@@ -217,8 +217,9 @@ class YouTubeParser():
                 url = img['url']
             i = i + 1
         
-        if 'hqdefault' in url:
-            url = url.replace('hqdefault','hq720')
+        if hq:
+            if 'hqdefault' in url:
+                url = url.replace('hqdefault','hq720')
         
         return url
         
