@@ -17,6 +17,8 @@ from Plugins.Extensions.IPTVPlayer.libs import ph
 # FOREIGN import
 ###################################################
 import re
+import urllib
+from urlparse import urlparse, urlunparse, parse_qsl
 from datetime import timedelta
 from Components.config import config, ConfigSelection, ConfigYesNo
 ###################################################
@@ -193,6 +195,32 @@ class YouTubeParser():
         else:
             retList.extend(dashList)
             return retList
+    
+    def updateQueryUrl(self, url, queryDict):
+        urlParts = urlparse(url)
+        query = dict(parse_qsl(urlParts[4]))
+        query.update(queryDict)
+        new_query = urllib.urlencode(query)
+        new_url = urlunparse((urlParts[0],urlParts[1],urlParts[2],urlParts[3], new_query, urlParts[5]))
+        return new_url
+
+    def getThumbnailUrl(self, thumbJson, maxWidth = 200):
+        
+        url = ''
+        width = 0
+        i = 0
+        
+        while i < len(thumbJson):
+            img = thumbJson[i]
+            width = img['width']
+            if width < maxWidth:
+                url = img['url']
+            i = i + 1
+        
+        if 'hqdefault' in url:
+            url = url.replace('hqdefault','hq720')
+        
+        return url
         
     def getVideoData(self, videoJson):
         
@@ -216,7 +244,7 @@ class YouTubeParser():
             if badges:
                 title = title + " [" + (' , '.join(badges)) + "]"
                 
-            icon = videoJson["thumbnail"]["thumbnails"][-1]["url"]
+            icon = self.getThumbnailUrl(videoJson["thumbnail"]["thumbnails"])
             
             desc = []
             try:
@@ -269,7 +297,8 @@ class YouTubeParser():
             url = 'http://www.youtube.com/channel/%s' % chId
             title = chJson['title']['simpleText'] 
 
-            icon = chJson["thumbnail"]["thumbnails"][-1]["url"]
+            icon = self.getThumbnailUrl(chJson["thumbnail"]["thumbnails"])
+
             try:
                 desc = chJson["descriptionSnippet"]["runs"][0]["text"]
             except:
@@ -286,7 +315,7 @@ class YouTubeParser():
         if plId:
             url = "https://www.youtube.com/playlist?list=%s" % plId
             title = plJson['title']['simpleText'] 
-            icon = plJson['thumbnails'][0]["thumbnails"][-1]["url"]
+            icon = self.getThumbnailUrl(plJson["thumbnail"]["thumbnails"])
 
             videoCount = plJson['videoCount']
             desc = _("videos: %s") % videoCount
@@ -465,9 +494,9 @@ class YouTubeParser():
                 
                 if sts:
                     response = json_loads(data)
-                    #printDBG("--------------------")
-                    #printDBG(json_dumps(response))
-                    #printDBG("--------------------")
+                    printDBG("--------------------")
+                    printDBG(json_dumps(response))
+                    printDBG("--------------------")
 
                     rr = {}
                     for r in response:
@@ -531,13 +560,13 @@ class YouTubeParser():
                 #printDBG("-------------------------------------------------")
 
                 ctoken = nextPage["nextContinuationData"]["continuation"]
-                ctit = nextPage["nextContinuationData"]["clickTrackingParams"]
+                itct = nextPage["nextContinuationData"]["clickTrackingParams"]
                 try:
                     label = nextPage["nextContinuationData"]["label"]["runs"][0]["text"]
                 except:
                     label = _("Next Page")
                 
-                urlNextPage = url + "&pbj=1&ctoken=%s&continuation=%s&itct=%s" % (ctoken, ctoken, ctit)
+                urlNextPage = self.updateQueryUrl(url, {'pbj':'1', 'ctoken': ctoken, 'continuation': ctoken, 'itct': itct}) 
                 params = {'type':'more', 'category': "search_next_page", 'title': label, 'page': str(int(page) + 1), 'url': urlNextPage}
                 printDBG(str(params))
                 currList.append(params)
