@@ -43,8 +43,8 @@ class Raiplay(CBaseHostClass):
         self.RAISPORT_ARCHIVIO_URL = self.RAISPORT_MAIN_URL + '/archivio.html'        
         self.RAISPORT_SEARCH_URL = self.RAISPORT_MAIN_URL + "/atomatic/news-search-service/api/v1/search?transform=false"
         
-        self.DEFAULT_ICON_URL = "https://images-eu.ssl-images-amazon.com/images/I/41%2B5P94pGPL.png"
-        self.NOTHUMB_URL = "http://www.rai.it/cropgd/256x144/dl/components/img/imgPlaceholder.png"
+        self.DEFAULT_ICON_URL = "https://img.tuttoandroid.net/wp-content/uploads/2019/10/Raiplay-logo.jpg"
+        self.NOTHUMB_URL = "https://img.tuttoandroid.net/wp-content/uploads/2019/10/Raiplay-logo.jpg"
 
         self.HTTP_HEADER = self.cm.getDefaultHeader(browser='chrome')        
         self.RELINKER_USER_AGENT = "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/73.0.3683.103 Safari/537.36"
@@ -138,12 +138,12 @@ class Raiplay(CBaseHostClass):
         return linksTab
 
     def listMainMenu(self, cItem):
-        MAIN_CAT_TAB = [{'category':'live_tv', 'title': 'Dirette tv'},
-                        {'category':'live_radio', 'title': 'Dirette radio'},
-                        {'category':'replay', 'title': 'Replay'},
-                        {'category':'ondemand', 'title': 'Programmi on demand'},
-                        {'category':'tg', 'title': 'Archivio Telegiornali'},
-                        {'category':'raisport_main', 'title':'Archivio Rai Sport'}]  
+        MAIN_CAT_TAB = [{'category':'live_tv', 'title': 'Dirette tv', 'icon' : self.DEFAULT_ICON_URL },
+                        {'category':'live_radio', 'title': 'Dirette radio', 'icon' : self.DEFAULT_ICON_URL },
+                        {'category':'replay', 'title': 'Replay', 'icon' : self.DEFAULT_ICON_URL },
+                        {'category':'ondemand', 'title': 'Programmi on demand','icon' : self.DEFAULT_ICON_URL },
+                        {'category':'tg', 'title': 'Archivio Telegiornali','icon' : self.DEFAULT_ICON_URL },
+                        {'category':'raisport_main', 'title':'Archivio Rai Sport', 'icon' : self.DEFAULT_ICON_URL }]  
         self.listsTab(MAIN_CAT_TAB, cItem)  
 
     def listLiveTvChannels(self, cItem):
@@ -158,8 +158,8 @@ class Raiplay(CBaseHostClass):
         for station in tv_stations:
             title = station["channel"]
             desc = station["description"]
-            icon = self.getThumbnailUrl(station["transparent-icon"])           
-            url = station["video"]["contentUrl"]
+            icon = self.getThumbnailUrl(station["transparent-icon"]) + '|webpToPng'          
+            url = station["video"]["contentUrl"] 
             params = dict(cItem)
             params = {'title':title, 'url':url, 'icon':icon, 'category': 'live_tv', 'desc': desc}
             self.addVideo(params)
@@ -219,14 +219,17 @@ class Raiplay(CBaseHostClass):
     
         for day in self.daterange(epgStartDate, epgEndDate):
             day_str = days[int(day.strftime("%w"))] + " " + day.strftime("%d") + " " + months[int(day.strftime("%m"))-1]
-            self.addDir(MergeDicts(cItem, {'category':'replay_date', 'title': day_str , 'name': day.strftime("%d-%m-%Y")}))              
+            params = MergeDicts(cItem, {'category':'replay_date', 'title': day_str , 'name': day.strftime("%d-%m-%Y"), 'icon' : self.DEFAULT_ICON_URL })
+            printDBG(str(params))
+            self.addDir(params)              
 
     def listReplayChannels(self, cItem):
         day=cItem['name']
         printDBG("Raiplay - start replay/EPG section - channels list for %s " % day)
 
         sts, data = self.getPage(self.CHANNELS_URL)
-        if not sts: return
+        if not sts: 
+            return
  
         response = json_loads(data)
         tv_stations = response["dirette"]
@@ -234,8 +237,10 @@ class Raiplay(CBaseHostClass):
         for station in tv_stations:
             title = station["channel"] 
             name = day + "|" + station["channel"]
-            icon = self.MAIN_URL + station["icon"]          
-            self.addDir(MergeDicts(cItem, {'category':'replay_channel', 'title': title , 'name': name }))              
+            icon = self.getThumbnailUrl(station["transparent-icon"]) + '|webpToPng'          
+            params = MergeDicts(cItem, {'category':'replay_channel', 'title': title , 'name': name, 'icon': icon }) 
+            printDBG(str(params))
+            self.addDir(params)              
 
             
     def listEPG(self, cItem):
