@@ -203,6 +203,8 @@ config.plugins.iptvplayer.myjd_login = ConfigText(default = "", fixed_size = Fal
 config.plugins.iptvplayer.myjd_password = ConfigText(default = "", fixed_size = False)
 config.plugins.iptvplayer.myjd_jdname = ConfigText(default = "", fixed_size = False)
 
+config.plugins.iptvplayer.api_key_youtube = ConfigText(default = "", fixed_size = False)
+
 # Update
 config.plugins.iptvplayer.autoCheckForUpdate = ConfigYesNo(default = True)
 config.plugins.iptvplayer.updateLastCheckedVersion = ConfigText(default = "00.00.00.00", fixed_size = False)
@@ -420,6 +422,8 @@ class ConfigMenu(ConfigBaseWidget):
 
         if config.plugins.iptvplayer.captcha_bypass_pay.value == "2captcha.com":
             list.append(getConfigListEntry(_("%s API KEY") % 'http://2captcha.com/', config.plugins.iptvplayer.api_key_2captcha))
+        
+        list.append(getConfigListEntry( _("%s API KEY") % 'http://youtube.com/', config.plugins.iptvplayer.api_key_youtube))
         
         list.append(getConfigListEntry(_("Use subtitles parser extension if available"), config.plugins.iptvplayer.useSubtitlesParserExtension))
         list.append(getConfigListEntry("http://opensubtitles.org/ " + _("login"), config.plugins.iptvplayer.opensuborg_login))

@@ -4,6 +4,7 @@
 ###################################################
 # LOCAL import
 ###################################################
+from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _, GetIPTVNotify
 from Plugins.Extensions.IPTVPlayer.components.ihost import CHostBase, CBaseHostClass
 from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, CSelOneLink
 from Components.config import config, getConfigListEntry, ConfigYesNo, ConfigText
@@ -25,15 +26,18 @@ from Screens.MessageBox import MessageBox
 ####################################################
 config.plugins.iptvplayer.MusicBox_premium = ConfigYesNo(default=False)
 config.plugins.iptvplayer.MusicBox_login = ConfigText(default="", fixed_size=False)
+config.plugins.iptvplayer.api_key_youtube = ConfigText(default = "", fixed_size = False)
+
 ####################################################
 # Api keys
 ####################################################
 audioscrobbler_api_key = "d49b72ffd881c2cb13b4595e67005ac4"
-youtube_api_key = 'AIzaSyAnWEByKdGdDQjN89KRmVNKty9F57qa6TY'
+
 HEADER = {'User-Agent': 'Mozilla/5.0 (Windows NT 6.1; rv:33.0) Gecko/20100101 Firefox/33.0'}
 
 def GetConfigList():
     optionList = []
+    optionList.append(getConfigListEntry( _("%s API KEY") % 'http://youtube.com/', config.plugins.iptvplayer.api_key_youtube))
     optionList.append(getConfigListEntry("Użytkownik Last.fm", config.plugins.iptvplayer.MusicBox_premium))
     if config.plugins.iptvplayer.MusicBox_premium.value:
         optionList.append(getConfigListEntry(" Last.fm login:", config.plugins.iptvplayer.MusicBox_login))
@@ -47,6 +51,7 @@ class MusicBox(CBaseHostClass):
 
     def __init__(self):
         CBaseHostClass.__init__(self)
+        self.youtube_api_key = ""
         self.ytformats = config.plugins.iptvplayer.ytformat.value
         self.ytp = YouTubeParser()
         self.lastfm_username = config.plugins.iptvplayer.MusicBox_login.value
@@ -77,6 +82,17 @@ class MusicBox(CBaseHostClass):
                                    {'category':'lastfm', 'title':"Last.fm - " + _("My list")},
                                    ]
     
+    def readYoutubeApiKey(self):
+        if not self.youtube_api_key:
+            apiKey = config.plugins.iptvplayer.api_key_youtube.value
+            if apiKey:
+                self.youtube_api_key = apiKey
+            else:
+                msg = _("You can't view Youtube videos, if you don't write API key in setting menu")
+                msg = msg + "\n" + ("Search for 'how to create your own Youtube api key'") 
+                GetIPTVNotify().push(msg, 'error', 10)
+    
+            
     def listsMainMenu(self):
         printDBG("MusicBox - lists main menu")
 
@@ -353,7 +369,11 @@ class MusicBox(CBaseHostClass):
     def getLinksForVideo(self, cItem):
         printDBG("getLinksForVideo cItem[%s]" % cItem)
         
-        sts, data = self.cm.getPage("https://www.googleapis.com/youtube/v3/search?part=id%2Csnippet&q=" + cItem.get('page', '') + "&type=Music&maxResults=1&key=" + youtube_api_key)
+        self.readYoutubeApiKey()
+        if not self.youtube_api_key:
+            return []
+        
+        sts, data = self.cm.getPage("https://www.googleapis.com/youtube/v3/search?part=id%2Csnippet&q=" + cItem.get('page', '') + "&type=Music&maxResults=1&key=" + self.youtube_api_key)
         if not sts: 
             return []
         match = re.compile('"videoId": "([^"]+?)"').findall(data)
