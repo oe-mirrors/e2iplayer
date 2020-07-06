@@ -1302,18 +1302,19 @@ class common:
                 break
         return sts, data
 
-    def convertWebp(self,file_path):
+    def convertWebp(self,file_path, png = False):
         printDBG("PCommon.convertWebp %s" % file_path)
         
         output_path = file_path.replace('.webp','.jpg')
+        png_path = file_path.replace('.webp','.png')
         if IsExecutable('ffmpeg'):
-            command = "ffmpeg -i %s %s && test -e %s && rm %s " % (file_path, output_path, output_path, file_path) 
+            if png:
+                command = "ffmpeg -i %s %s && test -e %s && rm %s && mv %s %s" % (file_path, png_path, png_path, file_path, png_path , output_path) 
+            else:
+                command = "ffmpeg -i %s %s && test -e %s && rm %s " % (file_path, output_path, output_path, file_path) 
+            
             printDBG("Send command %s" % command)
             self.cmd = iptv_system(command)
-            
-    def removeWebp(self, file_path):
-        printDBG("PCommon.removeWebp %s" % file_path)
-
             
     def saveWebFileWithPyCurl(self, file_path, url, add_params = {}, post_data = None):
         bRet = False
@@ -1424,7 +1425,10 @@ class common:
                 
                 # decode webp to jpeg
                 if file_path.endswith(".webp"):
-                    self.convertWebp(file_path)
+                    if addParams.get('webp_convert_to_png', False):
+                        self.convertWebp(file_path, png = True)
+                    else:
+                        self.convertWebp(file_path)
                          
         except Exception:
             printExc("common.getFile download file exception")

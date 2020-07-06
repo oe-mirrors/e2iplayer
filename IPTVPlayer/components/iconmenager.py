@@ -275,7 +275,12 @@ class IconMenager:
 
         else:
             params_cfad={}
-            
+        
+        if img_url.endswith('|webpToPng'):
+            param_png = {'webp_convert_to_png': True}
+        else:
+            param_png = {}
+                
         if img_url.endswith('need_resolve.jpeg'):
             domain = urlparser.getDomain(img_url)
             if domain.startswith('www.'): domain = domain[4:]
@@ -340,7 +345,7 @@ class IconMenager:
                 
         if not self.cm.isValidUrl(img_url): return False
         
-        params = MergeDicts(params, params_cfad)
+        params = MergeDicts(params, params_cfad, param_png)
         
         printDBG("Calling saveWebFile file_path:'%s' img_url:'%s'" % (file_path, img_url))
         return self.cm.saveWebFile(file_path, img_url, addParams = params)['sts']
