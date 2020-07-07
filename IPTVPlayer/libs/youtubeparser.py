@@ -328,6 +328,117 @@ class YouTubeParser():
             return {'type': 'category', 'category': 'playlist', 'title': title, 'url': url, 'icon': icon, 'time': '' ,'desc': desc}
         else:
             return {}
+    
+    def getMenuItemData(self, itemJson):
+        
+        try:
+            title = itemJson['title']['simpleText'] 
+            icon = self.getThumbnailUrl(itemJson["thumbnail"]["thumbnails"])
+
+            try:
+                feedId = itemJson["navigationEndpoint"]["browseEndpoint"]["params"]
+                url = "https://www.youtube.com/feed/trending?bp=%s&pbj=1" % feedId
+                cat = "feeds_" + title
+            except:
+                try:
+                    url = "https://www.youtube.com" + itemJson["navigationEndpoint"]["commandMetadata"]["webCommandMetadata"]["url"]
+                except:
+                    printExc()
+                    return {}
+
+            if '/channel/' in url:
+                return {'type': 'category', 'category': 'channel', 'title': title, 'url': url, 'icon': icon, 'time': '' ,'desc': ''}
+            else:
+                return {'type': 'feed', 'category': cat, 'title': title, 'url': url, 'icon': icon, 'time': '' ,'desc': ''}
+                
+        except:
+            printExc()
+            return {}
+        
+    def getFeedsList(self, url):
+        printDBG('YouTubeParser.getFeedList')
+        
+        currList = []
+        try:
+            sts,data =  self.cm.getPage(url, self.http_params)
+            if sts:
+                self.checkSessionToken(data)
+
+                data2 = self.cm.ph.getDataBeetwenMarkers(data,"window[\"ytInitialData\"] =", "};", False)[1]
+                
+                try:
+                    response = json_loads(data2 + "}")
+                
+                    submenu = response['contents']['twoColumnBrowseResultsRenderer']['tabs'][0]['tabRenderer']['content']['sectionListRenderer']['subMenu']
+                    for item in submenu["channelListSubMenuRenderer"]["contents"]:
+                        menuJson = item.get("channelListSubMenuAvatarRenderer", '') 
+                        if menuJson:
+                            params = self.getMenuItemData(menuJson)
+                            
+                            if params:
+                                printDBG(str(params))
+                                currList.append(params)    
+                except:
+                    printExc()
+
+        except Exception:
+            printExc()
+            
+        return currList
+
+    
+    def getVideoFromFeed(self, url):
+        printDBG('YouTubeParser.getVideosFromFeed')
+        
+        currList = []
+        try:
+            sts,data =  self.cm.getPage(url, self.http_params)
+            if sts:
+                self.checkSessionToken(data)
+
+                try:
+                    response = json_loads(data)
+                    
+                    rr = {}
+                    for r in response:
+                        if r.get("response",""):
+                            rr = r
+                            break
+
+                    if not rr:
+                        return []
+                    
+                    r1 = rr["response"]["contents"]['twoColumnBrowseResultsRenderer']['tabs'][0]['tabRenderer']['content']['sectionListRenderer']['contents']
+                    r2 = r1[0]['itemSectionRenderer']['contents'][0]["shelfRenderer"]["content"]["expandedShelfContentsRenderer"]["items"]
+                    
+                    for item in r2:
+                        chJson = item.get('channelRenderer', '')
+                        videoJson = item.get('videoRenderer','')
+                        plJson = item.get('playlistRenderer','')
+                        
+                        params = {}
+                        if videoJson:
+                            # it is a video
+                            params = self.getVideoData(videoJson)
+                        elif chJson:
+                            # it is a channel
+                            params = self.getChannelData(chJson)
+                        elif plJson:
+                            # it is a playlist
+                            params = self.getPlaylistData(plJson)
+                            
+                        if params:
+                            printDBG(str(params))
+                            currList.append(params)
+
+                except:
+                    printExc()
+
+        except Exception:
+            printExc()
+
+        return currList
+    
         
     ########################################################
     # Tray List PARSER
