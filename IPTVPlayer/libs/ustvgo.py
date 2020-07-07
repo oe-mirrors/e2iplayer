@@ -12,7 +12,7 @@ from Plugins.Extensions.IPTVPlayer.libs.urlparserhelper import getDirectM3U8Play
 ###################################################
 
 import re
-    
+import base64
 ###################################################
 
 class UstvgoApi(CBaseHostClass):
@@ -75,6 +75,14 @@ class UstvgoApi(CBaseHostClass):
                     scripts = self.cm.ph.getAllItemsBeetwenMarkers(data, ('<script','>'),'</script>')
                     
                     for s in scripts:
+                        base64Url = re.findall("filePath\s?=\s?atob\('([^']+?)'", s)
+                        if base64Url:
+                            video_url = base64.b64decode(base64Url[0])
+                            if self.cm.isValidUrl(video_url):
+                                video_url = self.up.decorateUrl(video_url, {'iptv_proto':'m3u8', 'iptv_livestream':True, 'Referer':'https://ustvgo.tv',  'User-Agent': self.HTTP_HEADER['User-Agent']})
+                                urlsTab.append({'name': 'link', 'url': video_url })
+                                urlsTab.extend(getDirectM3U8Playlist(video_url, checkExt=False, checkContent=True))
+                        
                         if 'Clappr.Player' in s:
                             # s is the right javascript code
                             #search span tags, name of function and useful code
