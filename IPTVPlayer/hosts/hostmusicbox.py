@@ -52,6 +52,7 @@ class MusicBox(CBaseHostClass):
     def __init__(self):
         CBaseHostClass.__init__(self)
         self.youtube_api_key = ""
+        self.first_advice = True
         self.ytformats = config.plugins.iptvplayer.ytformat.value
         self.ytp = YouTubeParser()
         self.lastfm_username = config.plugins.iptvplayer.MusicBox_login.value
@@ -83,15 +84,21 @@ class MusicBox(CBaseHostClass):
                                    ]
     
     def readYoutubeApiKey(self):
-        if not self.youtube_api_key:
+        if self.youtube_api_key != config.plugins.iptvplayer.api_key_youtube.value:
             apiKey = config.plugins.iptvplayer.api_key_youtube.value
-            if apiKey:
-                self.youtube_api_key = apiKey
-            else:
-                msg = _("You can't view Youtube videos, if you don't write API key in setting menu")
+            if len(apiKey)>0 and len(apiKey) != 39:
+                msg = _("Wrong Youtube Api Key length")
+                GetIPTVNotify().push(msg, 'error', 5)
+
+        self.youtube_api_key = apiKey
+        
+        if not self.youtube_api_key:
+            if self.first_advice: 
+                self.first_advice = False
+                msg = _("Youtube searches are quicker, if you fill API key in setting menu")
                 msg = msg + "\n" + ("Search for 'how to create your own Youtube api key'") 
-                GetIPTVNotify().push(msg, 'error', 10)
-    
+                GetIPTVNotify().push(msg, 'info', 5)
+                    
             
     def listsMainMenu(self):
         printDBG("MusicBox - lists main menu")
@@ -369,17 +376,27 @@ class MusicBox(CBaseHostClass):
     def getLinksForVideo(self, cItem):
         printDBG("getLinksForVideo cItem[%s]" % cItem)
         
-        self.readYoutubeApiKey()
-        if not self.youtube_api_key:
-            return []
-        
-        sts, data = self.cm.getPage("https://www.googleapis.com/youtube/v3/search?part=id%2Csnippet&q=" + cItem.get('page', '') + "&type=Music&maxResults=1&key=" + self.youtube_api_key)
-        if not sts: 
-            return []
-        match = re.compile('"videoId": "([^"]+?)"').findall(data)
         videoUrls = []
-        for item in match:
-            video_path = "https://www.youtube.com/watch?v=" + item
+        self.readYoutubeApiKey()
+        if len(self.youtube_api_key) == 39:
+            # quicker solution
+        
+            sts, data = self.cm.getPage("https://www.googleapis.com/youtube/v3/search?part=id%2Csnippet&q=" + cItem.get('page', '') + "&type=Music&maxResults=1&key=" + self.youtube_api_key)
+            if sts: 
+                match = re.compile('"videoId": "([^"]+?)"').findall(data)
+     
+                for item in match:
+                    video_path = "https://www.youtube.com/watch?v=" + item
+                    videoUrls = self._getLinksForVideo(video_path)
+       
+        if not videoUrls:
+            # if apikey isn't present or previous search fails, use browser search (slower) 
+        
+            search_list = YouTubeParser().getSearchResult(cItem.get('page', ''), "music", 1 , '')
+            if not search_list:
+                return []
+        
+            video_path = search_list[0]['url']
             videoUrls = self._getLinksForVideo(video_path)
         
         return videoUrls
