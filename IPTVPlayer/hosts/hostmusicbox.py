@@ -27,6 +27,7 @@ from Screens.MessageBox import MessageBox
 config.plugins.iptvplayer.MusicBox_premium = ConfigYesNo(default=False)
 config.plugins.iptvplayer.MusicBox_login = ConfigText(default="", fixed_size=False)
 config.plugins.iptvplayer.api_key_youtube = ConfigText(default = "", fixed_size = False)
+config.plugins.iptvplayer.api_key_warning = ConfigYesNo(default=True)
 
 ####################################################
 # Api keys
@@ -38,6 +39,7 @@ HEADER = {'User-Agent': 'Mozilla/5.0 (Windows NT 6.1; rv:33.0) Gecko/20100101 Fi
 def GetConfigList():
     optionList = []
     optionList.append(getConfigListEntry( _("%s API KEY") % 'http://youtube.com/', config.plugins.iptvplayer.api_key_youtube))
+    optionList.append(getConfigListEntry( _("Show Youtube Api Key warnings"), config.plugins.iptvplayer.api_key_warning))
     optionList.append(getConfigListEntry("Użytkownik Last.fm", config.plugins.iptvplayer.MusicBox_premium))
     if config.plugins.iptvplayer.MusicBox_premium.value:
         optionList.append(getConfigListEntry(" Last.fm login:", config.plugins.iptvplayer.MusicBox_login))
@@ -52,7 +54,6 @@ class MusicBox(CBaseHostClass):
     def __init__(self):
         CBaseHostClass.__init__(self)
         self.youtube_api_key = ""
-        self.first_advice = True
         self.ytformats = config.plugins.iptvplayer.ytformat.value
         self.ytp = YouTubeParser()
         self.lastfm_username = config.plugins.iptvplayer.MusicBox_login.value
@@ -87,14 +88,15 @@ class MusicBox(CBaseHostClass):
         if self.youtube_api_key != config.plugins.iptvplayer.api_key_youtube.value:
             apiKey = config.plugins.iptvplayer.api_key_youtube.value
             if len(apiKey)>0 and len(apiKey) != 39:
-                msg = _("Wrong Youtube Api Key length")
-                GetIPTVNotify().push(msg, 'error', 5)
+                if config.plugins.iptvplayer.api_key_warning.value == True: 
+                    msg = _("Wrong Youtube Api Key length")
+                    GetIPTVNotify().push(msg, 'error', 5)
 
-        self.youtube_api_key = apiKey
+            self.youtube_api_key = apiKey
         
         if not self.youtube_api_key:
-            if self.first_advice: 
-                self.first_advice = False
+            if config.plugins.iptvplayer.api_key_warning.value == True: 
+                config.plugins.iptvplayer.api_key_warning.value = False
                 msg = _("Youtube searches are quicker, if you fill API key in setting menu")
                 msg = msg + "\n" + ("Search for 'how to create your own Youtube api key'") 
                 GetIPTVNotify().push(msg, 'info', 5)
