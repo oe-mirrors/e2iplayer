@@ -217,7 +217,7 @@ class YouTubeParser():
                 url = img['url']
             i = i + 1
         
-        if hq:
+        if hq or (not config.plugins.iptvplayer.allowedcoverformats.value) or config.plugins.iptvplayer.allowedcoverformats.value !='all':
             if 'hqdefault' in url:
                 url = url.replace('hqdefault','hq720')
         
