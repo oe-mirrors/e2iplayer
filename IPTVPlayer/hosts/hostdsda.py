@@ -8,7 +8,7 @@
 ###################################################
 from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _
 from Plugins.Extensions.IPTVPlayer.components.ihost import CHostBase, CBaseHostClass
-from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc
+from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, MergeDicts
 from Plugins.Extensions.IPTVPlayer.tools.iptvtypes import strwithmeta
 ###################################################
 
@@ -20,7 +20,7 @@ import HTMLParser
 ###################################################
 
 def gettytul():
-    return 'https://documentari-streaming-da.com/'
+    return 'https://www.dsda.press/'
 
 class DSDA(CBaseHostClass):
 
@@ -30,7 +30,7 @@ class DSDA(CBaseHostClass):
         self.USER_AGENT = 'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:68.0) Gecko/20100101 Firefox/68.0'
         self.HEADER = {'User-Agent': self.USER_AGENT, 'Accept': 'text/html'}
         
-        self.MAIN_URL = 'https://documentari-streaming-da.com/'
+        self.MAIN_URL = 'https://www.dsda.press/'
         self.DEFAULT_ICON_URL = 'https://scontent-mxp1-1.xx.fbcdn.net/v/t1.0-9/56742587_669013310186689_7805148216235655168_n.jpg?_nc_cat=105&_nc_oc=AQljKC8dtD_B28VmidDlC1P1oUdvIyw7Ig-zCqGuD30jdIJMExgm3ct3T6EiwqTRziQ&_nc_ht=scontent-mxp1-1.xx&oh=17a67f50b311538188abd9bb7a2ed366&oe=5DD4BF01'
         
         self.defaultParams = {'header':self.HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
@@ -63,20 +63,20 @@ class DSDA(CBaseHostClass):
         sts, data = self.cm.getPage(url)
         if not sts: return        
 
-        cats = re.findall('''has-menu-child"><a href=(.*)</a></li>''', str(data))
+        #url = self.MAIN_URL+"page/1/?searchtype=movie&post_type=movie&sl=lasts&s#038;post_type=movie&sl=lasts&s"
+        self.addDir({'name': 'category', 'category': 'list_items', 'title': 'Home', 'url': self.MAIN_URL + "page/1/" })
+        
+        tmp = self.cm.ph.getDataBeetwenNodes(data, ("<ul",">","elementor-nav-menu"),"</ul>")[1]
+        cats = re.findall("<a href=\"(.*?)\".*?elementor.*?>(.*?)</a></li>", tmp)
+        
         for cat in cats:
             printDBG(str(cat))
-            url = re.findall('''"(.*?)"''', cat)[0]
-            #title = re.findall('''">(.*?)''', cat)[0]
-            title = cat.split('"')[2]
-            title = title.replace(">", "")
+            url = cat[0]
+            title = cat[1]
             liststr = ["Presentazione", "Contatto", "Sostieni DSDA", "Categorie"]
 
             if title not in liststr:
 
-                if title == "Home":
-                    title = "Documentari Ultime uscite"
-                    url = self.MAIN_URL+"page/1/?searchtype=movie&post_type=movie&sl=lasts&s#038;post_type=movie&sl=lasts&s"
 
                 params = dict(cItem)
                 params.update({'name':'category', 'category':'list_items', 'title':title, 'url':url})
@@ -123,16 +123,21 @@ class DSDA(CBaseHostClass):
             printDBG(url)
 
         sts, data = self.cm.getPage(url)
-        if not sts: return        
-
-        pntemp = re.findall('''<div class="item col-sm-3">(.*?)<span class=''', data, re.S)
-        #print (str(pntemp))
-
+        if not sts: return
+        
+        tmp = self.cm.ph.getDataBeetwenMarkers(data, ('elementor-grid-1 elementor-posts--align-center') , ('<nav class="elementor-pagination'), False)[1]
+        
+        printDBG(tmp)
+        #pntemp = re.findall('''elementor-grid-1 elementor-posts--align-center(.*?)<nav class="elementor-pagination''', data, re.S)
+        pntemp = re.findall('''<article class(.*?)</article>''', tmp, re.S)
+        #printDBG(pntemp)
+        printDBG(str(pntemp))
+        
         for t in pntemp:
             #print(t)
             icon = re.findall('''src="(.*?)"''', t, re.S)[0]
             url = re.findall('''href="(.*?)"''', t, re.S)[0]
-            title = re.findall('''/">(.*?)<\/a><\/h4>''', t)[0]
+            title = re.findall('''/">\n\t\t\t\t(.*?)\t\t\t</a>\n\t\t</h3>''', t, re.S)[0]
             title = HTMLParser.HTMLParser().unescape(title).encode('utf-8')
             params = dict(cItem)
             params.update({'good_for_fav': True, 'category':nextCategory, 'title':title, 'url':url, 'icon':icon, 'desc':title})
@@ -141,7 +146,7 @@ class DSDA(CBaseHostClass):
 
 
         #next page
-        if "next page-numbers" in data:
+        if "page-numbers next" in data:
             tmp = urlnext.split("/"+str(page))
             printDBG("next page-numbers<<< ")
             printDBG("urlnext<<< "+ urlnext)
@@ -161,9 +166,13 @@ class DSDA(CBaseHostClass):
         if not sts: return        
 
         #video link
-        d = re.findall('''</div><h2>(.*?)</div>''', data, re.S)[0]
+        d = re.findall('''<h2>(.*?)<section class=''', data, re.S)[0]
+        
+        #d = re.findall('''<a class="link-doc(.*?)</div>''', data, re.S)[0]
+        printDBG(d)
         #printDBG("desc <<<<< "+ d+"\n<<<<<<<<<<<<<<<")
         dd = re.findall('''<p>(.*?)</p>''', data, re.S)
+        printDBG(dd)
         ddd = ""
         for d in dd:
             d = re.sub('''<(.*?)>''', "", d)
@@ -172,34 +181,59 @@ class DSDA(CBaseHostClass):
             printDBG("d <<< "+d+"<<<")
             ddd = ddd+d+"\n"
         ddd = HTMLParser.HTMLParser().unescape(ddd).encode('utf-8')
+        printDBG(ddd)
+        #desc = re.findall('''<b style="color:#333333;">(.*?)</div>''', data, re.S)[0]
+        #desc = '''<b style="color:#333333;">'''+desc
+        #tmp = desc.split("</b></a> <br><br>")
+        #del tmp[-1]
+        desc = ddd
         
-        desc = re.findall('''<b style="color:#333333;">(.*?)</div>''', data, re.S)[0]
-        desc = '''<b style="color:#333333;">'''+desc
-        tmp = desc.split("</b></a> <br><br>")
-        del tmp[-1]
-
-        for t in tmp:
-            t = t+'''</b>'''
-            #print (str(t))
-            title = re.findall('''>(.*?)</b><br>''', t, re.S)[0]
-            title = HTMLParser.HTMLParser().unescape(title).encode('utf-8')
-            #print (title)
-            names = re.findall('''<b>(.*?)</b>''', t, re.S)
-            #print(names)
+        # check if is a series
+        is_serie = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(data, '<title>', '</title>')[1])
+        printDBG(is_serie)
+        if 'Serie' in is_serie:
+            title = re.findall('''<title>(.*?)</title>''', data, re.S)[0]
+            t = self.cm.ph.getDataBeetwenMarkers(data, ('<div class="panel">') , ('<script>'), False)[1]
+            printDBG(t)
+            #eps = self.cm.ph.getDataBeetwenMarkers(t, ('<p class="title-episodio">') , ('</p>'), False)[1]
+            #eps = re.findall('''<p class="title-episodio">(.*?)</p>''', t, re.S)
+            eps = self.cm.ph.getAllItemsBeetwenMarkers(t, '<p class="title-episodio">', '</p>')
+            printDBG(eps)
+            printDBG(eps)
+            printDBG(eps)
+            names1 = re.findall('''target="_blank">\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t(.*?)</a>''', t, re.S)
+            names = MergeDicts(cItem, {eps + " " + names1})
+            #names = eps + " " + names1
+            printDBG(names)
+            printDBG(names)
+            printDBG(names)
             vurl = re.findall('''href="(.*?)"''', t, re.S)
-            #print(vurl)
+            
+        else:    
+            #for t in data:
+            t = self.cm.ph.getDataBeetwenMarkers(data, ('<h2>') , ('<section class='), False)[1]
+            #t = re.findall('''<h2>(.*?)<section class=''', data, re.S)[0]
+            printDBG(str(t))
+            t = '''</b>'''+t
+            title = re.findall('''<title>(.*?)</title>''', data, re.S)[0]
+            title = HTMLParser.HTMLParser().unescape(title).encode('utf-8')
+            printDBG(title)
+            names = re.findall('''noopener">(.*?)</a>''', t, re.S)
+            printDBG(names)
+            vurl = re.findall('''href="(.*?)"''', t, re.S)
+            printDBG(vurl)
 
-            urlTab = []
-            i = 0
-            for name in names:
-                urlTab.append({'name':name, 'url':vurl[i], 'need_resolve':1})
-                i = i + 1
+        urlTab = []
+        i = 0
+        for name in names:
+            urlTab.append({'name':name, 'url':vurl[i], 'need_resolve':1})
+            i = i + 1
 
-            params = dict(cItem)
-            params.update({'good_for_fav':False, 'title': title, 'urls_tab':urlTab, 'desc':ddd})
-            #params.update({'good_for_fav':False, 'url':url, 'title':'%s %s' % (title, cItem['title'])})
-            printDBG(str(params))
-            self.addVideo(params)
+        params = dict(cItem)
+        params.update({'good_for_fav':False, 'title': title, 'urls_tab':urlTab, 'desc':ddd})
+        #params.update({'good_for_fav':False, 'url':url, 'title':'%s %s' % (title, cItem['title'])})
+        printDBG(str(params))
+        self.addVideo(params)
 
 
     def listSearchResult(self, cItem, searchPattern, searchType):
