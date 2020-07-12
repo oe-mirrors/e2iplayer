@@ -16,20 +16,20 @@ except Exception: import simplejson as json
 ###################################################
 
 def gettytul():
-    return 'https://cb01.email/'
+    return 'https://cb01.design/'
 
 class Cb01(CBaseHostClass):
 
     def __init__(self):
-        CBaseHostClass.__init__(self, {'history':'cb01.email', 'cookie':'cb01.email.cookie'})
+        CBaseHostClass.__init__(self, {'history':'cb01.design', 'cookie':'cb01.design.cookie'})
         
         self.USER_AGENT = 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/73.0.3683.103 Safari/537.36'
         self.HEADER = {'User-Agent': self.USER_AGENT, 'Accept': 'text/html'}
         self.AJAX_HEADER = dict(self.HEADER)
         self.AJAX_HEADER.update( {'X-Requested-With':'XMLHttpRequest', 'Content-Type':'application/x-www-form-urlencoded; charset=UTF-8'} )
         
-        self.MAIN_URL = 'https://cb01.email/'
-        self.DEFAULT_ICON_URL = 'https://cb01.email/wp-content/uploads/2019/03/logocb2-1.jpg'
+        self.MAIN_URL = 'https://cb01.design/'
+        self.DEFAULT_ICON_URL = 'https://cb01.design/wp-content/uploads/2019/03/logocb2-1.jpg'
         
         self.defaultParams = {'header':self.HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
     
