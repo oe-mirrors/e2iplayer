@@ -397,13 +397,16 @@ class CartoonHD(CBaseHostClass):
         baseurl = self.getFullUrl(self.cm.ph.getSearchGroups(data, '''\s+?baseurl\s*=\s*['"]([^'^"]+?)['"]''')[0])
         printDBG("baseurl [%s]" % baseurl)
         if not self.cm.isValidUrl(baseurl): 
-            baseUrl =  self.cm.getBaseUrl(cItem['url'])
+            baseurl =  self.cm.getBaseUrl(cItem['url'])
         
         tor  = self._getToken(data)
         elid = self.cm.ph.getSearchGroups(data, '''elid[\s]*=[\s]['"]([^"^']+?)['"]''')[0]
-        if '' == elid: elid = self.cm.ph.getSearchGroups(data, 'data-id="([^"]+?)"')[0]
-        if '' == elid: elid = self.cm.ph.getSearchGroups(data, 'data-movie="([^"]+?)"')[0]
-        if '' == elid: return []
+        if '' == elid: 
+            elid = self.cm.ph.getSearchGroups(data, 'data-id="([^"]+?)"')[0]
+        if '' == elid: 
+            elid = self.cm.ph.getSearchGroups(data, 'data-movie="([^"]+?)"')[0]
+        if '' == elid: 
+            return []
         
         if "movieInfo['season']" not in data and 'movieInfo["season"]' not in data:
             type = 'getMovieEmb'
