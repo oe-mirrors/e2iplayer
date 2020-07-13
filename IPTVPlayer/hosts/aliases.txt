@@ -18,7 +18,7 @@
 "hostbbciplayer": "http://www.bbc.co.uk/iplayer",
 "hostbbcsport": "https://www.bbc.co.uk/sport",
 "hostbsto": "https://bs.to/",
-"hostcartoonhd": "https://cartoonhd.care/",
+"hostcartoonhd": "https://cartoonhd.app/",
 "hostcasacinema": "https://www.casacinema.cam/"
 "hostcb01": "https://cb01.run/",
 "hostcb01uno": "https://cb01.design/",
