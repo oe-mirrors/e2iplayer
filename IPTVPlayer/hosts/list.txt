@@ -4,7 +4,6 @@ host3sktv
 host7tvde
 host9anime
 hostakoam
-hostallboxtv
 hostalltubetv
 hostaltadefinizione
 hostaltadefinizionecool
@@ -12,7 +11,6 @@ hostaltadefinizione01
 hostandrijaiandjelka
 hostanimeodcinki
 hostappletrailers
-hostarconaitvme
 hostardmediathek
 hostartetv
 hostbajeczkiorg
@@ -33,11 +31,9 @@ hostcinemaxx
 hostcinemay
 hostcineto
 hostclassiccinemaonline
-hostcrtankocom
 hostdailymotion
 hostdancetrippin
 hostdardarkomcom
-hostdarshowcom
 hostddl
 hostdel
 hostdixmax
@@ -87,7 +83,6 @@ hosthdfilmetv
 hosthdfull
 hosthdkinomir
 hosthdpopcornscom
-hosthdsto
 hosthdstreams
 hosthitboxtv
 hosthoofootcom
@@ -100,7 +95,6 @@ hostitvcom
 hostkabarety
 hostkijknl
 hostkinogo
-hostkinomanco
 hostkinotan
 hostkinox
 hostkissanimeto
@@ -131,7 +125,6 @@ hostmusicbox
 hostmusicmp3ru
 hostmyfreemp3
 hostmythewatchseries
-hostnaszekinotv
 hostngolos
 hostninateka
 hostnuteczki
@@ -175,13 +168,11 @@ hoststreamcomplet
 hoststreaminghdfun
 hoststreamliveto
 hostsvtplayse
-hostszenestreamz
 hosttainieskaiseirestv
 hosttantifilmorg
 hostted
 hosttfarjocom
 hostthewatchseriesto
-hosttreetv
 hostturcjatv
 hosttvgrypl
 hosttvjworg
@@ -202,7 +193,6 @@ hostvimeo
 hostvodpl
 hostvumedicom
 hostwatchcartoononline
-hostwatchmovies
 hostwatchwrestling
 hostwatchwrestlinguno
 hostwebstream
@@ -216,5 +206,4 @@ hostxrysoise
 hostyesmoviesto
 hostyifytv
 hostyoutube
-hostzalukajcom
 hostzdfmediathek
