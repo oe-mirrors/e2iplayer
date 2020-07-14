@@ -298,13 +298,15 @@ class AlltubeTV(CBaseHostClass):
         params = dict(self.defaultParams)
         params['header'] = {'User-Agent':self.USER_AGENT, 'Content-Type':'application/x-www-form-urlencoded'}
         sts, data = self.getPage(self.SRCH_URL, params, post_data={'search':searchPattern})
-        if not sts: return
+        if not sts: 
+            return
         
-        printDBG(data)
+        #printDBG(data)
         
-        data = self.cm.ph.rgetDataBeetwenMarkers(data, '<div class="container-fluid">', 'Kontakt')[1]
+        data = self.cm.ph.rgetDataBeetwenMarkers(data, '<div class="container-fluid">', 'navbar-fixed-bottom')[1]
         data = data.split('<h2 class="headline">')
-        if len(data): del data[0]
+        if len(data): 
+            del data[0]
         
         if searchType == 'series':
             marker = 'Seriale'
@@ -319,19 +321,28 @@ class AlltubeTV(CBaseHostClass):
                 found = True
                 break
                 
-        if not found: return
+        if not found: 
+            return
         data = data[idx]
         data = data.split('<div class="item-block clearfix">')
-        if len(data): del data[0]
+        if len(data): 
+            del data[0]
 
         for item in data:
+            #printDBG("---------------------------")
+            #printDBG(item)
+            #printDBG("---------------------------")
+            
             url    = self.cm.ph.getSearchGroups(item, 'href="([^"]+?)"')[0]
             icon   = self.cm.ph.getSearchGroups(item, 'src="([^"]+?)"')[0]
             title  = self.cm.ph.getDataBeetwenMarkers(item, '<div class="title">', '</div>', False)[1]
-            if '' == title: title = self.cm.ph.getDataBeetwenMarkers(item, '<h3>', '</h3>', False)[1]
-            if '' == title:  title = self.cm.ph.getSearchGroups(item, 'alt="([^"]+?)"')[0]
+            if '' == title: 
+                title = self.cm.ph.getDataBeetwenMarkers(item, '<h3>', '</h3>', False)[1]
+            if '' == title:  
+                title = self.cm.ph.getSearchGroups(item, 'alt="([^"]+?)"')[0]
             desc   = self.cm.ph.getDataBeetwenMarkers(item, '<div class="description">', '</div>', False)[1]
-            if '' == desc: desc = item.split('<p>')[-1]
+            if '' == desc: 
+                desc = item.split('<p>')[-1]
             
             params = dict(cItem)
             params.update({'good_for_fav': True, 'title':self.cleanHtmlStr( title ), 'url':self.getFullUrl( url ), 'icon':self.getFullUrl( icon ), 'desc':self.cleanHtmlStr( desc )})
