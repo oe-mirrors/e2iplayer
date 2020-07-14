@@ -160,6 +160,7 @@ class urlparser:
                        'allvid.ch':             self.pp.parserALLVIDCH      ,
                        'anime-shinden.info':    self.pp.parserANIMESHINDEN  ,
                        'aparat.cam':            self.pp.parserAPARAT        ,
+                       'aparat.com':            self.pp.parserAPARAT        ,
                        'api.video.mail.ru':     self.pp.parserVIDEOMAIL     ,
                        'archive.org':           self.pp.parserARCHIVEORG    ,
                        'auroravid.to':          self.pp.parserAURORAVIDTO   ,
@@ -386,6 +387,7 @@ class urlparser:
                        'p2pcast.tv':            self.pp.parserP2PCASTTV      ,
                        'partners.nettvplus.com': self.pp.parserNETTVPLUSCOM,
                        'picasaweb.google.com':  self.pp.parserPICASAWEB     ,
+                       'playhydrax.com':        self.pp.parserPLAYHYDRAX,
                        'playbb.me':             self.pp.parserEASYVIDEOME   ,
                        'played.to':             self.pp.parserPLAYEDTO      ,
                        'playedto.me':           self.pp.parserPLAYEDTO      ,
@@ -14099,7 +14101,17 @@ class pageParser(CaptchaHelper):
         }
 
         urlsTab = []
-        
+
+        if '/videohash/' not in baseUrl and '/showvideo/' not in baseUrl:
+            sts, data = self.cm.getPage(baseUrl, httpParams)
+            if not sts:
+                return False
+            
+            cUrl = self.cm.meta['url']
+            baseUrl = self.cm.getFullUrl(ph.search(data, '''['"]([^'^"]+?/videohash/[^'^"]+?)['"]''')[0], cUrl)
+            if not baseUrl:
+                baseUrl = self.cm.getFullUrl(ph.search(data, '''['"]([^'^"]+?/showvideo/[^'^"]+?)['"]''')[0], cUrl)
+
         sts, data = self.cm.getPage(baseUrl, httpParams)
         
         if sts:
@@ -14108,7 +14120,13 @@ class pageParser(CaptchaHelper):
             #printDBG("-----------------------")
         
             srcJson = re.findall("sources\s?:\s?\[(.*?)\]", data, re.S)
-            
+            if not srcJson:
+                srcJson = re.findall("multiSRC\"?\s?:\s?\[\[(.*?)\]\]", data, re.S)
+                if srcJson:
+                    sources = re.findall("(\{\"src\":.*?\})", srcJson[0])
+                    if sources:
+                        srcJson = [",".join(sources)]  
+                
             if srcJson:
                 srcJson = srcJson[0]
                 sources = demjson_loads("[" + srcJson + "]")
@@ -14128,7 +14146,7 @@ class pageParser(CaptchaHelper):
                         params = {'name': label , 'url': u}
                         printDBG(str(params))
                         urlsTab.append(params)
-
+        
         return urlsTab
 
     def parserABCVIDEO(self, baseUrl):
@@ -14219,3 +14237,86 @@ class pageParser(CaptchaHelper):
                         except:
                             printExc()
         return urlsTab
+
+    def parserPLAYHYDRAX(self, baseUrl):
+        printDBG("parserPLAYHYDRAX baseUrl[%r]" % baseUrl)
+
+        httpParams = {
+            'header' : {
+                'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.61 Safari/537.36',
+                'Accept': '*/*',
+                'Accept-Encoding': 'gzip',
+                'Referer' : baseUrl.meta.get('Referer', baseUrl)
+            } 
+        }
+
+        urlsTab = []
+        
+        sts, data = self.cm.getPage(baseUrl, httpParams)
+        
+        if sts:
+            #printDBG("-------------------------------")
+            #printDBG(data)
+            #printDBG("-------------------------------")
+
+            scripts = self.cm.ph.getAllItemsBeetwenMarkers(data, ('<script', '>'), '</script>', withMarkers=True)
+            
+            apiUrl = ""
+            paramsScript =""
+            
+            for s in scripts:
+                printDBG(s)
+                tmp =  self.cm.ph.getSearchGroups(s, "src='([^']+?api\.js)'")[0]
+                if tmp:
+                    apiUrl = self.cm.getFullUrl(tmp, baseUrl)
+                
+                if '__CF$cv$params' in s:
+                    paramsScript = clean_html(s)
+                        
+            printDBG("api Url: %s " % apiUrl)
+            printDBG("-------------------")
+            printDBG(paramsScript)
+            printDBG("-------------------")
+            
+            if apiUrl:
+                sts, apiCode = self.cm.getPage(apiUrl, httpParams)
+        
+                if sts:
+                    #printDBG("-------------------------------")
+                    #printDBG(apiCode)
+                    #printDBG("-------------------------------")
+                    
+                    code1 = apiCode[:apiCode.find("!function")]
+                    varNames = re.findall("var\s([a-z0-9_]{8,10}?)=",code1)
+                    
+                    if len(varNames) == 4 and varNames[1]==varNames[3]:
+                        apiCode = re.sub(varNames[0],"vvv",apiCode)
+                        apiCode = re.sub(varNames[1],"vv",apiCode)
+                        apiCode = re.sub(varNames[2],"v",apiCode)
+                        
+                        #printDBG("-------------------------------")
+                        #printDBG(apiCode)
+                        #printDBG("-------------------------------")
+
+                        code1 = apiCode[:apiCode.find("!function")]
+                    
+                        jsCode = code1 + '''
+                        for (var i=0; i<vvv.length; i++){
+                            console.log(v(i));
+                        }
+                        '''
+                        ret = js_execute(jsCode)
+                        strings = ret['data'].split('\n')
+                        
+                        printDBG(str(strings))
+                        
+                        for i in range(len(strings)):
+                            apiCode = re.sub("v\('" + hex(i) +"'\)", "'" + strings[i] + "'", apiCode)
+
+                        printDBG("-------------------------------")
+                        printDBG(apiCode)
+                        printDBG("-------------------------------")
+
+
+        return urlsTab
+
