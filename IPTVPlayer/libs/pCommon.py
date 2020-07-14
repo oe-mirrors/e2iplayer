@@ -29,7 +29,7 @@ try:
     except Exception: from StringIO import StringIO 
     import gzip
 except Exception: pass
-from urlparse import urljoin, urlparse, urlunparse
+from urlparse import urljoin, urlparse, urlunparse, parse_qs, parse_qsl
 from binascii import hexlify
 import os
 ###################################################
@@ -956,11 +956,12 @@ class common:
         #printDBG("Cloudflare Url: %s" % data.meta["url"])
         
         current = 0
-        while current < 5:
+        while current < 3:
             #if True:
             if not sts and None != data:
                 start_time = time.time()
                 current += 1
+                printDBG("Cloudflare protection -- try n. %s" % current)
                 doRefresh = False
                 try:
                     domain = self.getBaseUrl(data.meta['url'])
@@ -970,9 +971,9 @@ class common:
                     #printDBG("------------------")
                     if 'sitekey' not in verData and 'challenge' not in verData: break
                     
-                    printDBG(">>")
-                    printDBG(verData)
-                    printDBG("<<")
+                    #printDBG(">>")
+                    #printDBG(verData)
+                    #printDBG("<<")
                     
                     sitekey = self.ph.getSearchGroups(verData, 'data-sitekey="([^"]+?)"')[0]
                     id = self.ph.getSearchGroups(verData, 'data-ray="([^"]+?)"')[0]
@@ -1093,7 +1094,8 @@ class common:
                             elif 'window._cf_chl_opt' in item:
                                 dat = item 
                                 challengeType = 2
-
+                                break
+                                
                         if challengeType == 0:
                             GetIPTVNotify().push(_("New javascript not yet supported!"), 'info', 5)
                              
@@ -1101,7 +1103,8 @@ class common:
                             
                         elif challengeType == 2:
                             #new javascript challenge
-                            GetIPTVNotify().push(_("New javascript not yet supported!"), 'info', 5)
+                            printDBG("Challenge type 2")
+                            #GetIPTVNotify().push(_("New javascript not yet supported!"), 'info', 5)
                             
                             # read data in input
                             '''
@@ -1133,20 +1136,138 @@ class common:
                                     jsch_url = urljoin(domain, jsch_url[0])
                                     printDBG(jsch_url)
                                     
-                                    sts, jschCode = self.getPage(jsch_url, params)
+                                    sts, jsCode = self.getPage(jsch_url, params)
 
                                     
-                                    printDBG("-----------  jschCode  -----------")
+                                    printDBG("-------------  jsCode  -----------")
                                     printDBG("----------------------------------")
-                                    printDBG(jschCode)
+                                    printDBG(jsCode)
                                     printDBG("----------------------------------")
 
-                                    js_params = [{'path' : GetJSScriptFile('cf_max.byte')}]
-                                    code = "var window = {}; \n\n" + data_input + "\n\n" + jschCode
+                                    codeType = 0
+
+                                    # first execution of duktape to decode strings
+                                    if "e=c[a],e}," in jsCode:
+                                        jsCode1 = jsCode[:(jsCode.find("e=c[a],e},") + 9)] + "; for(var i=0; i<c.length; i++){ console.log(d(i));}}();"
+                                        codeType = 1
+
+                                    elif "e=a[c],e}," in jsCode:
+                                        jsCode1 = jsCode[:jsCode.find("e=a[c],e}") + 9] + "; for(var i=0; i<a.length; i++){ console.log(b(i));}}();"
+                                        codeType = 2
+
+                                    printDBG("----- 1st duktape - only strings-----")
+                                    printDBG(jsCode1)
+                                    printDBG("----------------------------------")
+                                    
+                                    js_params = [{'code': jsCode1}]
+                                    ret = js_execute_ext( js_params )
+
+                                    if ret['data']:
+                                        words = []
+                                        for w in ret['data'].split('\n'):
+                                            words.append(w)
+                                    
+                                        # replace strings in jsCode
+                                        for i in range(len(words)):
+                                            if codeType == 1:
+                                                jsCode = re.sub("d\('" + hex(i) +"'\)" , "'" + words[i] +"'", jsCode)
+                                            elif codeType == 2:
+                                                jsCode = re.sub("b\('" + hex(i) +"'\)" , "'" + words[i] +"'", jsCode)
+
+                                    # first mod
+                                    if codeType == 1:
+                                        jsCode = re.sub( "([fg])=function\(h,i\)\{.*?\},([fg])\(function\(h", "PIPPO1=function(h,i){ },PIPPO1(function(h", jsCode)
+                                    elif codeType == 2:
+                                        jsCode = re.sub( "([defgh])=function\s[defgh]\(i\)\{.*?\},([defgh])\(function\(i", "PIPPO1 = function(i){window['_cf_chl_enter']()}, PIPPO1(function(i", jsCode)
+
+                                    js_params = [{'path' : GetJSScriptFile('cf_new_max.byte')}]
+                                    
+                                    finale = '''
+                                    LZString = window['LZString'];
+                                    window['JSON'] = JSON;
+                                    _ = window['_'];
+
+                                    window._cf_chl_enter();
+                                    '''
+
+                                    # second execution of duktape
+                                    code = data_input + '\n\n' + jsCode + '\n' +finale
+                                    
+                                    printDBG("------ 1st duktape - all code ----")
+                                    printDBG("----------------------------------")
+                                    printDBG(code)
+                                    printDBG("----------------------------------")
+                                    
+                                    
                                     js_params.append({'code': code})
                                     ret = js_execute_ext( js_params )
-                                    printDBG(ret)
+                                    # we hope it contains post data
+                                    
+                                    try:
+                                        jsonPostData = json_loads(ret['data'])
+                                        postUrl = self.getFullUrl(jsonPostData["url"], baseUrl)
+                                        header = jsonPostData["header"]
 
+                                        params2 = dict(params)
+                                        params2['header']= dict(params['header'])
+                                        params2['header'].update(jsonPostData["header"])
+                                        params2['header'].update({'Accept':'*/*'})
+                                        #header['Accept'] = '*/*' 
+                                        #header['Accept-Encoding'] = 'gzip' 
+
+                                        postData = dict(parse_qsl(jsonPostData["post_data"].replace(" ","+")))
+                                        
+                                        cookie = jsonPostData['cookie']
+                                        c = cookie.split("=")
+                                        printDBG("new cookie: " + str(c))
+                                        
+                                        sts, responseText = self.getPage(postUrl, params2, post_data=postData)
+                                        
+                                        if sts:
+                                            string2 = responseText.encode('unicode-escape')
+
+                                            # insert responseTextin code and re-execute duktape
+                                            code = "window['XMLHttpRequest']['responseText']=\"" + string2 + "\";\n\n" + code   
+                                            if codeType == 2:
+                                                functionLetter= re.findall("([defgh]?)=function\([ij]\)\{", code)
+                                                if functionLetter:
+                                                    code = code.replace("}()\n", "\nstr = " + functionLetter[0] +"(window['XMLHttpRequest']['responseText']);\nconsole.log(str);\n}()\n")
+                                                else:
+                                                    printDBG("function name letter not found!")
+                                                    
+                                            printDBG("----- code 2nd duktape ---with responseText from POST---")
+                                            printDBG(code)
+                                            printDBG("----------------------------------------------------")
+
+                                            js_params = [{'path' : GetJSScriptFile('cf_new_max.byte')}]
+                                            js_params.append({'code': code})
+                                            ret = js_execute_ext( js_params )
+
+                                            if ret['data']:
+                                                jsCode2 = ret['data'].encode('unicode-escape')
+                                                printDBG("----------- jsCode2 -----------")
+                                                printDBG(jsCode2)
+                                                printDBG("-------------------------------")
+
+                                                # third execution of duktape
+                                                
+                                                code = data_input + '\n\n' + jsCode + '\n'+ jsCode2 + '\n' 
+                                                printDBG("--------  code 3rd duktape - with new code from POST ---")
+                                                printDBG(code)
+                                                printDBG("----------------------------------------")
+
+                                                js_params = [{'path' : GetJSScriptFile('cf_new_max.byte')}]
+                                                js_params.append({'code': code})
+                                                ret = js_execute_ext( js_params )
+                                    
+                                                printDBG(ret['data'])
+                                                
+                                    except:
+                                        printExc()
+                                        printDBG(ret['data'])
+                            
+                            # retry to load challenge
+                            sts, data = self.getPage(url, params, post_data)
                                     
                         else:
                             
