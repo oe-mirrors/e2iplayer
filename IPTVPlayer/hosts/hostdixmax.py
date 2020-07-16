@@ -92,6 +92,12 @@ class DixMax(CBaseHostClass):
             addParams = dict(self.defaultParams)
         return self.cm.getPage(baseUrl, addParams, post_data)
 
+    def getPageCF(self, baseUrl, params = {}, post_data = None):
+        if params == {}: 
+            params = self.defaultParams
+        params['cloudflare_params'] = {'domain':'dixmax.com', 'cookie_file':self.COOKIE_FILE}
+        return self.cm.getPageCFProtection(baseUrl, params, post_data)
+
     def setMainUrl(self, url):
         CBaseHostClass.setMainUrl(self, url)
         SuggestionsProvider.MAIN_URL = self.getMainUrl()
@@ -100,16 +106,6 @@ class DixMax(CBaseHostClass):
         if url.startswith('/'): 
             return 'https://image.tmdb.org/t/p/w185' + url
         return CBaseHostClass.getFullIconUrl(self, url, baseUrl)
-
-    def getDBApiKey(self, data=None):
-        printDBG("DixMax.listMain")
-        if self.dbApiKey: return self.dbApiKey
-        sts, data = self.getPage(self.getFullUrl('/index.php'))
-        if not sts: 
-            return
-        
-        data = ph.find(data, 'filterCat(', ')', 0)[1].split(',')
-        self.dbApiKey = data[-1].strip()[1:-1]
 
     def tryToLogin(self):
         printDBG("DixMax.tryToLogin")
@@ -174,10 +170,9 @@ class DixMax(CBaseHostClass):
                 self.addDir(params)
 
             self.fillCacheFilters(cItem, data)
-            #self.getDBApiKey(data)
 
             MAIN_CAT_TAB = [
-                            {'category':'list_filters',   'title': _("Filters") ,     'url':self.getFullUrl('/api/private/get/popular')},
+                            {'category':'list_filters',   'title': _("Filters") ,     'url': self.MAIN_URL},
                             {'category':'search',         'title': _('Search'),       'search_item':True       },
                             {'category':'search_history', 'title': _('Search history'),                        }]
             self.listsTab(MAIN_CAT_TAB, cItem)
@@ -187,31 +182,44 @@ class DixMax(CBaseHostClass):
         self.cacheFilters = {}
         self.cacheFiltersKeys = []
 
-        keys = ('f_type', 'filter-genre')
+        todosUrl = self.cm.ph.getSearchGroups(data, "<script src=\"([^\"]+todos[^\"]+?)\"")[0]
+        if todosUrl:
+            todosUrl = "https://dixmax.com/v2/" + todosUrl
 
+        sts, todosData = self.getPage(todosUrl)
+        
+        if sts:
+            # type
+            self.cacheFiltersKeys.append('f_type')
+            self.cacheFilters['f_type'] = [
+                            {'title': _('Movies'), 'f_type': "movies", 'f_type_t': _('Movies')},
+                            {'title': _('Series'), 'f_type': "series", 'f_type_t': _('Series')},
+                            ]
+            
+            # genres
+            genre_code = re.findall("function _getGenreCode\(genre\)\{(.*?)\}", todosData)
+            if genre_code:
+                genre_code = genre_code[0]
+                
+                genreCodes = re.findall("case '([^']+?)':code=([0-9]+?);",genre_code)
+                
+                self.cacheFilters['f_genre'] = []
+                for g in genreCodes:
+                    self.cacheFilters['f_genre'].append({'title': g[0], 'f_genre': g[1], 'f_genre_t': g[0]})
 
-        '''
-        keys = ('f_type', 'f_genre') #('genres[]', 'fichaType[]')
-        for section in tmp:
-            key = keys[len( self.cacheFiltersKeys)]
-            self.cacheFilters[key] = []
-            section = ph.findall(section, ('<option', '>'), '</option>', ph.START_S)
-            for idx in range(1, len(section), 2):
-                title = self.cleanHtmlStr(section[idx])
-                value = ph.getattr(section[idx-1], 'value')
-                self.cacheFilters[key].append({'title':title, key:value, key + '_t':title})
-            if len(self.cacheFilters[key]):
-                self.cacheFilters[key].insert(0, {'title':_('--All--')})
-                self.cacheFiltersKeys.append(key)
-
-        key = 'f_year'
-        self.cacheFilters[key] = [{'title':_('--All--')}]
-        currYear = datetime.now().year
-        for year in range(currYear, currYear-20, -1):
-            self.cacheFilters[key].append({'title':'%d-%d' % (year-1, year), key:year})
-        self.cacheFiltersKeys.append(key)
-        '''
-        printDBG(self.cacheFilters)
+                if self.cacheFilters['f_genre']:
+                    self.cacheFilters['f_genre'].insert(0, {'title':_('--All--')})
+                    self.cacheFiltersKeys.append('f_genre')
+            
+            # year
+            key = 'f_year'
+            self.cacheFilters['f_year'] = [{'title':_('--All--')}]
+            currYear = datetime.now().year
+            for year in range(currYear, currYear-20, -1):
+                self.cacheFilters['f_year'].append({'title':'%d-%d' % (year-1, year), 'f_year':year})
+            self.cacheFiltersKeys.append('f_year')
+        
+        printDBG(json_dumps(self.cacheFilters))
 
     def listFilters(self, cItem, nextCategory):
         printDBG("DixMax.listFilters")
@@ -228,57 +236,9 @@ class DixMax(CBaseHostClass):
             cItem['category'] = nextCategory
         self.listsTab(self.cacheFilters.get(filter, []), cItem)
 
-    def listPopular(self, cItem):
-        printDBG("DixMax.listPopular")
-        sts, data = self.getPage(cItem['url'])
-        if not sts: return
-        self.setMainUrl(self.cm.meta['url'])
-
-        try:
-            data = json_loads(data)
-            for item in (('series','Series mas populares'), ('movie','Peliculas mas populares'), ('latest','Ultimas fichas agregadas')):
-                subItems = self._listItems(cItem, 'explore_item', data['result'][item[0]])
-                if subItems:
-                    self.addDir(MergeDicts(cItem, {'title':item[1], 'category':'sub_items', 'sub_items':subItems}))
-        except Exception:
-            printExc()
-
     def listSubItems(self, cItem):
         printDBG("DixMax.listSubItems")
         self.currList = cItem['sub_items']
-
-    def _listItems(self, cItem, nextCategory, data):
-        printDBG("DixMax._listItems")
-        retList = []
-        
-        for item in data:
-            item = item['info']
-
-            icon = self.getFullIconUrl(item['cover'])
-
-            title = self.cleanHtmlStr( item['title'] )
-            title2 = self.cleanHtmlStr( item['originalTitle'] )
-            if title2 and title2 != title: title  += ' (%s)' % title2
-
-            type = item['type']
-            desc = [type]
-            desc.append(item['year'])
-
-            duration = _('%s minutes') % item['duration']
-            desc.append(duration)
-
-            rating = '%s (%s)' % (item['rating'], item['votes']) if int(item['votes']) else ''
-            if rating: desc.append(rating)
-            desc.append(item['country'])
-            desc.append(item['genres'])
-            desc.append(item['popularity'])
-            desc = ' | '.join(desc) + '[/br]' + item['sinopsis']
-
-            article = {'f_type':type, 'f_isserie':int(item['isSerie']), 'f_year':item['year'], 'f_duration':duration, 'f_rating':rating, 'f_country':item['country'], 'f_genres':item['genres'], 'f_sinopsis':item['sinopsis'], 'f_popularity':item['popularity']}
-            if article['f_isserie']:  article.update({'f_seasons':item['seasons'], 'f_episodes':item['episodes']})
-            params = MergeDicts(cItem, {'good_for_fav':True, 'category':nextCategory, 'title':title, 'icon':icon, 'desc':desc, 'f_id':item['id']}, article) 
-            retList.append( params )
-        return retList
 
     def listItems(self, cItem, nextCategory):
         printDBG("DixMax.listItems")
@@ -286,19 +246,27 @@ class DixMax(CBaseHostClass):
         url = cItem.get('url','')
         if not url:
             return
-            
-        page = cItem.get('page', 1)
         
+        if 'f_type' in cItem:
+            if cItem['f_type'] == 'movies' and 'movie' not in url:
+                url = self.MAIN_URL  + "v2/movies"
+            
+            if cItem['f_type'] == 'series' and 'serie' not in url:
+                url = self.MAIN_URL  + "v2/series"
+        
+        page = cItem.get('page', 1)
         if not '/page/' in url:
             url = url + "/page/%s" % page
-                
-        #url = 'api/private/get/explore'
-        #url += '?limit=%s&order=3&start=%s' % (ITEMS_NUM, page*ITEMS_NUM)
 
-        #if 'f_genre' in cItem: url += '&genres[]=%s' % cItem['f_genre_t']
-        #if 'f_type' in cItem: url += '&fichaType[]=%s' % cItem['f_type']
-        #if 'f_year' in cItem: url += '&fromYear=%s&toYear=%s' % (cItem['f_year']-1, cItem['f_year'])
+        filters = []        
+        if 'f_genre' in cItem: 
+            filters.append('genre=%s' % cItem['f_genre'])
+        if 'f_year' in cItem: 
+            filters.append('year_from=%s&year_to=%s' % (cItem['f_year']-1, cItem['f_year']))
 
+        if filters:
+            url = url + "?" + "&".join(filters) 
+        
         sts, data = self.getPage(self.getFullUrl(url))
         if not sts: 
             return
@@ -342,9 +310,9 @@ class DixMax(CBaseHostClass):
         sts, data = self.getPage(url)
         
         if sts:
-            printDBG("-----------------")
-            printDBG(data)
-            printDBG("-----------------")
+            #printDBG("-----------------")
+            #printDBG(data)
+            #printDBG("-----------------")
             
             # info
             desc = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(data, ("<div",">", "card__description"), "</div>")[1])
@@ -407,24 +375,16 @@ class DixMax(CBaseHostClass):
                     self.addVideo(params)
             
     def listSearchResult(self, cItem, searchPattern, searchType):
-        self.tryTologin()
 
-        url = self.getFullUrl('/api/private/get/search?query=%s&limit=100&f=1' % urllib.quote(searchPattern))
-        sts, data = self.getPage(url)
-        if not sts: return
-        self.setMainUrl(self.cm.meta['url'])
-
-        try:
-            data = json_loads(data)
-            for key in data['result']:
-                subItems = self._listItems(cItem, 'explore_item', data['result'][key])
-                if subItems:
-                    self.addDir(MergeDicts(cItem, {'title':key.title(), 'category':'sub_items', 'sub_items':subItems}))
-        except Exception:
-            printExc()
-
-        if len(self.currList) == 1:
-            self.currList = self.currList[0]['sub_items']
+        url = self.MAIN_URL + "?view=search&q=%s" % urllib.quote(searchPattern)
+        
+        sts, data = self.getPageCF(url)
+        
+        if not sts:
+            return
+        
+        # add code when cloudflare protection will be bypassed
+        
 
     def _getLinks(self, key, cItem):
         printDBG("DixMax._getLinks [%s]" % cItem['f_id'])
@@ -485,26 +445,6 @@ class DixMax(CBaseHostClass):
 
         return []
 
-    def getArticleContent(self, cItem, data=None):
-        printDBG("DixMax.getArticleContent [%s]" % cItem)
-        retTab = []
-
-        title = cItem['title']
-        icon  = cItem.get('icon', self.DEFAULT_ICON_URL)
-        desc  = cItem.get('f_sinopsis', '')
-
-        otherInfo = {}
-
-        for key in ('f_season', 'f_episode', 'f_seasons','f_episodes', 'f_year','f_duration', 'f_rating', 'f_genres', 'f_country', 'f_popularity'):
-            if key in cItem:
-                otherInfo[key[2:]] = cItem[key]
-
-        if title == '': title = cItem['title']
-        if icon == '':  icon  = cItem.get('icon', self.DEFAULT_ICON_URL)
-        if desc == '':  desc  = cItem.get('desc', '')
-        
-        return [{'title':self.cleanHtmlStr( title ), 'text': self.cleanHtmlStr( desc ), 'images':[{'title':'', 'url':self.getFullUrl(icon)}], 'other_info':otherInfo}]
-
     def handleService(self, index, refresh = 0, searchPattern = '', searchType = ''):
         printDBG('handleService start')
         
@@ -523,9 +463,6 @@ class DixMax(CBaseHostClass):
 
         elif category == 'list_filters':
             self.listFilters(self.currItem, 'list_items')
-
-        elif category == 'list_popular':
-            self.listPopular(self.currItem)
 
         elif category == 'sub_items':
             self.listSubItems(self.currItem)
