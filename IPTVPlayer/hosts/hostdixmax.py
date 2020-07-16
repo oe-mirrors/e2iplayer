@@ -2,13 +2,14 @@
 ###################################################
 # LOCAL import
 ###################################################
-from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _
+from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _, GetIPTVNotify
 from Plugins.Extensions.IPTVPlayer.components.ihost import CHostBase, CBaseHostClass
 from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, MergeDicts, rm, GetCookieDir, ReadTextFile, WriteTextFile
 from Plugins.Extensions.IPTVPlayer.tools.iptvtypes import strwithmeta
 from Plugins.Extensions.IPTVPlayer.libs.pCommon import common
 from Plugins.Extensions.IPTVPlayer.libs import ph
-from Plugins.Extensions.IPTVPlayer.libs.e2ijson import loads as json_loads
+from Plugins.Extensions.IPTVPlayer.libs.e2ijson import loads as json_loads, dumps as json_dumps
+from Plugins.Extensions.IPTVPlayer.libs.demjson import decode as demjson_loads
 ###################################################
 
 ###################################################
@@ -17,6 +18,7 @@ from Plugins.Extensions.IPTVPlayer.libs.e2ijson import loads as json_loads
 from binascii import hexlify
 from hashlib import md5
 import urllib
+import re
 from datetime import datetime
 from Components.config import config, ConfigText, getConfigListEntry
 ###################################################
@@ -74,8 +76,9 @@ class DixMax(CBaseHostClass):
         self.defaultParams = {'header':self.HTTP_HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
 
         self.MAIN_URL    = 'https://dixmax.com/'
-        self.DEFAULT_ICON_URL = 'https://tuelectronica.es/wp-content/uploads/2018/09/dixmax-portada.jpg'
-
+        self.SESSION_URL = self.MAIN_URL + "session.php?action=1"
+        self.GETLINKS_URL = self.MAIN_URL + "api/private/get_links.php"
+        self.DEFAULT_ICON_URL = "https://dixmax.com/img/logor.png"
         self.cacheFilters  = {}
         self.cacheFiltersKeys = []
         self.cacheLinks = {}
@@ -102,36 +105,93 @@ class DixMax(CBaseHostClass):
         printDBG("DixMax.listMain")
         if self.dbApiKey: return self.dbApiKey
         sts, data = self.getPage(self.getFullUrl('/index.php'))
-        if not sts: return
+        if not sts: 
+            return
+        
         data = ph.find(data, 'filterCat(', ')', 0)[1].split(',')
         self.dbApiKey = data[-1].strip()[1:-1]
 
+    def tryToLogin(self):
+        printDBG("DixMax.tryToLogin")
+        
+        if not (config.plugins.iptvplayer.dixmax_login.value and config.plugins.iptvplayer.dixmax_password.value):
+            msg = _('The host %s requires subscription.\nPlease fill your login and password in the host configuration - available under blue button.') % self.getMainUrl()
+            GetIPTVNotify().push(msg, 'info', 10)
+            return False
+
+        params = dict(self.defaultParams)
+        params['header'].update({'Content-Type':'application/x-www-form-urlencoded'})
+        
+        postData = {'username': config.plugins.iptvplayer.dixmax_login.value.strip() , 'password': config.plugins.iptvplayer.dixmax_password.value.strip(), 'remember':'on' }
+        sts, data = self.getPage(self.SESSION_URL, params, post_data = postData)
+        
+        if not sts:
+            return False
+
+        printDBG("---------------")
+        printDBG(data)
+        printDBG("---------------")
+        
+        if 'Error' in data:
+            msg = data
+            GetIPTVNotify().push(msg, 'info', 10)
+            return False
+        else:
+            self.loggedIn = True
+            return True
+    
     def listMain(self, cItem):
         printDBG("DixMax.listMain")
-        sts, data = self.getPage(self.getFullUrl('/index.php'))
-        if not sts: return
-        self.setMainUrl(self.cm.meta['url'])
+        
+        sts, data = self.getPage(self.MAIN_URL)
+        if not sts: 
+            return
+        
+        # check if login is required or it is a normal
+        url = self.cm.meta['url']
 
-        tmp = ph.findall(data, ('<li', '>', 'tooltip'), '</li>', limits=2)
-        title1 = self.cleanHtmlStr(tmp[0]) if len(tmp) > 0 else _("Popular")
-        title2 = self.cleanHtmlStr(tmp[1]) if len(tmp) > 1 else _("Browse")
+        if 'login' in url:
+            # try to login
+            success = self.tryToLogin()
+            #reload page
+            sts, data = self.getPage(self.MAIN_URL)
+            url = self.setMainUrl(self.cm.meta['url'])
+        else:
+            self.loggedIn = True
 
-        self.fillCacheFilters(cItem, data)
-        self.getDBApiKey(data)
+        if self.loggedIn: 
+            
+            # show menu of page     
+            tmp = ph.findall(data, "<li class=\"header__nav-item\">", '</li>')
+            
+            for t in tmp:
+                url = self.cm.ph.getSearchGroups(t, "href=['\"]([^\"^']+?)['\"]")[0]
+                if url in ["series", "movies", "listas"]:
+                    url = "https://dixmax.com/v2/" + url
+                title = self.cleanHtmlStr(t)
+                params = {'title': title, 'category':'list_items', 'url': url, 'icon': self.DEFAULT_ICON_URL}
+                printDBG(str(params))
+                self.addDir(params)
 
-        MAIN_CAT_TAB = [{'category':'list_popular',   'title': title1,        'url':self.getFullUrl('/api/private/get/popular')},
-                        {'category':'list_filters',   'title': title2,        'url':self.getFullUrl('/api/private/get/popular')},
-                        {'category':'search',         'title': _('Search'),       'search_item':True       },
-                        {'category':'search_history', 'title': _('Search history'),                        }]
-        self.listsTab(MAIN_CAT_TAB, cItem)
+            self.fillCacheFilters(cItem, data)
+            #self.getDBApiKey(data)
+
+            MAIN_CAT_TAB = [
+                            {'category':'list_filters',   'title': _("Filters") ,     'url':self.getFullUrl('/api/private/get/popular')},
+                            {'category':'search',         'title': _('Search'),       'search_item':True       },
+                            {'category':'search_history', 'title': _('Search history'),                        }]
+            self.listsTab(MAIN_CAT_TAB, cItem)
 
     def fillCacheFilters(self, cItem, data):
         printDBG("DixMax.fillCacheFilters")
         self.cacheFilters = {}
         self.cacheFiltersKeys = []
 
+        keys = ('f_type', 'filter-genre')
+
+
+        '''
         keys = ('f_type', 'f_genre') #('genres[]', 'fichaType[]')
-        tmp = ph.findall(data, ('<select', '>', 'b-multiple'), '</select>', limits=2)
         for section in tmp:
             key = keys[len( self.cacheFiltersKeys)]
             self.cacheFilters[key] = []
@@ -150,7 +210,7 @@ class DixMax(CBaseHostClass):
         for year in range(currYear, currYear-20, -1):
             self.cacheFilters[key].append({'title':'%d-%d' % (year-1, year), key:year})
         self.cacheFiltersKeys.append(key)
-
+        '''
         printDBG(self.cacheFilters)
 
     def listFilters(self, cItem, nextCategory):
@@ -190,6 +250,7 @@ class DixMax(CBaseHostClass):
     def _listItems(self, cItem, nextCategory, data):
         printDBG("DixMax._listItems")
         retList = []
+        
         for item in data:
             item = item['info']
 
@@ -221,98 +282,130 @@ class DixMax(CBaseHostClass):
 
     def listItems(self, cItem, nextCategory):
         printDBG("DixMax.listItems")
-        ITEMS_NUM = 40
-        page = cItem.get('page', 0)
-        url = 'api/private/get/explore'
-        url += '?limit=%s&order=3&start=%s' % (ITEMS_NUM, page*ITEMS_NUM)
+        
+        url = cItem.get('url','')
+        if not url:
+            return
+            
+        page = cItem.get('page', 1)
+        
+        if not '/page/' in url:
+            url = url + "/page/%s" % page
+                
+        #url = 'api/private/get/explore'
+        #url += '?limit=%s&order=3&start=%s' % (ITEMS_NUM, page*ITEMS_NUM)
 
-        if 'f_genre' in cItem: url += '&genres[]=%s' % cItem['f_genre_t']
-        if 'f_type' in cItem: url += '&fichaType[]=%s' % cItem['f_type']
-        if 'f_year' in cItem: url += '&fromYear=%s&toYear=%s' % (cItem['f_year']-1, cItem['f_year'])
+        #if 'f_genre' in cItem: url += '&genres[]=%s' % cItem['f_genre_t']
+        #if 'f_type' in cItem: url += '&fichaType[]=%s' % cItem['f_type']
+        #if 'f_year' in cItem: url += '&fromYear=%s&toYear=%s' % (cItem['f_year']-1, cItem['f_year'])
 
         sts, data = self.getPage(self.getFullUrl(url))
-        if not sts: return
+        if not sts: 
+            return
 
-        try:
-            data = json_loads(data)
-            for key in data['result']:
-                subItems = self._listItems(cItem, nextCategory, data['result'][key])
-                if subItems:
-                    self.addDir(MergeDicts(cItem, {'title':key.title(), 'category':'sub_items', 'sub_items':subItems}))
-        except Exception:
-            printExc()
+        items = data.split("<div class=\"card\">")
+        if items:
+            del(items[0])
 
-        if len(self.currList) == 1:
-            self.currList = self.currList[0]['sub_items']
-
-        if ITEMS_NUM == len(self.currList):
-            self.addDir(MergeDicts(cItem, {'title':_('Next page'), 'page':page + 1}))
-
+        #items
+        for item in items:
+            h3 = self.cm.ph.getDataBeetwenMarkers(item, ("<h3",">"), "</h3>")[1]
+            url = self.cm.ph.getSearchGroups(h3, "href=\"([^\"^']+?)\"")[0]
+            if url:
+                url = self.getFullUrl(url)
+                title = self.cleanHtmlStr(h3)
+                icon = self.cm.ph.getSearchGroups(item, "data-src-lazy=\"([^\"^']+?)\"")[0]
+                params = dict(cItem)
+                params.update({'title':title, 'url': url, 'icon': icon, 'category': nextCategory})
+                if '/listas' in url:
+                    params.update({'category':'list_items'})
+                printDBG(str(params))
+                self.addDir(params)
+        
+        #next page
+        next_page = self.cm.ph.getSearchGroups(data, "href=\"([^\"^']+?)\">%s</a>" % (page+1))[0]
+        if not next_page:
+            next_page = self.cm.ph.getSearchGroups(data, "href=\"([^\"^']+?)\">\s?<i class=\"icon ion-ios-arrow-forward\"></i>\s?</a>" )[0]
+        if next_page:
+            params = dict(cItem)
+            params.update({'title': _('Next page'), 'page': page + 1})
+            self.addMore(params)
+        
     def exploreItem(self, cItem, nextCategory):
         printDBG("DixMax.exploreItem")
         self.cacheLinks = {}
-        apiKey = self.getDBApiKey()
 
-        type = 'tv' if cItem['f_isserie'] else 'movie'
-        url = 'https://api.themoviedb.org/3/%s/%s/videos?api_key=%s' % (type, cItem['f_id'], apiKey)
-
+        url = cItem.get('url','')
+        if not url:
+            return
+            
         sts, data = self.getPage(url)
-        if not sts: return
-        try:
-            data = json_loads(data)
-            for item in data['results']:
-                if item['site'].lower() == 'youtube':
-                    title = '[%s][%s] %s ' % (item['iso_3166_1'], item['size'], item['name'])
-                    url = 'https://www.youtube.com/watch?v=%s' % item['key']
-                    self.addVideo(MergeDicts(cItem, {'good_for_fav': True, 'title':title, 'url':url}))
-        except Exception:
-            printExc()
+        
+        if sts:
+            printDBG("-----------------")
+            printDBG(data)
+            printDBG("-----------------")
+            
+            # info
+            desc = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(data, ("<div",">", "card__description"), "</div>")[1])
+            
+            # trailer
+            trailerData = self.cm.ph.getSearchGroups(data, "YT\.Player\('ytplayer',\s?\{([^\}]+?)\\}")[0]
+            if trailerData:
+                try:
+                    trailerJson = demjson_loads("{" + trailerData + "}")
+                    printDBG(json_dumps(trailerJson))
+                    videoId = trailerJson.get("videoId", "")
+                    if videoId:
+                        youtubeUrl = "https://www.youtube.com/watch?v=%s" % videoId
+                        params = {'title' : cItem['title'] + " - trailer", 'url': youtubeUrl, 'icon': cItem['icon'], 'desc': desc}
+                        printDBG(str(params))
+                        self.addVideo(params)
+                    
+                except:
+                    printExc()
 
-        if type == 'tv':
-            url = self.getFullUrl('/serie/%s' % cItem['f_id'])
-            sts, data = self.getPage(url)
-            if not sts: return
-            try:
-                data = ph.find(data, 'gotoFuchaCrazy', '</script>', flags=0)[1]
-                data = data[data.find('{'):data.rfind('}')+1]
-                data = json_loads(data)
-                sTitle = data['result']['info']['title']
-                sIcon = self.getFullIconUrl(data['result']['info']['cover'])
+            f_id = url.split("/")[-1]
+            if f_id:
+                if 'serie' in url.split("/"):
+                    #it is a series
+                    seasons = self.cm.ph.getAllItemsBeetwenMarkers(data, ("<div", ">",  "accordion__card"), "</table>")
+                    for s in seasons:
+                        sTitle = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(s, ("<span",">"), "</span>")[1])
+                        tmp = re.findall("setMarkedSeasonModal\(([0-9]+?)\s?,\s?([0-9]+?)\s?,\s?([0-9]+?)\);", s)
+                        if tmp:
+                            sNum = tmp[0][0]
+                            numEpisodes = tmp[0][2]
+                            sTitle = sTitle + " [ %s episodios]" % numEpisodes 
+                        else:
+                            sNum = 1
+                        #sNum = str(seasonData['season'])
+                        #sEpisodes = ''
+                        subItems = []
+                        episodes = self.cm.ph.getAllItemsBeetwenMarkers(s, ("<tr",">","row"), "</tr")
 
-                for seasonData in data['result']['episodes']:
-                    sNum = str(seasonData['season'])
-                    sEpisodes = ''
-                    subItems = []
-                    for item in seasonData['episodesList']:
-                        eNum = str(item['episode'])
-                        sEpisodes = str(item['episodes'])
+                        for ep in episodes:
+                            epTitle = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(ep, ("<td",">","col-4"), "</td>")[1])
+                            epNum = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(ep, ("<th",">","col-1"), "</th>")[1])
+                            epNum = epNum.strip()
+                            if epTitle and epNum:
+                                epTitle = 's%se%s %s' % (sNum.zfill(2), epNum.zfill(2), epTitle)
+                            params = {'f_type': 'tv', 'f_isepisode': 1, 'f_id': f_id, 'f_season': sNum, 'f_episode': epNum}
+                            params = MergeDicts(cItem, {'good_for_fav':True, 'type': 'video', 'title': epTitle}, params) 
+                            key =  '%sx%sx%s' % ('f_id', params['f_episode'].zfill(2), params['f_season'].zfill(2))
+                            
+                            printDBG(str(params))
+                            subItems.append( params )
 
-                        icon = self.getFullIconUrl(item['cover'])
-                        if not icon: icon = sIcon
-
-                        title = '%s: s%se%s %s' % (sTitle, sNum.zfill(2), eNum.zfill(2), item['name'])
-                        type = _('Episode')
-                        desc = [type]
-                        desc.append(item['dateText'])
-                        desc = ' | '.join(desc) + '[/br]' + item['sinopsis']
-
-                        params = {'f_type':type, 'f_isepisode':1, 'f_date':item['dateText'], 'f_sinopsis':item['sinopsis'], 'f_season':sNum, 'f_episode':eNum}
-                        params = MergeDicts(cItem, {'good_for_fav':True, 'type':'video', 'title':title, 'icon':icon, 'desc':desc, 'f_eid':item['id']}, params) 
-                        params.pop('f_seasons')
-                        params.pop('f_episodes')
-
-                        key =  '%sx%sx%s' % (cItem['f_id'], params['f_episode'].zfill(2), params['f_season'].zfill(2))
-                        subItems.append( params )
-
-                    if len(subItems):
-                        params = {'f_type':_('Season'), 'f_isseason':1, 'f_season':sNum}
-                        params = MergeDicts(cItem, {'good_for_fav':False, 'category':nextCategory, 'sub_items':subItems, 'title':_('Season %s (%s)') % (sNum.zfill(2), sEpisodes), 'icon':sIcon}, params) 
-                        self.addDir( params )
-            except Exception:
-                printExc()
-        else:
-            self.addVideo( MergeDicts(cItem) )
-
+                        if len(subItems):
+                            params = {'f_type':_('Season'), 'f_isseason':1, 'title': sTitle,  'f_season':sNum, 'f_id' : f_id , 'category':nextCategory, 'sub_items':subItems}
+                            self.addDir(MergeDicts(dict(cItem), params))
+                        
+                else:
+                    params = MergeDicts(dict(cItem), {'desc': desc, 'f_id' : f_id})
+                    printDBG(str(params))
+                    self.addVideo(params)
+            
     def listSearchResult(self, cItem, searchPattern, searchType):
         self.tryTologin()
 
@@ -344,9 +437,9 @@ class DixMax(CBaseHostClass):
         else:
             post_data.update({'i':'false'})
 
-        url = self.getFullUrl('/get_links.php') #get_all_links
-        sts, data = self.getPage(url, post_data=post_data)
-        if not sts: return
+        sts, data = self.getPage(self.GETLINKS_URL, post_data=post_data)
+        if not sts: 
+            return
         printDBG(data)
 
         try:
@@ -361,8 +454,6 @@ class DixMax(CBaseHostClass):
             printExc()
 
     def getLinksForVideo(self, cItem):
-        self.tryTologin()
-
         url = cItem.get('url', '')
         if 0 != self.up.checkHostSupport(url): 
             return self.up.getVideoLinkExt(url)
@@ -371,7 +462,7 @@ class DixMax(CBaseHostClass):
             key =  '%sx%sx%s' % (cItem['f_id'], cItem['f_episode'].zfill(2), cItem['f_season'].zfill(2))
         else:
             key = cItem['f_id']
-
+        
         linksTab = self.cacheLinks.get(key, [])
         if not linksTab:
             self._getLinks(key, cItem)
@@ -413,70 +504,6 @@ class DixMax(CBaseHostClass):
         if desc == '':  desc  = cItem.get('desc', '')
         
         return [{'title':self.cleanHtmlStr( title ), 'text': self.cleanHtmlStr( desc ), 'images':[{'title':'', 'url':self.getFullUrl(icon)}], 'other_info':otherInfo}]
-        
-    def tryTologin(self):
-        printDBG('tryTologin start')
-        
-        if None == self.loggedIn or self.login != config.plugins.iptvplayer.dixmax_login.value or\
-            self.password != config.plugins.iptvplayer.dixmax_password.value:
-
-            loginCookie = GetCookieDir('dixmax.com.login')
-            self.login = config.plugins.iptvplayer.dixmax_login.value
-            self.password = config.plugins.iptvplayer.dixmax_password.value
-
-            sts, data = self.getPage(self.getMainUrl())
-            if sts: self.setMainUrl(self.cm.meta['url'])
-
-            freshSession = False
-            if sts and 'logout.php' in data:
-                printDBG("Check hash")
-                hash = hexlify(md5('%s@***@%s' % (self.login, self.password)).digest())
-                prevHash = ReadTextFile(loginCookie)[1].strip()
-
-                printDBG("$hash[%s] $prevHash[%s]" % (hash, prevHash))
-                if hash == prevHash:
-                    self.loggedIn = True
-                    return
-                else:
-                    freshSession = True
-
-            rm(loginCookie)
-            rm(self.COOKIE_FILE)
-            if freshSession:
-                sts, data = self.getPage(self.getMainUrl(), MergeDicts(self.defaultParams, {'use_new_session':True}))
-
-            self.loggedIn = False
-            if '' == self.login.strip() or '' == self.password.strip():
-                msg = _('The host %s requires registration. \nPlease fill your login and password in the host configuration. Available under blue button.' % self.getMainUrl())
-                self.sessionEx.waitForFinishOpen(MessageBox, msg, type=MessageBox.TYPE_INFO, timeout = 10)
-                return False
-
-            msgTab = [_('Login failed.')]
-            if sts:
-                actionUrl = self.getFullUrl('/session.php?action=1')
-                post_data = {'username':self.login, 'password':self.password, 'remember':'1'}
-
-                httpParams = dict(self.defaultParams)
-                httpParams['header'] = MergeDicts(httpParams['header'], {'Referer':self.cm.meta['url'], 'Accept':'*/*'})
-
-                sts, data = self.getPage(actionUrl, httpParams, post_data)
-                printDBG(data)
-                if sts: msgTab.append(self.cleanHtmlStr(data))
-                sts, data = self.getPage(self.getMainUrl())
-
-            if sts and 'logout.php' in data:
-                printDBG('tryTologin OK')
-                self.loggedIn = True
-            else:
-                printDBG(data)
-                self.sessionEx.waitForFinishOpen(MessageBox, '\n'.join(msgTab), type = MessageBox.TYPE_ERROR, timeout = 10)
-                printDBG('tryTologin failed')
-
-            if self.loggedIn:
-                hash = hexlify(md5('%s@***@%s' % (self.login, self.password)).digest())
-                WriteTextFile(loginCookie, hash)
-
-        return self.loggedIn
 
     def handleService(self, index, refresh = 0, searchPattern = '', searchType = ''):
         printDBG('handleService start')
@@ -486,11 +513,11 @@ class DixMax(CBaseHostClass):
         name     = self.currItem.get("name", '')
         category = self.currItem.get("category", '')
         printDBG( "handleService: ||| name[%s], category[%s] " % (name, category) )
+        
         self.currList = []
 
-        self.tryTologin()
 
-    #MAIN MENU
+        #MAIN MENU
         if name == None:
             self.listMain({'name':'category', 'type':'category'})
 
@@ -509,12 +536,12 @@ class DixMax(CBaseHostClass):
         elif category == 'explore_item':
             self.exploreItem(self.currItem, 'sub_items')
 
-    #SEARCH
+        #SEARCH
         elif category in ["search", "search_next_page"]:
             cItem = dict(self.currItem)
             cItem.update({'search_item':False, 'name':'category'}) 
             self.listSearchResult(cItem, searchPattern, searchType)
-    #HISTORIA SEARCH
+        #HISTORIA SEARCH
         elif category == "search_history":
             self.listsHistory({'name':'history', 'category': 'search'}, 'desc', _("Type: "))
         else:
