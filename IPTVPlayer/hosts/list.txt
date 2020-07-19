@@ -63,12 +63,10 @@ hostfilmeonlineto
 hostfilmezz
 hostfilmixco
 hostfilmovizijastudio
-hostfilmowood
 hostfilmpalast
 hostfilmpertutti
 hostfilmstreamhdit
 hostfilmstreamvkcom
-hostfilmydokumentalneeu
 hostfokustv
 hostforjatn
 hostfrancetv
@@ -164,7 +162,6 @@ hostspiegeltv
 hostsportdeutschland
 hostsportitalia
 hostspryciarze
-hoststreamcomplet
 hoststreaminghdfun
 hoststreamliveto
 hostsvtplayse
@@ -175,7 +172,6 @@ hosttfarjocom
 hostthewatchseriesto
 hostturcjatv
 hosttvgrypl
-hosttvjworg
 hosttvn24
 hosttvnowde
 hosttvnvod
@@ -188,7 +184,6 @@ hostuktvplay
 hosturllist
 hostustreamtv
 hostvidcorncom
-hostvideopenny
 hostvimeo
 hostvodpl
 hostvumedicom
