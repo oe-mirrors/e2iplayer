@@ -340,6 +340,7 @@ class urlparser:
                        'mstream.icu':           self.pp.parserMSTREAMICU    ,
                        'mstream.press':         self.pp.parserMSTREAMICU    ,
                        'mstream.xyz':           self.pp.parserMSTREAMICU    ,
+                       'multikland.net':        self.pp.parserMULTIKLAND,
                        'my.mail.ru':            self.pp.parserVIDEOMAIL     ,
                        'mycloud.to':            self.pp.parserMYCLOUDTO     ,
                        'mystream.la':           self.pp.parserMYSTREAMLA    ,
@@ -14320,3 +14321,64 @@ class pageParser(CaptchaHelper):
 
         return urlsTab
 
+    def parserMULTIKLAND(self, baseUrl):
+        printDBG("parserMULTIKLAND baseUrl[%r]" % baseUrl)
+
+        httpParams = {
+            'header' : {
+                'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.61 Safari/537.36',
+                'Accept': '*/*',
+                'Accept-Encoding': 'gzip',
+                'Referer' : baseUrl.meta.get('Referer', baseUrl)
+            } 
+        }
+
+        urlsTab = []
+        
+        sts, data = self.cm.getPage(baseUrl, httpParams)
+        
+        if sts:
+        
+            playerData = re.findall("makePlayer\((\{.*?\})\);", data, re.S)
+            if playerData:
+                playerData = playerData[0].replace(' * ','') 
+                printDBG(playerData)
+                try:
+                    playerJson = demjson_loads( playerData)
+                    # title
+                    title = playerJson.get('title','')
+                    
+                    #playlist:
+                    if 'playlist' in playerJson:
+                        playlist = playerJson['playlist']
+                        printDBG(json_dumps(playlist))
+                        seasons = playlist.get('seasons',[])
+                        for season in seasons:
+                            season_number = season.get('season',0)
+                            eps = season.get('episodes',[])
+                            for ep in eps:
+                                ep_number = ep.get('episode','0')
+                                ep_title = ep.get('title', '')
+                                if 'hlsList' in ep:
+                                    hlslist = ep['hlsList']
+                                for label in hlslist:
+                                    url = urlparser.decorateUrl(hlslist[label], {'Referer': baseUrl})
+
+                                    params = {'title' :title + " " + label, 'name': title + " " + label, 'label': label, 'url': url}
+                                    printDBG(str(params)) 
+                                    urlsTab.append(params)
+                        
+                    else:
+                        source = playerJson.get('source','')
+                        if 'hlsList' in source:
+                            hlslist = source['hlsList']
+                            for label in hlslist:
+                                url = urlparser.decorateUrl(hlslist[label], {'Referer': baseUrl})
+
+                                params = {'title' :title + " " + label, 'name': title + " " + label, 'label': label, 'url': url}
+                                printDBG(str(params)) 
+                                urlsTab.append(params)
+
+                except:
+                    printExc()
+        return urlsTab
