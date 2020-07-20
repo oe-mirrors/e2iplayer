@@ -258,18 +258,19 @@ class Filmativa(CBaseHostClass):
         urlTab = []
         urlTab = self.up.getVideoLinkExt(baseUrl)
         
-        if 'external_sub_tracks' in baseUrl.meta:
-            subTracks = baseUrl.meta['external_sub_tracks']
-            printDBG("subTracks %s " % str(subTracks))
-            urlTab2 = []
-            for u in urlTab:
-                printDBG(u)
-                url = strwithmeta(u['url'], {'Referer' : baseUrl, 'external_sub_tracks': subTracks})
-                u.update({'url': url})
-                urlTab2.append(u)
+        if isinstance(baseUrl, strwithmeta):
+            if 'external_sub_tracks' in baseUrl.meta:
+                subTracks = baseUrl.meta['external_sub_tracks']
+                printDBG("subTracks %s " % str(subTracks))
+                urlTab2 = []
+                for u in urlTab:
+                    printDBG(u)
+                    url = strwithmeta(u['url'], {'Referer' : baseUrl, 'external_sub_tracks': subTracks})
+                    u.update({'url': url})
+                    urlTab2.append(u)
+                
+                urlTab = urlTab2
             
-            urlTab = urlTab2
-                    
         return urlTab
         
     def getFavouriteData(self, cItem):
