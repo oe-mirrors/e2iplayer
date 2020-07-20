@@ -2,17 +2,17 @@
 ###################################################
 # LOCAL import
 ###################################################
-from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _
+from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _, SetIPTVPlayerLastHostError
 from Plugins.Extensions.IPTVPlayer.components.ihost import CHostBase, CBaseHostClass, CDisplayListItem, RetHost, CUrlItem
 from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, GetLogoDir
+from Plugins.Extensions.IPTVPlayer.libs.e2ijson import loads as json_loads, dumps as json_dumps
+from Plugins.Extensions.IPTVPlayer.tools.iptvtypes import strwithmeta
 ###################################################
 
 ###################################################
 # FOREIGN import
 ###################################################
 import urllib
-try:    import json
-except Exception: import simplejson as json
 ###################################################
 
 
@@ -27,11 +27,11 @@ class Filmativa(CBaseHostClass):
 
         self.MAIN_URL    = 'https://filmativa.xyz/'
         self.SRCH_URL    = self.MAIN_URL + '?s='
-        self.DEFAULT_ICON_URL = 'http://athensmoviepalace.com/wp-content/uploads/2014/07/FilmReel.png'
+        self.DEFAULT_ICON_URL = 'https://zoxh.com/screenshot/bupxbupx/pxlr/pxjk/pxos/filmativa.ws-desktop.jpg'
     
         self.S_MAIN_URL    = 'http://epizode.ws/'
         self.S_SRCH_URL    = self.S_MAIN_URL + '?s='
-        self.S_DEFAULT_ICON_URL = "https://upload.wikimedia.org/wikipedia/en/5/54/The_Serial_Logo.png"
+        self.S_DEFAULT_ICON_URL = "https://zoxh.com/screenshot/bupxbupx/pxlr/pxjk/pxos/filmativa.ws-desktop.jpg"
 
         self.MAIN_CAT_TAB = [{'category':'movies',         'title': _('Movies'),       'url':self.MAIN_URL, 'icon':self.DEFAULT_ICON_URL},
                             {'category':'series',         'title': _('TV series'),    'url':self.S_MAIN_URL, 'icon':self.S_DEFAULT_ICON_URL},
@@ -146,40 +146,56 @@ class Filmativa(CBaseHostClass):
     def listSeasons(self, cItem, category):
         printDBG("Filmativa.listSeasons")
         sts, data = self.cm.getPage(cItem['url'])
-        if not sts: return
-        
+        if not sts: 
+            return
+
         tvShowTitle = cItem['title']
         self.seriesCache = {}
         self.seasons = []
-        data = self.cm.ph.getDataBeetwenMarkers(data, '<div class="seasons">', '<script>', False)[1]
+        data = self.cm.ph.getDataBeetwenMarkers(data, ('<div','>', 'seasons'), '<script>', False)[1]
         
-        data = data.split('</dd>')
-        if len(data): del data[-1]
-        for item in data:
-            season = self.cm.ph.getDataBeetwenMarkers(item, '<dt>', '</dt>', False)[1]
-            if '' != season:
+        seasons = data.split('<dt>')
+        
+        for item in seasons:
+            if item.find('</dt>') > 0:
+                season = item[:item.find('</dt>')]
+                sNum = season.upper().replace('SEZONA', '').strip()
                 self.seasons.append({'title':season, 'season':season})
-            if 0 == len(self.seasons): continue
-            item = item.split('</dt>')[-1]
-            season = self.seasons[-1]['season']
-            tmp = item.split('<button class="download-button">')
-            linkUrl = self.cm.ph.getSearchGroups(tmp[-1], 'data="([^"]+?)"')[0]
-            
-            if '' != linkUrl:  linkUrl = 'http://videomega.tv/view.php?ref={0}&width=700&height=460&val=1'.format(linkUrl)
-            if '' == linkUrl:
-                linkUrl = self.cm.ph.getSearchGroups(tmp[-1], 'data-open="([^"]+?)"')[0]
-                linkHosting = self.cm.ph.getSearchGroups(tmp[-1], 'data-source="([^"]+?)"')[0]
-                if '' != linkUrl: 
-                    if 'vidoza' in linkHosting: linkUrl = 'https://vidoza.net/embed-{0}.html'.format(linkUrl)
-                    else: linkUrl = 'http://openload.co/embed/{0}/'.format(linkUrl)
-            if '' == linkUrl: linkUrl = self.cm.ph.getSearchGroups(item, '''['"](http[^'^"]+?openload[^'^"]+?)['"]''')[0]
-            if '' == linkUrl: continue
-            episodeTitle = self.cleanHtmlStr( tmp[0] )
-            if 0 == len(self.seriesCache.get(season, [])):
-                self.seriesCache[season] = []
-            sNum = season.upper().replace('SEZONA', '').strip()
-            self.seriesCache[season].append({'title':'{0}: s{1}e{2}'.format(tvShowTitle, sNum, episodeTitle), 'url':linkUrl, 'direct':True})
-            
+
+                if not self.seriesCache.get(season, []):
+                    self.seriesCache[season] = []
+
+                episodes = self.cm.ph.getAllItemsBeetwenMarkers(item, ('<dd','>'), '</dd>')
+                for tmp in episodes:
+                    episodeTitle = self.cm.ph.getDataBeetwenMarkers(tmp, ('<div','>','title'), '</div>', False)[1]
+                    episodeTitle = self.cleanHtmlStr(episodeTitle)
+
+                    postId = self.cm.ph.getSearchGroups(tmp, 'data-postid="([^"]+?)"')[0]
+                    dataS = self.cm.ph.getSearchGroups(tmp, 'data-s="([^"]+?)"')[0]
+                    dataE = self.cm.ph.getSearchGroups(tmp, 'data-e="([^"]+?)"')[0]
+
+                    subtitleUrl = "https://cdn.opensubtitles.ml/sub/" + postId + "-" + dataS + "-" + dataE +".vtt"
+
+                    dataDood = self.cm.ph.getSearchGroups(tmp, 'data-doodstream="([^"]+?)"')[0]
+                    dataMix = self.cm.ph.getSearchGroups(tmp, 'data-mix="([^"]+?)"')[0]
+                    dataOnly = self.cm.ph.getSearchGroups(tmp, 'data-only="([^"]+?)"')[0]
+                    dataVidoza = self.cm.ph.getSearchGroups(tmp, 'data-vidoza="([^"]+?)"')[0]
+
+                    if dataDood:
+                        url = "https://dood.watch/e/%s" % dataDood
+                        self.seriesCache[season].append({'title':'{0}: s{1} - {2} [{3}]'.format(tvShowTitle, sNum, episodeTitle, "Doodstream"), 'url':url, 'direct':True})
+                    elif dataMix:
+                        url = "https://mixdrop.co/e/%s" % dataMix
+                        self.seriesCache[season].append({'title':'{0}: s{1} - {2} [{3}]'.format(tvShowTitle, sNum, episodeTitle, "Mixdrop"), 'url':url, 'direct':True, 'subtitles': subtitleUrl })
+                    elif dataOnly:
+                        url = "https://onlystream.tv/e/%s" % dataOnly
+                        self.seriesCache[season].append({'title':'{0}: s{1} - {2} [{3}]'.format(tvShowTitle, sNum, episodeTitle, "Onlystream"), 'url':url, 'direct':True})
+                    elif dataVidoza:
+                        url = "https://vidoza.net/embed-%s" % dataVidoza
+                        self.seriesCache[season].append({'title':'{0}: s{1} - {2} [{3}]'.format(tvShowTitle, sNum, episodeTitle, "Vidoza"), 'url':url, 'direct':True})
+                    else:
+                        self.seriesCache[season].append({'title':'{0}: s{1} - {2} [{3}]'.format(tvShowTitle, sNum, episodeTitle, _("No valid links available.")), 'url': ''})
+                        
         cItem = dict(cItem)
         cItem['category'] = category
         self.listsTab(self.seasons, cItem)
@@ -204,13 +220,26 @@ class Filmativa(CBaseHostClass):
         printDBG("Filmativa.getLinksForVideo [%s]" % cItem)
         urlTab = []
         
+        if not cItem.get('url',''):
+            return []
+        
         if cItem.get('direct', False):
-            urlTab.append({'name':'link', 'url':cItem['url'], 'need_resolve':1})
+            if cItem.get('subtitles',''):
+                subtitlesTab = [{'title': 'Serbian', 'url': cItem.get('subtitles',''), 'lang': 'srp', 'format': 'vtt'}]
+                url = strwithmeta(cItem['url'], {'external_sub_tracks':subtitlesTab})
+                urlTab.append({'name':'link', 'url': url, 'need_resolve':1 })
+            else:
+                urlTab.append({'name':'link', 'url':cItem['url'], 'need_resolve':1})
+        
         else:
             sts, data = self.cm.getPage(cItem['url'])
             if not sts: 
                 return urlTab
             
+            if 'USKORO!' in data:
+                SetIPTVPlayerLastHostError('USKORO!')
+                return urlTab
+                
             divIframe = self.cm.ph.getDataBeetwenMarkers(data, ('<div','>','trailer'), '</div>', False)[1]
             url = self.cm.ph.getSearchGroups(divIframe, 'src="([^"]+?)"')[0]
             if 'videomega.tv/validatehash.php?' in url:
@@ -228,6 +257,19 @@ class Filmativa(CBaseHostClass):
         printDBG("Filmativa.getVideoLinks [%s]" % baseUrl)
         urlTab = []
         urlTab = self.up.getVideoLinkExt(baseUrl)
+        
+        if 'external_sub_tracks' in baseUrl.meta:
+            subTracks = baseUrl.meta['external_sub_tracks']
+            printDBG("subTracks %s " % str(subTracks))
+            urlTab2 = []
+            for u in urlTab:
+                printDBG(u)
+                url = strwithmeta(u['url'], {'Referer' : baseUrl, 'external_sub_tracks': subTracks})
+                u.update({'url': url})
+                urlTab2.append(u)
+            
+            urlTab = urlTab2
+                    
         return urlTab
         
     def getFavouriteData(self, cItem):

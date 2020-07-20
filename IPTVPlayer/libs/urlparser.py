@@ -12587,8 +12587,20 @@ class pageParser(CaptchaHelper):
         sts, data = self.cm.getPage(url)
         if not sts:
             return []
-        
+
+        #<script>window.location = "/e/952om2mbm9oqc?k=1a8724a6fc293ed495a0cd33921cb4a7&t=1595245658&referrer=";</script>
+        redirectUrl = self.cm.ph.getSearchGroups(data, '''<script>\s?window\.location\s?=\s?['"]([^"^']+?)['"]''')[0]
+        if redirectUrl:
+            redirectUrl = self.cm.getFullUrl(redirectUrl,baseUrl)
+            if redirectUrl != baseUrl:
+                url = redirectUrl
+                sts, data = self.cm.getPage(url)
+                if not sts:
+                    return []
+                
+        printDBG("--------------------------")
         printDBG(data)
+        printDBG("--------------------------")
         
         error = self.cm.ph.getDataBeetwenNodes(data, '<div class="tb error">', '</p>')[1]
 
