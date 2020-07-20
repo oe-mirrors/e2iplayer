@@ -17,37 +17,55 @@ except Exception: import simplejson as json
 
 
 def gettytul():
-    return 'http://filmativa.ws/'
+    return 'https://filmativa.xyz/'
 
-class Filmotopia(CBaseHostClass):
-    MAIN_URL    = 'http://filmativa.ws/'
-    SRCH_URL    = MAIN_URL + '?s='
-    DEFAULT_ICON_URL = 'http://athensmoviepalace.com/wp-content/uploads/2014/07/FilmReel.png'
-    
-    S_MAIN_URL    = 'http://epizode.ws/'
-    S_SRCH_URL    = S_MAIN_URL + '?s='
-    S_DEFAULT_ICON_URL = "https://upload.wikimedia.org/wikipedia/en/5/54/The_Serial_Logo.png"
-    
-    MAIN_CAT_TAB = [{'category':'movies',         'title': _('Movies'),       'url':MAIN_URL, 'icon':DEFAULT_ICON_URL},
-                    {'category':'series',         'title': _('TV series'),    'url':MAIN_URL, 'icon':S_DEFAULT_ICON_URL},
-                    {'category':'search',         'title': _('Search'),       'search_item':True},
-                    {'category':'search_history', 'title': _('Search history')} 
-                   ]
-    
-    MOVIES_TAB = [{'category':'list_movies',  'title': _('New'),       'url':MAIN_URL,              },
-                  {'category':'list_movies',  'title': _('Popular'),   'url':MAIN_URL + 'popularno/'},
-                 ]
-    
-    SERIES_TAB = [{'category':'list_series',  'title': _('New'),          'url':S_MAIN_URL,                 },
-                  {'category':'list_series',  'title': _('New episodes'), 'url':S_MAIN_URL + 'nove-epizode/'},
-                  {'category':'list_series',  'title': _('Popular'),      'url':S_MAIN_URL + 'popularno/'   },
-                 ]
+class Filmativa(CBaseHostClass):
     
  
     def __init__(self):
-        CBaseHostClass.__init__(self, {'history':'Filmotopia', 'cookie':'filmotopia.cookie'})
+        CBaseHostClass.__init__(self, {'history':'Filmativa', 'cookie':'filmativa.cookie'})
+
+        self.MAIN_URL    = 'https://filmativa.xyz/'
+        self.SRCH_URL    = self.MAIN_URL + '?s='
+        self.DEFAULT_ICON_URL = 'http://athensmoviepalace.com/wp-content/uploads/2014/07/FilmReel.png'
+    
+        self.S_MAIN_URL    = 'http://epizode.ws/'
+        self.S_SRCH_URL    = self.S_MAIN_URL + '?s='
+        self.S_DEFAULT_ICON_URL = "https://upload.wikimedia.org/wikipedia/en/5/54/The_Serial_Logo.png"
+
+        self.MAIN_CAT_TAB = [{'category':'movies',         'title': _('Movies'),       'url':self.MAIN_URL, 'icon':self.DEFAULT_ICON_URL},
+                            {'category':'series',         'title': _('TV series'),    'url':self.S_MAIN_URL, 'icon':self.S_DEFAULT_ICON_URL},
+                            {'category':'search',         'title': _('Search'),       'search_item':True},
+                            {'category':'search_history', 'title': _('Search history')} 
+                            ]
+        
+        self.MOVIES_TAB = [{'category':'list_movies',  'title': _('New'),       'url':self.MAIN_URL,              },
+                            {'category':'list_movies',  'title': _('Popular'),   'url':self.MAIN_URL + 'popularno/'},
+                            ]
+        
+        self.SERIES_TAB = [{'category':'list_series',  'title': _('New'),          'url':self.S_MAIN_URL,                 },
+                      {'category':'list_series',  'title': _('New episodes'),       'url':self.S_MAIN_URL + 'nove-epizode/'},
+                      {'category':'list_series',  'title': _('Popular'),            'url':self.S_MAIN_URL + 'popularno/'   },
+                 ]
+
+
+        self.USER_AGENT = 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/73.0.3683.103 Safari/537.36'
+        self.HEADER = {'User-Agent': self.USER_AGENT, 'Accept': 'text/html', 'Accept-Encoding': 'gzip'}
+        self.defaultParams = {'header':self.HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
+
         self.seriesCache = {}
         self.seasons = []
+
+    def getPageCF(self, baseUrl, params = {}, post_data = None):
+        if params == {}: 
+            params = self.defaultParams
+        params['cloudflare_params'] = {'domain':'filmativa.xyz', 'cookie_file': self.COOKIE_FILE, 'User-Agent':self.USER_AGENT}
+        return self.cm.getPageCFProtection(baseUrl, params, post_data)
+
+    def getPage(self, baseUrl, addParams = {}, post_data = None):
+        if addParams == {}: 
+            addParams = dict(self.defaultParams)
+        return self.cm.getPage(baseUrl, addParams, post_data)
         
     def _getFullUrl(self, url, series=False):
         if not series:
@@ -61,25 +79,25 @@ class Filmotopia(CBaseHostClass):
         return url
         
     def listMoviesTab(self, cItem, category):
-        printDBG("Filmotopia.listMoviesTab")
+        printDBG("Filmativa.listMoviesTab")
         cItem = dict(cItem)
         cItem['category'] = category
         self.listsTab(self.MOVIES_TAB, cItem)
         
     def listSeriesTab(self, cItem, category):
-        printDBG("Filmotopia.listSeriesTab")
+        printDBG("Filmativa.listSeriesTab")
         cItem = dict(cItem)
         cItem['category'] = category
         self.listsTab(self.SERIES_TAB, cItem)
         
     def _listItems(self, cItem, category):
-        printDBG("Filmotopia._listItems")
+        printDBG("Filmativa._listItems")
         url = cItem['url']
         page = cItem.get('page', 1)
         if page > 1:
             url += 'page/%d/' % page
         
-        sts, data = self.cm.getPage(url)
+        sts, data = self.getPageCF(url)
         if not sts: return 
         
         if ('/page/%d/' % (page + 1)) in data:
@@ -118,15 +136,15 @@ class Filmotopia(CBaseHostClass):
             self.addDir(params)
             
     def listMovies(self, cItem):
-        printDBG("Filmotopia.listMovies")
+        printDBG("Filmativa.listMovies")
         self._listItems(cItem, 'video')
         
     def listSeries(self, cItem, category):
-        printDBG("Filmotopia.listSeries")
+        printDBG("Filmativa.listSeries")
         self._listItems(cItem, category)
         
     def listSeasons(self, cItem, category):
-        printDBG("Filmotopia.listSeasons")
+        printDBG("Filmativa.listSeasons")
         sts, data = self.cm.getPage(cItem['url'])
         if not sts: return
         
@@ -167,7 +185,7 @@ class Filmotopia(CBaseHostClass):
         self.listsTab(self.seasons, cItem)
         
     def listEpisodes(self, cItem):
-        printDBG("Filmotopia.listEpisodes")
+        printDBG("Filmativa.listEpisodes")
         season = cItem.get('season', '')
         cItem = dict(cItem)
         self.listsTab(self.seriesCache.get(season, []), cItem, 'video')
@@ -183,30 +201,31 @@ class Filmotopia(CBaseHostClass):
             self.listSeries(cItem, 'list_seasons')
         
     def getLinksForVideo(self, cItem):
-        printDBG("Filmotopia.getLinksForVideo [%s]" % cItem)
+        printDBG("Filmativa.getLinksForVideo [%s]" % cItem)
         urlTab = []
         
         if cItem.get('direct', False):
             urlTab.append({'name':'link', 'url':cItem['url'], 'need_resolve':1})
         else:
             sts, data = self.cm.getPage(cItem['url'])
-            if not sts: return urlTab
+            if not sts: 
+                return urlTab
             
-            data = self.cm.ph.getDataBeetwenMarkers(data, '<div class="trailer">', '</div>', False)[1]
-            url = self.cm.ph.getSearchGroups(data, 'src="([^"]+?)"')[0]
+            divIframe = self.cm.ph.getDataBeetwenMarkers(data, ('<div','>','trailer'), '</div>', False)[1]
+            url = self.cm.ph.getSearchGroups(divIframe, 'src="([^"]+?)"')[0]
             if 'videomega.tv/validatehash.php?' in url:
                 sts, data = self.cm.getPage(url, {'header':{'Referer':cItem['url'], 'User-Agent':'Mozilla/5.0'}})
                 if sts:
                     data = self.cm.ph.getSearchGroups(data, 'ref="([^"]+?)"')[0]
                     linkUrl = 'http://videomega.tv/view.php?ref={0}&width=700&height=460&val=1'.format(data)
                     urlTab.append({'name':'videomega.tv', 'url':linkUrl, 'need_resolve':1})
-            elif url.startswith('http://') or url.startswith('https://'):
+            elif self.cm.isValidUrl(url): 
                 urlTab.append({'name':'link', 'url':url, 'need_resolve':1})
         
         return urlTab
         
     def getVideoLinks(self, baseUrl):
-        printDBG("Filmotopia.getVideoLinks [%s]" % baseUrl)
+        printDBG("Filmativa.getVideoLinks [%s]" % baseUrl)
         urlTab = []
         urlTab = self.up.getVideoLinkExt(baseUrl)
         return urlTab
@@ -259,7 +278,7 @@ class Filmotopia(CBaseHostClass):
 class IPTVHost(CHostBase):
 
     def __init__(self):
-        CHostBase.__init__(self, Filmotopia(), True, [CDisplayListItem.TYPE_VIDEO, CDisplayListItem.TYPE_AUDIO])
+        CHostBase.__init__(self, Filmativa(), True, [CDisplayListItem.TYPE_VIDEO, CDisplayListItem.TYPE_AUDIO])
 
     def getLogoPath(self):
         return RetHost(RetHost.OK, value = [GetLogoDir('filmotopialogo.png')])
