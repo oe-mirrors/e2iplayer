@@ -49,7 +49,7 @@ class Filmoviplex(CBaseHostClass):
             {'category':'list_items',      'title': _('Most Viewed Series'),   'url':self.getFullUrl('/browse-series-views-1.html')},
             {'category':'list_items',      'title': _('Top Series'),           'url':self.getFullUrl('/browse-series-top-1.html')},
             #{'category':'year',            'title': _('Year'),                 'url': self.MAIN_URL },
-            {'category':'search',          'title': _('Search'),               'search_item':True   },
+            {'category':'search',          'title': _('Search'),               'search_item':True  },
             {'category':'search_history',  'title': _('Search history') }
             ]
         
@@ -466,13 +466,8 @@ class Filmoviplex(CBaseHostClass):
         printDBG("Filmoviplex.listSearchResult cItem[%s], searchPattern[%s] searchType[%s]" % (cItem, searchPattern, searchType))
         cItem = dict(cItem)
         
-        if 'movie' == searchType:
-            baseUrl = self.MOV_SEARCH_URL
-        else:
-            baseUrl = self.SER_SEARCH_URL
-
         if 'page=' not in cItem.get('url', ''):
-            cItem['url'] = baseUrl + urllib.quote(searchPattern)
+            cItem['url'] = self.MAIN_URL + "?all=all&s=%s&orderby=all" % urllib.quote_plus(searchPattern)
         self.listItems(cItem)
 
     def getArticleContent(self, cItem):

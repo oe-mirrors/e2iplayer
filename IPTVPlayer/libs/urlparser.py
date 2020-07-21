@@ -12,7 +12,6 @@ from Plugins.Extensions.IPTVPlayer.libs.crypto.hash.md5Hash import MD5
 from Plugins.Extensions.IPTVPlayer.libs import ph
 
 from Plugins.Extensions.IPTVPlayer.components.captcha_helper import CaptchaHelper
-#from Plugins.Extensions.IPTVPlayer.components.recaptcha_v2helper import CaptchaHelperOld
 
 from Plugins.Extensions.IPTVPlayer.libs.recaptcha_v2 import UnCaptchaReCaptcha
 
@@ -44,7 +43,6 @@ from Plugins.Extensions.IPTVPlayer.libs.demjson import decode as demjson_loads
 from Plugins.Extensions.IPTVPlayer.libs.aadecode import decode as aadecode 
 from Plugins.Extensions.IPTVPlayer.libs.powvideo import swapUrl as powvideo_swapUrl
 
-
 from Screens.MessageBox import MessageBox
 ###################################################
 # FOREIGN import
@@ -64,8 +62,10 @@ from hashlib import md5, sha256
 from Components.config import config
 
 from Plugins.Extensions.IPTVPlayer.libs.youtube_dl.extractor.mtv import GametrailersIE
-try:    from urlparse import urlsplit, urlunsplit, urljoin
-except Exception: printExc()
+try:    
+    from urlparse import urlsplit, urlunsplit, urljoin
+except Exception: 
+    printExc()
 ###################################################
 
 def InternalCipher(data, encrypt=True):
@@ -9720,6 +9720,7 @@ class pageParser(CaptchaHelper):
         params = {'with_metadata':True, 'header':HTTP_HEADER, 'use_cookie': True, 'save_cookie': True, 'load_cookie': True, 'cookiefile': COOKIE_FILE}
         
         urlsTab = []
+        srtTab = []
         domain = self.cm.getBaseUrl(baseUrl)
 
         def getNextUrl(data, domain):
@@ -9747,13 +9748,34 @@ class pageParser(CaptchaHelper):
             except Exception:
                 return ''
         
+        def getCaptions(string):
+            srtData = {}
+            try:
+                srtJson = demjson_loads("{" + string + "}")
+                src = srtJson.get('src' ,'')
+                if src:
+                    if 'load_vtt.php' in src:
+                        src = src[(src.find("url=")+4):]
+                        src = urllib.unquote(src)
+                        
+                    label = srtJson.get('label' ,'')
+                    label = label.replace('&nbsp;','')
+                    
+                    lang = srtJson.get('srclang' ,'')
+                    srtData = {'title': label, 'url': src, 'lang': lang, 'format':'srt'}                
+            except:
+                printExc()
+                
+            return srtData
+            
         if 'embed_player.php' in baseUrl:
             final_url = baseUrl
 
             sts, data = self.cm.getPage(final_url, params)
             if not sts:
                 return urlsTab
-                
+             
+            #find chinese script    
             scripts = self.cm.ph.getAllItemsBeetwenMarkers(data, '<script>', '</script>', False)
             chineseScript = ''
             tmpScript  = ''
@@ -9766,7 +9788,13 @@ class pageParser(CaptchaHelper):
                     printDBG("-----------------")
                     printDBG(chineseScript)
                     printDBG("-----------------")
-
+            
+            #find captions
+            #olplayer.addRemoteTextTrack({kind: "captions",    srclang: "aa",    label: "&nbsp;Afar" ,src: "/player/load_vtt.php?v=22&url=http%3A%2F%2Fs1.netu.tv%2Fflv%2Fapi%2Ffiles%2Fsrt%2F2019%2F07%2F01%2F1561936372a9dce-2-OV8D.srt" , mode: 'showing'}, true);
+            track = self.cm.ph.getSearchGroups(data, "addRemoteTextTrack\(\{([^\}]+?)\}")[0]
+            printDBG("caption informations: %s " % track)
+            srtTab.append(getCaptions(track))
+            
         else:
             next_url = baseUrl
             red_url = baseUrl
@@ -9800,6 +9828,12 @@ class pageParser(CaptchaHelper):
                     printDBG("-----------------")
                     printDBG(chineseScript)
                     printDBG("-----------------")
+
+            #find captions
+            #olplayer.addRemoteTextTrack({kind: "captions",    srclang: "aa",    label: "&nbsp;Afar" ,src: "/player/load_vtt.php?v=22&url=http%3A%2F%2Fs1.netu.tv%2Fflv%2Fapi%2Ffiles%2Fsrt%2F2019%2F07%2F01%2F1561936372a9dce-2-OV8D.srt" , mode: 'showing'}, true);
+            track = self.cm.ph.getSearchGroups(data, "addRemoteTextTrack\(\{([^\}]+?)\}")[0]
+            printDBG("caption informations: %s " % track)
+            srtTab.append(getCaptions(track))
             
             if not final_url:
                 printDBG("Url with embed_player.php not found!!")
@@ -9910,13 +9944,23 @@ class pageParser(CaptchaHelper):
                         if l.startswith('//'):
                             # readable link
                             l = "http:" + l
+                        
                         if self.cm.isValidUrl(l): 
                             tabs = []
                             if l.split('?')[0].endswith('.m3u8') or '/hls-' in l:
-                                file_url = urlparser.decorateUrl(l, {'iptv_livestream':False, 'User-Agent':HTTP_HEADER['User-Agent'], 'Referer': final_url, 'iptv_proto':'m3u8'})
+                                if srtTab:
+                                    file_url = urlparser.decorateUrl(l, {'iptv_livestream':False, 'User-Agent':HTTP_HEADER['User-Agent'], 'Referer': final_url, 'iptv_proto':'m3u8', 'external_sub_tracks': srtTab})
+                                else:
+                                    file_url = urlparser.decorateUrl(l, {'iptv_livestream':False, 'User-Agent':HTTP_HEADER['User-Agent'], 'Referer': final_url, 'iptv_proto':'m3u8'})
+
                                 tabs = getDirectM3U8Playlist(file_url, checkExt=False, checkContent=True, cookieParams = params) 
+
                             if not tabs:
-                                file_url = urlparser.decorateUrl(l, {'iptv_livestream':False, 'User-Agent':HTTP_HEADER['User-Agent'], 'Referer': final_url})
+                                if srtTab:
+                                    file_url = urlparser.decorateUrl(l, {'iptv_livestream':False, 'User-Agent':HTTP_HEADER['User-Agent'], 'Referer': final_url, 'external_sub_tracks': srtTab})
+                                else:
+                                    file_url = urlparser.decorateUrl(l, {'iptv_livestream':False, 'User-Agent':HTTP_HEADER['User-Agent'], 'Referer': final_url})
+                                    
                                 tabs = [{"name":"link", "url": file_url}]
                             printDBG(str(tabs))
                             urlsTab.extend(tabs)
