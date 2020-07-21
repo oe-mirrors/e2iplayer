@@ -7,6 +7,7 @@ from Plugins.Extensions.IPTVPlayer.components.ihost import CHostBase, CBaseHostC
 from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc
 from Plugins.Extensions.IPTVPlayer.tools.iptvtypes import strwithmeta
 from Plugins.Extensions.IPTVPlayer.libs.e2ijson import loads as json_loads, dumps as json_dumps
+from Plugins.Extensions.IPTVPlayer.tools.e2ijs import js_execute, js_execute_ext
 ###################################################
 
 ###################################################
@@ -64,27 +65,20 @@ class Filmoviplex(CBaseHostClass):
         if sts and None == data:
             sts = False
         return sts, data
+    
+    def getUrlFromCode(self, script, s, ep):
+        #examples
+        #$(".openload1_1").append("<iframe id='openload' width='100%' height='500px' src='https://video.filmoviplex.com/e/SDFGREdDNEpSM1VLOE9udnJINlRDdz09' frameborder='0' allowfullscreen=''></iframe>")
+        #$(".openload7_1").append("<h1>USKORO!!</h1>");
         
-    def _getIconUrl(self, url):
-        url = self._getFullUrl(url)
-        if 'filmovizija.' in url and self.isNeedProxy():
-            proxy = 'https://www.sslgate.co.uk/index.php?q={0}&hl=2e1'.format(urllib.quote(url, ''))
-            params = {}
-            params['User-Agent'] = self.HEADER['User-Agent'],
-            params['Referer'] = proxy
-            params['Cookie'] = 'flags=2e1;'
-            url = strwithmeta(proxy, params) 
+        re_string = "\$\(\"\.openload%d_%d\"\)\.append\((.*?)\)" % (s,ep)
+        #printDBG(re_string)
+        tag = self.cm.ph.getSearchGroups(script, re_string )[0]
+        url = self.cm.ph.getSearchGroups(tag, '''src=['"](http[^'^"^>]+?)[>'"]''')[0]
+
         return url
         
-    def _urlWithCookie(self, url):
-        if self.isNeedProxy():
-            return self._getIconUrl(url)
-        else:
-            url = self._getFullUrl(url)
-            if url == '': return ''
-            cookieHeader = self.cm.getCookieHeader(self.COOKIE_FILE)
-            return strwithmeta(url, {'Cookie':cookieHeader, 'User-Agent':self.USER_AGENT})
-        
+    
     def replacewhitespace(self, data):
         data = data.replace(' ', '%20')
         return CBaseHostClass.cleanHtmlStr(data)
@@ -255,14 +249,129 @@ class Filmoviplex(CBaseHostClass):
         if not sts: 
             return
         
-        #self.setMainUrl(self.cm.meta['url'])
+        dataScript = ""
+        scripts = self.cm.ph.getAllItemsBeetwenMarkers(data, ('<script','>'), '</script>', False)
         
+        for s in scripts:
+            if 'window.onload' in s:
+                dataScript = s
+                break
+        
+        if not dataScript:
+            return
+            
+        #printDBG("--------------------")
+        #printDBG(dataScript)
+        #printDBG("--------------------")
+        
+        #var Home = "https://www.filmoviplex.com/",
+        #Excerpt = "When Emily Thorne moves to the Hamptons, everyone wonders about the new girl, but she knows everything about them, including what they did to her family. Years ago, they took everything from her. Now, one by one, she's going to make them pay.",
+        #episodeSlug = "Epizoda",
+        #seasonSlug = "Sezona",
+        #PosterNull = "https://image.tmdb.org/t/p/w500/qx7XytRgg1F03NN5BoK8jx3Cyft.jpg",
+        #baseUrl = "https://api.themoviedb.org/3/tv/",
+        #apikey = "?api_key=ad8148d111b9980e2527c200eadf1d8b",
+        #language = "&language=en-US",
+        #ImgLang = "&include_image_language=en-US,null",
+        #appendToResponse = "&append_to_response=images",
+        #id = 39358,
+        #dataUrl = baseUrl + id + apikey + language + ImgLang + appendToResponse;
+        
+        code = self.cm.ph.getSearchGroups(dataScript, "(var[^;]+?dataUrl[^;]+?;)")[0]
+        code = code + '''
+        var data = {
+            home: Home,
+            id: id,
+            desc: Excerpt, 
+            apiUrl: baseUrl,
+            apiKey: apikey,
+            dataUrl: dataUrl,
+            seasonUrl: dataUrl.replace('?','/season/%s?'),
+            epUrl: dataUrl.replace('?','/season/%s/episode/%s?')
+        };
+        console.log(JSON.stringify(data));
+        '''
         printDBG("--------------------")
-        printDBG(data)
+        printDBG(code)
         printDBG("--------------------")
         
+        ret = js_execute(code)
+        try:
+            response = json_loads(ret['data'].replace('\n',''))
+        
+            desc = response.get('desc','')
+            
+            sts, apiData = self.getPage(response['dataUrl'])
+            
+            if sts:
+                #printDBG("--------------------")
+                #printDBG(apiData)
+                #printDBG("--------------------")
+                
+                try:
+                    apiJson = json_loads(apiData)
+                    for s in apiJson['seasons']:
+                        sNum = s.get("season_number", 0)
+                        
+                        sTitle = s.get("name",'')
+                        if not sTitle:
+                            sTitle =  "%s %d" % (_("Season") , sNum)
+                        else:
+                            if 'Season' in sTitle:
+                                sTitle = sTitle.replace("Season", _("Season"))
+                        
+                        snumEp = s.get("episode_count", "")
+                        if snumEp:
+                            sTitle = "%s ( %s )" % (sTitle, snumEp)
+                        
+                        # episodes
+                        episodesTab = []
+                        sts, seasonData = self.getPage(response['seasonUrl'] % str(sNum))
+                        
+                        if sts:
+                            #printDBG("--------------------")
+                            #printDBG(seasonData)
+                            #printDBG("--------------------")
+                            
+                            try:
+                                seasonJson = json_loads(seasonData)
+                                
+                                for ep in seasonJson['episodes']:
+                                    eNum = ep.get("episode_number", 0)
+                                    
+                                    eTitle = ep.get("name",'')
+                                    if not eTitle:
+                                        eTitle =  "%s %d - %s %d" % (_("Season") , sNum, _("Episode") , eNum)
+                                    else:
+                                        eTitle = "%d. %s" % (eNum, eTitle)
+                                    
+                                    #aggiungere ricerca dell'url
+                                    url = self.getUrlFromCode(dataScript,sNum,eNum)
+                                    if url == '':
+                                        eTitle = eTitle + " [link not found!]"
+                                    
+                                    params = dict(cItem)
+                                    params.update({'category': 'video', 'good_for_fav': True, 'title': eTitle, 'url': url, 'direct':True})
+                                    printDBG(str(params))
+                                    episodesTab.append(params)
+                                
+                            except:
+                                pass
+                        
+                        params = dict(cItem)
+                        params.update({'good_for_fav':False, 'category':nextCategory, 'title':sTitle, 'desc': desc, 'season_idx':len(self.cacheSeasons)})
+                        printDBG(str(params))
+                        self.addDir(params)
+                        self.cacheSeasons.append(episodesTab)    
+
+                except:
+                    printExc()
+        except:
+            printExc()
+            
+        '''
         desc = self.cm.ph.getDataBeetwenMarkers(data, '<div id="epload">', '<script>', False)[1]
-        icon = self._urlWithCookie( self.cm.ph.getSearchGroups(desc, '''src=['"]*(http[^'^"^>]+?)[>'"]''')[0] )
+        icon = self._urlWithCookie( self.cm.ph.getSearchGroups(desc, "src=['"]*(http[^'^"^>]+?)[>'"]")[0] )
         desc = self.cleanHtmlStr(desc)
         
         m1 = '<li class="dropdown epilid caret-bootstrap caret-right" style="font-size:13px;">'
@@ -277,11 +386,11 @@ class Filmoviplex(CBaseHostClass):
             if len(episodesData): del episodesData[0]
             episodesTab = []
             for episodeItem in episodesData:
-                url = self.cm.ph.getSearchGroups(episodeItem, '''<a[^>]+?epiloader[^>]+?class=["']([^'^"]+?)['"]''')[0]
+                url = self.cm.ph.getSearchGroups(episodeItem, "<a[^>]+?epiloader[^>]+?class=["']([^'^"]+?)['"]")[0]
                 if url == '': continue
                 url = self.EPISODE_URL + url
                 title = self.cleanHtmlStr( episodeItem )
-                dUrl  = self._getFullUrl( self.cm.ph.getSearchGroups(episodeItem, '''data-url=['"]([^"^']+?)['"]''')[0] )
+                dUrl  = self._getFullUrl( self.cm.ph.getSearchGroups(episodeItem, "data-url=['"]([^"^']+?)['"]")[0] )
                 seasonNum = self.cm.ph.getSearchGroups(seasonTitle+'|', '[^0-9]([0-9]+?)[^0-9]')[0]
                 episodesTab.append({'good_for_fav':False, 'title':cItem['title'] + ' - s%se%s' % (seasonNum, title), 'url':self._getFullUrl(url), 'data_url':dUrl})
             if 0 == len(episodesTab): continue
@@ -289,7 +398,8 @@ class Filmoviplex(CBaseHostClass):
             params.update({'good_for_fav':False, 'category':nextCategory, 'title':seasonTitle, 'desc':desc, 'icon':icon, 'season_idx':len(self.cacheSeasons)})
             self.addDir(params)
             self.cacheSeasons.append(episodesTab)
-    
+        '''
+        
     def listEpisodes(self, cItem):
         printDBG("Filmoviplex.listEpisodes")
         seasonIdx = cItem.get('season_idx', -1)
@@ -331,8 +441,6 @@ class Filmoviplex(CBaseHostClass):
                 return []
             
             newUrl = self.cm.ph.getSearchGroups(data, "<iframe src=[\"']([^\"^']+?)[\"']")[0]
-            if 'video.filmoviplex.com' in newUrl:
-                newUrl = newUrl.replace('video.filmoviplex.com','netu.tv')
             
             printDBG("redirect to %s" % newUrl)
             urlTab.append({'name':'link', 'url': newUrl, 'need_resolve':1 })
@@ -348,6 +456,9 @@ class Filmoviplex(CBaseHostClass):
         urlTab = []
             
         if videoUrl != '':
+            if 'video.filmoviplex.com' in videoUrl:
+                videoUrl = videoUrl.replace('video.filmoviplex.com','netu.tv')
+
             urlTab.extend(self.up.getVideoLinkExt(videoUrl))
         return urlTab
         
