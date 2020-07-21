@@ -539,9 +539,9 @@ class urlparser:
                        'vidcloud.icu':          self.pp.parserVIDCLOUD      ,
                        'vidcloud.net':          self.pp.parserVIDCLOUD      ,
                        'vidcloud9.com':         self.pp.parserVIDCLOUD9     ,
-                       'videa.hu':              self.pp.parserVIDEA         ,
-                       'videa.hu':              self.pp.parserVIDEAHU        ,
-                       'video.meta.ua':         self.pp.parserMETAUA         ,
+                       'videa.hu':              self.pp.parserVIDEAHU       ,
+                       'video.filmoviplex.com': self.pp.parserNETUTV        ,
+                       'video.meta.ua':         self.pp.parserMETAUA        ,
                        'video.rutube.ru':       self.pp.parserRUTUBE        ,
                        'video.sibnet.ru':       self.pp.parserSIBNET        ,
                        'video.tt':              self.pp.parserVIDEOTT       ,
@@ -3967,15 +3967,6 @@ class pageParser(CaptchaHelper):
                     return data
         return False
         
-    def parserVIDEA(self, url):
-        sts, data = self.cm.getPage(url)
-        if not sts: return False
-        r = re.compile('v=(.+?)&eventHandler').findall(data)
-        sts, data = self.cm.getPage('http://videa.hu/flvplayer_get_video_xml.php?v='+r[0])
-        if not sts: return False
-        r2 = re.compile('video_url="(.+?)"').findall(data)
-        return r2[0]
-
     def parserALIEZ(self, url):
         sts, data = self.cm.getPage(url)
         if not sts: return False
@@ -14087,6 +14078,9 @@ class pageParser(CaptchaHelper):
         }
 
         urlsTab = []
+        
+        if '/d/' in baseUrl:
+            baseUrl = baseUrl.replace('/d/','/e/')
         
         sts, data = self.cm.getPage(baseUrl, httpParams)
         
