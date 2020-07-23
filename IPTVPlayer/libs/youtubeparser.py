@@ -601,6 +601,7 @@ class YouTubeParser():
             nextPage = {}
             nP = {}
             nP_new = {}
+            r2 = []
             
             if url:
                 # next page search
@@ -620,10 +621,24 @@ class YouTubeParser():
 
                     if not rr:
                         return []
+                    
+                    try:    
+                        r1 = rr["response"]["continuationContents"]["itemSectionContinuation"]
+                        r2 = r1["itemSectionRenderer"].get("contents",[])
+                        nP = r1.get('continuations','')
+                    except:
+                        try:
+                            r1 = rr["response"]["onResponseReceivedCommands"][0]["appendContinuationItemsAction"]["continuationItems"]
+                            r2 = []
+                            for i in range(len(r1)):
+                                if 'itemSectionRenderer' in r1[i]:
+                                    r2.extend(r1[i]['itemSectionRenderer']['contents'])
+                                if "continuationItemRenderer" in r1[i]:
+                                    nP_new = r1[1]["continuationItemRenderer"]
                         
-                    r1 = rr["response"]["continuationContents"]["itemSectionContinuation"]
-                    r2 = r1.get("contents",[])
-                    nP = r1.get('continuations','')
+                        except:
+                            printExc()
+                    
             else:
                 # new search
                 url = 'http://www.youtube.com/results?search_query=%s&filters=%s&search_sort=%s' % (pattern, searchType, sortBy) 
