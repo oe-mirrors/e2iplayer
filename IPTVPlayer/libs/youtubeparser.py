@@ -599,7 +599,9 @@ class YouTubeParser():
             #url = 'http://www.youtube.com/results?search_query=%s&filters=%s&search_sort=%s&page=%s' % (pattern, searchType, sortBy, page) 
 
             nextPage = {}
-
+            nP = {}
+            nP_new = {}
+            
             if url:
                 # next page search
                 sts, data =  self.cm.getPage(url, self.http_params, self.postdata)
@@ -646,6 +648,7 @@ class YouTubeParser():
                                 pass
                         
                         if "continuationItemRenderer" in r1[i]:
+                            nP_new = r1[1]["continuationItemRenderer"]
                             
 
             if not sts:
@@ -683,6 +686,21 @@ class YouTubeParser():
                     label = nextPage["nextContinuationData"]["label"]["runs"][0]["text"]
                 except:
                     label = _("Next Page")
+                
+                urlNextPage = self.updateQueryUrl(url, {'pbj':'1', 'ctoken': ctoken, 'continuation': ctoken, 'itct': itct}) 
+                params = {'type':'more', 'category': "search_next_page", 'title': label, 'page': str(int(page) + 1), 'url': urlNextPage}
+                printDBG(str(params))
+                currList.append(params)
+
+            if nP_new:
+                printDBG("-------------------------------------------------")
+                printDBG(json_dumps(nP_new))
+                printDBG("-------------------------------------------------")
+
+                
+                ctoken = nP_new["continuationEndpoint"]["continuationCommand"]["token"]
+                itct = nP_new["continuationEndpoint"]["clickTrackingParams"]
+                label = _("Next Page")
                 
                 urlNextPage = self.updateQueryUrl(url, {'pbj':'1', 'ctoken': ctoken, 'continuation': ctoken, 'itct': itct}) 
                 params = {'type':'more', 'category': "search_next_page", 'title': label, 'page': str(int(page) + 1), 'url': urlNextPage}
