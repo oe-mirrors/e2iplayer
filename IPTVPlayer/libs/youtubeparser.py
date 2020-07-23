@@ -634,13 +634,19 @@ class YouTubeParser():
                     
                     r1 = response['contents']['twoColumnSearchResultsRenderer']['primaryContents']['sectionListRenderer']['contents']
                     r2 = []
-                
+                    
+                    printDBG(json_dumps(r1))
                     for i in range(len(r1)):
-                        r2.extend(r1[i]['itemSectionRenderer']['contents'])
-                    try:
-                        nP = r1[i]['itemSectionRenderer'].get('continuations','')
-                    except:
-                        pass
+                        if 'itemSectionRenderer' in r1[i]:
+                            r2.extend(r1[i]['itemSectionRenderer']['contents'])
+                            try:
+                                if 'continuations' in r1[i]['itemSectionRenderer']:
+                                    nP = r1[i]['itemSectionRenderer'].get('continuations','')
+                            except:
+                                pass
+                        
+                        if "continuationItemRenderer" in r1[i]:
+                            
 
             if not sts:
                 return []
