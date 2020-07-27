@@ -19,7 +19,7 @@
 "hostbbcsport": "https://www.bbc.co.uk/sport",
 "hostbsto": "https://bs.to/",
 "hostcartoonhd": "https://cartoonhd.app/",
-"hostcasacinema": "https://www.casacinema.cam/"
+"hostcasacinema": "https://www.casacinema.cam/",
 "hostcb01": "https://cb01.run/",
 "hostcb01uno": "https://cb01.design/",
 "hostcdapl": "https://cda.pl/",
@@ -29,7 +29,7 @@
 "hostcimaclubcom": "http://cimaclub.com/",
 "hostcinemaxx": "http://cinemaxx.cc/",
 "hostcinemay": "http://www.cinemay.li/",
-"hostcinemalibero": "https://cinemalibero.plus/"
+"hostcinemalibero": "https://cinemalibero.plus/",
 "hostcineto": "https://cine.to/",
 "hostclassiccinemaonline": "http://classiccinemaonline.com/",
 "hostdailymotion": "http://dailymotion.com/",
@@ -107,7 +107,7 @@
 "hostlibrestream": "http://ls-streaming.com/",
 "hostliveleak": "https://liveleak.com/",
 "hostlocalmedia": "LocalMedia",
-"hostlookmovieag" : "https://lookmovie.ag/"
+"hostlookmovieag" : "https://lookmovie.ag/",
 "hostlosmovies": "http://losmovies.cx/",
 "hostluxveritatis": "https://luxveritatis.pl/",
 "hostmaxtvgo": "https://maxtvgo.com/",
@@ -129,7 +129,7 @@
 "hostninateka": "http://ninateka.pl/",
 "hostnuteczki": "https://nuteczki.eu/",
 "hostofficialfilmillimite": "https://official-film-illimite.ws/",
-"hostogladajto": "https://www.ogladaj.to"
+"hostogladajto": "https://www.ogladaj.to",
 "hostoipeirates": "https://oipeirates.tv/",
 "hostokgoals": "http://okgoals.com/",
 "hostororotv": "https://ororo.tv/",
@@ -162,7 +162,7 @@
 "hostsovdub": "http://sovdub.ru/",
 "hostspiegeltv": "http://spiegel.tv/",
 "hostsportdeutschland": "http://sportdeutschland.tv/",
-"hostsportitalia": "https://www.sportitalia.com"
+"hostsportitalia": "https://www.sportitalia.com",
 "hostspryciarze": "https://spryciarze.pl/",
 "hoststreaminghdfun": "https://streaminghd.online/",
 "hoststreamliveto": "https://streamlive.to/",
@@ -203,6 +203,6 @@
 "hostyesmoviesto": "https://yesmovies.to/",
 "hostyifytv": "https://ymovies.tv/",
 "hostyoutube": "https://youtube.com/",
-"hostzdfmediathek": "ZDFmediathek",
+"hostzdfmediathek": "ZDFmediathek"
 }
 
