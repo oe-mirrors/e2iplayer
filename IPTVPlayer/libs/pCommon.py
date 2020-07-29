@@ -457,6 +457,69 @@ class common:
         except Exception:
             printExc()
         return cookiesDict
+
+    def addCookieItem(self, cookiefile, cookieDict,ignoreDiscard=True, ignoreExpires=False):
+        printDBG("pCommon.addCookieItem %s to file '%s'" % (json_dumps(cookieDict), cookiefile))
+        
+        cj = None
+        # create a Cookie object from cookieDict
+        cookieName = cookieDict.get('name','')
+        cookieValue = cookieDict.get('value','')
+        cookiePort = cookieDict.get('port',None)
+        domainParts = cookieDict.get('domain','').split('/')
+        while len(domainParts) and ('http' in domainParts[0] or len(domainParts[0]) == 0):
+            del(domainParts[0])
+        
+        cookiePath = cookieDict.get('path','/')
+        cookieExpires = cookieDict.get('expires',None)
+        
+        if cookiePort == None:
+            cookiePortSpecified = False
+        else:
+            cookiePortSpecified = True
+        if not domainParts:
+            cookieDomain = ''
+            cookieDomainSpecified = False
+            cookieDomainDot = False
+        else:
+            cookieDomain = domainParts[0]
+            cookieDomainSpecified = True
+            if cookieDomain.startswith("."):
+                cookieDomainDot = True
+            else:
+                cookieDomainDot = False
+        
+        if not (cookieName and cookieValue):
+            printDBG("cookie not valid : %s " % json_dumps(cookieDict))
+            return
+        
+        try:    
+            c = cookielib.Cookie(version=0, name=cookieName, value=cookieValue, port=cookiePort, port_specified=cookiePortSpecified, domain=cookieDomain, domain_specified=cookieDomainSpecified, domain_initial_dot=cookieDomainDot, path=cookiePath, path_specified=True, secure=False, expires=cookieExpires, discard=True, comment=None, comment_url=None, rest={'HttpOnly': None}, rfc2109=False) 
+            
+        except:
+            printExc()
+            return
+            
+        try:
+            # load cookies from cookiefile
+            if self.usePyCurl():
+                cj = self._pyCurlLoadCookie(cookiefile, ignoreDiscard, ignoreExpires)
+            else:
+                cj = cookielib.MozillaCookieJar()
+                cj.load(cookiefile, ignore_discard = ignoreDiscard)
+            
+            #add new cookie
+            cj.set_cookie(c)
+        
+            # save in cookiefile
+            #if self.usePyCurl():
+            #    cj = self._pyCurlLoadCookie(cookiefile, ignoreDiscard, ignoreExpires)
+            #else:
+            cj.save(cookiefile, ignore_discard = ignoreDiscard)
+        except Exception:
+            printExc()
+        
+        
         
     def getCookieHeader(self, cookiefile, allowedNames=[], unquote=True, ignoreDiscard=True, ignoreExpires=False):
         ret = ''
@@ -1180,6 +1243,9 @@ class common:
                                     elif codeType == 2:
                                         jsCode = re.sub( "([defgh])=function\s[defgh]\(i\)\{.*?\},([defgh])\(function\(i", "PIPPO1 = function(i){window['_cf_chl_enter']()}, PIPPO1(function(i", jsCode)
 
+                                    jsCode = jsCode.replace("c=this||self,","c=window,")
+                                    jsCode = jsCode.replace("new c[('XMLHttpRequest')]()", "window['XMLHttpRequest']")
+                                    
                                     js_params = [{'path' : GetJSScriptFile('cf_new_max.byte')}]
                                     
                                     finale = '''
@@ -1218,7 +1284,10 @@ class common:
                                         postData = dict(parse_qsl(jsonPostData["post_data"].replace(" ","+")))
                                         
                                         cookie = jsonPostData['cookie']
-                                        c = cookie.split("=")
+                                        printDBG(cookie)
+                                        c2 = cookie.split(";")
+                                        c = c2[0].split("=")
+                                        self.addCookieItem(params['cookiefile'], {'name':c[0],'value':c[1],'domain':domain})
                                         printDBG("new cookie: " + str(c))
                                         
                                         sts, responseText = self.getPage(postUrl, params2, post_data=postData)
@@ -1227,9 +1296,9 @@ class common:
                                             string2 = responseText.encode('unicode-escape')
 
                                             # insert responseTextin code and re-execute duktape
-                                            code = "window['XMLHttpRequest']['responseText']=\"" + string2 + "\";\n\n" + code   
+                                            code = "window['XMLHttpRequest']['responseText']=\"" + string2 + "\";\nshowPost=false;\n" + code   
                                             if codeType == 2:
-                                                functionLetter= re.findall("([defgh]?)=function\([ij]\)\{", code)
+                                                functionLetter= re.findall("([defgh]+?)=function\([ij]\)\{", code)
                                                 if functionLetter:
                                                     code = code.replace("}()\n", "\nstr = " + functionLetter[0] +"(window['XMLHttpRequest']['responseText']);\nconsole.log(str);\n}()\n")
                                                 else:
@@ -1249,9 +1318,13 @@ class common:
                                                 printDBG(jsCode2)
                                                 printDBG("-------------------------------")
 
+                                                # fix jsCode2
+                                                jsCode2 = jsCode2.replace("\\n", "\n")
+                                                jsCode2 = re.sub("const\s?\{(.*?)\}\s?=\s?([a-z0-9\(\)]+?)", r"const \2 = {\1}", jsCode2, flags=re.S)
+                                                jsCode2 = jsCode2.replace("window._=function(){};", "window._=function(){};\nn_ = window['_'];\n")
                                                 # third execution of duktape
                                                 
-                                                code = data_input + '\n\n' + jsCode + '\n'+ jsCode2 + '\n' 
+                                                code = data_input + '\n' + jsCode + '\n'+ jsCode2 + '\n' 
                                                 printDBG("--------  code 3rd duktape - with new code from POST ---")
                                                 printDBG(code)
                                                 printDBG("----------------------------------------")
