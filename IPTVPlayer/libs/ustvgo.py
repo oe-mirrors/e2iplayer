@@ -76,6 +76,8 @@ class UstvgoApi(CBaseHostClass):
                     
                     for s in scripts:
                         base64Url = re.findall("filePath\s?=\s?atob\('([^']+?)'", s)
+                        base64Url.extend(re.findall("hlsURL\s?=\s?atob\('([^']+?)'", s))
+                        
                         if base64Url:
                             video_url = base64.b64decode(base64Url[0])
                             if self.cm.isValidUrl(video_url):
