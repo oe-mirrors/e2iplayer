@@ -44,10 +44,10 @@ def GetConfigList():
 ###################################################
 
 def gettytul():
-    return 'https://hdfull.io/'
+    return 'https://hdfull.la/'
     
 class SuggestionsProvider:
-    MAIN_URL = 'https://hdfull.io/'
+    MAIN_URL = 'https://hdfull.la/'
     COOKIE_FILE = ''
     def __init__(self):
         self.cm = common()
@@ -82,14 +82,14 @@ def jstr(item, key, default=''):
 class HDFull(CBaseHostClass, CaptchaHelper):
 
     def __init__(self):
-        CBaseHostClass.__init__(self, {'history':'hdfull.io', 'cookie':'hdfull.io.cookie'})
+        CBaseHostClass.__init__(self, {'history':'hdfull.la', 'cookie':'hdfull.la.cookie'})
         SuggestionsProvider.COOKIE_FILE = self.COOKIE_FILE
 
         self.HTTP_HEADER = self.cm.getDefaultHeader(browser='chrome')
         language = config.plugins.iptvplayer.hdfull_language.value
         self.defaultParams = {'header':self.HTTP_HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE, 'cookie_items':{'language':language}}
 
-        self.MAIN_URL    = 'https://hdfull.io/'
+        self.MAIN_URL    = 'https://hdfull.la/'
         self.DEFAULT_ICON_URL = 'https://ocio.farodevigo.es/img_contenido/noticias/2018/02/642946/web_cine_pirata.jpg'
 
         self.filters = []
@@ -272,7 +272,7 @@ class HDFull(CBaseHostClass, CaptchaHelper):
                 tabJs['view'] = {'url':self.getFullUrl(item), 'hash':version + '.1'}
 
         for key in tabJs.iterkeys():
-            tabJs[key]['name'] = 'hdfull.io_%s' % key
+            tabJs[key]['name'] = 'hdfull.la_%s' % key
             if not is_js_cached(tabJs[key]['name'], tabJs[key]['hash']):
                 sts, jsdata = self.getPage(tabJs[key]['url'])
                 if sts: 
@@ -484,7 +484,7 @@ class HDFull(CBaseHostClass, CaptchaHelper):
         if not sts: return linksTab
         cUrl = self.cm.meta['url']
 
-        printDBG(data)
+        #printDBG(data)
 
         linksTab = self._getLinks(cUrl, data)
 
@@ -569,7 +569,7 @@ class HDFull(CBaseHostClass, CaptchaHelper):
 
             self.cm.clearCookie(self.COOKIE_FILE, removeNames=['language'])
 
-            loginCookie = GetCookieDir('hdfull.io.login')
+            loginCookie = GetCookieDir('hdfull.la.login')
             self.login = config.plugins.iptvplayer.hdfull_login.value
             self.password = config.plugins.iptvplayer.hdfull_password.value
 

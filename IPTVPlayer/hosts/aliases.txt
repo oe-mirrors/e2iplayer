@@ -80,7 +80,7 @@
 "hostguardaserie": "http://guardaserie.media/",
 "hosthd1080online": "https://hd1080.online/",
 "hosthdfilmetv": "http://hdfilme.cx/",
-"hosthdfull": "https://hdfull.me/",
+"hosthdfull": "https://hdfull.la/",
 "hosthdkinomir": "http://hdkinomir.com/",
 "hosthdpopcornscom": "http://hdpopcorns.co/",
 "hosthdstreams": "https://hd-streams.org/",
