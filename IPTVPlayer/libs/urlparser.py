@@ -577,6 +577,7 @@ class urlparser:
                        'vidoo.tv':             self.pp.parserONLYSTREAMTV   ,
                        'vup.to':               self.pp.parserONLYSTREAMTV   ,
                        'upvideo.cc':           self.pp.parserONLYSTREAMTV   ,
+                       'playtube.ws':          self.pp.parserONLYSTREAMTV   ,
                        'jetload.net':          self.pp.parserJETLOADNET     ,
                        'mixdrop.co':           self.pp.parserMIXDROP        ,
                        'mixdrop.club':         self.pp.parserMIXDROP        ,
