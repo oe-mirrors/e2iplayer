@@ -593,6 +593,9 @@ class urlparser:
                        'premiumserver.club':   self.pp.parserMSTREAMICU     ,
                        'mystream.streamango.to': self.pp.parserMSTREAMICU   ,
                        'embed.mystream.to':    self.pp.parserMSTREAMICU     ,
+                       'dood.to':              self.pp.parserDOOD           ,
+                       'dood.watch':           self.pp.parserDOOD           ,
+                       'doodstream.com':       self.pp.parserDOOD           ,
                     }
         return
     
@@ -11553,6 +11556,7 @@ class pageParser(CaptchaHelper):
             if 'video' not in type and 'x-mpeg' not in type: continue
             if url == '': continue
             if 'video' in type:
+                url = strwithmeta(url, {'Referer':baseUrl, 'iptv_wget_continue':True, 'iptv_wget_timeout':100})
                 linksTab.append({'name':'[%s]' % type, 'url':url})
             elif 'x-mpeg' in type:
                 linksTab.extend(getDirectM3U8Playlist(url, checkContent=True, sortWithMaxBitrate=999999999))
@@ -12627,28 +12631,20 @@ class pageParser(CaptchaHelper):
         return urlTab
 
     def parserABCVIDEO(self, baseUrl):
-        printDBG("parserABCVIDEO baseUrl[%s]" % baseUrl)
+        printDBG("parserABCVIDEO baseUrl[%r]" % baseUrl)
 
-        HTTP_HEADER = self.cm.getDefaultHeader(browser='chrome')
-        referer = baseUrl.meta.get('Referer')
-        if referer: HTTP_HEADER['Referer'] = referer
-        COOKIE_FILE = GetCookieDir('abcvideo.cookie')
-        urlParams = {'header': HTTP_HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': COOKIE_FILE}
-        sts, data = self.cm.getPage(baseUrl, urlParams)
-        if not sts: return False
-        cUrl = self.cm.meta['url']
+        httpParams = {
+            'header' : {
+                'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.61 Safari/537.36',
+                'Accept': '*/*',
+                'Accept-Encoding': 'gzip',
+                'Referer' : baseUrl.meta.get('Referer', baseUrl)
+            } 
+        }
 
-        sitekey = self.cm.ph.getSearchGroups(data, '''sitekey=['"]([^'^"]+?)['"]''')[0]
-        if sitekey != '':
-            url = baseUrl + '&'
-            vid = self.cm.ph.getSearchGroups(url, '''[^/]/([0-9a-zA-Z]+?)[^0-9^a-z^A-Z]''')[0]
-            token, errorMsgTab = self.processCaptcha(sitekey, cUrl)
-            if token == '':
-                SetIPTVPlayerLastHostError('\n'.join(errorMsgTab))
-                return False
-            post_data = {'op':'download1', 'id':vid, 'g-recaptcha-response':token}
-            sts, data = self.cm.getPage(baseUrl, urlParams, post_data)
-            if not sts: return False
+        urlsTab = []
+        
+        sts, data = self.cm.getPage(baseUrl, httpParams)
 
         if "eval(function(p,a,c,k,e,d)" in data:
             printDBG( 'Host resolveUrl packed' )
@@ -12663,16 +12659,62 @@ class pageParser(CaptchaHelper):
                 printDBG( 'OK unpack: [%s]' % data)
             except Exception: pass
 
-        urlTab=[]
-        url = self.cm.ph.getSearchGroups(data, '''["'](https?://[^'^"]+?\.mp4(?:\?[^"^']+?)?)["']''', ignoreCase=True)[0]
-        if url != '':
-            url = strwithmeta(url, {'Origin':"https://" + urlparser.getDomain(baseUrl), 'Referer':baseUrl})
-            urlTab.append({'name':'mp4', 'url':url})
-        hlsUrl = self.cm.ph.getSearchGroups(data, '''["'](https?://[^'^"]+?\.m3u8(?:\?[^"^']+?)?)["']''', ignoreCase=True)[0]
-        if hlsUrl != '':
-            hlsUrl = strwithmeta(hlsUrl, {'Origin':"https://" + urlparser.getDomain(baseUrl), 'Referer':baseUrl})
-            urlTab.extend(getDirectM3U8Playlist(hlsUrl, checkExt=False, variantCheck=True, checkContent=True, sortWithMaxBitrate=99999999))
-        return urlTab
+        if sts:
+            sitekey = ph.search(data, '''grecaptcha.execute\(['"]([^"^']+?)['"]''')[0]
+            action = ph.search(data, '''grecaptcha.execute.*?action:\s['"]([^"^']+?)['"]''')[0]
+            if not sitekey:
+                printDBG("-----------------------")
+                printDBG(data)
+                printDBG("-----------------------")
+                printDBG("parserABCVideo.Catpcha sitekey not found")
+            else:    
+                #process captcha
+                printDBG("parserABCVideo.sitekey: % s" % sitekey)
+                query_url = self.cm.ph.getSearchGroups(data, "jQuery.get\(([^,]+?),")[0]
+                printDBG("parserABCVideo.query url: % s" % query_url)
+				
+                from Plugins.Extensions.IPTVPlayer.libs.recaptcha_v3_2captcha import UnCaptchaReCaptcha
+                recaptcha = UnCaptchaReCaptcha(lang=GetDefaultLang())
+                token = recaptcha.processCaptcha(sitekey, baseUrl, action)
+                if token == '':
+                    SetIPTVPlayerLastHostError('\n'.join(errorMsgTab)) 
+                    return False
+                
+                query_url = self.cm.getFullUrl(eval(query_url), baseUrl)
+                printDBG("parserABCVideo.query url after captcha: %s" % query_url)
+                
+                if self.cm.isValidUrl(query_url):
+                    httpParams['header'].update({
+                                'x-requested-with': 'XMLHttpRequest',
+                                'Referer': baseUrl
+                                })
+                                
+                    sts, data = self.cm.getPage(query_url, httpParams)
+                    
+                    if sts:
+                        printDBG("-----------------------")
+                        printDBG(data)
+                        printDBG("-----------------------")
+                        
+                        try:
+                            response = json_loads(data)
+                            for u in response:
+                                url = u.get('file','')
+                                if self.cm.isValidUrl(url):
+                                    url = urlparser.decorateUrl(url, {'Referer': baseUrl})
+                                    label = u.get('label','')
+                                if 'm3u' in url :
+                                    params = getDirectM3U8Playlist(url, checkExt=True, variantCheck=True, checkContent=True, sortWithMaxBitrate=99999999)
+                                    printDBG(str(params))    
+                                    urlsTab.extend(params)
+                                else:
+                                    params = {'name': label , 'url': url}
+                                    printDBG(str(params))
+                                    urlsTab.append(params)
+                                
+                        except:
+                            printExc()
+        return urlsTab
 
     def parserEASYLOAD(self, baseUrl):
         printDBG("parserEASYLOAD baseUrl[%s]" % baseUrl)
@@ -12847,3 +12889,44 @@ class pageParser(CaptchaHelper):
                             urlTabs.append({'name': 'link' , 'url': u}) 
                             
         return urlTabs
+
+    def parserDOOD(self, baseUrl):
+        printDBG("parserDOOD baseUrl[%s]" % baseUrl)
+
+        HTTP_HEADER = self.cm.getDefaultHeader(browser='chrome')
+        referer = baseUrl.meta.get('Referer')
+        if referer: HTTP_HEADER['Referer'] = referer
+        COOKIE_FILE = GetCookieDir('abcvideo.cookie')
+        urlParams = {'header': HTTP_HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': COOKIE_FILE}
+        baseUrl = baseUrl.replace('/d/', '/e/')
+        sts, data = self.cm.getPage(baseUrl, urlParams)
+        if not sts: return False
+        cUrl = self.cm.meta['url']
+
+        sitekey = ph.search(data, '''grecaptcha.execute\(['"]([^"^']+?)['"]''')[0]
+        action = ph.search(data, '''grecaptcha.execute.*?action:\s['"]([^"^']+?)['"]''')[0]
+        url = ph.search(data, '''grecaptcha.execute.*?.get\(['"]([^"^']+?)['"]''')[0]
+        token = ''
+        if sitekey != '': 
+            from Plugins.Extensions.IPTVPlayer.libs.recaptcha_v3_2captcha import UnCaptchaReCaptcha
+            recaptcha = UnCaptchaReCaptcha(lang=GetDefaultLang())
+            token = recaptcha.processCaptcha(sitekey, cUrl, action)
+            if token == '':
+                SetIPTVPlayerLastHostError('\n'.join(errorMsgTab)) 
+                return False
+            url = self.cm.getFullUrl(url+token, cUrl)
+            sts, data = self.cm.getPage(url, urlParams)
+            if not sts: return False
+
+        printDBG("parserDOOD data[%s]" % data)
+
+        urlTab=[]
+        url = self.cm.ph.getSearchGroups(data, '''(https?://[^'^"]+?\.mp4(?:\?[^"^']+?)?)''', ignoreCase=True)[0]
+        if url != '':
+            url = strwithmeta(url, {'Origin':"https://" + urlparser.getDomain(baseUrl), 'Referer':baseUrl})
+            urlTab.append({'name':'mp4', 'url':url})
+        hlsUrl = self.cm.ph.getSearchGroups(data, '''(https?://[^'^"]+?\.m3u8(?:\?[^"^']+?)?)''', ignoreCase=True)[0]
+        if hlsUrl != '':
+            hlsUrl = strwithmeta(hlsUrl, {'Origin':"https://" + urlparser.getDomain(baseUrl), 'Referer':baseUrl})
+            urlTab.extend(getDirectM3U8Playlist(hlsUrl, checkExt=False, variantCheck=True, checkContent=True, sortWithMaxBitrate=99999999))
+        return urlTab
