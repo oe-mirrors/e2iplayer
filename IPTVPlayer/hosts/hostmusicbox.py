@@ -29,7 +29,7 @@ config.plugins.iptvplayer.MusicBox_login = ConfigText(default="", fixed_size=Fal
 # Api keys
 ####################################################
 audioscrobbler_api_key = "d49b72ffd881c2cb13b4595e67005ac4"
-youtube_api_key = 'AIzaSyBtKhNioZvkXRU-k-gXTOfn1oFSR4nCG48'
+
 HEADER = {'User-Agent': 'Mozilla/5.0 (Windows NT 6.1; rv:33.0) Gecko/20100101 Firefox/33.0'}
 
 def GetConfigList():
@@ -310,13 +310,11 @@ class MusicBox(CBaseHostClass):
     def getLinksForVideo(self, cItem):
         printDBG("getLinksForVideo cItem[%s]" % cItem)
         
-        sts, data = self.cm.getPage("https://www.googleapis.com/youtube/v3/search?part=id%2Csnippet&q=" + cItem.get('page', '') + "&type=Music&maxResults=1&key=" + youtube_api_key)
-        if not sts: return []
-        match = re.compile('"videoId": "([^"]+?)"').findall(data)
-        videoUrls = []
-        for item in match:
-            video_path = "https://www.youtube.com/watch?v=" + item
-            videoUrls = self._getLinksForVideo(video_path)
+        search_list = YouTubeParser().getSearchResult(cItem.get('page', ''), "music", 1 , '')
+        if not search_list: return []
+
+        video_path = search_list[0]['url']
+        videoUrls = self._getLinksForVideo(video_path)
         
         return videoUrls
 

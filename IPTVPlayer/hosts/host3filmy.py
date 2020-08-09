@@ -308,7 +308,7 @@ class _3Filmy(CBaseHostClass):
 #            expires = self.cm.ph.getSearchGroups(data, '''<input[^>]*?name=['"]expires['"][^>]*?value=['"]([^'^"]+?)['"]''')[0]
 #            hash    = self.cm.ph.getSearchGroups(data, '''<input[^>]*?name=['"]hash['"][^>]*?value=['"]([^'^"]+?)['"]''')[0]
 #            post_data = 'expires=%s&hash=%s&username=%s&password=%s&remember_me=ON' % (expires, hash, self.login, self.password)
-            post_data = {'remember_me':'ON', 'username':self.login, 'password':self.password}
+            post_data = {'remember_me':'ON', 'nickname':self.login, 'password':self.password}
             inputData = self.cm.ph.getAllItemsBeetwenMarkers(data, '<input type="hidden"', '>')
             for item in inputData:
                 name  = self.cm.ph.getSearchGroups(item, '''name=['"]([^'^"]+?)['"]''')[0]
