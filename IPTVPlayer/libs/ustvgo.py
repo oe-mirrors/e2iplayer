@@ -61,12 +61,14 @@ class UstvgoApi(CBaseHostClass):
                 #</div>
                 
                 tmp = self.cm.ph.getDataBeetwenNodes(data, ('<div','>','iframe'), ('</div>'), False)[1]
-                iframe_url = self.getFullUrl(self.cm.ph.getSearchGroups(tmp, '''src=['"]([^'^"]+?)['"]''')[0])
-                printDBG("UstvgoApi - iframe url: %s" % iframe_url)
-                
-                params = MergeDicts(self.http_params, {'Referer': url})
-                sts, data = self.cm.getPage(iframe_url, params)
-                
+                if tmp:
+                    iframe_url = self.getFullUrl(self.cm.ph.getSearchGroups(tmp, '''src=['"]([^'^"]+?)['"]''')[0])
+                    printDBG("UstvgoApi - iframe url: %s" % iframe_url)
+                    
+                    params = MergeDicts(self.http_params, {'Referer': url})
+                    sts, data = self.cm.getPage(iframe_url, params)
+                else:
+                    printDBG("UstvgoApi - iframe not found... trying with main page")
                 if sts: 
                     printDBG("------------- iframe player html code ----------")
                     printDBG(data)
