@@ -40,7 +40,7 @@ def GetConfigList():
 
 
 def gettytul():
-    return 'https://ymovies.to/'
+    return 'https://ymovies.se/'
 
 class YifyTV(CBaseHostClass):
     def __init__(self):
@@ -48,14 +48,15 @@ class YifyTV(CBaseHostClass):
         self.filterCache = {}
         self.cacheLinks = {}
         self.VIDEO_HOSTINGS_MAP = {
-            "rpd":"https://www.rapidvideo.com/embed/{0}", 
-            "vza":"https://vidoza.net/embed-{0}.html", 
             "akv":"https://akvideo.stream/embed-{0}.html", 
+            "lox":"https://vidlox.tv/embed-{0}.html",
+            "meg":"https://mega.nz/embed/{0}",
+            "rpd":"https://www.rapidvideo.com/embed/{0}", 
             "rpt":"https://www.raptu.com/e/{0}", 
-            "lox":"https://vidlox.tv/embed-{0}.html", 
-            "vsh":"http://vshare.eu/embed-{0}.html"
+            "vsh":"http://vshare.eu/embed-{0}.html",
+            "vza":"https://vidoza.net/embed-{0}.html" 
         }
-        self.DEFAULT_ICON_URL="https://ymovies.to/wp-content/themes/yifybootstrap3/img/logo.svg"
+        self.DEFAULT_ICON_URL="https://ymovies.se/wp-content/themes/yifybootstrap3/img/logo.svg"
         self.USER_AGENT = 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/81.0.4044.138 Safari/537.36'
         self.HEADER = {'User-Agent': self.USER_AGENT, 'DNT':'1', 'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8', 'Accept-Language':'pl,en-US;q=0.7,en;q=0.3', 'Accept-Encoding':'gzip, deflate'}
         
@@ -63,7 +64,7 @@ class YifyTV(CBaseHostClass):
         self.AJAX_HEADER.update( {'X-Requested-With': 'XMLHttpRequest'} )
         
         
-        self.MAIN_URL    = 'https://ymovies.to/'
+        self.MAIN_URL    = 'https://ymovies.se/'
         self.SRCH_URL    = self.getFullUrl('?s=')
         
         self.MAIN_CAT_TAB = [{'category':'list_items',            'title': _('Releases'),          'url':self.getFullUrl('files/releases/') },
@@ -283,7 +284,7 @@ class YifyTV(CBaseHostClass):
             page = cItem.get('page', 1)
             params = dict(cItem)
             params.update( {'title':_('Next page'), 'page':page+1} )
-            self.addDir(params)
+            self.addMore(params)
         
     def listSearchResult(self, cItem, searchPattern, searchType):
         printDBG("YifyTV.listSearchResult cItem[%s], searchPattern[%s] searchType[%s]" % (cItem, searchPattern, searchType))
@@ -350,7 +351,7 @@ class YifyTV(CBaseHostClass):
             subLangs = subLangs.split(',')
             for lang in subLangs:
                 if subID != '':
-                    params = {'title':lang, 'url':'https://ymovies.to/player/bajarsub.php?%s_%s' % (subID, lang), 'lang':lang, 'format':'srt'}
+                    params = {'title':lang, 'url':'https://ymovies.se/player/bajarsub.php?%s_%s' % (subID, lang), 'lang':lang, 'format':'srt'}
                     printDBG(str(params))
                     sub_tracks.append(params)
         
@@ -421,7 +422,7 @@ class YifyTV(CBaseHostClass):
             
             for sou in souTab:
                 post_data = {'fv':'27', 'url':baseUrl, 'sou':sou}
-                url = 'https://ymovies.to/playerlite/pk/pk/plugins/player_p2.php'
+                url = 'https://ymovies.se/playerlite/pk/pk/plugins/player_p2.php'
                 sts, data = self.getPage(url, {'header':header}, post_data)
                 if not sts: 
                     return []

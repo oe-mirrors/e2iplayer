@@ -201,7 +201,7 @@
 "hostwrealu24tv": "https://wrealu24.tv/",
 "hostxrysoise": "https://xrysoi.tv/",
 "hostyesmoviesto": "https://yesmovies.to/",
-"hostyifytv": "https://ymovies.tv/",
+"hostyifytv": "https://ymovies.se/",
 "hostyoutube": "https://youtube.com/",
 "hostzdfmediathek": "ZDFmediathek"
 }
