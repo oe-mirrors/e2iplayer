@@ -172,6 +172,7 @@ class DixMax(CBaseHostClass):
             self.fillCacheFilters(cItem, data)
 
             MAIN_CAT_TAB = [
+                            {'category':'list_items',     'title': _("Your lists") ,    'url': "https://dixmax.com/v2/listas/youself" },
                             {'category':'list_filters',   'title': _("Filters") ,     'url': self.MAIN_URL},
                             {'category':'search',         'title': _('Search'),       'search_item':True       },
                             {'category':'search_history', 'title': _('Search history'),                        }]
