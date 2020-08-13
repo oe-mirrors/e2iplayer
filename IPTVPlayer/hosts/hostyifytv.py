@@ -63,8 +63,9 @@ class YifyTV(CBaseHostClass):
         self.AJAX_HEADER = dict(self.HEADER)
         self.AJAX_HEADER.update( {'X-Requested-With': 'XMLHttpRequest'} )
         
-        
         self.MAIN_URL    = 'https://ymovies.se/'
+        self.AJAX_URL = self.MAIN_URL + "wp-admin/admin-ajax.php?"
+
         self.SRCH_URL    = self.getFullUrl('?s=')
         
         self.MAIN_CAT_TAB = [{'category':'list_items',            'title': _('Releases'),          'url':self.getFullUrl('files/releases/') },
@@ -237,20 +238,24 @@ class YifyTV(CBaseHostClass):
             url = baseUrl
         
         sts, data = self.getPage(url)
-        if not sts: return 
+        if not sts: 
+            return 
         
         #printDBG(data)
         
         if ('/page/%s/' % (page + 1)) in data:
             nextPage = True
-        else: nextPage = False
+        else: 
+            nextPage = False
         
         # fix to check both combinations of var posts.. yifi periodically changes and takes 
         # out the spaces for some reason.. probably to break kodi boxes etc.  Here i'll be
         # checking for both to help prevent a further break when they change again. CM
 
-        if 'var posts = {' in data: data = self.cm.ph.getDataBeetwenMarkers(data, 'var posts = {', '};', False)[1]
-        elif 'var posts={' in data: data = self.cm.ph.getDataBeetwenMarkers(data, 'var posts={', '};', False)[1]
+        if 'var posts = {' in data: 
+            data = self.cm.ph.getDataBeetwenMarkers(data, 'var posts = {', '};', False)[1]
+        elif 'var posts={' in data: 
+            data = self.cm.ph.getDataBeetwenMarkers(data, 'var posts={', '};', False)[1]
         data = '{' + data + '}'
         
         self._listItems(cItem, data, nextPage)
@@ -260,12 +265,13 @@ class YifyTV(CBaseHostClass):
         
         url = cItem['url'] + '&num=%s' % cItem.get('page', 1)
         sts, data = self.getPage(url)
-        if not sts: return 
+        if not sts: 
+            return 
         
         self._listItems(cItem, data, True)
         
     def _listItems(self, cItem, data, nextPage):
-        printDBG("YifyTV.listItems")
+        printDBG("YifyTV._listItems")
         try:
             data = byteify(json_loads(data), noneReplacement='', baseTypesAsString=True)
             #printDBG(data)
@@ -317,78 +323,94 @@ class YifyTV(CBaseHostClass):
         
         imdbid = self.cm.ph.getSearchGroups(data, '''var\s+imdbid\s*=\s*['"]([^'^"]+?)['"]''')[0]
         
-        jscode = '$ = function(){return {ready:function(){}}};\n' + self.cm.ph.getDataBeetwenMarkers(data, 'function autoPlay()', '</script>')[1][:-9]
-        try:
-            jscode = base64.b64decode('''dmFyIGRvY3VtZW50ID0ge307DQp2YXIgd2luZG93ID0gdGhpczsNCnZhciBsb2NhdGlvbiA9IHt9Ow0KbG9jYXRpb24uaG9zdG5hbWUgPSAiJXMiOw0KbG9jYXRpb24udG9TdHJpbmcgPSBmdW5jdGlvbigpew0KICAgICAgICAgICAgICAgICAgICAgIHJldHVybiAiJXMiOw0KICAgICAgICAgICAgICAgICAgICB9Ow0KJXM7DQoNCnByaW50KHdpbmRvdy5wYXJhbWV0cm9zKQ==''') % (self.up.getDomain(self.getMainUrl()), self.getMainUrl(), jscode)
-            #printDBG("+++++++++++++++++++++++  CODE  ++++++++++++++++++++++++")
-            #printDBG(jscode)
-            #printDBG("+++++++++++++++++++++++++++++++++++++++++++++++++++++++")
-            ret = js_execute( jscode )
-            #{'code': 0, 'data': 'pic=ZGxTYlJreFlidzNRNUZuTzlQcHJvZ3kzTlNCZEppNGFSMmEydC9rVXVWaz0=penc&pic=OUNiUzVRdHNGQldoMmVSeWdFL1gzOFA4Zy9nU250bjJUTzNvOWpKVTlSZz0=penc&&lox=7k62t29g6h9v&id=tt1206885\n', 'sts': True}
-            if ret['sts'] and 0 == ret['code']:
-                decoded = ret['data'].strip()
-                printDBG('DECODED DATA -> [%s]' % decoded)
-            data = decoded
-        except Exception:
-            printExc()
+        videoTable = self.cm.ph.getDataBeetwenMarkers(data, ("<table", ">","videos-table"), "</table>")[1]
+        mirrors= self.cm.ph.getAllItemsBeetwenMarkers(videoTable, "<tr><td data-label", "</tr>")
         
-        sub_tracks = []
-        subLangs = self.cm.ph.getSearchGroups(data, '&sub=([^&]+?)&')[0]
-        if subLangs == '':
-            tmp = re.compile("\=([^&]*?)&").findall(data)
-            for it in tmp:
-                for e in ['PT2', 'EN', 'FR', 'ES']:
-                    if e in it:
-                        subLangs = it
-                        break
-                if '' != subLangs:
-                    break
+        for mirror in mirrors:
+
+            name = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(mirror, ("<h6",">"), "</h6>", False)[1])
         
-        if subLangs != '':
-            subID    = self.cm.ph.getSearchGroups(data, '&id=(tt[^&]+?)&')[0]
-            if subID == '':
-                subID    = self.cm.ph.getSearchGroups(data, '&pic=(tt[^&]+?)&')[0]
-            subLangs = subLangs.split(',')
-            for lang in subLangs:
-                if subID != '':
-                    params = {'title':lang, 'url':'https://ymovies.se/player/bajarsub.php?%s_%s' % (subID, lang), 'lang':lang, 'format':'srt'}
-                    printDBG(str(params))
-                    sub_tracks.append(params)
-        
-        data = data.split('&')
-        idx = 1
-        for item in data:
-            tmp = item.split('=')
-            printDBG(str(idx) + " ----> " + str(tmp))
+            quality = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(mirror, ("<td",">","Quality"), "</td>", False)[1])
+            if quality:
+                name = name + " " + quality
             
-            if len(tmp)< 2: 
-                continue
+            lang = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(mirror, ("<td",">","Language"), "</td>", False)[1])
+            if lang:
+                name = name + " " + lang
                 
-            if len(tmp) == 3:
-                tmp[1] = tmp[1] + "=" + tmp[2]
+            subtitle = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(mirror, ("<td",">","Subtitle"), "</td>", False)[1])
+
+            if len(subtitle)>0 and (not "n/d" in subtitle.lower()):
+                name = name + " " + subtitle
             
-            if len(tmp) == 4 and tmp[2] == "":
-                tmp[1] = tmp[1] + "==" + tmp[3]
+            printDBG("mirror name : %s" % name)
+
+            jscode = self.cm.ph.getDataBeetwenMarkers(mirror, ("<script",">"), "</script>", False)[1]
             
-            if tmp[1].endswith('enc'):
-                url = strwithmeta(tmp[1], {'Referer': cItem['url'], 'sou':tmp[0], 'imdbid':imdbid, 'external_sub_tracks':sub_tracks})
-                urlTab.append({'name':_('Mirror') + ' %s' % idx, 'url':url, 'need_resolve':1})
-            elif '' != self.VIDEO_HOSTINGS_MAP.get(tmp[0], ''):
-                url = self.VIDEO_HOSTINGS_MAP[tmp[0]].format(tmp[1])
-                url = strwithmeta(url, {'Referer': cItem['url'], 'imdbid':imdbid, 'external_sub_tracks':sub_tracks})
-                params = {'name':_('Mirror') + ' %s [%s]' % (idx, self.up.getHostName(url)), 'url':url, 'need_resolve':1}
-                printDBG(str(params))
-                urlTab.append(params)
+            if jscode:
+                jscode = "var window={ eval: function(t){ console.log(t); } }; \n\n " + jscode
+                
+                #printDBG("+++++++++++++++++++++++  CODE  ++++++++++++++++++++++++")
+                #printDBG(jscode)
+                #printDBG("+++++++++++++++++++++++++++++++++++++++++++++++++++++++")
+                ret = js_execute( jscode )
+
+                if ret['sts'] and 0 == ret['code']:
+                    action_params = self.cm.ph.getSearchGroups(ret['data'], "ajaxActionGet\(([^\)]+?)\)")[0]
+                    sec = "play"
+                    ajax_url = self.AJAX_URL + eval(action_params)
             
-            idx += 1
+                    printDBG("ajax url: %s" % ajax_url)
+            
+                    params = {'header':self.AJAX_HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
+                    params['header']['Referer'] = url
+        
+                    sts, ajaxData = self.cm.getPage(ajax_url, params)  
+            
+                    if sts:
+                        #printDBG("-------------")
+                        #printDBG( ajaxData)
+                        #printDBG("-------------")
+
+                        try:
+                            response = json_loads(ajaxData)
+                        
+                            htmlcode = response["htmlcode"]
+                            #printDBG(htmlcode)
+                        
+                            objs = re.findall("(\{[^\}]+?\})", htmlcode)
+                        
+                            for obj in objs:
+                                if "linkTo" in obj:
+                                    printDBG("-------------------")
+                                    printDBG(obj)
+                                    printDBG("-------------------")
+                        
+                                    try:
+                                        videoData=json_loads(obj)
+                                        videoUrl = videoData["linkTo"]
+                                        #printDBG("mirror video url : %s" % videoUrl)
+                                        
+                                        videoUrl = strwithmeta(videoUrl, {'Referer': cItem['url'], 'imdbid':imdbid}) #'external_sub_tracks':sub_tracks})
+                                        params = {'name': name, 'url': videoUrl, 'need_resolve':1}
+                                        printDBG(str(params))
+                                        urlTab.append(params)
+                                        
+                                    except:
+                                        printExc()
+                        
+                                    break
+                        except:
+                            printExc()
 
         if len(urlTab):
             self.cacheLinks[cItem['url']] = urlTab
 
         if self.cm.isValidUrl(trailerUrl) and 1 == self.up.checkHostSupport(trailerUrl):
-            params = {'name':self.cleanHtmlStr(trailer), 'url':trailerUrl, 'need_resolve':1}
-            printDBG(str(params))
-            urlTab.insert(0, params)
+            if not 'listType'in trailerUrl:
+                params = {'name':self.cleanHtmlStr(trailer), 'url':trailerUrl, 'need_resolve':1}
+                printDBG(str(params))
+                urlTab.insert(0, params)
 
         return urlTab
 
