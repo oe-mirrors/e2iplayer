@@ -564,6 +564,7 @@ class urlparser:
                        'vidlox.tv':             self.pp.parserVIDLOXTV      ,
                        'vidnode.net':           self.pp.parserVIDCLOUD      ,
                        'vidoza.net':            self.pp.parserVIDOZANET     ,
+                       'vidoza.co':             self.pp.parserVIDOZANET     ,
                        'vidshare.tv':           self.pp.parserVIDSHARETV    ,
                        'vidsource.me':          self.pp.parserVIDSOURCE     ,
                        'vidspot.net':           self.pp.parserVIDSPOT       ,
