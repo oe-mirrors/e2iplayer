@@ -240,6 +240,7 @@ class FranceTv(CBaseHostClass):
                     params={'title' : r[0]['channel_name'], 'desc': r[1]['plot'], 'icon': r[2]['thumb'], 'url': url, 'category': 'live'}
                 else:
                     params={'title' : r[0]['channel_name'], 'desc': r[1]['plot'], 'url': url, 'category': 'live'}
+                printDBG(str(params))
                 self.addVideo(params)
     
     def listChannels(self, cItem):
@@ -453,7 +454,7 @@ class FranceTv(CBaseHostClass):
         
         linksTab = []
         
-        if cItem['category'] == 'video':
+        if cItem['category'] in ('video','live'):
             sts, data = self.getPage(cItem['url'])
             
             if not sts: 
@@ -475,6 +476,7 @@ class FranceTv(CBaseHostClass):
                     else:
                         geoblock = False
                     
+                    printDBG("url: %s, video format: %s" % (v.get('url',''),video_format))
                     # check times
                     now = time.time()
                     for interval in v.get('plages_ouverture') or []:
