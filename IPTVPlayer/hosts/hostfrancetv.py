@@ -468,7 +468,7 @@ class FranceTv(CBaseHostClass):
             for v in data['videos']:
                 # check video format 
                 video_format = v.get('format')
-                if video_format in ("hls_v1_os","hls_v5_os"):
+                if video_format in ("hls_v1_os","hls_v5_os","hls"):
                     # check georestricted streams
                     countries = v.get('geoblocage')
                     if countries:
