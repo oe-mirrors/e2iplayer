@@ -68,6 +68,7 @@ hostfilmpalast
 hostfilmpertutti
 hostfilmstreamhdit
 hostfilmstreamvkcom
+hostfilmynadzis
 hostfokustv
 hostforjatn
 hostfrancetv

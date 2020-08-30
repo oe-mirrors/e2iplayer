@@ -70,6 +70,7 @@
 "hostfilmpertutti": "https://filmpertutti.pro/",
 "hostfilmstreamhdit": "http://filmstreamhd.it/",
 "hostfilmstreamvkcom": "http://filmstreamvk.club/",
+"hostfilmynadzis": "https://filmynadzis.pl/",
 "hostfokustv": "http://fokus.tv/",
 "hostforjatn": "https://forja.tn/",
 "hostfrancetv" : "https://www.france.tv",

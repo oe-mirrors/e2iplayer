@@ -132,6 +132,7 @@ class IPTVHostsGroups:
         'filmpertutti' : [ 'italian', 'moviesandseries'] ,
         'filmstreamhdit' : [ 'italian', 'moviesandseries'] ,
         'filmstreamvkcom' : [ 'french', 'moviesandseries'] ,
+        'filmynadzis': [ 'moviesandseries', 'polish'] ,
         'fokustv' : [ 'documentary', 'live', 'polish', 'science'] ,
         'forjatn' : [ 'arabic', 'english', 'french', 'moviesandseries'] ,
         'francetv' : [ 'french'] ,
