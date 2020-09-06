@@ -128,9 +128,17 @@ class Raiplay(CBaseHostClass):
                 video_url=response["video"]["content_url"]
                 printDBG(video_url);
                 video_url=strwithmeta(video_url, {'User-Agent': self.RELINKER_USER_AGENT })
-                linksTab.append({'name': 'hls', 'url': video_url})           
-                linksTab.extend(getDirectM3U8Playlist(video_url, checkExt=False, variantCheck=True, checkContent=True, sortWithMaxBitrate=99999999))  
-            
+                links = getDirectM3U8Playlist(video_url, checkExt=False, variantCheck=True, checkContent=True, sortWithMaxBitrate=99999999)
+                if links:
+                    linksTab.append({'name': 'hls', 'url': video_url})           
+                    linksTab.extend(links)  
+                else:
+                    # for some wrong links opening another mpd link instead of index.m3u8
+                    sts, data = self.getPage(video_url, {'User-Agent': self.RELINKER_USER_AGENT })
+                    if sts:
+                        printDBG(data)
+                        if self.cm.isValidUrl(data.strip()):
+                            linksTab.append({'name': 'mpd', 'url': data.strip()})  
         else:
             printDBG("Raiplay: video form category %s with url %s not handled" % (cItem["category"],cItem["url"]));
             linksTab.append({'url': cItem["url"], 'name': 'link1'})
