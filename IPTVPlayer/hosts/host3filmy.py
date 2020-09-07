@@ -4,10 +4,11 @@
 ###################################################
 from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _
 from Plugins.Extensions.IPTVPlayer.components.ihost import CHostBase, CBaseHostClass
-from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, rm
+from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, GetDefaultLang, rm
 from Plugins.Extensions.IPTVPlayer.tools.iptvtypes import strwithmeta
 from Plugins.Extensions.IPTVPlayer.libs.youtube_dl.utils import unescapeHTML
 from Plugins.Extensions.IPTVPlayer.libs.e2ijson import loads as json_loads
+from Plugins.Extensions.IPTVPlayer.libs import ph
 ###################################################
 
 ###################################################
@@ -305,10 +306,18 @@ class _3Filmy(CBaseHostClass):
             sts, data = self.getPage('https://3filmy.com/ajax/modal', httpParams, post_data)
             if not sts: return False
 
+            post_data = {'remember_me':'ON', 'nickname':self.login, 'password':self.password}
+            sitekey  = self.cm.ph.getSearchGroups(data, 'data-sitekey="([^"]+?)"')[0]
+            if sitekey != '':
+                from Plugins.Extensions.IPTVPlayer.libs.hcaptcha_2captcha import UnCaptchahCaptcha
+                recaptcha = UnCaptchahCaptcha(lang=GetDefaultLang())
+                token = recaptcha.processCaptcha(sitekey, self.cm.meta['url'])
+                if token != '':
+                    post_data['g-recaptcha-response'] = token
+                    post_data['h-captcha-response'] = token
 #            expires = self.cm.ph.getSearchGroups(data, '''<input[^>]*?name=['"]expires['"][^>]*?value=['"]([^'^"]+?)['"]''')[0]
 #            hash    = self.cm.ph.getSearchGroups(data, '''<input[^>]*?name=['"]hash['"][^>]*?value=['"]([^'^"]+?)['"]''')[0]
 #            post_data = 'expires=%s&hash=%s&username=%s&password=%s&remember_me=ON' % (expires, hash, self.login, self.password)
-            post_data = {'remember_me':'ON', 'nickname':self.login, 'password':self.password}
             inputData = self.cm.ph.getAllItemsBeetwenMarkers(data, '<input type="hidden"', '>')
             for item in inputData:
                 name  = self.cm.ph.getSearchGroups(item, '''name=['"]([^'^"]+?)['"]''')[0]
