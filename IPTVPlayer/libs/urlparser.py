@@ -597,6 +597,7 @@ class urlparser:
                        'dood.to':              self.pp.parserDOOD           ,
                        'dood.watch':           self.pp.parserDOOD           ,
                        'doodstream.com':       self.pp.parserDOOD           ,
+                       'govod.tv':             self.pp.parserWIIZTV         ,
                     }
         return
     

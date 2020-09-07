@@ -71,6 +71,7 @@ hostfullmatchtvcom
 hostgamatocom
 hostgamatotvme
 hostgledalica
+hostgovodtv
 hostgreekdocumentaries3
 hostguardaserie
 hosthd1080online
@@ -188,7 +189,6 @@ hostvimeo
 hostvodpl
 hostvumedicom
 hostwatchcartoononline
-hostwatchmovies
 hostwatchwrestling
 hostwatchwrestlinguno
 hostwebstream
