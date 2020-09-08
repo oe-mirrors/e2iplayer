@@ -5,7 +5,6 @@ host3sktv
 host7tvde
 host9anime
 hostakoam
-hostallboxtv
 hostalltubetv
 hostaltadefinizione
 hostaltadefinizione01
@@ -146,7 +145,6 @@ hostrtbfbe
 hostrteieplayer
 hostrtlmost
 hostserialeco
-hostserialnet
 hostserienstreamto
 hostseriesonline
 hostserijeonline
