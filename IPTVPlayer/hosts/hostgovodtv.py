@@ -80,7 +80,7 @@ class govodtv(CBaseHostClass):
         dat = self.cm.ph.getDataBeetwenMarkers(data, '<ul class="fc-main-list">', '</ul>', False)[1]
         dat = re.compile('<a[^>]+?href="([^"]+?)"[^>]*?>(.+?)</a>').findall(re.sub('\s+', ' ', dat))
         for item in dat:
-            self.cacheMovieFilters['sort'].append({'title': self.cleanHtmlStr(item[1]), 'url': self.getFullUrl(item[0])})
+            self.cacheMovieFilters['sort'].append({'title': self.cleanHtmlStr(item[1]).replace('ych', 'e'), 'url': self.getFullUrl(item[0])})
 
 #        sts, data = self.getPage(self.MAIN_URL)
 #        if not sts: return
@@ -236,6 +236,32 @@ class govodtv(CBaseHostClass):
                         
         return self.up.getVideoLinkExt(baseUrl)
 
+    def getArticleContent(self, cItem):
+        printDBG("govodtv.getArticleContent [%s]" % cItem)
+        itemsList = []
+
+        sts, data = self.cm.getPage(cItem['url'])
+        if not sts: return []
+
+        title = cItem['title']
+        icon = cItem.get('icon', '')
+        desc = cItem.get('desc', '')
+
+        title = self.cm.ph.getDataBeetwenMarkers(data, '<h1 itemprop="name">', '</h1>', True)[1]
+        desc = self.cm.ph.getDataBeetwenMarkers(data, '<p class="f-desc">', '</p>', False)[1]
+        tmp = self.cm.ph.getAllItemsBeetwenNodes(data, ('<strong', '>'), ('</p', '>'))
+        for item in tmp:
+            list = ['Kategorie: ', 'Czas trwania:', 'Kraj produkcji: ', 'Rok produkcji: ']
+            l = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(item, '<strong>', '</strong>', False)[1])
+            if l in list:
+                itemsList.append((l, self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(item, '</strong>', '</p>', False)[1])))
+
+        if title == '': title = cItem['title']
+        if icon  == '': icon  = cItem.get('icon', '')
+        if desc  == '': desc  = cItem.get('desc', '')
+
+        return [{'title':self.cleanHtmlStr( title ), 'text': self.cleanHtmlStr( desc ), 'images':[{'title':'', 'url':self.getFullUrl(icon)}], 'other_info':{'custom_items_list':itemsList}}]
+
     def handleService(self, index, refresh = 0, searchPattern = '', searchType = ''):
         printDBG('handleService start')
         
@@ -286,3 +312,5 @@ class IPTVHost(CHostBase):
     def __init__(self):
         CHostBase.__init__(self, govodtv(), True, [])
 
+    def withArticleContent(self, cItem):
+        return True

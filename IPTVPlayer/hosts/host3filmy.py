@@ -338,7 +338,7 @@ class _3Filmy(CBaseHostClass):
         return self.loggedIn
 
     def getArticleContent(self, cItem):
-        printDBG("cda-filmy.getArticleContent [%s]" % cItem)
+        printDBG("3filmy.getArticleContent [%s]" % cItem)
         itemsList = []
 
         sts, data = self.cm.getPage(cItem['url'])
