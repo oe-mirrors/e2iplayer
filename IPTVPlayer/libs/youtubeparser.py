@@ -204,6 +204,19 @@ class YouTubeParser():
         new_url = urlunparse((urlParts[0],urlParts[1],urlParts[2],urlParts[3], new_query, urlParts[5]))
         return new_url
 
+    def findKeys(self, node, kv):
+        if isinstance(node, list):
+            for i in node:
+                for x in self.findKeys(i, kv):
+                    yield x
+        elif isinstance(node, dict):
+            if kv in node:
+                yield node[kv]
+            for j in node.values():
+                for x in self.findKeys(j, kv):
+                    yield x
+
+
     def getThumbnailUrl(self, thumbJson, maxWidth = 1000, hq=False):
         
         url = ''
@@ -593,6 +606,8 @@ class YouTubeParser():
     #def getVideosFromSearch(self, pattern, page='1'):
     def getSearchResult(self, pattern, searchType, page, nextPageCategory, sortBy='', url = ''):
         printDBG('YouTubeParser.getSearchResult pattern[%s], searchType[%s], page[%s]' % (pattern, searchType, page))
+        
+        
         currList = []
               
         try:
@@ -609,36 +624,7 @@ class YouTubeParser():
                 
                 if sts:
                     response = json_loads(data)
-                    printDBG("--------------------")
-                    printDBG(json_dumps(response))
-                    printDBG("--------------------")
 
-                    rr = {}
-                    for r in response:
-                        if r.get("response",""):
-                            rr = r
-                            break
-
-                    if not rr:
-                        return []
-                    
-                    try:    
-                        r1 = rr["response"]["continuationContents"]["itemSectionContinuation"]
-                        r2 = r1["itemSectionRenderer"].get("contents",[])
-                        nP = r1.get('continuations','')
-                    except:
-                        try:
-                            r1 = rr["response"]["onResponseReceivedCommands"][0]["appendContinuationItemsAction"]["continuationItems"]
-                            r2 = []
-                            for i in range(len(r1)):
-                                if 'itemSectionRenderer' in r1[i]:
-                                    r2.extend(r1[i]['itemSectionRenderer']['contents'])
-                                if "continuationItemRenderer" in r1[i]:
-                                    nP_new = r1[1]["continuationItemRenderer"]
-                        
-                        except:
-                            printExc()
-                    
             else:
                 # new search
                 url = 'http://www.youtube.com/results?search_query=%s&filters=%s&search_sort=%s' % (pattern, searchType, sortBy) 
@@ -649,56 +635,73 @@ class YouTubeParser():
                     data2 = self.cm.ph.getDataBeetwenMarkers(data,"window[\"ytInitialData\"] =", "};", False)[1]
                     response = json_loads(data2 + "}")
                     
-                    r1 = response['contents']['twoColumnSearchResultsRenderer']['primaryContents']['sectionListRenderer']['contents']
-                    r2 = []
-                    
-                    printDBG(json_dumps(r1))
-                    for i in range(len(r1)):
-                        if 'itemSectionRenderer' in r1[i]:
-                            r2.extend(r1[i]['itemSectionRenderer']['contents'])
-                            try:
-                                if 'continuations' in r1[i]['itemSectionRenderer']:
-                                    nP = r1[i]['itemSectionRenderer'].get('continuations','')
-                            except:
-                                pass
-                        
-                        if "continuationItemRenderer" in r1[i]:
-                            nP_new = r1[1]["continuationItemRenderer"]
-                            
-
+            
             if not sts:
                 return []
-                    
+
+            #printDBG("--------------------")
+            #printDBG(json_dumps(response))
+            #printDBG("--------------------")
+
+            
+            # search videos
+            r2 = list(self.findKeys(response, 'videoRenderer'))
+            
+            printDBG("---------------------")
+            printDBG(json_dumps(r2))
+            printDBG("---------------------")
+
             for item in r2:
-                chJson = item.get('channelRenderer', '')
-                videoJson = item.get('videoRenderer','')
-                plJson = item.get('playlistRenderer','')
-                
-                params = {}
-                if videoJson:
-                    # it is a video
-                    params = self.getVideoData(videoJson)
-                elif chJson:
-                    # it is a channel
-                    params = self.getChannelData(chJson)
-                elif plJson:
-                    # it is a playlist
-                    params = self.getPlaylistData(plJson)
+                params = self.getVideoData(item)
                     
                 if params:
                     printDBG(str(params))
                     currList.append(params)
 
+            # search channels
+
+            r2 = list(self.findKeys(response, 'channelRenderer'))
+            
+            printDBG("---------------------")
+            printDBG(json_dumps(r2))
+            printDBG("---------------------")
+
+            for item in r2:
+                params = self.getChannelData(item)
+                    
+                if params:
+                    printDBG(str(params))
+                    currList.append(params)
+            
+            #search playlists 
+
+            r2 = list(self.findKeys(response, 'playlistRenderer'))
+            
+            printDBG("---------------------")
+            printDBG(json_dumps(r2))
+            printDBG("---------------------")
+
+            for item in r2:
+                params = self.getPlaylistData(item)
+                    
+                if params:
+                    printDBG(str(params))
+                    currList.append(params)
+
+            nP = list(self.findKeys(response, "nextContinuationData"))
+            nP_new = list(self.findKeys(response, "continuationEndpoint"))
+            
+            
             if nP:
                 nextPage = nP[0]
-                #printDBG("-------------------------------------------------")
-                #printDBG(json_dumps(nextPage))
-                #printDBG("-------------------------------------------------")
+                printDBG("-------------------------------------------------")
+                printDBG(json_dumps(nextPage))
+                printDBG("-------------------------------------------------")
 
-                ctoken = nextPage["nextContinuationData"]["continuation"]
-                itct = nextPage["nextContinuationData"]["clickTrackingParams"]
+                ctoken = nextPage["continuation"]
+                itct = nextPage["clickTrackingParams"]
                 try:
-                    label = nextPage["nextContinuationData"]["label"]["runs"][0]["text"]
+                    label = nextPage["label"]["runs"][0]["text"]
                 except:
                     label = _("Next Page")
                 
@@ -707,21 +710,21 @@ class YouTubeParser():
                 printDBG(str(params))
                 currList.append(params)
 
-            if nP_new:
+            elif nP_new:
                 printDBG("-------------------------------------------------")
                 printDBG(json_dumps(nP_new))
                 printDBG("-------------------------------------------------")
-
+                nextPage = nP_new[0]
                 
-                ctoken = nP_new["continuationEndpoint"]["continuationCommand"]["token"]
-                itct = nP_new["continuationEndpoint"]["clickTrackingParams"]
+                ctoken = nextPage["continuationCommand"]["token"]
+                itct = nextPage["clickTrackingParams"]
                 label = _("Next Page")
                 
                 urlNextPage = self.updateQueryUrl(url, {'pbj':'1', 'ctoken': ctoken, 'continuation': ctoken, 'itct': itct}) 
                 params = {'type':'more', 'category': "search_next_page", 'title': label, 'page': str(int(page) + 1), 'url': urlNextPage}
                 printDBG(str(params))
                 currList.append(params)
-         
+            
         except Exception:
             printExc()
 
