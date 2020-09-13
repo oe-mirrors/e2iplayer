@@ -276,9 +276,10 @@ class urlparser:
                        'hdplayer.casa':         self.pp.parserHDPLAYERCASA  ,
                        'hdvid.tv':              self.pp.parserHDVIDTV       ,
                        'hlstester.com':         self.pp.parserHLSTESTER,
-                       'hofoot.allvidview.tk':  self.pp.parserVIUCLIPS, 
-                       'hofoot.vidcrt.net':     self.pp.parserVIUCLIPS,
-                       'hofoot.uprafa.com':     self.pp.parserVIUCLIPS,
+                       'hofoot.allvidview.tk':  self.pp.parserVIUCLIPS      , 
+                       'hofoot.koravidup.com':  self.pp.parserVIUCLIPS      ,
+                       'hofoot.vidcrt.net':     self.pp.parserVIUCLIPS      ,
+                       'hofoot.uprafa.com':     self.pp.parserVIUCLIPS      ,
                        'hqq.none':              self.pp.parserNETUTV         ,
                        'hqq.tv':                self.pp.parserNETUTV         ,
                        'hqq.watch':             self.pp.parserNETUTV         ,
@@ -12347,6 +12348,7 @@ class pageParser(CaptchaHelper):
         #         https://oms.streamatus.tk/player/html/Mi5nzmttSZ?popup=yes&autoplay=1
         #         https://hofoot.vidcrt.net
         #         http://oms.upmela.com/player/PopUpIframe/xbVz4HBVkMpLr?iframe=popup&u=
+        #         https://hofoot.koravidup.com/player/PopUpIframe/uAR0RRxWvy6d9?iframe=popup&u=
         
         baseUrl = baseUrl + "?"
             
