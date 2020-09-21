@@ -346,6 +346,8 @@ class urlparser:
                        'mycloud.to':            self.pp.parserMYCLOUDTO     ,
                        'mystream.la':           self.pp.parserMYSTREAMLA    ,
                        'mystream.to':           self.pp.parserMYSTREAMTO    ,
+                       'mystream.press':        self.pp.parserMYSTREAMTO   ,
+                       'mystream.bestiptv.cc':  self.pp.parserMYSTREAMTO   ,
                        'premiumserver.club':    self.pp.parserMSTREAMICU    ,
                        'mystream.streamango.to': self.pp.parserMSTREAMICU   ,
                        'myvi.ru':               self.pp.parserMYVIRU        ,
@@ -12348,6 +12350,7 @@ class pageParser(CaptchaHelper):
         #         https://oms.streamatus.tk/player/html/Mi5nzmttSZ?popup=yes&autoplay=1
         #         https://hofoot.vidcrt.net
         #         http://oms.upmela.com/player/PopUpIframe/xbVz4HBVkMpLr?iframe=popup&u=
+        #         https://oms.upmela.com/player/html/6YqaAh7rybcxe?popup=yes&autoplay=1
         #         https://hofoot.koravidup.com/player/PopUpIframe/uAR0RRxWvy6d9?iframe=popup&u=
         
         baseUrl = baseUrl + "?"
@@ -13991,7 +13994,10 @@ class pageParser(CaptchaHelper):
                         
                         for iframe in iframes:
                             url = self.cm.ph.getSearchGroups(iframe, "src=['\"]([^\"^']+?)['\"]")[0]
-                            printDBG("Found url: %s" % url)
+                            if url.startswith('//'):
+                                url = 'http:' + url
+                                
+                            printDBG("HDPLAYERCASA --> Found url: %s" % url)
                             if self.cm.isValidUrl(url):
                                 if  urlparser().checkHostSupport(url)== 1:
                                     urls = urlparser().getVideoLinkExt(url)
@@ -14093,18 +14099,21 @@ class pageParser(CaptchaHelper):
                     
                     for s in sources:
                         u = s.get('src','')
+                        if not u:
+                            u = s.get('file','')
+                            
                         if self.cm.isValidUrl(u):
                             u = urlparser.decorateUrl(u, {'Referer': baseUrl})
                             label = s.get('label','')
                             srcType = s.get('type','')
-                        if 'm3u' in srcType or 'hls' in srcType:
-                            params = getDirectM3U8Playlist(u, checkExt=True, variantCheck=True, checkContent=True, sortWithMaxBitrate=99999999)
-                            printDBG(str(params))    
-                            urlsTab.extend(params)
-                        else:
-                            params = {'name': label , 'url': u}
-                            printDBG(str(params))
-                            urlsTab.append(params)
+                            if 'm3u' in srcType or 'hls' in srcType:
+                                params = getDirectM3U8Playlist(u, checkExt=True, variantCheck=True, checkContent=True, sortWithMaxBitrate=99999999)
+                                printDBG(str(params))    
+                                urlsTab.extend(params)
+                            else:
+                                params = {'name': label , 'url': u}
+                                printDBG(str(params))
+                                urlsTab.append(params)
                     
         return urlsTab
 
