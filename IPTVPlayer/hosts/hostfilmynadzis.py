@@ -2,12 +2,14 @@
 ###################################################
 # LOCAL import
 ###################################################
-from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _
+from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _, GetIPTVNotify
 from Plugins.Extensions.IPTVPlayer.components.ihost import CHostBase, CBaseHostClass
 from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, rm, MergeDicts
 from Plugins.Extensions.IPTVPlayer.tools.iptvtypes import strwithmeta
 from Plugins.Extensions.IPTVPlayer.tools.e2ijs import js_execute
 from Plugins.Extensions.IPTVPlayer.libs import ph
+
+from Components.config import config, ConfigText, getConfigListEntry
 
 ###################################################
 
@@ -16,7 +18,22 @@ from Plugins.Extensions.IPTVPlayer.libs import ph
 ###################################################
 from urllib import quote_plus
 import re
+
 ###################################################
+
+###################################################
+# Config options for HOST
+###################################################
+config.plugins.iptvplayer.filmynadzis_login    = ConfigText(default = "", fixed_size = False)
+config.plugins.iptvplayer.filmynadzis_password = ConfigText(default = "", fixed_size = False)
+
+def GetConfigList():
+    optionList = []
+    optionList.append(getConfigListEntry(_("Username")+":",    config.plugins.iptvplayer.filmynadzis_login))
+    optionList.append(getConfigListEntry(_("Password")+":", config.plugins.iptvplayer.filmynadzis_password))
+    return optionList
+###################################################
+
 
 def gettytul():
     return 'https://filmynadzis.pl/'
@@ -36,6 +53,10 @@ class FilmyNaDzis(CBaseHostClass):
 
         self.cacheLinks    = {}
 
+        self.loggedIn = None
+        self.login    = ''
+        self.password = ''
+
     def getDefaultParams(self, forAjax=False):
         header = self.AJAX_HEADER if forAjax else self.HTTP_HEADER
         return MergeDicts(self.defaultParams, {'header':header})
@@ -46,6 +67,46 @@ class FilmyNaDzis(CBaseHostClass):
         #params['cloudflare_params'] = {'cookie_file':self.COOKIE_FILE, 'User-Agent': self.HTTP_HEADER['User-Agent']}
         
         return self.cm.getPage(baseUrl, params, post_data)
+
+    def tryToLogin(self):
+        printDBG('FilmyNaDzis.tryTologin start')
+        errorMsg = _('Error communicating with the server.')
+    
+        if None == self.loggedIn or self.login != config.plugins.iptvplayer.filmynadzis_login.value or\
+            self.password != config.plugins.iptvplayer.filmynadzis_password.value:
+        
+            self.login = config.plugins.iptvplayer.filmynadzis_login.value
+            self.password = config.plugins.iptvplayer.filmynadzis_password.value
+            
+            rm(self.COOKIE_FILE)
+            
+            self.loggedIn = False
+            self.loginMessage = ''
+            
+            if '' == self.login.strip() or '' == self.password.strip():
+                msg = _('The host %s requires subscription.\nPlease fill your login and password in the host configuration - available under blue button.') % self.getMainUrl()
+                GetIPTVNotify().push(msg, 'info', 10)
+                return False
+            
+        if not self.loggedIn :
+            # try to login
+            postData = {'ihcaction': 'login', 'log' : self.login, 'pwd': self.password}
+            sts, data = self.cm.getPage (self.MAIN_URL, self.defaultParams, post_data = postData)
+
+            if sts:
+                responseUrl = self.cm.meta['url']
+                printDBG("response url : %s" % responseUrl)
+                
+                if 'ihc_login_fail' in responseUrl:
+                    msg =  _('Login failed. Invalid email or password.')
+                    GetIPTVNotify().push(msg, 'error', 10)
+                    self.loggedIn = False
+                elif 'ihc_success_login' in responseUrl:
+                    self.loggedIn = True
+                    
+        printDBG('FilmyNaDzis.tryTologin end loggedIn[%s]' % self.loggedIn)
+        return self.loggedIn
+        
 
     def listMain(self, cItem):
         printDBG("FilmyNaDzis.listMainMenu")
@@ -101,6 +162,12 @@ class FilmyNaDzis(CBaseHostClass):
         tmp = ph.find(data, ('<div', '>', 'listing-wrap'), ('<div','>', 'main-bottom-sidebar-wrap'), flags=0)[1]
         items = self.cm.ph.getAllItemsBeetwenMarkers(tmp, ('<article', '>'), '</article>')
         
+        if not items:
+            printDBG("FilmyNaDzis.listItems: No items found! Check HTML")
+            printDBG("--------------------------------")
+            printDBG(data)
+            printDBG("--------------------------------")
+            
         
         for item in items:
             #printDBG("----------------------------")
@@ -184,26 +251,28 @@ class FilmyNaDzis(CBaseHostClass):
             else:
                 printDBG("-------> %s" % tmp)
         
-        return urlTab
-
-        #tmp = ph.find(data, ('<a', '>', ph.check(ph.all, 'data=', '%')))[1]
-        #tmp = re.compile('''data\=([^=]=?!=['"]([^'^"]+?)('")''').findall(tmp)
+        tmp = ph.find(data, ('<a', '>', ph.check(ph.all, ('data-id', ))))[1]
+        tmp = re.compile('''data-([^=]+?)="([^"]*?)"''').findall(tmp)
         
-        #sts, tmp = self.getPage(cUrl, urlParams, MergeDicts({'action':'get_video_player'}, dict(tmp)))
-        #if not sts: 
-        #    return
+        sts, data = self.getPage(cUrl, urlParams, MergeDicts({'action':'get_video_player'}, dict(tmp)))
+        if not sts: 
+            return
 
-        #dumpData(tmp, cUrl, '')
+        tmp = self.cm.ph.getAllItemsBeetwenMarkers(data, '<source', '>')
+        if len(tmp):
+            for item in tmp:
+                type = self.cm.ph.getSearchGroups(item, '''type=['"]([^'^"]+?)['"]''')[0].lower()
+                url  = self.cm.ph.getSearchGroups(item, '''src=['"]([^'^"]+?)['"]''')[0]
+                
+                if 'video/mp4' == type: 
+                    urlTab.append({'name':self.up.getHostName(url), 'url':self.getFullUrl(url), 'need_resolve':0})
+                elif 'm3u' in url:
+                    urlTab.extend(getDirectM3U8Playlist(url, checkExt=False, checkContent=True, sortWithMaxBitrate=999999999))
 
-        #tmp = self.getFullUrl(ph.search(tmp, ph.IFRAME)[1], cUrl)
-        #if tmp and self.cm.getBaseUrl(tmp) != self.cm.getBaseUrl(cUrl):
-        #    name = self.cm.getBaseUrl(tmp, 'nowww')
-        #    urlTab.append({'name':name, 'url':strwithmeta(tmp, meta), 'need_resolve':1})
+        if urlTab:
+            self.cacheLinks[cacheKey] = urlTab
 
-        #if urlTab:
-        #    self.cacheLinks[cacheKey] = urlTab
-
-        #return urlTab
+        return urlTab
 
     def getVideoLinks(self, videoUrl):
         printDBG("FilmyNaDzis.getVideoLinks [%s]" % videoUrl)
@@ -267,7 +336,8 @@ class FilmyNaDzis(CBaseHostClass):
         CBaseHostClass.handleService(self, index, refresh, searchPattern, searchType)
 
         category = self.currItem.get("category", '')
-
+        title = self.currItem.get("title","")
+        
         printDBG( "handleService: || category[%s] " % (category) )
         self.currList = []
 
@@ -275,14 +345,22 @@ class FilmyNaDzis(CBaseHostClass):
         if not category:
             self.listMain({'name':'category'})
         elif category == 'list_items':
-            self.listItems(self.currItem)
+            if title == 'PREMIUM':
+                self.tryToLogin()
+                if self.loggedIn:
+                    self.listItems(self.currItem)
+            else:
+                self.listItems(self.currItem)
 
         elif category == 'sub_items':
             self.listSubItems(self.currItem)
 
     #SEARCH
         elif category == "search": 
-            self.listSearch(self.currItem, searchPattern, searchType)
+            self.tryToLogin()
+            if self.loggedIn:
+                self.listSearch(self.currItem, searchPattern, searchType)
+    
     #HISTORIA SEARCH
         elif category == "search_history":
             self.listsHistory({'name':'history', 'category': 'search', 'desc': _("Type: ")})
