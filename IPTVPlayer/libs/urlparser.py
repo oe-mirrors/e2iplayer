@@ -1973,85 +1973,93 @@ class pageParser(CaptchaHelper):
             return False
 
     def parserDAILYMOTION(self, baseUrl):
-        # https://github.com/rg3/youtube-dl/blob/master/youtube_dl/extractor/dailymotion.py
+        printDBG("parserDAILYMOTION %s" % baseUrl)
+
+        # source from https://github.com/ytdl-org/youtube-dl/blob/master/youtube_dl/extractor/dailymotion.py
         COOKIE_FILE = self.COOKIE_PATH + "dailymotion.cookie"
-        _VALID_URL = r'(?i)(?:https?://)?(?:(www|touch)\.)?dailymotion\.[a-z]{2,3}/(?:(embed|swf|#)/)?video/(?P<id>[^/?_]+)'
+        HTTP_HEADER = {"User-Agent":"Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/84.0.4147.105 Safari/537.36"}
+        httpParams = {'header': HTTP_HEADER, 'use_cookie': True, 'save_cookie': False, 'load_cookie': False, 'cookiefile': COOKIE_FILE}
+        
+        _VALID_URL = r'''(?ix)
+                    https?://
+                        (?:
+                            (?:(?:www|touch)\.)?dailymotion\.[a-z]{2,3}/(?:(?:(?:embed|swf|\#)/)?video|swf)|
+                            (?:www\.)?lequipe\.fr/video
+                        )
+                        /(?P<id>[^/?_]+)(?:.+?\bplaylist=(?P<playlist_id>x[0-9a-z]+))?
+                    '''
+        
         mobj = re.match(_VALID_URL, baseUrl)
         video_id = mobj.group('id')
+
+        if not video_id:
+            printDBG("parserDAILYMOTION -- Video id not found")
+            return []
         
-        HTTP_HEADER= {'User-Agent': "Mozilla/5.0"}
+        printDBG("parserDAILYMOTION video id: %s " % video_id)
         
-        url = 'http://www.dailymotion.com/embed/video/' + video_id
-        familyUrl = 'http://www.dailymotion.com/family_filter?enable=false&urlback=' + urllib.quote_plus('/embed/video/' + video_id)
-        sts, data = self.cm.getPage(url, {'header':HTTP_HEADER, 'use_cookie': True, 'save_cookie': False, 'load_cookie': False, 'cookiefile': COOKIE_FILE})
-        if not sts or "player" not in data: 
-            sts, data = self.cm.getPage(familyUrl, {'header':HTTP_HEADER, 'use_cookie': True, 'save_cookie': False, 'load_cookie': False, 'cookiefile': COOKIE_FILE})
-            if not sts: return []
+        urlsTab =[]
+
+        sts, data = self.cm.getPage(baseUrl, httpParams)
+
+        metadataUrl = 'https://www.dailymotion.com/player/metadata/video/' + video_id
         
-        sub_tracks = []
-        vidTab = []
-        playerConfig = None
+        sts, data = self.cm.getPage(metadataUrl, httpParams)
         
-        tmp = self.cm.ph.getSearchGroups(data, r'playerV5\s*=\s*dmp\.create\([^,]+?,\s*({.+?})\);')[0]
-        try:
-            playerConfig = json_loads(tmp)['metadata']
-        except Exception:
-            pass
-        if playerConfig == None:
-            tmp = self.cm.ph.getSearchGroups(data, r'var\s+config\s*=\s*({.+?});')[0]
+        if sts:
             try:
-                playerConfig = json_loads(tmp)['metadata']
-            except Exception:
-                pass
-            
-        if None != playerConfig and 'qualities' in playerConfig:
-            hlsTab = []
-            for quality, media_list in playerConfig['qualities'].items():
-                for media in media_list:
-                    media_url = media.get('url')
-                    if not media_url:
-                        continue
-                    type_ = media.get('type')
-                    if type_ == 'application/vnd.lumberjack.manifest':
-                        continue
-                    if type_ == 'application/x-mpegURL' or media_url.split('?')[-1].endswith('m3u8'):
-                        hlsTab.append(media_url)
-                    else:
-                        vidTab.append({'name':'dailymotion.com: %sp' % quality, 'url':media_url, 'quality':quality})
+                metadata = json_loads(data)
+                
+                printDBG("----------------------")
+                printDBG(json_dumps(data))
+                printDBG("----------------------")
+
+                error = metadata.get('error')
+                if error:
+                    title = error.get('title') or error['raw_message']
+                    
+                    # See https://developer.dailymotion.com/api#access-error
+                    #if error.get('code') == 'DM007':
+                    #    allowed_countries = try_get(media, lambda x: x['geoblockedCountries']['allowed'], list)
+                    #    self.raise_geo_restricted(msg=title, countries=allowed_countries)
+                    #raise ExtractorError(
+                    #    '%s said: %s' % (self.IE_NAME, title), expected=True)
+
+                    printDBG("Error accessing metadata: %s " % title)
+                    return []
+                     
+                #subtitles = {}
+                #subtitles_data = try_get(metadata, lambda x: x['subtitles']['data'], dict) or {}
+                #for subtitle_lang, subtitle in subtitles_data.items():
+                #    subtitles[subtitle_lang] = [{
+                #        'url': subtitle_url,
+                #    } for subtitle_url in subtitle.get('urls', [])]
+
+                
+                for quality, media_list in metadata['qualities'].items():
+                    for m in media_list:
+                        media_url = m.get('url')
+                        media_type = m.get('type')
+                        if not media_url or media_type == 'application/vnd.lumberjack.manifest':
+                            continue
                         
-            try:
-                for lang in playerConfig['subtitles']['data']:
-                    label   = clean_html(playerConfig['subtitles']['data'][lang]['label'])
-                    src     = playerConfig['subtitles']['data'][lang]['urls']
-                    if 0 == len(src) or not self.cm.isValidUrl(src[0]): continue
-                    sub_tracks.append({'title':label, 'url':src[0], 'lang':lang, 'format':'srt'})
-            except Exception: pass
-            
-            if len(hlsTab) and 0 == len(vidTab):
-                for media_url in hlsTab:
-                    tmpTab = getDirectM3U8Playlist(media_url, False, checkContent=True, cookieParams={'header':HTTP_HEADER, 'cookiefile':COOKIE_FILE, 'use_cookie': True, 'save_cookie':True})
-                    cookieHeader = self.cm.getCookieHeader(COOKIE_FILE)
-                    for tmp in tmpTab:
-                        redirectUrl =  strwithmeta(tmp['url'], {'iptv_proto':'m3u8', 'Cookie':cookieHeader, 'User-Agent': HTTP_HEADER['User-Agent']})
-                        vidTab.append({'name':'dailymotion.com: %sp hls' % (tmp.get('heigth', '0')), 'url':redirectUrl, 'quality':tmp.get('heigth', '0')})
-                        
-        if 0 == len(vidTab):
-            data = CParsingHelper.getDataBeetwenMarkers(data, 'id="player"', '</script>', False)[1].replace('\/', '/')
-            match = re.compile('"stream_h264.+?url":"(http[^"]+?H264-)([^/]+?)(/[^"]+?)"').findall(data)
-            for i in range(len(match)):
-                url = match[i][0] + match[i][1] + match[i][2]
-                name = match[i][1]
-                try: vidTab.append({'name': 'dailymotion.com: ' + name, 'url':url})
-                except Exception: pass
-        
-        try: vidTab = sorted(vidTab, key=lambda item: int(item.get('quality', '0')))
-        except Exception: pass
-        
-        if len(sub_tracks):
-            for idx in range(len(vidTab)):
-                vidTab[idx]['url'] = urlparser.decorateUrl(vidTab[idx]['url'], {'external_sub_tracks':sub_tracks})
-            
-        return vidTab[::-1]
+                        media_url = urlparser.decorateUrl(media_url, {'Referer': baseUrl})
+                        if media_type == 'application/x-mpegURL':
+                            tmpTab = getDirectM3U8Playlist(media_url, False, checkContent=True, sortWithMaxBitrate=99999999, cookieParams={'header':HTTP_HEADER, 'cookiefile':COOKIE_FILE, 'use_cookie': True, 'save_cookie':True})
+                            cookieHeader = self.cm.getCookieHeader(COOKIE_FILE)
+                            
+                            for tmp in tmpTab:
+                                hlsUrl = self.cm.ph.getSearchGroups(tmp['url'], """(https?://[^'^"]+?\.m3u8[^'^"]*?)#?""")[0]
+                                redirectUrl =  strwithmeta(hlsUrl, {'iptv_proto':'m3u8', 'Cookie':cookieHeader, 'User-Agent': HTTP_HEADER['User-Agent']})
+                                urlsTab.append({'name':'dailymotion.com: %sp hls' % (tmp.get('heigth', '0')), 'url':redirectUrl, 'quality':tmp.get('heigth', '0')})
+
+                        else:
+                            urlsTab.append({'name': quality, 'url': media_url})
+                
+            except:
+                printExc
+                
+        return urlsTab
 
     def parserSIBNET(self, baseUrl):
         printDBG("parserSIBNET url[%s]" % baseUrl)
