@@ -4,10 +4,14 @@
 ###################################################
 from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _, SetIPTVPlayerLastHostError
 from Plugins.Extensions.IPTVPlayer.components.ihost import CHostBase, CBaseHostClass
-from Plugins.Extensions.IPTVPlayer.components.recaptcha_v2helper import CaptchaHelper
+#from Plugins.Extensions.IPTVPlayer.components.recaptcha_v2helper import CaptchaHelper
+
+from Plugins.Extensions.IPTVPlayer.components.captcha_helper import CaptchaHelper
 from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, GetDefaultLang, MergeDicts
 from Plugins.Extensions.IPTVPlayer.tools.iptvtypes import strwithmeta
 from Plugins.Extensions.IPTVPlayer.libs.e2ijson import loads as json_loads
+from Components.config import config, ConfigSelection, ConfigYesNo, ConfigText, getConfigListEntry
+
 ###################################################
 
 ###################################################
@@ -16,6 +20,25 @@ from Plugins.Extensions.IPTVPlayer.libs.e2ijson import loads as json_loads
 import urlparse
 import re
 import urllib
+###################################################
+
+###################################################
+# Config options for HOST
+###################################################
+config.plugins.iptvplayer.api_key_9kweu = ConfigText(default = "", fixed_size = False)
+config.plugins.iptvplayer.api_key_2captcha = ConfigText(default = "", fixed_size = False)
+config.plugins.iptvplayer.cineto_bypassrecaptcha = ConfigSelection(default = "", choices = [("",        _("None")),
+                                                                                          ("9kw.eu",       "https://9kw.eu/"),
+                                                                                          ("2captcha.com", "http://2captcha.com/")])
+
+def GetConfigList():
+    optionList = []
+    optionList.append(getConfigListEntry(_("Captcha solving service"), config.plugins.iptvplayer.cineto_bypassrecaptcha))
+    if config.plugins.iptvplayer.cineto_bypassrecaptcha.value == '9kw.eu':
+        optionList.append(getConfigListEntry(_("%s API KEY") % '    ', config.plugins.iptvplayer.api_key_9kweu))
+    elif config.plugins.iptvplayer.cineto_bypassrecaptcha.value == '2captcha.com':
+        optionList.append(getConfigListEntry(_("%s API KEY") % '    ', config.plugins.iptvplayer.api_key_2captcha))
+    return optionList
 ###################################################
 
 
@@ -351,7 +374,7 @@ class CineTO(CBaseHostClass, CaptchaHelper):
                 else:
                     sitekey = self.cm.ph.getSearchGroups(data, '''gcaptchaSetup\s*?\(\s*?['"]([^'^"]+?)['"]''')[0]
                     if sitekey != '':
-                        token, errorMsgTab = self.processCaptcha(sitekey, self.cm.meta['url'])
+                        token, errorMsgTab = self.processCaptcha(sitekey,  self.cm.meta['url'], bypassCaptchaService=config.plugins.iptvplayer.cineto_bypassrecaptcha.value)
                         
                         if token != '':
                             params = MergeDicts(self.defaultParams, {'max_data_size':0})
