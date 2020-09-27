@@ -129,7 +129,9 @@ class govodtv(CBaseHostClass):
         page = cItem.get('page', 1)
 
         url = cUrl = cItem['url']
-        if page > 1: url = url + '?page={0}'.format(page)
+        if '?' in url: url += '&'
+        else: url += '?'
+        if page > 1: url = url + 'page={0}'.format(page)
         sts, data = self.getPage(url)
         if not sts: return
         self.setMainUrl(data.meta['url'])
