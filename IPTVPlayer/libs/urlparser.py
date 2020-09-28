@@ -579,6 +579,7 @@ class urlparser:
                        'vup.to':               self.pp.parserONLYSTREAMTV   ,
                        'upvideo.cc':           self.pp.parserONLYSTREAMTV   ,
                        'playtube.ws':          self.pp.parserONLYSTREAMTV   ,
+                       'vkprime.com':          self.pp.parserONLYSTREAMTV   ,
                        'jetload.net':          self.pp.parserJETLOADNET     ,
                        'mixdrop.co':           self.pp.parserMIXDROP        ,
                        'mixdrop.club':         self.pp.parserMIXDROP        ,
@@ -12449,15 +12450,17 @@ class pageParser(CaptchaHelper):
                 printDBG( 'OK unpack: [%s]' % data)
             except Exception: pass
 
-        urlTab=[]
-        url = self.cm.ph.getSearchGroups(data, '''["'](https?://[^'^"]+?\.mp4(?:\?[^"^']+?)?)["']''', ignoreCase=True)[0]
-        if url != '':
-            url = strwithmeta(url, {'Origin':"https://" + urlparser.getDomain(baseUrl), 'Referer':baseUrl})
-            urlTab.append({'name':'mp4', 'url':url})
-        hlsUrl = self.cm.ph.getSearchGroups(data, '''["'](https?://[^'^"]+?\.m3u8(?:\?[^"^']+?)?)["']''', ignoreCase=True)[0]
-        if hlsUrl != '':
-            hlsUrl = strwithmeta(hlsUrl, {'Origin':"https://" + urlparser.getDomain(baseUrl), 'Referer':baseUrl})
-            urlTab.extend(getDirectM3U8Playlist(hlsUrl, checkExt=False, variantCheck=True, checkContent=True, sortWithMaxBitrate=99999999))
+        urlTab = self._findLinks(data)
+        if 0 == len(urlTab):
+            url = self.cm.ph.getSearchGroups(data, '''["'](https?://[^'^"]+?\.mp4(?:\?[^"^']+?)?)["']''', ignoreCase=True)[0]
+            if url != '':
+                url = strwithmeta(url, {'Origin':"https://" + urlparser.getDomain(baseUrl), 'Referer':baseUrl})
+                urlTab.append({'name':'mp4', 'url':url})
+            hlsUrl = self.cm.ph.getSearchGroups(data, '''["'](https?://[^'^"]+?\.m3u8(?:\?[^"^']+?)?)["']''', ignoreCase=True)[0]
+            if hlsUrl != '':
+                hlsUrl = strwithmeta(hlsUrl, {'Origin':"https://" + urlparser.getDomain(baseUrl), 'Referer':baseUrl})
+                urlTab.extend(getDirectM3U8Playlist(hlsUrl, checkExt=False, variantCheck=True, checkContent=True, sortWithMaxBitrate=99999999))
+
         return urlTab
 
     def parserMIXDROP(self, baseUrl):
