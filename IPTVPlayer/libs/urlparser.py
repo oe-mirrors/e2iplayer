@@ -12450,7 +12450,7 @@ class pageParser(CaptchaHelper):
                 printDBG( 'OK unpack: [%s]' % data)
             except Exception: pass
 
-        urlTab = self._findLinks(data)
+        urlTab = self._findLinks(data, meta={'Referer':baseUrl})
         if 0 == len(urlTab):
             url = self.cm.ph.getSearchGroups(data, '''["'](https?://[^'^"]+?\.mp4(?:\?[^"^']+?)?)["']''', ignoreCase=True)[0]
             if url != '':
