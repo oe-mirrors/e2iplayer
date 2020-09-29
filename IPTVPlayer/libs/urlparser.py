@@ -311,6 +311,7 @@ class urlparser:
                        'liveonlinetv247.net':   self.pp.parserLIVEONLINE247 ,
                        'livestream.com':        self.pp.parserLIVESTREAMCOM,
                        'live-stream.tv':        self.pp.parserLIVESTRAMTV   ,
+                       'm2list.com':            self.pp.parserM2LIST        ,
                        'mastarti.com':          self.pp.parserMOONWALKCC    ,
                        'matchat.online':        self.pp.parserMATCHATONLINE  ,
                        'maxupload.tv':          self.pp.parserTOPUPLOAD     ,
@@ -340,6 +341,7 @@ class urlparser:
                        'mstream.fun':           self.pp.parserMSTREAMICU    ,
                        'mstream.icu':           self.pp.parserMSTREAMICU    ,
                        'mstream.press':         self.pp.parserMSTREAMICU    ,
+                       'mstream.website':       self.pp.parserMSTREAMICU    ,
                        'mstream.xyz':           self.pp.parserMSTREAMICU    ,
                        'multikland.net':        self.pp.parserMULTIKLAND,
                        'my.mail.ru':            self.pp.parserVIDEOMAIL     ,
@@ -347,6 +349,7 @@ class urlparser:
                        'mystream.la':           self.pp.parserMYSTREAMLA    ,
                        'mystream.to':           self.pp.parserMYSTREAMTO    ,
                        'mystream.press':        self.pp.parserMYSTREAMTO   ,
+                       'mystream.nuova-indirizzo.com': self.pp.parserMYSTREAMTO,
                        'mystream.bestiptv.cc':  self.pp.parserMYSTREAMTO   ,
                        'premiumserver.club':    self.pp.parserMSTREAMICU    ,
                        'mystream.streamango.to': self.pp.parserMSTREAMICU   ,
@@ -366,8 +369,9 @@ class urlparser:
                        'nowvideo.eu':           self.pp.parserNOWVIDEO      ,
                        'nowvideo.sx':           self.pp.parserNOWVIDEO      ,
                        'nowvideo.to':           self.pp.parserNOWVIDEO      ,
-                       'ntv.ru':                self.pp.parserNTVRU          ,
-                       'nxload.com':            self.pp.parserNXLOADCOM      ,
+                       'ntv.ru':                self.pp.parserNTVRU         ,
+                       'nuovo-indirizzo.com':   self.pp.parserHDPLAYERCASA  ,
+                       'nxload.com':            self.pp.parserNXLOADCOM     ,
                        'ok.ru':                 self.pp.parserOKRU          ,
                        'oload.cloud':           self.pp.parserOPENLOADIO    ,
                        'oload.co':              self.pp.parserOPENLOADIO    ,
@@ -476,6 +480,7 @@ class urlparser:
                        'suprafiles.org':        self.pp.parserUPLOAD         ,
                        'suspents.info':         self.pp.parserFASTVIDEOIN   ,
                        'swirownia.com.usrfiles.com': self.pp.parserSWIROWNIA,
+                       'tantifilm.ga':          self.pp.parserTANTIFILM     ,
                        'tantifilm.top':         self.pp.parserTANTIFILM     ,
                        'telerium.tv':           self.pp.parserTELERIUMTV     ,
                        'theactionlive.com':     self.pp.parserTHEACTIONLIVE ,
@@ -14488,4 +14493,86 @@ class pageParser(CaptchaHelper):
 
                 except:
                     printExc()
+        return urlsTab
+
+    def parserM2LIST(self, baseUrl):
+        printDBG("parserM2LIST baseUrl[%r]" % baseUrl)
+
+        #example: http://www.m2list.com/embed.php?datab=y&lister=none&mirror=m6p1&mainid=272854
+
+        httpParams = {
+            'header' : {
+                'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.61 Safari/537.36',
+                'Accept': '*/*',
+                'Accept-Encoding': 'gzip',
+                'Referer' : baseUrl
+            } 
+        }
+
+        urlsTab = []
+        
+        urlparts = baseUrl.split('?')
+        query = dict(parse_qsl(urlparts[-1]))
+        
+        if 'mainid' in query and 'lister' in query and 'mirror' in query:
+            #playerUrl = "http://player.m2list.com/mv/" + query.get('mainid','') + "?lister=" + query.get('lister','none') + "&mirror=" + query.get('mirror','') 
+        
+            #example: http://player.m2list.com/mv/272854?lister=none&mirror=m6p1
+            #         http://player.m2list.com/ajax/movie/get_sources/272854/m6p1
+
+            playerUrl = "http://player.m2list.com/ajax/movie/get_sources/" + query.get('mainid','') + "/" + query.get('mirror','') 
+            
+            printDBG("M2list: player Url: %s " % playerUrl)
+
+            sts, data = self.cm.getPage(playerUrl, httpParams)
+            
+            if sts:
+
+                try:
+                    jsonData = json_loads(data)
+
+                    printDBG("---------------------")
+                    printDBG(data)
+                    printDBG("---------------------")
+                    
+                    url = jsonData.get('sources','')
+                    
+                    if url:
+                        if url.startswith('//'):
+                            url = 'http:' + url
+                        
+                        sts, data = self.cm.getPage(url, httpParams)
+
+                        printDBG("---------------------")
+                        printDBG(data)
+                        printDBG("---------------------")
+
+                    
+                except:
+                    printExc
+                    
+                '''
+                scripts = self.cm.ph.getAllItemsBeetwenMarkers(data, ('<script','>'), '</script>', withMarkers=False)
+                
+                for script in scripts:
+                    if "eval(function" in script:
+                        printDBG("----------- pack -----------------")
+                        printDBG(script)
+
+                        script = script + "\n"
+                        # mods
+                        script = script.replace("eval(function(p,a,c,k,e,d","pippo = function(p,a,c,k,e,d")
+                        script = script.replace("return p}(", "print(p)}\n\npippo(")
+                        script = script.replace("))\n",");\n")
+
+                        # duktape
+                        ret = js_execute( script )
+                        decoded = ret['data']
+                        printDBG('------------------------------')
+                        printDBG(decoded)
+                        printDBG('------------------------------')
+
+                '''
+                
+                
         return urlsTab
