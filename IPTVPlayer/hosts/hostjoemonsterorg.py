@@ -85,7 +85,7 @@ class JoeMonster(CBaseHostClass):
         data = self.cm.ph.rgetAllItemsBeetwenNodes(data, ('</div', '>'), ('<div id', '>', 'mtv-row'))
         for item in data:
             url = self.getFullUrl( self.cm.ph.getSearchGroups(item, '''\shref=['"]([^"^']+?)['"]''')[0] )
-            title = self.cleanHtmlStr( self.cm.ph.getDataBeetwenNodes(item, ('<div', '>', 'mtv-desc'), ('</b', '>'))[1])
+            title = self.cleanHtmlStr( self.cm.ph.getDataBeetwenNodes(item, ('<div', '>', 'mtv-desc'), ('</a', '>'))[1])
             time  = self.cleanHtmlStr( self.cm.ph.getDataBeetwenNodes(item, ('<time', '>', 'video-time'), ('</time', '>'))[1])
             if len(time) > 0: time = '[%s] ' % time
             desc  = time + self.cleanHtmlStr( self.cm.ph.getDataBeetwenNodes(item, ('<div', '>', 'mtv-desc-text'), ('</div', '>'))[1])
