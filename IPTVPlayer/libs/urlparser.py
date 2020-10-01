@@ -4694,7 +4694,7 @@ class pageParser(CaptchaHelper):
                 
             if srcJson:
                 srcJson = srcJson[0]
-                sources = demjson_loads("[" + srcJson + "]")
+                sources = json_loads("[" + srcJson + "]")
                 printDBG(str(sources))
                 
                 for s in sources:
@@ -12920,42 +12920,71 @@ class pageParser(CaptchaHelper):
         return urlTabs
 
     def parserDOOD(self, baseUrl):
-        printDBG("parserDOOD baseUrl[%s]" % baseUrl)
+        printDBG("parserDOOD baseUrl [%s]" % baseUrl)
+        
+        httpParams = {
+            'header' : {
+                'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.61 Safari/537.36',
+                'Accept': '*/*',
+                'Accept-Encoding': 'gzip',
+                'Referer' : baseUrl.meta.get('Referer', baseUrl)
+            }, 
+            'use_cookie':True,
+            'load_cookie':True,
+            'save_cookie':True,
+            'cookiefile': GetCookieDir("dood.cookie")
+        }
 
-        HTTP_HEADER = self.cm.getDefaultHeader(browser='chrome')
-        referer = baseUrl.meta.get('Referer')
-        if referer: HTTP_HEADER['Referer'] = referer
-        COOKIE_FILE = GetCookieDir('abcvideo.cookie')
-        urlParams = {'header': HTTP_HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': COOKIE_FILE}
-        baseUrl = baseUrl.replace('/d/', '/e/')
-        sts, data = self.cm.getPage(baseUrl, urlParams)
-        if not sts: return False
-        cUrl = self.cm.meta['url']
+        urlsTab = []
+        
+        if '/d/' in baseUrl:
+            baseUrl = baseUrl.replace('/d/','/e/')
+        
+        sts, data = self.cm.getPage(baseUrl, httpParams)
+        
+        if sts:
+            printDBG("-----------------------")
+            printDBG(data)
+            printDBG("-----------------------")
 
-        sitekey = ph.search(data, '''grecaptcha.execute\(['"]([^"^']+?)['"]''')[0]
-        action = ph.search(data, '''grecaptcha.execute.*?action:\s['"]([^"^']+?)['"]''')[0]
-        url = ph.search(data, '''grecaptcha.execute.*?.get\(['"]([^"^']+?)['"]''')[0]
-        token = ''
-        if sitekey != '': 
-            from Plugins.Extensions.IPTVPlayer.libs.recaptcha_v3_2captcha import UnCaptchaReCaptcha
-            recaptcha = UnCaptchaReCaptcha(lang=GetDefaultLang())
-            token = recaptcha.processCaptcha(sitekey, cUrl, action)
-            if token == '':
-                SetIPTVPlayerLastHostError('\n'.join(errorMsgTab)) 
-                return False
-            url = self.cm.getFullUrl(url+token, cUrl)
-            sts, data = self.cm.getPage(url, urlParams)
-            if not sts: return False
 
-        printDBG("parserDOOD data[%s]" % data)
+        subTracks=[]
+        #<track kind="captions" src="https://doodstream.com/srt/00705/s72n7d5hi6qc_Serbian.vtt" srclang="en" label="Serbian" default>
+        tracks = self.cm.ph.getAllItemsBeetwenMarkers(data, '<track', '>', withMarkers=True)
+        for track in tracks:
+            track_kind = self.cm.ph.getSearchGroups(track, '''kind=['"]([^'^"]+?)['"]''')[0]
+            if 'caption' in track_kind:
+                srtUrl = self.cm.ph.getSearchGroups(track, '''src=['"]([^'^"]+?)['"]''')[0]
+                srtLabel= self.cm.ph.getSearchGroups(track, '''label=['"]([^'^"]+?)['"]''')[0]
+                srtFormat = srtUrl[-3:]
+                params = {'title': srtLabel, 'url': srtUrl, 'lang': srtLabel.lower()[:3], 'format': srtFormat}
+                printDBG(str(params))
+                subTracks.append(params)
 
-        urlTab=[]
-        url = self.cm.ph.getSearchGroups(data, '''(https?://[^'^"]+?\.mp4(?:\?[^"^']+?)?)''', ignoreCase=True)[0]
-        if url != '':
-            url = strwithmeta(url, {'Origin':"https://" + urlparser.getDomain(baseUrl), 'Referer':baseUrl})
-            urlTab.append({'name':'mp4', 'url':url})
-        hlsUrl = self.cm.ph.getSearchGroups(data, '''(https?://[^'^"]+?\.m3u8(?:\?[^"^']+?)?)''', ignoreCase=True)[0]
-        if hlsUrl != '':
-            hlsUrl = strwithmeta(hlsUrl, {'Origin':"https://" + urlparser.getDomain(baseUrl), 'Referer':baseUrl})
-            urlTab.extend(getDirectM3U8Playlist(hlsUrl, checkExt=False, variantCheck=True, checkContent=True, sortWithMaxBitrate=99999999))
-        return urlTab
+        #$.get('/pass_md5/3526522-87-9-1595176733-d1cadb0bad545cdcc61809e26c0ccf93/p3yuk59uqm525k1zc9boovu4'
+        #function makePlay(){for(var a="",t="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789",n=t.length,o=0;10>o;o++)a+=t.charAt(Math.floor(Math.random()*n));return a+"?token=p3yuk59uqm525k1zc9boovu4&expiry="+Date.now();};
+        pass_md5_url = self.cm.ph.getSearchGroups(data, "\$\.get\('(/pass_md5[^']+?)'")[0]
+        makePlay= self.cm.ph.getSearchGroups(data, "(function makePlay\(\)\{.*?\};)")[0]
+        if pass_md5_url and makePlay:        
+            pass_md5_url = self.cm.getFullUrl(pass_md5_url, self.cm.getBaseUrl(baseUrl))
+            sts, new_url = self.cm.getPage(pass_md5_url, httpParams)
+
+            if sts:
+                code =  "var url = '%s';\n%s\nconsole.log(url + makePlay());" % (new_url, makePlay)
+                
+                printDBG("-----------------------")
+                printDBG(code)
+                printDBG("-----------------------")
+
+                ret = js_execute(code)
+                newUrl = ret['data'].replace("\n","")
+                if newUrl:
+                    if subTracks:
+                        newUrl = urlparser.decorateUrl(newUrl, {'Referer': baseUrl,'external_sub_tracks':subTracks})
+                    else:
+                        newUrl = urlparser.decorateUrl(newUrl, {'Referer': baseUrl})
+                    params = {'name': 'link' , 'url': newUrl}
+                    printDBG(str(params))
+                    urlsTab.append(params)
+        
+        return urlsTab
