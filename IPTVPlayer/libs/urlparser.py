@@ -4656,47 +4656,63 @@ class pageParser(CaptchaHelper):
 
     def parserAPARATCOM(self, baseUrl):
         printDBG("parserAPARATCOM baseUrl[%r]" % baseUrl)
-        baseUrl = strwithmeta(baseUrl)
-        HTTP_HEADER = self.cm.getDefaultHeader(browser='chrome')
-        referer = baseUrl.meta.get('Referer')
-        if referer:
-            HTTP_HEADER['Referer'] = referer
-        urlParams = {'header': HTTP_HEADER}
+        httpParams = {
+            'header' : {
+                'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.61 Safari/537.36',
+                'Accept': '*/*',
+                'Accept-Encoding': 'gzip',
+                'Referer' : baseUrl.meta.get('Referer', baseUrl)
+            } 
+        }
+
+        urlsTab = []
+
         if '/videohash/' not in baseUrl and '/showvideo/' not in baseUrl:
-            sts, data = self.cm.getPage(baseUrl, urlParams)
+            sts, data = self.cm.getPage(baseUrl, httpParams)
             if not sts:
                 return False
+            
             cUrl = self.cm.meta['url']
             baseUrl = self.cm.getFullUrl(ph.search(data, '''['"]([^'^"]+?/videohash/[^'^"]+?)['"]''')[0], cUrl)
             if not baseUrl:
                 baseUrl = self.cm.getFullUrl(ph.search(data, '''['"]([^'^"]+?/showvideo/[^'^"]+?)['"]''')[0], cUrl)
-        if '/showvideo/' not in baseUrl:
-            sts, data = self.cm.getPage(baseUrl, urlParams)
-            if not sts:
-                return False
-            cUrl = self.cm.meta['url']
-            baseUrl = self.cm.getFullUrl(ph.search(data, '''['"]([^'^"]+?/showvideo/[^'^"]+?)['"]''')[0], cUrl)
-        sts, data = self.cm.getPage(baseUrl, urlParams)
-        if not sts:
-            return False
-        cUrl = self.cm.meta['url']
-        data = ph.find(data, ('JSON.parse', ')', '('), flags=ph.I | ph.START_E)[1]
-        ret = js_execute("print(JSON.stringify(%s));" % data)
-        data = json_loads(ret['data'])
-        sources = []
-        for item in data['plugins']['sabaPlayerPlugin']['multiSRC']:
-            sources.extend(item)
 
-        urlTab = []
-        for item in sources:
-            type  = item.get('type', '')
-            url   = item.get('src', '')
-            label = item.get('label', '')
-            if 'm3u8' in url:
-                urlTab.extend(getDirectM3U8Playlist(url, checkContent=True, sortWithMaxBitrate=999999999))
-            else:
-                urlTab.append({'name': type + ' res: ' + label, 'url': url})
-        return urlTab
+        sts, data = self.cm.getPage(baseUrl, httpParams)
+        
+        if sts:
+            #printDBG("-----------------------")
+            #printDBG(data)
+            #printDBG("-----------------------")
+        
+            srcJson = re.findall("sources\s?:\s?\[(.*?)\]", data, re.S)
+            if not srcJson:
+                srcJson = re.findall("multiSRC\"?\s?:\s?\[\[(.*?)\]\]", data, re.S)
+                if srcJson:
+                    sources = re.findall("(\{\"src\":.*?\})", srcJson[0])
+                    if sources:
+                        srcJson = [",".join(sources)]  
+                
+            if srcJson:
+                srcJson = srcJson[0]
+                sources = demjson_loads("[" + srcJson + "]")
+                printDBG(str(sources))
+                
+                for s in sources:
+                    u = s.get('src','')
+                    if self.cm.isValidUrl(u):
+                        u = urlparser.decorateUrl(u, {'Referer': baseUrl})
+                        label = s.get('label','')
+                        srcType = s.get('type','')
+                    if 'm3u' in u or 'hls' in srcType or 'x-mpeg' in srcType :
+                        params = getDirectM3U8Playlist(u, checkExt=True, variantCheck=True, checkContent=True, sortWithMaxBitrate=99999999)
+                        printDBG(str(params))    
+                        urlsTab.extend(params)
+                    else:
+                        params = {'name': label , 'url': u}
+                        printDBG(str(params))
+                        urlsTab.append(params)
+        
+        return urlsTab 
 
     def parserSTREAMJACOM(self, baseUrl):
         printDBG("parserSTREAMJACOM baseUrl[%r]" % baseUrl)
