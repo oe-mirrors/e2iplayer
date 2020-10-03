@@ -910,7 +910,8 @@ class HasBahCa(CBaseHostClass):
 
     def getCrackstreamsGroups(self, url):
         printDBG("crackstreamsGroups start")
-        sts,data = self.cm.getPage(url)
+        sts, data = self.getPage( url, {'use_cookie': True, 'cookie_items':{'challenge':'BitMitigate.com'}} )
+#        sts,data = self.cm.getPage(url)
         if not sts: return
         data = CParsingHelper.getDataBeetwenNodes(data, ('<div', '>', 'collapse navbar-collapse'), ('</div', '>'))[1]
         data = data.split('</a>')
@@ -930,21 +931,23 @@ class HasBahCa(CBaseHostClass):
 
     def getCrackstreamsList(self, url):
         printDBG("crackstreamsList start")
-        sts,data = self.cm.getPage(url)
+        sts, data = self.getPage( url, {'use_cookie': True, 'cookie_items':{'challenge':'BitMitigate.com'}} )
+#        sts,data = self.cm.getPage(url)
         if not sts: return
-        data = self.cm.ph.getAllItemsBeetwenNodes(data, ('<a', '>', 'btn'), ('</a', '>'))
+        data = self.cm.ph.getAllItemsBeetwenNodes(data, ('<a', '>', 'btn btn-default'), ('</a', '>'))
         for item in data:
             params = {'name':"crackstreams.com"}
             params['url'] = self.cm.ph.getSearchGroups(item, '''\shref=['"]([^"^']+?)['"]''')[0]
             params['icon'] = self.cm.ph.getSearchGroups(item, '''\ssrc=['"]([^"^']+?)['"]''')[0]
-            params['title'] = self.cleanHtmlStr(item)
+            params['title'] = self.cleanHtmlStr(CParsingHelper.getDataBeetwenNodes(item, ('<h4', '>'), ('</div', '>'))[1])
             if len(params['icon']) and not params['icon'].startswith('http'): params['icon'] = 'http://crackstreams.com/'+params['icon']
             if len(params['url']) and not params['url'].startswith('http'): params['url'] = 'http://crackstreams.com/'+params['url']
             self.addVideo(params)
 
     def getCrackstreamsLink(self, url):
         printDBG("crackstreamsLink url[%r]" % url)
-        sts,data = self.cm.getPage(url)
+        sts, data = self.getPage( url, {'use_cookie': True, 'cookie_items':{'challenge':'BitMitigate.com'}} )
+#        sts,data = self.cm.getPage(url)
         if not sts: return []
         data = CParsingHelper.getDataBeetwenNodes(data, ('<iframe', '>', 'allowfullscreen'), ('</iframe', '>'))[1]
         _url  = self.cm.ph.getSearchGroups(data, '''src=['"]([^"^']+?)['"]''')[0]

@@ -344,7 +344,7 @@ class NGolosCOM(CBaseHostClass):
         elif '.me/player' in videoUrl:
             sts, data = self.cm.getPage(videoUrl)
             if not sts: return []
-            url = url = self.cm.ph.getSearchGroups(data, '''file:[^"^']*?["'](http[^'^"]+?)["']''')[0]
+            url = self.cm.ph.getSearchGroups(data, '''file:[^"^']*?["'](http[^'^"]+?)["']''')[0]
             urlTab.append({'name':self.up.getDomain(videoUrl), 'url':url})
         elif videoUrl.startswith('http'):
             urlTab.extend(self.up.getVideoLinkExt(videoUrl))

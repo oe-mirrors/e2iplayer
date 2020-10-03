@@ -127,6 +127,8 @@ class FilmyNaDzis(CBaseHostClass):
             url = self.getFullUrl(ph.getattr(item, 'href'), self.MAIN_URL)
             title = ph.clean_html(item)
             
+            if 'seriale' in url: continue
+
             params = {'good_for_fav':True, 'category':'list_items', 'url':url, 'title': title}
 
             if '/category/' in url:
