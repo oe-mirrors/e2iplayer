@@ -1,5 +1,4 @@
 host123movieshd
-host3filmy
 host3player
 host3sktv
 host7tvde
