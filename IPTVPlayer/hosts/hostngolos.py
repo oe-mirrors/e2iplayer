@@ -69,6 +69,11 @@ class NGolosCOM(CBaseHostClass):
         printDBG("NGolosCOM.listMainMenu")
         self.cacheCategories = []
         
+        params = dict(cItem)
+        params.update({'category':'list_items', 'title':_('Home page'), 'url':cItem['url']})
+        self.addDir(params)
+        self.addMarker({})
+        
         sts, data = self.getPage(cItem['url'])
         if not sts: return
         self.setMainUrl(data.meta['url'])
