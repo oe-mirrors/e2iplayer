@@ -581,6 +581,7 @@ class EFilmyTv(CBaseHostClass):
         ##############################################################################################
         
         jscode = []
+        printDBG("EFilmyTv.getVideoLinks data[%s]" % data)
         tmp = self.cm.ph.getAllItemsBeetwenNodes(data, ('<script', '>'), ('</script', '>'), False)
         for item in tmp:
             if 'eval(' in item:
@@ -599,7 +600,9 @@ class EFilmyTv(CBaseHostClass):
             videoUrl = self.cm.ph.getSearchGroups(data, '''\surl\s*?:\s*?['"](https?://[^'^"]+?)['"]''', 1, True)[0]
             if videoUrl != '': urlTab.append({'name':'direct_link', 'url':strwithmeta(videoUrl, {'Referer':cUrl})})
         else:
-            videoUrl = self.getFullUrl(self.cm.ph.getSearchGroups(data, '''<iframe[^>]+?src=['"]([^"^']+?)['"]''', 1, True)[0], cUrl)
+            videoUrl = self.getFullUrl(self.cm.ph.getSearchGroups(data, '''href=['"]([^'^"]+?)['"]''', 1, True)[0], cUrl)
+            if 'aparat' not in videoUrl:
+                videoUrl = self.getFullUrl(self.cm.ph.getSearchGroups(data, '''<iframe[^>]+?src=['"]([^"^']+?)['"]''', 1, True)[0], cUrl)
             urlTab = self.up.getVideoLinkExt(strwithmeta(videoUrl, {'Referer':cUrl}))
         
         return urlTab
