@@ -78,6 +78,7 @@
 "hostfullmatchtvcom": "https://fullmatchtv.com/",
 "hostgamatocom": "https://gamato-movies.com/",
 "hostgamatotvme": "http://gamatotv.me/",
+"hostgovodtv": "https://govod.tv/",
 "hostgreekdocumentaries3": "http://greekdocumentaries2.blogspot.gr/",
 "hostguardaserie": "http://guardaserie.media/",
 "hosthd1080online": "https://hd1080.online/",

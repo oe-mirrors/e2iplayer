@@ -140,6 +140,7 @@ class IPTVHostsGroups:
         'fullmatchtvcom' : ['sport'] ,
         'gamatocom' : [ 'greek', 'moviesandseries'] ,
         'gamatotvme' : [ 'greek', 'moviesandseries'] ,
+        'govodtv' : [ 'moviesandseries', 'polish'] ,
         'greekdocumentaries3' : [ 'documentary', 'greek'] ,
         'guardaserie' : [ 'italian', 'moviesandseries'] ,
         'hd1080online' : [ 'moviesandseries', 'russian'] ,
