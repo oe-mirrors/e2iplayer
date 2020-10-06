@@ -35,7 +35,7 @@ class EskaGo(CBaseHostClass):
         self.MAIN_ESKAPL_URL = 'http://www.eska.pl/'
         self.DEFAULT_ICON_URL = self.MAIN_URL + 'html/img/fb.jpg'
         
-        self.MAIN_CAT_TAB = [{'category':'list_vod_casts',          'title': 'VOD',                      'url':self.getFullUrl('vod')     },
+        self.MAIN_CAT_TAB = [#{'category':'list_vod_casts',          'title': 'VOD',                      'url':self.getFullUrl('vod')     },
                              {'category':'list_radio_cats',         'title': 'Radio Eska Go',            'url':self.getFullUrl('radio')   },
                              {'category':'list_radio_eskapl',       'title': 'Radio Eska PL',            'url':self.MAIN_ESKAPL_URL,       'icon':'https://www.press.pl/images/contents/photo_51546_1515158162_big.jpg'},
                              ]
