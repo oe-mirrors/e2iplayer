@@ -1,4 +1,4 @@
-# -*- coding: utf-8 -*-
+﻿# -*- coding: utf-8 -*-
 #
 
 ###################################################
@@ -137,8 +137,10 @@ class IPTVHostsGroups:
         'forjatn' : [ 'arabic', 'english', 'french', 'moviesandseries'] ,
         'francetv' : [ 'french'] ,
         'freediscpl' : [ 'moviesandseries', 'others', 'polish'] ,
+        'fullmatchtvcom' : ['sport'] ,
         'gamatocom' : [ 'greek', 'moviesandseries'] ,
         'gamatotvme' : [ 'greek', 'moviesandseries'] ,
+        'govodtv' : [ 'moviesandseries', 'polish'] ,
         'greekdocumentaries3' : [ 'documentary', 'greek'] ,
         'guardaserie' : [ 'italian', 'moviesandseries'] ,
         'hd1080online' : [ 'moviesandseries', 'russian'] ,

@@ -1,4 +1,4 @@
-# -*- coding: utf-8 -*-
+﻿# -*- coding: utf-8 -*-
 
 ###################################################
 # LOCAL import
@@ -268,6 +268,7 @@ class urlparser:
                        'google.com':            self.pp.parserGOOGLE        ,
                        'gorillavid.in':         self.pp.parserFASTVIDEOIN   , 
                        'gounlimited.to':        self.pp.parserGOUNLIMITEDTO  ,
+                       'govod.tv':             self.pp.parserWIIZTV         ,
                        'haxhits.com':           self.pp.parserHAXHITSCOM     ,
                        'hdcast.info':           self.pp.parserHDCASTINFO    ,
                        'hdfilmstreaming.com':   self.pp.parserHDFILMSTREAMING,
