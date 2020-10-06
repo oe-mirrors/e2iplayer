@@ -69,6 +69,11 @@ class NGolosCOM(CBaseHostClass):
         printDBG("NGolosCOM.listMainMenu")
         self.cacheCategories = []
         
+        params = dict(cItem)
+        params.update({'category':'list_items', 'title':_('Home page'), 'url':cItem['url']})
+        self.addDir(params)
+        self.addMarker({})
+        
         sts, data = self.getPage(cItem['url'])
         if not sts: return
         self.setMainUrl(data.meta['url'])
@@ -218,9 +223,10 @@ class NGolosCOM(CBaseHostClass):
         for section in tmp:
             sId = self.cm.ph.getSearchGroups(section, '''id=['"]([^'^"]+?)['"]''')[0]
             subItems = []
-            section = section.split('</iframe>')
+            section = section.split('<br />')
             for item in section:
                 url = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''<iframe[^>]+?src=['"]([^"^']+?)['"]''', 1, True)[0])
+                if url == '': url = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''href=['"]([^"^']+?)['"]''', 1, True)[0])
                 if url == '': continue
                 title = '%s : %s' % (cItem['title'], self.cleanHtmlStr(item))
                 params = dict(cItem)
@@ -335,6 +341,11 @@ class NGolosCOM(CBaseHostClass):
                             urlTab.append({'name':name, 'url':url})
             except Exception:
                 printExc()
+        elif '.me/player' in videoUrl:
+            sts, data = self.cm.getPage(videoUrl)
+            if not sts: return []
+            url = self.cm.ph.getSearchGroups(data, '''file:[^"^']*?["'](http[^'^"]+?)["']''')[0]
+            urlTab.append({'name':self.up.getDomain(videoUrl), 'url':url})
         elif videoUrl.startswith('http'):
             urlTab.extend(self.up.getVideoLinkExt(videoUrl))
         return urlTab
