@@ -217,7 +217,7 @@ class urlparser:
                        'dood.watch':            self.pp.parserDOOD          ,
                        'doodstream.com':        self.pp.parserDOOD          ,
                        'dotstream.tv':          self.pp.parserDOTSTREAMTV   ,
-                       'droonws.xyz':           self.pp.parserTXNEWSNETWORK ,
+                       'droonws.xyz':           self.pp.parserTXNEWSNETWORK , 
                        'dwn.so':                self.pp.parserDWN           ,
                        'easyload.io':           self.pp.parserEASYLOAD      ,
                        'easyvid.org':           self.pp.parserEASYVIDORG    ,
@@ -350,8 +350,7 @@ class urlparser:
                        'mystream.la':           self.pp.parserMYSTREAMLA    ,
                        'mystream.to':           self.pp.parserMYSTREAMTO    ,
                        'mystream.press':        self.pp.parserMYSTREAMTO   ,
-                       'mystream.nuova-indirizzo.com': self.pp.parserMYSTREAMTO,
-                       'mystream.bestiptv.cc':  self.pp.parserMYSTREAMTO   ,
+                       'mystream.nuovo-indirizzo.com':  self.pp.parserMSTREAMICU   ,
                        'premiumserver.club':    self.pp.parserMSTREAMICU    ,
                        'mystream.streamango.to': self.pp.parserMSTREAMICU   ,
                        'myvi.ru':               self.pp.parserMYVIRU        ,
@@ -370,9 +369,9 @@ class urlparser:
                        'nowvideo.eu':           self.pp.parserNOWVIDEO      ,
                        'nowvideo.sx':           self.pp.parserNOWVIDEO      ,
                        'nowvideo.to':           self.pp.parserNOWVIDEO      ,
-                       'ntv.ru':                self.pp.parserNTVRU         ,
-                       'nuovo-indirizzo.com':   self.pp.parserHDPLAYERCASA  ,
-                       'nxload.com':            self.pp.parserNXLOADCOM     ,
+                       'ntv.ru':                self.pp.parserNTVRU          ,
+                       'nuovo-indirizzo.com':   self.pp.parserHDPLAYERCASA   ,
+                       'nxload.com':            self.pp.parserNXLOADCOM      ,
                        'ok.ru':                 self.pp.parserOKRU          ,
                        'oload.cloud':           self.pp.parserOPENLOADIO    ,
                        'oload.co':              self.pp.parserOPENLOADIO    ,
@@ -396,6 +395,7 @@ class urlparser:
                        'p2pcast.tv':            self.pp.parserP2PCASTTV      ,
                        'partners.nettvplus.com': self.pp.parserNETTVPLUSCOM,
                        'picasaweb.google.com':  self.pp.parserPICASAWEB     ,
+                       'player.m2list.com':     self.pp.parserM2LIST        ,
                        'playhydrax.com':        self.pp.parserPLAYHYDRAX,
                        'playbb.me':             self.pp.parserEASYVIDEOME   ,
                        'played.to':             self.pp.parserPLAYEDTO      ,
@@ -408,10 +408,11 @@ class urlparser:
                        'powvideo.cc':           self.pp.parserPOWVIDEONET    ,
                        'powvideo.net':          self.pp.parserPOWVIDEONET    ,
                        'powv1deo.cc':           self.pp.parserPOWVIDEONET  ,
-                       'premiertvlive.com':     self.pp.parserTXNEWSNETWORK ,          
+                       'premiertvlive.com':     self.pp.parserTXNEWSNETWORK ,
                        'primevideos.net':       self.pp.parserPRIMEVIDEOS,  
                        'privatestream.tv':      self.pp.parserPRIVATESTREAM ,
                        'promptfile.com':        self.pp.parserPROMPTFILE    ,
+                       'protectlink.stream':    self.pp.parserFEMBED        ,
                        'publicvideohost.org':   self.pp.parserPUBLICVIDEOHOST,
                        'putlive.in':            self.pp.parserPUTLIVEIN      ,
                        'putlocker.com':         self.pp.parserFIREDRIVE     , 
@@ -450,6 +451,7 @@ class urlparser:
                        'spruto.tv':             self.pp.parserSPRUTOTV       ,
                        'srkcast.com':           self.pp.parserSRKCASTCOM    ,
                        'ssh101.com':            self.pp.parserSSH101COM     ,
+                       'statics.mystream.to':   self.pp.parserMSTREAMICU    ,
                        'swzz.xyz':              self.pp.parserSWZZ,
                        'st.dwn.so':             self.pp.parserDWN           ,
                        'stayonline.pro':        self.pp.parserSTAYONLINE,
@@ -482,6 +484,8 @@ class urlparser:
                        'suprafiles.org':        self.pp.parserUPLOAD         ,
                        'suspents.info':         self.pp.parserFASTVIDEOIN   ,
                        'swirownia.com.usrfiles.com': self.pp.parserSWIROWNIA,
+                       'talbot.net':            self.pp.parserTXNEWSNETWORK ,
+                       'tantifilm.fit':         self.pp.parserTANTIFILM     ,
                        'tantifilm.ga':          self.pp.parserTANTIFILM     ,
                        'tantifilm.top':         self.pp.parserTANTIFILM     ,
                        'telerium.tv':           self.pp.parserTELERIUMTV     ,
@@ -615,6 +619,7 @@ class urlparser:
                        'woof.tube':             self.pp.parserWOOFTUBE,
                        'wrzuta.pl':             self.pp.parserWRZUTA        ,
                        'wstream.video':         self.pp.parserWSTREAMVIDEO   ,
+                       'ww1.opendrive.top':     self.pp.parserOPENDRIVE     ,
                        'xage.pl':               self.pp.parserXAGEPL        ,
                        'xvidstage.com':         self.pp.parserXVIDSTAGECOM   ,
                        'yocast.tv':             self.pp.parserYOCASTTV      ,
@@ -13114,6 +13119,8 @@ class pageParser(CaptchaHelper):
         
         return urlTabs
 
+
+
     def parserRAPIDCRYPT(self, baseUrl):
         printDBG("parserRAPIDCRYPT baseUrl[%s]" % baseUrl)
 
@@ -13136,6 +13143,7 @@ class pageParser(CaptchaHelper):
                 return []
         else:
             return []
+
     
     def parserLINKHUB(self, baseUrl):
         printDBG("parserLINKHUB baseUrl[%s]" % baseUrl)
@@ -13995,8 +14003,14 @@ class pageParser(CaptchaHelper):
         
             # find alternative mirrors
             #<li class="dropdown"> 
-            #<a class="" href="https://hdplayer.casa/series/names/12/12/12/label1/HDPlayer"><i class="fa fa-home fa-fw"></i> HDPlayer</a>
+            #<a class="" href="https://nuovo-indirizzo.com/serietv/series/names/2993/6831/100309/label1/Player"><i class="fa fa-home fa-fw"></i> Player</a>
             #</li>
+            #<li class="dropdown">
+            #<a class="" href="https://nuovo-indirizzo.com/serietv/series/names/2993/6831/100309/label2/Tantifilm"><i class="fa fa-home fa-fw"></i> Tantifilm</a>
+            #</li>
+            #<li class="dropdown">
+            #<a class="" href="https://nuovo-indirizzo.com/serietv/series/names/2993/6831/100309/label3/Mystream"><i class="fa fa-home fa-fw"></i> Mystream</a>
+            #<li>
             mirrors = self.cm.ph.getAllItemsBeetwenMarkers(data, ('<li','>','"dropdown"'), '</li>')
             for m in mirrors:
                 mirrorUrl = self.cm.ph.getSearchGroups(m, "href=['\"]([^\"^']+?)['\"]")[0]
@@ -14497,10 +14511,12 @@ class pageParser(CaptchaHelper):
                     printExc()
         return urlsTab
 
+
+
     def parserM2LIST(self, baseUrl):
         printDBG("parserM2LIST baseUrl[%r]" % baseUrl)
 
-        #example: http://www.m2list.com/embed.php?datab=y&lister=none&mirror=m6p1&mainid=272854
+        #example: http://www.m2list.com/embed.php?datab=y&lister=none&mirror=olv1&mainid=833795
 
         httpParams = {
             'header' : {
@@ -14519,8 +14535,8 @@ class pageParser(CaptchaHelper):
         if 'mainid' in query and 'lister' in query and 'mirror' in query:
             #playerUrl = "http://player.m2list.com/mv/" + query.get('mainid','') + "?lister=" + query.get('lister','none') + "&mirror=" + query.get('mirror','') 
         
-            #example: http://player.m2list.com/mv/272854?lister=none&mirror=m6p1
-            #         http://player.m2list.com/ajax/movie/get_sources/272854/m6p1
+            #example: http://player.m2list.com/mv/833795?lister=none&mirror=olv1
+            #         http://player.m2list.com/ajax/movie/get_sources/833795/olv1
 
             playerUrl = "http://player.m2list.com/ajax/movie/get_sources/" + query.get('mainid','') + "/" + query.get('mirror','') 
             
