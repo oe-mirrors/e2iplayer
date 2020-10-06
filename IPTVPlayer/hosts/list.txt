@@ -73,8 +73,10 @@ hostfokustv
 hostforjatn
 hostfrancetv
 hostfreediscpl
+hostfullmatchtvcom
 hostgamatocom
 hostgamatotvme
+hostgovodtv
 hostgreekdocumentaries3
 hostguardaserie
 hosthd1080online
@@ -96,13 +98,11 @@ hostkijknl
 hostkinogo
 hostkinotan
 hostkinox
-hostkissanimeto
 hostkisscartoonme
 hostkkiste
 hostkreskoweczki
 hostkreskowkazone
 hostla7it
-hostlaola1tv
 hostlibrestream
 hostliveleak
 hostlocalmedia
@@ -137,7 +137,6 @@ hostotakufr
 hostourmatchnet
 hostpinkbike
 hostpmgsport
-hostplanetstreamingcom
 hostplaypuls
 hostplayrtsiw
 hostplusdede
@@ -150,7 +149,6 @@ hostrtbfbe
 hostrteieplayer
 hostrtlmost
 hostserialeco
-hostserialnet
 hostserienstreamto
 hostseriesonline
 hostserijeonline
