@@ -69,7 +69,6 @@ hostfilmpertutti
 hostfilmstreamhdit
 hostfilmstreamvkcom
 hostfilmynadzis
-hostfokustv
 hostforjatn
 hostfrancetv
 hostfreediscpl
@@ -148,7 +147,6 @@ hostredbull
 hostrtbfbe
 hostrteieplayer
 hostrtlmost
-hostserialeco
 hostserienstreamto
 hostseriesonline
 hostserijeonline
@@ -169,7 +167,6 @@ hosttantifilmorg
 hostted
 hosttfarjocom
 hostthewatchseriesto
-hostturcjatv
 hosttvgrypl
 hosttvn24
 hosttvnowde
