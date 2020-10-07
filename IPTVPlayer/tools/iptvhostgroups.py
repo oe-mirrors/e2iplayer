@@ -1,4 +1,4 @@
-﻿# -*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-
 #
 
 ###################################################
@@ -133,7 +133,6 @@ class IPTVHostsGroups:
         'filmstreamhdit' : [ 'italian', 'moviesandseries'] ,
         'filmstreamvkcom' : [ 'french', 'moviesandseries'] ,
         'filmynadzis': [ 'moviesandseries', 'polish'] ,
-        'fokustv' : [ 'documentary', 'live', 'polish', 'science'] ,
         'forjatn' : [ 'arabic', 'english', 'french', 'moviesandseries'] ,
         'francetv' : [ 'french'] ,
         'freediscpl' : [ 'moviesandseries', 'others', 'polish'] ,
@@ -213,7 +212,6 @@ class IPTVHostsGroups:
         'rtbfbe' : [ 'french', 'others'] ,
         'rteieplayer' : [ 'english'] ,
         'rtlmost' : [ 'hungarian', 'moviesandseries'] ,
-        'serialeco' : [ 'moviesandseries', 'polish'] ,
         'serienstreamto' : [ 'german', 'moviesandseries'] ,
         'seriesonline' : [ 'english', 'moviesandseries'] ,
         'serijeonline' : [ 'balkans', 'moviesandseries'] ,
@@ -235,7 +233,6 @@ class IPTVHostsGroups:
         'ted' : [ 'english', 'others'] ,
         'tfarjocom' : [ 'french', 'moviesandseries'] ,
         'thewatchseriesto' : [ 'english', 'moviesandseries'] ,
-        'turcjatv' : [ 'moviesandseries', 'polish'] ,
         'tvgrypl' : [ 'polish'] ,
         'tvn24' : [ 'polish'] ,
         'tvnowde' : [ 'german'] ,
