@@ -65,7 +65,6 @@
 "hostfilmezz": "http://filmezz.eu/",
 "hostfilmixco": "https://filmix.co/",
 "hostfilmoviplex": "https://www.filmoviplex.com/",
-"hostfilmovizijastudio": "https://filmovizija.fun/",
 "hostfilmpalast": "http://filmpalast.to/",
 "hostfilmpertutti": "https://filmpertutti.pro/",
 "hostfilmstreamhdit": "http://filmstreamhd.it/",
