@@ -127,7 +127,6 @@ class IPTVHostsGroups:
         'filmezz' : [ 'hungarian', 'moviesandseries'] ,
         'filmixco' : [ 'moviesandseries', 'russian'] ,
         'filmoviplex' : [ 'balkans', 'moviesandseries'] ,
-        'filmovizijastudio' : [ 'balkans', 'moviesandseries'] ,
         'filmpalast' : [ 'german', 'moviesandseries'] ,
         'filmpertutti' : [ 'italian', 'moviesandseries'] ,
         'filmstreamhdit' : [ 'italian', 'moviesandseries'] ,
