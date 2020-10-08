@@ -74,7 +74,7 @@ class TvnVod(CBaseHostClass):
         printDBG("TvnVod.__init__")
         CBaseHostClass.__init__(self, {'history':'TvnVod', 'history_store_type':True, 'proxyURL': config.plugins.iptvplayer.proxyurl.value, 'useProxy': config.plugins.iptvplayer.proxyenable.value})
         self.itemsPerPage = 30 # config.plugins.iptvplayer.tvp_itemsperpage.value
-        self.DEFAULT_ICON_URL = 'http://www.programosy.pl/download/screens/13711/android-player-1_s.png' 
+        self.DEFAULT_ICON_URL = 'https://upload.wikimedia.org/wikipedia/commons/thumb/f/fc/Player_%28TVN%29.svg/480px-Player_%28TVN%29.svg.png' 
         self.platforms = {
             'Panasonic': {
                 'platform' : 'ConnectedTV',
