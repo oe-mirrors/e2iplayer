@@ -18,7 +18,7 @@ from Plugins.Extensions.IPTVPlayer.libs.e2ijson import loads as json_loads
 import re
 import time
 import urllib
-from datetime import  datetime, timedelta
+from datetime import  timedelta
 ###################################################
 ###################################################
 # Config options for HOST
@@ -47,13 +47,12 @@ class Redbull(CBaseHostClass):
     def listMain(self, cItem, nextCategory):
         printDBG("Redbull.listMain")
 
-        MAIN_CAT_TAB = [ 
-                        {'category':'explore_item',       'title': _('Discover'),  'url':self.REDBULL_API + "products/discover"       },
-                        {'category':'explore_item',       'title': _('TV'),        'url':self.REDBULL_API + "products/tv"             },
-                        {'category':'explore_item',       'title': _('Channels'),  'url':self.REDBULL_API + "products/channels"       },
-                        {'category':'explore_item',       'title': _('Calendar'),  'url':self.REDBULL_API + "products/calendar"       },
-                        {'category':'search',             'title': _('Search'),    'search_item':True,},
-                        {'category':'search_history',     'title': _('Search history'),            } 
+        MAIN_CAT_TAB = [{'category':'explore_item',         'title': _('Discover'),  'url':self.REDBULL_API + "products/discover"       },
+                         {'category':'explore_item',          'title': _('TV'),      'url':self.REDBULL_API + "products/tv"             },
+                         {'category':'explore_item',         'title': _('Channels'), 'url':self.REDBULL_API + "products/channels"       },
+                         {'category':'explore_item',          'title': _('Calendar'),'url':self.REDBULL_API + "products/calendar"       },
+                         {'category':'search',             'title': _('Search'), 'search_item':True,},
+                         {'category':'search_history',     'title': _('Search history'),            } 
                         ]
 
         self.listsTab(MAIN_CAT_TAB, cItem)
@@ -113,62 +112,6 @@ class Redbull(CBaseHostClass):
     def getFullUrl(self, url, currUrl=None):
         return CBaseHostClass.getFullUrl(self, url.replace('&amp;', '&'), currUrl)
 
-    def getInfo(self, item):
-        desc = ''
-        icon = self.getFullIconUrl(ph.search(item, '''src720=['"]([^'^"]+?)['"]''')[0])
-        url = self.getFullUrl(ph.search(item, '''loadPage\(['"]([^'^"]+?)['"]''')[0])
-        if url:
-            content_type = ph.search(url, '''appletv.redbull.tv/(.*?)[\?/]''')[0]
-
-        title = self.cleanHtmlStr(ph.search(item, '''<title>([^>]+?)</title>''')[0])
-        title2 = self.cleanHtmlStr(ph.search(item, '''<label>([^>]+?)</label>''')[0])
-        if len(title2)>len(title):
-            title = title2
-        
-        title3 = self.cleanHtmlStr(ph.search(item, '''<label2>([^>]+?)</label2>''')[0])
-        if title3:
-            if title:
-                title = title + "  " + title3
-            else:
-                title = title3
-        if not title: 
-            title = self.cleanHtmlStr(ph.search(item, '''accessibilityLabel=['"]([^'^"]+?)['"]''')[0])
-        if not title:
-            title = self.cleanHtmlStr(ph.search(item, '''Label=['"]([^'^"]+?)['"]''')[0])
-
-        summary = self.cleanHtmlStr(ph.search(item, '''<summary>([^>]+?)</summary>''')[0])
-        if summary:
-            desc = summary
-            
-        subtitle = self.cleanHtmlStr(ph.search(item, '''<subtitle>([^>]+?)</subtitle>''')[0])
-        if subtitle:
-            if desc:
-                desc = subtitle + "\n" + desc
-            else:
-                desc = subtitle
-                
-        time = self.cleanHtmlStr(ph.search(item, '''Duration: ([^'^"]+?)<''')[0])
-        if time:
-            desc = time + "\n" + desc 
-        
-        timestamp = ph.search(item, '''<rightLabel>([^>]+?)</rightLabel>''')[0]
-        
-        if timestamp.isdigit():
-            v_date = datetime.fromtimestamp(int(timestamp)).strftime("%d/%m/%Y, %H:%M")
-            if desc:
-                desc = _("Live at: ") + v_date + '\n' + desc
-            else:
-                desc = _("Live at: ") + v_date
-        else:
-            if timestamp:
-                if desc:
-                    desc = timestamp + '\n' + desc
-                else:
-                    desc = timestamp
-                
-        params = {'title':title, 'icon':icon, 'desc': desc, 'url':url, 'content_type': content_type}
-        return params    
-    
     def listSubItems(self, cItem):
         printDBG("Redbull.listSubItems")
         self.currList = cItem['sub_items']
@@ -178,97 +121,60 @@ class Redbull(CBaseHostClass):
 
         sts, data = self.getPage(cItem['url'])
         if not sts: return []
+        printDBG("hostredbull.exploreItem.data2 |%s|" % data)
 
         if '<mediaURL>' in data: 
             icon = self.getFullIconUrl(ph.search(data, '''src720=['"]([^'^"]+?)['"]''')[0])
-            url = self.getFullUrl(ph.search(data, '''loadPage\(['"]([^'^"]+?)['"]''')[0])
+            url = self.getFullUrl(ph.search(data, '''onPlay="loadPage\(['"]([^'^"]+?)['"]''')[0])
             title = self.cleanHtmlStr(ph.search(data, '''<label2>([^>]+?)</label2>''')[0])
-            if not title: 
-                title = self.cleanHtmlStr(ph.search(data, '''<title>([^>]+?)</title>''')[0])
-            params = {'title':title, 'icon':icon, 'desc':'', 'url': cItem['url']}
+            if not title: title = self.cleanHtmlStr(ph.search(data, '''<title>([^>]+?)</title>''')[0])
+            params = {'title':title, 'icon':icon, 'desc':'', 'url':cItem['url']}
             self.addVideo(params)
 
-        posters=[]
-        data3 = ph.findall(data, '<showcasePoster', '</showcasePoster>')
-        for item in data3:
-            params = self.getInfo(item)
-            posters.append(params)
-            
-        if len(posters):
-            self.addDir({'title': _('Showcase'), 'icon': self.DEFAULT_ICON_URL, 'category': 'video_collection', 'sub_items': posters})
-        
-        data2 = re.findall("(<collectionDivider.*?</collectionDivider>.*?<grid.*?</grid>)",data)
-        
-        if not len(data2):
-            data2 = re.findall("(<collectionDivider.*?</collectionDivider>.*?<collectionDivider.*?</collectionDivider>)",data)
-        
-        for item2 in data2:
-            #printDBG("------------------------------------")
-            if ('<shelf' in item2) or ('<grid' in item2):
-                posters=[]
-                poster_title = self.cleanHtmlStr(ph.search(item2, '''<title>([^>]+?)</title>''')[0])
-                data3 = ph.findall(item2, '<sixteenByNinePoster', '</sixteenByNinePoster>')
-                for item in data3:
-                    params=self.getInfo(item)
-                    posters.append(params)
-                
-                data3 = ph.findall(item2, '<moviePoster', '</moviePoster>')
-                for item in data3:
-                    params=self.getInfo(item)
-                    posters.append(params)
-                
-                if len(posters):
-                    self.addDir({'title': poster_title, 'icon': self.DEFAULT_ICON_URL, 'category': 'video_collection', 'sub_items': posters})
- 
-        data2 = ph.findall(data, '<centerShelf>', '</centerShelf>')
-        for d in data2:
-            data3 = ph.findall(d, '<actionButton', '</actionButton>')
-            for item in data3:
-                params = self.getInfo(item)
+        data2 = ph.findall(data, '<sixteenByNinePoster', '</sixteenByNinePoster>')
+        for item in data2:
+            icon = self.getFullIconUrl(ph.search(item, '''src720=['"]([^'^"]+?)['"]''')[0])
+            url = self.getFullUrl(ph.search(item, '''onPlay="loadPage\(['"]([^'^"]+?)['"]''')[0])
+            title = self.cleanHtmlStr(ph.search(item, '''<label2>([^>]+?)</label2>''')[0])
+            if not title: title = self.cleanHtmlStr(ph.search(item, '''<title>([^>]+?)</title>''')[0])
+            if not title: title = self.cleanHtmlStr(ph.search(item, '''accessibilityLabel=['"]([^'^"]+?)['"]''')[0])
+            time = self.cleanHtmlStr(ph.search(item, '''Duration: ([^'^"]+?)<''')[0])
+            if 'page_stream' in url:
+                params = {'title':title, 'icon':icon, 'desc':'', 'url':url}
+                self.addVideo(params)
+            else:
+                params = dict(cItem)
+                params.update({'good_for_fav':True, 'category':'explore_item', 'title':title, 'url':url, 'desc':url, 'icon':icon})
+                self.addDir(params)
 
-                if params['content_type'] in ['products','collection']:
-                    params['icon'] = cItem['icon']
-                    params['category'] = 'explore_item'
-                    self.addDir(params)
-                elif params['content_type'] in ['content','page_stream']:
-                    params['icon'] = cItem['icon'] 
-                    self.addVideo (params)
-                else:
-                    printDBG("Content Type unknown: %s " % params['content_type'])
-        
-        data2 = ph.findall(data, '<bottomShelf>', '</bottomShelf>')
-        for d in data2:
-            posters=[]
-            data3 = ph.findall(d, '<sixteenByNinePoster', '</sixteenByNinePoster>')
-            
-            for item in data3:
-                params = self.getInfo(item)
-                posters.append(params)
-            
-            if len(posters):
-                self.addDir({'title': 'Related', 'icon': self.DEFAULT_ICON_URL, 'category': 'video_collection', 'sub_items': posters})
+        data2 = ph.findall(data, '<showcasePoster', '</showcasePoster>')
+        for item in data2:
+            icon = self.getFullIconUrl(ph.search(item, '''src720=['"]([^'^"]+?)['"]''')[0])
+            url = self.getFullUrl(ph.search(item, '''onPlay="loadPage\(['"]([^'^"]+?)['"]''')[0])
+            title = self.cleanHtmlStr(ph.search(item, '''Label=['"]([^'^"]+?)['"]''')[0])
+            params = {'title':title, 'icon':icon, 'desc':'', 'url':url}
+            self.addVideo(params)
 
-        
         data2 = ph.findall(data, '<twoLine', '</twoLine')
         for item in data2:
-            params = self.getInfo(item)
+            icon = self.getFullIconUrl(ph.search(item, '''src720=['"]([^'^"]+?)['"]''')[0])
+            url = self.getFullUrl(ph.search(item, '''onPlay="loadPage\(['"]([^'^"]+?)['"]''')[0])
+            title = self.cleanHtmlStr(ph.search(item, '''<label2>([^>]+?)</label2>''')[0])
+            if not title: title = self.cleanHtmlStr(ph.search(item, '''<title>([^>]+?)</title>''')[0])
+            time = self.cleanHtmlStr(ph.search(item, '''Duration: ([^'^"]+?)<''')[0])
+            params = {'title':title, 'icon':icon, 'desc':'['+time+']', 'url':url}
             self.addVideo(params)
-        
-    def listVideoItems(self, cItem):
-        printDBG("Redbull.listVideoItems")
-        videos = cItem['sub_items']
-        
-        for v in videos:
-            content_type = v.get('content_type','')
 
-            if content_type in ['products','collection']:
-                v['category'] = 'explore_item'
-                self.addDir(v)
-            elif content_type in ['content','page_stream']:
-                self.addVideo (v)
-            else:
-                printDBG("Content Type unknown: %s " % content_type)
-            
+        data2 = ph.findall(data, '<moviePoster', '</moviePoster>')
+        for item in data2:
+            icon = self.getFullIconUrl(ph.search(item, '''src720=['"]([^'^"]+?)['"]''')[0])
+            url = self.getFullUrl(ph.search(item, '''onPlay="loadPage\(['"]([^'^"]+?)['"]''')[0])
+            title = self.cleanHtmlStr(ph.search(item, '''<label2>([^>]+?)</label2>''')[0])
+            if not title: title = self.cleanHtmlStr(ph.search(item, '''<title>([^>]+?)</title>''')[0])
+            time = self.cleanHtmlStr(ph.search(item, '''Duration: ([^'^"]+?)<''')[0])
+            params = {'title':title, 'icon':icon, 'desc':'['+time+']', 'url':url}
+            self.addVideo(params)
+
     def listSearchResult(self, cItem, searchPattern, searchType):
 
         url = self.REDBULL_API + "search?q=%s" % urllib.quote_plus(searchPattern)
@@ -282,45 +188,47 @@ class Redbull(CBaseHostClass):
         sts, data = self.getPage(cItem['url'])
         if not sts: return
         self.setMainUrl(self.cm.meta['url'])
-        #printDBG("hostredbull.listSearchItems |%s|" % data)
+        printDBG("hostredbull.listSearchItems |%s|" % data)
 
         data2 = ph.findall(data, '<twoLine', '</twoLine')
         for item in data2:
-            params = self.getInfo(item)
+            icon = self.getFullIconUrl(ph.search(item, '''src720=['"]([^'^"]+?)['"]''')[0])
+            url = self.getFullUrl(ph.search(item, '''onPlay="loadPage\(['"]([^'^"]+?)['"]''')[0])
+            title = self.cleanHtmlStr(ph.search(item, '''<label2>([^>]+?)</label2>''')[0])
+            if not title: title = self.cleanHtmlStr(ph.search(item, '''<title>([^>]+?)</title>''')[0])
+            if not title: title = self.cleanHtmlStr(ph.search(item, '''<label>([^>]+?)</label>''')[0])
+            if not title: title = self.cleanHtmlStr(ph.search(item, '''Label=['"]([^'^"]+?)['"]''')[0])
+            time = self.cleanHtmlStr(ph.search(item, '''Duration: ([^'^"]+?)<''')[0])
+            params = {'title':title, 'icon':icon, 'desc':'['+time+']', 'url':url}
+            self.addVideo(params)
 
-            if params['content_type'] in ['products','collection']:
-                params['category'] = 'explore_item'
-                #printDBG(str(params))
-                self.addDir(params)
-                
-            elif params['content_type'] in ['content','page_stream']:
-                #printDBG(str(params))
-                self.addVideo (params)
-            else:
-                printDBG("Content Type unknown: %s " % params['content_type'])
 
     def getLinksForVideo(self, cItem):
-        printDBG("Redbull.getLinksForVideo %s" % cItem['url'])
         urlsTab = []
 
         sts, data = self.getPage(cItem['url'])
-        if not sts: 
-            return []
-        #printDBG("Redbull.getLinksForVideo.data |%s|" % data)
+        if not sts: return []
+        printDBG("hostredbull.getLinksForVideo.data |%s|" % data)
         videoUrl = ph.search(data, '''<mediaURL>([^"]+?)<''')[0]
         if videoUrl:
-            urlsTab.extend(getDirectM3U8Playlist(videoUrl, checkExt=True, variantCheck=True, checkContent=True, sortWithMaxBitrate=99999999)) 
+            tmp = getDirectM3U8Playlist(videoUrl, checkExt=True, checkContent=True)
+            for item in tmp:
+                name = '%sx%s  , bitrate: %s' % (item['width'], item['height'], item['bitrate'])
+                urlsTab.append({'name':name, 'url':item['url'], 'need_resolve':0, 'bitrate':item['bitrate'], 'original':''})
+            urlsTab.sort(key=lambda x: x['bitrate'], reverse=True)
+            return urlsTab
         else: 
-            url = self.getFullUrl(ph.search(data, '''loadPage\(['"]([^'^"]+?)['"]''')[0])
+            url = self.getFullUrl(ph.search(data, '''onPlay="loadPage\(['"]([^'^"]+?)['"]''')[0])
             sts, data = self.getPage(url)
-            if not sts: 
-                return []
+            if not sts: return []
             printDBG("hostredbull.getLinksForVideo.data |%s|" % data)
             videoUrl = ph.search(data, '''<mediaURL>([^"]+?)<''')[0]
-            if videoUrl:
-                urlsTab.extend(getDirectM3U8Playlist(videoUrl, checkExt=True, variantCheck=True, checkContent=True, sortWithMaxBitrate=99999999)) 
-        
-        return urlsTab
+            tmp = getDirectM3U8Playlist(videoUrl, checkExt=True, checkContent=True)
+            for item in tmp:
+                name = '%sx%s  , bitrate: %s' % (item['width'], item['height'], item['bitrate'])
+                urlsTab.append({'name':name, 'url':item['url'], 'need_resolve':0, 'bitrate':item['bitrate'], 'original':''})
+            urlsTab.sort(key=lambda x: x['bitrate'], reverse=True)
+            return urlsTab
 
 
     def handleService(self, index, refresh = 0, searchPattern = '', searchType = ''):
@@ -333,7 +241,7 @@ class Redbull(CBaseHostClass):
         printDBG( "handleService: ||| name[%s], category[%s] " % (name, category) )
         self.currList = []
 
-        #MAIN MENU
+    #MAIN MENU
         if name == None:
             self.listMain({'name':'category', 'type':'category'}, 'explore_item')
 
@@ -343,18 +251,14 @@ class Redbull(CBaseHostClass):
         elif category == 'sub_items':
             self.listSubItems(self.currItem)
 
-        elif category == 'video_collection':
-            self.listVideoItems(self.currItem)
-            
-        #SEARCH
+    #SEARCH
         elif category == 'list_search':
             self.listSearchItems(self.currItem)
         elif category in ["search", "search_next_page"]:
             cItem = dict(self.currItem)
             cItem.update({'search_item':False, 'name':'category'}) 
             self.listSearchResult(cItem, searchPattern, searchType)
-        
-        #HISTORIA SEARCH
+    #HISTORIA SEARCH
         elif category == "search_history":
             self.listsHistory({'name':'history', 'category': 'search'}, 'desc', _("Type: "))
         else:
