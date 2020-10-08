@@ -261,6 +261,7 @@ class urlparser:
                        'gdriveplayer.me':       self.pp.parserGDRIVEPLAYER  ,
                        'gdriveplayer.us':       self.pp.parserGDRIVEPLAYER  ,
                        'ginbig.com':            self.pp.parserGINBIG        ,
+                       'gloria.tv':             self.pp.parserGLORIATV      ,
                        'gogoanime.to':          self.pp.parserGOGOANIMETO   ,
                        'goldvod.tv':            self.pp.parserGOLDVODTV     ,
                        'goodcast.co':           self.pp.parserGOODCASTCO    ,
@@ -14596,3 +14597,31 @@ class pageParser(CaptchaHelper):
                 
                 
         return urlsTab
+
+    def parserGLORIATV(self, baseUrl):
+        printDBG("parserGLORIATV baseUrl[%r]" % baseUrl)
+        baseUrl = strwithmeta(baseUrl)
+        HTTP_HEADER = self.cm.getDefaultHeader(browser='firefox')
+        referer = baseUrl.meta.get('Referer')
+        if referer: HTTP_HEADER['Referer'] = referer
+        urlParams = {'header': HTTP_HEADER}
+        sts, data = self.cm.getPage(baseUrl, urlParams)
+        if not sts: return False
+        cUrl = self.cm.meta['url']
+        retTab = []
+        data = ph.find(data, ('<video', '>'), '</video>', flags=0)[1]
+        data = ph.findall(data, '<source', '>', flags=0)
+        for item in data:
+            url = self.cm.getFullUrl(ph.getattr(item, 'src').replace('&amp;', '&'), cUrl)
+            type = ph.clean_html(ph.getattr(item, 'type').lower())
+            if 'video' not in type and 'x-mpeg' not in type: continue
+            url = strwithmeta(url, {'Referer': cUrl, 'User-Agent': HTTP_HEADER['User-Agent']})
+            if 'video' in type:
+                width = ph.getattr(item, 'width')
+                height = ph.getattr(item, 'height')
+                bitrate = ph.getattr(item, 'bitrate')
+                retTab.append({'name': '[%s] %sx%s %s' % (type, width, height, bitrate), 'url': url})
+            elif 'x-mpeg' in type:
+                retTab.extend(getDirectM3U8Playlist(url, checkContent=True, sortWithMaxBitrate=999999999))
+
+        return retTab
