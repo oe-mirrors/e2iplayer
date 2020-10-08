@@ -14296,28 +14296,23 @@ class pageParser(CaptchaHelper):
         urlsTab = []
         
         sts, data = self.cm.getPage(baseUrl, httpParams)
-        
+
+        if "eval(function(p,a,c,k,e,d)" in data:
+            printDBG( 'Host resolveUrl packed' )
+            packed = re.compile('>eval\(function\(p,a,c,k,e,d\)(.+?)</script>', re.DOTALL).findall(data)
+            if packed:
+                data2 = packed[-1]
+            else:
+                return ''
+            printDBG( 'Host pack: [%s]' % data2)
+            try:
+                data = unpackJSPlayerParams(data2, TEAMCASTPL_decryptPlayerParams, 0, True, True)
+                printDBG( 'OK unpack: [%s]' % data)
+            except Exception: pass
+
         if sts:
-        
-            '''
-            grecaptcha.ready(function() {
-
-                grecaptcha.execute('6LcOeuUUAAAAANS5Gb3oKwWkBjOdMXxqbj_2cPCy', {action: 'homepage'}).then(function(token) {
-                    
-                    jQuery.get("/dl?op=video_src&file_code=q9za1xe42hef&g-recaptcha-response="+token, function(data){
-                            
-                            data = JSON.parse(data);
-                            console.log( 'dataaaaaaa');
-                            console.log( data );
-                            load_jw_player( data );
-
-                            
-                    });     
-                });     
-            });
-            '''
-        
-            sitekey = self.cm.ph.getSearchGroups(data, "grecaptcha.execute\('([^']+?)'")[0]
+            sitekey = ph.search(data, '''grecaptcha.execute\(['"]([^"^']+?)['"]''')[0]
+            action = ph.search(data, '''grecaptcha.execute.*?action:\s['"]([^"^']+?)['"]''')[0]
             if not sitekey:
                 printDBG("-----------------------")
                 printDBG(data)
@@ -14328,8 +14323,10 @@ class pageParser(CaptchaHelper):
                 printDBG("parserABCVideo.sitekey: % s" % sitekey)
                 query_url = self.cm.ph.getSearchGroups(data, "jQuery.get\(([^,]+?),")[0]
                 printDBG("parserABCVideo.query url: % s" % query_url)
-                
-                token, errorMsgTab = self.processCaptcha(sitekey, baseUrl, captchaType="v3")
+				
+                from Plugins.Extensions.IPTVPlayer.libs.recaptcha_v3_2captcha import UnCaptchaReCaptcha
+                recaptcha = UnCaptchaReCaptcha(lang=GetDefaultLang())
+                token = recaptcha.processCaptcha(sitekey, baseUrl, action)
                 if token == '':
                     SetIPTVPlayerLastHostError('\n'.join(errorMsgTab)) 
                     return False
