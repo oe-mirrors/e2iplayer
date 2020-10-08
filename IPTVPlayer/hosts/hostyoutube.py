@@ -1,4 +1,4 @@
-﻿# -*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-
 
 ###################################################
 # LOCAL import
@@ -49,10 +49,10 @@ class Youtube(CBaseHostClass):
         printDBG("Youtube.__init__")
         CBaseHostClass.__init__(self, {'history':'ytlist', 'cookie':'youtube.cookie'})
         self.UTLIST_FILE      = 'ytlist.txt'
-        self.DEFAULT_ICON_URL = 'https://www.vippng.com/png/full/85-853653_patreon-logo-png-transparent-background-youtube-logo.png'
+        self.DEFAULT_ICON_URL = 'https://lodz.adwent.pl/wp-content/uploads/YouTube-icon-full_color.png'
         self.MAIN_GROUPED_TAB = [{'category': 'from_file',             'title': _("User links"),     'desc': _("User links stored in the ytlist.txt file.")}, \
                                  {'category': 'search',                'title': _("Search"),         'desc': _("Search youtube materials "), 'search_item':True}, \
-                                 {'category': 'feeds',                 'title': _("Trending Feeds"), 'desc': _("Browse youtube trending feeds")}, \
+                                 {'category': 'feeds',                 'title': _("On Time"), 'desc': _("Browse youtube trending feeds")}, \
                                  {'category': 'search_history',        'title': _("Search history"), 'desc': _("History of searched phrases.")}]
         
         self.SEARCH_TYPES = [  (_("Video"),    "video"   ), 
