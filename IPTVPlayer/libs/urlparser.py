@@ -159,7 +159,7 @@ class urlparser:
                        'allocine.fr':           self.pp.parserALLOCINEFR    ,
                        'allvid.ch':             self.pp.parserALLVIDCH      ,
                        'anime-shinden.info':    self.pp.parserANIMESHINDEN  ,
-                       'aparat.cam':            self.pp.parserAPARAT        ,
+                       'aparat.cam':            self.pp.parserONLYSTREAM    ,
                        'aparat.com':            self.pp.parserAPARAT        ,
                        'api.video.mail.ru':     self.pp.parserVIDEOMAIL     ,
                        'archive.org':           self.pp.parserARCHIVEORG    ,
@@ -404,6 +404,7 @@ class urlparser:
                        'playedto.me':           self.pp.parserPLAYEDTO      ,
                        'playpanda.net':         self.pp.parserPLAYPANDANET   ,
                        'playreplay.net':        self.pp.parserPLAYEREPLAY   ,
+                       'playtube.ws':           self.pp.parserONLYSTREAM   ,
                        'playvid.org':           self.pp.parserEASYVIDORG    ,
                        'polsatsport.pl':        self.pp.parserPOLSATSPORTPL  ,
                        'posiedze.pl':           self.pp.parserPOSIEDZEPL    ,
@@ -599,6 +600,7 @@ class urlparser:
                        'vimeo.com':             self.pp.parserVIMEOCOM       ,
                        'viuclips.net':          self.pp.parserVIUCLIPS     ,
                        'vivo.sx':               self.pp.parserVIVOSX        ,
+                       'vkprime.com':           self.pp.parserONLYSTREAM    ,
                        'vk.com':                self.pp.parserVK            ,
                        'vodlocker.com':         self.pp.parserVODLOCKER     ,
                        'vod-share.com':         self.pp.parserVODSHARECOM   ,
@@ -12577,62 +12579,40 @@ class pageParser(CaptchaHelper):
         return urlsTab
 
     def parserONLYSTREAM(self, baseUrl):
-        #links like this: https://very.streamango.to/e/1wu3s8ocmuex redirect to onlystream.tv
-        #https://vup.to/embed-3j25hps2fmmt.html
-
         printDBG("parserONLYSTREAM baseUrl[%s]" % baseUrl)
 
-        sts, data = self.cm.getPage(baseUrl)
-        if not sts:
-            return []
+        HTTP_HEADER = self.cm.getDefaultHeader(browser='chrome')
+        referer = baseUrl.meta.get('Referer')
+        if referer: HTTP_HEADER['Referer'] = referer
+        urlParams = {'header': HTTP_HEADER}
+        sts, data = self.cm.getPage(baseUrl, urlParams)
+        if not sts: return False
 
-        urlsTab=[]
-        subTracks = []
-        
-        # subtitles search
-        t = re.findall("tracks: \[(.*?)\]", data, re.S)
-        if t:
-            txt = "[" + t[0] + "]"
-            printDBG(txt)
-            tracks = demjson_loads(txt)
-            printDBG(str(tracks))
-            
-            for tr in tracks:
-                if tr.get('kind','') == 'captions':
-                    printDBG(str(tr))
-                    srtUrl = tr.get('file','')
-                    if srtUrl != '' and not ('empty.srt' in srtUrl):
-                        label = tr.get('label', 'srt')
-                        srtFormat = srtUrl[-3:]
-                        params = {'title': label, 'url': srtUrl, 'lang': label.lower()[:3], 'format': srtFormat}
-                        printDBG(str(params))
-                        subTracks.append(params)
-                    
-        # stream search
-        s = re.findall("sources: \[(.*?)\]", data, re.S)
-        if not s:
-            # alternative form:
-            # player.updateSrc([{src: "https://za2l95b.ostreamcdn.com/u5kj744xflhlsdgge7hweikfl5p6ls2jejk4lomgktk76pc3kph2ysew72ga/v.mp4", type: "video/mp4", res: 720, label: "720"}]
-            s = re.findall("player.updateSrc\(\[(.*?)\]", data, re.S)
-            if not s:
-                return []
+        if "eval(function(p,a,c,k,e,d)" in data:
+            printDBG( 'Host resolveUrl packed' )
+            packed = re.compile('>eval\(function\(p,a,c,k,e,d\)(.+?)</script>', re.DOTALL).findall(data)
+            if packed:
+                data2 = packed[-1]
+            else:
+                return ''
+            printDBG( 'Host pack: [%s]' % data2)
+            try:
+                data = unpackJSPlayerParams(data2, TEAMCASTPL_decryptPlayerParams, 0, True, True)
+                printDBG( 'OK unpack: [%s]' % data)
+            except Exception: pass
 
-        txt = "[" + s[0] + "]"
-        printDBG(txt)
-        
-        links = demjson_loads(txt)
-        #printDBG(str(links))
-        for l in links:
-            if 'file' in l:
-                url = urlparser.decorateUrl(l['file'], {'Referer' : baseUrl, 'external_sub_tracks':subTracks})
-                if url.endswith('.m3u8'):
-                    urlsTab.extend(getDirectM3U8Playlist(url, checkExt=False, variantCheck=True, checkContent=True, sortWithMaxBitrate=99999999))
-                else:
-                    params = {'name': l.get('label', 'link') , 'url': url}
-                    printDBG(params)
-                    urlsTab.append(params)
-        
-        return urlsTab
+        urlTab = self._findLinks(data, meta={'Referer':baseUrl})
+        if 0 == len(urlTab):
+            url = self.cm.ph.getSearchGroups(data, '''["'](https?://[^'^"]+?\.mp4(?:\?[^"^']+?)?)["']''', ignoreCase=True)[0]
+            if url != '':
+                url = strwithmeta(url, {'Origin':"https://" + urlparser.getDomain(baseUrl), 'Referer':baseUrl})
+                urlTab.append({'name':'mp4', 'url':url})
+            hlsUrl = self.cm.ph.getSearchGroups(data, '''["'](https?://[^'^"]+?\.m3u8(?:\?[^"^']+?)?)["']''', ignoreCase=True)[0]
+            if hlsUrl != '':
+                hlsUrl = strwithmeta(hlsUrl, {'Origin':"https://" + urlparser.getDomain(baseUrl), 'Referer':baseUrl})
+                urlTab.extend(getDirectM3U8Playlist(hlsUrl, checkExt=False, variantCheck=True, checkContent=True, sortWithMaxBitrate=99999999))
+
+        return urlTab
     
     def parserMIXDROP(self, baseUrl):
         printDBG("parserMIXDROP baseUrl[%s]" % baseUrl)
