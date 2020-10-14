@@ -1,4 +1,4 @@
-{
+﻿{
 "host123movieshd": "https://123movieshd.sc/",
 "host3player": "https://virginmediatelevision.ie/player",
 "host3sktv": "http://33sk.tv/",
@@ -93,6 +93,7 @@
 "hostipla": "https://ipla.tv/",
 "hostiptvplayerinfo": "E2iPlayer info",
 "hostitvcom": "https://www.itv.com/",
+"hostjoemonsterorg": "https://joemonster.org/",
 "hostkabarety": "http://kabaret.tworzymyhistorie.pl/",
 "hostkijknl": "http://kijk.nl/",
 "hostkinogo": "http://kinogo.cc/",
