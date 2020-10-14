@@ -68,7 +68,7 @@ class DokumentalneNET(CBaseHostClass):
         if not sts: return
         
         data = self.cm.ph.getDataBeetwenNodes(data, ('<aside', '>', 'categories'), ('</aside', '>'))[1]
-        data = self.cm.ph.getAllItemsBeetwenMarkers(data, '<a', '</div>')
+        data = self.cm.ph.getAllItemsBeetwenMarkers(data, '<a ', '</div>')
         for item in data:
             url = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''href=['"]([^'^"]+?)['"]''')[0])
             title = self.cleanHtmlStr(item)
