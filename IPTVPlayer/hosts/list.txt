@@ -22,7 +22,6 @@ hostcasacinema
 hostcb01
 hostcb01uno
 hostcdapl
-hostcdafilmy
 hostchomikuj
 hostchristusvincit
 hostcimaclubcom

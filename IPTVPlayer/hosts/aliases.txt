@@ -23,7 +23,6 @@
 "hostcb01": "https://cb01.run/",
 "hostcb01uno": "https://cb01.design/",
 "hostcdapl": "https://cda.pl/",
-"hostcdafilmy": "https://cda-filmy.online/",
 "hostchomikuj": "http://chomikuj.pl/",
 "hostchristusvincit": "http://christusvincit-tv.pl/",
 "hostcimaclubcom": "http://cimaclub.com/",
