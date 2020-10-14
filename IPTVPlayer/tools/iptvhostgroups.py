@@ -1,4 +1,4 @@
-# -*- coding: utf-8 -*-
+﻿# -*- coding: utf-8 -*-
 #
 
 ###################################################
@@ -85,7 +85,6 @@ class IPTVHostsGroups:
         'cb01' : [ 'italian', 'moviesandseries'] ,
         'cb01uno' : [ 'italian', 'moviesandseries'] ,
         'cdapl' : [ 'moviesandseries', 'others', 'polish'] ,
-        'cdafilmy' : [ 'moviesandseries', 'polish'] ,
         'chomikuj' : [ 'others', 'polish'] ,
         'christusvincit' : [ 'polish'] ,
         'cimaclubcom' : [ 'arabic', 'moviesandseries'] ,
@@ -155,6 +154,7 @@ class IPTVHostsGroups:
         'ipla' : [ 'polish'] ,
         'iptvplayerinfo' : [ 'others'] ,
         'itvcom' : [ 'english'] ,
+        'joemonsterorg' : [ 'polish'] ,
         'kabarety' : [ 'others', 'polish'] ,
         'kijknl' : [ 'others'] ,
         'kinogo' : [ 'moviesandseries', 'russian'] ,

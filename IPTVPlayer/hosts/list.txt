@@ -22,7 +22,6 @@ hostcasacinema
 hostcb01
 hostcb01uno
 hostcdapl
-hostcdafilmy
 hostchomikuj
 hostchristusvincit
 hostcimaclubcom
@@ -91,6 +90,7 @@ hostinteriatv
 hostipla
 hostiptvplayerinfo
 hostitvcom
+hostjoemonsterorg
 hostkabarety
 hostkijknl
 hostkinogo
