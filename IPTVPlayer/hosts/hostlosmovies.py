@@ -37,7 +37,7 @@ def GetConfigList():
 
 
 def gettytul():
-    return 'http://losmovies.to/'
+    return 'http://losmovies.live/'
 
 class LosMovies(CBaseHostClass):
  
@@ -49,7 +49,7 @@ class LosMovies(CBaseHostClass):
         self.HEADER = self.cm.getDefaultHeader(browser='chrome')
         self.AJAX_HEADER = dict(self.HEADER)
         self.AJAX_HEADER.update( {'X-Requested-With': 'XMLHttpRequest'} )
-        self.MAIN_URL = 'http://losmovies.to/'
+        self.MAIN_URL = 'http://losmovies.live/'
         self.cacheEpisodes = {}
         self.cacheLinks = {}
         self.defaultParams = {'header':self.HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
