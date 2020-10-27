@@ -17,7 +17,7 @@ except Exception: import simplejson as json
 ###################################################
 
 def gettytul():
-    return 'https://www.guardaserie.work/'
+    return 'https://www.guardaserie.bar/'
 
 class GuardaSerieClick(CBaseHostClass):
 
@@ -25,19 +25,19 @@ class GuardaSerieClick(CBaseHostClass):
         CBaseHostClass.__init__(self, {'history':'guardaserie.work', 'cookie':'guardaserie.work.cookie'})
         
         self.USER_AGENT = 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/73.0.3683.103 Safari/537.36'
-        self.MAIN_URL = 'https://www.guardaserie.work/'
+        self.MAIN_URL = 'https://www.guardaserie.bar/'
 
         self.HEADER = {'User-Agent': self.USER_AGENT, 'Accept': 'text/html', 'Accept-Encoding': 'gzip', 'Referer': self.MAIN_URL}
         self.AJAX_HEADER = MergeDicts(self.HEADER, {'X-Requested-With':'XMLHttpRequest', 'Content-Type':'application/x-www-form-urlencoded; charset=UTF-8'})
         
-        self.DEFAULT_ICON_URL = self.getFullIconUrl('/wp-content/themes/guardaserie/images/logogd.png|cf')
+        self.DEFAULT_ICON_URL = 'https://cdn.pixabay.com/photo/2014/03/25/16/57/clapper-297673_1280.png'
         
         self.defaultParams = {'header':self.HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
     
     def getPageCF(self, baseUrl, params = {}, post_data = None):
         if params == {}: 
             params = self.defaultParams
-        params['cloudflare_params'] = {'domain':'guardaserie.work', 'cookie_file':self.COOKIE_FILE, 'User-Agent':self.USER_AGENT}
+        params['cloudflare_params'] = {'domain':'guardaserie.bar', 'cookie_file':self.COOKIE_FILE, 'User-Agent':self.USER_AGENT}
         return self.cm.getPageCFProtection(baseUrl, params, post_data)
 
     def getPage(self, baseUrl, addParams = {}, post_data = None):
