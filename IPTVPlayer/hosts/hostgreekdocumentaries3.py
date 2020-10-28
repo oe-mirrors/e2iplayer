@@ -18,22 +18,22 @@ except Exception: import simplejson as json
 
 
 def gettytul():
-    return 'http://greekdocumentaries2.blogspot.gr/'
+    return 'http://greekdocumentaries2.blogspot.com/'
 
 class GreekDocumentaries3(CBaseHostClass):
     HEADER = {'User-Agent': 'Mozilla/5.0', 'Accept': 'text/html'}
     AJAX_HEADER = dict(HEADER)
     AJAX_HEADER.update( {'X-Requested-With': 'XMLHttpRequest'} )
     
-    MAIN_URL      = 'http://greekdocumentaries2.blogspot.gr/'
+    MAIN_URL      = 'http://greekdocumentaries2.blogspot.com/'
     SEARCH_URL    = MAIN_URL + '/search?sitesearch=http%3A%2F%2Fjohny-jossbanget.blogspot.com&q='
     DEFAULT_ICON  = "http://3.bp.blogspot.com/-s80VMsgUq0w/VsYj0rd4nrI/AAAAAAAAAAw/y-ix9jhy1Gg/s1600-r/%25CF%2586%25CE%25BF%25CF%2584%25CE%25BF%2Bblog%2BHeader.png"
     
     MAIN_CAT_TAB = [{'category':'list_items', 'title': _('Recent'),      'url':MAIN_URL,  'icon':DEFAULT_ICON},
-                    {'category':'categories', 'title': _('Categories'),  'url':MAIN_URL,  'icon':DEFAULT_ICON, 'filter':'categories'},
-                    {'category':'categories', 'title': _('Programs'),    'url':MAIN_URL,  'icon':DEFAULT_ICON, 'filter':'programs'},
-                    {'category':'categories', 'title': _('Labels'),      'url':MAIN_URL,  'icon':DEFAULT_ICON, 'filter':'labels'},
+                    {'category':'list_items', 'title': _('Recommended'),  'url':MAIN_URL + 'search/label/%CE%A0%CE%A1%CE%9F%CE%A4%CE%95%CE%99%CE%9D%CE%9F%CE%9C%CE%95%CE%9D%CE%91',  'icon':DEFAULT_ICON},
                     {'category':'list_items', 'title': _('TV series'),   'url':MAIN_URL + 'search/label/TV-Series', 'icon':DEFAULT_ICON},
+                    {'category':'categories', 'title': _('Categories'),    'url':MAIN_URL,  'icon':DEFAULT_ICON, 'filter':'categories'},
+                    {'category':'categories', 'title': _('History'),      'url':MAIN_URL,  'icon':DEFAULT_ICON, 'filter':'history'},
                     {'category':'search',          'title': _('Search'), 'search_item':True, 'icon':DEFAULT_ICON},
                     {'category':'search_history',  'title': _('Search history'),             'icon':DEFAULT_ICON} ]
  
@@ -82,11 +82,13 @@ class GreekDocumentaries3(CBaseHostClass):
         sts, data = self.cm.getPage(self.MAIN_URL)
         if not sts: return
         
-        for cat in  [('labels', 'list-label-widget-content', '</ul>'), \
-                     ('categories', 'ΚΑΤΗΓΟΡΙΕΣ', 'ΠΑΡΑΓΩΓΗΣ'), \
-                     ('programs', 'ΠΑΡΑΓΩΓΗΣ', '</ul>')]:
+        for cat in  [('categories', 'ΚΑΤΗΓΟΡΙΕΣ', '</ul>'), \
+                     ('history', ">TV-Series</a></li>", '>Follow Us<')]:
             self.cacheFilters[cat[0]] = [] 
             tmp = self.cm.ph.getDataBeetwenMarkers(data, cat[1], cat[2], False)[1]
+            # printDBG('=============================================================')
+            # printDBG(tmp)
+            # printDBG('=============================================================')
             tmp = re.compile('''<a[^>]+?href=['"]([^'^"]+?)['"][^>]*?>([^<]+?)<''').findall(tmp)
             for item in tmp:
                 self.cacheFilters[cat[0]].append({'title':self.cleanHtmlStr(item[1]), 'url':item[0]})
@@ -118,7 +120,7 @@ class GreekDocumentaries3(CBaseHostClass):
         nextPageUrl = self.cm.ph.getSearchGroups(nextPageUrl, '<a[^<]+?href=\'([^"]+?)\'')[0]
         
         m1 = "<div class='post bar hentry'>"
-        data = self.cm.ph.getDataBeetwenMarkers(data, m1, "<span id='home-link'>", False)[1]
+        data = self.cm.ph.getDataBeetwenMarkers(data, m1, "<div class='blog-pager'", False)[1]
         data = data.split(m1)
         for item in data:
             tmp   = self.cm.ph.getSearchGroups(item, '''<a[^>]+?href=['"]([^'^"]+?)['"][^>]*?>([^<]+?)<''', 2)
