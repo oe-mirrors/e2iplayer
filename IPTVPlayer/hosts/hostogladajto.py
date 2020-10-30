@@ -21,6 +21,12 @@ from Components.config import config, ConfigText, ConfigSelection, getConfigList
 ###################################################
 
 ###################################################
+# E2 GUI COMMPONENTS 
+###################################################
+from Screens.MessageBox import MessageBox
+###################################################
+
+###################################################
 # Config options for HOST
 ###################################################
 config.plugins.iptvplayer.ogladajto_login = ConfigText(default = "", fixed_size = False)
