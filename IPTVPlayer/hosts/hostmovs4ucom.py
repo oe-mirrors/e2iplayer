@@ -20,17 +20,17 @@ except Exception: import simplejson as json
 
 
 def gettytul():
-    return 'http://movs4u.tv/'
+    return 'https://movs4u.life/'
 
 class Movs4uCOM(CBaseHostClass):
  
     def __init__(self):
-        CBaseHostClass.__init__(self, {'history':'movs4u.com', 'cookie':'movs4u.com.cookie'})
+        CBaseHostClass.__init__(self, {'history':'movs4u.life', 'cookie':'movs4u.life.cookie'})
         self.USER_AGENT = 'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:40.0) Gecko/20100101 Firefox/40.0'
         self.HEADER = {'User-Agent': self.USER_AGENT, 'DNT':'1', 'Accept': 'text/html'}
         self.AJAX_HEADER = dict(self.HEADER)
         self.AJAX_HEADER.update( {'X-Requested-With': 'XMLHttpRequest'} )
-        self.MAIN_URL = 'http://www.movs4u.tv/' 
+        self.MAIN_URL = 'https://movs4u.life/' 
         self.DEFAULT_ICON_URL = self.getFullIconUrl('/wp-content/uploads/2018/03/TcCsO2w.png')
         self.cacheLinks    = {}
         self.cacheSeasons = {}
@@ -80,9 +80,9 @@ class Movs4uCOM(CBaseHostClass):
         
         tabID = cItem.get('tab_id', '')
         if tabID == 'categories':
-            ms = '>انواع افلام<'
+            ms = '>ÃÂ§ÃÂÃÂÃÂ§ÃÂ¹ ÃÂ§ÃÂÃÂÃÂ§ÃÂ<'
         elif tabID == 'qualities':
-            ms = '>جودات افلام<'
+            ms = '>ÃÂ¬ÃÂÃÂ¯ÃÂ§ÃÂª ÃÂ§ÃÂÃÂÃÂ§ÃÂ<'
         elif tabID == 'releases':
             ms = '<ul class="releases'
         elif tabID == 'genres':
@@ -203,49 +203,10 @@ class Movs4uCOM(CBaseHostClass):
         self.cacheLinks  = {}
         
         if '/tvshows/' in cItem['url']:
-            self.cacheSeasons = {}
-            sKey = 0
-            data = self.cm.ph.getAllItemsBeetwenMarkers(data, '<div class="se-c">', '</ul>')
-            for sItem in data:
-                sTtile   = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(sItem, '<span class="title"', '<i>')[1])
-                sNum     = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(sItem, '<span class="se-t', '</span>')[1])
-                sDate    = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(sItem, '<i>', '</i>')[1])
-                sRating  = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(sItem, '<div class="se_rating', '</div>')[1])
-                
-                episodesList = []
-                sItem = self.cm.ph.getAllItemsBeetwenMarkers(sItem, '<li', '</li>')
-
-                for item in sItem:
-                    url = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''href=['"]([^'^"]+?)['"]''')[0])
-                    icon = self.getFullIconUrl(self.cm.ph.getSearchGroups(item, '''src=['"]([^'^"]+?)['"]''')[0])
-                    if icon == '': icon = mainIcon
-                    title = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(item, '<div class="episodiotitle"', '</a>')[1])
-                    date  = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(item, '<span class="date"', '</span>')[1])
-                    tmp   = self.cm.ph.getSearchGroups(item, '''<div class="numerando">\s*([0-9]+)\s*\-\s*([0-9]+)\s*</div>''', 2)
-                    
-                    title = '%s s%se%s - %s' % (cItem['title'], tmp[0].zfill(2), tmp[1].zfill(2), title)
-                    desc = []
-                    if date != '': desc.append(date)
-                    desc = ' | '.join(desc)
-                    if desc != '': desc += '[/br]'
-                    desc += mainDesc
-                    params = {'title':title, 'url':url, 'icon':icon, 'desc':desc}
-                    episodesList.append(params)
-                
-                if len(episodesList):
-                    self.cacheSeasons[sKey] = episodesList
-                    
-                    desc = []
-                    if sDate != '': desc.append(sDate)
-                    if sRating != '': desc.append(sRating)
-                    desc = ' | '.join(desc)
-                    if desc != '': desc += '[/br]'
-                    desc += mainDesc
-                    
-                    params = dict(cItem)
-                    params.update({'good_for_fav': False, 'category':nextCategory, 'title':sTtile, 's_key':sKey, 'prev_title':mainTitle, 'url':url, 'prev_url':cItem['url'], 'prev_desc':cItem.get('desc', ''), 'icon':icon, 'desc':desc})
-                    self.addDir(params)
-                    sKey += 1
+            _data = re.findall("class='imagen'.*?src='(.*?)'.*?numerando'>(.*?)<.*?episodiotitle.*?href='(.*?)'>(.*?)<",data, re.S)
+            for (img_,num,url_,titre) in _data:
+				params = {'name':'categories','category' : 'video','url': url_,'title':'\c0000????'+num+' \c00??????: '+titre,'icon':img_} 
+				self.addVideo(params)			
         else:
             params = dict(cItem)
             params.update({'good_for_fav': True, 'title':mainTitle, 'icon':mainIcon, 'desc':mainDesc})
@@ -270,95 +231,43 @@ class Movs4uCOM(CBaseHostClass):
         self.listItems(cItem, 'explore_item')
         
     def getLinksForVideo(self, cItem):
-        printDBG("Movs4uCOM.getLinksForVideo [%s]" % cItem)
-        retTab = []
-        if 1 == self.up.checkHostSupport(cItem.get('url', '')):
-            videoUrl = cItem['url'].replace('youtu.be/', 'youtube.com/watch?v=')
-            return self.up.getVideoLinkExt(videoUrl)
-        
-        cacheTab = self.cacheLinks.get(cItem['url'], [])
-        if len(cacheTab):
-            return cacheTab
-        
-        currUrl = cItem['url']
-        prevUrl = ''
-        while currUrl != prevUrl:
-            sts, data = self.getPage(currUrl)
-            if not sts: return retTab
-            prevUrl = currUrl
-            
-            linksData = self.cm.ph.getDataBeetwenMarkers(data, '<div class="playex">', '<div class="control">')[1]
-            currUrl = self.getFullUrl(self.cm.ph.getSearchGroups(linksData, '''<a[^>]+?href=['"]([^'^"]+?view=[^'^"]+?)['"]''')[0])
-            
-            linksData = re.sub("<!--[\s\S]*?-->", "", linksData)
-            linksData = self.cm.ph.getAllItemsBeetwenMarkers(linksData, '<iframe', '>')
-            linksMap = {}
-            for item in linksData:
-                url = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''src=['"]([^'^"]+?)['"]''')[0])
-                id  = self.cm.ph.getSearchGroups(item, '''data-iframe-id=['"]([^'^"]+?)['"]''')[0]
-                linksMap[id] = url
-            
-            playerData = self.cm.ph.getDataBeetwenMarkers(data, '<nav class="player">', '</ul>')[1]
-            playerData = re.sub("<!--[\s\S]*?-->", "", playerData)
-            playerData = self.cm.ph.getAllItemsBeetwenMarkers(playerData, '<li', '</li>')
-            
-            for item in playerData:
-                id   = self.cm.ph.getSearchGroups(item, '''data-target-id=['"]([^'^"]+?)['"]''')[0]
-                name = self.cleanHtmlStr(item)
-                url  = linksMap.get(id, '')
-                if self.cm.isValidUrl(url):
-                    retTab.append({'name':name, 'url':url, 'need_resolve':1})
-            
-            if len(retTab):
-                self.cacheLinks[cItem['url']] = retTab
-            
-            if currUrl == '':
-                break
-        
-        return retTab
+		printDBG("Movs4uCOM.getLinksForVideo [%s]" % cItem)
+		retTab = []
+		if 1 == self.up.checkHostSupport(cItem.get('url', '')):
+			videoUrl = cItem['url'].replace('youtu.be/', 'youtube.com/watch?v=')
+			return self.up.getVideoLinkExt(videoUrl) 
+		cacheTab = self.cacheLinks.get(cItem['url'], [])
+		if len(cacheTab):
+			return cacheTab    
+		currUrl = cItem['url']
+		sts, data = self.getPage(currUrl)
+		_data = re.findall("data-url='(.*?)'.*?title'>(.*?)<.*?server'>(.*?)<",data, re.S)
+		for (data_url,titre1,srv) in _data:
+			titre1=titre1.replace('ÃÂ³ÃÂÃÂ±ÃÂÃÂ± ÃÂÃÂ´ÃÂ§ÃÂÃÂ¯ÃÂ© ÃÂ±ÃÂÃÂ','Server:')
+			retTab.append({'name':titre1+' ' +'\c0000????('+srv+')', 'url':data_url, 'need_resolve':1})		
+		return retTab
         
     def getVideoLinks(self, videoUrl):
-        printDBG("Movs4uCOM.getVideoLinks [%s]" % videoUrl)
-        videoUrl = strwithmeta(videoUrl)
-        urlTab = []
-        orginUrl = str(videoUrl)
+		printDBG("Movs4uCOM.getVideoLinks [%s]" % videoUrl)
+		videoUrl = strwithmeta(videoUrl)
+		urlTab = []
+		orginUrl = str(videoUrl)
         
-        # mark requested link as used one
-        if len(self.cacheLinks.keys()):
-            for key in self.cacheLinks:
-                for idx in range(len(self.cacheLinks[key])):
-                    if videoUrl in self.cacheLinks[key][idx]['url']:
-                        if not self.cacheLinks[key][idx]['name'].startswith('*'):
-                            self.cacheLinks[key][idx]['name'] = '*' + self.cacheLinks[key][idx]['name']
-                        break
+		sts, data = self.getPage(videoUrl)
+		_data2 = re.findall('<iframe.*?src="(.*?)"',data, re.S)				
+		if _data2:
+			printDBG('_data2[0]='+_data2[0])
+			videoUrl = _data2[0]
+			if 'gdriveplayer' in videoUrl:
+				_data3 = re.findall('link=(.*?)&',videoUrl, re.S)
+				if _data3:
+					printDBG('_data3[0]='+_data3[0])
+					videoUrl = _data3[0]
+
+		if self.cm.isValidUrl(videoUrl):
+			urlTab = self.up.getVideoLinkExt(videoUrl)
         
-        sts, data = self.cm.getPage(videoUrl, self.defaultParams)
-        videoUrl = self.cm.meta.get('url', videoUrl)
-        
-        if self.up.getDomain(self.getMainUrl()) in videoUrl or self.up.getDomain(videoUrl) == self.up.getDomain(orginUrl):
-            if not sts: return []
-            
-            found = False
-            printDBG(data)
-            tmp = re.compile('''<iframe[^>]+?src=['"]([^"^']+?)['"]''', re.IGNORECASE).findall(data)
-            for url in tmp:
-                if 1 == self.up.checkHostSupport(url):
-                    videoUrl = url
-                    found = True
-                    break
-            if not found or 'flashx' in videoUrl:
-                tmp = self.cm.ph.getAllItemsBeetwenMarkers(data, 'embedFrame', '</a>')
-                for urlItem in tmp:
-                    url = self.cm.ph.getSearchGroups(urlItem, '''href=['"](https?://[^'^"]+?)['"]''')[0]
-                    if 1 == self.up.checkHostSupport(url):
-                        videoUrl = url
-                        found = True
-                        break
-        
-        if self.cm.isValidUrl(videoUrl):
-            urlTab = self.up.getVideoLinkExt(videoUrl)
-        
-        return urlTab
+		return urlTab
     
     def getFavouriteData(self, cItem):
         printDBG('Movs4uCOM.getFavouriteData')
