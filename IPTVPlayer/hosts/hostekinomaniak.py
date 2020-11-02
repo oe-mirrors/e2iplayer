@@ -208,23 +208,25 @@ class eKinomaniak(CBaseHostClass):
         sts, data = self.getPage(url, params)
         if not sts: return []
 
-        sts, jscode = self.getPage('https://ekinomaniak.net/js/bootstrap.php', params)
-        if not sts: return []
+#        sts, jscode = self.getPage('https://ekinomaniak.net/js/bootstrap.php', params)
+#        if not sts: return []
 
         cUrl = data.meta['url']
         self.setMainUrl(cUrl)
-        data = self.cm.ph.getAllItemsBeetwenNodes(data, 'document.write(shwp',  ('</script', '>'))
+        data = self.cm.ph.getAllItemsBeetwenNodes(data, ('<button', '>', 'play-video'), ('</button', '>'))
+#        data = self.cm.ph.getAllItemsBeetwenNodes(data, 'document.write(shwp',  ('</script', '>'))
     
         for item in data:
             printDBG("eKinomaniak.getLinksForVideo item[%s]" % item)
-            shwp = self.cm.ph.getSearchGroups(item, '''shwp\(['"]([^"^']+?)['"]''', 1, True)[0]
-            tmp = jscode + ';var test="%s";print(shwp(test))' % shwp
-            ret = js_execute( tmp )
-            if ret['sts'] and 0 == ret['code']:
-                data = ret['data'].strip()
-                playerUrl = self.cm.ph.getSearchGroups(data, '''src=['"]([^"^']+?)['"]''', 1, True)[0]
-            else:
-                continue
+#            shwp = self.cm.ph.getSearchGroups(item, '''shwp\(['"]([^"^']+?)['"]''', 1, True)[0]
+#            tmp = jscode + ';var test="%s";print(shwp(test))' % shwp
+#            ret = js_execute( tmp )
+#            if ret['sts'] and 0 == ret['code']:
+#                data = ret['data'].strip()
+#                playerUrl = self.cm.ph.getSearchGroups(data, '''src=['"]([^"^']+?)['"]''', 1, True)[0]
+#            else:
+#                continue
+            playerUrl = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''data-plyr=['"]([^"^']+?)['"]''')[0])
             retTab.append({'name':self.up.getHostName(playerUrl), 'url':strwithmeta(playerUrl, {'Referer':url}), 'need_resolve':1})
              
         if len(retTab):
