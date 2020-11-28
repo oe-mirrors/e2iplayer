@@ -15,9 +15,9 @@ class Wiziwig1Api(CBaseHostClass):
 
     def __init__(self):
         CBaseHostClass.__init__(self)
-        self.MAIN_URL = 'http://wiziwig1.com/'
+        self.MAIN_URL = 'http://wiziwig1.eu/'
         self.DEFAULT_ICON_URL = 'http://i.imgur.com/yBX7fZA.jpg'
-        self.HTTP_HEADER = MergeDicts(self.cm.getDefaultHeader(browser='chrome'), {'Referer':self.getMainUrl()})
+        self.HTTP_HEADER = {}
         self.http_params = {'header':self.HTTP_HEADER}
         self.getLinkJS = ''
         self.timeoffset = datetime.datetime.now() - datetime.datetime.utcnow() + datetime.timedelta(milliseconds=500)

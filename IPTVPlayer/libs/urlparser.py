@@ -417,6 +417,7 @@ class urlparser:
                        'promptfile.com':        self.pp.parserPROMPTFILE    ,
                        'protectlink.stream':    self.pp.parserFEMBED        ,
                        'publicvideohost.org':   self.pp.parserPUBLICVIDEOHOST,
+                       'pumpnews.xyz':          self.pp.parserTXNEWSNETWORK , 
                        'putlive.in':            self.pp.parserPUTLIVEIN      ,
                        'putlocker.com':         self.pp.parserFIREDRIVE     , 
                        'putstream.com':         self.pp.parserPUTSTREAM     ,
@@ -14303,7 +14304,7 @@ class pageParser(CaptchaHelper):
                 printDBG("parserABCVideo.sitekey: % s" % sitekey)
                 query_url = self.cm.ph.getSearchGroups(data, "jQuery.get\(([^,]+?),")[0]
                 printDBG("parserABCVideo.query url: % s" % query_url)
-				
+                
                 from Plugins.Extensions.IPTVPlayer.libs.recaptcha_v3_2captcha import UnCaptchaReCaptcha
                 recaptcha = UnCaptchaReCaptcha(lang=GetDefaultLang())
                 token = recaptcha.processCaptcha(sitekey, baseUrl, action)
