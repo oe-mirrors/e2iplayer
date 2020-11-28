@@ -1,11 +1,11 @@
-﻿# -*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-
 ###################################################
 # LOCAL import
 ###################################################
 from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _
 from Plugins.Extensions.IPTVPlayer.components.ihost import CHostBase, CBaseHostClass, RetHost, CUrlItem
 from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, GetLogoDir, GetCookieDir, GetHostsOrderList
-from Plugins.Extensions.IPTVPlayer.libs.e2ijson import loads as json_loads
+from Plugins.Extensions.IPTVPlayer.libs.e2ijson import loads as json_loads, dumps as json_dumps
 
 from Plugins.Extensions.IPTVPlayer.libs.pCommon import  CParsingHelper
 from Plugins.Extensions.IPTVPlayer.libs.urlparserhelper import getDirectM3U8Playlist, getF4MLinksWithMeta
@@ -170,13 +170,15 @@ class HasBahCa(CBaseHostClass):
             {'alias_id' : 'sportstream365.com', 'name' : 'sportstream365.com',  'title' : 'http://sportstream365.com/', 'url' : 'http://sportstream365.com/',       'icon' : 'http://sportstream365.com/img/logo.png'},\
             {'alias_id' : 'ustvgo.tv',          'name' : 'ustvgo',              'title' : 'https://ustvgo.tv/',         'url' : 'https://www.ustvgo.tv/',           'icon' : 'https://image.winudf.com/v2/image1/dXN0dmdvLmdvdHYudXNfaWNvbl8xNTcyNDU4Nzc3XzAzMg/icon.png?w=170&fakeurl=1'},\
             {'alias_id' : 'ustvnow.com',        'name' : 'ustvnow',             'title' : 'https://ustvnow.com/',       'url' : 'https://www.ustvnow.com/',         'icon' : 'http://2.bp.blogspot.com/-SVJ4uZ2-zPc/UBAZGxREYRI/AAAAAAAAAKo/lpbo8OFLISU/s1600/ustvnow.png'},\
-            {'alias_id' : 'videostar.pl',       'name' : 'videostar.pl',        'title' : 'https://pilot.wp.pl/',       'url' : '',                                 'icon' : 'http://satkurier.pl/uploads/53612.jpg'},\
+            {'alias_id' : 'videostar.pl',       'name' : 'videostar.pl',        'title' : 'https://pilot.wp.pl/',       'url' : '',                                 'icon' : 'https://nowymarketing.pl/i/articles/23227_l2.jpg'},\
             {'alias_id' : 'wagasworld',         'name' : 'wagasworld.com',      'title' : 'http://wagasworld.com/',     'url' : 'http://www.wagasworld.com/channels.php', 'icon' : 'http://upload.wikimedia.org/wikipedia/commons/thumb/b/ba/Flag_of_Germany.svg/1000px-Flag_of_Germany.svg.png'},\
             {'alias_id' : 'webcamera.pl',       'name' : 'webcamera.pl',        'title' : 'https://webcamera.pl/',      'url' : 'https://www.webcamera.pl/',        'icon' : 'http://static.webcamera.pl/webcamera/img/loader-min.png'},\
             {'alias_id' : 'weeb.tv',            'name' : 'weeb.tv',             'title' : 'http://weeb.tv/',            'url' : '',                                 'icon' : 'http://xmtvplayer.com/wp-content/uploads/2014/07/weebtv.png'},\
             {'alias_id' : 'wiz1.net',           'name' : 'wiz1.net',            'title' : 'http://wiz1.net/',           'url' : '',                                 'icon' : 'http://i.imgur.com/yBX7fZA.jpg'},\
             {'alias_id' : 'wiziwig1.eu',       'name' : 'wiziwig1.eu',        'title' : 'http://wiziwig1.eu/',       'url' : '',                                 'icon' : 'http://i.imgur.com/yBX7fZA.jpg'},\
-            {'alias_id' : 'wizja.tv',           'name' : 'wizja.tv',            'title' : 'http://wizja.tv/',           'url' : 'http://wizja.tv/',                 'icon' : 'http://wizja.tv/logo.png'}
+            {'alias_id' : 'wizja.tv',           'name' : 'wizja.tv',            'title' : 'http://wizja.tv/',           'url' : 'http://wizja.tv/',                 'icon' : 'https://superrepo.org/static/images/icons/original/xplugin.video.mrknow.wizjatv.png.pagespeed.ic.rcm_sBgdWS.png'},\
+            {'alias_id' : 'nhl66.ir',           'name' : 'nhl66.ir',            'title' : 'https://nhl66.ir',           'url' : 'https://pro.nhl66.ir/api/get_anonymous_data', 'icon' : 'https://nhl66.ir/cassets/logo.png'}, \
+            {'alias_id' : 'crackstreams.com',   'name' : 'crackstreams.com',    'title' : 'http://crackstreams.com/',   'url' : 'http://crackstreams.com/',         'icon' : 'https://freesportsstreams.weebly.com/uploads/1/2/7/3/127391428/published/free-sports-logo-image.jpg'}, \
     ] 
     
     def __init__(self):
@@ -486,11 +488,18 @@ class HasBahCa(CBaseHostClass):
             self.addVideo(params)
     
     def getOthersLinks(self, cItem):
-        urlTab = []
+        printDBG("getOthersLinks cItem[%s]" % cItem)
+        hlsTab = []
         url = cItem.get('url', '')
         if url != '':
-            urlTab = getDirectM3U8Playlist(url, False)
-        return urlTab
+            if cItem['urlkey'] == '' and cItem['replacekey'] == '':
+                hlsTab = getDirectM3U8Playlist(url, False)
+            else:
+                hlsTab = getDirectM3U8Playlist(url, checkContent=True, sortWithMaxBitrate=9000000)
+                for idx in range(len(hlsTab)):
+                    hlsTab[idx]['url'] = strwithmeta(hlsTab[idx]['url'], {'iptv_m3u8_key_uri_replace_old':cItem['replacekey'], 'iptv_m3u8_key_uri_replace_new':cItem['urlkey']})
+
+        return hlsTab
     
     def getWeebTvList(self, url):
         printDBG('getWeebTvList start')
@@ -941,6 +950,89 @@ class HasBahCa(CBaseHostClass):
         url = self.up.decorateUrl(url, urlMeta)
         return [{'name':'prognoza.pogody.tv', 'url':url}]
 
+    def getNhl66List(self, url):
+        printDBG("nhl66List start")
+        sts,data = self.cm.getPage(url)
+        if not sts: return
+        try:
+            data = json_loads(data)
+            for item in data['games']:
+                tmp = json_dumps(item['stream_full'])
+                tmp = self.cm.ph.getAllItemsBeetwenMarkers(tmp, '"name":', ']')
+                for sitem in tmp:
+                    url   = self.getFullUrl(self.cm.ph.getSearchGroups(sitem, '''urls":.*?['"]([^"^']+?)['"]''')[0])
+                    if url == '': continue
+                    live  = self.cm.ph.getSearchGroups(sitem, '''is_live":([^"^']+?)['"]''')[0]
+                    if 'true' in live: title = '[LIVE]  '
+                    else: title = ''
+                    name  = self.cm.ph.getSearchGroups(sitem, '''name":.*?['"]([^"^']+?)['"]''')[0]
+                    dtime = item['start_datetime'].replace('T', ' - ').replace('Z', ' GMT')
+                    title = title + item['away_abr'] + ' vs. ' + item['home_abr'] + ' - ' + dtime + ' - ' + name
+                    desc = dtime + '[/br]' + item['away_name'] + ' vs. ' + item['home_name'] + '[/br]' + name
+                    params = {'good_for_fav':True, 'name':"others", 'url':url, 'title':title, 'desc':desc, 'replacekey':'https://mf.svc.nhl.com/', 'urlkey':'https://pro.nhl66.ir/api/get_key_url/'}
+                    self.addVideo(params)
+        except Exception:
+            printExc()
+
+    def getCrackstreamsGroups(self, url):
+        printDBG("crackstreamsGroups start")
+        sts, data = self.getPage( url, {'use_cookie': True, 'cookie_items':{'challenge':'BitMitigate.com'}} )
+#        sts,data = self.cm.getPage(url)
+        if not sts: return
+        data = CParsingHelper.getDataBeetwenNodes(data, ('<div', '>', 'collapse navbar-collapse'), ('</div', '>'))[1]
+        data = data.split('</a>')
+        if len(data): del data[-1]
+        for item in data:
+            title = self.cleanHtmlStr(item)
+            url   = self.cm.ph.getSearchGroups(item, 'href="([^"]+?)"')[0]
+            if len(url) and not url.startswith('http'): url = 'http://crackstreams.com/'+url
+            try:
+                params = { 'name'     : 'crackstreams_streams',
+                           'url'      : url,
+                           'title'    : title,
+                           }
+                self.addDir(params)
+            except Exception:
+                printExc()
+
+    def getCrackstreamsList(self, url):
+        printDBG("crackstreamsList start")
+        sts, data = self.getPage( url, {'use_cookie': True, 'cookie_items':{'challenge':'BitMitigate.com'}} )
+#        sts,data = self.cm.getPage(url)
+        if not sts: return
+        data = self.cm.ph.getAllItemsBeetwenNodes(data, ('<a', '>', 'btn btn-default'), ('</a', '>'))
+        for item in data:
+            params = {'name':"crackstreams.com"}
+            params['url'] = self.cm.ph.getSearchGroups(item, '''\shref=['"]([^"^']+?)['"]''')[0]
+            params['icon'] = self.cm.ph.getSearchGroups(item, '''\ssrc=['"]([^"^']+?)['"]''')[0]
+            params['title'] = self.cleanHtmlStr(CParsingHelper.getDataBeetwenNodes(item, ('<h4', '>'), ('</div', '>'))[1])
+            if len(params['icon']) and not params['icon'].startswith('http'): params['icon'] = 'http://crackstreams.com/'+params['icon']
+            if len(params['url']) and not params['url'].startswith('http'): params['url'] = 'http://crackstreams.com/'+params['url']
+            self.addVideo(params)
+
+    def getCrackstreamsLink(self, url):
+        printDBG("crackstreamsLink url[%r]" % url)
+        sts, data = self.getPage( url, {'use_cookie': True, 'cookie_items':{'challenge':'BitMitigate.com'}} )
+#        sts,data = self.cm.getPage(url)
+        if not sts: return []
+        data = CParsingHelper.getDataBeetwenNodes(data, ('<iframe', '>', 'allowfullscreen'), ('</iframe', '>'))[1]
+        _url  = self.cm.ph.getSearchGroups(data, '''src=['"]([^"^']+?)['"]''')[0]
+        if len(_url) and not _url.startswith('http'): _url = url+_url
+        if 'youtube' in _url:
+            urlsTab = self.up.getVideoLinkExt(_url)
+            return urlsTab
+        sts,data = self.cm.getPage(_url)
+        if not sts: return []
+        printDBG("crackstreamsLink data[%r]" % data)
+        _url = self.cm.ph.getSearchGroups(data, '''source:\swindow.atob\(['"]([^"^']+?)['"]''')[0]
+        if _url != '':
+            import base64
+            return [{'name':'others', 'url':urllib.unquote(base64.b64decode(_url))}]
+        else:
+            _url = self.cm.ph.getSearchGroups(data, '''source:\s['"]([^"^']+?)['"]''')[0]
+            return [{'name':'others', 'url':_url}]
+        if '///' in _url: return []
+
     def handleService(self, index, refresh = 0, searchPattern = '', searchType = ''):
         printDBG('handleService start')
         
@@ -989,6 +1081,9 @@ class HasBahCa(CBaseHostClass):
         elif name == 'wiz1.net':            self.getWiz1NetList(self.currItem)
         elif name == 'wiziwig1.eu':        self.getWiziwig1List(self.currItem)
         elif name == 'wizja.tv':            self.getWizjaTvList(self.currItem)
+        elif name == 'nhl66.ir':            self.getNhl66List(url)
+        elif name == "crackstreams_streams":self.getCrackstreamsList(url)
+        elif name == 'crackstreams.com':    self.getCrackstreamsGroups(url)
         
         CBaseHostClass.endHandleService(self, index, refresh)
 
@@ -1051,6 +1146,7 @@ class IPTVHost(CHostBase):
         elif name == "beinmatch.com":              urlList = self.host.getBeinmatchLink(cItem)
         elif name == "wiz1.net":                   urlList = self.host.getWiz1NetLink(cItem)
         elif name == "wiziwig1.eu":               urlList = self.host.getWiziwig1Link(cItem)
+        elif name == "crackstreams.com":           urlList = self.host.getCrackstreamsLink(url)
 
         if isinstance(urlList, list):
             for item in urlList:
