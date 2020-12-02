@@ -733,7 +733,7 @@ class YoutubeIE(object):
             tmp = ph.find(video_webpage, ('<script', '>', 'player/base'))[1]
             playerUrl = ph.getattr(tmp, 'src')
             if not playerUrl:
-                for reObj in ['"assets"\:[^\}]+?"js"\s*:\s*"([^"]+?)"', 'src="([^"]+?)"[^>]+?name="player.*?/base"']:
+                for reObj in ['"assets"\:[^\}]+?"js"\s*:\s*"([^"]+?)"', 'src="([^"]+?)"[^>]+?name="player.*?/base"', '"jsUrl":"([^"]+?)"']:
                     playerUrl = ph.search(video_webpage, reObj)[0]
                     if playerUrl:
                         break
