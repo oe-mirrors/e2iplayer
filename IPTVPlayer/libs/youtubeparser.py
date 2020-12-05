@@ -337,7 +337,7 @@ class YouTubeParser():
 
         chId = chJson.get("channelId","")
         if chId:
-            url = 'http://www.youtube.com/channel/%s' % chId
+            url = 'https://www.youtube.com/channel/%s' % chId
             title = chJson['title']['simpleText'] 
 
             icon = self.getThumbnailUrl(chJson)
