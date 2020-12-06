@@ -491,7 +491,7 @@ class YouTubeParser():
 
         currList = []
         try:
-            sts,data =  self.cm.getPage(url, {'host': self.HOST})
+            sts,data =  self.cm.getPage(url, self.http_params)
             if sts:
                 sts,data = CParsingHelper.getDataBeetwenMarkers(data, 'class="playlist-videos-container', '<div class="watch-sidebar-body">', False)
                 data = data.split('class="yt-uix-scroller-scroll-unit')
@@ -779,7 +779,7 @@ class YouTubeParser():
 
         currList = []
         if baseUrl != '':
-            sts, data =  self.cm.getPage(baseUrl, {'host': self.HOST})
+            sts, data =  self.cm.getPage(baseUrl, self.http_params)
             try:
                 data = json_loads(data)['video']
                 for item in data:
