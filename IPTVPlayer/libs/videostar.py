@@ -8,6 +8,7 @@ from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, Ge
 from Plugins.Extensions.IPTVPlayer.tools.iptvtypes import strwithmeta
 from Plugins.Extensions.IPTVPlayer.libs.urlparserhelper import getDirectM3U8Playlist, getMPDLinksWithMeta
 from Plugins.Extensions.IPTVPlayer.components.ihost import CBaseHostClass
+from Plugins.Extensions.IPTVPlayer.components.recaptcha_v2helper import CaptchaHelper
 from Plugins.Extensions.IPTVPlayer.libs.e2ijson import loads as json_loads
 ###################################################
 
@@ -48,7 +49,7 @@ def GetConfigList():
     
 ###################################################
 
-class VideoStarApi(CBaseHostClass):
+class VideoStarApi(CBaseHostClass, CaptchaHelper):
 
     def __init__(self):
         CBaseHostClass.__init__(self)
@@ -88,40 +89,63 @@ class VideoStarApi(CBaseHostClass):
         printDBG("VideoStarApi.doLogin")
         
         logged = False
+
+        httpParams = dict(self.defaultParams)
+        actionUrl = self.getFullUrl('v1/user', 'api')
+        sts, data = self.cm.getPage(actionUrl, httpParams)
+        printDBG(">>> user >>>")
+        printDBG(data)
+        printDBG("<<<")
+        if sts:
+            try:
+                data = json_loads(data, '', True)
+                if '' != data['data']['token']:
+                    self.userToken = data['data']['token']
+                    return True, ''
+            except Exception:
+                printExc()
+
         loginUrl = self.getFullUrl('/login')
         errMessage = _("Get page \"%s\" error.")
         
         sts, data = self.cm.getPage(loginUrl, self.defaultParams)
         if not sts: return False, (errMessage % loginUrl)
-        
-        sts, data = self.cm.ph.getDataBeetwenNodes(data, ('<form', '>', 'login'), ('</form', '>'))
-        if not sts: return False, ""
-        
-        actionUrl = self.getFullUrl('/user/login', 'api')
-        data = self.cm.ph.getAllItemsBeetwenMarkers(data, '<input', '>')
-        post_data = {}
-        for item in data:
-            name  = self.cm.ph.getSearchGroups(item, '''name=['"]([^'^"]+?)['"]''')[0]
-            if name == '': continue
-            value = self.cm.ph.getSearchGroups(item, '''value=['"]([^'^"]+?)['"]''')[0]
-            post_data[name] = value
-        
-        post_data.update({'login': login, 'password': password, 'permanent': '1', 'device':'web'})
-        httpParams = dict(self.defaultParams)
+
+#        sts, data = self.cm.ph.getDataBeetwenNodes(data, ('<form', '>', 'login'), ('</form', '>'))
+#        if not sts: return False, ""
+
+        link = self.cm.ph.getSearchGroups(data, '''<link as="script" rel="preload" href=['"](\/gatsby\-statics\/app\-[^'^"]+?)['"]''')[0]
+        sts, data = self.cm.getPage(self.getFullUrl(link), self.defaultParams)
+        if not sts: return False, (errMessage % loginUrl)
+
+        if login != 'guest':
+            sitekey = self.cm.ph.getSearchGroups(data, '''GRECAPTCHA_SITEKEY.*?['"]([^'^"]+?)['"]''')[0]
+            if sitekey != '':
+                token, errorMsgTab = self.processCaptcha(sitekey, loginUrl)
+                if token == '':
+                    return False, errorMsgTab
+            else: return False, errorMsgTab
+            post_data = '{"login":"%s","password":"%s","g-recaptcha-response":"%s","permanent":"1","device":"web"}' % (login, password, token)
+        else:
+            post_data = '{"login":"%s","password":"%s","permanent":"1","device":"web"}' % (login, password)
+
+        actionUrl = self.getFullUrl('v1/user_auth/login', 'api')
+
         httpParams['header'] = dict(httpParams['header'])
-        httpParams['header']['Referer'] = self.getMainUrl()
+        httpParams['header']['Referer'] = loginUrl
+        httpParams['raw_post_data'] = True
         sts, data = self.cm.getPage(actionUrl, httpParams, post_data)
-        printDBG(">>>")
+        printDBG(">>> user_auth/login >>>")
         printDBG(data)
         printDBG("<<<")
         if sts:
             errMessage = ''
             try:
                 data = json_loads(data, '', True)
-                if data['status'] == 'error':
+                if '' == data['data']['token']:
                     errMessage = 'Błędne dane do logowania.'
-                elif data['status'] == 'ok' and '' != data['user']['token']:
-                    self.userToken = data['user']['token']
+                else:
+                    self.userToken = data['data']['token']
                     return True, ''
             except Exception:
                 printExc()
@@ -130,13 +154,13 @@ class VideoStarApi(CBaseHostClass):
                 return False, errMessage
         else:
             return False, (errMessage % actionUrl)
-        
+
         return False, _("Unknown error.")
     
     def getList(self, cItem):
         printDBG("VideoStarApi.getList")
         
-        rm(self.COOKIE_FILE)
+#        rm(self.COOKIE_FILE)
         
         self.informAboutGeoBlockingIfNeeded('PL')
         
@@ -158,17 +182,21 @@ class VideoStarApi(CBaseHostClass):
         channelsTab = []
         
         if self.loggedIn:
-            url = self.getFullUrl('/channels/list?device=web', 'api')
+            url = self.getFullUrl('v1/channels/list?device=web', 'api')
         else:
             url = self.getFullUrl('/static/guest/channels/list/web.json', 'static')
         
         sts, data = self.cm.getPage(url, self.defaultParams)
         if not sts: return channelsTab
-        
+
         try:
             idx = 0
+            if 'channels' in data:
+                jsonChannels = 'channels'
+            else:
+                jsonChannels = 'data'
             data = json_loads(data, '', True)
-            for item in data['channels']:
+            for item in data[jsonChannels]:
                 guestTimeout = item.get('guest_timeout', '')
                 if not config.plugins.iptvplayer.videostar_show_all_channels.value and (item['access_status'] == 'unsubscribed' or (not self.loggedIn and guestTimeout == '0')): continue
                 title = self.cleanHtmlStr(item['name'])

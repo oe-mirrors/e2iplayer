@@ -8,6 +8,7 @@ from Plugins.Extensions.IPTVPlayer.libs.pCommon import common
 from Plugins.Extensions.IPTVPlayer.libs.urlparser import urlparser
 from Plugins.Extensions.IPTVPlayer.components.ihost import CBaseHostClass
 from Plugins.Extensions.IPTVPlayer.libs.e2ijson import loads as json_loads
+from Plugins.Extensions.IPTVPlayer.libs import ph
 ###################################################
 
 ###################################################
@@ -19,7 +20,7 @@ def GetConfigList():
 ###################################################
 
 class LivespottingTvApi:
-    MAIN_URL = 'http://livespotting.tv/'
+    MAIN_URL = 'http://livespotting.com/'
 
     def __init__(self):
         self.COOKIE_FILE = GetCookieDir('livespottingtv.cookie')
@@ -35,20 +36,19 @@ class LivespottingTvApi:
     def getChannelsList(self, cItem):
         printDBG("WkylinewebcamsCom.getChannelsList")
         list = []
-        sts, data = self.cm.getPage('http://livespotting.tv/api/api.json')
+        sts, data = self.cm.getPage('https://livespotting.com/showroom.json')
         if not sts: return list
+        printDBG("data: %s" % data)
+        data = data.replace('Showroom.Load(','').replace(');','')
         try:
             data = json_loads(data)
-            for item in data['streams']:
-                if 'stream' not in item: continue
+            for item in data:
                 try:
-                    item = item['stream']['data']
-                    title = item['content']['title']
-                    icon  = item['images'].get('snapshot-343x192', '')
-                    desc  = self.cleanHtmlStr(item['content'].get('longtext', ''))
-                    camId = item['camID']['camid']
-                    if camId.startswith('LS_'): camId = camId[3:]
-                    url   =  'rtmp://stream.livespotting.tv/windit-edge/%s.stream live=1' % camId
+                    title = item['title']
+                    icon  = item['image']
+                    desc  = item['description'] 
+                    url  = str(item['sources'])
+                    url = ph.search(url, '''file['"]:\s*['"]([^"^']+?)['"]''')[0]
                     list.append({'title':title, 'url':url, 'icon':icon, 'desc':desc})
                 except Exception: printExc()
         except Exception:
