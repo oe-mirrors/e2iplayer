@@ -269,7 +269,7 @@ class urlparser:
                        'google.com':            self.pp.parserGOOGLE        ,
                        'gorillavid.in':         self.pp.parserFASTVIDEOIN   , 
                        'gounlimited.to':        self.pp.parserGOUNLIMITEDTO  ,
-                       'govod.tv':             self.pp.parserWIIZTV         ,
+                       'govod.tv':              self.pp.parserWIIZTV         ,
                        'haxhits.com':           self.pp.parserHAXHITSCOM     ,
                        'hdcast.info':           self.pp.parserHDCASTINFO    ,
                        'hdfilmstreaming.com':   self.pp.parserHDFILMSTREAMING,
@@ -417,7 +417,7 @@ class urlparser:
                        'promptfile.com':        self.pp.parserPROMPTFILE    ,
                        'protectlink.stream':    self.pp.parserFEMBED        ,
                        'publicvideohost.org':   self.pp.parserPUBLICVIDEOHOST,
-                       'pumpnews.xyz':          self.pp.parserTXNEWSNETWORK , 
+                       'pumpnews.xyz':          self.pp.parserTXNEWSNETWORK ,
                        'putlive.in':            self.pp.parserPUTLIVEIN      ,
                        'putlocker.com':         self.pp.parserFIREDRIVE     , 
                        'putstream.com':         self.pp.parserPUTSTREAM     ,
@@ -481,6 +481,7 @@ class urlparser:
                        'streamtape.com':        self.pp.parserSTREAMTAPE    ,
                        'streamz.cc':            self.pp.parserSTREAMZ       ,
                        'streamz.vg':            self.pp.parserSTREAMZ       ,
+                       'streamwire.net':        self.pp.parserONLYSTREAM   ,
                        'superfastvideos.xyz':   self.pp.parserTXNEWSNETWORK ,
                        'superfilm.pl':          self.pp.parserSUPERFILMPL   ,
                        'supervideo.tv':         self.pp.parserSUPERVIDEO    ,
@@ -497,7 +498,7 @@ class urlparser:
                        'thefile.me':            self.pp.parserTHEFILEME     ,
                        'thevideo.cc':           self.pp.parserTHEVIDEOME    ,
                        'thevideo.me':           self.pp.parserTHEVIDEOME    ,
-                       'thevideos.ga':           self.pp.parserTHEVIDEOME    ,
+                       'thevideos.ga':          self.pp.parserTHEVIDEOME    ,
                        'thevideobee.to':        self.pp.parserTHEVIDEOBEETO  ,
                        'tiny.cc':               self.pp.parserTINYCC        ,
                        'tinymov.net':           self.pp.parserTINYMOV       ,
@@ -534,6 +535,7 @@ class urlparser:
                        'uptostream.com':        self.pp.parserUPTOSTREAMCOM  ,
                        'upvid.co':              self.pp.parserWATCHUPVIDCO   ,
                        'upvid.mobi':            self.pp.parserUPFILEMOBI     ,
+                       'upvideo.cc':            self.pp.parserONLYSTREAM   ,
                        'userscloud.com':        self.pp.parserUSERSCLOUDCOM ,
                        'ustream.tv':            self.pp.parserUSTREAMTV     ,
                        'ustreamix.com':         self.pp.parserUSTREAMIXCOM  ,
@@ -581,6 +583,7 @@ class urlparser:
                        'vidlox.me':             self.pp.parserVIDLOXTV      ,
                        'vidlox.tv':             self.pp.parserVIDLOXTV      ,
                        'vidnode.net':           self.pp.parserVIDCLOUD      ,
+                       'vidoo.tv':              self.pp.parserONLYSTREAM   ,
                        'vidoza.net':            self.pp.parserVIDOZANET     ,
                        'vidoza.co':             self.pp.parserVIDOZANET     ,
                        'vidshare.tv':           self.pp.parserVIDSHARETV    ,
@@ -628,6 +631,7 @@ class urlparser:
                        'xage.pl':               self.pp.parserXAGEPL        ,
                        'xvidstage.com':         self.pp.parserXVIDSTAGECOM   ,
                        'yocast.tv':             self.pp.parserYOCASTTV      ,
+                       'youdbox.com':           self.pp.parserONLYSTREAM   ,
                        'yourvideohost.com':     self.pp.parserYOURVIDEOHOST ,
                        'youtu.be':              self.pp.parserYOUTUBE       ,
                        'youtube.com':           self.pp.parserYOUTUBE       ,
@@ -3057,15 +3061,17 @@ class pageParser(CaptchaHelper):
         if None != self.getYTParser():
             try:
                 formats = config.plugins.iptvplayer.ytformat.value
-                height = config.plugins.iptvplayer.ytDefaultformat.value
+                height  = config.plugins.iptvplayer.ytDefaultformat.value
                 dash    = self.getYTParser().isDashAllowed()
+                age     = self.getYTParser().isAgeGateAllowed()
             except Exception:
                 printDBG("parserYOUTUBE default ytformat or ytDefaultformat not available here")
                 formats = "mp4"
                 height = "360"
                 dash    = False
+                age     = False
 
-            tmpTab, dashTab = self.getYTParser().getDirectLinks(url, formats, dash, dashSepareteList = True)
+            tmpTab, dashTab = self.getYTParser().getDirectLinks(url, formats, dash, dashSepareteList = True, allowAgeGate = age)
             #tmpTab = CSelOneLink(tmpTab, __getLinkQuality, int(height)).getSortedLinks()
             #dashTab = CSelOneLink(dashTab, __getLinkQuality, int(height)).getSortedLinks()
 
@@ -12367,57 +12373,30 @@ class pageParser(CaptchaHelper):
         #         http://oms.veuclips.com/player/PopUpIframe/HGXPBPodVx?iframe=popup&u=
         #         https://footy11.viuclips.net/player/html/D7o5OVWU9C?popup=yes&autoplay=1
         #         http://player.veuclips.com/embed/JwB2kRDt7Y
-        #         https://oms.vidstreamup.com/embed/vElkr1qfLm
-        #         https://oms.vidstreamup.com/player/PopUpIframe/vElkr1qfLm?iframe=popup&u=
-        #         https://oms.vidstreamup.com/player/html/vElkr1qfLm?popup=yes&autoplay=1
-        #         http://oms.upclips.online/player/PopUpIframe/CsAJ8IjxE8?iframe=popup&u=
-        #         https://hofoot.toclipit.com/player/PopUpIframe/CsAJ8IjxE8?iframe=popup&u=
-        #         https://hofoot.allvidview.tk/player/PopUpIframe/rU81KreFct?iframe=popup&u=
-        #         https://oms.streamatus.tk/player/html/Mi5nzmttSZ?popup=yes&autoplay=1
-        #         https://hofoot.vidcrt.net
-        #         http://oms.upmela.com/player/PopUpIframe/xbVz4HBVkMpLr?iframe=popup&u=
-        #         https://oms.upmela.com/player/html/6YqaAh7rybcxe?popup=yes&autoplay=1
-        #         https://hofoot.koravidup.com/player/PopUpIframe/uAR0RRxWvy6d9?iframe=popup&u=
-        
-        baseUrl = baseUrl + "?"
-            
-        video_id = re.findall("/player/PopUpIframe/(.*?)\?", baseUrl)
-        if not video_id:
-            video_id = re.findall("/player/html/(.*?)\?", baseUrl)
-        if not video_id:
-            video_id = re.findall("/embed/(.*?)\?", baseUrl)
-        if not video_id:
-            return []
 
-        player_url = urlparser.getDomain(baseUrl, False) + "embed/%s" % video_id[0]
-        printDBG("reading from url %s" % player_url)
-        sts, data = self.cm.getPage(player_url)
-        if not sts: 
-            return []
+        if 'parserVIUCLIPS' in baseUrl:
+            baseUrl = ph.search(baseUrl, r'''https?://.*parserVIUCLIPS\[([^"]+?)\]''')[0]
+            printDBG("force parserVIUCLIPS baseUrl[%s]" % baseUrl)
+
+        if 'embed' not in baseUrl:
+            video_id  = ph.search(baseUrl, r'''https?://.*/player/.*/([a-zA-Z0-9]{13})\?''')[0]
+            printDBG("parserVIUCLIPS video_id[%s]" % video_id)
+            baseUrl = '{0}embed/{1}'.format(urlparser.getDomain(baseUrl, False), video_id)
+
+        sts, data = self.cm.getPage(baseUrl)
+        if not sts: return False
 
         if 'This video has been removed' in data:
             SetIPTVPlayerLastHostError( 'This video has been removed')
-            return []
+            return False
         
         vidTab=[]
-        links = re.findall("hls:\"(.*?)\"", data) 
-        if not links: 
-            links = re.findall( "hlsSource:['\"](.*?)['\"]", data, re.S)
-        
-        for l in links:
-            if l.startswith("//"):
-                l = "http:" + l
-            vidTab.extend(getDirectM3U8Playlist(l, checkExt=False, variantCheck=True, checkContent=True, sortWithMaxBitrate=99999999))
-        
-        m = re.findall("sources: \[\{(.*?)\}\]", data, re.S)
-        if m:
-            links = re.findall ("src: ['\"](.*?)['\"]", m[0])
-            for l in links: 
-                if l.startswith("//"):
-                    l = "https:" + l 
-
-            vidTab.extend(getDirectM3U8Playlist(l, checkExt=False, variantCheck=True, checkContent=True, sortWithMaxBitrate=99999999))
-        
+        hlsUrl = self.cm.ph.getSearchGroups(data, '''["']([^'^"]+?\.m3u8(?:\?[^"^']+?)?)["']''', ignoreCase=True)[0]
+        if hlsUrl != '':
+            if hlsUrl.startswith("//"):
+                hlsUrl = "https:" + hlsUrl
+            hlsUrl = strwithmeta(hlsUrl, {'Origin':"https://" + urlparser.getDomain(baseUrl), 'Referer':baseUrl})
+            vidTab.extend(getDirectM3U8Playlist(hlsUrl, checkExt=False, variantCheck=True, checkContent=True, sortWithMaxBitrate=99999999))
         return vidTab
 
     def parserWOOFTUBE(self, baseUrl):
