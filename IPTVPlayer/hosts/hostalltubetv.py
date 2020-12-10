@@ -24,7 +24,7 @@ class AlltubeTV(CBaseHostClass):
     USER_AGENT = 'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:40.0) Gecko/20100101 Firefox/40.0'
     MAIN_URL    = 'http://alltube.pl/'
     SRCH_URL    = MAIN_URL + 'szukaj'
-    DEFAULT_ICON_URL = 'http://alltube.pl/static/main/newlogoall.png'
+    DEFAULT_ICON_URL = 'http://alltube.tv/static/img/allfly.png'
     #{'category':'latest_added',       'title': _('Latest added'),  'url':MAIN_URL,                   'icon':DEFAULT_ICON},
     MAIN_CAT_TAB = [{'category':'genres_movies',      'title': _('Movies'),        'url':MAIN_URL+'filmy-online/',   },
                     {'category':'cat_series',         'title': _('Series'),        'url':MAIN_URL+'seriale-online/', },
