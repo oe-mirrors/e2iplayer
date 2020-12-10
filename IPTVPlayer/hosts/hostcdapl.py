@@ -1,4 +1,4 @@
-﻿# -*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-
 
 ###################################################
 # LOCAL import
@@ -58,7 +58,7 @@ class cda(CBaseHostClass, CaptchaHelper):
         
         self.MAIN_URL = 'https://www.cda.pl/'
         self.SEARCH_URL = self.getFullUrl('video/show/%s/p%d?s=%s')
-        self.DEFAULT_ICON_URL = 'http://www.download.net.pl/upload/NewsSeptember2015/CDA-Filmy/cdalogo.jpg'
+        self.DEFAULT_ICON_URL = 'https://scdn.2cda.pl/v001/img/logotypyv2/prasa/WI3L7077.jpg'
         
         self.MAIN_TAB = [{'category':'video',             'title': 'Filmy wideo',  'url':''},
                          {'category':'premium',           'title': 'CDA Premium',  'url':self.getFullUrl('premium')},
