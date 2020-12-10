@@ -17,6 +17,20 @@ import re
 import urllib
 try:    import json
 except Exception: import simplejson as json
+from Components.config import config, ConfigText, ConfigSelection, getConfigListEntry
+###################################################
+
+###################################################
+# Config options for HOST
+###################################################
+config.plugins.iptvplayer.ogladajto_login = ConfigText(default = "", fixed_size = False)
+config.plugins.iptvplayer.ogladajto_password = ConfigText(default = "", fixed_size = False)
+
+def GetConfigList():
+    optionList = []
+    optionList.append(getConfigListEntry("ogladaj.to login:", config.plugins.iptvplayer.ogladajto_login))
+    optionList.append(getConfigListEntry("ogladaj.to hasło:", config.plugins.iptvplayer.ogladajto_password))
+    return optionList
 ###################################################
 
 
@@ -30,13 +44,18 @@ class ogladajto(CBaseHostClass):
         self.USER_AGENT = 'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:40.0) Gecko/20100101 Firefox/40.0'
         self.MAIN_URL = 'https://ogladaj.to/'
         self.DEFAULT_ICON_URL = 'https://www.ogladaj.to/templates/oto/images/logo.png'
-        self.HTTP_HEADER = {'User-Agent': self.USER_AGENT, 'DNT':'1', 'Accept': 'text/html', 'Accept-Encoding':'gzip, deflate', 'Referer':self.getMainUrl(), 'Origin':self.getMainUrl()}
+        self.HTTP_HEADER = {'User-Agent': self.USER_AGENT, 'DNT':'1', 'Accept': 'text/html', 'Accept-Encoding':'gzip, deflate', 'Referer':self.getMainUrl(), 'Origin':self.getMainUrl(), 'Upgrade-Insecure-Requests':'1', 'Connection':'keep-alive'}
         self.AJAX_HEADER = dict(self.HTTP_HEADER)
         self.AJAX_HEADER.update( {'X-Requested-With': 'XMLHttpRequest', 'Accept-Encoding':'gzip, deflate', 'Content-Type':'application/x-www-form-urlencoded; charset=UTF-8', 'Accept':'application/json, text/javascript, */*; q=0.01'} )
 
         self.cacheMovieFilters = {'cats':[], 'sort':[], 'years':[], 'az':[]}        
         self.cacheLinks    = {}
         self.defaultParams = {'header':self.HTTP_HEADER, 'with_metadata':True, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
+        self.ajaxParams = {'header':self.AJAX_HEADER, 'with_metadata':True, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
+
+        self.loggedIn = None
+        self.login    = ''
+        self.password = ''
 
     def getPage(self, baseUrl, addParams = {}, post_data = None):
         if addParams == {}: addParams = dict(self.defaultParams)
@@ -203,9 +222,22 @@ class ogladajto(CBaseHostClass):
         printDBG("ogladajto.getLinksForVideo [%s]" % cItem)
                 
         urlTab = []
-        
+
         sts, data = self.getPage(cItem['url'])
         if not sts: return
+
+        url = self.cm.meta.get('location', '')
+        if "zaloguj" in url and self.loggedIn:
+            httpParams = dict(self.ajaxParams)
+            httpParams['header'] = dict(httpParams['header'])
+            post_data = {'submit':'', 'ahd_username':self.login, 'ahd_password':self.password}
+            data = self.cm.ph.getDataBeetwenNodes(data, ('<form', '>', 'zaloguj'), ('</form', '>'))[1]
+            inputData = self.cm.ph.getAllItemsBeetwenMarkers(data, '<input type="hidden"', '>')
+            for item in inputData:
+                name  = self.cm.ph.getSearchGroups(item, '''name=['"]([^'^"]+?)['"]''')[0]
+                value = self.cm.ph.getSearchGroups(item, '''value=['"]([^'^"]+?)['"]''')[0]
+                post_data[name] = value
+            sts, data = self.getPage(url, httpParams, post_data)
 
         tmp = self.cm.ph.getAllItemsBeetwenNodes(data, ('<iframe', '>'), ('</iframe', '>'))
         for item in tmp:
@@ -230,8 +262,54 @@ class ogladajto(CBaseHostClass):
                         
         return self.up.getVideoLinkExt(baseUrl)
 
+    def tryTologin(self):
+        printDBG('tryTologin start')
+        
+        if None == self.loggedIn or self.login != config.plugins.iptvplayer.ogladajto_login.value or\
+            self.password != config.plugins.iptvplayer.ogladajto_password.value:
+
+            self.login = config.plugins.iptvplayer.ogladajto_login.value
+            self.password = config.plugins.iptvplayer.ogladajto_password.value
+
+#            rm(self.COOKIE_FILE)
+            self.cm.clearCookie(self.COOKIE_FILE, ['__cfduid', 'cf_clearance'])
+
+            self.loggedIn = False
+
+            if '' == self.login.strip() or '' == self.password.strip():
+                return False
+
+            sts, data = self.getPage(self.MAIN_URL)
+            if not sts: return False
+
+            post_data = {'submit':'', 'ahd_username':self.login, 'ahd_password':self.password}
+            data = self.cm.ph.getDataBeetwenNodes(data, ('<form', '>', 'zaloguj'), ('</form', '>'))[1]
+            url  = self.cm.ph.getSearchGroups(data, '''action=['"]([^'^"]+?)['"]''')[0]
+            inputData = self.cm.ph.getAllItemsBeetwenMarkers(data, '<input type="hidden"', '>')
+            for item in inputData:
+                name  = self.cm.ph.getSearchGroups(item, '''name=['"]([^'^"]+?)['"]''')[0]
+                value = self.cm.ph.getSearchGroups(item, '''value=['"]([^'^"]+?)['"]''')[0]
+                post_data[name] = value
+
+            httpParams = dict(self.ajaxParams)
+            httpParams['header'] = dict(httpParams['header'])
+#            httpParams['raw_post_data'] = True
+            sts, data = self.getPage(url, httpParams, post_data)
+            if sts and 'notification error' not in data:
+                printDBG('tryTologin ok')
+                self.loggedIn = True
+            else:
+                if sts: message = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(data, ('<div', '>', 'notification error'), ('</div', '>'))[1])
+                else: message = ''
+                self.sessionEx.open(MessageBox, _('Login failed.') + '\n' + message, type = MessageBox.TYPE_ERROR, timeout = 10)
+                printDBG('tryTologin failed')
+
+        return self.loggedIn
+
     def handleService(self, index, refresh = 0, searchPattern = '', searchType = ''):
         printDBG('handleService start')
+        
+        self.tryTologin()
         
         CBaseHostClass.handleService(self, index, refresh, searchPattern, searchType)
 
