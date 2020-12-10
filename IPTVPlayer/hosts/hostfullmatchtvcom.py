@@ -27,7 +27,7 @@ class Fullmatchtv(CBaseHostClass):
     def __init__(self):
         CBaseHostClass.__init__(self, {'history':'fullmatchtv.org', 'cookie':'fullmatchtv.cookie'})
         
-        self.DEFAULT_ICON_URL = 'https://pbs.twimg.com/profile_images/683367328248164352/Ivn9ly9e_400x400.png'
+        self.DEFAULT_ICON_URL = 'https://fullmatchtv.com/wp-content/uploads/2018/06/logo2-1.png'
         self.HEADER = {'User-Agent': 'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:40.0) Gecko/20100101 Firefox/40.0', 'DNT':'1', 'Accept': 'text/html'}
         self.MAIN_URL = 'https://fullmatchtv.com/'
         self.defaultParams = {'with_metadata':True, 'header':self.HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
