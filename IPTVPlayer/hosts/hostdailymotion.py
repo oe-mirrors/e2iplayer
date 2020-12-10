@@ -42,7 +42,7 @@ class Dailymotion(CBaseHostClass):
         
         self.SITE_URL = 'https://www.dailymotion.com/'
         self.MAIN_URL = 'https://api.dailymotion.com/'
-        self.DEFAULT_ICON_URL = 'http://static1.dmcdn.net/images/dailymotion-logo-ogtag.png'
+        self.DEFAULT_ICON_URL = 'https://www.drupal.org/files/styles/grid-3-2x/public/project-images/dailymotion.png'
         self.MAIN_CAT_TAB = [{'category':'categories',            'title': _('Categories') },
                              {'category':'search',                'title': _('Search'), 'search_item':True},
                              {'category':'search_history',        'title': _('Search history')} ]
