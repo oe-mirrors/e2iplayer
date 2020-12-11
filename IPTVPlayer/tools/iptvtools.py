@@ -448,6 +448,8 @@ def GetExtensionsDir(file = ''):
     return resolveFilename(SCOPE_PLUGINS, 'Extensions/') + file
 def GetSkinsDir(path = ''):
     return resolveFilename(SCOPE_PLUGINS, 'Extensions/IPTVPlayer/skins/') + path
+def GetPlayerSkinDir(path = ''):
+    return resolveFilename(SCOPE_PLUGINS, 'Extensions/IPTVPlayer/playerskins/') + path
 def GetConfigDir(path = ''):
     return resolveFilename(SCOPE_CONFIG, path)
 def IsExecutable(fpath):

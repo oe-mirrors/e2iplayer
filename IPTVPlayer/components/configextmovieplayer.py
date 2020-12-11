@@ -76,6 +76,8 @@ config.plugins.iptvplayer.extplayer_subtitle_box_height  = ConfigInteger(240, (5
 
 config.plugins.iptvplayer.extplayer_infobanner_clockformat = ConfigSelection(default = "", choices = [ ("", _("None")), ("24", _("24 hour format ")), ("12", _("12 hour format "))])
 
+config.plugins.iptvplayer.extplayer_skin = ConfigSelection(default = "default", choices = [ ("default", _("default")), ("black", _("black")), ("red", _("red"))])
+
 class ConfigExtMoviePlayerBase():
     
     def __init__(self):
@@ -228,6 +230,15 @@ class ConfigExtMoviePlayerBase():
             return ''
         return config.plugins.iptvplayer.extplayer_infobanner_clockformat.value
     
+    def getPlayerSkinFolder(self):
+        printDBG("configextmovieplayer.getPlayerSkinFolder")
+        skin = config.plugins.iptvplayer.extplayer_skin.value
+        if not skin:
+            return "default"
+        else:
+            return skin
+  
+    
 class ConfigExtMoviePlayer(ConfigBaseWidget, ConfigExtMoviePlayerBase):
    
     def __init__(self, session, operatingPlayer=False):
@@ -296,6 +307,8 @@ class ConfigExtMoviePlayer(ConfigBaseWidget, ConfigExtMoviePlayerBase):
         list.append(getConfigListEntry(_("Remember last watched position"), config.plugins.iptvplayer.remember_last_position))
         if getDesktop(0).size().width() >= 800:
             list.append(getConfigListEntry(_("Info bar clock format"), config.plugins.iptvplayer.extplayer_infobanner_clockformat))
+            list.append(getConfigListEntry(_("Player Skin"), config.plugins.iptvplayer.extplayer_skin))
+            
         list.append(getConfigListEntry(_("Create LCD/VFD summary screen"), config.plugins.iptvplayer.extplayer_summary))
         if 1:#IsExecutable(config.plugins.iptvplayer.exteplayer3path.value):
             list.append(getConfigListEntry(_("----------------- External exteplayer3 options -----------------"), config.plugins.iptvplayer.fakeExtePlayer3))
