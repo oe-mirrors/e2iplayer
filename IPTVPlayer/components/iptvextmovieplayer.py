@@ -27,6 +27,7 @@ from Plugins.Extensions.IPTVPlayer.components.iptvdirbrowser import IPTVFileSele
 from Plugins.Extensions.IPTVPlayer.components.configextmovieplayer import ConfigExtMoviePlayerBase, ConfigExtMoviePlayer
 from Plugins.Extensions.IPTVPlayer.libs.pCommon import CParsingHelper
 from Plugins.Extensions.IPTVPlayer.libs.urlparser import urlparser
+from Plugins.Extensions.IPTVPlayer.libs.e2ijson import loads as json_loads, dumps as json_dumps
 ###################################################
 
 ###################################################
@@ -51,10 +52,9 @@ from skin import parseColor, parseFont
 from datetime import timedelta
 try:
     from math import floor, fabs
-    try:    import json
-    except Exception: import simplejson as json
 except Exception:
     printExc()
+
 from os import chmod as os_chmod, path as os_path
 import re
 import time
@@ -200,9 +200,9 @@ class IPTVExtMoviePlayer(Screen):
             skin = skinFile.read()            
             skinFile.close()            
             
-            printDBG("---------------------------------------")
-            printDBG(skin)
-            printDBG("---------------------------------------")
+            #printDBG("---------------------------------------")
+            #printDBG(skin)
+            #printDBG("---------------------------------------")
         else:
             skin = ""
             
@@ -237,7 +237,13 @@ class IPTVExtMoviePlayer(Screen):
             </screen>""" 
 
         if self.clockFormat:
-            clockFontSize = 30 if getDesktop(0).size().width() == 1920 else 24
+            if getDesktop(0).size().width() >= 1920:
+                clockFontSize = self.skinSettings.get("clockFontSize_FHD", 24)
+            elif getDesktop(0).size().width() < 1920 and getDesktop(0).size().width() >= 800:
+                clockFontSize = self.skinSettings.get("clockFontSize_HD", 30)
+            else:
+                clockFontSize = self.skinSettings.get("clockFontSize_SD", 30)
+            
             self.playerClockPath = self.playerSkinFolder + "/playerclock.xml"
 
             printDBG("Player clock file path:" + self.playerClockPath)
@@ -248,9 +254,9 @@ class IPTVExtMoviePlayer(Screen):
                 clockWidget = clockFile.read()            
                 clockFile.close()            
                 
-                printDBG("---------------------------------------")
-                printDBG(clockWidget)
-                printDBG("---------------------------------------")
+                #printDBG("---------------------------------------")
+                #printDBG(clockWidget)
+                #printDBG("---------------------------------------")
             
                 clockWidget = clockWidget % clockFontSize
             else:
@@ -271,10 +277,40 @@ class IPTVExtMoviePlayer(Screen):
         sub = None
         return skin
     
+    def getSkinSettings(self):
+        printDBG("iptvextmovieplayer.getSkinSetting")
+        
+        if getDesktop(0).size().width() < 800:
+            # skin for SD
+            self.playerSkinFolder = GetPlayerSkinDir('sd')
+        else:
+            self.playerSkinFolder = GetPlayerSkinDir(ConfigExtMoviePlayerBase().getPlayerSkinFolder())
+        
+        settingsPath = self.playerSkinFolder + "/settings.json"
+        
+        try:
+            if os_path.exists(settingsPath):
+                #read player skin xml file
+                settingsFile = open(settingsPath, 'r')
+                response = settingsFile.read()            
+                settingsFile.close()            
+                
+                #printDBG("---------------------------------------")
+                #printDBG(response)
+                #printDBG("---------------------------------------")
+                
+                return json_loads(response)
+            
+            return {}
+        except:
+            printExc()
+            return {}
+    
     def __init__(self, session, filesrcLocation, FileName, lastPosition=None, player='eplayer', additionalParams={}):
         self.configObj = ConfigExtMoviePlayerBase()
         self.subConfig = self.configObj.getSubtitleFontSettings()
         self.clockFormat = self.configObj.getInfoBannerrClockFormat()
+        self.skinSettings = self.getSkinSettings()
         self.skin = self.__prepareSkin()
         Screen.__init__(self, session)
         self.skinName = "IPTVExtMoviePlayer"
@@ -1529,7 +1565,7 @@ class IPTVExtMoviePlayer(Screen):
             #printDBG(item)
             if item.startswith('{'): 
                 try:
-                    obj = json.loads(item.strip())
+                    obj = json_loads(item.strip())
                     #printDBG("Status object [%r]" % obj)
                     key = obj.keys()[0]
                     obj = obj[key]
@@ -2113,9 +2149,12 @@ class IPTVExtMoviePlayer(Screen):
     
     def updateClock(self):
         if self.clockFormat == '24':
-            self['clockTime'].setText(time.strftime("%H:%M"))
+            timeFormatString = self.skinSettings.get("clockFormat_24H", "%H:%M")
+            self['clockTime'].setText(time.strftime(timeFormatString))
         elif self.clockFormat == '12':
-            self['clockTime'].setText(time.strftime("%I:%M"))
+            timeFormatString = self.skinSettings.get("clockFormat_12H", "%I:%M")
+            self['clockTime'].setText(time.strftime(timeFormatString))
+            
         
     def _showHideSubSynchroControl(self, show=True):
         for elem in self.subHandler['synchro']['guiElemNames']:
