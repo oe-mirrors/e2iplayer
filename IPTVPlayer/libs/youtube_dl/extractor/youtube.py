@@ -514,10 +514,12 @@ class YoutubeIE(object):
             isGoogleDoc = False
             videoKey = 'video_id'
             videoInfoBase = 'https://www.youtube.com/get_video_info?video_id=%s&' % video_id
-            videoInfoparams = {}
-
+            #videoInfoparams = {}
+            videoInfoparams = {'header': {'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/86.0.4240.75 Safari/537.36'}}
+        
         sts, video_webpage = self.cm.getPage(url)
-        if not sts: raise ExtractorError('Unable to download video webpage')
+        if not sts: 
+            raise ExtractorError('Unable to download video webpage')
 
         # Get video info
         #if re.search(r'player-age-gate-content">', video_webpage) is not None:
@@ -535,17 +537,42 @@ class YoutubeIE(object):
                                                   })
             video_info_url = videoInfoBase + data
             sts, video_info = self.cm.getPage(video_info_url, videoInfoparams)
-            if not sts: raise ExtractorError('Faile to get "%s"' % video_info_url)
+            if not sts: 
+                raise ExtractorError('Fail to get "%s"' % video_info_url)
         else:
             age_gate = False
-            for el_type in ['&el=detailpage', '&el=embedded', '&el=vevo', '']:
-                #https
-                video_info_url = videoInfoBase + ('%s&ps=default&eurl=&gl=US&hl=en'% ( el_type))
-                sts, video_info = self.cm.getPage(video_info_url, videoInfoparams)
-                if not sts: continue
-                if 'channel_creation_token' in video_info or '&account_playback_token=' in video_info:
-                    break
-        if 'channel_creation_token' not in video_info and '&account_playback_token=' not in video_info:
+            tries = 0
+            tokenFound = False
+            
+            while (tries < 5) and (not tokenFound):
+                for el_type in ['&el=detailpage', '&el=embedded', '&el=vevo', '']:
+                    #https
+                    video_info_url = videoInfoBase + ('%s&ps=default&eurl=&gl=US&hl=en'% (el_type))
+                    sts, video_info = self.cm.getPage(video_info_url, videoInfoparams)
+                    if not sts: 
+                        continue
+
+                    #printDBG("----------------------------")
+                    #printDBG(video_info_url)
+                    #printDBG("----------------------------")
+                    #printDBG(video_info)
+                    #printDBG("----------------------------")
+
+                    #if 'channel_creation_token' in video_info or '&account_playback_token=' in video_info :
+                    if 'token' in video_info or 'Token' in video_info :
+                        if 'channel_creation_token' in video_info:
+                            printDBG("channel_creation_token found!")
+                        elif 'account_playback_token' in video_info:
+                            printDBG("account_playback_token found!")
+                        else:
+                            printDBG("different token found!")
+                        printDBG("token found after %s tries!" % (tries + 1))
+                        tokenFound = True
+                        break
+                
+                tries = tries + 1
+        
+        if not tokenFound:
             raise ExtractorError('"token" parameter not in video info')
         
         # Check for "rental" videos
