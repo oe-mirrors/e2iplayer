@@ -545,14 +545,30 @@ class YoutubeIE(object):
             if not sts: raise ExtractorError('Faile to get "%s"' % video_info_url)
         else:
             age_gate = False
-            for el_type in ['&el=detailpage', '&el=embedded', '&el=vevo', '']:
-                #https
-                video_info_url = videoInfoBase + ('%s&ps=default&eurl=&gl=US&hl=en'% ( el_type))
-                sts, video_info = self.cm.getPage(video_info_url, videoInfoparams)
-                if not sts: continue
-                if 'channel_creation_token' in video_info or '&account_playback_token=' in video_info:
-                    break
-        if 'channel_creation_token' not in video_info and '&account_playback_token=' not in video_info:
+            tries = 0
+            tokenFound = False
+            
+            while (tries < 5) and (not tokenFound):
+                for el_type in ['&el=detailpage', '&el=embedded', '&el=vevo', '']:
+                    #https
+                    video_info_url = videoInfoBase + ('%s&ps=default&eurl=&gl=US&hl=en'% (el_type))
+                    sts, video_info = self.cm.getPage(video_info_url, videoInfoparams)
+                    if not sts: 
+                        continue
+                    if 'token' in video_info or 'Token' in video_info :
+                        if 'channel_creation_token' in video_info:
+                            printDBG("channel_creation_token found!")
+                        elif 'account_playback_token' in video_info:
+                            printDBG("account_playback_token found!")
+                        else:
+                            printDBG("different token found!")
+                        printDBG("token found after %s tries!" % (tries + 1))
+                        tokenFound = True
+                        break
+                
+                tries = tries + 1
+        
+        if not tokenFound:
             raise ExtractorError('"token" parameter not in video info')
         
         # Check for "rental" videos
