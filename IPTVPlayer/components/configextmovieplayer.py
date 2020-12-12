@@ -76,7 +76,7 @@ config.plugins.iptvplayer.extplayer_subtitle_box_height  = ConfigInteger(240, (5
 
 config.plugins.iptvplayer.extplayer_infobanner_clockformat = ConfigSelection(default = "", choices = [ ("", _("None")), ("24", _("24 hour format ")), ("12", _("12 hour format "))])
 
-config.plugins.iptvplayer.extplayer_skin = ConfigSelection(default = "default", choices = [ ("default", _("default")), ("black", _("black")), ("red", _("red"))])
+config.plugins.iptvplayer.extplayer_skin = ConfigSelection(default = "default", choices = [ ("default", _("default")), ("black", _("black")), ("red", _("red")), ("blue", _("blue")), ("left_black", _("left_black")), ("left_blue", _("left_blue")), ("left_black_navy", _("left_black_navy")), ("left_blue_navy", _("left_blue_navy")), ("left_green", _("left_green")), ("line", _("line"))])
 
 class ConfigExtMoviePlayerBase():
     
