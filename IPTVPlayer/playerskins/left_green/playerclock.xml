@@ -1,0 +1,1 @@
+<widget name="clockTime" noWrap="1" position="25,3" size="500,40" zPosition="3" transparent="1" foregroundColor="#016351" backgroundColor="#251f1f1f" font="Regular;%d" halign="left" valign="center" />
