@@ -43,9 +43,9 @@ class Twitch(CBaseHostClass):
         
         self.CHANNEL_TOKEN_URL = self.getFullUrl('/api/channels/%s/access_token')
         self.LIVE_URL = 'http://usher.justin.tv/api/channel/hls/%s.m3u8?token=%s&sig=%s&allow_source=true'
-        self.CHANNEL_TOKEN_URL = self.API1_URL + 'api/channels/%s/access_token?need_https=false&oauth_token&platform=web&player_backend=mediaplayer&player_type=site'
+        self.CHANNEL_TOKEN_URL = self.API1_URL + 'api/channels/%s/access_token?need_https=false&oauth_token&platform=web&player_backend=mediaplayer&player_type=embed'
         
-        self.VOD_TOKEN_URL = self.API1_URL + 'api/vods/%s/access_token?need_https=true&oauth_token&platform=web&player_backend=mediaplayer&player_type=site'
+        self.VOD_TOKEN_URL = self.API1_URL + 'api/vods/%s/access_token?need_https=true&oauth_token&platform=web&player_backend=mediaplayer&player_type=embed'
         self.VOD_URL = 'https://usher.ttvnw.net/vod/%s.m3u8?token=%s&sig=%s&allow_source=true'
 
         self.platformFilters = [{'title':_('All Platforms'), 'platform_type':'all'}, {'title':_('Xbox One'), 'platform_type':'xbox'}, {'title':_('PlayStation 4'), 'platform_type':'ps4'}]
