@@ -10222,9 +10222,13 @@ class pageParser(CaptchaHelper):
         
     def parserWIIZTV(self, baseUrl):
         printDBG("parserWIIZTV url[%s]\n" % baseUrl)
-        HTTP_HEADER= { 'User-Agent':'Mozilla/5.0'}
+        baseUrl = strwithmeta(baseUrl)
+        referer = baseUrl.meta.get('Referer', baseUrl)
         
-        sts, data = self.cm.getPage(baseUrl, {'header':HTTP_HEADER})
+        HTTP_HEADER = { 'User-Agent':'Mozilla/5.0', 'Referer':referer}
+        params = {'header':HTTP_HEADER}
+        
+        sts, data = self.cm.getPage(baseUrl, params) 
         if not sts: return False
         
         tmp = self.cm.ph.getDataBeetwenMarkers(data, '<video', '</video>')[1]
