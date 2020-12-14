@@ -127,6 +127,8 @@ class FilmyNaDzis(CBaseHostClass):
             url = self.getFullUrl(ph.getattr(item, 'href'), self.MAIN_URL)
             title = ph.clean_html(item)
             
+            if 'seriale' in url: continue
+
             params = {'good_for_fav':True, 'category':'list_items', 'url':url, 'title': title}
 
             if '/category/' in url:
@@ -276,59 +278,7 @@ class FilmyNaDzis(CBaseHostClass):
 
     def getVideoLinks(self, videoUrl):
         printDBG("FilmyNaDzis.getVideoLinks [%s]" % videoUrl)
-        #self.markSelectedLink(self.cacheLinks, videoUrl)
         return self.up.getVideoLinkExt(videoUrl)
-
-    def getArticleContent(self, cItem, data=None, cUrl=None):
-        printDBG("FilmyNaDzis.getArticleContent [%s]" % cItem)
-
-        retTab = []
-        itemsList = []
-        icons = []
-        
-        if not data:
-            url = cItem.get('prev_url', cItem['url'])
-            sts, data = self.getPage(url)
-            if not sts: 
-                return []
-            
-            self.setMainUrl(self.cm.meta['url'])
-            data = re.sub("<!==[\s\S]*?==>", "", data)
-
-        desc = ph.clean_html(ph.find(data, ('<div', '>', 'body=content'), '</div', flags=0)[1])
-        data = ph.find(data, ('<div', '>', 'video_thumbnail_image'), '</div>', flags=ph.BLOCK_MODE)[1]
-
-        title = ph.clean_html(ph.find(data, ('<div', '>', 'heading'), '</div>', flags=0)[1])
-        icon = self.getFullIconUrl(ph.search(data, ph.IMG3)[1], cUrl)
-
-        data = ph.find(data, ('<div', '>', 'meta='), '</div', flags=ph.BLOCK_MODE|ph.START_S)
-        for idx in xrange(1, len(data), 2):
-            tmp = ph.find(data[idx], ('<h5', '>'), '</h5>', flags=0)[1].split('<span', 1)
-            if len(tmp) == 2:
-                label = ph.clean_html(tmp[0])
-                value = ph.clean_html('<span' + tmp[1])
-            elif 'categories' in data[1]:
-                label = ('Categories')
-                value = ph.clean_html(data[idx])
-            elif 'podtytul' in data[1]:
-               label = _('Alternative title')
-               value = ph.clean_html(data[idx])
-            else:
-               continue
-
-            if label and value:
-                itemsList.append((label, value))
-
-        if not title: 
-            title = cItem['title']
-        
-        if not icons: 
-            icons.append({'title':'', 'url':cItem.get('icon', self.DEFAULT_ICON_URL)})
-        
-        if not desc: 
-            desc = cItem.get('desc', '')
-
-        return [{'title':ph.clean_html( title ), 'text': ph.clean_html( desc ), 'images':icons, 'other_info':{'costom_items_list':itemsList}}]
 
     def handleService(self, index, refresh = 0, searchPattern = '', searchType = ''):
         printDBG('handleService start')
@@ -374,5 +324,3 @@ class IPTVHost(CHostBase):
     def __init__(self):
         CHostBase.__init__(self, FilmyNaDzis(), True, [])
 
-    def withArticleContent(self, cItem):
-        return 'video' == cItem.get('type')

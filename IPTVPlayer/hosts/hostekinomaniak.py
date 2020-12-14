@@ -29,7 +29,7 @@ class eKinomaniak(CBaseHostClass):
         CBaseHostClass.__init__(self, {'history':'ekinomaniak.online', 'cookie':'ekinomaniak.online.cookie'})
         self.USER_AGENT = 'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:40.0) Gecko/20100101 Firefox/40.0'
         self.MAIN_URL = 'https://ekinomaniak.net/'
-        self.DEFAULT_ICON_URL = 'https://m.ekinomaniak.net/mobile/images/tinified/logo-footer.png'
+        self.DEFAULT_ICON_URL = 'https://www.wykop.pl/cdn/c3397992/ekinomaniak_xKHlcsDqTG,q250.jpg'
         self.HTTP_HEADER = {'User-Agent': self.USER_AGENT, 'DNT':'1', 'Accept': 'text/html', 'Accept-Encoding':'gzip, deflate', 'Referer':self.getMainUrl(), 'Origin':self.getMainUrl()}
         self.AJAX_HEADER = dict(self.HTTP_HEADER)
         self.AJAX_HEADER.update( {'X-Requested-With': 'XMLHttpRequest', 'Accept-Encoding':'gzip, deflate', 'Content-Type':'application/x-www-form-urlencoded; charset=UTF-8', 'Accept':'application/json, text/javascript, */*; q=0.01'} )
