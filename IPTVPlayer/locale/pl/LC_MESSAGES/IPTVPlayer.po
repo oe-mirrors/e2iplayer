@@ -4,7 +4,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-12-13 13:16+0100\n"
 "PO-Revision-Date: \n"
-"Last-Translator: kosmacz <anteneczka@gmail.com> poprawki sq9\n"
+"Last-Translator: kosmacz <anteneczka@gmail.com> poprawki sq9\n, jac555"
 "Language-Team: IPTVPlayer\n"
 "Language: pl_PL\n"
 "MIME-Version: 1.0\n"
@@ -19,7 +19,7 @@ msgstr ""
 #: ../components/iptvplayerwidget.py:1685
 #, python-format
 msgid "\tDisk space available: %s"
-msgstr "tDisk przestrzeń dostępna: %s"
+msgstr "\tDisk przestrzeń dostępna: %s"
 
 #: ../components/iptvplayerwidget.py:1684
 #, python-format
@@ -205,14 +205,13 @@ msgid " Odczekaj momencik na wolne miejsce"
 msgstr ""
 
 #: ../hosts/hostinfoversion.py:4148
-#, fuzzy
 msgid " Ups, wystąpił chwilowy problem z naszymi serwerami."
-msgstr " "
+msgstr ""
 
 #: ../hosts/hostinfoversion.py:2199 ../hosts/hostinfoversion.py:2229
 #: ../hosts/hostinfoversion.py:2259
 msgid " Wystąpił chwilowy problem z naszymi serwerami."
-msgstr " "
+msgstr ""
 
 #: ../setup/iptvsetupimpl.py:743 ../setup/iptvsetupimpl.py:806
 #: ../setup/iptvsetupimpl.py:871 ../setup/iptvsetupimpl.py:931
@@ -632,7 +631,7 @@ msgstr "Filmy przygodowe"
 
 #: ../hosts/hostyoutube.py:35
 msgid "Age-gate bypass:"
-msgstr ""
+msgstr "Obejście bramki wiekowej:"
 
 #: ../components/iptvplayerwidget.py:1143 ../hosts/host3player.py:156
 #: ../hosts/host9anime.py:104 ../hosts/hostakoam.py:134
@@ -770,7 +769,6 @@ msgid "Alternative proxy server (2)"
 msgstr "Alternatywny serwer proxy (2)"
 
 #: ../hosts/hostfilmynadzis.py:314
-#, fuzzy
 msgid "Alternative title"
 msgstr "Alternatywny"
 
@@ -961,7 +959,7 @@ msgstr "Przeglądaj wideo"
 
 #: ../hosts/hostyoutube.py:56
 msgid "Browse youtube trending feeds"
-msgstr ""
+msgstr "Przeglądaj popularne kanały z YouTube"
 
 #: ../components/iptvconfigmenu.py:402
 msgid "Buffering location"
@@ -2518,9 +2516,8 @@ msgid "Highlights"
 msgstr "Polecane"
 
 #: ../hosts/hostgreekdocumentaries3.py:36
-#, fuzzy
 msgid "History"
-msgstr "Filmy historyczne"
+msgstr "Historia"
 
 #: ../hosts/hostlookmovieag.py:76
 msgid "History Movies"
@@ -3025,12 +3022,11 @@ msgstr "Link zabezpieczony przez Google ReCaptcha v2"
 #: ../hosts/hostmooviecc.py:407 ../hosts/hostserienstreamto.py:406
 #: ../hosts/hosttvpvod.py:213 ../hosts/hostfilmezz.py:301
 msgid "Link protected with google recaptcha v2."
-msgstr "Link zabezpieczony przez Google ReCaptcha v2."
+msgstr "Link zabezpieczony przez google recaptcha v2."
 
 #: ../hosts/hostekinotv.py:399 ../hosts/hostekinotv.py:411
-#, fuzzy
 msgid "Link protected with hCaptcha."
-msgstr "Link zabezpieczony przez Google ReCaptcha v2"
+msgstr "Link zabezpieczony przez hCaptcha."
 
 #: ../Web/webParts.py:445
 msgid "Links for"
@@ -3189,7 +3185,7 @@ msgstr ""
 
 #: ../Web/webParts.py:63 ../Web/webParts.py:80
 msgid "Logs"
-msgstr ""
+msgstr "Dzienniki"
 
 #: ../hosts/hostcartoonhd.py:32 ../hosts/hostxrysoise.py:30
 msgid "Longest"
@@ -3267,7 +3263,7 @@ msgstr "Menu"
 #: ../libs/recaptcha_v2_2captcha.py:79
 #, python-format
 msgid "Message from 2Captcha: %s"
-msgstr ""
+msgstr "Wiadomość od 2Captcha: %s"
 
 #: ../hosts/hostkijknl.py:61
 msgid "Missed"
@@ -3309,12 +3305,10 @@ msgid "Most Popular"
 msgstr "Najbardziej popularne"
 
 #: ../hosts/hostfilmoviplex.py:43
-#, fuzzy
 msgid "Most Viewed Movies"
 msgstr "Najczęściej oglądane"
 
 #: ../hosts/hostfilmoviplex.py:49
-#, fuzzy
 msgid "Most Viewed Series"
 msgstr "Najczęściej oglądane"
 
@@ -3761,7 +3755,7 @@ msgstr "Na żywo"
 
 #: ../hosts/hostyoutube.py:56
 msgid "On Time"
-msgstr ""
+msgstr "Na czasie"
 
 #: ../hosts/hostardmediathek.py:39 ../hosts/hostzdfmediathek.py:41
 msgid "One link mode"
@@ -3990,7 +3984,6 @@ msgid "Player %s: %s"
 msgstr "Odtwarzacz %s: %s"
 
 #: ../components/configextmovieplayer.py:310
-#, fuzzy
 msgid "Player Skin"
 msgstr "Odtwarzacz"
 
@@ -4093,12 +4086,10 @@ msgid "Popular Episodes"
 msgstr "Popularne odcinki"
 
 #: ../hosts/hostfilmoviplex.py:42
-#, fuzzy
 msgid "Popular Movies"
 msgstr "Filmy wojenne"
 
 #: ../hosts/hostfilmoviplex.py:48
-#, fuzzy
 msgid "Popular Series"
 msgstr "Popularne odcinki"
 
@@ -4372,9 +4363,8 @@ msgid "Random"
 msgstr "Losowe"
 
 #: ../hosts/hostfilmoviplex.py:46
-#, fuzzy
 msgid "Random Movies"
-msgstr "Filmy romantyczne"
+msgstr "Losowe filmy"
 
 #: ../components/iptvplayerwidget.py:602
 msgid "Randomize a playlist"
@@ -4406,7 +4396,6 @@ msgid "Recent"
 msgstr "Najnowsze"
 
 #: ../hosts/hostgreekdocumentaries3.py:33
-#, fuzzy
 msgid "Recommended"
 msgstr "zalecane"
 
@@ -5058,7 +5047,7 @@ msgstr "Pokazać E2iPlayer w głównym menu"
 
 #: ../hosts/hostmusicbox.py:42
 msgid "Show Youtube Api Key warnings"
-msgstr ""
+msgstr "Pokaż ostrzeżenia o kluczach interfejsu API YouTube"
 
 #: ../libs/videostar.py:41 ../libs/weebtv.py:57
 msgid "Show all channels"
@@ -5679,7 +5668,6 @@ msgid "Top Movies"
 msgstr "Ulubione filmy"
 
 #: ../hosts/hostfilmoviplex.py:50
-#, fuzzy
 msgid "Top Series"
 msgstr "Najlepsze seriale"
 
@@ -6140,7 +6128,6 @@ msgid "Video mode"
 msgstr "Tryb Obrazu"
 
 #: ../hosts/hostfilmoviplex.py:440
-#, fuzzy
 msgid "Video not found"
 msgstr "Opcje wideo"
 
@@ -6294,7 +6281,7 @@ msgstr "Recenzja pisemnych tablic"
 
 #: ../hosts/hostmusicbox.py:92
 msgid "Wrong Youtube Api Key length"
-msgstr ""
+msgstr "Nieprawidłowa długość klucza API YouTube"
 
 #: ../hosts/hoststreamliveto.py:334 ../libs/urlparser.py:4285
 msgid "Wrong answer."
@@ -6423,7 +6410,6 @@ msgid "Your language preference:"
 msgstr "Preferencje językowe:"
 
 #: ../hosts/hostdixmax.py:175
-#, fuzzy
 msgid "Your lists"
 msgstr "Poprzednia lista"
 
@@ -6438,7 +6424,7 @@ msgstr "Sugestie YouTube"
 
 #: ../hosts/hostmusicbox.py:100
 msgid "Youtube searches are quicker, if you fill API key in setting menu"
-msgstr ""
+msgstr "Wyszukiwanie w YouTube jest szybsze, jeśli wypełnisz klucz API w menu ustawień"
 
 #: ../components/confighost.py:44
 #, python-format
@@ -6545,7 +6531,6 @@ msgid "black"
 msgstr "czarny"
 
 #: ../components/configextmovieplayer.py:79
-#, fuzzy
 msgid "black&white"
 msgstr "czarny"
 
@@ -6973,7 +6958,7 @@ msgstr "bardzo wysoka"
 #: ../libs/youtubeparser.py:355
 #, fuzzy, python-format
 msgid "videos: %s"
-msgstr "Pliki wideo %s"
+msgstr "filmy: %s"
 
 #: ../hosts/hosthitboxtv.py:72
 msgid "viewers: "
