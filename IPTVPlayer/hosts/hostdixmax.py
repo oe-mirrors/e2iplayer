@@ -43,10 +43,10 @@ def GetConfigList():
 ###################################################
 
 def gettytul():
-    return 'https://dixmax.com/'
+    return 'https://dixmax.cc/'
     
 class SuggestionsProvider:
-    MAIN_URL = 'https://dixmax.com/'
+    MAIN_URL = 'https://dixmax.cc/'
     COOKIE_FILE = ''
     def __init__(self):
         self.cm = common()
@@ -75,10 +75,10 @@ class DixMax(CBaseHostClass):
         self.HTTP_HEADER = self.cm.getDefaultHeader(browser='chrome')
         self.defaultParams = {'header':self.HTTP_HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
 
-        self.MAIN_URL    = 'https://dixmax.com/'
+        self.MAIN_URL    = 'https://dixmax.cc/'
         self.SESSION_URL = self.MAIN_URL + "session.php?action=1"
         self.GETLINKS_URL = self.MAIN_URL + "api/private/get_links.php"
-        self.DEFAULT_ICON_URL = "https://dixmax.com/img/logor.png"
+        self.DEFAULT_ICON_URL = "https://dixmax.cc/img/logor.png"
         self.cacheFilters  = {}
         self.cacheFiltersKeys = []
         self.cacheLinks = {}
@@ -163,7 +163,7 @@ class DixMax(CBaseHostClass):
             for t in tmp:
                 url = self.cm.ph.getSearchGroups(t, "href=['\"]([^\"^']+?)['\"]")[0]
                 if url in ["series", "movies", "listas"]:
-                    url = "https://dixmax.com/v2/" + url
+                    url = "https://dixmax.cc/v2/" + url
                 title = self.cleanHtmlStr(t)
                 params = {'title': title, 'category':'list_items', 'url': url, 'icon': self.DEFAULT_ICON_URL}
                 printDBG(str(params))
@@ -172,7 +172,7 @@ class DixMax(CBaseHostClass):
             self.fillCacheFilters(cItem, data)
 
             MAIN_CAT_TAB = [
-                            {'category':'list_items',     'title': _("Your lists") ,    'url': "https://dixmax.com/v2/listas/youself" },
+                            {'category':'list_items',     'title': _("Your lists") ,    'url': "https://dixmax.cc/v2/listas/youself" },
                             {'category':'list_filters',   'title': _("Filters") ,     'url': self.MAIN_URL},
                             {'category':'search',         'title': _('Search'),       'search_item':True       },
                             {'category':'search_history', 'title': _('Search history'),                        }]
@@ -185,7 +185,7 @@ class DixMax(CBaseHostClass):
 
         todosUrl = self.cm.ph.getSearchGroups(data, "<script src=\"([^\"]+todos[^\"]+?)\"")[0]
         if todosUrl:
-            todosUrl = "https://dixmax.com/v2/" + todosUrl
+            todosUrl = "https://dixmax.cc/v2/" + todosUrl
 
         sts, todosData = self.getPage(todosUrl)
         
