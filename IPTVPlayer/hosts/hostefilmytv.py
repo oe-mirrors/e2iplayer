@@ -51,7 +51,7 @@ class EFilmyTv(CBaseHostClass):
         CBaseHostClass.__init__(self, {'history':'efilmy.tv', 'cookie':'efilmy.tv.cookie'})
         self.USER_AGENT = 'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:40.0) Gecko/20100101 Firefox/40.0'
         self.MAIN_URL = 'http://www.efilmy.tv/'
-        self.DEFAULT_ICON_URL = 'https://superrepo.org/static/images/icons/original/xplugin.video.efilmy.png.pagespeed.ic.ISN8CDQxwg.png'
+        self.DEFAULT_ICON_URL = 'https://voucherforyou.pl/wp-content/uploads/2020/05/efilmy.jpg'
         self.HTTP_HEADER = {'User-Agent': self.USER_AGENT, 'DNT':'1', 'Accept': 'text/html', 'Accept-Encoding':'gzip, deflate', 'Referer':self.getMainUrl(), 'Origin':self.getMainUrl()}
         self.AJAX_HEADER = dict(self.HTTP_HEADER)
         self.AJAX_HEADER.update( {'X-Requested-With': 'XMLHttpRequest', 'Accept-Encoding':'gzip, deflate', 'Content-Type':'application/x-www-form-urlencoded; charset=UTF-8', 'Accept':'application/json, text/javascript, */*; q=0.01'} )
@@ -474,20 +474,19 @@ class EFilmyTv(CBaseHostClass):
         
         errorMessage = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(data, ('<div', '>', 'deleted'), ('<div', '>'))[1])
         SetIPTVPlayerLastHostError(errorMessage)
-        
         data = self.cm.ph.getAllItemsBeetwenNodes(data, ('<span', '>', 'playername'), ('</div></div', '>'))
-        printDBG(data)
+        printDBG("EFilmyTv.getLinksForVideo playername[%s]" % data)
         for item in data:
-            movieId = self.cm.ph.getDataBeetwenNodes(item, ('<div', '>', 'play'), ('<div', '>'))[1]
+            movieId = self.cm.ph.getDataBeetwenNodes(item, ('<div', '>', 'embedbg'), ('</div', '>'))[1]
             movieId = self.cm.ph.getSearchGroups(movieId, '''\sid=['"]([0-9]+?(?:_s)?)['"]''')[0]
             if movieId == '': continue
             if movieId.endswith('_s'): baseUrl = '/seriale.php'
             else: baseUrl = '/filmy.php'
             
-            item = item.split('</div>', 1)
-            name = self.cleanHtmlStr(item[0]).replace('Odtwarzacz', '').replace('Wersja', '')
-            
-            item = self.cm.ph.getAllItemsBeetwenMarkers(item[-1], '<input', '>')
+#            item = item.split('</div>', 1)
+            name = self.cleanHtmlStr(item).replace('Odtwarzacz', '').replace('Wersja', '')
+
+            item = self.cm.ph.getAllItemsBeetwenMarkers(item, '<input', '>')
             for it in item:
                 val = self.cm.ph.getSearchGroups(it, '''\svalue=['"]([^'^"]+?)['"]''')[0]
                 if 'bez' in val.lower(): 
@@ -600,7 +599,9 @@ class EFilmyTv(CBaseHostClass):
             videoUrl = self.cm.ph.getSearchGroups(data, '''\surl\s*?:\s*?['"](https?://[^'^"]+?)['"]''', 1, True)[0]
             if videoUrl != '': urlTab.append({'name':'direct_link', 'url':strwithmeta(videoUrl, {'Referer':cUrl})})
         else:
-            videoUrl = self.getFullUrl(self.cm.ph.getSearchGroups(data, '''<iframe[^>]+?src=['"]([^"^']+?)['"]''', 1, True)[0], cUrl)
+            videoUrl = self.getFullUrl(self.cm.ph.getSearchGroups(data, '''href=['"]([^'^"]+?)['"]''', 1, True)[0], cUrl)
+            if 'clipwatching' in videoUrl:
+                videoUrl = self.getFullUrl(self.cm.ph.getSearchGroups(data, '''<iframe[^>]+?src=['"]([^"^']+?)['"]''', 1, True)[0], cUrl)
             urlTab = self.up.getVideoLinkExt(strwithmeta(videoUrl, {'Referer':cUrl}))
         
         return urlTab
