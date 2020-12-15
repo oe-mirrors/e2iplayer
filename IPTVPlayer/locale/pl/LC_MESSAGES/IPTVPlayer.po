@@ -609,7 +609,7 @@ msgstr "Dodaj nową grupę ulubionych"
 
 #: ../iptvupdate/updatemainwindow.py:374
 msgid "Add repository last version."
-msgstr "Dodaj ostatnią wersję repozytorium"
+msgstr "Dodaj ostatnią wersję repozytorium."
 
 #: ../Web/webParts.py:421
 msgid "Add to downloader"
@@ -857,7 +857,7 @@ msgstr "Filmy arabskie"
 
 #: ../hosts/hosttwitchtv.py:105 ../iptvdm/iptvdmui.py:76 ../Web/webParts.py:254
 msgid "Archive"
-msgstr "Pobrane"
+msgstr "Transmisje archiwalne"
 
 #: ../hosts/hostlocalmedia.py:611
 #, python-format
@@ -1540,7 +1540,7 @@ msgstr "Włącz/Wyłacz serwisy"
 
 #: ../hosts/hostredbull.py:50
 msgid "Discover"
-msgstr "Odkryć"
+msgstr "TV"
 
 #: ../components/iptvconfigmenu.py:370
 msgid "Display thumbnails"
@@ -2513,7 +2513,7 @@ msgstr "Wysoka (lub HD)"
 
 #: ../hosts/hostogladajto.py:80 ../hosts/hosttwitchtv.py:106
 msgid "Highlights"
-msgstr "Polecane"
+msgstr "Skróty"
 
 #: ../hosts/hostgreekdocumentaries3.py:36
 msgid "History"
@@ -2609,7 +2609,7 @@ msgstr "Informacje"
 
 #: ../components/configextmovieplayer.py:309
 msgid "Info bar clock format"
-msgstr "Format czasu na pasek info"
+msgstr "Format zegara paska info"
 
 #: ../components/configextmovieplayer.py:332
 msgid "Info bar timeout"
@@ -2919,7 +2919,7 @@ msgstr "Ostatnio sprawdzona wersja"
 
 #: ../hosts/hosttwitchtv.py:113
 msgid "Last day"
-msgstr "Zeszły dzień"
+msgstr "Najlepsze 24GODZ."
 
 #: ../components/iptvplayerwidget.py:336 ../hosts/hostinfoversion.py:563
 #: ../hosts/hostinfoversion.py:583 ../hosts/hostinfoversion.py:1860
@@ -2942,7 +2942,7 @@ msgstr "Ostatni błąd: \"%s\""
 
 #: ../hosts/hosttwitchtv.py:115
 msgid "Last month"
-msgstr "Zeszły miesiąc"
+msgstr "Najlepsze 30D."
 
 #: ../hosts/host9anime.py:46
 msgid "Last update"
@@ -2950,7 +2950,7 @@ msgstr "Ostatnio aktualizowane"
 
 #: ../hosts/hosttwitchtv.py:114
 msgid "Last week"
-msgstr "Zeszły tydzień"
+msgstr "Najlepsze 7D."
 
 #: ../hosts/hostcartoonhd.py:32 ../hosts/hostxrysoise.py:30
 msgid "Lastest"
@@ -2998,7 +2998,7 @@ msgstr "Jasno szare"
 
 #: ../components/configextmovieplayer.py:347
 msgid "Line Spacing"
-msgstr "Rozstaw wiersza"
+msgstr "Odstępy między wierszami"
 
 #: ../components/iptvextmovieplayer.py:1904
 msgid "Link is not supported by the gstplayer. Please use the extelayer3 if available."
@@ -3088,7 +3088,7 @@ msgstr "TV na żywo"
 
 #: ../hosts/hosttwitchtv.py:635 ../hosts/hosturllist.py:51
 msgid "Live streams"
-msgstr "Na żywo"
+msgstr "Kanały na żywo"
 
 #: ../libs/wagasworld.py:57
 msgid "LiveTv"
@@ -3419,7 +3419,7 @@ msgstr "Filmy muzyczne"
 
 #: ../libs/recaptcha_v2_myjd.py:16
 msgid "My JDownloader reCAPTCHA v2 solution"
-msgstr "My JDownloader reCAPTCHA v2 - rozwiązanie "
+msgstr "My JDownloader reCAPTCHA v2 - rozwiązanie"
 
 #: ../hosts/hostmusicbox.py:84
 msgid "My list"
@@ -3896,7 +3896,7 @@ msgstr "Hasło:"
 
 #: ../hosts/hosttwitchtv.py:104
 msgid "Past premieres"
-msgstr "Zeszłe premiery"
+msgstr "Premiery archiwalne"
 
 #: ../hosts/hostlocalmedia.py:558
 #, python-format
@@ -3985,7 +3985,7 @@ msgstr "Odtwarzacz %s: %s"
 
 #: ../components/configextmovieplayer.py:310
 msgid "Player Skin"
-msgstr "Odtwarzacz"
+msgstr "Skórka odtwarzacza"
 
 #: ../hosts/hostkijknl.py:293
 msgid "Player data parsing error."
@@ -4319,11 +4319,11 @@ msgstr "RADIO"
 
 #: ../components/configextmovieplayer.py:316
 msgid "RAM buffer size [MB] for local files"
-msgstr "Rozmiar bufora w RAM dla plików lokalnych"
+msgstr "Rozmiar bufora RAM (MB) dla plików lokalnych"
 
 #: ../components/configextmovieplayer.py:315
 msgid "RAM buffer size [MB] for network protocols"
-msgstr "Rozmiar bufora w RAM dla plików online"
+msgstr "Rozmiar bufora RAM (MB) dla plików sieciowych"
 
 #: ../hosts/hostguardaserie.py:232
 msgid "RATING"
@@ -4343,7 +4343,7 @@ msgstr "Radio"
 
 #: ../components/configextmovieplayer.py:375
 msgid "Radio iframe file"
-msgstr "Plik ramki iframe dla audio"
+msgstr "Plik ramki iframe radio/audio"
 
 #: ../hosts/hostdrdk.py:39
 msgid "Radio stations"
@@ -4393,7 +4393,7 @@ msgstr "Ocena:"
 
 #: ../hosts/hostgreekdocumentaries3.py:32 ../hosts/hosttwitchtv.py:110
 msgid "Recent"
-msgstr "Najnowsze"
+msgstr "Ostatnio rozpoczęte"
 
 #: ../hosts/hostgreekdocumentaries3.py:33
 msgid "Recommended"
@@ -5142,7 +5142,7 @@ msgstr "Rozwiązanie %s z %s nie zostało jeszcze zaimplementowane"
 
 #: ../components/configextmovieplayer.py:279
 msgid "Some changes will be applied only after movie player restart."
-msgstr "Niektóre zmiany zostaną zastosowane po ponownym uruchomieniu odtwarzacza."
+msgstr "Niektóre zmiany zostaną zastosowane dopiero po ponownym uruchomieniu odtwarzacza."
 
 #: ../components/iptvconfigmenu.py:584 ../components/iptvplayerwidget.py:1397
 msgid ""
@@ -5413,7 +5413,7 @@ msgstr "ZWIASTUN"
 #: ../hosts/hostplayrtsiw.py:100 ../hosts/hostredbull.py:51
 #: ../libs/canlitvliveio.py:109
 msgid "TV"
-msgstr "TV"
+msgstr "Odkryj więcej"
 
 #: ../hosts/hosthdstreams.py:71
 msgid "TV SERIES"
@@ -5939,7 +5939,7 @@ msgstr "Data przesłania"
 
 #: ../hosts/hosttwitchtv.py:107
 msgid "Uploads"
-msgstr "Przesłane"
+msgstr "Przesłane materiały"
 
 #: ../hosts/hosturllist.py:38
 msgid "Urllists player"
@@ -6160,7 +6160,7 @@ msgstr ""
 #: ../hosts/hosttwitchtv.py:119 ../hosts/hosturllist.py:50
 #: ../hosts/hostvimeo.py:393 ../hosts/hostwrealu24tv.py:45
 msgid "Videos"
-msgstr "Wideo"
+msgstr "Filmy"
 
 #: ../hosts/hosttwitchtv.py:281
 #, python-format
@@ -6532,7 +6532,7 @@ msgstr "czarny"
 
 #: ../components/configextmovieplayer.py:79
 msgid "black&white"
-msgstr "czarny"
+msgstr "czarno biały"
 
 #: ../components/configbase.py:33 ../components/configextmovieplayer.py:79
 msgid "blue"
@@ -6794,7 +6794,7 @@ msgstr "mipsel"
 
 #: ../components/configbase.py:33 ../components/configextmovieplayer.py:79
 msgid "navy"
-msgstr "granatowy"
+msgstr ""
 
 #: ../components/iptvconfigmenu.py:165
 msgid "no"
