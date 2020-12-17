@@ -23,15 +23,15 @@ def GetConfigList():
 ###################################################
 
 def gettytul():
-    return 'https://www.cinemay.li/'
+    return 'https://cinemay.li/'
 
 class Cinemay(CBaseHostClass):
     
     def __init__(self):
         CBaseHostClass.__init__(self, {'history':'cinemay', 'cookie':'cinemay.cookie'})
-        self.DEFAULT_ICON_URL = 'http://www.cinemay.li/image/logo.png' 
+        self.DEFAULT_ICON_URL = 'https://cinemay.li/static/image/logo.png' 
         self.USER_AGENT = 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/73.0.3683.103 Safari/537.36'
-        self.MAIN_URL = 'https://www.cinemay.li/'
+        self.MAIN_URL = 'https://cinemay.li/'
         self.HEADER = {'User-Agent': self.USER_AGENT, 'DNT':'1', 'Accept': 'text/html', 'Accept-Encoding':'gzip, deflate', 'Referer':self.getMainUrl(), 'Origin':self.getMainUrl()}
         self.AJAX_HEADER = dict(self.HEADER)
         self.AJAX_HEADER.update( {'X-Requested-With': 'XMLHttpRequest', 'Accept-Encoding':'gzip, deflate', 'Content-Type':'application/x-www-form-urlencoded; charset=UTF-8', 'Accept':'application/json, text/javascript, */*; q=0.01'} )
