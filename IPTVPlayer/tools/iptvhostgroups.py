@@ -1,4 +1,4 @@
-﻿# -*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-
 #
 
 ###################################################
@@ -227,6 +227,7 @@ class IPTVHostsGroups:
         'streamliveto' : [ 'live'] ,
         'svtplayse' : [ 'swedish'] ,
         'tainieskaiseirestv' : [ 'greek', 'moviesandseries'] ,
+        'tainiesonline' : [ 'greek', 'moviesandseries'] ,
         'tantifilmorg' : [ 'italian', 'moviesandseries'] ,
         'tata' : [ 'german'] ,
         'ted' : [ 'english', 'others'] ,
