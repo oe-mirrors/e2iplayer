@@ -1,4 +1,4 @@
-﻿{
+{
 "host123movieshd": "https://123movieshd.cloud/",
 "host3player": "https://virginmediatelevision.ie/player",
 "host3sktv": "http://33sk.tv/",
@@ -33,7 +33,6 @@
 "hostclassiccinemaonline": "http://classiccinemaonline.com/",
 "hostdailymotion": "http://dailymotion.com/",
 "hostdancetrippin": "https://www.dancetelevision.net/",
-"hostdardarkomcom": "http://dardarkom.com/",
 "hostdazn": "https://www.dazn.com/",
 "hostddl": "http://ddl.me/",
 "hostdel": "https://del.org/",
@@ -81,7 +80,6 @@
 "hosthd1080online": "https://hd1080.online/",
 "hosthdfilmetv": "http://hdfilme.cx/",
 "hosthdfull": "https://hdfull.io/",
-"hosthdkinomir": "http://hdkinomir.com/",
 "hosthdpopcornscom": "https://hdpopcorns.wtf/",
 "hosthdstreams": "https://hd-streams.org/",
 "hosthitboxtv": "https://www.smashcast.tv/",
@@ -103,7 +101,6 @@
 "hostkreskoweczki": "http://kreskoweczki.pl/",
 "hostkreskowkazone": "http://kreskowkazone.pl/",
 "hostla7it": "http://www.la7.it/",
-"hostlibrestream": "http://ls-streaming.com/",
 "hostliveleak": "https://liveleak.com/",
 "hostlocalmedia": "LocalMedia",
 "hostlookmovieag" : "https://lookmovie.ag/",
@@ -164,6 +161,7 @@
 "hoststreamliveto": "https://streamlive.to/",
 "hostsvtplayse": "https://svtplay.se/",
 "hosttainieskaiseirestv": "http://tainieskaiseires.tv/",
+"hosttainiesonline": "https://tainiesonline.pro/",
 "hosttantifilmorg": "https://www.tantifilm.work/",
 "hostted": "https://ted.com/",
 "hosttfarjocom": "http://tfarjo.ws/",

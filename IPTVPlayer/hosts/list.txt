@@ -32,7 +32,6 @@ hostcineto
 hostclassiccinemaonline
 hostdailymotion
 hostdancetrippin
-hostdardarkomcom
 hostddl
 hostdel
 hostdixmax
@@ -79,7 +78,6 @@ hostguardaserie
 hosthd1080online
 hosthdfilmetv
 hosthdfull
-hosthdkinomir
 hosthdpopcornscom
 hosthdstreams
 hosthitboxtv
@@ -101,7 +99,6 @@ hostkkiste
 hostkreskoweczki
 hostkreskowkazone
 hostla7it
-hostlibrestream
 hostliveleak
 hostlocalmedia
 hostlookmovieag
@@ -162,6 +159,7 @@ hoststreaminghdfun
 hoststreamliveto
 hostsvtplayse
 hosttainieskaiseirestv
+hosttainiesonline
 hosttantifilmorg
 hostted
 hosttfarjocom

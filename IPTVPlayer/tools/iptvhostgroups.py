@@ -1,4 +1,4 @@
-﻿# -*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-
 #
 
 ###################################################
@@ -95,7 +95,6 @@ class IPTVHostsGroups:
         'classiccinemaonline' : [ 'english', 'moviesandseries'] ,
         'dailymotion' : [ 'arabic', 'balkans', 'documentary', 'english', 'french', 'german', 'greek', 'hungarian', 'italian', 'latino', 'live', 'music', 'others', 'polish', 'russian', 'science', 'swedish'] ,
         'dancetrippin' : [ 'english', 'music'] ,
-        'dardarkomcom' : [ 'arabic', 'moviesandseries'] ,
         'ddl' : [ 'english', 'german', 'moviesandseries'] ,
         'del' : [ 'german', 'sport'] ,
         'dixmax' : [ 'latino', 'moviesandseries'] ,
@@ -143,7 +142,6 @@ class IPTVHostsGroups:
         'hd1080online' : [ 'moviesandseries', 'russian'] ,
         'hdfilmetv' : [ 'german', 'moviesandseries'] ,
         'hdfull' : [ 'latino', 'moviesandseries'] ,
-        'hdkinomir' : [ 'moviesandseries', 'russian'] ,
         'hdpopcornscom' : [ 'english', 'moviesandseries'] ,
         'hdstreams' : [ 'german', 'moviesandseries'] ,
         'hitboxtv' : [ 'arabic', 'balkans', 'english', 'french', 'german', 'greek', 'hungarian', 'italian', 'latino', 'others', 'polish', 'russian', 'sport', 'swedish'] ,
@@ -166,7 +164,6 @@ class IPTVHostsGroups:
         'kreskoweczki' : [ 'cartoonsandanime', 'polish'] ,
         'kreskowkazone' : [ 'cartoonsandanime', 'polish'] ,
         'la7it' : [ 'italian'] ,
-        'librestream' : [ 'french', 'moviesandseries'] ,
         'liveleak' : [ 'english', 'others'] ,
         'localmedia' : [ 'others', 'userdefined'] ,
         'lookmovieag' : [ 'english', 'moviesandseries'] ,
@@ -227,6 +224,7 @@ class IPTVHostsGroups:
         'streamliveto' : [ 'live'] ,
         'svtplayse' : [ 'swedish'] ,
         'tainieskaiseirestv' : [ 'greek', 'moviesandseries'] ,
+        'tainiesonline' : [ 'greek', 'moviesandseries'] ,
         'tantifilmorg' : [ 'italian', 'moviesandseries'] ,
         'tata' : [ 'german'] ,
         'ted' : [ 'english', 'others'] ,
