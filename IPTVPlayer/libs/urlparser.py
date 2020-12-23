@@ -12396,6 +12396,8 @@ class pageParser(CaptchaHelper):
         
         vidTab=[]
         hlsUrl = self.cm.ph.getSearchGroups(data, '''["']([^'^"]+?\.m3u8(?:\?[^"^']+?)?)["']''', ignoreCase=True)[0]
+        tmpUrl = urlparser.getDomain(hlsUrl)
+        hlsUrl = hlsUrl.replace(tmpUrl + '//', tmpUrl + '/')
         if hlsUrl != '':
             if hlsUrl.startswith("//"):
                 hlsUrl = "https:" + hlsUrl
