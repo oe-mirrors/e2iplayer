@@ -550,7 +550,8 @@ class YouTubeParser():
         currList = []
 
         try:
-            sts,data =  self.cm.getPage(url, self.http_params, self.postdata)
+#         sts,data =  self.cm.getPage(url, self.http_params, self.postdata)
+            sts,data = self.cm.getPage(url, self.http_params)
             
             if sts:
                 if 'browse_ajax' in url:
