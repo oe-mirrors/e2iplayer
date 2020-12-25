@@ -60,6 +60,7 @@ class IPTVHostsGroups:
         # hosts
         self.PREDEFINED_HOSTS = {}
         HOST_AND_GROUPS = {
+        '1tvru': [ 'russian' ],
         '123movieshd' : [ 'english', 'moviesandseries'] ,
         '3player' : [ 'english'] ,
         '3sktv' : [ 'arabic', 'moviesandseries'] ,
