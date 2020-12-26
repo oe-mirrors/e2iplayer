@@ -76,7 +76,7 @@ class IPTVHostsGroups:
         'animeodcinki' : [ 'cartoonsandanime', 'polish'] ,
         'appletrailers' : [ 'moviesandseries'] ,
         'ardmediathek' : [ 'german'] ,
-        'artetv' : [ 'english', 'french', 'german', 'latino', 'polish'] ,
+        'artetv' : [ 'italian','english', 'french', 'german', 'latino', 'polish'] ,
         'bajeczkiorg' : [ 'cartoonsandanime', 'polish'] ,
         'bbciplayer' : [ 'english'] ,
         'bbcsport' : [ 'english', 'sport'] ,
