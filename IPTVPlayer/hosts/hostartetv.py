@@ -261,8 +261,6 @@ class ArteTV(CBaseHostClass):
                         params = dict(cItem)
                         
                         if category_type == "category": 
-                            if title 
-                            
                             cat_url = self.API_URL + self.API_ENDPOINTS['category'].format(category_code=code, lang=lang)
                             params.update({'category': category_type, 'title':title, 'code': code, 'url': cat_url})
                             printDBG(str(params))
