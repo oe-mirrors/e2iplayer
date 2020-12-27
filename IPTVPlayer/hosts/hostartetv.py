@@ -17,6 +17,20 @@ import urllib
 import time
 from datetime import datetime, timedelta
 ###################################################
+# Config options for HOST
+###################################################
+from Components.config import config, ConfigYesNo, getConfigListEntry
+
+config.plugins.iptvplayer.artetv_quality = ConfigYesNo(default = True)
+config.plugins.iptvplayer.artetv_audio = ConfigYesNo(default = False)
+
+def GetConfigList():
+    optionList = []
+    optionList.append(getConfigListEntry(_("Show only best quality of streams:"), config.plugins.iptvplayer.artetv_quality))
+    optionList.append(getConfigListEntry(_("Show only audio in selected language:"), config.plugins.iptvplayer.artetv_audio))
+    return optionList
+
+###################################################
 
 
 def gettytul():
@@ -53,15 +67,20 @@ class ArteTV(CBaseHostClass):
         
     def parseDate(self, datestr):
         # remove weekday & timezone
-        datestr = str.join(' ', datestr.split(None)[1:5])
-
+        datestr = ' '.join(datestr.split(None)[1:5])
+        
+        #replace months with numbers - there will be problems with localization
+        months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec']
+        
+        for i in range(12):
+            datestr = datestr.replace(months[i],str(i+1))
+        
         date = None
-        # workaround for datetime.strptime not working (NoneType ???)
         try:
-            date = datetime.strptime(datestr, '%d %b %Y %H:%M:%S')
-        except TypeError:
-            date = datetime.fromtimestamp(time.mktime(
-                time.strptime(datestr, '%d %b %Y %H:%M:%S')))
+            date = datetime.strptime(datestr, '%d %m %Y %H:%M:%S')
+        except:
+            printExc()
+        
         return date
 
     def getPage(self, baseUrl, addParams = {}, post_data = None):
@@ -81,8 +100,18 @@ class ArteTV(CBaseHostClass):
         
         duration = int(item.get('duration') or 0) * 60 or item.get('durationSeconds')
 
+        desc1 = ""
         if duration>0 :
-            desc.append(_('Duration') + ": %s" % str(timedelta(seconds = duration)) ) 
+            desc1 = _('Duration') + ": %s" % str(timedelta(seconds = duration)) 
+        try: 
+            airdate = item.get('broadcastBegin')
+            if airdate is not None:
+                desc1 = desc1 + " " + (_("Broadcast begins at %s") % datetime.strftime(self.parseDate(airdate), '%d %B %Y %H:%M:%S'))
+        except:
+            printExc()
+
+        if desc1:
+            desc.append(desc1)
         
         if item.get('fullDescription',''):
             desc.append(item.get('fullDescription',''))
@@ -92,13 +121,6 @@ class ArteTV(CBaseHostClass):
         if item.get('genrePresse'):
             desc.append( item.get('genrePresse'))
         
-        try: 
-            airdate = item.get('broadcastBegin')
-            if airdate is not None:
-                desc.append(self.parseDate(airdate))
-        except:
-            printExc()
-            
         desc = '\n'.join(desc)
 
         return {
@@ -141,7 +163,7 @@ class ArteTV(CBaseHostClass):
             url = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''\shref=['"]([^'^"]+?)['"]''')[0])
             title = self.cleanHtmlStr(item)
             lang = url.split('/')[3]
-            #printDBG("+++> lang[%s] title[%s]" % (lang, title))
+
             params = dict(cItem)
             params.update({'good_for_fav':False, 'category': nextCategory, 'title':title, 'url':url, 'f_lang':lang})
             printDBG(str(params))
@@ -312,11 +334,16 @@ class ArteTV(CBaseHostClass):
                     if videoUrl:
                         slot = v.get('audioSlot',0)
                         quality = v.get('quality','')
-                        height = v.get('height', '')
-                        width = v.get('width', '')
+                        height = int(v.get('height', 0))
+                        width = int(v.get('width', 0))
                         label = v.get('audioLabel','audio')
                         
-                        linksTab.append({'name': label + " %sx%s" %(width,height) , 'slot': slot, 'url': videoUrl })
+                        if config.plugins.iptvplayer.artetv_quality.value and (height < 700):
+                            continue
+                        if config.plugins.iptvplayer.artetv_audio.value and (slot > 1):
+                            continue
+                        
+                        linksTab.append({'name': label + " %dx%d" %(width,height) , 'slot': slot, 'url': videoUrl })
                          
             except:
                 printExc()
