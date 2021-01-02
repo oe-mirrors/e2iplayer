@@ -60,7 +60,7 @@ class Filman(CBaseHostClass):
                         {'category':'list_items',      'title': _('Children'),       'url':self.getFullUrl('/dla-dzieci-pl/')},
                         {'category':'list_sort',       'title': _('Series'),         'url':self.getFullUrl('/seriale-online-pl/')},
 #                        {'category':'list_years',     'title': _('Movies by year'), 'url':self.MAIN_URL},
-#                        {'category':'list_cats',      'title': _('Movies genres'),  'url':self.MAIN_URL},
+                        {'category':'list_cats',       'title': _('Movies genres'),  'url':self.getFullUrl('/filmy-online-pl/')},
 #                        {'category':'list_az',        'title': _('Alphabetically'), 'url':self.MAIN_URL},
                         {'category':'search',         'title': _('Search'),         'search_item':True}, 
                         {'category':'search_history', 'title': _('Search history')},]
@@ -83,10 +83,10 @@ class Filman(CBaseHostClass):
 #        if not sts: return
         
         # fill cats
-#        dat = self.cm.ph.getDataBeetwenMarkers(data, '<ul id="filter-category"', '</ul>', False)[1]
-#        dat = re.compile('<li[^>]+?data-id="([^"]+?)".*?<a[^>]*?>(.+?)</a>').findall(dat)
-#        for item in dat:
-#            self.cacheMovieFilters['cats'].append({'title': self.cleanHtmlStr(item[1]), 'url': self.getFullUrl(item[0])})
+        dat = self.cm.ph.getDataBeetwenMarkers(data, '<ul id="filter-category"', '</ul>', False)[1]
+        dat = re.compile('<li[^>]+?data-id="([^"]+?)".*?<a[^>]*?>(.+?)</a>').findall(dat)
+        for item in dat:
+            self.cacheMovieFilters['cats'].append({'title': self.cleanHtmlStr(item[1]), 'url': cItem['url']+'category:%s/' % item[0]})
             
         # fill years
 #        dat = self.cm.ph.getDataBeetwenMarkers(data, '<ul class="dropdown-menu year-dropdown"', '</ul>', False)[1]
@@ -146,16 +146,19 @@ class Filman(CBaseHostClass):
         if 'phrase=' in cItem['url']:
             data = self.cm.ph.getAllItemsBeetwenNodes(data, ('<a', '>', 'clearfix item'), ('</a', '>'))
         else:
-            data = self.cm.ph.getAllItemsBeetwenNodes(data, ('<div', '>', 'poster'), ('</a', '>'))
-
+            data = data.split('<div class="poster">')[1:]
+        
         for item in data:
 #            printDBG("Filman.listItems item %s" % item)
             url = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''href=['"]([^"^']+?)['"]''')[0])
-            if '<div id="posters"' in item or url == '': continue
+            if url == '': continue
             icon = self.getFullIconUrl(self.cm.ph.getSearchGroups(item, '''src=['"]([^"^']+?poster[^"^']+?)['"]''')[0])
             title = self.cm.ph.getSearchGroups(item, '''title=['"]([^"^']+?)['"]''')[0].replace('&quot;', '"'.replace('&amp;', '&'))
             desc = self.cm.ph.getSearchGroups(item, '''data-text=['"]([^"^']+?)['"]''')[0]
             if desc == '': desc = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(item, ('<div', '>', 'description'), ('</div', '>'), False)[1])
+            quality = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(item, ('<div', '>', 'quality-version'), ('</div', '>'), False)[1])
+            year = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(item, ('<div', '>', 'film_year'), ('</div', '>'), False)[1])
+            if year != '': desc = _('Year: ') + year + ' - ' + _('Quality:') + ' ' + quality + '[/br]' + desc
             if 'serial-online' in url:
                 params = {'good_for_fav':True,'category':'list_series', 'url':url, 'title':title, 'desc':desc, 'icon':icon}
                 self.addDir(params)
@@ -219,14 +222,18 @@ class Filman(CBaseHostClass):
 
         cUrl = data.meta['url']
         self.setMainUrl(cUrl)
-        data = self.cm.ph.getAllItemsBeetwenNodes(data, ('<td', '>', 'link-to-video'), ('</td', '>'))
+        data = self.cm.ph.getAllItemsBeetwenNodes(data, ('<td', '>', 'link-to-video'), ('</tr', '>'))
     
         for item in data:
 #            printDBG("Filman.getLinksForVideo item[%s]" % item)
             playerUrl = base64.b64decode(self.cm.ph.getSearchGroups(item, '''data-iframe=['"]([^"^']+?)['"]''')[0]).replace('\\', '')
             playerUrl = self.getFullUrl(self.cm.ph.getSearchGroups(playerUrl, '''src['"]:['"]([^"^']+?)['"]''')[0])
+            name = self.up.getHostName(playerUrl)
+            item = item.split('</td>\n')
+            if len(item) > 2:
+                name = name + ' - ' + self.cleanHtmlStr(item[1]) + ' - ' + self.cleanHtmlStr(item[2])
             if playerUrl == '': continue
-            retTab.append({'name':self.up.getHostName(playerUrl), 'url':strwithmeta(playerUrl, {'Referer':url}), 'need_resolve':1})
+            retTab.append({'name':name, 'url':strwithmeta(playerUrl, {'Referer':url}), 'need_resolve':1})
              
         if len(retTab):
             self.cacheLinks[cacheKey] = retTab
