@@ -380,6 +380,9 @@ class cda(CBaseHostClass, CaptchaHelper):
         sts, data = self.getPage(url)
         if not sts: return
         
+        nextPage = ph.find(data, ('<a', '>', 'btn-primary '))[1]
+        nextPage = self.getFullUrl(ph.clean_html(ph.getattr(nextPage, 'href')), self.cm.meta['url'])
+        
         data = self.cm.ph.getAllItemsBeetwenNodes(data, ('<div', '>', 'list-when-small'), ('</div', '>'))
         for item in data:
             tmp = self.cm.ph.getDataBeetwenNodes(item, ('<a', '>', 'link-title'), ('</a', '>'))[1]
@@ -393,6 +396,9 @@ class cda(CBaseHostClass, CaptchaHelper):
             params = dict(cItem)
             params.update({'good_for_fav':True, 'title':title, 'url':url, 'icon':icon, 'desc':'[/br]'.join(desc)})
             self.addVideo(params)
+
+        if nextPage:
+            self.addDir(MergeDicts(cItem, {'good_for_fav':False, 'url':nextPage, 'title':'Następna strona'}))
         
     def getLinksForVideo(self, cItem):
         self.tryTologin()
