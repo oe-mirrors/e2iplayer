@@ -600,6 +600,7 @@ class urlparser:
                        'dood.watch':           self.pp.parserDOOD           ,
                        'doodstream.com':       self.pp.parserDOOD           ,
                        'govod.tv':             self.pp.parserWIIZTV         ,
+                       'streamtape.com':       self.pp.parserSTREAMTAPE     ,
                     }
         return
     
@@ -12931,3 +12932,27 @@ class pageParser(CaptchaHelper):
                     urlsTab.append(params)
         
         return urlsTab
+
+    def parserSTREAMTAPE(self, baseUrl):
+        printDBG("parserSTREAMTAPE baseUrl[%s]" % baseUrl)
+        
+        sts, data = self.cm.getPage(baseUrl)
+
+        urlTabs=[]
+        
+        if sts:
+#            printDBG("---------")
+#            printDBG(data)
+#            printDBG("---------")
+            
+            #search url in tag like <div id="videolink" style="display:none;">//streamtape.com/get_video?id=27Lbk7KlQBCZg02&expires=1589450415&ip=DxWsE0qnDS9X&token=Og-Vxdpku4x8</div>
+            t = eval(self.cm.ph.getSearchGroups(data, '''innerHTML = ([^;]+?);''')[0])
+            printDBG("parserSTREAMTAPE t[%s]" % t)
+            if t.startswith('//'): t = "https:" + t
+            if self.cm.isValidUrl(t):
+                t = urlparser.decorateUrl(t, {'Referer': baseUrl})
+                params = {'name': 'link' , 'url': t}
+                printDBG(params)
+                urlTabs.append(params)
+                
+        return urlTabs
