@@ -169,7 +169,7 @@ class HasBahCa(CBaseHostClass):
                         {'alias_id':'goldvod.tv',              'name': 'goldvod.tv',          'title': 'http://goldvod.tv/',                'url': '',                                                                   'icon': 'http://goldvod.tv/assets/images/logo.png'}, \
                         {'alias_id':'livemass.net',            'name': 'livemass.net',        'title': 'http://livemass.net/',              'url': 'http://www.livemass.net/',                                           'icon': 'http://s3.amazonaws.com/livemass/warrington/images/warrington/iconclr.png'}, \
 #                        {'alias_id':'wizja.tv',                'name': 'wizja.tv',            'title': 'http://wizja.tv/',                  'url': 'http://wizja.tv/',                                                   'icon': 'http://wizja.tv/logo.png'}, \
-                        {'alias_id':'crackstreams.com',        'name': 'crackstreams.com',    'title': 'http://crackstreams.com/',          'url': 'http://crackstreams.com/',                                           'icon': ''}, \
+                        {'alias_id':'crackstreams.net',        'name': 'crackstreams.net',    'title': 'http://crackstreams.net/',          'url': 'http://crackstreams.net/',                                           'icon': ''}, \
                         {'alias_id':'nhl66.ir',                'name': 'nhl66.ir',            'title': 'https://nhl66.ir',                  'url': 'https://pro.nhl66.ir/api/get_anonymous_data',                     'icon': 'https://nhl66.ir/cassets/logo.png'}, \
                        ] 
     
@@ -919,7 +919,7 @@ class HasBahCa(CBaseHostClass):
         for item in data:
             title = self.cleanHtmlStr(item)
             url   = self.cm.ph.getSearchGroups(item, 'href="([^"]+?)"')[0]
-            if len(url) and not url.startswith('http'): url = 'http://crackstreams.com/'+url
+            if len(url) and not url.startswith('http'): url = 'http://crackstreams.net/'+url
             try:
                 params = { 'name'     : 'crackstreams_streams',
                            'url'      : url,
@@ -936,12 +936,12 @@ class HasBahCa(CBaseHostClass):
         if not sts: return
         data = self.cm.ph.getAllItemsBeetwenNodes(data, ('<a', '>', 'btn btn-default'), ('</a', '>'))
         for item in data:
-            params = {'name':"crackstreams.com"}
+            params = {'name':"crackstreams.net"}
             params['url'] = self.cm.ph.getSearchGroups(item, '''\shref=['"]([^"^']+?)['"]''')[0]
             params['icon'] = self.cm.ph.getSearchGroups(item, '''\ssrc=['"]([^"^']+?)['"]''')[0]
             params['title'] = self.cleanHtmlStr(CParsingHelper.getDataBeetwenNodes(item, ('<h4', '>'), ('</div', '>'))[1])
-            if len(params['icon']) and not params['icon'].startswith('http'): params['icon'] = 'http://crackstreams.com/'+params['icon']
-            if len(params['url']) and not params['url'].startswith('http'): params['url'] = 'http://crackstreams.com/'+params['url']
+            if len(params['icon']) and not params['icon'].startswith('http'): params['icon'] = 'http://crackstreams.net/'+params['icon']
+            if len(params['url']) and not params['url'].startswith('http'): params['url'] = 'http://crackstreams.net/'+params['url']
             self.addVideo(params)
 
     def getCrackstreamsLink(self, url):
@@ -1038,7 +1038,7 @@ class HasBahCa(CBaseHostClass):
         elif name == 'beinmatch.com':       self.getBeinmatchList(self.currItem)
         elif name == 'wiz1.net':            self.getWiz1NetList(self.currItem)
         elif name == "crackstreams_streams":self.getCrackstreamsList(url)
-        elif name == 'crackstreams.com':    self.getCrackstreamsGroups(url)
+        elif name == 'crackstreams.net':    self.getCrackstreamsGroups(url)
         elif name == 'nhl66.ir':            self.getNhl66List(url)
 
         CBaseHostClass.endHandleService(self, index, refresh)
@@ -1100,7 +1100,7 @@ class IPTVHost(CHostBase):
         elif name == "firstonetv.net":             urlList = self.host.getFirstOneTvLink(cItem)
         elif name == "beinmatch.com":              urlList = self.host.getBeinmatchLink(cItem)
         elif name == "wiz1.net":                   urlList = self.host.getWiz1NetLink(cItem)
-        elif name == "crackstreams.com":           urlList = self.host.getCrackstreamsLink(url)
+        elif name == "crackstreams.net":           urlList = self.host.getCrackstreamsLink(url)
 
         if isinstance(urlList, list):
             for item in urlList:
