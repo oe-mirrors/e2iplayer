@@ -80,7 +80,7 @@ class MediayouNet(CBaseHostClass):
         option = cItem.get('option')
         sts, data = self.getPage(cItem['url'], post_data = cItem.get('post_data'))
         if not sts: return
-        printDBG("MediayouNet.listCategories data[%s]" % data)
+#        printDBG("MediayouNet.listCategories data[%s]" % data)
         try:
             data = json_loads(data)['contents']
         except Exception:
@@ -102,7 +102,7 @@ class MediayouNet(CBaseHostClass):
 
         sts, data = self.getPage(cItem['url'], post_data = cItem.get('post_data'))
         if not sts: return
-        printDBG("MediayouNet.listItems data[%s]" % data)
+#        printDBG("MediayouNet.listItems data[%s]" % data)
         try:
             data = json_loads(data)['contents']
         except Exception:
@@ -140,7 +140,7 @@ class MediayouNet(CBaseHostClass):
         
         sts, data = self.getPage(self.getFullUrl('/embedded/GetUrlSub_Website.php'), post_data = {'os':'PCWEB', 'id':cItem['url']})
         if not sts: return []
-        printDBG("MediayouNet.getLinksForVideo data[%s]" % data)
+#        printDBG("MediayouNet.getLinksForVideo data[%s]" % data)
         try:
             data = json_loads(data)['urls']
             for item in data:
