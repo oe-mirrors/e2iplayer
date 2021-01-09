@@ -150,7 +150,7 @@ class HasBahCa(CBaseHostClass):
             {'alias_id' : 'beinmatch.com',      'name' : 'beinmatch.com',       'title' : 'http://beinmatch.com/',      'url' : '',                                 'icon' : 'https://www.extraprog.com/wp-content/uploads/2019/11/screen-1-512x430.jpg'},\
             {'alias_id' : 'bilasport.net',      'name' : 'bilasport.net',       'title' : 'http://bilasport.net/',      'url' : '',                                 'icon' : 'http://bilasport.net/img/3bf381471c24e0087f6f0ce82442ba05.png'},\
             {'alias_id' : 'canlitvlive.io',     'name' : 'canlitvlive.io',      'title' : 'http://canlitvlive.io/',     'url' : 'http://www.canlitvlive.io/',       'icon' : 'https://izle.canlitvlive.io/images/amblem/100/92/457975_0.png'},\
-            {'alias_id' : 'crackstreams.com',   'name' : 'crackstreams.com',    'title' : 'http://crackstreams.com/',   'url' : 'http://crackstreams.com/',         'icon' : 'https://freesportsstreams.weebly.com/uploads/1/2/7/3/127391428/published/free-sports-logo-image.jpg'}, \
+            {'alias_id' : 'crackstreams.net',   'name' : 'crackstreams.net',    'title' : 'http://crackstreams.net/',   'url' : 'http://crackstreams.net/',         'icon' : 'https://freesportsstreams.weebly.com/uploads/1/2/7/3/127391428/published/free-sports-logo-image.jpg'}, \
             {'alias_id' : 'djing.com',          'name' : 'djing.com',           'title' : 'https://djing.com/',         'url' : 'https://djing.com/',               'icon' : 'https://www.djing.com/newimages/content/c01.jpg'},\
 ###         {'alias_id' : 'edem_tv',            'name' : 'edem.tv',             'title' : 'https://edem.tv/',           'url' : 'https://edem.tv/',                 'icon' : 'https://edem.tv/public/images/logo_edem.png'},\
             {'alias_id' : 'filmon.com',         'name' : 'filmon_groups',       'title' : 'http://filmon.com/',         'url' : 'http://www.filmon.com/',           'icon' : 'http://static.filmon.com/theme/img/filmon_tv_logo_white.png'},\
@@ -985,7 +985,7 @@ class HasBahCa(CBaseHostClass):
         for item in data:
             title = self.cleanHtmlStr(item)
             url   = self.cm.ph.getSearchGroups(item, 'href="([^"]+?)"')[0]
-            if len(url) and not url.startswith('http'): url = 'http://crackstreams.com/'+url
+            if len(url) and not url.startswith('http'): url = 'http://crackstreams.net/'+url
             try:
                 params = { 'name'     : 'crackstreams_streams',
                            'url'      : url,
@@ -1002,12 +1002,12 @@ class HasBahCa(CBaseHostClass):
         if not sts: return
         data = self.cm.ph.getAllItemsBeetwenNodes(data, ('<a', '>', 'btn btn-default'), ('</a', '>'))
         for item in data:
-            params = {'name':"crackstreams.com"}
+            params = {'name':"crackstreams.net"}
             params['url'] = self.cm.ph.getSearchGroups(item, '''\shref=['"]([^"^']+?)['"]''')[0]
             params['icon'] = self.cm.ph.getSearchGroups(item, '''\ssrc=['"]([^"^']+?)['"]''')[0]
             params['title'] = self.cleanHtmlStr(CParsingHelper.getDataBeetwenNodes(item, ('<h4', '>'), ('</div', '>'))[1])
-            if len(params['icon']) and not params['icon'].startswith('http'): params['icon'] = 'http://crackstreams.com/'+params['icon']
-            if len(params['url']) and not params['url'].startswith('http'): params['url'] = 'http://crackstreams.com/'+params['url']
+            if len(params['icon']) and not params['icon'].startswith('http'): params['icon'] = 'http://crackstreams.net/'+params['icon']
+            if len(params['url']) and not params['url'].startswith('http'): params['url'] = 'http://crackstreams.net/'+params['url']
             self.addVideo(params)
 
     def getCrackstreamsLink(self, url):
@@ -1083,7 +1083,7 @@ class HasBahCa(CBaseHostClass):
         elif name == 'wizja.tv':            self.getWizjaTvList(self.currItem)
         elif name == 'nhl66.ir':            self.getNhl66List(url)
         elif name == "crackstreams_streams":self.getCrackstreamsList(url)
-        elif name == 'crackstreams.com':    self.getCrackstreamsGroups(url)
+        elif name == 'crackstreams.net':    self.getCrackstreamsGroups(url)
         
         CBaseHostClass.endHandleService(self, index, refresh)
 
@@ -1146,7 +1146,7 @@ class IPTVHost(CHostBase):
         elif name == "beinmatch.com":              urlList = self.host.getBeinmatchLink(cItem)
         elif name == "wiz1.net":                   urlList = self.host.getWiz1NetLink(cItem)
         elif name == "wiziwig1.eu":                urlList = self.host.getWiziwig1Link(cItem)
-        elif name == "crackstreams.com":           urlList = self.host.getCrackstreamsLink(url)
+        elif name == "crackstreams.net":           urlList = self.host.getCrackstreamsLink(url)
 
         if isinstance(urlList, list):
             for item in urlList:

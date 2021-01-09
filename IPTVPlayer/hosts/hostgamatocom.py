@@ -19,7 +19,7 @@ from datetime import datetime
 
 def gettytul():
     return 'https://gamato-movies.com/'
-
+    
 class GamatoMovies(CBaseHostClass):
  
     def __init__(self):
@@ -31,6 +31,7 @@ class GamatoMovies(CBaseHostClass):
         self.AJAX_HEADER.update( {'X-Requested-With': 'XMLHttpRequest'} )
         
         self.MAIN_URL = 'http://gamato-movies.com/'
+        
         self.DEFAULT_ICON_URL = self.MAIN_URL + 'assets/uploads/images/aaw81QHKtm.png'
         
         self.MAIN_CAT_TAB = [{'category':'movies',            'title': _('Movies'),                       'priv_type':'movie',  'url':self.getFullUrl('movies'),  'icon':self.DEFAULT_ICON_URL},
@@ -224,7 +225,7 @@ class GamatoMovies(CBaseHostClass):
         cItem = dict(cItem)
         cItem.update({'priv_type':searchType, 'query':urllib.quote_plus(searchPattern)})
         self.listItems(cItem, 'list_seasons')
-    
+                		
     def getLinksForVideo(self, cItem):
         printDBG("GamatoMovies.getLinksForVideo [%s]" % cItem)
         urlTab = []
@@ -286,11 +287,11 @@ class GamatoMovies(CBaseHostClass):
         shortUri = videoUrl
         domain = self.up.getDomain(videoUrl)
         sts, data = self.cm.getPage(videoUrl)
-        if sts and 'shorte.st/' in data:
-            videoUrl = videoUrl.replace(domain, 'sh.st')
-            domain = 'sh.st'
+        if sts and 'sfdmn.eu' in data:
+            videoUrl = videoUrl.replace(domain, 'sfdmn.eu')
+            domain = 'sfdmn.eu'
         
-        if 'sh.st' in domain or 'viid.me' in domain or 'skiip.me' in domain or 'clkmein.com' in domain:
+        if 'sfdmn.eu' in domain or 'streamtape.net' in domain:
             from Plugins.Extensions.IPTVPlayer.libs.unshortenit import unshorten
             uri, sts = unshorten(videoUrl)
             videoUrl = str(uri)
