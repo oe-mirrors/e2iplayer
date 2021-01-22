@@ -16,7 +16,7 @@ import urllib
 
 
 def gettytul():
-    return 'https://gowatchseries.io/'
+    return 'https://www1.gowatchseries.bz/'
 
 class MyTheWatchseries(CBaseHostClass):
  
@@ -36,7 +36,7 @@ class MyTheWatchseries(CBaseHostClass):
         self.cacheFiltersKeys = []
         
     def selectDomain(self):
-        self.MAIN_URL = 'https://gowatchseries.io/'
+        self.MAIN_URL = 'https://www1.gowatchseries.bz/'
         params = dict(self.defaultParams)
         params['with_metadata'] = True
         sts, data = self.getPage(self.getMainUrl(), params)
