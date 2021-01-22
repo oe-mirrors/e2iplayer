@@ -18,15 +18,15 @@ except Exception: import simplejson as json
 
 
 def gettytul():
-    return 'http://www.filma24hd.com/'
+    return 'https://www.filmahd.cc/'
 
 class Filma24hdCom(CBaseHostClass):
-    MAIN_URL    = 'http://www.filma24hd.com/'
+    MAIN_URL    = 'https://www.filmahd.cc/'
     SRCH_URL    = MAIN_URL + '?s='
-    DEFAULT_ICON_URL = 'http://www.filma24hd.com/wp-content/uploads/2015/12/f24hd.png'
+    DEFAULT_ICON_URL = 'https://www.filmahd.cc/wp-content/uploads/2019/12/filmahdfinallogo.png'
     
-    MAIN_TV_SERIES_URL  = 'http://seriale.filma24hd.com/'
-    DEFAULT_TV_SERIES_ICON_URL = 'http://seriale.filma24hd.com/wp-content/uploads/2015/12/f24hdserie.png'
+    MAIN_TV_SERIES_URL  = 'https://seriale.filmahd.cc/'
+    DEFAULT_TV_SERIES_ICON_URL = 'http://seriale.filmahd.cc/wp-content/uploads/2019/12/serieshdlogos.png'
     
     MAIN_CAT_TAB = [{'category':'movies',     'title': _('Movies'),                           'url':MAIN_URL,            'icon':DEFAULT_ICON_URL},
                     {'category':'series',     'title': _('TV Series'),                        'url':MAIN_TV_SERIES_URL,  'icon':DEFAULT_TV_SERIES_ICON_URL},
