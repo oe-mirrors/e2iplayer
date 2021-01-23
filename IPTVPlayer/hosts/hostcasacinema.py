@@ -23,7 +23,7 @@ except Exception: import simplejson as json
 ###################################################
 
 def gettytul():
-    return 'https://www.casacinema.cam/'
+    return 'https://www.casacinema01.surf/'
 
 class TantiFilmOrg(CBaseHostClass):
     REMOVE_COOKIE = True
@@ -36,7 +36,7 @@ class TantiFilmOrg(CBaseHostClass):
         self.cm.HEADER = self.HEADER # default header
         self.defaultParams = {'header':self.HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
         
-        self.MAIN_URL = 'https://www.casacinema.cam/'
+        self.MAIN_URL = 'https://www.casacinema01.surf/'
         self.DEFAULT_ICON_URL = 'https://www.casacinema.cam/wp-content/themes/smashingMultiMediaBrown/images/logo.png'
         
         self.MAIN_CAT_TAB = [{'category':'list_categories',    'title': _('Categories'),                           'url':self.MAIN_URL  },
