@@ -601,6 +601,7 @@ class urlparser:
                        'doodstream.com':       self.pp.parserDOOD           ,
                        'govod.tv':             self.pp.parserWIIZTV         ,
                        'streamtape.com':       self.pp.parserSTREAMTAPE     ,
+                       'ninjastream.to':       self.pp.parserNINJASTREAMTO  ,
                     }
         return
     
@@ -12956,3 +12957,31 @@ class pageParser(CaptchaHelper):
                 urlTabs.append(params)
                 
         return urlTabs
+
+    def parserNINJASTREAMTO(self, baseUrl):
+        printDBG("parserNINJASTREAMTO baseUrl [%s]" % baseUrl)
+
+        httpParams = {
+            'header' : {
+                'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.61 Safari/537.36',
+                'Accept': '*/*',
+                'Accept-Encoding': 'gzip',
+                'Referer' : baseUrl.meta.get('Referer', baseUrl)
+            }
+        }
+
+        urlsTab = []
+
+        sts, data = self.cm.getPage(baseUrl, httpParams)
+        if sts:
+#            printDBG("-----------------------")
+#            printDBG(data)
+#            printDBG("-----------------------")
+
+            r = self.cm.ph.getSearchGroups(data, r'v-bind:stream="([^"]+)')[0]
+            if r:
+                data = json_loads(r.replace('&quot;', '"'))
+                url = data.get('host') + data.get('hash') + '/index.m3u8'
+                urlsTab.extend(getDirectM3U8Playlist(url, checkContent=True, sortWithMaxBitrate=999999999))
+
+        return urlsTab
