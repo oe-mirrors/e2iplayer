@@ -18,7 +18,6 @@ hostbbciplayer
 hostbbcsport
 hostbsto
 hostcartoonhd
-hostcdafilmy
 hostcdapl
 hostchomikuj
 hostchristusvincit
@@ -186,6 +185,7 @@ hostustvgo
 hostvevo
 hostvidcorncom
 hostvimeo
+hostvizjerpl
 hostvodpl
 hostvumedicom
 hostwatchcartoononline
