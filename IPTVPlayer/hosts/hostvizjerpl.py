@@ -30,7 +30,7 @@ class Vizjer(CBaseHostClass):
         CBaseHostClass.__init__(self, {'history':'Vizjer.pl', 'cookie':'Vizjer.pl.cookie'})
         self.USER_AGENT = 'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:40.0) Gecko/20100101 Firefox/40.0'
         self.MAIN_URL = 'https://vizjer.pl/'
-        self.DEFAULT_ICON_URL = 'https://vizjer.pl/public/dist/images/logo.png'
+#        self.DEFAULT_ICON_URL = 'https://vizjer.pl/public/dist/images/logo.png'
         self.HTTP_HEADER = {'User-Agent': self.USER_AGENT, 'DNT':'1', 'Accept': 'text/html', 'Accept-Encoding':'gzip, deflate', 'Referer':self.getMainUrl(), 'Origin':self.getMainUrl()}
         self.AJAX_HEADER = dict(self.HTTP_HEADER)
         self.AJAX_HEADER.update( {'X-Requested-With': 'XMLHttpRequest', 'Accept-Encoding':'gzip, deflate', 'Content-Type':'application/x-www-form-urlencoded; charset=UTF-8', 'Accept':'application/json, text/javascript, */*; q=0.01'} )
@@ -45,12 +45,11 @@ class Vizjer(CBaseHostClass):
         sts,data = self.cm.getPage(baseUrl, addParams, post_data)
         if not sts:
             sts, data = self.cm.getPage('https://check.ddos-guard.net/check.js', addParams)
-            if not sts: return
-            jsurl = self.getFullUrl(self.cm.ph.getSearchGroups(data, '''src = ['"]([^"^']+?)['"]''')[0])
-            sts, data = self.cm.getPage(jsurl, addParams)
-            if not sts: return
-            sts,data = self.cm.getPage(baseUrl, addParams, post_data)
-            if not sts: return
+            if sts:
+                jsurl = self.getFullUrl(self.cm.ph.getSearchGroups(data, '''src = ['"]([^"^']+?)['"]''')[0])
+                sts, data = self.cm.getPage(jsurl, addParams)
+                if sts:
+                    sts,data = self.cm.getPage(baseUrl, addParams, post_data)
         return sts,data
         
     def getFullIconUrl(self, url):
@@ -170,7 +169,7 @@ class Vizjer(CBaseHostClass):
             year = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(item, ('<div', '>', 'rate'), ('</div', '>'), False)[1])
             if year != '': desc = _('Year: ') + year + '[/br]' + desc
             if 'serial-online' in url:
-                params = {'good_for_fav':True,'category':'list_series', 'url':url, 'title':title, 'desc':desc, 'icon':icon}
+                params = {'good_for_fav':True,'category':'list_seasons', 'url':url, 'title':title, 'desc':desc, 'icon':icon}
                 self.addDir(params)
             else:
                 params = {'good_for_fav':True, 'url':url, 'title':title, 'desc':desc, 'icon':icon}
@@ -181,27 +180,34 @@ class Vizjer(CBaseHostClass):
             params.update({'title':_('Next page'), 'page':page + 1})
             self.addDir(params)
 
-    def listSeries(self, cItem):
-        printDBG("Vizjer.listSeries %s" % cItem)
+    def listSeriesSeasons(self, cItem, nextCategory):
+        printDBG("Vizjer.listSeriesSeasons")
         sts, data = self.getPage(cItem['url'])
         if not sts: return
-        self.setMainUrl(data.meta['url'])
-
+        serieDesc = self.cm.ph.getDataBeetwenNodes(data, ('<p', '>', 'description'), ('</p', '>'), False)[1]
         data = self.cm.ph.getDataBeetwenNodes(data, ('<ul', '>', 'episode-list'), ('<hr', '>'))[1]
-        #data = self.cm.ph.getAllItemsBeetwenNodes(data, ('<li', '>', 'active'), ('</ul', '>'))
-        data = data.split('<span')
-        for sitem in data:
-#            printDBG("Vizjer.listSeries sitem %s" % sitem)
-            season = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(sitem, ('<span', '>'), ('</span', '>'))[1])
-            tmp = self.cm.ph.getAllItemsBeetwenNodes(sitem, ('<li', '>'), ('</li', '>'))
-            for item in tmp:
-#                printDBG("Vizjer.listSeries item %s" % item)
-                url = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''href=['"]([^"^']+?)['"]''')[0])
-                if url == '': continue
-#                title = season + ' - ' + self.cleanHtmlStr(item)
+        data = data.split('</ul>')
+        
+        for sItem in data:
+            sTitle = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(sItem, ('<span', '>'), ('</span', '>'))[1])
+            if not sTitle: continue
+            sItem = self.cm.ph.getAllItemsBeetwenMarkers(sItem, '<a', '</a>')
+            tabItems = []
+            for item in sItem:
+                url = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''\shref=['"]([^'^"]+?)['"]''')[0])
                 title = self.cleanHtmlStr(item)
-                params = {'good_for_fav':True, 'url':url, 'title':title, 'icon':cItem['icon']}
-                self.addVideo(params)
+                tabItems.append({'title':'%s' % title, 'url':url, 'icon':cItem['icon'], 'desc':''})
+            if len(tabItems):
+                params = dict(cItem)
+                params.update({'good_for_fav':False, 'category':nextCategory, 'title':sTitle, 'episodes':tabItems, 'icon':cItem['icon'], 'desc':serieDesc})
+                self.addDir(params)
+                
+    def listSeriesEpisodes(self, cItem):
+        printDBG("Vizjer.listSeriesEpisodes [%s]" % cItem)
+        episodes = cItem.get('episodes', [])
+        cItem = dict(cItem)
+        for item in episodes:
+            self.addVideo(item)
 
     def listSearchResult(self, cItem, searchPattern, searchType):
         printDBG("Vizjer.listSearchResult cItem[%s], searchPattern[%s] searchType[%s]" % (cItem, searchPattern, searchType))
@@ -316,8 +322,10 @@ class Vizjer(CBaseHostClass):
             self.listMovieFilters(self.currItem, 'list_items')
         elif category == 'list_items':
             self.listItems(self.currItem)            
-        elif category == 'list_series':
-            self.listSeries(self.currItem)
+        elif category == 'list_seasons':
+            self.listSeriesSeasons(self.currItem, 'list_episodes')
+        elif category == 'list_episodes':
+            self.listSeriesEpisodes(self.currItem)
 
     #SEARCH
         elif category in ["search", "search_next_page"]:
