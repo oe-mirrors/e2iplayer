@@ -9,7 +9,7 @@ from Plugins.Extensions.IPTVPlayer.tools.iptvtypes import strwithmeta
 from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, CSelOneLink, GetCookieDir, byteify, formatBytes, GetPyScriptCmd, GetTmpDir, rm, \
                                                           GetDefaultLang, GetFileSize, GetPluginDir, MergeDicts, GetJSScriptFile
 from Plugins.Extensions.IPTVPlayer.libs.crypto.hash.md5Hash import MD5
-from Plugins.Extensions.IPTVPlayer.libs import ph
+from Plugins.Extensions.IPTVPlayer.libs import ph, recaptcha_v3
 
 from Plugins.Extensions.IPTVPlayer.components.captcha_helper import CaptchaHelper
 
@@ -159,6 +159,7 @@ class urlparser:
                        'allocine.fr':           self.pp.parserALLOCINEFR    ,
                        'allvid.ch':             self.pp.parserALLVIDCH      ,
                        'anime-shinden.info':    self.pp.parserANIMESHINDEN  ,
+                       'anyvideo.org':          self.pp.parserONLYSTREAM    ,
                        'aparat.cam':            self.pp.parserONLYSTREAM    ,
                        'aparat.com':            self.pp.parserAPARAT        ,
                        'api.video.mail.ru':     self.pp.parserVIDEOMAIL     ,
@@ -213,6 +214,7 @@ class urlparser:
                        'divxstage.eu':          self.pp.parserDIVXSTAGE     ,
                        'divxstage.to':          self.pp.parserDIVXSTAGE     ,
                        'donevideo.com':         self.pp.parserLIMEVIDEO     ,
+                       'dood.so':               self.pp.parserDOOD          ,
                        'dood.to':               self.pp.parserDOOD          ,
                        'dood.watch':            self.pp.parserDOOD          ,
                        'doodstream.com':        self.pp.parserDOOD          ,
@@ -230,12 +232,14 @@ class urlparser:
                        'embed.mystream.to':     self.pp.parserMSTREAMICU,
                        'embeducaster.com':      self.pp.parserUCASTERCOM     ,
                        'estream.to':            self.pp.parserESTREAMTO     ,
+                       'evoload.io':            self.pp.parserEVOLOADIO     ,
                        'exashare.com':          self.pp.parserEXASHARECOM   ,
                        'facebook.com':          self.pp.parserFACEBOOK      ,
                        'fastflash.pw':          self.pp.parserCASTFLASHPW    ,
                        'fastplay.cc':           self.pp.parserFASTPLAYCC     ,
                        'faststream.in':         self.pp.parserVIDSTREAM     ,
                        'fastvideo.in':          self.pp.parserFASTVIDEOIN   ,
+                       'fcdn.stream':           self.pp.parserFEMBED,
                        'fembed.com':            self.pp.parserFEMBED,
                        'feurl.com':             self.pp.parserFEMBED,
                        'filecandy.net':         self.pp.parserFILECANDYNET   ,
@@ -278,7 +282,6 @@ class urlparser:
                        'hdpass.online':         self.pp.parserHDPASSONLINE  ,
                        'hdplayer.casa':         self.pp.parserHDPLAYERCASA  ,
                        'hdvid.tv':              self.pp.parserHDVIDTV       ,
-                       'sfdmn.eu':              self.pp.parserHDVIDTV       ,
                        'hdvid.fun':             self.pp.parserHDVIDTV       ,
                        'hlstester.com':         self.pp.parserHLSTESTER     ,
                        'hofoot.90minkora.com':  self.pp.parserVIUCLIPS      ,
@@ -291,6 +294,7 @@ class urlparser:
                        'hqq.to':                self.pp.parserNETUTV         ,
                        'hqq.watch':             self.pp.parserNETUTV         ,
                        'hxload.io':             self.pp.parserVIDBOMCOM      ,
+                       'hydrax.net':            self.pp.parserONLYSTREAM     ,
                        'i.vplay.ro':            self.pp.parserVPLAY         ,
                        'ideoraj.ch':            self.pp.parserCLOUDYEC      ,
                        'indavideo.hu':          self.pp.parserINDAVIDEOHU    ,
@@ -319,6 +323,7 @@ class urlparser:
                        'livestream.com':        self.pp.parserLIVESTREAMCOM,
                        'live-stream.tv':        self.pp.parserLIVESTRAMTV   ,
                        'm2list.com':            self.pp.parserM2LIST        ,
+                       'm0.vidcloudpng.com':    self.pp.parserVIDCLOUD    ,
                        'mastarti.com':          self.pp.parserMOONWALKCC    ,
                        'matchat.online':        self.pp.parserMATCHATONLINE  ,
                        'maxupload.tv':          self.pp.parserTOPUPLOAD     ,
@@ -366,7 +371,7 @@ class urlparser:
                        'neodrive.co':           self.pp.parserNEODRIVECO    ,
                        'netu.tv':               self.pp.parserNETUTV         ,
                        'netu.to':               self.pp.parserNETUTV         ,
-                       'ninjastream.to':        self.pp.parserHDPLAYERCASA   ,
+                       'ninjastream.to':        self.pp.parserNINJASTREAMTO   ,
                        'nonlimit.pl':           self.pp.parserIITV          ,
                        'nosvideo.com':          self.pp.parserNOSVIDEO      ,
                        'novamov.com':           self.pp.parserNOVAMOV       ,
@@ -441,6 +446,7 @@ class urlparser:
                        'sendvid.com':           self.pp.parserSENDVIDCOM    ,
                        'seositer.com':          self.pp.parserYANDEX        ,
                        'serpens.nl':            self.pp.parserMOONWALKCC    ,
+                       'sfdmn.eu':              self.pp.parserSTREAMTAPE       ,
                        'sfiles.org':            self.pp.parserUPLOAD         ,
                        'shared.sx':             self.pp.parserSHAREDSX      ,
                        'share-online.biz':      self.pp.parserSHAREONLINEBIZ ,
@@ -487,6 +493,7 @@ class urlparser:
                        'streamplay.to':         self.pp.parserSTREAMPLAY    ,
                        'streamtape.com':        self.pp.parserSTREAMTAPE    ,
                        'streamtape.net':        self.pp.parserSTREAMTAPE    ,
+                       'streamtape.to':        self.pp.parserSTREAMTAPE    ,
                        'streamz.cc':            self.pp.parserSTREAMZ       ,
                        'streamz.vg':            self.pp.parserSTREAMZ       ,
                        'streamwire.net':        self.pp.parserONLYSTREAM   ,
@@ -501,6 +508,7 @@ class urlparser:
                        'tantifilm.fit':         self.pp.parserTANTIFILM     ,
                        'tantifilm.ga':          self.pp.parserTANTIFILM     ,
                        'tantifilm.top':         self.pp.parserTANTIFILM     ,
+                       'tapecontent.net':       self.pp.parserSTREAMTAPE   ,
                        'telerium.tv':           self.pp.parserTELERIUMTV     ,
                        'theactionlive.com':     self.pp.parserTHEACTIONLIVE ,
                        'thefile.me':            self.pp.parserTHEFILEME     ,
@@ -545,6 +553,7 @@ class urlparser:
                        'upvid.mobi':            self.pp.parserUPFILEMOBI     ,
                        'upvideo.cc':            self.pp.parserONLYSTREAM   ,
                        'userscloud.com':        self.pp.parserUSERSCLOUDCOM ,
+                       'ustream.to':            self.pp.parserUSTREAMTV     ,
                        'ustream.tv':            self.pp.parserUSTREAMTV     ,
                        'ustreamix.com':         self.pp.parserUSTREAMIXCOM  ,
                        'vcrypt.net':            self.pp.parserVCRYPT        ,
@@ -590,7 +599,7 @@ class urlparser:
                        'vidload.co':            self.pp.parserVIDLOADCO     ,
                        'vidlox.me':             self.pp.parserVIDLOXTV      ,
                        'vidlox.tv':             self.pp.parserVIDLOXTV      ,
-                       'vidnext.net':           self.pp.parserMOVCLOUD      ,
+                       'vidnext.net':           self.pp.parserVIDCLOUD      ,
                        'vidnode.net':           self.pp.parserVIDCLOUD      ,
                        'vidoo.tv':              self.pp.parserONLYSTREAM   ,
                        'vidoza.net':            self.pp.parserVIDOZANET     ,
@@ -13139,7 +13148,7 @@ class pageParser(CaptchaHelper):
     def parserLINKHUB(self, baseUrl):
         printDBG("parserLINKHUB baseUrl[%s]" % baseUrl)
         
-        #https://linkhub.icu/get/K7QujZZVkn
+        #https://linkhub.icu/get/v7k65hI6r4
         sts, data = self.cm.getPage(baseUrl)
 
         if sts:
@@ -14608,3 +14617,113 @@ class pageParser(CaptchaHelper):
                 retTab.extend(getDirectM3U8Playlist(url, checkContent=True, sortWithMaxBitrate=999999999))
 
         return retTab
+
+    def parserNINJASTREAMTO(self, baseUrl):
+        printDBG("parserNINJASTREAMTO baseUrl [%s]" % baseUrl)
+
+        httpParams = {
+            'header' : {
+                'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.61 Safari/537.36',
+                'Accept': '*/*',
+                'Accept-Encoding': 'gzip',
+                'Referer' : baseUrl.meta.get('Referer', baseUrl)
+            }
+        }
+
+        urlsTab = []
+
+        sts, data = self.cm.getPage(baseUrl, httpParams)
+        if sts:
+#            printDBG("-----------------------")
+#            printDBG(data)
+#            printDBG("-----------------------")
+
+            r = self.cm.ph.getSearchGroups(data, r'v-bind:stream="([^"]+)')[0]
+            if r:
+                data = json_loads(r.replace('&quot;', '"'))
+                url = data.get('host') + data.get('hash') + '/index.m3u8'
+                urlsTab.extend(getDirectM3U8Playlist(url, checkContent=True, sortWithMaxBitrate=999999999))
+
+        return urlsTab
+
+    def parserKINOGERRE(self, baseUrl):
+        urlTab=[]
+        url = baseUrl.replace('/v/', '/api/source/')
+        HTTP_HEADER = self.cm.getDefaultHeader(browser='chrome')
+        urlParams = {'header': HTTP_HEADER}
+        post_data = { 'r':'https://kinoger.com/', 'd': 'kinoger.re'}
+        sts, data = self.cm.getPage(url, urlParams, post_data=post_data)
+        if not sts: return []
+
+        #printDBG("kinogerto.getVideoLinks data[%s]" % data)
+        files = self.cm.ph.getAllItemsBeetwenMarkers(data, '{"file":', '}')
+        for f in files:
+            link, quality = self.cm.ph.getSearchGroups(f, '''file":"([^"]+)","label":"([^"]+)''', grupsNum=2 )
+            link = link.replace('\\', '')
+            urlTab.append({'name':'[%s]' % quality, 'url':strwithmeta(link, {'Referer':url})})
+            #printDBG("kinogerto.getVideoLinks [typ: %s link: %s]" % ( typ, link))
+        return urlTab
+
+    def parserEVOLOADIO(self, baseUrl):
+        urlTab=[]
+        printDBG("parserEVOLOADIO baseUrl[%r]" % baseUrl)
+
+        def get_movie_code(url):
+            partes=url.split("/")
+            p=len(partes)
+            code=partes[p-1]
+            return code
+
+        def prepare_url(url):
+            url=url.replace('/f/','/e/')
+            return url
+
+        def validate_url(url):
+            regex = r"https*:\/\/evoload\.io\/(?:e|f)\/.*?$"
+            try:
+                url=re.findall(regex,url)[0]
+                url=prepare_url(url)
+            except:
+                url=''
+            return url
+
+        url=validate_url(baseUrl)
+        if url == '': return 'Wrong evoload.io embed video url'
+        code=get_movie_code(baseUrl)
+        default_headers = dict()
+        default_headers["User-Agent"] = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/86.0.4240.75 Safari/537.36"
+        default_headers["Accept"] = "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8"
+        default_headers["Accept-Language"] = "es-ES,es;q=0.8,en-US;q=0.5,en;q=0.3"
+        default_headers["Accept-Charset"] = "UTF-8"
+        default_headers["Accept-Encoding"] = "gzip"
+        import requests
+        s= requests.session()
+        req=s.get(baseUrl,headers=default_headers)
+
+        key = "6Ldv2fYUAAAAALstHex35R1aDDYakYO85jt0ot-c"
+        co = "aHR0cHM6Ly9ldm9sb2FkLmlvOjQ0Mw.."
+        loc = "https://evoload.io"
+
+        token= recaptcha_v3.get_token(key, co, '', loc)
+        if token == None or token=='':
+            return ' No token obtained'
+
+        secureplayer_url="https://evoload.io/SecurePlayer"
+        #{"code":"wEZkuDhnkURe5j","token":"03AGdBq27nr_noUxcJ98JorBLQ7m6ydE-3RfSJBX7eAQGL16Rdu0x1uT8y4Pbm5HPUcR1TmH-sjoBqgQSJUWjmAbCqOzSgcQ5VujY_mUPgs-r1eQ6pmHdhTjZnNfop5upf63-neQUEfONx3-e0roY8g8szPcog5Yu00Fk8twYd228ySQ7s-DC7ijIHv21kTAIt-BivAeqBRedao-aNLaYOANSVWSAShrFN0xOroiXVm31H8il0VJySos13fOUYXuLwSSwEVI3_yEhM7SIBut0T89oVMq6F73LPWxyo-k46hGTAym4rJoYAhUN9RJb5uo8JzWlCCri2GbhKqpc2yxgwwelnh6RMoZRDGhyYvQhF42JaTHS8joDU0xAuzdsf4r5dFIJERxj9Xeud8E3CMbBEx2MADE9vpON4WlW8fVKEQfnKmMaUGHgKIcM"}
+        #json
+        post='{"code":"' + code + '","token":"'+ token + '"}'
+        xsrf=""
+        header={}
+        header['Accept']='Accept: application/json, text/plain, */*'
+        header['Accept-Language'] = 'es-ES,es;q=0.8,en-US;q=0.5,en;q=0.3'
+        header['Accept-Encoding'] = 'deflate'
+        header['Content-Type'] = 'application/json;charset=utf-8'
+        header['X-XSRF-TOKEN'] = xsrf
+        header['Origin'] = loc
+        header['Connection'] = 'keep-alive'
+        header['Referer'] = baseUrl
+        req=s.post(secureplayer_url,data=post,headers=header)
+        jso= json_loads(req.text)
+        url_stream=jso.get('stream').get('src')
+        urlTab.append({'name':'movie', 'url':strwithmeta(url_stream, {'Referer':baseUrl})})
+        return urlTab
