@@ -580,6 +580,7 @@ class urlparser:
                        'upvideo.cc':           self.pp.parserONLYSTREAMTV   ,
                        'playtube.ws':          self.pp.parserONLYSTREAMTV   ,
                        'vkprime.com':          self.pp.parserONLYSTREAMTV   ,
+                       'anyvideo.org':         self.pp.parserONLYSTREAMTV   ,
                        'jetload.net':          self.pp.parserJETLOADNET     ,
                        'mixdrop.co':           self.pp.parserMIXDROP        ,
                        'mixdrop.club':         self.pp.parserMIXDROP        ,
