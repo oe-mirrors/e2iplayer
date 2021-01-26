@@ -44,10 +44,10 @@ def GetConfigList():
 ###################################################
 
 def gettytul():
-    return 'https://hdfull.lv/'
+    return 'https://hdfull.cx/'
     
 class SuggestionsProvider:
-    MAIN_URL = 'https://hdfull.lv/'
+    MAIN_URL = 'https://hdfull.cx/'
     COOKIE_FILE = ''
     def __init__(self):
         self.cm = common()
@@ -82,15 +82,15 @@ def jstr(item, key, default=''):
 class HDFull(CBaseHostClass, CaptchaHelper):
 
     def __init__(self):
-        CBaseHostClass.__init__(self, {'history':'hdfull.la', 'cookie':'hdfull.la.cookie'})
+        CBaseHostClass.__init__(self, {'history':'hdfull.cx', 'cookie':'hdfull.cx.cookie'})
         SuggestionsProvider.COOKIE_FILE = self.COOKIE_FILE
 
         self.HTTP_HEADER = self.cm.getDefaultHeader(browser='chrome')
         language = config.plugins.iptvplayer.hdfull_language.value
         self.defaultParams = {'header':self.HTTP_HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE, 'cookie_items':{'language':language}}
 
-        self.MAIN_URL    = 'https://hdfull.lv/'
-        self.DEFAULT_ICON_URL = 'https://hdfull.la/logo.png'
+        self.MAIN_URL    = 'https://hdfull.cx/'
+        self.DEFAULT_ICON_URL = 'https://hdfull.tv/logo.png'
 
         self.filters = []
         self.cacheLinks = {}
