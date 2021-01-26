@@ -4,7 +4,8 @@
 ###################################################
 from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _
 from Plugins.Extensions.IPTVPlayer.components.ihost import CHostBase, CBaseHostClass
-from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, rm
+from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, rm, byteify
+from Plugins.Extensions.IPTVPlayer.libs.e2ijson import loads as json_loads, dumps as json_dumps
 from Plugins.Extensions.IPTVPlayer.tools.iptvtypes import strwithmeta
 from Plugins.Extensions.IPTVPlayer.tools.e2ijs import js_execute
 ###################################################
@@ -14,9 +15,11 @@ from Plugins.Extensions.IPTVPlayer.tools.e2ijs import js_execute
 ###################################################
 import urlparse
 import re
+import base64
 import urllib
 try:    import json
 except Exception: import simplejson as json
+from copy import deepcopy
 ###################################################
 
 
@@ -29,7 +32,7 @@ class eKinomaniak(CBaseHostClass):
         CBaseHostClass.__init__(self, {'history':'ekinomaniak.online', 'cookie':'ekinomaniak.online.cookie'})
         self.USER_AGENT = 'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:40.0) Gecko/20100101 Firefox/40.0'
         self.MAIN_URL = 'https://ekinomaniak.net/'
-        self.DEFAULT_ICON_URL = 'https://www.wykop.pl/cdn/c3397992/ekinomaniak_xKHlcsDqTG,q250.jpg'
+        self.DEFAULT_ICON_URL = 'https://ww1.ekinomaniak.net/assets/images/ekinomaniak-og-image.png'
         self.HTTP_HEADER = {'User-Agent': self.USER_AGENT, 'DNT':'1', 'Accept': 'text/html', 'Accept-Encoding':'gzip, deflate', 'Referer':self.getMainUrl(), 'Origin':self.getMainUrl()}
         self.AJAX_HEADER = dict(self.HTTP_HEADER)
         self.AJAX_HEADER.update( {'X-Requested-With': 'XMLHttpRequest', 'Accept-Encoding':'gzip, deflate', 'Content-Type':'application/x-www-form-urlencoded; charset=UTF-8', 'Accept':'application/json, text/javascript, */*; q=0.01'} )
@@ -39,13 +42,58 @@ class eKinomaniak(CBaseHostClass):
         self.defaultParams = {'header':self.HTTP_HEADER, 'with_metadata':True, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
 
     def getPage(self, baseUrl, addParams = {}, post_data = None):
-        if addParams == {}: addParams = dict(self.defaultParams)
-        origBaseUrl = baseUrl
-        baseUrl = self.cm.iriToUri(baseUrl)
+        if addParams == {}:
+            addParams = dict(self.defaultParams)
+            
         def _getFullUrl(url):
-            if self.cm.isValidUrl(url): return url
-            else: return urlparse.urljoin(baseUrl, url)
+            if url == '': return ''
+            
+            if self.cm.isValidUrl(url):
+                return url
+            else:
+                return urlparse.urljoin(baseUrl, url)
+            
         addParams['cloudflare_params'] = {'domain':self.up.getDomain(baseUrl), 'cookie_file':self.COOKIE_FILE, 'User-Agent':self.USER_AGENT, 'full_url_handle':_getFullUrl}
+        
+        url = baseUrl
+        urlParams = deepcopy(addParams)
+        urlData = deepcopy(post_data)
+        unloadUrl = None #
+        tries = 0
+        removeCookieItems = False
+        while tries < 20:
+            tries += 1
+            sts, data = self.cm.getPageCFProtection(url, urlParams, urlData)
+            if not sts: return sts, data
+
+            if unloadUrl != None:
+                self.cm.getPageCFProtection(unloadUrl, urlParams)
+                unloadUrl = None
+            
+            if 'sucuri_cloudproxy' in data:
+                cookieItems = {}
+                jscode = self.cm.ph.getDataBeetwenNodes(data, ('<script', '>'), ('</script', '>'), False)[1]
+                if 'eval' in jscode:
+                    jscode = '%s\n%s' % (base64.b64decode('''dmFyIGlwdHZfY29va2llcz1bXSxkb2N1bWVudD17fTtPYmplY3QuZGVmaW5lUHJvcGVydHkoZG9jdW1lbnQsImNvb2tpZSIse2dldDpmdW5jdGlvbigpe3JldHVybiIifSxzZXQ6ZnVuY3Rpb24obyl7bz1vLnNwbGl0KCI7IiwxKVswXS5zcGxpdCgiPSIsMiksb2JqPXt9LG9ialtvWzBdXT1vWzFdLGlwdHZfY29va2llcy5wdXNoKG9iail9fSk7dmFyIHdpbmRvdz10aGlzLGxvY2F0aW9uPXt9O2xvY2F0aW9uLnJlbG9hZD1mdW5jdGlvbigpe3ByaW50KEpTT04uc3RyaW5naWZ5KGlwdHZfY29va2llcykpfTs='''), jscode)
+                    ret = js_execute( jscode )
+                    if ret['sts'] and 0 == ret['code']:
+                        try:
+                            cookies = byteify(json_loads(ret['data'].strip()))
+                            for cookie in cookies: cookieItems.update(cookie)
+                        except Exception:
+                            printExc()
+                self.defaultParams['cookie_items'] = cookieItems
+                urlParams['cookie_items'] = cookieItems
+                removeCookieItems = False
+                sts, data = self.cm.getPageCFProtection(url, urlParams, urlData)
+            
+            # remove not needed used cookie
+            if removeCookieItems:
+                self.defaultParams.pop('cookie_items', None)
+            self.cm.clearCookie(self.COOKIE_FILE, removeNames=['___utmvc'])
+            #printDBG(data)
+            return sts, data
+        
         return self.cm.getPageCFProtection(baseUrl, addParams, post_data)
         
     def setMainUrl(self, url):
@@ -148,6 +196,7 @@ class eKinomaniak(CBaseHostClass):
             icon = self.getFullIconUrl(self.cm.ph.getSearchGroups(item, '''data-src=['"]([^"^']+?)['"]''')[0])
             if icon == '':
                 icon = self.getFullIconUrl(self.cm.ph.getSearchGroups(item, '''src=['"]([^"^']+?)['"]''')[0])
+            icon = icon.replace('/thumbnails', '')
             title = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(item, ('</a', '>'), ('</a', '>'), False)[1])
             desc = self.cleanHtmlStr(item)
             if 'watch-tv-shows' in url:
@@ -208,31 +257,25 @@ class eKinomaniak(CBaseHostClass):
         sts, data = self.getPage(url, params)
         if not sts: return []
 
-        data2 = self.cm.ph.getAllItemsBeetwenMarkers(data, '<button', '</button>')
-        for item in data2:
-            printDBG("eKinomaniak.getLinksForVideo item[%s]" % item)
-            playerUrl = self.cm.ph.getSearchGroups(item, '''data-plyr=['"]([^"^']+?)['"]''', 1, True)[0]
-            if ''==playerUrl: continue
-            retTab.append({'name':self.up.getHostName(playerUrl), 'url':strwithmeta(playerUrl, {'Referer':url}), 'need_resolve':1})
-        data2 = None
-
-        sts, jscode = self.getPage('https://ekinomaniak.net/js/bootstrap.php', params)
-        if not sts: return []
+#        sts, jscode = self.getPage('https://ekinomaniak.net/js/bootstrap.php', params)
+#        if not sts: return []
 
         cUrl = data.meta['url']
         self.setMainUrl(cUrl)
-        data = self.cm.ph.getAllItemsBeetwenNodes(data, 'document.write(shwp',  ('</script', '>'))
+        data = self.cm.ph.getAllItemsBeetwenNodes(data, ('<button', '>', 'play-video'), ('</button', '>'))
+#        data = self.cm.ph.getAllItemsBeetwenNodes(data, 'document.write(shwp',  ('</script', '>'))
     
         for item in data:
             printDBG("eKinomaniak.getLinksForVideo item[%s]" % item)
-            shwp = self.cm.ph.getSearchGroups(item, '''shwp\(['"]([^"^']+?)['"]''', 1, True)[0]
-            tmp = jscode + ';var test="%s";print(shwp(test))' % shwp
-            ret = js_execute( tmp )
-            if ret['sts'] and 0 == ret['code']:
-                data = ret['data'].strip()
-                playerUrl = self.cm.ph.getSearchGroups(data, '''src=['"]([^"^']+?)['"]''', 1, True)[0]
-            else:
-                continue
+#            shwp = self.cm.ph.getSearchGroups(item, '''shwp\(['"]([^"^']+?)['"]''', 1, True)[0]
+#            tmp = jscode + ';var test="%s";print(shwp(test))' % shwp
+#            ret = js_execute( tmp )
+#            if ret['sts'] and 0 == ret['code']:
+#                data = ret['data'].strip()
+#                playerUrl = self.cm.ph.getSearchGroups(data, '''src=['"]([^"^']+?)['"]''', 1, True)[0]
+#            else:
+#                continue
+            playerUrl = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''data-plyr=['"]([^"^']+?)['"]''')[0])
             retTab.append({'name':self.up.getHostName(playerUrl), 'url':strwithmeta(playerUrl, {'Referer':url}), 'need_resolve':1})
              
         if len(retTab):
@@ -259,7 +302,7 @@ class eKinomaniak(CBaseHostClass):
         printDBG("eKinomaniak.getArticleContent [%s]" % cItem)
         itemsList = []
 
-        sts, data = self.cm.getPage(cItem['url'])
+        sts, data = self.getPage(cItem['url'])
         if not sts: return []
 
         title = cItem['title']
