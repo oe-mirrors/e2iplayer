@@ -1,3 +1,3 @@
 # -*- coding: utf-8 -*-
 #YYYY.MM.DD.DAY_RELEASE maxbambi REPO
-IPTV_VERSION="2021.01.26.01"
+IPTV_VERSION="2021.01.31.01"
