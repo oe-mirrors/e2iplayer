@@ -211,8 +211,12 @@ class cda(CBaseHostClass, CaptchaHelper):
             desc = self.cleanHtmlStr(item.replace('<br />', '[/br]').replace('</a>', '[/br]'))
             
             params = dict(cItem)
-            params.update({'title':title, 'url':url, 'icon':icon, 'desc':desc})
-            self.addVideo(params)
+            if '/video' in url:
+                params.update({'title':title, 'url':url, 'icon':icon, 'desc':desc})
+                self.addVideo(params)
+            elif '/folder/' in url:
+                params.update({'title':title, 'url':url, 'icon':icon, 'desc':desc, 'name':'dir', 'category':'list_folder_items'})
+                self.addDir(params)
             
         if nextPage:
             params = dict(cItem)

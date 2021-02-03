@@ -1532,7 +1532,8 @@ class pageParser(CaptchaHelper):
         self.cm.clearCookie(COOKIE_FILE, removeNames=['vToken'])
 
         #HEADER = {'User-Agent': 'Mozilla/5.0', 'Accept': 'text/html'}
-        HTTP_HEADER = self.cm.getDefaultHeader(browser='chrome') #iphone_3_0
+#        HTTP_HEADER = self.cm.getDefaultHeader(browser='chrome') #iphone_3_0
+        HTTP_HEADER = {"User-Agent":"Mozilla/5.0 (PlayStation 4 4.71) AppleWebKit/601.2 (KHTML, like Gecko)"}
         defaultParams = {'header': HTTP_HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': COOKIE_FILE}
         
         def _decorateUrl(inUrl, host, referer):
