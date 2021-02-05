@@ -317,8 +317,14 @@ class Raiplay(CBaseHostClass):
         for item in items:
             if item["sub-type"] in ("RaiPlay Tipologia Page", "RaiPlay Genere Page", "RaiPlay Tipologia Editoriale Page"):
                 icon_url=self.MAIN_URL + item["image"]
-                self.addDir(MergeDicts(cItem, {'category':'ondemand_items', 'title': item["name"] , 'name': item["name"], 'url': item["PathID"], 'icon': icon_url, 'sub-type': item["sub-type"] }))            
-
+                params = MergeDicts(cItem, {'category':'ondemand_items', 'title': item["name"] , 'name': item["name"], 'url': item["PathID"], 'icon': icon_url, 'sub-type': item["sub-type"] })          
+                # new urls 
+                # i.e. change "/raiplay/programmi/?json" to "/raiplay/tipologia/programmi/index.json"
+                m = re.findall("raiplay/(.*?)/[?]json", params["url"])
+                if m:
+                    params["url"] = "/raiplay/tipologia/%s/index.json" % m[0]              
+                printDBG(str(params))
+                self.addDir(params)
                 
     def listOnDemandCategory(self, cItem):
         pathId=cItem["url"]
