@@ -178,6 +178,7 @@ class Dplayit(CBaseHostClass):
             response=json_loads(data)
             stream_url = response['data']['attributes']['streaming']['hls']['url']
             stream_url=strwithmeta(stream_url, h)
+            linksTab.append({'name': 'hls', 'url': stream_url})
             linksTab.extend(getDirectM3U8Playlist(stream_url, checkExt=False, variantCheck=True, checkContent=True, sortWithMaxBitrate=99999999))  
                         
         else: 
