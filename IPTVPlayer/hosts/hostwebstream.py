@@ -164,7 +164,7 @@ class HasBahCa(CBaseHostClass):
  ###        {'alias_id' : 'livetvhd.net',       'name' : 'livetvhd.net',        'title' : 'https://livetvhd.net/',      'url' : 'https://livetvhd.net/',            'icon' : 'https://livetvhd.net/images/logo.png'},\
             {'alias_id' : 'meteo.pl',           'name' : 'meteo.pl',            'title' : 'http://meteo.pl/',           'url' : 'http://meteo.pl/',                 'icon' : 'http://www.meteo.pl/img/napis_glowny_pl_2.png'},\
             {'alias_id' : 'mlbstream.tv',       'name' : 'mlbstream.tv',        'title' : 'http://mlbstream.tv/&&http://nhlstream.tv/', 'url' : '',                 'icon' : 'http://mlbstream.tv/wp-content/uploads/2018/03/mlb-network-291x300.png'},\
-            {'alias_id' : 'nhl66.ir',           'name' : 'nhl66.ir',            'title' : 'https://nhl66.ir',           'url' : 'https://pro.nhl66.ir/api/get_anonymous_data', 'icon' : 'https://nhl66.ir/cassets/logo.png'}, \
+            {'alias_id' : 'nhl66.ir',                'name': 'nhl66.ir',            'title': 'https://nhl66.ir',                  'url': 'https://api.nhl66.ir/api/sport/schedule',                            'icon': 'https://nhl66.ir/cassets/logo.png'}, \
             {'alias_id' : 'videostar.pl',        'name' : 'videostar.pl',         'title' : 'https://pilot.wp.pl/',     'url' : '',                                 'icon' : 'https://nowymarketing.pl/i/articles/23227_l2.jpg'},\
             {'alias_id' : 'prognoza.pogody.tv', 'name' : 'prognoza.pogody.tv',  'title' : 'http://prognoza.pogody.tv/',          'url' : 'http://prognoza.pogody.tv',        'icon' : 'http://pogody.pl/images/pogodytv.png'},\
 ###         {'alias_id' : 'showsport-tv.com',   'name' : 'showsport-tv.com',    'title' : 'http://showsport-tv.com/',   'url' : 'http://showsport-tv.com/',         'icon' : 'http://showsport-tv.com/images/sstv-logo.png'},\
@@ -957,19 +957,16 @@ class HasBahCa(CBaseHostClass):
         try:
             data = json_loads(data)
             for item in data['games']:
-                tmp = json_dumps(item['stream_full'])
-                tmp = self.cm.ph.getAllItemsBeetwenMarkers(tmp, '"name":', ']')
-                for sitem in tmp:
-                    url   = self.getFullUrl(self.cm.ph.getSearchGroups(sitem, '''urls":.*?['"]([^"^']+?)['"]''')[0])
+                for sitem in item['streams']:
+                    url = sitem['url']
                     if url == '': continue
-                    live  = self.cm.ph.getSearchGroups(sitem, '''is_live":([^"^']+?)['"]''')[0]
-                    if 'true' in live: title = '[LIVE]  '
+                    if sitem['is_live']: title = '[LIVE]  '
                     else: title = ''
-                    name  = self.cm.ph.getSearchGroups(sitem, '''name":.*?['"]([^"^']+?)['"]''')[0]
+                    name = sitem['name']
                     dtime = item['start_datetime'].replace('T', ' - ').replace('Z', ' GMT')
                     title = title + item['away_abr'] + ' vs. ' + item['home_abr'] + ' - ' + dtime + ' - ' + name
                     desc = dtime + '[/br]' + item['away_name'] + ' vs. ' + item['home_name'] + '[/br]' + name
-                    params = {'good_for_fav':True, 'name':"others", 'url':url, 'title':title, 'desc':desc, 'replacekey':'https://mf.svc.nhl.com/', 'urlkey':'https://pro.nhl66.ir/api/get_key_url/'}
+                    params = {'good_for_fav':True, 'name':"others", 'url':url, 'title':title, 'desc':desc, 'replacekey':'https://mf.svc.nhl.com/', 'urlkey':'https://api.nhl66.ir/api/get_key_url/'}
                     self.addVideo(params)
         except Exception:
             printExc()
@@ -1021,6 +1018,11 @@ class HasBahCa(CBaseHostClass):
         if 'youtube' in _url:
             urlsTab = self.up.getVideoLinkExt(_url)
             return urlsTab
+        sts,data = self.cm.getPage(_url)
+        if not sts: return []
+        data = CParsingHelper.getDataBeetwenNodes(data, ('<iframe', '>', 'allowfullscreen'), ('</iframe', '>'))[1]
+        _url  = self.cm.ph.getSearchGroups(data, '''src=['"]([^"^']+?)['"]''')[0]
+        if len(_url) and not _url.startswith('http'): _url = url+_url
         sts,data = self.cm.getPage(_url)
         if not sts: return []
         printDBG("crackstreamsLink data[%r]" % data)
