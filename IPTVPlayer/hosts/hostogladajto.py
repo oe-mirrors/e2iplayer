@@ -47,7 +47,7 @@ class ogladajto(CBaseHostClass):
     
     def __init__(self):
         CBaseHostClass.__init__(self, {'history':'ogladaj.to', 'cookie':'ogladaj.to.cookie'})
-        self.USER_AGENT = 'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:40.0) Gecko/20100101 Firefox/40.0'
+        self.USER_AGENT = 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.61 Safari/537.36'
         self.MAIN_URL = 'https://ogladaj.to/'
         self.DEFAULT_ICON_URL = 'https://www.ogladaj.to/templates/oto/images/logo.png'
         self.HTTP_HEADER = {'User-Agent': self.USER_AGENT, 'DNT':'1', 'Accept': 'text/html', 'Accept-Encoding':'gzip, deflate', 'Referer':self.getMainUrl(), 'Origin':self.getMainUrl(), 'Upgrade-Insecure-Requests':'1', 'Connection':'keep-alive'}
@@ -60,8 +60,9 @@ class ogladajto(CBaseHostClass):
         self.ajaxParams = {'header':self.AJAX_HEADER, 'with_metadata':True, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
 
         self.loggedIn = None
-        self.login    = ''
-        self.password = ''
+        self.login     = ''
+        self.password  = ''
+        self.postLogin = ''
 
     def getPage(self, baseUrl, addParams = {}, post_data = None):
         if addParams == {}: addParams = dict(self.defaultParams)
@@ -227,24 +228,18 @@ class ogladajto(CBaseHostClass):
     def getLinksForVideo(self, cItem):
         printDBG("ogladajto.getLinksForVideo [%s]" % cItem)
                 
-        urlTab = []
-
-        sts, data = self.getPage(cItem['url'])
-        if not sts: return
+        params = dict(self.defaultParams)
+        params['no_redirection'] = True
+        sts, data = self.getPage(cItem['url'], params)
+        if not sts: return []
 
         url = self.cm.meta.get('location', '')
         if "zaloguj" in url and self.loggedIn:
             httpParams = dict(self.ajaxParams)
             httpParams['header'] = dict(httpParams['header'])
-            post_data = {'submit':'', 'ahd_username':self.login, 'ahd_password':self.password}
-            data = self.cm.ph.getDataBeetwenNodes(data, ('<form', '>', 'zaloguj'), ('</form', '>'))[1]
-            inputData = self.cm.ph.getAllItemsBeetwenMarkers(data, '<input type="hidden"', '>')
-            for item in inputData:
-                name  = self.cm.ph.getSearchGroups(item, '''name=['"]([^'^"]+?)['"]''')[0]
-                value = self.cm.ph.getSearchGroups(item, '''value=['"]([^'^"]+?)['"]''')[0]
-                post_data[name] = value
-            sts, data = self.getPage(url, httpParams, post_data)
+            sts, data = self.getPage(url, httpParams, self.postLogin)
 
+        urlTab = []
         tmp = self.cm.ph.getAllItemsBeetwenNodes(data, ('<iframe', '>'), ('</iframe', '>'))
         for item in tmp:
             url  = self.cm.ph.getSearchGroups(item, '''src=['"]([^'^"]+?)['"]''')[0]
@@ -277,7 +272,7 @@ class ogladajto(CBaseHostClass):
             self.login = config.plugins.iptvplayer.ogladajto_login.value
             self.password = config.plugins.iptvplayer.ogladajto_password.value
 
-#            rm(self.COOKIE_FILE)
+            rm(self.COOKIE_FILE)
             self.cm.clearCookie(self.COOKIE_FILE, ['__cfduid', 'cf_clearance'])
 
             self.loggedIn = False
@@ -296,6 +291,7 @@ class ogladajto(CBaseHostClass):
                 name  = self.cm.ph.getSearchGroups(item, '''name=['"]([^'^"]+?)['"]''')[0]
                 value = self.cm.ph.getSearchGroups(item, '''value=['"]([^'^"]+?)['"]''')[0]
                 post_data[name] = value
+            self.postLogin = post_data
 
             httpParams = dict(self.ajaxParams)
             httpParams['header'] = dict(httpParams['header'])
@@ -340,7 +336,7 @@ class ogladajto(CBaseHostClass):
         elif 'list_sort' == category:
             self.listMovieFilters(self.currItem, 'list_items')
         elif category == 'list_items':
-            self.listItems(self.currItem)            
+            self.listItems(self.currItem)
         elif category == 'list_seasons':
             self.listSeriesSeasons(self.currItem, 'list_episodes')
         elif category == 'list_episodes':

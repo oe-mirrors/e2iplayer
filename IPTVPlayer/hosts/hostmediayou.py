@@ -47,7 +47,7 @@ class MediayouNet(CBaseHostClass):
         self.AJAX_HEADER.update( {'X-Requested-With':'XMLHttpRequest', 'Content-Type':'application/x-www-form-urlencoded; charset=UTF-8'} )
         
         self.MAIN_URL = 'https://www.mediayou.net/'
-        self.DEFAULT_ICON_URL = 'https://www.mediayou.net/web/images/mas_s.png'
+        self.DEFAULT_ICON_URL = 'https://www.mediayou.net/web/images/mediaU_icon.png'
         
         self.defaultParams = {'header':self.HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
         self.cacheFilters = {}
