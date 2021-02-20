@@ -141,9 +141,9 @@ class urlparser:
 
     def setHostsMap(self):
         self.hostMap = {
-                       'lookmovie.ag' :         self.pp.parserLOOKMOVIE,
-                       '1fichier.com':          self.pp.parser1FICHIERCOM    ,
-                       '1tv.ru':                self.pp.parser1TVRU          ,
+                       '1fichier.com':          self.pp.parser1FICHIERCOM   ,
+                       '1tv.ru':                self.pp.parser1TVRU         ,
+                       '2021dogecoin.xyz':      self.pp.parserTXNEWSNETWORK ,
                        '37.220.36.15':          self.pp.parserMOONWALKCC    ,
                        '4snip.pw':              self.pp.parser4SNIP         ,
                        '7cast.net':             self.pp.parser7CASTNET      ,
@@ -322,6 +322,8 @@ class urlparser:
                        'liveonlinetv247.net':   self.pp.parserLIVEONLINE247 ,
                        'livestream.com':        self.pp.parserLIVESTREAMCOM,
                        'live-stream.tv':        self.pp.parserLIVESTRAMTV   ,
+                       'lookhd.xyz':            self.pp.parserTXNEWSNETWORK ,
+                       'lookmovie.ag' :         self.pp.parserLOOKMOVIE     ,
                        'm2list.com':            self.pp.parserM2LIST        ,
                        'm0.vidcloudpng.com':    self.pp.parserVIDCLOUD    ,
                        'mastarti.com':          self.pp.parserMOONWALKCC    ,
@@ -13271,6 +13273,11 @@ class pageParser(CaptchaHelper):
             printDBG("---------")
             printDBG(data)
             printDBG("---------")
+
+            if "unable to find the video" in data:
+                printDBG("We are unable to find the video you're looking for")
+                SetIPTVPlayerLastHostError("We are unable to find the video you're looking for")
+                return []
 
             #search if there is an iframe with a link to mystream
             new_link = re.findall("src=\"([^\"]+mystream.premiumserver[^\"]+?)\"", data)
