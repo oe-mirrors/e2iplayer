@@ -68,7 +68,7 @@ class WkylinewebcamsComApi:
         printDBG("WkylinewebcamsCom.getMainMenu")
         STATIC_TAB = [{'title':_('NEW'),           'url':self.getFullUrl('/skyline/morewebcams.php?w=new&l='+self.lang), 'cat':'list_cams2'},
                       {'title':_('NEARBY CAMS'),   'url':self.getFullUrl('/skyline/morewebcams.php?w=you&l='+self.lang), 'cat':'list_cams2'},
-                      {'title':_('TOP live cams'), 'url':self.getFullUrl(self.lang+'/top-live-cams.html'),               'cat':'list_cams'},
+                      {'title':_('Top Live Cams'), 'url':self.getFullUrl(self.lang+'/top-live-cams.html'),                                                 'cat':'list_cams' },
                       ]
         
         list = []
@@ -124,7 +124,7 @@ class WkylinewebcamsComApi:
         list = []
         sts, data = self.cm.getPage(cItem['url'])
         if not sts: return list
-        data = self.cm.ph.getAllItemsBeetwenMarkers(data, '<li class="webcam">', '</li>')
+        data = self.cm.ph.getAllItemsBeetwenMarkers(data, '<div class="col-sm-6 col-md-4 webcam">', '</div>')
         for item in data:
             url    = self.cm.ph.getSearchGroups(item, '''href="([^"]+?)"''', 1, True)[0]
             icon   = self.cm.ph.getSearchGroups(item, '''"([^"]+?\.jpg)"''', 1, True)[0]
@@ -141,7 +141,7 @@ class WkylinewebcamsComApi:
         list = []
         sts, data = self.cm.getPage(cItem['url'])
         if not sts: return list
-        data = self.cm.ph.getAllItemsBeetwenMarkers(data, '<li class="webcam">', '</li>')
+        data = self.cm.ph.getAllItemsBeetwenMarkers(data, '<div class="col-sm-6 col-md-4 webcam">', '</div>')
         for item in data:
             url    = self.cm.ph.getSearchGroups(item, '''href="([^"]+?)"''', 1, True)[0]
             icon   = self.cm.ph.getSearchGroups(item, '''"([^"]+?\.jpg)"''', 1, True)[0]
