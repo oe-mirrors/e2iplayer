@@ -507,7 +507,8 @@ class IPTVSetupImpl:
             if old == '' and platform == 'mipsel' and not IsFPUAvailable():
                 old = '_softfpu'
             
-            url = server + 'bin/' + platform + ('/%s%s' % (binName, old)) + '_openssl' + openSSLVersion
+#            url = server + 'bin/' + platform + ('/%s%s' % (binName, old)) + '_openssl' + openSSLVersion
+            url = 'http://iptvplayer.vline.pl/resources/bin/' + platform + ('/%s%s' % (binName, old)) + '_openssl' + openSSLVersion
             if self.binaryInstalledSuccessfully:
                 self.binaryInstalledSuccessfully = False
                 
