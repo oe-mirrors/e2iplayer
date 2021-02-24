@@ -25,7 +25,7 @@ class HoofootCom(CBaseHostClass):
     AJAX_HEADER.update( {'X-Requested-With': 'XMLHttpRequest'} )
     
     MAIN_URL   = 'https://hoofoot.com/'
-    DEFAULT_ICON_URL  = "http://th.hoofoot.com/pics/default.jpg"
+    DEFAULT_ICON_URL  = "https://icdn.2cda.pl/g/286737_84647866641171280461.jpg"
     
     MAIN_CAT_TAB = [{'category':'list_cats',       'title': _('Main'),              'url':MAIN_URL,},
                     {'category':'list_cats2',      'title': _('Popular'),           'url':MAIN_URL,},
@@ -245,7 +245,7 @@ class HoofootCom(CBaseHostClass):
             return []
         
         data = self.cm.ph.getDataBeetwenMarkers(data, 'id="player"', '</div>', False)[1]
-        videoUrl = self.cm.ph.getSearchGroups(data, '<iframe[^>]+?src="([^"]+?)"', 1, ignoreCase=True)[0]
+        videoUrl = self.cm.ph.getSearchGroups(data, '''href=['"]([^'^"]+?)['"]''')[0]
         
         printDBG(videoUrl)
         if videoUrl.startswith('//'):
