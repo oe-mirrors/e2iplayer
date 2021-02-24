@@ -17,7 +17,7 @@ except Exception: import simplejson as json
 ###################################################
 
 def gettytul():
-    return 'https://altadefinizione01.photo/'
+    return 'https://altadefinizione01.games/'
 
 class AltadefinizioneZeroUno(CBaseHostClass):
 
@@ -29,7 +29,7 @@ class AltadefinizioneZeroUno(CBaseHostClass):
         self.AJAX_HEADER = dict(self.HEADER)
         self.AJAX_HEADER.update( {'X-Requested-With':'XMLHttpRequest', 'Content-Type':'application/x-www-form-urlencoded; charset=UTF-8'} )
         
-        self.MAIN_URL = 'https://www.altadefinizione01.photo/'
+        self.MAIN_URL = 'https://www.altadefinizione01.games/'
         self.DEFAULT_ICON_URL = self.MAIN_URL + 'templates/Darktemplate/images/logo.png'
         
         self.defaultParams = {'header':self.HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
