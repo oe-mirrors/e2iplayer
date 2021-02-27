@@ -125,15 +125,19 @@ class Zaluknij(CBaseHostClass):
 
     def listItems(self, cItem):
         printDBG("Zaluknij.listItems %s" % cItem)
+        page = cItem.get('page', 1)
 
         url  = cItem['url']
-
+        if page > 1: url = url + '/page/{0}'.format(page)
         sts, data = self.getPage(url)
         if not sts: return
         self.setMainUrl(data.meta['url'])
             
-        nextPage = self.cm.ph.getDataBeetwenNodes(data, ('<a', '>', 'arrow_pag'), ('</a', '>'))[1]
-        nextPage = self.getFullUrl(self.cm.ph.getSearchGroups(nextPage, '''href=['"]([^"^']+?)['"]''')[0])
+        nextPage = self.cm.ph.getDataBeetwenNodes(data, ('<div', '>', 'pagination'), ('</div', '>'))[1]
+        if '' != self.cm.ph.getSearchGroups(nextPage, 'page/(%s)[^0-9]' % (page+1))[0]:
+            nextPage = True
+        else:
+            nextPage = False
         
         if 'tvshows' in cItem['url']:
             data = self.cm.ph.getDataBeetwenNodes(data, ('<div', '>', 'archive-content'), ('<div', '>', 'pagination'))[1]
@@ -148,7 +152,7 @@ class Zaluknij(CBaseHostClass):
             url = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''href=['"]([^"^']+?)['"]''')[0])
             if url == '': continue
             icon = self.getFullIconUrl(self.cm.ph.getSearchGroups(item, '''src=['"]([^"^']+?)['"]''')[0])
-            title = self.cm.ph.getSearchGroups(item, '''alt=['"]([^"^']+?)['"]''')[0].replace('&quot;', '"'.replace('&amp;', '&'))
+            title = self.cm.ph.getSearchGroups(item, '''alt=['"]([^"^']+?)['"]''')[0].replace('&#8211;', '-').replace('&#038;', '&').replace('&#8217;', "'").replace('&#8230;', '...')
             desc = self.cleanHtmlStr(item)
             if '/tvshows/' in url:
                 params = {'good_for_fav':True,'category':'list_seasons', 'url':url, 'title':title, 'desc':desc, 'icon':icon}
@@ -159,7 +163,7 @@ class Zaluknij(CBaseHostClass):
             
         if nextPage:
             params = dict(cItem)
-            params.update({'title':_('Next page'), 'url':nextPage})
+            params.update({'title':_('Next page'), 'page':page + 1})
             self.addDir(params)
 
     def listSeriesSeasons(self, cItem, nextCategory):
