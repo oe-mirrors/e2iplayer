@@ -12900,11 +12900,10 @@ class pageParser(CaptchaHelper):
         
         sts, data = self.cm.getPage(baseUrl, httpParams)
         
-        if sts:
+#        if sts:
 #            printDBG("-----------------------")
 #            printDBG(data)
 #            printDBG("-----------------------")
-
 
         subTracks=[]
         #<track kind="captions" src="https://doodstream.com/srt/00705/s72n7d5hi6qc_Serbian.vtt" srclang="en" label="Serbian" default>
