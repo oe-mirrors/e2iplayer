@@ -597,6 +597,7 @@ class urlparser:
                        'premiumserver.club':   self.pp.parserMSTREAMICU     ,
                        'mystream.streamango.to': self.pp.parserMSTREAMICU   ,
                        'embed.mystream.to':    self.pp.parserMSTREAMICU     ,
+                       'dood.so':              self.pp.parserDOOD           ,
                        'dood.to':              self.pp.parserDOOD           ,
                        'dood.watch':           self.pp.parserDOOD           ,
                        'doodstream.com':       self.pp.parserDOOD           ,
@@ -12900,9 +12901,9 @@ class pageParser(CaptchaHelper):
         sts, data = self.cm.getPage(baseUrl, httpParams)
         
         if sts:
-            printDBG("-----------------------")
-            printDBG(data)
-            printDBG("-----------------------")
+#            printDBG("-----------------------")
+#            printDBG(data)
+#            printDBG("-----------------------")
 
 
         subTracks=[]
