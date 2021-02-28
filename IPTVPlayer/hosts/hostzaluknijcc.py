@@ -7,6 +7,7 @@ from Plugins.Extensions.IPTVPlayer.components.ihost import CHostBase, CBaseHostC
 from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, rm
 from Plugins.Extensions.IPTVPlayer.tools.iptvtypes import strwithmeta
 from Plugins.Extensions.IPTVPlayer.tools.e2ijs import js_execute
+from Plugins.Extensions.IPTVPlayer.libs.youtube_dl.utils import unescapeHTML
 ###################################################
 
 ###################################################
@@ -152,7 +153,7 @@ class Zaluknij(CBaseHostClass):
             url = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''href=['"]([^"^']+?)['"]''')[0])
             if url == '': continue
             icon = self.getFullIconUrl(self.cm.ph.getSearchGroups(item, '''src=['"]([^"^']+?)['"]''')[0])
-            title = self.cm.ph.getSearchGroups(item, '''alt=['"]([^"^']+?)['"]''')[0].replace('&#8211;', '-').replace('&#038;', '&').replace('&#8217;', "'").replace('&#8230;', '...')
+            title = unescapeHTML(self.cm.ph.getSearchGroups(item, '''alt=['"]([^"^']+?)['"]''')[0]).encode('UTF-8')
             desc = self.cleanHtmlStr(item)
             if '/tvshows/' in url:
                 params = {'good_for_fav':True,'category':'list_seasons', 'url':url, 'title':title, 'desc':desc, 'icon':icon}

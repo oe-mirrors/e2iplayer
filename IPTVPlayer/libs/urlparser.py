@@ -3504,44 +3504,35 @@ class pageParser(CaptchaHelper):
         
     def parserCLIPWATCHINGCOM(self, baseUrl):
         printDBG("parserCLIPWATCHINGCOM baseUrl[%r]" % baseUrl)
-
-        if 'embed' not in baseUrl:
-            video_id = self.cm.ph.getSearchGroups(baseUrl+'/', '/([A-Za-z0-9]{12})[/.-]')[0]
-            url = 'http://clipwatching.com/embed-{0}.html'.format(video_id)
-        else:
-            url = baseUrl
-
-        HTTP_HEADER = self.cm.getDefaultHeader(browser='chrome')
-        referer = baseUrl.meta.get('Referer')
-        if referer: HTTP_HEADER['Referer'] = referer
-        urlParams = {'header': HTTP_HEADER}
-        sts, data = self.cm.getPage(url, urlParams)
-        if not sts: return False
-
-        if "eval(function(p,a,c,k,e,d)" in data:
-            printDBG( 'Host resolveUrl packed' )
-            packed = re.compile('>eval\(function\(p,a,c,k,e,d\)(.+?)</script>', re.DOTALL).findall(data)
-            if packed:
-                data2 = packed[-1]
-            else:
-                return ''
-            printDBG( 'Host pack: [%s]' % data2)
-            try:
-                data = unpackJSPlayerParams(data2, TEAMCASTPL_decryptPlayerParams, 0, True, True)
-                printDBG( 'OK unpack: [%s]' % data)
-            except Exception: pass
-
-        urlTab=[]
-        tmp = re.compile('''["'](https?://[^'^"]+?\.mp4)["']''').findall(data)
-        for item in tmp:
-            params = {'name':'video/mp4', 'url':item}
-            if params not in urlTab: urlTab.append(params)
-
-        hlsUrl = self.cm.ph.getSearchGroups(data, '''["'](https?://[^'^"]+?\.m3u8(?:\?[^"^']+?)?)["']''', ignoreCase=True)[0]
-        if hlsUrl != '':
-            hlsUrl = strwithmeta(hlsUrl, {'Origin':"https://" + urlparser.getDomain(baseUrl), 'Referer':baseUrl})
-            urlTab.extend(getDirectM3U8Playlist(hlsUrl, checkExt=False, variantCheck=True, checkContent=True, sortWithMaxBitrate=99999999))
-        return urlTab
+        urlTabs= []
+        
+        sts, data = self.cm.getPage(baseUrl)
+        
+        if sts:
+#            printDBG("----------------------")
+#            printDBG(data)
+#            printDBG("----------------------")
+            
+            tmp = self.cm.ph.getAllItemsBeetwenMarkers(data, 'window.hola_player({', '}, ', False)
+            printDBG(str(tmp))
+            
+            for t in tmp:
+                if 'sources' in t:
+                    links= re.findall("src\s?:\s?['\"]([^\"^']+?)['\"]",t,re.S)
+                    
+                    for link_url in links:
+                        if  self.cm.isValidUrl(link_url):
+                            link_url = urlparser.decorateUrl(link_url, {'Referer': baseUrl})
+                            if 'm3u8' in link_url:
+                                params = getDirectM3U8Playlist(link_url, checkExt=True, variantCheck=True, checkContent=True, sortWithMaxBitrate=99999999)
+                                printDBG(str(params))
+                                urlTabs.extend(params)
+                            else:
+                                params = {'name': 'link' , 'url': link_url}
+                                printDBG(str(params))
+                                urlTabs.append(params)
+                    
+        return urlTabs
         
     def parserVIDABCCOM(self, baseUrl):
         printDBG("parserVIDABCCOM baseUrl[%r]" % baseUrl)
