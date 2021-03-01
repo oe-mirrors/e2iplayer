@@ -14174,10 +14174,11 @@ class pageParser(CaptchaHelper):
         
         sts, data = self.cm.getPage(baseUrl, httpParams)
         
-        if sts:
-            printDBG("-----------------------")
-            printDBG(data)
-            printDBG("-----------------------")
+#        if sts:
+#            printDBG("-----------------------")
+#            printDBG(data)
+#            printDBG("-----------------------")
+#            printDBG("-----------------------")
 
 
         subTracks=[]
@@ -14641,15 +14642,20 @@ class pageParser(CaptchaHelper):
 
         sts, data = self.cm.getPage(baseUrl, httpParams)
         if sts:
-#            printDBG("-----------------------")
-#            printDBG(data)
-#            printDBG("-----------------------")
-
-            r = self.cm.ph.getSearchGroups(data, r'v-bind:stream="([^"]+)')[0]
+            r = self.cm.ph.getSearchGroups(data, r'v-bind:stream="([^"]+?)"')[0].replace('&quot;', '"')
             if r:
-                data = json_loads(r.replace('&quot;', '"'))
-                url = data.get('host') + data.get('hash') + '/index.m3u8'
-                urlsTab.extend(getDirectM3U8Playlist(url, checkContent=True, sortWithMaxBitrate=999999999))
+                data = json_loads(r)
+                host = data.get('host')
+                hash = data.get('hash')
+
+                jsCode = 'var t = '+ repr(host) +';var s = "";for (var i = 0; i < t.length; i++) {s += String.fromCharCode(t[i].charCodeAt() ^ 50);}console.log(s);'
+
+                ret = js_execute(jsCode)
+
+                if ret['sts'] and 0 == ret['code']:
+                    host = ret['data']
+                    url = host.strip() + hash + '/index.m3u8'
+                    urlsTab.extend(getDirectM3U8Playlist(url, checkContent=True, sortWithMaxBitrate=999999999))
 
         return urlsTab
 
