@@ -5,7 +5,6 @@ host3sktv
 host7tvde
 host9anime
 hostakoam
-hostalltubetv
 hostaltadefinizione
 hostaltadefinizionecool
 hostaltadefinizione01
@@ -168,7 +167,6 @@ hostthewatchseriesto
 hosttvgrypl
 hosttvn24
 hosttvnowde
-hosttvnvod
 hosttvplayercom
 hosttvproart
 hosttvpvod
