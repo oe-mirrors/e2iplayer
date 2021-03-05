@@ -50,23 +50,23 @@ def GetConfigList():
 
 
 def gettytul():
-    return 'https://swatchseries.to/'
+    return 'https://swatchseries.ru/'
 
 class TheWatchseriesTo(CBaseHostClass):
-    DOMAIN        = 'www1.swatchseries.to'
-    MAIN_URL      = 'https://%s/' % DOMAIN
+    DOMAIN        = 'https://swatchseries.ru/'
+    MAIN_URL      = 'https://swatchseries.ru/'
     SEARCH_URL    = MAIN_URL + 'search/'
-    DEFAULT_ICON  = "https://%s/templates/default/images/apple-touch-icon.png" % DOMAIN
+    DEFAULT_ICON  = "https://i.pinimg.com/originals/c4/17/0b/c4170b68392f40cf7bed170cc9220906.jpg"
     
     HEADER = {'User-Agent': 'Mozilla/5.0', 'Accept': 'text/html', 'Accept-Encoding':'gzip, deflate', 'Referer':MAIN_URL}
     AJAX_HEADER = dict(HEADER)
     AJAX_HEADER.update( {'X-Requested-With': 'XMLHttpRequest'} )
     
-    MAIN_CAT_TAB = [{'icon':DEFAULT_ICON, 'category':'list_series',     'title': _('Series list'),           'url':MAIN_URL+'series'},                  # https://www1.swatchseries.to/series
-                    {'icon':DEFAULT_ICON, 'category':'episodes',        'title': _('Popular Episodes'),      'url':MAIN_URL+'new'},                     # https://www1.swatchseries.to/new
-                    {'icon':DEFAULT_ICON, 'category':'episodes',        'title': _('Newest Episodes'),       'url':MAIN_URL+'latest'},                  # https://www1.swatchseries.to/latest
-                    {'icon':DEFAULT_ICON, 'category':'categories',      'title': _('All A-Z'),               'url':MAIN_URL+'letters/A'},               # https://www1.swatchseries.to/letters/A
-                    {'icon':DEFAULT_ICON, 'category':'categories',      'title': _('Genres'),                'url':MAIN_URL+'genres/action'},           # https://www1.swatchseries.to/genres/action   
+    MAIN_CAT_TAB = [{'icon':DEFAULT_ICON, 'category':'list_series',     'title': _('Series list'),           'url':MAIN_URL+'tv-series'},                  # https://swatchseries.ru/tv-series
+                    {'icon':DEFAULT_ICON, 'category':'episodes',        'title': _('Popular Episodes'),      'url':MAIN_URL+'movies'},                     # https://swatchseries.ru/movies
+                    {'icon':DEFAULT_ICON, 'category':'episodes',        'title': _('Newest Episodes'),       'url':MAIN_URL+'movies'},                  # https://swatchseries.ru/movies
+                    {'icon':DEFAULT_ICON, 'category':'categories',      'title': _('All A-Z'),               'url':MAIN_URL+'letters/A'},               # https://swatchseries.ru/letters/A
+                    {'icon':DEFAULT_ICON, 'category':'categories',      'title': _('Genres'),                'url':MAIN_URL+'genres/action'},           # https://swatchseries.ru/genre/action   
                     {'icon':DEFAULT_ICON, 'category':'search',          'title': _('Search'), 'search_item':True},
                     {'icon':DEFAULT_ICON, 'category':'search_history',  'title': _('Search history')} ]
 
@@ -111,7 +111,7 @@ class TheWatchseriesTo(CBaseHostClass):
         HTTP_HEADER= dict(self.HEADER)
         params.update({'header':HTTP_HEADER})
         
-        if self.isNeedProxy() and ('thewatchseries.to' in url or 'watch-series.to' in url or 'the-watch-series.to' in url or self.DOMAIN in url):
+        if self.isNeedProxy() and ('swatchseries.ru' in url or 'watch-series.to' in url or 'the-watch-series.to' in url or self.DOMAIN in url):
             proxy = self.getProxyProvider()
             proxy = proxy.format(urllib.quote(url, ''))
             params['header']['Referer'] = proxy # + '&f=norefer'
@@ -123,7 +123,7 @@ class TheWatchseriesTo(CBaseHostClass):
         
     def getIconUrl(self, url):
         url = self.getFullUrl(url)
-        if self.isNeedProxy() and ('thewatchseries.to' in url or 'watch-series.to' in url or 'the-watch-series.to' in url or self.DOMAIN in url):
+        if self.isNeedProxy() and ('swatchseries.ru' in url or 'watch-series.to' in url or 'the-watch-series.to' in url or self.DOMAIN in url):
             proxy = self.getProxyProvider()
             proxy = proxy.format(urllib.quote(url, ''))
             params = {}
