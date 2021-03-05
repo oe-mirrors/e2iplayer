@@ -19,14 +19,14 @@ except Exception: import simplejson as json
 ###################################################
 
 def gettytul():
-    return 'https://4movierulz.sh/'
+    return 'https://4movierulz.lu/'
 
 class MovieRulzSX(CBaseHostClass):
     
     def __init__(self):
         CBaseHostClass.__init__(self, {'history':'movierulz.sx', 'cookie':'movierulz.sx.cookie'})
         self.USER_AGENT = 'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:40.0) Gecko/20100101 Firefox/40.0'
-        self.MAIN_URL = 'https://4movierulz.sh/'
+        self.MAIN_URL = 'https://4movierulz.lu/'
         self.DEFAULT_ICON_URL = 'https://superrepo.org/static/images/icons/original/xplugin.video.movierulz.png.pagespeed.ic.em3U-ZIgpV.png'
         self.HTTP_HEADER = {'User-Agent': self.USER_AGENT, 'DNT':'1', 'Accept': 'text/html', 'Accept-Encoding':'gzip, deflate', 'Referer':self.getMainUrl(), 'Origin':self.getMainUrl()}
         self.AJAX_HEADER = dict(self.HTTP_HEADER)
