@@ -42,7 +42,6 @@ hostdrdk
 hostdsda
 hostefilmytv
 hostegybest
-hostekinomaniak
 hostekinotv
 hostekstraklasatv
 hosteskago
@@ -163,7 +162,6 @@ hosttainiesonline
 hosttantifilmorg
 hostted
 hosttfarjocom
-hostthewatchseriesto
 hosttvgrypl
 hosttvn24
 hosttvnowde
