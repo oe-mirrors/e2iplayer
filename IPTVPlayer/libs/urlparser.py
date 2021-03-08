@@ -45,6 +45,7 @@ import re
 import time
 import urllib
 import string
+import codecs
 import base64
 import math
 
@@ -6645,39 +6646,20 @@ class pageParser(CaptchaHelper):
                 url = 'http:' + url
             return url
         
-        urlsTab = []
-        
         sts, data = self.cm.getPage(baseUrl)
-        if not sts: return urlsTab
+        if not sts: return False
         
         playerUrl = self.cm.ph.getSearchGroups(data, """['"]([^'^"]+?webcamera\.[^'^"]+?/player/[^'^"]+?)['"]""")[0]
         if playerUrl == '': playerUrl = self.cm.ph.getSearchGroups(data, """['"]([^'^"]+?player\.webcamera\.[^'^"]+?)['"]""")[0]
         playerUrl = _getFullUrl(playerUrl)
         if self.cm.isValidUrl(playerUrl):
             sts, tmp = self.cm.getPage(playerUrl)
-            tmp = re.compile("""['"]([^'^"]+?\.m3u8[^'^"]*?)['"]""").findall(tmp)
-            if len(tmp) == 2:
-                tmpList = getDirectM3U8Playlist(_getFullUrl(tmp[0]), checkContent=True)
-                if len(tmpList) and not 'connlimit' in tmp[0]:
-                    urlsTab.extend(tmpList)
-                else:
-                    return getDirectM3U8Playlist(_getFullUrl(tmp[1]), checkContent=True)
-            else:
-                for playerUrl in tmp:
-                    playerUrl = _getFullUrl(playerUrl)
-                    if self.cm.isValidUrl(playerUrl):
-                        urlsTab.extend(getDirectM3U8Playlist(playerUrl, checkContent=True))
+            tmp = self.cm.ph.getSearchGroups(tmp, """var\sVIDEO_SRC\s=\s['"]([^'^"]+?)['"]""")[0]
+            if tmp != '':
+                tmp = codecs.decode(tmp, 'rot13').replace('\/', '/')
+                return getDirectM3U8Playlist(_getFullUrl(tmp), checkContent=True)
         
-        data = self.cm.ph.getSearchGroups(data, """<meta itemprop="embedURL" content=['"]([^'^"]+?)['"]""")[0]
-        data = data.split('&')
-        if 2 < len(data) and data[0].startswith('http') and data[1].startswith('streamer=') and data[2].startswith('file='):
-            swfUrl = data[0]
-            url    = urllib.unquote(data[1][len('streamer='):])
-            file   = urllib.unquote(data[2][len('file='):])
-            if '' != file and '' != url:
-                url += ' playpath=%s swfUrl=%s pageUrl=%s live=1 ' % (file, swfUrl, baseUrl)
-                urlsTab.append({'name':'rtmp', 'url':url})
-        return urlsTab
+        return False
         
     def parserFLASHXTV(self, baseUrl):
         printDBG("parserFLASHXTV baseUrl[%s]" % baseUrl)
