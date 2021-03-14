@@ -60,7 +60,7 @@ class IPTVHostsGroups:
         self.PREDEFINED_HOSTS = {}
         self.PREDEFINED_HOSTS['userdefined']      = ['favourites','localmedia']
         self.PREDEFINED_HOSTS['moviesandseries']  = ['appletrailers','efilmytv','s01pl','ekinotv','cdapl','vizjerpl','zaluknijcc','iitvpl','filman','ogladajto','govodtv','filmynadzis','freediscpl', \
-                                                     ,'movienightws','yifytv','hdpopcornscom','losmovies', \
+                                                     'movienightws','yifytv','hdpopcornscom','losmovies', \
                                                      'solarmovie','mythewatchseries','thewatchseriesto','classiccinemaonline','seriesonline','vumooch','movie4kto','dardarkomcom','movs4ucom','movizlandcom', \
                                                      'sovdub','kinopokaz','cinemay','icefilmsinfo','hdkinomir','kinotan','egybest','dpstreamingcx','librestream','streamcomplet','skstream','filmstreamvkcom', \
                                                      'filmpalast','hdstreams','serienstreamto','bsto','hdfilmetv','cineto','treetv','mozicsillag','filmezz','rtlmost','gamatocom','xrysoise','gamatotvme','mooviecc','mrpiracy', \
