@@ -613,6 +613,7 @@ class YouTubeParser():
                     r3 = r2['sectionListRenderer']['contents'][0]['itemSectionRenderer']['contents']
                     r4 = r3[0]['gridRenderer'].get('items','')
                 
+                nextPage = ''
                 for r5 in r4:
                     videoJson = r5.get("gridVideoRenderer","") 
                     nP = r5.get('continuationItemRenderer','')
@@ -624,7 +625,6 @@ class YouTubeParser():
                     if nP != '': nextPage = nP
                 
                 if nextPage:
-                    printDBG('YouTubeParser.getVideosFromChannelList nextPage [%s]' % (nextPage) )
                     ctoken = nextPage["continuationEndpoint"]["continuationCommand"].get('token', '')
                     ctit = nextPage["continuationEndpoint"]["clickTrackingParams"]
                     try:

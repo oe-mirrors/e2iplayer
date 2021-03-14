@@ -3514,12 +3514,12 @@ class pageParser(CaptchaHelper):
 #            printDBG(data)
 #            printDBG("----------------------")
             
-            tmp = self.cm.ph.getAllItemsBeetwenMarkers(data, 'window.hola_player({', '}, ', False)
+            tmp = self.cm.ph.getAllItemsBeetwenMarkers(data, 'jwplayer("vplayer").setup({', '},', False)
             printDBG(str(tmp))
             
             for t in tmp:
                 if 'sources' in t:
-                    links= re.findall("src\s?:\s?['\"]([^\"^']+?)['\"]",t,re.S)
+                    links= re.findall("file\s?:\s?['\"]([^\"^']+?)['\"]",t,re.S)
                     
                     for link_url in links:
                         if  self.cm.isValidUrl(link_url):
@@ -12959,15 +12959,15 @@ class pageParser(CaptchaHelper):
 
         sts, data = self.cm.getPage(baseUrl, httpParams)
         if sts:
-#            printDBG("-----------------------")
-#            printDBG(data)
-#            printDBG("-----------------------")
-
-            r = self.cm.ph.getSearchGroups(data, r'v-bind:stream="([^"]+)')[0]
+            r = self.cm.ph.getSearchGroups(data, r'v-bind:stream="([^"]+?)"')[0].replace('&quot;', '"')
             if r:
-                data = json_loads(r.replace('&quot;', '"'))
-                url = data.get('host') + data.get('hash') + '/index.m3u8'
+                data = json_loads(r)
+                hash = data.get('hash')
+
+                host = "".join([chr(ord(i)^50) for i in data.get('host')])
+                url = '%s%s/index.m3u8' % (host, hash)
                 urlsTab.extend(getDirectM3U8Playlist(url, checkContent=True, sortWithMaxBitrate=999999999))
+
 
         return urlsTab
 
