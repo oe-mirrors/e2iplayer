@@ -39,7 +39,6 @@ hostdpstreamingcx
 hostdrdk
 hostefilmytv
 hostegybest
-hostekinomaniak
 hostekinotv
 hostekstraklasatv
 hosteskago
