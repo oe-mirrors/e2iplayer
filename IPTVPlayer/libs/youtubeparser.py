@@ -33,7 +33,7 @@ config.plugins.iptvplayer.ytUseDF         = ConfigYesNo(default = True)
 config.plugins.iptvplayer.ytAgeGate       = ConfigYesNo(default = False)
 config.plugins.iptvplayer.ytVP9           = ConfigYesNo(default = False)
 config.plugins.iptvplayer.ytShowDash      = ConfigSelection(default = "auto", choices = [("auto", _("Auto")),("true", _("Yes")),("false", _("No"))])
-config.plugins.iptvplayer.ytSortBy        = ConfigSelection(default = "", choices = [("", _("Relevance")),("video_date_uploaded", _("Upload date")),("video_view_count", _("View count")),("video_avg_rating", _("Rating"))]) 
+config.plugins.iptvplayer.ytSortBy        = ConfigSelection(default = "A", choices = [("A", _("Relevance")),("I", _("Upload date")),("M", _("View count")),("E", _("Rating"))]) 
 
 
 class YouTubeParser():
@@ -651,7 +651,7 @@ class YouTubeParser():
     # SEARCH PARSER
     ########################################################
     #def getVideosFromSearch(self, pattern, page='1'):
-    def getSearchResult(self, pattern, searchType, page, nextPageCategory, sortBy='', url = ''):
+    def getSearchResult(self, pattern, searchType, page, nextPageCategory, sortBy='A', url = ''):
         printDBG('YouTubeParser.getSearchResult pattern[%s], searchType[%s], page[%s]' % (pattern, searchType, page))
         currList = []
               
@@ -675,11 +675,14 @@ class YouTubeParser():
                 # url = 'http://www.youtube.com/results?search_query=%s&filters=%s&search_sort=%s' % (pattern, searchType, sortBy) 
                 url = 'https://www.youtube.com/results?search_query=' + pattern + '&sp='
                 if searchType == 'video':
-                    url += 'EgIQAQ%253D%253D'
+#                    url += 'EgIQAQ%253D%253D'
+                    url += 'CA%sSAhAB' % sortBy
                 if searchType == 'channel':
-                    url += 'EgIQAg%253D%253D'
+#                    url += 'EgIQAg%253D%253D'
+                    url += 'CA%sSAhAC' % sortBy
                 if searchType == 'playlist':
-                    url += 'EgIQAw%253D%253D'
+#                    url += 'EgIQAw%253D%253D'
+                    url += 'CA%sSAhAD' % sortBy
                 if searchType == 'live':
                     url += 'EgJAAQ%253D%253D'
 
