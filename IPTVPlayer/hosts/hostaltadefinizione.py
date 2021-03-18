@@ -21,19 +21,19 @@ import base64
 ###################################################
 
 def gettytul():
-    return 'https://altadefinizione.family/'
+    return 'https://altadefinizione.capital/'
 
 class Altadefinizione(CBaseHostClass):
  
     def __init__(self):
-        CBaseHostClass.__init__(self, {'history':'altadefinizione', 'cookie':'altadefinizione.family.cookie'})
+        CBaseHostClass.__init__(self, {'history':'altadefinizione', 'cookie':'altadefinizione.dance.cookie'})
         self.USER_AGENT = 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/73.0.3683.103 Safari/537.36'
         self.HEADER = {'User-Agent': self.USER_AGENT, 'DNT':'1', 'Accept': 'text/html'}
         self.AJAX_HEADER = dict(self.HEADER)
         self.AJAX_HEADER.update( {'X-Requested-With': 'XMLHttpRequest'} )
-        self.MAIN_URL = 'https://altadefinizione.family/'
+        self.MAIN_URL = 'https://altadefinizione.capital/'
         self.AZ_URL = self.MAIN_URL + 'catalog/%l/page/{0}'
-        self.NEW_URL_URL = 'https://altadefinizione-nuovo.info/'
+        self.NEW_URL_URL = 'https://nuovolink.com/'
         self.DEFAULT_ICON_URL = self.NEW_URL_URL + 'wp-content/uploads/2019/07/logo.png'
         
         self.cacheCategories = []
