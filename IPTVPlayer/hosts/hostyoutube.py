@@ -6,6 +6,7 @@
 from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _
 from Plugins.Extensions.IPTVPlayer.components.ihost import CHostBase, CBaseHostClass, CDisplayListItem
 from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, IsExecutable, printExc, byteify
+from Plugins.Extensions.IPTVPlayer.tools.iptvtypes import strwithmeta
 from Plugins.Extensions.IPTVPlayer.tools.iptvfilehost import IPTVFileHost
 from Plugins.Extensions.IPTVPlayer.libs.youtubeparser import YouTubeParser
 from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _
@@ -140,7 +141,7 @@ class Youtube(CBaseHostClass):
     def listItems(self, cItem):
         printDBG('Youtube.listItems cItem[%s]' % (cItem))
         category = cItem.get("category", '')
-        url      = cItem.get("url", '')
+        url      = strwithmeta(cItem.get("url", ''))
         page     = cItem.get("page", '1')
         
         if "playlists" == category:
@@ -185,7 +186,7 @@ class Youtube(CBaseHostClass):
         page     = cItem.get("page", '1')
                 
         if "channel" == category:
-            if not ('browse_ajax' in url) and (not 'ctoken' in url):
+            if not ('browse' in url) and (not 'ctoken' in url):
                 if url.endswith('/videos'): 
                     url = url + '?flow=list&view=0&sort=dd'
                 else:
