@@ -21,7 +21,7 @@ except Exception: import simplejson as json
 ###################################################
 
 def gettytul():
-    return 'https://www.cb01.run/'
+    return 'https://cbo1.fun/'
 
 class Cb01(CBaseHostClass):
 
@@ -33,8 +33,8 @@ class Cb01(CBaseHostClass):
         self.AJAX_HEADER = dict(self.HEADER)
         self.AJAX_HEADER.update( {'X-Requested-With':'XMLHttpRequest', 'Content-Type':'application/x-www-form-urlencoded; charset=UTF-8'} )
         
-        self.MAIN_URL = 'https://www.cb01.run/'
-        self.DEFAULT_ICON_URL = 'https://www.yourlifeupdated.net/wp-content/uploads/2019/04/Cineblog01.jpg'
+        self.MAIN_URL = 'https://cbo1.fun/'
+        self.DEFAULT_ICON_URL = 'https://cbo1.fun/wp-content/uploads/2020/02/logocb2-1.png'
         
         self.defaultParams = {'header':self.HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
     

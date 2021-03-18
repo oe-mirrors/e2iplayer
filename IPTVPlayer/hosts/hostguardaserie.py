@@ -17,7 +17,7 @@ except Exception: import simplejson as json
 ###################################################
 
 def gettytul():
-    return 'https://www.guardaserie.kim/'
+    return 'https://guardaserie.page/'
 
 class GuardaSerieClick(CBaseHostClass):
 
@@ -25,12 +25,12 @@ class GuardaSerieClick(CBaseHostClass):
         CBaseHostClass.__init__(self, {'history':'guardaserie.kim', 'cookie':'guardaserie.kim.cookie'})
         
         self.USER_AGENT = 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/73.0.3683.103 Safari/537.36'
-        self.MAIN_URL = 'https://www.guardaserie.kim/'
+        self.MAIN_URL = 'https://guardaserie.page/'
 
         self.HEADER = {'User-Agent': self.USER_AGENT, 'Accept': 'text/html', 'Accept-Encoding': 'gzip', 'Referer': self.MAIN_URL}
         self.AJAX_HEADER = MergeDicts(self.HEADER, {'X-Requested-With':'XMLHttpRequest', 'Content-Type':'application/x-www-form-urlencoded; charset=UTF-8'})
         
-        self.DEFAULT_ICON_URL = 'https://cdn.pixabay.com/photo/2014/03/25/16/57/clapper-297673_1280.png'
+        self.DEFAULT_ICON_URL = 'https://guardaserie.page/wp-content/uploads/2015/05/logogd-1-1.png'
         
         self.defaultParams = {'header':self.HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
     
