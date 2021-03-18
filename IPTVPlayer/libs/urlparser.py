@@ -51,6 +51,7 @@ import re
 import time
 import urllib
 import string
+import codecs
 import base64
 import math
 
@@ -495,6 +496,7 @@ class urlparser:
                        'streamplay.cc':         self.pp.parserSTREAMPLAY    ,
                        'streamplay.me':         self.pp.parserSTREAMPLAY    ,
                        'streamplay.to':         self.pp.parserSTREAMPLAY    ,
+                       'streamsb.net':          self.pp.parserONLYSTREAM   ,
                        'streamtape.com':        self.pp.parserSTREAMTAPE    ,
                        'streamtape.net':        self.pp.parserSTREAMTAPE    ,
                        'streamtape.to':         self.pp.parserSTREAMTAPE    ,
@@ -3740,12 +3742,12 @@ class pageParser(CaptchaHelper):
             printDBG(data)
             printDBG("----------------------")
             
-            tmp = self.cm.ph.getAllItemsBeetwenMarkers(data, 'window.hola_player({', '}, ', False)
+            tmp = self.cm.ph.getAllItemsBeetwenMarkers(data, 'jwplayer("vplayer").setup({', '},', False)
             printDBG(str(tmp))
             
             for t in tmp:
                 if 'sources' in t:
-                    links= re.findall("src\s?:\s?['\"]([^\"^']+?)['\"]",t,re.S)
+                    links= re.findall("file\s?:\s?['\"]([^\"^']+?)['\"]",t,re.S)
                     
                     for link_url in links:
                         if  self.cm.isValidUrl(link_url):
