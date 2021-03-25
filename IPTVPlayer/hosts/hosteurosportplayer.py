@@ -53,7 +53,7 @@ class EuroSportPlayer(CBaseHostClass):
         self.MENUBAR_URL = self.API_URL + "cms/collections/web-menubar?include=default"
         self.SCHEDULE_URL = self.API_URL + "cms/routes/schedule?include=default"
         self.SCHEDULE_COLLECTION_URL = self.API_URL + 'cms/collections/{%id%}?include=default&{%filter%}'  
-        self.PLAYBACK_URL = self.API_URL + '/playback/v2/videoPlaybackInfo/{%video_id%}?usePreAuth=true'
+        self.PLAYBACK_URL = self.API_URL + 'playback/v2/videoPlaybackInfo/{%video_id%}?usePreAuth=true'
         
         self.DEFAULT_ICON_URL = 'http://mirrors.kodi.tv/addons/leia/plugin.video.eurosportplayer/resources/icon.png'
         
