@@ -718,13 +718,13 @@ class UpdateMainAppImpl(IUpdateObjectInterface):
                     sourceUrl = "https://gitlab.com/{0}/e2iplayer/-/archive/master/e2iplayer-master.tar.gz".format(config.plugins.iptvplayer.gitlab_repo.value)
                     self.gitlabList = {'name':'gitlab.com', 'version':newVerNum, 'url':sourceUrl, 'subdir':'e2iplayer-master/', 'pyver':'X.X', 'packagetype':'sourcecode'}
                     printDBG("__serversListGitlabFinished: [%s]" % str(self.gitlabList))
+                    self.stepFinished(0, _("GitLab version from {0} was downloaded successfully.".format(config.plugins.iptvplayer.gitlab_repo.value)))
                 else:
                     msg = _("Wrong version: [%s].") % str(self.gitlabList)
                     self.stepFinished(-1, msg)
             else:
                 msg = _("File not found:\n[%s].") % filePath
                 self.stepFinished(-1, msg)
-            self.stepFinished(0, _("GitLab version from {0} was downloaded successfully.".format(config.plugins.iptvplayer.gitlab_repo.value)))
         return
 
     def __serversListDownloadFinished(self, arg, status):
