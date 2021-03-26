@@ -287,11 +287,11 @@ class GamatoMovies(CBaseHostClass):
         shortUri = videoUrl
         domain = self.up.getDomain(videoUrl)
         sts, data = self.cm.getPage(videoUrl)
-        if sts and 'sfdmn.eu' in data:
-            videoUrl = videoUrl.replace(domain, 'sfdmn.eu')
-            domain = 'sfdmn.eu'
+        if sts and 'gosfd.eu' in data:
+            videoUrl = videoUrl.replace(domain, 'gosfd.eu')
+            domain = 'gosfd.eu'
         
-        if 'sfdmn.eu' in domain or 'streamtape.net' in domain:
+        if 'gosfd.eu' in domain or 'streamtape.net' in domain:
             from Plugins.Extensions.IPTVPlayer.libs.unshortenit import unshorten
             uri, sts = unshorten(videoUrl)
             videoUrl = str(uri)
