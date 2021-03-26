@@ -272,7 +272,8 @@ class urlparser:
                        'goodcast.co':           self.pp.parserGOODCASTCO    ,
                        'goodrtmp.com':          self.pp.parserGOODRTMP      ,
                        'google.com':            self.pp.parserGOOGLE        ,
-                       'gorillavid.in':         self.pp.parserFASTVIDEOIN   , 
+                       'gorillavid.in':         self.pp.parserFASTVIDEOIN   ,
+                       'gosfd.eu':              self.pp.parserSTREAMTAPE    ,
                        'gounlimited.to':        self.pp.parserGOUNLIMITEDTO  ,
                        'govod.tv':              self.pp.parserWIIZTV         ,
                        'haxhits.com':           self.pp.parserHAXHITSCOM     ,
@@ -7830,7 +7831,7 @@ class pageParser(CaptchaHelper):
         printDBG("parserHDVIDTV baseUrl[%s]" % baseUrl)
         def _findLinks(data):
             return self._findLinks2(data, baseUrl)
-        return self._parserUNIVERSAL_A(baseUrl, 'http://sfdmn.eu/{0}-950x480.html', _findLinks)
+        return self._parserUNIVERSAL_A(baseUrl, 'http://gosfd.eu/{0}-950x480.html', _findLinks)
 
     def parserVIDME(self, baseUrl):
         printDBG("parserVIDME baseUrl[%s]" % baseUrl)
