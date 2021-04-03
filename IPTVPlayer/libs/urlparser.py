@@ -615,6 +615,7 @@ class urlparser:
                        'talbol.net':           self.pp.parserTXNEWSNETWORK  ,
                        'txnewsnetwork.net':    self.pp.parserTXNEWSNETWORK  ,
                        'lookhd.xyz':           self.pp.parserTXNEWSNETWORK  ,
+                       'highstream.tv':        self.pp.parserCLIPWATCHINGCOM,
                     }
         return
     
@@ -3514,24 +3515,22 @@ class pageParser(CaptchaHelper):
 #            printDBG(data)
 #            printDBG("----------------------")
             
-            tmp = self.cm.ph.getAllItemsBeetwenMarkers(data, 'jwplayer("vplayer").setup({', '},', False)
-            printDBG(str(tmp))
+            data = self.cm.ph.getDataBeetwenReMarkers(data, re.compile('''jwplayer\([^\)]+?player[^\)]+?\)\.setup'''), re.compile(';'))[1]
+#            printDBG(str(data))
             
-            for t in tmp:
-                if 'sources' in t:
-                    links= re.findall("file\s?:\s?['\"]([^\"^']+?)['\"]",t,re.S)
-                    
-                    for link_url in links:
-                        if  self.cm.isValidUrl(link_url):
-                            link_url = urlparser.decorateUrl(link_url, {'Referer': baseUrl})
-                            if 'm3u8' in link_url:
-                                params = getDirectM3U8Playlist(link_url, checkExt=True, variantCheck=True, checkContent=True, sortWithMaxBitrate=99999999)
-                                printDBG(str(params))
-                                urlTabs.extend(params)
-                            else:
-                                params = {'name': 'link' , 'url': link_url}
-                                printDBG(str(params))
-                                urlTabs.append(params)
+            if 'sources' in data:
+                items = self.cm.ph.getDataBeetwenReMarkers(data, re.compile('''[\{\s]sources\s*[=:]\s*\['''), re.compile('''\]'''), False)[1].split('},')
+                for item in items:
+                    label   = self.cm.ph.getSearchGroups(item, 'label:[ ]*?"([^"]+?)"')[0]
+                    src     = self.cm.ph.getSearchGroups(item, 'file:[ ]*?"([^"]+?)"')[0]
+                    if  self.cm.isValidUrl(src):
+                        src = urlparser.decorateUrl(src, {'Referer': baseUrl})
+                        if 'm3u8' in src:
+                            params = getDirectM3U8Playlist(src, checkExt=True, variantCheck=True, checkContent=True, sortWithMaxBitrate=99999999)
+                            urlTabs.extend(params)
+                        else:
+                            params = {'name': 'mp4 ' + label, 'url': src}
+                            urlTabs.append(params)
                     
         return urlTabs
         

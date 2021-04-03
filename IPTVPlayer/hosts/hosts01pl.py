@@ -246,7 +246,7 @@ class S01pl(CBaseHostClass):
 #            printDBG("S01pl.getLinksForVideo item[%s]" % item)
             playerUrl = self.getFullUrl(item.get('url', '')).replace(' ', '%20')
             if playerUrl == '': continue
-            name = item.get('name', '') + ' ' + self.up.getHostName(playerUrl)
+            name = self.cm.ph.getDataBeetwenMarkers(item.get('name', ''), '[', ']', True)[1] + ' ' + self.up.getHostName(playerUrl)
             if item['category'] == 'trailer': name = '[trailer] ' + name
             retTab.append({'name':name, 'url':strwithmeta(playerUrl, {'Referer':url}), 'need_resolve':1})
              
