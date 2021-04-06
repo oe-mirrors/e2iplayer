@@ -616,6 +616,8 @@ class urlparser:
                        'txnewsnetwork.net':    self.pp.parserTXNEWSNETWORK  ,
                        'lookhd.xyz':           self.pp.parserTXNEWSNETWORK  ,
                        'highstream.tv':        self.pp.parserCLIPWATCHINGCOM,
+                       'wolfstream.tv':        self.pp.parserCLIPWATCHINGCOM,
+                       'userload.co':          self.pp.parserUSERLOADCO     ,
                     }
         return
     
@@ -13036,3 +13038,45 @@ class pageParser(CaptchaHelper):
                                     urlTabs.append(tabs[0])
         
         return urlTabs
+
+    def parserUSERLOADCO(self, baseUrl):
+        printDBG("parserUSERLOADCO baseUrl[%s]" % baseUrl)
+
+        HTTP_HEADER = self.cm.getDefaultHeader(browser='chrome')
+        referer = baseUrl.meta.get('Referer')
+        if referer: HTTP_HEADER['Referer'] = referer
+        urlParams = {'header': HTTP_HEADER}
+        sts, data = self.cm.getPage(baseUrl, urlParams)
+        if not sts: return False
+
+        if "eval(function(p,a,c,k,e,d)" in data:
+            printDBG( 'Host resolveUrl packed' )
+            packed = re.compile('>eval\(function\(p,a,c,k,e,d\)(.+?)</script>', re.DOTALL).findall(data)
+            if packed:
+                data2 = packed[-1]
+            else:
+                return ''
+            printDBG( 'Host pack: [%s]' % data2)
+            try:
+                data = unpackJSPlayerParams(data2, TEAMCASTPL_decryptPlayerParams, 0, True, True)
+                printDBG( 'OK unpack: [%s]' % data)
+            except Exception: pass
+
+            morocco = self.cm.ph.getSearchGroups(data, '''['"](AO.+?Aa)['"]''')[0]
+            if morocco =='': morocco = self.cm.ph.getSearchGroups(data, '''['"]([0-9a-zA-Z]{31})['"]''')[0]
+            tmp = re.findall('''['"]([0-9a-z]{32})['"]''', data)
+            for item in tmp:
+                post_data = {'morocco':morocco, 'mycountry':item}
+                sts, data = self.cm.getPage('https://userload.co/api/request/', urlParams, post_data)
+                if not sts: return False
+                if 'http' in data: break
+            data = data.splitlines()[0]
+
+        urlTab = []
+        url = strwithmeta(data, {'Origin':"https://" + urlparser.getDomain(baseUrl), 'Referer':baseUrl})
+        if 'm3u8' in url:
+            urlTab.extend(getDirectM3U8Playlist(url, checkExt=False, variantCheck=True, checkContent=True, sortWithMaxBitrate=99999999))
+        else:
+            urlTab.append({'name':'mp4', 'url':url})
+
+        return urlTab
