@@ -18,7 +18,7 @@ if __name__ == "__main__":
         moduleDir = sys.argv[2]
         moduleName = sys.argv[3]
         sys.path.insert(1, libsPath)
-        mod = __import__('%s.%s' % (moduleDir, moduleName), globals(), locals(), [''], -1)
+        mod = __import__('%s.%s' % (moduleDir, moduleName), globals(), locals(), [''], 0)
         if hasattr(mod, '__version__'):
             print(mod.__version__)
         else:

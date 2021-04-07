@@ -31,7 +31,7 @@ class ConfigHostMenu(ConfigBaseWidget):
         self.hostName = hostName
         ConfigBaseWidget.__init__(self, session)
         self.setup_title = _("Configuration [%s] service") % self.hostName
-        self.host = __import__('Plugins.Extensions.IPTVPlayer.hosts.host' + hostName, globals(), locals(), ['GetConfigList'], -1)
+        self.host = __import__('Plugins.Extensions.IPTVPlayer.hosts.host' + hostName, globals(), locals(), ['GetConfigList'], 0)
 
     def __del__(self):
         printDBG("ConfigHostMenu.__del__ ")
@@ -132,7 +132,7 @@ class ConfigHostsMenu(ConfigBaseWidget):
             if self.hostsConfigsAvailableList[curIndex] and IsHostEnabled(hostName):
                 addConf = False
                 try:
-                    self.host = __import__('Plugins.Extensions.IPTVPlayer.hosts.host' + hostName, globals(), locals(), ['GetConfigList'], -1)
+                    self.host = __import__('Plugins.Extensions.IPTVPlayer.hosts.host' + hostName, globals(), locals(), ['GetConfigList'], 0)
                     if(len(self.host.GetConfigList()) < 1):
                         printDBG('ConfigMenu host "%s" does not have additional configs' % hostName)
                     else:

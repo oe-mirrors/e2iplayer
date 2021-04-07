@@ -316,7 +316,7 @@ class IPTVSubDownloaderWidget(Screen):
 
     def loadHost(self):
         try:
-            _temp = __import__('Plugins.Extensions.IPTVPlayer.subproviders.subprov_' + self.hostName, globals(), locals(), ['IPTVSubProvider'], -1)
+            _temp = __import__('Plugins.Extensions.IPTVPlayer.subproviders.subprov_' + self.hostName, globals(), locals(), ['IPTVSubProvider'], 0)
             params = dict(self.params)
             params['confirmed_title'] = self.movieTitle
             self.host = _temp.IPTVSubProvider(params)

@@ -82,7 +82,7 @@ def removeSpecialChars(text):
 
 def getHostLogo(hostName):
 	try:
-		_temp = __import__('Plugins.Extensions.IPTVPlayer.hosts.host' + hostName, globals(), locals(), ['IPTVHost'], -1)
+		_temp = __import__('Plugins.Extensions.IPTVPlayer.hosts.host' + hostName, globals(), locals(), ['IPTVHost'], 0)
 		logo = _temp.IPTVHost().getLogoPath().value[0]
 		_temp = None
 		if os.path.exists(logo):
@@ -108,7 +108,7 @@ def initActiveHost(hostName):
 	else:
 
 		settings.activeHost['Name'] = hostName
-		_temp = __import__('Plugins.Extensions.IPTVPlayer.hosts.host' + hostName, globals(), locals(), ['IPTVHost'], -1)
+		_temp = __import__('Plugins.Extensions.IPTVPlayer.hosts.host' + hostName, globals(), locals(), ['IPTVHost'], 0)
 		settings.activeHost['Title'] = _temp.gettytul()
 		settings.activeHost['Obj'] = _temp.IPTVHost()
 		settings.activeHost['PIC'] = settings.activeHost['Obj'].getLogoPath().value[0]

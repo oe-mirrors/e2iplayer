@@ -63,7 +63,7 @@ class buildActiveHostsHTML(threading.Thread):
 				continue
 			# column 1 containing logo and link if available
 			try:
-				_temp = __import__('Plugins.Extensions.IPTVPlayer.hosts.host' + hostName, globals(), locals(), ['gettytul'], -1)
+				_temp = __import__('Plugins.Extensions.IPTVPlayer.hosts.host' + hostName, globals(), locals(), ['gettytul'], 0)
 				title = _temp.gettytul()
 				_temp = None
 			except Exception:
@@ -191,7 +191,7 @@ class buildConfigsHTML(threading.Thread):
 		for hostName in SortHostsList(GetHostsList()):
 			# column 1 containing logo and link if available
 			try:
-				_temp = __import__('Plugins.Extensions.IPTVPlayer.hosts.host' + hostName, globals(), locals(), ['gettytul'], -1)
+				_temp = __import__('Plugins.Extensions.IPTVPlayer.hosts.host' + hostName, globals(), locals(), ['gettytul'], 0)
 				title = _temp.gettytul()
 			except Exception:
 				continue # we do NOT use broken hosts!!!
@@ -215,7 +215,7 @@ class buildConfigsHTML(threading.Thread):
 
 			# Column 4 host configuration options
 			try:
-				_temp = __import__('Plugins.Extensions.IPTVPlayer.hosts.host' + hostName, globals(), locals(), ['GetConfigList'], -1)
+				_temp = __import__('Plugins.Extensions.IPTVPlayer.hosts.host' + hostName, globals(), locals(), ['GetConfigList'], 0)
 				OptionsList = _temp.GetConfigList()
 			except Exception:
 				OptionsList = []
@@ -385,7 +385,7 @@ class doGlobalSearch(threading.Thread):
 				continue
 			#print "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! ---------------- %s ---------------- !!!!!!!!!!!!!!!!!!!!!!!!!" % hostName
 			try:
-				_temp = __import__('Plugins.Extensions.IPTVPlayer.hosts.host' + hostName, globals(), locals(), ['IPTVHost'], -1)
+				_temp = __import__('Plugins.Extensions.IPTVPlayer.hosts.host' + hostName, globals(), locals(), ['IPTVHost'], 0)
 			except Exception:
 				print("doGlobalSearch: Exception importing %s" % hostName)
 				continue
