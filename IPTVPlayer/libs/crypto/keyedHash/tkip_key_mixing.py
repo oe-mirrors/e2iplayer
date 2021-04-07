@@ -17,7 +17,7 @@ def S(word):
 """
 
 from crypto.cipher.rijndael import Sbox
-tkipSbox = [range(256),range(256)] # arbitrary initialization
+tkipSbox = [list(range(256)),list(range(256))] # arbitrary initialization
 for i in range(256):
     k  = Sbox[i]           # the rijndael S box (imported)
     if k & 0x80 :          # calculate k*2 polynomial math
@@ -124,7 +124,7 @@ def phase2KeyMixing(tk,p1k,pn):
     ppk[4] = (ppk[4] + rotR1(ppk[3])) & 0xFFFF
     ppk[5] = (ppk[5] + rotR1(ppk[4])) & 0xFFFF
 
-    rc4Key = range(16)
+    rc4Key = list(range(16))
     rc4Key[0] =  pn[0]
     rc4Key[1] = (pn[0] | 0x20) & 0x7F
     rc4Key[2] =  pn[1]

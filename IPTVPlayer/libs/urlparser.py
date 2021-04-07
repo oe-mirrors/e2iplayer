@@ -1597,7 +1597,7 @@ class pageParser(CaptchaHelper):
         def __ca(dat):
             def rot47(s):
                x = []
-               for i in xrange(len(s)):
+               for i in range(len(s)):
                    j = ord(s[i])
                    if j >= 33 and j <= 126:
                        x.append(chr(33 + ((j + 14) % 94)))

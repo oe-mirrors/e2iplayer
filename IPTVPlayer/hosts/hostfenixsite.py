@@ -233,7 +233,7 @@ class Fenixsite(CBaseHostClass):
 
         data = ph.find(data, ('<div', '>', 'tab-content'), ('<div', '>', 'fstory'), flags=0)[1]
         data = ph.rfindall(data, '</div>', ('<div', '>', 'tab-pane'), flags=ph.END_S)
-        for idx in xrange(1, len(data), 2):
+        for idx in range(1, len(data), 2):
             id = ph.getattr(data[idx-1], 'id')
             item = data[idx]
             title = titlesMap.get('#%s' % id, '')

@@ -34,7 +34,7 @@ class ARC4:
         """
         self.keySize     = len(key)
         self.strength    = self.keySize  # this does not include subtracting IV size :-(
-        i, j, self.state = 0, 0, range(256)
+        i, j, self.state = 0, 0, list(range(256))
         for i in range(256):
             j = (j + self.state[i] + ord(key[i % len(key)])) % 256
             self.state[i], self.state[j] = self.state[j], self.state[i]

@@ -262,7 +262,7 @@ class MuziCsillangCC(CBaseHostClass):
         
         # trailer 
         tmp = self.cm.ph.rgetAllItemsBeetwenMarkers(data, '</iframe>', '<h2')
-        for idx in xrange(len(tmp)):
+        for idx in range(len(tmp)):
             url = self.getFullUrl(self.cm.ph.getSearchGroups(tmp[idx], '''src=['"]([^'^"]+?)['"]''')[0])
             if url.endswith('/thanks'): continue
             title = self.cleanHtmlStr(tmp[idx])
