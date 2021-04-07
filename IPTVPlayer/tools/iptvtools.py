@@ -310,7 +310,7 @@ def IsWebInterfaceModuleAvailable(chekInit=False):
         file = '__init__'
     else:
         file = 'initiator'
-    if (fileExists(resolveFilename(SCOPE_PLUGINS, 'Extensions/IPTVPlayer/Web/%s.py' % file)):
+    if (fileExists(resolveFilename(SCOPE_PLUGINS, 'Extensions/IPTVPlayer/Web/%s.py' % file))):
         return True
     else:
         return False

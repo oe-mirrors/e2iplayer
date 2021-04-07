@@ -97,7 +97,7 @@ class gledajfilmDecrypter:
 		_loc3_ = 0
 		while(_loc3_ < len(param1)):
 			_loc2_ = _loc2_ + chr(param1[_loc3_])
-            		_loc3_ += 1
+			_loc3_ += 1
 		return _loc2_
 
 	def packBytes(self, param1):
@@ -149,7 +149,7 @@ class gledajfilmDecrypter:
 			param1[1][_loc3_] = param1[1][_loc3_] ^ param2[_loc3_] >> 8 & 255
 			param1[2][_loc3_] = param1[2][_loc3_] ^ param2[_loc3_] >> 16 & 255
 			param1[3][_loc3_] = param1[3][_loc3_] ^ param2[_loc3_] >> 24 & 255
-                  	_loc3_ += 1
+			_loc3_ += 1
 
 	def shiftRow(self, param1, param2):
 		_loc4_ = True
@@ -171,9 +171,9 @@ class gledajfilmDecrypter:
 
 		return param1
 
- 	def decryption(self, param1, param2):
+	def decryption(self, param1, param2):
 		param1 = self.packBytes(param1)
-         	self.InverseFinalRound(param1, param2[self.Nb * self.Nr:]) # nb*nr=42
+		self.InverseFinalRound(param1, param2[self.Nb * self.Nr:]) # nb*nr=42
 		_loc3_ = self.Nr - 1
 		while(_loc3_ > 0):
 			self.InverseRound(param1, param2[(self.Nb * _loc3_):self.Nb * (_loc3_ + 1)])
@@ -201,7 +201,7 @@ class gledajfilmDecrypter:
 				_loc5_ += 1
 			_loc4_ += 1
 
- 	def mixColumn(self, param1, param2):
+	def mixColumn(self, param1, param2):
 		_loc4_ = 0
 		_loc3_ = [0, 0, 0, 0]
 		_loc5_ = 0
@@ -244,7 +244,7 @@ class gledajfilmDecrypter:
 
 
 def hexToChars(param1):
- 	_loc4_ = False
+	_loc4_ = False
 	_loc5_ = True
 	_loc2_ = []
 	_loc3_ = 0
