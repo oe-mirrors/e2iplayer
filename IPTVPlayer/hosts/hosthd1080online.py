@@ -212,7 +212,7 @@ class HD1080Online(CBaseHostClass):
         if not sts:
             return
         self.setMainUrl(self.cm.meta['url'])
-        
+
         value = ph.search(data, '''var\s*?dle_login_hash\s*?=\s*?['"]([^'^"]+?)['"]''')[0]
         post_data = {'query': searchPattern, 'user_hash': value, 'do': 'search', 'subaction': 'search', 'story': searchPattern}
         self.listSearchItems(MergeDicts(cItem, {'category': 'list_search_items', 'url': self.getFullUrl('/index.php?do=search'), 'post_data': post_data}), 'explore_item')
@@ -254,7 +254,7 @@ class HD1080Online(CBaseHostClass):
             if not sts:
                 return []
             self.setMainUrl(self.cm.meta['url'])
-            
+
         rating = ph.clean_html(ph.find(data, ('<div', '>', 'aggregateRating'), '</div>', flags=0)[1])
 
         data = ph.find(data, ('<div', '>', 'dle-content'), ('<', '>', 'kino-online'), flags=0)[1]
@@ -277,12 +277,12 @@ class HD1080Online(CBaseHostClass):
             icon = cItem.get('icon', self.DEFAULT_ICON_URL)
         if desc == '':
             desc = cItem.get('desc', '')
-        
+
         return [{'title': self.cleanHtmlStr(title), 'text': self.cleanHtmlStr(desc), 'images': [{'title': '', 'url': self.getFullUrl(icon)}], 'other_info': {'custom_items_list': itemsList}}]
 
     def handleService(self, index, refresh=0, searchPattern='', searchType=''):
         printDBG('handleService start')
-        
+
         CBaseHostClass.handleService(self, index, refresh, searchPattern, searchType)
 
         name = self.currItem.get("name", '')

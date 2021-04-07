@@ -23,7 +23,7 @@ def gettytul():
 
 
 class Kkiste(CBaseHostClass):
- 
+
     def __init__(self):
         CBaseHostClass.__init__(self, {'history': 'szenestreamz.com', 'cookie': 'szenestreamz.com.cookie'})
         self.DEFAULT_ICON_URL = 'http://www.szene-streamz.com/Original_Header.png'
@@ -44,18 +44,18 @@ class Kkiste(CBaseHostClass):
                              {'category': 'list_items', 'title': _('Series'), 'url': self.getFullUrl('load/')},
                              {'category': 'list_cats', 'title': _('Genre selection') + ': ' + _('Series'), 'url': self.getFullUrl('load/')},
                              {'category': 'search', 'title': _('Search'), 'search_item': True, },
-                             {'category': 'search_history', 'title': _('Search history'), } 
+                             {'category': 'search_history', 'title': _('Search history'), }
                             ]
-        
+
     def getPage(self, url, addParams={}, post_data=None):
         if addParams == {}:
             addParams = dict(self.defaultParams)
-        
+
         return self.cm.getPage(url, addParams, post_data)
-        
+
     def listsCats(self, cItem, nextCat):
         printDBG("hostszenestreamz.listsCats |%s|" % cItem)
-        
+
         url = cItem['url']
 
         if '/publ/' in url:
@@ -76,20 +76,20 @@ class Kkiste(CBaseHostClass):
                 cats.append({'category': 'list_items', 'title': title, 'url': url})
 
         self.listsTab(cats, nextCat)
-        
+
     def listItems(self, cItem, nextCategory, post_data=None):
         printDBG("hostszenestreamz.listItems |%s|" % cItem)
-        
+
         url = cItem['url']
         page = cItem.get('page', 1)
-        
+
         sts, data = self.getPage(url, {}, post_data)
 
         if not sts:
             return
 
         nextPage, pagedata = ph.find(data, '<span class="pagesBlockuz1">', '<span class="numShown73">')
-        
+
         urls = []
         titles = []
         genres = []
@@ -125,7 +125,7 @@ class Kkiste(CBaseHostClass):
             self.addDir(params)
             index += 1
             printDBG("hostszenestreamz.title [%s]" % title)
-        
+
         if nextPage:
             printDBG("hostszenestreamz.nextPage")
             thispage = ph.findall(pagedata, 'class="swchItem', '</span>')
@@ -142,10 +142,10 @@ class Kkiste(CBaseHostClass):
                 params = dict(cItem)
                 params.update({'good_for_fav': False, 'title': _('Next page'), 'page': page + 1, 'url': url})
                 self.addDir(params)
-        
+
     def exploreItem(self, cItem):
         printDBG("hostszenestreamz.exploreItem")
-        
+
         sts, data = self.getPage(cItem['url'])
         if not sts:
             return
@@ -265,10 +265,10 @@ class Kkiste(CBaseHostClass):
 
     def listEpisodes(self, cItem):
         printDBG("hostszenestreamz.listEpisodes")
-        
+
         sKey = cItem.get('s_key', -1)
         episodesList = self.cacheSeasons.get(sKey, [])
-        
+
         for item in episodesList:
             params = dict(cItem)
             params.update(item)
@@ -279,7 +279,7 @@ class Kkiste(CBaseHostClass):
         printDBG("hostszenestreamz.getVideoLinks [%s]" % videoUrl)
         videoUrl = strwithmeta(videoUrl)
         urlTab = []
-        
+
         # mark requested link as used one
         if len(self.cacheLinks):
             for key in self.cacheLinks:
@@ -288,43 +288,43 @@ class Kkiste(CBaseHostClass):
                         if not self.cacheLinks[key][idx]['name'].startswith('*'):
                             self.cacheLinks[key][idx]['name'] = '*' + self.cacheLinks[key][idx]['name']
                         break
-                        
+
         sts, data = self.getPage(videoUrl)
         if not sts:
             return []
-        
+
         if self.cm.isValidUrl(videoUrl):
             urlTab = self.up.getVideoLinkExt(videoUrl)
-        
+
         return urlTab
-        
+
     def getLinksForVideo(self, cItem):
         printDBG("szenestreamz.getLinksForVideo [%s]" % cItem)
         url = cItem.get('url', '')
         if 1 == self.up.checkHostSupport(url):
             return self.up.getVideoLinkExt(url)
-        
+
         key = cItem.get('links_key', '')
         return self.cacheLinks.get(key, [])
-    
+
     def listSearchResult(self, cItem, searchPattern, searchType):
         printDBG("hostszenestreamz.listSearchResult cItem[%s], searchPattern[%s] searchType[%s]" % (cItem, searchPattern, searchType))
         post_data = {'query': urllib.parse.unquote(searchPattern), 'sfSbm': '', 'a': '2'}
         cItem = dict(cItem)
         cItem['url'] = self.getFullUrl('/publ/')
         self.listItems(cItem, 'explore_item', post_data)
-        
+
     def handleService(self, index, refresh=0, searchPattern='', searchType=''):
         printDBG('hostszenestreamz.handleService start')
-        
+
         CBaseHostClass.handleService(self, index, refresh, searchPattern, searchType)
 
         name = self.currItem.get("name", '')
         category = self.currItem.get("category", '')
-        
+
         printDBG("handleService: |||||||||||||||||||||||||||||||||||| name[%s], category[%s] " % (name, category))
         self.currList = []
-        
+
     #MAIN MENU
         if name == None:
             self.listsTab(self.MAIN_CAT_TAB, {'name': 'category'})
@@ -339,14 +339,14 @@ class Kkiste(CBaseHostClass):
     #SEARCH
         elif category in ["search", "search_next_page"]:
             cItem = dict(self.currItem)
-            cItem.update({'search_item': False, 'name': 'category'}) 
+            cItem.update({'search_item': False, 'name': 'category'})
             self.listSearchResult(cItem, searchPattern, searchType)
     #HISTORY SEARCH
         elif category == "search_history":
             self.listsHistory({'name': 'history', 'category': 'search'}, 'desc', _("Type: "))
         else:
             printExc()
-        
+
         CBaseHostClass.endHandleService(self, index, refresh)
 
 
@@ -354,4 +354,3 @@ class IPTVHost(CHostBase):
 
     def __init__(self):
         CHostBase.__init__(self, Kkiste(), True, [])
-

@@ -29,7 +29,7 @@ def GetConfigList():
     optionList.append(getConfigListEntry(_('Cyrillic Latin Converter') + ": ", config.plugins.iptvplayer.sportstream365_cyrillic2latin))
     return optionList
 ###################################################
-    
+
 ###################################################
 
 
@@ -42,7 +42,7 @@ class SportStream365Api(CBaseHostClass):
         self.MAIN_URL = 'http://sportstream365.com/'
         self.DEFAULT_ICON_URL = self.getFullUrl('/img/logo.png')
         self.lang = None
-        
+
         OFFSET = datetime.now() - datetime.utcnow()
         seconds = OFFSET.seconds + OFFSET.days * 24 * 3600
         if ((seconds + 1) % 10) == 0:
@@ -66,7 +66,7 @@ class SportStream365Api(CBaseHostClass):
             self.cyrillic2LatinMap[item[0]] = item[1]
         for item in cyrillicAlphabets:
             self.cyrillic2LatinMap[item[0].upper()] = item[1].upper()
-    
+
     def cleanHtmlStr(self, text):
         text = CBaseHostClass.cleanHtmlStr(text)
         if config.plugins.iptvplayer.sportstream365_cyrillic2latin.value:
@@ -76,15 +76,15 @@ class SportStream365Api(CBaseHostClass):
                 text += self.cyrillic2LatinMap.get(letter, letter)
             text = text.encode('utf-8')
         return text
-        
+
     def getList(self, cItem):
         printDBG("SportStream365Api.getList cItem[%s]" % cItem)
         channelsList = []
-        
+
         if self.lang != config.plugins.iptvplayer.sportstream365_language.value:
             self.lang = config.plugins.iptvplayer.sportstream365_language.value
             lang = self.lang
-            if lang == '': 
+            if lang == '':
                 userLang = GetDefaultLang()
                 if userLang in ['de', 'en', 'es', 'fr', 'it', 'pt', 'ru', 'tr', 'cn']:
                     lang = userLang
@@ -92,7 +92,7 @@ class SportStream365Api(CBaseHostClass):
                 self.defaultParams['cookie_items'] = {'lng': lang}
             else:
                 self.defaultParams['cookie_items'] = {'lng': 'en'} #self.defaultParams.pop('cookie_items', None)
-        
+
         category = cItem.get('priv_cat')
         if category == None:
             sts, data = self.cm.getPage(self.getMainUrl(), self.defaultParams)
@@ -118,31 +118,31 @@ class SportStream365Api(CBaseHostClass):
             sts, data = self.cm.getPage(cItem['url'], self.defaultParams)
             if not sts:
                 return []
-            
+
             allowSports = self.cm.ph.getSearchGroups(data, '''var\s+?allow_sports\s*=\s*['"]([^'^"]+?)['"]''')[0]
             tagz = self.cm.ph.getSearchGroups(data, '''var\s+?tagz\s*=\s*['"]([^'^"]+?)['"]''')[0]
-            
+
             try:
                 from Plugins.Extensions.IPTVPlayer.libs import websocket
-                
+
                 lang = self.defaultParams['cookie_items']['lng']
                 for i in range(3):
                     url = self.getFullUrl('/signcon/negotiate')
                     sts, data = self.cm.getPage(url, MergeDicts(self.defaultParams, {'header': self.AJAX_HEADER, 'raw_post_data': True}), post_data='')
                     if not sts:
                         return []
-                    
+
                     data = json_loads(data)
                     uri = 'ws:' + self.getFullUrl('/signcon?id=').split(':', 1)[-1] + data['connectionId']
-                    
+
                     printDBG("URI: %s" % uri)
-                
+
                     ws1 = websocket.create_connection(uri)
                     ws1.send('{"protocol":"json","version":1}\x1E')
                     ws1.send('{"arguments":[{"partner":2,"lng":"%s","typegame":3}],"invocationId":"0","target":"ConnectClient","type":1}\x1E' % lang) # 
                     ws1.send('{"arguments":["%s","en",24],"invocationId":"1","target":"GetFeed","type":1}\x1E' % allowSports)
                     ws1.send('{"arguments":["%s","en",24],"invocationId":"2","target":"GetFeed","type":1}\x1E' % allowSports)
-                    
+
                     for j in range(4):
                         data = ws1.recv()
                         printDBG(data)
@@ -155,7 +155,7 @@ class SportStream365Api(CBaseHostClass):
                         printExc()
                         continue
                     break
-                
+
                 parseInt = lambda sin: int(''.join([c for c in str(sin).replace(',', '.').split('.')[0] if c.isdigit()])) if sum(map(int, [s.isdigit() for s in str(sin)])) and not callable(sin) and str(sin)[0].isdigit() else 0
 
                 def parseInt2(string):
@@ -163,7 +163,7 @@ class SportStream365Api(CBaseHostClass):
                         return int(''.join([x for x in string if x.isdigit()]))
                     except Exception:
                         return 0
-                
+
                 def cmp(x, y):
                     if x['SportId'] != y['SportId']:
                         return parseInt(x['SportId']) - parseInt(y['SportId'])
@@ -174,7 +174,7 @@ class SportStream365Api(CBaseHostClass):
                             return 0
                     else:
                         return parseInt(x['FirstGameId']) - parseInt(y['FirstGameId'])
-                
+
                 data = json_loads(data['arguments'][0])['Value']
                 data.sort(cmp=cmp) #key = lambda item: (parseInt(item['SportId']), item['Liga'], parseInt(item['FirstGameId']))
                 printDBG(data)
@@ -200,7 +200,7 @@ class SportStream365Api(CBaseHostClass):
                 printExc()
 
         return channelsList
-    
+
     def getVideoLink(self, cItem):
         printDBG("SportStream365Api.getVideoLink cItem[%s]" % cItem)
         return self.up.getVideoLinkExt(cItem.get('url', ''))

@@ -345,7 +345,7 @@ class Christusvincit(CBaseHostClass):
             url = self.getFullUrl(ph.search(item, ph.A_HREF_URI_RE)[1])
             icon = self.getFullUrl(ph.search(item, self.reImgObj)[1])
             title = self.cleanHtmlStr(item)
-            if not title: 
+            if not title:
                 title = icon.rsplit('/', 1)[-1].rsplit('.', 1)[0]
                 title = self.titlesMap.get(title, title.upper())
             subItems.append(MergeDicts(cItem, {'good_for_fav': True, 'category': nextCategory, 'title': title, 'url': url, 'icon': icon}))
@@ -380,7 +380,7 @@ class Christusvincit(CBaseHostClass):
 
             if 'articles.php' in cUrl:
                 iframe = ph.search(data, ph.IFRAME_SRC_URI_RE)[1]
-                if not iframe: 
+                if not iframe:
                     iframe = ph.find(data, ('<script', '>', 'embedIframeJs'))[1]
                     iframe = ph.getattr(iframe, 'src')
 
@@ -436,7 +436,7 @@ class Christusvincit(CBaseHostClass):
 
         data = ph.find(data, 'search_result', '</table>', flags=0)[1]
         data = re.compile('''<div[^>]+?pagenav[^>]*?>''').split(data, 1)
-        if len(data) == 2: 
+        if len(data) == 2:
             nextPage = ph.find(data[-1], ('<a', '>%s<' % (page + 1)))[1]
             nextPage = self.getFullUrl(ph.getattr(nextPage, 'href'))
         else:
@@ -491,7 +491,7 @@ class Christusvincit(CBaseHostClass):
 
     def handleService(self, index, refresh=0, searchPattern='', searchType=''):
         printDBG('handleService start')
-        
+
         CBaseHostClass.handleService(self, index, refresh, searchPattern, searchType)
 
         name = self.currItem.get("name", '')
@@ -514,14 +514,14 @@ class Christusvincit(CBaseHostClass):
             self.listSearchItems(self.currItem)
         elif category in ["search", "search_next_page"]:
             cItem = dict(self.currItem)
-            cItem.update({'search_item': False, 'name': 'category'}) 
+            cItem.update({'search_item': False, 'name': 'category'})
             self.listSearchResult(cItem, searchPattern, searchType)
     #HISTORIA SEARCH
         elif category == "search_history":
             self.listsHistory({'name': 'history', 'category': 'search'}, 'desc', _("Type: "))
         else:
             printExc()
-        
+
         CBaseHostClass.endHandleService(self, index, refresh)
 
 
@@ -529,4 +529,3 @@ class IPTVHost(CHostBase):
 
     def __init__(self):
         CHostBase.__init__(self, Christusvincit(), True, [])
-

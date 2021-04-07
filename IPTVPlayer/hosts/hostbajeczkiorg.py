@@ -26,7 +26,7 @@ def gettytul():
 
 
 class BajeczkiOrg(CBaseHostClass):
- 
+
     def __init__(self):
         CBaseHostClass.__init__(self, {'history': 'bajeczki.org', 'cookie': 'bajeczki.org.cookie'})
         self.MAIN_URL = 'http://bajeczki.org/'
@@ -36,12 +36,12 @@ class BajeczkiOrg(CBaseHostClass):
         self.AJAX_HEADER.update({'X-Requested-With': 'XMLHttpRequest'})
         self.defaultParams = {'with_metadata': True, 'header': self.HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
         self.cacheLinks = {}
-    
+
     def getPage(self, url, addParams={}, post_data=None):
         if addParams == {}:
             addParams = dict(self.defaultParams)
         return self.cm.getPage(url, addParams, post_data)
-        
+
     def listMainMenu(self, cItem):
         MAIN_CAT_TAB = [{'category': 'categories', 'title': 'Wszystkie bajki', 'url': self.getFullUrl('/all-categories/')},
                         {'category': 'list_items', 'title': 'Ostatnio dodane', 'url': self.getFullUrl('/?s=')},
@@ -49,7 +49,7 @@ class BajeczkiOrg(CBaseHostClass):
                         {'category': 'search', 'title': _('Search'), 'search_item': True, },
                         {'category': 'search_history', 'title': _('Search history'), }]
         self.listsTab(MAIN_CAT_TAB, cItem)
-    
+
     def listCategories(self, cItem, nextCategory):
         printDBG("BajeczkiOrg.listCategories")
 
@@ -69,7 +69,7 @@ class BajeczkiOrg(CBaseHostClass):
             params = dict(cItem)
             params = {'good_for_fav': True, 'category': nextCategory, 'title': title, 'url': url, 'icon': icon, 'desc': desc}
             self.addDir(params)
-    
+
     def listItems(self, cItem):
         printDBG("BajeczkiOrg.listItems")
 
@@ -169,14 +169,14 @@ class BajeczkiOrg(CBaseHostClass):
 
         if urlTab:
             self.cacheLinks[cItem['url']] = urlTab
-            
+
         return urlTab
-    
+
     def getVideoLinks(self, videoUrl):
         printDBG("BajeczkiOrg.getVideoLinks [%s]" % videoUrl)
         videoUrl = strwithmeta(videoUrl)
         urlTab = []
-        
+
         # mark requested link as used one
         if len(list(self.cacheLinks.keys())):
             for key in self.cacheLinks:
@@ -189,25 +189,25 @@ class BajeczkiOrg(CBaseHostClass):
             return [{'name': 'direct', 'url': videoUrl}]
         urlTab = self.up.getVideoLinkExt(videoUrl)
         return urlTab
-        
+
     def listSearchResult(self, cItem, searchPattern, searchType):
         printDBG("FilmeHD.listSearchResult cItem[%s], searchPattern[%s] searchType[%s]" % (cItem, searchPattern, searchType))
         cItem = dict(cItem)
         cItem.update({'category': 'list_items', 'url': self.getFullUrl('/?s=') + urllib.parse.quote_plus(searchPattern)})
         self.listItems(cItem)
-        
+
     def handleService(self, index, refresh=0, searchPattern='', searchType=''):
         printDBG('handleService start')
-        
+
         CBaseHostClass.handleService(self, index, refresh, searchPattern, searchType)
 
         name = self.currItem.get("name", '')
         category = self.currItem.get("category", '')
         mode = self.currItem.get("mode", '')
-        
+
         printDBG("handleService: >> name[%s], category[%s] " % (name, category))
         self.currList = []
-        
+
     #MAIN MENU
         if name == None:
             self.listMainMenu({'name': 'category'})
@@ -218,14 +218,14 @@ class BajeczkiOrg(CBaseHostClass):
     #SEARCH
         elif category in ["search", "search_next_page"]:
             cItem = dict(self.currItem)
-            cItem.update({'search_item': False, 'name': 'category'}) 
+            cItem.update({'search_item': False, 'name': 'category'})
             self.listSearchResult(cItem, searchPattern, searchType)
     #HISTORIA SEARCH
         elif category == "search_history":
             self.listsHistory({'name': 'history', 'category': 'search'}, 'desc', _("Type: "))
         else:
             printExc()
-        
+
         CBaseHostClass.endHandleService(self, index, refresh)
 
 
@@ -233,4 +233,3 @@ class IPTVHost(CHostBase):
 
     def __init__(self):
         CHostBase.__init__(self, BajeczkiOrg(), True, [])
-    

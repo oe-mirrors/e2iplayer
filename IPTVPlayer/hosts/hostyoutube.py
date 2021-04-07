@@ -42,7 +42,7 @@ def GetConfigList():
     optionList.append(getConfigListEntry(_("Age-gate bypass:"), config.plugins.iptvplayer.ytAgeGate))
     # temporary, the ffmpeg must be in right version to be able to merge file without transcoding
     # checking should be moved to setup
-    if IsExecutable('ffmpeg'): 
+    if IsExecutable('ffmpeg'):
         optionList.append(getConfigListEntry(_("Allow dash format:"), config.plugins.iptvplayer.ytShowDash))
         if config.plugins.iptvplayer.ytShowDash.value != 'false':
             optionList.append(getConfigListEntry(_("Allow VP9 codec:"), config.plugins.iptvplayer.ytVP9))
@@ -56,7 +56,7 @@ def gettytul():
 
 
 class Youtube(CBaseHostClass):
-    
+
     def __init__(self):
         printDBG("Youtube.__init__")
         CBaseHostClass.__init__(self, {'history': 'ytlist', 'cookie': 'youtube.cookie'})
@@ -66,8 +66,8 @@ class Youtube(CBaseHostClass):
                                  {'category': 'search', 'title': _("Search"), 'desc': _("Search youtube materials "), 'search_item': True},
                                  {'category': 'feeds', 'title': _("Trending Feeds"), 'desc': _("Browse youtube trending feeds")},
                                  {'category': 'search_history', 'title': _("Search history"), 'desc': _("History of searched phrases.")}]
-        
-        self.SEARCH_TYPES = [(_("Video"), "video"), 
+
+        self.SEARCH_TYPES = [(_("Video"), "video"),
                                (_("Channel"), "channel"),
                                (_("Playlist"), "playlist"),
                               #(_("Movie"),    "movie"   ),
@@ -76,7 +76,7 @@ class Youtube(CBaseHostClass):
                               #("traylist",           "traylist"),
         self.ytp = YouTubeParser()
         self.currFileHost = None
-        
+
     def _getCategory(self, url):
         printDBG("Youtube._getCategory")
         if '/playlist?list=' in url:
@@ -90,17 +90,17 @@ class Youtube(CBaseHostClass):
         else:
             category = 'video'
         return category
-        
+
     def listMainMenu(self):
         printDBG("Youtube.listsMainMenu")
         for item in self.MAIN_GROUPED_TAB:
             params = {'name': 'category'}
             params.update(item)
             self.addDir(params)
-        
+
     def listCategory(self, cItem, searchMode=False):
         printDBG("Youtube.listCategory cItem[%s]" % cItem)
-        
+
         sortList = True
         filespath = config.plugins.iptvplayer.Sciezkaurllist.value
         groupList = True
@@ -149,16 +149,16 @@ class Youtube(CBaseHostClass):
                         self.addMore(params)
                     else:
                         self.addDir(params)
-                        
+
     def listItems(self, cItem):
         printDBG('Youtube.listItems cItem[%s]' % (cItem))
         category = cItem.get("category", '')
         url = cItem.get("url", '')
         page = cItem.get("page", '1')
-        
+
         if "playlists" == category:
             self.currList = self.ytp.getListPlaylistsItems(url, category, page, cItem)
-        
+
         for idx in range(len(self.currList)):
             if self.currList[idx]['category'] in ["channel", "playlist", "movie", "traylist"]:
                 self.currList[idx]['good_for_fav'] = True
@@ -167,17 +167,17 @@ class Youtube(CBaseHostClass):
         printDBG('Youtube.listFeeds cItem[%s]' % (cItem))
 
         category = cItem.get("category", "")
-        
+
         if category == "feeds":
             url = "https://www.youtube.com/feed/trending"
             tmpList = self.ytp.getFeedsList(url)
             for item in tmpList:
-                self.addDir(item) 
-        
+                self.addDir(item)
+
         elif category.startswith("feeds_"):
             topic = category[6:]
             url = cItem.get('url', '')
-            tmpList = self.ytp.getVideoFromFeed(url) 
+            tmpList = self.ytp.getVideoFromFeed(url)
 
             for item in tmpList:
                 item.update({'name': 'category'})
@@ -189,38 +189,38 @@ class Youtube(CBaseHostClass):
                     if item['category'] in ["channel", "playlist", "movie", "traylist"] or item['category'].startswith("feeds"):
                         item['good_for_fav'] = True
                     self.addDir(item)
-            
+
     def getVideos(self, cItem):
         printDBG('Youtube.getVideos cItem[%s]' % (cItem))
-        
+
         category = cItem.get("category", '')
         url = strwithmeta(cItem.get("url", ''))
         page = cItem.get("page", '1')
-                
+
         if "channel" == category:
             if not ('browse' in url) and (not 'ctoken' in url):
-                if url.endswith('/videos'): 
+                if url.endswith('/videos'):
                     url = url + '?flow=list&view=0&sort=dd'
                 else:
                     url = url + '/videos?flow=list&view=0&sort=dd'
             self.currList = self.ytp.getVideosFromChannelList(url, category, page, cItem)
         elif "playlist" == category:
-            self.currList = self.ytp.getVideosFromPlaylist(url, category, page, cItem)   
+            self.currList = self.ytp.getVideosFromPlaylist(url, category, page, cItem)
         elif "traylist" == category:
             self.currList = self.ytp.getVideosFromTraylist(url, category, page, cItem)
         else:
             printDBG('YTlist.getVideos Error unknown category[%s]' % category)
-            
+
     def listSearchResult(self, cItem, pattern, searchType):
         page = cItem.get("page", '1')
         url = cItem.get("url", "")
-        
+
         if url:
             printDBG("URL ricerca -----------> %s" % url)
             tmpList = self.ytp.getSearchResult(urllib.parse.quote_plus(pattern), searchType, page, 'search', config.plugins.iptvplayer.ytSortBy.value, url)
         else:
             tmpList = self.ytp.getSearchResult(urllib.parse.quote_plus(pattern), searchType, page, 'search', config.plugins.iptvplayer.ytSortBy.value)
-        
+
         for item in tmpList:
             item.update({'name': 'category'})
             if 'video' == item['type']:
@@ -231,18 +231,18 @@ class Youtube(CBaseHostClass):
                 if item['category'] in ["channel", "playlist", "movie", "traylist"]:
                     item['good_for_fav'] = True
                 self.addDir(item)
-                
+
     def getLinksForVideo(self, cItem):
         printDBG("Youtube.getLinksForVideo cItem[%s]" % cItem)
         urlTab = self.up.getVideoLinkExt(cItem['url'])
         if config.plugins.iptvplayer.ytUseDF.value and 0 < len(urlTab):
             return [urlTab[0]]
         return urlTab
-        
+
     def getFavouriteData(self, cItem):
         printDBG('Youtube.getFavouriteData')
         return json.dumps(cItem)
-        
+
     def getLinksForFavourite(self, fav_data):
         printDBG('Youtube.getLinksForFavourite')
         links = []
@@ -258,7 +258,7 @@ class Youtube(CBaseHostClass):
         printDBG('Youtube.setInitListFromFavouriteItem')
         try:
             params = byteify(json.loads(fav_data))
-        except Exception: 
+        except Exception:
             params = {}
             printExc()
         self.addDir(params)
@@ -266,14 +266,14 @@ class Youtube(CBaseHostClass):
 
     def handleService(self, index, refresh=0, searchPattern='', searchType=''):
         printDBG('Youtube.handleService start')
-        
+
         CBaseHostClass.handleService(self, index, refresh, searchPattern, searchType)
-        
+
         name = self.currItem.get("name", '')
         category = self.currItem.get("category", '')
         printDBG("Youtube.handleService: ---------> name[%s], category[%s] " % (name, category))
         self.currList = []
-        
+
         if None == name:
             self.listMainMenu()
         elif 'from_file' == category:
@@ -287,14 +287,14 @@ class Youtube(CBaseHostClass):
         #SEARCH
         elif category in ["search", "search_next_page"]:
             cItem = dict(self.currItem)
-            cItem.update({'search_item': False, 'name': 'category'}) 
+            cItem.update({'search_item': False, 'name': 'category'})
             self.listSearchResult(cItem, searchPattern, searchType)
         #HISTORIA SEARCH
         elif category == "search_history":
             self.listsHistory({'name': 'history', 'category': 'search'}, 'desc', _("Type: "))
         else:
             printExc()
-        
+
         CBaseHostClass.endHandleService(self, index, refresh)
 
     def getSuggestionsProvider(self, index):
@@ -304,10 +304,9 @@ class Youtube(CBaseHostClass):
 
 
 class IPTVHost(CHostBase):
-    
+
     def getSearchTypes(self):
         return self.host.SEARCH_TYPES
-    
+
     def __init__(self):
         CHostBase.__init__(self, Youtube(), True, [CDisplayListItem.TYPE_VIDEO, CDisplayListItem.TYPE_AUDIO])
-

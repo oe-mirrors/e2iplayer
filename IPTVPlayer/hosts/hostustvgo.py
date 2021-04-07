@@ -52,7 +52,7 @@ def gettytul():
 class ustvgo(CBaseHostClass):
     def __init__(self):
         CBaseHostClass.__init__(self, {'history': 'ustvgo.tv', 'cookie': 'ustvgo.cookie'})
-        
+
         self.USER_AGENT = 'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:40.0) Gecko/20100101 Firefox/40.0'
         self.HEADER = {'User-Agent': self.USER_AGENT, 'DNT': '1', 'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8', 'Accept-Language': 'pl,en-US;q=0.7,en;q=0.3', 'Accept-Encoding': 'gzip, deflate'}
         self.MAIN_URL = None
@@ -61,18 +61,18 @@ class ustvgo(CBaseHostClass):
     def getPage(self, baseUrl, addParams={}, post_data=None):
         if addParams == {}:
             addParams = dict(self.defaultParams)
-            
+
         def _getFullUrl(url):
             if url == '':
                 return ''
-            
+
             if self.cm.isValidUrl(url):
                 return url
             else:
                 return urllib.parse.urljoin(baseUrl, url)
-            
+
         addParams['cloudflare_params'] = {'domain': self.up.getDomain(baseUrl), 'cookie_file': self.COOKIE_FILE, 'User-Agent': self.USER_AGENT, 'full_url_handle': _getFullUrl}
-        
+
         url = baseUrl
         urlParams = deepcopy(addParams)
         urlData = deepcopy(post_data)
@@ -88,7 +88,7 @@ class ustvgo(CBaseHostClass):
             if unloadUrl != None:
                 self.cm.getPageCFProtection(unloadUrl, urlParams)
                 unloadUrl = None
-            
+
             if 'sucuri_cloudproxy' in data:
                 cookieItems = {}
                 jscode = self.cm.ph.getDataBeetwenNodes(data, ('<script', '>'), ('</script', '>'), False)[1]
@@ -106,14 +106,14 @@ class ustvgo(CBaseHostClass):
                 urlParams['cookie_items'] = cookieItems
                 removeCookieItems = False
                 sts, data = self.cm.getPageCFProtection(url, urlParams, urlData)
-            
+
             # remove not needed used cookie
             if removeCookieItems:
                 self.defaultParams.pop('cookie_items', None)
             self.cm.clearCookie(self.COOKIE_FILE, removeNames=['___utmvc'])
             #printDBG(data)
             return sts, data
-        
+
         return self.cm.getPageCFProtection(baseUrl, addParams, post_data)
 
     def selectDomain(self):
@@ -123,22 +123,22 @@ class ustvgo(CBaseHostClass):
             if domain[-1] != '/':
                 domain += '/'
             domains.insert(0, domain)
-        
+
         for domain in domains:
             sts, data = self.getPage(domain)
             if sts:
                 if '<meta charset="UTF-8">' in data:
                     self.setMainUrl(self.cm.meta['url'])
                     break
-                else: 
+                else:
                     continue
-            
+
             if self.MAIN_URL != None:
                 break
-        
+
         if self.MAIN_URL == None:
             self.MAIN_URL = domains[0]
-        
+
     def listMainMenu(self, cItem):
         if self.MAIN_URL == None:
             self.selectDomain()
@@ -149,7 +149,7 @@ class ustvgo(CBaseHostClass):
                         {'category': 'list_category', 'title': 'Kids', 'url': self.getFullUrl('/category/kids/')},
                         {'category': 'list_items', 'title': _('All'), 'url': self.getFullUrl('/')}, ]
         self.listsTab(MAIN_CAT_TAB, cItem)
-    
+
     def listItems(self, cItem):
         printDBG("ustvgo.listItems")
 
@@ -170,7 +170,7 @@ class ustvgo(CBaseHostClass):
         printDBG("ustvgo.listCategory")
 
         page = cItem.get('page', 1)
-        
+
         sts, data = self.getPage(cItem['url'])
         if not sts:
             return
@@ -195,7 +195,7 @@ class ustvgo(CBaseHostClass):
             params = dict(cItem)
             params.update({'title': _("Next page"), 'url': self.getFullUrl(nextPage), 'page': page + 1})
             self.addDir(params)
-        
+
     def getLinksForVideo(self, cItem):
         printDBG("ustvgo.getLinksForVideo [%s]" % cItem)
 
@@ -236,7 +236,7 @@ class ustvgo(CBaseHostClass):
             return getDirectM3U8Playlist(url)
         else:
             return []
-    
+
     def handleService(self, index, refresh=0, searchPattern='', searchType=''):
         printDBG('handleService start')
 
@@ -248,10 +248,10 @@ class ustvgo(CBaseHostClass):
         name = self.currItem.get("name", '')
         category = self.currItem.get("category", '')
         mode = self.currItem.get("mode", '')
-        
+
         printDBG("handleService: >> name[%s], category[%s] " % (name, category))
         self.currList = []
-        
+
     #MAIN MENU
         if name == None:
             self.listMainMenu({'name': 'category'})
@@ -261,7 +261,7 @@ class ustvgo(CBaseHostClass):
             self.listItems(self.currItem)
         else:
             printExc()
-        
+
         CBaseHostClass.endHandleService(self, index, refresh)
 
 
@@ -269,4 +269,3 @@ class IPTVHost(CHostBase):
 
     def __init__(self):
         CHostBase.__init__(self, ustvgo(), True, [])
-    

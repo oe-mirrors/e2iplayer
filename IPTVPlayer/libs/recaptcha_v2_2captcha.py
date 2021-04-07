@@ -60,14 +60,14 @@ class UnCaptchaReCaptcha:
                         elif timeout > 10:
                             timeout = 5
                         time.sleep(timeout)
-                        
+
                         apiUrl = self.getFullUrl('/res.php?key=') + apiKey + '&action=get&json=1&id=' + captchaid
                         sts, data = self.cm.getPage(apiUrl)
                         if not sts:
                             continue
                             # maybe simple continue here ?
                             errorMsgTab.append(_('Network failed %s.') % '2')
-                            break 
+                            break
                         else:
                             printDBG('API DATA:\n%s\n' % data)
                             data = json_loads(data, '', True)
@@ -87,7 +87,7 @@ class UnCaptchaReCaptcha:
 
         if sleepObj != None:
             sleepObj.Reset()
-        
+
         if token == '':
             self.sessionEx.waitForFinishOpen(MessageBox, (_('Resolving reCaptcha with %s failed!\n\n') % self.getMainUrl()) + '\n'.join(errorMsgTab), type=MessageBox.TYPE_ERROR, timeout=10)
         return token

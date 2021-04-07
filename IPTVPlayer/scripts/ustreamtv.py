@@ -13,7 +13,7 @@ import time
 try:
     import json
 except Exception:
-    import simplejson as json 
+    import simplejson as json
 from random import randint
 
 import signal
@@ -56,29 +56,29 @@ def getPage(url, params={}):
     except Exception:
         printExc()
     return sts, data
-    
+
 
 def getLink(width, mediaId, referer, userAgent):
     WS_URL = "http://r{0}-1-{1}-{2}-{3}.ums.ustream.tv"
 
     rsid = "{0:x}:{1:x}".format(randint(0, 1e10), randint(0, 1e10))
     rpin = "_rpin.{0:x}".format(randint(0, 1e15))
-    
+
     apiUrl = WS_URL.format(randint(0, 0xffffff), mediaId, 'channel', 'lp-live') + '/1/ustream'
     url = apiUrl + '?' + urllib.parse.urlencode([('media', mediaId), ('referrer', referer), ('appVersion', 2), ('application', 'channel'), ('rsid', rsid), ('appId', 11), ('rpin', rpin), ('type', 'viewer')])
-    
+
     params = {'Referer': referer, 'User-Agent': userAgent}
     sts, data = getPage(url, params)
     if not sts:
         return ''
-    
+
     data = json.loads(data)
     host = data[0]['args'][0]['host'].encode('utf-8')
     connectionId = data[0]['args'][0]['connectionId']
     if len(host):
         apiUrl = "http://" + host + '/1/ustream'
     url = apiUrl + '?connectionId=' + str(connectionId)
-    
+
     for i in range(5):
         sts, data = getPage(url, params)
         if not sts:
@@ -88,11 +88,11 @@ def getLink(width, mediaId, referer, userAgent):
         time.sleep(1)
     data = json.loads(data)
     playlistUrl = data[0]['args'][0]['stream'][0]['url'].encode('utf-8')
-    
+
     sts, data = getPage(playlistUrl, params)
     if not sts:
         return ''
-    
+
     data = data.split('\n')
     marker = 'RESOLUTION=%sx' % width
     for idx in range(len(data)):
@@ -112,7 +112,7 @@ if __name__ == "__main__":
         mediaId = sys.argv[2]
         referer = sys.argv[3]
         userAgent = sys.argv[4]
-        
+
         refreshUrl = getLink(width, mediaId, referer, userAgent)
         if refreshUrl != '':
             while True:
@@ -124,4 +124,3 @@ if __name__ == "__main__":
     except Exception:
         printExc()
     sys.exit(0)
-

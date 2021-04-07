@@ -48,7 +48,7 @@ def IncludeHEADER(extraMetas=''):
 </head>
 """ % (extraMetas, IPTV_VERSION)
 	return tempText
-	
+
 ########################################################
 
 
@@ -96,7 +96,7 @@ def IncludeMENU(MenuStatusMSG='', ShowCancelButton=False):
 class Body():
 	def __init__(self):
 		pass
-		
+
 	def StartPageContent(self, resetStatusMSG):
 		tempText = '<body bgcolor=\"#666666\" text=\"#FFFFFF\">\n'
 		tempText += '<form method="POST" action="--WEBBOT-SELF--">\n'
@@ -268,17 +268,17 @@ class Body():
 			tempText += '<td>' + formSUBMITvalue([('cmd', 'downloadsDM')], _("Downloads"), 'style="background-color:#0080FF"') + '</td></tr>\n'
 			tempText += '<tr><td colspan="2">%s</td><td colspan="2">%s</td></tr>' % (_("Manager status: "), DM_status)
 			tempText += '</tbody></table>\n'
-			
+
 			#display the list of downloads
 			tempText += '<table  width="800px" cellspacing="5px"><tbody>\n'
 			for item in currList:
 				# Downloaded Size
 				info1 = formatBytes(item.downloadedSize)
-        
+
 				# File Size
 				if item.fileSize > 0:
 					info1 += "/" + formatBytes(item.fileSize)
-        
+
 				elif item.totalFileDuration > 0 and item.downloadedFileDuration > 0:
 					totalDuration = item.totalFileDuration
 					downloadDuration = item.downloadedFileDuration
@@ -293,10 +293,10 @@ class Body():
 				# Downloaded Procent
 				if item.downloadedProcent >= 0:
 					info1 += ", " + str(item.downloadedProcent) + "%"
- 
+
 				# Download Speed
 				info2 = info1 + ", " + formatBytes(item.downloadedSpeed) + "/s"
-				
+
 				try:
 					fileName = item.fileName.split('/')[-1]
 				except Exception:
@@ -313,7 +313,7 @@ class Body():
 					buttons = '<table><tbody><tr><td>%s</td><td>%s</td></tr></tbody></table>' % (
 							formSUBMITvalue([('watchMovie', item.fileName)], _("Watch")),
 							formSUBMITvalue([('stopDownload', item.downloadIdx)], _("Stop download")))
-				
+
 				elif DMHelper.STS.DOWNLOADED == item.status and item.url[:1] == '/': # for Archive section
 					status = _("DOWNLOADED")
 					icon = '<img border="0" src="./icons/icondone.png" width="64" height="64">'
@@ -321,7 +321,7 @@ class Body():
 					buttons = '<table><tbody><tr><td>%s</td><td>%s</td></tr></tbody></table>' % (
 							formSUBMITvalue([('cmd', 'arvchiveDM'), ('cmd', 'watchMovie'), ('cmd', item.fileName)], _("Watch")),
 							formSUBMITvalue([('cmd', 'arvchiveDM'), ('cmd', 'deleteMovie'), ('cmd', item.fileName)], _("Delete")))
-				
+
 				elif DMHelper.STS.DOWNLOADED == item.status:
 					status = _("DOWNLOADED")
 					icon = '<img border="0" src="./icons/icondone.png" width="64" height="64">'
@@ -411,7 +411,7 @@ class Body():
 			iconSrc = iType
 		txt = tableHorizontalRedLine(colspan=2)
 		txt += '<tr><td rowspan="2" style="width:64px"><img border="0" src="%s" width="64" height="64"></td>' % iconSrc
-		
+
 		if iType == "SEARCH":
 			if len(settings.activeHost['SearchTypes']) == 0:
 				txt += '<td>%s</td></tr>\n' % formSUBMITtext(_(iName), ListType, 'style="color: #DBA901;background: none;border: none;text-decoration: underline"')

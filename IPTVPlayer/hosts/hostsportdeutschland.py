@@ -25,7 +25,7 @@ except Exception:
 ###################################################
 # Config options for HOST
 ###################################################
-config.plugins.iptvplayer.sportdeutschland_streamprotocol = ConfigSelection(default="hls", choices=[("rtmp", "rtmp"), ("hls", "HLS - m3u8")]) 
+config.plugins.iptvplayer.sportdeutschland_streamprotocol = ConfigSelection(default="hls", choices=[("rtmp", "rtmp"), ("hls", "HLS - m3u8")])
 
 
 def GetConfigList():
@@ -43,29 +43,29 @@ class SportDeutschland(CBaseHostClass):
 
     def __init__(self):
         printDBG("SportDeutschland.__init__")
-        
-        CBaseHostClass.__init__(self, {'history': 'SportDeutschland'})       
-        
+
+        CBaseHostClass.__init__(self, {'history': 'SportDeutschland'})
+
         self.DEFAULT_ICON_URL = 'https://www.sportdeutschland.de/typo3conf/ext/arx_template/Resources/Public/Images/WebSite/logo.png'
         self.MAINURL = 'http://sportdeutschland.tv/'
         self.MAIN_API_URL = 'http://proxy.vidibusdynamic.net/sportdeutschland.tv/api/'
-        self.HTTP_JSON_HEADER = {'User-Agent': 'Mozilla/5.0 (X11; Ubuntu; Linux i686; rv:12.0) Gecko/20100101 Firefox/12.0', 
+        self.HTTP_JSON_HEADER = {'User-Agent': 'Mozilla/5.0 (X11; Ubuntu; Linux i686; rv:12.0) Gecko/20100101 Firefox/12.0',
                                   'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
                                   'Accept-Encoding': 'gzip, deflate',
-                                  'Referer': self.MAINURL, 
+                                  'Referer': self.MAINURL,
                                   'Origin': self.MAINURL
                                  }
         self.cm.HEADER = dict(self.HTTP_JSON_HEADER)
         self.MAIN_CAT_TAB = [{'category': 'categories', 'title': _('Categories'), },
                              {'category': 'search', 'title': _('Search'), 'search_item': True, },
                              {'category': 'search_history', 'title': _('Search history'), }]
-                 
+
     def _getJItemStr(self, item, key, default=''):
         v = item.get(key, None)
         if None == v:
             return default
         return clean_html('%s' % v).encode('utf-8')
-        
+
     def _getJItemNum(self, item, key, default=0):
         v = item.get(key, None)
         if None != v:
@@ -73,45 +73,45 @@ class SportDeutschland(CBaseHostClass):
                 NumberTypes = (int, int, float, complex)
             except NameError:
                 NumberTypes = (int, int, float)
-                
+
             if isinstance(v, NumberTypes):
                 return v
         return default
-        
+
     def _getItemsListFromJson(self, url):
-        sts, data = self.cm.getPage(url)    
+        sts, data = self.cm.getPage(url)
         if sts:
             try:
                 data = json.loads(data)
                 data = data['items']
                 return data
-                
+
             except Exception:
                 printExc()
         return []
-        
+
     def _utc2local(self, utc_datetime):
         now_timestamp = time.time()
         offset = datetime.fromtimestamp(now_timestamp) - datetime.utcfromtimestamp(now_timestamp)
         return utc_datetime + offset
-            
+
     def listCategories(self, cItem):
         printDBG("SportDeutschland.listCategories")
         data = self._getItemsListFromJson(self.MAIN_API_URL + 'sections?access_token=true&per_page=9999')
-        
+
         params = {'name': 'category', 'title': _('--All--'), 'category': 'category', 'permalink': '', 'uuid': '', 'page': 1}
         self.addDir(params)
-        
+
         for item in data:
             icon = self._getJItemStr(item, 'image')
-            try: 
+            try:
                 if icon == '':
                     icon = ('%s' % item['images'][0]).encode('utf-8')
             except Exception:
                 pass
             params = {'name': 'category', 'title': self._getJItemStr(item, 'title'), 'category': 'category', 'icon': icon, 'permalink': self._getJItemStr(item, 'permalink'), 'uuid': self._getJItemStr(item, 'uuid'), 'page': 1}
             self.addDir(params)
-        
+
     def listCategory(self, cItem):
         printDBG("SportDeutschland.listCategory cItem[%s]" % cItem)
         baseUrl = self.MAIN_API_URL
@@ -127,14 +127,14 @@ class SportDeutschland(CBaseHostClass):
         data = self._getItemsListFromJson(baseUrl + 'access_token=true&page=%d&per_page=100' % page)
         for item in data:
             icon = self._getJItemStr(item, 'image')
-            try: 
+            try:
                 if icon == '':
                     icon = ('%s' % item['images'][0]).encode('utf-8')
             except Exception:
                 pass
-            
+
             desc = '%s[/br]%s' % (self._getJItemStr(item, 'duration'), self._getJItemStr(item, 'teaser'))
-            
+
             params = {'name': 'category', 'title': self._getJItemStr(item, 'title'), 'category': 'category', 'icon': icon, 'desc': desc, 'player': self._getJItemStr(item, 'player')}
             printDBG(":::::::::::::::::::::::::::::::::::::\n%s\n:::::::::::::::::::::::::::::::" % item)
             planned = False
@@ -147,14 +147,14 @@ class SportDeutschland(CBaseHostClass):
                     planned = True
             except Exception:
                 printExc()
-            
+
             sectionPermalink = self._getJItemStr(item.get('section', {}), 'permalink')
             permalink = self._getJItemStr(item, 'permalink')
             if '' != sectionPermalink and '' != permalink:
                 params['url'] = 'http://proxy.vidibusdynamic.net/sportdeutschland.tv/api/permalinks/%s/%s?access_token=true' % (sectionPermalink, permalink)
             else:
                 params['url'] = ''
-                
+
             if '' != params['url'] or '' != params['player']:
                 if None != item.get('duration', None) or item.get('live', False):
                     self.addVideo(params)
@@ -162,19 +162,19 @@ class SportDeutschland(CBaseHostClass):
                     self.addArticle(params)
             else:
                 printDBG('SportDeutschland.listCategory wrong item[%s]' % item)
-                
+
         data = self._getItemsListFromJson(baseUrl + 'page=%d&per_page=100' % (page + 1))
         if 0 < len(data):
             params = dict(cItem)
             params.update({'title': _('Next page'), 'page': page + 1})
             self.addDir(params)
-            
+
     def getLinksForVideo(self, cItem):
         printDBG("SportDeutschland.getLinksForVideo [%s]" % cItem)
         HTTP_HEADER = {'User-Agent': 'Mozilla/5.0 (X11; Ubuntu; Linux i686; rv:21.0) Gecko/20100101 Firefox/21.0',
                        'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8'}
         videoUrls = []
-        
+
         if self.cm.isValidUrl(cItem['url']):
             sts, data = self.cm.getPage(cItem['url'])
             if sts:
@@ -205,18 +205,18 @@ class SportDeutschland(CBaseHostClass):
                             videoUrls.append({'name': name, 'url': videoUrl})
                 except Exception:
                     printExc()
-                    
+
         for idx in range(len(videoUrls)):
             videoUrls[idx]['need_resolve'] = 0
-        
+
         return videoUrls
-        
+
     def listSearchResult(self, cItem, searchPattern, searchType):
         printDBG("SportDeutschland.listSearchResult cItem[%s], searchPattern[%s] searchType[%s]" % (cItem, searchPattern, searchType))
         cItem = dict(cItem)
         cItem['pattern'] = searchPattern
         self.listCategory(self.currItem)
-    
+
     def handleService(self, index, refresh=0, searchPattern='', searchType=''):
         printDBG('SportDeutschland.handleService start')
         CBaseHostClass.handleService(self, index, refresh, searchPattern, searchType)
@@ -224,7 +224,7 @@ class SportDeutschland(CBaseHostClass):
         category = self.currItem.get("category", '')
         printDBG("SportDeutschland.handleService: ---------> name[%s], category[%s] " % (name, category))
         self.currList = []
-        
+
         if None == name:
             self.listsTab(self.MAIN_CAT_TAB, {'name': 'category'})
         elif 'categories' == category:
@@ -234,7 +234,7 @@ class SportDeutschland(CBaseHostClass):
     #SEARCH
         elif category in ["search", "search_next_page"]:
             cItem = dict(self.currItem)
-            cItem.update({'search_item': False, 'name': 'category'}) 
+            cItem.update({'search_item': False, 'name': 'category'})
             self.listSearchResult(cItem, searchPattern, searchType)
     #HISTORIA SEARCH
         elif category == "search_history":
@@ -247,4 +247,3 @@ class IPTVHost(CHostBase):
 
     def __init__(self):
         CHostBase.__init__(self, SportDeutschland(), True, [])
-

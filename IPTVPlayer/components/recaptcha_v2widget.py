@@ -4,7 +4,7 @@
 #
 #  $Id$
 #
-# 
+#
 from Screens.Screen import Screen
 from Components.ActionMap import ActionMap, HelpableActionMap
 from enigma import ePoint
@@ -17,10 +17,10 @@ from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, GetIconDir
 
 
 class UnCaptchaReCaptchaWidget(Screen):
-    
+
     def __init__(self, session, imgFilePath, message, title, additionalParams={}):
         printDBG("UnCaptchaReCaptchaWidget.__init__ --------------------------")
-        
+
         self.params = additionalParams
         self.imgFilePath = imgFilePath
         self.numOfRow = self.params.get('rows', 3)
@@ -29,23 +29,23 @@ class UnCaptchaReCaptchaWidget(Screen):
         self.markerHeight = self.params.get('marker_height', 100)
         self.offsetCoverX = 100
         self.offsetCoverY = 100
-        
+
         windowWidth = self.markerWidth * self.numOfCol + self.offsetCoverX * 2
         windowHeight = self.markerWidth * self.numOfRow + self.offsetCoverY + 70
-        
+
         coversSkin = ''
         self.coversSelection = []
         for x in range(self.numOfCol):
             self.coversSelection.append([])
             for y in range(self.numOfRow):
-                coversSkin += """<widget name="cover_%s%s" zPosition="5" position="%d,%d" size="%d,%d" transparent="1" alphatest="blend" />""" % (x, y, 
+                coversSkin += """<widget name="cover_%s%s" zPosition="5" position="%d,%d" size="%d,%d" transparent="1" alphatest="blend" />""" % (x, y,
                     (self.offsetCoverX + self.markerWidth * x), # pos X image
                     (self.offsetCoverY + self.markerHeight * y), # pos Y image
-                    self.markerWidth, 
+                    self.markerWidth,
                     self.markerHeight
                 )
                 self.coversSelection[x].append(False) # at start no icon is selected
-                
+
         self.skin = """
         <screen position="center,center" size="%d,%d" title="%s">
             <widget name="statustext"   position="0,10"  zPosition="2" size="%d,80"  valign="center" halign="center" font="Regular;22" transparent="1" />
@@ -54,8 +54,8 @@ class UnCaptchaReCaptchaWidget(Screen):
             <widget name="accept"       position="10,%d"  zPosition="2" size="%d,50"  valign="center" halign="center" font="Regular;22" foregroundColor="#00FFFFFF" backgroundColor="#FFFFFFFF" />
             %s
         </screen>
-        """ % (windowWidth, 
-               windowHeight, 
+        """ % (windowWidth,
+               windowHeight,
                title,
                windowWidth,
                self.offsetCoverX, # puzzle x
@@ -69,10 +69,10 @@ class UnCaptchaReCaptchaWidget(Screen):
                self.offsetCoverY + self.markerWidth * self.numOfCol + 10,
                windowWidth - 20,
                coversSkin)
-        
+
         self.session = session
         Screen.__init__(self, session)
-        
+
         self["actions"] = ActionMap(["WizardActions", "DirectionActions", "ColorActions"],
         {
             "left": self.keyLeft,
@@ -82,41 +82,41 @@ class UnCaptchaReCaptchaWidget(Screen):
             "ok": self.keyOK,
             "back": self.keyCancel,
         }, -1)
-        
+
         self.markerPixmap = LoadPixmap(GetIconDir('markerCaptchaV2.png'))
         self.selectPixmap = LoadPixmap(GetIconDir('selectCaptchaV2.png'))
-        
+
         self["statustext"] = Label(str(message))
         self["accept"] = Label(self.params.get('accep_label', _("Verify")))
-        
+
         self['puzzle_image'] = Cover2()
         self["marker"] = Cover3()
-        
+
         for x in range(self.numOfCol):
             for y in range(self.numOfRow):
                 strIndex = "cover_%s%s" % (x, y)
                 self[strIndex] = Cover3()
-                
+
         self.currX = 0
         self.currY = 0
         self.focusOnAcceptButton = False
         self.onLayoutFinish.append(self.onStart)
-        
+
     def __del__(self):
-        printDBG("UnCaptchaReCaptchaWidget.__del__ --------------------------")    
-        
+        printDBG("UnCaptchaReCaptchaWidget.__del__ --------------------------")
+
     def onStart(self):
         self.onLayoutFinish.remove(self.onStart)
         self['puzzle_image'].updateIcon(self.imgFilePath)
         self['marker'].setPixmap(self.markerPixmap)
         self['marker'].show()
-        
+
         for x in range(self.numOfCol):
             for y in range(self.numOfRow):
                 strIndex = "cover_%s%s" % (x, y)
                 self[strIndex].setPixmap(self.selectPixmap)
                 self[strIndex].hide()
-                
+
     def updateAccpetButton(self):
         if self.focusOnAcceptButton and self.currY < self.numOfRow:
             self['accept'].instance.setForegroundColor(parseColor("#FFFFFF"))
@@ -145,7 +145,7 @@ class UnCaptchaReCaptchaWidget(Screen):
         elif self.currX < 0:
             self.currX = self.numOfCol - 1
         return
-        
+
     def keyRight(self):
         self.currX += 1
         self.calcMarkerPosX()
@@ -169,7 +169,7 @@ class UnCaptchaReCaptchaWidget(Screen):
         self.calcMarkerPosY()
         self.moveMarker()
         return
-    
+
     def moveMarker(self):
         if self.updateAccpetButton():
             return
@@ -187,7 +187,7 @@ class UnCaptchaReCaptchaWidget(Screen):
         if self.updateAccpetButton():
             self.keyVerify()
             return
-        
+
         strIndex = "cover_%s%s" % (self.currX, self.currY)
         self.coversSelection[self.currX][self.currY] = not self.coversSelection[self.currX][self.currY]
         if self.coversSelection[self.currX][self.currY]:
@@ -195,7 +195,7 @@ class UnCaptchaReCaptchaWidget(Screen):
         else:
             self[strIndex].hide()
         return
-        
+
     def keyVerify(self):
         retList = []
         # order of iteration must be: from left to do right, from top to bottom

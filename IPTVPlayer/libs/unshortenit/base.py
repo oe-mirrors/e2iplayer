@@ -56,12 +56,12 @@ class UnshortenIt(object):
     _short24_regex = r'short24\.pw'
     _rapidcrypt_regex = r'rapidcrypt\.net'
     _vcryptnet_regex = r'vcrypt\.net'
-    
+
     _maxretries = 5
 
     _this_dir, _this_filename = os.path.split(__file__)
     _timeout = 10
-    
+
     def __init__(self):
         self.cm = common()
 
@@ -98,7 +98,7 @@ class UnshortenIt(object):
             return self._unshorten_rapidcrypt(uri)
         if re.search(self._vcryptnet_regex, domain, re.IGNORECASE):
             return self._unshorten_vcryptnet(uri)
-        
+
         return uri, 200
 
     def unwrap_30x(self, uri, timeout=10):
@@ -359,20 +359,20 @@ class UnshortenIt(object):
                 resp_uri = json_loads(response[6:-2])['destinationUrl']
                 if resp_uri is not None:
                     uri = resp_uri
-            
+
             return uri, 'OK'
 
         except Exception as e:
             printExc()
             return uri, str(e)
-            
+
     def _unshorten_iivpl(self, baseUri):
         baseUri = strwithmeta(baseUri)
         ref = baseUri.meta.get('Referer', baseUri)
         USER_AGENT = 'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:40.0) Gecko/20100101 Firefox/40.0'
         HTTP_HEADER = {'User-Agent': USER_AGENT, 'Accept': '*/*', 'Accept-Encoding': 'gzip, deflate', 'Referer': ref}
         HTTP_HEADER_AJAX = {'User-Agent': USER_AGENT, 'Accept': '*/*', 'Accept-Encoding': 'gzip, deflate', 'Referer': baseUri, 'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8', 'X-Requested-With': 'XMLHttpRequest'}
-        
+
         COOKIE_FILE = GetCookieDir('iit.pl')
         tries = 0
         retUri, retSts = '', 'KO'
@@ -381,11 +381,11 @@ class UnshortenIt(object):
             rm(COOKIE_FILE)
             try:
                 params = {'header': HTTP_HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': COOKIE_FILE}
-                
+
                 sts, data = self.cm.getPage(baseUri, params)
-                
+
                 sts, headers = self.cm.getPage('http://iiv.pl/modules/system/assets/js/framework.js', params)
-                
+
                 headers = self.cm.ph.getDataBeetwenMarkers(headers, 'headers', '}')[1]
                 headers = re.compile('''['"]([^'^"]+?)['"]''').findall(headers)
                 salt = self.cm.ph.getSearchGroups(data, '''data\-salt="([^"]+?)"''')[0]
@@ -395,7 +395,7 @@ class UnshortenIt(object):
                 component = self.cm.ph.getSearchGroups(data, '''data\-component="([^"]+?)"''')[0]
                 if tries > 1:
                     GetIPTVSleep().Sleep(int(time))
-                
+
                 sts, partials = self.cm.getPage('http://iiv.pl/themes/cutso/assets/javascript/shortcut/shortcut.js', params)
                 partials = self.cm.ph.getDataBeetwenMarkers(partials, 'update:', '}')[1]
                 partials = self.cm.ph.getSearchGroups(partials, '''['"]([^'^"]+?)['"]''')[0]
@@ -406,7 +406,7 @@ class UnshortenIt(object):
                         HTTP_HEADER_AJAX[header] = action
                     elif 'PARTIALS' in header:
                         HTTP_HEADER_AJAX[header] = partials
-                
+
                 post_data = {'salt': salt, 'banner': banner, 'blocker': 0}
                 params['header'] = HTTP_HEADER_AJAX
                 sts, data = self.cm.getPage(baseUri, params, post_data)
@@ -414,13 +414,13 @@ class UnshortenIt(object):
                 printDBG(">>>%s<<<" % data)
                 uri = self.cm.ph.getSearchGroups(data[partials], '''href="(https?://[^"]+?)"''')[0]
                 retUri, retSts = uri, 'OK'
-                
+
             except Exception as e:
                 retUri, retSts = baseUri, str(e)
                 printExc()
-            
+
         return retUri, retSts
-            
+
     def _unshorten_viidme(self, uri):
         try:
             sts, html = self.cm.getPage(uri, {'header': HTTP_HEADER})
@@ -444,7 +444,7 @@ class UnshortenIt(object):
                 resp_uri = json_loads(response[6:-2])['destinationUrl']
                 if resp_uri is not None:
                     uri = resp_uri
-            
+
             return uri, 'OK'
 
         except Exception as e:
@@ -473,7 +473,7 @@ class UnshortenIt(object):
                 uri = self.cm.ph.getSearchGroups(uri, '"([^"]+?)"')[0]
             elif uri.startswith("'"):
                 uri = self.cm.ph.getSearchGroups(uri, "'([^']+?)'")[0]
-            
+
             uri = self.cm.getFullUrl(uri, self.cm.getBaseUrl(self.cm.meta['url']))
             return uri, 'OK'
         except Exception as e:
@@ -487,12 +487,12 @@ class UnshortenIt(object):
             params['cloudflare_params'] = {'cookie_file': COOKIE_FILE, 'User-Agent': HTTP_HEADER['User-Agent']}
             sts, data = self.cm.getPageCFProtection(uri, params)
             uri = self.cm.ph.getDataBeetwenNodes(data, ('<a', '>', 'push_button'), ('</a', '>'))[1]
-            
+
             printDBG("+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++")
             printDBG(self.cm.meta['url'])
             printDBG("+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++")
             uri = self.cm.meta['url']
-            
+
             uri = self.cm.getFullUrl(uri, self.cm.getBaseUrl(self.cm.meta['url']))
             return uri, 'OK'
         except Exception as e:

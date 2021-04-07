@@ -35,5 +35,3 @@ class SHA1(Hash):
             non-ASCII characters, including null bytes.
         """
         return self.pysha1.digest()
-
-

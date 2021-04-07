@@ -28,7 +28,7 @@ def gettytul():
 
 
 class KijkNL(CBaseHostClass):
-    
+
     def __init__(self):
         CBaseHostClass.__init__(self, {'history': 'kijk.nl.uk', 'cookie': 'kijk.nl.cookie'})
         self.DEFAULT_ICON_URL = 'http://is2.mzstatic.com/image/thumb/Purple128/v4/81/1d/19/811d19eb-3de6-1456-ab00-f68204e7dae4/source/1200x630bb.jpg'
@@ -37,19 +37,19 @@ class KijkNL(CBaseHostClass):
         self.HEADER = {'User-Agent': self.USER_AGENT, 'DNT': '1', 'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8', 'Accept-Encoding': 'gzip, deflate'}
         self.AJAX_HEADER = dict(self.HEADER)
         self.AJAX_HEADER.update({'X-Requested-With': 'XMLHttpRequest', 'Accept-Encoding': 'gzip, deflate', 'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8', 'Accept': 'application/json, text/javascript, */*; q=0.01'})
-        
+
         self.cacheLinks = {}
         self.cacheFilters = {}
         self.cacheFiltersKeys = []
         self.defaultParams = {'header': self.HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
         self.tmpUrl = 'http://api.kijk.nl/'
         self.policyKeyCache = ''
-        
+
     def getPage(self, baseUrl, addParams={}, post_data=None):
         if addParams == {}:
             addParams = dict(self.defaultParams)
         return self.cm.getPage(baseUrl, addParams, post_data)
-        
+
     def listMainMenu(self, cItem):
         printDBG("KijkNL.listMainMenu")
         self.MAIN_CAT_TAB = [
@@ -58,7 +58,7 @@ class KijkNL(CBaseHostClass):
                              {'category': 'list_popular', 'title': 'Populair', 'url': self.tmpUrl + 'v2/templates/page/popular'},
                              {'category': 'list_letters', 'title': 'A-Z', 'url': ''},
                              {'category': 'list_themas', 'title': "THEMA'S", 'url': self.getMainUrl()},
-                             {'category': 'search', 'title': _('Search'), 'search_item': True}, 
+                             {'category': 'search', 'title': _('Search'), 'search_item': True},
                              {'category': 'search_history', 'title': _('Search history')},
                             ]
         self.HOME_CAT_TAB = [
@@ -73,18 +73,18 @@ class KijkNL(CBaseHostClass):
                                 {'category': 'list_items', 'title': "Populaire clips", 'url': self.tmpUrl + 'v2/default/sections/popular_PopularClips'},
                                ]
         self.listsTab(self.MAIN_CAT_TAB, cItem)
-        
+
     def listHome(self, cItem):
         printDBG("KijkNL.listHome")
         params = dict(cItem)
         params['good_for_fav'] = True
         self.listsTab(self.HOME_CAT_TAB, cItem)
-        
+
     def listMissed(self, cItem, nextCategory):
         printDBG("KijkNL.listMissed")
         dt = cItem.get('f_date', None)
         ITEMS_PER_PAGE = 15
-        if dt == None: 
+        if dt == None:
             dt = datetime.date.today()
         else:
             try:
@@ -98,17 +98,17 @@ class KijkNL(CBaseHostClass):
             params = {'good_for_fav': False, 'category': nextCategory, 'title': dtIt.strftime("%d-%m-%Y"), 'url': url}
             self.addDir(params)
             dtIt = PrevDay(dtIt)
-            
+
         params = dict(cItem)
         params.update({'good_for_fav': False, 'title': _('Next page'), 'f_date': dtIt.strftime('%Y-%m-%d')})
         self.addDir(params)
-        
+
     def listPopular(self, cItem):
         printDBG("KijkNL.listPopular")
         params = dict(cItem)
         params['good_for_fav'] = True
         self.listsTab(self.POPULAR_CAT_TAB, cItem)
-        
+
     def listLetters(self, cItem, nextCategory):
         printDBG("KijkNL.listLetters [%s]" % cItem)
         catList = [{'title': '0 T/M 9', 'url': '0123456789'},
@@ -119,7 +119,7 @@ class KijkNL(CBaseHostClass):
                   {'title': 'QRST', },
                   {'title': 'UVW', },
                   {'title': 'XYZ', }]
-        
+
         for item in catList:
             url = item.get('url', '')
             if url == '':
@@ -127,19 +127,19 @@ class KijkNL(CBaseHostClass):
             url = self.tmpUrl + 'v1/default/sections/programs-abc-' + url
             params = {'good_for_fav': True, 'category': nextCategory, 'title': item['title'], 'url': url}
             self.addDir(params)
-        
+
     def listThemas(self, cItem, nextCategory):
         printDBG("KijkNL.listThemas [%s]" % cItem)
-        
+
         urlparams = dict(self.defaultParams)
         urlparams['header'] = dict(urlparams['header'])
         urlparams['cookie_items'] = {'OPTOUTMULTI': '0:0%7Cc5:0%7Cc1:0%7Cc4:0%7Cc3:0%7Cc2:0'} #{'OPTOUTMULTI':'0:0|c5:0|c1:0|c4:0|c3:0|c2:0'}
         urlparams['header']['Referer'] = 'http://consent.kijk.nl/?url=' + urllib.parse.quote('http://www.kijk.nl/')
-        
+
         sts, data = self.getPage(cItem['url'], urlparams)
         if not sts:
             return
-        
+
         data = self.cm.ph.getDataBeetwenMarkers(data, '>Thema', '</ul>')[1]
         data = self.cm.ph.getAllItemsBeetwenMarkers(data, '<li', '</li>', withMarkers=True)
         for item in data:
@@ -150,18 +150,18 @@ class KijkNL(CBaseHostClass):
             title = self.cleanHtmlStr(item)
             params = {'good_for_fav': True, 'category': nextCategory, 'title': title, 'url': url}
             self.addDir(params)
-            
+
     def listComponents(self, cItem, nextCategory):
         printDBG("KijkNL.listComponents [%s]" % cItem)
-        
+
         def _doHasItems(url):
             try:
                 sts, data = self.getPage(url + '?limit=1&offset=0')
-                return json.loads(data)['totalItemsAvailable'] > 0 
+                return json.loads(data)['totalItemsAvailable'] > 0
             except Exception:
                 printExc()
             return False
-        
+
         type = cItem.get('f_type', '')
         try:
             sts, data = self.getPage(cItem['url'])
@@ -172,7 +172,7 @@ class KijkNL(CBaseHostClass):
                 if item['type'] == 'video_list':
                     id = item['id']
                     item = item['data']
-                    url = item['url'] 
+                    url = item['url']
                     if not self.cm.isValidUrl(url):
                         continue
                     if type == 'series' and item['more']['parameters']['type'] != 'episodes' and not _doHasItems(url):
@@ -182,7 +182,7 @@ class KijkNL(CBaseHostClass):
                     self.addDir(params)
         except Exception:
             printExc()
-    
+
     def listItems(self, cItem, nextCategory):
         ITEMS = 12
         page = cItem.get('page', 0)
@@ -192,20 +192,20 @@ class KijkNL(CBaseHostClass):
                 url += '&'
             else:
                 url += '?'
-            
+
             url += 'limit=%s&offset=%s' % (ITEMS, ITEMS * page)
-            
+
             sts, data = self.getPage(url)
             if not sts:
                 return
-            
+
             data = byteify(json.loads(data))
-            
+
             if isinstance(data, list):
                 items = data
             else:
                 items = data['items']
-            
+
             for item in items:
                 if item['type'] in ['clip', 'episode', 'series']: #and item['available']
                     icon = item['images'].get('nonretina_image', '')
@@ -223,7 +223,7 @@ class KijkNL(CBaseHostClass):
                             title = '%s - %s' % (sTtile, title)
                         else:
                             descTab.append(sTtile)
-                       
+
                     descTab.append(item.get('dateStringNoTime', item.get('dateString', '')))
                     if 'channel' in item:
                         descTab.append(item['channel'])
@@ -231,7 +231,7 @@ class KijkNL(CBaseHostClass):
                         descTab.append(', '.join(item['genres']))
                     if 'nicam' in item:
                         descTab.append(', '.join(item['nicam']))
-                    
+
                     desc = self.cleanHtmlStr(' | '.join(descTab)) + '[/br]' + self.cleanHtmlStr(item.get('synopsis', ''))
                     params = {'good_for_fav': True, 'title': title, 'url': url, 'icon': icon, 'desc': desc, 'f_type': item['type'], 'f_id': id}
                     if item['type'] in ['clip', 'episode']:
@@ -250,26 +250,26 @@ class KijkNL(CBaseHostClass):
                 self.addDir(params)
         except Exception:
             printExc()
-        
+
     def listSearchResult(self, cItem, searchPattern, searchType):
         printDBG("KijkNL.listSearchResult cItem[%s], searchPattern[%s] searchType[%s]" % (cItem, searchPattern, searchType))
         cItem = dict(cItem)
         cItem['url'] = self.tmpUrl + ('v1/default/searchresultsgrouped?search=%s' % urllib.parse.quote(searchPattern))
         self.listItems(cItem, 'list_components')
-        
+
     def getLinksForVideo(self, cItem):
         printDBG("KijkNL.getLinksForVideo [%s]" % cItem)
-        
+
         retTab = []
         videoUrl = ''
         embedVideoUrl = ''
         try:
             url = self.tmpUrl + 'v1/default/entitlement/' + cItem['f_id']
-            
+
             sts, data = self.getPage(url)
             if not sts:
                 return
-            
+
             data = byteify(json.loads(data), '', True)
             if data['playerInfo']['hasDRM']:
                 SetIPTVPlayerLastHostError(_('DRM protection detected.'))
@@ -287,7 +287,7 @@ class KijkNL(CBaseHostClass):
         except Exception:
             SetIPTVPlayerLastHostError(_('Entitlement parsing error.'))
             printExc()
-        
+
         printDBG(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> embedVideoUrl[%s]" % embedVideoUrl)
         if self.cm.isValidUrl(embedVideoUrl) and 0 == len(retTab):
             sts, data = self.getPage(embedVideoUrl)
@@ -295,7 +295,7 @@ class KijkNL(CBaseHostClass):
                 vidData = self.cm.ph.getDataBeetwenMarkers(data, '<video', '>')[1]
                 account = self.cm.ph.getSearchGroups(vidData, '''data\-account=['"]([^'^"]+?)['"]''')[0]
                 video = self.cm.ph.getSearchGroups(vidData, '''data\-video\-id=['"]([^'^"]+?)['"]''')[0]
-                
+
                 if self.policyKeyCache == '':
                     data = re.compile('''<script[^>]+?src=['"]([^'^"]+?)['"]''').findall(data)
                     for item in data:
@@ -307,7 +307,7 @@ class KijkNL(CBaseHostClass):
                             self.policyKeyCache = self.cm.ph.getSearchGroups(script, '''policyKey\s*:\s*['"]([^'^"]+?)['"]''')[0]
                         if self.policyKeyCache != '':
                             break
-                
+
                 urlParams = dict(self.defaultParams)
                 urlParams['header'] = dict(urlParams['header'])
                 urlParams['header']['Accept'] = "application/json;pk=" + self.policyKeyCache
@@ -326,33 +326,33 @@ class KijkNL(CBaseHostClass):
             except Exception:
                 SetIPTVPlayerLastHostError(_('Player data parsing error.'))
                 printExc()
-        
+
         def __getLinkQuality(itemLink):
             try:
                 return int(itemLink['bitrate'])
             except Exception:
                 return 0
-        
+
         retTab = CSelOneLink(retTab, __getLinkQuality, 99999999).getSortedLinks()
-        
+
         return retTab
-    
+
     def handleService(self, index, refresh=0, searchPattern='', searchType=''):
         printDBG('handleService start')
-        
+
         CBaseHostClass.handleService(self, index, refresh, searchPattern, searchType)
-        
+
         self.informAboutGeoBlockingIfNeeded('NL')
-        
+
         name = self.currItem.get("name", '')
         category = self.currItem.get("category", '')
         mode = self.currItem.get("mode", '')
-        
+
         printDBG("handleService: |||||||||||||||||||||||||||||||||||| name[%s], category[%s] " % (name, category))
         self.currList = []
-        
+
         cItem = self.currItem
-        
+
     #MAIN MENU
         if name == None:
             self.listMainMenu({'name': 'category'})
@@ -376,14 +376,14 @@ class KijkNL(CBaseHostClass):
     #SEARCH
         elif category in ["search", "search_next_page"]:
             cItem = dict(cItem)
-            cItem.update({'search_item': False, 'name': 'category'}) 
+            cItem.update({'search_item': False, 'name': 'category'})
             self.listSearchResult(cItem, searchPattern, searchType)
     #HISTORIA SEARCH
         elif category == "search_history":
             self.listsHistory({'name': 'history', 'category': 'search'}, 'desc', _("Type: "))
         else:
             printExc()
-        
+
         CBaseHostClass.endHandleService(self, index, refresh)
 
 
@@ -391,4 +391,3 @@ class IPTVHost(CHostBase):
 
     def __init__(self):
         CHostBase.__init__(self, KijkNL(), True, [])
-    

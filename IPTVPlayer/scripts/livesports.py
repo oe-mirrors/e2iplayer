@@ -99,7 +99,7 @@ def getPage(url, params={}):
         data = e
     except Exception:
         printExc()
-    return sts, data 
+    return sts, data
 
 
 jsscriptPath = '/'.join(os.path.dirname(os.path.abspath(__file__)).split('/')[:-1]) + '/jsscripts/'
@@ -127,7 +127,7 @@ def getPageCF(url, params={}):
                 cUrl = data.fp.geturl()
                 verData = e.fp.read(1 * 1024 * 1024)
                 e.fp.close()
-                
+
                 dat = reCFScript.findall(verData)
                 for item in dat:
                     if 'setTimeout' in item and 'submit()' in item:
@@ -164,7 +164,7 @@ def getPageCF(url, params={}):
                 sts, data = getPage(verUrl, params2)
         except Exception:
             printExc()
-  
+
     return sts, data
 
 
@@ -177,14 +177,14 @@ class Proxy(http.server.SimpleHTTPRequestHandler):
         global cookiefile
         global duktape
         keyUrl = self.path
-        
+
         if keyUrl.startswith('/https/'):
             keyUrl = 'https://' + keyUrl[7:]
         elif keyUrl.startswith('/http/'):
             keyUrl = 'http://' + keyUrl[6:]
-        
+
         printDBG("do_GET: " + keyUrl)
-        
+
         if isinstance(scriptUrl, list):
             for item in scriptUrl:
                 keyUrl = keyUrl.replace(item[0], item[1])
@@ -199,7 +199,7 @@ class Proxy(http.server.SimpleHTTPRequestHandler):
         else:
             #keyUrl = urlPath + base64.b64encode('l=' + 'nhl' + '&g=' + 'OTT-COL-20171110' + '&f=' + 'home' + '&u=' + base64.b64encode(keyUrl))
             keyUrl = urlPath + base64.b64encode(keyUrl)
-        if not keyUrl.startswith('https://') and not keyUrl.startswith('http://'): 
+        if not keyUrl.startswith('https://') and not keyUrl.startswith('http://'):
             if keyUrl[0] == '/':
                 keyUrl = keyUrl[1:]
             keyUrl = mainUrl + keyUrl
@@ -231,7 +231,7 @@ if __name__ == "__main__":
                 urlPath = urlPath[1:]
         elif scriptUrl.startswith('|'):
             scriptUrl = json.loads(base64.b64decode(scriptUrl))
-        
+
         socketserver.TCPServer.allow_reuse_address = True
         #httpd = SocketServer.ForkingTCPServer(('127.0.0.1', port), Proxy)
         httpd = socketserver.TCPServer(('127.0.0.1', port), Proxy)
@@ -244,4 +244,3 @@ if __name__ == "__main__":
         httpd.socket.close()
         httpd.server_close()
     sys.exit(0)
-

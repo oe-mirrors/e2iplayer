@@ -101,5 +101,3 @@ class Icedoll(Rijndael):
         AddRoundKey(self, self.priorFeedBack) # <------- !!! change from Rijndael !!!
         self.priorFeedBack = nextFeedBack     # <------- !!! change from Rijndael !!!
         return self._toBString(self.state)
-
-

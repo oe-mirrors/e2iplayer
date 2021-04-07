@@ -24,7 +24,7 @@ import sys
 class IPTVSetupImpl:
     def __init__(self, finished, chooseQuestion, showMessage, setInfo):
         printDBG("IPTVSetupImpl.__init__ -------------------------------")
-        
+
         # callbacks
         self._finished = finished
         self._chooseQuestion = chooseQuestion
@@ -33,10 +33,10 @@ class IPTVSetupImpl:
         self.workingObj = None
         self.stepHelper = None
         self.termination = False
-        
+
         self.tmpDir = GetTmpDir()
         self.resourceServers = [GetResourcesServerUri()]
-        
+
         self.ffmpegVersion = ""
         self.gstreamerVersion = ""
         self.openSSLVersion = ""
@@ -44,9 +44,9 @@ class IPTVSetupImpl:
         self.supportedPlatforms = ["sh4", "mipsel", "i686", "armv7", "armv5t"]
         self.platform = "unknown"
         self.glibcVersion = -1
-        
+
         # wget members
-        self.wgetVersion = 1902 # 1.15 
+        self.wgetVersion = 1902 # 1.15
         self.wgetpaths = ["wget", "/usr/bin/wget", "/usr/bin/fullwget", GetBinDir("wget", "")]
         self._wgetInstallChoiseList = [(_('Install into the "%s".') % ("/usr/bin/fullwget " + _("recommended")), "/usr/bin/fullwget"),
                                        (_('Install into the "%s".') % "IPTVPlayer/bin/wget", GetBinDir("wget", "")),
@@ -55,7 +55,7 @@ class IPTVSetupImpl:
         # rtmpdump members
         self.rtmpdumpVersion = 20151215 #{'sh4':'2015', 'mipsel':'2015', 'armv5t':'2015', 'armv7':'2015', 'default':"Compiled by samsamsam@o2.pl 2015-01-11"} #'K-S-V patch'
         self.rtmpdumppaths = ["/usr/bin/rtmpdump", "rtmpdump"]
-        
+
         # f4mdump member
         self.f4mdumpVersion = 0.80
         self.f4mdumppaths = ["/usr/bin/f4mdump", GetBinDir("f4mdump", "")]
@@ -65,7 +65,7 @@ class IPTVSetupImpl:
         self._f4mdumpInstallChoiseList2 = [(_('Install into the "%s".') % ("/usr/bin/f4mdump static libstdc++ (%s)" % _("recommended")), "/usr/bin/f4mdump"),
                                           (_('Install into the "%s".') % "IPTVPlayer/bin/f4mdump _static_libstdc++", GetBinDir("f4mdump", "")),
                                           (_("Do not install (not recommended)"), "")]
-                                          
+
         # uchardet member
         self.uchardetVersion = [0, 0, 6] #UCHARDET_VERSION_MAJOR, UCHARDET_VERSION_MINOR, UCHARDET_VERSION_REVISION
         self.uchardetpaths = ["/usr/bin/uchardet", GetBinDir("uchardet", "")]
@@ -87,15 +87,15 @@ class IPTVSetupImpl:
         self._exteplayer3InstallChoiseList = [(_('Install into the "%s".') % ("/usr/bin/exteplayer3 (%s)" % _("recommended")), "/usr/bin/exteplayer3"),
                                           (_('Install into the "%s".') % "IPTVPlayer/bin/exteplayer3", GetBinDir("exteplayer3", "")),
                                           (_("Do not install (not recommended)"), "")]
-                                          
+
         # flumpegdemux
         self.flumpegdemuxVersion = "0.10.85"
         self.flumpegdemuxpaths = ["/usr/lib/gstreamer-0.10/libgstflumpegdemux.so"]
-        
+
         # gstifdsrc
         self.gstifdsrcVersion = "1.1.1"
         self.gstifdsrcPaths = ["/usr/lib/gstreamer-1.0/libgstifdsrc.so"]
-        
+
         # subparser
         self.subparserVersion = 0.5
         self.subparserPaths = [resolveFilename(SCOPE_PLUGINS, 'Extensions/IPTVPlayer/libs/iptvsubparser/_subparser.so')]
@@ -107,61 +107,61 @@ class IPTVSetupImpl:
         # hlsdl
         self.hlsdlVersion = 0.21
         self.hlsdlPaths = [resolveFilename(SCOPE_PLUGINS, 'Extensions/IPTVPlayer/bin/hlsdl'), "/usr/bin/hlsdl"]
-        
+
         # cmdwrap
         self.cmdwrapVersion = 2
         self.cmdwrapPaths = [resolveFilename(SCOPE_PLUGINS, 'Extensions/IPTVPlayer/bin/cmdwrap'), "/usr/bin/cmdwrap"]
-        
+
         # duk
         self.dukVersion = 6 # "2.1.99 [experimental]" # real version
         self.dukPaths = [resolveFilename(SCOPE_PLUGINS, 'Extensions/IPTVPlayer/bin/duk'), "/usr/bin/duk"]
-        
+
         self.binaryInstalledSuccessfully = False
         self.tries = 0
         self.hasAbiFlags = None
         self.abiFP = None
-        
+
     def __del__(self):
         printDBG("IPTVSetupImpl.__del__ -------------------------------")
-        
+
     def terminate(self):
         printDBG("IPTVSetupImpl.terminate -------------------------------")
         self.termination = True
         self._finished = None
         self._chooseQuestion = None
         self._showMessage = None
-        self._setInfo = None 
+        self._setInfo = None
         if self.workingObj:
             self.workingObj.terminate()
-        
+
     def finish(self, sts=None, ret=None):
         printDBG("IPTVSetupImpl.finish")
         if self._finished:
             self._finished()
-        
+
     def chooseQuestion(self, title, list, callback):
         printDBG("IPTVSetupImpl.chooseQuestion")
         if self._chooseQuestion:
             self._chooseQuestion(title, list, callback)
-        
+
     def showMessage(self, message, type, callback):
         printDBG("IPTVSetupImpl.showMessage")
         if self._showMessage:
             self._showMessage(message, type, callback)
-        
+
     def setInfo(self, title, message):
         printDBG("IPTVSetupImpl.setInfo")
         if self._setInfo:
             self._setInfo(title, message)
-        
+
     def setInfoFromStepHelper(self, key):
         if None != self.stepHelper:
             self.setInfo(_(self.stepHelper.getMessage(key, 0)), _(self.stepHelper.getMessage(key, 1)))
-       
+
     def start(self):
         printDBG("IPTVSetupImpl.start")
         self.glibcVerDetect()
-        
+
     ###################################################
     # STEP: GLIBC VERSION DETECTION
     ###################################################
@@ -170,21 +170,21 @@ class IPTVSetupImpl:
         self.setInfo(_("Detection of glibc version."), _("Detection version of installed standard C library."))
         cmdTabs = []
         cmdTabs.append("ls /lib/libc-*.so 2>&1")
-        
+
         def _glibcVerValidator(code, data):
             printDBG("IPTVSetupImpl._glibcVerValidator")
             return True, False
         self.workingObj = CCmdValidator(self.glibcVerDetectFinished, _glibcVerValidator, cmdTabs)
         self.workingObj.start()
-        
+
     def glibcVerDetectFinished(self, stsTab, dataTab):
         printDBG("IPTVSetupImpl.glibcVerDetectFinished")
-        
-        try: 
+
+        try:
             self.glibcVersion = int(float(re.search("libc\-([0-9]+?\.[0-9]+?)\.", dataTab[-1]).group(1)) * 1000)
-        except Exception: 
+        except Exception:
             self.glibcVersion = -1
-            
+
         self.platformDetect()
 
     ###################################################
@@ -210,7 +210,7 @@ class IPTVSetupImpl:
                 return False, True
         self.workingObj = CCmdValidator(self.platformDetectFinished, _platformValidator, cmdTabs)
         self.workingObj.start()
-        
+
     def platformDetectFinished(self, stsTab, dataTab):
         printDBG("IPTVSetupImpl.platformDetectFinished")
 
@@ -220,14 +220,14 @@ class IPTVSetupImpl:
             printDBG("IPTVSetupImpl.platformDetectFinished platform[%s]" % self.platform)
             config.plugins.iptvplayer.plarform.save()
             configfile.save()
-        
+
         if len(stsTab) > 0 and True == stsTab[-1]:
             _saveConfig(self.supportedPlatforms[len(stsTab) - 1])
             self.detectFPU()
         else:
             _saveConfig("unknown")
             self.showMessage(_("Fatal Error!\nPlugin is not supported with your platform."), MessageBox.TYPE_ERROR, boundFunction(self.finish, False))
-            
+
     ###################################################
     # STEP: FPU DETECTION
     ###################################################
@@ -247,23 +247,23 @@ class IPTVSetupImpl:
                 self.hasAbiFlags = hasAbiFlags
                 self.abiFP = val
             printDBG(">> detectFPU hasAbiFlags[%s] abiFP[%s] -> [%s]" % (self.hasAbiFlags, self.abiFP, IsFPUAvailable()))
-        
+
         if config.plugins.iptvplayer.plarform.value != 'mipsel' or IsFPUAvailable() or config.plugins.iptvplayer.plarformfpuabi.value != '':
             self.getOpensslVersion()
         else:
             self.setInfo(_("Detection of MIPSEL FPU ABI."), _("This step is required to proper select binaries for installation."))
-            
+
             def _cmdValidator(code, data):
-                if 'IPTVPLAYER FPU TEST' in data: 
+                if 'IPTVPLAYER FPU TEST' in data:
                     return True, False
-                else: 
+                else:
                     return False, True
             outCmdTab = []
             for resourceServer in self.resourceServers:
                 outCmdTab.append('wget -q "%sbin/mipsel/fputest" -O "%s/fputest" ; chmod 777 "%s/fputest" ; "%s/fputest" ; rm "%s/fputest" 2>/dev/null' % (resourceServer, self.tmpDir, self.tmpDir, self.tmpDir, self.tmpDir))
             self.workingObj = CCmdValidator(self.detectFPUFinished, _cmdValidator, outCmdTab)
             self.workingObj.start()
-        
+
     def detectFPUFinished(self, stsTab, dataTab):
         printDBG("IPTVSetupImpl.detectFPUFinished")
 
@@ -275,7 +275,7 @@ class IPTVSetupImpl:
             printDBG("IPTVSetupImpl.detectFPUFinished isHardFloat[%r]" % isHardFloat)
             config.plugins.iptvplayer.plarformfpuabi.save()
             configfile.save()
-        
+
         if len(stsTab) > 0:
             if 'IPTVPLAYER FPU TEST OK' in dataTab[-1]:
                 _saveConfig(True)
@@ -283,26 +283,26 @@ class IPTVSetupImpl:
                 _saveConfig(False)
             else:
                 printDBG("IPTVSetupImpl.detectFPUFinished detection failed")
-        
+
         self.getOpensslVersion()
-    
+
     ###################################################
     # STEP: OpenSSL DETECTION
     ###################################################
     def getOpensslVersion(self):
         printDBG("IPTVSetupImpl.getOpensslVersion")
         self.setInfo(_("Detection of the OpenSSL version."), _("OpenSSL lib is needed by wget and rtmpdump utilities."))
-        
+
         def _verValidator(code, data):
-            if code == 0: 
+            if code == 0:
                 return True, False
-            else: 
+            else:
                 return False, True
         verCmdTab = []
         verCmdTab.append('openssl version -a')
         self.workingObj = CCmdValidator(self.getOpensslVersionFinished, _verValidator, verCmdTab)
         self.workingObj.start()
-        
+
     def getOpensslVersionFinished(self, stsTab, dataTab):
         printDBG("IPTVSetupImpl.getOpensslVersionFinished")
         if len(stsTab) > 0 and True == stsTab[-1]:
@@ -310,7 +310,7 @@ class IPTVSetupImpl:
                 if ver in dataTab[-1]:
                     self.openSSLVersion = '.' + ver
                     break
-        
+
         if self.openSSLVersion == '':
             # use old detection manner
             self.setOpenSSLVersion()
@@ -318,7 +318,7 @@ class IPTVSetupImpl:
             self.getOpenssl2Finished()
         else:
             self.getGstreamerVer()
-    
+
     def setOpenSSLVersion(self, ret=None):
         printDBG('Check opennSSL version')
         self.setInfo(_("Detection of the OpenSSL version."), _("OpenSSL lib is needed by wget and rtmpdump utilities."))
@@ -357,37 +357,37 @@ class IPTVSetupImpl:
         else:
             self.openSSLVersion = ""
             self.showMessage(_("Fatal Error!\nOpenssl could not be found. Please install it and retry."), MessageBox.TYPE_ERROR, boundFunction(self.finish, False))
-            
+
     ###################################################
     # STEP: CHECK OPENSSL 1.0.0 VERSION
     ###################################################
     def getOpenssl1Ver(self):
         printDBG("IPTVSetupImpl.getOpenssl1Ver")
         self.setInfo(_("Detection of the OpenSSL 1.0.0 version."), None)
-        
+
         def _verValidator(code, data):
-            if '1.0.0' in data: 
+            if '1.0.0' in data:
                 return True, False
-            else: 
+            else:
                 return False, True
         verCmdTab = []
         verCmdTab.append('grep OPENSSL_1.0.0 "%s"' % self.libSSLPath)
         self.workingObj = CCmdValidator(self.getOpenssl1Finished, _verValidator, verCmdTab)
         self.workingObj.start()
-        
+
     def getOpenssl1Finished(self, stsTab, dataTab):
         printDBG("IPTVSetupImpl.getOpenssl1Finished")
         if len(stsTab) == 0 or False == stsTab[-1]:
             self.getOpenssl2Finished()
         else:
             self.getGstreamerVer()
-        
+
     def getOpenssl2Finished(self):
         printDBG("IPTVSetupImpl.getOpenssl2Finished")
         # we detect new version OpenSSL without symbol OPENSSL_1.0.0
         self.openSSLVersion = '.1.0.2'
         self.libSSLPath = ""
-        
+
         # check if link for libssl.so.1.0.0 and libcrypto.so.1.0.0 are needed
         openSSlVerMap = {}
         for ver in ['.1.0.0', '.1.0.2']:
@@ -397,12 +397,12 @@ class IPTVSetupImpl:
                     fullLibraryPath = os_path.join(path, library)
                     if os_path.isfile(fullLibraryPath):
                         openSSlVerMap[library] = fullLibraryPath
-        
+
         linksTab = []
         for library in ['libssl.so', 'libcrypto.so']:
             if (library + '.1.0.0') not in openSSlVerMap and (library + '.1.0.2') in openSSlVerMap:
                 linksTab.append([openSSlVerMap[library + '.1.0.2'], openSSlVerMap[library + '.1.0.2'][:-1] + '0'])
-        
+
         # there is need to create symlinks for libssl.so.1.0.0 and libcrypto.so.1.0.0
         if len(linksTab):
             symlinksText = []
@@ -411,9 +411,9 @@ class IPTVSetupImpl:
             msg = _("OpenSSL in your image has different library names then these used by %s.\nThere is need to create following symlinks:\n%s\nto be able to install binary components from %s server.\nDo you want to proceed?" % ('E2iPlayer', '\n'.join(symlinksText), 'E2iPlayer'))
             self.showMessage(msg, MessageBox.TYPE_YESNO, boundFunction(self.createOpenSSLSymlinks, linksTab))
             return
-            
+
         self.getGstreamerVer()
-    
+
     ###################################################
     # STEP: OpenSSL create symlinks 1.0.2 -> 1.0.0
     ###################################################
@@ -421,7 +421,7 @@ class IPTVSetupImpl:
         try:
             if arg and len(linksTab):
                 for item in linksTab:
-                    try: 
+                    try:
                         if os_path.islink(item[1]):
                             os_unlink(item[1])
                     except Exception:
@@ -430,9 +430,9 @@ class IPTVSetupImpl:
         except Exception as e:
             self.showMessage(_('Create OpenSSL symlinks failed with following error "%s".\nSome functions may not work correctly.') % e, MessageBox.TYPE_WARNING, self.getGstreamerVer)
             return
-        
+
         self.getGstreamerVer()
-        
+
     ###################################################
     # STEP: GSTREAMER VERSION
     ###################################################
@@ -441,11 +441,11 @@ class IPTVSetupImpl:
         self.setInfo(_("Detection of the gstreamer version."), None)
 
         def _verValidator(code, data):
-            if 'libgstbase-' in data: 
+            if 'libgstbase-' in data:
                 return True, False
-            elif 'GStreamer Core Library version ' in data: 
+            elif 'GStreamer Core Library version ' in data:
                 return True, False
-            else: 
+            else:
                 return False, True
         verCmdTab = []
         verCmdTab.append('cat /proc/%s/maps | grep libgst' % os_getpid())
@@ -453,7 +453,7 @@ class IPTVSetupImpl:
         verCmdTab.append('gst-launch --gst-version')
         self.workingObj = CCmdValidator(self.getGstreamerVerFinished, _verValidator, verCmdTab)
         self.workingObj.start()
-        
+
     def getGstreamerVerFinished(self, stsTab, dataTab):
         printDBG("IPTVSetupImpl.getGstreamerVerFinished")
         if len(stsTab) > 0 and True == stsTab[-1]:
@@ -465,12 +465,12 @@ class IPTVSetupImpl:
                 self.gstreamerVersion = "1.0"
             elif ' version 0.' in dataTab[-1]:
                 self.gstreamerVersion = "0.10"
-            else: 
+            else:
                 self.gstreamerVersion = ""
         else:
             self.gstreamerVersion = ""
         self.getFFmpegVer()
-        
+
     ###################################################
     # STEP: GSTREAMER VERSION
     ###################################################
@@ -485,11 +485,11 @@ class IPTVSetupImpl:
                 return False, True
         self.workingObj = CCmdValidator(self.getFFmpegVerFinished, _verValidator, ['/iptvplayer_rootfs/usr/bin/ffmpeg -version', 'ffmpeg -version'])
         self.workingObj.start()
-        
+
     def getFFmpegVerFinished(self, stsTab, dataTab):
         printDBG("IPTVSetupImpl.getFFmpegVerFinished")
         if len(stsTab) > 0 and True == stsTab[-1]:
-            try: 
+            try:
                 self.ffmpegVersion = re.search("ffmpeg version ([0-9.]+?)[^0-9^.]", dataTab[-1]).group(1)
                 if '.' == self.ffmpegVersion[-1]:
                     self.ffmpegVersion = self.ffmpegVersion[:-1]
@@ -498,7 +498,7 @@ class IPTVSetupImpl:
         else:
             self.ffmpegVersion = ""
         self.wgetStep()
-            
+
     ###################################################
     # STEP: WGET
     ###################################################
@@ -506,8 +506,8 @@ class IPTVSetupImpl:
         printDBG("IPTVSetupImpl.wgetStep")
 
         def _detectValidator(code, data):
-            if 'BusyBox' not in data and '+https' in data: 
-                try: 
+            if 'BusyBox' not in data and '+https' in data:
+                try:
                     obj = re.search("GNU Wget 1\.([0-9]+?)\.([0-9]+?)[^0-9]", data)
                     if obj != None:
                         ver = int(obj.group(1)) * 100 + int(obj.group(2))
@@ -518,33 +518,33 @@ class IPTVSetupImpl:
                 if ver >= self.wgetVersion:
                     return True, False
             return False, True
-        
+
         def _deprecatedHandler(paths, stsTab, dataTab):
             sts, retPath = False, ""
             for idx in range(len(dataTab)):
                 if 'BusyBox' not in dataTab[idx] and '+https' in dataTab[idx]:
                     sts, retPath = True, paths[idx]
             return sts, retPath
-        
+
         def _downloadCmdBuilder(binName, platform, openSSLVersion, server, tmpPath):
             old = ''
             versions = {'sh4': 2190, 'mipsel': 2200}
-            
+
             if platform in ['sh4', 'mipsel'] and (self.binaryInstalledSuccessfully or self.glibcVersion < versions[platform]):
                 old = '_old'
-            
+
             if old == '' and platform == 'mipsel' and not IsFPUAvailable():
                 old = '_softfpu'
-            
+
 #            url = server + 'bin/' + platform + ('/%s%s' % (binName, old)) + '_openssl' + openSSLVersion
             url = 'http://iptvplayer.vline.pl/resources/bin/' + platform + ('/%s%s' % (binName, old)) + '_openssl' + openSSLVersion
             if self.binaryInstalledSuccessfully:
                 self.binaryInstalledSuccessfully = False
-                
+
             tmpFile = tmpPath + binName
             cmd = SetupDownloaderCmdCreator(url, tmpFile) + ' > /dev/null 2>&1'
             return cmd
-        
+
         self.stepHelper = CBinaryStepHelper("wget", self.platform, self.openSSLVersion, config.plugins.iptvplayer.wgetpath)
         self.stepHelper.updateMessage('detection', (_('The "%s" utility is used by the %s to buffering and downloading [%s] links.') % ('wget', 'E2iPlayer', 'http, https, f4m, uds, hls')), 1)
         self.stepHelper.setInstallChoiseList(self._wgetInstallChoiseList)
@@ -559,14 +559,14 @@ class IPTVSetupImpl:
     def wgetStepFinished(self, sts, ret=None):
         printDBG("IPTVSetupImpl.wgetStepFinished sts[%r]" % sts)
         self.rtmpdumpStep()
-        
+
     ###################################################
     # STEP: RTMPDUMP
     ###################################################
     def rtmpdumpStep(self, ret=None):
         printDBG("IPTVSetupImpl.rtmpdumpStep")
         self.binaryInstalledSuccessfully = False
-        
+
         def _detectValidator(code, data):
             try:
                 rawVer = re.search("([0-9]{4})\-([0-9]{2})\-([0-9]{2})", data)
@@ -587,30 +587,30 @@ class IPTVSetupImpl:
         def _downloadCmdBuilder(binName, platform, openSSLVersion, server, tmpPath):
             old = ''
             versions = {'sh4': 2190, 'mipsel': 2200}
-            
+
             if platform in ['sh4', 'mipsel'] and (self.binaryInstalledSuccessfully or self.glibcVersion < versions[platform]):
                 old = '_old'
-            
+
             if platform in ['armv7'] and self.binaryInstalledSuccessfully:
                 old = '_old'
-            
+
             if old == '' and platform == 'mipsel' and not IsFPUAvailable():
                 old = '_softfpu'
-            
+
             url = server + ('rtmpdump/rtmpdump_%s%s_libssl.so%s.tar.gz' % (platform, old, openSSLVersion))
-            
+
             if self.binaryInstalledSuccessfully:
                 self.binaryInstalledSuccessfully = False
-            
-            tmpFile = tmpPath + 'rtmpdump.tar.gz' 
+
+            tmpFile = tmpPath + 'rtmpdump.tar.gz'
             cmd = SetupDownloaderCmdCreator(url, tmpFile) + ' > /dev/null 2>&1'
             return cmd
 
         def _installCmdBuilder(binName, binaryInstallPath, tmpPath):
-            sourceArchive = tmpPath + 'rtmpdump.tar.gz'         
+            sourceArchive = tmpPath + 'rtmpdump.tar.gz'
             cmd = 'tar -xzf "%s" -C / 2>&1' % sourceArchive
             return cmd
-            
+
         self.stepHelper = CBinaryStepHelper("rtmpdump", self.platform, self.openSSLVersion, config.plugins.iptvplayer.rtmpdumppath)
         self.stepHelper.updateMessage('detection', (_('The "%s" utility is used by the %s to buffering and downloading [%s] links.') % ('rtmpdump', 'E2iPlayer', 'rtmp, rtmpt, rtmpe, rtmpte, rtmps')), 1)
         self.stepHelper.setInstallChoiseList([('rtmpdump', '/usr/bin/rtmpdump')])
@@ -626,7 +626,7 @@ class IPTVSetupImpl:
     def rtmpdumpStepFinished(self, sts, ret=None):
         printDBG("IPTVSetupImpl.rtmpdumpStepFinished sts[%r]" % sts)
         self.uchardetStep()
-        
+
     ###################################################
     # STEP: uchardet
     ###################################################
@@ -639,7 +639,7 @@ class IPTVSetupImpl:
                 self.stepHelper.setInstallChoiseList(self._uchardetInstallChoiseList2)
             else:
                 self.stepHelper.setInstallChoiseList(self._uchardetInstallChoiseList)
-            try: 
+            try:
                 rawVer = re.search("Version\s([0-9])\.([0-9])\.([0-9])", data)
                 UCHARDET_VERSION_MAJOR = int(rawVer.group(1))
                 UCHARDET_VERSION_MINOR = int(rawVer.group(2))
@@ -663,17 +663,17 @@ class IPTVSetupImpl:
             fpuVer = ''
             if 'mipsel' == self.platform and self.hasAbiFlags and self.abiFP == 'soft_float':
                 fpuVer = '_softfpu'
-            
+
             if self.binaryInstalledSuccessfully:
                 url = server + 'bin/' + platform + ('/%s%s' % (binName, fpuVer)) + '_static_libstdc++'
                 self.binaryInstalledSuccessfully = False
             else:
                 url = server + 'bin/' + platform + ('/%s%s' % (binName, fpuVer))
-                
+
             tmpFile = tmpPath + binName
             cmd = SetupDownloaderCmdCreator(url, tmpFile) + ' > /dev/null 2>&1'
             return cmd
-            
+
         self.stepHelper = CBinaryStepHelper("uchardet", self.platform, self.openSSLVersion, config.plugins.iptvplayer.uchardetpath)
         self.stepHelper.updateMessage('detection', _('The "%s" utility is used by the %s to determine the encoding of the text.') % ('E2iPlayer', 'uchardet'), 1)
         self.stepHelper.setInstallChoiseList(self._uchardetInstallChoiseList)
@@ -692,7 +692,7 @@ class IPTVSetupImpl:
     def getPackageName(self, name):
         printDBG("getPackageName platform [%s] glibcVersion [%s] " % (self.platform, self.glibcVersion))
         packageAvailable = False
-        try: 
+        try:
             old = 'none'
             if self.platform == 'mipsel':
                 if IsFPUAvailable():
@@ -701,7 +701,7 @@ class IPTVSetupImpl:
                     elif self.glibcVersion >= 2120:
                         old = '_old'
                 else:
-                    if self.glibcVersion >= 2200: 
+                    if self.glibcVersion >= 2200:
                         old = '_softfpu'
                     elif self.glibcVersion >= 2120:
                         old = '_old_softfpu'
@@ -748,18 +748,18 @@ class IPTVSetupImpl:
         def _detectValidator(code, data):
             printDBG("subparserStep_detectValidator code[%d], data[%s]" % (code, data))
             if 0 == code:
-                try: 
+                try:
                     if float(data.strip()) >= self.subparserVersion:
                         return True, False
-                except Exception: 
+                except Exception:
                     pass
             return False, True
 
         def _deprecatedHandler(paths, stsTab, dataTab):
-            try: 
+            try:
                 ver = float(dataTab[0].strip())
                 return True, self.subparserPaths[0]
-            except Exception: 
+            except Exception:
                 pass
             return False, ""
 
@@ -779,7 +779,7 @@ class IPTVSetupImpl:
             self.stepHelper.updateMessage('detection', msg2, 1)
             self.stepHelper.updateMessage('not_detected_2', msg1 + _(' has not been detected. \nDo you want to install it? ') + msg3 + msg2, 1)
             self.stepHelper.updateMessage('deprecated_2', msg1 + _(' is deprecated. \nDo you want to install new one? ') + msg3 + msg2, 1)
-            
+
             self.stepHelper.setInstallChoiseList([('_subparser.so', self.subparserPaths[0])])
             self.stepHelper.setPaths(self.subparserPaths)
             self.stepHelper.setDetectCmdBuilder(_detectCmdBuilder)
@@ -800,29 +800,29 @@ class IPTVSetupImpl:
     ###################################################
     def e2icjsonStep(self, ret=None):
         printDBG("IPTVSetupImpl.e2icjsonStep")
-        
+
         def _detectCmdBuilder(path):
             cmd = GetPyScriptCmd('modver') + ' "%s" e2icjson e2icjson ' % resolveFilename(SCOPE_PLUGINS, 'Extensions/IPTVPlayer/libs/')
             return cmd
-            
+
         def _detectValidator(code, data):
             printDBG("e2icjsonStep_detectValidator code[%d], data[%s]" % (code, data))
             if 0 == code:
-                try: 
+                try:
                     ver = data.strip().split('.')
                     ver = int(ver[0]) * 10000 + int(ver[1]) * 100 + int(ver[2])
                     if ver >= self.e2icjsonVersion:
                         return True, False
-                except Exception: 
+                except Exception:
                     pass
             return False, True
 
         def _deprecatedHandler(paths, stsTab, dataTab):
-            try: 
+            try:
                 ver = data.strip().split('.')
                 ver = int(ver[0]) * 10000 + int(ver[1]) * 100 + int(ver[2])
                 return True, self.e2icjsonPaths[0]
-            except Exception: 
+            except Exception:
                 pass
             return False, ""
 
@@ -857,14 +857,14 @@ class IPTVSetupImpl:
     def e2icjsonStepFinished(self, sts, ret=None):
         printDBG("IPTVSetupImpl.e2icjsonStepFinished sts[%r]" % sts)
         self.hlsdlStep()
-    
+
     ###################################################
     # STEP: hlsdl
     ###################################################
     def hlsdlStep(self, ret=None):
         printDBG("IPTVSetupImpl.hlsdlStep")
         self.binaryInstalledSuccessfully = False
-            
+
         def _detectValidator(code, data):
             if 'hlsdl v' in data:
                 try:
@@ -874,32 +874,32 @@ class IPTVSetupImpl:
                 except Exception:
                     printExc()
             return False, True
-        
+
         def _deprecatedHandler(paths, stsTab, dataTab):
             sts, retPath = False, ""
             for idx in range(len(dataTab)):
                 if 'hlsdl v' in dataTab[idx]:
                     sts, retPath = True, paths[idx]
             return sts, retPath
-        
+
         def _downloadCmdBuilder(binName, platform, openSSLVersion, server, tmpPath):
             old = ''
             versions = {'sh4': 2190, 'mipsel': 2200}
-            
+
             if platform in ['sh4', 'mipsel'] and (self.binaryInstalledSuccessfully or self.glibcVersion < versions[platform]):
                 old = '_old'
-            
+
             if old == '' and platform == 'mipsel' and not IsFPUAvailable():
                 old = '_softfpu'
-            
+
             url = server + 'bin/' + platform + ('/%s%s' % (binName, old)) + '_static_curl_openssl' + openSSLVersion
             if self.binaryInstalledSuccessfully:
                 self.binaryInstalledSuccessfully = False
-                
+
             tmpFile = tmpPath + binName
             cmd = SetupDownloaderCmdCreator(url, tmpFile) + ' > /dev/null 2>&1'
             return cmd
-        
+
         self.stepHelper = CBinaryStepHelper("hlsdl", self.platform, self.openSSLVersion, config.plugins.iptvplayer.hlsdlpath)
         msg1 = _("hlsdl downloader")
         msg2 = _("\nFor more info please ask samsamsam@o2.pl")
@@ -908,7 +908,7 @@ class IPTVSetupImpl:
         self.stepHelper.updateMessage('detection', msg2, 1)
         self.stepHelper.updateMessage('not_detected_2', msg1 + _(' has not been detected. \nDo you want to install it? ') + msg3 + msg2, 1)
         self.stepHelper.updateMessage('deprecated_2', msg1 + _(' is deprecated. \nDo you want to install new one? ') + msg3 + msg2, 1)
-        
+
         self.stepHelper.setInstallChoiseList([('hlsdl', self.hlsdlPaths[0])])
         self.stepHelper.setPaths(self.hlsdlPaths)
         self.stepHelper.setDetectCmdBuilder(lambda path: path + " 2>&1 ")
@@ -917,17 +917,17 @@ class IPTVSetupImpl:
         self.stepHelper.setDeprecatedHandler(_deprecatedHandler)
         self.stepHelper.setFinishHandler(self.hlsdlStepFinished)
         self.binaryDetect()
-    
+
     def hlsdlStepFinished(self, sts, ret=None):
         printDBG("IPTVSetupImpl.hlsdlStepFinished sts[%r]" % sts)
         self.cmdwrapStep()
-        
+
     ###################################################
     # STEP: cmdwrap
     ###################################################
     def cmdwrapStep(self, ret=None):
         printDBG("IPTVSetupImpl.cmdwrapStep")
-            
+
         def _detectValidator(code, data):
             if 'cmdwrap input_file' in data:
                 try:
@@ -937,30 +937,30 @@ class IPTVSetupImpl:
                 except Exception:
                     printExc()
             return False, True
-        
+
         def _deprecatedHandler(paths, stsTab, dataTab):
             sts, retPath = False, ""
             for idx in range(len(dataTab)):
                 if 'cmdwrap input_file' in dataTab[idx]:
                     sts, retPath = True, paths[idx]
             return sts, retPath
-        
+
         def _downloadCmdBuilder(binName, platform, openSSLVersion, server, tmpPath):
             old = ''
             versions = {'sh4': 2190, 'mipsel': 2200}
-            
+
             if platform in ['sh4', 'mipsel'] and self.glibcVersion < versions[platform]:
                 old = '_old'
-            
+
             if old == '' and platform == 'mipsel' and not IsFPUAvailable():
                 old = '_softfpu'
-            
+
             url = server + 'bin/' + platform + ('/%s%s' % (binName, old))
-            
+
             tmpFile = tmpPath + binName
             cmd = SetupDownloaderCmdCreator(url, tmpFile) + ' > /dev/null 2>&1'
             return cmd
-        
+
         self.stepHelper = CBinaryStepHelper("cmdwrap", self.platform, self.openSSLVersion, config.plugins.iptvplayer.cmdwrappath)
         msg1 = _("cmdwrap tool")
         msg2 = _("\nFor more info please ask samsamsam@o2.pl")
@@ -969,7 +969,7 @@ class IPTVSetupImpl:
         self.stepHelper.updateMessage('detection', msg2, 1)
         self.stepHelper.updateMessage('not_detected_2', msg1 + _(' has not been detected. \nDo you want to install it? ') + msg3 + msg2, 1)
         self.stepHelper.updateMessage('deprecated_2', msg1 + _(' is deprecated. \nDo you want to install new one? ') + msg3 + msg2, 1)
-        
+
         self.stepHelper.setInstallChoiseList([('cmdwrap', self.cmdwrapPaths[0])])
         self.stepHelper.setPaths(self.cmdwrapPaths)
         self.stepHelper.setDetectCmdBuilder(lambda path: path + " 2>&1 ")
@@ -978,18 +978,18 @@ class IPTVSetupImpl:
         self.stepHelper.setDeprecatedHandler(_deprecatedHandler)
         self.stepHelper.setFinishHandler(self.cmdwrapStepFinished)
         self.binaryDetect()
-    
+
     def cmdwrapStepFinished(self, sts, ret=None):
         printDBG("IPTVSetupImpl.cmdwrapStepFinished sts[%r]" % sts)
         self.dukStep()
-        
+
     ###################################################
     # STEP: duk
     ###################################################
     def dukStep(self, ret=None):
         printDBG("IPTVSetupImpl.dukStep")
         self.binaryInstalledSuccessfully = False
-            
+
         def _detectValidator(code, data):
             if 'restrict-memory' in data:
                 try:
@@ -999,33 +999,33 @@ class IPTVSetupImpl:
                 except Exception:
                     printExc()
             return False, True
-        
+
         def _deprecatedHandler(paths, stsTab, dataTab):
             sts, retPath = False, ""
             for idx in range(len(dataTab)):
                 if 'restrict-memory' in dataTab[idx]:
                     sts, retPath = True, paths[idx]
             return sts, retPath
-        
+
         def _downloadCmdBuilder(binName, platform, openSSLVersion, server, tmpPath):
             old = ''
             softfpu = ''
             versions = {'sh4': 2190, 'mipsel': 2200}
-            
+
             if platform in ['sh4', 'mipsel'] and (self.binaryInstalledSuccessfully or self.glibcVersion < versions[platform]):
                 old = '_old'
-            
+
             if platform == 'mipsel' and not IsFPUAvailable():
                 softfpu = '_softfpu'
-            
+
             url = server + 'bin/' + platform + ('/%s%s%s' % (binName, old, softfpu))
             if self.binaryInstalledSuccessfully:
                 self.binaryInstalledSuccessfully = False
-                
+
             tmpFile = tmpPath + binName
             cmd = SetupDownloaderCmdCreator(url, tmpFile) + ' > /dev/null 2>&1'
             return cmd
-        
+
         self.stepHelper = CBinaryStepHelper("duk", self.platform, self.openSSLVersion, config.plugins.iptvplayer.dukpath)
         msg1 = _("duktape")
         msg2 = _("\nPlease visit http://duktape.org/")
@@ -1034,7 +1034,7 @@ class IPTVSetupImpl:
         self.stepHelper.updateMessage('detection', msg2, 1)
         self.stepHelper.updateMessage('not_detected_2', msg1 + _(' has not been detected. \nDo you want to install it? ') + msg3 + msg2, 1)
         self.stepHelper.updateMessage('deprecated_2', msg1 + _(' is deprecated. \nDo you want to install new one? ') + msg3 + msg2, 1)
-        
+
         self.stepHelper.setInstallChoiseList([('duk', self.dukPaths[0])])
         self.stepHelper.setPaths(self.dukPaths)
         self.stepHelper.setDetectCmdBuilder(lambda path: path + " --help 2>&1 ")
@@ -1043,11 +1043,11 @@ class IPTVSetupImpl:
         self.stepHelper.setDeprecatedHandler(_deprecatedHandler)
         self.stepHelper.setFinishHandler(self.dukStepFinished)
         self.binaryDetect()
-    
+
     def dukStepFinished(self, sts, ret=None):
         printDBG("IPTVSetupImpl.dukStepFinished sts[%r]" % sts)
         self.f4mdumpStep()
-        
+
     ###################################################
     # STEP: F4MDUMP
     ###################################################
@@ -1080,17 +1080,17 @@ class IPTVSetupImpl:
             fpuVer = ''
             if 'mipsel' == self.platform and self.hasAbiFlags and self.abiFP == 'soft_float':
                 fpuVer = '_softfpu'
-            
+
             if self.binaryInstalledSuccessfully:
                 url = server + 'bin/' + platform + ('/%s%s_openssl' % (binName, fpuVer)) + openSSLVersion + '_static_libstdc++'
                 self.binaryInstalledSuccessfully = False
             else:
                 url = server + 'bin/' + platform + ('/%s%s_openssl' % (binName, fpuVer)) + openSSLVersion
-                
+
             tmpFile = tmpPath + binName
             cmd = SetupDownloaderCmdCreator(url, tmpFile) + ' > /dev/null 2>&1'
             return cmd
-            
+
         self.stepHelper = CBinaryStepHelper("f4mdump", self.platform, self.openSSLVersion, config.plugins.iptvplayer.f4mdumppath)
         self.stepHelper.updateMessage('detection', (_('The "%s" utility is used by the %s to buffering and downloading [%s] links.') % ('f4mdump', 'E2iPlayer', 'f4m, uds')), 1)
         self.stepHelper.setInstallChoiseList(self._f4mdumpInstallChoiseList)
@@ -1107,8 +1107,8 @@ class IPTVSetupImpl:
         shortFFmpegVersion = self.ffmpegVersion
         if len(self.ffmpegVersion) >= 5:
             shortFFmpegVersion = self.ffmpegVersion[:-2]
-            
-        if self.platform in ['sh4'] and shortFFmpegVersion in ['1.0', '1.1', '1.2', '2.0', '2.2', '2.5', '2.6', '2.7', '2.8', '3.0', '3.1', '3.2', '3.3', '3.4']: 
+
+        if self.platform in ['sh4'] and shortFFmpegVersion in ['1.0', '1.1', '1.2', '2.0', '2.2', '2.5', '2.6', '2.7', '2.8', '3.0', '3.1', '3.2', '3.3', '3.4']:
             self.ffmpegVersion = shortFFmpegVersion
             self.exteplayer3Step()
         elif self.platform in ['mipsel'] and shortFFmpegVersion in ['2.8', '3.0', '3.1', '3.2', '3.3', '3.4']:
@@ -1133,7 +1133,7 @@ class IPTVSetupImpl:
         printDBG("IPTVSetupImpl.exteplayer3Step")
 
         def _detectValidator(code, data):
-            if '{"EPLAYER3_EXTENDED":{"version":' in data: 
+            if '{"EPLAYER3_EXTENDED":{"version":' in data:
                 try:
                     ver = int(re.search('"version":([0-9]+?)[^0-9]', data).group(1))
                 except Exception:
@@ -1174,7 +1174,7 @@ class IPTVSetupImpl:
             self.gstplayerStep()
         else:
             self.finish()
-    
+
     ###################################################
     # STEP: GSTPLAYER
     ###################################################
@@ -1185,13 +1185,13 @@ class IPTVSetupImpl:
             self.gstplayerStepFinished(False)
         else:
             def _detectValidator(code, data):
-                if '{"GSTPLAYER_EXTENDED":{"version":' in data: 
+                if '{"GSTPLAYER_EXTENDED":{"version":' in data:
                     try:
                         ver = int(re.search('"version":([0-9]+?)[^0-9]', data).group(1))
                     except Exception:
                         ver = 0
                     if '0.10' != self.gstreamerVersion or ver < 10000:
-                        if ver >= self.gstplayerVersion.get(self.gstreamerVersion, 0): 
+                        if ver >= self.gstplayerVersion.get(self.gstreamerVersion, 0):
                             return True, False
                 return False, True
 
@@ -1227,11 +1227,11 @@ class IPTVSetupImpl:
         if sts:
             if '0.10' == self.gstreamerVersion:
                 self.flumpegdemuxStep()
-            else: 
+            else:
                 self.gstifdsrcStep()
         else:
             self.finish()
-        
+
     ###################################################
     # STEP: FLUENDO MPEGDEMUX
     ###################################################
@@ -1267,7 +1267,7 @@ class IPTVSetupImpl:
         self.stepHelper.updateMessage('detection', msg2, 1)
         self.stepHelper.updateMessage('not_detected_2', msg1 + _(' has not been detected. \nDo you want to install it? ') + msg3 + msg2, 1)
         self.stepHelper.updateMessage('deprecated_2', msg1 + _(' is deprecated. \nDo you want to install new one? ') + msg3 + msg2, 1)
-        
+
         self.stepHelper.setInstallChoiseList([('gst-fluendo-mpegdemux', self.flumpegdemuxpaths[0])])
         self.stepHelper.setPaths(self.flumpegdemuxpaths)
         self.stepHelper.setDetectCmdBuilder(lambda path: ('grep "%s" "%s" 2>&1 ' % (self.flumpegdemuxVersion, path)))
@@ -1276,11 +1276,11 @@ class IPTVSetupImpl:
         self.stepHelper.setDeprecatedHandler(_deprecatedHandler)
         self.stepHelper.setFinishHandler(self.flumpegdemuxStepFinished)
         self.binaryDetect()
-        
+
     def flumpegdemuxStepFinished(self, sts, ret=None):
         printDBG("IPTVSetupImpl.flumpegdemuxStepFinished sts[%r]" % sts)
         self.finish()
-    
+
     ###################################################
     # STEP: GST IFDSRC
     ###################################################
@@ -1319,7 +1319,7 @@ class IPTVSetupImpl:
         self.stepHelper.updateMessage('detection', msg2, 1)
         self.stepHelper.updateMessage('not_detected_2', msg1 + _(' has not been detected. \nDo you want to install it? ') + msg3 + msg2, 1)
         self.stepHelper.updateMessage('deprecated_2', msg1 + _(' is deprecated. \nDo you want to install new one? ') + msg3 + msg2, 1)
-        
+
         self.stepHelper.setInstallChoiseList([('gst-ifdsrc', self.gstifdsrcPaths[0])])
         self.stepHelper.setPaths(self.gstifdsrcPaths)
         self.stepHelper.setDetectCmdBuilder(lambda path: ('grep "%s" "%s" 2>&1 ' % (self.gstifdsrcVersion, path)))
@@ -1336,7 +1336,7 @@ class IPTVSetupImpl:
     ###################################################
     ###################################################
     ###################################################
-        
+
     ###################################################
     # STEP: SEARCHING FOR binary
     ###################################################
@@ -1345,10 +1345,10 @@ class IPTVSetupImpl:
         self.setInfoFromStepHelper('detection')
         self.workingObj = CCmdValidator(self.binaryDetectFinished, self.stepHelper.getDetectValidator(), self.stepHelper.getDetectCmds())
         self.workingObj.start()
-        
+
     def binaryDetectFinished(self, stsTab, dataTab):
         printDBG("IPTVSetupImpl.binaryDetectFinished")
-        
+
         if len(stsTab) > 0 and True == stsTab[-1]:
             path = self.stepHelper.getPaths()[len(stsTab) - 1]
             self.stepHelper.getSaveConfigOptionHandler()(self.stepHelper.getConfigOption(), path)
@@ -1390,7 +1390,7 @@ class IPTVSetupImpl:
             cmdTabs.append(cmd)
         self.workingObj = CCmdValidator(self.binaryDownloadFinished, self.stepHelper.getDownloadValidator(), cmdTabs)
         self.workingObj.start()
-    
+
     def binaryDownload_1(self, ret=None):
         printDBG("IPTVSetupImpl.binaryDownload_1")
         if ret:
@@ -1401,7 +1401,7 @@ class IPTVSetupImpl:
             self.binaryDownload()
         else:
             self.stepHelper.getFinishHandler()(False)
-        
+
     def binaryDownload_2(self, ret=None):
         printDBG("IPTVSetupImpl.binaryDownload_2")
         if ret:
@@ -1410,7 +1410,7 @@ class IPTVSetupImpl:
         else:
             self._binaryInstallPath = ""
             self.stepHelper.getFinishHandler()(False)
-        
+
     def binaryDownloadFinished(self, stsTab, dataTab):
         printDBG("IPTVSetupImpl.binaryDownloadFinished")
         if len(stsTab) > 0 and True == stsTab[-1]:
@@ -1418,14 +1418,14 @@ class IPTVSetupImpl:
             self.binaryInstall()
         else:
             self.showMessage(self.stepHelper.getMessage('dwn_failed', 1), MessageBox.TYPE_YESNO, self.binaryDownloadRetry)
-            
+
     def binaryDownloadRetry(self, ret=None):
         printDBG("IPTVSetupImpl.binaryDownloadRetry")
         if ret:
             self.binaryDetect()
         else:
             self.stepHelper.getFinishHandler()(False)
-            
+
     ###################################################
     # STEP: binary Install
     ###################################################
@@ -1435,7 +1435,7 @@ class IPTVSetupImpl:
         cmd = self.stepHelper.getInstallCmdBuilder()(self.stepHelper.getName(), self._binaryInstallPath, self.tmpDir)
         self.workingObj = CCmdValidator(self.binaryInstallFinished, self.stepHelper.getInstallValidator(), [cmd])
         self.workingObj.start()
-        
+
     def binaryInstallFinished(self, stsTab, dataTab):
         printDBG("IPTVSetupImpl.binaryInstallFinished")
         if len(stsTab) > 0 and True == stsTab[-1]:
@@ -1444,7 +1444,7 @@ class IPTVSetupImpl:
             self.binaryDetect() # run detect step once again to make sure that installed binary will be detected
         else:
             self.showMessage(_("Installation binary failed. Retry?"), MessageBox.TYPE_YESNO, self.binaryInstallRetry)
-        
+
     def binaryInstallRetry(self, ret=None):
         printDBG("IPTVSetupImpl.binaryInstallRetry")
         if ret:

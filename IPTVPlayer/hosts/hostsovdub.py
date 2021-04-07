@@ -24,7 +24,7 @@ def gettytul():
 class Sovdub(CBaseHostClass):
     def __init__(self):
         CBaseHostClass.__init__(self, {'history': 'Sovdub', 'cookie': 'Sovdub.cookie'})
-        
+
         self.MAIN_URL = 'http://sovdub.ru/'
         self.DEFAULT_ICON_URL = self.getFullIconUrl('/templates/simplefilms/images/logo.png')
 
@@ -34,13 +34,13 @@ class Sovdub(CBaseHostClass):
                              {'category': 'search_history', 'title': _('Search history')}
                             ]
         self.encoding = ''
-    
+
     def getPage(self, url, params={}, post_data=None):
         sts, data = self.cm.getPage(url, params, post_data)
         if sts and self.encoding == '':
             self.encoding = self.cm.ph.getSearchGroups(data, 'charset=([^"]+?)"')[0]
         return sts, data
-    
+
     def getFullUrl(self, url):
         url = url.replace('&amp;', '&')
         return CBaseHostClass.getFullUrl(self, url)
@@ -123,7 +123,7 @@ class Sovdub(CBaseHostClass):
             return
         desc = self.cm.ph.getDataBeetwenMarkers(data, '<div class="full-news-content">', '</a></div>', False)[1]
         desc = self.cleanHtmlStr(desc).replace('  ', '')
-        
+
         url = ''
         hasLinks = False
         data = self.cm.ph.getAllItemsBeetwenNodes(data, ('<iframe', '>'), ('</iframe', '>'), caseSensitive=False)
@@ -133,7 +133,7 @@ class Sovdub(CBaseHostClass):
             url = self.getFullUrl(url)
             if 'money.' not in url and 1 == self.up.checkHostSupport(url):
                 hasLinks = True
-            
+
         if self.cm.isValidUrl(url):
             params = dict(cItem)
             params['desc'] = desc
@@ -142,26 +142,26 @@ class Sovdub(CBaseHostClass):
                 self.addVideo(params)
             else:
                 self.addArticle(params)
-        
+
     def listSearchResult(self, cItem, searchPattern, searchType):
         #searchPattern = 'Колонна'
-        
+
         if self.encoding == '':
             sts, data = self.getPage(self.getMainUrl())
             if not sts:
                 return
-            
+
         try:
             searchPattern = searchPattern.decode('utf-8').encode(self.encoding, 'ignore')
         except Exception:
             searchPattern = ''
-        
+
         post_data = {'do': 'search', 'subaction': 'search', 'story': searchPattern, 'x': 0, 'y': 0}
-        
+
         sts, data = self.getPage(self.getMainUrl(), post_data=post_data)
         if not sts:
             return
-        
+
         m1 = '<div class="main-news">'
         data = self.cm.ph.getDataBeetwenMarkers(data, m1, '<div style="clear: both;">', False)[1]
         data = data.split(m1)

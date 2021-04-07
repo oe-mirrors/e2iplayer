@@ -28,7 +28,7 @@ except Exception:
 def GetConfigList():
     optionList = []
     return optionList
-    
+
 ###################################################
 
 
@@ -41,12 +41,12 @@ class LivemassNetApi(CBaseHostClass):
         self.HTTP_HEADER = {'User-Agent': 'Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/62.0.3202.94 Safari/537.36', 'Accept': 'text/html', 'Accept-Encoding': 'gzip, deflate'}
         self.AJAX_HEADER = dict(self.HTTP_HEADER)
         self.AJAX_HEADER.update({'X-Requested-With': 'XMLHttpRequest'})
-        
+
         self.COOKIE_FILE = GetCookieDir('livemass.net')
-        
+
         self.defaultParams = {'header': self.HTTP_HEADER, 'with_metadata': True, 'save_cookie': True, 'load_cookie': True, 'cookiefile': self.COOKIE_FILE}
         self.linksCache = {}
-        
+
     def getList(self, cItem):
         printDBG("LivemassNetApi.getChannelsList")
         mainItemsTab = []
@@ -55,7 +55,7 @@ class LivemassNetApi(CBaseHostClass):
             sts, data = self.cm.getPage(self.getMainUrl(), self.defaultParams)
             if not sts:
                 return []
-            
+
             if not sts:
                 url = 'http://s3.amazonaws.com/livemass/index.html'
             else:
@@ -70,13 +70,13 @@ class LivemassNetApi(CBaseHostClass):
                 if not sts:
                     return []
                 cUrl = data.meta['url']
-                
+
                 if 'refresh' in data:
                     url = self.getFullUrl(self.cm.ph.getSearchGroups(data, '''url=([^'^"^>^\s]+?)['">\s]''', 1, True)[0], cUrl)
                     sts, data = self.cm.getPage(url, self.defaultParams)
                     if not sts:
                         return []
-            
+
             cUrl = data.meta['url']
             data = re.compile('''<a[^>]+?href=['"]([^'^"]+?)['"][^>]*?>\s*?(EN|FR)\s*?<''', re.IGNORECASE).findall(data)
             for item in data:
@@ -90,7 +90,7 @@ class LivemassNetApi(CBaseHostClass):
             if not sts:
                 return []
             cUrl = data.meta['url']
-            
+
             printDBG("_______________________")
             printDBG(data)
             linksTab = []
@@ -119,13 +119,13 @@ class LivemassNetApi(CBaseHostClass):
                             links.append({'title': title, 'url': url})
                     if 2 == len(links):
                         linksTab.append(links)
-            
+
             if liveItem != None:
                 params = dict(cItem)
                 params.update(liveItem)
                 params.update({'type': 'video'})
                 mainItemsTab.append(params)
-            
+
             if len(groupsNames) <= len(linksTab):
                 for idx in range(len(groupsNames)):
                     params = dict(cItem)
@@ -137,19 +137,19 @@ class LivemassNetApi(CBaseHostClass):
                         params.update(item)
                         params.update({'type': 'video'})
                         mainItemsTab.append(params)
-        
+
         return mainItemsTab
-        
+
     def getVideoLink(self, cItem):
         printDBG("LivemassNetApi.getVideoLink")
         urlsTab = self.linksCache.get(cItem['url'], [])
         if len(urlsTab):
             return urlsTab
-        
+
         sts, data = self.cm.getPage(cItem['url'], self.defaultParams)
         if not sts:
             return urlsTab
-        
+
         data = self.cm.ph.getSearchGroups(data, '''['"]?sources['"]?\s*?:\s*?(\[[^\]]+?\])''', 1, True)[0]
         printDBG(data)
         data = data.split('},')
@@ -162,17 +162,17 @@ class LivemassNetApi(CBaseHostClass):
                 urlsTab.extend(getDirectM3U8Playlist(url, checkContent=True))
             else:
                 urlsTab.append({'name': name, 'url': url})
-        
+
         for idx in range(len(urlsTab)):
             urlsTab[idx]['need_resolve'] = 0
             urlsTab[idx]['url'] = strwithmeta(urlsTab[idx]['url'], {'Referer': cItem['url']})
-            
+
         try:
             urlsTab.sort(key=lambda item: int(item.get('bitrate', '0')), reverse=True)
         except Exception:
             printExc()
-        
+
         if len(urlsTab):
             self.linksCache[cItem['url']] = urlsTab
-        
+
         return urlsTab

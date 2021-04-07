@@ -72,5 +72,3 @@ class WEP_TestVectors(unittest.TestCase):
 # Make this test module runnable from the command prompt
 if __name__ == "__main__":
     unittest.main()
-
-

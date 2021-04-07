@@ -12,7 +12,7 @@ __all__ = 'M3U8', 'Playlist', 'loads', 'load', 'parse'
 
 def inits(content, uri):
     '''
-    Given a string with a m3u8 content and uri from which 
+    Given a string with a m3u8 content and uri from which
     this content was downloaded returns a M3U8 object.
     Raises ValueError if invalid content
     '''
@@ -58,4 +58,3 @@ def _load_from_file(uri):
         raw_content = fileobj.read().strip()
     base_uri = os.path.dirname(uri)
     return M3U8(raw_content, base_uri=base_uri)
-

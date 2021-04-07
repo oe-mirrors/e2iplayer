@@ -23,7 +23,7 @@ from Components.config import config, ConfigText, ConfigSelection, getConfigList
 ###################################################
 
 ###################################################
-# E2 GUI COMMPONENTS 
+# E2 GUI COMMPONENTS
 ###################################################
 from Screens.MessageBox import MessageBox
 ###################################################
@@ -47,7 +47,7 @@ def GetConfigList():
 
 def gettytul():
     return 'https://hdfull.me/'
-    
+
 
 class SuggestionsProvider:
     MAIN_URL = 'https://hdfull.me/'
@@ -74,7 +74,7 @@ class SuggestionsProvider:
             retList = []
             for item in json_loads(data):
                 retList.append(item['title'])
-            return retList 
+            return retList
         return None
 
 
@@ -111,7 +111,7 @@ class HDFull(CBaseHostClass, CaptchaHelper):
         if addParams == {}:
             addParams = dict(self.defaultParams)
         return self.cm.getPage(baseUrl, addParams, post_data)
-    
+
     def setMainUrl(self, url):
         CBaseHostClass.setMainUrl(self, url)
         SuggestionsProvider.MAIN_URL = self.getMainUrl()
@@ -122,7 +122,7 @@ class HDFull(CBaseHostClass, CaptchaHelper):
         if not sts:
             return
         self.setMainUrl(self.cm.meta['url'])
-        
+
         reObj = re.compile('<ul[^>]*?>')
         data = self.cm.ph.getAllItemsBeetwenNodes(data, ('<li', '>', 'dropdown'), ('</ul', '>'), False)
         for menuData in data:
@@ -144,7 +144,7 @@ class HDFull(CBaseHostClass, CaptchaHelper):
             subItems = []
             if category:
                 subItems = [MergeDicts(cItem, {'url': menuUrl, 'title': _('All'), 'category': category})]
-            
+
             for item in menuData:
                 title = self.cleanHtmlStr(item)
                 url = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''\shref=['"]([^'^"]+?)['"]''')[0])
@@ -203,7 +203,7 @@ class HDFull(CBaseHostClass, CaptchaHelper):
         if not sts:
             return
         self.setMainUrl(self.cm.meta['url'])
-        
+
         data = self.cm.ph.getDataBeetwenNodes(data, ('<div', '>', 'filter-title'), ('</div', '>'), False)[1]
         data = self.cm.ph.getAllItemsBeetwenMarkers(data, '<a', '</a>')
         for item in data:
@@ -238,7 +238,7 @@ class HDFull(CBaseHostClass, CaptchaHelper):
 
             # rating
             item = self.cm.ph.getDataBeetwenNodes(item, ('<div', '>', 'right'), ('</div', '>'), False)[1]
-            
+
             tmp = [self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(item, ('<', '>', 'rating'), ('<', '>'), False)[1])]
             tmp.append(self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(item, ('<', '>', 'dec'), ('</', '>'), False)[1]))
             if tmp[0]:
@@ -267,7 +267,7 @@ class HDFull(CBaseHostClass, CaptchaHelper):
             nextPage += '/%d' % (page + 1)
         else:
             nextPage = self.cm.ph.getDataBeetwenMarkers(data, 'filter-title', '</div>', False)[1]
-            nextPage = self.getFullUrl(self.cm.ph.getSearchGroups(nextPage, '''<a[^>]+?href=['"]([^'^"]+?)['"][^>]*?>\s*?%s\s*?<''' % (page + 1))[0]) 
+            nextPage = self.getFullUrl(self.cm.ph.getSearchGroups(nextPage, '''<a[^>]+?href=['"]([^'^"]+?)['"][^>]*?>\s*?%s\s*?<''' % (page + 1))[0])
 
         self.currList.extend(self._listItems(cItem, nextCategory, data))
 
@@ -291,7 +291,7 @@ class HDFull(CBaseHostClass, CaptchaHelper):
             tabJs[key]['name'] = 'hdfull.me_%s' % key
             if not is_js_cached(tabJs[key]['name'], tabJs[key]['hash']):
                 sts, jsdata = self.getPage(tabJs[key]['url'])
-                if sts: 
+                if sts:
                     if 'providers' == key:
                         idx1 = jsdata.find('providers')
                         idx2 = jsdata.find(';', idx1 + 9)
@@ -421,7 +421,7 @@ class HDFull(CBaseHostClass, CaptchaHelper):
 
         params = dict(self.defaultParams)
         params['header'] = MergeDicts(params['header'], {'Referer': cItem['url'], 'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8'})
-        
+
         sts, data = self.getPage(self.getFullUrl('/a/episodes'), params, post_data)
         if not sts:
             return
@@ -436,7 +436,7 @@ class HDFull(CBaseHostClass, CaptchaHelper):
                 title = '%s - s%se%s %s' % (jstr(item['show']['title'], lang), sNum.zfill(2), eNum.zfill(2), jstr(item['title'], lang))
                 desc = jstr(item, 'date_aired') + ' | ' + (', '.join(item.get('languages', [])))
                 url = self.getFullUrl(baseEpisodeUrl % (jstr(item, 'permalink'), sNum, eNum))
-                
+
                 self.addVideo({'good_for_fav': True, 'title': title, 'url': url, 'icon': icon, 'desc': desc})
         except Exception:
             printExc()
@@ -446,13 +446,13 @@ class HDFull(CBaseHostClass, CaptchaHelper):
 
     def listEpisodesLangs(self, cItem, nextCategory):
         printDBG("HDFull.listEpisodesLangs")
-        
+
         sts, data = self.getPage(cItem['url'])
         if not sts:
             return
         cUrl = self.getFullUrl(self.cm.meta['url'])
         self.setMainUrl(cUrl)
-        
+
         data = self.cm.ph.getDataBeetwenNodes(data, ('<ul', '>', 'lang-bar'), ('</ul', '>'), False)[1]
         data = self.cm.ph.getAllItemsBeetwenMarkers(data, '<a', '</a>')
         for item in data:
@@ -467,7 +467,7 @@ class HDFull(CBaseHostClass, CaptchaHelper):
         if not sts:
             return
         self.setMainUrl(self.cm.meta['url'])
-        
+
         post_data = {}
         data = self.cm.ph.getDataBeetwenNodes(data, ('<form', '>', 'search'), ('</form', '>'), True, False)[1]
         actionUrl = self.getFullUrl(self.cm.ph.getSearchGroups(data, '''action=['"]([^"^']+?)["']''', 1, True)[0])
@@ -478,7 +478,7 @@ class HDFull(CBaseHostClass, CaptchaHelper):
             if name != '':
                 post_data[name] = value
         post_data.update({'query': searchPattern})
-        
+
         httpParams = dict(self.defaultParams)
         httpParams['header'] = MergeDicts(httpParams['header'], {'Referer': self.cm.meta['url'], 'Content-Type': 'application/x-www-form-urlencoded'})
 
@@ -497,7 +497,7 @@ class HDFull(CBaseHostClass, CaptchaHelper):
     def getLinksForVideo(self, cItem):
         self.tryTologin()
 
-        if 0 != self.up.checkHostSupport(cItem['url']): 
+        if 0 != self.up.checkHostSupport(cItem['url']):
             return self.up.getVideoLinkExt(cItem['url'])
 
         linksTab = self.cacheLinks.get(cItem['url'], [])
@@ -517,7 +517,7 @@ class HDFull(CBaseHostClass, CaptchaHelper):
             self.cacheLinks[cUrl] = linksTab
 
         return linksTab
-        
+
     def getVideoLinks(self, videoUrl):
         printDBG("HDFull.getVideoLinks [%s]" % videoUrl)
         # mark requested link as used one
@@ -528,9 +528,9 @@ class HDFull(CBaseHostClass, CaptchaHelper):
                         if not self.cacheLinks[key][idx]['name'].startswith('*'):
                             self.cacheLinks[key][idx]['name'] = '*' + self.cacheLinks[key][idx]['name']
 
-        if 0 != self.up.checkHostSupport(videoUrl): 
+        if 0 != self.up.checkHostSupport(videoUrl):
             return self.up.getVideoLinkExt(videoUrl)
-        
+
         return []
 
     def _desc(self, data):
@@ -544,7 +544,7 @@ class HDFull(CBaseHostClass, CaptchaHelper):
     def getArticleContent(self, cItem, data=None):
         printDBG("HDFull.getArticleContent [%s]" % cItem)
         retTab = []
-        
+
         url = cItem.get('prev_url', cItem['url'])
         if data == None:
             self.tryTologin()
@@ -561,7 +561,7 @@ class HDFull(CBaseHostClass, CaptchaHelper):
         desc = self.cleanHtmlStr(tmp[0])
 
         itemsList = []
-        
+
         value = self.cm.ph.getSearchGroups(data, '''<([^>]+?datePublished[^>]+?)>''')[0]
         value = self.cleanHtmlStr(self.cm.ph.getSearchGroups(value, '''content=['"]([^"^']+?)['"]''')[0])
         if value:
@@ -585,12 +585,12 @@ class HDFull(CBaseHostClass, CaptchaHelper):
             icon = cItem.get('icon', self.DEFAULT_ICON_URL)
         if desc == '':
             desc = cItem.get('desc', '')
-        
+
         return [{'title': self.cleanHtmlStr(title), 'text': self.cleanHtmlStr(desc), 'images': [{'title': '', 'url': self.getFullUrl(icon)}], 'other_info': {'custom_items_list': itemsList}}]
-        
+
     def tryTologin(self):
         printDBG('tryTologin start')
-        
+
         if None == self.loggedIn or self.login != config.plugins.iptvplayer.hdfull_login.value or \
             self.password != config.plugins.iptvplayer.hdfull_password.value:
 
@@ -659,7 +659,7 @@ class HDFull(CBaseHostClass, CaptchaHelper):
 
     def handleService(self, index, refresh=0, searchPattern='', searchType=''):
         printDBG('handleService start')
-        
+
         CBaseHostClass.handleService(self, index, refresh, searchPattern, searchType)
 
         name = self.currItem.get("name", '')
@@ -699,7 +699,7 @@ class HDFull(CBaseHostClass, CaptchaHelper):
     #SEARCH
         elif category in ["search", "search_next_page"]:
             cItem = dict(self.currItem)
-            cItem.update({'search_item': False, 'name': 'category'}) 
+            cItem.update({'search_item': False, 'name': 'category'})
             self.listSearchResult(cItem, searchPattern, searchType)
     #HISTORIA SEARCH
         elif category == "search_history":
@@ -718,7 +718,7 @@ class IPTVHost(CHostBase):
 
     def __init__(self):
         CHostBase.__init__(self, HDFull(), True, [])
-    
+
     def withArticleContent(self, cItem):
         if cItem.get('prev_url') or cItem.get('type') == 'video' or cItem.get('category') == 'explore_item':
             return True

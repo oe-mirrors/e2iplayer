@@ -32,14 +32,14 @@ class AndrijaIAndjelka(CBaseHostClass):
         self.HEADER = {'User-Agent': self.USER_AGENT, 'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8', 'Accept-Language': 'pl,en-US;q=0.7,en;q=0.3', 'Accept-Encoding': 'gzip, deflate', 'Upgrade-Insecure-Requests': '1', 'Connection': 'keep-alive'}
         self.AJAX_HEADER = dict(self.HEADER)
         self.AJAX_HEADER.update({'X-Requested-With': 'XMLHttpRequest', 'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8'})
-        
+
         self.MAIN_URL = 'https://andrija-i-andjelka.com/'
         #https://previews.123rf.com/images/yusufsangdes89/yusufsangdes891507/yusufsangdes89150700042/42557652-cinema-camera-icon-movie-lover-series-icon.jpg
         self.DEFAULT_ICON_URL = 'https://img00.deviantart.net/972b/i/2010/241/0/4/tv_series_icon_set_by_silentbang-d2xl0kj.jpg'
-        
+
         self.defaultParams = {'header': self.HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE, 'cookie_items': {}}
         self.timestam = 0
-    
+
     def getPage(self, baseUrl, addParams={}, post_data=None):
         if addParams == {}:
             addParams = dict(self.defaultParams)
@@ -88,16 +88,16 @@ class AndrijaIAndjelka(CBaseHostClass):
                         {'category': 'search', 'title': _('Search'), 'search_item': True},
                         {'category': 'search_history', 'title': _('Search history')}]
         self.listsTab(MAIN_CAT_TAB, cItem)
-        
+
     def listItems(self, cItem):
         printDBG("AndrijaIAndjelka.listItems")
         page = cItem.get('page', 1)
-        
+
         sts, data = self.getPage(cItem['url'])
         if not sts:
             return
         self.setMainUrl(self.cm.meta['url'])
-        
+
         nextPage = self.cm.ph.getDataBeetwenNodes(data, ('<nav', '>', 'pagination'), ('</nav', '>'), False)[1]
         nextPage = self.cm.ph.getSearchGroups(nextPage, '''<a[^>]+?href=['"]([^'^"]+?/%s[^0-9][^'^"]*?)['"]''' % (page + 1))[0]
 
@@ -115,15 +115,15 @@ class AndrijaIAndjelka(CBaseHostClass):
             params = dict(cItem)
             params.update({'title': _("Next page"), 'url': nextPage, 'page': page + 1})
             self.addDir(params)
-            
+
     def listSeries(self, cItem, nextCategory):
         printDBG("AndrijaIAndjelka.listSeries")
-        
+
         sts, data = self.getPage(cItem['url'])
         if not sts:
             return
         self.setMainUrl(self.cm.meta['url'])
-        
+
         data = self.cm.ph.getDataBeetwenNodes(data, ('<article', '>', 'post-'), ('</article', '>'), False)[1]
         data = self.cm.ph.getAllItemsBeetwenMarkers(data, '<td', '</td>')
         for item in data:
@@ -134,14 +134,14 @@ class AndrijaIAndjelka(CBaseHostClass):
             params = dict(cItem)
             params.update({'good_for_fav': True, 'category': nextCategory, 'title': title, 'url': url, 'icon': icon})
             self.addDir(params)
-        
+
     def listSearchResult(self, cItem, searchPattern, searchType):
         printDBG("AndrijaIAndjelka.listSearchResult cItem[%s], searchPattern[%s] searchType[%s]" % (cItem, searchPattern, searchType))
         cItem = dict(cItem)
         cItem['url'] = self.getFullUrl('/?s=') + urllib.parse.quote_plus(searchPattern)
         cItem['category'] = 'list_items'
         self.listItems(cItem)
-    
+
     def getLinksForVideo(self, cItem):
         printDBG("AndrijaIAndjelka.getLinksForVideo [%s]" % cItem)
         urlTab = []
@@ -153,7 +153,7 @@ class AndrijaIAndjelka(CBaseHostClass):
         data = self.cm.ph.getAllItemsBeetwenMarkers(data, '<iframe', '</iframe>', caseSensitive=False)
         for item in data:
             url = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''src=['"]([^"^']+?)['"]''', 1, True)[0])
-            if 1 == self.up.checkHostSupport(url): 
+            if 1 == self.up.checkHostSupport(url):
                 name = self.up.getHostName(url) #, nameOnly=True)
                 url = strwithmeta(url, {'Referer': cItem['url']})
                 urlTab.append({'name': name, 'url': url, 'need_resolve': 1})
@@ -166,18 +166,18 @@ class AndrijaIAndjelka(CBaseHostClass):
 
     def handleService(self, index, refresh=0, searchPattern='', searchType=''):
         printDBG('handleService start')
-        
+
         CBaseHostClass.handleService(self, index, refresh, searchPattern, searchType)
 
         name = self.currItem.get("name", '')
         category = self.currItem.get("category", '')
         mode = self.currItem.get("mode", '')
-        
+
         printDBG("handleService: || name[%s], category[%s] " % (name, category))
         self.currList = []
         self.currItem = dict(self.currItem)
         self.currItem.pop('good_for_fav', None)
-        
+
     #MAIN MENU
         if name == None:
             self.listMainMenu({'name': 'category', 'type': 'category'})
@@ -190,19 +190,18 @@ class AndrijaIAndjelka(CBaseHostClass):
     #SEARCH
         elif category in ["search", "search_next_page"]:
             cItem = dict(self.currItem)
-            cItem.update({'search_item': False, 'name': 'category'}) 
+            cItem.update({'search_item': False, 'name': 'category'})
             self.listSearchResult(cItem, searchPattern, searchType)
     #HISTORIA SEARCH
         elif category == "search_history":
             self.listsHistory({'name': 'history', 'category': 'search'}, 'desc', _("Type: "))
         else:
             printExc()
-        
+
         CBaseHostClass.endHandleService(self, index, refresh)
 
 
 class IPTVHost(CHostBase):
 
     def __init__(self):
-        CHostBase.__init__(self, AndrijaIAndjelka(), True, favouriteTypes=[]) 
-
+        CHostBase.__init__(self, AndrijaIAndjelka(), True, favouriteTypes=[])

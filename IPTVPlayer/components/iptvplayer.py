@@ -1,6 +1,6 @@
 from Screens.Screen import Screen
 from Screens.InfoBarGenerics import InfoBarSeek, InfoBarAudioSelection, InfoBarNotifications, InfoBarSubtitleSupport, InfoBarShowHide
-   
+
 
 from Screens.HelpMenu import HelpableScreen
 from Components.ActionMap import HelpableActionMap
@@ -19,11 +19,11 @@ class customMoviePlayer(InfoBarShowHide, InfoBarSeek, InfoBarAudioSelection, Inf
     STATE_PAUSED = 2
     ENABLE_RESUME_SUPPORT = True
     ALLOW_SUSPEND = True
-    
+
     def __init__(self, session, service, lastPosition=None, bugEOFworkaround=0):
         Screen.__init__(self, session)
         self.skinName = "MoviePlayer"
-        
+
         self.__event_tracker = ServiceEventTracker(screen=self, eventmap={
                 iPlayableService.evEOF: self.__evEOF,
                 iPlayableService.evSOF: self.__evEOF,
@@ -33,25 +33,25 @@ class customMoviePlayer(InfoBarShowHide, InfoBarSeek, InfoBarAudioSelection, Inf
                 "leavePlayer": (self.leavePlayer, _("leave movie player...")),
                 "leavePlayerOnExit": (self.leavePlayer, _("leave movie player...")),
             }, -5)
-        
+
         for x in HelpableScreen, InfoBarShowHide, InfoBarSeek, InfoBarAudioSelection, InfoBarSubtitleSupport, InfoBarNotifications:
             x.__init__(self)
-            
+
         # InfoBarServiceNotifications
-                    
+
         self.onClose.append(self.__onClose)
         self.mainTimer = eTimer()
         self.mainTimer_conn = eConnectCallback(self.mainTimer.timeout, self.timerCallBack)
         self.mainTimer.start(1000)
         self.bugEOFworkaround = bugEOFworkaround
-        
+
         self.session.nav.playService(service)
         if lastPosition != None and (lastPosition / 90000) > 10:
             self.position = 0
             self.lastPosition = lastPosition
             self.doSeekToLastPosition = True
         else:
-            self.position = 0  
+            self.position = 0
             self.lastPosition = 0
             self.doSeekToLastPosition = False
         self.waitForSeekToLastPosition = 0
@@ -60,7 +60,7 @@ class customMoviePlayer(InfoBarShowHide, InfoBarSeek, InfoBarAudioSelection, Inf
         self.returning = False
         self.aspectratiomode = "1"
         self.isClosing = False
-        
+
     def getPosition(self):
         time = 0
         length = 0
@@ -74,12 +74,12 @@ class customMoviePlayer(InfoBarShowHide, InfoBarSeek, InfoBarAudioSelection, Inf
             if not r[0]:
                 time = r[1] #float(float(r[1]) / float(90000))
         return time, length
-        
+
     def doSeekRelative(self, pts):
         printDBG("doSeekRelative pts[%r]" % pts)
         InfoBarSeek.doSeekRelative(self, pts)
         self.waitForSeekToLastPosition = -1
-    
+
     def timerCallBack(self):
         try:
             position, length = self.getPosition()
@@ -91,7 +91,7 @@ class customMoviePlayer(InfoBarShowHide, InfoBarSeek, InfoBarAudioSelection, Inf
                 self.stopTimeFix = 0
                 self.lastPosition = 0
                 return
-                
+
             if -1 == self.waitForSeekToLastPosition:
                 if position > 0:
                     self.waitForSeekToLastPosition = position
@@ -116,7 +116,7 @@ class customMoviePlayer(InfoBarShowHide, InfoBarSeek, InfoBarAudioSelection, Inf
         if self.stopTimeFix >= self.bugEOFworkaround:
             self.mainTimer.stop()
             self.leavePlayer(True)
-    
+
     def aspectChange(self):
         printDBG("Aspect Ratio [%r]" % self.aspectratiomode)
         if self.aspectratiomode == "1": #letterbox
@@ -131,7 +131,7 @@ class customMoviePlayer(InfoBarShowHide, InfoBarSeek, InfoBarAudioSelection, Inf
         elif self.aspectratiomode == "4": #panscan
             eAVSwitch.getInstance().setAspectRatio(3)
             self.aspectratiomode = "1"
-        
+
     def pauseBeforeClose(self):
         printDBG("pauseBeforeClose")
         service = self.session.nav.getCurrentService()
@@ -145,7 +145,7 @@ class customMoviePlayer(InfoBarShowHide, InfoBarSeek, InfoBarAudioSelection, Inf
             printDBG("pausable")
             pauseable.pause()
         return True
-        
+
     def leavePlayer(self, endFile=False):
         printDBG("customMoviePlayer.leavePlayer isClosing[%r], endFile[%r]" % (self.isClosing, endFile))
         if False == self.isClosing:
@@ -158,7 +158,7 @@ class customMoviePlayer(InfoBarShowHide, InfoBarSeek, InfoBarAudioSelection, Inf
     def doEofInternal(self, playing):
         printDBG("--- eofint movieplayer ---")
         self.leavePlayer(True)
-        
+
     def _doClose(self, sts):
         printDBG("_doClose sts[%r], lastPosition[%r]" % (sts, self.lastPosition))
         try:
@@ -170,32 +170,32 @@ class customMoviePlayer(InfoBarShowHide, InfoBarSeek, InfoBarAudioSelection, Inf
         except Exception:
             printExc(customMoviePlayer._doClose)
         self.close(sts, self.lastPosition)
-        
+
     def __evEOF(self):
         printDBG("evEOF=%d" % iPlayableService.evEOF)
         self.leavePlayer(True)
-        
+
     def __onClose(self):
         printDBG("customMoviePlayer.__onClose")
         self.mainTimer.stop()
         self.mainTimer_conn = None
         self.onClose.remove(self.__onClose)
-        
+
     def show(self):
         if False == self.isClosing:
             Screen.show(self)
         else:
             printExc("customMoviePlayer.show")
-            
+
     def doShow(self):
         if False == self.isClosing:
             InfoBarShowHide.doShow(self)
         else:
             printExc("customMoviePlayer.doShow")
-    
+
     def openEventView(self, *args, **kwargs):
         pass
-        
+
 
 #####################################################
 # movie player by j00zek

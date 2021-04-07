@@ -199,7 +199,7 @@ class KKisteAG(CBaseHostClass):
         sts, data = self.getPage(url)
         if not sts:
             return
-        
+
         if page == 1 and 'f_idx' not in cItem:
             tmp = ph.find(data, 'function load_contents', '}')[1]
             url = self.getFullUrl(ph.search(tmp, '''['"]([^'^"]*m=[^'^"]*?)['"]''')[0])
@@ -286,7 +286,7 @@ class KKisteAG(CBaseHostClass):
 
     def getFunctionCode(self, data, marker):
         funData = ''
-        start = data.find(marker) 
+        start = data.find(marker)
         idx = data.find('{', start) + 1
         num = 1
         while idx < len(data):
@@ -430,12 +430,12 @@ class KKisteAG(CBaseHostClass):
             icon = cItem.get('icon', self.DEFAULT_ICON_URL)
         if desc == '':
             desc = cItem.get('desc', '')
-        
+
         return [{'title': ph.clean_html(title), 'text': ph.clean_html(desc), 'images': [{'title': '', 'url': self.getFullUrl(icon)}], 'other_info': {'custom_items_list': itemsList}}]
 
     def handleService(self, index, refresh=0, searchPattern='', searchType=''):
         printDBG('handleService start')
-        
+
         CBaseHostClass.handleService(self, index, refresh, searchPattern, searchType)
 
         name = self.currItem.get("name", '')

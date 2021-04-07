@@ -15,7 +15,7 @@ from Plugins.Extensions.IPTVPlayer.libs import ph
 ###################################################
 
 ###################################################
-# E2 GUI COMMPONENTS 
+# E2 GUI COMMPONENTS
 ###################################################
 from Screens.MessageBox import MessageBox
 ###################################################
@@ -36,8 +36,8 @@ from Components.config import config, ConfigText, ConfigSelection, getConfigList
 config.plugins.iptvplayer.ekinotv_login = ConfigText(default="", fixed_size=False)
 config.plugins.iptvplayer.ekinotv_password = ConfigText(default="", fixed_size=False)
 
-config.plugins.iptvplayer.ekinotv_sortby = ConfigSelection(default="data-dodania", choices=[("alfabetycznie", "nazwy"), ("ocena", "oceny"), ("odslony", "ilości odsłon"), ("data-dodania", "daty dodania"), ("data-premiery", "daty premiery"), ('data-aktualizacji', 'daty aktualizacji')])            
-config.plugins.iptvplayer.ekinotv_sortorder = ConfigSelection(default="desc", choices=[("desc", "malejąco"), ("asc", "rosnąco")]) 
+config.plugins.iptvplayer.ekinotv_sortby = ConfigSelection(default="data-dodania", choices=[("alfabetycznie", "nazwy"), ("ocena", "oceny"), ("odslony", "ilości odsłon"), ("data-dodania", "daty dodania"), ("data-premiery", "daty premiery"), ('data-aktualizacji', 'daty aktualizacji')])
+config.plugins.iptvplayer.ekinotv_sortorder = ConfigSelection(default="desc", choices=[("desc", "malejąco"), ("asc", "rosnąco")])
 
 
 def GetConfigList():
@@ -55,25 +55,25 @@ def gettytul():
 
 
 class EkinoTv(CBaseHostClass, CaptchaHelper):
-    
+
     def __init__(self):
         printDBG("EkinoTv.__init__")
         CBaseHostClass.__init__(self, {'history': 'EkinoTv.tv', 'cookie': 'ekinotv.cookie'})
         self.MAIN_URL = 'https://ekino-tv.pl/'
         self.DEFAULT_ICON_URL = 'https://img.cda.pl/obr/oryginalne/c53be9b25636d46fabbb0ec78abe75c8.png'
-        self.FILMS_CAT_URL = self.getFullUrl('/movie/cat/')  
-        
+        self.FILMS_CAT_URL = self.getFullUrl('/movie/cat/')
+
         self.USER_AGENT = 'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:40.0) Gecko/20100101 Firefox/40.0'
         self.HTTP_HEADER = {'User-Agent': self.USER_AGENT, 'DNT': '1', 'Accept': 'text/html', 'Accept-Encoding': 'gzip, deflate', 'Referer': self.getMainUrl(), 'Origin': self.getMainUrl()}
-        
+
         self.defaultParams = {'header': self.HTTP_HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE, 'cookie_items': {'prch': 'true'}}
-        
+
         self.MAIN_CAT_TAB = [{'category': 'list_cats', 'title': 'Filmy', 'url': self.FILMS_CAT_URL},
                              {'category': 'series_abc', 'title': 'Seriale', 'url': self.getFullUrl('/serie/')},
                              {'category': 'list_movies', 'title': 'Dla dzieci', 'url': self.FILMS_CAT_URL, 'cat': '2,3,5,6'},
                              {'category': 'search', 'title': _('Search'), 'search_item': True},
                              {'category': 'search_history', 'title': _('Search history')}]
-        
+
         self.SORT_MAP = {'data-dodania': 'add',
                           'data-aktualizacji': 'update',
                           'data-premiery': 'premiera',
@@ -81,13 +81,13 @@ class EkinoTv(CBaseHostClass, CaptchaHelper):
                           'odslony': 'views',
                           'ocena': 'rate',
                           'alfabetycznie': 'alfa', }
-        
+
         self.cacheMovieFilters = {'cats': [], 'vers': [], 'years': []}
         self.loggedIn = None
         self.login = ''
         self.password = ''
         self.loginMessage = ''
-        
+
     def getPage(self, baseUrl, addParams={}, post_data=None):
         if addParams == {}:
             addParams = dict(self.defaultParams)
@@ -101,49 +101,49 @@ class EkinoTv(CBaseHostClass, CaptchaHelper):
                 return urllib.parse.urljoin(baseUrl, url)
         addParams['cloudflare_params'] = {'domain': self.up.getDomain(baseUrl), 'cookie_file': self.COOKIE_FILE, 'User-Agent': self.USER_AGENT, 'full_url_handle': _getFullUrl}
         return self.cm.getPageCFProtection(baseUrl, addParams, post_data)
-    
+
     def getFullIconUrl(self, url):
         url = CBaseHostClass.getFullIconUrl(self, url.strip())
         if url == '':
             return ''
         cookieHeader = self.cm.getCookieHeader(self.COOKIE_FILE, ['cf_clearance'])
         return strwithmeta(url, {'Cookie': cookieHeader, 'User-Agent': self.USER_AGENT})
-    
+
     def _checkNexPage(self, data, page):
         if -1 != data.find('strona[%s]' % page):
             return True
         else:
             return False
-    
+
     ###################################################
     def _fillMovieFilters(self):
         self.cacheMovieFilters = {'cats': [], 'vers': [], 'years': []}
         sts, data = self.getPage(self.FILMS_CAT_URL)
         if not sts:
             return
-        
+
         # fill cats
         dat = self.cm.ph.getDataBeetwenMarkers(data, '<ul class="movieCategories">', '</ul>', False)[1]
         dat = re.compile('<a[^"]+?href="[^"]+?kategoria\[([0-9]+?)\][^>]*?>([^<]+?)<').findall(dat)
         for item in dat:
             self.cacheMovieFilters['cats'].append({'title': self.cleanHtmlStr(item[1]), 'cat': item[0]})
-            
+
         # fill vers
         dat = self.cm.ph.getDataBeetwenMarkers(data, '<ul class="quality"', '</ul>', False)[1]
         dat = re.compile('<li[^>]+?data-id="([^"]+?)"[^>]*?>(.+?)</li>').findall(dat)
         for item in dat:
             self.cacheMovieFilters['vers'].append({'title': self.cleanHtmlStr(item[1]), 'ver': item[0]})
-            
+
         # fill years
         dat = self.cm.ph.getDataBeetwenMarkers(data, '<ul class="filtyear">', '</ul>', False)[1]
         dat = re.compile('<li[^>]+?data-id="([^"]+?)"[^>]*?>(.+?)</li>').findall(dat)
         for item in dat:
             self.cacheMovieFilters['years'].append({'title': self.cleanHtmlStr(item[1]), 'year': item[0]})
-    
+
     ###################################################
     def listMovieFilters(self, cItem, category):
         printDBG("EkinoTv.listMovieFilters")
-        
+
         filter = cItem['category'].split('_')[-1]
         if 0 == len(self.cacheMovieFilters[filter]):
             self._fillMovieFilters()
@@ -151,7 +151,7 @@ class EkinoTv(CBaseHostClass, CaptchaHelper):
             filterTab = [{'title': '--Wszystkie--'}]
             filterTab.extend(self.cacheMovieFilters[filter])
             self.listsTab(filterTab, cItem, category)
-        
+
     def listsTab(self, tab, cItem, category=None):
         printDBG("EkinoTv.listsTab")
         for item in tab:
@@ -161,7 +161,7 @@ class EkinoTv(CBaseHostClass, CaptchaHelper):
             params['desc'] = self.loginMessage
             params.update(item)
             self.addDir(params)
-            
+
     def _addItems(self, cItem, dataTab, category='video'):
         for item in dataTab:
             item = item.split('</span>')
@@ -180,36 +180,36 @@ class EkinoTv(CBaseHostClass, CaptchaHelper):
             else:
                 params['category'] = category
                 self.addDir(params)
-        
+
     def listMovies(self, cItem):
         printDBG("EkinoTv.listMovies")
-        
+
         # prepare url
-        sortby = config.plugins.iptvplayer.ekinotv_sortby.value          
+        sortby = config.plugins.iptvplayer.ekinotv_sortby.value
         sortorder = config.plugins.iptvplayer.ekinotv_sortorder.value
         page = cItem.get('page', 1)
         url = cItem['url'] + 'strona[%s]+sort[%s]+method[%s]+' % (page, self.SORT_MAP[sortby], sortorder)
-        
+
         for item in [('cat', 'kategoria'), ('ver', 'wersja'), ('year', 'rok')]:
             if item[0] in cItem:
                 url += '%s[%s]+' % (item[1], cItem[item[0]])
-        
+
         sts, data = self.getPage(url)
         if not sts:
             return
-        
+
         # parse data
         nextPage = self._checkNexPage(data, page + 1)
         sp = '<div class="movies-list-item"'
         data = self.cm.ph.getDataBeetwenMarkers(data, sp, '<div id="pager">', False)[1]
         data = data.split(sp)
         self._addItems(cItem, data)
-        
+
         if nextPage:
             params = dict(cItem)
             params.update({'title': _('Next page'), 'page': page + 1})
             self.addDir(params)
-                
+
     def listsSeriesABC(self, cItem, category):
         printDBG('EkinoTv.listsSeriesABC start')
         sts, data = self.getPage(cItem['url'])
@@ -220,30 +220,30 @@ class EkinoTv(CBaseHostClass, CaptchaHelper):
                 params = dict(cItem)
                 params.update({'category': category, 'title': '%s (%s)' % (item[1], item[2]), 'url': self.getFullUrl(item[0])})
                 self.addDir(params)
-                
+
     def listsSeries(self, cItem, category):
         printDBG('EkinoTv.listsSeries start')
         page = cItem.get('page', 1)
         url = cItem['url'] + ',strona=%s' % page
-        
+
         sts, data = self.getPage(url)
         if not sts:
             return
-        
+
         nextPage = False
         if (',strona=%s"' % (page + 1)) in data:
             nextPage = True
-        
+
         sp = '<div class="movies-list-item"'
         data = self.cm.ph.getDataBeetwenMarkers(data, sp, '<div id="pager">', False)[1]
         data = data.split(sp)
         self._addItems(cItem, data, category)
-        
+
         if nextPage:
             params = dict(cItem)
             params.update({'title': _('Next page'), 'page': page + 1})
             self.addDir(params)
-                
+
     def listEpisodes(self, cItem):
         printDBG('EkinoTv.listEpisodes start')
         sts, data = self.getPage(cItem['url'])
@@ -263,11 +263,11 @@ class EkinoTv(CBaseHostClass, CaptchaHelper):
                 params = dict(cItem)
                 params.update({'title': title, 'url': self.getFullUrl(eItem[0])})
                 self.addVideo(params)
-    
+
     def listSearchResult(self, cItem, searchPattern, searchType):
         printDBG("EkinoTv.listSearchResult cItem[%s], searchPattern[%s] searchType[%s]" % (cItem, searchPattern, searchType))
         searchPattern = searchPattern.replace(' ', '+')
-        
+
         url = 'https://ekino-tv.pl/search/qf/?q=' + urllib.parse.quote_plus(searchPattern)
         sts, data = self.getPage(url)
         if not sts:
@@ -293,29 +293,29 @@ class EkinoTv(CBaseHostClass, CaptchaHelper):
     def getLinksForVideo(self, cItem):
         printDBG("EkinoTv.getLinksForVideo [%s]" % cItem)
         self.tryTologin()
-        
+
         urlTab = []
         premiumTab = []
         ultraTab = []
-        
+
         if self.loggedIn:
             self.cm.clearCookie(self.COOKIE_FILE, removeNames=['pplayer'])
-        
+
         sts, data = self.getPage(cItem['url'])
         if not sts:
             return []
-        
+
         baseVidUrl = self.cm.ph.getSearchGroups(data, '''src=['"]([^'^"]*?/watch/[^'^"]*?)['"]''')[0]
         if baseVidUrl == '':
             baseVidUrl = 'watch/f/'
-        
+
         if 'dmcabitch.jpg' in data:
             message = self.cm.ph.getDataBeetwenMarkers(data, '<div class="playerContainer"', '<br style="clear:both">', True)[1]
             SetIPTVPlayerLastHostError(self.cleanHtmlStr(message))
             return []
-        
+
         reTitleObj = re.compile('''title=['"]([^"^']+?)['"]''')
-        
+
         def _findHostingLinks(data, linkTab, premium):
             if premium:
                 jscode = [base64.b64decode('''dmFyIGRvY3VtZW50PXt9LHdpbmRvdz10aGlzLGVsZW1lbnQ9ZnVuY3Rpb24obil7dGhpcy5odG1sPWZ1bmN0aW9uKG4pe3ByaW50KG4pfSx0aGlzLmhpZGU9ZnVuY3Rpb24oKXt9fSwkPWZ1bmN0aW9uKG4pe3JldHVybiBuZXcgZWxlbWVudChuKX07''')]
@@ -325,9 +325,9 @@ class EkinoTv(CBaseHostClass, CaptchaHelper):
                         jscode.append(item)
                         break
                 jscode = '\n'.join(jscode)
-        
+
             playersData = self.cm.ph.getDataBeetwenMarkers(data, '<ul class="players"', '</ul>', False)[1]
-            
+
             playersData = playersData.split('</li>')
             if len(playersData):
                 del playersData[-1]
@@ -339,7 +339,7 @@ class EkinoTv(CBaseHostClass, CaptchaHelper):
                 tmp = reTitleObj.findall(item)
                 title += ' ' + ' '.join(tmp)
                 players.append({'title': title, 'id': id})
-            
+
             tmp = self.cm.ph.getDataBeetwenMarkers(data, '<div class="tab-content">', '<script>', False)[1]
             tmp = tmp.split('</div>')
             if len(tmp):
@@ -358,7 +358,7 @@ class EkinoTv(CBaseHostClass, CaptchaHelper):
                         url = baseVidUrl + '/'.join(playerParams)
                     if url == '':
                         url = self.cm.ph.getSearchGroups(item, 'src="([^"]+?)"')[0]
-                    
+
                 url = self.getFullUrl(url)
                 if url == '' or url.split('?', 1)[0].split('.')[-1].lower() in ['jpg', 'jepg', 'gif', 'png']:
                     continue
@@ -369,7 +369,7 @@ class EkinoTv(CBaseHostClass, CaptchaHelper):
                         else:
                             linkTab.append({'name': p['title'], 'url': strwithmeta(url, {'Referer': cItem['url']}), 'need_resolve': 1})
                         break
-        
+
         _findHostingLinks(data, urlTab, False)
         if self.loggedIn:
             setUltra = 'setUltra()' in data
@@ -387,18 +387,18 @@ class EkinoTv(CBaseHostClass, CaptchaHelper):
                 tmp = reTitleObj.findall(item)
                 title += ' ' + ' '.join(tmp)
                 premiumTab.append({'name': '[premium] %s' % title, 'url': strwithmeta(url, {'Referer': cItem['url'], 'is_premium': True}), 'need_resolve': 1})
-            
+
             if setUltra:
                 urlParams = dict(self.defaultParams)
                 urlParams['cookie_items'] = {'pplayer': '1'}
                 sts, data = self.getPage(cItem['url'], urlParams)
                 if sts and 'setStandard()' in data:
                     _findHostingLinks(data, ultraTab, True)
-                    
+
         ultraTab.extend(premiumTab)
         ultraTab.extend(urlTab)
         return ultraTab
-        
+
     def getVideoLinks(self, baseUrl):
         printDBG("EkinoTv.getVideoLinks [%s]" % baseUrl)
         urlTab = []
@@ -408,24 +408,24 @@ class EkinoTv(CBaseHostClass, CaptchaHelper):
         urlParams['header']['Referer'] = meta.get('Referer', baseUrl)
         urlParams['handle_recaptcha'] = True
         urlParams['with_metadata'] = True
-        
+
         url = baseUrl
         tries = 0
         while self.up.getDomain(self.getMainUrl()) in self.up.getDomain(url) and tries < 4:
             tries += 1
-            
+
             sts, data = self.getPage(url, urlParams)
             if not sts:
                 return []
-            
+
             url = data.meta.get('url', url)
-            
+
             if self.up.getDomain(self.getMainUrl()) not in self.up.getDomain(url):
                 break
 
             printDBG(">>>\n%s\n<<<" % data)
             if 'hcaptcha' in data:
-                SetIPTVPlayerLastHostError(_('Link protected with hCaptcha.')) 
+                SetIPTVPlayerLastHostError(_('Link protected with hCaptcha.'))
                 sitekey = self.cm.ph.getSearchGroups(data, 'data-sitekey="([^"]+?)"')[0]
                 if sitekey == '':
                     sitekey = self.cm.ph.getSearchGroups(data, '''['"]?sitekey['"]?\s*:\s*['"]([^"^']+?)['"]''')[0]
@@ -441,7 +441,7 @@ class EkinoTv(CBaseHostClass, CaptchaHelper):
                         SetIPTVPlayerLastHostError(_('Link protected with hCaptcha.'))
                         return []
                         break
-            
+
             sts, data = self.getPage(url, urlParams)
             if not sts:
                 return urlTab
@@ -458,9 +458,9 @@ class EkinoTv(CBaseHostClass, CaptchaHelper):
                         return urlTab
 
             if 'recaptcha' in data:
-                SetIPTVPlayerLastHostError(_('Link protected with google recaptcha v2.')) 
+                SetIPTVPlayerLastHostError(_('Link protected with google recaptcha v2.'))
                 continue
-            
+
             if not self.cm.isValidUrl(url):
                 url = self.getFullUrl(self.cm.ph.getSearchGroups(data, '<iframe[^>]+?src="([^"]+?)"')[0])
 
@@ -482,11 +482,11 @@ class EkinoTv(CBaseHostClass, CaptchaHelper):
             printDBG("#################################################################")
             printDBG(data)
             printDBG("#################################################################")
-        
-        if self.cm.isValidUrl(url): 
+
+        if self.cm.isValidUrl(url):
             urlTab = self.up.getVideoLinkExt(url)
         return urlTab
-        
+
     def getLinksForFavourite(self, favData):
         try:
             cItem = json_loads(favData)
@@ -494,32 +494,32 @@ class EkinoTv(CBaseHostClass, CaptchaHelper):
             cItem = {'url': favData}
             printExc()
         return self.getLinksForVideo(cItem)
-    
+
     def tryTologin(self):
         printDBG('tryTologin start')
-        
+
         if None == self.loggedIn or self.login != config.plugins.iptvplayer.ekinotv_login.value or\
             self.password != config.plugins.iptvplayer.ekinotv_password.value:
-        
+
             self.login = config.plugins.iptvplayer.ekinotv_login.value
             self.password = config.plugins.iptvplayer.ekinotv_password.value
-            
+
             #rm(self.COOKIE_FILE)
             self.cm.clearCookie(self.COOKIE_FILE, ['__cfduid', 'cf_clearance'])
-            
+
             self.loggedIn = False
-            
+
             if '' == self.login.strip() or '' == self.password.strip():
                 return False
-            
+
             sts, data = self.getPage(self.getMainUrl())
             if not sts:
                 return False
-            
+
             sts, data = self.cm.ph.getDataBeetwenNodes(data, ('<form', '>', 'login'), ('</form', '>'))
             if not sts:
                 return False
-            
+
             actionUrl = self.getFullUrl(self.cm.ph.getSearchGroups(data, '''action=['"]([^'^"]+?)['"]''')[0])
             data = self.cm.ph.getAllItemsBeetwenMarkers(data, '<input', '>')
             post_data = {}
@@ -527,9 +527,9 @@ class EkinoTv(CBaseHostClass, CaptchaHelper):
                 name = self.cm.ph.getSearchGroups(item, '''name=['"]([^'^"]+?)['"]''')[0]
                 value = self.cm.ph.getSearchGroups(item, '''value=['"]([^'^"]+?)['"]''')[0]
                 post_data[name] = value
-            
+
             post_data.update({'login': self.login, 'password': self.password})
-            
+
             httpParams = dict(self.defaultParams)
             httpParams['header'] = dict(httpParams['header'])
             httpParams['header']['Referer'] = self.getMainUrl()
@@ -552,20 +552,20 @@ class EkinoTv(CBaseHostClass, CaptchaHelper):
                 self.sessionEx.open(MessageBox, _('Login failed.') + '\n' + message, type=MessageBox.TYPE_ERROR, timeout=10)
                 printDBG('tryTologin failed')
         return self.loggedIn
-    
+
     def handleService(self, index, refresh=0, searchPattern='', searchType=''):
         printDBG('EkinoTv.handleService start')
-        
+
         self.tryTologin()
-                
+
         CBaseHostClass.handleService(self, index, refresh, searchPattern, searchType)
-        
+
         name = self.currItem.get("name", None)
         category = self.currItem.get("category", '')
         printDBG("EkinoTv.handleService: ---------> name[%s], category[%s] " % (name, category))
         searchPattern = self.currItem.get("search_pattern", searchPattern)
         self.currList = []
-        
+
         if None == name:
             self.listsTab(self.MAIN_CAT_TAB, {'name': 'category'})
     #FILMS CATEGORIES
@@ -588,7 +588,7 @@ class EkinoTv(CBaseHostClass, CaptchaHelper):
     #SEARCH
         elif category in ["search", "search_next_page"]:
             cItem = dict(self.currItem)
-            cItem.update({'search_item': False, 'name': 'category'}) 
+            cItem.update({'search_item': False, 'name': 'category'})
             self.listSearchResult(cItem, searchPattern, searchType)
     #HISTORIA SEARCH
         elif category == "search_history":
@@ -596,13 +596,13 @@ class EkinoTv(CBaseHostClass, CaptchaHelper):
         else:
             printExc()
         CBaseHostClass.endHandleService(self, index, refresh)
-    
+
 
 class IPTVHost(CHostBase):
 
     def __init__(self):
         CHostBase.__init__(self, EkinoTv(), True)
-        
+
     def getSearchTypes(self):
         searchTypesOptions = []
         searchTypesOptions.append(("Filmy", "movies"))

@@ -42,7 +42,7 @@ def Plugins(**kwargs):
             list.append(PluginDescriptor(name=(("E2iPlayer")), description=desc, where=[PluginDescriptor.WHERE_WIZARD], fnc=(9, pluginAutostart), needsRestart=False))
         elif config.plugins.iptvplayer.plugin_autostart_method.value == 'infobar':
             list.append(PluginDescriptor(where=[PluginDescriptor.WHERE_SESSIONSTART, PluginDescriptor.WHERE_AUTOSTART], fnc=pluginAutostartSetup))
-    
+
     list.append(PluginDescriptor(name=(("E2iPlayer")), description=desc, where=[PluginDescriptor.WHERE_PLUGINMENU], icon=iconFile, fnc=main)) # always show in plugin menu
     list.append(PluginDescriptor(name=(("E2iPlayer")), description=desc, where=PluginDescriptor.WHERE_MENU, fnc=startIPTVfromMenu))
     if config.plugins.iptvplayer.showinextensions.value:
@@ -95,42 +95,42 @@ def startIPTVfromMenu(menuid, **kwargs):
         return [("E2iPlayer", main, "iptv_main", None)]
     else:
         return []
-    
+
 
 def mainSetup(session, **kwargs):
     if config.plugins.iptvplayer.configProtectedByPin.value:
-        session.openWithCallback(boundFunction(pinCallback, session, runSetup), IPTVPinWidget, title=_("Enter pin")) 
+        session.openWithCallback(boundFunction(pinCallback, session, runSetup), IPTVPinWidget, title=_("Enter pin"))
     else:
         runSetup(session)
-    
+
 
 def runSetup(session):
-    session.open(ConfigMenu) 
+    session.open(ConfigMenu)
 
 
 def main(session, **kwargs):
     if config.plugins.iptvplayer.pluginProtectedByPin.value:
-        session.openWithCallback(boundFunction(pinCallback, session, runMain), IPTVPinWidget, title=_("Enter pin")) 
+        session.openWithCallback(boundFunction(pinCallback, session, runMain), IPTVPinWidget, title=_("Enter pin"))
     else:
         runMain(session)
-    
+
 
 class pluginAutostart(Screen):
     def __init__(self, session):
         self.session = session
         Screen.__init__(self, session)
         self.onShow.append(self.onStart)
-    
+
     def onStart(self):
         self.onShow.remove(self.onStart)
         runMain(self.session, self.iptvDoRunMain)
-        
+
     def iptvDoRunMain(self, session):
         session.openWithCallback(self.iptvDoClose, E2iPlayerWidget)
-        
+
     def iptvDoClose(self, **kwargs):
         self.close()
-    
+
 
 def doRunMain(session):
     session.open(E2iPlayerWidget)
@@ -147,7 +147,7 @@ def runMain(session, nextFunction=doRunMain):
         session.openWithCallback(boundFunction(nextFunction, session), IPTVSetupMainWidget, True)
     else:
         nextFunction(session)
-        
+
 
 def pinCallback(session, callbackFun, pin=None):
     if None == pin:
@@ -156,7 +156,7 @@ def pinCallback(session, callbackFun, pin=None):
         session.open(MessageBox, _("Pin incorrect!"), type=MessageBox.TYPE_INFO, timeout=5)
         return
     callbackFun(session)
-    
+
 
 def sessionstart(reason, **kwargs):
     if reason == 0 and 'session' in kwargs:
@@ -164,4 +164,3 @@ def sessionstart(reason, **kwargs):
             import Plugins.Extensions.IPTVPlayer.Web.initiator
         except Exception as e:
             print("EXCEPTION initiating IPTVplayer WebComponent:", str(e))
-        

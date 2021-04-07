@@ -26,7 +26,7 @@ def gettytul():
 
 
 class ForjaTN(CBaseHostClass):
-    
+
     def __init__(self):
         CBaseHostClass.__init__(self, {'history': 'forja.tn', 'cookie': 'forja.tn.cookie'})
         self.DEFAULT_ICON_URL = 'https://forja.tn/logoHeader.png'
@@ -35,19 +35,19 @@ class ForjaTN(CBaseHostClass):
         self.HTTP_HEADER = {'User-Agent': self.USER_AGENT, 'DNT': '1', 'Accept': 'text/html', 'Accept-Encoding': 'gzip, deflate'}
         self.AJAX_HEADER = dict(self.HTTP_HEADER)
         self.AJAX_HEADER.update({'X-Requested-With': 'XMLHttpRequest', 'Accept-Encoding': 'gzip, deflate', 'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8', 'Accept': 'application/json, text/javascript, */*; q=0.01'})
-        
+
         self.cacheFilters = {}
         self.cacheFiltersKeys = []
         self.cacheEpisodes = {}
         self.defaultParams = {'header': self.HTTP_HEADER, 'with_metadata': True, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
-        
+
         self.MAIN_CAT_TAB = [{'category': 'list_filters', 'title': _('Movies'), 'f_type': 'movies', 'url': self.getFullUrl('/movies')},
                              {'category': 'list_filters', 'title': _('Series'), 'f_type': 'series', 'url': self.getFullUrl('/series')},
-                             
-                             {'category': 'search', 'title': _('Search'), 'search_item': True}, 
+
+                             {'category': 'search', 'title': _('Search'), 'search_item': True},
                              {'category': 'search_history', 'title': _('Search history')},
                             ]
-        
+
     def getPage(self, baseUrl, addParams={}, post_data=None):
         if addParams == {}:
             addParams = dict(self.defaultParams)
@@ -55,98 +55,98 @@ class ForjaTN(CBaseHostClass):
         baseUrl = self.cm.iriToUri(baseUrl)
         addParams['cloudflare_params'] = {'cookie_file': self.COOKIE_FILE, 'User-Agent': self.USER_AGENT}
         return self.cm.getPageCFProtection(baseUrl, addParams, post_data)
-        
+
     def fillCacheFilters(self, cItem):
         printDBG("ForjaTN.fillCacheFilters")
         self.cacheFilters = {}
         self.cacheFiltersKeys = []
-        
+
         sts, data = self.getPage(cItem['url'])
         if not sts:
             return
-        
+
         printDBG("==============================================================")
-        
+
         data = re.sub("<!--[\s\S]*?-->", "", data)
-        
+
         def addFilter(data, itemMarker, valMarker, key, allTitle=None):
             self.cacheFilters[key] = []
             for item in data:
                 value = self.cm.ph.getSearchGroups(item, valMarker + '''="([^"]+?)"''')[0]
                 title = self.cm.ph.rgetDataBeetwenMarkers2(item, '</%s>' % itemMarker, '>', False)[1]
                 title = self.cleanHtmlStr(title)
-                if value == '': 
+                if value == '':
                     if allTitle == None:
                         allTitle = title
                     continue
                 self.cacheFilters[key].append({'title': title.title(), key: value})
-                
+
             if len(self.cacheFilters[key]):
                 if allTitle != None:
                     self.cacheFilters[key].insert(0, {'title': allTitle, key: ''})
                 self.cacheFiltersKeys.append(key)
-                
+
         # genres
         key = 'f_genre'
         tmp = self.cm.ph.getDataBeetwenNodes(data, ('<select', '>', 'genre-input'), ('</select', '>'), False)[1]
         tmp = self.cm.ph.getAllItemsBeetwenMarkers(tmp, '<option', '</option>')
         addFilter(tmp, 'option', 'value', key)
-        
+
         # sortby
         key = 'f_sortby'
         tmp = self.cm.ph.getDataBeetwenNodes(data, ('<select', '>', 'sort-input'), ('</select', '>'), False)[1]
         tmp = self.cm.ph.getAllItemsBeetwenMarkers(tmp, '<option', '</option>')
         addFilter(tmp, 'option', 'value', key)
-        
+
         printDBG(self.cacheFilters)
-        
+
     def listFilters(self, cItem, nextCategory):
         printDBG("ForjaTN.listFilters")
         cItem = dict(cItem)
-        
+
         f_idx = cItem.get('f_idx', 0)
         if f_idx == 0:
             self.fillCacheFilters(cItem)
-        
+
         if f_idx >= len(self.cacheFiltersKeys):
             return
-        
+
         filter = self.cacheFiltersKeys[f_idx]
         f_idx += 1
         cItem['f_idx'] = f_idx
         if f_idx == len(self.cacheFiltersKeys):
             cItem['category'] = nextCategory
         self.listsTab(self.cacheFilters.get(filter, []), cItem)
-    
+
     def listMainMenu(self, cItem, nextCategory):
         printDBG("ForjaTN.listMainMenu")
         self.listsTab(self.MAIN_CAT_TAB, cItem)
-        
+
     def listItems(self, cItem, nextCategory):
         printDBG("ForjaTN.listItems [%s]" % cItem)
         page = cItem.get('page', 1)
         type = cItem['f_type']
-        
+
         post_data = {'page': page}
         post_data['title'] = cItem.get('f_title', '')
         post_data['genre'] = cItem.get('f_genre', '')
         post_data['sortby'] = cItem.get('f_sortby', '')
-        
+
         url = '/api/' + type
         if type == 'movies':
             url += '?extended=short'
         else:
             post_data['no_data'] = 'true'
-        
+
         params = dict(self.defaultParams)
         params['header'] = dict(self.AJAX_HEADER)
         params['header']['Referer'] = cItem['url']
-        
+
         url = self.getFullUrl(url)
         sts, data = self.getPage(url, params, post_data)
         if not sts:
             return
-        
+
         try:
             data = byteify(json.loads(data), '', True)
             for item in data[type]:
@@ -158,33 +158,33 @@ class ForjaTN(CBaseHostClass):
                     if t != '':
                         desc.append(t)
                 desc = ' | '.join(desc) + '[/br]' + self.cleanHtmlStr(item.get('Plot', ''))
-                id = item.get('_id', '') 
-                imdbID = item.get('imdbID', '') 
+                id = item.get('_id', '')
+                imdbID = item.get('imdbID', '')
                 url = self.getFullUrl('/%s/%s/' % (type[:-1], imdbID))
                 params = dict(cItem)
                 params.update({'good_for_fav': True, 'category': nextCategory, 'title': title, 'url': url, '_id': id, 'imdb_id': imdbID, 'icon': icon, 'desc': desc})
                 self.addDir(params)
         except Exception:
             printExc()
-        
+
         if len(self.currList) >= 50:
             params = dict(cItem)
             params.update({'good_for_fav': False, 'title': _("Next page"), 'page': page + 1})
             self.addDir(params)
-        
+
     def exploreItem(self, cItem, nextCategory):
         printDBG("ForjaTN.exploreItem")
         self.cacheEpisodes = {}
-        
+
         type = cItem['f_type']
         imdbID = cItem['imdb_id']
-        
+
         sts, data = self.getPage(cItem['url'])
         if not sts:
             return
-        
+
         SetIPTVPlayerLastHostError(self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(data, ('<div', '>', 'medias_container'), ('</div', '>'), False)[1]))
-        
+
         if type == 'series':
             seasonsTab = []
             data = self.cm.ph.getAllItemsBeetwenNodes(data, ('<div', '>', 'episode-container'), ('</div', '>'))
@@ -209,15 +209,15 @@ class ForjaTN(CBaseHostClass):
                 params = dict(cItem)
                 params.update({'good_for_fav': True, 'title': title, 'url': url, 'prev_url': cItem['url']})
                 self.addVideo(params)
-            
+
             if 'player.src' in data or 'streamSources' in data:
                 params = dict(cItem)
                 params.update({'good_for_fav': True, 'url': cItem['url']})
                 self.addVideo(params)
-            
+
     def listEpisodes(self, cItem):
         printDBG("ForjaTN.listEpisodes")
-        
+
         sNum = cItem.get('s_num', '')
         tab = self.cacheEpisodes.get(sNum, [])
         for item in tab:
@@ -225,7 +225,7 @@ class ForjaTN(CBaseHostClass):
             params.update({'good_for_fav': True, 'f_type': 'episode'})
             params.update(item)
             self.addVideo(params)
-        
+
     def listSearchResult(self, cItem, searchPattern, searchType):
         printDBG("ForjaTN.listSearchResult cItem[%s], searchPattern[%s] searchType[%s]" % (cItem, searchPattern, searchType))
         cItem = dict(cItem)
@@ -233,29 +233,29 @@ class ForjaTN(CBaseHostClass):
         cItem['f_title'] = searchPattern
         cItem['url'] = self.getFullUrl(searchType)
         self.listItems(cItem, 'explore_item')
-        
+
     def getLinksForVideo(self, cItem):
         printDBG("ForjaTN.getLinksForVideo [%s]" % cItem)
-        
+
         if 1 == self.up.checkHostSupport(cItem.get('url', '')):
             videoUrl = cItem['url'].replace('youtu.be/', 'youtube.com/watch?v=')
             return self.up.getVideoLinkExt(videoUrl)
-        
+
         retTab = []
         subTracksTab = []
-        
+
         sts, data = self.getPage(cItem['url'])
         if not sts:
             return []
-        
+
         cUrl = data.meta['url']
-        
+
         if cItem.get('f_type', '') == 'episode':
             episodeId = cItem['url']
             if episodeId.endswith('/'):
                 episodeId = episodeId[-1]
             episodeId = '/'.join(episodeId.split('/')[-2:])
-            
+
             data = self.cm.ph.getDataBeetwenReMarkers(data, re.compile('''episodes\s*='''), re.compile('''];'''), False)[1]
             data = data.strip() + ']'
             ret = js_execute('print(JSON.stringify(%s));' % data)
@@ -274,16 +274,16 @@ class ForjaTN(CBaseHostClass):
                                 tmpTab = getDirectM3U8Playlist(vidUrl, checkExt=False, checkContent=True, cookieParams=self.defaultParams)
                             elif 'mp4' in vidType:
                                 tmpTab.append({'name': 'mp4', 'url': vidUrl})
-                            
+
                             for idx in range(len(tmpTab)):
                                 tmpTab[idx]['name'] = '[%s] %s' % (name, tmpTab[idx]['name'])
                             retTab.extend(tmpTab)
-                        
+
                         for item in eItem['textTracks']:
                             if item.get('kind', '') != 'captions':
                                 continue
                             subTracksTab.append({'title': item['label'], 'url': self.getFullUrl(item['src']), 'lang': item['language'], 'format': 'vtt'})
-                        
+
                         break
                 except Exception:
                     printExc()
@@ -296,15 +296,15 @@ class ForjaTN(CBaseHostClass):
                 vidType = self.cm.ph.getSearchGroups(tmp, '''type['"]?\s*:\s*['"]([^'^"]+?)['"]''')[0].lower()
                 vidLabel = self.cm.ph.getSearchGroups(tmp, '''label['"]?\s*:\s*['"]([^'^"]+?)['"]''')[0]
                 vidUrl = self.getFullUrl(self.cm.ph.getSearchGroups(tmp, '''src['"]?\s*:\s*['"]([^'^"]+?)['"]''')[0], cUrl)
-                
+
                 if not self.cm.isValidUrl(vidUrl):
                     return []
-                
+
                 if 'x-mpegurl' in vidType:
                     retTab = getDirectM3U8Playlist(vidUrl, checkExt=False, checkContent=True, cookieParams=self.defaultParams)
                 elif 'mp4' in vidType:
                     retTab.append({'name': 'mp4 %s' % vidLabel, 'url': vidUrl})
-            
+
             data = self.cm.ph.getAllItemsBeetwenMarkers(data, '<video', '</video>')
             for tmp in data:
                 tmp = self.cm.ph.getAllItemsBeetwenMarkers(tmp, '<track', '>')
@@ -317,29 +317,29 @@ class ForjaTN(CBaseHostClass):
                     lang = self.cm.ph.getSearchGroups(item, '''srclang=['"]([^'^"]+?)['"]''')[0]
                     title = self.cm.ph.getSearchGroups(item, '''label=['"]([^'^"]+?)['"]''')[0]
                     subTracksTab.append({'title': title, 'url': url, 'lang': lang, 'format': 'vtt'})
-        
+
         cookieHeader = self.cm.getCookieHeader(self.COOKIE_FILE)
         for idx in range(len(retTab)):
             retTab[idx]['url'] = strwithmeta(retTab[idx]['url'], {'User-Agent': self.USER_AGENT, 'Referer': cItem['url'], 'Cookie': cookieHeader, 'external_sub_tracks': subTracksTab})
         return retTab
-    
+
     def getArticleContent(self, cItem, data=None):
         printDBG("ForjaTN.getArticleContent [%s]" % cItem)
-        
+
         retTab = []
-        
+
         otherInfo = {}
-        
+
         if data == None:
             sts, data = self.getPage(cItem.get('prev_url', cItem['url']))
             if not sts:
                 return []
-            
+
         data = self.cm.ph.getDataBeetwenNodes(data, ('<div', '>', 'row desc'), ('<div', '>', 'row'), False)[1]
         desc = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(data, '<p', '</p>')[1])
         title = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(data, '<h4', '</h4>')[1])
         icon = self.getFullIconUrl(self.cm.ph.getSearchGroups(data, '''\ssrc=['"]([^'^"]+?)['"]''')[0])
-        
+
         keysMap = {'runtime': 'duration',
                    'genre': 'genres',
                    'actors': 'actors',
@@ -352,39 +352,39 @@ class ForjaTN(CBaseHostClass):
             item = item.split(':', 1)
             if len(item) != 2:
                 continue
-            
+
             marker = self.cleanHtmlStr(item[0]).lower()
             if marker not in keysMap:
                 continue
-            
+
             if marker == 'rating':
                 value = self.cm.ph.getSearchGroups(item[1], '''stars\-([0-9\-]+?)\.png''')[0].replace('-', '.') + '/5.0'
             else:
                 value = self.cleanHtmlStr(item[1])
-            
+
             otherInfo[keysMap[marker]] = value
-        
+
         if title == '':
             title = cItem['title']
         if desc == '':
             desc = cItem.get('desc', '')
         if icon == '':
             icon = cItem.get('icon', self.DEFAULT_ICON_URL)
-        
+
         return [{'title': self.cleanHtmlStr(title), 'text': self.cleanHtmlStr(desc), 'images': [{'title': '', 'url': self.getFullUrl(icon)}], 'other_info': otherInfo}]
-    
+
     def handleService(self, index, refresh=0, searchPattern='', searchType=''):
         printDBG('handleService start')
-        
+
         CBaseHostClass.handleService(self, index, refresh, searchPattern, searchType)
 
         name = self.currItem.get("name", '')
         category = self.currItem.get("category", '')
         mode = self.currItem.get("mode", '')
-        
+
         printDBG("handleService: |||||||||||||||||||||||||||||||||||| name[%s], category[%s] " % (name, category))
         self.currList = []
-        
+
     #MAIN MENU
         if name == None:
             self.listMainMenu({'name': 'category'}, 'list_genres')
@@ -399,14 +399,14 @@ class ForjaTN(CBaseHostClass):
     #SEARCH
         elif category in ["search", "search_next_page"]:
             cItem = dict(self.currItem)
-            cItem.update({'search_item': False, 'name': 'category'}) 
+            cItem.update({'search_item': False, 'name': 'category'})
             self.listSearchResult(cItem, searchPattern, searchType)
     #HISTORIA SEARCH
         elif category == "search_history":
             self.listsHistory({'name': 'history', 'category': 'search'}, 'desc', _("Type: "))
         else:
             printExc()
-        
+
         CBaseHostClass.endHandleService(self, index, refresh)
 
 
@@ -414,13 +414,12 @@ class IPTVHost(CHostBase):
 
     def __init__(self):
         CHostBase.__init__(self, ForjaTN(), True, [])
-        
+
     def withArticleContent(self, cItem):
         return cItem.get('good_for_fav', False)
-    
+
     def getSearchTypes(self):
         searchTypesOptions = []
         searchTypesOptions.append((_("Movies"), "movies"))
         searchTypesOptions.append((_("Seriale"), "series"))
         return searchTypesOptions
-    

@@ -18,25 +18,25 @@ class CaptchaHelper():
             errorMsgTab = list(baseErrMsgTab)
         else:
             errorMsgTab = [_('Link protected with Google ReCaptcha v2')]
-        
+
         if userAgent == None:
             try:
                 userAgent = self.USER_AGENT
             except Exception:
                 pass
-        
+
         if userAgent == None:
             try:
                 userAgent = self.defaultParams['header']['User-Agent']
             except Exception:
                 pass
-        
+
         recaptcha = UnCaptchaReCaptcha_fallback(lang=GetDefaultLang())
         recaptcha.HTTP_HEADER['Referer'] = refUrl
         if userAgent != None:
             recaptcha.HTTP_HEADER['User-Agent'] = userAgent
         token = recaptcha.processCaptcha(sitekey)
-        
+
         if token == '':
             recaptcha = None
             if config.plugins.iptvplayer.captcha_bypass.value != '' and bypassCaptchaService == None:
@@ -47,7 +47,7 @@ class CaptchaHelper():
                 recaptcha = UnCaptchaReCaptcha_2captcha()
             elif config.plugins.iptvplayer.myjd_login.value != '' and config.plugins.iptvplayer.myjd_password.value != '':
                 recaptcha = UnCaptchaReCaptcha_myjd()
-            
+
             if recaptcha != None:
                 token = recaptcha.processCaptcha(sitekey, refUrl)
             else:
@@ -58,4 +58,3 @@ class CaptchaHelper():
                     errorMsgTab.append(_(' or '))
                     errorMsgTab.append(_('You can use \"%s\" or \"%s\" services for automatic solution.') % ("http://2captcha.com/", "https://9kw.eu/", ) + ' ' + _('Go to the host configuration available under blue button.'))
         return token, errorMsgTab
-

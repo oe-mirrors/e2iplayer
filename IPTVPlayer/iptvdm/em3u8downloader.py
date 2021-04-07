@@ -27,7 +27,7 @@ import datetime
 ###################################################
 
 ###################################################
-# One instance of this class can be used only for 
+# One instance of this class can be used only for
 # one download
 ###################################################
 
@@ -37,7 +37,7 @@ class EM3U8Downloader(M3U8Downloader):
     def __init__(self):
         printDBG('EM3U8Downloader.__init__ ----------------------------------')
         M3U8Downloader.__init__(self)
-        
+
         # M3U8list link provider
         self.EM3U8linkProv = eConsoleAppContainer()
         self.EM3U8linkProv_appClosed_conn = eConnectCallback(self.EM3U8linkProv.appClosed, self._updateEM3U8Finished)
@@ -46,36 +46,36 @@ class EM3U8Downloader(M3U8Downloader):
 
         self.EM3U8ListData = ''
         self.em3u8Started = False
-        
+
         self.em3u8_url = ''
         self.em3u8_filePath = ''
         self.em3i8_params = {}
-        
+
         self.maxTriesAtStart = 12
-        
+
     def __del__(self):
         printDBG("EM3U8Downloader.__del__ ----------------------------------")
-    
+
     def start(self, url, filePath, params={}):
         self.em3u8_url = strwithmeta(url)
         self.em3u8_filePath = filePath
         self.em3i8_params = params
-        
+
         printDBG("===================EM3U8Downloader===================")
         printDBG(self.em3u8_url.meta)
         printDBG(self.em3u8_url.meta.get('iptv_refresh_cmd', ''))
         printDBG("=====================================================")
         self.EM3U8linkProv.execute(self.em3u8_url.meta.get('iptv_refresh_cmd', ''))
-        
+
         return BaseDownloader.CODE_OK
-        
+
     def _updateEM3U8Finished(self, code=0):
         printDBG('EM3U8Downloader._updateEM3U8Finished update code[%d]--- ' % (code))
         if not self.em3u8Started:
             self.status = DMHelper.STS.ERROR
             M3U8Downloader._terminate(self)
             self.onFinish()
-        
+
     def _updateEM3U8DataAvail(self, data):
         if None != data and 0 < len(data):
             self.EM3U8ListData += data
@@ -94,7 +94,7 @@ class EM3U8Downloader(M3U8Downloader):
                     else:
                         self.m3u8Url = url
                 self.EM3U8ListData = ''
-                        
+
     def _terminate(self):
         printDBG("M3U8Downloader._terminate")
         if self.EM3U8linkProv:
@@ -104,5 +104,3 @@ class EM3U8Downloader(M3U8Downloader):
             self.EM3U8linkProv.sendCtrlC()
             self.EM3U8linkProv = None
         return M3U8Downloader._terminate(self)
-    
-   

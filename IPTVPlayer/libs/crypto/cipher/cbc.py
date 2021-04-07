@@ -108,4 +108,3 @@ class CBC(BlockCipher):
         self.prior_CT_block = encryptedBlock
 
         return dct_XOR_priorCT
-

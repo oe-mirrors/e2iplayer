@@ -62,12 +62,12 @@ class Proxy(http.server.SimpleHTTPRequestHandler):
         try:
             global HTTP_HEADER
             url = self.path
-            
+
             if url.startswith('/https/'):
                 url = 'https://' + url[7:]
             elif url.startswith('/http/'):
                 url = 'http://' + url[6:]
-            
+
             sts, resp = getPage(url, HTTP_HEADER)
             if sts:
                 self.send_response(200)
@@ -78,7 +78,7 @@ class Proxy(http.server.SimpleHTTPRequestHandler):
                 self.end_headers()
         except KeyboardInterrupt:
             self.server._BaseServer__shutdown_request = True
-            
+
     def log_request(self, code='-', size='-'):
         pass
 
@@ -90,20 +90,20 @@ if __name__ == "__main__":
     if len(sys.argv) < 5:
         print('libsPath, userAgent, refererUrl and m3u8Url are needed', file=sys.stderr)
         sys.exit(1)
-    
+
     try:
         port = int(sys.argv[1])
         libsPath = sys.argv[2]
         userAgent = sys.argv[3]
         refererUrl = sys.argv[4]
         m3u8Url = sys.argv[5]
-        
+
         sys.path.insert(1, libsPath)
         from keepalive import HTTPHandler
-        keepalive_handler = HTTPHandler()    
-        opener = urllib.request.build_opener(keepalive_handler)    
-        urllib.request.install_opener(opener)    
-        
+        keepalive_handler = HTTPHandler()
+        opener = urllib.request.build_opener(keepalive_handler)
+        urllib.request.install_opener(opener)
+
         HTTP_HEADER.update({'User-Agent': userAgent, 'Referer': refererUrl})
         socketserver.TCPServer.allow_reuse_address = True
         httpd = socketserver.TCPServer(('127.0.0.1', port), Proxy)
@@ -116,4 +116,3 @@ if __name__ == "__main__":
         httpd.socket.close()
         httpd.server_close()
     sys.exit(0)
-

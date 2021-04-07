@@ -60,7 +60,7 @@ class BSTO(CBaseHostClass, CaptchaHelper):
         self.HEADER = {'User-Agent': self.USER_AGENT, 'DNT': '1', 'Accept': 'text/html'}
         self.AJAX_HEADER = dict(self.HEADER)
         self.AJAX_HEADER.update({'X-Requested-With': 'XMLHttpRequest'})
-        
+
         self.DEFAULT_ICON_URL = 'https://bs.to/opengraph.jpg'
         self.MAIN_URL = None
         self.cacheSeries = []
@@ -68,33 +68,33 @@ class BSTO(CBaseHostClass, CaptchaHelper):
         self.cacheLinks = {}
         self.defaultParams = {'with_metadata': True, 'header': self.HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
         self._getHeaders = None
-    
+
     def getPage(self, baseUrl, addParams={}, post_data=None):
         if addParams == {}:
             addParams = dict(self.defaultParams)
 
         addParams['cloudflare_params'] = {'cookie_file': self.COOKIE_FILE, 'User-Agent': self.USER_AGENT}
         return self.cm.getPageCFProtection(baseUrl, addParams, post_data)
-        
+
     def getFullIconUrl(self, url):
         return CBaseHostClass.getFullIconUrl(self, url)
-        
-    def selectDomain(self):                
+
+    def selectDomain(self):
         self.MAIN_URL = 'https://bs.to/'
         self.MAIN_CAT_TAB = [{'category': 'list_genres', 'title': 'Genres', 'url': self.getFullUrl('/serie-genre')},
                              {'category': 'list_genres', 'title': 'Alphabet', 'url': self.getFullUrl('/serie-alphabet')},
                              {'category': 'search', 'title': _('Search'), 'search_item': True, },
-                             {'category': 'search_history', 'title': _('Search history'), } 
+                             {'category': 'search_history', 'title': _('Search history'), }
                             ]
-        
+
     def listGenres(self, cItem, nextCategory):
         printDBG("BSTO.listGenres")
         self.cacheGenres = {}
-        
+
         sts, data = self.getPage(cItem['url'])
         if not sts:
             return
-        
+
         data = self.cm.ph.getAllItemsBeetwenMarkers(data, '<div class="genre">', '</ul>', False)
         for genreItem in data:
             genreTitle = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(genreItem, '<strong>', '</strong>', False)[1])
@@ -109,7 +109,7 @@ class BSTO(CBaseHostClass, CaptchaHelper):
             params = dict(cItem)
             params.update({'title': genreTitle, 'category': nextCategory})
             self.addDir(params)
-                
+
     def listItems(self, cItem, nextCategory):
         printDBG("BSTO.listItems")
         tab = self.cacheGenres.get(cItem['title'], [])
@@ -118,17 +118,17 @@ class BSTO(CBaseHostClass, CaptchaHelper):
             params.update(item)
             params.update({'good_for_fav': True, 'category': nextCategory, 'icon': item['url'] + '?fake=need_resolve.jpeg'})
             self.addDir(params)
-    
+
     def listSeasons(self, cItem, nextCategory):
         printDBG("BSTO.listSeasons")
         sts, data = self.getPage(cItem['url'])
         if not sts:
             return
-        
+
         descData = self.cm.ph.getDataBeetwenMarkers(data, '<div id="sp_left">', '<script', False)[1]
         desc = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(descData, '<p ', '</p>')[1])
         icon = self.getFullIconUrl(self.cm.ph.getSearchGroups(descData, '''src=['"]([^'^"]+?)['"]''')[0])
-        
+
         data = self.cm.ph.getDataBeetwenMarkers(data, '<div class="seasons full">', '</ul>')[1]
         seasonLabel = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(data, '<strong>', '</strong>', False)[1])
         data = self.cm.ph.getAllItemsBeetwenMarkers(data, '<li>', '</li>', False)
@@ -138,16 +138,16 @@ class BSTO(CBaseHostClass, CaptchaHelper):
             params = dict(cItem)
             params.update({'good_for_fav': False, 'category': nextCategory, 'title': '%s %s' % (seasonLabel, title), 's_num': title, 'series_title': cItem['title'], 'url': url, 'icon': icon, 'desc': desc})
             self.addDir(params)
-        
+
     def listEpisodes(self, cItem):
         printDBG("BSTO.listEpisodes")
         self.cacheLinks = {}
         sNum = cItem['s_num']
-        
+
         sts, data = self.getPage(cItem['url'])
         if not sts:
             return
-        
+
         data = self.cm.ph.getDataBeetwenMarkers(data, '<table class="episodes">', '</table>')[1]
         data = self.cm.ph.getAllItemsBeetwenMarkers(data, '<tr>', '</tr>', False)
         for item in data:
@@ -156,16 +156,16 @@ class BSTO(CBaseHostClass, CaptchaHelper):
                 continue
             url = self.getFullUrl(self.cm.ph.getSearchGroups(item[0], '''href=['"]([^'^"]+?)['"]''')[0])
             eNum = self.cleanHtmlStr(item[0])
-            
+
             title1 = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(item[1], '<strong>', '</strong>', False)[1])
             title2 = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(item[1], '<i>', '</i>', False)[1])
-            
+
             key = 's%se%s' % (sNum.zfill(2), eNum.zfill(2))
             self.cacheLinks[key] = []
             title = cItem['series_title'] + ', ' + key + ' ' + title1
             if title2 != '':
                 title += ' (%s)' % title2
-            
+
             item = self.cm.ph.getAllItemsBeetwenMarkers(item[2], '<a', '</a>')
             for link in item:
                 name = self.cleanHtmlStr(link)
@@ -177,17 +177,17 @@ class BSTO(CBaseHostClass, CaptchaHelper):
                 params = dict(cItem)
                 params.update({'good_for_fav': False, 'title': title, 'url': url, 'links_key': key})
                 self.addVideo(params)
-        
+
     def listSearchResult(self, cItem, searchPattern, searchType):
         printDBG("BSTO.listSearchResult cItem[%s], searchPattern[%s] searchType[%s]" % (cItem, searchPattern, searchType))
-        
+
         if len(self.cacheSeries) == 0:
             url = self.getFullUrl('andere-serien')
             sts, data = self.getPage(url)
             if not sts:
                 return []
             data = self.cm.ph.getDataBeetwenMarkers(data, '<div id="seriesContainer"', '<script', False)[1]
-        
+
             data = self.cm.ph.getAllItemsBeetwenMarkers(data, '<li>', '</li>', False)
             for item in data:
                 url = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''href=['"]([^'^"]+?)['"]''')[0])
@@ -195,7 +195,7 @@ class BSTO(CBaseHostClass, CaptchaHelper):
                 if title == '':
                     title = self.cleanHtmlStr(self.cm.ph.getSearchGroups(item, '''title=['"]([^'^"]+?)['"]''')[0])
                 self.cacheSeries.append({'title': title, 'url': url})
-        
+
         searchResults = []
         words = ' '.join(searchPattern.lower().split())
         words = words.split(' ')
@@ -207,20 +207,20 @@ class BSTO(CBaseHostClass, CaptchaHelper):
                     score += 1
             if score > 0:
                 searchResults.append({'idx': idx, 'score': score})
-        
-        searchResults.sort(key=lambda k: k['score'], reverse=True) 
+
+        searchResults.sort(key=lambda k: k['score'], reverse=True)
         for item in searchResults:
             item = self.cacheSeries[item['idx']]
             params = dict(cItem)
             params.update(item)
             params.update({'good_for_fav': True, 'category': 'list_seasons', 'icon': item['url'] + '?fake=need_resolve.jpeg'})
             self.addDir(params)
-    
+
     def getLinksForVideo(self, cItem, forEpisodes=False):
         printDBG("BSTO.getLinksForVideo [%s]" % cItem)
         key = cItem.get('links_key', '')
         return self.cacheLinks.get(key, [])
-        
+
     def _cryptoJS_AES_decrypt(self, encrypted, password):
         def derive_key_and_iv(password, key_length, iv_length):
             d = d_i = ''
@@ -232,7 +232,7 @@ class BSTO(CBaseHostClass, CaptchaHelper):
         key, iv = derive_key_and_iv(password, 32, 16)
         cipher = AES_CBC(key=key, keySize=32)
         return cipher.decrypt(encrypted, iv)
-        
+
     def getHeaders(self, url):
         headers = {}
         if self._getHeaders == None:
@@ -254,38 +254,38 @@ class BSTO(CBaseHostClass, CaptchaHelper):
             except Exception:
                 printExc()
         return headers
-        
+
     def getVideoLinks(self, videoUrl):
         printDBG("BSTO.getVideoLinks [%s]" % videoUrl)
         urlTab = []
-        
+
         key = strwithmeta(videoUrl).meta.get('links_key', '')
         if key in self.cacheLinks:
             for idx in range(len(self.cacheLinks[key])):
                 if self.cacheLinks[key][idx]['url'] == videoUrl and not self.cacheLinks[key][idx]['name'].startswith('*'):
                     self.cacheLinks[key][idx]['name'] = '*' + self.cacheLinks[key][idx]['name']
-        
+
         sts, data = self.getPage(videoUrl)
         if not sts:
             return []
-        
+
         errorMsgTab = []
-        
+
         baseUrl = self.cm.ph.getSearchGroups(data, '''href=['"][^'^"]*?(/out/[^'^"]+?)['"]''')[0]
         url = self.getFullUrl(baseUrl)
         prevUrl = url
-        
+
         linkId = self.cm.ph.getSearchGroups(url, '''/out/([0-9]+)''')[0]
         hostUrl = BSTO.LINKS_CACHE.get(linkId, '')
         if hostUrl == '' and config.plugins.iptvplayer.bsto_linkcache.value:
             hostUrl = ReadTextFile(GetCacheSubDir('bs.to', linkId))[1]
-        
+
         if hostUrl == '':
             sts, data = self.cm.getPage(prevUrl, self.defaultParams)
             if not sts:
                 return []
             url = data.meta['url']
-            
+
             if url == prevUrl:
                 query = {}
                 tmp = self.cm.ph.getDataBeetwenNodes(data, ('<form', '>'), ('</form', '>'), False)[1]
@@ -295,7 +295,7 @@ class BSTO(CBaseHostClass, CaptchaHelper):
                     value = self.cm.ph.getSearchGroups(item, '''value=['"]([^'^"]+?)['"]''')[0]
                     if name != '':
                         query[name] = value
-                
+
                 sitekey = self.cm.ph.getSearchGroups(data, '''['"]sitekey['"]\s*?:\s*?['"]([^'^"]+?)['"]''')[0]
                 if sitekey != '' and 'bitte das Captcha' in data:
                     token, errorMsgTab = self.processCaptcha(sitekey, self.cm.meta['url'], config.plugins.iptvplayer.bsto_bypassrecaptcha.value)
@@ -304,58 +304,58 @@ class BSTO(CBaseHostClass, CaptchaHelper):
                         if not sts:
                             return []
                         url = data.meta['url']
-            
+
             if 1 != self.up.checkHostSupport(url):
                 url = baseUrl.replace('/out/', '/watch/')[1:]
-                
+
                 hostUrl = ''
                 try:
                     sts, data = self.cm.getPage(self.getFullUrl('/api/' + url), self.getHeaders(url))
                     if not sts:
                         return []
-                    
+
                     data = byteify(json.loads(data))
                     printDBG(data)
-                    
+
                     hostUrl = data['fullurl']
                 except Exception:
                     printExc()
             else:
                 hostUrl = url
-            
+
         if 1 != self.up.checkHostSupport(hostUrl):
-            SetIPTVPlayerLastHostError('\n'.join(errorMsgTab)) 
+            SetIPTVPlayerLastHostError('\n'.join(errorMsgTab))
         elif self.cm.isValidUrl(hostUrl):
             BSTO.LINKS_CACHE[linkId] = hostUrl
             if config.plugins.iptvplayer.bsto_linkcache.value:
                 WriteTextFile(GetCacheSubDir('bs.to', linkId), hostUrl)
             urlTab = self.up.getVideoLinkExt(hostUrl)
-        
+
         return urlTab
-        
+
     def getArticleContent(self, cItem):
         printDBG("SeriesOnlineIO.getArticleContent [%s]" % cItem)
         retTab = []
-        
+
         sts, data = self.getPage(cItem.get('url', ''))
         if not sts:
             return retTab
-        
+
         desc = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(data, '<div class="justify" id="desc_spoiler">', '</div>')[1])
-        
+
         data = self.cm.ph.getDataBeetwenMarkers(data, '<div id="sp_left">', '<script', False)[1]
         title = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(data, '<h2', '</h2>')[1].split('<small>')[0])
         if desc == '':
             desc = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(data, '<p ', '</p>')[1])
         icon = self.getFullIconUrl(self.cm.ph.getSearchGroups(data, '''src=['"]([^'^"]+?)['"]''')[0])
-        
+
         if title == '':
             title = cItem['title']
         if desc == '':
             desc = cItem.get('desc', '')
         if icon == '':
             icon = cItem.get('icon', '')
-        
+
         data = data.split('<div class="infos">')[-1]
         data = self.cm.ph.getAllItemsBeetwenMarkers(data, '<span>', '</p>')
         printDBG(data)
@@ -378,12 +378,12 @@ class BSTO(CBaseHostClass, CaptchaHelper):
                     otherInfo[descTabMap[key]] = val
                 except Exception:
                     continue
-        
+
         return [{'title': self.cleanHtmlStr(title), 'text': self.cleanHtmlStr(desc), 'images': [{'title': '', 'url': self.getFullIconUrl(icon)}], 'other_info': otherInfo}]
-    
+
     def handleService(self, index, refresh=0, searchPattern='', searchType=''):
         printDBG('handleService start')
-        
+
         CBaseHostClass.handleService(self, index, refresh, searchPattern, searchType)
         if self.MAIN_URL == None:
             #rm(self.COOKIE_FILE)
@@ -392,10 +392,10 @@ class BSTO(CBaseHostClass, CaptchaHelper):
         name = self.currItem.get("name", '')
         category = self.currItem.get("category", '')
         mode = self.currItem.get("mode", '')
-        
+
         printDBG("handleService: |||||||||||||||||||||||||||||||||||| name[%s], category[%s] " % (name, category))
         self.currList = []
-        
+
     #MAIN MENU
         if name == None:
             self.listsTab(self.MAIN_CAT_TAB, {'name': 'category'})
@@ -410,14 +410,14 @@ class BSTO(CBaseHostClass, CaptchaHelper):
     #SEARCH
         elif category in ["search", "search_next_page"]:
             cItem = dict(self.currItem)
-            cItem.update({'search_item': False, 'name': 'category'}) 
+            cItem.update({'search_item': False, 'name': 'category'})
             self.listSearchResult(cItem, searchPattern, searchType)
     #HISTORIA SEARCH
         elif category == "search_history":
             self.listsHistory({'name': 'history', 'category': 'search'}, 'desc', _("Type: "))
         else:
             printExc()
-        
+
         CBaseHostClass.endHandleService(self, index, refresh)
 
 
@@ -425,9 +425,8 @@ class IPTVHost(CHostBase):
 
     def __init__(self):
         CHostBase.__init__(self, BSTO(), True, [])
-    
+
     def withArticleContent(self, cItem):
         if cItem['type'] != 'video' and cItem['category'] != 'list_episodes' and cItem['category'] != 'list_seasons':
             return False
         return True
-    

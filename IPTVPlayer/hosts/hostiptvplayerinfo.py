@@ -37,7 +37,7 @@ def gettytul():
 
 
 class IPTVPlayerInfo(CBaseHostClass):
- 
+
     def __init__(self):
         CBaseHostClass.__init__(self, {'history': 'iptvplayer.pl', 'cookie': 'iptvplayer.pl.cookie'})
         self.DEFAULT_ICON_URL = 'https://about.gitlab.com/images/press/logo/png/gitlab-logo-white-stacked-rgb.png'
@@ -49,59 +49,59 @@ class IPTVPlayerInfo(CBaseHostClass):
         self.MAIN_URL = 'https://gitlab.com/'
         self.MAIN_CAT_TAB = [
                              {'category': 'commits', 'title': _('Commits'), },
-                             {'category': 'tutorial', 'title': _('Tutorials'), } 
+                             {'category': 'tutorial', 'title': _('Tutorials'), }
                             ]
-                            
+
         self.TUTORIALS_TAB = [{'title': _('Services management'), 'url': 'https://www.youtube.com/watch?v=pG-_csh2TDk'},
                              {'title': _('%s - service overview') % 'http://rte.ie/player', 'url': 'https://www.youtube.com/watch?v=IhC8m8K1jkg'},
                              {'title': _('%s subtitles download - how to') % _('[en]'), 'url': 'https://www.youtube.com/watch?v=ZO6w6Pr5z_4'},
                              {'title': _('%s subtitles download - how to') % _('[pl]'), 'url': 'https://www.youtube.com/watch?v=3onH5vxlDcg'},
                              {'title': _('%s - subtitles provider') % 'http://prijevodi-online.org/', 'url': 'https://www.youtube.com/watch?v=lb8QvViUYq4'},
                             ]
-                            
+
     def getPage(self, baseUrl, addParams={}, post_data=None):
         if addParams == {}:
             addParams = dict(self.defaultParams)
         return self.cm.getPage(baseUrl, addParams, post_data)
-    
+
     def listCommits(self, cItem, nextCategory):
         printDBG("listCommits [%s]" % cItem)
-        
+
         ITEMS_PER_PAGE = 40
-        
+
         page = cItem.get('page', 0)
         url = self.getFullUrl('/%s/e2iplayer/commits/master?limit=%d&offset=%d' % (config.plugins.iptvplayer.gitlab_repo.value, ITEMS_PER_PAGE, page * ITEMS_PER_PAGE))
-        
+
         if page > 1:
             if '?' in url:
                 url += '&'
             else:
                 url += '?'
             url += 'page=%s' % page
-        
+
         sts, data = self.getPage(url)
         if not sts:
             return
-        
+
         try:
             nextPage = False
             currCommitStamp = GetIPTVPlayerComitStamp()
-            
+
             printDBG(">>>> currCommitStamp[%s]" % currCommitStamp)
-            
+
             data = byteify(json.loads(data))
             if data['count'] >= ITEMS_PER_PAGE:
                 nextPage = True
-            
+
             splitReObj = re.compile('''<span[^>]+?class=['"]commit-row-message[^>]+?>''')
-            
+
             data = self.cm.ph.rgetAllItemsBeetwenNodes(data['html'], ('</li', '>'), ('<li', '>', 'commit-header'))
             for item in data:
                 item = item.split('</li>', 1)
                 title = self.cm.ph.getSearchGroups(item[0], '''data-day=['"]([^'^"]+?)['"]''')[0].replace('-', '.')
-                desc = self.cleanHtmlStr(item[0]) 
+                desc = self.cleanHtmlStr(item[0])
                 self.addMarker({'title': title, 'desc': desc})
-                
+
                 item = self.cm.ph.getAllItemsBeetwenMarkers(item[1], '<li', '</li>')
                 for it in item:
                     stamp = self.cm.ph.getSearchGroups(it, '''data-clipboard-text=['"]([^'^"]+?)['"]''')[0]
@@ -111,35 +111,35 @@ class IPTVPlayerInfo(CBaseHostClass):
                     it = splitReObj.split(it[1])
                     title = self.cleanHtmlStr(it[0])
                     desc = self.cleanHtmlStr(it[1])
-                    
+
                     params = {'title': title, 'url': url, 'desc': desc, 'icon': icon}
                     if currCommitStamp != '' and currCommitStamp == stamp:
                         params['text_color'] = config.plugins.iptvplayer.iptvplayerinfo_currversion_color.value
                     self.addArticle(params)
         except Exception:
             printExc()
-        
+
         if nextPage:
             params = dict(cItem)
             params.update({'title': _("Next page"), 'page': page + 1})
             self.addDir(params)
-        
+
     def getLinksForVideo(self, cItem):
         printDBG("getLinksForVideo [%s]" % cItem)
         return self.up.getVideoLinkExt(cItem['url'])
-    
+
     def handleService(self, index, refresh=0, searchPattern='', searchType=''):
         printDBG('handleService start')
-        
+
         CBaseHostClass.handleService(self, index, refresh, searchPattern, searchType)
 
         name = self.currItem.get("name", '')
         category = self.currItem.get("category", '')
         mode = self.currItem.get("mode", '')
-        
+
         printDBG("handleService: |||||||||||||||||||||||||||||||||||| name[%s], category[%s] " % (name, category))
         self.currList = []
-        
+
     #MAIN MENU
         if name == None:
             self.listsTab(self.MAIN_CAT_TAB, {'name': 'category'})
@@ -149,7 +149,7 @@ class IPTVPlayerInfo(CBaseHostClass):
             self.listsTab(self.TUTORIALS_TAB, self.currItem, 'video')
         else:
             printExc()
-        
+
         CBaseHostClass.endHandleService(self, index, refresh)
 
 
@@ -157,4 +157,3 @@ class IPTVHost(CHostBase):
 
     def __init__(self):
         CHostBase.__init__(self, IPTVPlayerInfo(), True, [])
-    

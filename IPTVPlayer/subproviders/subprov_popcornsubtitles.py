@@ -17,7 +17,7 @@ from Components.config import config, ConfigSelection, ConfigYesNo, ConfigText, 
 
 
 ###################################################
-# E2 GUI COMMPONENTS 
+# E2 GUI COMMPONENTS
 ###################################################
 from Plugins.Extensions.IPTVPlayer.components.asynccall import MainSessionWrapper
 from Screens.MessageBox import MessageBox
@@ -34,8 +34,8 @@ def GetConfigList():
 ###################################################
 
 
-class YoutubeComProvider(CBaseSubProviderClass): 
-    
+class YoutubeComProvider(CBaseSubProviderClass):
+
     def __init__(self, params={}):
         self.MAIN_URL = 'http://popcornsubtitles.com/'
         self.USER_AGENT = 'Mozilla/5.0 (X11; Linux i686) AppleWebKit/537.36 (KHTML, like Gecko) Ubuntu Chromium/37.0.2062.120 Chrome/37.0.2062.120 Safari/537.36'
@@ -43,26 +43,26 @@ class YoutubeComProvider(CBaseSubProviderClass):
 
         params['cookie'] = 'popcornsubtitlescom.cookie'
         CBaseSubProviderClass.__init__(self, params)
-        
+
         self.defaultParams = {'header': self.HTTP_HEADER}
         if 'popcornsubtitles_url' in self.params['url_params'] and '' != self.params['url_params']['popcornsubtitles_url']:
             self.popcornsubtitlesUrl = self.params['url_params']['popcornsubtitles_url']
         else:
-            self.popcornsubtitlesUrl = '' 
-            
+            self.popcornsubtitlesUrl = ''
+
     def getSubtitles(self, cItem):
         printDBG("YoutubeComProvider.getSubtitles")
         if not self.cm.isValidUrl(self.popcornsubtitlesUrl):
             SetIPTVPlayerLastHostError(_('Wrong uri.'))
             return
-        
+
         url = self.popcornsubtitlesUrl
         urlParams = dict(self.defaultParams)
-        
+
         sts, tmp = self.cm.getPage(url, urlParams)
         if not sts:
             return
-        
+
         imdbid = self.cm.ph.getSearchGroups(tmp, '/(tt[0-9]+?)[^0-9]')[0]
         tmp = self.cm.ph.getDataBeetwenMarkers(tmp, '<tbody>', '</tbody>')[1]
         tmp = self.cm.ph.getAllItemsBeetwenMarkers(tmp, '<tr', '</tr>', withMarkers=True)
@@ -74,7 +74,7 @@ class YoutubeComProvider(CBaseSubProviderClass):
                 params = dict(cItem)
                 params.update({'title': lang, 'url': url, 'lang': lang, 'imdbid': imdbid, 'desc': title})
                 self.addSubtitle(params)
-            
+
     def _getFileName(self, title, lang, subId, imdbid):
         title = RemoveDisallowedFilenameChars(title).replace('_', '.')
         match = re.search(r'[^.]', title)
@@ -84,7 +84,7 @@ class YoutubeComProvider(CBaseSubProviderClass):
         fileName = "{0}_{1}_0_{2}_{3}".format(title, lang, subId, imdbid)
         fileName = fileName + '.srt'
         return fileName
-            
+
     def downloadSubtitleFile(self, cItem):
         printDBG("downloadSubtitleFile")
         retData = {}
@@ -94,22 +94,22 @@ class YoutubeComProvider(CBaseSubProviderClass):
         imdbid = cItem['imdbid']
         fileName = self._getFileName(title, lang, subId, imdbid)
         fileName = GetSubtitlesDir(fileName)
-        
+
         tmpFile = GetTmpDir(self.TMP_FILE_NAME)
-        
+
         urlParams = dict(self.defaultParams)
         sts, data = self.cm.getPage(cItem['url'], urlParams)
         if not sts:
             SetIPTVPlayerLastHostError(_('Failed to page with subtitle link.'))
             return retData
-        
+
         url = self.cm.ph.getSearchGroups(data, '''<meta[^>]+?refresh[^>]+?(https?://[^"^']+?)['"]''')[0]
         urlParams['max_data_size'] = self.getMaxFileSize()
         sts, data = self.cm.getPage(url, urlParams)
         if not sts:
             SetIPTVPlayerLastHostError(_('Failed to download subtitle.'))
             return retData
-        
+
         try:
             with open(tmpFile, 'w') as f:
                 f.write(data)
@@ -117,17 +117,17 @@ class YoutubeComProvider(CBaseSubProviderClass):
             printExc()
             SetIPTVPlayerLastHostError(_('Failed to write file "%s".') % tmpFile)
             return retData
-        
+
         printDBG(">>")
         printDBG(tmpFile)
         printDBG(fileName)
         printDBG("<<")
-        
+
         def __cleanFiles(all=False):
             if all:
                 rm(fileName)
             rm(tmpFile)
-        
+
         # detect encoding
         cmd = '%s "%s"' % (config.plugins.iptvplayer.uchardetpath.value, tmpFile)
         ret = self.iptv_execute(cmd)
@@ -139,7 +139,7 @@ class YoutubeComProvider(CBaseSubProviderClass):
                 encoding = encoding.strip()
         else:
             encoding = ''
-        
+
         # convert file to UTF-8
         try:
             with open(tmpFile) as f:
@@ -156,28 +156,28 @@ class YoutubeComProvider(CBaseSubProviderClass):
             except Exception:
                 printExc()
                 SetIPTVPlayerLastHostError(_('Failed to convert the file "%s" to UTF-8.') % tmpFile)
-        except Exception: 
+        except Exception:
             printExc()
             SetIPTVPlayerLastHostError(_('Failed to open the file "%s".') % tmpFile)
-        
+
         __cleanFiles()
         return retData
-    
+
     def handleService(self, index, refresh=0):
         printDBG('handleService start')
-        
+
         CBaseSubProviderClass.handleService(self, index, refresh)
 
         name = self.currItem.get("name", '')
         category = self.currItem.get("category", '')
-        
+
         printDBG("handleService: |||||||||||||||||||||||||||||||||||| name[%s], category[%s] " % (name, category))
         self.currList = []
-        
+
     #MAIN MENU
         if name == None:
             self.getSubtitles({'name': 'category', })
-        
+
         CBaseSubProviderClass.endHandleService(self, index, refresh)
 
 
@@ -185,4 +185,3 @@ class IPTVSubProvider(CSubProviderBase):
 
     def __init__(self, params={}):
         CSubProviderBase.__init__(self, YoutubeComProvider(params))
-    

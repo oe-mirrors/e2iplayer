@@ -32,16 +32,16 @@ class TrailersApple(CBaseHostClass):
         self.MAIN_URL = 'https://trailers.apple.com/'
         self.DEFAULT_ICON_URL = 'http://www.userlogos.org/files/logos/mafi0z/apple%20trailers.png'
         self.cacheLinks = {}
-    
+
     def getFullUrl(self, url, baseUrl=None):
         return CBaseHostClass.getFullUrl(self, url.replace('&#038;', '&'), baseUrl)
-    
+
     def getPage(self, baseUrl, addParams={}, post_data=None):
         return self.cm.getPage(baseUrl, addParams, post_data)
-    
+
     def listMain(self, cItem):
         printDBG("TrailersApple.listMain")
-        
+
         MAIN_CAT_TAB = [{'category': 'list_items', 'title': 'Just Added', 'url': self.getFullUrl('/trailers/home/feeds/just_added.json')},
                         {'category': 'list_items', 'title': 'Exclusive', 'url': self.getFullUrl('/trailers/home/feeds/exclusive.json')},
                         {'category': 'list_items', 'title': 'Just HD', 'url': self.getFullUrl('/trailers/home/feeds/just_hd.json')},
@@ -50,7 +50,7 @@ class TrailersApple(CBaseHostClass):
                         {'category': 'search', 'title': _('Search'), 'search_item': True},
                         {'category': 'search_history', 'title': _('Search history'), }]
         self.listsTab(MAIN_CAT_TAB, cItem)
-    
+
     def listCatItems(self, cItem, nextCategory):
         printDBG("TrailersApple.listCatItems")
         printDBG(cItem['c_tree'])
@@ -61,7 +61,7 @@ class TrailersApple(CBaseHostClass):
                 params = dict(cItem)
                 params.update({'good_for_fav': False, 'category': nextCategory, 'title': _('--All--'), 'url': url})
                 self.addDir(params)
-            
+
             for item in cTree['list']:
                 title = self.cleanHtmlStr(item['dat'])
                 url = self.getFullUrl(self.cm.ph.getSearchGroups(item['dat'], '''href=['"]([^'^"]+?)['"]''')[0])
@@ -77,11 +77,11 @@ class TrailersApple(CBaseHostClass):
                     self.addDir(params)
         except Exception:
             printExc()
-    
+
     def listSubItems(self, cItem):
         printDBG("TrailersApple.listSubItems")
         self.currList = cItem['sub_items']
-    
+
     def listItems(self, cItem, nextCategory):
         printDBG("TrailersApple.listItems [%s]" % cItem)
         sts, data = self.getPage(cItem['url'])
@@ -102,7 +102,7 @@ class TrailersApple(CBaseHostClass):
                 desc = []
                 if 'releasedate' in item:
                     desc.append(item['releasedate'][:16])
-                
+
                 for it in [(_('Studio:'), 'studio'), (_('Director:'), 'director'), (_('Directors:'), 'directors'), (_('Genres:'), 'genres'), (_('Genre:'), 'genre'), (_('Actors:'), 'actors')]:
                     if it[1] not in item:
                         continue
@@ -115,19 +115,19 @@ class TrailersApple(CBaseHostClass):
                 self.addDir(params)
         except Exception:
             printExc()
-        
+
     def exploreItem(self, cItem):
         printDBG("TrailersApple.exploreItem")
         self.cacheLinks = {}
-        
+
         sts, data = self.getPage(cItem['url'])
         if not sts:
             return
         cUrl = self.cm.meta['url']
         self.setMainUrl(cUrl)
-        
+
         filmId = self.cm.ph.getSearchGroups(data, '''FilmId\s*=\s*['"](\d+)['"]''')[0]
-        
+
         sts, data = self.getPage(self.getFullUrl('/trailers/feeds/data/%s.json' % filmId))
         if not sts:
             return
@@ -161,17 +161,17 @@ class TrailersApple(CBaseHostClass):
                 self.addVideo(params)
         except Exception:
             printExc()
-    
+
     def listSearchResult(self, cItem, searchPattern, searchType):
         searchPattern = urllib.parse.quote_plus(searchPattern)
-        
+
         url = self.getFullUrl('/trailers/home/scripts/quickfind.php?q=') + urllib.parse.quote_plus(searchPattern)
         self.listItems({'url': url}, 'explore_item')
-        
+
     def getLinksForVideo(self, cItem):
         printDBG("TrailersApple.getLinksForVideo [%s]" % cItem)
         return self.cacheLinks.get(cItem['url'], [])
-        
+
     def getVideoLinks(self, videoUrl):
         printDBG("TrailersApple.getVideoLinks [%s]" % videoUrl)
         # mark requested link as used one
@@ -181,19 +181,19 @@ class TrailersApple(CBaseHostClass):
                     if videoUrl in self.cacheLinks[key][idx]['url']:
                         if not self.cacheLinks[key][idx]['name'].startswith('*'):
                             self.cacheLinks[key][idx]['name'] = '*' + self.cacheLinks[key][idx]['name']
-        
+
         return [{'name': 'direct', 'url': videoUrl}]
-        
+
     def handleService(self, index, refresh=0, searchPattern='', searchType=''):
         printDBG('handleService start')
-        
+
         CBaseHostClass.handleService(self, index, refresh, searchPattern, searchType)
 
         name = self.currItem.get("name", '')
         category = self.currItem.get("category", '')
         printDBG("handleService: ||| name[%s], category[%s] " % (name, category))
         self.currList = []
-        
+
     #MAIN MENU
         if name == None:
             self.listMain({'name': 'category', 'type': 'category'})
@@ -208,14 +208,14 @@ class TrailersApple(CBaseHostClass):
     #SEARCH
         elif category in ["search", "search_next_page"]:
             cItem = dict(self.currItem)
-            cItem.update({'search_item': False, 'name': 'category'}) 
+            cItem.update({'search_item': False, 'name': 'category'})
             self.listSearchResult(cItem, searchPattern, searchType)
     #HISTORIA SEARCH
         elif category == "search_history":
             self.listsHistory({'name': 'history', 'category': 'search'}, 'desc', _("Type: "))
         else:
             printExc()
-        
+
         CBaseHostClass.endHandleService(self, index, refresh)
 
 

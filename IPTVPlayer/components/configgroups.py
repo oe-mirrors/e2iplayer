@@ -23,16 +23,16 @@ from Screens.ChoiceBox import ChoiceBox
 from Components.config import config, getConfigListEntry, NumericalTextInput, ConfigYesNo
 from Tools.BoundFunction import boundFunction
 ###################################################
-        
+
 
 class ConfigGroupsMenu(ConfigBaseWidget):
-   
+
     def __init__(self, session):
         printDBG("ConfigGroupsMenu.__init__ -------------------------------")
         self.list = []
         self.inList = []
         self.groupObj = IPTVHostsGroups()
-        
+
         ConfigBaseWidget.__init__(self, session)
         self.setup_title = _("E2iPlayer enable/disabled groups")
         self.__preparLists()
@@ -50,7 +50,7 @@ class ConfigGroupsMenu(ConfigBaseWidget):
 
     def runSetup(self):
         ConfigBaseWidget.runSetup(self)
-        
+
     def saveOrCancel(self, operation="save"):
         if "save" == operation:
             groupList = []
@@ -63,16 +63,16 @@ class ConfigGroupsMenu(ConfigBaseWidget):
                     if self.inList[idx].name == item.name:
                         validIdx = True
                         break
-                
+
                 if not validIdx or self.list[idx][1].value:
                     groupList.append(item.name)
-                    
+
             for idx in range(len(self.list)):
                 if self.list[idx][1].value and self.inList[idx].name not in groupList:
                     groupList.append(self.inList[idx].name)
-                    
+
             self.groupObj.setGroupList(groupList)
-        
+
     def __preparLists(self):
         currentList = self.groupObj.getGroupsList()
         predefinedList = self.groupObj.getPredefinedGroupsList()
@@ -87,4 +87,3 @@ class ConfigGroupsMenu(ConfigBaseWidget):
             optionEntry = ConfigYesNo(default=enabled)
             self.list.append(getConfigListEntry(item.title, optionEntry))
             self.inList.append(item)
-        

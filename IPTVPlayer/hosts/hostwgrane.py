@@ -29,27 +29,27 @@ class WgranePL(CBaseHostClass):
 
     def __init__(self):
         CBaseHostClass.__init__(self, {'history': 'wgrane.pl.online', 'cookie': 'wgrane.pl.cookie'})
-        
+
         self.USER_AGENT = 'Mozilla/5.0'
         self.HEADER = {'User-Agent': self.USER_AGENT, 'Accept': 'text/html'}
         self.AJAX_HEADER = dict(self.HEADER)
         self.AJAX_HEADER.update({'X-Requested-With': 'XMLHttpRequest'})
-        
+
         self.MAIN_URL = 'http://www.wgrane.pl/'
         self.DEFAULT_ICON_URL = 'https://i.ytimg.com/vi/HpTrVOZVNhA/maxresdefault.jpg'
-        
+
         self.defaultParams = {'with_metadata': True, 'header': self.HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
         self.cacheFilters = {}
         self.cacheLinks = {}
-    
+
     def setMainUrl(self, url):
         if self.cm.isValidUrl(url):
             self.MAIN_URL = self.cm.getBaseUrl(url)
-    
+
     def getFullUrl(self, url, baseUrl=None):
         url = url.replace('&amp;', '&')
         return CBaseHostClass.getFullUrl(self, url, baseUrl)
-    
+
     def getPage(self, baseUrl, addParams={}, post_data=None):
         if addParams == {}:
             addParams = dict(self.defaultParams)
@@ -61,7 +61,7 @@ class WgranePL(CBaseHostClass):
                 return urljoin(baseUrl, url)
         addParams['cloudflare_params'] = {'domain': self.up.getDomain(baseUrl), 'cookie_file': self.COOKIE_FILE, 'User-Agent': self.USER_AGENT, 'full_url_handle': _getFullUrl}
         return self.cm.getPageCFProtection(baseUrl, addParams, post_data)
-    
+
     def listMainMenu(self, cItem):
         printDBG("WgranePL.listMainMenu")
 
@@ -70,15 +70,15 @@ class WgranePL(CBaseHostClass):
                         {'category': 'search', 'title': _('Search'), 'search_item': True},
                         {'category': 'search_history', 'title': _('Search history')}]
         self.listsTab(MAIN_CAT_TAB, cItem)
-    
+
     def listCategories(self, cItem, nextCategory):
         printDBG("WgranePL.listCategories")
         page = cItem.get('page', 1)
-        
+
         sts, data = self.getPage(cItem['url'])
         if not sts:
             return
-        
+
         data = self.cm.ph.getDataBeetwenNodes(data, ('<div', '>', 'window_title'), ('<div', '>', 'footer'), False)[1]
 
         data = re.compile('''<div[^>]+?class=['"]list['"][^>]*?>''').split(data)
@@ -129,15 +129,15 @@ class WgranePL(CBaseHostClass):
     def listItems(self, cItem, nextCategory):
         printDBG("WgranePL.listItems")
         page = cItem.get('page', 1)
-        
+
         sts, data = self.getPage(cItem['url'])
         if not sts:
             return
-        
+
         data = self.cm.ph.getDataBeetwenNodes(data, ('<div', '>', 'window_title'), ('<div', '>', 'footer'), False)[1]
         nextPage = self.cm.ph.getDataBeetwenNodes(data, ('<div', '>', 'pages'), ('</div', '>'), False)[1]
         nextPage = self.cm.ph.getSearchGroups(nextPage, '''<a[^>]+?href=['"]([^'^"]+?)['"][^>]*?>\s*&raquo;\s*<''')[0]
-        
+
         descObj = re.compile('''<br\s*?/>''', re.I)
         data = re.compile('''<div[^>]+?class=['"]list['"][^>]*?>''').split(data)
         for item in data:
@@ -170,7 +170,7 @@ class WgranePL(CBaseHostClass):
                 self.addVideo(params) # how to know if this is audio or video item?
             else:
                 self.addPicture(params)
-        
+
         if nextPage != '':
             params = dict(cItem)
             params.update({'title': _("Next page"), 'url': self.getFullUrl(nextPage), 'page': page + 1})
@@ -182,11 +182,11 @@ class WgranePL(CBaseHostClass):
         cItem['url'] = self.getFullUrl('/watch.html?search=') + urllib.parse.quote_plus(searchPattern)
         cItem['category'] = 'list_items'
         self.listItems(cItem, 'list_playlist')
-    
+
     def getLinksForVideo(self, cItem):
         printDBG("WgranePL.getLinksForVideo [%s]" % cItem)
         urlTab = []
-        
+
         if 'picture' == cItem['type']:
             icon = ''
             sts, data = self.getPage(cItem['url'])
@@ -203,18 +203,18 @@ class WgranePL(CBaseHostClass):
 
     def handleService(self, index, refresh=0, searchPattern='', searchType=''):
         printDBG('handleService start')
-        
+
         CBaseHostClass.handleService(self, index, refresh, searchPattern, searchType)
 
         name = self.currItem.get("name", '')
         category = self.currItem.get("category", '')
         mode = self.currItem.get("mode", '')
-        
+
         printDBG("handleService: || name[%s], category[%s] " % (name, category))
         self.currList = []
         self.currItem = dict(self.currItem)
         self.currItem.pop('good_for_fav', None)
-        
+
     #MAIN MENU
         if name == None:
             self.listMainMenu({'name': 'category'})
@@ -231,18 +231,18 @@ class WgranePL(CBaseHostClass):
     #SEARCH
         elif category in ["search", "search_next_page"]:
             cItem = dict(self.currItem)
-            cItem.update({'search_item': False, 'name': 'category'}) 
+            cItem.update({'search_item': False, 'name': 'category'})
             self.listSearchResult(cItem, searchPattern, searchType)
     #HISTORIA SEARCH
         elif category == "search_history":
             self.listsHistory({'name': 'history', 'category': 'search'}, 'desc', _("Type: "))
         else:
             printExc()
-        
+
         CBaseHostClass.endHandleService(self, index, refresh)
 
 
 class IPTVHost(CHostBase):
 
     def __init__(self):
-        CHostBase.__init__(self, WgranePL(), True, favouriteTypes=[]) 
+        CHostBase.__init__(self, WgranePL(), True, favouriteTypes=[])

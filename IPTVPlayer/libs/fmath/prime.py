@@ -41,5 +41,3 @@ def rabin_miller(possiblePrime, aTestInteger):
         if y != (possiblePrime - 1):
             return 0 # failed - composite
     return 1 # success - still a possible prime
-
-

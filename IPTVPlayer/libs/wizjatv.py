@@ -25,7 +25,7 @@ from os import path as os_path
 ############################################
 
 ###################################################
-# E2 GUI COMMPONENTS 
+# E2 GUI COMMPONENTS
 ###################################################
 from Screens.MessageBox import MessageBox
 ###################################################
@@ -42,7 +42,7 @@ def GetConfigList():
     optionList.append(getConfigListEntry('wizja.tv ' + _("login") + ':', config.plugins.iptvplayer.wizjatv_login))
     optionList.append(getConfigListEntry('wizja.tv ' + _("password") + ':', config.plugins.iptvplayer.wizjatv_password))
     return optionList
-    
+
 ###################################################
 
 
@@ -55,28 +55,28 @@ class WizjaTvApi(CBaseHostClass):
         self.HTTP_HEADER = {'User-Agent': 'Mozilla/5.0', 'Accept': 'text/html'}
         self.AJAX_HEADER = dict(self.HTTP_HEADER)
         self.AJAX_HEADER.update({'X-Requested-With': 'XMLHttpRequest'})
-        
+
         self.COOKIE_FILE = GetCookieDir('wizjatv.cookie')
-        
+
         self.http_params = {}
         self.http_params.update({'header': self.HTTP_HEADER, 'save_cookie': True, 'load_cookie': True, 'cookiefile': self.COOKIE_FILE})
         self.loggedIn = False
-        
+
     def doLogin(self, login, password):
         logged = False
         premium = False
         loginUrl = self.getFullUrl('/users/index.php')
-        
+
         rm(self.COOKIE_FILE)
         sts, data = self.cm.getPage(loginUrl, self.http_params)
         if not sts:
             return False, False
-        
+
         HTTP_HEADER = dict(self.HTTP_HEADER)
         HTTP_HEADER.update({'Referer': loginUrl})
         params = dict(self.http_params)
         params['header'] = HTTP_HEADER
-        
+
         post_data = {'user_name': login, 'user_password': password, 'login': 'Zaloguj'}
         sts, data = self.cm.getPage(loginUrl, params, post_data)
         printDBG("-------------------------------------")
@@ -97,7 +97,7 @@ class WizjaTvApi(CBaseHostClass):
 
     def getList(self, cItem):
         printDBG("WizjaTvApi.getChannelsList")
-        
+
         login = config.plugins.iptvplayer.wizjatv_login.value
         password = config.plugins.iptvplayer.wizjatv_password.value
         if login != '' and password != '':
@@ -112,13 +112,13 @@ class WizjaTvApi(CBaseHostClass):
         else:
             self.sessionEx.open(MessageBox, 'Serwis ten wymaga zalogowania. Wprowadź swój login i hasło w konfiguracji hosta dostępnej po naciśnięciu niebieskiego klawisza.', type=MessageBox.TYPE_ERROR, timeout=10)
             return []
-        
+
         channelsTab = []
-        
+
         sts, data = self.cm.getPage(self.getMainUrl(), self.http_params)
         if not sts:
             return channelsTab
-        
+
         data = self.cm.ph.getDataBeetwenMarkers(data, '<ul class="dropdown-menu">', '</ul>')[1]
         data = self.cm.ph.getAllItemsBeetwenMarkers(data, '<a', '</a>')
         for item in data:
@@ -129,20 +129,20 @@ class WizjaTvApi(CBaseHostClass):
             title = self.cleanHtmlStr(item)
             if title == '':
                 title = icon.split('/')[-1][:-4].upper()
-            
+
             params = {'name': 'wizja.tv', 'type': 'video', 'title': title, 'url': url, 'icon': icon}
             channelsTab.append(params)
-        
+
         return channelsTab
-        
+
     def getVideoLink(self, cItem):
         printDBG("WizjaTvApi.getVideoLink")
         urlsTab = []
-        
+
         sts, data = self.cm.getPage(cItem['url'], self.http_params)
         if not sts:
             return urlsTab
-        
+
         data = self.cm.ph.getAllItemsBeetwenMarkers(data, '<iframe', '>', caseSensitive=False)
         printDBG(data)
         for item in data:
@@ -153,11 +153,11 @@ class WizjaTvApi(CBaseHostClass):
             HTTP_HEADER.update({'Referer': cItem['url']})
             params = dict(self.http_params)
             params['header'] = HTTP_HEADER
-            
+
             tries = 0
             while tries < 2:
                 tries += 1
-                
+
                 if 'porter' in url or 'player' in item:
                     sts, tmp = self.cm.getPage(url, params)
                     if not sts:

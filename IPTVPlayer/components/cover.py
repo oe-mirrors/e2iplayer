@@ -21,19 +21,19 @@ import threading
 class Cover(Pixmap):
     def __init__(self):
         printDBG("Cover.__init__ ---------------------------")
-        Pixmap.__init__(self)       
+        Pixmap.__init__(self)
         self.picload = ePicLoad()
-        
+
         self.currIcon = {}
         self.waitIcon = {}
         self.paramsSet = False
-        
+
         self.decoding = False
         self.picload_conn = None
-    
+
     def __del__(self):
         printDBG("Cover.__del__ ---------------------------")
-        
+
     def preWidgetRemove(self, instance):
         printDBG("Cover.preWidgetRemove ---------------------------")
         if None != self.picload_conn:
@@ -45,9 +45,9 @@ class Cover(Pixmap):
         except Exception:
             printExc()
 
-    def onShow(self):      
+    def onShow(self):
         Pixmap.onShow(self)
-        
+
     # this function should be called only from mainThread
     # filename - path to image wich will be decoded
     # callBackFun - the function wich will be called after decoding
@@ -59,7 +59,7 @@ class Cover(Pixmap):
         if filename != self.currIcon.get('FileName', ''):
             if not self.paramsSet:
                 self.picload.setPara((self.instance.size().width(), self.instance.size().height(), 1, 1, False, 1, "#00000000"))
-                self.paramsSet = True 
+                self.paramsSet = True
             if not self.decoding:
                 printDBG("_______________start decodeCover")
                 self.decoding = True
@@ -78,18 +78,18 @@ class Cover(Pixmap):
         else:
             printDBG("___________________________decodeCover not need (%s)" % filename)
             return False
-            
+
     def checkDecodeNeeded(self, filename):
         iconFile = self.waitIcon.get('FileName', '')
         if '' == iconFile:
             iconFile = self.currIcon.get('FileName', '')
         return filename != iconFile
-            
+
     # end decodeCover(self, filename, callBackFun, ident):
-    
+
     # this method should be called only from mainThread
     # ptrPixmap - decoded pixelmap to set
-    # filename  - path to image corresponding to pixelmap 
+    # filename  - path to image corresponding to pixelmap
     def updatePixmap(self, ptrPixmap, filename):
         printDBG("updatePixmap %s=%s" % (filename, self.currIcon["FileName"]))
         if ptrPixmap != None:
@@ -105,15 +105,15 @@ class Cover(Pixmap):
         elif None != self.currIcon.get("CallBackFun", None):
             self.currIcon["CallBackFun"]({"Changed": True, "Pixmap": ptr, "FileName": self.currIcon['FileName'], "Ident": self.currIcon["Ident"]})
     # end decodeCallBack(self, picInfo=None):
-        
+
 
 class Cover2(Pixmap):
     def __init__(self):
         Pixmap.__init__(self)
-        self.picload = ePicLoad()            
+        self.picload = ePicLoad()
         self.paramsSet = False
         self.picload_conn = None
-        
+
     def preWidgetRemove(self, instance):
         printDBG("Cover2.preWidgetRemove ---------------------------")
         if None != self.picload_conn:
@@ -143,7 +143,7 @@ class Cover2(Pixmap):
         ret = self.picload.startDecode(filename)
         if ret != 0:
             self.picload_conn = None
-        
+
 
 class Cover3(Pixmap):
     def __init__(self):
@@ -152,30 +152,30 @@ class Cover3(Pixmap):
 
     def setPixmap(self, ptr):
         self.instance.setPixmap(ptr)
-        
+
     def getWidth(self):
         return self.instance.size().width()
 
     def getHeight(self):
         return self.instance.size().height()
-        
+
     def setPosition(self, x, y):
         self.instance.move(ePoint(int(x), int(y)))
- 
+
     def getPosition(self):
         p = self.instance.position()
         return (p.x(), p.y())
-        
+
 
 class SimpleAnimatedCover(Pixmap):
     def __init__(self):
         Pixmap.__init__(self)
         Pixmap.hide(self)
         self.visible = False
-        
+
         self.framesList = []
         self.currFrame = -1
-        
+
     def loadFrames(self, framesPathList):
         #printDBG('loadFrames')
         self.framesList = []
@@ -191,7 +191,7 @@ class SimpleAnimatedCover(Pixmap):
                 self.currFrame = 0
             #printDBG('nextFrame [%d]' % self.currFrame)
             self.setPixmap(self.framesList[self.currFrame])
-                
+
     def onShow(self):
         #printDBG('onShow')
         self.visible = True
@@ -203,10 +203,9 @@ class SimpleAnimatedCover(Pixmap):
         #printDBG('onHide')
         self.visible = False
         Pixmap.onHide(self)
-        
+
     def setPixmap(self, ptr):
         if self.instance:
             self.instance.setPixmap(ptr)
             return True
         return False
-        

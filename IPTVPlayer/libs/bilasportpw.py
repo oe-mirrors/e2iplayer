@@ -34,7 +34,7 @@ def GetConfigList():
     optionList = []
     optionList.append(getConfigListEntry(_('PORT') + ": ", config.plugins.iptvplayer.bilasportpw_port))
     return optionList
-    
+
 ###################################################
 
 
@@ -66,7 +66,7 @@ class BilaSportPwApi(CBaseHostClass):
     def getList(self, cItem):
         printDBG("BilaSportPwApi.getChannelsList")
         mainItemsTab = []
-        
+
         sts, data = self.getPage(self.getFullUrl('/schedule.html'))
         if not sts:
             return mainItemsTab
@@ -86,7 +86,7 @@ class BilaSportPwApi(CBaseHostClass):
             desc = ph.clean_html(item[-1].split('</div>', 1)[-1])
             mainItemsTab.append(MergeDicts(cItem, {'type': 'video', 'title': title, 'url': url, 'icon': icon, 'desc': desc}))
         return mainItemsTab
-        
+
     def getVideoLink(self, cItem):
         printDBG("BilaSportPwApi.getVideoLink")
         urlsTab = []
@@ -137,7 +137,7 @@ class BilaSportPwApi(CBaseHostClass):
         if hlsTab:
             return hlsTab
 
-        if 1 == self.up.checkHostSupport(cUrl): 
+        if 1 == self.up.checkHostSupport(cUrl):
             return self.up.getVideoLinkExt(strwithmeta(cUrl, {'Referer': baseUrl}))
 
         return []
@@ -145,9 +145,9 @@ class BilaSportPwApi(CBaseHostClass):
     def getResolvedVideoLink(self, videoUrl):
         printDBG("BilaSportPwApi.getResolvedVideoLink [%s]" % videoUrl)
         urlsTab = []
-        
+
         meta = strwithmeta(videoUrl).meta
-        
+
         baseUrl = self.cm.getBaseUrl(videoUrl.meta.get('Referer', ''))
         scriptUrl = videoUrl.meta.get('priv_script_url', '')
         if scriptUrl:
@@ -169,14 +169,14 @@ class BilaSportPwApi(CBaseHostClass):
         sts, data = self.getPage(videoUrl)
         if not sts or '#EXTM3U' not in data:
             return urlsTab
-        
+
         keyUrl = set(re.compile('''#EXT\-X\-KEY.*?URI=['"](https?://[^"]+?)['"]''').findall(data))
         if len(keyUrl):
             keyUrl = keyUrl.pop()
             proto = keyUrl.split('://', 1)[0]
             pyCmd = GetPyScriptCmd('livesports') + ' "%s" "%s" "%s" "%s" "%s" "%s" "%s" ' % (config.plugins.iptvplayer.bilasportpw_port.value, videoUrl, baseUrl, scriptUrl, self.HTTP_HEADER['User-Agent'], self.COOKIE_FILE, GetDukPath())
             meta = {'iptv_proto': 'em3u8'}
-            meta['iptv_m3u8_key_uri_replace_old'] = '%s://' % proto 
+            meta['iptv_m3u8_key_uri_replace_old'] = '%s://' % proto
             meta['iptv_m3u8_key_uri_replace_new'] = 'http://127.0.0.1:{0}/{1}/'.format(config.plugins.iptvplayer.bilasportpw_port.value, proto)
             meta['iptv_refresh_cmd'] = pyCmd
             videoUrl = urlparser.decorateUrl("ext://url/" + videoUrl, meta)

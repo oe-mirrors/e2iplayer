@@ -33,7 +33,7 @@ class IPTVSetupMainWidget(Screen):
     <screen position="center,center" size="600,300" title="E2iPlayer setup version %s">
             <widget name="sub_title"    position="10,10" zPosition="2" size="580,90"   valign="center" halign="center" font="Regular;24" transparent="1" foregroundColor="white" />
             <widget name="info_field"   position="10,100" zPosition="2" size="580,200" valign="top" halign="center"   font="Regular;22" transparent="1" foregroundColor="white" />
-            
+
             <widget name="spinner"   zPosition="2" position="463,200" size="16,16" transparent="1" alphatest="blend" />
             <widget name="spinner_1" zPosition="1" position="463,200" size="16,16" transparent="1" alphatest="blend" />
             <widget name="spinner_2" zPosition="1" position="479,200" size="16,16" transparent="1" alphatest="blend" />
@@ -46,7 +46,7 @@ class IPTVSetupMainWidget(Screen):
         Screen.__init__(self, session)
         self["sub_title"] = Label(_(" "))
         self["info_field"] = Label(_(" "))
-        
+
         self["actions"] = ActionMap(["SetupActions", "ColorActions"],
             {
                 "cancel": self.cancelPressed,
@@ -56,16 +56,16 @@ class IPTVSetupMainWidget(Screen):
             for idx in range(5):
                 spinnerName = "spinner"
                 if idx:
-                    spinnerName += '_%d' % idx 
+                    spinnerName += '_%d' % idx
                 self[spinnerName] = Cover3()
         except Exception:
             printExc()
         self.spinnerPixmap = [LoadPixmap(GetIconDir('radio_button_on.png')), LoadPixmap(GetIconDir('radio_button_off.png'))]
-        
+
         self.onClose.append(self.__onClose)
         #self.onLayoutFinish.append(self.onStart)
         self.onShow.append(self.onStart)
-        
+
         #flags
         self.autoStart = autoStart
         self.underCloseMessage = False
@@ -90,7 +90,7 @@ class IPTVSetupMainWidget(Screen):
         self["info_field"].setText(_("IPTVPlayer need some additional setup.\nSuch as downloading and installation additional binaries.\nPress OK to start."))
         if self.autoStart:
             self.startPressed()
-        
+
     def cancelPressed(self):
         printDBG("IPTVSetupMainWidget.cancelPressed")
         if self.underClosing:
@@ -107,12 +107,12 @@ class IPTVSetupMainWidget(Screen):
             return
         self.started = True
         self.setupImpl.start()
-        
+
     def cancelAnswer(self, ret):
         printDBG("IPTVSetupMainWidget.cancelAnswer")
         if self.underClosing:
             return
-        if ret: 
+        if ret:
             self.underClosing = True
             self.close()
         else:
@@ -120,7 +120,7 @@ class IPTVSetupMainWidget(Screen):
                 deferredAction = self.deferredAction
                 self.deferredAction = None
                 deferredAction()
-            
+
     def showMessage(self, message, type, callback):
         printDBG("IPTVSetupMainWidget.showMessage")
         if self.underClosing:
@@ -129,10 +129,10 @@ class IPTVSetupMainWidget(Screen):
             self.deferredAction = boundFunction(self.doShowMessage, message, type, callback)
         else:
             self.doShowMessage(message, type, callback)
-        
+
     def doShowMessage(self, message, type, callback):
         self.session.openWithCallback(callback, MessageBox, text=message, type=type)
-        
+
     def chooseQuestion(self, title, list, callback):
         printDBG("IPTVSetupMainWidget.chooseQuestion")
         if self.underClosing:
@@ -141,12 +141,12 @@ class IPTVSetupMainWidget(Screen):
             self.deferredAction = boundFunction(self.dochooseQuestion, title, list, callback)
         else:
             self.dochooseQuestion(title, list, callback)
-        
+
     def dochooseQuestion(self, title, list, callback):
         title += "                                                                         " # workaround for truncation message by stupid E2
         title = title.replace('\n', ' ').replace(' ', chr(160))
         self.session.openWithCallback(callback, ChoiceBox, title=title, list=list)
-        
+
     def setInfo(self, title, message):
         if self.underClosing:
             return
@@ -154,7 +154,7 @@ class IPTVSetupMainWidget(Screen):
             self["sub_title"].setText(title)
         if None != message:
             self["info_field"].setText(message)
-        
+
     def finished(self):
         if self.underClosing:
             return
@@ -162,6 +162,6 @@ class IPTVSetupMainWidget(Screen):
             self.deferredAction = self.doFinished
         else:
             self.doFinished()
-        
+
     def doFinished(self):
         self.close()

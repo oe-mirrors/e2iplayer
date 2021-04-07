@@ -34,7 +34,7 @@ def GetConfigList():
     optionList = []
     optionList.append(getConfigListEntry(_('Categorization') + ": ", config.plugins.iptvplayer.iklubnet_categorization))
     return optionList
-    
+
 ###################################################
 
 
@@ -45,18 +45,18 @@ class IKlubNetApi(CBaseHostClass):
         self.MAIN_URL = 'http://iklub.net/'
         self.HEADER = {'User-Agent': 'Mozilla/5.0', 'Accept': 'text/html'}
         self.COOKIE_FILE = GetCookieDir('iklubnet.cookie')
-        
+
         self.http_params = {}
         self.http_params.update({'save_cookie': True, 'load_cookie': True, 'cookiefile': self.COOKIE_FILE})
         #self.cacheList = {}
         #self.cacheLinks = {'url':'', 'tab':[]}
-        
+
     def getListOfChannels(self, cItem):
         printDBG("IKlubNetApi.getListOfChannels")
         sts, data = self.cm.getPage(cItem['url'])
         if not sts:
             return []
-        
+
         retList = []
         data = self.cm.ph.getDataBeetwenMarkers(data, '<div class="entry-content">', '</div>')[1]
         data = self.cm.ph.getAllItemsBeetwenMarkers(data, '<a', '</a>')
@@ -70,7 +70,7 @@ class IKlubNetApi(CBaseHostClass):
             params.update({'type': 'video', 'url': self.getFullUrl(url), 'title': title, 'icon': self.getFullUrl(icon)})
             retList.append(params)
         return retList
-        
+
     def getList(self, cItem):
         printDBG("IKlubNetApi.getChannelsList")
         channelsTab = []
@@ -131,16 +131,16 @@ class IKlubNetApi(CBaseHostClass):
             else:
                 channelsTab = self.getListOfChannels(cItem)
         return channelsTab
-        
+
     def getTvpStreamLink(self, data):
         printDBG(data)
         file = self.cm.ph.getSearchGroups(data, '''['"](https?[^'^"]+?\.m3u8[^'^"]*?)['"]''')[0]
         return getDirectM3U8Playlist(file)
-        
+
     def getVideoLink(self, cItem):
         printDBG("IKlubNetApi.getVideoLink")
         urlsTab = []
-        
+
         if cItem.get('vlc', False):
             uri = cItem['url']
             if uri.startswith('http') and uri.split('?')[-1].endswith('.m3u8'):
@@ -150,30 +150,30 @@ class IKlubNetApi(CBaseHostClass):
             elif uri.startswith('http'):
                 urlsTab.append({'name': '[rtmp]', 'url': urlparser.decorateUrl(uri, {'iptv_livestream': True})})
             return urlsTab
-        
+
         url = cItem['url']
         nextTitle = 'Podstawowy '
         for linkIdx in range(2):
             if '' == url:
                 break
             title = nextTitle
-            
+
             sts, data = self.cm.getPage(url)
             if not sts:
                 return urlsTab
-            
+
             if 'tvpstream.tvp.pl' in url:
                 urlsTab.extend(self.getTvpStreamLink(data))
                 if linkIdx > 0:
                     return urlsTab
-            
+
             url = self.getFullUrl(self.cm.ph.getSearchGroups(data, '<a href="([^"]+?)"[^>]*?><img[^>]*?alt="Zapasowy Player"', 1, True)[0])
             if '' == url:
                 url = self.getFullUrl(self.cm.ph.getSearchGroups(data, '<a href="([^"]+?)"[^>]*?><img[^>]*?alt="[^"]*?vlc[^"]*?"', 1, True)[0])
             nextTitle = 'Zapasowy '
-            
+
             printDBG(data)
-            
+
             urlNext = self.cm.ph.getSearchGroups(data, '<iframe[^>]+?src="([^"]+?iklub[^"]+?)"', 1, True)[0]
             if '' == urlNext:
                 urlNext = self.cm.ph.getSearchGroups(data, '<iframe[^>]+?src="([^"]+?)"', 1, True)[0]
@@ -181,7 +181,7 @@ class IKlubNetApi(CBaseHostClass):
                 sts, data = self.cm.getPage(urlNext)
                 if not sts:
                     continue
-            
+
             data = self.cm.ph.getAllItemsBeetwenMarkers(data, 'eval(', ');', False)
             try:
                 ddata = ''
@@ -195,16 +195,16 @@ class IKlubNetApi(CBaseHostClass):
                             tmp2 = re.compile('''unescape\(['"]([^"^']+?)['"]''').findall(item)
                             for item2 in tmp2:
                                 ddata += urllib.parse.unquote(item2)
-                
+
                 printDBG("++++++++++++++++++++++++++++++++++++++++++++++++++++")
                 printDBG(ddata)
                 printDBG("++++++++++++++++++++++++++++++++++++++++++++++++++++")
-                
+
                 funName = self.cm.ph.getSearchGroups(ddata, '''function\s*([^\(]+?)''')[0].strip()
                 sp = self.cm.ph.getSearchGroups(ddata, '''split\(\s*['"]([^'^"]+?)['"]''')[0]
-                modStr = self.cm.ph.getSearchGroups(ddata, '''\+\s*['"]([^'^"]+?)['"]''')[0] 
+                modStr = self.cm.ph.getSearchGroups(ddata, '''\+\s*['"]([^'^"]+?)['"]''')[0]
                 modInt = int(self.cm.ph.getSearchGroups(ddata, '''\+\s*(-?[0-9]+?)[^0-9]''')[0])
-                
+
                 ddata = self.cm.ph.getSearchGroups(ddata, '''document\.write[^'^"]+?['"]([^'^"]+?)['"]''')[0]
                 data = ''
                 tmp = ddata.split(sp)
@@ -212,11 +212,11 @@ class IKlubNetApi(CBaseHostClass):
                 k = urllib.parse.unquote(tmp[1] + modStr)
                 for idx in range(len(ddata)):
                     data += chr((int(k[idx % len(k)]) ^ ord(ddata[idx])) + modInt)
-                    
+
                 printDBG("++++++++++++++++++++++++++++++++++++++++++++++++++++")
                 printDBG(data)
                 printDBG("++++++++++++++++++++++++++++++++++++++++++++++++++++")
-                
+
                 if 'rtmp://' in data:
                     rtmpUrl = self.cm.ph.getDataBeetwenMarkers(data, '&source=', '&', False)[1]
                     if rtmpUrl == '':
@@ -241,14 +241,14 @@ class IKlubNetApi(CBaseHostClass):
                     urlsTab.append({'name': title + ' [src]', 'url': file})
                 else:
                     urlsTab.extend(self.up.getAutoDetectedStreamLink(url, data))
-                    
+
                 if 'content.jwplatform.com' in data:
                     vidUrl = self.getFullUrl(self.cm.ph.getSearchGroups(data, '''['"]([^'^"]+?content.jwplatform.com[^'^"]+?)['"]''')[0])
-                    
+
                     sts, data = self.cm.getPage(vidUrl)
                     if not sts:
                         continue
-                    
+
                     if '/players/' not in vidUrl:
                         vidUrl = self.cm.ph.getSearchGroups(data, '''['"](https?[^'^"]+?/players/[^'^"]+?\.js)['"]''')[0]
                         HEADER = dict(self.HEADER)
@@ -256,7 +256,7 @@ class IKlubNetApi(CBaseHostClass):
                         sts, data = self.cm.getPage(vidUrl, {'header': HEADER})
                         if not sts:
                             continue
-                    
+
                     data = self.cm.ph.getDataBeetwenMarkers(data, '"sources":', ']', False)[1]
                     file = self.cm.ph.getSearchGroups(data, r'''['"]?file['"]?\s*:\s*['"]([^"^']+)['"],''')[0]
                     printDBG(">>>>>>>>>>>>>>>>>>>>>>>> FILE[%s]" % file)
@@ -267,5 +267,5 @@ class IKlubNetApi(CBaseHostClass):
             except Exception:
                 printExc()
                 continue
-        
+
         return urlsTab

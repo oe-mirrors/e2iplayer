@@ -40,7 +40,7 @@ def updateStatus(type, data, code=None):
     sys.stderr.write('\n%s\n' % json.dumps(obj).encode('utf-8'))
 
 
-DEBUGE = False 
+DEBUGE = False
 
 
 def printDBG(strDat):
@@ -60,24 +60,24 @@ def printExc(msg=''):
 def getPage(url, headers={}, post_data=None):
     printDBG('url [%s]' % url)
     customOpeners = []
-    
+
     try:
         ctx = ssl._create_unverified_context()
         customOpeners.append(urllib.request.HTTPSHandler(context=ctx))
     except Exception:
         pass
-    
+
     sts = 0
     data = ''
     try:
         req = urllib.request.Request(url)
         for key in headers:
             req.add_header(key, headers[key])
-        
+
         printDBG("++++HEADERS START++++")
         printDBG(req.headers)
         printDBG("++++HEADERS END++++")
-        
+
         opener = urllib.request.build_opener(*customOpeners)
         response = opener.open(req)
         data = response.read()
@@ -92,7 +92,7 @@ def getPage(url, headers={}, post_data=None):
         printExc()
     except Exception:
         printExc()
-    return sts, data 
+    return sts, data
 
 
 def _fromhex(hex):
@@ -112,7 +112,7 @@ class Jddevice:
         self.device_id = device_dict["id"]
         self.device_type = device_dict["type"]
         self.myjd = jd
-    
+
     def action(self, path, params=(), http_action="POST"):
         action_url = self.__action_url()
         response = self.myjd.request_api(path, http_action, params, action_url)
@@ -127,10 +127,10 @@ class Jddevice:
 def decrypt(secret_token, data):
     iv = secret_token[:len(secret_token) // 2]
     key = secret_token[len(secret_token) // 2:]
-    
+
     cipher = AES_CBC(key=key, keySize=16)
     decrypted_data = cipher.decrypt(base64.b64decode(data), iv).strip()
-    
+
     return decrypted_data
 
 
@@ -138,10 +138,10 @@ def encrypt(secret_token, data):
     data = data.encode('utf-8')
     iv = secret_token[:len(secret_token) // 2]
     key = secret_token[len(secret_token) // 2:]
-    
+
     cipher = AES_CBC(key=key, keySize=16)
-    encrypted_data = base64.b64encode(cipher.encrypt(data, iv)) 
-    
+    encrypted_data = base64.b64encode(cipher.encrypt(data, iv))
+
     return encrypted_data
 
 
@@ -159,7 +159,7 @@ class Myjdapi:
         self._server_encryption_token = None
         self._device_encryption_token = None
         self._connected = False
-        
+
     def get_device_secret(self):
         return self._device_secret
 
@@ -168,7 +168,7 @@ class Myjdapi:
 
     def get_server_encryption_token(self):
         return self._server_encryption_token
-        
+
     def get_device_encryption_token(self):
         return self._device_encryption_token
 
@@ -199,7 +199,7 @@ class Myjdapi:
     def _signature_create(self, key, data):
         signature = hmac.new(key, data.encode('utf-8'), hashlib.sha256)
         return signature.hexdigest()
-    
+
     def _decrypt(self, secret_token, data):
         return decrypt(secret_token, data)
 
@@ -310,10 +310,10 @@ class Myjdapi:
 
 class MyjdRequestHandler(BaseHTTPRequestHandler):
     server_version = 'IPTVPlayer HttpServer' #'AppWork GmbH HttpServer'
-    
+
     def log_message(self, format, *args):
         printDBG(format % args)
-    
+
     def parse_request(self):
         idx = -1
         for i in range(len(self.raw_requestline)):
@@ -330,7 +330,7 @@ class MyjdRequestHandler(BaseHTTPRequestHandler):
             #sys.exit(-1)
             #raise Exception("Wrong request %s..." % self.raw_requestline[:256])
         return BaseHTTPRequestHandler.parse_request(self)
-    
+
     def _set_headers(self, returnCode=200, addHeaders=[]):
         self.send_response(returnCode)
         self.send_header('Connection', 'close')
@@ -350,23 +350,23 @@ class MyjdRequestHandler(BaseHTTPRequestHandler):
         jd = self.server
         return_data = ''
         returnCode = 200
-        
+
         printDBG("In post method \n" + str(self.path))
         self.data_string = self.rfile.read(int(self.headers['Content-Length']))
-        
+
         session_token = self.path.split('/t_', 1)[-1].split('_', 1)[0]
         new_token = hashlib.sha256()
         new_token.update(jd.get_device_secret() + _fromhex(session_token))
         encryption_token = new_token.digest()
-        
+
         printDBG("SESSION TOKEN: %s" % session_token)
         data = decrypt(encryption_token, self.data_string)
 
         printDBG("ENCRYPTED_DATA [%s]: %s" % (len(self.data_string), self.data_string))
         printDBG("DECRYPTED_DATA [%s]: %s" % (len(data), data))
-        
+
         data = json.loads(data)
-        
+
         if data['url'] == '/device/getDirectConnectionInfos':
             updateStatus('status', "Client connected")
             return_data = {"infos": [], "rebindProtectionDetected": False, "mode": "NONE"}
@@ -471,7 +471,7 @@ def PoolConnection(*args, **kwargs):
             s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
             s.connect(('api.jdownloader.org', 80))
             s.send("DEVICE%s" % parameters.session_token)
-            
+
             tmp = MyjdRequestHandler(s, (None, None), parameters)
             s.close()
         except Exception:
@@ -488,11 +488,11 @@ if __name__ == "__main__":
     if len(sys.argv) != 7:
         sys.stderr.write('Wrong parameters\n')
         sys.exit(1)
-        
+
     libsPath = sys.argv[1]
     sys.path.insert(1, libsPath)
     from crypto.cipher.aes_cbc import AES_CBC
-        
+
     APP_KEY = "JD_api_39100"
     LOGIN = sys.argv[2]
     PASSWORD = sys.argv[3]
@@ -506,14 +506,14 @@ if __name__ == "__main__":
     SUBSCRIPTION_ID = int(time.time() * 1000)
     DEBUGE = int(sys.argv[6])
     returnCode = 0
-    
+
     parameters = Params()
     parameters.captcha_finished = False
     parameters.captcha_result = None
     parameters.captcha_notified = False
     parameters.captcha_data = CAPTCHA_DATA
     parameters.subscription_id = SUBSCRIPTION_ID
-    
+
     try:
         jd = None
 
@@ -536,15 +536,15 @@ if __name__ == "__main__":
         jd.update_request_id()
         parameters.device_secret = jd.get_device_secret()
         parameters.session_token = jd.get_session_token()
-        
+
         updateStatus('status', "Waiting for client connection")
         if True:
             threads = [None, None, None] #None, None, None
             for i in range(len(threads)):
                 threads[i] = threading.Thread(target=PoolConnection, name='PoolConnection %d' % i, kwargs={'params': parameters})
-                threads[i].daemon = True 
+                threads[i].daemon = True
                 threads[i].start()
-        
+
         while not parameters.captcha_finished:
             # send keep alive to server
             time.sleep(2)
@@ -554,7 +554,7 @@ if __name__ == "__main__":
             jd.update_request_id()
 
         updateStatus('captcha_result', parameters.captcha_result)
-        
+
         try:
             if jd:
                 jd.disconnect()

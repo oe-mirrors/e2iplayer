@@ -86,22 +86,22 @@ class IPTVSubDownloaderWidget(Screen):
                             <widget name="spinner_4" zPosition="1" position="556,240" size="16,16" transparent="1" alphatest="blend" />
                     </screen>
                 """ % (IPTV_VERSION, GetIconDir('red.png'), GetIconDir('line.png'))
-        
+
     def __init__(self, session, params={}):
         # params: vk_title, movie_title
         printDBG("IPTVSubDownloaderWidget.__init__ desktop IPTV_VERSION[%s]\n" % (IPTVSubDownloaderWidget.IPTV_VERSION))
         self.session = session
-        path = GetSkinsDir(config.plugins.iptvplayer.skin.value) + "/subplaylist.xml" 
+        path = GetSkinsDir(config.plugins.iptvplayer.skin.value) + "/subplaylist.xml"
         if os_path.exists(path):
-            try:    
+            try:
                 with open(path, "r") as f:
                     self.skin = f.read()
                     f.close()
             except Exception:
                 printExc("Skin read error: " + path)
-                
+
         Screen.__init__(self, session)
-        
+
         self["key_red"] = StaticText(_("Cancel"))
 
         self["list"] = IPTVMainNavigatorList()
@@ -120,49 +120,49 @@ class IPTVSubDownloaderWidget(Screen):
         self["headertext"] = Label()
         self["console"] = Label()
         self["sequencer"] = Label()
-        
+
         try:
             for idx in range(5):
                 spinnerName = "spinner"
                 if idx:
-                    spinnerName += '_%d' % idx 
+                    spinnerName += '_%d' % idx
                 self[spinnerName] = Cover3()
         except Exception:
             printExc()
 
         self.spinnerPixmap = [LoadPixmap(GetIconDir('radio_button_on.png')), LoadPixmap(GetIconDir('radio_button_off.png'))]
         self.showHostsErrorMessage = True
-        
+
         self.onClose.append(self.__onClose)
         #self.onLayoutFinish.append(self.onStart)
         self.onShow.append(self.onStart)
-        
+
         #Defs
         self.params = dict(params)
         self.params['discover_info'] = self.discoverInfoFromTitle()
         self.params['movie_url'] = strwithmeta(self.params.get('movie_url', ''))
         self.params['url_params'] = self.params['movie_url'].meta
         self.movieTitle = self.params['discover_info']['movie_title']
-        
+
         self.workThread = None
         self.host = None
         self.hostName = ''
-        
+
         self.nextSelIndex = 0
         self.currSelIndex = 0
-        
+
         self.prevSelList = []
         self.categoryList = []
-      
+
         self.currList = []
         self.currItem = CDisplayListItem()
 
         self.visible = True
-        
+
         #################################################################
         #                      Inits for Proxy Queue
         #################################################################
-       
+
         # register function in main Queue
         if None == asynccall.gMainFunctionsQueueTab[1]:
             asynccall.gMainFunctionsQueueTab[1] = asynccall.CFunctionProxyQueue(self.session)
@@ -172,22 +172,22 @@ class IPTVSubDownloaderWidget(Screen):
         #main Queue
         self.mainTimer = eTimer()
         self.mainTimer_conn = eConnectCallback(self.mainTimer.timeout, self.processProxyQueue)
-        # every 100ms Proxy Queue will be checked  
+        # every 100ms Proxy Queue will be checked
         self.mainTimer_interval = 100
         self.mainTimer.start(self.mainTimer_interval, True)
-        
+
         # spinner timer
         self.spinnerTimer = eTimer()
-        self.spinnerTimer_conn = eConnectCallback(self.spinnerTimer.timeout, self.updateSpinner) 
+        self.spinnerTimer_conn = eConnectCallback(self.spinnerTimer.timeout, self.updateSpinner)
         self.spinnerTimer_interval = 200
         self.spinnerEnabled = False
-        
+
         #################################################################
-        
+
         self.downloadedSubItems = []
 
     #end def __init__(self, session):
-    
+
     def __del__(self):
         printDBG("IPTVSubDownloaderWidget.__del__ --------------------------")
 
@@ -203,7 +203,7 @@ class IPTVSubDownloaderWidget(Screen):
             asynccall.gMainFunctionsQueueTab[1].clearQueue()
         except Exception:
             printExc()
-            
+
     def onStart(self):
         self.onShow.remove(self.onStart)
         #self.onLayoutFinish.remove(self.onStart)
@@ -211,18 +211,18 @@ class IPTVSubDownloaderWidget(Screen):
         self.hideSpinner()
         #self.hideButtons()
         self.confirmMovieTitle()
-        
+
     def confirmMovieTitle(self):
         # first ask user to provide movie title
         self.session.openWithCallback(self.confirmMovieTitleCallBack, GetVirtualKeyboard(), title=(_("Confirm the title of the movie")), text=self.movieTitle)
-        
+
     def confirmMovieTitleCallBack(self, text=None):
         if isinstance(text, str):
             self.movieTitle = text
             self.listSubtitlesProviders()
         else:
             self.close()
-        
+
     def hideButtons(self, buttons=['green', 'yellow', 'blue']):
         try:
             for button in buttons:
@@ -230,19 +230,19 @@ class IPTVSubDownloaderWidget(Screen):
                 self['label_' + button].hide()
         except Exception:
             printExc()
-            
+
     def red_pressed(self):
         self.close(None)
-        
+
     def green_pressed(self):
         pass
-        
+
     def yellow_pressed(self):
         pass
-        
+
     def blue_pressed(self):
         pass
-    
+
     def back_pressed(self):
         printDBG("IPTVSubDownloaderWidget.back_pressed")
         try:
@@ -252,7 +252,7 @@ class IPTVSubDownloaderWidget(Screen):
                     self["statustext"].setText(_("Operation aborted!"))
                 return
         except Exception:
-            return    
+            return
         if self.visible:
             if len(self.prevSelList) > 0:
                 self.nextSelIndex = self.prevSelList.pop()
@@ -268,7 +268,7 @@ class IPTVSubDownloaderWidget(Screen):
         else:
             self.showWindow()
     #end back_pressed(self):
-    
+
     def ok_pressed(self):
         if self.visible:
             sel = None
@@ -280,17 +280,17 @@ class IPTVSubDownloaderWidget(Screen):
             if sel is None:
                 printDBG("ok_pressed sel is None")
                 return
-            
+
             elif len(self.currList) <= 0:
                 printDBG("ok_pressed list is empty")
                 self.getRefreshedCurrList()
                 return
             else:
                 printDBG("ok_pressed selected item: %s" % (sel.name))
-                
-                item = self.getSelItem()  
+
+                item = self.getSelItem()
                 self.currItem = item
-                
+
                 #Get current selection
                 currSelIndex = self["list"].getCurrentIndex()
                 #remember only prev categories
@@ -299,7 +299,7 @@ class IPTVSubDownloaderWidget(Screen):
                         self.hostName = item.privateData['sub_provider']
                         self.loadHost()
                     except Exception:
-                        printExc() 
+                        printExc()
                 elif item.type in [CDisplayListItem.TYPE_SUBTITLE]:
                     self.requestListFromHost('ForDownloadSubFile', currSelIndex, '')
                 elif item.type == CDisplayListItem.TYPE_CATEGORY:
@@ -313,7 +313,7 @@ class IPTVSubDownloaderWidget(Screen):
         else:
             self.showWindow()
     #end ok_pressed(self):
-    
+
     def loadHost(self):
         try:
             _temp = __import__('Plugins.Extensions.IPTVPlayer.subproviders.subprov_' + self.hostName, globals(), locals(), ['IPTVSubProvider'], -1)
@@ -328,9 +328,9 @@ class IPTVSubDownloaderWidget(Screen):
             printExc('Cannot import class IPTVSubProvider for host [%r]' % self.hostName)
             self.close()
             return
-        # request initial list from host        
+        # request initial list from host
         self.getInitialList()
-    
+
     def loadSpinner(self):
         try:
             if "spinner" in self:
@@ -340,15 +340,15 @@ class IPTVSubDownloaderWidget(Screen):
                     self[spinnerName].setPixmap(self.spinnerPixmap[1])
         except Exception:
             printExc()
-        
+
     def showSpinner(self):
         if None != self.spinnerTimer:
             self._setSpinnerVisibility(True)
             self.spinnerTimer.start(self.spinnerTimer_interval, True)
-    
+
     def hideSpinner(self):
         self._setSpinnerVisibility(False)
-    
+
     def _setSpinnerVisibility(self, visible=True):
         self.spinnerEnabled = visible
         try:
@@ -360,7 +360,7 @@ class IPTVSubDownloaderWidget(Screen):
                     self[spinnerName].visible = visible
         except Exception:
             printExc()
-        
+
     def updateSpinner(self):
         try:
             if self.spinnerEnabled and None != self.workThread:
@@ -383,11 +383,11 @@ class IPTVSubDownloaderWidget(Screen):
             self.hideSpinner()
         except Exception:
             printExc()
-        
+
     def reportHostCrash(self, ret):
         try:
             if ret:
-                try: 
+                try:
                     exceptStack = self.workThread.getExceptStack()
                     reporter = GetPluginDir('iptvdm/reporthostcrash.py')
                     msg = urllib_quote('%s|%s|%s|%s' % ('HOST_CRASH', IPTVSubDownloaderWidget.IPTV_VERSION, self.hostName, self.getCategoryPath()))
@@ -406,7 +406,7 @@ class IPTVSubDownloaderWidget(Screen):
             asynccall.gMainFunctionsQueueTab[1].processQueue()
             self.mainTimer.start(self.mainTimer_interval, True)
         return
-        
+
     def doProcessProxyQueueItem(self, item):
         try:
             if None == item.retValue[0] or self.workThread == item.retValue[0]:
@@ -418,7 +418,7 @@ class IPTVSubDownloaderWidget(Screen):
                 printDBG('>>>>>>>>>>>>>>> doProcessProxyQueueItem callback from old workThread[%r][%s]' % (self.workThread, item.retValue))
         except Exception:
             printExc()
-    
+
     def getCategoryPath(self):
         def _getCat(cat, num):
             if '' == cat:
@@ -436,18 +436,18 @@ class IPTVSubDownloaderWidget(Screen):
         prevNum = 0
         for cat in self.categoryList:
             if prevCat != cat:
-                str += _getCat(prevCat, prevNum) 
+                str += _getCat(prevCat, prevNum)
                 prevCat = cat
                 prevNum = 1
             else:
                 prevNum += 1
-        str += _getCat(prevCat, prevNum) 
+        str += _getCat(prevCat, prevNum)
         return str
-        
+
     def getRefreshedCurrList(self):
         currSelIndex = self["list"].getCurrentIndex()
         self.requestListFromHost('Refresh', currSelIndex)
-    
+
     def getInitialList(self):
         self.nexSelIndex = 0
         self.prevSelList = []
@@ -456,28 +456,28 @@ class IPTVSubDownloaderWidget(Screen):
         self.currItem = CDisplayListItem()
         self["headertext"].setText(self.getCategoryPath())
         self.requestListFromHost('Initial')
-        
+
     def requestListFromHost(self, type, currSelIndex=-1, privateData=''):
-        
+
         if not self.isInWorkThread():
             self["list"].hide()
-            
+
             if type not in ['ForDownloadSubFile']:
                 #hide bottom panel
                 self["console"].setText('')
-                
+
             if type in ['ForItem', 'Initial']:
                 self.prevSelList.append(self.currSelIndex)
-                self.categoryList.append(self.currItem.name) 
+                self.categoryList.append(self.currItem.name)
                 #new list, so select first index
                 self.nextSelIndex = 0
-            
+
             selItem = None
             if currSelIndex > -1 and len(self.currList) > currSelIndex:
                 selItem = self.currList[currSelIndex]
                 if selItem.itemIdx > -1 and len(self.currList) > selItem.itemIdx:
                     currSelIndex = selItem.itemIdx
-            
+
             dots = ""#_("...............")
             IDS_DOWNLOADING = _("Downloading") + dots
             IDS_LOADING = _("Loading") + dots
@@ -508,19 +508,19 @@ class IPTVSubDownloaderWidget(Screen):
             except Exception:
                 printExc('The current host crashed')
     #end requestListFromHost(self, type, currSelIndex = -1, privateData = ''):
-    
+
     def callbackGetList(self, addParam, thread, ret):
         asynccall.gMainFunctionsQueueTab[1].addToQueue("reloadList", [thread, {'add_param': addParam, 'ret': ret}])
-        
+
     def downloadSubtitleFileCallback(self, addParam, thread, ret):
         asynccall.gMainFunctionsQueueTab[1].addToQueue("subtitleFileDownloaded", [thread, {'add_param': addParam, 'ret': ret}])
-        
+
     def subtitleFileDownloaded(self, params):
         printDBG("IPTVSubDownloaderWidget.subtitleFileDownloaded")
         self["statustext"].setText("")
         self["list"].show()
         ret = params['ret']
-        
+
         if ret.status != RetHost.OK or 1 != len(ret.value):
             disMessage = _('Download subtiles failed.') + '\n'
             if ret.message and ret.message != '':
@@ -536,16 +536,16 @@ class IPTVSubDownloaderWidget(Screen):
             message = _('Subtitles \"%s\" downloaded correctly.') % ret.path
             message += '\n' + _('Do you want to finish?')
             self.session.openWithCallback(self.askFinishCallback, MessageBox, text=message, type=MessageBox.TYPE_YESNO)
-        
+
     def askFinishCallback(self, ret):
         try:
-            if ret: 
+            if ret:
                 item = self.downloadedSubItems[-1]
                 track = {'title': item.name, 'lang': item.lang, 'path': item.path, 'id': item.imdbid}
                 self.close(track)
         except Exception:
             printExc()
-        
+
     def reloadList(self, params):
         printDBG("IPTVSubDownloaderWidget.reloadList")
         refresh = params['add_param'].get('refresh', 0)
@@ -554,13 +554,13 @@ class IPTVSubDownloaderWidget(Screen):
         printDBG("IPTVSubDownloaderWidget.reloadList refresh[%s], selIndex[%s]" % (refresh, selIndex))
         if 0 < refresh and 0 < selIndex:
             self.nextSelIndex = selIndex
-        
+
         if ret.status != RetHost.OK:
             printDBG("++++++++++++++++++++++ reloadList ret.status = %s" % ret.status)
 
         self.currList = ret.value
         self["list"].setList([(x,) for x in self.currList])
-        
+
         self["headertext"].setText(self.getCategoryPath())
         if len(self.currList) <= 0:
             disMessage = _("No item to display. \nPress OK to refresh.\n")
@@ -570,7 +570,7 @@ class IPTVSubDownloaderWidget(Screen):
             if lastErrorMsg != '':
                 disMessage += "\n" + _('Last error: "%s"') % lastErrorMsg
             disMessage += '\n\n' + _('Simplify the title and try again.')
-            
+
             self["statustext"].setText(disMessage)
             self["list"].hide()
         else:
@@ -580,11 +580,11 @@ class IPTVSubDownloaderWidget(Screen):
             #else:
             #selection will not be change so manualy call
             self.changeBottomPanel()
-            
-            self["statustext"].setText("")            
+
+            self["statustext"].setText("")
             self["list"].show()
     #end reloadList(self, ret):
-    
+
     def listSubtitlesProviders(self):
         printDBG("IPTVSubDownloaderWidget.listSubtitlesProviders")
         subProvidersList = []
@@ -601,72 +601,72 @@ class IPTVSubDownloaderWidget(Screen):
         subtitlesgr = {'title': "Subtitles.gr", 'sub_provider': 'subtitlesgr'}
         prijevodi = {'title': "Prijevodi-Online.org", 'sub_provider': 'prijevodi'}
         subsro = {'title': "Subs.ro", 'sub_provider': 'subsro'}
-        
+
         defaultLang = GetDefaultLang()
-        
+
         if 'youtube_id' in self.params['url_params'] and '' != self.params['url_params']['youtube_id']:
             subProvidersList.append(youtube)
-            
+
         if 'popcornsubtitles_url' in self.params['url_params'] and '' != self.params['url_params']['popcornsubtitles_url']:
             subProvidersList.append(popcornsubtitles)
-            
-        if 'hr' == defaultLang: 
+
+        if 'hr' == defaultLang:
             subProvidersList.append(prijevodi)
-        
-        if 'el' == defaultLang: 
+
+        if 'el' == defaultLang:
             subProvidersList.append(subtitlesgr)
-        
-        if 'ro' == defaultLang: 
+
+        if 'ro' == defaultLang:
             subProvidersList.append(subsro)
-        
-        if 'pl' == defaultLang: 
+
+        if 'pl' == defaultLang:
             subProvidersList.append(napisy24pl)
             if IsSubtitlesParserExtensionCanBeUsed():
                 subProvidersList.append(napiprojektpl)
-        
+
         subProvidersList.append(openSubtitles2)
         subProvidersList.append(openSubtitles3)
         subProvidersList.append(openSubtitles)
         subProvidersList.append(podnapisinet)
         subProvidersList.append(titlovi)
         subProvidersList.append(subscene)
-        
-        if 'pl' != defaultLang: 
+
+        if 'pl' != defaultLang:
             subProvidersList.append(napisy24pl)
             if IsSubtitlesParserExtensionCanBeUsed():
                 subProvidersList.append(napiprojektpl)
-                
-        if 'el' != defaultLang: 
+
+        if 'el' != defaultLang:
             subProvidersList.append(subtitlesgr)
-        
-        if 'hr' != defaultLang: 
+
+        if 'hr' != defaultLang:
             subProvidersList.append(prijevodi)
-        
-        if 'ro' != defaultLang: 
+
+        if 'ro' != defaultLang:
             subProvidersList.append(subsro)
-        
+
         self.currList = []
         for item in subProvidersList:
             params = CDisplayListItem(item['title'], item.get('desc', ''), CDisplayListItem.TYPE_SUB_PROVIDER)
             params.privateData = {'sub_provider': item['sub_provider']}
             self.currList.append(params)
-            
+
         idx = 0
         selIndex = 0
         for idx in range(len(self.currList)):
             if self.hostName == self.currList[idx].privateData['sub_provider']:
                 selIndex = idx
                 break
-        
+
         self["list"].setList([(x,) for x in self.currList])
         #restor previus selection
         if len(self.currList) > selIndex:
             self["list"].moveToIndex(selIndex)
         self.changeBottomPanel()
         self["headertext"].setText(self.getCategoryPath())
-        self["statustext"].setText("")            
+        self["statustext"].setText("")
         self["list"].show()
-    
+
     def changeBottomPanel(self):
         selItem = self.getSelItem()
         if selItem and selItem.description != '':
@@ -676,20 +676,20 @@ class IPTVSubDownloaderWidget(Screen):
             self["console"].setText(sData)
         else:
             self["console"].setText(_('Searching subtitles for "%s"') % self.params['movie_title'])
-    
+
     def onSelectionChanged(self):
         self.changeBottomPanel()
-        
+
     def isInWorkThread(self):
         return None != self.workThread and (not self.workThread.isFinished() or self.workThread.isAlive())
-    
+
     def getSelItem(self):
         currSelIndex = self["list"].getCurrentIndex()
         if len(self.currList) <= currSelIndex:
             printDBG("ERROR: getSelItem there is no item with index: %d, listOfItems.len: %d" % (currSelIndex, len(self.currList)))
             return None
         return self.currList[currSelIndex]
-    
+
     def hideWindow(self):
         self.visible = False
         self.hide()
@@ -697,12 +697,12 @@ class IPTVSubDownloaderWidget(Screen):
     def showWindow(self):
         self.visible = True
         self.show()
-        
+
     def discoverInfoFromTitle(self, movieTitle=None):
         dInfo = {'movie_title': None, 'season': None, 'episode': None}
         if movieTitle == None:
             movieTitle = self.params.get('movie_title', '')
-        
+
         # discovered information
         dInfo = {'movie_title': None, 'season': None, 'episode': None}
         dInfo['movie_title'] = CParsingHelper.getNormalizeStr(movieTitle)
@@ -717,4 +717,3 @@ class IPTVSubDownloaderWidget(Screen):
             except Exception:
                 pass
         return dInfo
-    

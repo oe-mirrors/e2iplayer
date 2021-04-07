@@ -83,5 +83,3 @@ class Trolldoll(Icedoll):
                 raise IntegrityCheckError('Trolldoll MIC Failure, bad key or modified data')
             plainText = plainText[:-self.micSize]  # trim off the integrity check
         return plainText
-
-

@@ -42,4 +42,3 @@ class Hash:
         return b2a_hex(self.digest())
 #   def hexdigest(self):       not supported yet
 #   def copy(self):            not supported yet ... may change
-

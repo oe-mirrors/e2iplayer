@@ -28,10 +28,10 @@ from Components.config import config, ConfigSelection, ConfigYesNo, ConfigText, 
 ###################################################
 # Config options for HOST
 ###################################################
-config.plugins.iptvplayer.laola1tv_defquality = ConfigSelection(default="1000000", choices=[("0", _("The worst")), ("500000", _("Low")), ("1000000", _("Mid")), ("1500000", _("High")), ("9000000", _("The best"))]) 
+config.plugins.iptvplayer.laola1tv_defquality = ConfigSelection(default="1000000", choices=[("0", _("The worst")), ("500000", _("Low")), ("1000000", _("Mid")), ("1500000", _("High")), ("9000000", _("The best"))])
 config.plugins.iptvplayer.laola1tv_onelink = ConfigYesNo(default=False)
-config.plugins.iptvplayer.laola1tv_portal = ConfigSelection(default="int", choices=[("at", "AT"), ("de", "DE"), ("int", "INT")]) 
-config.plugins.iptvplayer.laola1tv_language = ConfigSelection(default="en", choices=[("en", _("English")), ("de", _("Deutsch"))]) 
+config.plugins.iptvplayer.laola1tv_portal = ConfigSelection(default="int", choices=[("at", "AT"), ("de", "DE"), ("int", "INT")])
+config.plugins.iptvplayer.laola1tv_language = ConfigSelection(default="en", choices=[("en", _("English")), ("de", _("Deutsch"))])
 config.plugins.iptvplayer.laola1tv_myip1 = ConfigText(default="146.0.32.8", fixed_size=False)
 config.plugins.iptvplayer.laola1tv_myip2 = ConfigText(default="85.128.142.29", fixed_size=False)
 
@@ -55,15 +55,15 @@ def gettytul():
 class Laola1TV(CBaseHostClass):
     HTTP_HEADER = {'User-Agent': 'Mozilla/5.0 (iPad; U; CPU OS 3_2 like Mac OS X; en-us) AppleWebKit/531.21.10 (KHTML, like Gecko) Version/4.0.4 Mobile/7B334b Safari/531.21.10'}
     MAIN_URL = 'http://laola1.tv/'
-    
+
     #'http://www.laola1.tv/img/laola1_logo.png'
     MAIN_CAT_TAB = [{'category': 'search', 'title': _('Search'), 'search_item': True},
                     {'category': 'search_history', 'title': _('Search history')}]
-    
+
     def __init__(self):
         CBaseHostClass.__init__(self, {'history': 'Laola1TV', 'cookie': 'Laola1TV.cookie'})
         self.mainCache = {}
-        
+
     def _getFullUrl(self, url, baseUrl=None):
         if baseUrl == None:
             baseUrl = self.MAIN_URL
@@ -73,14 +73,14 @@ class Laola1TV(CBaseHostClass):
             if url.startswith('/'):
                 url = url[1:]
             url = baseUrl + url
-        
+
         if baseUrl.startswith('https://'):
             url = url.replace('https://', 'http://')
         return url
 
     def getPage(self, url, params={}, post_data=None):
         return self.cm.getPage(url, params, post_data)
-        
+
     def getMainUrl(self):
         return (self.MAIN_URL + '{language}-{portal}/').format(language=config.plugins.iptvplayer.laola1tv_language.value, portal=config.plugins.iptvplayer.laola1tv_portal.value)
 
@@ -94,38 +94,38 @@ class Laola1TV(CBaseHostClass):
                 type = item['category']
             if type == 'video':
                 self.addVideo(params)
-            else: 
+            else:
                 self.addDir(params)
-                
+
     def listFromCache(self, cItem, key=None):
         if 'cache_key' in cItem:
             key = cItem['cache_key']
         printDBG('Laola1TV.listFromCache key[%s]' % key)
-        
+
         tab = self.mainCache.get(key, [])
         for item in tab:
             params = dict(cItem)
             params.update(item)
             self.addDir(params)
-            
+
     def listMainMenu(self, cItem):
         printDBG('Laola1TV.listMainMenu')
         sts, data = self.getPage(self.getMainUrl() + 'home/')
         if not sts:
             return
-        
+
         # live
         liveUrl = self.cm.ph.getSearchGroups(data, '<a href="([^"]+?)" class="live">')[0]
         liveTitle = self.cm.ph.getDataBeetwenMarkers(data, 'class="live">', '</a>', False)[1]
         params = dict(cItem)
         params.update({'category': 'calendar', 'title': self.cleanHtmlStr(liveTitle), 'url': self._getFullUrl(liveUrl)})
         self.addDir(params)
-        
+
         data = self.cm.ph.getDataBeetwenMarkers(data, '<ul class="level1">', '</div>', False)[1]
         data = data.split('<li class="active">')
         if len(data):
             del data[0]
-        
+
         def _getLastItems(data, baseItem):
             retTab = []
             data = data.split('</a>')
@@ -138,7 +138,7 @@ class Laola1TV(CBaseHostClass):
                 params.update({'url': self._getFullUrl(url), 'title': title})
                 retTab.append(params)
             return retTab
-                
+
         self.mainCache = {}
         self.mainCache['level_1'] = []
         for itemL1 in data:
@@ -150,7 +150,7 @@ class Laola1TV(CBaseHostClass):
                 titleL2 = self.cleanHtmlStr(dataL2[0])
                 cacheKey2 = 'level_2_%s' % titleL2
                 self.mainCache[cacheKey2] = []
-                            
+
                 del dataL2[0]
                 for itemL2 in dataL2:
                     if '<ul class="level3">' in itemL2:
@@ -172,19 +172,19 @@ class Laola1TV(CBaseHostClass):
                             self.mainCache[cacheKey2].append({'title': titleL3, 'category': 'list_cache_cat', 'cache_key': cacheKey3, 'level': '3'})
                             self.mainCache[cacheKey3] = subItems
                         self.mainCache['level_1'].append({'title': titleL2, 'category': 'list_cache_cat', 'cache_key': cacheKey2, 'level': '2'})
-        
+
         self.listFromCache(cItem, 'level_1')
-        
+
     def explorePage(self, cItem):
         printDBG("Laola1TV.explorePage")
         sts, data = self.getPage(cItem['url'])
         if not sts:
             return
-        
+
         m1 = '<div class="teaser-title'
         data = self.cm.ph.getDataBeetwenMarkers(data, m1, '</section>', False)[1]
         data = data.split(m1)
-        
+
         for item in data:
             tmp = item.split('<div class="teaser-list"')
             if 2 != len(tmp):
@@ -197,13 +197,13 @@ class Laola1TV(CBaseHostClass):
                 params = dict(cItem)
                 params.update({'category': 'videos_list', 'url': self._getFullUrl(url), 'title': self.cleanHtmlStr(title), 'icon': self._getFullUrl(icon), 'desc': self.cleanHtmlStr(desc)})
                 self.addDir(params)
-        
+
     def listCalendary(self, cItem):
         printDBG("Laola1TV.listCalendary")
         sts, data = self.getPage(cItem['url'])
         if not sts:
-            return 
-        
+            return
+
         data = self.cm.ph.getDataBeetwenReMarkers(data, re.compile('<ul class="list list-day day-[^"]+?" style="display:none;">'), re.compile('<ul class="list list-day day-[^"]+?" style="display:none;">'))[1]
         data = self.cm.ph.getAllItemsBeetwenMarkers(data, '<li class="item list-sport', '</li>')
         for item in data:
@@ -224,17 +224,17 @@ class Laola1TV(CBaseHostClass):
             url = url[1:]
         if page > 1:
             url += '/%s' % page
-        
+
         sts, data = self.getPage(url)
         if not sts:
-            return 
-        
+            return
+
         nextPage = self.cm.ph.getDataBeetwenMarkers(data, 'class="paging"', '<p>', False)[1]
         if ('/%s"' % (page + 1)) in nextPage:
             nextPage = True
         else:
             nextPage = False
-        
+
         data = self.cm.ph.getDataBeetwenMarkers(data, '<div class="teaser-list">', '</section>', False)[1]
         data = data.split('</a>')
         if len(data):
@@ -249,21 +249,21 @@ class Laola1TV(CBaseHostClass):
             if url != '':
                 params = {'category': 'videos_list', 'url': self._getFullUrl(url), 'title': self.cleanHtmlStr(title), 'icon': self._getFullUrl(icon), 'desc': self.cleanHtmlStr(desc)}
                 self.addVideo(params)
-        
+
         if nextPage:
             params = dict(cItem)
             params.update({'title': _("Next page"), 'page': page + 1})
             self.addDir(params)
-        
+
     def listSearchResult(self, cItem, searchPattern, searchType):
         printDBG("Laola1TV.listSearchResult cItem[%s], searchPattern[%s] searchType[%s]" % (cItem, searchPattern, searchType))
-        
-        # this looks strange but live attrib is returned for not live stream 
+
+        # this looks strange but live attrib is returned for not live stream
         # for me this is server bug
         searchLive = '1'
         if searchType == 'live':
             searchLive = ''
-        
+
         page = cItem.get('page', 1)
         url = 'http://search-api.laola1.at/?callback=ret&q=%s&p=%d&i=laola1tv-2015-int&include=[]&_=%s' % (urllib.parse.quote_plus(searchPattern), page, str(time.time()))
         sts, data = self.getPage(url)
@@ -272,14 +272,14 @@ class Laola1TV(CBaseHostClass):
         try:
             data = data.strip()[4:-2]
             data = byteify(json.loads(data))['result']
-            
+
             pagesize = int(self.cm.ph.getSearchGroups(data, 'pagesize="([0-9]+?)"')[0])
             total = int(self.cm.ph.getSearchGroups(data, 'total="([0-9]+?)"')[0])
             data = self.cm.ph.getAllItemsBeetwenMarkers(data, '<result id=', '</result>')
-            
+
             def _getText(data, name):
                 return self.cm.ph.getDataBeetwenMarkers(data, '<%s>' % name, '</%s>' % name, False)[1]
-            
+
             for item in data:
                 def _getText(name):
                     return self.cm.ph.getDataBeetwenMarkers(item, '<%s>' % name, '</%s>' % name, False)[1]
@@ -292,19 +292,19 @@ class Laola1TV(CBaseHostClass):
                 text = self.cleanHtmlStr(_getText('text'))
                 rubric = self.cleanHtmlStr(_getText('rubric'))
                 datetime = self.cleanHtmlStr(_getText('datetime'))
-                
+
                 desc = ' \n'.join([datetime, rubric, text])
                 params = dict(cItem)
                 params.update({'title': title, 'url': url, 'desc': desc, 'icon': icon})
                 self.addVideo(params)
-            
+
             if (page * pagesize) < total:
                 params = dict(cItem)
                 params.update({'title': _("Next page"), 'page': page + 1})
-                self.addDir(params) 
+                self.addDir(params)
         except Exception:
             printExc()
-        
+
     def getLinksForVideo(self, cItem):
         printDBG("Laola1TV.getLinksForVideo [%s]" % cItem)
         urlTab = []
@@ -327,11 +327,11 @@ class Laola1TV(CBaseHostClass):
             vidUrl = 'http:' + vidUrl
         vidUrl += '?' + urllib.parse.urlencode(getParams)
         vidUrl = self._getFullUrl(vidUrl, baseUrl)
-        
+
         sts, data = self.getPage(vidUrl)
         if not sts:
             return []
-        
+
         try:
             data = byteify(json.loads(data))
             url = data['video']['streamAccess']
@@ -354,7 +354,7 @@ class Laola1TV(CBaseHostClass):
                 streamaccessTab.append(item)
         except Exception:
             printExc()
-        
+
         comment = ''
         for streamaccess in streamaccessTab:
             for myip in ['', config.plugins.iptvplayer.laola1tv_myip1.value, config.plugins.iptvplayer.laola1tv_myip2.value]:
@@ -373,10 +373,10 @@ class Laola1TV(CBaseHostClass):
                     continue
                 url = self.cm.ph.getSearchGroups(data, 'url="([^"]+?)"')[0]
                 url = url + '?hdnea=' + auth
-                
+
                 if myip != '':
                     url = strwithmeta(url, {'X-Forwarded-For': myip})
-                
+
                 COOKIE_FILE = GetCookieDir('m3u8_laola1.tv')
                 rm(COOKIE_FILE)
                 cookieParams = {'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': COOKIE_FILE}
@@ -390,7 +390,7 @@ class Laola1TV(CBaseHostClass):
                 break
             if 0 < len(urlTab):
                 break
-            
+
         if 0 < len(urlTab):
             max_bitrate = int(config.plugins.iptvplayer.laola1tv_defquality.value)
 
@@ -403,36 +403,36 @@ class Laola1TV(CBaseHostClass):
                     return 0
             urlTab = CSelOneLink(urlTab, __getLinkQuality, max_bitrate).getSortedLinks()
             if config.plugins.iptvplayer.laola1tv_onelink.value:
-                urlTab = [urlTab[0]] 
+                urlTab = [urlTab[0]]
         else:
             SetIPTVPlayerLastHostError(comment)
-                
+
         return urlTab
-    
+
     def getVideoLinks(self, baseUrl):
         printDBG("Movie4kTO.getVideoLinks [%s]" % baseUrl)
         urlTab = []
-        if '' != baseUrl: 
+        if '' != baseUrl:
             videoUrl = baseUrl
             urlTab = self.up.getVideoLinkExt(videoUrl)
         return urlTab
-        
+
     def getFavouriteData(self, cItem):
         return cItem['url']
-        
+
     def getLinksForFavourite(self, fav_data):
         return self.getLinksForVideo({'url': fav_data})
 
     def handleService(self, index, refresh=0, searchPattern='', searchType=''):
         printDBG('handleService start')
-        
+
         CBaseHostClass.handleService(self, index, refresh, searchPattern, searchType)
 
         name = self.currItem.get("name", '')
         category = self.currItem.get("category", '')
         printDBG("handleService: |||||||||||||||||||||||||||||||||||| name[%s], category[%s] " % (name, category))
         self.currList = []
-        
+
     #MAIN MENU
         if name == None:
             self.listMainMenu({'name': 'category'})
@@ -443,19 +443,19 @@ class Laola1TV(CBaseHostClass):
             self.explorePage(self.currItem)
         elif category == 'videos_list':
             self.listVideos(self.currItem)
-        elif category == 'calendar':    
+        elif category == 'calendar':
             self.listCalendary(self.currItem)
     #SEARCH
         elif category in ["search", "search_next_page"]:
             cItem = dict(self.currItem)
-            cItem.update({'search_item': False, 'name': 'category'}) 
+            cItem.update({'search_item': False, 'name': 'category'})
             self.listSearchResult(cItem, searchPattern, searchType)
     #HISTORIA SEARCH
         elif category == "search_history":
             self.listsHistory({'name': 'history', 'category': 'search'}, 'desc', _("Type: "))
         else:
             printExc()
-        
+
         CBaseHostClass.endHandleService(self, index, refresh)
 
 
@@ -466,20 +466,20 @@ class IPTVHost(CHostBase):
 
     def getLogoPath(self):
         return RetHost(RetHost.OK, value=[GetLogoDir('laola1tvlogo.png')])
-    
+
     def getLinksForVideo(self, Index=0, selItem=None):
         retCode = RetHost.ERROR
         retlist = []
         if not self.isValidIndex(Index):
             return RetHost(retCode, value=retlist)
-        
+
         urlList = self.host.getLinksForVideo(self.host.currList[Index])
         for item in urlList:
             retlist.append(CUrlItem(item["name"], item["url"], item["need_resolve"]))
 
         return RetHost(RetHost.OK, value=retlist)
     # end getLinksForVideo
-    
+
     def getResolvedURL(self, url):
         # resolve url to get direct url to video file
         retlist = []
@@ -489,13 +489,13 @@ class IPTVHost(CHostBase):
             retlist.append(CUrlItem(item["name"], item["url"], need_resolve))
 
         return RetHost(RetHost.OK, value=retlist)
-    
+
     def converItem(self, cItem):
         hostList = []
         searchTypesOptions = [] # ustawione alfabetycznie
         searchTypesOptions.append((_("Live-streams"), "live"))
         searchTypesOptions.append((_("Videos"), "videos"))
-    
+
         hostLinks = []
         type = CDisplayListItem.TYPE_UNKNOWN
         possibleTypesOfSearch = None
@@ -512,16 +512,16 @@ class IPTVHost(CHostBase):
             type = CDisplayListItem.TYPE_MORE
         elif 'audio' == cItem['type']:
             type = CDisplayListItem.TYPE_AUDIO
-            
+
         if type in [CDisplayListItem.TYPE_AUDIO, CDisplayListItem.TYPE_VIDEO]:
             url = cItem.get('url', '')
             if '' != url:
                 hostLinks.append(CUrlItem("Link", url, 1))
-            
+
         title = cItem.get('title', '')
         description = cItem.get('desc', '')
         icon = cItem.get('icon', '')
-        
+
         return CDisplayListItem(name=title,
                                     description=description,
                                     type=type,

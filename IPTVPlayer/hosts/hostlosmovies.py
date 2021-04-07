@@ -45,11 +45,11 @@ def gettytul():
 
 
 class LosMovies(CBaseHostClass):
- 
+
     def __init__(self):
         CBaseHostClass.__init__(self, {'history': 'LosMovies.tv', 'cookie': 'LosMovies.cookie'})
         self.defaultParams = {'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
-        
+
         self.DEFAULT_ICON_URL = 'https://superrepo.org/static/images/icons/original/xplugin.video.losmovies.png.pagespeed.ic.JtaWsQ6YWz.jpg'
         self.HEADER = self.cm.getDefaultHeader(browser='chrome')
         self.AJAX_HEADER = dict(self.HEADER)
@@ -58,24 +58,24 @@ class LosMovies(CBaseHostClass):
         self.cacheEpisodes = {}
         self.cacheLinks = {}
         self.defaultParams = {'header': self.HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
-        
+
         self.MAIN_CAT_TAB = [{'category': 'list_cats', 'mode': 'movie', 'title': 'Movies', 'url': self.getMainUrl()},
                              {'category': 'list_cats', 'mode': 'serie', 'title': 'TV Shows', 'url': self.getFullUrl('watch-popular-tv-shows')},
                              {'category': 'list_top_cats', 'mode': 'movie', 'title': 'Top Movie Lists', 'url': self.getFullUrl('top-movie-lists')},
-                             
+
                              {'category': 'search', 'title': _('Search'), 'search_item': True, },
-                             {'category': 'search_history', 'title': _('Search history'), } 
+                             {'category': 'search_history', 'title': _('Search history'), }
                             ]
-                            
+
         self.MAIN_SUB_CATS_TAB = [{'category': 'list_abc', 'title': 'Alphabetically', },
                                   {'category': 'list_categories', 'title': 'Genres', 'url': self.getFullUrl('movie-genres')},
                                   {'category': 'list_categories', 'title': 'Countries', 'url': self.getFullUrl('countries')},
                                  ]
-        
+
     def getPage(self, baseUrl, addParams={}, post_data=None):
         if addParams == {}:
             addParams = dict(self.defaultParams)
-        
+
         proxy = config.plugins.iptvplayer.losmovies_proxy.value
         printDBG(">> " + proxy)
         if proxy != 'None':
@@ -85,24 +85,24 @@ class LosMovies(CBaseHostClass):
                 proxy = config.plugins.iptvplayer.alternative_proxy2.value
             addParams = dict(addParams)
             addParams.update({'http_proxy': proxy})
-            
+
         def _getFullUrl(url):
             if self.cm.isValidUrl(url):
                 return url
             else:
                 return urllib.parse.urljoin(baseUrl, url)
-                
+
         addParams['cloudflare_params'] = {'cookie_file': self.COOKIE_FILE, 'User-Agent': self.HEADER['User-Agent']}
         return self.cm.getPageCFProtection(baseUrl, addParams, post_data)
-        
+
     def listCats(self, cItem, nextCategory):
         printDBG("LosMovies.listCats")
-        
+
         sts, data = self.getPage(cItem['url'])
         if not sts:
             return
         self.setMainUrl(self.cm.meta['url'])
-        
+
         data = self.cm.ph.getDataBeetwenMarkers(data, '<div class="btn-group">', '</div>')[1]
         data = self.cm.ph.getAllItemsBeetwenMarkers(data, '<a', '</a>', withMarkers=True)
         for item in data:
@@ -110,30 +110,30 @@ class LosMovies(CBaseHostClass):
             title = self.cleanHtmlStr(item)
             params = {'category': nextCategory, 'title': title, 'url': url}
             self.addDir(params)
-            
+
         params = dict(cItem)
         self.listsTab(self.MAIN_SUB_CATS_TAB, params)
-        
+
     def listABC(self, cItem, nextCategory):
         printDBG("LosMovies.listABC")
         for letter in "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ":
             params = dict(cItem)
             params.update({'category': nextCategory, 'title': letter, 'letter': letter})
             self.addDir(params)
-            
+
     def listCategories(self, cItem, nextCategory):
         printDBG("LosMovies.listCategories")
-        
+
         if cItem['mode'] == 'movie':
             marker = 'movies'
         else:
             marker = 'shows'
-        
+
         sts, data = self.getPage(cItem['url'])
         if not sts:
             return
         self.setMainUrl(self.cm.meta['url'])
-        
+
         data = self.cm.ph.getDataBeetwenMarkers(data, '<h1 class="centerHeader">', '<footer>')[1]
         data = data.split('showEntityTeaser ')
         if len(data):
@@ -145,13 +145,13 @@ class LosMovies(CBaseHostClass):
             params = dict(cItem)
             params.update({'category': nextCategory, 'title': title, 'url': url, 'icon': icon})
             self.addDir(params)
-        
+
     def listItems(self, cItem, nextCategory=None):
         printDBG("LosMovies.listItems")
         url = cItem['url']
         page = cItem.get('page', 1)
         letter = cItem.get('letter', '')
-        
+
         getParams = []
         if page > 1:
             getParams.append("page=%d" % page)
@@ -162,23 +162,23 @@ class LosMovies(CBaseHostClass):
             url += '&' + getParams
         else:
             url += '?' + getParams
-        
+
         sts, data = self.getPage(url)
         if not sts:
             return
         self.setMainUrl(self.cm.meta['url'])
-        
+
         nextPage = self.cm.ph.getDataBeetwenMarkers(data, 'pagination', '</div>', False)[1]
         if '' != self.cm.ph.getSearchGroups(nextPage, 'page=(%s)[^0-9]' % (page + 1))[0]:
             nextPage = True
         else:
             nextPage = False
-        
+
         if cItem['category'] in ['list_items', 'search', 'search_next_page']:
             marker = 'movie'
         else:
             marker = 'rubric'
-        
+
         data = self.cm.ph.getAllItemsBeetwenMarkers(data, '<div id="' + marker, '</h4>', withMarkers=True)
         for item in data:
             url = self.getFullUrl(self.cm.ph.getSearchGroups(item, 'href="([^"]+?)"')[0])
@@ -191,7 +191,7 @@ class LosMovies(CBaseHostClass):
                 title = self.cleanHtmlStr(self.cm.ph.getSearchGroups(item, 'title="([^"]+?)"')[0])
             if title == '':
                 title = self.cleanHtmlStr(self.cm.ph.getSearchGroups(item, 'alt="([^"]+?)"')[0])
-            
+
             params = {'good_for_fav': True, 'title': title, 'url': url, 'desc': desc, 'info_url': url, 'icon': icon}
             if 'class="movieTV"' not in item and '/movie-list/' not in item:
                 self.addVideo(params)
@@ -200,22 +200,22 @@ class LosMovies(CBaseHostClass):
                 params2 = dict(cItem)
                 params2.update(params)
                 self.addDir(params2)
-        
+
         if nextPage and len(self.currList) > 0:
             params = dict(cItem)
             params.update({'title': _("Next page"), 'page': page + 1})
             self.addDir(params)
-            
+
     def listSeasons(self, cItem, nextCategory='list_episodes'):
         printDBG("LosMovies.listSeasons")
-        
+
         self.cacheEpisodes = {}
-        
+
         sts, data = self.getPage(cItem['url'])
         if not sts:
             return
         self.setMainUrl(self.cm.meta['url'])
-        
+
         seasonsTitlesTab = {}
         seasonsData = self.cm.ph.getDataBeetwenMarkers(data, '<div id="seasons">', '</ul>')[1]
         seasonsData = self.cm.ph.getAllItemsBeetwenMarkers(seasonsData, '<a ', '</a>', withMarkers=True)
@@ -223,7 +223,7 @@ class LosMovies(CBaseHostClass):
             seasonTitle = self.cleanHtmlStr(item)
             seasonKey = self.cm.ph.getSearchGroups(item, '''href=['"]#tabs\-([^'^"]+?)['"]''')[0]
             seasonsTitlesTab[seasonKey] = seasonTitle
-        
+
         marker = '<div id="tabs-'
         data = self.cm.ph.getDataBeetwenMarkers(data, marker, '<div class="adsPlaceHolder', False)[1]
         data = data.split(marker)
@@ -244,13 +244,13 @@ class LosMovies(CBaseHostClass):
                 params = dict(cItem)
                 params.update({'good_for_fav': False, 'category': nextCategory, 'title': sTitle, 's_key': seasonKey})
                 self.addDir(params)
-    
+
     def listEpisodes(self, cItem):
         printDBG("LosMovies.listEpisodes")
-        
+
         sKey = cItem.get('s_key', '')
         tab = self.cacheEpisodes.get(sKey, [])
-        
+
         params = dict(cItem)
         self.listsTab(tab, params, 'video')
 
@@ -259,23 +259,23 @@ class LosMovies(CBaseHostClass):
         cItem = dict(cItem)
         cItem['url'] = self.getFullUrl('search?type=movies&q=') + urllib.parse.quote_plus(searchPattern)
         self.listItems(cItem, 'list_seasons')
-        
+
     def getLinksForVideo(self, cItem, eItem=None):
         printDBG("LosMovies.getLinksForVideo [%s]" % cItem)
         urlTab = []
-        
+
         if eItem == None:
             urlTab = self.cacheLinks.get(cItem['url'], [])
             if len(urlTab):
                 return urlTab
-            
+
             url = cItem['url']
             sts, data = self.getPage(url, self.defaultParams)
             if not sts:
                 return urlTab
         else:
             data = eItem
-        
+
         linksData = self.cm.ph.getAllItemsBeetwenMarkers(data, '<tr class="linkTr"', '</tr>', True)
         for item in linksData:
             url = self.cm.ph.getDataBeetwenReMarkers(item, re.compile('<td[^>]+?linkHiddenUrl[^>]+?>'), re.compile('</td>'), False)[1].strip()
@@ -296,11 +296,11 @@ class LosMovies(CBaseHostClass):
                 nameTab.append(nItem)
             name = ' | '.join(nameTab)
             urlTab.append({'name': name, 'url': url, 'need_resolve': 1})
-        
+
         if eItem == None:
             self.cacheLinks[cItem['url']] = urlTab
         return urlTab
-        
+
     def unSecure(self, data):
         data = self.cm.ph.getSearchGroups(data, r'''=['"]([A-Za-z0-9+=\/]{40,})['"]''')[0]
         try:
@@ -325,11 +325,11 @@ class LosMovies(CBaseHostClass):
         except Exception:
             printExc()
         return None
-        
+
     def getVideoLinks(self, videoUrl):
         printDBG("LosMovies.getVideoLinks [%s]" % videoUrl)
         urlTab = []
-        
+
         # mark requested link as used one
         if len(list(self.cacheLinks.keys())):
             for key in self.cacheLinks:
@@ -338,20 +338,20 @@ class LosMovies(CBaseHostClass):
                         if not self.cacheLinks[key][idx]['name'].startswith('*'):
                             self.cacheLinks[key][idx]['name'] = '*' + self.cacheLinks[key][idx]['name']
                         break
-        
+
         if not self.cm.isValidUrl(videoUrl):
             return []
-        
+
         tab = self.up.getVideoLinkExt(videoUrl)
         if len(tab):
             return tab
-        
+
         sts, data = self.getPage(videoUrl, self.defaultParams)
         if not sts:
             return []
-        
+
         printDBG(data)
-        
+
         if 'onlinemovietv' in self.up.getDomain(videoUrl) and 'You are being redirected' in data:
             cookie = self.unSecure(data)
             if cookie != None:
@@ -360,9 +360,9 @@ class LosMovies(CBaseHostClass):
                 sts, data = self.getPage(videoUrl, params)
                 if not sts:
                     return []
-        
+
         #printDBG(data)
-        
+
         subTracks = []
         tmp = self.cm.ph.getDataBeetwenMarkers(data, 'sources', ']')[1]
         if tmp != '':
@@ -373,19 +373,19 @@ class LosMovies(CBaseHostClass):
             tmp = self.cm.ph.getAllItemsBeetwenMarkers(data, '<source', '>', withMarkers=True)
             urlAttrName = 'src'
             sp = '='
-        
+
         for item in tmp:
             url = self.cm.ph.getSearchGroups(item.replace('\\/', '/'), r'''['"]?{0}['"]?\s*{1}\s*['"](https?://[^"^']+)['"]'''.format(urlAttrName, sp))[0]
             if not self.cm.isValidUrl(url):
                 continue
             name = self.cm.ph.getSearchGroups(item, r'''['"]?label['"]?\s*{0}\s*['"]?([^"^'^,]+)[,'"]'''.format(sp))[0]
-            
+
             printDBG('---------------------------')
             printDBG('url:  ' + url)
             printDBG('name: ' + name)
             printDBG('+++++++++++++++++++++++++++')
             printDBG(item)
-            
+
             if 'mp4' in item:
                 url = strwithmeta(self.cm.getFullUrl(url, self.cm.meta['url']), {'User-Agent': self.HEADER['User-Agent'], 'Referer': self.cm.meta['url']})
                 urlTab.append({'name': name, 'url': url})
@@ -394,37 +394,37 @@ class LosMovies(CBaseHostClass):
                 if format in ['srt', 'vtt']:
                     url = strwithmeta(self.cm.getFullUrl(url, self.cm.meta['url']), {'User-Agent': self.HEADER['User-Agent'], 'Referer': self.cm.meta['url']})
                     subTracks.append({'title': name, 'url': url, 'lang': name, 'format': format})
-            
+
         printDBG(subTracks)
         if len(subTracks):
             for idx in range(len(urlTab)):
                 urlTab[idx]['url'] = strwithmeta(urlTab[idx]['url'], {'external_sub_tracks': subTracks})
-        
+
         return urlTab
-        
+
     def getArticleContent(self, cItem):
         printDBG("LosMovies.getArticleContent [%s]" % cItem)
         retTab = []
-        
+
         sts, data = self.getPage(cItem.get('url', ''))
         if not sts:
             return retTab
-        
+
         title = self.cleanHtmlStr(self.cm.ph.getSearchGroups(data, '<meta property="og:title"[^>]+?content="([^"]+?)"')[0])
         desc = self.cleanHtmlStr(self.cm.ph.getDataBeetwenReMarkers(data, re.compile('showRowDescription[^>]+?>'), re.compile('</div>'), False)[1])
-        
-        icon = self.cm.ph.getDataBeetwenMarkers(data, 'showRowImage">', '</div>')[1] 
+
+        icon = self.cm.ph.getDataBeetwenMarkers(data, 'showRowImage">', '</div>')[1]
         icon = self.getFullUrl(self.cm.ph.getSearchGroups(icon, 'src="([^"]+?)"')[0])
-        
+
         self.getFullUrl(self.cm.ph.getSearchGroups(data, '<meta property="og:image"[^>]+?content="([^"]+?)"')[0])
-        
+
         if title == '':
             title = cItem['title']
         if desc == '':
             title = cItem['desc']
         if icon == '':
             title = cItem['icon']
-        
+
         descKeys = [('ImdbRating', 'rated'),
                     ('Actors', 'actors'),
                     ('Directors', 'director'),
@@ -433,7 +433,7 @@ class LosMovies(CBaseHostClass):
                     ('Categories', 'genre'),
                     ('Duration', 'duration'),
                     ('Budget', 'budget')]
-        
+
         otherInfo = {}
         for item in descKeys:
             val = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(data, 'showValue%s">' % item[0], '</div>', False)[1])
@@ -442,14 +442,14 @@ class LosMovies(CBaseHostClass):
                     otherInfo[item[1]] = val.replace(' , ', ', ')
                 except Exception:
                     continue
-        
+
         return [{'title': self.cleanHtmlStr(title), 'text': self.cleanHtmlStr(desc), 'images': [{'title': '', 'url': self.getFullUrl(icon)}], 'other_info': otherInfo}]
-    
+
     def getFavouriteData(self, cItem):
         printDBG('LosMovies.getFavouriteData')
         params = {'type': cItem['type'], 'category': cItem.get('category', ''), 'title': cItem['title'], 'url': cItem['url'], 'desc': cItem['desc'], 'icon': cItem['icon']}
-        return json.dumps(params) 
-        
+        return json.dumps(params)
+
     def getLinksForFavourite(self, fav_data):
         printDBG('LosMovies.getLinksForFavourite')
         if self.MAIN_URL == None:
@@ -461,31 +461,31 @@ class LosMovies(CBaseHostClass):
         except Exception:
             printExc()
         return links
-        
+
     def setInitListFromFavouriteItem(self, fav_data):
         printDBG('LosMovies.setInitListFromFavouriteItem')
         if self.MAIN_URL == None:
             self.selectDomain()
         try:
             params = byteify(json.loads(fav_data))
-        except Exception: 
+        except Exception:
             params = {}
             printExc()
         self.addDir(params)
         return True
-        
+
     def handleService(self, index, refresh=0, searchPattern='', searchType=''):
         printDBG('handleService start')
-        
+
         CBaseHostClass.handleService(self, index, refresh, searchPattern, searchType)
 
         name = self.currItem.get("name", '')
         category = self.currItem.get("category", '')
         mode = self.currItem.get("mode", '')
-        
+
         printDBG("handleService: |||||||||||||||||||||||||||||||||||| name[%s], category[%s] " % (name, category))
         self.currList = []
-        
+
     #MAIN MENU
         if name == None:
             self.cacheLinks = {}
@@ -507,14 +507,14 @@ class LosMovies(CBaseHostClass):
     #SEARCH
         elif category in ["search", "search_next_page"]:
             cItem = dict(self.currItem)
-            cItem.update({'search_item': False, 'name': 'category'}) 
+            cItem.update({'search_item': False, 'name': 'category'})
             self.listSearchResult(cItem, searchPattern, searchType)
     #HISTORIA SEARCH
         elif category == "search_history":
             self.listsHistory({'name': 'history', 'category': 'search'}, 'desc', _("Type: "))
         else:
             printExc()
-        
+
         CBaseHostClass.endHandleService(self, index, refresh)
 
 
@@ -522,9 +522,8 @@ class IPTVHost(CHostBase):
 
     def __init__(self):
         CHostBase.__init__(self, LosMovies(), True, [])
-    
+
     def withArticleContent(self, cItem):
         if cItem['type'] != 'video' and cItem['category'] != 'list_seasons':
             return False
         return True
-    

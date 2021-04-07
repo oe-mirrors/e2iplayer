@@ -19,7 +19,7 @@ from Components.config import config, ConfigSelection, getConfigListEntry
 # Config options for HOST
 ###################################################
 config.plugins.iptvplayer.TVN24httpType = ConfigSelection(default="http://", choices=[("http://", "http://"), ("https://", "https://")])
-   
+
 
 def GetConfigList():
     optionList = []
@@ -37,7 +37,7 @@ class Tvn24(CBaseHostClass):
     API_KEY = '70487a5562bef96d33225a1df16ec081'
     MAIN_URL = 'http://api.tvn24.pl'
     ITEMS_PER_PAGE = '20'
-    
+
     def __init__(self):
         CBaseHostClass.__init__(self, {'history': 'SeansikTV'})
 
@@ -75,7 +75,7 @@ class Tvn24(CBaseHostClass):
 
     def listsMainMenu(self):
         printDBG('listsMainMenu')
-        
+
         VIDEO_PLAYLIST = Tvn24.MAIN_URL + '/video/playlists/' + Tvn24.API_KEY
         MAIN_CATEGORIES = [
             {'name': 'category', 'title': 'Najnowsze', 'category': 'end_cat', 'url': Tvn24.MAIN_URL + '/articles/newest/' + Tvn24.API_KEY + '/20'},
@@ -97,7 +97,7 @@ class Tvn24(CBaseHostClass):
                 plot = self.getStr(item.get('description', ''))
                 icon = self.getStr(item.get('pht_url', ''))
                 videosNum = int(self.getStr(item.get('videos_count', '0'), '0'))
-                
+
                 if videosNum > 0:
                     videos = item.get('videos', [])
                     if len(videos) > 0:
@@ -105,7 +105,7 @@ class Tvn24(CBaseHostClass):
                         self.addDir(params)
         except Exception:
             printExc()
-            
+
     def listPlaylistVideos(self, videos):
         printDBG("listPlaylistVideos")
         try:
@@ -120,7 +120,7 @@ class Tvn24(CBaseHostClass):
                     self.addVideo(params)
         except Exception:
             printExc()
-            
+
     def listSubCategories(self, category, subCategiories):
         printDBG("listSubCategories")
         try:
@@ -133,7 +133,7 @@ class Tvn24(CBaseHostClass):
                     self.addDir(params)
         except Exception:
             printExc()
-            
+
     def listCategories(self, category, baseUrl, page):
         printDBG("listCategories category[%s] url[%s] page[%s]" % (category, baseUrl, page))
         url = baseUrl
@@ -182,7 +182,7 @@ class Tvn24(CBaseHostClass):
                 self.addDir(params)
         except Exception:
             printExc()
-            
+
     def listEndItems(self, parent_cat, baseUrl, page):
         printDBG("listEndItems parent_cat[%s] baseUrl[%s], page[%s]" % (parent_cat, baseUrl, page))
         url = baseUrl
@@ -199,19 +199,19 @@ class Tvn24(CBaseHostClass):
                 if int(data['pageCount']) > int(data['currentPageNumber']):
                     nextPage = str(int(page) + 1)
                 data = data['items']
-                
+
             for item in data:
                 url = ''
                 title = self.getStr(item.get('title', ''))
                 plot = self.getStr(item.get('lead', ''))
                 id = self.getStr(item.get('id', ''))
                 tar_id = self.getStr(item.get('tar_id', ''))
-                
+
                 # get icon
                 icon = self.getStr(item.get('pht_main_content_url', ''))
                 if '' == icon:
                     icon = self.getStr(item.get('pht_url', ''))
-                
+
                 # get data from related
                 item = item.get('related', None)
                 if None != item:
@@ -227,35 +227,35 @@ class Tvn24(CBaseHostClass):
                         if '' == icon:
                             icon = self.getStr(videoItem.get('still_url', ''))
                         url = self.getStr(videoItem.get('url', ''))
-                        
+
                 if url != '' or tar_id != '' or id != '':
                     params = {'title': title, 'url': url, 'icon': icon, 'plot': plot, 'tar_id': tar_id, 'id': id}
                     if '' != url:
                         self.addVideo(params)
                     else:
                         self.addArticle(params)
-                    
+
             if None != nextPage:
                 params = {'name': 'category', 'title': 'Następna strona', 'category': 'end_cat', 'parent_cat': parent_cat, 'url': baseUrl, 'page': nextPage}
                 self.addDir(params)
         except Exception:
             printExc()
-                
+
     def getHostingTable(self, idx):
         url = self.currList[idx].get('url', '')
         printDBG("getHostingTable idx[%d] = url[%s]" % (idx, url))
-            
+
         if url.startswith('http'):
             return [{'name': 'tvn24', 'url': self.converUrl(url)}]
         return []
-        
+
     def getArticleContent(self, idx):
         printDBG('getArticleContent idx[%s]' % idx)
         retList = []
         articleID = self.currList[idx].get('tar_id', '')
-        if '' == articleID: 
+        if '' == articleID:
             articleID = self.currList[idx].get('id', '')
-            
+
         if '' != articleID:
             try:
                 url = Tvn24.MAIN_URL + '/articles/' + Tvn24.API_KEY + '/%s,0,1,10' % articleID
@@ -270,12 +270,12 @@ class Tvn24(CBaseHostClass):
                 img_title = self.getStr(data.get('pht_title', ''), '')
                 img_author = self.getStr(data.get('pht_author', ''), '')
                 img_url = self.getStr(data.get('pht_url', ''), '')
-                
+
                 item['images'] = [{'title': img_title, 'author': img_author, 'url': img_url}]
                 retList.append(item)
             except Exception:
                 printExc()
-        
+
         return retList
 
     def handleService(self, index, refresh=0, searchPattern='', searchType=''):
@@ -292,7 +292,7 @@ class Tvn24(CBaseHostClass):
         plot = self.currItem.get("plot", '')
         printDBG("handleService: |||||||||||||||||||||||||||||||||||| name[%s], category[%s] " % (name, category))
         self.currList = []
-        
+
     #MAIN MENU
         if name == None:
             self.listsMainMenu()
@@ -313,7 +313,7 @@ class Tvn24(CBaseHostClass):
     #LIST SUB CATEGORIES
         elif category == "sub_categiories":
               self.listSubCategories(category, self.currItem.get("sub_categiories", []))
-              
+
 
 class IPTVHost(CHostBase):
 
@@ -328,7 +328,7 @@ class IPTVHost(CHostBase):
         if listLen < Index and listLen > 0:
             printDBG("ERROR getLinksForVideo - current list is to short len: %d, Index: %d" % (listLen, Index))
             return RetHost(RetHost.ERROR, value=[])
-        
+
         if self.host.currList[Index]["type"] != 'video':
             printDBG("ERROR getLinksForVideo - current item has wrong type")
             return RetHost(RetHost.ERROR, value=[])
@@ -341,17 +341,17 @@ class IPTVHost(CHostBase):
 
         return RetHost(RetHost.OK, value=retlist)
     # end getLinksForVideo
-    
+
     def getArticleContent(self, Index=0):
         listLen = len(self.host.currList)
         if listLen < Index and listLen > 0:
             printDBG("ERROR getArticleContent - current list is to short len: %d, Index: %d" % (listLen, Index))
             return RetHost(RetHost.ERROR, value=[])
-        
+
         if self.host.currList[Index]["type"] != 'article':
             printDBG("ERROR getArticleContent - current item has wrong type")
             return RetHost(RetHost.ERROR, value=[])
-        
+
         retlist = []
         hList = self.host.getArticleContent(Index)
         for item in hList:
@@ -359,7 +359,7 @@ class IPTVHost(CHostBase):
             text = clean_html(item.get('text', ''))
             images = item.get("images", [])
             retlist.append(ArticleContent(title=title, text=text, images=images))
-        
+
         return RetHost(RetHost.OK, value=retlist)
 
     def convertList(self, cList):
@@ -367,7 +367,7 @@ class IPTVHost(CHostBase):
         searchTypesOptions = [] # ustawione alfabetycznie
         #searchTypesOptions.append(("Seriale", "seriale"))
         searchTypesOptions.append(("Filmy", "filmy"))
-    
+
         for cItem in cList:
             hostLinks = []
             type = CDisplayListItem.TYPE_UNKNOWN
@@ -389,11 +389,11 @@ class IPTVHost(CHostBase):
                 url = cItem.get('url', '')
                 if '' != url:
                     hostLinks.append(CUrlItem("Link", url, 1))
-                
+
             title = clean_html(cItem.get('title', ''))
             description = clean_html(cItem.get('plot', ''))
             icon = cItem.get('icon', '')
-            
+
             hostItem = CDisplayListItem(name=title,
                                         description=description,
                                         type=type,
@@ -405,4 +405,3 @@ class IPTVHost(CHostBase):
 
         return hostList
     # end convertList
-

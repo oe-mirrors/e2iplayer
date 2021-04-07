@@ -14,7 +14,7 @@ from Plugins.Extensions.IPTVPlayer.libs import ph
 ###################################################
 
 ###################################################
-# E2 GUI COMMPONENTS 
+# E2 GUI COMMPONENTS
 ###################################################
 from Screens.MessageBox import MessageBox
 ###################################################
@@ -93,11 +93,9 @@ class BeinmatchApi(CBaseHostClass):
             return getDirectM3U8Playlist(url, checkContent=True, sortWithMaxBitrate=999999999)
         data = ph.find(data, ('<div', '>', 'video-container'), '</div>', flags=0)[1]
         url = self.getFullUrl(ph.search(data, ph.IFRAME)[1])
-        if 0 == self.up.checkHostSupport(url): 
+        if 0 == self.up.checkHostSupport(url):
             sts, data = self.getPage(url, self.http_params)
             if not sts:
                 return urlsTab
             url = self.getFullUrl(ph.search(data, ph.IFRAME)[1])
         return self.up.getVideoLinkExt(url)
-            
-            

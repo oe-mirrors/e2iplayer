@@ -24,7 +24,7 @@ from Components.config import config, ConfigText, getConfigListEntry
 ###################################################
 
 ###################################################
-# E2 GUI COMMPONENTS 
+# E2 GUI COMMPONENTS
 ###################################################
 from Screens.MessageBox import MessageBox
 ###################################################
@@ -46,7 +46,7 @@ def GetConfigList():
 
 def gettytul():
     return 'https://dixmax.com/'
-    
+
 
 class SuggestionsProvider:
     MAIN_URL = 'https://dixmax.com/'
@@ -67,7 +67,7 @@ class SuggestionsProvider:
             retList = []
             for item in json_loads(data)['result']['ficha']['fichas']:
                 retList.append(item['title'])
-            return retList 
+            return retList
         return None
 
 
@@ -101,7 +101,7 @@ class DixMax(CBaseHostClass):
         SuggestionsProvider.MAIN_URL = self.getMainUrl()
 
     def getFullIconUrl(self, url, baseUrl=None):
-        if url.startswith('/'): 
+        if url.startswith('/'):
             return 'https://image.tmdb.org/t/p/w185' + url
         return CBaseHostClass.getFullIconUrl(self, url, baseUrl)
 
@@ -229,7 +229,7 @@ class DixMax(CBaseHostClass):
             article = {'f_type': type, 'f_isserie': int(item['isSerie']), 'f_year': item['year'], 'f_duration': duration, 'f_rating': rating, 'f_country': item['country'], 'f_genres': item['genres'], 'f_sinopsis': item['sinopsis'], 'f_popularity': item['popularity']}
             if article['f_isserie']:
                 article.update({'f_seasons': item['seasons'], 'f_episodes': item['episodes']})
-            params = MergeDicts(cItem, {'good_for_fav': True, 'category': nextCategory, 'title': title, 'icon': icon, 'desc': desc, 'f_id': item['id']}, article) 
+            params = MergeDicts(cItem, {'good_for_fav': True, 'category': nextCategory, 'title': title, 'icon': icon, 'desc': desc, 'f_id': item['id']}, article)
             retList.append(params)
         return retList
 
@@ -318,7 +318,7 @@ class DixMax(CBaseHostClass):
                         desc = ' | '.join(desc) + '[/br]' + item['sinopsis']
 
                         params = {'f_type': type, 'f_isepisode': 1, 'f_date': item['dateText'], 'f_sinopsis': item['sinopsis'], 'f_season': sNum, 'f_episode': eNum}
-                        params = MergeDicts(cItem, {'good_for_fav': True, 'type': 'video', 'title': title, 'icon': icon, 'desc': desc, 'f_eid': item['id']}, params) 
+                        params = MergeDicts(cItem, {'good_for_fav': True, 'type': 'video', 'title': title, 'icon': icon, 'desc': desc, 'f_eid': item['id']}, params)
                         params.pop('f_seasons')
                         params.pop('f_episodes')
 
@@ -327,7 +327,7 @@ class DixMax(CBaseHostClass):
 
                     if len(subItems):
                         params = {'f_type': _('Season'), 'f_isseason': 1, 'f_season': sNum}
-                        params = MergeDicts(cItem, {'good_for_fav': False, 'category': nextCategory, 'sub_items': subItems, 'title': _('Season %s (%s)') % (sNum.zfill(2), sEpisodes), 'icon': sIcon}, params) 
+                        params = MergeDicts(cItem, {'good_for_fav': False, 'category': nextCategory, 'sub_items': subItems, 'title': _('Season %s (%s)') % (sNum.zfill(2), sEpisodes), 'icon': sIcon}, params)
                         self.addDir(params)
             except Exception:
                 printExc()
@@ -359,7 +359,7 @@ class DixMax(CBaseHostClass):
         printDBG("DixMax._getLinks [%s]" % cItem['f_id'])
 
         post_data = {'id': cItem['f_id']}
-        
+
         isSeries = cItem.get('f_isepisode') or cItem.get('f_isserie')
         if isSeries:
             post_data.update({'i': 'true', 't': cItem.get('f_season'), 'e': cItem.get('f_episode')})
@@ -387,7 +387,7 @@ class DixMax(CBaseHostClass):
         self.tryTologin()
 
         url = cItem.get('url', '')
-        if 0 != self.up.checkHostSupport(url): 
+        if 0 != self.up.checkHostSupport(url):
             return self.up.getVideoLinkExt(url)
 
         if 'f_isepisode' in cItem:
@@ -412,7 +412,7 @@ class DixMax(CBaseHostClass):
                         if not self.cacheLinks[key][idx]['name'].startswith('*'):
                             self.cacheLinks[key][idx]['name'] = '*' + self.cacheLinks[key][idx]['name']
 
-        if 0 != self.up.checkHostSupport(videoUrl): 
+        if 0 != self.up.checkHostSupport(videoUrl):
             return self.up.getVideoLinkExt(videoUrl)
 
         return []
@@ -437,12 +437,12 @@ class DixMax(CBaseHostClass):
             icon = cItem.get('icon', self.DEFAULT_ICON_URL)
         if desc == '':
             desc = cItem.get('desc', '')
-        
+
         return [{'title': self.cleanHtmlStr(title), 'text': self.cleanHtmlStr(desc), 'images': [{'title': '', 'url': self.getFullUrl(icon)}], 'other_info': otherInfo}]
-        
+
     def tryTologin(self):
         printDBG('tryTologin start')
-        
+
         if None == self.loggedIn or self.login != config.plugins.iptvplayer.dixmax_login.value or\
             self.password != config.plugins.iptvplayer.dixmax_password.value:
 
@@ -508,7 +508,7 @@ class DixMax(CBaseHostClass):
 
     def handleService(self, index, refresh=0, searchPattern='', searchType=''):
         printDBG('handleService start')
-        
+
         CBaseHostClass.handleService(self, index, refresh, searchPattern, searchType)
 
         name = self.currItem.get("name", '')
@@ -540,14 +540,14 @@ class DixMax(CBaseHostClass):
     #SEARCH
         elif category in ["search", "search_next_page"]:
             cItem = dict(self.currItem)
-            cItem.update({'search_item': False, 'name': 'category'}) 
+            cItem.update({'search_item': False, 'name': 'category'})
             self.listSearchResult(cItem, searchPattern, searchType)
     #HISTORIA SEARCH
         elif category == "search_history":
             self.listsHistory({'name': 'history', 'category': 'search'}, 'desc', _("Type: "))
         else:
             printExc()
-        
+
         CBaseHostClass.endHandleService(self, index, refresh)
 
     def getSuggestionsProvider(self, index):
@@ -559,7 +559,7 @@ class IPTVHost(CHostBase):
 
     def __init__(self):
         CHostBase.__init__(self, DixMax(), True, [])
-    
+
     def withArticleContent(self, cItem):
         if 'f_id' in cItem:
             return True

@@ -24,7 +24,7 @@ from Tools.BoundFunction import boundFunction
 
 
 class ConfigHostMenu(ConfigBaseWidget):
-   
+
     def __init__(self, session, hostName):
         printDBG("ConfigHostMenu.__init__ ")
         self.list = []
@@ -54,10 +54,10 @@ class ConfigHostMenu(ConfigBaseWidget):
                 self.runSetup()
         except Exception:
             pass
-        
+
 
 class ConfigHostsMenu(ConfigBaseWidget):
-   
+
     def __init__(self, session, listOfHostsNames):
         printDBG("ConfigHostsMenu.__init__ ")
         self.list = []
@@ -68,7 +68,7 @@ class ConfigHostsMenu(ConfigBaseWidget):
         ConfigBaseWidget.__init__(self, session)
         self.setup_title = _("Services configuration")
         self.__preparHostsConfigs(self.orgListOfHostsNames)
-        
+
         self.reorderingEnabled = False
         self.reorderingMode = False
 
@@ -88,24 +88,24 @@ class ConfigHostsMenu(ConfigBaseWidget):
 
     #def changeSubOptions(self):
     #    self.runSetup()
-        
+
     def isChanged(self):
         if self.orgListOfHostsNames != self.listOfHostsNames:
             return True
         return ConfigBaseWidget.isChanged(self)
-        
+
     def saveOrCancel(self, operation="save"):
         if "save" == operation:
             if self.orgListOfHostsNames != self.listOfHostsNames:
                 SaveHostsOrderList(self.listOfHostsNames)
         ConfigBaseWidget.saveOrCancel(self, operation)
-        
+
     def isOkActive(self):
         curIndex = self["config"].getCurrentIndex()
         if curIndex < len(self.hostsConfigsAvailableList):
             return self.hostsConfigsAvailableList[curIndex]
         return False
-        
+
     def setOKLabel(self):
         if self.reorderingEnabled:
             self["key_ok"].setText(_("OK"))
@@ -124,7 +124,7 @@ class ConfigHostsMenu(ConfigBaseWidget):
                 self.reorderingMode = False
             self.runSetup()
             return
-  
+
         curIndex = self["config"].getCurrentIndex()
         currItem = self["config"].list[curIndex][1]
         if curIndex < len(self.listOfHostsNames):
@@ -146,18 +146,18 @@ class ConfigHostsMenu(ConfigBaseWidget):
                     self.session.open(MessageBox, _("Service [%s] has no additional settings.") % hostName, type=MessageBox.TYPE_INFO, timeout=5)
         else:
             ConfigBaseWidget.keyOK(self)
-    
-    def keyMenu(self):     
+
+    def keyMenu(self):
         options = []
         if not self.reorderingEnabled:
             options.append((_("Enable reordering mode"), "REORDERING_ENABLED"))
         else:
             options.append((_("Disable reordering mode"), "REORDERING_DISABLED"))
         self.session.openWithCallback(self._changeMode, ChoiceBox, title=_("Select option"), list=options)
-    
+
     def _changeMode(self, ret):
         if ret:
-            if ret[1] == "REORDERING_ENABLED": 
+            if ret[1] == "REORDERING_ENABLED":
                 self.reorderingEnabled = True
             elif ret[1] == "REORDERING_DISABLED":
                 self.reorderingEnabled = False
@@ -166,7 +166,7 @@ class ConfigHostsMenu(ConfigBaseWidget):
                 self["config"].instance.setForegroundColorSelected(gRGB(0xFFFFFF))
                 self.runSetup()
             self.setOKLabel()
-        
+
     def _moveItem(self, curIndex):
         assert(len(self.list) == len(self.hostsConfigsAvailableList) == len(self.listOfHostsNames))
         newIndex = self["config"].getCurrentIndex()
@@ -176,7 +176,7 @@ class ConfigHostsMenu(ConfigBaseWidget):
             self.hostsConfigsAvailableList.insert(newIndex, self.hostsConfigsAvailableList.pop(curIndex))
             self.listOfHostsNames.insert(newIndex, self.listOfHostsNames.pop(curIndex))
             self.runSetup()
-            
+
     def keyUp(self):
         if self.reorderingMode:
             printDBG(">>>>>>>>>>>>>>>>>>> keyUp")
@@ -185,7 +185,7 @@ class ConfigHostsMenu(ConfigBaseWidget):
             self._moveItem(curIndex)
         else:
             ConfigBaseWidget.keyUp(self)
-        
+
     def keyDown(self):
         if self.reorderingMode:
             printDBG(">>>>>>>>>>>>>>>>>>> keyDown")
@@ -194,33 +194,33 @@ class ConfigHostsMenu(ConfigBaseWidget):
             self._moveItem(curIndex)
         else:
             ConfigBaseWidget.keyDown(self)
-            
+
     def keyPageUp(self):
         if not self.reorderingEnabled:
             ConfigBaseWidget.keyPageUp(self)
-    
+
     def keyPageDown(self):
         if not self.reorderingEnabled:
             ConfigBaseWidget.keyPageDown(self)
-    
+
     def keyLeft(self):
         if not self.reorderingEnabled:
             ConfigBaseWidget.keyLeft(self)
-        
+
     def keyRight(self):
         if not self.reorderingEnabled:
             ConfigBaseWidget.keyRight(self)
-            
+
     def changedEntry(self):
         if self["config"].getCurrent()[1] in self.privacePoliceWorningList and self["config"].getCurrent()[1].value:
             message = _('Using this host in your country can be illegal.\nDo you want to continue at your own risk?')
             self.session.openWithCallback(boundFunction(self.privatePoliceWorningCallback, self["config"].getCurrent()[1]), MessageBox, text=message, type=MessageBox.TYPE_YESNO)
-            
+
     def privatePoliceWorningCallback(self, configEntry=None, arg=None):
         if not arg:
             if configEntry != None:
                 configEntry.value = False
-        
+
     def __preparHostsConfigs(self, listOfHostsNames):
         '''
         prepar config entries for hosts Enabling/Disabling
@@ -231,7 +231,7 @@ class ConfigHostsMenu(ConfigBaseWidget):
         sortedList = list(listOfHostsNames)
         hostsAliases = GetHostsAliases()
         for hostName in sortedList:
-            try:    
+            try:
                 optionEntry = None
                 exec('optionEntry = config.plugins.iptvplayer.host' + hostName)
                 self.list.append(getConfigListEntry("%s" % hostsAliases.get('host' + hostName, hostName), optionEntry))

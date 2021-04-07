@@ -28,7 +28,7 @@ config.plugins.iptvplayer.sortuj = ConfigYesNo(default=True)
 
 
 def GetConfigList():
-    optionList = [] 
+    optionList = []
     optionList.append(getConfigListEntry(_('Text files ytlist and urllist are in:'), config.plugins.iptvplayer.Sciezkaurllist))
     optionList.append(getConfigListEntry(_('Sort the list:'), config.plugins.iptvplayer.sortuj))
     optionList.append(getConfigListEntry(_('Group links into categories: '), config.plugins.iptvplayer.grupujurllist))
@@ -48,7 +48,7 @@ class Urllist(CBaseHostClass):
     def __init__(self):
         printDBG("Urllist.__init__")
         path = config.plugins.iptvplayer.Sciezkaurllist.value + '/'
-        
+
         self.MAIN_GROUPED_TAB = [{'category': 'all', 'title': _("All in one"), 'desc': _("Links from all files without categories"), 'icon': 'https://mikeharwood.files.wordpress.com/2011/01/all-in-one-logo-on-blue.jpg'}]
         self.MAIN_GROUPED_TAB.extend([{'category': Urllist.URLLIST_FILE, 'title': _("Videos"), 'desc': _("Links from the file %s") % normpath(path + 'urllist.txt'), 'icon': 'https://st2.depositphotos.com/3000465/12281/v/950/depositphotos_122812390-stock-illustration-video-play-sign-with-letter.jpg'},
                                        {'category': Urllist.URRLIST_STREAMS, 'title': _("Live streams"), 'desc': _("Links from the file %s") % normpath(path + 'urllist.stream'), 'icon': 'http://asiamh.ru.images.1c-bitrix-cdn.ru/images/media_logo.jpg?136879146733721'},
@@ -69,20 +69,20 @@ class Urllist(CBaseHostClass):
 
     def listCategory(self, cItem, searchMode=False):
         printDBG("Urllist.listCategory cItem[%s]" % cItem)
-        
+
         sortList = config.plugins.iptvplayer.sortuj.value
         filespath = config.plugins.iptvplayer.Sciezkaurllist.value
         groupList = config.plugins.iptvplayer.grupujurllist.value
         if cItem['category'] in ['all', Urllist.URLLIST_FILE, Urllist.URRLIST_STREAMS, Urllist.URRLIST_USER]:
             self.currFileHost = IPTVFileHost()
-            
-            if cItem['category'] in ['all', Urllist.URLLIST_FILE]: 
+
+            if cItem['category'] in ['all', Urllist.URLLIST_FILE]:
                 self.currFileHost.addFile(filespath + Urllist.URLLIST_FILE, encoding='utf-8')
-            if cItem['category'] in ['all', Urllist.URRLIST_STREAMS]: 
+            if cItem['category'] in ['all', Urllist.URRLIST_STREAMS]:
                 self.currFileHost.addFile(filespath + Urllist.URRLIST_STREAMS, encoding='utf-8')
             if cItem['category'] in ['all', Urllist.URRLIST_USER]:
                 self.currFileHost.addFile(filespath + Urllist.URRLIST_USER, encoding='utf-8')
-            
+
             if 'all' != cItem['category'] and groupList:
                 tmpList = self.currFileHost.getGroups(sortList)
                 for item in tmpList:
@@ -112,15 +112,15 @@ class Urllist(CBaseHostClass):
                     desc = item['desc']
                 params = {'title': title, 'url': item['url'], 'desc': desc, 'icon': item.get('icon', '')}
                 self.addVideo(params)
-                
+
     def getLinksForVideo(self, cItem):
         printDBG("Urllist.getLinksForVideo url[%s]" % cItem['url'])
         videoUrls = []
         uri = urlparser.decorateParamsFromUrl(cItem['url'])
         protocol = uri.meta.get('iptv_proto', '')
-        
+
         printDBG("PROTOCOL [%s] " % protocol)
-        
+
         urlSupport = self.up.checkHostSupport(uri)
         if 1 == urlSupport:
             retTab = self.up.getVideoLinkExt(uri)
@@ -138,7 +138,7 @@ class Urllist(CBaseHostClass):
             else:
                 videoUrls.append({'name': 'direct link', 'url': uri})
         return videoUrls
-    
+
     def handleService(self, index, refresh=0, searchPattern='', searchType=''):
         printDBG('Urllist.handleService start')
         CBaseHostClass.handleService(self, index, refresh, searchPattern, searchType)
@@ -146,12 +146,12 @@ class Urllist(CBaseHostClass):
         category = self.currItem.get("category", '')
         printDBG("Urllist.handleService: ---------> name[%s], category[%s] " % (name, category))
         self.currList = []
-        
+
         if None == name:
             self.listsTab(self.MAIN_GROUPED_TAB, self.currItem)
         else:
             self.listCategory(self.currItem)
-        
+
         CBaseHostClass.endHandleService(self, index, refresh)
 
 
@@ -159,9 +159,9 @@ class IPTVHost(CHostBase):
 
     def __init__(self):
         CHostBase.__init__(self, Urllist(), True)
-        
+
     def _isPicture(self, url):
-        def _checkExtension(url): 
+        def _checkExtension(url):
             return url.endswith(".jpeg") or url.endswith(".jpg") or url.endswith(".png")
         if _checkExtension(url):
             return True
@@ -179,7 +179,7 @@ class IPTVHost(CHostBase):
         if listLen < Index and listLen > 0:
             printDBG("ERROR getLinksForVideo - current list is to short len: %d, Index: %d" % (listLen, Index))
             return RetHost(RetHost.ERROR, value=[])
-        
+
         if self.host.currList[Index]["type"] != 'video':
             printDBG("ERROR getLinksForVideo - current item has wrong type")
             return RetHost(RetHost.ERROR, value=[])
@@ -201,7 +201,7 @@ class IPTVHost(CHostBase):
         searchTypesOptions = [] # ustawione alfabetycznie
         #searchTypesOptions.append(("Filmy", "filmy"))
         #searchTypesOptions.append(("Seriale", "seriale"))
-    
+
         for cItem in cList:
             hostLinks = []
             type = CDisplayListItem.TYPE_UNKNOWN
@@ -222,11 +222,11 @@ class IPTVHost(CHostBase):
                     type = CDisplayListItem.TYPE_VIDEO
                 if '' != url:
                     hostLinks.append(CUrlItem("Link", url, 1))
-                
+
             title = cItem.get('title', '')
             description = ph.clean_html(cItem.get('desc', ''))
             icon = cItem.get('icon', '')
-            
+
             hostItem = CDisplayListItem(name=title,
                                         description=description,
                                         type=type,

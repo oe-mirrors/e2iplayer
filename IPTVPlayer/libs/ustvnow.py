@@ -23,7 +23,7 @@ from datetime import datetime, timedelta
 ############################################
 
 ###################################################
-# E2 GUI COMMPONENTS 
+# E2 GUI COMMPONENTS
 ###################################################
 from Plugins.Extensions.IPTVPlayer.components.asynccall import MainSessionWrapper
 from Screens.MessageBox import MessageBox
@@ -44,9 +44,9 @@ def GetConfigList():
     optionList.append(getConfigListEntry(_("Password") + ": ", config.plugins.iptvplayer.ustvnow_password))
     optionList.append(getConfigListEntry(_("List only channels with subscription") + ": ", config.plugins.iptvplayer.ustvnow_only_available))
     optionList.append(getConfigListEntry(_("Get EPG") + ": ", config.plugins.iptvplayer.ustvnow_epg))
-    
+
     return optionList
-    
+
 ###################################################
 
 
@@ -62,11 +62,11 @@ class UstvnowApi:
         self.cookiePath = GetCookieDir('ustvnow.cookie')
         self.token = ''
         self.passkey = ''
-        
+
         HTTP_HEADER = dict(self.HTTP_HEADER)
         HTTP_HEADER.update({'Content-Type': 'application/x-www-form-urlencoded'})
         self.defParams = {'header': HTTP_HEADER, 'cookiefile': self.cookiePath, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True}
-        
+
     def getFullUrl(self, url):
         if url.startswith('//'):
             return 'http:' + url
@@ -77,17 +77,17 @@ class UstvnowApi:
         if not self.MAIN_URL.startswith('https://'):
             url = url.replace('https://', 'http://')
         return url
-        
+
     def cleanHtmlStr(self, str):
         return CBaseHostClass.cleanHtmlStr(str)
-        
+
     def _getChannelsNames(self):
         printDBG("UstvnowApi._getChannelsNames")
         url = 'http://m.ustvnow.com/gtv/1/live/listchannels?%s' % urllib.parse.urlencode({'token': self.token})
         sts, data = self.cm.getPage(url)
         if not sts:
             return []
-        
+
         channelList = []
         try:
             data = json_loads(data)
@@ -103,16 +103,16 @@ class UstvnowApi:
                 params['lang'] = item['lang']
                 params['af'] = item['af']
                 channelList.append(params)
-                
+
             printDBG(channelList)
-                
+
         except Exception:
             printExc()
         return channelList
-    
+
     def getChannelsList(self, cItem):
         printDBG("UstvnowApi.getChannelsList")
-        
+
         login = config.plugins.iptvplayer.ustvnow_login.value
         passwd = config.plugins.iptvplayer.ustvnow_password.value
 
@@ -125,11 +125,11 @@ class UstvnowApi:
         else:
             self.sessionEx.open(MessageBox, _('You need to enter email and password in configuration.'), type=MessageBox.TYPE_INFO, timeout=10)
             return []
-            
+
         sts, data = self.cm.getPage(self.LIVE_URL, self.defParams)
         if not sts:
             return []
-        
+
         channelsNames = self._getChannelsNames()
         channelsTab = []
         data = self.cm.ph.getDataBeetwenMarkers(data, '<div data-role="content" data-theme="c">', '</ul>', False)[1]
@@ -143,7 +143,7 @@ class UstvnowApi:
             params = dict(cItem)
             params.pop('url')
             params.update({'priv_url': self.getFullUrl(url), 'ui_page': ui, 'icon': icon, 'desc': desc})
-            
+
             for nameItem in channelsNames:
                 if nameItem['img'] in icon:
                     if config.plugins.iptvplayer.ustvnow_only_available.value and 0 == nameItem['t']:
@@ -154,7 +154,7 @@ class UstvnowApi:
                     prgsvcidMap[params['prgsvcid']] = len(channelsTab)
                     channelsTab.append(params)
                     break
-        
+
         # calculate time difference from utcnow and the local system time reported by OS
         OFFSET = datetime.now() - datetime.utcnow()
         if config.plugins.iptvplayer.ustvnow_epg.value:
@@ -172,45 +172,45 @@ class UstvnowApi:
                             channelsTab[idx]['desc'] += '[/br][/br] [%s][/br]%s[/br]%s[/br]%s[/br]%s' % (utc_date.strftime('%Y-%m-%d %H:%M:%S'), item.get('title', ''), item.get('synopsis', ''), item.get('description', ''), item.get('episode_title', ''))
                 except Exception:
                     printExc()
-            
+
         return channelsTab
-        
+
     def doLogin(self, login, password):
         printDBG("UstvnowApi.doLogin")
         rm(self.cookiePath)
         token = ''
-        
+
         sts, data = self.cm.getPage(self.getFullUrl('iphone/1/live/settings'), self.defParams)
         if not sts:
             return token
-        
+
         printDBG("===")
         printDBG(data)
         printDBG("===")
-        
+
         url = self.getFullUrl(self.cm.ph.getSearchGroups(data, '''action=['"]([^'^"]+?)['"]''')[0])
         if not self.cm.isValidUrl(url):
             return token
-        
+
         post_data = {'username': login, 'password': password, 'device': 'iphone'}
         sts, data = self.cm.getPage(url, self.defParams, post_data)
         if sts:
             token = self.cm.getCookieItem(self.cookiePath, 'token')
         return token
-        
+
     def getPasskey(self):
 
         url = 'http://m.ustvnow.com/gtv/1/live/viewdvrlist?%s' % urllib.parse.urlencode({'token': self.token})
         sts, data = self.cm.getPage(url)
         if not sts:
             return ''
-        
+
         try:
             data = json_loads(data)
             return data['globalparams']['passkey']
         except Exception:
             return ''
-        
+
     def getVideoLink(self, cItem):
         printDBG("UstvnowApi.getVideoLink %s" % cItem)
         urlsTab = []
@@ -220,13 +220,13 @@ class UstvnowApi:
         if sts:
             try:
                 data = json_loads(data)
-                
+
                 tmp = getDirectM3U8Playlist(strwithmeta(data['stream'], {'User-Agent': self.HTTP_HEADER['User-Agent']}), cookieParams=cookieParams, checkContent=True)
                 cookieValue = self.cm.getCookieHeader(self.cookiePath)
-                
+
                 for item in tmp:
                     vidUrl = item['url']
-                    
+
                     item['url'] = urlparser.decorateUrl(vidUrl, {'User-Agent': self.HTTP_HEADER['User-Agent'], 'Cookie': cookieValue})
                     urlsTab.append(item)
                 if len(urlsTab):
@@ -237,22 +237,22 @@ class UstvnowApi:
         sts, data = self.cm.getPage(self.LIVE_URL, self.defParams)
         if not sts:
             return []
-        
+
         url = self.cm.ph.getSearchGroups(data, 'for="popup-%s"[^>]*?href="([^"]+?)"[^>]*?>' % cItem['ui_page'])[0]
         url = self.getFullUrl(url)
-        
+
         sts, data = self.cm.getPage(url, self.defParams)
         if not sts:
             return []
-        
+
         url = self.cm.ph.getSearchGroups(data, 'src="([^"]+?)"')[0]
         tmp = getDirectM3U8Playlist(strwithmeta(url, {'User-Agent': self.HTTP_HEADER['User-Agent']}), cookieParams=cookieParams, checkContent=True)
         cookieValue = self.cm.getCookieHeader(self.cookiePath)
-        
+
         for item in tmp:
             vidUrl = item['url']
-            
+
             item['url'] = urlparser.decorateUrl(vidUrl, {'User-Agent': self.HTTP_HEADER['User-Agent'], 'Cookie': cookieValue})
             urlsTab.append(item)
-        
+
         return urlsTab

@@ -38,40 +38,40 @@ class WebCameraApi(CBaseHostClass):
         self.HEADER = {'User-Agent': 'Mozilla/5.0 (X11; Ubuntu; Linux i686; rv:21.0) Gecko/20100101 Firefox/21.0', 'Referer': self.getMainUrl(), 'Accept': 'text/html'}
         self.AJAX_HEADER = dict(self.HEADER)
         self.AJAX_HEADER.update({'X-Requested-With': 'XMLHttpRequest'})
-        
+
         self.COOKIE_FILE = GetCookieDir('webcamerapl')
         self.defaultParams = {'with_metadata': True, 'header': self.HEADER, 'save_cookie': True, 'load_cookie': True, 'cookiefile': self.COOKIE_FILE}
         self.cacheList = {}
-        
+
     def getFullIconUrl(self, url, baseUrl=None):
         return CBaseHostClass.getFullIconUrl(self, url, baseUrl)
-        
+
     def getFullUrl(self, url, baseUrl=None):
         if url == '#' or url == '/#':
             return ''
         return CBaseHostClass.getFullUrl(self, url, baseUrl)
-    
+
     def getPage(self, baseUrl, addParams={}, post_data=None):
         if addParams == {}:
             addParams = dict(self.defaultParams)
         return self.cm.getPage(baseUrl, addParams, post_data)
-    
+
     def addDefaultIcons(self):
         for idx in range(len(self.currList)):
             if '' == self.currList[idx].get('icon', ''):
                 self.currList[idx]['icon'] = self.getDefaulIcon()
-    
+
     def getList(self, cItem):
         printDBG("WebCameraApi.getChannelsList")
         self.currList = []
-        
+
         try:
             category = cItem.get('priv_category', '')
             if category == '':
                 params = dict(cItem)
                 params.update({'title': _('main'), 'priv_category': 'list_items'})
                 self.addDir(params)
-                
+
                 sts, data = self.getPage(self.getMainUrl())
                 if not sts:
                     return []
@@ -141,7 +141,7 @@ class WebCameraApi(CBaseHostClass):
                         desc = ''
                         title = self.cleanHtmlStr(item)
                         limiter = '<span class="cam__desc">'
-                        if limiter in item: 
+                        if limiter in item:
                             title = self.cleanHtmlStr(item.split(limiter)[0])
                             desc = self.cleanHtmlStr(item.split(limiter)[-1])
                         icon = self.cm.ph.getSearchGroups(item, """data\-src=['"]([^'^"]+?)['"]""")[0]
@@ -166,16 +166,16 @@ class WebCameraApi(CBaseHostClass):
                         urlPrams['columns'] = page * (int(urlPrams['limit']) + 1)
                     except Exception:
                         printExc()
-                    
+
                     #urlPrams['cameras'] = '14'
                     #urlPrams['columns'] = '12'
-                    
+
                     url = self.getFullUrl(cItem['more_url'])
                     url += '?' + urllib.parse.urlencode(urlPrams)
                     getPageParams['header']['X-Requested-With'] = 'XMLHttpRequest'
                     sts, data = self.getPage(url, getPageParams)
 
-                    if sts and data.startswith('{') and '"last":true' not in data: 
+                    if sts and data.startswith('{') and '"last":true' not in data:
                         params = dict(cItem)
                         params.update({'title': _('Next page'), 'url': url, 'page': page + 1})
                         self.addDir(params)
@@ -201,7 +201,7 @@ class WebCameraApi(CBaseHostClass):
         else:
             videoUrl = cItem['url']
         return self.up.getVideoLinkExt(videoUrl)
-        
+
     def listCategories(self, cItem, nextCategory):
         printDBG("WebCameraApi.listCategories")
         try:

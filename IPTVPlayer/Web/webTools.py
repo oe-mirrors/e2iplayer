@@ -102,11 +102,11 @@ def initActiveHost(hostName):
 	settings.activeHost = {}
 	settings.retObj = None
 	settings.currItem = {}
-	
+
 	if hostName is None:
 		pass
 	else:
-		
+
 		settings.activeHost['Name'] = hostName
 		_temp = __import__('Plugins.Extensions.IPTVPlayer.hosts.host' + hostName, globals(), locals(), ['IPTVHost'], -1)
 		settings.activeHost['Title'] = _temp.gettytul()

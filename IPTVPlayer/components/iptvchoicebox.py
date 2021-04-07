@@ -28,7 +28,7 @@ class IPTVChoiceBoxItem:
     TYPE_ON = "on"
     TYPE_OFF = "off"
     TYPE_NONE = None
-    
+
     def __init__(self, name="",
                 description="",
                 privateData=None,
@@ -44,7 +44,7 @@ class IPTVChoiceBoxWidget(Screen):
     def __prepareSkin(self):
         width = self.params.get('width', 300)
         height = self.params.get('height', 300)
-        
+
         skin = """
             <screen name="IPTVChoiceBoxWidget" position="center,center" title="%s" size="%d,%d">
                 <widget name="title" position="5,10"  zPosition="1" size="%d,30" font="Regular;20"            transparent="1"  backgroundColor="#00000000"/>
@@ -56,56 +56,56 @@ class IPTVChoiceBoxWidget(Screen):
                 width - 10, height - 50
                 )
         return skin
-            
+
     def __init__(self, session, params={'width': 300, 'height': 300, 'title': '', 'current_idx': 0, 'options': []}):
         self.params = params
         self.skin = self.__prepareSkin()
         Screen.__init__(self, session)
         self.skinName = "IPTVChoiceBoxWidget"
-        
+
         self.onShown.append(self.onStart)
         self.onClose.append(self.__onClose)
 
-        self["title"] = Label(self.params.get('title', _("Select option")))        
+        self["title"] = Label(self.params.get('title', _("Select option")))
         self["list"] = IPTVRadioButtonList()
-        
+
         self["actions"] = ActionMap(["ColorActions", "SetupActions", "WizardActions", "ListboxActions"],
             {
                 "cancel": self.key_cancel,
                 "ok": self.key_ok,
             }, -2)
-            
+
         self.prevIdx = 0
         self.reorderingMode = False
-            
+
     def __onClose(self):
         try:
             self["list"].disconnectSelChanged(self.onSelectionChanged)
         except Exception:
             printExc()
         self.params = None
-        
+
     def onStart(self):
         self.onShown.remove(self.onStart)
-        
+
         self["list"].setList([(x,) for x in self.params['options']])
         try:
             self["list"].moveToIndex(self.params['current_idx'])
         except Exception:
             printExc()
         self["list"].connectSelChanged(self.onSelectionChanged)
-            
+
     def key_ok(self):
         self.close(self.getSelectedItem())
-    
+
     def key_cancel(self):
         self.close(None)
-            
+
     def onSelectionChanged(self):
         callback = self.params.get('selection_changed', None)
         if callable(callback):
             callback(self.getSelectedItem())
-        
+
     def getSelectedItem(self):
         sel = None
         try:
@@ -113,5 +113,3 @@ class IPTVChoiceBoxWidget(Screen):
         except Exception:
             pass
         return sel
-    
-    

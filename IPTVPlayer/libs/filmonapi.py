@@ -19,7 +19,7 @@ from hashlib import md5
 ###################################################
 # Config options for HOST
 ###################################################
-config.plugins.iptvplayer.filmontvcom_streamprotocol = ConfigSelection(default="rtmp", choices=[("rtmp", "rtmp"), ("rtsp", "rtsp"), ("hls", "HLS - m3u8")]) 
+config.plugins.iptvplayer.filmontvcom_streamprotocol = ConfigSelection(default="rtmp", choices=[("rtmp", "rtmp"), ("rtsp", "rtsp"), ("hls", "HLS - m3u8")])
 config.plugins.iptvplayer.filmontvcom_premium = ConfigYesNo(default=False)
 config.plugins.iptvplayer.filmontvcom_login = ConfigText(default="", fixed_size=False)
 config.plugins.iptvplayer.filmontvcom_password = ConfigText(default="", fixed_size=False)
@@ -39,7 +39,7 @@ def GetConfigList():
 class FilmOnComApi:
     HTTP_USER_AGENT = 'User-Agent: AndroidNative/2.0.90 (Linux; U; Android 2.3.4; pl-pl; SAMSUNG GT-N7000; Build/GRJ22; com.filmontvcom.android) tablet; xlarge; 1024x600; FilmOn-MIDDLE-EAST'
     MAINURL = 'http://www.filmon.com/tv'
-    
+
     BASE_INIT_PARAMS = "app_android_device_model=GT-N7000&app_android_test=false&app_version=2.0.90&app_android_device_tablet=true&app_android_device_manufacturer=SAMSUNG&app_secret=wis9Ohmu7i&app_id=android-native&app_android_api_version=10%20HTTP/1.1"
     STREAMING_PROTOCOLS = {'rtsp': "channelProvider=rtsp", 'rtmp': "channelProvider=rtmp", 'hls': "channelProvider=ipad&supported_streaming_protocol=livehttp"}
 
@@ -72,7 +72,7 @@ class FilmOnComApi:
                     printExc()
                 self._login()
         return (None != self.session_key)
-    
+
     def getUrlForChannel(self, channelID):
         printDBG('FilmOnComApi.getGroupList channelID[%r]' % channelID)
         url = self.middleware + "/api/channel/%s?session_key=%s&quality=low" % (str(channelID), str(self.session_key))
@@ -92,10 +92,10 @@ class FilmOnComApi:
                             if int(stream['watch-timeout']) < 1000:
                                 name += ' ' + _('PAY')
                             else:
-                                name += ' ' + _('FREE') 
+                                name += ' ' + _('FREE')
                         except Exception:
                             pass
-                        
+
                         url = stream['url']
                         if url.startswith('rtmp'):
                             flashplayer = 'http://www.filmon.com/tv/modules/FilmOnTV/files/flashapp/filmon/FilmonPlayer.swf?v=55'
@@ -106,46 +106,46 @@ class FilmOnComApi:
                         urlsList.append({'name': name, 'url': url})
                 except Exception:
                     printExc()
-                
+
             return urlsList
-            
+
         self.initSession()
         urlsList = getUrlImpl(self, url)
         if 0 == len(urlsList):
             self.initSession(force=True)
             urlsList = getUrlImpl(self, url)
         return urlsList
-        
+
     def getGroupList(self, force=False):
         printDBG('FilmOnComApi.getGroupList force[%r]' % force)
         self._getJsonDataIfNeed('groups', force)
         return self.jsonData['groups']
-        
+
     def getChannelsListByGroupID(self, group_id, force=False):
         printDBG('FilmOnComApi.getChannelsListByGroupID group_id[%r], force[%r]' % (group_id, force))
         self._getJsonDataIfNeed('channels', force)
-        currChannelsList = [] 
+        currChannelsList = []
         for channel_it in self.jsonData['channels']:
             if 'group_id' not in channel_it:
                 continue
             if group_id == channel_it['group_id']:
                 currChannelsList.append(channel_it)
         return currChannelsList
-    
+
     def _getJsonItemlById(self, type, id):
         printDBG('FilmOnComApi._getChannelById type[%r], id[%r]' % (type, id))
         for item in self.jsonData[type]:
             if item['id'] == id:
                 return item
         return None
-        
+
     def _getJsonDataIfNeed(self, type, force=False):
         printDBG('FilmOnComApi._getJsonDataIfNeed type[%r], force[%r]' % (type, force))
         if 0 == len(self.jsonData[type]) or force:
             self.initSession(force=True)
             self._getJsonData(type)
         return 0 < len(self.jsonData[type])
-        
+
     def _getJsonData(self, type):
         printDBG('FilmOnComApi._getJsonData type[%r]' % type)
         url = self.middleware + '/api/%s?session_key=%s' % (type, str(self.session_key))
@@ -166,7 +166,7 @@ class FilmOnComApi:
         if 0 == len(self.jsonData[type]) and self.initSession(force=True):
             self.jsonData[type] = getJsonDataImpl(self, url)
         return 0 < len(self.jsonData[type])
-        
+
     def _login(self):
         printDBG('FilmOnComApi.__login sessionKey[%s]' % str(self.session_key))
         if self.PREMIUM and None != self.session_key:

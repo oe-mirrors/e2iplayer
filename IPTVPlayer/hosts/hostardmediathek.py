@@ -50,7 +50,7 @@ def gettytul():
 
 
 class ARDmediathek(CBaseHostClass):
-    
+
     def __init__(self):
         printDBG("ARDmediathek.__init__")
         CBaseHostClass.__init__(self, {'history': 'ARDmediathek.tv', 'cookie': 'zdfde.cookie'})
@@ -58,7 +58,7 @@ class ARDmediathek(CBaseHostClass):
         self.HEADER = {'User-Agent': self.HOST, 'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8'}
         self.AJAX_HEADER = dict(self.HEADER)
         self.AJAX_HEADER.update({'X-Requested-With': 'XMLHttpRequest', 'Connection': 'keep-alive', 'Pragma': 'no-cache', 'Cache-Control': 'no-cache'})
-        
+
         self.MAIN_URL = 'http://www.ardmediathek.de/'
         self.MAIN_API_URL = 'http://www.ardmediathek.de/'
         self.DEFAULT_ICON_URL = 'http://www.fluentu.com/german/blog/wp-content/uploads/sites/5/2014/12/how-to-hack-through-geoblocking-and-watch-german-tv-online1.png' # 'http://www.ardmediathek.de/ard/static/img/base/icon/ardlogo_weiss.png'
@@ -69,21 +69,21 @@ class ARDmediathek(CBaseHostClass):
                              {'category': 'list_items', 'title': _('Live Radio'), 'url': self.getFullUrl('appdata/servlet/radio/live?json')},
                              {'category': 'search', 'title': _('Search'), 'search_item': True},
                              {'category': 'search_history', 'title': _('Search history')}]
-        
+
         self.ICON_QUALITY_MAP = {'large': 1080, 'medium': 640, 'small': 240}
         self.STREAM_QUALITY_MAP = {'hd': 4, 'veryhigh': 3, 'high': 2, 'med': 1, 'low': 0}
-        
+
     def _getQualityName(self, qualityValue):
         for key in self.STREAM_QUALITY_MAP:
             value = self.STREAM_QUALITY_MAP[key]
             if value == qualityValue:
                 return key
         return 'auto'
-        
+
     def getPage(self, url, params={}, post_data=None):
         HTTP_HEADER = dict(self.HEADER)
         return self.cm.getPage(url, params, post_data)
-        
+
     def getIconUrl(self, url):
         marker = '##width##'
         if marker in url:
@@ -91,10 +91,10 @@ class ARDmediathek(CBaseHostClass):
             iconWidth = self.ICON_QUALITY_MAP.get(iconQuality, 240)
             url = url.replace(marker, str(iconWidth))
         return self.getFullUrl(url)
-        
+
     def getFullUrl(self, url):
         return CBaseHostClass.getFullUrl(self, url).replace(' ', '%20')
-        
+
     def _getNum(self, v, default=0):
         try:
             return int(v)
@@ -103,15 +103,15 @@ class ARDmediathek(CBaseHostClass):
                 return float(v)
             except Exception:
                 return default
-            
+
     def _getList(self, data, key, default=[]):
-        try: 
+        try:
             if isinstance(data[key], list):
                 return data[key]
         except Exception:
             printExc()
         return default
-        
+
     def _mapClip(self, data):
         printDBG('_mapClip [%s]' % data)
         item = {}
@@ -120,12 +120,12 @@ class ARDmediathek(CBaseHostClass):
                 break
         if type != 'none':
             item['typ'] = type
-        
+
         # title
         item['title'] = self.cleanHtmlStr(data['ueberschrift'])
-        
+
         # icon and alt title
-        try: 
+        try:
             tmp = data['bilder'][0]
             item['icon'] = self.getIconUrl(tmp.get('schemaUrl', ''))
             if item['title'] == '':
@@ -135,7 +135,7 @@ class ARDmediathek(CBaseHostClass):
         except Exception:
             printExc()
             item['icon'] = ''
-                
+
         # desc
         descTab = []
         if len(data.get('dachzeile', '')):
@@ -147,22 +147,22 @@ class ARDmediathek(CBaseHostClass):
         item['desc'] = self.cleanHtmlStr('[/br]'.join(descTab).replace('<br>', '[/br]'))
         # url
         item['url'] = self.getFullUrl(data['link']['url'])
-        
+
         item['good_for_fav'] = True
         return item
-        
+
     def _copy(self, params, addParams={}):
         params = dict(params)
         params.pop('page', None)
         params.update(addParams)
         return params
-        
+
     def listItem(self, cItem, data, sectionIdx):
         printDBG('listItem')
         if data['typ'] not in ["Section"]:
             return
         skipButtons = list(cItem.get('skip_buttons', []))
-        
+
         modCons = self._getList(data, 'modCons')
         for modCon in modCons:
             if modCon['typ'] not in ["ModCon"]:
@@ -172,7 +172,7 @@ class ARDmediathek(CBaseHostClass):
                 if mod['typ'] not in ["Mod"]:
                     continue
                 filters = []
-                if sectionIdx not in skipButtons: 
+                if sectionIdx not in skipButtons:
                     mainButtons = self._getList(mod, 'buttons')
                     for mainButton in mainButtons:
                         if mainButton['typ'] not in ['ButtonGroup']:
@@ -197,9 +197,9 @@ class ARDmediathek(CBaseHostClass):
                             if not self.cm.isValidUrl(url):
                                 continue
                             if len(filters) and (url.endswith('quelle.radio') or url.endswith('quelle.tv')):
-                                continue # some workaround 
+                                continue # some workaround
                             filters.append({'good_for_fav': True, 'title': mainTitle + title, 'url': self.getFullUrl(url), 'desc': desc, 'skip_buttons': skipButtons})
-                
+
                 # if there are filter buttons add them as subcategories
                 if len(filters) > 1:
                     skipButtons.append(sectionIdx)
@@ -244,25 +244,25 @@ class ARDmediathek(CBaseHostClass):
                             params = self._copy(cItem, params)
                             self.addDir(params)
         return False
-        
+
     def listItems(self, cItem):
         printDBG('listItems')
         url = cItem['url']
         page = cItem.get('page', 1)
-        
+
         sts, data = self.getPage(url)
         if not sts:
             return
-        
+
         nextPage = self.cm.ph.getSearchGroups(data, '"(http[^"]+?page\.%s[^0-9][^"]*?)"' % (page + 1))[0].split('"')[0]
-       
+
         skipSections = []
         if '/search?' in url:
             if '&sort=date' in url or 'sort=score' in url:
                 skipSections = [0, 2]
             else:
                 nextPage = ''
-            
+
         try:
             sectionIdx = 0
             data = byteify(json.loads(data))
@@ -285,22 +285,22 @@ class ARDmediathek(CBaseHostClass):
                         for mod in mods:
                             if mod['typ'] not in ["Mod"]:
                                 continue
-                            
+
                             try:
                                 url = mod['allesLink']['url']
-                            except Exception: 
+                            except Exception:
                                 printExc()
                                 continue
                             if not self.cm.isValidUrl(url):
                                 continue
-                            
+
                             title = self.cleanHtmlStr(mod['titel'])
-                            try: 
+                            try:
                                 if title == '':
                                     title = url.split('/')[6].split('?')[0].title()
                             except Exception:
                                 printExc()
-                            
+
                             params = self._copy(cItem, {'good_for_fav': True, 'title': title, 'url': url})
                             self.addDir(params)
                             processed = True
@@ -309,7 +309,7 @@ class ARDmediathek(CBaseHostClass):
                             break
         except Exception:
             printExc()
-        
+
         if nextPage != '':
             params = deepcopy(cItem)
             params.update({'good_for_fav': False, 'url': nextPage, 'title': _('Next page'), 'page': page + 1})
@@ -334,32 +334,32 @@ class ARDmediathek(CBaseHostClass):
         if 'url' not in cItem:
             cItem['url'] = self.getFullUrl('appdata/servlet/-/search?json&searchText={0}'.format(urllib.parse.quote_plus(searchPattern)))
         self.listItems(cItem)
-    
+
     def getLinksForVideo(self, cItem):
         printDBG("ARDmediathek.getLinksForVideo url[%s]" % cItem['url'])
-        
+
         sts, data = self.getPage(cItem['url'])
         if not sts:
             return []
-        
+
         try:
             data = byteify(json.loads(data))
             url = data['sections'][0]['modCons'][0]['mods'][0]['inhalte'][0]['mediaCollection']['url']
         except Exception:
             printExc()
             return []
-            
+
         sts, data = self.getPage(url)
         if not sts:
             return []
-        
+
         preferedQuality = int(config.plugins.iptvplayer.ardmediathek_prefquality.value)
         preferedFormat = config.plugins.iptvplayer.ardmediathek_prefformat.value
         tmp = preferedFormat.split(',')
         formatMap = {}
         for i in range(len(tmp)):
             formatMap[tmp[i]] = i
-        
+
         try:
             urlTab = []
             tmpUrlTab = []
@@ -378,7 +378,7 @@ class ARDmediathek(CBaseHostClass):
                             url = urls[-1]
                         else:
                             url = urls
-                            
+
                         if url.startswith('https://'):
                             url = 'http' + url[5:]
                         for type in [{'pattern': '.m3u8', 'name': 'm3u8'}, {'pattern': '.mp4', 'name': 'mp4'}]:
@@ -470,9 +470,9 @@ class ARDmediathek(CBaseHostClass):
             printDBG(tmpUrlTab)
         except Exception:
             printExc()
-            
+
         return urlTab
-    
+
     def handleService(self, index, refresh=0, searchPattern='', searchType=''):
         printDBG('ARDmediathek.handleService start')
         CBaseHostClass.handleService(self, index, refresh, searchPattern, searchType)
@@ -480,7 +480,7 @@ class ARDmediathek(CBaseHostClass):
         category = self.currItem.get("category", '')
         printDBG("ARDmediathek.handleService: ---------> name[%s], category[%s] " % (name, category))
         searchPattern = self.currItem.get("search_pattern", searchPattern)
-        self.currList = [] 
+        self.currList = []
 
         if None == name:
             self.listsTab(self.MAIN_CAT_TAB, {'name': 'category'})
@@ -488,7 +488,7 @@ class ARDmediathek(CBaseHostClass):
             self.listItems(self.currItem)
         elif 'list_tab' == category:
             self.listTab(self.currItem)
-            
+
         elif 'missed_date' == category:
             self.listMissedDate(self.currItem)
         elif 'list_missed' == category:
@@ -500,7 +500,7 @@ class ARDmediathek(CBaseHostClass):
     #WYSZUKAJ
         elif category in ["search", "search_next_page"]:
             cItem = dict(self.currItem)
-            cItem.update({'search_item': False, 'name': 'category', 'category': 'search_next_page'}) 
+            cItem.update({'search_item': False, 'name': 'category', 'category': 'search_next_page'})
             self.listSearchResult(cItem, searchPattern, searchType)
     #HISTORIA WYSZUKIWANIA
         elif category == "search_history":

@@ -22,7 +22,7 @@ except Exception:
 class MTVServicesInfoExtractor(InfoExtractor):
     _MOBILE_TEMPLATE = None
     _LANG = None
-    
+
     def __init__(self):
         InfoExtractor.__init__(self)
         self.cm.HOST = 'python-urllib/2.7'
@@ -72,7 +72,7 @@ class MTVServicesInfoExtractor(InfoExtractor):
         formats = []
         data = mdoc[mdoc.find('<rendition'):mdoc.rfind('</rendition>')]
         data = mdoc.split('</rendition>')
-        
+
         for rendition in data:
             try:
                 rtmp_video_url = self.xmlGetText(rendition, 'src')
@@ -80,7 +80,7 @@ class MTVServicesInfoExtractor(InfoExtractor):
                     continue
                 params = {}
                 params['type'] = self.xmlGetArg(rendition, 'type')
-                if 'video/' not in params['type']: 
+                if 'video/' not in params['type']:
                     continue
                 params['url'] = self._transform_rtmp_url(rtmp_video_url)
                 params['width'] = self.xmlGetArg(rendition, 'width')
@@ -121,7 +121,7 @@ class MTVServicesInfoExtractor(InfoExtractor):
         mtvn_id_node = self.xmlGetText(itemdoc, 'media:category scheme="urn:mtvn:id"')
         if mtvn_id_node != '':
             mtvn_id = mtvn_id_node
-        
+
         formats = self._extract_video_formats(mediagen_doc, mtvn_id)
         #subtitles = self._extract_subtitles(mediagen_doc, mtvn_id)
         #thumbnail = self._get_thumbnail_url(uri, itemdoc)
@@ -136,7 +136,7 @@ class MTVServicesInfoExtractor(InfoExtractor):
             info_url += 'lang=%s&' % self._LANG
         info_url += data
         sts, data = self.cm.getPage(info_url)
-        
+
         data = data[data.find('<item>'):]
         data = data.split('</item>')
         urlTabs = []
@@ -221,7 +221,7 @@ class MTVIggyIE(MTVServicesInfoExtractor):
     IE_NAME = 'mtviggy.com'
     _VALID_URL = r'https?://www\.mtviggy\.com/videos/.+'
     _FEED_URL = 'http://all.mtvworldverticals.com/feed-xml/'
-    
+
 
 class GametrailersIE(MTVServicesInfoExtractor):
     _VALID_URL = r'http://www\.gametrailers\.com/(?P<type>videos|reviews|full-episodes)/(?P<id>.*?)/(?P<title>.*)'

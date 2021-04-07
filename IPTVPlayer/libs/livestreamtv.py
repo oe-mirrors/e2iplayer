@@ -39,9 +39,9 @@ class LiveStreamTvApi(CBaseHostClass):
             epgend = self.cleanHtmlStr(self.cm.ph.getSearchGroups(item, '''epgend=['"]([^'^"]+?)['"]''')[0])
             epgtitle = self.cleanHtmlStr(self.cm.ph.getSearchGroups(item, '''epgtitle=['"]([^'^"]+?)['"]''')[0])
             epgdesc = re.sub("</?br\s*/?>", "[/br]", self.cleanHtmlStr(self.cm.ph.getSearchGroups(item, '''epgdesc=['"]([^'^"]+?)['"]''')[0]))
-            
+
             desc = '%s - %s %s' % (epgstart, epgend, epgtitle) + '[/br]' + epgdesc
-            
+
             icon = self.getFullUrl(self.cm.ph.getSearchGroups(item, 'src="([^"]+?)"')[0])
             url = self.getFullUrl(self.cm.ph.getSearchGroups(item, 'href="([^"]+?)"')[0])
             if 'filterGray' in item:
@@ -51,7 +51,7 @@ class LiveStreamTvApi(CBaseHostClass):
             if self.cm.isValidUrl(url):
                 channelsList.append({'name': 'live-stream.tv', 'title': title, 'url': url, 'desc': desc, 'icon': icon})
         return channelsList
-    
+
     def getVideoLink(self, cItem):
         printDBG("LiveStreamTvApi.getVideoLink cItem[%s]" % cItem)
         return self.up.getVideoLinkExt(cItem.get('url', ''))

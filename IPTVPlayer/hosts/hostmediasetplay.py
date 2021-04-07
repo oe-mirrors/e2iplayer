@@ -54,16 +54,16 @@ class MediasetPlay(CBaseHostClass):
         self.OFFSET = datetime.datetime.now() - datetime.datetime.utcnow()
         seconds = self.OFFSET.seconds + self.OFFSET.days * 24 * 3600
         if ((seconds + 1) % 10) == 0:
-            seconds += 1  
+            seconds += 1
         elif ((seconds - 1) % 10) == 0:
-            seconds -= 1 
+            seconds -= 1
         self.OFFSET = timedelta(seconds=seconds)
 
     def getPage(self, baseUrl, addParams={}, post_data=None):
         if addParams == {}:
             addParams = dict(self.defaultParams)
         return self.cm.getPage(baseUrl, addParams, post_data)
-        
+
     def dateRange(self, d):
         d1 = d.replace(minute=0, hour=0, second=0, microsecond=0)
         d2 = d.replace(minute=59, hour=23, second=59, microsecond=999999)
@@ -71,7 +71,7 @@ class MediasetPlay(CBaseHostClass):
 
     def initApi(self):
         if self.initData:
-            return 
+            return
         url = self.API_BASE_URL + 'idm/anonymous/login/v1.0'
         params = MergeDicts(self.defaultParams, {'raw_post_data': True, 'collect_all_headers': True})
         cid = str(uuid.uuid4())
@@ -159,7 +159,7 @@ class MediasetPlay(CBaseHostClass):
         channelId = ph.search(data, '''/diretta/[^'^"]+?_c([^'^"]+?)['"][^>]*?>\s*?diretta\s*?<''', flags=ph.I)[0]
 
         self.listCatalog(cItem, 'list_catalog_items', 'video_mixed', data)
-        
+
         ABBREVIATED_DAYS_NAME_TAB = ['LUN', 'MAR', 'MER', 'GIO', 'VEN', 'SAB', 'DOM']
         subItems = []
         today = datetime.datetime.utcnow()
@@ -190,8 +190,8 @@ class MediasetPlay(CBaseHostClass):
                 desc = []
                 videoUrl = item.get('mediasetprogram$videoPageUrl', '')
                 if videoUrl:
-                    desc.append(item['mediasetprogram$publishInfo']['last_published'].split('T', 1)[0]) 
-                    desc.append(item['mediasetprogram$publishInfo']['description']) 
+                    desc.append(item['mediasetprogram$publishInfo']['last_published'].split('T', 1)[0])
+                    desc.append(item['mediasetprogram$publishInfo']['description'])
                     desc.append(str(timedelta(seconds=int(item['mediasetprogram$duration']))))
                     desc.append(_('%s views') % item['mediasetprogram$numberOfViews'])
                     desc = [' | '.join(desc)]
@@ -227,7 +227,7 @@ class MediasetPlay(CBaseHostClass):
             cItem['category'] = nextCategory
             filtersTab = []
             filtersTab.append({'title': 'Tutti', 'f_query': '*:*'})
-            for i in range(0, 24): 
+            for i in range(0, 24):
                 filtersTab.append({'title': chr(ord('A') + i), 'f_query': 'TitleFullSearch:%s*' % chr(ord('a') + i)})
             filtersTab.append({'title': '#', 'f_query': '-(TitleFullSearch:{A TO *})'})
         self.listsTab(filtersTab, cItem)
@@ -261,8 +261,8 @@ class MediasetPlay(CBaseHostClass):
                 desc = []
                 videoUrl = item.get('mediasetprogram$videoPageUrl', '')
                 if videoUrl:
-                    desc.append(item['mediasetprogram$publishInfo']['last_published'].split('T', 1)[0]) 
-                    desc.append(item['mediasetprogram$publishInfo']['description']) 
+                    desc.append(item['mediasetprogram$publishInfo']['last_published'].split('T', 1)[0])
+                    desc.append(item['mediasetprogram$publishInfo']['description'])
                     desc.append(str(timedelta(seconds=int(item['mediasetprogram$duration']))))
                     desc.append(_('%s views') % item['mediasetprogram$numberOfViews'])
                     desc = [' | '.join(desc)]
@@ -327,7 +327,7 @@ class MediasetPlay(CBaseHostClass):
                     title2 = ph.clean_html(ph.find(item, ('<p', '>', exports['title-hero-small']), '</p>', flags=0)[1])
                 if not title1:
                     title1 = ph.clean_html(ph.find(item, ('<h2', '>'), '</h2>', flags=0)[1])
-                
+
                 title = []
                 if title1:
                     title.append(title1)
@@ -347,10 +347,10 @@ class MediasetPlay(CBaseHostClass):
                 self.currList.extend(subItems)
             elif len(subItems) > 1:
                 self.addDir(MergeDicts(cItem, {'good_for_fav': False, 'category': 'sub_items', 'title': sTitle, 'icon': sIcon, 'sub_items': subItems}))
-        
+
         if len(self.currList) == 1 and self.currList[0].get('category') == 'sub_items':
             self.currList = self.currList[0]['sub_items']
-        
+
         tab = []
         category = cItem['category']
         cItem = MergeDicts(cItem, {'good_for_fav': True, 'category': nextCategory1})
@@ -425,10 +425,10 @@ class MediasetPlay(CBaseHostClass):
                 self.currList.extend(subItems)
             elif len(subItems) > 1:
                 self.addDir(MergeDicts(cItem, {'good_for_fav': False, 'category': 'sub_items', 'title': sTitle, 'sub_items': subItems}))
-        
+
         if len(self.currList) == 1 and self.currList[0].get('category') == 'sub_items':
             self.currList = self.currList[0]['sub_items']
-        
+
         # https://feed.entertainment.tv.theplatform.eu/f/PR1GhC/mediaset-prod-all-brands?byCustomValue={brandId}{100000513}&sort=mediasetprogram$order
         # https://feed.entertainment.tv.theplatform.eu/f/PR1GhC/mediaset-prod-all-programs?byCustomValue={brandId}{100000513},{subBrandId}{100000722}&sort=mediasetprogram$publishInfo_lastPublished|desc
         # https://feed.entertainment.tv.theplatform.eu/f/PR1GhC/mediaset-prod-all-programs?byCustomValue={brandId}{100000513}&sort=mediasetprogram$publishInfo_lastPublished|desc
@@ -445,12 +445,12 @@ class MediasetPlay(CBaseHostClass):
 
         cItem = MergeDicts(cItem, {'category': 'list_items', 'url': url})
         self.listItems(cItem, 'video_mixed')
-        
+
         #'CWSEARCHBRAND'
         #'CWSEARCHCLIP',
         #'CWSEARCHEPISODE'
         #'CWSEARCHMOVIE'
-        
+
         #https://api-ott-prod-fe.mediaset.net/PROD/play/rec/search/v1.0?uxReference=CWSEARCHBRAND&query=shrek&platform=pc&traceCid=73dd1614-f553-4851-ace3-bd01e34bdd26&page=1
         #https://api-ott-prod-fe.mediaset.net/PROD/play/rec/search/v1.0?uxReference=CWSEARCHCLIP&query=shrek&platform=pc&traceCid=73dd1614-f553-4851-ace3-bd01e34bdd26&sort=Viewers=DESC&page=1
         #https://api-ott-prod-fe.mediaset.net/PROD/play/rec/search/v1.0?uxReference=CWSEARCHEPISODE&query=shrek&platform=pc&traceCid=73dd1614-f553-4851-ace3-bd01e34bdd26&page=1
@@ -533,7 +533,7 @@ class MediasetPlay(CBaseHostClass):
                     if videoUrl in self.cacheLinks[key][idx]['url']:
                         if not self.cacheLinks[key][idx]['name'].startswith('*'):
                             self.cacheLinks[key][idx]['name'] = '*' + self.cacheLinks[key][idx]['name']
-        
+
         type = strwithmeta(videoUrl).meta.get('priv_type', '')
         if type == 'DASH/MPD':
             return getMPDLinksWithMeta(videoUrl, sortWithMaxBandwidth=999999999)
@@ -544,7 +544,7 @@ class MediasetPlay(CBaseHostClass):
 
     def handleService(self, index, refresh=0, searchPattern='', searchType=''):
         printDBG('handleService start')
-        
+
         CBaseHostClass.handleService(self, index, refresh, searchPattern, searchType)
 
         name = self.currItem.get("name", '')
@@ -593,7 +593,7 @@ class MediasetPlay(CBaseHostClass):
     #SEARCH
         elif category in ["search", "search_next_page"]:
             cItem = dict(self.currItem)
-            cItem.update({'search_item': False, 'name': 'category'}) 
+            cItem.update({'search_item': False, 'name': 'category'})
             self.listSearchResult(cItem, searchPattern, searchType)
     #HISTORIA SEARCH
         elif category == "search_history":

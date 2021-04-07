@@ -23,9 +23,9 @@ class UnCaptchaReCaptcha:
     def __init__(self, lang='en'):
         self.HTTP_HEADER = {'Accept-Language': lang, 'Referer': 'https://www.google.com/recaptcha/api2/demo', 'User-Agent': 'Mozilla/5.0 (X11; U; Linux i686; en-US; rv:1.9.2.18) Gecko/20110621 Mandriva Linux/1.9.2.18-0.1mdv2010.2 (2010.2) Firefox/3.6.18'}
         self.cm = common()
-        self.sessionEx = MainSessionWrapper() 
+        self.sessionEx = MainSessionWrapper()
         self.COOKIE_FILE = GetCookieDir('google.cookie')
-        
+
     def processCaptcha(self, key, referer=None):
         post_data = None
         token = ''
@@ -36,7 +36,7 @@ class UnCaptchaReCaptcha:
         while iteration < 20:
             #,'cookiefile':self.COOKIE_FILE, 'use_cookie': True, 'load_cookie': True, 'save_cookie':True
             sts, data = self.cm.getPage(reCaptchaUrl, {'header': self.HTTP_HEADER, 'raw_post_data': True}, post_data=post_data)
-            if not sts: 
+            if not sts:
                 SetIPTVPlayerLastHostError(_('Fail to get "%s".') % reCaptchaUrl)
                 return ''
 
@@ -68,18 +68,18 @@ class UnCaptchaReCaptcha:
             imgUrl = 'https://www.google.com%s' % (imgUrl.replace('&amp;', '&'))
             message = ph.clean_html(message)
             accepLabel = ph.clean_html(ph.search(data, 'type="submit"\s+value="([^"]+)')[0])
-            
+
             filePath = GetTmpDir('.iptvplayer_captcha.jpg')
             printDBG(">>>>>>>> Captcha message[%s]" % (message))
             printDBG(">>>>>>>> Captcha accep label[%s]" % (accepLabel))
             printDBG(">>>>>>>> Captcha imgUrl[%s] filePath[%s]" % (imgUrl, filePath))
-            
+
             params = {'maintype': 'image', 'subtypes': ['jpeg'], 'check_first_bytes': ['\xFF\xD8', '\xFF\xD9']}
             ret = self.cm.saveWebFile(filePath, imgUrl, params)
             if not ret.get('sts'):
                 SetIPTVPlayerLastHostError(_('Fail to get "%s".') % imgUrl)
                 break
-            
+
             retArg = self.sessionEx.waitForFinishOpen(UnCaptchaReCaptchaWidget, imgFilePath=filePath, message=message, title="reCAPTCHA v2", additionalParams={'accep_label': accepLabel})
             printDBG('>>>>>>>> Captcha response[%s]' % (retArg))
             if retArg is not None and len(retArg) and retArg[0]:
@@ -88,5 +88,5 @@ class UnCaptchaReCaptcha:
                 post_data = urllib.parse.urlencode({'c': cval, 'response': answer}, doseq=True)
             else:
                 break
-        
+
         return token

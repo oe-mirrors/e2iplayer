@@ -29,14 +29,14 @@ class CrtankoCom(CBaseHostClass):
 
     def __init__(self):
         CBaseHostClass.__init__(self, {'history': '  CrtankoCom.tv', 'cookie': 'crtankocom.cookie'})
-        
+
         self.MAIN_URL = 'http://www.crtanko.com/'
         self.SEARCH_URL = self.MAIN_URL
         self.DEFAULT_ICON_URL = "http://www.crtanko.com/wp-content/uploads/2015/04/logo5.png"
-        
+
         self.MAIN_CAT_TAB = [{'category': 'search', 'title': _('Search'), 'search_item': True, },
                              {'category': 'search_history', 'title': _('Search history'), }]
-                        
+
         self.BY_LETTER_TAB = [{'title': _('All')},
                               {'title': '#', 'letter': 'numeric'}, {'title': '', 'letter': 'A'},
                               {'title': '', 'letter': 'B'}, {'title': '', 'letter': 'C'},
@@ -53,11 +53,11 @@ class CrtankoCom(CBaseHostClass):
                               {'title': '', 'letter': 'V'}, {'title': '', 'letter': 'W'},
                               {'title': '', 'letter': 'Y'}, {'title': '', 'letter': 'Z'},
                               {'title': '', 'letter': 'Ž'}]
-        
+
         self.defaultParams = {'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
         self.cacheSubCategory = []
         self.cacheLinks = {}
-        
+
     def _getFullUrl(self, url):
         if url.startswith('//'):
             url = 'http:' + url
@@ -66,16 +66,16 @@ class CrtankoCom(CBaseHostClass):
                 url = self.MAIN_URL + url
             if not self.MAIN_URL.startswith('https://'):
                 url = url.replace('https://', 'http://')
-                
+
         url = self.cleanHtmlStr(url)
         url = self.replacewhitespace(url)
 
         return url
-        
+
     def replacewhitespace(self, data):
         data = data.replace(' ', '%20')
         return CBaseHostClass.cleanHtmlStr(data)
-    
+
     def listMainMenu(self, cItem, nextCategory1, nextCategory2):
         printDBG("CrtankoCom.listMainMenu")
         sts, data = self.cm.getPage(self.getMainUrl())
@@ -92,7 +92,7 @@ class CrtankoCom(CBaseHostClass):
                 except Exception:
                     printExc()
         self.listsTab(self.MAIN_CAT_TAB, cItem)
-        
+
     def listCategories(self, cItem, nextCategory1, nextCategory2):
         printDBG("CrtankoCom.listCategories")
         try:
@@ -116,7 +116,7 @@ class CrtankoCom(CBaseHostClass):
                     self.addDir(params)
         except Exception:
             printExc()
-            
+
     def listLetters(self, cItem, nextCategory):
         printDBG("CrtankoCom.listCategories")
         tab = []
@@ -127,31 +127,31 @@ class CrtankoCom(CBaseHostClass):
             if item['title'] == '':
                 params['title'] = item['letter']
             self.addDir(params)
-            
+
     def listItems(self, cItem, nextCategory='explore_item'):
         printDBG("CrtankoCom.listItems")
         page = cItem.get('page', 1)
-        search = cItem.get('search', '') 
-        letter = cItem.get('letter', '') 
-        url = cItem['url'] 
-        
+        search = cItem.get('search', '')
+        letter = cItem.get('letter', '')
+        url = cItem['url']
+
         if page > 1:
             url += 'page/%s/' % page
         if letter != '':
             url += '?ap=%s' % letter
         elif search != '':
             url += '?s=%s' % search
-        
+
         sts, data = self.cm.getPage(url)
         if not sts:
             return
-        
+
         nextPage = self.cm.ph.getDataBeetwenMarkers(data, 'rel="next"', '>', False)[1]
         if '/page/{0}/'.format(page + 1) in nextPage:
             nextPage = True
         else:
             nextPage = False
-        
+
         data = self.cm.ph.getAllItemsBeetwenNodes(data, ('<article', '>'), ('</article', '>'))
         for item in data:
             title = self.cm.ph.getSearchGroups(item, '''title=['"]([^"^']+?)['"]''')[0]
@@ -161,30 +161,30 @@ class CrtankoCom(CBaseHostClass):
                 params = dict(cItem)
                 params.update({'good_for_fav': True, 'category': nextCategory, 'title': self.cleanHtmlStr(title), 'url': url, 'icon': icon, 'desc': self.cleanHtmlStr(item.split('</noscript>')[-1])})
                 self.addDir(params)
-        
+
         if nextPage:
             params = dict(cItem)
             params.update({'good_for_fav': False, 'title': _('Next page'), 'page': page + 1})
             self.addDir(params)
-            
+
     def exploreItem(self, cItem, category):
         printDBG("CrtankoCom.exploreItem")
         page = cItem.get('page', 1)
         url = cItem['url']
-        
+
         if page > 1:
             url += '%s/' % page
-        
+
         sts, data = self.cm.getPage(url)
         if not sts:
             return
-        
+
         nextPage = self.cm.ph.getDataBeetwenMarkers(data, 'Pages:', '</section>', False)[1]
         if '>{0}<'.format(page + 1) in nextPage:
             nextPage = True
         else:
             nextPage = False
-        
+
         tmp1 = self.cm.ph.getDataBeetwenMarkers(data, '<section', '</section', False)[1]
         tmp1 = self.cm.ph.getAllItemsBeetwenMarkers(tmp1, '<p', '</div>')
         data = self.cm.ph.getAllItemsBeetwenNodes(data, ('<div', '>', 'class="youtube"'), ('</div', '>'))
@@ -211,23 +211,23 @@ class CrtankoCom(CBaseHostClass):
                 searchMore = False
             if not searchMore:
                 break
-            
+
         if nextPage:
             params = dict(cItem)
             params.update({'good_for_fav': False, 'title': _('Next page'), 'page': page + 1})
             self.addDir(params)
-    
+
     def getLinksForVideo(self, cItem):
         printDBG("CrtankoCom.getLinksForVideo [%s]" % cItem)
         urlTab = []
-        
+
         if 'url_data' in cItem:
             data = cItem['url_data']
         else:
             sts, data = self.cm.getPage(cItem['url'])
             if not sts:
                 return []
-        
+
         vidUrl = self.cm.ph.getSearchGroups(data, '<iframe[^>]+?src="([^"]+?)"', 1, True)[0]
         if vidUrl == '':
             vidUrl = self.cm.ph.getSearchGroups(data, '<script[^>]+?src="([^"]+?)"', 1, True)[0]
@@ -236,7 +236,7 @@ class CrtankoCom(CBaseHostClass):
 
         if vidUrl.startswith('//'):
             vidUrl = 'http:' + vidUrl
-        
+
         vidUrl = self._getFullUrl(vidUrl)
         validatehash = ''
         for hashName in ['up2stream.com', 'videomega.tv']:
@@ -250,21 +250,21 @@ class CrtankoCom(CBaseHostClass):
             if '' == dat:
                 return urlTab
             vidUrl = 'http://{0}/view.php?ref={1}&width=700&height=460&val=1'.format(validatehash, dat)
-            
+
         if '' != vidUrl:
             title = self.up.getHostName(vidUrl)
             urlTab.append({'name': title, 'url': vidUrl, 'need_resolve': 1})
-        
+
         return urlTab
-        
+
     def getVideoLinks(self, videoUrl):
         printDBG("CrtankoCom.getVideoLinks [%s]" % videoUrl)
-        
+
         urlTab = []
         if videoUrl.startswith('http'):
             urlTab = self.up.getVideoLinkExt(videoUrl)
         return urlTab
-        
+
     def listSearchResult(self, cItem, searchPattern, searchType):
         printDBG("CrtankoCom.listSearchResult cItem[%s], searchPattern[%s] searchType[%s]" % (cItem, searchPattern, searchType))
         cItem = dict(cItem)
@@ -274,16 +274,16 @@ class CrtankoCom(CBaseHostClass):
 
     def handleService(self, index, refresh=0, searchPattern='', searchType=''):
         printDBG('handleService start')
-        
+
         CBaseHostClass.handleService(self, index, refresh, searchPattern, searchType)
 
         name = self.currItem.get("name", '')
         category = self.currItem.get("category", '')
         mode = self.currItem.get("mode", '')
-        
+
         printDBG("handleService: |||||||||||||||||||||||||||||||||||| [%s] " % self.currItem)
         self.currList = []
-        
+
     #MAIN MENU
         if name == None:
             self.listMainMenu({'name': 'category', 'url': self.MAIN_URL}, 'list_items', 'list_letters')
@@ -299,14 +299,14 @@ class CrtankoCom(CBaseHostClass):
     #SEARCH
         elif category in ["search", "search_next_page"]:
             cItem = dict(self.currItem)
-            cItem.update({'search_item': False, 'name': 'category'}) 
+            cItem.update({'search_item': False, 'name': 'category'})
             self.listSearchResult(cItem, searchPattern, searchType)
     #HISTORIA SEARCH
         elif category == "search_history":
             self.listsHistory({'name': 'history', 'category': 'search'}, 'desc', _("Type: "))
         else:
             printExc()
-        
+
         CBaseHostClass.endHandleService(self, index, refresh)
 
 
@@ -314,4 +314,3 @@ class IPTVHost(CHostBase):
 
     def __init__(self):
         CHostBase.__init__(self, CrtankoCom(), True, favouriteTypes=[])
-

@@ -18,7 +18,7 @@ import urllib.error
 ############################################
 
 ###################################################
-# E2 GUI COMMPONENTS 
+# E2 GUI COMMPONENTS
 ###################################################
 from Plugins.Extensions.IPTVPlayer.components.asynccall import MainSessionWrapper
 from Screens.MessageBox import MessageBox
@@ -53,7 +53,7 @@ class WeebTvApi:
     PLAYERURL = MAINURL + '/api/setPlayer'
     JSONURL = MAINURL + '/api/getChannelList'
     VERSION = 140
-    
+
     MAIN_TAB = [{'category': 'main', 'url': JSONURL + '&option=online-alphabetical', 'title': _('Sorted channels A-Z [live]')},
                  {'category': 'main', 'url': JSONURL + '&option=online-now-viewed', 'title': _('Sorted most viewed channels now [live]')},
                  {'category': 'main', 'url': JSONURL + '&option=online-most-viewed', 'title': _('Sorted most viewed channels general [live]')},
@@ -62,7 +62,7 @@ class WeebTvApi:
 
     def __init__(self):
         self.cm = common()
-        
+
     def _jsonToSortedTab(self, data):
         strTab = []
         outTab = []
@@ -73,7 +73,7 @@ class WeebTvApi:
             strTab = []
         outTab.sort(key=lambda x: x[0])
         return outTab
-    
+
     def _getJsonFromAPI(self, url):
         ret = {'0': 'Null'}
         try:
@@ -82,22 +82,22 @@ class WeebTvApi:
                 password = config.plugins.iptvplayer.weebtv_password.value
             else:
                 username = ''
-                password = '' 
-            postdata = {'username': username, 'userpassword': password} 
+                password = ''
+            postdata = {'username': username, 'userpassword': password}
             sts, data = self.cm.getPage(url, WeebTvApi.DEFPARAMS, postdata)
             if sts:
                 ret = json_loads(data)
         except Exception:
             printExc()
         return ret
-    
+
     def _getStr(self, v, default=''):
         if type(v) == type(''):
             return v.encode('utf-8')
         elif type(v) == type(''):
             return v
         return default
-    
+
     def getCategoriesList(self):
         printDBG("WeebTvApi.getCategoriesList")
         retTab = []
@@ -128,10 +128,10 @@ class WeebTvApi:
                             user = self._getStr(k['user_name']).replace("\"", '')
                             if 0 == len(title):
                                 title = name
-                            if 0 == online: 
+                            if 0 == online:
                                 online = 'offline'
                                 channel = ''
-                            elif 2 == online: 
+                            elif 2 == online:
                                 online = 'online'
                                 channel = name
                             title = '%s - %s %s' % (title, user, online)
@@ -142,7 +142,7 @@ class WeebTvApi:
             except Exception:
                 printExc()
         return channelsList
-    
+
     def getVideoLink(self, url):
         printDBG("WeebTvApi.getVideoLink")
         rtmp = ''
@@ -159,7 +159,7 @@ class WeebTvApi:
                 postdata = {'username': '', 'userpassword': ''}
             postdata['channel'] = channel
             postdata['platform'] = WeebTvApi.HOST
-            
+
             sts, data = self.cm.getPage(WeebTvApi.PLAYERURL, WeebTvApi.DEFPARAMS, postdata)
             if sts:
                 printDBG("||||||||||||||||||||||||||||| " + data)
@@ -173,33 +173,33 @@ class WeebTvApi:
                 bitrate = parser.getIntParam(params, '20')
                 token = parser.getParam(params, '73')
                 title = parser.getParam(params, '6')
-                
+
                 if title == '':
                     title = parser.getParam(params, '7')
-                
+
                 video_quality = config.plugins.iptvplayer.weebtv_videoquality.value
                 if video_quality == '2' and bitrate == 1:
                     playPath = playPath + 'HI'
                 elif video_quality == '0' and bitrate == 2:
                     playPath = playPath + 'LOW'
-                
+
                 rtmp = str(rtmpLink) + '/' + str(playPath) + ' live=1 token=fake pageUrl=token swfUrl=' + str(token)
                 printDBG("||||||||||||||||||||||||||||| " + rtmp)
         except Exception:
             printExc()
-        
+
         if rtmp.startswith('rtmp'):
-            if 0 == premium: 
+            if 0 == premium:
                 MainSessionWrapper().waitForFinishOpen(MessageBox, _("You do not have a premium account. Starting a sponsored broadcast."), type=MessageBox.TYPE_INFO, timeout=5)
             return rtmp
         else:
             return ''
 
-        
+
 class UrlParser:
     def __init__(self):
         pass
-    
+
     def getParam(self, params, name):
         try:
             result = params[name]
@@ -207,21 +207,21 @@ class UrlParser:
             return result
         except Exception:
             return None
-    
+
     def getIntParam(self, params, name):
         try:
             param = self.getParam(params, name)
             return int(param)
         except Exception:
             return None
-    
+
     def getBoolParam(self, params, name):
         try:
             param = self.getParam(params, name)
             return 'True' == param
         except Exception:
             return None
-    
+
     def getParams(self, paramstring=''):
         param = []
         if len(paramstring) >= 2:

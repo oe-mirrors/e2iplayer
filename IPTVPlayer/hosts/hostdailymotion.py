@@ -43,7 +43,7 @@ class Dailymotion(CBaseHostClass):
         CBaseHostClass.__init__(self, {'history': 'Dailymotion', 'cookie': 'dailymotion.cookie'})
         self.HTTP_HEADER = {'User-Agent': self.cm.getDefaultHeader(browser='chrome')['User-Agent'], 'X-Requested-With': 'XMLHttpRequest'}
         self.defaultParams = {'header': self.HTTP_HEADER, 'use_cookie': True, 'save_cookie': True, 'load_cookie': True, 'cookiefile': self.COOKIE_FILE}
-        
+
         self.SITE_URL = 'https://www.dailymotion.com/'
         self.MAIN_URL = 'https://api.dailymotion.com/'
         self.DEFAULT_ICON_URL = 'http://static1.dmcdn.net/images/dailymotion-logo-ogtag.png'
@@ -78,10 +78,10 @@ class Dailymotion(CBaseHostClass):
         if 'auto' == locale:
             locale = 'en_EN'
         return locale
-            
+
     def getApiUrl(self, fun, page, args=[]):
         url = self.MAIN_URL + fun + '?'
-        
+
         args.extend(['page={0}'.format(page), 'localization={0}'.format(self.getLocale())])
         for key in self.apiData:
             val = self.apiData[key]
@@ -89,13 +89,13 @@ class Dailymotion(CBaseHostClass):
         url += '&'.join(args)
         printDBG("Dailymotion.getApiUrl [%s]" % url)
         return url
-            
+
     def addNextPage(self, cItem, nextPage, page):
         if nextPage:
             params = dict(cItem)
             params.update({'title': _('Next page'), 'page': page + 1})
             self.addDir(params)
-        
+
     def listCategories(self, cItem, category):
         printDBG("Dailymotion.listCategories [%s]" % cItem)
         page = cItem.get('page', 1)
@@ -117,13 +117,13 @@ class Dailymotion(CBaseHostClass):
         except Exception:
             printExc()
         self.addNextPage(cItem, nextPage, page)
-        
+
     def listSort(self, cItem, category):
         printDBG("Dailymotion.listSort [%s]" % cItem)
         params = dict(cItem)
         params['category'] = category
         self.listsTab(self.SORT_TAB, params)
-    
+
     def listVideos(self, cItem, type='videos'):
         printDBG("Dailymotion.listVideos [%s]" % cItem)
         page = cItem.get('page', 1)
@@ -154,7 +154,7 @@ class Dailymotion(CBaseHostClass):
             args.append('sort={0}'.format(cItem['sort']))
         if 'search' in cItem:
             args.append('search={0}'.format(cItem['search']))
-        
+
         url = self.getApiUrl(type, page, args)
         sts, data = self.cm.getPage(url)
         if not sts:
@@ -212,7 +212,7 @@ class Dailymotion(CBaseHostClass):
                 return self.authData['token']
             except Exception:
                 printExc()
-        
+
         return self.authData.get('token', '')
 
     def getApiHeaders(self, cItem):
@@ -242,7 +242,7 @@ class Dailymotion(CBaseHostClass):
 
         sts, data = self.cm.getPage(self.authData['url'], params, post_data)
         if not sts:
-            return 
+            return
 
         try:
             data = json_loads(data)['data']['search'][type]
@@ -271,7 +271,7 @@ class Dailymotion(CBaseHostClass):
 
     def listSearchResult(self, cItem, searchPattern, searchType):
         printDBG("Dailymotion.listSearchResult cItem[%s], searchPattern[%s] searchType[%s]" % (cItem, searchPattern, searchType))
-        
+
         currItem = dict(cItem)
         if searchType == 'videos':
             currItem['search'] = urllib.parse.quote(searchPattern)
@@ -282,11 +282,11 @@ class Dailymotion(CBaseHostClass):
             currItem['f_type'] = searchType
             currItem['f_query'] = searchPattern
             self.listSiteSeach(currItem)
-        
+
     def getLinksForVideo(self, cItem):
         printDBG("Dailymotion.getLinksForVideo [%s]" % cItem)
         urlTab = []
-        
+
         tmpTab = self.up.getVideoLinkExt(cItem.get('url', ''))
         for item in tmpTab:
             item['need_resolve'] = 0
@@ -303,14 +303,14 @@ class Dailymotion(CBaseHostClass):
 
     def handleService(self, index, refresh=0, searchPattern='', searchType=''):
         printDBG('handleService start')
-        
+
         CBaseHostClass.handleService(self, index, refresh, searchPattern, searchType)
 
         name = self.currItem.get("name", '')
         category = self.currItem.get("category", '')
         printDBG("handleService: |||||||||||||||||||||||||||||||||||| name[%s], category[%s] " % (name, category))
         self.currList = []
-        
+
     #MAIN MENU
         if name == None:
             self.listsTab(self.MAIN_CAT_TAB, {'name': 'category'})
@@ -334,14 +334,14 @@ class Dailymotion(CBaseHostClass):
     #SEARCH
         elif category in ["search", "search_next_page"]:
             cItem = dict(self.currItem)
-            cItem.update({'search_item': False, 'name': 'category'}) 
+            cItem.update({'search_item': False, 'name': 'category'})
             self.listSearchResult(cItem, searchPattern, searchType)
     #HISTORIA SEARCH
         elif category == "search_history":
             self.listsHistory({'name': 'history', 'category': 'search'}, 'desc', _("Type: "))
         else:
             printExc()
-        
+
         CBaseHostClass.endHandleService(self, index, refresh)
 
 

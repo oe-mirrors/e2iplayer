@@ -45,22 +45,22 @@ class DRDK(CBaseHostClass):
                     #{'category':'genres_movies',      'title': _('Movies'), 'url':MAIN_URL+'filmy', 'icon':''},
                     #{'category':'genres_series',      'title': _('Series'), 'url':MAIN_URL+'seriale', 'icon':''},
                     #{'category':'search',             'title': _('Search'), 'search_item':True},
-                    #{'category':'search_history',     'title': _('Search history')} 
+                    #{'category':'search_history',     'title': _('Search history')}
                     ]
- 
+
     def __init__(self):
         CBaseHostClass.__init__(self, {'history': 'DRDK', 'cookie': 'dr.dk.cookie'})
         if '' != config.plugins.iptvplayer.drdk_myip.value:
             self.cm.HEADER = {'X-Forwarded-For': config.plugins.iptvplayer.drdk_myip.value}
         self.tv2r = TV2RChannel()
-        
+
     def _getFullUrl(self, url):
         if 0 < len(url) and not url.startswith('http'):
             url = self.MAIN_URL + url
         if not self.MAIN_URL.startswith('https://'):
             url = url.replace('https://', 'http://')
         return url
-        
+
     def _getIcon(self, Slug):
         url = MAIN_URL + 'api/1.2/asset/{0}?width={1}&height={2}&crop={3}&raw={4}'.format(Slug, )
 
@@ -74,7 +74,7 @@ class DRDK(CBaseHostClass):
                 self.addDir(params)
             else:
                 self.addVideo(params)
-            
+
     def listLiveChannels(self, cItem):
         printDBG("listLiveChannels")
         sts, data = self.cm.getPage(cItem['url'])
@@ -102,16 +102,16 @@ class DRDK(CBaseHostClass):
                     self.addVideo(params)
         except Exception:
             printExc()
-        
+
     def getLinksForVideo(self, cItem):
         printDBG("DRDK.getLinksForVideo [%s]" % cItem)
         urlTab = []
-        
+
         try:
             if cItem["Type"] == "Channel":
                 for serv in cItem["StreamingServers"]:
                     if "HLS" not in serv["LinkType"]:
-                        continue 
+                        continue
                     for qual in serv["Qualities"]:
                         for stream in qual["Streams"]:
                             url = self.up.decorateUrl(serv["Server"] + "/" + stream["Stream"])
@@ -131,9 +131,9 @@ class DRDK(CBaseHostClass):
                     urlTab.append({'name': title, 'url': url, 'need_resolve': 1})
         except Exception:
             printExc()
-        
+
         return urlTab
-        
+
     def getVideoLinks(self, baseUrl):
         printDBG("Movie4kTO.getVideoLinks [%s]" % baseUrl)
         urlTab = []
@@ -145,23 +145,23 @@ class DRDK(CBaseHostClass):
         else:
             urlTab = [{'name': 'direct', 'url': baseUrl}]
         return urlTab
-        
+
     def getFavouriteData(self, cItem):
         return cItem['url']
-        
+
     def getLinksForFavourite(self, fav_data):
         return self.getLinksForVideo({'url': fav_data})
 
     def handleService(self, index, refresh=0, searchPattern='', searchType=''):
         printDBG('handleService start')
-        
+
         CBaseHostClass.handleService(self, index, refresh, searchPattern, searchType)
 
         name = self.currItem.get("name", '')
         category = self.currItem.get("category", '')
         printDBG("handleService: |||||||||||||||||||||||||||||||||||| name[%s], category[%s] " % (name, category))
         self.currList = []
-        
+
     #MAIN MENU
         if name == None:
             self.listsTab(self.MAIN_CAT_TAB, {'name': 'category'})
@@ -171,14 +171,14 @@ class DRDK(CBaseHostClass):
     #SEARCH
         elif category in ["search", "search_next_page"]:
             cItem = dict(self.currItem)
-            cItem.update({'search_item': False, 'name': 'category'}) 
+            cItem.update({'search_item': False, 'name': 'category'})
             self.listSearchResult(cItem, searchPattern, searchType)
     #HISTORIA SEARCH
         elif category == "search_history":
             self.listsHistory({'name': 'history', 'category': 'search'}, 'desc', _("Type: "))
         else:
             printExc()
-        
+
         CBaseHostClass.endHandleService(self, index, refresh)
 
 
@@ -189,20 +189,20 @@ class IPTVHost(CHostBase):
 
     def getLogoPath(self):
         return RetHost(RetHost.OK, value=[GetLogoDir('drdklogo.png')])
-    
+
     def getLinksForVideo(self, Index=0, selItem=None):
         retCode = RetHost.ERROR
         retlist = []
         if not self.isValidIndex(Index):
             return RetHost(retCode, value=retlist)
-        
+
         urlList = self.host.getLinksForVideo(self.host.currList[Index])
         for item in urlList:
             retlist.append(CUrlItem(item["name"], item["url"], item["need_resolve"]))
 
         return RetHost(RetHost.OK, value=retlist)
     # end getLinksForVideo
-    
+
     def getResolvedURL(self, url):
         # resolve url to get direct url to video file
         retlist = []
@@ -212,13 +212,13 @@ class IPTVHost(CHostBase):
             retlist.append(CUrlItem(item["name"], item["url"], need_resolve))
 
         return RetHost(RetHost.OK, value=retlist)
-    
+
     def converItem(self, cItem):
         hostList = []
         searchTypesOptions = [] # ustawione alfabetycznie
         #searchTypesOptions.append((_("Movies"), "movies"))
         #searchTypesOptions.append((_("Series"), "series"))
-    
+
         hostLinks = []
         type = CDisplayListItem.TYPE_UNKNOWN
         possibleTypesOfSearch = None
@@ -235,16 +235,16 @@ class IPTVHost(CHostBase):
             type = CDisplayListItem.TYPE_MORE
         elif 'audio' == cItem['type']:
             type = CDisplayListItem.TYPE_AUDIO
-            
+
         if type in [CDisplayListItem.TYPE_AUDIO, CDisplayListItem.TYPE_VIDEO]:
             url = cItem.get('url', '')
             if '' != url:
                 hostLinks.append(CUrlItem("Link", url, 1))
-            
+
         title = cItem.get('title', '')
         description = cItem.get('desc', '')
         icon = cItem.get('icon', '')
-        
+
         return CDisplayListItem(name=title,
                                     description=description,
                                     type=type,

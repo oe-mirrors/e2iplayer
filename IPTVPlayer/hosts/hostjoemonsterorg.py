@@ -49,10 +49,10 @@ def gettytul():
 
 
 class JoeMonster(CBaseHostClass):
- 
+
     def __init__(self):
         CBaseHostClass.__init__(self, {'history': 'joemonster.org', 'cookie': 'joemonster.cookie'})
-        
+
         self.DEFAULT_ICON_URL = 'https://joemonster.org/images/logo/jm-logo-1450873307.png'
         self.HEADER = {'User-Agent': 'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:40.0) Gecko/20100101 Firefox/40.0', 'DNT': '1', 'Accept': 'text/html'}
         self.AJAX_HEADER = dict(self.HEADER)
@@ -66,16 +66,16 @@ class JoeMonster(CBaseHostClass):
     def getPage(self, url, addParams={}, post_data=None):
         if addParams == {}:
             addParams = dict(self.defaultParams)
-        
+
         return self.cm.getPage(url, addParams, post_data)
-        
+
     def listMainMenu(self, cItem):
         MAIN_CAT_TAB = [{'category': 'list_items', 'title': 'Monster TV - Najnowsze filmy', 'url': self.getFullUrl('/filmy')},
                         {'category': 'list_items', 'title': 'Monster TV - Najlepsze filmy', 'url': self.getFullUrl('/filmy/ulubione')},
                         {'category': 'list_poczekalnia', 'title': 'Monster TV - Poczekalnia', 'url': self.getFullUrl('/filmy/poczekalnia')},
                         {'category': 'list_poczekalnia', 'title': 'Monster TV - Kolejka', 'url': self.getFullUrl('/filmy/kolejka')}, ]
         self.listsTab(MAIN_CAT_TAB, cItem)
-    
+
     def listItems(self, cItem):
         printDBG("JoeMonster.listItems")
 
@@ -109,12 +109,12 @@ class JoeMonster(CBaseHostClass):
             params = dict(cItem)
             params.update({'title': _("Next page"), 'url': self.getFullUrl(nextPage), 'page': page + 1})
             self.addDir(params)
-        
+
     def listPoczekalnia(self, cItem):
         printDBG("JoeMonster.listPoczekalnia")
 
         page = cItem.get('page', 1)
-        
+
         sts, data = self.getPage(cItem['url'])
         if not sts:
             return
@@ -122,7 +122,7 @@ class JoeMonster(CBaseHostClass):
         nextPage = self.cm.ph.getDataBeetwenNodes(data, ('<div', '>', 'pagerNav'), ('</div', '>'), False)[1]
         nextPage = self.cm.ph.getDataBeetwenNodes(nextPage, ('<span', '>', 'highlight'), ('</a', '>'), False)[1]
         nextPage = self.cm.ph.getSearchGroups(nextPage, '''href=['"]([^"^']+?)['"]''')[0]
-        
+
         data = self.cm.ph.getDataBeetwenNodes(data, ('<div', '>', 'mtv-poczekalnia-container'), ('<br', '>'))[1]
         data = self.cm.ph.getAllItemsBeetwenNodes(data, ('<div', '>', 'mtvPoczekalniaFilm'), ('<!--', '>'))
         for item in data:
@@ -144,11 +144,11 @@ class JoeMonster(CBaseHostClass):
             params = dict(cItem)
             params.update({'title': _("Next page"), 'url': self.getFullUrl(nextPage), 'page': page + 1})
             self.addDir(params)
-    
+
     def getLinksForVideo(self, cItem):
         printDBG("JoeMonster.getLinksForVideo [%s]" % cItem)
         urlTab = []
-        
+
         sts, data = self.getPage(cItem['url'])
         if not sts:
             return
@@ -161,8 +161,8 @@ class JoeMonster(CBaseHostClass):
                 type = self.cm.ph.getSearchGroups(item, '''type=['"]([^'^"]+?)['"]''')[0].lower()
                 url = self.cm.ph.getSearchGroups(item, '''src=['"]([^'^"]+?)['"]''')[0]
                 name = '%s. %s' % (str(len(urlTab) + 1), type)
-                
-                if 'video/mp4' == type: 
+
+                if 'video/mp4' == type:
                     urlTab.append({'name': name, 'url': self.getFullUrl(url), 'need_resolve': 0})
 #                elif 'video/youtube' == type:
                 else:
@@ -176,11 +176,11 @@ class JoeMonster(CBaseHostClass):
                 urlTab.append({'name': 'name', 'url': self.getFullUrl(url), 'need_resolve': 1})
 
         return urlTab
-    
+
     def getVideoLinks(self, videoUrl):
         printDBG("JoeMonster.getVideoLinks [%s]" % videoUrl)
         urlTab = []
-        if 1 == self.up.checkHostSupport(videoUrl): 
+        if 1 == self.up.checkHostSupport(videoUrl):
             urlTab = self.up.getVideoLinkExt(videoUrl)
         return urlTab
 
@@ -217,16 +217,16 @@ class JoeMonster(CBaseHostClass):
             else:
                 self.login = config.plugins.iptvplayer.joemonsterorg_login.value
                 self.password = config.plugins.iptvplayer.joemonsterorg_password.value
-        
+
         CBaseHostClass.handleService(self, index, refresh, searchPattern, searchType)
 
         name = self.currItem.get("name", '')
         category = self.currItem.get("category", '')
         mode = self.currItem.get("mode", '')
-        
+
         printDBG("handleService: >> name[%s], category[%s] " % (name, category))
         self.currList = []
-        
+
     #MAIN MENU
         if name == None:
             self.listMainMenu({'name': 'category'})
@@ -236,7 +236,7 @@ class JoeMonster(CBaseHostClass):
             self.listItems(self.currItem)
         else:
             printExc()
-        
+
         CBaseHostClass.endHandleService(self, index, refresh)
 
 
@@ -244,4 +244,3 @@ class IPTVHost(CHostBase):
 
     def __init__(self):
         CHostBase.__init__(self, JoeMonster(), True, [])
-    

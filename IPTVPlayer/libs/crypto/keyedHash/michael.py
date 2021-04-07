@@ -25,7 +25,7 @@ class Michael:
         self.strength = 20
         if key != None:
             self.setKey(key)
-            
+
     def __del__(self):
         self.setKey(8 * chr(0))   # feable attempt to clear keys on exit
 
@@ -70,6 +70,3 @@ def b(l, r):
     r ^= (((l << 30) & 0xffffffff) | ((l >> 2) & 0x3fffffff))     # r  = r ^ (l >>> 2)
     l = (l + r) & 0xffffffff                                  # l = (l+r) mod 2**32
     return (l, r)
-
-
-

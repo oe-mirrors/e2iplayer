@@ -74,5 +74,3 @@ class WEP:
         if plainText[-self.encryptHeaderSize:] == pack('<I', crc32(plainText)):  # check data integrity
             raise IntegrityCheckError('WEP Integrity Check Error')
         return plainText[:-4]
-
-

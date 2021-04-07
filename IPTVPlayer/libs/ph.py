@@ -27,8 +27,8 @@ A = A_HREF_URI_RE
 
 def getattr(data, attrmame, flags=0):
     if flags & IGNORECASE:
-        sData = data.lower() 
-        m = '%s=' % attrmame.lower() 
+        sData = data.lower()
+        m = '%s=' % attrmame.lower()
     else:
         sData = data
         m = '%s=' % attrmame
@@ -93,7 +93,7 @@ def none(tab, data, start, end):
 def check(arg1, arg2=None):
     if arg2 == None and isinstance(arg1, str):
         return lambda data, ldata, s, e: ldata.find(arg1, s, e) != -1
-    
+
     return lambda data, ldata, s, e: arg1(arg2, ldata, s, e)
 
 
@@ -119,7 +119,7 @@ def findall(data, start, end=('',), flags=START_E | END_E, limits=-1):
 
     lastIdx = 0
     search = 1
-    
+
     if not (flags & IGNORECASE):
         sData = data
     else:
@@ -199,7 +199,7 @@ def rfindall(data, start, end=('',), flags=START_E | END_E, limits=-1):
 
     lastIdx = len(data)
     search = 1
-    
+
     if not (flags & IGNORECASE):
         sData = data
     else:
@@ -274,7 +274,7 @@ def rfind(data, start, end=('',), flags=START_E | END_E):
 def strip_doubles(data, pattern):
     while -1 < data.find(pattern + pattern) and '' != pattern:
         data = data.replace(pattern + pattern, pattern)
-    return data 
+    return data
 
 
 STRIP_HTML_TAGS_C = None

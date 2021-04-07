@@ -54,7 +54,7 @@ class ZDFmediathek(CBaseHostClass):
     HEADER = {'User-Agent': HOST, 'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8'}
     AJAX_HEADER = dict(HEADER)
     AJAX_HEADER.update({'X-Requested-With': 'XMLHttpRequest', 'Connection': 'keep-alive', 'Pragma': 'no-cache', 'Cache-Control': 'no-cache'})
-    
+
     MAIN_URL = 'https://www.zdf.de/'
     MAIN_API_URL = 'https://zdf-cdn.live.cellular.de/'
     ZDF_API_URL = 'https://api.zdf.de/'
@@ -80,7 +80,7 @@ class ZDFmediathek(CBaseHostClass):
     BOOKMARKS_API_URL = MAIN_API_URL + 'mediathekV2/user/bookmarks'
     AUTH_TOKEN_API_URL = MAIN_API_URL + 'mediathekV2/token'
     AKAMAI_TOKEN_API_URL = 'https://tg2cl15.zdf.de/generate'
-    
+
     MAIN_CAT_TAB = [{'category': 'list_start', 'title': _('Home page'), 'url': START_PAGE_API_URL},
                     {'category': 'missed_date', 'title': _('Missed the show?')},
                     {'category': 'list_cluster', 'title': _('Program A-Z'), 'simplify': False, 'url': BRANDS_ALPHABETICAL_API_URL},
@@ -89,22 +89,22 @@ class ZDFmediathek(CBaseHostClass):
                     {'category': 'kinder', 'title': _('Children')},
                     {'category': 'search', 'title': _('Search'), 'search_item': True},
                     {'category': 'search_history', 'title': _('Search history')}]
-                       
+
     QUALITY_MAP = {'hd': 4, 'veryhigh': 3, 'high': 2, 'med': 1, 'low': 0}
-    
+
     def __init__(self):
         printDBG("ZDFmediathek.__init__")
         CBaseHostClass.__init__(self, {'history': 'ZDFmediathek.tv', 'cookie': 'zdfde.cookie'})
         self.DEFAULT_ICON_URL = 'https://www.zdf.de/static//img/bgs/zdf-typical-fallback-314x314.jpg'
-        
+
         self.KINDER_TAB = [{'category': 'explore_item', 'title': _('Home page'), 'url': self.getFullUrl('/kinder'), 'icon': self.getIconUrl('/assets/zdftivi-home-100~384x216')},
                            {'category': 'kinder_list_abc', 'title': _('Program A-Z'), 'url': self.getFullUrl('/kinder/sendungen-a-z'), 'icon': self.getIconUrl('/assets/a-z-teaser-100~384x216')},
                            {'category': 'explore_item', 'title': _('Missed the show?'), 'url': self.getFullUrl('/kinder/sendung-verpasst'), 'icon': self.getIconUrl('/assets/buehne-tivi-sendung-verpasst-100~384x216')}]
-    
+
     def getPage(self, url, params={}, post_data=None):
         HTTP_HEADER = dict(self.HEADER)
         params.update({'header': HTTP_HEADER})
-        
+
         if 'zdf-cdn.live.cellular.de' in url and False:
             proxy = 'http://www.proxy-german.de/index.php?q={0}&hl=2e1'.format(urllib.parse.quote(url, ''))
             params['header']['Referer'] = proxy
@@ -116,7 +116,7 @@ class ZDFmediathek(CBaseHostClass):
         if sts and 'Duze obciazenie!' in data:
             SetIPTVPlayerLastHostError(self.cleanHtmlStr(data))
         return sts, data
-        
+
     def getIconUrl(self, url):
         url = self.getFullUrl(url)
         if 'zdf-cdn.live.cellular.de' in url and False:
@@ -125,17 +125,17 @@ class ZDFmediathek(CBaseHostClass):
             params['User-Agent'] = self.HEADER['User-Agent'],
             params['Referer'] = proxy
             params['Cookie'] = 'flags=2e5;'
-            url = strwithmeta(proxy, params) 
+            url = strwithmeta(proxy, params)
         elif url.startswith('https://'):
             url = 'http' + url[5:]
-            
+
         return url
-        
+
     def getFullUrl(self, url):
         if 'proxy-german.de' in url:
             url = urllib.parse.unquote(self.cm.ph.getSearchGroups(url + '&', '''\?q=(http[^&]+?)&''')[0])
         return CBaseHostClass.getFullUrl(self, url)
-        
+
     def _getNum(self, v, default=0):
         try:
             return int(v)
@@ -144,15 +144,15 @@ class ZDFmediathek(CBaseHostClass):
                 return float(v)
             except Exception:
                 return default
-            
+
     def _getList(self, data, key, default=[]):
-        try: 
+        try:
             if isinstance(data[key], list):
                 return data[key]
         except Exception:
             printExc()
         return default
-            
+
     def _getIcon(self, iconsItem):
         iconssize = config.plugins.iptvplayer.zdfmediathek_iconssize.value
         iconsTab = []
@@ -171,13 +171,13 @@ class ZDFmediathek(CBaseHostClass):
                 idx = 0
             return iconsTab[idx]['url']
         return ''
-        
+
     def kinderListABC(self, cItem, nextCategory):
         printDBG('kinderListABC')
         sts, data = self.getPage(cItem['url'])
         if not sts:
             return
-        
+
         data = self.cm.ph.getDataBeetwenMarkers(data, '<ul class="letter-list"', '</ul>')[1]
         data = self.cm.ph.getAllItemsBeetwenMarkers(data, '<li', '</li>')
         for item in data:
@@ -188,22 +188,22 @@ class ZDFmediathek(CBaseHostClass):
             params = dict(cItem)
             params.update({'good_for_fav': False, 'category': nextCategory, 'url': url, 'title': title})
             self.addDir(params)
-        
+
     def exploreItem(self, cItem, nextCategory):
         printDBG('exploreItem')
-        
+
         sts, data = self.getPage(cItem['url'])
         if not sts:
             return
-        
+
         data = self.cm.ph.rgetDataBeetwenNodes(data, ('<article class="b-cluster', '>', 'x-web-only'), ('<main', '>', 'id="skip-main"'), False)[1]
         # split data per sections
         sections = re.split('''<section[^>]+?class=['"]b-content-teaser-list['"][^>]*?>|<article[^>]+?itemtype=['"]http://schema.org/ItemList['"][^>]*?>|<article[^>]+?class=['"]b-content-module['"][^>]*?>''', data)
         for section in sections:
             sectionTitle = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(section, '<h2', '</h2>')[1])
-            
+
             items = []
-            data = self.cm.ph.rgetAllItemsBeetwenNodes(section, ('<span', '>', 'circle icon'), ('<picture', '>', '"artdirect"')) #('<article', '>')) 
+            data = self.cm.ph.rgetAllItemsBeetwenNodes(section, ('<span', '>', 'circle icon'), ('<picture', '>', '"artdirect"')) #('<article', '>'))
             tmp = self.cm.ph.rgetAllItemsBeetwenNodes(section, ('<span', '>', 'circle icon'), ('<', '>', '"artdirect"'))
             if len(tmp) > len(data):
                 data = tmp
@@ -213,20 +213,20 @@ class ZDFmediathek(CBaseHostClass):
                     tmp = self.cm.ph.getSearchGroups(item, '''(<a[^>]+?\stitle=[^>]*?>)''')[0]
                     if tmp == '':
                         continue
-                    
+
                     title = self.cleanHtmlStr(self.cm.ph.getSearchGroups(tmp, '''title=['"]([^'^"]+?)['"]''')[0])
-                    
+
                     if title.startswith('Folge'):
                         seriesTitle = self.cleanHtmlStr(self.cm.ph.getDataBeetwenReMarkers(item, re.compile('<span[^>]+?teaser\-cat\-brand[^>]+?>'), re.compile('</span>'), False)[1])
                         title = '%s, %s' % (seriesTitle, title)
-                    
+
                     url = self.getFullUrl(self.cm.ph.getSearchGroups(tmp, '''href=['"]([^'^"]+?)['"]''')[0])
-                    
+
                     icon = self.getIconUrl(self.cm.ph.getSearchGroups(item, '''data-srcset=['"]([^'^"~]+?)['"~]''')[0])
-                    
+
                     if icon == '':
                         icon = self.getIconUrl(self.cm.ph.getSearchGroups(item, '''<meta[^>]+?itemprop=['"]image['"][^>]+?content=['"]([^'^"~]+?)['"~]''')[0])
-                    if icon == '': 
+                    if icon == '':
                         tmp = self.cleanHtmlStr(self.cm.ph.getSearchGroups(item, '''teaser-image=['"]([^'^"]+?)['"]''')[0])
                         try:
                             tmp = json_loads(tmp)['original']
@@ -236,16 +236,16 @@ class ZDFmediathek(CBaseHostClass):
                             printExc()
                     if icon != '':
                         icon += '~314x314'
-                    
+
                     desc = [self.cleanHtmlStr(item.split('<span class="visuallyhidden">', 1)[0])]
                     tmp = self.cm.ph.getDataBeetwenReMarkers(item, re.compile('<[^>]+?desc[^>]+?>'), re.compile('</p>'))[1]
                     desc.append(self.cleanHtmlStr(tmp))
                     desc.append(self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(item, '<dl', '</dl>')[1].replace('</dd>', ' | ')))
                     desc = '[/br]'.join(desc)
-                    
+
                     if 'assets/a-z-teaser' in icon:
                         continue
-                    
+
                     params = {'url': url, 'title': title, 'icon': icon, 'desc': desc}
                     if '_play' in item:
                         params.update({'type': 'video', 'good_for_fav': False})
@@ -262,26 +262,26 @@ class ZDFmediathek(CBaseHostClass):
                     params = dict(cItem)
                     params.update(it)
                     self.currList.append(params)
-        
+
         if len(self.currList) == 1 and 'sub_items' in self.currList[0]:
             cItem = self.currList[0]
             self.currList = []
             self.listSubItems(cItem, 'explore_item')
         return
-        
+
     def listSubItems(self, cItem, nextCategory):
         printDBG('listSubItems')
-        
+
         cItem = dict(cItem)
         items = cItem.pop('sub_items', '')
-        
+
         for item in items:
             params = dict(cItem)
             params.update(item)
             if item['type'] == 'category':
                 params.update({'category': nextCategory})
             self.currList.append(params)
-        
+
     def listStart(self, cItem):
         printDBG('listStart')
         sts, data = self.getPage(cItem['url'])
@@ -294,7 +294,7 @@ class ZDFmediathek(CBaseHostClass):
             self._listCluster(cItem, data['cluster'])
         except Exception:
             printExc()
-        
+
     def listSendungverpasst(self, cItem):
         printDBG('listSendungverpasst')
         sts, data = self.getPage(cItem['url'])
@@ -305,7 +305,7 @@ class ZDFmediathek(CBaseHostClass):
             self._listCluster(cItem, data)
         except Exception:
             printExc()
-        
+
     def listCluster(self, cItem):
         printDBG('listCluster')
         sts, data = self.getPage(cItem['url'])
@@ -316,10 +316,10 @@ class ZDFmediathek(CBaseHostClass):
             self._listCluster(cItem, data)
         except Exception:
             printExc()
-    
+
     def _listCluster(self, cItem, data):
         for item in data:
-            
+
             if 'teaser' in item['type']:
                 tab = self._getList(item, 'teaser')
                 if 0 == len(tab):
@@ -335,13 +335,13 @@ class ZDFmediathek(CBaseHostClass):
                 params = dict(cItem)
                 params.update({'category': 'list_content', 'title': title, 'content': tab})
                 self.addDir(params)
-                
+
     def listContent(self, cItem):
         printDBG('listCluster')
         contentTab = cItem.get('content', [])
         for item in contentTab:
             self._addItem(cItem, item)
-        
+
     def _addItem(self, cItem, item):
         printDBG('_addItem')
         try:
@@ -356,7 +356,7 @@ class ZDFmediathek(CBaseHostClass):
                 descTab.append(self.cleanHtmlStr(item['beschreibung']))
                 params = {'name': 'category', 'category': 'list_cluster', 'title': title, 'url': self.getFullUrl(item['url']), 'desc': ' | '.join(descTab), 'icon': self.getIconUrl(icon), 'id': item['id'], 'sharing_url': item['sharingUrl'], 'good_for_fav': True}
                 self.addDir(params)
-            elif item['type'] in ["video", "livevideo"]:    
+            elif item['type'] in ["video", "livevideo"]:
                 descTab = []
                 descTab.append(self.cleanHtmlStr(item['headline']))
                 descTab.append(self.cleanHtmlStr(item['channel']))
@@ -367,7 +367,7 @@ class ZDFmediathek(CBaseHostClass):
                 self.addVideo(params)
         except Exception:
             printExc()
-    
+
     def listMissedDate(self, cItem):
         printDBG("listMissedDate")
         # convert to timestamp
@@ -385,7 +385,7 @@ class ZDFmediathek(CBaseHostClass):
             url = self.SEARCH_API_URL % (searchPattern, 'episode')
         else:
             url = cItem['url']
-        
+
         sts, data = self.getPage(url)
         if not sts:
             return
@@ -399,10 +399,10 @@ class ZDFmediathek(CBaseHostClass):
                 self.addDir(params)
         except Exception:
             printExc()
-    
+
     def getLinksForVideo(self, cItem):
         printDBG("ZDFmediathek.getLinksForVideo [%s]" % cItem)
-        
+
         if 'id' not in cItem and 'url' in cItem:
             sts, data = self.getPage(cItem['url'])
             if not sts:
@@ -410,18 +410,18 @@ class ZDFmediathek(CBaseHostClass):
             id = self.cm.ph.getSearchGroups(data, '''['"]?docId['"]?\s*:\s*['"]([^'^"]+?)['"]''')[0]
         else:
             id = cItem['id']
-        
+
         sts, data = self.getPage(self.DOCUMENT_API_URL % id)
         if not sts:
             return []
-        
+
         preferedQuality = int(config.plugins.iptvplayer.zdfmediathek_prefquality.value)
         preferedFormat = config.plugins.iptvplayer.zdfmediathek_prefformat.value
         tmp = preferedFormat.split(',')
         formatMap = {}
         for i in range(len(tmp)):
             formatMap[tmp[i]] = i
-        
+
         try:
             subTracks = []
             urlTab = []
@@ -433,7 +433,7 @@ class ZDFmediathek(CBaseHostClass):
                         subTracks.append({'title': item['language'], 'url': item['uri'], 'lang': item['language'], 'format': 'vtt'})
             except Exception:
                 printExc()
-            
+
             live = data['type']
             try:
                 data = data['formitaeten']
@@ -519,7 +519,7 @@ class ZDFmediathek(CBaseHostClass):
                 if '' != url:
                     if 'live' in str(live):
                         live = True
-                    else: 
+                    else:
                         live = False
                     urlTab.append({'need_resolve': 0, 'name': name, 'url': self.up.decorateUrl(url, {'iptv_livestream': live, 'external_sub_tracks': subTracks})})
                     if onelinkmode:
@@ -527,7 +527,7 @@ class ZDFmediathek(CBaseHostClass):
             printDBG(tmpUrlTab)
         except Exception:
             printExc()
-            
+
         return urlTab
 
     def handleService(self, index, refresh=0, searchPattern='', searchType=''):
@@ -537,7 +537,7 @@ class ZDFmediathek(CBaseHostClass):
         category = self.currItem.get("category", '')
         printDBG("ZDFmediathek.handleService: ---------> name[%s], category[%s] " % (name, category))
         searchPattern = self.currItem.get("search_pattern", searchPattern)
-        self.currList = [] 
+        self.currList = []
 
         if None == name:
             self.listsTab(self.MAIN_CAT_TAB, {'name': 'category'})
@@ -562,7 +562,7 @@ class ZDFmediathek(CBaseHostClass):
     #WYSZUKAJ
         elif category in ["search", "search_next_page"]:
             cItem = dict(self.currItem)
-            cItem.update({'search_item': False, 'name': 'category', 'category': 'search_next_page'}) 
+            cItem.update({'search_item': False, 'name': 'category', 'category': 'search_next_page'})
             self.listSearchResult(cItem, searchPattern, searchType)
     #HISTORIA WYSZUKIWANIA
         elif category == "search_history":

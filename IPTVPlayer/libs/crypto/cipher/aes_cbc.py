@@ -21,4 +21,3 @@ class AES_CBC(CBC):
     def __init__(self, key=None, padding=padWithPadLen(), keySize=16):
         CBC.__init__(self, AES(key, noPadding(), keySize), padding)
         self.name = 'AES_CBC'
-

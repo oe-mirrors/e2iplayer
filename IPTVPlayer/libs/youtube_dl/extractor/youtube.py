@@ -65,9 +65,9 @@ class CYTSignAlgoExtractor:
                  r'\bc\s*&&\s*[a-zA-Z0-9]+\.set\([^,]+\s*,\s*\([^)]*\)\s*\(\s*(?P<sig>[a-zA-Z0-9$]+)\(',
                  r'\bc\s*&&\s*[a-zA-Z0-9]+\.set\([^,]+\s*,\s*\([^)]*\)\s*\(\s*(?P<sig>[a-zA-Z0-9$]+)\('
         ]
-        
+
         for reg in patterns:
-            tmp = re.findall(reg, data)                    
+            tmp = re.findall(reg, data)
             for name in tmp:
                 if name and not any((c in name) for c in ''', '"'''):
                     printDBG('pattern: ' + reg)
@@ -120,7 +120,7 @@ class CYTSignAlgoExtractor:
         jsname = 'ytsigndec'
         jshash = 'hash7_' + playerUrl.split('://', 1)[-1]
         if not is_js_cached(jsname, jshash):
-        
+
             # get main function
             sts, self.playerData = self.cm.getPage(playerUrl)
             if not sts:
@@ -174,7 +174,7 @@ class CYTSignAlgoExtractor:
 def ExtractorError(text):
     printDBG(text)
     SetIPTVPlayerLastHostError(_(text))
-    
+
 
 class YoutubeIE(object):
     """Information extractor for youtube.com."""
@@ -226,14 +226,14 @@ class YoutubeIE(object):
                                       # Dash audio
                                       '172', '141', '171', '140', '139'
                                       ]
-                                      
+
     _supported_formats = ['18', '22', '37', '38', # mp4
                           '82', '83', '84', '85', # mp4 3D
                           '92', '93', '94', '95', '96', '132', '151', # Apple HTTP Live Streaming
                           '133', '134', '135', '136', '137', '138', '160', '298', '299', # Dash mp4
                           '139', '140', '141', # Dash mp4 audio
                           ]
-    
+
     _video_formats_map = {
         'flv': ['35', '34', '6', '5'],
         '3gp': ['36', '17', '13'],
@@ -297,8 +297,8 @@ class YoutubeIE(object):
         '246': 'webm',
         '247': 'webm',
         '248': 'webm',
-        '271': 'webmv', 
-        '313': 'webmv', 
+        '271': 'webmv',
+        '313': 'webmv',
 
         'mpd': 'mpd'
     }
@@ -353,7 +353,7 @@ class YoutubeIE(object):
         '248': '1080p',
         '298': '720p60',
         '299': '1080p60',
-        '271': '1440p', 
+        '271': '1440p',
         '313': '2160p',
     }
 
@@ -386,7 +386,7 @@ class YoutubeIE(object):
         '248': 'DASH Video',
         '298': 'DASH Video',
         '299': 'DASH Video',
-        '271': 'DASH Video', 
+        '271': 'DASH Video',
         '313': 'DASH Video',
     }
     IE_NAME = 'youtube'
@@ -402,7 +402,7 @@ class YoutubeIE(object):
         mobj = re.match(self._VALID_URL, url, re.VERBOSE)
         if mobj != None:
             video_id = mobj.group(2)
-        
+
         return video_id
 
     def _get_automatic_captions(self, video_id, webpage=None):
@@ -412,7 +412,7 @@ class YoutubeIE(object):
             sts, data = self.cm.getPage(url)
             if not sts:
                 return sub_tracks
-        
+
         sts, data = self.cm.ph.getDataBeetwenMarkers(data, ';ytplayer.config =', '};', False)
         if not sts:
             return sub_tracks
@@ -432,7 +432,7 @@ class YoutubeIE(object):
                 caption_list = self.cm.getPage(list_url)
                 printDBG(caption_list)
                 return sub_lang_list
-                
+
                 original_lang_node = caption_list.find('track')
                 if original_lang_node is None:
                     return []
@@ -457,7 +457,7 @@ class YoutubeIE(object):
                         })
                     sub_lang_list[sub_lang] = sub_formats
                 return sub_lang_list
-            
+
             # Some videos don't provide ttsurl but rather caption_tracks and
             # caption_translation_languages (e.g. 20LmZk1hakA)
             caption_tracks = args['caption_tracks']
@@ -482,7 +482,7 @@ class YoutubeIE(object):
         except Exception:
             printExc()
         return sub_tracks
-        
+
     def _get_subtitles(self, video_id):
         sub_tracks = []
         try:
@@ -490,13 +490,13 @@ class YoutubeIE(object):
             sts, data = self.cm.getPage(url)
             if not sts:
                 return sub_tracks
-            
+
             encoding = self.cm.ph.getDataBeetwenMarkers(data, 'encoding="', '"', False)[1]
-            
+
             def getArg(item, name):
                 val = self.cm.ph.getDataBeetwenMarkers(item, '%s="' % name, '"', False)[1]
                 return val.decode(encoding).encode(encoding)
-            
+
             data = data.split('/>')
             for item in data:
                 if 'lang_code' not in item:
@@ -518,7 +518,7 @@ class YoutubeIE(object):
 
     def _real_extract(self, url, allowVP9=False, allowAgeGate=False):
         # Extract original video URL from URL with redirection, like age verification, using next_url parameter
-        
+
         mobj = re.search(self._NEXT_URL_RE, url)
         if mobj:
             #https
@@ -565,13 +565,13 @@ class YoutubeIE(object):
             age_gate = False
             tries = 0
             tokenFound = False
-            
+
             while (tries < 5) and (not tokenFound):
                 for el_type in ['&el=detailpage', '&el=embedded', '&el=vevo', '']:
                     #https
                     video_info_url = videoInfoBase + ('%s&ps=default&eurl=&gl=US&hl=en' % (el_type))
                     sts, video_info = self.cm.getPage(video_info_url, videoInfoparams)
-                    if not sts: 
+                    if not sts:
                         continue
                     if 'token' in video_info or 'Token' in video_info:
                         if 'channel_creation_token' in video_info:
@@ -583,18 +583,18 @@ class YoutubeIE(object):
                         printDBG("token found after %s tries!" % (tries + 1))
                         tokenFound = True
                         break
-                
+
                 tries = tries + 1
-        
+
         if not tokenFound:
             raise ExtractorError('"token" parameter not in video info')
-        
+
         # Check for "rental" videos
         if 'ypc_video_rental_bar_text' in video_info and 'author' not in video_info:
             raise ExtractorError('"rental" videos not supported')
 
         # Start extracting information
-        
+
         video_info = video_info.split('&')
         video_info2 = {}
         for item in video_info:
@@ -610,7 +610,7 @@ class YoutubeIE(object):
             video_duration = ''
         else:
             video_duration = video_info['length_seconds']
-        
+
         if 'url_encoded_fmt_stream_map' in video_info:
             video_info['url_encoded_fmt_stream_map'] = [_unquote(video_info['url_encoded_fmt_stream_map'], None)]
         if 'adaptive_fmts' in video_info:
@@ -647,13 +647,13 @@ class YoutubeIE(object):
             if allowVP9:
                 _supported_formats.extend(['313', '271'])
             for url_data_str in encoded_url_map.split(','):
-                if 'index=' in url_data_str and 'index=0-0&' in url_data_str: 
+                if 'index=' in url_data_str and 'index=0-0&' in url_data_str:
                     continue
-                
+
                 if 'itag=' in url_data_str and 'url=' in url_data_str:
                     url_data_str = url_data_str.split('&')
                     url_data = {}
-                    
+
                     supported = False
                     for item in url_data_str:
                         item = item.split('=')
@@ -666,7 +666,7 @@ class YoutubeIE(object):
                             else:
                                 break
                         url_data[item[0]] = key
-                            
+
                     if not supported:
                         continue
 
@@ -676,7 +676,7 @@ class YoutubeIE(object):
                         url_item['url'] += '&signature=' + signature
                     elif 's' in url_data:
                         url_item['esign'] = _unquote(url_data['s'])
-                        if 'sp' in url_data: 
+                        if 'sp' in url_data:
                             url_item['url'] += '&%s={0}' % url_data['sp']
                         else:
                             url_item['url'] += '&signature={0}'
@@ -684,7 +684,7 @@ class YoutubeIE(object):
                         url_item['url'] += '&ratebypass=yes'
                     url_map[url_data['itag']] = url_item
                 video_url_list = self._get_video_url_list(url_map, allowVP9)
-   
+
         if video_info.get('hlsvp') and not video_url_list:
             is_m3u8 = 'yes'
             manifest_url = _unquote(video_info['hlsvp'], None)
@@ -695,7 +695,7 @@ class YoutubeIE(object):
             is_m3u8 = 'yes'
             manifest_url = _unquote(video_info['player_response'], None)
             manifest = re.search('"hlsManifestUrl":"(.*?)"', manifest_url)
-            if manifest: 
+            if manifest:
                 manifest_url = manifest.group(1)
                 url_map = self._extract_from_m3u8(manifest_url, video_id)
                 video_url_list = self._get_video_url_list(url_map, allowVP9)
@@ -709,17 +709,17 @@ class YoutubeIE(object):
                     url_data_str += json_loads(_unquote(video_info['player_response'], None))['streamingData']['adaptiveFormats']
                 except Exception:
                     printExc()
-                
+
                 for url_data in url_data_str:
-                    
+
                     printDBG(str(url_data))
-                    
+
                     if 'url' in url_data:
                         url_item = {'url': url_data['url']}
                     else:
                         cipher = url_data.get('cipher', '') + url_data.get('signatureCipher', '')
                         printDBG(cipher)
-                        
+
                         cipher = cipher.split('&')
                         for item in cipher:
                             #sig_item = ''
@@ -738,13 +738,13 @@ class YoutubeIE(object):
                             url_item['url'] += '&signature=' + signature
                         elif len(s_item):
                             url_item['esign'] = _unquote(s_item)
-                            if len(sp_item): 
+                            if len(sp_item):
                                 url_item['url'] += '&%s={0}' % sp_item
                             else:
                                 url_item['url'] += '&signature={0}'
                         if not 'ratebypass' in url_item['url']:
                             url_item['url'] += '&ratebypass=yes'
-                        
+
                     url_map[str(url_data['itag'])] = url_item
                 video_url_list = self._get_video_url_list(url_map, allowVP9)
             except Exception:
@@ -795,7 +795,7 @@ class YoutubeIE(object):
 
         if isGoogleDoc:
             cookieHeader = self.cm.getCookieHeader(COOKIE_FILE)
-        
+
         sub_tracks = self._get_subtitles(video_id)
         results = []
         for format_param, url_item in video_url_list:
@@ -823,9 +823,9 @@ class YoutubeIE(object):
                 'player_url': '',
                 'm3u8': is_m3u8,
             })
-            
+
         return results
-        
+
     def _extract_from_m3u8(self, manifest_url, video_id):
         url_map = {}
 
@@ -861,12 +861,11 @@ class YoutubeIE(object):
         else:
             printDBG('unable to extract %s; please report this issue on http://yt-dl.org/bug' % name)
             return None
-            
+
     def _get_video_url_list(self, url_map, allowVP9=False):
         format_list = list(self._available_formats_prefer_free) # available_formats
         if allowVP9:
             format_list.extend(['313', '271'])
         existing_formats = [x for x in format_list if x in url_map]
-        
-        return [(f, url_map[f]) for f in existing_formats] # All formats
 
+        return [(f, url_map[f]) for f in existing_formats] # All formats

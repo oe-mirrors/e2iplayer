@@ -25,7 +25,7 @@ from Components.config import config, ConfigSelection, ConfigInteger, ConfigYesN
 
 
 ###################################################
-# E2 GUI COMMPONENTS 
+# E2 GUI COMMPONENTS
 ###################################################
 from Plugins.Extensions.IPTVPlayer.components.asynccall import iptv_execute
 from Screens.MessageBox import MessageBox
@@ -55,7 +55,7 @@ def GetConfigList():
 
 def gettytul():
     return _('LocalMedia')
-    
+
 
 def iptv_execute_wrapper(cmd):
     printDBG("LocalMedia.iptv_execute_wrapper cmd[%r]" % cmd)
@@ -74,17 +74,17 @@ class LocalMedia(CBaseHostClass):
     PICTURE_FILES_EXTENSIONS = ['jpg', 'jpeg', 'png']
     M3U_FILES_EXTENSIONS = ['m3u']
     ISO_FILES_EXTENSIONS = ['iso']
-    
+
     def __init__(self):
         CBaseHostClass.__init__(self, {'history': 'LocalMedia'})
         self.currDir = ''
 
     def getCurrDir(self):
         return self.currDir
-        
+
     def setCurrDir(self, currDir):
         self.currDir = currDir
-        
+
     def getExtension(self, path):
         ext = ''
         try:
@@ -93,7 +93,7 @@ class LocalMedia(CBaseHostClass):
         except Exception:
             pass
         return ext.lower()
-        
+
     def prepareCmd(self, path, start, end):
         lsdirPath = GetBinDir("lsdir")
         try:
@@ -104,7 +104,7 @@ class LocalMedia(CBaseHostClass):
             dWildcards = '[^.]*|.[^.]*|..[^.]*'
         else:
             dWildcards = '[^.]*'
-        
+
         fWildcards = []
         extensions = self.VIDEO_FILE_EXTENSIONS + self.AUDIO_FILES_EXTENSIONS + self.PICTURE_FILES_EXTENSIONS + self.M3U_FILES_EXTENSIONS + self.ISO_FILES_EXTENSIONS
         for ext in extensions:
@@ -121,28 +121,28 @@ class LocalMedia(CBaseHostClass):
         if config.plugins.iptvplayer.local_showfilesize.value:
             cmd += " 1 "
         return cmd
-        
+
     def listsMainMenu(self, cItem):
         printDBG("LocalMedia.listsMainMenu [%s]" % cItem)
         # list mount points
         predefined = [{'title': _('Downloads'), 'path': config.plugins.iptvplayer.NaszaSciezka.value}, {'title': _('rootfs'), 'path': '/'}]
         for item in predefined:
             params = dict(cItem)
-            params.update(item) 
+            params.update(item)
             self.addDir(params)
-        
+
         table = self.getMountsTable()
         for item in table:
             if config.plugins.iptvplayer.local_showhiddensdir.value:
                 path, name = os_path.split(item['node'])
                 if name.startswith('.'):
                     continue
-                
+
             if '/' != item['node'] and item['filesystem'] in self.FILE_SYSTEMS:
                 params = dict(cItem)
-                params.update({'title': item['node'], 'path': item['node']}) 
+                params.update({'title': item['node'], 'path': item['node']})
                 self.addDir(params)
-        
+
     def _getM3uIcon(self, item, cItem):
         icon = item.get('tvg-logo', '')
         if not self.cm.isValidUrl(icon):
@@ -152,7 +152,7 @@ class LocalMedia(CBaseHostClass):
         if not self.cm.isValidUrl(icon):
             icon = cItem.get('icon', '')
         return icon
-        
+
     def _getM3uPlayableUrl(self, baseUrl, url, item):
         need_resolve = 1
         if url.startswith('/'):
@@ -163,10 +163,10 @@ class LocalMedia(CBaseHostClass):
                 url = 'http:' + url
             else:
                 url = self.cm.getBaseUrl(baseUrl) + url[1:]
-        if '' != item.get('program-id', ''): 
+        if '' != item.get('program-id', ''):
             url = strwithmeta(url, {'PROGRAM-ID': item['program-id']})
         return need_resolve, url
-        
+
     def listM3u(self, cItem, nextCategory):
         printDBG("LocalMedia.listM3u [%s]" % cItem)
         baseUrl = ''
@@ -177,16 +177,16 @@ class LocalMedia(CBaseHostClass):
                 return
             if '#EXT' not in data:
                 baseUrl = data.strip()
-        else: 
+        else:
             baseUrl = cItem['path']
-        
+
         if self.cm.isValidUrl(baseUrl):
-            baseUrl = self.up.decorateParamsFromUrl(baseUrl) 
+            baseUrl = self.up.decorateParamsFromUrl(baseUrl)
             httpParams, postData = self.cm.getParamsFromUrlWithMeta(baseUrl)
             sts, data = self.cm.getPage(baseUrl, httpParams, postData)
             if not sts:
                 return
-        
+
         data = ParseM3u(data)
         groups = {}
         for item in data:
@@ -194,7 +194,7 @@ class LocalMedia(CBaseHostClass):
             group = item.get('group-title', '')
             url = item['uri']
             icon = self._getM3uIcon(item, cItem)
-            
+
             if item['f_type'] == 'inf':
                 if group == '':
                     need_resolve, url = self._getM3uPlayableUrl(baseUrl, url, item)
@@ -216,12 +216,12 @@ class LocalMedia(CBaseHostClass):
             elif item['f_type'] == 'import' and self.cm.isValidUrl(url):
                 params.update({'good_for_fav': True, 'title': item['title'], 'path': url, 'desc': '', 'icon': icon})
                 self.addDir(params)
-        
+
         if groups != {}:
             for idx in range(len(self.currList)):
                 if 'f_group' in self.currList[idx]:
                     self.currList[idx]['f_group_items'] = groups.get(self.currList[idx]['f_group'], [])
-        
+
     def listM3uGroups(self, cItem):
         printDBG("LocalMedia.listM3uGroups [%s]" % cItem)
         baseUrl = cItem['url']
@@ -233,15 +233,15 @@ class LocalMedia(CBaseHostClass):
             need_resolve, url = self._getM3uPlayableUrl(baseUrl, url, item)
             params.update({'good_for_fav': True, 'title': item['title'], 'category': 'm3u_item', 'url': url, 'desc': item.get('tvg-name', ''), 'icon': icon, 'need_resolve': need_resolve})
             self.addVideo(params)
-            
+
     def showErrorMessage(self, message):
         printDBG(message)
         SetIPTVPlayerLastHostError(message)
         self.sessionEx.open(MessageBox, text=message, type=MessageBox.TYPE_ERROR)
-        
+
     def getMountsTable(self, silen=False):
         table = []
-        
+
         cmd = 'mount  2>&1'
         ret = iptv_execute_wrapper(cmd)
         if ret['sts']:
@@ -256,7 +256,7 @@ class LocalMedia(CBaseHostClass):
             else:
                 message = _('Can not get mount points - cmd mount failed.\nReturn code[%s].\nReturn data[%s].') % (ret['code'], data)
         return table
-            
+
     def getMountPoint(self, device, table=[], silen=False):
         printDBG("LocalMedia.getMountPoint")
         if [] == table:
@@ -265,7 +265,7 @@ class LocalMedia(CBaseHostClass):
             if device == item['device']:
                 return item['node']
         return ''
-        
+
     def isMountPoint(self, path, table=[], silen=False):
         printDBG("LocalMedia.isMountPoint")
         if [] == table:
@@ -274,7 +274,7 @@ class LocalMedia(CBaseHostClass):
             if path == item['node']:
                 return True
         return False
-        
+
     def getCharsetEncodingOfMountPoint(self, mountPoint):
         printDBG("getCharsetEncodingOfMountPoint mountPoint[%s]" % mountPoint)
         encoding = 'utf-8'
@@ -287,16 +287,16 @@ class LocalMedia(CBaseHostClass):
         if encoding == '':
             encoding = 'utf-8'
         return encoding
-        
+
     def listIso(self, cItem):
         printDBG("LocalMedia.listIso [%s]" % cItem)
         # check if iso file is mounted
         path = cItem['path']
         defaultMountPoint = GetTmpDir(self.ISO_MOUNT_POINT_NAME)
         defaultMountPoint = defaultMountPoint.replace('//', '/')
-        
+
         mountPoint = self.getMountPoint(path)
-        
+
         if '' == mountPoint:
             # umount if different image already mounted
             if self.isMountPoint(defaultMountPoint):
@@ -306,7 +306,7 @@ class LocalMedia(CBaseHostClass):
                     # normal umount failed, so detach filesystem only
                     cmd = 'umount -l "{0}"'.format(defaultMountPoint) + ' 2>&1'
                     ret = iptv_execute_wrapper(cmd)
-                    
+
             # now mount the iso file
             if not mkdirs(defaultMountPoint):
                 message = _('Make directory [%s]') % (defaultMountPoint)
@@ -322,28 +322,28 @@ class LocalMedia(CBaseHostClass):
                         return
                     else:
                         mountPoint = defaultMountPoint
-        
+
         if '' != mountPoint:
             params = dict(cItem)
             params.update({'next_good_for_fav': False, 'path': mountPoint, 'category': 'dir'})
             self.listDir(params)
-        
+
     def listDir(self, cItem):
         printDBG("LocalMedia.listDir [%s]" % cItem)
         page = cItem.get('page', 0)
-        
+
         start = cItem.get('start', 0)
         end = start + config.plugins.iptvplayer.local_maxitems.value
-        
+
         cItem = dict(cItem)
         cItem['start'] = 0
-        
+
         path = cItem['path']
         cmd = self.prepareCmd(path, start, end + 1) + ' 2>&1'
-        printDBG("cmd [%s]" % cmd) 
+        printDBG("cmd [%s]" % cmd)
         ret = iptv_execute_wrapper(cmd)
         printDBG(ret)
-        
+
         if ret['sts'] and 0 == ret['code']:
             self.setCurrDir(path)
             data = ret['data'].split('\n')
@@ -351,7 +351,7 @@ class LocalMedia(CBaseHostClass):
                 encoding = self.getCharsetEncodingOfMountPoint(data[0])
             else:
                 encoding = 'utf-8'
-            
+
             dirTab = []
             m3uTab = []
             isoTab = []
@@ -361,14 +361,14 @@ class LocalMedia(CBaseHostClass):
             for item in data:
                 start += 1
                 if start > end:
-                    break 
+                    break
                 item = item.split('//')
                 if config.plugins.iptvplayer.local_showfilesize.value:
                     if 5 != len(item):
                         continue
-                elif 4 != len(item): 
+                elif 4 != len(item):
                     continue
-                
+
                 fileSize = -1
                 if 5 == len(item):
                     try:
@@ -397,14 +397,14 @@ class LocalMedia(CBaseHostClass):
                         audTab.append(params)
                     elif ext in self.PICTURE_FILES_EXTENSIONS:
                         picTab.append(params)
-                
+
             self.addFromTab(cItem, dirTab, path, 'dir')
             self.addFromTab(cItem, isoTab, path, 'iso')
             self.addFromTab(cItem, m3uTab, path, 'm3u', 1)
             self.addFromTab(cItem, vidTab, path, 'video')
             self.addFromTab(cItem, audTab, path, 'audio')
             self.addFromTab(cItem, picTab, path, 'picture')
-            
+
             if start > end:
                 params = dict(cItem)
                 params.pop('good_for_fav', None)
@@ -415,7 +415,7 @@ class LocalMedia(CBaseHostClass):
         table = []
         if category == 'iso':
             table = self.getMountsTable(True)
-            
+
         if config.plugins.iptvplayer.local_alphasort.value == 'alphabetically':
             try:
                 tab.sort(key=lambda item: item['title'])
@@ -431,12 +431,12 @@ class LocalMedia(CBaseHostClass):
                     descTab = []
                     if item.get('size', -1) >= 0:
                         descTab.append(_("Total size: ") + formatBytes(item['size']))
-                        
+
                     #if len(table):
                     #    params['iso_mount_path']  = self.getMountPoint(fullPath, table)
                     #    if params['iso_mount_path']:
                     #        descTab.append( _('Mounted on %s') % params['iso_mount_path'] )
-                    
+
                     if len(descTab):
                         params['desc'] = '[/br]'.join(descTab)
                 self.addDir(params)
@@ -450,29 +450,29 @@ class LocalMedia(CBaseHostClass):
                 if item.get('size', -1) >= 0:
                     params['desc'] = _("Total size: ") + formatBytes(item['size'])
                 self.currList.append(params)
-    
+
     def getArticleContent(self, cItem):
         printDBG("LocalMedia.getArticleContent [%s]" % cItem)
         retTab = []
-        
+
         return []
-        
+
     def _uriIsValid(self, url):
         if '://' in url:
             return True
         return False
-        
+
     def getResolvedURL(self, url):
         printDBG("LocalMedia.getResolvedURL [%s]" % url)
         videoUrls = []
-        
+
         if url.startswith('/') and fileExists(url):
             url = 'file://' + url
-        
+
         uri, params = DMHelper.getDownloaderParamFromUrl(url)
         printDBG(params)
         uri = urlparser.decorateUrl(uri, params)
-        
+
         if uri.meta.get('iptv_proto', '') in ['http', 'https']:
             urlSupport = self.up.checkHostSupport(uri)
         else:
@@ -490,25 +490,25 @@ class LocalMedia(CBaseHostClass):
             else:
                 videoUrls.append({'name': 'direct link', 'url': uri})
         return videoUrls
-        
+
     def getFavouriteData(self, cItem):
         try:
             params = dict(cItem)
             if 'url' in params:
                 params['fav_url_meta'] = strwithmeta(params['url']).meta
             data = json_dumps(cItem)
-        except Exception: 
+        except Exception:
             printExc()
             data = ''
         return data
-        
+
     def getLinksForFavourite(self, fav_data):
         try:
             cItem = json_loads(fav_data)
             fav_data = strwithmeta(cItem['url'], cItem.get('fav_url_meta', {}))
         except Exception:
             printExc()
-        
+
         need_resolve = 0
         if not fav_data.startswith('file://'):
             need_resolve = 1
@@ -516,14 +516,14 @@ class LocalMedia(CBaseHostClass):
 
     def handleService(self, index, refresh=0, searchPattern='', searchType=''):
         printDBG('handleService start')
-        
+
         CBaseHostClass.handleService(self, index, refresh, searchPattern, searchType)
 
         name = self.currItem.get("name", '')
         category = self.currItem.get("category", '')
         printDBG("handleService: |||||||||||||||||||||||||||||||||||| name[%s], category[%s] " % (name, category))
         self.currList = []
-        
+
     #MAIN MENU
         if name == None:
             self.listsMainMenu({'name': 'category', 'good_for_fav': True})
@@ -535,7 +535,7 @@ class LocalMedia(CBaseHostClass):
             self.listIso(self.currItem)
         else:
             self.listDir(self.currItem)
-        
+
         CBaseHostClass.endHandleService(self, index, refresh)
 
 
@@ -547,7 +547,7 @@ class IPTVHost(CHostBase):
         self.cType = ''
         self.needRefresh = ''
         self.DEFAULT_ICON = 'http://www.ngonb.ru/files/res_media.png'
-    
+
     def getPrevList(self, refresh=0):
         self.host.setCurrDir('')
         if(len(self.listOfprevList) > 0):
@@ -555,9 +555,9 @@ class IPTVHost(CHostBase):
             hostCurrItem = self.listOfprevItems.pop()
             self.host.setCurrList(hostList)
             self.host.setCurrItem(hostCurrItem)
-            
+
             convList = None
-            if '' != self.needRefresh: 
+            if '' != self.needRefresh:
                 path = hostCurrItem.get('path', '')
                 if '' != path and os_path.realpath(path) == os_path.realpath(self.needRefresh):
                     self.needRefresh = ''
@@ -568,25 +568,25 @@ class IPTVHost(CHostBase):
             return RetHost(RetHost.OK, value=convList)
         else:
             return RetHost(RetHost.ERROR, value=[])
-        
+
     def getCustomActions(self, Index=0):
         retCode = RetHost.ERROR
         retlist = []
-        
+
         def addPasteAction(path):
             if os_path.isdir(path):
                 if '' != self.cFilePath:
                     cutPath, cutFileName = os_path.split(self.cFilePath)
                     params = IPTVChoiceBoxItem(_('Paste "%s"') % cutFileName, "", {'action': 'paste_file', 'path': path})
                     retlist.append(params)
-        
+
         ok = False
         if not self.isValidIndex(Index):
             path = self.host.getCurrDir()
             addPasteAction(path)
-            retCode = RetHost.OK 
+            retCode = RetHost.OK
             return RetHost(retCode, value=retlist)
-        
+
         if self.host.currList[Index]['type'] in ['video', 'audio', 'picture'] and \
            self.host.currList[Index].get('url', '').startswith('file://'):
             fullPath = self.host.currList[Index]['url'][7:]
@@ -603,28 +603,28 @@ class IPTVHost(CHostBase):
         if ok:
             path, fileName = os_path.split(fullPath)
             name, ext = os_path.splitext(fileName)
-            
+
             if '' != self.host.currList[Index].get("iso_mount_path", ''):
                 params = IPTVChoiceBoxItem(_('Umount iso file'), "", {'action': 'umount_iso_file', 'file_path': fullPath, 'iso_mount_path': self.host.currList[Index]['iso_mount_path']})
                 retlist.append(params)
-            
+
             if os_path.isfile(fullPath):
                 params = IPTVChoiceBoxItem(_('Rename'), "", {'action': 'rename_file', 'file_path': fullPath})
                 retlist.append(params)
                 params = IPTVChoiceBoxItem(_('Remove'), "", {'action': 'remove_file', 'file_path': fullPath})
                 retlist.append(params)
-                
+
                 params = IPTVChoiceBoxItem(_('Copy'), "", {'action': 'copy_file', 'file_path': fullPath})
                 retlist.append(params)
-                
+
                 params = IPTVChoiceBoxItem(_('Cut'), "", {'action': 'cut_file', 'file_path': fullPath})
                 retlist.append(params)
-            
+
             addPasteAction(path)
             retCode = RetHost.OK
-        
+
         return RetHost(retCode, value=retlist)
-        
+
     def performCustomAction(self, privateData):
         retCode = RetHost.ERROR
         retlist = []
@@ -683,11 +683,11 @@ class IPTVHost(CHostBase):
                     elif self.cType == 'copy':
                         cmd = 'cp "%s" "%s"' % (self.cFilePath, newPath)
                         ret = iptv_execute_wrapper(cmd)
-                
+
                 if ret['sts'] and 0 != ret['code']:
                     retlist = [(_('Moving file from "%s" to "%s" failed.\n') % (self.cFilePath, newPath)) + (_('Error code: %s\n') % ret['code']) + (_('Error message: %s\n') % ret['data'])]
                     ok = False
-                
+
                 if ok:
                     self.cType = ''
                     self.cFilePath = ''
@@ -702,9 +702,9 @@ class IPTVHost(CHostBase):
                 # normal umount failed, so detach filesystem only
                 cmd = 'umount -l "{0}"'.format(privateData['iso_mount_path']) + ' 2>&1'
                 ret = iptv_execute_wrapper(cmd)
-        
+
         return RetHost(retCode, value=retlist)
-        
+
     def getResolvedURL(self, url):
         # resolve url to get direct url to video file
         retlist = []
@@ -714,7 +714,7 @@ class IPTVHost(CHostBase):
             retlist.append(CUrlItem(item["name"], item["url"], need_resolve))
 
         return RetHost(RetHost.OK, value=retlist)
-    
+
     def getArticleContent(self, Index=0):
         retCode = RetHost.ERROR
         retlist = []
@@ -729,15 +729,14 @@ class IPTVHost(CHostBase):
             othersInfo = item.get('other_info', '')
             retlist.append(ArticleContent(title=title, text=text, images=images, richDescParams=othersInfo))
         return RetHost(RetHost.OK, value=retlist)
-        
+
     def getFullIconUrl(self, url):
         return url
-        
+
     def getDefaulIcon(self, cItem):
         return self.DEFAULT_ICON
-    
+
     def converItem(self, cItem):
         needUrlResolve = cItem.get('need_resolve', 0)
         needUrlSeparateRequest = 0
         return CHostBase.converItem(self, cItem, needUrlResolve, needUrlSeparateRequest)
-    

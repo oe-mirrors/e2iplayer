@@ -75,7 +75,7 @@ class Fenixsite(CBaseHostClass):
 
         data = ph.find(data, ('<div', '>', 'owl-box'), '</table>')[1]
         data = ph.findall(data, ('<a', '>'), '</td>', flags=ph.START_S)
-        
+
         itemsList = []
         for idx in range(1, len(data), 2):
             url = self.getFullUrl(ph.getattr(data[idx - 1], 'href'))
@@ -116,7 +116,7 @@ class Fenixsite(CBaseHostClass):
         for idx in range(1, len(data), 2):
             item = ph.find(data[idx - 1], 'ssorts(', ')', flags=0)[1].split(',')
             if len(item) != 3:
-                continue 
+                continue
             title = self.cleanHtmlStr(data[idx])
             url = self.getFullUrl(item[1].strip()[1:-1])
             try:
@@ -193,7 +193,7 @@ class Fenixsite(CBaseHostClass):
             self.currList = self.currList[0]['sub_items']
 
     def getLinksForVideo(self, cItem):
-    
+
         linksTab = self.cacheLinks.get(cItem['url'], [])
         if linksTab:
             return linksTab
@@ -333,7 +333,7 @@ class Fenixsite(CBaseHostClass):
                 except Exception:
                     printExc()
                     continue
-            else: 
+            else:
                 value = self.cleanHtmlStr(ph.find(item, ('<div', '>', 'text'), '</div>', flags=0)[1].rsplit('</ul>', 1)[-1])
             itemsList.append((key, value))
 
@@ -343,12 +343,12 @@ class Fenixsite(CBaseHostClass):
             icon = cItem.get('icon', self.DEFAULT_ICON_URL)
         if desc == '':
             desc = cItem.get('desc', '')
-        
+
         return [{'title': self.cleanHtmlStr(title), 'text': self.cleanHtmlStr(desc), 'images': [{'title': '', 'url': self.getFullUrl(icon)}], 'other_info': {'custom_items_list': itemsList}}]
 
     def handleService(self, index, refresh=0, searchPattern='', searchType=''):
         printDBG('handleService start')
-        
+
         CBaseHostClass.handleService(self, index, refresh, searchPattern, searchType)
 
         name = self.currItem.get("name", '')
@@ -378,7 +378,7 @@ class Fenixsite(CBaseHostClass):
     #SEARCH
         elif category in ["search", "search_next_page"]:
             cItem = dict(self.currItem)
-            cItem.update({'search_item': False, 'name': 'category'}) 
+            cItem.update({'search_item': False, 'name': 'category'})
             self.listSearchResult(cItem, searchPattern, searchType)
     #HISTORIA SEARCH
         elif category == "search_history":

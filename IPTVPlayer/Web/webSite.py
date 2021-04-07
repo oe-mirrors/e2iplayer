@@ -34,14 +34,14 @@ def reloadScripts():
     webPath = GetPluginDir(file='/Web/')
     if os.path.exists(os.path.join(webPath, "webParts.py")):
         if os.path.exists(os.path.join(webPath, "webParts.pyo")):
-            if (int(os.path.getmtime(os.path.join(webPath, "webParts.pyo"))) < 
+            if (int(os.path.getmtime(os.path.join(webPath, "webParts.pyo"))) <
                 int(os.path.getmtime(os.path.join(webPath, "webParts.py")))):
                 importlib.reload(webParts)
         else:
             importlib.reload(webParts)
     if os.path.exists(os.path.join(webPath, "webThreads.py")):
         if os.path.exists(os.path.join(webPath, "webThreads.pyo")):
-            if (int(os.path.getmtime(os.path.join(webPath, "webThreads.pyo"))) < 
+            if (int(os.path.getmtime(os.path.join(webPath, "webThreads.pyo"))) <
                 int(os.path.getmtime(os.path.join(webPath, "webThreads.py")))):
                 importlib.reload(webThreads)
         else:
@@ -50,10 +50,10 @@ def reloadScripts():
 
 
 class redirectionPage(resource.Resource):
-    
+
     title = "E2iPlayer Webinterface"
     isLeaf = False
-   
+
     def render(self, req):
         req.setHeader('Content-type', 'text/html')
         req.setHeader('charset', 'UTF-8')
@@ -85,10 +85,10 @@ class redirectionPage(resource.Resource):
 class StartPage(resource.Resource):
     title = "E2iPlayer Webinterface"
     isLeaf = False
-   
+
     def __init__(self):
         pass
-   
+
     def render(self, req):
         req.setHeader('Content-type', 'text/html')
         req.setHeader('charset', 'UTF-8')
@@ -117,7 +117,7 @@ class StartPage(resource.Resource):
                     resetStatusMSG.append(_('Web component has been reset and all threads are stopped. :)'))
                 else:
                     resetStatusMSG.insert(0, _('Web component has been reset, the following threads are still working:'))
-              
+
         """ rendering server response """
         if isActiveHostInitiated():
             return util.redirectTo("/iptvplayer/usehost", req)
@@ -125,17 +125,17 @@ class StartPage(resource.Resource):
         html = '<html lang="%s">' % language.getLanguage()[:2]
         html += webParts.IncludeHEADER()
         html += webParts.Body().StartPageContent(', '.join(resetStatusMSG))
-        return html 
+        return html
 #######################################################
 
 
 class searchPage(resource.Resource):
     title = "E2iPlayer Webinterface"
     isLeaf = False
-   
+
     def __init__(self):
         self.Counter = 0
-   
+
     def render(self, req):
         req.setHeader('Content-type', 'text/html')
         req.setHeader('charset', 'UTF-8')
@@ -156,10 +156,10 @@ class searchPage(resource.Resource):
         else:
             key = None
             arg = None
-            
+
         """ rendering server response """
         reloadScripts()
-        
+
         if key is None or arg is None or arg == '':
             if isThreadRunning('doGlobalSearch'):
                 stopRunningThread('doGlobalSearch')
@@ -199,23 +199,23 @@ class searchPage(resource.Resource):
             MenuStatusMSG = ''
             extraMeta = ''
             settings.GlobalSearchListShown = False
-          
+
         html = '<html lang="%s">' % language.getLanguage()[:2]
         html += webParts.IncludeHEADER(extraMeta)
         html += webParts.Body().SearchPageContent(MenuStatusMSG, ShowCancelButton)
-        return html 
+        return html
 
 
 #######################################################
 class hostsPage(resource.Resource):
     title = "E2iPlayer Webinterface"
     isLeaf = False
-    
+
     def __init__(self):
         self.Counter = 0
-   
+
     def render(self, req):
-        
+
         req.setHeader('Content-type', 'text/html')
         req.setHeader('charset', 'UTF-8')
 
@@ -248,26 +248,26 @@ class hostsPage(resource.Resource):
 class logsPage(resource.Resource):
     title = "E2iPlayer Webinterface"
     isLeaf = False
-   
+
     def __init__(self):
         pass
-   
+
     def render(self, req):
         """ rendering server response """
         htmlError = ''
         DBGFileContent = ''
         MenuStatusMSG = ''
         extraMeta = ''
-        
+
         if os.path.exists('/hdd/iptv.dbg'):
             DBGFileName = '/hdd/iptv.dbg'
         elif os.path.exists('/tmp/iptv.dbg'):
             DBGFileName = '/tmp/iptv.dbg'
         else:
             DBGFileName = ''
-            
+
         command = req.args.get("cmd", ['NOcmd'])
-        
+
         if DBGFileName == '':
             req.setHeader('Content-type', 'text/html')
             req.setHeader('charset', 'UTF-8')
@@ -309,10 +309,10 @@ class logsPage(resource.Resource):
 class settingsPage(resource.Resource):
     title = "E2iPlayer Webinterface"
     isLeaf = False
-   
+
     def __init__(self):
         pass
-   
+
     def render(self, req):
         extraMeta = ''
         MenuStatusMSG = ''
@@ -324,7 +324,7 @@ class settingsPage(resource.Resource):
             key = list(req.args.keys())[0]
             arg = req.args.get(key, None)[0]
             print('Received: ', key, '=', arg)
-        
+
             try:
                 if key is None or arg is None:
                     pass
@@ -375,10 +375,10 @@ class settingsPage(resource.Resource):
 class downloaderPage(resource.Resource):
     title = "E2iPlayer Webinterface"
     isLeaf = False
-   
+
     def __init__(self):
         pass
-   
+
     def render(self, req):
         req.setHeader('Content-type', 'text/html')
         req.setHeader('charset', 'UTF-8')
@@ -413,7 +413,7 @@ class downloaderPage(resource.Resource):
                 DMlist = Plugins.Extensions.IPTVPlayer.components.iptvplayerwidget.gDownloadManager.getList()
         elif key == 'cmd' and arg == 'runDM':
             if None != Plugins.Extensions.IPTVPlayer.components.iptvplayerwidget.gDownloadManager:
-                Plugins.Extensions.IPTVPlayer.components.iptvplayerwidget.gDownloadManager.runWorkThread() 
+                Plugins.Extensions.IPTVPlayer.components.iptvplayerwidget.gDownloadManager.runWorkThread()
                 DMlist = Plugins.Extensions.IPTVPlayer.components.iptvplayerwidget.gDownloadManager.getList()
         elif key == 'cmd' and arg == 'stopDM':
             if None != Plugins.Extensions.IPTVPlayer.components.iptvplayerwidget.gDownloadManager:
@@ -471,7 +471,7 @@ class downloaderPage(resource.Resource):
                     listItem = DMItemBase(_('Nothing has been downloaded yet.'), '')
                     listItem.status = 'INFO'
                     DMlist.append(listItem)
-            
+
         if len(DMlist) == 0 and arg != 'arvchiveDM':
             listItem = DMItemBase(_('No materials waiting in the downloader queue'), '')
             listItem.status = 'INFO'
@@ -479,7 +479,7 @@ class downloaderPage(resource.Resource):
             extraMeta = ''
         elif len(DMlist) == 0 and arg in ['arvchiveDM', 'stopDM']:
             extraMeta = ''
-            
+
         reloadScripts()
         html = '<html lang="%s">' % language.getLanguage()[:2]
         html += webParts.IncludeHEADER(extraMeta)
@@ -491,13 +491,13 @@ class downloaderPage(resource.Resource):
 class useHostPage(resource.Resource):
     title = "E2iPlayer Webinterface"
     isLeaf = False
-   
+
     def __init__(self):
         self.Counter = 0
-   
+
     def render(self, req):
         reloadScripts()
-        
+
         """ rendering server response """
         self.key = None
         self.arg = None
@@ -505,7 +505,7 @@ class useHostPage(resource.Resource):
         html = ''
         extraMeta = ''
         MenuStatusMSG = ''
-        
+
         if len(list(req.args.keys())) > 0:
             self.key = list(req.args.keys())[0]
             self.arg = req.args.get(self.key, None)[0]
@@ -514,7 +514,7 @@ class useHostPage(resource.Resource):
                 print("useHostPage received: '%s'='%s' searchType='%s'" % (self.key, str(self.arg), self.searchType))
             else:
                 print("useHostPage received: '%s'='%s'" % (self.key, str(self.arg)))
-        
+
         if self.key is None and isActiveHostInitiated() == False:
             return util.redirectTo("/iptvplayer/hosts", req)
         elif self.key == 'cmd' and self.arg == 'hosts':

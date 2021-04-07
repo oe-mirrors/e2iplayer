@@ -60,19 +60,19 @@ class UnCaptchaReCaptcha:
                         elif timeout > 10:
                             timeout = 5
                         time.sleep(timeout)
-                        
+
                         apiUrl = self.getFullUrl('/index.cgi?apikey=') + apiKey + '&action=usercaptchacorrectdata&json=1&id=' + captchaid
                         sts, data = self.cm.getPage(apiUrl)
                         if not sts:
                             continue
                             # maybe simple continue here ?
                             errorMsgTab.append(_('Network failed %s.') % '2')
-                            break 
+                            break
                         else:
                             printDBG('API DATA:\n%s\n' % data)
                             data = json_loads(data)
                             token = data['answer']
-                            if token != '': 
+                            if token != '':
                                 break
                         if sleepObj.getTimeout() == 0:
                             errorMsgTab.append(_('%s timeout.') % self.getMainUrl())
@@ -84,10 +84,10 @@ class UnCaptchaReCaptcha:
         except Exception as e:
             errorMsgTab.append(str(e))
             printExc()
-        
+
         if sleepObj != None:
             sleepObj.Reset()
-        
+
         if token == '':
             self.sessionEx.waitForFinishOpen(MessageBox, (_('Resolving reCaptcha with %s failed!\n\n') % self.getMainUrl()) + '\n'.join(errorMsgTab), type=MessageBox.TYPE_ERROR, timeout=10)
         return token

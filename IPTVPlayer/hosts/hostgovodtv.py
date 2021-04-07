@@ -29,7 +29,7 @@ def gettytul():
 
 
 class govodtv(CBaseHostClass):
-    
+
     def __init__(self):
         CBaseHostClass.__init__(self, {'history': 'govod.tv', 'cookie': 'govod.tv.cookie'})
         self.USER_AGENT = 'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:40.0) Gecko/20100101 Firefox/40.0'
@@ -39,7 +39,7 @@ class govodtv(CBaseHostClass):
         self.AJAX_HEADER = dict(self.HTTP_HEADER)
         self.AJAX_HEADER.update({'X-Requested-With': 'XMLHttpRequest', 'Accept-Encoding': 'gzip, deflate', 'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8', 'Accept': 'application/json, text/javascript, */*; q=0.01'})
 
-        self.cacheMovieFilters = {'cats': [], 'sort': [], 'years': [], 'az': []}        
+        self.cacheMovieFilters = {'cats': [], 'sort': [], 'years': [], 'az': []}
         self.cacheLinks = {}
         self.defaultParams = {'header': self.HTTP_HEADER, 'with_metadata': True, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
 
@@ -59,11 +59,11 @@ class govodtv(CBaseHostClass):
                 return urllib.parse.urljoin(baseUrl, url)
         addParams['cloudflare_params'] = {'domain': self.up.getDomain(baseUrl), 'cookie_file': self.COOKIE_FILE, 'User-Agent': self.USER_AGENT, 'full_url_handle': _getFullUrl}
         return self.cm.getPageCFProtection(baseUrl, addParams, post_data)
-        
+
     def setMainUrl(self, url):
         if self.cm.isValidUrl(url):
             self.MAIN_URL = self.cm.getBaseUrl(url)
-    
+
     def listMainMenu(self, cItem):
         printDBG("govodtv.listMainMenu")
 
@@ -74,10 +74,10 @@ class govodtv(CBaseHostClass):
 #                        {'category':'list_years',     'title': _('Movies by year'), 'url':self.MAIN_URL},
                         {'category': 'list_cats', 'title': _('Categories'), 'url': self.MAIN_URL},
 #                        {'category':'list_az',        'title': _('Alphabetically'), 'url':self.MAIN_URL},
-                        {'category': 'search', 'title': _('Search'), 'search_item': True}, 
+                        {'category': 'search', 'title': _('Search'), 'search_item': True},
                         {'category': 'search_history', 'title': _('Search history')}, ]
         self.listsTab(MAIN_CAT_TAB, cItem)
-    
+
     ###################################################
     def _fillMovieFilters(self, cItem):
         self.cacheMovieFilters = {'cats': [], 'sort': [], 'years': [], 'az': []}
@@ -94,13 +94,13 @@ class govodtv(CBaseHostClass):
 
 #        sts, data = self.getPage(self.MAIN_URL)
 #        if not sts: return
-        
+
         # fill cats
         dat = self.cm.ph.getDataBeetwenMarkers(data, '<ul class="sub-menu">', '</ul>', False)[1]
         dat = re.compile('<a[^>]+?href="([^"]+?)"[^>]*?>(.+?)</a>').findall(re.sub('\s+', ' ', dat))
         for item in dat:
             self.cacheMovieFilters['cats'].append({'title': self.cleanHtmlStr(item[1]), 'url': self.getFullUrl(item[0])})
-            
+
         # fill years
 #        dat = self.cm.ph.getDataBeetwenMarkers(data, '<ul class="dropdown-menu year-dropdown"', '</ul>', False)[1]
 #        dat = re.compile('<a[^>]+?href="([^"]+?)"[^>]*?>(.+?)</a>').findall(dat)
@@ -112,11 +112,11 @@ class govodtv(CBaseHostClass):
 #        dat = re.compile('<a[^>]+?href="([^"]+?)"[^>]*?>(.+?)</a>').findall(dat)
 #        for item in dat:
 #            self.cacheMovieFilters['az'].append({'title': self.cleanHtmlStr(item[1]), 'url': self.getFullUrl(item[0])})
-    
+
     ###################################################
     def listMovieFilters(self, cItem, category):
         printDBG("govodtv.listMovieFilters")
-        
+
         filter = cItem['category'].split('_')[-1]
         if 0 == len(self.cacheMovieFilters[filter]) or filter == 'sort':
             self._fillMovieFilters(cItem)
@@ -124,7 +124,7 @@ class govodtv(CBaseHostClass):
             filterTab = []
             filterTab.extend(self.cacheMovieFilters[filter])
             self.listsTab(filterTab, cItem, category)
-        
+
     def listsTab(self, tab, cItem, category=None):
         printDBG("govodtv.listsTab")
         for item in tab:
@@ -149,14 +149,14 @@ class govodtv(CBaseHostClass):
         if not sts:
             return
         self.setMainUrl(data.meta['url'])
-            
+
         nextPage = self.cm.ph.getDataBeetwenNodes(data, ('<div', '>', 'pagination'), ('</div', '>'))[1]
         nextPage = self.cm.ph.getDataBeetwenNodes(nextPage, ('<a', '>', 'next'), ('</a', '>'))[1]
         if '' != self.cm.ph.getSearchGroups(nextPage, 'page=(%s)[^0-9]' % (page + 1))[0]:
             nextPage = True
         else:
             nextPage = False
-        
+
         data = self.cm.ph.getAllItemsBeetwenNodes(data, ('<div', '>', 'ml-item'), ('</i', '>'))
 
         for item in data:
@@ -173,7 +173,7 @@ class govodtv(CBaseHostClass):
             else:
                 params = {'good_for_fav': True, 'url': url, 'title': title, 'desc': desc, 'icon': icon}
                 self.addVideo(params)
-            
+
         if nextPage:
             params = dict(cItem)
             params.update({'title': _('Next page'), 'url': cUrl, 'page': page + 1})
@@ -190,7 +190,7 @@ class govodtv(CBaseHostClass):
         serieDesc = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(serieDesc, ('<p', '>'), ('</p', '>'))[1])
         serieIcon = self.getFullIconUrl(self.cm.ph.getSearchGroups(data, '''<img itemprop="image".*src=['"]([^'^"]+?)['"]''')[0])
         data = self.cm.ph.getAllItemsBeetwenNodes(data, ('<div', '>', 'season-'), ('</table', '>'))
-        
+
         for sItem in data:
             sTitle = self.cm.ph.getSearchGroups(sItem, '''<div id=['"]([^'^"]+?)['"]''')[0].replace('season', _('Season')).replace('-', ' ')
             if not sTitle:
@@ -206,7 +206,7 @@ class govodtv(CBaseHostClass):
                 params = dict(cItem)
                 params.update({'good_for_fav': False, 'category': nextCategory, 'title': sTitle, 'episodes': tabItems, 'icon': serieIcon, 'desc': serieDesc})
                 self.addDir(params)
-                
+
     def listSeriesEpisodes(self, cItem):
         printDBG("govodtv.listSeriesEpisodes [%s]" % cItem)
         episodes = cItem.get('episodes', [])
@@ -220,12 +220,12 @@ class govodtv(CBaseHostClass):
         url = self.getFullUrl('/szukaj?s=%s') % urllib.parse.quote_plus(searchPattern)
         params = {'name': 'category', 'category': 'list_items', 'good_for_fav': False, 'url': url}
         self.listItems(params)
-        
+
     def getLinksForVideo(self, cItem):
         printDBG("govodtv.getLinksForVideo [%s]" % cItem)
-                
+
         urlTab = []
-        
+
         if '/player/' in cItem['url']:
             urlTab.append({'name': cItem['url'], 'url': strwithmeta(cItem['url'], {'Referer': cItem['url']}), 'need_resolve': 1})
         else:
@@ -239,12 +239,12 @@ class govodtv(CBaseHostClass):
                 urlTab.append({'name': self.up.getHostName(url), 'url': strwithmeta(url, {'Referer': cItem['url']}), 'need_resolve': 1})
 
         return urlTab
-        
+
     def getVideoLinks(self, baseUrl):
         printDBG("govodtv.getVideoLinks [%s]" % baseUrl)
         baseUrl = strwithmeta(baseUrl)
         urlTab = []
-        
+
         # mark requested link as used one
         if len(list(self.cacheLinks.keys())):
             for key in self.cacheLinks:
@@ -253,7 +253,7 @@ class govodtv(CBaseHostClass):
                         if not self.cacheLinks[key][idx]['name'].startswith('*'):
                             self.cacheLinks[key][idx]['name'] = '*' + self.cacheLinks[key][idx]['name'] + '*'
                         break
-                        
+
         return self.up.getVideoLinkExt(baseUrl)
 
     def getArticleContent(self, cItem):
@@ -288,17 +288,17 @@ class govodtv(CBaseHostClass):
 
     def handleService(self, index, refresh=0, searchPattern='', searchType=''):
         printDBG('handleService start')
-        
+
         CBaseHostClass.handleService(self, index, refresh, searchPattern, searchType)
 
         name = self.currItem.get("name", '')
         category = self.currItem.get("category", '')
         mode = self.currItem.get("mode", '')
-        
+
         printDBG("handleService: |||| name[%s], category[%s] " % (name, category))
         self.cacheLinks = {}
         self.currList = []
-        
+
     #MAIN MENU
         if name == None and category == '':
             rm(self.COOKIE_FILE)
@@ -312,7 +312,7 @@ class govodtv(CBaseHostClass):
         elif 'list_sort' == category:
             self.listMovieFilters(self.currItem, 'list_items')
         elif category == 'list_items':
-            self.listItems(self.currItem)            
+            self.listItems(self.currItem)
         elif category == 'list_seasons':
             self.listSeriesSeasons(self.currItem, 'list_episodes')
         elif category == 'list_episodes':
@@ -321,14 +321,14 @@ class govodtv(CBaseHostClass):
     #SEARCH
         elif category in ["search", "search_next_page"]:
             cItem = dict(self.currItem)
-            cItem.update({'search_item': False, 'name': 'category'}) 
+            cItem.update({'search_item': False, 'name': 'category'})
             self.listSearchResult(cItem, searchPattern, searchType)
     #HISTORIA SEARCH
         elif category == "search_history":
             self.listsHistory({'name': 'history', 'category': 'search'}, 'desc', _("Type: "))
         else:
             printExc()
-        
+
         CBaseHostClass.endHandleService(self, index, refresh)
 
 

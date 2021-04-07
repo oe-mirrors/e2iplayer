@@ -53,4 +53,3 @@ if __name__ == "__main__":
     sys.path.insert(1, libsPath)
     decrypt_file(file, key)
     sys.exit(0)
-

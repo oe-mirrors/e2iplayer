@@ -17,7 +17,7 @@ class SuggestionsProvider:
 
     def __init__(self):
         self.cm = common()
-        
+
     def getName(self):
         return _("IMDb Suggestions")
 
@@ -34,5 +34,5 @@ class SuggestionsProvider:
                 data = json.loads(data)['d']
                 for item in data:
                     retList.append(item['l'].encode('utf-8'))
-                return retList 
+                return retList
         return None

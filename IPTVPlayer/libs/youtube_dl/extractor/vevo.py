@@ -23,11 +23,11 @@ from Components.config import config, ConfigSelection, ConfigYesNo, ConfigText, 
 
 config.plugins.iptvplayer.vevo_default_quality = ConfigSelection(default="1228800", choices=[
 ("0", _("the worst")),
-("245760", "30 KB/s"), 
-("655360", "80 KB/s"), 
-("409600", "50 KB/s"), 
-("655360", "80 KB/s"), 
-("737280", "90 KB/s"), 
+("245760", "30 KB/s"),
+("655360", "80 KB/s"),
+("409600", "50 KB/s"),
+("655360", "80 KB/s"),
+("737280", "90 KB/s"),
 ("1228800", "150 KB/s"),
 ("1638400", "200 KB/s"),
 ("2867200", "350 KB/s"),
@@ -87,12 +87,12 @@ class VevoIE(InfoExtractor):
     def __init__(self):
         InfoExtractor.__init__(self)
         self._api_url_template = ''
-        
+
     def printDBG(self, data):
         printDBG("=======================================================")
         printDBG(data)
         printDBG("=======================================================")
-        
+
     def _initialize_api(self, video_id):
         sts, data = self.cm.getPage('http://www.vevo.com/')
         if sts:
@@ -106,7 +106,7 @@ class VevoIE(InfoExtractor):
     def _formats_from_json(self, video_info):
         if not video_info:
             return []
-        
+
         last_version = {'version': -1}
         for version in video_info['videoVersions']:
             # These are the HTTP downloads, other types are for different manifests
@@ -133,7 +133,7 @@ class VevoIE(InfoExtractor):
 
     def _formats_from_smil(self, smil_xml):
         formats = []
-        
+
         els = re.compile('<video ([^>]+?)>').findall(smil_xml)
         for el in els:
             src = self.xmlGetArg(el, 'src')
@@ -188,20 +188,20 @@ class VevoIE(InfoExtractor):
     def _real_extract2(self, url, hls=None, smil=True):
         mobj = re.match(self._VALID_URL, url)
         video_id = mobj.group('id')
-        
+
         if hls == None:
             hls = config.plugins.iptvplayer.vevo_allow_hls.value
 
         json_url = 'http://api.vevo.com/VideoService/AuthenticateVideo?isrc=%s' % video_id
         response = self._download_json(json_url, video_id)
         video_info = response['video'] or {}
-        
+
         if not video_info and response.get('statusCode') != 909:
             if 'statusMessage' in response:
                 SetIPTVPlayerLastHostError(response['statusMessage'])
                 raise ExtractorError('%s said: %s' % (self.IE_NAME, response['statusMessage']), expected=True)
             raise ExtractorError('Unable to extract videos')
-            
+
         if not video_info:
             if url.startswith('vevo:'):
                 raise ExtractorError('Please specify full Vevo URL for downloading', expected=True)
@@ -250,14 +250,14 @@ class VevoIE(InfoExtractor):
             'duration': video_info.get('duration', 0),
             'age_limit': age_limit,
         }
-        
+
     def _call_api(self, path, *args, **kwargs):
         return self._download_json(self._api_url_template % path, *args, **kwargs)
-    
+
     def _real_extract(self, url, hls=None, smil=True):
         mobj = re.match(self._VALID_URL, url)
         video_id = mobj.group('id')
-        
+
         if hls == None:
             hls = config.plugins.iptvplayer.vevo_allow_hls.value
 
@@ -267,11 +267,11 @@ class VevoIE(InfoExtractor):
             video_info = {}
         else:
             video_info = response['video'] or {}
-        
+
         printDBG(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>.")
         printDBG(video_info)
         printDBG("<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<.")
-        
+
         artist = None
         featured_artist = None
         uploader = None
@@ -303,7 +303,7 @@ class VevoIE(InfoExtractor):
             if not video_versions:
                 webpage = self._download_webpage(url, video_id)
                 video_versions = self._extract_json(webpage, video_id, 'streams')[video_id][0]
-            
+
             artists = video_info.get('artists')
             if artists:
                 artist = uploader = artists[0]['name']
@@ -340,7 +340,7 @@ class VevoIE(InfoExtractor):
                         \.(?P<ext>[a-z0-9]+)''', version_url)
                     if not m:
                         continue
-                        
+
                     formats.append({
                         'url': version_url,
                         'format_id': 'http-%s-%s' % (version, video_version['quality']),

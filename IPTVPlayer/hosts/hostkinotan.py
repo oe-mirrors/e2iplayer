@@ -34,14 +34,14 @@ class Kinotan(CBaseHostClass):
         self.HEADER = {'User-Agent': 'Mozilla/5.0', 'Accept': 'text/html'}
         self.AJAX_HEADER = dict(self.HEADER)
         self.AJAX_HEADER.update({'X-Requested-With': 'XMLHttpRequest'})
-        
+
         self.MAIN_URL = 'http://kinotan.ru/'
         self.DEFAULT_ICON_URL = 'http://ipic.su/img/img7/fs/logo2.1460442551.png'
 
         self.MAIN_CAT_TAB = [{'category': 'cat_serials', 'title': _('Serials'), 'url': self.getFullUrl('/serial/')},
                              {'category': 'cat_tv_shows', 'title': _('TV shows'), 'url': self.getFullUrl('/tv-shou/')},
                              {'category': 'cat_mult', 'title': _('Cartoons'), 'url': self.getFullUrl('/multserial/')},
-                             
+
                              {'category': 'search', 'title': _('Search'), 'search_item': True},
                              {'category': 'search_history', 'title': _('Search history')}
                              ]
@@ -176,14 +176,14 @@ class Kinotan(CBaseHostClass):
             params = dict(cItem)
             params.update({'title': _('Next page'), 'page': cItem.get('page', 1) + 1})
             self.addDir(params)
-    
+
     def listIndexes(self, cItem, nextCategory, nextCategory2):
         printDBG("Kinotan.listIndexes")
-        
+
         sts, data = self.getPage(cItem['url'])
         if not sts:
             return
-        
+
         idx = 0
         tmp = self.cm.ph.getAllItemsBeetwenNodes(data, ('<div', '>', 'news-item'), ('</div', '>'))
         for item in tmp:
@@ -196,7 +196,7 @@ class Kinotan(CBaseHostClass):
             params = dict(cItem)
             params.update({'good_for_fav': False, 'category': nextCategory, 'title': title, 'url': url})
             self.addDir(params)
-            
+
         if len(self.currList) < 2:
             self.currList = []
             cItem = dict(cItem)
@@ -205,12 +205,12 @@ class Kinotan(CBaseHostClass):
     def listContent(self, cItem, category, data=None):
         printDBG("Kinotan.listContent")
         self.cacheContentTab = {}
-        
+
         if data == None:
             sts, data = self.getPage(cItem['url'])
             if not sts:
                 return
-        
+
         tabs = []
         tmp = self.cm.ph.getAllItemsBeetwenMarkers(data, '<div id="videotabs_', '</div>')
         printDBG(tmp)
@@ -223,13 +223,13 @@ class Kinotan(CBaseHostClass):
             if '' != tab_block and '' != tab_id and '' != tab_page:
                 post_data = {'block': tab_block, 'id': tab_id, 'page': tab_page}
                 tabs.append({'title': title, 'url': self.getFullUrl('/engine/ajax/re_video_part.php'), 'post_data': post_data})
-        
+
         if len(tabs):
             params = dict(cItem)
             params['category'] = 'list_tab_content'
             self.listsTab(tabs, params)
             return
-        
+
         tmp = self.cm.ph.getDataBeetwenMarkers(data, 'RalodePlayer.init(', '"});', False)[1]
         if tmp != '':
             try:
@@ -238,7 +238,7 @@ class Kinotan(CBaseHostClass):
                     tabs = []
                     sTitle = self.cleanHtmlStr(tmp[sKey]['name'])
                     sId = self.cleanHtmlStr(tmp[sKey]['id'])
-                    
+
                     for eKey in tmp[sKey]['items']:
                         title = self.cleanHtmlStr(tmp[sKey]['items'][eKey]['sname'])
                         url = self.cm.ph.getSearchGroups(tmp[sKey]['items'][eKey]['scode'], 'src="([^"]*?)"')[0]
@@ -249,7 +249,7 @@ class Kinotan(CBaseHostClass):
                         except Exception:
                             sortVal = 0
                         tabs.append({'title': title, 'sort_value': sortVal, 'url': url})
-                    
+
                     if len(tabs):
                         tabs.sort(key=lambda item: item['sort_value'])
                         params = dict(cItem)
@@ -258,7 +258,7 @@ class Kinotan(CBaseHostClass):
                         self.cacheContentTab[sId] = tabs
             except Exception:
                 printExc()
-        
+
         d_url = self.cm.ph.getDataBeetwenMarkers(data, '<div class="full-text">', '</iframe>', False)[1]
         url = self.cm.ph.getSearchGroups(d_url, 'src="([^"]*?)"')[0]
         if url.startswith('//'):
@@ -266,11 +266,11 @@ class Kinotan(CBaseHostClass):
         desc = self.cm.ph.getDataBeetwenMarkers(data, '<h2 class="opisnie">', '</div>', True)[1]
         desc = self.cm.ph.getSearchGroups(desc, '>(.*?)</div>')[0]
         desc = self.cleanHtmlStr(desc)
-        
+
         self.exploreLink(cItem, category, url, desc)
-        
+
     def exploreLink(self, cItem, category, url, desc=''):
-        
+
         title = cItem['title']
         params = dict(cItem)
         params['desc'] = desc
@@ -278,8 +278,8 @@ class Kinotan(CBaseHostClass):
         hostName = self.up.getHostName(url)
         if hostName in ['serpens.nl', 'daaidaij.com', '37.220.36.15']:
             hostName = 'moonwalk.cc'
-            
-        params.update({'category': category, 'serie_title': title}) 
+
+        params.update({'category': category, 'serie_title': title})
         if hostName == 'moonwalk.cc' and '/serial/' in url:
             seasons = self.moonwalkParser.getSeasonsList(url)
             for item in seasons:
@@ -295,10 +295,10 @@ class Kinotan(CBaseHostClass):
                 param = dict(params)
                 param.update({'host_name': 'hdgo.cc', 'title': item['title'], 'season_id': item['id'], 'url': item['url']})
                 self.addDir(param)
-            
+
             if 0 != len(seasons):
                 return
-            
+
             seasonUrl = url
             episodes = self.hdgocc.getEpiodesList(seasonUrl, -1)
             for item in episodes:
@@ -306,16 +306,16 @@ class Kinotan(CBaseHostClass):
                 param.update(
                     {'title': '{0} - {1} - s01e{2} '.format(title, item['title'], item['id']), 'url': item['url']})
                 self.addVideo(param)
-            
+
             if 0 != len(episodes):
                 return
-        
+
         if 1 == self.up.checkHostSupport(url):
             self.addVideo(params)
-            
+
     def listTabContent(self, cItem, category):
         printDBG("Kinotan.listTabContent")
-        
+
         tabId = cItem.get('tab_id', '')
         if tabId != '':
             tabs = self.cacheContentTab[tabId]
@@ -323,17 +323,17 @@ class Kinotan(CBaseHostClass):
                 params = dict(cItem)
                 params['title'] = item['title']
                 self.exploreLink(params, category, item['url'])
-        
+
         else:
             post_data = cItem.get('post_data')
             sts, data = self.getPage(cItem['url'], {}, post_data)
             if not sts:
                 return
-            
+
             printDBG("==========================================")
             printDBG(data)
             printDBG("==========================================")
-            
+
             url = data.strip()
             if url.startswith('http://') or url.startswith('https://'):
                 self.exploreLink(cItem, category, url)
@@ -349,21 +349,21 @@ class Kinotan(CBaseHostClass):
             episodes = self.moonwalkParser.getEpiodesList(cItem['url'], id)
         elif hostName == 'hdgo.cc':
             episodes = self.hdgocc.getEpiodesList(cItem['url'], id)
-        
+
         for item in episodes:
             params = dict(cItem)
             params.update({'title': '{0} - s{1}e{2} {3}'.format(title, id, item['id'], item['title']), 'url': item['url']})
             self.addVideo(params)
-        
+
     def listSearchResult(self, cItem, searchPattern, searchType):
         #searchPattern = 'сезон'
-        
+
         post_data = {'do': 'search', 'titleonly': 3, 'subaction': 'search', 'story': searchPattern}
-        
+
         sts, data = self.getPage(self.getMainUrl(), post_data=post_data)
         if not sts:
             return
-        
+
         m1 = '<div class="short-item">'
         data = self.cm.ph.getDataBeetwenMarkers(data, m1, '<div class="navigright">', False)[1]
         data = data.split(m1)

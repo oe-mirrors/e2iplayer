@@ -25,35 +25,35 @@ def gettytul():
 
 
 class MeczykiPL(CBaseHostClass):
- 
+
     def __init__(self):
         CBaseHostClass.__init__(self, {'history': 'meczykipl', 'cookie': 'meczykipl.cookie'})
         self.USER_AGENT = 'Mozilla/5.0'
         self.HEADER = {'User-Agent': self.USER_AGENT, 'Accept': 'text/html'}
         self.AJAX_HEADER = dict(self.HEADER)
         self.AJAX_HEADER.update({'X-Requested-With': 'XMLHttpRequest'})
-        
+
         self.defaultParams = {'header': self.HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
-        
+
         self.DEFAULT_ICON_URL = 'http://www.meczyki.pl/images/logo.png'
         self.MAIN_URL = None
-        
+
     def selectDomain(self):
         self.MAIN_URL = 'http://www.meczyki.pl/'
-    
+
     def getPage(self, baseUrl, addParams={}, post_data=None):
         return self.cm.getPage(baseUrl, addParams, post_data)
-    
+
     def listMainMenu(self, cItem, nextCategory):
         printDBG("MeczykiPL.listMainMenu")
-        
+
         params = dict(cItem)
         params.update({'category': nextCategory, 'title': _('--All--'), 'f_cat': '0'})
         self.addDir(params)
-        
+
         sts, data = self.getPage(self.getFullUrl('/najnowsze_skroty.html'))
         if not sts:
-            return 
+            return
         data = self.cm.ph.getDataBeetwenMarkers(data, '<div class="content-box-text"', 'shortcuts-content-start')[1]
         data = self.cm.ph.getAllItemsBeetwenMarkers(data, '<a', '</a>')
         for item in data:
@@ -64,21 +64,21 @@ class MeczykiPL(CBaseHostClass):
             params = dict(cItem)
             params.update({'category': nextCategory, 'title': title, 'url': url, 'icon': icon, 'f_cat': cat})
             self.addDir(params)
-    
+
     def listItems(self, cItem, nextCategory):
         printDBG("MeczykiPL.listItems |%s|" % cItem)
-        
+
         baseUrl = self.getFullUrl('/front/shortcut/get-shortcuts')
         page = cItem.get('page', 1)
         cat = cItem.get('f_cat', '0')
-        
+
         query = {'category': cat, 'page': page}
         url = baseUrl + '?' + urllib.parse.urlencode(query)
-        
+
         sts, data = self.getPage(url)
         if not sts:
             return
-        
+
         try:
             data = json_loads(data)
             data = data['shortcuts']
@@ -97,16 +97,16 @@ class MeczykiPL(CBaseHostClass):
                     self.addDir(params)
         except Exception:
             printExc()
-        
+
         if 0 == len(self.currList):
             return
-        
+
         query['page'] = page + 1
         url = baseUrl + '?' + urllib.parse.urlencode(query)
         sts, data = self.getPage(url)
         if not sts:
             return
-        
+
         try:
             if len(list(json_loads(data)['shortcuts'].keys())):
                 params = dict(cItem)
@@ -114,10 +114,10 @@ class MeczykiPL(CBaseHostClass):
                 self.addDir(params)
         except Exception:
             printExc()
-            
+
     def exploreItem(self, cItem):
         printDBG("OkGoals.exploreItem")
-        
+
         sts, data = self.cm.getPage(cItem['url'])
         if not sts:
             return
@@ -137,7 +137,7 @@ class MeczykiPL(CBaseHostClass):
         tmp.extend(re.compile('''<iframe[^>]+?src=['"]([^"]+?)['"]''').findall(data))
         tmp.extend(re.compile('''<a[^>]+?href=['"](https?://[^'^"]*?ekstraklasa.tv[^'^"]+?)['"]''').findall(data))
         tmp.extend(re.compile('''<a[^>]+?href=['"](https?://[^'^"]*?polsatsport.pl[^'^"]+?)['"]''').findall(data))
-        
+
         for idx in range(len(tmp)):
             url = self.getFullUrl(tmp[idx])
             if not self.cm.isValidUrl(url):
@@ -150,15 +150,15 @@ class MeczykiPL(CBaseHostClass):
                     continue
             title = cItem['title']
             desc = ''
-            if len(titles) > idx: 
+            if len(titles) > idx:
                 if titles[idx][0]:
                     title += ' - ' + titles[idx][0]
                 desc = titles[idx][1]
-            
+
             params = dict(cItem)
             params.update({'good_for_fav': False, 'title': title, 'url': url, 'desc': desc})
             self.addVideo(params)
-    
+
     def getLinksForVideo(self, cItem):
         printDBG("OkGoals.getLinksForVideo [%s]" % cItem)
         urlTab = []
@@ -199,7 +199,7 @@ class MeczykiPL(CBaseHostClass):
 
     def handleService(self, index, refresh=0, searchPattern='', searchType=''):
         printDBG('handleService start')
-        
+
         CBaseHostClass.handleService(self, index, refresh, searchPattern, searchType)
         if self.MAIN_URL == None:
             #rm(self.COOKIE_FILE)
@@ -208,10 +208,10 @@ class MeczykiPL(CBaseHostClass):
         name = self.currItem.get("name", '')
         category = self.currItem.get("category", '')
         mode = self.currItem.get("mode", '')
-        
+
         printDBG("handleService: |||||||||||||||||||||||||||||||||||| name[%s], category[%s] " % (name, category))
         self.currList = []
-        
+
     #MAIN MENU
         if name == None:
             self.listMainMenu({'name': 'category'}, 'list_items')
@@ -221,7 +221,7 @@ class MeczykiPL(CBaseHostClass):
             self.exploreItem(self.currItem)
         else:
             printExc()
-        
+
         CBaseHostClass.endHandleService(self, index, refresh)
 
 

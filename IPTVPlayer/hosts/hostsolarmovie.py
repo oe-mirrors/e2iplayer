@@ -47,16 +47,16 @@ def gettytul():
 
 
 class SolarMovie(CBaseHostClass):
- 
+
     def __init__(self):
         CBaseHostClass.__init__(self, {'history': 'SolarMovie.tv', 'cookie': 'solarmovie.cookie'})
         self.USER_AGENT = self.cm.getDefaultHeader()['User-Agent']
         self.HEADER = {'User-Agent': self.USER_AGENT, 'DNT': '1', 'Accept': 'text/html'}
         self.AJAX_HEADER = dict(self.HEADER)
         self.AJAX_HEADER.update({'X-Requested-With': 'XMLHttpRequest'})
-        
+
         self.defaultParams = {'header': self.HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
-        
+
         self.DEFAULT_ICON_URL = 'http://www.top-site-list.com/topsites/wp-content/uploads/2013/10/421.png' #'https://solarmovie.st/assets/movie/frontend/images/logo.png'
         self.MAIN_URL = None
         self.cacheFiltersKeys = []
@@ -64,7 +64,7 @@ class SolarMovie(CBaseHostClass):
         self.cacheLinks = {}
         self.defaultParams = {'header': self.HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
         self._myFun = None
-        
+
     def getProxy(self):
         proxy = config.plugins.iptvplayer.solarmovie_proxy.value
         if proxy != 'None':
@@ -75,7 +75,7 @@ class SolarMovie(CBaseHostClass):
         else:
             proxy = None
         return proxy
-        
+
     def getPage(self, baseUrl, addParams={}, post_data=None):
         if addParams == {}:
             addParams = dict(self.defaultParams)
@@ -84,7 +84,7 @@ class SolarMovie(CBaseHostClass):
             addParams = MergeDicts(addParams, {'http_proxy': proxy})
         addParams['cloudflare_params'] = {'cookie_file': self.COOKIE_FILE, 'User-Agent': self.USER_AGENT}
         return self.cm.getPageCFProtection(baseUrl, addParams, post_data)
-        
+
     def getFullIconUrl(self, url):
         m1 = 'amp;url='
         if m1 in url:
@@ -98,7 +98,7 @@ class SolarMovie(CBaseHostClass):
         cookieHeader = self.cm.getCookieHeader(self.COOKIE_FILE, ['PHPSESSID', 'cf_clearance', '__cfduid'])
         url = strwithmeta(url, {'Cookie': cookieHeader, 'User-Agent': self.HEADER['User-Agent']})
         return url
-        
+
     def selectDomain(self):
         printDBG("SolarMovie.selectDomain")
         domains = ['https://solarmoviex.to/']
@@ -107,7 +107,7 @@ class SolarMovie(CBaseHostClass):
             if domain[-1] != '/':
                 domain += '/'
             domains.insert(0, domain)
-        
+
         urlParams = dict(self.defaultParams)
         urlParams['with_metadata'] = True
         for domain in domains:
@@ -118,33 +118,33 @@ class SolarMovie(CBaseHostClass):
                         self.MAIN_URL = data.meta.get('url')
                         printDBG(">> meta[%s]" % data.meta)
                         break
-                    else: 
+                    else:
                         continue
                 break
-            
+
             if self.MAIN_URL != None:
                 break
-                
+
         if self.MAIN_URL == None:
             self.MAIN_URL = domains[0]
-        
+
         self.MAIN_CAT_TAB = [{'category': 'list_items', 'title': 'Featured movies', 'url': self.MAIN_URL + 'featured'},
                              {'category': 'list_filters', 'title': 'Movies', 'url': self.MAIN_URL + 'filter', 'f_type[]': 'movie'},
                              {'category': 'list_filters', 'title': 'TV-Series', 'url': self.MAIN_URL + 'filter', 'f_type[]': 'series'},
-                             
+
                              {'category': 'search', 'title': _('Search'), 'search_item': True, },
-                             {'category': 'search_history', 'title': _('Search history'), } 
+                             {'category': 'search_history', 'title': _('Search history'), }
                             ]
-        
+
     def fillCacheFilters(self, cItem):
         printDBG("SolarMovie.listCategories")
         self.cacheFilters = {}
         self.cacheFiltersKeys = []
-        
+
         sts, data = self.getPage(self.getFullUrl('/movies'))
         if not sts:
             return
-        
+
         def addFilter(data, marker, baseKey, addAll=True, titleBase=''):
             key = 'f_' + baseKey
             self.cacheFilters[key] = []
@@ -160,78 +160,78 @@ class SolarMovie(CBaseHostClass):
                     self.cacheFilters[key].append({'title': titleBase + title.title()})
                 else:
                     self.cacheFilters[key].append({'title': titleBase + title.title(), key: value})
-                
+
             if len(self.cacheFilters[key]):
                 if addAll:
                     self.cacheFilters[key].insert(0, {'title': _('All')})
                 self.cacheFiltersKeys.append(key)
-        
+
         data = self.cm.ph.getAllItemsBeetwenMarkers(data, '<div class="filter dropdown">', '</ul>')
         for tmp in data:
             titleBase = self.cleanHtmlStr(self.cm.ph.getSearchGroups(tmp, '''<button[^>]+?>([^<]+?)<''')[0])
             if titleBase.lower() in ['type']:
                 continue
-            if titleBase.lower() not in ['subtitle']: 
+            if titleBase.lower() not in ['subtitle']:
                 titleBase = ''
             else:
                 titleBase += ': '
             key = self.cm.ph.getSearchGroups(tmp, '''name="([^"]+?)"''')[0]
             tmp = self.cm.ph.getAllItemsBeetwenMarkers(tmp, '<li', '</li>')
             addFilter(tmp, 'value', key, True, titleBase)
-        
+
         printDBG(self.cacheFilters)
-        
+
     def listFilters(self, cItem, nextCategory):
         printDBG("SolarMovie.listFilters")
         cItem = dict(cItem)
-        
+
         f_idx = cItem.get('f_idx', 0)
         if f_idx == 0:
             self.fillCacheFilters(cItem)
-        
+
         if f_idx >= len(self.cacheFiltersKeys):
             return
-        
+
         filter = self.cacheFiltersKeys[f_idx]
         f_idx += 1
         cItem['f_idx'] = f_idx
         if f_idx == len(self.cacheFiltersKeys):
             cItem['category'] = nextCategory
         self.listsTab(self.cacheFilters.get(filter, []), cItem)
-        
+
     def listItems(self, cItem, nextCategory):
         printDBG("SolarMovie.listItems |%s|" % cItem)
         url = cItem['url']
-        
+
         page = cItem.get('page', 1)
-        
+
         query = {}
         if page > 1:
             query['page'] = page
-        
+
         keysList = ['f_type[]']
         keysList.extend(self.cacheFiltersKeys)
         for key in keysList:
             baseKey = key[2:] # "f_"
             if key in cItem:
                 query[baseKey] = cItem[key]
-        
+
         query = urllib.parse.urlencode(query)
         if '?' in url:
             url += '&' + query
         else:
             url += '?' + query
-        
+
         sts, data = self.getPage(url)
         if not sts:
             return
-        
+
         nextPage = self.cm.ph.getDataBeetwenMarkers(data, '<ul class="pagination">', '</ul>', False)[1]
         if '>&raquo;</a>' in nextPage:
             nextPage = True
         else:
             nextPage = False
-        
+
         data = self.cm.ph.getDataBeetwenMarkers(data, '<div class="film-list">', '<div class="clearfix', False)[1]
         data = data.split('<div class="item">')
         if len(data):
@@ -254,40 +254,40 @@ class SolarMovie(CBaseHostClass):
             params = {'good_for_fav': True, 'title': title, 'url': url, 'desc': desc, 'tip_url': tip, 'icon': icon}
             params['category'] = nextCategory
             self.addDir(params)
-        
+
         if nextPage and len(self.currList) > 0:
             params = dict(cItem)
             params.update({'title': _("Next page"), 'page': page + 1})
             self.addDir(params)
-    
+
     def exploreItem(self, cItem):
         printDBG("SolarMovie.exploreItem")
-        
+
         sts, data = self.getPage(cItem['url'])
         if not sts:
             return
-        
+
         params = dict(self.defaultParams)
         params['header'] = dict(self.AJAX_HEADER)
         params['header']['Referer'] = self.cm.meta['url']
-        
+
         timestamp = self.cm.ph.getSearchGroups(data, '''data-ts=['"]([0-9]+?)['"]''')[0]
         id = self.cm.ph.getDataBeetwenNodes(data, ('<', 'watch-page', '>'), ('<', '>'))[1]
         id = self.cm.ph.getSearchGroups(id, '''data-id=['"]([^'^"]+?)['"]''')[0]
         getParams = {'ts': timestamp}
         getParams = self._updateParams(getParams)
         url = self.getFullUrl('/ajax/film/servers/{0}?'.format(id) + urllib.parse.urlencode(getParams))
-        
+
         sts, data = self.getPage(url, params)
         if not sts:
             return []
-        
+
         try:
             data = byteify(json.loads(data))['html']
             printDBG(data)
         except Exception:
             printExc()
-        
+
         titlesTab = []
         self.cacheLinks = {}
         #data = self.cm.ph.getDataBeetwenMarkers(data, '<div id="servers">', '<div class="widget')[1]
@@ -305,7 +305,7 @@ class SolarMovie(CBaseHostClass):
                     self.cacheLinks[title] = []
                 url = strwithmeta(url, {'id': id, 'server_id': serverId})
                 self.cacheLinks[title].append({'name': serverName, 'url': url, 'need_resolve': 1})
-        
+
         for item in titlesTab:
             params = dict(cItem)
             params.update({'good_for_fav': False, 'title': '%s : %s' % (cItem['title'], item), 'links_key': item})
@@ -316,12 +316,12 @@ class SolarMovie(CBaseHostClass):
         cItem = dict(cItem)
         cItem['url'] = self.getFullUrl('search?keyword=' + urllib.parse.quote_plus(searchPattern))
         self.listItems(cItem, 'explore_item')
-        
+
     def getLinksForVideo(self, cItem):
         printDBG("SolarMovie.getLinksForVideo [%s]" % cItem)
         key = cItem.get('links_key', '')
         return self.cacheLinks.get(key, [])
-        
+
     def _cryptoJS_AES(self, encrypted, password, decrypt=True):
         def derive_key_and_iv(password, key_length, iv_length):
             d = d_i = ''
@@ -336,7 +336,7 @@ class SolarMovie(CBaseHostClass):
             return cipher.decrypt(encrypted, iv)
         else:
             return cipher.encrypt(encrypted, iv)
-        
+
     def _updateParams(self, params):
         if self._myFun == None:
             try:
@@ -355,13 +355,13 @@ class SolarMovie(CBaseHostClass):
         except Exception:
             printExc()
         return params
-        
+
     def getVideoLinks(self, videoUrl):
         printDBG("SolarMovie.getVideoLinks [%s]" % videoUrl)
         baseUrl = videoUrl
         videoUrl = strwithmeta(videoUrl)
         urlTab = []
-        
+
         # mark requested link as used one
         if len(list(self.cacheLinks.keys())):
             for key in self.cacheLinks:
@@ -370,18 +370,18 @@ class SolarMovie(CBaseHostClass):
                         if not self.cacheLinks[key][idx]['name'].startswith('*'):
                             self.cacheLinks[key][idx]['name'] = '*' + self.cacheLinks[key][idx]['name']
                         break
-        
+
         params = dict(self.defaultParams)
         params['header'] = dict(self.AJAX_HEADER)
         params['header']['Referer'] = str(videoUrl)
-        
+
         sts, data = self.getPage(videoUrl[:videoUrl.rfind('/')], params)
         if sts:
             timestamp = self.cm.ph.getSearchGroups(data, '''data-ts=['"]([0-9]+?)['"]''')[0]
         else:
             timestamp = ''
-        
-        if timestamp == '': 
+
+        if timestamp == '':
             sts, data = self.getPage(videoUrl, params)
             if not sts:
                 return []
@@ -393,18 +393,18 @@ class SolarMovie(CBaseHostClass):
         sts, data = self.getPage(url, params)
         if not sts:
             return []
-        
+
         m = "++++++++++++++++++++++++++++++++"
         printDBG('%s\n%s\n%s' % (m, data, m))
-        
+
         getParams = {'ts': timestamp, 'id': videoUrl.meta.get('id', ''), 'server': videoUrl.meta.get('server_id', ''), 'update': '0'}
         getParams = self._updateParams(getParams)
-        
+
         url = self.getFullUrl('/ajax/episode/info?' + urllib.parse.urlencode(getParams))
         sts, data = self.getPage(url, params)
         if not sts:
             return []
-        
+
         videoUrl = ''
         subTrack = ''
         try:
@@ -445,7 +445,7 @@ class SolarMovie(CBaseHostClass):
 
         if self.cm.isValidUrl(videoUrl) and 0 == len(urlTab):
             urlTab = self.up.getVideoLinkExt(strwithmeta(videoUrl, {'Referer': baseUrl}))
-        
+
         if self.cm.isValidUrl(subTrack):
             cookieHeader = self.cm.getCookieHeader(self.COOKIE_FILE, ['PHPSESSID', 'cf_clearance'])
             subTrack = strwithmeta(subTrack, {'Cookie': cookieHeader, 'User-Agent': self.HEADER['User-Agent']})
@@ -455,24 +455,24 @@ class SolarMovie(CBaseHostClass):
                 if 'external_sub_tracks' not in urlTab[idx]['url'].meta:
                     urlTab[idx]['url'].meta['external_sub_tracks'] = []
                 urlTab[idx]['url'].meta['external_sub_tracks'].append({'title': '', 'url': subTrack, 'lang': 'pt', 'format': format})
-        
+
         return urlTab
-        
+
     def getArticleContent(self, cItem):
         printDBG("SolarMovie.getArticleContent [%s]" % cItem)
         retTab = []
-        
+
         params = dict(self.defaultParams)
         params['header'] = dict(self.AJAX_HEADER)
         params['header']['Referer'] = str(cItem['url'])
-        
+
         sts, data = self.getPage(cItem['url'], params)
         if not sts:
             return []
-        
+
         id = self.cm.ph.getSearchGroups(data, '''<([^>]+?class="watch-page"[^>]*?)>''')[0]
         id = self.cm.ph.getSearchGroups(id, '''data-id=['"]([^'^"]+?)['"]''')[0]
-        
+
         timestamp = self.cm.ph.getSearchGroups(data, '''data-ts=['"]([0-9]+?)['"]''')[0]
 
         getParams = {'ts': timestamp}
@@ -481,64 +481,64 @@ class SolarMovie(CBaseHostClass):
         sts, data = self.getPage(url, params)
         if not sts:
             return []
-        
+
         printDBG(data)
-        
+
         desc = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(data, '<p class="desc">', '</p>')[1])
         if desc == '':
             desc = self.cleanHtmlStr(self.cm.ph.getSearchGroups(data, '<meta property="og:description"[^>]+?content="([^"]+?)"')[0])
-        
+
         title = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(data, '<h1', '</h1>')[1])
         if title == '':
             title = self.cleanHtmlStr(self.cm.ph.getSearchGroups(data, '<meta property="og:title"[^>]+?content="([^"]+?)"')[0])
-        
+
         icon = self.getFullUrl(self.cm.ph.getSearchGroups(data, '<meta property="og:image"[^>]+?content="([^"]+?)"')[0])
-        
+
         if title == '':
             title = cItem['title']
         if desc == '':
             desc = cItem['desc']
         if icon == '':
             icon = cItem['icon']
-        
+
         otherInfo = {}
         tmp = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(data, '<span class="duration"', '</span>')[1])
         if tmp != '':
             otherInfo['duration'] = tmp
-        
+
         tmp = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(data, '<span class="imdb"', '</span>')[1])
         if tmp != '':
             otherInfo['imdb_rating'] = tmp
-        
+
         tmp = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(data, '<span class="quality"', '</span>')[1])
         if tmp != '':
             otherInfo['quality'] = tmp
-        
+
         tmp = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(data, 'Country:', '</div>', False)[1])
         if tmp != '':
             otherInfo['country'] = tmp
-        
+
         tmp = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(data, 'Stars:', '</div>', False)[1])
         if tmp != '':
             otherInfo['stars'] = tmp
-        
+
         tmp = self.cm.ph.getDataBeetwenMarkers(data, 'Genre:', '</div>', False)[1]
         tmp = self.cm.ph.getAllItemsBeetwenMarkers(tmp, '<a', '</a>')
         tmp = ', '.join([self.cleanHtmlStr(item) for item in tmp])
         if tmp != '':
             otherInfo['genre'] = tmp
-        
+
         tmp = self.cm.ph.getDataBeetwenMarkers(data, '<h1>', '</div>', False)[1]
         tmp = self.cm.ph.getSearchGroups(tmp, '''<span[^>]*?>\s*([0-9]+?)\s*<''')[0]
         if tmp != '':
             otherInfo['year'] = tmp
-        
+
         return [{'title': self.cleanHtmlStr(title), 'text': self.cleanHtmlStr(desc), 'images': [{'title': '', 'url': self.getFullUrl(icon)}], 'other_info': otherInfo}]
-    
+
     def getFavouriteData(self, cItem):
         printDBG('SolarMovie.getFavouriteData')
-        return json.dumps(cItem) 
-        
+        return json.dumps(cItem)
+
     def getLinksForFavourite(self, fav_data):
         printDBG('SolarMovie.getLinksForFavourite')
         if self.MAIN_URL == None:
@@ -550,22 +550,22 @@ class SolarMovie(CBaseHostClass):
         except Exception:
             printExc()
         return links
-        
+
     def setInitListFromFavouriteItem(self, fav_data):
         printDBG('SolarMovie.setInitListFromFavouriteItem')
         if self.MAIN_URL == None:
             self.selectDomain()
         try:
             params = byteify(json.loads(fav_data))
-        except Exception: 
+        except Exception:
             params = {}
             printExc()
         self.addDir(params)
         return True
-        
+
     def handleService(self, index, refresh=0, searchPattern='', searchType=''):
         printDBG('handleService start')
-        
+
         CBaseHostClass.handleService(self, index, refresh, searchPattern, searchType)
         if self.MAIN_URL == None:
             #rm(self.COOKIE_FILE)
@@ -574,10 +574,10 @@ class SolarMovie(CBaseHostClass):
         name = self.currItem.get("name", '')
         category = self.currItem.get("category", '')
         mode = self.currItem.get("mode", '')
-        
+
         printDBG("handleService: |||||||||||||||||||||||||||||||||||| name[%s], category[%s] " % (name, category))
         self.currList = []
-        
+
     #MAIN MENU
         if name == None:
             self.listsTab(self.MAIN_CAT_TAB, {'name': 'category'})
@@ -590,14 +590,14 @@ class SolarMovie(CBaseHostClass):
     #SEARCH
         elif category in ["search", "search_next_page"]:
             cItem = dict(self.currItem)
-            cItem.update({'search_item': False, 'name': 'category'}) 
+            cItem.update({'search_item': False, 'name': 'category'})
             self.listSearchResult(cItem, searchPattern, searchType)
     #HISTORIA SEARCH
         elif category == "search_history":
             self.listsHistory({'name': 'history', 'category': 'search'}, 'desc', _("Type: "))
         else:
             printExc()
-        
+
         CBaseHostClass.endHandleService(self, index, refresh)
 
 
@@ -605,9 +605,8 @@ class IPTVHost(CHostBase):
 
     def __init__(self):
         CHostBase.__init__(self, SolarMovie(), True, [])
-    
+
     def withArticleContent(self, cItem):
         if cItem['type'] != 'video' and cItem['category'] != 'explore_item':
             return False
         return True
-    

@@ -2,7 +2,7 @@
 #
 
 ###################################################
-# E2 GUI COMMPONENTS 
+# E2 GUI COMMPONENTS
 ###################################################
 from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _, SetIPTVPlayerLastHostError
 from Plugins.Extensions.IPTVPlayer.components.asynccall import MainSessionWrapper, iptv_execute
@@ -34,7 +34,7 @@ class CSubItem:
         self.lang = lang
         self.imdbid = imdbid
         self.subId = subId
-        
+
 ## class ISubProvider
 # interface base class with method used to
 # communicate display layer with host
@@ -46,36 +46,36 @@ class ISubProvider:
     # return firs available list of item category or video or link
     def getInitList(self):
         return RetHost(RetHost.NOT_IMPLEMENTED, value=[])
-    
+
     # return List of item from current List
     # for given Index
-    # 1 == refresh - force to read data from 
-    #                server if possible 
-    # server instead of cache 
+    # 1 == refresh - force to read data from
+    #                server if possible
+    # server instead of cache
     def getListForItem(self, Index=0, refresh=0):
         return RetHost(RetHost.NOT_IMPLEMENTED, value=[])
-        
-    # return prev requested List of item 
+
+    # return prev requested List of item
     # for given Index
-    # 1 == refresh - force to read data from 
+    # 1 == refresh - force to read data from
     #                server if possible
     def getPrevList(self, refresh=0):
         return RetHost(RetHost.NOT_IMPLEMENTED, value=[])
-        
+
     # return current List
     # for given Index
-    # 1 == refresh - force to read data from 
+    # 1 == refresh - force to read data from
     #                server if possible
     def getCurrentList(self, refresh=0):
         return RetHost(RetHost.NOT_IMPLEMENTED, value=[])
-        
+
     # return current List
     # for given Index
     def getMoreForItem(self, Index=0):
         return RetHost(RetHost.NOT_IMPLEMENTED, value=[])
-    
+
     # return list of CSubItem objects
-    # for given Index, 
+    # for given Index,
     def downloadSubtitleFile(self, Index=0,):
         return RetHost(RetHost.NOT_IMPLEMENTED, value=[])
 
@@ -91,9 +91,9 @@ class CSubProviderBase(ISubProvider):
         self.subProvider = subProvider
 
         self.currIndex = -1
-        self.listOfprevList = [] 
-        self.listOfprevItems = [] 
-        
+        self.listOfprevList = []
+        self.listOfprevItems = []
+
     def isValidIndex(self, Index, validTypes=None):
         listLen = len(self.subProvider.currList)
         if listLen <= Index or Index < 0:
@@ -104,27 +104,27 @@ class CSubProviderBase(ISubProvider):
             return False
         return True
     # end getFavouriteItem
-    
+
     # return firs available list of item category or video or link
     def getInitList(self):
         self.currIndex = -1
-        self.listOfprevList = [] 
+        self.listOfprevList = []
         self.listOfprevItems = []
-        
+
         self.subProvider.handleService(self.currIndex)
         convList = self.convertList(self.subProvider.getCurrList())
-        
+
         return RetHost(RetHost.OK, value=convList)
-    
+
     def getListForItem(self, Index=0, refresh=0, selItem=None):
         self.listOfprevList.append(self.subProvider.getCurrList())
         self.listOfprevItems.append(self.subProvider.getCurrItem())
-        
+
         self.currIndex = Index
-        
+
         self.subProvider.handleService(Index, refresh)
         convList = self.convertList(self.subProvider.getCurrList())
-        
+
         return RetHost(RetHost.OK, value=convList)
 
     def getPrevList(self, refresh=0):
@@ -133,30 +133,30 @@ class CSubProviderBase(ISubProvider):
             subProviderCurrItem = self.listOfprevItems.pop()
             self.subProvider.setCurrList(subProviderList)
             self.subProvider.setCurrItem(subProviderCurrItem)
-            
+
             convList = self.convertList(subProviderList)
             return RetHost(RetHost.OK, value=convList)
         else:
             return RetHost(RetHost.ERROR, value=[])
-    
+
     def getCurrentList(self, refresh=0):
         if refresh == 1:
             self.subProvider.handleService(self.currIndex, refresh)
         convList = self.convertList(self.subProvider.getCurrList())
         return RetHost(RetHost.OK, value=convList)
-        
+
     def getMoreForItem(self, Index=0):
         self.subProvider.handleService(Index, 2)
         convList = self.convertList(self.subProvider.getCurrList())
         return RetHost(RetHost.OK, value=convList)
-        
+
     def downloadSubtitleFile(self, Index=0):
         if self.isValidIndex(Index, [CDisplayListItem.TYPE_SUBTITLE]):
             retData = self.subProvider.downloadSubtitleFile(self.subProvider.currList[Index])
             if 'path' in retData and 'title' in retData:
                 return RetHost(RetHost.OK, value=[CSubItem(retData['path'], retData['title'], retData.get('lang', ''), retData.get('imdbid', ''), retData.get('sub_id', ''))])
         return RetHost(RetHost.ERROR, value=[])
-    
+
     def convertList(self, cList):
         subProviderList = []
         for cItem in cList:
@@ -165,7 +165,7 @@ class CSubProviderBase(ISubProvider):
                 subProviderList.append(subProviderItem)
         return subProviderList
     # end convertList
-    
+
     def converItem(self, cItem):
         type = CDisplayListItem.TYPE_UNKNOWN
 
@@ -175,10 +175,10 @@ class CSubProviderBase(ISubProvider):
             type = CDisplayListItem.TYPE_SUBTITLE
         elif 'more' == cItem['type']:
             type = CDisplayListItem.TYPE_MORE
-            
+
         title = cItem.get('title', '')
         description = cItem.get('desc', '')
-        
+
         return CDisplayListItem(name=title,
                                 description=description,
                                 type=type)
@@ -186,12 +186,12 @@ class CSubProviderBase(ISubProvider):
 
 
 class CBaseSubProviderClass:
-    
+
     def __init__(self, params={}):
         self.TMP_FILE_NAME = '.iptv_subtitles.file'
         self.TMP_DIR_NAME = '/.iptv_subtitles.dir/'
-        self.sessionEx = MainSessionWrapper(mainThreadIdx=1) 
-        
+        self.sessionEx = MainSessionWrapper(mainThreadIdx=1)
+
         proxyURL = params.get('proxyURL', '')
         useProxy = params.get('useProxy', False)
         self.cm = common(proxyURL, useProxy)
@@ -202,51 +202,51 @@ class CBaseSubProviderClass:
             self.COOKIE_FILE = GetCookieDir(params['cookie'])
         self.moreMode = False
         self.params = params
-        
+
     def getSupportedFormats(self, all=False):
         if all:
             ret = list(IPTVSubtitlesHandler.getSupportedFormats())
         else:
             ret = list(IPTVSubtitlesHandler.SUPPORTED_FORMATS)
         return ret
-        
+
     def getMaxFileSize(self):
         return 1024 * 1024 * 5 # 5MB, max size of sub file to be download
-        
+
     def getMaxItemsInDir(self):
         return 500
-        
+
     def listsTab(self, tab, cItem):
         for item in tab:
             params = dict(cItem)
             params.update(item)
             params['name'] = 'category'
             self.addDir(params)
-            
+
     def iptv_execute(self, cmd):
         printDBG("iptv_execute cmd_exec [%s]" % cmd)
         ret = iptv_execute(1)(cmd)
         printDBG("iptv_execute cmd_ret sts[%s] code[%s] data[%s]" % (ret.get('sts', ''), ret.get('code', ''), ret.get('data', '')))
         return ret
 
-    @staticmethod 
+    @staticmethod
     def cleanHtmlStr(str):
         return CParsingHelper.cleanHtmlStr(str)
 
-    @staticmethod 
+    @staticmethod
     def getStr(v, default=''):
         if type(v) == type(''):
             return v.encode('utf-8')
         elif type(v) == type(''):
             return v
         return default
-            
+
     def getCurrList(self):
         return self.currList
 
     def setCurrList(self, list):
         self.currList = list
-        
+
     def getCurrItem(self):
         return self.currItem
 
@@ -260,7 +260,7 @@ class CBaseSubProviderClass:
         else:
             self.currList.insert(0, params)
         return
-        
+
     def addMore(self, params, atTheEnd=True):
         params['type'] = 'more'
         if atTheEnd:
@@ -268,7 +268,7 @@ class CBaseSubProviderClass:
         else:
             self.currList.insert(0, params)
         return
-  
+
     def addSubtitle(self, params, atTheEnd=True):
         params['type'] = 'subtitle'
         if atTheEnd:
@@ -276,14 +276,14 @@ class CBaseSubProviderClass:
         else:
             self.currList.insert(0, params)
         return
-        
+
     def getMainUrl(self):
         return self.MAIN_URL
-        
+
     def getFullUrl(self, url, currUrl=None):
         if url.startswith('./'):
             url = url[1:]
-        
+
         if currUrl == None or not self.cm.isValidUrl(currUrl):
             try:
                 mainUrl = self.getMainUrl()
@@ -291,7 +291,7 @@ class CBaseSubProviderClass:
                 mainUrl = 'http://fake'
         else:
             mainUrl = self.cm.getBaseUrl(currUrl)
-        
+
         if url.startswith('//'):
             proto = mainUrl.split('://', 1)[0]
             url = proto + ':' + url
@@ -306,9 +306,9 @@ class CBaseSubProviderClass:
             else:
                 url = urljoin(currUrl, url)
         return url
-    
+
     def handleService(self, index, refresh=0):
-    
+
         self.moreMode = False
         if 0 == refresh:
             if len(self.currList) <= index:
@@ -327,7 +327,7 @@ class CBaseSubProviderClass:
                 self.currItem = {"name": None}
             else:
                 self.currItem = self.currList[index]
-    
+
     def endHandleService(self, index, refresh):
         if 2 == refresh: # refresh for more items
             currList = self.currList
@@ -339,7 +339,7 @@ class CBaseSubProviderClass:
             self.beforeMoreItemList = []
             self.afterMoreItemList = []
         self.moreMode = False
-        
+
     def imdbGetSeasons(self, imdbid, promSeason=None):
         printDBG('CBaseSubProviderClass.imdbGetSeasons imdbid[%s]' % imdbid)
         promotItem = None
@@ -355,22 +355,22 @@ class CBaseSubProviderClass:
                 promotItem = season
             else:
                 list.append(season)
-            
+
         if promotItem != None:
             list.insert(0, promotItem)
-        
+
         return True, list
-        
+
     def imdbGetEpisodesForSeason(self, imdbid, season, promEpisode=None):
         printDBG('CBaseSubProviderClass.imdbGetEpisodesForSeason imdbid[%s] season[%s]' % (imdbid, season))
         promotItem = None
         list = []
-        
+
         # get episodes for season
         sts, data = self.cm.getPage("http://www.imdb.com/title/tt%s/episodes/_ajax?season=%s" % (imdbid, season))
         if not sts:
             return False, []
-        
+
         data = self.cm.ph.getDataBeetwenMarkers(data, '<div class="list detail eplist">', '<hr>', False)[1]
         data = data.split('<div class="clear">')
         if len(data):
@@ -380,19 +380,19 @@ class CBaseSubProviderClass:
             eimdbid = self.cm.ph.getSearchGroups(item, 'data-const="tt([0-9]+?)"')[0]
             episode = self.cm.ph.getSearchGroups(item, 'content="([0-9]+?)"')[0]
             params = {"episode_title": episodeTitle, "episode": episode, "eimdbid": eimdbid}
-            
+
             if None != promEpisode and episode == str(promEpisode):
                 promotItem = params
             else:
                 list.append(params)
-        
+
         if promotItem != None:
             list.insert(0, promotItem)
         return True, list
-        
+
     def imdbGetMoviesByTitle(self, title):
         printDBG('CBaseSubProviderClass.imdbGetMoviesByTitle title[%s]' % (title))
-        
+
         sts, data = self.cm.getPage("http://www.imdb.com/find?ref_=nv_sr_fn&q=%s&s=tt" % urllib.parse.quote_plus(title))
         if not sts:
             return False, []
@@ -417,10 +417,10 @@ class CBaseSubProviderClass:
                 title = title[:-1].strip()
             list.append({'title': title, 'base_title': self.cleanHtmlStr(baseTtitle), 'year': year, 'imdbid': imdbid})
         return True, list
-        
+
     def imdbGetOrginalByTitle(self, imdbid):
         printDBG('CBaseSubProviderClass.imdbGetOrginalByTitle imdbid[%s]' % (imdbid))
-        
+
         if not imdbid.startswith('tt'):
             imdbid = 'tt' + imdbid
         sts, data = self.cm.getPage('http://www.imdb.com/title/' + imdbid)
@@ -428,7 +428,7 @@ class CBaseSubProviderClass:
             return False, {}
         title = self.cm.ph.getSearchGroups(data, '''<meta property='og:title' content="([^\(^"]+?)["\(]''')[0].strip()
         return True, {'title': title}
-        
+
     def getTypeFromThemoviedb(self, imdbid, title):
         if '(TV Series)' in title:
             return 'series'
@@ -441,7 +441,7 @@ class CBaseSubProviderClass:
             except Exception:
                 import simplejson as json
             from Plugins.Extensions.IPTVPlayer.tools.iptvtools import byteify
-            
+
             url = "https://api.themoviedb.org/3/find/tt{0}?api_key={1}&external_source=imdb_id".format(imdbid, base64.b64decode('NjMxMWY4MmQ1MjAxNDI2NWQ3NjVkMzk4MDJhYWZhYTc='))
             sts, data = self.cm.getPage(url)
             if not sts:
@@ -452,7 +452,7 @@ class CBaseSubProviderClass:
         except Exception:
             printExc()
         return itemType
-    
+
     def downloadAndUnpack(self, url, params={}, post_data=None, unpackToSubDir=False):
         data, fileName = self.downloadFileData(url, params, post_data)
         if data == None:
@@ -462,7 +462,7 @@ class CBaseSubProviderClass:
         if ext not in ['zip', 'rar']:
             SetIPTVPlayerLastHostError(_('Unknown file extension "%s".') % ext)
             return None
-            
+
         tmpFile = GetTmpDir(self.TMP_FILE_NAME)
         tmpArchFile = tmpFile + '.' + ext
         tmpDIR = ''
@@ -470,10 +470,10 @@ class CBaseSubProviderClass:
             dirName = fileName.rsplit('.', 1)[0].split('filename=', 1)[-1]
             if dirName != '':
                 tmpDIR = GetSubtitlesDir(dirName)
-        
+
         if tmpDIR == '':
             tmpDIR = GetTmpDir(self.TMP_DIR_NAME)
-        
+
         printDBG(">>")
         printDBG(fileName)
         printDBG(tmpFile)
@@ -483,12 +483,12 @@ class CBaseSubProviderClass:
 
         if not self.writeFile(tmpArchFile, data):
             return None
-        
+
         if not self.unpackArchive(tmpArchFile, tmpDIR):
             rm(tmpArchFile)
             return None
         return tmpDIR
-    
+
     def downloadFileData(self, url, params={}, post_data=None):
         printDBG('CBaseSubProviderClass.downloadFileData url[%s]' % url)
         urlParams = dict(params)
@@ -499,16 +499,16 @@ class CBaseSubProviderClass:
             fileName = self.cm.meta.get('content-disposition', '')
             if fileName != '':
                 tmpFileName = self.cm.ph.getSearchGroups(fileName.lower(), '''filename=['"]([^'^"]+?)['"]''')[0]
-                if tmpFileName != '': 
+                if tmpFileName != '':
                     printDBG("downloadFileData: replace fileName[%s] with [%s]" % (fileName, tmpFileName))
                     fileName = tmpFileName
             else:
                 fileName = urllib.parse.unquote(self.cm.meta['url'].split('/')[-1])
-            
+
             return data, fileName
 
         return None, ''
-        
+
     def writeFile(self, filePath, data):
         printDBG('CBaseSubProviderClass.writeFile path[%s]' % filePath)
         try:
@@ -519,9 +519,9 @@ class CBaseSubProviderClass:
             printExc()
             SetIPTVPlayerLastHostError(_('Failed to write file "%s".') % filePath)
         return False
-        
+
     def unpackZipArchive(self, tmpFile, tmpDIR):
-        errorCode = 0 
+        errorCode = 0
         # check if archive is not evil
         cmd = "unzip -l '{0}' 2>&1 ".format(tmpFile)
         ret = self.iptv_execute(cmd)
@@ -531,7 +531,7 @@ class CBaseSubProviderClass:
                 errorCode = 9
         elif '..' in ret['data']:
             errorCode = 9
-        
+
         # if archive is valid then upack it
         if errorCode == 0:
             cmd = "unzip -o '{0}' -d '{1}' 2>/dev/null".format(tmpFile, tmpDIR)
@@ -540,7 +540,7 @@ class CBaseSubProviderClass:
                 errorCode = ret['code']
                 if errorCode == 0:
                     errorCode = 9
-        
+
         if errorCode != 0:
             message = _('Unzip error code[%s].') % errorCode
             if str(errorCode) == str(127):
@@ -549,9 +549,9 @@ class CBaseSubProviderClass:
                 message += '\n' + _('Wrong format of zip archive.')
             SetIPTVPlayerLastHostError(message)
             return False
-        
+
         return True
-        
+
     def unpackArchive(self, tmpFile, tmpDIR):
         printDBG('CBaseSubProviderClass.unpackArchive tmpFile[%s], tmpDIR[%s]' % (tmpFile, tmpDIR))
         rmtree(tmpDIR, ignore_errors=True)
@@ -574,7 +574,7 @@ class CBaseSubProviderClass:
                 return False
             return True
         return False
-        
+
     def listSupportedFilesFromPath(self, cItem, subExt=['srt'], archExt=['rar', 'zip'], dirCategory=None):
         printDBG('CBaseSubProviderClass.listSupportedFilesFromPath')
         maxItems = self.getMaxItemsInDir()
@@ -598,7 +598,7 @@ class CBaseSubProviderClass:
             if numItems >= maxItems:
                 break
         self.currList.sort(key=lambda k: k['title'])
-    
+
     def converFileToUtf8(self, inFile, outFile, lang=''):
         printDBG('CBaseSubProviderClass.converFileToUtf8 inFile[%s] outFile[%s]' % (inFile, outFile))
         # detect encoding
@@ -611,15 +611,15 @@ class CBaseSubProviderClass:
                 encoding = ''
             else:
                 encoding = encoding.strip()
-        
+
         if lang == '':
-            lang = GetDefaultLang() 
-        
+            lang = GetDefaultLang()
+
         if lang == 'pl' and encoding == 'iso-8859-2':
             encoding = GetPolishSubEncoding(tmpFile)
         elif '' == encoding:
             encoding = 'utf-8'
-            
+
         # convert file to UTF-8
         try:
             with open(inFile) as f:
@@ -635,4 +635,3 @@ class CBaseSubProviderClass:
             printExc()
             SetIPTVPlayerLastHostError(_('Failed to open the file "%s".') % inFile)
         return False
-    

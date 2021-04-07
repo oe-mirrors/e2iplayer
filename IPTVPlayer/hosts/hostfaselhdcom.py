@@ -26,7 +26,7 @@ def gettytul():
 
 
 class FaselhdCOM(CBaseHostClass):
-    
+
     def __init__(self):
         CBaseHostClass.__init__(self, {'history': 'faselhd.com', 'cookie': 'faselhd.com.cookie'})
         self.USER_AGENT = 'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:40.0) Gecko/20100101 Firefox/40.0'
@@ -35,15 +35,15 @@ class FaselhdCOM(CBaseHostClass):
         self.HTTP_HEADER = {'User-Agent': self.USER_AGENT, 'DNT': '1', 'Accept': 'text/html', 'Accept-Encoding': 'gzip, deflate', 'Referer': self.getMainUrl(), 'Origin': self.getMainUrl()}
         self.AJAX_HEADER = dict(self.HTTP_HEADER)
         self.AJAX_HEADER.update({'X-Requested-With': 'XMLHttpRequest', 'Accept-Encoding': 'gzip, deflate', 'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8', 'Accept': 'application/json, text/javascript, */*; q=0.01'})
-        
+
         self.cacheLinks = {}
         self.defaultParams = {'header': self.HTTP_HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
-        
-        self.MAIN_CAT_TAB = [                             
-                             {'category': 'search', 'title': _('Search'), 'search_item': True}, 
+
+        self.MAIN_CAT_TAB = [
+                             {'category': 'search', 'title': _('Search'), 'search_item': True},
                              {'category': 'search_history', 'title': _('Search history')},
                             ]
-        
+
     def getPage(self, baseUrl, addParams={}, post_data=None):
         if addParams == {}:
             addParams = dict(self.defaultParams)
@@ -62,7 +62,7 @@ class FaselhdCOM(CBaseHostClass):
         if url != '' and self.up.getDomain(url) in self.getMainUrl():
             url = 'https://i2.wp.com/' + url.split('://', 1)[-1]
         return url
-    
+
     def listMainMenu(self, cItem):
         printDBG("FaselhdCOM.listMainMenu")
         sts, data = self.getPage(self.getMainUrl())
@@ -78,9 +78,9 @@ class FaselhdCOM(CBaseHostClass):
                     self.listCategories(params, 'list_items')
                 except Exception:
                     printExc()
-        
+
         self.listsTab(self.MAIN_CAT_TAB, cItem)
-        
+
     def listCategories(self, cItem, nextCategory):
         printDBG("FaselhdCOM.listCategories")
         try:
@@ -101,19 +101,19 @@ class FaselhdCOM(CBaseHostClass):
                     self.addDir(params)
         except Exception:
             printExc()
-                
+
     def listItems(self, cItem, nextCategory=''):
         printDBG("FaselhdCOM.listItems [%s]" % cItem)
         page = cItem.get('page', 1)
-        
+
         sts, data = self.getPage(cItem['url'])
         if not sts:
             return
         baseData = data
-        
+
         nextPage = self.cm.ph.getDataBeetwenNodes(data, ('<div', '>', 'pagination'), ('</div', '>'))[1]
         nextPage = self.getFullUrl(self.cm.ph.getSearchGroups(nextPage, '''<a[^>]+?href=['"]([^'^"]+?)['"][^>]*?>%s<''' % (page + 1))[0])
-        
+
         data = self.cm.ph.getAllItemsBeetwenNodes(data, ('<div', '>', 'one-movie'), ('</a', '>'))
         printDBG(data)
         for item in data:
@@ -124,7 +124,7 @@ class FaselhdCOM(CBaseHostClass):
                 title = self.cleanHtmlStr(self.cm.ph.getSearchGroups(item, '''alt=['"]([^'^"]+?)['"]''')[0])
             if title == '':
                 continue
-            
+
             desc = []
             tmp = self.cm.ph.getDataBeetwenNodes(item, ('<div', '>', 'movie-meta'), ('</div', '>'))[1]
             tmp = self.cm.ph.getAllItemsBeetwenMarkers(tmp, '<span', '</span>')
@@ -135,12 +135,12 @@ class FaselhdCOM(CBaseHostClass):
                 elif 'fa-eye' in t:
                     label = _('Views:')
                 t = self.cleanHtmlStr(t)
-                if t != '': 
+                if t != '':
                     if label != '':
                         desc.append('%s %s' % (label, t))
                     else:
                         desc.append(t)
-            
+
             if '/seasons/' in self.cm.meta['url'] and not cItem.get('sub_view'):
                 title = '%s - %s' % (cItem['title'], title)
                 self.addDir(MergeDicts(cItem, {'url': url, 'title': title, 'sub_view': True}))
@@ -169,19 +169,19 @@ class FaselhdCOM(CBaseHostClass):
 
     def exploreItem(self, cItem, nextCategory):
         printDBG("FaselhdCOM.exploreItem")
-        
+
         sts, data = self.getPage(cItem['url'])
         if not sts:
             return
-        
+
         url = self.cm.ph.getDataBeetwenNodes(data, ('<meta', '>', 'refresh'), ('<', '>'))[1]
         url = self.getFullUrl(self.cm.ph.getSearchGroups(url, '''url=['"]([^'^"]+?)['"]''', 1, True)[0])
-        
+
         if self.cm.isValidUrl(url):
             sts, tmp = self.getPage(url)
             if sts:
                 data = tmp
-        
+
         tmp = self.cm.ph.getDataBeetwenNodes(data, ('<div', '>', 'movie-btns'), ('</div', '>'))[1]
         tmp = self.cm.ph.getAllItemsBeetwenMarkers(tmp, '<a', '</a>')
         for item in tmp:
@@ -193,7 +193,7 @@ class FaselhdCOM(CBaseHostClass):
                 params = dict(cItem)
                 params.update({'good_for_fav': False, 'url': url, 'title': '%s - %s' % (cItem['title'], title)})
                 self.addVideo(params)
-        
+
         tmp = self.cm.ph.getDataBeetwenNodes(data, ('<div', '>', 'movies-servers'), ('<div', '>', 'container'))[1]
         if tmp != '':
             params = dict(cItem)
@@ -204,7 +204,7 @@ class FaselhdCOM(CBaseHostClass):
             if self.cm.isValidUrl(url):
                 cItem['url'] = url
             self.listItems(cItem)
-        
+
     def listSearchResult(self, cItem, searchPattern, searchType):
         printDBG("FaselhdCOM.listSearchResult cItem[%s], searchPattern[%s] searchType[%s]" % (cItem, searchPattern, searchType))
         cItem = dict(cItem)
@@ -212,33 +212,33 @@ class FaselhdCOM(CBaseHostClass):
             cItem['category'] = 'list_items'
             cItem['url'] = self.getFullUrl('/?s=') + urllib.parse.quote_plus(searchPattern)
         self.listItems(cItem, 'explore_item')
-        
+
     def getLinksForVideo(self, cItem):
         printDBG("FaselhdCOM.getLinksForVideo [%s]" % cItem)
-        
+
         if 1 == self.up.checkHostSupport(cItem.get('url', '')):
             videoUrl = cItem['url'].replace('youtu.be/', 'youtube.com/watch?v=')
             return self.up.getVideoLinkExt(videoUrl)
-        
+
         retTab = []
         dwnTab = []
-        
+
         cacheKey = cItem['url']
         cacheTab = self.cacheLinks.get(cacheKey, [])
         if len(cacheTab):
             return cacheTab
-        
+
         self.cacheLinks = {}
-        
+
         sts, data = self.getPage(cItem['url'])
         if not sts:
             return
-        
+
         dwnLink = self.cm.ph.getDataBeetwenNodes(data, ('<a', '>', 'download_direct_link'), ('</a', '>'))[1]
         dwnLink = self.cm.ph.getSearchGroups(dwnLink, '''href=['"](https?://[^"^']+?)['"]''')[0]
-        
+
         data = self.cm.ph.getDataBeetwenNodes(data, ('<div', '>', 'movies-servers'), ('<script', '>'))[1]
-        
+
         tmp = self.cm.ph.getDataBeetwenMarkers(data, '<ul', '</ul>')[1]
         tmp = self.cm.ph.getAllItemsBeetwenMarkers(tmp, '<li', '</li>')
         for item in tmp:
@@ -246,13 +246,13 @@ class FaselhdCOM(CBaseHostClass):
             name = self.cleanHtmlStr(item)
             dat = self.cm.ph.getDataBeetwenNodes(data, ('<div', '>', marker), ('<iframe', '>'))[1]
             url = self.getFullUrl(self.cm.ph.getSearchGroups(dat, '''<iframe[^>]+?src=['"]([^"^']+?)['"]''', 1, True)[0])
-            if url == '': 
+            if url == '':
                 url = self.cm.ph.getSearchGroups(item, '''href\s*?=\s*?['"]([^'^"]+?)['"]''')[0]
                 tmp = url.split('embed.php?url=', 1)
                 if 2 == len(tmp):
                     url = urllib.parse.unquote(tmp[-1])
             retTab.append({'name': name, 'url': self.getFullUrl(url), 'need_resolve': 1})
-            
+
         if self.cm.isValidUrl(dwnLink):
             sts, data = self.getPage(dwnLink)
             if not sts:
@@ -265,17 +265,17 @@ class FaselhdCOM(CBaseHostClass):
                     continue
                 name = self.cleanHtmlStr(item)
                 dwnTab.append({'name': name, 'url': url, 'need_resolve': 1})
-        
+
         retTab.extend(dwnTab)
         if len(retTab):
             self.cacheLinks[cacheKey] = retTab
         return retTab
-        
+
     def getVideoLinks(self, baseUrl):
         printDBG("FaselhdCOM.getVideoLinks [%s]" % baseUrl)
         videoUrl = strwithmeta(baseUrl)
         urlTab = []
-        
+
         # mark requested link as used one
         if len(list(self.cacheLinks.keys())):
             for key in self.cacheLinks:
@@ -284,59 +284,59 @@ class FaselhdCOM(CBaseHostClass):
                         if not self.cacheLinks[key][idx]['name'].startswith('*'):
                             self.cacheLinks[key][idx]['name'] = '*' + self.cacheLinks[key][idx]['name'] + '*'
                         break
-        
+
         urlTab = self.up.getVideoLinkExt(videoUrl)
         if 0 == len(urlTab):
             sts, data = self.getPage(videoUrl)
             if not sts:
                 return []
-            
+
             hlsUrl = self.cm.ph.getSearchGroups(data, '''["'](https?://[^'^"]+?\.m3u8(?:\?[^"^']+?)?)["']''', ignoreCase=True)[0]
             printDBG("hlsUrl||||||||||||||||| " + hlsUrl)
             if hlsUrl != '':
                 hlsUrl = strwithmeta(hlsUrl, {'User-Agent': self.defaultParams['header']['User-Agent'], 'Referer': baseUrl})
                 urlTab = getDirectM3U8Playlist(hlsUrl, checkContent=True, sortWithMaxBitrate=999999999)
-            
+
             if 0 == len(urlTab):
                 data = self.cm.ph.getDataBeetwenMarkers(data, '.setup(', ')')[1]
                 videoUrl = self.cm.ph.getSearchGroups(data, '''['"]?file['"]?\s*:\s*['"](https?://[^'^"]+?)['"]''')[0]
                 if self.cm.isValidUrl(videoUrl):
                     videoUrl = strwithmeta(videoUrl, {'User-Agent': self.defaultParams['header']['User-Agent'], 'Referer': baseUrl})
                     urlTab.append({'name': 'direct', 'url': videoUrl})
-            
+
         return urlTab
-        
+
     def getArticleContent(self, cItem, data=None):
         printDBG("FaselhdCOM.getArticleContent [%s]" % cItem)
-        
+
         retTab = []
-        
+
         otherInfo = {}
-        
+
         sts, data = self.getPage(cItem['url'])
         if not sts:
             return []
-        
+
         url = self.cm.ph.getDataBeetwenNodes(data, ('<meta', '>', 'refresh'), ('<', '>'))[1]
         url = self.getFullUrl(self.cm.ph.getSearchGroups(url, '''url=['"]([^'^"]+?)['"]''', 1, True)[0])
-        
+
         if self.cm.isValidUrl(url):
             sts, tmp = self.getPage(url)
             if sts:
                 data = tmp
-        
+
         data = self.cm.ph.getDataBeetwenNodes(data, ('<header', '>'), ('<style', '>'))[1]
         desc = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(data, '<p', '</p>')[1])
         title = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(data, '<h1', '</h1>')[1])
         icon = self.getFullIconUrl(self.cm.ph.getSearchGroups(data, '''\ssrc=['"]([^'^"]+?)['"]''')[0])
-        
+
         keysMap = {'دولة المسلسل': 'country',
                    'حالة المسلسل': 'status',
                    'اللغة': 'language',
                    'توقيت الحلقات': 'duration',
                    'الموسم': 'seasons',
                    'الحلقات': 'episodes',
-        
+
                    'تصنيف الفيلم': 'genres',
                    'مستوى المشاهدة': 'age_limit',
                    'سنة الإنتاج': 'year',
@@ -350,9 +350,9 @@ class FaselhdCOM(CBaseHostClass):
             tmp = self.cleanHtmlStr(item).split(':')
             marker = tmp[0].strip()
             value = tmp[-1].strip().replace(' , ', ', ')
-            
+
             printDBG(">>>>>>>>>>>>>>>>>> marker[%s] -> value[%s]" % (marker, value))
-            
+
             #marker = self.cm.ph.getSearchGroups(item, '''(\sfa\-[^'^"]+?)['"]''')[0].split('fa-')[-1]
             #printDBG(">>>>>>>>>>>>>>>>>> " + marker)
             if marker not in keysMap:
@@ -360,29 +360,29 @@ class FaselhdCOM(CBaseHostClass):
             if value == '':
                 continue
             otherInfo[keysMap[marker]] = value
-        
+
         if title == '':
             title = cItem['title']
         if desc == '':
             desc = cItem.get('desc', '')
         if icon == '':
             icon = cItem.get('icon', self.DEFAULT_ICON_URL)
-        
+
         return [{'title': self.cleanHtmlStr(title), 'text': self.cleanHtmlStr(desc), 'images': [{'title': '', 'url': self.getFullUrl(icon)}], 'other_info': otherInfo}]
-    
+
     def handleService(self, index, refresh=0, searchPattern='', searchType=''):
         printDBG('handleService start')
-        
+
         CBaseHostClass.handleService(self, index, refresh, searchPattern, searchType)
 
         name = self.currItem.get("name", '')
         category = self.currItem.get("category", '')
         mode = self.currItem.get("mode", '')
-        
+
         printDBG("handleService: |||| name[%s], category[%s] " % (name, category))
         self.cacheLinks = {}
         self.currList = []
-        
+
     #MAIN MENU
         if name == None:
             self.listMainMenu({'name': 'category'})
@@ -397,14 +397,14 @@ class FaselhdCOM(CBaseHostClass):
     #SEARCH
         elif category in ["search", "search_next_page"]:
             cItem = dict(self.currItem)
-            cItem.update({'search_item': False, 'name': 'category'}) 
+            cItem.update({'search_item': False, 'name': 'category'})
             self.listSearchResult(cItem, searchPattern, searchType)
     #HISTORIA SEARCH
         elif category == "search_history":
             self.listsHistory({'name': 'history', 'category': 'search'}, 'desc', _("Type: "))
         else:
             printExc()
-        
+
         CBaseHostClass.endHandleService(self, index, refresh)
 
 
@@ -412,7 +412,6 @@ class IPTVHost(CHostBase):
 
     def __init__(self):
         CHostBase.__init__(self, FaselhdCOM(), True, [])
-        
+
     def withArticleContent(self, cItem):
         return cItem.get('good_for_fav', False)
-    

@@ -23,23 +23,23 @@ class CanlitvliveIoApi(CBaseHostClass):
         self.HTTP_HEADER = {'User-Agent': 'Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/62.0.3202.94 Safari/537.36', 'Accept': 'text/html', 'Accept-Encoding': 'gzip, deflate'}
         self.AJAX_HEADER = dict(self.HTTP_HEADER)
         self.AJAX_HEADER.update({'X-Requested-With': 'XMLHttpRequest'})
-        
+
         self.COOKIE_FILE = GetCookieDir('canlitvlive.io.cookie')
-        
+
         self.defaultParams = {}
         self.defaultParams.update({'header': self.HTTP_HEADER, 'save_cookie': True, 'load_cookie': True, 'cookiefile': self.COOKIE_FILE})
-        
+
     def getCategories(self, cItem, nextCategory):
         printDBG("CanlitvliveIoApi.getCategories")
         itemsList = []
-        
+
         sts, data = self.cm.getPage(cItem['url'], self.defaultParams)
         if not sts:
             return []
-        
+
         data = self.cm.ph.getDataBeetwenNodes(data, ('<div', '>', 'class="ct_cont"'), ('</ul', '>'))[1]
         data = self.cm.ph.getAllItemsBeetwenMarkers(data, '<li', '</li>')
-        if cItem.get('priv_category', '') == 'tv': 
+        if cItem.get('priv_category', '') == 'tv':
             data.insert(0, '<a href="/a-z-tum-tv-kanallari.html">A-Z')
             nextType = 'video'
         else:
@@ -52,17 +52,17 @@ class CanlitvliveIoApi(CBaseHostClass):
             title = self.cleanHtmlStr(item)
             params = {'name': cItem['name'], 'priv_category': nextCategory, 'priv_next_type': nextType, 'type': 'dir', 'title': title, 'url': url, 'icon': self.DEFAULT_ICON_URL}
             itemsList.append(params)
-        
+
         return itemsList
-        
+
     def getChannelsList(self, cItem):
         printDBG("CanlitvliveIoApi.getChannelsList")
         itemsList = []
-        
+
         sts, data = self.cm.getPage(cItem['url'], self.defaultParams)
         if not sts:
             return []
-        
+
         data = self.cm.ph.getAllItemsBeetwenNodes(data, ('<ul', '>', 'kanallar'), ('</ul', '>'))
         for section in data:
             section = self.cm.ph.getAllItemsBeetwenMarkers(section, '<li', '</li>')
@@ -76,13 +76,13 @@ class CanlitvliveIoApi(CBaseHostClass):
                 title = self.cleanHtmlStr(item)
                 params = {'name': cItem['name'], 'type': cItem.get('priv_next_type', 'video'), 'title': title, 'url': url, 'icon': icon}
                 itemsList.append(params)
-        
+
         return itemsList
-    
+
     def getList(self, cItem):
         printDBG("CanlitvliveIoApi.getList")
         itemsList = []
-        
+
         category = cItem.get('priv_category', None)
         if category == None:
             itemsList.append({'name': cItem['name'], 'priv_category': 'tv', 'type': 'video', 'title': 'TELE 1', 'url': 'https://tele1.com.tr/canli-yayin/', 'desc': 'https://tele1.com.tr/canli-yayin/', 'icon': 'https://i0.wp.com/tele1.com.tr/wp-content/uploads/2016/11/tele1_logo_yeni.png'})
@@ -97,9 +97,9 @@ class CanlitvliveIoApi(CBaseHostClass):
             return self.getCategories(cItem, 'priv_list_channels')
         elif category == 'priv_list_channels':
             return self.getChannelsList(cItem)
-        
+
         return itemsList
-        
+
     def getVideoLink(self, cItem):
         printDBG("CanlitvliveIoApi.getVideoLink")
         urlsTab = []

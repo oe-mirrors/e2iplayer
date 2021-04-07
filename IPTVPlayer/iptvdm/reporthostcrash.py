@@ -19,6 +19,6 @@ def ReportCrash(url, except_msg):
 if __name__ == "__main__":
     if len(sys.argv) < 2:
         sys.exit(1)
-    
+
     ReportCrash(sys.argv[1], sys.argv[2])
     sys.exit(0)

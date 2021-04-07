@@ -22,7 +22,7 @@ except Exception:
 ############################################
 
 ###################################################
-# E2 GUI COMMPONENTS 
+# E2 GUI COMMPONENTS
 ###################################################
 ###################################################
 
@@ -37,7 +37,7 @@ def GetConfigList():
     optionList = []
     optionList.append(getConfigListEntry(_("Language:"), config.plugins.iptvplayer.skylinewebcams_lang))
     return optionList
-    
+
 ###################################################
 
 
@@ -53,7 +53,7 @@ class WkylinewebcamsComApi:
         self.cacheList = {}
         self.mainMenuCache = {}
         self.lang = config.plugins.iptvplayer.skylinewebcams_lang.value
-        
+
     def getFullUrl(self, url):
         if url == '':
             return ''
@@ -64,17 +64,17 @@ class WkylinewebcamsComApi:
         elif url.startswith('/'):
             url = url[1:]
         return self.MAIN_URL + url
-        
+
     def cleanHtmlStr(self, str):
         return CBaseHostClass.cleanHtmlStr(str)
-        
+
     def getMainMenu(self, cItem):
         printDBG("WkylinewebcamsCom.getMainMenu")
         STATIC_TAB = [{'title': _('NEW'), 'url': self.getFullUrl('/skyline/morewebcams.php?w=new&l=' + self.lang), 'cat': 'list_cams2'},
                       {'title': _('NEARBY CAMS'), 'url': self.getFullUrl('/skyline/morewebcams.php?w=you&l=' + self.lang), 'cat': 'list_cams2'},
                       {'title': _('TOP live cams'), 'url': self.getFullUrl(self.lang + '/top-live-cams.html'), 'cat': 'list_cams'},
                       ]
-        
+
         list = []
         sts, data = self.cm.getPage(cItem['url'])
         if not sts:
@@ -103,13 +103,13 @@ class WkylinewebcamsComApi:
                 params = dict(cItem)
                 params.update({'title': catTitle, 'cat': 'list_main_category', 'idx': idx})
                 list.append(params)
-        
+
         for item in STATIC_TAB:
                 params = dict(cItem)
                 params.update(item)
                 list.insert(0, params)
         return list
-        
+
     def listCams2(self, cItem):
         printDBG("WkylinewebcamsCom.listCams2")
         list = []
@@ -127,7 +127,7 @@ class WkylinewebcamsComApi:
             params.update({'title': title, 'url': self.getFullUrl(url), 'icon': self.getFullUrl(icon), 'type': 'video'})
             list.append(params)
         return list
-        
+
     def listCams(self, cItem):
         printDBG("WkylinewebcamsCom.listCams")
         list = []
@@ -146,7 +146,7 @@ class WkylinewebcamsComApi:
             params.update({'title': title, 'url': self.getFullUrl(url), 'icon': self.getFullUrl(icon), 'desc': desc, 'type': 'video'})
             list.append(params)
         return list
-        
+
     def exploreItem(self, cItem):
         printDBG("WkylinewebcamsCom.exploreItem")
         list = []
@@ -165,7 +165,7 @@ class WkylinewebcamsComApi:
             params.update({'title': title, 'url': self.getFullUrl(url), 'icon': self.getFullUrl(icon), 'desc': desc, 'type': 'video'})
             list.append(params)
         return list
-        
+
     def getChannelsList(self, cItem):
         printDBG("WkylinewebcamsCom.getChannelsList")
         list = []
@@ -190,7 +190,7 @@ class WkylinewebcamsComApi:
             return self.exploreItem(cItem)
 
         return list
-        
+
     def getVideoLink(self, cItem):
         printDBG("WkylinewebcamsCom.getVideoLink")
         urlsTab = []

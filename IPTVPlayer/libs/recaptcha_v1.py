@@ -24,10 +24,10 @@ class UnCaptchaReCaptcha:
     def __init__(self, lang='en'):
         self.HTTP_HEADER = {'Accept-Language': lang, 'Referer': 'https://www.google.com/recaptcha/demo/', 'User-Agent': 'Mozilla/5.0 (X11; U; Linux i686; en-US; rv:1.9.2.18) Gecko/20110621 Mandriva Linux/1.9.2.18-0.1mdv2010.2 (2010.2) Firefox/3.6.18'}
         self.cm = common()
-        self.sessionEx = MainSessionWrapper() 
+        self.sessionEx = MainSessionWrapper()
         self.challenge = ''
         self.response = ''
-        
+
     def processCaptcha(self, key):
         post_data = None
         token = ''
@@ -35,15 +35,15 @@ class UnCaptchaReCaptcha:
         reCaptchaUrl = 'https://www.google.com/recaptcha/api/noscript?k=%s' % (key)
         while iteration < 20:
             sts, data = self.cm.getPage(reCaptchaUrl, {'header': self.HTTP_HEADER, 'raw_post_data': True}, post_data=post_data)
-            if not sts: 
+            if not sts:
                 SetIPTVPlayerLastHostError(_('Fail to get "%s".') % reCaptchaUrl)
                 return ''
-        
+
             imgUrl = self.cm.ph.getSearchGroups(data, 'src="(image[^"]+?)"')[0]
             iteration += 1
             message = self.cm.ph.getSearchGroups(data, '<p[^>]*>([^<]+?)</p>')[0]
             token = self.cm.ph.getSearchGroups(data, '<textarea[^>]*>([^<]+?)</textarea>')[0]
-            if '' != token: 
+            if '' != token:
                 printDBG('>>>>>>>> Captcha token[%s]' % (token))
                 break
             elif message == '':
@@ -54,18 +54,18 @@ class UnCaptchaReCaptcha:
             imgUrl = 'https://www.google.com/recaptcha/api/%s' % (imgUrl.replace('&amp;', '&'))
             message = clean_html(message)
             accepLabel = clean_html(self.cm.ph.getSearchGroups(data, 'type="submit"[^>]+?value="([^"]+)"')[0])
-            
+
             filePath = GetTmpDir('.iptvplayer_captcha.jpg')
             printDBG(">>>>>>>> Captcha message[%s]" % (message))
             printDBG(">>>>>>>> Captcha accep label[%s]" % (accepLabel))
             printDBG(">>>>>>>> Captcha imgUrl[%s] filePath[%s]" % (imgUrl, filePath))
-            
+
             params = {'maintype': 'image', 'subtypes': ['jpeg'], 'check_first_bytes': ['\xFF\xD8', '\xFF\xD9']}
             ret = self.cm.saveWebFile(filePath, imgUrl, params)
             if not ret.get('sts'):
                 SetIPTVPlayerLastHostError(_('Fail to get "%s".') % imgUrl)
                 break
-            
+
             params = deepcopy(IPTVMultipleInputBox.DEF_PARAMS)
             params['accep_label'] = _('Send')
             params['title'] = accepLabel
@@ -76,7 +76,7 @@ class UnCaptchaReCaptcha:
             item['icon_path'] = filePath
             item['input']['text'] = ''
             params['list'].append(item)
-            
+
             ret = 0
             retArg = self.sessionEx.waitForFinishOpen(IPTVMultipleInputBox, params)
             printDBG('>>>>>>>> Captcha response[%s]' % (retArg))
@@ -86,5 +86,5 @@ class UnCaptchaReCaptcha:
                 post_data = urllib.parse.urlencode({'recaptcha_challenge_field': recaptcha_challenge_field, 'recaptcha_response_field': recaptcha_response_field, 'submit': accepLabel}, doseq=True)
             else:
                 break
-        
+
         return token

@@ -25,7 +25,7 @@ from Components.config import config, ConfigSelection, ConfigYesNo, ConfigText, 
 
 
 ###################################################
-# E2 GUI COMMPONENTS 
+# E2 GUI COMMPONENTS
 ###################################################
 from Screens.MessageBox import MessageBox
 ###################################################
@@ -63,7 +63,7 @@ def gettytul():
 
 
 class TVPlayer(CBaseHostClass):
- 
+
     def __init__(self):
         CBaseHostClass.__init__(self, {'history': 'tvplayer.com', 'cookie': 'tvplayer.com.cookie'})
         self.DEFAULT_ICON_URL = 'http://ww1.prweb.com/prfiles/2012/03/21/9313945/TVPlayer%20Logo%20New%20USE%20THIS%20ONE.jpg'
@@ -77,29 +77,29 @@ class TVPlayer(CBaseHostClass):
         self.loggedIn = None
         self.login = ''
         self.password = ''
-        
+
         self.defaultParams = {'header': self.HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE, 'ignore_http_code_ranges': [(404, 500)]}
-    
+
         self.MAIN_CAT_TAB = [{'category': 'list_channels_genres', 'title': _('Channels'), 'url': self.getFullUrl('/channels')},
-                             
+
                              #{'category':'search',           'title': _('Search'), 'search_item':True,},
-                             #{'category':'search_history',   'title': _('Search history'),            } 
+                             #{'category':'search_history',   'title': _('Search history'),            }
                             ]
-    
+
     def getPage(self, baseUrl, addParams={}, post_data=None):
         if addParams == {}:
             addParams = dict(self.defaultParams)
         return self.cm.getPage(baseUrl, addParams, post_data)
-        
+
     def fillChannelsFreeFlags(self):
         printDBG("TVPlayer.fillFreeFlags")
         if self.cacheChannelsFlags != {}:
             return
-        
+
         sts, data = self.getPage(self.getFullUrl('/watch'))
         if not sts:
             return []
-        
+
         data = self.cm.ph.getAllItemsBeetwenMarkers(data, '<ul class="list-unstyled', '</ul>')
         for item in data:
             item = self.cm.ph.getAllItemsBeetwenMarkers(item, '<li', '</li>')
@@ -112,10 +112,10 @@ class TVPlayer(CBaseHostClass):
                 title = self.cm.ph.getSearchGroups(it, '''data-name=['"]([^'^"]+?)['"]''')[0]
                 type = self.cm.ph.getSearchGroups(it, '''class=['"]online\s*([^'^"]+?)['"]''')[0].lower()
                 self.cacheChannelsFlags[id[1]] = {'title': self.cleanHtmlStr(title), 'url': self.getFullUrl(url), 'icon': self.getFullIconUrl(icon), 'f_type': type}
-                
+
     def listChannelsGenres(self, cItem, nextCategory):
         printDBG("TVPlayer.listChannelsGenres")
-        
+
         if 0 == len(self.cacheChannelsGenres):
             sts, data = self.getPage(cItem['url'])
             if not sts:
@@ -128,27 +128,27 @@ class TVPlayer(CBaseHostClass):
                     continue
                 params = {'title': self.cleanHtmlStr(item), 'f_genre': genre}
                 self.cacheChannelsGenres.append(params)
-        
+
         cItem = dict(cItem)
         cItem['category'] = nextCategory
         self.listsTab(self.cacheChannelsGenres, cItem)
-    
+
     def listTypeFilter(self, cItem, nextCategory):
         printDBG("TVPlayer.listTypeFilter")
         tab = [{'title': _('All'), 'f_type': ''}, {'title': _('Free'), 'f_type': 'free'}, {'title': _('Paid'), 'f_type': 'paid'}]
         cItem = dict(cItem)
         cItem['category'] = nextCategory
         self.listsTab(tab, cItem)
-        
+
     def listChannels(self, cItem):
         printDBG("TVPlayer.listChannels cItem[%s]" % cItem)
-        
+
         self.fillChannelsFreeFlags()
-        
+
         sts, data = self.getPage(cItem['url'])
         if not sts:
             return
-        
+
         data = self.cm.ph.getDataBeetwenMarkers(data, '<ul class="list ', '</ul>')[1]
         data = self.cm.ph.getAllItemsBeetwenMarkers(data, '<li', '</li>')
         for item in data:
@@ -156,20 +156,20 @@ class TVPlayer(CBaseHostClass):
             if cItem.get('f_genre', '') not in genres:
                 continue
             url = self.cm.ph.getSearchGroups(item, '''href=['"]([^'^"]+?)['"]''')[0]
-            
+
             id = url.split('/watch/')[-1]
             if id in self.cacheChannelsFlags:
                 flagType = self.cacheChannelsFlags[id]['f_type']
             else:
                 flagType = ''
-                
+
             if cItem.get('f_type', '') not in flagType:
                 continue
-            
+
             url = self.getFullUrl(url)
             title = self.cleanHtmlStr(self.cm.ph.getSearchGroups(item, '''data-name=['"]([^'^"]+?)['"]''')[0])
             icon = self.getFullIconUrl(self.cm.ph.getSearchGroups(item, '''src=['"]([^'^"]+?)['"]''')[0])
-            
+
             params = dict(cItem)
             params.update({'good_for_fav': True, 'title': title, 'url': url, 'icon': icon, 'desc': flagType.title()})
             self.addVideo(params)
@@ -179,40 +179,40 @@ class TVPlayer(CBaseHostClass):
         cItem = dict(cItem)
         cItem['url'] = self.getFullUrl('/?s=' + urllib.parse.quote_plus(searchPattern))
         self.listItems(cItem, 'explore_item')
-        
+
     def getLinksForVideo(self, cItem):
         printDBG("TVPlayer.getLinksForVideo [%s]" % cItem)
         self.tryTologin()
-        
+
         def _SetIPTVPlayerLastHostError(msg):
             if not cItem.get('next_try', False):
                 SetIPTVPlayerLastHostError(msg)
-        
+
         retTab = []
-        
+
         sts, data = self.getPage(cItem['url'])
         if not sts:
             return []
-        
+
         checkUrl = self.cm.ph.getSearchGroups(data, '''<[^>]+?id="check"[^>]+?src=['"]([^'^"]+?)['"]''')[0]
-        
+
         playerData = self.cm.ph.getSearchGroups(data, '''<div([^"^']+?class=['"]video-js[^>]+?)>''')[0]
         printDBG(playerData)
-        
+
         playerData = dict(re.findall('''\sdata\-(\w+?)\s*=\s*['"]([^'^"]+?)['"]''', playerData))
         printDBG(playerData)
-        
-        if 'resource' not in playerData or 'token' not in playerData: 
+
+        if 'resource' not in playerData or 'token' not in playerData:
             msg = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(data, '<div class="centered-content">', '</h', False)[1])
             _SetIPTVPlayerLastHostError(msg)
             return []
-        
+
         url = self.getFullUrl('/watch/context?resource={0}&gen={1}'.format(playerData.get('resource'), playerData.get('token')))
         sts, data = self.getPage(url)
         if not sts:
             return []
         printDBG("response: [%s]" % data)
-        
+
         try:
             data = byteify(json.loads(data))
             url = 'https://api.tvplayer.com/api/v2/stream/live'
@@ -224,7 +224,7 @@ class TVPlayer(CBaseHostClass):
             post_data = {'id': data['resource'], 'service': 1, 'platform': data['platform']['key'], 'validate': data['validate']}
             if 'token' in data:
                 post_data['token'] = data['token']
-                
+
             sts, data = self.getPage(url, {}, post_data)
             if not sts:
                 try:
@@ -233,9 +233,9 @@ class TVPlayer(CBaseHostClass):
                     pass
                 return []
             printDBG("response: [%s]" % data)
-            
+
             data = byteify(json.loads(data))['tvplayer']['response']
-            if 'error' in data: 
+            if 'error' in data:
                 _SetIPTVPlayerLastHostError(data['error'])
                 if not config.plugins.iptvplayer.tvplayercom_drmbypass.value or cItem.get('next_try', False):
                     return []
@@ -253,23 +253,23 @@ class TVPlayer(CBaseHostClass):
                     if not self.cm.isValidUrl(streamUrl):
                         _SetIPTVPlayerLastHostError(_('No playable sources found.'))
                         return []
-            
+
             retTab = getDirectM3U8Playlist(streamUrl, checkExt=True, variantCheck=True, cookieParams=self.defaultParams, checkContent=True)
             if len(retTab):
                 cookieHeader = self.cm.getCookieHeader(self.COOKIE_FILE)
                 for idx in range(len(retTab)):
                     retTab[idx]['url'] = strwithmeta(retTab[idx]['url'], {'iptv_proto': 'm3u8', 'Cookie': cookieHeader, 'User-Agent': self.defaultParams['header']['User-Agent']})
-                    
+
                 def __getLinkQuality(itemLink):
-                    try: 
+                    try:
                         return int(itemLink['bitrate'])
                     except Exception:
                         printExc()
                         return 0
-                
+
                 retTab = CSelOneLink(retTab, __getLinkQuality, int(int(config.plugins.iptvplayer.tvplayercom_preferredbitrate.value) * 1.2)).getSortedLinks()
                 if len(retTab) and config.plugins.iptvplayer.tvplayercom_usepreferredbitrate.value:
-                    retTab = [retTab[0]] 
+                    retTab = [retTab[0]]
                 printDBG(retTab)
             elif self.cm.isValidUrl(checkUrl):
                 sts, data = self.getPage(checkUrl)
@@ -277,23 +277,23 @@ class TVPlayer(CBaseHostClass):
                     _SetIPTVPlayerLastHostError(_("Sorry. TVPlayer is currently only available in the United Kingdom"))
         except Exception:
             printExc()
-        
+
         return retTab
-        
+
     def getArticleContent(self, cItem):
         printDBG("TVPlayer.getArticleContent [%s]" % cItem)
         self.tryTologin()
-        
+
         retTab = []
-        
+
         sts, data = self.getPage(cItem['url'])
         if not sts:
             return retTab
-        
+
         title = cItem['title']
         desc = ''
         icon = cItem.get('icon', self.DEFAULT_ICON_URL)
-        
+
         descTab = []
         tmp = self.cm.ph.getDataBeetwenReMarkers(data, re.compile('''<div[^>]+?class=['"]collapse['"][^>]*?>'''), re.compile('''<div[^>]+?id=['"]dark-button['"]'''), False)[1]
         tmp = tmp.split('<div class="row">')
@@ -308,10 +308,10 @@ class TVPlayer(CBaseHostClass):
                     tmpTab.append(t)
             if len(tmpTab):
                 descTab.append(tmpTab)
-        
+
         tmp = self.cm.ph.getDataBeetwenMarkers(data, 'segment">', '<div class="collapse"', False)[1]
         tmp = re.split('''<[^>]+?segment[^>]*?>''', tmp)
-        
+
         if len(descTab) == len(tmp) > 0:
             for idx in range(len(tmp)):
                 items = self.cm.ph.getAllItemsBeetwenMarkers(tmp[idx], '<div', '</div>')
@@ -329,35 +329,35 @@ class TVPlayer(CBaseHostClass):
                     tmpTab.insert(1, title)
                 tmpTab.extend(descTab[idx])
                 descTab[idx] = tmpTab
-        
+
         for tab in descTab:
             desc += '[/br]'.join(tab)
             desc += '[/br][/br]'
-        
+
         return [{'title': self.cleanHtmlStr(title), 'text': self.cleanHtmlStr(desc), 'images': [{'title': '', 'url': self.DEFAULT_ICON_URL}], 'other_info': {}}]
-        
+
     def tryTologin(self):
         printDBG('tryTologin start')
         self.defUrl = self.getFullUrl('/watch/russiatoday')
         if None == self.loggedIn or self.login != config.plugins.iptvplayer.tvplayercom_login.value or\
             self.password != config.plugins.iptvplayer.tvplayercom_password.value:
-        
+
             self.login = config.plugins.iptvplayer.tvplayercom_login.value
             self.password = config.plugins.iptvplayer.tvplayercom_password.value
-            
+
             rm(self.COOKIE_FILE)
-            
+
             self.loggedIn = False
-            
+
             if '' == self.login.strip() or '' == self.password.strip():
                 return False
-            
+
             url = self.getFullUrl('/account/login')
-            
+
             sts, data = self.getPage(url)
             if not sts:
                 return False
-            
+
             sts, data = self.cm.ph.getDataBeetwenNodes(data, ('<form', '>', 'login'), ('</form', '>'))
             if not sts:
                 return False
@@ -368,9 +368,9 @@ class TVPlayer(CBaseHostClass):
                 name = self.cm.ph.getSearchGroups(item, '''name=['"]([^'^"]+?)['"]''')[0]
                 value = self.cm.ph.getSearchGroups(item, '''value=['"]([^'^"]+?)['"]''')[0]
                 post_data[name] = value
-            
+
             post_data.update({'email': self.login, 'password': self.password, 'remember_me': 1})
-            
+
             httpParams = dict(self.defaultParams)
             httpParams['header'] = dict(httpParams['header'])
             httpParams['header']['Content-Type'] = 'application/x-www-form-urlencoded'
@@ -383,21 +383,21 @@ class TVPlayer(CBaseHostClass):
                 self.sessionEx.open(MessageBox, _('Login failed.'), type=MessageBox.TYPE_ERROR, timeout=10)
                 printDBG('tryTologin failed')
         return self.loggedIn
-    
+
     def handleService(self, index, refresh=0, searchPattern='', searchType=''):
         printDBG('handleService start')
-        
+
         self.tryTologin()
-        
+
         CBaseHostClass.handleService(self, index, refresh, searchPattern, searchType)
 
         name = self.currItem.get("name", '')
         category = self.currItem.get("category", '')
         mode = self.currItem.get("mode", '')
-        
+
         printDBG("handleService: |||||||||||||||||||||||||||||||||||| name[%s], category[%s] " % (name, category))
         self.currList = []
-        
+
     #MAIN MENU
         if name == None:
             #self.listsTab(self.MAIN_CAT_TAB, {'name':'category'})
@@ -413,14 +413,14 @@ class TVPlayer(CBaseHostClass):
     #SEARCH
         elif category in ["search", "search_next_page"]:
             cItem = dict(self.currItem)
-            cItem.update({'search_item': False, 'name': 'category'}) 
+            cItem.update({'search_item': False, 'name': 'category'})
             self.listSearchResult(cItem, searchPattern, searchType)
     #HISTORIA SEARCH
         elif category == "search_history":
             self.listsHistory({'name': 'history', 'category': 'search'}, 'desc', _("Type: "))
         else:
             printExc()
-        
+
         CBaseHostClass.endHandleService(self, index, refresh)
 
 
@@ -428,10 +428,8 @@ class IPTVHost(CHostBase):
 
     def __init__(self):
         CHostBase.__init__(self, TVPlayer(), True, [])
-        
+
     def withArticleContent(self, cItem):
         if cItem['type'] == 'video':
             return True
         return False
-    
-    

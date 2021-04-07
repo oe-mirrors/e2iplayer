@@ -200,7 +200,7 @@ class BasePathMixin(object):
             if self.base_uri is None:
                 raise ValueError('There can not be `absolute_uri` with no `base_uri` set')
             uri = _urijoin(self.base_uri, self.uri)
-        
+
         # ugly workaround to be fixed
         proxyUri = 'englandproxy.co.uk'
         if proxyUri in self.base_uri and proxyUri not in uri:
@@ -209,7 +209,7 @@ class BasePathMixin(object):
             except Exception:
                 pass
         return uri
-            
+
     @property
     def base_path(self):
         return os.path.dirname(self.uri)
@@ -248,7 +248,7 @@ class Segment(BasePathMixin):
 
     `duration`
       duration attribute from EXTINF paramter
-    
+
     `date`
       program date from EXT-X-PROGRAM-DATE-TIME paramter
 
@@ -333,7 +333,7 @@ class AudioStream(BasePathMixin):
     def __str__(self):
         # ToDO
         return ''
-        
+
 
 class Playlist(BasePathMixin):
     '''
@@ -345,7 +345,7 @@ class Playlist(BasePathMixin):
     '''
 
     def __init__(self, uri, stream_info, alt_audio_streams, base_uri):
-    
+
         self.uri = uri
         self.base_uri = base_uri
 
@@ -404,12 +404,12 @@ def _urijoin(base_uri, path):
     elif parser.is_url(base_uri):
         if path.startswith('/'):
             return urllib.parse.urljoin(base_uri, path)
-        
+
         parsed_url = urllib.parse.urlparse(base_uri)
         prefix = parsed_url.scheme + '://' + parsed_url.netloc
         new_path = os.path.normpath(parsed_url.path + '/' + path)
         full_uri = urllib.parse.urljoin(prefix, new_path.strip('/'))
-        if not parser.is_url(full_uri): 
+        if not parser.is_url(full_uri):
             full_uri = urllib.parse.urljoin(prefix, '/' + new_path.strip('/'))
         return full_uri
     else:

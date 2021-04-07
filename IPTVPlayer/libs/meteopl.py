@@ -28,7 +28,7 @@ def GetConfigList():
     optionList = []
     optionList.append(getConfigListEntry("Miejscowość:", config.plugins.iptvplayer.meteopl_locality))
     return optionList
-    
+
 ###################################################
 
 
@@ -39,10 +39,10 @@ class MeteoPLApi(CBaseHostClass):
         self.MAIN_URL = 'http://www.meteo.pl/'
         self.HEADER = {'User-Agent': 'Mozilla/5.0', 'Accept': 'text/html'}
         self.COOKIE_FILE = GetCookieDir('iklubnet.cookie')
-        
+
         self.http_params = {}
         self.http_params.update({'save_cookie': True, 'load_cookie': True, 'cookiefile': self.COOKIE_FILE})
-        
+
     def getPage(self, url, params={}, post_data=None):
         sts, data = self.cm.getPage(url, params, post_data)
         if sts:
@@ -52,7 +52,7 @@ class MeteoPLApi(CBaseHostClass):
             except Exception:
                 pass
         return sts, data
-        
+
     def getList(self, cItem):
         printDBG("MeteoPLApi.getChannelsList")
         channelsTab = []
@@ -65,7 +65,7 @@ class MeteoPLApi(CBaseHostClass):
                     channelsTab.append(params)
                 except Exception:
                     printExc()
-                
+
             sts, data = self.getPage(self.getFullUrl('um/php/gpp/search.php'))
             if not sts:
                 return []
@@ -98,18 +98,18 @@ class MeteoPLApi(CBaseHostClass):
                     params.update({'type': 'picture', 'title': title, 'meteo_cat': True, 'url': self.getFullUrl('um/php/meteorogram_id_um.php?ntype=0u&id=' + mgram)})
                     channelsTab.append(params)
         return channelsTab
-        
+
     def getVideoLink(self, cItem):
         printDBG("MeteoPLApi.getVideoLink")
         urlsTab = []
-        
+
         sts, data = self.getPage(cItem['url'])
         if not sts:
             return []
         printDBG("===================================")
         printDBG(data)
         printDBG("===================================")
-        
+
         fcstdate = self.cm.ph.getSearchGroups(data, '''var\s*fcstdate\s*=\s*['"]([^'^"]+?)['"]''')[0]
         ntype = self.cm.ph.getSearchGroups(data, '''var\s*ntype\s*=\s*['"]([^'^"]+?)['"]''')[0]
         lang = self.cm.ph.getSearchGroups(data, '''var\s*lang\s*=\s*['"]([^'^"]+?)['"]''')[0]
@@ -117,5 +117,5 @@ class MeteoPLApi(CBaseHostClass):
         act_x = self.cm.ph.getSearchGroups(data, '''var\s*act_x\s*=([^;]+?);''')[0].strip()
         act_y = self.cm.ph.getSearchGroups(data, '''var\s*act_y\s*=([^;]+?);''')[0].strip()
         urlsTab.append({'name': 'mgram', 'url': self.getFullUrl('um/metco/mgram_pict.php?ntype=%s&fdate=%s&row=%s&col=%s&lang=%s' % (ntype, fcstdate, act_y, act_x, lang))})
-        
+
         return urlsTab

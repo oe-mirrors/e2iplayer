@@ -191,7 +191,7 @@ class C7tvDe(CBaseHostClass):
                         title = '%s: ' % (item['metadata']['tvShowTitle'])
                     title += item['title']
                     icon = self.getFullIconUrl(item['url'] + '?fake=need_resolve.jpeg')
-                    url = self.getFullUrl(item['url']) 
+                    url = self.getFullUrl(item['url'])
                     params = MergeDicts(cItem, {'good_for_fav': True, 'url': url, 'icon': icon, 'title': title, 'desc': ' | '.join(desc)})
                     if item['type'] == 'video':
                         params['type'] = 'video'
@@ -247,7 +247,7 @@ class C7tvDe(CBaseHostClass):
         if not sts:
             return
         self.setMainUrl(self.cm.meta['url'])
-        
+
         tmp = ph.find(data, 'var contentResources = [', '];', flags=0)[1]
         try:
             tmp = json_loads('[%s]' % tmp)
@@ -345,18 +345,18 @@ class C7tvDe(CBaseHostClass):
             linksTab.sort(reverse=True, key=lambda k: int(k['bitrate']))
         except Exception:
             printExc()
-            
+
         return linksTab
 
     def doGetLinks(self, video_id, client_location, mimetype, web=False):
         linksTab = []
         try:
             if web:
-                access_token = 'h''b''b''t''v'  
+                access_token = 'h''b''b''t''v'
                 salt = '0''1''r''e''e''6''e''L''e''i''w''i''u''m''i''e''7''i''e''V''8''p''a''h''g''e''i''T''u''i''3''B'
                 client_name = 'h''b''b''t''v'
             else:
-              access_token = 'seventv-web'  
+              access_token = 'seventv-web'
               salt = '01!8d8F_)r9]4s[qeuXfP%'
               client_name = ''
 
@@ -366,7 +366,7 @@ class C7tvDe(CBaseHostClass):
                 return []
             printDBG(json_data)
             printDBG("++++++++++++++++++++")
-            json_data = json_loads(json_data) 
+            json_data = json_loads(json_data)
 
             source_id = -1
             for stream in json_data['sources']:
@@ -378,15 +378,15 @@ class C7tvDe(CBaseHostClass):
 
             client_id_1 = salt[:2] + sha1(''.join([str(video_id), salt, access_token, client_location, salt, client_name]).encode('utf-8')).hexdigest()
 
-            json_url = 'http://vas.sim-technik.de/vas/live/v2/videos/%s/sources?access_token=%s&client_location=%s&client_name=%s&client_id=%s' % (video_id, access_token, client_location, client_name, client_id_1)            
+            json_url = 'http://vas.sim-technik.de/vas/live/v2/videos/%s/sources?access_token=%s&client_location=%s&client_name=%s&client_id=%s' % (video_id, access_token, client_location, client_name, client_id_1)
             sts, json_data = self.getPage(json_url)
             if not sts:
                 return []
             printDBG(json_data)
             printDBG("++++++++++++++++++++")
-            json_data = json_loads(json_data) 
+            json_data = json_loads(json_data)
             server_id = json_data['server_id']
-            
+
             #client_name = 'kolibri-1.2.5'
             client_id = salt[:2] + sha1(''.join([salt, video_id, access_token, server_id, client_location, str(source_id), salt, client_name]).encode('utf-8')).hexdigest()
             url_api_url = 'http://vas.sim-technik.de/vas/live/v2/videos/%s/sources/url?%s' % (video_id, urllib.parse.urlencode({
@@ -417,7 +417,7 @@ class C7tvDe(CBaseHostClass):
                 printDBG(json_data)
                 printDBG("++++++++++++++++++++")
                 printDBG(json_data)
-                json_data = json_loads(json_data) 
+                json_data = json_loads(json_data)
                 if json_data.get("status_code") != 12:
                     break
 
@@ -440,7 +440,7 @@ class C7tvDe(CBaseHostClass):
 
     def handleService(self, index, refresh=0, searchPattern='', searchType=''):
         printDBG('handleService start')
-        
+
         CBaseHostClass.handleService(self, index, refresh, searchPattern, searchType)
 
         name = self.currItem.get("name", '')
@@ -457,7 +457,7 @@ class C7tvDe(CBaseHostClass):
 
         elif category == 'list_abc':
             self.listABC(self.currItem, 'list_abc_items')
-            
+
         elif category == 'list_abc_items':
             self.listABCItems(self.currItem, 'explore_item')
 

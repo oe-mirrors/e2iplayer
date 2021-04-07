@@ -141,5 +141,3 @@ def phase2KeyMixing(tk, p1k, pn):
         rc4Key[5 + 2 * i] = (ppk[i] >> 8) & 0xff
     wepSeed = ''.join([chr(i) for i in rc4Key]) # convert to string
     return wepSeed
-
-

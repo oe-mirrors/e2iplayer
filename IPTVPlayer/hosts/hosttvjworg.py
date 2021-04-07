@@ -20,15 +20,15 @@ from Components.config import config, ConfigSelection, ConfigYesNo, getConfigLis
 
 
 ###################################################
-# E2 GUI COMMPONENTS 
+# E2 GUI COMMPONENTS
 ###################################################
 ###################################################
 
 ###################################################
 # Config options for HOST
 ###################################################
-config.plugins.iptvplayer.tvjworg_language = ConfigSelection(default="default", choices=[("default", _("Default")), ("P", _("Polish")), ("E", _("English"))]) 
-config.plugins.iptvplayer.tvjworg_icontype = ConfigSelection(default="vertical", choices=[("vertical", _('vertical')), ("horizontal", _('horizontal'))]) 
+config.plugins.iptvplayer.tvjworg_language = ConfigSelection(default="default", choices=[("default", _("Default")), ("P", _("Polish")), ("E", _("English"))])
+config.plugins.iptvplayer.tvjworg_icontype = ConfigSelection(default="vertical", choices=[("vertical", _('vertical')), ("horizontal", _('horizontal'))])
 config.plugins.iptvplayer.tvjworg_default_format = ConfigSelection(default="720", choices=[("0", _("the worst")),
                                                                                                ("240", "240p"),
                                                                                                ("360", "360p"),
@@ -56,16 +56,16 @@ class TVJWORG(CBaseHostClass):
     HTTP_HEADER = {'User-Agent': 'Mozilla/5.0', 'Accept': 'text/html'}
     MAIN_URL = 'http://mediator.jw.org/v1/'
     DEFAULT_ICON = 'https://s-media-cache-ak0.pinimg.com/236x/3b/aa/32/3baa3268cdbc9dc5114bbe1ab0b00ce0.jpg'
-    
+
     ICONS_KEYS = ["xl", "lg", "md", "sm", "xs"]
     ICONS_TYPES = {'vertical': ['pss', 'psr', 'sqr', 'sqs'], 'horizontal': ['lsr', 'lss', 'wss', 'wsr', 'pnr']}
-    
+
     def __init__(self):
         CBaseHostClass.__init__(self, {'history': 'filmydokumentalne.eu', 'cookie': 'filmydokumentalne.eu.cookie'})
         self.defaultParams = {'header': self.HTTP_HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
         self.cacheCats = {}
         self.defaultLangCode = ''
-        
+
     def _getFullUrl(self, url, api=True):
         baseUrl = self.MAIN_URL
         if 0 < len(url):
@@ -76,7 +76,7 @@ class TVJWORG(CBaseHostClass):
         if not baseUrl.startswith('https://'):
             url = url.replace('https://', 'http://')
         return url
-        
+
     def cleanHtmlStr(self, data):
         data = data.replace('&nbsp;', ' ')
         data = data.replace('&nbsp', ' ')
@@ -92,7 +92,7 @@ class TVJWORG(CBaseHostClass):
                 self.addDir(params)
             else:
                 self.addVideo(params)
-            
+
     def _getIcon(self, iconItem):
         icon = ''
         try:
@@ -117,7 +117,7 @@ class TVJWORG(CBaseHostClass):
         if '' == icon:
             icon = self.DEFAULT_ICON
         return icon
-        
+
     def _getLangCode(self):
         langCode = 'E'
         if config.plugins.iptvplayer.tvjworg_language.value == 'default':
@@ -139,16 +139,16 @@ class TVJWORG(CBaseHostClass):
         else:
             langCode = config.plugins.iptvplayer.tvjworg_language.value
         return langCode
-    
+
     def listCategories(self, cItem, sub=''):
         printDBG("TVJWORG.listCategories")
-        
+
         if 'key' in cItem:
             baseUrl = 'categories/%s/%s?detailed=1' % (self._getLangCode(), cItem['key'])
         else:
             baseUrl = 'categories/' + self._getLangCode()
         url = self._getFullUrl(baseUrl)
-        
+
         sts, data = self.cm.getPage(url)
         if not sts:
             return
@@ -169,17 +169,17 @@ class TVJWORG(CBaseHostClass):
                 self.addDir(params)
         except Exception:
             printExc()
-            
+
     def listMedia(self, cItem):
         printDBG("TVJWORG.listMedia")
-        
+
         baseUrl = 'categories/%s/%s?detailed=1' % (self._getLangCode(), cItem['key'])
         url = self._getFullUrl(baseUrl)
-        
+
         sts, data = self.cm.getPage(url)
         if not sts:
             return
-        
+
         try:
             data = byteify(json.loads(data))
             for item in data['category']['media']:
@@ -206,17 +206,17 @@ class TVJWORG(CBaseHostClass):
                     self.addVideo(params)
         except Exception:
             printExc()
-            
+
     def listPseudoStreaming(self, cItem):
         printDBG("TVJWORG.listPseudoStreaming")
-        
+
         baseUrl = 'schedules/%s/%s?utcOffset=60' % (self._getLangCode(), cItem['key'])
         url = self._getFullUrl(baseUrl)
-        
+
         sts, data = self.cm.getPage(url)
         if not sts:
             return
-        
+
         try:
             data = byteify(json.loads(data))
             for item in data['category']['media']:
@@ -243,11 +243,11 @@ class TVJWORG(CBaseHostClass):
                     self.addVideo(params)
         except Exception:
             printExc()
-    
+
     def getLinksForVideo(self, cItem):
         printDBG("TVJWORG.getLinksForVideo [%s]" % cItem)
         urlTab = []
-        
+
         try:
             tmpTab = cItem.get('files', [])
             for item in tmpTab:
@@ -257,13 +257,13 @@ class TVJWORG(CBaseHostClass):
                     urlTab.append({'name': item['label'], 'url': linkVideo, 'need_resolve': 0})
                 except Exception:
                     printExc()
-                
+
             if 1 < len(urlTab):
                 error = False
                 max_bitrate = int(config.plugins.iptvplayer.tvjworg_default_format.value)
 
                 def __getLinkQuality(itemLink):
-                    try: 
+                    try:
                         return int(itemLink['name'][0:-1])
                     except Exception:
                         error = True
@@ -275,21 +275,21 @@ class TVJWORG(CBaseHostClass):
                     urlTab = oneLink.getSortedLinks()
         except Exception:
             printExc()
-        
+
         return urlTab
-        
+
     def handleService(self, index, refresh=0, searchPattern='', searchType=''):
         printDBG('handleService start')
-        
+
         CBaseHostClass.handleService(self, index, refresh, searchPattern, searchType)
 
         name = self.currItem.get("name", '')
         category = self.currItem.get("category", '')
         mode = self.currItem.get("mode", '')
-        
+
         printDBG("handleService: |||||||||||||||||||||||||||||||||||| name[%s], category[%s] " % (name, category))
         self.currList = []
-        
+
     #MAIN MENU
         if name == None:
             self.listCategories({'name': 'category'})
@@ -301,7 +301,7 @@ class TVJWORG(CBaseHostClass):
             self.listCategories(self.currItem, 'subcategories')
         else:
             printExc()
-        
+
         CBaseHostClass.endHandleService(self, index, refresh)
 
 
@@ -312,24 +312,24 @@ class IPTVHost(CHostBase):
 
     def getLogoPath(self):
         return RetHost(RetHost.OK, value=[GetLogoDir('tvjworglogo.png')])
-    
+
     def getLinksForVideo(self, Index=0, selItem=None):
         retCode = RetHost.ERROR
         retlist = []
         if not self.isValidIndex(Index):
             return RetHost(retCode, value=retlist)
-        
+
         urlList = self.host.getLinksForVideo(self.host.currList[Index])
         for item in urlList:
             retlist.append(CUrlItem(item["name"], item["url"], item['need_resolve']))
 
         return RetHost(RetHost.OK, value=retlist)
     # end getLinksForVideo
-    
+
     def converItem(self, cItem):
         hostList = []
         searchTypesOptions = [] # ustawione alfabetycznie
-        
+
         hostLinks = []
         type = CDisplayListItem.TYPE_UNKNOWN
         possibleTypesOfSearch = None
@@ -346,16 +346,16 @@ class IPTVHost(CHostBase):
             type = CDisplayListItem.TYPE_MORE
         elif 'audio' == cItem['type']:
             type = CDisplayListItem.TYPE_AUDIO
-            
+
         if type in [CDisplayListItem.TYPE_AUDIO, CDisplayListItem.TYPE_VIDEO]:
             url = cItem.get('url', '')
             if '' != url:
                 hostLinks.append(CUrlItem("Link", url, 1))
-            
+
         title = cItem.get('title', '')
         description = cItem.get('desc', '')
         icon = cItem.get('icon', '')
-        
+
         return CDisplayListItem(name=title,
                                     description=description,
                                     type=type,

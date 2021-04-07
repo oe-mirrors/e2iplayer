@@ -27,22 +27,22 @@ class TeledunetParser:
 
     def __get_channel_time_player(self, channel_name):
         # Fetch the main Teledunet website to be given a Session ID
-        params = {'cookiefile': self.COOKIE_FILE, 'use_cookie': True, 'load_cookie': False, 'save_cookie': True} 
+        params = {'cookiefile': self.COOKIE_FILE, 'use_cookie': True, 'load_cookie': False, 'save_cookie': True}
         sts, data = self.cm.getPage(self.HEADER_REFERER, params)
         if False == sts:
             printDBG("__get_cookie_session getPage problem")
-        
+
         url = self.TELEDUNET_TIMEPLAYER_URL % channel_name
-        
+
         HTTP_HEADER = {'Host': self.HEADER_HOST,
                        'Referer': self.HEADER_REFERER,
                        'User-agent': self.HEADER_USER_AGENT}
-                       
-        params = {'header': HTTP_HEADER, 'cookiefile': self.COOKIE_FILE, 'use_cookie': True, 'load_cookie': True, 'save_cookie': False} 
+
+        params = {'header': HTTP_HEADER, 'cookiefile': self.COOKIE_FILE, 'use_cookie': True, 'load_cookie': True, 'save_cookie': False}
         sts, data = self.cm.getPage(url, params)
         if False == sts:
             printDBG("__get_channel_time_player getPage problem")
- 
+
         m = re.search('time_player=(.*);', data, re.M | re.I)
         time_player_str = eval(m.group(1))
 
@@ -50,7 +50,7 @@ class TeledunetParser:
         rtmp_url = m.group(1)
         play_path = rtmp_url[rtmp_url.rfind("/") + 1:]
         return rtmp_url, play_path, repr(time_player_str).rstrip('0').rstrip('.')
-        
+
     def get_rtmp_params(self, url):
         try:
             channel_name = url.split(' ')[0].split('/')[-1]
@@ -65,12 +65,10 @@ class TeledunetParser:
                     'file=%(channel_name)s&'
                     'provider=rtmp'
                     ) % {'time_player': time_player_id, 'channel_name': play_path, 'rtmp_url': rtmp_url}
-                        
+
             url = '%s playpath=%s app=teledunet swfUrl=%s pageUrl=http://www.teledunet.com/tv/?channel=%s&no_pub live=1' % (rtmp_url, play_path, swf_url, play_path)
             printDBG('get_rtmp_params url[%s]' % url)
             return url
         except Exception:
             printDBG('get_rtmp_params excetion')
             return ''
-            
-

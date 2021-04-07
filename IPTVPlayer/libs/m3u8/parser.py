@@ -59,18 +59,18 @@ def parse(content):
         elif line.startswith(extinf):
             _parse_extinf(line, data, state)
             state['expect_segment'] = True
-        
+
         elif line.startswith(ext_x_program_date_time):
             if state['expect_segment']:
                 _parse_simple_parameter(line, state)
-        
+
         elif line.startswith(ext_x_stream_inf):
             state['expect_playlist'] = True
             _parse_stream_inf(line, data, state)
 
         elif line.startswith(ext_x_endlist):
             data['is_endlist'] = True
-            
+
         elif state['expect_segment']:
             _parse_ts_chunk(line, data, state)
             state['expect_segment'] = False
@@ -78,7 +78,7 @@ def parse(content):
         elif state['expect_playlist']:
             _parse_variant_playlist(line, data, state)
             state['expect_playlist'] = False
-            
+
     try:
         for playlist in data['playlists']:
             if 'audio' in playlist['stream_info']:
@@ -104,7 +104,7 @@ def _parse_extinf(line, data, state):
         title = val[1]
     else:
         title = ""
-        
+
     state['segment'] = {'duration': float(val[0]), 'title': remove_quotes(title)}
 
 
@@ -139,8 +139,8 @@ def _parse_alternate_media(line, data):
     for param in params:
         name, value = param.split('=', 1)
         normalize_params[normalize_attribute(name)] = remove_quotes(value)
-    
-    # skip alternative audio if it does not have URI to media playlist attrib 
+
+    # skip alternative audio if it does not have URI to media playlist attrib
     if normalize_params.get('type', '').upper() == 'AUDIO' and not normalize_params.get('uri', None):
         return
 

@@ -42,9 +42,9 @@ def duktape_execute(cmd_params):
 def js_execute(jscode, params={}):
     ret = {'sts': False, 'code': -12, 'data': ''}
     sts, tmpPath = CreateTmpFile('.iptv_js.js', jscode)
-    if sts: 
+    if sts:
         ret = duktape_execute('-t %s ' % params.get('timeout_sec', 20) + ' ' + tmpPath)
-        
+
     # leave last script for debug purpose
     if getDebugMode() == '':
         rm(tmpPath)
@@ -132,7 +132,7 @@ def js_execute_ext(items, params={}):
         for file in tmpFiles:
             rm(file)
     return ret
-    
+
 
 def is_js_cached(name, hash):
     ret = False

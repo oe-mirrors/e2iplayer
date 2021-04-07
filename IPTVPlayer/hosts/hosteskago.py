@@ -24,44 +24,44 @@ def gettytul():
 
 
 class EskaGo(CBaseHostClass):
- 
+
     def __init__(self):
         CBaseHostClass.__init__(self, {'history': 'eskaGO.pl', 'cookie': 'eskagopl.cookie'})
-        
+
         self.HEADER = {'User-Agent': 'Mozilla/5.0', 'Accept': 'text/html'}
         self.AJAX_HEADER = dict(self.HEADER)
         self.AJAX_HEADER.update({'X-Requested-With': 'XMLHttpRequest'})
         self.defaultParams = {'header': self.HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
-        
+
         self.MAIN_URL = 'http://www.eskago.pl/'
         self.MAIN_ESKAPL_URL = 'http://www.eska.pl/'
         self.DEFAULT_ICON_URL = self.MAIN_URL + 'html/img/fb.jpg'
-        
+
         self.MAIN_CAT_TAB = [#{'category':'list_vod_casts',          'title': 'VOD',                      'url':self.getFullUrl('vod')     },
                              {'category': 'list_radio_cats', 'title': 'Radio Eska Go', 'url': self.getFullUrl('radio')},
                              {'category': 'list_radio_eskapl', 'title': 'Radio Eska PL', 'url': self.MAIN_ESKAPL_URL, 'icon': 'https://www.press.pl/images/contents/photo_51546_1515158162_big.jpg'},
                              ]
                             # {'category':'search',                  'title': _('Search'),                'search_item':True,              },
-                            # {'category':'search_history',          'title': _('Search history'),                                         } 
+                            # {'category':'search_history',          'title': _('Search history'),                                         }
                             #]
-        
+
         self.cacheItems = {}
-        
+
     def listRadioCats(self, cItem, nextCategory):
         printDBG('listRadioCats')
         self.cacheItems = {}
-        
+
         sts, data = self.cm.getPage(cItem['url'])
         if not sts:
             return
-        
+
         ###########################
         listDataTab = self.cm.ph.getDataBeetwenMarkers(data, '<div class="channel-list-box"', '<script>', False)[1]
         listDataTab = listDataTab.split('<div class="channel-list-box"')
         for listData in listDataTab:
             listId = self.cm.ph.getSearchGroups(listData, '''channel\-list\-([^"^']+?)["']''')[0]
             self.cacheItems[listId] = []
-            
+
             headMarker = '<div class="head-title">'
             tmpTab = self.cm.ph.getAllItemsBeetwenMarkers(listData, headMarker, '</ul>')
             for tmp in tmpTab:
@@ -77,7 +77,7 @@ class EskaGo(CBaseHostClass):
         printDBG(self.cacheItems)
         printDBG('#########################################')
         ###########################
-            
+
         tmp = self.cm.ph.getDataBeetwenMarkers(data, '<div class="new-radio-box">', '<div class="row radio-list">', False)[1]
         tmp = self.cm.ph.getAllItemsBeetwenMarkers(tmp, '<a', '</a>')
         for item in tmp:
@@ -95,12 +95,12 @@ class EskaGo(CBaseHostClass):
                     continue
                 params = {'good_for_fav': False, 'category': nextCategory, 'title': self.cacheItems[listId][0]['desc'], 'url': listId, 'icon': icon}
                 self.addDir(params)
-                
+
     def listCacheItems(self, cItem):
         printDBG('listCacheItems')
         listId = cItem.get('url', '')
         tab = self.cacheItems.get(listId, [])
-        
+
         for item in tab:
             params = dict(cItem)
             params.update(item)
@@ -108,11 +108,11 @@ class EskaGo(CBaseHostClass):
 
     def listVodCats(self, cItem, nextCategory):
         printDBG("EskaGo.listVodCats")
-        
+
         sts, data = self.cm.getPage(cItem['url'])
         if not sts:
             return
-        
+
         nextCategoriesMap = {'filmy': 'vod_movies_cats', 'seriale': 'vod_sort', 'programy': 'vod_channels'}
 
         data = ph.find(data, ('<ul', '>', 'categories'), '</ul>')[1]
@@ -265,7 +265,7 @@ class EskaGo(CBaseHostClass):
 
     def listVodEpisodes(self, cItem, data=None):
         printDBG("EskaGo.listVodEpisodes")
-        if not data: 
+        if not data:
             url = cItem['url'].replace('/serial/', '/ajax/serial/')
             sts, data = self.cm.getPage(url)
             if not sts:
@@ -281,11 +281,11 @@ class EskaGo(CBaseHostClass):
 
     def listRadioEskaPL(self, cItem):
         printDBG("EskaGo.listRadioEskaPL")
-        
+
         sts, data = self.cm.getPage(cItem['url'])
         if not sts:
             return
-        
+
         data = self.cm.ph.getDataBeetwenMarkers(data, 'var radioConfig = ', '</script>', False)[1]
         data = self.cm.ph.getAllItemsBeetwenMarkers(data, '"stream": ', '},', False)
         for item in data:
@@ -301,9 +301,9 @@ class EskaGo(CBaseHostClass):
 
     def listSearchResult(self, cItem, searchPattern, searchType):
         printDBG("EskaGo.listSearchResult cItem[%s], searchPattern[%s] searchType[%s]" % (cItem, searchPattern, searchType))
-        
+
         # TODO: implement me
-    
+
     def getLinksForItem(self, cItem):
         printDBG("EskaGo.getLinksForItem [%s]" % cItem)
         urlTab = []
@@ -385,24 +385,24 @@ class EskaGo(CBaseHostClass):
     def getVideoLinks(self, videoUrl):
         printDBG("EskaGo.getVideoLinks [%s]" % videoUrl)
         urlTab = []
-        
+
         if self.cm.isValidUrl(videoUrl):
             urlTab = self.up.getVideoLinkExt(videoUrl)
-        
+
         return urlTab
 
     def handleService(self, index, refresh=0, searchPattern='', searchType=''):
         printDBG('handleService start')
-        
+
         CBaseHostClass.handleService(self, index, refresh, searchPattern, searchType)
 
         name = self.currItem.get("name", '')
         category = self.currItem.get("category", '')
         mode = self.currItem.get("mode", '')
-        
+
         printDBG("handleService: |||||||||||||||||||||||||||||||||||| name[%s], category[%s] " % (name, category))
         self.currList = []
-        
+
     #MAIN MENU
         if name == None:
             self.listsTab(self.MAIN_CAT_TAB, {'name': 'category'})
@@ -434,14 +434,14 @@ class EskaGo(CBaseHostClass):
     #SEARCH
         elif category in ["search", "search_next_page"]:
             cItem = dict(self.currItem)
-            cItem.update({'search_item': False, 'name': 'category'}) 
+            cItem.update({'search_item': False, 'name': 'category'})
             self.listSearchResult(cItem, searchPattern, searchType)
     #HISTORIA SEARCH
         elif category == "search_history":
             self.listsHistory({'name': 'history', 'category': 'search'}, 'desc', _("Type: "))
         else:
             printExc()
-        
+
         CBaseHostClass.endHandleService(self, index, refresh)
 
 
@@ -449,5 +449,3 @@ class IPTVHost(CHostBase):
 
     def __init__(self):
         CHostBase.__init__(self, EskaGo(), True, [])
-
-

@@ -27,23 +27,23 @@ class OipeiratesOnline(CBaseHostClass):
 
     def __init__(self):
         CBaseHostClass.__init__(self, {'history': 'oipeirates.online', 'cookie': 'oipeirates.online.cookie'})
-        
+
         self.USER_AGENT = 'Mozilla/5.0'
         self.HEADER = {'User-Agent': self.USER_AGENT, 'Accept': 'text/html'}
         self.AJAX_HEADER = dict(self.HEADER)
         self.AJAX_HEADER.update({'X-Requested-With': 'XMLHttpRequest'})
-        
+
         self.MAIN_URL = 'https://oipeirates.tv/'
         self.DEFAULT_ICON_URL = 'http://1.bp.blogspot.com/-EWw9aeMT-bo/U1_TUm3oM-I/AAAAAAAABiE/n07eIp9i6CI/s1600/oipeirates.jpg'
-        
+
         self.defaultParams = {'with_metadata': True, 'header': self.HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
         self.cacheFilters = {}
         self.cacheLinks = {}
-    
+
     def setMainUrl(self, url):
         if self.cm.isValidUrl(url):
             self.MAIN_URL = self.cm.getBaseUrl(url)
-    
+
     def getPage(self, baseUrl, addParams={}, post_data=None):
         if addParams == {}:
             addParams = dict(self.defaultParams)
@@ -55,7 +55,7 @@ class OipeiratesOnline(CBaseHostClass):
                 return urljoin(baseUrl, url)
         addParams['cloudflare_params'] = {'domain': self.up.getDomain(baseUrl), 'cookie_file': self.COOKIE_FILE, 'User-Agent': self.USER_AGENT, 'full_url_handle': _getFullUrl}
         return self.cm.getPageCFProtection(baseUrl, addParams, post_data)
-    
+
     def listMainMenu(self, cItem):
         printDBG("OipeiratesOnline.listMainMenu")
         sts, data = self.getPage(self.getMainUrl())
@@ -79,11 +79,11 @@ class OipeiratesOnline(CBaseHostClass):
                     self.listCategories(params, 'list_items')
                 except Exception:
                     printExc()
-                
+
         MAIN_CAT_TAB = [{'category': 'search', 'title': _('Search'), 'search_item': True},
                         {'category': 'search_history', 'title': _('Search history')}]
         self.listsTab(MAIN_CAT_TAB, cItem)
-    
+
     def listCategories(self, cItem, nextCategory):
         printDBG("OipeiratesOnline.listCategories")
         try:
@@ -107,13 +107,13 @@ class OipeiratesOnline(CBaseHostClass):
                     self.addDir(params)
         except Exception:
             printExc()
-        
+
     def listMainItems(self, cItem, nextCategory):
         printDBG("OipeiratesOnline.listMainItems [%s]" % cItem)
         sts, data = self.getPage(cItem['url'])
         if not sts:
             return
-        
+
         data = self.cm.ph.getAllItemsBeetwenNodes(data, ('<h2', '>', 'h1'), ('<div', '>', 'cleared'))
         for item in data:
             icon = self.getFullIconUrl(self.cm.ph.getSearchGroups(item, '''\ssrc=['"]([^'^"]+?)['"]''', 1, True)[0])
@@ -124,7 +124,7 @@ class OipeiratesOnline(CBaseHostClass):
             params = dict(cItem)
             params.update({'good_for_fav': True, 'category': nextCategory, 'title': title, 'url': url, 'icon': icon, 'f_method': method, 'f_param': param})
             self.addDir(params)
-    
+
     def listSort(self, cItem, nextCategory):
         printDBG("OipeiratesOnline.listSort")
 
@@ -140,7 +140,7 @@ class OipeiratesOnline(CBaseHostClass):
             params = dict(cItem)
             params.update({'good_for_fav': False, 'category': nextCategory, 'title': title, 'url': url})
             self.addDir(params)
-        
+
     def listItems(self, cItem, nextCategory='explore_item'):
         printDBG("OipeiratesOnline.listItems")
         page = cItem.get('page', 0)
@@ -207,7 +207,7 @@ class OipeiratesOnline(CBaseHostClass):
             params = dict(cItem)
             params.update({'title': _("Next page"), 'page': page + 1, 'ajaxurl': ajaxurl, 'query': query})
             self.addDir(params)
-            
+
     def exploreItem(self, cItem):
         printDBG("OipeiratesOnline.exploreItem")
         sts, data = self.getPage(cItem['url'])
@@ -235,7 +235,7 @@ class OipeiratesOnline(CBaseHostClass):
             params['desc'] = desc
             self.addVideo(params)
 
-        # check 
+        # check
         ms1 = '<b>ΠΕΡΙΛΗΨΗ</b>'
         if ms1 in data:
             m1 = ms1
@@ -256,7 +256,7 @@ class OipeiratesOnline(CBaseHostClass):
             for sp in spTab:
                 if None != sp.search(linksData):
                     break
-            
+
             collectionItems = sp.split(linksData)
             if len(collectionItems) > 0:
                 del collectionItems[0]
@@ -270,7 +270,7 @@ class OipeiratesOnline(CBaseHostClass):
                 links = []
                 for itemUrl in linksData:
                     if 1 != self.up.checkHostSupport(itemUrl):
-                        continue 
+                        continue
                     links.append({'name': self.up.getHostName(itemUrl), 'url': itemUrl, 'need_resolve': 1})
                 if len(links):
                     params = dict(cItem)
@@ -280,14 +280,14 @@ class OipeiratesOnline(CBaseHostClass):
             # find all links for this season
             eLinks = {}
             episodes = []
-            
+
             idx = 0
             first = True
             while True:
                 if idx == -1:
                     break
                 prevIdx = idx
-                
+
                 match = seasonMarkerObj.search(linksDataLower[idx:])
                 if match:
                     idx += match.start(0)
@@ -300,7 +300,7 @@ class OipeiratesOnline(CBaseHostClass):
                     item = linksData[prevIdx:idx]
                 else:
                     item = linksData[prevIdx:]
-                
+
                 seasonID = item.find('<')
                 if seasonID < 0:
                     continue
@@ -315,15 +315,15 @@ class OipeiratesOnline(CBaseHostClass):
                     if eUrl.startswith('//'):
                         eUrl = self.getFullUrl(eUrl)
                     if 1 != self.up.checkHostSupport(eUrl):
-                        continue 
-                    
+                        continue
+
                     linksID = '- s{0}e{1}'.format(seasonID.zfill(2), eID.zfill(2))
                     linksID = linksID.strip()
                     if linksID not in eLinks:
                         eLinks[linksID] = []
                         episodes.append({'linksID': linksID, 'episode': eID, 'season': seasonID})
                     eLinks[linksID].append({'name': self.up.getHostName(eUrl), 'url': eUrl, 'need_resolve': 1})
-            
+
             for item in episodes:
                 linksID = item['linksID']
                 if len(eLinks[linksID]):
@@ -338,7 +338,7 @@ class OipeiratesOnline(CBaseHostClass):
                 params['links'] = links
                 params['desc'] = desc
                 self.addVideo(params)
-            
+
     def getLinksForMovie(self, data):
         urlTab = []
         linksData = re.compile('<a[^>]*?href="([^"]+?)"[^>]*?>([^<]*?)<').findall(data)
@@ -347,8 +347,8 @@ class OipeiratesOnline(CBaseHostClass):
             title = item[1]
             # only supported hosts will be displayed
             if 1 != self.up.checkHostSupport(url):
-                continue 
-            
+                continue
+
             name = self.up.getHostName(url)
             if url.startswith('//'):
                 url += 'http'
@@ -363,7 +363,7 @@ class OipeiratesOnline(CBaseHostClass):
         cItem['url_suffix'] = '?s=' + urllib.parse.quote_plus(searchPattern)
         cItem['mode'] = 'search'
         self.listItems(cItem)
-    
+
     def getLinksForVideo(self, cItem):
         printDBG("OipeiratesOnline.getLinksForVideo [%s]" % cItem)
         # Use Season and Episode information when exist for cache index
@@ -372,33 +372,33 @@ class OipeiratesOnline(CBaseHostClass):
         if len(urlTab):
             return urlTab
         self.cacheLinks = {}
-        
+
         urlTab = cItem.get('links', [])
 
         self.cacheLinks[idx] = urlTab
         return urlTab
-        
+
     def getVideoLinks(self, videoUrl):
         printDBG("OipeiratesOnline.getVideoLinks [%s]" % videoUrl)
         urlTab = []
-        
+
         if videoUrl.startswith('http'):
             urlTab = self.up.getVideoLinkExt(videoUrl)
         return urlTab
-        
+
     def getArticleContent(self, cItem, data=None):
         printDBG("OipeiratesOnline.getArticleContent [%s]" % cItem)
         retTab = []
         otherInfo = {}
-        
+
         if data == None:
             url = cItem.get('prev_url', cItem['url'])
             sts, data = self.getPage(url)
             if not sts:
                 data = ''
-        
+
         title = cItem['title']
-        
+
         descMarker = 'ΠΕΡΙΛΗΨΗ'
         desc = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(data, ('<span', '</span>', descMarker), ('<a', '>'), False)[1])
         data = self.cm.ph.getDataBeetwenNodes(data, ('<script', '>', 'oipeirates/vp'), ('<img', '>'))[1]
@@ -412,18 +412,18 @@ class OipeiratesOnline(CBaseHostClass):
 
     def handleService(self, index, refresh=0, searchPattern='', searchType=''):
         printDBG('handleService start')
-        
+
         CBaseHostClass.handleService(self, index, refresh, searchPattern, searchType)
 
         name = self.currItem.get("name", '')
         category = self.currItem.get("category", '')
         mode = self.currItem.get("mode", '')
-        
+
         printDBG("handleService: |||||||||||||||||||||||||||||||||||| name[%s], category[%s] " % (name, category))
         self.currList = []
         self.currItem = dict(self.currItem)
         self.currItem.pop('good_for_fav', None)
-        
+
     #MAIN MENU
         if name == None:
             self.listMainMenu({'name': 'category'})
@@ -441,22 +441,22 @@ class OipeiratesOnline(CBaseHostClass):
     #SEARCH
         elif category in ["search", "search_next_page"]:
             cItem = dict(self.currItem)
-            cItem.update({'search_item': False, 'name': 'category'}) 
+            cItem.update({'search_item': False, 'name': 'category'})
             self.listSearchResult(cItem, searchPattern, searchType)
     #HISTORIA SEARCH
         elif category == "search_history":
             self.listsHistory({'name': 'history', 'category': 'search'}, 'desc', _("Type: "))
         else:
             printExc()
-        
+
         CBaseHostClass.endHandleService(self, index, refresh)
 
 
 class IPTVHost(CHostBase):
 
     def __init__(self):
-        CHostBase.__init__(self, OipeiratesOnline(), True, favouriteTypes=[]) 
-    
+        CHostBase.__init__(self, OipeiratesOnline(), True, favouriteTypes=[])
+
     def withArticleContent(self, cItem):
         if cItem.get('type', 'video') != 'video' and cItem.get('category', 'unk') != 'explore_item':
             return False

@@ -31,7 +31,7 @@ try:
     try:
         from io import StringIO
     except Exception:
-        from io import StringIO 
+        from io import StringIO
     import gzip
 except Exception:
     pass
@@ -40,7 +40,7 @@ from Components.config import config, ConfigSelection, ConfigYesNo, ConfigText, 
 
 
 ###################################################
-# E2 GUI COMMPONENTS 
+# E2 GUI COMMPONENTS
 ###################################################
 from Plugins.Extensions.IPTVPlayer.components.asynccall import MainSessionWrapper
 from Screens.MessageBox import MessageBox
@@ -109,9 +109,9 @@ def GetLanguageTab():
     return tab
 
 
-class SubsceneComProvider(CBaseSubProviderClass): 
+class SubsceneComProvider(CBaseSubProviderClass):
     LANGUAGE_CACHE = []
-    
+
     def __init__(self, params={}):
         self.MAIN_URL = 'https://subscene.com/'
         self.USER_AGENT = 'Mozilla/5.0 (X11; Linux i686) AppleWebKit/537.36 (KHTML, like Gecko) Ubuntu Chromium/37.0.2062.120 Chrome/37.0.2062.120 Safari/537.36'
@@ -119,20 +119,20 @@ class SubsceneComProvider(CBaseSubProviderClass):
 
         params['cookie'] = 'subscenecom.cookie'
         CBaseSubProviderClass.__init__(self, params)
-        
+
         self.defaultParams = {'header': self.HTTP_HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
         self.SEARCH_TYPE_TAB = [{'title': _('By media title'), 'category': 'search_by_title'},
                                 {'title': _('By release name'), 'category': 'search_by_release'}]
-        self.cache = {} 
-    
+        self.cache = {}
+
     def _getHeader(self, lang):
         header = dict(self.HTTP_HEADER)
         header['Cookie'] = 'LanguageFilter={0}; HearingImpaired=2; ForeignOnly=False;'.format(lang)
         return header
-        
+
     def _getLanguages(self):
         defLang = GetDefaultLang()
-        
+
         def _isDefaultLanguage(langName):
             tab = GetLanguageTab()
             for item in tab:
@@ -140,12 +140,12 @@ class SubsceneComProvider(CBaseSubProviderClass):
                     continue
                 if item[0] in langName:
                     return True
-        
+
         url = self.getFullUrl('/filter/edit')
         sts, data = self.cm.getPage(url, self.defaultParams)
         if not sts:
             return []
-        
+
         list = []
         defaultLanguages = []
         data = self.cm.ph.getDataBeetwenMarkers(data, '<label class="h5">', '<button type="submit">', False)[1]
@@ -162,32 +162,32 @@ class SubsceneComProvider(CBaseSubProviderClass):
                 list.append(params)
         defaultLanguages.extend(list)
         return defaultLanguages
-        
+
     def getLanguages(self, cItem, nextCategory):
         printDBG("SubsceneComProvider.getEpisodes")
         if 0 == len(SubsceneComProvider.LANGUAGE_CACHE):
             SubsceneComProvider.LANGUAGE_CACHE = self._getLanguages()
-        
+
         for item in SubsceneComProvider.LANGUAGE_CACHE:
             params = dict(cItem)
             params.update(item)
             params.update({'category': nextCategory})
             self.addDir(params)
-            
+
     def listSearchType(self, cItem):
         printDBG("SubsceneComProvider.listSearchType")
         self.listsTab(self.SEARCH_TYPE_TAB, cItem)
-        
+
     def searchByTitle(self, cItem, nextCategory):
         printDBG("SubsceneComProvider.searchByTitle")
         self.cache = {}
         url = self.getFullUrl('/subtitles/title?q={0}&r=true'.format(urllib.parse.quote_plus(self.params['confirmed_title'])))
-        
+
         header = self._getHeader(cItem['lang_id'])
         sts, data = self.cm.getPage(url, {'header': header})
         if not sts:
             return
-        
+
         data = self.cm.ph.getDataBeetwenMarkers(data, '<div class="search-result">', '<div class="alternativeSearch">', False)[1]
         data = self.cm.ph.getAllItemsBeetwenMarkers(data, '<h2', '</ul>')
         for groupItem in data:
@@ -206,38 +206,38 @@ class SubsceneComProvider(CBaseSubProviderClass):
                 params = dict(cItem)
                 params.update({'title': groupTitle, 'group_id': groupTitle, 'category': nextCategory})
                 self.addDir(params)
-                
+
     def listGroup(self, cItem, nextCategory):
         printDBG("SubsceneComProvider.listGroup")
         cItem = dict(cItem)
         cItem.update({'category': nextCategory})
         self.listsTab(self.cache[cItem['group_id']], cItem)
-    
+
     def searchByReleaseName(self, cItem, nextCategory):
         printDBG("SubsceneComProvider.searchByReleaseName")
         url = self.getFullUrl('/subtitles/release?q={0}&r=true'.format(urllib.parse.quote_plus(self.params['confirmed_title'])))
         cItem = dict(cItem)
         cItem.update({'url': url})
         self.listSubItems(cItem, nextCategory)
-        
+
     def listSubItems(self, cItem, nextCategory):
         printDBG("SubsceneComProvider.listSubItems")
-        
+
         def _getLangCode(lang):
             tab = GetLanguageTab()
             for item in tab:
                 if item[0] == lang:
                     return item[1]
             return ''
-        
+
         header = self._getHeader(cItem['lang_id'])
-        
+
         sts, data = self.cm.getPage(cItem['url'], {'header': header})
         if not sts:
             return
-        
+
         data = self.cm.ph.getDataBeetwenMarkers(data, '<table>', '</table>', False)[1]
-        
+
         headData = self.cm.ph.getDataBeetwenMarkers(data, '<thead>', '</thead>', False)[1]
         headData = self.cm.ph.getAllItemsBeetwenMarkers(headData, '<td ', '</td>')
         heads = []
@@ -251,9 +251,9 @@ class SubsceneComProvider(CBaseSubProviderClass):
             url = self.getFullUrl(self.cm.ph.getSearchGroups(item, 'href="([^"]+?)"')[0])
             if url == '':
                 continue
-            
+
             bodyData = self.cm.ph.getAllItemsBeetwenMarkers(item, '<td ', '</td>')
-            
+
             #title
             if 'positive-icon' in bodyData[0]:
                 t1 = '[+]'
@@ -262,10 +262,10 @@ class SubsceneComProvider(CBaseSubProviderClass):
             else:
                 t1 = '[-]'
             title = t1 + ' ' + self.cleanHtmlStr(bodyData[0])
-            
-            #lang 
+
+            #lang
             lang = _getLangCode(self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(bodyData[0], '<span class="l', '</span>')[1]))
-            
+
             # desc
             descTab = []
             if len(bodyData) == len(heads):
@@ -280,47 +280,47 @@ class SubsceneComProvider(CBaseSubProviderClass):
                 desc = '[/br]'.join(descTab[1:])
             else:
                 desc = cItem['desc']
-            
+
             params = dict(cItem)
             params.update({'category': nextCategory, 'title': title, 'url': url, 'lang': lang, 'desc': desc})
             self.addDir(params)
-        
+
     def getSubtitlesList(self, cItem, nextCategory):
         printDBG("SubsceneComProvider.getSubtitlesList")
-        
+
         sts, data = self.cm.getPage(cItem['url'], {'with_metadata': True})
         if not sts:
             return
         cUrl = data.meta['url']
-        
+
         imdbid = self.cm.ph.getSearchGroups(data, '/title/(tt[0-9]+?)[^0-9]')[0]
         subId = self.cm.ph.getSearchGroups(data, 'SubtitleId[^0-9]*?([0-9]+?)[^0-9]')[0]
         url = self.getFullUrl(self.cm.ph.getSearchGroups(data, 'href="([^"]*?/subtitle/download[^"]+?)"')[0], cUrl)
         if url == '':
             url = self.cm.ph.getDataBeetwenNodes(data, ('<a', '>', 'downloadButton'), ('</a', '>'))[1]
             url = self.getFullUrl(self.cm.ph.getSearchGroups(url, 'href="([^"]+?)"')[0], cUrl)
-        
+
         urlParams = dict(self.defaultParams)
         tmpDIR = self.downloadAndUnpack(url, urlParams)
         if None == tmpDIR:
             return
-        
+
         cItem = dict(cItem)
         cItem.update({'category': nextCategory, 'path': tmpDIR, 'imdbid': imdbid, 'sub_id': subId})
         self.listSupportedFilesFromPath(cItem)
-    
+
     def listSubsInPackedFile(self, cItem, nextCategory):
         printDBG("SubsceneComProvider.listSubsInPackedFile")
         tmpFile = cItem['file_path']
         tmpDIR = tmpFile[:-4]
-        
+
         if not self.unpackArchive(tmpFile, tmpDIR):
             return
-        
+
         cItem = dict(cItem)
         cItem.update({'category': nextCategory, 'path': tmpDIR})
         self.listSupportedFilesFromPath(cItem)
-            
+
     def _getFileName(self, title, lang, subId, imdbid):
         title = RemoveDisallowedFilenameChars(title).replace('_', '.')
         match = re.search(r'[^.]', title)
@@ -330,7 +330,7 @@ class SubsceneComProvider(CBaseSubProviderClass):
         fileName = "{0}_{1}_0_{2}_{3}".format(title, lang, subId, imdbid)
         fileName = fileName + '.srt'
         return fileName
-            
+
     def downloadSubtitleFile(self, cItem):
         printDBG("SubsceneComProvider.downloadSubtitleFile")
         retData = {}
@@ -339,31 +339,31 @@ class SubsceneComProvider(CBaseSubProviderClass):
         subId = cItem['sub_id']
         imdbid = cItem['imdbid']
         inFilePath = cItem['file_path']
-        
+
         outFileName = self._getFileName(title, lang, subId, imdbid)
         outFileName = GetSubtitlesDir(outFileName)
-        
+
         printDBG(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>")
         printDBG(inFilePath)
         printDBG(outFileName)
         printDBG(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>")
-        
+
         if self.converFileToUtf8(inFilePath, outFileName, lang):
             retData = {'title': title, 'path': outFileName, 'lang': lang, 'imdbid': imdbid, 'sub_id': subId}
-        
+
         return retData
-    
+
     def handleService(self, index, refresh=0):
         printDBG('handleService start')
-        
+
         CBaseSubProviderClass.handleService(self, index, refresh)
 
         name = self.currItem.get("name", '')
         category = self.currItem.get("category", '')
-        
+
         printDBG("handleService: |||||||||||||||||||||||||||||||||||| name[%s], category[%s] " % (name, category))
         self.currList = []
-        
+
     #MAIN MENU
         if name == None:
             self.getLanguages({'name': 'category'}, 'list_search_types')
@@ -381,7 +381,7 @@ class SubsceneComProvider(CBaseSubProviderClass):
             self.getSubtitlesList(self.currItem, 'list_sub_in_packed_file')
         elif category == 'list_sub_in_packed_file':
             self.listSubsInPackedFile(self.currItem, 'list_sub_in_packed_file')
-        
+
         CBaseSubProviderClass.endHandleService(self, index, refresh)
 
 
@@ -389,4 +389,3 @@ class IPTVSubProvider(CSubProviderBase):
 
     def __init__(self, params={}):
         CSubProviderBase.__init__(self, SubsceneComProvider(params))
-    

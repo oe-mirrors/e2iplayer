@@ -55,11 +55,3 @@ class PRN_Rijndael:
         """
         self.__state = self.__algorithm.encrypt(self.__state)
         return self.__state[:16]
-
-
-
-
-
-
-
-

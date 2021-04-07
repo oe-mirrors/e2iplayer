@@ -41,28 +41,28 @@ def gettytul():
 
 
 class NGolosCOM(CBaseHostClass):
- 
+
     def __init__(self):
         CBaseHostClass.__init__(self, {'history': 'ngolos.com', 'cookie': 'ngolos.com.cookie'})
         self.USER_AGENT = 'Mozilla/5.0'
         self.HEADER = {'User-Agent': self.USER_AGENT, 'Accept': 'text/html', 'Accept-Encoding': 'gzip, deflate'}
         self.AJAX_HEADER = dict(self.HEADER)
         self.AJAX_HEADER.update({'X-Requested-With': 'XMLHttpRequest'})
-        
+
         self.defaultParams = {'with_metadata': True, 'header': self.HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
-        
+
         self.MAIN_URL = None
         self.cacheCategories = []
         self.cacheTeams = {}
-    
+
     def setMainUrl(self, url):
         if self.cm.isValidUrl(url):
             self.MAIN_URL = self.cm.getBaseUrl(url)
-    
+
     def selectDomain(self):
         self.MAIN_URL = 'https://www.ngolos.com/'
         self.DEFAULT_ICON_URL = self.getFullIconUrl('/assets/images/thumbnail.png')
-    
+
     def getPage(self, baseUrl, addParams={}, post_data=None):
         if addParams == {}:
             addParams = dict(self.defaultParams)
@@ -71,21 +71,21 @@ class NGolosCOM(CBaseHostClass):
         cookieItems.update({'language': lang})
         addParams['cookie_items'] = cookieItems
         return self.cm.getPage(baseUrl, addParams, post_data)
-        
+
     def listMainMenu(self, cItem, nextCategory):
         printDBG("NGolosCOM.listMainMenu")
         self.cacheCategories = []
-        
+
         params = dict(cItem)
         params.update({'category': 'list_items', 'title': _('Home page'), 'url': cItem['url']})
         self.addDir(params)
         self.addMarker({})
-        
+
         sts, data = self.getPage(cItem['url'])
         if not sts:
             return
         self.setMainUrl(data.meta['url'])
-        
+
         tmp = self.cm.ph.getDataBeetwenNodes(data, ('<div', '>', 'competitions_sidebar'), ('</div', '>'))[1]
         tmp = self.cm.ph.getAllItemsBeetwenMarkers(tmp, '<a', '</a>')
         for item in tmp:
@@ -94,21 +94,21 @@ class NGolosCOM(CBaseHostClass):
             params = dict(cItem)
             params.update({'category': 'list_items', 'title': title, 'url': url})
             self.addDir(params)
-        
+
         self.addMarker({})
-        
+
         data = self.cm.ph.getDataBeetwenNodes(data, ('<div', '>', '"competitions"'), ('<div', '>', 'other_settings'))[1]
         data = re.compile('''(<div[^>]+?card\-header collapsed[^>]+?>)''').split(data)
         for idx in range(1, len(data), 2):
             parent = self.cm.ph.getSearchGroups(data[idx], '''data\-parent=['"]([^'^"]+?)['"]''')[0]
             current = self.cm.ph.getSearchGroups(data[idx], '''href=['"](#[^'^"]+?)['"]''')[0]
-            
+
             tmp = self.cm.ph.getDataBeetwenNodes(data[idx + 1], ('<a', '>', 'card-title'), ('</a', '>'))[1]
             cUrl = self.getFullUrl(self.cm.ph.getSearchGroups(tmp, '''href=['"]([^'^"]+?)['"]''')[0])
             cTitle = self.cleanHtmlStr(tmp)
             if cTitle == '':
                 cTitle = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(data[idx + 1], '<i', '</a>')[1])
-            
+
             if parent == '.competitions':
                 params = dict(cItem)
                 params.update({'category': nextCategory, 'title': cTitle, 'cat_id': current})
@@ -122,7 +122,7 @@ class NGolosCOM(CBaseHostClass):
                     params = dict(cItem)
                     params.update({'category': 'list_items', 'title': title, 'url': url, 'parent': current})
                     subItems.append(params)
-                
+
                 if len(subItems):
                     if self.cm.isValidUrl(cUrl):
                         params = dict(cItem)
@@ -131,26 +131,26 @@ class NGolosCOM(CBaseHostClass):
                     params = dict(cItem)
                     params.update({'category': 'sub_items', 'title': cTitle, 'parent': parent, 'sub_items': subItems})
                     self.cacheCategories.append(params)
-        
+
     def listCatItems(self, cItem, nextCategory):
         printDBG("NGolosCOM.listCatItems")
-        
+
         for item in self.cacheCategories:
             if cItem['cat_id'] == item['parent']:
                 self.currList.append(item)
-        
+
     def listItems(self, cItem, nextCategory):
         printDBG("NGolosCOM.listItems |%s|" % cItem)
-        
+
         page = cItem.get('page', 1)
-        
+
         params = dict(self.defaultParams)
         params['cookie_items'] = {'orderby': cItem.get('orderby', '')} #'latest'
         sts, data = self.getPage(cItem['url'], params)
         if not sts:
             return
         self.setMainUrl(data.meta['url'])
-        
+
         if page == 1:
             if 'team' not in cItem:
                 team = self.cm.ph.getDataBeetwenNodes(data, ('<p', '>', 'competition'), ('</p', '>'), False)[1].strip()
@@ -167,19 +167,19 @@ class NGolosCOM(CBaseHostClass):
                         url = self.getFullUrl('/team/' + item['url'])
                         desc = [self.cleanHtmlStr(item['location'])]
                         desc.append(self.cleanHtmlStr(item['alias']))
-                        icon = self.getFullIconUrl('/assets/images/logos/' + item['logo']) 
+                        icon = self.getFullIconUrl('/assets/images/logos/' + item['logo'])
                         params = dict(cItem)
                         params.update({'good_for_fav': True, 'title': title, 'url': url, 'team': team, 'icon': icon, 'desc': ' | '.join(desc)})
                         self.addDir(params)
                 except Exception:
                     printExc()
-                
+
                 if len(self.currList):
                     params = dict(cItem)
                     params.update({'title': _('--All--'), 'team': ''})
                     self.currList.insert(0, params)
                     return
-            
+
             if 'orderby' not in cItem:
                 tmp = self.cm.ph.getAllItemsBeetwenNodes(data, ('<input', '>', 'orderby_sidebar'), ('</label', '>'))
                 for item in tmp:
@@ -192,44 +192,44 @@ class NGolosCOM(CBaseHostClass):
                     params = dict(cItem)
                     params.update({'good_for_fav': False, 'title': title, 'orderby': value})
                     self.addDir(params)
-                
+
                 if len(self.currList):
                     return
-        
+
         nextPage = self.cm.ph.getDataBeetwenNodes(data, ('<ul', '>', 'pagination'), ('</ul', '>'))[1]
         nextPage = self.getFullUrl(self.cm.ph.getSearchGroups(nextPage, '''<a[^>]+?href=['"]([^'^"]+?)['"][^>]*?>%s<''' % (page + 1))[0])
-        
+
         data = self.cm.ph.getDataBeetwenNodes(data, ('<div', '>', 'match row'), ('<', '>', 'reportlink_before'))[1]
         data = self.cm.ph.rgetAllItemsBeetwenNodes(data, ('</div', '>'), ('<div', '>', 'match row'))
         for item in data:
             item = self.cm.ph.getAllItemsBeetwenMarkers(item, '<a', '</a>')
-            
+
             title = self.cleanHtmlStr(item[0])
             url = self.getFullUrl(self.cm.ph.getSearchGroups(item[0], '''href=['"]([^'^"]+?)['"]''')[0])
             desc = self.cleanHtmlStr(item[-1])
-            
+
             params = dict(cItem)
             params.update({'good_for_fav': True, 'category': nextCategory, 'title': title, 'url': url, 'desc': desc})
             self.addDir(params)
-        
+
         if self.cm.isValidUrl(nextPage):
             params = dict(cItem)
             params.update({'good_for_fav': False, 'title': _('Next page'), 'url': nextPage, 'page': page + 1})
             self.addDir(params)
-        
+
     def exploreItem(self, cItem, nextCategory):
         printDBG("NGolosCOM.exploreItem")
-        
+
         sts, data = self.getPage(cItem['url'])
         if not sts:
             return
-        
+
         tabs = {}
         tmp = self.cm.ph.getDataBeetwenNodes(data, ('<ul', '>', 'nav-tabs'), ('</ul', '>'))[1]
         tmp = re.compile('''<a[^>]+?href=['"]#([^'^"]+?)['"][^>]*?>([^<]+?)<''').findall(tmp)
         for item in tmp:
             tabs[item[0]] = self.cleanHtmlStr(item[1])
-        
+
         tmp = self.cm.ph.getDataBeetwenNodes(data, ('<div', '>', 'tab-pane'), ('</script', '>'))[1]
         tmp = self.cm.ph.rgetAllItemsBeetwenNodes(tmp, ('</div', '>'), ('<div', '>', 'tab-pane'))
         for section in tmp:
@@ -246,16 +246,16 @@ class NGolosCOM(CBaseHostClass):
                 params = dict(cItem)
                 params.update({'good_for_fav': False, 'type': 'video', 'title': title, 'url': url})
                 subItems.append(params)
-            
+
             if len(subItems) and '' != tabs.get(sId, ''):
                 params = dict(cItem)
                 params.update({'good_for_fav': False, 'category': nextCategory, 'title': tabs[sId], 'sub_items': subItems})
                 self.addDir(params)
             else:
                 self.currList.extend(subItems)
-        
+
         if 0 == len(self.currList):
-        
+
             tmp = self.cm.ph.rgetDataBeetwenNodes(data, ('</iframe', '>'), ('<div', '>', 'font-weight-bold'), False)[1]
             tmp = tmp.split('</iframe>')
             for item in tmp:
@@ -266,10 +266,10 @@ class NGolosCOM(CBaseHostClass):
                 params = dict(cItem)
                 params.update({'good_for_fav': False, 'title': title, 'url': url})
                 self.addVideo(params)
-            
+
         return
         data = re.sub('''unescape\(["']([^"^']+?)['"]\)''', lambda m: urllib.parse.unquote(m.group(1)), data)
-        
+
         titles = []
         titles2 = []
         tmp = self.cm.ph.getDataBeetwenMarkers(data, '<div id="tab-1"', '</strong>')[1]
@@ -277,18 +277,18 @@ class NGolosCOM(CBaseHostClass):
         tmp = tmp.split('</iframe>')
 
         for title in tmp:
-            title = self.cleanHtmlStr(title) 
+            title = self.cleanHtmlStr(title)
             if title != '':
                 titles.append(title)
-        
+
         for title in tmp2:
-            title = self.cleanHtmlStr(title) 
+            title = self.cleanHtmlStr(title)
             if title != '':
                 titles2.append(title)
-        
+
         if len(titles2) > len(titles):
             titles = titles2
-        
+
         tmp = re.compile('''['"]([^'^"]*?//config\.playwire\.com[^'^"]+?\.json)['"]''').findall(data)
         tmp.extend(re.compile('<iframe[^>]+?src="([^"]+?)"').findall(data))
         tmp.extend(re.compile('''<a[^>]+?href=['"](https?://[^'^"]*?ekstraklasa.tv[^'^"]+?)['"]''').findall(data))
@@ -307,9 +307,9 @@ class NGolosCOM(CBaseHostClass):
                 except Exception:
                     printExc()
                     continue
-            
+
             urlsTab.append(url)
-        
+
         for idx in range(len(urlsTab)):
             title = cItem['title']
             if len(titles) == len(urlsTab):
@@ -317,11 +317,11 @@ class NGolosCOM(CBaseHostClass):
             params = dict(cItem)
             params.update({'good_for_fav': False, 'title': title, 'url': urlsTab[idx]})
             self.addVideo(params)
-            
+
     def listSubItems(self, cItem):
         printDBG("NGolosCOM.listSubItems")
         self.currList = cItem['sub_items']
-            
+
     def listSearchResult(self, cItem, searchPattern, searchType):
         printDBG("NGolosCOM.listSearchResult cItem[%s], searchPattern[%s] searchType[%s]" % (cItem, searchPattern, searchType))
         cItem = dict(cItem)
@@ -329,7 +329,7 @@ class NGolosCOM(CBaseHostClass):
         if page == 1:
             cItem['url'] = self.SEARCH_URL + urllib.parse.quote_plus(searchPattern)
         self.listItems(cItem, 'explore_item')
-    
+
     def getLinksForVideo(self, cItem):
         printDBG("NGolosCOM.getLinksForVideo [%s]" % cItem)
         urlTab = []
@@ -381,7 +381,7 @@ class NGolosCOM(CBaseHostClass):
 
     def handleService(self, index, refresh=0, searchPattern='', searchType=''):
         printDBG('handleService start')
-        
+
         CBaseHostClass.handleService(self, index, refresh, searchPattern, searchType)
         if self.MAIN_URL == None:
             #rm(self.COOKIE_FILE)
@@ -390,10 +390,10 @@ class NGolosCOM(CBaseHostClass):
         name = self.currItem.get("name", '')
         category = self.currItem.get("category", '')
         mode = self.currItem.get("mode", '')
-        
+
         printDBG("handleService: || name[%s], category[%s] " % (name, category))
         self.currList = []
-        
+
     #MAIN MENU
         if name == None:
             baseItem = {'type': 'category', 'name': 'category', 'url': self.getMainUrl()}
@@ -409,14 +409,14 @@ class NGolosCOM(CBaseHostClass):
     #SEARCH
         elif category in ["search", "search_next_page"]:
             cItem = dict(self.currItem)
-            cItem.update({'search_item': False, 'name': 'category'}) 
+            cItem.update({'search_item': False, 'name': 'category'})
             self.listSearchResult(cItem, searchPattern, searchType)
     #HISTORIA SEARCH
         elif category == "search_history":
             self.listsHistory({'name': 'history', 'category': 'search'}, 'desc', _("Type: "))
         else:
             printExc()
-        
+
         CBaseHostClass.endHandleService(self, index, refresh)
 
 
@@ -424,5 +424,3 @@ class IPTVHost(CHostBase):
 
     def __init__(self):
         CHostBase.__init__(self, NGolosCOM(), True, [])
-
-    

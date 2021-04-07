@@ -13,10 +13,10 @@ import codecs
 
 class IPTVFileHost:
     def __init__(self):
-        printDBG("IPTVFileHost.__init__")    
+        printDBG("IPTVFileHost.__init__")
         self.items = []
         self.groups = []
-        
+
     def _getGroup(self, title):
         # for now only first group is considered: "[group1][group2] ala" will return "[group1]" and "[group2] ala"
         titleInGroup = ''
@@ -60,7 +60,7 @@ class IPTVFileHost:
                                 icon = line[idx1:].strip()
                         else:
                             url = line[idx1 + 1:].strip()
-                        if '' != fullTitle and url != '': 
+                        if '' != fullTitle and url != '':
                             # get group
                             groupTitle, titleInGroup = self._getGroup(fullTitle)
                             if groupTitle not in self.groups:
@@ -72,7 +72,7 @@ class IPTVFileHost:
                     printDBG('IPTVFileHost.addFile wrong line[%d]' % (lineNum))
         except Exception:
             printExc()
-                
+
     def getGroups(self, sort=False):
         def _compare(it1, it2):
             name1 = it1.lower()
@@ -87,7 +87,7 @@ class IPTVFileHost:
         if sort:
             tmpList.sort(_compare)
         return tmpList
-    
+
     def getItemsInGroup(self, group, sort=False):
         tmpList = []
 
@@ -106,7 +106,7 @@ class IPTVFileHost:
         if sort:
             tmpList.sort(_compare)
         return tmpList
-        
+
     def getAllItems(self, sort=False):
         tmpList = []
 

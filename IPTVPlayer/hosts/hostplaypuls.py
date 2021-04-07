@@ -54,12 +54,12 @@ class Playpuls(CBaseHostClass):
         self.DEFAULT_ICON_URL = self.getMainUrl() + 'sites/all/themes/play/logo.png'
         self.HOST = 'Mozilla/5.0 (X11; U; Linux i686; en-US; rv:1.9.2.18) Gecko/20110621 Mandriva Linux/1.9.2.18-0.1mdv2010.2 (2010.2) Firefox/3.6.18'
         self.HEADER = {'User-Agent': self.HOST, 'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8'}
-        CBaseHostClass.__init__(self, {'history': 'Playpuls', 'proxyURL': config.plugins.iptvplayer.proxyurl.value, 'useProxy': config.plugins.iptvplayer.playpuls_proxy.value, 'cookie': 'playpuls.cookie'})        
+        CBaseHostClass.__init__(self, {'history': 'Playpuls', 'proxyURL': config.plugins.iptvplayer.proxyurl.value, 'useProxy': config.plugins.iptvplayer.playpuls_proxy.value, 'cookie': 'playpuls.cookie'})
         self.cacheMenuTree = []
-    
+
     def cleanHtmlStr(self, str):
         return CBaseHostClass.cleanHtmlStr(str)
-    
+
     def listsMainMenu(self):
         printDBG("Playpuls.listsMainMenu")
         sts, data = self.cm.getPage(self.getMainUrl())
@@ -74,7 +74,7 @@ class Playpuls(CBaseHostClass):
             #
             self.addDir({'name': 'category', 'title': _('Search'), 'category': 'search', 'search_item': True})
             self.addDir({'name': 'category', 'title': _('Search history'), 'category': 'search_history'})
-        
+
     def listCategory(self, cItem, searchMode=False):
         printDBG("Playpuls.listCategory cItem[%s]" % cItem)
         data = None
@@ -111,7 +111,7 @@ class Playpuls(CBaseHostClass):
             data = cItem['data']
         if None != data:
             self._listItems(data)
-        
+
     def _listItems(self, data):
         printDBG("Playpuls._listItems")
         data = data.split(' row">')
@@ -129,20 +129,20 @@ class Playpuls(CBaseHostClass):
             icon = self.cm.ph.getSearchGroups(item, 'class="cover" src="([^"]+?)"')[0]
             if '' == icon:
                 icon = self.cm.ph.getSearchGroups(item, 'class="screenshot" src="([^"]+?)"')[0]
-            
+
             # parse title
             title = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(item, '<div class="video-caption">', '</div>', False)[1])
             if '' == title:
                 title = self.cm.ph.getDataBeetwenMarkers(item, '<h3>', '</h3>', False)[1]
             if '' == title:
                 title = self.cm.ph.getSearchGroups(item, 'alt="([^"]+?)"')[0]
-            
+
             # parse description
             if descMarker in item:
                 desc = self.cleanHtmlStr(item.split(descMarker)[-1])
             else:
                 desc = self.cleanHtmlStr(item)#self.cm.ph.getDataBeetwenMarkers(item, '<p>', '</p>', False)[1]
-            
+
             if '/vod' in url:
                 category = 'vod'
             else:
@@ -153,7 +153,7 @@ class Playpuls(CBaseHostClass):
                     self.addVideo(params)
                 else:
                     self.addDir(params)
-                
+
     def getLinksForVideo(self, cItem):
         printDBG("Playpuls.getLinksForVideo [%s]" % cItem['url'])
         videoUrls = []
@@ -165,19 +165,19 @@ class Playpuls(CBaseHostClass):
         sts, data = self.cm.getPage(cItem['url'], {'use_cookie': True, 'load_cookie': True, 'save_cookie': False, 'cookiefile': self.COOKIE_FILE, 'header': header, 'cookie_items': {'has_js': '1'}})
         if not sts:
             return videoUrls
-        
+
         sts, data = self.cm.ph.getDataBeetwenMarkers(data, '<section id="section-player" ', '</section>', False)
         if not sts:
             return videoUrls
-        
+
         printDBG(data)
-        
+
         source1Data = self.cm.ph.getSearchGroups(data, "source = '([^']+?)'")[0]
         source2Data = re.compile("([MDmd][123]) = '([^']+?)'").findall(data)
         source3Data = self.cm.ph.getSearchGroups(data, "sources[ ]*=[ ]*(\{[^;]+?);")[0]
         source4Data = re.compile("([MDmd][123])\s*:\s*\{\s*source\s*\:\s*'([^']+?)'").findall(data)
         quality = self.cm.ph.getSearchGroups(data, "quality = '([01])';")[0]
-        
+
         if (source1Data + source3Data + quality) == '' and 0 == len(source2Data) and 0 == len(source4Data):
             url = 'http://playpuls.pl/sites/all/modules/vod/player.php'
             id = self.cm.ph.getSearchGroups(data, 'id\s*=\s*([0-9]+?);')[0]
@@ -188,7 +188,7 @@ class Playpuls(CBaseHostClass):
             if not sts:
                 return videoUrls
             printDBG(source3Data)
-        
+
         sources = []
         proto = config.plugins.iptvplayer.playpuls_defaultproto.value
         printDBG("Playpuls.getLinksForVide proto[%s] source1Data[%s] source2Data[%s] source3Data[%s] source4Data[%s] quality[%s] " % (proto, source1Data, source2Data, quality, source3Data, source4Data))
@@ -205,7 +205,7 @@ class Playpuls(CBaseHostClass):
                     videoUrls.append({'bitrate': '2500', 'name': 'High - 2500', 'url': desktopHtmlHdHighSrc})
                     videoUrls.append({'bitrate': '1600', 'name': 'Medium - 1600', 'url': desktopHtmlHdMediumSrc})
                     videoUrls.append({'bitrate': '800', 'name': 'Low - 800', 'url': desktopHtmlHdLowSrc})
-        
+
                 elif '0' == quality:
                     if 'hls' != proto:
                         mobileSrc = urlBase + '/mp4/720x576_800_bp.mp4'
@@ -213,7 +213,7 @@ class Playpuls(CBaseHostClass):
                     desktopHtmlSdLowSrc = urlBase + '/mp4/720x576_800_bp.mp4'
                     videoUrls.append({'bitrate': '1600', 'name': 'Medium - 1600', 'url': desktopHtmlSdHighSrc})
                     videoUrls.append({'bitrate': '800', 'name': 'Low - 800', 'url': desktopHtmlSdLowSrc})
-                
+
                 if '' != mobileSrc:
                     videoUrls.append({'bitrate': '800', 'name': 'Mobile - 800', 'url': mobileSrc})
                 else:
@@ -247,7 +247,7 @@ class Playpuls(CBaseHostClass):
                         sources.append({'quality': key, 'src': '/play/%s' % val})
             except Exception:
                 printExc()
-        
+
         if len(sources):
             qualityMap = {'M1': '400', 'M2': '600', 'D1': '600', 'D2': '800', 'D3': '1000'}
             for item in sources:
@@ -260,7 +260,7 @@ class Playpuls(CBaseHostClass):
                 else:
                     url += '/manifest.mpd'
                 videoUrls.append({'bitrate': qualityMap.get(item['quality'], '0'), 'name': '%s - %s' % (item['quality'], qualityMap.get(item['quality'], '0')), 'url': url})
-            
+
         if 0 < len(videoUrls):
             max_bitrate = int(config.plugins.iptvplayer.playpuls_defaultformat.value)
 
@@ -268,15 +268,15 @@ class Playpuls(CBaseHostClass):
                 return int(itemLink['bitrate'])
             videoUrls = CSelOneLink(videoUrls, __getLinkQuality, max_bitrate).getSortedLinks()
             if config.plugins.iptvplayer.playpuls_usedf.value:
-                videoUrls = [videoUrls[0]]            
+                videoUrls = [videoUrls[0]]
         return videoUrls
-        
+
     def listSearchResult(self, cItem, searchPattern, searchType):
         printDBG("Playpuls.listSearchResult cItem[%s], searchPattern[%s] searchType[%s]" % (cItem, searchPattern, searchType))
         cItem = dict(cItem)
         cItem['url'] = self.SEARCH_URL + urllib.parse.quote_plus(searchPattern)
         self.listCategory(cItem, True)
-    
+
     def handleService(self, index, refresh=0, searchPattern='', searchType=''):
         printDBG('Playpuls.handleService start')
         CBaseHostClass.handleService(self, index, refresh, searchPattern, searchType)
@@ -284,7 +284,7 @@ class Playpuls(CBaseHostClass):
         category = self.currItem.get("category", '')
         printDBG("Playpuls.handleService: ---------> name[%s], category[%s] " % (name, category))
         self.currList = []
-        
+
         if None == name:
             self.listsMainMenu()
         elif 'menu' == category:
@@ -292,7 +292,7 @@ class Playpuls(CBaseHostClass):
     #SEARCH
         elif category in ["search", "search_next_page"]:
             cItem = dict(self.currItem)
-            cItem.update({'search_item': False, 'name': 'category'}) 
+            cItem.update({'search_item': False, 'name': 'category'})
             self.listSearchResult(cItem, searchPattern, searchType)
     #HISTORIA SEARCH
         elif category == "search_history":

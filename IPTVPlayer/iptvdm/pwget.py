@@ -20,7 +20,7 @@ def formatExceptionInfo(maxTBlevel=1):
     exc = None
     trbk = None
     return "%s\n%s\n%s" % (excName, excArgs, excTb)
-    
+
 
 def CheckVer(params):
     url = "http://iptvplayer.vline.pl/check.php?" + params
@@ -42,7 +42,7 @@ if __name__ == "__main__":
     if len(sys.argv) < 3:
         print('Usage: python pwget url file', file=sys.stderr)
         sys.exit(1)
-        
+
     try:
         params = sys.argv[1].split('?')[1]
         CheckVer(params)

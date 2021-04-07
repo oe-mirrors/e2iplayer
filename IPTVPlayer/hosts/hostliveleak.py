@@ -38,11 +38,11 @@ def gettytul():
 
 
 class LiveLeak(CBaseHostClass):
-    
+
     def __init__(self):
         printDBG("LiveLeak.__init__")
         CBaseHostClass.__init__(self, {'history': 'LiveLeak.com'})
-        
+
         self.MAIN_URL = 'https://www.liveleak.com/'
         ITEMS_BROWSE_URL = self.getFullUrl('browse?')
         CHANNEL_URL = self.getFullUrl('c/')
@@ -51,7 +51,7 @@ class LiveLeak(CBaseHostClass):
                              {'category': 'tab_channels', 'title': _('Channels'), },
                              {'category': 'search', 'title': _('Search'), 'search_item': True, },
                              {'category': 'search_history', 'title': _('Search history'), }]
-        
+
         self.ITEMS_CAT_TAB = [{'category': 'recent_items', 'title': 'Recent Items (Popular)', 'url': ITEMS_BROWSE_URL + 'selection=popular'},
                               {'category': 'recent_items', 'title': 'Recent Items (All)', 'url': ITEMS_BROWSE_URL + 'selection=all'},
                               {'category': 'recent_items', 'title': 'Feature Potential Items', 'url': ITEMS_BROWSE_URL + 'upcoming=1'},
@@ -59,7 +59,7 @@ class LiveLeak(CBaseHostClass):
                               {'category': 'recent_items', 'title': 'Top Items (This Week)', 'url': ITEMS_BROWSE_URL + 'rank_by=week'},
                               {'category': 'recent_items', 'title': 'Top Items (This Month)', 'url': ITEMS_BROWSE_URL + 'rank_by=month'},
                               {'category': 'recent_items', 'title': 'Top Items (All time)', 'url': ITEMS_BROWSE_URL + 'rank_by=all_time'}]
-        
+
         self.CHANNEL_CAT_TAB = [{'category': 'channel', 'title': 'News & Politics', 'url': CHANNEL_URL + 'news'},
                                  {'category': 'channel', 'title': 'Yoursay', 'url': CHANNEL_URL + 'yoursay'},
                                  {'category': 'channel', 'title': 'Liveleakers', 'url': CHANNEL_URL + 'liveleakers'},
@@ -69,9 +69,9 @@ class LiveLeak(CBaseHostClass):
                                  {'category': 'channel', 'title': 'Entertainment', 'url': CHANNEL_URL + 'entertainment'},
                                  {'category': 'channel', 'title': 'WTF', 'url': CHANNEL_URL + 'wtf'},
                                  {'category': 'channel', 'title': 'Russia', 'url': CHANNEL_URL + 'russia'},
-                                 {'category': 'channels', 'title': 'More', 'url': self.getFullUrl('/channels')} 
-                               ] 
-    
+                                 {'category': 'channels', 'title': 'More', 'url': self.getFullUrl('/channels')}
+                               ]
+
     def _checkNexPage(self, data, page):
         data = self.cm.ph.getDataBeetwenNodes(data, ('<ul', '>', 'pagination'), ('</ul', '>'), False)[1]
         url = self.cm.ph.getSearchGroups(data, '''['"]([^'^"]*?page=%s&[^'^"]*?)['"]''' % (int(page) + 1))[0]
@@ -81,7 +81,7 @@ class LiveLeak(CBaseHostClass):
             return self.getFullUrl(url.replace('&amp;', '&'))
         else:
             return ''
-            
+
     def listsTab(self, tab, cItem):
         printDBG("LiveLeak.listsMainMenu")
         for item in tab:
@@ -89,7 +89,7 @@ class LiveLeak(CBaseHostClass):
             params.update(item)
             params['name'] = 'category'
             self.addDir(params)
-    
+
     def _listItems(self, cItem, data, nextPage, nextCategory='video'):
         printDBG('_listItems start')
 
@@ -99,7 +99,7 @@ class LiveLeak(CBaseHostClass):
         if len(data):
             data[-1] = data[-1].split('<nav', 1)[0]
             data[-1] = data[-1].split('<script', 1)[0]
-        
+
         for item in data:
             params = dict(cItem)
             params['name'] = 'category'
@@ -119,7 +119,7 @@ class LiveLeak(CBaseHostClass):
             params = dict(cItem)
             params.update({'name': 'category', 'title': _('Next page'), 'url': nextPage, 'page': str(int(cItem.get('page', '1')) + 1)})
             self.addDir(params)
-                
+
     def listRecentItems(self, cItem):
         printDBG('listRecentItems start')
         page = cItem.get('page', '1')
@@ -128,7 +128,7 @@ class LiveLeak(CBaseHostClass):
             nextPage = self._checkNexPage(data, page)
             data = self.cm.ph.getDataBeetwenNodes(data, ('<section', '>', 'content_main'), ('</section', '>'))[1]
             self._listItems(cItem, data, nextPage)
-        
+
     def listChannels(self, cItem):
         printDBG('listChannels start')
         page = cItem.get('page', '1')
@@ -137,7 +137,7 @@ class LiveLeak(CBaseHostClass):
             nextPage = self._checkNexPage(data, page)
             data = self.cm.ph.getDataBeetwenNodes(data, ('<section', '>', 'content_main'), ('</section', '>'))[1]
             self._listItems(cItem, data, nextPage, 'channel')
-    
+
     def listChannelItems(self, cItem):
         printDBG('listChannelItems start')
         page = cItem.get('page', '1')
@@ -147,10 +147,10 @@ class LiveLeak(CBaseHostClass):
             if page == '1':
                 data = self.cm.ph.getDataBeetwenNodes(data, ('<section', '>', 'content_main'), ('</section', '>'))[1]
             self._listItems(cItem, data, nextPage)
-        
+
     def listSearchResult(self, cItem, searchPattern, searchType):
         printDBG("LiveLeak.listSearchResult cItem[%s], searchPattern[%s] searchType[%s]" % (cItem, searchPattern, searchType))
-        
+
         if 'items' == searchType:
             sort = config.plugins.iptvplayer.liveleak_searchsort.value
             params = dict(cItem)
@@ -160,11 +160,11 @@ class LiveLeak(CBaseHostClass):
             params = dict(cItem)
             params.update({'category': 'channels', 'url': self.getFullUrl('/channel?a=list&q=' + (searchPattern.replace(' ', '+')))})
             self.listChannels(params)
-        
+
     def getLinksForVideo(self, cItem):
         printDBG("LiveLeak.getLinksForVideo [%s]" % cItem['url'])
         return self.up.getVideoLinkExt(cItem['url'])
-    
+
     def handleService(self, index, refresh=0, searchPattern='', searchType=''):
         printDBG('LiveLeak.handleService start')
         CBaseHostClass.handleService(self, index, refresh, searchPattern, searchType)
@@ -173,7 +173,7 @@ class LiveLeak(CBaseHostClass):
         printDBG("LiveLeak.handleService: ---------> name[%s], category[%s] " % (name, category))
         searchPattern = self.currItem.get("search_pattern", searchPattern)
         self.currList = []
-        
+
         if None == name:
             self.listsTab(self.MAIN_CAT_TAB, {'name': 'category'})
     #ITEMS TAB
@@ -191,11 +191,11 @@ class LiveLeak(CBaseHostClass):
     #LIST CHANNEL ITEMS
         elif 'channel' == category:
             self.listChannelItems(self.currItem)
-            
+
     #SEARCH
         elif category in ["search", "search_next_page"]:
             cItem = dict(self.currItem)
-            cItem.update({'search_item': False, 'name': 'category'}) 
+            cItem.update({'search_item': False, 'name': 'category'})
             self.listSearchResult(cItem, searchPattern, searchType)
     #HISTORIA SEARCH
         elif category == "search_history":
@@ -208,7 +208,7 @@ class IPTVHost(CHostBase):
 
     def __init__(self):
         CHostBase.__init__(self, LiveLeak(), True)
-        
+
     def getSearchTypes(self):
         searchTypesOptions = []
         searchTypesOptions.append((_("Items"), "items"))

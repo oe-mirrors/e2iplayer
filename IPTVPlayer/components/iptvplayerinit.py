@@ -55,7 +55,7 @@ def IPTVPlayerNeedInit(value=None):
     if value in [True, False]:
         gInitIPTVPlayer = value
     return gInitIPTVPlayer
-    
+
 
 def SetIPTVPlayerLastHostError(value=""):
     global gSetIPTVPlayerLastHostError
@@ -78,17 +78,17 @@ class IPTVPlayerNotification():
         self.timeout = int(timeout)
         self.messageHash = messageHash
         self.timestamp = timestamp
-        
+
     def __eq__(self, a):
         return not self.__ne__(a)
-    
+
     def __ne__(self, a):
-        if a == None: 
+        if a == None:
             return True
-        
+
         if None != self.messageHash and None != a.messageHash:
             return self.messageHash != a.messageHash
-        
+
         if self.title != a.title or \
            self.type != a.type or \
            self.message != a.message or \
@@ -98,7 +98,7 @@ class IPTVPlayerNotification():
 
 
 class IPTVPlayerNotificationList(object):
-    
+
     def __init__(self):
         self.notificationsList = []
         self.repeatMessages = {}
@@ -106,12 +106,12 @@ class IPTVPlayerNotificationList(object):
         # this flag will be checked without mutex
         # to less lock check
         self.empty = True
-        
+
     def clearQueue(self):
         with self.mainLock:
             self.notificationsList = []
             self.empty = True
-        
+
     def isEmpty(self):
         try:
             if self.empty:
@@ -119,17 +119,17 @@ class IPTVPlayerNotificationList(object):
         except Exception:
             pass
         return False
-    
+
     def push(self, message, type="message", timeout=5, messageHash=None, repeatMessageTimeoutSec=0):
         ret = False
         if messageHash == None and repeatMessageTimeoutSec > 0:
             raise Exception("IPTVPlayerNotificationList.push call with repeatMessageTimeout but without messageHash")
-        
+
         if repeatMessageTimeoutSec > 0:
             timestamp = time.time() + repeatMessageTimeoutSec
         else:
             timestamp = None
-        
+
         with self.mainLock:
             try:
                 notification = IPTVPlayerNotification('IPTVPlayer', message, type, timeout, messageHash, timestamp)
@@ -156,7 +156,7 @@ class IPTVPlayerNotificationList(object):
                         if item != notification:
                             newList.append(item)
                     self.notificationsList = newList
-                
+
                 if notification.timestamp != None:
                     timestamp = time.time()
                     self.repeatMessages = dict((k, v) for k, v in list(self.repeatMessages.items()) if v.timestamp > timestamp)
@@ -166,7 +166,7 @@ class IPTVPlayerNotificationList(object):
                         self.repeatMessages[notification.messageHash] = notification
             except Exception as e:
                 print(str(e))
-                
+
             if 0 == len(self.notificationsList):
                 self.empty = True
         return notification
@@ -178,15 +178,15 @@ gIPTVPlayerNotificationList = IPTVPlayerNotificationList()
 def GetIPTVNotify():
     global gIPTVPlayerNotificationList
     return gIPTVPlayerNotificationList
-    
+
 
 class IPTVPlayerSleep(object):
-    
+
     def __init__(self):
         self.mainLock = threading.Lock()
         self.timeout = 0
         self.startTimestamp = 0
-        
+
     def Sleep(self, timeout, blocking=True):
         tmp = float(timeout)
         with self.mainLock:
@@ -194,11 +194,11 @@ class IPTVPlayerSleep(object):
             self.startTimestamp = time.time()
         if blocking:
             time.sleep(self.timeout)
-        
+
     def Reset(self):
         with self.mainLock:
             self.startTimestamp = 0
-    
+
     def getTimeout(self):
         ret = 0
         with self.mainLock:
@@ -208,7 +208,7 @@ class IPTVPlayerSleep(object):
                     self.timeout = 0
                     ret = 0
         return ret
-    
+
 
 gIPTVPlayerSleep = IPTVPlayerSleep()
 
@@ -216,5 +216,3 @@ gIPTVPlayerSleep = IPTVPlayerSleep()
 def GetIPTVSleep():
     global gIPTVPlayerSleep
     return gIPTVPlayerSleep
-        
-        

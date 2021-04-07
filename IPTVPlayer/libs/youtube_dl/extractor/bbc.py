@@ -20,9 +20,9 @@ from Components.config import config, ConfigSelection, ConfigYesNo, ConfigText, 
 
 config.plugins.iptvplayer.bbc_default_quality = ConfigSelection(default="900", choices=[
 ("0", _("the worst")),
-("500", "360p"), 
-("600", "480p"), 
-("900", "720p"), 
+("500", "360p"),
+("600", "480p"),
+("900", "720p"),
 ("99999999", _("the best"))
 ])
 config.plugins.iptvplayer.bbc_use_default_quality = ConfigYesNo(default=False)
@@ -43,11 +43,11 @@ def int_or_none(data):
 
 
 class BBCCoUkIE(InfoExtractor):
-    
+
     class MediaSelectionError(Exception):
         def __init__(self, id):
             self.id = id
-            
+
     def __init__(self):
         self.IE_NAME = 'bbc.co.uk'
         self._ID_REGEX = r'[pb][\da-z]{7}'
@@ -69,15 +69,15 @@ class BBCCoUkIE(InfoExtractor):
                 'http://open.live.bbc.co.uk/mediaselector/4/mtis/stream/%s',
                 'http://open.live.bbc.co.uk/mediaselector/5/select/version/2.0/mediaset/journalism-pc/vpid/%s',
             ]
-        
+
         self._MEDIASELECTOR_URLS_2 = self._MEDIASELECTOR_URLS
-            
+
         InfoExtractor.__init__(self)
         self.COOKIE_FILE = GetCookieDir('bbciplayer.cookie')
         self.HEADER = {'User-Agent': 'Mozilla/5.0', 'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8', 'Accept-Encoding': 'gzip, deflate'}
         self.cm.HEADER = self.HEADER # default header
         self.defaultParams = {'header': self.HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
-    
+
     def getFullUrl(self, url):
         if config.plugins.iptvplayer.bbc_use_web_proxy.value and 'englandproxy.co.uk' not in url:
             try:
@@ -85,7 +85,7 @@ class BBCCoUkIE(InfoExtractor):
             except Exception:
                 pass
         return url
-        
+
     def getPage(self, url, params={}, post_data=None):
         HTTP_HEADER = dict(self.HEADER)
         params.update({'header': HTTP_HEADER})
@@ -101,10 +101,10 @@ class BBCCoUkIE(InfoExtractor):
 
     def _extract_medias(self, mediaData):
         error = self.xmlGetAllNodes(mediaData, 'error')
-        
+
         if len(error):
             raise BBCCoUkIE.MediaSelectionError(self.xmlGetArg(error[0], 'id'))
-        
+
         return self.xmlGetAllNodes(mediaData, 'media')
 
     def _get_subtitles(self, media, programme_id):
@@ -128,16 +128,16 @@ class BBCCoUkIE(InfoExtractor):
 
     def _download_media_selector(self, programme_id):
         last_exception = None
-        
+
         formatsTab = []
         subtitlesTab = []
         withSubtitles = True
-        
+
         if config.plugins.iptvplayer.bbc_prefered_format.value == 'hls':
             mediaselectorUrls = self._MEDIASELECTOR_URLS
         else:
             mediaselectorUrls = self._MEDIASELECTOR_URLS_2
-        
+
         hasDASH = False
         hasHLS = False
         for mediaselector_url in mediaselectorUrls:
@@ -264,7 +264,7 @@ class BBCCoUkIE(InfoExtractor):
         duration = None
 
         tviplayer = self.cm.ph.getSearchGroups(webpage, r'mediator\.bind\(({.+?})\s*,\s*document\.getElementById')[0]
-        
+
         player = None
         if tviplayer != '':
             printDBG(tviplayer)
@@ -281,13 +281,13 @@ class BBCCoUkIE(InfoExtractor):
 
         if not programme_id:
             programme_id = self.cm.ph.getSearchGroups(webpage, r'"vpid"\s*:\s*"(%s)"' % self._ID_REGEX)[0]
-            
+
         if not programme_id and player:
             programme_id = player.get('pid')
 
         if programme_id and programme_id != '':
             formats, subtitles = self._download_media_selector(programme_id)
-        
+
             return {
                 'id': programme_id,
                 'duration': duration,
@@ -295,4 +295,3 @@ class BBCCoUkIE(InfoExtractor):
                 'subtitles': subtitles,
             }
         return {}
-

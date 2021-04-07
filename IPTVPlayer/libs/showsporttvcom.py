@@ -22,7 +22,7 @@ except Exception:
 ############################################
 
 ###################################################
-# E2 GUI COMMPONENTS 
+# E2 GUI COMMPONENTS
 ###################################################
 from Plugins.Extensions.IPTVPlayer.components.asynccall import MainSessionWrapper
 ###################################################
@@ -35,12 +35,12 @@ from Plugins.Extensions.IPTVPlayer.components.asynccall import MainSessionWrappe
 def GetConfigList():
     optionList = []
     return optionList
-    
+
 ###################################################
 
 
 class ShowsportTVApi(CBaseHostClass):
-    
+
     def __init__(self):
         self.MAIN_URL = 'http://showsport-tv.com/'
         self.HTTP_HEADER = {'User-Agent': 'Mozilla/5.0 (X11; Ubuntu; Linux i686; rv:12.0) Gecko/20100101 Firefox/12.0', 'Referer': self.MAIN_URL}
@@ -51,7 +51,7 @@ class ShowsportTVApi(CBaseHostClass):
         self.http_params = {}
         self.http_params.update({'save_cookie': True, 'load_cookie': True, 'cookiefile': self.COOKIE_FILE})
         self.cacheList = {}
-        
+
     def _getChannelsList(self, cItem):
         printDBG("ShowsportTVApi._getChannelsList")
         channelsTab = []
@@ -80,17 +80,17 @@ class ShowsportTVApi(CBaseHostClass):
             params.update({'abc_cat': 'list_videos', 'title': title, 'url': url, 'icon': icon, 'desc': desc})
             channelsTab.append(params)
         return channelsTab
-        
+
     def _getVideoItems(self, cItem):
         printDBG("ShowsportTVApi._getVideoItems")
         channelsTab = []
         sts, data = self.cm.getPage(cItem['url'])
         if not sts:
             return []
-        
+
         basePlayerUrl = self.cm.ph.getDataBeetwenMarkers(data, 'function switchServer', '}')[1]
         basePlayerUrl = self.getFullUrl(self.cm.ph.getSearchGroups(basePlayerUrl, '''['"]src['"][^'^"]*?['"]([^'^"]+?)['"]''')[0])
-        
+
         data = self.cm.ph.getAllItemsBeetwenNodes(data, ('<ul ', '>', 'nav-tabs'), ('</ul', '>'), numNodes=1)
         if len(data):
             data = data[0]
@@ -109,14 +109,14 @@ class ShowsportTVApi(CBaseHostClass):
             params.update({'type': 'video', 'title': '%s [%s]' % (cItem['title'], self.cleanHtmlStr(item)), 'url': url})
             channelsTab.append(params)
         return channelsTab
-        
+
     def _getScheduleList(self, cItem):
         printDBG("ShowsportTVApi._getScheduleList")
         channelsTab = []
         sts, data = self.cm.getPage(self.getMainUrl())
         if not sts:
             return []
-        
+
         data = self.cm.ph.getAllItemsBeetwenNodes(data, ('<td', '>', 'date-row'), ('</table', '>'), False, numNodes=1)
         if len(data):
             data = data[0]
@@ -128,7 +128,7 @@ class ShowsportTVApi(CBaseHostClass):
             params = dict(cItem)
             params.update({'type': 'marker', 'title': desc})
             channelsTab.append(params)
-                
+
             dat = self.cm.ph.getAllItemsBeetwenNodes(dat, ('<tr', '>', 'e_row'), ('</tr', '>'))
             printDBG(dat)
             for item in dat:
@@ -145,11 +145,11 @@ class ShowsportTVApi(CBaseHostClass):
                 params.update({'abc_cat': 'list_videos', 'title': title, 'url': url, 'icon': icon, 'desc': desc})
                 channelsTab.append(params)
         return channelsTab
-        
+
     def getChannelsList(self, cItem):
         printDBG("ShowsportTVApi.getChannelsList")
         channelsTab = []
-        
+
         category = cItem.get('abc_cat', None)
         if category == None:
             for item in [{'title': _('Channels'), 'abc_cat': 'list_channels'}, {'title': _('Schedule'), 'abc_cat': 'list_schedule'}]:
@@ -164,7 +164,7 @@ class ShowsportTVApi(CBaseHostClass):
             channelsTab = self._getVideoItems(cItem)
 
         return channelsTab
-        
+
     def getVideoLink(self, cItem):
         printDBG("ShowsportTVApi.getVideoLink")
         urlsTab = []
@@ -172,5 +172,5 @@ class ShowsportTVApi(CBaseHostClass):
         sts, data = self.cm.getPage(cItem['url'], params)
         if not sts:
             return []
-        
+
         return self.up.getAutoDetectedStreamLink(cItem['url'], data)

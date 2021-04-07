@@ -2,14 +2,14 @@
 
 ####################################################################
 # IPLA privacy policy
-# Pobieranie i udostępnianie danych ze źródła ipla przez 
-# podmioty nieuprawnione grozi sankcjami karnymi na 
-# podstawie obowiązujących przepisów karnych (grzywna, 
-# kara ograniczenia wolności albo kara pozbawienia wolności) 
-# oraz konsekwencjami przewidzianymi w przepisach prawa 
+# Pobieranie i udostępnianie danych ze źródła ipla przez
+# podmioty nieuprawnione grozi sankcjami karnymi na
+# podstawie obowiązujących przepisów karnych (grzywna,
+# kara ograniczenia wolności albo kara pozbawienia wolności)
+# oraz konsekwencjami przewidzianymi w przepisach prawa
 # cywilnego (odszkodowanie w wysokości zasądzonej przez sąd).
-# Zabronione jest pobieranie danych i udostępniania ich na 
-# urządzeniach lub aplikacjach innych niż przygotowane i 
+# Zabronione jest pobieranie danych i udostępniania ich na
+# urządzeniach lub aplikacjach innych niż przygotowane i
 # wspierane oficjalnie przez Redefine Sp. z o.o.
 ####################################################################
 
@@ -26,10 +26,10 @@ from Plugins.Extensions.IPTVPlayer.libs.youtube_dl.utils import clean_html
 ###################################################
 # from xml.etree import cElementTree - I would not recommend this XML parser or any other from python
 # XML will be parser using regular expressions due to problem with memory leak, if we use
-# cElementTree event if memory is free using clear method and removing instances by del, 
+# cElementTree event if memory is free using clear method and removing instances by del,
 # the memory using still grows with each parsing, probably due to fragmentation of memory.
 # The XML is devil's invention :)
-    
+
 from Components.config import config, ConfigYesNo, ConfigSelection, getConfigListEntry
 from time import time
 from os import path as os_path
@@ -73,13 +73,13 @@ class Ipla(CBaseHostClass):
     CAT_URL = MAIN_URL + '/r/l_x_35_ipla/categories/list/?' + IDENTITY
     MOV_URL = MAIN_URL + '/action/2.0/vod/list/?' + IDENTITY + '&category='
     SEARCH_URL = MAIN_URL + '/vods/search/?vod_limit=150&' + IDENTITY + '&page=0&keywords='
-    
+
     def __init__(self):
         CBaseHostClass.__init__(self, {'history': 'ipla'})
         self.categoryXMLTree = None
         self.cacheFilePath = os_path.join(config.plugins.iptvplayer.SciezkaCache.value, "iplaxml.cache")
         self.cm.HEADER = {'User-Agent': self.HOST, 'DNT': '1', 'Accept': 'text/html', 'Accept-Encoding': 'gzip, deflate'}
-        
+
     def getStr(self, v, default=''):
         if None == v:
             return default
@@ -95,10 +95,10 @@ class Ipla(CBaseHostClass):
         for attrib in attribs:
             item[attrib[0]] = attrib[1]
         return item
-    
+
     def getVideosList(self, url):
         printDBG("Ipla.getVideosList url[%s]" % url)
-            
+
         sts, videosXMLTree = self.cm.getPage(url, {'host': Ipla.HOST})
         if sts:
             videosXMLTree = self.getStr(videosXMLTree).split('</vod>')
@@ -130,7 +130,7 @@ class Ipla(CBaseHostClass):
                         urls = self._getVideoUrls(vod)
                         sortNum = self.cm.ph.getSearchGroups(title, '''odcinek\s*?([0-9]+?)(?:^0-9|$)''', 1, True)[0]
                         if sortNum != '':
-                            sortNum = int(sortNum) 
+                            sortNum = int(sortNum)
                         params = {'category': 'video', 'sort_num': sortNum, 'title': self.cleanHtmlStr(title), 'plot': plot, 'icon': icon, 'urls': urls, 'fav_item': {'url': url, 'vod_id': val.get('id', '')}}
                         vodList.append(params)
                     except Exception:
@@ -141,7 +141,7 @@ class Ipla(CBaseHostClass):
             except Exception:
                 printExc()
     # end getVideosList
-    
+
     def _getVideoUrls(self, vodData):
         urls = []
         re_compile_srcreq = re.compile('<srcreq ([^>]+?)>')
@@ -165,7 +165,7 @@ class Ipla(CBaseHostClass):
         if config.plugins.iptvplayer.iplaUseDF.value:
             urls = [urls[0]]
         return urls
-    
+
     def __writeCategoryCache(self, data):
         printDBG("__writeCategoryCache ")
         try:
@@ -173,10 +173,10 @@ class Ipla(CBaseHostClass):
                 return
             data = str({"timestamp": int(time()), "data": data})
             with open(self.cacheFilePath, 'w') as f:
-                f.write(str(data))            
+                f.write(str(data))
         except Exception:
             printExc()
-    
+
     def __readCategoryCache(self):
         printDBG("__readCategoryCache ")
         try:
@@ -189,7 +189,7 @@ class Ipla(CBaseHostClass):
             data = literal_eval(data)
             currTimestamp = int(time())
             saveTimestamp = data["timestamp"]
-            
+
             if (currTimestamp - saveTimestamp) / 3600 < int(config.plugins.iptvplayer.iplacachexml.value):
                 data = data["data"]
                 printDBG("__readCategoryCache data from cache valid")
@@ -199,16 +199,16 @@ class Ipla(CBaseHostClass):
             printExc()
             data = None
         return data
-        
+
     def getCatXmlTree(self, refresh=False):
         printDBG("setCatXmlTree refresh[%r]" % refresh)
-        
+
         def _fromUrl():
             sts, data = self.cm.getPage(Ipla.CAT_URL, {'host': Ipla.HOST})
             if not sts:
                 data = ''
             return data
-            
+
         if None == self.categoryXMLTree or refresh:
             try:
                 bFromCache = True
@@ -229,7 +229,7 @@ class Ipla(CBaseHostClass):
                 printExc()
                 self.categoryXMLTree = None
         return self.categoryXMLTree
-        
+
     def __simpleCategoryParser(self, data):
         printDBG("__simpleCategoryParser start")
         data = re.compile('<cat ([^>]+?)>').findall(data)
@@ -238,7 +238,7 @@ class Ipla(CBaseHostClass):
             data[idx] = self.__getAttribs(data[idx])
         printDBG("__simpleCategoryParser step 2 finished")
         return data
-        
+
     def getCategories(self, parentCatId, refresh):
         printDBG("getCategories parentCatId[%s]" % parentCatId)
         xmlTree = self.getCatXmlTree(refresh)
@@ -282,19 +282,19 @@ class Ipla(CBaseHostClass):
             except Exception:
                 printExc()
         return
-        
+
     def listsMainMenu(self, refresh=False):
         printDBG('listsMainMenu')
         self.getCategories('0', refresh)
         self.addDir({'category': 'Wyszukaj', 'title': 'Wyszukaj'})
         self.addDir({'category': 'search_history', 'title': 'Historia wyszukiwania'})
-        
+
     def getFavouriteData(self, cItem):
         return json.dumps(cItem['fav_item'])
-        
+
     def getLinksForFavourite(self, fav_data):
         links = []
-        try: 
+        try:
             favItem = byteify(json.loads(fav_data))
             printDBG(favItem)
             sts, data = self.cm.getPage(favItem['url'], {'host': Ipla.HOST})
@@ -324,7 +324,7 @@ class Ipla(CBaseHostClass):
         plot = self.currItem.get("plot", '')
         printDBG("handleService: |||||||||||||||||||||||||||||||||||| category[%r] " % (category))
         self.currList = []
-        
+
     #MAIN MENU
         if category == None:
             self.listsMainMenu(refresh)
@@ -347,7 +347,7 @@ class IPTVHost(CHostBase):
 
     def getLogoPath(self):
         return RetHost(RetHost.OK, value=[GetLogoDir('iplalogo.png')])
-    
+
     def converItem(self, cItem):
         searchTypesOptions = [] # ustawione alfabetycznie
         hostLinks = []
@@ -365,7 +365,7 @@ class IPTVHost(CHostBase):
             urls = cItem.get('urls', [])
             for urlItem in urls:
                 hostLinks.append(CUrlItem(urlItem['name'], urlItem['url'], 0))
-            
+
         title = clean_html(cItem.get('title', ''))
         description = clean_html(cItem.get('plot', ''))
         icon = cItem.get('icon', '')
@@ -377,7 +377,7 @@ class IPTVHost(CHostBase):
                                     iconimage=icon,
                                     possibleTypesOfSearch=possibleTypesOfSearch)
         return hostItem
-    
+
     def getSearchItemInx(self):
         # Find 'Wyszukaj' item
         try:
@@ -403,4 +403,3 @@ class IPTVHost(CHostBase):
             self.searchPattern = ''
             self.searchType = ''
         return
-

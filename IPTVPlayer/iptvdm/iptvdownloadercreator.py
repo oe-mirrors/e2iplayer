@@ -70,30 +70,28 @@ def DownloaderCreator(url):
             downloader = MergeDownloader()
     elif 'mpd' == iptv_proto and IsExecutable('ffmpeg') and config.plugins.iptvplayer.cmdwrappath.value != '':
         downloader = FFMPEGDownloader()
-    
+
     return downloader
 
 
 def UpdateDownloaderCreator(url):
     printDBG("UpdateDownloaderCreator url[%s]" % url)
     if url.startswith('https'):
-        if IsExecutable(DMHelper.GET_WGET_PATH()): 
+        if IsExecutable(DMHelper.GET_WGET_PATH()):
             printDBG("UpdateDownloaderCreator WgetDownloader")
             return WgetDownloader()
-        elif IsExecutable('python'): 
+        elif IsExecutable('python'):
             printDBG("UpdateDownloaderCreator PwgetDownloader")
             return PwgetDownloader()
     else:
         if IsExecutable('wget'):
             printDBG("UpdateDownloaderCreator BuxyboxWgetDownloader")
             return BuxyboxWgetDownloader()
-        elif IsExecutable(DMHelper.GET_WGET_PATH()): 
+        elif IsExecutable(DMHelper.GET_WGET_PATH()):
             printDBG("UpdateDownloaderCreator WgetDownloader")
             return WgetDownloader()
-        elif IsExecutable('python'): 
+        elif IsExecutable('python'):
             printDBG("UpdateDownloaderCreator PwgetDownloader")
             return PwgetDownloader()
     printDBG("UpdateDownloaderCreator downloader not available")
     return PwgetDownloader()
-        
-        

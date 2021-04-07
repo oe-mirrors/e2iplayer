@@ -36,10 +36,10 @@ class TV2RChannel():
 
     def __init__(self):
         self.cm = common()
-        
+
     def getChannels(self):
         return copy.deepcopy(self.CHANNELS)
-        
+
     def __getFynskemedierIP(self):
         for attempt in range(0, 2):
             sts, data = self.cm.getPage('http://livestream.fynskemedier.dk/loadbalancer')
@@ -47,9 +47,9 @@ class TV2RChannel():
                 continue
             return data[9:]
         return None
-        
+
     def getLinksForChannel(self, channelData):
-        links = [] 
+        links = []
         if 'fynskemedier.dk' == channelData['type']:
             ip = self.__getFynskemedierIP()
             if None == ip:

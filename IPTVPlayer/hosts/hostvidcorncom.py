@@ -22,7 +22,7 @@ from Components.config import config, ConfigText, getConfigListEntry
 ###################################################
 
 ###################################################
-# E2 GUI COMMPONENTS 
+# E2 GUI COMMPONENTS
 ###################################################
 from Screens.MessageBox import MessageBox
 ###################################################
@@ -87,14 +87,14 @@ class VidCorn(CBaseHostClass, CaptchaHelper):
             title = self.cleanHtmlStr(item)
             params = MergeDicts(cItem, {'category': category, 'f_type': category, 'title': title, 'url': self.getFullUrl(url)})
             self.addDir(params)
-        
+
         MAIN_CAT_TAB = [{'category': 'search', 'title': _('Search'), 'search_item': True},
                         {'category': 'search_history', 'title': _('Search history'), }]
         self.listsTab(MAIN_CAT_TAB, cItem)
 
     def listFilters(self, cItem, nextCategory):
         printDBG("VidCorn.listFilters")
-        idx = cItem.get('f_idx', 0) 
+        idx = cItem.get('f_idx', 0)
         if idx == 0:
             self.filters = []
             sts, data = self.getPage(cItem['url'])
@@ -170,7 +170,7 @@ class VidCorn(CBaseHostClass, CaptchaHelper):
         post_data['optradio'] = cItem.get('f_optradio', '0')
 
         url = self.getFullUrl('/services/fetch_pages')
-        
+
         sts, data = self.getPage(url, post_data=post_data)
         if not sts:
             return
@@ -289,7 +289,7 @@ class VidCorn(CBaseHostClass, CaptchaHelper):
         reObj = re.compile('<div[^>]+?link\-option\-head[^>]+?>')
         data = reObj.split(data)
         del data[0]
-        
+
         uniqueLinks = set()
         linksTab = []
         for linksData in data:
@@ -319,7 +319,7 @@ class VidCorn(CBaseHostClass, CaptchaHelper):
     def exploreItem(self, cItem):
         printDBG("VidCorn.exploreItem")
         self.cacheLinks = {}
-        
+
         if not self.loggedIn:
             self.sessionEx.open(MessageBox, 'Debes iniciar sesión para ver los enlaces.', type=MessageBox.TYPE_ERROR, timeout=10)
 
@@ -343,7 +343,7 @@ class VidCorn(CBaseHostClass, CaptchaHelper):
             params = dict(cItem)
             params.update({'good_for_fav': False, 'title': title, 'url': strwithmeta(trailer, {'Referer': cUrl}), 'desc': desc, 'prev_url': cUrl})
             self.addVideo(params)
-        
+
         movieId = self.cm.ph.getSearchGroups(data, '''data\-movie\-id=['"]([^"^']+?)["']''', 1, True)[0]
         if not movieId:
             return
@@ -381,7 +381,7 @@ class VidCorn(CBaseHostClass, CaptchaHelper):
                         eNum = tab[0]
                     else:
                         eNum = url.rsplit('-', 1)[-1]
-                    
+
                     if len(tab) > 1:
                         title = tab[1]
                     else:
@@ -434,7 +434,7 @@ class VidCorn(CBaseHostClass, CaptchaHelper):
     def getLinksForVideo(self, cItem):
         self.tryTologin()
 
-        if 0 != self.up.checkHostSupport(cItem['url']): 
+        if 0 != self.up.checkHostSupport(cItem['url']):
             return self.up.getVideoLinkExt(cItem['url'])
 
         linksTab = self.cacheLinks.get(cItem['url'], [])
@@ -455,7 +455,7 @@ class VidCorn(CBaseHostClass, CaptchaHelper):
                 self.cacheLinks[cItem['url']] = linksTab
 
         return linksTab
-        
+
     def getVideoLinks(self, videoUrl):
         printDBG("VidCorn.getVideoLinks [%s]" % videoUrl)
         # mark requested link as used one
@@ -469,19 +469,19 @@ class VidCorn(CBaseHostClass, CaptchaHelper):
         linksTab = []
         urlParams = dict(self.defaultParams)
         urlParams['header'] = MergeDicts(urlParams['header'], {'Referer': videoUrl.meta['Referer']})
-        
+
         sts, data = self.getPage(videoUrl, urlParams)
         if not sts:
             linksTab
-        
+
         data = self.cm.ph.getDataBeetwenNodes(data, ('<div', '>', 'go-link-container'), ('</div', '>'), False)[1]
         videoUrl = self.getFullUrl(self.cm.ph.getSearchGroups(data, '''href=['"]([^"^']+?)["']''', 1, True)[0], self.cm.meta['url'])
-        
-        if 0 == self.up.checkHostSupport(videoUrl): 
+
+        if 0 == self.up.checkHostSupport(videoUrl):
             urlParams['header']['Referer'] = self.cm.meta['url']
             urlParams['max_data_size'] = 0
             sts, data = self.getPage(videoUrl, urlParams)
-            if sts: 
+            if sts:
                 videoUrl = strwithmeta(self.cm.meta['url'], {'Referer': urlParams['header']['Referer']})
         else:
             videoUrl = strwithmeta(videoUrl, {'Referer': self.cm.meta['url']})
@@ -493,7 +493,7 @@ class VidCorn(CBaseHostClass, CaptchaHelper):
     def getArticleContent(self, cItem, data=None):
         printDBG("HDFull.getArticleContent [%s]" % cItem)
         retTab = []
-        
+
         url = cItem.get('prev_url', cItem['url'])
         if data == None:
             self.tryTologin()
@@ -548,12 +548,12 @@ class VidCorn(CBaseHostClass, CaptchaHelper):
             icon = cItem.get('icon', self.DEFAULT_ICON_URL)
         if desc == '':
             desc = cItem.get('desc', '')
-        
+
         return [{'title': self.cleanHtmlStr(title), 'text': self.cleanHtmlStr(desc), 'images': [{'title': '', 'url': self.getFullUrl(icon)}], 'other_info': {'custom_items_list': itemsList}}]
-        
+
     def tryTologin(self):
         printDBG('tryTologin start')
-        
+
         if None == self.loggedIn or self.login != config.plugins.iptvplayer.vidcorn_login.value or\
             self.password != config.plugins.iptvplayer.vidcorn_password.value:
 
@@ -598,7 +598,7 @@ class VidCorn(CBaseHostClass, CaptchaHelper):
                     token, errorMsgTab = self.processCaptcha(sitekey, self.cm.meta['url'])
                     if token == '':
                         return False
-                    post_data['g-recaptcha-response'] = token 
+                    post_data['g-recaptcha-response'] = token
 
                 httpParams = dict(self.defaultParams)
                 httpParams['header'] = MergeDicts(httpParams['header'], {'Referer': self.cm.meta['url'], 'X-Requested-With': 'XMLHttpRequest', 'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8'})
@@ -610,7 +610,7 @@ class VidCorn(CBaseHostClass, CaptchaHelper):
                 self.loggedIn = True
             else:
                 msgTab = [_('Login failed.')]
-                if sts: 
+                if sts:
                     data = self.cm.ph.getAllItemsBeetwenMarkers(data, 'error-modal', ');')
                     for item in data:
                         item = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(item, '(', ')', False)[1].strip()[1:-1])
@@ -618,16 +618,16 @@ class VidCorn(CBaseHostClass, CaptchaHelper):
                             msgTab.append(item)
                 self.sessionEx.waitForFinishOpen(MessageBox, '\n'.join(msgTab), type=MessageBox.TYPE_ERROR, timeout=10)
                 printDBG('tryTologin failed')
-            
+
             if self.loggedIn:
                 hash = hexlify(md5('%s@***@%s' % (self.login, self.password)).digest())
                 WriteTextFile(loginCookie, hash)
-                
+
         return self.loggedIn
-        
+
     def handleService(self, index, refresh=0, searchPattern='', searchType=''):
         printDBG('handleService start')
-        
+
         CBaseHostClass.handleService(self, index, refresh, searchPattern, searchType)
 
         name = self.currItem.get("name", '')
@@ -664,14 +664,14 @@ class VidCorn(CBaseHostClass, CaptchaHelper):
     #SEARCH
         elif category in ["search", "search_next_page"]:
             cItem = dict(self.currItem)
-            cItem.update({'search_item': False, 'name': 'category'}) 
+            cItem.update({'search_item': False, 'name': 'category'})
             self.listSearchResult(cItem, searchPattern, searchType)
     #HISTORIA SEARCH
         elif category == "search_history":
             self.listsHistory({'name': 'history', 'category': 'search'}, 'desc', _("Type: "))
         else:
             printExc()
-        
+
         CBaseHostClass.endHandleService(self, index, refresh)
 
 
@@ -679,7 +679,7 @@ class IPTVHost(CHostBase):
 
     def __init__(self):
         CHostBase.__init__(self, VidCorn(), True, [])
-    
+
     def withArticleContent(self, cItem):
         if cItem.get('f_type', '') in ['series', 'peliculas']:
             return True

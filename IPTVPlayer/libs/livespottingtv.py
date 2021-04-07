@@ -32,10 +32,10 @@ class LivespottingTvApi:
         self.http_params = {}
         self.http_params.update({'save_cookie': True, 'load_cookie': True, 'cookiefile': self.COOKIE_FILE})
         self.cache = {}
-        
+
     def cleanHtmlStr(self, str):
         return CBaseHostClass.cleanHtmlStr(str)
-        
+
     def getChannelsList(self, cItem):
         printDBG("WkylinewebcamsCom.getChannelsList")
         list = []
@@ -50,7 +50,7 @@ class LivespottingTvApi:
                 try:
                     title = item['title']
                     icon = item['image']
-                    desc = item['description'] 
+                    desc = item['description']
                     url = str(item['sources'])
                     url = ph.search(url, '''file['"]:\s*['"]([^"^']+?)['"]''')[0]
                     list.append({'title': title, 'url': url, 'icon': icon, 'desc': desc})

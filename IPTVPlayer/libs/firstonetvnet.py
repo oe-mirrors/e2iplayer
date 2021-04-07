@@ -25,7 +25,7 @@ from Components.config import config, ConfigText, getConfigListEntry
 ############################################
 
 ###################################################
-# E2 GUI COMMPONENTS 
+# E2 GUI COMMPONENTS
 ###################################################
 from Plugins.Extensions.IPTVPlayer.components.iptvmultipleinputbox import IPTVMultipleInputBox
 from Screens.MessageBox import MessageBox
@@ -43,7 +43,7 @@ def GetConfigList():
     optionList.append(getConfigListEntry('firstonetv.net ' + _("email") + ':', config.plugins.iptvplayer.firstonetv_login))
     optionList.append(getConfigListEntry('firstonetv.net ' + _("password") + ':', config.plugins.iptvplayer.firstonetv_password))
     return optionList
-    
+
 ###################################################
 
 
@@ -66,7 +66,7 @@ class FirstOneTvApi(CBaseHostClass):
 
     def tryTologin(self):
         printDBG('tryTologin start')
-        
+
         if None == self.loggedIn or self.login != config.plugins.iptvplayer.firstonetv_login.value or\
             self.password != config.plugins.iptvplayer.firstonetv_password.value:
 
@@ -114,13 +114,13 @@ class FirstOneTvApi(CBaseHostClass):
                 self.sessionEx.waitForFinishOpen(MessageBox, '\n'.join(msgTab), type=MessageBox.TYPE_ERROR, timeout=10)
                 printDBG('tryTologin failed')
         return self.loggedIn
-    
+
     def getList(self, cItem):
         printDBG("FirstOneTvApi.getChannelsList")
         self.tryTologin()
 
         channelsTab = []
-        
+
         if cItem.get('priv_cat') == None:
             defLang = GetDefaultLang()
             sts, data = self.cm.getPage(self.getFullUrl('/Live'), self.http_params)
@@ -181,7 +181,7 @@ class FirstOneTvApi(CBaseHostClass):
                 desc = ' | '.join(desc) + '[/br]' + ph.clean_html(reObj.sub('[/br]', ph.find(item, ('<a', '>'), '</a>', flags=0)[1]))
                 channelsTab.append(MergeDicts(cItem, {'type': 'video', 'title': title, 'priv_cat': 'list_channels', 'url': self.getFullUrl(url), 'icon': self.getFullIconUrl(icon), 'desc': desc}))
         return channelsTab
-       
+
     def _getLinks(self, cUrl, params, post_data):
         ret = -1
         links = []
@@ -265,7 +265,7 @@ class FirstOneTvApi(CBaseHostClass):
             #printDBG("++++++++++++++++++++++++++++++++++")
             #printDBG(tmp)
             #printDBG("++++++++++++++++++++++++++++++++++")
-            hiroErrorCode = -1 
+            hiroErrorCode = -1
             try:
                 tmp = json_loads(tmp)
                 post_data = {'action': 'hiro', 'result': '', 'hash': tmp['hash'], 'time': tmp['time']}
@@ -367,7 +367,7 @@ class FirstOneTvApi(CBaseHostClass):
                     post_data['response'] = retArg[0][0]
                 else:
                     return []
-                 
+
                 url = self.getFullUrl('/api/?cacheFucker=' + str(random.random()), cUrl)
                 sts, data = self.cm.getPage(url, params, post_data)
                 if sts:
