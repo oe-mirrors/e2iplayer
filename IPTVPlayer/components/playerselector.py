@@ -83,8 +83,8 @@ class PlayerSelectorWidget(Screen):
         markerHeight = 45 + coverHeight
 
         # position of first marker
-        offsetMarkerX = offsetCoverX - (markerWidth - coverWidth) / 2
-        offsetMarkerY = offsetCoverY - (markerHeight - coverHeight) / 2
+        offsetMarkerX = offsetCoverX - (markerWidth - coverWidth) // 2
+        offsetMarkerY = offsetCoverY - (markerHeight - coverHeight) // 2
 
         # how to calculate position of image with indexes indxX, indxY:
         #posX = offsetCoverX + (coverWidth + disWidth) * indxX
@@ -128,7 +128,7 @@ class PlayerSelectorWidget(Screen):
 
         # pagination
         self.pageItemSize = 16
-        self.pageItemStartX = (offsetCoverX + tmpX * numOfCol + offsetCoverX - disWidth - self.numOfPages * self.pageItemSize) / 2
+        self.pageItemStartX = (offsetCoverX + tmpX * numOfCol + offsetCoverX - disWidth - self.numOfPages * self.pageItemSize) // 2
         if screenwidth and screenwidth == 1920:
             self.pageItemStartY = 60
         else:
@@ -184,6 +184,7 @@ class PlayerSelectorWidget(Screen):
         # add pagination items
         for pageItemOffset in range(self.numOfPages):
             pageItemX = self.pageItemStartX + pageItemOffset * self.pageItemSize
+            print(pageItemX)
             skinCoverLine = """<ePixmap zPosition="2" position="%d,%d" size="%d,%d" pixmap="%s" transparent="1" alphatest="blend" />""" % (pageItemX, self.pageItemStartY, self.pageItemSize, self.pageItemSize, GetIconDir('radio_button_off.png'))
             skin += '\n' + skinCoverLine
         skin += '</screen>'
@@ -261,7 +262,7 @@ class PlayerSelectorWidget(Screen):
             self.currLine = (self.numOfLines - 1)
 
         # calculate new page number
-        newPage = self.currLine / self.numOfRow
+        newPage = self.currLine // self.numOfRow
         if newPage != self.currPage:
             self.currPage = newPage
             self.updateIcons()
@@ -322,12 +323,12 @@ class PlayerSelectorWidget(Screen):
             self.lastSelection = self.numOfItems - 1
 
         # numbers of lines
-        self.numOfLines = self.numOfItems / self.numOfCol
+        self.numOfLines = self.numOfItems // self.numOfCol
         if self.numOfItems % self.numOfCol > 0:
             self.numOfLines += 1
 
         # numbers of pages
-        self.numOfPages = self.numOfLines / self.numOfRow
+        self.numOfPages = self.numOfLines // self.numOfRow
         if self.numOfLines % self.numOfRow > 0:
             self.numOfPages += 1
 
@@ -369,7 +370,7 @@ class PlayerSelectorWidget(Screen):
             selIdx = self.numOfItems
 
         self.dispX = selIdx % self.numOfCol
-        self.currLine = selIdx / self.numOfCol
+        self.currLine = selIdx // self.numOfCol
 
         self.calcMarkerPosX()
         self.calcMarkerPosY()
@@ -423,8 +424,8 @@ class PlayerSelectorWidget(Screen):
         imgPosY = self.offsetCoverY + (self.coverHeight + self.disHeight) * self.dispY
 
         # calculate postion of marker for current image
-        x = imgPosX - (self.markerWidth - self.coverWidth) / 2
-        y = imgPosY - (self.markerHeight - self.coverHeight) / 2
+        x = imgPosX - (self.markerWidth - self.coverWidth) // 2
+        y = imgPosY - (self.markerHeight - self.coverHeight) // 2
 
         #x =  30 + self.dispX * 180
         #y = 130 + self.dispY * 125
