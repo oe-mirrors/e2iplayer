@@ -57,7 +57,8 @@ class WatchwrestlingUNO(CBaseHostClass):
     def listCategories(self, cItem, nexCategory):
         printDBG("WatchwrestlingUNO.listCategories")
         sts, data = self.cm.getPage(cItem['url'])
-        if not sts: return
+        if not sts:
+            return
         
         data = self.cm.ph.getDataBeetwenMarkers(data, cItem['m1'], '</ul>', False)[1]
         
@@ -69,7 +70,8 @@ class WatchwrestlingUNO(CBaseHostClass):
         data = self.cm.ph.getAllItemsBeetwenMarkers(data, '<a', '</a>')
         for item in data:
             url    = self.cm.ph.getSearchGroups(item, '''href=['"]([^"^']+?)["']''')[0]
-            if url == '': continue
+            if url == '':
+                continue
             title  = self.cleanHtmlStr(item)
             params = dict(cItem)
             params.update({'title':title, 'url':self.getFullUrl(url), 'category':nexCategory})
@@ -89,15 +91,18 @@ class WatchwrestlingUNO(CBaseHostClass):
             url += 'page/%d/' % page
         if '?' in url:
             url += '&'
-        else: url += '?'
+        else:
+            url += '?'
         url += 'orderby=%s' % cItem['sort']
         
         sts, data = self.cm.getPage(url)
-        if not sts: return 
+        if not sts:
+            return 
         
         if ('/page/%d/' % (page + 1)) in data:
             nextPage = True
-        else: nextPage = False
+        else:
+            nextPage = False
         
         posts = self.cm.ph.getAllItemsBeetwenMarkers(data, '<div id="post-', '</div>')
         data = self.cm.ph.getAllItemsBeetwenMarkers(data, '<div class="data"', '</div>')
@@ -106,7 +111,8 @@ class WatchwrestlingUNO(CBaseHostClass):
             url    = self.cm.ph.getSearchGroups(item, 'href="([^"]+?)"')[0]
             icon   = self.cm.ph.getSearchGroups(item, 'src="([^"]+?)"')[0]
             title  = self.cm.ph.getSearchGroups(item, 'title="([^"]+?)"')[0]
-            if title == '': title = self.cm.ph.getSearchGroups(item, 'alt="([^"]+?)"')[0]
+            if title == '':
+                title = self.cm.ph.getSearchGroups(item, 'alt="([^"]+?)"')[0]
             
             if len(data) < len(posts):
                 printDBG("FIX ME: data_len[%d] posts_len[%d]" % (len(data), len(posts)))
@@ -117,11 +123,13 @@ class WatchwrestlingUNO(CBaseHostClass):
                 tmp.extend(self.cm.ph.getAllItemsBeetwenMarkers(data[idx], '<i', '</span>'))
                 for item in tmp:
                     item = self.cleanHtmlStr(item)
-                    if item != '': desc.append(item)
+                    if item != '':
+                        desc.append(item)
                 desc = ' | '.join(desc)
             params = dict(cItem)
             params.update( {'good_for_fav': True, 'category':nextCategory, 'title': self.cleanHtmlStr(title), 'url':self.getFullUrl(url), 'desc': desc, 'icon':self.getFullIconUrl(icon)} )
-            if '/category/' not in url: params['category'] = nextCategory
+            if '/category/' not in url:
+                params['category'] = nextCategory
             self.addDir(params)
         
         if nextPage:
@@ -132,14 +140,16 @@ class WatchwrestlingUNO(CBaseHostClass):
     def listServers(self, cItem, nextCategory):
         printDBG("WatchwrestlingUNO.listServers [%s]" % cItem)
         sts, data = self.cm.getPage(cItem['url'])
-        if not sts: return
+        if not sts:
+            return
         
         baseUrl = self.cm.ph.getSearchGroups(data, '''<base[^>]+?href=["'](https?://[^"^']+?)['"]''')[0]
         
         self.serversCache = []
         matchObj = re.compile('href="([^"]+?)"[^>]*?>([^>]+?)</a>')
         tmp = self.cm.ph.getDataBeetwenMarkers(data, '<div class="entry-content rich-content">', '<p class="no-break">', False)[1]
-        if not tmp: tmp = self.cm.ph.getDataBeetwenMarkers(data, '<div class="entry-content rich-content">', '<div id="extras">', False)[1]
+        if not tmp:
+            tmp = self.cm.ph.getDataBeetwenMarkers(data, '<div class="entry-content rich-content">', '<div id="extras">', False)[1]
         data = tmp
         sp = '<span style="font-size:'
         if sp in data: 
@@ -149,11 +159,13 @@ class WatchwrestlingUNO(CBaseHostClass):
             data = data.split('color:')
             sp = '</p>'
         
-        if len(data): del data[0]
+        if len(data):
+            del data[0]
         printDBG(data)
         for item in data:
             sts, serverName = self.cm.ph.getDataBeetwenMarkers(item, '>', sp, False)
-            if not sts: continue
+            if not sts:
+                continue
             parts = matchObj.findall(item)
             partsTab = []
             for part in parts:
@@ -174,7 +186,8 @@ class WatchwrestlingUNO(CBaseHostClass):
     def listLiveStreams(self, cItem):
         printDBG("WatchwrestlingUNO.listLiveStreams [%s]" % cItem)
         sts, data = self.cm.getPage(cItem['url'])
-        if not sts: return
+        if not sts:
+            return
         
         baseUrl = self.cm.ph.getSearchGroups(data, '''<base[^>]+?href=["'](https?://[^"^']+?)['"]''')[0]
         sp = '<div style="text-align: center;">'
@@ -203,7 +216,8 @@ class WatchwrestlingUNO(CBaseHostClass):
         printDBG("WatchwrestlingUNO.getLinksForVideo [%s]" % cItem)
         urlTab = []
         live = cItem.get('live', False)
-        if live: return [{'name':cItem['title'], 'url':cItem['url'], 'need_resolve':1}]
+        if live:
+            return [{'name':cItem['title'], 'url':cItem['url'], 'need_resolve':1}]
         
         url = strwithmeta(cItem['url'])
         referer =  url.meta.get('Referer', '')
@@ -211,7 +225,8 @@ class WatchwrestlingUNO(CBaseHostClass):
             tries = 0
             while tries < 3:
                 sts, data = self.cm.getPage(url, {'header':{'Referer':referer, 'User-Agent':'Mozilla/5.0'}})
-                if not sts: return urlTab
+                if not sts:
+                    return urlTab
                 data = data.replace('// -->', '')
                 data = self._clearData(data)
                 #printDBG(data)

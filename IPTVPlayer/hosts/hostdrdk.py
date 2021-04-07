@@ -12,8 +12,10 @@ from Plugins.Extensions.IPTVPlayer.libs.dk_channels import TV2RChannel
 ###################################################
 # FOREIGN import
 ###################################################
-try:    import json
-except Exception: import simplejson as json
+try:
+    import json
+except Exception:
+    import simplejson as json
 from Components.config import config, ConfigText, getConfigListEntry
 ###################################################
 
@@ -68,12 +70,14 @@ class DRDK(CBaseHostClass):
             params['name']  = 'category'
             if type == 'dir':
                 self.addDir(params)
-            else: self.addVideo(params)
+            else:
+                self.addVideo(params)
             
     def listLiveChannels(self, cItem):
         printDBG("listLiveChannels")
         sts, data = self.cm.getPage(cItem['url'])
-        if not sts: return
+        if not sts:
+            return
         try:
             if 'video' == cItem['channel_type']:
                 video = True
@@ -82,7 +86,8 @@ class DRDK(CBaseHostClass):
             data = byteify(json.loads(data))
             #if video: data.sort(key=lambda item: item["WebChannel"])
             for item in data:
-                if item.get("WebChannel", False): continue
+                if item.get("WebChannel", False):
+                    continue
                 item.update({'title':item['Title'], 'icon':item.get('PrimaryImageUri')})
                 if video:
                     self.addVideo(item)
@@ -103,7 +108,8 @@ class DRDK(CBaseHostClass):
         try:
             if cItem["Type"] == "Channel":
                 for serv in cItem["StreamingServers"]:
-                    if "HLS" not in serv["LinkType"]: continue 
+                    if "HLS" not in serv["LinkType"]:
+                        continue 
                     for qual in serv["Qualities"]:
                         for stream in qual["Streams"]:
                             url   = self.up.decorateUrl(serv["Server"] + "/" + stream["Stream"])
@@ -183,7 +189,8 @@ class IPTVHost(CHostBase):
     def getLinksForVideo(self, Index = 0, selItem = None):
         retCode = RetHost.ERROR
         retlist = []
-        if not self.isValidIndex(Index): return RetHost(retCode, value=retlist)
+        if not self.isValidIndex(Index):
+            return RetHost(retCode, value=retlist)
         
         urlList = self.host.getLinksForVideo(self.host.currList[Index])
         for item in urlList:

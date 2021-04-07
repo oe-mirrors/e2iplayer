@@ -17,8 +17,10 @@ import urllib.request
 import urllib.parse
 import urllib.error
 import base64
-try:    import json
-except Exception: import simplejson as json
+try:
+    import json
+except Exception:
+    import simplejson as json
 from Components.config import config, ConfigSelection, getConfigListEntry
 ###################################################
 
@@ -95,7 +97,8 @@ class LosMovies(CBaseHostClass):
         printDBG("LosMovies.listCats")
         
         sts, data = self.getPage(cItem['url'])
-        if not sts: return
+        if not sts:
+            return
         self.setMainUrl(self.cm.meta['url'])
         
         data = self.cm.ph.getDataBeetwenMarkers(data, '<div class="btn-group">', '</div>')[1]
@@ -119,16 +122,20 @@ class LosMovies(CBaseHostClass):
     def listCategories(self, cItem, nextCategory):
         printDBG("LosMovies.listCategories")
         
-        if cItem['mode'] == 'movie': marker = 'movies'
-        else: marker = 'shows'
+        if cItem['mode'] == 'movie':
+            marker = 'movies'
+        else:
+            marker = 'shows'
         
         sts, data = self.getPage(cItem['url'])
-        if not sts: return
+        if not sts:
+            return
         self.setMainUrl(self.cm.meta['url'])
         
         data = self.cm.ph.getDataBeetwenMarkers(data, '<h1 class="centerHeader">', '<footer>')[1]
         data = data.split('showEntityTeaser ')
-        if len(data): del data[0]
+        if len(data):
+            del data[0]
         for item in data:
             url   = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''href=['"]([^'^"]+?{0})['"]'''.format(marker))[0])
             title = self.cleanHtmlStr(self.cm.ph.getDataBeetwenReMarkers(item, re.compile('<div[^>]+?showRowName'), re.compile('</div>'))[1])
@@ -144,32 +151,44 @@ class LosMovies(CBaseHostClass):
         letter = cItem.get('letter', '')
         
         getParams = []
-        if page > 1: getParams.append("page=%d" % page)
-        if letter != '': getParams.append("letter=%s" % letter)
+        if page > 1:
+            getParams.append("page=%d" % page)
+        if letter != '':
+            getParams.append("letter=%s" % letter)
         getParams = '&'.join(getParams)
-        if '?' in url: url += '&' + getParams
-        else: url += '?' + getParams
+        if '?' in url:
+            url += '&' + getParams
+        else:
+            url += '?' + getParams
         
         sts, data = self.getPage(url)
-        if not sts: return
+        if not sts:
+            return
         self.setMainUrl(self.cm.meta['url'])
         
         nextPage = self.cm.ph.getDataBeetwenMarkers(data, 'pagination', '</div>', False)[1]
-        if '' != self.cm.ph.getSearchGroups(nextPage, 'page=(%s)[^0-9]' % (page+1))[0]: nextPage = True
-        else: nextPage = False
+        if '' != self.cm.ph.getSearchGroups(nextPage, 'page=(%s)[^0-9]' % (page+1))[0]:
+            nextPage = True
+        else:
+            nextPage = False
         
-        if cItem['category'] in ['list_items', 'search', 'search_next_page']: marker = 'movie'
-        else: marker = 'rubric'
+        if cItem['category'] in ['list_items', 'search', 'search_next_page']:
+            marker = 'movie'
+        else:
+            marker = 'rubric'
         
         data = self.cm.ph.getAllItemsBeetwenMarkers(data, '<div id="' + marker, '</h4>', withMarkers=True)
         for item in data:
             url  = self.getFullUrl( self.cm.ph.getSearchGroups(item, 'href="([^"]+?)"')[0] )
-            if not self.cm.isValidUrl(url): continue
+            if not self.cm.isValidUrl(url):
+                continue
             icon = self.getFullUrl( self.cm.ph.getSearchGroups(item, 'src="([^"]+?)"')[0] )
             desc = self.cleanHtmlStr( item )
             title = self.cleanHtmlStr( self.cm.ph.getDataBeetwenMarkers(item, '<h4', '</h4>')[1] )
-            if title == '': title  = self.cleanHtmlStr( self.cm.ph.getSearchGroups(item, 'title="([^"]+?)"')[0] )
-            if title == '': title  = self.cleanHtmlStr( self.cm.ph.getSearchGroups(item, 'alt="([^"]+?)"')[0] )
+            if title == '':
+                title  = self.cleanHtmlStr( self.cm.ph.getSearchGroups(item, 'title="([^"]+?)"')[0] )
+            if title == '':
+                title  = self.cleanHtmlStr( self.cm.ph.getSearchGroups(item, 'alt="([^"]+?)"')[0] )
             
             params = {'good_for_fav': True, 'title':title, 'url':url, 'desc':desc, 'info_url':url, 'icon':icon}
             if 'class="movieTV"' not in item and '/movie-list/' not in item:
@@ -191,7 +210,8 @@ class LosMovies(CBaseHostClass):
         self.cacheEpisodes = {}
         
         sts, data = self.getPage(cItem['url'])
-        if not sts: return
+        if not sts:
+            return
         self.setMainUrl(self.cm.meta['url'])
         
         seasonsTitlesTab = {}
@@ -244,27 +264,33 @@ class LosMovies(CBaseHostClass):
         
         if eItem == None:
             urlTab = self.cacheLinks.get(cItem['url'],  [])
-            if len(urlTab): return urlTab
+            if len(urlTab):
+                return urlTab
             
             url = cItem['url']
             sts, data = self.getPage(url, self.defaultParams)
-            if not sts: return urlTab
+            if not sts:
+                return urlTab
         else:
             data = eItem
         
         linksData = self.cm.ph.getAllItemsBeetwenMarkers(data, '<tr class="linkTr"', '</tr>', True)
         for item in linksData:
             url  = self.cm.ph.getDataBeetwenReMarkers(item, re.compile('<td[^>]+?linkHiddenUrl[^>]+?>'), re.compile('</td>'), False)[1].strip()
-            if not self.cm.isValidUrl(url): continue
+            if not self.cm.isValidUrl(url):
+                continue
             tmp = self.cm.ph.getAllItemsBeetwenMarkers(item, '<td', '</td>', True)
             nameTab = []
             nIdx = 0
             for nItem in tmp:
                 nIdx += 1
-                if nIdx in [3, 4]: continue
-                if nIdx > 6: break
+                if nIdx in [3, 4]:
+                    continue
+                if nIdx > 6:
+                    break
                 nItem = self.cleanHtmlStr(nItem)
-                if nItem == 'None': continue
+                if nItem == 'None':
+                    continue
                 nameTab.append(nItem)
             name = ' | '.join(nameTab)
             urlTab.append({'name':name, 'url':url, 'need_resolve':1})
@@ -315,10 +341,12 @@ class LosMovies(CBaseHostClass):
             return []
         
         tab = self.up.getVideoLinkExt(videoUrl)
-        if len(tab): return tab
+        if len(tab):
+            return tab
         
         sts, data = self.getPage(videoUrl, self.defaultParams)
-        if not sts: return []
+        if not sts:
+            return []
         
         printDBG(data)
         
@@ -328,7 +356,8 @@ class LosMovies(CBaseHostClass):
                 params = dict(self.defaultParams)
                 params['cookie_items'] = cookie
                 sts, data = self.getPage(videoUrl, params)
-                if not sts: return []
+                if not sts:
+                    return []
         
         #printDBG(data)
         
@@ -345,7 +374,8 @@ class LosMovies(CBaseHostClass):
         
         for item in tmp:
             url  = self.cm.ph.getSearchGroups(item.replace('\\/', '/'), r'''['"]?{0}['"]?\s*{1}\s*['"](https?://[^"^']+)['"]'''.format(urlAttrName, sp))[0]
-            if not self.cm.isValidUrl(url): continue
+            if not self.cm.isValidUrl(url):
+                continue
             name = self.cm.ph.getSearchGroups(item, r'''['"]?label['"]?\s*{0}\s*['"]?([^"^'^,]+)[,'"]'''.format(sp))[0]
             
             printDBG('---------------------------')
@@ -375,7 +405,8 @@ class LosMovies(CBaseHostClass):
         retTab = []
         
         sts, data = self.getPage(cItem.get('url', ''))
-        if not sts: return retTab
+        if not sts:
+            return retTab
         
         title = self.cleanHtmlStr( self.cm.ph.getSearchGroups(data, '<meta property="og:title"[^>]+?content="([^"]+?)"')[0] )
         desc  = self.cleanHtmlStr( self.cm.ph.getDataBeetwenReMarkers(data, re.compile('showRowDescription[^>]+?>'), re.compile('</div>'), False)[1] )
@@ -385,9 +416,12 @@ class LosMovies(CBaseHostClass):
         
         self.getFullUrl( self.cm.ph.getSearchGroups(data, '<meta property="og:image"[^>]+?content="([^"]+?)"')[0] )
         
-        if title == '': title = cItem['title']
-        if desc == '':  title = cItem['desc']
-        if icon == '':  title = cItem['icon']
+        if title == '':
+            title = cItem['title']
+        if desc == '':
+            title = cItem['desc']
+        if icon == '':
+            title = cItem['icon']
         
         descKeys = [('ImdbRating',   'rated'),
                     ('Actors',      'actors'),
@@ -402,8 +436,10 @@ class LosMovies(CBaseHostClass):
         for item in descKeys:
             val = self.cleanHtmlStr( self.cm.ph.getDataBeetwenMarkers(data, 'showValue%s">' % item[0], '</div>', False)[1] )
             if val != '' and item[1] != '':
-                try: otherInfo[item[1]] = val.replace(' , ', ', ')
-                except Exception: continue
+                try:
+                    otherInfo[item[1]] = val.replace(' , ', ', ')
+                except Exception:
+                    continue
         
         return [{'title':self.cleanHtmlStr( title ), 'text': self.cleanHtmlStr( desc ), 'images':[{'title':'', 'url':self.getFullUrl(icon)}], 'other_info':otherInfo}]
     
@@ -420,7 +456,8 @@ class LosMovies(CBaseHostClass):
         try:
             cItem = byteify(json.loads(fav_data))
             links = self.getLinksForVideo(cItem)
-        except Exception: printExc()
+        except Exception:
+            printExc()
         return links
         
     def setInitListFromFavouriteItem(self, fav_data):

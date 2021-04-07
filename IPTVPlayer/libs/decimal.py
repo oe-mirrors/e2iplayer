@@ -492,7 +492,8 @@ def localcontext(ctx=None):
     >>> print getcontext().prec
     28
     """
-    if ctx is None: ctx = getcontext()
+    if ctx is None:
+        ctx = getcontext()
     return _ContextManager(ctx)
 
 

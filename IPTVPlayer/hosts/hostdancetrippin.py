@@ -53,21 +53,24 @@ class DancetrippinTV(CBaseHostClass):
             self.MAIN_URL = self.cm.getBaseUrl(url)
     
     def getPage(self, baseUrl, addParams = {}, post_data = None):
-        if addParams == {}: addParams = dict(self.defaultParams)
+        if addParams == {}:
+            addParams = dict(self.defaultParams)
         return self.cm.getPage(baseUrl, addParams, post_data)
      
     def listsChannels(self, cItem, nextCategory):
         printDBG("DancetrippinTV.listsChannels")
         
         sts, data = self.getPage(cItem['url'])
-        if not sts: return
+        if not sts:
+            return
         self.setMainUrl(data.meta['url'])
         
         data = self.cm.ph.getDataBeetwenNodes(data, ('<', '>', 'browsenetwork'), ('</ul', '>'), False)[1]
         data = data.split('</li>')
         for item in data:
             url   = self.getFullUrl( self.cm.ph.getSearchGroups(item, '''\shref=['"]([^'^"]+?)['"]''')[0] )
-            if url == '': continue
+            if url == '':
+                continue
             icon  = self.getFullIconUrl( self.cm.ph.getSearchGroups(item, '''\ssrc=['"]([^'^"]+?)['"]''')[0] )
             title = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(item, ('<a', '>'), ('</a', '>'), False)[1])
             params = dict(cItem)
@@ -77,14 +80,16 @@ class DancetrippinTV(CBaseHostClass):
     def listChannel(self, cItem):
         printDBG("DancetrippinTV.listChannel")
         sts, data = self.getPage(cItem['url'])
-        if not sts: return
+        if not sts:
+            return
         self.setMainUrl(data.meta['url'])
         
         data = self.cm.ph.getDataBeetwenNodes(data, ('<div', '>', 'navigation'), ('</div', '>'), False)[1]
         for item in ['menu-videos', 'menu-24', 'menu-djmixes']:
             tmp = self.cm.ph.getDataBeetwenNodes(data, ('<a', '>', item), ('</a', '>'))[1]
             url = self.getFullUrl( self.cm.ph.getSearchGroups(tmp, '''\shref=['"]([^'^"]+?)['"]''')[0] )
-            if url == '': continue
+            if url == '':
+                continue
             if item == 'menu-24':
                 if url.endswith('/channels'):
                     nextCategory = 'playlists24'
@@ -101,14 +106,16 @@ class DancetrippinTV(CBaseHostClass):
     def listPlaylists24(self, cItem, nextCategory):
         printDBG("DancetrippinTV.listPlaylists24")
         sts, data = self.getPage(cItem['url'])
-        if not sts: return
+        if not sts:
+            return
         self.setMainUrl(data.meta['url'])
         
         data = self.cm.ph.getDataBeetwenNodes(data, ('<div', '>', 'grid-content'), ('<footer', '>'), False)[1]
         data = self.cm.ph.rgetAllItemsBeetwenNodes(data, ('</div', '>'), ('<div', '>', '"single'))
         for item in data:
             url  = self.getFullUrl( self.cm.ph.getSearchGroups(item, '''\shref=['"]([^'^"]+?)['"]''')[0] )
-            if url == '': continue
+            if url == '':
+                continue
             icon = self.getFullIconUrl( self.cm.ph.getDataBeetwenMarkers(item, 'url(', ')', False)[1].strip() )
             item = item.split('</h3>', 1)
             title = self.cleanHtmlStr(self.cleanHtmlStr(item[0]))
@@ -120,7 +127,8 @@ class DancetrippinTV(CBaseHostClass):
     def listPlaylist(self, cItem):
         printDBG("DancetrippinTV.listPlaylist")
         sts, data = self.getPage(cItem['url'])
-        if not sts: return
+        if not sts:
+            return
         self.setMainUrl(data.meta['url'])
         
         pevId = cItem.get('last_id', '')
@@ -134,7 +142,8 @@ class DancetrippinTV(CBaseHostClass):
                 continue
             
             streamUrl = self.getFullUrl( self.cm.ph.getSearchGroups(item, '''\sdata\-loc=['"]([^'^"]+?)['"]''')[0] )
-            if streamUrl == '': continue
+            if streamUrl == '':
+                continue
             streamType = self.cm.ph.getSearchGroups(item, '''\sdata\-type=['"]([^'^"]+?)['"]''')[0].lower()
             icon = self.getFullIconUrl( self.cm.ph.getSearchGroups(item, '''\sdata\-poster=['"]([^'^"]+?)['"]''')[0] )
             title = self.cleanHtmlStr(self.cm.ph.rgetDataBeetwenMarkers2(item, '</div>', '<div')[1])
@@ -155,7 +164,8 @@ class DancetrippinTV(CBaseHostClass):
         self.cacheFilters = []
         
         sts, data = self.getPage(cItem['url'])
-        if not sts: return
+        if not sts:
+            return
         self.setMainUrl(data.meta['url'])
         
         hasVideos = False
@@ -164,30 +174,37 @@ class DancetrippinTV(CBaseHostClass):
         reTitleObj = re.compile('''<div[^>]+?genre[^>]+?>''')
         m1 = '"content"'
         m2 = '"content-grid"'
-        if m1 not in data: m1 = m2
+        if m1 not in data:
+            m1 = m2
         
         tmp = self.cm.ph.getDataBeetwenNodes(data, ('<div', '>', 'genrelist'), ('<div', '>', 'content'), False)[1]
         tmp = self.cm.ph.getAllItemsBeetwenNodes(tmp, ('<a', '>'), ('</a', '>'), False)
         for item in tmp:
             item = self.cleanHtmlStr(item)
-            if item == '': continue
+            if item == '':
+                continue
             self.cacheFilters.append(item)
         
         tmp = self.cm.ph.getDataBeetwenNodes(data, ('<div', '>', m1), ('<div', '>', 'show-more'), False)[1]
-        if tmp == '': tmp = data
+        if tmp == '':
+            tmp = data
         data = self.cm.ph.rgetAllItemsBeetwenNodes(tmp, ('</div', '>'), ('<div', '>', '"single'))
         for item in data:
             url   = self.getFullUrl( self.cm.ph.getSearchGroups(item, '''\shref=['"]([^'^"]+?)['"]''')[0] )
-            if url == '': continue
+            if url == '':
+                continue
             icon  = self.cm.ph.getDataBeetwenMarkers(item, 'url(', ')', False)[1].strip()
-            if len(icon) > 2 and icon[0] in ['"', "'"] and icon[-1] in ['"', "'"]: icon = self.getFullIconUrl( icon[1:-1] )
-            else: icon = self.getFullIconUrl( icon )
+            if len(icon) > 2 and icon[0] in ['"', "'"] and icon[-1] in ['"', "'"]:
+                icon = self.getFullIconUrl( icon[1:-1] )
+            else:
+                icon = self.getFullIconUrl( icon )
             
             filters = []
             tmp = self.cm.ph.getAllItemsBeetwenNodes(item, ('<a', '>', 'filter'), ('</a', '>'), False)
             for t in tmp:
                 t = self.cleanHtmlStr(t)
-                if t == '': continue
+                if t == '':
+                    continue
                 filters.append(t)
             
             if len(filters):
@@ -215,8 +232,10 @@ class DancetrippinTV(CBaseHostClass):
             self.cacheItems.append(params)
         
         if hasVideos and hasAudios:
-            if not hasFilters or 0 == len(self.cacheFilters): self.listTypes(cItem, nextCategory2) 
-            else: self.listTypes(cItem, nextCategory1)
+            if not hasFilters or 0 == len(self.cacheFilters):
+                self.listTypes(cItem, nextCategory2) 
+            else:
+                self.listTypes(cItem, nextCategory1)
         elif hasFilters and len(self.cacheFilters):
             self.listFilters(cItem, nextCategory2)
         else:
@@ -234,7 +253,8 @@ class DancetrippinTV(CBaseHostClass):
         for item in self.cacheFilters:
             params = dict(cItem)
             params.update({'good_for_fav':False, 'category':nextCategory, 'title':item})
-            if ' all' not in item.lower(): params['f_filter'] = item
+            if ' all' not in item.lower():
+                params['f_filter'] = item
             self.addDir(params)
     
     def listsItems(self, cItem):
@@ -243,8 +263,10 @@ class DancetrippinTV(CBaseHostClass):
         fFilter = cItem.get('f_filter', None)
         
         for item in self.cacheItems:
-            if fType != None and item['type'] != fType: continue
-            if fFilter != None and fFilter not in item['filters']: continue
+            if fType != None and item['type'] != fType:
+                continue
+            if fFilter != None and fFilter not in item['filters']:
+                continue
             self.currList.append(item)
         
     def listSearchResult(self, cItem, searchPattern, searchType):
@@ -265,7 +287,8 @@ class DancetrippinTV(CBaseHostClass):
             return urlTab
         
         sts, data = self.cm.getPage(cItem['url'])
-        if not sts: return urlTab
+        if not sts:
+            return urlTab
         
         tmp = self.cm.ph.getDataBeetwenMarkers(data, 'videoplayer', '</div>')[1]
         url = self.getFullUrl(self.cm.ph.getSearchGroups(tmp, '''<iframe[^>]+?src=['"]([^"^']+?)['"]''', 1, True)[0]).replace('&amp;', '&')
@@ -287,7 +310,8 @@ class DancetrippinTV(CBaseHostClass):
         else:
             url = self.getFullUrl(self.cm.ph.getSearchGroups(data, '''<iframe[^>]+?src=['"]([^"^']+?)['"]''', 1, True)[0])
             sts, data = self.cm.getPage(url)
-            if not sts: return urlTab
+            if not sts:
+                return urlTab
             hlsUrls = re.compile('''['"]((?:https?:)?//[^'^"]+?\.m3u8(?:\?[^'^"]+?)?)['"]''', re.IGNORECASE).findall(data)
             for url in hlsUrls:
                 urlTab.extend(getDirectM3U8Playlist(self.getFullUrl(url), checkExt=False, checkContent=True, sortWithMaxBitrate=999999999))

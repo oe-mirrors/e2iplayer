@@ -38,12 +38,15 @@ class StreamingHDFun(CBaseHostClass):
         self.defaultParams = {'header':self.HTTP_HEADER, 'with_metadata':True, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
         
     def getPage(self, baseUrl, addParams = {}, post_data = None):
-        if addParams == {}: addParams = dict(self.defaultParams)
+        if addParams == {}:
+            addParams = dict(self.defaultParams)
         origBaseUrl = baseUrl
         baseUrl = self.cm.iriToUri(baseUrl)
         def _getFullUrl(url):
-            if self.cm.isValidUrl(url): return url
-            else: return urllib.parse.urljoin(baseUrl, url)
+            if self.cm.isValidUrl(url):
+                return url
+            else:
+                return urllib.parse.urljoin(baseUrl, url)
         addParams['cloudflare_params'] = {'domain':self.up.getDomain(baseUrl), 'cookie_file':self.COOKIE_FILE, 'User-Agent':self.USER_AGENT, 'full_url_handle':_getFullUrl}
         return self.cm.getPageCFProtection(baseUrl, addParams, post_data)
         
@@ -65,7 +68,8 @@ class StreamingHDFun(CBaseHostClass):
     def listSubMenu(self, cItem, nextCategory1, nextCategory2):
         printDBG("StreamingHDFun.listSubMenu")
         sts, data = self.getPage(cItem['url'])
-        if not sts: return
+        if not sts:
+            return
         cUrl = data.meta['url']
         self.setMainUrl(cUrl)
         
@@ -102,7 +106,8 @@ class StreamingHDFun(CBaseHostClass):
         page = cItem.get('page', 1)
         
         sts, data = self.getPage(cItem['url'])
-        if not sts: return
+        if not sts:
+            return
         self.setMainUrl(data.meta['url'])
         
         nextPage = self.cm.ph.getDataBeetwenNodes(data, ('<div', '>', 'pagination'), ('</div', '>'))[1]
@@ -113,10 +118,13 @@ class StreamingHDFun(CBaseHostClass):
             url = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''href=['"]([^"^']+?)['"]''')[0])
             icon = self.getFullIconUrl(self.cm.ph.getSearchGroups(item, '''src=['"]([^"^']+?)['"]''')[0])
             title = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(item, '<h3', '</h3>')[1])
-            if title  == '': title = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(item, ('<div', '>', 'title'), ('</div', '>'))[1])
-            if cItem['url'].endswith('/seasons/'): title = self.cleanHtmlStr(self.cm.ph.getSearchGroups(item, '''alt=['"]([^"^']+?)['"]''')[0])
+            if title  == '':
+                title = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(item, ('<div', '>', 'title'), ('</div', '>'))[1])
+            if cItem['url'].endswith('/seasons/'):
+                title = self.cleanHtmlStr(self.cm.ph.getSearchGroups(item, '''alt=['"]([^"^']+?)['"]''')[0])
             sTitle = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(item, ('<span', '>', 'serie'), ('</span', '>'))[1])
-            if sTitle != '': title = '%s %s' % (sTitle, title)
+            if sTitle != '':
+                title = '%s %s' % (sTitle, title)
             
             desc = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(item, '<p', '</p>')[1])
             descTab = []
@@ -124,8 +132,10 @@ class StreamingHDFun(CBaseHostClass):
             item =  self.cm.ph.getAllItemsBeetwenMarkers(item, '<span', '</span>')
             for t in item:
                 t = self.cleanHtmlStr(t)
-                if t != '': descTab.append(t)
-            if rating != '': descTab.append('%s/10' % rating)
+                if t != '':
+                    descTab.append(t)
+            if rating != '':
+                descTab.append('%s/10' % rating)
             desc = ' | '.join(descTab) + '[/br]' + desc
             params = {'good_for_fav':True, 'priv_has_art':True, 'category':nextCategory, 'url':url, 'title':title, 'desc':desc, 'icon':icon}
             if '/episodi/' in url:
@@ -142,7 +152,8 @@ class StreamingHDFun(CBaseHostClass):
         printDBG("InteriaTv.listTop")
         
         sts, data = self.getPage(cItem['url'])
-        if not sts: return
+        if not sts:
+            return
         self.setMainUrl(data.meta['url'])
         
         reObj = re.compile('''<div[^>]+?top\-imdb\-item[^>]*>''', re.IGNORECASE)
@@ -151,7 +162,8 @@ class StreamingHDFun(CBaseHostClass):
         for section in data:
             sTitle = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(section, '<h3', '</h3>')[1])
             section = reObj.split(section)
-            if len(section): del section[0]
+            if len(section):
+                del section[0]
             subItems = []
             for item in section:
                 url   = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''href=['"]([^"^']+?)['"]''')[0])
@@ -171,8 +183,10 @@ class StreamingHDFun(CBaseHostClass):
     
     def listSearchResult(self, cItem, searchPattern, searchType):
         printDBG("StreamingHDFun.listSearchResult cItem[%s], searchPattern[%s] searchType[%s]" % (cItem, searchPattern, searchType))
-        if searchType == 'movies': url = '/'
-        else: url = '/serietv/'
+        if searchType == 'movies':
+            url = '/'
+        else:
+            url = '/serietv/'
         
         url = self.getFullUrl(url + '?s=') + urllib.parse.quote_plus(searchPattern)
         cItem = dict(cItem)
@@ -185,7 +199,8 @@ class StreamingHDFun(CBaseHostClass):
         for item in data:
             url = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''href=['"]([^"^']+?)['"]''')[0])
             icon = self.getFullIconUrl(self.cm.ph.getSearchGroups(item, '''src=['"]([^"^']+?)['"]''')[0])
-            if icon == '': icon = iIcon
+            if icon == '':
+                icon = iIcon
             
             numer = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(item, ('<div', '>', 'numerando'), ('</div', '>'))[1])
             title = self.cm.ph.getDataBeetwenNodes(item, ('<div', '>', 'episodiotitle'), ('</div', '>'))[1].split('</a>', 1)
@@ -199,7 +214,8 @@ class StreamingHDFun(CBaseHostClass):
     def exploreItem(self, cItem, nextCategory):
         printDBG("InteriaTv.listItems")
         sts, data = self.getPage(cItem['url'])
-        if not sts: return
+        if not sts:
+            return
         cUrl = data.meta['url']
         self.setMainUrl(cUrl)
         
@@ -241,12 +257,14 @@ class StreamingHDFun(CBaseHostClass):
         
         cacheKey = cItem['url']
         cacheTab = self.cacheLinks.get(cacheKey, [])
-        if len(cacheTab): return cacheTab
+        if len(cacheTab):
+            return cacheTab
         
         self.cacheLinks = {}
         
         sts, data = self.getPage(cItem['url'])
-        if not sts: return
+        if not sts:
+            return
         
         cUrl = data.meta['url']
         self.setMainUrl(cUrl)
@@ -266,7 +284,8 @@ class StreamingHDFun(CBaseHostClass):
             #if 1 != self.up.checkHostSupport(url): continue
             id = self.cm.ph.getSearchGroups(item, '''id=['"]([^"^']+?)['"]''', 1, True)[0]
             name = namesData.get(id, '') + _(' main link')
-            if name == '': name = self.up.getHostName(url)
+            if name == '':
+                name = self.up.getHostName(url)
             retTab.append({'name':name, 'url':strwithmeta(url, {'Referer':cUrl}), 'need_resolve':1})
             
         data = self.cm.ph.getDataBeetwenNodes(data, ('<div', '>', 'links_table'), ('</table', '>'))[1].split('<tbody', 1)[-1]
@@ -275,7 +294,8 @@ class StreamingHDFun(CBaseHostClass):
             url = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''href=['"]([^"^']+?)['"]''')[0])
             
             item = self.cm.ph.getAllItemsBeetwenNodes(item, ('<td', '>'), ('</td', '>'))
-            if len(item) < 2: continue
+            if len(item) < 2:
+                continue
             fakeHostUrl = 'http://%s/' % self.cleanHtmlStr(item[1]).lower()
             #if 1 != self.up.checkHostSupport(fakeHostUrl): continue
             title = []
@@ -311,11 +331,13 @@ class StreamingHDFun(CBaseHostClass):
             paramsUrl['header']['Referer'] = baseUrl.meta['Referer']
             
             sts, data = self.getPage(baseUrl, paramsUrl)
-            if not sts: return
+            if not sts:
+                return
             printDBG(data)
             try:
                 videoUrl = self.getFullUrl(self.cm.ph.getSearchGroups(data, '''location\.href=['"]([^"^']+?)['"]''', 1, True)[0])
-                if videoUrl == '': videoUrl = data.meta['url']
+                if videoUrl == '':
+                    videoUrl = data.meta['url']
                 urlTab = self.up.getVideoLinkExt(videoUrl)
             except Exception:
                 printExc()
@@ -330,12 +352,15 @@ class StreamingHDFun(CBaseHostClass):
         otherInfo = {}
         
         sts, data = self.getPage(cItem['url'])
-        if not sts: return []
+        if not sts:
+            return []
         cUrl = data.meta['url']
         self.setMainUrl(cUrl)
         
-        if '/episodes/' in cUrl: m1 = 'info'
-        else: m1 = 'sheader'
+        if '/episodes/' in cUrl:
+            m1 = 'info'
+        else:
+            m1 = 'sheader'
         data = self.cm.ph.getDataBeetwenNodes(data, ('<div', '>', m1), ('<script', '>'), False)[1]
         
         icon = self.cm.ph.getDataBeetwenNodes(data, ('<div', '>', 'poster'), ('</div', '>'))[1]
@@ -344,31 +369,43 @@ class StreamingHDFun(CBaseHostClass):
         desc = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(data, ('<div', '>', 'wp-content'), ('</div', '>'))[1])
         
         tmp = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(data, ('<div', '>', 'starstruck-rating'), ('</div', '>'), False)[1])
-        if tmp != '': otherInfo['rating'] = tmp
+        if tmp != '':
+            otherInfo['rating'] = tmp
         tmp = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(data, ('<b', '</b>', 'IMDb Rating'), ('</div', '>'), False)[1])
-        if tmp != '': otherInfo['imdb_rating'] = tmp
+        if tmp != '':
+            otherInfo['imdb_rating'] = tmp
         tmp = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(data, ('<b', '</b>', 'TMDb Rating'), ('</div', '>'), False)[1])
-        if tmp != '': otherInfo['tmdb_rating'] = tmp
+        if tmp != '':
+            otherInfo['tmdb_rating'] = tmp
         tmp = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(data, ('<b', '</b>', 'Original title'), ('</div', '>'), False)[1])
-        if tmp != '': otherInfo['original_title'] = tmp
+        if tmp != '':
+            otherInfo['original_title'] = tmp
         tmp = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(data, ('<b', '</b>', 'Status'), ('</div', '>'), False)[1]) 
-        if tmp != '': otherInfo['status'] = tmp
+        if tmp != '':
+            otherInfo['status'] = tmp
         tmp = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(data, ('<b', '</b>', 'Stagioni'), ('</div', '>'), False)[1]) 
-        if tmp != '': otherInfo['seasons'] = tmp
+        if tmp != '':
+            otherInfo['seasons'] = tmp
         tmp = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(data, ('<b', '</b>', 'Episodi'), ('</div', '>'), False)[1]) 
-        if tmp != '': otherInfo['episodes'] = tmp
+        if tmp != '':
+            otherInfo['episodes'] = tmp
         tmp = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(data, ('<span', '>', 'date'), ('</span', '>'), False)[1])
-        if tmp != '': otherInfo['released'] = tmp
+        if tmp != '':
+            otherInfo['released'] = tmp
         tmp = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(data, ('<span', '>', 'country'), ('</span', '>'), False)[1])
-        if tmp != '': otherInfo['country'] = tmp
+        if tmp != '':
+            otherInfo['country'] = tmp
         tmp = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(data, ('<span', '>', 'runtime'), ('</span', '>'), False)[1])
-        if tmp != '': otherInfo['duration'] = tmp
+        if tmp != '':
+            otherInfo['duration'] = tmp
         tmp = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(data, ('<a', '>', '/network/'), ('</a', '>'), False)[1])
-        if tmp != '': otherInfo['station'] = tmp
+        if tmp != '':
+            otherInfo['station'] = tmp
         
         tmp = self.cm.ph.getDataBeetwenNodes(data, ('<div', '>', 'sgeneros'), ('</div', '>'), False)[1]
         tmp = self.cm.ph.getAllItemsBeetwenNodes(tmp, ('<a', '>'), ('</a', '>'), False)
-        if len(tmp): otherInfo['genres'] = self.cleanHtmlStr(', '.join(tmp))
+        if len(tmp):
+            otherInfo['genres'] = self.cleanHtmlStr(', '.join(tmp))
         
         creators = []
         actors = []
@@ -378,18 +415,28 @@ class StreamingHDFun(CBaseHostClass):
         for item in data:
             name = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(item, ('<div', '>', 'name'), ('</div', '>'), False)[1])
             caracter = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(item, ('<div', '>', 'caracter'), ('</div', '>'), False)[1]).lower() 
-            if caracter == 'director': directors.append(name)
-            elif caracter == 'creator': creators.append(name)
-            elif name != '': actors.append(name)
+            if caracter == 'director':
+                directors.append(name)
+            elif caracter == 'creator':
+                creators.append(name)
+            elif name != '':
+                actors.append(name)
         
-        if 1 == len(directors): otherInfo['director'] = self.cleanHtmlStr(', '.join(directors))
-        elif 1 < len(directors): otherInfo['directors'] = self.cleanHtmlStr(', '.join(directors))
-        if 1 == len(creators): otherInfo['creator'] = self.cleanHtmlStr(', '.join(creators))
-        elif 1 < len(creators): otherInfo['creators'] = self.cleanHtmlStr(', '.join(creators))
-        if len(actors): otherInfo['actors'] = self.cleanHtmlStr(', '.join(actors))
+        if 1 == len(directors):
+            otherInfo['director'] = self.cleanHtmlStr(', '.join(directors))
+        elif 1 < len(directors):
+            otherInfo['directors'] = self.cleanHtmlStr(', '.join(directors))
+        if 1 == len(creators):
+            otherInfo['creator'] = self.cleanHtmlStr(', '.join(creators))
+        elif 1 < len(creators):
+            otherInfo['creators'] = self.cleanHtmlStr(', '.join(creators))
+        if len(actors):
+            otherInfo['actors'] = self.cleanHtmlStr(', '.join(actors))
         
-        if title == '': title = cItem['title']
-        if icon == '':  icon = cItem.get('icon', self.DEFAULT_ICON_URL)
+        if title == '':
+            title = cItem['title']
+        if icon == '':
+            icon = cItem.get('icon', self.DEFAULT_ICON_URL)
         
         return [{'title':self.cleanHtmlStr( title ), 'text': self.cleanHtmlStr( desc ), 'images':[{'title':'', 'url':self.getFullUrl(icon)}], 'other_info':otherInfo}]
     
@@ -439,8 +486,10 @@ class IPTVHost(CHostBase):
         CHostBase.__init__(self, StreamingHDFun(), True, [])
         
     def withArticleContent(self, cItem):
-        if cItem.get('priv_has_art', False): return True
-        else: return False
+        if cItem.get('priv_has_art', False):
+            return True
+        else:
+            return False
         
     def getSearchTypes(self):
         searchTypesOptions = []

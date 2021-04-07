@@ -14,8 +14,10 @@ from Plugins.Extensions.IPTVPlayer.tools.iptvtypes import strwithmeta
 import urllib.parse
 import re
 import base64
-try:    import json
-except Exception: import simplejson as json
+try:
+    import json
+except Exception:
+    import simplejson as json
 ###################################################
 
 
@@ -42,26 +44,31 @@ class KinogoCC(CBaseHostClass):
         self.cacheFiltersKeys = []
         
     def getPage(self, baseUrl, addParams = {}, post_data = None):
-        if addParams == {}: addParams = dict(self.defaultParams)
+        if addParams == {}:
+            addParams = dict(self.defaultParams)
         origBaseUrl = baseUrl
         baseUrl = self.cm.iriToUri(baseUrl)
         def _getFullUrl(url):
-            if self.cm.isValidUrl(url): return url
-            else: return urllib.parse.urljoin(baseUrl, url)
+            if self.cm.isValidUrl(url):
+                return url
+            else:
+                return urllib.parse.urljoin(baseUrl, url)
         addParams['cloudflare_params'] = {'domain':self.up.getDomain(baseUrl), 'cookie_file':self.COOKIE_FILE, 'User-Agent':self.USER_AGENT, 'full_url_handle':_getFullUrl}
         return self.cm.getPageCFProtection(baseUrl, addParams, post_data)
         
     def listMainMenu(self, cItem):
         printDBG("KinogoCC.listMainMenu")
         sts, data = self.getPage(self.getMainUrl())
-        if not sts: return
+        if not sts:
+            return
         self.setMainUrl(data.meta['url'])
         
         tmp = self.cm.ph.getDataBeetwenNodes(data, ('<table', '>', 'menu'), ('</table', '>'), False)[1]
         tmp = self.cm.ph.getAllItemsBeetwenMarkers(tmp, '<a', '</a>')
         for item in tmp:
             url = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''href=['"]([^'^"]+?)['"]''')[0])
-            if not url.endswith('/'): continue
+            if not url.endswith('/'):
+                continue
             title = self.cleanHtmlStr(item)
             params = dict(cItem)
             params.update({'good_for_fav':True, 'category':'list_items', 'title':title, 'url':url})
@@ -108,7 +115,8 @@ class KinogoCC(CBaseHostClass):
         post_data = cItem.get('post_data', None)
         
         sts, data = self.getPage(cItem['url'], post_data=post_data)
-        if not sts: return
+        if not sts:
+            return
         self.setMainUrl(data.meta['url'])
             
         nextPage = self.cm.ph.getDataBeetwenNodes(data, ('<div', '>', 'bot-navigation'), ('</div', '>'))[1]
@@ -134,9 +142,12 @@ class KinogoCC(CBaseHostClass):
             item = brReObj.split(item)
             for idx in range(len(item)):
                 t = self.cleanHtmlStr(item[idx])
-                if t == '': continue
-                if len(descTab) == 0: descTab.append(t)
-                else: descTab.insert(1, t)
+                if t == '':
+                    continue
+                if len(descTab) == 0:
+                    descTab.append(t)
+                else:
+                    descTab.insert(1, t)
             descTab.append('Дата: %s, %s/5' % (date, rating))
             params = {'good_for_fav':True, 'category':nextCategory, 'url':url, 'title':title, 'desc':'[/br]'.join(descTab[::-1]), 'icon':icon}
             self.addDir(params)
@@ -156,10 +167,13 @@ class KinogoCC(CBaseHostClass):
         printDBG("KinogoCC.listSearchResult cItem[%s], searchPattern[%s] searchType[%s]" % (cItem, searchPattern, searchType))
         url = self.getFullUrl('/index.php?do=search')
         sts, data = self.getPage(url)
-        if not sts: return
+        if not sts:
+            return
         if 'orig_charset' in data.meta:
-            try: searchPattern = searchPattern.decode('UTF-8').encode(data.meta['orig_charset'])
-            except Exception: printExc()
+            try:
+                searchPattern = searchPattern.decode('UTF-8').encode(data.meta['orig_charset'])
+            except Exception:
+                printExc()
         
         searchPattern = self.cm.urlEncodeNonAscii(searchPattern)
         post_data = {'do':'search', 'subaction':'search', 'search_start':1, 'full_search':0, 'result_from':1, 'story':searchPattern}
@@ -169,7 +183,8 @@ class KinogoCC(CBaseHostClass):
     def exploreItem(self, cItem, nextCategory):
         printDBG("KinogoCC.listItems")
         sts, data = self.getPage(cItem['url'])
-        if not sts: return
+        if not sts:
+            return
         self.setMainUrl(data.meta['url'])
         
         data = self.cm.ph.getDataBeetwenNodes(data, ('<div', '>', 'section'), ('<', '>', 'social'))[1]
@@ -177,8 +192,10 @@ class KinogoCC(CBaseHostClass):
         
         titles = self.cm.ph.getDataBeetwenNodes(data, ('<ul', '>', 'tabs'), ('</ul', '>'))[1]
         titles = self.cm.ph.getAllItemsBeetwenMarkers(titles, '<li', '</li>')
-        if len(titles) == 0: titles.append(_('watch'))
-        if len(titles) < 2: titles.append(_('trailer'))
+        if len(titles) == 0:
+            titles.append(_('watch'))
+        if len(titles) < 2:
+            titles.append(_('trailer'))
         
         # trailer
         iTrailer = self.cm.ph.getSearchGroups(data, '''['"](https?://[^'^"]*?youtube[^'^"]*?watch[^'^"]*?)['"]''')[0]
@@ -219,13 +236,15 @@ class KinogoCC(CBaseHostClass):
                             urlParams = dict(self.defaultParams)
                             urlParams['convert_charset'] = False
                             sts, tmp = self.getPage(url, urlParams)
-                            if not sts: continue
+                            if not sts:
+                                continue
                             printDBG(">>\n%s\n<<" % tmp)
                             tmp = tmp.split('},')
                             for item in tmp:
                                 title =  self.cleanHtmlStr( self.cm.ph.getSearchGroups(item, '''['"]comment['"]\s*?:\s*?['"]([^'^"]+?)['"]''')[0] )
                                 url = self.cm.ph.getSearchGroups(item, '''['"]file['"]\s*?:\s*?['"](https?://[^'^"]+?)['"]''')[0]
-                                if url == '': continue
+                                if url == '':
+                                    continue
                                 params = dict(cItem)
                                 params.update({'good_for_fav':False, 'title':'%s %s' % (cItem['title'], title), 'url':url})
                                 self.addVideo(params)
@@ -237,8 +256,10 @@ class KinogoCC(CBaseHostClass):
             for item in data:
                 name = item.split('?', 1)[0].split('.')[-1]
                 params = {'name':name, 'url':strwithmeta(item, {'Referer':self.getMainUrl()}), 'need_resolve':0}
-                if name == 'flv': urlsTab.insert(0, params)
-                else: urlsTab.append(params)
+                if name == 'flv':
+                    urlsTab.insert(0, params)
+                else:
+                    urlsTab.append(params)
             
             if len(urlsTab):
                 params = dict(cItem)

@@ -75,7 +75,8 @@ class FreeDiscPL(CBaseHostClass):
         
     def getPage(self, url, params={}, post_data=None):
         mainParamsUrl = params
-        if mainParamsUrl == {}: mainParamsUrl = dict(self.defaultParams)
+        if mainParamsUrl == {}:
+            mainParamsUrl = dict(self.defaultParams)
 
         while True:
             sts, data = self.cm.getPage(url, mainParamsUrl, post_data)
@@ -84,7 +85,8 @@ class FreeDiscPL(CBaseHostClass):
                 if 'sitekey' in tmp:
                     errorMsg = [_('Link protected with google recaptcha v2.')]
                     errorMsg.append(_("Please visit \"%s\" and confirm that you are human." % self.getMainUrl()))
-                    if not self.loggedIn: errorMsg.append(_('Please register and set login and password in the host configuration, to solve this problems permanently.'))
+                    if not self.loggedIn:
+                        errorMsg.append(_('Please register and set login and password in the host configuration, to solve this problems permanently.'))
                     errorMsg = '\n'.join(errorMsg)
                     GetIPTVNotify().push(errorMsg, 'info', 10)
                     SetIPTVPlayerLastHostError(errorMsg)
@@ -103,22 +105,27 @@ class FreeDiscPL(CBaseHostClass):
                     captchaLabel = self.cleanHtmlStr(ph.getattr(tmp, 'placeholder'))
                     captchaLabel = '%s %s' % (sendLabel, captchaLabel)
 
-                    if captchaLabel.strip() == '': captchaLabel = _('Captcha')
-                    if captchaTitle == '': captchaTitle = captchaLabel
-                    else: captchaTitle = '%s\n\n%s' % (captchaTitle, captchaLabel)
+                    if captchaLabel.strip() == '':
+                        captchaLabel = _('Captcha')
+                    if captchaTitle == '':
+                        captchaTitle = captchaLabel
+                    else:
+                        captchaTitle = '%s\n\n%s' % (captchaTitle, captchaLabel)
                     sendLabel = _('Send')
 
                     imgUrl = self.getFullIconUrl(ph.search(tmp, ph.IMAGE_SRC_URI_RE)[1], cUrl)
 
                     actionUrl = self.getFullUrl(ph.getattr(tmp, 'action'), cUrl)
-                    if actionUrl == '': actionUrl = cUrl
+                    if actionUrl == '':
+                        actionUrl = cUrl
                     raw_post = ph.findall(tmp, '<input', '>', flags=ph.IGNORECASE)
                     printDBG(tmp)
                     captcha_post_data = {}
                     for it in raw_post:
                         val = ph.getattr(it, 'value').strip()
                         name = ph.getattr(it, 'name')
-                        if name == '': continue
+                        if name == '':
+                            continue
                         captcha_post_data[name] = val
 
                     header = dict(self.HTTP_HEADER)
@@ -172,19 +179,22 @@ class FreeDiscPL(CBaseHostClass):
             params['name']  = 'category'
             if type == 'dir':
                 self.addDir(params)
-            else: self.addVideo(params)
+            else:
+                self.addVideo(params)
         
     def listItems(self, cItem):
         printDBG("FreeDiscPL.listItems")
         filter = cItem.get('filter', '')
         type = self.TYPES.get(filter, -1)
-        if type == -1: return
+        if type == -1:
+            return
         
         page      = cItem.get('page', 0)
         url       = cItem['url'] % (type) + '{0}'.format(page)
         
         sts, data = self.getPage(url)
-        if not sts: return
+        if not sts:
+            return
         
         try:
             data = json_loads(data)['response']
@@ -194,11 +204,13 @@ class FreeDiscPL(CBaseHostClass):
                 data = data['html_newest']
             splitMarker = "<div class='imageDisplay'>"
             data = data.split(splitMarker)
-            if len(data): del data[0]
+            if len(data):
+                del data[0]
             for item in data:
                 icon  = self.cm.ph.getSearchGroups(item, '''url\(['"]([^'^"]+?)['"]''')[0]
                 url = self.cm.ph.getSearchGroups(item, '''href=['"]([^'^"]+?)['"]''')[0]
-                if url == '': continue
+                if url == '':
+                    continue
                 title = self.cm.ph.getSearchGroups(item, '''title=['"]([^'^"]+?)['"]''')[0]
                 
                 params = dict(cItem)
@@ -222,7 +234,8 @@ class FreeDiscPL(CBaseHostClass):
         page = cItem.get('page', 0)
         
         post_data = {"search_phrase":cItem.get('f_search_pattern', ''), "search_type":cItem.get('f_search_type', ''), "search_saved":0, "pages":0, "limit":0}
-        if page > 0: post_data['search_page'] = page
+        if page > 0:
+            post_data['search_page'] = page
         
         params = dict(self.defaultParams)
         params['raw_post_data'] = True
@@ -230,7 +243,8 @@ class FreeDiscPL(CBaseHostClass):
         params['header']['Referer']= self.cm.getBaseUrl(self.getMainUrl()) + 'search/%s/%s' % (cItem.get('f_search_type', ''), urllib.parse.quote(cItem.get('f_search_pattern', '')))
         
         sts, data = self.getPage(cItem['url'], params, json_dumps(post_data))
-        if not sts: return
+        if not sts:
+            return
         
         printDBG(data)
         
@@ -248,7 +262,8 @@ class FreeDiscPL(CBaseHostClass):
                 desc += '[/br]' + (_('Added by: %s, directory: %s') % (userItem['display'], dirItem['name']))
                 params = dict(cItem)
                 params.update({'good_for_fav':True, 'f_user_item':userItem, 'f_dir_item':dirItem, 'category':nextCategory, 'title':self.cleanHtmlStr(title), 'url':self.getFullUrl(url), 'icon':self.getFullIconUrl(icon), 'desc':desc, 'f_type':item.get('type_fk', '')})
-                if params['f_type'] in ['7', '6']: self.addDir(params)
+                if params['f_type'] in ['7', '6']:
+                    self.addDir(params)
             if data['pages'] > page:
                 params = dict(cItem)
                 params.update({'good_for_fav':False, 'title':_('Next page'), 'page':page+1})
@@ -265,8 +280,10 @@ class FreeDiscPL(CBaseHostClass):
         
         type = cItem.get('f_type', '')
         
-        if type == '7': self.addVideo(cItem)
-        elif type == '6': self.addAudio(cItem)
+        if type == '7':
+            self.addVideo(cItem)
+        elif type == '6':
+            self.addAudio(cItem)
         
         try:
             if userItem != {}:
@@ -309,7 +326,8 @@ class FreeDiscPL(CBaseHostClass):
                 self.treeCache = {}
                 url = self.getFullUrl('/directory/directory_data/get_tree/%s' % (userId))
                 sts, data = self.getPage(url, urlParams)
-                if not sts: return
+                if not sts:
+                    return
                 
                 self.treeCache[userId] = json_loads(data, '', True)['response']['data']
             
@@ -322,7 +340,8 @@ class FreeDiscPL(CBaseHostClass):
                 dirsTab.sort(key=lambda item: item['name']) #, reverse=True)
                 
                 for item in dirsTab:
-                    if item['id'] in ['0', dirId]: continue
+                    if item['id'] in ['0', dirId]:
+                        continue
                     url = '/%s,d-%s,%s' % (userId, item['id'], item['name_url'])
                     title = self.cleanHtmlStr(item['name'])
                     desc = ['Katalogów: %s' % item['dir_count']]
@@ -334,7 +353,8 @@ class FreeDiscPL(CBaseHostClass):
             # now files data
             url = self.getFullUrl('/directory/directory_data/get/%s/%s' % (userId, dirId))
             sts, data = self.getPage(url, urlParams)
-            if not sts: return
+            if not sts:
+                return
 
             data = json_loads(data, '', True)['response']['data']
             if 'data' in data:
@@ -345,8 +365,10 @@ class FreeDiscPL(CBaseHostClass):
                 filesTab.sort(key=lambda item: item['name']) #, reverse=True)
                 url = self.getFullIconUrl('/static/img/icons/big_dir.png')
                 for item in filesTab:
-                    if '7' == item['type_fk']: icon = 'http://img.freedisc.pl/photo/%s/7/2/%s.png' % (item['id'], item['name_url'])
-                    else: icon = ''
+                    if '7' == item['type_fk']:
+                        icon = 'http://img.freedisc.pl/photo/%s/7/2/%s.png' % (item['id'], item['name_url'])
+                    else:
+                        icon = ''
                     
                     url = '/%s,f-%s,%s' % (userId, item['id'], item['name_url'])
                     title = self.cleanHtmlStr(item['name'])
@@ -366,7 +388,8 @@ class FreeDiscPL(CBaseHostClass):
                 if tmpId in self.treeCache[userId][key]:
                     parentId = self.treeCache[userId][key][tmpId]['parent_id']
                     break
-            if parentId == None: return
+            if parentId == None:
+                return
             
             item = None
             # find parent id item
@@ -375,7 +398,8 @@ class FreeDiscPL(CBaseHostClass):
                 if tmpId in self.treeCache[userId][key]:
                     item = self.treeCache[userId][key][tmpId]
                     break
-            if item == None: return
+            if item == None:
+                return
             
             if item['id'] not in ['0', dirId, cItem.get('f_prev_dir_id', '')]:
                 url = '/%s,d-%s,%s' % (userId, item['id'], item['name_url'])
@@ -404,7 +428,8 @@ class FreeDiscPL(CBaseHostClass):
             try:
                 cItem = json_loads(fav_data)
                 links = self.getLinksForVideo(cItem)
-            except Exception: printExc()
+            except Exception:
+                printExc()
         return links
         
     def tryTologin(self):
@@ -417,7 +442,8 @@ class FreeDiscPL(CBaseHostClass):
             self.password = config.plugins.iptvplayer.freediscpl_password.value
             
             sts, data = self.getPage(self.getMainUrl())
-            if not sts: return None
+            if not sts:
+                return None
             
             if 200 != data.meta.get('status_code', 0):
                 return None
@@ -426,7 +452,8 @@ class FreeDiscPL(CBaseHostClass):
             self.loginMessage = ''
             
             if '' == self.login.strip() or '' == self.password.strip():
-                if 'btnLogout' in data: rm(self.COOKIE_FILE)
+                if 'btnLogout' in data:
+                    rm(self.COOKIE_FILE)
                 return False
             
             params = dict(self.defaultParams)
@@ -436,12 +463,15 @@ class FreeDiscPL(CBaseHostClass):
             
             post_data = {"email_login":self.login,"password_login":self.password,"remember_login":1,"provider_login":""}
             sts, data = self.getPage(self.getFullUrl('/account/signin_set'), params, json_dumps(post_data))
-            if not sts: return None
+            if not sts:
+                return None
             
             try:
                 data = json_loads(data)
-                if data['success'] == True: self.loggedIn = True
-                else: errMsg = [self.cleanHtmlStr(data['response']['info'])]
+                if data['success'] == True:
+                    self.loggedIn = True
+                else:
+                    errMsg = [self.cleanHtmlStr(data['response']['info'])]
             except Exception:
                 printExc()
             

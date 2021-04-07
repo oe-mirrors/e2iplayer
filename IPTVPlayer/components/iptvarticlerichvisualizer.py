@@ -58,7 +58,8 @@ class IPTVArticleRichVisualizer(Screen):
             skin += """<widget name="dsc_label_%d" noWrap="1" position="%d,%d"  zPosition="1" size="%d,%d"  font="Regular;20" halign="right" valign="center"   transparent="1" backgroundColor="transparent" foregroundColor="#000E83F5" shadowColor="black" shadowOffset="-1,-1" />""" % (idx+1, self.richDesc['row_label_x'], y, self.richDesc['row_label_w'], self.richDesc['row_h'])
             skin += """<widget name="dsc_text_%d"  noWrap="1" position="%d,%d"  zPosition="1" size="%d,%d"  font="Regular;20" halign="left"  valign="center"   transparent="1" backgroundColor="transparent" foregroundColor="#00EFEFEF" shadowColor="black" shadowOffset="-1,-1" />""" % (idx+1, self.richDesc['row_text_x'], y, self.richDesc['row_text_w'], self.richDesc['row_h'])
             y += self.richDesc['row_h']
-        if y != self.richDesc['row_y']: y += self.richDesc['row_h']
+        if y != self.richDesc['row_y']:
+            y += self.richDesc['row_h']
         skin += """<widget name="text"        position="260,%d" zPosition="1" size="780,%d" font="Regular;26" halign="left"  valign="top"      transparent="1" backgroundColor="transparent" foregroundColor="#00EFEFEF" />""" % (y, 625 - y - 5)
         
         # adds pagination items
@@ -72,7 +73,8 @@ class IPTVArticleRichVisualizer(Screen):
 
             for idx in range(self.richDesc['pages_count']):
                 pageItemX = self.richDesc['page_item_start_x'] + idx * self.richDesc['page_item_size']
-                if 0 == idx: skin += """<widget name="page_marker" zPosition="3" position="%d,%d" size="%d,%d" transparent="1" alphatest="blend" />""" % (pageItemX, self.richDesc['page_item_start_y'], self.richDesc['page_item_size'], self.richDesc['page_item_size'] )
+                if 0 == idx:
+                    skin += """<widget name="page_marker" zPosition="3" position="%d,%d" size="%d,%d" transparent="1" alphatest="blend" />""" % (pageItemX, self.richDesc['page_item_start_y'], self.richDesc['page_item_size'], self.richDesc['page_item_size'] )
                 skin += """<ePixmap zPosition="2" position="%d,%d" size="%d,%d" pixmap="%s" transparent="1" alphatest="blend" />\n""" % (pageItemX, self.richDesc['page_item_start_y'], self.richDesc['page_item_size'], self.richDesc['page_item_size'], GetIconDir('radio_button_off.png') )
         skin += '</screen>'
         self.skin = skin
@@ -104,7 +106,8 @@ class IPTVArticleRichVisualizer(Screen):
             self.richDesc['pages_count'] += 1
         if self.richDesc['items_count'] < self.MAX_RICH_DESC_ROW_NUM:
             self.richDesc['rows_count'] = self.richDesc['items_count']
-        else: self.richDesc['rows_count'] = self.MAX_RICH_DESC_ROW_NUM
+        else:
+            self.richDesc['rows_count'] = self.MAX_RICH_DESC_ROW_NUM
         #############################################
         
         self.__prepareSkin()
@@ -124,7 +127,8 @@ class IPTVArticleRichVisualizer(Screen):
         self.cover = {'src':'', 'downloader':None, 'files_to_remove':[], 'image_path':''}
         try:
             self.cover['image_path'] = os.path.join(addParams['buffering_path'], '.iptv_buffering.jpg')
-        except Exception: printExc()
+        except Exception:
+            printExc()
         #############################################
         
         #############################################
@@ -133,9 +137,11 @@ class IPTVArticleRichVisualizer(Screen):
         try:
             for idx in range(5):
                 spinnerName = "spinner"
-                if idx: spinnerName += '_%d' % idx 
+                if idx:
+                    spinnerName += '_%d' % idx 
                 self[spinnerName] = Cover3()
-        except Exception: printExc()
+        except Exception:
+            printExc()
         self.spinner = {}
         self.spinner["pixmap"] = [LoadPixmap(GetIconDir('radio_button_on.png')), LoadPixmap(GetIconDir('radio_button_off.png'))]
         # spinner timer
@@ -188,9 +194,11 @@ class IPTVArticleRichVisualizer(Screen):
     #############################################
     def loadCover(self):
         self["cover"].hide()
-        if 0 == len(self.artItem.images): return
+        if 0 == len(self.artItem.images):
+            return
         self.cover['src'] = self.artItem.images[0].get('url', '')
-        if not self.cover['src'].startswith('http'): return
+        if not self.cover['src'].startswith('http'):
+            return
         
         self.cover['downloader'] = DownloaderCreator( self.cover['src'] )
         if self.cover['downloader']:
@@ -204,7 +212,8 @@ class IPTVArticleRichVisualizer(Screen):
             self.cover['downloader'] .subscribeFor_Finish(self.downloaderEnd)
             self.cover['downloader'] .start(url, self._getDownloadFilePath(), downloaderParams)
             self.showSpinner()
-        else: self.session.openWithCallback(self.close, MessageBox, _("Downloading cannot be started.\n Downloader [%s] not working properly.\n Status[%s]") % (self.cover['downloader'].getName(), reason.strip()), type = MessageBox.TYPE_ERROR, timeout = 10 )        
+        else:
+            self.session.openWithCallback(self.close, MessageBox, _("Downloading cannot be started.\n Downloader [%s] not working properly.\n Status[%s]") % (self.cover['downloader'].getName(), reason.strip()), type = MessageBox.TYPE_ERROR, timeout = 10 )        
         
     def _getDownloadFilePath(self):
         self.cover['files_to_remove'].append(self.cover['image_path'])
@@ -237,8 +246,10 @@ class IPTVArticleRichVisualizer(Screen):
             
         for filePath in self.cover['files_to_remove']:
             if fileExists(filePath):
-                try: os.remove(filePath)
-                except Exception: printDBG('Problem with removing old buffering file')
+                try:
+                    os.remove(filePath)
+                except Exception:
+                    printDBG('Problem with removing old buffering file')
     #################################################
     
     #######################################################################
@@ -251,7 +262,8 @@ class IPTVArticleRichVisualizer(Screen):
                 for idx in range(4):
                     spinnerName = 'spinner_%d' % (idx + 1)
                     self[spinnerName].setPixmap(self.spinner["pixmap"][1])
-        except Exception: printExc()
+        except Exception:
+            printExc()
         
     def showSpinner(self):
         if None != self.spinner["timer"]:
@@ -267,9 +279,11 @@ class IPTVArticleRichVisualizer(Screen):
             if "spinner" in self:
                 for idx in range(5):
                     spinnerName = "spinner"
-                    if idx: spinnerName += '_%d' % idx
+                    if idx:
+                        spinnerName += '_%d' % idx
                     self[spinnerName].visible = visible
-        except Exception: printExc()
+        except Exception:
+            printExc()
         
     def updateSpinner(self):
         try:
@@ -284,7 +298,8 @@ class IPTVArticleRichVisualizer(Screen):
                     self.spinner["timer"].start(self.spinner["timer_interval"], True)
                     return
             self.hideSpinner()
-        except Exception: printExc()
+        except Exception:
+            printExc()
     #######################################################################
     
     #######################################################################
@@ -295,9 +310,11 @@ class IPTVArticleRichVisualizer(Screen):
         
     def setRichDesc(self):
         printDBG("IPTVArticleRichVisualizer.setRichDesc")
-        if 0 == self.richDesc['items_count']: return
+        if 0 == self.richDesc['items_count']:
+            return
         firstIdx = self.richDesc['rows_count'] * self.richDesc['page']
-        if firstIdx >= self.richDesc['items_count']: return
+        if firstIdx >= self.richDesc['items_count']:
+            return
         
         printDBG("IPTVArticleRichVisualizer.setRichDesc firstIdx[%d]" % firstIdx)
         try:

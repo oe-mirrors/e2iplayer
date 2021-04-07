@@ -14,8 +14,10 @@ import re
 import urllib.request
 import urllib.parse
 import urllib.error
-try:    import json
-except Exception: import simplejson as json
+try:
+    import json
+except Exception:
+    import simplejson as json
 ###################################################
 
 
@@ -76,16 +78,18 @@ class GreekDocumentaries3(CBaseHostClass):
             params['name']  = 'category'
             if type == 'dir':
                 self.addDir(params)
-            else: self.addVideo(params)
+            else:
+                self.addVideo(params)
             
     def fillCategories(self):
         printDBG("GreekDocumentaries3.fillCategories")
         self.cacheFilters = {}
         sts, data = self.cm.getPage(self.MAIN_URL)
-        if not sts: return
+        if not sts:
+            return
         
-        for cat in  [('labels', 'list-label-widget-content', '</ul>'), \
-                     ('categories', 'ΚΑΤΗΓΟΡΙΕΣ', 'ΠΑΡΑΓΩΓΗΣ'), \
+        for cat in  [('labels', 'list-label-widget-content', '</ul>'),
+                     ('categories', 'ΚΑΤΗΓΟΡΙΕΣ', 'ΠΑΡΑΓΩΓΗΣ'),
                      ('programs', 'ΠΑΡΑΓΩΓΗΣ', '</ul>')]:
             self.cacheFilters[cat[0]] = [] 
             tmp = self.cm.ph.getDataBeetwenMarkers(data, cat[1], cat[2], False)[1]
@@ -114,7 +118,8 @@ class GreekDocumentaries3(CBaseHostClass):
             url += cItem['url_suffix']
         
         sts, data = self.cm.getPage(url) #, {'header':self.AJAX_HEADER}
-        if not sts: return
+        if not sts:
+            return
         
         nextPageUrl = self.cm.ph.getDataBeetwenMarkers(data, "<span id='blog-pager-older-link'>", '</span>', False)[1]
         nextPageUrl = self.cm.ph.getSearchGroups(nextPageUrl, '<a[^<]+?href=\'([^"]+?)\'')[0]
@@ -141,7 +146,8 @@ class GreekDocumentaries3(CBaseHostClass):
     def exploreItem(self, cItem):
         printDBG("GreekDocumentaries3.exploreItem")
         sts, data = self.cm.getPage(cItem['url'])
-        if not sts: return
+        if not sts:
+            return
         
         data = data.split('</button>')
         
@@ -158,14 +164,15 @@ class GreekDocumentaries3(CBaseHostClass):
         data = data[0]
         
         added = False 
-        for m in [('<span style="color: ', '</iframe>', False, True),\
-                  ('</iframe>', '<b>', True, True),\
+        for m in [('<span style="color: ', '</iframe>', False, True),
+                  ('</iframe>', '<b>', True, True),
                   ('<iframe ', '</iframe>', False, False)]:
                   
             #"<div style='clear: both;'>"
             if 1 == m[3]:
                 idx = data.find('Γλώσσα:')
-            else: idx = -1
+            else:
+                idx = -1
             if idx > -1:
                 tmp = data[idx:]
             else:
@@ -185,10 +192,12 @@ class GreekDocumentaries3(CBaseHostClass):
                 idx = title.find('Επεισόδιο')
                 if idx > -1:
                     title = title[idx:]
-                if title == "": title = cItem['title']
+                if title == "":
+                    title = cItem['title']
                 videoUrl = self.cm.ph.getSearchGroups(item, '''<iframe[^>]+?src=['"]([^"^']+?)['"]''', 1, True)[0]
                 videoUrl = self._getFullUrl(videoUrl)
-                if not videoUrl.startswith('http'): continue
+                if not videoUrl.startswith('http'):
+                    continue
                 params = dict(cItem)
                 params.update({'title':title, 'url':videoUrl})
                 self.addVideo(params)
@@ -260,7 +269,8 @@ class IPTVHost(CHostBase):
     def getLinksForVideo(self, Index = 0, selItem = None):
         retCode = RetHost.ERROR
         retlist = []
-        if not self.isValidIndex(Index): return RetHost(retCode, value=retlist)
+        if not self.isValidIndex(Index):
+            return RetHost(retCode, value=retlist)
         
         urlList = self.host.getLinksForVideo(self.host.currList[Index])
         for item in urlList:

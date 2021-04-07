@@ -36,8 +36,10 @@ from Components.Label import Label
 from Tools.BoundFunction import boundFunction
 from Tools.Directories import resolveFilename, SCOPE_PLUGINS
 
-try:    import json
-except Exception: import simplejson as json
+try:
+    import json
+except Exception:
+    import simplejson as json
 
 from os import path as os_path, remove as os_remove, listdir as os_listdir
 ###################################################
@@ -300,7 +302,8 @@ class UpdateMainAppImpl(IUpdateObjectInterface):
 
         try:
             # get new version
-            with open (newVerFile, "r") as verFile: data = verFile.read()
+            with open (newVerFile, "r") as verFile:
+                data = verFile.read()
             newVerNum = CParsingHelper.getSearchGroups(data, verPattern)[0]
             if newVerNum != self.serversList[self.currServIdx]['version']:
                 code = -1
@@ -592,13 +595,13 @@ class UpdateMainAppImpl(IUpdateObjectInterface):
                 self.copyBinariesCmdList.append( 'cp -f "%s/libs/e2icjson/e2icjson.so" "%s/libs/e2icjson/e2icjson.so"  2>&1 ' % (os_path.join(self.ExtensionPath, 'IPTVPlayer'), os_path.join(self.ExtensionTmpPath, 'IPTVPlayer')) )
 
             binPath = "%s/bin/" % (os_path.join(self.ExtensionPath, 'IPTVPlayer'))
-            binariesTab = [('exteplayer3', config.plugins.iptvplayer.exteplayer3path.value), \
-                           ('gstplayer', config.plugins.iptvplayer.gstplayerpath.value), \
-                           ('wget', config.plugins.iptvplayer.wgetpath.value), \
-                           ('hlsdl', config.plugins.iptvplayer.hlsdlpath.value), \
-                           ('cmdwrap', config.plugins.iptvplayer.cmdwrappath.value), \
-                           ('duk', config.plugins.iptvplayer.dukpath.value), \
-                           ('f4mdump', config.plugins.iptvplayer.f4mdumppath.value), \
+            binariesTab = [('exteplayer3', config.plugins.iptvplayer.exteplayer3path.value),
+                           ('gstplayer', config.plugins.iptvplayer.gstplayerpath.value),
+                           ('wget', config.plugins.iptvplayer.wgetpath.value),
+                           ('hlsdl', config.plugins.iptvplayer.hlsdlpath.value),
+                           ('cmdwrap', config.plugins.iptvplayer.cmdwrappath.value),
+                           ('duk', config.plugins.iptvplayer.dukpath.value),
+                           ('f4mdump', config.plugins.iptvplayer.f4mdumppath.value),
                            ('uchardet', config.plugins.iptvplayer.uchardetpath.value)]
             for binItem in binariesTab:
                 if binPath in binItem[1]:
@@ -710,7 +713,8 @@ class UpdateMainAppImpl(IUpdateObjectInterface):
             verPattern = self.VERSION_PATTERN
             if os_path.isfile(newVerFile):
                 try:
-                    with open (newVerFile, "r") as verFile: data = verFile.read()
+                    with open (newVerFile, "r") as verFile:
+                        data = verFile.read()
                     newVerNum = CParsingHelper.getSearchGroups(data, verPattern)[0]
                 except Exception:
                     printExc()
@@ -729,10 +733,14 @@ class UpdateMainAppImpl(IUpdateObjectInterface):
 
     def __serversListDownloadFinished(self, arg, status):
         def ServerComparator(x, y):
-            try:    val1 = int(x['version'].replace('.', ''))
-            except Exception: val1 = 0
-            try:    val2 = int(y['version'].replace('.', ''))
-            except Exception: val2 = 0
+            try:
+                val1 = int(x['version'].replace('.', ''))
+            except Exception:
+                val1 = 0
+            try:
+                val2 = int(y['version'].replace('.', ''))
+            except Exception:
+                val2 = 0
             #printDBG("ServerComparator val1[%d], val2[%d]" % (val1, val2))
             return cmp(val1, val2)
         try:
@@ -753,7 +761,8 @@ class UpdateMainAppImpl(IUpdateObjectInterface):
                 urls = ""
                 for idx in range(self.serverIdx):
                     urls += "%s, " % (self.SERVERS_LIST_URLS[idx])
-                if 1 < len(urls): urls = urls[:-2]
+                if 1 < len(urls):
+                    urls = urls[:-2]
                 self.stepFinished(-1, _("Problem with downloading the server list from [%s].") % urls)
         else:
             # process servers list
@@ -775,7 +784,8 @@ class UpdateMainAppImpl(IUpdateObjectInterface):
                             extServer[key] = server[key].encode('utf8')
                             
                     #printDBG("")
-                    if not serverOK: continue
+                    if not serverOK:
+                        continue
                     enc = server.get('enc')
                     encUrlTmp = server.get('enc_url_tmp')
                     if enc:
@@ -812,8 +822,10 @@ class UpdateMainAppImpl(IUpdateObjectInterface):
                 for idx in range(len(serversList)):
                     server = serversList[idx]
                     if not config.plugins.iptvplayer.hiddenAllVersionInUpdate.value:
-                        try: newVerNum = int(server['version'].replace('.', ''))
-                        except Exception: continue
+                        try:
+                            newVerNum = int(server['version'].replace('.', ''))
+                        except Exception:
+                            continue
                         #printDBG("newVerNum[%s], currVerNum[%s]" % (newVerNum, currVerNum))
                         if newVerNum < currVerNum and not config.plugins.iptvplayer.downgradePossible.value:
                             continue
@@ -962,7 +974,8 @@ class UpdateMainAppImpl(IUpdateObjectInterface):
     # DECRYPTION ARCHIVE STEP'S PRIVATES METHODS
     ##############################################################################
     def __decryptionCmdFinished(self, status, outData):
-        if self.decKeyFilePath: rm(self.decKeyFilePath)
+        if self.decKeyFilePath:
+            rm(self.decKeyFilePath)
         code = -1
         msg  = ""
         self.cmd = None

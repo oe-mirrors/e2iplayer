@@ -126,13 +126,15 @@ class TheWatchseriesTo(CBaseHostClass):
             params['name']  = 'category'
             if type == 'dir':
                 self.addDir(params)
-            else: self.addVideo(params)
+            else:
+                self.addVideo(params)
             
     def listCategories(self, cItem, nextCategory):
         printDBG("TheWatchseriesTo.listCategories")
         
         sts, data = self.getPage(cItem['url'])
-        if not sts: return
+        if not sts:
+            return
         
         data = self.cm.ph.getDataBeetwenMarkers(data, '<ul class="pagination"', '</ul>', False)[1]
         data = self.cm.ph.getAllItemsBeetwenMarkers(data, '<li', '</li>')
@@ -140,7 +142,8 @@ class TheWatchseriesTo(CBaseHostClass):
         for item in data:
             url = self.cm.ph.getSearchGroups(item, '''href=['"]([^'^"]+?)['"]''', 1)[0]
             url = self.getFullUrl( url )
-            if not url.startswith('http') or 'latest' in url: continue
+            if not url.startswith('http') or 'latest' in url:
+                continue
             title = self.cleanHtmlStr(item)
             params = dict(cItem)
             params.update({'category':nextCategory, 'title':title, 'url':url, 'page':0})
@@ -160,15 +163,18 @@ class TheWatchseriesTo(CBaseHostClass):
             url += '%d' % page
         
         sts, data = self.getPage(url, {}, post_data)
-        if not sts: return
+        if not sts:
+            return
         
         nextPage = self.cm.ph.getAllItemsBeetwenMarkers(data, '<ul class="pagination"', '</ul>', False)
         if len(nextPage):
             nextPage = nextPage[-1]
-        else: nextPage = ''
+        else:
+            nextPage = ''
         if '>{0}<'.format(page + 1) in nextPage:
             nextPage = True
-        else: nextPage = False
+        else:
+            nextPage = False
         
         mainMarker = '<ul class="listings">'
         if mainMarker in data:
@@ -181,15 +187,21 @@ class TheWatchseriesTo(CBaseHostClass):
         for item in data:
             icon  = self.cm.ph.getSearchGroups(item, '''src=['"]([^'^"]+?)['"]''')[0]
             icon = self.getFullUrl(icon)
-            if icon == '': icon = cItem['icon']
-            if ta: item = item.split('<div valign="top" style="padding-left: 10px;">')[-1]
-            if 'category-item-ad' in item or 'Latest Episode' in item: continue
+            if icon == '':
+                icon = cItem['icon']
+            if ta:
+                item = item.split('<div valign="top" style="padding-left: 10px;">')[-1]
+            if 'category-item-ad' in item or 'Latest Episode' in item:
+                continue
             url = self.cm.ph.getSearchGroups(item, '''href=['"]([^'^"]+?)['"]''')[0]
-            if url == '': continue
+            if url == '':
+                continue
             title = self.cm.ph.getSearchGroups(item, '''title=['"]([^'^"]+?)['"]''')[0]
-            if title == '': title = item.split('<span class="epnum"')[0]
+            if title == '':
+                title = item.split('<span class="epnum"')[0]
             desc = self.cleanHtmlStr( self.cm.ph.getDataBeetwenMarkers(item, '<div class="info">', '</div>', False)[1] )
-            if desc == '': desc = self.cleanHtmlStr(item)
+            if desc == '':
+                desc = self.cleanHtmlStr(item)
             
             params = dict(cItem)
             params.update({'good_for_fav': True, 'category':nextCategory, 'title':self.cleanHtmlStr(title), 'url':self.getFullUrl(url), 'icon':icon, 'desc':desc})
@@ -208,7 +220,8 @@ class TheWatchseriesTo(CBaseHostClass):
         self.seasonCache = {}
         
         sts, data = self.getPage(cItem['url'])
-        if not sts: return
+        if not sts:
+            return
         
         seasons = self.cm.ph.getAllItemsBeetwenMarkers(data, '<h2 class="lists"', '</ul>')
         for season in seasons:
@@ -218,7 +231,8 @@ class TheWatchseriesTo(CBaseHostClass):
             episodesTab = []
             data = self.cm.ph.getAllItemsBeetwenMarkers(season, '<li ', '</li>')
             for item in data:
-                if '(0 links)' in item: continue
+                if '(0 links)' in item:
+                    continue
                 title = self.cleanHtmlStr( self.cm.ph.getDataBeetwenReMarkers(item, re.compile('itemprop="name"[^>]*?>'), re.compile('</span>'), False)[1] )
                 url = self.cm.ph.getSearchGroups(item, '''href=['"]([^'^"]+?)['"]''')[0]
                 episodeNum = self.cm.ph.getSearchGroups(title + '|', '''Episode\s+?([0-9]+?)[^0-9]''', 1, True)[0]
@@ -248,7 +262,8 @@ class TheWatchseriesTo(CBaseHostClass):
             return self.cacheLinks[cItem['url']]
 
         sts, data = self.getPage(cItem['url'])
-        if not sts: return []
+        if not sts:
+            return []
 
         data = ph.findall(data, ('<tr', '>', 'download_link_'), '</tr>')
         for item in data:
@@ -263,7 +278,8 @@ class TheWatchseriesTo(CBaseHostClass):
                     url = urllib.parse.unquote(ph.search(it, '''href=['"][^'^"]*?%3Fr%3D([^'^"^&]+?)['"&]''')[0])
                 else:
                     url = ph.search(it, '''href=['"][^'^"]*?\?r=([^'^"]+?)['"]''')[0]
-                if url == '': continue
+                if url == '':
+                    continue
                 try:
                     url = base64.b64decode(url)
                 except Exception:
@@ -272,7 +288,8 @@ class TheWatchseriesTo(CBaseHostClass):
 #            if url == '': continue
             if 'http' not in url:
                 url = self.cm.ph.getSearchGroups(item, '''['"]Delete\slink\s(http.+?)['"]''')[0]
-            if self.up.checkHostSupport(url) != 1: continue
+            if self.up.checkHostSupport(url) != 1:
+                continue
             url = strwithmeta(self.getFullUrl(url), {'Referer':self.cm.meta['url']})
             urlTab.append({'name':host, 'url':url, 'need_resolve':1})
         if len(urlTab):

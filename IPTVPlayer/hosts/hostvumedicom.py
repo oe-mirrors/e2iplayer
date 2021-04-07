@@ -15,8 +15,10 @@ import urllib.request
 import urllib.parse
 import urllib.error
 import base64
-try:    import json
-except Exception: import simplejson as json
+try:
+    import json
+except Exception:
+    import simplejson as json
 from Components.config import config, ConfigText, getConfigListEntry
 ###################################################
 
@@ -69,8 +71,10 @@ class VUMEDI(CBaseHostClass):
     
     def getFullUrl(self, url, baseUrl=None):
         if not self.cm.isValidUrl(url) and baseUrl != None:
-            if url.startswith('/'): baseUrl = self.cm.getBaseUrl(baseUrl)
-            else: baseUrl = baseUrl.rsplit('/', 1)[0] + '/'
+            if url.startswith('/'):
+                baseUrl = self.cm.getBaseUrl(baseUrl)
+            else:
+                baseUrl = baseUrl.rsplit('/', 1)[0] + '/'
         return CBaseHostClass.getFullUrl(self, url.replace('&#038;', '&').replace('&amp;', '&'), baseUrl)
     
     def listMainMenu(self, cItem):
@@ -84,7 +88,8 @@ class VUMEDI(CBaseHostClass):
         
     def listCategories(self, cItem, nextCategory1, nextCategory2):
         sts, data = self.getPage(cItem['url'])
-        if not sts: return
+        if not sts:
+            return
         cUrl = self.cm.meta['url']
         self.setMainUrl(cUrl)
         
@@ -97,7 +102,8 @@ class VUMEDI(CBaseHostClass):
         data = self.cm.ph.getAllItemsBeetwenMarkers(data, '<li', '</li>')
         for sItem in data:
             sItem = sItem.split('</a>', 1)
-            if len(sItem) < 2: continue
+            if len(sItem) < 2:
+                continue
             sTitle = self.cleanHtmlStr(sItem[0])
             sUrl = self.getFullUrl( self.cm.ph.getSearchGroups(sItem[0], '''href=['"]([^"^']+?)['"]''')[0].split('#', 1)[0], cUrl )
             categories = []
@@ -124,16 +130,19 @@ class VUMEDI(CBaseHostClass):
                 
     def listTopics(self, cItem, nextCategory):
         sts, data = self.getPage(cItem['url'])
-        if not sts: return
+        if not sts:
+            return
         cUrl = self.cm.meta['url']
         self.setMainUrl(cUrl)
         
         data = self.cm.ph.getAllItemsBeetwenNodes(data, ('<h2', '>', 'filters'), ('</div', '>'))
         for sItem in data:
             sItem = sItem.split('</h2>', 1)
-            if len(sItem) < 2: continue
+            if len(sItem) < 2:
+                continue
             sTitle = self.cleanHtmlStr(sItem[0])
-            if sTitle.endswith(':'): sTitle = sTitle[:-1]
+            if sTitle.endswith(':'):
+                sTitle = sTitle[:-1]
             categories = []
             sItem = self.cm.ph.getAllItemsBeetwenMarkers(sItem[1], '<a', '</a>')
             for item in sItem:
@@ -157,7 +166,8 @@ class VUMEDI(CBaseHostClass):
                 
     def listSpecialities(self, cItem, nextCategory):
         sts, data = self.getPage(cItem['url'])
-        if not sts: return
+        if not sts:
+            return
         cUrl = self.cm.meta['url']
         self.setMainUrl(cUrl)
 
@@ -174,7 +184,8 @@ class VUMEDI(CBaseHostClass):
         printDBG("VUMEDI.listItems [%s]" % cItem)
         
         sts, data = self.getPage(cItem['url'])
-        if not sts: return
+        if not sts:
+            return
         cUrl = self.cm.meta['url']
         self.setMainUrl(cUrl)
         
@@ -182,7 +193,8 @@ class VUMEDI(CBaseHostClass):
         data = self.cm.ph.getAllItemsBeetwenMarkers(data, '<a', '</a>')
         for item in data:
             url = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''href=['"]([^"^']+?)['"]''')[0], cUrl)
-            if url == '': url = cUrl
+            if url == '':
+                url = cUrl
             title = self.cleanHtmlStr(item)
             params = dict(cItem)
             params.update({'name':'category', 'category':nextCategory, 'title':title, 'url':url})
@@ -197,7 +209,8 @@ class VUMEDI(CBaseHostClass):
         params['header'] = MergeDicts(self.AJAX_HEADER, {'Referer':cItem['url']})
         
         sts, data = self.getPage(url, params)
-        if not sts: return
+        if not sts:
+            return
         try:
             data = byteify(json.loads(data))
             nextPage = data.get('start', -1)
@@ -218,11 +231,13 @@ class VUMEDI(CBaseHostClass):
         data = self.cm.ph.getAllItemsBeetwenNodes(data, ('<div', '>', 'video-item'), ('</ul', '>'), False)
         for item in data:
             t = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(item, ('<', '>', 'video-duration'), ('</', '>'), False)[1]).upper()
-            if ':' not in t and 'VIDEO' not in t: continue
+            if ':' not in t and 'VIDEO' not in t:
+                continue
             tmp = self.cm.ph.getDataBeetwenNodes(item, ('<h', '>', '_title'), ('</h', '>'), False)[1]
             
             url = self.getFullUrl(self.cm.ph.getSearchGroups(tmp, '''\shref=['"]([^'^"]+?)['"]''')[0].strip())
-            if url == '': continue
+            if url == '':
+                continue
             
             icon = self.getFullIconUrl(self.cm.ph.getSearchGroups(item, '''\ssrc=['"]([^"^']+?\.(?:jpe?g|png)(?:\?[^'^"]*?)?)['"]''')[0])
             title = self.cleanHtmlStr(tmp)
@@ -231,14 +246,16 @@ class VUMEDI(CBaseHostClass):
             tmp = []
             for marker in ['_author', '_desc']:
                 t = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(item, ('<', '>', marker), ('</', '>'), False)[1])
-                if t == '': continue
+                if t == '':
+                    continue
                 tmp.append(t)
             desc.append(' | '.join(tmp))
             
             tmp = []
             for t in self.cm.ph.getAllItemsBeetwenMarkers(item, '<li', '</li>'):
                 t = self.cleanHtmlStr(t)
-                if t == '': continue
+                if t == '':
+                    continue
                 tmp.append(t)
             desc.append(' | '.join(tmp))
             
@@ -251,7 +268,8 @@ class VUMEDI(CBaseHostClass):
         page = cItem.get('page', 1)
         
         sts, data = self.getPage(cItem['url'])
-        if not sts: return
+        if not sts:
+            return
         cUrl = self.cm.meta['url']
         self.setMainUrl(cUrl)
         
@@ -279,7 +297,8 @@ class VUMEDI(CBaseHostClass):
         self.tryTologin()
         
         sts, data = self.getPage(cItem['url'])
-        if not sts: return []
+        if not sts:
+            return []
         self.setMainUrl(self.cm.meta['url'])
         
         playerBase = 'http://player.ooyala.com/'
@@ -294,7 +313,8 @@ class VUMEDI(CBaseHostClass):
             
             url = playerBase + 'player_api/v1/content_tree/embed_code/%s/%s?' % (pcode, videoId)
             sts, data = self.getPage(url)
-            if not sts: return []
+            if not sts:
+                return []
             try:
                 printDBG(data)
                 data = byteify(json.loads(data))['content_tree']
@@ -306,14 +326,16 @@ class VUMEDI(CBaseHostClass):
                 
                 url = playerBase + 'sas/player_api/v2/authorization/embed_code/%s/%s?device=html5&domain=%s' % (pcode, embedCode, self.cm.getBaseUrl(self.getMainUrl(), True))
                 sts, data = self.getPage(url)
-                if not sts: return []
+                if not sts:
+                    return []
                 printDBG(data)
                 data = byteify(json.loads(data))['authorization_data'][key]['streams']
                 for item in data:
                     url = ''
                     if item['url']['format'] == 'encoded':
                         url = base64.b64decode(item['url']['data'])
-                    if not self.cm.isValidUrl(url): continue
+                    if not self.cm.isValidUrl(url):
+                        continue
                     
                     if item['delivery_type'] == 'mp4':
                         name = 'mp4 %s %sx%s %sfps' % (item['video_codec'], item['width'], item['height'], item['framerate'])
@@ -341,14 +363,17 @@ class VUMEDI(CBaseHostClass):
                 return False
             
             sts, data = self.getPage(self.getFullUrl('/accounts/login/'))
-            if not sts: return False
+            if not sts:
+                return False
             cUrl = self.cm.meta['url']
             self.setMainUrl(cUrl)
             
             sts, data = self.cm.ph.getDataBeetwenNodes(data, ('<form', '>'), ('</form', '>'))
-            if not sts: return False
+            if not sts:
+                return False
             actionUrl = self.cm.getFullUrl(self.cm.ph.getSearchGroups(data, '''action=['"]([^'^"]+?)['"]''')[0], self.cm.getBaseUrl(cUrl))
-            if actionUrl == '': actionUrl = cUrl
+            if actionUrl == '':
+                actionUrl = cUrl
             
             post_data = {}
             inputData = self.cm.ph.getAllItemsBeetwenMarkers(data, '<input', '>')
@@ -371,7 +396,8 @@ class VUMEDI(CBaseHostClass):
             
             if not self.loggedIn:
                 errorMessage = [_('Login failed.')]
-                if sts: errorMessage.append(self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(data, ('<div', '>', 'alert-warning'), ('<', '>'), False)[1]))
+                if sts:
+                    errorMessage.append(self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(data, ('<div', '>', 'alert-warning'), ('<', '>'), False)[1]))
                 self.sessionEx.open(MessageBox, '\n'.join(errorMessage), type = MessageBox.TYPE_ERROR, timeout = 10)
                 printDBG('tryTologin failed')
         return self.loggedIn

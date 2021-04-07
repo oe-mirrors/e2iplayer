@@ -19,8 +19,10 @@ import urllib.request
 import urllib.parse
 import urllib.error
 import base64
-try:    import json
-except Exception: import simplejson as json
+try:
+    import json
+except Exception:
+    import simplejson as json
 from copy import deepcopy
 ###################################################
 
@@ -70,7 +72,8 @@ class HDFilmeTV(CBaseHostClass):
     
     def getIconUrl(self, url):
         url = self.getFullUrl(url)
-        if url == '': return ''
+        if url == '':
+            return ''
         cookieHeader = self.cm.getCookieHeader(self.COOKIE_FILE)
         return strwithmeta(url, {'Cookie':cookieHeader, 'User-Agent':self.USER_AGENT})
     
@@ -124,7 +127,8 @@ class HDFilmeTV(CBaseHostClass):
         printDBG(str(params))
                             
         sts, data = self.getPageCF(cItem['url'], params)
-        if not sts: return
+        if not sts:
+            return
         
         for filter in [{'m':'name="category"', 'key':'genre'}, {'m':'name="country"', 'key':'country'}, {'m':'name="sort"', 'key':'sort'}]:
             filterData = []
@@ -144,7 +148,8 @@ class HDFilmeTV(CBaseHostClass):
             for item in optionsData:
                 title = self.cleanHtmlStr(item)
                 value = self.cm.ph.getSearchGroups(item, '''value=['"]([^'^"]+?)['"]''')[0]
-                if value == '': continue
+                if value == '':
+                    continue
                 
                 if value != old_value:
                     old_value = value
@@ -193,7 +198,8 @@ class HDFilmeTV(CBaseHostClass):
         url += "?" + urllib.parse.urlencode(query)
         sts, data = self.getPageCF(url, params, post_data = {'load':'full-page'})
         #printDBG(data)
-        if not sts: return
+        if not sts:
+            return
         
         nextPage = self.cm.ph.getDataBeetwenMarkers(data, '<ul class="pagination', '</ul>', False)[1]
         if 'data-page="{0}"'.format(page+1) in nextPage:
@@ -241,7 +247,8 @@ class HDFilmeTV(CBaseHostClass):
 
         sts, data = self.getPageCF(cItem['url'], params)
         #printDBG(data)
-        if not sts: return
+        if not sts:
+            return
 
         movieId = self.cm.ph.getSearchGroups(data, '''data-movie-id=['"]([^'^"]+?)['"]''')[0]
         printDBG("movieId ------->" + movieId)
@@ -331,15 +338,19 @@ class HDFilmeTV(CBaseHostClass):
         season = self.cm.ph.getSearchGroups(cItem['url'], '''staf[f]+?el-([0-9]+?)-''')[0]
         if season == '':
             season = self.cm.ph.getSearchGroups(baseTitle, '''staffel\s*([0-9]+?)$''', ignoreCase=True)[0]
-            if season != '': baseTitle = baseTitleReObj.sub('', baseTitle, 1).strip()
+            if season != '':
+                baseTitle = baseTitleReObj.sub('', baseTitle, 1).strip()
         
-        try: episodesTab.sort(key=lambda item: self.c_int(item))
+        try:
+            episodesTab.sort(key=lambda item: self.c_int(item))
         except Exception:
             printExc()
         for episode in episodesTab:
             title = baseTitle
-            if season != '': title += ': ' + 's%se%s'% (season.zfill(2), episode.zfill(2))
-            elif len(episodesTab) > 1: title += ': ' + 'e%s'% (episode.zfill(2))
+            if season != '':
+                title += ': ' + 's%se%s'% (season.zfill(2), episode.zfill(2))
+            elif len(episodesTab) > 1:
+                title += ': ' + 'e%s'% (episode.zfill(2))
             params = dict(cItem)
             params.update({'good_for_fav': False, 'title':title, 'urls': episodesLinks[episode]})
             self.addVideo(params)
@@ -368,7 +379,8 @@ class HDFilmeTV(CBaseHostClass):
 
         sts, data = self.getPageCF(videoUrl, params)
         printDBG(data)
-        if not sts: return []
+        if not sts:
+            return []
         
         url = self.cm.ph.getDataBeetwenMarkers(data, '$( "#play-area-wrapper" ).load( "', '"', False)[1]
         
@@ -415,7 +427,8 @@ class HDFilmeTV(CBaseHostClass):
         try:
             cItem = byteify(json.loads(fav_data))
             links = self.getLinksForVideo(cItem)
-        except Exception: printExc()
+        except Exception:
+            printExc()
         return links
         
     def setInitListFromFavouriteItem(self, fav_data):
@@ -440,15 +453,18 @@ class HDFilmeTV(CBaseHostClass):
         retTab = []
         
         sts, data = self.getPage(cItem['url'], self.defaultParams)
-        if not sts: return retTab
+        if not sts:
+            return retTab
         
         data = self.cm.ph.getDataBeetwenMarkers(data, '<div id="main">', '<div class="row">')[1]
         
         icon  = self.getFullUrl(self.cm.ph.getSearchGroups(data, '''src=['"]([^'^"]+?)['"]''')[0])
-        if icon == '': icon = cItem.get('icon', '')
+        if icon == '':
+            icon = cItem.get('icon', '')
         
         title = self.cleanHtmlStr( self.cm.ph.getDataBeetwenMarkers(data, '<b class="text-blue title-film">', '</b>', False)[1] )
-        if title == '': title = cItem['title']
+        if title == '':
+            title = cItem['title']
         
         desc = self.cleanHtmlStr( self.cm.ph.getDataBeetwenMarkers(data, '<div class="caption">', '</div>', False)[1] )
         
@@ -467,7 +483,8 @@ class HDFilmeTV(CBaseHostClass):
         otherInfo = {}
         for item in descData:
             item = item.split('</span>')
-            if len(item) < 2: continue
+            if len(item) < 2:
+                continue
             key = self.cleanHtmlStr( item[0] ).replace(':', '').strip()
             val = self.cleanHtmlStr( item[1] )
             for dKey in descTabMap:
@@ -535,7 +552,8 @@ class IPTVHost(CHostBase):
     def getArticleContent(self, Index = 0):
         retCode = RetHost.ERROR
         retlist = []
-        if not self.isValidIndex(Index): return RetHost(retCode, value=retlist)
+        if not self.isValidIndex(Index):
+            return RetHost(retCode, value=retlist)
         cItem = self.host.currList[Index]
         
         if cItem['type'] != 'video' and cItem.get('category', '') != 'explore_item':

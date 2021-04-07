@@ -16,8 +16,10 @@ import re
 import urllib.request
 import urllib.parse
 import urllib.error
-try:    import json
-except Exception: import simplejson as json
+try:
+    import json
+except Exception:
+    import simplejson as json
 ###################################################
 
 
@@ -45,14 +47,17 @@ class GamatoTV(CBaseHostClass):
                             ]
         
     def getPage(self, baseUrl, addParams = {}, post_data = None):
-        if addParams == {}: addParams = dict(self.defaultParams)
+        if addParams == {}:
+            addParams = dict(self.defaultParams)
         
         origBaseUrl = baseUrl
         baseUrl = self.cm.iriToUri(baseUrl)
         
         def _getFullUrl(url):
-            if self.cm.isValidUrl(url): return url
-            else: return urllib.parse.urljoin(baseUrl, url)
+            if self.cm.isValidUrl(url):
+                return url
+            else:
+                return urllib.parse.urljoin(baseUrl, url)
         
         addParams['cloudflare_params'] = {'domain':self.up.getDomain(baseUrl), 'cookie_file':self.COOKIE_FILE, 'User-Agent':self.USER_AGENT, 'full_url_handle':_getFullUrl}
         return self.cm.getPageCFProtection(baseUrl, addParams, post_data)
@@ -60,17 +65,23 @@ class GamatoTV(CBaseHostClass):
     def listMainMenu(self, cItem, nextCategory1, nextCategory2, nextCategory3):
         printDBG("listMainMenu")
         sts, data = self.getPage(cItem['url'])
-        if not sts: return
+        if not sts:
+            return
         
         data = self.cm.ph.getDataBeetwenMarkers(data, 'id="xg_navigation"', '</ul>')[1]
         data = self.cm.ph.getAllItemsBeetwenMarkers(data, '<a', '</a>')
         for item in data:
             url = self.cm.ph.getSearchGroups(item, '''href=['"]([^'^"]+?)['"]''')[0]
-            if '/notes/' in url: break
-            if len(url) < 2 or '/authorization/' in url: continue
-            if url.endswith('/category'): category = nextCategory3
-            elif url.endswith('/listFeatured'): category = nextCategory2
-            else: category = nextCategory1
+            if '/notes/' in url:
+                break
+            if len(url) < 2 or '/authorization/' in url:
+                continue
+            if url.endswith('/category'):
+                category = nextCategory3
+            elif url.endswith('/listFeatured'):
+                category = nextCategory2
+            else:
+                category = nextCategory1
             title = self.cleanHtmlStr(item)
             params = dict(cItem)
             params.update({'good_for_fav':False, 'category':category, 'title':title, 'url':self.getFullIconUrl(url)})
@@ -81,7 +92,8 @@ class GamatoTV(CBaseHostClass):
     def listSortFilters(self, cItem, nextCategory):
         printDBG("listSortFilters")
         sts, data = self.getPage(cItem['url'])
-        if not sts: return
+        if not sts:
+            return
         data = self.cm.ph.getDataBeetwenMarkers(data, '<select onchange', '</select>')[1]
         data = self.cm.ph.getAllItemsBeetwenMarkers(data, '<option', '</option>')
         for item in data:
@@ -99,7 +111,8 @@ class GamatoTV(CBaseHostClass):
         self.cacheFilters = {}
         
         sts, data = self.getPage(cItem['url'])
-        if not sts: return
+        if not sts:
+            return
         data = self.cm.ph.getDataBeetwenMarkers(data, '<strong><span class="font-size-4">', '<div class="addthis_sharing_toolbox">')[1]
         data = data.split('<span><span class="font-size-4">')
         for item in data:
@@ -109,7 +122,8 @@ class GamatoTV(CBaseHostClass):
             for it in item:
                 it = self.cm.ph.getDataBeetwenMarkers(it, '<a', '</a>')[1]
                 url = self.getFullUrl( self.cm.ph.getSearchGroups(it, '''href=['"]([^"^']+?)['"]''')[0] )
-                if not self.cm.isValidUrl(url): continue
+                if not self.cm.isValidUrl(url):
+                    continue
                 title = self.cleanHtmlStr(it)
                 self.cacheFilters[key].append({'title':title, 'url':url})
             
@@ -132,21 +146,27 @@ class GamatoTV(CBaseHostClass):
         url  = cItem['url']
         
         if page > 1:
-            if '?' in url: url += '&'
-            else: url += '?'
+            if '?' in url:
+                url += '&'
+            else:
+                url += '?'
             url += 'page=%s' % page
         
         sts, data = self.getPage(url)
-        if not sts: return
+        if not sts:
+            return
         
-        if '›</a>' in data: nextPage = True
-        else: nextPage = False
+        if '›</a>' in data:
+            nextPage = True
+        else:
+            nextPage = False
         
         data = self.cm.ph.getDataBeetwenMarkers(data, 'xg_list_groups_main', '</ul></div>')[1]
         data = self.cm.ph.getAllItemsBeetwenMarkers(data, '<li', '</li>')
         for item in data:
             url = self.getFullUrl( self.cm.ph.getSearchGroups(item, '''href=['"]([^"^']+?)['"]''')[0] )
-            if not self.cm.isValidUrl( url ): continue
+            if not self.cm.isValidUrl( url ):
+                continue
             icon = self.getFullIconUrl( self.cm.ph.getSearchGroups(item, '''src=['"]([^"^']+?)['"]''')[0] )
             title = self.cleanHtmlStr( self.cm.ph.getDataBeetwenMarkers(item, '<h3', '</h3>')[1] )
 
@@ -154,7 +174,8 @@ class GamatoTV(CBaseHostClass):
             desc = []
             for t in tmp:
                 t = self.cleanHtmlStr(t)
-                if t != '': desc.append(t)
+                if t != '':
+                    desc.append(t)
             
             params = dict(cItem)
             params = {'good_for_fav': True, 'category':nextCategory, 'title':title, 'url':url, 'desc':'[/br]'.join(desc), 'icon':icon}
@@ -171,7 +192,8 @@ class GamatoTV(CBaseHostClass):
         self.cacheLinks  = {}
         
         sts, data = self.getPage(cItem['url'])
-        if not sts: return
+        if not sts:
+            return
         
         trailer = None
         mainDesc = []
@@ -192,7 +214,8 @@ class GamatoTV(CBaseHostClass):
         items = self.cm.ph.getAllItemsBeetwenMarkers(items, '<p', '</p>')
         for item in items:
             item = self.cleanHtmlStr(item)
-            if item != '': mainDesc.append(item)
+            if item != '':
+                mainDesc.append(item)
         
         mainDesc.append(self.cleanHtmlStr(tmp.split('<span id="groups121">', 1)[-1]))
         mainDesc  = '[/br]'.join(mainDesc)
@@ -226,7 +249,8 @@ class GamatoTV(CBaseHostClass):
                     sItem = self.cm.ph.getAllItemsBeetwenMarkers(tmp[idx], '<a', '</a>')
                     for item in sItem:
                         url = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''href=['"]([^'^"]+?)['"]''')[0])
-                        if 1 != self.up.checkHostSupport(url): continue
+                        if 1 != self.up.checkHostSupport(url):
+                            continue
                         title = self.cleanHtmlStr(item)
                         
                         if title not in episodesList:
@@ -247,18 +271,23 @@ class GamatoTV(CBaseHostClass):
                     printDBG("++++++++++++++++++++++++++++++++++++++++")
                     item = tmp[idx]
                     title = self.cleanHtmlStr(self.cm.ph.getDataBeetwenReMarkers(item, re.compile('<span[^>]+?style="text-decoration: underline;"[^>]*?>'), re.compile('</span>'))[1])
-                    if title == '': title = self.cleanHtmlStr(self.cm.ph.rgetDataBeetwenMarkers2(item, '</a>', '<a')[1])
-                    if title == '': title = self.cleanHtmlStr(item)
+                    if title == '':
+                        title = self.cleanHtmlStr(self.cm.ph.rgetDataBeetwenMarkers2(item, '</a>', '<a')[1])
+                    if title == '':
+                        title = self.cleanHtmlStr(item)
                     icon = self.getFullIconUrl(self.cm.ph.getSearchGroups(tmp[idx-1], '''src=['"]([^'^"]+?)['"]''')[0])
-                    if icon == '': icon = cItem.get('icon', '')
+                    if icon == '':
+                        icon = cItem.get('icon', '')
                     linksTab = []
                     item = self.cm.ph.getAllItemsBeetwenMarkers(item, '<a', '</a>')
                     for it in item:
                         url = self.cm.ph.getSearchGroups(it, '''href=['"]([^"^']+?)['"]''')[0]
                         printDBG(">>> [%s]" % url)
                         url = re.split('''(https?://)''', url)
-                        if len(url) > 1: url = url[-2] + url[-1]
-                        else: continue
+                        if len(url) > 1:
+                            url = url[-2] + url[-1]
+                        else:
+                            continue
                         name = self.cleanHtmlStr(it)
                         if 0 == len(linksTab) and 'gamato' in url and '/group/' in url:
                             url = self.getFullUrl('/group/' + url.split('/group/')[-1])
@@ -326,12 +355,15 @@ class GamatoTV(CBaseHostClass):
             httpParams = dict(self.defaultParams)
             httpParams['max_data_size'] = 0
             self.cm.getPage(url, httpParams, post_data)
-            if 'url' in self.cm.meta: videoUrl = self.cm.meta['url']
-            else: return []
+            if 'url' in self.cm.meta:
+                videoUrl = self.cm.meta['url']
+            else:
+                return []
             
             if self.up.getDomain(self.getMainUrl()) in videoUrl or self.up.getDomain(videoUrl) == self.up.getDomain(orginUrl):
                 sts, data = self.getPage(videoUrl)
-                if not sts: return []
+                if not sts:
+                    return []
                 
                 found = False
                 printDBG(data)
@@ -362,10 +394,12 @@ class GamatoTV(CBaseHostClass):
         otherInfo = {}
         
         url = cItem.get('prev_url', '')
-        if url == '': url = cItem.get('url', '')
+        if url == '':
+            url = cItem.get('url', '')
         
         sts, data = self.getPage(url)
-        if not sts: return retTab
+        if not sts:
+            return retTab
         
         title = self.cleanHtmlStr(self.cm.ph.getSearchGroups(data, '''<meta[^>]+?itemprop="name"[^>]+?content="([^"]+?)"''')[0])
         icon  = self.cm.ph.getDataBeetwenMarkers(data, '<div id="poster"', '</div>')[1]
@@ -377,12 +411,15 @@ class GamatoTV(CBaseHostClass):
         tmp = self.cm.ph.getAllItemsBeetwenMarkers(data, '<div class="custom_fields">', '</div>')
         for item in tmp:
             item = item.split('<span class="valor">')
-            if len(item)<2: continue
+            if len(item)<2:
+                continue
             marker = self.cleanHtmlStr(item[0])
             key = mapDesc.get(marker, '')
-            if key == '': continue
+            if key == '':
+                continue
             value  = self.cleanHtmlStr(item[1])
-            if value != '': otherInfo[key] = value
+            if value != '':
+                otherInfo[key] = value
         
         mapDesc = {'Director': 'directors', 'Cast':'cast', 'Creator':'creators'}
         
@@ -391,13 +428,16 @@ class GamatoTV(CBaseHostClass):
         for item in tmp:
             marker = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(item, '<h2', '</h2>')[1])
             key = mapDesc.get(marker, '')
-            if key == '': continue
+            if key == '':
+                continue
             item = self.cm.ph.getAllItemsBeetwenMarkers(item, '<div class="name">', '</div>') 
             value  = []
             for t in item:
                 t = self.cleanHtmlStr(t)
-                if t != '': value.append(t)
-            if len(value): otherInfo[key] = ', '.join(value)
+                if t != '':
+                    value.append(t)
+            if len(value):
+                otherInfo[key] = ', '.join(value)
         
         key = 'genres'
         tmp = self.cm.ph.getDataBeetwenMarkers(data, '<div class="sgeneros">', '</div>')[1]
@@ -405,24 +445,33 @@ class GamatoTV(CBaseHostClass):
         value  = []
         for t in tmp:
             t = self.cleanHtmlStr(t)
-            if t != '': value.append(t)
-        if len(value): otherInfo[key] = ', '.join(value)
+            if t != '':
+                value.append(t)
+        if len(value):
+            otherInfo[key] = ', '.join(value)
         
         tmp = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(data, '<div class="starstruck-rating">', '</div>')[1])
-        if tmp != '': otherInfo['rating'] = tmp
+        if tmp != '':
+            otherInfo['rating'] = tmp
         
         tmp = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(data, '<span class="qualityx">', '</span>')[1])
-        if tmp != '': otherInfo['quality'] = tmp
+        if tmp != '':
+            otherInfo['quality'] = tmp
         
         tmp = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(data, '<span class="country">', '</span>')[1])
-        if tmp != '': otherInfo['country'] = tmp
+        if tmp != '':
+            otherInfo['country'] = tmp
         
         tmp = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(data, '<span class="runtime">', '</span>')[1])
-        if tmp != '': otherInfo['duration'] = tmp
+        if tmp != '':
+            otherInfo['duration'] = tmp
         
-        if title == '': title = cItem['title']
-        if desc == '':  desc = cItem.get('desc', '')
-        if icon == '':  icon = cItem.get('icon', self.DEFAULT_ICON_URL)
+        if title == '':
+            title = cItem['title']
+        if desc == '':
+            desc = cItem.get('desc', '')
+        if icon == '':
+            icon = cItem.get('icon', self.DEFAULT_ICON_URL)
         
         return [{'title':self.cleanHtmlStr( title ), 'text': self.cleanHtmlStr( desc ), 'images':[{'title':'', 'url':self.getFullUrl(icon)}], 'other_info':otherInfo}]
     

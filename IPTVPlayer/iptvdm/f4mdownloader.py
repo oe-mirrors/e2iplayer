@@ -23,8 +23,10 @@ from time import sleep
 import re
 import datetime
 try:
-    try:    import json
-    except Exception: import simplejson as json
+    try:
+        import json
+    except Exception:
+        import simplejson as json
 except Exception:
     printExc()
 ###################################################
@@ -112,8 +114,10 @@ class F4mDownloader(BaseDownloader):
         if None == data:
             return
         data = self.outData + data
-        if '\n' != data[-1]: truncated = True
-        else:                truncated = False
+        if '\n' != data[-1]:
+            truncated = True
+        else:
+            truncated = False
         data = data.split('\n')
         if truncated: 
             self.outData = data[-1]

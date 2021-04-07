@@ -15,8 +15,10 @@ import urllib.request
 import urllib.parse
 import urllib.error
 import base64
-try:    import json
-except Exception: import simplejson as json
+try:
+    import json
+except Exception:
+    import simplejson as json
 from Plugins.Extensions.IPTVPlayer.libs.urlparserhelper import unpackJSPlayerParams, VIDEOMEGA_decryptPlayerParams, SAWLIVETV_decryptPlayerParams
 ###################################################
 
@@ -45,7 +47,8 @@ class StreamComplet(CBaseHostClass):
     def listCategories(self, cItem, category):
         printDBG("StreamComplet.listCategories")
         sts, data = self.cm.getPage(self.MAIN_URL)
-        if not sts: return
+        if not sts:
+            return
         
         data = self.cm.ph.getDataBeetwenMarkers(data, '<ul id="menu-menu" class="menu">', '</ul>', False)[1]
         
@@ -62,7 +65,8 @@ class StreamComplet(CBaseHostClass):
         url = tmp[0]
         if len(tmp) > 1:
             arg = tmp[1]
-        else: arg = ''
+        else:
+            arg = ''
         
         page = cItem.get('page', 1)
         if page > 1:
@@ -71,7 +75,8 @@ class StreamComplet(CBaseHostClass):
             url += '?' + arg
         
         sts, data = self.cm.getPage(url)
-        if not sts: return
+        if not sts:
+            return
         
         nextPage = False
         if ('/page/%s/' % (page+1)) in data:
@@ -85,7 +90,8 @@ class StreamComplet(CBaseHostClass):
             url   = self.cm.ph.getSearchGroups(item, 'href="([^"]+?)"')[0]
             title = self.cm.ph.getSearchGroups(item, 'alt="([^"]+?)"')[0]
             title = self.cleanHtmlStr( title )
-            if title == '': continue
+            if title == '':
+                continue
             icon  = self.cm.ph.getSearchGroups(item, 'src="([^"]+?)"')[0]
             desc  = self.cleanHtmlStr( item )
             params.update({'title':title, 'icon':self.getFullUrl(icon), 'desc':desc, 'url':self.getFullUrl(url)})
@@ -126,7 +132,8 @@ class StreamComplet(CBaseHostClass):
             tmpTab = self.cm.ph.getAllItemsBeetwenMarkers(data, "eval(", '</script>')
             for tmpData in tmpTab:
                 tmp = tmpData.split('eval(')
-                if len(tmp): del tmp[0]
+                if len(tmp):
+                    del tmp[0]
                 for tmpItem in tmp:
                     tmpDec = ''
                     for decFun in [VIDEOMEGA_decryptPlayerParams, SAWLIVETV_decryptPlayerParams]:
@@ -187,7 +194,8 @@ class StreamComplet(CBaseHostClass):
                 printDBG("============================ start ============================")
                 printDBG(data)
                 printDBG("============================ end ============================")
-                if not sts: continue
+                if not sts:
+                    continue
                 enc1 = self.cm.ph.getDataBeetwenMarkers(data, 'enc1|', '|', False)[1].strip()
                 data = self._decodeData(data)
                 printDBG("============================ start ============================")
@@ -203,9 +211,12 @@ class StreamComplet(CBaseHostClass):
                 
                 for item in tryLinksTab:
                     item = item.replace('\\/', '/')
-                    if '' == item.strip(): continue
-                    if 'facebook' in item: continue
-                    if 'wp-content' in item: continue
+                    if '' == item.strip():
+                        continue
+                    if 'facebook' in item:
+                        continue
+                    if 'wp-content' in item:
+                        continue
                     if not self.cm.isValidUrl(item):
                         if item.startswith('../'):
                             item = self.up.getDomain(frameUrl, False) + item.replace('../', '')

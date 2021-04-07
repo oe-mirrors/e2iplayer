@@ -98,13 +98,15 @@ class cda(CBaseHostClass, CaptchaHelper):
         self.cacheFilters = {}
         self.filtersTab = []
         sts, data = self.getPage(cItem['url'], self.defaultParams)
-        if not sts: return
+        if not sts:
+            return
         
         def addFilter(data, key, addAny, titleBase):
             self.cacheFilters[key] = []
             for item in data:
                 value = self.cm.ph.getSearchGroups(item, '''value=['"]([^'^"]+?)['"]''')[0]
-                if value == '': continue
+                if value == '':
+                    continue
                 title = self.cleanHtmlStr(item)
                 self.cacheFilters[key].append({'title':titleBase + title, key:value})
             if addAny and len(self.cacheFilters[key]):
@@ -117,7 +119,8 @@ class cda(CBaseHostClass, CaptchaHelper):
             tmpData = self.cm.ph.getAllItemsBeetwenMarkers(tmp[0], '<li', '</li>', withMarkers=True)
             for item in tmpData:
                 url = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''href=['"]([^'^"]+?)['"]''')[0])
-                if not self.cm.isValidUrl(url): continue
+                if not self.cm.isValidUrl(url):
+                    continue
                 title = self.cleanHtmlStr(item)
                 self.cacheFilters['premium_cat'].append({'title':title, 'url':url})
         if len(self.cacheFilters.get('premium_cat', [])):
@@ -179,7 +182,8 @@ class cda(CBaseHostClass, CaptchaHelper):
         
         if page == 1:
             sts, data = self.getPage(baseUrl, self.defaultParams)
-            if not sts: return
+            if not sts:
+                return
             tmp = self.cm.ph.getSearchGroups(data, '''katalogLoadMore\([^\,]+?\,\s*"([^"]+?)"\s*,\s*"([^"]+?)"''', 2)
             nextPageData = {'cat':tmp[0], 'sort':tmp[1]}
             nextPage = True
@@ -193,7 +197,8 @@ class cda(CBaseHostClass, CaptchaHelper):
             post_data = '{"jsonrpc":"2.0","method":"katalogLoadMore","params":[%s,"%s","%s",{}],"id":%s}' % (page, nextPageData.get('cat', 'all'), nextPageData.get('sort', 'new'), nextPageData.get('id', page-1))
             params['raw_post_data'] = True
             sts, data = self.getPage(self.getFullUrl('premium'), params, post_data)
-            if not sts: return
+            if not sts:
+                return
             try:
                 data = json_loads(data)
                 if data['result']['status'] == 'continue' and int(data['id']) < page:
@@ -207,7 +212,8 @@ class cda(CBaseHostClass, CaptchaHelper):
         data = self.cm.ph.rgetAllItemsBeetwenMarkers(data, '</span>', '</style>', withMarkers=True)
         for item in data:
             title = self.cleanHtmlStr(self.cm.ph.getSearchGroups(item, '''title=['"]([^'^"]+?)['"]''')[0])
-            if title == '': title = self.cleanHtmlStr(self.cm.ph.getSearchGroups(item, '''alt=['"]([^'^"]+?)['"]''')[0])
+            if title == '':
+                title = self.cleanHtmlStr(self.cm.ph.getSearchGroups(item, '''alt=['"]([^'^"]+?)['"]''')[0])
             url = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''href=['"]([^'^"]+?)['"]''')[0])
             icon = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''src=['"]([^'^"]+?)['"]''')[0])
             desc = self.cleanHtmlStr(item.replace('<br />', '[/br]').replace('</a>', '[/br]'))
@@ -238,7 +244,8 @@ class cda(CBaseHostClass, CaptchaHelper):
         if searchType and searchType != 'all': 
             url += '&duration=' + searchType
             sts, data = self.getPage(url)
-            if not sts: return
+            if not sts:
+                return
             if '/info/' in self.cm.meta['url']:
                 searchPattern = ph.search(self.cm.meta['url']+'/', '/info/([^/^\?]+?)[/\?]')[0]
                 url = self.SEARCH_URL % (searchPattern, 1, searchsort)
@@ -247,13 +254,15 @@ class cda(CBaseHostClass, CaptchaHelper):
         self.listItems(MergeDicts(cItem, {'category':'search_next_page'}), url, search=True)
         
     def listItems(self, cItem, url=None, page=None, search=False):
-        if url == None: url = cItem['url']
+        if url == None:
+            url = cItem['url']
         sts, data = self.getPage(url)
         if sts:
             if page == None:
                 page = cItem.get('page', 1)
                 nextPage = ph.find(data, ('<span', '>', 'next-wrapper'), '</span>', flags=0)[1]
-                if not nextPage: nextPage = ph.find(data, ('<a', '>', 'btn-large '))[1]
+                if not nextPage:
+                    nextPage = ph.find(data, ('<a', '>', 'btn-large '))[1]
                 nextPage = self.getFullUrl(ph.clean_html(ph.getattr(nextPage, 'href')), self.cm.meta['url'])
             else:
                 nextPage = url if 'Następna strona' in data else ''
@@ -273,21 +282,28 @@ class cda(CBaseHostClass, CaptchaHelper):
 
                 descTab = []
                 desc = self.cleanHtmlStr(self.cm.ph.getDataBeetwenReMarkers(item, re.compile('''<span class=["']timeElem[^>]*?>'''), re.compile('</span>'), False)[1])
-                if '' != desc: descTab.append(desc)
+                if '' != desc:
+                    descTab.append(desc)
                 desc = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(item, '<div class="text text-video">', '</div>', False)[1])
-                if '' != desc: descTab.append(desc)
+                if '' != desc:
+                    descTab.append(desc)
                 desc  = self.cleanHtmlStr( self.cm.ph.getSearchGroups(item, '''<label[^>]+title=['"]([^"^']+?)["']''', 1, True)[0] )
                 if '' == desc: 
                     desc = self.cm.ph.getDataBeetwenMarkers(item, '<div class="text"', '</div>')[1]
                     desc = self.cleanHtmlStr( self.cm.ph.getSearchGroups(item, '''title=['"]([^"^']+?)["']''', 1, True)[0] )
-                if '' != desc: descTab.append(desc)
+                if '' != desc:
+                    descTab.append(desc)
                 desc = self.cleanHtmlStr('[/br]'.join(descTab))
-                if desc == '': desc = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(item, ('<', '>', 'count-files'), ('</a', '>'))[1])  
+                if desc == '':
+                    desc = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(item, ('<', '>', 'count-files'), ('</a', '>'))[1])  
                 
                 title  = self.cleanHtmlStr( self.cm.ph.getDataBeetwenMarkers(item, '<div class="text">', '</div>', False)[1] )
-                if '' == title: title  = self.cleanHtmlStr( self.cm.ph.getDataBeetwenMarkers(item, '<span style="color: #B82D2D; font-size: 14px">', '</a>', False)[1] )
-                if '' == title: title  = self.cleanHtmlStr( self.cm.ph.getDataBeetwenMarkers(item, 'alt="', '"', False)[1] )
-                if '' == title: title = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(item, ('<a', '>', 'link-title'), ('</a', '>'))[1])
+                if '' == title:
+                    title  = self.cleanHtmlStr( self.cm.ph.getDataBeetwenMarkers(item, '<span style="color: #B82D2D; font-size: 14px">', '</a>', False)[1] )
+                if '' == title:
+                    title  = self.cleanHtmlStr( self.cm.ph.getDataBeetwenMarkers(item, 'alt="', '"', False)[1] )
+                if '' == title:
+                    title = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(item, ('<a', '>', 'link-title'), ('</a', '>'))[1])
                 
                 url    = self.getFullUrl(self.cleanHtmlStr( self.cm.ph.getDataBeetwenMarkers(item, 'href="', '"', False)[1] ))
                 icon   = self.cleanHtmlStr( self.cm.ph.getDataBeetwenMarkers(item, 'src="', '"', False)[1] )
@@ -306,7 +322,8 @@ class cda(CBaseHostClass, CaptchaHelper):
         
         url = self.getFullUrl('/partial/polecanekanaly_paski')
         sts, data = self.getPage(url)
-        if not sts: return
+        if not sts:
+            return
         
         cats = self.cm.ph.getDataBeetwenReMarkers(data, re.compile('var\s*?polecani_partnerzy\s*?='), re.compile(';'), False)[1].strip()
         counts = self.cm.ph.getDataBeetwenReMarkers(data, re.compile('var\s*?polecani_video_count\s*?='), re.compile(';'), False)[1].strip()
@@ -314,7 +331,8 @@ class cda(CBaseHostClass, CaptchaHelper):
         try:
             tmp = re.compile('''"([^"]+?)"\s*?\:\s*?\[''').findall(cats) # we use this trick to get valid order of cats
             data = []
-            for item in tmp: data.append('"%s"' % item)
+            for item in tmp:
+                data.append('"%s"' % item)
             data = '[%s]' % ','.join(data)
             data   = json_loads(data, '')
             cats   = json_loads(cats, '')
@@ -337,7 +355,8 @@ class cda(CBaseHostClass, CaptchaHelper):
         printDBG("cda.listChannels [%s]" % cItem['url'])
         
         sts, data = self.getPage(cItem['url'])
-        if not sts: return
+        if not sts:
+            return
         
         data = self.cm.ph.getAllItemsBeetwenNodes(data, ('<a', '>', 'tube-wrap'), ('</a', '>'))
         for item in data:
@@ -353,7 +372,8 @@ class cda(CBaseHostClass, CaptchaHelper):
     def listFolders(self, cItem, nextCategory):
         printDBG("cda.listFolders [%s]" % cItem['url'])
         sts, data = self.getPage(cItem['url'])
-        if not sts: return
+        if not sts:
+            return
         
         data = self.cm.ph.getDataBeetwenNodes(data, ('<ul', '>', 'navigation_foldery'), ('<div', '>', 'panel-footer'))[1]
         data = self.cm.ph.getAllItemsBeetwenMarkers(data, '<a', '</a>')
@@ -370,7 +390,8 @@ class cda(CBaseHostClass, CaptchaHelper):
         items = [('od Z do A', 'sortby=name&order=desc'), ('od A do Z', ''), ('najnowsze', 'sortby=created&order=desc'), ('najstarsze', 'sortby=created&order=asc')]
         for item in items:
             url = cItem['url']
-            if item[1] != '': url += '?' + item[1]
+            if item[1] != '':
+                url += '?' + item[1]
             title = item[0]
             params = dict(cItem)
             params.update({'good_for_fav':False, 'category':nextCategory, 'title':title, 'url':url})
@@ -379,12 +400,15 @@ class cda(CBaseHostClass, CaptchaHelper):
     def listFolderItems(self, cItem):
         printDBG("cda.listFolderItems [%s]" % cItem['url'])
         url = cItem['url']
-        if '?' in url: url += '&'
-        else: url += '?'
+        if '?' in url:
+            url += '&'
+        else:
+            url += '?'
         url += 'type=pliki'
         
         sts, data = self.getPage(url)
-        if not sts: return
+        if not sts:
+            return
         
         nextPage = ph.find(data, ('<a', '>', 'btn-primary '))[1]
         nextPage = self.getFullUrl(ph.clean_html(ph.getattr(nextPage, 'href')), self.cm.meta['url'])
@@ -393,7 +417,8 @@ class cda(CBaseHostClass, CaptchaHelper):
         for item in data:
             tmp = self.cm.ph.getDataBeetwenNodes(item, ('<a', '>', 'link-title'), ('</a', '>'))[1]
             url = self.getFullUrl(self.cm.ph.getSearchGroups(tmp, '''\shref=['"]([^'^"]+?)['"]''')[0])
-            if '/video/' not in url: continue
+            if '/video/' not in url:
+                continue
             icon = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''\ssrc=['"]([^'^"]+?)['"]''')[0])
             desc = [self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(item, ('<', '>', 'time-inline'), ('<', '>'), False)[1])]
             desc.append(self.cleanHtmlStr(self.cm.ph.getSearchGroups(item, '''\salt=['"]([^'^"]+?)['"]''')[0]))
@@ -408,7 +433,8 @@ class cda(CBaseHostClass, CaptchaHelper):
         
     def getLinksForVideo(self, cItem):
         self.tryTologin()
-        if 'url' not in cItem: return []
+        if 'url' not in cItem:
+            return []
         printDBG("cda.getLinksForVideo [%s]" % cItem['url'])
         return self.up.getVideoLinkExt(cItem['url'])
 
@@ -433,7 +459,8 @@ class cda(CBaseHostClass, CaptchaHelper):
             self.password = config.plugins.iptvplayer.cda_password.value
 
             sts, data = self.getPage(self.getMainUrl(), self.defaultParams)
-            if sts: self.setMainUrl(self.cm.meta['url'])
+            if sts:
+                self.setMainUrl(self.cm.meta['url'])
 
             freshSession = False
             if sts and '/logout' in data:
@@ -481,13 +508,15 @@ class cda(CBaseHostClass, CaptchaHelper):
 
                     if sitekey != '':
                         token, errorMsgTab = self.processCaptcha(sitekey, self.cm.meta['url'])
-                        if token != '': post_data['g-recaptcha-response'] = token
+                        if token != '':
+                            post_data['g-recaptcha-response'] = token
 
                     # login
                     sts, data = self.getPage(actionUrl, params, post_data)
 
                     printDBG(data)
-                    if sts:  msgTab.append(ph.clean_html(ph.find(data, ('<p', '>', 'error-form'), '</p>', flags=0)[1]))
+                    if sts:
+                        msgTab.append(ph.clean_html(ph.find(data, ('<p', '>', 'error-form'), '</p>', flags=0)[1]))
 
                 if sts and '/logout' in data:
                     printDBG('tryTologin OK')
@@ -522,9 +551,12 @@ class cda(CBaseHostClass, CaptchaHelper):
             self.listsTab(self.MAIN_TAB, {'name':'category'})
         elif 'premium' == category:
             idx = self.currItem.get('f_idx', 0)
-            if idx == 0: self.fillFilters({'name':'category', 'url':self.getFullUrl('premium')})
-            if idx < len(self.filtersTab): self.listFilter(self.currItem, self.filtersTab)
-            else: self.listPremiumItems(self.currItem)
+            if idx == 0:
+                self.fillFilters({'name':'category', 'url':self.getFullUrl('premium')})
+            if idx < len(self.filtersTab):
+                self.listFilter(self.currItem, self.filtersTab)
+            else:
+                self.listPremiumItems(self.currItem)
         elif 'video' == category:
             self.listsTab(self.VIDEO_TAB, self.currItem)
         elif 'categories' == category:

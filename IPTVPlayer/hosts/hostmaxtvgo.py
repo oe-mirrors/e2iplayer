@@ -16,8 +16,10 @@ import urllib.parse
 import urllib.request
 import urllib.parse
 import urllib.error
-try:    import json
-except Exception: import simplejson as json
+try:
+    import json
+except Exception:
+    import simplejson as json
 from Components.config import config, ConfigText, getConfigListEntry
 ###################################################
 
@@ -68,12 +70,15 @@ class MaxtvGO(CBaseHostClass):
         self.password = ''
         
     def getPage(self, baseUrl, addParams = {}, post_data = None):
-        if addParams == {}: addParams = dict(self.defaultParams)
+        if addParams == {}:
+            addParams = dict(self.defaultParams)
         origBaseUrl = baseUrl
         baseUrl = self.cm.iriToUri(baseUrl)
         def _getFullUrl(url):
-            if self.cm.isValidUrl(url): return url
-            else: return urllib.parse.urljoin(baseUrl, url)
+            if self.cm.isValidUrl(url):
+                return url
+            else:
+                return urllib.parse.urljoin(baseUrl, url)
         addParams['cloudflare_params'] = {'domain':self.up.getDomain(baseUrl), 'cookie_file':self.COOKIE_FILE, 'User-Agent':self.USER_AGENT, 'full_url_handle':_getFullUrl}
         return self.cm.getPageCFProtection(baseUrl, addParams, post_data)
         
@@ -83,7 +88,8 @@ class MaxtvGO(CBaseHostClass):
         
     def getFullIconUrl(self, url):
         url = CBaseHostClass.getFullIconUrl(self, url.strip())
-        if url == '': return ''
+        if url == '':
+            return ''
         cookieHeader = self.cm.getCookieHeader(self.COOKIE_FILE)
         return strwithmeta(url, {'Cookie':cookieHeader, 'User-Agent':self.USER_AGENT, 'Referer':self.getMainUrl()})
         
@@ -91,7 +97,8 @@ class MaxtvGO(CBaseHostClass):
         printDBG("MaxtvGO.listItems [%s]" % cItem)
         
         sts, data = self.getPage(cItem['url'])
-        if not sts: return
+        if not sts:
+            return
         
         try:
             data = byteify(json.loads(data))
@@ -104,7 +111,8 @@ class MaxtvGO(CBaseHostClass):
                     title = self.cleanHtmlStr(it['title'])
                     #icon = self.getFullIconUrl(it['image'])
                     icon = str(it.get('vimeoPosterId', ''))
-                    if icon != '': icon = 'http://i.vimeocdn.com/video/%s.jpg?mw=300' % icon
+                    if icon != '':
+                        icon = 'http://i.vimeocdn.com/video/%s.jpg?mw=300' % icon
                     url = self.getFullUrl('video.php?film=') + it['code']
                     params = dict(cItem)
                     params.update({'type':'video', 'good_for_fav':True, 'title':title, 'url':url, 'icon':icon})
@@ -151,7 +159,8 @@ class MaxtvGO(CBaseHostClass):
         retTab = []
         
         sts, data = self.getPage(cItem['url'])
-        if not sts: return
+        if not sts:
+            return
         
         cookieHeader = self.cm.getCookieHeader(self.COOKIE_FILE)
         
@@ -159,7 +168,8 @@ class MaxtvGO(CBaseHostClass):
         tmp = self.cm.ph.getAllItemsBeetwenMarkers(tmp, '<source', '>')
         for item in tmp:
             url = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''src=['"]([^'^"]+?)['"]''')[0])
-            if not self.cm.isValidUrl(url): continue
+            if not self.cm.isValidUrl(url):
+                continue
             type = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''type=['"]([^'^"]+?)['"]''')[0]).lower()
             if 'mp4' in type:
                 url = strwithmeta(self.getFullUrl(url), {'Cookie':cookieHeader, 'User-Agent':self.USER_AGENT, 'Referer':cItem['url']})
@@ -200,10 +210,12 @@ class MaxtvGO(CBaseHostClass):
                 return False
             
             sts, data = self.getPage(self.getFullUrl('/login.php'))
-            if not sts: return False
+            if not sts:
+                return False
             
             sts, data = self.cm.ph.getDataBeetwenNodes(data, ('<form', '>', 'login'), ('</form', '>'))
-            if not sts: return False
+            if not sts:
+                return False
             actionUrl = self.getFullUrl(self.cm.ph.getSearchGroups(data, '''action=['"]([^'^"]+?)['"]''')[0])
             data = self.cm.ph.getAllItemsBeetwenMarkers(data, '<input', '>')
             post_data = {}
@@ -234,7 +246,8 @@ class MaxtvGO(CBaseHostClass):
             return []
         
         sts, data = self.getPage(cItem['url'])
-        if not sts: return []
+        if not sts:
+            return []
         
         videoID = self.cm.ph.getSearchGroups(data, '''(<input[^>]+?videoID[^>]+?>)''', 1, True)[0]
         videoID = self.cm.ph.getSearchGroups(videoID, '''\svalue=['"]([^'^"]+?)['"]''', 1, True)[0]
@@ -276,9 +289,12 @@ class MaxtvGO(CBaseHostClass):
         
         desc = '------------------------------------------------------------------------------[/br]'.join(desc)
         
-        if title == '': title = cItem['title']
-        if desc == '':  desc = cItem.get('desc', '')
-        if icon == '':  icon = cItem.get('icon', self.DEFAULT_ICON_URL)
+        if title == '':
+            title = cItem['title']
+        if desc == '':
+            desc = cItem.get('desc', '')
+        if icon == '':
+            icon = cItem.get('icon', self.DEFAULT_ICON_URL)
         
         return [{'title':self.cleanHtmlStr( title ), 'text': self.cleanHtmlStr( desc ), 'images':[{'title':'', 'url':self.getFullIconUrl(icon)}], 'other_info':otherInfo}]
     

@@ -37,7 +37,8 @@ class LivespottingTvApi:
         printDBG("WkylinewebcamsCom.getChannelsList")
         list = []
         sts, data = self.cm.getPage('https://livespotting.com/showroom.json')
-        if not sts: return list
+        if not sts:
+            return list
         printDBG("data: %s" % data)
         data = data.replace('Showroom.Load(', '').replace(');', '')
         try:
@@ -50,7 +51,8 @@ class LivespottingTvApi:
                     url  = str(item['sources'])
                     url = ph.search(url, '''file['"]:\s*['"]([^"^']+?)['"]''')[0]
                     list.append({'title':title, 'url':url, 'icon':icon, 'desc':desc})
-                except Exception: printExc()
+                except Exception:
+                    printExc()
         except Exception:
             printExc()
 

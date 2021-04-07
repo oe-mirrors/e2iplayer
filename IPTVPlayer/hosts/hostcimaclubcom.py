@@ -14,8 +14,10 @@ from Plugins.Extensions.IPTVPlayer.tools.iptvtypes import strwithmeta
 import urllib.request
 import urllib.parse
 import urllib.error
-try:    import json
-except Exception: import simplejson as json
+try:
+    import json
+except Exception:
+    import simplejson as json
 from Components.config import config, ConfigSelection, getConfigListEntry
 ###################################################
 
@@ -61,23 +63,30 @@ class CimaClubCom(CBaseHostClass):
     def getProxy(self):
         proxy = config.plugins.iptvplayer.cimaclub_proxy.value
         if proxy != 'None':
-            if proxy == 'proxy_1': proxy = config.plugins.iptvplayer.alternative_proxy1.value
-            else: proxy = config.plugins.iptvplayer.alternative_proxy2.value
-        else: proxy = None
+            if proxy == 'proxy_1':
+                proxy = config.plugins.iptvplayer.alternative_proxy1.value
+            else:
+                proxy = config.plugins.iptvplayer.alternative_proxy2.value
+        else:
+            proxy = None
         return proxy
     
     def getPage(self, baseUrl, addParams = {}, post_data = None):
-        if addParams == {}: addParams = dict(self.defaultParams)
+        if addParams == {}:
+            addParams = dict(self.defaultParams)
         proxy = self.getProxy()
-        if proxy != None: addParams = MergeDicts(addParams, {'http_proxy':proxy})
+        if proxy != None:
+            addParams = MergeDicts(addParams, {'http_proxy':proxy})
         addParams['cloudflare_params'] = {'cookie_file':self.COOKIE_FILE, 'User-Agent':self.USER_AGENT}
         return self.cm.getPageCFProtection(baseUrl, addParams, post_data)
         
     def getFullIconUrl(self, url):
         url = CBaseHostClass.getFullIconUrl(self, url.strip())
-        if url == '': return url
+        if url == '':
+            return url
         proxy = self.getProxy()
-        if proxy != None: url = strwithmeta(url, {'iptv_http_proxy':proxy})
+        if proxy != None:
+            url = strwithmeta(url, {'iptv_http_proxy':proxy})
         cookieHeader = self.cm.getCookieHeader(self.COOKIE_FILE, ['PHPSESSID', 'cf_clearance', '__cfduid'])
         url = strwithmeta(url, {'Cookie':cookieHeader, 'User-Agent':self.HTTP_HEADER['User-Agent']})
         return url
@@ -88,8 +97,10 @@ class CimaClubCom(CBaseHostClass):
             url = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''href=['"]([^'^"]+?)['"]''')[0])
             title = self.cleanHtmlStr(item)
             params = {'title':title, 'url':url}
-            if revert: self.cacheSubSections[key].insert(0, params)
-            else: self.cacheSubSections[key].append(params)
+            if revert:
+                self.cacheSubSections[key].insert(0, params)
+            else:
+                self.cacheSubSections[key].append(params)
         
         if len(self.cacheSubSections[key]):
             params = dict(cItem)
@@ -100,7 +111,8 @@ class CimaClubCom(CBaseHostClass):
         printDBG("CimaClubCom.listMainMenu")
         
         sts, data = self.getPage(self.getMainUrl())
-        if not sts: return
+        if not sts:
+            return
         self.setMainUrl(data.meta['url'])
         
         self.cacheSubSections = {'sub_1':[]}
@@ -167,7 +179,8 @@ class CimaClubCom(CBaseHostClass):
                 self.cacheFilters[key].append({'title':title.title(), key:value})
                 
             if len(self.cacheFilters[key]):
-                if addAll: self.cacheFilters[key].insert(0, {'title':_('All')})
+                if addAll:
+                    self.cacheFilters[key].insert(0, {'title':_('All')})
                 self.cacheFiltersKeys.append(key)
         
         data = self.cm.ph.getDataBeetwenNodes(data, ('<form', '>', 'searchandfilter'), ('</form', '>'))[1]
@@ -191,7 +204,8 @@ class CimaClubCom(CBaseHostClass):
         cItem = dict(cItem)
         
         f_idx = cItem.get('f_idx', 0)
-        if f_idx >= len(self.cacheFiltersKeys): return
+        if f_idx >= len(self.cacheFiltersKeys):
+            return
         
         filter = self.cacheFiltersKeys[f_idx]
         f_idx += 1
@@ -208,21 +222,24 @@ class CimaClubCom(CBaseHostClass):
             post_data = {}
             for key in self.cacheFiltersKeys:
                 baseKey = key[2:] # "f_"
-                if key in cItem: post_data[baseKey] = cItem[key]
+                if key in cItem:
+                    post_data[baseKey] = cItem[key]
             for item in self.cacheFilters.get('operators', []):
                 post_data.update(item)
         else:
             post_data = None
         
         sts, data = self.getPage(cItem['url'], post_data=post_data)
-        if not sts: return
+        if not sts:
+            return
         
         self.setMainUrl(data.meta['url'])
         baseItem = {'good_for_fav':False, 'name':'category', 'type':'category', 'category':cItem['category']}
         
         idx1 = data.find('overlayBOBOB')
         idx2 = data.rfind('footerEndSection')
-        if idx1 >= 0 and idx2 >= 0: data = data[idx1:idx2]
+        if idx1 >= 0 and idx2 >= 0:
+            data = data[idx1:idx2]
         
         nextPage = self.cm.ph.getDataBeetwenNodes(data, ('<div', '>', 'pagination'), ('</ul', '>'))[1]
         nextPage = self.cm.ph.getDataBeetwenNodes(nextPage, ('<li', '</a>', '&laquo;'), ('<', '>'))[1]
@@ -238,11 +255,14 @@ class CimaClubCom(CBaseHostClass):
                 continue
             desc = []
             views = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(item, ('<span', '>', 'views'), ('</span', '>'))[1])
-            if views != '': desc.append(_('%s views') % views)
+            if views != '':
+                desc.append(_('%s views') % views)
             cats = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(item, ('<span', '>', 'category'), ('</span', '>'))[1])
-            if cats != '': desc.append(cats)
+            if cats != '':
+                desc.append(cats)
             raiting = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(item, ('<i', '>', 'StarLabels'), ('</i', '>'))[1])
-            if raiting != '': desc.append(_('%s/10') % raiting)
+            if raiting != '':
+                desc.append(_('%s/10') % raiting)
             desc = ' | '.join(desc)
             desc += '[/br]' + self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(item, '<p', '</p>')[1])
             
@@ -258,7 +278,8 @@ class CimaClubCom(CBaseHostClass):
         printDBG("CimaClubCom.exploreItem [%s]" % cItem)
         
         sts, data = self.getPage(cItem['url'])
-        if not sts: return
+        if not sts:
+            return
         self.setMainUrl(data.meta['url'])
         
         self.cacheEpisodes = []
@@ -273,7 +294,8 @@ class CimaClubCom(CBaseHostClass):
         sTitle = ''
         tmp = self.cm.ph.getDataBeetwenNodes(data, ('<div', '>', 'mpbreadcrumbs'), ('</div', '>'))[1]
         tmp = self.cm.ph.getAllItemsBeetwenMarkers(tmp, '<a', '</a>')
-        if len(tmp): sTitle = self.cleanHtmlStr(tmp[-1])
+        if len(tmp):
+            sTitle = self.cleanHtmlStr(tmp[-1])
         
         baseItem = {'good_for_fav':False, 'name':'category', 'type':'category', 'category':nextCategory, 'icon':cItem.get('icon', '')}
         tmp = self.cm.ph.getAllItemsBeetwenNodes(data, ('<div', '>', 'data-filter'), ('</div', '>'))
@@ -297,7 +319,8 @@ class CimaClubCom(CBaseHostClass):
         sId = cItem['s_id']
         sTitle = cItem['s_title']
         for item in self.cacheEpisodes:
-            if item['s_id'] != sId: continue
+            if item['s_id'] != sId:
+                continue
             title = '%s - %s - %s' % (sTitle, cItem['title'], item['title'])
             params = dict(cItem)
             params.update(item)
@@ -321,12 +344,14 @@ class CimaClubCom(CBaseHostClass):
         
         cacheKey = cItem['url']
         cacheTab = self.cacheLinks.get(cacheKey, [])
-        if len(cacheTab): return cacheTab
+        if len(cacheTab):
+            return cacheTab
         
         self.cacheLinks = {}
         
         sts, data = self.getPage(cItem['url'])
-        if not sts: return
+        if not sts:
+            return
         
         cUrl = data.meta['url']
         self.setMainUrl(cUrl)
@@ -339,7 +364,8 @@ class CimaClubCom(CBaseHostClass):
         urlParams['header']['Referer'] = cUrl
         
         sts, data = self.getPage(self.getFullUrl(viewUrl), urlParams)
-        if not sts: return
+        if not sts:
+            return
         
         retTab = []
         
@@ -385,7 +411,8 @@ class CimaClubCom(CBaseHostClass):
         urlParams['header']['Referer'] = baseUrl.meta.get('Referer', self.getMainUrl())
         
         sts, data = self.getPage(baseUrl, urlParams)
-        if not sts: return
+        if not sts:
+            return
         
         videoUrl = self.getFullUrl(self.cm.ph.getSearchGroups(data, '''<iframe[^>]+?src=['"]([^"^']+?)['"]''', 1, True)[0])
         videoUrl = strwithmeta(videoUrl, {'Referer':urlParams['header']['Referer']})
@@ -399,7 +426,8 @@ class CimaClubCom(CBaseHostClass):
         otherInfo = {}
         
         sts, data = self.getPage(cItem['url'])
-        if not sts: return []
+        if not sts:
+            return []
         
         cUrl = data.meta['url']
         self.setMainUrl(cUrl)
@@ -411,7 +439,8 @@ class CimaClubCom(CBaseHostClass):
         icon  = self.getFullIconUrl(self.cm.ph.getSearchGroups(data, '''\ssrc=['"]([^'^"]+?(:?\.jpe?g|\.png)(:?\?[^'^"]*?)?)['"]''')[0])
         
         item = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(data, ('<div', '>', 'views'), ('</div', '>'))[1])
-        if item != '': otherInfo['rating'] = item
+        if item != '':
+            otherInfo['rating'] = item
         
         keysMap = {'quality':        'quality',
                    'category':       'category',
@@ -423,19 +452,25 @@ class CimaClubCom(CBaseHostClass):
         printDBG(data)
         for item in data:
             marker = self.cm.ph.getSearchGroups(item, '''\sitemprop=['"]([^'^"]+?)['"]''')[0]
-            if marker == '': marker = self.cm.ph.getSearchGroups(item, '''\sclass=['"]([^'^"]+?)['"]''')[0]
+            if marker == '':
+                marker = self.cm.ph.getSearchGroups(item, '''\sclass=['"]([^'^"]+?)['"]''')[0]
             printDBG(">>> %s" % marker)
-            if marker not in keysMap: continue
+            if marker not in keysMap:
+                continue
             value  = self.cleanHtmlStr(item)
             printDBG(">>>>> %s" % value)
-            if value == '': continue
+            if value == '':
+                continue
             if marker == 'genre' and '' != self.cm.ph.getSearchGroups(value, '''([0-9]{4})''')[0]:
                 marker = 'year'
             otherInfo[keysMap[marker]] = value
         
-        if title == '': title = cItem['title']
-        if desc == '':  desc = cItem.get('desc', '')
-        if icon == '':  icon = cItem.get('icon', self.DEFAULT_ICON_URL)
+        if title == '':
+            title = cItem['title']
+        if desc == '':
+            desc = cItem.get('desc', '')
+        if icon == '':
+            icon = cItem.get('icon', self.DEFAULT_ICON_URL)
         
         return [{'title':self.cleanHtmlStr( title ), 'text': self.cleanHtmlStr( desc ), 'images':[{'title':'', 'url':self.getFullUrl(icon)}], 'other_info':otherInfo}]
     

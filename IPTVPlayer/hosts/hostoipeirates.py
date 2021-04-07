@@ -109,7 +109,8 @@ class OipeiratesOnline(CBaseHostClass):
     def listMainItems(self, cItem, nextCategory):
         printDBG("OipeiratesOnline.listMainItems [%s]" % cItem)
         sts, data = self.getPage(cItem['url'])
-        if not sts: return
+        if not sts:
+            return
         
         data = self.cm.ph.getAllItemsBeetwenNodes(data, ('<h2', '>', 'h1'), ('<div', '>', 'cleared'))
         for item in data:
@@ -126,7 +127,8 @@ class OipeiratesOnline(CBaseHostClass):
         printDBG("OipeiratesOnline.listSort")
 
         sts, data = self.getPage(cItem['url'])
-        if not sts: return
+        if not sts:
+            return
 
         data = self.cm.ph.getDataBeetwenNodes(data, ('<div', '>', 'filmborder'), ('</ul', '>'), False)[1]
         data = self.cm.ph.getAllItemsBeetwenMarkers(data, '<li', '</li>')
@@ -150,12 +152,14 @@ class OipeiratesOnline(CBaseHostClass):
                 url += cItem['url_suffix']
 
             sts, data = self.getPage(url)
-            if not sts: return
+            if not sts:
+                return
 
             tmp = ph.find(data, ('<div', '>', 'ajax-load-more'), '</div>')[1]
             tmp = re.compile('''data\-([^=]+?)=['"]([^'^"]+?)['"]''').findall(tmp)
             for item in tmp:
-                if item[0].startswith('alm-'): item[0] = item[0][4:]
+                if item[0].startswith('alm-'):
+                    item[0] = item[0][4:]
                 query[item[0].replace('-', '_')] = item[1]
 
             if query:
@@ -171,12 +175,14 @@ class OipeiratesOnline(CBaseHostClass):
 
             url = cItem['ajaxurl'] + '?action=alm_query_posts&query_type=standard&' + urllib.parse.urlencode(query)
             sts, data = self.getPage(url)
-            if not sts: return
+            if not sts:
+                return
             printDBG(data)
             try:
                 tmp = json_loads(data)
                 data = tmp['html']
-                if not data: data = ''
+                if not data:
+                    data = ''
                 if tmp['meta']['postcount'] == int(query['posts_per_page']):
                     if tmp['meta']['totalposts'] > (page+1) * int(query['posts_per_page']):
                         ajaxurl = cItem['ajaxurl']
@@ -203,18 +209,22 @@ class OipeiratesOnline(CBaseHostClass):
     def exploreItem(self, cItem):
         printDBG("OipeiratesOnline.exploreItem")
         sts, data = self.getPage(cItem['url'])
-        if not sts: return
+        if not sts:
+            return
 
         desc  = self.cleanHtmlStr( self.cm.ph.getSearchGroups(data, '<meta[^>]*?property="og:description"[^>]*?content="([^"]+?)"')[0] )
         title = self.cleanHtmlStr( self.cm.ph.getSearchGroups(data, '<meta[^>]*?property="og:title"[^>]*?content="([^"]+?)"')[0] )
-        if '' == title: title = cItem['title']
+        if '' == title:
+            title = cItem['title']
 
         # trailer link extraction
         trailerMarker = '/trailer'
         trailer = ph.find(data, trailerMarker, '</iframe>', flags=ph.I|ph.START_E)[1]
-        if not trailer: trailer = ph.find(data, ('<iframe', '>', 'youtube'), '</iframe>', flags=ph.I|ph.START_E)[1]
+        if not trailer:
+            trailer = ph.find(data, ('<iframe', '>', 'youtube'), '</iframe>', flags=ph.I|ph.START_E)[1]
         trailer = ph.search(trailer, ph.IFRAME_SRC_URI_RE)[1]
-        if trailer.startswith('//'): trailer = 'http:' + trailer
+        if trailer.startswith('//'):
+            trailer = 'http:' + trailer
         if trailer.startswith('http'):
             params = dict(cItem)
             params['title'] = 'TRAILER'
@@ -232,7 +242,8 @@ class OipeiratesOnline(CBaseHostClass):
         else:
             m1 = '<!-- END TAG -->'
         sts, linksData = self.cm.ph.getDataBeetwenMarkers(data, m1, 'facebok', False, False)
-        if not sts: return
+        if not sts:
+            return
         seasonMarkerObj = re.compile(">\s*season|>\s*σεζόν")
         linksDataLower = linksData.decode('utf-8').lower().encode('utf-8')
 
@@ -241,19 +252,23 @@ class OipeiratesOnline(CBaseHostClass):
             mode = 'collect_item'
             spTab = [re.compile('<b>'), re.compile('<div[\s]+class="separator"[\s]+style="text-align\:[\s]+center;">'), re.compile('<div[\s]+style="text-align\:[\s]+center;">')]
             for sp in spTab:
-                if None != sp.search(linksData): break
+                if None != sp.search(linksData):
+                    break
             
             collectionItems = sp.split(linksData)
-            if len(collectionItems) > 0: del collectionItems[0]
+            if len(collectionItems) > 0:
+                del collectionItems[0]
             linksData = ''
             for item in collectionItems:
                 itemTitle = item.find('<')
-                if itemTitle < 0: continue
+                if itemTitle < 0:
+                    continue
                 itemTitle = self.cleanHtmlStr( item[:itemTitle] )
                 linksData = re.compile('<a[^>]*?href="([^"]+?)"[^>]*?>').findall(item)
                 links = []
                 for itemUrl in linksData:
-                    if 1 != self.up.checkHostSupport(itemUrl): continue 
+                    if 1 != self.up.checkHostSupport(itemUrl):
+                        continue 
                     links.append({'name':self.up.getHostName(itemUrl), 'url':itemUrl, 'need_resolve':1})
                 if len(links):
                     params = dict(cItem)
@@ -267,12 +282,15 @@ class OipeiratesOnline(CBaseHostClass):
             idx = 0
             first = True
             while True:
-                if idx == -1: break
+                if idx == -1:
+                    break
                 prevIdx = idx
                 
                 match = seasonMarkerObj.search(linksDataLower[idx:])
-                if match: idx += match.start(0)
-                else: idx = -1
+                if match:
+                    idx += match.start(0)
+                else:
+                    idx = -1
                 if prevIdx == 0:
                     continue
                 if idx > -1:
@@ -282,16 +300,20 @@ class OipeiratesOnline(CBaseHostClass):
                     item = linksData[prevIdx:]
                 
                 seasonID = item.find('<')
-                if seasonID < 0: continue
+                if seasonID < 0:
+                    continue
                 seasonID = item[:seasonID+1]
                 seasonID = self.cm.ph.getSearchGroups(seasonID, '([0-9]+?)[^0-9]')[0]
-                if '' == seasonID: continue
+                if '' == seasonID:
+                    continue
                 episodesData = re.compile('<a[^>]*?href="([^"]+?)"[^>]*?>([^<]+?)</a>').findall(item)
                 for eItem in episodesData:
                     eUrl = eItem[0]
                     eID  = self.cleanHtmlStr(eItem[1].replace(chr(160), ' '))
-                    if eUrl.startswith('//'): eUrl = self.getFullUrl(eUrl)
-                    if 1 != self.up.checkHostSupport(eUrl): continue 
+                    if eUrl.startswith('//'):
+                        eUrl = self.getFullUrl(eUrl)
+                    if 1 != self.up.checkHostSupport(eUrl):
+                        continue 
                     
                     linksID = '- s{0}e{1}'.format(seasonID.zfill(2), eID.zfill(2))
                     linksID = linksID.strip()
@@ -322,10 +344,12 @@ class OipeiratesOnline(CBaseHostClass):
             url   = item[0]
             title = item[1]
             # only supported hosts will be displayed
-            if 1 != self.up.checkHostSupport(url): continue 
+            if 1 != self.up.checkHostSupport(url):
+                continue 
             
             name = self.up.getHostName(url)
-            if url.startswith('//'): url += 'http'
+            if url.startswith('//'):
+                url += 'http'
             if url.startswith('http'):
                 urlTab.append({'name':title + ': ' + name, 'url':url, 'need_resolve':1})
         return urlTab
@@ -343,7 +367,8 @@ class OipeiratesOnline(CBaseHostClass):
         # Use Season and Episode information when exist for cache index
         idx = cItem['mode'] + cItem['url'] + cItem.get('season', '') + cItem.get('episode', '')
         urlTab = self.cacheLinks.get(idx,  [])
-        if len(urlTab): return urlTab
+        if len(urlTab):
+            return urlTab
         self.cacheLinks = {}
         
         urlTab = cItem.get('links', [])
@@ -367,7 +392,8 @@ class OipeiratesOnline(CBaseHostClass):
         if data == None:
             url = cItem.get('prev_url', cItem['url'])
             sts, data = self.getPage(url)
-            if not sts: data = ''
+            if not sts:
+                data = ''
         
         title = cItem['title']
         
@@ -376,8 +402,10 @@ class OipeiratesOnline(CBaseHostClass):
         data = self.cm.ph.getDataBeetwenNodes(data, ('<script', '>', 'oipeirates/vp'), ('<img', '>'))[1]
         icon = self.getFullIconUrl( self.cm.ph.getSearchGroups(data, '''<img[^>]+?src=['"]([^'^"]+?(?:\.jpe?g|\.png)(?:\?[^'^"]*?)?)['"]''')[0] )
         t = self.cleanHtmlStr(data.split('</div>', 1)[-1])
-        if t != '' and t != title: otherInfo['alternate_title'] = t
-        if icon == '': icon = cItem['icon']
+        if t != '' and t != title:
+            otherInfo['alternate_title'] = t
+        if icon == '':
+            icon = cItem['icon']
         return [{'title':self.cleanHtmlStr( title ), 'text': self.cleanHtmlStr( desc ), 'images':[{'title':'', 'url':self.getFullUrl(icon)}], 'other_info':otherInfo}]
 
     def handleService(self, index, refresh = 0, searchPattern = '', searchType = ''):

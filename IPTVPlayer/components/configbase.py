@@ -29,7 +29,7 @@ from Components.config import config, ConfigDirectory, ConfigText, ConfigPasswor
 from Components.ConfigList import ConfigListScreen
 from Tools.BoundFunction import boundFunction
 ###################################################
-COLORS_DEFINITONS = [("#000000", _("black")), ("#C0C0C0", _("silver")), ("#808080", _("gray")), ("#FFFFFF", _("white")), ("#800000", _("maroon")), ("#FF0000", _("red")), ("#800080", _("purple")), ("#FF00FF", _("fuchsia")), \
+COLORS_DEFINITONS = [("#000000", _("black")), ("#C0C0C0", _("silver")), ("#808080", _("gray")), ("#FFFFFF", _("white")), ("#800000", _("maroon")), ("#FF0000", _("red")), ("#800080", _("purple")), ("#FF00FF", _("fuchsia")),
                      ("#008000", _("green")), ("#00FF00", _("lime")), ("#808000", _("olive")), ("#FFFF00", _("yellow")), ("#000080", _("navy")), ("#0000FF", _("blue")), ("#008080", _("teal")), ("#00FFFF", _("aqua"))]
 
 class ConfigIPTVFileSelection(ConfigDirectory):
@@ -199,10 +199,12 @@ class ConfigBaseWidget(Screen, ConfigListScreen):
     def saveOrCancelChanges(self, callbackFun=None, failCallBackFun=None, answer=None):
         if answer:
             self.save()
-            if callbackFun: callbackFun()
+            if callbackFun:
+                callbackFun()
         else:
             self.cancel()
-            if failCallBackFun: failCallBackFun()
+            if failCallBackFun:
+                failCallBackFun()
 
     def keySave(self):
         self.saveAndClose()
@@ -230,7 +232,8 @@ class ConfigBaseWidget(Screen, ConfigListScreen):
     def performCloseWithMessage(self, afterSave=True):
         if afterSave:
             message = self.getMessageAfterSave()
-        else: message = self.getMessageBeforeClose()
+        else:
+            message = self.getMessageBeforeClose()
         if message == '':
             self.close()
         else:
@@ -252,7 +255,8 @@ class ConfigBaseWidget(Screen, ConfigListScreen):
         
         if isinstance(currItem, ConfigIPTVFileSelection):
             def SetFilePathCallBack(curIndex, newPath):
-                if None != newPath: self["config"].list[curIndex][1].value = newPath
+                if None != newPath:
+                    self["config"].list[curIndex][1].value = newPath
             try:
                 if None != currItem.fileMatch:
                     if currItem.ignoreCase:
@@ -269,12 +273,14 @@ class ConfigBaseWidget(Screen, ConfigListScreen):
         
         elif isinstance(currItem, ConfigDirectory):
             def SetDirPathCallBack(curIndex, newPath):
-                if None != newPath: self["config"].list[curIndex][1].value = newPath
+                if None != newPath:
+                    self["config"].list[curIndex][1].value = newPath
             self.session.openWithCallback(boundFunction(SetDirPathCallBack, curIndex), IPTVDirectorySelectorWidget, currDir=currItem.value,  title=_('Select the directory'))
             return
         elif isinstance(currItem, ConfigText):
             def VirtualKeyBoardCallBack(curIndex, newTxt):
-                if isinstance(newTxt, str): self["config"].list[curIndex][1].value = newTxt
+                if isinstance(newTxt, str):
+                    self["config"].list[curIndex][1].value = newTxt
             try:
                 # we need hide NumericalTextInputHelpDialog before 
                 self["config"].list[curIndex][1].help_window.hide()
@@ -345,5 +351,6 @@ class ConfigBaseWidget(Screen, ConfigListScreen):
 
     def changedEntry(self):
         self.changeSubOptions()
-        for x in self.onChangedEntry: x() 
+        for x in self.onChangedEntry:
+            x() 
 

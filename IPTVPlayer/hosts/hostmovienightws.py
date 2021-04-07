@@ -14,8 +14,10 @@ import re
 import urllib.request
 import urllib.parse
 import urllib.error
-try:    import json
-except Exception: import simplejson as json
+try:
+    import json
+except Exception:
+    import simplejson as json
 ###################################################
 
 
@@ -58,7 +60,8 @@ class MoviesNight(CBaseHostClass):
         printDBG("MoviesNight._fillFilters")
         cache = {'genres':[], 'years':[]}
         sts, data = self.cm.getPage(url)
-        if not sts: return {}
+        if not sts:
+            return {}
         
         tmp = self.cm.ph.getDataBeetwenMarkers(data, '<ul class="scrolling years">', '</ul>', False)[1]
         tmp = self.cm.ph.getAllItemsBeetwenMarkers(tmp, '<a ', '</a>')
@@ -111,7 +114,8 @@ class MoviesNight(CBaseHostClass):
             url += '?' + post
         
         sts, data = self.cm.getPage(url)
-        if not sts: return
+        if not sts:
+            return
         
         nextPage = False
         if ('/page/%d/' % (page + 1)) in data:
@@ -125,7 +129,8 @@ class MoviesNight(CBaseHostClass):
         
         for item in data:
             url    = self.cm.ph.getSearchGroups(item, 'href="([^"]+?)"')[0]
-            if url == '': continue
+            if url == '':
+                continue
             icon   = self.cm.ph.getSearchGroups(item, 'src="([^"]+?)"')[0]
             title = self.cm.ph.getDataBeetwenMarkers(item, '<h2>', '</h2>', False)[1]
             desc = self.cleanHtmlStr( item )
@@ -149,7 +154,8 @@ class MoviesNight(CBaseHostClass):
         self.episodesCache = {}
         
         sts, data = self.cm.getPage(cItem['url'])
-        if not sts: return
+        if not sts:
+            return
         
         data = self.cm.ph.getDataBeetwenReMarkers(data, re.compile('''<div id=['"]cssmenu['"]>'''), re.compile('</div>'), False)[1]
         data = re.split('''<li class=['"]has-sub['"]>''', data)
@@ -157,7 +163,8 @@ class MoviesNight(CBaseHostClass):
             del data[0]
         
         for item in data:
-            if 'No episodes' in item: continue
+            if 'No episodes' in item:
+                continue
             seasonTitle = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(item, '<a ', '</a>')[1])
             printDBG(">>>>>>>>>>>>>>>>>>>>>>>>>>>> " + seasonTitle)
             
@@ -180,7 +187,8 @@ class MoviesNight(CBaseHostClass):
     def listEpisodes(self, cItem):
         printDBG("MoviesNight.listEpisodes [%s]" % cItem)
         seasonKey = cItem.get('season_key', '')
-        if '' == seasonKey: return
+        if '' == seasonKey:
+            return
         cItem = dict(cItem)
         self.listsTab(self.episodesCache.get(seasonKey, []), cItem, 'video')
         
@@ -196,7 +204,8 @@ class MoviesNight(CBaseHostClass):
         url = cItem['url']
         
         sts, data = self.cm.getPage(url)
-        if not sts: return []
+        if not sts:
+            return []
         
         data = re.compile('<iframe[^>]+?src="(https?://[^"]+?)"', re.I).findall(data)
         for videoUrl in data:
@@ -217,7 +226,8 @@ class MoviesNight(CBaseHostClass):
         try:
             cItem = byteify(json.loads(fav_data))
             links = self.getLinksForVideo(cItem)
-        except Exception: printExc()
+        except Exception:
+            printExc()
         return links
         
     def setInitListFromFavouriteItem(self, fav_data):
@@ -239,10 +249,12 @@ class MoviesNight(CBaseHostClass):
         url = cItem.get('url', '')
         
         sts, data = self.cm.getPage(url)
-        if not sts: return retTab
+        if not sts:
+            return retTab
         
         m2 = '<div class="tsll">'
-        if m2 not in data: m2 = ' id="player'
+        if m2 not in data:
+            m2 = ' id="player'
         
         data = self.cm.ph.getDataBeetwenMarkers(data, '<div class="post">', m2)[1]
         title = self.cleanHtmlStr( self.cm.ph.getDataBeetwenMarkers(data, '<h1', '</h1>')[1] )
@@ -256,28 +268,37 @@ class MoviesNight(CBaseHostClass):
                 desc = self.cleanHtmlStr(data[1])
         else:
             tmp = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(data, '<span class="original">', '</span>')[1])
-            if tmp != '': otherInfo['alternate_title'] = tmp
+            if tmp != '':
+                otherInfo['alternate_title'] = tmp
             
             tmp = self.cm.ph.getSearchGroups(data, '>\s*([12][0-9]{3})\s*<')[0]
-            if tmp != '': otherInfo['year'] = tmp
+            if tmp != '':
+                otherInfo['year'] = tmp
             
             tmp = self.cm.ph.getSearchGroups(data, '>\s*([0-9]+\s*min)\s*<')[0]
-            if tmp != '': otherInfo['duration'] = tmp
+            if tmp != '':
+                otherInfo['duration'] = tmp
             
             tmp = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(data, '<div class="imdbdatos">', '</div>')[1])
-            if tmp != '': otherInfo['rating'] = tmp
+            if tmp != '':
+                otherInfo['rating'] = tmp
             
             tmp = []
             tmp2 = re.compile('<a[^>]+?rel="category[^>]+?>([^>]+?)<').findall(data)
             for t in tmp2:
                 t = self.cleanHtmlStr(t)
-                if t != '': tmp.append(t)
-            if len(tmp): otherInfo['genres'] = ', '.join(tmp)
+                if t != '':
+                    tmp.append(t)
+            if len(tmp):
+                otherInfo['genres'] = ', '.join(tmp)
 
         
-        if title == '': title = cItem['title']
-        if desc == '':  desc = cItem.get('desc', '')
-        if icon == '':  icon = cItem.get('icon', self.DEFAULT_ICON_URL)
+        if title == '':
+            title = cItem['title']
+        if desc == '':
+            desc = cItem.get('desc', '')
+        if icon == '':
+            icon = cItem.get('icon', self.DEFAULT_ICON_URL)
         
         return [{'title':self.cleanHtmlStr( title ), 'text': self.cleanHtmlStr( desc ), 'images':[{'title':'', 'url':self.getFullUrl(icon)}], 'other_info':otherInfo}]
     

@@ -19,8 +19,10 @@ import urllib.parse
 import urllib.error
 import base64
 from copy import deepcopy
-try:    import json
-except Exception: import simplejson as json
+try:
+    import json
+except Exception:
+    import simplejson as json
 from Components.config import config, ConfigSelection, ConfigYesNo, ConfigText, getConfigListEntry
 from Plugins.Extensions.IPTVPlayer.libs.recaptcha_v2 import UnCaptchaReCaptcha as  UnCaptchaReCaptcha_fallback
 ###################################################
@@ -96,7 +98,8 @@ class MRPiracyGQ(CBaseHostClass, CaptchaHelper):
         domain = None
         for url in ['http://mrpiracy.site/', 'http://mrpiracy.gq/']:
             sts, data = self.getPage(url)
-            if not sts: continue
+            if not sts:
+                continue
             tmp = self.cm.ph.getSearchGroups(data, '<a[^>]+?href="(https?://[^"]+?)"[^>]*?>[^>]+?site')[0]
             if self.cm.isValidUrl(tmp):
                 domain = tmp
@@ -122,7 +125,8 @@ class MRPiracyGQ(CBaseHostClass, CaptchaHelper):
     
         
     def getFullUrl(self, url):
-        if url.startswith('..'): url = url[2:]
+        if url.startswith('..'):
+            url = url[2:]
         return CBaseHostClass.getFullUrl(self, url)
         
     def getPage(self, baseUrl, addParams = {}, post_data = None):
@@ -134,8 +138,10 @@ class MRPiracyGQ(CBaseHostClass, CaptchaHelper):
         if sts:
             encoding = self.cm.ph.getDataBeetwenMarkers(data, 'charset=', '"', False)[1]
             if encoding != '':
-                try: data = data.decode(encoding).encode('utf-8')
-                except Exception: printExc()
+                try:
+                    data = data.decode(encoding).encode('utf-8')
+                except Exception:
+                    printExc()
         return sts, data
     
     def fillCacheFilters(self, cItem):
@@ -144,18 +150,22 @@ class MRPiracyGQ(CBaseHostClass, CaptchaHelper):
         self.cacheFiltersKeys = []
         
         sts, data = self.getPage(cItem['url'])
-        if not sts: return
+        if not sts:
+            return
         
         def addFilter(data, marker, key, addAny=True, titleBase=''):
             self.cacheFilters[key] = []
             for item in data:
                 value = self.cm.ph.getSearchGroups(item, marker + '''=([0-9]+?)[^0-9]''')[0]
-                if value == '': continue
+                if value == '':
+                    continue
                 title = self.cleanHtmlStr(item)
-                if titleBase == '': title = title.title()
+                if titleBase == '':
+                    title = title.title()
                 self.cacheFilters[key].append({'title':titleBase + title, key:value})
             if len(self.cacheFilters[key]):
-                if addAny: self.cacheFilters[key].insert(0, {'title':_('All')})
+                if addAny:
+                    self.cacheFilters[key].insert(0, {'title':_('All')})
                 self.cacheFiltersKeys.append(key)
         
         # clas
@@ -194,7 +204,8 @@ class MRPiracyGQ(CBaseHostClass, CaptchaHelper):
             # asc
             item.update({'title': '\xe2\x86\x91 ' + item['title'], 'order':'1'})
             self.cacheFilters['sort_by'].append(item)
-        if len(self.cacheFilters['sort_by']): self.cacheFiltersKeys.append('sort_by')
+        if len(self.cacheFilters['sort_by']):
+            self.cacheFiltersKeys.append('sort_by')
         
         printDBG(self.cacheFilters)
         
@@ -203,9 +214,11 @@ class MRPiracyGQ(CBaseHostClass, CaptchaHelper):
         cItem = dict(cItem)
         
         f_idx = cItem.get('f_idx', 0)
-        if f_idx == 0: self.fillCacheFilters(cItem)
+        if f_idx == 0:
+            self.fillCacheFilters(cItem)
         
-        if f_idx >= len(self.cacheFiltersKeys): return
+        if f_idx >= len(self.cacheFiltersKeys):
+            return
         
         filter = self.cacheFiltersKeys[f_idx]
         f_idx += 1
@@ -220,7 +233,8 @@ class MRPiracyGQ(CBaseHostClass, CaptchaHelper):
         page = cItem.get('page', 1)
         
         uriParams = {}
-        if page > 1: uriParams['pagina'] = page
+        if page > 1:
+            uriParams['pagina'] = page
         
         for item in [('f_class', 'e'), ('f_cat', 'categoria'), ('f_year', 'anos')]:
             if item[0] in cItem:
@@ -230,11 +244,14 @@ class MRPiracyGQ(CBaseHostClass, CaptchaHelper):
             uriParams[cItem['sort_by']] = cItem['order']
         
         uriParams = urllib.parse.urlencode(uriParams)
-        if '?' in url: url += '&' + uriParams
-        else: url += '?' + uriParams
+        if '?' in url:
+            url += '&' + uriParams
+        else:
+            url += '?' + uriParams
         
         sts, data = self.getPage(url)
-        if not sts: return
+        if not sts:
+            return
         
         nextPage = self.cm.ph.getDataBeetwenMarkers(data, 'pagination-aux', '</div>', False)[1]
         if ('>%s<' % (page+1)) in nextPage: 
@@ -249,18 +266,22 @@ class MRPiracyGQ(CBaseHostClass, CaptchaHelper):
             item = re.sub('<script.+?</script>', '', item)
             item = item.split('<div class="clear">')
             url  = self.getFullUrl( self.cm.ph.getSearchGroups(item[0], 'href="([^"]+?)"')[0] )
-            if not self.cm.isValidUrl(url): continue
+            if not self.cm.isValidUrl(url):
+                continue
             icon = self.getFullUrl( self.cm.ph.getSearchGroups(item[0], 'src="([^"]+?)"')[0] )
             title = self.cleanHtmlStr( item[0] )
-            if title == '': title = self.cleanHtmlStr(self.cm.ph.getSearchGroups(item[0], '''alt=['"]([^'^"]+?)['"]''')[0])
-            if title == '': title = self.cleanHtmlStr(self.cm.ph.getSearchGroups(item[0], '''title=['"]([^'^"]+?)['"]''')[0])
+            if title == '':
+                title = self.cleanHtmlStr(self.cm.ph.getSearchGroups(item[0], '''alt=['"]([^'^"]+?)['"]''')[0])
+            if title == '':
+                title = self.cleanHtmlStr(self.cm.ph.getSearchGroups(item[0], '''title=['"]([^'^"]+?)['"]''')[0])
             descTab = []
             try:
                 tmp = self.cm.ph.getAllItemsBeetwenMarkers(item[1], '<div', '</div>')
                 tmp.insert(0, self.cleanHtmlStr(item[2]))
                 descTab.append('[/br]'.join( [self.cleanHtmlStr(x) for x in tmp]))
                 descTab.append(self.cleanHtmlStr(item[3]))
-            except Exception: printExc()
+            except Exception:
+                printExc()
 
             params = {'good_for_fav': True, 'title':title, 'url':url, 'desc':'[/br]'.join(descTab), 'info_url':url, 'icon':icon}
             if '/filme.php' in url:
@@ -280,10 +301,12 @@ class MRPiracyGQ(CBaseHostClass, CaptchaHelper):
         printDBG("MRPiracyGQ.listSeasons")
         
         sts, data = self.getPage(cItem['url'])
-        if not sts: return
+        if not sts:
+            return
         
         seriesTitle = self.cleanHtmlStr( self.cm.ph.getSearchGroups(data, '<a[^>]+?class="movie-name"[^>]*?>([^<]+?)</a>')[0] )
-        if seriesTitle != '': seriesTitle = cItem['title']
+        if seriesTitle != '':
+            seriesTitle = cItem['title']
         
         seasonLabel = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(data, '<div class="season-Label">', '</div>', False)[1])
         
@@ -304,19 +327,24 @@ class MRPiracyGQ(CBaseHostClass, CaptchaHelper):
         seriesTitle = cItem.get('s_title', '')
         
         sts, data = self.getPage(cItem['url'])
-        if not sts: return
+        if not sts:
+            return
         
         data = self.cm.ph.getDataBeetwenMarkers(data, '<div id="episodes-list"', '<div class="season-info">')[1]
         data = self.cm.ph.getAllItemsBeetwenMarkers(data, '<a ', '</a>', withMarkers=True)
         for item in data:
             eNum = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(item, '<div class="episode-number">', '</div>')[1])
-            if eNum != '': eNum = self.cleanHtmlStr(self.cm.ph.getSearchGroups(item, '''name=['"]([^'^"]+?)['"]''')[0])
+            if eNum != '':
+                eNum = self.cleanHtmlStr(self.cm.ph.getSearchGroups(item, '''name=['"]([^'^"]+?)['"]''')[0])
             url  = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''href=['"]([^'^"]+?)['"]''')[0].split('#')[0])
-            if not self.cm.isValidUrl(url): continue
+            if not self.cm.isValidUrl(url):
+                continue
             icon = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''src=["']([^"^']+?)["']''')[0])
             title = self.cleanHtmlStr(self.cm.ph.getSearchGroups(item, '''alt=['"]([^'^"]+?)['"]''')[0])
-            if title == '': title = self.cleanHtmlStr(self.cm.ph.getSearchGroups(item, '''title=['"]([^'^"]+?)['"]''')[0])
-            if title == '': title = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(item, '<div class="semlegendaimg">', '</div>')[1])
+            if title == '':
+                title = self.cleanHtmlStr(self.cm.ph.getSearchGroups(item, '''title=['"]([^'^"]+?)['"]''')[0])
+            if title == '':
+                title = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(item, '<div class="semlegendaimg">', '</div>')[1])
             title = '%s: s%se%s %s' % (seriesTitle, sNum.zfill(2), eNum.zfill(2), title)
             params = dict(cItem)
             params.update({'good_for_fav': False, 'title':title, 'url':url, 'icon':icon})
@@ -342,10 +370,12 @@ class MRPiracyGQ(CBaseHostClass, CaptchaHelper):
         printDBG("MRPiracyGQ.getLinksForVideo [%s]" % cItem)
         urlTab = self.cacheLinks.get(cItem['url'], [])
         
-        if len(urlTab): return urlTab
+        if len(urlTab):
+            return urlTab
         
         sts, data = self.getPage(cItem['url'])
-        if not sts: return urlTab
+        if not sts:
+            return urlTab
         cUrl = self.cm.meta['url']
         
         trailerUrl = self.cm.ph.getSearchGroups(data, '''trailer\(\s*["'](https?://youtube.com/[^"^']+?)["']''')[0]
@@ -376,7 +406,8 @@ class MRPiracyGQ(CBaseHostClass, CaptchaHelper):
         
         if len(urlTab):
             authCookie = self.cm.getCookieItem(self.COOKIE_FILE, 'id_utilizador')
-            if authCookie == '': authCookie = self.cm.getCookieItem(self.COOKIE_FILE, 'admin')
+            if authCookie == '':
+                authCookie = self.cm.getCookieItem(self.COOKIE_FILE, 'admin')
         
             id = urlTab[0]['url'].meta.get('id', '')
             type = cItem['url'].rsplit('/', 1)[-1].split('.', 1)[0]
@@ -389,10 +420,13 @@ class MRPiracyGQ(CBaseHostClass, CaptchaHelper):
                     data = byteify(json.loads(data))
                     for item in data:
                         for i in range(10):
-                            if i == 0: key = 'URL'
-                            else: key = 'URL%s' % i
+                            if i == 0:
+                                key = 'URL'
+                            else:
+                                key = 'URL%s' % i
                             url = item.get(key, '')
-                            if not self.cm.isValidUrl(url): continue
+                            if not self.cm.isValidUrl(url):
+                                continue
                             kodiLinks.append({'name':'[kodi] ' + self.up.getHostName(url).rsplit('.', 1)[0].title(), 'url':strwithmeta(url, {'kodi_link':True, 'Referer':cUrl}), 'need_resolve':1})
                     kodiLinks.extend(urlTab)
                     urlTab = kodiLinks
@@ -402,7 +436,8 @@ class MRPiracyGQ(CBaseHostClass, CaptchaHelper):
         if self.cm.isValidUrl(trailerUrl):
             urlTab.append({'name':_('Trailer'), 'url':trailerUrl, 'need_resolve':1})
             sts, data = self.getPage(cItem['url'])
-            if not sts: return urlTab
+            if not sts:
+                return urlTab
         
         if len(urlTab):
             self.cacheLinks[cItem['url']] = urlTab
@@ -498,7 +533,8 @@ class MRPiracyGQ(CBaseHostClass, CaptchaHelper):
             if sts and '00:'in data:
                 for idx in range(len(urlTab)):
                     urlTab[idx]['url'] = strwithmeta(urlTab[idx]['url'])
-                    if 'external_sub_tracks' not in urlTab[idx]['url'].meta: urlTab[idx]['url'].meta['external_sub_tracks'] = []
+                    if 'external_sub_tracks' not in urlTab[idx]['url'].meta:
+                        urlTab[idx]['url'].meta['external_sub_tracks'] = []
                     urlTab[idx]['url'].meta['external_sub_tracks'].append({'title':'', 'url':subUrl, 'lang':'pt', 'format':'srt'})
         return urlTab
     
@@ -515,7 +551,8 @@ class MRPiracyGQ(CBaseHostClass, CaptchaHelper):
         try:
             cItem = byteify(json.loads(fav_data))
             links = self.getLinksForVideo(cItem)
-        except Exception: printExc()
+        except Exception:
+            printExc()
         return links
         
     def setInitListFromFavouriteItem(self, fav_data):
@@ -535,17 +572,22 @@ class MRPiracyGQ(CBaseHostClass, CaptchaHelper):
         retTab = []
         
         sts, data = self.getPage(cItem.get('url', ''))
-        if not sts: return retTab
+        if not sts:
+            return retTab
         
         desc = self.cleanHtmlStr(self.cm.ph.getDataBeetwenReMarkers(data, re.compile('<[^>]+?id="movie-synopsis"[^>]*?>'), re.compile('</div>'))[1])
-        if desc == '': desc  = self.cleanHtmlStr( self.cm.ph.getSearchGroups(data, '<meta property="og:description"[^>]+?content="([^"]+?)"')[0] )
+        if desc == '':
+            desc  = self.cleanHtmlStr( self.cm.ph.getSearchGroups(data, '<meta property="og:description"[^>]+?content="([^"]+?)"')[0] )
         
         title = self.cleanHtmlStr( self.cm.ph.getSearchGroups(data, '<meta property="og:title"[^>]+?content="([^"]+?)"')[0] )
         icon  = self.getFullUrl( self.cm.ph.getSearchGroups(data, '<meta property="og:image"[^>]+?content="([^"]+?)"')[0] )
         
-        if title == '': title = cItem['title']
-        if desc == '':  title = cItem['desc']
-        if icon == '':  title = cItem['icon']
+        if title == '':
+            title = cItem['title']
+        if desc == '':
+            title = cItem['desc']
+        if icon == '':
+            title = cItem['icon']
         
         descData = self.cm.ph.getDataBeetwenMarkers(data, '<div class="movie-detailed-info">', '<div class="clear">', False)[1] 
         descTabMap = {"genre":         "genre",
@@ -557,26 +599,34 @@ class MRPiracyGQ(CBaseHostClass, CaptchaHelper):
         for item in tmp:
             key = self.cm.ph.getSearchGroups(item, '''class=['"]([^'^"]+?)['"]''')[0]
             if key in descTabMap:
-                try: otherInfo[descTabMap[key]] = self.cleanHtmlStr(item)
-                except Exception: continue
+                try:
+                    otherInfo[descTabMap[key]] = self.cleanHtmlStr(item)
+                except Exception:
+                    continue
                 
         status = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(descData, 'Estado:', '</span>', False)[1])
-        if status != '': otherInfo['status'] = status
+        if status != '':
+            otherInfo['status'] = status
         
         year = self.cm.ph.getSearchGroups(self.cm.ph.getDataBeetwenMarkers(descData, '<span class="year">', '<span class="', False)[1], '[^0-9]([0-9]+?)[^0-9]')[0]
-        if year != '': otherInfo['year'] = year
+        if year != '':
+            otherInfo['year'] = year
         
         director = self.cleanHtmlStr(self.cm.ph.getDataBeetwenReMarkers(descData, re.compile('Realizador:\s*</span>'), re.compile('</span>'), False)[1])
-        if director != '': otherInfo['director'] = director
+        if director != '':
+            otherInfo['director'] = director
         
         creator = self.cleanHtmlStr(self.cm.ph.getDataBeetwenReMarkers(descData, re.compile('Criador:\s*</span>'), re.compile('</span>'), False)[1])
-        if creator != '': otherInfo['creator'] = creator
+        if creator != '':
+            otherInfo['creator'] = creator
         
         actors = self.cleanHtmlStr(self.cm.ph.getDataBeetwenReMarkers(descData, re.compile('Elenco:\s*</span>'), re.compile('</span>'), False)[1])
-        if actors != '': otherInfo['actors'] = actors
+        if actors != '':
+            otherInfo['actors'] = actors
         
         imdb_rating = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(descData, '<div class="imdb-rate">', '</span>', False)[1])
-        if imdb_rating != '': otherInfo['imdb_rating'] = imdb_rating
+        if imdb_rating != '':
+            otherInfo['imdb_rating'] = imdb_rating
         
         return [{'title':self.cleanHtmlStr( title ), 'text': self.cleanHtmlStr( desc ), 'images':[{'title':'', 'url':self.getFullUrl(icon)}], 'other_info':otherInfo}]
     
@@ -585,7 +635,8 @@ class MRPiracyGQ(CBaseHostClass, CaptchaHelper):
         connFailed = _('Connection to server failed!')
 
         sts, data = self.getPage(self.getMainUrl())
-        if not sts: return False, connFailed 
+        if not sts:
+            return False, connFailed 
 
         if 'logout.php' in data:
             return True, 'OK'
@@ -614,7 +665,8 @@ class MRPiracyGQ(CBaseHostClass, CaptchaHelper):
 
         # login
         sts, data = self.cm.getPage(url, params, post_data)
-        if not sts: return False, connFailed
+        if not sts:
+            return False, connFailed
 
         if 'logout.php' in data:
             return True, 'OK'
@@ -627,7 +679,7 @@ class MRPiracyGQ(CBaseHostClass, CaptchaHelper):
         if self.MAIN_URL == None:
             self.selectDomain()
         
-        if (self.login != config.plugins.iptvplayer.mrpiracy_login.value or \
+        if (self.login != config.plugins.iptvplayer.mrpiracy_login.value or
              self.password != config.plugins.iptvplayer.mrpiracy_password.value) and \
             '' != config.plugins.iptvplayer.mrpiracy_login.value.strip() and \
             '' != config.plugins.iptvplayer.mrpiracy_password.value.strip():
@@ -639,7 +691,7 @@ class MRPiracyGQ(CBaseHostClass, CaptchaHelper):
             else:
                 self.loogin   = config.plugins.iptvplayer.mrpiracy_login.value
                 self.password = config.plugins.iptvplayer.mrpiracy_password.value
-        elif ('' == config.plugins.iptvplayer.mrpiracy_login.value.strip() or \
+        elif ('' == config.plugins.iptvplayer.mrpiracy_login.value.strip() or
               '' == config.plugins.iptvplayer.mrpiracy_password.value.strip()):
            self.sessionEx.open(MessageBox, 'Access to this service requires login.\nPlease register on the site \"%s\". Then log in and then put your login data in the host configuration under blue button.' % self.getMainUrl(), type=MessageBox.TYPE_INFO, timeout=20 )
         

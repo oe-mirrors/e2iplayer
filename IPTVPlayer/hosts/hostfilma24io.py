@@ -14,8 +14,10 @@ from Plugins.Extensions.IPTVPlayer.tools.iptvtypes import strwithmeta
 import urllib.request
 import urllib.parse
 import urllib.error
-try:    import json
-except Exception: import simplejson as json
+try:
+    import json
+except Exception:
+    import simplejson as json
 ###################################################
 
 
@@ -36,7 +38,8 @@ class Filma24IO(CBaseHostClass):
     def listMain(self, cItem):
         printDBG("Filma24IO.listMain")
         sts, data = self.getPage(self.getMainUrl())
-        if not sts: return
+        if not sts:
+            return
         self.setMainUrl(self.cm.meta['url'])
         
         subItems = []
@@ -52,13 +55,16 @@ class Filma24IO(CBaseHostClass):
         tmp = self.cm.ph.getDataBeetwenNodes(data, ('<ul', '>', 'main_menu'), ('</ul', '>'), False)[1]
         tmp = self.cm.ph.getAllItemsBeetwenMarkers(tmp, '<li', '</li>')
         for item in tmp:
-            if '_blank' in item: continue
+            if '_blank' in item:
+                continue
             url = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''href=['"]([^"^']+?)["']''', 1, True)[0])
             title = self.cleanHtmlStr(item)
             icon = self.getFullIconUrl(self.cm.ph.getSearchGroups(item, '''src=['"]([^"^']+?)["']''', 1, True)[0])
             params = dict(cItem)
-            if len(self.currList): params['category'] = 'list_items'
-            else: params.update({'category':'sub_items', 'sub_items':subItems})
+            if len(self.currList):
+                params['category'] = 'list_items'
+            else:
+                params.update({'category':'sub_items', 'sub_items':subItems})
             params.update({'title':title, 'url':url, 'icon':icon})
             self.addDir(params)
             
@@ -88,7 +94,8 @@ class Filma24IO(CBaseHostClass):
     def listItems(self, cItem, nextCategory):
         printDBG("Filma24IO.listItems [%s]" % cItem)
         sts, data = self.getPage(cItem['url'])
-        if not sts: return
+        if not sts:
+            return
         
         page = cItem.get('page', 1)
         
@@ -106,10 +113,13 @@ class Filma24IO(CBaseHostClass):
         data = self.cm.ph.rgetAllItemsBeetwenNodes(data, ('</div', '>'), ('<div', '>', 'post-'))
         for item in data:
             url = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''href=['"]([^"^']+?)["']''', 1, True)[0])
-            if url == '': continue
+            if url == '':
+                continue
             icon = self.cm.ph.getSearchGroups(item, '''image\:url\(([^\)]+?)\)''', 1, True)[0].strip()
-            if icon[:1] in ['"', "'"]: icon = icon[1:-1]
-            if icon == '': icon = self.cm.ph.getSearchGroups(item, '''\ssrc=['"]([^"^']+?\.(?:jpe?g|png)(?:\?[^'^"]*?)?)['"]''')[0]
+            if icon[:1] in ['"', "'"]:
+                icon = icon[1:-1]
+            if icon == '':
+                icon = self.cm.ph.getSearchGroups(item, '''\ssrc=['"]([^"^']+?\.(?:jpe?g|png)(?:\?[^'^"]*?)?)['"]''')[0]
             title = self.cleanHtmlStr( self.cm.ph.getDataBeetwenNodes(item, ('<h', '>'), ('</h', '>'), False)[1] )
             
             desc = []
@@ -118,11 +128,13 @@ class Filma24IO(CBaseHostClass):
             tmp.extend(self.cm.ph.getAllItemsBeetwenMarkers(t, '<li', '</li>'))
             for t in tmp:
                 t = self.cleanHtmlStr(t)
-                if t != '': desc.append(t)
+                if t != '':
+                    desc.append(t)
             
             params = dict(cItem)
             params.update( {'good_for_fav': True, 'title':baseTitle % title, 'url':url, 'desc':' | '.join(desc), 'icon':self.getFullIconUrl(icon)} )
-            if '/seriale/' not in url: params['category'] = nextCategory
+            if '/seriale/' not in url:
+                params['category'] = nextCategory
             self.addDir(params)
         
         if nextPage != '':
@@ -135,7 +147,8 @@ class Filma24IO(CBaseHostClass):
         self.cacheLinks = {}
         
         sts, data = self.getPage(cItem['url'])
-        if not sts: return
+        if not sts:
+            return
         cUrl = self.cm.meta['url']
         self.setMainUrl(cUrl)
         
@@ -210,12 +223,15 @@ class Filma24IO(CBaseHostClass):
         url = cItem.get('prev_url', cItem['url'])
         if data == None:
             sts, data = self.getPage(url)
-            if not sts: data = ''
+            if not sts:
+                data = ''
 
         data = self.cm.ph.getDataBeetwenNodes(data, ('<div', '>', 'movie-info'), ('<div', '>', 'watch-links'), False)[1]
         icon = ''
-        if '/seria/' in url: title = ''
-        else: title = self.cleanHtmlStr( self.cm.ph.getDataBeetwenNodes(data, ('<div', '>', 'title'), ('</div', '>'), False)[1] )
+        if '/seria/' in url:
+            title = ''
+        else:
+            title = self.cleanHtmlStr( self.cm.ph.getDataBeetwenNodes(data, ('<div', '>', 'title'), ('</div', '>'), False)[1] )
         desc = self.cleanHtmlStr( self.cm.ph.getDataBeetwenNodes(data, ('<div', '>', 'synopsis'), ('</div', '>'), False)[1] )
 
         itemsList = []
@@ -224,23 +240,30 @@ class Filma24IO(CBaseHostClass):
         for idx in range(1, len(tmp), 2):
             key = self.cleanHtmlStr(tmp[idx-1])
             val = self.cleanHtmlStr(tmp[idx])
-            if key == '' or val == '': continue
+            if key == '' or val == '':
+                continue
             itemsList.append((key, val))
 
         tmp = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(data, ('<span', '>', 'movie-len'), ('</span', '>'), False)[1])
-        if tmp != '': itemsList.append((_('Duration:'), tmp))
+        if tmp != '':
+            itemsList.append((_('Duration:'), tmp))
         
         data = self.cm.ph.getDataBeetwenNodes(data, ('<ul', '>', 'genre'), ('</ul', '>'), False)[1]
         data = self.cm.ph.getAllItemsBeetwenMarkers(data, '<li', '</li>')
         tmp = []
         for t in data:
             t = self.cleanHtmlStr(t)
-            if t != '': tmp.append(t)
-        if len(tmp): itemsList.append((_('Genres:'), ', '.join(tmp)))
+            if t != '':
+                tmp.append(t)
+        if len(tmp):
+            itemsList.append((_('Genres:'), ', '.join(tmp)))
 
-        if title == '': title = cItem['title']
-        if icon == '':  icon  = cItem.get('icon', self.DEFAULT_ICON_URL)
-        if desc == '':  desc  = cItem.get('desc', '')
+        if title == '':
+            title = cItem['title']
+        if icon == '':
+            icon  = cItem.get('icon', self.DEFAULT_ICON_URL)
+        if desc == '':
+            desc  = cItem.get('desc', '')
         
         return [{'title':self.cleanHtmlStr( title ), 'text': self.cleanHtmlStr( desc ), 'images':[{'title':'', 'url':self.getFullUrl(icon)}], 'other_info':{'custom_items_list':itemsList}}]
         
@@ -282,5 +305,7 @@ class IPTVHost(CHostBase):
         CHostBase.__init__(self, Filma24IO(), True, [])
     
     def withArticleContent(self, cItem):
-        if 'prev_url' in cItem or cItem.get('category', '') == 'explore_item': return True
-        else: return False
+        if 'prev_url' in cItem or cItem.get('category', '') == 'explore_item':
+            return True
+        else:
+            return False

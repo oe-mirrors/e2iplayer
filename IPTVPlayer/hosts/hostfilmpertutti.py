@@ -34,7 +34,8 @@ class FilmPertutti(CBaseHostClass):
     def listMain(self, cItem):
         printDBG("FilmPertutti.listMain")
         sts, data = self.getPage(self.getMainUrl())
-        if not sts: return
+        if not sts:
+            return
         self.setMainUrl(self.cm.meta['url'])
         
         MAIN_CAT_TAB = [{'category':'list_cats',       'title':'Film',                   'url':self.getFullUrl('/category/film/')},
@@ -48,7 +49,8 @@ class FilmPertutti(CBaseHostClass):
     def listCategories(self, cItem, nextCategory):
         printDBG("FilmPertutti.listCategories")
         sts, data = self.getPage(cItem['url'])
-        if not sts: return
+        if not sts:
+            return
         self.setMainUrl(self.cm.meta['url'])
         
         params = dict(cItem)
@@ -59,7 +61,8 @@ class FilmPertutti(CBaseHostClass):
         data = self.cm.ph.getAllItemsBeetwenMarkers(data, '<option', '</option>')
         for item in data:
             url = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''<option[^>]+?src=['"]([^'^"]+?)['"]''')[0])
-            if url == '': continue
+            if url == '':
+                continue
             title = self.cleanHtmlStr(item)
             params = dict(cItem)
             params.update( {'good_for_fav': False, 'title':title, 'category':nextCategory, 'url':url} )
@@ -72,7 +75,8 @@ class FilmPertutti(CBaseHostClass):
     def listItems(self, cItem, nextCategory):
         printDBG("FilmPertutti.listItems [%s]" % cItem)
         sts, data = self.getPage(cItem['url'])
-        if not sts: return
+        if not sts:
+            return
         
         page = cItem.get('page', 1)
         
@@ -88,14 +92,17 @@ class FilmPertutti(CBaseHostClass):
                 printDBG(item)
                 printDBG('+++++++++++++++++++++++++++++++++++++')
                 url = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''href=['"]([^"^']+?)["']''', 1, True)[0])
-                if url == '': continue
+                if url == '':
+                    continue
                 icon = self.cm.ph.getSearchGroups(item, '''\ssrc=['"]([^"^']+?\.(?:jpe?g|png)(?:\?[^'^"]*?)?)['"]''')[0]
-                if icon == '': icon = self.cm.ph.getSearchGroups(item, '''thumbnail=['"]([^"^']+?\.(?:jpe?g|png)(?:\?[^'^"]*?)?)['"]''')[0]
+                if icon == '':
+                    icon = self.cm.ph.getSearchGroups(item, '''thumbnail=['"]([^"^']+?\.(?:jpe?g|png)(?:\?[^'^"]*?)?)['"]''')[0]
                 descTab = []
                 item = self.cm.ph.getAllItemsBeetwenNodes(item, ('<div', '>'), ('</div', '>'))
                 for t in item:
                     t = self.cleanHtmlStr(t)
-                    if t != '': descTab.append(t)
+                    if t != '':
+                        descTab.append(t)
                 
                 title = descTab.pop(0) if len(descTab) else ''
                 
@@ -113,7 +120,8 @@ class FilmPertutti(CBaseHostClass):
         self.cacheLinks = {}
         
         sts, data = self.getPage(cItem['url'])
-        if not sts: return
+        if not sts:
+            return
         cUrl = self.cm.meta['url']
         self.setMainUrl(cUrl)
         
@@ -129,7 +137,8 @@ class FilmPertutti(CBaseHostClass):
         tmp = self.cm.ph.getAllItemsBeetwenNodes(data, ('<div', '>', 'embed-title'), ('</iframe', '>'), False, caseSensitive=False)
         for item in tmp:
             url = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''<iframe[^>]+?src=['"]([^"^']+?)['"]''', 1, True)[0])
-            if url == '': continue
+            if url == '':
+                continue
             title = self.cleanHtmlStr(item)
             params = dict(cItem)
             params.update({'good_for_fav': False, 'title':'%s - %s' % (cItem['title'], title), 'url':url, 'main_link':True, 'desc':desc, 'prev_url':cItem['url']})
@@ -153,30 +162,36 @@ class FilmPertutti(CBaseHostClass):
             idx1 = item.find('<strong')
             if idx1 > -1:
                 idx2 = item.find('<br', idx1 + 7)
-                if idx2 < 0: idx2 = item.find('</strong', idx1 + 7)
+                if idx2 < 0:
+                    idx2 = item.find('</strong', idx1 + 7)
             
             if -1 not in [idx1, idx2] : 
                 linksCategory = self.cleanHtmlStr(item[idx1:idx2])
                 printDBG("linksCategory %s" % linksCategory)
             
-            if 'Download:' in linksCategory: continue
+            if 'Download:' in linksCategory:
+                continue
             item = reObj.split(item)
             for tmp in item:
                 episodeName = self.cleanHtmlStr(tmp[:tmp.find('<a')]).split(';', 1)[0]
                 if '×' not in episodeName:
                     episodeName = ''
                 else:
-                    try: episodeName = episodeName.decode('utf-8').strip().encode('utf-8')
-                    except Exception: pass
+                    try:
+                        episodeName = episodeName.decode('utf-8').strip().encode('utf-8')
+                    except Exception:
+                        pass
                 
-                if  linksCategory == '' and episodeName == '': continue
+                if  linksCategory == '' and episodeName == '':
+                    continue
                 typeName = linksCategory.split(' – ', 1)[-1] if episodeName != '' else linksCategory
                 
                 tmp = self.cm.ph.getAllItemsBeetwenMarkers(tmp, '<a', '</a>')
                 for it in tmp:
                     name = self.cleanHtmlStr(it)
                     url = self.getFullUrl(self.cm.ph.getSearchGroups(it, '''href=['"]([^"^']+?)['"]''')[0])
-                    if url == '' or '.addtoany.' in url: continue
+                    if url == '' or '.addtoany.' in url:
+                        continue
                     printDBG('>> | %s | %s | %s | > %s' % (typeName, episodeName, name, url))
                     if episodeName not in episodes:
                         episodes.append(episodeName)
@@ -189,8 +204,10 @@ class FilmPertutti(CBaseHostClass):
             cacheKey = cUrl + '#' + episode
             self.cacheLinks[cacheKey] = links[episode]
             
-            if episode == '': title = cItem['title'] + _(' - others links')
-            else: title = cItem['title'] + ' ' + episode
+            if episode == '':
+                title = cItem['title'] + _(' - others links')
+            else:
+                title = cItem['title'] + ' ' + episode
             
             params = dict(cItem)
             params.update({'good_for_fav': False, 'title':title, 'url':cUrl, 'cache_key':cacheKey, 'desc':desc, 'prev_url':cItem['url']})
@@ -240,7 +257,8 @@ class FilmPertutti(CBaseHostClass):
         url = cItem.get('prev_url', cItem['url'])
         if data == None:
             sts, data = self.getPage(url)
-            if not sts: data = ''
+            if not sts:
+                data = ''
 
         data = self.cm.ph.getDataBeetwenNodes(data, ('<section', '>', 'content'), ('</section', '>'), False)[1]
         icon = ''
@@ -253,15 +271,21 @@ class FilmPertutti(CBaseHostClass):
         data = self.cm.ph.rgetAllItemsBeetwenNodes(data, ('</div', '>'), ('<div', '>', 'subtitle'))
         for item in data:
             item = item.split('</div>', 1)
-            if len(item) != 2: continue
+            if len(item) != 2:
+                continue
             key = self.cleanHtmlStr(item[0])
             val = self.cleanHtmlStr(item[1]).replace(' , ', ', ')
-            if key == '' or val == '': continue
-            if key.lower() in ['approfondimento', 'trama']: descTab.append(key + '[/br]' + val)
-            else: itemsList.append((key, val))
+            if key == '' or val == '':
+                continue
+            if key.lower() in ['approfondimento', 'trama']:
+                descTab.append(key + '[/br]' + val)
+            else:
+                itemsList.append((key, val))
 
-        if title == '': title = cItem['title']
-        if icon == '':  icon  = cItem.get('icon', self.DEFAULT_ICON_URL)
+        if title == '':
+            title = cItem['title']
+        if icon == '':
+            icon  = cItem.get('icon', self.DEFAULT_ICON_URL)
         
         return [{'title':self.cleanHtmlStr( title ), 'text': '[/br][/br]'.join(descTab), 'images':[{'title':'', 'url':self.getFullUrl(icon)}], 'other_info':{'custom_items_list':itemsList}}]
         
@@ -305,5 +329,7 @@ class IPTVHost(CHostBase):
         CHostBase.__init__(self, FilmPertutti(), True, [])
     
     def withArticleContent(self, cItem):
-        if 'prev_url' in cItem or cItem.get('category', '') == 'explore_item': return True
-        else: return False
+        if 'prev_url' in cItem or cItem.get('category', '') == 'explore_item':
+            return True
+        else:
+            return False

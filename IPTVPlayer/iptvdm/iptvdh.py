@@ -138,12 +138,15 @@ class DMHelper:
             for idx in range(tries):
                 if idx > 0:
                     uniqueID = str(idx+1) + '. '
-                else: uniqueID = ''
+                else:
+                    uniqueID = ''
                 newFileName = os.path.dirname(fileName) + os.sep + uniqueID + os.path.basename(fileName)
-                if fileExists(newFileName): continue
+                if fileExists(newFileName):
+                    continue
                 if withTmpFileName: 
                     tmpFileName = os.path.dirname(fileName) + os.sep + "." + uniqueID + os.path.basename(fileName)
-                    if fileExists(tmpFileName): continue
+                    if fileExists(tmpFileName):
+                        continue
                     return newFileName, tmpFileName
                 else:
                     return newFileName
@@ -188,7 +191,8 @@ class DMHelper:
         cm = common()
         # only request
         sts = cm.getPage(url, addParams)[0]
-        if sts: remoteContentInfo = {'Content-Length': cm.meta.get('content-length', -1), 'Content-Type': cm.meta.get('content-type', '')}
+        if sts:
+            remoteContentInfo = {'Content-Length': cm.meta.get('content-length', -1), 'Content-Type': cm.meta.get('content-type', '')}
         printDBG("getRemoteContentInfoByUrllib: [%r]" % remoteContentInfo)
         return sts, remoteContentInfo
 
@@ -196,9 +200,11 @@ class DMHelper:
     def downloaderParams2UrllibParams(params):
         tmpParams = {}
         userAgent = params.get('User-Agent', '')
-        if '' != userAgent: tmpParams['User-Agent'] = userAgent
+        if '' != userAgent:
+            tmpParams['User-Agent'] = userAgent
         cookie = params.get('Cookie', '')
-        if '' != cookie: tmpParams['Cookie'] = cookie
+        if '' != cookie:
+            tmpParams['Cookie'] = cookie
         
         if len(tmpParams) > 0:
             return {'header': tmpParams}
@@ -252,9 +258,11 @@ class DMHelper:
         for key, value in list(downloaderParams.items()):
             if value != '':
                 if key in DMHelper.HANDLED_HTTP_HEADER_PARAMS:
-                    if 'Cookie' == key: headerOptions += ' --cookies=off '
+                    if 'Cookie' == key:
+                        headerOptions += ' --cookies=off '
                     headerOptions += ' --header "%s: %s" ' % (key, value)
-                    if key == 'User-Agent': defaultHeader = ''
+                    if key == 'User-Agent':
+                        defaultHeader = ''
                 elif key == 'http_proxy':
                     proxyOptions += ' -e use_proxy=yes -e http_proxy="%s" -e https_proxy="%s" ' % (value, value)
         

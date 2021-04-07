@@ -77,7 +77,8 @@ class PlusDEDE(CBaseHostClass):
         self.LOGIN_MARKER_FILE = self.COOKIE_FILE + '.mark'
         
     def getPage(self, baseUrl, addParams = {}, post_data = None):
-        if addParams == {}: addParams = dict(self.defaultParams)
+        if addParams == {}:
+            addParams = dict(self.defaultParams)
         origBaseUrl = baseUrl
         baseUrl = self.cm.iriToUri(baseUrl)
         addParams['cloudflare_params'] = {'cookie_file':self.COOKIE_FILE, 'User-Agent':self.USER_AGENT}
@@ -98,7 +99,8 @@ class PlusDEDE(CBaseHostClass):
     def readLoginMarker(self):
         printDBG("PlusDEDE.saveLoginMarker")
         sts, marker = ReadTextFile(self.LOGIN_MARKER_FILE)
-        if not sts: marker = ''
+        if not sts:
+            marker = ''
         printDBG("marker[%s]" % marker)
         return marker
         
@@ -108,7 +110,8 @@ class PlusDEDE(CBaseHostClass):
         self.cacheFiltersKeys = []
         
         sts, data = self.getPage(cItem['url'])
-        if not sts: return
+        if not sts:
+            return
         
         data = re.sub("<!--[\s\S]*?-->", "", data)
         
@@ -119,12 +122,14 @@ class PlusDEDE(CBaseHostClass):
                 title = self.cm.ph.rgetDataBeetwenMarkers2(item, '</%s>' % itemMarker, '>', False)[1]
                 title = self.cleanHtmlStr(title)
                 if value == '': 
-                    if allTitle == None: allTitle = title
+                    if allTitle == None:
+                        allTitle = title
                     continue
                 self.cacheFilters[key].append({'title':title.title(), key:value})
                 
             if len(self.cacheFilters[key]):
-                if allTitle != None: self.cacheFilters[key].insert(0, {'title':allTitle, key:''})
+                if allTitle != None:
+                    self.cacheFilters[key].insert(0, {'title':allTitle, key:''})
                 self.cacheFiltersKeys.append(key)
                 
         # get sub categories
@@ -134,7 +139,8 @@ class PlusDEDE(CBaseHostClass):
         tmp = self.cm.ph.getAllItemsBeetwenMarkers(tmp, '<li', '</li>')
         for item in tmp:
             url = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''href=['"]([^'^"]+?)['"]''')[0])
-            if not self.cm.isValidUrl(url): continue
+            if not self.cm.isValidUrl(url):
+                continue
             title = self.cleanHtmlStr(item)
             title = re.sub("&[^;]+?;", "", title).strip()
             tmpTab.append({'title':title, 'url':url})
@@ -170,7 +176,8 @@ class PlusDEDE(CBaseHostClass):
             
             if [] != self.cacheFilters.get(key, []):
                 title = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(data[idx], '<label', '</label>')[1])
-                if len(title): self.cacheFilters[key].insert(0, {'title':title, 'type':'marker'})
+                if len(title):
+                    self.cacheFilters[key].insert(0, {'title':title, 'type':'marker'})
         
         printDBG(self.cacheFilters)
         
@@ -179,9 +186,11 @@ class PlusDEDE(CBaseHostClass):
         cItem = dict(cItem)
         
         f_idx = cItem.get('f_idx', 0)
-        if f_idx == 0: self.fillCacheFilters(cItem)
+        if f_idx == 0:
+            self.fillCacheFilters(cItem)
         
-        if f_idx >= len(self.cacheFiltersKeys): return
+        if f_idx >= len(self.cacheFiltersKeys):
+            return
         
         filter = self.cacheFiltersKeys[f_idx]
         f_idx += 1
@@ -192,14 +201,16 @@ class PlusDEDE(CBaseHostClass):
     
     def listMainMenu(self, cItem, nextCategory):
         printDBG("PlusDEDE.listMainMenu")
-        if not self.loggedIn: return
+        if not self.loggedIn:
+            return
         self.listsTab(self.MAIN_CAT_TAB, cItem)
         
     def listLists(self, cItem, nextCategory):
         printDBG("PlusDEDE.listLists [%s]" % cItem)
         page = cItem.get('page', 0)
         sts, data = self.getPage(cItem['url'])
-        if not sts: return
+        if not sts:
+            return
         
         nextPage = self.cm.ph.getDataBeetwenNodes(data, ('<div', '>', 'load-more'), ('</div', '>'))[1]
         nextPage = self.getFullUrl(self.cm.ph.getSearchGroups(nextPage, '''data\-url=['"]([^'^"]+?)['"]''')[0])
@@ -213,7 +224,8 @@ class PlusDEDE(CBaseHostClass):
             tmp = self.cm.ph.getAllItemsBeetwenNodes(item, ('<div', '>', 'lista-stat'), ('</div', '>'))
             for t in tmp:
                 t = self.cleanHtmlStr(t)
-                if t != '': desc.append(t)
+                if t != '':
+                    desc.append(t)
             desc = ' | '.join(desc)
             desc += '[/br]' + self.cleanHtmlStr(item.split('</h4>', 1)[-1])
 
@@ -232,7 +244,8 @@ class PlusDEDE(CBaseHostClass):
         page = cItem.get('page', 0)
         
         url = cItem['url']
-        if not url.endswith('/'): url += '/'
+        if not url.endswith('/'):
+            url += '/'
         
         if page == 0:
             if '/lista/' in url:
@@ -240,21 +253,26 @@ class PlusDEDE(CBaseHostClass):
             elif 'f_search_query' not in cItem:
                 query = {}
                 for key in self.cacheFiltersKeys:
-                    if key in cItem: query[key[2:]] = cItem[key]
+                    if key in cItem:
+                        query[key[2:]] = cItem[key]
                 
                 query = urllib.parse.urlencode(query)
-                if '?' in url: url += '&' + query
-                else: url += '?' + query
+                if '?' in url:
+                    url += '&' + query
+                else:
+                    url += '?' + query
             else:
                 url += urllib.parse.quote(cItem['f_search_query'])
         
         sts, data = self.getPage(url)
-        if not sts: return
+        if not sts:
+            return
         
         nextPage = self.cm.ph.getDataBeetwenNodes(data, ('<div', '>', 'load-more'), ('</div', '>'))[1]
         nextPage = self.getFullUrl(self.cm.ph.getSearchGroups(nextPage, '''data\-url=['"]([^'^"]+?)['"]''')[0])
         data = re.compile('''<div[^>]+?media\-container[^>]+?>''').split(data)
-        if len(data): del data[0]
+        if len(data):
+            del data[0]
         reSeriesTitle = re.compile('^[0-9]+?x[0-9]+?\s')
         for item in data:
             url   = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''href=['"]([^'^"]+?)['"]''')[0])
@@ -282,7 +300,8 @@ class PlusDEDE(CBaseHostClass):
         self.cacheEpisodes = {}
         
         sts, data = self.getPage(cItem['url'])
-        if not sts: return
+        if not sts:
+            return
         
         tmp = self.cm.ph.getDataBeetwenNodes(data, ('<button', '>', 'data-youtube'), ('</button', '>'))[1]
         url = self.cm.ph.getSearchGroups(tmp, '''data\-youtube=['"]([^'^"]+?)['"]''')[0]
@@ -310,7 +329,8 @@ class PlusDEDE(CBaseHostClass):
                 eData = self.cm.ph.getAllItemsBeetwenNodes(season, ('<a', '>', 'episode'), ('</li', '>'))
                 for item in eData:
                     url = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''data\-href=['"]([^'^"]+?)['"]''')[0])
-                    if not self.cm.isValidUrl(url): continue
+                    if not self.cm.isValidUrl(url):
+                        continue
                     
                     tmp = self.cm.ph.getDataBeetwenNodes(item, ('<div', '>', 'name'), ('</div', '>'))[1].split('</span>', 1)
                     eNum   = self.cleanHtmlStr(tmp[0])
@@ -318,13 +338,17 @@ class PlusDEDE(CBaseHostClass):
                     title  = ('%s - s%se%s %s' % (cItem['title'], sNum.zfill(2), eNum.zfill(2), eTitle)).strip()
                     desc = []
                     tmp = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(item, ('<div', '>', 'date'), ('</div', '>'))[1])
-                    if tmp != '': desc.append(_('Date: %s') % tmp)
+                    if tmp != '':
+                        desc.append(_('Date: %s') % tmp)
                     tmp = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(item, ('<i', '>', 'wifi'), ('</div', '>'))[1])
-                    if tmp != '': desc.append(_('Views: %s') % tmp)
+                    if tmp != '':
+                        desc.append(_('Views: %s') % tmp)
                     tmp = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(item, ('<i', '>', 'download'), ('</div', '>'))[1])
-                    if tmp != '': desc.append(_('Downloads: %s') % tmp)
+                    if tmp != '':
+                        desc.append(_('Downloads: %s') % tmp)
                     tmp = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(item, ('<i', '>', 'comment'), ('</div', '>'))[1])
-                    if tmp != '': desc.append(_('Comments: %s') % tmp)
+                    if tmp != '':
+                        desc.append(_('Comments: %s') % tmp)
                     episodesTab.append({'title':title, 'url':url, 'desc':'[/br]'.join(desc)})
                 if len(episodesTab):
                     self.cacheEpisodes[sNum] = episodesTab
@@ -370,12 +394,14 @@ class PlusDEDE(CBaseHostClass):
         
         cacheKey = cItem['url']
         cacheTab = self.cacheLinks.get(cacheKey, [])
-        if len(cacheTab): return cacheTab
+        if len(cacheTab):
+            return cacheTab
         
         self.cacheLinks = {}
         
         sts, data = self.getPage(cItem['url'])
-        if not sts: return
+        if not sts:
+            return
         
         data = data.split('<div id="download"', 1)
         for idx in range(len(data)):
@@ -394,12 +420,16 @@ class PlusDEDE(CBaseHostClass):
                 tmp = self.cm.ph.getAllItemsBeetwenMarkers(item, '<div', '</div>')
                 for t in tmp:
                     t = self.cleanHtmlStr(t)
-                    if t != '': titleTab.append(t)
-                if idx == 0: retTab.append({'name':'%s' % (' | '.join(titleTab)), 'url':self.getFullUrl(url), 'need_resolve':1})
-                else: dwnTab.append({'name':'%s' % (' | '.join(titleTab)), 'url':self.getFullUrl(url), 'need_resolve':1})
+                    if t != '':
+                        titleTab.append(t)
+                if idx == 0:
+                    retTab.append({'name':'%s' % (' | '.join(titleTab)), 'url':self.getFullUrl(url), 'need_resolve':1})
+                else:
+                    dwnTab.append({'name':'%s' % (' | '.join(titleTab)), 'url':self.getFullUrl(url), 'need_resolve':1})
         
         #retTab.extend(dwnTab)
-        if len(retTab): self.cacheLinks[cacheKey] = retTab
+        if len(retTab):
+            self.cacheLinks[cacheKey] = retTab
         return retTab
         
     def getVideoLinks(self, videoUrl):
@@ -417,7 +447,8 @@ class PlusDEDE(CBaseHostClass):
                         break
         
         sts, data = self.getPage(videoUrl)
-        if not sts: return []
+        if not sts:
+            return []
         
         data = self.cm.ph.getDataBeetwenNodes(data, ('<div', '>', 'visit-buttons'), ('</div', '>'))[1]
         videoUrl  = self.getFullUrl(self.cm.ph.getSearchGroups(data, '''href=['"]([^'^"]+?)['"]''')[0])
@@ -440,7 +471,8 @@ class PlusDEDE(CBaseHostClass):
         
         if data == None:
             sts, data = self.getPage(cItem.get('prev_url', cItem['url']))
-            if not sts: return []
+            if not sts:
+                return []
         
         desc = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(data, ('<div', '>', 'plot'), ('</div', '>'), False)[1])
         title = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(data, ('<h1', '>', 'big-title'), ('</h1', '>'), False)[1])
@@ -455,7 +487,8 @@ class PlusDEDE(CBaseHostClass):
         tmpTab = []
         for t in tmp:
             t = self.cleanHtmlStr(t)
-            if t != '': tmpTab.append(t)
+            if t != '':
+                tmpTab.append(t)
         otherInfo['genres'] = ', '.join(tmpTab)
         
         objRe = re.compile('<div[^>]+?text\-sub[^>]+?>')
@@ -465,19 +498,25 @@ class PlusDEDE(CBaseHostClass):
         for t in tmp:
             t = objRe.split(t, 1)
             t[0] = self.cleanHtmlStr(t[0])
-            if t[0] == '': continue
+            if t[0] == '':
+                continue
             if 2 == len(t):
                 t[1] = self.cleanHtmlStr(t[1])
                 if t[1] == 'Director':
                     directors.append(t[0])
                     continue
             stars.append(t[0])
-        if len(directors): otherInfo['director'] = ', '.join(directors)
-        if len(stars): otherInfo['stars'] = ', '.join(stars)
+        if len(directors):
+            otherInfo['director'] = ', '.join(directors)
+        if len(stars):
+            otherInfo['stars'] = ', '.join(stars)
         
-        if title == '': title = cItem['title']
-        if desc == '':  desc = cItem.get('desc', '')
-        if icon == '':  icon = cItem.get('icon', self.DEFAULT_ICON_URL)
+        if title == '':
+            title = cItem['title']
+        if desc == '':
+            desc = cItem.get('desc', '')
+        if icon == '':
+            icon = cItem.get('icon', self.DEFAULT_ICON_URL)
         
         return [{'title':self.cleanHtmlStr( title ), 'text': self.cleanHtmlStr( desc ), 'images':[{'title':'', 'url':self.getFullUrl(icon)}], 'other_info':otherInfo}]
     
@@ -522,10 +561,12 @@ class PlusDEDE(CBaseHostClass):
             
             url = self.getFullUrl('/login?popup=1')
             sts, data = self.getPage(url)
-            if not sts: return False
+            if not sts:
+                return False
             
             sts, tmp = self.cm.ph.getDataBeetwenNodes(data, ('<form', '>'), ('</form', '>'))
-            if not sts: return False
+            if not sts:
+                return False
             
             actionUrl = self.getFullUrl(self.cm.ph.getSearchGroups(tmp, '''action=['"]([^'^"]+?)['"]''')[0])
             tmp = self.cm.ph.getAllItemsBeetwenMarkers(tmp, '<input', '>')
@@ -592,7 +633,8 @@ class PlusDEDE(CBaseHostClass):
                 tab = []
                 for t in tmp:
                     t = self.cleanHtmlStr(t)
-                    if t == '': continue
+                    if t == '':
+                        continue
                     tab.append(t)
                 error = ', '.join(tab)
             except Exception:
@@ -604,7 +646,8 @@ class PlusDEDE(CBaseHostClass):
                 self.AJAX_HEADER['X-CSRF-TOKEN'] = httpParams['header']['X-CSRF-TOKEN']
                 self.loggedIn = True
             else:
-                if error == '': error = _('Login failed.')
+                if error == '':
+                    error = _('Login failed.')
                 SetIPTVPlayerLastHostError(error)
                 printDBG('tryTologin failed')
         return self.loggedIn

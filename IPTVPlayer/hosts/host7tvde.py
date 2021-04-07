@@ -39,7 +39,8 @@ class C7tvDe(CBaseHostClass):
         self.channelsMap = {'titles':{'kabel1doku':'kabel eins Doku', 'pro7':'ProSieben', 'kabel1':'Kabeleins'}, 'order':{'kabel1doku':10, 'pro7':1, 'kabel1':3}}
 
     def getPage(self, baseUrl, addParams={}, post_data=None):
-        if addParams == {}: addParams = dict(self.defaultParams)
+        if addParams == {}:
+            addParams = dict(self.defaultParams)
         return self.cm.getPage(baseUrl, addParams, post_data)
 
     def getFullUrl(self, url, curUrl=None):
@@ -48,7 +49,8 @@ class C7tvDe(CBaseHostClass):
     def listMain(self, cItem, nextCategory):
         printDBG("C7tvDe.listMain")
         sts, data = self.getPage(self.getMainUrl())
-        if not sts: return
+        if not sts:
+            return
         self.setMainUrl(self.cm.meta['url'])
 
         MAIN_CAT_TAB = [{'category':'programs',       'title': 'Sendungen A-Z',       'url':self.getFullUrl('/sendungen-a-z')},
@@ -61,7 +63,8 @@ class C7tvDe(CBaseHostClass):
     def listMissed(self, cItem, nextCategory):
         printDBG("C7tvDe.listMissed")
         sts, data = self.getPage(cItem['url'])
-        if not sts: return
+        if not sts:
+            return
         self.setMainUrl(self.cm.meta['url'])
 
         tmp = ph.find(data, ('<ul', '>', 'site-nav-submenu'), '</ul>', flags=0)[1]
@@ -81,7 +84,8 @@ class C7tvDe(CBaseHostClass):
     def listChannels(self, cItem, nextCategory):
         printDBG("C7tvDe.listChannels")
         sts, data = self.getPage(cItem['url'])
-        if not sts: return
+        if not sts:
+            return
         self.setMainUrl(self.cm.meta['url'])
 
         data = ph.find(data, ('<ul', '>', 'brandgrid'), '</ul>', flags=0)[1]
@@ -94,7 +98,8 @@ class C7tvDe(CBaseHostClass):
     def listProgramsMenu(self, cItem, nextCategory1, nextCategory2):
         printDBG("C7tvDe.listProgramsMenu")
         sts, data = self.getPage(cItem['url'])
-        if not sts: return
+        if not sts:
+            return
         self.setMainUrl(self.cm.meta['url'])
 
         data = ph.find(data, ('<nav', '>', 'tvshow-nav'), '</nav>', flags=0)[1]
@@ -106,20 +111,26 @@ class C7tvDe(CBaseHostClass):
             for idx in range(1, len(sData), 2):
                 url = self.getFullUrl(ph.getattr(sData[idx-1], 'data-href'))
                 title = ph.clean_html(sData[idx])
-                if url: subItems.append(MergeDicts(cItem, {'url':url, 'title':title, 'category':nextCategory2}))
-                else: subItems.append(MergeDicts(cItem, {'title':title, 'category':nextCategory1}))
-            if not sTitle: self.currList.extend(subItems)
-            else: self.addDir(MergeDicts(cItem, {'category':'sub_items', 'sub_items':subItems, 'title':sTitle}))
+                if url:
+                    subItems.append(MergeDicts(cItem, {'url':url, 'title':title, 'category':nextCategory2}))
+                else:
+                    subItems.append(MergeDicts(cItem, {'title':title, 'category':nextCategory1}))
+            if not sTitle:
+                self.currList.extend(subItems)
+            else:
+                self.addDir(MergeDicts(cItem, {'category':'sub_items', 'sub_items':subItems, 'title':sTitle}))
 
     def listABC(self, cItem, nextCategory):
         printDBG("C7tvDe.listABC")
         sts, data = self.getPage(cItem['url'])
-        if not sts: return
+        if not sts:
+            return
         cUrl = self.cm.meta['url']
         try:
             data = json_loads(data)
             for letter, value in data['facet'].items():
-                if letter == '#': letter = '0-9'
+                if letter == '#':
+                    letter = '0-9'
                 if value:
                     title = '%s (%s)' % (letter.upper(), value)
                     url = cUrl + '/(letter)/%s' % letter
@@ -131,15 +142,20 @@ class C7tvDe(CBaseHostClass):
     def listABCItems(self, cItem, nextCategory):
         printDBG("C7tvDe.listABCItems")
         sts, data = self.getPage(cItem['url'])
-        if not sts: return
+        if not sts:
+            return
         cUrl = self.cm.meta['url']
         try:
             data = json_loads(data)
             for item in data['entries']:
-                if item['type'] == 'tvShow': category = nextCategory
-                else: category = nextCategory
-                try: icon = self.getFullIconUrl(item['images'][0]['url'])
-                except Exception: icon = ''
+                if item['type'] == 'tvShow':
+                    category = nextCategory
+                else:
+                    category = nextCategory
+                try:
+                    icon = self.getFullIconUrl(item['images'][0]['url'])
+                except Exception:
+                    icon = ''
                 desc = ' | '.join(item.get('relatedProviders', []))
                 self.addDir(MergeDicts(cItem, {'good_for_fav':True, 'category':category, 'url':self.getFullUrl(item['url']), 'icon':icon, 'title':str(item['title']), 'desc':desc}))
         except Exception:
@@ -150,7 +166,8 @@ class C7tvDe(CBaseHostClass):
         titlesMap = {} #{'pro7':'', 'sat1':'', 'kabel1':'', 'sixx':'', 'prosiebenmaxx':'', 'sat1gold':'', 'kabel1doku':'', 'dmax':'', 'tlc':'', 'eurosport':''}
 
         sts, data = self.getPage(cItem['url'])
-        if not sts: return
+        if not sts:
+            return
         cUrl = self.cm.meta['url']
 
         try:
@@ -164,8 +181,10 @@ class C7tvDe(CBaseHostClass):
                 subItems = []
                 for item in cData:
                     desc = [cItem['title'], item['airtime']]
-                    try: desc.append(str(timedelta(seconds=item['duration'] / 1000)))
-                    except Exception: pass
+                    try:
+                        desc.append(str(timedelta(seconds=item['duration'] / 1000)))
+                    except Exception:
+                        pass
                     if item['subType'] == "episode":
                         title = '%s: ' % (item['metadata']['tvShowTitle'])
                     title += item['title']
@@ -191,7 +210,8 @@ class C7tvDe(CBaseHostClass):
     def listItems(self, cItem, nextCategory):
         printDBG("C7tvDe.listItems")
         sts, data = self.getPage(cItem['url'])
-        if not sts: return
+        if not sts:
+            return
         self.setMainUrl(self.cm.meta['url'])
         self.currList = self.getItems(cItem, nextCategory, data)
 
@@ -205,10 +225,12 @@ class C7tvDe(CBaseHostClass):
             icon = self.getFullIconUrl( ph.getattr(item, 'data-src') )
             desc = ph.clean_html(ph.find(item, ('<div', '>', 'caption'), '</div>', flags=0)[1])
             title = ph.clean_html(ph.find(item, ('<h5', '>', 'title'), '</h5>', flags=0)[1])
-            if title == '': title = url.rsplit('/', 1)[-1].replace('-', ' ').decode('utf-8').title().encode('utf-8')
+            if title == '':
+                title = url.rsplit('/', 1)[-1].replace('-', ' ').decode('utf-8').title().encode('utf-8')
             desc = [desc] if desc else []
             desc.append(ph.clean_html(ph.find(item, ('<p', '>'), '</p>', flags=0)[1]))
-            if sTitle: title = '%s: %s' % (sTitle, title)
+            if sTitle:
+                title = '%s: %s' % (sTitle, title)
             params = MergeDicts(cItem, {'good_for_fav':True, 'title':title, 'url':self.getFullUrl(url), 'icon':icon, 'desc':'[/br]'.join(desc)})
             if 'class-clip' in data[idx-1]: # and '-clip' in url:
                 params.update({'type':'video'})
@@ -220,7 +242,8 @@ class C7tvDe(CBaseHostClass):
     def exploreItem(self, cItem, nextCategory):
         printDBG("C7tvDe.exploreItem")
         sts, data = self.getPage(cItem['url'])
-        if not sts: return
+        if not sts:
+            return
         self.setMainUrl(self.cm.meta['url'])
         
         tmp = ph.find(data, 'var contentResources = [', '];', flags=0)[1]
@@ -229,10 +252,14 @@ class C7tvDe(CBaseHostClass):
             for item in tmp:
                 icon = self.getFullIconUrl(item.get('poster', ''))
                 desc = []
-                try: desc.append(str(timedelta(seconds=item['duration'])))
-                except Exception: printExc()
-                try: desc.append(item['teaser']['description'])
-                except Exception: printExc()
+                try:
+                    desc.append(str(timedelta(seconds=item['duration'])))
+                except Exception:
+                    printExc()
+                try:
+                    desc.append(item['teaser']['description'])
+                except Exception:
+                    printExc()
                 self.addVideo(MergeDicts(cItem, {'good_for_fav':False, 'title':item['title'], 'item_data':item, 'icon':icon, 'desc':'[/br]'.join(desc)}))
         except Exception:
             printExc()
@@ -240,13 +267,15 @@ class C7tvDe(CBaseHostClass):
 
         if not cItem.get('sub_menu_item'):
             tmp = ph.find(data, ('<article', '>', 'class-clip'))[1]
-            if not tmp: return
+            if not tmp:
+                return
 
             data = ph.find(data, ('<ul', '>', 'format-nav-list'), '</ul>', flags=0)[1]
             data = ph.findall(data, ('<a', '>'), '</a>', flags=ph.START_S)
             for idx in range(1, len(data), 2):
                 url = self.getFullUrl(ph.getattr(data[idx-1], 'href'))
-                if '7tv.de' not in self.cm.getBaseUrl(url, True): continue
+                if '7tv.de' not in self.cm.getBaseUrl(url, True):
+                    continue
                 title = self.cleanHtmlStr(data[idx])
                 self.addDir(MergeDicts(cItem, {'good_for_fav':False, 'sub_menu_item':True, 'category':nextCategory, 'title':title, 'url':url}))
 
@@ -273,11 +302,14 @@ class C7tvDe(CBaseHostClass):
 
         if 'item_data' not in cItem:
             sts, data = self.getPage(cItem['url'])
-            if not sts: return
+            if not sts:
+                return
             client_location = self.cm.meta['url']
             data = ph.find(data, 'var contentResources = [', '];', flags=0)[1]
-            try: data = json_loads('[%s]' % data)[0]
-            except Exception: pass
+            try:
+                data = json_loads('[%s]' % data)[0]
+            except Exception:
+                pass
         else:
             client_location = cItem['url']
             data = cItem['item_data']
@@ -328,7 +360,8 @@ class C7tvDe(CBaseHostClass):
 
             json_url = 'http://vas.sim-technik.de/vas/live/v2/videos/%s?access_token=%s&client_location=%s&client_name=%s' % (video_id, access_token, client_location, client_name)
             sts, json_data = self.getPage(json_url)
-            if not sts: return []
+            if not sts:
+                return []
             printDBG(json_data)
             printDBG("++++++++++++++++++++")
             json_data = json_loads(json_data) 
@@ -345,7 +378,8 @@ class C7tvDe(CBaseHostClass):
 
             json_url = 'http://vas.sim-technik.de/vas/live/v2/videos/%s/sources?access_token=%s&client_location=%s&client_name=%s&client_id=%s' % (video_id, access_token, client_location, client_name, client_id_1)            
             sts, json_data = self.getPage(json_url)
-            if not sts: return []
+            if not sts:
+                return []
             printDBG(json_data)
             printDBG("++++++++++++++++++++")
             json_data = json_loads(json_data) 
@@ -375,7 +409,8 @@ class C7tvDe(CBaseHostClass):
                     url = url_api_url
 
                 sts, json_data = self.getPage(url, params)
-                if not sts: return []
+                if not sts:
+                    return []
 
                 printDBG(json_data)
                 printDBG("++++++++++++++++++++")

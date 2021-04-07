@@ -14,8 +14,10 @@ import urllib.parse
 import urllib.request
 import urllib.parse
 import urllib.error
-try:    import json
-except Exception: import simplejson as json
+try:
+    import json
+except Exception:
+    import simplejson as json
 ###################################################
 
 
@@ -36,12 +38,15 @@ class QuesttvCoUK(CBaseHostClass):
         self.defaultParams = {'header':self.HTTP_HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
         
     def getPage(self, baseUrl, addParams = {}, post_data = None):
-        if addParams == {}: addParams = dict(self.defaultParams)
+        if addParams == {}:
+            addParams = dict(self.defaultParams)
         origBaseUrl = baseUrl
         baseUrl = self.cm.iriToUri(baseUrl)
         def _getFullUrl(url):
-            if self.cm.isValidUrl(url): return url
-            else: return urllib.parse.urljoin(baseUrl, url)
+            if self.cm.isValidUrl(url):
+                return url
+            else:
+                return urllib.parse.urljoin(baseUrl, url)
         addParams['cloudflare_params'] = {'domain':self.up.getDomain(baseUrl), 'cookie_file':self.COOKIE_FILE, 'User-Agent':self.USER_AGENT, 'full_url_handle':_getFullUrl}
         return self.cm.getPageCFProtection(baseUrl, addParams, post_data)
         
@@ -49,7 +54,8 @@ class QuesttvCoUK(CBaseHostClass):
         printDBG("QuesttvCoUK.listOnDemand")
         
         sts, data = self.getPage(cItem['url'])
-        if not sts: return
+        if not sts:
+            return
         
         data = self.cm.ph.getDataBeetwenMarkers(data, 'jQuery.get(', ')')[1]
         url = self.getFullUrl(self.cm.ph.getSearchGroups(data, '''['"]([^'^"]+?)['"]''')[0])
@@ -59,14 +65,17 @@ class QuesttvCoUK(CBaseHostClass):
         params['header']['Referer'] = cItem['url']
         
         sts, data = self.getPage(url, params)
-        if not sts: return
+        if not sts:
+            return
         
         data = self.cm.ph.getAllItemsBeetwenNodes(data, ('<div', '>', 'dni-video-playlist-thumb-box'), ('</a', '>'))
         for item in data:
             videoId = self.cm.ph.getSearchGroups(item, '''href=['"]#([0-9]+?)['"]''')[0]
-            if videoId == '': continue
+            if videoId == '':
+                continue
             title = self.cleanHtmlStr(self.cm.ph.getSearchGroups(item, '''alt=['"]([^'^"]+?)['"]''')[0])
-            if title == '': title = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(item, ('<h3', '>', 'descHidden'), ('</h3', '>'))[1])
+            if title == '':
+                title = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(item, ('<h3', '>', 'descHidden'), ('</h3', '>'))[1])
             desc = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(item, ('<p', '>', 'descHidden'), ('</p', '>'))[1])
             icon = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''src=['"]([^'^"]+?)['"]''')[0])
             params = {'type':'video', 'title':title, 'f_video_id':videoId, 'desc':desc, 'icon':icon}
@@ -82,17 +91,20 @@ class QuesttvCoUK(CBaseHostClass):
             videoId = cItem['f_video_id']
         else:
             sts, data = self.getPage(cItem['url'])
-            if not sts: return
+            if not sts:
+                return
             
             videoId = self.cm.ph.getSearchGroups(data, '''data\-videoid=['"]([^'^"]+?)['"]''')[0]
-            if videoId == '': return ''
+            if videoId == '':
+                return ''
             
             getParams = {}
             data = self.cm.ph.getDataBeetwenMarkers(data, '<object', '</object>')[1]
             data = self.cm.ph.getAllItemsBeetwenMarkers(data, '<param', '>')
             for item in data:
                 name = self.cm.ph.getSearchGroups(item, '''name=['"]([^'^"]+?)['"]''')[0]
-                if name not in ['playerID', '@videoPlayer', 'playerKey']: continue
+                if name not in ['playerID', '@videoPlayer', 'playerKey']:
+                    continue
                 value = self.cm.ph.getSearchGroups(item, '''value=['"]([^'^"]+?)['"]''')[0]
                 getParams[name] = value
             
@@ -104,15 +116,19 @@ class QuesttvCoUK(CBaseHostClass):
                     printDBG(data)
                     data = byteify(json.loads(data+']'), '', True)
                     for item in data:
-                        if item['videoCodec'] != 'H264': continue
+                        if item['videoCodec'] != 'H264':
+                            continue
                         url = item['defaultURL']
-                        if not self.cm.isValidUrl(url): continue
+                        if not self.cm.isValidUrl(url):
+                            continue
                         name = '[mp4] bitrate: %s, %sx%s' % (item['encodingRate'], item['frameWidth'], item['frameHeight'])
                         mp4Tab.append({'name':name, 'url':url, 'bitrate':item['encodingRate']})
                         
                         def __getLinkQuality( itemLink ):
-                            try: return int(itemLink['bitrate'])
-                            except Exception: return 0
+                            try:
+                                return int(itemLink['bitrate'])
+                            except Exception:
+                                return 0
                         mp4Tab = CSelOneLink(mp4Tab, __getLinkQuality, 999999999).getSortedLinks()
                 except Exception:
                     printExc()

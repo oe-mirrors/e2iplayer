@@ -123,7 +123,8 @@ class IPTVDMWidget(Screen):
     
     def refreshFinished(self, code):
         printDBG("IPTVDMWidget.refreshFinished")
-        if self.iptvclosing: return
+        if self.iptvclosing:
+            return
         self.localFiles = []
         self.tmpList.sort(key=lambda x: x.fileName.lower())
         self.localFiles = self.tmpList
@@ -134,18 +135,22 @@ class IPTVDMWidget(Screen):
         
     def refreshNewData(self, data):
         printDBG("IPTVDMWidget.refreshNewData")
-        if self.iptvclosing: return
+        if self.iptvclosing:
+            return
         self.tmpData += data
         newFiles = self.tmpData.split('\n')
         if not self.tmpData.endswith('\n'): 
             self.tmpData = newFiles[-1]
             del newFiles[-1]
-        else: self.tmpData = ''
+        else:
+            self.tmpData = ''
 
         for item in newFiles:
             params = item.split('//')
-            if 4 > len(params): continue
-            if item.startswith('.'): continue # do not list hidden items
+            if 4 > len(params):
+                continue
+            if item.startswith('.'):
+                continue # do not list hidden items
             if len(params[0]) > 3 and params[0].lower()[-4:] in ['.flv', '.mp4']:
                 fileName = os_path.join(config.plugins.iptvplayer.NaszaSciezka.value, params[0])
                 skip = False
@@ -154,10 +159,13 @@ class IPTVDMWidget(Screen):
                     if fileName == item2.fileName.replace('//', '/'): 
                         skip = True
                         break
-                if skip: continue
+                if skip:
+                    continue
                 listItem = DMItemBase(url=fileName, fileName=fileName)
-                try: listItem.downloadedSize = os_path.getsize(fileName)
-                except Exception: listItem.downloadedSize = 0
+                try:
+                    listItem.downloadedSize = os_path.getsize(fileName)
+                except Exception:
+                    listItem.downloadedSize = 0
                 listItem.status      = DMHelper.STS.DOWNLOADED
                 listItem.downloadIdx = -1
                 self.tmpList.append( listItem )
@@ -169,8 +177,10 @@ class IPTVDMWidget(Screen):
     
     def setManagerStatus(self):
         status = _("Manager status: ")
-        if self.DM.isRunning(): self["titel"].setText(status + _("STARTED"))
-        else: self["titel"].setText(status + _("STOPPED"))
+        if self.DM.isRunning():
+            self["titel"].setText(status + _("STARTED"))
+        else:
+            self["titel"].setText(status + _("STOPPED"))
     
     def onListChanged(self):
         global gIPTVDM_listChanged
@@ -196,7 +206,8 @@ class IPTVDMWidget(Screen):
             self.mainTimer_conn = None
             self.mainTimer.stop()
             self.mainTimer = None
-        except Exception: printExc()
+        except Exception:
+            printExc()
         try:
             self.currentService = None
             self.session.nav.event.remove(self.__event)
@@ -204,7 +215,8 @@ class IPTVDMWidget(Screen):
 
             self.onClose.remove(self.__onClose)
             self.onShow.remove(self.onStart)
-        except Exception: printExc()
+        except Exception:
+            printExc()
         
     def red_pressed(self):
         self.DM.stopWorkThread()
@@ -217,14 +229,17 @@ class IPTVDMWidget(Screen):
         return
 
     def yellow_pressed(self):
-        if self.iptvclosing: return
+        if self.iptvclosing:
+            return
         if not self.underRefreshing: 
             self.underRefreshing = True
             self.tmpList = []
             self.tmpData = ''
             lsdirPath = GetBinDir("lsdir")
-            try: os_chmod(lsdirPath, 0o777)
-            except Exception: printExc()
+            try:
+                os_chmod(lsdirPath, 0o777)
+            except Exception:
+                printExc()
             cmd = '%s "%s" rl r' % (lsdirPath, config.plugins.iptvplayer.NaszaSciezka.value)
             printDBG("cmd[%s]" % cmd)
             self.console.execute( E2PrioFix( cmd ) )
@@ -234,7 +249,8 @@ class IPTVDMWidget(Screen):
         return
  
     def blue_pressed(self):
-        if self.iptvclosing: return
+        if self.iptvclosing:
+            return
         self.localMode = False
         self.reloadList(True)
         return  
@@ -243,12 +259,14 @@ class IPTVDMWidget(Screen):
         return
  
     def back_pressed(self):
-        if self.console: self.console.sendCtrlC()
+        if self.console:
+            self.console.sendCtrlC()
         self.close()
         return
 
     def ok_pressed(self): 
-        if self.iptvclosing: return
+        if self.iptvclosing:
+            return
         
         
         # wszystkie dostepne opcje
@@ -334,7 +352,8 @@ class IPTVDMWidget(Screen):
                                 del self.localFiles[idx]
                                 self.reloadList(True)
                                 break
-                    except Exception: printExc()
+                    except Exception:
+                        printExc()
             elif ret[1] == "continue":
                 self.DM.continueDownloadItem(item.downloadIdx)
             elif ret[1] == "retry":
@@ -354,8 +373,10 @@ class IPTVDMWidget(Screen):
 
     def getSelItem(self):
         currSelIndex = self["list"].getCurrentIndex()
-        if not self.localMode: list = self.currList
-        else: list = self.localFiles
+        if not self.localMode:
+            list = self.currList
+        else:
+            list = self.localFiles
         if len(list) <= currSelIndex:
             printDBG("ERROR: getSelItem there is no item with index: %d, listOfItems.len: %d" % (currSelIndex, len(list)))
             return None
@@ -365,7 +386,8 @@ class IPTVDMWidget(Screen):
         sel = None
         try:
             sel = self["list"].l.getCurrentSelection()[0]
-        except Exception:return None
+        except Exception:
+            return None
         return sel
         
     def onStart(self):

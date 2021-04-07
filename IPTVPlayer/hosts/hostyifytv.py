@@ -19,8 +19,10 @@ import urllib.request
 import urllib.parse
 import urllib.error
 import base64
-try:    import json
-except Exception: import simplejson as json
+try:
+    import json
+except Exception:
+    import simplejson as json
 from binascii import unhexlify
 from Components.config import config, ConfigSelection, getConfigListEntry
 from copy import deepcopy
@@ -91,7 +93,8 @@ class YifyTV(CBaseHostClass):
             addParams.update({'http_proxy':proxy})
             
         def _getFullUrl(url):
-            if url == '': return ''
+            if url == '':
+                return ''
             
             if self.cm.isValidUrl(url):
                 return url
@@ -109,7 +112,8 @@ class YifyTV(CBaseHostClass):
         while tries < 20:
             tries += 1
             sts, data = self.cm.getPageCFProtection(url, urlParams, urlData)
-            if not sts: return sts, data
+            if not sts:
+                return sts, data
             
             if unloadUrl != None:
                 self.cm.getPageCFProtection(unloadUrl, urlParams)
@@ -124,7 +128,8 @@ class YifyTV(CBaseHostClass):
                     if ret['sts'] and 0 == ret['code']:
                         try:
                             cookies = byteify(json.loads(ret['data'].strip()))
-                            for cookie in cookies: cookieItems.update(cookie)
+                            for cookie in cookies:
+                                cookieItems.update(cookie)
                         except Exception:
                             printExc()
                 self.defaultParams['cookie_items'] = cookieItems
@@ -153,7 +158,8 @@ class YifyTV(CBaseHostClass):
                 self.filterCache['genres'] = [{'title': _('Any')}]
                 for item in genres:
                     value = self.cm.ph.getSearchGroups(item[0], '''genre=([^'^"^\?^&]+?)$''')[0]
-                    if value == '': continue
+                    if value == '':
+                        continue
                     self.filterCache['genres'].append({'title': self.cleanHtmlStr(item[1]), 'genre':value})
                 
                 # orderby
@@ -170,7 +176,8 @@ class YifyTV(CBaseHostClass):
                 self.filterCache['years'] = [{'title': _('Any')}]
                 for item in years:
                     value = self.cm.ph.getSearchGroups(item[0], '''years=([0-9]{4})''')[0]
-                    if value == '': continue
+                    if value == '':
+                        continue
                     self.filterCache['years'].append({'title': self.cleanHtmlStr(item[1]), 'year':value})
                 
         if 0 == len(self.filterCache.get('languages', [])):
@@ -231,13 +238,15 @@ class YifyTV(CBaseHostClass):
             url = baseUrl
         
         sts, data = self.getPage(url)
-        if not sts: return 
+        if not sts:
+            return 
         
         #printDBG(data)
         
         if ('/page/%s/' % (page + 1)) in data:
             nextPage = True
-        else: nextPage = False
+        else:
+            nextPage = False
         
         data = self.cm.ph.getDataBeetwenMarkers(data, 'var posts = {', '};', False)[1]
         data = '{' + data + '}'
@@ -248,7 +257,8 @@ class YifyTV(CBaseHostClass):
         
         url = cItem['url'] + '&num=%s' % cItem.get('page', 1)
         sts, data = self.getPage(url)
-        if not sts: return 
+        if not sts:
+            return 
         
         self._listItems(cItem, data, True)
         
@@ -285,12 +295,15 @@ class YifyTV(CBaseHostClass):
         printDBG("YifyTV.getLinksForVideo [%s]" % cItem)
         
         urlTab = self.cacheLinks.get(cItem['url'], [])
-        if len(urlTab): return urlTab
+        if len(urlTab):
+            return urlTab
         
         url = cItem['url']
-        if not url.endswith('/'): url += '/'
+        if not url.endswith('/'):
+            url += '/'
         sts, data = self.getPage(url + 'watching/?playermode=')
-        if not sts: return urlTab
+        if not sts:
+            return urlTab
         
         printDBG("+++++++++++++++++++++++  data  ++++++++++++++++++++++++")
         printDBG(data)
@@ -340,7 +353,8 @@ class YifyTV(CBaseHostClass):
         idx = 1
         for item in data:
             tmp = item.split('=')
-            if len(tmp)!= 2: continue
+            if len(tmp)!= 2:
+                continue
             if tmp[1].endswith('enc'):
                 url = strwithmeta(tmp[1], {'Referer': cItem['url'], 'sou':tmp[0], 'imdbid':imdbid, 'external_sub_tracks':sub_tracks})
                 urlTab.append({'name':_('Mirror') + ' %s' % idx, 'url':url, 'need_resolve':1})
@@ -390,7 +404,8 @@ class YifyTV(CBaseHostClass):
                 post_data = {'fv':'27', 'url':baseUrl, 'sou':sou}
                 url = 'https://ymovies.tv/playerlite/pk/pk/plugins/player_p2.php'
                 sts, data = self.getPage(url, {'header':header}, post_data)
-                if not sts: return []
+                if not sts:
+                    return []
                 
                 printDBG("+++++++++++++++++++++++  data  ++++++++++++++++++++++++")
                 printDBG(data)
@@ -435,22 +450,26 @@ class YifyTV(CBaseHostClass):
                                 try:
                                     tmp = byteify(json.loads(data.strip()))
                                     sts, data = self.getPage(tmp['url'], {'header':header, 'raw_post_data':True}, tmp['params'])
-                                    if not sts: return []
+                                    if not sts:
+                                        return []
                                     tmp = byteify(json.loads(data))
                                     for hostDomain in tmp['hosts']:
                                         urlTab.append({'name':hostDomain, 'url':'http://%s%s' % (hostDomain, tmp['path'])})
-                                    if len(urlTab): break
+                                    if len(urlTab):
+                                        break
                                 except Exception:
                                     printExc()
                             
                             g3 = self.cm.ph.getSearchGroups(data+'&', '''[&\?]g3=([^&]+?)&''')[0]
                             emb = self.cm.ph.getSearchGroups(data+'&', '''[&\?]emb=([^&^\*]+?)[&\*]''')[0]
-                            if emb != '': data = urllib.parse.unquote(emb)
+                            if emb != '':
+                                data = urllib.parse.unquote(emb)
                             if g3 != '':
                                 post_data = {'fv':'0', 'g3':urllib.parse.unquote(g3)}
                                 url = 'https://ymovies.tv/playerlite/pk/pk/plugins/player_g3.php'
                                 sts, data = self.getPage(url, {'header':header}, post_data)
-                                if not sts: return []
+                                if not sts:
+                                    return []
                                 printDBG(data)
                             elif self.cm.isValidUrl(data) and 1 == self.up.checkHostSupport(data):
                                 urlTab = self.up.getVideoLinkExt(data)
@@ -509,7 +528,8 @@ class YifyTV(CBaseHostClass):
                     printExc()
                     return []
                 
-                if len(urlTab): break;
+                if len(urlTab):
+                    break
             
         elif self.cm.isValidUrl(baseUrl):
             urlTab = self.up.getVideoLinkExt(baseUrl)

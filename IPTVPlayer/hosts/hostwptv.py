@@ -13,8 +13,10 @@ from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, by
 import urllib.request
 import urllib.parse
 import urllib.error
-try:    import json
-except Exception: import simplejson as json
+try:
+    import json
+except Exception:
+    import simplejson as json
 from Components.config import config, ConfigSelection, ConfigYesNo, getConfigListEntry
 ###################################################
 
@@ -63,15 +65,18 @@ class WpTV(CBaseHostClass):
     def _getAttrVal(self, data, attr):
         val = self.cm.ph.getSearchGroups(data, '[<\s][^>]*' + attr + '=([^\s^>]+?)[\s>]')[0].strip()
         if len(val) > 2:
-            if val[0] in ['"', "'"]: val = val[1:]
-            if val[-1] in ['"', "'"]: val = val[:-1]
+            if val[0] in ['"', "'"]:
+                val = val[1:]
+            if val[-1] in ['"', "'"]:
+                val = val[:-1]
             return val
         return ''
 
     def getSectionItems(self, section):
         sectionItemsTab = []
         tmp = self.cm.ph.rgetAllItemsBeetwenNodes(section, ('</div', '>'), ('<div', '>', 'teaser teaser'))
-        if 0 == len(tmp): tmp = self.cm.ph.getAllItemsBeetwenNodes(section, ('<a', '>', 'teaser teaser'), ('</a', '>'))
+        if 0 == len(tmp):
+            tmp = self.cm.ph.getAllItemsBeetwenNodes(section, ('<a', '>', 'teaser teaser'), ('</a', '>'))
         for item in tmp:
             cat = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(item, '<em', '</em>')[1])
             dur = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(item, '<time', '</time>')[1])
@@ -79,17 +84,22 @@ class WpTV(CBaseHostClass):
             
             url  = self.getFullUrl(self._getAttrVal(item, 'href'))
             icon = self._getAttrVal(item, 'src')
-            if icon == '' or icon.startswith('data:image'): icon = self._getAttrVal(item, 'data-src')
+            if icon == '' or icon.startswith('data:image'):
+                icon = self._getAttrVal(item, 'data-src')
             title = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(item, '<h3', '</h3>')[1])
-            if title == '': title = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(item, '<h2', '</h2>')[1])
-            if title == '': title = self.cleanHtmlStr(self._getAttrVal(item, 'alt'))
-            if 'odcinek' in cat.lower(): title += ' - ' +  cat
+            if title == '':
+                title = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(item, '<h2', '</h2>')[1])
+            if title == '':
+                title = self.cleanHtmlStr(self._getAttrVal(item, 'alt'))
+            if 'odcinek' in cat.lower():
+                title += ' - ' +  cat
             
             if cat != '' and dur != '' and des != '':
                 desc = '%s | %s [/br]%s' % (dur, cat, des)
             else:
                 desc = self.cleanHtmlStr(item)
-            if not self.cm.isValidUrl(url): continue
+            if not self.cm.isValidUrl(url):
+                continue
             params = {'title':title, 'url':url, 'icon':self.getFullUrl(icon), 'desc':desc}
             if ',klip.html' in url:
                 params['type'] = 'video'
@@ -104,7 +114,8 @@ class WpTV(CBaseHostClass):
         self.cacheSections = {}
         page = cItem.get('page', 1)
         sts, data = self.cm.getPage(cItem['url'])
-        if not sts: return
+        if not sts:
+            return
         
         nextPage = self.getFullUrl(self.cm.ph.getSearchGroups(data, '''href=['"]([^'^"]+?\,page\,%d\,[^'^"]+?)['"]''' % (page+1))[0])
         
@@ -154,7 +165,8 @@ class WpTV(CBaseHostClass):
         self.cacheGroups = {}
         
         sts, data = self.cm.getPage(cItem['url'])
-        if not sts: return
+        if not sts:
+            return
         
         titlesTab = []
         data = self.cm.ph.getAllItemsBeetwenMarkers(data, '<div class="others__cols', '</ul>')
@@ -188,7 +200,8 @@ class WpTV(CBaseHostClass):
         
         page = cItem.get('page', 1)
         sts, data = self.cm.getPage(cItem['url'])
-        if not sts: return
+        if not sts:
+            return
         
         nextPage = self.getFullUrl(self.cm.ph.getSearchGroups(data, '''href=['"]([^'^"]+?\,page\,%d\,[^'^"]+?)['"]''' % (page+1))[0])
         mainDesc = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(data, '<main class="main-content"', '</p>')[1])
@@ -203,7 +216,8 @@ class WpTV(CBaseHostClass):
         
         data = self.cm.ph.getAllItemsBeetwenMarkers(data, '<section', '</section>')
         for section in data:
-            if 'Zobacz także' in section: continue
+            if 'Zobacz także' in section:
+                continue
             itemsTab = self.getSectionItems(section)
             for item in itemsTab:
                 item.update({'good_for_fav': True, 'desc':item['desc'] + '[/br]' + mainDesc}) #, 'title':item['desc']
@@ -230,25 +244,29 @@ class WpTV(CBaseHostClass):
         
         rm(self.COOKIE_FILE)
         sts, data = self.cm.getPage(cItem['url'], self.defaultParams)
-        if not sts: return []
+        if not sts:
+            return []
         
         vidId = self.cm.ph.getSearchGroups(data, 'data-mid="([^"]+?)"')[0]
         vidUrl = self.MAIN_URL + "player/mid,%s,embed.json" % vidId
         try:
             sts, data = self.cm.getPage(vidUrl, self.defaultParams)
-            if not sts: return []
+            if not sts:
+                return []
             
             tmpTab = []
             qMap = {"HQ":'2', "LQ":'1'}
             data = byteify(json.loads(data))
             for item in data['clip']['url']:
-                if 'mp4' not in item['type']: continue
+                if 'mp4' not in item['type']:
+                    continue
                 urlTab.append({'name':item['quality'] + ' ' + item['type'], 'url':self.getFullUrl(item['url']), 'quality':qMap.get(item['quality'], '3'), 'need_resolve':0})
                 
             if 0 < len(urlTab):
                 max_bitrate = int(config.plugins.iptvplayer.wpDefaultformat.value)
                 def __getLinkQuality( itemLink ):
-                    if 'mobile' in itemLink['name']: return 0
+                    if 'mobile' in itemLink['name']:
+                        return 0
                     return int(itemLink['quality'])
                 urlTab = CSelOneLink(urlTab, __getLinkQuality, max_bitrate).getSortedLinks()
                 if config.plugins.iptvplayer.wpUseDF.value:
@@ -267,7 +285,8 @@ class WpTV(CBaseHostClass):
         try:
             cItem = byteify(json.loads(fav_data))
             links = self.getLinksForVideo(cItem)
-        except Exception: printExc()
+        except Exception:
+            printExc()
         return links
         
     def setInitListFromFavouriteItem(self, fav_data):

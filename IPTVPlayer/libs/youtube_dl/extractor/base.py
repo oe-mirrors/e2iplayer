@@ -21,7 +21,8 @@ class InfoExtractor():
             
     def _download_json(self, url, video_id, note='', errnote='', fatal=True, params={}):
         sts, data = self.cm.getPage(url, params)
-        if not sts: return None
+        if not sts:
+            return None
         if fatal:
             data = json_loads(data)
         else:
@@ -40,7 +41,8 @@ class InfoExtractor():
         
     def xmlGetAllNodes(self, data, name):
         nodes = self.cm.ph.getAllItemsBeetwenMarkers(data, '<' + name, '</%s>' % name)
-        if 0 == len(nodes): nodes = self.cm.ph.getAllItemsBeetwenMarkers(data, '<' + name, '/>')
+        if 0 == len(nodes):
+            nodes = self.cm.ph.getAllItemsBeetwenMarkers(data, '<' + name, '/>')
         return nodes
         
     def _search_regex(self, pattern, string, name, default=NO_DEFAULT, fatal=True, flags=0, group=None):

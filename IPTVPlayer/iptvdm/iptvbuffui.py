@@ -137,7 +137,8 @@ class E2iPlayerBufferingWidget(Screen):
         self["icon"] = SimpleAnimatedCover()
         # prepare icon frames path
         frames = []
-        for idx in range(1, self.NUM_OF_ICON_FRAMES+1): frames.append( resolveFilename(SCOPE_PLUGINS, 'Extensions/IPTVPlayer/icons/buffering/buffering_%d.png' % idx) )
+        for idx in range(1, self.NUM_OF_ICON_FRAMES+1):
+            frames.append( resolveFilename(SCOPE_PLUGINS, 'Extensions/IPTVPlayer/icons/buffering/buffering_%d.png' % idx) )
         self["icon"].loadFrames(frames) 
         
         self.inMoviePlayer = False
@@ -347,10 +348,14 @@ class E2iPlayerBufferingWidget(Screen):
             playerAdditionalParams['file-download-timeout'] = 10000 # 10s
         playerAdditionalParams['file-download-live'] = self._isInLiveMode()
         playerAdditionalParams['download_manager_available'] = self.downloadManager != None
-        if "mini" == player: self.session.openWithCallback(self.leaveMoviePlayer, IPTVMiniMoviePlayer, self.filePath, self.movieTitle, self.lastPosition, 4)
-        elif "exteplayer" == player: self.session.openWithCallback(self.leaveMoviePlayer, IPTVExtMoviePlayer, self.filePath, self.movieTitle, self.lastPosition, 'eplayer', playerAdditionalParams)
-        elif "extgstplayer" == player: self.session.openWithCallback(self.leaveMoviePlayer, IPTVExtMoviePlayer, self.filePath, self.movieTitle, self.lastPosition, 'gstplayer', playerAdditionalParams)
-        else: self.session.openWithCallback(self.leaveMoviePlayer, IPTVStandardMoviePlayer, self.filePath, self.movieTitle)
+        if "mini" == player:
+            self.session.openWithCallback(self.leaveMoviePlayer, IPTVMiniMoviePlayer, self.filePath, self.movieTitle, self.lastPosition, 4)
+        elif "exteplayer" == player:
+            self.session.openWithCallback(self.leaveMoviePlayer, IPTVExtMoviePlayer, self.filePath, self.movieTitle, self.lastPosition, 'eplayer', playerAdditionalParams)
+        elif "extgstplayer" == player:
+            self.session.openWithCallback(self.leaveMoviePlayer, IPTVExtMoviePlayer, self.filePath, self.movieTitle, self.lastPosition, 'gstplayer', playerAdditionalParams)
+        else:
+            self.session.openWithCallback(self.leaveMoviePlayer, IPTVStandardMoviePlayer, self.filePath, self.movieTitle)
         playerAdditionalParams = None
         
     def setMainTimerSts(self, start):
@@ -364,7 +369,8 @@ class E2iPlayerBufferingWidget(Screen):
                 if self.mainTimerEnabled:
                     self.mainTimer.stop()
                     self.mainTimerEnabled = False
-        except Exception: printDBG("setMainTimerSts status[%r] EXCEPTION" % start)
+        except Exception:
+            printDBG("setMainTimerSts status[%r] EXCEPTION" % start)
         
     def updateRecButton(self):
         if self.canRunMoviePlayer: #and self.downloader.getPlayableFileSize() > 0:
@@ -400,7 +406,7 @@ class E2iPlayerBufferingWidget(Screen):
             
             if remoteSize > self.maxMOOVAtomSize and \
                self.downloader.getName() == "wget" and \
-               (self.clouldBeMP4 or (None != self.downloader.getMimeType() and \
+               (self.clouldBeMP4 or (None != self.downloader.getMimeType() and
                'mp4' in self.downloader.getMimeType())):
                 # check moov atom position
                 # if it is located at the begining of MP4 file
@@ -449,11 +455,15 @@ class E2iPlayerBufferingWidget(Screen):
                 lFileSize = lFileSize[2:]
         else:
             # remote size
-            if -1 == remoteSize: rFileSize = '??'
-            else: rFileSize = formatBytes(float(remoteSize))
+            if -1 == remoteSize:
+                rFileSize = '??'
+            else:
+                rFileSize = formatBytes(float(remoteSize))
             # local size
-            if -1 == localSize: lFileSize = '??'
-            else: lFileSize = formatBytes(float(localSize))
+            if -1 == localSize:
+                lFileSize = '??'
+            else:
+                lFileSize = formatBytes(float(localSize))
         
         
         # download speed
@@ -488,14 +498,20 @@ class E2iPlayerBufferingWidget(Screen):
                     self["addinfo"].setText(_("Please wait for initialization data."))
                     self.moovAtomStatus = self.MOOV_STS.DOWNLOADING
                 remoteSize = self.moovAtomOffset + self.moovAtomSize
-                if localSize > remoteSize: percentage = 100
-                else: percentage = (100 * localSize) / remoteSize
+                if localSize > remoteSize:
+                    percentage = 100
+                else:
+                    percentage = (100 * localSize) / remoteSize
             else:
                 requestedBuffSize = self.requestedBuffSize
-                if self.lastSize > moovAtomDataSize: tmpBuffSize = localSize - self.lastSize
-                else: tmpBuffSize = localSize - moovAtomDataSize
-                if tmpBuffSize > requestedBuffSize: percentage = 100
-                else: percentage = (100 * tmpBuffSize) / requestedBuffSize
+                if self.lastSize > moovAtomDataSize:
+                    tmpBuffSize = localSize - self.lastSize
+                else:
+                    tmpBuffSize = localSize - moovAtomDataSize
+                if tmpBuffSize > requestedBuffSize:
+                    percentage = 100
+                else:
+                    percentage = (100 * tmpBuffSize) / requestedBuffSize
                 if self.moovAtomStatus != self.MOOV_STS.DOWNLOADED:
                     self["addinfo"].setText("")
                     self.moovAtomStatus = self.MOOV_STS.DOWNLOADED
@@ -516,8 +532,10 @@ class E2iPlayerBufferingWidget(Screen):
                 moovRemoteSize = self.moovAtomDownloader.getRemoteFileSize()
                 if status == DMHelper.STS.DOWNLOADING:
                     if moovLocalSize > 0 and self.moovAtomSize > 0:
-                        if moovLocalSize > self.moovAtomSize: percentage = 100
-                        else: percentage = (100 * moovLocalSize) / self.moovAtomSize
+                        if moovLocalSize > self.moovAtomSize:
+                            percentage = 100
+                        else:
+                            percentage = (100 * moovLocalSize) / self.moovAtomSize
                 elif status == DMHelper.STS.DOWNLOADED or (status == DMHelper.STS.INTERRUPTED and moovLocalSize == self.moovAtomSize):
                     self.moovAtomStatus = self.MOOV_STS.DOWNLOADED
                     self["addinfo"].setText("")
@@ -538,13 +556,17 @@ class E2iPlayerBufferingWidget(Screen):
             tmpBuffSize = localSize - self.lastSize + 1 # simple when getLocalFileSize() returns -1
             if self.downloader.getPlayableFileSize() > 0:
                 requestedBuffSize = self.requestedBuffSize
-                if tmpBuffSize > requestedBuffSize: percentage = 100
-                else: percentage = (100 * tmpBuffSize) / requestedBuffSize
+                if tmpBuffSize > requestedBuffSize:
+                    percentage = 100
+                else:
+                    percentage = (100 * tmpBuffSize) / requestedBuffSize
                 handled = True
         
         if not handled and localSize > 0 and remoteSize > 0:
-            if localSize > remoteSize: percentage = 100
-            else: percentage = (100 * localSize) / remoteSize
+            if localSize > remoteSize:
+                percentage = 100
+            else:
+                percentage = (100 * localSize) / remoteSize
         
         self["percentage"].setText(str(percentage))
         self["icon"].nextFrame()
@@ -582,7 +604,8 @@ class E2iPlayerBufferingWidget(Screen):
         try:
             self.mainTimer_conn = None
             self.mainTimer = None
-        except Exception:   printExc()
+        except Exception:
+            printExc()
 
         self.onClose.remove(self.__onClose)
         #self.onLayoutFinish.remove(self.doStart)
@@ -592,12 +615,16 @@ class E2iPlayerBufferingWidget(Screen):
         
     def _cleanedUp(self):
         if fileExists(self.filePath):
-            try: os_remove(self.filePath)
-            except Exception: printDBG('Problem with removing old buffering file (%s)' % self.filePath)
+            try:
+                os_remove(self.filePath)
+            except Exception:
+                printDBG('Problem with removing old buffering file (%s)' % self.filePath)
         
         if fileExists(self.moovAtomPath):
-            try: os_remove(self.moovAtomPath)
-            except Exception: printDBG('Problem with removing old buffering file (%s)' % self.moovAtomPath)
+            try:
+                os_remove(self.moovAtomPath)
+            except Exception:
+                printDBG('Problem with removing old buffering file (%s)' % self.moovAtomPath)
     '''
     def doStart(self):
         if not self.onStartCalled:

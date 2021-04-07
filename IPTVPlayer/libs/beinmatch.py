@@ -30,7 +30,8 @@ class BeinmatchApi(CBaseHostClass):
         self.getLinkJS = ''
 
     def getPage(self, baseUrl, addParams = {}, post_data = None):
-        if addParams == {}: addParams = dict(self.http_params)
+        if addParams == {}:
+            addParams = dict(self.http_params)
         origBaseUrl = baseUrl
         baseUrl = self.cm.iriToUri(baseUrl)
         return self.cm.getPage(baseUrl, addParams, post_data)
@@ -40,7 +41,8 @@ class BeinmatchApi(CBaseHostClass):
 
         channelsTab = []
         sts, data = self.getPage(self.getMainUrl(), self.http_params)
-        if not sts: return []
+        if not sts:
+            return []
         self.setMainUrl(self.cm.meta['url'])
 
         tmp = ph.findall(data, ('<script', '>', ph.check(ph.none, ('src=',))), '</script>', flags=0)
@@ -80,7 +82,8 @@ class BeinmatchApi(CBaseHostClass):
             return urlsTab
 
         sts, data = self.getPage(url, self.http_params)
-        if not sts: return urlsTab
+        if not sts:
+            return urlsTab
         cUrl = self.cm.meta['url']
         printDBG(data)
         url = self.getFullUrl(ph.search(data, '''['"]([^'^"]+?\.m3u8(?:\?[^'^"]*?)?)['"]''')[0], cUrl)
@@ -91,7 +94,8 @@ class BeinmatchApi(CBaseHostClass):
         url = self.getFullUrl(ph.search(data, ph.IFRAME)[1])
         if 0 == self.up.checkHostSupport(url): 
             sts, data = self.getPage(url, self.http_params)
-            if not sts: return urlsTab
+            if not sts:
+                return urlsTab
             url = self.getFullUrl(ph.search(data, ph.IFRAME)[1])
         return self.up.getVideoLinkExt(url)
             

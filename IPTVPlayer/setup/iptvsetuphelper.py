@@ -64,12 +64,14 @@ class CCmdValidator:
         self.termination = True
         self.finishCallback  = None
         self.validatorFun    = None
-        if self.cmd: self.cmd.kill(False)
+        if self.cmd:
+            self.cmd.kill(False)
         self.cmd = None
 
     def finish(self):
         printDBG('CCmdValidator.finish detectIdx[%r]' % self.detectIdx)
-        if self.termination: return
+        if self.termination:
+            return
         
         finishCallback = self.finishCallback
         self.finishCallback  = None
@@ -81,7 +83,8 @@ class CCmdValidator:
 
     def _cmdFinished(self, code, data):
         printDBG("CCmdValidator._cmdFinished cmd[%r] code[%r], data[%r]" % (self.cmdTabs[self.detectIdx], code, data))
-        if self.termination: return
+        if self.termination:
+            return
         self.cmd = None
         sts, cont = self.validatorFun(code, data)
         self.stsTab.append(sts)
@@ -89,7 +92,8 @@ class CCmdValidator:
         if cont and (self.detectIdx + 1) < len(self.cmdTabs): 
             self.detectIdx += 1
             self._detect()
-        else: self.finish()
+        else:
+            self.finish()
         
     def _detect(self):
         self.cmd = iptv_system( self.cmdTabs[self.detectIdx], self._cmdFinished )
@@ -133,8 +137,10 @@ class CBinaryStepHelper:
         return path + " 2>&1 "
         
     def _detectValidator(self, code, data):
-        if 0==code: return True, False
-        else: return False, True
+        if 0==code:
+            return True, False
+        else:
+            return False, True
         
     def _downloadCmdBuilder(self, binName, platform, openSSLVersion, server, tmpPath):
         url = server + 'bin/' + platform + ('/%s_openssl' % binName) + openSSLVersion
@@ -143,8 +149,10 @@ class CBinaryStepHelper:
         return cmd
         
     def _downloadValidator(self, code, data):
-        if 0==code: return True, False
-        else: return False, True
+        if 0==code:
+            return True, False
+        else:
+            return False, True
     
     def _installCmdBuilder(self, binName, binaryInstallPath, tmpPath):
         srcFile = tmpPath + binName
@@ -152,8 +160,10 @@ class CBinaryStepHelper:
         return cmd
     
     def _installValidator(self, code, data):
-        if 0==code: return True, False
-        else: return False, True
+        if 0==code:
+            return True, False
+        else:
+            return False, True
         
     def _saveConfigOptionHandler(self, configOption, value):
         if None != configOption:

@@ -76,7 +76,8 @@ class LivetvhdNetApi(CBaseHostClass):
                 channelsTab.append(params)
                     
                 sts, data = self.cm.getPage('https://livetvhd.net/api/categories')
-                if not sts: return []
+                if not sts:
+                    return []
                 data = json_loads(data)
                 for item in data:
                     params = dict(cItem)
@@ -84,9 +85,11 @@ class LivetvhdNetApi(CBaseHostClass):
                     channelsTab.append(params)
             else:
                 sts, data = self.cm.getPage(cItem['url'])
-                if not sts: return []
+                if not sts:
+                    return []
                 data = json_loads(data)
-                if 'videos' in data: data = data['videos']
+                if 'videos' in data:
+                    data = data['videos']
                 for item in data:
                     url   = item['url']
                     icon  = item['thumbnail']
@@ -109,7 +112,8 @@ class LivetvhdNetApi(CBaseHostClass):
             return []
         
         sts, data = self.cm.getPage('https://livetvhd.net/api/videos', self.http_params)
-        if not sts: return []
+        if not sts:
+            return []
         token = self.cm.ph.getDataBeetwenReMarkers(data, re.compile('"token"\s*:\s*"'), re.compile('"'), False)[1]
         
         videoUrl = cItem['url'] + '?token=' + token 

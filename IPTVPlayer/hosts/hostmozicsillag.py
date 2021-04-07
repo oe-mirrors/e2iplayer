@@ -17,8 +17,10 @@ import urllib.request
 import urllib.parse
 import urllib.error
 import base64
-try:    import json
-except Exception: import simplejson as json
+try:
+    import json
+except Exception:
+    import simplejson as json
 ###################################################
 
 
@@ -50,7 +52,8 @@ class MuziCsillangCC(CBaseHostClass):
                             ]
                             
     def getFullIconUrl(self, url):
-        if url == '': return url
+        if url == '':
+            return url
         url = url.replace('&amp;', '&')
         url = CBaseHostClass.getFullIconUrl(self, url)
         return strwithmeta(url, {'Referer':self.getMainUrl()})
@@ -79,7 +82,8 @@ class MuziCsillangCC(CBaseHostClass):
         self.cacheFiltersKeys = []
         
         sts, data = self.getPage(cItem['url'])
-        if not sts: return
+        if not sts:
+            return
         self.setMainUrl(data.meta['url'])
         
         def addFilter(data, marker, baseKey, allTitle='', titleBase=''):
@@ -88,46 +92,56 @@ class MuziCsillangCC(CBaseHostClass):
             for item in data:
                 type  = self.cm.ph.getSearchGroups(item, '''type="([^"]+?)"''')[0]
                 value = self.cm.ph.getSearchGroups(item, marker + '''="([^"]+?)"''')[0]
-                if value == '': continue
+                if value == '':
+                    continue
                 title = self.cleanHtmlStr(item)
                 if title in ['Összes']:
                     allTitle = ''
                 self.cacheFilters[key].append({'title':title.title(), key:value, ('%s_type' % key):type })
                 
             if len(self.cacheFilters[key]):
-                if allTitle != '': self.cacheFilters[key].insert(0, {'title':allTitle})
+                if allTitle != '':
+                    self.cacheFilters[key].insert(0, {'title':allTitle})
                 self.cacheFiltersKeys.append(key)
                 
         # search_type
         tmp = self.cm.ph.getAllItemsBeetwenMarkers(data, '<input id="search_type', '</label>')
-        if len(tmp): addFilter(tmp, 'value', 'search_type')
+        if len(tmp):
+            addFilter(tmp, 'value', 'search_type')
         
         # search_sync_
         tmp = self.cm.ph.getAllItemsBeetwenMarkers(data, '<input id="search_sync_', '</label>')
-        if len(tmp): addFilter(tmp, 'value', 'search_sync_', _('Any'))
+        if len(tmp):
+            addFilter(tmp, 'value', 'search_sync_', _('Any'))
         
         # search_rating_start
         tmp = self.cm.ph.getDataBeetwenMarkers(data, '<select id="search_rating_start"', '</select>')[1]
         tmp = self.cm.ph.getAllItemsBeetwenMarkers(tmp, '<option', '</option>')[::-1]
-        if len(tmp): addFilter(tmp, 'value', 'search_rating_start', _('Any'))
+        if len(tmp):
+            addFilter(tmp, 'value', 'search_rating_start', _('Any'))
         
         # year
         tmp = self.cm.ph.getDataBeetwenMarkers(data, '<select id="search_year_from"', '</select>')[1]
         tmp = self.cm.ph.getAllItemsBeetwenMarkers(tmp, '<option', '</option>')[::-1]
-        if len(tmp): addFilter(tmp, 'value', 'year', _('Any'), 'IMDB pont')
+        if len(tmp):
+            addFilter(tmp, 'value', 'year', _('Any'), 'IMDB pont')
         
         # search_categ_
         tmp = self.cm.ph.getAllItemsBeetwenMarkers(data, '<input id="search_categ_', '</label>')
-        if len(tmp) > 1: tmp = tmp[2:]
-        if len(tmp): addFilter(tmp, 'value', 'search_categ_', _('Any'))
+        if len(tmp) > 1:
+            tmp = tmp[2:]
+        if len(tmp):
+            addFilter(tmp, 'value', 'search_categ_', _('Any'))
         
         # search_qual_
         tmp = self.cm.ph.getAllItemsBeetwenMarkers(data, '<input id="search_qual_', '</label>')
-        if len(tmp): addFilter(tmp, 'value', 'search_qual_', _('Any'))
+        if len(tmp):
+            addFilter(tmp, 'value', 'search_qual_', _('Any'))
         
         # search_share_
         tmp = self.cm.ph.getAllItemsBeetwenMarkers(data, '<input id="search_share_', '</label>')
-        if len(tmp): addFilter(tmp, 'value', 'search_share_', _('Any'))
+        if len(tmp):
+            addFilter(tmp, 'value', 'search_share_', _('Any'))
         
         printDBG(self.cacheFilters)
         
@@ -136,9 +150,11 @@ class MuziCsillangCC(CBaseHostClass):
         cItem = dict(cItem)
         
         f_idx = cItem.get('f_idx', 0)
-        if f_idx == 0: self.fillCacheFilters(cItem)
+        if f_idx == 0:
+            self.fillCacheFilters(cItem)
         
-        if 0 == len(self.cacheFiltersKeys): return
+        if 0 == len(self.cacheFiltersKeys):
+            return
         
         filter = self.cacheFiltersKeys[f_idx]
         f_idx += 1
@@ -160,45 +176,61 @@ class MuziCsillangCC(CBaseHostClass):
             query += 'search_where=%s&' % cItem.get('f_search_where', '0')
             query += 'search_rating_start=%s&search_rating_end=10&' % cItem.get('f_search_rating_start', '1')
             query += 'search_year_from=%s&search_year_to=%s&' % (cItem.get('f_year', '1900'), cItem.get('f_year', '2090'))
-            if 'f_search_sync_' in cItem: query += 'search_sync_%s=%s&' % (cItem['f_search_sync_'], cItem['f_search_sync_'])
-            if 'f_search_categ_' in cItem: query += 'search_categ_%s=%s&' % (cItem['f_search_categ_'], cItem['f_search_categ_'])
-            if 'f_search_qual_' in cItem: query += 'search_qual_%s=%s&' % (cItem['f_search_qual_'], cItem['f_search_qual_'])
-            if 'f_search_share_' in cItem: query += 'search_share_%s=%s&' % (cItem['f_search_share_'], cItem['f_search_share_'])
-            if query.endswith('&'): query = query[:-1]
+            if 'f_search_sync_' in cItem:
+                query += 'search_sync_%s=%s&' % (cItem['f_search_sync_'], cItem['f_search_sync_'])
+            if 'f_search_categ_' in cItem:
+                query += 'search_categ_%s=%s&' % (cItem['f_search_categ_'], cItem['f_search_categ_'])
+            if 'f_search_qual_' in cItem:
+                query += 'search_qual_%s=%s&' % (cItem['f_search_qual_'], cItem['f_search_qual_'])
+            if 'f_search_share_' in cItem:
+                query += 'search_share_%s=%s&' % (cItem['f_search_share_'], cItem['f_search_share_'])
+            if query.endswith('&'):
+                query = query[:-1]
             printDBG('>>> query[%s]' % query)
         
-        if not url.endswith('/'): url += '/'
-        if sort != '': url += sort + '/'
-        if query != '': url += base64.b64encode(query)
-        if page > 1: url += '?page=%s' % page
+        if not url.endswith('/'):
+            url += '/'
+        if sort != '':
+            url += sort + '/'
+        if query != '':
+            url += base64.b64encode(query)
+        if page > 1:
+            url += '?page=%s' % page
         
         sts, data = self.getPage(url)
-        if not sts: return
+        if not sts:
+            return
         
         nextPage = self.cm.ph.getDataBeetwenMarkers(data, 'pagination', '</ul>')[1]
-        if  '' != self.cm.ph.getSearchGroups(nextPage, 'page=(%s)[^0-9]' % (page+1))[0]: nextPage = True
-        else: nextPage = False
+        if  '' != self.cm.ph.getSearchGroups(nextPage, 'page=(%s)[^0-9]' % (page+1))[0]:
+            nextPage = True
+        else:
+            nextPage = False
         
         data = self.cm.ph.getDataBeetwenMarkers(data, '<ul class="small-block-grid', '</ul>')[1]        
         data = self.cm.ph.getAllItemsBeetwenMarkers(data, '<li', '</li>')
         reFlagObj = re.compile('''<img[^>]+?src=['"][^"^']+?/([^/]+?)\.png['"]''')
         for item in data:
             url = self.getFullUrl( self.cm.ph.getSearchGroups(item, '''href=['"]([^"^']+?)['"]''')[0] )
-            if not self.cm.isValidUrl(url): continue
+            if not self.cm.isValidUrl(url):
+                continue
             
             icon = self.getFullIconUrl( self.cm.ph.getSearchGroups(item, '''data-original=['"]([^"^']+?\.jpe?g)['"]''')[0] )
             title = self.cleanHtmlStr( self.cm.ph.getDataBeetwenMarkers(item, '<strong', '</strong>')[1] )
-            if title == '': title = self.cleanHtmlStr( self.cm.ph.getDataBeetwenMarkers(item, '<h2', '</h2>')[1] )
+            if title == '':
+                title = self.cleanHtmlStr( self.cm.ph.getDataBeetwenMarkers(item, '<h2', '</h2>')[1] )
             
             # desc start
             descTab = []
             tmp = self.cm.ph.getDataBeetwenMarkers(item, '</strong>', '</div>')[1]
             flags = reFlagObj.findall(tmp)
-            if len(flags): descTab.append(' | '.join(flags))
+            if len(flags):
+                descTab.append(' | '.join(flags))
             tmp = tmp.split('<br>')
             for t in tmp:
                 t = self.cleanHtmlStr(t)
-                if t == '': continue
+                if t == '':
+                    continue
                 descTab.append(t)
             ######
             
@@ -215,7 +247,8 @@ class MuziCsillangCC(CBaseHostClass):
     def _listCategories(self, cItem, nextCategory, m1, m2):
         printDBG("MuziCsillangCC._listCategories")
         sts, data = self.getPage(cItem['url'])
-        if not sts: return
+        if not sts:
+            return
         
         data = self.cm.ph.getDataBeetwenMarkers(data, m1, m2)[1]
         data = self.cm.ph.getAllItemsBeetwenMarkers(data, '<a', '</a>')
@@ -238,12 +271,14 @@ class MuziCsillangCC(CBaseHostClass):
         printDBG("MuziCsillangCC.listSeries")
         if 0 == len(self.cacheSortOrder):
             sts, data = self.getPage(self.getFullUrl('/filmek-online')) # sort order is same for movies and series
-            if not sts: return
+            if not sts:
+                return
             data = self.cm.ph.getDataBeetwenMarkers(data, '<dl ', '</dl>')[1]
             data = self.cm.ph.getAllItemsBeetwenMarkers(data, '<a', '</a>')
             for item in data:
                 sort  = self.cm.ph.getSearchGroups(item, '''href=['"]([^'^"]+?)['"]''')[0].split('/')[-1]
-                if sort == '': continue
+                if sort == '':
+                    continue
                 title = self.cleanHtmlStr(item)
                 self.cacheSortOrder.append({'title':title, 'f_sort':sort})
         
@@ -257,7 +292,8 @@ class MuziCsillangCC(CBaseHostClass):
         printDBG("MuziCsillangCC.exploreItem")
         
         sts, data = self.getPage(cItem['url'])
-        if not sts: return
+        if not sts:
+            return
         lastUrl = data.meta['url']
         
         desc = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(data, '<p>', '</p>')[1])
@@ -266,10 +302,13 @@ class MuziCsillangCC(CBaseHostClass):
         tmp = self.cm.ph.rgetAllItemsBeetwenMarkers(data, '</iframe>', '<h2')
         for idx in range(len(tmp)):
             url = self.getFullUrl(self.cm.ph.getSearchGroups(tmp[idx], '''src=['"]([^'^"]+?)['"]''')[0])
-            if url.endswith('/thanks'): continue
+            if url.endswith('/thanks'):
+                continue
             title = self.cleanHtmlStr(tmp[idx])
-            if title.endswith(':'): title = title[:-1]
-            if title == '': title = '%s - %s' %(cItem['title'], _('trailer'))
+            if title.endswith(':'):
+                title = title[:-1]
+            if title == '':
+                title = '%s - %s' %(cItem['title'], _('trailer'))
             if 1 == self.up.checkHostSupport(url):
                 params = dict(cItem)
                 params.update({'good_for_fav': False, 'title':'%s. %s' % (idx+1, title), 'prev_title':cItem['title'], 'url':url, 'prev_url':cItem['url'], 'prev_desc':cItem.get('desc', ''), 'desc':desc})
@@ -283,13 +322,15 @@ class MuziCsillangCC(CBaseHostClass):
         
         if sourcesLink != '':
             sts, data = self.getPage(sourcesLink)
-            if not sts: return
+            if not sts:
+                return
             lastUrl = data.meta['url']
         
         sourcesLink = self.cm.ph.getSearchGroups(data, '''<a[^>]+?href=['"](https?://[^'^"]+?)['"][^>]*?>Lejatszas''')[0]
         if sourcesLink != '':
             sts, data = self.getPage(sourcesLink)
-            if not sts: return
+            if not sts:
+                return
             lastUrl = data.meta['url']
         
         self.cacheLinks  = {}
@@ -305,15 +346,18 @@ class MuziCsillangCC(CBaseHostClass):
                 printDBG(">>>>>>>>>>>> [%s]" % item)
                 url = self.cm.ph.getSearchGroups(item, '''<a[^>]+?href=['"]([^'^"]*?watch[^'^"]*?)['"]''')[0]
                 
-                if url != '': url = self.getFullUrl(url, lastUrl)
-                if not self.cm.isValidUrl(url): continue
+                if url != '':
+                    url = self.getFullUrl(url, lastUrl)
+                if not self.cm.isValidUrl(url):
+                    continue
                 serverName = []
                 item = self.cm.ph.getAllItemsBeetwenMarkers(item, '<div', '</div>')
                 for t in item:
                     if 'link_flag' in t:
                         t = self.cm.ph.getSearchGroups(t, '''<img[^>]+?src=['"][^"^']+?/([^/]+?)\.png['"]''')[0]
                     t = self.cleanHtmlStr(t)
-                    if t != '': serverName.append(t)
+                    if t != '':
+                        serverName.append(t)
                 serverName = ' | '.join(serverName)
                 
                 if episodeName not in episodesTab:
@@ -324,7 +368,8 @@ class MuziCsillangCC(CBaseHostClass):
         for item in episodesTab:
             params = dict(cItem)
             title = cItem['title']
-            if item != '': title += ' : ' + item
+            if item != '':
+                title += ' : ' + item
             params.update({'good_for_fav': False, 'title':title, 'links_key':item, 'prev_desc':cItem.get('desc', ''), 'desc':desc})
             self.addVideo(params)
 
@@ -362,7 +407,8 @@ class MuziCsillangCC(CBaseHostClass):
         videoUrl = self.cm.meta.get('url', videoUrl)
         
         if 1 != self.up.checkHostSupport(videoUrl):
-            if not sts: return []
+            if not sts:
+                return []
             
             printDBG(data)
             tmp = re.compile('''<iframe[^>]+?src=['"]([^"^']+?)['"]''', re.IGNORECASE).findall(data)
@@ -389,7 +435,8 @@ class MuziCsillangCC(CBaseHostClass):
         try:
             cItem = byteify(json.loads(fav_data))
             links = self.getLinksForVideo(cItem)
-        except Exception: printExc()
+        except Exception:
+            printExc()
         return links
         
     def setInitListFromFavouriteItem(self, fav_data):
@@ -411,10 +458,12 @@ class MuziCsillangCC(CBaseHostClass):
         otherInfo = {}
         
         url = cItem.get('prev_url', '')
-        if url == '': url = cItem.get('url', '')
+        if url == '':
+            url = cItem.get('url', '')
         
         sts, data = self.getPage(url)
-        if not sts: return retTab
+        if not sts:
+            return retTab
         
         data = self.cm.ph.getDataBeetwenMarkers(data, '<div class="row" id="content-tab">', '<div id="zone')[1]
         
@@ -429,18 +478,24 @@ class MuziCsillangCC(CBaseHostClass):
             tmp = self.cm.ph.getDataBeetwenMarkers(data, item[0], '</li>', False)[1].split('<br>')
             for t in tmp:
                 t = self.cleanHtmlStr(t).replace(' , ',  ', ')
-                if t != '': tmpTab.append(t)
-            if len(tmpTab): otherInfo[item[1]] = ', '.join(tmpTab)
+                if t != '':
+                    tmpTab.append(t)
+            if len(tmpTab):
+                otherInfo[item[1]] = ', '.join(tmpTab)
         
         for item in [('Játékidő:',     'duration'),
                      ('IMDB Pont:', 'imdb_rating'),
                      ('Nézettség:',       'views')]:
             tmp = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(data, item[0], '</li>', False)[1])
-            if tmp != '': otherInfo[item[1]] = tmp
+            if tmp != '':
+                otherInfo[item[1]] = tmp
         
-        if title == '': title = cItem['title']
-        if desc == '':  desc = cItem.get('desc', '')
-        if icon == '':  icon = cItem.get('icon', self.DEFAULT_ICON_URL)
+        if title == '':
+            title = cItem['title']
+        if desc == '':
+            desc = cItem.get('desc', '')
+        if icon == '':
+            icon = cItem.get('icon', self.DEFAULT_ICON_URL)
         
         return [{'title':self.cleanHtmlStr( title ), 'text': self.cleanHtmlStr( desc ), 'images':[{'title':'', 'url':self.getFullUrl(icon)}], 'other_info':otherInfo}]
     

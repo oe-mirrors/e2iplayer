@@ -60,19 +60,22 @@ class FilmPalastTo(CBaseHostClass):
                               ]
     
     def getPage(self, baseUrl, addParams = {}, post_data = None):
-        if addParams == {}: addParams = dict(self.defaultParams)
+        if addParams == {}:
+            addParams = dict(self.defaultParams)
         addParams['cloudflare_params'] = {'cookie_file':self.COOKIE_FILE, 'User-Agent':self.USER_AGENT}
         return self.cm.getPageCFProtection(baseUrl, addParams, post_data)
         
     def getFullIconUrl(self, url):
         url = self.getFullUrl(url)
-        if url == '': return ''
+        if url == '':
+            return ''
         cookieHeader = self.cm.getCookieHeader(self.COOKIE_FILE)
         return strwithmeta(url, {'Cookie':cookieHeader, 'User-Agent':self.USER_AGENT})
         
     def _listLinks(self, cItem, m1, m2):
         sts, data = self.getPage(cItem['url'])
-        if not sts: return []
+        if not sts:
+            return []
         
         retTab = []
         data = self.cm.ph.getDataBeetwenMarkers(data, m1, m2)[1]
@@ -89,7 +92,8 @@ class FilmPalastTo(CBaseHostClass):
         tab = self._listLinks(cItem, 'id="serien"', '</ul>')
         for item in tab:
             letter = item['title'][0]
-            if not letter.isalpha(): letter = '#'
+            if not letter.isalpha():
+                letter = '#'
             if letter not in self.cacheSeries:
                 self.cacheSeries['letters'].append(letter)
                 self.cacheSeries[letter] = []
@@ -136,16 +140,20 @@ class FilmPalastTo(CBaseHostClass):
         
         if '?' not in url:
             if page > 1:
-                if not url.endswith('/'): url += '/'
+                if not url.endswith('/'):
+                    url += '/'
                 if '/search/' not in url:
                     url += 'page/'
                 url += str(page)
         
         sts, data = self.getPage(url)
-        if not sts: return
+        if not sts:
+            return
         
-        if 'vorw&auml;rts&nbsp;+' in data: nextPage = True
-        else: nextPage = False
+        if 'vorw&auml;rts&nbsp;+' in data:
+            nextPage = True
+        else:
+            nextPage = False
         
         data = self.cm.ph.getAllItemsBeetwenMarkers(data, '<article', '</article>')
         for item in data:
@@ -166,7 +174,8 @@ class FilmPalastTo(CBaseHostClass):
                     t = t.split('</span>')
                     for t1 in t:
                         t1 = self.cleanHtmlStr(t1)
-                        if t1 != '':  desc.append(t1)
+                        if t1 != '':
+                            desc.append(t1)
                 desc = '[/br]'.join(desc)
             # get desc end
             
@@ -194,7 +203,8 @@ class FilmPalastTo(CBaseHostClass):
         
         url = cItem['url']
         sts, data = self.getPage(url)
-        if not sts: return
+        if not sts:
+            return
         
         tmp = self.cm.ph.getDataBeetwenMarkers(data, '<ul class="staffelNav', '</ul>')[1]
         
@@ -244,21 +254,27 @@ class FilmPalastTo(CBaseHostClass):
         linksTab = []
 
         linksTab = self.cacheLinks.get(cItem['url'], [])
-        if len(linksTab) > 0: return linksTab
+        if len(linksTab) > 0:
+            return linksTab
         
         sts, data = self.getPage(cItem['url'], self.defaultParams)
-        if not sts: return []
+        if not sts:
+            return []
         
         data = ph.findall(data, ('<ul', '>', 'currentStreamLinks'), '</ul>', flags=0)
         for item in data:
             printDBG("FilmPalastTo.getLinksForVideo item [%s]" % item)
             data_id    = ph.getattr(item, 'data-id')
             data_stamp = ph.getattr(item, 'data-stamp')
-            if data_id and data_stamp: url = strwithmeta('%s|%s' % (data_id, data_stamp), {'data_id':data_id, 'data_stamp':data_stamp, 'links_key':cItem['url']}) 
-            else: url = strwithmeta(self.getFullUrl(self.cm.ph.getSearchGroups(item, '''url=['"]([^'^"]+?)['"]''')[0]), {'links_key':cItem['url']})
-            if url == '': continue
+            if data_id and data_stamp:
+                url = strwithmeta('%s|%s' % (data_id, data_stamp), {'data_id':data_id, 'data_stamp':data_stamp, 'links_key':cItem['url']}) 
+            else:
+                url = strwithmeta(self.getFullUrl(self.cm.ph.getSearchGroups(item, '''url=['"]([^'^"]+?)['"]''')[0]), {'links_key':cItem['url']})
+            if url == '':
+                continue
             title = ph.clean_html(ph.find(item, ('<p', '>'), '</p>', flags=0)[1])
-            if title == '': title = ph.clean_html(item)
+            if title == '':
+                title = ph.clean_html(item)
             linksTab.append({'name':title, 'url':strwithmeta(url, {'Referer':cItem['url']}), 'need_resolve':1})
         
         if len(linksTab):
@@ -291,7 +307,8 @@ class FilmPalastTo(CBaseHostClass):
             urlParams['header'] = dict(self.AJAX_HEADER)
             urlParams['header']['Referer'] = key
             sts, data = self.getPage(url, urlParams, {'streamID':data_id})
-            if not sts: return []
+            if not sts:
+                return []
             
             try:
                 data = json_loads(data)
@@ -313,7 +330,8 @@ class FilmPalastTo(CBaseHostClass):
         otherInfo = {}
         
         sts, data = self.getPage(cItem['url'])
-        if not sts: return []
+        if not sts:
+            return []
         
         data = self.cm.ph.getDataBeetwenMarkers(data, '<div id="content" role="main">', '</ul>')[1]
         
@@ -324,45 +342,61 @@ class FilmPalastTo(CBaseHostClass):
         tmpTab = []
         tmp = self.cm.ph.getDataBeetwenMarkers(data, 'enre</p>', '</li>', False)[1]
         tmp = self.cm.ph.getAllItemsBeetwenMarkers(tmp, '<a', '</a>')
-        for t in tmp: tmpTab.append(self.cleanHtmlStr(t))
-        if len(tmpTab): otherInfo['genre'] = ', '.join(tmpTab)
+        for t in tmp:
+            tmpTab.append(self.cleanHtmlStr(t))
+        if len(tmpTab):
+            otherInfo['genre'] = ', '.join(tmpTab)
         
         tmpTab = []
         tmp = self.cm.ph.getDataBeetwenMarkers(data, 'chauspieler</p>', '</li>', False)[1]
         tmp = self.cm.ph.getAllItemsBeetwenMarkers(tmp, '<a', '</a>')
-        for t in tmp: tmpTab.append(self.cleanHtmlStr(t))
-        if len(tmpTab): otherInfo['actors'] = ', '.join(tmpTab)
+        for t in tmp:
+            tmpTab.append(self.cleanHtmlStr(t))
+        if len(tmpTab):
+            otherInfo['actors'] = ', '.join(tmpTab)
         
         tmpTab = []
         tmp = self.cm.ph.getDataBeetwenMarkers(data, 'chöpfer</p>', '</li>', False)[1]
         tmp = self.cm.ph.getAllItemsBeetwenMarkers(tmp, '<a', '</a>')
-        for t in tmp: tmpTab.append(self.cleanHtmlStr(t))
-        if len(tmpTab): otherInfo['creators'] = ', '.join(tmpTab)
+        for t in tmp:
+            tmpTab.append(self.cleanHtmlStr(t))
+        if len(tmpTab):
+            otherInfo['creators'] = ', '.join(tmpTab)
         
         tmpTab = []
         tmp = self.cm.ph.getDataBeetwenMarkers(data, 'egie</p>', '</li>', False)[1]
         tmp = self.cm.ph.getAllItemsBeetwenMarkers(tmp, '<a', '</a>')
-        for t in tmp: tmpTab.append(self.cleanHtmlStr(t))
-        if len(tmpTab): otherInfo['director'] = ', '.join(tmpTab)
+        for t in tmp:
+            tmpTab.append(self.cleanHtmlStr(t))
+        if len(tmpTab):
+            otherInfo['director'] = ', '.join(tmpTab)
         
         tmp = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(data, 'hortinfos</p>', '</strong>', False)[1])
-        if tmp != '': otherInfo['views'] = tmp
+        if tmp != '':
+            otherInfo['views'] = tmp
         
         tmp = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(data, 'Ver&ouml;ffentlicht:', '<', False)[1])
-        if tmp != '': otherInfo['released'] = tmp
+        if tmp != '':
+            otherInfo['released'] = tmp
         
         tmp = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(data, '<em>', '</em>', False)[1])
-        if tmp != '': otherInfo['duration'] = tmp
+        if tmp != '':
+            otherInfo['duration'] = tmp
         
         tmp = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(data, 'Imdb:', '<', False)[1])
-        if tmp != '': otherInfo['imdb_rating'] = tmp
+        if tmp != '':
+            otherInfo['imdb_rating'] = tmp
         
         tmp = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(data, '<span class="average">', '<span', False)[1])
-        if tmp != '': otherInfo['rating'] = tmp
+        if tmp != '':
+            otherInfo['rating'] = tmp
         
-        if title == '': title = cItem['title']
-        if desc == '':  desc = cItem.get('desc', '')
-        if icon == '':  icon = cItem.get('icon', self.DEFAULT_ICON_URL)
+        if title == '':
+            title = cItem['title']
+        if desc == '':
+            desc = cItem.get('desc', '')
+        if icon == '':
+            icon = cItem.get('icon', self.DEFAULT_ICON_URL)
         
         return [{'title':self.cleanHtmlStr( title ), 'text': self.cleanHtmlStr( desc ), 'images':[{'title':'', 'url':self.getFullUrl(icon)}], 'other_info':otherInfo}]
 

@@ -18,8 +18,10 @@ import urllib.parse
 import urllib.error
 import random
 from datetime import datetime, timedelta
-try:    import json
-except Exception: import simplejson as json
+try:
+    import json
+except Exception:
+    import simplejson as json
 from Components.config import config, ConfigText, getConfigListEntry
 ###################################################
 
@@ -68,8 +70,10 @@ class RTBFBE(CBaseHostClass):
         
         self.OFFSET = datetime.now() - datetime.utcnow()
         seconds = self.OFFSET.seconds + self.OFFSET.days * 24 * 3600
-        if ((seconds + 1) % 10) == 0: seconds += 1  
-        elif ((seconds - 1) % 10) == 0: seconds -= 1 
+        if ((seconds + 1) % 10) == 0:
+            seconds += 1  
+        elif ((seconds - 1) % 10) == 0:
+            seconds -= 1 
         self.OFFSET = timedelta(seconds=seconds)
         
         self.partnerKey = ''
@@ -83,7 +87,8 @@ class RTBFBE(CBaseHostClass):
             self.MAIN_URL = self.cm.getBaseUrl(url)
         
     def getPage(self, baseUrl, addParams = {}, post_data = None):
-        if addParams == {}: addParams = dict(self.defaultParams)
+        if addParams == {}:
+            addParams = dict(self.defaultParams)
         baseUrl = self.cm.iriToUri(baseUrl)
         return self.cm.getPage(baseUrl, addParams, post_data)
         
@@ -106,12 +111,14 @@ class RTBFBE(CBaseHostClass):
         if '' in [self.csrfToken, self.partnerKey]:
             if data == None:
                 sts, data = self.getPage(self.getMainUrl())
-                if not sts: return ''
+                if not sts:
+                    return ''
             tmp = re.compile('''<script[^>]+?src=['"]([^'^"]+?_ssl\.js)['"]''').findall(data)
             data = ''
             for item in tmp:
                 sts, item = self.getPage(self.getFullUrl(item))
-                if sts: data += item
+                if sts:
+                    data += item
             self.partnerKey = self.cm.ph.getSearchGroups(data, '''partner_key\s*?:\s*?['"]([^'^"]+?)['"]''', ignoreCase=True)[0]
             self.csrfToken = self.cm.ph.getSearchGroups(data, '''['"]?X-CSRF-Token['"]?\s*?:\s*?['"]([^'^"]+?)['"]''', ignoreCase=True)[0]
         return self.partnerKey
@@ -120,7 +127,8 @@ class RTBFBE(CBaseHostClass):
         if self.partnerToken == '':
             url = 'https://www.rtbf.be/api/partner/generic/live/planninglist?target_site=media&origin_site=media&category_id=0&start_date&offset=0&limit=1&partner_key=' + self.getPartnerKey()
             sts, data = self.getPage(url)
-            if not sts: return ''
+            if not sts:
+                return ''
             self.partnerToken = self.cm.ph.getSearchGroups(data, '''\.m3u8\?token=([0-9A-Za-z]+?)[^0-9^A-Z^a-z]''')[0]
         return self.partnerToken
         
@@ -128,7 +136,8 @@ class RTBFBE(CBaseHostClass):
         printDBG("RTBFBE.listLiveCategories")
         
         sts, data = self.getPage(cItem['url'])
-        if not sts: return
+        if not sts:
+            return
         
         cUrl = data.meta['url']
         self.setMainUrl(cUrl)
@@ -140,7 +149,8 @@ class RTBFBE(CBaseHostClass):
         try:
             data = byteify(json.loads(data))
             baseUrl = data['api']['planninglist']
-            if not self.cm.isValidUrl(baseUrl): return
+            if not self.cm.isValidUrl(baseUrl):
+                return
             for item in data['categories']:
                 url = baseUrl + '?target_site=media&origin_site=media&category_id=' + item['id'] + '&start_date&offset={0}&limit={1}&partner_key=' + partnerKey
                 title = self.cleanHtmlStr(item['label'])
@@ -169,17 +179,22 @@ class RTBFBE(CBaseHostClass):
         page = cItem.get('page', 0)
         
         sts, data = self.getPage(cItem['url'].format(page * NUM_ITEMS, NUM_ITEMS))
-        if not sts: return
+        if not sts:
+            return
         try:
             data = byteify(json.loads(data))
             for item in data:
                 title = self.cleanHtmlStr(item['title'])
                 subtitle = self.cleanHtmlStr(item['subtitle'])
-                if subtitle != '': title = '%s - %s' % (title, subtitle)
+                if subtitle != '':
+                    title = '%s - %s' % (title, subtitle)
                 url = self.getFullUrl(item['url_share'])
-                try: streamUrl = self.getFullUrl(item['url_streaming']['url_hls'])
-                except Exception: streamUrl = ''
-                if not self.cm.isValidUrl(streamUrl): continue
+                try:
+                    streamUrl = self.getFullUrl(item['url_streaming']['url_hls'])
+                except Exception:
+                    streamUrl = ''
+                if not self.cm.isValidUrl(streamUrl):
+                    continue
                 desc = [self.cleanHtmlStr(item['geolock']['title'])]
                 if item.get('drm', False): 
                     desc.append('DRM')
@@ -187,13 +202,16 @@ class RTBFBE(CBaseHostClass):
                     icon = self.getFullIconUrl(item['images']['illustration']['16x9']['370x208'])
                     for k in ['channel', 'program', 'category', 'live']:
                         desc.append(item[k]['label'])
-                except Exception: icon = ''
+                except Exception:
+                    icon = ''
                 desc = [' | '.join(desc)] 
                 desc.append(self.cleanHtmlStr(item['description']))
                 
                 date = _parseDate(item['start_date'])
-                if date.day == currDate.day: timeHeader = date.strftime('%Hh%M')
-                else:  timeHeader = date.strftime('%Y-%m-%d %Hh%M')
+                if date.day == currDate.day:
+                    timeHeader = date.strftime('%Hh%M')
+                else:
+                    timeHeader = date.strftime('%Y-%m-%d %Hh%M')
                 timeHeader += ' - ' + _parseDate(item['end_date']).strftime('%Hh%M')
                 desc.insert(0, timeHeader)
                 
@@ -211,7 +229,8 @@ class RTBFBE(CBaseHostClass):
         printDBG("RTBFBE.listSubMenuItems")
         
         sts, data = self.getPage(cItem['url'])
-        if not sts: return
+        if not sts:
+            return
         
         cUrl = data.meta['url']
         self.setMainUrl(cUrl)
@@ -222,7 +241,8 @@ class RTBFBE(CBaseHostClass):
                 if item['@attributes']['id'] == key:
                     for it in item['item']:
                         it = it['@attributes']
-                        if it['url'].startswith('.'): continue
+                        if it['url'].startswith('.'):
+                            continue
                         url = self.getFullUrl(it['url'])
                         title = self.cleanHtmlStr(it['name'])
                         params = dict(cItem)
@@ -253,7 +273,8 @@ class RTBFBE(CBaseHostClass):
         page = cItem.get('page', 0)
         
         sts, data = self.getPage(cItem['url'])
-        if not sts: return
+        if not sts:
+            return
         
         cItem = dict(cItem)
         defaultMediaType = cItem.pop('default_media_type', 'video')
@@ -265,7 +286,8 @@ class RTBFBE(CBaseHostClass):
         nextPage = self.getFullUrl(self.cm.ph.getSearchGroups(nextPage, '''href=['"]([^'^"]+?)['"]''')[0], cUrl)
         
         sections = self.cm.ph.getAllItemsBeetwenNodes(data, ('<section', '>'), ('</section', '>'), False)
-        if page == 0: sections.append(self.cm.ph.getDataBeetwenNodes(data, ('<div', '>', 'autocomplete--medias'), ('</section', '>'))[1])
+        if page == 0:
+            sections.append(self.cm.ph.getDataBeetwenNodes(data, ('<div', '>', 'autocomplete--medias'), ('</section', '>'))[1])
         
         reObj = re.compile('\sdata\-([^=]+?)="([^"]+?)"')
         query = []
@@ -275,22 +297,28 @@ class RTBFBE(CBaseHostClass):
             item = reObj.findall(item)
             obj = {}
             for it in item:
-                if it[0] == 'devices': continue
-                if it[0] == 'uuid': uuids.append(it[1])
-                try: obj[it[0]] = byteify(json.loads(self.cleanHtmlStr(it[1])))
-                except Exception: obj[it[0]] = it[1]
+                if it[0] == 'devices':
+                    continue
+                if it[0] == 'uuid':
+                    uuids.append(it[1])
+                try:
+                    obj[it[0]] = byteify(json.loads(self.cleanHtmlStr(it[1])))
+                except Exception:
+                    obj[it[0]] = it[1]
             query.append(obj)
         
         if len(query):
             query = self.serParams(query, 'data')
             url = self.getFullUrl('/news/api/block?' + query)
             sts, data = self.getPage(url)
-            if not sts: return
+            if not sts:
+                return
             
             try:
                 data = byteify(json.loads(data))['blocks']
                 for uuid in uuids:
-                    if uuid not in data: continue
+                    if uuid not in data:
+                        continue
                     sections.append(data[uuid])
             except Exception:
                 printExc()
@@ -302,15 +330,18 @@ class RTBFBE(CBaseHostClass):
             if sUrl == '' and '<article' not in sectionItem: 
                 sUrl = self.getFullUrl(self.cm.ph.getSearchGroups(sectionItem, '''<a[^>]+?href=['"]([^'^"]+?)['"]''')[0])
             sTitle = self.cleanHtmlStr(sTitle)
-            if sTitle == '': continue
+            if sTitle == '':
+                continue
             sItems = []
             sectionItem = self.cm.ph.getAllItemsBeetwenMarkers(sectionItem, '<article', '</article>')
             for item in sectionItem:
                 icon = self.getFullIconUrl(self.cm.ph.getSearchGroups(item, '''data\-srcset=['"]([^'^"^\s]+?)[\s'"]''')[0])
-                if icon == '': icon = self.getFullIconUrl(self.cm.ph.getSearchGroups(item, '''src=['"]([^'^"^\s]+?(?:\.jpe?g|\.png)(?:\?[^'^"^\s]*?)?)[\s'"]''')[0])
+                if icon == '':
+                    icon = self.getFullIconUrl(self.cm.ph.getSearchGroups(item, '''src=['"]([^'^"^\s]+?(?:\.jpe?g|\.png)(?:\?[^'^"^\s]*?)?)[\s'"]''')[0])
                 header = self.cm.ph.getDataBeetwenMarkers(item, '<header', '</header>')[1]
                 url = self.cm.ph.getSearchGroups(header, '''href=['"]([^'^"]+?)['"]''')[0]
-                if url == '' or url[0] in ['{', '[']: continue
+                if url == '' or url[0] in ['{', '[']:
+                    continue
                 url = self.getFullUrl(url)
                 title = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(header, ('<h', '>', '__title'), ('</h', '>'))[1])
                 subTitle = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(header, ('<h', '>', '__subtitle'), ('</h', '>'))[1])
@@ -321,22 +352,32 @@ class RTBFBE(CBaseHostClass):
                         title = '%s - %s' % (title, subTitle)
                     else: 
                         desc.append(subTitle)
-                if duration != '': desc.append(duration)
+                if duration != '':
+                    desc.append(duration)
                 desc.append(self.cleanHtmlStr(item.split('</header>', 1)[-1]))
                 params = {'good_for_fav':True, 'title':title, 'url':url, 'icon':icon, 'desc':'[/br]'.join(desc)}
-                if 'ico-playlist' in item: params.update({'type':'category', 'category':'list_playlist_items'})
-                elif 'ico-volume' in item: params['type'] = 'audio'
-                elif 'ico-play' in item: params['type'] = 'video'
-                elif '/emissions/' in url: params['type'] = 'video'
-                else: params['type'] = defaultMediaType
+                if 'ico-playlist' in item:
+                    params.update({'type':'category', 'category':'list_playlist_items'})
+                elif 'ico-volume' in item:
+                    params['type'] = 'audio'
+                elif 'ico-play' in item:
+                    params['type'] = 'video'
+                elif '/emissions/' in url:
+                    params['type'] = 'video'
+                else:
+                    params['type'] = defaultMediaType
                 sItems.append(params)
                 
-            if len(sItems): icon = sItems[0]['icon']
-            else: icon = ''
+            if len(sItems):
+                icon = sItems[0]['icon']
+            else:
+                icon = ''
             
             if sUrl != '' and sUrl != cItem['url']:
-                if 0 == len(sItems): title = sTitle
-                else: title = _('More') 
+                if 0 == len(sItems):
+                    title = sTitle
+                else:
+                    title = _('More') 
                 params = dict(cItem)
                 params.update({'good_for_fav':False, 'url':sUrl, 'title':title, 'category':nextCategory2, 'icon':icon})
                 sItems.append(params)
@@ -364,7 +405,8 @@ class RTBFBE(CBaseHostClass):
         printDBG("RTBFBE.listPlaylistItems")
         
         sts, data = self.getPage(cItem['url'])
-        if not sts: return
+        if not sts:
+            return
         
         cItem = dict(cItem)
         
@@ -375,11 +417,13 @@ class RTBFBE(CBaseHostClass):
         data = re.compile('''<li[^>]+?js\-chapter\-entry[^>]+?>''').split(data)
         for item in data:
             icon = self.getFullIconUrl(self.cm.ph.getSearchGroups(item, '''data\-srcset=['"]([^'^"^\s]+?)[\s'"]''')[0])
-            if icon == '': icon = self.getFullIconUrl(self.cm.ph.getSearchGroups(item, '''src=['"]([^'^"^\s]+?(?:\.jpe?g|\.png)(?:\?[^'^"^\s]*?)?)[\s'"]''')[0])
+            if icon == '':
+                icon = self.getFullIconUrl(self.cm.ph.getSearchGroups(item, '''src=['"]([^'^"^\s]+?(?:\.jpe?g|\.png)(?:\?[^'^"^\s]*?)?)[\s'"]''')[0])
             title = self.cleanHtmlStr(self.cm.ph.getSearchGroups(item, '''\stitle=['"]([^'^"]+?)['"]''')[0])
             url = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''href=['"]([^'^"]+?)['"]''')[0])
             desc = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(item, ('<span', '>', '-subtitle'), ('</span', '>'))[1])
-            if '/auvio/' not in url: continue
+            if '/auvio/' not in url:
+                continue
             params = {'good_for_fav':True, 'title':title, 'url':url, 'icon':icon, 'desc':desc}
             self.addVideo(params)
     
@@ -409,10 +453,12 @@ class RTBFBE(CBaseHostClass):
         subsTab = []
         cacheKey = cItem['url']
         cacheTab = self.cacheLinks.get(cacheKey, [])
-        if len(cacheTab): return cacheTab
+        if len(cacheTab):
+            return cacheTab
         
         sts, data = self.getPage(cItem['url'])
-        if not sts: return []
+        if not sts:
+            return []
         
         cUrl = data.meta['url']
         self.setMainUrl(cUrl)
@@ -423,7 +469,8 @@ class RTBFBE(CBaseHostClass):
         urlParams['header']['Referer'] = cUrl
         
         sts, data = self.getPage(url, urlParams)
-        if not sts: return []
+        if not sts:
+            return []
         
         geoLocRestriction = ''
         data = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(data, 'data-media="', '"', False)[1])
@@ -437,9 +484,11 @@ class RTBFBE(CBaseHostClass):
             hslUrls = [data.get('streamUrlHls', ''), cItem.get('stream_url', '')]
             hslUrls.append(data.get('urlHls', ''))
             for hslUrl in hslUrls:
-                if not self.cm.isValidUrl(hslUrl): continue
+                if not self.cm.isValidUrl(hslUrl):
+                    continue
                 hlsTab.append({'name':'[HLS/m3u8]', 'url':hslUrl, 'iptv_proto':'m3u8'})
-                if len(hlsTab): break
+                if len(hlsTab):
+                    break
             
             # DASH LINKS
             dashUrl = data.get('urlDash', '')
@@ -452,20 +501,25 @@ class RTBFBE(CBaseHostClass):
                     tmp = []
                     for type in ['url', 'high', 'mobile', 'web']:
                         url = data['sources'][type]
-                        if url in tmp: continue
+                        if url in tmp:
+                            continue
                         tmp.append(url)
                         name = self.cm.ph.getSearchGroups(url, '''[\-_]([0-9]+?)p\.mp4''')[0]
-                        if name == '': name = type
-                        if self.cm.isValidUrl(url): mp4Tab.append({'name':'[mp4] %sp'% name, 'url':url, 'quality':name})
+                        if name == '':
+                            name = type
+                        if self.cm.isValidUrl(url):
+                            mp4Tab.append({'name':'[mp4] %sp'% name, 'url':url, 'quality':name})
                     mp4Tab = CSelOneLink(mp4Tab, lambda item: int(item['quality']), 999999999).getSortedLinks()
                 except Exception:
                     printExc()
                     
             # SUBTITLES
             for item in data['tracks']:
-                if isinstance(item, str): item = data['tracks'][item]
+                if isinstance(item, str):
+                    item = data['tracks'][item]
                 subtitleUrl = item['url']
-                if not self.cm.isValidUrl(subtitleUrl): continue
+                if not self.cm.isValidUrl(subtitleUrl):
+                    continue
                 subsTab.append({'title':item['label'], 'url':subtitleUrl, 'lang':item['lang'], 'format':item['format']})
                 
             printDBG("++++++++++++++++++++++++++++++++++++++++++++++")
@@ -482,7 +536,8 @@ class RTBFBE(CBaseHostClass):
             namePrefix = '!geo-blocked! '
         for idx in range(len(retTab)):
             meta = {'Referer':cItem['url'], 'external_sub_tracks':subsTab}
-            if 'iptv_proto' in retTab[idx]: meta['iptv_proto'] = retTab[idx]['iptv_proto']
+            if 'iptv_proto' in retTab[idx]:
+                meta['iptv_proto'] = retTab[idx]['iptv_proto']
             retTab[idx]['url'] = strwithmeta(retTab[idx]['url'], meta)
             retTab[idx]['need_resolve'] = 1
             retTab[idx]['name'] = namePrefix + retTab[idx]['name']
@@ -520,7 +575,8 @@ class RTBFBE(CBaseHostClass):
             
             url = 'https://token.rtbf.be/'
             sts, data = self.getPage(url, urlParams, self.serParams({type:videoUrl}, 'streams'))
-            if not sts: return []
+            if not sts:
+                return []
             
             try:
                 data = byteify(json.loads(data))

@@ -60,8 +60,10 @@ class TED(CBaseHostClass):
         
     def getFullUrl(self, url):
         url = CBaseHostClass.getFullUrl(self, url)
-        try: url.encode('ascii')
-        except Exception: url = urllib.parse.quote(url, safe="/:&?%@[]()*$!+-=|<>;")
+        try:
+            url.encode('ascii')
+        except Exception:
+            url = urllib.parse.quote(url, safe="/:&?%@[]()*$!+-=|<>;")
         url = url.replace(' ', '%20').replace('&amp;', '&')
         return url
         
@@ -84,7 +86,8 @@ class TED(CBaseHostClass):
         filtersTab = []
         for item in data:
             value = self.cm.ph.getSearchGroups(item, '''value=['"]([^'^"]+?)['"]''')[0]
-            if value in ['', '...']: continue
+            if value in ['', '...']:
+                continue
             title = self.cleanHtmlStr(item)
             filtersTab.append({'title':titleBase + title, key:value})
         if anyTitle != '' and len(filtersTab):
@@ -98,7 +101,8 @@ class TED(CBaseHostClass):
         self.cacheTalksFilters = []
         
         sts, data = self.getPage(cItem['url'])
-        if not sts: return
+        if not sts:
+            return
         
         # topics
         tmp = self.cm.ph.getDataBeetwenMarkers(data, "name='topics'", '</select>')[1]
@@ -132,7 +136,8 @@ class TED(CBaseHostClass):
         self.cachePlaylistsFilters = []
         
         sts, data = self.getPage(cItem['url'])
-        if not sts: return
+        if not sts:
+            return
         
         # topics
         tmp = self.cm.ph.getDataBeetwenMarkers(data, "name='topics'", '</select>')[1]
@@ -165,7 +170,8 @@ class TED(CBaseHostClass):
             httpParams['header']['Referer'] = cItem['url']
             for url in [cItem['f_url'], 'http://textuploader.com/d0k96/raw']:
                 sts, data = self.getPage(url, httpParams)
-                if not sts: continue
+                if not sts:
+                    continue
                 try:
                     data = json_loads(data)
                     for item in data:
@@ -202,7 +208,8 @@ class TED(CBaseHostClass):
             httpParams['header']['Referer'] = cItem['url']
             
             sts, data = self.getPage(cItem['f_url'], httpParams)
-            if not sts: return
+            if not sts:
+                return
             try:
                 userLang = GetDefaultLang()
                 promotItem = None
@@ -230,7 +237,8 @@ class TED(CBaseHostClass):
             httpParams['header']['Referer'] = cItem['url']
             for url in [cItem['f_url'], 'http://textuploader.com/d0k0n/raw']:
                 sts, data = self.getPage(url, httpParams)
-                if not sts: continue
+                if not sts:
+                    continue
                 try:
                     data = json_loads(data)
                     for item in data:
@@ -244,7 +252,8 @@ class TED(CBaseHostClass):
         if len(self.cacheAllEvents):
             yearsTab = []
             for item in self.cacheAllEvents:
-                if item['f_year'] in yearsTab: continue
+                if item['f_year'] in yearsTab:
+                    continue
                 params = dict(cItem)
                 params.update({'category':nextCategory, 'title':item['f_year'], 'f_year':item['f_year']})
                 self.addDir(params)
@@ -257,7 +266,8 @@ class TED(CBaseHostClass):
         cItem = dict(cItem)
         cItem.update({'category':nextCategory, 'f_idx':cItem.get('f_idx', 0) + 1})
         for item in self.cacheAllEvents:
-            if item['f_year'] != year: continue
+            if item['f_year'] != year:
+                continue
             params = dict(cItem)
             params.update(item)
             self.addDir(params)
@@ -269,19 +279,24 @@ class TED(CBaseHostClass):
         page = cItem.get('page', 1)
         
         query = {}
-        if page > 1: query['page'] = page
+        if page > 1:
+            query['page'] = page
         
         queryParamsMap = {'f_topics':'topics[]', 'f_language':'language', 'f_duration':'duration', 'f_event':'event', 'f_sort':'sort'}
         for key in cItem:
-            if key not in queryParamsMap: continue
+            if key not in queryParamsMap:
+                continue
             query[queryParamsMap[key]] = cItem[key]
         
         query = urllib.parse.urlencode(query)
-        if '?' in url: url += '&' + query
-        else: url += '?' + query
+        if '?' in url:
+            url += '&' + query
+        else:
+            url += '?' + query
         
         sts, data = self.getPage(url)
-        if not sts: return
+        if not sts:
+            return
         
         nextPage = self.getFullUrl(self.cm.ph.getSearchGroups(data, '''<a[^>]+?rel="next"[^>]+?href="([^"]+?)"''', ignoreCase=True)[0])
         if nextPage != '':
@@ -289,26 +304,31 @@ class TED(CBaseHostClass):
         
         data = self.cm.ph.getDataBeetwenMarkers(data, "browse-results", '<script>')[1]
         data = data.split("<div class='talk-link'>")
-        if len(data): del data[0]
+        if len(data):
+            del data[0]
         if len(data):
             idx = data[-1].find('<div class="pagination">')
-            if idx >= 0: data[-1] = data[-1][:idx]
+            if idx >= 0:
+                data[-1] = data[-1][:idx]
         
         for item in data:
             url   = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''href=['"]([^'^"]+?)['"]''', ignoreCase=True)[0])
-            if not self.cm.isValidUrl(url): continue
+            if not self.cm.isValidUrl(url):
+                continue
             icon  = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''<img[^>]+?src=['"]([^'^"]+?)['"]''', ignoreCase=True)[0])
             
             tmp = self.cm.ph.getAllItemsBeetwenMarkers(item, '<h4', '</h4>')
             titles = []
             for t in tmp:
                 t = self.cleanHtmlStr(t)
-                if t != '': titles.append(t)
+                if t != '':
+                    titles.append(t)
             title = ': '.join(titles)
             
             duration = self.cm.ph.getSearchGroups(item, '<span[^>]+?duration[^>]*?>([^>]+?)<')[0]
             desc  = self.cleanHtmlStr(item.split("</h4>")[-1])
-            if duration != '': desc = duration + ' | ' + desc
+            if duration != '':
+                desc = duration + ' | ' + desc
             
             params = dict(cItem)
             params.update({'good_for_fav':True, 'title':title, 'url':url, 'desc':desc, 'icon':icon})
@@ -328,24 +348,30 @@ class TED(CBaseHostClass):
         page = cItem.get('page', 1)
         
         query = {}
-        if page > 1: query['page'] = page
+        if page > 1:
+            query['page'] = page
         query['per_page'] = 24
         
         queryParamsMap = {'f_topics':'topics[]', 'f_duration':'duration', 'f_curator':'curator'}
         for key in cItem:
-            if key not in queryParamsMap: continue
+            if key not in queryParamsMap:
+                continue
             query[queryParamsMap[key]] = cItem[key]
         
         query = urllib.parse.urlencode(query)
-        if '?' in url: url += '&' + query
-        else: url += '?' + query
+        if '?' in url:
+            url += '&' + query
+        else:
+            url += '?' + query
         
         sts, data = self.getPage(url, httpParams)
-        if not sts: return
+        if not sts:
+            return
         nextPage = False
         try:
             data = json_loads(data)
-            if page < data['metadata']['pageCount']: nextPage = True
+            if page < data['metadata']['pageCount']:
+                nextPage = True
             for item in data['records']:
                 url   = self.getFullUrl(item['url'])
                 icon  = self.getFullIconUrl(item['thumb'])
@@ -353,7 +379,8 @@ class TED(CBaseHostClass):
                 
                 descTab = ['%s: %s' %(_('Talks'), item['talks'])]
                 duration = str( timedelta( seconds = int(item['duration']) ) )
-                if duration.startswith("0:"): duration = duration[2:]
+                if duration.startswith("0:"):
+                    duration = duration[2:]
                 descTab.append('%s: %s' % (_('Duration'), duration))
                 descTab.append('%s: %s' % (_('Curator'), item['curator']))
                 desc = '[/br]'.join(descTab)
@@ -373,23 +400,27 @@ class TED(CBaseHostClass):
         printDBG("TED.listTalksItems")
         
         sts, data = self.getPage(cItem['url'])
-        if not sts: return
+        if not sts:
+            return
         
         data = self.cm.ph.getDataBeetwenMarkers(data, 'playlist-talks', '</ul>')[1]
         data = self.cm.ph.getAllItemsBeetwenMarkers(data, '<li', '</li>')
         for item in data:
             url   = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''href=['"]([^'^"]+?)['"]''', ignoreCase=True)[0])
-            if not self.cm.isValidUrl(url): continue
+            if not self.cm.isValidUrl(url):
+                continue
             icon  = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''<img[^>]+?src=['"]([^'^"]+?)['"]''', ignoreCase=True)[0])
             
             titles = [self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(item, '<h9', '</h9>')[1])]
             speaker = self.cm.ph.getSearchGroups(item, '<a[^>]+?speaker[^>]*?>([^>]+?)<')[0]
-            if speaker != '': titles.insert(0, speaker)
+            if speaker != '':
+                titles.insert(0, speaker)
             title = ': '.join(titles)
             
             duration = self.cm.ph.getSearchGroups(item, '<span[^>]+?duration[^>]*?>([^>]+?)<')[0]
             desc  = self.cleanHtmlStr(item.split("</h9>")[-1])
-            if duration != '': desc = duration + ' | ' + desc
+            if duration != '':
+                desc = duration + ' | ' + desc
             
             params = dict(cItem)
             params.update({'good_for_fav':True, 'title':title, 'url':url, 'desc':desc, 'icon':icon})
@@ -402,15 +433,18 @@ class TED(CBaseHostClass):
         url = self.getFullUrl('/search?cat=%s&page=%s&per_page=12&q=%s' % (searchType, page, urllib.parse.quote_plus(searchPattern)))
         
         sts, data = self.getPage(url)
-        if not sts: return
+        if not sts:
+            return
         
         nextPage = self.getFullUrl(self.cm.ph.getSearchGroups(data, '''<a[^>]+?rel="next"[^>]+?href="([^"]+?)"''', ignoreCase=True)[0])
-        if nextPage != '': nextPage = True
+        if nextPage != '':
+            nextPage = True
         
         data = self.cm.ph.getAllItemsBeetwenMarkers(data, '<article', '</article>')
         for item in data:
             url   = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''href=['"]([^'^"]+?)['"]''', ignoreCase=True)[0])
-            if not self.cm.isValidUrl(url): continue
+            if not self.cm.isValidUrl(url):
+                continue
             icon  = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''<img[^>]+?src=['"]([^'^"]+?)['"]''', ignoreCase=True)[0])
             tmp = item.split('</h3>')
             title = self.cleanHtmlStr(tmp[0])
@@ -436,11 +470,13 @@ class TED(CBaseHostClass):
         #cItem['url'] = 'https://www.ted.com/talks/douglas_adams_parrots_the_universe_and_everything'
         
         sts, data = self.getPage(cItem['url'])
-        if not sts: return []
+        if not sts:
+            return []
         
         def _addLinkItem(urlTab, item, url, namePrefix=''):
             try:
-                if not self.cm.isValidUrl(url) and not url.startswith('merge://'): return
+                if not self.cm.isValidUrl(url) and not url.startswith('merge://'):
+                    return
                 if 'width' in item and 'height' in item:
                     name = '%sx%s (%s)' % (item['width'], item['height'], item['bitrate'])
                 else:
@@ -456,23 +492,28 @@ class TED(CBaseHostClass):
             tmp = playerData.get('media', {}).get('internal', {})
             for key in tmp:
                 bitrate = self.cm.ph.getSearchGroups(key, '([0-9]+)k')[0]
-                if bitrate == '': continue
+                if bitrate == '':
+                    continue
                 item = tmp[key]
                 item['bitrate'] = int(bitrate)
-                if '/mp4' not in item.get('mime_type', ''): continue
+                if '/mp4' not in item.get('mime_type', ''):
+                    continue
                 _addLinkItem(urlTab, item, item.get('uri', ''))
             
             tmp = playerData['talks'][0]['player_talks'][0]
             rtmpTab = tmp['resources'].get('rtmp', [])
-            if rtmpTab == None: rtmpTab = []
+            if rtmpTab == None:
+                rtmpTab = []
             for item in rtmpTab:
                 url = item.get('file', '')
-                if not url.startswith('mp4:'): continue
+                if not url.startswith('mp4:'):
+                    continue
                 url = 'https://pc.tedcdn.com/' + url[4:]
                 _addLinkItem(urlTab, item, url)
 
             h264Tab = tmp['resources'].get('h264', [])
-            if h264Tab == None: h264Tab = []
+            if h264Tab == None:
+                h264Tab = []
             for item in h264Tab:
                 _addLinkItem(urlTab, item, item['file'])
 
@@ -481,14 +522,17 @@ class TED(CBaseHostClass):
                 baseMp4Url = urlTab[-1]['url']
                 baseBitrate = ph.search(baseMp4Url, reObj)[0]
                 hlsItem = tmp['resources'].get('hls', {})
-                if hlsItem == None: hlsItem = {}
+                if hlsItem == None:
+                    hlsItem = {}
                 url = hlsItem.get('stream', '')
-                if url == None: url = ''
+                if url == None:
+                    url = ''
 
                 tmp = getDirectM3U8Playlist(self.cm.getFullUrl(url, self.cm.meta['url']), checkExt=False)
                 for item in tmp:
                     url = item['url']
-                    if url.startswith('merge://'): url = url.meta.get('video_url', '')
+                    if url.startswith('merge://'):
+                        url = url.meta.get('video_url', '')
                     bitrate = ph.search(url, reObj)[0]
                     url = baseMp4Url.replace(baseBitrate, bitrate)
                     printDBG(">> %s %s %s" % (url, baseMp4Url, url))
@@ -497,8 +541,10 @@ class TED(CBaseHostClass):
                 #    _addLinkItem(urlTab, item, item['url'], '[HLS] ')
 
             def __getLinkQuality( itemLink ):
-                try: return int(itemLink['bitrate'])
-                except Exception: return 0
+                try:
+                    return int(itemLink['bitrate'])
+                except Exception:
+                    return 0
             
             urlTab = CSelOneLink(urlTab, __getLinkQuality, 99999999).getSortedLinks()
             
@@ -555,7 +601,8 @@ class TED(CBaseHostClass):
     # TALKS
         elif 'list_talks_filters' == category:
             idx = self.currItem.get('f_idx', 0)
-            if idx == 0: self._fillTalksFilters(self.currItem)
+            if idx == 0:
+                self._fillTalksFilters(self.currItem)
             if idx < len(self.cacheTalksFilters):
                 self.listFilters(self.currItem, self.cacheTalksFilters)
             else:
@@ -574,7 +621,8 @@ class TED(CBaseHostClass):
     # PLAYLISTS
         elif 'list_playlists_filters' == category:
             idx = self.currItem.get('f_idx', 0)
-            if idx == 0: self._fillPlaylistsFilters(self.currItem)
+            if idx == 0:
+                self._fillPlaylistsFilters(self.currItem)
             if idx < len(self.cachePlaylistsFilters):
                 self.listFilters(self.currItem, self.cachePlaylistsFilters)
             else:

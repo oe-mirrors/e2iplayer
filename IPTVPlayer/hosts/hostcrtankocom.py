@@ -14,8 +14,10 @@ import re
 import urllib.request
 import urllib.parse
 import urllib.error
-try:    import json
-except Exception: import simplejson as json
+try:
+    import json
+except Exception:
+    import simplejson as json
 ###################################################
 
 
@@ -140,7 +142,8 @@ class CrtankoCom(CBaseHostClass):
             url += '?s=%s' % search
         
         sts, data = self.cm.getPage(url)
-        if not sts: return
+        if not sts:
+            return
         
         nextPage = self.cm.ph.getDataBeetwenMarkers(data, 'rel="next"', '>', False)[1]
         if '/page/{0}/'.format(page+1) in nextPage:
@@ -172,7 +175,8 @@ class CrtankoCom(CBaseHostClass):
             url += '%s/' % page
         
         sts, data = self.cm.getPage(url)
-        if not sts: return
+        if not sts:
+            return
         
         nextPage = self.cm.ph.getDataBeetwenMarkers(data, 'Pages:', '</section>', False)[1]
         if '>{0}<'.format(page+1) in nextPage:
@@ -198,7 +202,8 @@ class CrtankoCom(CBaseHostClass):
                 t2 = title.strip().upper()
                 if t1 != t2 and t2 != '' and not t1 in t2:
                     title = '{0} - {1}'.format(cItem['title'], title)
-                if title == '': title = cItem['title']
+                if title == '':
+                    title = cItem['title']
                 params = dict(cItem)
                 params.update({'good_for_fav': False, 'title':title, 'url_data':linkData})
                 self.addVideo(params)
@@ -219,11 +224,14 @@ class CrtankoCom(CBaseHostClass):
             data = cItem['url_data']
         else:
             sts, data = self.cm.getPage(cItem['url'])
-            if not sts: return []
+            if not sts:
+                return []
         
         vidUrl = self.cm.ph.getSearchGroups(data, '<iframe[^>]+?src="([^"]+?)"', 1, True)[0]
-        if vidUrl == '': vidUrl = self.cm.ph.getSearchGroups(data, '<script[^>]+?src="([^"]+?)"', 1, True)[0]
-        if vidUrl == '': vidUrl = self.cm.ph.getDataBeetwenMarkers(data, 'data-rocketsrc="', '"', False, True)[1]
+        if vidUrl == '':
+            vidUrl = self.cm.ph.getSearchGroups(data, '<script[^>]+?src="([^"]+?)"', 1, True)[0]
+        if vidUrl == '':
+            vidUrl = self.cm.ph.getDataBeetwenMarkers(data, 'data-rocketsrc="', '"', False, True)[1]
 
         if vidUrl.startswith('//'):
             vidUrl = 'http:' + vidUrl
@@ -235,9 +243,11 @@ class CrtankoCom(CBaseHostClass):
                 validatehash = hashName
         if validatehash != '':
             sts, dat = self.cm.getPage(vidUrl, {'header':{'Referer':cItem['url'], 'User-Agent':'Mozilla/5.0 (X11; Linux i686) AppleWebKit/537.36 (KHTML, like Gecko) Ubuntu Chromium/37.0.2062.120 Chrome/37.0.2062.120 Safari/537.36'}})
-            if not sts: return urlTab
+            if not sts:
+                return urlTab
             dat = self.cm.ph.getSearchGroups(dat, 'ref="([^"]+?)"')[0]
-            if '' == dat: return urlTab
+            if '' == dat:
+                return urlTab
             vidUrl = 'http://{0}/view.php?ref={1}&width=700&height=460&val=1'.format(validatehash, dat)
             
         if '' != vidUrl:

@@ -14,8 +14,10 @@ import base64
 import sys
 import traceback
 from http.server import BaseHTTPRequestHandler
-try:    import json
-except Exception: import simplejson as json
+try:
+    import json
+except Exception:
+    import simplejson as json
 from binascii import hexlify
 import threading
 
@@ -163,7 +165,7 @@ class Myjdapi:
 
     def __secret_create(self, email, password, domain):
         secret_hash = hashlib.sha256()
-        secret_hash.update(email.lower().encode('utf-8') + password.encode('utf-8') + \
+        secret_hash.update(email.lower().encode('utf-8') + password.encode('utf-8') +
                     domain.lower().encode('utf-8'))
         return secret_hash.digest()
 
@@ -239,10 +241,10 @@ class Myjdapi:
                     query += ["&%s=%s" % (param[0], param[1])]
             query += ["rid="+str(self._request_id)]
             if self._server_encryption_token is None:
-                query += ["signature=" + \
+                query += ["signature=" +
                           str(self._signature_create(self._login_secret, query[0]+"&".join(query[1:])))]
             else:
-                query += ["signature=" + \
+                query += ["signature=" +
                           str(self._signature_create(self._server_encryption_token, query[0]+"&".join(query[1:])))]
             query = query[0]+"&".join(query[1:])
             encrypted_response_status_code, encrypted_response_text = getPage(self._api_url+query)

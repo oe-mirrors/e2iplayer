@@ -65,7 +65,8 @@ class InternetowaApi(CBaseHostClass):
 
             rm(self.COOKIE_FILE)
             sts, data = self.cm.getPage(self.getFullUrl('/logowanie/'), self.http_params)
-            if sts: self.setMainUrl(self.cm.meta['url'])
+            if sts:
+                self.setMainUrl(self.cm.meta['url'])
 
             self.loggedIn = False
             if '' == self.login.strip() or '' == self.password.strip():
@@ -97,7 +98,8 @@ class InternetowaApi(CBaseHostClass):
         
         if cItem.get('priv_cat') == None:
             sts, data = self.cm.getPage(self.getMainUrl(), self.http_params)
-            if not sts: return []
+            if not sts:
+                return []
 
             sectionsTitles = {}
             tmp = self.cm.ph.getDataBeetwenNodes(data, ('<select', '>', 'switchView'), ('</select', '>'), False)[1]
@@ -120,9 +122,11 @@ class InternetowaApi(CBaseHostClass):
                     subSections = self.cm.ph.getAllItemsBeetwenMarkers(section[idx], '<a', '</a>')
                     for item in subSections:
                         url = self.getFullIconUrl( self.cm.ph.getSearchGroups(item, '''href=['"]([^'^"]+?)['"]''')[0] )
-                        if not self.cm.isValidUrl(url): continue
+                        if not self.cm.isValidUrl(url):
+                            continue
                         title = self.cleanHtmlStr(item)
-                        if title == '': title = self.cleanHtmlStr(self.cm.ph.getSearchGroups(item, '''title=['"]([^'^"]+?)['"]''')[0])
+                        if title == '':
+                            title = self.cleanHtmlStr(self.cm.ph.getSearchGroups(item, '''title=['"]([^'^"]+?)['"]''')[0])
                         icon = self.getFullUrl( self.cm.ph.getSearchGroups(item, '''src=['"]([^"^']+?)['"]''')[0] )
                         type = title.lower()
                         type = 'audio' if 'radio' in type or 'rmf ' in type else 'video'
@@ -142,7 +146,8 @@ class InternetowaApi(CBaseHostClass):
         urlsTab = []
 
         sts, data = self.cm.getPage(cItem['url'], self.http_params)
-        if not sts: return urlsTab
+        if not sts:
+            return urlsTab
         cUrl = self.cm.meta['url']
 
         SetIPTVPlayerLastHostError(self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(data, ('<div', '>', 'nostream'), ('</div', '>'), False)[1]))
@@ -151,7 +156,8 @@ class InternetowaApi(CBaseHostClass):
         printDBG(data)
         for item in data:
             url = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''src=['"]([^'^"]+?)['"]''')[0])
-            if not self.cm.isValidUrl(url): continue
+            if not self.cm.isValidUrl(url):
+                continue
             if 1 == self.up.checkHostSupport(url):
                 url = strwithmeta(url, {'Referer':cUrl})
                 urlsTab.extend( self.up.getVideoLinkExt(url) )
@@ -159,7 +165,8 @@ class InternetowaApi(CBaseHostClass):
                 params = dict(self.http_params)
                 params['header'] = MergeDicts(self.HTTP_HEADER, {'Referer':cUrl})
                 sts, tmp = self.cm.getPage(url, params)
-                if not sts: continue
+                if not sts:
+                    continue
                 tmp2 = self.cm.ph.getDataBeetwenMarkers(tmp, '<audio', '</audio>', False)[1]
                 tmp2 = self.cm.ph.getDataBeetwenMarkers(tmp, '<audio', '</audio>', False)[1]
                 tmp = self.cm.ph.getAllItemsBeetwenMarkers(tmp2, '<source', '>')

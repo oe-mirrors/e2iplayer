@@ -13,8 +13,10 @@ from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, by
 import urllib.request
 import urllib.parse
 import urllib.error
-try:    import json
-except Exception: import simplejson as json
+try:
+    import json
+except Exception:
+    import simplejson as json
 ###################################################
 
 
@@ -46,10 +48,12 @@ class TVProart(CBaseHostClass):
         printDBG("TVProart.listCategories [%s]" % cItem)
         if self.categories == {}:
             sts, data = self.cm.getPage(self.API_URL + 'categories')
-            if not sts: return
+            if not sts:
+                return
             try:
                 data = byteify(json.loads(data))
-                if data['status'] != '200': return
+                if data['status'] != '200':
+                    return
                 self.categories = data['content']
             except Exception:
                 printExc()
@@ -66,11 +70,13 @@ class TVProart(CBaseHostClass):
         page = cItem.get('page', 1)
         url = self.API_URL + 'movies?type=cats&crit_id={0}'.format(cItem['slug'])
         sts, data = self.cm.getPage(url + '&page={0}'.format(page))
-        if not sts: return
+        if not sts:
+            return
         nextPage = False
         try:
             data = json.loads(data)
-            if data['status'] != '200': return
+            if data['status'] != '200':
+                return
             for item in data['content']:
                 icon = self.getFullUrl( item['thumb'].encode('utf-8') )
                 item = item['data']
@@ -99,11 +105,13 @@ class TVProart(CBaseHostClass):
         page = cItem.get('page', 0)
         url = self.SEARCH_URL + urllib.parse.quote(searchPattern)
         sts, data = self.cm.getPage(url + '&page={0}'.format(page))
-        if not sts: return
+        if not sts:
+            return
         nextPage = False
         try:
             data = byteify(json.loads(data))
-            if data['status'] != '200': return
+            if data['status'] != '200':
+                return
             for item in data['content']['movies']:
                 tmp = item['href'].split('/')
                 url = self.API_URL + 'video?id={0}&slug={1}'.format(tmp[-2], tmp[-1])
@@ -116,7 +124,8 @@ class TVProart(CBaseHostClass):
         printDBG("TVProart.getLinksForVideo [%s]" % cItem)
         urlTab = []
         sts, data = self.cm.getPage(cItem['url'])
-        if not sts: return []
+        if not sts:
+            return []
         try:
             data = byteify(json.loads(data))
             urlTab.append({'name':'vod', 'url':data['content']['video']['movieFile'], 'need_resolve':0})

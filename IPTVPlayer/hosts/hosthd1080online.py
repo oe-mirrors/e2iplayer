@@ -28,13 +28,15 @@ class HD1080Online(CBaseHostClass):
         self.hdgocc = HdgoccParser()
 
     def getPage(self, baseUrl, addParams={}, post_data=None):
-        if addParams == {}: addParams = dict(self.defaultParams)
+        if addParams == {}:
+            addParams = dict(self.defaultParams)
         return self.cm.getPage(baseUrl, addParams, post_data)
 
     def listMain(self, cItem, nextCategory):
         printDBG("HD1080Online.listMain")
         sts, data = self.getPage(self.getMainUrl())
-        if not sts: return
+        if not sts:
+            return
         self.setMainUrl(self.cm.meta['url'])
 
         tmp = ph.find(data, ('<ul', '>', 'first-menu'), '</ul>', flags=0)[1]
@@ -71,7 +73,8 @@ class HD1080Online(CBaseHostClass):
         page = cItem.get('page', 1)
 
         sts, data = self.getPage(cItem['url'])
-        if not sts: return
+        if not sts:
+            return
         self.setMainUrl(self.cm.meta['url'])
 
         nextPage = ph.find(data, ('<span', '>', 'pnext'), '</span>', flags=0)[1]
@@ -79,7 +82,8 @@ class HD1080Online(CBaseHostClass):
 
         data = ph.find(data, ('<div', '>', 'dle-content'), ('<aside', '>'))[1]
         data = ph.rfindall(data, '</div>', ('<div', '>', 'kino-item'))
-        if data and nextPage: data[-1] = ph.find(data[-1], '<div', ('<div', '>', 'pagi-nav'))[1]
+        if data and nextPage:
+            data[-1] = ph.find(data[-1], '<div', ('<div', '>', 'pagi-nav'))[1]
 
         for item in data:
             url = self.getFullUrl( ph.search(item, ph.A)[1] )
@@ -91,12 +95,14 @@ class HD1080Online(CBaseHostClass):
             tmp = ph.findall(tmp, ('<li', '>'), '</li>', flags=0)
             for t in tmp:
                 t = ph.clean_html(t)
-                if t: desc.append(t)
+                if t:
+                    desc.append(t)
 
             # rating
             desc.append(ph.clean_html(ph.rfind(item, ('<div', '>', 'ratig-layer'), ('<b', '>'), flags=0)[1]))
             t = ph.clean_html(ph.find(item, ('<li', '>', 'current-rating'), '</li>', flags=0)[1])
-            if t.isdigit(): desc[-1] += ' %s/10' % str(int(t) / 10.0)
+            if t.isdigit():
+                desc[-1] += ' %s/10' % str(int(t) / 10.0)
 
             desc.append(ph.clean_html(ph.find(item, ('<div', '>', 'desc'), '</div>', flags=0)[1]))
             self.addDir(MergeDicts(cItem, {'good_for_fav':True, 'category':nextCategory, 'title':title, 'url':url, 'icon':icon, 'desc':'[/br]'.join(desc)}))
@@ -109,7 +115,8 @@ class HD1080Online(CBaseHostClass):
         self.cacheLinks = {}
 
         sts, data = self.getPage(cItem['url'])
-        if not sts: return
+        if not sts:
+            return
         cUrl = self.cm.meta['url']
         self.setMainUrl(cUrl)
 
@@ -132,9 +139,11 @@ class HD1080Online(CBaseHostClass):
 
         for idx, item in enumerate(data):
             url = self.getFullUrl( ph.search(item, ph.IFRAME)[1] )
-            if not url: continue
+            if not url:
+                continue
             title = baseTitle
-            if idx < len(titles): title += ' - ' + titles[idx]
+            if idx < len(titles):
+                title += ' - ' + titles[idx]
 
             if ('/video/' in url and '/serials/' in url) or 'playlist' in url:
                 url = strwithmeta(url, {'Referer':cUrl})
@@ -169,10 +178,12 @@ class HD1080Online(CBaseHostClass):
         cItem = dict(cItem)
         page = cItem.get('page', 1)
         post_data = cItem['post_data']
-        if page > 1: post_data.update({'search_start':page, 'full_search':0, 'result_from':(page-1)*10+1})
+        if page > 1:
+            post_data.update({'search_start':page, 'full_search':0, 'result_from':(page-1)*10+1})
 
         sts, data = self.getPage(cItem['url'], post_data=post_data)
-        if not sts: return
+        if not sts:
+            return
         self.setMainUrl(self.cm.meta['url'])
 
         nextPage = ph.find(data, ('<div', '>', 'pagi-nav'), '</div>', flags=0)[1]
@@ -196,7 +207,8 @@ class HD1080Online(CBaseHostClass):
     def listSearchResult(self, cItem, searchPattern, searchType):
         #searchPattern = 'Человек'
         sts, data = self.getPage(self.getMainUrl())
-        if not sts: return
+        if not sts:
+            return
         self.setMainUrl(self.cm.meta['url'])
         
         value = ph.search(data, '''var\s*?dle_login_hash\s*?=\s*?['"]([^'^"]+?)['"]''')[0]
@@ -205,7 +217,8 @@ class HD1080Online(CBaseHostClass):
 
     def getLinksForVideo(self, cItem):
         linksTab = self.cacheLinks.get(cItem['url'], [])
-        if linksTab: return linksTab
+        if linksTab:
+            return linksTab
 
         linksTab = self.up.getVideoLinkExt(cItem['url'])
         for item in linksTab:
@@ -236,7 +249,8 @@ class HD1080Online(CBaseHostClass):
         if not data:
             url = cItem.get('prev_url', cItem['url'])
             sts, data = self.getPage(url)
-            if not sts: return []
+            if not sts:
+                return []
             self.setMainUrl(self.cm.meta['url'])
             
         rating = ph.clean_html(ph.find(data, ('<div', '>', 'aggregateRating'), '</div>', flags=0)[1])
@@ -251,12 +265,16 @@ class HD1080Online(CBaseHostClass):
         for idx in range(1, len(data), 2):
             label = ph.clean_html(data[idx-1])
             value = ph.clean_html(data[idx])
-            if label and value: itemsList.append((label, value))
+            if label and value:
+                itemsList.append((label, value))
         itemsList.append((_('Rating'), rating))
 
-        if title == '': title = cItem['title']
-        if icon == '':  icon = cItem.get('icon', self.DEFAULT_ICON_URL)
-        if desc == '':  desc = cItem.get('desc', '')
+        if title == '':
+            title = cItem['title']
+        if icon == '':
+            icon = cItem.get('icon', self.DEFAULT_ICON_URL)
+        if desc == '':
+            desc = cItem.get('desc', '')
         
         return [{'title':self.cleanHtmlStr( title ), 'text': self.cleanHtmlStr( desc ), 'images':[{'title':'', 'url':self.getFullUrl(icon)}], 'other_info':{'custom_items_list':itemsList}}]
 

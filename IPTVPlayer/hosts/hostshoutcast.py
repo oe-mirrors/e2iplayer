@@ -11,8 +11,10 @@ from Plugins.Extensions.IPTVPlayer.libs.m3uparser import ParseM3u
 ###################################################
 # FOREIGN import
 ###################################################
-try:    import json
-except Exception: import simplejson as json
+try:
+    import json
+except Exception:
+    import simplejson as json
 ###################################################
 
 
@@ -35,7 +37,8 @@ class ShoutcastCom(CBaseHostClass):
         self.cacheGenres = {}
         
     def getPage(self, baseUrl, addParams = {}, post_data = None):
-        if addParams == {}: addParams = dict(self.defaultParams)
+        if addParams == {}:
+            addParams = dict(self.defaultParams)
         return self.cm.getPage(baseUrl, addParams, post_data)
     
     def listMainMenu(self, cItem):
@@ -53,7 +56,8 @@ class ShoutcastCom(CBaseHostClass):
         self.cacheGenres = {}
         
         sts, data = self.getPage(cItem['url'])
-        if not sts: return
+        if not sts:
+            return
         
         data = self.cm.ph.getAllItemsBeetwenNodes(data, ('<li', '>', 'main-genre'), ('</ul', '>'))
         for genreItem in data:
@@ -90,7 +94,8 @@ class ShoutcastCom(CBaseHostClass):
         
         if searchPattern == '':
             sts, data = self.getPage(cItem['url'])
-            if not sts: return
+            if not sts:
+                return
             
             data = self.cm.ph.getDataBeetwenMarkers(data, '</footer>', '</body>')[1]
             data = self.cm.ph.getDataBeetwenMarkers(data, 'loadStationsByGenre(', ');', False)[1]
@@ -98,7 +103,8 @@ class ShoutcastCom(CBaseHostClass):
             params = []
             for item in data:
                 item = item.strip()
-                if item[0] in ['"', "'"]: item = item[1:-1]
+                if item[0] in ['"', "'"]:
+                    item = item[1:-1]
                 params.append(item)
             
             url = self.getFullUrl('/Home/BrowseByGenre')
@@ -107,13 +113,15 @@ class ShoutcastCom(CBaseHostClass):
             url = self.getFullUrl('/Search')
             post_data = {'query':searchPattern}
             sts, data = self.getPage(url, post_data = post_data)
-            if not sts: return
+            if not sts:
+                return
             
             url = self.getFullUrl('/Search/UpdateSearch')
             post_data = {'query':searchPattern}
         
         sts, data = self.getPage(url, post_data = post_data)
-        if not sts: return
+        if not sts:
+            return
         
         try:
             data = byteify(json.loads(data))
@@ -124,8 +132,10 @@ class ShoutcastCom(CBaseHostClass):
                 desc.append(_('Genre: %s') % item['Genre'])
                 desc.append(_('Listeners: %s') % item['Listeners'])
                 desc.append(_('Bitrate: %s') % item['Bitrate'])
-                if item['IsAACEnabled']: type = 'AAC'
-                else: type = 'MP3'
+                if item['IsAACEnabled']:
+                    type = 'AAC'
+                else:
+                    type = 'MP3'
                 desc.append(_('Type: %s') % type)
                 desc = ' | '.join(desc)
                 #desc += '[/br] ' + self.cleanHtmlStr(item['CurrentTrack'])
@@ -149,7 +159,8 @@ class ShoutcastCom(CBaseHostClass):
         url = 'http://yp.shoutcast.com/sbin/tunein-station.m3u?id=%s' % stationId
         
         sts, data = self.getPage(url)
-        if not sts: return
+        if not sts:
+            return
         
         data = ParseM3u(data)
         for item in data:

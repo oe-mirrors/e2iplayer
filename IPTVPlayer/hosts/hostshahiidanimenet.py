@@ -17,8 +17,10 @@ import re
 import urllib.request
 import urllib.parse
 import urllib.error
-try:    import json
-except Exception: import simplejson as json
+try:
+    import json
+except Exception:
+    import simplejson as json
 ###################################################
 
 
@@ -70,21 +72,24 @@ class ShahiidAnime(CBaseHostClass):
         self.cacheFiltersKeys = []
         
         sts, data = self.getPage(cItem['url'])
-        if not sts: return
+        if not sts:
+            return
         
         def addFilter(data, marker, baseKey, addAll=True, titleBase=''):
             key = 'f_' + baseKey
             self.cacheFilters[key] = []
             for item in data:
                 value = self.cm.ph.getSearchGroups(item, marker + '''="([^"]+?)"''')[0]
-                if value == '': continue
+                if value == '':
+                    continue
                 title = self.cleanHtmlStr(item)
                 if title.lower() in ['all', 'default', 'any']:
                     addAll = False
                 self.cacheFilters[key].append({'title':title.title(), key:value})
                 
             if len(self.cacheFilters[key]):
-                if addAll: self.cacheFilters[key].insert(0, {'title':_('All')})
+                if addAll:
+                    self.cacheFilters[key].insert(0, {'title':_('All')})
                 self.cacheFiltersKeys.append(key)
         
         data = self.cm.ph.getAllItemsBeetwenNodes(data, ('<select', '>', 'Select2'), ('</', 'select>'))
@@ -100,9 +105,11 @@ class ShahiidAnime(CBaseHostClass):
         cItem = dict(cItem)
         
         f_idx = cItem.get('f_idx', 0)
-        if f_idx == 0: self.fillCacheFilters(cItem)
+        if f_idx == 0:
+            self.fillCacheFilters(cItem)
         
-        if f_idx >= len(self.cacheFiltersKeys): return
+        if f_idx >= len(self.cacheFiltersKeys):
+            return
         
         filter = self.cacheFiltersKeys[f_idx]
         f_idx += 1
@@ -121,19 +128,23 @@ class ShahiidAnime(CBaseHostClass):
         page = cItem.get('page', 1)
         
         url = cItem['url']
-        if page > 1: url += '/page/%s/' % page
+        if page > 1:
+            url += '/page/%s/' % page
         
         query = {}
         keys = list(self.cacheFiltersKeys)
         keys.append('f_s')
         for key in keys:
             baseKey = key[2:] # "f_"
-            if key in cItem: query[baseKey] = cItem[key]
+            if key in cItem:
+                query[baseKey] = cItem[key]
         query = urllib.parse.urlencode(query)
-        if query != '': url += '?' + query
+        if query != '':
+            url += '?' + query
         
         sts, data = self.getPage(url)
-        if not sts: return
+        if not sts:
+            return
         
         nextPage = self.cm.ph.getAllItemsBeetwenNodes(data,  ('<nav ', '>', 'pagination'), ('</nav', '>'), False, numNodes=1)
         if len(nextPage) and ('/page/%s/' % (page + 1)) in nextPage[0]: 
@@ -155,9 +166,12 @@ class ShahiidAnime(CBaseHostClass):
                 for it in tmp:
                     val = self.cleanHtmlStr(it).replace(' , ', ', ')
                     if val != '':
-                        if '"title' in it or 'title"' in it: continue
-                        elif '"story"'in it: desc = val
-                        else: descTab.append(val)
+                        if '"title' in it or 'title"' in it:
+                            continue
+                        elif '"story"'in it:
+                            desc = val
+                        else:
+                            descTab.append(val)
                 desc = ' | '.join(descTab) + '[/br]' + desc
                 params = dict(cItem)
                 params.pop('page', None)
@@ -175,11 +189,14 @@ class ShahiidAnime(CBaseHostClass):
         page = cItem.get('page', 1)
         
         url = cItem['url']
-        if url.endswith('/'): url = url[:-1]
-        if page > 1: url += '/page/%s/' % page
+        if url.endswith('/'):
+            url = url[:-1]
+        if page > 1:
+            url += '/page/%s/' % page
         
         sts, data = self.getPage(url)
-        if not sts: return
+        if not sts:
+            return
         
         nextPage = self.cm.ph.getDataBeetwenNodes(data,  ('<div ', '>', 'pagination'), ('</div', '>'), False)[1]
         if ('/page/%s/' % (page + 1)) in nextPage: 
@@ -192,7 +209,8 @@ class ShahiidAnime(CBaseHostClass):
             for item in tmp:
                 url = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''<iframe[^>]+?src=['"]([^"^']+?)['"]''', 1, True)[0])
                 title = self.cleanHtmlStr(item)
-                if title == '': title = _('Trailer')
+                if title == '':
+                    title = _('Trailer')
                 title = cItem['title'] + (' [%s]' % title)
                 if 1 == self.up.checkHostSupport(url):
                     params = dict(cItem)
@@ -203,10 +221,14 @@ class ShahiidAnime(CBaseHostClass):
         for item in data:
             url   = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''href=['"]([^'^"]+?)['"]''')[0])
             icon  = self.getFullIconUrl(self.cm.ph.getSearchGroups(item, '''src=['"]([^'^"]+?)['"]''')[0])
-            try: title = self.cleanHtmlStr(self.cm.ph.getAllItemsBeetwenNodes(item,  ('<div ', '>', 'title-online'), ('</div', '>'), False, numNodes=1)[0])
-            except Exception: continue
-            try: title += ' - ' + self.cleanHtmlStr(self.cm.ph.getAllItemsBeetwenNodes(item,  ('<div ', '>', 'numepisode'), ('</div', '>'), False, numNodes=1)[0])
-            except Exception: pass
+            try:
+                title = self.cleanHtmlStr(self.cm.ph.getAllItemsBeetwenNodes(item,  ('<div ', '>', 'title-online'), ('</div', '>'), False, numNodes=1)[0])
+            except Exception:
+                continue
+            try:
+                title += ' - ' + self.cleanHtmlStr(self.cm.ph.getAllItemsBeetwenNodes(item,  ('<div ', '>', 'numepisode'), ('</div', '>'), False, numNodes=1)[0])
+            except Exception:
+                pass
             
             params = dict(cItem)
             params.update({'good_for_fav':True, 'title':title, 'url':url, 'icon':icon})
@@ -233,12 +255,14 @@ class ShahiidAnime(CBaseHostClass):
         
         cacheKey = cItem['url']
         cacheTab = self.cacheLinks.get(cacheKey, [])
-        if len(cacheTab): return cacheTab
+        if len(cacheTab):
+            return cacheTab
         
         self.cacheLinks = {}
         
         sts, data = self.getPage(cItem['url'])
-        if not sts: return
+        if not sts:
+            return
         
         data = self.cm.ph.getAllItemsBeetwenNodes(data,  ('<ul ', '>', 'server-position'), ('</ul', '>'), False)
         for dat in data:
@@ -276,7 +300,8 @@ class ShahiidAnime(CBaseHostClass):
         url = self.getFullUrl('?' + query)
         
         sts, data = self.getPage(url)
-        if not sts: return []
+        if not sts:
+            return []
         
         palyerUrl = self.getFullUrl(self.cm.ph.getSearchGroups(data, '''<iframe[^>]+?src=['"]([^"^']+?)['"]''', 1, True)[0])
         if 1 == self.up.checkHostSupport(palyerUrl):
@@ -294,11 +319,14 @@ class ShahiidAnime(CBaseHostClass):
         otherInfo = {}
         
         sts, data = self.getPage(cItem['url'])
-        if not sts: return []
+        if not sts:
+            return []
         
         tmp = ''.join(self.cm.ph.getAllItemsBeetwenMarkers(data, '<h5', '</h5>'))
-        try: title = self.cleanHtmlStr(self.cm.ph.getAllItemsBeetwenNodes(data, ('<h3', '>', 'entry-title'), ('</h3', '>'), numNodes=1)[0])
-        except Exception: title = ''
+        try:
+            title = self.cleanHtmlStr(self.cm.ph.getAllItemsBeetwenNodes(data, ('<h3', '>', 'entry-title'), ('</h3', '>'), numNodes=1)[0])
+        except Exception:
+            title = ''
         desc = self.cleanHtmlStr(tmp)
         icon = self.getFullIconUrl(self.cm.ph.getSearchGroups(tmp, '''src=['"]([^'^"]+?)['"]''')[0])
         
@@ -313,15 +341,20 @@ class ShahiidAnime(CBaseHostClass):
         data = self.cm.ph.getAllItemsBeetwenNodes(data, ('<span', '>', 'class="name"'), ('</div', '>'))
         for item in data:
             item = item.split('</span>', 1)
-            if len(item) != 2: continue
+            if len(item) != 2:
+                continue
             keyMarker = self.cleanHtmlStr(item[0]).replace(':', '').strip()
             value = self.cleanHtmlStr(item[1]).replace(' , ', ', ')
             key = keysMap.get(keyMarker, '')
-            if key != '' and value != '': otherInfo[key] = value
+            if key != '' and value != '':
+                otherInfo[key] = value
         
-        if title == '': title = cItem['title']
-        if desc == '':  desc = cItem.get('desc', '')
-        if icon == '':  icon = cItem.get('icon', self.DEFAULT_ICON_URL)
+        if title == '':
+            title = cItem['title']
+        if desc == '':
+            desc = cItem.get('desc', '')
+        if icon == '':
+            icon = cItem.get('icon', self.DEFAULT_ICON_URL)
         
         return [{'title':self.cleanHtmlStr( title ), 'text': self.cleanHtmlStr( desc ), 'images':[{'title':'', 'url':self.getFullUrl(icon)}], 'other_info':otherInfo}]
     

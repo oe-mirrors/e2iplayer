@@ -16,8 +16,10 @@ import re
 import urllib.request
 import urllib.parse
 import urllib.error
-try:    import json
-except Exception: import simplejson as json
+try:
+    import json
+except Exception:
+    import simplejson as json
 ###################################################
 
 def gettytul():
@@ -72,7 +74,8 @@ class Altadefinizione(CBaseHostClass):
             for tabData in tmp:
                 tabId = self.cm.ph.getSearchGroups(tabData, '''<div[^>]+?id=['"]([^'^"]+?)['"]''')[0]
                 tabTitle = tabTitles.get(tabId, '')
-                if tabTitle == '': continue
+                if tabTitle == '':
+                    continue
                 subItems = []
                 tabData = self.cm.ph.getAllItemsBeetwenMarkers(tabData, '<a', '</a>')
                 for item in tabData:
@@ -91,7 +94,8 @@ class Altadefinizione(CBaseHostClass):
             tmp = self.cm.ph.getAllItemsBeetwenMarkers(tmp, '<a', '</a>')
             for item in tmp:
                 url = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''href=['"]([^'^"]+?)['"]''')[0])
-                if url.endswith('richieste/'): break
+                if url.endswith('richieste/'):
+                    break
                 title = self.cleanHtmlStr(item)
                 params = dict(cItem)
                 params.update({'good_for_fav':True, 'category':'list_items', 'title':title, 'url':url})
@@ -112,7 +116,8 @@ class Altadefinizione(CBaseHostClass):
         
         if data == None:
             sts, data = self.getPage(cItem['url'])
-            if not sts: return
+            if not sts:
+                return
         
         nextPage = self.cm.ph.getDataBeetwenNodes(data, ('<ul', '>', 'pagination'), ('</ul', '>'), False)[1]
         nextPage = self.getFullUrl( self.cm.ph.getSearchGroups(nextPage, '''<a[^>]+?href=['"]([^"^']+?)['"][^>]*?>%s<''' % (page + 1))[0] )
@@ -121,7 +126,8 @@ class Altadefinizione(CBaseHostClass):
         data = self.cm.ph.getAllItemsBeetwenMarkers(data, '<div', '</div>')
         for item in data:
             url = self.getFullUrl( self.cm.ph.getSearchGroups(item, '''href=['"]([^"^']+?)['"]''')[0] )
-            if url == '': continue
+            if url == '':
+                continue
             title = self.cleanHtmlStr( self.cm.ph.getDataBeetwenNodes(item, ('<h', '>', 'title'), ('</h', '>'))[1])
             icon = self.getFullIconUrl( self.cm.ph.getSearchGroups(item, '''<img[^>]+?src=['"]([^"^']+?)['"]''')[0] )
 
@@ -130,7 +136,8 @@ class Altadefinizione(CBaseHostClass):
             tmp.append(self.cm.ph.getDataBeetwenNodes(item, ('<div', '>', 'rate'), ('</div', '>'), False)[1])
             for t in tmp:
                 t = self.cleanHtmlStr(t)
-                if t != '': desc.append(t)
+                if t != '':
+                    desc.append(t)
             desc = ' | '.join(desc) 
             
             params = dict(cItem)
@@ -147,7 +154,8 @@ class Altadefinizione(CBaseHostClass):
         self.cacheLinks = {}
         
         sts, data = self.getPage(cItem['url'])
-        if not sts: return
+        if not sts:
+            return
         cUrl = data.meta['url']
         
         descObj = self.getArticleContent(cItem, data)[0]
@@ -168,19 +176,22 @@ class Altadefinizione(CBaseHostClass):
         
         data = self.cm.ph.getDataBeetwenNodes(data, ('<div', '>', 'player'), ('</div', '>'), False)[1]
         playerUrl = self.getFullUrl(self.cm.ph.getSearchGroups(data, '''<iframe[^>]+?src=['"]([^"^']+?)['"]''', 1, ignoreCase=True)[0])
-        if playerUrl == '': return
+        if playerUrl == '':
+            return
         
         urlParams = dict(self.defaultParams)
         urlParams['header'] = dict(urlParams)
         urlParams['header']['Referer'] = cUrl
         sts, data = self.getPage(playerUrl, urlParams)
-        if not sts: return
+        if not sts:
+            return
         
         data = self.cm.ph.getDataBeetwenNodes(data, ('<div', '>', 'listRes'), ('</div', '>'), False)[1]
         data = self.cm.ph.getAllItemsBeetwenMarkers(data, '<a', '</a>')
         for item in data:
             url = self.getFullUrl( self.cm.ph.getSearchGroups(item, '''href=['"]([^"^']+?)['"]''')[0] )
-            if url == '': continue
+            if url == '':
+                continue
             title = self.cleanHtmlStr(item)
             params = dict(cItem)
             params.update({'good_for_fav': False, 'title':'%s - %s' % (cItem['title'], title), 'url':url, 'desc':desc, 'prev_url':cItem['url']})
@@ -209,7 +220,8 @@ class Altadefinizione(CBaseHostClass):
         urlParams['header'] = dict(urlParams)
         urlParams['header']['Referer'] = cItem.get('prev_url', '')
         sts, data = self.getPage(cItem['url'], urlParams)
-        if not sts: return urlTab
+        if not sts:
+            return urlTab
         
         cUrl = data.meta['url']
         
@@ -217,7 +229,8 @@ class Altadefinizione(CBaseHostClass):
         data = self.cm.ph.getAllItemsBeetwenMarkers(data, '<form', '</form>')
         for item in data:
             actionUrl = self.cm.getFullUrl(self.cm.ph.getSearchGroups(item, '''action=['"]([^'^"]+?)['"]''')[0].replace('&amp;', '&'), self.cm.getBaseUrl(cUrl))
-            if actionUrl == '': actionUrl = cUrl
+            if actionUrl == '':
+                actionUrl = cUrl
             item = self.cm.ph.getAllItemsBeetwenMarkers(item, '<input', '>')
             title = ''
             query = {}
@@ -225,10 +238,13 @@ class Altadefinizione(CBaseHostClass):
                 name  = self.cm.ph.getSearchGroups(it, '''name=['"]([^'^"]+?)['"]''')[0]
                 value = self.cm.ph.getSearchGroups(it, '''value=['"]([^'^"]+?)['"]''')[0]
                 query[name] = value
-                if title == '' and name.startswith('mir'): title = value
+                if title == '' and name.startswith('mir'):
+                    title = value
             
-            if '?' in actionUrl: actionUrl += '&'
-            else: actionUrl += '?'
+            if '?' in actionUrl:
+                actionUrl += '&'
+            else:
+                actionUrl += '?'
             actionUrl += urllib.parse.urlencode(query)
             urlTab.append({'name':title, 'url':strwithmeta(actionUrl, {'Referer':cUrl}), 'need_resolve':1})
         
@@ -255,7 +271,8 @@ class Altadefinizione(CBaseHostClass):
         urlParams['header']['Referer'] = str(videoUrl.meta.get('Referer', self.getMainUrl()))
         
         sts, data = self.getPage(videoUrl, urlParams)
-        if not sts: return urlTab
+        if not sts:
+            return urlTab
         cUrl = data.meta['url']
         
         playerData = self.cm.ph.getDataBeetwenNodes(data, ('<input', '>', 'urlEmbed'), ('<iframe', '>'))[1]
@@ -270,19 +287,23 @@ class Altadefinizione(CBaseHostClass):
             jsUrl = ''
             data = re.compile('''<script[^>]+?src=['"]([^'^"]+?)['"]''', re.I).findall(data)
             for item in data:
-                if 'filmlive' not in item: continue
+                if 'filmlive' not in item:
+                    continue
                 jsUrl = self.cm.getFullUrl(item, self.cm.getBaseUrl(cUrl))
                 break
             
             sts, data = self.getPage(jsUrl, urlParams)
-            if not sts: return urlTab
+            if not sts:
+                return urlTab
             try:
                 idxS = data.find('function clearify')
                 num = 1
                 idx = data.find('{', idxS)
                 for idx in range(idx+1, len(data), 1):
-                    if data[idx] == '{': num += 1
-                    if data[idx] == '}': num -= 1
+                    if data[idx] == '{':
+                        num += 1
+                    if data[idx] == '}':
+                        num -= 1
                     if num == 0:
                         printDBG("JS_CODE_IDX: [%s:%s]" % (idxS, idx))
                         break
@@ -307,7 +328,8 @@ class Altadefinizione(CBaseHostClass):
         if data == None:
             url = cItem.get('prev_url', cItem['url'])
             sts, data = self.getPage(url)
-            if not sts: data = ''
+            if not sts:
+                data = ''
             
         descData = self.cm.ph.getDataBeetwenNodes(data, ('<div', '>', 'schedaFilm'), ('</ul', '>'), True)[1]
         icon = self.getFullIconUrl(self.cm.ph.getSearchGroups(descData, '''<img[^>]+?src=['"]([^'^"]+?)['"]''')[0])
@@ -317,22 +339,29 @@ class Altadefinizione(CBaseHostClass):
             desc = self.cm.ph.getSearchGroups(data, '''(<meta[^>]+?description['"][^>]*?>)''')[0]
             desc = self.cleanHtmlStr( self.cm.ph.getSearchGroups(desc, '''content=['"]([^'^"]+?)['"]''')[0] )
         
-        try: title = str(byteify(json.loads(self.cm.ph.getSearchGroups(data, '''"disqusTitle"\:("[^"]+?")''')[0])))
-        except Exception: title = ''
+        try:
+            title = str(byteify(json.loads(self.cm.ph.getSearchGroups(data, '''"disqusTitle"\:("[^"]+?")''')[0])))
+        except Exception:
+            title = ''
         
-        if title == '': title = cItem['title']
-        if desc == '':  desc = cItem['desc']
-        if icon == '':  icon = cItem['icon']
+        if title == '':
+            title = cItem['title']
+        if desc == '':
+            desc = cItem['desc']
+        if icon == '':
+            icon = cItem['icon']
         
         otherInfo = {}
         
         # imdb_rating
         t = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(data, ('<span', '>', 'rateIMDB'), ('</span', '>'), False)[1])
-        if t != '': otherInfo['imdb_rating'] = t
+        if t != '':
+            otherInfo['imdb_rating'] = t
         
         # raiting
         t = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(data, 'ratings_off(', ',', False)[1])
-        if t != '': otherInfo['rating'] = t
+        if t != '':
+            otherInfo['rating'] = t
         
         descMap = {'genere':    'genres',
                    'anno'  :    'year',
@@ -345,15 +374,18 @@ class Altadefinizione(CBaseHostClass):
         for item in descData:
             item = item.split('</label>', 1)
             marker = self.cleanHtmlStr(item[0]).replace(':', '').lower()
-            if marker not in descMap: continue
+            if marker not in descMap:
+                continue
             
             t = []
             item = self.cm.ph.getAllItemsBeetwenMarkers(item[-1], '<a', '</a>')
             for it in item:
                 it = self.cleanHtmlStr(it)
-                if it == '': continue
+                if it == '':
+                    continue
                 t.append(it)
-            if len(t): otherInfo[descMap[marker]] = ', '.join(t)
+            if len(t):
+                otherInfo[descMap[marker]] = ', '.join(t)
         
         return [{'title':self.cleanHtmlStr( title ), 'text': self.cleanHtmlStr( desc ), 'images':[{'title':'', 'url':self.getFullUrl(icon)}], 'other_info':otherInfo}]
         

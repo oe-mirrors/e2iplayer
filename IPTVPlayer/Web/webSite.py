@@ -382,10 +382,14 @@ class downloaderPage(resource.Resource):
         if len(list(req.args.keys())) >= 1:
             key = list(req.args.keys())[0]
             arg = req.args.get(key, None)[0]
-            try: arg2 = req.args.get(key, None)[1]
-            except Exception: pass
-            try: arg3 = req.args.get(key, None)[2]
-            except Exception: pass
+            try:
+                arg2 = req.args.get(key, None)[1]
+            except Exception:
+                pass
+            try:
+                arg3 = req.args.get(key, None)[2]
+            except Exception:
+                pass
             print('Received: "%s"="%s","%s","%s"' % ( key, arg, arg2, arg3))
 
         if key is None or arg is None:
@@ -432,18 +436,23 @@ class downloaderPage(resource.Resource):
                 files = os.listdir(config.plugins.iptvplayer.NaszaSciezka.value)
                 files.sort(key=lambda x: x.lower())
                 for item in files:
-                    if item.startswith('.'): continue # do not list hidden items
-                    if item[-4:].lower() not in ['.flv', '.mp4']: continue
+                    if item.startswith('.'):
+                        continue # do not list hidden items
+                    if item[-4:].lower() not in ['.flv', '.mp4']:
+                        continue
                     fileName = os.path.join(config.plugins.iptvplayer.NaszaSciezka.value, item)
                     skip = False
                     for item2 in Plugins.Extensions.IPTVPlayer.components.iptvplayerwidget.gDownloadManager.getList():
                         if fileName == item2.fileName.replace('//', '/'):
                             skip = True
                             break
-                    if skip: continue
+                    if skip:
+                        continue
                     listItem = DMItemBase(url=fileName, fileName=fileName)
-                    try: listItem.downloadedSize = os.path.getsize(fileName)
-                    except Exception: listItem.downloadedSize = 0
+                    try:
+                        listItem.downloadedSize = os.path.getsize(fileName)
+                    except Exception:
+                        listItem.downloadedSize = 0
                     listItem.status      = DMHelper.STS.DOWNLOADED
                     listItem.downloadIdx = -1
                     DMlist.append( listItem )

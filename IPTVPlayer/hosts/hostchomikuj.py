@@ -18,8 +18,10 @@ import urllib.request
 import urllib.parse
 import urllib.error
 from hashlib import md5
-try:    import simplejson as json
-except Exception: import json
+try:
+    import simplejson as json
+except Exception:
+    import json
 
 
 ###################################################
@@ -113,7 +115,8 @@ class Chomikuj(CBaseHostClass):
         #printDBG(data)
         #printDBG("=================================================")
         if sts:
-            try: data = json.loads(data)
+            try:
+                data = json.loads(data)
             except Exception:
                 printExc()
                 sts = False
@@ -165,7 +168,8 @@ class Chomikuj(CBaseHostClass):
         if 'accounts' == searchType:
             url = self.SEARCH_ACCOUNT_URL % (page, urllib.parse.quote_plus(searchPattern))
             sts, data = self.requestJsonData(url)
-            if not sts: return
+            if not sts:
+                return
             printDBG(data)
             # list accounts
             for item in data.get('Results', []):
@@ -289,8 +293,10 @@ class Chomikuj(CBaseHostClass):
             self.addDir(params)
         
         params = dict(cItem)
-        if owner: params['owner'] = owner
-        if parent: params['parent'] = parent
+        if owner:
+            params['owner'] = owner
+        if parent:
+            params['parent'] = parent
         self._addItem(item, params)
         
     def getLinksForItem(self, cItem):
@@ -304,8 +310,10 @@ class Chomikuj(CBaseHostClass):
             
             # full
             name = 'Full (%s)' % cItem['size']
-            if cItem.get('is_free', False): name += ' | darmowy'
-            else: name += ' | odliczy transfer z konta'
+            if cItem.get('is_free', False):
+                name += ' | darmowy'
+            else:
+                name += ' | odliczy transfer z konta'
             url = strwithmeta(cItem['file_id'], {'priv_type':cItem['type'], 'priv_download':True})
             videoUrls.append({'name':name, 'url':url, 'need_resolve':1})
             
@@ -317,7 +325,8 @@ class Chomikuj(CBaseHostClass):
         try:
             if fileId.meta.get('priv_download', False):
                 sts, data = self.requestJsonData(self.FILE_REQUEST_URL + fileId)
-                if not sts: return urlTab
+                if not sts:
+                    return urlTab
                 directUrl = self._getJItemStr(data, 'FileUrl', '')
                 urlTab.append({'name':'direct', 'url':directUrl})
             elif fileId.meta.get('priv_demo', False):
@@ -328,7 +337,8 @@ class Chomikuj(CBaseHostClass):
                 
                 if parent != None:
                     url = self.LIST_FOLDER_URL % (parent, page)
-                    if owner != None: url += '&AccountId=%s' % owner
+                    if owner != None:
+                        url += '&AccountId=%s' % owner
                     sts, data = self.requestJsonData(url)
                 else:
                     sts = False

@@ -15,8 +15,10 @@ from Plugins.Extensions.IPTVPlayer.libs.crypto.hash.md5Hash import MD5
 # FOREIGN import
 ###################################################
 from Tools.Directories import fileExists
-try:    import simplejson as json
-except Exception: import json
+try:
+    import simplejson as json
+except Exception:
+    import json
 from binascii import hexlify
 from Components.config import config, ConfigYesNo, getConfigListEntry
 ###################################################
@@ -49,7 +51,8 @@ class Favourites(CBaseHostClass):
         self.DEFAULT_ICON_URL = 'http://sarah-bauer.weebly.com/uploads/4/2/2/3/42234635/1922500_orig.png'
         
     def _setHost(self, hostName):
-        if hostName == self.hostName: return True
+        if hostName == self.hostName:
+            return True
         try:
             _temp = __import__('Plugins.Extensions.IPTVPlayer.hosts.host' + hostName, globals(), locals(), ['IPTVHost'], -1)
             host = _temp.IPTVHost()
@@ -57,7 +60,8 @@ class Favourites(CBaseHostClass):
                 self.hostName = hostName
                 self.host = host
                 return True
-        except Exception: printExc()
+        except Exception:
+            printExc()
         return False
         
     def getHostNameFromItem(self, index):
@@ -73,14 +77,16 @@ class Favourites(CBaseHostClass):
     def listGroups(self, category):
         printDBG("Favourites.listGroups")
         sts = self.helper.load()
-        if not sts: return
+        if not sts:
+            return
         data = self.helper.getGroups()
         self.listsTab(data, {'category':category})
         
     def listFavourites(self, cItem):
         printDBG("Favourites.listFavourites")
         sts, data = self.helper.getGroupItems(cItem['group_id'])
-        if not sts: return
+        if not sts:
+            return
         
         typesMap = {CDisplayListItem.TYPE_VIDEO: self.addVideo, 
                     CDisplayListItem.TYPE_AUDIO: self.addAudio, 
@@ -92,13 +98,15 @@ class Favourites(CBaseHostClass):
             item = data[idx]
             addFun = typesMap.get(item.type, None)
             params = {'name':'item', 'title':item.name, 'host':item.hostName, 'icon':item.iconimage, 'desc':item.description, 'group_id':cItem['group_id'], 'item_idx':idx}
-            if None != addFun: addFun(params)
+            if None != addFun:
+                addFun(params)
         
     def getLinksForVideo(self, cItem):
         printDBG("Favourites.getLinksForVideo idx[%r]" % cItem)
         ret = RetHost(RetHost.ERROR, value = [])
         sts, data = self.helper.getGroupItems(cItem['group_id'])
-        if not sts: return ret
+        if not sts:
+            return ret
         item = data[cItem['item_idx']]
         
         printDBG(">>>>>>>>>>>>>>>>>>>>>>>>>>>> [%s]" % item.resolver)
@@ -125,8 +133,10 @@ class Favourites(CBaseHostClass):
         return ret
         
     def getResolvedURL(self, url):
-        try: return self.host.getResolvedURL(url)
-        except Exception: return RetHost(RetHost.ERROR, value = [])
+        try:
+            return self.host.getResolvedURL(url)
+        except Exception:
+            return RetHost(RetHost.ERROR, value = [])
 
     def handleService(self, index, refresh=0, searchPattern='', searchType=''):
         printDBG('Favourites.handleService start')
@@ -317,7 +327,8 @@ class IPTVHost(CHostBase):
     def getPrevList(self, refresh = 0):
         ret = RetHost(RetHost.ERROR, value = [])
         if not self.host.isQuestMode() or len(self.host.getCurrentGuestHost().listOfprevList) <= 1:
-            if self.host.isQuestMode(): self.host.clearQuestMode()
+            if self.host.isQuestMode():
+                self.host.clearQuestMode()
             ret = CHostBase.getPrevList(self, refresh)
         else:
             ret = self.host.getCurrentGuestHost().getPrevList(refresh)

@@ -34,8 +34,10 @@ config.plugins.iptvplayer.bbc_use_web_proxy = ConfigYesNo(default = False)
 
 def int_or_none(data):
     ret = 0
-    try: ret = int(data)
-    except Exception: pass
+    try:
+        ret = int(data)
+    except Exception:
+        pass
     return ret
 
 class BBCCoUkIE(InfoExtractor):
@@ -76,8 +78,10 @@ class BBCCoUkIE(InfoExtractor):
     
     def getFullUrl(self, url):
         if config.plugins.iptvplayer.bbc_use_web_proxy.value and 'englandproxy.co.uk' not in url:
-            try: url = 'https://www.englandproxy.co.uk/' + url[url.find('://')+3:]
-            except Exception: pass
+            try:
+                url = 'https://www.englandproxy.co.uk/' + url[url.find('://')+3:]
+            except Exception:
+                pass
         return url
         
     def getPage(self, url, params={}, post_data=None):
@@ -89,7 +93,8 @@ class BBCCoUkIE(InfoExtractor):
     def _extract_asx_playlist(self, connection, programme_id):
         url = self.xmlGetArg(connection, 'href')
         sts, asx = self.getPage(url, self.defaultParams)
-        if not sts: return []
+        if not sts:
+            return []
         a = FixMe
         return [ref.get('href') for ref in asx.findall('./Entry/ref')]
 
@@ -136,23 +141,28 @@ class BBCCoUkIE(InfoExtractor):
         hasHLS = False
         for mediaselector_url in mediaselectorUrls:
             try:
-                if len(subtitlesTab): withSubtitles = False
+                if len(subtitlesTab):
+                    withSubtitles = False
                 formats, subtitles = self._download_media_selector_url(mediaselector_url % programme_id, programme_id, withSubtitles)
                 formatsTab.extend(formats)
                 subtitlesTab.extend(subtitles)
                 for item in formatsTab:
-                    if item.get('ext', '') == 'dash': hasDASH = True
-                    if item.get('ext', '') == 'hls':  hasHLS = True
+                    if item.get('ext', '') == 'dash':
+                        hasDASH = True
+                    if item.get('ext', '') == 'hls':
+                        hasHLS = True
                 if hasDASH and hasHLS:
                     break
             except Exception:
                 printExc()
-        if len(formatsTab): return formatsTab, subtitlesTab
+        if len(formatsTab):
+            return formatsTab, subtitlesTab
         self._raise_extractor_error(last_exception)
 
     def _download_media_selector_url(self, url, programme_id=None, withSubtitles=False):
         sts, media_selection = self.getPage(url, self.defaultParams)
-        if not sts: return [], []
+        if not sts:
+            return [], []
         return self._process_media_selector(media_selection, programme_id, withSubtitles)
 
     def _process_media_selector(self, media_selection, programme_id, withSubtitles=False):
@@ -180,7 +190,8 @@ class BBCCoUkIE(InfoExtractor):
                     supplier        = self.xmlGetArg(connection, 'supplier')
                     transfer_format = self.xmlGetArg(connection, 'transferFormat')
                     for format_id in [supplier, conn_kind, protocol]:
-                        if format_id != '': break
+                        if format_id != '':
+                            break
                     if service != '':
                         format_id = '%s_%s' % (service, format_id)
                     # ASX playlist
@@ -223,7 +234,8 @@ class BBCCoUkIE(InfoExtractor):
                             })
                         elif protocol == 'rtmp':
                             application = self.xmlGetArg(connection, 'application')
-                            if application == '': application = 'ondemand'
+                            if application == '':
+                                application = 'ondemand'
                             auth_string = self.xmlGetArg(connection, 'authString')
                             identifier  = self.xmlGetArg(connection, 'identifier')
                             server      = self.xmlGetArg(connection, 'server')
@@ -244,7 +256,8 @@ class BBCCoUkIE(InfoExtractor):
     def _real_extract(self, url):
 
         sts, webpage = self.getPage(url, self.defaultParams)
-        if not sts: return None
+        if not sts:
+            return None
 
         programme_id = None
         duration = None

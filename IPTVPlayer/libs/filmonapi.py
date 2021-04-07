@@ -83,12 +83,15 @@ class FilmOnComApi:
                     seekable = data['seekable']
                     for stream in data['streams']:
                         name = stream.get('name', '')
-                        if name == '': name = stream['quality']
+                        if name == '':
+                            name = stream['quality']
                         try:
                             if int(stream['watch-timeout']) < 1000:
                                 name += ' ' + _('PAY')
-                            else: name += ' ' + _('FREE') 
-                        except Exception: pass
+                            else:
+                                name += ' ' + _('FREE') 
+                        except Exception:
+                            pass
                         
                         url  = stream['url']
                         if url.startswith('rtmp'):
@@ -120,7 +123,8 @@ class FilmOnComApi:
         self._getJsonDataIfNeed('channels', force)
         currChannelsList = [] 
         for channel_it in self.jsonData['channels']:
-            if 'group_id' not in channel_it: continue
+            if 'group_id' not in channel_it:
+                continue
             if group_id == channel_it['group_id']:
                 currChannelsList.append(channel_it)
         return currChannelsList

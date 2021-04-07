@@ -16,8 +16,10 @@ import re
 import urllib.request
 import urllib.parse
 import urllib.error
-try:    import json
-except Exception: import simplejson as json
+try:
+    import json
+except Exception:
+    import simplejson as json
 ###################################################
 
 def gettytul():
@@ -65,19 +67,22 @@ class RteIE(CBaseHostClass):
         
         descMap = {}
         sts, data = self.cm.getPage(cItem['url'])
-        if not sts: return
+        if not sts:
+            return
         
         data = self.cm.ph.getDataBeetwenMarkers(data, '<div id="top-live-schedule">', '</ul>')[1]
         data = self.cm.ph.getAllItemsBeetwenMarkers(data, '<li', '</li>')
         for item in data:
             url = self.getFullUrl( self.cm.ph.getSearchGroups(item, '''href=['"]([^"^']+)['"]''')[0] )
             tmp = self.cm.ph.rgetAllItemsBeetwenMarkers(item, '</span>', '<span class')
-            if 0 == len(tmp): continue
+            if 0 == len(tmp):
+                continue
             title = self.cleanHtmlStr(tmp[0])
             descTab = []
             for desc in tmp[1:]:
                 desc =self.cleanHtmlStr(desc) 
-                if len(desc): descTab.append(desc)
+                if len(desc):
+                    descTab.append(desc)
             chId = self._getIdFromUrl(url)
             descMap[chId] = {'title':title, 'url':url, 'desc':'[/br]'.join(descTab)}
         
@@ -94,7 +99,8 @@ class RteIE(CBaseHostClass):
         printDBG("RteIE.listCategories")
         
         sts, data = self.cm.getPage(cItem['url'])
-        if not sts: return
+        if not sts:
+            return
         
         calendarTitle = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(data, '<section class="sidebar-content-box', '<table class="calendar">')[1])
         
@@ -127,13 +133,15 @@ class RteIE(CBaseHostClass):
     def _listFilters(self, cItem, nextCategory, marker):
     
         sts, data = self.cm.getPage(cItem['url'])
-        if not sts: return
+        if not sts:
+            return
         
         data = self.cm.ph.getDataBeetwenMarkers(data, marker, '</table>')[1]
         data = self.cm.ph.getAllItemsBeetwenMarkers(data, '<td', '</td>')
         for item in data:
             url = self.getFullUrl( self.cm.ph.getSearchGroups(item, '''href=['"]([^"^']+)['"]''')[0] )
-            if not self.cm.isValidUrl(url): continue
+            if not self.cm.isValidUrl(url):
+                continue
             title = url.split('/')[-2] #self.cleanHtmlStr(item)
             params = dict(cItem)
             params = {'good_for_fav': False, 'category':nextCategory, 'title':title, 'url':url}
@@ -143,10 +151,13 @@ class RteIE(CBaseHostClass):
         printDBG("RteIE.listItems |%s|" % cItem)
         
         sts, data = self.cm.getPage(cItem['url'])
-        if not sts: return
+        if not sts:
+            return
         
-        if '/show/' in cItem['url']: episodes = True
-        else: episodes = False
+        if '/show/' in cItem['url']:
+            episodes = True
+        else:
+            episodes = False
         
         data = self.cm.ph.getAllItemsBeetwenMarkers(data, '<section class="main-content-box-', '</section>')
         if len(data) == 1:
@@ -168,15 +179,18 @@ class RteIE(CBaseHostClass):
         data = self.cm.ph.getAllItemsBeetwenMarkers(data, '<article', '</article>')
         for item in data:
             url = self.getFullUrl( self.cm.ph.getSearchGroups(item, 'href="([^"]+?)"')[0] )
-            if not self.cm.isValidUrl(url): continue
+            if not self.cm.isValidUrl(url):
+                continue
             icon = self.getFullIconUrl( self.cm.ph.getSearchGroups(item, 'src="([^"]+?)"')[0] )
             if '/search/' not in cItem['url']:
                 titleTab = []
                 if episodes:
                     tmp = self.cleanHtmlStr(self.cm.ph.getSearchGroups(item, '''alt=['"]([^'^"]+?)['"]''')[0])
-                    if tmp != '': titleTab.append(tmp)
+                    if tmp != '':
+                        titleTab.append(tmp)
                 tmp = self.cleanHtmlStr( self.cm.ph.getDataBeetwenMarkers(item, '<span class="thumbnail-title">', '</span>')[1] )
-                if tmp != '' and tmp not in titleTab: titleTab.append(tmp)
+                if tmp != '' and tmp not in titleTab:
+                    titleTab.append(tmp)
                 title = ' '.join(titleTab)
                 desc  = self.cleanHtmlStr( self.cm.ph.getDataBeetwenMarkers(item, '<span class="thumbnail-date">', '</span>')[1] )
             else:
@@ -186,8 +200,10 @@ class RteIE(CBaseHostClass):
 
             params = dict(cItem)
             params = {'good_for_fav': True, 'category':nextCategory, 'title':title, 'url':url, 'desc':desc, 'icon':icon}
-            if episodes: self.addVideo(params)
-            else: self.addDir(params)
+            if episodes:
+                self.addVideo(params)
+            else:
+                self.addDir(params)
 
     def listSearchResult(self, cItem, searchPattern, searchType):
         printDBG("AnimeTo.listSearchResult cItem[%s], searchPattern[%s] searchType[%s]" % (cItem, searchPattern, searchType))
@@ -204,7 +220,8 @@ class RteIE(CBaseHostClass):
         hdsUrl = ''
         
         id = self._getIdFromUrl(cItem['url'])
-        if id == '': return []
+        if id == '':
+            return []
         
         if '/show/' in cItem['url']:
             try:
@@ -252,15 +269,18 @@ class RteIE(CBaseHostClass):
         
         if '/show/' in cItem['url']:
             id = self.cm.ph.getSearchGroups(cItem['url'], r'https?://(?:www\.)?rte\.ie/player/[^/]{2,3}/show/[^/]+/([0-9]+)')[0]
-            if id == '': return []
+            if id == '':
+                return []
             live = False
         elif '/live/' in cItem['url']:
             id = self.cm.ph.getSearchGroups(cItem['url'], r'https?://(?:www\.)?rte\.ie/player/[^/]{2,3}/live/([0-9]+)')[0]
-            if id == '': return []
+            if id == '':
+                return []
             live = True
         
         sts, data = self.cm.getPage(cItem['url'], self.defaultParams)
-        if not sts: return []
+        if not sts:
+            return []
         
         
         if live:
@@ -284,7 +304,8 @@ class RteIE(CBaseHostClass):
                     event = self.cm.ph.getAllItemsBeetwenMarkers(event, '>', '<', False)
                     for item in event:
                         item = self.cleanHtmlStr(item)
-                        if item != '': descTab.append(item)                            
+                        if item != '':
+                            descTab.append(item)                            
                     descTab.append("")
                 desc = '[/br]'.join(descTab)
         else:
@@ -296,17 +317,23 @@ class RteIE(CBaseHostClass):
             
             otherInfo = {}
             tmp = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(data, 'Duration</strong>', '</li>', False, False)[1])
-            if tmp != '': otherInfo['duration'] = tmp
+            if tmp != '':
+                otherInfo['duration'] = tmp
             
             tmp = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(data, 'Broadcast</strong>', '</li>', False, False)[1])
-            if tmp != '': otherInfo['broadcast'] = tmp
+            if tmp != '':
+                otherInfo['broadcast'] = tmp
             
             tmp = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(data, 'remaining</strong>', '</li>', False, False)[1])
-            if tmp != '': otherInfo['remaining'] = tmp
+            if tmp != '':
+                otherInfo['remaining'] = tmp
             
-        if title == '': title = cItem['title']
-        if desc == '':  desc = cItem.get('desc', '')
-        if icon == '':  icon = cItem.get('icon', self.DEFAULT_ICON_URL)
+        if title == '':
+            title = cItem['title']
+        if desc == '':
+            desc = cItem.get('desc', '')
+        if icon == '':
+            icon = cItem.get('icon', self.DEFAULT_ICON_URL)
         
         return [{'title':self.cleanHtmlStr( title ), 'text': self.cleanHtmlStr( desc ), 'images':[{'title':'', 'url':self.getFullUrl(icon)}], 'other_info':otherInfo}]
 

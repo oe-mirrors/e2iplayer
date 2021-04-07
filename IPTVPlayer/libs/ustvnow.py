@@ -83,7 +83,8 @@ class UstvnowApi:
         printDBG("UstvnowApi._getChannelsNames")
         url = 'http://m.ustvnow.com/gtv/1/live/listchannels?%s' % urllib.parse.urlencode({'token': self.token})
         sts, data = self.cm.getPage(url)
-        if not sts: return []
+        if not sts:
+            return []
         
         channelList = []
         try:
@@ -125,7 +126,8 @@ class UstvnowApi:
             
     
         sts, data = self.cm.getPage(self.LIVE_URL, self.defParams)
-        if not sts: return []
+        if not sts:
+            return []
         
         channelsNames = self._getChannelsNames()
         channelsTab = []
@@ -178,14 +180,16 @@ class UstvnowApi:
         token = ''
         
         sts, data = self.cm.getPage(self.getFullUrl('iphone/1/live/settings'), self.defParams)
-        if not sts: return token
+        if not sts:
+            return token
         
         printDBG("===")
         printDBG(data)
         printDBG("===")
         
         url = self.getFullUrl(self.cm.ph.getSearchGroups(data, '''action=['"]([^'^"]+?)['"]''')[0])
-        if not self.cm.isValidUrl(url): return token
+        if not self.cm.isValidUrl(url):
+            return token
         
         post_data = {'username':login, 'password':password, 'device':'iphone'}
         sts, data = self.cm.getPage(url, self.defParams, post_data)
@@ -197,7 +201,8 @@ class UstvnowApi:
 
         url = 'http://m.ustvnow.com/gtv/1/live/viewdvrlist?%s' % urllib.parse.urlencode({'token': self.token})
         sts, data = self.cm.getPage(url)
-        if not sts: return ''
+        if not sts:
+            return ''
         
         try:
             data = json_loads(data)
@@ -229,13 +234,15 @@ class UstvnowApi:
                 printExc()
 
         sts, data = self.cm.getPage(self.LIVE_URL, self.defParams)
-        if not sts: return []
+        if not sts:
+            return []
         
         url = self.cm.ph.getSearchGroups(data, 'for="popup-%s"[^>]*?href="([^"]+?)"[^>]*?>' % cItem['ui_page'])[0]
         url = self.getFullUrl(url)
         
         sts, data = self.cm.getPage(url, self.defParams)
-        if not sts: return []
+        if not sts:
+            return []
         
         url = self.cm.ph.getSearchGroups(data, 'src="([^"]+?)"')[0]
         tmp = getDirectM3U8Playlist(strwithmeta(url, {'User-Agent':self.HTTP_HEADER['User-Agent']}), cookieParams=cookieParams, checkContent=True)

@@ -15,8 +15,10 @@ import re
 import urllib.request
 import urllib.parse
 import urllib.error
-try:    import json
-except Exception: import simplejson as json
+try:
+    import json
+except Exception:
+    import simplejson as json
 ###################################################
 
 
@@ -71,7 +73,8 @@ class Watchwrestling(CBaseHostClass):
     def listCategories(self, cItem, nexCategory):
         printDBG("Watchwrestling.listCategories")
         sts, data = self.cm.getPage(cItem['url'])
-        if not sts: return
+        if not sts:
+            return
         
         data = self.cm.ph.getDataBeetwenMarkers(data, cItem['m1'], '</ul>', False)[1]
         
@@ -83,7 +86,8 @@ class Watchwrestling(CBaseHostClass):
         data = self.cm.ph.getAllItemsBeetwenMarkers(data, '<a', '</a>')
         for item in data:
             url    = self.cm.ph.getSearchGroups(item, '''href=['"]([^"^']+?)["']''')[0]
-            if url == '': continue
+            if url == '':
+                continue
             title  = self.cleanHtmlStr(item)
             params = dict(cItem)
             params.update({'title':title, 'url':self.getFullUrl(url), 'category':nexCategory})
@@ -103,15 +107,18 @@ class Watchwrestling(CBaseHostClass):
             url += 'page/%d/' % page
         if '?' in url:
             url += '&'
-        else: url += '?'
+        else:
+            url += '?'
         url += 'orderby=%s' % cItem['sort']
         
         sts, data = self.cm.getPage(url)
-        if not sts: return 
+        if not sts:
+            return 
         
         if ('/page/%d/' % (page + 1)) in data:
             nextPage = True
-        else: nextPage = False
+        else:
+            nextPage = False
         
         if '<div class="loop-nav pag-nav">' in data:
             m2 = '<div class="loop-nav pag-nav">'
@@ -120,7 +127,8 @@ class Watchwrestling(CBaseHostClass):
         data = self.cm.ph.getDataBeetwenMarkers(data, '<div class="nag cf">', m2, False)[1]
         
         data = data.split('<div id="post-')
-        if len(data): del data[0]
+        if len(data):
+            del data[0]
         
         for item in data:
             tmp    = item.split('<p class="stats">')
@@ -140,16 +148,19 @@ class Watchwrestling(CBaseHostClass):
     def listServers(self, cItem, nextCategory):
         printDBG("Watchwrestling.listServers [%s]" % cItem)
         sts, data = self.cm.getPage(cItem['url'])
-        if not sts: return
+        if not sts:
+            return
         self.serversCache = []
         matchObj = re.compile('href="([^"]+?)"[^>]*?>([^>]+?)</a>')
         sp = '<div style="text-align: center;">'
         data = self.cm.ph.getDataBeetwenMarkers(data, sp, '<div id="extras">', False)[1]
         data = data.split(sp)
-        if len(data): del data[0]
+        if len(data):
+            del data[0]
         for item in data:
             sts, serverName = self.cm.ph.getDataBeetwenMarkers(item, 'geneva;">', '</span>', False)
-            if not sts: continue
+            if not sts:
+                continue
             parts = matchObj.findall(item)
             partsTab = []
             for part in parts:
@@ -168,7 +179,8 @@ class Watchwrestling(CBaseHostClass):
     def listLiveStreams(self, cItem):
         printDBG("Watchwrestling.listLiveStreams [%s]" % cItem)
         sts, data = self.cm.getPage(cItem['url'])
-        if not sts: return
+        if not sts:
+            return
         sp = '<div style="text-align: center;">'
         data = self.cm.ph.getDataBeetwenMarkers(data, sp, '</div>', False)[1]
         data = re.compile('href="([^"]+?)"[^>]*?>([^>]+?)</a>').findall(data)
@@ -198,7 +210,8 @@ class Watchwrestling(CBaseHostClass):
             tries = 0
             while tries < 3:
                 sts, data = self.cm.getPage(url, {'header':{'Referer':Referer, 'User-Agent':'Mozilla/5.0'}})
-                if not sts: return urlTab
+                if not sts:
+                    return urlTab
                 data = data.replace('// -->', '')
                 data = self._clearData(data)
                 #printDBG(data)
@@ -238,7 +251,8 @@ class Watchwrestling(CBaseHostClass):
         try:
             cItem = byteify(json.loads(fav_data))
             links = self.getLinksForVideo(cItem)
-        except Exception: printExc()
+        except Exception:
+            printExc()
         return links
         
     def setInitListFromFavouriteItem(self, fav_data):

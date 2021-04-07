@@ -68,18 +68,21 @@ class WorldFree4u(CBaseHostClass):
         self.cacheFiltersKey = []
         
         sts, data = self.getPage(self.getMainUrl())
-        if not sts: return
+        if not sts:
+            return
         
         data = self.cm.ph.getAllItemsBeetwenNodes(data, ('<li', '>', 'dropdown'), ('</ul', '>'))
         for item in data:
             tabItems = []
             item = item.split('<ul', 1)
-            if len(item) != 2: continue
+            if len(item) != 2:
+                continue
             filterName = self.cleanHtmlStr(item[0])
             item = self.cm.ph.getAllItemsBeetwenMarkers(item[1], '<li', '</li>')
             for it in item:
                 url = self.getFullUrl(self.cm.ph.getSearchGroups(it, '''href=['"]([^'^"]+?)['"]''')[0])
-                if url.endswith('/1'): url = url[:-1]
+                if url.endswith('/1'):
+                    url = url[:-1]
                 title = self.cleanHtmlStr(it)
                 tabItems.append({'title':title, 'url':url})
             if len(tabItems):
@@ -102,14 +105,18 @@ class WorldFree4u(CBaseHostClass):
         url = cItem['url']
         page = cItem.get('page', 1)
         if page > 1 or url[-1] == '/':
-            if url[-1] != '/': url += '/'
+            if url[-1] != '/':
+                url += '/'
             url += str(page)
         
         sts, data = self.getPage(url)
-        if not sts: return
+        if not sts:
+            return
         
-        if '>View More</a>' in data: nextPage = True
-        else: nextPage = False
+        if '>View More</a>' in data:
+            nextPage = True
+        else:
+            nextPage = False
         
         data = self.cm.ph.getAllItemsBeetwenNodes(data, ('<div', '>', 'item'), ('</div', '>'))
         for item in data:
@@ -136,7 +143,8 @@ class WorldFree4u(CBaseHostClass):
         urlTab = []
         
         sts, data = self.getPage(cItem['url'])
-        if not sts: return []
+        if not sts:
+            return []
         
         url = ''
         params = dict(self.defaultParams)
@@ -147,7 +155,8 @@ class WorldFree4u(CBaseHostClass):
         url = self.getFullUrl(self.cm.ph.getSearchGroups(data, '''<iframe[^>]+?src=['"]([^"^']+?)['"]''', 1, True)[0])
         if self.cm.isValidUrl(url):
             sts, data = self.getPage(url, params)
-            if not sts: return []
+            if not sts:
+                return []
             
             url = self.cm.meta['url']
             if 1 != self.up.checkHostSupport(url):
@@ -162,16 +171,20 @@ class WorldFree4u(CBaseHostClass):
                 uniqueLinks = []
                 for item in linksCandidates:
                     url  = self.cm.ph.getSearchGroups(item, '''file['"]?\s*[=:]\s*['"]([^"^']+?)['"]''')[0]
-                    if url.startswith('//'): url = 'http:' + url
-                    if not url.startswith('http'): continue
-                    if url in uniqueLinks or 'error' in url: continue
+                    if url.startswith('//'):
+                        url = 'http:' + url
+                    if not url.startswith('http'):
+                        continue
+                    if url in uniqueLinks or 'error' in url:
+                        continue
                     uniqueLinks.append(url)
                     
                     if 'mp4' in item:
                         type = self.cm.ph.getSearchGroups(item, '''[\s'"]type['"]?\s*[=:]\s*['"]([^"^']+?)['"]''')[0]
                         res  = self.cm.ph.getSearchGroups(item, '''[\s'"]res['"]?\s*[=:]\s*['"]([^"^']+?)['"]''')[0]
                         label = self.cm.ph.getSearchGroups(item, '''[\s'"]label['"]?\s*[=:]\s*['"]([^"^']+?)['"]''')[0]
-                        if label == '': label = res
+                        if label == '':
+                            label = res
                         url = strwithmeta(url, {'Referer':cItem['url'], 'User-Agent':self.USER_AGENT})
                         urlTab.append({'name':'[{1}] {0}'.format(type, label), 'url':url})
                     elif 'mpegurl' in item:
@@ -188,7 +201,8 @@ class WorldFree4u(CBaseHostClass):
                 tmp = []
                 if 1 == self.up.checkHostSupport(item['url']):
                     sts = self.getPage(item['url'], params)[0]
-                    if not sts: continue
+                    if not sts:
+                        continue
                     contentType = self.cm.meta.get('content-type', '').lower()
                     if 'video' not in contentType and 'mpegurl' not in contentType and 'application' not in contentType:
                         tmp = self.up.getVideoLinkExt(item['url'])
@@ -204,16 +218,20 @@ class WorldFree4u(CBaseHostClass):
         retTab = []
         
         sts, data = self.getPage(cItem['url'])
-        if not sts: return retTab
+        if not sts:
+            return retTab
         
         title = self.cleanHtmlStr( self.cm.ph.getDataBeetwenMarkers(data, '<h3>', '</h3>')[1] )
         desc  = self.cleanHtmlStr( self.cm.ph.getDataBeetwenReMarkers(data, re.compile('''<div[^>]+?class=['"]desc['"][^>]*?>'''), re.compile('''</div>'''))[1] )
         icon  = self.cm.ph.getDataBeetwenMarkers(data, 'mvic-thumb', '>')[1]
         icon  = self.getFullUrl( self.cm.ph.getSearchGroups(icon, '''url\(\s*['"]([^'^"]+?\.jpg[^'^"]*?)['"]''', 1, True)[0] )
         
-        if title == '': title = cItem['title']
-        if desc == '':  desc = cItem.get('desc', '')
-        if icon == '':  icon = cItem.get('icon', '')
+        if title == '':
+            title = cItem['title']
+        if desc == '':
+            desc = cItem.get('desc', '')
+        if icon == '':
+            icon = cItem.get('icon', '')
         
         descData = self.cm.ph.getDataBeetwenMarkers(data, '<div class="mvic-info">', '<div class="clearfix">', False)[1]
         descData = self.cm.ph.getAllItemsBeetwenMarkers(descData, '<p', '</p>')
@@ -229,13 +247,17 @@ class WorldFree4u(CBaseHostClass):
         otherInfo = {}
         for item in descData:
             item = item.split('</strong>')
-            if len(item) < 2: continue
+            if len(item) < 2:
+                continue
             key = self.cleanHtmlStr( item[0] ).replace(':', '').replace(' ', '').strip().lower()
             val = self.cleanHtmlStr( item[1] )
-            if key == 'IMDb': val += ' IMDb' 
+            if key == 'IMDb':
+                val += ' IMDb' 
             if key in descTabMap:
-                try: otherInfo[descTabMap[key]] = val
-                except Exception: continue
+                try:
+                    otherInfo[descTabMap[key]] = val
+                except Exception:
+                    continue
         
         return [{'title':self.cleanHtmlStr( title ), 'text': self.cleanHtmlStr( desc ), 'images':[{'title':'', 'url':self.getFullUrl(icon)}], 'other_info':otherInfo}]
     

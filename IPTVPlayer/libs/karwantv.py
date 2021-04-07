@@ -11,8 +11,10 @@ from Plugins.Extensions.IPTVPlayer.components.ihost import CBaseHostClass
 ###################################################
 # FOREIGN import
 ###################################################
-try:    import json
-except Exception: import simplejson as json
+try:
+    import json
+except Exception:
+    import simplejson as json
 from urllib.parse import urljoin
 ############################################
 
@@ -45,8 +47,10 @@ class KarwanTvApi(CBaseHostClass):
         return 'http://www.karwan24.com/'
     
     def getFullUrl24(self, url):
-        if self.cm.isValidUrl(url): return url
-        elif url == '': return ''
+        if self.cm.isValidUrl(url):
+            return url
+        elif url == '':
+            return ''
         return urljoin(self.getMainUrl24(), url)
     
     def getList(self, cItem):
@@ -65,7 +69,8 @@ class KarwanTvApi(CBaseHostClass):
             else:
                 category = cItem.get('priv_cat', '')
                 sts, data = self.cm.getPage(cItem['url'])
-                if not sts: return []
+                if not sts:
+                    return []
                 
                 if category in ['radio', 'tv']:
                     data = self.cm.ph.getAllItemsBeetwenMarkers(data, '<div class="bt-inner">', '</div>')
@@ -74,12 +79,15 @@ class KarwanTvApi(CBaseHostClass):
                         url   = self.getFullUrl( self.cm.ph.getSearchGroups(item, '''href=['"]([^'^"]+?)['"]''')[0] )
                         title = self.cleanHtmlStr( item )                
                         params = {'name':'karwan.tv', 'title':title, 'url':url, 'icon':icon}
-                        if category == 'radio': params['type'] = 'audio'
-                        else: params['type'] = 'video'
+                        if category == 'radio':
+                            params['type'] = 'audio'
+                        else:
+                            params['type'] = 'video'
                         channelsTab.append(params)
                 elif category == 'karwan24_tv':
                     m1 = '<div class=column'
-                    if m1 not in data: m1 = '<div class="column"'
+                    if m1 not in data:
+                        m1 = '<div class="column"'
                     data = self.cm.ph.getAllItemsBeetwenMarkers(data, m1, '</a>')
                     for item in data:
                         icon  = self.getFullUrl24( self.cm.ph.getSearchGroups(item, '''src=['"]([^"^']+?)['"]''')[0] )
@@ -87,8 +95,10 @@ class KarwanTvApi(CBaseHostClass):
                         title = self.cleanHtmlStr( self.cm.ph.getSearchGroups(item, '''title=['"]([^'^"]+?)['"]''')[0] )
                         desc = self.cleanHtmlStr( item )                
                         params = {'name':'karwan.tv', 'title':title, 'url':url, 'desc':desc, 'icon':icon}
-                        if category == 'radio': params['type'] = 'audio'
-                        else: params['type'] = 'video'
+                        if category == 'radio':
+                            params['type'] = 'audio'
+                        else:
+                            params['type'] = 'video'
                         channelsTab.append(params)
         except Exception:
             printExc()
@@ -100,32 +110,41 @@ class KarwanTvApi(CBaseHostClass):
         
         params = dict(self.http_params)
         sts, data = self.cm.getPage(cItem['url'], params)
-        if not sts: return urlsTab
+        if not sts:
+            return urlsTab
         
         params['header'] = dict(params['header'])
         params['header']['Referer'] = cItem['url']
         
         tmp = self.cm.ph.getDataBeetwenMarkers(data, '<div class="art-article">', '<tbody>', False)[1]
-        if tmp == '': tmp = self.cm.ph.getDataBeetwenMarkers(data, '<div class="video-player">', '</div>', False)[1]
+        if tmp == '':
+            tmp = self.cm.ph.getDataBeetwenMarkers(data, '<div class="video-player">', '</div>', False)[1]
         
         url = ''
         tmp = self.cm.ph.getAllItemsBeetwenMarkers(data, '<iframe', '>', caseSensitive=False)
         for item in tmp:
-            if 'google' in item: continue
+            if 'google' in item:
+                continue
             url  = self.cm.ph.getSearchGroups(item, '<iframe[^>]+?src="([^"]+?)"', ignoreCase=True)[0]
-            if 'karwan24' in self.up.getDomain(cItem['url']): url = self.getFullUrl24(url)
-            else: url = self.getFullUrl(url)
+            if 'karwan24' in self.up.getDomain(cItem['url']):
+                url = self.getFullUrl24(url)
+            else:
+                url = self.getFullUrl(url)
             break
         
-        if not self.cm.isValidUrl(url): return urlsTab
+        if not self.cm.isValidUrl(url):
+            return urlsTab
         
         sts, data = self.cm.getPage(url, params)
-        if not sts: return urlsTab
+        if not sts:
+            return urlsTab
         
         hlsUrl  = self.cm.ph.getSearchGroups(data, '''['"]?hls['"]?\s*:\s*['"]([^"^']+?)['"]''')[0]
-        if not self.cm.isValidUrl(hlsUrl) == '': hlsUrl = self.cm.getFullUrl(self.cm.ph.getSearchGroups(data, '''['"]([^'^"]+?\.m3u8(?:\?[^'^"]+?)?)['"]''')[0], self.cm.getBaseUrl(self.cm.meta['url']))
+        if not self.cm.isValidUrl(hlsUrl) == '':
+            hlsUrl = self.cm.getFullUrl(self.cm.ph.getSearchGroups(data, '''['"]([^'^"]+?\.m3u8(?:\?[^'^"]+?)?)['"]''')[0], self.cm.getBaseUrl(self.cm.meta['url']))
         dashUrl = self.cm.ph.getSearchGroups(data, '''['"]?dash['"]?\s*:\s*['"]([^"^']+?)['"]''')[0]
-        if self.cm.isValidUrl(dashUrl): dashUrl = self.cm.getFullUrl(self.cm.ph.getSearchGroups(data, '''['"]([^'^"]+?\.mpd(?:\?[^'^"]+?)?)['"]''')[0], self.cm.getBaseUrl(self.cm.meta['url']))
+        if self.cm.isValidUrl(dashUrl):
+            dashUrl = self.cm.getFullUrl(self.cm.ph.getSearchGroups(data, '''['"]([^'^"]+?\.mpd(?:\?[^'^"]+?)?)['"]''')[0], self.cm.getBaseUrl(self.cm.meta['url']))
         
         if self.cm.isValidUrl(hlsUrl):
             urlsTab.extend( getDirectM3U8Playlist(hlsUrl, checkContent=True) )

@@ -26,7 +26,8 @@ from Tools.LoadPixmap import LoadPixmap
 class SingleFileDownloaderWidget(Screen):
     sz_w = getDesktop(0).size().width() - 190
     sz_h = getDesktop(0).size().height() - 195
-    if sz_h < 500: sz_h += 4
+    if sz_h < 500:
+        sz_h += 4
     skin = """
         <screen position="center,center" title="%s" size="%d,%d">
          <widget name="icon_red"    position="5,9"   zPosition="4" size="30,30" transparent="1" alphatest="on" />
@@ -119,7 +120,8 @@ class SingleFileDownloaderWidget(Screen):
         try:
             for icon in self.iconPixmap:
                 self['icon_'+icon].setPixmap(self.iconPixmap[icon])
-        except Exception: printExc()
+        except Exception:
+            printExc()
 
     def hideButtons(self, buttons=['green']):
         try:

@@ -16,8 +16,10 @@ import urllib.request
 import urllib.parse
 import urllib.error
 import random
-try:    import json
-except Exception: import simplejson as json
+try:
+    import json
+except Exception:
+    import simplejson as json
 from Components.config import config, ConfigSelection, ConfigText, getConfigListEntry
 ###################################################
 
@@ -58,7 +60,8 @@ class SKStream(CBaseHostClass):
         self._getHeaders = None
         
     def getPage(self, baseUrl, addParams = {}, post_data = None):
-        if addParams == {}: addParams = dict(self.defaultParams)
+        if addParams == {}:
+            addParams = dict(self.defaultParams)
         
         proxy = config.plugins.iptvplayer.skstream_proxy.value
         if proxy != 'None':
@@ -85,8 +88,10 @@ class SKStream(CBaseHostClass):
         
     def getFullUrl(self, url):
         url = CBaseHostClass.getFullUrl(self, url)
-        try: url.encode('ascii')
-        except Exception: url = urllib.parse.quote(url, safe="/:&?%@[]()*$!+-=|<>;")
+        try:
+            url.encode('ascii')
+        except Exception:
+            url = urllib.parse.quote(url, safe="/:&?%@[]()*$!+-=|<>;")
         url = url.replace(' ', '%20')
         return url
         
@@ -95,12 +100,14 @@ class SKStream(CBaseHostClass):
             domains = ['https://ww1.skstream.info/']
             domain = config.plugins.iptvplayer.skstream_alt_domain.value.strip()
             if self.cm.isValidUrl(domain):
-                if domain[-1] != '/': domain += '/'
+                if domain[-1] != '/':
+                    domain += '/'
                 domains.insert(0, domain)
             
             for domain in domains:
                 sts, data = self.getPage(domain)
-                if not sts: continue
+                if not sts:
+                    continue
                 if '/series' in data:
                     self.setMainUrl(self.cm.meta['url'])
                     break
@@ -125,7 +132,8 @@ class SKStream(CBaseHostClass):
         self.cacheCategories = []
         
         sts, data = self.getPage(cItem['url'])
-        if not sts: return
+        if not sts:
+            return
         
         params = dict(cItem)
         params.update({'good_for_fav':False, 'category':'list_items', 'title':_('--All--')})
@@ -133,7 +141,8 @@ class SKStream(CBaseHostClass):
         
         data = self.cm.ph.getDataBeetwenMarkers(data, '<nav ', '</nav>')[1]
         data = data.split('<div class="panel panel-default">')
-        if len(data) > 2: data = data[2:]
+        if len(data) > 2:
+            data = data[2:]
         for section in data:
             sectionTitle = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(section, '<div class="panel-heading">', '</div>')[1])
             
@@ -141,13 +150,15 @@ class SKStream(CBaseHostClass):
             groupsDataTab = self.cm.ph.getAllItemsBeetwenMarkers(section, '<div class="list-group', '</div>')
             for idx in range(len(groupsDataTab)):
                 groupTitle = sectionTitle + ' '
-                if idx < len(groupsTitles): groupTitle += self.cleanHtmlStr(groupsTitles[idx])
+                if idx < len(groupsTitles):
+                    groupTitle += self.cleanHtmlStr(groupsTitles[idx])
                 tmp   = self.cm.ph.getAllItemsBeetwenMarkers(groupsDataTab[idx], '<a', '</a>')
                 tab = []
                 for item in tmp:
                     title = self.cleanHtmlStr(item)
                     url   = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''href=['"]([^'^"]+?)['"]''')[0])
-                    if not self.cm.isValidUrl(url): continue
+                    if not self.cm.isValidUrl(url):
+                        continue
                     tab.append({'title':title, 'url':url})
                 if len(tab):
                     params = dict(cItem)
@@ -172,7 +183,8 @@ class SKStream(CBaseHostClass):
         page = cItem.get('page', 1)
         
         sts, data = self.getPage(cItem['url'])
-        if not sts: return
+        if not sts:
+            return
         
         nextPage = self.getFullUrl(self.cm.ph.getSearchGroups(data, '''<a[^>]+?href=['"]([^"^']+?)['"][^>]*?>Suivant''', ignoreCase=True)[0])
         
@@ -181,7 +193,8 @@ class SKStream(CBaseHostClass):
         printDBG(data)
         for item in data:
             url   = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''href=['"]([^'^"]+?)['"]''', ignoreCase=True)[0])
-            if not self.cm.isValidUrl(url): continue
+            if not self.cm.isValidUrl(url):
+                continue
             title = self.cleanHtmlStr(item)
             icon  = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''<img[^>]+?src=['"]([^'^"]+?)['"]''', ignoreCase=True)[0])
             
@@ -198,7 +211,8 @@ class SKStream(CBaseHostClass):
         printDBG("SKStream.exploreItem")
         
         sts, data = self.getPage(cItem['url'])
-        if not sts: return
+        if not sts:
+            return
         
         desc = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(data, '<div class="more-info">', '</div>')[1])
         
@@ -217,7 +231,8 @@ class SKStream(CBaseHostClass):
                 for item in season:
                     title = self.cleanHtmlStr(self.cm.ph.getSearchGroups(item, '''title=['"]([^'^"]+?)['"]''')[0])
                     url   = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''href=['"]([^'^"]+?)['"]''')[0])
-                    if not self.cm.isValidUrl(url): continue
+                    if not self.cm.isValidUrl(url):
+                        continue
                     tab.append({'title':title, 'url':url})
                 if len(tab):
                     params = dict(cItem)
@@ -250,10 +265,12 @@ class SKStream(CBaseHostClass):
         self.selectDomain()
         
         urlTab = self.cacheLinks.get(cItem['url'],  [])
-        if len(urlTab): return urlTab
+        if len(urlTab):
+            return urlTab
             
         sts, data = self.getPage(cItem['url'])
-        if not sts: return []
+        if not sts:
+            return []
         
         urlTab = []
         data = self.cm.ph.getDataBeetwenMarkers(data, '<tbody>', '</tbody>')[1]
@@ -267,13 +284,15 @@ class SKStream(CBaseHostClass):
             if self.cm.isValidUrl(playerUrl):
                 linksTab.append(playerUrl)
             
-            if 0 == len(linksTab): continue
+            if 0 == len(linksTab):
+                continue
             
             nameTab = []
             tmp = self.cm.ph.getAllItemsBeetwenMarkers(item, '<td', '</td>')
             for n in tmp:
                 n = self.cleanHtmlStr(n)
-                if n != '': nameTab.append(n)
+                if n != '':
+                    nameTab.append(n)
             
             url = strwithmeta('|><|'.join(linksTab), {'Referer':cItem['url']})
             urlTab.append({'name':' | '.join(nameTab), 'url':url, 'need_resolve':1})
@@ -326,11 +345,13 @@ class SKStream(CBaseHostClass):
                             
                             # get JS player script code from confirmation page
                             sts, tmpData = self.cm.ph.getDataBeetwenMarkers(data, ">eval(", '</script>', False)
-                            if sts: data += unpackJSPlayerParams(tmpData, VIDEOMEGA_decryptPlayerParams, 0, r2=True) #YOUWATCH_decryptPlayerParams == VIDUPME_decryptPlayerParams
+                            if sts:
+                                data += unpackJSPlayerParams(tmpData, VIDEOMEGA_decryptPlayerParams, 0, r2=True) #YOUWATCH_decryptPlayerParams == VIDUPME_decryptPlayerParams
                             
                             printDBG(data)
                             url = self.getFullUrl(self.cm.ph.getSearchGroups(data, '''<iframe[^>]+?src=['"]([^"^']+?)['"]''', 1, True)[0])
-                            if url == '': url = self.getFullUrl(self.cm.ph.getSearchGroups(data, '''iframe.src\s*=\s*['"]([^"^']+?)['"]''', 1, True)[0])
+                            if url == '':
+                                url = self.getFullUrl(self.cm.ph.getSearchGroups(data, '''iframe.src\s*=\s*['"]([^"^']+?)['"]''', 1, True)[0])
                             if not self.cm.isValidUrl(url):
                                 data = self.cm.ph.getDataBeetwenMarkers(data, 'sources:', '],', False)[1] + ']'
                                 data = byteify(json.loads(data))
@@ -402,7 +423,8 @@ class SKStream(CBaseHostClass):
         try:
             cItem = byteify(json.loads(fav_data))
             links = self.getLinksForVideo(cItem)
-        except Exception: printExc()
+        except Exception:
+            printExc()
         return links
         
     def setInitListFromFavouriteItem(self, fav_data):

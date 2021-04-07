@@ -17,8 +17,10 @@ import urllib.request
 import urllib.parse
 import urllib.error
 from copy import deepcopy
-try:    import json
-except Exception: import simplejson as json
+try:
+    import json
+except Exception:
+    import simplejson as json
 ###################################################
 
 ###################################################
@@ -100,32 +102,40 @@ class MoovieCC(CBaseHostClass):
             ms = 'Még több jó film »'
         elif tabID == 'pop_movies':
             ms = 'Még több népszerű film »'
-        else: return
+        else:
+            return
         
         sts, data = self.getPage(self.getMainUrl())
-        if not sts: return
+        if not sts:
+            return
         
         data = self.cm.ph.getDataBeetwenMarkers(data, ms, '</ul></ul>')[1]
         data = self.cm.ph.getAllItemsBeetwenMarkers(data, m1, m2)
         for item in data:
             url = self.getFullUrl( self.cm.ph.getSearchGroups(item, '''href=['"]([^"^']+?)['"]''')[0] )
-            if not self.cm.isValidUrl(url): continue
+            if not self.cm.isValidUrl(url):
+                continue
             
             icon = self.getFullIconUrl( self.cm.ph.getSearchGroups(item, '''src=['"]([^"^']+?\.jpe?g[^'^"]*?)['"]''')[0] )
             title = self.cleanHtmlStr( self.cm.ph.getDataBeetwenMarkers(item, '<a class="title', '</a>')[1] )
-            if title == '': title = self.cleanHtmlStr( self.cm.ph.getSearchGroups(item, '''bubble=['"]([^"^']+?)['"]''')[0] )
-            if title == '': title = self.cleanHtmlStr( self.cm.ph.getDataBeetwenMarkers(item, '<h2', '</h2>')[1] )
+            if title == '':
+                title = self.cleanHtmlStr( self.cm.ph.getSearchGroups(item, '''bubble=['"]([^"^']+?)['"]''')[0] )
+            if title == '':
+                title = self.cleanHtmlStr( self.cm.ph.getDataBeetwenMarkers(item, '<h2', '</h2>')[1] )
             
             # get desc
             desc = self.cleanHtmlStr( self.cm.ph.getDataBeetwenMarkers(item, '<p', '</p>')[1] )
             if desc == '':
                 desc = []
                 tmp = self.cm.ph.getAllItemsBeetwenMarkers(item, '<td', '</td>')
-                if len(tmp): del tmp[0]
+                if len(tmp):
+                    del tmp[0]
                 for t in tmp:
-                    if '/flags/' in t: t = self.cm.ph.getSearchGroups(t, '''<img[^>]+?src=['"][^"^']+?/([^/]+?)\.png['"]''')[0]
+                    if '/flags/' in t:
+                        t = self.cm.ph.getSearchGroups(t, '''<img[^>]+?src=['"][^"^']+?/([^/]+?)\.png['"]''')[0]
                     t = self.cleanHtmlStr(t)
-                    if t != '': desc.append(t)
+                    if t != '':
+                        desc.append(t)
                 desc = ' | '.join(desc)
             
             params = dict(cItem)
@@ -141,7 +151,8 @@ class MoovieCC(CBaseHostClass):
         cItem = dict(cItem)
         if cItem.get('f_query', '') == '':
             sts, data = self.getPage(cItem['url'])
-            if not sts: return
+            if not sts:
+                return
             cItem['f_page'] = 1
             tmp = self.cm.ph.getDataBeetwenMarkers(data, '<div id="content">', '<script')[1]
             tmp = self.cm.ph.getAllItemsBeetwenMarkers(tmp, '<input', '>')
@@ -149,14 +160,16 @@ class MoovieCC(CBaseHostClass):
             cItem['filters'] = []
             for item in tmp:
                 name  = self.cm.ph.getSearchGroups(item, '''name=['"]([^"^']+?)['"]''')[0]
-                if name == '': continue
+                if name == '':
+                    continue
                 value = self.cm.ph.getSearchGroups(item, '''value=['"]([^"^']+?)['"]''')[0]
                 inputCache[name] = value
             tmp = self.cm.ph.getDataBeetwenMarkers(data, 'function dataFromInput', '}')[1]
             tmp = re.compile('''\[name=([^\]]+?)\]''').findall(tmp)
             for item in tmp:
                 cItem['filters'].append(item)
-                if item in ['sort', 'page']: continue
+                if item in ['sort', 'page']:
+                    continue
                 cItem['f_'+item] = inputCache.get(item,  '')
             tmp = self.cm.ph.getDataBeetwenMarkers(data, '$.ajax(', '});', False)[1]
             cItem['url'] = self.getFullUrl(self.cm.ph.getSearchGroups(tmp, '''['"]?url['"]?\s*:\s*['"]([^'^"]+?)['"]''')[0])
@@ -170,7 +183,8 @@ class MoovieCC(CBaseHostClass):
                 value = cItem[name]
                 if not str(value).startswith(filter+':'):
                     value = '%s:%s' % (filter, cItem[name])
-                if not value.endswith('|'): value += '|'
+                if not value.endswith('|'):
+                    value += '|'
                 query.append(value)
         
         query = cItem.get('f_query', '') + (''.join(query))
@@ -178,22 +192,27 @@ class MoovieCC(CBaseHostClass):
         urlParams = dict(self.defaultParams)
         urlParams.update({'raw_post_data':True})
         sts, data = self.getPage(cItem['url'], urlParams, query)
-        if not sts: return
+        if not sts:
+            return
         
         nextPage = self.cm.ph.getSearchGroups(data, '''pages_num\s*=\s*([0-9]+?)[^0-9]''')[0]
         if nextPage != '' and int(nextPage) > 0:
             nextPage = True
-        else: nextPage = False
+        else:
+            nextPage = False
         
         data = self.cm.ph.getAllItemsBeetwenMarkers(data, 'id="movie', '<div class="clear')
         for item in data:
             url = self.getFullUrl( self.cm.ph.getSearchGroups(item, '''href=['"]([^"^']+?)['"]''')[0] )
-            if not self.cm.isValidUrl(url): continue
+            if not self.cm.isValidUrl(url):
+                continue
             
             icon = self.getFullIconUrl( self.cm.ph.getSearchGroups(item, '''src=['"]([^"^']+?)['"]''')[0] )
             title = self.cleanHtmlStr( self.cm.ph.getDataBeetwenMarkers(item, '<a class="title', '</a>')[1] )
-            if title == '': title = self.cleanHtmlStr( self.cm.ph.getSearchGroups(item, '''bubble=['"]([^"^']+?)['"]''')[0] )
-            if title == '': title = self.cleanHtmlStr( self.cm.ph.getDataBeetwenMarkers(item, '<h2', '</h2>')[1] )
+            if title == '':
+                title = self.cleanHtmlStr( self.cm.ph.getSearchGroups(item, '''bubble=['"]([^"^']+?)['"]''')[0] )
+            if title == '':
+                title = self.cleanHtmlStr( self.cm.ph.getDataBeetwenMarkers(item, '<h2', '</h2>')[1] )
             desc = self.cleanHtmlStr( self.cm.ph.getDataBeetwenMarkers(item, '<p', '</p>')[1] )
             
             params = dict(cItem)
@@ -209,7 +228,8 @@ class MoovieCC(CBaseHostClass):
     def _listCategories(self, cItem, nextCategory, m1, m2):
         printDBG("MoovieCC._listCategories")
         sts, data = self.getPage(cItem['url'])
-        if not sts: return
+        if not sts:
+            return
         
         data = self.cm.ph.getDataBeetwenMarkers(data, m1, m2)[1]
         data = self.cm.ph.getAllItemsBeetwenMarkers(data, '<div', '</div>')
@@ -232,13 +252,16 @@ class MoovieCC(CBaseHostClass):
         printDBG("MoovieCC.listSeries")
         if 0 == len(self.cacheSortOrder):
             sts, data = self.getPage(self.getFullUrl('/online-filmek/')) # sort order is same for movies and series
-            if not sts: return
+            if not sts:
+                return
             data = self.cm.ph.getDataBeetwenMarkers(data, '<ul class="sort_by">', '</ul>')[1]
             data = self.cm.ph.getAllItemsBeetwenMarkers(data, '<a', '</a>')
             for item in data:
-                if not self.cm.ph.getSearchGroups(item, '''href=['"]([^'^"]+?)['"]''')[0].startswith('javascript'): continue
+                if not self.cm.ph.getSearchGroups(item, '''href=['"]([^'^"]+?)['"]''')[0].startswith('javascript'):
+                    continue
                 sort  = self.cm.ph.getSearchGroups(item, '''id=['"]([^'^"]+?)['"]''')[0]
-                if sort == '': continue
+                if sort == '':
+                    continue
                 title = self.cleanHtmlStr(item)
                 self.cacheSortOrder.append({'title':title, 'f_sort':sort})
         
@@ -259,16 +282,19 @@ class MoovieCC(CBaseHostClass):
                 printDBG(item)
                 url = self.cm.ph.getSearchGroups(item, '''href=['"](https?://[^'^"]+?)['"]''')[0]
                 tmpUrl = self.cm.ph.getSearchGroups(url, '''/(https?://[^'^"]+?)$''')[0]
-                if self.cm.isValidUrl(tmpUrl): url = tmpUrl
+                if self.cm.isValidUrl(tmpUrl):
+                    url = tmpUrl
                 printDBG(">>> " + url)
-                if not self.cm.isValidUrl(url): continue
+                if not self.cm.isValidUrl(url):
+                    continue
                 serverName = []
                 item = self.cm.ph.getAllItemsBeetwenMarkers(item, '<td', '</td>')
                 for t in item:
                     if '/flags/' in t:
                         t = self.cm.ph.getSearchGroups(t, '''<img[^>]+?src=['"][^"^']+?/([^/]+?)\.png['"]''')[0]
                     t = self.cleanHtmlStr(t)
-                    if t != '': serverName.append(t)
+                    if t != '':
+                        serverName.append(t)
                 serverName = ' | '.join(serverName)
                 
                 if episodeName not in episodesTab:
@@ -281,12 +307,14 @@ class MoovieCC(CBaseHostClass):
         printDBG("MoovieCC.exploreItem")
         
         sts, data = self.getPage(cItem['url'])
-        if not sts: return
+        if not sts:
+            return
         
         desc = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(data, '<div id="plot">', '</div>')[1])
         icon  = self.cm.ph.getDataBeetwenMarkers(data, '<div id="poster"', '</div>')[1]
         icon  = self.getFullIconUrl( self.cm.ph.getSearchGroups(icon, '''<img[^>]+?src=['"]([^"^']+?\.jpe?g[^"^']*?)["']''')[0] )
-        if icon == '': icon = cItem.get('icon', '')
+        if icon == '':
+            icon = cItem.get('icon', '')
         
         # trailer 
         tmp = self.cm.ph.getDataBeetwenMarkers(data, '<a id="youtube_video"', '</a>')[1]
@@ -306,14 +334,17 @@ class MoovieCC(CBaseHostClass):
         
         tmp = urllib.parse.unquote(sourcesLink)
         tmp = self.cm.ph.getSearchGroups(tmp[1:], '''(https?://.+)''')[0]
-        if tmp != '': sourcesLink = tmp
+        if tmp != '':
+            sourcesLink = tmp
         
         sts, data = self.getPage(sourcesLink)
-        if not sts: return []
+        if not sts:
+            return []
         
         desc2 = self.cm.ph.getDataBeetwenMarkers(data, '<article', '</article>')[1]
         mainTitle = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(desc2, '<h1>', '</h1>')[1])
-        if mainTitle == '': mainTitle = cItem['title']
+        if mainTitle == '':
+            mainTitle = cItem['title']
         
         self.cacheLinks  = {}
         
@@ -331,7 +362,8 @@ class MoovieCC(CBaseHostClass):
                 self.addDir(params)
         else:
             desc2 = self.cleanHtmlStr(desc2)
-            if desc2 != '': desc = desc2
+            if desc2 != '':
+                desc = desc2
             episodesList = self._fillLinksCache(data, '<table')
             for item in episodesList:
                 params = dict(cItem)
@@ -342,7 +374,8 @@ class MoovieCC(CBaseHostClass):
         printDBG("MoovieCC.listEpisodes")
         
         sts, data = self.getPage(cItem['url'])
-        if not sts: return
+        if not sts:
+            return
         
         desc = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(data, '<article', '</article>')[1])
         
@@ -398,12 +431,14 @@ class MoovieCC(CBaseHostClass):
         post_data = None
         while True:
             sts, data = self.getPage(url, post_data=post_data)
-            if not sts: return []
+            if not sts:
+                return []
             videoUrl = self.cm.meta['url']
             
             if self.up.getDomain(self.getMainUrl()) in videoUrl or self.up.getDomain(videoUrl) == self.up.getDomain(orginUrl):
                 
-                if 'captcha' in data: data = re.sub("<!--[\s\S]*?-->", "", data)
+                if 'captcha' in data:
+                    data = re.sub("<!--[\s\S]*?-->", "", data)
                 
                 if 'google.com/recaptcha/' in data and 'sitekey' in data:
                     message = _('Link protected with google recaptcha v2.')
@@ -418,15 +453,20 @@ class MoovieCC(CBaseHostClass):
                     data = self.cm.ph.getDataBeetwenMarkers(data, '<form', '</form>')[1]
                     
                     imgUrl = self.cm.ph.getSearchGroups(data, 'src="([^"]+?)"')[0]
-                    if imgUrl != '' and not imgUrl.startswith('/'): imgUrl = '/' + imgUrl
-                    if imgUrl.startswith('/'): imgUrl = urllib.parse.urljoin(videoUrl, imgUrl)
+                    if imgUrl != '' and not imgUrl.startswith('/'):
+                        imgUrl = '/' + imgUrl
+                    if imgUrl.startswith('/'):
+                        imgUrl = urllib.parse.urljoin(videoUrl, imgUrl)
                     
                     printDBG("img URL [%s]" % imgUrl)
                         
                     actionUrl = self.cm.ph.getSearchGroups(data, 'action="([^"]+?)"')[0]
-                    if actionUrl != '': actionUrl = '/' + actionUrl
-                    if actionUrl.startswith('/'): actionUrl = urllib.parse.urljoin(videoUrl, actionUrl)
-                    elif actionUrl == '': actionUrl = videoUrl
+                    if actionUrl != '':
+                        actionUrl = '/' + actionUrl
+                    if actionUrl.startswith('/'):
+                        actionUrl = urllib.parse.urljoin(videoUrl, actionUrl)
+                    elif actionUrl == '':
+                        actionUrl = videoUrl
                         
                     captcha_post_data = dict(re.findall(r'''<input[^>]+?name=["']([^"^']*)["'][^>]+?value=["']([^"^']*)["'][^>]*>''', data))
                     
@@ -506,7 +546,8 @@ class MoovieCC(CBaseHostClass):
         try:
             cItem = byteify(json.loads(fav_data))
             links = self.getLinksForVideo(cItem)
-        except Exception: printExc()
+        except Exception:
+            printExc()
         return links
         
     def setInitListFromFavouriteItem(self, fav_data):
@@ -528,10 +569,12 @@ class MoovieCC(CBaseHostClass):
         otherInfo = {}
         
         url = cItem.get('prev_url', '')
-        if url == '': url = cItem.get('url', '')
+        if url == '':
+            url = cItem.get('url', '')
         
         sts, data = self.getPage(url)
-        if not sts: return retTab
+        if not sts:
+            return retTab
         
         
         title = self.cleanHtmlStr(self.cm.ph.getSearchGroups(data, '''<meta[^>]+?itemprop="name"[^>]+?content="([^"]+?)"''')[0])
@@ -547,24 +590,34 @@ class MoovieCC(CBaseHostClass):
                    'Kategória:':'category', 'Írta:':'writers', 'Rendezte:':'directors', 'Szereplők:':'actors'} #'Megtekintve:':'views',
         for item in data:
             item = self.cm.ph.getAllItemsBeetwenMarkers(item, '<td', '</td>')
-            if len(item) != 2: continue
+            if len(item) != 2:
+                continue
             marker = self.cleanHtmlStr(item[0])
             tmp  =  self.cm.ph.getAllItemsBeetwenMarkers(item[1], '<a', '</a>')
             value = []
             for t in tmp:
                 t = self.cleanHtmlStr(t)
-                if t != '': value.append(t)
-            if len(value): value = ', '.join(value)
-            else: value = self.cleanHtmlStr(item[1])
-            if value == '': continue
+                if t != '':
+                    value.append(t)
+            if len(value):
+                value = ', '.join(value)
+            else:
+                value = self.cleanHtmlStr(item[1])
+            if value == '':
+                continue
             key = mapDesc.get(marker, '')
-            if key != '': otherInfo[key] = value
+            if key != '':
+                otherInfo[key] = value
             
-        if rating != '': otherInfo['rating'] = rating
+        if rating != '':
+            otherInfo['rating'] = rating
         
-        if title == '': title = cItem['title']
-        if desc == '':  desc = cItem.get('desc', '')
-        if icon == '':  icon = cItem.get('icon', self.DEFAULT_ICON_URL)
+        if title == '':
+            title = cItem['title']
+        if desc == '':
+            desc = cItem.get('desc', '')
+        if icon == '':
+            icon = cItem.get('icon', self.DEFAULT_ICON_URL)
         
         return [{'title':self.cleanHtmlStr( title ), 'text': self.cleanHtmlStr( desc ), 'images':[{'title':'', 'url':self.getFullUrl(icon)}], 'other_info':otherInfo}]
     

@@ -16,8 +16,10 @@ from Plugins.Extensions.IPTVPlayer.libs.crypto.cipher.aes_cbc import AES_CBC
 import base64
 import hashlib
 from binascii import unhexlify
-try:    import json
-except Exception: import simplejson as json
+try:
+    import json
+except Exception:
+    import simplejson as json
 from Components.config import config, ConfigSelection, ConfigYesNo, ConfigText, getConfigListEntry
 ###################################################
 
@@ -87,7 +89,8 @@ class BSTO(CBaseHostClass, CaptchaHelper):
         self.cacheGenres = {}
         
         sts, data = self.getPage(cItem['url'])
-        if not sts: return
+        if not sts:
+            return
         
         data = self.cm.ph.getAllItemsBeetwenMarkers(data, '<div class="genre">', '</ul>', False)
         for genreItem in data:
@@ -97,7 +100,8 @@ class BSTO(CBaseHostClass, CaptchaHelper):
             for item in genreItem:
                 url   = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''href=['"]([^'^"]+?)['"]''')[0])
                 title = self.cleanHtmlStr(item)
-                if title == '': title = self.cleanHtmlStr(self.cm.ph.getSearchGroups(item, '''title=['"]([^'^"]+?)['"]''')[0])
+                if title == '':
+                    title = self.cleanHtmlStr(self.cm.ph.getSearchGroups(item, '''title=['"]([^'^"]+?)['"]''')[0])
                 self.cacheGenres[genreTitle].append({'title':title, 'url':url})
             params = dict(cItem)
             params.update({'title':genreTitle, 'category':nextCategory})
@@ -115,7 +119,8 @@ class BSTO(CBaseHostClass, CaptchaHelper):
     def listSeasons(self, cItem, nextCategory):
         printDBG("BSTO.listSeasons")
         sts, data = self.getPage(cItem['url'])
-        if not sts: return
+        if not sts:
+            return
         
         descData = self.cm.ph.getDataBeetwenMarkers(data, '<div id="sp_left">', '<script', False)[1]
         desc = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(descData, '<p ', '</p>')[1])
@@ -137,13 +142,15 @@ class BSTO(CBaseHostClass, CaptchaHelper):
         sNum = cItem['s_num']
         
         sts, data = self.getPage(cItem['url'])
-        if not sts: return
+        if not sts:
+            return
         
         data = self.cm.ph.getDataBeetwenMarkers(data, '<table class="episodes">', '</table>')[1]
         data = self.cm.ph.getAllItemsBeetwenMarkers(data, '<tr>', '</tr>', False)
         for item in data:
             item = self.cm.ph.getAllItemsBeetwenMarkers(item, '<td', '</td>')
-            if len(item) < 3: continue
+            if len(item) < 3:
+                continue
             url  = self.getFullUrl(self.cm.ph.getSearchGroups(item[0], '''href=['"]([^'^"]+?)['"]''')[0])
             eNum = self.cleanHtmlStr(item[0])
             
@@ -153,13 +160,15 @@ class BSTO(CBaseHostClass, CaptchaHelper):
             key = 's%se%s'% (sNum.zfill(2), eNum.zfill(2))
             self.cacheLinks[key] = []
             title = cItem['series_title'] + ', ' + key + ' ' + title1
-            if title2 != '': title+= ' (%s)' % title2
+            if title2 != '':
+                title+= ' (%s)' % title2
             
             item = self.cm.ph.getAllItemsBeetwenMarkers(item[2], '<a', '</a>')
             for link in item:
                 name = self.cleanHtmlStr(link)
                 url  = self.getFullUrl(self.cm.ph.getSearchGroups(link, '''href=['"]([^'^"]+?)['"]''')[0])
-                if name == '': name = url.rsplit('/', 1)[-1]
+                if name == '':
+                    name = url.rsplit('/', 1)[-1]
                 self.cacheLinks[key].append({'name':name, 'url':strwithmeta(url, {'links_key':key}), 'need_resolve':1})
             if len(self.cacheLinks[key]):
                 params = dict(cItem)
@@ -172,14 +181,16 @@ class BSTO(CBaseHostClass, CaptchaHelper):
         if len(self.cacheSeries) == 0:
             url = self.getFullUrl('andere-serien')
             sts, data = self.getPage(url)
-            if not sts: return []
+            if not sts:
+                return []
             data = self.cm.ph.getDataBeetwenMarkers(data, '<div id="seriesContainer"', '<script', False)[1]
         
             data = self.cm.ph.getAllItemsBeetwenMarkers(data, '<li>', '</li>', False)
             for item in data:
                 url   = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''href=['"]([^'^"]+?)['"]''')[0])
                 title = self.cleanHtmlStr(item)
-                if title == '': title = self.cleanHtmlStr(self.cm.ph.getSearchGroups(item, '''title=['"]([^'^"]+?)['"]''')[0])
+                if title == '':
+                    title = self.cleanHtmlStr(self.cm.ph.getSearchGroups(item, '''title=['"]([^'^"]+?)['"]''')[0])
                 self.cacheSeries.append({'title':title, 'url':url})
         
         searchResults = []
@@ -252,7 +263,8 @@ class BSTO(CBaseHostClass, CaptchaHelper):
                     self.cacheLinks[key][idx]['name'] = '*' + self.cacheLinks[key][idx]['name']
         
         sts, data = self.getPage(videoUrl)
-        if not sts: return []
+        if not sts:
+            return []
         
         errorMsgTab = []
         
@@ -267,7 +279,8 @@ class BSTO(CBaseHostClass, CaptchaHelper):
         
         if hostUrl == '':
             sts, data = self.cm.getPage(prevUrl, self.defaultParams)
-            if not sts: return []
+            if not sts:
+                return []
             url = data.meta['url']
             
             if url == prevUrl:
@@ -285,7 +298,8 @@ class BSTO(CBaseHostClass, CaptchaHelper):
                     token, errorMsgTab = self.processCaptcha(sitekey,  self.cm.meta['url'], config.plugins.iptvplayer.bsto_bypassrecaptcha.value)
                     if token != '':
                         sts, data = self.cm.getPage(url + '?t=%s&s=%s' % (token, query.get('s', '')), self.defaultParams)
-                        if not sts: return []
+                        if not sts:
+                            return []
                         url = data.meta['url']
             
             if 1 != self.up.checkHostSupport(url):
@@ -294,7 +308,8 @@ class BSTO(CBaseHostClass, CaptchaHelper):
                 hostUrl = ''
                 try:
                     sts, data = self.cm.getPage(self.getFullUrl('/api/' + url), self.getHeaders(url))
-                    if not sts: return []
+                    if not sts:
+                        return []
                     
                     data = byteify(json.loads(data))
                     printDBG(data)
@@ -320,18 +335,23 @@ class BSTO(CBaseHostClass, CaptchaHelper):
         retTab = []
         
         sts, data = self.getPage(cItem.get('url', ''))
-        if not sts: return retTab
+        if not sts:
+            return retTab
         
         desc = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(data, '<div class="justify" id="desc_spoiler">', '</div>')[1])
         
         data  = self.cm.ph.getDataBeetwenMarkers(data, '<div id="sp_left">', '<script', False)[1]
         title = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(data, '<h2', '</h2>')[1].split('<small>')[0])
-        if desc == '': desc = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(data, '<p ', '</p>')[1])
+        if desc == '':
+            desc = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(data, '<p ', '</p>')[1])
         icon  = self.getFullIconUrl(self.cm.ph.getSearchGroups(data, '''src=['"]([^'^"]+?)['"]''')[0])
         
-        if title == '': title = cItem['title']
-        if desc == '':  desc  = cItem.get('desc', '')
-        if icon == '':  icon  = cItem.get('icon', '')
+        if title == '':
+            title = cItem['title']
+        if desc == '':
+            desc  = cItem.get('desc', '')
+        if icon == '':
+            icon  = cItem.get('icon', '')
         
         data = data.split('<div class="infos">')[-1]
         data = self.cm.ph.getAllItemsBeetwenMarkers(data, '<span>', '</p>')
@@ -347,11 +367,14 @@ class BSTO(CBaseHostClass, CaptchaHelper):
             key = self.cleanHtmlStr( self.cm.ph.getDataBeetwenMarkers(item, '<span', '</span>')[1] )
             tmp = self.cm.ph.getDataBeetwenMarkers(item, '<p', '</p>')[1]
             val = self.cleanHtmlStr(' '.join(self.cm.ph.getAllItemsBeetwenMarkers(tmp, '<span', '</span>')))
-            if val == '': val = self.cleanHtmlStr(tmp)
+            if val == '':
+                val = self.cleanHtmlStr(tmp)
 
             if key in descTabMap:
-                try: otherInfo[descTabMap[key]] = val
-                except Exception: continue
+                try:
+                    otherInfo[descTabMap[key]] = val
+                except Exception:
+                    continue
         
         return [{'title':self.cleanHtmlStr( title ), 'text': self.cleanHtmlStr( desc ), 'images':[{'title':'', 'url':self.getFullIconUrl(icon)}], 'other_info':otherInfo}]
     

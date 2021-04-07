@@ -99,9 +99,11 @@ class customMoviePlayer(InfoBarShowHide, InfoBarSeek, InfoBarAudioSelection, Inf
                 printDBG('________waitForSeekToLastPosition position[%r]' % (position) )
                 return
             printDBG('________timerCallBack position [%r], length[%r], seekstate[%r]' % (position, length, self.seekstate) )
-            if self.waitForSeekToLastPosition > 0 and self.waitForSeekToLastPosition >= position: return
+            if self.waitForSeekToLastPosition > 0 and self.waitForSeekToLastPosition >= position:
+                return
             self.waitForSeekToLastPosition = 0
-            if self.bugEOFworkaround == 0 or position == 0 or self.seekstate != self.SEEK_STATE_PLAY: return #== self.SEEK_STATE_PAUSE: return
+            if self.bugEOFworkaround == 0 or position == 0 or self.seekstate != self.SEEK_STATE_PLAY:
+                return #== self.SEEK_STATE_PAUSE: return
             self.lastPosition = position
         except Exception:
             printExc()

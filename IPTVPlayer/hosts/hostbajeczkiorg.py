@@ -53,12 +53,14 @@ class BajeczkiOrg(CBaseHostClass):
         printDBG("BajeczkiOrg.listCategories")
 
         sts, data = self.getPage(cItem['url'])
-        if not sts: return
+        if not sts:
+            return
 
         data = self.cm.ph.getAllItemsBeetwenNodes(data, ('<div', '>', 'category-bar'), ('</div', '>'))
         for item in data:
             url = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''\shref=['"]([^"^']+?)['"]''')[0])
-            if url == '': continue
+            if url == '':
+                continue
             item = item.split('</span>', 1)
             title = ph.clean_html(item[0])
             desc  = ph.clean_html(item[-1])
@@ -71,7 +73,8 @@ class BajeczkiOrg(CBaseHostClass):
         printDBG("BajeczkiOrg.listItems")
 
         sts, data = self.getPage(cItem['url'])
-        if not sts: return
+        if not sts:
+            return
         nextPage = ph.find(data, ('<a', '>', 'next page-'))[1]
         nextPage = self.getFullUrl(ph.getattr(nextPage, 'href'), self.cm.meta['url'])
 
@@ -83,7 +86,8 @@ class BajeczkiOrg(CBaseHostClass):
             item = data[idx]
 
             url = self.getFullUrl( ph.search(item, ph.A_HREF_URI_RE)[1] )
-            if url == '': continue
+            if url == '':
+                continue
 #            icon = self.getFullUrl( ph.search(item, ph.IMAGE_SRC_URI_RE)[1] )
             icon = self.getFullIconUrl(self.cm.ph.getSearchGroups(item, '''data-src=['"]([^'^"]+?)['"]''', ignoreCase=True)[0])
             item = item.split('</h2>', 1)
@@ -93,7 +97,8 @@ class BajeczkiOrg(CBaseHostClass):
             tmp = descObj.split(item[-1])
             for t in tmp:
                 t = ph.clean_html(t)
-                if t != '': desc.append(t)
+                if t != '':
+                    desc.append(t)
             params = dict(cItem)
             params = {'good_for_fav': True, 'title':title, 'url':url, 'icon':icon, 'desc':'[/br]'.join(desc)}
             self.addVideo(params)
@@ -108,12 +113,14 @@ class BajeczkiOrg(CBaseHostClass):
     def getLinksForVideo(self, cItem):
         printDBG("BajeczkiOrg.getLinksForVideo [%s]" % cItem)
         urlTab = self.cacheLinks.get(cItem['url'], [])
-        if urlTab: return urlTab
+        if urlTab:
+            return urlTab
 
         self.cacheLinks = {}
 
         sts, data = self.getPage(cItem['url'])
-        if not sts: return
+        if not sts:
+            return
 
         data = self.cm.ph.getDataBeetwenNodes(data, ('<div', '>', 'entry-content'), ('<aside', '>'))[1]
         data = re.sub("<!--[\s\S]*?-->", "", data)
@@ -129,7 +136,8 @@ class BajeczkiOrg(CBaseHostClass):
 
         tmp = ph.findall(data, ('<div', '>', 'data-item'), flags=ph.IGNORECASE|ph.START_E)
         for item in tmp:
-            if 'sources' not in item: continue
+            if 'sources' not in item:
+                continue
             item = ph.clean_html(ph.getattr(item, 'data-item'))
             try:
                 item = json_loads(item)

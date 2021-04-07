@@ -46,15 +46,21 @@ class UnCaptchaReCaptcha:
             iteration += 1
 
             message = ph.clean_html(ph.find(data, ('<div', '>', 'imageselect-desc'), '</div>', flags=0)[1])
-            if not message: message = ph.clean_html(ph.find(data, ('<label', '>', 'fbc-imageselect-message-text'), '</label>', flags=0)[1])
-            if not message: message = ph.clean_html(ph.find(data, ('<div', '>', 'imageselect-message'), '</div>', flags=0)[1])
+            if not message:
+                message = ph.clean_html(ph.find(data, ('<label', '>', 'fbc-imageselect-message-text'), '</label>', flags=0)[1])
+            if not message:
+                message = ph.clean_html(ph.find(data, ('<div', '>', 'imageselect-message'), '</div>', flags=0)[1])
             if '' == message:
                 token = ph.find(data, ('<div', '>', 'verification-token'), '</div>', flags=0)[1]
                 token = ph.find(data, ('<textarea', '>'), '</textarea>', flags=0)[1].strip()
-                if token == '': token = ph.search(data, '"this\.select\(\)">(.*?)</textarea>')[0]
-                if token == '': token = ph.find(data, ('<textarea', '>'), '</textarea>', flags=0)[1].strip()
-                if '' != token: printDBG('>>>>>>>> Captcha token[%s]' % (token))
-                else: printDBG('>>>>>>>> Captcha Failed\n\n%s\n\n' % data)
+                if token == '':
+                    token = ph.search(data, '"this\.select\(\)">(.*?)</textarea>')[0]
+                if token == '':
+                    token = ph.find(data, ('<textarea', '>'), '</textarea>', flags=0)[1].strip()
+                if '' != token:
+                    printDBG('>>>>>>>> Captcha token[%s]' % (token))
+                else:
+                    printDBG('>>>>>>>> Captcha Failed\n\n%s\n\n' % data)
                 break
 
             cval = ph.search(data, 'name="c"\s+value="([^"]+)')[0]

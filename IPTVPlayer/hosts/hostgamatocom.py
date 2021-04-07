@@ -13,8 +13,10 @@ from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, by
 import urllib.request
 import urllib.parse
 import urllib.error
-try:    import json
-except Exception: import simplejson as json
+try:
+    import json
+except Exception:
+    import simplejson as json
 from datetime import datetime
 ###################################################
 
@@ -46,21 +48,25 @@ class GamatoMovies(CBaseHostClass):
         self.cacheSeries = {}
         
     def getStr(self, item, key):
-        if key not in item: return ''
-        if item[key] == None: return ''
+        if key not in item:
+            return ''
+        if item[key] == None:
+            return ''
         return str(item[key])
         
     def fillFilters(self, cItem):
         self.cacheFilters = {}
         sts, data = self.cm.getPage(cItem['url'])
-        if not sts: return
+        if not sts:
+            return
         self.cacheFilters['token'] = self.cm.ph.getSearchGroups(data, '''token\s*:\s*['"]([^'^"]+?)['"]''')[0]
         
         def addFilter(data, key, addAny, titleBase):
             self.cacheFilters[key] = []
             for item in data:
                 value = self.cm.ph.getSearchGroups(item, '''value=['"]([^'^"]+?)['"]''')[0]
-                if value == '': continue
+                if value == '':
+                    continue
                 title = self.cleanHtmlStr(item)
                 self.cacheFilters[key].append({'title':titleBase + title, key:value})
             if addAny and len(self.cacheFilters[key]):
@@ -120,14 +126,16 @@ class GamatoMovies(CBaseHostClass):
             baseUrl += '&query={0}'.format(cItem['query'])
             
         sts, data = self.cm.getPage(self.getFullUrl(baseUrl), {'header':self.AJAX_HEADER})
-        if not sts: return
+        if not sts:
+            return
         try:
             data = byteify(json.loads(data))
             for item in data['items']:
                 try:
                     if item['type'] == 'movie':
                         url = 'movies'
-                    else: url = item['type']
+                    else:
+                        url = item['type']
                     url   = self.getFullUrl(url + '/'  + str(item['id']))
                     title = '{0} ({1})'.format(self.getStr(item, 'title'), self.getStr(item, 'year'))
                     desc  = '{0}/10|{1}[/br]{2}'.format(self.getStr(item, 'imdb_rating'), self.getStr(item, 'genre'), self.getStr(item, 'plot'))
@@ -168,7 +176,8 @@ class GamatoMovies(CBaseHostClass):
     def listSeasons(self, cItem, nextCategory):
         printDBG("GamatoMovies.listSeasons")
         sts, data = self.cm.getPage(cItem['url'])
-        if not sts: return
+        if not sts:
+            return
         
         data = self.cm.ph.getDataBeetwenMarkers(data, 'vars.title =', '};', False)[1].strip() + '}'
         
@@ -186,7 +195,8 @@ class GamatoMovies(CBaseHostClass):
             data = byteify(json.loads(data))
             for item in data['season']:
                 title = self.getStr(item, 'title')
-                if '' == title: title = _('Season {0}'.format(item['number']))
+                if '' == title:
+                    title = _('Season {0}'.format(item['number']))
                 url   = self.getFullUrl(cItem['url'] + '/seasons/'  + str(item['number']))
                 overview = self.getStr(item, 'overview')
                 if overview == '':
@@ -201,7 +211,8 @@ class GamatoMovies(CBaseHostClass):
     def listEpisodes(self, cItem):
         printDBG("GamatoMovies.listEpisodes")
         sts, data = self.cm.getPage(cItem['url'])
-        if not sts: return
+        if not sts:
+            return
         
         sNum = cItem['priv_snum']
         
@@ -221,7 +232,8 @@ class GamatoMovies(CBaseHostClass):
         printDBG("GamatoMovies.listSearchResult cItem[%s], searchPattern[%s] searchType[%s]" % (cItem, searchPattern, searchType))
         if 'token' not in self.cacheFilters:
             sts, data = self.cm.getPage(self.MAIN_URL)
-            if not sts: return
+            if not sts:
+                return
             self.cacheFilters['token'] = self.cm.ph.getSearchGroups(data, '''token\s*:\s*['"]([^'^"]+?)['"]''')[0]
         cItem = dict(cItem)
         cItem.update({'priv_type':searchType, 'query':urllib.parse.quote_plus(searchPattern)})
@@ -235,11 +247,13 @@ class GamatoMovies(CBaseHostClass):
             return self.up.getVideoLinkExt(cItem['url'])
             
         urlTab = self.cacheLinks.get(cItem['url'],  [])
-        if len(urlTab): return urlTab
+        if len(urlTab):
+            return urlTab
         self.cacheLinks = {}
         
         sts, data = self.cm.getPage(cItem['url'])
-        if not sts: return []
+        if not sts:
+            return []
         
         jsonData = self.cm.ph.getDataBeetwenMarkers(data, 'vars.title =', '};', False)[1].strip() + '}'
         if 'movie' == cItem['priv_type']:
@@ -321,7 +335,8 @@ class GamatoMovies(CBaseHostClass):
         try:
             cItem = byteify(json.loads(fav_data))
             links = self.getLinksForVideo(cItem)
-        except Exception: printExc()
+        except Exception:
+            printExc()
         return links
         
     def setInitListFromFavouriteItem(self, fav_data):
@@ -350,8 +365,10 @@ class GamatoMovies(CBaseHostClass):
         if name == None:
             self.listsTab(self.MAIN_CAT_TAB, {'name':'category'})
         elif category in ['movies', 'series']:
-            if category == 'movies': filtersTab = ['genres', 'order', 'year'] #min_rating
-            else: filtersTab = ['genres', 'order']
+            if category == 'movies':
+                filtersTab = ['genres', 'order', 'year'] #min_rating
+            else:
+                filtersTab = ['genres', 'order']
             idx = self.currItem.get('f_idx', 0)
             if idx < len(filtersTab):
                 self.listFilter(self.currItem, filtersTab)

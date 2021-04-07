@@ -52,12 +52,15 @@ class MediasetPlay(CBaseHostClass):
 
         self.OFFSET = datetime.datetime.now() - datetime.datetime.utcnow()
         seconds = self.OFFSET.seconds + self.OFFSET.days * 24 * 3600
-        if ((seconds + 1) % 10) == 0: seconds += 1  
-        elif ((seconds - 1) % 10) == 0: seconds -= 1 
+        if ((seconds + 1) % 10) == 0:
+            seconds += 1  
+        elif ((seconds - 1) % 10) == 0:
+            seconds -= 1 
         self.OFFSET = timedelta(seconds=seconds)
 
     def getPage(self, baseUrl, addParams={}, post_data=None):
-        if addParams == {}: addParams = dict(self.defaultParams)
+        if addParams == {}:
+            addParams = dict(self.defaultParams)
         return self.cm.getPage(baseUrl, addParams, post_data)
         
     def dateRange(self, d):
@@ -66,14 +69,16 @@ class MediasetPlay(CBaseHostClass):
         return (d1, d2)
 
     def initApi(self):
-        if self.initData: return 
+        if self.initData:
+            return 
         url = self.API_BASE_URL + 'idm/anonymous/login/v1.0'
         params = MergeDicts(self.defaultParams, {'raw_post_data':True, 'collect_all_headers':True})
         cid = str(uuid.uuid4())
         post_data = '{"cid":"%s","platform":"pc","appName":"web/mediasetplay-web/18be850"}' % cid
 
         sts, data = self.getPage(url, params, post_data=post_data)
-        if not sts: return
+        if not sts:
+            return
         printDBG(data)
         try:
             headers = {'t-apigw':self.cm.meta['t-apigw'], 't-cts':self.cm.meta['t-cts']}
@@ -84,12 +89,14 @@ class MediasetPlay(CBaseHostClass):
                 self.HTTP_HEADER.update(headers)
         except Exception:
             printExc()
-        if not self.initData: self.sessionEx.waitForFinishOpen(MessageBox, _("API initialization failed!"), type=MessageBox.TYPE_ERROR, timeout=20)
+        if not self.initData:
+            self.sessionEx.waitForFinishOpen(MessageBox, _("API initialization failed!"), type=MessageBox.TYPE_ERROR, timeout=20)
 
     def listMain(self, cItem, nextCategory):
         printDBG("MediasetPlay.listMain")
         sts, data = self.getPage(self.getMainUrl())
-        if not sts: return
+        if not sts:
+            return
         self.setMainUrl(self.cm.meta['url'])
 
         subItems = []
@@ -113,11 +120,13 @@ class MediasetPlay(CBaseHostClass):
     def listOnAir(self, cItem):
         printDBG("MediasetPlay.listOnAir")
         sts, data = self.getPage('https://feed.entertainment.tv.theplatform.eu/f/PR1GhC/mediaset-prod-all-stations?bycallsign')
-        if not sts: return
+        if not sts:
+            return
         try:
             data = json_loads(data)
             for item in data['entries']:
-                if 'vip' in item['mediasetstation$pageUrl']: continue
+                if 'vip' in item['mediasetstation$pageUrl']:
+                    continue
                 icon = self.getFullIconUrl( item['thumbnails']['channel_logo-100x100']['url']) #next(iter(item['thumbnails']))['url'] )
                 title = item['title']
                 url = self.getFullIconUrl( item['mediasetstation$pageUrl'] )
@@ -128,7 +137,8 @@ class MediasetPlay(CBaseHostClass):
     def listChannels(self, cItem, nextCategory):
         printDBG("MediasetPlay.listChannels")
         sts, data = self.getPage(cItem['url'])
-        if not sts: return
+        if not sts:
+            return
         cUrl = self.cm.meta['url']
 
         data = ph.find(data, '<span>Canali</span>', '>On Demand<', flags=0)[1]
@@ -141,7 +151,8 @@ class MediasetPlay(CBaseHostClass):
     def listChannelItems(self, cItem, nextCategory):
         printDBG("MediasetPlay.listChannelItems")
         sts, data = self.getPage(cItem['url'])
-        if not sts: return
+        if not sts:
+            return
         self.setMainUrl(self.cm.meta['url'])
 
         channelId = ph.search(data, '''/diretta/[^'^"]+?_c([^'^"]+?)['"][^>]*?>\s*?diretta\s*?<''', flags=ph.I)[0]
@@ -168,7 +179,8 @@ class MediasetPlay(CBaseHostClass):
     def listTime(self, cItem, nextCategory):
         printDBG("MediasetPlay.listTime")
         sts, data = self.getPage(cItem['url'])
-        if not sts: return
+        if not sts:
+            return
         try:
             data = json_loads(data)['response']
             for item in data['entries'][0]['listings']:
@@ -190,8 +202,10 @@ class MediasetPlay(CBaseHostClass):
                     url = self.getFullUrl(item['mediasetprogram$pageUrl'])
                 desc.append(item.get('description', ''))
                 params = {'good_for_fav':True, 'category':nextCategory, 'title':title, 'url':url, 'icon':icon, 'desc':'[/br]'.join(desc)}
-                if videoUrl: self.addVideo(MergeDicts(cItem, params, {'guid':guid}))
-                else: self.addDir(MergeDicts(cItem, params))
+                if videoUrl:
+                    self.addVideo(MergeDicts(cItem, params, {'guid':guid}))
+                else:
+                    self.addDir(MergeDicts(cItem, params))
         except Exception:
             printExc()
 
@@ -221,10 +235,13 @@ class MediasetPlay(CBaseHostClass):
         printDBG('MediasetPlay.listAZItems')
 
         query = {'hitsPerPage':50}
-        if 'f_onair' in cItem: query['inOnda'] = 'true'
+        if 'f_onair' in cItem:
+            query['inOnda'] = 'true'
         url = self.API_BASE_URL + 'rec/azlisting/v1.0?' + urllib.parse.urlencode(query)
-        if 'f_query' in cItem: url += '&query=%s' % cItem['f_query'] #query['query'] = cItem['f_query']
-        if 'f_category' in cItem: url += '&categories=%s' % cItem['f_category'] #query['categories'] = cItem['f_category']
+        if 'f_query' in cItem:
+            url += '&query=%s' % cItem['f_query'] #query['query'] = cItem['f_query']
+        if 'f_category' in cItem:
+            url += '&categories=%s' % cItem['f_category'] #query['categories'] = cItem['f_category']
 
         cItem = MergeDicts(cItem, {'category':'list_items', 'url':url})
         self.listItems(cItem, nextCategory)
@@ -234,7 +251,8 @@ class MediasetPlay(CBaseHostClass):
         page = cItem.get('page', 1)
         url = cItem['url'] + '&page=%s' % page
         sts, data = self.getPage(url)
-        if not sts: return
+        if not sts:
+            return
         try:
             data = json_loads(data)['response']
             for item in data['entries']:
@@ -255,8 +273,10 @@ class MediasetPlay(CBaseHostClass):
                     url = self.getFullUrl(item['mediasetprogram$pageUrl'])
                 desc.append(item.get('description', ''))
                 params = {'good_for_fav':True, 'category':nextCategory, 'title':title, 'url':url, 'icon':icon, 'desc':'[/br]'.join(desc)}
-                if videoUrl: self.addVideo(MergeDicts(cItem, params, {'guid':guid}))
-                else: self.addDir(MergeDicts(cItem, params))
+                if videoUrl:
+                    self.addVideo(MergeDicts(cItem, params, {'guid':guid}))
+                else:
+                    self.addDir(MergeDicts(cItem, params))
 
             if data.get('hasMore'):
                 self.addDir(MergeDicts(cItem, {'title':_('Next page'), 'page':page + 1}))
@@ -267,7 +287,8 @@ class MediasetPlay(CBaseHostClass):
         printDBG("MediasetPlay.listCatalog")
         if not data:
             sts, data = self.getPage(cItem['url'])
-            if not sts: return
+            if not sts:
+                return
             self.setMainUrl(self.cm.meta['url'])
 
         exports = {"button-special": "_1u_k9 _3Pqi-", "wrapper": "C6FJZ", "description": "_3XiTc", "sub-title-banner": "_1tNlk", "title-banner": "_1KV50", "airing-time": "_3pYTW", "description-wrapper": "glxlH", "title-hero":"dTamS", "title-hero-small":"_1AN7g"}
@@ -278,7 +299,8 @@ class MediasetPlay(CBaseHostClass):
             sectionItem = sectionItem.split('</header>', 1)
             sIcon = self.getFullUrl(ph.search(sectionItem[0], ph.IMAGE_SRC_URI_RE)[1])
             sTitle = ph.clean_html(ph.find(sectionItem[0], ('<h2', '>'), '</h2>', flags=0)[1])
-            if not sTitle: sTitle = ph.clean_html(ph.getattr(sectionItem[0], 'title'))
+            if not sTitle:
+                sTitle = ph.clean_html(ph.getattr(sectionItem[0], 'title'))
             subItems = []
             item = ph.rfind(sectionItem[0], '</div>', ('<div', '>', exports['wrapper']), flags=0)[1]
             url = self.getFullUrl(ph.getattr(item, 'href'))
@@ -294,15 +316,22 @@ class MediasetPlay(CBaseHostClass):
                 icon = self.getFullUrl(ph.search(item, ph.IMAGE_SRC_URI_RE)[1])
                 title1 = ph.clean_html(ph.find(item, ('<h3', '>'), '</h3>', flags=0)[1])
                 title2 = ph.clean_html(ph.find(item, ('<h4', '>'), '</h4>', flags=0)[1])
-                if not title1: title1 = ph.clean_html(ph.find(item, ('<p', '>', exports['title-banner']), '</p>', flags=0)[1])
-                if not title2: title2 = ph.clean_html(ph.find(item, ('<p', '>', exports['sub-title-banner']), '</p>', flags=0)[1])
-                if not title1: title1 = ph.clean_html(ph.find(item, ('<p', '>', exports['title-hero']), '</p>', flags=0)[1])
-                if not title2: title2 = ph.clean_html(ph.find(item, ('<p', '>', exports['title-hero-small']), '</p>', flags=0)[1])
-                if not title1: title1 = ph.clean_html(ph.find(item, ('<h2', '>'), '</h2>', flags=0)[1])
+                if not title1:
+                    title1 = ph.clean_html(ph.find(item, ('<p', '>', exports['title-banner']), '</p>', flags=0)[1])
+                if not title2:
+                    title2 = ph.clean_html(ph.find(item, ('<p', '>', exports['sub-title-banner']), '</p>', flags=0)[1])
+                if not title1:
+                    title1 = ph.clean_html(ph.find(item, ('<p', '>', exports['title-hero']), '</p>', flags=0)[1])
+                if not title2:
+                    title2 = ph.clean_html(ph.find(item, ('<p', '>', exports['title-hero-small']), '</p>', flags=0)[1])
+                if not title1:
+                    title1 = ph.clean_html(ph.find(item, ('<h2', '>'), '</h2>', flags=0)[1])
                 
                 title = []
-                if title1: title.append(title1)
-                if title2: title.append(title2)
+                if title1:
+                    title.append(title1)
+                if title2:
+                    title.append(title2)
                 desc = []
                 desc.append(ph.clean_html(ph.find(item, ('<div', '>', exports['airing-time']), '</div>', flags=0)[1]))
                 desc.append(ph.clean_html(ph.find(item, ('<div', '>', exports['description-wrapper']), '</div>', flags=0)[1]))
@@ -349,7 +378,8 @@ class MediasetPlay(CBaseHostClass):
         url = self.API_BASE_URL + 'rec/cataloguelisting/v1.0?' + urllib.parse.urlencode(query)
 
         sts, data = self.getPage(url)
-        if not sts: return
+        if not sts:
+            return
         try:
             data = json_loads(data)['response']
             for item in data['entries']:
@@ -368,7 +398,8 @@ class MediasetPlay(CBaseHostClass):
         printDBG("MediasetPlay.listVideoMixed")
 
         sts, data = self.getPage(cItem['url'])
-        if not sts: return
+        if not sts:
+            return
         cUrl = self.cm.meta['url']
         self.setMainUrl(cUrl)
 
@@ -409,7 +440,8 @@ class MediasetPlay(CBaseHostClass):
         query.update(self.initData)
 
         url = self.API_BASE_URL + 'rec/search/v1.0?' + urllib.parse.urlencode(query)
-        if 'clip' == searchType: url += '&sort=Viewers=DESC'
+        if 'clip' == searchType:
+            url += '&sort=Viewers=DESC'
 
         cItem = MergeDicts(cItem, {'category':'list_items', 'url':url})
         self.listItems(cItem, 'video_mixed')
@@ -429,18 +461,21 @@ class MediasetPlay(CBaseHostClass):
         self.initApi()
 
         linksTab = self.cacheLinks.get(cItem['url'], [])
-        if linksTab: return linksTab
+        if linksTab:
+            return linksTab
 
         if cItem.get('is_live'):
             channelId = cItem.get('call_sign')
             if not channelId:
                 sts, data = self.getPage(cItem['url'])
-                if not sts: return
+                if not sts:
+                    return
                 channelId = ph.search(data, '''/diretta/[^'^"]+?_c([^'^"]+?)['"][^>]*?>\s*?diretta\s*?<''', flags=ph.I)[0]
 
             url = self.API_BASE_URL + 'alive/nownext/v1.0?channelId=' + channelId
             sts, data = self.getPage(url)
-            if not sts: return
+            if not sts:
+                return
             try:
                 data = json_loads(data)
                 for tuningInstructions in data['response']['tuningInstruction'].values():
@@ -458,8 +493,10 @@ class MediasetPlay(CBaseHostClass):
                 printExc()
         else:
             guid = cItem.get('guid', '')
-            if not guid: guid  = ph.search(cItem['url'], r'''https?://(?:(?:www|static3)\.)?mediasetplay\.mediaset\.it/(?:(?:video|on-demand)/(?:[^/]+/)+[^/]+_|player/index\.html\?.*?\bprogramGuid=)([0-9A-Z]{16})''')[0]
-            if not guid: return linksTab
+            if not guid:
+                guid  = ph.search(cItem['url'], r'''https?://(?:(?:www|static3)\.)?mediasetplay\.mediaset\.it/(?:(?:video|on-demand)/(?:[^/]+/)+[^/]+_|player/index\.html\?.*?\bprogramGuid=)([0-9A-Z]{16})''')[0]
+            if not guid:
+                return linksTab
 
             tp_path = 'PR1GhC/media/guid/2702976343/' + guid
 
@@ -468,7 +505,8 @@ class MediasetPlay(CBaseHostClass):
                 for f in (('MPEG4', 'MP4', 0), ('MPEG-DASH', 'DASH/MPD', 1), ('M3U', 'HLS/M3U8', 1)):
                     url = 'http://link.theplatform.%s/s/%s?mbr=true&formats=%s&assetTypes=%s' % ('eu', tp_path, f[0], asset_type)
                     sts, data = self.cm.getPage(url, post_data={'format': 'SMIL'})
-                    if not sts: continue
+                    if not sts:
+                        continue
                     if 'GeoLocationBlocked' in data:
                         SetIPTVPlayerLastHostError(ph.getattr(data, 'abstract'))
                     printDBG("++++++++++++++++++++++++++++++++++")
@@ -476,7 +514,8 @@ class MediasetPlay(CBaseHostClass):
                     tmp = ph.findall(data, '<video', '>')
                     for item in tmp:
                         url = ph.getattr(item, 'src')
-                        if not self.cm.isValidUrl(url): continue
+                        if not self.cm.isValidUrl(url):
+                            continue
                         if url not in uniqueUrls:
                             uniqueUrls.add(url)
                             linksTab.append({'name':'%s - %s' % (f[1], asset_type), 'url':strwithmeta(url, {'priv_type':f[1]}), 'need_resolve':f[2]})

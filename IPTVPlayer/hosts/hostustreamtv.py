@@ -15,8 +15,10 @@ import re
 import urllib.request
 import urllib.parse
 import urllib.error
-try:    import json
-except Exception: import simplejson as json
+try:
+    import json
+except Exception:
+    import simplejson as json
 ###################################################
 
 
@@ -50,11 +52,13 @@ class UstreamTV(CBaseHostClass):
         printDBG("UstreamTV.fillFilters")
         self.cacheFilters = {}
         sts, data = self.cm.getPage(url)
-        if not sts: return
+        if not sts:
+            return
         filtersTab = self.cm.ph.getAllItemsBeetwenMarkers(data, '<div class="control-select">', '</select>', False)
         for filterData in filtersTab:
             filterName = self.cm.ph.getSearchGroups(filterData, 'view-data-key="([^"]+?)"')[0]
-            if '' == filterName: filterName = self.cm.ph.getSearchGroups(filterData, 'name="([^"]+?)"')[0]
+            if '' == filterName:
+                filterName = self.cm.ph.getSearchGroups(filterData, 'name="([^"]+?)"')[0]
             
             filterData = re.compile('<option value="([^"]*?)"[^>]*?>([^<]+?)</option>').findall(filterData)
             self.cacheFilters[filterName] = []
@@ -84,7 +88,8 @@ class UstreamTV(CBaseHostClass):
             params['name']  = 'category'
             if type == 'dir':
                 self.addDir(params)
-            else: self.addVideo(params)
+            else:
+                self.addVideo(params)
             
     def buildUrl(self, cItem):
         if 'q' in cItem:
@@ -112,12 +117,14 @@ class UstreamTV(CBaseHostClass):
     def listCategories(self, cItem, category):
         printDBG("UstreamTV.listCategories")
         sts, data = self.cm.getPage(self.MAIN_URL + 'explore/all')
-        if not sts: return
+        if not sts:
+            return
         data = self.cm.ph.getDataBeetwenMarkers(data, '<div class="submenu-column half-width-links">', '<form', False)[1]
         data = re.compile('<a href="[^"]*?/explore/([^"]+?)"[^>]*?>([^<]+?)<').findall(data)
         #data = re.compile('<a[^>]*?/([^/]+?)\.json[^>]*?>([^<]+?)<').findall(data)
         for item in data:
-            if item[0] == 'all': continue
+            if item[0] == 'all':
+                continue
             params = dict(cItem)
             params.update({'category':category, 'title':self.cleanHtmlStr( item[1] ), 'cat_id':item[0]})
             self.addDir(params)
@@ -130,12 +137,14 @@ class UstreamTV(CBaseHostClass):
     def listItems(self, cItem, url):
         printDBG("UstreamTV.listItems")
         sts, data = self.cm.getPage(url)
-        if not sts: return
+        if not sts:
+            return
         
         nextPage = False
         try:
             data = byteify(json.loads(data))
-            if not data['success']: return
+            if not data['success']:
+                return
             nextPage = data['pageMeta']['infinite']
             data = data['pageContent']
             data = data.split('<div class="item media-item">')
@@ -226,7 +235,8 @@ class IPTVHost(CHostBase):
     def getLinksForVideo(self, Index = 0, selItem = None):
         retCode = RetHost.ERROR
         retlist = []
-        if not self.isValidIndex(Index): return RetHost(retCode, value=retlist)
+        if not self.isValidIndex(Index):
+            return RetHost(retCode, value=retlist)
         
         urlList = self.host.getLinksForVideo(self.host.currList[Index])
         for item in urlList:

@@ -25,7 +25,8 @@ class Wiziwig1Api(CBaseHostClass):
         self.timeoffset = datetime.datetime.now() - datetime.datetime.utcnow() + datetime.timedelta(milliseconds=500)
 
     def getPage(self, baseUrl, addParams = {}, post_data = None):
-        if addParams == {}: addParams = dict(self.http_params)
+        if addParams == {}:
+            addParams = dict(self.http_params)
         origBaseUrl = baseUrl
         baseUrl = self.cm.iriToUri(baseUrl)
         return self.cm.getPage(baseUrl, addParams, post_data)

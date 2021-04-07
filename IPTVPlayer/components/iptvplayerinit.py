@@ -47,7 +47,8 @@ language.addCallback(localeInit)
 
 def IPTVPlayerNeedInit(value=None):
     global gInitIPTVPlayer
-    if value in [True, False]: gInitIPTVPlayer = value
+    if value in [True, False]:
+        gInitIPTVPlayer = value
     return gInitIPTVPlayer
     
 def SetIPTVPlayerLastHostError(value=""):
@@ -57,7 +58,8 @@ def SetIPTVPlayerLastHostError(value=""):
 def GetIPTVPlayerLastHostError(clear=True):
     global gSetIPTVPlayerLastHostError
     tmp = gSetIPTVPlayerLastHostError
-    if clear: gSetIPTVPlayerLastHostError = ""
+    if clear:
+        gSetIPTVPlayerLastHostError = ""
     return tmp
 
 class IPTVPlayerNotification():
@@ -123,8 +125,10 @@ class IPTVPlayerNotificationList(object):
             try:
                 notification = IPTVPlayerNotification('IPTVPlayer', message, type, timeout, messageHash, timestamp)
                 if messageHash != None:
-                    try: self.notificationsList.remove(notification)
-                    except Exception: pass
+                    try:
+                        self.notificationsList.remove(notification)
+                    except Exception:
+                        pass
                 self.notificationsList.append(notification)
                 self.empty = False
                 ret = True
@@ -175,7 +179,8 @@ class IPTVPlayerSleep(object):
         with self.mainLock:
             self.timeout = timeout
             self.startTimestamp = time.time()
-        if blocking: time.sleep(self.timeout)
+        if blocking:
+            time.sleep(self.timeout)
         
     def Reset(self):
         with self.mainLock:

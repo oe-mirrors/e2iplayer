@@ -20,19 +20,26 @@ import urllib.request
 import urllib.error
 import urllib.parse
 import base64
-try: import ssl
-except Exception: pass
+try:
+    import ssl
+except Exception:
+    pass
 import re
 import time
 import http.cookiejar
 import unicodedata
-try: import pycurl
-except Exception: pass
 try:
-    try: from io import StringIO
-    except Exception: from io import StringIO 
+    import pycurl
+except Exception:
+    pass
+try:
+    try:
+        from io import StringIO
+    except Exception:
+        from io import StringIO 
     import gzip
-except Exception: pass
+except Exception:
+    pass
 from urllib.parse import urljoin, urlparse, urlunparse
 from binascii import hexlify
 ###################################################
@@ -99,7 +106,8 @@ class CParsingHelper:
             if cList[idx].startswith('<ul') or cList[idx].startswith('<li'):
                 deep += 1
                 nTree, idx, nDeep = CParsingHelper.listToDir(cList, idx+1)
-                if 'list' not in cTree: cTree['list'] = []
+                if 'list' not in cTree:
+                    cTree['list'] = []
                 cTree['list'].append(nTree)
                 deep += nDeep
             elif cList[idx].startswith('</ul>') or cList[idx].startswith('</li>'):
@@ -119,9 +127,11 @@ class CParsingHelper:
     @staticmethod
     def getDataBeetwenReMarkers(data, pattern1, pattern2, withMarkers=True):
         match1 = pattern1.search(data)
-        if None == match1 or -1 == match1.start(0): return False, ''
+        if None == match1 or -1 == match1.start(0):
+            return False, ''
         match2 = pattern2.search(data[match1.end(0):])
-        if None == match2 or -1 == match2.start(0): return False, ''
+        if None == match2 or -1 == match2.start(0):
+            return False, ''
         
         if withMarkers:
             return True, data[match1.start(0): (match1.end(0) + match2.end(0)) ]
@@ -131,29 +141,37 @@ class CParsingHelper:
     @staticmethod
     def getDataBeetwenMarkers(data, marker1, marker2, withMarkers=True, caseSensitive=True):
         flags = 0
-        if withMarkers: flags |= ph.START_E|ph.END_E
-        if not caseSensitive: flags |= ph.IGNORECASE
+        if withMarkers:
+            flags |= ph.START_E|ph.END_E
+        if not caseSensitive:
+            flags |= ph.IGNORECASE
         return ph.find(data, marker1, marker2, flags)
 
     @staticmethod
     def getAllItemsBeetwenMarkers(data, marker1, marker2, withMarkers=True, caseSensitive=True):
         flags = 0
-        if withMarkers: flags |= ph.START_E|ph.END_E
-        if not caseSensitive: flags |= ph.IGNORECASE
+        if withMarkers:
+            flags |= ph.START_E|ph.END_E
+        if not caseSensitive:
+            flags |= ph.IGNORECASE
         return ph.findall(data, marker1, marker2, flags)
 
     @staticmethod
     def rgetAllItemsBeetwenMarkers(data, marker1, marker2, withMarkers=True, caseSensitive=True):
         flags = 0
-        if withMarkers: flags |= ph.START_E|ph.END_E
-        if not caseSensitive: flags |= ph.IGNORECASE
+        if withMarkers:
+            flags |= ph.START_E|ph.END_E
+        if not caseSensitive:
+            flags |= ph.IGNORECASE
         return ph.rfindall(data, marker1, marker2, flags)
 
     @staticmethod
     def rgetDataBeetwenMarkers2(data, marker1, marker2, withMarkers=True, caseSensitive=True):
         flags = 0
-        if withMarkers: flags |= ph.START_E|ph.END_E
-        if not caseSensitive: flags |= ph.IGNORECASE
+        if withMarkers:
+            flags |= ph.START_E|ph.END_E
+        if not caseSensitive:
+            flags |= ph.IGNORECASE
         return ph.rfind(data, marker1, marker2, flags)
 
     @staticmethod
@@ -161,9 +179,11 @@ class CParsingHelper:
         # this methods is not working as expected, but is is used in many places
         # so I will leave at it is, please use rgetDataBeetwenMarkers2
         idx1 = data.rfind(marker1)
-        if -1 == idx1: return False, ''
+        if -1 == idx1:
+            return False, ''
         idx2 = data.rfind(marker2, idx1 + len(marker1))
-        if -1 == idx2: return False, ''
+        if -1 == idx2:
+            return False, ''
         if withMarkers:
             idx2 = idx2 + len(marker2)
         else:
@@ -173,29 +193,37 @@ class CParsingHelper:
     @staticmethod
     def getDataBeetwenNodes(data, node1, node2, withNodes=True, caseSensitive=True):
         flags = 0
-        if withNodes: flags |= ph.START_E|ph.END_E
-        if not caseSensitive: flags |= ph.IGNORECASE
+        if withNodes:
+            flags |= ph.START_E|ph.END_E
+        if not caseSensitive:
+            flags |= ph.IGNORECASE
         return ph.find(data, node1, node2, flags)
 
     @staticmethod
     def getAllItemsBeetwenNodes(data, node1, node2, withNodes=True, numNodes=-1, caseSensitive=True):
         flags = 0
-        if withNodes: flags |= ph.START_E|ph.END_E
-        if not caseSensitive: flags |= ph.IGNORECASE
+        if withNodes:
+            flags |= ph.START_E|ph.END_E
+        if not caseSensitive:
+            flags |= ph.IGNORECASE
         return ph.findall(data, node1, node2, flags, limits=numNodes)
 
     @staticmethod
     def rgetDataBeetwenNodes(data, node1, node2, withNodes=True, caseSensitive=True):
         flags = 0
-        if withNodes: flags |= ph.START_E|ph.END_E
-        if not caseSensitive: flags |= ph.IGNORECASE
+        if withNodes:
+            flags |= ph.START_E|ph.END_E
+        if not caseSensitive:
+            flags |= ph.IGNORECASE
         return ph.rfind(data, node1, node2, flags)
         
     @staticmethod
     def rgetAllItemsBeetwenNodes(data, node1, node2, withNodes=True, numNodes=-1, caseSensitive=True):
         flags = 0
-        if withNodes: flags |= ph.START_E|ph.END_E
-        if not caseSensitive: flags |= ph.IGNORECASE
+        if withNodes:
+            flags |= ph.START_E|ph.END_E
+        if not caseSensitive:
+            flags |= ph.IGNORECASE
         return ph.rfindall(data, node1, node2, flags, limits=numNodes)
 
     # this method is useful only for developers 
@@ -216,13 +244,15 @@ class CParsingHelper:
                              'Á': 'A', 'É': 'E', 'Í': 'I', 'Ñ': 'N', 'Ó': 'O', 'Ú': 'U', 'Ü': 'U',
                             }
         txt = txt.decode('utf-8')
-        if None != idx: txt = txt[idx]
+        if None != idx:
+            txt = txt[idx]
         nrmtxt = unicodedata.normalize('NFC', txt)
         ret_str = []
         for item in nrmtxt:
             if ord(item) > 128:
                 item = POLISH_CHARACTERS.get(item)
-                if item: ret_str.append(item)
+                if item:
+                    ret_str.append(item)
             else: # pure ASCII character
                 ret_str.append(item)
         return ''.join(ret_str).encode('utf-8')
@@ -242,9 +272,12 @@ class common:
     
     @staticmethod
     def getDefaultHeader(browser='firefox'):
-        if browser == 'firefox': ua = 'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:46.0) Gecko/20100101 Firefox/46.0'
-        elif browser == 'iphone_3_0': ua = 'Mozilla/5.0 (iPhone; U; CPU iPhone OS 3_0 like Mac OS X; en-us) AppleWebKit/528.18 (KHTML, like Gecko) Version/4.0 Mobile/7A341 Safari/528.16'
-        else: ua = 'Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/59.0.3071.115 Safari/537.36'
+        if browser == 'firefox':
+            ua = 'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:46.0) Gecko/20100101 Firefox/46.0'
+        elif browser == 'iphone_3_0':
+            ua = 'Mozilla/5.0 (iPhone; U; CPU iPhone OS 3_0 like Mac OS X; en-us) AppleWebKit/528.18 (KHTML, like Gecko) Version/4.0 Mobile/7A341 Safari/528.16'
+        else:
+            ua = 'Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/59.0.3071.115 Safari/537.36'
         
         HTTP_HEADER = { 'User-Agent':ua,
                         'Accept':'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
@@ -261,8 +294,10 @@ class common:
         tmpParams = {}
         postData = None
         if isinstance(url, strwithmeta):
-            if None != baseHeaderOutParams: tmpParams['header'] = baseHeaderOutParams
-            else: tmpParams['header'] = {}
+            if None != baseHeaderOutParams:
+                tmpParams['header'] = baseHeaderOutParams
+            else:
+                tmpParams['header'] = {}
             for key in url.meta:
                 if key in HANDLED_HTTP_HEADER_PARAMS:
                     tmpParams['header'][key] = url.meta[key]
@@ -285,7 +320,8 @@ class common:
         
     @staticmethod
     def getFullUrl(url, mainUrl='http://fake/'):
-        if not url: return ''
+        if not url:
+            return ''
         if url.startswith('./'):
             url = url[1:]
 
@@ -404,7 +440,8 @@ class common:
         for idx in range(len(lines)):
             lineNeedFix = False
             fields = lines[idx].split('\t')
-            if len(fields) < 5: continue
+            if len(fields) < 5:
+                continue
             if fields[0].startswith('#HttpOnly_'):
                 fields[0] = fields[0][10:]
                 lineNeedFix = True
@@ -466,9 +503,11 @@ class common:
         try:
             cookiesDict = self.getCookieItems(cookiefile, ignoreDiscard, ignoreExpires)
             for name in cookiesDict:
-                if 0 < len(allowedNames) and name not in allowedNames: continue
+                if 0 < len(allowedNames) and name not in allowedNames:
+                    continue
                 value = cookiesDict[name]
-                if unquote: value = urllib.parse.unquote(value)
+                if unquote:
+                    value = urllib.parse.unquote(value)
                 ret += '%s=%s; ' % (name, value)
         except Exception:
             printExc()
@@ -627,15 +666,19 @@ class common:
                 curlSession.reset()
             
             if params.get('use_fresh_connect', False):
-                curlSession.setopt(pycurl.FRESH_CONNECT, 1);
+                curlSession.setopt(pycurl.FRESH_CONNECT, 1)
             
             customHeaders = []
             for key in headers:
                 lKey = key.lower()
-                if lKey == 'user-agent': curlSession.setopt(pycurl.USERAGENT, headers[key])
-                elif lKey == 'cookie': curlSession.setopt(pycurl.COOKIE, headers[key])
-                elif lKey == 'referer': curlSession.setopt(pycurl.REFERER, headers[key])
-                else: customHeaders.append('%s: %s' % (key, headers[key]))
+                if lKey == 'user-agent':
+                    curlSession.setopt(pycurl.USERAGENT, headers[key])
+                elif lKey == 'cookie':
+                    curlSession.setopt(pycurl.COOKIE, headers[key])
+                elif lKey == 'referer':
+                    curlSession.setopt(pycurl.REFERER, headers[key])
+                else:
+                    customHeaders.append('%s: %s' % (key, headers[key]))
             if len(customHeaders):
                 curlSession.setopt(pycurl.HTTPHEADER, customHeaders)
             
@@ -722,9 +765,12 @@ class common:
 
             curlSession.setopt(pycurl.HEADERFUNCTION, _headerFunction)
 
-            if fileHandler: curlSession.setopt(pycurl.WRITEFUNCTION, _bodyFunction)
-            elif maxDataSize >= 0: curlSession.setopt(pycurl.WRITEFUNCTION, _breakConnection)
-            else: curlSession.setopt(pycurl.WRITEDATA, buffer)
+            if fileHandler:
+                curlSession.setopt(pycurl.WRITEFUNCTION, _bodyFunction)
+            elif maxDataSize >= 0:
+                curlSession.setopt(pycurl.WRITEFUNCTION, _breakConnection)
+            else:
+                curlSession.setopt(pycurl.WRITEDATA, buffer)
 
             curlSession.setopt(pycurl.NOPROGRESS, False)
             curlSession.setopt(pycurl.PROGRESSFUNCTION, _terminateFunction)
@@ -739,7 +785,8 @@ class common:
                     except pycurl.error as e:
                         if e[0] != pycurl.E_WRITE_ERROR:
                             raise e
-                        else: printExc()
+                        else:
+                            printExc()
                 else:
                     curlSession.perform()
                 
@@ -824,7 +871,7 @@ class common:
             if not sts and 'pycurl_error' in self.meta:
                 if self.meta['pycurl_error'][0] == pycurl.E_SSL_CONNECT_ERROR:
                     self.reportHttpsError('other', url, self.meta['pycurl_error'][1])
-                elif self.meta['pycurl_error'][0] in [pycurl.E_SSL_CACERT, pycurl.E_SSL_ISSUER_ERROR, \
+                elif self.meta['pycurl_error'][0] in [pycurl.E_SSL_CACERT, pycurl.E_SSL_ISSUER_ERROR,
                                                       pycurl.E_SSL_PEER_CERTIFICATE, pycurl.E_SSL_CACERT_BADFILE]:
                     self.reportHttpsError('verify', url, self.meta['pycurl_error'][1])
                 elif self.meta['pycurl_error'][0] == pycurl.E_SSL_INVALIDCERTSTATUS:
@@ -835,8 +882,10 @@ class common:
 
     def fillHeaderItems(self, metadata, responseHeaders, camelCase=False, collectAllHeaders=False):
         returnKeys = ['content-type', 'content-disposition', 'content-length', 'location']
-        if camelCase: sourceKeys = ['Content-Type', 'Content-Disposition', 'Content-Length', 'Location']
-        else: sourceKeys = returnKeys
+        if camelCase:
+            sourceKeys = ['Content-Type', 'Content-Disposition', 'Content-Length', 'Location']
+        else:
+            sourceKeys = returnKeys
         for idx in range(len(returnKeys)):
             if sourceKeys[idx] in responseHeaders:
                 metadata[returnKeys[idx]] = responseHeaders[sourceKeys[idx]]
@@ -950,7 +999,8 @@ class common:
                     printDBG("------------------")
                     printDBG(verData)
                     printDBG("------------------")
-                    if 'sitekey' not in verData and 'challenge' not in verData: break
+                    if 'sitekey' not in verData and 'challenge' not in verData:
+                        break
                     
                     printDBG(">>")
                     printDBG(verData)
@@ -965,14 +1015,18 @@ class common:
 #                        recaptcha.HTTP_HEADER['Referer'] = baseUrl
 #                        if '' != cfParams.get('User-Agent', ''): recaptcha.HTTP_HEADER['User-Agent'] = cfParams['User-Agent']
                         token = recaptcha.processCaptcha(sitekey, domain)
-                        if token == '': return False, None
+                        if token == '':
+                            return False, None
                         
                         sts, tmp = self.ph.getDataBeetwenMarkers(verData, '<form', '</form>', caseSensitive=False)
-                        if not sts: return False, None
+                        if not sts:
+                            return False, None
                         
                         url = self.ph.getSearchGroups(tmp, 'action="([^"]+?)"')[0]
-                        if url != '': url = _getFullUrl( url, domain )
-                        else: url = data.meta['url']
+                        if url != '':
+                            url = _getFullUrl( url, domain )
+                        else:
+                            url = data.meta['url']
                         actionType = self.ph.getSearchGroups(tmp, 'method="([^"]+?)"', 1, True)[0].lower()
 #                        post_data2 = dict(re.findall(r'<input[^>]*name="([^"]*)"[^>]*value="([^"]*)"[^>]*>', tmp))
                         post_data2 = {}
@@ -1272,7 +1326,8 @@ class common:
                 else:
                     ctx = ssl._create_unverified_context()
                 customOpeners.append(urllib.request.HTTPSHandler(context=ctx))
-            except Exception: pass
+            except Exception:
+                pass
         elif sslProtoVer != None:
             ctx = ssl.SSLContext( sslProtoVer )
             customOpeners.append(urllib.request.HTTPSHandler(context=ctx))
@@ -1321,7 +1376,8 @@ class common:
                     metadata['url'] = response.geturl()
                     metadata['status_code'] = response.getcode()
                     self.fillHeaderItems(metadata, response.info(), True, collectAllHeaders=params.get('collect_all_headers'))
-                except Exception: pass
+                except Exception:
+                    pass
                 
                 data = response.read(params.get('max_data_size', -1))
                 response.close()
@@ -1341,7 +1397,8 @@ class common:
                     try: 
                         metadata['url'] = e.fp.geturl()
                         self.fillHeaderItems(metadata, e.fp.info(), True, collectAllHeaders=params.get('collect_all_headers'))
-                    except Exception: pass
+                    except Exception:
+                        pass
                     data = e.fp.read(params.get('max_data_size', -1))
                     #e.msg
                     #e.headers
@@ -1417,8 +1474,10 @@ class common:
             for parti, part in enumerate(parts):
                 newPart = part
                 try:
-                    if parti == 1: newPart = part.encode('idna')
-                    else: newPart = self.urlEncodeNonAscii(part.encode('utf-8'))
+                    if parti == 1:
+                        newPart = part.encode('idna')
+                    else:
+                        newPart = self.urlEncodeNonAscii(part.encode('utf-8'))
                 except Exception:
                     printExc()
                 encodedParts.append(newPart)

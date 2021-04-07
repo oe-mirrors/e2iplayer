@@ -146,7 +146,8 @@ class OpenSubOrgProvider(CBaseSubProviderClass):
         httpParams['raw_post_data'] = True
         sts, data = self.cm.getPage(self.MAIN_URL, httpParams, requestData)
         if sts:
-            try: data = self._resp2Json(data)
+            try:
+                data = self._resp2Json(data)
             except Exception:
                 sts = False
                 printExc()
@@ -159,9 +160,11 @@ class OpenSubOrgProvider(CBaseSubProviderClass):
                     if 'status' in data[idx]:
                         item = data[idx]
                         break
-            else: item = data[idx]
+            else:
+                item = data[idx]
             code = int(item['status'].split(' ')[0])
-            if code >= 200 and code < 300: return True
+            if code >= 200 and code < 300:
+                return True
             self.lastApiError = {'code':code, 'message':item['status']}
             
         except Exception:
@@ -192,7 +195,8 @@ class OpenSubOrgProvider(CBaseSubProviderClass):
         lang = GetDefaultLang()
         params = [login, hex_md5(password), lang, self.USER_AGENT]
         sts, data = self._rpcMethodCall("LogIn", params)
-        if sts and (None == data or 0 == len(data)): sts = False 
+        if sts and (None == data or 0 == len(data)):
+            sts = False 
         printDBG(">>>>>>>>>>>>>>>>>>>>>>>>>>>>> data[%s]" % data)
         if not sts:
             SetIPTVPlayerLastHostError(_('Login failed!'))
@@ -232,22 +236,27 @@ class OpenSubOrgProvider(CBaseSubProviderClass):
         
     def _getSubtitleTitle(self, item):
         title = item.get('MovieReleaseName', '')
-        if '' == title: title = item.get('SubFileName', '')
-        if '' == title: title = item.get('MovieName', '')
+        if '' == title:
+            title = item.get('SubFileName', '')
+        if '' == title:
+            title = item.get('MovieName', '')
         
         cdMax = item.get('SubSumCD', '1')
         cd    = item.get('SubActualCD', '1')
-        if cdMax != '1': title += ' CD[{0}/{1}]'.format(cdMax, cd)
+        if cdMax != '1':
+            title += ' CD[{0}/{1}]'.format(cdMax, cd)
         
         lastTime = item.get('SubLastTS', '')
-        if '' != lastTime: title += ' [{0}]'.format(lastTime)
+        if '' != lastTime:
+            title += ' [{0}]'.format(lastTime)
         
         return RemoveDisallowedFilenameChars(title)
         
     def _getFileName(self, subItem):
         title = self._getSubtitleTitle(subItem).replace('_', '.').replace('.'+subItem['SubFormat'], '').replace(' ', '.')
         match = re.search(r'[^.]', title)
-        if match: title = title[match.start():]
+        if match:
+            title = title[match.start():]
 
         fileName = "{0}_{1}_0_{2}_{3}".format(title, subItem['ISO639'], subItem['IDSubtitle'], subItem['IDMovieImdb'])
         fileName = fileName + '.' + subItem['SubFormat']
@@ -280,7 +289,8 @@ class OpenSubOrgProvider(CBaseSubProviderClass):
     def getMoviesTitles(self, cItem, nextCategory):
         printDBG("OpenSubOrgProvider.getMoviesTitles")
         sts, tab = self.imdbGetMoviesByTitle(self.params['confirmed_title'])
-        if not sts: return
+        if not sts:
+            return
         printDBG(tab)
         for item in tab:
             params = dict(cItem)
@@ -296,7 +306,8 @@ class OpenSubOrgProvider(CBaseSubProviderClass):
         if type == 'series':
             promSeason = self.dInfo.get('season')
             sts, tab = self.imdbGetSeasons(imdbid, promSeason)
-            if not sts: return
+            if not sts:
+                return
             for item in tab:
                 params = dict(cItem)
                 params.update({'category':'get_episodes', 'item_title':cItem['title'], 'season':item, 'title':_('Season %s') % item})
@@ -312,7 +323,8 @@ class OpenSubOrgProvider(CBaseSubProviderClass):
         
         promEpisode = self.dInfo.get('episode')
         sts, tab = self.imdbGetEpisodesForSeason(imdbid, season, promEpisode)
-        if not sts: return
+        if not sts:
+            return
         for item in tab:
             params = dict(cItem)
             params.update(item) # item = "episode_title", "episode", "eimdbid"

@@ -22,8 +22,10 @@ from Components.config import config
 
 import codecs
 
-try:    import json
-except Exception: import simplejson as json
+try:
+    import json
+except Exception:
+    import simplejson as json
 import base64
 ###################################################
 
@@ -38,7 +40,8 @@ class UnCaptchaReCaptchaMyJDWidget(Screen):
         
         sz_w = 504 #getDesktop(0).size().width() - 190
         sz_h = 300 #getDesktop(0).size().height() - 195
-        if sz_h < 500: sz_h += 4
+        if sz_h < 500:
+            sz_h += 4
         self.skin = """
             <screen position="center,center" title="%s" size="%d,%d">
              <ePixmap position="5,9"   zPosition="4" size="30,30" pixmap="%s" transparent="1" alphatest="on" />
@@ -103,11 +106,14 @@ class UnCaptchaReCaptchaMyJDWidget(Screen):
     def _scriptStderrAvail(self, data):
         self.workconsole['stderr'] += data
         self.workconsole['stderr'] = self.workconsole['stderr'].split('\n')
-        if data.endswith('\n'): data = ''
-        else: data = self.workconsole['stderr'].pop(-1)
+        if data.endswith('\n'):
+            data = ''
+        else:
+            data = self.workconsole['stderr'].pop(-1)
         for line in self.workconsole['stderr']:
             line = line.strip()
-            if line == '': continue
+            if line == '':
+                continue
             try:
                 line = byteify(json.loads(line))
                 if line['type'] == 'captcha_result':
@@ -136,8 +142,10 @@ class UnCaptchaReCaptchaMyJDWidget(Screen):
     def _scriptStdoutAvail(self, data):
         self.workconsole['stdout'] += data
         self.workconsole['stdout'] = self.workconsole['stdout'].split('\n')
-        if data.endswith('\n'): data = ''
-        else: data = self.workconsole['stdout'].pop(-1)
+        if data.endswith('\n'):
+            data = ''
+        else:
+            data = self.workconsole['stdout'].pop(-1)
         for line in self.workconsole['stdout']:
             printDBG(line)
         self.workconsole['stdout'] = data
@@ -148,10 +156,14 @@ class UnCaptchaReCaptchaMyJDWidget(Screen):
         jdname = config.plugins.iptvplayer.myjd_jdname.value
         
         captcha = {'siteKey': self.sitekey, 'sameOrigin': True, 'siteUrl': self.referer, 'contextUrl': '/'.join(self.referer.split('/')[:3]), 'boundToDomain': True, 'stoken': None}
-        try: captcha = base64.b64encode(json.dumps(captcha))
-        except Exception: printExc()
-        if getDebugMode() == '': debug = 0
-        else: debug = 1
+        try:
+            captcha = base64.b64encode(json.dumps(captcha))
+        except Exception:
+            printExc()
+        if getDebugMode() == '':
+            debug = 0
+        else:
+            debug = 1
         
         cmd = GetPyScriptCmd('fakejd') + ' "%s" "%s" "%s" "%s" "%s" %d' % (GetPluginDir('libs/'), login, password, jdname, captcha, debug)
         

@@ -71,7 +71,8 @@ def ParseM3u(data):
             tmp = line[11:].split(',')
             for it in tmp:
                 it = it.split('=')
-                if len(it) != 2: continue
+                if len(it) != 2:
+                    continue
                 it[0] = it[0].lower() # key
                 for m in [("program", 'program-id'), ('http-user-agent', 'user_agent')]:
                     if it[0] == m[0]:
@@ -80,7 +81,8 @@ def ParseM3u(data):
             if '' != params['title']:
                 line = line.replace('rtmp://$OPT:rtmp-raw=', '')
                 cTitle = re.sub('\[[^\]]*?\]', '', params['title'])
-                if len(cTitle): params['title'] = cTitle
+                if len(cTitle):
+                    params['title'] = cTitle
                 params['uri'] = urlparser.decorateParamsFromUrl(line)
                 list.append(params)
             params = {'title':'', 'length':'', 'uri':''}

@@ -16,8 +16,10 @@ import urllib.request
 import urllib.parse
 import urllib.error
 from datetime import  timedelta
-try:    import json
-except Exception: import simplejson as json
+try:
+    import json
+except Exception:
+    import simplejson as json
 from Components.config import config, getConfigListEntry
 ###################################################
 
@@ -57,7 +59,8 @@ class VevoCom(CBaseHostClass):
         
     def getPage(self, baseUrl, addParams = {}, post_data = None):
         self._getAuthToken()
-        if addParams == {}: addParams = dict(self.defaultParams)
+        if addParams == {}:
+            addParams = dict(self.defaultParams)
         return self.cm.getPage(baseUrl, addParams, post_data)
         
     def fillBrowse(self, data):
@@ -76,7 +79,8 @@ class VevoCom(CBaseHostClass):
         printDBG("VevoCom.listMainMenu")
         
         sts, data = self.getPage(self.getMainUrl())
-        if not sts: return
+        if not sts:
+            return
         
         self.fillBrowse(data)
         
@@ -88,7 +92,8 @@ class VevoCom(CBaseHostClass):
             url = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''\shref=['"]([^'^"]+?)['"]''')[0])
             title = self.cleanHtmlStr(item)
             nextCategory = catsMAp.get(url.split('/')[-1], '')
-            if nextCategory == '': continue
+            if nextCategory == '':
+                continue
             
             params = dict(cItem)
             params.pop('page', 0)
@@ -104,7 +109,8 @@ class VevoCom(CBaseHostClass):
         printDBG("VevoCom.listGenresFilters [%s]" % cItem)
         
         baseUrl = cItem['url']
-        if baseUrl.endswith('/'): baseUrl = baseUrl[:-1]
+        if baseUrl.endswith('/'):
+            baseUrl = baseUrl[:-1]
         
         genresList = [{'title':_('all'), 'url':baseUrl}]
         try:
@@ -124,7 +130,8 @@ class VevoCom(CBaseHostClass):
         page = cItem.get('page', 1)
         
         sts, data = self.getPage(cItem['url'])
-        if not sts: return
+        if not sts:
+            return
         
         nextPage = self.cm.ph.getDataBeetwenNodes(data, ('<a', '>', 'rel="next"'), ('</a', '>'))[1]
         nextPage = self.getFullUrl(self.cm.ph.getSearchGroups(nextPage, '''\shref=['"]([^'^"]+?)['"]''')[0])
@@ -136,17 +143,24 @@ class VevoCom(CBaseHostClass):
             icon  = self.getFullIconUrl(self.cm.ph.getSearchGroups(item, '''\ssrc=['"]([^'^"]+?)['"]''')[0])
             titleTab = []
             title = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(item, ('<', '>', 'item-title'), ('<', '>'))[1])
-            if title != '': titleTab.append(title)
+            if title != '':
+                titleTab.append(title)
             subtitle = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(item, '<h3', '</h3>')[1])
-            if subtitle != '': titleTab.append(subtitle)
+            if subtitle != '':
+                titleTab.append(subtitle)
             params = dict(cItem)
             params.pop('page', 0)
             params.update({'good_for_fav':True, 'title':' - '.join(titleTab), 'url':url, 'icon':icon})
-            if '/playlist/' in url: nextCategory = 'list_playlist'
-            elif '/artist/' in url: nextCategory = 'list_artist_videos'
-            elif '/genres/' in url: nextCategory =  'list_containers'
-            elif '/watch/' in url:  nextCategory = 'video'
-            else: continue
+            if '/playlist/' in url:
+                nextCategory = 'list_playlist'
+            elif '/artist/' in url:
+                nextCategory = 'list_artist_videos'
+            elif '/genres/' in url:
+                nextCategory =  'list_containers'
+            elif '/watch/' in url:
+                nextCategory = 'video'
+            else:
+                continue
             if nextCategory == 'video':
                 self.addVideo(params)
             else:
@@ -166,7 +180,8 @@ class VevoCom(CBaseHostClass):
             url = urlparse( cItem['url'] )
             url = url._replace(path= '/'.join(url.path.split('/')[2:])).geturl()
             sts, data = self.getPage(url)
-        if not sts: return
+        if not sts:
+            return
         
         
         data = self.cm.ph.getDataBeetwenNodes(data, ('<div', '>', 'containers'), ('<div', '>', 'footer'))[1]
@@ -184,12 +199,17 @@ class VevoCom(CBaseHostClass):
                     icon  = self.getFullIconUrl(self.cm.ph.getSearchGroups(item, '''\ssrc=['"]([^'^"]+?)['"]''')[0])
                     titleTab = []
                     title = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(item, ('<', '>', 'item-title'), ('<', '>'))[1])
-                    if title != '': titleTab.append(title)
+                    if title != '':
+                        titleTab.append(title)
                     subtitle = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(item, '<h3', '</h3>')[1])
-                    if subtitle != '': titleTab.append(subtitle)
-                    if '/playlist/' in url: itemNextCategory = 'list_playlist'
-                    elif '/artist/' in url: itemNextCategory = 'list_artist_videos'
-                    elif '/watch/' in url:  itemNextCategory = 'video'
+                    if subtitle != '':
+                        titleTab.append(subtitle)
+                    if '/playlist/' in url:
+                        itemNextCategory = 'list_playlist'
+                    elif '/artist/' in url:
+                        itemNextCategory = 'list_artist_videos'
+                    elif '/watch/' in url:
+                        itemNextCategory = 'video'
                     
                     itemsTab.append({'good_for_fav':True, 'category':itemNextCategory, 'title':' - '.join(titleTab), 'url':url, 'icon':icon})
             
@@ -210,16 +230,20 @@ class VevoCom(CBaseHostClass):
             params = dict(cItem)
             params.pop('page', 0)
             params.update(item)
-            if item['category'] == 'video': self.addVideo(params)
-            else: self.addDir(params)
+            if item['category'] == 'video':
+                self.addVideo(params)
+            else:
+                self.addDir(params)
         
     def _getAuthToken(self):
         if self.authData.get('key', '') == '':
             sts, data = self.cm.getPage(self.getMainUrl(), self.defaultParams)
-            if not sts: return ''
+            if not sts:
+                return ''
             scriptUrl = self.getFullUrl(self.cm.ph.getSearchGroups(data, '''<script[^>]+?src=["']([^'^"]*?/browser[^'^"]*?\.js)['"]''')[0])
             sts, data = self.cm.getPage(scriptUrl, self.defaultParams)
-            if not sts: return ''
+            if not sts:
+                return ''
             self.authData['key'] = self.cm.ph.getDataBeetwenMarkers(data, 'token:{key:"', '"', False)[1]
         
         if self.authData.get('expires', 0) < int(time.time()):
@@ -231,7 +255,8 @@ class VevoCom(CBaseHostClass):
             params['raw_post_data'] = True
             post_data = '{"client_id":"%s","grant_type":"urn:vevo:params:oauth:grant-type:anonymous"}' % (self.authData['key'])
             sts, data = self.cm.getPage('https://accounts.vevo.com/token', params, post_data)
-            if not sts: return ''
+            if not sts:
+                return ''
             
             printDBG(data)
             try:
@@ -258,14 +283,16 @@ class VevoCom(CBaseHostClass):
     def _listJsonVideos(self, cItem, data):
         try:
             for item in data:
-                if 'videoData' in item: item = item['videoData']
+                if 'videoData' in item:
+                    item = item['videoData']
                 item = item['basicMetaV3']
                 url = self.getFullUrl( self.getFullUrl('watch/' + item['isrc']) )
                 
                 titleTab = []
                 try: 
                     title = item['artists'][0]['basicMeta']['name']
-                    if title != '': titleTab.append(self.cleanHtmlStr( title ))
+                    if title != '':
+                        titleTab.append(self.cleanHtmlStr( title ))
                 except Exception:
                     printExc()
                 
@@ -274,7 +301,8 @@ class VevoCom(CBaseHostClass):
                 
                 icon = self.getFullIconUrl(item['thumbnailUrl'])
                 desc = str(timedelta(seconds=item['duration']/1000))
-                if desc.startswith('0:'): desc = desc[2:]
+                if desc.startswith('0:'):
+                    desc = desc[2:]
                 desc = [desc]
                 desc.append(', '.join(item['categories']))
                 params = dict(cItem)
@@ -287,18 +315,22 @@ class VevoCom(CBaseHostClass):
     def listPlaylistItems(self, cItem):
         printDBG("VevoCom.listPlaylistItems [%s]" % cItem)
         playlistId = cItem['url'].split('/')[-1].split('?', 1)[0]
-        if playlistId == '': return
+        if playlistId == '':
+            return
         
         page = cItem.get('page', 0)
-        if page == 0: mode = 'Playlist'
-        else: mode = 'MorePlaylistVideos'
+        if page == 0:
+            mode = 'Playlist'
+        else:
+            mode = 'MorePlaylistVideos'
         
         post_data = '{"query":"query %s($ids: [String]!, $offset: Int, $limit: Int) {\\n  playlists(ids: $ids) {\\n    id\\n    playlistId\\n    basicMeta {\\n      title\\n      description\\n      curated\\n      admin_id\\n      user_id\\n      user {\\n        id\\n        basicMeta {\\n          username\\n          vevo_user_id\\n          __typename\\n        }\\n        __typename\\n      }\\n      public\\n      image_url\\n      videoCount\\n      errorCode\\n      __typename\\n    }\\n    likes\\n    liked\\n    videos(limit: $limit, offset: $offset) {\\n      items {\\n        id\\n        index\\n        isrc\\n        videoData {\\n          id\\n          likes\\n          liked\\n          basicMetaV3 {\\n            youTubeId\\n            monetizable\\n            isrc\\n            title\\n            urlSafeTitle\\n            startDate\\n            endDate\\n            releaseDate\\n            copyright\\n            copyrightYear\\n            genres\\n            contentProviders\\n            shortUrl\\n            thumbnailUrl\\n            duration\\n            hasLyrics\\n            explicit\\n            allowEmbed\\n            allowMobile\\n            categories\\n            credits {\\n              role\\n              name\\n              __typename\\n            }\\n            artists {\\n              id\\n              basicMeta {\\n                urlSafeName\\n                role\\n                name\\n                thumbnailUrl\\n                __typename\\n              }\\n              __typename\\n            }\\n            errorCode\\n            __typename\\n          }\\n          __typename\\n        }\\n        __typename\\n      }\\n      offset\\n      limit\\n      __typename\\n    }\\n    __typename\\n  }\\n}\\n","variables":{"ids":["%s"],"limit":%s,"offset":%s},"operationName":"%s"}'
         post_data = post_data % (mode, playlistId, 20, page*20, mode)
         params = self._getApiHeaders(cItem)
         
         sts, data = self.getPage(self.API_URL, params, post_data)
-        if not sts: return
+        if not sts:
+            return
         
         try:
             data = byteify(json.loads(data), '')['data']['playlists'][0]
@@ -314,7 +346,8 @@ class VevoCom(CBaseHostClass):
     def listArtistVideos(self, cItem):
         printDBG("VevoCom.listArtistVideos [%s]" % cItem)
         artistId = cItem['url'].split('/')[-1].split('?', 1)[0]
-        if artistId == '': return
+        if artistId == '':
+            return
         
         page = cItem.get('page', 0)
         
@@ -324,7 +357,8 @@ class VevoCom(CBaseHostClass):
         params = self._getApiHeaders(cItem)
         
         sts, data = self.getPage(self.API_URL, params, post_data)
-        if not sts: return
+        if not sts:
+            return
         
         try:
             data = byteify(json.loads(data), '')['data']['artists'][0]
@@ -345,7 +379,8 @@ class VevoCom(CBaseHostClass):
         params = self._getApiHeaders({'url':self.getFullUrl(query)})
         
         sts, data = self.getPage(url, params)
-        if not sts: return
+        if not sts:
+            return
         
         try:
             artistsTab = []
@@ -380,7 +415,8 @@ class VevoCom(CBaseHostClass):
                 playlists.append(params)
             
             for item in [(_('Videos'), videosTab), (_('Playlists'), playlists), (_('Artists'), artistsTab)]:
-                if 0 == len(item[1]): continue
+                if 0 == len(item[1]):
+                    continue
                 params = dict(cItem)
                 params.pop('page', 0)
                 params.update({'good_for_fav':False, 'category':'list_container_items', 'title':'%s (%s)' % (item[0], len(item[1])), 'container_items':item[1]})

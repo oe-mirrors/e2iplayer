@@ -12,8 +12,10 @@ from Plugins.Extensions.IPTVPlayer.components.ihost import CBaseHostClass
 ###################################################
 # FOREIGN import
 ###################################################
-try:    import json
-except Exception: import simplejson as json
+try:
+    import json
+except Exception:
+    import simplejson as json
 
 ############################################
 
@@ -52,14 +54,16 @@ class DjingComApi(CBaseHostClass):
         channelsTab = []
         
         sts, data = self.cm.getPage(self.getMainUrl(), self.defaultParams)
-        if not sts: return channelsTab
+        if not sts:
+            return channelsTab
         
         data = self.cm.ph.getDataBeetwenNodes(data, ('<ul', '>', 'bgImages'), ('</ul', '>'))[1]
         data = self.cm.ph.getAllItemsBeetwenMarkers(data, '<li', '</li>')
         for item in data:
             icon  = self.getFullUrl( self.cm.ph.getSearchGroups(item, '''<img[^>]+?src=['"]([^"^']+?)['"]''')[0] )
             url   = self.getFullUrl( self.cm.ph.getSearchGroups(item, '''<source[^>]+?src=['"]([^"^']+?)['"]''')[0] )
-            if not self.cm.isValidUrl(url): continue
+            if not self.cm.isValidUrl(url):
+                continue
             
             title = self.cleanHtmlStr( self.cm.ph.getDataBeetwenMarkers(item, '<h3', '</h3>')[1] )
             desc  = self.cleanHtmlStr( self.cm.ph.getDataBeetwenMarkers(item, '<p', '</p>')[1] )
@@ -78,7 +82,9 @@ class DjingComApi(CBaseHostClass):
             urlsTab = getDirectM3U8Playlist(hlsUrl, checkContent=True)
             
         def __getLinkQuality( itemLink ):
-            try: return int(itemLink['bitrate'])
-            except Exception: return 0
+            try:
+                return int(itemLink['bitrate'])
+            except Exception:
+                return 0
         
         return CSelOneLink(urlsTab, __getLinkQuality, 99999999).getSortedLinks()

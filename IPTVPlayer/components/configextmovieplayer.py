@@ -90,7 +90,8 @@ class ConfigExtMoviePlayerBase():
             config.plugins.iptvplayer.aac_mix.value = None
         if len(tmp):
             self.aac_mix_avaliable = True
-        else: self.aac_mix_avaliable = False
+        else:
+            self.aac_mix_avaliable = False
         config.plugins.iptvplayer.aac_mix = ConfigSelection(default = None, choices = options)
         
         # fill ac3_mix option
@@ -102,7 +103,8 @@ class ConfigExtMoviePlayerBase():
             config.plugins.iptvplayer.ac3_mix.value = None
         if len(tmp):
             self.ac3_mix_avaliable = True
-        else: self.ac3_mix_avaliable = False
+        else:
+            self.ac3_mix_avaliable = False
         config.plugins.iptvplayer.ac3_mix = ConfigSelection(default = None, choices = options)
         
         # fill aspect option
@@ -114,7 +116,8 @@ class ConfigExtMoviePlayerBase():
             config.plugins.iptvplayer.extplayer_aspect.value = None
         if len(tmp):
             self.aspect_avaliable = True
-        else: self.aspect_avaliable = False
+        else:
+            self.aspect_avaliable = False
         config.plugins.iptvplayer.extplayer_aspect = ConfigSelection(default = None, choices = options)
 
         # fill policy option 
@@ -126,7 +129,8 @@ class ConfigExtMoviePlayerBase():
             config.plugins.iptvplayer.extplayer_policy.value = None
         if len(tmp):
             self.policy_avaliable = True
-        else: self.policy_avaliable = False
+        else:
+            self.policy_avaliable = False
         config.plugins.iptvplayer.extplayer_policy = ConfigSelection(default = None, choices = options)
         
         # fill policy 2 option 
@@ -135,12 +139,14 @@ class ConfigExtMoviePlayerBase():
             tmp = GetE2VideoPolicyChoices()
             for item in tmp:
                 options.append((item, _(item)))
-        else: tmp = []
+        else:
+            tmp = []
         if config.plugins.iptvplayer.extplayer_policy2.value not in tmp:
             config.plugins.iptvplayer.extplayer_policy2.value = None
         if len(tmp):
             self.policy2_avaliable = True
-        else: self.policy2_avaliable = False
+        else:
+            self.policy2_avaliable = False
         config.plugins.iptvplayer.extplayer_policy2 = ConfigSelection(default = None, choices = options)
         
         # fill fonts option
@@ -152,7 +158,8 @@ class ConfigExtMoviePlayerBase():
                 if font not in fonts:
                     fonts.append(font)
                     options.append((font, font))
-        except Exception: printExc()
+        except Exception:
+            printExc()
         config.plugins.iptvplayer.extplayer_subtitle_font = ConfigSelection(default = "Regular", choices = options)
         
         # check if border is avaliable
@@ -161,7 +168,8 @@ class ConfigExtMoviePlayerBase():
             tmp = dir(eLabel)
             if 'setBorderColor' in tmp:
                 self.subtitle_border_avaliable = True
-        except Exception: printExc()
+        except Exception:
+            printExc()
         if not self.subtitle_border_avaliable:
             config.plugins.iptvplayer.extplayer_subtitle_border_enabled.value = False
     

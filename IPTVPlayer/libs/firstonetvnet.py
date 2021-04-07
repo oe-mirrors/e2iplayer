@@ -91,7 +91,8 @@ class FirstOneTvApi(CBaseHostClass):
             rm(self.COOKIE_FILE)
             params = MergeDicts(self.http_params, {'use_new_session':True})
             sts, data = self.cm.getPage(self.getFullUrl('/Register-Login'), params)
-            if sts: self.setMainUrl(self.cm.meta['url'])
+            if sts:
+                self.setMainUrl(self.cm.meta['url'])
 
             if sts:
                 params = dict(self.http_params)
@@ -120,7 +121,8 @@ class FirstOneTvApi(CBaseHostClass):
         if cItem.get('priv_cat') == None:
             defLang = GetDefaultLang()
             sts, data = self.cm.getPage(self.getFullUrl('/Live'), self.http_params)
-            if not sts: return []
+            if not sts:
+                return []
 
             tmp = ph.find(data, ('<div', '>', 'list-group'), '</section>', flags=0)[1]
             tmp = ph.rfindall(tmp, '</div>', ('<div', '>', 'group-item-grid'), flags=0)
@@ -132,7 +134,8 @@ class FirstOneTvApi(CBaseHostClass):
                 item = ph.findall(item, ('<div', '>', 'thumb-stats'), '</div>', flags=0)
                 for t in item:
                     t = ph.clean_html(t)
-                    if t: desc.append(t)
+                    if t:
+                        desc.append(t)
                 params = MergeDicts(cItem, {'title':title, 'priv_cat':'list_channels', 'url':self.getFullUrl(url), 'icon':self.getFullIconUrl(icon), 'desc':' | '.join(desc)})
                 lang = icon.split('?', 1)[0].rsplit('/', 1)[-1].split('.', 1)[0].lower()
                 if lang == defLang:
@@ -155,20 +158,23 @@ class FirstOneTvApi(CBaseHostClass):
         else:
             reObj = re.compile('<[/\s]*?br[/\s]*?>', re.I)
             sts, data = self.cm.getPage(cItem['url'], self.http_params)
-            if not sts: return []
+            if not sts:
+                return []
 
             tmp = ph.find(data, ('<div', '>', 'list-group'), '</section>', flags=0)[1]
             tmp = ph.rfindall(tmp, '</div>', ('<div', '>', 'group-item-grid'), flags=0)
             for item in tmp:
                 title = ph.clean_html(ph.find(item, '<h6>', '</h6>', flags=0)[1])
-                if not title: title = ph.clean_html(ph.getattr(item, 'alt'))
+                if not title:
+                    title = ph.clean_html(ph.getattr(item, 'alt'))
                 icon = ph.search(item, ph.IMAGE_SRC_URI_RE)[1]
                 url = ph.search(item, ph.A_HREF_URI_RE)[1]
                 desc = []
                 tmp = ph.findall(item, ('<div', '>', 'thumb-stats'), '</div>', flags=0)
                 for t in tmp:
                     t = ph.clean_html(t)
-                    if t: desc.append(t)
+                    if t:
+                        desc.append(t)
                 desc = ' | '.join(desc) + '[/br]' + ph.clean_html(reObj.sub('[/br]', ph.find(item, ('<a', '>'), '</a>', flags=0)[1]))
                 channelsTab.append(MergeDicts(cItem, {'type':'video', 'title':title, 'priv_cat':'list_channels', 'url':self.getFullUrl(url), 'icon':self.getFullIconUrl(icon), 'desc':desc}))
         return channelsTab
@@ -178,7 +184,8 @@ class FirstOneTvApi(CBaseHostClass):
         links = []
         url = self.getFullUrl('/api/?cacheFucker=' + str(random.random()), cUrl)
         sts, data = self.cm.getPage(url, params, post_data)
-        if not sts: return -1, []
+        if not sts:
+            return -1, []
         printDBG("+++_getLinks+++")
         printDBG(data)
         printDBG("+++++++++++++++")
@@ -206,7 +213,8 @@ class FirstOneTvApi(CBaseHostClass):
         urlsTab = []
 
         sts, data = self.cm.getPage(cItem['url'], self.http_params)
-        if not sts: return urlsTab
+        if not sts:
+            return urlsTab
         cUrl = self.cm.meta['url']
 
         SRC_URI_RE = re.compile(r'''\s+?src=(['"])([^>]*?)(?:\1)''', re.I)
@@ -232,14 +240,16 @@ class FirstOneTvApi(CBaseHostClass):
         params = dict(self.http_params)
         params['header'] = MergeDicts(self.HTTP_HEADER, {'Referer':cUrl, 'Content-Type':'application/x-www-form-urlencoded; charset=UTF-8', 'X-Requested-With':'XMLHttpRequest'})
         sts, tmp = self.cm.getPage(url, params, post_data)
-        if not sts: return []
+        if not sts:
+            return []
         printDBG("+++++tracking+++++")
         printDBG(tmp)
         printDBG("++++++++++++++++++")
 
         if cToken:
             ret, links = self._getLinks(cUrl, params, channel_post_data)
-            if links: return links
+            if links:
+                return links
 
         hiroRetry = 0
         while hiroRetry < 3:
@@ -247,7 +257,8 @@ class FirstOneTvApi(CBaseHostClass):
             url = self.getFullUrl('/api/?cacheFucker=' + str(random.random()), cUrl)
             post_data = {'action':'hiro', 'result':'get'}
             sts, tmp = self.cm.getPage(url, params, post_data)
-            if not sts: return []
+            if not sts:
+                return []
             #printDBG("++++++++++++++++++++++++++++++++++")
             #printDBG(tmp)
             #printDBG("++++++++++++++++++++++++++++++++++")
@@ -272,11 +283,13 @@ class FirstOneTvApi(CBaseHostClass):
                                 jscode2 = ["top={'location':'%s'};self=top;document={'domain':'%s'};window=this;function eval(data){print(data);}" % (cUrl, self.cm.getBaseUrl(cUrl, True)), jscode1]
                                 jscode2.append(tmp2)
                                 ret = js_execute( '\n'.join(jscode2) )
-                                if 0 != ret['code']: raise Exception('stream script failed')
+                                if 0 != ret['code']:
+                                    raise Exception('stream script failed')
                                 streamJsData = ret['data']
 
                             value = ph.search(streamJsData, '[\}\s;](%s=[^;]+?;)' % identifier)[0]
-                            if not value: raise Exception('can not find in the "%s" stream script' % identifier)
+                            if not value:
+                                raise Exception('can not find in the "%s" stream script' % identifier)
                             if streamJs not in self.CACHE_VARS:
                                 self.CACHE_VARS = {streamJs:[]}
                             self.CACHE_VARS[streamJs].append(value)
@@ -285,7 +298,8 @@ class FirstOneTvApi(CBaseHostClass):
                         post_data['result'] = ret['data'].strip()
                         url = self.getFullUrl('/api/?cacheFucker=' + str(random.random()), cUrl)
                         sts, tmp = self.cm.getPage(url, params, post_data)
-                        if not sts: Exception('can not find in the "%s" stream script' % identifier)
+                        if not sts:
+                            Exception('can not find in the "%s" stream script' % identifier)
                         tmp = json_loads(tmp)
                         hiroErrorCode = tmp['errorCode']
                         if tmp['state']:
@@ -309,7 +323,8 @@ class FirstOneTvApi(CBaseHostClass):
             while True:
                 url = self.getFullUrl('/src/captcha/?cacheFucker=' + str(random.random()), cUrl)
                 sts, data = self.cm.getPage(url, params)
-                if not sts: return []
+                if not sts:
+                    return []
                 try:
                     data = json_loads(data)
                     post_data = {'action':'captcha', 'response':'', 'hash':data['hash'], 'time':data['time']}

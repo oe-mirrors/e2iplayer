@@ -14,8 +14,10 @@ import re
 import urllib.request
 import urllib.parse
 import urllib.error
-try:    import json
-except Exception: import simplejson as json
+try:
+    import json
+except Exception:
+    import simplejson as json
 ###################################################
 
 def gettytul():
@@ -36,7 +38,8 @@ class GuardaSerieClick(CBaseHostClass):
         self.defaultParams = {'header':self.HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
     
     def getPage(self, baseUrl, addParams = {}, post_data = None):
-        if addParams == {}: addParams = dict(self.defaultParams)
+        if addParams == {}:
+            addParams = dict(self.defaultParams)
         addParams['cloudflare_params'] = {'domain': 'guardaserie.digital', 'cookie_file':self.COOKIE_FILE, 'User-Agent':self.USER_AGENT}
         return self.cm.getPageCFProtection(baseUrl, addParams, post_data)
     
@@ -44,7 +47,8 @@ class GuardaSerieClick(CBaseHostClass):
         printDBG("GuardaSerieClick.listMainMenu")
 
         sts, data = self.getPage(self.getMainUrl())
-        if not sts: return
+        if not sts:
+            return
         self.setMainUrl(self.cm.meta['url'])
 
         item = self.cm.ph.getDataBeetwenNodes(data, ('<a', '>', 'lista-serie'), ('</a', '>'))[1]
@@ -80,17 +84,21 @@ class GuardaSerieClick(CBaseHostClass):
             url = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''href=['"]([^"^']+?)['"]''')[0])
             icon  = self.getFullIconUrl( self.cm.ph.getSearchGroups(item, '''<img[^>]+?src=['"]([^"^']+?)['"]''')[0] )
             title = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(item, '<p', '</p>')[1])
-            if title == '': continue
+            if title == '':
+                continue
             desc  = []
             tmp = self.cm.ph.getAllItemsBeetwenMarkers(item, '<span', '</span>')
             for t in tmp:
                 t = self.cleanHtmlStr(t)
-                if t != '' and 'star' not in t: desc.append(t)
+                if t != '' and 'star' not in t:
+                    desc.append(t)
             try:
                 item = self.cm.ph.getSearchGroups(item, '''star\s*?s([0-5][^'^"]*?)['"]''')[0].split('_', 1)
                 star = str(int(item[0]))
-                if 'half' in item[-1]: star += '.5'
-                else: star += '.0'
+                if 'half' in item[-1]:
+                    star += '.5'
+                else:
+                    star += '.0'
                 desc.append(star)
             except Exception:
                 printExc()
@@ -103,7 +111,8 @@ class GuardaSerieClick(CBaseHostClass):
         printDBG("GuardaSerieClick.listItems")
         
         sts, data = self.getPage(cItem['url'])
-        if not sts: return
+        if not sts:
+            return
         self.setMainUrl(self.cm.meta['url'])
         
         marker = 'container-fluid greybg followMeBar containerTopBarTitle'
@@ -120,7 +129,8 @@ class GuardaSerieClick(CBaseHostClass):
         printDBG("GuardaSerieClick.listItems")
         
         sts, data = self.getPage(cItem['url'])
-        if not sts: return
+        if not sts:
+            return
         self.setMainUrl(self.cm.meta['url'])
         
         data = self.cm.ph.getDataBeetwenMarkers(data, 'box-container', 'container-foote', False)[1]
@@ -130,7 +140,8 @@ class GuardaSerieClick(CBaseHostClass):
         printDBG("GuardaSerieClick.exploreItem")
 
         sts, data = self.getPage(cItem['url'])
-        if not sts: return
+        if not sts:
+            return
         self.setMainUrl(self.cm.meta['url'])
         
         cItem = dict(cItem)
@@ -146,7 +157,8 @@ class GuardaSerieClick(CBaseHostClass):
             for item in data:
                 title = '%s - %s' % (cItem['title'], self.cleanHtmlStr(item.split('<p', 1)[0]))
                 icon  = self.cm.ph.getSearchGroups(item, '''<img[^>]+?src=['"]([^"^']+?)['"]''')[0]
-                if icon == '': icon  = self.cm.ph.getSearchGroups(item, '''<img[^>]+?data\-original=['"]([^"^']+?)['"]''')[0]
+                if icon == '':
+                    icon  = self.cm.ph.getSearchGroups(item, '''<img[^>]+?data\-original=['"]([^"^']+?)['"]''')[0]
                 desc  = self.cleanHtmlStr( self.cm.ph.getDataBeetwenNodes(item, ('<p', '>', 'desc'), ('</p', '>'))[1] )
                 season = self.cm.ph.getSearchGroups(item, '''meta\-stag=['"]([^"^']+?)['"]''')[0]
                 episode = self.cm.ph.getSearchGroups(item, '''meta\-ep=['"]([^"^']+?)['"]''')[0]
@@ -177,7 +189,8 @@ class GuardaSerieClick(CBaseHostClass):
         if 0 == self.up.checkHostSupport(videoUrl):
             url = ''
             sts, data = self.cm.getPage(videoUrl)
-            if sts: url = self.getFullUrl(self.cm.ph.getSearchGroups(data, '''<iframe[^>]+?src=['"]([^"^']+?)['"]''', 1, True)[0])
+            if sts:
+                url = self.getFullUrl(self.cm.ph.getSearchGroups(data, '''<iframe[^>]+?src=['"]([^"^']+?)['"]''', 1, True)[0])
             if url == '':
                 videoUrl = 'http://www.safersurf.org/browse.php?u={0}&b=8&f=norefer'.format(urllib.parse.quote_plus(videoUrl, ''))
                 params = dict(self.defaultParams)
@@ -197,11 +210,14 @@ class GuardaSerieClick(CBaseHostClass):
         retTab = []
         itemsList = []
         
-        if 'prev_url' in cItem: url = cItem['prev_url']
-        else: url = cItem['url']
+        if 'prev_url' in cItem:
+            url = cItem['prev_url']
+        else:
+            url = cItem['url']
 
         sts, data = self.cm.getPage(url)
-        if not sts: return
+        if not sts:
+            return
 
         data = self.cm.ph.getDataBeetwenNodes(data, ('<div', '>', 'container-title-single'), ('<input', '>'), False)[1]
         icon = self.getFullUrl( self.cm.ph.getSearchGroups(data, '''<img[^>]+?src=['"]([^'^"]+?)['"]''')[0] )
@@ -211,24 +227,32 @@ class GuardaSerieClick(CBaseHostClass):
         try:
             tmp = self.cm.ph.getSearchGroups(data, '''star\s*?s([0-5][^'^"]*?)['"]''')[0].split('_', 1)
             star = str(int(tmp[0]))
-            if 'half' in tmp[-1]: star += '.5'
-            else: star += '.0'
-            if star != '': itemsList.append((_('RATING'), star))
+            if 'half' in tmp[-1]:
+                star += '.5'
+            else:
+                star += '.0'
+            if star != '':
+                itemsList.append((_('RATING'), star))
         except Exception:
             printExc()
 
         tmp = self.cm.ph.getAllItemsBeetwenNodes(data, ('<p', '>', 'details'), ('</p', '>'), False)
         for item in tmp:
             item = item.split('</b>', 1)
-            if len(item) < 2: continue
+            if len(item) < 2:
+                continue
             key = self.cleanHtmlStr(item[0])
             val = self.cleanHtmlStr(item[1])
-            if key == '' or val == '': continue
+            if key == '' or val == '':
+                continue
             itemsList.append((key, val))
 
-        if title == '': title = cItem['title']
-        if icon == '':  icon  = cItem.get('icon', self.DEFAULT_ICON_URL)
-        if desc == '':  desc  = cItem.get('desc', '')
+        if title == '':
+            title = cItem['title']
+        if icon == '':
+            icon  = cItem.get('icon', self.DEFAULT_ICON_URL)
+        if desc == '':
+            desc  = cItem.get('desc', '')
         
         return [{'title':self.cleanHtmlStr( title ), 'text': self.cleanHtmlStr( desc ), 'images':[{'title':'', 'url':self.getFullUrl(icon)}], 'other_info':{'custom_items_list':itemsList}}]
 
@@ -281,5 +305,7 @@ class IPTVHost(CHostBase):
         CHostBase.__init__(self, GuardaSerieClick(), True, favouriteTypes=[]) 
 
     def withArticleContent(self, cItem):
-        if 'prev_url' in cItem or cItem.get('category', '') == 'explore_item': return True
-        else: return False
+        if 'prev_url' in cItem or cItem.get('category', '') == 'explore_item':
+            return True
+        else:
+            return False

@@ -263,7 +263,8 @@ class IPTVDMApi():
         return bRet, msg
 
     def processDQ(self):
-            if False == self.running: return
+            if False == self.running:
+                return
             dListChanged = False
             if len(self.queueUD) < self.MAX_DOWNLOAD_ITEM and \
                0 < len(self.queueDQ):
@@ -369,7 +370,8 @@ class IPTVDMApi():
         try:
             fileName = self.queueUD[listUDIdx].fileName.split('/')[-1]
             shortName = fileName[:17]
-            if len(fileName) > len(shortName): shortName += '...'
+            if len(fileName) > len(shortName):
+                shortName += '...'
             shortName += ' '
             self.finishNotifyCallback().showNotify(shortName + _(status))
         except Exception:

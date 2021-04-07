@@ -13,8 +13,10 @@ from Plugins.Extensions.IPTVPlayer.tools.iptvtools import  printDBG, printExc
 ###################################################
 import re
 import time
-try:    import json
-except Exception: import simplejson as json
+try:
+    import json
+except Exception:
+    import simplejson as json
 from Components.config import config, ConfigSelection, getConfigListEntry
 ###################################################
 
@@ -70,9 +72,12 @@ class LiveLeak(CBaseHostClass):
     def _checkNexPage(self, data, page):
         data = self.cm.ph.getDataBeetwenNodes(data, ('<ul', '>', 'pagination'), ('</ul', '>'), False)[1]
         url = self.cm.ph.getSearchGroups(data, '''['"]([^'^"]*?page=%s&[^'^"]*?)['"]''' % (int(page) + 1))[0]
-        if url == '': url = self.cm.ph.getSearchGroups(data, '''['"]([^'^"]*?page=%s)['"]''' % (int(page) + 1))[0]
-        if url != '': return self.getFullUrl(url.replace('&amp;', '&'))
-        else: return ''
+        if url == '':
+            url = self.cm.ph.getSearchGroups(data, '''['"]([^'^"]*?page=%s)['"]''' % (int(page) + 1))[0]
+        if url != '':
+            return self.getFullUrl(url.replace('&amp;', '&'))
+        else:
+            return ''
             
     def listsTab(self, tab, cItem):
         printDBG("LiveLeak.listsMainMenu")
@@ -86,7 +91,8 @@ class LiveLeak(CBaseHostClass):
         printDBG('_listItems start')
 
         data = re.compile('''<div[^>]+?items_outer[^>]+?>''', re.I).split(data)
-        if len(data): del data[0]
+        if len(data):
+            del data[0]
         if len(data):
             data[-1] = data[-1].split('<nav', 1)[0]
             data[-1] = data[-1].split('<script', 1)[0]
@@ -95,7 +101,8 @@ class LiveLeak(CBaseHostClass):
             params = dict(cItem)
             params['name']  = 'category'
             params['title'] = self.cleanHtmlStr(self.cm.ph.getSearchGroups(item, '''title=['"]([^"^']+?)['"]''')[0])
-            if params['title'] == '': params['title'] = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(item, '<a', '</a>')[1])
+            if params['title'] == '':
+                params['title'] = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(item, '<a', '</a>')[1])
             params['icon']  = self.cm.ph.getSearchGroups(item, 'src="([^"]+?\.jpg[^"]*?)"')[0]
             params['url']   = self.cm.ph.getSearchGroups(item, '<a[^>]+?href="([^"]+?)"')[0]
             params['desc']  = self.cleanHtmlStr(item.split('</a>', 1)[-1].replace('</p>', '[/br]'))
@@ -134,7 +141,8 @@ class LiveLeak(CBaseHostClass):
         sts, data = self.cm.getPage(cItem['url'])
         if sts:
             nextPage = self._checkNexPage(data, page)
-            if page == '1': data = self.cm.ph.getDataBeetwenNodes(data, ('<section', '>', 'content_main'), ('</section', '>'))[1]
+            if page == '1':
+                data = self.cm.ph.getDataBeetwenNodes(data, ('<section', '>', 'content_main'), ('</section', '>'))[1]
             self._listItems(cItem, data, nextPage)
         
     def listSearchResult(self, cItem, searchPattern, searchType):

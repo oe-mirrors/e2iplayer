@@ -68,7 +68,7 @@ class AADecoder(object):
                     for t in enc_char[1:]:
                         l+=1
                         if findClose and t==')':
-                            balance-=1;
+                            balance-=1
                             if balance==0:
                                 result+=[enc_char[startpos:l+1]]
                                 findClose=False

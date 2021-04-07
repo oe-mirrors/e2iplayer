@@ -15,8 +15,10 @@ import re
 import urllib.request
 import urllib.parse
 import urllib.error
-try:    import json
-except Exception: import simplejson as json
+try:
+    import json
+except Exception:
+    import simplejson as json
 ###################################################
 
 
@@ -40,12 +42,15 @@ class FilmStreamHD(CBaseHostClass):
                             ]
 
     def getPage(self, baseUrl, addParams = {}, post_data = None):
-        if addParams == {}: addParams = dict(self.defaultParams)
+        if addParams == {}:
+            addParams = dict(self.defaultParams)
         origBaseUrl = baseUrl
         baseUrl = self.cm.iriToUri(baseUrl)
         def _getFullUrl(url):
-            if self.cm.isValidUrl(url): return url
-            else: return urlparse.urljoin(baseUrl, url)
+            if self.cm.isValidUrl(url):
+                return url
+            else:
+                return urlparse.urljoin(baseUrl, url)
         addParams['cloudflare_params'] = {'domain':self.up.getDomain(baseUrl), 'cookie_file':self.COOKIE_FILE, 'User-Agent':self.USER_AGENT, 'full_url_handle':_getFullUrl}
         return self.cm.getPageCFProtection(baseUrl, addParams, post_data)
         
@@ -56,7 +61,8 @@ class FilmStreamHD(CBaseHostClass):
     def listCategories(self, cItem, nextCategory, m1, addAll=True):
         printDBG("FilmStreamHD.listCategories")
         sts, data = self.getPage(cItem['url'])
-        if not sts: return
+        if not sts:
+            return
         self.setMainUrl(data.meta['url'])
         
         if addAll:
@@ -69,7 +75,8 @@ class FilmStreamHD(CBaseHostClass):
         for item in data:
             url   = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''href=['"]([^"^']+?)['"]''')[0])
             title = self.cleanHtmlStr(item)
-            if title == '': title = self.cleanHtmlStr(self.cm.ph.getSearchGroups(item, '''title=['"]([^"^']+?)['"]''')[0])
+            if title == '':
+                title = self.cleanHtmlStr(self.cm.ph.getSearchGroups(item, '''title=['"]([^"^']+?)['"]''')[0])
             params = dict(cItem)
             params.update({'category':nextCategory, 'title':title, 'url':url})
             self.addDir(params)
@@ -78,7 +85,8 @@ class FilmStreamHD(CBaseHostClass):
         printDBG("FilmStreamHD.listItems")
         
         sts, data = self.getPage(cItem['url'])
-        if not sts: return
+        if not sts:
+            return
         self.setMainUrl(data.meta['url'])
         
         nextPage = self.cm.ph.getDataBeetwenNodes(data, ('<a', '>', 'loadnavi'), ('</a', '>'))[1]
@@ -94,18 +102,23 @@ class FilmStreamHD(CBaseHostClass):
                 
                 desc = []
                 tmp = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(item, ('<span', '>', 'movie-release'), ('</span', '>'), False)[1])
-                if tmp != '': desc.append(tmp)
+                if tmp != '':
+                    desc.append(tmp)
                 tmp = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(item, ('<span', '>', 'icon-hd'), ('</span', '>'), False)[1])
-                if tmp != '': desc.append(tmp)
+                if tmp != '':
+                    desc.append(tmp)
                 tmp = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(item, ('<div', '>', 'movie-info'), ('</div', '>'), False)[1])
-                if tmp != '': desc.append(tmp)
+                if tmp != '':
+                    desc.append(tmp)
                 desc = [' | '.join(desc)]
                 
                 tmp = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(item, ('<div', '>', 'movie-cast'), ('</div', '>'), False)[1])
-                if tmp != '': desc.append(tmp)
+                if tmp != '':
+                    desc.append(tmp)
 
                 tmp = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(item, ('<div', '>', 'movie-excerpt'), ('</div', '>'), False)[1])
-                if tmp != '': desc.append(tmp)
+                if tmp != '':
+                    desc.append(tmp)
 
                 params = dict(cItem)
                 params.update({'good_for_fav':True, 'title':title, 'url':url, 'icon':icon, 'desc':'[/br]'.join(desc)})
@@ -127,7 +140,8 @@ class FilmStreamHD(CBaseHostClass):
         urlTab = []
         
         sts, data = self.getPage(cItem['url'])
-        if not sts: return
+        if not sts:
+            return
         cUrl = data.meta['url']
         self.setMainUrl(cUrl)
         
@@ -148,7 +162,8 @@ class FilmStreamHD(CBaseHostClass):
         otherInfo = {}
         
         sts, data = self.getPage(cItem['url'])
-        if not sts: return []
+        if not sts:
+            return []
         cUrl = data.meta['url']
         self.setMainUrl(cUrl)
         
@@ -166,10 +181,12 @@ class FilmStreamHD(CBaseHostClass):
                 itemsList.append((key+':', val))
         
         tmp = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(data, ('<div', '>', 'release'), ('</div', '>'), False)[1].replace('(', ''))
-        if tmp != '': itemsList.append((_('Release:'),  tmp[:-1]))
+        if tmp != '':
+            itemsList.append((_('Release:'),  tmp[:-1]))
         
         tmp = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(data, ('<div', '>', 'categories'), ('</div', '>'), False)[1].replace('</a>', ', ').replace(' , ', ', '))
-        if tmp != '': itemsList.append((_('Categories:'),  tmp[:-1]))
+        if tmp != '':
+            itemsList.append((_('Categories:'),  tmp[:-1]))
         
         for m in ['director', 'actor']:
             tmp = self.cm.ph.getDataBeetwenNodes(data, ('<div', '>', m), ('</div', '>'), False)[1].split('</h4>', 1)
@@ -178,9 +195,12 @@ class FilmStreamHD(CBaseHostClass):
                 val = self.cleanHtmlStr(tmp[1])
                 itemsList.append((key, val))
         
-        if title == '': title = cItem['title']
-        if icon == '':  icon = cItem.get('icon', self.DEFAULT_ICON_URL)
-        if desc == '': desc = cItem.get('desc', '')
+        if title == '':
+            title = cItem['title']
+        if icon == '':
+            icon = cItem.get('icon', self.DEFAULT_ICON_URL)
+        if desc == '':
+            desc = cItem.get('desc', '')
         
         return [{'title':self.cleanHtmlStr( title ), 'text': self.cleanHtmlStr( desc ), 'images':[{'title':'', 'url':self.getFullUrl(icon)}], 'other_info':{'custom_items_list':itemsList}}]
     
@@ -226,4 +246,5 @@ class IPTVHost(CHostBase):
     def withArticleContent(self, cItem):
         if 'video' == cItem.get('type', ''):
             return True
-        else: return False
+        else:
+            return False

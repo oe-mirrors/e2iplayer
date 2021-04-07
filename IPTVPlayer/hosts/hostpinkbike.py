@@ -16,8 +16,10 @@ import re
 import urllib.request
 import urllib.parse
 import urllib.error
-try:    import simplejson as json
-except Exception: import json
+try:
+    import simplejson as json
+except Exception:
+    import json
 ###################################################
 
 ###################################################
@@ -54,18 +56,23 @@ class Pinkbike(CBaseHostClass):
         
     def _fillCategories(self):
         printDBG("Pinkbike._fillCategories")
-        if len(self.best): return
+        if len(self.best):
+            return
         sts, data = self.cm.getPage( Pinkbike.VID_MAIN_URL )
-        if not sts: return
+        if not sts:
+            return
         bestData = self.cm.ph.getDataBeetwenMarkers(data, 'Best Pinkbike Videos', '</div>', False)[1]
         bestData = re.compile('href="([^"]+?)"[^>]*?>([^<]+?)</a>').findall(bestData)
-        for item in bestData: self.best.append({'url':item[0], 'title':item[1]})
+        for item in bestData:
+            self.best.append({'url':item[0], 'title':item[1]})
         
-        if len(self.categories): return
+        if len(self.categories):
+            return
         
         data = self.cm.ph.getDataBeetwenMarkers(data, '<td valign="top" width="25%">', '</div>', False)[1]
         data = data.split('</table>')
-        if len(data): del data[-1]
+        if len(data):
+            del data[-1]
         for item in data:
             title = self.cm.ph.getDataBeetwenMarkers(item, '<h3>', '</h3>', False)[1]
             desc  = self.cm.ph.getDataBeetwenMarkers(item, '<h5>', '</h5>', False)[1]
@@ -75,7 +82,8 @@ class Pinkbike(CBaseHostClass):
             for cat in tmp:
                 url = self.cm.ph.getSearchGroups(cat, 'href="([^"]+?)"')[0]
                 tit = self.cleanHtmlStr(cat)
-                if url.startswith('http'): catItems.append({'title':tit, 'url':url})
+                if url.startswith('http'):
+                    catItems.append({'title':tit, 'url':url})
             
             if len(tmp):
                 self.categories.append({'title':title, 'desc':desc})
@@ -110,19 +118,27 @@ class Pinkbike(CBaseHostClass):
     def listVideos(self, cItem):
         printDBG("Pinkbike.listVideos")
         page = cItem.get('page', 1)
-        if '?' in cItem['url']: url = cItem['url'] + '&'
-        else: url = cItem['url'] + '?'
+        if '?' in cItem['url']:
+            url = cItem['url'] + '&'
+        else:
+            url = cItem['url'] + '?'
         url = url + 'page=' + str(page)
         sts, data = self.cm.getPage(url)
-        if not sts: return
-        if ('page=%d"' % (page+1)) in data: nextPage = True
-        else: nextPage = False
+        if not sts:
+            return
+        if ('page=%d"' % (page+1)) in data:
+            nextPage = True
+        else:
+            nextPage = False
         
-        if '<table class="paging-container">' in data: marker = '<table class="paging-container">'
-        else: marker = '<div class="foot f11">'
+        if '<table class="paging-container">' in data:
+            marker = '<table class="paging-container">'
+        else:
+            marker = '<div class="foot f11">'
         data = self.cm.ph.getDataBeetwenMarkers(data, '<div id="inList" class="fullview">', marker, False)[1]
         data = data.split('</ul>')
-        if len(data): del data[-1]
+        if len(data):
+            del data[-1]
         for item in data:
             item = item.split('</li>')
             icon  = self.cm.ph.getSearchGroups(item[0], 'src="([^"]+?)"')[0]
@@ -149,10 +165,12 @@ class Pinkbike(CBaseHostClass):
         printDBG("Pinkbike.getLinksForVideo [%s]" % cItem)
         urlTab = []
         sts, data = self.cm.getPage(cItem['url'])
-        if not sts: return urlTab
+        if not sts:
+            return urlTab
         data = self.cm.ph.getDataBeetwenMarkers(data, '<video', '</video>', False)[1].replace('\\"', '"')
         data = re.compile('data-quality="([^"]+?)"[^>]+?src="([^"]+?)"').findall(data)
-        for item in data: urlTab.append({'name':item[0], 'url':self.getFullUrl(item[1])})
+        for item in data:
+            urlTab.append({'name':item[0], 'url':self.getFullUrl(item[1])})
         return urlTab
         
     def getFavouriteData(self, cItem):

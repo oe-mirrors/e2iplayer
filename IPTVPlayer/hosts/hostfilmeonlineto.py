@@ -17,8 +17,10 @@ import re
 import urllib.request
 import urllib.parse
 import urllib.error
-try:    import json
-except Exception: import simplejson as json
+try:
+    import json
+except Exception:
+    import simplejson as json
 from Components.config import config, ConfigSelection, ConfigText, getConfigListEntry
 ###################################################
 
@@ -87,7 +89,8 @@ class FilmeOnlineTo(CBaseHostClass):
         domains = ['https://filme-online.to/']
         domain = config.plugins.iptvplayer.filmeonlineto_alt_domain.value.strip()
         if self.cm.isValidUrl(domain):
-            if domain[-1] != '/': domain += '/'
+            if domain[-1] != '/':
+                domain += '/'
             domains.insert(0, domain)
         
         addParams = dict(self.defaultParams)
@@ -120,7 +123,8 @@ class FilmeOnlineTo(CBaseHostClass):
         self.cacheFiltersKeys = []
         
         sts, data = self.getPage(cItem['url'])
-        if not sts: return
+        if not sts:
+            return
         
         def addFilter(data, marker, baseKey, addAll=True):
             key = 'f_' + baseKey
@@ -139,13 +143,15 @@ class FilmeOnlineTo(CBaseHostClass):
                 self.cacheFilters[key].append({'title':title.title(), key:value})
                 
             if len(self.cacheFilters[key]):
-                if addAll: self.cacheFilters[key].insert(0, {'title':_('All')})
+                if addAll:
+                    self.cacheFilters[key].insert(0, {'title':_('All')})
                 self.cacheFiltersKeys.append(key)
         
         filtersData = self.cm.ph.getAllItemsBeetwenNodes(data, ('<ul', '>', '-list'), ('</ul', '>'))
         for tmp in filtersData:
             key = self.cm.ph.getSearchGroups(tmp, '''name="([^"]+?)"''')[0]
-            if key in ['', 'type']: continue
+            if key in ['', 'type']:
+                continue
             tmp = self.cm.ph.getAllItemsBeetwenMarkers(tmp, '<li', '</li>')
             addFilter(tmp, 'value', key)
         
@@ -169,9 +175,11 @@ class FilmeOnlineTo(CBaseHostClass):
         cItem = dict(cItem)
         
         f_idx = cItem.get('f_idx', 0)
-        if f_idx == 0: self.fillCacheFilters(cItem)
+        if f_idx == 0:
+            self.fillCacheFilters(cItem)
         
-        if f_idx >= len(self.cacheFiltersKeys): return
+        if f_idx >= len(self.cacheFiltersKeys):
+            return
         
         filter = self.cacheFiltersKeys[f_idx]
         f_idx += 1
@@ -193,7 +201,8 @@ class FilmeOnlineTo(CBaseHostClass):
             else:
                 url = self.getFullUrl('search/' + urllib.parse.quote_plus(cItem['f_search']))
             sts, data = self.getPage(url)
-            if not sts: return
+            if not sts:
+                return
             
             if 'var offset' in data:
                 nextPage = True
@@ -207,14 +216,16 @@ class FilmeOnlineTo(CBaseHostClass):
                 filterList = ['f_search']
             for key in filterList:
                 baseKey = key[2:].replace('[]', '') # "f_"
-                if key in cItem: post_data[baseKey] = cItem.get(key, 'all')
+                if key in cItem:
+                    post_data[baseKey] = cItem.get(key, 'all')
             
             params = dict(self.defaultParams)
             params['header'] = dict(self.AJAX_HEADER)
             params['header']['Referer'] = self.getMainUrl()
             url = self.getFullUrl('/ajax/filtru.php')
             sts, data = self.getPage(url, params, post_data)
-            if not sts: return
+            if not sts:
+                return
             
             tmp = self.cm.ph.getDataBeetwenMarkers(data, '<script', '</script>', False)[1]
             if 'offset' in tmp:
@@ -223,7 +234,8 @@ class FilmeOnlineTo(CBaseHostClass):
         data = self.cm.ph.getAllItemsBeetwenNodes(data, ('<div', '>', 'data-movie-id'), ('</div', '>'))
         for item in data:
             url  = self.getFullUrl( self.cm.ph.getSearchGroups(item, '''href=['"]([^"^']+?)['"]''')[0] )
-            if url == '': continue
+            if url == '':
+                continue
             icon = self.getFullUrl( self.cm.ph.getSearchGroups(item, '''data\-original=['"]([^"^']+?)['"]''')[0] )
             tmp = item.split('<h2>', 1)
             title = self.cleanHtmlStr( tmp[-1] )
@@ -231,10 +243,13 @@ class FilmeOnlineTo(CBaseHostClass):
             tmp = self.cm.ph.getAllItemsBeetwenMarkers(tmp[0], '<span', '</span>')
             for t in tmp:
                 t = self.cleanHtmlStr(t)
-                if t != '': desc.append(t)
+                if t != '':
+                    desc.append(t)
             
-            if title == '': title  = self.cleanHtmlStr( self.cm.ph.getSearchGroups(item, 'title="([^"]+?)"')[0] )
-            if title == '': title  = self.cleanHtmlStr( self.cm.ph.getSearchGroups(item, 'alt="([^"]+?)"')[0] )
+            if title == '':
+                title  = self.cleanHtmlStr( self.cm.ph.getSearchGroups(item, 'title="([^"]+?)"')[0] )
+            if title == '':
+                title  = self.cleanHtmlStr( self.cm.ph.getSearchGroups(item, 'alt="([^"]+?)"')[0] )
             movieId = self.cm.ph.getSearchGroups(item, '''data\-movie\-id=['"]([^"^']+?)['"]''')[0]
             params = {'good_for_fav': True, 'name':'category', 'category':nextCategory, 'title':title, 'url':url, 'movie_id':movieId, 'desc':' | '.join(desc), 'info_url':url, 'icon':icon}
             self.addDir(params)
@@ -249,7 +264,8 @@ class FilmeOnlineTo(CBaseHostClass):
         self.cacheLinks = {}
         
         sts, data = self.getPage(cItem['url'])
-        if not sts: return
+        if not sts:
+            return
         
         data = self.cm.ph.getDataBeetwenReMarkers(data, re.compile('var\s*?movie\s*?\=\s*?\{'), re.compile('}'))[1]
         ret = js_execute( data + '; print(JSON.stringify(movie));' )
@@ -267,7 +283,8 @@ class FilmeOnlineTo(CBaseHostClass):
             params['header']['Referer'] = cItem['url']
             url = self.getFullUrl('/ajax/mep.php?id=%s' % movieData['id'])
             sts, data = self.getPage(url, params)
-            if not sts: return
+            if not sts:
+                return
             
             data = byteify(json.loads(data), '', True)
             printDBG("++++++++++++++++++++++++++++++++++++++++++++++++++++++++")
@@ -275,7 +292,8 @@ class FilmeOnlineTo(CBaseHostClass):
             printDBG("++++++++++++++++++++++++++++++++++++++++++++++++++++++++")
             
             serverData = re.compile('''<div[^>]+?clearfix[^>]+?>''').split(data['html'])
-            if len(serverData): del serverData[-1]
+            if len(serverData):
+                del serverData[-1]
             
             linksKeys = []
             linksLinks = {}
@@ -290,8 +308,10 @@ class FilmeOnlineTo(CBaseHostClass):
                     if cItem['title'] not in title:
                         title = '%s %s' % (cItem['title'], title)
                     params = dict(reParamsObj.findall(item))
-                    try: key = int(params['epNr'])
-                    except Exception: key = params.get('epNr', title)
+                    try:
+                        key = int(params['epNr'])
+                    except Exception:
+                        key = params.get('epNr', title)
                     if key not in linksKeys:
                         linksKeys.append(key)
                         linksLinks[key] = []
@@ -354,7 +374,8 @@ class FilmeOnlineTo(CBaseHostClass):
                         break
         
         sts, data = self.getPage(videoUrl)
-        if not sts: return
+        if not sts:
+            return
         
         data = self.cm.ph.getDataBeetwenReMarkers(data, re.compile('var\s*?movie\s*?\=\s*?\{'), re.compile('}'))[1]
         ret = js_execute( data + '; print(JSON.stringify(movie));' )
@@ -365,14 +386,16 @@ class FilmeOnlineTo(CBaseHostClass):
             urlParams['header']['Referer'] = str(videoUrl)
             url = self.getFullUrl('/ajax/mep.php?id=%s' % movieData['id'])
             sts, data = self.getPage(url, urlParams)
-            if not sts: return
+            if not sts:
+                return
             data = byteify(json.loads(data), '', True)
             
             params = dict(videoUrl.meta.get('params', {}))
             if params.get('tip', '') == 'embed':
                 url = '/ajax/movie_embed.php?eid=%s&lid=undefined&ts=%s&up=0&mid=%s&gid=%s&epNr=%s&type=%s&server=%s&epIndex=%s&so=%s&srvr=%s' % (params['id'], data.get('ts', ''), movieData['id'], movieData['gid'], params['epNr'], movieData['type'], params.get('server', 'NaN'), params['index'], params['so'], params.get('srvr', 'NaN'))
                 sts, data = self.getPage(self.getFullUrl(url), urlParams)
-                if not sts: return
+                if not sts:
+                    return
                 data = byteify(json.loads(data), '', True)
                 url = data['src'].replace('&amp;', '&')
                 urlParams = {'Referer':str(videoUrl), 'User-Agent':self.HEADER['User-Agent']}
@@ -385,11 +408,13 @@ class FilmeOnlineTo(CBaseHostClass):
             elif params.get('tip', '') == 'vip':
                 url = '/ajax/mtoken.php?eid=%s&mid=%s&so=%s&server=NaN&epNr=%s&srvr=NaN&_=%s' % (params['id'], movieData['id'], params['so'], params['epNr'], int(time.time()*1000))
                 sts, data = self.getPage(self.getFullUrl(url), urlParams)
-                if not sts: return
+                if not sts:
+                    return
                 data = dict(re.compile('''_([a-z]+?)\s*?=\s*['"]([^'^"]+?)['"]''').findall(data))
                 url = '/ajax/msources.php?eid=%s&x=%s&y=%s&z=%s&ip=%s&mid=%s&gid=%s&lang=rum&epIndex=%s&server=NaN&so=%s&epNr=%s&srvr=NaN' % (params['id'], data['x'], data['y'], data['z'], data['ip'], movieData['id'], movieData['gid'], params['index'], params['so'], params['epNr'])
                 sts, data = self.getPage(self.getFullUrl(url), urlParams)
-                if not sts: return
+                if not sts:
+                    return
                 
                 urlParams = {'Referer':str(videoUrl), 'User-Agent':self.HEADER['User-Agent']}
                 data = byteify(json.loads(data), '', True)
@@ -397,7 +422,8 @@ class FilmeOnlineTo(CBaseHostClass):
                 if 'mp4' in data['playlist'][0]['sources']['type'].lower():
                     urlTab.append({'name':'mp4', 'url':strwithmeta(url, urlParams), 'need_resolve':0})
                 for item in data['playlist'][0]['tracks']:
-                    if item.get('kind', '').lower() != 'captions': continue
+                    if item.get('kind', '').lower() != 'captions':
+                        continue
                     url = self.getFullUrl(item['file'])
                     label = self.cleanHtmlStr(item['label'])
                     subTracks.append({'title':label, 'url':strwithmeta(url, urlParams), 'lang':label, 'format':'srt'})
@@ -419,15 +445,19 @@ class FilmeOnlineTo(CBaseHostClass):
         retTab = []
         
         sts, data = self.getPage(cItem.get('info_url', ''))
-        if not sts: return retTab
+        if not sts:
+            return retTab
         
         title = self.cleanHtmlStr( self.cm.ph.getSearchGroups(data, '<meta property="og:title"[^>]+?content="([^"]+?)"')[0] )
         desc  = self.cleanHtmlStr( self.cm.ph.getSearchGroups(data, '<meta property="og:description"[^>]+?content="([^"]+?)"')[0] )
         icon  = self.getFullUrl( self.cm.ph.getSearchGroups(data, '<meta property="og:image"[^>]+?content="([^"]+?)"')[0] )
         
-        if title == '': title = cItem['title']
-        if desc == '':  desc = cItem.get('desc', '')
-        if icon == '':  icon = cItem.get('icon', '')
+        if title == '':
+            title = cItem['title']
+        if desc == '':
+            desc = cItem.get('desc', '')
+        if icon == '':
+            icon = cItem.get('icon', '')
         
         descData = self.cm.ph.getDataBeetwenMarkers(data, '<div class="mvic-info">', '<div class="clearfix">', False)[1]
         descData = self.cm.ph.getAllItemsBeetwenMarkers(descData, '<p', '</p>')
@@ -451,14 +481,19 @@ class FilmeOnlineTo(CBaseHostClass):
         otherInfo = {}
         for item in descData:
             item = item.split('</strong>')
-            if len(item) < 2: continue
+            if len(item) < 2:
+                continue
             key = self.cleanHtmlStr( item[0] ).replace(':', '').strip()
             val = self.cleanHtmlStr( item[1] ).replace(' , ', ', ')
-            if val.endswith(','): val = val[:-1]
-            if key == 'IMDb': val += ' IMDb' 
+            if val.endswith(','):
+                val = val[:-1]
+            if key == 'IMDb':
+                val += ' IMDb' 
             if key in descTabMap:
-                try: otherInfo[descTabMap[key]] = val
-                except Exception: continue
+                try:
+                    otherInfo[descTabMap[key]] = val
+                except Exception:
+                    continue
         
         return [{'title':self.cleanHtmlStr( title ), 'text': self.cleanHtmlStr( desc ), 'images':[{'title':'', 'url':self.getFullUrl(icon)}], 'other_info':otherInfo}]
         

@@ -122,8 +122,10 @@ except NameError:
     compat_chr = chr
 
 def compat_ord(c):
-    if type(c) is int: return c
-    else: return ord(c)
+    if type(c) is int:
+        return c
+    else:
+        return ord(c)
 
 
 def preferredencoding():
@@ -145,7 +147,8 @@ def htmlentity_transform(entity):
     try:
         if entity in compat_html_entities.name2codepoint:
             return compat_chr(compat_html_entities.name2codepoint[entity])
-    except Exception: pass
+    except Exception:
+        pass
 
     mobj = re.match(r'#(x?[0-9A-Fa-f]+)', entity)
     if mobj is not None:

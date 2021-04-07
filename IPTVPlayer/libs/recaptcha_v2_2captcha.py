@@ -30,7 +30,8 @@ class UnCaptchaReCaptcha:
         return self.MAIN_URL
 
     def getFullUrl(self, url, mainUrl=None):
-        if mainUrl == None: mainUrl = self.getMainUrl()
+        if mainUrl == None:
+            mainUrl = self.getMainUrl()
         return self.cm.getFullUrl(url, mainUrl)
 
     def processCaptcha(self, sitekey, referer=''):

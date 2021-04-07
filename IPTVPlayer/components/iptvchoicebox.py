@@ -28,9 +28,9 @@ class IPTVChoiceBoxItem:
     TYPE_OFF  = "off"
     TYPE_NONE = None
     
-    def __init__(self, name = "", \
-                description = "", \
-                privateData = None, \
+    def __init__(self, name = "",
+                description = "",
+                privateData = None,
                 type = TYPE_NONE):
         self.name = name
         self.description = description
@@ -78,16 +78,20 @@ class IPTVChoiceBoxWidget(Screen):
         self.reorderingMode = False
             
     def __onClose(self):
-        try: self["list"].disconnectSelChanged(self.onSelectionChanged)
-        except Exception: printExc()
+        try:
+            self["list"].disconnectSelChanged(self.onSelectionChanged)
+        except Exception:
+            printExc()
         self.params = None
         
     def onStart(self):
         self.onShown.remove(self.onStart)
         
         self["list"].setList([ (x,) for x in self.params['options']])
-        try:    self["list"].moveToIndex(self.params['current_idx'])
-        except Exception: printExc()
+        try:
+            self["list"].moveToIndex(self.params['current_idx'])
+        except Exception:
+            printExc()
         self["list"].connectSelChanged(self.onSelectionChanged)
             
     def key_ok(self):
@@ -103,8 +107,10 @@ class IPTVChoiceBoxWidget(Screen):
         
     def getSelectedItem(self):
         sel = None
-        try: sel = self["list"].l.getCurrentSelection()[0]
-        except Exception: pass
+        try:
+            sel = self["list"].l.getCurrentSelection()[0]
+        except Exception:
+            pass
         return sel
     
     

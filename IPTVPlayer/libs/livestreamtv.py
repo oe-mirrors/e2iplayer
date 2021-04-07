@@ -10,8 +10,10 @@ from Plugins.Extensions.IPTVPlayer.components.ihost import CBaseHostClass
 # FOREIGN import
 ###################################################
 import re
-try: import json
-except Exception: import simplejson
+try:
+    import json
+except Exception:
+    import simplejson
 ############################################
 
 
@@ -24,12 +26,14 @@ class LiveStreamTvApi(CBaseHostClass):
         printDBG("LiveStreamTvApi.getChannelsList cItem[%s]" % cItem )
         channelsList = []
         sts, data = self.cm.getPage(self.MAIN_URL)
-        if not sts: return channelsList
+        if not sts:
+            return channelsList
         data = self.cm.ph.getAllItemsBeetwenMarkers(data, '<div id="channel', '</a>')
         desc = ''
         for item in data:
             title = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(item, '<strong', '</strong>')[1])
-            if title == '': title = self.cleanHtmlStr(self.cm.ph.getSearchGroups(item, '''channame=['"]([^'^"]+?)['"]''')[0])
+            if title == '':
+                title = self.cleanHtmlStr(self.cm.ph.getSearchGroups(item, '''channame=['"]([^'^"]+?)['"]''')[0])
             # desc
             epgstart = self.cleanHtmlStr(self.cm.ph.getSearchGroups(item, '''epgstart=['"]([^'^"]+?)['"]''')[0])
             epgend = self.cleanHtmlStr(self.cm.ph.getSearchGroups(item, '''epgend=['"]([^'^"]+?)['"]''')[0])
@@ -40,8 +44,10 @@ class LiveStreamTvApi(CBaseHostClass):
             
             icon  = self.getFullUrl(self.cm.ph.getSearchGroups(item, 'src="([^"]+?)"')[0])
             url   = self.getFullUrl(self.cm.ph.getSearchGroups(item, 'href="([^"]+?)"')[0])
-            if 'filterGray' in item: desc = '[offline] ' + title
-            else: desc = '[online] ' + desc
+            if 'filterGray' in item:
+                desc = '[offline] ' + title
+            else:
+                desc = '[online] ' + desc
             if self.cm.isValidUrl(url):
                 channelsList.append({'name':'live-stream.tv', 'title':title, 'url':url, 'desc':desc, 'icon':icon})
         return channelsList

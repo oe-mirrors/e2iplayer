@@ -16,8 +16,10 @@ import re
 import urllib.request
 import urllib.parse
 import urllib.error
-try:    import json
-except Exception: import simplejson as json
+try:
+    import json
+except Exception:
+    import simplejson as json
 from Components.config import config, ConfigSelection, getConfigListEntry
 ###################################################
 
@@ -59,19 +61,24 @@ class AkoAm(CBaseHostClass):
     def getProxy(self):
         proxy = config.plugins.iptvplayer.akoam_proxy.value
         if proxy != 'None':
-            if proxy == 'proxy_1': proxy = config.plugins.iptvplayer.alternative_proxy1.value
-            else: proxy = config.plugins.iptvplayer.alternative_proxy2.value
-        else: proxy = None
+            if proxy == 'proxy_1':
+                proxy = config.plugins.iptvplayer.alternative_proxy1.value
+            else:
+                proxy = config.plugins.iptvplayer.alternative_proxy2.value
+        else:
+            proxy = None
         return proxy
     
     def getPage(self, baseUrl, addParams = {}, post_data = None):
         while True:
-            if addParams == {}: addParams = dict(self.defaultParams)
+            if addParams == {}:
+                addParams = dict(self.defaultParams)
             origBaseUrl = baseUrl
             baseUrl = self.cm.iriToUri(baseUrl)
             
             proxy = self.getProxy()
-            if proxy != None: addParams = MergeDicts(addParams, {'http_proxy':proxy})
+            if proxy != None:
+                addParams = MergeDicts(addParams, {'http_proxy':proxy})
             addParams['cloudflare_params'] = {'cookie_file':self.COOKIE_FILE, 'User-Agent':self.USER_AGENT}
             sts, data = self.cm.getPageCFProtection(baseUrl, addParams, post_data)
             
@@ -83,9 +90,11 @@ class AkoAm(CBaseHostClass):
     
     def getFullIconUrl(self, url):
         url = CBaseHostClass.getFullIconUrl(self, url.strip())
-        if url == '': return url
+        if url == '':
+            return url
         proxy = self.getProxy()
-        if proxy != None: url = strwithmeta(url, {'iptv_http_proxy':proxy})
+        if proxy != None:
+            url = strwithmeta(url, {'iptv_http_proxy':proxy})
         cookieHeader = self.cm.getCookieHeader(self.COOKIE_FILE, ['PHPSESSID', 'cf_clearance', '__cfduid'])
         url = strwithmeta(url, {'Cookie':cookieHeader, 'User-Agent':self.HTTP_HEADER['User-Agent']})
         return url
@@ -93,7 +102,8 @@ class AkoAm(CBaseHostClass):
     def listMainMenu(self, cItem, nextCategory):
         printDBG("AkoAm.listMainMenu")
         sts, data = self.getPage(self.getMainUrl())
-        if not sts: return
+        if not sts:
+            return
         cUrl = data.meta['url']
         self.setMainUrl(cUrl)
         
@@ -117,7 +127,8 @@ class AkoAm(CBaseHostClass):
     def listSubMenu(self, cItem, nextCategory1, nextCategory2):
         printDBG("AkoAm.listSubMenu")
         sts, data = self.getPage(cItem['url'])
-        if not sts: return
+        if not sts:
+            return
         cUrl = data.meta['url']
         self.setMainUrl(cUrl)
         
@@ -125,7 +136,8 @@ class AkoAm(CBaseHostClass):
         tmp = self.cm.ph.getAllItemsBeetwenMarkers(tmp, '<li', '</li>')
         for item in tmp:
             url   = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''href=['"]([^"^']+?)['"]''')[0])
-            if url == '': continue
+            if url == '':
+                continue
             title = self.cleanHtmlStr(item)
             params = dict(cItem)
             params.update({'category':nextCategory1, 'title':title, 'url':url})
@@ -150,21 +162,26 @@ class AkoAm(CBaseHostClass):
         
         if data == None:
             sts, data = self.getPage(cItem['url'])
-            if not sts: return
+            if not sts:
+                return
             self.setMainUrl(data.meta['url'])
         
         nextPage = self.cm.ph.getDataBeetwenNodes(data, ('<li', '>', 'pagination_next'), ('</li', '>'))[1]
         nextPage = self.getFullUrl(self.cm.ph.getSearchGroups(nextPage, '''href=['"]([^"^']+?)['"]''')[0])
         
-        if '/search/' in cItem['url']: m1 = 'tags_box'
-        else: m1 = 'subject_box'
+        if '/search/' in cItem['url']:
+            m1 = 'tags_box'
+        else:
+            m1 = 'subject_box'
         
         data = self.cm.ph.getAllItemsBeetwenNodes(data, ('<div', '>', m1), ('</a', '>'))
         for item in data:
-            if 'next_prev' in item: continue
+            if 'next_prev' in item:
+                continue
             url   = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''href=['"]([^"^']+?)['"]''')[0])
             icon  = self.getFullIconUrl(self.cm.ph.getSearchGroups(item, '''src=['"]([^"^']+?)['"]''')[0])
-            if icon == '': icon  = self.getFullIconUrl(self.cm.ph.getDataBeetwenMarkers(item, 'url(', ');', False)[1].strip())
+            if icon == '':
+                icon  = self.getFullIconUrl(self.cm.ph.getDataBeetwenMarkers(item, 'url(', ');', False)[1].strip())
             title = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(item, ('<h', '>'), ('</h', '>'), False)[1])
             desc  = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(item, ('<span', '>', 'desc'), ('</span', '>'), False)[1])
             params = {'good_for_fav':True, 'priv_has_art':True, 'category':nextCategory, 'url':url, 'title':title, 'desc':desc, 'icon':icon}
@@ -195,7 +212,8 @@ class AkoAm(CBaseHostClass):
             linksSection = linksSection.split('</div>')
             for link in linksSection:
                 url = self.getFullUrl(self.cm.ph.getSearchGroups(link, '''href=['"]([^"^']+?)['"]''')[0])
-                if url == '': continue
+                if url == '':
+                    continue
                 nameTab = []
                 if baseFileName != '': 
                     nameTab.append(baseFileName)
@@ -206,16 +224,19 @@ class AkoAm(CBaseHostClass):
                 else:
                     playable = True
                 name = self.cleanHtmlStr(link)
-                if name != '': nameTab.append(name)
+                if name != '':
+                    nameTab.append(name)
                 hostId = self.cm.ph.getSearchGroups(link, '/files/([0-9]+?)\.')[0]
-                if hostId in hostMap: nameTab.append(hostMap[hostId])
+                if hostId in hostMap:
+                    nameTab.append(hostMap[hostId])
                 urlsTab.append({'name':' '.join(nameTab), 'url':url, 'need_resolve':1})
         return playable, urlsTab
     
     def exploreItem(self, cItem, nextCategory):
         printDBG("AkoAm.listItems")
         sts, data = self.getPage(cItem['url'])
-        if not sts: return
+        if not sts:
+            return
         cUrl = data.meta['url']
         self.setMainUrl(cUrl)
         
@@ -242,12 +263,15 @@ class AkoAm(CBaseHostClass):
                 playable, urlsTab = self._getLinksTab(item)
                 if len(urlsTab):
                     params = {'title':'%s - %s' % (iTitle, title), 'url':cItem['url'] + '#iptvplayer=' + title, 'icon':iIcon, 'desc':desc + '[/br]' + iDesc, 'iptv_urls':urlsTab}
-                    if playable: self.addVideo(params)
-                    else: self.addData(params)
+                    if playable:
+                        self.addVideo(params)
+                    else:
+                        self.addData(params)
                     
             data = self.cm.ph.getAllItemsBeetwenNodes(data, ('<a', '>'), ('</a', '>'))
             for item in data:
-                if '#FFD700' not in item: continue
+                if '#FFD700' not in item:
+                    continue
                 title = self.cleanHtmlStr(item)
                 url   = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''href=['"]([^"^']+?)['"]''')[0])
                 params = dict(cItem)
@@ -259,8 +283,10 @@ class AkoAm(CBaseHostClass):
             playable, urlsTab = self._getLinksTab(data)
             if len(urlsTab):
                 params = {'title':iTitle, 'url':cItem['url'], 'icon':iIcon, 'desc':iDesc, 'iptv_urls':urlsTab}
-                if playable: self.addVideo(params)
-                else: self.addData(params)
+                if playable:
+                    self.addVideo(params)
+                else:
+                    self.addData(params)
         
     def getLinksForVideo(self, cItem):
         printDBG("AkoAm.getLinksForVideo [%s]" % cItem)
@@ -271,7 +297,8 @@ class AkoAm(CBaseHostClass):
         
         cacheKey = cItem['url']
         cacheTab = self.cacheLinks.get(cacheKey, [])
-        if len(cacheTab): return cacheTab
+        if len(cacheTab):
+            return cacheTab
         
         self.cacheLinks = {}
         
@@ -347,7 +374,8 @@ class AkoAm(CBaseHostClass):
         otherInfo = {}
         
         sts, data = self.getPage(cItem['url'])
-        if not sts: return
+        if not sts:
+            return
         cUrl = data.meta['url']
         self.setMainUrl(cUrl)
         
@@ -359,7 +387,8 @@ class AkoAm(CBaseHostClass):
         descData = self.cm.ph.getDataBeetwenNodes(data, ('<div', '>', 'sub_mainInfo'), ('<div', '>', 'sub_socialMedia'), False)[1]
         
         tmp = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(descData, ('<li', '>', 'imdb'), ('</li', '>'), False)[1])
-        if tmp != '': otherInfo['imdb_rating'] = tmp.replace(' ', '')
+        if tmp != '':
+            otherInfo['imdb_rating'] = tmp.replace(' ', '')
 
         descTabMap = {"المدة الزمنية":     "duration",
                       "سنة الانتاج":        "year",
@@ -371,12 +400,15 @@ class AkoAm(CBaseHostClass):
         descData = self.cm.ph.getAllItemsBeetwenNodes(descData, ('<li', '>'), ('</li', '>'), False)
         for item in descData:
             item = reObj.split(item)
-            if len(item) < 2: continue
+            if len(item) < 2:
+                continue
             key = self.cleanHtmlStr( item[0] ).replace(':', '').strip()
             val = self.cleanHtmlStr( item[1] )
             if key in descTabMap:
-                try: otherInfo[descTabMap[key]] = val
-                except Exception: continue
+                try:
+                    otherInfo[descTabMap[key]] = val
+                except Exception:
+                    continue
         
         reObj = re.compile('''<[\s\\/]*?br[\s\\/]*?>''', re.I)
         descTabMap = {"بطولة الفيلم":     "actors",
@@ -388,19 +420,25 @@ class AkoAm(CBaseHostClass):
         descData = re.compile('''<span[^>]+?color\:[^>]+?>''').split(descData)
         for item in descData:
             item = item.split('</span>', 1)
-            if len(item) < 2: continue
+            if len(item) < 2:
+                continue
             key = self.cleanHtmlStr( item[0] ).replace(':', '').strip()
             vals = []
             tmp = reObj.split(item[1])
             for val in tmp:
                 val = self.cleanHtmlStr(val)
-                if val != '': vals.append(val)
+                if val != '':
+                    vals.append(val)
             if key in descTabMap and len(vals):
-                try: otherInfo[descTabMap[key]] = ', '.join(vals)
-                except Exception: continue
+                try:
+                    otherInfo[descTabMap[key]] = ', '.join(vals)
+                except Exception:
+                    continue
         
-        if title == '': title = cItem['title']
-        if icon == '':  icon = cItem.get('icon', self.DEFAULT_ICON_URL)
+        if title == '':
+            title = cItem['title']
+        if icon == '':
+            icon = cItem.get('icon', self.DEFAULT_ICON_URL)
         
         return [{'title':self.cleanHtmlStr( title ), 'text': self.cleanHtmlStr( desc ), 'images':[{'title':'', 'url':self.getFullUrl(icon)}], 'other_info':otherInfo}]
     
@@ -450,6 +488,8 @@ class IPTVHost(CHostBase):
         CHostBase.__init__(self, AkoAm(), True, [])
         
     def withArticleContent(self, cItem):
-        if cItem.get('priv_has_art', False): return True
-        else: return False
+        if cItem.get('priv_has_art', False):
+            return True
+        else:
+            return False
     

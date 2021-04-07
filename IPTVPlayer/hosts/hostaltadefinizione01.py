@@ -12,8 +12,10 @@ from Plugins.Extensions.IPTVPlayer.tools.iptvtypes import strwithmeta
 # FOREIGN import
 ###################################################
 import re
-try:    import json
-except Exception: import simplejson as json
+try:
+    import json
+except Exception:
+    import simplejson as json
 ###################################################
 
 def gettytul():
@@ -49,7 +51,8 @@ class Altadefinizione(CBaseHostClass):
         printDBG("Altadefinizione.listMainMenu")
 
         sts, data = self.getPage(self.getMainUrl())
-        if not sts: return
+        if not sts:
+            return
         self.setMainUrl(self.cm.meta['url'])
 
         tmp = self.cm.ph.getDataBeetwenNodes(data, ('<div', '>', 'before_widget'), ('<div', '>', 'before_widget'), False)[1]
@@ -61,7 +64,8 @@ class Altadefinizione(CBaseHostClass):
             for tabItem in tmp[0]:
                 tabTitle = self.cleanHtmlStr(tabItem)
                 key = self.cm.ph.getSearchGroups(tabItem, '''href=['"]\#([^"^']+?)['"]''')[0]
-                if key == '': continue
+                if key == '':
+                    continue
                 categories = []
                 tmp[1] = self.cm.ph.getDataBeetwenNodes(data, ('<div', '>', key), ('</ul', '>'), False)[1]
                 tmp[1] = self.cm.ph.getAllItemsBeetwenMarkers(tmp[1], '<li', '</li>')
@@ -91,8 +95,10 @@ class Altadefinizione(CBaseHostClass):
             title = self.cleanHtmlStr(item)
             params = dict(cItem)
             params.update({'name':'category', 'title':title, 'url':self.getFullUrl(url)})
-            if '/catalog' in url: params['category'] = 'list_abc'
-            else: params['category'] = 'list_items'
+            if '/catalog' in url:
+                params['category'] = 'list_abc'
+            else:
+                params['category'] = 'list_items'
             self.addDir(params)
 
         MAIN_CAT_TAB = [{'category':'search',          'title': _('Search'), 'search_item':True},
@@ -105,7 +111,8 @@ class Altadefinizione(CBaseHostClass):
         postData = cItem.get('post_data')
 
         sts, data = self.getPage(cItem['url'], post_data=postData)
-        if not sts: return
+        if not sts:
+            return
         self.setMainUrl(self.cm.meta['url'])
 
         nextPage = self.cm.ph.getDataBeetwenNodes(data, ('<div', '>', 'page_nav'), ('</div', '>'), False)[1]
@@ -129,18 +136,21 @@ class Altadefinizione(CBaseHostClass):
 
                 desc = []
                 t = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(item, ('<div', '>', 'trdublaj'), ('</div', '>'), False)[1])
-                if t != '': desc.append(t)
+                if t != '':
+                    desc.append(t)
                 item = item.split('list-inline', 1)[-1]
                 tmp = self.cm.ph.getAllItemsBeetwenNodes(item, ('<li', '>'), ('</li', '>'), False)
                 for t in tmp:
                     t = self.cleanHtmlStr(t)
-                    if t != '': desc.append(t)
+                    if t != '':
+                        desc.append(t)
 
                 desc = [' | '.join(desc)]
                 tmp = self.cm.ph.getAllItemsBeetwenNodes(item, ('<p', '>'), ('</p', '>'), False)
                 for t in tmp:
                     t = self.cleanHtmlStr(t)
-                    if t != '': desc.append(t)
+                    if t != '':
+                        desc.append(t)
 
                 params = dict(cItem)
                 params.update({'good_for_fav': True, 'category':nextCategory, 'title':title, 'url':url, 'icon':icon, 'desc':'[/br]'.join(desc)})
@@ -165,7 +175,8 @@ class Altadefinizione(CBaseHostClass):
         printDBG("Altadefinizione.listABC")
 
         sts, data = self.getPage(cItem['url'])
-        if not sts: return
+        if not sts:
+            return
         self.setMainUrl(self.cm.meta['url'])
 
         data = self.cm.ph.getDataBeetwenNodes(data, ('<div', '>', 'alphabet'), ('</div', '>'), False)[1]
@@ -182,7 +193,8 @@ class Altadefinizione(CBaseHostClass):
         page = cItem.get('page', 1)
 
         sts, data = self.getPage(cItem['url'])
-        if not sts: return
+        if not sts:
+            return
         self.setMainUrl(self.cm.meta['url'])
 
         nextPage = self.cm.ph.getDataBeetwenNodes(data, ('<div', '>', 'page_nav'), ('</div', '>'), False)[1]
@@ -195,13 +207,15 @@ class Altadefinizione(CBaseHostClass):
             icon  = self.getFullIconUrl( self.cm.ph.getSearchGroups(item, '''<img[^>]+?src=['"]([^"^']+?)['"]''')[0].replace('/40x59-', '/203x293-') )
             url   = self.getFullUrl( self.cm.ph.getSearchGroups(tmp, '''href=['"]([^"^']+?)['"]''')[0] )
             title = self.cleanHtmlStr( tmp )
-            if url == '': continue
+            if url == '':
+                continue
 
             desc = []
             tmp = self.cm.ph.getAllItemsBeetwenNodes(item, ('<td', '>'), ('</td', '>'), False)[3:]
             for t in tmp:
                 t = self.cleanHtmlStr(t)
-                if t != '': desc.append(t)
+                if t != '':
+                    desc.append(t)
 
             params = dict(cItem)
             params.update({'good_for_fav': True, 'category':nextCategory, 'title':title, 'url':url, 'icon':icon, 'desc':' | '.join(desc)})
@@ -216,7 +230,8 @@ class Altadefinizione(CBaseHostClass):
         printDBG("Altadefinizione.exploreItem")
 
         sts, data = self.getPage(cItem['url'])
-        if not sts: return
+        if not sts:
+            return
         self.setMainUrl(self.cm.meta['url'])
         
         cItem = dict(cItem)
@@ -269,11 +284,14 @@ class Altadefinizione(CBaseHostClass):
         retTab = []
         itemsList = []
         
-        if 'prev_url' in cItem: url = cItem['prev_url']
-        else: url = cItem['url']
+        if 'prev_url' in cItem:
+            url = cItem['prev_url']
+        else:
+            url = cItem['url']
 
         sts, data = self.cm.getPage(url)
-        if not sts: return
+        if not sts:
+            return
 
         data = self.cm.ph.getDataBeetwenNodes(data, ('<div', '>', 's_left'), ('<div', '>', 'comment'), False)[1]
         
@@ -288,23 +306,31 @@ class Altadefinizione(CBaseHostClass):
                 item = [self.cm.ph.getSearchGroups(item, '''title=['"]([^'^"]+?)['"]''')[0], item]
             else:
                 item = item.split('</b>', 1)
-                if len(item) < 2: continue
+                if len(item) < 2:
+                    continue
             key = self.cleanHtmlStr(item[0])
             val = self.cleanHtmlStr(item[1])
-            if key == '' or val == '': continue
+            if key == '' or val == '':
+                continue
             itemsList.append((key, val))
 
         tmp = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(data, ('<span', '>', 'dato'), ('</span', '>'), False)[1])
-        if tmp != '': itemsList.append((_('Rating'), tmp))
+        if tmp != '':
+            itemsList.append((_('Rating'), tmp))
 
         tmp = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(data, ('<p', '>', 'views'), ('</p', '>'), False)[1])
-        if tmp != '': itemsList.append((_('Views'), tmp))
+        if tmp != '':
+            itemsList.append((_('Views'), tmp))
         tmp = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(data, ('<p', '>', 'date'), ('</p', '>'), False)[1])
-        if tmp != '': itemsList.append((_('Relese'), tmp))
+        if tmp != '':
+            itemsList.append((_('Relese'), tmp))
 
-        if title == '': title = cItem['title']
-        if icon == '':  icon  = cItem.get('icon', self.DEFAULT_ICON_URL)
-        if desc == '':  desc  = cItem.get('desc', '')
+        if title == '':
+            title = cItem['title']
+        if icon == '':
+            icon  = cItem.get('icon', self.DEFAULT_ICON_URL)
+        if desc == '':
+            desc  = cItem.get('desc', '')
         
         return [{'title':self.cleanHtmlStr( title ), 'text': self.cleanHtmlStr( desc ), 'images':[{'title':'', 'url':self.getFullUrl(icon)}], 'other_info':{'custom_items_list':itemsList}}]
 
@@ -354,5 +380,7 @@ class IPTVHost(CHostBase):
         CHostBase.__init__(self, Altadefinizione(), True, favouriteTypes=[]) 
 
     def withArticleContent(self, cItem):
-        if 'prev_url' in cItem or cItem.get('category', '') == 'explore_item': return True
-        else: return False
+        if 'prev_url' in cItem or cItem.get('category', '') == 'explore_item':
+            return True
+        else:
+            return False

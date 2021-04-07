@@ -48,9 +48,11 @@ class Cinemaxx(CBaseHostClass):
         cUrl = ''
         while tries < 4:
             tries += 1
-            if addParams == {}: addParams = dict(self.defaultParams)
+            if addParams == {}:
+                addParams = dict(self.defaultParams)
             sts, data = self.cm.getPage(baseUrl, addParams, post_data)
-            if not sts: return sts, data
+            if not sts:
+                return sts, data
             cUrl = self.cm.meta['url']
             if 'DDoS' in data:
                 if tries == 1:
@@ -75,7 +77,8 @@ class Cinemaxx(CBaseHostClass):
                         params = dict(addParams)
                         params['header'] = MergeDicts(self.HTTP_HEADER, {'Referer':cUrl})
                         sts2, data2 = self.cm.getPage(url, params)
-                        if not sts2: break
+                        if not sts2:
+                            break
                         js_params= [{'path':GetJSScriptFile('cinemaxx2.byte')}]
                         js_params.append({'code':data2 + 'print(JSON.stringify(e2iobj));'})
                         ret = js_execute_ext( js_params )
@@ -104,7 +107,8 @@ class Cinemaxx(CBaseHostClass):
     def listMain(self, cItem, nextCategory):
         printDBG("Cinemaxx.listMain")
         sts, data = self.getPage(self.getMainUrl())
-        if not sts: return
+        if not sts:
+            return
         self.setMainUrl(self.cm.meta['url'])
 
         subItems = []
@@ -121,7 +125,8 @@ class Cinemaxx(CBaseHostClass):
         sections = ph.rfindall(sections, '</li>', ('<li', '>', 'nav'), flags=0)
         for section in sections:
             tmp = ph.findall(section, ('<a', '>'), '</a>', flags=ph.START_S, limits=1)
-            if not tmp: continue
+            if not tmp:
+                continue
             sTitle = ph.clean_html(tmp[1])
             sUrl = ph.getattr(tmp[0], 'href')
 
@@ -154,7 +159,8 @@ class Cinemaxx(CBaseHostClass):
         post_data = cItem.pop('post_data', None)
 
         sts, data = self.getPage(cItem['url'], post_data=post_data)
-        if not sts: return
+        if not sts:
+            return
         self.setMainUrl(self.cm.meta['url'])
         printDBG(data)
 
@@ -174,7 +180,8 @@ class Cinemaxx(CBaseHostClass):
             tmp.extend(ph.findall(item, ('<span', '>'), '</span>', flags=0))
             for t in tmp:
                 t = self.cleanHtmlStr(t)
-                if t: desc.append(t)
+                if t:
+                    desc.append(t)
             self.addDir(MergeDicts(cItem, {'good_for_fav':True, 'category':nextCategory, 'title':title, 'url':url, 'icon':icon, 'desc':' | '.join(desc)}))
 
         if nextPage:
@@ -185,7 +192,8 @@ class Cinemaxx(CBaseHostClass):
         self.cacheLinks = {}
 
         sts, data = self.getPage(cItem['url'])
-        if not sts: return
+        if not sts:
+            return
         cUrl = self.cm.meta['url']
         self.setMainUrl(cUrl)
 
@@ -257,7 +265,8 @@ class Cinemaxx(CBaseHostClass):
 
         url = self.getFullUrl('/api/private/get/search?query=%s&limit=100&f=1' % urllib.parse.quote(searchPattern))
         sts, data = self.getPage(self.getMainUrl())
-        if not sts: return
+        if not sts:
+            return
         self.setMainUrl(self.cm.meta['url'])
         
         value = ph.search(data, '''var\s*?dle_login_hash\s*?=\s*?['"]([^'^"]+?)['"]''')[0]
@@ -266,7 +275,8 @@ class Cinemaxx(CBaseHostClass):
 
     def getLinksForVideo(self, cItem):
         linksTab = self.cacheLinks.get(cItem['url'], [])
-        if linksTab: return linksTab
+        if linksTab:
+            return linksTab
 
         linksTab = self.up.getVideoLinkExt(cItem['url'])
         for item in linksTab:
@@ -297,7 +307,8 @@ class Cinemaxx(CBaseHostClass):
         if not data:
             url = cItem.get('prev_url', cItem['url'])
             sts, data = self.getPage(url)
-            if not sts: return []
+            if not sts:
+                return []
             self.setMainUrl(self.cm.meta['url'])
 
         tmp = ph.find(data, ('<div', '>', 'dle-content'), ('<div', '>', 'fstory-info'), flags=0)[1]
@@ -317,9 +328,12 @@ class Cinemaxx(CBaseHostClass):
                 value = self.cleanHtmlStr(ph.find(item, ('<div', '>', 'text'), '</div>', flags=0)[1].rsplit('</ul>', 1)[-1])
             itemsList.append((key, value))
 
-        if title == '': title = cItem['title']
-        if icon == '':  icon = cItem.get('icon', self.DEFAULT_ICON_URL)
-        if desc == '':  desc = cItem.get('desc', '')
+        if title == '':
+            title = cItem['title']
+        if icon == '':
+            icon = cItem.get('icon', self.DEFAULT_ICON_URL)
+        if desc == '':
+            desc = cItem.get('desc', '')
         
         return [{'title':self.cleanHtmlStr( title ), 'text': self.cleanHtmlStr( desc ), 'images':[{'title':'', 'url':self.getFullUrl(icon)}], 'other_info':{'custom_items_list':itemsList}}]
 

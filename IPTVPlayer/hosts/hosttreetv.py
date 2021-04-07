@@ -86,29 +86,38 @@ class TreeTv(CBaseHostClass):
         if sts:
             if 'lawfilter' in self.cm.meta['url']:
                 msg = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(data, ('<div', '>', 'message'), ('</div', '>'), False)[1])
-                if msg != '': GetIPTVNotify().push(msg, 'info', 10)
+                if msg != '':
+                    GetIPTVNotify().push(msg, 'info', 10)
         return sts, data
     
     def getStr(self, item, key):
-        if key not in item: return ''
-        if item[key] == None: return ''
+        if key not in item:
+            return ''
+        if item[key] == None:
+            return ''
         return str(item[key])
         
     def fillFilters(self, cItem):
         self.cacheFilters = {}
         self.filtersTab = []
         sts, data = self.getPage(cItem['url']) # it seems that series and movies have same filters
-        if not sts: return
+        if not sts:
+            return
         self.setMainUrl(self.cm.meta['url'])
         
         def addFilter(data, key, addAny, titleBase, type=0):
             self.cacheFilters[key] = []
             for item in data:
-                if 0 == type: value = self.cm.ph.getSearchGroups(item, '''value=['"]([^'^"]+?)['"]''')[0]
-                elif 1 == type: value = self.cm.ph.getSearchGroups(item, '''\{[^:]+?\s*:\s*['"]([^"^']+?)['"]''')[0]
-                elif 2 == type: value = self.cm.ph.getSearchGroups(item, '''data-rel=['"]([^'^"]+?)['"]''')[0]
-                elif 3 == type: value = self.cm.ph.getSearchGroups(item, '''name=['"]([^'^"]+?)['"]''')[0]
-                if value == '': continue
+                if 0 == type:
+                    value = self.cm.ph.getSearchGroups(item, '''value=['"]([^'^"]+?)['"]''')[0]
+                elif 1 == type:
+                    value = self.cm.ph.getSearchGroups(item, '''\{[^:]+?\s*:\s*['"]([^"^']+?)['"]''')[0]
+                elif 2 == type:
+                    value = self.cm.ph.getSearchGroups(item, '''data-rel=['"]([^'^"]+?)['"]''')[0]
+                elif 3 == type:
+                    value = self.cm.ph.getSearchGroups(item, '''name=['"]([^'^"]+?)['"]''')[0]
+                if value == '':
+                    continue
                 title = self.cleanHtmlStr(item)
                 self.cacheFilters[key].append({'title':titleBase + title, key:value})
             if addAny and len(self.cacheFilters[key]):
@@ -118,14 +127,16 @@ class TreeTv(CBaseHostClass):
         tmpData = self.cm.ph.getDataBeetwenMarkers(data, 'production_links', '</div')[1]
         tmpData = self.cm.ph.getAllItemsBeetwenMarkers(tmpData, '<a ', '</a>', withMarkers=True)
         addFilter(tmpData, 'production', True, '', 1)
-        if len(self.cacheFilters.get('production', [])): self.filtersTab.append('production')
+        if len(self.cacheFilters.get('production', [])):
+            self.filtersTab.append('production')
         
         # genres -> janrs
         sts, tmpData = self.getPage(self.getFullUrl('default/index/janrs?_=' + str(time.time())))
         if sts:
             tmpData = self.cm.ph.getAllItemsBeetwenMarkers(tmpData, '<a ', '</a>', withMarkers=True)
             addFilter(tmpData, 'genres', True, '', 2)
-        if len(self.cacheFilters.get('genres', [])): self.filtersTab.append('genres')
+        if len(self.cacheFilters.get('genres', [])):
+            self.filtersTab.append('genres')
         
         # year
         self.cacheFilters['year'] = []
@@ -141,13 +152,15 @@ class TreeTv(CBaseHostClass):
         tmpData = self.cm.ph.getDataBeetwenMarkers(data, '<h2 class="main_janrs_title"', '<div class="apply_q"')[1]
         tmpData = self.cm.ph.getAllItemsBeetwenMarkers(tmpData, '<div class="quality_item both">', '</a>', withMarkers=True)
         addFilter(tmpData, 'quality', True, '', 3)
-        if len(self.cacheFilters.get('quality', [])): self.filtersTab.append('quality')
+        if len(self.cacheFilters.get('quality', [])):
+            self.filtersTab.append('quality')
             
         # sortType 
         tmpData = self.cm.ph.getDataBeetwenMarkers(data, '<div class="left_menu" id="left_menu">', '</div')[1]
         tmpData = self.cm.ph.getAllItemsBeetwenMarkers(tmpData, '<a ', '</a>', withMarkers=True)
         addFilter(tmpData, 'sort', False, '', 1)
-        if len(self.cacheFilters.get('sort', [])): self.filtersTab.append('sort')
+        if len(self.cacheFilters.get('sort', [])):
+            self.filtersTab.append('sort')
         
     def listFilter(self, cItem, filters):
         params = dict(cItem)
@@ -188,27 +201,32 @@ class TreeTv(CBaseHostClass):
         params['header']['Referer'] = self.MAIN_URL
         
         sts, data = self.getPage(self.getFullUrl(baseUrl), params)
-        if not sts: return
+        if not sts:
+            return
         self.setMainUrl(self.cm.meta['url'])
         
         if 'class="next"' in data:
             nextPage = True
-        else: nextPage = False
+        else:
+            nextPage = False
         
         #data = self.cm.ph.getDataBeetwenMarkers(data, '<div class="preview">', '<div id="left_up">', withMarkers=True)[1]
         #data = self.cm.ph.getAllItemsBeetwenMarkers(data, '<div class="preview">', '<div class="clear">', withMarkers=True)
         m1 = '<div class="preview">'
         for m2 in ['<div class="navigation', '<div class="t_center">', '<div class="right']:
-            if m2 in data: break
+            if m2 in data:
+                break
         data = self.cm.ph.getDataBeetwenMarkers(data, m1, m2, withMarkers=False)[1]
         data = data.split(m1)
         for item in data:
             tmp    = self.cm.ph.rgetDataBeetwenMarkers2(item, '<div class="item_content">', '<a ')[1]
             url    = self.getFullUrl(self.cm.ph.getSearchGroups(tmp, '''href=['"]([^'^"]+?)['"]''')[0])
-            if not self.cm.isValidUrl(url): continue
+            if not self.cm.isValidUrl(url):
+                continue
             icon   = self.getFullUrl(self.cm.ph.getSearchGroups(tmp, '''src=['"]([^'^"]+?)['"]''')[0])
             title  = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(tmp, 'alt="', '" ', withMarkers=False)[1])
-            if title == '': title  = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(item, '<h2>', '</h2>', withMarkers=False)[1])
+            if title == '':
+                title  = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(item, '<h2>', '</h2>', withMarkers=False)[1])
             desc   = self.cleanHtmlStr(item)
             params = {'category': nextCategory, 'good_for_fav': True, 'title':title, 'url':url, 'icon':icon, 'desc':desc}
             self.addDir(params)
@@ -221,7 +239,8 @@ class TreeTv(CBaseHostClass):
     def exploreItem(self, cItem):
         printDBG("TreeTv.exploreItem")
         sts, data = self.getPage(cItem['url'], self.defaultParams)
-        if not sts: return
+        if not sts:
+            return
         self.setMainUrl(self.cm.meta['url'])
         data = re.sub("<!--[\s\S]*?-->", "", data)
         
@@ -260,7 +279,8 @@ class TreeTv(CBaseHostClass):
         
         baseUrl = self.getFullUrl('search?usersearch={0}&filter=name'.format(urllib.parse.quote_plus(searchPattern)))
         sts, data = self.getPage(baseUrl)
-        if not sts: return
+        if not sts:
+            return
         self.setMainUrl(self.cm.meta['url'])
 
         cItem = dict(cItem)
@@ -303,10 +323,12 @@ class TreeTv(CBaseHostClass):
         sts, data = self.getPage(self.getFullUrl('/film/index/imprint'), params, 'result=' + self.defaultParams['cookie_items']['mycook'] + '&components%5B0%5D%5Bkey%5D=user_agent&components%5B0%5D%5Bvalue%5D=Mozilla%2F5.0+(Windows+NT+6.1%3B+WOW64)+AppleWebKit%2F537.36+(KHTML%2C+like+Gecko)+Chrome%2F52.0.2743.116+Safari%2F537.36&components%5B1%5D%5Bkey%5D=language&components%5B1%5D%5Bvalue%5D=&components%5B2%5D%5Bkey%5D=color_depth&components%5B2%5D%5Bvalue%5D=24&components%5B3%5D%5Bkey%5D=pixel_ratio&components%5B3%5D%5Bvalue%5D=1&components%5B4%5D%5Bkey%5D=hardware_concurrency&components%5B4%5D%5Bvalue%5D=unknown&components%5B5%5D%5Bkey%5D=resolution&components%5B5%5D%5Bvalue%5D%5B%5D=1920&components%5B5%5D%5Bvalue%5D%5B%5D=1080&components%5B6%5D%5Bkey%5D=available_resolution&components%5B6%5D%5Bvalue%5D%5B%5D=1920&components%5B6%5D%5Bvalue%5D%5B%5D=1040&components%5B7%5D%5Bkey%5D=timezone_offset&components%5B7%5D%5Bvalue%5D=-60&components%5B8%5D%5Bkey%5D=session_storage&components%5B8%5D%5Bvalue%5D=1&components%5B9%5D%5Bkey%5D=local_storage&components%5B9%5D%5Bvalue%5D=1&components%5B10%5D%5Bkey%5D=indexed_db&components%5B10%5D%5Bvalue%5D=1&components%5B11%5D%5Bkey%5D=cpu_class&components%5B11%5D%5Bvalue%5D=unknown&components%5B12%5D%5Bkey%5D=navigator_platform&components%5B12%5D%5Bvalue%5D=unknown&components%5B13%5D%5Bkey%5D=do_not_track&components%5B13%5D%5Bvalue%5D=1&components%5B14%5D%5Bkey%5D=regular_plugins&components%5B14%5D%5Bvalue%5D%5B%5D=&components%5B15%5D%5Bkey%5D=canvas&components%5B15%5D%5Bvalue%5D=&components%5B16%5D%5Bkey%5D=webgl&components%5B16%5D%5Bvalue%5D=&components%5B17%5D%5Bkey%5D=adblock&components%5B17%5D%5Bvalue%5D=false&components%5B18%5D%5Bkey%5D=has_lied_languages&components%5B18%5D%5Bvalue%5D=false&components%5B19%5D%5Bkey%5D=has_lied_resolution&components%5B19%5D%5Bvalue%5D=false&components%5B20%5D%5Bkey%5D=has_lied_os&components%5B20%5D%5Bvalue%5D=false&components%5B21%5D%5Bkey%5D=has_lied_browser&components%5B21%5D%5Bvalue%5D=true&components%5B22%5D%5Bkey%5D=touch_support&components%5B22%5D%5Bvalue%5D%5B%5D=0&components%5B22%5D%5Bvalue%5D%5B%5D=false&components%5B22%5D%5Bvalue%5D%5B%5D=false&components%5B23%5D%5Bkey%5D=js_fonts&components%5B23%5D%5Bvalue%5D%5B%5D=Arial')
         params['header']['Referer'] = str(videoUrl)
         sts, data = self.getPage(self.getFullUrl('/film/index/imprint'), params, 'result=' + self.defaultParams['cookie_items']['mycook'] + '&components%5B0%5D%5Bkey%5D=user_agent&components%5B0%5D%5Bvalue%5D=Mozilla%2F5.0+(Windows+NT+6.1%3B+WOW64)+AppleWebKit%2F537.36+(KHTML%2C+like+Gecko)+Chrome%2F52.0.2743.116+Safari%2F537.36&components%5B1%5D%5Bkey%5D=language&components%5B1%5D%5Bvalue%5D=&components%5B2%5D%5Bkey%5D=color_depth&components%5B2%5D%5Bvalue%5D=24&components%5B3%5D%5Bkey%5D=pixel_ratio&components%5B3%5D%5Bvalue%5D=1&components%5B4%5D%5Bkey%5D=hardware_concurrency&components%5B4%5D%5Bvalue%5D=unknown&components%5B5%5D%5Bkey%5D=resolution&components%5B5%5D%5Bvalue%5D%5B%5D=1920&components%5B5%5D%5Bvalue%5D%5B%5D=1080&components%5B6%5D%5Bkey%5D=available_resolution&components%5B6%5D%5Bvalue%5D%5B%5D=1920&components%5B6%5D%5Bvalue%5D%5B%5D=1040&components%5B7%5D%5Bkey%5D=timezone_offset&components%5B7%5D%5Bvalue%5D=-60&components%5B8%5D%5Bkey%5D=session_storage&components%5B8%5D%5Bvalue%5D=1&components%5B9%5D%5Bkey%5D=local_storage&components%5B9%5D%5Bvalue%5D=1&components%5B10%5D%5Bkey%5D=indexed_db&components%5B10%5D%5Bvalue%5D=1&components%5B11%5D%5Bkey%5D=cpu_class&components%5B11%5D%5Bvalue%5D=unknown&components%5B12%5D%5Bkey%5D=navigator_platform&components%5B12%5D%5Bvalue%5D=unknown&components%5B13%5D%5Bkey%5D=do_not_track&components%5B13%5D%5Bvalue%5D=1&components%5B14%5D%5Bkey%5D=regular_plugins&components%5B14%5D%5Bvalue%5D%5B%5D=&components%5B15%5D%5Bkey%5D=canvas&components%5B15%5D%5Bvalue%5D=&components%5B16%5D%5Bkey%5D=webgl&components%5B16%5D%5Bvalue%5D=&components%5B17%5D%5Bkey%5D=adblock&components%5B17%5D%5Bvalue%5D=false&components%5B18%5D%5Bkey%5D=has_lied_languages&components%5B18%5D%5Bvalue%5D=false&components%5B19%5D%5Bkey%5D=has_lied_resolution&components%5B19%5D%5Bvalue%5D=false&components%5B20%5D%5Bkey%5D=has_lied_os&components%5B20%5D%5Bvalue%5D=false&components%5B21%5D%5Bkey%5D=has_lied_browser&components%5B21%5D%5Bvalue%5D=true&components%5B22%5D%5Bkey%5D=touch_support&components%5B22%5D%5Bvalue%5D%5B%5D=0&components%5B22%5D%5Bvalue%5D%5B%5D=false&components%5B22%5D%5Bvalue%5D%5B%5D=false&components%5B23%5D%5Bkey%5D=js_fonts&components%5B23%5D%5Bvalue%5D%5B%5D=Arial')
-        if sts: self.setMainUrl(self.cm.meta['url'])
+        if sts:
+            self.setMainUrl(self.cm.meta['url'])
         
         sts, data = self.getPage(videoUrl, self.defaultParams)
-        if not sts: return []
+        if not sts:
+            return []
         data = re.sub("<!--[\s\S]*?-->", "", data)
         
         url = self.getFullUrl(self.cm.ph.getSearchGroups(data, '''<iframe[^>]+?src=['"]([^"^']+?)['"]''', 1, True)[0].replace('\t', ''))
@@ -319,7 +341,8 @@ class TreeTv(CBaseHostClass):
         params['header']['Referer'] = str(videoUrl)
         
         sts, data = self.getPage(url, params)
-        if not sts: return []
+        if not sts:
+            return []
         
         printDBG(data)
         
@@ -346,12 +369,13 @@ class TreeTv(CBaseHostClass):
                         playerKeyParams['p'] = serverData['p']
                 
                     playerKeyParams['key'] = random.randrange(1, 8)
-                    numClient = math.pow(playerKeyParams['g'], playerKeyParams['key']);
-                    clientKey = math.fmod(numClient, playerKeyParams['p']);
+                    numClient = math.pow(playerKeyParams['g'], playerKeyParams['key'])
+                    clientKey = math.fmod(numClient, playerKeyParams['p'])
                 
                     post_data = {'key':int(clientKey)}
                     sts, data = self.getPage(tmpurl, params, post_data)
-                    if not sts: return []
+                    if not sts:
+                        return []
                     printDBG("++++++++++++++")
                     printDBG(data)
                     printDBG("++++++++++++++")
@@ -367,7 +391,7 @@ class TreeTv(CBaseHostClass):
                 printDBG("playerKeyParams [%s]" % playerKeyParams)
                 return []
                 
-            b =  math.pow(serverData['s_key'], playerKeyParams['key']);
+            b =  math.pow(serverData['s_key'], playerKeyParams['key'])
             skc = int(math.fmod(b, serverData['p']))
         except Exception:
             printExc()
@@ -375,7 +399,8 @@ class TreeTv(CBaseHostClass):
         
         post_data = {'file':fileId, 'source':source, 'skc':skc}
         sts, data = self.getPage(sourceUrl, params, post_data)
-        if not sts: return []
+        if not sts:
+            return []
         
         printDBG('url[%s]' % url)
         printDBG('sourceUrl[%s]' % sourceUrl)
@@ -396,11 +421,13 @@ class TreeTv(CBaseHostClass):
                 sources = sources.split('}') 
                 for item in sources:
                     uri = self.cm.ph.getSearchGroups(item, '''['"]?src['"]?\s*:\s*['"]([^'^"]+?)['"]''', 1, True)[0]
-                    if not self.cm.isValidUrl(uri): continue
+                    if not self.cm.isValidUrl(uri):
+                        continue
                     uri = strwithmeta(uri, {'User-Agent':params['header']['User-Agent'] , 'Referer':params['header']['Referer'], 'Origin':'http://player.tree.tv'})
                     point = self.cm.ph.getSearchGroups(item, '''['"]?point['"]?\s*:\s*['"]([^'^"]+?)['"]''', 1, True)[0]
                     label = self.cm.ph.getSearchGroups(item, '''['"]?label['"]?\s*:\s*['"]([^'^"]+?)['"]''', 1, True)[0]
-                    if label == '': label = name
+                    if label == '':
+                        label = name
                     if str(fileId) == str(point) or point == '':
                         if '/playlist/' in uri:
                             urlTab.extend( getDirectM3U8Playlist(uri, checkExt=False, cookieParams=params, checkContent=True) )
@@ -419,7 +446,8 @@ class TreeTv(CBaseHostClass):
         params['use_new_session'] = True
 
         sts, data = self.getPage(self.getMainUrl(), params)
-        if not sts: return False, connFailed 
+        if not sts:
+            return False, connFailed 
         self.setMainUrl(self.cm.meta['url'])
 
         loginUrl = self.getFullUrl('users/index/auth')
@@ -432,7 +460,8 @@ class TreeTv(CBaseHostClass):
         
         # login
         sts, data = self.getPage(loginUrl, params, post_data)
-        if not sts: return False, connFailed
+        if not sts:
+            return False, connFailed
         
         # check if logged
         #sts, data = self.getPage(self.MAIN_URL, self.defaultParams)
@@ -474,7 +503,8 @@ class TreeTv(CBaseHostClass):
             self.listsTab(self.MAIN_CAT_TAB, {'name':'category'})
         elif 'list_items' == category:
             idx = self.currItem.get('f_idx', 0)
-            if idx == 0: self.fillFilters({'name':'category', 'url':self.getFullUrl('/films')})
+            if idx == 0:
+                self.fillFilters({'name':'category', 'url':self.getFullUrl('/films')})
             if idx < len(self.filtersTab):
                 self.listFilter(self.currItem, self.filtersTab)
             else:

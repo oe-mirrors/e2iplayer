@@ -17,8 +17,10 @@ import re
 import urllib.request
 import urllib.parse
 import urllib.error
-try: import json
-except Exception: import simplejson as json
+try:
+    import json
+except Exception:
+    import simplejson as json
 from Components.config import config, ConfigText, ConfigSelection, getConfigListEntry
 ###################################################
 
@@ -75,15 +77,18 @@ class HDSTo(CBaseHostClass):
         url = self.getRealUrl(url)
         baseUrl = self.getRealUrl(baseUrl)
         if not self.cm.isValidUrl(url) and baseUrl != None:
-            if url.startswith('/'): baseUrl = self.cm.getBaseUrl(baseUrl)
-            else: baseUrl = baseUrl.rsplit('/', 1)[0] + '/'
+            if url.startswith('/'):
+                baseUrl = self.cm.getBaseUrl(baseUrl)
+            else:
+                baseUrl = baseUrl.rsplit('/', 1)[0] + '/'
         return CBaseHostClass.getFullUrl(self, url.replace('&#038;', '&'), baseUrl)
     
     def setMainUrl(self, url):
         CBaseHostClass.setMainUrl(self, self.getRealUrl(url))
     
     def getPage(self, baseUrl, addParams={}, post_data=None):
-        if addParams == {}: addParams = dict(self.defaultParams)
+        if addParams == {}:
+            addParams = dict(self.defaultParams)
         
         proxy = config.plugins.iptvplayer.hdsto_proxy.value
         if proxy == 'webproxy':
@@ -127,7 +132,8 @@ class HDSTo(CBaseHostClass):
     def listMain(self, cItem):
         printDBG("HDSTo.listMain")
         sts, data = self.getPage(self.getMainUrl())
-        if not sts: return
+        if not sts:
+            return
         self.setMainUrl(self.cm.meta['url'])
         if self.getFullUrl(self.cm.meta['url']).endswith('/home.php'):
             GetIPTVNotify().push('\n'.join(self.membersOnly), 'info', 10)
@@ -152,8 +158,10 @@ class HDSTo(CBaseHostClass):
         
     def searchUrl(self, data):
         url = self.cm.ph.getSearchGroups(data, '''<a[^>]+?href=([^>\s]+?)[>\s]''')[0]
-        if url.startswith('"'): url = self.cm.ph.getSearchGroups(url, '"([^"]+?)"')[0]
-        if url.startswith("'"): url = self.cm.ph.getSearchGroups(url, "'([^']+?)'")[0]
+        if url.startswith('"'):
+            url = self.cm.ph.getSearchGroups(url, '"([^"]+?)"')[0]
+        if url.startswith("'"):
+            url = self.cm.ph.getSearchGroups(url, "'([^']+?)'")[0]
         return self.getFullUrl(url)
     
     def listCatItems(self, cItem, nextCategory):
@@ -167,7 +175,8 @@ class HDSTo(CBaseHostClass):
                 title = self.cleanHtmlStr(cTree['dat'])
                 
                 if url != '':
-                    if 'list' in cTree: title = _('--All--')
+                    if 'list' in cTree:
+                        title = _('--All--')
                     params = dict(cItem)
                     params.update({'good_for_fav':False, 'category':nextCategory, 'title':title, 'url':url})
                     params.pop('c_tree')
@@ -210,12 +219,16 @@ class HDSTo(CBaseHostClass):
         data = self.cm.ph.getAllItemsBeetwenMarkers(data, '<li', '</li>')
         for item in data:
             url = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''href=['"]([^"^']+?)["']''', 1, True)[0])
-            if url == '': continue
+            if url == '':
+                continue
             icon = self.cm.ph.getSearchGroups(item, '''\ssrc=['"]([^"^']+?\.(?:jpe?g|png)(?:\?[^'^"]*?)?)['"]''')[0]
-            if icon == '': icon = self.cm.ph.getSearchGroups(item, '''\ssrc=['"]([^"^']+?)['"]''')[0]
+            if icon == '':
+                icon = self.cm.ph.getSearchGroups(item, '''\ssrc=['"]([^"^']+?)['"]''')[0]
             title = self.cleanHtmlStr( self.cm.ph.getDataBeetwenNodes(item, ('<h', '>'), ('</h', '>'), False)[1] )
-            if 'details-serie' in cItem['url']: title += ' ' + self.cleanHtmlStr( self.cm.ph.getDataBeetwenNodes(item, ('<span', '>', 'opacity'), ('</span', '>'), False)[1] )
-            if title == '': title = self.cleanHtmlStr( self.cm.ph.getDataBeetwenNodes(item, ('<a', '>', 'name'), ('</a', '>'), False)[1] )
+            if 'details-serie' in cItem['url']:
+                title += ' ' + self.cleanHtmlStr( self.cm.ph.getDataBeetwenNodes(item, ('<span', '>', 'opacity'), ('</span', '>'), False)[1] )
+            if title == '':
+                title = self.cleanHtmlStr( self.cm.ph.getDataBeetwenNodes(item, ('<a', '>', 'name'), ('</a', '>'), False)[1] )
             
             desc = ''
             descTab = []
@@ -226,8 +239,10 @@ class HDSTo(CBaseHostClass):
 
             for t in desc:
                 d = self.cleanHtmlStr(t)
-                if d == '': continue
-                else: descTab.append(d)
+                if d == '':
+                    continue
+                else:
+                    descTab.append(d)
             desc = ' | '.join(descTab)
             params = dict(cItem)
             if 'tout_voir' in icon:
@@ -244,7 +259,8 @@ class HDSTo(CBaseHostClass):
     def listItems(self, cItem, nextCategory):
         printDBG("HDSTo.listItems [%s]" % cItem)
         sts, data = self.getPage(cItem['url'])
-        if not sts: return
+        if not sts:
+            return
         
         page = cItem.get('page', 1)
         
@@ -274,7 +290,8 @@ class HDSTo(CBaseHostClass):
         self.cacheLinks = {}
         
         sts, data = self.getPage(cItem['url'])
-        if not sts: return
+        if not sts:
+            return
         cUrl = self.getFullUrl(self.cm.meta['url'])
         self.setMainUrl(cUrl)
         
@@ -283,10 +300,12 @@ class HDSTo(CBaseHostClass):
         
         tmp = self.cm.ph.getAllItemsBeetwenNodes(data, ('<a', '>', 'iframe'), ('</a', '>'))
         for item in tmp:
-            if 'file-video-o' not in item: continue
+            if 'file-video-o' not in item:
+                continue
             title = self.cleanHtmlStr(item)
             url = self.getFullUrl( self.cm.ph.getSearchGroups(item, '''href=['"]([^"^']+?)["']''', 1, True)[0], cUrl)
-            if url == '': continue
+            if url == '':
+                continue
             self.cacheLinks[url] = [{'name':'', 'url':strwithmeta(url, {'Referer':cUrl}), 'need_resolve':1}]
             
             params = dict(cItem)
@@ -318,7 +337,8 @@ class HDSTo(CBaseHostClass):
             for it in item:
                 linkName  = self.cleanHtmlStr(it)
                 linkUrl = self.getFullUrl( self.cm.ph.getSearchGroups(it, '''href=['"]([^"^']+?)["']''', 1, True)[0], cUrl)
-                if linkUrl == '': continue
+                if linkUrl == '':
+                    continue
                 urls.append({'name':linkName, 'url':strwithmeta(linkUrl, {'Referer':cUrl}), 'need_resolve':1})
             
             if len(urls):
@@ -336,7 +356,8 @@ class HDSTo(CBaseHostClass):
         cItem['category'] = 'list_items'
         cItem['url'] = self.getFullUrl('/search.php?q=') + urllib.parse.quote_plus(searchPattern)
         sts, data = self.getPage(cItem['url'])
-        if not sts: return
+        if not sts:
+            return
         self.setMainUrl(self.cm.meta['url'])
         
         data = self.cm.ph.getDataBeetwenNodes(data, ('<ul', '>', 'film-preview'), ('</ul', '>'), False)[1]
@@ -369,7 +390,8 @@ class HDSTo(CBaseHostClass):
                     for item in tmp:
                         if 'video/mp4' in item.lower():
                             url = self.getFullUrl( self.cm.ph.getSearchGroups(item, '''src=['"]([^"^']+?)['"]''')[0] )
-                            if url != '': linksTab.append({'name':str(len(linksTab)+1) + ' mp4', 'url':url})
+                            if url != '':
+                                linksTab.append({'name':str(len(linksTab)+1) + ' mp4', 'url':url})
                 
                 jwplayer = False
                 jscode = []
@@ -381,8 +403,10 @@ class HDSTo(CBaseHostClass):
                         jwplayer = True
                         jscode.append(item)
                 
-                if not jwplayer: jscode.insert(0, 'var document={};function RadiantMP(){return document}document.getElementById=function(){return document},document.addEventListener=function(){},document.init=function(){print(JSON.stringify(arguments))};')
-                else: jscode.insert(0, 'window=this; function stub() {}; function jwplayer() {return {setup:function(){print(JSON.stringify(arguments[0]))}, onTime:stub, onPlay:stub, onComplete:stub, onReady:stub, addButton:stub}}; window.jwplayer=jwplayer;')
+                if not jwplayer:
+                    jscode.insert(0, 'var document={};function RadiantMP(){return document}document.getElementById=function(){return document},document.addEventListener=function(){},document.init=function(){print(JSON.stringify(arguments))};')
+                else:
+                    jscode.insert(0, 'window=this; function stub() {}; function jwplayer() {return {setup:function(){print(JSON.stringify(arguments[0]))}, onTime:stub, onPlay:stub, onComplete:stub, onReady:stub, addButton:stub}}; window.jwplayer=jwplayer;')
                 
                 ret = js_execute( '\n'.join(jscode) )
                 try:
@@ -392,10 +416,12 @@ class HDSTo(CBaseHostClass):
                             subsTab = []
                             for item in dat.get('tracks', []):
                                 try:
-                                    if item.get('kind', '') != 'captions': continue
+                                    if item.get('kind', '') != 'captions':
+                                        continue
                                     title = self.cleanHtmlStr(item['label'])
                                     lang = item['file'].rsplit('-', 1)[-1].split('.', 1)[0]
-                                    if lang == '': lang = title
+                                    if lang == '':
+                                        lang = title
                                     subsTab.append({'title':title, 'url':self.getFullUrl(item['file'], cUrl), 'lang':lang, 'format':item['file'].rsplit('.', 1)[-1]})
                                 except Exception:
                                     pass
@@ -423,7 +449,8 @@ class HDSTo(CBaseHostClass):
                         for key, dat in data.items():
                             subsTab = []
                             for item in dat.get('ccFiles', []):
-                                if len(item) < 3: continue
+                                if len(item) < 3:
+                                    continue
                                 subsTab.append({'title':self.cleanHtmlStr(item[1]), 'url':self.getFullUrl(item[2], cUrl), 'lang':self.cleanHtmlStr(item[0]), 'format':self.cleanHtmlStr(item[0]).rsplit('.', 1)[-1]})
                             
                             tmpLinksTab = []
@@ -432,8 +459,10 @@ class HDSTo(CBaseHostClass):
                                     tmpLinksTab.extend( getDirectM3U8Playlist(item, checkExt=False, checkContent=True) )
                                 elif type == 'mp4' and isinstance(item, list):
                                     for url in item:
-                                        if '-' in url: name = url.rsplit('-', 1)[-1].replace('.', ' ')
-                                        else: name = 'mp4'
+                                        if '-' in url:
+                                            name = url.rsplit('-', 1)[-1].replace('.', ' ')
+                                        else:
+                                            name = 'mp4'
                                         tmpLinksTab.append({'name':name, 'url':url})
                             
                             if len(subsTab):
@@ -455,7 +484,8 @@ class HDSTo(CBaseHostClass):
         if data == None:
             self.tryTologin()
             sts, data = self.getPage(url)
-            if not sts: data = ''
+            if not sts:
+                data = ''
 
         data = data.split('title-holder', 1)[-1]
         title = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(data, ('<h', '>'), ('</h', '>'), False)[1])
@@ -472,14 +502,20 @@ class HDSTo(CBaseHostClass):
             if val == '' and 'determinate' in item[-1]:
                 val = self.cm.ph.getSearchGroups(item[-1], '''<div([^>]+?determinate[^>]+?)>''')[0]
                 val = self.cm.ph.getSearchGroups(val, '''width\:\s*([0-9]+)''')[0]
-                try: val = str(int(val) / 10.0)
-                except Exception: continue
-            if key == '' or val == '': continue
+                try:
+                    val = str(int(val) / 10.0)
+                except Exception:
+                    continue
+            if key == '' or val == '':
+                continue
             itemsList.append((key, val))
 
-        if title == '': title = cItem['title']
-        if icon == '':  icon  = cItem.get('icon', self.DEFAULT_ICON_URL)
-        if desc == '':  desc  = cItem.get('desc', '')
+        if title == '':
+            title = cItem['title']
+        if icon == '':
+            icon  = cItem.get('icon', self.DEFAULT_ICON_URL)
+        if desc == '':
+            desc  = cItem.get('desc', '')
         
         return [{'title':self.cleanHtmlStr( title ), 'text': self.cleanHtmlStr( desc ), 'images':[{'title':'', 'url':self.getFullUrl(icon)}], 'other_info':{'custom_items_list':itemsList}}]
         
@@ -500,7 +536,8 @@ class HDSTo(CBaseHostClass):
             rm(self.COOKIE_FILE)
             
             sts, data = self.getPage(self.getFullUrl('/home.php'))
-            if not sts: return False
+            if not sts:
+                return False
             
             actionUrl = self.getFullUrl(self.cm.meta['url'])
             post_data = {'email':self.login, 'password':self.password, 'submit_form':'Login'}
@@ -519,7 +556,8 @@ class HDSTo(CBaseHostClass):
                     data = data.split('",')
                     if len(data) == 3:
                         idx = data[1].find('"')
-                        if idx >= 0: msgTab.append(self.cleanHtmlStr(data[1][idx+1:])) 
+                        if idx >= 0:
+                            msgTab.append(self.cleanHtmlStr(data[1][idx+1:])) 
                 self.sessionEx.waitForFinishOpen(MessageBox, '\n'.join(msgTab), type = MessageBox.TYPE_ERROR, timeout = 10)
                 printDBG('tryTologin failed')
         return self.loggedIn
@@ -566,5 +604,7 @@ class IPTVHost(CHostBase):
         CHostBase.__init__(self, HDSTo(), True, [])
     
     def withArticleContent(self, cItem):
-        if 'prev_url' in cItem or cItem.get('category', '') == 'explore_item': return True
-        else: return False
+        if 'prev_url' in cItem or cItem.get('category', '') == 'explore_item':
+            return True
+        else:
+            return False

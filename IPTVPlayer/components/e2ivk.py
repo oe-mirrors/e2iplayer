@@ -31,10 +31,14 @@ class E2iInput(Input):
 
     def timeout(self, *args, **kwargs):
         callCallback = False
-        try: callCallback = True if self.lastKey != -1 else False
-        except Exception:  printExc()
-        try: Input.timeout(self, *args, **kwargs)
-        except Exception: printExc()
+        try:
+            callCallback = True if self.lastKey != -1 else False
+        except Exception:
+            printExc()
+        try:
+            Input.timeout(self, *args, **kwargs)
+        except Exception:
+            printExc()
         if self.e2iTimeoutCallback:
             self.e2iTimeoutCallback()
 
@@ -49,8 +53,10 @@ class E2iVKSelectionList(IPTVListComponentBase):
             fontSize = 16
             itemHeight = 30
         
-        try: self.font = skin.fonts["e2ivklistitem"]
-        except Exception: self.font = ("Regular", fontSize, itemHeight, 0)
+        try:
+            self.font = skin.fonts["e2ivklistitem"]
+        except Exception:
+            self.font = ("Regular", fontSize, itemHeight, 0)
         
         self.l.setFont(0, gFont("Regular", 60))
         self.l.setFont(1, gFont(self.font[0], self.font[1]))
@@ -70,8 +76,10 @@ class E2iVKSelectionList(IPTVListComponentBase):
             for key in self.dictPIX:
                 try:
                     pixFile = self.ICONS_FILESNAMES.get(key, None)
-                    if None != pixFile: self.dictPIX[key] = LoadPixmap(cached=True, path=GetIconDir(pixFile))
-                except Exception: printExc()
+                    if None != pixFile:
+                        self.dictPIX[key] = LoadPixmap(cached=True, path=GetIconDir(pixFile))
+                except Exception:
+                    printExc()
         
     def onDestroy(self):
         printDBG('--- onDestroy ---')
@@ -442,8 +450,10 @@ class E2iVirtualKeyBoard(Screen):
             colIdx = self.colIdx
             while True:
                 colIdx += dx
-                if colIdx < 0: colIdx = self.colMax -1
-                elif colIdx >= self.colMax: colIdx = 0
+                if colIdx < 0:
+                    colIdx = self.colMax -1
+                elif colIdx >= self.colMax:
+                    colIdx = 0
                 if keyID != self.KEYIDMAP[self.rowIdx][colIdx]:
                     self.colIdx = colIdx
                     break
@@ -451,8 +461,10 @@ class E2iVirtualKeyBoard(Screen):
             rowIdx = self.rowIdx
             while True:
                 rowIdx += dy
-                if rowIdx < 0: rowIdx = self.rowMax -1
-                elif rowIdx >= self.rowMax: rowIdx = 0
+                if rowIdx < 0:
+                    rowIdx = self.rowMax -1
+                elif rowIdx >= self.rowMax:
+                    rowIdx = 0
                 if keyID != self.KEYIDMAP[rowIdx][self.colIdx]:
                     self.rowIdx = rowIdx
                     break
@@ -801,7 +813,8 @@ class E2iVirtualKeyBoard(Screen):
     def keyOK(self):
         if self.focus in (self.FOCUS_SUGGESTIONS, self.FOCUS_SEARCH_HISTORY):
             text = self['right_list' if self.focus == self.FOCUS_SUGGESTIONS else "left_list"].getCurrent()
-            if text: self.setText(text)
+            if text:
+                self.setText(text)
             self.currentKeyId = 0
             self.rowIdx = 0
             self.colIdx = 7
@@ -954,13 +967,17 @@ class E2iVirtualKeyBoard(Screen):
 
     def keyNumberGlobal(self, number):
         if self.currentKeyId == 0:
-            try: self["text"].number(number)
-            except Exception: printExc()
+            try:
+                self["text"].number(number)
+            except Exception:
+                printExc()
 
     def keyGotAscii(self):
         if self.currentKeyId == 0:
-            try: self["text"].handleAscii(getPrevAsciiCode())
-            except Exception: printExc()
+            try:
+                self["text"].handleAscii(getPrevAsciiCode())
+            except Exception:
+                printExc()
 
     def setSuggestionVisible(self, visible):
         if self.isAutocompleteEnabled and self.isSuggestionVisible != visible:

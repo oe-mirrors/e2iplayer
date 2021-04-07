@@ -46,7 +46,8 @@ class ARC4:
             this continues the encryption
             New sessions of encrypt can NOT be called twice with the same key!!!!
         """
-        if self.keyReady != 1 : raise Exception('Error, ARC4 key already used once!')
+        if self.keyReady != 1 :
+            raise Exception('Error, ARC4 key already used once!')
         if more != 1:
             self.keyReady = None
         cipherText = arcfourBlock(self.state, plainText)

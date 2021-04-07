@@ -16,8 +16,10 @@ import urllib.parse
 import time
 import re
 from copy import deepcopy
-try:    import json
-except Exception: import simplejson as json
+try:
+    import json
+except Exception:
+    import simplejson as json
 from Components.config import config, ConfigText, getConfigListEntry
 ###################################################
 
@@ -68,12 +70,15 @@ class EFilmyTv(CBaseHostClass):
         self.cacheABC = {}
         
     def getPage(self, baseUrl, addParams = {}, post_data = None):
-        if addParams == {}: addParams = dict(self.defaultParams)
+        if addParams == {}:
+            addParams = dict(self.defaultParams)
         origBaseUrl = baseUrl
         baseUrl = self.cm.iriToUri(baseUrl)
         def _getFullUrl(url):
-            if self.cm.isValidUrl(url): return url
-            else: return urllib.parse.urljoin(baseUrl, url)
+            if self.cm.isValidUrl(url):
+                return url
+            else:
+                return urllib.parse.urljoin(baseUrl, url)
         addParams['cloudflare_params'] = {'domain':self.up.getDomain(baseUrl), 'cookie_file':self.COOKIE_FILE, 'User-Agent':self.USER_AGENT, 'full_url_handle':_getFullUrl}
         return self.cm.getPageCFProtection(baseUrl, addParams, post_data)
         
@@ -90,7 +95,8 @@ class EFilmyTv(CBaseHostClass):
         
     def listHeadModuleItems(self, cItem, nextCategory, baseUrl, marker):
         sts, data = self.getPage(self.getMainUrl())
-        if not sts: return
+        if not sts:
+            return
         
         cUrl = self.cm.getBaseUrl(data.meta['url'])
         data = self.cm.ph.getDataBeetwenNodes(data, ('<h1>', '</h1>', marker), ('</div', '>'))[1]
@@ -98,7 +104,8 @@ class EFilmyTv(CBaseHostClass):
         for item in data:
             url = self.cm.ph.getSearchGroups(item, '''\shref=['"]([^'^"]+?)['"]''')[0]
             id = self.cm.ph.getSearchGroups(item, '''\sid=['"]([^'^"]+?)['"]''')[0]
-            if url != '#' or id == '': continue
+            if url != '#' or id == '':
+                continue
             url = self.getFullUrl(baseUrl.format(id), cUrl)
             title = self.cleanHtmlStr(item)
             params = dict(cItem)
@@ -127,7 +134,8 @@ class EFilmyTv(CBaseHostClass):
         
     def listTopItems(self, cItem, nextCategory, baseUrl):
         sts, data = self.getPage(self.getMainUrl())
-        if not sts: return
+        if not sts:
+            return
         
         cUrl = self.cm.getBaseUrl(data.meta['url'])
         data = self.cm.ph.getDataBeetwenMarkers(data, '<h3>', '</h3>')[1]
@@ -135,13 +143,16 @@ class EFilmyTv(CBaseHostClass):
         for item in data:
             url = self.cm.ph.getSearchGroups(item, '''\shref=['"]([^'^"]+?)['"]''')[0]
             id = self.cm.ph.getSearchGroups(item, '''\sid=['"]([^'^"]+?)['"]''')[0].split('_')[-1]
-            if url != '#' or id == '': continue
+            if url != '#' or id == '':
+                continue
             url = self.getFullUrl(baseUrl.format(id), cUrl)
             title = self.cleanHtmlStr(item)
             params = dict(cItem)
             params.update({'good_for_fav':False, 'category':nextCategory, 'title':title, 'url':url, 'desc':''})
-            if nextCategory == 'video': self.addVideo(params)
-            else: self.addDir(params)
+            if nextCategory == 'video':
+                self.addVideo(params)
+            else:
+                self.addDir(params)
         
     def listSeriesTop(self, cItem, nextCategory):
         printDBG("EFilmyTv.listSeriesTop")
@@ -154,7 +165,8 @@ class EFilmyTv(CBaseHostClass):
     def listCmdItems(self, cItem, nextCategory):
         printDBG("EFilmyTv.listCmdItems")
         sts, data = self.getPage(cItem['url'])
-        if not sts: return
+        if not sts:
+            return
         cUrl = self.cm.getBaseUrl(data.meta['url'])
         data = self.cm.ph.getAllItemsBeetwenNodes(data, ('<div', '>', '-item'), ('</div', '>'))
         for item in data:
@@ -173,14 +185,19 @@ class EFilmyTv(CBaseHostClass):
             desc = []
             for t in tmp:
                 t = self.cleanHtmlStr(t)
-                if t == '': continue
-                if len(title) < titleLen: title.append(t)
-                else: desc.append(t)
+                if t == '':
+                    continue
+                if len(title) < titleLen:
+                    title.append(t)
+                else:
+                    desc.append(t)
             
             params = dict(cItem)
             params.update({'good_for_fav':True, 'category':nextCategory, 'title':' - '.join(title), 'url':url, 'icon':icon, 'desc':'[/br]'.join(desc)})
-            if isEpisode or nextCategory == 'video': self.addVideo(params)
-            else: self.addDir(params)
+            if isEpisode or nextCategory == 'video':
+                self.addVideo(params)
+            else:
+                self.addDir(params)
         
     def listSeriesAll(self, cItem, nextCategory):
         printDBG("EFilmyTv.listSeriesAll")
@@ -189,7 +206,8 @@ class EFilmyTv(CBaseHostClass):
         url += '&page=%s' % page
         
         sts, data = self.getPage(url)
-        if not sts: return
+        if not sts:
+            return
         
         cUrl = self.cm.getBaseUrl(data.meta['url'])
         
@@ -210,11 +228,13 @@ class EFilmyTv(CBaseHostClass):
         printDBG("EFilmyTv.fillSeriesCache")
         self.cacheSeries = {}
         sts, data = self.getPage(url)
-        if not sts: return
+        if not sts:
+            return
         cUrl = self.cm.getBaseUrl(data.meta['url'])
         url = self.getFullUrl(self.cm.ph.getSearchGroups(data, '''<script[^>]+?src=['"]([^'^"]+?menu\.js[^'^"]*?)['"]''')[0], cUrl)
         sts, data = self.getPage(url)
-        if not sts: return
+        if not sts:
+            return
         data = self.cm.ph.getAllItemsBeetwenMarkers(data, 'var serials_', '];', False)
         try:
             parseObj = {}
@@ -232,11 +252,13 @@ class EFilmyTv(CBaseHostClass):
         if len(letters) == 0:
             self.cacheABC['f_keys'] = []
             sts, data = self.getPage(cItem['url'])
-            if not sts: return
+            if not sts:
+                return
             cUrl = self.cm.getBaseUrl(data.meta['url'])
             url = self.getFullUrl(self.cm.ph.getSearchGroups(data, '''<script[^>]+?src=['"]([^'^"]+?menu\.js[^'^"]*?)['"]''')[0], cUrl)
             sts, data = self.getPage(url)
-            if not sts: return
+            if not sts:
+                return
             data = self.cm.ph.getAllItemsBeetwenMarkers(data, 'var serials_', '];', False)
             try:
                 if self.cacheSeries == {}:
@@ -245,8 +267,10 @@ class EFilmyTv(CBaseHostClass):
                 for idx in range(len(self.cacheSeries['seo'])):
                     tmp = self.cacheSeries['seo'][idx].split(',', 1)[-1]
                     letter = tmp[0].upper()
-                    if letter == '-' and len(tmp) > 1: letter = tmp[1].upper()
-                    if letter in "0123456789*?#-!": letter = '#'
+                    if letter == '-' and len(tmp) > 1:
+                        letter = tmp[1].upper()
+                    if letter in "0123456789*?#-!":
+                        letter = '#'
                     title = self.cleanHtmlStr(self.cacheSeries['pl'][idx])
                     url = self.getFullUrl('/serial,%s.html' % self.cacheSeries['seo'][idx], cUrl)
                     if letter not in keysTab:
@@ -277,7 +301,8 @@ class EFilmyTv(CBaseHostClass):
         self.cacheMovies = {'f_keys':[]}
         
         sts, data = self.getPage(cItem['url'])
-        if not sts: return
+        if not sts:
+            return
         
         cUrl = self.cm.getBaseUrl(data.meta['url'])
         
@@ -301,13 +326,16 @@ class EFilmyTv(CBaseHostClass):
         cItem = dict(cItem)
         
         f_idx = cItem.get('f_idx', 0)
-        if f_idx == 0: self.fillMoviesCache(cItem)
+        if f_idx == 0:
+            self.fillMoviesCache(cItem)
         filters = self.cacheMovies.get('f_keys', [])
-        if f_idx >= len(filters): return
+        if f_idx >= len(filters):
+            return
         tabItems = self.cacheMovies.get(filters[f_idx], [])
         f_idx += 1
         cItem['f_idx'] = f_idx
-        if f_idx >= len(filters): cItem['category'] = nextCategory
+        if f_idx >= len(filters):
+            cItem['category'] = nextCategory
         self.listsTab(tabItems, cItem)
         
     def listSort(self, cItem, nextCategory):
@@ -315,7 +343,8 @@ class EFilmyTv(CBaseHostClass):
         
         if self.cacheSort == []:
             sts, data = self.getPage(cItem['url'])
-            if not sts: return
+            if not sts:
+                return
             
             sortTabe = []
             data = self.cm.ph.getDataBeetwenNodes(data, ('<div', '>', 'sort'), ('</div', '>'))[1]
@@ -339,7 +368,8 @@ class EFilmyTv(CBaseHostClass):
         
         post_data = cItem.get('post_data', None)
         sts, data = self.getPage(cItem['url'], paramsUrl, post_data)
-        if not sts: return
+        if not sts:
+            return
         
         cUrl = self.cm.getBaseUrl(data.meta['url'])
         
@@ -356,14 +386,18 @@ class EFilmyTv(CBaseHostClass):
             tmp = self.cm.ph.getAllItemsBeetwenNodes(item, ('<a', '>', 'title_'), ('</a', '>'), False)
             for t in tmp:
                 t = self.cleanHtmlStr(t)
-                if t == '': continue
-                if title == '': title = t
-                else: desc.append(t)
+                if t == '':
+                    continue
+                if title == '':
+                    title = t
+                else:
+                    desc.append(t)
             
             tmp = self.cm.ph.getAllItemsBeetwenMarkers(item, '<span', '</span>')
             for t in tmp:
                 t = self.cleanHtmlStr(t)
-                if t == '': continue
+                if t == '':
+                    continue
                 desc.append(t)
             desc.append(self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(item, '<p', '</p>')[1]))
             params = dict(cItem)
@@ -378,7 +412,8 @@ class EFilmyTv(CBaseHostClass):
     def listSeriesUpdated(self, cItem, nextCategory):
         printDBG("EFilmyTv.listSeriesUpdated")
         sts, data = self.getPage(cItem['url'])
-        if not sts: return
+        if not sts:
+            return
         
         cUrl = self.cm.getBaseUrl(data.meta['url'])
         
@@ -405,7 +440,8 @@ class EFilmyTv(CBaseHostClass):
     def listSeriesSeasons(self, cItem, nextCategory):
         printDBG("EFilmyTv.listSeriesSeasons")
         sts, data = self.getPage(cItem['url'])
-        if not sts: return
+        if not sts:
+            return
         cUrl = self.cm.getBaseUrl(data.meta['url'])
         serieTitle = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(data, ('<div', '>', 'module-head'), ('</h1>', '>'))[1])
         data = self.cm.ph.getDataBeetwenNodes(data, ('<div', '>', 'holder'), ('</div', '>'))[1]
@@ -465,10 +501,12 @@ class EFilmyTv(CBaseHostClass):
         retTab = []
         cacheKey = cItem['url']
         cacheTab = self.cacheLinks.get(cacheKey, [])
-        if len(cacheTab): return cacheTab
+        if len(cacheTab):
+            return cacheTab
         
         sts, data = self.getPage(cItem['url'])
-        if not sts: return []
+        if not sts:
+            return []
         
         cUrl = data.meta['url']
         
@@ -479,9 +517,12 @@ class EFilmyTv(CBaseHostClass):
         for item in data:
             movieId = self.cm.ph.getDataBeetwenNodes(item, ('<div', '>', 'embedbg'), ('</div', '>'))[1]
             movieId = self.cm.ph.getSearchGroups(movieId, '''\sid=['"]([0-9]+?(?:_s)?)['"]''')[0]
-            if movieId == '': continue
-            if movieId.endswith('_s'): baseUrl = '/seriale.php'
-            else: baseUrl = '/filmy.php'
+            if movieId == '':
+                continue
+            if movieId.endswith('_s'):
+                baseUrl = '/seriale.php'
+            else:
+                baseUrl = '/filmy.php'
             
 #            item = item.split('</div>', 1)
             name = self.cleanHtmlStr(item).replace('Odtwarzacz', '').replace('Wersja', '')
@@ -490,7 +531,8 @@ class EFilmyTv(CBaseHostClass):
             for it in item:
                 val = self.cm.ph.getSearchGroups(it, '''\svalue=['"]([^'^"]+?)['"]''')[0]
                 if 'bez' in val.lower(): 
-                    if not self.loggedIn: continue
+                    if not self.loggedIn:
+                        continue
                     type = 'show_premium'
                 else: 
                     type = 'show_player'
@@ -520,7 +562,8 @@ class EFilmyTv(CBaseHostClass):
         paramsUrl['header'] = dict(paramsUrl['header'])
         paramsUrl['header']['Referer'] = videoUrl.meta.get('Referer', self.getMainUrl())
         sts, data = self.getPage(videoUrl, paramsUrl)
-        if not sts: return urlTab
+        if not sts:
+            return urlTab
         cUrl = data.meta['url']
         
         ##############################################################################################
@@ -574,8 +617,10 @@ class EFilmyTv(CBaseHostClass):
                 captcha_post_data['captcha'] = retArg[0][0]
                 paramsUrl['header']['Referer'] = cUrl
                 sts, data = self.cm.getPage(actionUrl, paramsUrl, captcha_post_data)
-                if sts: cUrl = data.meta['url'] 
-                else: return urlTab
+                if sts:
+                    cUrl = data.meta['url'] 
+                else:
+                    return urlTab
             else:
                 return urlTab
         ##############################################################################################
@@ -597,7 +642,8 @@ class EFilmyTv(CBaseHostClass):
             SetIPTVPlayerLastHostError(errorMessage)
             data = self.cm.ph.getDataBeetwenMarkers(data, 'clip:', '}')[1]
             videoUrl = self.cm.ph.getSearchGroups(data, '''\surl\s*?:\s*?['"](https?://[^'^"]+?)['"]''', 1, True)[0]
-            if videoUrl != '': urlTab.append({'name':'direct_link', 'url':strwithmeta(videoUrl, {'Referer':cUrl})})
+            if videoUrl != '':
+                urlTab.append({'name':'direct_link', 'url':strwithmeta(videoUrl, {'Referer':cUrl})})
         else:
             videoUrl = self.getFullUrl(self.cm.ph.getSearchGroups(data, '''href=['"]([^'^"]+?)['"]''', 1, True)[0], cUrl)
             if 'clipwatching' in videoUrl:
@@ -612,13 +658,18 @@ class EFilmyTv(CBaseHostClass):
         retTab = []
         
         url = cItem.get('url', '')
-        if ',odcinek' in url: type = 'episode'
-        elif 'serial,' in url: type = 'series'
-        elif 'film,' in url: type = 'movie'  
-        else: return []
+        if ',odcinek' in url:
+            type = 'episode'
+        elif 'serial,' in url:
+            type = 'series'
+        elif 'film,' in url:
+            type = 'movie'  
+        else:
+            return []
         
         sts, data = self.getPage(url)
-        if not sts: return []
+        if not sts:
+            return []
         
         otherInfo = {}
         retTab = []
@@ -633,9 +684,12 @@ class EFilmyTv(CBaseHostClass):
             sTitle = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(data, ('<div', '>', 'movieinfo'), ('</h', '>'), False)[1])
             title = '%s - %s' % (sTitle, title)
         
-        if title == '': title = cItem['title']
-        if desc == '':  desc = cItem.get('desc', '')
-        if icon == '':  icon = cItem.get('icon', self.DEFAULT_ICON_URL)
+        if title == '':
+            title = cItem['title']
+        if desc == '':
+            desc = cItem.get('desc', '')
+        if icon == '':
+            icon = cItem.get('icon', self.DEFAULT_ICON_URL)
         
         return [{'title':self.cleanHtmlStr( title ), 'text': self.cleanHtmlStr( desc ), 'images':[{'title':'', 'url':self.getFullIconUrl(icon)}], 'other_info':otherInfo}]
         
@@ -657,14 +711,16 @@ class EFilmyTv(CBaseHostClass):
             return False
         
         sts, data = self.getPage(self.getMainUrl())
-        if not sts: return False
+        if not sts:
+            return False
         
         nick = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(data, ('<a', '>', 'nick'), ('</a', '>'))[1])
         loginMarker = 'logout.html'
         if loginMarker not in data or nick != self.login:
             self.cm.clearCookie(self.COOKIE_FILE, ['__cfduid', 'cf_clearance'])
             sts, data = self.cm.ph.getDataBeetwenNodes(data, ('<form', '>', 'user'), ('</form', '>'))
-            if not sts: return False
+            if not sts:
+                return False
             
             actionUrl = self.getFullUrl(self.cm.ph.getSearchGroups(data, '''action=['"]([^'^"]+?)['"]''')[0])
             data = self.cm.ph.getAllItemsBeetwenMarkers(data, '<input', '>')
@@ -687,7 +743,8 @@ class EFilmyTv(CBaseHostClass):
             self.loginMessage =  []
             for t in data:
                 t = self.cleanHtmlStr(t)
-                if t not in ['', '>']: self.loginMessage.append(t)
+                if t not in ['', '>']:
+                    self.loginMessage.append(t)
             self.loginMessage = '[/br]'.join(self.loginMessage)
         else:
             message = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(data, ('<div', '>', 'warn'), ('</div', '>'))[1])

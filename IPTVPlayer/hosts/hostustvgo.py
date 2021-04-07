@@ -18,8 +18,10 @@ from Plugins.Extensions.IPTVPlayer.tools.e2ijs import js_execute
 import re
 import base64
 import urllib.parse
-try:    import json
-except Exception: import simplejson as json
+try:
+    import json
+except Exception:
+    import simplejson as json
 from Components.config import config, ConfigText, getConfigListEntry
 from copy import deepcopy
 ###################################################
@@ -57,7 +59,8 @@ class ustvgo(CBaseHostClass):
             addParams = dict(self.defaultParams)
             
         def _getFullUrl(url):
-            if url == '': return ''
+            if url == '':
+                return ''
             
             if self.cm.isValidUrl(url):
                 return url
@@ -75,7 +78,8 @@ class ustvgo(CBaseHostClass):
         while tries < 20:
             tries += 1
             sts, data = self.cm.getPageCFProtection(url, urlParams, urlData)
-            if not sts: return sts, data
+            if not sts:
+                return sts, data
 
             if unloadUrl != None:
                 self.cm.getPageCFProtection(unloadUrl, urlParams)
@@ -90,7 +94,8 @@ class ustvgo(CBaseHostClass):
                     if ret['sts'] and 0 == ret['code']:
                         try:
                             cookies = byteify(json_loads(ret['data'].strip()))
-                            for cookie in cookies: cookieItems.update(cookie)
+                            for cookie in cookies:
+                                cookieItems.update(cookie)
                         except Exception:
                             printExc()
                 self.defaultParams['cookie_items'] = cookieItems
@@ -111,7 +116,8 @@ class ustvgo(CBaseHostClass):
         domains = ['http://ustvgo.tv/', 'http://ustv247.tv/']
         domain = config.plugins.iptvplayer.ustvgo_alt_domain.value.strip()
         if self.cm.isValidUrl(domain):
-            if domain[-1] != '/': domain += '/'
+            if domain[-1] != '/':
+                domain += '/'
             domains.insert(0, domain)
         
         for domain in domains:
@@ -144,7 +150,8 @@ class ustvgo(CBaseHostClass):
         printDBG("ustvgo.listItems")
 
         sts, data = self.getPage(cItem['url'])
-        if not sts: return
+        if not sts:
+            return
 
         data = self.cm.ph.getDataBeetwenNodes(data, ('<ul', '>', 'ul_pis_posts_in_sidebar-2'), ('</ul', '>'))[1]
         data = self.cm.ph.rgetAllItemsBeetwenNodes(data, ('</li', '>'), ('<li', '>', 'pis-li'))
@@ -161,7 +168,8 @@ class ustvgo(CBaseHostClass):
         page = cItem.get('page', 1)
         
         sts, data = self.getPage(cItem['url'])
-        if not sts: return
+        if not sts:
+            return
 
         nextPage = self.cm.ph.getDataBeetwenNodes(data, ('<div', '>', 'nav-links'), ('</div', '>'), False)[1]
         nextPage = self.cm.ph.getDataBeetwenNodes(nextPage, ('<span', '>', 'aria-current'), ('</a', '>'), False)[1]
@@ -172,7 +180,8 @@ class ustvgo(CBaseHostClass):
             tmp = self.cm.ph.getDataBeetwenNodes(item, ('<h3', '>'), ('</h3', '>'))[1]
             url = self.getFullUrl( self.cm.ph.getSearchGroups(tmp, '''\shref=['"]([^"^']+?)['"]''')[0] )
             title  = self.cleanHtmlStr(tmp)
-            if not self.cm.isValidUrl(url): continue
+            if not self.cm.isValidUrl(url):
+                continue
             icon = self.getFullIconUrl( self.cm.ph.getSearchGroups(item, '''\sdata-lazy-src=['"]([^"^']+?)['"]''')[0] )
             params = dict(cItem)
             params = {'good_for_fav': True, 'title':title, 'url':url, 'icon':icon}
@@ -187,16 +196,19 @@ class ustvgo(CBaseHostClass):
         printDBG("ustvgo.getLinksForVideo [%s]" % cItem)
 
         sts, data = self.getPage(cItem['url'])
-        if not sts: return
+        if not sts:
+            return
 
         if 'player.setup' not in data:
             url = self.getFullUrl(self.cm.ph.getSearchGroups(data, '''src=['"]([^"^']+?player2?\.php[^"^']*?)['"]''', 1, True)[0])
             sts, data = self.getPage(url)
-            if not sts: return
+            if not sts:
+                return
 
 #        jsfunc = self.cm.ph.getDataBeetwenMarkers(data, 'var setup', '}', False)[1]
         jsfunc = self.cm.ph.getSearchGroups(data, '''source:\s([^,]+?),''', 1, True)[0]
-        if jsfunc == '': jsfunc = self.cm.ph.getSearchGroups(data, '''file:\s([^,]+?),''', 1, True)[0]
+        if jsfunc == '':
+            jsfunc = self.cm.ph.getSearchGroups(data, '''file:\s([^,]+?),''', 1, True)[0]
         jscode = [base64.b64decode('''dmFyIHBsYXllcj17fTtmdW5jdGlvbiBzZXR1cChlKXt0aGlzLm9iaj1lfWZ1bmN0aW9uIGp3cGxheWVyKCl7cmV0dXJuIHBsYXllcn1wbGF5ZXIuc2V0dXA9c2V0dXAsZG9jdW1lbnQ9e30sZG9jdW1lbnQuZ2V0RWxlbWVudEJ5SWQ9ZnVuY3Rpb24oZSl7cmV0dXJue2lubmVySFRNTDppbnRlckh0bWxFbGVtZW50c1tlXX19Ow==''')]
         interHtmlElements = {}
         tmp = ph.findall(data, ('<span', '>', 'display:none'), '</span>', flags=ph.START_S)

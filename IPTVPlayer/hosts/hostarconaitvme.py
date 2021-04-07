@@ -18,8 +18,10 @@ import urllib.request
 import urllib.parse
 import urllib.error
 import base64
-try:    import json
-except Exception: import simplejson as json
+try:
+    import json
+except Exception:
+    import simplejson as json
 ###################################################
 
 ###################################################
@@ -66,7 +68,8 @@ class ArconaitvME(CBaseHostClass):
         
     def getPage(self, url, params={}, post_data=None):
         HTTP_HEADER= dict(self.HEADER)
-        if post_data != None: HTTP_HEADER['Content-Type'] = 'application/x-www-form-urlencoded'
+        if post_data != None:
+            HTTP_HEADER['Content-Type'] = 'application/x-www-form-urlencoded'
         params.update({'header':HTTP_HEADER})
         if self.isProxyNeeded( url ):
             proxy = self.proxyUrl.format(urllib.parse.quote(url, ''))
@@ -97,7 +100,8 @@ class ArconaitvME(CBaseHostClass):
     def listItems(self, cItem, m1, m2, post_data=None):
         printDBG("ArconaitvME.listItems")
         sts, data = self.getPage(cItem['url'], post_data=post_data)
-        if not sts: return
+        if not sts:
+            return
         
         data = self.cm.ph.getDataBeetwenReMarkers(data, re.compile(m1), re.compile(m2))[1]
         data = self.cm.ph.getAllItemsBeetwenMarkers(data, '<a ', '</a>', False)
@@ -105,7 +109,8 @@ class ArconaitvME(CBaseHostClass):
         for item in data:
             icon  = self.cm.ph.getSearchGroups(item, '''src=['"]([^'^"]+?)['"]''')[0]
             url = self.getFullUrl( self.cm.ph.getSearchGroups(item, '''href=['"]([^'^"]+?)['"]''')[0] )
-            if url == '': continue
+            if url == '':
+                continue
             title = self.cleanHtmlStr( self.cm.ph.getSearchGroups(item, '''title=['"]([^'^"]+?)['"]''')[0] )
             
             params = dict(cItem)
@@ -139,23 +144,33 @@ class ArconaitvME(CBaseHostClass):
         printDBG("ArconaitvME.getLinksForVideo [%s]" % cItem)
         urlsTab = []
         sts, data = self.getPage(cItem['url'])
-        if not sts: return urlsTab
+        if not sts:
+            return urlsTab
         
         playerUrl = self.cm.ph.getSearchGroups(data, '''<source[^>]*?src=['"](https?:[^"^']+?\.m3u8[^"^']*?)['"]''', 1, ignoreCase=True)[0]
-        try: playerUrl = byteify(json.loads('"%s"' % playerUrl))
-        except Exception: printExc()
-        if not self.cm.isValidUrl(playerUrl): playerUrl = self.cm.ph.getSearchGroups(data, '''"sources"\s*:\s*[^\]]*?"src"\s*:\s*"(https?:[^"]+?\.m3u8[^"]*?)"''', 1, ignoreCase=True)[0]
-        try: playerUrl = byteify(json.loads('"%s"' % playerUrl))
-        except Exception: printExc()
-        if not self.cm.isValidUrl(playerUrl): playerUrl = self.cm.ph.getSearchGroups(data, '''"(https?:[^"]+?\.m3u8[^"]*?)"''', 1, ignoreCase=True)[0]
-        try: playerUrl = byteify(json.loads('"%s"' % playerUrl))
-        except Exception: printExc()
+        try:
+            playerUrl = byteify(json.loads('"%s"' % playerUrl))
+        except Exception:
+            printExc()
+        if not self.cm.isValidUrl(playerUrl):
+            playerUrl = self.cm.ph.getSearchGroups(data, '''"sources"\s*:\s*[^\]]*?"src"\s*:\s*"(https?:[^"]+?\.m3u8[^"]*?)"''', 1, ignoreCase=True)[0]
+        try:
+            playerUrl = byteify(json.loads('"%s"' % playerUrl))
+        except Exception:
+            printExc()
+        if not self.cm.isValidUrl(playerUrl):
+            playerUrl = self.cm.ph.getSearchGroups(data, '''"(https?:[^"]+?\.m3u8[^"]*?)"''', 1, ignoreCase=True)[0]
+        try:
+            playerUrl = byteify(json.loads('"%s"' % playerUrl))
+        except Exception:
+            printExc()
         
         if not self.cm.isValidUrl(playerUrl):
             scripts = []
             tmp = self.cm.ph.getAllItemsBeetwenNodes(data, ('<script', '>'), ('</script', '>'), False)
             for item in tmp:
-                if 'eval(' not in item and 'ﾟωﾟﾉ=' not in item: continue
+                if 'eval(' not in item and 'ﾟωﾟﾉ=' not in item:
+                    continue
                 scripts.append(item.strip())
             try:
                 jscode = base64.b64decode('''dmFyIGRvY3VtZW50PXt9LHdpbmRvdz10aGlzLGVsZW1lbnQ9ZnVuY3Rpb24oZSl7dGhpcy5fbmFtZT1lLHRoaXMuc2V0QXR0cmlidXRlPWZ1bmN0aW9uKGUsdCl7InNyYyI9PWUmJih0aGlzLnNyYz10KX0sT2JqZWN0LmRlZmluZVByb3BlcnR5KHRoaXMsInNyYyIse2dldDpmdW5jdGlvbigpe3JldHVybiB0aGlzLl9zcmN9LHNldDpmdW5jdGlvbihlKXt0aGlzLl9zcmM9ZSxwcmludChlKX19KX0sJD1mdW5jdGlvbihlKXtyZXR1cm4gbmV3IGVsZW1lbnQoZSl9O2RvY3VtZW50LmdldEVsZW1lbnRCeUlkPWZ1bmN0aW9uKGUpe3JldHVybiBuZXcgZWxlbWVudChlKX0sZG9jdW1lbnQuZ2V0RWxlbWVudHNCeVRhZ05hbWU9ZnVuY3Rpb24oZSl7cmV0dXJuW25ldyBlbGVtZW50KGUpXX07''')

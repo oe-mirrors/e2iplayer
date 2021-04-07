@@ -54,8 +54,10 @@ class PlayerSelectorWidget(Screen):
             confNumOfRow = int(config.plugins.iptvplayer.numOfRow.value)
             confNumOfCol = int(config.plugins.iptvplayer.numOfCol.value)
             # 0 - means AUTO
-            if confNumOfRow > 0: numOfRow = confNumOfRow
-            if confNumOfCol > 0: numOfCol = confNumOfCol
+            if confNumOfRow > 0:
+                numOfRow = confNumOfRow
+            if confNumOfCol > 0:
+                numOfCol = confNumOfCol
         except Exception:
             pass
 

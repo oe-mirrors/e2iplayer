@@ -15,8 +15,10 @@ from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT
 ###################################################
 # FOREIGN import
 ###################################################
-try:    import json
-except Exception: import simplejson as json
+try:
+    import json
+except Exception:
+    import simplejson as json
 import  re
 import urllib.request
 import urllib.parse
@@ -57,9 +59,9 @@ class Youtube(CBaseHostClass):
         CBaseHostClass.__init__(self, {'history':'ytlist', 'cookie':'youtube.cookie'})
         self.UTLIST_FILE      = 'ytlist.txt'
         self.DEFAULT_ICON_URL = 'https://www.vippng.com/png/full/85-853653_patreon-logo-png-transparent-background-youtube-logo.png'
-        self.MAIN_GROUPED_TAB = [{'category': 'from_file',             'title': _("User links"),     'desc': _("User links stored in the ytlist.txt file.")}, \
-                                 {'category': 'search',                'title': _("Search"),         'desc': _("Search youtube materials "), 'search_item':True}, \
-                                 {'category': 'feeds',                 'title': _("Trending Feeds"), 'desc': _("Browse youtube trending feeds")}, \
+        self.MAIN_GROUPED_TAB = [{'category': 'from_file',             'title': _("User links"),     'desc': _("User links stored in the ytlist.txt file.")},
+                                 {'category': 'search',                'title': _("Search"),         'desc': _("Search youtube materials "), 'search_item':True},
+                                 {'category': 'feeds',                 'title': _("Trending Feeds"), 'desc': _("Browse youtube trending feeds")},
                                  {'category': 'search_history',        'title': _("Search history"), 'desc': _("History of searched phrases.")}]
         
         self.SEARCH_TYPES = [  (_("Video"),    "video"   ), 
@@ -108,8 +110,10 @@ class Youtube(CBaseHostClass):
                 params.update({'sub_file_category':'all', 'group': 'all', 'title':_("--All--")})
                 self.addDir(params)
             for item in tmpList:
-                if '' == item: title = _("--Other--")
-                else:          title = item
+                if '' == item:
+                    title = _("--Other--")
+                else:
+                    title = item
                 params = dict(cItem)
                 params.update({'sub_file_category':'group', 'title':title, 'group':item})
                 self.addDir(params)

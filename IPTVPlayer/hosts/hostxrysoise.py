@@ -15,8 +15,10 @@ import re
 import urllib.request
 import urllib.parse
 import urllib.error
-try:    import json
-except Exception: import simplejson as json
+try:
+    import json
+except Exception:
+    import simplejson as json
 from Components.config import config, ConfigSelection
 ###################################################
 
@@ -81,13 +83,15 @@ class XrysoiSE(CBaseHostClass):
             params['name']  = 'category'
             if type == 'dir':
                 self.addDir(params)
-            else: self.addVideo(params)
+            else:
+                self.addVideo(params)
             
     def fillCategories(self):
         printDBG("XrysoiSE.fillCategories")
         self.cacheFilters = {}
         sts, data = self.cm.getPage(self.MAIN_URL)
-        if not sts: return
+        if not sts:
+            return
 
         moviesTab = [{'title':'2019', 'url':self._getFullUrl('category/tainiesonline/2019/')},
                      {'title':'2018', 'url':self._getFullUrl('category/tainiesonline/2018/')},
@@ -98,8 +102,10 @@ class XrysoiSE(CBaseHostClass):
         tmp = self.cm.ph.getDataBeetwenMarkers(data, '>Ταινιες<', '</ul>', False)[1]
         tmp = re.compile('<a[^>]*?href="([^"]+?)"[^>]*?>([^<]+?)<').findall(tmp)
         for item in tmp:
-            if item[0].endswith('collection/'): continue # at now we are not able to handle colletion
-            if item[0].endswith('προσεχώς/'): continue # soon, so there is only trailer link available
+            if item[0].endswith('collection/'):
+                continue # at now we are not able to handle colletion
+            if item[0].endswith('προσεχώς/'):
+                continue # soon, so there is only trailer link available
             moviesTab.append({'title':self.cleanHtmlStr(item[1]), 'url':self._getFullUrl(item[0])})
 
         moviesTab.append({'title': 'Κινούμενα Σχέδια (με μετάφραση)', 'url':self._getFullUrl('category/κιν-σχέδια/')})
@@ -128,12 +134,14 @@ class XrysoiSE(CBaseHostClass):
             url += cItem['url_suffix']
         
         sts, data = self.cm.getPage(url) #, {'header':self.AJAX_HEADER}
-        if not sts: return
+        if not sts:
+            return
         
         nextPage = self.cm.ph.getDataBeetwenReMarkers(data, re.compile('''class=['"]pages['"]'''), re.compile('</div>'), False)[1]
         if 'rel="next"' in nextPage:
             nextPage = True
-        else: nextPage = False
+        else:
+            nextPage = False
         
         data = self.cm.ph.getDataBeetwenMarkers(data, '<h1 class=', 'class="filmborder">', False)[1]
         data = data.split('class="moviefilm">')
@@ -155,18 +163,21 @@ class XrysoiSE(CBaseHostClass):
     def exploreItem(self, cItem):
         printDBG("XrysoiSE.exploreItem")
         sts, data = self.cm.getPage(cItem['url'])
-        if not sts: return
+        if not sts:
+            return
         
         desc  = self.cleanHtmlStr( self.cm.ph.getSearchGroups(data, '<meta[^>]*?property="og:description"[^>]*?content="([^"]+?)"')[0] )
         title = self.cleanHtmlStr( self.cm.ph.getSearchGroups(data, '<meta[^>]*?property="og:title"[^>]*?content="([^"]+?)"')[0] )
-        if '' == title: title = cItem['title']
+        if '' == title:
+            title = cItem['title']
         
         # trailer link extraction
         trailerMarker = '/trailer'
         sts, trailer = self.cm.ph.getDataBeetwenMarkers(data, trailerMarker, '</iframe>', False, False)
         if sts:
             trailer = self.cm.ph.getSearchGroups(trailer, '<iframe[^>]+?src="([^"]+?)"', 1, ignoreCase=True)[0]
-            if trailer.startswith('//'): trailer = 'http:' + trailer
+            if trailer.startswith('//'):
+                trailer = 'http:' + trailer
             if trailer.startswith('http'):
                 params = dict(cItem)
                 params['title'] = 'TRAILER'
@@ -184,7 +195,8 @@ class XrysoiSE(CBaseHostClass):
         else:
             m1 = '<!-- END TAG -->'
         sts, linksData = self.cm.ph.getDataBeetwenMarkers(data, m1, '<center>', False, False)
-        if not sts: return
+        if not sts:
+            return
         
         mode = cItem.get('mode', 'unknown')
         # find all links for this season
@@ -194,19 +206,23 @@ class XrysoiSE(CBaseHostClass):
             mode = 'collect_item'
             spTab = [re.compile('<b>'), re.compile('<div[\s]+class="separator"[\s]+style="text-align\:[\s]+center;">'), re.compile('<div[\s]+style="text-align\:[\s]+center;">')]
             for sp in spTab:
-                if None != sp.search(linksData): break
+                if None != sp.search(linksData):
+                    break
             
             collectionItems = sp.split(linksData)
-            if len(collectionItems) > 0: del collectionItems[0]
+            if len(collectionItems) > 0:
+                del collectionItems[0]
             linksData = ''
             for item in collectionItems:
                 itemTitle = item.find('<')
-                if itemTitle < 0: continue
+                if itemTitle < 0:
+                    continue
                 itemTitle = self.cleanHtmlStr( item[:itemTitle] )
                 linksData = re.compile('<a[^>]*?href="([^"]+?)"[^>]*?>').findall(item)
                 links = []
                 for itemUrl in linksData:
-                    if 1 != self.up.checkHostSupport(itemUrl): continue 
+                    if 1 != self.up.checkHostSupport(itemUrl):
+                        continue 
                     links.append({'name':self.up.getHostName(itemUrl), 'url':itemUrl, 'need_resolve':1})
                 if len(links):
                     params = dict(cItem)
@@ -215,22 +231,28 @@ class XrysoiSE(CBaseHostClass):
         elif '>Season' in linksData or '>Σεζόν' in linksData:
             if '>Season' in linksData:
                 seasonMarker = '>Season'
-            else: seasonMarker = '>Σεζόν'
+            else:
+                seasonMarker = '>Σεζόν'
             mode = 'episode'
             seasons = linksData.split(seasonMarker)
-            if len(seasons) > 0: del seasons[0]
+            if len(seasons) > 0:
+                del seasons[0]
             for item in seasons:
                 seasonID = item.find('<')
-                if seasonID < 0: continue
+                if seasonID < 0:
+                    continue
                 seasonID = item[:seasonID+1]
                 seasonID = self.cm.ph.getSearchGroups(seasonID, '([0-9]+?)[^0-9]')[0]
-                if '' == seasonID: continue
+                if '' == seasonID:
+                    continue
                 episodesData = re.compile('<a[^>]*?href="([^"]+?)"[^>]*?>([^<]+?)</a>').findall(item)
                 for eItem in episodesData:
                     eUrl = eItem[0]
                     eID  = eItem[1].strip()
-                    if eUrl.startswith('//'): eUrl += 'http'
-                    if 1 != self.up.checkHostSupport(eUrl): continue 
+                    if eUrl.startswith('//'):
+                        eUrl += 'http'
+                    if 1 != self.up.checkHostSupport(eUrl):
+                        continue 
                     
                     linksID = '-s{0}e{1}'.format(seasonID, eID)
                     if linksID not in eLinks:
@@ -259,10 +281,12 @@ class XrysoiSE(CBaseHostClass):
             url   = item[0]
             title = item[1]
             # only supported hosts will be displayed
-            if 1 != self.up.checkHostSupport(url): continue 
+            if 1 != self.up.checkHostSupport(url):
+                continue 
             
             name = self.up.getHostName(url)
-            if url.startswith('//'): url += 'http'
+            if url.startswith('//'):
+                url += 'http'
             if url.startswith('http'):
                 urlTab.append({'name':title + ': ' + name, 'url':url, 'need_resolve':1})
         return urlTab
@@ -280,7 +304,8 @@ class XrysoiSE(CBaseHostClass):
         # Use Season and Episode information when exist for cache index
         idx = cItem['mode'] + cItem['url'] + cItem.get('season', '') + cItem.get('episode', '')
         urlTab = self.cacheLinks.get(idx,  [])
-        if len(urlTab): return urlTab
+        if len(urlTab):
+            return urlTab
         self.cacheLinks = {}
         
         urlTab = cItem.get('links', [])
@@ -302,10 +327,12 @@ class XrysoiSE(CBaseHostClass):
         
         if 'movie' == cItem.get('mode') or 'explore_item' == cItem.get('category'):        
             sts, data = self.cm.getPage(cItem['url'])
-            if not sts: return retTab
+            if not sts:
+                return retTab
             
             sts, data = CParsingHelper.getDataBeetwenMarkers(data, '<meta property', '<script')
-            if not sts: return retTab
+            if not sts:
+                return retTab
             
             icon  = self.cm.ph.getSearchGroups(data, '<meta[^>]*?property="og:image"[^>]*?content="(http[^"]+?)"')[0]
             title = self.cm.ph.getSearchGroups(data, '<meta[^>]*?property="og:title"[^>]*?content="([^"]+?)"')[0]

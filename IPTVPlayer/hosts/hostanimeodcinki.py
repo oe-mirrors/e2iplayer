@@ -18,8 +18,10 @@ from Plugins.Extensions.IPTVPlayer.libs.crypto.keyedHash.evp import EVP_BytesToK
 import urllib.request
 import urllib.parse
 import urllib.error
-try:    import json
-except Exception: import simplejson as json
+try:
+    import json
+except Exception:
+    import simplejson as json
 ###################################################
 
 
@@ -61,20 +63,24 @@ class AnimeOdcinkiPL(CBaseHostClass):
     @staticmethod
     def resolveIconUrl(cm, url):
         sts, data = cm.getPage(url)
-        if not sts: return ''
+        if not sts:
+            return ''
         data = cm.ph.getDataBeetwenMarkers(data, 'okladka', '</div>')[1]
         return cm.ph.getSearchGroups(data, '''src=['"]([^'^"]+?)['"]''')[0]
         
     def getStr(self, item, key):
-        if key not in item: return ''
-        if item[key] == None: return ''
+        if key not in item:
+            return ''
+        if item[key] == None:
+            return ''
         return str(item[key])
         
     def fillFilters(self, cItem):
         self.filtersTab   = []
         self.cacheFilters = {}
         sts, data = self.cm.getPage(cItem['url'])
-        if not sts: return
+        if not sts:
+            return
         
         data = self.cm.ph.getAllItemsBeetwenMarkers(data, '<div class="search-category-checkbox checkbox">', '</div>')
         for item in data:
@@ -99,7 +105,8 @@ class AnimeOdcinkiPL(CBaseHostClass):
         
         self.cacheItems[baseUrl] = {'items':[], 'letters':[]}
         sts, data = self.cm.getPage(baseUrl)
-        if not sts: return
+        if not sts:
+            return
         
         tmp = self.cm.ph.getDataBeetwenMarkers(data, '<div id="letter-index"', '</td>')[1]
         tmp = self.cm.ph.getAllItemsBeetwenMarkers(tmp, '<a', '</span>')
@@ -142,7 +149,8 @@ class AnimeOdcinkiPL(CBaseHostClass):
             self.fillItemsCache(cItem)
             
         for item in self.cacheItems[baseUrl]['items']:
-            if letter != '' and letter != item['letter']: continue
+            if letter != '' and letter != item['letter']:
+                continue
             url   = item['url'] 
             title = item['title']
             icon = strwithmeta(url, {'icon_resolver':AnimeOdcinkiPL.resolveIconUrl})
@@ -154,14 +162,16 @@ class AnimeOdcinkiPL(CBaseHostClass):
         printDBG("AnimeOdcinkiPL.listEmitowane")
         
         sts, data = self.cm.getPage(cItem['url'])
-        if not sts: return
+        if not sts:
+            return
         
         data = self.cm.ph.getDataBeetwenMarkers(data, m1, m2)[1]
         data = self.cm.ph.getAllItemsBeetwenMarkers(data, sp1, sp2)
         for item in data:
             title  = self.cleanHtmlStr(item)
             url    = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''href=['"]([^'^"]+?)['"]''')[0])
-            if not self.cm.isValidUrl(url): continue
+            if not self.cm.isValidUrl(url):
+                continue
             #icon   = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''src=['"]([^'^"]+?)['"]''')[0])
             #if icon == '': icon   = strwithmeta(url, {'icon_resolver':AnimeOdcinkiPL.resolveIconUrl})
             params = {'good_for_fav': True, 'title':title, 'url':url}
@@ -188,15 +198,18 @@ class AnimeOdcinkiPL(CBaseHostClass):
             getParams.append('s=%s' % (urllib.parse.quote_plus(cItem['f_search'])))
         
         baseUrl = cItem['url']
-        if page > 1: baseUrl += '/strona/%s' % page
+        if page > 1:
+            baseUrl += '/strona/%s' % page
         baseUrl += '?' + '&'.join(getParams)
 
         sts, data = self.cm.getPage(baseUrl)
-        if not sts: return
+        if not sts:
+            return
         
         if '>»<' in data:
             nextPage = True
-        else: nextPage = False
+        else:
+            nextPage = False
         
         data = self.cm.ph.getAllItemsBeetwenMarkers(data, '<li class="search-result">', '</li>')
         for item in data:
@@ -204,7 +217,8 @@ class AnimeOdcinkiPL(CBaseHostClass):
             title  = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(item, '<h3', '</h3>')[1])
             icon   = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''src=['"]([^'^"]+?)['"]''')[0])
             desc   = self.cleanHtmlStr(item.split('</h3>')[-1])
-            if icon == '': icon = strwithmeta(url, {'icon_resolver':AnimeOdcinkiPL.resolveIconUrl})
+            if icon == '':
+                icon = strwithmeta(url, {'icon_resolver':AnimeOdcinkiPL.resolveIconUrl})
             params = {'good_for_fav': True, 'title':title, 'url':url, 'icon':icon, 'desc':desc}
             try:
                 episodeNum = int(url.split('/')[-1])
@@ -223,7 +237,8 @@ class AnimeOdcinkiPL(CBaseHostClass):
         printDBG("AnimeOdcinkiPL.listEpisodes")
         
         sts, data = self.cm.getPage(cItem['url'])
-        if not sts: return
+        if not sts:
+            return
         
         desc = self.cm.ph.getDataBeetwenMarkers(data, 'summary', '</div>')[1]
         desc = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(desc, '<div', '</div>')[1])
@@ -274,21 +289,25 @@ class AnimeOdcinkiPL(CBaseHostClass):
         urlTab = []
         
         urlTab = self.cacheLinks.get(cItem['url'], [])
-        if len(urlTab): return urlTab
+        if len(urlTab):
+            return urlTab
         
         sts, data = self.cm.getPage(cItem['url'])
-        if not sts: return []
+        if not sts:
+            return []
         
         data = self.cm.ph.getAllItemsBeetwenMarkers(data, '<div class="video-player-mode"', '</div>')
         for item in data:
             url  = self.cm.ph.getSearchGroups(item, "data-hash='([^']+?)'")[0]
-            if url == '': url  = self.cm.ph.getSearchGroups(item, 'data-hash="([^"]+?)"')[0]
+            if url == '':
+                url  = self.cm.ph.getSearchGroups(item, 'data-hash="([^"]+?)"')[0]
             try:
                 tmp = json.loads(url)
                 url = self._encryptPlayerUrl(tmp)
             except Exception:
                 continue
-            if not self.cm.isValidUrl(url): continue
+            if not self.cm.isValidUrl(url):
+                continue
             name = self.cleanHtmlStr(item)
             urlTab.append({'name':name, 'url':strwithmeta(url, {'Referer':cItem['url']}), 'need_resolve':1})
         
@@ -313,7 +332,8 @@ class AnimeOdcinkiPL(CBaseHostClass):
             paramsUrl['header'] = dict(paramsUrl['header'])
             paramsUrl['header']['Referer'] = strwithmeta(videoUrl).meta.get('Referer', self.getMainUrl())
             sts, data = self.cm.getPage(videoUrl, paramsUrl)
-            if not sts: return []
+            if not sts:
+                return []
             videoUrl = self.cm.ph.getSearchGroups(data, '''<iframe[^>]+?src=['"]([^"^']+?)['"]''', 1, True)[0].replace('&amp;', '&')
         
         if self.cm.isValidUrl(videoUrl):
@@ -328,7 +348,8 @@ class AnimeOdcinkiPL(CBaseHostClass):
         title = cItem.get('title', '')
         desc = cItem.get('desc', '')
         icon  = self.resolveIconUrl(self.cm, cItem.get('icon', ''))
-        if icon == '':  icon = self.getDefaulIcon()
+        if icon == '':
+            icon = self.getDefaulIcon()
         
         return [{'title':title, 'text':desc, 'images':[{'title':'', 'url':self.getFullUrl(icon)}], 'other_info':{}}]
         
@@ -361,7 +382,8 @@ class AnimeOdcinkiPL(CBaseHostClass):
             self.listItems(self.currItem, 'list_episodes')
         elif 'list_filters' == category:
             idx = self.currItem.get('f_idx', 0)
-            if idx == 0: self.fillFilters(self.currItem)
+            if idx == 0:
+                self.fillFilters(self.currItem)
             if idx < len(self.filtersTab):
                 self.listFilter(self.currItem, self.filtersTab)
             else:

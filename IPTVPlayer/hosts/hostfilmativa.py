@@ -100,11 +100,13 @@ class Filmativa(CBaseHostClass):
             url += 'page/%d/' % page
         
         sts, data = self.getPageCF(url)
-        if not sts: return 
+        if not sts:
+            return 
         
         if ('/page/%d/' % (page + 1)) in data:
             nextPage = True
-        else: nextPage = False
+        else:
+            nextPage = False
         
         try:
             marker = 'class="with_teaser">'
@@ -113,10 +115,12 @@ class Filmativa(CBaseHostClass):
             printExc()
             return
         data = data.split('</a>')
-        if len(data): del data[-1]
+        if len(data):
+            del data[-1]
         
         for item in data:
-            if '"cover"' not in item: continue
+            if '"cover"' not in item:
+                continue
             tmp    = item.split('<span class="rating')
             url    = self.cm.ph.getSearchGroups(item, 'href="([^"]+?)"')[0]
             icon   = self.cm.ph.getSearchGroups(item, 'src="([^"]+?)"')[0]
@@ -331,7 +335,8 @@ class IPTVHost(CHostBase):
     def getLinksForVideo(self, Index = 0, selItem = None):
         retCode = RetHost.ERROR
         retlist = []
-        if not self.isValidIndex(Index): return RetHost(retCode, value=retlist)
+        if not self.isValidIndex(Index):
+            return RetHost(retCode, value=retlist)
         
         urlList = self.host.getLinksForVideo(self.host.currList[Index])
         for item in urlList:

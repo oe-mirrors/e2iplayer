@@ -43,8 +43,10 @@ class IPTVImagesSelectionList(IPTVListComponentBase):
         for key in self.dictPIX:
             try:
                 pixFile = self.ICONS_FILESNAMES.get(key, None)
-                if None != pixFile: self.dictPIX[key] = LoadPixmap(cached=True, path=GetIconDir(pixFile))
-            except Exception: printExc()
+                if None != pixFile:
+                    self.dictPIX[key] = LoadPixmap(cached=True, path=GetIconDir(pixFile))
+            except Exception:
+                printExc()
         
     def onDestroy(self):
         printDBG('--- onDestroy ---')
@@ -61,8 +63,10 @@ class IPTVImagesSelectionList(IPTVListComponentBase):
             y = (height - item['height']) / 2
             res.append((eListboxPythonMultiContent.TYPE_PIXMAP_ALPHABLEND, x, y, item['width'], item['height'], item['pixmap']))
             if item['id'] != None:
-                if item['selected']: sel_key = 'on'
-                else: sel_key = 'off'
+                if item['selected']:
+                    sel_key = 'on'
+                else:
+                    sel_key = 'off'
                 res.append((eListboxPythonMultiContent.TYPE_PIXMAP_ALPHABLEND, 3, 3, 16, 16, self.dictPIX.get(sel_key, None)))
         except Exception:
             printExc()
@@ -71,12 +75,17 @@ class IPTVImagesSelectionList(IPTVListComponentBase):
 class IPTVMultipleImageSelectorWidget(Screen):
 
     def __prepareSkin(self):
-        if None == self.iptv_width: self.iptv_width = getDesktop(0).size().width()
-        if None == self.iptv_height: self.iptv_height = getDesktop(0).size().height()
-        if self.iptv_title == None: self.iptv_title = _('Select pictures')
+        if None == self.iptv_width:
+            self.iptv_width = getDesktop(0).size().width()
+        if None == self.iptv_height:
+            self.iptv_height = getDesktop(0).size().height()
+        if self.iptv_title == None:
+            self.iptv_title = _('Select pictures')
         
-        if self.iptv_message != None and self.iptv_message_height == None: self.iptv_message_height = self.iptv_height / 10
-        if self.iptv_accep_label != None and self.iptv_accep_height == None: self.iptv_accep_height = self.iptv_height / 20
+        if self.iptv_message != None and self.iptv_message_height == None:
+            self.iptv_message_height = self.iptv_height / 10
+        if self.iptv_accep_label != None and self.iptv_accep_height == None:
+            self.iptv_accep_height = self.iptv_height / 20
         
         y = 0
         skin = ['<screen position="center,center" title="%s" size="%d,%d">' % (self.iptv_title, self.iptv_width, self.iptv_height)]
@@ -86,7 +95,8 @@ class IPTVMultipleImageSelectorWidget(Screen):
         
         list_width = self.iptv_image_width + 40
         list_height = (self.iptv_height - y) - 20
-        if self.iptv_accep_label != None: list_height -= self.iptv_accep_height + 10 
+        if self.iptv_accep_label != None:
+            list_height -= self.iptv_accep_height + 10 
         
         x = (self.iptv_width - (10 * (self.iptv_col_num + 1) + list_width * self.iptv_col_num )) / 2
         for idx in range(self.iptv_col_num):
@@ -227,8 +237,10 @@ class IPTVMultipleImageSelectorWidget(Screen):
     def changeColumnSelection(self):
         for i in range(self.iptv_col_num):
             item = self["col_%d" % i]
-            if i != self.column_index: item.instance.setSelectionEnable(0)
-            else: item.instance.setSelectionEnable(1)
+            if i != self.column_index:
+                item.instance.setSelectionEnable(0)
+            else:
+                item.instance.setSelectionEnable(1)
     
     def key_ok(self):
         maxItemsSelected = False
@@ -359,12 +371,16 @@ class IPTVMultipleImageSelectorWidget(Screen):
         
     def key_left(self):
         if self.row_index < self.iptv_row_num:
-            if self.column_index == 0: self.column_index = self.iptv_col_num - 1
-            else: self.column_index -= 1
+            if self.column_index == 0:
+                self.column_index = self.iptv_col_num - 1
+            else:
+                self.column_index -= 1
             self.changeColumnSelection()
         
     def key_right(self):
         if self.row_index < self.iptv_row_num:
-            if self.column_index == self.iptv_col_num - 1: self.column_index = 0
-            else: self.column_index += 1
+            if self.column_index == self.iptv_col_num - 1:
+                self.column_index = 0
+            else:
+                self.column_index += 1
             self.changeColumnSelection()

@@ -15,8 +15,10 @@ import re
 import urllib.request
 import urllib.parse
 import urllib.error
-try:    import json
-except Exception: import simplejson as json
+try:
+    import json
+except Exception:
+    import simplejson as json
 ###################################################
 
 def gettytul():
@@ -38,7 +40,8 @@ class WolnelekturyPL(CBaseHostClass):
         self.cacheFilters = {}
         
     def getPage(self, baseUrl, addParams = {}, post_data = None):
-        if addParams == {}: addParams = dict(self.defaultParams)
+        if addParams == {}:
+            addParams = dict(self.defaultParams)
         baseUrl = self.cm.iriToUri(baseUrl)
         return self.cm.getPage(baseUrl, addParams, post_data)
         
@@ -47,7 +50,8 @@ class WolnelekturyPL(CBaseHostClass):
         self.cacheFilters = {}
         
         sts, data = self.getPage(cItem['url'])
-        if not sts: return
+        if not sts:
+            return
         
         titlesMap = {}
         tmp = self.cm.ph.getDataBeetwenNodes(data, ('<div', '>', 'tabbed-filter'), ('</div', '>'))[1]
@@ -97,14 +101,19 @@ class WolnelekturyPL(CBaseHostClass):
     def listItems(self, cItem, nextCategory1, nextCategory2, checkPlayable=False):
         printDBG("WolnelekturyPL.listItems")
         sts, data = self.getPage(cItem['url'])
-        if not sts: return
+        if not sts:
+            return
         
-        if '/szukaj/' in cItem['url']: data2 = self.cm.ph.getDataBeetwenNodes(data, ('<', '>', 'work-list'), ('<footer', '>'))[1]
-        else: data2 = self.cm.ph.getDataBeetwenNodes(data, ('<ol', '>', 'work-list'), ('</ol', '>'))[1]
+        if '/szukaj/' in cItem['url']:
+            data2 = self.cm.ph.getDataBeetwenNodes(data, ('<', '>', 'work-list'), ('<footer', '>'))[1]
+        else:
+            data2 = self.cm.ph.getDataBeetwenNodes(data, ('<ol', '>', 'work-list'), ('</ol', '>'))[1]
         data2 = re.compile('''<li[^>]+?Book-item[^>]+?>''', re.IGNORECASE).split(data2)
-        if len(data2): del data2[0]
+        if len(data2):
+            del data2[0]
         for item in data2:
-            if checkPlayable and 'jp-play' not in item: continue
+            if checkPlayable and 'jp-play' not in item:
+                continue
             tmp = self.cm.ph.getDataBeetwenNodes(item, ('<div', '>', 'title'), ('</div', '>'))[1]
             title = self.cleanHtmlStr(tmp)
             url = self.getFullUrl( self.cm.ph.getSearchGroups(tmp, '''\shref=['"]([^"^']+?)['"]''')[0] )
@@ -112,18 +121,22 @@ class WolnelekturyPL(CBaseHostClass):
             
             desc = []
             tmp = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(item, ('<div', '>', 'book-box-head'), ('</div', '>'))[1]).replace(' , ', ', ')
-            if tmp != '': desc.append(tmp)
+            if tmp != '':
+                desc.append(tmp)
             tmp = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(item, ('<div', '>', 'tags'), ('</div', '>'))[1].replace('</span></span>', '[/br]'))
-            if tmp != '': desc.append(' ' + tmp)
+            if tmp != '':
+                desc.append(' ' + tmp)
             
             params = dict(cItem)
             params.update({'good_for_fav':True, 'category':nextCategory2, 'title':title, 'url':url, 'icon':icon, 'desc':'[/br]'.join(desc)})
             self.addDir(params)
         
-        if nextCategory1 == '': return
+        if nextCategory1 == '':
+            return
         
         data = self.cm.ph.getDataBeetwenNodes(data, ('<h2', '</div>', 'plain-list'), ('<div', '>', 'clearboth'))[1].split('<h2>')
-        if len(data): del data[0]
+        if len(data):
+            del data[0]
         for section in data:
             section = section.split('</h2>', 1)
             sTitle = self.cleanHtmlStr(section[0])
@@ -135,9 +148,12 @@ class WolnelekturyPL(CBaseHostClass):
                     author = self.cleanHtmlStr(item)
                     continue
                 url = self.getFullUrl( self.cm.ph.getSearchGroups(item, '''\shref=['"]([^"^']+?)['"]''')[0] )
-                if url == '': continue
-                if url.endswith('/'): icon = url[:-1].split('/')
-                else: icon = icon.split('/')
+                if url == '':
+                    continue
+                if url.endswith('/'):
+                    icon = url[:-1].split('/')
+                else:
+                    icon = icon.split('/')
                 icon = self.getFullIconUrl('/media/book/cover_thumb/%s.jpg' % icon[-1])
                 title = self.cleanHtmlStr(item)
                 itemsTab.append({'title':title, 'url':url, 'icon':icon, 'desc':author})
@@ -158,7 +174,8 @@ class WolnelekturyPL(CBaseHostClass):
         printDBG("WolnelekturyPL.exploreItem")
         
         sts, data = self.getPage(cItem['url'])
-        if not sts: return
+        if not sts:
+            return
         
         data = self.cm.ph.getDataBeetwenNodes(data, ('<div', '>', 'jp-playlist'), ('</ul', '>'))[1]
         data = self.cm.ph.getAllItemsBeetwenMarkers(data, '<li', '</li>')
@@ -171,8 +188,10 @@ class WolnelekturyPL(CBaseHostClass):
             urlTab = []
             mp3Url = self.getFullUrl( self.cm.ph.getSearchGroups(item, '''\sdata\-mp3=['"]([^"^']+?)['"]''')[0] )
             oggUrl = self.getFullUrl( self.cm.ph.getSearchGroups(item, '''\sdata\-ogg=['"]([^"^']+?)['"]''')[0] )
-            if mp3Url != '': urlTab.append({'name': 'mp3', 'url':mp3Url, 'need_resolve':0})
-            if oggUrl != '': urlTab.append({'name': 'ogg', 'url':mp3Url, 'need_resolve':0})
+            if mp3Url != '':
+                urlTab.append({'name': 'mp3', 'url':mp3Url, 'need_resolve':0})
+            if oggUrl != '':
+                urlTab.append({'name': 'ogg', 'url':mp3Url, 'need_resolve':0})
             params = dict(cItem)
             params.update({'good_for_fav':False, 'title':title, 'urls':urlTab, 'desc':desc})
             self.addAudio(params)
@@ -192,13 +211,15 @@ class WolnelekturyPL(CBaseHostClass):
         retTab = []
         
         sts, data = self.cm.getPage(cItem['url'])
-        if not sts: return []
+        if not sts:
+            return []
         
         try:
             data = byteify(json.loads(data))
             url = data['txt']
             sts, desc = self.cm.getPage(url)
-            if not sts: desc = ''
+            if not sts:
+                desc = ''
             otherInfo = {}
             return [{'title':self.cleanHtmlStr( data['title'] ), 'text': self.cleanHtmlStr( desc ), 'images':[{'title':'', 'url':data['cover']}], 'other_info':otherInfo}]
         except Exception:

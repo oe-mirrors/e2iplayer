@@ -16,8 +16,10 @@ import re
 import urllib.request
 import urllib.parse
 import urllib.error
-try:    import json
-except Exception: import simplejson as json
+try:
+    import json
+except Exception:
+    import simplejson as json
 ###################################################
 
 def gettytul():
@@ -44,12 +46,15 @@ class MovieRulzSX(CBaseHostClass):
         self.cacheGenresSections = []
         
     def getPage(self, baseUrl, addParams = {}, post_data = None):
-        if addParams == {}: addParams = dict(self.defaultParams)
+        if addParams == {}:
+            addParams = dict(self.defaultParams)
         origBaseUrl = baseUrl
         baseUrl = self.cm.iriToUri(baseUrl)
         def _getFullUrl(url):
-            if self.cm.isValidUrl(url): return url
-            else: return urllib.parse.urljoin(baseUrl, url)
+            if self.cm.isValidUrl(url):
+                return url
+            else:
+                return urllib.parse.urljoin(baseUrl, url)
         addParams['cloudflare_params'] = {'domain':self.up.getDomain(baseUrl), 'cookie_file':self.COOKIE_FILE, 'User-Agent':self.USER_AGENT, 'full_url_handle':_getFullUrl}
         return self.cm.getPageCFProtection(baseUrl, addParams, post_data)
     
@@ -98,7 +103,8 @@ class MovieRulzSX(CBaseHostClass):
         self.cacheGenresSections = []
         
         sts, data = self.getPage(cItem['url'])
-        if not sts: return
+        if not sts:
+            return
         
         data = self.cm.ph.rgetAllItemsBeetwenNodes(data,  ('</table', '>'), ('<p', '>', 'center;'))
         for section in data:
@@ -132,7 +138,8 @@ class MovieRulzSX(CBaseHostClass):
         page = cItem.get('page', 1)
         
         sts, data = self.getPage(cItem['url'])
-        if not sts: return
+        if not sts:
+            return
         
         nextPage = self.cm.ph.getDataBeetwenNodes(data, ('<div', '>', 'nav-older'), ('</div', '>'))[1]
         nextPage = self.getFullUrl(self.cm.ph.getSearchGroups(nextPage, '''href=['"]([^'^"]+?)['"]''')[0])
@@ -143,8 +150,10 @@ class MovieRulzSX(CBaseHostClass):
             url   = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''href=['"]([^'^"]+?)['"]''')[0])
             icon  = self.getFullIconUrl(self.cm.ph.getSearchGroups(item, '''[\s\-]src=['"]([^'^"]+?)['"]''')[0])
             title = self.cleanHtmlStr(item)
-            try: title = ''.join(reObjYer.split(title)[:2])
-            except Exception: printExc()
+            try:
+                title = ''.join(reObjYer.split(title)[:2])
+            except Exception:
+                printExc()
             desc = self.cleanHtmlStr(item)
             
             params = dict(cItem)
@@ -173,13 +182,15 @@ class MovieRulzSX(CBaseHostClass):
         
         cacheKey = cItem['url']
         cacheTab = self.cacheLinks.get(cacheKey, [])
-        if len(cacheTab): return cacheTab
+        if len(cacheTab):
+            return cacheTab
         
         self.cacheLinks = {}
         retTab = []
         
         sts, data = self.getPage(cItem['url'])
-        if not sts: return
+        if not sts:
+            return
         
         tmp = self.cm.ph.getAllItemsBeetwenMarkers(data, '<iframe', '>')
         for item in tmp:
@@ -192,7 +203,8 @@ class MovieRulzSX(CBaseHostClass):
         tmp = self.cm.ph.getAllItemsBeetwenMarkers(data, '<p', '</a>')
         for item in tmp:
             url = self.cm.ph.getSearchGroups(item, '''href=['"](https?://[^"^']+?)['"]''')[0].replace('&amp;', '&')
-            if url == '': continue
+            if url == '':
+                continue
             name = self.cleanHtmlStr(item.split('<a', 1)[0])
             retTab.append({'name':name, 'url':url, 'need_resolve':1})
         
@@ -216,10 +228,12 @@ class MovieRulzSX(CBaseHostClass):
         
         if 1 != self.up.checkHostSupport(baseUrl):
             sts, data = self.getPage(videoUrl)
-            if not sts: return []
+            if not sts:
+                return []
             tmp = self.cm.ph.getDataBeetwenNodes(data, ('<div', '>', 'entry-content'), ('</div', '>'))[1]
             videoUrl = self.getFullUrl(self.cm.ph.getSearchGroups(tmp, '''<iframe[^>]+?src=['"]([^"^']+?)['"]''', 1, True)[0]).replace('&amp;', '&')
-            if videoUrl == '': videoUrl = self.cm.ph.getSearchGroups(tmp, '''href=['"](https?://[^"^']+?)['"]''')[0].replace('&amp;', '&')
+            if videoUrl == '':
+                videoUrl = self.cm.ph.getSearchGroups(tmp, '''href=['"](https?://[^"^']+?)['"]''')[0].replace('&amp;', '&')
             if videoUrl == '':
                 tmp = self.cm.ph.getAllItemsBeetwenMarkers(data, '<iframe', '>')
                 for item in tmp:
@@ -237,14 +251,16 @@ class MovieRulzSX(CBaseHostClass):
         otherInfo = {}
         
         sts, data = self.getPage(cItem['url'])
-        if not sts: return []
+        if not sts:
+            return []
         
         url = self.cm.ph.getDataBeetwenNodes(data, ('<meta', '>', 'refresh'), ('<', '>'))[1]
         url = self.getFullUrl(self.cm.ph.getSearchGroups(url, '''url=['"]([^'^"]+?)['"]''', 1, True)[0])
         
         if self.cm.isValidUrl(url):
             sts, tmp = self.getPage(url)
-            if sts: data = tmp
+            if sts:
+                data = tmp
         
         data = self.cm.ph.getDataBeetwenNodes(data, ('<header', '>'), ('<style', '>'))[1]
         desc = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(data, '<p', '</p>')[1])
@@ -276,13 +292,18 @@ class MovieRulzSX(CBaseHostClass):
             
             #marker = self.cm.ph.getSearchGroups(item, '''(\sfa\-[^'^"]+?)['"]''')[0].split('fa-')[-1]
             #printDBG(">>>>>>>>>>>>>>>>>> " + marker)
-            if marker not in keysMap: continue
-            if value == '': continue
+            if marker not in keysMap:
+                continue
+            if value == '':
+                continue
             otherInfo[keysMap[marker]] = value
         
-        if title == '': title = cItem['title']
-        if desc == '':  desc = cItem.get('desc', '')
-        if icon == '':  icon = cItem.get('icon', self.DEFAULT_ICON_URL)
+        if title == '':
+            title = cItem['title']
+        if desc == '':
+            desc = cItem.get('desc', '')
+        if icon == '':
+            icon = cItem.get('icon', self.DEFAULT_ICON_URL)
         
         return [{'title':self.cleanHtmlStr( title ), 'text': self.cleanHtmlStr( desc ), 'images':[{'title':'', 'url':self.getFullUrl(icon)}], 'other_info':otherInfo}]
     

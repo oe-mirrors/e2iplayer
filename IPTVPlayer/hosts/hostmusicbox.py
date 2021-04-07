@@ -172,7 +172,8 @@ class MusicBox(CBaseHostClass):
 
     def Beatport_top100(self, url):
         sts, data = self.cm.getPage(url)
-        if not sts: return
+        if not sts:
+            return
         
         data = self.cm.ph.getDataBeetwenNodes(data, ('<ul', '>', 'bucket-item'), ('</ul', '>'), False)[1]
         data = self.cm.ph.getAllItemsBeetwenMarkers(data, '<li', '</li>')
@@ -193,7 +194,8 @@ class MusicBox(CBaseHostClass):
 
     def Billboard_charts(self, url):
         sts, data = self.cm.getPage(url, {'header': HEADER})
-        if not sts:  return
+        if not sts:
+            return
 
         data = ph.find(data, ('<div', '>', 'chart-number-one'), ('<div', '>', 'chart-list__expanded-header'))[1]
         data = re.compile('<div[^>]*?data\-has\-content[^>]*?>').split(data)
@@ -216,7 +218,8 @@ class MusicBox(CBaseHostClass):
 
     def Billboard_chartsalbums(self, url):
         sts, data = self.cm.getPage(url, {'header': HEADER})
-        if not sts:  return
+        if not sts:
+            return
 
         data = ph.find(data, ('<div', '>', 'chart-number-one'), ('<div', '>', 'chart-list__expanded-header'))[1]
         data = re.compile('<div[^>]*?data\-has\-content[^>]*?>').split(data)
@@ -225,8 +228,10 @@ class MusicBox(CBaseHostClass):
             artist = ph.clean_html(ph.find(item, ('<div', '>', '__artist'), '</div>', flags=0)[1])
 
             icon = ph.search(item, '\s(https?://[^\s]+?\-174x174\.jpg)\s')[0]
-            if not icon: icon = ph.getattr(item, 'data-srcset').split(' ', 1)[0]
-            if not icon: icon = ph.getattr(item, 'srcset').split(' ', 1)[0]
+            if not icon:
+                icon = ph.getattr(item, 'data-srcset').split(' ', 1)[0]
+            if not icon:
+                icon = ph.getattr(item, 'srcset').split(' ', 1)[0]
             album_name = name
             params = {'good_for_fav':True, 'name': 'List_album_tracks','title': name + ' - ' + artist, 'page': 0, 'artist': artist, 'album': album_name, 'icon':self.cm.getFullUrl(icon, self.cm.meta['url'])}
             self.addDir(params)
@@ -238,10 +243,12 @@ class MusicBox(CBaseHostClass):
     def List_album_tracks(self, url, artist, album, albumIcon):
         if url != 0:
             sts, data = self.cm.getPage('http://ws.audioscrobbler.com/2.0/?method=album.getInfo&mbid='+url+'&api_key=' + audioscrobbler_api_key + '&format=json', {'header': HEADER})
-            if not sts: return
+            if not sts:
+                return
         else:
             sts, data = self.cm.getPage('http://ws.audioscrobbler.com/2.0/?method=album.getInfo&artist='+urllib.parse.quote(artist)+'&album='+urllib.parse.quote(album)+'&api_key=' + audioscrobbler_api_key + '&format=json', {'header': HEADER})
-            if not sts: return
+            if not sts:
+                return
         try:
             data = json_loads(data)
             try:
@@ -314,7 +321,8 @@ class MusicBox(CBaseHostClass):
         printDBG("getLinksForVideo cItem[%s]" % cItem)
         
         search_list = YouTubeParser().getSearchResult(cItem.get('page', ''), "music", 1, '')
-        if not search_list: return []
+        if not search_list:
+            return []
 
         video_path = search_list[0]['url']
         videoUrls = self._getLinksForVideo(video_path)
@@ -344,7 +352,8 @@ class MusicBox(CBaseHostClass):
         printDBG( "handleService: |||||||||||||||||||||||||||||||||||| [%s] " % name )
         self.currList = []
 
-        if str(page)=='None' or page=='': page = '0'
+        if str(page)=='None' or page=='':
+            page = '0'
 
     #MAIN MENU
         if name is None:

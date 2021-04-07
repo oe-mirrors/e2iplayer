@@ -10,8 +10,10 @@ from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import SetIPTVPlaye
 ###################################################
 import threading
 import traceback
-try: import ctypes
-except Exception: pass
+try:
+    import ctypes
+except Exception:
+    pass
 ###################################################
 
 gMainThreadId = None
@@ -305,7 +307,7 @@ class iptv_execute(object):
         self.Thread = threading.current_thread()
 
     def __call__(self, cmd):
-        printDBG("iptv_execute.__call__: Here we must not be in main thread context: [%s]" % threading.current_thread());
+        printDBG("iptv_execute.__call__: Here we must not be in main thread context: [%s]" % threading.current_thread())
         self.event.clear()
         tmpRet = DelegateToMainThread(self._system, self.mainThreadIdx)(cmd)
         if tmpRet and tmpRet[0] == iptv_execute.WAIT_RET: 
@@ -317,33 +319,38 @@ class iptv_execute(object):
             return {'sts':False}
 
     def _system(self, session, cmd):
-        printDBG("iptv_execute._system: Here we must be in main thread context: [%s]" % threading.current_thread());
+        printDBG("iptv_execute._system: Here we must be in main thread context: [%s]" % threading.current_thread())
         
-        try: terminated = self.Thread._iptvplayer_ext['terminated']
+        try:
+            terminated = self.Thread._iptvplayer_ext['terminated']
         except Exception:
             printExc()
             terminated = False
         
         if not terminated and self.Thread.isAlive():
-            try: self.Thread._iptvplayer_ext['iptv_execute'] = self
-            except Exception: printExc()
+            try:
+                self.Thread._iptvplayer_ext['iptv_execute'] = self
+            except Exception:
+                printExc()
             self.iptv_system = iptv_system(cmd, self._callBack)
             
             return iptv_execute.WAIT_RET
         return
 
     def _callBack(self, code, outData):
-        printDBG("iptv_execute._callBack: Here we must be in main thread context: [%s]" % threading.current_thread());
+        printDBG("iptv_execute._callBack: Here we must be in main thread context: [%s]" % threading.current_thread())
         self.iptv_system = None
         self.retVal = {'sts':True, 'code':code, 'data':outData}
         self.event.set()
         
-        try: self.Thread._iptvplayer_ext['iptv_execute'] = None
-        except Exception: printExc()
+        try:
+            self.Thread._iptvplayer_ext['iptv_execute'] = None
+        except Exception:
+            printExc()
         self.Thread = None
     
     def terminate(self):
-        printDBG("iptv_execute.terminate: Here we must be in main thread context: [%s]" % threading.current_thread());
+        printDBG("iptv_execute.terminate: Here we must be in main thread context: [%s]" % threading.current_thread())
         self.iptv_system.kill()
         self._callBack(-1, "terminated")
 
@@ -437,7 +444,8 @@ class CFunctionProxyQueue:
                 item = self.Queue[-1]
                 if isinstance(item, CPQItemCallBack):
                     name = str(item.clientFunName)
-            except Exception: pass
+            except Exception:
+                pass
             self.QueueLock.release()
         return name
     
@@ -463,10 +471,12 @@ class CFunctionProxyQueue:
                 printDBG("CFunctionProxyQueue.processQueue")
             else:
                 QueueIsEmpty = True 
-            if QueueIsEmpty: self.QueueEmpty = True
+            if QueueIsEmpty:
+                self.QueueEmpty = True
             self.QueueLock.release()
             
-            if QueueIsEmpty: return
+            if QueueIsEmpty:
+                return
                 
             if isinstance(item, CPQItemCallBack) and None != self.procFun:
                 self.procFun(item)

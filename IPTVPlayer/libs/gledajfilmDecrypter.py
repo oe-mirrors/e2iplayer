@@ -43,7 +43,8 @@ class gledajfilmDecrypter:
 		x = 0xffffffff & x
 		if x > 0x7fffffff :
 			return - ( ~(x - 1) & 0xffffffff )
-		else : return x   
+		else :
+			return x   
 
 
 	def keyExpansion(self, param1):

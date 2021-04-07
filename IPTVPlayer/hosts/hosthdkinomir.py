@@ -13,8 +13,10 @@ from Plugins.Extensions.IPTVPlayer.libs.youtubeparser import YouTubeParser
 # FOREIGN import
 ###################################################
 import re
-try:    import json
-except Exception: import simplejson as json
+try:
+    import json
+except Exception:
+    import simplejson as json
 ###################################################
 
 
@@ -48,7 +50,8 @@ class HDKinoMir(CBaseHostClass):
     
     def getPage(self, url, params={}, post_data=None):
         sts, data = self.cm.getPage(url, params, post_data)
-        if sts and self.encoding == '': self.encoding = self.cm.ph.getSearchGroups(data, 'charset=([^"]+?)"')[0]
+        if sts and self.encoding == '':
+            self.encoding = self.cm.ph.getSearchGroups(data, 'charset=([^"]+?)"')[0]
         return sts, data
     
     def getFullUrl(self, url):
@@ -58,7 +61,8 @@ class HDKinoMir(CBaseHostClass):
     def listMainMenu(self, cItem, category):
         printDBG("HDKinoMir.listCategories")
         sts, data = self.getPage(cItem['url'])
-        if not sts: return
+        if not sts:
+            return
         
         if 0 == len(self.sortCache):
             sorData = self.cm.ph.getDataBeetwenMarkers(data, '<form name="news_set_sort"', '/> ', False)[1]
@@ -79,7 +83,8 @@ class HDKinoMir(CBaseHostClass):
         mainMenuData = self.cm.ph.getDataBeetwenMarkers(data, '<div class="top-menu-block">', '</ul>', False)[1]
         mainMenuData = re.compile('href="([^"]+?)"[^>]*?>([^<]+?)<').findall(mainMenuData)
         for item in mainMenuData:
-            if item[0] in ['/actors/', '/podborki-filmov.html']: continue
+            if item[0] in ['/actors/', '/podborki-filmov.html']:
+                continue
             params = dict(cItem)
             params.update({'category':category, 'title':item[1], 'url':self.getFullUrl(item[0])})
             self.addDir(params)
@@ -89,7 +94,8 @@ class HDKinoMir(CBaseHostClass):
     def listContent(self, cItem, category):
         printDBG("HDKinoMir.listContent")
         sts, data = self.getPage(cItem['url'])
-        if not sts: return
+        if not sts:
+            return
         
         desc  = self.cm.ph.getDataBeetwenMarkers(data, '<div class="full-right-detailes">', '<div style="clear:both;">', False)[1]
         desc  = self.cleanHtmlStr(desc)
@@ -156,7 +162,8 @@ class HDKinoMir(CBaseHostClass):
                 printExc()
                 return
             for item in list:
-                if item['category'] != 'video': continue
+                if item['category'] != 'video':
+                    continue
                 self.addVideo(item)
         
     def listItems(self, cItem, category):
@@ -166,7 +173,8 @@ class HDKinoMir(CBaseHostClass):
         url = tmp[0]
         if len(tmp) > 1:
             arg = tmp[1]
-        else: arg = ''
+        else:
+            arg = ''
         
         page = cItem.get('page', 1)
         if page > 1:
@@ -176,7 +184,8 @@ class HDKinoMir(CBaseHostClass):
         
         post_data = cItem.get('post_data', None)
         sts, data = self.getPage(url, {}, post_data)
-        if not sts: return
+        if not sts:
+            return
         
         nextPage = False
         if ('/page/%s/' % (page+1)) in data:
@@ -186,14 +195,17 @@ class HDKinoMir(CBaseHostClass):
         data = self.cm.ph.getDataBeetwenNodes(data, ('<div', '>', 'filmposters'), ('<div', '>', 'center'), False)[1]
         data = data.split(m1)
         
-        if len(data): data[-1] = data[-1].split('<div class="navigation">')[0]
+        if len(data):
+            data[-1] = data[-1].split('<div class="navigation">')[0]
         for item in data:
             url   = self.cm.ph.getSearchGroups(item, 'href="([^"]+?)"')[0]
             title = self.cm.ph.getSearchGroups(item, 'alt="([^"]+?)"')[0]
-            if title == '{title}': title = self.cm.ph.getDataBeetwenMarkers(item, '<span>', '</span>', False)[1]
+            if title == '{title}':
+                title = self.cm.ph.getDataBeetwenMarkers(item, '<span>', '</span>', False)[1]
             title = self.cleanHtmlStr( title )
             
-            if title == '': continue
+            if title == '':
+                continue
             icon  = self.cm.ph.getSearchGroups(item, 'src="([^"]+?)"')[0]
             desc  = self.cleanHtmlStr( item.split('<div class="ribbon">')[-1] )
             params = dict(cItem)
@@ -210,22 +222,27 @@ class HDKinoMir(CBaseHostClass):
         
         if self.encoding == '':
             sts, data = self.getPage(self.getMainUrl())
-            if not sts: return
+            if not sts:
+                return
         
-        try: searchPattern = searchPattern.decode('utf-8').encode(self.encoding, 'ignore')
-        except Exception: searchPattern = ''
+        try:
+            searchPattern = searchPattern.decode('utf-8').encode(self.encoding, 'ignore')
+        except Exception:
+            searchPattern = ''
         
         post_data = {'do':'search', 'subaction':'search', 'story':searchPattern, 'x': 0, 'y': 0}
         
         sts, data = self.getPage(self.getMainUrl(), post_data=post_data)
-        if not sts: return
+        if not sts:
+            return
         
         m1 = '<div class="filmposters">'
         data = self.cm.ph.getDataBeetwenMarkers(data, m1, '<div class="main">', False)[1]
         data = data.split(m1)
         for item in data:
             title = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(item, '<h2', '</h2>')[1])
-            if title == '': title = self.cleanHtmlStr(self.cm.ph.getSearchGroups(item, '''alt=['"]([^'^"]+?)['"]''')[0])
+            if title == '':
+                title = self.cleanHtmlStr(self.cm.ph.getSearchGroups(item, '''alt=['"]([^'^"]+?)['"]''')[0])
             icon  = self.getFullIconUrl(self.cm.ph.getSearchGroups(item, '''src=['"]([^'^"]+?)['"]''')[0])
             url   = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''href=['"]([^'^"]+?)['"]''')[0])
             desc  = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(item, '</h2>', '</div>')[1])
@@ -246,7 +263,8 @@ class HDKinoMir(CBaseHostClass):
         
         if 'HDKinoMir.com' in videoUrl:
             sts, data = self.getPage(videoUrl)
-            if not sts: return []
+            if not sts:
+                return []
             data = self.cm.ph.getDataBeetwenMarkers(data, '<div class="wbox2 video dark">', '</iframe>', False)[1]
             videoUrl = self.cm.ph.getSearchGroups(data, '<iframe[^>]+?src="(http[^"]+?)"', 1, True)[0]
         

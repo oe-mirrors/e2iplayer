@@ -17,8 +17,10 @@ import re
 import urllib.request
 import urllib.parse
 import urllib.error
-try:    import json
-except Exception: import simplejson as json
+try:
+    import json
+except Exception:
+    import simplejson as json
 ###################################################
 
 
@@ -45,12 +47,15 @@ class Gledalica(CBaseHostClass):
         self.cacheFiltersKeys = []
         
     def getPage(self, baseUrl, addParams = {}, post_data = None):
-        if addParams == {}: addParams = dict(self.defaultParams)
+        if addParams == {}:
+            addParams = dict(self.defaultParams)
         origBaseUrl = baseUrl
         baseUrl = self.cm.iriToUri(baseUrl)
         def _getFullUrl(url):
-            if self.cm.isValidUrl(url): return url
-            else: return urllib.parse.urljoin(baseUrl, url)
+            if self.cm.isValidUrl(url):
+                return url
+            else:
+                return urllib.parse.urljoin(baseUrl, url)
         addParams['cloudflare_params'] = {'domain':self.up.getDomain(baseUrl), 'cookie_file':self.COOKIE_FILE, 'User-Agent':self.USER_AGENT, 'full_url_handle':_getFullUrl}
         return self.cm.getPageCFProtection(baseUrl, addParams, post_data)
         
@@ -109,7 +114,8 @@ class Gledalica(CBaseHostClass):
     def listTopMenu(self, cItem, nextCategory):
         printDBG("Gledalica.listTopMenu")
         sts, data = self.getPage(cItem['url'])
-        if not sts: return
+        if not sts:
+            return
         self.setMainUrl(data.meta['url'])
         
         data = self.cm.ph.getAllItemsBeetwenNodes(data, ('<optgroup', '>'), ('</optgroup', '>'))
@@ -123,14 +129,16 @@ class Gledalica(CBaseHostClass):
             for item in groupItem:
                 url = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''value=['"](https?://[^"^']+?)['"]''')[0])
                 title = self.cm.ph.getDataBeetwenMarkers(item, '>', '<', False)[1]
-                if title == '': title = _('--All--')
+                if title == '':
+                    title = _('--All--')
                 if '&nbsp;&nbsp;&nbsp;' in title and url != '':
                     prevItem['sub_items'].append({'title':self.cleanHtmlStr(title).strip(), 'url':url})
                 else:
                     if 'url' in prevItem:
                         subSubItems.append(prevItem)
                         prevItem = {'sub_items':[]}
-                    if url != '': prevItem.update({'title':self.cleanHtmlStr(title).strip(), 'url':url})
+                    if url != '':
+                        prevItem.update({'title':self.cleanHtmlStr(title).strip(), 'url':url})
             if len(subSubItems):
                 params = dict(cItem)
                 params.update({'title':groupTitle, 'category':nextCategory, 'sub_items':subSubItems})
@@ -142,14 +150,17 @@ class Gledalica(CBaseHostClass):
         for item in subList:
             params = {'name':'category', 'type':'category', 'good_for_fav':True}
             params.update(item)
-            if len(item.get('sub_items', [])): params['category'] = cItem['category']
-            else: params['category'] = nextCategory
+            if len(item.get('sub_items', [])):
+                params['category'] = cItem['category']
+            else:
+                params['category'] = nextCategory
             self.addDir(params)
             
     def listTopItems(self, cItem, nextCategory):
         printDBG("Gledalica.listTopItems")
         sts, data = self.getPage(cItem['url'])
-        if not sts: return
+        if not sts:
+            return
         self.setMainUrl(data.meta['url'])
         
         data = self.cm.ph.getDataBeetwenMarkers(data, 'topvideos_results', '</table>')[1]
@@ -157,30 +168,36 @@ class Gledalica(CBaseHostClass):
         for item in data:
             item = self.cm.ph.getAllItemsBeetwenMarkers(item, '<td', '</td>')
             
-            if len(item) < 5: continue
+            if len(item) < 5:
+                continue
             url = self.getFullUrl(self.cm.ph.getSearchGroups(item[3], '''href=['"]([^"^']+?)['"]''')[0])
-            if url == '': continue
+            if url == '':
+                continue
             icon = self.getFullIconUrl(self.cm.ph.getSearchGroups(item[1], '''src=['"]([^"^']+?)['"]''')[0])
             title = self.cleanHtmlStr(item[3])
-            if title  == '': title = self.cm.ph.rgetDataBeetwenMarkers2(url, '-video_', '/', False)[1].replace('-', ' ').title()
+            if title  == '':
+                title = self.cm.ph.rgetDataBeetwenMarkers2(url, '-video_', '/', False)[1].replace('-', ' ').title()
             desc = ' | '.join([self.cleanHtmlStr(item[0]), self.cleanHtmlStr(item[2]), self.cleanHtmlStr(item[4])])
             params = {'good_for_fav':True, 'url':url, 'title':title, 'desc':desc, 'icon':icon}
             if '-video_' not in url:
                 params['category'] = nextCategory
                 self.addDir(params)
-            else: self.addVideo(params)
+            else:
+                self.addVideo(params)
             
     def listSort(self, cItem, nextCategory):
         printDBG("Gledalica.listSort")
         sts, data = self.getPage(cItem['url'])
-        if not sts: return
+        if not sts:
+            return
         self.setMainUrl(data.meta['url'])
         
         tmp = self.cm.ph.getDataBeetwenNodes(data, ('<div', '>', 'sorting'), ('</ul', '>'))[1]
         tmp = self.cm.ph.getAllItemsBeetwenMarkers(tmp, '<li', '</li>')
         for item in tmp:
             url = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''href=['"]([^"^']+?)['"]''')[0])
-            if url == '': continue
+            if url == '':
+                continue
             title = self.cleanHtmlStr(item)
             self.addDir({'category':nextCategory, 'url':url, 'title':title})
         
@@ -194,7 +211,8 @@ class Gledalica(CBaseHostClass):
         page = cItem.get('page', 1)
         if data == None:
             sts, data = self.getPage(cItem['url'])
-            if not sts: return
+            if not sts:
+                return
             self.setMainUrl(data.meta['url'])
 
         nextPage = self.cm.ph.getDataBeetwenNodes(data, ('<div', '>', 'pagination'), ('</div', '>'))[1]
@@ -210,12 +228,14 @@ class Gledalica(CBaseHostClass):
             tmp =  self.cm.ph.getAllItemsBeetwenMarkers(item, '<a', '</a>')
             for t in tmp:
                 t = self.cleanHtmlStr(t)
-                if t != '': desc.append(t)
+                if t != '':
+                    desc.append(t)
             params = {'good_for_fav':True, 'url':url, 'title':title, 'desc':' | '.join(desc), 'icon':icon}
             if 'SERIJA' in item:
                 params['category'] = 'list_series'
                 self.addDir(params)
-            else: self.addVideo(params)
+            else:
+                self.addVideo(params)
 
         if nextPage != '':
             params = dict(cItem)
@@ -225,14 +245,16 @@ class Gledalica(CBaseHostClass):
     def listYears(self, cItem, nextCategory):
         printDBG("Gledalica.listYears")
         sts, data = self.getPage(cItem['url'])
-        if not sts: return
+        if not sts:
+            return
         self.setMainUrl(data.meta['url'])
         
         data = self.cm.ph.getDataBeetwenNodes(data, ('<div', '>', 'index_new_videos'), ('</div', '>'))[1]
         data = self.cm.ph.getAllItemsBeetwenMarkers(data, '<a', '</a>')
         for item in data:
             url = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''href=['"]([^"^']+?)['"]''')[0])
-            if url == '': continue
+            if url == '':
+                continue
             title = self.cleanHtmlStr(item)
             self.addDir({'category':nextCategory, 'url':url, 'title':title})
 
@@ -245,7 +267,8 @@ class Gledalica(CBaseHostClass):
         printDBG("Gledalica.exploreItem [%s]" % cItem)
 
         sts, data = self.getPage(cItem['url'])
-        if not sts: return
+        if not sts:
+            return
         self.setMainUrl(data.meta['url'])
 
 #        nextPage = self.cm.ph.getDataBeetwenNodes(data, ('<div', '>', 'pagination'), ('</div', '>'))[1]
@@ -262,7 +285,8 @@ class Gledalica(CBaseHostClass):
         test = self.cm.ph.getAllItemsBeetwenMarkers(jsdata, '$(".openload', '\n')
         printDBG("Gledalica.listSeries test[%s]" % test)
         sts, data = self.getPage(baseUrl + id + apikey )
-        if not sts: return
+        if not sts:
+            return
         try:
             data = json_loads(data)
             seasons = data['number_of_seasons']
@@ -272,7 +296,8 @@ class Gledalica(CBaseHostClass):
 
         for x in range(1, seasons + 1):
             sts, data = self.getPage(baseUrl + id + '/season/' + str(x) + apikey)
-            if not sts: return
+            if not sts:
+                return
             try:
                 data = json_loads(data)
                 data = data['episodes']
@@ -281,7 +306,8 @@ class Gledalica(CBaseHostClass):
                     links = test[x-1].split('$(".openload')
                     url = self.getFullUrl(self.cm.ph.getSearchGroups(links[y], '''src=['"]([^"^']+?)['"]''')[0])
                     y += 1
-                    if url == '': continue
+                    if url == '':
+                        continue
                     title = 'S'+str(item['season_number'])+'E'+str(item['episode_number'])+' - '+item['name']
                     desc  = item['overview']
                     params = {'good_for_fav':True, 'url':url, 'title':title, 'desc':desc, 'icon':cItem['icon']}
@@ -308,19 +334,23 @@ class Gledalica(CBaseHostClass):
             self.cacheSetiesByLetter = {}
             
             sts, data = self.getPage(cItem['url'])
-            if not sts: return
+            if not sts:
+                return
             self.setMainUrl(data.meta['url'])
             
             data = self.cm.ph.getDataBeetwenNodes(data, ('<div', '>', 'list_subcats'), ('</table', '>'))[1]
             data = self.cm.ph.getAllItemsBeetwenMarkers(data, '<a', '</a>')
             for item in data:
                 url = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''href=['"]([^"^']+?)['"]''')[0])
-                if url == '': continue
+                if url == '':
+                    continue
                 title = self.cleanHtmlStr(item)
-                if title == '': continue
+                if title == '':
+                    continue
                 icon = self.getFullIconUrl(self.cm.ph.getSearchGroups(item, '''src=['"]([^"^']+?)['"]''')[0])
                 letter = title.decode('utf-8')[0].upper().encode('utf-8')
-                if not letter.isalpha(): letter = '#'
+                if not letter.isalpha():
+                    letter = '#'
                 
                 if letter not in self.cacheSeriesLetter:
                     self.cacheSeriesLetter.append(letter)
@@ -355,7 +385,8 @@ class Gledalica(CBaseHostClass):
 
         cacheKey = cItem['url']
         cacheTab = self.cacheLinks.get(cacheKey, [])
-        if len(cacheTab): return cacheTab
+        if len(cacheTab):
+            return cacheTab
 
         self.cacheLinks = {}
 
@@ -368,7 +399,8 @@ class Gledalica(CBaseHostClass):
         retTab = []
         params['header']['Referer'] = cUrl
         sts, data = self.getPage(url, params)
-        if not sts: return []
+        if not sts:
+            return []
 
         cUrl = data.meta['url']
         self.setMainUrl(cUrl)
@@ -377,9 +409,11 @@ class Gledalica(CBaseHostClass):
         for item in data:
             url = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''src=['"]([^"^']+?)['"]''', 1, True)[0])
             sts, data = self.getPage(url, params)
-            if not sts: return []
+            if not sts:
+                return []
             playerUrl = self.getFullUrl(self.cm.ph.getSearchGroups(data, '''src=['"]([^"^']+?)['"]''', 1, True)[0])
-            if 1 != self.up.checkHostSupport(playerUrl): continue 
+            if 1 != self.up.checkHostSupport(playerUrl):
+                continue 
             retTab.append({'name':self.up.getHostName(playerUrl), 'url':strwithmeta(playerUrl, {'Referer':cUrl}), 'need_resolve':1})
         
         if len(retTab):
@@ -410,7 +444,8 @@ class Gledalica(CBaseHostClass):
         otherInfo = {}
         
         sts, data = self.getPage(cItem['url'])
-        if not sts: return []
+        if not sts:
+            return []
         cUrl = data.meta['url']
         self.setMainUrl(cUrl)
         
@@ -434,13 +469,17 @@ class Gledalica(CBaseHostClass):
         printDBG(tmp)
         for idx in range(1, len(tmp)):
             val = self.cleanHtmlStr(tmp[idx])
-            if val == '' or val.lower() == 'n/a': continue
+            if val == '' or val.lower() == 'n/a':
+                continue
             key = self.cleanHtmlStr(tmp[idx-1]).decode('utf-8').lower().encode('utf-8')
-            if key not in keysMap: continue
+            if key not in keysMap:
+                continue
             otherInfo[keysMap[key]] = val
         
-        if title == '': title = cItem['title']
-        if icon == '':  icon = cItem.get('icon', self.DEFAULT_ICON_URL)
+        if title == '':
+            title = cItem['title']
+        if icon == '':
+            icon = cItem.get('icon', self.DEFAULT_ICON_URL)
         
         return [{'title':self.cleanHtmlStr( title ), 'text': self.cleanHtmlStr( desc ), 'images':[{'title':'', 'url':self.getFullUrl(icon)}], 'other_info':otherInfo}]
     
@@ -491,7 +530,8 @@ class Gledalica(CBaseHostClass):
     #SECTIONS
         elif category == 'sections':
             self.listSections(self.currItem, 'list_sub_items', 'explore_item')
-            if 1 == len(self.currList): self.listSubItems(self.currList[0])
+            if 1 == len(self.currList):
+                self.listSubItems(self.currList[0])
         elif category == 'list_sub_items':
             self.listSubItems(self.currItem)
     #MOVIES
@@ -530,5 +570,6 @@ class IPTVHost(CHostBase):
     def withArticleContent(self, cItem):
         if '-video_' in cItem.get('url', ''):
             return True
-        else: return False
+        else:
+            return False
     

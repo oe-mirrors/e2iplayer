@@ -68,7 +68,8 @@ class VidCorn(CBaseHostClass, CaptchaHelper):
     def listMain(self, cItem):
         printDBG("VidCorn.listMain")
         sts, data = self.getPage(self.getMainUrl())
-        if not sts: return
+        if not sts:
+            return
         self.setMainUrl(self.cm.meta['url'])
 
         data = self.cm.ph.getDataBeetwenNodes(data, ('<ul', '>', 'navegacion'), ('</ul', '>'), False)[1]
@@ -94,7 +95,8 @@ class VidCorn(CBaseHostClass, CaptchaHelper):
         if idx == 0:
             self.filters = []
             sts, data = self.getPage(cItem['url'])
-            if not sts: return
+            if not sts:
+                return
             data = self.cm.ph.getAllItemsBeetwenNodes(data, ('<span', '>', 'filter-value'), ('</ul', '>'))
             for filterData in data:
                 filtersTab = []
@@ -130,9 +132,11 @@ class VidCorn(CBaseHostClass, CaptchaHelper):
         data = self.cm.ph.rgetAllItemsBeetwenNodes(data, ('</div', '>'), ('<div', '>', 'data-type'))
         for item in data:
             url = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''href=['"]([^"^']+?)["']''', 1, True)[0])
-            if url == '': continue
+            if url == '':
+                continue
             icon = self.getFullIconUrl(self.cm.ph.getSearchGroups(item, '''original=['"]([^"^']+?)['"]''')[0])
-            if icon == '': icon = self.getFullIconUrl(self.cm.ph.getSearchGroups(item, '''<img[^>]+?src=['"]([^"^']+?\.jpe?g(?:\?[^'^"]*?)?)['"]''')[0])
+            if icon == '':
+                icon = self.getFullIconUrl(self.cm.ph.getSearchGroups(item, '''<img[^>]+?src=['"]([^"^']+?\.jpe?g(?:\?[^'^"]*?)?)['"]''')[0])
             title = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(item, ('<div', '>', 'info-'), ('</div', '>'), False)[1])
             type = self.cm.ph.getSearchGroups(item, '''data\-type=['"]([^"^']+?)['"]''')[0]
 
@@ -165,7 +169,8 @@ class VidCorn(CBaseHostClass, CaptchaHelper):
         url = self.getFullUrl('/services/fetch_pages')
         
         sts, data = self.getPage(url, post_data=post_data)
-        if not sts: return
+        if not sts:
+            return
 
         nextPage = True if "$('#load_more_button').show();" in data else False
         self.currList.extend(self._listItems(cItem, data))
@@ -188,7 +193,8 @@ class VidCorn(CBaseHostClass, CaptchaHelper):
             item = self.cm.ph.getAllItemsBeetwenNodes(item, ('<span', '>'), ('</span', '>'), False)
             for it in item:
                 it = self.cleanHtmlStr(it)
-                if it: descTab.append(it)
+                if it:
+                    descTab.append(it)
 
             params = MergeDicts(cItem, {'good_for_fav':True, 'category':nextCategory, 'title':title, 'url':url, 'list_id':listId, 'f_type':'listas', 'icon':icon, 'desc':'[/br]'.join(descTab)})
             retList.append(params)
@@ -205,7 +211,8 @@ class VidCorn(CBaseHostClass, CaptchaHelper):
         url = self.getFullUrl('/services/fetch_lists')
 
         sts, data = self.getPage(url, post_data=post_data)
-        if not sts: return
+        if not sts:
+            return
 
         nextPage = True if "$('#load_more_button').show();" in data else False
         self.currList.extend(self._listLists(cItem, nextCategory, data))
@@ -224,7 +231,8 @@ class VidCorn(CBaseHostClass, CaptchaHelper):
         url = self.getFullUrl('/services/fetch_list_content')
 
         sts, data = self.getPage(url, post_data=post_data)
-        if not sts: return
+        if not sts:
+            return
 
         nextPage = True if "$('#load_more_button').show();" in data else False
         self.currList.extend(self._listItems(cItem, data))
@@ -244,7 +252,8 @@ class VidCorn(CBaseHostClass, CaptchaHelper):
         url = self.getFullUrl('/services/fetch_people')
 
         sts, data = self.getPage(url, post_data=post_data)
-        if not sts: return
+        if not sts:
+            return
 
         nextPage = True if "$('#load_more_button').show();" in data else False
         self.currList.extend(self._listItems(cItem, data))
@@ -256,7 +265,8 @@ class VidCorn(CBaseHostClass, CaptchaHelper):
     def listActorItems(self, cItem):
         printDBG("VidCorn.listActorItems")
         sts, data = self.getPage(cItem['url'])
-        if not sts: return
+        if not sts:
+            return
         printDBG(data)
         data = self.cm.ph.getDataBeetwenNodes(data, ('<div', '>', 'data-type'), ('<div', '>', 'padding-top'))[1]
         self.currList.extend(self._listItems(cItem, data))
@@ -284,8 +294,10 @@ class VidCorn(CBaseHostClass, CaptchaHelper):
             linksData = self.cm.ph.getAllItemsBeetwenMarkers(linksData, '<a', '</a>')
             for item in linksData:
                 url = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''href=['"]([^"^']+?)["']''', 1, True)[0])
-                if not url: continue
-                if url in uniqueLinks: continue
+                if not url:
+                    continue
+                if url in uniqueLinks:
+                    continue
                 uniqueLinks.add(url)
                 title = []
                 item = self.cm.ph.getAllItemsBeetwenMarkers(item, '<span', '</span>')
@@ -293,8 +305,10 @@ class VidCorn(CBaseHostClass, CaptchaHelper):
                     t = ''
                     if 'link-img' not in it:
                         t = self.cleanHtmlStr(self.cm.ph.getSearchGroups(it, '''title=['"]([^"^']+?)["']''', 1, True)[0]).split(': ', 1)[-1]
-                    if not t: t = self.cleanHtmlStr(it)
-                    if t: title.append(t)
+                    if not t:
+                        t = self.cleanHtmlStr(it)
+                    if t:
+                        title.append(t)
                 title = '[%s] %s' % (linksType, ' | '.join(title))
                 linksTab.append({'name':title, 'url':strwithmeta(url, {'Referer':cUrl}), 'need_resolve':1})
         return linksTab
@@ -307,7 +321,8 @@ class VidCorn(CBaseHostClass, CaptchaHelper):
             self.sessionEx.open(MessageBox, 'Debes iniciar sesión para ver los enlaces.', type = MessageBox.TYPE_ERROR, timeout=10)
 
         sts, data = self.getPage(cItem['url'])
-        if not sts: return
+        if not sts:
+            return
         cUrl = self.getFullUrl(self.cm.meta['url'])
         self.setMainUrl(cUrl)
 
@@ -327,11 +342,13 @@ class VidCorn(CBaseHostClass, CaptchaHelper):
             self.addVideo(params)
         
         movieId = self.cm.ph.getSearchGroups(data, '''data\-movie\-id=['"]([^"^']+?)["']''', 1, True)[0]
-        if not movieId: return
+        if not movieId:
+            return
 
         url = self.getFullUrl('/services/fetch_links')
         sts, data = self.getPage(url, post_data={'movie':movieId, 'data_type':cItem['f_type']})
-        if not sts: return
+        if not sts:
+            return
 
         linksTab = self._getLinks(cUrl, data)
         if len(linksTab):
@@ -355,7 +372,8 @@ class VidCorn(CBaseHostClass, CaptchaHelper):
                     tmp = self.cm.ph.getAllItemsBeetwenMarkers(item, '<span', '</span>')
                     for t in tmp:
                         t = self.cleanHtmlStr(t)
-                        if t: tab.append(t)
+                        if t:
+                            tab.append(t)
                     if len(tab):
                         eNum = tab[0]
                     else:
@@ -370,7 +388,8 @@ class VidCorn(CBaseHostClass, CaptchaHelper):
                     tmp = self.cm.ph.getAllItemsBeetwenMarkers(item, '<small', '</small>')
                     for t in tmp:
                         t = self.cleanHtmlStr(t)
-                        if t: tab.append(t)
+                        if t:
+                            tab.append(t)
                     #desc += '[/br]' + ' | '.join(tab)
                     title = '%s: s%se%s %s' % (cItem['title'], sNum.zfill(2), eNum.zfill(2), title)
                     params = MergeDicts(cItem, {'good_for_fav': False, 'type':'video', 'title':title, 'url':url, 'episode_id':episodeId, 'desc':desc, 'prev_url':cUrl})
@@ -386,7 +405,8 @@ class VidCorn(CBaseHostClass, CaptchaHelper):
 
         url = self.getFullUrl('/buscar/') + urllib.parse.quote_plus(searchPattern)
         sts, data = self.getPage(url)
-        if not sts: return
+        if not sts:
+            return
         self.setMainUrl(self.cm.meta['url'])
 
         headersTitles = []
@@ -421,7 +441,8 @@ class VidCorn(CBaseHostClass, CaptchaHelper):
         if cItem.get('episode_id'):
             url = self.getFullUrl('/services/fetch_links_from_episode')
             sts, data = self.getPage(url, post_data={'episode':cItem['episode_id']})
-            if not sts: return linksTab
+            if not sts:
+                return linksTab
 
             printDBG(data)
 
@@ -447,7 +468,8 @@ class VidCorn(CBaseHostClass, CaptchaHelper):
         urlParams['header'] = MergeDicts(urlParams['header'], {'Referer':videoUrl.meta['Referer']})
         
         sts, data = self.getPage(videoUrl, urlParams)
-        if not sts: linksTab
+        if not sts:
+            linksTab
         
         data = self.cm.ph.getDataBeetwenNodes(data, ('<div', '>', 'go-link-container'), ('</div', '>'), False)[1]
         videoUrl = self.getFullUrl( self.cm.ph.getSearchGroups(data, '''href=['"]([^"^']+?)["']''', 1, True)[0], self.cm.meta['url'])
@@ -473,7 +495,8 @@ class VidCorn(CBaseHostClass, CaptchaHelper):
         if data == None:
             self.tryTologin()
             sts, data = self.getPage(url)
-            if not sts: data = ''
+            if not sts:
+                data = ''
 
         data = data.split('page-content', 1)[-1]
         icon = self.getFullIconUrl(self.cm.ph.getSearchGroups(data, '''<img[^>]+?src=['"]([^"^']+?\.jpe?g(?:\?[^'^"]*?)?)['"]''')[0])
@@ -481,36 +504,47 @@ class VidCorn(CBaseHostClass, CaptchaHelper):
         tmp = data.split('titulo', 1)[-1]
         title = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(tmp, ('<h1', '>'), ('</h1', '>'), False)[1])
         title1 = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(tmp, ('<h3', '>'), ('</h3', '>'), False)[1])
-        if title1: title  = '%s (%s)' % (title, title1)
+        if title1:
+            title  = '%s (%s)' % (title, title1)
 
         desc = self.cleanHtmlStr( self.cm.ph.getDataBeetwenNodes(tmp, ('<div', '>', 'description'), ('</div', '>'), False)[1] )
 
         itemsList = []
 
         val = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(data, ('<span', '>', 'tv-status'), ('</span', '>'), False)[1])
-        if val: itemsList.append((_('TV status'), val))
+        if val:
+            itemsList.append((_('TV status'), val))
 
         val = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(data, ('<span', '>', 'año'), ('</span', '>'), False)[1])
-        if val: itemsList.append((_('Year'), val))
+        if val:
+            itemsList.append((_('Year'), val))
 
         val = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(data, ('<i', '>', 'fa-star'), ('</b', '>'), False)[1])
-        if val: itemsList.append((_('IMDb rating'), val))
+        if val:
+            itemsList.append((_('IMDb rating'), val))
 
         val = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(data, ('<div', '>', 'ratingValue'), ('</div', '>'), False)[1])
         val1 = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(data, ('<span', '>', 'total-item-rates'), ('</span', '>'), False)[1])
-        if val1: val = '%s (%s)' % (val, val1)
-        if val: itemsList.append((_('Rating'), val))
+        if val1:
+            val = '%s (%s)' % (val, val1)
+        if val:
+            itemsList.append((_('Rating'), val))
 
         val = []
         tmp = self.cm.ph.getDataBeetwenNodes(data, ('<div', '>', 'generos'), ('</div', '>'), False)[1].split('</span>')
         for t in tmp:
             t = self.cleanHtmlStr(t)
-            if t: val.append(t)
-        if val: itemsList.append((_('Genres'), ', '.join(val)))
+            if t:
+                val.append(t)
+        if val:
+            itemsList.append((_('Genres'), ', '.join(val)))
 
-        if title == '': title = cItem['title']
-        if icon == '':  icon  = cItem.get('icon', self.DEFAULT_ICON_URL)
-        if desc == '':  desc  = cItem.get('desc', '')
+        if title == '':
+            title = cItem['title']
+        if icon == '':
+            icon  = cItem.get('icon', self.DEFAULT_ICON_URL)
+        if desc == '':
+            desc  = cItem.get('desc', '')
         
         return [{'title':self.cleanHtmlStr( title ), 'text': self.cleanHtmlStr( desc ), 'images':[{'title':'', 'url':self.getFullUrl(icon)}], 'other_info':{'custom_items_list':itemsList}}]
         
@@ -525,7 +559,8 @@ class VidCorn(CBaseHostClass, CaptchaHelper):
             self.password = config.plugins.iptvplayer.vidcorn_password.value
 
             sts, data = self.getPage(self.getMainUrl())
-            if sts: self.setMainUrl(self.cm.meta['url'])
+            if sts:
+                self.setMainUrl(self.cm.meta['url'])
 
             freshSession = False
             if sts and '/logout' in data:
@@ -642,5 +677,7 @@ class IPTVHost(CHostBase):
         CHostBase.__init__(self, VidCorn(), True, [])
     
     def withArticleContent(self, cItem):
-        if cItem.get('f_type', '') in ['series', 'peliculas']: return True
-        else: return False
+        if cItem.get('f_type', '') in ['series', 'peliculas']:
+            return True
+        else:
+            return False

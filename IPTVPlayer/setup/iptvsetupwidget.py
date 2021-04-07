@@ -54,9 +54,11 @@ class IPTVSetupMainWidget(Screen):
         try:
             for idx in range(5):
                 spinnerName = "spinner"
-                if idx: spinnerName += '_%d' % idx 
+                if idx:
+                    spinnerName += '_%d' % idx 
                 self[spinnerName] = Cover3()
-        except Exception: printExc()
+        except Exception:
+            printExc()
         self.spinnerPixmap = [LoadPixmap(GetIconDir('radio_button_on.png')), LoadPixmap(GetIconDir('radio_button_off.png'))]
         
         self.onClose.append(self.__onClose)
@@ -85,25 +87,30 @@ class IPTVSetupMainWidget(Screen):
         printDBG("IPTVSetupMainWidget.onStart")
         self["sub_title"].setText(_("Information"))
         self["info_field"].setText(_("IPTVPlayer need some additional setup.\nSuch as downloading and installation additional binaries.\nPress OK to start."))
-        if self.autoStart: self.startPressed()
+        if self.autoStart:
+            self.startPressed()
         
     def cancelPressed(self):
         printDBG("IPTVSetupMainWidget.cancelPressed")
-        if self.underClosing: return
+        if self.underClosing:
+            return
         self.underCloseMessage = True
         message = _("Skipping IPTVPlayer setup may cause problems.\nAre you sure to skip IPTVPlayer setup?")
         self.session.openWithCallback(self.cancelAnswer, MessageBox, text=message, type=MessageBox.TYPE_YESNO)
 
     def startPressed(self):
         printDBG("IPTVSetupMainWidget.startPressed")
-        if self.underClosing: return
-        if self.started: return
+        if self.underClosing:
+            return
+        if self.started:
+            return
         self.started = True
         self.setupImpl.start()
         
     def cancelAnswer(self, ret):
         printDBG("IPTVSetupMainWidget.cancelAnswer")
-        if self.underClosing: return
+        if self.underClosing:
+            return
         if ret: 
             self.underClosing = True
             self.close()
@@ -115,18 +122,24 @@ class IPTVSetupMainWidget(Screen):
             
     def showMessage(self, message, type, callback):
         printDBG("IPTVSetupMainWidget.showMessage")
-        if self.underClosing: return
-        if self.underCloseMessage: self.deferredAction =  boundFunction(self.doShowMessage, message, type, callback)
-        else: self.doShowMessage(message, type, callback)
+        if self.underClosing:
+            return
+        if self.underCloseMessage:
+            self.deferredAction =  boundFunction(self.doShowMessage, message, type, callback)
+        else:
+            self.doShowMessage(message, type, callback)
         
     def doShowMessage(self, message, type, callback):
         self.session.openWithCallback(callback, MessageBox, text=message, type=type)
         
     def chooseQuestion(self, title, list, callback):
         printDBG("IPTVSetupMainWidget.chooseQuestion")
-        if self.underClosing: return
-        if self.underCloseMessage: self.deferredAction =  boundFunction(self.dochooseQuestion, title, list, callback)
-        else: self.dochooseQuestion(title, list, callback)
+        if self.underClosing:
+            return
+        if self.underCloseMessage:
+            self.deferredAction =  boundFunction(self.dochooseQuestion, title, list, callback)
+        else:
+            self.dochooseQuestion(title, list, callback)
         
     def dochooseQuestion(self, title, list, callback):
         title += "                                                                         " # workaround for truncation message by stupid E2
@@ -134,14 +147,20 @@ class IPTVSetupMainWidget(Screen):
         self.session.openWithCallback(callback, ChoiceBox, title=title, list = list)
         
     def setInfo(self, title, message):
-        if self.underClosing: return
-        if None != title: self["sub_title"].setText(title)
-        if None != message: self["info_field"].setText(message)
+        if self.underClosing:
+            return
+        if None != title:
+            self["sub_title"].setText(title)
+        if None != message:
+            self["info_field"].setText(message)
         
     def finished(self):
-        if self.underClosing: return
-        if self.underCloseMessage: self.deferredAction = self.doFinished
-        else: self.doFinished()
+        if self.underClosing:
+            return
+        if self.underCloseMessage:
+            self.deferredAction = self.doFinished
+        else:
+            self.doFinished()
         
     def doFinished(self):
         self.close()

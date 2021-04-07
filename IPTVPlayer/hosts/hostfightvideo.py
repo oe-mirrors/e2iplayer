@@ -15,8 +15,10 @@ import re
 import urllib.request
 import urllib.parse
 import urllib.error
-try:    import json
-except Exception: import simplejson as json
+try:
+    import json
+except Exception:
+    import simplejson as json
 ###################################################
 
 
@@ -59,19 +61,22 @@ class FightVideo(CBaseHostClass):
         
         url = self.getFullUrl('viewforum.php?f=35')
         sts, data = self.getPage(url)
-        if not sts: return
+        if not sts:
+            return
         
         def addFilter(data, marker, baseKey, addAll=True, titleBase=''):
             key = 'f_' + baseKey
             self.cacheFilters[key] = []
             for item in data:
                 value = self.cm.ph.getSearchGroups(item, marker + '''="([^"]+?)"''')[0]
-                if value == '': continue
+                if value == '':
+                    continue
                 title = self.cleanHtmlStr(item)
                 self.cacheFilters[key].append({'title':title.title(), key:value})
                 
             if len(self.cacheFilters[key]):
-                if addAll: self.cacheFilters[key].insert(0, {'title':_('All')})
+                if addAll:
+                    self.cacheFilters[key].insert(0, {'title':_('All')})
                 self.cacheFiltersKeys.append(key)
         
         # Display topics from previous
@@ -107,9 +112,11 @@ class FightVideo(CBaseHostClass):
         cItem = dict(cItem)
         
         f_idx = cItem.get('f_idx', 0)
-        if f_idx == 0: self.fillCacheFilters(cItem)
+        if f_idx == 0:
+            self.fillCacheFilters(cItem)
         
-        if 0 == len(self.cacheFiltersKeys): return
+        if 0 == len(self.cacheFiltersKeys):
+            return
         
         filter = self.cacheFiltersKeys[f_idx]
         f_idx += 1
@@ -125,23 +132,30 @@ class FightVideo(CBaseHostClass):
         url = 'viewforum.php?f=35'
         
         query = {}
-        if page > 1: query['start'] = page*perPage
+        if page > 1:
+            query['start'] = page*perPage
         
         keys = list(self.cacheFiltersKeys)
         keys.append('f_sd')
         for key in self.cacheFiltersKeys:
             baseKey = key[2:] # "f_"
-            if key in cItem: query[baseKey] = urllib.parse.quote(cItem[key])
+            if key in cItem:
+                query[baseKey] = urllib.parse.quote(cItem[key])
         
         query = urllib.parse.urlencode(query)
-        if '?' in url: url += '&' + query
-        else: url += '?' + query
+        if '?' in url:
+            url += '&' + query
+        else:
+            url += '?' + query
         
         sts, data = self.getPage(self.getFullUrl(url))
-        if not sts: return
+        if not sts:
+            return
         
-        if  '<li class="next"><a' in data: nextPage = True
-        else: nextPage = False
+        if  '<li class="next"><a' in data:
+            nextPage = True
+        else:
+            nextPage = False
         
         data = self.cm.ph.getDataBeetwenMarkers(data, '<div class="list-inner">Topics</div>', '<form', False)[1]
         data = self.cm.ph.getAllItemsBeetwenMarkers(data, '<li class="row', '</dl>')
@@ -174,11 +188,13 @@ class FightVideo(CBaseHostClass):
             url += '&start=%s' % (page * 14)
         
         sts, data = self.getPage(url)
-        if not sts: return []
+        if not sts:
+            return []
         
         if self.cm.ph.getSearchGroups(data, '''[&;]start=(%s)[^0-9]''' % ((page+1)*14))[0] != '':
             nextPage = True
-        else: nextPage = False
+        else:
+            nextPage = False
         
         idx = cItem.get('video_idx', 1)
         data1 = self.cm.ph.getAllItemsBeetwenMarkers(data, '<div class="content">', '<div class="back2top">')
@@ -191,7 +207,8 @@ class FightVideo(CBaseHostClass):
             if 'VIDEO' == mTitle.upper().strip():
                 url  = self.cm.ph.getSearchGroups(tmp, 'href="(https?://[^"]+?)"')[0].replace('&amp;', '&')
                 sts, data = self.getPage(url)
-                if not sts: break
+                if not sts:
+                    break
                 tmp = self.cm.ph.getAllItemsBeetwenMarkers(data, '<div class="content">', '<div class="back2top">')
                 tItems = []
                 for item in tmp:
@@ -201,7 +218,8 @@ class FightVideo(CBaseHostClass):
                 tItems.extend(self.cm.ph.getAllItemsBeetwenMarkers(data, '<div class="postbody"', '</div>'))
                 for tItem in tItems:
                     title = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(tItem, '<strong', '</strong>')[1])
-                    if title == '': title = self.cleanHtmlStr(tItem)
+                    if title == '':
+                        title = self.cleanHtmlStr(tItem)
                     directUrl = True
                     url = self.cm.ph.getSearchGroups(tItem, '<source[^>]+?src="(https?://[^"]+?)"[^>]*?type="video')[0]
                     url = url.replace(' ', '%20')
@@ -210,7 +228,8 @@ class FightVideo(CBaseHostClass):
                         directUrl = False
                     if url not in allUrls and self.cm.isValidUrl(url) and (directUrl or 1 == self.up.checkHostSupport(url)):
                         allUrls.append(url)
-                        if title == '': title = 'Video %d - %s' % (idx, self.up.getDomain(url))
+                        if title == '':
+                            title = 'Video %d - %s' % (idx, self.up.getDomain(url))
                         params = {'title':title, 'url':url, 'direct_url':directUrl}
                         self.addVideo(params)
                         idx += 1
@@ -263,7 +282,8 @@ class FightVideo(CBaseHostClass):
         try:
             cItem = byteify(json.loads(fav_data))
             links = self.getLinksForVideo(cItem)
-        except Exception: printExc()
+        except Exception:
+            printExc()
         return links
         
     def setInitListFromFavouriteItem(self, fav_data):

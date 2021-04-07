@@ -17,8 +17,10 @@ from Plugins.Extensions.IPTVPlayer.components.ihost import CBaseHostClass
 ###################################################
 from Components.config import config, ConfigText, getConfigListEntry
 from hashlib import md5
-try:    import json
-except Exception: import simplejson as json
+try:
+    import json
+except Exception:
+    import simplejson as json
 ############################################
 
 ###################################################
@@ -96,14 +98,16 @@ class EdemTvApi:
             self.cacheChannels = {}
             categoryUrl = self.getFullUrl('category')
             sts, data = self.cm.getPage(categoryUrl, self.http_params)
-            if not sts: return []
+            if not sts:
+                return []
             
             marker = "animated_hidden uk-width-1-1"
             channelsData = self.cm.ph.getDataBeetwenMarkers(data, marker, 'uk-visible-small', False)[1]
             channelsData = channelsData.split(marker)
             for catItem in channelsData:
                 catId = self.cm.ph.getSearchGroups(catItem, ''' id=['"]([^'^"]+?)['"]''')[0]
-                if catId == '': continue
+                if catId == '':
+                    continue
                 channelsPerCat = self.cm.ph.getAllItemsBeetwenMarkers(catItem, '<a ', '</a>')
                 for item in channelsPerCat:
                     url  = self.cm.ph.getSearchGroups(item, ''' href=['"]([^'^"]+?)['"]''')[0]
@@ -121,7 +125,8 @@ class EdemTvApi:
             for item in catsData:
                 catId = self.cm.ph.getSearchGroups(item, '''data-target=['"]([^'^"]+?)['"]''')[0]
                 catTitle = self.cleanHtmlStr(item) + ' (%s)' % catId.title()
-                if 0 == len(self.cacheChannels.get(catId, [])): continue
+                if 0 == len(self.cacheChannels.get(catId, [])):
+                    continue
                 
                 if 'adult' == catId:
                     adult = True
@@ -156,7 +161,8 @@ class EdemTvApi:
         while tries < 7:
             tries += 1
             sts, data = self.cm.getPage(playlistUrl, self.http_params)
-            if not sts: return []
+            if not sts:
+                return []
             
             subdomain = self.cm.ph.getSearchGroups(data, '''<input[^>]*?name=['"]subdomain['"][^>]*?value=['"]([^'^"]+?)['"]''')[0]
             domainTab = self.cm.ph.getSearchGroups(data, '''<option[^>]*?value="([0-9]+?)"[^>]*?selected[^>]*?>([^<]+?)</option>''', 2)
@@ -182,7 +188,8 @@ class EdemTvApi:
         
         
         sts, data = self.cm.getPage(cItem['url'], self.http_params)
-        if not sts: return []
+        if not sts:
+            return []
         
         #printDBG(data)
         

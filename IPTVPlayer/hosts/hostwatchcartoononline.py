@@ -51,7 +51,8 @@ class WatchCartoonOnline(CBaseHostClass):
         printDBG("WatchCartoonOnline.listMainMenu")
 
         sts, data = self.getPage(self.getMainUrl())
-        if not sts: return
+        if not sts:
+            return
         self.setMainUrl(self.cm.meta['url'])
         
         data = data[data.find('<body'):]
@@ -60,7 +61,8 @@ class WatchCartoonOnline(CBaseHostClass):
         tmp = self.cm.ph.getAllItemsBeetwenMarkers(tmp, '<li', '</li>')
         tabItems = []
         for item in tmp:
-            if 'active' in item: continue
+            if 'active' in item:
+                continue
             url = self.getFullUrl( self.cm.ph.getSearchGroups(item, '''href=['"]([^"^']+?)['"]''')[0] )
             title = self.cleanHtmlStr(item)
             params = dict(cItem)
@@ -110,7 +112,8 @@ class WatchCartoonOnline(CBaseHostClass):
     def listABC(self, cItem, nextCategory):
         printDBG("WatchCartoonOnline.listABC")
         sts, data = self.getPage(cItem['url'])
-        if not sts: return
+        if not sts:
+            return
         self.setMainUrl(self.cm.meta['url'])
         
         data = self.cm.ph.getDataBeetwenNodes(data, ('<div', '>', 'ddmcc_container'), ('</div', '>'), False)[1]
@@ -137,7 +140,8 @@ class WatchCartoonOnline(CBaseHostClass):
         printDBG("WatchCartoonOnline.exploreItem")
 
         sts, data = self.getPage(cItem['url'])
-        if not sts: return
+        if not sts:
+            return
         self.setMainUrl(self.cm.meta['url'])
         
         cItem = dict(cItem)
@@ -152,7 +156,8 @@ class WatchCartoonOnline(CBaseHostClass):
         tmp = self.cm.ph.getAllItemsBeetwenMarkers(tmp, '<a', '</a>')
         for t in tmp:
             t = self.cleanHtmlStr(t)
-            if t != '': desc.append(t)
+            if t != '':
+                desc.append(t)
         desc = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(descData, '<b', '</b>')[1]) + ' ' + ', '.join(desc)
         desc += '[/br]' + self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(descData, '<p', '</p>')[1])
         
@@ -190,12 +195,14 @@ class WatchCartoonOnline(CBaseHostClass):
         printDBG("WatchCartoonOnline.listSearchResult cItem[%s], searchPattern[%s] searchType[%s]" % (cItem, searchPattern, searchType))
         url = self.getFullUrl('/search')
         sts, data = self.getPage(url)
-        if not sts: return
+        if not sts:
+            return
         self.setMainUrl(self.cm.meta['url'])
         
         url = self.getFullUrl('/search')
         sts, data = self.getPage(url, {}, {'catara':searchPattern, 'konuara':searchType})
-        if not sts: return
+        if not sts:
+            return
         
         data = self.cm.ph.getDataBeetwenNodes(data, ('<ul', '>', 'items'), ('</ul', '>'), False)[1]
         data = self.cm.ph.getAllItemsBeetwenMarkers(data, '<li', '</li>')
@@ -233,7 +240,8 @@ class WatchCartoonOnline(CBaseHostClass):
             return urlTab
         
         sts, data = self.getPage(cItem['url'])
-        if not sts: return
+        if not sts:
+            return
         self.setMainUrl(self.cm.meta['url'])
         cUrl = self.cm.meta['url']
         
@@ -247,7 +255,8 @@ class WatchCartoonOnline(CBaseHostClass):
         altUrl = self.getFullUrl(self.cm.ph.getSearchGroups(data, '''<a[^>]+?href=['"]([^"^']+?)['"]''', 1, True)[0])
         
         sts, data = self.getPage(altUrl)
-        if not sts: return urlTab
+        if not sts:
+            return urlTab
         cUrl = self.cm.meta['url']
         
         data = self.cm.ph.getDataBeetwenNodes(data, ('<meta', '>', 'embedURL'), ('</script', '>'))[1]
@@ -277,7 +286,8 @@ class WatchCartoonOnline(CBaseHostClass):
         params['header']['Referer'] = referer
         
         sts, data = self.getPage(videoUrl, params)
-        if not sts: return
+        if not sts:
+            return
         cUrl = self.cm.meta['url']
         
         domain = self.up.getDomain(cUrl).replace('www.', '')
@@ -288,10 +298,12 @@ class WatchCartoonOnline(CBaseHostClass):
         printDBG(items)
         for item in items:
             item = item.replace('\/', '/')
-            if 'video/mp4' not in item.lower(): continue
+            if 'video/mp4' not in item.lower():
+                continue
             type = self.cm.ph.getSearchGroups(item, '''type['"]?\s*[=:]\s*['"]([^"^']+?)['"]''')[0]
             label = self.cm.ph.getSearchGroups(item, '''label['"]?\s*[=:]\s*['"]([^"^']+?)['"]''')[0]
-            if label == '': label = self.cm.ph.getSearchGroups(item, '''format['"]?\s*[=:]\s*['"]([^"^']+?)['"]''')[0]
+            if label == '':
+                label = self.cm.ph.getSearchGroups(item, '''format['"]?\s*[=:]\s*['"]([^"^']+?)['"]''')[0]
             url  = self.cm.ph.getSearchGroups(item, '''src['"]?\s*[=:]\s*['"]([^"^']+?)['"]''')[0]
             if url not in uniqueUrls:
                 uniqueUrls.append(url)

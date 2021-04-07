@@ -17,15 +17,17 @@ from copy import deepcopy
 import urllib.request
 import urllib.parse
 import urllib.error
-try:    import simplejson as json
-except Exception: import json
+try:
+    import simplejson as json
+except Exception:
+    import json
 ###################################################
 
 ###################################################
 # Config options for HOST
 ###################################################
 config.plugins.iptvplayer.ardmediathek_iconquality = ConfigSelection(default = "medium", choices = [ ("large", _("high")), ("medium", _("medium")), ("small", _("low")) ])
-config.plugins.iptvplayer.ardmediathek_prefformat = ConfigSelection(default = "mp4,m3u8", choices = [\
+config.plugins.iptvplayer.ardmediathek_prefformat = ConfigSelection(default = "mp4,m3u8", choices = [
 ("mp4,m3u8", "mp4,m3u8"), ("m3u8,mp4", "m3u8,mp4")])
 config.plugins.iptvplayer.ardmediathek_prefquality = ConfigSelection(default = "4", choices = [("0", _("low")), ("1", _("medium")), ("2", _("high")), ("3", _("very high")), ("4", _("hd"))])
 config.plugins.iptvplayer.ardmediathek_prefmoreimportant = ConfigSelection(default = "quality", choices = [("quality", _("quality")), ("format", _("format"))])
@@ -92,10 +94,13 @@ class ARDmediathek(CBaseHostClass):
         return CBaseHostClass.getFullUrl(self, url).replace(' ', '%20')
         
     def _getNum(self, v, default=0):
-        try: return int(v)
+        try:
+            return int(v)
         except Exception:
-            try: return float(v)
-            except Exception: return default
+            try:
+                return float(v)
+            except Exception:
+                return default
             
     def _getList(self, data, key, default=[]):
         try: 
@@ -111,7 +116,8 @@ class ARDmediathek(CBaseHostClass):
         for type in ['audio', 'video', 'none']:
             if type in data['kennzeichen']:
                 break
-        if type != 'none': item['typ'] = type
+        if type != 'none':
+            item['typ'] = type
         
         # title
         item['title'] = self.cleanHtmlStr(data['ueberschrift'])
@@ -120,17 +126,22 @@ class ARDmediathek(CBaseHostClass):
         try: 
             tmp = data['bilder'][0]
             item['icon'] = self.getIconUrl(tmp.get('schemaUrl', ''))
-            if item['title'] == '': item['title']  = self.cleanHtmlStr(tmp.get('title', ''))
-            if item['title'] == '': item['title']  = self.cleanHtmlStr(tmp.get('alt', ''))
+            if item['title'] == '':
+                item['title']  = self.cleanHtmlStr(tmp.get('title', ''))
+            if item['title'] == '':
+                item['title']  = self.cleanHtmlStr(tmp.get('alt', ''))
         except Exception:
             printExc()
             item['icon'] = ''
                 
         # desc
         descTab = []
-        if len(data.get('dachzeile', '')): descTab.append(data['dachzeile'])
-        if len(data.get('unterzeile', '')): descTab.append(data['unterzeile'])
-        if len(data.get('teaserText', '')): descTab.append(data['teaserText'])
+        if len(data.get('dachzeile', '')):
+            descTab.append(data['dachzeile'])
+        if len(data.get('unterzeile', '')):
+            descTab.append(data['unterzeile'])
+        if len(data.get('teaserText', '')):
+            descTab.append(data['teaserText'])
         item['desc']  = self.cleanHtmlStr('[/br]'.join(descTab).replace('<br>', '[/br]'))
         # url
         item['url'] = self.getFullUrl(data['link']['url'])
@@ -146,33 +157,45 @@ class ARDmediathek(CBaseHostClass):
         
     def listItem(self, cItem, data, sectionIdx):
         printDBG('listItem')
-        if data['typ'] not in ["Section"]: return
+        if data['typ'] not in ["Section"]:
+            return
         skipButtons = list(cItem.get('skip_buttons', []))
         
         modCons = self._getList(data,  'modCons')
         for modCon in modCons:
-            if modCon['typ'] not in ["ModCon"]: continue
+            if modCon['typ'] not in ["ModCon"]:
+                continue
             mods = self._getList(modCon,  'mods')
             for mod in mods:
-                if mod['typ'] not in ["Mod"]: continue
+                if mod['typ'] not in ["Mod"]:
+                    continue
                 filters = []
                 if sectionIdx not in skipButtons: 
                     mainButtons = self._getList(mod,  'buttons')
                     for mainButton in mainButtons:
-                        if mainButton['typ'] not in ['ButtonGroup']: continue
-                        try: mainTitle = self.cleanHtmlStr(mainButton['label']['text']) + ' '
-                        except Exception: mainTitle = ''
+                        if mainButton['typ'] not in ['ButtonGroup']:
+                            continue
+                        try:
+                            mainTitle = self.cleanHtmlStr(mainButton['label']['text']) + ' '
+                        except Exception:
+                            mainTitle = ''
                         buttons = self._getList(mainButton,  'buttons')
                         for button in buttons:
-                            if button['typ'] in ['buttonTyp']: continue
-                            if button['buttonTyp'] == 'paging': continue # paging is handled in diffrent way
+                            if button['typ'] in ['buttonTyp']:
+                                continue
+                            if button['buttonTyp'] == 'paging':
+                                continue # paging is handled in diffrent way
                             #if button.get('disabled', False): continue
                             title = self.cleanHtmlStr(button['label']['text'])
-                            try: desc = self.cleanHtmlStr(button['label']['altText'])
-                            except Exception:  desc = ''
+                            try:
+                                desc = self.cleanHtmlStr(button['label']['altText'])
+                            except Exception:
+                                desc = ''
                             url   = button['buttonLink']['url']
-                            if not self.cm.isValidUrl(url): continue
-                            if len(filters) and (url.endswith('quelle.radio') or url.endswith('quelle.tv')): continue # some workaround 
+                            if not self.cm.isValidUrl(url):
+                                continue
+                            if len(filters) and (url.endswith('quelle.radio') or url.endswith('quelle.tv')):
+                                continue # some workaround 
                             filters.append({'good_for_fav':True, 'title':mainTitle + title, 'url':self.getFullUrl(url), 'desc':desc, 'skip_buttons':skipButtons})
                 
                 # if there are filter buttons add them as subcategories
@@ -186,15 +209,18 @@ class ARDmediathek(CBaseHostClass):
                 else:
                     inhalte = self._getList(mod,  'inhalte')
                     for teaser in inhalte:
-                        if teaser['typ'] not in ['Teaser']: continue
+                        if teaser['typ'] not in ['Teaser']:
+                            continue
                         if 'Gruppe' in teaser['teaserTyp']: # in ['TabGruppe']:
                             mainTitle = self.cleanHtmlStr(teaser['ueberschrift'])
                             tab = []
                             interInhalte = self._getList(teaser, 'inhalte')
                             for interTeaser in interInhalte:
-                                if interTeaser['typ'] not in ['Teaser']: continue
+                                if interTeaser['typ'] not in ['Teaser']:
+                                    continue
                                 inter2Inhalte = self._getList(interTeaser, 'inhalte')
-                                if 0 == len(inter2Inhalte): inter2Inhalte = [interTeaser]
+                                if 0 == len(inter2Inhalte):
+                                    inter2Inhalte = [interTeaser]
                                 for item in inter2Inhalte:
                                     printDBG("************************************************")
                                     params = self._mapClip(item)
@@ -223,7 +249,8 @@ class ARDmediathek(CBaseHostClass):
         page = cItem.get('page', 1)
         
         sts, data = self.getPage(url)
-        if not sts: return
+        if not sts:
+            return
         
         nextPage = self.cm.ph.getSearchGroups(data, '"(http[^"]+?page\.%s[^0-9][^"]*?)"' % (page + 1))[0].split('"')[0]
        
@@ -243,26 +270,34 @@ class ARDmediathek(CBaseHostClass):
                 sectionIdx = -1
                 for section in data['sections']:
                     sectionIdx += 1
-                    if sectionIdx in skipSections: continue
-                    if section['typ'] not in ["Section"]: continue
+                    if sectionIdx in skipSections:
+                        continue
+                    if section['typ'] not in ["Section"]:
+                        continue
                     processed = False
                     modCons = self._getList(section,  'modCons')
                     for modCon in modCons:
-                        if modCon['typ'] not in ["ModCon"]: continue
+                        if modCon['typ'] not in ["ModCon"]:
+                            continue
                         mods = self._getList(modCon,  'mods')
                         for mod in mods:
-                            if mod['typ'] not in ["Mod"]: continue
+                            if mod['typ'] not in ["Mod"]:
+                                continue
                             
-                            try: url = mod['allesLink']['url']
+                            try:
+                                url = mod['allesLink']['url']
                             except Exception: 
                                 printExc()
                                 continue
-                            if not self.cm.isValidUrl(url): continue
+                            if not self.cm.isValidUrl(url):
+                                continue
                             
                             title = self.cleanHtmlStr(mod['titel'])
                             try: 
-                                if title == '': title = url.split('/')[6].split('?')[0].title()
-                            except Exception: printExc()
+                                if title == '':
+                                    title = url.split('/')[6].split('?')[0].title()
+                            except Exception:
+                                printExc()
                             
                             params = self._copy(cItem, {'good_for_fav':True, 'title':title, 'url':url})
                             self.addDir(params)
@@ -302,7 +337,8 @@ class ARDmediathek(CBaseHostClass):
         printDBG("ARDmediathek.getLinksForVideo url[%s]" % cItem['url'])
         
         sts, data = self.getPage(cItem['url'])
-        if not sts: return []
+        if not sts:
+            return []
         
         try:
             data = byteify(json.loads(data))
@@ -312,7 +348,8 @@ class ARDmediathek(CBaseHostClass):
             return []
             
         sts, data = self.getPage(url)
-        if not sts: return []
+        if not sts:
+            return []
         
         preferedQuality = int(config.plugins.iptvplayer.ardmediathek_prefquality.value)
         preferedFormat  = config.plugins.iptvplayer.ardmediathek_prefformat.value
@@ -345,7 +382,8 @@ class ARDmediathek(CBaseHostClass):
                         for type in [{'pattern':'.m3u8', 'name':'m3u8'}, {'pattern':'.mp4', 'name':'mp4'}]:
                             if itemType == 'audio':
                                 typeName = 'mp4'
-                            elif not url.endswith(type['pattern']): continue
+                            elif not url.endswith(type['pattern']):
+                                continue
                             else:
                                 typeName = type['name']
                             if typeName == 'mp4':
@@ -355,16 +393,23 @@ class ARDmediathek(CBaseHostClass):
                                 formatPref  = formatMap.get(typeName, 10)
                                 tmpUrlTab.append({'url':url, 'quality_name':quality, 'quality':qualityVal, 'quality_pref':qualityPref, 'format_name':typeName, 'format_pref':formatPref})
                             elif typeName == 'm3u8':
-                                if quality != 'auto': break
+                                if quality != 'auto':
+                                    break
                                 tmpList = getDirectM3U8Playlist(url, checkExt=False)
                                 for tmpItem in tmpList:
                                     res = tmpItem['with']
-                                    if res == 0: continue
-                                    if res > 300: quality = 'low'
-                                    if res > 600: quality = 'med'
-                                    if res > 800: quality = 'high'
-                                    if res > 950: quality = 'veryhigh'
-                                    if res > 1200: quality = 'hd'
+                                    if res == 0:
+                                        continue
+                                    if res > 300:
+                                        quality = 'low'
+                                    if res > 600:
+                                        quality = 'med'
+                                    if res > 800:
+                                        quality = 'high'
+                                    if res > 950:
+                                        quality = 'veryhigh'
+                                    if res > 1200:
+                                        quality = 'hd'
                                     qualityVal = self.STREAM_QUALITY_MAP.get(quality, 10)
                                     qualityPref = abs(qualityVal - preferedQuality)
                                     formatPref  = formatMap.get(typeName, 10)
@@ -374,25 +419,39 @@ class ARDmediathek(CBaseHostClass):
             def _cmpLinks(it1, it2):
                 prefmoreimportantly = config.plugins.iptvplayer.ardmediathek_prefmoreimportant.value
                 if 'quality' == prefmoreimportantly:
-                    if it1['quality_pref'] < it2['quality_pref'] :   return -1
-                    elif it1['quality_pref']  > it2['quality_pref'] : return 1
+                    if it1['quality_pref'] < it2['quality_pref'] :
+                        return -1
+                    elif it1['quality_pref']  > it2['quality_pref'] :
+                        return 1
                     else:
-                        if it1['quality'] < it2['quality'] :   return -1
-                        elif it1['quality']  > it2['quality'] : return 1
+                        if it1['quality'] < it2['quality'] :
+                            return -1
+                        elif it1['quality']  > it2['quality'] :
+                            return 1
                         else:
-                            if it1['format_pref'] < it2['format_pref'] :   return -1
-                            elif it1['format_pref']  > it2['format_pref'] : return 1
-                            else: return 0
+                            if it1['format_pref'] < it2['format_pref'] :
+                                return -1
+                            elif it1['format_pref']  > it2['format_pref'] :
+                                return 1
+                            else:
+                                return 0
                 else:
-                    if it1['format_pref'] < it2['format_pref'] :   return -1
-                    elif it1['format_pref']  > it2['format_pref'] : return 1
+                    if it1['format_pref'] < it2['format_pref'] :
+                        return -1
+                    elif it1['format_pref']  > it2['format_pref'] :
+                        return 1
                     else:
-                        if it1['quality_pref'] < it2['quality_pref'] :   return -1
-                        elif it1['quality_pref']  > it2['quality_pref'] : return 1
+                        if it1['quality_pref'] < it2['quality_pref'] :
+                            return -1
+                        elif it1['quality_pref']  > it2['quality_pref'] :
+                            return 1
                         else:
-                            if it1['quality'] < it2['quality'] :   return -1
-                            elif it1['quality']  > it2['quality'] : return 1
-                            else: return 0
+                            if it1['quality'] < it2['quality'] :
+                                return -1
+                            elif it1['quality']  > it2['quality'] :
+                                return 1
+                            else:
+                                return 0
             tmpUrlTab.sort(_cmpLinks)
             onelinkmode = config.plugins.iptvplayer.ardmediathek_onelinkmode.value
             for item in tmpUrlTab:
@@ -403,7 +462,8 @@ class ARDmediathek(CBaseHostClass):
                     if self.cm.isValidUrl(subtitleUrl):
                         decorateParams['external_sub_tracks'] = [{'title':_('German'), 'url':subtitleUrl, 'lang':_('de'), 'format':'ttml'}]
                     urlTab.append({'need_resolve':0, 'name':name, 'url':self.up.decorateUrl(url, decorateParams)})
-                    if onelinkmode: break
+                    if onelinkmode:
+                        break
             printDBG(tmpUrlTab)
         except Exception:
             printExc()

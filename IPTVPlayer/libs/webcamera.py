@@ -44,7 +44,8 @@ class WebCameraApi(CBaseHostClass):
         return CBaseHostClass.getFullIconUrl(self, url, baseUrl)
         
     def getFullUrl(self, url, baseUrl=None):
-        if url == '#' or url == '/#': return ''
+        if url == '#' or url == '/#':
+            return ''
         return CBaseHostClass.getFullUrl(self, url, baseUrl)
     
     def getPage(self, baseUrl, addParams = {}, post_data = None):
@@ -69,25 +70,30 @@ class WebCameraApi(CBaseHostClass):
                 self.addDir(params)
                 
                 sts, data = self.getPage(self.getMainUrl())
-                if not sts: return []
+                if not sts:
+                    return []
                 data = self.cm.ph.getDataBeetwenMarkers(data, '<nav', '</nav>', False)[1]
                 data = self.cm.ph.getAllItemsBeetwenMarkers(data, '<a', '</a>')
                 for item in data:
                     catUrl   = self.getFullUrl( self.cm.ph.getSearchGroups(item, """href=['"]([^'^"]+?)['"]""")[0] )
-                    if catUrl == '' or '#' in catUrl: continue
+                    if catUrl == '' or '#' in catUrl:
+                        continue
                     info = ' ['+catUrl.split(',')[-1]+']'
                     catTitle = self.cleanHtmlStr( self.cm.ph.getDataBeetwenMarkers(item, '<a', '</a>')[1] )
-                    if 'Wszystkie' in catTitle: catTitle = catTitle + info
+                    if 'Wszystkie' in catTitle:
+                        catTitle = catTitle + info
                     catIcon  = self.getFullUrl( 'images/logo_mobile.png' )
 
                     subCats = []
                     item = self.cm.ph.getAllItemsBeetwenMarkers(item.split('<ul', 1)[-1], '<li', '</li>')
                     for it in item:
                         url = self.getFullUrl( self.cm.ph.getSearchGroups(it, """href=['"]([^'^"]+?)['"]""")[0] )
-                        if 'kategoria' not in url: continue
+                        if 'kategoria' not in url:
+                            continue
                         subCats.append({'title':self._cleanHtmlStr(it), 'url':url, 'icon':catIcon, catKey:'list_videos'})
 
-                    if catTitle == '': continue
+                    if catTitle == '':
+                        continue
                     params = dict(cItem)
                     params.update({'title':catTitle, 'url':catUrl, 'icon':catIcon})
                     if len(subCats):
@@ -101,10 +107,12 @@ class WebCameraApi(CBaseHostClass):
             elif category == 'list_items':
                 page = cItem.get('page', 1)
                 getPageParams = dict(self.defaultParams)
-                if page > 1: self.defaultParams['header']['X-Requested-With'] = 'XMLHttpRequest'
+                if page > 1:
+                    self.defaultParams['header']['X-Requested-With'] = 'XMLHttpRequest'
 
                 sts, data = self.getPage(cItem['url'], getPageParams)
-                if not sts: return []
+                if not sts:
+                    return []
 
                 if page == 1:
                     tmp = self.cm.ph.getSearchGroups(data, '''(<div[^>]+?inline\-camera\-listing[^>]+?>)''')[0]
@@ -134,8 +142,10 @@ class WebCameraApi(CBaseHostClass):
                             title = self.cleanHtmlStr(item.split(limiter)[0])
                             desc = self.cleanHtmlStr(item.split(limiter)[-1])
                         icon  = self.cm.ph.getSearchGroups(item, """data\-src=['"]([^'^"]+?)['"]""")[0]
-                        if icon == '': icon  = self.cm.ph.getSearchGroups(item, """src=['"]([^'^"]+?\.jpg[^'^"]*?)['"]""")[0]
-                        if 'instagramie' in title: continue
+                        if icon == '':
+                            icon  = self.cm.ph.getSearchGroups(item, """src=['"]([^'^"]+?\.jpg[^'^"]*?)['"]""")[0]
+                        if 'instagramie' in title:
+                            continue
                         params = dict(cItem)
                         params.update({'title':title, 'url':self.getFullUrl(url), 'icon':self.getFullIconUrl(icon), 'desc': desc})
                         self.addVideo(params)
@@ -145,10 +155,14 @@ class WebCameraApi(CBaseHostClass):
                 if vidCount > 0:
                     urlPrams = dict(cItem['more_params'])
                     urlPrams['page'] = page + 1
-                    try: urlPrams['cameras'] = page * int(urlPrams['limit']) - 1
-                    except Exception: printExc()
-                    try: urlPrams['columns'] = page * (int(urlPrams['limit']) + 1)
-                    except Exception: printExc()
+                    try:
+                        urlPrams['cameras'] = page * int(urlPrams['limit']) - 1
+                    except Exception:
+                        printExc()
+                    try:
+                        urlPrams['columns'] = page * (int(urlPrams['limit']) + 1)
+                    except Exception:
+                        printExc()
                     
                     #urlPrams['cameras'] = '14'
                     #urlPrams['columns'] = '12'
@@ -170,13 +184,16 @@ class WebCameraApi(CBaseHostClass):
     def getVideoLink(self, cItem):
         printDBG("WebCameraApi.getVideoLink")
         sts, data = self.getPage(cItem['url'])
-        if not sts: return []
+        if not sts:
+            return []
         videoUrl = self.cm.ph.getSearchGroups(data, '''<iframe[^>]+?src=['"]([^"^']+?embed[^"^']+?)['"]''', 1, True)[0]
-        if videoUrl == '': videoUrl = self.cm.ph.getSearchGroups(data, '''<iframe[^>]+?src=['"]([^"^']*?/player/[^"^']+?)['"]''', 1, True)[0]
+        if videoUrl == '':
+            videoUrl = self.cm.ph.getSearchGroups(data, '''<iframe[^>]+?src=['"]([^"^']*?/player/[^"^']+?)['"]''', 1, True)[0]
         url = self.getFullUrl(videoUrl)
         if 'youtube' in videoUrl and 'v=' not in videoUrl:
             sts, data = self.getPage(videoUrl)
-            if not sts: return []
+            if not sts:
+                return []
             videoUrl = self.cm.ph.getSearchGroups(data, '''<link[^>]+?rel=['"]canonical['"][^>]+?href=['"]([^'^"]+?)['"]''')[0]
         else:
             videoUrl = cItem['url']
@@ -194,12 +211,15 @@ class WebCameraApi(CBaseHostClass):
                     break
                 elif 'list' not in item:
                     if self.cm.isValidUrl(url) and title != '':
-                        if url.endswith('/aktualnosci'): continue # not handled at now
+                        if url.endswith('/aktualnosci'):
+                            continue # not handled at now
                         params = dict(cItem)
                         params.pop('c_tree', None)
                         params.update({'priv_category':nextCategory, 'title':title, 'url':url, 'icon':icon})
-                        if url.endswith('/tv'): self.addVideo(params)
-                        else: self.addDir(params)
+                        if url.endswith('/tv'):
+                            self.addVideo(params)
+                        else:
+                            self.addDir(params)
                 elif len(item['list']) == 1 and title != '':
                     obj = item['list'][0]
                     if url != '' and 'list' in obj:

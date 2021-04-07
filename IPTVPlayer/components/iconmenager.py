@@ -156,7 +156,8 @@ class IconMenager:
        
     def getIconPathFromAAueue(self, item):
         printDBG("getIconPathFromAAueue item[%s]" % item)
-        if item.startswith('file://'): return item[7:]
+        if item.startswith('file://'):
+            return item[7:]
         
         hashAlg = MD5()
         name = hashAlg(item)
@@ -218,7 +219,8 @@ class IconMenager:
                 
                 if self.download_img(url, file):
                     self.addItemToAAueue(self.currDownloadDir, file)
-                    if self.updateFun: self.updateFun(url)
+                    if self.updateFun:
+                        self.updateFun(url)
 
                 # add to AA list
 
@@ -253,11 +255,15 @@ class IconMenager:
             subtypes = config.plugins.iptvplayer.allowedcoverformats.value.split(',')
             #params['subtypes'] = subtypes
             params['check_first_bytes'] = []
-            if 'jpeg' in subtypes: params['check_first_bytes'].extend(['\xFF\xD8', '\xFF\xD9'])
-            if 'png' in subtypes: params['check_first_bytes'].append('\x89\x50\x4E\x47')
-            if 'gif' in subtypes: params['check_first_bytes'].extend(['GIF87a', 'GIF89a'])
+            if 'jpeg' in subtypes:
+                params['check_first_bytes'].extend(['\xFF\xD8', '\xFF\xD9'])
+            if 'png' in subtypes:
+                params['check_first_bytes'].append('\x89\x50\x4E\x47')
+            if 'gif' in subtypes:
+                params['check_first_bytes'].extend(['GIF87a', 'GIF89a'])
             # formato webp	'RI'
-            if 'webp' in subtypes: params['check_first_bytes'].extend(['RI'])
+            if 'webp' in subtypes:
+                params['check_first_bytes'].extend(['RI'])
         else:
             params['check_first_bytes'] = ['\xFF\xD8', '\xFF\xD9', '\x89\x50\x4E\x47', 'GIF87a', 'GIF89a', 'RI']
         
@@ -273,11 +279,13 @@ class IconMenager:
         
         if img_url.endswith('need_resolve.jpeg'):
             domain = urlparser.getDomain(img_url)
-            if domain.startswith('www.'): domain = domain[4:]
+            if domain.startswith('www.'):
+                domain = domain[4:]
             # link need resolve, at now we will have only one img resolver, 
             # we should consider add img resolver to urlparser if more will be needed
             sts, data = self.cm.getPage(img_url)
-            if not sts: return False
+            if not sts:
+                return False
             if 'imdb.com' in domain:
                 img_url = self.cm.ph.getDataBeetwenMarkers(data, 'class="poster"', '</div>')[1]
                 img_url = self.cm.ph.getSearchGroups(img_url, 'src="([^"]+?)"')[0]
@@ -288,28 +296,35 @@ class IconMenager:
                 baseUrl = img_url
                 img_url = self.cm.ph.getSearchGroups(data, '(<img[^>]+?alt="Cover"[^>]+?>)')[0]
                 img_url = self.cm.ph.getSearchGroups(img_url, 'src="([^"]+?)"')[0]
-                if img_url.startswith('/'): img_url = urljoin(baseUrl, img_url)
+                if img_url.startswith('/'):
+                    img_url = urljoin(baseUrl, img_url)
             elif 'watchseriesmovie.' in domain or 'gowatchseries' in domain:
                 baseUrl = img_url
                 img_url = self.cm.ph.getDataBeetwenNodes(data, ('<div', '>', 'picture'), ('</div', '>'), False)[1]
                 img_url = self.cm.ph.getSearchGroups(img_url, '<img[^>]+?src="([^"]+?)"')[0]
-                if img_url.startswith('/'): img_url = urljoin(baseUrl, img_url)
+                if img_url.startswith('/'):
+                    img_url = urljoin(baseUrl, img_url)
             elif 'classiccinemaonline.com' in domain:
                 baseUrl = img_url
                 img_url = self.cm.ph.getDataBeetwenNodes(data, ('<center>', '</center>', '<img'), ('<', '>'))[1]
                 img_url = self.cm.ph.getSearchGroups(img_url, '<img[^>]+?src="([^"]+?\.(:?jpe?g|png)(:?\?[^"]+?)?)"')[0]
-                if img_url.startswith('/'): img_url = urljoin(baseUrl, img_url)
+                if img_url.startswith('/'):
+                    img_url = urljoin(baseUrl, img_url)
             elif 'nasze-kino.tv' in domain:
                 baseUrl = img_url
                 img_url = self.cm.ph.getDataBeetwenNodes(data, ('<div', '>', 'single-poster'), ('<img', '>'))[1]
                 img_url = self.cm.ph.getSearchGroups(img_url, '<img[^>]+?src="([^"]+?\.(:?jpe?g|png)(:?\?[^"]+?)?)"')[0]
-                if img_url.startswith('/'): img_url = urljoin(baseUrl, img_url)
+                if img_url.startswith('/'):
+                    img_url = urljoin(baseUrl, img_url)
             elif 'allbox.' in domain:
                 baseUrl = img_url
                 img_url = self.cm.ph.getDataBeetwenNodes(data, ('<img', '>', '"image"'), ('<', '>'))[1]
-                if img_url != '': img_url = self.cm.ph.getSearchGroups(img_url, '<img[^>]+?src="([^"]+?\.(:?jpe?g|png)(:?\?[^"]+?)?)"')[0]
-                else: img_url = self.cm.ph.getSearchGroups(data, 'url\(([^"^\)]+?\.(:?jpe?g|png)(:?\?[^"^\)]+?)?)\);')[0].strip()
-                if img_url.startswith('/'): img_url = urljoin(baseUrl, img_url)
+                if img_url != '':
+                    img_url = self.cm.ph.getSearchGroups(img_url, '<img[^>]+?src="([^"]+?\.(:?jpe?g|png)(:?\?[^"]+?)?)"')[0]
+                else:
+                    img_url = self.cm.ph.getSearchGroups(data, 'url\(([^"^\)]+?\.(:?jpe?g|png)(:?\?[^"^\)]+?)?)\);')[0].strip()
+                if img_url.startswith('/'):
+                    img_url = urljoin(baseUrl, img_url)
             elif 'efilmy.' in domain:
                 baseUrl = img_url
                 img_url = self.cm.ph.getDataBeetwenNodes(data, ('<img', '>', 'align="left"'), ('<', '>'))[1]
@@ -318,12 +333,15 @@ class IconMenager:
             elif 'bajeczki.org' == domain:
                 baseUrl = img_url
                 img_url = self.cm.ph.getDataBeetwenNodes(data, ('<img', '>', 'wp-post-image'), ('<', '>'))[1]
-                if img_url != '': img_url = self.cm.ph.getSearchGroups(img_url, '<img[^>]+?src="([^"]+?\.(:?jpe?g|png)(?:\?[^"]+?)?)"')[0]
-                if img_url.startswith('/'): img_url = urljoin(baseUrl, img_url)
+                if img_url != '':
+                    img_url = self.cm.ph.getSearchGroups(img_url, '<img[^>]+?src="([^"]+?\.(:?jpe?g|png)(?:\?[^"]+?)?)"')[0]
+                if img_url.startswith('/'):
+                    img_url = urljoin(baseUrl, img_url)
             elif '7tv.de' == domain:
                 data = ph.find(data, ('<meta', '>', 'thumbnail_image_url'))[1]
                 img_url = ph.getattr(data, 'content')
-            if not self.cm.isValidUrl(img_url): return False
+            if not self.cm.isValidUrl(img_url):
+                return False
         else:
             img_url = strwithmeta(img_url)
             if img_url.meta.get('icon_resolver', None) is not None:
@@ -333,7 +351,8 @@ class IconMenager:
                     printExc()
                     return False
         
-        if not self.cm.isValidUrl(img_url): return False
+        if not self.cm.isValidUrl(img_url):
+            return False
         
         params = MergeDicts(params, params_cfad)
         

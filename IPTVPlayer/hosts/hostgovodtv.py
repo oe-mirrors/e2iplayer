@@ -17,8 +17,10 @@ import re
 import urllib.request
 import urllib.parse
 import urllib.error
-try:    import json
-except Exception: import simplejson as json
+try:
+    import json
+except Exception:
+    import simplejson as json
 ###################################################
 
 
@@ -44,12 +46,15 @@ class govodtv(CBaseHostClass):
         return CBaseHostClass.getFullIconUrl(self, icon.replace('.webp', '.jpg').replace('/pictures/posters/t', '/posters/'), baseUrl)
 
     def getPage(self, baseUrl, addParams = {}, post_data = None):
-        if addParams == {}: addParams = dict(self.defaultParams)
+        if addParams == {}:
+            addParams = dict(self.defaultParams)
         origBaseUrl = baseUrl
         baseUrl = self.cm.iriToUri(baseUrl)
         def _getFullUrl(url):
-            if self.cm.isValidUrl(url): return url
-            else: return urllib.parse.urljoin(baseUrl, url)
+            if self.cm.isValidUrl(url):
+                return url
+            else:
+                return urllib.parse.urljoin(baseUrl, url)
         addParams['cloudflare_params'] = {'domain':self.up.getDomain(baseUrl), 'cookie_file':self.COOKIE_FILE, 'User-Agent':self.USER_AGENT, 'full_url_handle':_getFullUrl}
         return self.cm.getPageCFProtection(baseUrl, addParams, post_data)
         
@@ -76,7 +81,8 @@ class govodtv(CBaseHostClass):
         self.cacheMovieFilters = { 'cats':[], 'sort':[], 'years':[], 'az':[]}
 
         sts, data = self.getPage(self.getFullUrl(cItem['url']))
-        if not sts: return
+        if not sts:
+            return
 
         # fill sort
         dat = self.cm.ph.getDataBeetwenMarkers(data, '<ul class="fc-main-list">', '</ul>', False)[1]
@@ -131,11 +137,15 @@ class govodtv(CBaseHostClass):
         page = cItem.get('page', 1)
 
         url = cUrl = cItem['url']
-        if '?' in url: url += '&'
-        else: url += '?'
-        if page > 1: url = url + 'page={0}'.format(page)
+        if '?' in url:
+            url += '&'
+        else:
+            url += '?'
+        if page > 1:
+            url = url + 'page={0}'.format(page)
         sts, data = self.getPage(url)
-        if not sts: return
+        if not sts:
+            return
         self.setMainUrl(data.meta['url'])
             
         nextPage = self.cm.ph.getDataBeetwenNodes(data, ('<div', '>', 'pagination'), ('</div', '>'))[1]
@@ -150,7 +160,8 @@ class govodtv(CBaseHostClass):
         for item in data:
 #            printDBG("govodtv.listItems item %s" % item)
             url = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''href=['"]([^"^']+?)['"]''')[0])
-            if url == '': continue
+            if url == '':
+                continue
             icon = self.getFullIconUrl(self.cm.ph.getSearchGroups(item, '''src=['"]([^"^']+?)['"]''')[0])
             title = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(item, ('<h3', '>'), ('</h3', '>'), False)[1])
             desc = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(item, ('<p', '>'), ('</i', '>'), False)[1])
@@ -169,7 +180,8 @@ class govodtv(CBaseHostClass):
     def listSeriesSeasons(self, cItem, nextCategory):
         printDBG("govodtv.listSeriesSeasons")
         sts, data = self.getPage(cItem['url'])
-        if not sts: return
+        if not sts:
+            return
         cUrl = self.cm.getBaseUrl(data.meta['url'])
         serieTitle = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(data, ('<h1', '>', 'itemprop="name"'), ('</h1', '>'))[1])
         serieDesc = self.cm.ph.getDataBeetwenNodes(data, ('<div', '>', 'description'), ('</div', '>'))[1]
@@ -179,7 +191,8 @@ class govodtv(CBaseHostClass):
         
         for sItem in data:
             sTitle = self.cm.ph.getSearchGroups(sItem, '''<div id=['"]([^'^"]+?)['"]''')[0].replace('season', _('Season')).replace('-', ' ')
-            if not sTitle: continue
+            if not sTitle:
+                continue
             sItem = self.cm.ph.getDataBeetwenNodes(sItem, ('<tbody', '>'), ('</tbody', '>'))[1]
             sItem = self.cm.ph.getAllItemsBeetwenMarkers(sItem, '<tr', '</tr>')
             tabItems = []
@@ -215,7 +228,8 @@ class govodtv(CBaseHostClass):
             urlTab.append({'name':cItem['url'], 'url':strwithmeta(cItem['url'], {'Referer':cItem['url']}), 'need_resolve':1})
         else:
             sts, data = self.getPage(cItem['url'])
-            if not sts: return
+            if not sts:
+                return
 
             tmp = self.cm.ph.getAllItemsBeetwenNodes(data, ('<iframe', '>'), ('</iframe', '>'))
             for item in tmp:
@@ -245,7 +259,8 @@ class govodtv(CBaseHostClass):
         itemsList = []
 
         sts, data = self.cm.getPage(cItem['url'])
-        if not sts: return []
+        if not sts:
+            return []
 
         title = cItem['title']
         icon = cItem.get('icon', '')
@@ -260,9 +275,12 @@ class govodtv(CBaseHostClass):
             if l in list:
                 itemsList.append((l, self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(item, '</strong>', '</p>', False)[1])))
 
-        if title == '': title = cItem['title']
-        if icon  == '': icon  = cItem.get('icon', '')
-        if desc  == '': desc  = cItem.get('desc', '')
+        if title == '':
+            title = cItem['title']
+        if icon  == '':
+            icon  = cItem.get('icon', '')
+        if desc  == '':
+            desc  = cItem.get('desc', '')
 
         return [{'title':self.cleanHtmlStr( title ), 'text': self.cleanHtmlStr( desc ), 'images':[{'title':'', 'url':self.getFullUrl(icon)}], 'other_info':{'custom_items_list':itemsList}}]
 

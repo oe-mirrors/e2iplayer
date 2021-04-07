@@ -51,12 +51,15 @@ class IPTVFavouritesAddNewGroupWidget(Screen):
         self.session.openWithCallback(self.iptvRetCallback, IPTVMultipleInputBox, params)
         
     def _validate(self, text):
-        if 0 == len(text): return False, _("Name cannot be empty.")
-        elif not IsValidFileName(text): return False, _("Name is not valid.\nPlease remove special characters.")
+        if 0 == len(text):
+            return False, _("Name cannot be empty.")
+        elif not IsValidFileName(text):
+            return False, _("Name is not valid.\nPlease remove special characters.")
         else:
             group_id = text.lower()
             idx = self.favourites._getGroupIdx(group_id)
-            if -1 != idx: return False, _("Group \"%s\" already exists.") % group_id
+            if -1 != idx:
+                return False, _("Group \"%s\" already exists.") % group_id
         return True, ""
         
     def iptvRetCallback(self, retArg):
@@ -64,7 +67,8 @@ class IPTVFavouritesAddNewGroupWidget(Screen):
         if retArg and 2 == len(retArg):
             group = {"title":retArg[0], "group_id":retArg[0].lower(), "desc":retArg[1]}
             result = self.favourites.addGroup(group)
-            if result: self.group = group
+            if result:
+                self.group = group
             else:
                 self.session.openWithCallback(self.iptvDoFinish, MessageBox, self.favourites.getLastError(), type=MessageBox.TYPE_ERROR, timeout=10)
                 return 
@@ -83,8 +87,10 @@ class IPTVFavouritesAddItemWidget(Screen):
         self.result  = False
         
         self.favItem        = favItem
-        if None != favourites: self.saveLoad = False
-        else: self.saveLoad = True
+        if None != favourites:
+            self.saveLoad = False
+        else:
+            self.saveLoad = True
         self.favourites     = favourites
         self.canAddNewGroup = canAddNewGroup
         self.ignoredGroups  = ignoredGroups
@@ -100,34 +106,46 @@ class IPTVFavouritesAddItemWidget(Screen):
         options = []
         groups = self.favourites.getGroups()
         for item in groups:
-            if item['group_id'] in self.ignoredGroups: continue
+            if item['group_id'] in self.ignoredGroups:
+                continue
             options.append((item['title'], item['group_id']))
-        if self.canAddNewGroup: options.append((_("Add new group of favourites"), None))
-        if len(options): self.session.openWithCallback(self.addFavouriteToGroup, ChoiceBox, title=_("Select favourite group"), list=options)
-        else: self.session.openWithCallback(self.iptvDoFinish, MessageBox, _("There are no other favourite groups"), type=MessageBox.TYPE_INFO, timeout=10 )
+        if self.canAddNewGroup:
+            options.append((_("Add new group of favourites"), None))
+        if len(options):
+            self.session.openWithCallback(self.addFavouriteToGroup, ChoiceBox, title=_("Select favourite group"), list=options)
+        else:
+            self.session.openWithCallback(self.iptvDoFinish, MessageBox, _("There are no other favourite groups"), type=MessageBox.TYPE_INFO, timeout=10 )
         
     def addFavouriteToGroup(self, retArg):
         if retArg and 2 == len(retArg):
             if None != retArg[1]:
                 sts = self.favourites.loadGroupItems(retArg[1], force=False)
-                if sts: sts = self.favourites.addGroupItem(self.favItem, retArg[1])
-                if sts: sts = self.favourites.saveGroupItems(retArg[1])
+                if sts:
+                    sts = self.favourites.addGroupItem(self.favItem, retArg[1])
+                if sts:
+                    sts = self.favourites.saveGroupItems(retArg[1])
                 if sts:
                     self.result = True
                     self.iptvDoFinish()
                     return
-                else: self.session.openWithCallback(self.iptvDoFinish, MessageBox, self.favourites.getLastError(), type=MessageBox.TYPE_ERROR, timeout=10)
+                else:
+                    self.session.openWithCallback(self.iptvDoFinish, MessageBox, self.favourites.getLastError(), type=MessageBox.TYPE_ERROR, timeout=10)
             else: # addn new group
                 self.session.openWithCallback( self.addNewFavouriteGroup, IPTVFavouritesAddNewGroupWidget, self.favourites)
-        else: self.iptvDoFinish()
+        else:
+            self.iptvDoFinish()
                 
     def addNewFavouriteGroup(self, group):
         if None != group:
             sts = True
-            if self.saveLoad: sts = self.favourites.save(True)
-            if sts: self.addFavouriteToGroup((group['title'], group['group_id']))
-            else: self.session.openWithCallback(self.iptvDoFinish, MessageBox, self.favourites.getLastError(), type=MessageBox.TYPE_ERROR, timeout=10)
-        else: self.iptvDoFinish()
+            if self.saveLoad:
+                sts = self.favourites.save(True)
+            if sts:
+                self.addFavouriteToGroup((group['title'], group['group_id']))
+            else:
+                self.session.openWithCallback(self.iptvDoFinish, MessageBox, self.favourites.getLastError(), type=MessageBox.TYPE_ERROR, timeout=10)
+        else:
+            self.iptvDoFinish()
     
     def iptvDoFinish(self, ret=None):
         self.close(self.result)
@@ -232,7 +250,8 @@ class IPTVFavouritesMainWidget(Screen):
                 dItem.privateData = item['group_id']
                 list.append( (dItem,) )
         else:
-            if not self.loadGroupItems(self.menu): return 
+            if not self.loadGroupItems(self.menu):
+                return 
             sts, items = self.favourites.getGroupItems(self.menu)
             if not sts:
                 self.session.open(MessageBox, self.favourites.getLastError(), type=MessageBox.TYPE_ERROR, timeout=10)
@@ -256,9 +275,12 @@ class IPTVFavouritesMainWidget(Screen):
     
     def keyExit(self):
         if ":groups:" == self.menu:
-            if self.duringMoving: self._changeMode()
-            if self.modified: self.askForSave()
-            else: self.close(False)
+            if self.duringMoving:
+                self._changeMode()
+            if self.modified:
+                self.askForSave()
+            else:
+                self.close(False)
         else:
             self["title"].setText(_("Favourites groups"))
             self["label_red"].setText(_("Remove group"))
@@ -266,8 +288,10 @@ class IPTVFavouritesMainWidget(Screen):
         
             self.menu = ":groups:"
             self.displayList()
-            try: self["list"].moveToIndex(self.prevIdx)
-            except Exception: pass
+            try:
+                self["list"].moveToIndex(self.prevIdx)
+            except Exception:
+                pass
             
     def askForSave(self):
         self.session.openWithCallback(self.save, MessageBox, text = _("Save changes?"), type = MessageBox.TYPE_YESNO)
@@ -290,27 +314,38 @@ class IPTVFavouritesMainWidget(Screen):
             return
         if ":groups:" == self.menu:
             sel = self.getSelectedItem()
-            if None == sel: return
+            if None == sel:
+                return
             
             self.menu = sel.privateData
-            try: self["title"].setText(_("Items in group \"%s\"") % self.favourites.getGroup(self.menu)['title'])
-            except Exception: printExc()
+            try:
+                self["title"].setText(_("Items in group \"%s\"") % self.favourites.getGroup(self.menu)['title'])
+            except Exception:
+                printExc()
             self["label_red"].setText(_("Remove item"))
             self["label_green"].setText(_("Add item to group"))
             
-            try: self.prevIdx = self["list"].getCurrentIndex()
-            except Exception: self.prevIdx = 0
+            try:
+                self.prevIdx = self["list"].getCurrentIndex()
+            except Exception:
+                self.prevIdx = 0
             self.displayList()
-            try: self["list"].moveToIndex(0)
-            except Exception: pass
+            try:
+                self["list"].moveToIndex(0)
+            except Exception:
+                pass
             
     def keyRed(self):
-        if self.duringMoving: return
+        if self.duringMoving:
+            return
         sel = self.getSelectedItem()
-        if None == sel: return
+        if None == sel:
+            return
         sts = True
-        if ":groups:" == self.menu: sts = self.favourites.delGroup(sel.privateData)
-        else: sts = self.favourites.delGroupItem(sel.privateData, self.menu)
+        if ":groups:" == self.menu:
+            sts = self.favourites.delGroup(sel.privateData)
+        else:
+            sts = self.favourites.delGroupItem(sel.privateData, self.menu)
         if not sts:
             self.session.open(MessageBox, self.favourites.getLastError(), type=MessageBox.TYPE_ERROR, timeout=10)
             return
@@ -336,8 +371,10 @@ class IPTVFavouritesMainWidget(Screen):
         if ":groups:" == self.menu: 
             self.session.openWithCallback( self._groupAdded, IPTVFavouritesAddNewGroupWidget, self.favourites)
         else:
-            if None == self.getSelectedItem(): return
-            if not self.loadGroupItems(self.menu): return 
+            if None == self.getSelectedItem():
+                return
+            if not self.loadGroupItems(self.menu):
+                return 
             sts, items = self.favourites.getGroupItems(self.menu)
             if not sts:
                 self.session.open(MessageBox, self.favourites.getLastError(), type=MessageBox.TYPE_ERROR, timeout=10)
@@ -349,11 +386,14 @@ class IPTVFavouritesMainWidget(Screen):
         if None != group:
             self.modified = True
             self.displayList()
-            try: self["list"].moveToIndex( len(self.favourites.getGroups())-1 )
-            except Exception: pass
+            try:
+                self["list"].moveToIndex( len(self.favourites.getGroups())-1 )
+            except Exception:
+                pass
             
     def _itemCloned(self, ret):
-        if ret: self.modified = True
+        if ret:
+            self.modified = True
     
     def _changeMode(self):
             if not self.duringMoving:
@@ -370,8 +410,10 @@ class IPTVFavouritesMainWidget(Screen):
                 curIndex = self["list"].getCurrentIndex()
                 self["list"].instance.moveSelection(key)
                 newIndex = self["list"].getCurrentIndex()
-                if ":groups:" == self.menu: sts = self.favourites.moveGroup(curIndex, newIndex)
-                else: sts = self.favourites.moveGroupItem(curIndex, newIndex, self.menu)
+                if ":groups:" == self.menu:
+                    sts = self.favourites.moveGroup(curIndex, newIndex)
+                else:
+                    sts = self.favourites.moveGroupItem(curIndex, newIndex, self.menu)
                 if sts: 
                     self.modified = True
                     self.displayList()
@@ -399,8 +441,10 @@ class IPTVFavouritesMainWidget(Screen):
         
     def getSelectedItem(self):
         sel = None
-        try: sel = self["list"].l.getCurrentSelection()[0]
-        except Exception: pass
+        try:
+            sel = self["list"].l.getCurrentSelection()[0]
+        except Exception:
+            pass
         return sel
     
     

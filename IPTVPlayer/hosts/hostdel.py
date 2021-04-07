@@ -33,7 +33,8 @@ class Del(CBaseHostClass):
         self.DEFAULT_ICON_URL = self.MAIN_URL + 'assets/img/DEL_Logo.png'
 
     def getPage(self, baseUrl, addParams={}, post_data=None):
-        if addParams == {}: addParams = dict(self.defaultParams)
+        if addParams == {}:
+            addParams = dict(self.defaultParams)
         return self.cm.getPage(baseUrl, addParams, post_data)
 
     def listMain(self, cItem):
@@ -45,7 +46,8 @@ class Del(CBaseHostClass):
     def del2Filters(self, cItem, nextCategory):
         printDBG("Del.fillCacheFilters")
         sts, data = self.getPage(cItem['url'] + 'videos/')
-        if not sts: return
+        if not sts:
+            return
 
         data = ph.find(data, ('<div', '>', 'select_rechts'), '</div>', flags=0)[1]
         data = ph.findall(data, ('<option', '>'), '</option>', flags=ph.START_S)
@@ -57,7 +59,8 @@ class Del(CBaseHostClass):
     def listDel2(self, cItem):
         printDBG("Del.listDel2")
         sts, data = self.getPage(cItem['url'])
-        if not sts: return
+        if not sts:
+            return
 
         data = ph.find(data, ('<h3', '>', 'sectionHead'), ('<script', '>'))[1]
         data = ph.rfindall(data, '</div>', ('<h3', '>', 'sectionHead'))
@@ -75,7 +78,8 @@ class Del(CBaseHostClass):
                 tmp.extend(ph.findall(item, ('<p', '>'), '</p>', flags=0))
                 for t in tmp:
                     t = self.cleanHtmlStr(t)
-                    if t: desc.append(t)
+                    if t:
+                        desc.append(t)
 
                 subItems.append({'good_for_fav':True, 'type':'video', 'title':title, 'url':url, 'icon':icon, 'desc':' | '.join(desc)})
 
@@ -86,7 +90,8 @@ class Del(CBaseHostClass):
         printDBG("Del.listDel")
         page = cItem.get('page', 1)
         sts, data = self.getPage('https://www.del.org/ajax.php?cmd=loadmorevideos&videotype=5&page=%s' % page)
-        if not sts: return
+        if not sts:
+            return
 
         data = ph.findall(data, ('<article ', '>'), '</article>', flags=0)
         for item in data:
@@ -99,7 +104,8 @@ class Del(CBaseHostClass):
             tmp = [ph.find(item, ('<h3', '>'), '</h3>', flags=0)[1], ph.find(item, ('<h3', '>', 'duration'), '</pretitle>', flags=0)[1]]
             for t in tmp:
                 t = self.cleanHtmlStr(t)
-                if t: desc.append(t)
+                if t:
+                    desc.append(t)
             desc = ' | '.join(desc) + '[/br]' + self.cleanHtmlStr(ph.find(item, ('<p', '>'), '</p>', flags=0)[1])
 
             self.addVideo({'good_for_fav':True, 'type':'video', 'title':title, 'url':url, 'icon':icon, 'desc':desc})
@@ -116,7 +122,8 @@ class Del(CBaseHostClass):
 
         rm(self.COOKIE_FILE)
         sts, data = self.getPage(cItem['url'])
-        if not sts: return []
+        if not sts:
+            return []
 
         tmp = ph.find(data, ('<glomex-player', '>'))[1]
         if tmp:
@@ -124,13 +131,15 @@ class Del(CBaseHostClass):
             playlist_id = ph.getattr(tmp, 'data-playlist-id')
             url = 'https://integration-cloudfront-eu-west-1.mes.glomex.cloud/?integration_id=%s&playlist_id=%s&current_url=' % (player_id, playlist_id)
             sts, data = self.getPage(url)
-            if not sts: return []
+            if not sts:
+                return []
             try:
                 data = json_loads(data)['videos'][0]['source']
                 if data.get('hls'):
                     hlsUrl = self.cm.getFullUrl( data['hls'], self.cm.meta['url'])
                     urlsTab = getDirectM3U8Playlist(hlsUrl, checkContent=True, sortWithMaxBitrate=999999999, mergeAltAudio=True)
-                    if len(urlsTab): urlsTab.append({'name':'Variable M3U8/HLS', 'url':hlsUrl, 'need_resolve':0})
+                    if len(urlsTab):
+                        urlsTab.append({'name':'Variable M3U8/HLS', 'url':hlsUrl, 'need_resolve':0})
 
                 # progressive links seem do not work why?
                 if False and data.get('progressive'):
@@ -164,7 +173,8 @@ class Del(CBaseHostClass):
                         data = json_loads(data)['data']['stream-access']
                         for url in data:
                             sts, streamData = self.getPage(self.cm.getFullUrl( url, self.cm.meta['url']), urlParams)
-                            if not sts: continue
+                            if not sts:
+                                continue
                             printDBG("?----?")
                             printDBG(data)
                             printDBG("?----?")

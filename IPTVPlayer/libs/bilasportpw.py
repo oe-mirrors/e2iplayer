@@ -49,13 +49,15 @@ class BilaSportPwApi(CBaseHostClass):
         self.defaultParams = {'header':self.HTTP_HEADER, 'save_cookie': True, 'load_cookie': True, 'cookiefile': self.COOKIE_FILE}
 
     def getPage(self, baseUrl, params={}, post_data=None):
-        if params == {}: params = dict(self.defaultParams)
+        if params == {}:
+            params = dict(self.defaultParams)
         params['cloudflare_params'] = {'cookie_file':self.COOKIE_FILE, 'User-Agent':self.HTTP_HEADER['User-Agent']}
         return self.cm.getPageCFProtection(baseUrl, params, post_data)
 
     def getFullIconUrl(self, url, currUrl=None):
         url = CBaseHostClass.getFullIconUrl(self, url.strip(), currUrl)
-        if url == '': return ''
+        if url == '':
+            return ''
         cookieHeader = self.cm.getCookieHeader(self.COOKIE_FILE, ['PHPSESSID', 'cf_clearance'])
         return strwithmeta(url, {'Cookie':cookieHeader, 'User-Agent':self.HTTP_HEADER['User-Agent']})
 
@@ -64,7 +66,8 @@ class BilaSportPwApi(CBaseHostClass):
         mainItemsTab = []
         
         sts, data = self.getPage(self.getFullUrl('/schedule.html'))
-        if not sts: return mainItemsTab
+        if not sts:
+            return mainItemsTab
         cUrl = self.cm.meta['url']
 
         data = ph.find(data, ('<table', '>'), '</table>', flags=0)[1]
@@ -76,7 +79,8 @@ class BilaSportPwApi(CBaseHostClass):
             title = ph.clean_html(item[0])
             start = ph.getattr(item[-1], 'data-gamestart')
             end = ph.getattr(item[-1], 'data-gameends')
-            if start and end: title = '[%s - %s] %s' % (start, end, title)
+            if start and end:
+                title = '[%s - %s] %s' % (start, end, title)
             desc = ph.clean_html(item[-1].split('</div>', 1)[-1])
             mainItemsTab.append(MergeDicts(cItem, {'type':'video', 'title':title, 'url':url, 'icon':icon, 'desc':desc}))
         return mainItemsTab
@@ -86,20 +90,24 @@ class BilaSportPwApi(CBaseHostClass):
         urlsTab = []
 
         sts, data = self.getPage(cItem['url'])
-        if not sts: return urlsTab
+        if not sts:
+            return urlsTab
         cUrl = self.cm.meta['url']
         baseUrl = cUrl
 
         url = self.getFullUrl(ph.search(data, '''['"]([^'^"]*?/iframes/[^'^"]+?)['"]''')[0], cUrl)
-        if not url: return urlsTab
+        if not url:
+            return urlsTab
         sts, data = self.getPage(url)
-        if not sts: return urlsTab
+        if not sts:
+            return urlsTab
         cUrl = self.cm.meta['url']
 
         url = self.getFullUrl(ph.search(data, ph.IFRAME)[1], cUrl)
         if url:
             sts, data = self.getPage(url)
-            if not sts: return urlsTab
+            if not sts:
+                return urlsTab
             cUrl = self.cm.meta['url']
 
         replaceTab = self.cm.ph.getDataBeetwenMarkers(data, 'prototype.open', '};', False)[1]
@@ -142,7 +150,8 @@ class BilaSportPwApi(CBaseHostClass):
         scriptUrl = videoUrl.meta.get('priv_script_url', '')
         if scriptUrl:
             sts, data = self.getPage(scriptUrl)
-            if not sts: return []
+            if not sts:
+                return []
             hash = '/tmp/%s' % hexlify(md5(data).digest())
             data = 'btoa=function(t){return Duktape.enc("base64",t)},XMLHttpRequest=function(){},XMLHttpRequest.prototype.open=function(t,e,n,o,p){print(e)};' + data + 'tmp = new XMLHttpRequest();'
             try:
@@ -156,7 +165,8 @@ class BilaSportPwApi(CBaseHostClass):
             scriptUrl = hash
 
         sts, data = self.getPage(videoUrl)
-        if not sts or '#EXTM3U' not in data: return urlsTab
+        if not sts or '#EXTM3U' not in data:
+            return urlsTab
         
         keyUrl = set(re.compile('''#EXT\-X\-KEY.*?URI=['"](https?://[^"]+?)['"]''').findall(data))
         if len(keyUrl):

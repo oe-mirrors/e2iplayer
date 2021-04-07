@@ -16,8 +16,10 @@ import urllib.request
 import urllib.parse
 import urllib.error
 import base64
-try:    import json
-except Exception: import simplejson as json
+try:
+    import json
+except Exception:
+    import simplejson as json
 from Components.config import config, ConfigSelection, getConfigListEntry
 ###################################################
 
@@ -60,7 +62,8 @@ class NGolosCOM(CBaseHostClass):
         self.DEFAULT_ICON_URL = self.getFullIconUrl('/assets/images/thumbnail.png')
     
     def getPage(self, baseUrl, addParams = {}, post_data = None):
-        if addParams == {}: addParams = dict(self.defaultParams)
+        if addParams == {}:
+            addParams = dict(self.defaultParams)
         lang = config.plugins.iptvplayer.ngolos_language.value
         cookieItems = addParams.get('cookie_items', {})
         cookieItems.update({'language':lang})
@@ -77,7 +80,8 @@ class NGolosCOM(CBaseHostClass):
         self.addMarker({})
         
         sts, data = self.getPage(cItem['url'])
-        if not sts: return
+        if not sts:
+            return
         self.setMainUrl(data.meta['url'])
         
         tmp = self.cm.ph.getDataBeetwenNodes(data, ('<div', '>', 'competitions_sidebar'), ('</div', '>'))[1]
@@ -100,7 +104,8 @@ class NGolosCOM(CBaseHostClass):
             tmp = self.cm.ph.getDataBeetwenNodes(data[idx+1], ('<a', '>', 'card-title'), ('</a', '>'))[1]
             cUrl = self.getFullUrl(self.cm.ph.getSearchGroups(tmp, '''href=['"]([^'^"]+?)['"]''')[0])
             cTitle = self.cleanHtmlStr(tmp)
-            if cTitle == '': cTitle = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(data[idx+1], '<i', '</a>')[1])
+            if cTitle == '':
+                cTitle = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(data[idx+1], '<i', '</a>')[1])
             
             if parent == '.competitions':
                 params = dict(cItem)
@@ -140,7 +145,8 @@ class NGolosCOM(CBaseHostClass):
         params = dict(self.defaultParams)
         params['cookie_items'] = {'orderby':cItem.get('orderby', '')} #'latest'
         sts, data = self.getPage(cItem['url'], params)
-        if not sts: return
+        if not sts:
+            return
         self.setMainUrl(data.meta['url'])
         
         if page == 1:
@@ -177,8 +183,10 @@ class NGolosCOM(CBaseHostClass):
                 for item in tmp:
                     title = self.cleanHtmlStr(item)
                     value = self.cm.ph.getSearchGroups(item, '''value=['"]([^'^"]+?)['"]''')[0]
-                    if '0' == value: value = 'latest'
-                    else: value = ''
+                    if '0' == value:
+                        value = 'latest'
+                    else:
+                        value = ''
                     params = dict(cItem)
                     params.update({'good_for_fav':False, 'title':title, 'orderby':value})
                     self.addDir(params)
@@ -212,7 +220,8 @@ class NGolosCOM(CBaseHostClass):
         printDBG("NGolosCOM.exploreItem")
         
         sts, data = self.getPage(cItem['url'])
-        if not sts: return
+        if not sts:
+            return
         
         tabs = {}
         tmp = self.cm.ph.getDataBeetwenNodes(data, ('<ul', '>', 'nav-tabs'), ('</ul', '>'))[1]
@@ -228,8 +237,10 @@ class NGolosCOM(CBaseHostClass):
             section = section.split('<br />')
             for item in section:
                 url = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''<iframe[^>]+?src=['"]([^"^']+?)['"]''', 1, True)[0])
-                if url == '': url = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''href=['"]([^"^']+?)['"]''', 1, True)[0])
-                if url == '': continue
+                if url == '':
+                    url = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''href=['"]([^"^']+?)['"]''', 1, True)[0])
+                if url == '':
+                    continue
                 title = '%s : %s' % (cItem['title'], self.cleanHtmlStr(item))
                 params = dict(cItem)
                 params.update({'good_for_fav': False, 'type':'video', 'title':title, 'url':url})
@@ -248,7 +259,8 @@ class NGolosCOM(CBaseHostClass):
             tmp = tmp.split('</iframe>')
             for item in tmp:
                 url = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''<iframe[^>]+?src=['"]([^"^']+?)['"]''', 1, True)[0])
-                if url == '': continue
+                if url == '':
+                    continue
                 title = '%s : %s' % (cItem['title'], self.cleanHtmlStr(item))
                 params = dict(cItem)
                 params.update({'good_for_fav': False, 'title':title, 'url':url})
@@ -265,26 +277,32 @@ class NGolosCOM(CBaseHostClass):
 
         for title in tmp:
             title = self.cleanHtmlStr(title) 
-            if title != '': titles.append(title)
+            if title != '':
+                titles.append(title)
         
         for title in tmp2:
             title = self.cleanHtmlStr(title) 
-            if title != '': titles2.append(title)
+            if title != '':
+                titles2.append(title)
         
-        if len(titles2) > len(titles): titles = titles2
+        if len(titles2) > len(titles):
+            titles = titles2
         
         tmp = re.compile('''['"]([^'^"]*?//config\.playwire\.com[^'^"]+?\.json)['"]''').findall(data)
         tmp.extend(re.compile('<iframe[^>]+?src="([^"]+?)"').findall(data))
         tmp.extend(re.compile('''<a[^>]+?href=['"](https?://[^'^"]*?ekstraklasa.tv[^'^"]+?)['"]''').findall(data))
         urlsTab = []
         for idx in range(len(tmp)):
-            if 'facebook' in tmp[idx]: continue
+            if 'facebook' in tmp[idx]:
+                continue
             url = self.getFullUrl(tmp[idx])
-            if not self.cm.isValidUrl(url): continue
+            if not self.cm.isValidUrl(url):
+                continue
             if 'playwire.com' not in url and  self.up.checkHostSupport(url) != 1:
                 try:
                     url = self.getFullUrl(base64.b64decode(url.split('link=', 1)[-1]))
-                    if self.up.checkHostSupport(url) != 1: continue
+                    if self.up.checkHostSupport(url) != 1:
+                        continue
                 except Exception:
                     printExc()
                     continue
@@ -293,7 +311,8 @@ class NGolosCOM(CBaseHostClass):
         
         for idx in range(len(urlsTab)):
             title = cItem['title']
-            if len(titles) == len(urlsTab): title += ' - ' + titles[idx]
+            if len(titles) == len(urlsTab):
+                title += ' - ' + titles[idx]
             params = dict(cItem)
             params.update({'good_for_fav': False, 'title':title, 'url':urlsTab[idx]})
             self.addVideo(params)
@@ -316,7 +335,8 @@ class NGolosCOM(CBaseHostClass):
         videoUrl = cItem['url']
         if 'playwire.com' in videoUrl:
             sts, data = self.cm.getPage(videoUrl)
-            if not sts: return []
+            if not sts:
+                return []
             try:
                 data = byteify(json.loads(data))
                 if 'content' in data:
@@ -345,7 +365,8 @@ class NGolosCOM(CBaseHostClass):
                 printExc()
         elif '.me/player' in videoUrl:
             sts, data = self.cm.getPage(videoUrl)
-            if not sts: return []
+            if not sts:
+                return []
             url = self.cm.ph.getSearchGroups(data, '''file:[^"^']*?["'](http[^'^"]+?)["']''')[0]
             urlTab.append({'name':self.up.getDomain(videoUrl), 'url':url})
         elif videoUrl.startswith('http'):

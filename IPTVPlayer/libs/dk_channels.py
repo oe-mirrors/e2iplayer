@@ -43,7 +43,8 @@ class TV2RChannel():
     def __getFynskemedierIP(self):
         for attempt in range(0, 2):
             sts, data = self.cm.getPage('http://livestream.fynskemedier.dk/loadbalancer')
-            if not sts: continue
+            if not sts:
+                continue
             return data[9:]
         return None
         
@@ -51,7 +52,8 @@ class TV2RChannel():
         links = [] 
         if 'fynskemedier.dk' == channelData['type']:
             ip = self.__getFynskemedierIP()
-            if None == ip: return links
+            if None == ip:
+                return links
             for qual in self.QUALITIES:
                 url = 'rtmp://{0}:1935/live/_definst_/{1}_{2} live=1'.format(ip, channelData['id'], qual)
                 name = 'livestream.fynskemedier.dk [{0}]'.format(qual)

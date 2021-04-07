@@ -77,13 +77,15 @@ class HDStreams(CBaseHostClass):
                             ]
     
     def getPage(self, baseUrl, addParams = {}, post_data = None):
-        if addParams == {}: addParams = dict(self.defaultParams)
+        if addParams == {}:
+            addParams = dict(self.defaultParams)
         addParams['cloudflare_params'] = {'cookie_file':self.COOKIE_FILE, 'User-Agent':self.USER_AGENT}
         return self.cm.getPageCFProtection(baseUrl, addParams, post_data)
         
     def getFullIconUrl(self, url):
         url = CBaseHostClass.getFullIconUrl(self, url.strip())
-        if url == '': return ''
+        if url == '':
+            return ''
         cookieHeader = self.cm.getCookieHeader(self.COOKIE_FILE, ['PHPSESSID', 'cf_clearance'])
         return strwithmeta(url, {'Cookie':cookieHeader, 'User-Agent':self.USER_AGENT})
         
@@ -105,15 +107,18 @@ class HDStreams(CBaseHostClass):
         self.cacheFiltersKeys = []
         
         sts, data = self.getPage(cItem['url'])
-        if not sts: return
+        if not sts:
+            return
         
         # year
         key = 'f_year'
         tmp = self.cm.ph.getDataBeetwenReMarkers(data, re.compile('source\.years\s*=\s*\['), re.compile('\]'), False)[1].split(',')
         self.cacheFilters[key] = []
         for value in tmp:
-            try: value = str(int(value))
-            except Exception: continue
+            try:
+                value = str(int(value))
+            except Exception:
+                continue
             self.cacheFilters[key].append({'title':value, key:value})
         if len(self.cacheFilters[key]):
             self.cacheFilters[key].insert(0, {'title':_('Any')})
@@ -134,7 +139,8 @@ class HDStreams(CBaseHostClass):
         
         url = self.cm.ph.getSearchGroups(data, '''<script[^>]+?src=['"]([^'^"]*?/js/app\.[^'^"]*?js)['"]''')[0]
         sts, data = self.getPage(self.getFullUrl(url))
-        if not sts: return
+        if not sts:
+            return
         
         # order 
         key = 'f_order'
@@ -157,9 +163,11 @@ class HDStreams(CBaseHostClass):
         cItem = dict(cItem)
         
         f_idx = cItem.get('f_idx', 0)
-        if f_idx == 0: self.fillCacheFilters(cItem)
+        if f_idx == 0:
+            self.fillCacheFilters(cItem)
         
-        if 0 == len(self.cacheFiltersKeys): return
+        if 0 == len(self.cacheFiltersKeys):
+            return
         
         filter = self.cacheFiltersKeys[f_idx]
         f_idx += 1
@@ -181,16 +189,21 @@ class HDStreams(CBaseHostClass):
                 query[item[1]] = cItem[item[0]]
         
         query = urllib.parse.urlencode(query)
-        if '?' in url: url += '&' + query
-        else: url += '?' + query
+        if '?' in url:
+            url += '&' + query
+        else:
+            url += '?' + query
         
         sts, data = self.getPage(url)
-        if not sts: return
+        if not sts:
+            return
         
         nextPage = ph.find(data, ('<ul', '>', 'pagination'), '</ul>', flags=0)[1]
         nextPage = ph.search(nextPage, '''page=(%s)[^0-9]''' % (page+1))[0]
-        if nextPage != '': nextPage = True
-        else: nextPage = False
+        if nextPage != '':
+            nextPage = True
+        else:
+            nextPage = False
         
         data = self.cm.ph.getAllItemsBeetwenNodes(data, ('<div', '>', 'movie-wrap'), ('</a', '>'))
         for item in data:
@@ -201,7 +214,8 @@ class HDStreams(CBaseHostClass):
             if '/video-hd-32.png' in item:
                 desc.append(_('Quality:') + ' HD')
             views = self.cleanHtmlStr(self.cm.ph.getDataBeetwenReMarkers(item, re.compile('''<div[^>]+?views[^>]*?>'''), re.compile('</div>'), False)[1])
-            if views != '': desc.append(_('Views:') + ' ' + views)
+            if views != '':
+                desc.append(_('Views:') + ' ' + views)
             
             params = dict(cItem)
             params.update({'good_for_fav':True, 'category':nextCategory, 'title':title, 'url':url, 'desc':'[/br]'.join(desc), 'icon':icon})
@@ -218,7 +232,8 @@ class HDStreams(CBaseHostClass):
         self.cacheLinks = {}
         
         sts, data = self.getPage(cItem['url'])
-        if not sts: return
+        if not sts:
+            return
         
         desc = ''
         icon = ''
@@ -231,14 +246,18 @@ class HDStreams(CBaseHostClass):
             descTab = []
             for key in ['year', 'rating', 'genres']:
                 val = article['other_info'].get(key, '')
-                if val != '': descTab.append(val)
+                if val != '':
+                    descTab.append(val)
             desc = ' | '.join(descTab) + '[/br]' + article.get('text', '')
             icon = article.get('icon', '')
             baseTitle = article.get('title', '')
         
-        if icon == '': icon = cItem.get('icon', '')
-        if desc == '': desc = cItem.get('desc', '')
-        if baseTitle == '': baseTitle = cItem.get('title', '')
+        if icon == '':
+            icon = cItem.get('icon', '')
+        if desc == '':
+            desc = cItem.get('desc', '')
+        if baseTitle == '':
+            baseTitle = cItem.get('title', '')
         
         videoId = self.cm.ph.getSearchGroups(data, '''video\-id=['"]['"]?([^'^"]+?)['"]''')[0]
         if videoId != '':
@@ -246,8 +265,10 @@ class HDStreams(CBaseHostClass):
             params.update({'good_for_fav':False, 'title': '%s %s' % (cItem['title'], '[TRAILER]'), 'url':strwithmeta('https://www.youtube.com/watch?v=' + videoId, {'Referer':cItem['url']}), 'desc':desc, 'icon':icon})
             self.addVideo(params)
         
-        if 'source.serie.' in data: type = 'serie'
-        else: type = 'movie'
+        if 'source.serie.' in data:
+            type = 'serie'
+        else:
+            type = 'movie'
         
         if type == 'movie':
             # get links 
@@ -262,11 +283,14 @@ class HDStreams(CBaseHostClass):
                 for qualityItem in langItem:
                     qualityName = self.cm.ph.getDataBeetwenMarkers(qualityItem, '<v-btn', '</v-btn>')[1]
                     qualityItem = self.cm.ph.getAllItemsBeetwenMarkers(qualityItem, '<v-tooltip', '</v-tooltip>')
-                    if 'recaptcha' not in qualityName: qualityName = self.cleanHtmlStr(qualityName)
-                    else: qualityName = ''
+                    if 'recaptcha' not in qualityName:
+                        qualityName = self.cleanHtmlStr(qualityName)
+                    else:
+                        qualityName = ''
                     for linkItem in qualityItem:
                         tmp = self.cm.ph.getSearchGroups(linkItem, '''recaptcha\(\s*['"]([^'^"]+?)['"]\s*,\s*['"]([^'^"]+?)['"],\s*['"]([^'^"]+?)['"]''', 3)
-                        if '' in tmp: continue
+                        if '' in tmp:
+                            continue
                         name = self.cleanHtmlStr(flagsReObj.sub('', linkItem))
                         name = '[%s][%s] %s' % (langId, qualityName, name)
                         url = strwithmeta(cItem['url'], {'links_key':linksKey, 'link_data':tmp, 'post_data':{'e':tmp[0], 'h':tmp[1], 'lang':langId}})
@@ -284,7 +308,8 @@ class HDStreams(CBaseHostClass):
             data = sp.split(data)
             for episodeItem in data:
                 eIcon = self.cm.ph.getSearchGroups(episodeItem, '''src=['"]([^'^"]+?)['"]''')[0]
-                if eIcon == '' or eIcon.startswith('data:image'): eIcon = icon
+                if eIcon == '' or eIcon.startswith('data:image'):
+                    eIcon = icon
                 eIcon = self.getFullIconUrl(eIcon)
                 eTitle = self.cleanHtmlStr(self.cm.ph.getDataBeetwenReMarkers(episodeItem, re.compile('''<p[^>]+?episode\-name'''), re.compile('</p>'))[1])
                 eNum = self.cleanHtmlStr(self.cm.ph.getDataBeetwenReMarkers(episodeItem, re.compile('''<p[^>]+?episode\-number'''), re.compile('</p>'))[1])
@@ -295,8 +320,10 @@ class HDStreams(CBaseHostClass):
                 episodeItem = self.cm.ph.getAllItemsBeetwenMarkers(episodeItem, '<v-list-tile ', '</v-list-tile>')
                 for linkItem in episodeItem:
                     tmp = self.cm.ph.getSearchGroups(linkItem, '''loadStream\(\s*['"]([^'^"]+?)['"]\s*,\s*['"]([^'^"]+?)['"]''', 2)
-                    if '' in tmp: tmp = self.cm.ph.getSearchGroups(linkItem, '''loadEpisodeStream\(\s*['"]([^'^"]+?)['"]\s*,\s*['"]([^'^"]+?)['"]''', 2)
-                    if '' in tmp: continue
+                    if '' in tmp:
+                        tmp = self.cm.ph.getSearchGroups(linkItem, '''loadEpisodeStream\(\s*['"]([^'^"]+?)['"]\s*,\s*['"]([^'^"]+?)['"]''', 2)
+                    if '' in tmp:
+                        continue
                     name = self.cleanHtmlStr(linkItem)
                     url = strwithmeta(cItem['url'], {'links_key':linksKey, 'link_data':tmp, 'post_data':{'e':tmp[0], 'h':tmp[1], 'lang':'de'}}) #langId
                     linksTab.append({'name':name, 'url':url, 'need_resolve':1})
@@ -325,7 +352,8 @@ class HDStreams(CBaseHostClass):
         
         url = self.getFullUrl('/home')
         sts, data = self.getPage(url)
-        if not sts: return
+        if not sts:
+            return
         
         urlParams = dict(self.defaultParams)
         urlParams['header'] = dict(self.AJAX_HEADER)
@@ -337,7 +365,8 @@ class HDStreams(CBaseHostClass):
         url = self.getFullUrl('/search')
         query = urllib.parse.urlencode({'q':searchPattern, 'movies':movies, 'seasons':series, 'didyoumean':'true', 'actors':'false'})
         sts, data = self.getPage(url+'?'+query, urlParams)
-        if not sts: return
+        if not sts:
+            return
         
         printDBG(data)
         
@@ -348,7 +377,8 @@ class HDStreams(CBaseHostClass):
                 for item in data[key]:
                     icon  = self.getFullIconUrl(item.get('src', ''))
                     url = self.getFullUrl(item.get('url', ''))
-                    if url == '': continue
+                    if url == '':
+                        continue
                     title = self.cleanHtmlStr(item.get('title', ''))
                     desc = self.cleanHtmlStr(item.get('original_title', ''))
                     params = dict(cItem)
@@ -389,7 +419,8 @@ class HDStreams(CBaseHostClass):
                     break
         
         sts, data = self.getPage(videoUrl)
-        if not sts: return []
+        if not sts:
+            return []
         
         recaptcha = self.cm.ph.getSearchGroups(data, '''source\.recaptcha\s*?=\s*?(false|true)''')[0]
         printDBG(">> recaptcha[%s]" % recaptcha)
@@ -407,7 +438,8 @@ class HDStreams(CBaseHostClass):
         post_data = dict(post_data)
         post_data.update({"q":"","grecaptcha":""})
         sts, data = self.getPage(videoUrl + '/stream', urlParams, post_data)
-        if not sts: return []
+        if not sts:
+            return []
         
         if 'captcha' in data.lower():
             SetIPTVPlayerLastHostError(_('Link protected with google recaptcha v2.')) 
@@ -438,8 +470,10 @@ class HDStreams(CBaseHostClass):
             a = urlParams['header']['x-csrf-token']
             for idx in range(len(a)-1, 0, -2):
                 b += a[idx]
-            if mainData.get('e', None): b += '1'
-            else: b += '0'
+            if mainData.get('e', None):
+                b += '1'
+            else:
+                b += '0'
             printDBG("b: " + b)
             tmp = self.cryptoJS_AES_decrypt(ciphertext, b, salt)
             printDBG(tmp)
@@ -463,41 +497,52 @@ class HDStreams(CBaseHostClass):
         
         if data == None:
             sts, data = self.getPage(url)
-            if not sts: return []
+            if not sts:
+                return []
         
         fullTtitle = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(data, '<h4', '</h4>')[1])
         
         title = self.cleanHtmlStr( self.cm.ph.getSearchGroups(data, '''\.title\s*=\s*['"]([^'^"]+?)['"]''')[0] )
         desc  = self.cleanHtmlStr(self.cm.ph.getDataBeetwenReMarkers(data, re.compile('''<div[^>]*?card__text[^>]*?>'''), re.compile('</div>'))[1])
-        if desc == '': desc =  self.cleanHtmlStr(self.cm.ph.getDataBeetwenReMarkers(data, re.compile('''Handlung'''), re.compile('</p>'), False)[1])
+        if desc == '':
+            desc =  self.cleanHtmlStr(self.cm.ph.getDataBeetwenReMarkers(data, re.compile('''Handlung'''), re.compile('</p>'), False)[1])
         icon  = self.cm.ph.getDataBeetwenReMarkers(data, re.compile('''<div[^>]*?movie\-cover[^>]*?>'''), re.compile('</div>'))[1]
         icon  = self.getFullIconUrl( self.cm.ph.getSearchGroups(icon, '''src=['"]([^"^']+\.jpe?g)['"]''')[0] )
         
         tmp = self.cleanHtmlStr(self.cm.ph.getSearchGroups(data, '''\.rating\s*=([^;]+?);''')[0])
-        if tmp != '': otherInfo['rating'] = tmp + '/10'
+        if tmp != '':
+            otherInfo['rating'] = tmp + '/10'
         
         tmp = self.cm.ph.getDataBeetwenReMarkers(data, re.compile('\.genres\s*=\s*\['), re.compile(']'), False)[1]
         tmp = re.compile('''text['"]?\s*:\s*['"]([^'^"]+?)['"]''').findall(tmp)
         tmpTab = []
         for t in tmp:
             t = self.cleanHtmlStr(t)
-            if t != '': tmpTab.append(t)
-        if len(tmpTab): otherInfo['genres'] = ', '.join(tmpTab)
+            if t != '':
+                tmpTab.append(t)
+        if len(tmpTab):
+            otherInfo['genres'] = ', '.join(tmpTab)
         
         tmp = self.cm.ph.getDataBeetwenReMarkers(data, re.compile('\.actors\s*=\s*\['), re.compile(']'), False)[1]
         tmp = re.compile('''name['"]?\s*:\s*['"]([^'^"]+?)['"]''').findall(tmp)
         tmpTab = []
         for t in tmp:
             t = self.cleanHtmlStr(t)
-            if t != '': tmpTab.append(t)
-        if len(tmpTab): otherInfo['actors'] = ', '.join(tmpTab)
+            if t != '':
+                tmpTab.append(t)
+        if len(tmpTab):
+            otherInfo['actors'] = ', '.join(tmpTab)
         
         tmp = self.cleanHtmlStr(self.cm.ph.getSearchGroups(fullTtitle, '''\(\s*([0-9]{4})\s*\)''')[0])
-        if tmp != '': otherInfo['year'] = tmp
+        if tmp != '':
+            otherInfo['year'] = tmp
         
-        if title == '': title = cItem['title']
-        if desc == '':  desc = cItem.get('desc', '')
-        if icon == '':  icon = cItem.get('icon', self.DEFAULT_ICON_URL)
+        if title == '':
+            title = cItem['title']
+        if desc == '':
+            desc = cItem.get('desc', '')
+        if icon == '':
+            icon = cItem.get('icon', self.DEFAULT_ICON_URL)
         
         return [{'title':self.cleanHtmlStr( title ), 'text': self.cleanHtmlStr( desc ), 'images':[{'title':'', 'url':self.getFullUrl(icon)}], 'other_info':otherInfo}]
         

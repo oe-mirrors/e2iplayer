@@ -60,8 +60,10 @@ def search(data, pattern, flags=0, limits=-1):
         limits = reObj.groups
     match = reObj.search(data)
     for idx in range(limits):
-        try:    value = match.group(idx + 1)
-        except Exception: value = ''
+        try:
+            value = match.group(idx + 1)
+        except Exception:
+            value = ''
         tab.append(value)
     return tab
 
@@ -123,10 +125,12 @@ def findall(data, start, end=('',), flags=START_E|END_E, limits=-1):
         if search == 1:
             # node 1 - start
             idx1 = sData.find(n1S, lastIdx)
-            if -1 == idx1: return itemsTab
+            if -1 == idx1:
+                return itemsTab
             lastIdx = idx1 + len(n1S)
             idx2 = sData.find(n1E, lastIdx)
-            if -1 == idx2: return itemsTab
+            if -1 == idx2:
+                return itemsTab
             lastIdx = idx2 + len(n1E)
 
             if match1P and not  match1P(data, sData, idx1 + len(n1S), idx2):
@@ -136,10 +140,12 @@ def findall(data, start, end=('',), flags=START_E|END_E, limits=-1):
         else:
             # node 2 - end
             tIdx1 = sData.find(n2S, lastIdx)
-            if -1 == tIdx1: return itemsTab
+            if -1 == tIdx1:
+                return itemsTab
             lastIdx = tIdx1 + len(n2S)
             tIdx2 = sData.find(n2E, lastIdx)
-            if -1 == tIdx2: return itemsTab
+            if -1 == tIdx2:
+                return itemsTab
             lastIdx = tIdx2 + len(n2E)
 
             if match2P and not  match2P(data, sData, tIdx1 + len(n2S), tIdx2):
@@ -198,10 +204,12 @@ def rfindall(data, start, end=('',), flags=START_E|END_E, limits=-1):
         if search == 1:
             # node 1 - end
             idx1 = sData.rfind(n1S, 0, lastIdx)
-            if -1 == idx1: return itemsTab
+            if -1 == idx1:
+                return itemsTab
             lastIdx = idx1
             idx2 = sData.find(n1E, idx1+len(n1S))
-            if -1 == idx2: return itemsTab
+            if -1 == idx2:
+                return itemsTab
 
             if match1P and not  match1P(data, sData, idx1 + len(n1S), idx2):
                 continue
@@ -210,10 +218,12 @@ def rfindall(data, start, end=('',), flags=START_E|END_E, limits=-1):
         else:
             # node 2 - start
             tIdx1 = sData.rfind(n2S, 0, lastIdx)
-            if -1 == tIdx1: return itemsTab
+            if -1 == tIdx1:
+                return itemsTab
             lastIdx = tIdx1
             tIdx2 = sData.find(n2E, tIdx1+len(n2S), idx1)
-            if -1 == tIdx2: return itemsTab
+            if -1 == tIdx2:
+                return itemsTab
 
             if match2P and not  match2P(data, sData, tIdx1 + len(n2S), tIdx2):
                 continue
@@ -238,13 +248,17 @@ def rfindall(data, start, end=('',), flags=START_E|END_E, limits=-1):
 
 def find(data, start, end=('',), flags=START_E|END_E):
     ret = findall(data, start, end, flags, 1)
-    if len(ret): return True, ret[0]
-    else: return False, ''
+    if len(ret):
+        return True, ret[0]
+    else:
+        return False, ''
 
 def rfind(data, start, end=('',), flags=START_E|END_E):
     ret = rfindall(data, start, end, flags, 1)
-    if len(ret): return True, ret[0]
-    else: return False, ''
+    if len(ret):
+        return True, ret[0]
+    else:
+        return False, ''
 
 def strip_doubles(data, pattern):
     while -1 < data.find(pattern+pattern) and '' != pattern:

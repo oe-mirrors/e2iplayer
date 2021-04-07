@@ -16,13 +16,18 @@ import re
 import urllib.request
 import urllib.parse
 import urllib.error
-try:    import json
-except Exception: import simplejson as json
 try:
-    try: from io import StringIO
-    except Exception: from io import StringIO 
+    import json
+except Exception:
+    import simplejson as json
+try:
+    try:
+        from io import StringIO
+    except Exception:
+        from io import StringIO 
     import gzip
-except Exception: pass
+except Exception:
+    pass
 from Components.config import config, ConfigSelection, ConfigYesNo, ConfigText, getConfigListEntry
 ###################################################
 
@@ -62,7 +67,8 @@ class OpenSubtitlesRest(CBaseSubProviderClass):
     def getMoviesTitles(self, cItem, nextCategory):
         printDBG("OpenSubtitlesRest.getMoviesTitles")
         sts, tab = self.imdbGetMoviesByTitle(self.params['confirmed_title'])
-        if not sts: return
+        if not sts:
+            return
         printDBG(tab)
         for item in tab:
             params = dict(cItem)
@@ -81,7 +87,8 @@ class OpenSubtitlesRest(CBaseSubProviderClass):
         if type == 'series':
             promSeason = self.dInfo.get('season')
             sts, tab = self.imdbGetSeasons(imdbid, promSeason)
-            if not sts: return
+            if not sts:
+                return
             for item in tab:
                 params = dict(cItem)
                 params.update({'category':'get_episodes', 'item_title':cItem['title'], 'season':item, 'title':_('Season %s') % item})
@@ -97,7 +104,8 @@ class OpenSubtitlesRest(CBaseSubProviderClass):
         
         promEpisode = self.dInfo.get('episode')
         sts, tab = self.imdbGetEpisodesForSeason(imdbid, season, promEpisode)
-        if not sts: return
+        if not sts:
+            return
         for item in tab:
             params = dict(cItem)
             params.update(item) # item = "episode_title", "episode", "eimdbid"
@@ -137,13 +145,16 @@ class OpenSubtitlesRest(CBaseSubProviderClass):
             
     def _getSubtitleTitle(self, item):
         title = item.get('MovieReleaseName', '')
-        if '' == title: title = item.get('SubFileName', '')
-        if '' == title: title = item.get('MovieName', '')
+        if '' == title:
+            title = item.get('SubFileName', '')
+        if '' == title:
+            title = item.get('MovieName', '')
         title = '[%s] %s' % (item['ISO639'], title.strip())
         
         cdMax = item.get('SubSumCD', '1')
         cd    = item.get('SubActualCD', '1')
-        if cdMax != '1': title += ' CD[{0}/{1}]'.format(cdMax, cd)
+        if cdMax != '1':
+            title += ' CD[{0}/{1}]'.format(cdMax, cd)
         
         #lastTime = item.get('SubLastTS', '')
         #if '' != lastTime: title += ' [{0}]'.format(lastTime)
@@ -153,12 +164,14 @@ class OpenSubtitlesRest(CBaseSubProviderClass):
     def _getFileName(self, subItem):
         title = self._getSubtitleTitle(subItem).replace('_', '.').replace('.'+subItem['SubFormat'], '').replace(' ', '.')
         match = re.search(r'[^.]', title)
-        if match: title = title[match.start():]
+        if match:
+            title = title[match.start():]
 
         fileName = "{0}_{1}_0_{2}_{3}".format(title, subItem['ISO639'], subItem['IDSubtitle'], subItem['IDMovieImdb'])
         try:
             fps = float(subItem['MovieFPS'])
-            if fps > 0: fileName += '_fps{0}'.format(fps)
+            if fps > 0:
+                fileName += '_fps{0}'.format(fps)
         except Exception:
             printExc()
         fileName += '.' + subItem['SubFormat']
@@ -188,7 +201,8 @@ class OpenSubtitlesRest(CBaseSubProviderClass):
         
         url = self.getFullUrl('/search/%s/' % ('/'.join(queryTab)))
         sts, data = self.cm.getPage(url, self.defaultParams)
-        if not sts: return
+        if not sts:
+            return
         
         subFormats = self.getSupportedFormats(all=True)
         try:
@@ -198,8 +212,10 @@ class OpenSubtitlesRest(CBaseSubProviderClass):
                 if self.cm.isValidUrl(link) and item.get('SubFormat', '') in subFormats and link.endswith('.gz'):
                     title = self._getSubtitleTitle(item)
                     fileName = self._getFileName(item)
-                    try: fps = float(item['MovieFPS'])
-                    except Exception: fps = 0
+                    try:
+                        fps = float(item['MovieFPS'])
+                    except Exception:
+                        fps = 0
                     params = dict(cItem)
                     params.update({'title':title, 'file_name':fileName, 'lang':item['ISO639'], 'fps':fps, 'encoding':item.get('SubEncoding', ''), 'imdbid':item['IDMovieImdb'], 'url':link})
                     self.addSubtitle(params)

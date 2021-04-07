@@ -18,7 +18,7 @@ from datetime import datetime, timedelta
 # Config options for HOST
 ###################################################
 
-config.plugins.iptvplayer.sportstream365_language = ConfigSelection(default = "", choices = [("", _("Default")), ("de", "Deutsch"), ("en", "English"), ("es", "Español"), ("fr", "Français"), ("it", "Italiano"),\
+config.plugins.iptvplayer.sportstream365_language = ConfigSelection(default = "", choices = [("", _("Default")), ("de", "Deutsch"), ("en", "English"), ("es", "Español"), ("fr", "Français"), ("it", "Italiano"),
                                                                                              ("pt", "Português"), ("ru", "Русский"), ("tr", "Türkçe"), ("cn", "汉语")])
 config.plugins.iptvplayer.sportstream365_cyrillic2latin = ConfigYesNo(default = False)
 def GetConfigList():
@@ -42,11 +42,16 @@ class SportStream365Api(CBaseHostClass):
         
         OFFSET = datetime.now() - datetime.utcnow()
         seconds = OFFSET.seconds + OFFSET.days * 24 * 3600
-        if ((seconds + 1) % 10) == 0: seconds += 1
-        elif ((seconds - 1) % 10) == 0: seconds -= 1
-        if seconds > 0: GMTOffset = '+' + str(timedelta(seconds=seconds))
-        elif seconds < 0: GMTOffset = '-' + str(timedelta(seconds=seconds*-1))
-        else: GMTOffset = ''
+        if ((seconds + 1) % 10) == 0:
+            seconds += 1
+        elif ((seconds - 1) % 10) == 0:
+            seconds -= 1
+        if seconds > 0:
+            GMTOffset = '+' + str(timedelta(seconds=seconds))
+        elif seconds < 0:
+            GMTOffset = '-' + str(timedelta(seconds=seconds*-1))
+        else:
+            GMTOffset = ''
 
         while GMTOffset.endswith(':00'):
             GMTOffset = GMTOffset.rsplit(':', 1)[0]
@@ -54,15 +59,18 @@ class SportStream365Api(CBaseHostClass):
         # https://en.wikipedia.org/wiki/Cyrillic_alphabets#Common_letters
         cyrillicAlphabets = [('а', 'a'), ('б', 'b'), ('в', 'v'), ('г', 'ɡ'), ('д', 'd'), ('е', 'je'), ('ж', 'ʒ'), ('з', 'z'), ('и', 'i'), ('й', 'j'), ('к', 'k'), ('л', 'l'), ('м', 'm'), ('н', 'n'), ('о', 'o'), ('п', 'p'), ('с', 's'), ('т', 't'), ('у', 'u'), ('ф', 'f'), ('х', 'x'), ('ц', 'ts'), ('ч', 'tʃ'), ('ш', 'ʃ'), ('щ', 'ʃtʃ'), ('ь', 'ʲ'), ('ю', 'ju'), ('я', 'ja')]
         self.cyrillic2LatinMap = {}
-        for item in cyrillicAlphabets: self.cyrillic2LatinMap[item[0]] = item[1]
-        for item in cyrillicAlphabets: self.cyrillic2LatinMap[item[0].upper()] = item[1].upper()
+        for item in cyrillicAlphabets:
+            self.cyrillic2LatinMap[item[0]] = item[1]
+        for item in cyrillicAlphabets:
+            self.cyrillic2LatinMap[item[0].upper()] = item[1].upper()
     
     def cleanHtmlStr(self, text):
         text = CBaseHostClass.cleanHtmlStr(text)
         if config.plugins.iptvplayer.sportstream365_cyrillic2latin.value:
             tmp = text.decode('utf-8')
             text = ''
-            for letter in tmp: text += self.cyrillic2LatinMap.get(letter, letter)
+            for letter in tmp:
+                text += self.cyrillic2LatinMap.get(letter, letter)
             text = text.encode('utf-8')
         return text
         
@@ -77,29 +85,36 @@ class SportStream365Api(CBaseHostClass):
                 userLang = GetDefaultLang()
                 if userLang in ['de', 'en', 'es', 'fr', 'it', 'pt', 'ru', 'tr', 'cn']:
                     lang = userLang
-            if lang != '': self.defaultParams['cookie_items'] = {'lng':lang}
-            else: self.defaultParams['cookie_items'] = {'lng':'en'} #self.defaultParams.pop('cookie_items', None)
+            if lang != '':
+                self.defaultParams['cookie_items'] = {'lng':lang}
+            else:
+                self.defaultParams['cookie_items'] = {'lng':'en'} #self.defaultParams.pop('cookie_items', None)
         
         category = cItem.get('priv_cat')
         if category == None:
             sts, data = self.cm.getPage(self.getMainUrl(), self.defaultParams)
-            if not sts: return []
+            if not sts:
+                return []
             self.setMainUrl(self.cm.meta['url'])
             data = self.cm.ph.getDataBeetwenNodes(data, ('<div', '>', 'modal_menu_filter'), ('</div', '>'))[1]
             data = self.cm.ph.getAllItemsBeetwenMarkers(data, '<a', '</a>')
             for item in data:
                 url = self.cm.ph.getSearchGroups(item, '''\shref=['"]([^'^"]+?)['"]''')[0]
                 icon = url.rsplit('/', 1)[-1]
-                if icon == '': icon = 'all'
-                elif 'tennis' in icon: icon = 'footballtennis'
-                elif 'formula' in icon: icon = 'f1'
+                if icon == '':
+                    icon = 'all'
+                elif 'tennis' in icon:
+                    icon = 'footballtennis'
+                elif 'formula' in icon:
+                    icon = 'f1'
                 icon = self.getFullIconUrl('/img/%s.jpg' % icon)
                 title = self.cleanHtmlStr(item)
                 channelsList.append({'name':'sportstream365.com', 'type':'dir', 'priv_cat':'list_items', 'title':title, 'url':self.getFullUrl(url), 'icon':icon})
         else:
             iconsMap = {0:'other', 1:'football', 2:'hockey', 3:'basketball', 6:'volleyball', 26:'f1', 4:'footballtennis', 9:'boxing'}
             sts, data = self.cm.getPage(cItem['url'], self.defaultParams)
-            if not sts: return []
+            if not sts:
+                return []
             
             allowSports = self.cm.ph.getSearchGroups(data, '''var\s+?allow_sports\s*=\s*['"]([^'^"]+?)['"]''')[0]
             tagz = self.cm.ph.getSearchGroups(data, '''var\s+?tagz\s*=\s*['"]([^'^"]+?)['"]''')[0]
@@ -111,7 +126,8 @@ class SportStream365Api(CBaseHostClass):
                 for i in range(3):
                     url = self.getFullUrl('/signcon/negotiate')
                     sts, data = self.cm.getPage(url, MergeDicts(self.defaultParams, {'header':self.AJAX_HEADER, 'raw_post_data':True}), post_data='')
-                    if not sts: return []
+                    if not sts:
+                        return []
                     
                     data = json_loads(data)
                     uri = 'ws:' + self.getFullUrl('/signcon?id=').split(':', 1)[-1] + data['connectionId']
@@ -139,15 +155,19 @@ class SportStream365Api(CBaseHostClass):
                 
                 parseInt = lambda sin: int(''.join([c for c in str(sin).replace(',', '.').split('.')[0] if c.isdigit()])) if sum(map(int, [s.isdigit() for s in str(sin)])) and not callable(sin) and str(sin)[0].isdigit() else 0
                 def parseInt2(string):
-                    try: return int(''.join([x for x in string if x.isdigit()]))
-                    except Exception: return 0
+                    try:
+                        return int(''.join([x for x in string if x.isdigit()]))
+                    except Exception:
+                        return 0
                 
                 def cmp(x, y):
                     if x['SportId'] != y['SportId']:
                         return parseInt(x['SportId']) - parseInt(y['SportId'])
                     elif x['Liga'] != y['Liga']:
-                        try: int(x['Liga']) - int(y['Liga'])
-                        except Exception: return 0
+                        try:
+                            int(x['Liga']) - int(y['Liga'])
+                        except Exception:
+                            return 0
                     else:
                         return parseInt(x['FirstGameId']) - parseInt(y['FirstGameId'])
                 
@@ -155,17 +175,22 @@ class SportStream365Api(CBaseHostClass):
                 data.sort(cmp = cmp) #key = lambda item: (parseInt(item['SportId']), item['Liga'], parseInt(item['FirstGameId']))
                 printDBG(data)
                 for item in data:
-                    if None == item.get('VI'): continue
+                    if None == item.get('VI'):
+                        continue
                     url = self.getFullUrl('/viewer?sport=%s&game=%s&tagz=%s' % (item['SportId'], item['FirstGameId'], tagz))
                     icon = self.getFullIconUrl('/img/flag_%s.png' % iconsMap.get(item['SportId'], 'other'))
                     title = []
-                    if item['Opp1'] != '': title.append(item['Opp1'])
-                    if item['Opp2'] != '': title.append(item['Opp2'])
+                    if item['Opp1'] != '':
+                        title.append(item['Opp1'])
+                    if item['Opp2'] != '':
+                        title.append(item['Opp2'])
                     title = ' - '.join(title)
-                    if title == '': title = item['Liga']
+                    if title == '':
+                        title = item['Liga']
                     desc = item['Liga']
                     desc += '[/br]' + datetime.fromtimestamp(int(item['Start'] / 1000)).strftime('%A, %-d %B %H:%M')
-                    if self.GMTOffset != '': desc += ' (GMT %s)' % self.GMTOffset
+                    if self.GMTOffset != '':
+                        desc += ' (GMT %s)' % self.GMTOffset
                     channelsList.append({'name':'sportstream365.com', 'type':'video', 'title':self.cleanHtmlStr(title), 'url':url, 'icon':icon, 'desc':self.cleanHtmlStr(desc)})
             except Exception:
                 printExc()

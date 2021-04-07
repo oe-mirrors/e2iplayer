@@ -10,8 +10,10 @@ import urllib.parse
 import sys
 import traceback
 import time
-try: import json
-except Exception: import simplejson as json 
+try:
+    import json
+except Exception:
+    import simplejson as json 
 from random import randint
 
 import signal
@@ -59,7 +61,8 @@ def getLink(width, mediaId, referer, userAgent):
     
     params = {'Referer':referer, 'User-Agent':userAgent}
     sts, data = getPage(url, params)
-    if not sts: return ''
+    if not sts:
+        return ''
     
     data = json.loads(data)
     host = data[0]['args'][0]['host'].encode('utf-8')
@@ -70,7 +73,8 @@ def getLink(width, mediaId, referer, userAgent):
     
     for i in range(5):
         sts, data = getPage(url, params)
-        if not sts: continue
+        if not sts:
+            continue
         if 'm3u8' in data:
             break
         time.sleep(1)
@@ -78,7 +82,8 @@ def getLink(width, mediaId, referer, userAgent):
     playlistUrl = data[0]['args'][0]['stream'][0]['url'].encode('utf-8')
     
     sts, data = getPage(playlistUrl, params)
-    if not sts: return ''
+    if not sts:
+        return ''
     
     data = data.split('\n')
     marker = 'RESOLUTION=%sx' % width

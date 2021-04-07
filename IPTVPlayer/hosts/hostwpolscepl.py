@@ -15,8 +15,10 @@ import urllib.request
 import urllib.parse
 import urllib.error
 from datetime import datetime, timedelta
-try:    import json
-except Exception: import simplejson as json
+try:
+    import json
+except Exception:
+    import simplejson as json
 ###################################################
 
 
@@ -43,12 +45,15 @@ class WPolscePL(CBaseHostClass):
                             ]
         
     def getPage(self, baseUrl, addParams = {}, post_data = None):
-        if addParams == {}: addParams = dict(self.defaultParams)
+        if addParams == {}:
+            addParams = dict(self.defaultParams)
         origBaseUrl = baseUrl
         baseUrl = self.cm.iriToUri(baseUrl)
         def _getFullUrl(url):
-            if self.cm.isValidUrl(url): return url
-            else: return urllib.parse.urljoin(baseUrl, url)
+            if self.cm.isValidUrl(url):
+                return url
+            else:
+                return urllib.parse.urljoin(baseUrl, url)
         addParams['cloudflare_params'] = {'domain':self.up.getDomain(baseUrl), 'cookie_file':self.COOKIE_FILE, 'User-Agent':self.USER_AGENT, 'full_url_handle':_getFullUrl}
         return self.cm.getPageCFProtection(baseUrl, addParams, post_data)
     
@@ -69,10 +74,12 @@ class WPolscePL(CBaseHostClass):
             data = self.cm.ph.getAllItemsBeetwenMarkers(data, '<li', '</li>')
             for item in data:
                 url = self.cm.ph.getSearchGroups(item, '''href=['"]([^'^"]+?)['"]''')[0]
-                if url == '' or '#' in url: continue
+                if url == '' or '#' in url:
+                    continue
                 title = self.cleanHtmlStr(item)
                 cat = url.split('/')[-1]
-                if cat in ['gdzie-nas-ogladac']: continue
+                if cat in ['gdzie-nas-ogladac']:
+                    continue
                 
                 params = dict(cItem)
                 params.update({'good_for_fav':True, 'title':title, 'category':'list_items', 'priv_cat':cat, 'url':self.getFullUrl(url)})
@@ -86,9 +93,12 @@ class WPolscePL(CBaseHostClass):
         hours = td.seconds / 3600
         minutes = (td.seconds / 60) % 60
         
-        if days > 0: ret.append('%s d.' % days)
-        if hours > 0: ret.append('%s godz.' % hours)
-        if minutes > 0: ret.append('%s min.' % minutes)
+        if days > 0:
+            ret.append('%s d.' % days)
+        if hours > 0:
+            ret.append('%s godz.' % hours)
+        if minutes > 0:
+            ret.append('%s min.' % minutes)
         return ' '.join(ret)
         
     def str2date(self, txt):
@@ -120,9 +130,12 @@ class WPolscePL(CBaseHostClass):
         
         for item in itemsList:
             date = item.strftime('%Y-%m-%d')
-            if item == NOW: title = 'Dzisiaj'
-            elif item > NOW: title = 'Jutro'
-            else: title = date
+            if item == NOW:
+                title = 'Dzisiaj'
+            elif item > NOW:
+                title = 'Jutro'
+            else:
+                title = date
                 
             params = dict(cItem)
             params.update({'good_for_fav':False, 'category':nextCategory, 'title':title, 'f_date':date})
@@ -138,32 +151,39 @@ class WPolscePL(CBaseHostClass):
         
     def _listItems(self, cItem, url, key, onlyLiveItems):
         sts, data = self.getPage(url)
-        if not sts: return
+        if not sts:
+            return
         
         try:
             liveItem = None
             NOW = datetime.now()
             data = byteify(json.loads(data), '')
             for item in data[key]:
-                if onlyLiveItems and not item.get('is_live', False): continue
+                if onlyLiveItems and not item.get('is_live', False):
+                    continue
                 
                 url   = self.getFullUrl(item['url'])
                 icon  = self.getFullIconUrl(item['picture_url'])
-                if icon == '': icon  = self.getFullIconUrl(item['thumbnail_url'])
+                if icon == '':
+                    icon  = self.getFullIconUrl(item['thumbnail_url'])
                 
                 title = self.cleanHtmlStr(item['title'])
                 desc = []
-                if item['is_future_publication']: desc.append('Już za ' + self.delta2str(self.str2date(item['starts_at']) - NOW))
+                if item['is_future_publication']:
+                    desc.append('Już za ' + self.delta2str(self.str2date(item['starts_at']) - NOW))
                 desc.append(item['division_name'])
-                if item['duration'] != '': desc.append(self.delta2str(timedelta(seconds=item['duration'])))
+                if item['duration'] != '':
+                    desc.append(self.delta2str(timedelta(seconds=item['duration'])))
                 params = dict(cItem)
                 params.update({'good_for_fav':True, 'title':title, 'url':url, 'icon':icon, 'desc':' | '.join(desc)})
                 if item['is_future_publication']: 
                     params['good_for_fav'] = False
                     self.addArticle(params)
                 else:
-                    if item.get('is_current_live', False) and liveItem == None: liveItem = params
-                    else: self.addVideo(params)
+                    if item.get('is_current_live', False) and liveItem == None:
+                        liveItem = params
+                    else:
+                        self.addVideo(params)
             
             if liveItem != None:
                 liveItem['type'] = 'video'
@@ -184,22 +204,26 @@ class WPolscePL(CBaseHostClass):
         url = self.getFullUrl('/api/get_publications/%s?page=%s' % (cat, page))
         
         sts, data = self.getPage(url)
-        if not sts: return
+        if not sts:
+            return
         
         nextPage = False
         try:
             NOW = datetime.now()
             data = byteify(json.loads(data), '')
-            if data.get('has_next', False): nextPage = True
+            if data.get('has_next', False):
+                nextPage = True
             for item in data['publications']:
                 url   = self.getFullUrl(item['url'])
                 icon  = self.getFullIconUrl(item['thumbnail_url'])
                 title = self.cleanHtmlStr(item['title'])
                 desc = []
-                if item['is_future_publication']: desc.append('Już za ' + self.delta2str(self.str2date(item['starts_at']) - NOW))
+                if item['is_future_publication']:
+                    desc.append('Już za ' + self.delta2str(self.str2date(item['starts_at']) - NOW))
                 
                 desc.append(item['division_name'])
-                if item['duration'] != '': desc.append(self.delta2str(timedelta(seconds=item['duration'])))
+                if item['duration'] != '':
+                    desc.append(self.delta2str(timedelta(seconds=item['duration'])))
                 params = dict(cItem)
                 params.update({'good_for_fav':True, 'title':title, 'url':url, 'icon':icon, 'desc':' | '.join(desc)})
                 if item['is_future_publication']: 
@@ -220,15 +244,18 @@ class WPolscePL(CBaseHostClass):
 
         url = self.getFullUrl('/szukaj?q=' + urllib.parse.quote_plus(searchPattern))
         sts, data = self.getPage(url)
-        if not sts: return
+        if not sts:
+            return
         
         data = self.cm.ph.getAllItemsBeetwenNodes(data, ('<div', '>', 'result__single'), ('</ul', '>'))
         for item in data:
             url   = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''\shref=['"]([^'^"]+?)['"]''')[0])
             icon  = self.getFullIconUrl(self.cm.ph.getSearchGroups(item, '''\ssrc=['"]([^'^"]+?)['"]''')[0])
             title = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(item, '<h3', '</h3>')[1])
-            if title == '': title = self.cleanHtmlStr(self.cm.ph.getSearchGroups(item, '''\stitle=['"]([^'^"]+?)['"]''')[0])
-            if title == '': title = self.cleanHtmlStr(self.cm.ph.getSearchGroups(item, '''\salt=['"]([^'^"]+?)['"]''')[0])
+            if title == '':
+                title = self.cleanHtmlStr(self.cm.ph.getSearchGroups(item, '''\stitle=['"]([^'^"]+?)['"]''')[0])
+            if title == '':
+                title = self.cleanHtmlStr(self.cm.ph.getSearchGroups(item, '''\salt=['"]([^'^"]+?)['"]''')[0])
             
             desc = []
             date = None
@@ -237,7 +264,8 @@ class WPolscePL(CBaseHostClass):
                 if '<time' in t: 
                     date = self.str2date(self.cleanHtmlStr(t))
                     desc.append(date.strftime('%Y-%m-%d %H:%M'))
-                else: desc.append(self.cleanHtmlStr(t))
+                else:
+                    desc.append(self.cleanHtmlStr(t))
             
             params = dict(cItem)
             params.update({'good_for_fav':True, 'title':title, 'url':url, 'icon':icon, 'desc':' | '.join(desc)})
@@ -250,11 +278,13 @@ class WPolscePL(CBaseHostClass):
             return self.up.getVideoLinkExt(cItem['url'])
         
         sts, data = self.getPage(cItem['url'])
-        if not sts: return
+        if not sts:
+            return
         
         data = self.cm.ph.getDataBeetwenMarkers(data, 'PlayerManager', '}')[1]
         videoId = self.cm.ph.getSearchGroups(data, '''['"]?videoId['"]?\s*:\s*['"]([^'^"]+?)['"]''')[0]
-        if videoId == '': return
+        if videoId == '':
+            return
         
         videoUrl = 'https://www.youtube.com/watch?v=' + videoId 
         return self.up.getVideoLinkExt(videoUrl)

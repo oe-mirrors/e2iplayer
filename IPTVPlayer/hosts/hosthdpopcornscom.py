@@ -16,8 +16,10 @@ import re
 import urllib.request
 import urllib.parse
 import urllib.error
-try:    import json
-except Exception: import simplejson as json
+try:
+    import json
+except Exception:
+    import simplejson as json
 ###################################################
 
 
@@ -45,12 +47,15 @@ class HDPopcornsCom(CBaseHostClass):
         self.cacheFilters = {}
         
     def getPage(self, baseUrl, addParams = {}, post_data = None):
-        if addParams == {}: addParams = dict(self.defaultParams)
+        if addParams == {}:
+            addParams = dict(self.defaultParams)
         origBaseUrl = baseUrl
         baseUrl = self.cm.iriToUri(baseUrl)
         def _getFullUrl(url):
-            if self.cm.isValidUrl(url): return url
-            else: return urllib.parse.urljoin(baseUrl, url)
+            if self.cm.isValidUrl(url):
+                return url
+            else:
+                return urllib.parse.urljoin(baseUrl, url)
         addParams['cloudflare_params'] = {'domain':self.up.getDomain(baseUrl), 'cookie_file':self.COOKIE_FILE, 'User-Agent':self.USER_AGENT, 'full_url_handle':_getFullUrl}
         return self.cm.getPageCFProtection(baseUrl, addParams, post_data)
     
@@ -61,21 +66,24 @@ class HDPopcornsCom(CBaseHostClass):
     
     def getFullIconUrl(self, url):
         url = self.getFullUrl(url)
-        if url == '': return ''
+        if url == '':
+            return ''
         cookieHeader = self.cm.getCookieHeader(self.COOKIE_FILE)
         return strwithmeta(url, {'Cookie':cookieHeader, 'User-Agent':self.USER_AGENT})
         
     def fillFilters(self, cItem):
         self.cacheFilters = {}
         sts, data = self.getPage(cItem['url'])
-        if not sts: return
+        if not sts:
+            return
         self.setMainUrl(self.cm.meta['url'])
         
         def addFilter(data, key, addAny, titleBase, marker):
             self.cacheFilters[key] = []
             for item in data:
                 value = self.cm.ph.getSearchGroups(item, '''%s=['"]([^'^"]+?)['"]''' % marker)[0]
-                if value == '': continue
+                if value == '':
+                    continue
                 title = self.cleanHtmlStr(item)
                 if titleBase == '':
                     title = title.title()
@@ -98,8 +106,10 @@ class HDPopcornsCom(CBaseHostClass):
         if 0 == len(self.cacheFilters['ofrating']):
             for i in range(10):
                 i = str(i)
-                if i == '0': title = 'All Ratings'
-                else: title = i
+                if i == '0':
+                    title = 'All Ratings'
+                else:
+                    title = i
                 self.cacheFilters['ofrating'].append({'title':title, 'ofrating':i})
         
         
@@ -147,7 +157,8 @@ class HDPopcornsCom(CBaseHostClass):
         params['raw_post_data'] = True
         
         sts, data = self.getPage(baseUrl, params, post_data)
-        if not sts: return
+        if not sts:
+            return
         self.setMainUrl(self.cm.meta['url'])
         
         nextPage = self.cm.ph.getSearchGroups(data, 'var\s+?mts_ajax_loadposts\s*=\s*([^;]+?);')[0].strip()
@@ -162,7 +173,8 @@ class HDPopcornsCom(CBaseHostClass):
             url    = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''href=['"]([^'^"]+?)['"]''')[0])
             icon   = self.getFullIconUrl(self.cm.ph.getSearchGroups(item, '''src=['"]([^'^"]+?)['"]''')[0].strip())
             desc  = self.cleanHtmlStr(self.cm.ph.getSearchGroups(item, '''alt=['"]([^'^"]+?)['"]''')[0])
-            if desc == '': desc = self.cleanHtmlStr(self.cm.ph.getSearchGroups(item, '''title=['"]([^'^"]+?)['"]''')[0])
+            if desc == '':
+                desc = self.cleanHtmlStr(self.cm.ph.getSearchGroups(item, '''title=['"]([^'^"]+?)['"]''')[0])
             title = self.cleanHtmlStr(item)
             params = {'good_for_fav': True, 'category':nextCategory, 'title':title, 'url':url, 'icon':icon, 'desc':desc}
             self.addDir(params)
@@ -176,7 +188,8 @@ class HDPopcornsCom(CBaseHostClass):
         printDBG("HDPopcornsCom.listEpisodes")
         
         sts, data = self.getPage(cItem['url'], self.defaultParams)
-        if not sts: return
+        if not sts:
+            return
         self.setMainUrl(self.cm.meta['url'])
         
         desc = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(data, '<h2>Synopsis</h2>', '</p>', False)[1])
@@ -186,7 +199,8 @@ class HDPopcornsCom(CBaseHostClass):
         tmp = self.cm.ph.rgetAllItemsBeetwenMarkers(data, '</iframe>', '<h2', withMarkers=True, caseSensitive=False)
         for item in tmp:
             url = self.cm.ph.getSearchGroups(item, '''src=['"](https?://[^'^"]+?)['"]''')[0]
-            if 1 != self.up.checkHostSupport(url): continue 
+            if 1 != self.up.checkHostSupport(url):
+                continue 
             title = self.cleanHtmlStr(item)
             
             params = dict(cItem)
@@ -195,10 +209,12 @@ class HDPopcornsCom(CBaseHostClass):
             
         tmp = self.cm.ph.getAllItemsBeetwenMarkers(data, '<a ', '>', withMarkers=True, caseSensitive=False)
         for item in tmp:
-            if 'playTrailer' not in item: continue 
+            if 'playTrailer' not in item:
+                continue 
             
             url = self.cm.ph.getSearchGroups(item, '''href=['"](https?://[^'^"]+?)['"]''')[0]
-            if 1 != self.up.checkHostSupport(url): continue 
+            if 1 != self.up.checkHostSupport(url):
+                continue 
             
             title = '%s - Trailer %s' % (cItem['title'], len(self.currList)+1)
             params = dict(cItem)
@@ -215,7 +231,8 @@ class HDPopcornsCom(CBaseHostClass):
         for item in data:
             url   = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''href=['"]([^'^"]+?)['"]''')[0])
             title = self.cleanHtmlStr(item)
-            if not self.cm.isValidUrl(url): continue
+            if not self.cm.isValidUrl(url):
+                continue
             params = dict(cItem)
             params.update({'good_for_fav': True, 'title':title, 'urls':[{'name':'default', 'url':url, 'need_resolve':False}]})
             self.addVideo(params)
@@ -238,7 +255,8 @@ class HDPopcornsCom(CBaseHostClass):
         urlTab = []
         
         sts, data = self.getPage(cItem['url'], self.defaultParams)
-        if not sts: return []
+        if not sts:
+            return []
         
         data = self.cm.ph.getDataBeetwenMarkers(data, '<form action', '</form>')[1]
         try:
@@ -250,7 +268,8 @@ class HDPopcornsCom(CBaseHostClass):
             params['header']['Referer'] = cItem['url']
             
             sts, data = self.getPage(url, params, post_data)
-            if not sts: return []
+            if not sts:
+                return []
             
             printDBG("+++++++++++++++++++++++++++++++++++++++")
             tmp = self.cm.ph.getDataBeetwenMarkers(data, '<div id="subtitles">', '</form>')[1]
@@ -260,8 +279,10 @@ class HDPopcornsCom(CBaseHostClass):
             data = self.cm.ph.getAllItemsBeetwenMarkers(data, '<div id="btn', '</a>', withMarkers=True)
             for item in data:
                 url  = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''href=['"]([^'^"]+?)['"]''')[0])
-                if '///downloads/' in url: continue
-                if not self.cm.isValidUrl(url): continue
+                if '///downloads/' in url:
+                    continue
+                if not self.cm.isValidUrl(url):
+                    continue
                 name = self.cleanHtmlStr(item)
                 url = strwithmeta(url.replace('&#038;', '&'), {'popcornsubtitles_url':popcornsubtitlesUrl})
                 urlTab.append({'name':name, 'url':url, 'need_resolve':0})
@@ -289,7 +310,8 @@ class HDPopcornsCom(CBaseHostClass):
         try:
             cItem = byteify(json.loads(fav_data))
             links = self.getLinksForVideo(cItem)
-        except Exception: printExc()
+        except Exception:
+            printExc()
         return links
         
     def setInitListFromFavouriteItem(self, fav_data):
@@ -309,10 +331,12 @@ class HDPopcornsCom(CBaseHostClass):
         otherInfo = {}
         
         url = cItem.get('prev_url', '')
-        if url == '': url = cItem.get('url', '')
+        if url == '':
+            url = cItem.get('url', '')
         
         sts, data = self.getPage(url)
-        if not sts: return retTab
+        if not sts:
+            return retTab
         self.setMainUrl(self.cm.meta['url'])
         
         desc  = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(data, '<h2>Synopsis</h2>', '</p>', False)[1])
@@ -326,16 +350,22 @@ class HDPopcornsCom(CBaseHostClass):
         for item in tmp:
             key = self.cleanHtmlStr(item[0])
             key = mapDesc.get(key, '')
-            if key == '': continue
+            if key == '':
+                continue
             value  = self.cleanHtmlStr(item[1]).replace(' , ', ', ')
-            if value != '': otherInfo[key] = value
+            if value != '':
+                otherInfo[key] = value
             
         tmp = self.cleanHtmlStr(self.cm.ph.getDataBeetwenReMarkers(data, re.compile('<a[^>]+?alt="IMDb-Rating"[^>]*?>'), re.compile('</a>'))[1])
-        if tmp != '': otherInfo['imdb_rating'] = tmp
+        if tmp != '':
+            otherInfo['imdb_rating'] = tmp
         
-        if title == '': title = cItem['title']
-        if desc == '':  desc = cItem.get('desc', '')
-        if icon == '':  icon = cItem.get('icon', self.DEFAULT_ICON_URL)
+        if title == '':
+            title = cItem['title']
+        if desc == '':
+            desc = cItem.get('desc', '')
+        if icon == '':
+            icon = cItem.get('icon', self.DEFAULT_ICON_URL)
         
         return [{'title':self.cleanHtmlStr( title ), 'text': self.cleanHtmlStr( desc ), 'images':[{'title':'', 'url':self.getFullUrl(icon)}], 'other_info':otherInfo}]
         

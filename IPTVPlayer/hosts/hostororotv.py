@@ -16,8 +16,10 @@ import re
 import urllib.request
 import urllib.parse
 import urllib.error
-try:    import json
-except Exception: import simplejson as json
+try:
+    import json
+except Exception:
+    import simplejson as json
 ###################################################
 
 
@@ -65,7 +67,8 @@ class OroroTV(CBaseHostClass):
         printDBG("OroroTV.listChannels")
         
         sts, data = self.getPage(cItem['url'])
-        if not sts: return
+        if not sts:
+            return
         
         data = self.cm.ph.getDataBeetwenMarkers(data, '"items":', '};', False)[1]
         try:
@@ -73,11 +76,13 @@ class OroroTV(CBaseHostClass):
             for item in data:
                 url   = self.getFullUrl( item.get('url', '') )
                 icon  =  self.getFullUrl( item.get('banner', '') )
-                if icon == '': icon  = self.getFullUrl( item.get('image', '') )
+                if icon == '':
+                    icon  = self.getFullUrl( item.get('image', '') )
                 title = self.cleanHtmlStr( item.get('title', '') ) 
                 
                 desc  = ' | '.join( item.get('parsed_tags', []) )
-                if desc != '': desc += ' [/br]' 
+                if desc != '':
+                    desc += ' [/br]' 
                 desc += self.cleanHtmlStr( item.get('description', '') )
                 
                 params = dict(cItem)
@@ -90,7 +95,8 @@ class OroroTV(CBaseHostClass):
         printDBG("OroroTV.listItems [%s]" % cItem)
         
         sts, data = self.getPage(cItem['url'])
-        if not sts: return
+        if not sts:
+            return
         
         #desc = []
         #tmp = self.cm.ph.getDataBeetwenNodes(data, ('<section', '>', 'show-desc'), ('</section', '>'))[1]
@@ -106,7 +112,8 @@ class OroroTV(CBaseHostClass):
         sp = re.compile('''<div[^>]+?js\-watched\-mark[^>]+?>''')
         data = self.cm.ph.getDataBeetwenNodes(data, ('<div', '>', 'show-content'), ('<div', '>', 'site-footer'))[1]
         data = sp.split(data)
-        if len(data): del data[0]
+        if len(data):
+            del data[0]
         for item in data:
             url   = self.getFullUrl( self.cm.ph.getSearchGroups(item, '''data\-href=['"]([^'^"]+?)['"]''')[0] )
             icon  = self.getFullUrl( self.cm.ph.getSearchGroups(item, '''original=['"]([^'^"]+?)['"]''')[0] )
@@ -115,19 +122,23 @@ class OroroTV(CBaseHostClass):
             desc = []
             tmp = self.cm.ph.getAllItemsBeetwenMarkers(item, '<i', '</i>')
             for t in tmp:
-                if 'inactive' in t: continue
+                if 'inactive' in t:
+                    continue
                 t = self.cm.ph.getSearchGroups(t, '''class=['"]([^'^"]*?flag[^'^"]*?)['"]''')[0].replace('flag', '').replace('active-sub', '')
                 t = self.cleanHtmlStr(t)
-                if t == '': continue
+                if t == '':
+                    continue
                 desc.append(t)
             desc  = ' | '.join( desc ) 
-            if desc != '': desc += '[/br]' 
+            if desc != '':
+                desc += '[/br]' 
             
             tmp = self.cm.ph.getAllItemsBeetwenMarkers(item, '<p', '</p>')
             tmpTab = []
             for t in tmp:
                 t = self.cleanHtmlStr(t)
-                if t == '': continue
+                if t == '':
+                    continue
                 tmpTab.insert(0, t)
             desc += '[/br]'.join(tmpTab)
             
@@ -141,7 +152,8 @@ class OroroTV(CBaseHostClass):
         url = self.getFullUrl('/api/frontend/search?query=') + urllib.parse.quote_plus(searchPattern)
         
         sts, data = self.getPage(url)
-        if not sts: return
+        if not sts:
+            return
         
         data = self.cm.ph.getAllItemsBeetwenMarkers(data, '<a', '</a>')
         for item in data:
@@ -163,7 +175,8 @@ class OroroTV(CBaseHostClass):
         retTab = []
         
         sts, data = self.getPage(cItem['url'])
-        if not sts: return []
+        if not sts:
+            return []
         
         data = self.cm.ph.getDataBeetwenMarkers(data, '<video', '</video>')[1]
         
@@ -172,18 +185,21 @@ class OroroTV(CBaseHostClass):
         type = self.cm.ph.getSearchGroups(tmp, '''type=['"]([^'^"]+?)['"]''')[0]
         
         retTab = self.up.getVideoLinkExt(videoUrl)
-        if 0 == len(retTab): return []
+        if 0 == len(retTab):
+            return []
         
         subTracks = []
         tmp = self.cm.ph.getAllItemsBeetwenMarkers(data, '<track', '>')
         for item in tmp:
-            if 'subtitles' not in item: continue
+            if 'subtitles' not in item:
+                continue
             
             url = self.cm.ph.getSearchGroups(item, '''src=['"](https?://[^'^"]+?)['"]''')[0]
             lang = self.cm.ph.getSearchGroups(item, '''label=['"]([^'^"]+?)['"]''')[0]
             title = self.cm.ph.getSearchGroups(item, '''title=['"]([^'^"]+?)['"]''')[0]
             
-            if url != '': subTracks.append({'title':title, 'url':url, 'lang':lang, 'format':url[-3:]})
+            if url != '':
+                subTracks.append({'title':title, 'url':url, 'lang':lang, 'format':url[-3:]})
         
         if len(subTracks):
             for idx in range(len(retTab)):

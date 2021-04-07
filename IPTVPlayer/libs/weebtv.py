@@ -83,8 +83,10 @@ class WeebTvApi:
                 password = '' 
             postdata = { 'username': username, 'userpassword': password } 
             sts, data = self.cm.getPage(url, WeebTvApi.DEFPARAMS, postdata)
-            if sts: ret = json_loads(data)
-        except Exception: printExc()
+            if sts:
+                ret = json_loads(data)
+        except Exception:
+            printExc()
         return ret
     
     def _getStr(self, v, default=''):
@@ -122,7 +124,8 @@ class WeebTvApi:
                             rank    = k['rank']
                             bitrate = k['multibitrate']
                             user    = self._getStr(k['user_name']).replace("\"", '')
-                            if 0 == len(title): title = name
+                            if 0 == len(title):
+                                title = name
                             if 0 == online: 
                                 online = 'offline'
                                 channel = ''
@@ -132,8 +135,10 @@ class WeebTvApi:
                             title = '%s - %s %s' % (title, user, online)
                             params = {'url':channel, 'title':title, 'desc':desc, 'icon':image, 'rank':rank, 'bitrate':bitrate, 'user':user}
                             channelsList.append(params)
-                        except Exception: printExc()
-            except Exception: printExc()
+                        except Exception:
+                            printExc()
+            except Exception:
+                printExc()
         return channelsList
     
     def getVideoLink(self, url):
@@ -141,13 +146,15 @@ class WeebTvApi:
         rtmp = ''
         channel = url
         premium = 0
-        if 0 == len(channel): return ''
+        if 0 == len(channel):
+            return ''
         try:
             if config.plugins.iptvplayer.weebtv_premium.value:
                 username = config.plugins.iptvplayer.weebtv_login.value
                 password = config.plugins.iptvplayer.weebtv_password.value
                 postdata = { 'username': username, 'userpassword': password }
-            else: postdata = { 'username': '', 'userpassword': '' }
+            else:
+                postdata = { 'username': '', 'userpassword': '' }
             postdata['channel'] = channel
             postdata['platform'] = WeebTvApi.HOST
             
@@ -176,7 +183,8 @@ class WeebTvApi:
                 
                 rtmp = str(rtmpLink) + '/' + str(playPath) + ' live=1 token=fake pageUrl=token swfUrl=' + str(token)
                 printDBG("||||||||||||||||||||||||||||| " + rtmp)
-        except Exception: printExc()
+        except Exception:
+            printExc()
         
         if rtmp.startswith('rtmp'):
             if 0 == premium: 

@@ -44,11 +44,16 @@ class MLBStreamTVApi(CBaseHostClass):
         
         OFFSET = datetime.now() - datetime.utcnow()
         seconds = OFFSET.seconds + OFFSET.days * 24 * 3600
-        if ((seconds + 1) % 10) == 0: seconds += 1
-        elif ((seconds - 1) % 10) == 0: seconds -= 1
-        if seconds > 0: GMTOffset = '+' + str(timedelta(seconds=seconds))
-        elif seconds < 0: GMTOffset = '-' + str(timedelta(seconds=seconds*-1))
-        else: GMTOffset = ''
+        if ((seconds + 1) % 10) == 0:
+            seconds += 1
+        elif ((seconds - 1) % 10) == 0:
+            seconds -= 1
+        if seconds > 0:
+            GMTOffset = '+' + str(timedelta(seconds=seconds))
+        elif seconds < 0:
+            GMTOffset = '-' + str(timedelta(seconds=seconds*-1))
+        else:
+            GMTOffset = ''
 
         while GMTOffset.endswith(':00'):
             GMTOffset = GMTOffset.rsplit(':', 1)[0]
@@ -75,7 +80,8 @@ class MLBStreamTVApi(CBaseHostClass):
         elif category == 'list_items':
             defaultIcon = cItem.get('icon', '')
             sts, data = self.cm.getPage(cItem['url'], self.defaultParams)
-            if not sts: return []
+            if not sts:
+                return []
             cUrl = self.cm.meta['url']
 
             tmp = self.cm.ph.getDataBeetwenNodes(data, ('<ul', '>', 'menu-menu'), ('</ul', '>'), False)[1]
@@ -128,7 +134,8 @@ class MLBStreamTVApi(CBaseHostClass):
             urlParams['header'] = dict(urlParams['header'])
             urlParams['header']['Referer'] = cItem['url']
             sts, data = self.cm.getPage(cItem['url'], urlParams)
-            if not sts: return []
+            if not sts:
+                return []
             
             tmp = self.cm.ph.getDataBeetwenNodes(data, ('<div', '>', 'custom-related-links'), ('</div', '>'))[1]
             tmp = self.cm.ph.getAllItemsBeetwenNodes(tmp, ('<a', '>'), ('</a', '>'))
@@ -155,14 +162,16 @@ class MLBStreamTVApi(CBaseHostClass):
         urlParams['header']['Referer'] = cItem.get('Referer', cItem['url'])
         
         sts, data = self.cm.getPage(cItem['url'], urlParams)
-        if not sts: return []
+        if not sts:
+            return []
         
         if cItem.get('get_iframe', False):
             url = self.getFullUrl(self.cm.ph.getSearchGroups(data, '''<iframe[^>]+?src=['"]([^"^']+?)['"]''', 1, True)[0], self.cm.meta['url'])
             if url != '':
                 urlParams['header']['Referer'] = self.cm.meta['url']
                 sts, data = self.cm.getPage(url, urlParams)
-                if not sts: return urlsTab
+                if not sts:
+                    return urlsTab
         
         cUrl = self.cm.meta['url']
         tmp = self.cm.ph.getDataBeetwenMarkers(data, 'unescape(', ')', False)[1].strip()
@@ -215,7 +224,8 @@ class MLBStreamTVApi(CBaseHostClass):
         scriptUrl = videoUrl.meta.get('priv_script_url', '')
         
         sts, data = self.cm.getPage(videoUrl)
-        if not sts or '#EXTM3U' not in data: return urlsTab
+        if not sts or '#EXTM3U' not in data:
+            return urlsTab
         
         meta = {}
         keyUrl = set(re.compile('''#EXT\-X\-KEY.*?URI=['"](https?://[^"]+?)['"]''').findall(data))

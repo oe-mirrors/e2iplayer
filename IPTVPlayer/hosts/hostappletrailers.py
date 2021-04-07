@@ -14,8 +14,10 @@ import re
 import urllib.request
 import urllib.parse
 import urllib.error
-try:    import json
-except Exception: import simplejson as json
+try:
+    import json
+except Exception:
+    import simplejson as json
 ###################################################
 
 def gettytul():
@@ -81,22 +83,27 @@ class TrailersApple(CBaseHostClass):
     def listItems(self, cItem, nextCategory):
         printDBG("TrailersApple.listItems [%s]" % cItem)
         sts, data = self.getPage(cItem['url'])
-        if not sts: return
+        if not sts:
+            return
         self.setMainUrl(self.cm.meta['url'])
         try:
             data = byteify(json.loads(data))
-            if 'results' in data: data = data['results']
+            if 'results' in data:
+                data = data['results']
             for item in data:
                 printDBG(item)
-                if len(item['trailers']) == 0: continue
+                if len(item['trailers']) == 0:
+                    continue
                 title = self.cleanHtmlStr(item['title'])
                 url = self.getFullUrl(item['location'])
                 icon = self.getFullIconUrl(item['poster'])
                 desc = []
-                if 'releasedate' in item: desc.append(item['releasedate'][:16])
+                if 'releasedate' in item:
+                    desc.append(item['releasedate'][:16])
                 
                 for it in [(_('Studio:'), 'studio'), (_('Director:'), 'director'), (_('Directors:'), 'directors'), (_('Genres:'), 'genres'), (_('Genre:'), 'genre'), (_('Actors:'), 'actors')]:
-                    if it[1] not in item: continue
+                    if it[1] not in item:
+                        continue
                     if isinstance(item[it[1]], list):
                         value = ', '.join(item[it[1]])
                     else:
@@ -112,14 +119,16 @@ class TrailersApple(CBaseHostClass):
         self.cacheLinks = {}
         
         sts, data = self.getPage(cItem['url'])
-        if not sts: return
+        if not sts:
+            return
         cUrl = self.cm.meta['url']
         self.setMainUrl(cUrl)
         
         filmId = self.cm.ph.getSearchGroups(data, '''FilmId\s*=\s*['"](\d+)['"]''')[0]
         
         sts, data = self.getPage(self.getFullUrl('/trailers/feeds/data/%s.json' % filmId))
-        if not sts: return
+        if not sts:
+            return
         try:
             data = byteify(json.loads(data))
             key = 0

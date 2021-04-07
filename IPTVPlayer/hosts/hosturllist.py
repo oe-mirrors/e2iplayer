@@ -47,8 +47,8 @@ class Urllist(CBaseHostClass):
         path = config.plugins.iptvplayer.Sciezkaurllist.value + '/'
         
         self.MAIN_GROUPED_TAB = [{'category': 'all',                            'title': _("All in one"),                'desc': _("Links from all files without categories"),                              'icon':'https://mikeharwood.files.wordpress.com/2011/01/all-in-one-logo-on-blue.jpg'}]
-        self.MAIN_GROUPED_TAB.extend( [{'category': Urllist.URLLIST_FILE,       'title': _("Videos"),                    'desc': _("Links from the file %s") % normpath(path + 'urllist.txt'),              'icon':'https://st2.depositphotos.com/3000465/12281/v/950/depositphotos_122812390-stock-illustration-video-play-sign-with-letter.jpg'}, \
-                                       {'category': Urllist.URRLIST_STREAMS,    'title': _("Live streams"),              'desc': _("Links from the file %s") % normpath(path + 'urllist.stream'),           'icon':'http://asiamh.ru.images.1c-bitrix-cdn.ru/images/media_logo.jpg?136879146733721'}, \
+        self.MAIN_GROUPED_TAB.extend( [{'category': Urllist.URLLIST_FILE,       'title': _("Videos"),                    'desc': _("Links from the file %s") % normpath(path + 'urllist.txt'),              'icon':'https://st2.depositphotos.com/3000465/12281/v/950/depositphotos_122812390-stock-illustration-video-play-sign-with-letter.jpg'},
+                                       {'category': Urllist.URRLIST_STREAMS,    'title': _("Live streams"),              'desc': _("Links from the file %s") % normpath(path + 'urllist.stream'),           'icon':'http://asiamh.ru.images.1c-bitrix-cdn.ru/images/media_logo.jpg?136879146733721'},
                                        {'category': Urllist.URRLIST_USER,       'title': _("User files"),                'desc': _("Links from the file %s") % normpath(path + 'urllist.user'),             'icon':'http://kinovesti.ru/uploads/posts/2014-12/1419918660_1404722920_02.jpg'}])
         CBaseHostClass.__init__(self)
         self.currFileHost = None
@@ -83,8 +83,10 @@ class Urllist(CBaseHostClass):
             if 'all' != cItem['category'] and groupList:
                 tmpList = self.currFileHost.getGroups(sortList)
                 for item in tmpList:
-                    if '' == item: title = (_("Other"))
-                    else:          title = item
+                    if '' == item:
+                        title = (_("Other"))
+                    else:
+                        title = item
                     params = {'name': 'category', 'category':'group', 'title':title, 'group':item}
                     self.addDir(params)
             else:
@@ -157,9 +159,12 @@ class IPTVHost(CHostBase):
     def _isPicture(self, url):
         def _checkExtension(url): 
             return url.endswith(".jpeg") or url.endswith(".jpg") or url.endswith(".png")
-        if _checkExtension(url): return True
-        if _checkExtension(url.split('|')[0]): return True
-        if _checkExtension(url.split('?')[0]): return True
+        if _checkExtension(url):
+            return True
+        if _checkExtension(url.split('|')[0]):
+            return True
+        if _checkExtension(url.split('?')[0]):
+            return True
         return False
 
     def getLogoPath(self):
@@ -181,7 +186,8 @@ class IPTVHost(CHostBase):
             urlList = self.host.getLinksForVideo(self.host.currList[Index])
             for item in urlList:
                 retlist.append(CUrlItem(item["name"], item["url"], 0))
-        else: retlist.append(CUrlItem('picture link', urlparser.decorateParamsFromUrl(uri, True), 0))
+        else:
+            retlist.append(CUrlItem('picture link', urlparser.decorateParamsFromUrl(uri, True), 0))
 
         return RetHost(RetHost.OK, value = retlist)
     # end getLinksForVideo

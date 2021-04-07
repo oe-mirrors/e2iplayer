@@ -216,8 +216,10 @@ class Body():
 		columnIndex = 1
 		displayHostsList = SortHostsList(GetHostsList())
 		if 0 == len(GetHostsOrderList()):
-			try: displayHostsList.sort(key=lambda t : tuple('.'.join(str(t[0]).replace('://', '.').replace('www.', '').split('.')[1:-1]).lower()))
-			except Exception as e: print("Exception during sorting displayHostsList", str(e))
+			try:
+				displayHostsList.sort(key=lambda t : tuple('.'.join(str(t[0]).replace('://', '.').replace('www.', '').split('.')[1:-1]).lower()))
+			except Exception as e:
+				print("Exception during sorting displayHostsList", str(e))
 		for hostName in displayHostsList:
 			if hostName in list(settings.activeHostsHTML.keys()):
 				hostHTML = settings.activeHostsHTML[hostName]
@@ -280,13 +282,16 @@ class Body():
 					info1 = "{0}/{1} ({2})".format(downloadDuration, totalDuration, info1)
 
 				# Downloaded Procent
-				if item.downloadedProcent >= 0: info1 += ", " + str(item.downloadedProcent) + "%"
+				if item.downloadedProcent >= 0:
+					info1 += ", " + str(item.downloadedProcent) + "%"
  
 				# Download Speed
 				info2 = info1 + ", " + formatBytes(item.downloadedSpeed) + "/s"
 				
-				try: fileName = item.fileName.split('/')[-1]
-				except Exception: fileName = item.fileName
+				try:
+					fileName = item.fileName.split('/')[-1]
+				except Exception:
+					fileName = item.fileName
 				if DMHelper.STS.WAITING == item.status:
 					status = _("PENDING")
 					icon = '<img border="0" src="./icons/iconwait1.png" width="64" height="64">'

@@ -15,8 +15,10 @@ from Plugins.Extensions.IPTVPlayer.tools.iptvtypes import strwithmeta
 # FOREIGN import
 ###################################################
 import re
-try:    import json
-except Exception: import simplejson as json
+try:
+    import json
+except Exception:
+    import simplejson as json
 
 def gettytul():
     return 'http://kinotan.ru/'
@@ -59,13 +61,15 @@ class Kinotan(CBaseHostClass):
     def listMainMenu(self, cItem, category):
         printDBG("Kinotan.listCategories")
         sts, data = self.getPage(cItem['url'])
-        if not sts: return
+        if not sts:
+            return
 
         datac = self.cm.ph.getDataBeetwenMarkers(data, '<ul class="head-menu">', '</ul>', False)[1]
         datac = re.compile('<a[^"]+?href="([^"]*?)"[^>]*?>(.*?)</a></li>').findall(datac)
         for item in datac:
             if item[0] in ['/novosti/', 'http://kinotan.ru/skoro/',
-                           'http://kinotan.ru/index.php?do=orderdesc']: continue
+                           'http://kinotan.ru/index.php?do=orderdesc']:
+                               continue
         params = dict(cItem)
         params.update({'category': category, 'title': item[1], 'url': self.getFullUrl(item[0])})
         self.addDir(params)
@@ -74,7 +78,8 @@ class Kinotan(CBaseHostClass):
     def listGenre(self, cItem, category):
         printDBG("Kinotan.listGenre")
         sts, data = self.getPage(cItem['url'])
-        if not sts: return
+        if not sts:
+            return
         datag = self.cm.ph.getDataBeetwenMarkers(data, '<ul class="main-menu clearfix">', '</ul>', False)[1]
         datag = re.compile('<a[^"]+?href="([^"]*?)">(.*?)</a></li>').findall(datag)
         for item in datag:
@@ -85,7 +90,8 @@ class Kinotan(CBaseHostClass):
     def listCountry(self, cItem, category):
         printDBG("Kinotan.listCountry")
         sts, data = self.getPage(cItem['url'])
-        if not sts: return
+        if not sts:
+            return
         datacn = self.cm.ph.getDataBeetwenMarkers(data, '<div class="navigright2">', '</div>', False)[1]
         datacn = re.compile('href="(/xf[^"]*?)"[^>]+?>(.*?)</a><br>').findall(datacn)
         for item in datacn:
@@ -96,7 +102,8 @@ class Kinotan(CBaseHostClass):
     def listTrans(self, cItem, category):
         printDBG("Kinotan.listTrans")
         sts, data = self.getPage(cItem['url'])
-        if not sts: return
+        if not sts:
+            return
         datatr = self.cm.ph.getDataBeetwenMarkers(data, '<div class="navigright3">', '</div>', False)[1]
         datatr = re.compile('href="(/xf[^"]*?)"[^>]+?>(.*?)</a><br>').findall(datatr)
         for item in datatr:
@@ -107,7 +114,8 @@ class Kinotan(CBaseHostClass):
     def listSel(self, cItem, category):
         printDBG("Kinotan.listSel")
         sts, data = self.getPage(cItem['url'])
-        if not sts: return
+        if not sts:
+            return
         data1 = self.cm.ph.getDataBeetwenMarkers(data, '<div class="navigright">', '</div>', False)[1]
         datasl = re.compile('href="(/xf[^"]*?)"[^>]+?>(.*?)</a><br>').findall(data1)
         for item in datasl:
@@ -118,7 +126,8 @@ class Kinotan(CBaseHostClass):
     def listYears(self, cItem, category):
         printDBG("Kinotan.listYears")
         sts, data = self.getPage(cItem['url'])
-        if not sts: return
+        if not sts:
+            return
         data1 = self.cm.ph.getDataBeetwenMarkers(data, '<div class="navigright">', '</div>', False)[1]
         datay = re.compile('href="(/t[^"]*?)"[^>]+?>(.*?)</a><br>').findall(data1)
         for item in datay:
@@ -142,7 +151,8 @@ class Kinotan(CBaseHostClass):
         post_data = cItem.get('post_data', None)
         sts, data = self.getPage(url, {}, post_data)
 
-        if not sts: return
+        if not sts:
+            return
 
         nextPage = False
         if ('/page/%s/' % (page + 1)) in data:
@@ -171,15 +181,18 @@ class Kinotan(CBaseHostClass):
         printDBG("Kinotan.listIndexes")
         
         sts, data = self.getPage(cItem['url'])
-        if not sts: return
+        if not sts:
+            return
         
         idx = 0
         tmp = self.cm.ph.getAllItemsBeetwenNodes(data, ('<div', '>', 'news-item'), ('</div', '>'))
         for item in tmp:
             url = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''\shref=['"]([^'^"]+?)['"]''', 1, True)[0])
-            if url == '' and idx == 0: url = cItem['url']
+            if url == '' and idx == 0:
+                url = cItem['url']
             title = self.cleanHtmlStr(item)
-            if url == '': continue
+            if url == '':
+                continue
             params = dict(cItem)
             params.update({'good_for_fav':False, 'category':nextCategory, 'title':title, 'url':url})
             self.addDir(params)
@@ -195,7 +208,8 @@ class Kinotan(CBaseHostClass):
         
         if data == None:
             sts, data = self.getPage(cItem['url'])
-            if not sts: return
+            if not sts:
+                return
         
         tabs = []
         tmp = self.cm.ph.getAllItemsBeetwenMarkers(data, '<div id="videotabs_', '</div>')
@@ -228,9 +242,12 @@ class Kinotan(CBaseHostClass):
                     for eKey in tmp[sKey]['items']:
                         title = self.cleanHtmlStr(tmp[sKey]['items'][eKey]['sname'])
                         url = self.cm.ph.getSearchGroups(tmp[sKey]['items'][eKey]['scode'], 'src="([^"]*?)"')[0]
-                        if url.startswith('//'): url = 'http:' + url
-                        try: sortVal = int(self.cm.ph.getSearchGroups(' %s ' % title, '''[^0-9]([0-9]+?)[^0-9]''')[0])
-                        except Exception: sortVal = 0
+                        if url.startswith('//'):
+                            url = 'http:' + url
+                        try:
+                            sortVal = int(self.cm.ph.getSearchGroups(' %s ' % title, '''[^0-9]([0-9]+?)[^0-9]''')[0])
+                        except Exception:
+                            sortVal = 0
                         tabs.append({'title':title, 'sort_value':sortVal, 'url':url})
                     
                     if len(tabs):
@@ -244,7 +261,8 @@ class Kinotan(CBaseHostClass):
         
         d_url = self.cm.ph.getDataBeetwenMarkers(data, '<div class="full-text">', '</iframe>', False)[1]
         url = self.cm.ph.getSearchGroups(d_url, 'src="([^"]*?)"')[0]
-        if url.startswith('//'): url = 'http:' + url
+        if url.startswith('//'):
+            url = 'http:' + url
         desc = self.cm.ph.getDataBeetwenMarkers(data, '<h2 class="opisnie">', '</div>', True)[1]
         desc = self.cm.ph.getSearchGroups(desc, '>(.*?)</div>')[0]
         desc = self.cleanHtmlStr(desc)
@@ -309,7 +327,8 @@ class Kinotan(CBaseHostClass):
         else:
             post_data = cItem.get('post_data')
             sts, data = self.getPage(cItem['url'], {}, post_data)
-            if not sts: return
+            if not sts:
+                return
             
             printDBG("==========================================")
             printDBG(data)
@@ -342,14 +361,16 @@ class Kinotan(CBaseHostClass):
         post_data = {'do':'search', 'titleonly':3, 'subaction':'search', 'story':searchPattern}
         
         sts, data = self.getPage(self.getMainUrl(), post_data=post_data)
-        if not sts: return
+        if not sts:
+            return
         
         m1 = '<div class="short-item">'
         data = self.cm.ph.getDataBeetwenMarkers(data, m1, '<div class="navigright">', False)[1]
         data = data.split(m1)
         for item in data:
             title = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(item, '<h3', '</h3>')[1])
-            if title == '': title = self.cleanHtmlStr(self.cm.ph.getSearchGroups(item, '''alt=['"]([^'^"]+?)['"]''')[0])
+            if title == '':
+                title = self.cleanHtmlStr(self.cm.ph.getSearchGroups(item, '''alt=['"]([^'^"]+?)['"]''')[0])
             icon  = self.getFullIconUrl(self.cm.ph.getSearchGroups(item, '''src=['"]([^'^"]+?)['"]''')[0])
             url   = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''href=['"]([^'^"]+?)['"]''')[0])
             desc  = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(item, '<a', '</a>')[1])

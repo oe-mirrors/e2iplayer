@@ -16,8 +16,10 @@ import re
 import urllib.request
 import urllib.parse
 import urllib.error
-try:    import json
-except Exception: import simplejson as json
+try:
+    import json
+except Exception:
+    import simplejson as json
 from Components.config import config, ConfigSelection, ConfigYesNo, ConfigText, getConfigListEntry
 ###################################################
 
@@ -82,7 +84,8 @@ class TVPlayer(CBaseHostClass):
                             ]
     
     def getPage(self, baseUrl, addParams = {}, post_data = None):
-        if addParams == {}: addParams = dict(self.defaultParams)
+        if addParams == {}:
+            addParams = dict(self.defaultParams)
         return self.cm.getPage(baseUrl, addParams, post_data)
         
     def fillChannelsFreeFlags(self):
@@ -91,7 +94,8 @@ class TVPlayer(CBaseHostClass):
             return
         
         sts, data = self.getPage(self.getFullUrl('/watch'))
-        if not sts: return []
+        if not sts:
+            return []
         
         data = self.cm.ph.getAllItemsBeetwenMarkers(data, '<ul class="list-unstyled', '</ul>')
         for item in data:
@@ -100,7 +104,8 @@ class TVPlayer(CBaseHostClass):
                 url  = self.cm.ph.getSearchGroups(it, '''href=['"]([^'^"]+?)['"]''')[0]
                 icon = self.cm.ph.getSearchGroups(it, '''src=['"]([^'^"]+?)['"]''')[0]
                 id = url.split('/watch/')
-                if len(id) != 2: continue
+                if len(id) != 2:
+                    continue
                 title = self.cm.ph.getSearchGroups(it, '''data-name=['"]([^'^"]+?)['"]''')[0]
                 type = self.cm.ph.getSearchGroups(it, '''class=['"]online\s*([^'^"]+?)['"]''')[0].lower()
                 self.cacheChannelsFlags[id[1]] = {'title':self.cleanHtmlStr(title), 'url':self.getFullUrl(url), 'icon':self.getFullIconUrl(icon), 'f_type':type}
@@ -110,12 +115,14 @@ class TVPlayer(CBaseHostClass):
         
         if 0 == len(self.cacheChannelsGenres):
             sts, data = self.getPage(cItem['url'])
-            if not sts: return
+            if not sts:
+                return
             data = self.cm.ph.getDataBeetwenMarkers(data, '<ul id="nav"', '</ul>')[1]
             data = self.cm.ph.getAllItemsBeetwenMarkers(data, '<a', '</a>')
             for item in data:
                 genre = self.cm.ph.getSearchGroups(item, '''data-genre=['"]([^'^"]+?)['"]''')[0].lower()
-                if genre == '': continue
+                if genre == '':
+                    continue
                 params = {'title':self.cleanHtmlStr(item), 'f_genre':genre}
                 self.cacheChannelsGenres.append(params)
         
@@ -136,13 +143,15 @@ class TVPlayer(CBaseHostClass):
         self.fillChannelsFreeFlags()
         
         sts, data = self.getPage(cItem['url'])
-        if not sts: return
+        if not sts:
+            return
         
         data = self.cm.ph.getDataBeetwenMarkers(data, '<ul class="list ', '</ul>')[1]
         data = self.cm.ph.getAllItemsBeetwenMarkers(data, '<li', '</li>')
         for item in data:
             genres = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(item, ('<p', '>', 'genre hidden'), ('</p', '>'), False)[1]).lower()
-            if cItem.get('f_genre', '') not in genres: continue
+            if cItem.get('f_genre', '') not in genres:
+                continue
             url = self.cm.ph.getSearchGroups(item, '''href=['"]([^'^"]+?)['"]''')[0]
             
             id = url.split('/watch/')[-1]
@@ -179,7 +188,8 @@ class TVPlayer(CBaseHostClass):
         retTab = []
         
         sts, data = self.getPage(cItem['url'])
-        if not sts: return []
+        if not sts:
+            return []
         
         checkUrl = self.cm.ph.getSearchGroups(data, '''<[^>]+?id="check"[^>]+?src=['"]([^'^"]+?)['"]''')[0]
         
@@ -196,7 +206,8 @@ class TVPlayer(CBaseHostClass):
         
         url = self.getFullUrl('/watch/context?resource={0}&gen={1}'.format(playerData.get('resource'), playerData.get('token')))
         sts, data = self.getPage(url)
-        if not sts: return []
+        if not sts:
+            return []
         printDBG("response: [%s]" % data)
         
         try:
@@ -208,12 +219,15 @@ class TVPlayer(CBaseHostClass):
                 validate: e.validate
             '''
             post_data = {'id':data['resource'], 'service':1, 'platform':data['platform']['key'], 'validate':data['validate']}
-            if 'token' in data: post_data['token'] = data['token']
+            if 'token' in data:
+                post_data['token'] = data['token']
                 
             sts, data = self.getPage(url, {}, post_data)
             if not sts:
-                try: _SetIPTVPlayerLastHostError(str(data))
-                except Exception: pass
+                try:
+                    _SetIPTVPlayerLastHostError(str(data))
+                except Exception:
+                    pass
                 return []
             printDBG("response: [%s]" % data)
             
@@ -256,7 +270,8 @@ class TVPlayer(CBaseHostClass):
                 printDBG(retTab)
             elif self.cm.isValidUrl(checkUrl):
                 sts, data = self.getPage(checkUrl)
-                if not sts: _SetIPTVPlayerLastHostError(_("Sorry. TVPlayer is currently only available in the United Kingdom"))
+                if not sts:
+                    _SetIPTVPlayerLastHostError(_("Sorry. TVPlayer is currently only available in the United Kingdom"))
         except Exception:
             printExc()
         
@@ -269,7 +284,8 @@ class TVPlayer(CBaseHostClass):
         retTab = []
         
         sts, data = self.getPage(cItem['url'])
-        if not sts: return retTab
+        if not sts:
+            return retTab
         
         title = cItem['title']
         desc = ''
@@ -278,13 +294,15 @@ class TVPlayer(CBaseHostClass):
         descTab = []
         tmp = self.cm.ph.getDataBeetwenReMarkers(data, re.compile('''<div[^>]+?class=['"]collapse['"][^>]*?>'''), re.compile('''<div[^>]+?id=['"]dark-button['"]'''), False)[1]
         tmp = tmp.split('<div class="row">')
-        if len(tmp): del tmp[0]
+        if len(tmp):
+            del tmp[0]
         for item in tmp:
             item = self.cm.ph.getAllItemsBeetwenMarkers(item, '<p', '</p>')
             tmpTab = []
             for t in item:
                 t = self.cleanHtmlStr(t)
-                if t != '': tmpTab.append(t)
+                if t != '':
+                    tmpTab.append(t)
             if len(tmpTab):
                 descTab.append(tmpTab)
         
@@ -296,11 +314,13 @@ class TVPlayer(CBaseHostClass):
                 items = self.cm.ph.getAllItemsBeetwenMarkers(tmp[idx], '<div', '</div>')
                 tmpTab = []
                 for t in items:
-                    if 'hidden' in t and 'timer' not in t: continue
+                    if 'hidden' in t and 'timer' not in t:
+                        continue
                     tt = t.split('<br>')
                     for t in tt:
                         t = self.cleanHtmlStr(t)
-                        if t != '': tmpTab.append(t)
+                        if t != '':
+                            tmpTab.append(t)
                 if len(tmpTab):
                     title = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(tmp[idx], '<h2', '</h2>')[1])
                     tmpTab.insert(1, title)
@@ -332,10 +352,12 @@ class TVPlayer(CBaseHostClass):
             url = self.getFullUrl('/account/login')
             
             sts, data = self.getPage(url)
-            if not sts: return False
+            if not sts:
+                return False
             
             sts, data = self.cm.ph.getDataBeetwenNodes(data, ('<form', '>', 'login'), ('</form', '>'))
-            if not sts: return False
+            if not sts:
+                return False
             actionUrl = self.getFullUrl(self.cm.ph.getSearchGroups(data, '''action=['"]([^'^"]+?)['"]''')[0])
             data = self.cm.ph.getAllItemsBeetwenMarkers(data, '<input', '>')
             post_data = {}

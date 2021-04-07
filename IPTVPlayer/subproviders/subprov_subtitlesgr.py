@@ -22,16 +22,23 @@ import urllib.parse
 import urllib.error
 import unicodedata
 import base64
-try:    from urllib.parse import urlsplit, urlunsplit
-except Exception: printExc()
-from os import listdir as os_listdir, path as os_path
-try:    import json
-except Exception: import simplejson as json
 try:
-    try: from io import StringIO
-    except Exception: from io import StringIO 
+    from urllib.parse import urlsplit, urlunsplit
+except Exception:
+    printExc()
+from os import listdir as os_listdir, path as os_path
+try:
+    import json
+except Exception:
+    import simplejson as json
+try:
+    try:
+        from io import StringIO
+    except Exception:
+        from io import StringIO 
     import gzip
-except Exception: pass
+except Exception:
+    pass
 from Components.config import config, ConfigSelection, ConfigYesNo, ConfigText, getConfigListEntry
 ###################################################
 
@@ -80,7 +87,8 @@ class SubtitlesGrProvider(CBaseSubProviderClass):
         
         url = self.getFullUrl(baseUrl)
         sts, data = self.cm.getPage(url)
-        if not sts: return
+        if not sts:
+            return
         
         if ('page=%s&' % (page+1)) in data:
             nextPage = True
@@ -107,7 +115,8 @@ class SubtitlesGrProvider(CBaseSubProviderClass):
         
         url = cItem['url']
         sts, data = self.getPage(url)
-        if not sts: return
+        if not sts:
+            return
         
         imdbid = self.cm.ph.getSearchGroups(data, '''/tt([0-9]+?)[^0-9]''')[0]
         subId  = self.cm.ph.getSearchGroups(url + '/', '''/([0-9]+?)/''')[0]
@@ -119,7 +128,8 @@ class SubtitlesGrProvider(CBaseSubProviderClass):
         
         urlParams = dict(self.defaultParams)
         tmpDIR = self.downloadAndUnpack(url, urlParams)
-        if None == tmpDIR: return
+        if None == tmpDIR:
+            return
         
         cItem = dict(cItem)
         cItem.update({'category':'', 'path':tmpDIR + '/subs', 'fps':fps, 'imdbid':imdbid, 'sub_id':subId})
@@ -128,7 +138,8 @@ class SubtitlesGrProvider(CBaseSubProviderClass):
     def _getFileName(self, title, lang, subId, imdbid, fps, ext):
         title = RemoveDisallowedFilenameChars(title).replace('_', '.')
         match = re.search(r'[^.]', title)
-        if match: title = title[match.start():]
+        if match:
+            title = title[match.start():]
 
         fileName = "{0}_{1}_0_{2}_{3}".format(title, lang, subId, imdbid)
         if fps > 0:

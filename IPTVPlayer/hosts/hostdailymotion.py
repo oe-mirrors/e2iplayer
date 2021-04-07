@@ -99,7 +99,8 @@ class Dailymotion(CBaseHostClass):
         page = cItem.get('page', 1)
         url = self.getApiUrl('channels', page)
         sts, data = self.cm.getPage(url)
-        if not sts: return
+        if not sts:
+            return
         nextPage = False
         params = dict(cItem)
         params.update({'title':_('All'), 'category':category})
@@ -154,7 +155,8 @@ class Dailymotion(CBaseHostClass):
         
         url = self.getApiUrl(type, page, args)
         sts, data = self.cm.getPage(url)
-        if not sts: return
+        if not sts:
+            return
         nextPage = False
         try:
             data = json_loads(data)
@@ -176,7 +178,8 @@ class Dailymotion(CBaseHostClass):
             rm(self.COOKIE_FILE)
 
             sts, data = self.cm.getPage(self.SITE_URL, self.defaultParams)
-            if not sts: return ''
+            if not sts:
+                return ''
 
             data = ph.find(data, '__PLAYER_CONFIG__', '</script>', flags = 0)[1]
             data = ph.search(data, '"api"\s*?:\s*?(\{[^\}]+?\})\,')[0]
@@ -196,7 +199,8 @@ class Dailymotion(CBaseHostClass):
             self.authData['traffic_segment'] = cj.get('ts', '')
             post_data = {'client_id':self.authData['client_id'], 'client_secret':self.authData['client_secret'], 'grant_type':self.authData['grant_type'], 'visitor_id':self.authData['visitor_id'], 'traffic_segment':self.authData['traffic_segment']}
             sts, data = self.cm.getPage(self.authData['auth_url'], params, post_data)
-            if not sts: return ''
+            if not sts:
+                return ''
 
             printDBG(data)
             try:
@@ -221,7 +225,8 @@ class Dailymotion(CBaseHostClass):
     def listSiteSeach(self, cItem):
         printDBG("Dailymotion.listSiteSeach")
         token = self.getAuthToken()
-        if token == '': return
+        if token == '':
+            return
 
         type = cItem['f_type']
         page = cItem.get('page', 1)
@@ -234,7 +239,8 @@ class Dailymotion(CBaseHostClass):
         post_data = post_data % (cItem['f_query'], pages.get('videos', 1), pages.get('lives', 1), pages.get('channels', 1), pages.get('playlists', 1), limits.get('videos', 0), limits.get('lives', 0), limits.get('channels', 0), limits.get('playlists', 0), urllib.parse.quote(cItem['f_query']), cItem['f_type'])
 
         sts, data = self.cm.getPage(self.authData['url'], params, post_data)
-        if not sts: return 
+        if not sts:
+            return 
 
         try:
             data = json_loads(data)['data']['search'][type]
@@ -244,13 +250,15 @@ class Dailymotion(CBaseHostClass):
                     title = item['name'] + ' (%s)' % item['stats']['videos']['total']
                     desc = []
                     desc.append('%s: %s' % (item['channel']['__typename'], item['channel']['displayName']) )
-                    if item.get('description'): desc.append(item['description'])
+                    if item.get('description'):
+                        desc.append(item['description'])
                     params = {'good_for_fav':True, 'name':'category', 'category':'list_playlist', 'title':title, 'f_xid':item['xid'], 'icon':item['thumbURLx480'], 'desc':'[/br]'.join(desc)}
                     self.addDir(params)
                 elif item['__typename'] == 'Channel':
                     title = item['displayName']
                     desc = [item['accountType']]
-                    if item.get('description'): desc.append(item['description'])
+                    if item.get('description'):
+                        desc.append(item['description'])
                     params = {'good_for_fav':True, 'name':'category', 'category':'list_channel', 'title':item['displayName'], 'f_xid':item['xid'], 'f_name':item['name'], 'icon':item['logoURL'], 'desc':'[/br]'.join(desc)}
                     self.addDir(params)
             self.addNextPage(cItem, data['pageInfo']['hasNextPage'], data['pageInfo']['nextPage'])

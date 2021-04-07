@@ -42,7 +42,8 @@ class MyTheWatchseries(CBaseHostClass):
         params = dict(self.defaultParams)
         params['with_metadata'] = True
         sts, data = self.getPage(self.getMainUrl(), params)
-        if sts: self.MAIN_URL = self.cm.getBaseUrl(data.meta['url'])
+        if sts:
+            self.MAIN_URL = self.cm.getBaseUrl(data.meta['url'])
     
     def getPage(self, baseUrl, addParams = {}, post_data = None):
         if addParams == {}:
@@ -53,7 +54,8 @@ class MyTheWatchseries(CBaseHostClass):
         
     def getFullIconUrl(self, url):
         url = self.getFullUrl(url)
-        if url == '': return ''
+        if url == '':
+            return ''
         cookieHeader = self.cm.getCookieHeader(self.COOKIE_FILE)
         return strwithmeta(url, {'Cookie':cookieHeader, 'User-Agent':self.USER_AGENT})
         
@@ -80,21 +82,24 @@ class MyTheWatchseries(CBaseHostClass):
         self.cacheFiltersKeys = []
         
         sts, data = self.getPage(cItem['url'])
-        if not sts: return
+        if not sts:
+            return
         
         def addFilter(data, marker, baseKey, addAll=True, titleBase=''):
             key = 'f_' + baseKey
             self.cacheFilters[key] = []
             for item in data:
                 value = self.cm.ph.getSearchGroups(item, marker + '''="([^"]+?)"''')[0]
-                if value == '': continue
+                if value == '':
+                    continue
                 title = self.cleanHtmlStr(item)
                 if title.lower() in ['all', 'default', 'any']:
                     addAll = False
                 self.cacheFilters[key].append({'title':title.title(), key:value})
                 
             if len(self.cacheFilters[key]):
-                if addAll: self.cacheFilters[key].insert(0, {'title':_('All')})
+                if addAll:
+                    self.cacheFilters[key].insert(0, {'title':_('All')})
                 self.cacheFiltersKeys.append(key)
         
         tmp = self.cm.ph.getAllItemsBeetwenNodes(data, ('<li', '>', 'first-char'), ('</li', '>'))
@@ -113,9 +118,11 @@ class MyTheWatchseries(CBaseHostClass):
         cItem = dict(cItem)
         
         f_idx = cItem.get('f_idx', 0)
-        if f_idx == 0: self.fillCacheFilters(cItem)
+        if f_idx == 0:
+            self.fillCacheFilters(cItem)
         
-        if f_idx >= len(self.cacheFiltersKeys): return
+        if f_idx >= len(self.cacheFiltersKeys):
+            return
         
         filter = self.cacheFiltersKeys[f_idx]
         f_idx += 1
@@ -130,21 +137,27 @@ class MyTheWatchseries(CBaseHostClass):
         query = {}
         
         url = cItem['url']
-        if page > 1: query['page'] = page
+        if page > 1:
+            query['page'] = page
         
         keys = list(self.cacheFiltersKeys)
         for key in keys:
             baseKey = key[2:] # "f_"
-            if key in cItem: query[baseKey] = cItem[key]
+            if key in cItem:
+                query[baseKey] = cItem[key]
         query = urllib.parse.urlencode(query)
-        if query != '': url += '?' + query
+        if query != '':
+            url += '?' + query
         
         sts, data = self.getPage(url)
-        if not sts: return
+        if not sts:
+            return
         
         nextPage = self.cm.ph.getDataBeetwenNodes(data,  ('<div', '>', 'pagination'), ('</nav', '>'), False)[1]
-        if ('>%s<' % (page + 1)) in nextPage: nextPage = True
-        else: nextPage = False
+        if ('>%s<' % (page + 1)) in nextPage:
+            nextPage = True
+        else:
+            nextPage = False
         
         data = self.cm.ph.getDataBeetwenNodes(data,  ('<div ', '>', 'list_movies'), ('</ul', '>'), False)[1]
         data = self.cm.ph.getAllItemsBeetwenMarkers(data, '<li', '</li>')
@@ -152,7 +165,8 @@ class MyTheWatchseries(CBaseHostClass):
             url   = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''href=['"]([^'^"]+?)['"]''')[0])
             icon  = url + '?fake=need_resolve.jpeg'
             title = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(item, '<a', '</a>')[1])
-            if title != '': title = self.cleanHtmlStr(self.cm.ph.getSearchGroups(item, '''title=['"]([^'^"]+?)['"]''')[0])
+            if title != '':
+                title = self.cleanHtmlStr(self.cm.ph.getSearchGroups(item, '''title=['"]([^'^"]+?)['"]''')[0])
             desc  = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(item, '<span', '</span>')[1])
             params = dict(cItem)
             params.update({'good_for_fav':True, 'category':nextCategory, 'title':title, 'url':url, 'icon':icon, 'desc':desc})
@@ -172,19 +186,26 @@ class MyTheWatchseries(CBaseHostClass):
         query = {}
         if searchPattern != '':
             query['keyword'] = searchPattern
-        if page > 1: query['page'] = page
+        if page > 1:
+            query['page'] = page
         query = urllib.parse.urlencode(query)
         if query != '':
-            if url[-1] in ['&', '?']: sep = ''
-            elif '?' in url: sep = '&'
-            else: sep = '?'
+            if url[-1] in ['&', '?']:
+                sep = ''
+            elif '?' in url:
+                sep = '&'
+            else:
+                sep = '?'
             url += sep + query
         
         sts, data = self.getPage(url)
-        if not sts: return []
+        if not sts:
+            return []
         
-        if '>Next<' in data: nextPage = True
-        else: nextPage = False
+        if '>Next<' in data:
+            nextPage = True
+        else:
+            nextPage = False
         
         data = self.cm.ph.getDataBeetwenMarkers(data, '<ul class="listing items"', '</ul>')[1]
         data = self.cm.ph.getAllItemsBeetwenMarkers(data, '<li', '</li>')
@@ -192,7 +213,8 @@ class MyTheWatchseries(CBaseHostClass):
             url = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''href=['"]([^'^"]+?)['"]''')[0])
             icon = self.getFullIconUrl(self.cm.ph.getSearchGroups(item, '''src=['"]([^'^"]+?)['"]''')[0])
             title = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(item, '<div class="name"', '</div>')[1])
-            if title != '': title = self.cleanHtmlStr(self.cm.ph.getSearchGroups(item, '''alt=['"]([^'^"]+)['"]''')[0])
+            if title != '':
+                title = self.cleanHtmlStr(self.cm.ph.getSearchGroups(item, '''alt=['"]([^'^"]+)['"]''')[0])
             
             # prepare desc
             descTab = []
@@ -200,7 +222,8 @@ class MyTheWatchseries(CBaseHostClass):
             tmpTab.extend(self.cm.ph.getAllItemsBeetwenMarkers(item, '<div class="date"', '</div>'))
             for tmp in tmpTab:
                 tmp = self.cleanHtmlStr(tmp)
-                if tmp != '': descTab.append(tmp)
+                if tmp != '':
+                    descTab.append(tmp)
             desc = ' | '.join(descTab) + '[/br]' + self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(item, '<div class="des"', '</div>')[1])
             
             params = dict(cItem)
@@ -227,7 +250,8 @@ class MyTheWatchseries(CBaseHostClass):
                     url = data
         
         sts, data = self.getPage(url)
-        if not sts: return
+        if not sts:
+            return
         
         tmp = self.cm.ph.getSearchGroups(data, '''<iframe[^>]+?id=['"]iframe-trailer['"][^>]+?>''')[0]
         trailerUrl = self.getFullUrl(self.cm.ph.getSearchGroups(tmp, '''['"](https?://[^'^"]+?)['"]''')[0])
@@ -240,14 +264,18 @@ class MyTheWatchseries(CBaseHostClass):
         descTab = []
         tmpTab = self.cm.ph.getAllItemsBeetwenMarkers(tmp, '<li', '</li>')
         for d in tmpTab:
-            if 'Latest Episode' in d: continue
+            if 'Latest Episode' in d:
+                continue
             d = self.cleanHtmlStr(d)
-            if d != '': descTab.append(d)
+            if d != '':
+                descTab.append(d)
         mainDesc = '[/br]'.join(descTab) + '[/br]' + self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(tmp, '<div class="des"', '</div>')[1])
         
         icon = self.getFullIconUrl(self.cm.ph.getSearchGroups(tmp, '''src=['"]([^'^"]+?)['"]''')[0])
-        if icon == '': icon = cItem.get('icon', '')
-        if mainDesc == '': mainDesc = cItem.get('desc', '')
+        if icon == '':
+            icon = cItem.get('icon', '')
+        if mainDesc == '':
+            mainDesc = cItem.get('desc', '')
         
         # add trailer item
         if self.cm.isValidUrl(trailerUrl):
@@ -259,14 +287,16 @@ class MyTheWatchseries(CBaseHostClass):
         for item in data:
             url = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''href=['"]([^'^"]+?)['"]''')[0])
             title = self.cleanHtmlStr(item.split('<span')[0])
-            if title != '': title = self.cleanHtmlStr(self.cm.ph.getSearchGroups(item, '''title=['"]([^'^"]+)['"]''')[0])
+            if title != '':
+                title = self.cleanHtmlStr(self.cm.ph.getSearchGroups(item, '''title=['"]([^'^"]+)['"]''')[0])
             
             # prepare desc
             descTab = []
             tmpTab = self.cm.ph.getAllItemsBeetwenMarkers(item, '<span class="date"', '</span>')
             for tmp in tmpTab:
                 tmp = self.cleanHtmlStr(tmp)
-                if tmp != '': descTab.append(tmp)
+                if tmp != '':
+                    descTab.append(tmp)
             desc = ' | '.join(descTab) + '[/br]' + mainDesc
             
             params = dict(cItem)
@@ -286,17 +316,20 @@ class MyTheWatchseries(CBaseHostClass):
             linksTab.append({'name':'trailer', 'url':cItem['url'], 'need_resolve':1})
         else:
             linksTab = self.cacheLinks.get(cItem['url'], [])
-            if len(linksTab) > 0: return linksTab
+            if len(linksTab) > 0:
+                return linksTab
             
             sts, data = self.getPage(cItem['url'], self.defaultParams)
-            if not sts: return []
+            if not sts:
+                return []
             
             data = self.cm.ph.getDataBeetwenMarkers(data, 'muti_link', '</ul>')[1]
             data = self.cm.ph.getAllItemsBeetwenMarkers(data, '<li', '</li>')
             for item in data:
                 url = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''data-video=['"]([^'^"]+?)['"]''')[0])
                 title = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(item, '<a', '</span>')[1])
-                if title == '': title = self.cleanHtmlStr(item)
+                if title == '':
+                    title = self.cleanHtmlStr(item)
                 
                 linksTab.append({'name':title, 'url':strwithmeta(url, {'links_key':cItem['url']}), 'need_resolve':1})
         
@@ -359,7 +392,8 @@ class MyTheWatchseries(CBaseHostClass):
                     url = data
         
         sts, data = self.getPage(url)
-        if not sts: return
+        if not sts:
+            return
         
         data = self.cm.ph.getDataBeetwenNodes(data, ('<div', '>', '"content"'), ('<div', '>', '"clr"'), False)[1]
         
@@ -375,15 +409,20 @@ class MyTheWatchseries(CBaseHostClass):
         data = self.cm.ph.getAllItemsBeetwenMarkers(data, '<li', '</li>')
         for item in data:
             item = item.split('</span>', 1)
-            if len(item) != 2: continue
+            if len(item) != 2:
+                continue
             keyMarker = self.cleanHtmlStr(item[0]).replace(':', '').strip().lower()
             value = self.cleanHtmlStr(item[1]).replace(' , ', ', ')
             key = keysMap.get(keyMarker, '')
-            if key != '' and value != '': otherInfo[key] = value
+            if key != '' and value != '':
+                otherInfo[key] = value
         
-        if title == '': title = cItem['title']
-        if desc == '':  desc = cItem.get('desc', '')
-        if icon == '':  icon = cItem.get('icon', self.DEFAULT_ICON_URL)
+        if title == '':
+            title = cItem['title']
+        if desc == '':
+            desc = cItem.get('desc', '')
+        if icon == '':
+            icon = cItem.get('icon', self.DEFAULT_ICON_URL)
         
         return [{'title':self.cleanHtmlStr( title ), 'text': self.cleanHtmlStr( desc ), 'images':[{'title':'', 'url':self.getFullUrl(icon)}], 'other_info':otherInfo}]
         

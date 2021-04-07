@@ -89,7 +89,7 @@ class UnCaptchaSweetCaptchaWidget(Screen):
         if self.selIdx < 0:
             self.selIdx = self.maxIcons - 1
         elif  self.selIdx >= self.maxIcons:
-            self.selIdx = 0;
+            self.selIdx = 0
         
         offset = x - cx
         cx, cy = self["cover_%d"%self.selIdx].getPosition()

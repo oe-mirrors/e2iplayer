@@ -17,8 +17,10 @@ import re
 import urllib.request
 import urllib.parse
 import urllib.error
-try:    import json
-except Exception: import simplejson as json
+try:
+    import json
+except Exception:
+    import simplejson as json
 from Components.config import config, ConfigSelection, ConfigYesNo, ConfigText, getConfigListEntry
 ###################################################
 
@@ -73,7 +75,8 @@ class Napisy24plProvider(CBaseSubProviderClass):
         
         # select site language 
         sts, data = self.getPage(self.getMainUrl())
-        if not sts: return
+        if not sts:
+            return
         
         # login user 
         login  = config.plugins.iptvplayer.napisy24pl_login.value
@@ -103,7 +106,8 @@ class Napisy24plProvider(CBaseSubProviderClass):
     def sortSubtitlesByDurationMatch(self):
         # we need duration to sort
         movieDurationSec = self.params.get('duration_sec', 0)
-        if movieDurationSec <= 0: return 
+        if movieDurationSec <= 0:
+            return 
     
         # get only subtitles items from current list
         hasDuration = False
@@ -111,11 +115,13 @@ class Napisy24plProvider(CBaseSubProviderClass):
         for item in self.currList:
             if 'subtitle' == item.get('type', ''):
                 subList.append(item)
-                if 'duration_sec' in item: hasDuration = True
+                if 'duration_sec' in item:
+                    hasDuration = True
 
         # if there is no subtitle with duration available 
         # we will skip sort
-        if not hasDuration: return
+        if not hasDuration:
+            return
         subList.sort(key=lambda item: abs(item.get('duration_sec', 0) - movieDurationSec))
         
         for idx in range(len(self.currList)):
@@ -129,11 +135,13 @@ class Napisy24plProvider(CBaseSubProviderClass):
         url = self.getFullUrl('szukaj?page={0}&lang=0&search={1}&typ=0'.format(page, title))
         
         sts, data = self.getPage(url)
-        if not sts: return
+        if not sts:
+            return
         
         if 'title="Next"' in data:
             nextPage = True
-        else: nextPage = False
+        else:
+            nextPage = False
         
         # series items
         if page == 1:
@@ -144,7 +152,8 @@ class Napisy24plProvider(CBaseSubProviderClass):
                     imdbid = self.cm.ph.getSearchGroups(item, 'data-imdb="(tt[0-9]+?)"')[0]
                     url    = self.cm.ph.getSearchGroups(item, 'href="([^"]+?)"')[0]
                     title  = self.cleanHtmlStr( self.cm.ph.getDataBeetwenMarkers(item, '<h2', '</h2>')[1] )
-                    if title == '': title = self.cleanHtmlStr( urllib.parse.unquote_plus( url.split('/')[-1] ).title() )
+                    if title == '':
+                        title = self.cleanHtmlStr( urllib.parse.unquote_plus( url.split('/')[-1] ).title() )
                     desc   = item.split('</h2>')[-1]
                     
                     params = dict(cItem)
@@ -180,7 +189,8 @@ class Napisy24plProvider(CBaseSubProviderClass):
         url = cItem['url']
         self.cacheSeasons = {}
         sts, data = self.getPage(url)
-        if not sts: return
+        if not sts:
+            return
         
         titleN24 = self.cm.ph.getSearchGroups(data, 'titleN24="([^"]+?)"')[0]
         imdbid = self.cm.ph.getSearchGroups(data, 'imdbN24="([^"]+?)"')[0]
@@ -202,7 +212,8 @@ class Napisy24plProvider(CBaseSubProviderClass):
                 dNid = self.cm.ph.getSearchGroups(tmpItem, 'nid="([^"]+?)"')[0]
                 dSeazon = self.cm.ph.getSearchGroups(tmpItem, 'data-sezon="([0-9]+?)"')[0]
                 dEpizod = self.cm.ph.getSearchGroups(tmpItem, 'data-epizod="([0-9]+?)"')[0]
-                if dNid == '': continue
+                if dNid == '':
+                    continue
                 if dSeazon not in self.cacheSeasons:
                     self.cacheSeasons[season] = []
                 title = self.cleanHtmlStr(tmpItem)
@@ -245,7 +256,8 @@ class Napisy24plProvider(CBaseSubProviderClass):
         
         url = self.getFullUrl('run/pages/serial_napis.php')
         sts, data = self.getPage(url, self.defaultParams, post_data)
-        if not sts: return
+        if not sts:
+            return
         
         try:
             data = byteify(json.loads(data))
@@ -264,7 +276,8 @@ class Napisy24plProvider(CBaseSubProviderClass):
                 durationSecTab = self.cm.ph.getSearchGroups(desc, '[^0-9]([0-9]{2}):([0-9]{2}):([0-9]{2})[^0-9]', 3)
                 if '' not in durationSecTab:
                     durationSec = int(durationSecTab[0]) * 3600 + int(durationSecTab[1]) * 60 + int(durationSecTab[2])
-                else: durationSec = 0
+                else:
+                    durationSec = 0
                 printDBG("DUTATION >>>>>>>>>>>>>>>>>>>>>>> [%s]s" % durationSec)
                 params = dict(cItem)
                 params.update({'title':self.cleanHtmlStr(title), 'duration_sec':durationSec, 'sub_id':subId, 'lang':lang, 'desc':self.cleanHtmlStr(desc)})
@@ -276,7 +289,8 @@ class Napisy24plProvider(CBaseSubProviderClass):
     def _getFileName(self, title, lang, subId, imdbid):
         title = RemoveDisallowedFilenameChars(title).replace('_', '.')
         match = re.search(r'[^.]', title)
-        if match: title = title[match.start():]
+        if match:
+            title = title[match.start():]
 
         fileName = "{0}_{1}_0_{2}_{3}".format(title, lang, subId, imdbid)
         fileName = fileName + '.srt'
@@ -319,7 +333,8 @@ class Napisy24plProvider(CBaseSubProviderClass):
         printDBG("<<")
         
         def __cleanFiles(all=False):
-            if all: rm(fileName)
+            if all:
+                rm(fileName)
             rm(tmpFile)
             rm(tmpFileZip)
         
@@ -342,8 +357,10 @@ class Napisy24plProvider(CBaseSubProviderClass):
             encoding = MapUcharEncoding(ret['data'])
             if 0 != ret['code'] or 'unknown' in encoding:
                 encoding = ''
-            else: encoding = encoding.strip()
-        else: encoding = ''
+            else:
+                encoding = encoding.strip()
+        else:
+            encoding = ''
         
         if GetDefaultLang() == 'pl' and encoding == 'iso-8859-2':
             encoding = GetPolishSubEncoding(tmpFile)

@@ -15,8 +15,10 @@ import re
 import urllib.request
 import urllib.parse
 import urllib.error
-try:    import json
-except Exception: import simplejson as json
+try:
+    import json
+except Exception:
+    import simplejson as json
 from Components.config import config, ConfigText, getConfigListEntry
 ###################################################
 
@@ -68,12 +70,15 @@ class SerijeOnline(CBaseHostClass):
         self.password = ''
         
     def getPage(self, baseUrl, addParams = {}, post_data = None):
-        if addParams == {}: addParams = dict(self.defaultParams)
+        if addParams == {}:
+            addParams = dict(self.defaultParams)
         origBaseUrl = baseUrl
         baseUrl = self.cm.iriToUri(baseUrl)
         def _getFullUrl(url):
-            if self.cm.isValidUrl(url): return url
-            else: return urllib.parse.urljoin(baseUrl, url)
+            if self.cm.isValidUrl(url):
+                return url
+            else:
+                return urllib.parse.urljoin(baseUrl, url)
         addParams['cloudflare_params'] = {'domain':self.up.getDomain(baseUrl), 'cookie_file':self.COOKIE_FILE, 'User-Agent':self.USER_AGENT, 'full_url_handle':_getFullUrl}
         return self.cm.getPageCFProtection(baseUrl, addParams, post_data)
         
@@ -97,7 +102,8 @@ class SerijeOnline(CBaseHostClass):
         printDBG(cacheIcons)
                 
         sts, data = self.getPage(cItem['url'])
-        if not sts: return
+        if not sts:
+            return
         
         reObjSubCats = re.compile('''<ul[^>]+?dropdown-menu[^>]+?>''')
         data = self.cm.ph.getDataBeetwenNodes(data, ('<div', '>', 'nav-collapse'), ('<a', '>', '/topvideos'))[1]
@@ -142,13 +148,15 @@ class SerijeOnline(CBaseHostClass):
         printDBG("SerijeOnline.listSort [%s]" % cItem)
         
         sts, data = self.getPage(cItem['url'])
-        if not sts: return
+        if not sts:
+            return
         
         data = self.cm.ph.getDataBeetwenNodes(data, ('<div', '>', 'btn-group btn-group-sort'), ('</ul', '>'))[1]
         data = self.cm.ph.getAllItemsBeetwenMarkers(data, '<a', '</a>')
         for item in data:
             url   = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''href=['"]([^'^"]+?)['"]''')[0])
-            if not self.cm.isValidUrl(url): continue
+            if not self.cm.isValidUrl(url):
+                continue
             title = self.cleanHtmlStr(item)
             params = dict(cItem)
             params.update({'good_for_fav':False, 'category':nextCategory, 'url':url, 'title':title})
@@ -165,7 +173,8 @@ class SerijeOnline(CBaseHostClass):
         page = cItem.get('page', 0)
         
         sts, data = self.getPage(cItem['url'])
-        if not sts: return
+        if not sts:
+            return
         
         nextPage = self.getFullUrl(self.cm.ph.getSearchGroups(data, '''<a[^>]+?href=['"]([^'^"]+?)['"][^>]*?>&raquo;</a>''')[0])
         data = self.cm.ph.getAllItemsBeetwenNodes(data, ('<div', '>', 'pm-li-video'), ('</li', '>'))
@@ -178,7 +187,8 @@ class SerijeOnline(CBaseHostClass):
             tmp = self.cm.ph.getAllItemsBeetwenMarkers(item, '<span', '</span>')
             for t in tmp:
                 t = self.cleanHtmlStr(t)
-                if t != '': desc.append(t)
+                if t != '':
+                    desc.append(t)
             desc = ' | '.join(desc) + '[/br]' + self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(item, '<p', '</p>')[1])
             params = dict(cItem)
             params.update({'good_for_fav':True, 'category':nextCategory, 'title':title, 'url':url, 'icon':icon, 'desc':desc})
@@ -195,11 +205,13 @@ class SerijeOnline(CBaseHostClass):
         self.cm.clearCookie(self.COOKIE_FILE, ['PHPSESSID', '__cfduid', 'cf_clearance'])
         
         sts, data = self.getPage(cItem['url'])
-        if not sts: return
+        if not sts:
+            return
         
         desc = ''
         #desc = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(data, ('<h2', '>', 'upper-blue'), ('</div', '>'))[1])
-        if desc == '': desc = cItem.get('desc', '')
+        if desc == '':
+            desc = cItem.get('desc', '')
         
         tmp = self.cm.ph.getDataBeetwenNodes(data, ('<div', '>', 'pm-submit-data'), ('</div', '>'))[1]
         tmp = self.cm.ph.getAllItemsBeetwenMarkers(tmp, '<a', '</a>')
@@ -232,7 +244,8 @@ class SerijeOnline(CBaseHostClass):
                                 tmp = data
                             else:
                                 msg = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(data, ('<div', '>', 'restricted-video'), ('</h2', '>'))[1])
-                                if msg != '': GetIPTVNotify().push(msg, 'error', 10)
+                                if msg != '':
+                                    GetIPTVNotify().push(msg, 'error', 10)
                     except Exception:
                         printExc()
                     break
@@ -243,10 +256,13 @@ class SerijeOnline(CBaseHostClass):
         for url in data:
             url = self.getFullUrl(url)
             #if 1 != self.up.checkHostSupport(url): continue
-            if not self.cm.isValidUrl(url): continue
+            if not self.cm.isValidUrl(url):
+                continue
             num += 1
-            if len(data) > 1: title = '%s. %s' % (num, cItem['title'])
-            else: title = cItem['title']
+            if len(data) > 1:
+                title = '%s. %s' % (num, cItem['title'])
+            else:
+                title = cItem['title']
             params = dict(cItem)
             params.update({'good_for_fav':False, 'title':title, 'desc':desc, 'url':url})
             self.addVideo(params)
@@ -286,10 +302,12 @@ class SerijeOnline(CBaseHostClass):
                 return False
             
             sts, data = self.getPage(self.getFullUrl('/index.html'))
-            if not sts: return False
+            if not sts:
+                return False
             
             sts, data = self.cm.ph.getDataBeetwenNodes(data, ('<form', '>', 'login_form'), ('</form', '>'))
-            if not sts: return False
+            if not sts:
+                return False
             actionUrl = self.getFullUrl(self.cm.ph.getSearchGroups(data, '''action=['"]([^'^"]+?)['"]''')[0])
             tmp = self.cm.ph.getAllItemsBeetwenMarkers(data, '<input', '>')
             tmp.extend(self.cm.ph.getAllItemsBeetwenMarkers(data, '<button', '>'))

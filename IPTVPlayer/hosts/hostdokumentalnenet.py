@@ -15,8 +15,10 @@ import re
 import urllib.request
 import urllib.parse
 import urllib.error
-try:    import json
-except Exception: import simplejson as json
+try:
+    import json
+except Exception:
+    import simplejson as json
 from Components.config import config, ConfigText, getConfigListEntry
 ###################################################
 
@@ -54,12 +56,15 @@ class DokumentalneNET(CBaseHostClass):
         return CBaseHostClass.getFullUrl(self, url).replace('&#038;', '&')
         
     def getPage(self, baseUrl, addParams = {}, post_data = None):
-        if addParams == {}: addParams = dict(self.defaultParams)
+        if addParams == {}:
+            addParams = dict(self.defaultParams)
         origBaseUrl = baseUrl
         baseUrl = self.cm.iriToUri(baseUrl)
         def _getFullUrl(url):
-            if self.cm.isValidUrl(url): return url
-            else: return urllib.parse.urljoin(baseUrl, url)
+            if self.cm.isValidUrl(url):
+                return url
+            else:
+                return urllib.parse.urljoin(baseUrl, url)
         addParams['cloudflare_params'] = {'domain':self.up.getDomain(baseUrl), 'cookie_file':self.COOKIE_FILE, 'User-Agent':self.USER_AGENT, 'full_url_handle':_getFullUrl}
         return self.cm.getPageCFProtection(baseUrl, addParams, post_data)
         
@@ -67,7 +72,8 @@ class DokumentalneNET(CBaseHostClass):
         printDBG("KinoPodAniolemPL.listCategories [%s]" % cItem)
         
         sts, data = self.getPage(cItem['url'])
-        if not sts: return
+        if not sts:
+            return
         
         data = self.cm.ph.getDataBeetwenNodes(data, ('<aside', '>', 'categories'), ('</aside', '>'))[1]
         data = self.cm.ph.getAllItemsBeetwenMarkers(data, '<a ', '</div>')
@@ -87,7 +93,8 @@ class DokumentalneNET(CBaseHostClass):
         printDBG("KinoPodAniolemPL.listSort [%s]" % cItem)
         
         sts, data = self.getPage(cItem['url'])
-        if not sts: return
+        if not sts:
+            return
         
         data = self.cm.ph.getDataBeetwenNodes(data, ('<div', '>', 'view-sortby'), ('</div', '>'))[1]
         data = self.cm.ph.getAllItemsBeetwenMarkers(data, '<li', '</li>')
@@ -107,7 +114,8 @@ class DokumentalneNET(CBaseHostClass):
         page = cItem.get('page', 1)
         
         sts, data = self.getPage(cItem['url'])
-        if not sts: return
+        if not sts:
+            return
         
         nextPage = self.cm.ph.getDataBeetwenNodes(data, ('<a', '>', 'rel="next"'), ('</a', '>'))[1]
         nextPage = self.getFullUrl(self.cm.ph.getSearchGroups(nextPage, '''href=['"]([^'^"]+?)['"]''')[0])
@@ -116,14 +124,16 @@ class DokumentalneNET(CBaseHostClass):
         for item in data:
             url   = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''href=['"]([^'^"]+?)['"]''')[0])
             icon  = self.getFullIconUrl(self.cm.ph.getSearchGroups(item, '''[\s'"](https?://[^'^"^\s]+?)\s*300w''')[0].strip())
-            if icon == '': icon = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''\ssrc=['"]([^'^"]+?)['"]''')[0])
+            if icon == '':
+                icon = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''\ssrc=['"]([^'^"]+?)['"]''')[0])
             title = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(item, ('<h3', '>'), ('</h3', '>'), False)[1])
             desc  = []
             tmp = self.cm.ph.getDataBeetwenNodes(item, ('<div', '>', 'posted-on '), ('</div', '>'), False)[1]
             tmp = self.cm.ph.getAllItemsBeetwenMarkers(tmp, '<a', '</a>')
             for t in tmp:
                 t = self.cleanHtmlStr(t)
-                if t != '': desc.append(t)
+                if t != '':
+                    desc.append(t)
             desc = ' | '.join(desc)
             desc += '[/br]' + self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(item, ('<div', '>', 'excerpt '), ('</div', '>'), False)[1])
             
@@ -147,7 +157,8 @@ class DokumentalneNET(CBaseHostClass):
         printDBG("DokumentalneNET.getLinksForVideo [%s]" % cItem)
         
         sts, data = self.getPage(cItem['url'])
-        if not sts: return []
+        if not sts:
+            return []
         
         data = self.cm.ph.getDataBeetwenNodes(data, ('<div', '>', 'player-embed'), ('</div', '>'))[1]
         videoUrl = self.getFullUrl(self.cm.ph.getSearchGroups(data, '''<iframe[^>]+?src=['"]([^"^']+?)['"]''', 1, True)[0])

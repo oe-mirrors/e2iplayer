@@ -17,8 +17,10 @@ import urllib.request
 import urllib.parse
 import urllib.error
 from copy import deepcopy
-try:    import json
-except Exception: import simplejson as json
+try:
+    import json
+except Exception:
+    import simplejson as json
 from Components.config import config, ConfigText, getConfigListEntry
 ###################################################
 
@@ -99,21 +101,24 @@ class FilmezzEU(CBaseHostClass):
         self.cacheFiltersKeys = []
         
         sts, data = self.getPage(cItem['url'])
-        if not sts: return
+        if not sts:
+            return
         
         def addFilter(data, marker, baseKey, addAll=True, titleBase=''):
             key = 'f_' + baseKey
             self.cacheFilters[key] = []
             for item in data:
                 value = self.cm.ph.getSearchGroups(item, marker + '''="([^"]+?)"''')[0]
-                if value == '': continue
+                if value == '':
+                    continue
                 title = self.cleanHtmlStr(item)
                 if title in ['Összes']:
                     addAll = False
                 self.cacheFilters[key].append({'title':title.title(), key:value})
                 
             if len(self.cacheFilters[key]):
-                if addAll: self.cacheFilters[key].insert(0, {'title':_('All')})
+                if addAll:
+                    self.cacheFilters[key].insert(0, {'title':_('All')})
                 self.cacheFiltersKeys.append(key)
         
         data = self.cm.ph.getAllItemsBeetwenMarkers(data, '<div class="row form-group">', '</select>')
@@ -129,9 +134,11 @@ class FilmezzEU(CBaseHostClass):
         cItem = dict(cItem)
         
         f_idx = cItem.get('f_idx', 0)
-        if f_idx == 0: self.fillCacheFilters(cItem)
+        if f_idx == 0:
+            self.fillCacheFilters(cItem)
         
-        if 0 == len(self.cacheFiltersKeys): return
+        if 0 == len(self.cacheFiltersKeys):
+            return
         
         filter = self.cacheFiltersKeys[f_idx]
         f_idx += 1
@@ -146,47 +153,60 @@ class FilmezzEU(CBaseHostClass):
         page = cItem.get('page', 0)
         
         query = {}
-        if page > 0: query['p'] = page
+        if page > 0:
+            query['p'] = page
         
         for key in self.cacheFiltersKeys:
             baseKey = key[2:] # "f_"
-            if key in cItem: query[baseKey] = urllib.parse.quote(cItem[key])
+            if key in cItem:
+                query[baseKey] = urllib.parse.quote(cItem[key])
         
         query = urllib.parse.urlencode(query)
-        if '?' in url: url += '&' + query
-        else: url += '?' + query
+        if '?' in url:
+            url += '&' + query
+        else:
+            url += '?' + query
         
         sts, data = self.getPage(url)
-        if not sts: return
+        if not sts:
+            return
         
         nextPage = self.cm.ph.getDataBeetwenMarkers(data, 'pagination', '</ul>')[1]
-        if  '' != self.cm.ph.getSearchGroups(nextPage, 'p=(%s)[^0-9]' % (page+1))[0]: nextPage = True
-        else: nextPage = False
+        if  '' != self.cm.ph.getSearchGroups(nextPage, 'p=(%s)[^0-9]' % (page+1))[0]:
+            nextPage = True
+        else:
+            nextPage = False
         
         data = self.cm.ph.getDataBeetwenMarkers(data, 'movie-list', '<footer class="footer">')[1]        
         data = self.cm.ph.getAllItemsBeetwenMarkers(data, '<li', '</a>')
         reDescObj = re.compile('title="([^"]+?)"')
         for item in data:
             url = self.getFullUrl( self.cm.ph.getSearchGroups(item, 'href="([^"]+?)"')[0] )
-            if not self.cm.isValidUrl(url): continue
-            if 'kereses.php' in url: continue
+            if not self.cm.isValidUrl(url):
+                continue
+            if 'kereses.php' in url:
+                continue
             
             icon = self.getFullIconUrl( self.cm.ph.getSearchGroups(item, 'src="([^"]+?)"')[0] )
             title = self.cleanHtmlStr( self.cm.ph.getDataBeetwenMarkers(item, '<span class="title">', '</span>')[1] )
-            if title == '': title = self.cleanHtmlStr(self.cm.ph.getSearchGroups(item, '''alt=['"]([^'^"]+?)['"]''')[0])
-            if title == '': title = self.cleanHtmlStr(self.cm.ph.getSearchGroups(item, '''title=['"]([^'^"]+?)['"]''')[0])
+            if title == '':
+                title = self.cleanHtmlStr(self.cm.ph.getSearchGroups(item, '''alt=['"]([^'^"]+?)['"]''')[0])
+            if title == '':
+                title = self.cleanHtmlStr(self.cm.ph.getSearchGroups(item, '''title=['"]([^'^"]+?)['"]''')[0])
             
             # desc start
             tmp = self.cm.ph.getAllItemsBeetwenMarkers(item, '<li>', '</li>')
             descTab = []
             for t in tmp:
                 t = self.cleanHtmlStr(t)
-                if t == '': continue
+                if t == '':
+                    continue
                 descTab.append(t)
             tmp = self.cm.ph.getDataBeetwenMarkers(item, 'movie-icons">', '</ul>', False)[1]
             t = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(item, '<span class="cover-element imdb"', '</span>')[1])
             tmp = reDescObj.findall(tmp)
-            if t != '': tmp.insert(0, t)
+            if t != '':
+                tmp.insert(0, t)
             descTab.insert(0, ' | '.join(tmp))
             ######
             
@@ -204,7 +224,8 @@ class FilmezzEU(CBaseHostClass):
         printDBG("FilmezzEU.exploreItem")
         
         sts, data = self.getPage(cItem['url'])
-        if not sts: return
+        if not sts:
+            return
         
         desc = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(data, '<div class="text"', '</div>')[1])
         
@@ -222,26 +243,31 @@ class FilmezzEU(CBaseHostClass):
         self.cacheLinks  = {}
         data = self.cm.ph.getDataBeetwenMarkers(data, 'url-list', '</section>')[1]
         data = data.split('<div class="col-sm-4 col-xs-12 host">')
-        if len(data): del data[0]
+        if len(data):
+            del data[0]
         for tmp in data:
             dTab = self.cm.ph.getAllItemsBeetwenMarkers(tmp, '<div', '</div>')
-            if len(dTab) < 2: continue 
+            if len(dTab) < 2:
+                continue 
             title = self.cleanHtmlStr(dTab[1])
             
             # serverName
             t = self.cm.ph.getDataBeetwenMarkers(tmp, 'movie-icons">', '<div', False)[1]
             serverName = reDescObj.findall(t)
-            if t != '': serverName.append(self.cleanHtmlStr(t))
+            if t != '':
+                serverName.append(self.cleanHtmlStr(t))
             serverName = ' | '.join(serverName)
             #if 'letöltés' in serverName: continue
             
             t = self.cm.ph.getDataBeetwenReMarkers(tmp, re.compile('<a[^>]+?class="url-btn play"'), re.compile('>'))[1]
             url = self.cm.ph.getSearchGroups(t, '''href=['"]([^'^"]+?)['"]''')[0]
-            if url == '': continue
+            if url == '':
+                continue
 
             if url.startswith('http://adf.ly/'):
                 url = urllib.parse.unquote(url.rpartition('/')[2])
-                if url == '': continue
+                if url == '':
+                    continue
 
             if title not in titlesTab:
                 titlesTab.append(title)
@@ -251,7 +277,8 @@ class FilmezzEU(CBaseHostClass):
         for item in titlesTab:
             params = dict(cItem)
             title = cItem['title']
-            if item != '': title += ' : ' + item
+            if item != '':
+                title += ' : ' + item
             params.update({'good_for_fav': False, 'title':title, 'links_key':item, 'prev_desc':cItem.get('desc', ''), 'desc':desc})
             self.addVideo(params)
 
@@ -290,14 +317,18 @@ class FilmezzEU(CBaseHostClass):
             httpParams = dict(self.defaultParams)
             httpParams['max_data_size'] = 0
             self.cm.getPage(url, httpParams, post_data)
-            if 'url' in self.cm.meta: videoUrl = self.cm.meta['url']
-            else: return []
+            if 'url' in self.cm.meta:
+                videoUrl = self.cm.meta['url']
+            else:
+                return []
             
             if self.up.getDomain(self.getMainUrl()) in videoUrl:
                 sts, data = self.getPage(videoUrl)
-                if not sts: return []
+                if not sts:
+                    return []
                 
-                if 'captcha' in data: data = re.sub("<!--[\s\S]*?-->", "", data)
+                if 'captcha' in data:
+                    data = re.sub("<!--[\s\S]*?-->", "", data)
                 
                 if 'google.com/recaptcha/' in data and 'sitekey' in data:
                     message = _('Link protected with google recaptcha v2.')
@@ -314,15 +345,20 @@ class FilmezzEU(CBaseHostClass):
                     data = self.cm.ph.getDataBeetwenMarkers(data, '<form', '</form>')[1]
                     
                     imgUrl = self.cm.ph.getSearchGroups(data, 'src="([^"]+?)"')[0]
-                    if imgUrl != '': imgUrl = '/' + imgUrl
-                    if imgUrl.startswith('/'): imgUrl = urllib.parse.urljoin(videoUrl, imgUrl)
+                    if imgUrl != '':
+                        imgUrl = '/' + imgUrl
+                    if imgUrl.startswith('/'):
+                        imgUrl = urllib.parse.urljoin(videoUrl, imgUrl)
                     
                     printDBG("img URL [%s]" % imgUrl)
                         
                     actionUrl = self.cm.ph.getSearchGroups(data, 'action="([^"]+?)"')[0]
-                    if actionUrl != '': actionUrl = '/' + actionUrl
-                    if actionUrl.startswith('/'): actionUrl = urllib.parse.urljoin(videoUrl, actionUrl)
-                    elif actionUrl == '': actionUrl = videoUrl
+                    if actionUrl != '':
+                        actionUrl = '/' + actionUrl
+                    if actionUrl.startswith('/'):
+                        actionUrl = urllib.parse.urljoin(videoUrl, actionUrl)
+                    elif actionUrl == '':
+                        actionUrl = videoUrl
                         
                     captcha_post_data = dict(re.findall(r'''<input[^>]+?name=["']([^"^']*)["'][^>]+?value=["']([^"^']*)["'][^>]*>''', data))
                     
@@ -391,7 +427,8 @@ class FilmezzEU(CBaseHostClass):
         try:
             cItem = byteify(json.loads(fav_data))
             links = self.getLinksForVideo(cItem)
-        except Exception: printExc()
+        except Exception:
+            printExc()
         return links
         
     def setInitListFromFavouriteItem(self, fav_data):
@@ -411,23 +448,30 @@ class FilmezzEU(CBaseHostClass):
         retTab = []
         
         url = cItem.get('prev_url', '')
-        if url == '': url = cItem.get('url', '')
+        if url == '':
+            url = cItem.get('url', '')
         
         sts, data = self.getPage(url)
-        if not sts: return retTab
+        if not sts:
+            return retTab
         
         desc = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(data, '<div class="text"', '</div>')[1])
-        if desc == '': desc = self.cleanHtmlStr( self.cm.ph.getSearchGroups(data, '<meta[^>]+?name="description"[^>]+?content="([^"]+?)"')[0] )
+        if desc == '':
+            desc = self.cleanHtmlStr( self.cm.ph.getSearchGroups(data, '<meta[^>]+?name="description"[^>]+?content="([^"]+?)"')[0] )
         titleData = self.cm.ph.getDataBeetwenMarkers(data, '<div class="title"', '</div>')[1]
         
         title = self.cleanHtmlStr( self.cm.ph.getDataBeetwenMarkers(titleData, '<h1', '</h1>')[1] )
         altTitle = self.cleanHtmlStr( self.cm.ph.getDataBeetwenMarkers(titleData, '<h2', '</h2>')[1] )
-        if title != '': title = self.cleanHtmlStr( self.cm.ph.getSearchGroups(data, '<meta[^>]+?name="title"[^>]+?content="([^"]+?)"')[0] )
+        if title != '':
+            title = self.cleanHtmlStr( self.cm.ph.getSearchGroups(data, '<meta[^>]+?name="title"[^>]+?content="([^"]+?)"')[0] )
         icon  = self.getFullUrl( self.cm.ph.getSearchGroups(data, '<link[^>]+?rel="image_src"[^>]+?href="([^"]+?)"')[0] )
         
-        if title == '': title = cItem['title']
-        if desc == '':  title = cItem['desc']
-        if icon == '':  title = cItem['icon']
+        if title == '':
+            title = cItem['title']
+        if desc == '':
+            title = cItem['desc']
+        if icon == '':
+            title = cItem['icon']
         
         descTabMap = {"Kategória":    "genre",
                       "Rendező":      "director",
@@ -435,22 +479,29 @@ class FilmezzEU(CBaseHostClass):
         
         otherInfo = {}
         descData = cItem.get('prev_desc', '')
-        if descData == '': descData = cItem.get('desc', '')
+        if descData == '':
+            descData = cItem.get('desc', '')
         descData = descData.split('[/br]')
         for item in descData:
             item = item.split(':')
             key = item[0]
             if key in descTabMap:
-                try: otherInfo[descTabMap[key]] = self.cleanHtmlStr(item[-1])
-                except Exception: continue
+                try:
+                    otherInfo[descTabMap[key]] = self.cleanHtmlStr(item[-1])
+                except Exception:
+                    continue
         
         imdb_rating = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(data, '<span class="score">', '</span>', False)[1])
-        if imdb_rating != '': otherInfo['imdb_rating'] = imdb_rating
+        if imdb_rating != '':
+            otherInfo['imdb_rating'] = imdb_rating
         
-        if altTitle != '': otherInfo['alternate_title'] = altTitle
+        if altTitle != '':
+            otherInfo['alternate_title'] = altTitle
         year = self.cm.ph.getSearchGroups(cItem.get('prev_title', ''), '\(([0-9]{4})\)')[0]
-        if year == '': year = self.cm.ph.getSearchGroups(cItem['title'], '\(([0-9]{4})\)')[0]
-        if year != '': otherInfo['year'] = year
+        if year == '':
+            year = self.cm.ph.getSearchGroups(cItem['title'], '\(([0-9]{4})\)')[0]
+        if year != '':
+            otherInfo['year'] = year
         
         return [{'title':self.cleanHtmlStr( title ), 'text': self.cleanHtmlStr( desc ), 'images':[{'title':'', 'url':self.getFullUrl(icon)}], 'other_info':otherInfo}]
         

@@ -27,7 +27,7 @@ import time
 # Config options for HOST
 ###################################################
 config.plugins.iptvplayer.zdfmediathek_iconssize = ConfigSelection(default = "medium", choices = [ ("large", _("large")), ("medium", _("medium")), ("small", _("small")) ])
-config.plugins.iptvplayer.zdfmediathek_prefformat = ConfigSelection(default = "mp4,m3u8", choices = [\
+config.plugins.iptvplayer.zdfmediathek_prefformat = ConfigSelection(default = "mp4,m3u8", choices = [
 ("mp4,m3u8", "mp4,m3u8"), ("m3u8,mp4", "m3u8,mp4")])
 config.plugins.iptvplayer.zdfmediathek_prefquality = ConfigSelection(default = "4", choices = [("0", _("low")), ("1", _("medium")), ("2", _("high")), ("3", _("very high")), ("4", _("hd"))])
 config.plugins.iptvplayer.zdfmediathek_prefmoreimportant = ConfigSelection(default = "quality", choices = [("quality", _("quality")), ("format", _("format"))])
@@ -135,10 +135,13 @@ class ZDFmediathek(CBaseHostClass):
         return CBaseHostClass.getFullUrl(self, url)
         
     def _getNum(self, v, default=0):
-        try: return int(v)
+        try:
+            return int(v)
         except Exception:
-            try: return float(v)
-            except Exception: return default
+            try:
+                return float(v)
+            except Exception:
+                return default
             
     def _getList(self, data, key, default=[]):
         try: 
@@ -158,22 +161,27 @@ class ZDFmediathek(CBaseHostClass):
         idx = len(iconsTab)
         if idx:
             iconsTab.sort(key=lambda k: k['size'])
-            if 'large' == iconssize:    idx -= 1
-            elif 'medium' == iconssize: idx /=  2
-            elif 'small' == iconssize:  idx = 0
+            if 'large' == iconssize:
+                idx -= 1
+            elif 'medium' == iconssize:
+                idx /=  2
+            elif 'small' == iconssize:
+                idx = 0
             return iconsTab[idx]['url']
         return ''
         
     def kinderListABC(self, cItem, nextCategory):
         printDBG('kinderListABC')
         sts, data = self.getPage(cItem['url'])
-        if not sts: return
+        if not sts:
+            return
         
         data = self.cm.ph.getDataBeetwenMarkers(data, '<ul class="letter-list"', '</ul>')[1]
         data = self.cm.ph.getAllItemsBeetwenMarkers(data, '<li', '</li>')
         for item in data:
             url = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''href=['"]([^'^"]+?)['"]''')[0])
-            if not self.cm.isValidUrl(url): continue
+            if not self.cm.isValidUrl(url):
+                continue
             title = self.cleanHtmlStr(item)
             params = dict(cItem)
             params.update({'good_for_fav':False, 'category':nextCategory, 'url':url, 'title':title})
@@ -183,7 +191,8 @@ class ZDFmediathek(CBaseHostClass):
         printDBG('exploreItem')
         
         sts, data = self.getPage(cItem['url'])
-        if not sts: return
+        if not sts:
+            return
         
         data = self.cm.ph.rgetDataBeetwenNodes(data, ('<article class="b-cluster', '>', 'x-web-only'), ('<main', '>', 'id="skip-main"'), False)[1]
         # split data per sections
@@ -194,12 +203,14 @@ class ZDFmediathek(CBaseHostClass):
             items = []
             data = self.cm.ph.rgetAllItemsBeetwenNodes(section, ('<span', '>', 'circle icon'), ('<picture', '>', '"artdirect"')) #('<article', '>')) 
             tmp = self.cm.ph.rgetAllItemsBeetwenNodes(section, ('<span', '>', 'circle icon'), ('<', '>', '"artdirect"'))
-            if len(tmp) > len(data): data = tmp
+            if len(tmp) > len(data):
+                data = tmp
             for subData in data:
                 subData = re.split('<span[^>]+?circle icon[^>]+?>', subData)
                 for item in subData:
                     tmp = self.cm.ph.getSearchGroups(item, '''(<a[^>]+?\stitle=[^>]*?>)''')[0]
-                    if tmp == '': continue
+                    if tmp == '':
+                        continue
                     
                     title = self.cleanHtmlStr(self.cm.ph.getSearchGroups(tmp, '''title=['"]([^'^"]+?)['"]''')[0])
                     
@@ -211,15 +222,18 @@ class ZDFmediathek(CBaseHostClass):
                     
                     icon = self.getIconUrl(self.cm.ph.getSearchGroups(item, '''data-srcset=['"]([^'^"~]+?)['"~]''')[0])
                     
-                    if icon == '': icon = self.getIconUrl(self.cm.ph.getSearchGroups(item, '''<meta[^>]+?itemprop=['"]image['"][^>]+?content=['"]([^'^"~]+?)['"~]''')[0])
+                    if icon == '':
+                        icon = self.getIconUrl(self.cm.ph.getSearchGroups(item, '''<meta[^>]+?itemprop=['"]image['"][^>]+?content=['"]([^'^"~]+?)['"~]''')[0])
                     if icon == '': 
                         tmp = self.cleanHtmlStr(self.cm.ph.getSearchGroups(item, '''teaser-image=['"]([^'^"]+?)['"]''')[0])
                         try:
                             tmp = json_loads(tmp)['original']
-                            if tmp != '': icon = self.getIconUrl(tmp.split('~', 1)[0])
+                            if tmp != '':
+                                icon = self.getIconUrl(tmp.split('~', 1)[0])
                         except Exception:
                             printExc()
-                    if icon != '': icon += '~314x314'
+                    if icon != '':
+                        icon += '~314x314'
                     
                     desc = [self.cleanHtmlStr(item.split('<span class="visuallyhidden">', 1)[0])]
                     tmp = self.cm.ph.getDataBeetwenReMarkers(item, re.compile('<[^>]+?desc[^>]+?>'), re.compile('</p>'))[1]
@@ -227,7 +241,8 @@ class ZDFmediathek(CBaseHostClass):
                     desc.append(self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(item, '<dl', '</dl>')[1].replace('</dd>', ' | ')))
                     desc = '[/br]'.join(desc)
                     
-                    if 'assets/a-z-teaser' in icon: continue
+                    if 'assets/a-z-teaser' in icon:
+                        continue
                     
                     params = {'url':url, 'title':title, 'icon':icon, 'desc':desc}
                     if '_play' in item:
@@ -268,7 +283,8 @@ class ZDFmediathek(CBaseHostClass):
     def listStart(self, cItem):
         printDBG('listStart')
         sts, data = self.getPage(cItem['url'])
-        if not sts: return
+        if not sts:
+            return
         try:
             data = json_loads(data)
             for item in data['stage']:
@@ -280,7 +296,8 @@ class ZDFmediathek(CBaseHostClass):
     def listSendungverpasst(self, cItem):
         printDBG('listSendungverpasst')
         sts, data = self.getPage(cItem['url'])
-        if not sts: return
+        if not sts:
+            return
         try:
             data = json_loads(data)['broadcastCluster']
             self._listCluster(cItem, data)
@@ -290,7 +307,8 @@ class ZDFmediathek(CBaseHostClass):
     def listCluster(self, cItem):
         printDBG('listCluster')
         sts, data = self.getPage(cItem['url'])
-        if not sts: return
+        if not sts:
+            return
         try:
             data = json_loads(data)['cluster']
             self._listCluster(cItem, data)
@@ -302,13 +320,16 @@ class ZDFmediathek(CBaseHostClass):
             
             if 'teaser' in item['type']:
                 tab = self._getList(item, 'teaser')
-                if 0 == len(tab): continue
+                if 0 == len(tab):
+                    continue
                 if 1 == len(tab) and cItem.get('simplify', True):
                     self._addItem(cItem, tab[0])
                     continue
                 title = self.cleanHtmlStr(item['type'])
-                if 'name' in item: title = self.cleanHtmlStr(item['name'])
-                elif 'teaserLivevideo' == item['type']: title = _('Live')
+                if 'name' in item:
+                    title = self.cleanHtmlStr(item['name'])
+                elif 'teaserLivevideo' == item['type']:
+                    title = _('Live')
                 params = dict(cItem)
                 params.update({'category':'list_content', 'title':title, 'content':tab})
                 self.addDir(params)
@@ -323,7 +344,8 @@ class ZDFmediathek(CBaseHostClass):
         printDBG('_addItem')
         try:
             icon = self._getIcon(item.get("teaserBild", {}))
-            if icon == '': icon = cItem['icon']
+            if icon == '':
+                icon = cItem['icon']
             title = self.cleanHtmlStr(item["titel"])
             if item['type'] in ['brand', 'category']:
                 descTab = []
@@ -336,7 +358,8 @@ class ZDFmediathek(CBaseHostClass):
                 descTab = []
                 descTab.append(self.cleanHtmlStr(item['headline']))
                 descTab.append(self.cleanHtmlStr(item['channel']))
-                if 'length' in item: descTab.append(str(timedelta(seconds=int(item["length"]))))
+                if 'length' in item:
+                    descTab.append(str(timedelta(seconds=int(item["length"]))))
                 descTab.append(self.cleanHtmlStr(item['beschreibung']))
                 params = {'title':title, 'url':self.getFullUrl(item['url']), 'desc':'| '.join(descTab), 'icon':self.getIconUrl(icon), 'id':item['id'], 'sharing_url':item['sharingUrl'], 'good_for_fav': True}
                 self.addVideo(params)
@@ -362,7 +385,8 @@ class ZDFmediathek(CBaseHostClass):
             url = cItem['url']
         
         sts, data = self.getPage(url)
-        if not sts: return
+        if not sts:
+            return
         try:
             data = json_loads(data)
             for item in data['results']:
@@ -379,13 +403,15 @@ class ZDFmediathek(CBaseHostClass):
         
         if 'id' not in cItem and 'url' in cItem:
             sts, data = self.getPage(cItem['url'])
-            if not sts: return []
+            if not sts:
+                return []
             id = self.cm.ph.getSearchGroups(data, '''['"]?docId['"]?\s*:\s*['"]([^'^"]+?)['"]''')[0]
         else:
             id = cItem['id']
         
         sts, data = self.getPage(self.DOCUMENT_API_URL % id)
-        if not sts: return []
+        if not sts:
+            return []
         
         preferedQuality = int(config.plugins.iptvplayer.zdfmediathek_prefquality.value)
         preferedFormat  = config.plugins.iptvplayer.zdfmediathek_prefformat.value
@@ -415,7 +441,8 @@ class ZDFmediathek(CBaseHostClass):
                     if url.startswith('https://'):
                         url = 'http' + url[5:]
                     for type in [{'pattern':'http_m3u8_http', 'name':'m3u8'}, {'pattern':'mp4_http', 'name':'mp4'}]:
-                        if type['pattern'] not in item['type']: continue
+                        if type['pattern'] not in item['type']:
+                            continue
                         if type['name'] == 'mp4':
                             if item['hd']:
                                 quality = 'hd'
@@ -427,12 +454,18 @@ class ZDFmediathek(CBaseHostClass):
                             tmpList = getDirectM3U8Playlist(url, checkExt=False)
                             for tmpItem in tmpList:
                                 res = tmpItem['with']
-                                if res == 0: continue
-                                if res > 300: quality = 'low'
-                                if res > 600: quality = 'med'
-                                if res > 800: quality = 'high'
-                                if res > 1000: quality = 'veryhigh'
-                                if res > 1200: quality = 'hd'
+                                if res == 0:
+                                    continue
+                                if res > 300:
+                                    quality = 'low'
+                                if res > 600:
+                                    quality = 'med'
+                                if res > 800:
+                                    quality = 'high'
+                                if res > 1000:
+                                    quality = 'veryhigh'
+                                if res > 1200:
+                                    quality = 'hd'
                                 qualityVal = ZDFmediathek.QUALITY_MAP.get(quality, 10)
                                 qualityPref = abs(qualityVal - preferedQuality)
                                 formatPref  = formatMap.get(type['name'], 10)
@@ -442,25 +475,39 @@ class ZDFmediathek(CBaseHostClass):
             def _cmpLinks(it1, it2):
                 prefmoreimportantly = config.plugins.iptvplayer.zdfmediathek_prefmoreimportant.value
                 if 'quality' == prefmoreimportantly:
-                    if it1['quality_pref'] < it2['quality_pref'] :   return -1
-                    elif it1['quality_pref']  > it2['quality_pref'] : return 1
+                    if it1['quality_pref'] < it2['quality_pref'] :
+                        return -1
+                    elif it1['quality_pref']  > it2['quality_pref'] :
+                        return 1
                     else:
-                        if it1['quality'] < it2['quality'] :   return -1
-                        elif it1['quality']  > it2['quality'] : return 1
+                        if it1['quality'] < it2['quality'] :
+                            return -1
+                        elif it1['quality']  > it2['quality'] :
+                            return 1
                         else:
-                            if it1['format_pref'] < it2['format_pref'] :   return -1
-                            elif it1['format_pref']  > it2['format_pref'] : return 1
-                            else: return 0
+                            if it1['format_pref'] < it2['format_pref'] :
+                                return -1
+                            elif it1['format_pref']  > it2['format_pref'] :
+                                return 1
+                            else:
+                                return 0
                 else:
-                    if it1['format_pref'] < it2['format_pref'] :   return -1
-                    elif it1['format_pref']  > it2['format_pref'] : return 1
+                    if it1['format_pref'] < it2['format_pref'] :
+                        return -1
+                    elif it1['format_pref']  > it2['format_pref'] :
+                        return 1
                     else:
-                        if it1['quality_pref'] < it2['quality_pref'] :   return -1
-                        elif it1['quality_pref']  > it2['quality_pref'] : return 1
+                        if it1['quality_pref'] < it2['quality_pref'] :
+                            return -1
+                        elif it1['quality_pref']  > it2['quality_pref'] :
+                            return 1
                         else:
-                            if it1['quality'] < it2['quality'] :   return -1
-                            elif it1['quality']  > it2['quality'] : return 1
-                            else: return 0
+                            if it1['quality'] < it2['quality'] :
+                                return -1
+                            elif it1['quality']  > it2['quality'] :
+                                return 1
+                            else:
+                                return 0
             tmpUrlTab.sort(_cmpLinks)
             onelinkmode = config.plugins.iptvplayer.zdfmediathek_onelinkmode.value
             for item in tmpUrlTab:
@@ -472,7 +519,8 @@ class ZDFmediathek(CBaseHostClass):
                     else: 
                         live = False
                     urlTab.append({'need_resolve':0, 'name':name, 'url':self.up.decorateUrl(url, {'iptv_livestream':live, 'external_sub_tracks':subTracks})})
-                    if onelinkmode: break
+                    if onelinkmode:
+                        break
             printDBG(tmpUrlTab)
         except Exception:
             printExc()

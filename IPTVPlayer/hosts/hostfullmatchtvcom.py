@@ -53,9 +53,11 @@ class Fullmatchtv(CBaseHostClass):
             for item in data:
                 nextCategory = ''
                 url = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''\shref=['"]([^'^"]+?)['"]''')[0])
-                if 'category' not in url: url = url.replace('.com', '.com/category')
+                if 'category' not in url:
+                    url = url.replace('.com', '.com/category')
                 title = self.cleanHtmlStr(item)
-                if url == '' or title == 'Home': continue
+                if url == '' or title == 'Home':
+                    continue
                 nextCategory = 'list_items'
                 printDBG(">>>>>>>>>>>>>>>>> title[%s] url[%s]" % (title, url))
                 params = dict(cItem)
@@ -68,7 +70,8 @@ class Fullmatchtv(CBaseHostClass):
         page = cItem.get('page', 1)
 
         sts, data = self.getPage(cItem['url'])
-        if not sts: return
+        if not sts:
+            return
 
         if page == 1:
             data = self.cm.ph.getDataBeetwenNodes(data, ('jQuery(window)', '{'), '});')[1]
@@ -79,13 +82,15 @@ class Fullmatchtv(CBaseHostClass):
 
         post_data = {'action':'td_ajax_loop', 'loopState[moduleId]':'1', 'loopState[currentPage]':page, 'loopState[atts][category_id]':self.categoryId}
         sts, data = self.getPage('https://fullmatchtv.com/wp-admin/admin-ajax.php?td_theme_name=Newspaper&v=10.1', self.defaultParams, post_data)
-        if not sts: return
+        if not sts:
+            return
         data = data.replace('\\', '')
         data = self.cm.ph.getAllItemsBeetwenNodes(data, ('<div', '>', 'td-module-thumb'), ('</div', '>'))
         for item in data:
             url = self.getFullUrl( self.cm.ph.getSearchGroups(item, '''\shref=['"]([^"^']+?)['"]''')[0] )
             title = self.cm.ph.getSearchGroups(item, '''\stitle=['"]([^"^']+?)['"]''')[0].replace('&#8211;', '-')
-            if not self.cm.isValidUrl(url): continue
+            if not self.cm.isValidUrl(url):
+                continue
             icon = self.getFullUrl( self.cm.ph.getSearchGroups(item, '''\ssrc=['"]([^"^']+?)['"]''')[0] )
             params = dict(cItem)
             params = {'good_for_fav': True, 'title':title, 'url':url, 'icon':icon}
@@ -103,15 +108,18 @@ class Fullmatchtv(CBaseHostClass):
         urlTab = []
         
         sts, data = self.getPage(cItem['url'])
-        if not sts: return
+        if not sts:
+            return
 
         tmp = self.cm.ph.getDataBeetwenNodes(data, ('<div', '>', 'td-post-content'), ('</p', '>'), False)[1]
         tmp = self.cm.ph.getAllItemsBeetwenNodes(data, ('<iframe', '>'), ('</iframe', '>'))
         if len(tmp):
             for item in tmp:
                 url  = self.cm.ph.getSearchGroups(item, '''src=['"]([^'^"]+?)['"]''')[0]
-                if url.startswith('//'): url = 'http:' + url
-                if 1 != self.up.checkHostSupport(url): continue
+                if url.startswith('//'):
+                    url = 'http:' + url
+                if 1 != self.up.checkHostSupport(url):
+                    continue
                 name = self.up.getDomain(url)
                 urlTab.append({'name':name, 'url':self.getFullUrl(url), 'need_resolve':1})
 

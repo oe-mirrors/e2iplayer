@@ -11,8 +11,10 @@ from Plugins.Extensions.IPTVPlayer.components.ihost import CBaseHostClass
 # FOREIGN import
 ###################################################
 from Components.config import config, ConfigText, getConfigListEntry
-try:    import json
-except Exception: import simplejson as json
+try:
+    import json
+except Exception:
+    import simplejson as json
 ############################################
 
 
@@ -63,7 +65,8 @@ class MeteoPLApi(CBaseHostClass):
                     printExc()
                 
             sts, data = self.getPage(self.getFullUrl('um/php/gpp/search.php'))
-            if not sts: return []
+            if not sts:
+                return []
             data = self.cm.ph.getDataBeetwenMarkers(data, '<select name=woj', '</select>')[1]
             data = self.cm.ph.getAllItemsBeetwenMarkers(data, 'option', '<', withMarkers=True)
             for item in data:
@@ -81,11 +84,13 @@ class MeteoPLApi(CBaseHostClass):
                 post_data={'name':cItem['meteo_name']}
             if post_data != None:
                 sts, data = self.getPage(cItem['url'], post_data=post_data)
-                if not sts: return []
+                if not sts:
+                    return []
                 data = self.cm.ph.getAllItemsBeetwenMarkers(data, '<tr', '</tr>', withMarkers=True, caseSensitive=False)
                 for item in data:
                     mgram = self.cm.ph.getDataBeetwenMarkers(item, 'show_mgram(', ')', False)[1].strip()
-                    if mgram == '': continue
+                    if mgram == '':
+                        continue
                     title  = self.cleanHtmlStr(item)
                     params = dict(cItem)
                     params.update({'type':'picture', 'title':title, 'meteo_cat':True, 'url':self.getFullUrl('um/php/meteorogram_id_um.php?ntype=0u&id=' + mgram)})
@@ -97,7 +102,8 @@ class MeteoPLApi(CBaseHostClass):
         urlsTab = []
         
         sts, data = self.getPage(cItem['url'])
-        if not sts: return []
+        if not sts:
+            return []
         printDBG("===================================")
         printDBG(data)
         printDBG("===================================")

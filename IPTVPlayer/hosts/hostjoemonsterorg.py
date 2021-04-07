@@ -15,8 +15,10 @@ import re
 import urllib.request
 import urllib.parse
 import urllib.error
-try:    import json
-except Exception: import simplejson as json
+try:
+    import json
+except Exception:
+    import simplejson as json
 from Components.config import config, ConfigText, getConfigListEntry
 ###################################################
 
@@ -77,7 +79,8 @@ class JoeMonster(CBaseHostClass):
         page = cItem.get('page', 1)
 
         sts, data = self.getPage(cItem['url'])
-        if not sts: return
+        if not sts:
+            return
 
         nextPage = self.cm.ph.getDataBeetwenNodes(data, ('<div', '>', 'pagerNav'), ('</div', '>'), False)[1]
         nextPage = self.cm.ph.getDataBeetwenNodes(nextPage, ('<span', '>', 'highlight'), ('pagerNav', '>'), False)[1]
@@ -89,9 +92,11 @@ class JoeMonster(CBaseHostClass):
             url = self.getFullUrl( self.cm.ph.getSearchGroups(item, '''\shref=['"]([^"^']+?)['"]''')[0] )
             title = self.cleanHtmlStr( self.cm.ph.getDataBeetwenNodes(item, ('<div', '>', 'mtv-desc'), ('</a', '>'))[1])
             time  = self.cleanHtmlStr( self.cm.ph.getDataBeetwenNodes(item, ('<time', '>', 'video-time'), ('</time', '>'))[1])
-            if len(time) > 0: time = '[%s] ' % time
+            if len(time) > 0:
+                time = '[%s] ' % time
             desc  = time + self.cleanHtmlStr( self.cm.ph.getDataBeetwenNodes(item, ('<div', '>', 'mtv-desc-text'), ('</div', '>'))[1])
-            if not self.cm.isValidUrl(url): continue
+            if not self.cm.isValidUrl(url):
+                continue
             icon = self.getFullIconUrl( self.cm.ph.getSearchGroups(item, '''\ssrc=['"]([^"^']+?)['"]''')[0] )
             params = dict(cItem)
             params = {'good_for_fav': True, 'title':title, 'url':url, 'icon':icon, 'desc':desc}
@@ -108,7 +113,8 @@ class JoeMonster(CBaseHostClass):
         page = cItem.get('page', 1)
         
         sts, data = self.getPage(cItem['url'])
-        if not sts: return
+        if not sts:
+            return
 
         nextPage = self.cm.ph.getDataBeetwenNodes(data, ('<div', '>', 'pagerNav'), ('</div', '>'), False)[1]
         nextPage = self.cm.ph.getDataBeetwenNodes(nextPage, ('<span', '>', 'highlight'), ('</a', '>'), False)[1]
@@ -119,10 +125,13 @@ class JoeMonster(CBaseHostClass):
         for item in data:
             url = self.getFullUrl( self.cm.ph.getSearchGroups(item, '''\shref=['"]([^"^']+?)['"]''')[0] )
             title  = self.cleanHtmlStr( self.cm.ph.getDataBeetwenNodes(item, ('<h2', '>'), ('</h2', '>'))[1])
-            if title == "": title  = self.cleanHtmlStr( self.cm.ph.getDataBeetwenNodes(item, ('<a', '>', 'movie-title-link'), ('</a', '>'))[1])
+            if title == "":
+                title  = self.cleanHtmlStr( self.cm.ph.getDataBeetwenNodes(item, ('<a', '>', 'movie-title-link'), ('</a', '>'))[1])
             time  = self.cleanHtmlStr( self.cm.ph.getDataBeetwenNodes(item, ('<time', '>', 'video-time'), ('</time', '>'))[1])
-            if len(time) > 0: time = '[%s] ' % time
-            if not self.cm.isValidUrl(url): continue
+            if len(time) > 0:
+                time = '[%s] ' % time
+            if not self.cm.isValidUrl(url):
+                continue
             icon = self.getFullIconUrl( self.cm.ph.getSearchGroups(item, '''\ssrc=['"]([^"^']+?)['"]''')[0] )
             params = dict(cItem)
             params = {'good_for_fav': True, 'title':title, 'url':url, 'icon':icon, 'desc':time}
@@ -138,7 +147,8 @@ class JoeMonster(CBaseHostClass):
         urlTab = []
         
         sts, data = self.getPage(cItem['url'])
-        if not sts: return
+        if not sts:
+            return
 
         tmp = self.cm.ph.getDataBeetwenNodes(data, ('<div', '>', 'mtv-player-wrapper'), ('<div', '>', 'mtvRightColumn'), False)[1]
         tmp = self.cm.ph.getDataBeetwenMarkers(tmp, '<video', '</video>', False)[1]
@@ -177,12 +187,14 @@ class JoeMonster(CBaseHostClass):
 
         rm(self.COOKIE_FILE)
         sts, data = self.cm.getPage(self.MAIN_URL+'user.php', self.defaultParams)
-        if not sts: return False, connFailed
+        if not sts:
+            return False, connFailed
 
         # login
         post_data = {'_username':login, '_password':password, 'op':'login'}
         sts, data = self.cm.getPage('https://joemonster.org/login_check', self.defaultParams, post_data)
-        if not sts: return False, connFailed
+        if not sts:
+            return False, connFailed
 
         if 'logout' in data:
             return True, 'OK'

@@ -18,12 +18,16 @@ from urllib.parse import urljoin
 
 class CUrlItem:
     def __init__(self, name = "", url = "", urlNeedsResolve = 0):
-        if isinstance(name, str): self.name = name
-        else: self.name = str(name)
+        if isinstance(name, str):
+            self.name = name
+        else:
+            self.name = str(name)
         
         # used only for TYPE_VIDEO item 
-        if isinstance(url, str): self.url = url
-        else: self.url = str(url)
+        if isinstance(url, str):
+            self.url = url
+        else:
+            self.url = str(url)
         
         self.urlNeedsResolve = urlNeedsResolve #  additional request to host is needed to resolv this url (url is not direct link)
 ## class CDisplayListItem
@@ -45,41 +49,55 @@ class CDisplayListItem:
     TYPE_SUB_PROVIDER  = "SUB_PROVIDER"
     TYPE_UNKNOWN       = "UNKNOWN"
     
-    def __init__(self, name = "", \
-                description = "", \
-                type = TYPE_UNKNOWN, \
-                urlItems = [], \
-                urlSeparateRequest = 0, \
-                iconimage = '', \
-                possibleTypesOfSearch = None, \
-                pinLocked = False, \
-                isGoodForFavourites = False, \
-                isWatched = False, \
-                textColor = '', \
+    def __init__(self, name = "",
+                description = "",
+                type = TYPE_UNKNOWN,
+                urlItems = [],
+                urlSeparateRequest = 0,
+                iconimage = '',
+                possibleTypesOfSearch = None,
+                pinLocked = False,
+                isGoodForFavourites = False,
+                isWatched = False,
+                textColor = '',
                 pinCode = ''):
                 
-        if isinstance(name, str): self.name = name
-        else: self.name = str(name)
+        if isinstance(name, str):
+            self.name = name
+        else:
+            self.name = str(name)
         
-        if isinstance(description, str): self.description = description
-        else: self.description = str(description)
+        if isinstance(description, str):
+            self.description = description
+        else:
+            self.description = str(description)
         
-        if isinstance(type, str): self.type = type
-        else: self.type = str(type)
+        if isinstance(type, str):
+            self.type = type
+        else:
+            self.type = str(type)
         
-        if isinstance(iconimage, str): self.iconimage = iconimage
-        else: self.iconimage = str(iconimage)
+        if isinstance(iconimage, str):
+            self.iconimage = iconimage
+        else:
+            self.iconimage = str(iconimage)
         
-        if pinLocked: self.pinLocked = True
-        else: self.pinLocked = False
+        if pinLocked:
+            self.pinLocked = True
+        else:
+            self.pinLocked = False
         
         self.pinCode = str(pinCode)
         
-        if isGoodForFavourites: self.isGoodForFavourites = True
-        else: self.isGoodForFavourites = False
+        if isGoodForFavourites:
+            self.isGoodForFavourites = True
+        else:
+            self.isGoodForFavourites = False
         
-        if isWatched: self.isWatched = True
-        else: self.isWatched = False
+        if isWatched:
+            self.isWatched = True
+        else:
+            self.isWatched = False
         
         self.textColor = str(textColor)
         
@@ -111,8 +129,8 @@ class CDisplayListItem:
 class ArticleContent:
     VISUALIZER_DEFAULT = 'DEFAULT'
     # Posible args and values for richDescParams:
-    RICH_DESC_PARAMS        = ["alternate_title", "original_title", "station", "price", "age_limit", "views", "status", "type", "first_air_date", "last_air_date", "seasons", "episodes", "country", "language", "duration", "quality", "subtitles", "year", "imdb_rating", "tmdb_rating",\
-                               "released", "broadcast", "remaining", "rating", "rated", "genre", "genres", "category", "categories", "production", "director", "directors", "writer", "writers", \
+    RICH_DESC_PARAMS        = ["alternate_title", "original_title", "station", "price", "age_limit", "views", "status", "type", "first_air_date", "last_air_date", "seasons", "episodes", "country", "language", "duration", "quality", "subtitles", "year", "imdb_rating", "tmdb_rating",
+                               "released", "broadcast", "remaining", "rating", "rated", "genre", "genres", "category", "categories", "production", "director", "directors", "writer", "writers",
                                "creator", "creators", "cast", "actors", "stars", "awards", "budget", "translation",]
     # labels here must be in english language 
     # translation should be done before presentation using "locals" mechanism
@@ -175,11 +193,11 @@ class CFavItem:
     RESOLVER_SELF        = 'SELF'
     RESOLVER_URLLPARSER  = 'URLLPARSER'
     TYPE_UNKNOWN = CDisplayListItem.TYPE_UNKNOWN
-    def __init__( self, name         = '', \
-                  description        = '', \
-                  type               = TYPE_UNKNOWN, \
-                  iconimage          = '', \
-                  data               = '', \
+    def __init__( self, name         = '',
+                  description        = '',
+                  type               = TYPE_UNKNOWN,
+                  iconimage          = '',
+                  data               = '',
                   resolver           = RESOLVER_SELF ):
         self.name        = name
         self.description = description
@@ -353,7 +371,8 @@ class CHostBase(IHost):
     def getArticleContent(self, Index = 0):
         retCode = RetHost.ERROR
         retlist = []
-        if not self.isValidIndex(Index): return RetHost(retCode, value=retlist)
+        if not self.isValidIndex(Index):
+            return RetHost(retCode, value=retlist)
         cItem = self.host.currList[Index]
         
         if not self.withArticleContent(cItem):
@@ -367,14 +386,16 @@ class CHostBase(IHost):
             images     = item.get("images", [])
             othersInfo = item.get('other_info', '')
             retlist.append( ArticleContent(title = title, text = text, images =  images, richDescParams = othersInfo) )
-        if len(hList): retCode = RetHost.OK
+        if len(hList):
+            retCode = RetHost.OK
         return RetHost(retCode, value = retlist)
     # end getArticleContent
     
     def getLinksForItem(self, Index = 0, selItem = None):
         retCode = RetHost.ERROR
         retlist = []
-        if not self.isValidIndex(Index): return RetHost(retCode, value=retlist)
+        if not self.isValidIndex(Index):
+            return RetHost(retCode, value=retlist)
         
         urlList = self.host.getLinksForItem(self.host.currList[Index])
         if isinstance(urlList, list):
@@ -400,7 +421,8 @@ class CHostBase(IHost):
     def getFavouriteItem(self, Index=0):
         retCode = RetHost.ERROR
         retlist = []
-        if not self.isValidIndex(Index, self.favouriteTypes): RetHost(retCode, value=retlist)
+        if not self.isValidIndex(Index, self.favouriteTypes):
+            RetHost(retCode, value=retlist)
         
         cItem = self.host.currList[Index]
         data = self.host.getFavouriteData(cItem)
@@ -527,7 +549,8 @@ class CHostBase(IHost):
         hostList = []
         for cItem in cList:
             hostItem = self.converItem(cItem)
-            if None != hostItem: hostList.append(hostItem)
+            if None != hostItem:
+                hostList.append(hostItem)
         return hostList
     # end convertList
     
@@ -541,8 +564,10 @@ class CHostBase(IHost):
         return self.host.getDefaulIcon(cItem)
         
     def getFullIconUrl(self, url, currUrl=None):
-        if currUrl != None: return self.host.getFullIconUrl(url, currUrl)
-        else: return self.host.getFullIconUrl(url)
+        if currUrl != None:
+            return self.host.getFullIconUrl(url, currUrl)
+        else:
+            return self.host.getFullIconUrl(url)
     
     def converItem(self, cItem, needUrlResolve=1, needUrlSeparateRequest=1):
         hostList = []
@@ -571,16 +596,18 @@ class CHostBase(IHost):
         elif 'data' == cItem['type']:
             type = CDisplayListItem.TYPE_DATA
         
-        if type in [CDisplayListItem.TYPE_AUDIO, CDisplayListItem.TYPE_VIDEO, \
-                    CDisplayListItem.TYPE_PICTURE, CDisplayListItem.TYPE_ARTICLE, \
+        if type in [CDisplayListItem.TYPE_AUDIO, CDisplayListItem.TYPE_VIDEO,
+                    CDisplayListItem.TYPE_PICTURE, CDisplayListItem.TYPE_ARTICLE,
                     CDisplayListItem.TYPE_DATA]:
             url = cItem.get('url', '')
-            if '' != url: hostLinks.append(CUrlItem("Link", url, needUrlResolve))
+            if '' != url:
+                hostLinks.append(CUrlItem("Link", url, needUrlResolve))
             
         title       =  cItem.get('title', '')
         description =  cItem.get('desc', '')
         icon        =  self.getFullIconUrl( cItem.get('icon', '') )
-        if icon == '': icon = self.getDefaulIcon(cItem)
+        if icon == '':
+            icon = self.getDefaulIcon(cItem)
         isGoodForFavourites = cItem.get('good_for_fav', False)
         pinLocked = cItem.get('pin_locked', False)
         pinCode   = cItem.get('pin_code', '')
@@ -638,18 +665,21 @@ class CBaseHostClass:
         
     def informAboutGeoBlockingIfNeeded(self, country, onlyOnce=True):
         try: 
-            if onlyOnce and self.isGeoBlockingChecked: return
+            if onlyOnce and self.isGeoBlockingChecked:
+                return
         except Exception: 
             self.isGeoBlockingChecked = False
         sts, data = self.cm.getPage('https://dcinfos.abtasty.com/geolocAndWeather.php')
-        if not sts: return
+        if not sts:
+            return
         try:
             data = json_loads(data.strip()[1:-1], '', True)
             if data['country'] != country:
                 message = _('%s uses "geo-blocking" measures to prevent you from accessing the services from abroad.\n Host country: %s, your country: %s') 
                 GetIPTVNotify().push(message % (self.getMainUrl(), country, data['country']  ), 'info', 5)
             self.isGeoBlockingChecked = True
-        except Exception: printExc()
+        except Exception:
+            printExc()
     
     def listsTab(self, tab, cItem, type='dir'):
         defaultType = type
@@ -658,9 +688,12 @@ class CBaseHostClass:
             params.update(item)
             params['name']  = 'category'
             type = item.get('type', defaultType)
-            if type == 'dir': self.addDir(params)
-            elif type == 'marker': self.addMarker(params)
-            else: self.addVideo(params)
+            if type == 'dir':
+                self.addDir(params)
+            elif type == 'marker':
+                self.addMarker(params)
+            else:
+                self.addVideo(params)
 
     def listSubItems(self, cItem):
         printDBG("CBaseHostClass.listSubItems")
@@ -689,8 +722,10 @@ class CBaseHostClass:
         return self.cm.getFullUrl(url, currUrl)
 
     def getFullIconUrl(self, url, currUrl=None):
-        if currUrl != None: return self.getFullUrl(url, currUrl)
-        else: return self.getFullUrl(url)
+        if currUrl != None:
+            return self.getFullUrl(url, currUrl)
+        else:
+            return self.getFullUrl(url)
         
     def getDefaulIcon(self, cItem=None):
         try:
@@ -705,8 +740,10 @@ class CBaseHostClass:
 
     @staticmethod 
     def getStr(v, default=''):
-        if type(v) == type(''): return v.encode('utf-8')
-        elif type(v) == type(''):  return v
+        if type(v) == type(''):
+            return v.encode('utf-8')
+        elif type(v) == type(''):
+            return v
         return default
             
     def getCurrList(self):
@@ -769,14 +806,16 @@ class CBaseHostClass:
                 if type(histItem) == type({}):
                     pattern     = histItem.get('pattern', '')
                     search_type = histItem.get('type', '')
-                    if '' != search_type: plot = desc_base + _(search_type)
+                    if '' != search_type:
+                        plot = desc_base + _(search_type)
                 else:
                     pattern     = histItem
                     search_type = None
                 params = dict(baseItem)
                 params.update({'title': pattern, 'search_type': search_type,  desc_key: plot})
                 self.addDir(params)
-            except Exception: printExc()
+            except Exception:
+                printExc()
             
     def getFavouriteData(self, cItem):
         try:
@@ -795,7 +834,8 @@ class CBaseHostClass:
         try:
             cItem = json_loads(fav_data)
             links = self.getLinksForItem(cItem)
-        except Exception: printExc()
+        except Exception:
+            printExc()
         return links
         
     def setInitListFromFavouriteItem(self, fav_data):

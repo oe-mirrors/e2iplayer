@@ -87,26 +87,32 @@ class SubsRoProvider(CBaseSubProviderClass):
         
         url = self.getFullUrl('/subtitrari')
         sts, data = self.cm.getPage(url, urlParams)
-        if not sts: return
+        if not sts:
+            return
         
         actionUrl, query = self.getFormQuery(data, '', self.params['confirmed_title'])
-        if '?' in actionUrl: actionUrl += '&'
-        else: actionUrl += '?'
+        if '?' in actionUrl:
+            actionUrl += '&'
+        else:
+            actionUrl += '?'
         actionUrl += urllib.parse.urlencode(query)
         
         sts, data = self.cm.getPage(actionUrl, urlParams)
-        if not sts: return
+        if not sts:
+            return
         
         urlParams['header'].update({'Referer':actionUrl, 'Accept':'*/*', 'Content-Type':'application/x-www-form-urlencoded; charset=UTF-8', 'X-Requested-With':'XMLHttpRequest'})
         actionUrl, query = self.getFormQuery(data, 'search-subtitrari', self.params['confirmed_title'])
         sts, data = self.cm.getPage(actionUrl, urlParams, query)
-        if not sts: return
+        if not sts:
+            return
         
         data = self.cm.ph.getAllItemsBeetwenMarkers(data, '<li', '</li>')
         for item in data:
             url = self.cm.ph.getDataBeetwenNodes(item, ('<a', '>', 'details'), ('</a', '>'))[1]
             url = self.getFullUrl(self.cm.ph.getSearchGroups(url, '''href=['"]([^"^']+?)['"]''')[0])
-            if url == '': continue
+            if url == '':
+                continue
             
             title  = self.cleanHtmlStr( self.cm.ph.getDataBeetwenNodes(item, ('<h', '>', 'title'), ('</h', '>'), False)[1] )
             lang   = self.cm.ph.getSearchGroups(item, 'flag\-([a-z]+?)\-big\.png')[0] 
@@ -115,7 +121,8 @@ class SubsRoProvider(CBaseSubProviderClass):
             tmp = self.cm.ph.getAllItemsBeetwenMarkers(item, '<p', '</p>')
             for t in tmp:
                 t = self.cleanHtmlStr(t).replace(' , ', ', ').replace(' : ', ': ')
-                if t != '': descTab.append(t)
+                if t != '':
+                    descTab.append(t)
             
             descTab.append(self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(item, ('<div', '>', 'sub-comment'), ('</div', '>'), False)[1]))
             
@@ -128,7 +135,8 @@ class SubsRoProvider(CBaseSubProviderClass):
         printDBG("SubsRoProvider.getSubtitlesList")
         
         sts, data = self.cm.getPage(cItem['url'], self.defaultParams)
-        if not sts: return
+        if not sts:
+            return
         imdbid = self.cm.ph.getSearchGroups(data, '/title/(tt[0-9]+?)[^0-9]')[0]
         url    = self.getFullUrl( self.cm.ph.getSearchGroups(data, 'href="([^"]*?/descarca/[^"]+?)"')[0] )
         subId  = url.rsplit('/', 1)[-1]
@@ -142,7 +150,8 @@ class SubsRoProvider(CBaseSubProviderClass):
 
         urlParams = dict(self.defaultParams)
         tmpDIR = self.downloadAndUnpack(url, urlParams, unpackToSubDir=True)
-        if None == tmpDIR: return
+        if None == tmpDIR:
+            return
         
         cItem = dict(cItem)
         cItem.update({'path':tmpDIR, 'fps':fps, 'imdbid':imdbid, 'sub_id':subId})
@@ -159,7 +168,8 @@ class SubsRoProvider(CBaseSubProviderClass):
     def _getFileName(self, title, lang, subId, imdbid, fps, ext):
         title = RemoveDisallowedFilenameChars(title).replace('_', '.')
         match = re.search(r'[^.]', title)
-        if match: title = title[match.start():]
+        if match:
+            title = title[match.start():]
 
         fileName = "{0}_{1}_0_{2}_{3}".format(title, lang, subId, imdbid)
         if fps > 0:

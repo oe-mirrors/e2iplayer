@@ -20,7 +20,8 @@ class Wiz1NetApi(CBaseHostClass):
         self.getLinkJS = ''
 
     def getPage(self, baseUrl, addParams = {}, post_data = None):
-        if addParams == {}: addParams = dict(self.http_params)
+        if addParams == {}:
+            addParams = dict(self.http_params)
         origBaseUrl = baseUrl
         baseUrl = self.cm.iriToUri(baseUrl)
         return self.cm.getPage(baseUrl, addParams, post_data)
@@ -30,13 +31,15 @@ class Wiz1NetApi(CBaseHostClass):
 
         channelsTab = []
         sts, data = self.getPage(self.getFullUrl('/schedule'), self.http_params)
-        if not sts: return []
+        if not sts:
+            return []
         self.setMainUrl(self.cm.meta['url'])
         self.http_params['header']['Referer'] = self.cm.meta['url']
 
         url = self.getFullUrl(ph.search(data, ph.IFRAME)[1])
         sts, data = self.getPage(url, self.http_params)
-        if not sts: return []
+        if not sts:
+            return []
 
         desc = ph.clean_html(ph.find(data, ('<h4', '>'), ('<br', '>'), flags=0)[1])
 
@@ -53,11 +56,13 @@ class Wiz1NetApi(CBaseHostClass):
         urlsTab = []
 
         sts, data = self.getPage(cItem['url'], self.http_params)
-        if not sts: return urlsTab
+        if not sts:
+            return urlsTab
         self.http_params['header']['Referer'] = self.cm.meta['url']
 
         url = self.getFullUrl(ph.search(data, ph.IFRAME)[1])
         sts, data = self.getPage(url, self.http_params)
-        if not sts: return []
+        if not sts:
+            return []
 
         return self.up.getAutoDetectedStreamLink(self.cm.meta['url'], data)

@@ -16,8 +16,10 @@ from Plugins.Extensions.IPTVPlayer.libs.urlparserhelper import getDirectM3U8Play
 import urllib.request
 import urllib.parse
 import urllib.error
-try:    import json
-except Exception: import simplejson as json
+try:
+    import json
+except Exception:
+    import simplejson as json
 from datetime import datetime
 from Components.config import config, ConfigYesNo, getConfigListEntry
 ###################################################
@@ -86,8 +88,10 @@ class PlayRTSIW(CBaseHostClass):
             params = dict(cItem)
             params.update(self.PORTALS_MAP[portal])
             params.update({'portal':portal, 'desc':params['url']})
-            if portal == 'swi': params.update({'f_type':'tv', 'category':nextCategory2})
-            else: params.update({'category':nextCategory1})
+            if portal == 'swi':
+                params.update({'f_type':'tv', 'category':nextCategory2})
+            else:
+                params.update({'category':nextCategory1})
             self.addDir(params)
         
         MAIN_CAT_TAB = [{'category':'search',          'title': _('Search'), 'search_item':True, 'icon':self.SEARCH_ICON_URL},
@@ -102,8 +106,10 @@ class PlayRTSIW(CBaseHostClass):
         for item in [('tv', _('TV')), ('radio', _('Radio'))]:
             params = dict(cItem)
             params.update({'f_type':item[0], 'title':item[1], 'desc':self.getFullUrl('/play/' + item[0])})
-            if item[0] == 'tv': params.update({'category':'portal'})
-            else: params.update({'category':'radio_channels'})
+            if item[0] == 'tv':
+                params.update({'category':'portal'})
+            else:
+                params.update({'category':'radio_channels'})
             self.addDir(params)
             
     def listRadioChannels(self, cItem, nextCategory):
@@ -111,13 +117,15 @@ class PlayRTSIW(CBaseHostClass):
         
         url = self.getFullUrl('/play/radio/page/channel/navigation')
         sts, data = self.cm.getPage(url)
-        if not sts: return
+        if not sts:
+            return
         
         data = self.cm.ph.getAllItemsBeetwenMarkers(data, '<a', '</a>')
         for item in data:
             url = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''href=['"]([^'^"]+?)['"]''')[0])
             title = self.cleanHtmlStr(item)
-            if title == '': title = self.cm.ph.getSearchGroups(item, '''channelNavigationLogo__([^'^"]+?)['"]''')[0].upper()
+            if title == '':
+                title = self.cm.ph.getSearchGroups(item, '''channelNavigationLogo__([^'^"]+?)['"]''')[0].upper()
             params = dict(cItem)
             params.update({'title':title, 'url':url})
             if 'station=' in url:
@@ -144,14 +152,18 @@ class PlayRTSIW(CBaseHostClass):
             params.update({'category':'list_live', 'title':_('Live'), 'url':self.getFullUrl('/play/v2/tv/live/overview'), 'desc':self.getFullUrl('/play/tv/live')})
             self.addDir(params)
         
-        if type == 'tv': url = '/play/tv/videos/latest?numberOfVideos=100&moduleContext=homepage'
-        else: url = '/play/radio/latest/audios?numberOfAudios=100&moduleContext=homepage&channelId=' + cItem['f_channel_id']
+        if type == 'tv':
+            url = '/play/tv/videos/latest?numberOfVideos=100&moduleContext=homepage'
+        else:
+            url = '/play/radio/latest/audios?numberOfAudios=100&moduleContext=homepage&channelId=' + cItem['f_channel_id']
         params = dict(cItem)
         params.update({'category':'list_teaser_items', 'title':_('Latest'), 'url':self.getFullUrl(url)})
         self.addDir(params)
         
-        if type == 'tv': url = '/play/tv/videos/trending?numberOfVideos=23&onlyEpisodes=true&includeEditorialPicks=true'
-        else: url = '/play/radio/mostclicked/audios?numberOfAudios=23&moduleContext=homepage&channelId=' + cItem['f_channel_id']
+        if type == 'tv':
+            url = '/play/tv/videos/trending?numberOfVideos=23&onlyEpisodes=true&includeEditorialPicks=true'
+        else:
+            url = '/play/radio/mostclicked/audios?numberOfAudios=23&moduleContext=homepage&channelId=' + cItem['f_channel_id']
         params = dict(cItem)
         params.update({'category':'list_teaser_items', 'title':_('Most popular'), 'url':self.getFullUrl(url)})
         self.addDir(params)
@@ -164,7 +176,8 @@ class PlayRTSIW(CBaseHostClass):
         # chek if categories are available
         url = self.getFullUrl('/play/v2/%s/topicList?numberOfMostClicked=1&numberOfLatest=1&moduleContext=topicpaget' % type)
         sts, data = self.cm.getPage(url)
-        if not sts: return
+        if not sts:
+            return
         try:
             if len(json.loads(data)):
                 params = dict(cItem)
@@ -175,10 +188,13 @@ class PlayRTSIW(CBaseHostClass):
             
         # check AZ
         if portal != 'swi':
-            if type == 'tv': url = self.getFullUrl('/play/v2/tv/shows/atoz/index')
-            else: url = self.getFullUrl('/play/v2/radio/channel/%s/shows/atoz/index' % cItem['f_channel_id'])
+            if type == 'tv':
+                url = self.getFullUrl('/play/v2/tv/shows/atoz/index')
+            else:
+                url = self.getFullUrl('/play/v2/radio/channel/%s/shows/atoz/index' % cItem['f_channel_id'])
             sts, data = self.cm.getPage(url)
-            if not sts: return
+            if not sts:
+                return
             try:
                 self.cacheShowsAZ = byteify(json.loads(data))
             except Exception:
@@ -198,7 +214,8 @@ class PlayRTSIW(CBaseHostClass):
         url = self.getFullUrl('/play/v2/%s/topicList?numberOfMostClicked=100&numberOfLatest=100&moduleContext=topicpaget' % type)
         
         sts, data = self.cm.getPage(url)
-        if not sts: return
+        if not sts:
+            return
         try:
             data = byteify(json.loads(data))
             for item in data:
@@ -266,8 +283,10 @@ class PlayRTSIW(CBaseHostClass):
         printDBG("PlayRTSIW.listDays [%s]" % cItem)
         type = cItem['f_type']
         channelId = cItem.get('f_channel_id', '')
-        if 'f_date' not in cItem: dt = datetime.now()
-        else: dt = datetime.strptime(cItem['f_date'], '%d-%m-%Y').date()
+        if 'f_date' not in cItem:
+            dt = datetime.now()
+        else:
+            dt = datetime.strptime(cItem['f_date'], '%d-%m-%Y').date()
         baseUrl = self.getFullUrl('/play/v2/{0}/programDay/%s/{1}'.format(type, channelId))
         for item in range(31):
             title = dt.strftime('%d-%m-%Y')
@@ -290,7 +309,8 @@ class PlayRTSIW(CBaseHostClass):
                 url = item['absoluteDetailUrl']
                 icon = self.getFullIconUrl(item['imageUrl'])
                 desc = [item['duration'], item['date']]
-                if item['isGeoblocked']: desc.append(_('geoblocked'))
+                if item['isGeoblocked']:
+                    desc.append(_('geoblocked'))
                 descTab = []
                 descTab.append(item['showTitle'])
                 descTab.append(', '.join(desc))
@@ -298,10 +318,14 @@ class PlayRTSIW(CBaseHostClass):
                 
                 params = dict(cItem)
                 params.update({'good_for_fav':True, 'title':title, 'url':url, 'item_id':item['id'], 'popup_url':self.getFullUrl(item['popupUrl']), 'detail_url':self.getFullUrl(item['detailUrl']), 'icon':icon, 'desc':'[/br]'.join(descTab)})
-                if 'downloadHdUrl' in item: params['download_hd_url'] = item['downloadHdUrl']
-                if 'downloadSdUrl' in item: params['download_sd_url'] = item['downloadSdUrl']
-                if type == 'tv': self.addVideo(params)
-                else: self.addAudio(params)
+                if 'downloadHdUrl' in item:
+                    params['download_hd_url'] = item['downloadHdUrl']
+                if 'downloadSdUrl' in item:
+                    params['download_sd_url'] = item['downloadSdUrl']
+                if type == 'tv':
+                    self.addVideo(params)
+                else:
+                    self.addAudio(params)
         except Exception:
             printExc()
             
@@ -313,7 +337,8 @@ class PlayRTSIW(CBaseHostClass):
             icon = self.getFullIconUrl(item['imageUrl'])
             url = item['absoluteOverviewUrl']
             desc = []
-            if 'episodeCount' in item and item['episodeCount']['isDefined']: desc.append(_('%s episodes') % item['episodeCount']['formatted'])
+            if 'episodeCount' in item and item['episodeCount']['isDefined']:
+                desc.append(_('%s episodes') % item['episodeCount']['formatted'])
             desc.append(self.cleanHtmlStr(item.get('description', '')))
             sUrl = self.getFullUrl('/play/%s/show/%s/latestEpisodes' % (type, item['id']))
             
@@ -324,7 +349,8 @@ class PlayRTSIW(CBaseHostClass):
     def listTeaserItems(self, cItem):
         printDBG("PlayRTSIW.listTeaserItems")
         sts, data = self.cm.getPage(cItem['url'])
-        if not sts: return
+        if not sts:
+            return
         
         tmp = self.cm.ph.getAllItemsBeetwenMarkers(data, 'data-teaser="', '"', False)
         for data in tmp:
@@ -341,7 +367,8 @@ class PlayRTSIW(CBaseHostClass):
         try:
             allLetters = []
             for item in self.cacheShowsAZ:
-                if not item['hasShows']: continue
+                if not item['hasShows']:
+                    continue
                 params = dict(cItem)
                 params.update({'good_for_fav':False, 'title':item['id'], 'category':nextCategory, 'f_letters':[item['id']]})
                 self.addDir(params)
@@ -358,10 +385,13 @@ class PlayRTSIW(CBaseHostClass):
         printDBG("PlayRTSIW.listAZItems cItem[%s]" % (cItem))
         type = cItem['f_type']
         if self.cacheShowsMap == []:
-            if type == 'tv': url = self.getFullUrl('/play/v2/%s/shows' % type)
-            else: url = self.getFullUrl('/play/radio/shows/alphabetical-sections?channelId=' + cItem['f_channel_id'])
+            if type == 'tv':
+                url = self.getFullUrl('/play/v2/%s/shows' % type)
+            else:
+                url = self.getFullUrl('/play/radio/shows/alphabetical-sections?channelId=' + cItem['f_channel_id'])
             sts, data = self.cm.getPage(url)
-            if not sts: return
+            if not sts:
+                return
             
             data = clean_html(self.cm.ph.getDataBeetwenMarkers(data, 'data-alphabetical-sections="',  '"', False)[1])
             try:
@@ -372,7 +402,8 @@ class PlayRTSIW(CBaseHostClass):
         letters = cItem.get('f_letters', '')
         try:
             for section in self.cacheShowsMap:
-                if section['id'] not in letters: continue
+                if section['id'] not in letters:
+                    continue
                 params = dict(cItem)
                 params['category'] = nextCategory
                 self._listShows(params, section['showTeaserList'])
@@ -383,7 +414,8 @@ class PlayRTSIW(CBaseHostClass):
         printDBG("PlayRTSIW.listEpisodes cItem[%s]" % (cItem))
         
         sts, data = self.cm.getPage(cItem['f_show_url'])
-        if not sts: return
+        if not sts:
+            return
         try:
             data = byteify(json.loads(data))
             self._listItems(cItem, data['episodes'])
@@ -400,7 +432,8 @@ class PlayRTSIW(CBaseHostClass):
         printDBG("PlayRTSIW.listLiveChannels")
         
         sts, data = self.cm.getPage(cItem['url'])
-        if not sts: return
+        if not sts:
+            return
         try:
             data = byteify(json.loads(data))
             for item in data['teaser']:
@@ -432,7 +465,8 @@ class PlayRTSIW(CBaseHostClass):
             # SHOWS
             cUrl = self.getFullUrl('/play/v2/' + type + '/shows/' + baseUrl) + 'Shows='
             sts, data = self.cm.getPage(cUrl + '1')
-            if not sts: return
+            if not sts:
+                return
             try:
                 data = json.loads(data)
                 if data['numberOfAvailableShows'] > 0:
@@ -447,7 +481,8 @@ class PlayRTSIW(CBaseHostClass):
             # VIDEOS/AUDIOS
             cUrl = self.getFullUrl('/play/v2/' + type + '/' + self.ITEMS_TYPE_MAP[type] + '/' + baseUrl) + self.ITEMS_TYPE_MAP[type].title() + '='
             sts, data = self.cm.getPage(cUrl + '1')
-            if not sts: return
+            if not sts:
+                return
             try:
                 data = json.loads(data)
                 countKey = 'numberOfAvailable' + self.ITEMS_TYPE_MAP[type].title()
@@ -469,7 +504,8 @@ class PlayRTSIW(CBaseHostClass):
         printDBG("PlayRTSIW.listSearchItems cItem[%s]" % (cItem))
         type = self.ITEMS_TYPE_MAP[cItem.get('f_type', 'tv')]
         sts, data = self.cm.getPage(cItem['url'])
-        if not sts: return
+        if not sts:
+            return
         try:
             data = byteify(json.loads(data))
             self._listItems(cItem, data[type])
@@ -485,7 +521,8 @@ class PlayRTSIW(CBaseHostClass):
     def listSearchShows(self, cItem, nextCategory):
         printDBG("PlayRTSIW.listSearchShows cItem[%s]" % (cItem))
         sts, data = self.cm.getPage(cItem['url'])
-        if not sts: return
+        if not sts:
+            return
         try:
             data = byteify(json.loads(data))
             params = dict(cItem)
@@ -500,17 +537,23 @@ class PlayRTSIW(CBaseHostClass):
         
         if 'popup_url' not in cItem:
             sts, data = self.cm.getPage(cItem['url'])
-            if not sts: return []
+            if not sts:
+                return []
             url = self.cm.ph.getSearchGroups(data, '''ATR\.stream\s*?=\s*?\{[^\}]*?['"](https?://[^'^"]+?)['"]''')[0]
-            if url != '': linksTab.append({'name':'stream', 'url':url, 'need_resolve':0})
+            if url != '':
+                linksTab.append({'name':'stream', 'url':url, 'need_resolve':0})
             return linksTab
         
-        if 'download_sd_url' in cItem: linksTab.append({'url':cItem['download_sd_url'], 'name':_('Download %s') % 'SD', 'need_resolve':0})
-        if 'download_hd_url' in cItem: linksTab.append({'url':cItem['download_hd_url'], 'name':_('Download %s') % 'HD', 'need_resolve':0})
+        if 'download_sd_url' in cItem:
+            linksTab.append({'url':cItem['download_sd_url'], 'name':_('Download %s') % 'SD', 'need_resolve':0})
+        if 'download_hd_url' in cItem:
+            linksTab.append({'url':cItem['download_hd_url'], 'name':_('Download %s') % 'HD', 'need_resolve':0})
         
         if '/tv/' in cItem['popup_url']: 
-            if 'url_to_player' in cItem: url = cItem['url_to_player']
-            else: url = cItem['popup_url'].replace('/tv/popupvideoplayer?', '/v2/tv/popupvideoplayer/content?')
+            if 'url_to_player' in cItem:
+                url = cItem['url_to_player']
+            else:
+                url = cItem['popup_url'].replace('/tv/popupvideoplayer?', '/v2/tv/popupvideoplayer/content?')
             mediaType = 'VIDEO'
             progressType = 'mp4'
         else: 
@@ -520,7 +563,8 @@ class PlayRTSIW(CBaseHostClass):
         
         if '/tp.' not in url:
             sts, data = self.cm.getPage(url)
-            if not sts: return []
+            if not sts:
+                return []
             url = self.getFullUrl(self.cm.ph.getSearchGroups(data, '''<iframe[^>]+?src=['"]([^"^']+?)['"]''', 1, True)[0]).replace('&amp;', '&')
         
         baseUrl = self.cm.getBaseUrl(url)
@@ -540,17 +584,24 @@ class PlayRTSIW(CBaseHostClass):
             printDBG("<")
             for item in data:
                 mimeType = item['mimeType'].split('/', 1)[-1].lower()
-                if mimeType == 'x-mpegurl': mimeType = 'HLS'
-                elif mimeType == progressType: mimeType = mimeType.upper()
-                elif 'rtmp' in item['protocol'].lower(): mimeType = mimeType.upper()
-                elif mimeType == 'mpeg': mimeType = mimeType.upper()
-                else: continue
+                if mimeType == 'x-mpegurl':
+                    mimeType = 'HLS'
+                elif mimeType == progressType:
+                    mimeType = mimeType.upper()
+                elif 'rtmp' in item['protocol'].lower():
+                    mimeType = mimeType.upper()
+                elif mimeType == 'mpeg':
+                    mimeType = mimeType.upper()
+                else:
+                    continue
                 n = item['url'].split('/')
                 url = strwithmeta(item['url'], {'priv_token_url':tokenUrl + '%2F{0}%2F{1}%2F*'.format(n[3], n[4]), 'priv_type':mimeType.lower()})
                 name = '[%s/%s] %s' % (mimeType, url.split('://', 1)[0].upper(), item['quality'])
                 params = {'name':name, 'url':url, 'need_resolve':1}
-                if item['quality'].upper() == 'HD': linksTab.append(params)
-                else: linksTab.insert(0, params)
+                if item['quality'].upper() == 'HD':
+                    linksTab.append(params)
+                else:
+                    linksTab.insert(0, params)
         except Exception:
             printExc()
         
@@ -565,14 +616,18 @@ class PlayRTSIW(CBaseHostClass):
         sts, data = self.cm.getPage(tokenUrl)
         try:
             data = byteify(json.loads(data))['token']['authparams']
-            if '?' not in videoUrl: videoUrl += '?' + data
-            else: videoUrl += '&' + data
+            if '?' not in videoUrl:
+                videoUrl += '?' + data
+            else:
+                videoUrl += '&' + data
         except Exception:
             printExc()
         
         urlTab = []
-        if type == 'hls': urlTab = getDirectM3U8Playlist(videoUrl, checkContent=True, sortWithMaxBitrate=999999999)
-        else: urlTab.append({'name':'direct', 'url':videoUrl})
+        if type == 'hls':
+            urlTab = getDirectM3U8Playlist(videoUrl, checkContent=True, sortWithMaxBitrate=999999999)
+        else:
+            urlTab.append({'name':'direct', 'url':videoUrl})
         return urlTab
         
     def handleService(self, index, refresh = 0, searchPattern = '', searchType = ''):

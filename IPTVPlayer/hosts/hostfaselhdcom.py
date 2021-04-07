@@ -44,7 +44,8 @@ class FaselhdCOM(CBaseHostClass):
                             ]
         
     def getPage(self, baseUrl, addParams = {}, post_data = None):
-        if addParams == {}: addParams = dict(self.defaultParams)
+        if addParams == {}:
+            addParams = dict(self.defaultParams)
         origBaseUrl = baseUrl
         baseUrl = self.cm.iriToUri(baseUrl)
         addParams['cloudflare_params'] = {'cookie_file':self.COOKIE_FILE, 'User-Agent':self.USER_AGENT}
@@ -105,7 +106,8 @@ class FaselhdCOM(CBaseHostClass):
         page = cItem.get('page', 1)
         
         sts, data = self.getPage(cItem['url'])
-        if not sts: return
+        if not sts:
+            return
         baseData = data
         
         nextPage = self.cm.ph.getDataBeetwenNodes(data, ('<div', '>', 'pagination'), ('</div', '>'))[1]
@@ -117,20 +119,26 @@ class FaselhdCOM(CBaseHostClass):
             url   = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''href=['"]([^'^"]+?)['"]''')[0])
             icon  = self.getFullIconUrl(self.cm.ph.getSearchGroups(item, '''[\s\-]src=['"]([^'^"]+?)['"]''')[0])
             title = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(item, '<h1', '</h1>')[1])
-            if title == '': title = self.cleanHtmlStr(self.cm.ph.getSearchGroups(item, '''alt=['"]([^'^"]+?)['"]''')[0])
-            if title == '': continue
+            if title == '':
+                title = self.cleanHtmlStr(self.cm.ph.getSearchGroups(item, '''alt=['"]([^'^"]+?)['"]''')[0])
+            if title == '':
+                continue
             
             desc = []
             tmp = self.cm.ph.getDataBeetwenNodes(item, ('<div', '>', 'movie-meta'), ('</div', '>'))[1]
             tmp = self.cm.ph.getAllItemsBeetwenMarkers(tmp, '<span', '</span>')
             for t in tmp:
                 label = ''
-                if 'fa-star' in t: label = _('Rating:')
-                elif 'fa-eye' in t: label = _('Views:')
+                if 'fa-star' in t:
+                    label = _('Rating:')
+                elif 'fa-eye' in t:
+                    label = _('Views:')
                 t = self.cleanHtmlStr(t)
                 if t != '': 
-                    if label != '': desc.append('%s %s' %(label, t))
-                    else: desc.append(t)
+                    if label != '':
+                        desc.append('%s %s' %(label, t))
+                    else:
+                        desc.append(t)
             
             if '/seasons/' in self.cm.meta['url'] and not cItem.get('sub_view'):
                 title = '%s - %s' % (cItem['title'], title)
@@ -147,7 +155,8 @@ class FaselhdCOM(CBaseHostClass):
         if not cItem.get('sub_view'):
             data = ph.findall(baseData, ('<span', '>', 'sub-view'), '</span>')
             for item in data:
-                if 'display:none' in item: continue
+                if 'display:none' in item:
+                    continue
                 url = self.getFullUrl(ph.getattr(item, 'href'), self.cm.meta['url'])
                 title = '%s - %s' % (cItem['title'], ph.clean_html(item))
                 self.addDir(MergeDicts(cItem, {'url':url, 'title':title, 'sub_view':True}))
@@ -161,19 +170,22 @@ class FaselhdCOM(CBaseHostClass):
         printDBG("FaselhdCOM.exploreItem")
         
         sts, data = self.getPage(cItem['url'])
-        if not sts: return
+        if not sts:
+            return
         
         url = self.cm.ph.getDataBeetwenNodes(data, ('<meta', '>', 'refresh'), ('<', '>'))[1]
         url = self.getFullUrl(self.cm.ph.getSearchGroups(url, '''url=['"]([^'^"]+?)['"]''', 1, True)[0])
         
         if self.cm.isValidUrl(url):
             sts, tmp =  self.getPage(url)
-            if sts: data = tmp
+            if sts:
+                data = tmp
         
         tmp = self.cm.ph.getDataBeetwenNodes(data, ('<div', '>', 'movie-btns'), ('</div', '>'))[1]
         tmp = self.cm.ph.getAllItemsBeetwenMarkers(tmp, '<a', '</a>')
         for item in tmp:
-            if 'youtube-play' not in item: continue
+            if 'youtube-play' not in item:
+                continue
             title = self.cleanHtmlStr(item)
             url   = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''href=['"]([^'^"]+?)['"]''', 1, True)[0])
             if self.cm.isValidUrl(url):
@@ -188,7 +200,8 @@ class FaselhdCOM(CBaseHostClass):
         else:
             cItem = dict(cItem)
             cItem.update({'category':nextCategory, 'page':1, 'f_list_episodes':True})
-            if self.cm.isValidUrl(url): cItem['url'] = url
+            if self.cm.isValidUrl(url):
+                cItem['url'] = url
             self.listItems(cItem)
         
     def listSearchResult(self, cItem, searchPattern, searchType):
@@ -211,12 +224,14 @@ class FaselhdCOM(CBaseHostClass):
         
         cacheKey = cItem['url']
         cacheTab = self.cacheLinks.get(cacheKey, [])
-        if len(cacheTab): return cacheTab
+        if len(cacheTab):
+            return cacheTab
         
         self.cacheLinks = {}
         
         sts, data = self.getPage(cItem['url'])
-        if not sts: return
+        if not sts:
+            return
         
         dwnLink = self.cm.ph.getDataBeetwenNodes(data, ('<a', '>', 'download_direct_link'), ('</a', '>'))[1]
         dwnLink = self.cm.ph.getSearchGroups(dwnLink, '''href=['"](https?://[^"^']+?)['"]''')[0]
@@ -233,22 +248,26 @@ class FaselhdCOM(CBaseHostClass):
             if url == '': 
                 url = self.cm.ph.getSearchGroups(item, '''href\s*?=\s*?['"]([^'^"]+?)['"]''')[0]
                 tmp = url.split('embed.php?url=', 1)
-                if 2 == len(tmp): url = urllib.parse.unquote(tmp[-1])
+                if 2 == len(tmp):
+                    url = urllib.parse.unquote(tmp[-1])
             retTab.append({'name':name, 'url':self.getFullUrl(url), 'need_resolve':1})
             
         if self.cm.isValidUrl(dwnLink):
             sts, data = self.getPage(dwnLink)
-            if not sts: return
+            if not sts:
+                return
             data = self.cm.ph.getDataBeetwenNodes(data, ('<div', '>', 'other_servers'), ('</div', '>'))[1]
             data = self.cm.ph.getAllItemsBeetwenMarkers(data, '<a', '</a>')
             for item in data:
                 url = self.cm.ph.getSearchGroups(item, '''href=['"](https?://[^"^']+?)['"]''')[0]
-                if 1 != self.up.checkHostSupport(url): continue
+                if 1 != self.up.checkHostSupport(url):
+                    continue
                 name = self.cleanHtmlStr(item)
                 dwnTab.append({'name':name, 'url':url, 'need_resolve':1})
         
         retTab.extend(dwnTab)
-        if len(retTab): self.cacheLinks[cacheKey] = retTab
+        if len(retTab):
+            self.cacheLinks[cacheKey] = retTab
         return retTab
         
     def getVideoLinks(self, baseUrl):
@@ -268,7 +287,8 @@ class FaselhdCOM(CBaseHostClass):
         urlTab = self.up.getVideoLinkExt(videoUrl)
         if 0 == len(urlTab):
             sts, data = self.getPage(videoUrl)
-            if not sts: return []
+            if not sts:
+                return []
             
             hlsUrl = self.cm.ph.getSearchGroups(data, '''["'](https?://[^'^"]+?\.m3u8(?:\?[^"^']+?)?)["']''', ignoreCase=True)[0]
             printDBG("hlsUrl||||||||||||||||| " + hlsUrl)
@@ -293,14 +313,16 @@ class FaselhdCOM(CBaseHostClass):
         otherInfo = {}
         
         sts, data = self.getPage(cItem['url'])
-        if not sts: return []
+        if not sts:
+            return []
         
         url = self.cm.ph.getDataBeetwenNodes(data, ('<meta', '>', 'refresh'), ('<', '>'))[1]
         url = self.getFullUrl(self.cm.ph.getSearchGroups(url, '''url=['"]([^'^"]+?)['"]''', 1, True)[0])
         
         if self.cm.isValidUrl(url):
             sts, tmp = self.getPage(url)
-            if sts: data = tmp
+            if sts:
+                data = tmp
         
         data = self.cm.ph.getDataBeetwenNodes(data, ('<header', '>'), ('<style', '>'))[1]
         desc = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(data, '<p', '</p>')[1])
@@ -332,13 +354,18 @@ class FaselhdCOM(CBaseHostClass):
             
             #marker = self.cm.ph.getSearchGroups(item, '''(\sfa\-[^'^"]+?)['"]''')[0].split('fa-')[-1]
             #printDBG(">>>>>>>>>>>>>>>>>> " + marker)
-            if marker not in keysMap: continue
-            if value == '': continue
+            if marker not in keysMap:
+                continue
+            if value == '':
+                continue
             otherInfo[keysMap[marker]] = value
         
-        if title == '': title = cItem['title']
-        if desc == '':  desc = cItem.get('desc', '')
-        if icon == '':  icon = cItem.get('icon', self.DEFAULT_ICON_URL)
+        if title == '':
+            title = cItem['title']
+        if desc == '':
+            desc = cItem.get('desc', '')
+        if icon == '':
+            icon = cItem.get('icon', self.DEFAULT_ICON_URL)
         
         return [{'title':self.cleanHtmlStr( title ), 'text': self.cleanHtmlStr( desc ), 'images':[{'title':'', 'url':self.getFullUrl(icon)}], 'other_info':otherInfo}]
     

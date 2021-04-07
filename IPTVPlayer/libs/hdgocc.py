@@ -13,8 +13,10 @@ from Plugins.Extensions.IPTVPlayer.tools.iptvtypes import strwithmeta
 ###################################################
 import re
 import copy
-try: import json
-except Exception: import simplejson as json
+try:
+    import json
+except Exception:
+    import simplejson as json
 ###################################################
 
 ###################################################
@@ -52,21 +54,24 @@ class HdgoccParser():
         params['header']['Referer'] = refUrl
         params['with_metadata'] = True
         sts, data = self.cm.getPage( pageUrl, params)
-        if not sts: return []
+        if not sts:
+            return []
         
         urlNext = self.cm.ph.getSearchGroups(data, '<iframe[^>]+?src="([^"]+?)"', 1, True)[0]
         urlNext = self.getFullUrl(data.meta['url'], urlNext)
         if self.cm.isValidUrl(urlNext):
             params['header']['Referer'] = pageUrl
             sts, data = self.cm.getPage(urlNext, params)
-            if not sts: return []
+            if not sts:
+                return []
             
         seasonData = self.cm.ph.getDataBeetwenMarkers(data, 'id="season"', '</select>', False)[1]
         printDBG(seasonData)
         seasonData = re.compile('<option[^>]+?value="([0-9]+?)">([^<]+?)</option>').findall(seasonData)
         seasonMainUrl = self.cm.ph.getDataBeetwenMarkers(data, "$('#season').val();", '});', False)[1]
         seasonMainUrl = self.cm.ph.getSearchGroups(seasonMainUrl, "var url = '([^']+?)'")[0]
-        if seasonMainUrl == '': seasonMainUrl = pageUrl.split('?', 1)[0]
+        if seasonMainUrl == '':
+            seasonMainUrl = pageUrl.split('?', 1)[0]
         seasonMainUrl += '?season='
         seasonMainUrl = self.getFullUrl(pageUrl, seasonMainUrl)
         
@@ -84,14 +89,16 @@ class HdgoccParser():
         params['header']['Referer'] = refUrl
         params['with_metadata'] = True
         sts, data = self.cm.getPage( seasonUrl, params)
-        if not sts: return []
+        if not sts:
+            return []
         
         urlNext = self.cm.ph.getSearchGroups(data, '<iframe[^>]+?src="([^"]+?)"', 1, True)[0]
         urlNext = self.getFullUrl(data.meta['url'], urlNext)
         if self.cm.isValidUrl(urlNext):
             params['header']['Referer'] = seasonUrl
             sts, data = self.cm.getPage(urlNext, params)
-            if not sts: return []
+            if not sts:
+                return []
         
         if '.playlist.php' in seasonUrl:
             itemTitle = self.cm.ph.getSearchGroups(data, '''createTextNode\([^'^"]*?['"]([^'^"]+?)['"]''')[0]
@@ -113,7 +120,8 @@ class HdgoccParser():
             #int(item[0])
             idx = 1
             for item in episodeData:
-                try: id = int(self.cm.ph.getSearchGroups(' %s ' % item, '''[^0-9]([0-9]+?)[^0-9]''')[0])
+                try:
+                    id = int(self.cm.ph.getSearchGroups(' %s ' % item, '''[^0-9]([0-9]+?)[^0-9]''')[0])
                 except Exception: 
                     printExc()
                     id = idx

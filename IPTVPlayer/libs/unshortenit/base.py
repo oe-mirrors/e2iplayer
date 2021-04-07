@@ -12,8 +12,10 @@ import time
 from base64 import b64decode
 import copy
 
-try: import requests
-except Exception: pass
+try:
+    import requests
+except Exception:
+    pass
 
 from Plugins.Extensions.IPTVPlayer.libs.pCommon import common
 from Plugins.Extensions.IPTVPlayer.tools.iptvtools import byteify, printExc, printDBG, GetCookieDir, rm
@@ -401,12 +403,14 @@ class UnshortenIt(object):
                 action = self.cm.ph.getSearchGroups(data, '''data\-action="([^"]+?)"''')[0]
                 banner = self.cm.ph.getSearchGroups(data, '''data\-banner="([^"]+?)"''')[0]
                 component = self.cm.ph.getSearchGroups(data, '''data\-component="([^"]+?)"''')[0]
-                if tries > 1: GetIPTVSleep().Sleep(int(time))
+                if tries > 1:
+                    GetIPTVSleep().Sleep(int(time))
                 
                 sts, partials = self.cm.getPage('http://iiv.pl/themes/cutso/assets/javascript/shortcut/shortcut.js', params)
                 partials = self.cm.ph.getDataBeetwenMarkers(partials, 'update:', '}')[1]
                 partials = self.cm.ph.getSearchGroups(partials, '''['"]([^'^"]+?)['"]''')[0]
-                if partials == '': partials = 'shortcut/link_show'
+                if partials == '':
+                    partials = 'shortcut/link_show'
                 for header in headers:
                     if 'HANDLER' in header:
                         HTTP_HEADER_AJAX[header] = action
@@ -475,8 +479,10 @@ class UnshortenIt(object):
             uri = self.cm.ph.getDataBeetwenNodes(data, ('<a', '>', 'push_button'), ('</a', '>'))[1]
             printDBG(uri)
             uri = self.cm.ph.getSearchGroups(uri, '''href=([^>^\s]+?)[>\s]''')[0]
-            if uri.startswith('"'): uri = self.cm.ph.getSearchGroups(uri, '"([^"]+?)"')[0]
-            elif uri.startswith("'"): uri = self.cm.ph.getSearchGroups(uri, "'([^']+?)'")[0]
+            if uri.startswith('"'):
+                uri = self.cm.ph.getSearchGroups(uri, '"([^"]+?)"')[0]
+            elif uri.startswith("'"):
+                uri = self.cm.ph.getSearchGroups(uri, "'([^']+?)'")[0]
             
             uri = self.cm.getFullUrl(uri, self.cm.getBaseUrl(self.cm.meta['url']))
             return uri, 'OK'

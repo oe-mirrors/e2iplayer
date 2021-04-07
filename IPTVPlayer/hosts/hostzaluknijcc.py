@@ -19,8 +19,10 @@ import urllib.request
 import urllib.parse
 import urllib.error
 import base64
-try:    import json
-except Exception: import simplejson as json
+try:
+    import json
+except Exception:
+    import simplejson as json
 ###################################################
 
 
@@ -43,12 +45,15 @@ class Zaluknij(CBaseHostClass):
         self.defaultParams = {'header':self.HTTP_HEADER, 'with_metadata':True, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
 
     def getPage(self, baseUrl, addParams = {}, post_data = None):
-        if addParams == {}: addParams = dict(self.defaultParams)
+        if addParams == {}:
+            addParams = dict(self.defaultParams)
         origBaseUrl = baseUrl
         baseUrl = self.cm.iriToUri(baseUrl)
         def _getFullUrl(url):
-            if self.cm.isValidUrl(url): return url
-            else: return urllib.parse.urljoin(baseUrl, url)
+            if self.cm.isValidUrl(url):
+                return url
+            else:
+                return urllib.parse.urljoin(baseUrl, url)
         addParams['cloudflare_params'] = {'domain':self.up.getDomain(baseUrl), 'cookie_file':self.COOKIE_FILE, 'User-Agent':self.USER_AGENT, 'full_url_handle':_getFullUrl}
         return self.cm.getPageCFProtection(baseUrl, addParams, post_data)
         
@@ -75,7 +80,8 @@ class Zaluknij(CBaseHostClass):
         self.cacheMovieFilters = { 'cats':[], 'sort':[], 'years':[], 'az':[]}
 
         sts, data = self.getPage(cItem['url'])
-        if not sts: return
+        if not sts:
+            return
 
         # fill sort
 #        dat = self.cm.ph.getDataBeetwenMarkers(data, '<ul id="filter-sort"', '</ul>', False)[1]
@@ -131,9 +137,11 @@ class Zaluknij(CBaseHostClass):
         page = cItem.get('page', 1)
 
         url  = cItem['url']
-        if page > 1: url = url + '/page/{0}'.format(page)
+        if page > 1:
+            url = url + '/page/{0}'.format(page)
         sts, data = self.getPage(url)
-        if not sts: return
+        if not sts:
+            return
         self.setMainUrl(data.meta['url'])
             
         nextPage = self.cm.ph.getDataBeetwenNodes(data, ('<div', '>', 'pagination'), ('</div', '>'))[1]
@@ -153,7 +161,8 @@ class Zaluknij(CBaseHostClass):
         for item in data:
 #            printDBG("Zaluknij.listItems item %s" % item)
             url = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''href=['"]([^"^']+?)['"]''')[0])
-            if url == '': continue
+            if url == '':
+                continue
             icon = self.getFullIconUrl(self.cm.ph.getSearchGroups(item, '''src=['"]([^"^']+?)['"]''')[0])
             title = unescapeHTML(self.cm.ph.getSearchGroups(item, '''alt=['"]([^"^']+?)['"]''')[0]).encode('UTF-8')
             desc = self.cleanHtmlStr(item)
@@ -172,14 +181,16 @@ class Zaluknij(CBaseHostClass):
     def listSeriesSeasons(self, cItem, nextCategory):
         printDBG("Zaluknij.listSeriesSeasons")
         sts, data = self.getPage(cItem['url'])
-        if not sts: return
+        if not sts:
+            return
         serieDesc = self.cm.ph.getDataBeetwenNodes(data, ('<div', '>', 'info'), ('</p', '>'))[1]
         serieDesc = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(serieDesc, ('<p', '>'), ('</p', '>'))[1])
         data = self.cm.ph.getAllItemsBeetwenNodes(data, ('<div', '>', 'se-q'), ('</ul', '>'))
         
         for sItem in data:
             sTitle = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(sItem, ('<span', '>', 'title'), ('</span', '>'))[1])
-            if not sTitle: continue
+            if not sTitle:
+                continue
             sItem = self.cm.ph.getAllItemsBeetwenMarkers(sItem, '<a', '</a>')
             tabItems = []
             for item in sItem:
@@ -209,7 +220,8 @@ class Zaluknij(CBaseHostClass):
                 
         cacheKey = cItem['url']
         cacheTab = self.cacheLinks.get(cacheKey, [])
-        if len(cacheTab): return cacheTab
+        if len(cacheTab):
+            return cacheTab
         
         self.cacheLinks = {}
         
@@ -223,7 +235,8 @@ class Zaluknij(CBaseHostClass):
             
         params['header']['Referer'] = cUrl
         sts, data = self.getPage(url, params)
-        if not sts: return []
+        if not sts:
+            return []
 
         cUrl = data.meta['url']
         self.setMainUrl(cUrl)
@@ -238,7 +251,8 @@ class Zaluknij(CBaseHostClass):
             sts, data = self.getPage(playerUrl, params)
             playerUrl = self.cm.meta.get('location', '')
             name = self.up.getHostName(playerUrl)
-            if playerUrl == '': continue
+            if playerUrl == '':
+                continue
             retTab.append({'name':name, 'url':strwithmeta(playerUrl, {'Referer':url}), 'need_resolve':1})
              
         if len(retTab):
@@ -266,7 +280,8 @@ class Zaluknij(CBaseHostClass):
         itemsList = []
 
         sts, data = self.getPage(cItem['url'])
-        if not sts: return []
+        if not sts:
+            return []
 
         title = cItem['title']
         icon = cItem.get('icon', '')
@@ -279,9 +294,12 @@ class Zaluknij(CBaseHostClass):
 #        itemsList.append((_('Duration'), self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(data, '<dt>Czas trwania:</dt>', '</dd>', False)[1])))
 #        itemsList.append((_('Genres'), self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(data, '<ul class="genres">', '</ul>', True)[1])))
 
-        if title == '': title = cItem['title']
-        if icon  == '': icon  = cItem.get('icon', '')
-        if desc  == '': desc  = cItem.get('desc', '')
+        if title == '':
+            title = cItem['title']
+        if icon  == '':
+            icon  = cItem.get('icon', '')
+        if desc  == '':
+            desc  = cItem.get('desc', '')
 
         return [{'title':self.cleanHtmlStr( title ), 'text': self.cleanHtmlStr( desc ), 'images':[{'title':'', 'url':self.getFullUrl(icon)}], 'other_info':{'custom_items_list':itemsList}}]
         

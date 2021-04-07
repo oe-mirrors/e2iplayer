@@ -581,7 +581,8 @@ class ConfigMenu(ConfigBaseWidget):
         currItem = self["config"].list[curIndex][1]
         if isinstance(currItem, ConfigDirectory):
             def SetDirPathCallBack(curIndex, newPath):
-                if None != newPath: self["config"].list[curIndex][1].value = newPath
+                if None != newPath:
+                    self["config"].list[curIndex][1].value = newPath
             self.session.openWithCallback(boundFunction(SetDirPathCallBack, curIndex), IPTVDirectorySelectorWidget, currDir=currItem.value, title=_("Select directory"))
         elif config.plugins.iptvplayer.fakePin == currItem:
             self.changePin(start = True)
@@ -645,7 +646,8 @@ class ConfigMenu(ConfigBaseWidget):
             self.changingPinState = 'PUT_OLD_PIN'
             self.session.openWithCallback(self.changePin, IPTVPinWidget, title=_("Enter old pin"))
         else:
-            if pin == None: return
+            if pin == None:
+                return
             if 'PUT_OLD_PIN' == self.changingPinState:
                 if pin == config.plugins.iptvplayer.pin.value:
                     self.changingPinState = 'PUT_NEW_PIN'
@@ -729,13 +731,19 @@ def GetMoviePlayer(buffering=False, useAlternativePlayer=False):
         player = config.plugins.iptvplayer.NaszPlayer
         alternativePlayer = config.plugins.iptvplayer.NaszPlayer
         
-    if player.value == 'auto': player = CFakeMoviePlayerOption(availablePlayers[0], GetMoviePlayerName(availablePlayers[0]))
-    try: availablePlayers.remove(player.value)
-    except Exception: printExc()
+    if player.value == 'auto':
+        player = CFakeMoviePlayerOption(availablePlayers[0], GetMoviePlayerName(availablePlayers[0]))
+    try:
+        availablePlayers.remove(player.value)
+    except Exception:
+        printExc()
     
-    if alternativePlayer.value == 'auto': alternativePlayer = CFakeMoviePlayerOption(availablePlayers[0], GetMoviePlayerName(availablePlayers[0]))
-    try: availablePlayers.remove(alternativePlayer.value)
-    except Exception: printExc()
+    if alternativePlayer.value == 'auto':
+        alternativePlayer = CFakeMoviePlayerOption(availablePlayers[0], GetMoviePlayerName(availablePlayers[0]))
+    try:
+        availablePlayers.remove(alternativePlayer.value)
+    except Exception:
+        printExc()
     
     if useAlternativePlayer:
         return alternativePlayer

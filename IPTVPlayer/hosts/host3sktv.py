@@ -38,7 +38,8 @@ class C3skTv(CBaseHostClass):
         self.defaultParams = {'header':self.HEADER, 'with_metadata':True, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
         
     def getPage(self, url, addParams = {}, post_data = None):
-        if addParams == {}: addParams = dict(self.defaultParams)
+        if addParams == {}:
+            addParams = dict(self.defaultParams)
         baseUrl = self.cm.iriToUri(url)
         return self.cm.getPage(baseUrl, addParams, post_data)
         
@@ -48,8 +49,10 @@ class C3skTv(CBaseHostClass):
         addParams['with_metadata'] = True
         
         sts, data = self.getPage(domain, addParams)
-        if sts: self.MAIN_URL = self.cm.getBaseUrl(data.meta['url'])
-        else: self.MAIN_URL = domain
+        if sts:
+            self.MAIN_URL = self.cm.getBaseUrl(data.meta['url'])
+        else:
+            self.MAIN_URL = domain
     
     def listMainMenu(self, cItem):
         printDBG("C3skTv.listMainMenu")
@@ -60,7 +63,8 @@ class C3skTv(CBaseHostClass):
             for item in data:
                 nextCategory = ''
                 url = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''\shref=['"]([^'^"]+?)['"]''')[0])
-                if url == '' or 'pdep43.' in url: continue
+                if url == '' or 'pdep43.' in url:
+                    continue
                 
                 parsedUri = urlparse(url)
                 if parsedUri.path == '' and self.cm.isValidUrl(url):
@@ -87,7 +91,8 @@ class C3skTv(CBaseHostClass):
         page = cItem.get('page', 1)
         
         sts, data = self.getPage(cItem['url'])
-        if not sts: return
+        if not sts:
+            return
         
         currentUrl = data.meta['url']
         
@@ -97,7 +102,8 @@ class C3skTv(CBaseHostClass):
         data = self.cm.ph.getAllItemsBeetwenNodes(data, ('<div', '>', '"article"'), ('</div', '>'))
         for item in data:
             url = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''\shref=['"]([^'^"]+?)['"]''')[0], currentUrl)
-            if url == currentUrl: continue
+            if url == currentUrl:
+                continue
             
             if 'forumdisplay.php' in url:
                 nextCategory = 'list_threads'
@@ -121,15 +127,18 @@ class C3skTv(CBaseHostClass):
     def listThreads(self, cItem, nextCategory):
         printDBG("C3skTv.listThreads")
         sts, data = self.getPage(cItem['url'])
-        if not sts: return
+        if not sts:
+            return
         
         currentUrl = data.meta['url']
         
         data = self.cm.ph.getAllItemsBeetwenMarkers(data, '<tr', '</tr>')
         for item in data:
-            if 'vbmenu_option' in item: continue
+            if 'vbmenu_option' in item:
+                continue
             url = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''\shref=['"]([^'^"]+?)['"]''')[0], currentUrl)
-            if url == currentUrl: continue
+            if url == currentUrl:
+                continue
             #printDBG("++++++++ [%s]" % url)
             if 'forumdisplay.php' in url:
                 nextCategory = 'list_threads'
@@ -147,7 +156,8 @@ class C3skTv(CBaseHostClass):
     def listThread(self, cItem):
         printDBG("C3skTv.listThread")
         sts, data = self.getPage(cItem['url'])
-        if not sts: return
+        if not sts:
+            return
         
         currentUrl = data.meta['url']
         domain = self.up.getDomain(currentUrl)
@@ -161,7 +171,8 @@ class C3skTv(CBaseHostClass):
                 url = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''\shref=['"]([^'^"]+?)['"]''')[0], currentUrl)
                 printDBG(">>>>>>>>>>>>>>> " + url)
                 tmp = self.cm.getBaseUrl(url)
-                if domain in tmp and '/vid/' not in url and '/show/' not in url: continue
+                if domain in tmp and '/vid/' not in url and '/show/' not in url:
+                    continue
                 title = self.cleanHtmlStr(item)
                 params = dict(cItem)
                 params.update({'good_for_fav':False, 'title':'%s - %s' % (cItem['title'], title), 'url':url})
@@ -179,7 +190,8 @@ class C3skTv(CBaseHostClass):
             return self.cacheLinks[videoUrl]
         
         sts, data = self.getPage(cItem['url'])
-        if not sts: return
+        if not sts:
+            return
         
         currentUrl = data.meta['url']
             
@@ -188,7 +200,8 @@ class C3skTv(CBaseHostClass):
             data = self.cm.ph.getAllItemsBeetwenMarkers(data, '<iframe', '</iframe>', caseSensitive=False)
             for idx in range(len(data)):
                 url = self.getFullUrl(self.cm.ph.getSearchGroups(data[idx], '''\ssrc=['"]([^"^']+?)['"]''', 1, True)[0], currentUrl)
-                if url == '': continue
+                if url == '':
+                    continue
                 name = str(idx+1)
                 name = 'الجزء ' + nameMap.get(name, name)
                 urlTab.append({'url':url, 'name':name, 'need_resolve':1})
@@ -219,11 +232,13 @@ class C3skTv(CBaseHostClass):
         if page == 0:
             url = self.getFullUrl('/search.htm?q=%s&btnG=' % urllib.parse.quote(searchPattern))
             sts, data = self.getPage(url)
-            if not sts: return
+            if not sts:
+                return
             cx = ph.search(data, '''var\s+?cx\s*?=\s*?['"]([^'^"]+?)['"]''')[0]
             url = 'http://cse.google.com/cse.js?cx=' + cx
             sts, data = self.getPage(url)
-            if not sts: return
+            if not sts:
+                return
             tmp = ph.find(data, ')(', ');', flags=0)[1]
             try:
                 tmp = json_loads(tmp)
@@ -233,7 +248,8 @@ class C3skTv(CBaseHostClass):
                 lang = tmp['language']
                 token = tmp['cse_token']
                 sts, tmp = self.getPage(url)
-                if not sts: return
+                if not sts:
+                    return
                 hash = ph.search(tmp, '''google\.search\.JSHash\s*?=\s*?['"]([^'^"]+?)['"]''')[0]
 
                 baseUrl = 'https://cse.google.com/cse/element/v1?rsz=filtered_cse&num=10&hl='
@@ -247,7 +263,8 @@ class C3skTv(CBaseHostClass):
         try:
             url = baseUrl.format(str(page*10))
             sts, data = self.getPage(url)
-            if not sts: return
+            if not sts:
+                return
 
             data = data.strip()
             data = json_loads(data[data.find(marker) + len(marker)+1:-2])

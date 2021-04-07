@@ -16,8 +16,10 @@ from Plugins.Extensions.IPTVPlayer.libs.urlparserhelper import getDirectM3U8Play
 from Components.config import config, ConfigSelection, getConfigListEntry
 from datetime import datetime
 import time
-try:    import simplejson as json
-except Exception: import json
+try:
+    import simplejson as json
+except Exception:
+    import json
 ###################################################
 
 ###################################################
@@ -102,8 +104,10 @@ class SportDeutschland(CBaseHostClass):
         for item in data:
             icon = self._getJItemStr(item, 'image')
             try: 
-                if icon == '': icon = ('%s' % item['images'][0]).encode('utf-8')
-            except Exception: pass
+                if icon == '':
+                    icon = ('%s' % item['images'][0]).encode('utf-8')
+            except Exception:
+                pass
             params = {'name':'category', 'title':self._getJItemStr(item, 'title'), 'category':'category', 'icon':icon, 'permalink':self._getJItemStr(item, 'permalink'), 'uuid':self._getJItemStr(item, 'uuid'), 'page':1}
             self.addDir(params)
         
@@ -123,8 +127,10 @@ class SportDeutschland(CBaseHostClass):
         for item in data:
             icon = self._getJItemStr(item, 'image')
             try: 
-                if icon == '': icon = ('%s' % item['images'][0]).encode('utf-8')
-            except Exception: pass
+                if icon == '':
+                    icon = ('%s' % item['images'][0]).encode('utf-8')
+            except Exception:
+                pass
             
             desc = '%s[/br]%s' % (self._getJItemStr(item, 'duration'), self._getJItemStr(item, 'teaser'))
             
@@ -176,7 +182,8 @@ class SportDeutschland(CBaseHostClass):
                     printDBG(data['asset']['videos'])
                     for item in data['asset']['videos']:
                         videoUrl = item['url']
-                        if not self.cm.isValidUrl(videoUrl): continue
+                        if not self.cm.isValidUrl(videoUrl):
+                            continue
                         if item.get('livestream', False):
                             if '.smil?' in videoUrl:
                                 if 'rtmp' == config.plugins.iptvplayer.sportdeutschland_streamprotocol.value:

@@ -141,7 +141,8 @@ class RtmpDownloader(BaseDownloader):
                     prevflashVer = ''
                     continue
                 idx = item.find('=')
-                if -1 == idx: continue
+                if -1 == idx:
+                    continue
                 argName  = item[:idx] 
                 argValue = item[idx+1:]
                 if 'live' in argName:

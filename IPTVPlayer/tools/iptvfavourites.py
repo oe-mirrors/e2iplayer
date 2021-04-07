@@ -34,22 +34,28 @@ class IPTVFavourites:
         
     def load(self, groupsOnly=False):
         ret = self._loadGroups()
-        if not ret: lastError = self.lastError
-        else: lastError = ''
+        if not ret:
+            lastError = self.lastError
+        else:
+            lastError = ''
         if ret and not groupsOnly:
             for idx in range(len(self.groups)):
                 tmpRet = self._loadItems(idx)
-                if tmpRet: self.loadedGroups[self.groups[idx]['group_id']] = True
+                if tmpRet:
+                    self.loadedGroups[self.groups[idx]['group_id']] = True
                 else: 
                     ret = False
                     lastError += self.lastError
-        if not ret: self.lastError = lastError
+        if not ret:
+            self.lastError = lastError
         return ret
         
     def save(self, groupsOnly=False):
         ret = self._saveGroups()
-        if not ret: lastError = self.lastError
-        else: lastError = ''
+        if not ret:
+            lastError = self.lastError
+        else:
+            lastError = ''
         if not groupsOnly:
             for idx in range(len(self.groups)):
                 if self.loadedGroups.get(self.groups[idx]['group_id'], False):
@@ -63,14 +69,16 @@ class IPTVFavourites:
                     if not tmpRet: 
                         ret = False
                         lastError += self.lastError
-        if not ret: self.lastError = lastError
+        if not ret:
+            self.lastError = lastError
         return ret
         
     def getGroup(self, group_id):
         idx = self._getGroupIdx(group_id)
         if -1 != idx: 
             return self.groups[idx]
-        else: return None
+        else:
+            return None
     
     def getGroups(self):
         return self.groups
@@ -78,7 +86,8 @@ class IPTVFavourites:
     def addGroup(self, group):
         idx = self._getGroupIdx(group['group_id'])
         if -1 == idx:
-            if 'items' not in group: group['items'] = []
+            if 'items' not in group:
+                group['items'] = []
             self.groups.append(group)
             self.loadedGroups[group['group_id']] = True
             self.delGroups.pop(group['group_id'], None)
@@ -93,7 +102,8 @@ class IPTVFavourites:
             group['items'] = self.groups[idx].get('items', [])
             self.groups[idx] = group
             return True
-        else: return False
+        else:
+            return False
 
     def delGroup(self, group_id):
         idx = self._getGroupIdx(group_id)
@@ -102,7 +112,8 @@ class IPTVFavourites:
             self.delGroups[group_id] = True
             del self.groups[idx]
             return True
-        else: return False
+        else:
+            return False
         
     def moveGroup(self, curIndex, newIndex):
         if 0 <= curIndex and len(self.groups) > curIndex and 0 <= newIndex and len(self.groups) > newIndex:
@@ -114,21 +125,26 @@ class IPTVFavourites:
         
     def saveGroupItems(self, group_id):
         idx = self._getGroupIdx(group_id)
-        if -1 != idx: return self._saveItems(idx)
-        else: return False
+        if -1 != idx:
+            return self._saveItems(idx)
+        else:
+            return False
     
     def getGroupItems(self, group_id):
         idx = self._getGroupIdx(group_id)
-        if -1 != idx: return True, self.groups[idx].get('items', [])
+        if -1 != idx:
+            return True, self.groups[idx].get('items', [])
         return False, []
         
     def loadGroupItems(self, group_id, force=False):
         sts = False
         idx = self._getGroupIdx(group_id)
         if -1 != idx:
-            if self.loadedGroups.get(group_id, False) and not force: return True
+            if self.loadedGroups.get(group_id, False) and not force:
+                return True
             sts = self._loadItems(idx)
-            if sts: self.loadedGroups[group_id] = True
+            if sts:
+                self.loadedGroups[group_id] = True
         return sts
         
     def addGroupItem(self, item, group_id):
@@ -144,19 +160,22 @@ class IPTVFavourites:
                 items.append(item)
                 self.groups[idx]['items'] = items
                 return True
-            else: self.lastError = _("The same item already exists in this group.")
+            else:
+                self.lastError = _("The same item already exists in this group.")
         return False
 
     def delGroupItem(self, itemIdx, group_id):
         idx = self._getGroupIdx(group_id)
         if -1 != idx:
-            try: del self.groups[idx]['items'][itemIdx]
+            try:
+                del self.groups[idx]['items'][itemIdx]
             except Exception:
                 printExc()
                 self.lastError = _("Item idx[%d] not found in group[%s].") % (itemIdx, group_id)
                 return False
             return True
-        else: return False
+        else:
+            return False
         
     def moveGroupItem(self, curIndex, newIndex, group_id):
         idx = self._getGroupIdx(group_id)
@@ -167,7 +186,8 @@ class IPTVFavourites:
             else:
                 self.lastError = _("Wrong indexes.")
                 return False
-        else: return False
+        else:
+            return False
         
     def _getGroupIdx(self, group_id):
         for idx in range(len(self.groups)):
@@ -192,7 +212,8 @@ class IPTVFavourites:
                 printExc()
                 self.lastError = _("Error reading file \"%s\".\n") % filePath
                 ret = False
-        else: self.groups[groupIdx]['items'] = []
+        else:
+            self.groups[groupIdx]['items'] = []
         return ret
         
     def _loadGroups(self):
@@ -208,7 +229,8 @@ class IPTVFavourites:
                 printExc()
                 self.lastError = _("Error reading file \"%s\".\n") % filePath
                 ret = False
-        else: self.groups = []
+        else:
+            self.groups = []
         return ret
         
     def _delItems(self, groupId):
@@ -245,7 +267,8 @@ class IPTVFavourites:
         try:
             from copy import deepcopy
             groups = deepcopy(self.groups)
-            for item in groups: item.pop("items", None)
+            for item in groups:
+                item.pop("items", None)
             filePath = os_path.join(self.favDir, IPTVFavourites.GROUPS_FILE_NAME)
             data = json_dumps(groups)
             self._saveToFile(filePath, data)

@@ -14,8 +14,10 @@ from Plugins.Extensions.IPTVPlayer.libs.urlparserhelper import  getDirectM3U8Pla
 import urllib.request
 import urllib.parse
 import urllib.error
-try:    import json
-except Exception: import simplejson as json
+try:
+    import json
+except Exception:
+    import simplejson as json
 from Components.config import config
 ###################################################
 
@@ -42,7 +44,8 @@ class OkGoals(CBaseHostClass):
                              {'category': 'search_history',    'title': _('Search history'),                                },
                             ]
     def getFullUrl(self, url):
-        if url.startswith('//'): url = 'http:' + url
+        if url.startswith('//'):
+            url = 'http:' + url
         url = CBaseHostClass.getFullUrl(self, url)
         return url
     
@@ -67,13 +70,15 @@ class OkGoals(CBaseHostClass):
         printDBG("OkGoals.listCategories")
         
         sts, data = self.cm.getPage(cItem['url'])
-        if not sts: return
+        if not sts:
+            return
         
         data = self.cm.ph.getDataBeetwenMarkers(data, '<ul id="mediamenu">', '</ul>')[1]
         data = self.cm.ph.getAllItemsBeetwenMarkers(data, '<li', '</li>', withMarkers=True)
         for item in data:
             url   = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''href=['"]([^'^"]+?)['"]''')[0])
-            if not self.cm.isValidUrl(url): continue
+            if not self.cm.isValidUrl(url):
+                continue
             icon  = self.getBiggerImage(self.cm.ph.getSearchGroups(item, '''src=['"]([^'^"]+?)['"]''')[0])
             title = self.cleanHtmlStr(item)
             title = _( title.capitalize() )
@@ -86,7 +91,8 @@ class OkGoals(CBaseHostClass):
         page = cItem.get('page', 1)
         
         sts, data = self.cm.getPage(cItem['url'])
-        if not sts: return
+        if not sts:
+            return
         
         nextPage = self.cm.ph.getDataBeetwenMarkers(data, '<div class="wpnavi">', '<div class="clear">')[1]
         nextPage = self.cm.ph.getSearchGroups(nextPage, '''<a[^>]+?href=["']([^'^"]+?)["'][^>]*?>\s*{0}\s*</a>'''.format(page+1))[0]
@@ -110,7 +116,8 @@ class OkGoals(CBaseHostClass):
         printDBG("OkGoals.exploreItem")
         
         sts, data = self.cm.getPage(cItem['url'])
-        if not sts: return
+        if not sts:
+            return
         
         tmp = self.cm.ph.getDataBeetwenMarkers(data, ('<div', '>', 'matchcontainer'), '</div>', False)[1]
         tmp = tmp.split('</script>')
@@ -142,7 +149,8 @@ class OkGoals(CBaseHostClass):
                 
         if 'playwire.com' in videoUrl:
             sts, data = self.cm.getPage(videoUrl)
-            if not sts: return []
+            if not sts:
+                return []
             try:
                 data = byteify(json.loads(data))
                 if 'content' in data:
@@ -184,7 +192,8 @@ class OkGoals(CBaseHostClass):
         cItem = dict(cItem)
         url = self.getFullUrl('search.php?dosearch=yes&search_in_archives=yes&title=') + urllib.parse.quote_plus(searchPattern)
         sts, data = self.cm.getPage(url)
-        if not sts: return
+        if not sts:
+            return
         
         data = self.cm.ph.getDataBeetwenMarkers(data, 'Founded matches', '<div class="clear">')[1]
         data = self.cm.ph.getAllItemsBeetwenMarkers(data, '<a', '</a>', withMarkers=True)
@@ -205,7 +214,8 @@ class OkGoals(CBaseHostClass):
         try:
             cItem = byteify(json.loads(fav_data))
             links = self.getLinksForVideo(cItem)
-        except Exception: printExc()
+        except Exception:
+            printExc()
         return links
         
     def setInitListFromFavouriteItem(self, fav_data):

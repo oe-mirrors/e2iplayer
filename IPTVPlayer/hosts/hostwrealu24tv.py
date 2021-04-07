@@ -32,7 +32,8 @@ class WRealu24TV(CBaseHostClass):
         self.defaultParams = {'header':self.HTTP_HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
         
     def getPage(self, baseUrl, addParams = {}, post_data = None):
-        if addParams == {}: addParams = dict(self.defaultParams)
+        if addParams == {}:
+            addParams = dict(self.defaultParams)
         origBaseUrl = baseUrl
         baseUrl = self.cm.iriToUri(baseUrl)
         addParams['cloudflare_params'] = {'cookie_file':self.COOKIE_FILE, 'User-Agent':self.USER_AGENT}
@@ -51,26 +52,34 @@ class WRealu24TV(CBaseHostClass):
         url = cItem['url']
         
         page = cItem.get('page', 1)
-        if page > 1: url += '/%s' % page
+        if page > 1:
+            url += '/%s' % page
         
         sts, data = self.getPage(url)
-        if not sts: return
+        if not sts:
+            return
         
         nextPage = self.cm.ph.getDataBeetwenNodes(data, ('<nav', '>', 'pagination'), ('</nav', '>'))[1]
         printDBG("++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ " + nextPage)
         nextPage = self.cm.ph.getSearchGroups(nextPage, '''href=['"][^'^"]+?/(%s)[^0-9]''' % (page + 1))[0]
-        if nextPage != '': nextPage = True
-        else: nextPage = False
+        if nextPage != '':
+            nextPage = True
+        else:
+            nextPage = False
         
         data = self.cm.ph.getAllItemsBeetwenNodes(data, ('<a', '>',), ('</a', '>'))
         for item in data:
             url  = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''href=['"]([^'^"]+?)['"]''')[0])
-            if '/na-zywo/' not in url and '/film/' not in url: continue
+            if '/na-zywo/' not in url and '/film/' not in url:
+                continue
             icon = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''src=['"]([^'^"]+?)['"]''')[0])
             title = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(item, ('<div', '>', 'title'), ('</div', '>'))[1])
-            if title == '': title = self.cleanHtmlStr(item)
-            if title == '': title = self.cleanHtmlStr(url.split('/')[-1].replace('-', ' '))
-            if title == '': continue
+            if title == '':
+                title = self.cleanHtmlStr(item)
+            if title == '':
+                title = self.cleanHtmlStr(url.split('/')[-1].replace('-', ' '))
+            if title == '':
+                continue
             desc = []
             for marker in ['released', 'views', 'length']:
                 t = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(item, ('<div', '>', marker), ('</div', '>'))[1])
@@ -92,7 +101,8 @@ class WRealu24TV(CBaseHostClass):
         hlsTab = []
         
         sts, data = self.getPage(cItem['url'])
-        if not sts: return
+        if not sts:
+            return
         
         data = re.sub("<!--[\s\S]*?-->", "", data)
         cookieHeader = self.cm.getCookieHeader(self.COOKIE_FILE)
@@ -112,11 +122,13 @@ class WRealu24TV(CBaseHostClass):
         printDBG(data)
         for item in data:
             url = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''src=['"]([^'^"]+?)['"]''')[0])
-            if not self.cm.isValidUrl(url): continue
+            if not self.cm.isValidUrl(url):
+                continue
             type = self.cm.ph.getSearchGroups(item, '''type=['"]([^'^"]+?)['"]''')[0].lower()
             label = self.cm.ph.getSearchGroups(item, '''label=['"]([^'^"]+?)['"]''')[0]
             res = self.cm.ph.getSearchGroups(item, '''res=['"]([^'^"]+?)['"]''')[0]
-            if label == '': label = res
+            if label == '':
+                label = res
             
             if 'mp4' in type:
                 url = self.up.decorateUrl(url, {'Cookie':cookieHeader, 'User-Agent':self.USER_AGENT, 'Referer':cItem['url']})
@@ -129,8 +141,10 @@ class WRealu24TV(CBaseHostClass):
         
         if 1 < len(retTab):
             def __getLinkQuality( itemLink ):
-                try: return int(itemLink['res'])
-                except Exception: return 0
+                try:
+                    return int(itemLink['res'])
+                except Exception:
+                    return 0
             oneLink = CSelOneLink(retTab, __getLinkQuality, 999999999)
             retTab = oneLink.getSortedLinks()
         
@@ -145,7 +159,8 @@ class WRealu24TV(CBaseHostClass):
             return []
         
         sts, data = self.getPage(cItem['url'])
-        if not sts: return []
+        if not sts:
+            return []
         
         otherInfo = {}
         retTab = []
@@ -155,11 +170,13 @@ class WRealu24TV(CBaseHostClass):
         icon  = self.getFullIconUrl(self.cm.ph.getSearchGroups(data, '''poster=['"]([^'^"]+?)['"]''')[0])
         title = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(data, ('<div', '>', 'chat-video-title'), ('</div', '>'), False)[1])
         released = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(data, ('<div', '>', 'chat-video-date'), ('</div', '>'), False)[1])
-        if released != '': otherInfo['released'] = released
+        if released != '':
+            otherInfo['released'] = released
         
         data = re.compile('<div[^>]+?odswiezchat[^>]+?>').split(data, 1)[-1]
         data = re.compile('<div[^>]+?chat-comment-block[^>]+?>').split(data)
-        if len(data): del data[0]
+        if len(data):
+            del data[0]
         for item in data:
             author = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(item, ('<div', '>', 'chat-comment-author'), ('</div', '>'), False)[1])
             date   = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(item, ('<div', '>', 'chat-comment-content-data'), ('</div', '>'), False)[1])
@@ -170,9 +187,12 @@ class WRealu24TV(CBaseHostClass):
         
         desc = '------------------------------------------------------------------------------[/br]'.join(desc)
         
-        if title == '': title = cItem['title']
-        if desc == '':  desc = cItem.get('desc', '')
-        if icon == '':  icon = cItem.get('icon', self.DEFAULT_ICON_URL)
+        if title == '':
+            title = cItem['title']
+        if desc == '':
+            desc = cItem.get('desc', '')
+        if icon == '':
+            icon = cItem.get('icon', self.DEFAULT_ICON_URL)
         
         return [{'title':self.cleanHtmlStr( title ), 'text': self.cleanHtmlStr( desc ), 'images':[{'title':'', 'url':self.getFullUrl(icon)}], 'other_info':otherInfo}]
     

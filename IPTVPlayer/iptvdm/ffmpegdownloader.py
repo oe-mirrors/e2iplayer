@@ -65,10 +65,13 @@ class FFMPEGDownloader(BaseDownloader):
         sts    = True
         if code != 0:
             ffmpegBinaryName = DMHelper.GET_FFMPEG_PATH()
-            if ffmpegBinaryName == '': ffmpegBinaryName = 'ffmpeg'
+            if ffmpegBinaryName == '':
+                ffmpegBinaryName = 'ffmpeg'
             sts    = False
-            if code == 127: reason = _('Utility "%s" can not be found.' % ffmpegBinaryName)
-            else: reason = data
+            if code == 127:
+                reason = _('Utility "%s" can not be found.' % ffmpegBinaryName)
+            else:
+                reason = data
             self.iptv_sys = None
         callBackFun(sts, reason)
     
@@ -258,7 +261,7 @@ class FFMPEGDownloader(BaseDownloader):
             d = datetime.datetime.now() - self.lastUpadateTime
             if d.seconds > 3:
                 # if we not get new stats update this mean that we do not download any data
-                self.downloadSpeed = 0;
+                self.downloadSpeed = 0
         
     def hasDurationInfo(self):
         return True

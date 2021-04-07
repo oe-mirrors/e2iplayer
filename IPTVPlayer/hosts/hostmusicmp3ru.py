@@ -17,8 +17,10 @@ import re
 import urllib.request
 import urllib.parse
 import urllib.error
-try:    import json
-except Exception: import simplejson as json
+try:
+    import json
+except Exception:
+    import simplejson as json
 ###################################################
 
 def gettytul():
@@ -39,7 +41,8 @@ class MusicMp3Ru(CBaseHostClass):
         self.jscode = []
         
     def getPage(self, baseUrl, addParams = {}, post_data = None):
-        if addParams == {}: addParams = dict(self.defaultParams)
+        if addParams == {}:
+            addParams = dict(self.defaultParams)
         origBaseUrl = baseUrl
         baseUrl = self.cm.iriToUri(baseUrl)
         addParams['cloudflare_params'] = {'cookie_file':self.COOKIE_FILE, 'User-Agent':self.USER_AGENT}
@@ -65,7 +68,8 @@ class MusicMp3Ru(CBaseHostClass):
         printDBG("MusicMp3Ru.listMainMenu")
         
         sts, data = self.getPage(self.getMainUrl())
-        if not sts: return
+        if not sts:
+            return
         cUrl = self.cm.getBaseUrl(data.meta['url'])
         
         data = self.cm.ph.getDataBeetwenNodes(data, ('<ul', '>', 'menu_main'), ('</ul', '>'))[1]
@@ -73,7 +77,8 @@ class MusicMp3Ru(CBaseHostClass):
         for item in data:
             url = self.cm.ph.getSearchGroups(item, '''\shref=['"]([^'^"]+?)['"]''')[0]
             type = url.split('/')[-1].split('.', 1)[0].split('_', 1)[-1]
-            if type == 'genres': type = 'albums'
+            if type == 'genres':
+                type = 'albums'
             title = self.cleanHtmlStr(item)
             params = dict(cItem)
             params.update({'good_for_fav':False, 'category':nextCategory, 'url':self.getFullUrl(url, cUrl), 'title':title, 'f_type':type})
@@ -89,7 +94,8 @@ class MusicMp3Ru(CBaseHostClass):
         nextCategory = 'list_%s' % cItem.get('f_type', '')
         
         sts, data = self.getPage(cItem['url'])
-        if not sts: return
+        if not sts:
+            return
         
         cUrl = self.cm.getBaseUrl(data.meta['url'])
         
@@ -100,7 +106,8 @@ class MusicMp3Ru(CBaseHostClass):
             title = self.cleanHtmlStr(item)
             params = dict(cItem)
             params.update({'good_for_fav':False, 'url':url, 'title':title, 'sub_menu_idx':subMenuIdx+1})
-            if subMenuIdx > 0: params.update({'good_for_fav':True, 'category':nextCategory})
+            if subMenuIdx > 0:
+                params.update({'good_for_fav':True, 'category':nextCategory})
             self.addDir(params)
         
         if len(self.currList):
@@ -130,7 +137,8 @@ class MusicMp3Ru(CBaseHostClass):
         else:
             moreItem = cItem.get('f_more', {})
             sts, data = self.getPage(moreItem['next'].format(page))
-            if sts: retData = data
+            if sts:
+                retData = data
             
         return retData, moreItem
     
@@ -146,7 +154,8 @@ class MusicMp3Ru(CBaseHostClass):
         printDBG("MusicMp3Ru.listArtists")
         page = cItem.get('page', 1)
         data, moreItem = self._getData(cItem)
-        if page == 1: data = self.cm.ph.getDataBeetwenNodes(data, ('<ul', '>', 'small_list'), ('</ul', '>'))[1]
+        if page == 1:
+            data = self.cm.ph.getDataBeetwenNodes(data, ('<ul', '>', 'small_list'), ('</ul', '>'))[1]
         data = self.cm.ph.getAllItemsBeetwenMarkers(data, '<li', '</li>')
         for item in data:
             self._addBaseItem(cItem, nextCategory, item)
@@ -157,11 +166,14 @@ class MusicMp3Ru(CBaseHostClass):
         page = cItem.get('page', 1)
         data, moreItem = self._getData(cItem)
         
-        if page == 1: data = self.cm.ph.getDataBeetwenNodes(data, ('<div', '>', 'content'), ('<script', '>'))[1]
+        if page == 1:
+            data = self.cm.ph.getDataBeetwenNodes(data, ('<div', '>', 'content'), ('<script', '>'))[1]
         data = re.compile('''<div[^>]+?['"]album_report['"][^>]*?>''').split(data)
-        if len(data): del data[0]
+        if len(data):
+            del data[0]
         for item in data:
-            if 'album_report' not in item: continue
+            if 'album_report' not in item:
+                continue
             
             url = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''\shref=['"]([^'^"]+?)['"]''')[0])
             icon = self.getFullIconUrl(self.cm.ph.getSearchGroups(item, '''\ssrc=['"]([^'^"]+?)['"]''')[0])
@@ -171,17 +183,23 @@ class MusicMp3Ru(CBaseHostClass):
             tmp = self.cm.ph.getAllItemsBeetwenNodes(item, ('<div', '>', 'album_report_'), ('</div', '>'))
             for it in tmp:
                 t = self.cleanHtmlStr(it).replace(' , ', ', ')
-                if t == '': continue
-                if 'second_line' in it: title += ' - ' + t
-                else: desc.append(t)
+                if t == '':
+                    continue
+                if 'second_line' in it:
+                    title += ' - ' + t
+                else:
+                    desc.append(t)
             
             descTab = []
             item = self.cm.ph.getAllItemsBeetwenMarkers(item, '<li', '</li>')
             for it in item:
                 t = self.cleanHtmlStr(it)
-                if t == '': continue
-                if '_name'in it: title = t
-                else: descTab.append(t)
+                if t == '':
+                    continue
+                if '_name'in it:
+                    title = t
+                else:
+                    descTab.append(t)
             desc.append(' | '.join(descTab))
             params = dict(cItem)
             params.pop('f_more', None)
@@ -194,7 +212,8 @@ class MusicMp3Ru(CBaseHostClass):
         printDBG("MusicMp3Ru.listSongsItems [%s]" % cItem)
         
         sts, data = self.getPage(cItem['url'])
-        if not sts: return
+        if not sts:
+            return
         
         tmp = self.cm.ph.getDataBeetwenNodes(data, ('<table', '>', 'tracklist'), ('</table', '>'))[1]
         basePlaybackUrl = self.cm.ph.getSearchGroups(tmp, '''\sdata\-url=['"]([^'^"]+?)['"]''')[0]
@@ -209,11 +228,15 @@ class MusicMp3Ru(CBaseHostClass):
             item = self.cm.ph.getAllItemsBeetwenNodes(item, ('<td', '>'), ('</td', '>'))
             for it in item:
                 t = self.cleanHtmlStr(it)
-                if t == '': continue
-                if '_name'in it: title = t
-                else: desc.append(t)
+                if t == '':
+                    continue
+                if '_name'in it:
+                    title = t
+                else:
+                    desc.append(t)
             desc = ' | '.join(desc)
-            if title == '': continue
+            if title == '':
+                continue
             params = {'good_for_fav':True, 'title':title, 'url':basePlaybackUrl, 'rel':rel, 'id':id, 'desc':desc}
             self.addAudio(params)
         
@@ -228,10 +251,12 @@ class MusicMp3Ru(CBaseHostClass):
             self.listAlbums(cItem, 'list_songs')
         elif searchType == 'artists':
             sts, data = self.getPage(cItem['url'])
-            if not sts: return
+            if not sts:
+                return
             data = self.cm.ph.getDataBeetwenNodes(data, ('<div', '>', 'content'), ('</div', '>'))[1]
             data = re.compile('''<li[^>]+?artist_preview[^>]*?>''').split(data)
-            if len(data): del data[0]
+            if len(data):
+                del data[0]
             for item in data:
                 url = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''\shref=['"]([^'^"]+?)['"]''')[0])
                 title = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(item, '<a', '</a>')[1])
@@ -243,7 +268,8 @@ class MusicMp3Ru(CBaseHostClass):
                     descTab = []
                     for t in it:
                         t = self.cleanHtmlStr(t)
-                        if t != '': descTab.append(t)
+                        if t != '':
+                            descTab.append(t)
                     desc.append('%s: %s' % (header, ', '.join(descTab)))
                 params = dict(cItem)
                 params.pop('f_more', None)
@@ -256,11 +282,14 @@ class MusicMp3Ru(CBaseHostClass):
         
         if self.jscode == []:
             sts, data = self.getPage(self.getMainUrl())
-            if not sts: return []
+            if not sts:
+                return []
             scriptUrl = self.cm.ph.getSearchGroups(data, '''<script[^>]+?src=['"]([^'^"]*?/scripts\.js[^'^"]*?)['"]''')[0]
-            if scriptUrl == '': return []
+            if scriptUrl == '':
+                return []
             sts, data = self.getPage(self.getFullUrl(scriptUrl))
-            if not sts: return []
+            if not sts:
+                return []
             jscode = ['var iptvObj={%s};' % self.cm.ph.getDataBeetwenMarkers(data, 'boo:', '},')[1]]
             jscode.append('var iptvArg="%s";')
             jscode.append('print(iptvObj["boo"](iptvArg));')

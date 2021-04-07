@@ -45,11 +45,11 @@ class IPTVVirtualKeyBoardWithCaptcha(Screen):
                            <widget name="text"   position="25,200" size="536,34" transparent="1" noWrap="1" font="Regular;26" valign="center" halign="right" />
                            <widget name="list"   position="25,250" size="550,225" selectionDisabled="1" transparent="1" />
                        </screen>
-                    ''' % ( winWidth, 10, 55, \
-                            winWidth - 20, 100, \
-                            winWidth-20, \
-                            winWidth-20, \
-                            winWidth-20, \
+                    ''' % ( winWidth, 10, 55,
+                            winWidth - 20, 100,
+                            winWidth-20,
+                            winWidth-20,
+                            winWidth-20,
                             GetIconDir("vk/vkey_text.png"))
         
         Screen.__init__(self, session)
@@ -148,8 +148,10 @@ class IPTVVirtualKeyBoardWithCaptcha(Screen):
         self["text"].right()
         self["text"].currPos = len(self.startText)
         self["text"].right()
-        try: self['captcha'].updateIcon( self.captchaPath )
-        except Exception: printExc()
+        try:
+            self['captcha'].updateIcon( self.captchaPath )
+        except Exception:
+            printExc()
     
     def switchLang(self):
         pass
@@ -179,7 +181,8 @@ class IPTVVirtualKeyBoardWithCaptcha(Screen):
             for keys_list in [self.keys_list, self.shiftkeys_list]:
                 for row in range(len(keys_list)):
                     for idx in range(len(keys_list[row])):
-                        if len(keys_list[row][idx]) != 1: continue
+                        if len(keys_list[row][idx]) != 1:
+                            continue
                         upper = keys_list[row][idx].upper()
                         if upper == keys_list[row][idx]:
                             keys_list[row][idx] = keys_list[row][idx].lower()

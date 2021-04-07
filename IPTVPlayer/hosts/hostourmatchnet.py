@@ -16,8 +16,10 @@ import re
 import urllib.request
 import urllib.parse
 import urllib.error
-try:    import json
-except Exception: import simplejson as json
+try:
+    import json
+except Exception:
+    import simplejson as json
 from Components.config import config
 ###################################################
 
@@ -71,27 +73,31 @@ class OurmatchNet(CBaseHostClass):
         printDBG("OurmatchNet.fillCache [%s]" % cItem)
         self.cache = {'popular':[], 'trending':[], 'allleagues':[]}
         sts, data = self.cm.getPage(cItem['url'])
-        if not sts: return
+        if not sts:
+            return
         
         for marker in [('<li class="popular-leagues-list">', '</ul>', 'popular'), ('<li class="trending-competitions">', '</ul>', 'trending')]:
             tmp = self.cm.ph.getDataBeetwenMarkers(data, marker[0], marker[1])[1]
             tmp = self.cm.ph.getAllItemsBeetwenMarkers(tmp, '<li ', '</li>')
             for item in tmp:
                 url = self.cm.ph.getSearchGroups(item, '''href=['"](http[^'^"]+?)['"]''')[0]
-                if '' == url: continue
+                if '' == url:
+                    continue
                 title = self.cleanHtmlStr(item)
                 self.cache[marker[2]].append({'title':title, 'url':url})
             
         tmp = self.cm.ph.getAllItemsBeetwenMarkers(data, '<li class="header">', '</ul>')
         for division in tmp:
             division = division.split('<ul class="regions">')
-            if 2 != len(division): continue
+            if 2 != len(division):
+                continue
             divisionTitle = self.cleanHtmlStr(division[0])
             regionsTab = []
             regions = self.cm.ph.getAllItemsBeetwenMarkers(division[1], '<li ', '</li>')
             for region in regions:
                 url = self.cm.ph.getSearchGroups(region, '''href=['"](http[^'^"]+?)['"]''')[0]
-                if '' == url: continue
+                if '' == url:
+                    continue
                 title = self.cleanHtmlStr(region)
                 regionsTab.append({'title':title, 'url':url})
             if len(regionsTab):
@@ -100,7 +106,8 @@ class OurmatchNet(CBaseHostClass):
     def listPopulars(self, cItem, category):
         printDBG("OurmatchNet.listPopulars [%s]" % cItem)
         tab = self.cache.get('popular', [])
-        if 0 == len(tab): self.fillCache(cItem)
+        if 0 == len(tab):
+            self.fillCache(cItem)
         tab = self.cache.get('popular', [])
         
         params = dict(cItem)
@@ -110,7 +117,8 @@ class OurmatchNet(CBaseHostClass):
     def listTrending(self, cItem):
         printDBG("OurmatchNet.listTrending [%s]" % cItem)
         tab = self.cache.get('trending', [])
-        if 0 == len(tab): self.fillCache(cItem)
+        if 0 == len(tab):
+            self.fillCache(cItem)
         tab = self.cache.get('trending', [])
         
         params = dict(cItem)
@@ -119,7 +127,8 @@ class OurmatchNet(CBaseHostClass):
     def listLeagues(self, cItem, category):
         printDBG("OurmatchNet.listLeagues [%s]" % cItem)
         tab = self.cache.get('allleagues', [])
-        if 0 == len(tab): self.fillCache(cItem)
+        if 0 == len(tab):
+            self.fillCache(cItem)
         tab = self.cache.get('allleagues', [])
         for idx in range(len(tab)):
             item = tab[idx]
@@ -142,7 +151,8 @@ class OurmatchNet(CBaseHostClass):
         self.cache2 = {}
         
         sts, data = self.cm.getPage(cItem['url']) 
-        if not sts: return
+        if not sts:
+            return
         
         data = self.cm.ph.getDataBeetwenMarkers(data, '<div id="tabs_container">', '<div class="widget">')[1]
         tmp = self.cm.ph.getDataBeetwenMarkers(data, '<ul id="tabs">', '</ul>')[1]
@@ -154,8 +164,10 @@ class OurmatchNet(CBaseHostClass):
             tabs.append({'title':tabTitle, 'id':tabId})
             
         data = data.split('<div class="tab_content" ')
-        if len(data): del data[0]
-        if len(data) != len(tabs): return
+        if len(data):
+            del data[0]
+        if len(data) != len(tabs):
+            return
         for idx in range(len(data)):
             tab = tabs[idx]
             divisionsTab = []
@@ -200,7 +212,8 @@ class OurmatchNet(CBaseHostClass):
             url += '?s=' + cItem['s']
         
         sts, data = self.cm.getPage(url)
-        if not sts: return
+        if not sts:
+            return
         
         if ('/page/%d/' % (page+1)) in data:
             nextPage = True
@@ -211,7 +224,8 @@ class OurmatchNet(CBaseHostClass):
         data = data.split(sp)
         for item in data:
             url  = self.cm.ph.getSearchGroups(item, '''href=['"](http[^'^"]+?)['"]''')[0]
-            if '' == url: continue
+            if '' == url:
+                continue
             icon  = self.cm.ph.getSearchGroups(item, '''src=['"]*(http[^'^"^>]+?)[>'"]''')[0]
             title = self.cm.ph.getSearchGroups(item, '''title=['"]([^'^"]+?)['"]''')[0] 
             desc  = self.cleanHtmlStr( self.cm.ph.getDataBeetwenMarkers(item, '<div class="vidinfo">', '</div>')[1] )
@@ -235,7 +249,8 @@ class OurmatchNet(CBaseHostClass):
         urlTab = [] #{'name':'', 'url':cItem['url'], 'need_resolve':1}]
         
         sts, data = self.cm.getPage(cItem['url']) 
-        if not sts: return []
+        if not sts:
+            return []
         
         tmp = self.cm.ph.getAllItemsBeetwenMarkers(data, '<li data-pos="top" ', '</li>')
         for item in tmp:
@@ -270,7 +285,8 @@ class OurmatchNet(CBaseHostClass):
             if url == '':
                 url = self.cm.ph.getSearchGroups(item, '<iframe[^>]+?src="([^"]+?)"', 1, ignoreCase=True)[0]
             url = self._getFullUrl(url)
-            if not url.startswith('http'): continue
+            if not url.startswith('http'):
+                continue
             urlTab.append({'name':name, 'url':url, 'need_resolve':1})
         
         if 0 == len(urlTab):
@@ -283,9 +299,12 @@ class OurmatchNet(CBaseHostClass):
             data = re.compile('<iframe[^>]+?src="([^"]+?)"', re.IGNORECASE).findall(data)
             for link in data:
                 link = self._getFullUrl(link)
-                if 'facebook' in link: continue
-                if 'twitter.' in link: continue
-                if 1 != self.up.checkHostSupport(link): continue
+                if 'facebook' in link:
+                    continue
+                if 'twitter.' in link:
+                    continue
+                if 1 != self.up.checkHostSupport(link):
+                    continue
                 name = self.up.getHostName(link, True)
                 urlTab.append({'name':name, 'url':link, 'need_resolve':1})
   
@@ -296,7 +315,8 @@ class OurmatchNet(CBaseHostClass):
         urlTab = []
         if 'playwire.com' in videoUrl:
             sts, data = self.cm.getPage(videoUrl)
-            if not sts: return []
+            if not sts:
+                return []
             try:
                 data = byteify(json.loads(data))
                 if 'content' in data:
@@ -309,7 +329,8 @@ class OurmatchNet(CBaseHostClass):
                 for item in data:
                     url  = self.cm.ph.getSearchGroups(item, '''url=['"]([^'^"]+?)['"]''')[0]
                     name = self.cm.ph.getSearchGroups(item, '''height=['"]([^'^"]+?)['"]''')[0]
-                    if name == '': self.cm.ph.getSearchGroups(item, '''bitrate=['"]([^'^"]+?)['"]''')[0]
+                    if name == '':
+                        self.cm.ph.getSearchGroups(item, '''bitrate=['"]([^'^"]+?)['"]''')[0]
                     if not url.startswith('http'):
                         url = baseUrl + '/' + url
                     if url.startswith('http'):

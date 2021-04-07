@@ -67,16 +67,26 @@ class WgetDownloader(BaseDownloader):
     def _setLastError(self, code):
         # map Exit Status to message - https://www.gnu.org/software/wget/manual/html_node/Exit-Status.html
         self.lastErrorCode = code
-        if code == 0: self.lastErrorDesc = "No problems occurred."
-        elif code == 1: self.lastErrorDesc = "Generic error code."
-        elif code == 2: self.lastErrorDesc = "Parse error."
-        elif code == 3: self.lastErrorDesc = "File I/O error."
-        elif code == 4: self.lastErrorDesc = "Network failure."
-        elif code == 5: self.lastErrorDesc = "SSL verification failure."
-        elif code == 6: self.lastErrorDesc = "Username/password authentication failure."
-        elif code == 7: self.lastErrorDesc = "Protocol errors."
-        elif code == 8: self.lastErrorDesc = "Server issued an error response."
-        else: self.lastErrorDesc = 'Unknown error code.'
+        if code == 0:
+            self.lastErrorDesc = "No problems occurred."
+        elif code == 1:
+            self.lastErrorDesc = "Generic error code."
+        elif code == 2:
+            self.lastErrorDesc = "Parse error."
+        elif code == 3:
+            self.lastErrorDesc = "File I/O error."
+        elif code == 4:
+            self.lastErrorDesc = "Network failure."
+        elif code == 5:
+            self.lastErrorDesc = "SSL verification failure."
+        elif code == 6:
+            self.lastErrorDesc = "Username/password authentication failure."
+        elif code == 7:
+            self.lastErrorDesc = "Protocol errors."
+        elif code == 8:
+            self.lastErrorDesc = "Server issued an error response."
+        else:
+            self.lastErrorDesc = 'Unknown error code.'
 
     def isWorkingCorrectly(self, callBackFun):
         self.iptv_sys = iptv_system( DMHelper.GET_WGET_PATH() + " -V 2>&1 ", boundFunction(self._checkWorkingCallBack, callBackFun) )
@@ -110,7 +120,8 @@ class WgetDownloader(BaseDownloader):
         
         if self.infoFrom == WgetDownloader.INFO.FROM_DOTS:
             info = "--progress=dot:default"
-        else: info = ""
+        else:
+            info = ""
         
         # remove file if exists
         if fileExists(self.filePath):
@@ -143,9 +154,11 @@ class WgetDownloader(BaseDownloader):
                     for idx in range(len(lines)):
                         if 'Length:' in lines[idx]:
                             match = re.search(" ([0-9]+?) ", lines[idx])
-                            if match: self.remoteFileSize = int(match.group(1))
+                            if match:
+                                self.remoteFileSize = int(match.group(1))
                             match = re.search("(\[[^]]+?\])", lines[idx])
-                            if match: self.remoteContentType = match.group(1)
+                            if match:
+                                self.remoteContentType = match.group(1)
                     self.outData = ''
             elif self.WGET_STS.CONNECTING == self.wgetStatus:
                 self.outData += data 
@@ -164,7 +177,7 @@ class WgetDownloader(BaseDownloader):
                         self.wgetStatus  = self.WGET_STS.DOWNLOADING
                         if self.infoFrom != WgetDownloader.INFO.FROM_DOTS:
                             self.console_stderrAvail_conn = None
-                        break;
+                        break
                         
     def _terminate(self):
         printDBG("WgetDownloader._terminate")

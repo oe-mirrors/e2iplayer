@@ -25,13 +25,18 @@ import urllib.parse
 import urllib.error
 import unicodedata
 import base64
-try:    import json
-except Exception: import simplejson as json
 try:
-    try: from io import StringIO
-    except Exception: from io import StringIO 
+    import json
+except Exception:
+    import simplejson as json
+try:
+    try:
+        from io import StringIO
+    except Exception:
+        from io import StringIO 
     import gzip
-except Exception: pass
+except Exception:
+    pass
 from Components.config import config, ConfigSelection, ConfigYesNo, ConfigText, getConfigListEntry
 ###################################################
 
@@ -74,7 +79,8 @@ class NapiProjektProvider(CBaseSubProviderClass):
     def sortSubtitlesByDurationMatch(self):
         # we need duration to sort
         movieDurationSec = self.params.get('duration_sec', 0)
-        if movieDurationSec <= 0: return 
+        if movieDurationSec <= 0:
+            return 
     
         # get only subtitles items from current list
         hasDuration = False
@@ -82,11 +88,13 @@ class NapiProjektProvider(CBaseSubProviderClass):
         for item in self.currList:
             if 'subtitle' == item.get('type', ''):
                 subList.append(item)
-                if 'duration_sec' in item: hasDuration = True
+                if 'duration_sec' in item:
+                    hasDuration = True
 
         # if there is no subtitle with duration available 
         # we will skip sort
-        if not hasDuration: return
+        if not hasDuration:
+            return
         subList.sort(key=lambda item: abs(item.get('duration_sec', 0) - movieDurationSec))
         
         for idx in range(len(self.currList)):
@@ -108,10 +116,12 @@ class NapiProjektProvider(CBaseSubProviderClass):
         
         post_data = {'queryString':title, 'queryKind':cItem.get('kind', 0), 'queryYear':'', 'associate':''}
         sts, data = self.cm.getPage(url, self.defaultAjaxParams, post_data)
-        if not sts: return
+        if not sts:
+            return
         
         data = data.split('<div class="greyBoxCatcher">')
-        if len(data): del data[0]
+        if len(data):
+            del data[0]
         
         for item in data:
             imdbid = self.cm.ph.getSearchGroups(item, 'imdb\.com/title/(tt[0-9]+?)[^0-9]')[0]
@@ -120,7 +130,8 @@ class NapiProjektProvider(CBaseSubProviderClass):
             subId  = self.cm.ph.getSearchGroups(item, 'id="([0-9]+?)"')[0]
             title  = self.cm.ph.getDataBeetwenMarkers(item, '<h3', '</h3>')[1]
             url    = self.cm.ph.getSearchGroups(item, 'href="([^"]+?)"')[0]
-            if '' == url: continue
+            if '' == url:
+                continue
             
             desc   = self.cm.ph.getDataBeetwenMarkers(item, '<p', '</p>')[1]
             params = dict(cItem)
@@ -132,22 +143,28 @@ class NapiProjektProvider(CBaseSubProviderClass):
         
         url = cItem['url']
         sts, data = self.cm.getPage(url, self.defaultParams)
-        if not sts: return
+        if not sts:
+            return
         
         sts, data = self.cm.ph.getDataBeetwenMarkers(data, '-&gt;', '>napisy<')
-        if not sts: return
+        if not sts:
+            return
         url = self.getFullUrl( self.cm.ph.getSearchGroups(data, 'href="([^"]+?)"')[0] )
-        if '' == url: return
+        if '' == url:
+            return
         sts, data = self.cm.getPage(url, self.defaultParams)
-        if not sts: return
+        if not sts:
+            return
         
         # if series get seasons
         tmp = self.cm.ph.getDataBeetwenMarkers(data, 'sezonySubtitlesList', '</script>', False)[1]
         movieId = self.cm.ph.getSearchGroups(tmp, "'movieID':([0-9]+?)[^0-9]")[0]
         urlPattern = self.cm.ph.getDataBeetwenMarkers(tmp, 'window.location.href=', ';', False)[1].replace("'", "").replace('"', '').strip()
         urlPattern = urlPattern.split('tytul=')
-        if 2 == len(urlPattern): urlPattern = urlPattern[0] + 'tytul=' + urllib.parse.quote(urlPattern[1])
-        else: urlPattern = ''
+        if 2 == len(urlPattern):
+            urlPattern = urlPattern[0] + 'tytul=' + urllib.parse.quote(urlPattern[1])
+        else:
+            urlPattern = ''
         
         if '' != movieId and '' != urlPattern:
             tab = []
@@ -156,8 +173,10 @@ class NapiProjektProvider(CBaseSubProviderClass):
             tmp = self.cm.ph.getDataBeetwenMarkers(data, '<select id="sezonySubtitlesList" name="sezon">', '</select>', False)[1]
             tmp = self.cm.ph.getAllItemsBeetwenMarkers(tmp, '<option>', '</option>', False)
             for item in tmp:
-                try: season = int(item.strip())
-                except Exception: continue
+                try:
+                    season = int(item.strip())
+                except Exception:
+                    continue
                 params = {'category':'get_episodes', 'title':str(season), 'season':str(season), 'movie_id': movieId, 'url_pattern':urlPattern}
                 if None == promItem and promSeason == str(season):
                     promItem = params
@@ -182,7 +201,8 @@ class NapiProjektProvider(CBaseSubProviderClass):
         
         page = cItem.get('page', 1)
         sts, data = self.cm.getPage(cItem['url'], self.defaultParams)
-        if not sts: return
+        if not sts:
+            return
         
         nextPage = self.cm.ph.getSearchGroups(data, '"(napisy%s,[^"]+?)"' % (page+1))[0]
         data = self.cm.ph.getDataBeetwenMarkers(data, '<tbody>', '</tbody>')[1]
@@ -190,19 +210,24 @@ class NapiProjektProvider(CBaseSubProviderClass):
         for item in data:
             desc = self.cleanHtmlStr( self.cm.ph.getSearchGroups(item, 'title="([^"]+?)"')[0] )
             tmp = self.cm.ph.getAllItemsBeetwenMarkers(item, '<td', '</td>')
-            if len(tmp) != 7: continue
+            if len(tmp) != 7:
+                continue
             subId = self.cm.ph.getSearchGroups(tmp[0], 'href="napiprojekt\:([0-9a-f]+?)"')[0]
-            if '' == subId: continue
+            if '' == subId:
+                continue
             title = self.cleanHtmlStr(tmp[0])
             
-            try: fps = float( tmp[2].strip() )
-            except Exception: fps = 0
+            try:
+                fps = float( tmp[2].strip() )
+            except Exception:
+                fps = 0
             
             duration = self.cleanHtmlStr(tmp[3])
             durationSecTab = self.cm.ph.getSearchGroups('|%s|' %duration, '[^0-9]([0-9]{2}):([0-9]{2}):([0-9]{2})[^0-9]', 3)
             if '' not in durationSecTab:
                 durationSec = int(durationSecTab[0]) * 3600 + int(durationSecTab[1]) * 60 + int(durationSecTab[2])
-            else: durationSec = 0
+            else:
+                durationSec = 0
             
             params = dict(cItem)
             params.update({'title':_('Season') + ' ' + title + ' ' + duration, 'duration_sec':durationSec, 'fps':fps, 'sub_id':subId, 'lang':'pl', 'desc':desc, 'size':tmp[1].strip(), 'translator':item[4].strip(), 'added':item[5], 'downloaded':item[6]})
@@ -221,7 +246,8 @@ class NapiProjektProvider(CBaseSubProviderClass):
         
         post_data = {'sezon':cItem['season'], 'movieID':cItem['movie_id']}
         sts, data = self.cm.getPage(url, self.defaultAjaxParams, post_data)
-        if not sts: return
+        if not sts:
+            return
 
         urlPattern = cItem['url_pattern']
         tab = []
@@ -229,8 +255,10 @@ class NapiProjektProvider(CBaseSubProviderClass):
         promEpisode = str(self.dInfo.get('episode'))
         data = self.cm.ph.getAllItemsBeetwenMarkers(data, '<option>', '</option>', False)
         for item in data:
-            try: episode = int(item.strip())
-            except Exception: continue
+            try:
+                episode = int(item.strip())
+            except Exception:
+                continue
             params = {'category':nextCategory, 'title':_('Episode') + ' ' + str(episode), 'episode':str(episode), 'url':self.getFullUrl(urlPattern.replace('+sezon+', str(cItem['season'])).replace('+odcinek+', str(episode)))}
             if None == promItem and promEpisode == str(episode):
                 promItem = params
@@ -247,7 +275,8 @@ class NapiProjektProvider(CBaseSubProviderClass):
     def _getFileName(self, title, lang, subId, imdbid, fps, ext):
         title = RemoveDisallowedFilenameChars(title).replace('_', '.')
         match = re.search(r'[^.]', title)
-        if match: title = title[match.start():]
+        if match:
+            title = title[match.start():]
 
         fileName = "{0}_{1}_0_{2}_{3}".format(title, lang, subId, imdbid)
         if fps > 0:
@@ -271,11 +300,14 @@ class NapiProjektProvider(CBaseSubProviderClass):
         
         url = self.getFullUrl('api/api-napiprojekt3.php')
         sts, data = self.cm.getPage(url, self.defaultParams, post_data)
-        if not sts: return retData
+        if not sts:
+            return retData
        
         fps = self.cm.ph.getDataBeetwenMarkers(data, '<fps>', '</fps>', False)[1]
-        try: fps = float( fps.strip() )
-        except Exception: fps = 0
+        try:
+            fps = float( fps.strip() )
+        except Exception:
+            fps = 0
         
         post_data = {"downloaded_subtitles_id" : subId, 
                      "mode" : "1", 
@@ -286,7 +318,8 @@ class NapiProjektProvider(CBaseSubProviderClass):
         
         url = self.getFullUrl('api/api-napiprojekt3.php')
         sts, data = self.cm.getPage(url, self.defaultParams, post_data)
-        if not sts: return retData
+        if not sts:
+            return retData
         
         data = self.cm.ph.getDataBeetwenMarkers(data, '<content><![CDATA[', ']]></content>', False)[1]
         try:

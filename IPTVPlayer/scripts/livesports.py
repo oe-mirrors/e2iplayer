@@ -15,8 +15,10 @@ import http.server
 import re
 import ssl
 from urllib.parse import urlparse, urljoin
-try:    import json
-except Exception: import simplejson as json
+try:
+    import json
+except Exception:
+    import simplejson as json
 import http.cookiejar
 import time
 
@@ -27,8 +29,10 @@ def signal_handler(sig, frame):
 signal.signal(signal.SIGINT, signal_handler)
 
 def rm(file):
-    try: os.remove(file)
-    except Exception: pass
+    try:
+        os.remove(file)
+    except Exception:
+        pass
 
 def printDBG(strDat):
     return
@@ -61,8 +65,10 @@ def getPage(url, params={}):
     if params.get('cookiefile'):
         if cj == None:
             cj = http.cookiejar.MozillaCookieJar()
-            try: cj.load(params['cookiefile'], ignore_discard = True)
-            except IOError: pass
+            try:
+                cj.load(params['cookiefile'], ignore_discard = True)
+            except IOError:
+                pass
         customOpeners.append( urllib.request.HTTPCookieProcessor(cj) )
 
     sts = False
@@ -70,7 +76,8 @@ def getPage(url, params={}):
     try:
         req = urllib.request.Request(url)
         for key in ('Referer', 'User-Agent', 'Origin', 'Accept-Encoding', 'Accept'):
-            if key in params: req.add_header(key, params[key])
+            if key in params:
+                req.add_header(key, params[key])
         printDBG("++++HEADERS START++++")
         printDBG(req.headers)
         printDBG("++++HEADERS END++++")
@@ -135,8 +142,10 @@ def getPageCF(url, params={}):
                 params2 = dict(params)
                 params2.update({'Referer':cUrl, 'Accept-Encoding':'text', 'Accept':'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8'})
                 printDBG("Time spent: [%s]" % (time.time() - start_time))
-                if current == 1: time.sleep(1 + (decoded['timeout'] / 1000.0)-(time.time() - start_time))
-                else: time.sleep((decoded['timeout'] / 1000.0))
+                if current == 1:
+                    time.sleep(1 + (decoded['timeout'] / 1000.0)-(time.time() - start_time))
+                else:
+                    time.sleep((decoded['timeout'] / 1000.0))
                 printDBG("Time spent: [%s]" % (time.time() - start_time))
                 printDBG("Timeout: [%s]" % decoded['timeout'])
                 sts, data = getPage(verUrl, params2)
@@ -155,8 +164,10 @@ class Proxy(http.server.SimpleHTTPRequestHandler):
         global duktape
         keyUrl = self.path
         
-        if keyUrl.startswith('/https/'): keyUrl = 'https://' + keyUrl[7:]
-        elif keyUrl.startswith('/http/'): keyUrl = 'http://' + keyUrl[6:]
+        if keyUrl.startswith('/https/'):
+            keyUrl = 'https://' + keyUrl[7:]
+        elif keyUrl.startswith('/http/'):
+            keyUrl = 'http://' + keyUrl[6:]
         
         printDBG("do_GET: " + keyUrl)
         
@@ -175,7 +186,8 @@ class Proxy(http.server.SimpleHTTPRequestHandler):
             #keyUrl = urlPath + base64.b64encode('l=' + 'nhl' + '&g=' + 'OTT-COL-20171110' + '&f=' + 'home' + '&u=' + base64.b64encode(keyUrl))
             keyUrl = urlPath + base64.b64encode(keyUrl)
         if not keyUrl.startswith('https://') and not keyUrl.startswith('http://'): 
-            if keyUrl[0] == '/': keyUrl = keyUrl[1:]
+            if keyUrl[0] == '/':
+                keyUrl = keyUrl[1:]
             keyUrl = mainUrl + keyUrl
         parsedUri = urlparse( mainUrl )
         sts, data = getPageCF(keyUrl, {'User-Agent':userAgent, 'Referer':mainUrl, 'Origin':'{uri.scheme}://{uri.netloc}'.format(uri=parsedUri), 'cookiefile':cookiefile})
@@ -200,7 +212,8 @@ if __name__ == "__main__":
 
         if scriptUrl.startswith('<proxy>'):
             urlPath = scriptUrl[7:]
-            if urlPath.startswith('/'): urlPath = urlPath[1:]
+            if urlPath.startswith('/'):
+                urlPath = urlPath[1:]
         elif scriptUrl.startswith('|'):
             scriptUrl = json.loads(base64.b64decode(scriptUrl))
         

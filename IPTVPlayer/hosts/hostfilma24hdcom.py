@@ -14,8 +14,10 @@ import re
 import urllib.request
 import urllib.parse
 import urllib.error
-try:    import json
-except Exception: import simplejson as json
+try:
+    import json
+except Exception:
+    import simplejson as json
 ###################################################
 
 
@@ -60,14 +62,16 @@ class Filma24hdCom(CBaseHostClass):
     def listMoviesCategory(self, cItem, nextCategory):
         printDBG("Filma24hdCom.listMoviesCategory")
         sts, data = self.cm.getPage(cItem['url'])
-        if not sts: return
+        if not sts:
+            return
         
         data = self.cm.ph.getDataBeetwenMarkers(data, '<!-- Menu Starts -->', '<!-- Menu Ends -->', False)[1]
         data = self.cm.ph.getAllItemsBeetwenMarkers(data, '<a ', '</a>')
         for item in data:
             title = self.cleanHtmlStr( item )
             url   = self._getFullUrl(self.cm.ph.getSearchGroups(item, '''href=['"]([^"^']+?)["']''', 1, True)[0])
-            if url == '' or 'seriale' in url: continue
+            if url == '' or 'seriale' in url:
+                continue
             params = dict(cItem)
             params.update({'category':nextCategory, 'url':self._getFullUrl(url), 'title':title})
             self.addDir(params)
@@ -76,13 +80,15 @@ class Filma24hdCom(CBaseHostClass):
         printDBG("Filma24hdCom.listSeriesCategory")
         self.seriesSubCategoryCache = []
         sts, data = self.cm.getPage(cItem['url'])
-        if not sts: return
+        if not sts:
+            return
         
         marker = '<ul class="sub-menu">'
         data = self.cm.ph.getDataBeetwenMarkers(data, '<div id="main-nav">', '<!-- end #main-nav -->', False)[1]
         data = data.split('</ul>')
         for item in data:
-            if marker not in item: continue
+            if marker not in item:
+                continue
             tmp = item.split(marker)
             subCategoryTitle = self.cm.ph.rgetDataBeetwenMarkers(tmp[0], '<a', '</a>')[1]
             subCategoryUrl   = self.cm.ph.getSearchGroups(subCategoryTitle, '''href=['"]([^"^']+?)["']''', 1, True)[0]
@@ -111,7 +117,8 @@ class Filma24hdCom(CBaseHostClass):
             params['name']  = 'category'
             if type == 'dir':
                 self.addDir(params)
-            else: self.addVideo(params)
+            else:
+                self.addVideo(params)
             
     def listItems(self, cItem, category=''):
         printDBG("Filma24hdCom.listItems")
@@ -129,7 +136,8 @@ class Filma24hdCom(CBaseHostClass):
             url += '?' + post
         
         sts, data = self.cm.getPage(url)
-        if not sts: return
+        if not sts:
+            return
         
         nextPage = False
         if ("/page/%d/" % (page + 1)) in data:
@@ -142,10 +150,12 @@ class Filma24hdCom(CBaseHostClass):
             data = self.cm.ph.getAllItemsBeetwenMarkers(data, '<!-- Post Starts -->', '<!-- Post Ends -->')
             serieItem = False
         for item in data:
-            if serieItem: item = item.split('<!-- end')[0]
+            if serieItem:
+                item = item.split('<!-- end')[0]
             
             url    = self.cm.ph.getSearchGroups(item, 'href="([^"]+?)"')[0]
-            if url == '': continue
+            if url == '':
+                continue
             icon  = self.cm.ph.getSearchGroups(item, 'src="([^"]+?)"')[0]
             title = self.cm.ph.getDataBeetwenMarkers(item, '<h2', '</h2>')[1]
             desc  = self.cleanHtmlStr( item.split('<p class="entry-meta">')[-1] )
@@ -182,7 +192,8 @@ class Filma24hdCom(CBaseHostClass):
         url = cItem['url']
         
         sts, data = self.cm.getPage(url)
-        if not sts: return []
+        if not sts:
+            return []
         
         videoUrl = self.cm.ph.getSearchGroups(data, '''<iframe[^>]+?src=['"](http[^"^']+?)['"]''', 1, True)[0]
         if 1 == self.up.checkHostSupport(videoUrl):
@@ -197,7 +208,8 @@ class Filma24hdCom(CBaseHostClass):
         videoUrlTab += self.cm.ph.getDataBeetwenMarkers(data, '<map ', '</map>', caseSensitive=False)[1]
         videoUrlTab = re.compile('''<a[^>]*?href=['"](http[^"]+?)['"]''', re.IGNORECASE).findall(videoUrlTab)
         for item in videoUrlTab:
-            if 1 != self.up.checkHostSupport(item): continue
+            if 1 != self.up.checkHostSupport(item):
+                continue
             urlTab.append({'name':self.up.getHostName(item), 'url':item, 'need_resolve':1})
         return urlTab
         
@@ -216,12 +228,15 @@ class Filma24hdCom(CBaseHostClass):
         retTab = []
         
         sts, data = self.cm.getPage(cItem['url'])
-        if not sts: return retTab
+        if not sts:
+            return retTab
         
         m1 = '<span style="color: #00'
-        if m1 not in data: m1 = '<div class="entry-content'
+        if m1 not in data:
+            m1 = '<div class="entry-content'
         m2 = '<p>&nbsp;</p>'
-        if m2 not in data: m2 = '<tbody>'
+        if m2 not in data:
+            m2 = '<tbody>'
         desc = self.cm.ph.getDataBeetwenMarkers(data, m1, m2)[1]
         desc = self.cleanHtmlStr( desc )
         
@@ -280,7 +295,8 @@ class IPTVHost(CHostBase):
     def getLinksForVideo(self, Index = 0, selItem = None):
         retCode = RetHost.ERROR
         retlist = []
-        if not self.isValidIndex(Index): return RetHost(retCode, value=retlist)
+        if not self.isValidIndex(Index):
+            return RetHost(retCode, value=retlist)
         
         urlList = self.host.getLinksForVideo(self.host.currList[Index])
         for item in urlList:
@@ -302,7 +318,8 @@ class IPTVHost(CHostBase):
     def getArticleContent(self, Index = 0):
         retCode = RetHost.ERROR
         retlist = []
-        if not self.isValidIndex(Index): return RetHost(retCode, value=retlist)
+        if not self.isValidIndex(Index):
+            return RetHost(retCode, value=retlist)
         cItem = self.host.currList[Index]
         
         if cItem['type'] != 'video':

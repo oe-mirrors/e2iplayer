@@ -20,8 +20,10 @@ import urllib.error
 import base64
 from binascii import hexlify, unhexlify
 from hashlib import md5
-try:    import json
-except Exception: import simplejson as json
+try:
+    import json
+except Exception:
+    import simplejson as json
 from Components.config import config, ConfigSelection, ConfigText, getConfigListEntry
 ###################################################
 
@@ -71,10 +73,12 @@ class PutlockerTvTo(CBaseHostClass):
                 data = ret['data'].split('\n')
                 for line in data:
                     line = line.strip()
-                    if not line.endswith('=/'): continue
+                    if not line.endswith('=/'):
+                        continue
                     line = line.split(';')[0]
                     line = line.replace(' ', '').split('=')
-                    if 2 != len(line): continue
+                    if 2 != len(line):
+                        continue
                     cookieItems[line[0]] = line[1].split(';')[0]
         except Exception:
             printExc()
@@ -115,7 +119,8 @@ class PutlockerTvTo(CBaseHostClass):
         domains = ['https://www5.putlockertv.to/']
         domain = config.plugins.iptvplayer.putlockertv_alt_domain.value.strip()
         if self.cm.isValidUrl(domain):
-            if domain[-1] != '/': domain += '/'
+            if domain[-1] != '/':
+                domain += '/'
             domains.insert(0, domain)
         
         for domain in domains:
@@ -131,7 +136,8 @@ class PutlockerTvTo(CBaseHostClass):
             self.MAIN_URL = domains[0]
         
     def listMainMenu(self, cItem):
-        if self.MAIN_URL == None: return
+        if self.MAIN_URL == None:
+            return
         MAIN_CAT_TAB = [{'category':'list_items',      'title': 'Featured',  'url':self.getFullUrl('/featured')                       },
                         {'category':'list_filters',    'title': 'Movies',    'url':self.getFullUrl('/movies'),   'f_type[]':'movie' },
                         {'category':'list_filters',    'title': 'TV-Series', 'url':self.getFullUrl('/tv-series'),'f_type[]':'series'},
@@ -146,7 +152,8 @@ class PutlockerTvTo(CBaseHostClass):
         self.cacheFiltersKeys = []
         
         sts, data = self.getPage(cItem['url'])
-        if not sts: return
+        if not sts:
+            return
         
         def addFilter(data, marker, baseKey, allTitle='', titleFormat=''):
             key = 'f_' + baseKey
@@ -165,12 +172,14 @@ class PutlockerTvTo(CBaseHostClass):
                 self.cacheFilters[key].append({'title':title.title(), key:value})
                 
             if len(self.cacheFilters[key]):
-                if allTitle != '': self.cacheFilters[key].insert(0, {'title':allTitle})
+                if allTitle != '':
+                    self.cacheFilters[key].insert(0, {'title':allTitle})
                 self.cacheFiltersKeys.append(key)
         
         data = self.cm.ph.getAllItemsBeetwenNodes(data, ('<div', '>', 'filter dropdown'), ('</ul', '>'))
         for tmp in data:
-            if 'type[]' in tmp: continue
+            if 'type[]' in tmp:
+                continue
             titleFormat = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(tmp, ('<button', '>'), ('<', '>'), False)[1]) + ': {0}'
             key = self.cm.ph.getSearchGroups(tmp, '''name="([^"]+?)"''')[0]
             tmp = self.cm.ph.getAllItemsBeetwenMarkers(tmp, '<li', '</li>')
@@ -183,9 +192,11 @@ class PutlockerTvTo(CBaseHostClass):
         cItem = dict(cItem)
         
         f_idx = cItem.get('f_idx', 0)
-        if f_idx == 0: self.fillCacheFilters(cItem)
+        if f_idx == 0:
+            self.fillCacheFilters(cItem)
         
-        if f_idx >= len(self.cacheFiltersKeys): return
+        if f_idx >= len(self.cacheFiltersKeys):
+            return
         
         filter = self.cacheFiltersKeys[f_idx]
         f_idx += 1
@@ -203,43 +214,58 @@ class PutlockerTvTo(CBaseHostClass):
         keys.extend(['f_type[]', 'f_keyword'])
         for key in keys:
             baseKey = key[2:] # "f_"
-            if key in cItem: query[baseKey] = cItem[key]
+            if key in cItem:
+                query[baseKey] = cItem[key]
             
         if query != {}:
-            if 'f_keyword' in cItem: url = self.getFullUrl('/search')
-            else: url = self.getFullUrl('/filter')
+            if 'f_keyword' in cItem:
+                url = self.getFullUrl('/search')
+            else:
+                url = self.getFullUrl('/filter')
         else:
             url = cItem['url']
         
-        if page > 1: query['page'] = page
+        if page > 1:
+            query['page'] = page
         query = urllib.parse.urlencode(query)
-        if '?' in url: url += '&' + query
-        else: url += '?' + query
+        if '?' in url:
+            url += '&' + query
+        else:
+            url += '?' + query
         
         sts, data = self.getPage(url)
-        if not sts: return
+        if not sts:
+            return
         
-        if  '>&raquo;<' in data: nextPage = True
-        else: nextPage = False
+        if  '>&raquo;<' in data:
+            nextPage = True
+        else:
+            nextPage = False
         
         data = self.cm.ph.getDataBeetwenNodes(data, ('<div', '>', 'item'), ('<div', '>', 'footer'))[1]
         data = self.cm.ph.rgetAllItemsBeetwenNodes(data, ('</div', '>'), ('<div', '>', 'item'))
-        if nextPage and len(data): data[-1] = re.compile('<div[^>]+paging[^>]+?>').split(data[-1], 1)[0]
+        if nextPage and len(data):
+            data[-1] = re.compile('<div[^>]+paging[^>]+?>').split(data[-1], 1)[0]
         for item in data:
             url = self.getFullUrl( self.cm.ph.getSearchGroups(item, '''href=['"]([^"^']+?)['"]''')[0] )
             tip = self.getFullUrl( self.cm.ph.getSearchGroups(item, '''data\-tip=['"]([^"^']+?)['"]''')[0] )
-            if not self.cm.isValidUrl(url): continue
+            if not self.cm.isValidUrl(url):
+                continue
             icon = self.getFullIconUrl( self.cm.ph.getSearchGroups(item, '''src=['"]([^"^']+?)['"]''')[0] )
             title = self.cleanHtmlStr( self.cm.ph.getDataBeetwenNodes(item, ('<a', '>', 'name'), ('</a', '>'))[1])
-            if title == '': title = self.cleanHtmlStr( item )
-            if title == '': title = self.cleanHtmlStr(self.cm.ph.getSearchGroups(item, '''alt=['"]([^'^"]+?)['"]''')[0])
-            if title == '': title = self.cleanHtmlStr(self.cm.ph.getSearchGroups(item, '''title=['"]([^'^"]+?)['"]''')[0])
+            if title == '':
+                title = self.cleanHtmlStr( item )
+            if title == '':
+                title = self.cleanHtmlStr(self.cm.ph.getSearchGroups(item, '''alt=['"]([^'^"]+?)['"]''')[0])
+            if title == '':
+                title = self.cleanHtmlStr(self.cm.ph.getSearchGroups(item, '''title=['"]([^'^"]+?)['"]''')[0])
 
             desc = []
             tmp = self.cm.ph.getAllItemsBeetwenMarkers(item, '<div', '</div>')
             for t in tmp:
                 t = self.cleanHtmlStr(t)
-                if t != '': desc.append(t)
+                if t != '':
+                    desc.append(t)
             desc = ' | '.join(desc) 
             desc += '[/br]' + self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(item, '<p', '</p>')[1])
             
@@ -257,7 +283,8 @@ class PutlockerTvTo(CBaseHostClass):
         printDBG("PutlockerTvTo.exploreItem")
         
         sts, data = self.getPage(cItem['url'])
-        if not sts: return
+        if not sts:
+            return
         
         params = dict(self.defaultParams)
         params['header'] = dict(self.AJAX_HEADER)
@@ -271,7 +298,8 @@ class PutlockerTvTo(CBaseHostClass):
         url = self.getFullUrl('/ajax/film/servers/{0}?'.format(id) + urllib.parse.urlencode(getParams))
         
         sts, data = self.getPage(url, params)
-        if not sts: return []
+        if not sts:
+            return []
         
         try:
             data = byteify(json.loads(data))['html']
@@ -348,8 +376,10 @@ class PutlockerTvTo(CBaseHostClass):
                 self._myFun = vLocals['zaraza']
             except Exception:
                 printExc()
-        try: params = self._myFun(params)
-        except Exception: printExc()
+        try:
+            params = self._myFun(params)
+        except Exception:
+            printExc()
         return params
         
     def getVideoLinks(self, videoUrl):
@@ -377,19 +407,23 @@ class PutlockerTvTo(CBaseHostClass):
         #params['cookie_items'] = cookieItem
         
         sts, data = self.getPage(videoUrl[:videoUrl.rfind('/')], params)
-        if sts: timestamp = self.cm.ph.getSearchGroups(data, '''data-ts=['"]([0-9]+?)['"]''')[0]
-        else: timestamp = ''
+        if sts:
+            timestamp = self.cm.ph.getSearchGroups(data, '''data-ts=['"]([0-9]+?)['"]''')[0]
+        else:
+            timestamp = ''
         
         if timestamp == '': 
             sts, data = self.getPage(videoUrl, params)
-            if not sts: return []
+            if not sts:
+                return []
             timestamp = self.cm.ph.getSearchGroups(data, '''data-ts=['"]([0-9]+?)['"]''')[0]
 
         getParams = {'ts':timestamp, 'id':videoUrl.meta.get('id', ''), 'Q':'1'}
         getParams = self._updateParams(getParams)
         url = self.getFullUrl('/ajax/film/update-views?' + urllib.parse.urlencode(getParams))
         sts, data = self.getPage(url, params)
-        if not sts: return []
+        if not sts:
+            return []
         
         printDBG('+++++\n%s\n+++++' % (data))
         
@@ -398,7 +432,8 @@ class PutlockerTvTo(CBaseHostClass):
         
         url = self.getFullUrl('/ajax/episode/info?' + urllib.parse.urlencode(getParams))
         sts, data = self.getPage(url, params)
-        if not sts: return []
+        if not sts:
+            return []
         
         videoUrl = ''
         subTrack = ''
@@ -411,20 +446,26 @@ class PutlockerTvTo(CBaseHostClass):
             subTrack = data.get('subtitle', '')
             if data['type'] == 'iframe':
                 videoUrl = data['target']
-                if videoUrl.startswith('//'): videoUrl = 'http:' + videoUrl
+                if videoUrl.startswith('//'):
+                    videoUrl = 'http:' + videoUrl
             elif data['type'] == 'direct':
                 query = dict(data['params'])
                 query.update({'mobile':'0'})
                 url = data['grabber']
-                if '?' in url: url += '&'
-                else: url += '?'
+                if '?' in url:
+                    url += '&'
+                else:
+                    url += '?'
                 url += urllib.parse.urlencode(query)
                 sts, data = self.getPage(url, params)
-                if not sts: return []
+                if not sts:
+                    return []
                 data = byteify(json.loads(data))
                 for item in data['data']:
-                    if item['type'] != 'mp4': continue
-                    if not self.cm.isValidUrl(item['file']): continue
+                    if item['type'] != 'mp4':
+                        continue
+                    if not self.cm.isValidUrl(item['file']):
+                        continue
                     urlTab.append({'name':item['label'], 'url':item['file']})
                 urlTab = urlTab[::-1]
             else:
@@ -444,7 +485,8 @@ class PutlockerTvTo(CBaseHostClass):
             format = subTrack[-3:]
             for idx in range(len(urlTab)):
                 urlTab[idx]['url'] = strwithmeta(urlTab[idx]['url'])
-                if 'external_sub_tracks' not in urlTab[idx]['url'].meta: urlTab[idx]['url'].meta['external_sub_tracks'] = []
+                if 'external_sub_tracks' not in urlTab[idx]['url'].meta:
+                    urlTab[idx]['url'].meta['external_sub_tracks'] = []
                 urlTab[idx]['url'].meta['external_sub_tracks'].append({'title':'', 'url':subTrack, 'lang':'pt', 'format':format})
         
         return urlTab
@@ -458,7 +500,8 @@ class PutlockerTvTo(CBaseHostClass):
         params['header']['Referer'] = str(cItem['url'])
         
         sts, data = self.getPage(cItem['url'], params)
-        if not sts: return []
+        if not sts:
+            return []
         
         id = self.cm.ph.getSearchGroups(data, '''<([^>]+?class="watch-page"[^>]*?)>''')[0]
         id = self.cm.ph.getSearchGroups(id, '''data-id=['"]([^'^"]+?)['"]''')[0]
@@ -469,46 +512,59 @@ class PutlockerTvTo(CBaseHostClass):
         getParams = self._updateParams(getParams)
         url = self.getFullUrl('/ajax/film/tooltip/' + id + '?' + urllib.parse.urlencode(getParams))
         sts, data = self.getPage(url, params)
-        if not sts: return []
+        if not sts:
+            return []
         
         printDBG(data)
         
         desc = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(data, '<p class="desc">', '</p>')[1])
-        if desc == '': desc  = self.cleanHtmlStr( self.cm.ph.getSearchGroups(data, '<meta property="og:description"[^>]+?content="([^"]+?)"')[0] )
+        if desc == '':
+            desc  = self.cleanHtmlStr( self.cm.ph.getSearchGroups(data, '<meta property="og:description"[^>]+?content="([^"]+?)"')[0] )
         
         title = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(data, '<h1', '</h1>')[1])
-        if title == '': title = self.cleanHtmlStr( self.cm.ph.getSearchGroups(data, '<meta property="og:title"[^>]+?content="([^"]+?)"')[0] )
+        if title == '':
+            title = self.cleanHtmlStr( self.cm.ph.getSearchGroups(data, '<meta property="og:title"[^>]+?content="([^"]+?)"')[0] )
         
         icon  = self.getFullUrl( self.cm.ph.getSearchGroups(data, '<meta property="og:image"[^>]+?content="([^"]+?)"')[0] )
         
-        if title == '': title = cItem['title']
-        if desc == '':  desc = cItem['desc']
-        if icon == '':  icon = cItem['icon']
+        if title == '':
+            title = cItem['title']
+        if desc == '':
+            desc = cItem['desc']
+        if icon == '':
+            icon = cItem['icon']
         
         otherInfo = {}
         tmp = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(data, '<span class="duration"', '</span>')[1])
-        if tmp != '': otherInfo['duration'] = tmp
+        if tmp != '':
+            otherInfo['duration'] = tmp
         
         tmp = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(data, '<span class="imdb"', '</span>')[1])
-        if tmp != '': otherInfo['imdb_rating'] = tmp
+        if tmp != '':
+            otherInfo['imdb_rating'] = tmp
         
         tmp = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(data, '<span class="quality"', '</span>')[1])
-        if tmp != '': otherInfo['quality'] = tmp
+        if tmp != '':
+            otherInfo['quality'] = tmp
         
         tmp = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(data, 'Country:', '</div>', False)[1])
-        if tmp != '': otherInfo['country'] = tmp
+        if tmp != '':
+            otherInfo['country'] = tmp
         
         tmp = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(data, 'Stars:', '</div>', False)[1])
-        if tmp != '': otherInfo['stars'] = tmp
+        if tmp != '':
+            otherInfo['stars'] = tmp
         
         tmp = self.cm.ph.getDataBeetwenMarkers(data, 'Genre:', '</div>', False)[1]
         tmp = self.cm.ph.getAllItemsBeetwenMarkers(tmp, '<a', '</a>')
         tmp = ', '.join([self.cleanHtmlStr(item) for item in tmp])
-        if tmp != '': otherInfo['genre'] = tmp
+        if tmp != '':
+            otherInfo['genre'] = tmp
         
         tmp = self.cm.ph.getDataBeetwenMarkers(data, '<h1>', '</div>', False)[1]
         tmp = self.cm.ph.getSearchGroups(tmp, '''<span[^>]*?>\s*([0-9]+?)\s*<''')[0]
-        if tmp != '': otherInfo['year'] = tmp
+        if tmp != '':
+            otherInfo['year'] = tmp
         
         return [{'title':self.cleanHtmlStr( title ), 'text': self.cleanHtmlStr( desc ), 'images':[{'title':'', 'url':self.getFullUrl(icon)}], 'other_info':otherInfo}]
         

@@ -12,8 +12,10 @@ from Plugins.Extensions.IPTVPlayer.tools.iptvtypes import strwithmeta
 # FOREIGN import
 ###################################################
 import re
-try:    import json
-except Exception: import simplejson as json
+try:
+    import json
+except Exception:
+    import simplejson as json
 ###################################################
 
 
@@ -72,21 +74,25 @@ class DarshowCom(CBaseHostClass):
             params['name']  = 'category'
             if type == 'dir':
                 self.addDir(params)
-            else: self.addVideo(params)
+            else:
+                self.addVideo(params)
         
     def listTop(self, cItem, nextCategory):
         printDBG("DarshowCom.listTop")
         sts, data = self.cm.getPage(cItem['url'])
-        if not sts: return
+        if not sts:
+            return
         
         data = self.cm.ph.getAllItemsBeetwenMarkers(data, '<li dir="rtl">', '</li>')
         for item in data:
             url   = self._getFullUrl( self.cm.ph.getSearchGroups(item, 'href="([^"]+?)"')[0] )
-            if url == '': continue
+            if url == '':
+                continue
             icon  = self._getFullUrl( self.cm.ph.getSearchGroups(item, 'src="([^"]+?)"')[0] )
             desc  = self.cleanHtmlStr(item)
             title = self.cleanHtmlStr( self.cm.ph.getDataBeetwenMarkers(item, '<b>', '</b>')[1] )
-            if title == '': title = self.cleanHtmlStr( self.cm.ph.getSearchGroups(item, 'title="([^"]+?)"')[0] )
+            if title == '':
+                title = self.cleanHtmlStr( self.cm.ph.getSearchGroups(item, 'title="([^"]+?)"')[0] )
             params = dict(cItem)
             params.update({'category':nextCategory, 'title':title, 'url':url, 'desc':desc, 'icon':icon})
             self.addDir(params)
@@ -95,17 +101,20 @@ class DarshowCom(CBaseHostClass):
         printDBG("DarshowCom.listsMainMenu")
         self.cacheSubCategory = {'maincat':{'title':_('Categories'), 'tab':[]}, 'genres':{'title':_('Genres'), 'tab':[]}}
         sts, data = self.cm.getPage(cItem['url'])
-        if not sts: return
+        if not sts:
+            return
         
         data = self.cm.ph.getDataBeetwenMarkers(data, '<ul class="menu_body">', '</ul>')[1]
         data = self.cm.ph.getAllItemsBeetwenMarkers(data, '<li>', '</li>')
         for item in data:
             url   = self._getFullUrl( self.cm.ph.getSearchGroups(item, '''href=['"]([^"^']+?)['"]''')[0] )
             title = self.cleanHtmlStr( item )
-            if not url.startswith('http'): continue
+            if not url.startswith('http'):
+                continue
             if 'maincat' in item:
                 key = 'maincat'
-            else: key = 'genres'
+            else:
+                key = 'genres'
             self.cacheSubCategory[key]['tab'].append({'title':title, 'url':url})
 
         for key in self.cacheSubCategory:
@@ -133,30 +142,38 @@ class DarshowCom(CBaseHostClass):
                 post_data['search_start'] = page
         
         sts, data = self.cm.getPage(url, {}, post_data)
-        if not sts: return
+        if not sts:
+            return
         
         mp = '<div class="navigation">'
-        if mp not in data: mp = 'next-page'
+        if mp not in data:
+            mp = 'next-page'
         nextPageUrl = self.cm.ph.getDataBeetwenMarkers(data, mp, '</div>', False)[1]
         printDBG('++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++')
         printDBG(nextPageUrl)
         printDBG('++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++')
         if ('/{0}/'.format(page+1)) in nextPageUrl:
             nextPageUrl = self.cm.ph.getSearchGroups(nextPageUrl, '''href=['"]([^"^']+?)['"]''')[0]
-        else: nextPageUrl = '#'
+        else:
+            nextPageUrl = '#'
         
         m1   = '<div class="shortmail">'
         data = self.cm.ph.getDataBeetwenMarkers(data, m1, 'container-content')[1]
         data = self.cm.ph.getAllItemsBeetwenMarkers(data, m1, '</span></span>')
         for item in data:
             title = self.cleanHtmlStr( self.cm.ph.getDataBeetwenMarkers(item, 'class="title-shorts">', '<', False)[1] )
-            if title == '': title = self.cleanHtmlStr( self.cm.ph.getDataBeetwenMarkers(item, 'dir="rtl">', '<', False)[1] )
-            if title == '': title = self.cm.ph.getSearchGroups(item, '''title=['"]([^"^']+?)['"]''')[0]
-            if 'serie_title' in cItem: title = cItem['serie_title'] + ' - ' + title
+            if title == '':
+                title = self.cleanHtmlStr( self.cm.ph.getDataBeetwenMarkers(item, 'dir="rtl">', '<', False)[1] )
+            if title == '':
+                title = self.cm.ph.getSearchGroups(item, '''title=['"]([^"^']+?)['"]''')[0]
+            if 'serie_title' in cItem:
+                title = cItem['serie_title'] + ' - ' + title
 
             icon  =  self.cm.ph.getSearchGroups(item, '''src=['"]([^"^']+?)['"]''')[0]
-            if icon.startswith('['):  icon = ''
-            else: icon = self._getFullUrl( icon )
+            if icon.startswith('['):
+                icon = ''
+            else:
+                icon = self._getFullUrl( icon )
             url   = self._getFullUrl( self.cm.ph.getSearchGroups(item, '''href=['"]([^"^']+?)['"]''')[0] )
             if url.startswith('http'):
                 params = {}
@@ -176,7 +193,8 @@ class DarshowCom(CBaseHostClass):
     def exploreItem(self, cItem, category):
         printDBG("DarshowCom.exploreItem")
         sts, data = self.cm.getPage(cItem['url'])
-        if not sts: return
+        if not sts:
+            return
         
         params = dict(cItem)
         params.update({'good_for_fav':False, 'title':_('Trailer'), 'trailer':True})
@@ -206,7 +224,8 @@ class DarshowCom(CBaseHostClass):
         urlTab = []
         
         sts, data = self.cm.getPage(cItem['url'])
-        if not sts: return []
+        if not sts:
+            return []
         
         data = self.cm.ph.getDataBeetwenMarkers(data, '<div class="tabs-wr">', '<div class="fullin">')[1]
         
@@ -282,7 +301,8 @@ class DarshowCom(CBaseHostClass):
         
         if 'dardarkom.com' in videoUrl:
             sts, data = self.cm.getPage(videoUrl)
-            if not sts: return []
+            if not sts:
+                return []
             url = ''
             urlTmpTab = self.cm.ph.getAllItemsBeetwenMarkers(data, '<iframe ', '</iframe>', False, True)
             printDBG(urlTmpTab)
@@ -290,7 +310,8 @@ class DarshowCom(CBaseHostClass):
                 url = self.cm.ph.getSearchGroups(urlTmp, '''location\.href=['"]([^"^']+?)['"]''', 1, True)[0]
                 if 'javascript' in url: 
                     url = ''
-            if url == '': url = self.cm.ph.getSearchGroups(data, '''<iframe[^>]+?src=['"]([^"^']+?)['"]''', 1, True)[0]
+            if url == '':
+                url = self.cm.ph.getSearchGroups(data, '''<iframe[^>]+?src=['"]([^"^']+?)['"]''', 1, True)[0]
             url = self._getFullUrl( url )
             videoUrl = url
         

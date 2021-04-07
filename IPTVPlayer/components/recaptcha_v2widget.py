@@ -170,7 +170,8 @@ class UnCaptchaReCaptchaWidget(Screen):
         return
     
     def moveMarker(self):
-        if self.updateAccpetButton(): return
+        if self.updateAccpetButton():
+            return
         # calculate position of image
         x = self.offsetCoverX + self.markerWidth * self.currX
         y = self.offsetCoverY + self.markerHeight * self.currY

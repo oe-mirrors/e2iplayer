@@ -17,8 +17,10 @@ from Components.config import config, ConfigSelection
 import urllib.request
 import urllib.parse
 import urllib.error
-try:    import simplejson as json
-except Exception: import json
+try:
+    import simplejson as json
+except Exception:
+    import json
 ###################################################
 
 ###################################################
@@ -54,50 +56,66 @@ class Hitbox(CBaseHostClass):
         CBaseHostClass.__init__(self, {'history':'Hitbox.tv'})
         
     def _getFullUrl(self, url, baseUrl=None):
-        if None == baseUrl: baseUrl = Hitbox.MAIN_URL
+        if None == baseUrl:
+            baseUrl = Hitbox.MAIN_URL
         if 0 < len(url) and not url.startswith('http'):
             url =  baseUrl + url
         return url
         
     def _getStr(self, v, default=''):
-        if isinstance(v, str): return v
-        elif isinstance(v, list): return '%r' % v
-        else: return default
+        if isinstance(v, str):
+            return v
+        elif isinstance(v, list):
+            return '%r' % v
+        else:
+            return default
             
     def _getCategoryBaseParams(self, item):
         params = {}
         params['title'] = self._getStr( item.get("category_name") )
-        if '' == params['title']: params['title'] = self._getStr( item.get("category_name_short") )
+        if '' == params['title']:
+            params['title'] = self._getStr( item.get("category_name_short") )
         params['icon'] = self._getFullUrl( self._getStr( item.get("category_logo_small") ), Hitbox.STATIC_URL )
-        if '' == params['icon']: params['icon'] = self._getFullUrl( self._getStr( item.get("category_logo_large") ), Hitbox.STATIC_URL )
+        if '' == params['icon']:
+            params['icon'] = self._getFullUrl( self._getStr( item.get("category_logo_large") ), Hitbox.STATIC_URL )
         params['desc'] = ''
         for tmp in [('category_viewers', _('viewers: ')), ('category_media_count', _('media count: ')), ('category_updated', _('updated: '))]:
             desc = self._getStr( item.get(tmp[0]) )
-            if '' != desc: params['desc'] += ('%s %s, ' % (tmp[1], desc))
-        if '' != params['desc']: params['desc'] = params['desc'][:-2]
+            if '' != desc:
+                params['desc'] += ('%s %s, ' % (tmp[1], desc))
+        if '' != params['desc']:
+            params['desc'] = params['desc'][:-2]
         return params
         
     def _getLiveStreamsBaseParams(self, item):
         params = {}
         params['title'] = '%s (%s)' % ( self._getStr( item.get("media_display_name") ), self._getStr( item.get("media_status") ))
         params['icon'] = self._getFullUrl( self._getStr( item.get("media_thumbnail") ), Hitbox.STATIC_URL )
-        if '' == params['icon']: params['icon'] = self._getFullUrl( self._getStr( item.get("media_thumbnail_large") ), Hitbox.STATIC_URL )
-        if '' == params['icon']: params['icon'] = self._getFullUrl( self._getStr( item.get("user_logo_small") ), Hitbox.STATIC_URL )
-        if '' == params['icon']: params['icon'] = self._getFullUrl( self._getStr( item.get("user_logo") ), Hitbox.STATIC_URL )
-        if '' == params['icon']: params['icon'] = self._getFullUrl( self._getStr( item.get('channel', {}).get("user_logo_small") ), Hitbox.STATIC_URL )
-        if '' == params['icon']: params['icon'] = self._getFullUrl( self._getStr( item.get('channel', {}).get("user_logo") ), Hitbox.STATIC_URL )
+        if '' == params['icon']:
+            params['icon'] = self._getFullUrl( self._getStr( item.get("media_thumbnail_large") ), Hitbox.STATIC_URL )
+        if '' == params['icon']:
+            params['icon'] = self._getFullUrl( self._getStr( item.get("user_logo_small") ), Hitbox.STATIC_URL )
+        if '' == params['icon']:
+            params['icon'] = self._getFullUrl( self._getStr( item.get("user_logo") ), Hitbox.STATIC_URL )
+        if '' == params['icon']:
+            params['icon'] = self._getFullUrl( self._getStr( item.get('channel', {}).get("user_logo_small") ), Hitbox.STATIC_URL )
+        if '' == params['icon']:
+            params['icon'] = self._getFullUrl( self._getStr( item.get('channel', {}).get("user_logo") ), Hitbox.STATIC_URL )
         params['desc'] = ''
         for tmp in [('media_views', _('views: ')), ('media_countries', _('countries: ')), ('media_live_since', _('live since: '))]:
             desc = self._getStr( item.get(tmp[0]) )
-            if '' != desc: params['desc'] += ('%s %s, ' % (tmp[1], desc))
-        if '' != params['desc']: params['desc'] = params['desc'][:-2]
+            if '' != desc:
+                params['desc'] += ('%s %s, ' % (tmp[1], desc))
+        if '' != params['desc']:
+            params['desc'] = params['desc'][:-2]
         return params
             
     def listGames(self, cItem, category):
         printDBG("Hitbox.listGames")
         page = cItem.get('page', 0)
         sts, data = self.cm.getPage(cItem['url'].format(Hitbox.NUM_OF_ITEMS, page*Hitbox.NUM_OF_ITEMS) )
-        if not sts: return 
+        if not sts:
+            return 
         try:
             data = byteify(json.loads(data))["categories"]
             for item in data:
@@ -109,12 +127,14 @@ class Hitbox(CBaseHostClass):
                 self.addDir(params)
             # check next page
             sts, data = self.cm.getPage(cItem['url'].format(1, (page+1)*Hitbox.NUM_OF_ITEMS) )
-            if not sts: return 
+            if not sts:
+                return 
             if len(json.loads(data)["categories"]):
                 params = dict(cItem)
                 params.update( {'title':_('Next page'), 'page':page+1} )
                 self.addDir(params)
-        except Exception: printExc()
+        except Exception:
+            printExc()
         
     def listGamesTab(self, cItem, category=''):
         printDBG("Hitbox.listGamesTab")
@@ -129,11 +149,14 @@ class Hitbox(CBaseHostClass):
         printDBG("Hitbox.listMedia")
         page = cItem.get('page', 0)
         sts, data = self.cm.getPage(cItem['url'].format(Hitbox.NUM_OF_ITEMS, page*Hitbox.NUM_OF_ITEMS) )
-        if not sts: return 
+        if not sts:
+            return 
         try:
             data = byteify(json.loads(data))
-            if 'live' == data['media_type']: key = 'livestream'
-            elif 'video' == data['media_type']: key = 'video'
+            if 'live' == data['media_type']:
+                key = 'livestream'
+            elif 'video' == data['media_type']:
+                key = 'video'
             else:
                 printExc("Uknown type [%s]" % data['media_type'])
                 return
@@ -142,17 +165,21 @@ class Hitbox(CBaseHostClass):
             for item in data:
                 params = dict(cItem)
                 params.update( self._getLiveStreamsBaseParams(item) )
-                if key == 'video': params['media_id'] = item['media_id']
-                else: params['channel_link'] = item['channel']['channel_link']
+                if key == 'video':
+                    params['media_id'] = item['media_id']
+                else:
+                    params['channel_link'] = item['channel']['channel_link']
                 self.addVideo(params)
             # check next page
             sts, data = self.cm.getPage(cItem['url'].format(1, (page+1)*Hitbox.NUM_OF_ITEMS) )
-            if not sts: return 
+            if not sts:
+                return 
             if len(json.loads(data)[key]):
                 params = dict(cItem)
                 params.update( {'title':_('Next page'), 'page':page+1} )
                 self.addDir(params)
-        except Exception: printExc()
+        except Exception:
+            printExc()
 
     def listSearchResult(self, cItem, searchPattern, searchType):
         printDBG("Hitbox.listSearchResult cItem[%s], searchPattern[%s] searchType[%s]" % (cItem, searchPattern, searchType))
@@ -160,7 +187,8 @@ class Hitbox(CBaseHostClass):
         item = dict(cItem)
         item['category'] = 'media'
         item['url'] = Hitbox.MAIN_URLS+'api/media/'+searchType+'/list?filter=popular&media=true&search='+searchPattern+'&limit={0}&media=true&start={1}&size=list'
-        if 'live' == searchType: item['url'] += '&liveonly=true'
+        if 'live' == searchType:
+            item['url'] += '&liveonly=true'
         self.listMedia(item)
     
     def getLinksForVideo(self, cItem):
@@ -176,22 +204,27 @@ class Hitbox(CBaseHostClass):
                 try:
                     data = byteify( json.loads(data) )
                     baseUrl = data['clip']['baseUrl']
-                    if None == baseUrl: baseUrl = ''
+                    if None == baseUrl:
+                        baseUrl = ''
                     for item in data['clip']['bitrates']:
                         url = item['url']
                         if url.split('?')[0].endswith('m3u8'):
                             type = 'hls'
-                        else: type = 'vod'
+                        else:
+                            type = 'vod'
                                 
                         if not url.startswith('http'):
                             if 'vod' == type:
                                 url = baseUrl + '/' + url
-                            else: url = Hitbox.MAIN_URL + '/' + url
+                            else:
+                                url = Hitbox.MAIN_URL + '/' + url
                             
                         if url.startswith('http'):
                             urls.append( {'name':item.get('label', 'vod'), 'type':type, 'url':url} )
-                            if 'vod' == type: break
-                except Exception: printExc()
+                            if 'vod' == type:
+                                break
+                except Exception:
+                    printExc()
                 
         urlTab = []
         for urlItem in urls:
@@ -251,7 +284,8 @@ class IPTVHost(CHostBase):
     def getLinksForVideo(self, Index = 0, selItem = None):
         retCode = RetHost.ERROR
         retlist = []
-        if not self.isValidIndex(Index): return RetHost(retCode, value=retlist)
+        if not self.isValidIndex(Index):
+            return RetHost(retCode, value=retlist)
         
         urlList = self.host.getLinksForVideo(self.host.currList[Index])
         for item in urlList:

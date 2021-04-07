@@ -62,14 +62,16 @@ class LibreStream(CBaseHostClass):
             params['name']  = 'category'
             if type == 'dir':
                 self.addDir(params)
-            else: self.addVideo(params)
+            else:
+                self.addVideo(params)
             
     def _fillCache(self):
         printDBG("LibreStream._fillCache")
         sts, data = self.cm.getPage(self.MAIN_URL)
         self.sortCache = []
         self.catCache = {'year_cats':[], 'movie_cats':[], 'series_cats':[], 'qualities':[], 'platforms':[]}
-        if not sts: return
+        if not sts:
+            return
         
         # fill sort cache
         tmpData = self.cm.ph.getDataBeetwenMarkers(data, '<form name="news_set_sort"', '<input ', False)[1]
@@ -141,7 +143,8 @@ class LibreStream(CBaseHostClass):
     def listEpisodes(self, cItem):
         printDBG("LibreStream.listEpisodes")
         sts, data = self.cm.getPage(cItem['url'])
-        if not sts: return
+        if not sts:
+            return
         
         episodes = self._getLinksFromContent(data, 'id')
         title = cItem['title']
@@ -159,7 +162,8 @@ class LibreStream(CBaseHostClass):
         
         post_data = cItem.get('post_data', None)
         sts, data = self.cm.getPage(url, {}, post_data)
-        if not sts: return
+        if not sts:
+            return
         
         m1 = '<div class="libre-movie libre-movie-block">'
         data = self.cm.ph.getDataBeetwenMarkers(data, m1, '<footer>', False)[1]
@@ -175,10 +179,13 @@ class LibreStream(CBaseHostClass):
         for item in data:
             url   = self.cm.ph.getSearchGroups(item, "location.href='([^']+?)'")[0]
             title = self.cm.ph.getSearchGroups(item, 'alt="([^"]+?)"')[0]            
-            if title == '': title = self.cm.ph.getSearchGroups(item, 'title="([^"]+?)"')[0] 
-            if title == '': title = self.cm.ph.getSearchGroups(item, '<h2[^>]*?>([^<]+?)</h2>')[0] 
+            if title == '':
+                title = self.cm.ph.getSearchGroups(item, 'title="([^"]+?)"')[0] 
+            if title == '':
+                title = self.cm.ph.getSearchGroups(item, '<h2[^>]*?>([^<]+?)</h2>')[0] 
             title = self.cleanHtmlStr( title )
-            if title == '': continue
+            if title == '':
+                continue
             icon  = self.cm.ph.getSearchGroups(item, '<img[^>]+?data-src="([^"]+?)"')[0]
             desc  = self.cleanHtmlStr( item.split('<div class="mcontent">')[-1] ).replace(' ---------------', ': ')
             params = dict(cItem)
@@ -221,7 +228,8 @@ class LibreStream(CBaseHostClass):
         
         servers = self.cm.ph.getDataBeetwenMarkers(data, "<ul class='etabs'", '</ul>')[1]
         servers = servers.split('</li>')
-        if len(servers): del servers[-1]
+        if len(servers):
+            del servers[-1]
         for item in servers:
             title = self.cleanHtmlStr( item )
             id    = self.cm.ph.getSearchGroups(item, 'href="#([^"]+?)"')[0]
@@ -236,7 +244,8 @@ class LibreStream(CBaseHostClass):
         urlTab = []
         if 'libre-stream.com' in cItem['url'] or self.up.getDomain(self.getMainUrl(), True) in cItem['url']:
             sts, data = self.cm.getPage(cItem['url'])
-            if not sts: return []
+            if not sts:
+                return []
             urlTab = self._getLinksFromContent(data, 'name', {'need_resolve':1})
         else:
             urlTab.append({'name':'Main url', 'url':cItem['url'], 'need_resolve':1})
@@ -248,7 +257,8 @@ class LibreStream(CBaseHostClass):
         
         if 0 == self.up.checkHostSupport(videoUrl):
             sts, data = self.cm.getPage(videoUrl, {'max_data_size':0})
-            if not sts: return []
+            if not sts:
+                return []
             videoUrl = self.cm.meta['url']
         return self.up.getVideoLinkExt(videoUrl)
         

@@ -45,7 +45,8 @@ class YoutubeComProvider(CBaseSubProviderClass):
         self.defaultParams = {'header':self.HTTP_HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
         if 'youtube_id' in self.params['url_params'] and '' != self.params['url_params']['youtube_id']:
             self.youtubeId = self.params['url_params']['youtube_id']
-        else: self.youtubeId = '' 
+        else:
+            self.youtubeId = '' 
             
     def getSubtitles(self, cItem):
         printDBG("YoutubeComProvider.getSubtitles")
@@ -75,7 +76,8 @@ class YoutubeComProvider(CBaseSubProviderClass):
     def _getFileName(self, title, lang, subId, ytid):
         title = RemoveDisallowedFilenameChars(title).replace('_', '.')
         match = re.search(r'[^.]', title)
-        if match: title = title[match.start():]
+        if match:
+            title = title[match.start():]
 
         fileName = "{0}_{1}_0_{2}_{3}".format(title, lang, subId, ytid)
         fileName = fileName + '.vtt'

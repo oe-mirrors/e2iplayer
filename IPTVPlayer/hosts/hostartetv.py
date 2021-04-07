@@ -36,7 +36,8 @@ class ArteTV(CBaseHostClass):
         self.defaultParams = {'header':self.HTTP_HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
         
     def getPage(self, baseUrl, addParams = {}, post_data = None):
-        if addParams == {}: addParams = dict(self.defaultParams)
+        if addParams == {}:
+            addParams = dict(self.defaultParams)
         return self.cm.getPage(baseUrl, addParams, post_data)
     
     def listMainMenu(self, cItem, nextCategory):
@@ -48,7 +49,8 @@ class ArteTV(CBaseHostClass):
             url += lang
         
         sts, data = self.getPage(url)
-        if not sts: return
+        if not sts:
+            return
         
         data = self.cm.ph.getAllItemsBeetwenNodes(data, ('<a', '>', ' lang='), ('</a', '>'))
         for item in data:
@@ -69,7 +71,8 @@ class ArteTV(CBaseHostClass):
         printDBG("ArteTV.listLang [%s]" % cItem)
         
         sts, data = self.getPage(cItem['url'])
-        if not sts: return
+        if not sts:
+            return
         
         if False:
             tmp = self.cm.ph.getDataBeetwenNodes(data, ('<a', '>', '/direct/'), ('</a', '>'))[1]
@@ -88,7 +91,8 @@ class ArteTV(CBaseHostClass):
         url = self.getFullUrl(self.cm.ph.getSearchGroups(tmp, '''\shref=['"]([^'^"]+?)['"]''')[0])
         if url != '':
             sts, data = self.getPage(url)
-            if not sts: return
+            if not sts:
+                return
             
             tmp = self.cm.ph.getAllItemsBeetwenNodes(data, ('<article', '>'), ('</article', '>'))
             for item in tmp:
@@ -102,7 +106,8 @@ class ArteTV(CBaseHostClass):
             data = self.cm.ph.getAllItemsBeetwenMarkers(data, '<li', '</li>')
             for item in data:
                 url = self.cm.ph.getSearchGroups(item, '''\shref=['"]([^'^"]+?)['"]''')[0]
-                if '/videos/' not in url: continue
+                if '/videos/' not in url:
+                    continue
                 title = self.cleanHtmlStr(item)
                 params = dict(cItem)
                 params.update({'good_for_fav':False, 'category':nextCategory, 'title':title, 'url':self.getFullUrl(url)})
@@ -116,10 +121,12 @@ class ArteTV(CBaseHostClass):
         page = baseParams.pop('page', 1)
         
         baseUrl = cItem['url']
-        if '/search/' in baseUrl: baseUrl += '&page=%s' % page
+        if '/search/' in baseUrl:
+            baseUrl += '&page=%s' % page
         
         sts, data = self.getPage(baseUrl)
-        if not sts: return
+        if not sts:
+            return
         
         iconsMap = {}
         
@@ -128,8 +135,10 @@ class ArteTV(CBaseHostClass):
             jsonData = json_loads(jsonData[:jsonData.find('};')+1])
             try:
                 for item in jsonData['videos']['videos']:
-                    try: iconsMap[item['url']] = item['images'][0]['url']
-                    except Exception: pass
+                    try:
+                        iconsMap[item['url']] = item['images'][0]['url']
+                    except Exception:
+                        pass
             except Exception:
                 printExc()
             
@@ -137,8 +146,10 @@ class ArteTV(CBaseHostClass):
                 currentCode = jsonData['pages']['currentCode']
                 for zone in jsonData['pages']['list'][currentCode]['zones']:
                     for item in zone['data']:
-                        try: iconsMap[item['url']] = item['images']['landscape']['resolutions'][0]['url']
-                        except Exception: printExc()
+                        try:
+                            iconsMap[item['url']] = item['images']['landscape']['resolutions'][0]['url']
+                        except Exception:
+                            printExc()
             except Exception:
                 printExc()
         except Exception:
@@ -152,7 +163,8 @@ class ArteTV(CBaseHostClass):
             
             if 'next-teaser__link' not in tmp[idx] and '__duration' not in tmp[idx]:
                 sectionTitle = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(tmp[idx], '<h2', '</h2>')[1])
-                if sectionTitle == '': sectionTitle = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(tmp[idx], ('<li', '>', 'is-highlighted'), ('</li', '>'))[1])
+                if sectionTitle == '':
+                    sectionTitle = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(tmp[idx], ('<li', '>', 'is-highlighted'), ('</li', '>'))[1])
                 sectionUrl = self.getFullUrl(self.cm.ph.getSearchGroups(tmp[idx], '''\shref=['"]([^'^"]+?)['"]''')[0])
                 if 'arte.tv' in sectionUrl: 
                     if not sectionUrl.endswith('/search/'):
@@ -167,29 +179,39 @@ class ArteTV(CBaseHostClass):
                     continue
             else:
                 tmpSectionTitle = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(tmp[idx], ('<h', '>', 'section-title'), ('</h', '>'))[1])
-                if tmpSectionTitle != '': sectionTitle = tmpSectionTitle
+                if tmpSectionTitle != '':
+                    sectionTitle = tmpSectionTitle
             
             itemsTab = []
             itemsData = self.cm.ph.getAllItemsBeetwenNodes(tmp[idx], ('<a', '>', 'next-teaser__link'), ('</a', '>'))
-            if len(itemsData) == 0: itemsData = self.cm.ph.getAllItemsBeetwenNodes(tmp[idx], ('<a', '</a>', '__duration'), ('</div', '>'))
+            if len(itemsData) == 0:
+                itemsData = self.cm.ph.getAllItemsBeetwenNodes(tmp[idx], ('<a', '</a>', '__duration'), ('</div', '>'))
             for item in itemsData:
                 url = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''\shref=['"]([^'^"]+?)['"]''')[0])
-                if url == '': continue
-                if self.up.getDomain(self.getMainUrl(), True) != self.up.getDomain(url, True): continue
+                if url == '':
+                    continue
+                if self.up.getDomain(self.getMainUrl(), True) != self.up.getDomain(url, True):
+                    continue
                 icon  = self.getFullIconUrl(self.cm.ph.getSearchGroups(item, '''\ssrc=['"]([^'^"]+?)['"]''')[0])
                 title = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(item, '<h3', '</h3>')[1])
-                if title == '': title = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(item, ('<div', '>', 'teaser__title'), ('</div', '>'))[1])
-                if title == '': title = url.split('/')[-2].replace('-', ' ').upper()
+                if title == '':
+                    title = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(item, ('<div', '>', 'teaser__title'), ('</div', '>'))[1])
+                if title == '':
+                    title = url.split('/')[-2].replace('-', ' ').upper()
                 desc  = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(item, '<p', '</p>')[1])
                 icon = iconsMap.get(url, icon)
                 params = {'title':title, 'url':url, 'icon':icon, 'desc':desc}
-                if 'next-playlist' in item: params['type'] = 'dir_2'
-                elif ('next-collection' in item or 'reportage/' in tmp[idx] or '/RC-' in url) and '_duration' not in item: params['type'] = 'dir_1'
-                else: params['type'] = 'video'
+                if 'next-playlist' in item:
+                    params['type'] = 'dir_2'
+                elif ('next-collection' in item or 'reportage/' in tmp[idx] or '/RC-' in url) and '_duration' not in item:
+                    params['type'] = 'dir_1'
+                else:
+                    params['type'] = 'video'
                 itemsTab.append(params)
             
             idx += 1
-            if 0 == len(itemsTab): continue
+            if 0 == len(itemsTab):
+                continue
             
             if sectionTitle != '':
                 params = dict(baseParams)
@@ -219,7 +241,8 @@ class ArteTV(CBaseHostClass):
                                 nextPage = zone['nextPage']
                                 break
                         
-                        if nextPage == '': return
+                        if nextPage == '':
+                            return
                         
                         lang = jsonData['pages']['list'][currentCode]['language']
                         web  = jsonData['pages']['list'][currentCode]['support']
@@ -255,12 +278,15 @@ class ArteTV(CBaseHostClass):
         if '{0}' in url:
             url = url.format(str(page))
         else:
-            if '?' in url: url += '&'
-            else: url += '?'
+            if '?' in url:
+                url += '&'
+            else:
+                url += '?'
             url += 'page=' + str(page)
         
         sts, data = self.getPage(url)
-        if not sts: return
+        if not sts:
+            return
         
         printDBG('+++++++++++++++++++++++++++++++++')
         printDBG(data)
@@ -280,14 +306,20 @@ class ArteTV(CBaseHostClass):
             for item in tab:
                 url = self.getFullUrl( item['url'] )
                 title = self.cleanHtmlStr( item['title'] )
-                if None != item.get('subtitle', None): title += ' - ' + self.cleanHtmlStr( item['subtitle'] )
-                if type == 'zone': icon = self.getFullIconUrl(item['images']['landscape']['resolutions'][0]['url'])
-                else: icon = self.getFullIconUrl(item['images'][0]['url'])
+                if None != item.get('subtitle', None):
+                    title += ' - ' + self.cleanHtmlStr( item['subtitle'] )
+                if type == 'zone':
+                    icon = self.getFullIconUrl(item['images']['landscape']['resolutions'][0]['url'])
+                else:
+                    icon = self.getFullIconUrl(item['images'][0]['url'])
                 
-                if item.get('duration', 0) > 0: desc = ['%s min' % int(round(item['duration'] / divider))]
-                else: desc = []
+                if item.get('duration', 0) > 0:
+                    desc = ['%s min' % int(round(item['duration'] / divider))]
+                else:
+                    desc = []
                 
-                if None != item.get('description', None): desc.append(self.cleanHtmlStr(str(item['description'])))
+                if None != item.get('description', None):
+                    desc.append(self.cleanHtmlStr(str(item['description'])))
                 params = dict(cItem)
                 params.update({'good_for_fav':True, 'title':title, 'url':url, 'icon':icon, 'desc':'[/br]'.join(desc)})
                 if item.get('duration', 0) > 0:
@@ -323,12 +355,14 @@ class ArteTV(CBaseHostClass):
         printDBG("ArteTV.listPlaylistItems [%s]" % cItem)
         
         sts, data = self.getPage(cItem['url'])
-        if not sts: return
+        if not sts:
+            return
         
         url = self.getFullUrl(self.cm.ph.getSearchGroups(data, '''<iframe[^>]+?src=['"]([^"^']+?)['"]''', 1, True)[0])
         
         sts, data = self.getPage(url)
-        if not sts: return
+        if not sts:
+            return
         
         data = self.cm.ph.getDataBeetwenNodes(data, ('var ', '=', 'js_json_playlist'), ('var ', ';', '='), False)[1].strip()[:-1]
         try:
@@ -359,19 +393,22 @@ class ArteTV(CBaseHostClass):
         self.cacheLinks = {}
 
         sts, data = self.getPage(cItem['url'])
-        if not sts: return
+        if not sts:
+            return
 
         url = self.getFullUrl(self.cm.ph.getSearchGroups(data, '''<iframe[^>]+?src=['"]([^"^']+?)['"]''', 1, True)[0])
         jsonUrl = url.split('json_url=', 1)[-1].split('&', 1)[0]
 
         if not jsonUrl:
             sts, data = self.getPage(url)
-            if not sts: return
+            if not sts:
+                return
             data = self.cm.ph.getDataBeetwenNodes(data, ('var', '=', 'js_json'), ('</script', '>'), False)[1]
             data[:data.find('};')+1]
         else:
             sts, data = self.getPage(urllib.parse.unquote(jsonUrl))
-            if not sts: return
+            if not sts:
+                return
 
         linksTab = []
         try:
@@ -382,7 +419,8 @@ class ArteTV(CBaseHostClass):
             data = json_loads(data)
             for key in data['videoJsonPlayer']['VSR']:
                 item = data['videoJsonPlayer']['VSR'][key]
-                if item['mediaType'] not in ['mp4', 'hls']: continue
+                if item['mediaType'] not in ['mp4', 'hls']:
+                    continue
                 lang = item.get('versionShortLibelle', '').split('-')[-1]
                 lang = langsMap.get(lang, '')
                 res = '%sx%s' % (item['width'], item['height'])
@@ -399,7 +437,8 @@ class ArteTV(CBaseHostClass):
                 linksTab.append({'name':cacheLabels.get(currLang, currLang), 'url':'https://|' + currLang, 'need_resolve':1})
             
             for lang in self.cacheLinks:
-                if lang == currLang: continue
+                if lang == currLang:
+                    continue
                 linksTab.append({'name':cacheLabels.get(lang, lang), 'url':'https://|' +lang, 'need_resolve':1})
             
         except Exception:

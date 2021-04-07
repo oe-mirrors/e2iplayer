@@ -18,8 +18,10 @@ import re
 import urllib.request
 import urllib.parse
 import urllib.error
-try:    import json
-except Exception: import simplejson as json
+try:
+    import json
+except Exception:
+    import simplejson as json
 ############################################
 
 ###################################################
@@ -50,7 +52,8 @@ class IKlubNetApi(CBaseHostClass):
     def getListOfChannels(self, cItem):
         printDBG("IKlubNetApi.getListOfChannels")
         sts, data = self.cm.getPage(cItem['url'])
-        if not sts: return []
+        if not sts:
+            return []
         
         retList = []
         data = self.cm.ph.getDataBeetwenMarkers(data, '<div class="entry-content">', '</div>')[1]
@@ -59,7 +62,8 @@ class IKlubNetApi(CBaseHostClass):
             url = self.cm.ph.getSearchGroups(item, '''href=['"]([^'^"]+?)['"]''')[0]
             icon = self.cm.ph.getSearchGroups(item, '''src=['"]([^'^"]+?)['"]''')[0]
             title = self.cm.ph.getSearchGroups(item, '''alt=['"]([^'^"]+?)['"]''')[0].replace('Telewizja online - ', '')
-            if url == '': continue
+            if url == '':
+                continue
             params = dict(cItem)
             params.update({'type':'video', 'url':self.getFullUrl(url), 'title':title, 'icon':self.getFullUrl(icon)})
             retList.append(params)
@@ -73,13 +77,15 @@ class IKlubNetApi(CBaseHostClass):
             if config.plugins.iptvplayer.iklubnet_categorization.value:
                 retList = []
                 sts, data = self.cm.getPage(self.getFullUrl(self.MAIN_URL))
-                if not sts: return []
+                if not sts:
+                    return []
                 data = self.cm.ph.getDataBeetwenMarkers(data, '<div class="menu">', '</ul>')[1]
                 data = self.cm.ph.getAllItemsBeetwenMarkers(data, '<a', '</a>')
                 for item in data:
                     url = self.cm.ph.getSearchGroups(item, '''href=['"]([^'^"]+?)['"]''')[0]
                     title = self.cleanHtmlStr(item)
-                    if url == '': continue
+                    if url == '':
+                        continue
                     #if 'vlc-channel' in url: continue
                     params = dict(cItem)
                     params.update({'init_list':False, 'url':self.getFullUrl(url), 'title':title})
@@ -92,7 +98,8 @@ class IKlubNetApi(CBaseHostClass):
         else:
             if 'vlc-channel' in cItem['url']:
                 sts, data = self.cm.getPage(self.getFullUrl('vlcchannel.html'))
-                if not sts: return []
+                if not sts:
+                    return []
                 retList = []
                 data = self.cm.ph.getAllItemsBeetwenMarkers(data, '<option', '</option>', withMarkers=True, caseSensitive=False)
                 for item in data:
@@ -105,7 +112,8 @@ class IKlubNetApi(CBaseHostClass):
                 return retList
             elif 'tvpregionalna' in cItem['url']:
                 sts, data = self.cm.getPage('http://tvpstream.tvp.pl/')
-                if not sts: return []
+                if not sts:
+                    return []
                 retList = []
                 data = self.cm.ph.getAllItemsBeetwenMarkers(data, '<div class="button', '</div>', withMarkers=True, caseSensitive=False)
                 for item in data:
@@ -144,11 +152,13 @@ class IKlubNetApi(CBaseHostClass):
         url = cItem['url']
         nextTitle = 'Podstawowy '
         for linkIdx in range(2):
-            if '' == url: break
+            if '' == url:
+                break
             title = nextTitle
             
             sts, data = self.cm.getPage(url)
-            if not sts: return urlsTab
+            if not sts:
+                return urlsTab
             
             if 'tvpstream.tvp.pl' in url:
                 urlsTab.extend( self.getTvpStreamLink(data) )
@@ -156,16 +166,19 @@ class IKlubNetApi(CBaseHostClass):
                     return urlsTab
             
             url = self.getFullUrl( self.cm.ph.getSearchGroups(data, '<a href="([^"]+?)"[^>]*?><img[^>]*?alt="Zapasowy Player"', 1, True)[0] )
-            if '' == url: url = self.getFullUrl( self.cm.ph.getSearchGroups(data, '<a href="([^"]+?)"[^>]*?><img[^>]*?alt="[^"]*?vlc[^"]*?"', 1, True)[0] )
+            if '' == url:
+                url = self.getFullUrl( self.cm.ph.getSearchGroups(data, '<a href="([^"]+?)"[^>]*?><img[^>]*?alt="[^"]*?vlc[^"]*?"', 1, True)[0] )
             nextTitle = 'Zapasowy '
             
             printDBG(data)
             
             urlNext = self.cm.ph.getSearchGroups(data, '<iframe[^>]+?src="([^"]+?iklub[^"]+?)"', 1, True)[0]
-            if '' == urlNext: urlNext = self.cm.ph.getSearchGroups(data, '<iframe[^>]+?src="([^"]+?)"', 1, True)[0]
+            if '' == urlNext:
+                urlNext = self.cm.ph.getSearchGroups(data, '<iframe[^>]+?src="([^"]+?)"', 1, True)[0]
             if self.cm.isValidUrl(urlNext):
                 sts, data = self.cm.getPage(urlNext)
-                if not sts: continue
+                if not sts:
+                    continue
             
             data = self.cm.ph.getAllItemsBeetwenMarkers(data, 'eval(', ');', False)
             try:
@@ -209,12 +222,14 @@ class IKlubNetApi(CBaseHostClass):
                     urlsTab.append({'name':title + ' [rtmp]', 'url':rtmpUrl + ' live=1 '})
                 elif '.m3u8' in data:
                     file = self.cm.ph.getSearchGroups(data, r'''['"](http[^"^']+?\.m3u8[^"^']*?)['"]''')[0]
-                    if file == '': file = self.cm.ph.getDataBeetwenMarkers(data, 'src=', '&amp;', False)[1]
+                    if file == '':
+                        file = self.cm.ph.getDataBeetwenMarkers(data, 'src=', '&amp;', False)[1]
                     urlsTab.extend( getDirectM3U8Playlist(file) )
                 elif 'tvp.info' in data:
                     vidUrl = self.getFullUrl( self.cm.ph.getSearchGroups(data, '''['"](http[^'^"]+?tvp.info[^'^"]+?)['"]''')[0] )
                     sts, data = self.cm.getPage(vidUrl)
-                    if not sts: return []
+                    if not sts:
+                        return []
                     urlsTab.extend( self.getTvpStreamLink(data) )
                 elif 'mrl=' in data:
                     file = self.cm.ph.getSearchGroups(data, '''mrl=['"](http[^'^"]+?)['"]''')[0]
@@ -229,14 +244,16 @@ class IKlubNetApi(CBaseHostClass):
                     vidUrl = self.getFullUrl( self.cm.ph.getSearchGroups(data, '''['"]([^'^"]+?content.jwplatform.com[^'^"]+?)['"]''')[0] )
                     
                     sts, data = self.cm.getPage(vidUrl)
-                    if not sts: continue
+                    if not sts:
+                        continue
                     
                     if '/players/' not in vidUrl:
                         vidUrl = self.cm.ph.getSearchGroups(data, '''['"](https?[^'^"]+?/players/[^'^"]+?\.js)['"]''')[0]
                         HEADER = dict( self.HEADER )
                         HEADER['Referer'] = vidUrl
                         sts, data = self.cm.getPage(vidUrl, {'header':HEADER})
-                        if not sts: continue
+                        if not sts:
+                            continue
                     
                     data = self.cm.ph.getDataBeetwenMarkers(data, '"sources":', ']', False)[1]
                     file = self.cm.ph.getSearchGroups(data, r'''['"]?file['"]?\s*:\s*['"]([^"^']+)['"],''')[0]

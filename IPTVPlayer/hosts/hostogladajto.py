@@ -17,8 +17,10 @@ import re
 import urllib.request
 import urllib.parse
 import urllib.error
-try:    import json
-except Exception: import simplejson as json
+try:
+    import json
+except Exception:
+    import simplejson as json
 from Components.config import config, ConfigText, ConfigSelection, getConfigListEntry
 ###################################################
 
@@ -67,12 +69,15 @@ class ogladajto(CBaseHostClass):
         self.postLogin = ''
 
     def getPage(self, baseUrl, addParams = {}, post_data = None):
-        if addParams == {}: addParams = dict(self.defaultParams)
+        if addParams == {}:
+            addParams = dict(self.defaultParams)
         origBaseUrl = baseUrl
         baseUrl = self.cm.iriToUri(baseUrl)
         def _getFullUrl(url):
-            if self.cm.isValidUrl(url): return url
-            else: return urllib.parse.urljoin(baseUrl, url)
+            if self.cm.isValidUrl(url):
+                return url
+            else:
+                return urllib.parse.urljoin(baseUrl, url)
         addParams['cloudflare_params'] = {'domain':self.up.getDomain(baseUrl), 'cookie_file':self.COOKIE_FILE, 'User-Agent':self.USER_AGENT, 'full_url_handle':_getFullUrl}
         return self.cm.getPageCFProtection(baseUrl, addParams, post_data)
         
@@ -99,7 +104,8 @@ class ogladajto(CBaseHostClass):
         self.cacheMovieFilters = { 'cats':[], 'sort':[], 'years':[], 'az':[]}
 
         sts, data = self.getPage(self.getFullUrl(cItem['url']))
-        if not sts: return
+        if not sts:
+            return
 
         # fill sort
         dat = self.cm.ph.getDataBeetwenMarkers(data, '<div class="sorting__dropdown-list">', '</ul>', False)[1]
@@ -154,9 +160,11 @@ class ogladajto(CBaseHostClass):
         page = cItem.get('page', 1)
 
         url = cUrl = cItem['url']
-        if page > 1: url = url + '/strona{0}'.format(page)
+        if page > 1:
+            url = url + '/strona{0}'.format(page)
         sts, data = self.getPage(url)
-        if not sts: return
+        if not sts:
+            return
         self.setMainUrl(data.meta['url'])
             
         nextPage = self.cm.ph.getDataBeetwenNodes(data, ('<div', '>', 'pagination'), ('</div', '>'))[1]
@@ -170,7 +178,8 @@ class ogladajto(CBaseHostClass):
         for item in data:
 #            printDBG("ogladajto.listItems item %s" % item)
             url = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''href=['"]([^"^']+?)['"]''')[0])
-            if url == '': continue
+            if url == '':
+                continue
             icon = self.getFullIconUrl(self.cm.ph.getSearchGroups(item, '''data-src=['"]([^"^']+?)['"]''')[0])
             if icon == '':
                 icon = self.getFullIconUrl(self.cm.ph.getSearchGroups(item, '''src=['"]([^"^']+?)['"]''')[0])
@@ -192,7 +201,8 @@ class ogladajto(CBaseHostClass):
     def listSeriesSeasons(self, cItem, nextCategory):
         printDBG("ogladajto.listSeriesSeasons")
         sts, data = self.getPage(cItem['url'])
-        if not sts: return
+        if not sts:
+            return
         cUrl = self.cm.getBaseUrl(data.meta['url'])
         serieTitle = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(data, ('<div', '>', 'title-col video__title-col serials__title-col'), ('</div', '>'))[1])
         serieDesc = self.cm.ph.getDataBeetwenNodes(data, ('<div', '>', 'video__info-description'), ('</div', '>'))[1]
@@ -202,7 +212,8 @@ class ogladajto(CBaseHostClass):
         
         for sItem in data:
             sTitle = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(sItem, '<h1', '</h1>')[1])
-            if not sTitle: continue
+            if not sTitle:
+                continue
             sItem = self.cm.ph.getAllItemsBeetwenMarkers(sItem, '<a', '</a>')
             tabItems = []
             for item in sItem:
@@ -233,7 +244,8 @@ class ogladajto(CBaseHostClass):
         params = dict(self.defaultParams)
         params['no_redirection'] = True
         sts, data = self.getPage(cItem['url'], params)
-        if not sts: return []
+        if not sts:
+            return []
 
         url = self.cm.meta.get('location', '')
         if "zaloguj" in url and self.loggedIn:
@@ -283,7 +295,8 @@ class ogladajto(CBaseHostClass):
                 return False
 
             sts, data = self.getPage(self.MAIN_URL)
-            if not sts: return False
+            if not sts:
+                return False
 
             post_data = {'submit':'', 'ahd_username':self.login, 'ahd_password':self.password}
             data = self.cm.ph.getDataBeetwenNodes(data, ('<form', '>', 'zaloguj'), ('</form', '>'))[1]
@@ -303,8 +316,10 @@ class ogladajto(CBaseHostClass):
                 printDBG('tryTologin ok')
                 self.loggedIn = True
             else:
-                if sts: message = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(data, ('<div', '>', 'notification error'), ('</div', '>'))[1])
-                else: message = ''
+                if sts:
+                    message = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(data, ('<div', '>', 'notification error'), ('</div', '>'))[1])
+                else:
+                    message = ''
                 self.sessionEx.open(MessageBox, _('Login failed.') + '\n' + message, type = MessageBox.TYPE_ERROR, timeout = 10)
                 printDBG('tryTologin failed')
 

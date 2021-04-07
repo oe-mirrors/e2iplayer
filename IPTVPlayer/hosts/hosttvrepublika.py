@@ -11,8 +11,10 @@ from Plugins.Extensions.IPTVPlayer.libs.urlparserhelper import getDirectM3U8Play
 # FOREIGN import
 ###################################################
 import re
-try:    import json
-except Exception: import simplejson as json
+try:
+    import json
+except Exception:
+    import simplejson as json
 ###################################################
 
 
@@ -51,7 +53,8 @@ class TVRepublkaPL(CBaseHostClass):
         printDBG("TVRepublkaPL.listItems")
 
         sts, data = self.getPage(cItem['url'])
-        if not sts: return
+        if not sts:
+            return
         
         data = self.cm.ph.getDataBeetwenNodes(data, ('<div', '>', 'video-item'), ('<div', '>', 'footer'))[1]
         data = self.cm.ph.rgetAllItemsBeetwenNodes(data, ('</div', '>'), ('<div', '>', 'video-item'))
@@ -59,7 +62,8 @@ class TVRepublkaPL(CBaseHostClass):
             url = self.getFullUrl( self.cm.ph.getSearchGroups(item, '''\shref=['"]([^"^']+?)['"]''')[0] )
             title = self.cleanHtmlStr( self.cm.ph.getDataBeetwenNodes(item, ('<div', '>', 'video-title'), ('</div', '>'))[1])
             desc  = self.cleanHtmlStr( self.cm.ph.getDataBeetwenNodes(item, ('<div', '>', 'video-date'), ('</div', '>'))[1])
-            if not self.cm.isValidUrl(url): continue
+            if not self.cm.isValidUrl(url):
+                continue
             icon = self.getFullIconUrl( self.cm.ph.getSearchGroups(item, '''\ssrc=['"]([^"^']+?)['"]''')[0] )
             params = dict(cItem)
             params = {'good_for_fav': True, 'title':title, 'url':url, 'icon':icon, 'desc':desc}
@@ -69,15 +73,18 @@ class TVRepublkaPL(CBaseHostClass):
         printDBG("TVRepublkaPL.listMagazines")
         
         sts, data = self.getPage(cItem['url'])
-        if not sts: return
+        if not sts:
+            return
         
         data = self.cm.ph.getDataBeetwenNodes(data, ('<div', '>', 'magazyny'), ('<div', '>', 'video'))[1]
         data = self.cm.ph.getAllItemsBeetwenNodes(data, ('<div', '>', 'magazyn-item'), ('</div', '>'))
         for item in data:
             url = self.getFullUrl( self.cm.ph.getSearchGroups(item, '''\shref=['"]([^"^']+?)['"]''')[0] )
-            if url == '': continue
+            if url == '':
+                continue
             title = url.split('/')[-2].replace('-', ' ').decode('utf-8').title().encode('utf-8')
-            if not self.cm.isValidUrl(url): continue
+            if not self.cm.isValidUrl(url):
+                continue
             icon = self.getFullIconUrl( self.cm.ph.getSearchGroups(item, '''\ssrc=['"]([^"^']+?)['"]''')[0] )
             params = dict(cItem)
             params = {'good_for_fav': True, 'category':nextCategory, 'title':title, 'url':url, 'icon':icon}
@@ -88,7 +95,8 @@ class TVRepublkaPL(CBaseHostClass):
         urlTab = []
         
         sts, data = self.getPage(cItem['url'])
-        if not sts: return
+        if not sts:
+            return
         
         tmp = self.cm.ph.getDataBeetwenNodes(data, ('<div', '>', 'video-play'), ('<script', '>'), False)[1]
         tmp = self.cm.ph.getDataBeetwenMarkers(tmp, '<video', '</video>', False)[1]
@@ -98,7 +106,8 @@ class TVRepublkaPL(CBaseHostClass):
                 type = self.cm.ph.getSearchGroups(item, '''type=['"]([^'^"]+?)['"]''')[0].lower()
                 name = self.cm.ph.getSearchGroups(item, '''label=['"]([^'^"]+?)['"]''')[0]
                 url  = self.cm.ph.getSearchGroups(item, '''src=['"]([^'^"]+?)['"]''')[0]
-                if name == '': name = '%s. %s' % (str(len(urlTab)+1), type)
+                if name == '':
+                    name = '%s. %s' % (str(len(urlTab)+1), type)
                 
                 if 'video/mp4' == type: 
                     urlTab.append({'name':name, 'url':self.getFullUrl(url), 'need_resolve':0})

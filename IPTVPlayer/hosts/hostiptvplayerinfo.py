@@ -12,8 +12,10 @@ from Plugins.Extensions.IPTVPlayer.components.configbase import COLORS_DEFINITON
 # FOREIGN import
 ###################################################
 import re
-try:    import json
-except Exception: import simplejson as json
+try:
+    import json
+except Exception:
+    import simplejson as json
 from Components.config import config, ConfigSelection, getConfigListEntry
 ###################################################
 
@@ -57,7 +59,8 @@ class IPTVPlayerInfo(CBaseHostClass):
                             
         
     def getPage(self, baseUrl, addParams = {}, post_data = None):
-        if addParams == {}: addParams = dict(self.defaultParams)
+        if addParams == {}:
+            addParams = dict(self.defaultParams)
         return self.cm.getPage(baseUrl, addParams, post_data)
     
     def listCommits(self, cItem, nextCategory):
@@ -69,12 +72,15 @@ class IPTVPlayerInfo(CBaseHostClass):
         url  = self.getFullUrl('/%s/e2iplayer/commits/master?limit=%d&offset=%d' % (config.plugins.iptvplayer.gitlab_repo.value, ITEMS_PER_PAGE, page * ITEMS_PER_PAGE))
         
         if page > 1:
-            if '?' in url: url += '&'
-            else: url += '?'
+            if '?' in url:
+                url += '&'
+            else:
+                url += '?'
             url += 'page=%s' % page
         
         sts, data = self.getPage(url)
-        if not sts: return
+        if not sts:
+            return
         
         try:
             nextPage = False
@@ -83,7 +89,8 @@ class IPTVPlayerInfo(CBaseHostClass):
             printDBG(">>>> currCommitStamp[%s]" % currCommitStamp)
             
             data = byteify(json.loads(data))
-            if data['count'] >= ITEMS_PER_PAGE: nextPage = True
+            if data['count'] >= ITEMS_PER_PAGE:
+                nextPage = True
             
             splitReObj = re.compile('''<span[^>]+?class=['"]commit-row-message[^>]+?>''')
             

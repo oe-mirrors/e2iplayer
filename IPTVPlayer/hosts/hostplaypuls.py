@@ -18,8 +18,10 @@ import urllib.request
 import urllib.parse
 import urllib.error
 import random
-try:    import simplejson as json
-except Exception: import json
+try:
+    import simplejson as json
+except Exception:
+    import json
 ###################################################
 ###################################################
 # Config options for HOST
@@ -62,7 +64,8 @@ class Playpuls(CBaseHostClass):
             menuData = self.cm.ph.getDataBeetwenMarkers(data, '<div id="navigation">', '</div>', False)[1]
             menuData = re.compile('<li class="menu__item menu-[0-9]+? menuparent[^"]*?"><a href="[/]*?([^"]+?)" title="([^"]+?)" class="menu__link">([^<]+?)</a>').findall(menuData)
             for item in menuData:
-                if item[1] in 'Filmy': continue
+                if item[1] in 'Filmy':
+                    continue
                 params = {'name':'category', 'title':item[1], 'category':'menu', 'url':self.getFullUrl(item[0]), 'icon':self.DEFAULT_ICON_URL}
                 self.addDir(params)
             #
@@ -74,7 +77,8 @@ class Playpuls(CBaseHostClass):
         data = None
         if 'data' not in cItem:
             sts, data = self.cm.getPage(cItem['url'])
-            if not sts: return
+            if not sts:
+                return
             if searchMode:
               data = self.cm.ph.getDataBeetwenMarkers(data, '<ol class="search-results', '</ol>', False)[1]
             elif '<div class="region region-vod-list">' in data:
@@ -111,23 +115,30 @@ class Playpuls(CBaseHostClass):
         del data[0]
         descMarker = '<div class="video-description">'
         for idx in range(len(data)):
-            if idx < len(data)-1: item = data[idx] + '>'
-            else: item = data[idx]
+            if idx < len(data)-1:
+                item = data[idx] + '>'
+            else:
+                item = data[idx]
             #printDBG("============================================")
             #printDBG(item)
             #printDBG("============================================")
             url  = self.cm.ph.getSearchGroups(item, 'href="([^"]+?)"')[0]
             icon = self.cm.ph.getSearchGroups(item, 'class="cover" src="([^"]+?)"')[0]
-            if '' == icon: icon = self.cm.ph.getSearchGroups(item, 'class="screenshot" src="([^"]+?)"')[0]
+            if '' == icon:
+                icon = self.cm.ph.getSearchGroups(item, 'class="screenshot" src="([^"]+?)"')[0]
             
             # parse title
             title = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(item, '<div class="video-caption">', '</div>', False)[1])
-            if '' == title: title = self.cm.ph.getDataBeetwenMarkers(item, '<h3>', '</h3>', False)[1]
-            if '' == title: title = self.cm.ph.getSearchGroups(item, 'alt="([^"]+?)"')[0]
+            if '' == title:
+                title = self.cm.ph.getDataBeetwenMarkers(item, '<h3>', '</h3>', False)[1]
+            if '' == title:
+                title = self.cm.ph.getSearchGroups(item, 'alt="([^"]+?)"')[0]
             
             # parse description
-            if descMarker in item: desc = self.cleanHtmlStr(item.split(descMarker)[-1])
-            else: desc  = self.cleanHtmlStr(item)#self.cm.ph.getDataBeetwenMarkers(item, '<p>', '</p>', False)[1]
+            if descMarker in item:
+                desc = self.cleanHtmlStr(item.split(descMarker)[-1])
+            else:
+                desc  = self.cleanHtmlStr(item)#self.cm.ph.getDataBeetwenMarkers(item, '<p>', '</p>', False)[1]
             
             if '/vod' in url:
                 category = 'vod'
@@ -135,8 +146,10 @@ class Playpuls(CBaseHostClass):
                 category = 'menu'
             if '' != url:
                 params = {'name':'category', 'category':category, 'title':title, 'url':self.getFullUrl(url), 'icon':icon, 'desc':desc}
-                if 'vod' == category: self.addVideo(params)
-                else: self.addDir(params)
+                if 'vod' == category:
+                    self.addVideo(params)
+                else:
+                    self.addDir(params)
                 
     def getLinksForVideo(self, cItem):
         printDBG("Playpuls.getLinksForVideo [%s]" % cItem['url'])
@@ -144,12 +157,15 @@ class Playpuls(CBaseHostClass):
         header = dict(self.HEADER)
         header['Referer'] = cItem['url']
         sts, data = self.cm.getPage(cItem['url'], {'use_cookie': True, 'load_cookie': False, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE, 'header':header})
-        if not sts: return videoUrls
+        if not sts:
+            return videoUrls
         sts, data = self.cm.getPage(cItem['url'], {'use_cookie': True, 'load_cookie': True, 'save_cookie': False, 'cookiefile': self.COOKIE_FILE, 'header':header, 'cookie_items':{'has_js':'1'}})
-        if not sts: return videoUrls
+        if not sts:
+            return videoUrls
         
         sts, data = self.cm.ph.getDataBeetwenMarkers(data, '<section id="section-player" ', '</section>', False)
-        if not sts: return videoUrls
+        if not sts:
+            return videoUrls
         
         printDBG(data)
         
@@ -166,7 +182,8 @@ class Playpuls(CBaseHostClass):
             url += '?id=%s' % id
             header['Content-Type'] = 'application/x-www-form-urlencoded; charset=UTF-8'
             sts, source3Data = self.cm.getPage(url, {'use_cookie': True, 'load_cookie': True, 'save_cookie': False, 'cookiefile': self.COOKIE_FILE, 'header':header, 'cookie_items':{'has_js':'1'}}, post_data=post_data)
-            if not sts: return videoUrls
+            if not sts:
+                return videoUrls
             printDBG(source3Data)
         
         sources = []

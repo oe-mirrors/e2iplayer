@@ -14,8 +14,10 @@ from Plugins.Extensions.IPTVPlayer.tools.iptvtypes import strwithmeta
 import urllib.request
 import urllib.parse
 import urllib.error
-try:    import json
-except Exception: import simplejson as json
+try:
+    import json
+except Exception:
+    import simplejson as json
 ###################################################
 
 
@@ -58,7 +60,8 @@ class MovizlandCom(CBaseHostClass):
         
     def _getIconUrl(self, url):
         url = self._getFullUrl(url)
-        if url == '': return ''
+        if url == '':
+            return ''
         cookieHeader = self.cm.getCookieHeader(self.COOKIE_FILE)
         return strwithmeta(url, {'Cookie':cookieHeader, 'User-Agent':self.USER_AGENT})
         
@@ -83,13 +86,15 @@ class MovizlandCom(CBaseHostClass):
             params['name']  = 'category'
             if type == 'dir':
                 self.addDir(params)
-            else: self.addVideo(params)
+            else:
+                self.addVideo(params)
     
     def listCategories(self, cItem, nextCategory):
         printDBG("MovizlandCom.listCategories")
         
         sts, data = self.getPage(cItem['url'], self.defaultParams)
-        if not sts: return
+        if not sts:
+            return
         
         data = self.cm.ph.getDataBeetwenMarkers(data, '<ul id="tabs-ui">', '</ul>', False)[1]
         data = self.cm.ph.getAllItemsBeetwenMarkers(data, '<li>', '</li>')
@@ -97,7 +102,8 @@ class MovizlandCom(CBaseHostClass):
         for item in data:
             url = self.cm.ph.getSearchGroups(item, '''href=['"]([^'^"]+?)['"]''', 1)[0]
             url = self._getFullUrl( url )
-            if not url.startswith('http'): continue
+            if not url.startswith('http'):
+                continue
             title = self.cleanHtmlStr(item)
             params = dict(cItem)
             params.update({'category':nextCategory, 'title':title, 'url':url})
@@ -118,12 +124,14 @@ class MovizlandCom(CBaseHostClass):
                 url += '&page=%d' % page
         
         sts, data = self.getPage(url, self.defaultParams, post_data)
-        if not sts: return
+        if not sts:
+            return
         
         nextPage = self.cm.ph.getDataBeetwenMarkers(data, '<div class="paging">', '</ul>', False)[1]
         if '>{0}<'.format(page + 1) in nextPage:
             nextPage = True
-        else: nextPage = False
+        else:
+            nextPage = False
         
         data = self.cm.ph.getDataBeetwenMarkers(data, '<main ', '</main>')[1]
         data = self.cm.ph.getAllItemsBeetwenMarkers(data, '<li class="grid-item ">', '</li>')
@@ -135,9 +143,11 @@ class MovizlandCom(CBaseHostClass):
                 if '<img' in t:
                     item = t
                     break
-            if item == '' and len(tmp): item = tmp[-1]
+            if item == '' and len(tmp):
+                item = tmp[-1]
             url = self.cm.ph.getSearchGroups(item, '''href=['"]([^'^"]+?)['"]''', 1)[0]
-            if url == '': continue
+            if url == '':
+                continue
             title = self.cleanHtmlStr(item)
             icon  = self.cm.ph.getSearchGroups(item, '''src=['"]([^'^"]+?)['"]''', 1)[0]
             
@@ -168,17 +178,20 @@ class MovizlandCom(CBaseHostClass):
         urlTab = []
         
         sts, data = self.getPage(cItem['url'], self.defaultParams)
-        if not sts: return []
+        if not sts:
+            return []
         
         data = self.cm.ph.getDataBeetwenMarkers(data, 'class="iframeWide"', '<div class="footer">')[1]
         data = self.cm.ph.getAllItemsBeetwenMarkers(data, '<a', '</a>')
         for item in data:
             url = self.cm.ph.getSearchGroups(item, '''href=['"]([^'^"]+?)['"]''', 1)[0]
             url = self._getFullUrl( url )
-            if not self.cm.isValidUrl(url): continue
+            if not self.cm.isValidUrl(url):
+                continue
             title = self.cleanHtmlStr(item)
             printDBG(">>>>>>>>>>>>>> " + title)
-            if 'class="ViewMovieNow"' not in item: continue
+            if 'class="ViewMovieNow"' not in item:
+                continue
             
             if '?view=1' in url or '?high' in url or '?download' in url or 'embedM-' in url:
                 urlTab.append({'name':title, 'url':url, 'need_resolve':0})
@@ -221,7 +234,8 @@ class MovizlandCom(CBaseHostClass):
         
         url = cItem['url'].replace('://m.', '://')
         sts, data = self.getPage(url)
-        if not sts: return []
+        if not sts:
+            return []
         cUrl = data.meta['url']
         
         desc = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(data, ('<div', '>', 'contentMovie'), ('</div', '>'))[1])
@@ -232,26 +246,33 @@ class MovizlandCom(CBaseHostClass):
         itemsList = []
 
         tmp = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(data, ('<span', '>', 'ratings'), ('</span', '>'), False)[1])
-        if tmp != '': itemsList.append((_('Rating:'),  tmp))
+        if tmp != '':
+            itemsList.append((_('Rating:'),  tmp))
 
         data = self.cm.ph.getAllItemsBeetwenMarkers(data, '<btns', '</btns>')
         for item in data:
             item = item.split('</span>', 1)
-            if len(item) < 2: continue
+            if len(item) < 2:
+                continue
             key = self.cleanHtmlStr(item[0]) 
-            if key == '': cotninue
+            if key == '':
+                cotninue
             val = []
             item = self.cm.ph.getAllItemsBeetwenMarkers(item[1], '<a', '</a>')
             for it in item:
                 it = self.cleanHtmlStr(it)
-                if it: val.append(it)
+                if it:
+                    val.append(it)
 
             if len(val):
                 itemsList.append((key, ', '.join(val)))
         
-        if title == '': title = cItem['title']
-        if icon == '':  icon = cItem.get('icon', self.DEFAULT_ICON_URL)
-        if desc == '': desc = cItem.get('desc', '')
+        if title == '':
+            title = cItem['title']
+        if icon == '':
+            icon = cItem.get('icon', self.DEFAULT_ICON_URL)
+        if desc == '':
+            desc = cItem.get('desc', '')
         
         return [{'title':self.cleanHtmlStr( title ), 'text': self.cleanHtmlStr( desc ), 'images':[{'title':'', 'url':self.getFullUrl(icon)}], 'other_info':{'custom_items_list':itemsList}}]
 

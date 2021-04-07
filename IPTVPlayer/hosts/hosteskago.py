@@ -50,7 +50,8 @@ class EskaGo(CBaseHostClass):
         self.cacheItems = {}
         
         sts, data = self.cm.getPage(cItem['url'])
-        if not sts: return
+        if not sts:
+            return
         
         ###########################
         listDataTab = self.cm.ph.getDataBeetwenMarkers(data, '<div class="channel-list-box"', '<script>', False)[1]
@@ -65,7 +66,8 @@ class EskaGo(CBaseHostClass):
                 desc = self.cleanHtmlStr( self.cm.ph.getDataBeetwenMarkers(tmp, headMarker, '</div>', False)[1] )
                 tmp  = self.cm.ph.getAllItemsBeetwenMarkers(tmp, '<li>', '</li>')
                 for item in tmp:
-                    if 'play_icon' not in item: continue
+                    if 'play_icon' not in item:
+                        continue
                     url   = self.getFullIconUrl(self.cm.ph.getSearchGroups(item, '''href=['"]([^'^"]+?)['"]''')[0])
                     title = self.cleanHtmlStr(item)
                     self.cacheItems[listId].append({'good_for_fav':True, 'type':'audio', 'title':title, 'url':url, 'desc':desc})
@@ -79,14 +81,16 @@ class EskaGo(CBaseHostClass):
         for item in tmp:
             url   = self.cm.ph.getSearchGroups(item, '''href=['"]([^'^"]+?)['"]''')[0]
             icon  = self.getFullIconUrl( self.cm.ph.getSearchGroups(item, '''color[^>]+?src=['"]([^'^"]+?)['"]''')[0] )
-            if url != '#': url = self.getFullUrl(url)
+            if url != '#':
+                url = self.getFullUrl(url)
             if self.cm.isValidUrl(url):
                 title = url.split('/')[-1].replace('-', ' ').title()
                 params = {'good_for_fav':True, 'title':title, 'url':url, 'icon':icon}
                 self.addAudio(params)
             else:
                 listId = self.cm.ph.getSearchGroups(item, '''data-list-id=['"]([^'^"]+?)['"]''')[0]
-                if 0 == len(self.cacheItems.get(listId, [])): continue
+                if 0 == len(self.cacheItems.get(listId, [])):
+                    continue
                 params = {'good_for_fav':False, 'category':nextCategory, 'title':self.cacheItems[listId][0]['desc'], 'url':listId, 'icon':icon}
                 self.addDir(params)
                 
@@ -104,7 +108,8 @@ class EskaGo(CBaseHostClass):
         printDBG("EskaGo.listVodCats")
         
         sts, data = self.cm.getPage(cItem['url'])
-        if not sts: return
+        if not sts:
+            return
         
         nextCategoriesMap = {'filmy':'vod_movies_cats', 'seriale':'vod_sort', 'programy':'vod_channels'}
 
@@ -112,7 +117,8 @@ class EskaGo(CBaseHostClass):
         data = ph.findall(data, '<li', '</li>')
         for item in data:
             url = ph.search(item, ph.A_HREF_URI_RE)[1]
-            if url == '': continue
+            if url == '':
+                continue
             url = self.cm.getFullUrl(url, self.cm.meta['url'])
             icon   = self.cm.getFullUrl( ph.search(item, ph.IMAGE_SRC_URI_RE)[1], self.cm.meta['url'])
             tmp = ph.findall(item, '<span', '</span>')
@@ -124,7 +130,8 @@ class EskaGo(CBaseHostClass):
         printDBG("EskaGo.listVodFilters")
         url = cItem['url'].replace('/vod/', '/ajax/vod/')
         sts, data = self.cm.getPage(url)
-        if not sts: return
+        if not sts:
+            return
 
         idx = cItem.get('f_idx', 0)
 
@@ -180,7 +187,8 @@ class EskaGo(CBaseHostClass):
         page = cItem.get('page', 1)
         url = cItem['url'].replace('/vod/', '/ajax/vod/')
         sts, data = self.cm.getPage(url)
-        if not sts: return
+        if not sts:
+            return
 
         nextPage = ph.find(data, ('<div', '>', 'pagination'), '</div>', flags=0)[1]
         nextPage = self.cm.getFullUrl(ph.search(nextPage, r'''<a[^>]+?href=(['"])([^>]*?)(?:\1)[^>]*?>%s<''' % (page + 1))[1], self.cm.meta['url'])
@@ -221,12 +229,14 @@ class EskaGo(CBaseHostClass):
             url = url.replace('/serial/', '/ajax/serial/').replace('/program/', '/ajax/program/')
 
         sts, data = self.cm.getPage(url)
-        if not sts: return
+        if not sts:
+            return
 
         desc = self.cleanHtmlStr( ph.find(data, ('<div', '>', 'text-desc'), '</div>', flags=0)[1] )
         icon = ph.find(data, ('<div', '>', 'bg-film'), '</div>', flags=0)[1]
         icon = self.cm.getFullUrl(ph.search(icon, ph.IMAGE_SRC_URI_RE)[1], self.cm.meta['url'])
-        if not icon: icon = cItem.get('icon', '')
+        if not icon:
+            icon = cItem.get('icon', '')
 
         if type != 'vod':
             tmp = ph.find(data, ('<div', '>', 'seasons'),  ('<div', '>', 'clear'), flags=0)[1]
@@ -234,7 +244,8 @@ class EskaGo(CBaseHostClass):
             for item in tmp:
                 url = self.cm.getFullUrl(ph.search(item, ph.A_HREF_URI_RE)[1], self.cm.meta['url'])
                 title = self.cleanHtmlStr(item)
-                if not title: continue
+                if not title:
+                    continue
                 self.addDir(MergeDicts(cItem, {'good_for_fav':True, 'category':nextCategory, 'title':title, 's_title': '%s: %s,' % (cItem['title'], title), 'url':url, 'icon':icon, 'desc':desc}))
 
             if len(self.currList) == 0:
@@ -242,18 +253,21 @@ class EskaGo(CBaseHostClass):
                 self.listVodEpisodes(cItem, data)
         else:
             tmp = ph.find(data, ('<div', '>', 'layer-vod'), '</script>', flags=0)[1]
-            if tmp: self.addVideo(MergeDicts(cItem, {'good_for_fav':True, 'icon':icon, 'desc':desc}))
+            if tmp:
+                self.addVideo(MergeDicts(cItem, {'good_for_fav':True, 'icon':icon, 'desc':desc}))
 
         trailer = ph.find(data, ('<a', '>', 'trailer'), '</a>')[1]
         trailer = self.cm.getFullUrl(ph.search(trailer, ph.A_HREF_URI_RE)[1], self.cm.meta['url'])
-        if trailer: self.addVideo(MergeDicts(cItem, {'good_for_fav':True, 'title':_('%s - trailer') % (cItem['title']), 'url':trailer, 'icon':icon, 'desc':desc, 'is_trailer':True}))
+        if trailer:
+            self.addVideo(MergeDicts(cItem, {'good_for_fav':True, 'title':_('%s - trailer') % (cItem['title']), 'url':trailer, 'icon':icon, 'desc':desc, 'is_trailer':True}))
 
     def listVodEpisodes(self, cItem, data=None):
         printDBG("EskaGo.listVodEpisodes")
         if not data: 
             url = cItem['url'].replace('/serial/', '/ajax/serial/')
             sts, data = self.cm.getPage(url)
-            if not sts: return
+            if not sts:
+                return
 
         sTitle = cItem['s_title']
         data = ph.findall(data, ('<div', '>', 'box-movie-small'), '</div>', flags=0)
@@ -267,7 +281,8 @@ class EskaGo(CBaseHostClass):
         printDBG("EskaGo.listRadioEskaPL")
         
         sts, data = self.cm.getPage(cItem['url'])
-        if not sts: return
+        if not sts:
+            return
         
         data = self.cm.ph.getDataBeetwenMarkers(data, 'var radioConfig = ', '</script>', False)[1]
         data = self.cm.ph.getAllItemsBeetwenMarkers(data, '"stream": ', '},', False)
@@ -276,7 +291,8 @@ class EskaGo(CBaseHostClass):
             tmp = json_loads(item+'}')
             title  = tmp['name']
             url    = tmp['stream_url']
-            if url == '': continue
+            if url == '':
+                continue
             desc   = ''
             params = {'good_for_fav': True, 'title':title, 'url':url, 'desc':desc, 'is_trailer':True}
             self.addAudio(params)
@@ -300,35 +316,42 @@ class EskaGo(CBaseHostClass):
 
         if '/vod/' in url:
             sts, data = self.cm.getPage(url, self.defaultParams)
-            if not sts: return []
+            if not sts:
+                return []
             data = ph.find(data, ('<div', '>', 'layer-vod'), '</script>', flags=0)[1]
             hls = self.cm.getFullUrl(ph.search(data, r'''var\s+?hls\s*?=\s*?(['"])([^>]*?)(?:\1)''')[1], self.cm.meta['url'])
             mp4 = self.cm.getFullUrl(ph.search(data, r'''var\s+?mp4\s*?=\s*?(['"])([^>]*?)(?:\1)''')[1], self.cm.meta['url'])
             urlTab = getDirectM3U8Playlist(hls, checkExt=True, checkContent=True, sortWithMaxBitrate=999999999)
             for item in urlTab:
                 item['url'] = strwithmeta(item['url'], {'iptv_proto':'m3u8'})
-            if mp4 != '': urlTab.append({'name':'mp4', 'url':mp4, 'need_resolve':0})
+            if mp4 != '':
+                urlTab.append({'name':'mp4', 'url':mp4, 'need_resolve':0})
             return urlTab
 
         if self.up.getDomain(self.MAIN_ESKAPL_URL, onlyDomain=True) in url:
             sts, data = self.cm.getPage(url, self.defaultParams)
-            if not sts: return []
+            if not sts:
+                return []
             data = self.cm.ph.getDataBeetwenMarkers(data, '<div class="play_player">', '</div>')[1]
             url = self.cm.ph.getSearchGroups(data, '''href=['"]([^'^"]+?)['"]''')[0]
-            if not self.cm.isValidUrl(url): return []
+            if not self.cm.isValidUrl(url):
+                return []
 
         sts, data = self.cm.getPage(url)
-        if not sts: data = ''
+        if not sts:
+            data = ''
 
         if '/radio/' in  url:
             tmp = self.cm.ph.getDataBeetwenMarkers(data, 'input[name="data-radio-url"]', ';', withMarkers=False)[1]
             url  =  self.cm.ph.getSearchGroups(tmp, '''(https?://[^'^"]+?)['"]''')[0]
             if url != '' and url.endswith('.pls'):
                 sts, tmp = self.cm.getPage(url)
-                if not sts: return []
+                if not sts:
+                    return []
                 printDBG(tmp)
                 tmp = tmp.split('File')
-                if len(tmp): del tmp[0]
+                if len(tmp):
+                    del tmp[0]
                 for item in tmp:
                     printDBG('ITEM [%s]' % item)
                     url  = self.cm.ph.getSearchGroups(item, '''(https?://[^\s]+?)\s''')[0]

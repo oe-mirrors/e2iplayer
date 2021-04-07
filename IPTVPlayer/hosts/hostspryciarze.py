@@ -45,7 +45,8 @@ class Spryciarze(CBaseHostClass):
         self.currList = []
         
         sts, data = self.cm.getPage(self.MAIN_CATEGORIES_URL)
-        if not sts: return
+        if not sts:
+            return
         
         data = self.cm.ph.getDataBeetwenNodes(data, ('<section', '>', 'py-5 bg-light-v2'), '<div class="widget">')[1]
         
@@ -91,7 +92,8 @@ class Spryciarze(CBaseHostClass):
         self.currList = []
         
         sts, data = self.cm.getPage(item['url'])
-        if not sts: return
+        if not sts:
+            return
         
         data = self.cm.ph.getDataBeetwenNodes(data, ('<section', '>', 'py-5 bg-light-v2'), '<div class="widget">')[1]
         
@@ -186,10 +188,12 @@ class Spryciarze(CBaseHostClass):
         SEARCH_URL = self.MAIN_URL + 'szukaj/' + pattern + '/film/page:1/sort:ocena'
         
         sts, data = self.cm.getPage(SEARCH_URL)
-        if not sts: return
+        if not sts:
+            return
         
         match = re.compile('Wideoporadniki \(([0-9]+?)\)').findall(data)
-        if 0 == len(match): return
+        if 0 == len(match):
+            return
         
         itemNum = int(match[0])
         pageNum = itemNum / self.SEARCH_RES_PER_PAGE
@@ -223,7 +227,8 @@ class Spryciarze(CBaseHostClass):
             return
         
         sts, data = self.cm.getPage(url)
-        if not sts: return
+        if not sts:
+            return
         
         tab = self.cm.ph.getAllItemsBeetwenNodes(data, ('<div', '>', 'col-md-6 col-lg-6 col-xl-4 mb-4'), ('</div', '>'))
             
@@ -285,7 +290,8 @@ class Spryciarze(CBaseHostClass):
             tries -= 1
             # get videoID
             sts, data = self.cm.getPage(url, {'use_cookie': True, 'save_cookie': True, 'load_cookie': False, 'cookiefile': self.COOKIE_FILE}, post_data)
-            if not sts: return []
+            if not sts:
+                return []
             
             sts, block = self.cm.ph.getDataBeetwenMarkers(data, '<div class="film_blokada">', '</form>', False)
             if sts:
@@ -300,12 +306,14 @@ class Spryciarze(CBaseHostClass):
             player = self.getFullUrl(self.cm.ph.getSearchGroups(player, '''<iframe[^>]+?src=['"]([^"^']*?)['"]''', 1, True)[0])
             if 1 == self.up.checkHostSupport(player):
                 linkstTab = self.up.getVideoLinkExt(player)
-                if len(linkstTab): break
+                if len(linkstTab):
+                    break
             
             player =  self.getFullUrl(self.cm.ph.getSearchGroups(data, '''<iframe[^>]+?src=['"]([^"^']*?player\.spryciarze\.pl[^"^']+?)['"]''', 1, True)[0])
             if '' != player:
                 sts, player = self.cm.getPage(player, {'use_cookie': True, 'save_cookie': False, 'load_cookie': True, 'cookiefile': self.COOKIE_FILE})
-                if not sts: break
+                if not sts:
+                    break
                 url = self.getFullUrl(self.cm.ph.getSearchGroups(player, '''<iframe[^>]+?src=['"]([^"^']*?)['"]''', 1, True)[0])
                 if 1 == self.up.checkHostSupport(url):
                     linkstTab = self.up.getVideoLinkExt(url)
@@ -325,7 +333,8 @@ class Spryciarze(CBaseHostClass):
                 player  = self.cm.ph.getSearchGroups(data, '(spryciarze.pl/player/[^"]+?\.swf?[^"]+?)"')[0]
                 videoID = self.cm.ph.getSearchGroups(player + '|', 'VideoID=([0-9]+?)[^0-9]')[0]
                 sts, data = self.cm.getPage(self.getFullUrl('/player/player/xml_connect.php?code=%s&ra=2' % videoID), {'use_cookie': True, 'save_cookie': False, 'load_cookie': True, 'cookiefile': self.COOKIE_FILE})
-                if not sts: break
+                if not sts:
+                    break
                 data = re.compile('<urlMOV([^>]+?)>([^<]+?)<').findall(data)
                 tmp = []
                 for item in data:
@@ -508,7 +517,8 @@ class IPTVHost(IHost):
             ico = ''
             if 'ico' in cItem:
                 ico = cItem['ico']
-            if ico == '': ico = 'http://mamrodzine.pl/wp-content/uploads/2011/06/logo_transparent.png'
+            if ico == '':
+                ico = 'http://mamrodzine.pl/wp-content/uploads/2011/06/logo_transparent.png'
 
             hostItem = CDisplayListItem(name = name + ' ' + ilosc,
                                         description = opis,

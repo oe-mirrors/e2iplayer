@@ -23,13 +23,18 @@ import urllib.error
 import unicodedata
 import base64
 from os import listdir as os_listdir, path as os_path
-try:    import json
-except Exception: import simplejson as json
 try:
-    try: from io import StringIO
-    except Exception: from io import StringIO 
+    import json
+except Exception:
+    import simplejson as json
+try:
+    try:
+        from io import StringIO
+    except Exception:
+        from io import StringIO 
     import gzip
-except Exception: pass
+except Exception:
+    pass
 from Components.config import config, ConfigSelection, ConfigYesNo, ConfigText, getConfigListEntry
 ###################################################
 
@@ -135,7 +140,8 @@ class SubsceneComProvider(CBaseSubProviderClass):
         
         url  = self.getFullUrl('/filter/edit')
         sts, data = self.cm.getPage(url, self.defaultParams)
-        if not sts: return []
+        if not sts:
+            return []
         
         list = []
         defaultLanguages = []
@@ -143,7 +149,8 @@ class SubsceneComProvider(CBaseSubProviderClass):
         data = self.cm.ph.getAllItemsBeetwenMarkers(data, '<label>', '</label>')
         for item in data:
             langId = self.cm.ph.getSearchGroups(item, 'value="([0-9]+?)"')[0]
-            if '' == langId: continue
+            if '' == langId:
+                continue
             title = self.cleanHtmlStr(item)
             params = {'title':title, 'lang_id':langId}
             if _isDefaultLanguage(title):
@@ -175,18 +182,21 @@ class SubsceneComProvider(CBaseSubProviderClass):
         
         header = self._getHeader(cItem['lang_id'])
         sts, data = self.cm.getPage(url, {'header':header})
-        if not sts: return
+        if not sts:
+            return
         
         data = self.cm.ph.getDataBeetwenMarkers(data, '<div class="search-result">', '<div class="alternativeSearch">', False)[1]
         data = self.cm.ph.getAllItemsBeetwenMarkers(data, '<h2', '</ul>')
         for groupItem in data:
             groupTitle = self.cleanHtmlStr( self.cm.ph.getDataBeetwenMarkers(groupItem, '<h2', '</h2>', True)[1] )
-            if '' == groupTitle: continue
+            if '' == groupTitle:
+                continue
             items = self.cm.ph.getAllItemsBeetwenMarkers(groupItem, '<li', '</li>')
             tab = []
             for item in items:
                 tmp = self.cm.ph.getSearchGroups(item, '<a[^>]+?href="([^"]+?)"[^>]*?>([^<]+?)</a>', 2)
-                if tmp[0] == '' or tmp[1] == '': continue
+                if tmp[0] == '' or tmp[1] == '':
+                    continue
                 tab.append({'group_id':groupTitle, 'title':self.cleanHtmlStr(tmp[1]), 'url':self.getFullUrl(tmp[0])})
             if len(tab):
                 self.cache[groupTitle] = tab
@@ -220,7 +230,8 @@ class SubsceneComProvider(CBaseSubProviderClass):
         header = self._getHeader(cItem['lang_id'])
         
         sts, data = self.cm.getPage(cItem['url'], {'header':header})
-        if not sts: return
+        if not sts:
+            return
         
         data = self.cm.ph.getDataBeetwenMarkers(data, '<table>', '</table>', False)[1]
         
@@ -235,14 +246,18 @@ class SubsceneComProvider(CBaseSubProviderClass):
         data = self.cm.ph.getAllItemsBeetwenMarkers(data, '<td class="a1">', '</tr>')
         for item in data:
             url = self.getFullUrl( self.cm.ph.getSearchGroups(item, 'href="([^"]+?)"')[0] )
-            if url == '': continue
+            if url == '':
+                continue
             
             bodyData = self.cm.ph.getAllItemsBeetwenMarkers(item, '<td ', '</td>')
             
             #title
-            if 'positive-icon' in bodyData[0]: t1 = '[+]'
-            elif 'neutral-icon' in bodyData[0]: t1 = '[/]'
-            else: t1 = '[-]'
+            if 'positive-icon' in bodyData[0]:
+                t1 = '[+]'
+            elif 'neutral-icon' in bodyData[0]:
+                t1 = '[/]'
+            else:
+                t1 = '[-]'
             title = t1 + ' ' + self.cleanHtmlStr(bodyData[0])
             
             #lang 
@@ -254,11 +269,14 @@ class SubsceneComProvider(CBaseSubProviderClass):
                 for idx in range(len(heads)):
                     val = self.cleanHtmlStr(bodyData[idx])
                     if val.strip() == '':
-                        if 'class="a41"' in bodyData[idx]: val = _('Yes')
-                        elif 'class="a40"' in bodyData[idx]: val = _('No')
+                        if 'class="a41"' in bodyData[idx]:
+                            val = _('Yes')
+                        elif 'class="a40"' in bodyData[idx]:
+                            val = _('No')
                     descTab.append( '{0}: {1}'.format(heads[idx], val) )
                 desc = '[/br]'.join(descTab[1:])
-            else: desc = cItem['desc']
+            else:
+                desc = cItem['desc']
             
             params = dict(cItem)
             params.update({'category':nextCategory, 'title':title, 'url':url, 'lang':lang, 'desc':desc})
@@ -268,7 +286,8 @@ class SubsceneComProvider(CBaseSubProviderClass):
         printDBG("SubsceneComProvider.getSubtitlesList")
         
         sts, data = self.cm.getPage(cItem['url'], {'with_metadata':True})
-        if not sts: return
+        if not sts:
+            return
         cUrl = data.meta['url']
         
         imdbid = self.cm.ph.getSearchGroups(data, '/title/(tt[0-9]+?)[^0-9]')[0]
@@ -280,7 +299,8 @@ class SubsceneComProvider(CBaseSubProviderClass):
         
         urlParams = dict(self.defaultParams)
         tmpDIR = self.downloadAndUnpack(url, urlParams)
-        if None == tmpDIR: return
+        if None == tmpDIR:
+            return
         
         cItem = dict(cItem)
         cItem.update({'category':nextCategory, 'path':tmpDIR, 'imdbid':imdbid, 'sub_id':subId})
@@ -301,7 +321,8 @@ class SubsceneComProvider(CBaseSubProviderClass):
     def _getFileName(self, title, lang, subId, imdbid):
         title = RemoveDisallowedFilenameChars(title).replace('_', '.')
         match = re.search(r'[^.]', title)
-        if match: title = title[match.start():]
+        if match:
+            title = title[match.start():]
 
         fileName = "{0}_{1}_0_{2}_{3}".format(title, lang, subId, imdbid)
         fileName = fileName + '.srt'

@@ -14,8 +14,10 @@ from Plugins.Extensions.IPTVPlayer.libs.unshortenit import unshorten
 import urllib.request
 import urllib.parse
 import urllib.error
-try:    import json
-except Exception: import simplejson as json
+try:
+    import json
+except Exception:
+    import simplejson as json
 ###################################################
 
 
@@ -60,13 +62,15 @@ class IITVPL(CBaseHostClass):
             tmp   = item.split('</strong>', 1)
             key   = self.cleanHtmlStr(tmp[0])
             value = self.cleanHtmlStr(tmp[-1])
-            if key in keysMap: info[keysMap[key]] = value
+            if key in keysMap:
+                info[keysMap[key]] = value
         return info
         
     def listABC(self, cItem, nextCategory):
         printDBG("IITVPL.listABC")
         sts, data = self.cm.getPage(cItem['url'])
-        if not sts: return
+        if not sts:
+            return
         
         data = self.cm.ph.getDataBeetwenMarkers(data, '<ul id="list">', '</ul>')[1]
         data = self.cm.ph.getAllItemsBeetwenMarkers(data, '<li', '</li>', withMarkers=True)
@@ -76,19 +80,22 @@ class IITVPL(CBaseHostClass):
             
             if url.startswith('http://') or url.startswith('https://'):
                 letter = title.decode('utf-8')[0].encode('utf-8').upper()
-                if letter.isdigit(): letter = '0-9'
+                if letter.isdigit():
+                    letter = '0-9'
                 if letter not in self.cacheSeries:
                     self.cacheSeries[letter] = []
                 self.cacheSeries[letter].append( {'title':title, 'url':url} )
         
         letterTab = ["0-9", "a", "A", "ą", "Ą", "b", "B", "c", "C", "ć", "Ć", "d", "D", "e", "E", "ę", "Ę", "f", "F", "g", "G", "h", "H", "i", "I", "j", "J", "k", "K", "l", "L", "ł", "Ł", "m", "M", "n", "N", "ń", "Ń", "o", "O", "ó", "Ó", "p", "P", "q", "Q", "r", "R", "s", "S", "ś", "Ś", "t", "T", "u", "U", "v", "V", "w", "W", "x", "X", "y", "Y", "z", "Z", "ź", "Ź", "ż", "Ż"]
         for letter in letterTab:
-            if 0 == len(self.cacheSeries.get(letter, [])): continue
+            if 0 == len(self.cacheSeries.get(letter, [])):
+                continue
             params = dict(cItem)
             params.update({'category':nextCategory, 'title':letter, 'letter':letter})
             self.addDir(params)
         for letter in self.cacheSeries:
-            if letter in letterTab: continue
+            if letter in letterTab:
+                continue
             params = dict(cItem)
             params.update({'category':nextCategory, 'title':letter, 'letter':letter})
             self.addDir(params)
@@ -103,7 +110,8 @@ class IITVPL(CBaseHostClass):
     def listSeries(self, cItem, nextCategory, m1):
         printDBG("IITVPL.listSeries")
         sts, data = self.cm.getPage(cItem['url'])
-        if not sts: return
+        if not sts:
+            return
         
         data = self.cm.ph.getDataBeetwenMarkers(data, m1, '</ul>')[1]
         data = self.cm.ph.getAllItemsBeetwenMarkers(data, '<li', '</li>', withMarkers=True)
@@ -119,13 +127,15 @@ class IITVPL(CBaseHostClass):
         printDBG("IITVPL.listEpisodes")
         
         sts, data = self.cm.getPage(cItem['url'])
-        if not sts: return
+        if not sts:
+            return
         
         info = self.getSeriesInfo(data)
         
         data = self.cm.ph.getDataBeetwenMarkers(data, '<div class="episodes-list">', '<footer>')[1]
         data = data.split('</ul>')
-        if len(data): del data[-1]
+        if len(data):
+            del data[-1]
         
         for sItem in data:
             season   = self.cleanHtmlStr( self.cm.ph.getDataBeetwenMarkers(sItem, '<h2', '</h2>')[1] )
@@ -148,11 +158,13 @@ class IITVPL(CBaseHostClass):
         printDBG("IITVPL.getLinksForVideo [%s]" % cItem)
         
         urlTab = self.cacheLinks.get(cItem['url'],  [])
-        if len(urlTab): return urlTab
+        if len(urlTab):
+            return urlTab
         self.cacheLinks = {}
         
         sts, data = self.cm.getPage(cItem['url'])
-        if not sts: return []
+        if not sts:
+            return []
         
         tabsTitles = {}
         tmp = self.cm.ph.getAllItemsBeetwenNodes(data, ('<a', '>', 'tab-selector'), ('</a', '>'))
@@ -172,7 +184,8 @@ class IITVPL(CBaseHostClass):
             for item in lData:
                 item = self.cm.ph.getAllItemsBeetwenMarkers(item, '<a', '</a>')
                 for it in item:
-                    if 'data-link-id' not in it and 'class="_?video-link"' not in it: continue
+                    if 'data-link-id' not in it and 'class="_?video-link"' not in it:
+                        continue
                     tmp   = self.cm.ph.getSearchGroups(it, '<a[^>]+?href="([^"]+?)"[^>]*?>([^<]+?)<', 2)
                     if self.cm.isValidUrl(tmp[0]):
                         links[tabTitle].append({'name':'[{0}] '.format(tabTitle) + self.cleanHtmlStr(tmp[1]), 'url':tmp[0], 'need_resolve':1})
@@ -207,7 +220,8 @@ class IITVPL(CBaseHostClass):
             HEADER = dict(self.AJAX_HEADER)
             HEADER['Referer'] = videoUrl
             sts, data = self.cm.getPage(url, {'header':HEADER}, post_data)
-            if not sts: return []
+            if not sts:
+                return []
             try:
                 data = byteify(json.loads(data))
                 data = data['results']
@@ -222,8 +236,10 @@ class IITVPL(CBaseHostClass):
             uri, sts = unshorten(videoUrl)
             if sts == 'OK': 
                 subUri = self.cm.ph.getSearchGroups(uri, '''/(https?://[^'"]+?)$''')[0]
-                if self.cm.isValidUrl(subUri): videoUrl = subUri
-                elif self.up.checkHostSupport(uri): videoUrl = uri
+                if self.cm.isValidUrl(subUri):
+                    videoUrl = subUri
+                elif self.up.checkHostSupport(uri):
+                    videoUrl = uri
         
         if 1 != self.up.checkHostSupport(videoUrl):
             self.cm.getPage(videoUrl, {'max_data_size':0})
@@ -243,13 +259,16 @@ class IITVPL(CBaseHostClass):
             url = '/'.join( url.split('/')[:-1])
             
         sts, data = self.cm.getPage(url)
-        if not sts: return retTab
+        if not sts:
+            return retTab
         
         info  = self.getSeriesInfo(data)
         
         otherInfo = {}
-        if 'genre' in info: otherInfo['genre'] = info['genre']
-        if 'station' in info: otherInfo['station'] = info['station']
+        if 'genre' in info:
+            otherInfo['genre'] = info['genre']
+        if 'station' in info:
+            otherInfo['station'] = info['station']
         
         return [{'title':self.cleanHtmlStr( info['title'] ), 'text': self.cleanHtmlStr( info['desc'] ), 'images':[{'title':'', 'url':info['icon']}], 'other_info':otherInfo}]
         

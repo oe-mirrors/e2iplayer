@@ -22,16 +22,23 @@ import urllib.parse
 import urllib.error
 import unicodedata
 import base64
-try:    from urllib.parse import urlsplit, urlunsplit
-except Exception: printExc()
-from os import listdir as os_listdir, path as os_path
-try:    import json
-except Exception: import simplejson as json
 try:
-    try: from io import StringIO
-    except Exception: from io import StringIO 
+    from urllib.parse import urlsplit, urlunsplit
+except Exception:
+    printExc()
+from os import listdir as os_listdir, path as os_path
+try:
+    import json
+except Exception:
+    import simplejson as json
+try:
+    try:
+        from io import StringIO
+    except Exception:
+        from io import StringIO 
     import gzip
-except Exception: pass
+except Exception:
+    pass
 from Components.config import config, ConfigSelection, ConfigYesNo, ConfigText, getConfigListEntry
 ###################################################
 
@@ -91,7 +98,8 @@ class PodnapisiNetProvider(CBaseSubProviderClass):
         baseUrl = '/subtitles/search/advanced'
        
         sts, data = self.getPage(self.getFullUrl(baseUrl))
-        if not sts: return
+        if not sts:
+            return
         
         data = self.cm.ph.getDataBeetwenNodes(data, ('<div', '>', 'advanced_search_panel'), ('</form', '>'))[1]
         for filter in [{'key':'movie_type',   'marker':'movie_type'},
@@ -106,16 +114,20 @@ class PodnapisiNetProvider(CBaseSubProviderClass):
             for item in tmp:
                 value = self.cm.ph.getSearchGroups(item, '''value=["']?([^"^'^\s^>]+?)[\s"'>]''')[0].strip()
                 self.cacheFilters[filter['key']].append({filter['key']:value, 'title':self.cleanHtmlStr(item)})
-                if value == '': allItemAdded = True
+                if value == '':
+                    allItemAdded = True
             if not allItemAdded:
                 self.cacheFilters[filter['key']].insert(0, {filter['key']:'', 'title':_('Any')})
                 
         # prepare default values for filters
         season  = self.dInfo.get('season', None)
         episode = self.dInfo.get('episode', None)
-        if season != None and episode != None: defaultType = 'tv-series'
-        elif episode != None: defaultType = 'mini-series'
-        else: defaultType = ''
+        if season != None and episode != None:
+            defaultType = 'tv-series'
+        elif episode != None:
+            defaultType = 'mini-series'
+        else:
+            defaultType = ''
         printDBG("season [%s] episode[%s]" % (episode, season))
         defaultLanguage = GetDefaultLang()
         
@@ -160,8 +172,10 @@ class PodnapisiNetProvider(CBaseSubProviderClass):
             episode = self.dInfo.get('episode', None)
         elif 'mini-series' == cItem.get('movie_type'):
             episode = self.dInfo.get('episode', None)
-        if season == None: season = '' 
-        if episode == None: episode = '' 
+        if season == None:
+            season = '' 
+        if episode == None:
+            episode = '' 
         
         baseUrl = "/subtitles/search/advanced?keywords=%s&year=%s&seasons=%s&episodes=%s&language=%s" % (keywords, year, season, episode, language)
         for key in ['movie_type', 'episode_type', 'fps', 'flags']:
@@ -170,7 +184,8 @@ class PodnapisiNetProvider(CBaseSubProviderClass):
         
         url = self.getFullUrl(baseUrl)
         sts, data = self.cm.getPage(url)
-        if not sts: return
+        if not sts:
+            return
         
         tmp = self.cm.ph.getDataBeetwenMarkers(data, '<thead', '</thead>')[1]
         tmp = self.cm.ph.getAllItemsBeetwenMarkers(tmp, '<th', '</th>')
@@ -178,7 +193,8 @@ class PodnapisiNetProvider(CBaseSubProviderClass):
         for item in tmp:
             name = self.cleanHtmlStr(item)
             key = self.cm.ph.getDataBeetwenMarkers(item, 'sort=', '&', False)[1]
-            if name == '': name = key.replace('.', ' ').title()
+            if name == '':
+                name = key.replace('.', ' ').title()
             rawDesc.append({'key':key, 'name':name, 'val':''})
         del tmp
         
@@ -187,19 +203,24 @@ class PodnapisiNetProvider(CBaseSubProviderClass):
         data = self.cm.ph.getAllItemsBeetwenMarkers(data, '<tr', '</tr>')
         for item in data:
             item = self.cm.ph.getAllItemsBeetwenMarkers(item, '<td', '</td>')
-            if len(item) < 1: continue
+            if len(item) < 1:
+                continue
             title = self.cleanHtmlStr(item[0])
             url   = self.cm.ph.getSearchGroups(item[0], '''href=["']?([^"^'^\s^>]+?)[\s"'>]''')[0].strip()
             descTab = []
             for idx in range(len(item)):
-                if idx >= len(rawDesc): break
+                if idx >= len(rawDesc):
+                    break
                 value = self.cleanHtmlStr(item[idx])
                 rawDesc[idx]['val'] = value
-                if idx == 0: continue
+                if idx == 0:
+                    continue
                 descTab.append('%s: %s' % (rawDesc[idx]['name'], value))
-                if rawDesc[idx]['key'] == 'language': lang = value
+                if rawDesc[idx]['key'] == 'language':
+                    lang = value
                 if rawDesc[idx]['key'] == 'fps':
-                    try: fps = float(value.split('(')[0].strip())
+                    try:
+                        fps = float(value.split('(')[0].strip())
                     except Exception:
                         printExc()
                         fps = 0
@@ -217,7 +238,8 @@ class PodnapisiNetProvider(CBaseSubProviderClass):
         
         urlParams = dict(self.defaultParams)
         tmpDIR = self.downloadAndUnpack(cItem['url'], urlParams)
-        if None == tmpDIR: return
+        if None == tmpDIR:
+            return
         
         cItem = dict(cItem)
         cItem.update({'category':'', 'path':tmpDIR, 'fps':fps, 'imdbid':imdbid, 'sub_id':subId})
@@ -238,7 +260,8 @@ class PodnapisiNetProvider(CBaseSubProviderClass):
     def _getFileName(self, title, lang, subId, imdbid, fps, ext):
         title = RemoveDisallowedFilenameChars(title).replace('_', '.')
         match = re.search(r'[^.]', title)
-        if match: title = title[match.start():]
+        if match:
+            title = title[match.start():]
 
         fileName = "{0}_{1}_0_{2}_{3}".format(title, lang, subId, imdbid)
         if fps > 0:
@@ -284,8 +307,10 @@ class PodnapisiNetProvider(CBaseSubProviderClass):
     #MAIN MENU
         if name == None or category.startswith('list_filter_'):
             filter = category.replace('list_filter_', '')
-            if filter == '': self.listFilters(self.currItem, 'movie_type', 'list_filter_language')
-            elif filter == 'language': self.listFilters(self.currItem, filter, 'list_sub_items')
+            if filter == '':
+                self.listFilters(self.currItem, 'movie_type', 'list_filter_language')
+            elif filter == 'language':
+                self.listFilters(self.currItem, filter, 'list_sub_items')
         elif category == 'list_sub_items':
             self.listSubItems(self.currItem, 'list_subtitles')
         elif category == 'list_subtitles':

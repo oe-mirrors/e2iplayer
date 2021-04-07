@@ -101,21 +101,24 @@ class KissAnimeTo(CBaseHostClass):
                 tmp = self.cm.ph.getAllItemsBeetwenMarkers(formData, '<p', '</p>')
                 for item in tmp:
                     item = self.cleanHtmlStr(item)
-                    if item != '': messages.append(item)
+                    if item != '':
+                        messages.append(item)
                 
                 if len(messages) < 2:
                     errorMessages.append(_('Unknown captcha form! Data: "%s"') % messages)
                     break
                 
                 action = self.cm.ph.getSearchGroups(formData, '''action=['"]([^'^"]+?)['"]''', ignoreCase=True)[0]
-                if action == '': action = '/'
+                if action == '':
+                    action = '/'
                 action = self.getFullUrl(action)
                 tmp = self.cm.ph.getAllItemsBeetwenMarkers(formData, '<input', '>', False, False)
                 post_data2 = {}
                 for item in tmp:
                     name  = self.cm.ph.getSearchGroups(item, '''name=['"]([^'^"]+?)['"]''', ignoreCase=True)[0]
                     value = self.cm.ph.getSearchGroups(item, '''value=['"]([^'^"]+?)['"]''', ignoreCase=True)[0]
-                    if name != '': post_data2[name] = value
+                    if name != '':
+                        post_data2[name] = value
                 
                 header = dict(self.HTTP_HEADER)
                 header['Accept'] = 'image/png,image/*;q=0.8,*/*;q=0.5'
@@ -190,7 +193,8 @@ class KissAnimeTo(CBaseHostClass):
         
     def getFullIconUrl(self, url):
         url = CBaseHostClass.getFullIconUrl(self, url.strip())
-        if url == '': return ''
+        if url == '':
+            return ''
         cookieHeader = self.cm.getCookieHeader(self.COOKIE_FILE, ['cf_clearance'])
         return strwithmeta(url, {'Cookie':cookieHeader, 'User-Agent':self.USER_AGENT})
 
@@ -199,17 +203,23 @@ class KissAnimeTo(CBaseHostClass):
         if '' == sp: 
             sp = "<div style='position:relative'"
         data = data.split(sp)
-        if len(data): del data[0]
+        if len(data):
+            del data[0]
         tab = []
         for item in data:
             url   = self.cm.ph.getSearchGroups(item, '''href=["']([^"^']+?)["']''')[0]
-            if '' == url: continue
+            if '' == url:
+                continue
             title = self.cm.ph.getDataBeetwenMarkers(item, '<span class="title">', '</span>', False)[1]
-            if '' == title: title = self.cm.ph.getDataBeetwenMarkers(item, '<a ', '</a>')[1]
-            if forceIcon == '': icon  = self.cm.ph.getSearchGroups(item, '''src=["']([^"^']+?)["']''')[0]
-            else: icon = forceIcon
+            if '' == title:
+                title = self.cm.ph.getDataBeetwenMarkers(item, '<a ', '</a>')[1]
+            if forceIcon == '':
+                icon  = self.cm.ph.getSearchGroups(item, '''src=["']([^"^']+?)["']''')[0]
+            else:
+                icon = forceIcon
             desc  = self.cm.ph.getDataBeetwenMarkers(item, '<p>', '</p>', False)[1]
-            if '' == desc: desc = '<'+item
+            if '' == desc:
+                desc = '<'+item
             tab.append({'title':self.cleanHtmlStr(title), 'url':self.getFullUrl(url), 'icon':self.getFullIconUrl(icon), 'desc':self.cleanHtmlStr(desc)})
         return tab
             
@@ -222,7 +232,8 @@ class KissAnimeTo(CBaseHostClass):
         self.cacheHome = {}
         self.sortTab = []
         sts, data = self.getPage(cItem['url'])
-        if not sts: return
+        if not sts:
+            return
         
         tmp = self.cm.ph.getDataBeetwenMarkers(data, '<div id="tabmenucontainer">', '</div>', False)[1]
         tmp = self.cm.ph.getAllItemsBeetwenMarkers(tmp, '<li>', '</li>')
@@ -237,7 +248,8 @@ class KissAnimeTo(CBaseHostClass):
         
         tmp2 = self.cm.ph.getDataBeetwenMarkers(data, '<div id="subcontent">', '<div class="clear">', False)[1]
         tmp2 = tmp2.split('<div id="tab-')
-        if len(tmp2): del tmp2[0]
+        if len(tmp2):
+            del tmp2[0]
         for item in tmp2:
             # find tab id and title
             tabId = item[:item.find('"')].replace('-', '')
@@ -267,7 +279,8 @@ class KissAnimeTo(CBaseHostClass):
         printDBG("KissAnimeTo.listCats [%s]" % cItem)
         self.cache = {}
         sts, data = self.getPage(cItem['url'])
-        if not sts: return
+        if not sts:
+            return
         
         # alphabet
         cacheKey = 'alphabet'
@@ -289,7 +302,8 @@ class KissAnimeTo(CBaseHostClass):
         tmp = self.cm.ph.getAllItemsBeetwenMarkers(data, '<div class="rightBox">', '<div class="clear', False)
         for item in tmp:
             catTitle = self.cm.ph.getDataBeetwenMarkers(item, '<div class="barTitle">', '</div>', False)[1]
-            if catTitle == '': continue
+            if catTitle == '':
+                continue
             self.cache[catTitle] = []
             tmp2 = self.cm.ph.getAllItemsBeetwenMarkers(item, '<a ', '</a>')
             for item2 in tmp2:
@@ -319,8 +333,10 @@ class KissAnimeTo(CBaseHostClass):
                 url += '/'
             url += sortBy+'/'
         if page > 1:
-            if '?' in url: url += '&'
-            else: url += '?'
+            if '?' in url:
+                url += '&'
+            else:
+                url += '?'
             url += 'page=%d' % page
         return post_data, url
         
@@ -330,7 +346,8 @@ class KissAnimeTo(CBaseHostClass):
         sort_by   = cItem.get('sort_by', '')
         post_data, url = self._urlAppendPage(cItem['url'], page, sort_by, cItem.get('keyword', ''))
         sts, data = self.getPage(url, {}, post_data)
-        if not sts: return
+        if not sts:
+            return
         
         nextPage = False
         if ('page=%d"' % (page+1)) in data:
@@ -353,7 +370,8 @@ class KissAnimeTo(CBaseHostClass):
         printDBG("KissAnimeTo.listEpisodes [%s]" % cItem)
         
         sts, data = self.getPage(cItem['url']) 
-        if not sts: return
+        if not sts:
+            return
         
         printDBG(data)
         
@@ -375,7 +393,8 @@ class KissAnimeTo(CBaseHostClass):
             tries += 1
             
             sts, data = self.getPage(url) 
-            if not sts: return urlTab
+            if not sts:
+                return urlTab
             
             if 'areyouhuman' in self.cm.meta.get('url', '').lower():
                 tmp = self.cm.ph.getDataBeetwenNodes(data, ('<a', '>', 'specialButton'), ('</a', '>'))[1]
@@ -416,13 +435,16 @@ class KissAnimeTo(CBaseHostClass):
             return cipher.decrypt(encrypted, iv)
             
         sts, data = self.getPage(videoUrl) 
-        if not sts: return urlTab
+        if not sts:
+            return urlTab
         if 'AreYouHuman' in self.cm.meta['url']:
             SetIPTVPlayerLastHostError('Captcha failed! Try to use the RapidVideo hosting if available.')
         
         keySeed = self.cm.ph.getSearchGroups(data, r'"(\\x[^"]+?)"')[0]
-        try: keySeed = keySeed.decode('string-escape')
-        except Exception: printExc()
+        try:
+            keySeed = keySeed.decode('string-escape')
+        except Exception:
+            printExc()
         
         printDBG('keySeed: ' + keySeed)
         
@@ -433,13 +455,15 @@ class KissAnimeTo(CBaseHostClass):
                 tmp = tmp[1:-1]
             else:
                 tmp = self.cm.ph.getSearchGroups(data, '''var %s =[^'^"]*?["']([^"^']+?)["']''')[0]
-            if tmp == '': continue
+            if tmp == '':
+                continue
             try:
                 tmp = base64.b64decode(tmp)
                 tmp = self.cm.ph.getAllItemsBeetwenMarkers(tmp, '<a ', '</a>')
                 for item in tmp:
                     url  = self.cm.ph.getSearchGroups(item, '''href="([^"]+?)"''')[0]
-                    if 'googlevideo.com' not in url: continue
+                    if 'googlevideo.com' not in url:
+                        continue
                     name = self.cleanHtmlStr(item)
                     urlTab.append({'name':name, 'url':url, 'need_resolve':0})
             except Exception:
@@ -450,7 +474,8 @@ class KissAnimeTo(CBaseHostClass):
         tmpTab = self.cm.ph.getAllItemsBeetwenMarkers(tmpTab, '<option', '</option>')
         for item in tmpTab:
             url  = self.cm.ph.getSearchGroups(item, '''value="([^"]+?)"''')[0]
-            if '' == url: continue
+            if '' == url:
+                continue
             try:
                 printDBG(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> url[%s]" % url)
                 url = _decUrl(url, base64.b64decode('bmhjc2NzZGJjc2R0ZW5lNzIzMGNzYjZuMjNuY2NzZGxuMjEzem5zZGJjc2QwMTI5MzM0NzM='))
@@ -459,7 +484,8 @@ class KissAnimeTo(CBaseHostClass):
             except Exception:
                 printExc()
                 continue
-            if not self.cm.isValidUrl(url): continue
+            if not self.cm.isValidUrl(url):
+                continue
             name = self.cleanHtmlStr(item)
             urlTab.append({'name':name, 'url':url, 'need_resolve':0})
             
@@ -468,7 +494,8 @@ class KissAnimeTo(CBaseHostClass):
             def __getLinkQuality( itemLink ):
                 try:
                     return int(self.cm.ph.getSearchGroups('|'+itemLink['name']+'|', '[^0-9]([0-9]+?)[^0-9]')[0])
-                except Exception: return 0
+                except Exception:
+                    return 0
             urlTab = CSelOneLink(urlTab, __getLinkQuality, max_bitrate).getBestSortedList()
             for idx in range(len(urlTab)):
                 urlTab[idx]['url'] = strwithmeta(urlTab[idx]['url'], {'iptv_wget_retry_on_http_error':'429', 'iptv_wget_waitretry':'0.1', 'iptv_wget_tries':'1000'})

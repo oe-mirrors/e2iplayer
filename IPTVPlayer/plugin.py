@@ -29,8 +29,10 @@ from .Tools.Directories import resolveFilename, fileExists, SCOPE_PLUGINS
 ####################################################
 def Plugins(**kwargs):
     screenwidth = getDesktop(0).size().width()
-    if screenwidth and screenwidth == 1920: iconFile = "icons/iptvlogohd.png"
-    else: iconFile = "icons/iptvlogo.png"
+    if screenwidth and screenwidth == 1920:
+        iconFile = "icons/iptvlogohd.png"
+    else:
+        iconFile = "icons/iptvlogo.png"
     desc = _("Watch Videos Online")
     list = []
     if config.plugins.iptvplayer.plugin_autostart.value:
@@ -133,7 +135,8 @@ def runMain(session, nextFunction=doRunMain):
         nextFunction(session)
         
 def pinCallback(session, callbackFun, pin=None):
-    if None == pin: return
+    if None == pin:
+        return
     if pin != config.plugins.iptvplayer.pin.value:
         session.open(MessageBox, _("Pin incorrect!"), type = MessageBox.TYPE_INFO, timeout = 5)
         return

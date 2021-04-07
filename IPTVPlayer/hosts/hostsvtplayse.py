@@ -18,8 +18,10 @@ import urllib.request
 import urllib.parse
 import urllib.error
 import urllib.parse
-try:    import json
-except Exception: import simplejson as json
+try:
+    import json
+except Exception:
+    import simplejson as json
 from datetime import datetime, timedelta
 from Components.config import config, ConfigSelection, ConfigYesNo, getConfigListEntry
 ###################################################
@@ -118,7 +120,8 @@ class SVTPlaySE(CBaseHostClass):
         url = self.getFullUrl(cItem['url'])
         
         sts, data = self.cm.getPage(url, self.defaultParams)
-        if not sts: return
+        if not sts:
+            return
         
         data = self.cm.ph.getDataBeetwenMarkers(data, "root['__svtplay'] = ", ";\n", withMarkers=False)[1]
         try:
@@ -178,7 +181,8 @@ class SVTPlaySE(CBaseHostClass):
             return utc_date
         
         sts, data = self.cm.getPage(url, self.defaultParams)
-        if not sts: return
+        if not sts:
+            return
         
         data = self.cm.ph.getDataBeetwenMarkers(data, "root['__svtplay'] = ", ";\n", withMarkers=False)[1]
         try:
@@ -221,13 +225,16 @@ class SVTPlaySE(CBaseHostClass):
         url  = cItem['url']
         page = cItem.get('page', 1)
         if page > 1:
-            if '?' in url: url += '&'
-            else: url += '?'
+            if '?' in url:
+                url += '&'
+            else:
+                url += '?'
             url += 'page=%s&pageSize=%s' % (page, self.itemsPerPage)
         
         url = self.getFullApiUrl(url)
         sts, data = self.cm.getPage(url, self.defaultParams)
-        if not sts: return
+        if not sts:
+            return
         
         nextPage = False
         try:
@@ -246,8 +253,10 @@ class SVTPlaySE(CBaseHostClass):
                 title = self.cleanHtmlStr( item.get('programTitle', ''))
                 url   = self.getFullUrl( item['contentUrl'] )
                 desc  = item.get('description', '')
-                if desc == None: desc = ''
-                else: self.cleanHtmlStr( desc )
+                if desc == None:
+                    desc = ''
+                else:
+                    self.cleanHtmlStr( desc )
                 icon  = self.getIcon(item)
                 
                 descTab = []
@@ -258,7 +267,8 @@ class SVTPlaySE(CBaseHostClass):
                 if str(item.get('titleType')) == 'SERIES_OR_TV_SHOW':
                     title += ' ' + self.cleanHtmlStr( item.get('title', ''))
                     
-                if title == '': title = item.get('name', '')
+                if title == '':
+                    title = item.get('name', '')
                 
                 params = {'good_for_fav': True, 'title':title,  'url': url, 'icon':icon, 'desc':'[/br]'.join(descTab)}
                 #if not item.get('hasEpisodes', False):
@@ -281,7 +291,8 @@ class SVTPlaySE(CBaseHostClass):
         url = self.getFullUrl(cItem['url'])
         
         sts, data = self.cm.getPage(url, self.defaultParams)
-        if not sts: return
+        if not sts:
+            return
         
         tmp = self.cm.ph.getAllItemsBeetwenMarkers(data, '<section', '</section>', withMarkers=True)
         for sectionData in tmp:
@@ -295,10 +306,12 @@ class SVTPlaySE(CBaseHostClass):
             
             for section in sections:
                 idx = section.find('<article')
-                if idx < 0: continue
+                if idx < 0:
+                    continue
                 title = section[0:idx]
                 title = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(title, '<h2', '</h2>', withMarkers=True)[1])
-                if title == '': continue
+                if title == '':
+                    continue
                 articleItems = self.getArticleItems(section[idx:])
                 if len(articleItems):
                     params = dict(cItem)
@@ -344,7 +357,8 @@ class SVTPlaySE(CBaseHostClass):
             title = self.cleanHtmlStr(self.cm.ph.getDataBeetwenReMarkers(item, re.compile('<h'), re.compile('</h[0-9]>'), withMarkers=True)[1])
             url   = self.cm.ph.getSearchGroups(item, '''href=['"]([^'^"]+?)['"]''')[0]
             icon  = self.cm.ph.getSearchGroups(item, '''data-src=['"]([^'^"]+?)['"]''')[0]
-            if icon == '': icon  = self.cm.ph.getSearchGroups(item, '''src=['"]([^'^"]+?)['"]''')[0]
+            if icon == '':
+                icon  = self.cm.ph.getSearchGroups(item, '''src=['"]([^'^"]+?)['"]''')[0]
             descTab = []
             if '-geo-block' in item:
                 descTab.append(_('Only available in Sweden.'))
@@ -366,13 +380,16 @@ class SVTPlaySE(CBaseHostClass):
         url  = cItem['url']
         page = cItem.get('page', 1)
         if page > 1:
-            if '?' in url: url += '&'
-            else: url += '?'
+            if '?' in url:
+                url += '&'
+            else:
+                url += '?'
             url += 'sida=%s' % (page)
         
         url = self.getFullUrl(url)
         sts, data = self.cm.getPage(url, self.defaultParams)
-        if not sts: return
+        if not sts:
+            return
         
         # select related section
         sections = self.cm.ph.getAllItemsBeetwenMarkers(data, '<section', '</section>', withMarkers=True)
@@ -430,14 +447,16 @@ class SVTPlaySE(CBaseHostClass):
             if 'api' not in self.up.getDomain(cItem['url']):
                 url = self.getFullUrl(cItem['url'])
                 sts, data = self.cm.getPage(url, self.defaultParams)
-                if not sts: return []
+                if not sts:
+                    return []
                 videoId = self.cm.ph.getSearchGroups(data, '<video\s+?data-video-id="([^"]+?)"')[0]
                 url = 'https://api.svt.se/video/' + videoId
             else:
                 url = cItem['url']
             
             sts, data = self.cm.getPage(url, self.defaultParams)
-            if not sts: return []
+            if not sts:
+                return []
             
             printDBG(data)
             
@@ -445,7 +464,8 @@ class SVTPlaySE(CBaseHostClass):
                 data = byteify(json.loads(data))
                 
                 videoItem = data.get('video', None)
-                if videoItem  == None: videoItem = data
+                if videoItem  == None:
+                    videoItem = data
                 for item in videoItem['videoReferences']:
                     if self.cm.isValidUrl(item['url']):
                         if 'dashhbbtv' in item['format']:
@@ -470,7 +490,8 @@ class SVTPlaySE(CBaseHostClass):
         
         max_bitrate = int(config.plugins.iptvplayer.svt_default_quality.value)
         for item in tmpTab:
-            if item == '': continue
+            if item == '':
+                continue
             if item == dashUrl:
                 item = getMPDLinksWithMeta(item, False)
             elif item == hlsUrl:
@@ -486,12 +507,15 @@ class SVTPlaySE(CBaseHostClass):
                     item = getDirectM3U8Playlist(item, False, checkContent=True)
                 else:
                     item = vidTab
-            else: continue
+            else:
+                continue
             
             if len(item):
                 def __getLinkQuality( itemLink ):
-                    try: return int(itemLink['height'])
-                    except Exception: return 0
+                    try:
+                        return int(itemLink['height'])
+                    except Exception:
+                        return 0
                 item = CSelOneLink(item, __getLinkQuality, max_bitrate).getSortedLinks()
                 if config.plugins.iptvplayer.svt_use_default_quality.value:
                     videoUrls.append(item[0])
@@ -521,7 +545,8 @@ class SVTPlaySE(CBaseHostClass):
         try:
             cItem = byteify(json.loads(fav_data))
             links = self.getLinksForVideo(cItem)
-        except Exception: printExc()
+        except Exception:
+            printExc()
         return links
         
     def setInitListFromFavouriteItem(self, fav_data):

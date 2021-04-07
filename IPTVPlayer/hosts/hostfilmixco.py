@@ -77,23 +77,27 @@ class FilmixCO(CBaseHostClass):
         return ''
 
     def getPage(self, baseUrl, addParams = {}, post_data = None):
-        if addParams == {}: addParams = dict(self.defaultParams)
+        if addParams == {}:
+            addParams = dict(self.defaultParams)
         addParams['cloudflare_params'] = {'cookie_file':self.COOKIE_FILE, 'User-Agent':self.USER_AGENT}
         return self.cm.getPageCFProtection(baseUrl, addParams, post_data)
 
     def selectDomain(self):
-        if self.domainSelected: return 
+        if self.domainSelected:
+            return 
         self.domainSelected = True
         domains = ['http://filmix.cc/films', 'https://filmix.co/films']
         domain = config.plugins.iptvplayer.filmixco_alt_domain.value.strip()
         if self.cm.isValidUrl(domain):
-            if domain[-1] != '/': domain += '/'
+            if domain[-1] != '/':
+                domain += '/'
             domains.insert(0, domain + 'films')
 
         sts = False
         for domain in domains:
             sts, data = self.getPage(domain)
-            if not sts: continue
+            if not sts:
+                continue
             if '/films' in data:
                 self.setMainUrl(data.meta['url'])
                 break
@@ -119,7 +123,8 @@ class FilmixCO(CBaseHostClass):
                     for it in item:
                         title = self.cleanHtmlStr(it[1])
                         value = self.cm.ph.getSearchGroups(it[0], '''\sdata\-value=['"]([^'^"]+?)['"]''')[0]
-                        if value == '': continue
+                        if value == '':
+                            continue
                         values.append({'title':title, ('f_%s' % scope):value})
                     if len(values):
                         self.cacheFilters.append({'scope':scope, 'values':values})
@@ -184,17 +189,20 @@ class FilmixCO(CBaseHostClass):
                     urlParams['header'] = dict(self.AJAX_HEADER)
                     urlParams['Referer'] = self.getMainUrl()
                     sts, data = self.getPage(url, urlParams, {'scope':'cat', 'type':filter['type']})
-                    if not sts: return
+                    if not sts:
+                        return
                     try:
                         printDBG(data)
                         data = json_loads('[%s]' % data.replace('":"', '","')[1:-1])
                         for i in range(0, len(data), 2):
                             title = self.cleanHtmlStr(data[i+1])
                             value = data[i]
-                            if value.startswith('f'): value = value[1:]
+                            if value.startswith('f'):
+                                value = value[1:]
                             values.append({'title':title, ('f_%s' % filter['scope']):value})
                         if len(values):
-                            if 'years' == filter['type']: values.reverse()
+                            if 'years' == filter['type']:
+                                values.reverse()
                             values.insert(0, {'title':_('--Any--')})
                             filter['values'] = values
                     except Exception:
@@ -221,7 +229,8 @@ class FilmixCO(CBaseHostClass):
         printDBG("FilmixCO.listSort")
 
         sts, data = self.getPage(cItem['url'])
-        if not sts: return
+        if not sts:
+            return
         
         cItem = dict(cItem)
         cItem['url'] = data.meta['url']
@@ -247,8 +256,10 @@ class FilmixCO(CBaseHostClass):
                 postData = dict(basePostData)
                 postData.update({'dledirection':direction, 'dlenewssortby':sortOrderBy})
 
-                if 'asc' == direction: title = '\xe2\x86\x91 ' + baseTitle
-                elif 'desc' == direction: title = '\xe2\x86\x93 ' + baseTitle
+                if 'asc' == direction:
+                    title = '\xe2\x86\x91 ' + baseTitle
+                elif 'desc' == direction:
+                    title = '\xe2\x86\x93 ' + baseTitle
 
                 params = dict(cItem)
                 params.update({'category':nextCategory, 'title':title, 'desc':desc, 'post_data':postData})
@@ -265,7 +276,8 @@ class FilmixCO(CBaseHostClass):
             urlParams['Referer'] = self.getMainUrl()
         
         sts, data = self.getPage(cItem['url'], urlParams, postData)
-        if not sts: return
+        if not sts:
+            return
 
         nextPage = self.cm.ph.getDataBeetwenNodes(data, ('<div', '>', 'navigation'), ('</div', '>'), False)[1]
         nextPage = self.cm.ph.getSearchGroups(nextPage, '''<a[^>]+?href=['"]([^'^"]+?)['"][^>]*?>%s</a>''' % (page + 1))[0]
@@ -279,15 +291,18 @@ class FilmixCO(CBaseHostClass):
             title = self.cleanHtmlStr( self.cm.ph.getDataBeetwenMarkers(tmp, '<h2', '</h2>')[1] )
             titleOrg = self.cleanHtmlStr( self.cm.ph.getDataBeetwenNodes(item, ('<div', '>', 'origin-name'), ('</div', '>'))[1] )
             if titleOrg != '':
-                if title == '': title = titleOrg
-                else: title += ' / %s' % titleOrg
+                if title == '':
+                    title = titleOrg
+                else:
+                    title += ' / %s' % titleOrg
 
             desc = []
             tmp = self.cm.ph.getAllItemsBeetwenNodes(item, ('<div', '>', '"item'), ('</div', '>'))
             tmp.append(self.cm.ph.getDataBeetwenMarkers(item, '<p', '</p>')[1])
             for t in tmp:
                 t = self.cleanHtmlStr(t)
-                if t != '': desc.append(t.replace(' , ', ', '))
+                if t != '':
+                    desc.append(t.replace(' , ', ', '))
 
             if url != '':
                 params = dict(cItem)
@@ -305,7 +320,8 @@ class FilmixCO(CBaseHostClass):
         printDBG("FilmixCO.exploreItem")
         
         sts, data = self.getPage(cItem['url'])
-        if not sts: return
+        if not sts:
+            return
         cUrl = data.meta['url']
         self.setMainUrl(cUrl)
         
@@ -323,7 +339,8 @@ class FilmixCO(CBaseHostClass):
         urlParams['header'] = dict(self.AJAX_HEADER)
         urlParams['Referer'] = cUrl
         sts, data = self.getPage(url, urlParams, {'post_id':postId, 'showfull':'true'})
-        if not sts: return
+        if not sts:
+            return
         
         try:
             data = json_loads(data)
@@ -331,7 +348,8 @@ class FilmixCO(CBaseHostClass):
             data = data['message']['translations']['html5']
             for key in data:
                 url = self.getUtf8Str(data[key][1:])
-                if not self.cm.isValidUrl(url): continue
+                if not self.cm.isValidUrl(url):
+                    continue
                 title = self.cleanHtmlStr(key)
                 if url.split('?', 1)[-1].lower().endswith('.txt'):
                     params = dict(cItem)
@@ -352,7 +370,8 @@ class FilmixCO(CBaseHostClass):
         
         baseTitle = cItem['p_title']
         sts, data = self.getPage(cItem['url'], urlParams)
-        if not sts: return
+        if not sts:
+            return
         
         try:
             data = self.getUtf8Str(data[1:])
@@ -361,7 +380,8 @@ class FilmixCO(CBaseHostClass):
                 subItems = []
                 for item in playlistItem['playlist']:
                     url = item['file']
-                    if not self.cm.isValidUrl(url): continue
+                    if not self.cm.isValidUrl(url):
+                        continue
                     title = self.cleanHtmlStr(item['comment'])
                     params = dict(cItem)
                     params.update({'good_for_fav':False, 'type':'video', 'url':url, 'title':baseTitle + ' ' + title})
@@ -395,7 +415,8 @@ class FilmixCO(CBaseHostClass):
         try:
             for item in qualities:
                 item = item.strip()
-                if item != '': urlTab.append({'name':item, 'url':baseUrl % item, 'need_resolve':0})
+                if item != '':
+                    urlTab.append({'name':item, 'url':baseUrl % item, 'need_resolve':0})
         except Exception:
             printExc()
         
@@ -418,7 +439,8 @@ class FilmixCO(CBaseHostClass):
             self.password = config.plugins.iptvplayer.filmixco_password.value
 
             sts, data = self.getPage(self.getMainUrl())
-            if sts: self.setMainUrl(self.cm.meta['url'])
+            if sts:
+                self.setMainUrl(self.cm.meta['url'])
 
             freshSession = False
             if sts and 'action=logout' in data:
@@ -452,7 +474,8 @@ class FilmixCO(CBaseHostClass):
 
                 sts, data = self.getPage(actionUrl, httpParams, post_data)
                 printDBG(data)
-                if sts: msgTab.append(ph.clean_html(data))
+                if sts:
+                    msgTab.append(ph.clean_html(data))
                 sts, data = self.getPage(self.getMainUrl())
 
             if sts and 'action=logout' in data:

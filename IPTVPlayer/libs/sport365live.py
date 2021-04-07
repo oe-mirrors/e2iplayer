@@ -125,7 +125,8 @@ class Sport365LiveApi:
         return 'MarketGidStorage=%s; ' % urllib.parse.quote('{"0":{"svspr":"%s","svsds":%s,"TejndEEDj":"%s"},"C%s":{"page":1,"time":%s}}' % (referer, num, xz, id, int(time() * 100)))
         
     def refreshAdvert(self):
-        if not self.needRefreshAdvert: return
+        if not self.needRefreshAdvert:
+            return
         
         self.sessionEx.open(MessageBox, _('Please remember to visit http://www.sport365.live/ and watch a few advertisements.\nThis will fix problem, if your playback is constantly interrupted.'), type=MessageBox.TYPE_INFO, timeout=10)
         self.needRefreshAdvert = False
@@ -136,7 +137,8 @@ class Sport365LiveApi:
         params['header'] = dict(params['header'])
         
         sts, data = self.getPage(self.MAIN_URL, params)
-        if not sts: return 
+        if not sts:
+            return 
         
         baseUrl = self.cm.meta['url']
         
@@ -149,11 +151,13 @@ class Sport365LiveApi:
         timeMarker = '{0}{1}{2}{3}'.format(D.year-1900, D.month-1, D.day, D.hour)
         jscUrl = self.cm.ph.getSearchGroups(data, '''['"]([^'^"]*?jsc\.mgid[^'^"]*?)['"]''')[0]
         printDBG(">> [%s]" % jscUrl)
-        if jscUrl.endswith('t='): jscUrl += timeMarker
+        if jscUrl.endswith('t='):
+            jscUrl += timeMarker
         adUrl = self.cm.ph.getSearchGroups(data, '''['"]([^'^"]*?\.adshell\.[^'^"]*?)['"]''')[0] 
         
         sts, data = self.getPage(self.getFullUrl(adUrl), params)
-        if sts: adUrl = self.cm.ph.getSearchGroups(data, '''['"]([^'^"]*?\.adshell\.[^'^"]*?)['"]''')[0] 
+        if sts:
+            adUrl = self.cm.ph.getSearchGroups(data, '''['"]([^'^"]*?\.adshell\.[^'^"]*?)['"]''')[0] 
         
         sts, data = self.getPage(self.getFullUrl(jscUrl), params)
         marketCookie = self.getMarketCookie(jscUrl, baseUrl)
@@ -169,20 +173,24 @@ class Sport365LiveApi:
             params['header']['Referer'] = baseUrl
             params['header']['Cookie'] = sessionCookie + marketCookie
             sts, data = self.getPage(awrapperUrl, params)
-            if not sts: continue
+            if not sts:
+                continue
             
             adUrl = self.cm.ph.getSearchGroups(data, '''['"]([^'^"]*?\.adshell\.[^'^"]*?)['"]''')[0] 
             params['header']['Referer'] = awrapperUrl
             params['header']['Cookie'] = marketCookie
             
             sts, data = self.getPage(self.getFullUrl(adUrl), params)
-            if not sts: continue
+            if not sts:
+                continue
             
             jscUrl = self.cm.ph.getSearchGroups(data, '''['"]([^'^"]*?jsc\.mgid[^'^"]*?)['"]''')[0]
-            if jscUrl.endswith('t='): jscUrl += timeMarker
+            if jscUrl.endswith('t='):
+                jscUrl += timeMarker
             if jscUrl != '':
                 sts, tmp = self.getPage(self.getFullUrl(jscUrl), params)
-                if sts: params['header']['Cookie'] = self.getMarketCookie(jscUrl, awrapperUrl)
+                if sts:
+                    params['header']['Cookie'] = self.getMarketCookie(jscUrl, awrapperUrl)
             adUrls = re.compile('''['"]([^'^"]*?bannerid[^'^"]*?)['"]''').findall(data)
             for adUrl in adUrls:
                 adUrl = adUrl.replace('&amp;', '&')
@@ -201,7 +209,8 @@ class Sport365LiveApi:
         url = self.getFullUrl('en/events/-/1/-/-/%s' % (OFFSET))
         sts, data = self.getPage(self.MAIN_URL, self.http_params)
         sts, data = self.getPage(url, self.http_params)
-        if not sts: return []
+        if not sts:
+            return []
         
         date = ''
         data = self.cm.ph.getDataBeetwenMarkers(data, '<table', '</table>')[1]
@@ -209,7 +218,8 @@ class Sport365LiveApi:
         for item in data:
             if '/types/' not in item:
                 tmp = self.cm.ph.getSearchGroups(item, '''>([0-9]{2}\.[0-9]{2}\.[0-9]{4})<''')[0]
-                if tmp != '': date = tmp
+                if tmp != '':
+                    date = tmp
             else:
                 if '/types/dot-green-big.png' in item:
                     title = '[live] '
@@ -240,7 +250,8 @@ class Sport365LiveApi:
         eventId = linksData[0].replace('event_', '')
         url = self.getFullUrl('en/links/{0}/{1}'.format(eventId, linksData[-1]))
         sts, data = self.getPage(url, self.http_params)
-        if not sts: return []
+        if not sts:
+            return []
         
         desc = self.cleanHtmlStr( self.cm.ph.getDataBeetwenMarkers(data, '<table', '</table>')[1] ) + '[/br]' + cItem.get('desc', '')
         data = self.cm.ph.getAllItemsBeetwenMarkers(data, '<tr', '</tr>')
@@ -249,7 +260,8 @@ class Sport365LiveApi:
             links = self.cm.ph.getAllItemsBeetwenMarkers(item, '<span ', '</span>')
             for link in links:
                 linkTitle = self.cleanHtmlStr(link)
-                if '{' in linkTitle: continue
+                if '{' in linkTitle:
+                    continue
                 linkData  = self.cm.ph.getSearchGroups(link, '''onClick=[^(]*?\(([^)]+?)\)''')[0].split(',')[0].replace('"', '').replace("'", '').strip()
                 if linkData != '':
                     params = dict(cItem)
@@ -276,7 +288,8 @@ class Sport365LiveApi:
             return Sport365LiveApi.CACHE_AES_PASSWORD
         
         sts, data = self.getPage(self.getFullUrl('en/home/' + cItem['event_id']), self.http_params)
-        if not sts: return []
+        if not sts:
+            return []
         
         jsData = ''
         tmp = self.cm.ph.getAllItemsBeetwenMarkers(data, '<script', '</script>')
@@ -292,7 +305,8 @@ class Sport365LiveApi:
         data = re.compile('''src=['"](http[^"^']*?/js/[0-9a-fA-F]{32}\.js[^'^"]*?)["']''').findall(data)[::-1]
         for commonUrl in data:
             sts, tmpData = self.getPage(commonUrl, self.http_params)
-            if not sts: continue
+            if not sts:
+                continue
             if tmpData.startswith(';eval('):
                 try:
                     jscode = base64.b64decode('''dmFyIGRvY3VtZW50ID0ge307DQp2YXIgd2luZG93ID0gdGhpczsNCmRvY3VtZW50LndyaXRlID0gZnVuY3Rpb24oKXt9Ow0Kd2luZG93LmF0b2IgPSBmdW5jdGlvbigpe3JldHVybiAiIjt9Ow0KDQpmdW5jdGlvbiBkZWNyeXB0KCl7DQogICAgdmFyIHRleHQgPSBKU09OLnN0cmluZ2lmeSh7YWVzOmFyZ3VtZW50c1sxXX0pOw0KICAgIHByaW50KHRleHQpOw0KICAgIHJldHVybiAiIjsNCn0NCg0KdmFyIENyeXB0b0pTID0ge307DQpDcnlwdG9KUy5BRVMgPSB7fTsNCkNyeXB0b0pTLkFFUy5kZWNyeXB0ID0gZGVjcnlwdDsNCkNyeXB0b0pTLmVuYyA9IHt9Ow0KQ3J5cHRvSlMuZW5jLlV0ZjggPSAidXRmLTgiOw0K''')                   
@@ -315,7 +329,8 @@ class Sport365LiveApi:
             return Sport365LiveApi.CACHE_AES_PASSWORD
         
         sts, data = self.getPage(self.getFullUrl('en/home/' + cItem['event_id']), self.http_params)
-        if not sts: return []
+        if not sts:
+            return []
         
         aes = ''
         data = re.compile('''src=['"](http[^"^']*?/js/[0-9a-fA-F]{32}\.js[^'^"]*?)["']''').findall(data)[::-1]
@@ -334,7 +349,8 @@ class Sport365LiveApi:
             try:
                 while ('eval' in tmpData) and (not aes):
                     tmp = tmpData.split('eval(')
-                    if len(tmp): del tmp[0]
+                    if len(tmp):
+                        del tmp[0]
                     tmpData = ''
                     for item in tmp:
                         for decFun in [VIDEOWEED_decryptPlayerParams, VIDEOWEED_decryptPlayerParams2, SAWLIVETV_decryptPlayerParams]:
@@ -357,8 +373,10 @@ class Sport365LiveApi:
                                 printDBG("FUN NAME: [%s]" % funname)
                                 printDBG("ZZZZZZZZZZZZZ")
                                 tmp = self.cm.ph.getDataBeetwenMarkers(tmpData, 'function %s' % funname, '}')[1]
-                                try: aes = self.cm.ph.getSearchGroups(tmp, '"([^"]+?)"')[0].encode('utf-8')
-                                except Exception: printExc()
+                                try:
+                                    aes = self.cm.ph.getSearchGroups(tmp, '"([^"]+?)"')[0].encode('utf-8')
+                                except Exception:
+                                    printExc()
                             
                 aes = aes.encode('utf-8')
             except Exception:

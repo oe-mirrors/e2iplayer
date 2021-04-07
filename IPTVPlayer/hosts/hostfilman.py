@@ -18,8 +18,10 @@ import urllib.request
 import urllib.parse
 import urllib.error
 import base64
-try:    import json
-except Exception: import simplejson as json
+try:
+    import json
+except Exception:
+    import simplejson as json
 ###################################################
 
 
@@ -42,12 +44,15 @@ class Filman(CBaseHostClass):
         self.defaultParams = {'header':self.HTTP_HEADER, 'with_metadata':True, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
 
     def getPage(self, baseUrl, addParams = {}, post_data = None):
-        if addParams == {}: addParams = dict(self.defaultParams)
+        if addParams == {}:
+            addParams = dict(self.defaultParams)
         origBaseUrl = baseUrl
         baseUrl = self.cm.iriToUri(baseUrl)
         def _getFullUrl(url):
-            if self.cm.isValidUrl(url): return url
-            else: return urllib.parse.urljoin(baseUrl, url)
+            if self.cm.isValidUrl(url):
+                return url
+            else:
+                return urllib.parse.urljoin(baseUrl, url)
         addParams['cloudflare_params'] = {'domain':self.up.getDomain(baseUrl), 'cookie_file':self.COOKIE_FILE, 'User-Agent':self.USER_AGENT, 'full_url_handle':_getFullUrl}
         return self.cm.getPageCFProtection(baseUrl, addParams, post_data)
         
@@ -73,7 +78,8 @@ class Filman(CBaseHostClass):
         self.cacheMovieFilters = { 'cats':[], 'sort':[], 'years':[], 'az':[]}
 
         sts, data = self.getPage(cItem['url'])
-        if not sts: return
+        if not sts:
+            return
 
         # fill sort
         dat = self.cm.ph.getDataBeetwenMarkers(data, '<ul id="filter-sort"', '</ul>', False)[1]
@@ -131,12 +137,16 @@ class Filman(CBaseHostClass):
         if sort not in url:
             url = url + sort
 
-        if '?' in url: url += '&'
-        else: url += '?'
-        if page > 1: url = url + 'page={0}'.format(page)
+        if '?' in url:
+            url += '&'
+        else:
+            url += '?'
+        if page > 1:
+            url = url + 'page={0}'.format(page)
 
         sts, data = self.getPage(url)
-        if not sts: return
+        if not sts:
+            return
         self.setMainUrl(data.meta['url'])
             
         nextPage = self.cm.ph.getDataBeetwenNodes(data, ('<ul', '>', 'pagination'), ('</u', '>'))[1]
@@ -153,14 +163,17 @@ class Filman(CBaseHostClass):
         for item in data:
 #            printDBG("Filman.listItems item %s" % item)
             url = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''href=['"]([^"^']+?)['"]''')[0])
-            if url == '': continue
+            if url == '':
+                continue
             icon = self.getFullIconUrl(self.cm.ph.getSearchGroups(item, '''src=['"]([^"^']+?poster[^"^']+?)['"]''')[0])
             title = self.cm.ph.getSearchGroups(item, '''title=['"]([^"^']+?)['"]''')[0].replace('&quot;', '"'.replace('&amp;', '&'))
             desc = self.cm.ph.getSearchGroups(item, '''data-text=['"]([^"^']+?)['"]''')[0]
-            if desc == '': desc = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(item, ('<div', '>', 'description'), ('</div', '>'), False)[1])
+            if desc == '':
+                desc = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(item, ('<div', '>', 'description'), ('</div', '>'), False)[1])
             quality = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(item, ('<div', '>', 'quality-version'), ('</div', '>'), False)[1])
             year = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(item, ('<div', '>', 'film_year'), ('</div', '>'), False)[1])
-            if year != '': desc = _('Year: ') + year + ' - ' + _('Quality:') + ' ' + quality + '[/br]' + desc
+            if year != '':
+                desc = _('Year: ') + year + ' - ' + _('Quality:') + ' ' + quality + '[/br]' + desc
             if 'serial-online' in url:
                 params = {'good_for_fav':True,'category':'list_series', 'url':url, 'title':title, 'desc':desc, 'icon':icon}
                 self.addDir(params)
@@ -176,7 +189,8 @@ class Filman(CBaseHostClass):
     def listSeries(self, cItem):
         printDBG("Filman.listSeries %s" % cItem)
         sts, data = self.getPage(cItem['url'])
-        if not sts: return
+        if not sts:
+            return
         self.setMainUrl(data.meta['url'])
 
         data = self.cm.ph.getDataBeetwenNodes(data, ('<ul', '>', 'episode-list'), ('<hr', '>'))[1]
@@ -189,7 +203,8 @@ class Filman(CBaseHostClass):
             for item in tmp:
 #                printDBG("Filman.listSeries item %s" % item)
                 url = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''href=['"]([^"^']+?)['"]''')[0])
-                if url == '': continue
+                if url == '':
+                    continue
 #                title = season + ' - ' + self.cleanHtmlStr(item)
                 title = self.cleanHtmlStr(item)
                 params = {'good_for_fav':True, 'url':url, 'title':title, 'icon':cItem['icon']}
@@ -206,7 +221,8 @@ class Filman(CBaseHostClass):
                 
         cacheKey = cItem['url']
         cacheTab = self.cacheLinks.get(cacheKey, [])
-        if len(cacheTab): return cacheTab
+        if len(cacheTab):
+            return cacheTab
         
         self.cacheLinks = {}
         
@@ -220,7 +236,8 @@ class Filman(CBaseHostClass):
             
         params['header']['Referer'] = cUrl
         sts, data = self.getPage(url, params)
-        if not sts: return []
+        if not sts:
+            return []
 
         cUrl = data.meta['url']
         self.setMainUrl(cUrl)
@@ -234,7 +251,8 @@ class Filman(CBaseHostClass):
             item = item.split('</td>\n')
             if len(item) > 2:
                 name = name + ' - ' + self.cleanHtmlStr(item[1]) + ' - ' + self.cleanHtmlStr(item[2])
-            if playerUrl == '': continue
+            if playerUrl == '':
+                continue
             retTab.append({'name':name, 'url':strwithmeta(playerUrl, {'Referer':url}), 'need_resolve':1})
              
         if len(retTab):
@@ -262,7 +280,8 @@ class Filman(CBaseHostClass):
         itemsList = []
 
         sts, data = self.cm.getPage(cItem['url'])
-        if not sts: return []
+        if not sts:
+            return []
 
         title = cItem['title']
         icon = cItem.get('icon', '')
@@ -275,9 +294,12 @@ class Filman(CBaseHostClass):
 #        itemsList.append((_('Duration'), self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(data, '<dt>Czas trwania:</dt>', '</dd>', False)[1])))
 #        itemsList.append((_('Genres'), self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(data, '<ul class="genres">', '</ul>', True)[1])))
 
-        if title == '': title = cItem['title']
-        if icon  == '': icon  = cItem.get('icon', '')
-        if desc  == '': desc  = cItem.get('desc', '')
+        if title == '':
+            title = cItem['title']
+        if icon  == '':
+            icon  = cItem.get('icon', '')
+        if desc  == '':
+            desc  = cItem.get('desc', '')
 
         return [{'title':self.cleanHtmlStr( title ), 'text': self.cleanHtmlStr( desc ), 'images':[{'title':'', 'url':self.getFullUrl(icon)}], 'other_info':{'custom_items_list':itemsList}}]
         

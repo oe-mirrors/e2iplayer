@@ -13,8 +13,10 @@ from Plugins.Extensions.IPTVPlayer.tools.iptvtypes import strwithmeta
 ###################################################
 import urllib.parse
 from datetime import  timedelta
-try:    import json
-except Exception: import simplejson as json
+try:
+    import json
+except Exception:
+    import simplejson as json
 ###################################################
 
 
@@ -41,12 +43,15 @@ class MyFreeMp3(CBaseHostClass):
         self.streamUrl = 'http://s.mp3-music-downloads.com/'
         
     def getPage(self, baseUrl, addParams = {}, post_data = None):
-        if addParams == {}: addParams = dict(self.defaultParams)
+        if addParams == {}:
+            addParams = dict(self.defaultParams)
         origBaseUrl = baseUrl
         baseUrl = self.cm.iriToUri(baseUrl)
         def _getFullUrl(url):
-            if self.cm.isValidUrl(url): return url
-            else: return urllib.parse.urljoin(baseUrl, url)
+            if self.cm.isValidUrl(url):
+                return url
+            else:
+                return urllib.parse.urljoin(baseUrl, url)
         addParams['cloudflare_params'] = {'domain':self.up.getDomain(baseUrl), 'cookie_file':self.COOKIE_FILE, 'User-Agent':self.USER_AGENT, 'full_url_handle':_getFullUrl}
         return self.cm.getPageCFProtection(baseUrl, addParams, post_data)
     
@@ -57,7 +62,8 @@ class MyFreeMp3(CBaseHostClass):
     def listSearchResult(self, cItem, searchPattern, searchType):
         printDBG("MyFreeMp3.listSearchResult cItem[%s], searchPattern[%s] searchType[%s]" % (cItem, searchPattern, searchType))
         sts, data = self.getPage(self.getMainUrl())
-        if not sts: return
+        if not sts:
+            return
         self.setMainUrl(self.cm.meta['url'])
         
         # 
@@ -65,8 +71,10 @@ class MyFreeMp3(CBaseHostClass):
         sts, tmp = self.getPage(tmp)
         if sts:
             tmp = self.cm.ph.getSearchGroups(tmp, '''['"]([^'^"]*?/newtab[^'^"]+?)['"]''')[0]
-            if tmp != '': self.streamUrl = self.getFullUrl(tmp)
-            if not self.streamUrl.endswith('/'): self.streamUrl += '/'
+            if tmp != '':
+                self.streamUrl = self.getFullUrl(tmp)
+            if not self.streamUrl.endswith('/'):
+                self.streamUrl += '/'
             self.streamUrl = self.cm.getBaseUrl(self.streamUrl)
         
         url = self.getFullUrl('/api/search.php?callback=jQuery2130550300194200308_1532280982151')
@@ -92,11 +100,13 @@ class MyFreeMp3(CBaseHostClass):
         post_data['page'] = page
         
         sts, data = self.getPage(cItem['url'], post_data=post_data)
-        if not sts: return
+        if not sts:
+            return
         
         m1 = data.find('(')
         m2 = data.rfind(')')
-        if -1 in [m1, m2]: return
+        if -1 in [m1, m2]:
+            return
         
         data = data[m1+1:m2]
         try:
@@ -106,14 +116,16 @@ class MyFreeMp3(CBaseHostClass):
                 try:
                     title = '%s - %s' % (self.cleanHtmlStr(item.get('artist', '')), self.cleanHtmlStr(item.get('title', '')))
                     desc = str(timedelta(seconds=item['duration']))
-                    if desc.startswith('0:'): desc = desc[2:]
+                    if desc.startswith('0:'):
+                        desc = desc[2:]
                     icon = ''
                     try:
                         desc += ' | ' + item['album']['title']
                         icons = []
                         for key in item['album']['thumb']:
                             val = item['album']['thumb'][key]
-                            if not self.cm.isValidUrl(str(val)): continue
+                            if not self.cm.isValidUrl(str(val)):
+                                continue
                             key = int(key.split('_')[-1])
                             icons.append((key, val))
                         icons.sort(reverse=True)
@@ -141,9 +153,10 @@ class MyFreeMp3(CBaseHostClass):
         def encode(input):
             length = len(map)
             encoded = ""
-            if input == 0: return map[0]
+            if input == 0:
+                return map[0]
             if input < 0:
-                input *= -1;
+                input *= -1
                 encoded += "-"
             while input > 0:
                 val = input % length
@@ -153,8 +166,10 @@ class MyFreeMp3(CBaseHostClass):
         
         try:
             item = cItem['priv_data']
-            if 'aid' in item: id = item['aid']
-            else: id = item['id']
+            if 'aid' in item:
+                id = item['aid']
+            else:
+                id = item['id']
             
             url  = self.streamUrl + 'stream/%s:%s' % (encode(item['owner_id']), encode(id))
             #url  = 'http://streams.my-free-mp3.net/stream/%s:%s' % (encode(item['owner_id']), encode(item['aid']))

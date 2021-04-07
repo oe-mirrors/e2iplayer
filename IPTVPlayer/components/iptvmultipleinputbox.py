@@ -49,8 +49,10 @@ class IPTVMultipleInputBox(Screen):
         # calcl maxWidth size
         for idx in range(len(self.list)):
             item = self.list[idx]
-            if item['label_size'][0] > maxWidth: maxWidth = item['label_size'][0]
-            if item['input_size'][0] > maxWidth: maxWidth = item['input_size'][0]
+            if item['label_size'][0] > maxWidth:
+                maxWidth = item['label_size'][0]
+            if item['input_size'][0] > maxWidth:
+                maxWidth = item['input_size'][0]
         maxWidth += pX*2
         
         if len(self.statusText):
@@ -177,10 +179,12 @@ class IPTVMultipleInputBox(Screen):
                 self["marker"].setPixmap(self.markerPixmap[0])
                 for idx in range(len(self.list)):
                     self['marker_%d'%idx].setPixmap(self.markerPixmap[1])
-        except Exception: printExc()
+        except Exception:
+            printExc()
         
     def keyUp(self):
-        if not self.started: return
+        if not self.started:
+            return
         prevIdx = self.idx
         self.idx -= 1
         if self.idx < 0: 
@@ -196,7 +200,8 @@ class IPTVMultipleInputBox(Screen):
         self.setMarker(prevIdx)
 
     def keyDown(self):
-        if not self.started: return
+        if not self.started:
+            return
         prevIdx = self.idx
         self.idx += 1
         if self.idx >= len(self.list):
@@ -236,10 +241,12 @@ class IPTVMultipleInputBox(Screen):
                     self["border_%d"%idx].hide()
             if self.idx < len(self.list):
                 self["border_%d"%self.idx].show()
-        except Exception: printExc()
+        except Exception:
+            printExc()
         
     def setKeyboardMode(self):
-        if self.activeInput == '': return
+        if self.activeInput == '':
+            return
         
         rcinput = eRCInput.getInstance()
         printDBG("setKeyboardMode current_mode[%r] ASCI[%r] none[%r] type_text[%r] intput_type[%r]" % (rcinput.getKeyboardMode(), rcinput.kmAscii, rcinput.kmNone, Input.TEXT, self[self.activeInput].type))
@@ -251,23 +258,28 @@ class IPTVMultipleInputBox(Screen):
             rcinput.setKeyboardMode(rcinput.kmNone)
 
     def gotAsciiCode(self):
-        if self.activeInput == '': return
+        if self.activeInput == '':
+            return
         self[self.activeInput].handleAscii(getPrevAsciiCode())
 
     def keyLeft(self):
-        if self.activeInput == '': return
+        if self.activeInput == '':
+            return
         self[self.activeInput].left()
 
     def keyRight(self):
-        if self.activeInput == '': return
+        if self.activeInput == '':
+            return
         self[self.activeInput].right()
 
     def keyNumberGlobal(self, number):
-        if self.activeInput == '': return
+        if self.activeInput == '':
+            return
         self[self.activeInput].number(number)
 
     def keyDelete(self):
-        if self.activeInput == '': return
+        if self.activeInput == '':
+            return
         self[self.activeInput].delete()
 
     def keySave(self):
@@ -290,12 +302,15 @@ class IPTVMultipleInputBox(Screen):
             return
         
         def VirtualKeyBoardCallBack(newTxt):
-            if isinstance(newTxt, str): self[self.activeInput].setText( newTxt )
+            if isinstance(newTxt, str):
+                self[self.activeInput].setText( newTxt )
             self.setKeyboardMode()
         
         # title
-        try: title = self.list[self.idx]['title']
-        except Exception: title = ''
+        try:
+            title = self.list[self.idx]['title']
+        except Exception:
+            title = ''
         
         # virtual keyboard type
         captchaKeyBoard = False
@@ -306,7 +321,8 @@ class IPTVMultipleInputBox(Screen):
                 captchaPath = self.list[self.idx]['icon_path']
                 params = dict(self.params.get('vk_params', {}))
                 params.update({'captcha_size':captchaSize, 'captcha_path':captchaPath})
-        except Exception: printExc()
+        except Exception:
+            printExc()
         
         if not captchaKeyBoard:
             self.session.openWithCallback(VirtualKeyBoardCallBack, GetVirtualKeyboard(), title=title, text=self[self.activeInput].getText())
@@ -317,21 +333,26 @@ class IPTVMultipleInputBox(Screen):
         self.close(None)
 
     def keyHome(self):
-        if self.activeInput == '': return
+        if self.activeInput == '':
+            return
         self[self.activeInput].home()
 
     def keyEnd(self):
-        if self.activeInput == '': return
+        if self.activeInput == '':
+            return
         self[self.activeInput].end()
 
     def keyBackspace(self):
-        if self.activeInput == '': return
+        if self.activeInput == '':
+            return
         self[self.activeInput].deleteBackward()
 
     def keyTab(self):
-        if self.activeInput == '': return
+        if self.activeInput == '':
+            return
         self[self.activeInput].tab()
 
     def keyInsert(self):
-        if self.activeInput == '': return
+        if self.activeInput == '':
+            return
         self[self.activeInput].toggleOverwrite()

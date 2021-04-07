@@ -15,8 +15,10 @@ import re
 import urllib.request
 import urllib.parse
 import urllib.error
-try:    import json
-except Exception: import simplejson as json
+try:
+    import json
+except Exception:
+    import simplejson as json
 from Components.config import config, ConfigSelection, ConfigText, getConfigListEntry
 ###################################################
 
@@ -50,7 +52,8 @@ class FilmstreamvkCom(CBaseHostClass):
         self.defaultParams = {'header':self.HTTP_HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
     
     def getPage(self, baseUrl, addParams = {}, post_data = None):
-        if addParams == {}: addParams = dict(self.defaultParams)
+        if addParams == {}:
+            addParams = dict(self.defaultParams)
         
         proxy = config.plugins.iptvplayer.filmstreamvk_proxy.value
         if proxy != 'None':
@@ -79,12 +82,14 @@ class FilmstreamvkCom(CBaseHostClass):
             domains = ['http://filmstreamvk.club/']
             domain = config.plugins.iptvplayer.filmstreamvk_alt_domain.value.strip()
             if self.cm.isValidUrl(domain):
-                if domain[-1] != '/': domain += '/'
+                if domain[-1] != '/':
+                    domain += '/'
                 domains.insert(0, domain)
             
             for domain in domains:
                 sts, data = self.getPage(domain)
-                if not sts: continue
+                if not sts:
+                    continue
                 if '/serie' in data:
                     self.setMainUrl(self.cm.meta['url'])
                     break
@@ -108,7 +113,8 @@ class FilmstreamvkCom(CBaseHostClass):
     def listMainCategories(self, cItem, category):
         printDBG("FilmstreamvkCom.listCategories")
         sts, data = self.getPage(cItem['url'])
-        if not sts: return
+        if not sts:
+            return
         self._listCategory(cItem, category, '<div class="tam"', '</ul>', data)
         self._listCategory(cItem, category, 'Accueil', '<ul class="sub-menu">', data)
         self._listCategory(cItem, category, '</ul>', 'CONTACT', data)
@@ -116,7 +122,8 @@ class FilmstreamvkCom(CBaseHostClass):
     def listCategories(self, cItem, category):
         printDBG("FilmstreamvkCom.listCategories")
         sts, data = self.getPage(cItem['url'])
-        if not sts: return
+        if not sts:
+            return
         self._listCategory(cItem, category, '<li class="cat-item cat', '</ul>', data)
         
     def _listCategory(self, cItem, category, m1, m2, data):
@@ -131,12 +138,14 @@ class FilmstreamvkCom(CBaseHostClass):
         printDBG("FilmstreamvkCom.listItems")
         
         sts, data = self.getPage(cItem['url'])
-        if not sts: return
+        if not sts:
+            return
         
         nextPage = self.cm.ph.getSearchGroups(data, '''rel=["']next["'][^>]+?href=['"]([^'^"]+?)['"]''')[0]
         data = self.cm.ph.getDataBeetwenMarkers(data, '<div class="moviefilm">', '<div class="filmcontent">')[1]
         data = data.split('<div class="moviefilm">')
-        if len(data): del data[0]
+        if len(data):
+            del data[0]
         for item in data:
             url   = self.cm.ph.getSearchGroups(item, '''href=['"]([^'^"]+?)['"]''')[0]
             icon  = self.cm.ph.getSearchGroups(item, '''src=['"]([^'^"]+?)['"]''')[0]
@@ -161,7 +170,8 @@ class FilmstreamvkCom(CBaseHostClass):
         printDBG("FilmstreamvkCom.listEpisodes")
         
         sts, data = self.getPage(cItem['url'])
-        if not sts: return
+        if not sts:
+            return
         
         data = self.cm.ph.getAllItemsBeetwenMarkers(data, 'liste_episode', '</tr>')
         for idx in range(len(data)):
@@ -174,7 +184,8 @@ class FilmstreamvkCom(CBaseHostClass):
         printDBG("FilmstreamvkCom.listEpisodesByLanguage")
         
         sts, data = self.getPage(cItem['url'])
-        if not sts: return
+        if not sts:
+            return
         
         descData  = self.cm.ph.getDataBeetwenMarkers(data, '<div class="filmalti">', '<div class="filmborder">')[1]
         desc = self.cleanHtmlStr(descData)
@@ -183,8 +194,10 @@ class FilmstreamvkCom(CBaseHostClass):
         
         idx = cItem.get('erow_idx', 0)
         data = self.cm.ph.getAllItemsBeetwenMarkers(data, 'liste_episode', '</tr>')
-        if idx < len(data): data = data[idx]
-        else: return
+        if idx < len(data):
+            data = data[idx]
+        else:
+            return
         
         data = self.cm.ph.getAllItemsBeetwenMarkers(data, '<a', '</a>')
         for item in data:
@@ -201,7 +214,8 @@ class FilmstreamvkCom(CBaseHostClass):
                     fullTitle += ' %s' % str(title).zfill(2)
                 
                 urlName = url.split('-')[-1]
-                if urlName != '': fullTitle += ' [%s]' %  urlName
+                if urlName != '':
+                    fullTitle += ' [%s]' %  urlName
                 
                 params = dict(cItem)
                 params.update({'url':url, 'title':fullTitle, 'icon':icon, 'desc':desc})
@@ -220,14 +234,16 @@ class FilmstreamvkCom(CBaseHostClass):
         data = self.cm.ph.getAllItemsBeetwenMarkers(wholeData, '<iframe ', '</iframe>', withMarkers=True, caseSensitive=False)
         for item in data:
             url  = self.cm.ph.getSearchGroups(item, '''src=['"]([^'^"]+?)['"]''',  grupsNum=1, ignoreCase=True)[0]
-            if url in tmpUrls: continue
+            if url in tmpUrls:
+                continue
             tmpUrls.append(url)
             if url.startswith('http') and 'facebook.com' not in url and 1 == self.up.checkHostSupport(url):
                 videoUrlParams.append({'name': self.up.getHostName(url), 'url':url, 'need_resolve':1})
                 
         data = re.compile('''onclick=[^>]*?['"](http[^'^"]+?)['"]''').findall(wholeData)
         for url in data:
-            if url in tmpUrls: continue
+            if url in tmpUrls:
+                continue
             tmpUrls.append(url)
             if 'facebook.com' not in url and 1 == self.up.checkHostSupport(url):
                 videoUrlParams.append({'name': self.up.getHostName(url), 'url':url, 'need_resolve':1})
@@ -239,7 +255,8 @@ class FilmstreamvkCom(CBaseHostClass):
         urlTab = []
         
         sts, data = self.getPage(cItem['url'])
-        if not sts: return []
+        if not sts:
+            return []
             
         urlTab = self._getBaseVideoLink(data)
         
@@ -253,7 +270,8 @@ class FilmstreamvkCom(CBaseHostClass):
         
         if 1 == len(urlTab) and 'filmstreamvk' in self.up.getDomain(urlTab[0]['url']):
             sts, data = self.getPage(urlTab[0]['url'])
-            if not sts: return urlTab
+            if not sts:
+                return urlTab
             mainName = urlTab[0]['name']
             urlTab = self._getBaseVideoLink(data)
             for idx in range(len(urlTab)):
@@ -269,7 +287,8 @@ class FilmstreamvkCom(CBaseHostClass):
         videoUrl = ''
         if 'filmstreamvk' in self.up.getDomain(url):
             sts, data = self.getPage(url)
-            if not sts: return []
+            if not sts:
+                return []
             tmoUrlTab = self._getBaseVideoLink(data)
             if len(tmoUrlTab):
                 videoUrl = tmoUrlTab[0].get('url', '')

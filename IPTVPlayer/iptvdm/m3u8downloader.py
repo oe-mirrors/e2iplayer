@@ -132,8 +132,10 @@ class M3U8Downloader(BaseDownloader):
             
     def _addTimeStampToUrl(self, m3u8Url):
         if self.addStampToUrl:
-            if '?' in m3u8Url: m3u8Url += '&iptv_stamp='
-            else: m3u8Url += '?iptv_stamp='
+            if '?' in m3u8Url:
+                m3u8Url += '&iptv_stamp='
+            else:
+                m3u8Url += '?iptv_stamp='
             m3u8Url += ('%s' % time())
         return m3u8Url
         
@@ -176,14 +178,15 @@ class M3U8Downloader(BaseDownloader):
         
     def _updateM3U8DataAvail(self, data):
         if None != data and 0 < len(data):
-            self.M3U8ListData += data; 
+            self.M3U8ListData += data
         
     def mergeFragmentsListWithChecking_OLD(self, newFragments, media_sequence=-1):
         #newFragments = self.fixFragmentsList(newFragments) 
         try: 
             idx = newFragments.index(self.fragmentList[-1])
             newFragments = newFragments[idx+1:]
-        except Exception: printDBG('m3u8 update thread - last fragment from last list not available in new list!')
+        except Exception:
+            printDBG('m3u8 update thread - last fragment from last list not available in new list!')
         
         tmpList = []
         for item in reversed(newFragments):
@@ -466,8 +469,10 @@ class M3U8Downloader(BaseDownloader):
             #    localStatus = DMHelper.STS.INTERRUPTED
             elif 0 < (self.localFileSize - self.m3u8_prevLocalFileSize):
                 if  self.totalDuration > 0:
-                    try: self.downloadDuration += self.fragmentDurationList[self.currentFragment]
-                    except Exception: printExc()
+                    try:
+                        self.downloadDuration += self.fragmentDurationList[self.currentFragment]
+                    except Exception:
+                        printExc()
                 localStatus = self._startFragment()
             elif  0 == (self.localFileSize - self.m3u8_prevLocalFileSize):
                 localStatus = self._startFragment(True) # retry

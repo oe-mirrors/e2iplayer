@@ -33,7 +33,8 @@ class IPTVSubSimpleDownloaderWidget(Screen):
     _TMP_FILE_NAME='.externaltmpsub'
     sz_w = getDesktop(0).size().width() - 190
     sz_h = getDesktop(0).size().height() - 195
-    if sz_h < 500: sz_h += 4
+    if sz_h < 500:
+        sz_h += 4
     skin = """
         <screen name="IPTVSubSimpleDownloaderWidget" position="center,center" title="%s" size="%d,%d">
          <widget name="icon_red"    position="5,9"   zPosition="4" size="30,30" transparent="1" alphatest="on" />
@@ -179,21 +180,24 @@ class IPTVSubSimpleDownloaderWidget(Screen):
         try:
             for icon in self.iconPixmap:
                 self['icon_'+icon].setPixmap(self.iconPixmap[icon])
-        except Exception: printExc()
+        except Exception:
+            printExc()
         
     def hideButtons(self, buttons=['red', 'green']):
         try:
             for button in buttons:
                 self['icon_'+button].hide()
                 self['label_'+button].hide()
-        except Exception: printExc()
+        except Exception:
+            printExc()
         
     def showButtons(self, buttons=['red', 'green']):
         try:
             for button in buttons:
                 self['icon_'+button].show()
                 self['label_'+button].show()
-        except Exception: printExc()
+        except Exception:
+            printExc()
     
     def onStart(self):
         self.onShown.remove(self.onStart)
@@ -255,7 +259,8 @@ class IPTVSubSimpleDownloaderWidget(Screen):
             self.close(None)
             
     def keyOK(self):
-        if False == self.listMode: return
+        if False == self.listMode:
+            return
         idx, item = self.getSelectedItem()
         if None != item:
             self.startDownload(item.privateData)
@@ -272,11 +277,14 @@ class IPTVSubSimpleDownloaderWidget(Screen):
                 track = {'title':self.currItem.get('lang', _('default')), 'lang':self.currItem.get('lang', _('default')), 'path':self.downloadedSubFilePath}
                 track['id'] = self.currItem.get('url', '')
                 self.close(track)
-        except Exception: printExc()
+        except Exception:
+            printExc()
     
     def getSelectedItem(self):
-        try: idx = self["list"].getCurrentIndex()
-        except Exception: idx = 0
+        try:
+            idx = self["list"].getCurrentIndex()
+        except Exception:
+            idx = 0
         sel = None
         try: 
             if self["list"].visible:

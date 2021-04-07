@@ -55,7 +55,7 @@ def js_execute_ext(items, params={}):
     tmpFiles = []
 
     tid = _thread.get_ident()
-    uniqueId = 0;
+    uniqueId = 0
     ret = {'sts':False, 'code':-13, 'data':''}
     try:
         for item in items:

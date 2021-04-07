@@ -54,14 +54,20 @@ class Tvn24(CBaseHostClass):
         # get icon
         icon = ''
         if None != item:
-            try:    icon = self.getStr( item['Main_Content_Photo']['url'] )
-            except Exception: pass
+            try:
+                icon = self.getStr( item['Main_Content_Photo']['url'] )
+            except Exception:
+                pass
             if '' == icon:
-                try:    icon = self.getStr( item['Photo_Photo']['url'] )
-                except Exception: pass
+                try:
+                    icon = self.getStr( item['Photo_Photo']['url'] )
+                except Exception:
+                    pass
             if '' == icon:
-                try:    icon = self.getStr( item['Headbg_Photo']['url'] )
-                except Exception: pass
+                try:
+                    icon = self.getStr( item['Headbg_Photo']['url'] )
+                except Exception:
+                    pass
         return icon
 
     def listsMainMenu(self):
@@ -130,7 +136,8 @@ class Tvn24(CBaseHostClass):
         url = baseUrl
         pagination = False
         if '' != page:
-            if url[-1] != '/': url + ','
+            if url[-1] != '/':
+                url + ','
             url += '%s,%s' % (page, Tvn24.ITEMS_PER_PAGE)
             if '' != category:
                 pagination = True
@@ -154,7 +161,8 @@ class Tvn24(CBaseHostClass):
                 plot   = self.getStr( item.get('lead', '') )
                 icon   = self.getIconFromRelated(item.get('related', None))
                 id     = int( self.getStr( item.get('tcg_id', '-1'), '-1' ) )
-                if -1 == id: id = int( self.getStr( item.get('id', '-1'), '-1' ) )
+                if -1 == id:
+                    id = int( self.getStr( item.get('id', '-1'), '-1' ) )
 
                 if id != -1:
                     url = Tvn24.MAIN_URL + '/' + category + '/articles/' + Tvn24.API_KEY + '/' + str(id)
@@ -198,18 +206,23 @@ class Tvn24(CBaseHostClass):
                 
                 # get icon
                 icon  = self.getStr( item.get('pht_main_content_url', '') )
-                if '' == icon: icon = self.getStr( item.get('pht_url', '') )
+                if '' == icon:
+                    icon = self.getStr( item.get('pht_url', '') )
                 
                 # get data from related
                 item = item.get('related', None)
                 if None != item:
-                    if '' == icon: icon = self.getIconFromRelated(item)
+                    if '' == icon:
+                        icon = self.getIconFromRelated(item)
                     # get data from video url
                     videoItem = item.get('Video_Video', None)
                     if None != videoItem:
-                        if '' == title: title = self.getStr( videoItem.get('title', '') )
-                        if '' == plot:  plot  = self.getStr( videoItem.get('description', '') )
-                        if '' == icon: icon   = self.getStr( videoItem.get('still_url', '') )
+                        if '' == title:
+                            title = self.getStr( videoItem.get('title', '') )
+                        if '' == plot:
+                            plot  = self.getStr( videoItem.get('description', '') )
+                        if '' == icon:
+                            icon   = self.getStr( videoItem.get('still_url', '') )
                         url                   = self.getStr( videoItem.get('url', '') )
                         
                 if url != '' or tar_id != '' or id != '':

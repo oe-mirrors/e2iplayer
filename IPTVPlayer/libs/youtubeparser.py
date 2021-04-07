@@ -96,14 +96,17 @@ class YouTubeParser():
                 sts, data = self.cm.getPage(url)
                 if sts:
                     videoId = self.cm.ph.getSearchGroups(data, '''<meta[^>]+?itemprop=['"]videoId['"][^>]+?content=['"]([^'^"]+?)['"]''')[0]
-                    if videoId == '': videoId = self.cm.ph.getSearchGroups(data, '''['"]REDIRECT_TO_VIDEO['"]\s*\,\s*['"]([^'^"]+?)['"]''')[0]
-                    if videoId != '': url = 'https://www.youtube.com/watch?v=' + videoId
+                    if videoId == '':
+                        videoId = self.cm.ph.getSearchGroups(data, '''['"]REDIRECT_TO_VIDEO['"]\s*\,\s*['"]([^'^"]+?)['"]''')[0]
+                    if videoId != '':
+                        url = 'https://www.youtube.com/watch?v=' + videoId
             list = YoutubeIE()._real_extract(url, allowVP9 = allowVP9, allowAgeGate = allowAgeGate)
         except Exception:
             printExc()
             if dashSepareteList:
                 return [], []
-            else: return []
+            else:
+                return []
         
         reNum = re.compile('([0-9]+)')
         retHLSList = []
@@ -193,8 +196,10 @@ class YouTubeParser():
                     data = data.replace('\\"', '"').replace('\\\\\\/', '/').replace('\\/', '/')
                     dashUrl = self.cm.ph.getSearchGroups(data, '''"dashmpd"\s*:\s*"(https?://[^"]+?)"''')[0]
                     dashUrl = json_loads('"%s"' % dashUrl)
-                    if '?' not in dashUrl: dashUrl += '?mpd_version=5'
-                    else: dashUrl += '&mpd_version=5'
+                    if '?' not in dashUrl:
+                        dashUrl += '?mpd_version=5'
+                    else:
+                        dashUrl += '&mpd_version=5'
                     printDBG("DASH URL >> [%s]" % dashUrl)
                     if self.cm.isValidUrl(dashUrl):
                         dashList = getMPDLinksWithMeta(dashUrl, checkExt=False)
@@ -625,7 +630,8 @@ class YouTubeParser():
                         if params:
                             printDBG(str(params))
                             currList.append(params)
-                    if nP != '': nextPage = nP
+                    if nP != '':
+                        nextPage = nP
                 
                 if nextPage:
                     ctoken = nextPage["continuationEndpoint"]["continuationCommand"].get('token', '')
@@ -811,8 +817,10 @@ class YouTubeParser():
                     title = item['title']
                     img   = item['thumbnail']
                     time  = item['length_seconds']
-                    if '' != time: time = str( timedelta( seconds = int(time) ) )
-                    if time.startswith("0:"): time = time[2:]
+                    if '' != time:
+                        time = str( timedelta( seconds = int(time) ) )
+                    if time.startswith("0:"):
+                        time = time[2:]
                     desc  = item['description']
                     params = {'type': 'video', 'category': 'video', 'title': title, 'url': url, 'icon': img, 'time': time, 'desc': desc}
                     currList.append(params)

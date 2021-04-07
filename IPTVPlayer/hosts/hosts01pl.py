@@ -19,8 +19,10 @@ import urllib.request
 import urllib.parse
 import urllib.error
 import base64
-try:    import json
-except Exception: import simplejson as json
+try:
+    import json
+except Exception:
+    import simplejson as json
 ###################################################
 
 
@@ -45,12 +47,15 @@ class S01pl(CBaseHostClass):
         self.defaultParams = {'header':self.HTTP_HEADER, 'with_metadata':True, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
 
     def getPage(self, baseUrl, addParams = {}, post_data = None):
-        if addParams == {}: addParams = dict(self.defaultParams)
+        if addParams == {}:
+            addParams = dict(self.defaultParams)
         origBaseUrl = baseUrl
         baseUrl = self.cm.iriToUri(baseUrl)
         def _getFullUrl(url):
-            if self.cm.isValidUrl(url): return url
-            else: return urllib.parse.urljoin(baseUrl, url)
+            if self.cm.isValidUrl(url):
+                return url
+            else:
+                return urllib.parse.urljoin(baseUrl, url)
         addParams['cloudflare_params'] = {'domain':self.up.getDomain(baseUrl), 'cookie_file':self.COOKIE_FILE, 'User-Agent':self.USER_AGENT, 'full_url_handle':_getFullUrl}
         return self.cm.getPageCFProtection(baseUrl, addParams, post_data)
         
@@ -139,10 +144,12 @@ class S01pl(CBaseHostClass):
         if sort not in url:
             url = url + sort
 
-        if page > 1: url = url + '&page={0}'.format(page)
+        if page > 1:
+            url = url + '&page={0}'.format(page)
 
         sts, data = self.getPage(url)
-        if not sts: return
+        if not sts:
+            return
         self.setMainUrl(data.meta['url'])
 #        printDBG("S01pl.listItems data [%s]" % data)
         
@@ -161,7 +168,8 @@ class S01pl(CBaseHostClass):
 #            printDBG("S01pl.listItems item %s" % item)
             url = self.getFullUrl(self.API_URL + '/%d' % item['id'])
             icon = self.getFullIconUrl(item.get('poster', ''))
-            if 'original' in icon: icon = icon.replace('/original/', '/w500/')
+            if 'original' in icon:
+                icon = icon.replace('/original/', '/w500/')
             title = item.get('name', '')
             desc = item.get('description', '')
             if item['is_series']:
@@ -179,7 +187,8 @@ class S01pl(CBaseHostClass):
     def listSeriesSeasons(self, cItem, nextCategory):
         printDBG("S01pl.listSeriesSeasons")
         sts, data = self.getPage(cItem['url'])
-        if not sts: return
+        if not sts:
+            return
 
         try:
             data = json_loads(data)['title']
@@ -189,16 +198,19 @@ class S01pl(CBaseHostClass):
         for sItem in data['seasons']:
 #            printDBG("S01pl.listSeriesSeasons sItem [%s]" % sItem)
             sts, sdata = self.getPage(self.getFullUrl(cItem['url'] + '?seasonNumber=%d' % sItem['number']))
-            if not sts: return
+            if not sts:
+                return
             sTitle = 'Sezon %d' % sItem['number']
             sdata = json_loads(sdata)['title']['season']['episodes']
             tabItems = []
             for item in sdata:
 #                printDBG("S01pl.listSeriesSeasons item [%s]" % item)
-                if item['stream_videos_count'] == 0: continue
+                if item['stream_videos_count'] == 0:
+                    continue
                 url = self.getFullUrl(cItem['url'] + '?seasonNumber=%d&episodeNumber=%d' % (item['season_number'], item['episode_number']))
                 icon = self.getFullIconUrl(item.get('poster', ' '))
-                if 'original' in icon: icon = icon.replace('/original/', '/w500/')
+                if 'original' in icon:
+                    icon = icon.replace('/original/', '/w500/')
                 title = item.get('name', '')
                 desc = item.get('description', '')
                 tabItems.append({'url':url, 'title':title, 'desc':desc, 'icon':icon})
@@ -225,7 +237,8 @@ class S01pl(CBaseHostClass):
                 
         cacheKey = cItem['url']
         cacheTab = self.cacheLinks.get(cacheKey, [])
-        if len(cacheTab): return cacheTab
+        if len(cacheTab):
+            return cacheTab
         
         self.cacheLinks = {}
         
@@ -235,7 +248,8 @@ class S01pl(CBaseHostClass):
         retTab = []
             
         sts, data = self.getPage(url)
-        if not sts: return []
+        if not sts:
+            return []
 
         cUrl = data.meta['url']
         self.setMainUrl(cUrl)
@@ -247,9 +261,11 @@ class S01pl(CBaseHostClass):
         for item in data['videos']:
 #            printDBG("S01pl.getLinksForVideo item[%s]" % item)
             playerUrl = self.getFullUrl(item.get('url', '')).replace(' ', '%20')
-            if playerUrl == '': continue
+            if playerUrl == '':
+                continue
             name = self.cm.ph.getDataBeetwenMarkers(item.get('name', ''), '[', ']', True)[1] + ' ' + self.up.getHostName(playerUrl)
-            if item['category'] == 'trailer': name = '[trailer] ' + name
+            if item['category'] == 'trailer':
+                name = '[trailer] ' + name
             retTab.append({'name':name, 'url':strwithmeta(playerUrl, {'Referer':url}), 'need_resolve':1})
              
         if len(retTab):

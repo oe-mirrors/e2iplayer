@@ -34,7 +34,8 @@ class InteriaTv(CBaseHostClass):
         self.searchFiltersData = []
         
     def getPage(self, baseUrl, addParams = {}, post_data = None):
-        if addParams == {}: addParams = dict(self.defaultParams)
+        if addParams == {}:
+            addParams = dict(self.defaultParams)
         return self.cm.getPage(baseUrl, addParams, post_data)
     
     def listMainMenu(self, cItem, nextCategory1, nextCategory2):
@@ -84,7 +85,8 @@ class InteriaTv(CBaseHostClass):
     def listSort(self, cItem, nextCategory):
         printDBG("InteriaTv.listSort")
         sts, data = self.getPage(cItem['url'])
-        if not sts: return
+        if not sts:
+            return
         
         tmp = self.cm.ph.getDataBeetwenNodes(data, ('<div', '>', 'list-has-switch'), ('</div', '>'), False)[1]
         desc = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(tmp, '<strong', '</strong>')[1])
@@ -92,7 +94,8 @@ class InteriaTv(CBaseHostClass):
         for item in tmp:
             title = self.cleanHtmlStr(item)
             url = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''href=['"]([^"^']+?)['"]''')[0])
-            if url == '': url = cItem['url']
+            if url == '':
+                url = cItem['url']
             params = {'good_for_fav':True, 'category':nextCategory, 'title':title, 'url':url, 'desc':desc}
             self.addDir(params)
                 
@@ -108,7 +111,8 @@ class InteriaTv(CBaseHostClass):
         
         if data == None:
             sts, data = self.getPage(cItem['url'])
-            if not sts: return
+            if not sts:
+                return
         
         nextPage = self.cm.ph.getDataBeetwenNodes(data, ('<div', '>', 'pagination'), ('</div', '>'), False)[1]
         nextPage = self.cm.ph.getDataBeetwenNodes(nextPage, ('<li', '>', 'next'), ('</li', '>'), False)[1]
@@ -122,15 +126,19 @@ class InteriaTv(CBaseHostClass):
             # title
             title = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(item, '<strong', '</strong>')[1])
             tmp = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(item, ('<p', '>', 'stat'), ('</p', '>'))[1])
-            if tmp != '': title += ' (%s)' % tmp
+            if tmp != '':
+                title += ' (%s)' % tmp
             # desc
             desc = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(item, ('<div', '>', 'datetime'), ('</div', '>'))[1])
-            if '' != desc: desc += '[/br]'
+            if '' != desc:
+                desc += '[/br]'
             desc += self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(item, ('<p', '>', 'description'), ('</p', '>'))[1])
             
             params = {'good_for_fav':True, 'category':nextCategory, 'title':title, 'url':url, 'icon':icon, 'desc':desc}
-            if 'stat count' in item: self.addDir(params)
-            else: self.addVideo(params)
+            if 'stat count' in item:
+                self.addDir(params)
+            else:
+                self.addVideo(params)
         
         if nextPage:
             params = dict(cItem)
@@ -143,7 +151,8 @@ class InteriaTv(CBaseHostClass):
         
         if data == None:
             sts, data = self.getPage(cItem['url'])
-            if not sts: return
+            if not sts:
+                return
         
         nextPage = self.cm.ph.getDataBeetwenNodes(data, ('<div', '>', 'pagination'), ('</div', '>'), False)[1]
         nextPage = self.cm.ph.getDataBeetwenNodes(nextPage, ('<li', '>', 'next'), ('</li', '>'), False)[1]
@@ -151,7 +160,8 @@ class InteriaTv(CBaseHostClass):
         
         data = self.cm.ph.getDataBeetwenNodes(data, ('<div', '>', 'search-results'), ('<div', '>', 'content'))[1]
         data = re.compile('''<div[^>]+?thumbnail[^>]+?>''').split(data)
-        if len(data): del data[0]
+        if len(data):
+            del data[0]
         if len(data) and nextPage != '':
             data[-1] = re.compile('''<div[^>]+?pagination[^>]+?>''').split(data[-1], 1)[0]
             
@@ -161,15 +171,19 @@ class InteriaTv(CBaseHostClass):
             # title
             title = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(item, ('<h', '>', 'title'), ('</h', '>'), False)[1])
             tmp = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(item, ('<p', '>', 'stat'), ('</p', '>'), False)[1])
-            if tmp != '': title += ' (%s)' % tmp
+            if tmp != '':
+                title += ' (%s)' % tmp
             # desc
             desc = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(item, ('<li', '>', 'date'), ('</li', '>'), False)[1])
-            if '' != desc: desc += '[/br]'
+            if '' != desc:
+                desc += '[/br]'
             desc += self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(item, ('<', '>', 'description'), ('</', '>'), False)[1])
             
             params = {'good_for_fav':True, 'category':nextCategory, 'title':title, 'url':url, 'icon':icon, 'desc':desc}
-            if 'stat count' in item: self.addDir(params)
-            else: self.addVideo(params)
+            if 'stat count' in item:
+                self.addDir(params)
+            else:
+                self.addVideo(params)
         
         if nextPage:
             params = dict(cItem)
@@ -179,7 +193,8 @@ class InteriaTv(CBaseHostClass):
     def listPlaylistItems(self, cItem):
         printDBG("InteriaTv.listPlaylistItems [%s]" % cItem)
         sts, data = self.getPage(cItem['url'])
-        if not sts: return
+        if not sts:
+            return
         
         data = self.cm.ph.getAllItemsBeetwenNodes(data, ('<ul', '>', 'pack links'), ('</ul', '>'))
         for section in data:
@@ -197,7 +212,8 @@ class InteriaTv(CBaseHostClass):
         url = self.getFullUrl('/szukaj?q=') + urllib.parse.quote_plus(searchPattern)
         
         sts, data = self.getPage(url)
-        if not sts: return
+        if not sts:
+            return
         cUrl = data.meta['url']
         
         self.searchFiltersData = []
@@ -210,7 +226,8 @@ class InteriaTv(CBaseHostClass):
                 url = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''href=['"]([^"^']+?)['"]''')[0])
                 if url == '' and 'active' in item:
                     url = cUrl
-                if url == '': continue
+                if url == '':
+                    continue
                 tab.append({'title':title, 'url':url})
             
             if len(tab):

@@ -97,8 +97,10 @@ def _parse_key(line, data):
 
 def _parse_extinf(line, data, state):
     val = line.replace(extinf + ':', '').split(',')
-    if len(val) > 1: title = val[1]
-    else: title = ""
+    if len(val) > 1:
+        title = val[1]
+    else:
+        title = ""
         
     state['segment'] = {'duration': float(val[0]), 'title': remove_quotes(title)}
 

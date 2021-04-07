@@ -273,7 +273,8 @@ class Christusvincit(CBaseHostClass):
         printDBG("Christusvincit.listMain")
 
         sts, data = self.getPage(self.getMainUrl())
-        if not sts: return
+        if not sts:
+            return
         self.setMainUrl(self.cm.meta['url'])
 
         data = re.sub("<!--[\s\S]*?-->", "", data)
@@ -325,7 +326,8 @@ class Christusvincit(CBaseHostClass):
                 if iframe in uniques:
                     continue
                 uniques.add(iframe)
-                if not title: title = sTitle
+                if not title:
+                    title = sTitle
                 subItems.append(MergeDicts(cItem, {'category':nextCategory, 'title':title, 'url':iframe}))
 
         iframes = ph.IFRAME_SRC_URI_RE.findall(section)
@@ -354,7 +356,8 @@ class Christusvincit(CBaseHostClass):
             self.addDir(params)
 
     def getPage(self, baseUrl, addParams={}, post_data=None):
-        if addParams == {}: addParams = dict(self.defaultParams)
+        if addParams == {}:
+            addParams = dict(self.defaultParams)
         return self.cm.getPage(baseUrl, addParams, post_data)
 
     def getFullUrl(self, url, currUrl=None):
@@ -381,7 +384,8 @@ class Christusvincit(CBaseHostClass):
 
                 if iframe and '?' in iframe:
                     sts, tmp = self.getPage(self.getFullUrl(iframe.replace('?', '?iframeembed=true&')))
-                    if not sts: return
+                    if not sts:
+                        return
                     playerConfig = ph.find(tmp, '{"playerConfig"', '};')[1][:-1]
                 else:
                     sections = ph.find(data, '<noscript', 'scapmain-left')[1]
@@ -395,20 +399,23 @@ class Christusvincit(CBaseHostClass):
                 try:
                     playerConfig = json_loads(playerConfig)
                     playlistResult = playerConfig.get('playlistResult', {})
-                    if not playlistResult: playlistResult['0'] = {'items':[playerConfig['entryResult']['meta']]}
+                    if not playlistResult:
+                        playlistResult['0'] = {'items':[playerConfig['entryResult']['meta']]}
                     for key, section in playlistResult.items():
                         for item in section['items']:
                             icon = self.getFullUrl(item['thumbnailUrl'])
                             title = item['name']
                             desc = '%s | %s' % (str(timedelta(seconds=item['duration'])), item['description'])
                             params = {'title':title, 'icon':icon, 'desc':desc, 'f_id':item['id']}
-                            if item.get('hlsStreamUrl'): params['url'] = item['hlsStreamUrl']
+                            if item.get('hlsStreamUrl'):
+                                params['url'] = item['hlsStreamUrl']
                             self.addVideo(params)
                 except Exception:
                     printExc()
 
         rtmpItem = dict(cItem).pop('rtmp_item', None)
-        if rtmpItem: self.addVideo(rtmpItem)
+        if rtmpItem:
+            self.addVideo(rtmpItem)
 
     def listSearchResult(self, cItem, searchPattern, searchType):
 
@@ -421,7 +428,8 @@ class Christusvincit(CBaseHostClass):
         page = cItem.get('page', 1)
 
         sts, data = self.getPage(cItem['url'])
-        if not sts: return
+        if not sts:
+            return
         self.setMainUrl(self.cm.meta['url'])
 
         data = ph.find(data, 'search_result', '</table>', flags=0)[1]
@@ -429,7 +437,8 @@ class Christusvincit(CBaseHostClass):
         if len(data) == 2: 
             nextPage = ph.find(data[-1], ('<a', '>%s<' % (page+1)))[1]
             nextPage = self.getFullUrl(ph.getattr(nextPage, 'href'))
-        else: nextPage = ''
+        else:
+            nextPage = ''
 
         data = ph.findall(data[0], ('<a', '>', ph.check(ph.any, ('articles.php', 'readarticle.php'))), '</span>')
         for item in data:
@@ -455,13 +464,15 @@ class Christusvincit(CBaseHostClass):
             url += cItem['f_id']
             url += '&3:ks=%7B1%3Aresult%3Aks%7D&3:contextDataParams:referrer=http%3A%2F%2Fmediaserwer3.christusvincit-tv.pl&3:contextDataParams:objectType=KalturaEntryContextDataParams&3:contextDataParams:flavorTags=all&3:contextDataParams:streamerType=auto&3:service=baseentry&3:entryId=%7B2%3Aresult%3Aobjects%3A0%3Aid%7D&3:action=getContextData&4:ks=%7B1%3Aresult%3Aks%7D&4:service=metadata_metadata&4:action=list&4:version=-1&4:filter:metadataObjectTypeEqual=1&4:filter:orderBy=%2BcreatedAt&4:filter:objectIdEqual=%7B2%3Aresult%3Aobjects%3A0%3Aid%7D&4:pager:pageSize=1&5:ks=%7B1%3Aresult%3Aks%7D&5:service=cuepoint_cuepoint&5:action=list&5:filter:objectType=KalturaCuePointFilter&5:filter:orderBy=%2BstartTime&5:filter:statusEqual=1&5:filter:entryIdEqual=%7B2%3Aresult%3Aobjects%3A0%3Aid%7D&kalsig=404d9c08e114ce91328cd739e5151b80'
             sts, data = self.getPage(url)
-            if not sts: return []
+            if not sts:
+                return []
 
             try:
                 data = json_loads(data)
                 baseUrl = data[1]['objects'][0]['dataUrl']
                 for item in data[2]['flavorAssets']:
-                    if item['fileExt'] != 'mp4' or not item['isWeb']: continue
+                    if item['fileExt'] != 'mp4' or not item['isWeb']:
+                        continue
                     item['bitrate'] *= 1024
                     name = '%sx%s %s, bitrate: %s' % (item['width'], item['height'], formatBytes(item['size']*1024), item['bitrate'])
                     url = baseUrl.replace('/format/', '/flavorId/%s/format/' % item['id'])

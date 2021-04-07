@@ -16,8 +16,10 @@ import urllib.parse
 import re
 import random
 import base64
-try:    import json
-except Exception: import simplejson as json
+try:
+    import json
+except Exception:
+    import simplejson as json
 from Components.config import config, ConfigYesNo, getConfigListEntry
 ###################################################
 
@@ -59,12 +61,15 @@ class ITV(CBaseHostClass):
         self.forwardedIP = ''
         
     def getPage(self, baseUrl, addParams = {}, post_data = None):
-        if addParams == {}: addParams = dict(self.defaultParams)
+        if addParams == {}:
+            addParams = dict(self.defaultParams)
         origBaseUrl = baseUrl
         baseUrl = self.cm.iriToUri(baseUrl)
         def _getFullUrl(url):
-            if self.cm.isValidUrl(url): return url
-            else: return urllib.parse.urljoin(baseUrl, url)
+            if self.cm.isValidUrl(url):
+                return url
+            else:
+                return urllib.parse.urljoin(baseUrl, url)
         addParams['cloudflare_params'] = {'domain':self.up.getDomain(baseUrl), 'cookie_file':self.COOKIE_FILE, 'User-Agent':self.USER_AGENT, 'full_url_handle':_getFullUrl}
         return self.cm.getPageCFProtection(baseUrl, addParams, post_data)
         
@@ -73,12 +78,14 @@ class ITV(CBaseHostClass):
         return icon.replace('&amp;', '&')
         
     def getRandomGBIP(self):
-        if not config.plugins.iptvplayer.itv_use_x_forwarded_for.value: return ''
+        if not config.plugins.iptvplayer.itv_use_x_forwarded_for.value:
+            return ''
         if self.forwardedIP == '':
             sts, data = self.cm.getPage('http://free-proxy-list.net/uk-proxy.html')
             if sts:
                 data = re.compile('<tr><td>([^>]+?)</td><td>').findall(data)
-                if len(data): self.forwardedIP = random.choice(data)
+                if len(data):
+                    self.forwardedIP = random.choice(data)
         return self.forwardedIP
     
     def listMainMenu(self, cItem, nextCategory):
@@ -89,13 +96,15 @@ class ITV(CBaseHostClass):
         printDBG("ITV.listSubCategory")
         
         sts, data = self.getPage(cItem['url'])
-        if not sts: return
+        if not sts:
+            return
         
         data = self.cm.ph.getDataBeetwenNodes(data, ('<ul', '>', 'nav-secondary'), ('</ul', '>'), False)[1]
         data = self.cm.ph.getAllItemsBeetwenMarkers(data, '<li', '</li>')
         for item in data:
             url   = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''href=['"]([^'^"]+?)['"]''')[0])
-            if '/hub/' not in url: continue
+            if '/hub/' not in url:
+                continue
             title = self.cleanHtmlStr(item.split('<span', 1)[0])
             params = dict(cItem)
             params.update({'category':nextCategory, 'title':title, 'url':url})
@@ -107,7 +116,8 @@ class ITV(CBaseHostClass):
         self.cacheShowsKeys = []
         
         sts, data = self.getPage(cItem['url'])
-        if not sts: return
+        if not sts:
+            return
         
         params = dict(cItem)
         params.update({'category':nextCategory, 'title':_('--All--')})
@@ -123,7 +133,8 @@ class ITV(CBaseHostClass):
             for it in item:
                 it = it.split('</h3>', 1)
                 url  = self.getFullUrl(self.cm.ph.getSearchGroups(it[0], '''href=['"]([^'^"]+?)['"]''')[0])
-                if '/hub/' not in url: continue
+                if '/hub/' not in url:
+                    continue
                 icon = self.getFullIconUrl(self.cm.ph.getSearchGroups(it[0], '''src=['"]([^'^"]+?)['"]''')[0])
                 title = self.cleanHtmlStr(it[0])
                 desc  = self.cleanHtmlStr(it[1])
@@ -135,8 +146,10 @@ class ITV(CBaseHostClass):
     def listShowsByLetter(self, cItem, nextCategory):
         printDBG("ITV.listShowsByLetter")
         letter = cItem.get('f_letter', '')
-        if letter == '': letters = self.cacheShowsKeys
-        else: letters = [letter]
+        if letter == '':
+            letters = self.cacheShowsKeys
+        else:
+            letters = [letter]
         for letter in letters:
             for item in self.cacheShows[letter]:
                 params = dict(cItem)
@@ -148,7 +161,8 @@ class ITV(CBaseHostClass):
         printDBG("ITV.listItems [%s]" % cItem)
         
         sts, data = self.getPage(cItem['url'])
-        if not sts: return
+        if not sts:
+            return
         
         tmp = self.cm.ph.getDataBeetwenNodes(data, ('<div', '>', 'info__content grid__item'), ('</ul', '>'))[1]
         if 'data-video-id' in data and tmp != '':
@@ -158,7 +172,8 @@ class ITV(CBaseHostClass):
             tmp = self.cm.ph.getAllItemsBeetwenMarkers(tmp, '<li', '</li>')
             for t in tmp:
                 t = self.cleanHtmlStr(t)
-                if t != '': descTab.append(t)
+                if t != '':
+                    descTab.append(t)
             desc = ' | '.join(descTab) + '[/br]' + desc
             
             params = dict(cItem)
@@ -176,18 +191,25 @@ class ITV(CBaseHostClass):
         for section in data:
             sTtile  = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(section, '<h2', '</h2>')[1])
             section = self.cm.ph.getAllItemsBeetwenNodes(section, ('<li', '>', 'grid-list__item'), ('</li', '>'))
-            if 'Series' in sTtile or 'pisodes' in sTtile: title  = '%s - %s' % (cItem['title'], sTtile)
-            else: title = sTtile
-            if title != '': self.addMarker({'title':title})
+            if 'Series' in sTtile or 'pisodes' in sTtile:
+                title  = '%s - %s' % (cItem['title'], sTtile)
+            else:
+                title = sTtile
+            if title != '':
+                self.addMarker({'title':title})
             
             for item in section:
                 item = item.split('</h3>', 1)
                 url  = self.getFullUrl(self.cm.ph.getSearchGroups(item[0], '''href=['"]([^'^"]+?)['"]''')[0])
-                if '/hub/' not in url: continue
+                if '/hub/' not in url:
+                    continue
                 icon = self.getFullIconUrl(self.cm.ph.getSearchGroups(item[0], '''src=['"]([^'^"]+?)['"]''')[0])
-                if 'Series' in sTtile: title = '%s - %s %s' % (cItem['title'], sTtile, self.cleanHtmlStr(item[0]))
-                elif 'pisodes' in sTtile: title = '%s - %s' % (cItem['title'], self.cleanHtmlStr(item[0]))
-                else: title = self.cleanHtmlStr(item[0])
+                if 'Series' in sTtile:
+                    title = '%s - %s %s' % (cItem['title'], sTtile, self.cleanHtmlStr(item[0]))
+                elif 'pisodes' in sTtile:
+                    title = '%s - %s' % (cItem['title'], self.cleanHtmlStr(item[0]))
+                else:
+                    title = self.cleanHtmlStr(item[0])
                 desc  = self.cleanHtmlStr(item[-1])
                 
                 params = dict(cItem)
@@ -207,7 +229,8 @@ class ITV(CBaseHostClass):
         if cItem.get('is_live', False):
             if self.cacheLive == {}:
                 sts, data = self.getPage('http://textuploader.com/dlr3q')
-                if not sts: return []
+                if not sts:
+                    return []
                 data = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(data, ('<code', '>'), ('</code', '>'), False)[1])
                 try:
                     data = base64.b64decode(data)
@@ -216,16 +239,19 @@ class ITV(CBaseHostClass):
                 except Exception:
                     printExc()
             videoUrl = self.cacheLive.get(cItem['url'].split('/')[-1], '')
-            if forwardedIP != '': videoUrl = strwithmeta(videoUrl, {'X-Forwarded-For':forwardedIP})
+            if forwardedIP != '':
+                videoUrl = strwithmeta(videoUrl, {'X-Forwarded-For':forwardedIP})
             retTab = getDirectM3U8Playlist(videoUrl, checkContent=True)
         else:
             params = dict(self.defaultParams)
             params['header'] = dict(params['header'])
             params['header']['User-Agent'] = self.MOBILE_USER_AGENT
-            if forwardedIP != '': params['header']['X-Forwarded-For'] = forwardedIP
+            if forwardedIP != '':
+                params['header']['X-Forwarded-For'] = forwardedIP
             
             sts, data = self.getPage(cItem['url'], params)
-            if not sts: return []
+            if not sts:
+                return []
             
             url   = self.cm.ph.getSearchGroups(data, '''data\-video\-id=['"]([^'^"]+?)['"]''')[0]
             hmac  = self.cm.ph.getSearchGroups(data, '''data\-video\-hmac=['"]([^'^"]+?)['"]''')[0]
@@ -235,7 +261,8 @@ class ITV(CBaseHostClass):
             post_data = {"user":{"itvUserId":"","entitlements":[],"token":""},"device":{"manufacturer":"Apple","model":"iPhone","os":{"name":"iPad OS","version":"9.3","type":"ios"}},"client":{"version":"4.1","id":"browser"},"variantAvailability":{"featureset":{"min":["hls", "aes"],"max":["hls", "aes"]},"platformTag":"mobile"}}
             try:
                 sts, data = self.getPage(url, params, json.dumps(post_data))
-                if not sts: return []
+                if not sts:
+                    return []
                 data = byteify(json.loads(data), '', True)['Playlist']['Video']
                 videoUrl = data['Base'] + data['MediaFiles'][-1]['Href']
                 retTab = getDirectM3U8Playlist(videoUrl, checkContent=True)
@@ -243,8 +270,10 @@ class ITV(CBaseHostClass):
                 printExc()
         
         def __getLinkQuality( itemLink ):
-            try: return int(itemLink['bitrate'])
-            except Exception: return 0
+            try:
+                return int(itemLink['bitrate'])
+            except Exception:
+                return 0
         
         retTab = CSelOneLink(retTab, __getLinkQuality, 99999999).getSortedLinks()
         return retTab

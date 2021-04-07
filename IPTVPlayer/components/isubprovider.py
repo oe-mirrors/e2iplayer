@@ -23,10 +23,10 @@ import urllib.error
 from os import listdir as os_listdir, path as os_path
 
 class CSubItem:
-    def __init__(self, path = "", \
-                       name = "", \
-                       lang = "", \
-                       imdbid = "", \
+    def __init__(self, path = "",
+                       name = "",
+                       lang = "",
+                       imdbid = "",
                        subId = "" ):
         self.path = path
         self.name = name
@@ -154,7 +154,8 @@ class CSubProviderBase(ISubProvider):
         subProviderList = []
         for cItem in cList:
             subProviderItem = self.converItem(cItem)
-            if None != subProviderItem: subProviderList.append(subProviderItem)
+            if None != subProviderItem:
+                subProviderList.append(subProviderItem)
         return subProviderList
     # end convertList
     
@@ -226,8 +227,10 @@ class CBaseSubProviderClass:
 
     @staticmethod 
     def getStr(v, default=''):
-        if type(v) == type(''): return v.encode('utf-8')
-        elif type(v) == type(''):  return v
+        if type(v) == type(''):
+            return v.encode('utf-8')
+        elif type(v) == type(''):
+            return v
         return default
             
     def getCurrList(self):
@@ -244,20 +247,26 @@ class CBaseSubProviderClass:
 
     def addDir(self, params, atTheEnd=True):
         params['type'] = 'category'
-        if atTheEnd: self.currList.append(params)
-        else: self.currList.insert(0, params)
+        if atTheEnd:
+            self.currList.append(params)
+        else:
+            self.currList.insert(0, params)
         return
         
     def addMore(self, params, atTheEnd=True):
         params['type'] = 'more'
-        if atTheEnd: self.currList.append(params)
-        else: self.currList.insert(0, params)
+        if atTheEnd:
+            self.currList.append(params)
+        else:
+            self.currList.insert(0, params)
         return
   
     def addSubtitle(self, params, atTheEnd=True):
         params['type'] = 'subtitle'
-        if atTheEnd: self.currList.append(params)
-        else: self.currList.insert(0, params)
+        if atTheEnd:
+            self.currList.append(params)
+        else:
+            self.currList.insert(0, params)
         return
         
     def getMainUrl(self):
@@ -268,8 +277,10 @@ class CBaseSubProviderClass:
             url = url[1:]
         
         if currUrl == None or not self.cm.isValidUrl(currUrl):
-            try: mainUrl = self.getMainUrl()
-            except Exception: mainUrl = 'http://fake'
+            try:
+                mainUrl = self.getMainUrl()
+            except Exception:
+                mainUrl = 'http://fake'
         else:
             mainUrl = self.cm.getBaseUrl(currUrl)
         
@@ -327,7 +338,8 @@ class CBaseSubProviderClass:
         list = []
         # get all seasons
         sts, data = self.cm.getPage("http://www.imdb.com/title/tt%s/episodes" % imdbid)
-        if not sts: return False, []
+        if not sts:
+            return False, []
         data = self.cm.ph.getDataBeetwenMarkers(data, '<select id="bySeason"', '</select>', False)[1]
         seasons = re.compile('value="([0-9]+?)"').findall(data)
         for season in seasons:
@@ -348,11 +360,13 @@ class CBaseSubProviderClass:
         
         # get episodes for season
         sts, data = self.cm.getPage("http://www.imdb.com/title/tt%s/episodes/_ajax?season=%s" % (imdbid, season))
-        if not sts: return False, []
+        if not sts:
+            return False, []
         
         data = self.cm.ph.getDataBeetwenMarkers(data, '<div class="list detail eplist">', '<hr>', False)[1]
         data = data.split('<div class="clear">')
-        if len(data): del data[-1]
+        if len(data):
+            del data[-1]
         for item in data:
             episodeTitle = self.cm.ph.getSearchGroups(item, 'title="([^"]+?)"')[0]
             eimdbid = self.cm.ph.getSearchGroups(item, 'data-const="tt([0-9]+?)"')[0]
@@ -372,31 +386,38 @@ class CBaseSubProviderClass:
         printDBG('CBaseSubProviderClass.imdbGetMoviesByTitle title[%s]' % (title))
         
         sts, data = self.cm.getPage("http://www.imdb.com/find?ref_=nv_sr_fn&q=%s&s=tt" % urllib.parse.quote_plus(title))
-        if not sts: return False, []
+        if not sts:
+            return False, []
         list = []
         data = self.cm.ph.getDataBeetwenMarkers(data, '<table class="findList">', '</table>', False)[1]
         data = data.split('</tr>')
-        if len(data): del data[-1]
+        if len(data):
+            del data[-1]
         for item in data:
             item = item.split('<a ')
             item = '<a ' + item[2]
-            if '(Video Game)' in item: continue
+            if '(Video Game)' in item:
+                continue
             imdbid = self.cm.ph.getSearchGroups(item, '/tt([0-9]+?)/')[0]
             baseTtitle = ' '.join( self.cm.ph.getAllItemsBeetwenMarkers(item, '<a ', '</a>') )
             #title = title.split('<br/>')[0]
             title = self.cleanHtmlStr(item)
             year = self.cm.ph.getSearchGroups(item, '\((20[0-9]{2})\)')[0]
-            if '' == year: year = self.cm.ph.getSearchGroups(item, '\((20[0-9]{2})\)')[0]
-            if title.endswith('-'): title = title[:-1].strip()
+            if '' == year:
+                year = self.cm.ph.getSearchGroups(item, '\((20[0-9]{2})\)')[0]
+            if title.endswith('-'):
+                title = title[:-1].strip()
             list.append({'title':title, 'base_title':self.cleanHtmlStr(baseTtitle), 'year':year, 'imdbid':imdbid})
         return True, list
         
     def imdbGetOrginalByTitle(self, imdbid):
         printDBG('CBaseSubProviderClass.imdbGetOrginalByTitle imdbid[%s]' % (imdbid))
         
-        if not imdbid.startswith('tt'): imdbid = 'tt' + imdbid
+        if not imdbid.startswith('tt'):
+            imdbid = 'tt' + imdbid
         sts, data = self.cm.getPage('http://www.imdb.com/title/' + imdbid)
-        if not sts: return False, {}
+        if not sts:
+            return False, {}
         title = self.cm.ph.getSearchGroups(data, '''<meta property='og:title' content="([^\(^"]+?)["\(]''')[0].strip()
         return True, {'title':title}
         
@@ -408,13 +429,16 @@ class CBaseSubProviderClass:
         try:
             # lazy import
             import base64
-            try:    import json
-            except Exception: import simplejson as json
+            try:
+                import json
+            except Exception:
+                import simplejson as json
             from Plugins.Extensions.IPTVPlayer.tools.iptvtools import byteify
             
             url = "https://api.themoviedb.org/3/find/tt{0}?api_key={1}&external_source=imdb_id".format(imdbid, base64.b64decode('NjMxMWY4MmQ1MjAxNDI2NWQ3NjVkMzk4MDJhYWZhYTc='))
             sts, data = self.cm.getPage(url)
-            if not sts: return itemType
+            if not sts:
+                return itemType
             data = byteify(json.loads(data))
             if len(data["tv_results"]):
                 itemType = 'series'
@@ -496,7 +520,8 @@ class CBaseSubProviderClass:
         ret = self.iptv_execute(cmd)
         if not ret['sts'] or 0 != ret['code']:
             errorCode = ret['code']
-            if errorCode == 0: errorCode = 9
+            if errorCode == 0:
+                errorCode = 9
         elif '..' in ret['data']:
             errorCode = 9
         
@@ -506,7 +531,8 @@ class CBaseSubProviderClass:
             ret = self.iptv_execute(cmd)
             if not ret['sts'] or 0 != ret['code']:
                 errorCode = ret['code']
-                if errorCode == 0: errorCode = 9
+                if errorCode == 0:
+                    errorCode = 9
         
         if errorCode != 0:
             message = _('Unzip error code[%s].') % errorCode
@@ -576,7 +602,8 @@ class CBaseSubProviderClass:
             encoding = MapUcharEncoding(ret['data'])
             if 0 != ret['code'] or 'unknown' in encoding:
                 encoding = ''
-            else: encoding = encoding.strip()
+            else:
+                encoding = encoding.strip()
         
         if lang == '':
             lang = GetDefaultLang() 

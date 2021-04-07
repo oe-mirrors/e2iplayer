@@ -147,28 +147,38 @@ class TvpVod(CBaseHostClass, CaptchaHelper):
                 return inner
             prev_read = http.client.HTTPResponse.read
             http.client.HTTPResponse.read = patch_http_response_read(http.client.HTTPResponse.read)
-        except Exception: printExc()
+        except Exception:
+            printExc()
         sts, data = self.cm.getPage(url, addParams, post_data)
-        try: http.client.HTTPResponse.read = prev_read
-        except Exception: printExc()
+        try:
+            http.client.HTTPResponse.read = prev_read
+        except Exception:
+            printExc()
         return sts, data
         
     def _getStr(self, v, default=''):
         return self.cleanHtmlStr(self._encodeStr(v, default))
         
     def _encodeStr(self, v, default=''):
-        if type(v) == type(''): return v.encode('utf-8')
-        elif type(v) == type(''): return v
-        else: return default
+        if type(v) == type(''):
+            return v.encode('utf-8')
+        elif type(v) == type(''):
+            return v
+        else:
+            return default
         
     def _getNum(self, v, default=0):
-        try: return int(v)
+        try:
+            return int(v)
         except Exception:
-            try: return float(v)
-            except Exception: return default
+            try:
+                return float(v)
+            except Exception:
+                return default
             
     def _getFullUrl(self, url, baseUrl=None):
-        if None == baseUrl: baseUrl = TvpVod.MAIN_VOD_URL
+        if None == baseUrl:
+            baseUrl = TvpVod.MAIN_VOD_URL
         if 0 < len(url) and not url.startswith('http'):
             if url.startswith('//'):
                 url = 'http:' + url
@@ -185,7 +195,8 @@ class TvpVod(CBaseHostClass, CaptchaHelper):
         for item in self.FormatBitrateMap:
             if int(bitrate) == int(item[0]):
                 ret = item[1]
-        if '' == ret: ret = 'Bitrate[%s]' % bitrate
+        if '' == ret:
+            ret = 'Bitrate[%s]' % bitrate
         return ret
         
     def getBitrateFromFormat(self, format):
@@ -240,7 +251,7 @@ class TvpVod(CBaseHostClass, CaptchaHelper):
             
     def _getAjaxUrl(self, parent_id, location):
         if location == 'directory_series':
-            order='';
+            order=''
             type='website'
             template ='listing_series.html'
             direct='&direct=false'
@@ -272,7 +283,8 @@ class TvpVod(CBaseHostClass, CaptchaHelper):
     def listTVP3Streams(self, cItem):
         printDBG("TvpVod.listTVP3Streams")
         sts, data = self._getPage(cItem['url'], self.defaultParams)
-        if not sts: return
+        if not sts:
+            return
         data = self.cm.ph.getAllItemsBeetwenMarkers(data, '<div class="button', '</div>', withMarkers=True, caseSensitive=False)
         for item in data:
             id    = self.cm.ph.getSearchGroups(item, 'data-video[_\-]id="([0-9]+?)"')[0]
@@ -287,7 +299,8 @@ class TvpVod(CBaseHostClass, CaptchaHelper):
     def listTVPSportStreams(self, cItem, nextCategory):
         printDBG("TvpVod.listTVPSportStreams")
         sts, data = self._getPage(cItem['url'], self.defaultParams)
-        if not sts: return
+        if not sts:
+            return
         cUrl = self.cm.getBaseUrl(data.meta['url'])
         
         data = self.cm.ph.getDataBeetwenNodes(data, ('<div', '>', 'epg-broadcasts'), ('</section', '>'), False)[1]
@@ -300,9 +313,11 @@ class TvpVod(CBaseHostClass, CaptchaHelper):
                 time = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(tmp[i], ('<span', '>', 'time'), ('</span', '>'), False)[1])
                 desc = []
                 t = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(tmp[i], ('<div', '>', 'category'), ('</div', '>'), False)[1])
-                if t != '': desc.append(t)
+                if t != '':
+                    desc.append(t)
                 t = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(tmp[i], ('<div', '>', 'meta'), ('</div', '>'), False)[1])
-                if t != '': desc.append(t)
+                if t != '':
+                    desc.append(t)
                 desc = '[/br]'.join(desc)
                 t = self.cm.ph.getDataBeetwenNodes(tmp[i], ('<div', '>', 'title'), ('</div', '>'), False)[1]
                 url = self._getFullUrl(self.cm.ph.getSearchGroups(t, '''<a[^>]+?href=['"]([^'^"]+?)['"]''')[0], cUrl)
@@ -310,8 +325,10 @@ class TvpVod(CBaseHostClass, CaptchaHelper):
                 
                 params = dict(cItem)
                 params.update({'good_for_fav':False, 'title':title, 'url':url, 'desc':desc})
-                if url == '': params['type'] = 'article'
-                else: params['type'] = 'video'
+                if url == '':
+                    params['type'] = 'article'
+                else:
+                    params['type'] = 'video'
                 subItems.append(params)
             if len(subItems):
                 params = dict(cItem)
@@ -334,13 +351,15 @@ class TvpVod(CBaseHostClass, CaptchaHelper):
     def listEPGItems(self, cItem):
         printDBG("TvpVod.listEPGItems")
         sts, data = self._getPage(cItem['url'], self.defaultParams)
-        if not sts: return
+        if not sts:
+            return
         try:
             #date.fromtimestamp(item['release_date']['sec']).strftime('%H:%M')
             data = json_loads(data)
             data['items'].sort(key=lambda item: item['release_date_hour'])
             for item in data['items']:
-                if not item.get('is_live', False): continue 
+                if not item.get('is_live', False):
+                    continue 
                 title = str(item['title'])
                 desc  = str(item['lead'])
                 asset_id  = str(item['asset_id'])
@@ -355,7 +374,8 @@ class TvpVod(CBaseHostClass, CaptchaHelper):
     def listTVPSportCategories(self, cItem, nextCategory):
         printDBG("TvpVod.listTVPSportCategories")
         sts, data = self._getPage(cItem['url'], self.defaultParams)
-        if not sts: return
+        if not sts:
+            return
         data = self.cm.ph.getDataBeetwenMarkers(data, '__directoryData ', '</script>', False)[1]
         data = self.cm.ph.getDataBeetwenMarkers(data, '[', ']', True)[1]
         printDBG(">>> %s" % data)
@@ -365,7 +385,8 @@ class TvpVod(CBaseHostClass, CaptchaHelper):
                 if item['url'].startswith('?'):
                     url = cItem['url'] + item['url']
                 sts, tmp = self._getPage(url, self.defaultParams)
-                if not sts: continue
+                if not sts:
+                    continue
                 tmp = self.cm.ph.getDataBeetwenMarkers(tmp, '__blockList[0]', '"items":', False)[1]
                 url = self.cm.ph.getSearchGroups(tmp, '''['"]urlShowMore['"]\s*:\s*['"]([^'^"]+?)['"]''')[0]
                 url = self._getFullUrl(url.replace('\\', ''), 'http://sport.tvp.pl')
@@ -385,7 +406,8 @@ class TvpVod(CBaseHostClass, CaptchaHelper):
         url += '?page=%d' %(page)
         
         sts, data = self._getPage(url, self.defaultParams)
-        if not sts: return
+        if not sts:
+            return
         data = self.cm.ph.getDataBeetwenMarkers(data, 'window.__directoryData =', '</script>', False)[1]
         try:
             data = json_loads(data.replace(';', ''))
@@ -415,14 +437,17 @@ class TvpVod(CBaseHostClass, CaptchaHelper):
     def listCatalog(self, cItem, nextCategory):
         printDBG("TvpVod.listCatalog")
         sts, data = self._getPage(cItem['url'], self.defaultParams)
-        if not sts: return []
+        if not sts:
+            return []
 
         data = self.cm.ph.getDataBeetwenMarkers(data, '<div class="subMenu">', '</ul>')[1]
         data = self.cm.ph.getAllItemsBeetwenMarkers(data, '<li', '</li>')
         for item in data:
             url = self._getFullUrl(self.cm.ph.getSearchGroups(item, '''<a[^>]+?href\s*=\s*['"]([^'^"]+?)['"]''')[0])
-            if not self.cm.isValidUrl(url): continue
-            if 'cyfrowa.tvp.pl' in url: continue
+            if not self.cm.isValidUrl(url):
+                continue
+            if 'cyfrowa.tvp.pl' in url:
+                continue
             params = dict(cItem)
             params.update({'good_for_fav': False, 'category':nextCategory, 'title':self.cleanHtmlStr(item).title(), 'url':url, 'desc':''})
             self.addDir(params)
@@ -436,10 +461,12 @@ class TvpVod(CBaseHostClass, CaptchaHelper):
             labelMap = {'age':'Wiek: %s'}
             for key in ['transmision', 'antena', 'age']:
                 val = self.getJItemStr(item, key)
-                if val != '': tmp.append(labelMap.get(key, '%s') % val)
+                if val != '':
+                    tmp.append(labelMap.get(key, '%s') % val)
                 
             paymentTag = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(rawItem, ('<div', '>', 'showPaymentTag'), ('</div', '>'))[1])
-            if paymentTag != '': tmp.append(paymentTag)
+            if paymentTag != '':
+                tmp.append(paymentTag)
             desc = ' | '.join(tmp)
             desc += '[/br]' + self.getJItemStr(item, 'description')
             
@@ -464,7 +491,8 @@ class TvpVod(CBaseHostClass, CaptchaHelper):
         printDBG("TvpVod.exploreVODItem")
         
         sts, data = self._getPage(cItem['url'], self.defaultParams)
-        if not sts: return []
+        if not sts:
+            return []
         
         if '/szukaj?query=' in cItem['url']:
             isSearch = True
@@ -480,7 +508,8 @@ class TvpVod(CBaseHostClass, CaptchaHelper):
                 cItem = dict(cItem)
                 cItem['url'] = url
                 sts, data = self._getPage(cItem['url'], self.defaultParams)
-                if not sts: return []
+                if not sts:
+                    return []
         
         data = re.sub("<!--[\s\S]*?-->", "", data)
         
@@ -490,11 +519,13 @@ class TvpVod(CBaseHostClass, CaptchaHelper):
         if lastPage != '' and page < int(lastPage):
             nextPageUrl = self.cm.ph.getDataBeetwenMarkers(data, '<li class="next"', '</li>')[1]
             nextPageUrl = self._getFullUrl(self.cm.ph.getSearchGroups(nextPageUrl, '''<a[^>]+?href\s*=\s*['"]([^'^"]+?)['"]''')[0])
-        else: nextPageUrl = ''
+        else:
+            nextPageUrl = ''
         
         sectionsData = self.cm.ph.getDataBeetwenMarkers(data, '<section', '<footer>')[1]
         sectionsData = sectionsData.split('<section')
-        if len(sectionsData): del sectionsData[0]
+        if len(sectionsData):
+            del sectionsData[0]
         
         subFiltersData = self.cm.ph.getAllItemsBeetwenNodes(data[data.rfind('</header>'):], ('<ul', '>', '"dropdown-menu'), ('</ul', '>'))
         #subFiltersData.reverse()
@@ -504,7 +535,8 @@ class TvpVod(CBaseHostClass, CaptchaHelper):
             subFiltersTab = []
             for item in subFilterData:
                 url = self._getFullUrl(self.cm.ph.getSearchGroups(item, '''<a[^>]+?href\s*=\s*['"]([^'^"]+?)['"]''')[0])
-                if not self.cm.isValidUrl(url): continue
+                if not self.cm.isValidUrl(url):
+                    continue
                 params = dict(cItem)
                 params.update({'good_for_fav': False, 'category':nextCategory, 'title':self.cleanHtmlStr(item), 'url':url, 'desc':''})
                 subFiltersTab.append(params)
@@ -540,7 +572,8 @@ class TvpVod(CBaseHostClass, CaptchaHelper):
             else:
                 data = data.split('<div class="subCategoryMobile">')[0]
                 data = data.split('<div class="col-md') #re.split('<div class="col-md[^>]+?>', data)
-                if len(data): del data[0]
+                if len(data):
+                    del data[0]
             for item in data:
                 jsItem = ph.clean_html(self.cm.ph.getSearchGroups(item, '''data-hover\s*=\s*['"]([^'^"]+?)['"]''')[0])
                 self.mapHoeverItem(cItem, jsItem, item, nextCategory)
@@ -548,20 +581,24 @@ class TvpVod(CBaseHostClass, CaptchaHelper):
             sectionItems = []
             for section in sectionsData:
                 sectionHeader = self.cm.ph.getDataBeetwenMarkers(section, '<h1', '</h1>')[1]
-                if sectionHeader == '': sectionHeader = self.cm.ph.getDataBeetwenMarkers(section, '<h2>', '</h2>')[1]
+                if sectionHeader == '':
+                    sectionHeader = self.cm.ph.getDataBeetwenMarkers(section, '<h2>', '</h2>')[1]
                 sectionUrl    = self._getFullUrl(self.cm.ph.getSearchGroups(sectionHeader, '''<a[^>]+?href\s*=\s*['"]([^'^"]+?)['"]''')[0])
                 sectionIcon   = self._getFullUrl(self.cm.ph.getSearchGroups(section, '''<img[^>]+?data-lazy\s*=\s*['"]([^'^"]+?)['"]''')[0])
                 sectionTitle  = self.cleanHtmlStr(sectionHeader)
                 
                 if self.cm.isValidUrl(sectionUrl):
-                    if '>Oglądaj<' in section: continue
-                    if sectionTitle.startswith('Zobacz także:'): continue
+                    if '>Oglądaj<' in section:
+                        continue
+                    if sectionTitle.startswith('Zobacz także:'):
+                        continue
                 
                 itemsTab = []
                 tmp = self.cm.ph.getAllItemsBeetwenNodes(section, ('<div', '>', 'item'), ('</a', '>'))
                 for item in tmp:
                     icon = self._getFullUrl(self.cm.ph.getSearchGroups(item, '''<img[^>]+?data-lazy\s*=\s*['"]([^'^"]+?)['"]''')[0])
-                    if icon == '': icon = self._getFullUrl(self.cm.ph.getSearchGroups(item, '''<img[^>]+?src\s*=\s*['"]([^'^"]+?\.jpg)['"]''')[0])
+                    if icon == '':
+                        icon = self._getFullUrl(self.cm.ph.getSearchGroups(item, '''<img[^>]+?src\s*=\s*['"]([^'^"]+?\.jpg)['"]''')[0])
                     url  = self._getFullUrl(self.cm.ph.getSearchGroups(item, '''<a[^>]+?href\s*=\s*['"]([^'^"]+?)['"]''')[0])
                     
                     title = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(item, ('<h', '>', 'title'), ('</h', '>'))[1])
@@ -569,7 +606,8 @@ class TvpVod(CBaseHostClass, CaptchaHelper):
                     if '/' not in desc: 
                         title += ' ' + desc
                         desc = ''
-                    if title == '': title = self.cleanHtmlStr(item)
+                    if title == '':
+                        title = self.cleanHtmlStr(item)
                     title = title.strip()
                     if self.cm.isValidUrl(url) and title != '':
                         if title.startswith('odc.'): 
@@ -636,7 +674,8 @@ class TvpVod(CBaseHostClass, CaptchaHelper):
         
         printDBG("TvpVod.listItems2 start parse")
         data = data.split(itemMarker)
-        if len(data): del data[0]
+        if len(data):
+            del data[0]
         for item in data:
             url = self.cm.ph.getSearchGroups(item, 'href="([^"]+?)"')[0]
             title = self.cleanHtmlStr('<' + item)
@@ -646,20 +685,27 @@ class TvpVod(CBaseHostClass, CaptchaHelper):
             
     def getObjectID(self, url):
         sts, data = self.cm.getPage(url, self.defaultParams)
-        if not sts: return ''
+        if not sts:
+            return ''
         
         sess_player_url = self.cm.ph.getSearchGroups(data, '''(https?://[^'^"]+?/sess/player/video/[^'^"]+?)['"]''')[0]
         if sess_player_url != '':
             sts, tmp = self.cm.getPage(sess_player_url, self.defaultParams)
-            if sts: data = tmp
+            if sts:
+                data = tmp
         
         asset_id = self.cm.ph.getSearchGroups(data, '''id=['"]tvplayer\-[0-9]+\-([0-9]+)''')[0]
         
-        if asset_id == '': asset_id = self.cm.ph.getSearchGroups(data, 'object_id=([0-9]+?)[^0-9]')[0]
-        if asset_id == '': asset_id = self.cm.ph.getSearchGroups(data, 'class="playerContainer"[^>]+?data-id="([0-9]+?)"')[0]
-        if '' == asset_id: asset_id = self.cm.ph.getSearchGroups(data, 'data\-video-\id="([0-9]+?)"')[0]
-        if '' == asset_id: asset_id = self.cm.ph.getSearchGroups(data, "object_id:'([0-9]+?)'")[0]
-        if '' == asset_id: asset_id = self.cm.ph.getSearchGroups(data, 'data\-object\-id="([0-9]+?)"')[0]
+        if asset_id == '':
+            asset_id = self.cm.ph.getSearchGroups(data, 'object_id=([0-9]+?)[^0-9]')[0]
+        if asset_id == '':
+            asset_id = self.cm.ph.getSearchGroups(data, 'class="playerContainer"[^>]+?data-id="([0-9]+?)"')[0]
+        if '' == asset_id:
+            asset_id = self.cm.ph.getSearchGroups(data, 'data\-video-\id="([0-9]+?)"')[0]
+        if '' == asset_id:
+            asset_id = self.cm.ph.getSearchGroups(data, "object_id:'([0-9]+?)'")[0]
+        if '' == asset_id:
+            asset_id = self.cm.ph.getSearchGroups(data, 'data\-object\-id="([0-9]+?)"')[0]
         
         return asset_id
                 
@@ -669,7 +715,8 @@ class TvpVod(CBaseHostClass, CaptchaHelper):
         
         if 'tvpstream.tvp.pl' in url:
             sts, data = self.cm.getPage(url)
-            if not sts: return []
+            if not sts:
+                return []
             
             hlsUrl = self.cm.ph.getSearchGroups(data, '''['"](http[^'^"]*?\.m3u8[^'^"]*?)['"]''')[0]
             if '' != hlsUrl:
@@ -679,7 +726,8 @@ class TvpVod(CBaseHostClass, CaptchaHelper):
                     def __getLinkQuality( itemLink ):
                         if 'width' in itemLink and 'height' in itemLink:
                             bitrate = self.getBitrateFromFormat('%sx%s' % (itemLink['width'], itemLink['height']))
-                            if bitrate != 0: return bitrate
+                            if bitrate != 0:
+                                return bitrate
                         return int(itemLink['bitrate'])
                     oneLink = CSelOneLink(videoTab, __getLinkQuality, max_bitrate)
                     if config.plugins.iptvplayer.tvpVodUseDF.value:
@@ -704,7 +752,8 @@ class TvpVod(CBaseHostClass, CaptchaHelper):
         printDBG("getVideoLink asset_id [%s]" % asset_id)
         videoTab = []
         
-        if '' == asset_id: return  videoTab
+        if '' == asset_id:
+            return  videoTab
         
         def _sortVideoLinks(videoTab):
             if 1 < len(videoTab):
@@ -712,9 +761,12 @@ class TvpVod(CBaseHostClass, CaptchaHelper):
                 def __getLinkQuality( itemLink ):
                     if 'width' in itemLink and 'height' in itemLink:
                         bitrate = self.getBitrateFromFormat('%sx%s' % (itemLink['width'], itemLink['height']))
-                        if bitrate != 0: return bitrate
-                    try: return int(itemLink['bitrate'])
-                    except Exception: return 0
+                        if bitrate != 0:
+                            return bitrate
+                    try:
+                        return int(itemLink['bitrate'])
+                    except Exception:
+                        return 0
                 oneLink = CSelOneLink(videoTab, __getLinkQuality, max_bitrate)
                 videoTab = oneLink.getSortedLinks()
             return videoTab
@@ -786,8 +838,10 @@ class TvpVod(CBaseHostClass, CaptchaHelper):
                     for item in hlsTab:
                         res = '%sx%s' % (item['width'], item['height'])
                         for key in list(formatMap.keys()):
-                            if key == mp4Tab[0]['id']: continue
-                            if formatMap[key][0] != res: continue
+                            if key == mp4Tab[0]['id']:
+                                continue
+                            if formatMap[key][0] != res:
+                                continue
                             url = mp4Tab[0]['url']
                             url = url[:url.rfind('/')] + ('/video-%s.mp4' % key)
                             mp4Tab.append({'name':'%s \t mp4' % formatMap[key][0], 'url':url, 'bitrate':formatMap[key][1], 'id':key})
@@ -811,7 +865,8 @@ class TvpVod(CBaseHostClass, CaptchaHelper):
     def getLinksForFavourite(self, fav_data):
         if None == self.loggedIn:
             premium = config.plugins.iptvplayer.tvpvod_premium.value
-            if premium: self.loggedIn, msg = self.tryTologin()
+            if premium:
+                self.loggedIn, msg = self.tryTologin()
         
         try:
             cItem = json_loads(fav_data)
@@ -820,8 +875,10 @@ class TvpVod(CBaseHostClass, CaptchaHelper):
             cItem = {'url':fav_data}
             try:
                 ok = int(cItem['url'])
-                if ok: return self.getVideoLink(cItem['url'])
-            except Exception: pass
+                if ok:
+                    return self.getVideoLink(cItem['url'])
+            except Exception:
+                pass
         return self.getLinksForVideo(cItem)
         
     def getFavouriteData(self, cItem):
@@ -844,7 +901,8 @@ class TvpVod(CBaseHostClass, CaptchaHelper):
     def listDigiMenu(self, cItem, nextCategory):
         printDBG("listDigiMenu")
         sts, data = self.cm.getPage(cItem['url'], self.defaultParams)
-        if not sts: return
+        if not sts:
+            return
         cUrl = self.cm.meta['url']
 
         tmp = ph.find(data, ('<nav', '>'), '</nav>', flags=0)[1]
@@ -870,7 +928,8 @@ class TvpVod(CBaseHostClass, CaptchaHelper):
     def exploreDigiSite(self, cItem):
         printDBG("exploreDigiSite")
         sts, data = self.cm.getPage(cItem['url'], self.defaultParams)
-        if not sts: return
+        if not sts:
+            return
         cUrl = self.cm.meta['url']
         page = cItem.get('page', 1)
 
@@ -888,7 +947,8 @@ class TvpVod(CBaseHostClass, CaptchaHelper):
         sections = ph.findall(data, ('<section', '>'), '</section>', flags=0)
         for section in sections:
             tmp = ph.find(section, ('<', '>', 'grid-links'), '</ul>', flags=0)[1]
-            if not tmp: tmp = ph.find(section, ('<div', '>', 'custom-grid row'), '</ul>', flags=0)[1]
+            if not tmp:
+                tmp = ph.find(section, ('<div', '>', 'custom-grid row'), '</ul>', flags=0)[1]
             if tmp:
                 tmp2 = section.split('<ul', 1)[0]
                 url = self.getFullUrl(ph.search(tmp2, ph.A_HREF_URI_RE)[1],  cUrl)
@@ -908,12 +968,15 @@ class TvpVod(CBaseHostClass, CaptchaHelper):
 
                 descData = ph.findall(item[0], ('<p', '>'), '</p>', flags=0)
                 descData.extend(ph.findall(item[0], ('<span', '>'), '</span>', flags=0))
-                if not descData and not title: continue
-                if not title: title = self.cleanHtmlStr(descData[0])
+                if not descData and not title:
+                    continue
+                if not title:
+                    title = self.cleanHtmlStr(descData[0])
                 desc = []
                 for idx in range(1, len(descData)):
                     t = ph.clean_html(descData[idx])
-                    if t: desc.append(t)
+                    if t:
+                        desc.append(t)
                 desc = ' | '.join(desc) + '[/br]' + ph.clean_html(item[-1])
                 params = MergeDicts(cItem, {'good_for_fav':True, 'allow_sort':True, 'url':url, 'desc':desc, 'icon':icon})
                 if '/video/' in url:
@@ -939,7 +1002,8 @@ class TvpVod(CBaseHostClass, CaptchaHelper):
             premium = config.plugins.iptvplayer.tvpvod_premium.value
             if premium:
                 self.loggedIn, msg = self.tryTologin()
-                if self.loggedIn != True: self.sessionEx.open(MessageBox, msg, type = MessageBox.TYPE_INFO, timeout = 10 )
+                if self.loggedIn != True:
+                    self.sessionEx.open(MessageBox, msg, type = MessageBox.TYPE_INFO, timeout = 10 )
 
         CBaseHostClass.handleService(self, index, refresh, searchPattern, searchType)
         

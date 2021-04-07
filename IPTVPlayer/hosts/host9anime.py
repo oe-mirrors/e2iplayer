@@ -59,7 +59,8 @@ class AnimeTo(CBaseHostClass, CaptchaHelper):
         return CBaseHostClass.getFullIconUrl(self, url)
         
     def getPage(self, baseUrl, addParams = {}, post_data = None):
-        if addParams == {}: addParams = dict(self.defaultParams)
+        if addParams == {}:
+            addParams = dict(self.defaultParams)
         addParams['cloudflare_params'] = {'cookie_file':self.COOKIE_FILE, 'User-Agent':self.USER_AGENT}
         return self.cm.getPageCFProtection(baseUrl, addParams, post_data)
     
@@ -67,7 +68,8 @@ class AnimeTo(CBaseHostClass, CaptchaHelper):
         printDBG("AnimeTo.listLetters")
         
         sts, data = self.getPage(cItem['url'])
-        if not sts: return
+        if not sts:
+            return
         self.setMainUrl(data.meta['url'])
 
         data = self.cm.ph.getDataBeetwenNodes(data, ('<ul', '>', 'letters'), ('</ul', '>'))[1]
@@ -85,7 +87,8 @@ class AnimeTo(CBaseHostClass, CaptchaHelper):
         self.cacheFiltersKeys = []
         
         sts, data = self.getPage(self.getFullUrl('ongoing'))
-        if not sts: return
+        if not sts:
+            return
         self.setMainUrl(data.meta['url'])
         
         def addFilter(data, marker, baseKey, addAll=True, titleBase=''):
@@ -103,7 +106,8 @@ class AnimeTo(CBaseHostClass, CaptchaHelper):
                 self.cacheFilters[key].append({'title':title.title(), key:value})
                 
             if len(self.cacheFilters[key]):
-                if addAll: self.cacheFilters[key].insert(0, {'title':_('All')})
+                if addAll:
+                    self.cacheFilters[key].insert(0, {'title':_('All')})
                 self.cacheFiltersKeys.append(key)
         
         data = self.cm.ph.getAllItemsBeetwenNodes(data, ('<div', '>', 'filter dropdown'), ('</ul', '>'))
@@ -119,9 +123,11 @@ class AnimeTo(CBaseHostClass, CaptchaHelper):
         cItem = dict(cItem)
         
         f_idx = cItem.get('f_idx', 0)
-        if f_idx == 0: self.fillCacheFilters(cItem)
+        if f_idx == 0:
+            self.fillCacheFilters(cItem)
         
-        if f_idx >= len(self.cacheFiltersKeys): return
+        if f_idx >= len(self.cacheFiltersKeys):
+            return
         
         filter = self.cacheFiltersKeys[f_idx]
         f_idx += 1
@@ -136,41 +142,54 @@ class AnimeTo(CBaseHostClass, CaptchaHelper):
         page = cItem.get('page', 1)
         
         query = {}
-        if page > 1: query['page'] = page
+        if page > 1:
+            query['page'] = page
         
         for key in self.cacheFiltersKeys:
             baseKey = key[2:] # "f_"
-            if key in cItem: query[baseKey] = cItem[key]
+            if key in cItem:
+                query[baseKey] = cItem[key]
         
         query = urllib.parse.urlencode(query)
-        if '?' in url: url += '&' + query
-        else: url += '?' + query
+        if '?' in url:
+            url += '&' + query
+        else:
+            url += '?' + query
         
         sts, data = self.getPage(url)
-        if not sts: return
+        if not sts:
+            return
         self.setMainUrl(data.meta['url'])
         
-        if  '>Next<' in data: nextPage = True
-        else: nextPage = False
+        if  '>Next<' in data:
+            nextPage = True
+        else:
+            nextPage = False
         
         data = self.cm.ph.getDataBeetwenNodes(data, ('<div', '>', 'item'), ('<script', '>'))[1]
         data = self.cm.ph.rgetAllItemsBeetwenNodes(data, ('</div', '>'), ('<div', '>', 'item'))
-        if nextPage and len(data): data[-1] = re.compile('<div[^>]+?paging\-wrapper[^>]+?>').split(data[-1], 1)[0]
+        if nextPage and len(data):
+            data[-1] = re.compile('<div[^>]+?paging\-wrapper[^>]+?>').split(data[-1], 1)[0]
         for item in data:
             url = self.getFullUrl( self.cm.ph.getSearchGroups(item, 'href="([^"]+?)"')[0] )
             tip = self.getFullUrl( self.cm.ph.getSearchGroups(item, 'data-tip="([^"]+?)"')[0] )
-            if not self.cm.isValidUrl(url): continue
+            if not self.cm.isValidUrl(url):
+                continue
             icon = self.getFullIconUrl( self.cm.ph.getSearchGroups(item, 'src="([^"]+?)"')[0] )
             title = self.cleanHtmlStr( self.cm.ph.getDataBeetwenNodes(item, ('<a', '>', 'name'), ('</a', '>'))[1])
-            if title == '': title = self.cleanHtmlStr( item )
-            if title == '': title = self.cleanHtmlStr(self.cm.ph.getSearchGroups(item, '''alt=['"]([^'^"]+?)['"]''')[0])
-            if title == '': title = self.cleanHtmlStr(self.cm.ph.getSearchGroups(item, '''title=['"]([^'^"]+?)['"]''')[0])
+            if title == '':
+                title = self.cleanHtmlStr( item )
+            if title == '':
+                title = self.cleanHtmlStr(self.cm.ph.getSearchGroups(item, '''alt=['"]([^'^"]+?)['"]''')[0])
+            if title == '':
+                title = self.cleanHtmlStr(self.cm.ph.getSearchGroups(item, '''title=['"]([^'^"]+?)['"]''')[0])
 
             desc = []
             tmp = self.cm.ph.getAllItemsBeetwenMarkers(item, '<div', '</div>')
             for t in tmp:
                 t = self.cleanHtmlStr(t)
-                if t != '': desc.append(t)
+                if t != '':
+                    desc.append(t)
             desc = ' | '.join(desc) 
             desc += '[/br]' + self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(item, '<p', '</p>')[1])
             
@@ -188,7 +207,8 @@ class AnimeTo(CBaseHostClass, CaptchaHelper):
         printDBG("AnimeTo.exploreItem")
         
         sts, data = self.getPage(cItem['url'])
-        if not sts: return
+        if not sts:
+            return
         self.setMainUrl(data.meta['url'])
         
         desc = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(data, ('<div', '>', 'desc'), ('</div', '>'))[1])
@@ -214,7 +234,8 @@ class AnimeTo(CBaseHostClass, CaptchaHelper):
         url = self._getUrl(jsCode, url, urllib.parse.urlencode(getParams), timestamp)
         
         sts, data = self.getPage(url, params)
-        if not sts: return []
+        if not sts:
+            return []
         
         try:
             data = json_loads(data)['html']
@@ -235,7 +256,8 @@ class AnimeTo(CBaseHostClass, CaptchaHelper):
         self.cacheLinks  = {}
         data = re.compile('''(<div[^>]+?server[^>]+?>)''').split(data)
         for idx in range(1, len(data), 2):  
-            if 'episodes' not in data[idx+1]: continue
+            if 'episodes' not in data[idx+1]:
+                continue
             serverKey  = self.cm.ph.getSearchGroups(data[idx], '''\sdata\-name=['"]([^'^"]+?)['"]''')[0]
             serverName = serverNamesMap.get(serverKey, serverKey)
             
@@ -260,7 +282,8 @@ class AnimeTo(CBaseHostClass, CaptchaHelper):
                     title = self.cleanHtmlStr(item)
                     id    = self.cm.ph.getSearchGroups(item, '''data-id=['"]([^'^"]+?)['"]''')[0]
                     url   = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''href=['"]([^'^"]+?)['"]''')[0])
-                    if id == '' or url == '': continue 
+                    if id == '' or url == '':
+                        continue 
                     if title not in self.cacheEpisodes[rangeName]:
                         self.cacheEpisodes[rangeName].append(title)
                         self.cacheLinks[title] = []
@@ -332,7 +355,8 @@ class AnimeTo(CBaseHostClass, CaptchaHelper):
             try:
                 data = json_loads(data)
                 retUrl = data['url']
-                if data['data'] != '': retUrl += '&' + data['data']
+                if data['data'] != '':
+                    retUrl += '&' + data['data']
             except Exception:
                 printExc()
         return retUrl
@@ -355,7 +379,8 @@ class AnimeTo(CBaseHostClass, CaptchaHelper):
         if jsCode == '':
             for item in allJsScripts:
                 sts, tmp = self.getPage(item, params)
-                if not sts: continue
+                if not sts:
+                    continue
                 if '(window' in tmp:
                     jsCode = tmp
                     self.scriptCache[jsCode] = jsCode
@@ -387,12 +412,15 @@ class AnimeTo(CBaseHostClass, CaptchaHelper):
         #if not sts: return []
         
         sts, data = self.getPage(videoUrl[:videoUrl.rfind('/')], params)
-        if sts: timestamp = self.cm.ph.getSearchGroups(data, '''data-ts=['"]([^"^']+?)['"]''')[0]
-        else: timestamp = ''
+        if sts:
+            timestamp = self.cm.ph.getSearchGroups(data, '''data-ts=['"]([^"^']+?)['"]''')[0]
+        else:
+            timestamp = ''
         
         if timestamp == '': 
             sts, data = self.getPage(videoUrl, params)
-            if not sts: return []
+            if not sts:
+                return []
             timestamp = self.cm.ph.getSearchGroups(data, '''data-ts=['"]([^"^']+?)['"]''')[0]
         
         cUrl = data.meta['url']
@@ -403,13 +431,15 @@ class AnimeTo(CBaseHostClass, CaptchaHelper):
             url = self.getFullUrl('/ajax/film/update-views')
             url = self._getUrl(jsCode, url, urllib.parse.urlencode(getParams), timestamp)
             sts, data = self.getPage(url, params)
-            if not sts: return []
+            if not sts:
+                return []
         
         getParams = {'id':videoUrl.meta.get('id', ''), 'random':'0'}
         url = self.getFullUrl('/ajax/episode/info')
         url = self._getUrl(jsCode, url, urllib.parse.urlencode(getParams), timestamp)
         sts, data = self.getPage(url, params)
-        if not sts: return []
+        if not sts:
+            return []
         
         domain = self.up.getDomain(baseUrl)
         printDBG(">> domain: " + domain)
@@ -423,7 +453,8 @@ class AnimeTo(CBaseHostClass, CaptchaHelper):
                 videoUrl = data['target']
                 if domain in videoUrl:
                     videoUrl = self._getUrl(jsCode, videoUrl, "", timestamp)
-                if videoUrl.startswith('//'): videoUrl = 'http:' + videoUrl
+                if videoUrl.startswith('//'):
+                    videoUrl = 'http:' + videoUrl
             elif data['type'] == 'direct':
                 printDBG("---")
                 printDBG(data)
@@ -431,11 +462,14 @@ class AnimeTo(CBaseHostClass, CaptchaHelper):
                 if domain in data['grabber']:
                     url = self._getUrl(jsCode, data['grabber'], urllib.parse.urlencode(dict(data['params'])), timestamp) + '&mobile=0'
                 sts, data = self.getPage(url, params)
-                if not sts: return []
+                if not sts:
+                    return []
                 data = json_loads(data)
                 for item in data['data']:
-                    if item['type'] != 'mp4': continue
-                    if not self.cm.isValidUrl(item['file']): continue
+                    if item['type'] != 'mp4':
+                        continue
+                    if not self.cm.isValidUrl(item['file']):
+                        continue
                     urlTab.append({'name':item['label'], 'url':item['file']})
                 urlTab = urlTab[::-1]
             else:
@@ -453,7 +487,8 @@ class AnimeTo(CBaseHostClass, CaptchaHelper):
             format = subTrack[-3:]
             for idx in range(len(urlTab)):
                 urlTab[idx]['url'] = strwithmeta(urlTab[idx]['url'])
-                if 'external_sub_tracks' not in urlTab[idx]['url'].meta: urlTab[idx]['url'].meta['external_sub_tracks'] = []
+                if 'external_sub_tracks' not in urlTab[idx]['url'].meta:
+                    urlTab[idx]['url'].meta['external_sub_tracks'] = []
                 urlTab[idx]['url'].meta['external_sub_tracks'].append({'title':'', 'url':subTrack, 'lang':'pt', 'format':format})
         
         return urlTab
@@ -467,7 +502,8 @@ class AnimeTo(CBaseHostClass, CaptchaHelper):
         params['header']['Referer'] = str(cItem['url'])
         
         sts, data = self.getPage(cItem['url'], params)
-        if not sts: return []
+        if not sts:
+            return []
         
         id = self.cm.ph.getDataBeetwenNodes(data, ('<form', '>', 'film-report'), ('<', '>'))[1]
         id = self.cm.ph.getSearchGroups(id, '''data-id=['"]([^'^"]+?)['"]''')[0]
@@ -480,53 +516,69 @@ class AnimeTo(CBaseHostClass, CaptchaHelper):
         #getParams = self._updateParams(getParams)
         url = self.getFullUrl('/ajax/film/tooltip/' + id + '?' + urllib.parse.urlencode(getParams))
         sts, data = self.getPage(url, params)
-        if not sts: return []
+        if not sts:
+            return []
         
         printDBG(data)
         
         desc = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(data, '<p class="desc">', '</p>')[1])
-        if desc == '': desc = self.cleanHtmlStr(data.split('<div class="meta">')[-1]) 
-        if desc == '': desc = self.cleanHtmlStr( self.cm.ph.getSearchGroups(data, '<meta property="og:description"[^>]+?content="([^"]+?)"')[0] )
+        if desc == '':
+            desc = self.cleanHtmlStr(data.split('<div class="meta">')[-1]) 
+        if desc == '':
+            desc = self.cleanHtmlStr( self.cm.ph.getSearchGroups(data, '<meta property="og:description"[^>]+?content="([^"]+?)"')[0] )
         
         title = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(data, '<div class="title">', '<span>')[1])
-        if title == '': title = self.cleanHtmlStr( self.cm.ph.getSearchGroups(data, '<meta property="og:title"[^>]+?content="([^"]+?)"')[0] )
+        if title == '':
+            title = self.cleanHtmlStr( self.cm.ph.getSearchGroups(data, '<meta property="og:title"[^>]+?content="([^"]+?)"')[0] )
         
         icon  = self.getFullUrl( self.cm.ph.getSearchGroups(data, '<meta property="og:image"[^>]+?content="([^"]+?)"')[0] )
         
-        if title == '': title = cItem.get('title', '')
-        if desc == '':  desc = cItem.get('desc', '')
-        if icon == '':  icon = cItem.get('icon', '')
+        if title == '':
+            title = cItem.get('title', '')
+        if desc == '':
+            desc = cItem.get('desc', '')
+        if icon == '':
+            icon = cItem.get('icon', '')
         
         otherInfo = {}
         tmp = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(data, '<span class="duration"', '</span>')[1])
-        if tmp != '': otherInfo['duration'] = tmp
+        if tmp != '':
+            otherInfo['duration'] = tmp
         
         tmp = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(data, '<span class="imdb"', '</span>')[1])
-        if tmp != '': otherInfo['imdb_rating'] = tmp
+        if tmp != '':
+            otherInfo['imdb_rating'] = tmp
         
         tmp = self.cleanHtmlStr(self.cm.ph.getDataBeetwenReMarkers(data, re.compile('<[^>]+class="quality"'), re.compile('</span>'))[1])
-        if tmp != '': otherInfo['quality'] = tmp
+        if tmp != '':
+            otherInfo['quality'] = tmp
         
         tmp = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(data, 'Country:', '</div>', False)[1])
-        if tmp != '': otherInfo['country'] = tmp
+        if tmp != '':
+            otherInfo['country'] = tmp
         
         tmp = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(data, 'Stars:', '</div>', False)[1])
-        if tmp != '': otherInfo['stars'] = tmp
+        if tmp != '':
+            otherInfo['stars'] = tmp
         
         tmp = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(data, 'Other names:', '</div>', False)[1])
-        if tmp != '': otherInfo['alternate_title'] = tmp
+        if tmp != '':
+            otherInfo['alternate_title'] = tmp
         
         tmp = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(data, 'Status:', '</div>', False)[1])
-        if tmp != '': otherInfo['status'] = tmp
+        if tmp != '':
+            otherInfo['status'] = tmp
         
         tmp = self.cm.ph.getDataBeetwenMarkers(data, 'Genre:', '</div>', False)[1]
         tmp = self.cm.ph.getAllItemsBeetwenMarkers(tmp, '<a', '</a>')
         tmp = ', '.join([self.cleanHtmlStr(item) for item in tmp])
-        if tmp != '': otherInfo['genre'] = tmp
+        if tmp != '':
+            otherInfo['genre'] = tmp
         
         tmp = self.cm.ph.getDataBeetwenMarkers(data, '<div class="title">', '</div>', False)[1]
         tmp = self.cm.ph.getSearchGroups(tmp, '''<span[^>]*?>\s*([0-9]+?)\s*<''')[0]
-        if tmp != '': otherInfo['year'] = tmp
+        if tmp != '':
+            otherInfo['year'] = tmp
         
         return [{'title':self.cleanHtmlStr( title ), 'text': self.cleanHtmlStr( desc ), 'images':[{'title':'', 'url':self.getFullUrl(icon)}], 'other_info':otherInfo}]
         

@@ -14,8 +14,10 @@ from Plugins.Extensions.IPTVPlayer.components.ihost import CBaseHostClass
 ###################################################
 
 import re
-try:    import json
-except Exception: import simplejson as json
+try:
+    import json
+except Exception:
+    import simplejson as json
 ############################################
 
 ###################################################
@@ -50,7 +52,8 @@ class LivemassNetApi(CBaseHostClass):
         cats = cItem.get('iptv_cats', '')
         if cats == '':
             sts, data = self.cm.getPage(self.getMainUrl(), self.defaultParams)
-            if not sts: return []
+            if not sts:
+                return []
             
             if not sts:
                 url = 'http://s3.amazonaws.com/livemass/index.html'
@@ -60,15 +63,18 @@ class LivemassNetApi(CBaseHostClass):
                 url = self.cm.ph.getSearchGroups(data, '''<i?frame[^>]+?src=['"]([^"^']+?)['"]''', 1, True)[0].replace('&amp;', '&')
                 printDBG(url)
             if self.cm.isValidUrl(url):
-                if 'index.html/' in url: url = url.split('index.html/', 1)[0] + 'index.html'
+                if 'index.html/' in url:
+                    url = url.split('index.html/', 1)[0] + 'index.html'
                 sts, data = self.cm.getPage(url, self.defaultParams)
-                if not sts: return []
+                if not sts:
+                    return []
                 cUrl = data.meta['url']
                 
                 if 'refresh' in data:
                     url = self.getFullUrl(self.cm.ph.getSearchGroups(data, '''url=([^'^"^>^\s]+?)['">\s]''', 1, True)[0], cUrl)
                     sts, data = self.cm.getPage(url, self.defaultParams)
-                    if not sts: return []
+                    if not sts:
+                        return []
             
             cUrl = data.meta['url']
             data = re.compile('''<a[^>]+?href=['"]([^'^"]+?)['"][^>]*?>\s*?(EN|FR)\s*?<''', re.IGNORECASE).findall(data)
@@ -80,7 +86,8 @@ class LivemassNetApi(CBaseHostClass):
                 mainItemsTab.append(params)
         else:
             sts, data = self.cm.getPage(cItem['url'], self.defaultParams)
-            if not sts: return []
+            if not sts:
+                return []
             cUrl = data.meta['url']
             
             printDBG("_______________________")
@@ -92,15 +99,18 @@ class LivemassNetApi(CBaseHostClass):
             for item in data:
                 if 'href' not in item:
                     groupName = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(item, '<p', '</p>')[1])
-                    if groupName != '': groupsNames.append({'title':groupName})
+                    if groupName != '':
+                        groupsNames.append({'title':groupName})
                     printDBG('>>>> groupName[%s]' % groupName)
                 else:
                     links = []
                     item = self.cm.ph.getAllItemsBeetwenNodes(item, ('<a', '>'), ('</a', '>'))
-                    if 0 == len(item): continue
+                    if 0 == len(item):
+                        continue
                     for it in item:
                         title = self.cleanHtmlStr(it)
-                        if title.upper() in ['FR', 'EN']: break
+                        if title.upper() in ['FR', 'EN']:
+                            break
                         url = self.getFullUrl(self.cm.ph.getSearchGroups(it, '''\shref=['"]([^'^"]+?)['"]''', 1, True)[0], cUrl)
                         if ('/live.' in url or '/live-fr.' in url) and liveItem == None:
                             liveItem = {'title':self.cleanHtmlStr(it), 'url':url}
@@ -132,17 +142,20 @@ class LivemassNetApi(CBaseHostClass):
     def getVideoLink(self, cItem):
         printDBG("LivemassNetApi.getVideoLink")
         urlsTab = self.linksCache.get(cItem['url'], [])
-        if len(urlsTab): return urlsTab
+        if len(urlsTab):
+            return urlsTab
         
         sts, data = self.cm.getPage(cItem['url'], self.defaultParams)
-        if not sts: return urlsTab
+        if not sts:
+            return urlsTab
         
         data = self.cm.ph.getSearchGroups(data, '''['"]?sources['"]?\s*?:\s*?(\[[^\]]+?\])''', 1, True)[0]
         printDBG(data)
         data = data.split('},')
         for item in data:
             url = self.cm.ph.getSearchGroups(item, '''['"]?file['"]?\s*?:\s*['"](https?://[^'^"]+?)['"]''', 1, True)[0]
-            if url == '': continue
+            if url == '':
+                continue
             name = self.cleanHtmlStr(self.cm.ph.getSearchGroups(item, '''['"]?label['"]?\s*?:\s*['"]([^'^"]+?)['"]''', 1, True)[0])
             if '.m3u8' in url:
                 urlsTab.extend(getDirectM3U8Playlist(url, checkContent=True))
@@ -153,9 +166,12 @@ class LivemassNetApi(CBaseHostClass):
             urlsTab[idx]['need_resolve'] = 0
             urlsTab[idx]['url'] = strwithmeta(urlsTab[idx]['url'], {'Referer':cItem['url']})
             
-        try: urlsTab.sort(key=lambda item: int(item.get('bitrate', '0')), reverse=True)
-        except Exception: printExc()
+        try:
+            urlsTab.sort(key=lambda item: int(item.get('bitrate', '0')), reverse=True)
+        except Exception:
+            printExc()
         
-        if len(urlsTab): self.linksCache[cItem['url']] = urlsTab
+        if len(urlsTab):
+            self.linksCache[cItem['url']] = urlsTab
         
         return urlsTab

@@ -39,9 +39,11 @@ class AndrijaIAndjelka(CBaseHostClass):
         self.timestam = 0
     
     def getPage(self, baseUrl, addParams = {}, post_data = None):
-        if addParams == {}: addParams = dict(self.defaultParams)
+        if addParams == {}:
+            addParams = dict(self.defaultParams)
         if 'cookie_items' in addParams:
-            if self.timestam == 0: rm(self.COOKIE_FILE)
+            if self.timestam == 0:
+                rm(self.COOKIE_FILE)
             timestamp = int(time.time())
             if timestamp > self.timestam:
                 timestamp += 180
@@ -58,7 +60,8 @@ class AndrijaIAndjelka(CBaseHostClass):
         printDBG("AndrijaIAndjelka.listMainMenu")
 
         sts, data = self.getPage(self.getMainUrl())
-        if not sts: return
+        if not sts:
+            return
         self.setMainUrl(self.cm.meta['url'])
 
         categories = []
@@ -89,7 +92,8 @@ class AndrijaIAndjelka(CBaseHostClass):
         page = cItem.get('page', 1)
         
         sts, data = self.getPage(cItem['url'])
-        if not sts: return
+        if not sts:
+            return
         self.setMainUrl(self.cm.meta['url'])
         
         nextPage = self.cm.ph.getDataBeetwenNodes(data, ('<nav', '>', 'pagination'), ('</nav', '>'), False)[1]
@@ -114,7 +118,8 @@ class AndrijaIAndjelka(CBaseHostClass):
         printDBG("AndrijaIAndjelka.listSeries")
         
         sts, data = self.getPage(cItem['url'])
-        if not sts: return
+        if not sts:
+            return
         self.setMainUrl(self.cm.meta['url'])
         
         data = self.cm.ph.getDataBeetwenNodes(data, ('<article', '>', 'post-'), ('</article', '>'), False)[1]
@@ -140,7 +145,8 @@ class AndrijaIAndjelka(CBaseHostClass):
         urlTab = []
 
         sts, data = self.getPage(cItem['url'])
-        if not sts: return urlTab
+        if not sts:
+            return urlTab
 
         data = self.cm.ph.getAllItemsBeetwenMarkers(data, '<iframe', '</iframe>', caseSensitive=False)
         for item in data:

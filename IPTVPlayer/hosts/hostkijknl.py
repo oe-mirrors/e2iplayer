@@ -16,8 +16,10 @@ import urllib.request
 import urllib.parse
 import urllib.error
 import datetime
-try:    import json
-except Exception: import simplejson as json
+try:
+    import json
+except Exception:
+    import simplejson as json
 ###################################################
 
 
@@ -43,7 +45,8 @@ class KijkNL(CBaseHostClass):
         self.policyKeyCache = ''
         
     def getPage(self, baseUrl, addParams = {}, post_data = None):
-        if addParams == {}: addParams = dict(self.defaultParams)
+        if addParams == {}:
+            addParams = dict(self.defaultParams)
         return self.cm.getPage(baseUrl, addParams, post_data)
         
     def listMainMenu(self, cItem):
@@ -83,7 +86,8 @@ class KijkNL(CBaseHostClass):
         if dt == None: 
             dt = datetime.date.today()
         else:
-            try: dt = datetime.datetime.strptime(dt, '%Y-%m-%d').date()
+            try:
+                dt = datetime.datetime.strptime(dt, '%Y-%m-%d').date()
             except Exception:
                 printExc()
                 return
@@ -117,7 +121,8 @@ class KijkNL(CBaseHostClass):
         
         for item in catList:
             url = item.get('url', '')
-            if url == '': url = item['title'].lower()
+            if url == '':
+                url = item['title'].lower()
             url = self.tmpUrl + 'v1/default/sections/programs-abc-' + url
             params = {'good_for_fav':True, 'category':nextCategory, 'title':item['title'], 'url':url}
             self.addDir(params)
@@ -131,13 +136,15 @@ class KijkNL(CBaseHostClass):
         urlparams['header']['Referer'] = 'http://consent.kijk.nl/?url=' + urllib.parse.quote('http://www.kijk.nl/')
         
         sts, data = self.getPage(cItem['url'], urlparams)
-        if not sts: return
+        if not sts:
+            return
         
         data = self.cm.ph.getDataBeetwenMarkers(data, '>Thema', '</ul>')[1]
         data = self.cm.ph.getAllItemsBeetwenMarkers(data, '<li', '</li>', withMarkers=True)
         for item in data:
             url = self.cm.ph.getSearchGroups(item, '''href=['"]([^'^"]+?)['"]''')[0].split('/')[-1]
-            if url == '': continue
+            if url == '':
+                continue
             url = self.tmpUrl + 'v2/templates/page/theme/' + url
             title = self.cleanHtmlStr(item)
             params = {'good_for_fav':True, 'category':nextCategory, 'title':title, 'url':url}
@@ -157,15 +164,18 @@ class KijkNL(CBaseHostClass):
         type = cItem.get('f_type', '')
         try:
             sts, data = self.getPage(cItem['url'])
-            if not sts: return
+            if not sts:
+                return
             data = byteify(json.loads(data), '', True)
             for item in data['components']:
                 if item['type'] == 'video_list':
                     id = item['id']
                     item = item['data']
                     url = item['url'] 
-                    if not self.cm.isValidUrl(url): continue
-                    if type == 'series' and item['more']['parameters']['type'] != 'episodes' and not _doHasItems(url): continue
+                    if not self.cm.isValidUrl(url):
+                        continue
+                    if type == 'series' and item['more']['parameters']['type'] != 'episodes' and not _doHasItems(url):
+                        continue
                     title = self.cleanHtmlStr(item['title'])
                     params = {'good_for_fav':True, 'category':nextCategory, 'title':title, 'url':url, 'f_id':id}
                     self.addDir(params)
@@ -177,37 +187,49 @@ class KijkNL(CBaseHostClass):
         page = cItem.get('page', 0)
         try:
             url = cItem['url']
-            if '?' in url: url += '&'
-            else: url += '?'
+            if '?' in url:
+                url += '&'
+            else:
+                url += '?'
             
             url += 'limit=%s&offset=%s' % (ITEMS, ITEMS * page)
             
             sts, data = self.getPage(url)
-            if not sts: return
+            if not sts:
+                return
             
             data = byteify(json.loads(data))
             
-            if isinstance(data, list): items = data
-            else: items = data['items']
+            if isinstance(data, list):
+                items = data
+            else:
+                items = data['items']
             
             for item in items:
                 if item['type'] in ['clip', 'episode', 'series']: #and item['available']
                     icon  = item['images'].get('nonretina_image', '')
-                    if icon == '': icon  = item['images'].get('retina_image', '')
+                    if icon == '':
+                        icon  = item['images'].get('retina_image', '')
                     title = self.cleanHtmlStr(item['title'])
                     id = item['id']
                     url = item['_links']['self']
                     descTab = []
-                    if 'duration' in item: descTab.append(item['duration'])
+                    if 'duration' in item:
+                        descTab.append(item['duration'])
                     sTtile = self.cleanHtmlStr(item.get('seriesTitle', ''))
                     if sTtile != '':
-                        if item['type'] == 'episode': title = '%s - %s' % (sTtile, title)
-                        else: descTab.append(sTtile)
+                        if item['type'] == 'episode':
+                            title = '%s - %s' % (sTtile, title)
+                        else:
+                            descTab.append(sTtile)
                        
                     descTab.append(item.get('dateStringNoTime', item.get('dateString', '')))
-                    if 'channel' in item: descTab.append(item['channel'])
-                    if 'genres'  in item: descTab.append(', '.join(item['genres']))
-                    if 'nicam'   in item: descTab.append(', '.join(item['nicam']))
+                    if 'channel' in item:
+                        descTab.append(item['channel'])
+                    if 'genres'  in item:
+                        descTab.append(', '.join(item['genres']))
+                    if 'nicam'   in item:
+                        descTab.append(', '.join(item['nicam']))
                     
                     desc = self.cleanHtmlStr(' | '.join(descTab)) + '[/br]' + self.cleanHtmlStr(item.get('synopsis', ''))
                     params = {'good_for_fav':True, 'title':title, 'url':url, 'icon':icon, 'desc':desc, 'f_type':item['type'], 'f_id':id}
@@ -244,15 +266,18 @@ class KijkNL(CBaseHostClass):
             url = self.tmpUrl + 'v1/default/entitlement/' + cItem['f_id']
             
             sts, data = self.getPage(url)
-            if not sts: return
+            if not sts:
+                return
             
             data = byteify(json.loads(data), '', True)
-            if data['playerInfo']['hasDRM']: SetIPTVPlayerLastHostError(_('DRM protection detected.'))
+            if data['playerInfo']['hasDRM']:
+                SetIPTVPlayerLastHostError(_('DRM protection detected.'))
             embedVideoUrl = self.getFullUrl(data['playerInfo'].get('embed_video_url', ''))
             url = data['playerInfo']['embed_api_url']
             if self.cm.isValidUrl(url):
                 sts, data = self.getPage(url)
-                if not sts: return
+                if not sts:
+                    return
                 data = byteify(json.loads(data), '', True)
                 videoUrl = data['playlist']
                 retTab = getDirectM3U8Playlist(videoUrl, checkContent=True)
@@ -274,30 +299,38 @@ class KijkNL(CBaseHostClass):
                     data = re.compile('''<script[^>]+?src=['"]([^'^"]+?)['"]''').findall(data)
                     for item in data:
                         url = self.getFullUrl(item)
-                        if not self.cm.isValidUrl(url): continue
+                        if not self.cm.isValidUrl(url):
+                            continue
                         sts, script = self.getPage(url)
-                        if sts: self.policyKeyCache = self.cm.ph.getSearchGroups(script, '''policyKey\s*:\s*['"]([^'^"]+?)['"]''')[0]
-                        if self.policyKeyCache != '': break
+                        if sts:
+                            self.policyKeyCache = self.cm.ph.getSearchGroups(script, '''policyKey\s*:\s*['"]([^'^"]+?)['"]''')[0]
+                        if self.policyKeyCache != '':
+                            break
                 
                 urlParams = dict(self.defaultParams)
                 urlParams['header'] = dict(urlParams['header'])
                 urlParams['header']['Accept'] = "application/json;pk=" + self.policyKeyCache
                 url = 'https://edge.api.brightcove.com/playback/v1/accounts/%s/videos/%s' % (account, video)
                 sts, data = self.getPage(url, urlParams)
-                if not sts: return
+                if not sts:
+                    return
                 data = byteify(json.loads(data), '', True)
                 for item in data['sources']:
                     videoUrl = item.get('src', '')
-                    if not self.cm.isValidUrl(videoUrl): continue
+                    if not self.cm.isValidUrl(videoUrl):
+                        continue
                     retTab = getDirectM3U8Playlist(videoUrl, checkContent=True)
-                    if len(retTab): break
+                    if len(retTab):
+                        break
             except Exception:
                 SetIPTVPlayerLastHostError(_('Player data parsing error.'))
                 printExc()
         
         def __getLinkQuality( itemLink ):
-            try: return int(itemLink['bitrate'])
-            except Exception: return 0
+            try:
+                return int(itemLink['bitrate'])
+            except Exception:
+                return 0
         
         retTab = CSelOneLink(retTab, __getLinkQuality, 99999999).getSortedLinks()
         

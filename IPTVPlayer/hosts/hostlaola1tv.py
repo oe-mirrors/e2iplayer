@@ -18,8 +18,10 @@ import re
 import urllib.request
 import urllib.parse
 import urllib.error
-try:    import json
-except Exception: import simplejson as json
+try:
+    import json
+except Exception:
+    import simplejson as json
 from Components.config import config, ConfigSelection, ConfigYesNo, ConfigText, getConfigListEntry
 ###################################################
 
@@ -107,7 +109,8 @@ class Laola1TV(CBaseHostClass):
     def listMainMenu(self, cItem):
         printDBG('Laola1TV.listMainMenu')
         sts, data = self.getPage( self.getMainUrl() + 'home/' )
-        if not sts: return
+        if not sts:
+            return
         
         # live
         liveUrl = self.cm.ph.getSearchGroups(data, '<a href="([^"]+?)" class="live">')[0]
@@ -118,12 +121,14 @@ class Laola1TV(CBaseHostClass):
         
         data = self.cm.ph.getDataBeetwenMarkers(data, '<ul class="level1">', '</div>', False)[1]
         data = data.split('<li class="active">')
-        if len(data): del data[0]
+        if len(data):
+            del data[0]
         
         def _getLastItems(data, baseItem):
             retTab = []
             data = data.split('</a>')
-            if len(data): del data[-1]
+            if len(data):
+                del data[-1]
             for item in data:
                 params = dict(baseItem)
                 url   = self.cm.ph.getSearchGroups(item, 'href="([^"]+?)"')[0]
@@ -157,7 +162,8 @@ class Laola1TV(CBaseHostClass):
                     elif 1 < len(dataL3):
                         for itemL3 in dataL3:
                             tmp = itemL3.split('<ul class="level3">')
-                            if 2 != len(tmp): continue
+                            if 2 != len(tmp):
+                                continue
                             titleL3 = self.cleanHtmlStr(tmp[0])
                             cacheKey3 = 'level_3_%s_%s' % (titleL2, titleL3)
                             subItems = _getLastItems(tmp[1], {'category':'explore_page', 'level':'3'})
@@ -170,7 +176,8 @@ class Laola1TV(CBaseHostClass):
     def explorePage(self, cItem):
         printDBG("Laola1TV.explorePage")
         sts, data = self.getPage( cItem['url'] )
-        if not sts: return
+        if not sts:
+            return
         
         m1 = '<div class="teaser-title'
         data = self.cm.ph.getDataBeetwenMarkers(data, m1, '</section>', False)[1]
@@ -178,7 +185,8 @@ class Laola1TV(CBaseHostClass):
         
         for item in data:
             tmp = item.split('<div class="teaser-list"')
-            if 2 != len(tmp): continue
+            if 2 != len(tmp):
+                continue
             url   = self.cm.ph.getSearchGroups(tmp[0], 'href="([^"]+?)"')[0]
             icon  = self.cm.ph.getSearchGroups(tmp[0], 'src="([^"]+?)"')[0]
             title = self.cm.ph.getDataBeetwenMarkers(tmp[0], '<h2>', '</h2>', False)[1]
@@ -191,7 +199,8 @@ class Laola1TV(CBaseHostClass):
     def listCalendary(self, cItem):
         printDBG("Laola1TV.listCalendary")
         sts, data = self.getPage(cItem['url'])
-        if not sts: return 
+        if not sts:
+            return 
         
         data = self.cm.ph.getDataBeetwenReMarkers(data, re.compile('<ul class="list list-day day-[^"]+?" style="display:none;">'), re.compile('<ul class="list list-day day-[^"]+?" style="display:none;">'))[1]
         data = self.cm.ph.getAllItemsBeetwenMarkers(data, '<li class="item list-sport', '</li>')
@@ -215,18 +224,22 @@ class Laola1TV(CBaseHostClass):
             url += '/%s' % page
         
         sts, data = self.getPage(url)
-        if not sts: return 
+        if not sts:
+            return 
         
         nextPage = self.cm.ph.getDataBeetwenMarkers(data, 'class="paging"', '<p>', False)[1]
         if ('/%s"' % (page +1)) in nextPage:
             nextPage = True
-        else: nextPage = False
+        else:
+            nextPage = False
         
         data = self.cm.ph.getDataBeetwenMarkers(data, '<div class="teaser-list">', '</section>', False)[1]
         data = data.split('</a>')
-        if len(data): del data[-1]
+        if len(data):
+            del data[-1]
         for item in data:
-            if '"ico-play"' not in item: continue
+            if '"ico-play"' not in item:
+                continue
             url   = self.cm.ph.getSearchGroups(item, 'href="([^"]+?)"')[0]
             icon  = self.cm.ph.getSearchGroups(item, 'src="([^"]+?)"')[0]
             title = self.cm.ph.getDataBeetwenMarkers(item, '<p>', '</p>', False)[1]
@@ -252,7 +265,8 @@ class Laola1TV(CBaseHostClass):
         page = cItem.get('page', 1)
         url = 'http://search-api.laola1.at/?callback=ret&q=%s&p=%d&i=laola1tv-2015-int&include=[]&_=%s' % (urllib.parse.quote_plus(searchPattern), page, str(time.time()))
         sts, data = self.getPage(url)
-        if not sts: return
+        if not sts:
+            return
         try:
             data = data.strip()[4:-2]
             data = byteify(json.loads(data))['result']
@@ -268,7 +282,8 @@ class Laola1TV(CBaseHostClass):
                 def _getText(name):
                     return self.cm.ph.getDataBeetwenMarkers(item, '<%s>' % name, '</%s>' % name, False)[1]
                 live     = _getText('live')
-                if searchLive != live: continue
+                if searchLive != live:
+                    continue
                 title    = self.cleanHtmlStr( _getText('title') )
                 icon     = self._getFullUrl( _getText('pic') )
                 url      = self._getFullUrl( _getText('url') )
@@ -293,7 +308,8 @@ class Laola1TV(CBaseHostClass):
         urlTab = []
 
         sts, data = self.cm.getPage(cItem['url'])
-        if not sts: return []
+        if not sts:
+            return []
         baseUrl = self.cm.meta['url']
 
         data = self.cm.ph.getDataBeetwenMarkers(data, '<div class="videoplayer"', '</script>')[1]
@@ -311,7 +327,8 @@ class Laola1TV(CBaseHostClass):
         vidUrl = self._getFullUrl( vidUrl, baseUrl )
         
         sts, data = self.getPage(vidUrl)
-        if not sts: return []
+        if not sts:
+            return []
         
         try:
             data = byteify(json.loads(data))
@@ -339,15 +356,19 @@ class Laola1TV(CBaseHostClass):
         comment = ''
         for streamaccess in streamaccessTab:
             for myip in ['', config.plugins.iptvplayer.laola1tv_myip1.value, config.plugins.iptvplayer.laola1tv_myip2.value]:
-                if '' != myip: header = {'X-Forwarded-For':myip}
-                else: header = {}
+                if '' != myip:
+                    header = {'X-Forwarded-For':myip}
+                else:
+                    header = {}
                 sts, data = self.getPage(streamaccess, {'header':header})
-                if not sts: return urlTab
+                if not sts:
+                    return urlTab
                 data = self.cm.ph.getDataBeetwenMarkers(data, '<data>', '</data>', False)[1]
                 printDBG(data)
                 comment = self.cm.ph.getSearchGroups(data, 'comment="([^"]+?)"')[0]
                 auth = self.cm.ph.getSearchGroups(data, 'auth="([^"]+?)"')[0]
-                if auth in ['restricted', 'blocked']: continue
+                if auth in ['restricted', 'blocked']:
+                    continue
                 url  = self.cm.ph.getSearchGroups(data, 'url="([^"]+?)"')[0]
                 url = url + '?hdnea=' + auth
                 
@@ -444,7 +465,8 @@ class IPTVHost(CHostBase):
     def getLinksForVideo(self, Index = 0, selItem = None):
         retCode = RetHost.ERROR
         retlist = []
-        if not self.isValidIndex(Index): return RetHost(retCode, value=retlist)
+        if not self.isValidIndex(Index):
+            return RetHost(retCode, value=retlist)
         
         urlList = self.host.getLinksForVideo(self.host.currList[Index])
         for item in urlList:

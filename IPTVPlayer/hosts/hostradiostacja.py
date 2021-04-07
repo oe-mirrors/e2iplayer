@@ -33,7 +33,8 @@ class RadiostacjaPl(CBaseHostClass):
         self.cache = {}
         
     def getPage(self, baseUrl, addParams = {}, post_data = None):
-        if addParams == {}: addParams = dict(self.defaultParams)
+        if addParams == {}:
+            addParams = dict(self.defaultParams)
         return self.cm.getPage(baseUrl, addParams, post_data)
     
     def listMainMenu(self, cItem):
@@ -68,7 +69,8 @@ class RadiostacjaPl(CBaseHostClass):
     def _fillCache(self, cItem):
         if cItem['f_cache'] not in self.cache:
             sts, data = self.getPage(cItem['url'])
-            if not sts: return
+            if not sts:
+                return
             
             try:
                 data = json_loads(data)
@@ -177,7 +179,8 @@ class RadiostacjaPl(CBaseHostClass):
         try:
             cacheKey = cItem['f_cache']
             for item in self.cache[cacheKey]['categories']:
-                if 0 == len(item['ids']): continue
+                if 0 == len(item['ids']):
+                    continue
                 title = self.cleanHtmlStr(item['name'])
                 params = dict(cItem)
                 params.update({'good_for_fav':True, 'category':nextCategory, 'title':title, 'f_id':item['id']})
@@ -198,7 +201,8 @@ class RadiostacjaPl(CBaseHostClass):
                         ids = item['ids']
             
             for item in self.cache[cacheKey]['stations']:
-                if ids != None and item['id'] not in ids: continue
+                if ids != None and item['id'] not in ids:
+                    continue
                 title = self.cleanHtmlStr(item['name'])
                 icon = item['defaultart']
                 params = {'good_for_fav':True, 'title':title, 'url':'http://www.rmfon.pl/play,%s' % item['id'], 'icon':icon}
@@ -211,23 +215,28 @@ class RadiostacjaPl(CBaseHostClass):
         linksTab = []
         if 'weszlo.fm' in cItem['url']:
             sts, data = self.getPage(cItem['url'])
-            if not sts: return []
+            if not sts:
+                return []
             data = self.cm.ph.getDataBeetwenNodes(data, ('<div ', '>', 'radioplayer'), ('<', '>'))[1]
             url = self.cm.ph.getSearchGroups(data, '''\sdata\-src=['"](https?://[^'^"]+?)['"]''')[0]
             linksTab.append({'name':'direct', 'url':url, 'need_resolve':0})
         elif 'rmfon.pl' in cItem['url']:
             url = 'http://www.rmfon.pl/stacje/flash_aac_%s.xml.txt' % cItem['url'].split(',')[-1]
             sts, data = self.getPage(url)
-            if not sts: return []
+            if not sts:
+                return []
             data = self.cm.ph.getAllItemsBeetwenMarkers(data, '<playlist', '</playlist')
             for playlistItem in data:
-                if 'playlistMp3' in playlistItem: title = 'MP3'
-                else: title = 'AAC'
+                if 'playlistMp3' in playlistItem:
+                    title = 'MP3'
+                else:
+                    title = 'AAC'
                 tmp = []
                 playlistItem = self.cm.ph.getAllItemsBeetwenNodes(playlistItem, ('<item', '>'), ('</item', '>'), False)
                 for item in playlistItem:
                     url = item.strip()
-                    if not self.cm.isValidUrl(url): continue
+                    if not self.cm.isValidUrl(url):
+                        continue
                     tmp.append({'name':title, 'url':url, 'need_resolve':0})
                 if len(tmp):
                     linksTab.append(random.choice(tmp))

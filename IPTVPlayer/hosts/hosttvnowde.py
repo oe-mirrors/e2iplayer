@@ -99,11 +99,13 @@ class TVNowDE(CBaseHostClass):
         printDBG("TVNowDE.listChannelsCats")
         url = self.getFullUrl('/channels/?fields=*&filter=%7B%22Active%22:true%7D&maxPerPage=50&page=1')
         sts, data = self.getPage(url)
-        if not sts: return 
+        if not sts:
+            return 
         try:
             data = json_loads(data)
             for item in data['items']:
-                if not item.get('active', True): continue
+                if not item.get('active', True):
+                    continue
                 #url = '/channels/{0}?fields=%5B%22*%22,%22movies%22,%5B%22id%22,%22title%22,%22episode%22,%22broadcastStartDate%22,%22blockadeText%22,%22free%22,%22replaceMovieInformation%22,%22seoUrl%22,%22pictures%22,%5B%22*%22%5D,%22packages%22,%5B%22*%22%5D,%22manifest%22,%5B%22*%22%5D,%22format%22,%5B%22id%22,+%22station%22,+%22title%22,%22seoUrl%22,%22defaultDvdImage%22%5D%5D%5D'.format(item['id'])
                 url = '/channels/{0}?fields=%5B%22*%22,%22movies%22,%5B%22id%22,%22title%22,%22episode%22,%22broadcastStartDate%22,%22articleLong%22,%22duration%22,%22free%22,%22replaceMovieInformation%22,%22seoUrl%22,%22pictures%22,%5B%22*%22%5D,%22packages%22,%5B%22*%22%5D,%22manifest%22,%5B%22*%22%5D,%22format%22,%5B%22id%22,+%22station%22,+%22title%22,%22seoUrl%22,%22defaultDvdImage%22%5D%5D%5D'.format(item['id'])
                 url = self.getFullUrl(url)
@@ -145,9 +147,12 @@ class TVNowDE(CBaseHostClass):
         now = datetime.now()
         for d in range(8):
             t = (now - timedelta(days=d)).strftime('%Y-%m-%d')
-            if d == 0: title = _('Today')
-            elif d == 1: title = _('Yesterday')
-            else: title = t
+            if d == 0:
+                title = _('Today')
+            elif d == 1:
+                title = _('Yesterday')
+            else:
+                title = t
             url = '/movies?fields=*,format,paymentPaytypes,pictures,trailers,packages&filter=%7B%22BroadcastStartDate%22:%7B%22between%22:%7B%22start%22:%22{0}+00:00:00%22,%22end%22:%22{1}+23:59:59%22%7D%7D%7D&maxPerPage=200&order=BroadcastStartDate+asc'.format(t, t)
             url = self.getFullUrl(url)
             params = dict(cItem)
@@ -174,7 +179,8 @@ class TVNowDE(CBaseHostClass):
                 url = self.getFullUrl('/formats?fields=id,title,station,title,titleGroup,seoUrl,icon,hasFreeEpisodes,hasPayEpisodes,categoryId,searchAliasName,genres&filter=%7B%22Id%22:%7B%22containsNotIn%22:%5B%221896%22%5D%7D,%22Disabled%22:0%7D&maxPerPage=500&page=1&page={0}'.format(page))
                 
                 sts, data = self.getPage(url)
-                if not sts: return 
+                if not sts:
+                    return 
                 try:
                     data = json_loads(data)
                     total += len(data['items'])
@@ -199,14 +205,16 @@ class TVNowDE(CBaseHostClass):
                 if not config.plugins.iptvplayer.tvnowde_show_paid_items.value and not item.get('hasFreeEpisodes', False): 
                     continue
                 station  = self.getStr(item, 'station')
-                if len(fChannels) and station not in fChannels: continue
+                if len(fChannels) and station not in fChannels:
+                    continue
                 letter   = self.getStr(item, 'titleGroup')
                 title    = self.getStr(item, 'title')
                 name     = self.cleanHtmlStr(self.getStr(item, 'seoUrl'))
                 desc     = item.get('genres', [])
                 if isinstance(desc, list):
                     desc = ' | '.join(desc)
-                else: desc  = ''
+                else:
+                    desc  = ''
                 
                 params = {'good_for_fav':True, 'orig_item':item, 'f_station':station, 'f_name':name, 'title':title, 'desc':desc}
                 if not letter in self.cacheAZ['list']:
@@ -252,14 +260,16 @@ class TVNowDE(CBaseHostClass):
         url = self.getFullUrl('/formats/genre/{0}?fields=*&filter=%7B%22station%22:%22none%22%7D&maxPerPage=500&order=NameLong+asc&page={1}'.format(urllib.parse.quote(genre), page))
         
         sts, data = self.getPage(url)
-        if not sts: return 
+        if not sts:
+            return 
         try:
             data = json_loads(data)
             for item in data['items']:
                 if not config.plugins.iptvplayer.tvnowde_show_paid_items.value and not item.get('hasFreeEpisodes', False): 
                     continue
                 icon = self.getStr(item, 'defaultDvdImage')
-                if icon == '': icon = self.getStr(item, 'defaultDvdImage')
+                if icon == '':
+                    icon = self.getStr(item, 'defaultDvdImage')
                 title    = self.getStr(item, 'title')
                 station  = self.getStr(item, 'station')
                 name     = self.cleanHtmlStr(self.getStr(item, 'seoUrl'))
@@ -284,19 +294,22 @@ class TVNowDE(CBaseHostClass):
         url = self.getFullUrl('/formats/seo?fields=*,.*,formatTabs.*,formatTabs.formatTabPages.*,formatTabs.formatTabPages.container.*,annualNavigation.*&name={0}.php&station={1}'.format(name, station))
         
         sts, data = self.getPage(url)
-        if not sts: return 
+        if not sts:
+            return 
         try:
             data = json_loads(data)
             if data.get('tabSeason', False):
                 for item in data['formatTabs']['items']:
-                    if not item.get('visible', False): continue
+                    if not item.get('visible', False):
+                        continue
                     try:
                         title = self.getStr(item, 'headline')
                         containers = []
                         for tabItem in item['formatTabPages']['items']:
                             containers.append( tabItem['container']['id'])
                         
-                        if 0 == len(containers): continue
+                        if 0 == len(containers):
+                            continue
                         params = {'name':'category', 'category':'list_tab_items', 'f_containers_items':containers, 'title':title, 'icon':cItem.get('icon', ''), 'desc':cItem.get('desc', '')}
                         self.addDir(params)
                     except Exception:
@@ -308,11 +321,13 @@ class TVNowDE(CBaseHostClass):
                     months = item['months']
                     for m in range(1, 13, 1):
                         m1 = (m + 1)
-                        if m1 > 12: m1 = m1 % 12
+                        if m1 > 12:
+                            m1 = m1 % 12
                         days = (date(year + m/12, m1, 1)  - date(year, m, 1)).days
                         
                         m = str(m)
-                        if not m in months: continue
+                        if not m in months:
+                            continue
                         title = '%s/%s' % (year, m.zfill(2))
                         url = self.getFullUrl('/movies?fields=*,format,paymentPaytypes,pictures,trailers,packages&filter=%7B%22BroadcastStartDate%22:%7B%22between%22:%7B%22start%22:%22{0}-{1}-{2}+00:00:00%22,%22end%22:+%22{3}-{4}-{5}+23:59:59%22%7D%7D,+%22FormatId%22+:+{6}%7D&maxPerPage=300&order=BroadcastStartDate+desc'.format(year, m.zfill(2), '01', year, m.zfill(2), str(days).zfill(2), id))
                         params = {'name':'category', 'category':'list_video_items', 'url' :url, 'title':title, 'icon':cItem.get('icon', ''), 'desc':cItem.get('desc', '')}
@@ -342,11 +357,13 @@ class TVNowDE(CBaseHostClass):
         fChannels = cItem.get('f_channels', [])
         
         sts, data = self.getPage(url)
-        if not sts: return 
+        if not sts:
+            return 
         try:
             data = json_loads(data)
             subKey = cItem.get('sub_key', '')
-            if subKey != '': data = data[subKey]
+            if subKey != '':
+                data = data[subKey]
             for item in data['items']:
                 try:
                     if not config.plugins.iptvplayer.tvnowde_show_paid_items.value and not item.get('free', False): 
@@ -357,10 +374,12 @@ class TVNowDE(CBaseHostClass):
                         continue
                     
                     urlDashClear = item['manifest']['dashclear']
-                    if not self.cm.isValidUrl(urlDashClear): continue
+                    if not self.cm.isValidUrl(urlDashClear):
+                        continue
                     
                     station = self.getStr(item['format'], 'station')
-                    if len(fChannels) and station not in fChannels: continue
+                    if len(fChannels) and station not in fChannels:
+                        continue
                     
                     id = self.getStr(item, 'id')
                     icon = 'https://ais.tvnow.de/tvnow/movie/{0}/600x716/title.jpg'.format(id)
@@ -372,7 +391,8 @@ class TVNowDE(CBaseHostClass):
                     descTab = []
                     for d in [('broadcastStartDate', '%s'), ('episode', _('episode: %s')), ('duration', _('duration: %s'))]:
                         t = self.getStr(item, d[0])
-                        if t != '': descTab.append(d[1] % t)
+                        if t != '':
+                            descTab.append(d[1] % t)
                     if len(descTab):
                         desc = ' | '.join(descTab) + '[/br]' + desc
                     
@@ -407,16 +427,21 @@ class TVNowDE(CBaseHostClass):
                 station = cItem['f_station']
                 url = self.getFullUrl('/movies/{0}/{1}?fields=*,format,files,manifest,breakpoints,paymentPaytypes,trailers,packages&station={2}'.format(seoUrlItem, seoUrlFormat, station))
                 sts, data = self.getPage(url)
-                if not sts: return []
-                try: data = json_loads(data)
-                except Exception: data = 'error'
+                if not sts:
+                    return []
+                try:
+                    data = json_loads(data)
+                except Exception:
+                    data = 'error'
                 
-                if 'error' in data: data = cItem['orig_item']
+                if 'error' in data:
+                    data = cItem['orig_item']
                 
                 urlDashClear = data['manifest']['dashclear']
                 if data.get('isDrm', False): 
                     SetIPTVPlayerLastHostError(_("Video with DRM protection."))
-                if not self.cm.isValidUrl(urlDashClear): return []
+                if not self.cm.isValidUrl(urlDashClear):
+                    return []
             except Exception:
                 printExc()
         

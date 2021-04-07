@@ -75,9 +75,12 @@ class SuggestionsProvider:
 
 def jstr(item, key, default=''):
     v = item.get(key, default)
-    if type(v) == type(''): return v.encode('utf-8')
-    elif type(v) == type(''): return v
-    else: return default
+    if type(v) == type(''):
+        return v.encode('utf-8')
+    elif type(v) == type(''):
+        return v
+    else:
+        return default
 
 class HDFull(CBaseHostClass, CaptchaHelper):
 
@@ -110,7 +113,8 @@ class HDFull(CBaseHostClass, CaptchaHelper):
     def listMain(self, cItem):
         printDBG("HDFull.listMain")
         sts, data = self.getPage(self.getMainUrl())
-        if not sts: return
+        if not sts:
+            return
         self.setMainUrl(self.cm.meta['url'])
         
         reObj = re.compile('<ul[^>]*?>')
@@ -163,7 +167,8 @@ class HDFull(CBaseHostClass, CaptchaHelper):
     def listSortMoviesSeries(self, cItem, nextCategory1, nextCategory2):
         printDBG("HDFull.listSort")
         sts, data = self.getPage(cItem['url'])
-        if not sts: return
+        if not sts:
+            return
         self.setMainUrl(self.cm.meta['url'])
 
         hasABCMenu = self.cm.ph.getDataBeetwenMarkers(data, 'filter-title', '</div>', False)[1]
@@ -189,7 +194,8 @@ class HDFull(CBaseHostClass, CaptchaHelper):
     def listSeriesABC(self, cItem, nextCategory):
         printDBG("HDFull.listSeriesABC")
         sts, data = self.getPage(cItem['url'])
-        if not sts: return
+        if not sts:
+            return
         self.setMainUrl(self.cm.meta['url'])
         
         data = self.cm.ph.getDataBeetwenNodes(data, ('<div', '>', 'filter-title'), ('</div', '>'), False)[1]
@@ -211,7 +217,8 @@ class HDFull(CBaseHostClass, CaptchaHelper):
 
             tmp = self.cm.ph.getDataBeetwenMarkers(item, '<h5', '</h5>')[1]
             title = self.cleanHtmlStr( self.cm.ph.getSearchGroups(tmp, '''title=['"]([^"^']+?)["']''', 1, True)[0] )
-            if title == '': title = self.cleanHtmlStr(tmp)
+            if title == '':
+                title = self.cleanHtmlStr(tmp)
 
             desc = []
             # lang
@@ -219,7 +226,8 @@ class HDFull(CBaseHostClass, CaptchaHelper):
             tmp = reLang.findall(tmp)
             for t in tmp:
                 t = self.cleanHtmlStr(t)
-                if t: desc.append(t)
+                if t:
+                    desc.append(t)
             desc = [', '.join(desc)]
 
             # rating
@@ -227,7 +235,8 @@ class HDFull(CBaseHostClass, CaptchaHelper):
             
             tmp = [self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(item, ('<', '>', 'rating'), ('<', '>'), False)[1])]
             tmp.append(self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(item, ('<', '>', 'dec'), ('</', '>'), False)[1]))
-            if tmp[0]: desc.append('.'.join(tmp))
+            if tmp[0]:
+                desc.append('.'.join(tmp))
 
             retList.append( MergeDicts(cItem, {'good_for_fav':True, 'category':nextCategory, 'title':title, 'url':url, 'icon':icon, 'desc':' | '.join(desc)}) )
         return retList
@@ -235,7 +244,8 @@ class HDFull(CBaseHostClass, CaptchaHelper):
     def listItems(self, cItem, nextCategory):
         printDBG("HDFull.listItems")
         sts, data = self.getPage(cItem['url'])
-        if not sts: return
+        if not sts:
+            return
         self.setMainUrl(self.cm.meta['url'])
         page = cItem.get('page', 1)
 
@@ -325,7 +335,8 @@ class HDFull(CBaseHostClass, CaptchaHelper):
             for item in data:
                 name = '%s | %s | %s ' % (item['lang'], item['provider'], item['quality'])
                 url = item['embed']
-                if not url: url = item['download']
+                if not url:
+                    url = item['download']
                 linksTab.append({'name':name, 'url':strwithmeta(url, {'Referer':cUrl}), 'need_resolve':1})
         except Exception:
             printExc()
@@ -337,7 +348,8 @@ class HDFull(CBaseHostClass, CaptchaHelper):
         self.cacheLinks = {}
 
         sts, data = self.getPage(cItem['url'])
-        if not sts: return
+        if not sts:
+            return
         cUrl = self.getFullUrl(self.cm.meta['url'])
         self.setMainUrl(cUrl)
 
@@ -374,7 +386,8 @@ class HDFull(CBaseHostClass, CaptchaHelper):
         printDBG("HDFull.listEpisodes")
 
         sts, data = self.getPage(cItem['url'])
-        if not sts: return
+        if not sts:
+            return
         cUrl = self.getFullUrl(self.cm.meta['url'])
         self.setMainUrl(cUrl)
 
@@ -393,15 +406,19 @@ class HDFull(CBaseHostClass, CaptchaHelper):
 
         baseEpisodeUrl = '/show/%s/season-%s/episode-%s' if lang  == 'en' else '/serie/%s/temporada-%s/episodio-%s'
         post_data= {'action':cItem['f_action'], 'start':page*ITEMS, 'limit':ITEMS}
-        if 'f_show' in cItem: post_data['show'] = cItem['f_show']
-        if 'f_season' in cItem: post_data['season'] = cItem['f_season']
-        if 'f_elang' in cItem: post_data['elang'] = cItem['f_elang'].upper()
+        if 'f_show' in cItem:
+            post_data['show'] = cItem['f_show']
+        if 'f_season' in cItem:
+            post_data['season'] = cItem['f_season']
+        if 'f_elang' in cItem:
+            post_data['elang'] = cItem['f_elang'].upper()
 
         params = dict(self.defaultParams)
         params['header'] = MergeDicts(params['header'], {'Referer':cItem['url'], 'Content-Type':'application/x-www-form-urlencoded; charset=UTF-8'})
         
         sts, data = self.getPage(self.getFullUrl('/a/episodes'), params, post_data)
-        if not sts: return
+        if not sts:
+            return
 
         try:
             data = json_loads(data)
@@ -425,7 +442,8 @@ class HDFull(CBaseHostClass, CaptchaHelper):
         printDBG("HDFull.listEpisodesLangs")
         
         sts, data = self.getPage(cItem['url'])
-        if not sts: return
+        if not sts:
+            return
         cUrl = self.getFullUrl(self.cm.meta['url'])
         self.setMainUrl(cUrl)
         
@@ -440,7 +458,8 @@ class HDFull(CBaseHostClass, CaptchaHelper):
         self.tryTologin()
 
         sts, data = self.getPage(self.getMainUrl())
-        if not sts: return
+        if not sts:
+            return
         self.setMainUrl(self.cm.meta['url'])
         
         post_data = {}
@@ -450,7 +469,8 @@ class HDFull(CBaseHostClass, CaptchaHelper):
         for item in data:
             name = self.cm.ph.getSearchGroups(item, '''name=['"]([^"^']+?)['"]''')[0]
             value = self.cm.ph.getSearchGroups(item, '''value=['"]([^"^']+?)['"]''')[0]
-            if name != '': post_data[name] = value
+            if name != '':
+                post_data[name] = value
         post_data.update( {'query':searchPattern} )
         
         httpParams = dict(self.defaultParams)
@@ -479,7 +499,8 @@ class HDFull(CBaseHostClass, CaptchaHelper):
             return linksTab
 
         sts, data = self.getPage(cItem['url'])
-        if not sts: return linksTab
+        if not sts:
+            return linksTab
         cUrl = self.cm.meta['url']
 
         printDBG(data)
@@ -522,7 +543,8 @@ class HDFull(CBaseHostClass, CaptchaHelper):
         if data == None:
             self.tryTologin()
             sts, data = self.getPage(url)
-            if not sts: data = ''
+            if not sts:
+                data = ''
 
         data = self.cm.ph.getDataBeetwenNodes(data, ('<div', '>', 'summary-title'), ('<div', '>', 'breakaway-wrapper'), False)[1]
         title = self.cleanHtmlStr(data[:data.find('</div')])
@@ -536,21 +558,27 @@ class HDFull(CBaseHostClass, CaptchaHelper):
         
         value = self.cm.ph.getSearchGroups(data, '''<([^>]+?datePublished[^>]+?)>''')[0]
         value = self.cleanHtmlStr(self.cm.ph.getSearchGroups(value, '''content=['"]([^"^']+?)['"]''')[0])
-        if value: itemsList.append((_('Published:'), value))
+        if value:
+            itemsList.append((_('Published:'), value))
 
         item = tmp[-1]
         tmp = self.cm.ph.getDataBeetwenNodes(data, ('<div', '>', 'details'), ('</div', '>'), False)[1].split('</p>')
         tmp.append(item)
         for item in tmp:
             header = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(item, '<span', '</span>')[1])
-            if header == '': continue
+            if header == '':
+                continue
             value = self._desc(item)
-            if value == '': continue
+            if value == '':
+                continue
             itemsList.append((header, value))
 
-        if title == '': title = cItem['title']
-        if icon == '':  icon  = cItem.get('icon', self.DEFAULT_ICON_URL)
-        if desc == '':  desc  = cItem.get('desc', '')
+        if title == '':
+            title = cItem['title']
+        if icon == '':
+            icon  = cItem.get('icon', self.DEFAULT_ICON_URL)
+        if desc == '':
+            desc  = cItem.get('desc', '')
         
         return [{'title':self.cleanHtmlStr( title ), 'text': self.cleanHtmlStr( desc ), 'images':[{'title':'', 'url':self.getFullUrl(icon)}], 'other_info':{'custom_items_list':itemsList}}]
         
@@ -567,7 +595,8 @@ class HDFull(CBaseHostClass, CaptchaHelper):
             self.password = config.plugins.iptvplayer.hdfull_password.value
 
             sts, data = self.getPage(self.getMainUrl())
-            if sts: self.setMainUrl(self.cm.meta['url'])
+            if sts:
+                self.setMainUrl(self.cm.meta['url'])
 
             freshSession = False
             if sts and '/logout' in data:
@@ -599,7 +628,8 @@ class HDFull(CBaseHostClass, CaptchaHelper):
                 for item in data:
                     name = self.cm.ph.getSearchGroups(item, '''name=['"]([^"^']+?)['"]''')[0]
                     value = self.cm.ph.getSearchGroups(item, '''value=['"]([^"^']+?)['"]''')[0]
-                    if name != '': post_data[name] = value
+                    if name != '':
+                        post_data[name] = value
                 post_data.update( {'username':self.login, 'password':self.password, 'action':'login'} )
 
                 httpParams = dict(self.defaultParams)

@@ -87,23 +87,28 @@ class LocalMedia(CBaseHostClass):
         try:
             path, ext = os_path.splitext(path)
             ext = ext[1:]
-        except Exception: pass
+        except Exception:
+            pass
         return ext.lower()
         
     def prepareCmd(self, path, start, end):
         lsdirPath = GetBinDir("lsdir")
-        try: os_chmod(lsdirPath, 0o777)
-        except Exception: printExc()
+        try:
+            os_chmod(lsdirPath, 0o777)
+        except Exception:
+            printExc()
         if config.plugins.iptvplayer.local_showhiddensdir.value:
             dWildcards = '[^.]*|.[^.]*|..[^.]*'
-        else: dWildcards = '[^.]*'
+        else:
+            dWildcards = '[^.]*'
         
         fWildcards = []
         extensions = self.VIDEO_FILE_EXTENSIONS + self.AUDIO_FILES_EXTENSIONS + self.PICTURE_FILES_EXTENSIONS + self.M3U_FILES_EXTENSIONS + self.ISO_FILES_EXTENSIONS
         for ext in extensions:
             if config.plugins.iptvplayer.local_showhiddensfiles.value:
                 wilcard = '*'
-            else: wilcard = '[^.]*'
+            else:
+                wilcard = '[^.]*'
             insensitiveExt=''
             for l in ext:
                 insensitiveExt += '[%s%s]' % (l.upper(), l.lower())
@@ -111,7 +116,7 @@ class LocalMedia(CBaseHostClass):
             fWildcards.append(wilcard)
         cmd = '%s "%s" rdl rd %d %d "%s" "%s"' % (lsdirPath, path, start, end, '|'.join(fWildcards), dWildcards)
         if config.plugins.iptvplayer.local_showfilesize.value:
-            cmd += " 1 ";
+            cmd += " 1 "
         return cmd
         
     def listsMainMenu(self, cItem):
@@ -127,7 +132,8 @@ class LocalMedia(CBaseHostClass):
         for item in table:
             if config.plugins.iptvplayer.local_showhiddensdir.value:
                 path, name = os_path.split(item['node'])
-                if name.startswith('.'): continue
+                if name.startswith('.'):
+                    continue
                 
             if '/' != item['node'] and item['filesystem'] in self.FILE_SYSTEMS:
                 params = dict(cItem)
@@ -136,9 +142,12 @@ class LocalMedia(CBaseHostClass):
         
     def _getM3uIcon(self, item, cItem):
         icon = item.get('tvg-logo', '')
-        if not self.cm.isValidUrl(icon): icon = item.get('logo', '')
-        if not self.cm.isValidUrl(icon): icon = item.get('art', '')
-        if not self.cm.isValidUrl(icon): icon = cItem.get('icon', '')
+        if not self.cm.isValidUrl(icon):
+            icon = item.get('logo', '')
+        if not self.cm.isValidUrl(icon):
+            icon = item.get('art', '')
+        if not self.cm.isValidUrl(icon):
+            icon = cItem.get('icon', '')
         return icon
         
     def _getM3uPlayableUrl(self, baseUrl, url, item):
@@ -161,7 +170,8 @@ class LocalMedia(CBaseHostClass):
         data = ''
         if not self.cm.isValidUrl(cItem['path']):
             sts, data = ReadTextFile(cItem['path'])
-            if not sts: return
+            if not sts:
+                return
             if '#EXT' not in data:
                 baseUrl = data.strip()
         else: 
@@ -171,7 +181,8 @@ class LocalMedia(CBaseHostClass):
             baseUrl = self.up.decorateParamsFromUrl(baseUrl) 
             httpParams, postData = self.cm.getParamsFromUrlWithMeta(baseUrl)
             sts, data = self.cm.getPage(baseUrl, httpParams, postData)
-            if not sts: return
+            if not sts:
+                return
         
         data = ParseM3u(data)
         groups = {}
@@ -189,11 +200,14 @@ class LocalMedia(CBaseHostClass):
                 else:
                     if group not in groups:
                         groupIcon = item.get('group-logo', '')
-                        if not self.cm.isValidUrl(groupIcon): groupIcon = item.get('group-art', '')
-                        if not self.cm.isValidUrl(groupIcon): groupIcon = icon
+                        if not self.cm.isValidUrl(groupIcon):
+                            groupIcon = item.get('group-art', '')
+                        if not self.cm.isValidUrl(groupIcon):
+                            groupIcon = icon
                         groups[group] = []
                         params.update( {'good_for_fav':False, 'title':group, 'category':nextCategory, 'f_group':group, 'url':baseUrl, 'desc':'', 'icon':groupIcon} )
-                        if 'parent-code' in item: params.update({'pin_locked':True, 'pin_code':item['parent-code']})
+                        if 'parent-code' in item:
+                            params.update({'pin_locked':True, 'pin_code':item['parent-code']})
                         self.addDir(params)
                     groups[group].append(item)
             elif item['f_type'] == 'import' and self.cm.isValidUrl(url):
@@ -233,7 +247,8 @@ class LocalMedia(CBaseHostClass):
                 data = data.split('\n')
                 for line in data:
                     item = self.cm.ph.getSearchGroups(line, '(.+?) on (.+?) type ([^ ]+?) (\([^\)]+?\))', 4)
-                    if len(item) < 4: continue
+                    if len(item) < 4:
+                        continue
                     table.append({'device':item[0], 'node':item[1], 'filesystem':item[2], 'options':item[3]})
             else:
                 message = _('Can not get mount points - cmd mount failed.\nReturn code[%s].\nReturn data[%s].') % (ret['code'], data)
@@ -342,7 +357,8 @@ class LocalMedia(CBaseHostClass):
             picTab = []
             for item in data:
                 start += 1
-                if start > end: break 
+                if start > end:
+                    break 
                 item = item.split('//')
                 if config.plugins.iptvplayer.local_showfilesize.value:
                     if 5 != len(item):
@@ -352,11 +368,13 @@ class LocalMedia(CBaseHostClass):
                 
                 fileSize = -1
                 if 5 == len(item):
-                    try: fileSize = int(item[3])
+                    try:
+                        fileSize = int(item[3])
                     except Exception:
                         printExc()
                         continue
-                try: title = item[0].decode(encoding).encode('utf-8')
+                try:
+                    title = item[0].decode(encoding).encode('utf-8')
                 except Exception:
                     title = item[0]
                     printExc()
@@ -696,7 +714,8 @@ class IPTVHost(CHostBase):
     def getArticleContent(self, Index = 0):
         retCode = RetHost.ERROR
         retlist = []
-        if not self.isValidIndex(Index): return RetHost(retCode, value=retlist)
+        if not self.isValidIndex(Index):
+            return RetHost(retCode, value=retlist)
 
         hList = self.host.getArticleContent(self.host.currList[Index])
         for item in hList:

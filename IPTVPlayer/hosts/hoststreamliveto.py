@@ -15,8 +15,10 @@ import re
 import urllib.request
 import urllib.parse
 import urllib.error
-try:    import json
-except Exception: import simplejson as json
+try:
+    import json
+except Exception:
+    import simplejson as json
 from Components.config import config, ConfigText, getConfigListEntry
 ###################################################
 
@@ -85,7 +87,8 @@ class StreamLiveTo(CBaseHostClass):
             params['name']  = 'category'
             if type == 'dir':
                 self.addDir(params)
-            else: self.addVideo(params)
+            else:
+                self.addVideo(params)
             
     def fillCacheFilters(self):
         printDBG("StreamLiveTo.fillCacheFilters")
@@ -94,7 +97,8 @@ class StreamLiveTo(CBaseHostClass):
         
         sts, data = self.getPage(self._getFullUrl('channels'), self.defaultParams)
         #sts, data = self.getPage(self.MAIN_URL, self.defaultParams)
-        if not sts: return
+        if not sts:
+            return
         
         tmpTab = []
         tmp = self.cm.ph.getDataBeetwenMarkers(data, '<select name="category"', '</select>', False)[1]
@@ -125,7 +129,8 @@ class StreamLiveTo(CBaseHostClass):
             self.cacheFiltersKeys.append('f_sort')
         
         sts, data = self.getPage(self._getFullUrl('channelsPages.php'), self.defaultParams)
-        if not sts: return
+        if not sts:
+            return
         
         data = self.cm.ph.getDataBeetwenMarkers(data, '<h2', '</h2>')[1]
         data = self.cm.ph.getAllItemsBeetwenMarkers(data, '<a', '</a>')
@@ -146,9 +151,11 @@ class StreamLiveTo(CBaseHostClass):
         cItem = dict(cItem)
         
         f_idx = cItem.get('f_idx', 0)
-        if f_idx == 0: self.fillCacheFilters()
+        if f_idx == 0:
+            self.fillCacheFilters()
         
-        if f_idx >= len(self.cacheFiltersKeys): return
+        if f_idx >= len(self.cacheFiltersKeys):
+            return
         
         filter = self.cacheFiltersKeys[f_idx]
         f_idx += 1
@@ -163,44 +170,57 @@ class StreamLiveTo(CBaseHostClass):
         post_data = {'page':page}
         
         keysMap = {'cat':'category', 'lang':'language', 'sort':'sortBy', 'q':'query', 'type':'list' }
-        if 'f_q' in cItem: keys = ['f_q']
-        else: keys = []
+        if 'f_q' in cItem:
+            keys = ['f_q']
+        else:
+            keys = []
         keys.extend(self.cacheFiltersKeys)
         for item in keys:
-            if item not in cItem: continue
+            if item not in cItem:
+                continue
             key = keysMap.get(item[2:], item[2:])
             post_data[key] = cItem[item]
         
         url = self.getFullUrl('channelsPages.php')
 
         sts, data = self.getPage(url, self.defaultParams, post_data)
-        if not sts: return
+        if not sts:
+            return
         
         if 'data-page="{0}"'.format(page+1) in data:
             nextPage = True
-        else: nextPage = False
+        else:
+            nextPage = False
         
         data = self.cm.ph.rgetAllItemsBeetwenNodes(data.split('<nav>', 1)[0], ('</div', '>'), ('<div', '>', 'item'))
         for item in data:
             url  = self._getFullUrl( self.cm.ph.getSearchGroups(item, 'href="([^"]+?)"')[0] )
             icon = self._getFullUrl( self.cm.ph.getSearchGroups(item, 'src="([^"]+?)"')[0] )
             title = self.cleanHtmlStr( self.cm.ph.getDataBeetwenMarkers(item, '<strong>', '</strong>', False)[1] )
-            if '' == title: title = self.cleanHtmlStr( self.cm.ph.getSearchGroups(item, 'title="([^"]+?)"')[0] )
-            if 'class="premium_only"' in item or 'Premium Only' in item: postfix = 'PREMIUM ONLY'
-            elif 'glyphicon-king' in item: postfix = 'KING'
-            else: postfix = ''
-            if postfix != '': title += ' [%s]' % postfix
+            if '' == title:
+                title = self.cleanHtmlStr( self.cm.ph.getSearchGroups(item, 'title="([^"]+?)"')[0] )
+            if 'class="premium_only"' in item or 'Premium Only' in item:
+                postfix = 'PREMIUM ONLY'
+            elif 'glyphicon-king' in item:
+                postfix = 'KING'
+            else:
+                postfix = ''
+            if postfix != '':
+                title += ' [%s]' % postfix
             desc = []
             tmp = self.cm.ph.getAllItemsBeetwenNodes(item, ('<div', '>', '"jt'), ('</div', '>'))
             for t in tmp:
-                if 'bottom' in t: continue
+                if 'bottom' in t:
+                    continue
                 t = self.cleanHtmlStr(t)
-                if t != '': desc.append(t)
+                if t != '':
+                    desc.append(t)
             desc = ' | '.join(desc)
             tmp = self.cm.ph.getAllItemsBeetwenNodes(item, ('<div', '>', 'block'), ('</div', '>'), False)
             for t in tmp:
                 t = self.cleanHtmlStr(t)
-                if t != '': desc += '[/br]' + t
+                if t != '':
+                    desc += '[/br]' + t
             if self.cm.isValidUrl(url):
                 params = {'title':title, 'url':url, 'desc':desc, 'icon':icon}
                 self.addVideo(params)
@@ -340,8 +360,10 @@ class StreamLiveTo(CBaseHostClass):
         printDBG("StreamLiveTo.checkBotProtection")
         captchaMarker = 'name="captcha"'
         sts, data = self.cm.getPage(url, httpParams)
-        if not sts: return False, None
-        if captchaMarker not in data: return True, data
+        if not sts:
+            return False, None
+        if captchaMarker not in data:
+            return True, data
         data     = self.cm.ph.getDataBeetwenReMarkers(data, re.compile('<form [^>]+?>'), re.compile('</form>'), True)[1]    
         title    = self.cm.ph.getDataBeetwenMarkers(data, '<h1>', '</h1>')[1]
         question = self.cm.ph.getDataBeetwenReMarkers(data, re.compile('</h1>'), re.compile('</form>'), True)[1]
@@ -371,7 +393,8 @@ class StreamLiveTo(CBaseHostClass):
             newHttpParams['header'] = newHttpParams
             
             sts, data = self.cm.getPage(url, newHttpParams, {'captcha':answer})
-            if not sts: return False, None
+            if not sts:
+                return False, None
             resultMarker = 'Your answer is wrong.'
             if  resultMarker in data:
                 self.sessionEx.open(MessageBox, resultMarker, type = MessageBox.TYPE_ERROR, timeout = 10 )

@@ -151,7 +151,8 @@ class MoonwalkParser():
             params = copy.deepcopy(self.defaultParams)
             params['header']['Referer'] = url
             sts, data = self.cm.getPage( url, params)
-            if not sts: return []
+            if not sts:
+                return []
             
             url, sec_header, post_data = self._getSecurityData(data, params)
             params['header'].update(sec_header)
@@ -163,12 +164,14 @@ class MoonwalkParser():
             printDBG("=======================================================")
             printDBG(data)
             printDBG("=======================================================")
-            if not sts: return []
+            if not sts:
+                return []
             
             try: 
                 data = json_loads(data)
                 data = data['mans']
-            except Exception: printExc()
+            except Exception:
+                printExc()
             try:
                 mp4Url = strwithmeta(data["mp4"], {'User-Agent':'Mozilla/5.0', 'Referer':url})
                 sts, tmp = self.cm.getPage(mp4Url, {'User-Agent':'Mozilla/5.0', 'Referer':url})
@@ -234,7 +237,8 @@ class MoonwalkParser():
             params['header']['Referer'] = url
             params['with_metadata'] = True
             sts, data = self.cm.getPage( url, params)
-            if not sts: return []
+            if not sts:
+                return []
             
             url = data.meta['url']
             parsedUri = urlparse( url )
@@ -247,7 +251,8 @@ class MoonwalkParser():
             
             seasonData = self.cm.ph.getSearchGroups(data, '''seasons\s*:\s*\[([^\]]+?)\]''')[0]
             ref = self.cm.ph.getSearchGroups(data, '''ref\s*:[^'^"]*?['"]([^'^"]+?)['"]''')[0]
-            if 'ref' != '': query['ref'] = ref
+            if 'ref' != '':
+                query['ref'] = ref
             query.pop('episode', None)
             
             printDBG(seasonData)
@@ -255,7 +260,8 @@ class MoonwalkParser():
             seasonData = seasonData.split(',')
             for item in seasonData:
                 item = item.strip()
-                if item[0] in ['"', "'"]: item = item[1:-1]
+                if item[0] in ['"', "'"]:
+                    item = item[1:-1]
                 query['season'] = item
                 seasonsTab.append({'title':_('Season') + ' ' + item, 'id':int(item), 'url': '%s?%s' % (baseUrl, urllib.parse.urlencode(query))})
             seasonsTab.sort(key=lambda item: item['id'])
@@ -272,7 +278,8 @@ class MoonwalkParser():
             params['header']['Referer'] = url
             params['with_metadata'] = True
             sts, data = self.cm.getPage( url, params)
-            if not sts: return []
+            if not sts:
+                return []
             
             url = data.meta['url']
             parsedUri = urlparse( url )
@@ -298,7 +305,8 @@ class MoonwalkParser():
                 episodeData = episodeData.split(',')
                 for item in episodeData:
                     item = item.strip()
-                    if item[0] in ['"', "'"]: item = item[1:-1]
+                    if item[0] in ['"', "'"]:
+                        item = item[1:-1]
                     query['episode'] = item
                     url = '%s?%s' % (baseUrl, urllib.parse.urlencode(query))
                     episodesTab.append({'title':_('Episode') + ' ' + item, 'id':int(item), 'url': strwithmeta(url, {'host_name':'moonwalk.cc'})})

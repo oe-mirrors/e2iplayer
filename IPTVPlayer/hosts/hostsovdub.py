@@ -37,7 +37,8 @@ class Sovdub(CBaseHostClass):
     
     def getPage(self, url, params={}, post_data=None):
         sts, data = self.cm.getPage(url, params, post_data)
-        if sts and self.encoding == '': self.encoding = self.cm.ph.getSearchGroups(data, 'charset=([^"]+?)"')[0]
+        if sts and self.encoding == '':
+            self.encoding = self.cm.ph.getSearchGroups(data, 'charset=([^"]+?)"')[0]
         return sts, data
     
     def getFullUrl(self, url):
@@ -47,7 +48,8 @@ class Sovdub(CBaseHostClass):
     def listGenres(self, cItem, category):
         printDBG("Sovdub.listGenres")
         sts, data = self.getPage(cItem['url'])
-        if not sts: return
+        if not sts:
+            return
 
         catData = self.cm.ph.getDataBeetwenMarkers(data, '<div class="right-menu">', '</div>', False)[1]
         catData = re.compile('href="([^"]+?)">([^<]+?)</a>').findall(catData)
@@ -59,7 +61,8 @@ class Sovdub(CBaseHostClass):
     def listCountries(self, cItem, category):
         printDBG("Sovdub.listCountries")
         sts, data = self.getPage(cItem['url'])
-        if not sts: return
+        if not sts:
+            return
 
         canData = self.cm.ph.getDataBeetwenMarkers(data, 'Выбор страны', '</div>', False)[1]
         canData = re.compile('href="([^"]+?)">([^<]+?)</a>').findall(canData)
@@ -86,11 +89,13 @@ class Sovdub(CBaseHostClass):
 
         post_data = cItem.get('post_data', None)
         sts, data = self.getPage(url, {}, post_data)
-        if not sts: return
+        if not sts:
+            return
 
         if ('/page/%d/' % (page + 1)) in data:
             nextPage = True
-        else: nextPage = False
+        else:
+            nextPage = False
 
         m1 = '</div></div>'
         if ('<div class="navigation">') in data:
@@ -114,7 +119,8 @@ class Sovdub(CBaseHostClass):
     def listContent(self, cItem):
         printDBG("Sovdub.listContent")
         sts, data = self.getPage(cItem['url'])
-        if not sts: return
+        if not sts:
+            return
         desc = self.cm.ph.getDataBeetwenMarkers(data, '<div class="full-news-content">', '</a></div>', False)[1]
         desc = self.cleanHtmlStr(desc).replace('  ', '')
         
@@ -142,22 +148,27 @@ class Sovdub(CBaseHostClass):
         
         if self.encoding == '':
             sts, data = self.getPage(self.getMainUrl())
-            if not sts: return
+            if not sts:
+                return
             
-        try: searchPattern = searchPattern.decode('utf-8').encode(self.encoding, 'ignore')
-        except Exception: searchPattern = ''
+        try:
+            searchPattern = searchPattern.decode('utf-8').encode(self.encoding, 'ignore')
+        except Exception:
+            searchPattern = ''
         
         post_data = {'do':'search', 'subaction':'search', 'story':searchPattern, 'x': 0, 'y': 0}
         
         sts, data = self.getPage(self.getMainUrl(), post_data=post_data)
-        if not sts: return
+        if not sts:
+            return
         
         m1 = '<div class="main-news">'
         data = self.cm.ph.getDataBeetwenMarkers(data, m1, '<div style="clear: both;">', False)[1]
         data = data.split(m1)
         for item in data:
             title = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(item, '<h2', '</h2>')[1])
-            if title == '': title = self.cleanHtmlStr(self.cm.ph.getSearchGroups(item, '''alt=['"]([^'^"]+?)['"]''')[0])
+            if title == '':
+                title = self.cleanHtmlStr(self.cm.ph.getSearchGroups(item, '''alt=['"]([^'^"]+?)['"]''')[0])
             icon  = self.getFullIconUrl(self.cm.ph.getSearchGroups(item, '''src=['"]([^'^"]+?)['"]''')[0])
             url   = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''href=['"]([^'^"]+?)['"]''')[0])
             desc  = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(item, '</h2>', '</div>')[1])
@@ -171,7 +182,8 @@ class Sovdub(CBaseHostClass):
         urlTab = []
 
         sts, data = self.getPage(cItem['url'])
-        if not sts: return []
+        if not sts:
+            return []
 
         data = self.cm.ph.getAllItemsBeetwenNodes(data, ('<iframe', '>'),  ('</iframe', '>'), caseSensitive=False)
         for item in data:

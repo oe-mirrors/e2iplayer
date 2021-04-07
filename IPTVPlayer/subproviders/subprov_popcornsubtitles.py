@@ -45,7 +45,8 @@ class YoutubeComProvider(CBaseSubProviderClass):
         self.defaultParams = {'header':self.HTTP_HEADER}
         if 'popcornsubtitles_url' in self.params['url_params'] and '' != self.params['url_params']['popcornsubtitles_url']:
             self.popcornsubtitlesUrl = self.params['url_params']['popcornsubtitles_url']
-        else: self.popcornsubtitlesUrl = '' 
+        else:
+            self.popcornsubtitlesUrl = '' 
             
     def getSubtitles(self, cItem):
         printDBG("YoutubeComProvider.getSubtitles")
@@ -57,7 +58,8 @@ class YoutubeComProvider(CBaseSubProviderClass):
         urlParams = dict(self.defaultParams)
         
         sts, tmp = self.cm.getPage(url, urlParams)
-        if not sts: return
+        if not sts:
+            return
         
         imdbid = self.cm.ph.getSearchGroups(tmp, '/(tt[0-9]+?)[^0-9]')[0]
         tmp = self.cm.ph.getDataBeetwenMarkers(tmp, '<tbody>', '</tbody>')[1]
@@ -74,7 +76,8 @@ class YoutubeComProvider(CBaseSubProviderClass):
     def _getFileName(self, title, lang, subId, imdbid):
         title = RemoveDisallowedFilenameChars(title).replace('_', '.')
         match = re.search(r'[^.]', title)
-        if match: title = title[match.start():]
+        if match:
+            title = title[match.start():]
 
         fileName = "{0}_{1}_0_{2}_{3}".format(title, lang, subId, imdbid)
         fileName = fileName + '.srt'
@@ -119,7 +122,8 @@ class YoutubeComProvider(CBaseSubProviderClass):
         printDBG("<<")
         
         def __cleanFiles(all=False):
-            if all: rm(fileName)
+            if all:
+                rm(fileName)
             rm(tmpFile)
         
         # detect encoding
@@ -129,8 +133,10 @@ class YoutubeComProvider(CBaseSubProviderClass):
             encoding = MapUcharEncoding(ret['data'])
             if 0 != ret['code'] or 'unknown' in encoding:
                 encoding = ''
-            else: encoding = encoding.strip()
-        else: encoding = ''
+            else:
+                encoding = encoding.strip()
+        else:
+            encoding = ''
         
         # convert file to UTF-8
         try:

@@ -38,8 +38,10 @@ import urllib.parse
 import urllib.error
 import re
 
-try: import json
-except Exception: import simplejson as json
+try:
+    import json
+except Exception:
+    import simplejson as json
 ###################################################
 
 
@@ -105,7 +107,8 @@ class Ipla(CBaseHostClass):
                 for vod in videosXMLTree:
                     try:
                         val = re_compile_vod.search(vod)
-                        if not val: continue
+                        if not val:
+                            continue
                         val = self.__getAttribs(val.group(1))
                         title = val.get('title', '')
                         plot  = val.get('descr', '')
@@ -119,17 +122,21 @@ class Ipla(CBaseHostClass):
                                 if thumbSizePrev > thumbSize:
                                     thumbSizePrev = thumbSize
                                     icon = attrib['url']
-                        except Exception: printExc()
+                        except Exception:
+                            printExc()
                         urls = self._getVideoUrls(vod)
                         sortNum = self.cm.ph.getSearchGroups(title, '''odcinek\s*?([0-9]+?)(?:^0-9|$)''', 1, True)[0]
-                        if sortNum != '': sortNum = int(sortNum) 
+                        if sortNum != '':
+                            sortNum = int(sortNum) 
                         params = {'category': 'video', 'sort_num':sortNum, 'title': self.cleanHtmlStr(title), 'plot': plot, 'icon':icon, 'urls': urls, 'fav_item':{'url':url, 'vod_id':val.get('id', '')}}
                         vodList.append(params)
-                    except Exception: printExc()
+                    except Exception:
+                        printExc()
                 vodList.sort(key=lambda item: item['sort_num'])
                 for params in vodList:
                     self.addVideo(params)
-            except Exception: printExc()
+            except Exception:
+                printExc()
     # end getVideosList
     
     def _getVideoUrls(self, vodData):
@@ -148,7 +155,8 @@ class Ipla(CBaseHostClass):
                         continue
                     name = "Jakość: %s\t format: %s\t  bitrate: %s" % (attrib['quality'], attrib['format'], attrib['bitrate'])
                     urls.append( {'name':name, 'url':attrib['url'], 'bitrate':attrib['bitrate']} )
-        except Exception: printExc()
+        except Exception:
+            printExc()
         urls = CSelOneLink(urls, __getLinkQuality, max_bitrate).getSortedLinks()
         if config.plugins.iptvplayer.iplaUseDF.value:
             urls = [urls[0]]
@@ -157,7 +165,8 @@ class Ipla(CBaseHostClass):
     def __writeCategoryCache(self, data):
         printDBG("__writeCategoryCache ")
         try:
-            if "0" == config.plugins.iptvplayer.iplacachexml.value: return
+            if "0" == config.plugins.iptvplayer.iplacachexml.value:
+                return
             data = str({"timestamp" : int(time()), "data":data})
             with open(self.cacheFilePath, 'w') as f:
                 f.write(str(data))            
@@ -168,7 +177,8 @@ class Ipla(CBaseHostClass):
         printDBG("__readCategoryCache ")
         try:
             data = None
-            if "0" == config.plugins.iptvplayer.iplacachexml.value: return
+            if "0" == config.plugins.iptvplayer.iplacachexml.value:
+                return
             from ast import literal_eval
             with open(self.cacheFilePath, 'r') as f:
                 data = f.read()
@@ -191,7 +201,8 @@ class Ipla(CBaseHostClass):
         
         def _fromUrl():
             sts, data = self.cm.getPage(Ipla.CAT_URL, {'host' : Ipla.HOST})
-            if not sts: data = ''
+            if not sts:
+                data = ''
             return data
             
         if None == self.categoryXMLTree or refresh:
@@ -254,7 +265,8 @@ class Ipla(CBaseHostClass):
                                 if linkMarker  in link:
                                     # if this is only linkt to another category, update category id
                                     catId = link.replace(linkMarker, "")
-                            except Exception: pass
+                            except Exception:
+                                pass
                             params = {'category': 'category', 'title': self.cleanHtmlStr(title), 'plot': plot, 'icon':icon, 'catId': catId, 'pCatId': pid}
                             self.addDir(params)
                         #printDBG("||||||||||||||||: %s" %pid)
@@ -263,7 +275,8 @@ class Ipla(CBaseHostClass):
                         printExc()
                 if listVideo and numOfSubCat < 2:
                     self.getVideosList(Ipla.MOV_URL + parentCatId)
-            except Exception: printExc()
+            except Exception:
+                printExc()
         return
         
     def listsMainMenu(self, refresh=False):
@@ -283,16 +296,20 @@ class Ipla(CBaseHostClass):
             sts, data = self.cm.getPage(favItem['url'], {'host' : Ipla.HOST})
             if sts:
                 sts, data = self.cm.ph.getDataBeetwenReMarkers(data, re.compile('<vod[^>]+?id="%s"[^>]*?>'% favItem['vod_id']), re.compile('</vod>' ), False)
-                if sts: links = self._getVideoUrls(data)
-        except Exception: printExc()
+                if sts:
+                    links = self._getVideoUrls(data)
+        except Exception:
+            printExc()
         return links
 
     def handleService(self, index, refresh = 0, searchPattern = '', searchType = ''):
         printDBG('handleService start')
         CBaseHostClass.handleService(self, index, refresh, searchPattern, searchType)
 
-        if 0 == refresh: refresh = False
-        else: refresh = True
+        if 0 == refresh:
+            refresh = False
+        else:
+            refresh = True
 
         title      = self.currItem.get("title", '')
         category   = self.currItem.get("category", None)

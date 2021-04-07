@@ -48,7 +48,8 @@ class Fenixsite(CBaseHostClass):
     def listMain(self, cItem, nextCategory):
         printDBG("Fenixsite.listMain")
         sts, data = self.getPage(self.getMainUrl())
-        if not sts: return
+        if not sts:
+            return
         self.setMainUrl(self.cm.meta['url'])
 
         data = ph.find(data, ('<ul', '>', 'navbar'), '</ul>')[1]
@@ -67,7 +68,8 @@ class Fenixsite(CBaseHostClass):
     def listCategories(self, cItem, nextCategory):
         printDBG("Fenixsite.listCategories")
         sts, data = self.getPage(cItem['url'])
-        if not sts: return
+        if not sts:
+            return
         self.setMainUrl(self.cm.meta['url'])
 
         data = ph.find(data, ('<div', '>', 'owl-box'), '</table>')[1]
@@ -101,7 +103,8 @@ class Fenixsite(CBaseHostClass):
     def listSort(self, cItem, nextCategory):
         printDBG("Fenixsite.listSort")
         sts, data = self.getPage(cItem['url'])
-        if not sts: return
+        if not sts:
+            return
         self.setMainUrl(self.cm.meta['url'])
 
         directionsTitle = {1:'\xe2\x86\x91', 0:'\xe2\x86\x93'}
@@ -111,7 +114,8 @@ class Fenixsite(CBaseHostClass):
         items = [[], []]
         for idx in range(1, len(data), 2):
             item = ph.find(data[idx-1], 'ssorts(', ')', flags=0)[1].split(',')
-            if len(item) != 3: continue 
+            if len(item) != 3:
+                continue 
             title = self.cleanHtmlStr(data[idx])
             url = self.getFullUrl(item[1].strip()[1:-1])
             try:
@@ -137,7 +141,8 @@ class Fenixsite(CBaseHostClass):
             url += '-%s-%s' % (page, cItem['f_sort'])
 
         sts, data = self.getPage(url)
-        if not sts: return
+        if not sts:
+            return
         self.setMainUrl(self.cm.meta['url'])
 
         mainDesc = self.cleanHtmlStr(ph.find(data, ('<div', '>', 'shortstory-news'), '</div>', flags=0)[1].split('</h1>', 1)[-1])
@@ -157,7 +162,8 @@ class Fenixsite(CBaseHostClass):
             tmp = [ph.find(item, ('<i', '>', 'eye'), '</span', flags=0)[1], ph.find(item, ('<i', '>', 'comments'), '</span', flags=0)[1], ph.find(item, ('<i', '>', 'comments'), '</span', flags=0)[1] ]
             for t in tmp:
                 t = self.cleanHtmlStr(t)
-                if t: desc.append(t)
+                if t:
+                    desc.append(t)
             tmp = ph.find(item, ('<ul', '>', 'title'))[1]
             desc.append(ph.getattr(tmp, 'title').replace('/', ' (') + ')')
             self.addVideo({'good_for_fav':True, 'title':title, 'url':url, 'icon':icon, 'desc':' | '.join(desc) + '[/br]' + mainDesc})
@@ -169,7 +175,8 @@ class Fenixsite(CBaseHostClass):
 
         url = self.getFullUrl('/api/private/get/search?query=%s&limit=100&f=1' % urllib.parse.quote(searchPattern))
         sts, data = self.getPage(url)
-        if not sts: return
+        if not sts:
+            return
         self.setMainUrl(self.cm.meta['url'])
 
         try:
@@ -187,13 +194,15 @@ class Fenixsite(CBaseHostClass):
     def getLinksForVideo(self, cItem):
     
         linksTab = self.cacheLinks.get(cItem['url'], [])
-        if linksTab: return linksTab
+        if linksTab:
+            return linksTab
 
         linksTab = []
         subTrack = ''
 
         sts, data = self.getPage(cItem['url'])
-        if not sts: return []
+        if not sts:
+            return []
         self.setMainUrl(self.cm.meta['url'])
         cUrl = self.cm.meta['url']
 
@@ -230,7 +239,8 @@ class Fenixsite(CBaseHostClass):
         for item in tmp:
             key = ph.search(item, ph.A_HREF_URI_RE)[1]
             title = self.cleanHtmlStr(item)
-            if not key: continue
+            if not key:
+                continue
             titlesMap[key] = title
 
         data = ph.find(data, ('<div', '>', 'tab-content'), ('<div', '>', 'fstory'), flags=0)[1]
@@ -265,7 +275,8 @@ class Fenixsite(CBaseHostClass):
                     item['url'] = strwithmeta(item['url'], {'Referer':cUrl, 'external_sub_tracks':subTrack})
             self.cacheLinks[cItem['url']] = linksTab
 
-        if trailerUrl: linksTab.append({'name':_('Trailer'), 'url':trailerUrl, 'need_resolve':1})
+        if trailerUrl:
+            linksTab.append({'name':_('Trailer'), 'url':trailerUrl, 'need_resolve':1})
 
         return linksTab
 
@@ -294,7 +305,8 @@ class Fenixsite(CBaseHostClass):
 
         if not data:
             sts, data = self.getPage(cItem['url'])
-            if not sts: return []
+            if not sts:
+                return []
             self.setMainUrl(self.cm.meta['url'])
 
         tmp = ph.find(data, ('<div', '>', 'fullstory'), '</div>', flags=0)[1]
@@ -308,7 +320,8 @@ class Fenixsite(CBaseHostClass):
 
         for item in data:
             key = self.cleanHtmlStr(ph.find(item, ('<div', '>', 'title'), '</div>', flags=0)[1])
-            if 'Pomoc' in key or 'Prijavi' in key: continue
+            if 'Pomoc' in key or 'Prijavi' in key:
+                continue
             if 'imdbRatingPlugin' in item:
                 url ='http://p.media-imdb.com/static-content/documents/v1/title/{0}/ratings%3Fjsonp=imdb.rating.run:imdb.api.title.ratings/data.json?u={1}&s={2}'.format(ph.getattr(item, 'data-title'), ph.getattr(item, 'data-user'), ph.getattr(item, 'data-style'))
                 try:
@@ -323,9 +336,12 @@ class Fenixsite(CBaseHostClass):
                 value = self.cleanHtmlStr(ph.find(item, ('<div', '>', 'text'), '</div>', flags=0)[1].rsplit('</ul>', 1)[-1])
             itemsList.append((key, value))
 
-        if title == '': title = cItem['title']
-        if icon == '':  icon = cItem.get('icon', self.DEFAULT_ICON_URL)
-        if desc == '':  desc = cItem.get('desc', '')
+        if title == '':
+            title = cItem['title']
+        if icon == '':
+            icon = cItem.get('icon', self.DEFAULT_ICON_URL)
+        if desc == '':
+            desc = cItem.get('desc', '')
         
         return [{'title':self.cleanHtmlStr( title ), 'text': self.cleanHtmlStr( desc ), 'images':[{'title':'', 'url':self.getFullUrl(icon)}], 'other_info':{'custom_items_list':itemsList}}]
 

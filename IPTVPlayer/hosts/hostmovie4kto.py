@@ -17,8 +17,10 @@ import re
 import urllib.request
 import urllib.parse
 import urllib.error
-try:    import json
-except Exception: import simplejson as json
+try:
+    import json
+except Exception:
+    import simplejson as json
 ###################################################
 
 
@@ -84,24 +86,28 @@ class Movie4kTO(CBaseHostClass):
     def getMainUrl(self):
         domain = config.plugins.iptvplayer.movie4kto_alt_domain.value.strip()
         if self.cm.isValidUrl(domain):
-            if domain[-1] != '/': domain += '/'
+            if domain[-1] != '/':
+                domain += '/'
             return domain
         return self.MAIN_URL
         
     def getPage(self, baseUrl, params={}, post_data=None):
-        if params == {}: params = dict(self.defaultParams)
+        if params == {}:
+            params = dict(self.defaultParams)
         lang = config.plugins.iptvplayer.movie4kto_language.value
         if '' == lang:
             try:
                 lang = language.getActiveLanguage().split('_')[0]
-            except Exception: lang = 'en'
+            except Exception:
+                lang = 'en'
         params['cookie_items'] = {'lang':lang}
         params['cloudflare_params'] = {'domain':self.up.getDomain(self.getMainUrl()), 'cookie_file':self.COOKIE_FILE, 'User-Agent':self.USER_AGENT, 'full_url_handle':self.getFullUrl}
         return self.cm.getPageCFProtection(baseUrl, params, post_data)
         
     def getFullIconUrl(self, url):
         url = self.getFullUrl(url)
-        if url == '': return ''
+        if url == '':
+            return ''
         cookieHeader = self.cm.getCookieHeader(self.COOKIE_FILE)
         if url.startswith('https://'):
             url = 'http' + url[5:]
@@ -119,41 +125,51 @@ class Movie4kTO(CBaseHostClass):
         printDBG("Movie4kTO.listEpisodes")
         url  = self.getFullUrl(cItem['url'])
         sts, data = self.getPage(url)
-        if not sts: return
+        if not sts:
+            return
         testMark = '<FORM name="seasonform">'
         m1 = ''
         m2 = ''
         found = False
         for test in [{'m1':']="', 'm2':'";'}, {'m1':'id="tablemoviesindex"', 'm2':'</TABLE>'}, {}, None]:
             if testMark not in data:
-                if None == test: continue
+                if None == test:
+                    continue
                 m1 = test.get('m1', m1) 
                 m2 = test.get('m2', m2) 
                 sts, tmpData = self.cm.ph.getDataBeetwenMarkers(data, m1, m2, False)
                 tmpData = tmpData.replace('\\"', '"')
                 url = self.cm.ph.getSearchGroups(tmpData, 'href="([^"]+?)"')[0]
-                if '' == url: continue
+                if '' == url:
+                    continue
                 sts, data = self.getPage( self.getFullUrl(url) )
-                if not sts: data = ''
+                if not sts:
+                    data = ''
             else:
                 found = True
                 break
         
-        if not found: return
+        if not found:
+            return
         sts, data = self.cm.ph.getDataBeetwenMarkers(data, testMark, '</table>', False)
-        if not sts: return 
+        if not sts:
+            return 
 
         data = data.split('</FORM>')
-        if len(data): del data [-1]
-        if 0 == len(data): return
+        if len(data):
+            del data [-1]
+        if 0 == len(data):
+            return
         seasons = re.compile('<OPTION[^>]+?>([^<]+?)</OPTION>').findall(data[0])
         episodesReObj = re.compile('<OPTION[^>]+?value="([^"]+?)"[^>]*?>([^<]+?)</OPTION>')
         del data[0]
-        if len(seasons) != len(data): printDBG("Movie4kTO.listEpisodes >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> WRONG THIG HAPPENS seasons[%d] data[%d]", len(seasons), len(data))
+        if len(seasons) != len(data):
+            printDBG("Movie4kTO.listEpisodes >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> WRONG THIG HAPPENS seasons[%d] data[%d]", len(seasons), len(data))
         for idx in range(len(data)):
             if idx < len(seasons):
                 season = seasons[idx]
-            else: season = ''
+            else:
+                season = ''
             episodes = episodesReObj.findall( data[idx] )
             for episod in episodes:
                 url   = episod[0]
@@ -176,12 +192,15 @@ class Movie4kTO(CBaseHostClass):
         page = cItem.get('page', 1)
         url  = self.getFullUrl(cItem['url'])
         if page > 1:
-            if '?' in url: url += '?'
-            else: url += '&'
+            if '?' in url:
+                url += '?'
+            else:
+                url += '&'
             url += 'page=%s' % page
         
         sts, data = self.getPage(url)
-        if not sts: return
+        if not sts:
+            return
         
         sts, nextPage = self.cm.ph.getDataBeetwenMarkers(data, 'class="pagination"', '</div>', False)
         if sts:
@@ -199,16 +218,19 @@ class Movie4kTO(CBaseHostClass):
         for item in data:
             if None == category:
                 sts, item = self.cm.ph.getDataBeetwenMarkers(item, '<div id="xline">', '<div id="xline">', False)
-                if not sts: continue
+                if not sts:
+                    continue
             
             url    = self.cm.ph.getSearchGroups(item, 'href="([^"]+?)"')[0]
             icon   = self.cm.ph.getSearchGroups(item, 'src="([^"]+?)"')[0]
             
             title  = self.cm.ph.getSearchGroups(item, 'title="([^"]+?)"')[0]
-            if '' == title: self.cm.ph.getSearchGroups(item, 'alt="([^"]+?)"')[0]
+            if '' == title:
+                self.cm.ph.getSearchGroups(item, 'alt="([^"]+?)"')[0]
             lang = self.cm.ph.getSearchGroups(item, 'src="/img/([^"]+?)_small.png"')[0].replace('us', '').replace('_', '').replace('flag', '')
             #if '' == lang: lang = 'eng'
-            if '' != lang: title += ' ({0})'.format(lang)
+            if '' != lang:
+                title += ' ({0})'.format(lang)
             
             desc  = self.cm.ph.getDataBeetwenMarkers(item, 'class="info">', '</div>', False)[1]
 
@@ -236,16 +258,20 @@ class Movie4kTO(CBaseHostClass):
         printDBG("Movie4kTO.listsItems2")
         page = cItem.get('page', 1)
         baseUrl  = self.getFullUrl(cItem['url'])
-        if '{0}' in baseUrl: url = baseUrl.format(page)
-        else: url = baseUrl
+        if '{0}' in baseUrl:
+            url = baseUrl.format(page)
+        else:
+            url = baseUrl
         
         sts, data = self.getPage(url)
-        if not sts: return
+        if not sts:
+            return
         
         nextPage = False
         if '{0}' in baseUrl:
             tmp = baseUrl.format(page+1).split('/')[-1]
-            if tmp in data: nextPage = True
+            if tmp in data:
+                nextPage = True
             
         # covers 
         covers = {}
@@ -253,27 +279,33 @@ class Movie4kTO(CBaseHostClass):
         tmp = tmp.split('function()')
         for item in tmp:
             iconId = self.cm.ph.getSearchGroups(item, '''"#coverPreview([0-9]+?)"''')[0]
-            if iconId == '': continue
+            if iconId == '':
+                continue
             covers[iconId] = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''src=['"]([^"^']+?)['"]''')[0])
         
         year = ''
         data  = self.cm.ph.getAllItemsBeetwenMarkers(data, '<TR', '</TR>', caseSensitive=False)
         for item in data:
-            if "tdmovies" not in item: continue
+            if "tdmovies" not in item:
+                continue
             url   = self.getFullUrl( self.cm.ph.getSearchGroups(item, 'href="([^"]+?)"')[0] )
             title = self.cleanHtmlStr( self.cm.ph.getDataBeetwenMarkers(item, '<a', '</a>', caseSensitive=False)[1])
             
             descTab = []
             # year
             tmp = self.cm.ph.getSearchGroups(item, '[>\s]([0-9]{4})[<\s]')[0]
-            if tmp != '': year = tmp
-            if year != '': descTab.append(year)
+            if tmp != '':
+                year = tmp
+            if year != '':
+                descTab.append(year)
             # rating
             tmp = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(item, '<STRONG>', '</TD>', caseSensitive=False)[1])
-            if tmp != '': descTab.append(tmp)
+            if tmp != '':
+                descTab.append(tmp)
             # lang
             tmp = self.cm.ph.getSearchGroups(item, 'src="/img/([^"]+?)_small.png"')[0].replace('us', '').replace('_', '').replace('flag', '')
-            if tmp != '': descTab.append(tmp)
+            if tmp != '':
+                descTab.append(tmp)
             
             iconId = self.cm.ph.getSearchGroups(item, '''"coverPreview([0-9]+?)"''')[0]
             
@@ -326,12 +358,15 @@ class Movie4kTO(CBaseHostClass):
         url  = self.getFullUrl(cItem['url'])
         
         sts, data = self.getPage(url)
-        if not sts: return
+        if not sts:
+            return
         sts, data = self.cm.ph.getDataBeetwenMarkers(data, '<TABLE id="tablemovies" cellpadding=5 cellspacing=5>', '</TABLE>', False)
-        if not sts: return
+        if not sts:
+            return
         
         data = data.split('</TR>')
-        if len(data): del data[-1]
+        if len(data):
+            del data[-1]
         for item in data:
             
             genreID = self.cm.ph.getSearchGroups(item, genreMarker+'([0-9]+?)-')[0]
@@ -346,11 +381,14 @@ class Movie4kTO(CBaseHostClass):
     def listCategories(self, cItem, category):
         printDBG("Movie4kTO.listCategories")
         sts, data = self.getPage(self.getMainUrl())
-        if not sts: return
+        if not sts:
+            return
         sts, data = self.cm.ph.getDataBeetwenMarkers(data, 'aria-labelledby="menu_select">', '</ul>', False)
-        if not sts: return
+        if not sts:
+            return
         data = data.split('</li>')
-        if len(data): del data[-1]
+        if len(data):
+            del data[-1]
         
         for item in data:
             url    = self.cm.ph.getSearchGroups(item, 'href="([^"]+?)"')[0]
@@ -368,22 +406,28 @@ class Movie4kTO(CBaseHostClass):
         url  = cItem['url'] + "/{0},{1}.html".format(page, config.plugins.iptvplayer.Movie4kTO_sort.value)
         
         sts, data = self.getPage(url)
-        if not sts: return
+        if not sts:
+            return
         
-        if '"Następna"' in data: nextPage = True
-        else: nextPage = False
+        if '"Następna"' in data:
+            nextPage = True
+        else:
+            nextPage = False
         
         sts, data = self.cm.ph.getDataBeetwenMarkers(data, '<div class="col-md-2" style="margin-bottom: 35px;">', '<script>', False)
-        if not sts: return
+        if not sts:
+            return
         
         data = data.split('<div class="col-md-2" style="margin-bottom: 35px;">')
-        if len(data): del data[0]
+        if len(data):
+            del data[0]
         
         for item in data:
             icon   = self.cm.ph.getSearchGroups(item, 'src="([^"]+?)"')[0]
             url    = self.cm.ph.getSearchGroups(item, 'href="([^"]+?)"')[0]
             title  = self.cm.ph.getSearchGroups(item, 'title="([^"]+?)"')[0]
-            if '' == title: title  = self.cm.ph.getSearchGroups(item, 'alt="([^"]+?)"')[0]
+            if '' == title:
+                title  = self.cm.ph.getSearchGroups(item, 'alt="([^"]+?)"')[0]
             desc   =  ''
             if '' != url and '' != title:
                 params = dict(cItem)
@@ -410,10 +454,12 @@ class Movie4kTO(CBaseHostClass):
         printDBG("Movie4kTO.getArticleContent [%s]" % cItem)
         retTab = []
         
-        if 'url' not in cItem: return retTab
+        if 'url' not in cItem:
+            return retTab
         
         sts, data = self.getPage(cItem['url'])
-        if not sts: return retTab
+        if not sts:
+            return retTab
         
         title = self.cm.ph.getSearchGroups(data, 'title" content="([^"]+?)"')[0]
         icon = self.cm.ph.getSearchGroups(data, 'image" content="([^"]+?)"')[0]
@@ -426,7 +472,8 @@ class Movie4kTO(CBaseHostClass):
         urlTab = []
         
         sts, pageData = self.getPage(cItem['url'])
-        if not sts: return urlTab
+        if not sts:
+            return urlTab
         
         for idx in range(0, 2):
             if 0 != idx:
@@ -475,7 +522,8 @@ class Movie4kTO(CBaseHostClass):
         urlTab = []
         
         sts, data = self.getPage(url)
-        if not sts: return urlTab
+        if not sts:
+            return urlTab
         
         videoUrl = self.cm.ph.getSearchGroups(data, '<a target="_blank" href="([^"]+?)"')[0]
         if '' == videoUrl:
@@ -554,7 +602,8 @@ class IPTVHost(CHostBase):
     def getArticleContent(self, Index = 0):
         retCode = RetHost.ERROR
         retlist = []
-        if not self.isValidIndex(Index): return RetHost(retCode, value=retlist)
+        if not self.isValidIndex(Index):
+            return RetHost(retCode, value=retlist)
 
         hList = self.host.getArticleContent(self.host.currList[Index])
         for item in hList:

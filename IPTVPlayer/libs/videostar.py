@@ -109,14 +109,16 @@ class VideoStarApi(CBaseHostClass, CaptchaHelper):
         errMessage = _("Get page \"%s\" error.")
         
         sts, data = self.cm.getPage(loginUrl, self.defaultParams)
-        if not sts: return False, (errMessage % loginUrl)
+        if not sts:
+            return False, (errMessage % loginUrl)
 
 #        sts, data = self.cm.ph.getDataBeetwenNodes(data, ('<form', '>', 'login'), ('</form', '>'))
 #        if not sts: return False, ""
 
         link = self.cm.ph.getSearchGroups(data, '''<link as="script" rel="preload" href=['"](\/gatsby\-statics\/app\-[^'^"]+?)['"]''')[0]
         sts, data = self.cm.getPage(self.getFullUrl(link), self.defaultParams)
-        if not sts: return False, (errMessage % loginUrl)
+        if not sts:
+            return False, (errMessage % loginUrl)
 
         if login != 'guest':
             sitekey = self.cm.ph.getSearchGroups(data, '''GRECAPTCHA_SITEKEY.*?['"]([^'^"]+?)['"]''')[0]
@@ -124,7 +126,8 @@ class VideoStarApi(CBaseHostClass, CaptchaHelper):
                 token, errorMsgTab = self.processCaptcha(sitekey, loginUrl)
                 if token == '':
                     return False, errorMsgTab
-            else: return False, errorMsgTab
+            else:
+                return False, errorMsgTab
             post_data = '{"login":"%s","password":"%s","g-recaptcha-response":"%s","permanent":"1","device":"web"}' % (login, password, token)
         else:
             post_data = '{"login":"%s","password":"%s","permanent":"1","device":"web"}' % (login, password)
@@ -187,7 +190,8 @@ class VideoStarApi(CBaseHostClass, CaptchaHelper):
             url = self.getFullUrl('/static/guest/channels/list/web.json', 'static')
         
         sts, data = self.cm.getPage(url, self.defaultParams)
-        if not sts: return channelsTab
+        if not sts:
+            return channelsTab
 
         try:
             idx = 0
@@ -198,17 +202,23 @@ class VideoStarApi(CBaseHostClass, CaptchaHelper):
             data = json_loads(data, '', True)
             for item in data[jsonChannels]:
                 guestTimeout = item.get('guest_timeout', '')
-                if not config.plugins.iptvplayer.videostar_show_all_channels.value and (item['access_status'] == 'unsubscribed' or (not self.loggedIn and guestTimeout == '0')): continue
+                if not config.plugins.iptvplayer.videostar_show_all_channels.value and (item['access_status'] == 'unsubscribed' or (not self.loggedIn and guestTimeout == '0')):
+                    continue
                 title = self.cleanHtmlStr(item['name'])
                 icon  = self.getFullUrl(item.get('thumbnail', '')) 
                 url   = self.getFullUrl(item['slug'])
                 
                 desc = []
-                if item.get('hd', False): desc.append('HD')
-                else: desc.append('SD')
-                if self.loggedIn: desc.append(item['access_status'])
-                elif guestTimeout != '': desc.append(_('Guest timeout: %s') % guestTimeout)
-                if item.get('geoblocked', False): desc.append('geoblocked')
+                if item.get('hd', False):
+                    desc.append('HD')
+                else:
+                    desc.append('SD')
+                if self.loggedIn:
+                    desc.append(item['access_status'])
+                elif guestTimeout != '':
+                    desc.append(_('Guest timeout: %s') % guestTimeout)
+                if item.get('geoblocked', False):
+                    desc.append('geoblocked')
                 
                 params = {'name':cItem['name'], 'type':'video', 'title':title, 'url':url, 'icon':icon, 'priv_idx':idx, 'desc':' | '.join(desc)}
                 channelsTab.append(params)
@@ -244,9 +254,11 @@ class VideoStarApi(CBaseHostClass, CaptchaHelper):
                     rm(self.COOKIE_FILE)
                     self.doLogin('guest', 'guest')
                     sts, data = self.cm.getPage(self.getFullUrl('/static/guest/channels/list/web.json', 'static'), self.defaultParams)
-                    if sts: continue
+                    if sts:
+                        continue
                 
-                if not sts: break
+                if not sts:
+                    break
                 data = json_loads(data)
                 if data['data'] != None:
                     for item in data['data']['stream_channel']['streams']:

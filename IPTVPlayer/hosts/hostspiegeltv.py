@@ -52,7 +52,8 @@ class SpiegelTv(CBaseHostClass):
         self.oneconfig = {'client_id':'748'}
 
     def getPage(self, baseUrl, addParams = {}, post_data = None):
-        if addParams == {}: addParams = dict(self.defaultParams)
+        if addParams == {}:
+            addParams = dict(self.defaultParams)
         return self.cm.getPage(baseUrl, addParams, post_data)
 
     def getFullIconUrl(self, icon, baseUrl=None):
@@ -107,7 +108,8 @@ class SpiegelTv(CBaseHostClass):
     def listMainItems(self, cItem, nextCategory):
         printDBG("SpiegelTv.listMainItems [%s]" % cItem)
         sts, data = self.getPage(cItem['url'])
-        if not sts: return
+        if not sts:
+            return
         
         data = self.cm.ph.getAllItemsBeetwenNodes(data, ('<h2', '>', 'h1'), ('<div', '>', 'cleared'))
         for item in data:
@@ -123,7 +125,8 @@ class SpiegelTv(CBaseHostClass):
     def _fillOneConfig(self, cItem, data=None):
         if data == None:
             sts, data = self.getPage(cItem['url'])
-            if not sts: return
+            if not sts:
+                return
         
         jscode = []
         data = self.cm.ph.getAllItemsBeetwenNodes(data, ('<script', '>'), ('</script', '>'), False)
@@ -163,7 +166,8 @@ class SpiegelTv(CBaseHostClass):
                         }
             url = 'https://api.nexx.cloud/v3/%s/session/init' % (self.oneconfig['client_id'], )
             sts, data = self.getPage(url, urlParams, post_data)
-            if not sts: return
+            if not sts:
+                return
             
             self.oneconfig['session_data'] = json_loads(data, '', True)['result']
             self.oneconfig['session_data']['device_id'] = deviceId
@@ -235,12 +239,14 @@ class SpiegelTv(CBaseHostClass):
                 if icon:
                     desc = []
                     tmp = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(data, '<h2', '</h2>')[1])
-                    if tmp: desc.append(tmp)
+                    if tmp:
+                        desc.append(tmp)
 
                     tmp = self.cm.ph.getAllItemsBeetwenNodes(data, ('<div', '>', 'vreddesc'), ('</div', '>'), False)
                     for t in tmp:
                         t = self.cleanHtmlStr(t)
-                        if t: desc.append(t)
+                        if t:
+                            desc.append(t)
 
                     self.addVideo(MergeDicts(cItem, {'title':title, 'icon':icon, 'desc':'[/br]'.join(desc)}))
                     return
@@ -263,7 +269,8 @@ class SpiegelTv(CBaseHostClass):
             url = self.getFullUrl('/gateway/service.php')
             post_data = {'cid':self.oneconfig['cid'], 'client':self.oneconfig['client_id'], 'method':method, 'param':param, 'start':start, 'cgw':self.oneconfig['gw'], 'isu':'0', 'uhs':'0', 'agc':'0', 'wbp':'0', 'cdlang':self.oneconfig['language']}
             sts, data = self.getPage(url, post_data=post_data)
-            if not sts: return
+            if not sts:
+                return
             data = json_loads(data)['contents']
             printDBG(data)
             nextPageParams = []
@@ -280,13 +287,19 @@ class SpiegelTv(CBaseHostClass):
                 tmp = self.cm.ph.getAllItemsBeetwenMarkers(item, '<div', '</div>')
                 for it in tmp:
                     t = self.cleanHtmlStr(it)
-                    if t == '': continue
-                    if 'cardtitle' in it: title = t
-                    if 'tholderbottom' in it: desc.insert(0, t)
-                    else: desc.append(t)
+                    if t == '':
+                        continue
+                    if 'cardtitle' in it:
+                        title = t
+                    if 'tholderbottom' in it:
+                        desc.insert(0, t)
+                    else:
+                        desc.append(t)
                 params = {'good_for_fav':True, 'category':cItem['category'], 'title':title, 'url':url, 'icon':icon, 'desc':'[/br]'.join(desc)}
-                if '/videos/' in url: self.addVideo(params)
-                else: self.addDir(params)
+                if '/videos/' in url:
+                    self.addVideo(params)
+                else:
+                    self.addDir(params)
             
             if 3 == len(nextPageParams):
                 params = dict(cItem)
@@ -309,13 +322,15 @@ class SpiegelTv(CBaseHostClass):
         
         cacheKey = cItem['url']
         cacheTab = self.cacheLinks.get(cacheKey, [])
-        if len(cacheTab): return cacheTab
+        if len(cacheTab):
+            return cacheTab
         
         self.cacheLinks = {}
         retTab = []
         
         sts, data = self.getPage(cItem['url'])
-        if not sts: return
+        if not sts:
+            return
         
         self._fillOneConfig(cItem, data)
         self._initiSession(cItem)
@@ -350,11 +365,14 @@ class SpiegelTv(CBaseHostClass):
             
             url = 'https://api.nexx.cloud/v3/%s/videos/%s/%s' % (clientId, op, videoId)
             sts, data = self.getPage(url, urlParams, post_data)
-            if not sts: return
+            if not sts:
+                return
             
             data = json_loads(data, '', True)['result']
-            try: protectionToken = data['protectiondata']['token']
-            except Exception: protectionToken = None
+            try:
+                protectionToken = data['protectiondata']['token']
+            except Exception:
+                protectionToken = None
             language = data['general'].get('language_raw') or ''
             printDBG(data)
             
@@ -386,9 +404,11 @@ class SpiegelTv(CBaseHostClass):
                         if fds:
                             for fd in fds:
                                 ss = fd.split(':')
-                                if len(ss) != 2: continue
+                                if len(ss) != 2:
+                                    continue
                                 tbr = int(ss[0] or 0)
-                                if not tbr: continue
+                                if not tbr:
+                                    continue
                                 retTab.append({'name':'[%s] %s' % (tbr, ss[1]), 'tbr':tbr, 'url': '%s%s/%s_src_%s_%d.mp4' % (azureProgressiveBase, azureLocator, videoId, ss[1], tbr)})
                 except Exception:
                     printExc()

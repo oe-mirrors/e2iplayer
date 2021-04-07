@@ -79,7 +79,8 @@ class MediayouNet(CBaseHostClass):
         
         option = cItem.get('option')
         sts, data = self.getPage(cItem['url'], post_data = cItem.get('post_data'))
-        if not sts: return
+        if not sts:
+            return
 #        printDBG("MediayouNet.listCategories data[%s]" % data)
         try:
             data = json_loads(data)['contents']
@@ -101,7 +102,8 @@ class MediayouNet(CBaseHostClass):
         printDBG("MediayouNet.listItems [%s]" % cItem)
 
         sts, data = self.getPage(cItem['url'], post_data = cItem.get('post_data'))
-        if not sts: return
+        if not sts:
+            return
 #        printDBG("MediayouNet.listItems data[%s]" % data)
         try:
             data = json_loads(data)['contents']
@@ -132,14 +134,16 @@ class MediayouNet(CBaseHostClass):
 
         cacheKey = cItem['url']
         cacheTab = self.cacheLinks.get(cacheKey, [])
-        if len(cacheTab): return cacheTab
+        if len(cacheTab):
+            return cacheTab
         
         self.cacheLinks = {}
         
         urlTab = []
         
         sts, data = self.getPage(self.getFullUrl('/embedded/GetUrlSub_Website.php'), post_data = {'os':'PCWEB', 'id':cItem['url']})
-        if not sts: return []
+        if not sts:
+            return []
 #        printDBG("MediayouNet.getLinksForVideo data[%s]" % data)
         try:
             data = json_loads(data)['urls']
@@ -148,7 +152,8 @@ class MediayouNet(CBaseHostClass):
                 url = item['url']
                 if url != '' and url.endswith('.pls'):
                     sts, tmp = self.getPage(url)
-                    if not sts: return []
+                    if not sts:
+                        return []
                     if sts:
                         tmp = re.compile('''(File[0-9]+?)=(https?://.+)''').findall(tmp)
                         for pitem in tmp:

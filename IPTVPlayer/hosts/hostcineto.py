@@ -46,8 +46,10 @@ class CineTO(CBaseHostClass, CaptchaHelper):
                             ]
         
     def _getStr(self, item, key, default=''):
-        if key not in item: val = default
-        if item[key] == None: val = default
+        if key not in item:
+            val = default
+        if item[key] == None:
+            val = default
         val = str(item[key])
         return self._(val)
     
@@ -88,7 +90,8 @@ class CineTO(CBaseHostClass, CaptchaHelper):
         self.cacheFilters  = {'kind':[], 'genres':[], 'rating':[], 'year':[]}
         
         sts, data = self.getPage(self.getMainUrl())
-        if not sts: return []
+        if not sts:
+            return []
         
         try:
             # kind
@@ -138,7 +141,8 @@ class CineTO(CBaseHostClass, CaptchaHelper):
         url = self.getFullUrl('/request/search')
         post_data = self._getSearchParams(cItem)
         sts, data = self.getPage(url, post_data=post_data)
-        if not sts: return []
+        if not sts:
+            return []
         
         cItem = dict(cItem)
         cItem['category'] = nextCategory
@@ -172,15 +176,18 @@ class CineTO(CBaseHostClass, CaptchaHelper):
         printDBG("------------------------------------")
         printDBG(item)
         title = self.cleanHtmlStr(item['title'])
-        if 'cover' in item: icon  = self.getFullIconUrl(item['cover'])
-        else: icon = 'https://s.cine.to/cover/%s.jpg' % str(item['imdb']).zfill(7)
+        if 'cover' in item:
+            icon  = self.getFullIconUrl(item['cover'])
+        else:
+            icon = 'https://s.cine.to/cover/%s.jpg' % str(item['imdb']).zfill(7)
         
         descTab = []
         for it in ['year', 'quality', 'language']:
             tmp = item.get(it, '')
             if it == 'language':
                 tmp = ', '.join(re.compile('\-([^\,]+?)\,').findall(tmp + ','))
-            if tmp != '': descTab.append(tmp)
+            if tmp != '':
+                descTab.append(tmp)
         desc = ' | '.join(descTab)
         
         params = dict(cItem)
@@ -196,7 +203,8 @@ class CineTO(CBaseHostClass, CaptchaHelper):
         url = self.getFullUrl('/request/search')
         post_data = self._getSearchParams(cItem, count=ITEMS_PER_PAGE)
         sts, data = self.getPage(url, post_data=post_data)
-        if not sts: return []
+        if not sts:
+            return []
         
         try:
             data = json_loads(data, noneReplacement='', baseTypesAsString=True)
@@ -224,7 +232,8 @@ class CineTO(CBaseHostClass, CaptchaHelper):
         post_data = 'ID=%s' % cItem['imdb']
         
         sts, data = self.getPage(url, post_data=post_data)
-        if not sts: return []
+        if not sts:
+            return []
         
         try:
             data = json_loads(data, noneReplacement='', baseTypesAsString=True)['entry']
@@ -235,16 +244,20 @@ class CineTO(CBaseHostClass, CaptchaHelper):
 
             descTab = []
             tmp = data.get('year', '')
-            if tmp != '': descTab.append(tmp)
+            if tmp != '':
+                descTab.append(tmp)
             
             tmp = data.get('duration', '')
-            if tmp != '': descTab.append('~%s min.' % tmp)
+            if tmp != '':
+                descTab.append('~%s min.' % tmp)
             
             tmp = data.get('rating', '')
-            if tmp != '': descTab.append(tmp)
+            if tmp != '':
+                descTab.append(tmp)
             
             tmp = ', '.join(data.get('genres', []))
-            if tmp != '': descTab.append(tmp)
+            if tmp != '':
+                descTab.append(tmp)
             
             langIdsTab = []
             for lang in data['lang']:
@@ -304,14 +317,16 @@ class CineTO(CBaseHostClass, CaptchaHelper):
             post_data = 'ID=%s&lang=%s' % (cItem['imdb'], cItem['f_lang_id'])
             
             sts, data = self.getPage(url, post_data=post_data)
-            if not sts: return []
+            if not sts:
+                return []
             
             data = json_loads(data, '', True)['links']
             printDBG(data)
             
             for hosting in data:
                 links = data[hosting]
-                if len(links) < 2: continue
+                if len(links) < 2:
+                    continue
                 
                 quality = str(links[0])
                 quality = qualityMap.get(quality, quality)
@@ -359,7 +374,8 @@ class CineTO(CBaseHostClass, CaptchaHelper):
                             params = MergeDicts(self.defaultParams, {'max_data_size':0})
                             params['header'] = MergeDicts(params['header'], {'Referer':self.cm.meta['url']})
                             sts, data = self.getPage(videoUrl + '?token=' + token, params)
-                            if sts: videoUrl = self.cm.meta['url']
+                            if sts:
+                                videoUrl = self.cm.meta['url']
                     if 1 == self.up.checkHostSupport(videoUrl):
                         CineTO.LINKS_CACHE[cacheKey] = videoUrl
             returnCode = self.cm.meta.get('status_code', 200)
@@ -388,7 +404,8 @@ class CineTO(CBaseHostClass, CaptchaHelper):
         post_data = 'ID=%s' % cItem['imdb']
         
         sts, data = self.getPage(url, post_data=post_data)
-        if not sts: return []
+        if not sts:
+            return []
         
         title = ''
         desc = ''
@@ -404,34 +421,45 @@ class CineTO(CBaseHostClass, CaptchaHelper):
                 # move better language at top
                 langKeys = list(data['lang'].keys())
                 defLang = GetDefaultLang()
-                if defLang not in langKeys: defLang = 'en'
-                if defLang in langKeys: lang = defLang
-                else: lang = langKeys[0]
+                if defLang not in langKeys:
+                    defLang = 'en'
+                if defLang in langKeys:
+                    lang = defLang
+                else:
+                    lang = langKeys[0]
             
             desc = self.cleanHtmlStr(data.get('plot_'+lang, ''))
             
             tmp = data.get('year', '')
-            if tmp != '': otherInfo['year'] = tmp
+            if tmp != '':
+                otherInfo['year'] = tmp
             
             tmp = data.get('date', '')
-            if tmp != '': otherInfo['released'] = tmp
+            if tmp != '':
+                otherInfo['released'] = tmp
             
             tmp = data.get('duration', '')
-            if tmp != '': otherInfo['duration'] = tmp + ' min.'
+            if tmp != '':
+                otherInfo['duration'] = tmp + ' min.'
             
             for item in [('genres', 'genres'), ('producer', 'producers'), ('director', 'directors'), ('actor', 'actors')]:
                 tmp = ', '.join(data.get(item[0], []))
-                if tmp != '': otherInfo[item[1]] = tmp
+                if tmp != '':
+                    otherInfo[item[1]] = tmp
             
             tmp = data['rating']
-            if tmp != '': otherInfo['imdb_rating'] = '%s/10' % (data['rating'])
+            if tmp != '':
+                otherInfo['imdb_rating'] = '%s/10' % (data['rating'])
             
         except Exception:
             printExc()
             
-        if title == '': title = cItem['title']
-        if desc == '':  desc = cItem.get('desc', '')
-        if icon == '':  icon = cItem.get('icon', self.DEFAULT_ICON_URL)
+        if title == '':
+            title = cItem['title']
+        if desc == '':
+            desc = cItem.get('desc', '')
+        if icon == '':
+            icon = cItem.get('icon', self.DEFAULT_ICON_URL)
         
         return [{'title':self.cleanHtmlStr( title ), 'text': self.cleanHtmlStr( desc ), 'images':[{'title':'', 'url':self.getFullUrl(icon)}], 'other_info':otherInfo}]
     

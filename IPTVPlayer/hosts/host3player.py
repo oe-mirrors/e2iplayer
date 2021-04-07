@@ -68,11 +68,13 @@ class C3player(CBaseHostClass):
         
         descMap = {}
         sts, data = self.cm.getPage(cItem['url'])
-        if not sts: return
+        if not sts:
+            return
         
         data = re.sub("<!--[\s\S]*?-->", "", data)
         data = re.compile('''<div[^>]+?class=['"]live_[^>]+?>''').split(data)
-        if len(data): del data[0]
+        if len(data):
+            del data[0]
         
         for item in data:
             url = self.getFullUrl( self.cm.ph.getSearchGroups(item, '''href=['"]([^"^']+)['"]''')[0] )
@@ -83,16 +85,21 @@ class C3player(CBaseHostClass):
             
             descTab = []
             tmp = self.cleanHtmlStr( self.cm.ph.getDataBeetwenNodes(item[0], ('<div', '>', 'progress'), ('</div', '>'))[1] )
-            if tmp != '': descTab.append(tmp)
+            if tmp != '':
+                descTab.append(tmp)
             tmp = self.cleanHtmlStr( self.cm.ph.getDataBeetwenNodes(item[0], ('<div', '>', 'time'), ('</div', '>'))[1] )
-            if tmp != '': descTab.append(tmp)
+            if tmp != '':
+                descTab.append(tmp)
             tmp = self.cleanHtmlStr( self.cm.ph.getDataBeetwenMarkers(item[0], '<p', '</p>')[1].split('<span', 1)[0] )
-            if tmp != '': descTab.append(tmp)
+            if tmp != '':
+                descTab.append(tmp)
             descTab.append("")            
             tmp = self.cleanHtmlStr( self.cm.ph.getDataBeetwenMarkers(item[-1], '<span', '</span>')[1] )
-            if tmp != '': descTab.append(tmp)
+            if tmp != '':
+                descTab.append(tmp)
             tmp = self.cleanHtmlStr( self.cm.ph.getDataBeetwenMarkers(item[-1], '<p', '</p>')[1] )
-            if tmp != '': descTab.append(tmp)
+            if tmp != '':
+                descTab.append(tmp)
             
             params = dict(cItem)
             params.update({'title':title, 'url':url, 'icon':icon, 'desc':'[/br]'.join(descTab)})
@@ -116,16 +123,21 @@ class C3player(CBaseHostClass):
             for t in tmp:
                 t = t.split('<span', 1)
                 for idx in range(len(t)):
-                    if idx == 1: t[idx] = '<span' + t[idx]
+                    if idx == 1:
+                        t[idx] = '<span' + t[idx]
                     txt = self.cleanHtmlStr(t[idx])
-                    if txt != '' and txt != date: descTab.append(txt)
+                    if txt != '' and txt != date:
+                        descTab.append(txt)
             
-            if time != '' and len(descTab): descTab.insert(1, time)
+            if time != '' and len(descTab):
+                descTab.insert(1, time)
             
             params = {'good_for_fav': True, 'title': baseTitle % title, 'url': url, 'icon': icon, }
             if '/videos/' in icon:
-                if date not in params['title']: params['title'] = params['title'] + ': ' + date
-                if len(descTab): params['desc'] = ' | '.join(descTab[1:]) + '[/br]' + descTab[0]
+                if date not in params['title']:
+                    params['title'] = params['title'] + ': ' + date
+                if len(descTab):
+                    params['desc'] = ' | '.join(descTab[1:]) + '[/br]' + descTab[0]
                 self.addVideo(params)
             else: 
                 params.update({'name':'category', 'type':'category', 'category':nextCategory, 'desc':'[/br]'.join(descTab)})
@@ -135,14 +147,16 @@ class C3player(CBaseHostClass):
         printDBG("C3player.exploreShow cItem[%s]" % (cItem))
         
         sts, data = self.cm.getPage(cItem['url'])
-        if not sts: return
+        if not sts:
+            return
         
         data = self.cm.ph.getAllItemsBeetwenNodes(data, ('<a', '>', 'data-type'), ('</a', '>'))
         for item in data:
             showId = self.cm.ph.getSearchGroups(item, '''data\-showID=['"]([0-9]+?)['"]''')[0]
             dataType = self.cm.ph.getSearchGroups(item, '''data\-type=['"]([^'^"]+?)['"]''')[0]
             videoID = self.cm.ph.getSearchGroups(item, '''data\-videoID=['"]([0-9]+?)['"]''')[0]
-            if '' in [showId, dataType]: continue
+            if '' in [showId, dataType]:
+                continue
             title = self.cleanHtmlStr(item)
             url = self.getFullUrl('/player/assets/ajax/filter_tiles.php?showID={0}&videoID=&type={1}'.format(showId, dataType))
             params = dict(cItem)
@@ -164,10 +178,12 @@ class C3player(CBaseHostClass):
         showTitle = cItem['f_show_title']
         
         sts, data = self.cm.getPage(cItem['url'])
-        if not sts: return
+        if not sts:
+            return
         
         items = re.compile('''<div[^>]+?class=['"]clear['"][^>]*?>''').split(data)
-        if len(items): del items[-1]
+        if len(items):
+            del items[-1]
         self._listItems(items, baseTitle='{0}: %s'.format(showTitle))
         
         data = self.cm.ph.getDataBeetwenNodes(data, ('<a', '>', 'load_more'), ('</a', '>') )[1]
@@ -186,13 +202,15 @@ class C3player(CBaseHostClass):
         printDBG("C3player.listByDay cItem[%s]" % (cItem))
         
         sts, data = self.cm.getPage(cItem['url'])
-        if not sts: return
+        if not sts:
+            return
         
         filters = []
         filterData = self.cm.ph.getAllItemsBeetwenNodes(data, ('<a', '>', 'data-pageType'), ('</a', '>'))
         for item in filterData:
             showId = self.cm.ph.getSearchGroups(item, '''data\-showID=['"]([^'^"]+?)['"]''')[0] 
-            if showId == '': continue
+            if showId == '':
+                continue
             title = showId.upper()
             filters.append({'title':title, 'f_filter_id':showId})
             
@@ -201,7 +219,8 @@ class C3player(CBaseHostClass):
         for item in data:
             title = self.cleanHtmlStr(item)
             date = self.cm.ph.getSearchGroups(item, '''([0-9]{2}\-[0-9]{2}\-[0-9]{4})''')[0] 
-            if date == '': continue
+            if date == '':
+                continue
             subItems = []
             for it in filters:
                 url = self.getFullUrl('/player/assets/ajax/ajax_site.php?pageType=byday&showID=%s&videoID=%s' % (it['f_filter_id'], date))
@@ -218,13 +237,15 @@ class C3player(CBaseHostClass):
         printDBG("C3player.listByDayItems cItem[%s]" % (cItem))
         
         sts, data = self.cm.getPage(cItem['url'])
-        if not sts: return
+        if not sts:
+            return
         
         try:
             data = json_loads(data)['content']
             data = re.sub("<!--[\s\S]*?-->", "", data).split('<footer', 1)[0]
             data = re.compile('''<div[^>]+?list_row[^>]+?>''').split(data)
-            if len(data): del data[0]
+            if len(data):
+                del data[0]
             self._listItems(data)
         except Exception:
             printExc()
@@ -233,21 +254,25 @@ class C3player(CBaseHostClass):
         printDBG("C3player.listAZ cItem[%s]" % (cItem))
         
         sts, data = self.cm.getPage(cItem['url'])
-        if not sts: return
+        if not sts:
+            return
         
         data = self.cm.ph.getDataBeetwenNodes(data, ('<section', '>', 'btn_az'), ('</section', '>'))[1]
         data = re.sub("<!--[\s\S]*?-->", "", data)
         
         data = self.cm.ph.getAllItemsBeetwenMarkers(data, '<a', '</a>')
         for item in data:
-            if 'disabled' in item: continue
+            if 'disabled' in item:
+                continue
             showId = self.cm.ph.getSearchGroups(item, '''data\-showID=['"]([^'^"]+?)['"]''')[0] 
             pageType = self.cm.ph.getSearchGroups(item, '''data\-pageType=['"]([^'^"]+?)['"]''')[0] 
-            if pageType == '': continue
+            if pageType == '':
+                continue
             
             title = self.cleanHtmlStr(item).upper()
             url = self.getFullUrl('/player/assets/ajax/ajax_site.php?pageType=%s') % pageType
-            if showId != '': url += '&showID=%s' % showId
+            if showId != '':
+                url += '&showID=%s' % showId
             
             params = dict(cItem)
             params.update({'good_for_fav':True, 'title':title, 'category':nextCategory, 'url':url})
@@ -257,7 +282,8 @@ class C3player(CBaseHostClass):
         printDBG("C3player.listAZItems cItem[%s]" % (cItem))
         
         sts, data = self.cm.getPage(cItem['url'])
-        if not sts: return
+        if not sts:
+            return
         
         try:
             data = json_loads(data)['content']
@@ -283,19 +309,22 @@ class C3player(CBaseHostClass):
         post_data = {'queryString':searchPattern, 'limit':100}
         
         sts, data = self.cm.getPage(url, post_data=post_data)
-        if not sts: return
+        if not sts:
+            return
         
         printDBG(data)
         
         itemsReObj = re.compile('''<div[^>]+?list_row[^>]+?>''')
         
         data = re.compile('''<div[^>]+?list_title[^>]+?>''').split(data)
-        if len(data): del data[0]
+        if len(data):
+            del data[0]
         
         for section in data:
             sTtile = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(section, '<h2', '</h2>')[1])
             section = itemsReObj.split(section)
-            if len(section): del section[0]
+            if len(section):
+                del section[0]
             self._listItems(section)
         
     def getLinksForVideo(self, cItem):
@@ -305,7 +334,8 @@ class C3player(CBaseHostClass):
         hdsLinksTab = []
         
         sts, data = self.cm.getPage(cItem['url'])
-        if not sts: return []
+        if not sts:
+            return []
         
         hlsUrl = self.cm.ph.getSearchGroups(data, '''['"]?file['"]?\s*?:\s*?['"](https?://[^'^"]+?\.m3u8(?:\?[^'^"]+?)?)['"]''')[0]
         if hlsUrl != '': 
@@ -322,7 +352,8 @@ class C3player(CBaseHostClass):
                 params['header']['Referer'] = proxy
                 params.update({'cookie_items':{'flags':'2e1'}, 'use_cookie':True})
                 sts, data = self.cm.getPage(proxy, params)
-                if not sts: return []
+                if not sts:
+                    return []
                 printDBG("+++++++++++++++++++++++++++++++++++++++")
                 printDBG(data)
                 printDBG("+++++++++++++++++++++++++++++++++++++++")
@@ -334,7 +365,8 @@ class C3player(CBaseHostClass):
                 if len(auth) > 1:
                     url = 'https://player.ooyala.com/sas/player_api/v2/authorization/embed_code/%s/%s?embedToken=%s&device=html5&domain=www.tv3.ie&auth_token=' % (auth[0], auth[1], urllib.parse.quote_plus(embedToken) )
                     sts, data = self.cm.getPage(url)
-                    if not sts: return []
+                    if not sts:
+                        return []
                     try:
                         drmProtection = False
                         #printDBG(data)

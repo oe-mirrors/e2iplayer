@@ -17,8 +17,10 @@ import urllib.request
 import urllib.parse
 import urllib.error
 import urllib.parse
-try:    import json
-except Exception: import simplejson as json
+try:
+    import json
+except Exception:
+    import simplejson as json
 ###################################################
 
 
@@ -57,14 +59,16 @@ class StreamingSeriesWatch(CBaseHostClass):
         
     def getFullIconUrl(self, url):
         url = self.getFullUrl(url)
-        if url == '': return ''
+        if url == '':
+            return ''
         cookieHeader = self.cm.getCookieHeader(self.COOKIE_FILE)
         return strwithmeta(url, {'Cookie':cookieHeader, 'User-Agent':self.USER_AGENT})
             
     def listSort(self, cItem, nextCategory):
         printDBG("StreamingSeriesWatch.listSort")
         sts, data = self.getPage(cItem['url'])
-        if not sts: return
+        if not sts:
+            return
         
         data = self.cm.ph.getDataBeetwenNodes(data, ('<ul', '>', 'dropdown'), ('</ul', '>'))[1]
         data = self.cm.ph.getAllItemsBeetwenMarkers(data, '<a', '</a>')
@@ -79,23 +83,27 @@ class StreamingSeriesWatch(CBaseHostClass):
         printDBG("StreamingSeriesWatch.listItems")
         
         sts, data = self.getPage(cItem['url'])
-        if not sts: return
+        if not sts:
+            return
         
         nextPage = self.getFullUrl(self.cm.ph.getSearchGroups(data, '''<a[^>]+?href=['"]([^'^"]+?)['"][^>]*?>\s*Suivante''')[0])
         
         data = self.cm.ph.getDataBeetwenNodes(data, ('<div', '>', 'space'), ('<div', '>', 'clear'), False)[1]
         data = re.compile('''<div[^>]+?video[^>]+?>''').split(data)
-        if len(data): del data[0]
+        if len(data):
+            del data[0]
         for item in data:
             url   = self.cm.ph.getSearchGroups(item, '''href=['"]([^'^"]+?)['"]''')[0]
             icon  = self.cm.ph.getSearchGroups(item, '''src=['"]([^'^"]+?)['"]''')[0]
             title = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(item, ('<div', '>', 'title'), ('</div', '>'))[1])
-            if title == '': title = self.cleanHtmlStr(self.cm.ph.getSearchGroups(item, '''alt=['"]([^'^"]+?)['"]''')[0])
+            if title == '':
+                title = self.cleanHtmlStr(self.cm.ph.getSearchGroups(item, '''alt=['"]([^'^"]+?)['"]''')[0])
             desc = []
             tmp = self.cm.ph.getAllItemsBeetwenMarkers(item, '<div', '</div>')
             for t in tmp:
                 t = self.cleanHtmlStr(t)
-                if t != '': desc.append(t)
+                if t != '':
+                    desc.append(t)
             season = self.cm.ph.getSearchGroups(url, 'saison-([0-9]+?)-' )[0]
             params = dict(cItem)
             params.update({'good_for_fav': True, 'category':category, 'url':url, 'title':title, 'desc':'[/br]'.join(desc), 'icon':icon, 'season':season})
@@ -110,7 +118,8 @@ class StreamingSeriesWatch(CBaseHostClass):
         printDBG("StreamingSeriesWatch.listEpisodes")
         
         sts, data = self.getPage(cItem['url'])
-        if not sts: return
+        if not sts:
+            return
         
         descData  = self.cm.ph.getDataBeetwenNodes(data, ('<div', '>', 'video-container'), ('<div', '>', 'clear'))[1]
         desc = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(descData, 'Synopsis', '</p>')[1])
@@ -137,16 +146,19 @@ class StreamingSeriesWatch(CBaseHostClass):
         urlTab = []
         
         sts, data = self.getPage(cItem['url'])
-        if not sts: return []
+        if not sts:
+            return []
         
         data = self.cm.ph.getDataBeetwenNodes(data, ('<div', '>', 'video-container'), ('</div', '>'))[1]
         data = data.split('</iframe>')
-        if len(data): del data[-1]
+        if len(data):
+            del data[-1]
         
         lang = ''
         for item in data:
             tmp = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(item, ('<span', '>', '"lg"'), ('</span', '>'), False)[1])
-            if tmp != '': lang = tmp
+            if tmp != '':
+                lang = tmp
             name = self.cm.ph.getDataBeetwenMarkers(item, '<b', '</b>', False)[1]
             if lang != '':
                 name = '%s: %s' % (lang, name)
@@ -159,10 +171,12 @@ class StreamingSeriesWatch(CBaseHostClass):
         printDBG("StreamingSeriesWatch.getVideoLinks [%s]" % url)
         urlTab = []
         
-        if 'protect-stream.com' not in url: return []
+        if 'protect-stream.com' not in url:
+            return []
             
         sts, data = self.getPage(url, self.defaultParams)
-        if not sts: return []
+        if not sts:
+            return []
         cUrl = self.cm.meta['url']
         
         k = self.cm.ph.getSearchGroups(data, 'var\s+?k[^"]*?=[^"]*?"([^"]+?)"')[0]
@@ -186,7 +200,8 @@ class StreamingSeriesWatch(CBaseHostClass):
         params['use_cookie'] = False
         
         sts, data = self.getPage('https://www.protect-stream.com/%s.php' % secure, params, {'k':k})
-        if not sts: return []
+        if not sts:
+            return []
         printDBG('==========================================')
         printDBG(data)
         printDBG('==========================================')
@@ -208,7 +223,8 @@ class StreamingSeriesWatch(CBaseHostClass):
         try:
             cItem = byteify(json.loads(fav_data))
             links = self.getLinksForVideo(cItem)
-        except Exception: printExc()
+        except Exception:
+            printExc()
         return links
         
     def setInitListFromFavouriteItem(self, fav_data):
@@ -236,7 +252,8 @@ class StreamingSeriesWatch(CBaseHostClass):
         url = self.getFullUrl(url)
         
         sts, data = self.getPage(url)
-        if not sts: return []
+        if not sts:
+            return []
         
         title = cItem['title']
         desc  = cItem.get('desc', '')

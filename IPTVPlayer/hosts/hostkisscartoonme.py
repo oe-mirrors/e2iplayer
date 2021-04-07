@@ -15,8 +15,10 @@ from Plugins.Extensions.IPTVPlayer.tools.iptvtypes import strwithmeta
 import urllib.request
 import urllib.parse
 import urllib.error
-try:    import json
-except Exception: import simplejson as json
+try:
+    import json
+except Exception:
+    import simplejson as json
 from Components.config import config, ConfigSelection, getConfigListEntry
 ###################################################
 
@@ -91,7 +93,8 @@ class KissCartoonMe(CBaseHostClass):
         
     def _urlWithCookie(self, url):
         url = self._getFullUrl(url)
-        if url == '': return ''
+        if url == '':
+            return ''
         cookieHeader = self.cm.getCookieHeader(self.COOKIE_FILE)
         return strwithmeta(url, {'Cookie':cookieHeader, 'User-Agent':self.USER_AGENT})
         
@@ -112,24 +115,31 @@ class KissCartoonMe(CBaseHostClass):
             params['name']  = 'category'
             if type == 'dir' and 'video' != item.get('category', ''):
                 self.addDir(params)
-            else: self.addVideo(params)
+            else:
+                self.addVideo(params)
             
     def _getItems(self, data, sp='', forceIcon=''):
         printDBG("listHome._getItems")
         if '' == sp: 
             sp = '<div class="item_film_list">'
         data = data.split(sp)
-        if len(data): del data[0]
+        if len(data):
+            del data[0]
         tab = []
         for item in data:
             url   = self.cm.ph.getSearchGroups(item, '''href=["']([^"^']+?)["']''')[0]
-            if '' == url: continue
+            if '' == url:
+                continue
             title = self.cm.ph.getDataBeetwenMarkers(item, '<span class="title">', '</span>', False)[1]
-            if '' == title: title = self.cm.ph.getDataBeetwenMarkers(item, '<a ', '</a>')[1]
-            if forceIcon == '': icon  = self.cm.ph.getSearchGroups(item, '''src=["']([^"^']+?)["']''')[0]
-            else: icon = forceIcon
+            if '' == title:
+                title = self.cm.ph.getDataBeetwenMarkers(item, '<a ', '</a>')[1]
+            if forceIcon == '':
+                icon  = self.cm.ph.getSearchGroups(item, '''src=["']([^"^']+?)["']''')[0]
+            else:
+                icon = forceIcon
             desc  = self.cm.ph.getDataBeetwenMarkers(item, '<p>', '</p>', False)[1]
-            if '' == desc: desc = '<'+item
+            if '' == desc:
+                desc = '<'+item
             tab.append({'good_for_fav': True, 'title':self.cleanHtmlStr(title), 'url':self._getFullUrl(url), 'icon':self._urlWithCookie(icon), 'desc':self.cleanHtmlStr(desc)})
         return tab
             
@@ -142,7 +152,8 @@ class KissCartoonMe(CBaseHostClass):
         self.cacheHome = {}
         self.sortTab = []
         sts, data = self.getPage(cItem['url'])
-        if not sts: return
+        if not sts:
+            return
         
         tmp = self.cm.ph.getDataBeetwenMarkers(data, '<div id="tabmenucontainer"', '</div>', False)[1]
         tmp = self.cm.ph.getAllItemsBeetwenMarkers(tmp, '<li>', '</li>')
@@ -157,7 +168,8 @@ class KissCartoonMe(CBaseHostClass):
         
         tmp2 = self.cm.ph.getDataBeetwenMarkers(data, '<div id="subcontent"', '<div class="clear">', False)[1]
         tmp2 = tmp2.split('<div id="tab-')
-        if len(tmp2): del tmp2[0]
+        if len(tmp2):
+            del tmp2[0]
         for item in tmp2:
             # find tab id and title
             tabId = item[:item.find('"')].replace('-', '')
@@ -187,7 +199,8 @@ class KissCartoonMe(CBaseHostClass):
         printDBG("KissCartoonMe.listCats [%s]" % cItem)
         self.cache = {}
         sts, data = self.getPage(cItem['url'])
-        if not sts: return
+        if not sts:
+            return
         
         # alphabet
         cacheKey = 'alphabet'
@@ -211,7 +224,8 @@ class KissCartoonMe(CBaseHostClass):
         tmp = tmp.split(m1)
         for item in tmp:
             catTitle = self.cm.ph.getDataBeetwenMarkers(item, '<div class="barTitle', '</div>', True)[1]
-            if catTitle == '': continue
+            if catTitle == '':
+                continue
             self.cache[catTitle] = []
             tmp2 = self.cm.ph.getAllItemsBeetwenMarkers(item, '<a ', '</a>')
             for item2 in tmp2:
@@ -251,7 +265,8 @@ class KissCartoonMe(CBaseHostClass):
         sort_by   = cItem.get('sort_by', '')
         url = self._urlAppendPage(cItem['url'], page, sort_by)
         sts, data = self.getPage(url)
-        if not sts: return
+        if not sts:
+            return
         
         nextPage = False
         if ('page=%d"' % (page+1)) in data:
@@ -278,7 +293,8 @@ class KissCartoonMe(CBaseHostClass):
         printDBG("KissCartoonMe.listEpisodes [%s]" % cItem)
         
         sts, data = self.getPage(cItem['url']) 
-        if not sts: return
+        if not sts:
+            return
         
         printDBG(data)
         
@@ -294,7 +310,8 @@ class KissCartoonMe(CBaseHostClass):
         urlTab = []
         
         sts, data = self.getPage(cItem['url']) 
-        if not sts: return urlTab
+        if not sts:
+            return urlTab
         
         episodeId = self.cm.ph.getSearchGroups(data, r'''var\s*['"]?episode_id['"]?\s*=\s*['"]([0-9]+)['"]''')[0]
         url = self._getFullUrl('/ajax/anime/load_episodes')
@@ -303,11 +320,13 @@ class KissCartoonMe(CBaseHostClass):
         params['header'] = dict(self.AJAX_HEADER)
         params['header']['Referer'] = cItem['url']
         sts, data = self.getPage(url, params, post_data={'episode_id':episodeId}) 
-        if not sts: return urlTab
+        if not sts:
+            return urlTab
         
         try:
             data = byteify(json.loads(data))
-            if not data['status']: return urlTab
+            if not data['status']:
+                return urlTab
             url = data['value']
             if url.startswith('//'):
                 url = 'https:' + url
@@ -336,13 +355,15 @@ class KissCartoonMe(CBaseHostClass):
         if 'kisscartoon' not in self.up.getDomain(videoUrl):
             return self.up.getVideoLinkExt(videoUrl)
         
-        if not sts: return urlTab
+        if not sts:
+            return urlTab
         
         try:
             data = byteify(json.loads(data))
             printDBG(data)
             for item in data['playlist'][0].get('sources', []):
-                if 'mp4' not in item['type']: continue
+                if 'mp4' not in item['type']:
+                    continue
                 url = item['file']
                 name = item['label']
                 urlTab.append({'name':name, 'url':url, 'need_resolve':0})
@@ -364,7 +385,8 @@ class KissCartoonMe(CBaseHostClass):
             def __getLinkQuality( itemLink ):
                 try:
                     return int(self.cm.ph.getSearchGroups('|'+itemLink['name']+'|', '[^0-9]([0-9]+?)[^0-9]')[0])
-                except Exception: return 0
+                except Exception:
+                    return 0
             urlTab = CSelOneLink(urlTab, __getLinkQuality, max_bitrate).getBestSortedList()
         return urlTab
         
@@ -390,7 +412,8 @@ class KissCartoonMe(CBaseHostClass):
                 cItem = {'url':fav_data}
                 pass
             links = self.getLinksForVideo(cItem)
-        except Exception: printExc()
+        except Exception:
+            printExc()
         return links
         
     def setInitListFromFavouriteItem(self, fav_data):

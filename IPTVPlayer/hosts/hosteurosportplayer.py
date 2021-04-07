@@ -80,8 +80,10 @@ class EuroSportPlayer(CBaseHostClass):
         
         self.OFFSET = datetime.now() - datetime.utcnow()
         seconds = self.OFFSET.seconds + self.OFFSET.days * 24 * 3600
-        if ((seconds + 1) % 10) == 0: seconds += 1  
-        elif ((seconds - 1) % 10) == 0: seconds -= 1 
+        if ((seconds + 1) % 10) == 0:
+            seconds += 1  
+        elif ((seconds - 1) % 10) == 0:
+            seconds -= 1 
         self.OFFSET = timedelta(seconds=seconds)
         
         self.ABBREVIATED_MONTH_NAME_TAB = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
@@ -127,8 +129,10 @@ class EuroSportPlayer(CBaseHostClass):
         return utc_date
         
     def _absTimeDelta(self, d1, d2, div=60):
-        if d1 > d2: td = d1 - d2
-        else: td = d2 - d1
+        if d1 > d2:
+            td = d1 - d2
+        else:
+            td = d2 - d1
         return (td.seconds + td.days * 24 * 3600) / div
     
     def addItemInDB(self, item):

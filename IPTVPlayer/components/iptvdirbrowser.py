@@ -130,18 +130,22 @@ class IPTVDirectorySelectorWidget(Screen):
         self.onLayoutFinish.remove(self.layoutFinished)
         
     def _iptvDoClose(self, ret=None):
-        if self.console: self.console.sendCtrlC()
+        if self.console:
+            self.console.sendCtrlC()
         self.close(ret)
         
     def _getSelItem(self):
         currSelIndex = self["list"].getCurrentIndex()
-        if len(self.currList) <= currSelIndex: return None
+        if len(self.currList) <= currSelIndex:
+            return None
         return self.currList[currSelIndex]
         
     def prepareCmd(self):
         lsdirPath = GetBinDir("lsdir")
-        try: os_chmod(lsdirPath, 0o777)
-        except Exception: printExc()
+        try:
+            os_chmod(lsdirPath, 0o777)
+        except Exception:
+            printExc()
         cmd = '%s "%s" dl d' % (lsdirPath, self.currDir)
         return cmd
         
@@ -166,9 +170,11 @@ class IPTVDirectorySelectorWidget(Screen):
         
     def getCurrentDirectory(self):
         if self.currDir and os_path.isdir( self.currDir ): 
-            if '/' != self.currDir[-1]: self.currDir += '/'
+            if '/' != self.currDir[-1]:
+                self.currDir += '/'
             return self.currDir
-        else: return "/"
+        else:
+            return "/"
     
     def refreshFinished(self, code):
         printDBG("IPTVDirectorySelectorWidget.refreshFinished")
@@ -183,7 +189,8 @@ class IPTVDirectorySelectorWidget(Screen):
             self.currList = []
             self.tmpList.sort(key=lambda x: x.name.lower())
             self.currList = self.tmpList
-            if('/' != self.currDir): self.currList.insert(0,  CListItem(name='..', fullDir='', type='dir') ) # add back item
+            if('/' != self.currDir):
+                self.currList.insert(0,  CListItem(name='..', fullDir='', type='dir') ) # add back item
             self["list"].setList([ (x,) for x in self.currList])
             self.tmpList = []
             self.tmpData = ''
@@ -201,7 +208,8 @@ class IPTVDirectorySelectorWidget(Screen):
     def doRefreshNewData(self, newItems):
         for item in newItems:
             params = item.split('//')
-            if item.startswith('.'): continue # do not list hidden items
+            if item.startswith('.'):
+                continue # do not list hidden items
             #printDBG(params)
             if 4 == len(params):
                 #if '0' == params[2]: type = 'dir'
@@ -209,21 +217,26 @@ class IPTVDirectorySelectorWidget(Screen):
                 self.tmpList.append( CListItem(name=params[0], fullDir=params[3], type='dir') )
         
     def requestApply(self):
-        if self.underClosing: return
+        if self.underClosing:
+            return
         self.doAction( boundFunction(self._iptvDoClose, self.getCurrentDirectory()) )
         
     def requestCancel(self):
         printDBG(">>>REQUEST CANCEL<<<")
-        try: running = self.console.running()
-        except Exception: running = True
+        try:
+            running = self.console.running()
+        except Exception:
+            running = True
         if not self.console or not running:
             self._iptvDoClose(None)
         else:
             self.doAction( boundFunction(self._iptvDoClose, None) )
         
     def requestRefresh(self):
-        if self.underClosing: return
-        if self.underRefreshing: return
+        if self.underClosing:
+            return
+        if self.underRefreshing:
+            return
         self.underRefreshing = True
         self.tmpList = []
         self.tmpData = ''
@@ -232,22 +245,27 @@ class IPTVDirectorySelectorWidget(Screen):
         self.console.execute( E2PrioFix( cmd ) )
 
     def requestNewDir(self):
-        if self.underClosing: return
+        if self.underClosing:
+            return
         self.doAction( self.newDir )
         
     def requestOk(self):
-        if self.underClosing: return
+        if self.underClosing:
+            return
         self.doAction( self.ok )
         
     def requestBack(self):
-        if self.underClosing: return
+        if self.underClosing:
+            return
         self.doAction( self.back )
         
     def ok(self):
         item = self._getSelItem()
-        if None == item or '' == item.name: return
+        if None == item or '' == item.name:
+            return
         fullDirName = os_path.join(self.currDir, item.name)
-        if '..' == item.name: return self.back()
+        if '..' == item.name:
+            return self.back()
         if os_path.isdir( fullDirName ):
             self.currDir = fullDirName
             self.currDirChanged()
@@ -266,8 +284,10 @@ class IPTVDirectorySelectorWidget(Screen):
         if None != self.currDir and newDirName != None:
             sts = False
             if IsValidFileName(newDirName):
-                try: sts, msg = mkdir(os_path.join(self.currDir, newDirName))
-                except Exception: sts, msg = False, _("Exception occurs")
+                try:
+                    sts, msg = mkdir(os_path.join(self.currDir, newDirName))
+                except Exception:
+                    sts, msg = False, _("Exception occurs")
             else:
                 msg = _("Invalid name.")
             if sts:
@@ -310,18 +330,22 @@ class IPTVFileSelectorWidget(IPTVDirectorySelectorWidget):
         
     def prepareCmd(self):
         lsdirPath = GetBinDir("lsdir")
-        try: os_chmod(lsdirPath, 0o777)
-        except Exception: printExc()
+        try:
+            os_chmod(lsdirPath, 0o777)
+        except Exception:
+            printExc()
         cmd = '%s "%s" drl dr' % (lsdirPath, self.currDir)
         return cmd
         
     def doRefreshNewData(self, newItems):
         for item in newItems:
             params = item.split('//')
-            if item.startswith('.'): continue # do not list hidden items
+            if item.startswith('.'):
+                continue # do not list hidden items
             #printDBG(params)
             if 4 == len(params):
-                if 'd' == params[1]: type = 'dir'
+                if 'd' == params[1]:
+                    type = 'dir'
                 else:
                     type = 'file'
                     try:
@@ -334,10 +358,12 @@ class IPTVFileSelectorWidget(IPTVDirectorySelectorWidget):
                 
     def ok(self):
         item = self._getSelItem()
-        if None == item or '' == item.name: return
+        if None == item or '' == item.name:
+            return
         fullPath = os_path.join(self.currDir, item.name)
         if item.type == 'dir':
-            if '..' == item.name: return self.back()
+            if '..' == item.name:
+                return self.back()
             if os_path.isdir( fullPath ):
                 self.currDir = fullPath
                 self.currDirChanged()
@@ -345,5 +371,6 @@ class IPTVFileSelectorWidget(IPTVDirectorySelectorWidget):
             self.requestApply(fullPath)
         
     def requestApply(self, fullPath):
-        if self.underClosing: return
+        if self.underClosing:
+            return
         self.doAction( boundFunction(self._iptvDoClose, fullPath) )
