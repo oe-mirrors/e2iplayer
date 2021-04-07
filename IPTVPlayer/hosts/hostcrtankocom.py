@@ -24,6 +24,7 @@ except Exception:
 def gettytul():
     return 'http://www.crtanko.com/'
 
+
 class CrtankoCom(CBaseHostClass):
 
     def __init__(self):
@@ -307,6 +308,7 @@ class CrtankoCom(CBaseHostClass):
             printExc()
         
         CBaseHostClass.endHandleService(self, index, refresh)
+
 
 class IPTVHost(CHostBase):
 

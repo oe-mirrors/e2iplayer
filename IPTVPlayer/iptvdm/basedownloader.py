@@ -23,6 +23,8 @@ from os import rename as os_rename
 # One instance of this class can be used only for 
 # one download
 ###################################################
+
+
 class BaseDownloader:
     # errors code
     CODE_OK = 0

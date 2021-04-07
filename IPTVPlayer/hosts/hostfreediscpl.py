@@ -34,6 +34,7 @@ from Screens.MessageBox import MessageBox
 config.plugins.iptvplayer.freediscpl_login = ConfigText(default="", fixed_size=False)
 config.plugins.iptvplayer.freediscpl_password = ConfigText(default="", fixed_size=False)
 
+
 def GetConfigList():
     optionList = []
     optionList.append(getConfigListEntry(_("e-mail") + ":", config.plugins.iptvplayer.freediscpl_login))
@@ -44,6 +45,7 @@ def GetConfigList():
 
 def gettytul():
     return 'https://freedisc.pl/'
+
 
 class FreeDiscPL(CBaseHostClass):
     HTTP_HEADER = {'User-Agent': 'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:40.0) Gecko/20100101 Firefox/40.0', 'Accept': 'text/html', 'Accept-Encoding': 'gzip, deflate'}
@@ -526,6 +528,8 @@ class FreeDiscPL(CBaseHostClass):
             printExc()
         
         CBaseHostClass.endHandleService(self, index, refresh)
+
+
 class IPTVHost(CHostBase):
 
     def __init__(self):

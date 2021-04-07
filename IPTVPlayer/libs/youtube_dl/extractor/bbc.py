@@ -32,6 +32,7 @@ config.plugins.iptvplayer.bbc_prefered_format = ConfigSelection(default="hls", c
 ])
 config.plugins.iptvplayer.bbc_use_web_proxy = ConfigYesNo(default=False)
 
+
 def int_or_none(data):
     ret = 0
     try:
@@ -39,6 +40,7 @@ def int_or_none(data):
     except Exception:
         pass
     return ret
+
 
 class BBCCoUkIE(InfoExtractor):
     
@@ -89,7 +91,6 @@ class BBCCoUkIE(InfoExtractor):
         params.update({'header': HTTP_HEADER})
         return self.cm.getPage(self.getFullUrl(url), params, post_data)
 
-        
     def _extract_asx_playlist(self, connection, programme_id):
         url = self.xmlGetArg(connection, 'href')
         sts, asx = self.getPage(url, self.defaultParams)

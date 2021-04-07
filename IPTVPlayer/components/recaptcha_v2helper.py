@@ -10,6 +10,7 @@ from Plugins.Extensions.IPTVPlayer.libs.recaptcha_v2 import UnCaptchaReCaptcha a
 from Screens.MessageBox import MessageBox
 from Components.config import config
 
+
 class CaptchaHelper():
 
     def processCaptcha(self, sitekey, refUrl, bypassCaptchaService=None, userAgent=None, baseErrMsgTab=None, beQuaiet=False):

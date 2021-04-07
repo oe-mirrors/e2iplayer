@@ -9,6 +9,7 @@ from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, eC
 
 from enigma import eTimer
 
+
 class AutocompleteSearch:
 
     def __init__(self, provider, historyList=[]):

@@ -149,6 +149,7 @@ ROUND_05UP = 'ROUND_05UP'
 
 # Errors
 
+
 class DecimalException(ArithmeticError):
     """Base exception class.
 
@@ -168,6 +169,7 @@ class DecimalException(ArithmeticError):
     To define a new exception, it should be sufficient to have it derive
     from DecimalException.
     """
+
     def handle(self, context, *args):
         pass
 
@@ -183,6 +185,7 @@ class Clamped(DecimalException):
     this latter case, the exponent is reduced to fit and the corresponding
     number of zero digits are appended to the coefficient ("fold-down").
     """
+
 
 class InvalidOperation(DecimalException):
     """An invalid operation was performed.
@@ -207,11 +210,13 @@ class InvalidOperation(DecimalException):
     also a quiet NaN, but with the original sign, and an optional
     diagnostic information.
     """
+
     def handle(self, context, *args):
         if args:
             ans = _dec_from_triple(args[0]._sign, args[0]._int, 'n', True)
             return ans._fix_nan(context)
         return NaN
+
 
 class ConversionSyntax(InvalidOperation):
     """Trying to convert badly formed string.
@@ -220,8 +225,10 @@ class ConversionSyntax(InvalidOperation):
     converted to a number and it does not conform to the numeric string
     syntax.  The result is [0,qNaN].
     """
+
     def handle(self, context, *args):
         return NaN
+
 
 class DivisionByZero(DecimalException, ZeroDivisionError):
     """Division by 0.
@@ -239,6 +246,7 @@ class DivisionByZero(DecimalException, ZeroDivisionError):
     def handle(self, context, sign, *args):
         return Infsign[sign]
 
+
 class DivisionImpossible(InvalidOperation):
     """Cannot perform the division adequately.
 
@@ -249,6 +257,7 @@ class DivisionImpossible(InvalidOperation):
 
     def handle(self, context, *args):
         return NaN
+
 
 class DivisionUndefined(InvalidOperation, ZeroDivisionError):
     """Undefined result of division.
@@ -261,6 +270,7 @@ class DivisionUndefined(InvalidOperation, ZeroDivisionError):
     def handle(self, context, *args):
         return NaN
 
+
 class Inexact(DecimalException):
     """Had to round, losing information.
 
@@ -272,6 +282,7 @@ class Inexact(DecimalException):
     The inexact signal may be tested (or trapped) to determine if a given
     operation (or sequence of operations) was inexact.
     """
+
 
 class InvalidContext(InvalidOperation):
     """Invalid context.  Unknown rounding, for example.
@@ -287,6 +298,7 @@ class InvalidContext(InvalidOperation):
     def handle(self, context, *args):
         return NaN
 
+
 class Rounded(DecimalException):
     """Number got rounded (not  necessarily changed during rounding).
 
@@ -299,6 +311,7 @@ class Rounded(DecimalException):
     operation (or sequence of operations) caused a loss of precision.
     """
 
+
 class Subnormal(DecimalException):
     """Exponent < Emin before rounding.
 
@@ -309,6 +322,7 @@ class Subnormal(DecimalException):
     The subnormal signal may be tested (or trapped) to determine if a given
     or operation (or sequence of operations) yielded a subnormal result.
     """
+
 
 class Overflow(Inexact, Rounded):
     """Numerical overflow.
@@ -363,6 +377,7 @@ class Underflow(Inexact, Rounded, Subnormal):
     In all cases, Inexact, Rounded, and Subnormal will also be raised.
     """
 
+
 # List of public traps and flags
 _signals = [Clamped, DivisionByZero, Inexact, Overflow, Rounded,
            Underflow, InvalidOperation, Subnormal]
@@ -386,6 +401,7 @@ try:
 except ImportError:
     # Python was compiled without threads; create a mock object instead
     import sys
+
     class MockThreading(object):
         def local(self, sys=sys):
             return sys.modules[__name__]
@@ -451,6 +467,7 @@ else:
         _local.__decimal_context__ = context
 
     del threading, local        # Don't contaminate the namespace
+
 
 def localcontext(ctx=None):
     """Return a context manager for a copy of the supplied context
@@ -2614,7 +2631,6 @@ class Decimal(object):
                 return Dec_p1
         return Dec_0
 
-
     def compare_total_mag(self, other):
         """Compares self to other using abstract repr., ignoring sign.
 
@@ -2794,7 +2810,6 @@ class Decimal(object):
             return len(num) - len(den) - (num < den)
         # adj == -1, 0.1 <= self < 1
         return e + len(str(10**-e - c)) - 1
-
 
     def ln(self, context=None):
         """Returns the natural (base e) logarithm of self."""
@@ -3332,6 +3347,7 @@ class Decimal(object):
             return self     # My components are also immutable
         return self.__class__(str(self))
 
+
 def _dec_from_triple(sign, coefficient, exponent, special=False):
     """Create a decimal instance directly, without any validation,
     normalization (e.g. removal of leading zeros) or argument
@@ -3362,20 +3378,25 @@ for name in rounding_functions:
 
 del name, val, globalname, rounding_functions
 
+
 class _ContextManager(object):
     """Context manager class to support localcontext().
 
       Sets a copy of the supplied context in __enter__() and restores
       the previous decimal context in __exit__()
     """
+
     def __init__(self, new_context):
         self.new_context = new_context.copy()
+
     def __enter__(self):
         self.saved_context = getcontext()
         setcontext(self.new_context)
         return self.new_context
+
     def __exit__(self, t, v, tb):
         setcontext(self.saved_context)
+
 
 class Context(object):
     """Contains the context for a Decimal instance.
@@ -4662,6 +4683,7 @@ class Context(object):
     # the method name changed, but we provide also the old one, for compatibility
     to_integral = to_integral_value
 
+
 class _WorkRep(object):
     __slots__ = ('sign', 'int', 'exp')
     # sign: 0 or 1
@@ -4687,7 +4709,6 @@ class _WorkRep(object):
         return "(%r, %r, %r)" % (self.sign, self.int, self.exp)
 
     __str__ = __repr__
-
 
 
 def _normalize(op1, op2, prec=0):
@@ -4725,6 +4746,8 @@ def _normalize(op1, op2, prec=0):
 # The correction being in the function definition is for speed, and
 # the whole function is not resolved with math.log because of avoiding
 # the use of floats.
+
+
 def _nbits(n, correction={
         '0': 4, '1': 3, '2': 2, '3': 2,
         '4': 1, '5': 1, '6': 1, '7': 1,
@@ -4737,6 +4760,7 @@ def _nbits(n, correction={
         raise ValueError("The argument to _nbits should be nonnegative.")
     hex_n = "%x" % n
     return 4 * len(hex_n) - correction[hex_n[0]]
+
 
 def _sqrt_nearest(n, a):
     """Closest integer to the square root of the positive integer n.  a is
@@ -4753,6 +4777,7 @@ def _sqrt_nearest(n, a):
         b, a = a, a - -n // a >> 1
     return a
 
+
 def _rshift_nearest(x, shift):
     """Given an integer x and a nonnegative integer shift, return closest
     integer to x / 2**shift; use round-to-even in case of a tie.
@@ -4761,6 +4786,7 @@ def _rshift_nearest(x, shift):
     b, q = 1 << shift, x >> shift
     return q + (2 * (x & (b - 1)) + (q & 1) > b)
 
+
 def _div_nearest(a, b):
     """Closest integer to a/b, a and b positive integers; rounds to even
     in the case of a tie.
@@ -4768,6 +4794,7 @@ def _div_nearest(a, b):
     """
     q, r = divmod(a, b)
     return q + (2 * r + (q & 1) > b)
+
 
 def _ilog(x, M, L=8):
     """Integer approximation to M*log(x/M), with absolute error boundable
@@ -4817,6 +4844,7 @@ def _ilog(x, M, L=8):
 
     return _div_nearest(w * y, M)
 
+
 def _dlog10(c, e, p):
     """Given integers c, e and p with c > 0, p >= 0, compute an integer
     approximation to 10**p * log10(c*10**e), with an absolute error of
@@ -4850,6 +4878,7 @@ def _dlog10(c, e, p):
         log_tenpower = div_nearest(f, 10**-p) # error < 0.5
 
     return _div_nearest(log_tenpower + log_d, 100)
+
 
 def _dlog(c, e, p):
     """Given integers c, e and p with c > 0, compute an integer
@@ -4895,10 +4924,12 @@ def _dlog(c, e, p):
     # error in sum < 11+27 = 38; error after division < 0.38 + 0.5 < 1
     return _div_nearest(f_log_ten + log_d, 100)
 
+
 class _Log10Memoize(object):
     """Class to compute, store, and allow retrieval of, digits of the
     constant log(10) = 2.302585....  This constant is needed by
     Decimal.ln, Decimal.log10, Decimal.exp and Decimal.__pow__."""
+
     def __init__(self):
         self.digits = "23025850929940456840179914546843642076011014886"
 
@@ -4930,7 +4961,9 @@ class _Log10Memoize(object):
             self.digits = digits.rstrip('0')[:-1]
         return int(self.digits[:p + 1])
 
+
 _log10_digits = _Log10Memoize().getdigits
+
 
 def _iexp(x, M, L=8):
     """Given integers x and M, M > 0, such that x/M is small in absolute
@@ -4969,6 +5002,7 @@ def _iexp(x, M, L=8):
 
     return M + y
 
+
 def _dexp(c, e, p):
     """Compute an approximation to exp(c*10**e), with p decimal places of
     precision.
@@ -5004,6 +5038,7 @@ def _dexp(c, e, p):
 
     # error in result of _iexp < 120;  error after division < 0.62
     return _div_nearest(_iexp(rem, 10**p), 1000), quot - p + 3
+
 
 def _dpower(xc, xe, yc, ye, p):
     """Given integers xc, xe, yc and ye representing Decimals x = xc*10**xe and
@@ -5047,6 +5082,7 @@ def _dpower(xc, xe, yc, ye, p):
 
     return coeff, exp
 
+
 def _log10_lb(c, correction={
         '1': 100, '2': 70, '3': 53, '4': 40, '5': 31,
         '6': 23, '7': 16, '8': 10, '9': 5}):
@@ -5057,6 +5093,7 @@ def _log10_lb(c, correction={
     return 100 * len(str_c) - correction[str_c[0]]
 
 ##### Helper Functions ####################################################
+
 
 def _convert_other(other, raiseit=False):
     """Convert other to Decimal.
@@ -5075,6 +5112,7 @@ def _convert_other(other, raiseit=False):
 
 # The default context prototype used by Context()
 # Is mutable, so that new contexts can have different default values
+
 
 DefaultContext = Context(
         prec=28, rounding=ROUND_HALF_EVEN,
@@ -5158,7 +5196,6 @@ Dec_n1 = Decimal(-1)
 
 # Infsign[sign] is infinity w/ that sign
 Infsign = (Inf, negInf)
-
 
 
 if __name__ == '__main__':

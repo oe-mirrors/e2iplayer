@@ -52,10 +52,12 @@ from Screens.MessageBox import MessageBox
 # Config options for HOST
 ###################################################
 
+
 def GetConfigList():
     optionList = []
     return optionList
 ###################################################
+
 
 class NapiProjektProvider(CBaseSubProviderClass): 
     
@@ -374,6 +376,7 @@ class NapiProjektProvider(CBaseSubProviderClass):
             self.listSubtitles(self.currItem)
         
         CBaseSubProviderClass.endHandleService(self, index, refresh)
+
 
 class IPTVSubProvider(CSubProviderBase):
 

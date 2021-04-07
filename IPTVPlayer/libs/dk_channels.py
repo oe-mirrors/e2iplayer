@@ -20,6 +20,7 @@
 from Plugins.Extensions.IPTVPlayer.libs.pCommon import common
 import copy
 
+
 class TV2RChannel():
     QUALITIES = [2000, 1000, 300]
     CHANNELS = [{'title': 'TV2 Fyn', 'type': 'fynskemedier.dk', 'id': 'tv2fyn'},
@@ -33,7 +34,6 @@ class TV2RChannel():
                 #{'title':'Kanalsport DK', 'type':'direct',          'id':'http://lswb-de-08.servers.octoshape.net:1935/live/kanalsport_1000k/playlist.m3u8'},
                 ]
 
-                
     def __init__(self):
         self.cm = common()
         

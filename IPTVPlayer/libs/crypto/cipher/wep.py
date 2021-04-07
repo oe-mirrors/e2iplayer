@@ -13,10 +13,12 @@ from crypto.errors import IntegrityCheckError, BadKeySizeError
 from zlib import crc32
 from struct import pack
 
+
 class WEP:
     """ WEP Stream Cipher Algorithm
         Automatically adds and removes IV and KeyId
     """
+
     def __init__(self, key=None, keyId=None):
         """ key -> octet string for key """
         self.name = 'WEP'

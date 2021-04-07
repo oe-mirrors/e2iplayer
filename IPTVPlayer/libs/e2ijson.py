@@ -16,6 +16,7 @@ except Exception:
 e2icjson = None
 ############################################
 
+
 def loads(input, noneReplacement=None, baseTypesAsString=False, utf8=True):
     global e2icjson
     if e2icjson == None:
@@ -38,6 +39,7 @@ def loads(input, noneReplacement=None, baseTypesAsString=False, utf8=True):
             out = byteify(out, noneReplacement, baseTypesAsString)
 
     return out
+
 
 def dumps(input, *args, **kwargs):
     return json.dumps(input, *args, **kwargs)

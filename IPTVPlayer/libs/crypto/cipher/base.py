@@ -15,17 +15,21 @@
 from ..errors import DecryptNotBlockAlignedError
 from ..keyedHash.pbkdf2 import pbkdf2
 
+
 class BlockCipher:
     """ Block ciphers """
+
     def __init__(self):
         self.reset()
 
     def reset(self):
         self.resetEncrypt()
         self.resetDecrypt()        
+
     def resetEncrypt(self):
         self.encryptBlockCount = 0
         self.bytesToEncrypt = ''
+
     def resetDecrypt(self):
         self.decryptBlockCount = 0
         self.bytesToDecrypt = ''
@@ -89,15 +93,19 @@ class BlockCipher:
             self.resetDecrypt()
         return plainText
 
+
 class BlockCipherWithIntegrity(BlockCipher):
     """ Base class for encryption with integrity checking
         just a holding place for now ... """
+
     def __init__(self, authData, plainText):
         self.reset()
+
 
 class Pad:
    def __init__(self):
        pass              # eventually could put in calculation of min and max size extension
+
 
 class padWithPadLen(Pad):
     """ Pad a binary string with the length of the padding """
@@ -115,6 +123,7 @@ class padWithPadLen(Pad):
             raise DecryptNotBlockAlignedError('Expected More Data')
         return paddedBinaryString[:-ord(paddedBinaryString[-1])]
 
+
 class noPadding(Pad):
     """ No padding. Use this to get ECB behavior from encrypt/decrypt """
 
@@ -125,6 +134,7 @@ class noPadding(Pad):
     def removePad(self, paddedBinaryString, blockSize):
         """ Remove no padding """
         return paddedBinaryString
+
 
 class padWithZeros(Pad):
     """ Zero padding. Used in CBC_MAC processing """

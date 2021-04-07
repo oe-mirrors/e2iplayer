@@ -10,6 +10,7 @@ from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc
 ###################################################
 import codecs
 
+
 class IPTVFileHost:
     def __init__(self):
         printDBG("IPTVFileHost.__init__")    
@@ -89,6 +90,7 @@ class IPTVFileHost:
     
     def getItemsInGroup(self, group, sort=False):
         tmpList = []
+
         def _compare(it1, it2):
             name1 = it1['title_in_group'].lower()
             name2 = it2['title_in_group'].lower()
@@ -107,6 +109,7 @@ class IPTVFileHost:
         
     def getAllItems(self, sort=False):
         tmpList = []
+
         def _compare(it1, it2):
             name1 = it1['full_title'].lower()
             name2 = it2['full_title'].lower()

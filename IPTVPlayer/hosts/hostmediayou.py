@@ -27,14 +27,17 @@ from Screens.MessageBox import MessageBox
 ###################################################
 config.plugins.iptvplayer.mediayou_language = ConfigSelection(default="pol", choices=[("pol", _("Polish")), ("eng", _("English")), ("ger", _("Deutsch")), ("rus", _("Russian")), ("ita", _("Italian")), ("fre", _("French"))]) 
 
+
 def GetConfigList():
     optionList = []
     optionList.append(getConfigListEntry(_("Language"), config.plugins.iptvplayer.mediayou_language))
     return optionList
 ###################################################
 
+
 def gettytul():
     return 'https://mediayou.net/'
+
 
 class MediayouNet(CBaseHostClass):
 
@@ -73,7 +76,6 @@ class MediayouNet(CBaseHostClass):
                         {'category': 'search_history', 'title': _('Search history')}]
         self.listsTab(MAIN_CAT_TAB, cItem)
         
-       
     def listCategories(self, cItem, nextCategory):
         printDBG("MediayouNet.listCategories [%s]" % cItem)
         
@@ -186,7 +188,6 @@ class MediayouNet(CBaseHostClass):
     def handleService(self, index, refresh=0, searchPattern='', searchType=''):
         printDBG('handleService start')
         
-
         CBaseHostClass.handleService(self, index, refresh, searchPattern, searchType)
 
         name = self.currItem.get("name", '')
@@ -220,6 +221,7 @@ class MediayouNet(CBaseHostClass):
             printExc()
         
         CBaseHostClass.endHandleService(self, index, refresh)
+
 
 class IPTVHost(CHostBase):
 

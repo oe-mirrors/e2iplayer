@@ -24,6 +24,7 @@ IFRAME = IFRAME_SRC_URI_RE
 IMG = IMAGE_SRC_URI_RE
 A = A_HREF_URI_RE
 
+
 def getattr(data, attrmame, flags=0):
     if flags & IGNORECASE:
         sData = data.lower() 
@@ -50,6 +51,7 @@ def getattr(data, attrmame, flags=0):
         eidx += 1
     return ''
 
+
 def search(data, pattern, flags=0, limits=-1):
     tab = []
     if isinstance(pattern, str):
@@ -67,11 +69,13 @@ def search(data, pattern, flags=0, limits=-1):
         tab.append(value)
     return tab
 
+
 def all(tab, data, start, end):
     for it in tab:
         if data.find(it, start, end) == -1:
             return False
     return True
+
 
 def any(tab, data, start, end):
     for it in tab:
@@ -79,15 +83,19 @@ def any(tab, data, start, end):
             return True
     return False
 
+
 def none(tab, data, start, end):
     return not any(tab, data, start, end)
 
 # example: ph.findall(data, ('<a', '>', ph.check(ph.any, ('articles.php', 'readarticle.php'))), '</a>')
+
+
 def check(arg1, arg2=None):
     if arg2 == None and isinstance(arg1, str):
         return lambda data, ldata, s, e: ldata.find(arg1, s, e) != -1
     
     return lambda data, ldata, s, e: arg1(arg2, ldata, s, e)
+
 
 def findall(data, start, end=('',), flags=START_E | END_E, limits=-1):
 
@@ -167,6 +175,7 @@ def findall(data, start, end=('',), flags=START_E | END_E, limits=-1):
         if limits > 0 and len(itemsTab) >= limits:
             break
     return itemsTab
+
 
 def rfindall(data, start, end=('',), flags=START_E | END_E, limits=-1):
 
@@ -253,6 +262,7 @@ def find(data, start, end=('',), flags=START_E | END_E):
     else:
         return False, ''
 
+
 def rfind(data, start, end=('',), flags=START_E | END_E):
     ret = rfindall(data, start, end, flags, 1)
     if len(ret):
@@ -260,12 +270,16 @@ def rfind(data, start, end=('',), flags=START_E | END_E):
     else:
         return False, ''
 
+
 def strip_doubles(data, pattern):
     while -1 < data.find(pattern + pattern) and '' != pattern:
         data = data.replace(pattern + pattern, pattern)
     return data 
 
+
 STRIP_HTML_TAGS_C = None
+
+
 def clean_html(str):
     global STRIP_HTML_TAGS_C
     if None == STRIP_HTML_TAGS_C:

@@ -27,13 +27,16 @@ except Exception:
 ###################################################
 config.plugins.iptvplayer.hitbox_iconssize = ConfigSelection(default="medium", choices=[("large", _("large")), ("medium", _("medium")), ("small", _("small"))])
 
+
 def GetConfigList():
     optionList = []
     return optionList
 ###################################################
 
+
 def gettytul():
     return 'https://pinkbike.com/'
+
 
 class Pinkbike(CBaseHostClass):
 
@@ -152,7 +155,6 @@ class Pinkbike(CBaseHostClass):
             params.update({'title': _('Next page'), 'page': page + 1})
             self.addDir(params)
 
-
     def listSearchResult(self, cItem, searchPattern, searchType):
         printDBG("Pinkbike.listSearchResult cItem[%s], searchPattern[%s] searchType[%s]" % (cItem, searchPattern, searchType))
         searchPattern = urllib.parse.quote_plus(searchPattern)
@@ -209,6 +211,7 @@ class Pinkbike(CBaseHostClass):
         else:
             printExc()
         CBaseHostClass.endHandleService(self, index, refresh)
+
 
 class IPTVHost(CHostBase):
 

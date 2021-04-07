@@ -28,13 +28,17 @@ from Components.config import config, ConfigYesNo, getConfigListEntry
 ###################################################
 config.plugins.iptvplayer.itv_use_x_forwarded_for = ConfigYesNo(default=False)
 
+
 def GetConfigList():
     optionList = []
     optionList.append(getConfigListEntry(_("Bypass geo-blocking for VODs (it may be illegal):"), config.plugins.iptvplayer.itv_use_x_forwarded_for))
     return optionList
 ###################################################
+
+
 def gettytul():
     return 'https://www.itv.com/'
+
 
 class ITV(CBaseHostClass):
     
@@ -65,6 +69,7 @@ class ITV(CBaseHostClass):
             addParams = dict(self.defaultParams)
         origBaseUrl = baseUrl
         baseUrl = self.cm.iriToUri(baseUrl)
+
         def _getFullUrl(url):
             if self.cm.isValidUrl(url):
                 return url
@@ -278,7 +283,6 @@ class ITV(CBaseHostClass):
         retTab = CSelOneLink(retTab, __getLinkQuality, 99999999).getSortedLinks()
         return retTab
        
-    
     def handleService(self, index, refresh=0, searchPattern='', searchType=''):
         printDBG('handleService start')
         
@@ -312,6 +316,7 @@ class ITV(CBaseHostClass):
             printExc()
         
         CBaseHostClass.endHandleService(self, index, refresh)
+
 
 class IPTVHost(CHostBase):
 

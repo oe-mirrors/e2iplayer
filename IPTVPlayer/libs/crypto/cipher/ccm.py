@@ -16,6 +16,7 @@ from crypto.common import xor
 from struct import unpack, pack
 from crypto.errors import InitCryptoError, EncryptError, DecryptError, IntegrityCheckError
 
+
 class CCM(BlockCipherWithIntegrity):
     """ The CCM class wraps block ciphers to provide integrity and encryption.
 
@@ -48,6 +49,7 @@ class CCM(BlockCipherWithIntegrity):
             >> except IntegrityCheckError:
             >>     print 'failed integrity check'
     """
+
     def __init__(self, blockCipherInstance, autoNonce=None, macSize=8, nonceSize=13):
         """ CCM algorithms are created by initializing with a BlockCipher instance
                 blockCipherInstance -> typically AES_ECB
@@ -63,7 +65,6 @@ class CCM(BlockCipherWithIntegrity):
         self.keySize = self.baseCipher.keySize
 
         self.baseCipher.padding = noPadding()   # baseCipher should NOT pad!!
-
 
         self.M = macSize        # Number of octets
         if not((3 < self.M < 17) and (macSize % 2 == 0)):

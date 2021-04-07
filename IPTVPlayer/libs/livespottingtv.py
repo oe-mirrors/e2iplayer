@@ -14,10 +14,13 @@ from Plugins.Extensions.IPTVPlayer.libs import ph
 ###################################################
 # Config options for HOST
 ###################################################
+
+
 def GetConfigList():
     optionList = []
     return optionList
 ###################################################
+
 
 class LivespottingTvApi:
     MAIN_URL = 'http://livespotting.com/'

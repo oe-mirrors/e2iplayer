@@ -24,6 +24,7 @@ from Components.config import config, ConfigText, getConfigListEntry
 ###################################################
 config.plugins.iptvplayer.drdk_myip = ConfigText(default="213.173.226.190", fixed_size=False)
 
+
 def GetConfigList():
     optionList = []
     optionList.append(getConfigListEntry(_("Geolocation IP:"), config.plugins.iptvplayer.drdk_myip))
@@ -33,6 +34,7 @@ def GetConfigList():
 
 def gettytul():
     return 'http://dr.dk/'
+
 
 class DRDK(CBaseHostClass):
     MAIN_URL = 'http://dr.dk/'
@@ -178,6 +180,8 @@ class DRDK(CBaseHostClass):
             printExc()
         
         CBaseHostClass.endHandleService(self, index, refresh)
+
+
 class IPTVHost(CHostBase):
 
     def __init__(self):

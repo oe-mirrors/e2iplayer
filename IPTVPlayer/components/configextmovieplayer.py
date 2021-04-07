@@ -77,6 +77,7 @@ config.plugins.iptvplayer.extplayer_subtitle_box_height = ConfigInteger(240, (50
 
 config.plugins.iptvplayer.extplayer_infobanner_clockformat = ConfigSelection(default="", choices=[("", _("None")), ("24", _("24 hour format ")), ("12", _("12 hour format "))])
 
+
 class ConfigExtMoviePlayerBase():
     
     def __init__(self):
@@ -237,6 +238,7 @@ class ConfigExtMoviePlayerBase():
             return ''
         return config.plugins.iptvplayer.extplayer_infobanner_clockformat.value
     
+
 class ConfigExtMoviePlayer(ConfigBaseWidget, ConfigExtMoviePlayerBase):
    
     def __init__(self, session, operatingPlayer=False):

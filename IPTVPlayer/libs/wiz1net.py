@@ -9,6 +9,7 @@ from Plugins.Extensions.IPTVPlayer.components.ihost import CBaseHostClass
 from Plugins.Extensions.IPTVPlayer.libs import ph
 ###################################################
 
+
 class Wiz1NetApi(CBaseHostClass):
 
     def __init__(self):

@@ -18,8 +18,10 @@ import urllib.parse
 import urllib.error
 ###################################################
 
+
 def gettytul():
     return 'http://filmehd.net/'
+
 
 class FilmeHD(CBaseHostClass):
  
@@ -387,6 +389,7 @@ class FilmeHD(CBaseHostClass):
             printExc()
         
         CBaseHostClass.endHandleService(self, index, refresh)
+
 
 class IPTVHost(CHostBase):
 

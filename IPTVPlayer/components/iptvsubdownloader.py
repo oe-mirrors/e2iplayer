@@ -48,6 +48,7 @@ from Plugins.Extensions.IPTVPlayer.tools.iptvtypes import strwithmeta
 import Plugins.Extensions.IPTVPlayer.components.asynccall as asynccall
 ###################################################
 
+
 class IPTVSubDownloaderWidget(Screen):
     IPTV_VERSION = GetIPTVPlayerVerstion()
     screenwidth = getDesktop(0).size().width()

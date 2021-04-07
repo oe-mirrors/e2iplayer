@@ -30,9 +30,11 @@ from enigma import gRGB
 from skin import parseColor
 ###################################################
 
+
 class IPTVMultipleInputBox(Screen):
     DEF_INPUT_PARAMS = {'validator': None, 'title': '', 'useable_chars': None, 'label_font': 'Regular;23', 'label_size': (550, 25), 'input_font': 'Regular;20', 'input_size': (550, 25), 'input': dict(text="", maxSize=False, visible_width=False, type=Input.TEXT)}
     DEF_PARAMS = {'title': _("Input"), 'with_accept_button': False, 'accep_label': _("Save"), 'list': []}
+
     def __init__(self, session, params={}):
         
         # Skin generator
@@ -59,7 +61,6 @@ class IPTVMultipleInputBox(Screen):
             skinItems = '<widget name="statustext"   position="10,%d"  zPosition="2" size="%d,%d"  valign="center" halign="center" font="Regular;22" transparent="1" />' % (pY + dY, maxWidth - 20, statusTextHight)
             pY += statusTextHight + dY * 2
             
-        
         for idx in range(len(self.list)):
             item = self.list[idx]
             if 'icon_path' in item:

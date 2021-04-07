@@ -35,6 +35,7 @@ from Screens.MessageBox import MessageBox
 config.plugins.iptvplayer.vumedicom_login = ConfigText(default="", fixed_size=False)
 config.plugins.iptvplayer.vumedicom_password = ConfigText(default="", fixed_size=False)
 
+
 def GetConfigList():
     optionList = []
     optionList.append(getConfigListEntry(_("login") + ":", config.plugins.iptvplayer.vumedicom_login))
@@ -45,6 +46,7 @@ def GetConfigList():
 
 def gettytul():
     return 'https://vumedi.com/'
+
 
 class VUMEDI(CBaseHostClass):
 
@@ -445,6 +447,7 @@ class VUMEDI(CBaseHostClass):
             printExc()
         
         CBaseHostClass.endHandleService(self, index, refresh)
+
 
 class IPTVHost(CHostBase):
 

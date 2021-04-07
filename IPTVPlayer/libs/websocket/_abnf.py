@@ -66,6 +66,7 @@ VALID_CLOSE_STATUS = (
     STATUS_UNEXPECTED_CONDITION,
     )
 
+
 class ABNF(object):
     """
     ABNF frame class.
@@ -233,6 +234,7 @@ class ABNF(object):
         _d = array.array("B", data)
         return _mask(_m, _d)
 
+
 class frame_buffer(object):
     _HEADER_MASK_INDEX = 5
     _HEADER_LENGHT_INDEX = 6
@@ -277,7 +279,6 @@ class frame_buffer(object):
         if not self.header:
             return False
         return self.header[frame_buffer._HEADER_MASK_INDEX]
-
 
     def has_received_length(self):
         return self.length is None

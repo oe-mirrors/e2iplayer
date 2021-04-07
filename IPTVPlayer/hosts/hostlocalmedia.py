@@ -41,6 +41,7 @@ config.plugins.iptvplayer.local_showhiddensdir = ConfigYesNo(default=False)
 config.plugins.iptvplayer.local_showhiddensfiles = ConfigYesNo(default=False)
 config.plugins.iptvplayer.local_maxitems = ConfigInteger(1000, (10, 1000000))
 
+
 def GetConfigList():
     optionList = []
     optionList.append(getConfigListEntry(_("Sort alphabetically"), config.plugins.iptvplayer.local_alphasort))
@@ -55,6 +56,7 @@ def GetConfigList():
 def gettytul():
     return _('LocalMedia')
     
+
 def iptv_execute_wrapper(cmd):
     printDBG("LocalMedia.iptv_execute_wrapper cmd[%r]" % cmd)
     obj = iptv_execute()
@@ -62,6 +64,7 @@ def iptv_execute_wrapper(cmd):
     obj = None
     printDBG("LocalMedia.iptv_execute_wrapper ret[%r]" % ret)
     return ret
+
 
 class LocalMedia(CBaseHostClass):
     ISO_MOUNT_POINT_NAME = '.iptvplayer_iso'
@@ -534,6 +537,7 @@ class LocalMedia(CBaseHostClass):
             self.listDir(self.currItem)
         
         CBaseHostClass.endHandleService(self, index, refresh)
+
 
 class IPTVHost(CHostBase):
 

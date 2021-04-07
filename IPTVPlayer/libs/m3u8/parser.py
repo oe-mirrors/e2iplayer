@@ -22,6 +22,7 @@ http://stackoverflow.com/questions/2785755/how-to-split-but-ignore-separators-in
 '''
 ATTRIBUTELISTPATTERN = re.compile(r'''((?:[^,"']|"[^"]*"|'[^']*')+)''')
 
+
 def parse(content):
     '''
     Given a M3U8 playlist content returns a dictionary with all data found
@@ -88,12 +89,14 @@ def parse(content):
 
     return data
 
+
 def _parse_key(line, data):
     params = ATTRIBUTELISTPATTERN.split(line.replace(ext_x_key + ':', ''))[1::2]
     data['key'] = {}
     for param in params:
         name, value = param.split('=', 1)
         data['key'][normalize_attribute(name)] = remove_quotes(value)
+
 
 def _parse_extinf(line, data, state):
     val = line.replace(extinf + ':', '').split(',')
@@ -104,10 +107,12 @@ def _parse_extinf(line, data, state):
         
     state['segment'] = {'duration': float(val[0]), 'title': remove_quotes(title)}
 
+
 def _parse_ts_chunk(line, data, state):
     segment = state.pop('segment')
     segment['uri'] = line
     data['segments'].append(segment)
+
 
 def _parse_stream_inf(line, data, state):
     params = ATTRIBUTELISTPATTERN.split(line.replace(ext_x_stream_inf + ':', ''))[1::2]
@@ -125,6 +130,7 @@ def _parse_stream_inf(line, data, state):
 
     data['is_variant'] = True
     state['stream_info'] = stream_info
+
 
 def _parse_alternate_media(line, data):
     params = ATTRIBUTELISTPATTERN.split(line.replace(ext_x_media + ':', ''))[1::2]
@@ -147,6 +153,7 @@ def _parse_alternate_media(line, data):
         else:
             data['alt_media'][group].append(normalize_params)
 
+
 def _parse_variant_playlist(line, data, state):
     stream_info = state.pop('stream_info')
     playlist = {'uri': line,
@@ -154,14 +161,17 @@ def _parse_variant_playlist(line, data, state):
                 'alt_audio_streams': []}
     data['playlists'].append(playlist)
 
+
 def _parse_simple_parameter(line, data, cast_to=str):
     param, value = line.split(':', 1)
     param = normalize_attribute(param.replace('#EXT-X-', ''))
     value = normalize_attribute(value)
     data[param] = cast_to(value)
 
+
 def string_to_lines(string):
     return string.strip().replace('\r\n', '\n').split('\n')
+
 
 def remove_quotes(string):
     '''
@@ -178,8 +188,10 @@ def remove_quotes(string):
         return string[1:-1]
     return string
 
+
 def normalize_attribute(attribute):
     return attribute.replace('-', '_').lower().strip()
+
 
 def is_url(uri):
     return re.match(r'https?://', uri) is not None

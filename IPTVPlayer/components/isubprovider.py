@@ -22,6 +22,7 @@ import urllib.parse
 import urllib.error
 from os import listdir as os_listdir, path as os_path
 
+
 class CSubItem:
     def __init__(self, path="",
                        name="",
@@ -38,6 +39,8 @@ class CSubItem:
 # interface base class with method used to
 # communicate display layer with host
 #
+
+
 class ISubProvider:
 
     # return firs available list of item category or video or link
@@ -75,10 +78,14 @@ class ISubProvider:
     # for given Index, 
     def downloadSubtitleFile(self, Index=0,):
         return RetHost(RetHost.NOT_IMPLEMENTED, value=[])
+
+
 '''
 CSubProviderBase implements some typical methods
           from ISubProvider interface
 '''
+
+
 class CSubProviderBase(ISubProvider):
     def __init__(self, subProvider):
         self.subProvider = subProvider
@@ -176,6 +183,7 @@ class CSubProviderBase(ISubProvider):
                                 description=description,
                                 type=type)
     # end converItem
+
 
 class CBaseSubProviderClass:
     
@@ -420,7 +428,6 @@ class CBaseSubProviderClass:
             return False, {}
         title = self.cm.ph.getSearchGroups(data, '''<meta property='og:title' content="([^\(^"]+?)["\(]''')[0].strip()
         return True, {'title': title}
-        
         
     def getTypeFromThemoviedb(self, imdbid, title):
         if '(TV Series)' in title:

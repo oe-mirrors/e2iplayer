@@ -119,7 +119,6 @@ class IPTVPinWidget(Screen):
         self.updatePinDisplay()
         return
 
- 
     def back_pressed(self):
         self.close(None)
         return
@@ -137,24 +136,34 @@ class IPTVPinWidget(Screen):
                   
     def keyNum1(self):
         self.keyNumPressed(1)
+
     def keyNum2(self):
         self.keyNumPressed(2)
+
     def keyNum3(self):
         self.keyNumPressed(3)
+
     def keyNum4(self):
         self.keyNumPressed(4)
+
     def keyNum5(self):
         self.keyNumPressed(5)
+
     def keyNum6(self):
         self.keyNumPressed(6)
+
     def keyNum7(self):
         self.keyNumPressed(7)
+
     def keyNum8(self):
         self.keyNumPressed(8)
+
     def keyNum9(self):
         self.keyNumPressed(9)
+
     def keyNum0(self):
         self.keyNumPressed(0)
+
     def Error(self, error=None):
         pass
         

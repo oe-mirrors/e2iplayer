@@ -20,6 +20,7 @@ from urllib.parse import urlparse
 def gettytul():
     return 'https://watchcartoononline.com/'
 
+
 class WatchCartoonOnline(CBaseHostClass):
 
     def __init__(self):
@@ -39,6 +40,7 @@ class WatchCartoonOnline(CBaseHostClass):
     def getPage(self, baseUrl, addParams={}, post_data=None):
         if addParams == {}:
             addParams = dict(self.defaultParams)
+
         def _getFullUrl(url):
             if self.cm.isValidUrl(url):
                 return url
@@ -349,6 +351,7 @@ class WatchCartoonOnline(CBaseHostClass):
             printExc()
         
         CBaseHostClass.endHandleService(self, index, refresh)
+
 
 class IPTVHost(CHostBase):
 

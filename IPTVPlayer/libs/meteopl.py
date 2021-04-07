@@ -23,12 +23,14 @@ except Exception:
 ###################################################
 config.plugins.iptvplayer.meteopl_locality = ConfigText(default="", fixed_size=False)
 
+
 def GetConfigList():
     optionList = []
     optionList.append(getConfigListEntry("Miejscowość:", config.plugins.iptvplayer.meteopl_locality))
     return optionList
     
 ###################################################
+
 
 class MeteoPLApi(CBaseHostClass):
 

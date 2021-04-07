@@ -46,6 +46,7 @@ config.plugins.iptvplayer.tvplayercom_preferredbitrate = ConfigSelection(default
                                                                                                ("0", _("lowest"))])
 config.plugins.iptvplayer.tvplayercom_usepreferredbitrate = ConfigYesNo(default=False)
 
+
 def GetConfigList():
     optionList = []
     optionList.append(getConfigListEntry(_("Preferred bitrate") + ":", config.plugins.iptvplayer.tvplayercom_preferredbitrate))
@@ -56,8 +57,10 @@ def GetConfigList():
     return optionList
 ###################################################
 
+
 def gettytul():
     return 'https://tvplayer.com/'
+
 
 class TVPlayer(CBaseHostClass):
  
@@ -419,6 +422,7 @@ class TVPlayer(CBaseHostClass):
             printExc()
         
         CBaseHostClass.endHandleService(self, index, refresh)
+
 
 class IPTVHost(CHostBase):
 

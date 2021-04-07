@@ -21,6 +21,8 @@ from datetime import datetime, timedelta
 config.plugins.iptvplayer.sportstream365_language = ConfigSelection(default="", choices=[("", _("Default")), ("de", "Deutsch"), ("en", "English"), ("es", "Español"), ("fr", "Français"), ("it", "Italiano"),
                                                                                              ("pt", "Português"), ("ru", "Русский"), ("tr", "Türkçe"), ("cn", "汉语")])
 config.plugins.iptvplayer.sportstream365_cyrillic2latin = ConfigYesNo(default=False)
+
+
 def GetConfigList():
     optionList = []
     optionList.append(getConfigListEntry(_('Preferred language') + ": ", config.plugins.iptvplayer.sportstream365_language))
@@ -29,6 +31,7 @@ def GetConfigList():
 ###################################################
     
 ###################################################
+
 
 class SportStream365Api(CBaseHostClass):
     def __init__(self):
@@ -154,6 +157,7 @@ class SportStream365Api(CBaseHostClass):
                     break
                 
                 parseInt = lambda sin: int(''.join([c for c in str(sin).replace(',', '.').split('.')[0] if c.isdigit()])) if sum(map(int, [s.isdigit() for s in str(sin)])) and not callable(sin) and str(sin)[0].isdigit() else 0
+
                 def parseInt2(string):
                     try:
                         return int(''.join([x for x in string if x.isdigit()]))

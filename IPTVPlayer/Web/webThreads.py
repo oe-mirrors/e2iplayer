@@ -19,6 +19,8 @@ from Plugins.Extensions.IPTVPlayer.tools.iptvtools import GetHostsList, IsHostEn
 from Components.config import config
 
 ########################################################
+
+
 def _async_raise(tid, exctype):
 	"""raises the exception, performs cleanup if needed"""
 	if not inspect.isclass(exctype):
@@ -35,6 +37,8 @@ def _async_raise(tid, exctype):
 		raise SystemError("PyThreadState_SetAsyncExc failed")
 
 ########################################################
+
+
 class buildActiveHostsHTML(threading.Thread):
 	def __init__(self, args=[]):
 		''' Constructor. '''
@@ -88,6 +92,8 @@ class buildActiveHostsHTML(threading.Thread):
 			hostHTML = '<td align="center">%s</td>' % hostNameWithURLandLOGO
 			settings.activeHostsHTML[hostName] = hostHTML
 ########################################################
+
+
 class buildtempLogsHTML(threading.Thread):
 	def __init__(self, DebugFileName):
 		''' Constructor. '''
@@ -112,12 +118,15 @@ class buildtempLogsHTML(threading.Thread):
 					LogText = ''
 				settings.tempLogsHTML += L + '<br>\n'
 ########################################################
+
+
 class buildConfigsHTML(threading.Thread):
 	def __init__(self, args=[]):
 		''' Constructor. '''
 		threading.Thread.__init__(self)
 		self.name = 'buildConfigsHTML'
 		self.args = args
+
 	def raise_exc(self, exctype):
 		"""raises the given exception type in the context of this thread"""
 		_async_raise(self.ident, exctype)
@@ -127,6 +136,7 @@ class buildConfigsHTML(threading.Thread):
 		cause the thread to exit silently (unless caught)"""
 		self.raise_exc(SystemExit)
 	########################################################
+
 	def buildSettingsTable(self, List1, List2, exclList, direction):  #direction = '1>2'|'2>1'
 		def getCFGType(option):
 			cfgtype = ''
@@ -174,6 +184,7 @@ class buildConfigsHTML(threading.Thread):
 					tableCFG.append([ConfName, ConfDesc, CFGElements])
 		return tableCFG
 	########################################################
+
 	def run(self):
 		usedCFG = []
 		#configs for hosts
@@ -233,6 +244,8 @@ class buildConfigsHTML(threading.Thread):
 		for item in self.buildSettingsTable(List1=list(config.plugins.iptvplayer.dict().items()), List2=OptionsList, exclList=usedCFG, direction='2>1'):
 			settings.configsHTML[item[1]] = '<tr><td><tt>%s</tt></td><td>%s</td></tr>\n' % (item[1], formGET(item[2]))
 ########################################################
+
+
 class doUseHostAction(threading.Thread):
 	def __init__(self, key, arg, searchType):
 		''' Constructor. '''
@@ -330,6 +343,8 @@ class doUseHostAction(threading.Thread):
 			initActiveHost(self.arg)
 			settings.retObj = settings.activeHost['Obj'].getSearchResults(settings.GlobalSearchQuery, '')
 ########################################################
+
+
 class doGlobalSearch(threading.Thread):
 	def __init__(self):
 		''' Constructor. '''

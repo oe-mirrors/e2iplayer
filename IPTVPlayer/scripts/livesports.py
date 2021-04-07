@@ -24,15 +24,21 @@ import time
 
 import signal
 import os
+
+
 def signal_handler(sig, frame):
     os.kill(os.getpid(), signal.SIGTERM)
+
+
 signal.signal(signal.SIGINT, signal_handler)
+
 
 def rm(file):
     try:
         os.remove(file)
     except Exception:
         pass
+
 
 def printDBG(strDat):
     return
@@ -42,6 +48,7 @@ def printDBG(strDat):
     f.close
     print("%s" % strDat)
 
+
 def printExc(msg=''):
     printDBG("===============================================")
     printDBG("                   EXCEPTION                   ")
@@ -50,7 +57,10 @@ def printExc(msg=''):
     printDBG(msg)
     printDBG("===============================================")
 
+
 cj = None
+
+
 def getPage(url, params={}):
     printDBG('url [%s]' % url)
     global cj
@@ -91,11 +101,14 @@ def getPage(url, params={}):
         printExc()
     return sts, data 
 
+
 jsscriptPath = '/'.join(os.path.dirname(os.path.abspath(__file__)).split('/')[:-1]) + '/jsscripts/'
 reCFScript = re.compile('<script[^>]*?>(.*?)</script>', re.DOTALL)
 reCFForm = re.compile('<form[^>]*?id="challenge-form"[^>]*?>(.*?)</form>', re.DOTALL)
 reCFAction = re.compile('action="([^"]+?)"')
 reCFInput = re.compile(r'<input[^>]*name="([^"]*)"[^>]*value="([^"]*)"[^>]*>')
+
+
 def getPageCF(url, params={}):
     global duktape
     global reCFScript
@@ -154,6 +167,7 @@ def getPageCF(url, params={}):
   
     return sts, data
 
+
 class Proxy(http.server.SimpleHTTPRequestHandler):
     def do_GET(self):
         global mainUrl
@@ -196,6 +210,7 @@ class Proxy(http.server.SimpleHTTPRequestHandler):
             self.send_response(200)
             self.end_headers()
             self.wfile.write(data)
+
 
 if __name__ == "__main__":
     if len(sys.argv) < 6:

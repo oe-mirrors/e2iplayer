@@ -49,8 +49,10 @@ def GetConfigList():
     return optionList
 ###################################################
 
+
 def gettytul():
     return 'https://ekstraklasa.tv/'
+
 
 class Ekstraklasa(CBaseHostClass):
 
@@ -64,7 +66,6 @@ class Ekstraklasa(CBaseHostClass):
         #self.CHANNELS_JSON_URL = 'https://core.oz.com/channels'
         
         self.DEFAULT_ICON_URL = "https://d3pwgdagcpl4mv.cloudfront.net/oz/image/upload/f_auto,fl_progressive,w_300/v1565967880/gbtbw0hwdthy72jknsct.png"
-
 
         #self.HEADER = {'User-Agent':self.USER_AGENT, 'Accept':'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8', 'Accept-Encoding':'gzip, deflate'}
         #self.AJAX_HEADER = dict(self.HEADER)
@@ -88,7 +89,6 @@ class Ekstraklasa(CBaseHostClass):
         
     def TryToLogin(self):
         printDBG("Ekstraklasa.TryToLogin")
-        
         
         if None == self.loggedIn or self.login != config.plugins.iptvplayer.ekstraklasa_login.value or\
             self.password != config.plugins.iptvplayer.ekstraklasa_password.value:
@@ -144,7 +144,6 @@ class Ekstraklasa(CBaseHostClass):
             url = video_json['_links']['streamUrl']
         else:
             url = ''
-
 
         title = video_json.get('title', '')
 
@@ -255,7 +254,6 @@ class Ekstraklasa(CBaseHostClass):
                 except Exception:
                     printExc()
                     
-        
     def listCategories(self, cItem):
         printDBG("Ekstraklasa.listCategories")
         

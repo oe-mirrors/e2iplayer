@@ -43,10 +43,12 @@ from Screens.MessageBox import MessageBox
 # Config options for HOST
 ###################################################
 
+
 def GetConfigList():
     optionList = []
     return optionList
 ###################################################
+
 
 class OpenSubtitlesRest(CBaseSubProviderClass): 
     
@@ -335,6 +337,7 @@ class OpenSubtitlesRest(CBaseSubProviderClass):
             self.getSearchList(self.currItem)
         
         CBaseSubProviderClass.endHandleService(self, index, refresh)
+
 
 class IPTVSubProvider(CSubProviderBase):
 

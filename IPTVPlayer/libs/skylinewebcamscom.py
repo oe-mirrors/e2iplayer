@@ -32,12 +32,14 @@ except Exception:
 config.plugins.iptvplayer.skylinewebcams_lang = ConfigSelection(default="en", choices=[("en", "en"), ("it", "it"), ("es", "es"), ("de", "de"), ("fr", "fr"),
                                                                                            ("el", "el"), ("hr", "hr"), ("sl", "sl"), ("zh", "zh")])
 
+
 def GetConfigList():
     optionList = []
     optionList.append(getConfigListEntry(_("Language:"), config.plugins.iptvplayer.skylinewebcams_lang))
     return optionList
     
 ###################################################
+
 
 class WkylinewebcamsComApi:
     MAIN_URL = 'https://www.skylinewebcams.com/'

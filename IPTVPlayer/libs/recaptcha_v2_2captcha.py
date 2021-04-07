@@ -20,6 +20,7 @@ import urllib.error
 from Components.config import config
 ###################################################
 
+
 class UnCaptchaReCaptcha:
     def __init__(self, lang='en'):
         self.cm = common()

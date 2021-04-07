@@ -19,13 +19,16 @@ import urllib.error
 import base64
 ###################################################
 
+
 def GetConfigList():
     optionList = []
     return optionList
 ###################################################
 
+
 def gettytul():
     return 'http://cinemay.ws/'
+
 
 class Cinemay(CBaseHostClass):
     
@@ -421,6 +424,7 @@ class Cinemay(CBaseHostClass):
             printExc()
         
         CBaseHostClass.endHandleService(self, index, refresh)
+
 
 class IPTVHost(CHostBase):
 

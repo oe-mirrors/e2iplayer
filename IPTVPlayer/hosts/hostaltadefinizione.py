@@ -22,8 +22,10 @@ except Exception:
     import simplejson as json
 ###################################################
 
+
 def gettytul():
     return 'https://altadefinizione.fm/'
+
 
 class Altadefinizione(CBaseHostClass):
  
@@ -282,7 +284,6 @@ class Altadefinizione(CBaseHostClass):
         playerData = self.cm.ph.getSearchGroups(playerData, '''value=['"]([^'^"]+?)['"]''')[0]
         printDBG('PLAYER_DATA: %s\n' % playerData)
         
-        
         if self.cacheJSCode == '':
             jsUrl = ''
             data = re.compile('''<script[^>]+?src=['"]([^'^"]+?)['"]''', re.I).findall(data)
@@ -424,6 +425,7 @@ class Altadefinizione(CBaseHostClass):
             printExc()
         
         CBaseHostClass.endHandleService(self, index, refresh)
+
 
 class IPTVHost(CHostBase):
 

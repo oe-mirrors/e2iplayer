@@ -25,6 +25,7 @@ except Exception:
 from os import remove as os_remove, path as os_path
 ###################################################
 
+
 class IPTVSubtitlesHandler:
     SUPPORTED_FORMATS = ['srt', 'vtt', 'mpl']
     
@@ -305,6 +306,7 @@ class IPTVSubtitlesHandler:
 
         return sts
         
+
 class IPTVEmbeddedSubtitlesHandler:
     def __init__(self):
         printDBG("IPTVEmbeddedSubtitlesHandler.__init__")
@@ -368,6 +370,7 @@ class IPTVEmbeddedSubtitlesHandler:
         self.subAtoms = [] 
         self.pailsOfAtoms = {}
         
+
 if __name__ == "__main__":
     obj = IPTVSubtitlesHandler()
     obj.loadSubtitles('/hdd/_Back.To.The.Future[1985]DvDrip-aXXo.pl.srt')

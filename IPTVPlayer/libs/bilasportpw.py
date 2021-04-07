@@ -29,12 +29,14 @@ from hashlib import md5
 ###################################################
 config.plugins.iptvplayer.bilasportpw_port = ConfigInteger(8193, (1024, 65535))
 
+
 def GetConfigList():
     optionList = []
     optionList.append(getConfigListEntry(_('PORT') + ": ", config.plugins.iptvplayer.bilasportpw_port))
     return optionList
     
 ###################################################
+
 
 class BilaSportPwApi(CBaseHostClass):
 

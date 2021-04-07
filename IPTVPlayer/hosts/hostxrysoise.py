@@ -33,6 +33,7 @@ from Components.config import config, ConfigSelection
 ###################################################
 config.plugins.iptvplayer.movieshdco_sortby = ConfigSelection(default="date", choices=[("date", _("Lastest")), ("views", _("Most viewed")), ("duree", _("Longest")), ("rate", _("Top rated")), ("random", _("Random"))]) 
 
+
 def GetConfigList():
     optionList = []
     return optionList
@@ -41,6 +42,7 @@ def GetConfigList():
 
 def gettytul():
     return 'https://xrysoi.tv/'
+
 
 class XrysoiSE(CBaseHostClass):
     HEADER = {'User-Agent': 'Mozilla/5.0', 'Accept': 'text/html'}
@@ -392,6 +394,7 @@ class XrysoiSE(CBaseHostClass):
             printExc()
         
         CBaseHostClass.endHandleService(self, index, refresh)
+
 
 class IPTVHost(CHostBase):
 

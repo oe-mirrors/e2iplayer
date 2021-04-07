@@ -22,6 +22,7 @@ from Plugins.Extensions.IPTVPlayer.components.ihost import CFavItem
 class IPTVFavourites:
     FILE_NAME_MACRO = 'iptv_%s.fav'
     GROUPS_FILE_NAME = FILE_NAME_MACRO % 'groups' 
+
     def __init__(self, favDir):
         self.lastError = ''
         self.favDir = favDir

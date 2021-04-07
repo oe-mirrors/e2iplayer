@@ -25,6 +25,7 @@ except Exception:
 def gettytul():
     return 'http://fight.mmashare.club/'
 
+
 class FightVideo(CBaseHostClass):
  
     def __init__(self):
@@ -324,6 +325,7 @@ class FightVideo(CBaseHostClass):
             self.exploreItem(self.currItem)
         
         CBaseHostClass.endHandleService(self, index, refresh)
+
 
 class IPTVHost(CHostBase):
 

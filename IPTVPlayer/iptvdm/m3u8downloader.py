@@ -30,9 +30,11 @@ import datetime
 # one download
 ###################################################
 
+
 def DebugToFile(message, file="/home/sulge/tmp/m3u8.txt"):
     with open(file, "a") as myfile:
         myfile.write(message + "\n")
+
 
 class M3U8Downloader(BaseDownloader):
     MIN_REFRESH_DELAY = 1

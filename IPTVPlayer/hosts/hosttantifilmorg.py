@@ -22,11 +22,14 @@ except Exception:
     import simplejson as json
 ###################################################
 
+
 def gettytul():
     return 'https://tantifilm.eu/'
 
+
 class TantiFilmOrg(CBaseHostClass):
     REMOVE_COOKIE = True
+
     def __init__(self):
         CBaseHostClass.__init__(self, {'history': 'TantiFilmOrg.tv', 'cookie': 'tantifilmorg.cookie'})
         self.USER_AGENT = 'Mozilla/5.0'
@@ -238,7 +241,6 @@ class TantiFilmOrg(CBaseHostClass):
             params.update({'good_for_fav': False, 'title': _('Next page'), 'page': page + 1})
             self.addDir(params)
             
-            
     def listContent(self, cItem, nextCategory):
         printDBG("TantiFilmOrg.listContent")
         
@@ -360,7 +362,6 @@ class TantiFilmOrg(CBaseHostClass):
         cItem['url'] = baseUrl
         self.listItems(cItem, 'list_content')
 
-    
     def getLinksForVideo(self, cItem):
         printDBG("TantiFilmOrg.getLinksForVideo [%s]" % cItem)
         urlTab = []
@@ -510,6 +511,7 @@ class TantiFilmOrg(CBaseHostClass):
             printExc()
         
         CBaseHostClass.endHandleService(self, index, refresh)
+
 
 class IPTVHost(CHostBase):
 

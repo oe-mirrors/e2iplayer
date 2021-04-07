@@ -31,14 +31,18 @@ from Components.config import config, ConfigText, getConfigListEntry
 config.plugins.iptvplayer.eurosportplayer_login = ConfigText(default="", fixed_size=False)
 config.plugins.iptvplayer.eurosportplayer_password = ConfigText(default="", fixed_size=False)
 
+
 def GetConfigList():
     optionList = []
     optionList.append(getConfigListEntry(_("e-mail") + ":", config.plugins.iptvplayer.eurosportplayer_login))
     optionList.append(getConfigListEntry(_("password") + ":", config.plugins.iptvplayer.eurosportplayer_password))
     return optionList
 ###################################################
+
+
 def gettytul():
     return 'https://www.eurosportplayer.com/'
+
 
 class EuroSportPlayer(CBaseHostClass):
     
@@ -235,7 +239,6 @@ class EuroSportPlayer(CBaseHostClass):
                 else:
                     route_id = ''
 
-
                 if label_format:
                     if label_format == 'schedule':
                         if 'txSports' in videoData['relationships']:
@@ -354,7 +357,6 @@ class EuroSportPlayer(CBaseHostClass):
                 if params:
                     videoParamsList.append(params)
 
-                
             videoParamsList.sort(key=operator.itemgetter('schedule_date'), reverse=True)
             for v in videoParamsList:
                 self.addVideo(v)
@@ -431,7 +433,6 @@ class EuroSportPlayer(CBaseHostClass):
        
     def listSchedule(self, cItem):
         printDBG("EuroSportPlayer.listSchedule [%s]" % cItem)
-        
         
         try:
             url = self.SCHEDULE_COLLECTION_URL.replace('{%id%}', cItem['schedule_id']).replace('{%filter%}', cItem['filter'])
@@ -539,7 +540,6 @@ class EuroSportPlayer(CBaseHostClass):
                 sts, data = self.getPage(self.CONFIG_URL)
                 printDBG(data)
                     
-                
                 # solve captcha to login
                 (token, errorMsgTab) = CaptchaHelper().processCaptcha(self.recaptcha_sitekey, self.LOGIN_URL)
                 
@@ -587,7 +587,6 @@ class EuroSportPlayer(CBaseHostClass):
                   }
                 }                
                 '''
-                
                 
                 ''' example: wrong password
                 {
@@ -652,7 +651,6 @@ class EuroSportPlayer(CBaseHostClass):
                     #printDBG('--------------------------------')
                     #printDBG(data)
                 
-            
             # open video playback json page
             playback_info_url = self.PLAYBACK_URL.replace('{%video_id%}', video_id)
             
@@ -733,6 +731,7 @@ class EuroSportPlayer(CBaseHostClass):
             printExc()
         
         CBaseHostClass.endHandleService(self, index, refresh)
+
 
 class IPTVHost(CHostBase):
 

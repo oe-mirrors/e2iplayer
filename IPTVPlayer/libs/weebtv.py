@@ -32,6 +32,7 @@ config.plugins.iptvplayer.weebtv_login = ConfigText(default="", fixed_size=False
 config.plugins.iptvplayer.weebtv_password = ConfigText(default="", fixed_size=False)
 config.plugins.iptvplayer.weebtv_videoquality = ConfigSelection(default="1", choices=[("0", _("Low")), ("1", _("Standard")), ("2", _("High (or HD)"))])
 
+
 def GetConfigList():
     optionList = []
     optionList.append(getConfigListEntry(_("Premium user"), config.plugins.iptvplayer.weebtv_premium))
@@ -41,6 +42,7 @@ def GetConfigList():
     optionList.append(getConfigListEntry(_("Preferred video quality:"), config.plugins.iptvplayer.weebtv_videoquality))
     return optionList
 ###################################################
+
 
 class WeebTvApi:
     HOST = 'XBMC'

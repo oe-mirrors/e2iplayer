@@ -33,6 +33,7 @@ config.plugins.iptvplayer.yesmovies_proxy = ConfigSelection(default="None", choi
                                                                                         ("proxy_2", _("Alternative proxy server (2)"))])
 config.plugins.iptvplayer.yesmovies_alt_domain = ConfigText(default="", fixed_size=False)
 
+
 def GetConfigList():
     optionList = []
     optionList.append(getConfigListEntry(_("Use proxy server:"), config.plugins.iptvplayer.yesmovies_proxy))
@@ -44,6 +45,7 @@ def GetConfigList():
 
 def gettytul():
     return 'https://yesmovies.to/'
+
 
 class YesMovies(CBaseHostClass):
  
@@ -310,6 +312,7 @@ class YesMovies(CBaseHostClass):
                 urlTab.append({'name': name, 'title': title, 'server_title': serverTitle, 'url': serverId + '|' + episodeId + '|' + cItem['url'], 'server_id': serverId, 'episode_id': episodeId, 'need_resolve': 1})
         
         printDBG(urlTab)
+
         def _sortKey(item):
             val = item.get('server_id', '0')
             if val == '7':
@@ -549,6 +552,7 @@ class YesMovies(CBaseHostClass):
             printExc()
         
         CBaseHostClass.endHandleService(self, index, refresh)
+
 
 class IPTVHost(CHostBase):
 

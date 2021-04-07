@@ -10,8 +10,10 @@ from Plugins.Extensions.IPTVPlayer.libs import ph
 from Plugins.Extensions.IPTVPlayer.libs.hdgocc import HdgoccParser
 ###################################################
 
+
 def gettytul():
     return 'https://hd1080.online/'
+
 
 class HD1080Online(CBaseHostClass):
 
@@ -316,6 +318,7 @@ class HD1080Online(CBaseHostClass):
             printExc()
 
         CBaseHostClass.endHandleService(self, index, refresh)
+
 
 class IPTVHost(CHostBase):
     def __init__(self):

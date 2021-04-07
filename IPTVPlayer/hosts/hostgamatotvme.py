@@ -26,6 +26,7 @@ except Exception:
 def gettytul():
     return 'http://gamatotv.me/'
 
+
 class GamatoTV(CBaseHostClass):
  
     def __init__(self):
@@ -514,6 +515,7 @@ class GamatoTV(CBaseHostClass):
             printExc()
         
         CBaseHostClass.endHandleService(self, index, refresh)
+
 
 class IPTVHost(CHostBase):
 

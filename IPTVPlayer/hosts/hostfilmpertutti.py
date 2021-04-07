@@ -17,8 +17,10 @@ import urllib.parse
 import urllib.error
 ###################################################
 
+
 def gettytul():
     return 'https://filmpertutti.club/'
+
 
 class FilmPertutti(CBaseHostClass):
 
@@ -147,7 +149,6 @@ class FilmPertutti(CBaseHostClass):
         self.cacheLinks = {}
         data = self.cm.ph.getDataBeetwenNodes(data, ('<div', '"pad"'), ('<div', '>', 'disqus_thread'), False)[1]
         data = data.split('</p>')
-        
         
         episodes = []
         links = {}
@@ -322,6 +323,7 @@ class FilmPertutti(CBaseHostClass):
             printExc()
         
         CBaseHostClass.endHandleService(self, index, refresh)
+
 
 class IPTVHost(CHostBase):
 

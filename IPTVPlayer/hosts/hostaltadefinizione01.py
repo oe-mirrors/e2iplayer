@@ -18,8 +18,10 @@ except Exception:
     import simplejson as json
 ###################################################
 
+
 def gettytul():
     return 'https://altadefinizione01.film/'
+
 
 class Altadefinizione(CBaseHostClass):
 
@@ -39,6 +41,7 @@ class Altadefinizione(CBaseHostClass):
     def getPage(self, baseUrl, addParams={}, post_data=None):
         if addParams == {}:
             addParams = dict(self.defaultParams)
+
         def _getFullUrl(url):
             if self.cm.isValidUrl(url):
                 return url
@@ -373,6 +376,7 @@ class Altadefinizione(CBaseHostClass):
             printExc()
         
         CBaseHostClass.endHandleService(self, index, refresh)
+
 
 class IPTVHost(CHostBase):
 

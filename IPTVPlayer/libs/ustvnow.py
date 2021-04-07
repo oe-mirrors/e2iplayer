@@ -37,6 +37,7 @@ config.plugins.iptvplayer.ustvnow_password = ConfigText(default="", fixed_size=F
 config.plugins.iptvplayer.ustvnow_only_available = ConfigYesNo(default=True)
 config.plugins.iptvplayer.ustvnow_epg = ConfigYesNo(default=True)
 
+
 def GetConfigList():
     optionList = []
     optionList.append(getConfigListEntry(_("Email") + ": ", config.plugins.iptvplayer.ustvnow_login))
@@ -47,6 +48,7 @@ def GetConfigList():
     return optionList
     
 ###################################################
+
 
 class UstvnowApi:
     MAIN_URL = 'http://m.ustvnow.com/'
@@ -124,7 +126,6 @@ class UstvnowApi:
             self.sessionEx.open(MessageBox, _('You need to enter email and password in configuration.'), type=MessageBox.TYPE_INFO, timeout=10)
             return []
             
-    
         sts, data = self.cm.getPage(self.LIVE_URL, self.defParams)
         if not sts:
             return []

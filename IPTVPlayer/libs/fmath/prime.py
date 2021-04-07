@@ -7,6 +7,7 @@
     Read LICENSE.txt for license information.
 """
 
+
 def fermat_little_test(p, a):
     """ Fermat Little Test. Included as a curiosity, not useful for cryptographic use.
         p -> possiblePrime, a -> any integer
@@ -15,6 +16,7 @@ def fermat_little_test(p, a):
         return 1  # could be prime
     else:
         return 0  # is NOT prime
+
 
 def rabin_miller(possiblePrime, aTestInteger):
     """ The Rabin-Miller algorithm to test possible primes

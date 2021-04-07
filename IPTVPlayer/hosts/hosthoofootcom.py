@@ -18,8 +18,10 @@ except Exception:
     import simplejson as json
 ###################################################
 
+
 def gettytul():
     return 'https://hoofoot.com/'
+
 
 class HoofootCom(CBaseHostClass):
     HEADER = {'User-Agent': 'Mozilla/5.0', 'Accept': 'text/html'}
@@ -322,6 +324,7 @@ class HoofootCom(CBaseHostClass):
             printExc()
         CBaseHostClass.endHandleService(self, index, refresh)
         
+
 class IPTVHost(CHostBase):
 
     def __init__(self):

@@ -39,6 +39,7 @@ config.plugins.iptvplayer.vevo_default_quality = ConfigSelection(default="122880
 config.plugins.iptvplayer.vevo_use_default_quality = ConfigYesNo(default=True)
 config.plugins.iptvplayer.vevo_allow_hls = ConfigYesNo(default=True)
 
+
 def _int(data):
     ret = 0
     try:
@@ -46,6 +47,7 @@ def _int(data):
     except Exception:
         pass
     return ret
+
 
 class VevoIE(InfoExtractor):
     """
@@ -81,6 +83,7 @@ class VevoIE(InfoExtractor):
         3: 'level3',
         4: 'amazon',
     }
+
     def __init__(self):
         InfoExtractor.__init__(self)
         self._api_url_template = ''
@@ -268,7 +271,6 @@ class VevoIE(InfoExtractor):
         printDBG(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>.")
         printDBG(video_info)
         printDBG("<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<.")
-        
         
         artist = None
         featured_artist = None

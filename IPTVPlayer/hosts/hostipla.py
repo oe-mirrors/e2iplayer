@@ -52,6 +52,7 @@ config.plugins.iptvplayer.iplacachexml = ConfigSelection(default="12", choices=[
 config.plugins.iptvplayer.iplaDefaultformat = ConfigSelection(default="1900", choices=[("200", "bitrate: 200"), ("400", "bitrate: 400"), ("900", "bitrate: 900"), ("1900", "bitrate: 1900")])
 config.plugins.iptvplayer.iplaUseDF = ConfigYesNo(default=True)
 
+
 def GetConfigList():
     optionList = []
     optionList.append(getConfigListEntry("Używaj danych z pamięci podręcznej:", config.plugins.iptvplayer.iplacachexml))
@@ -60,8 +61,10 @@ def GetConfigList():
     return optionList
 ###################################################
 
+
 def gettytul():
     return 'https://ipla.tv/'
+
 
 class Ipla(CBaseHostClass):
     HOST = 'mipla/23'
@@ -143,6 +146,7 @@ class Ipla(CBaseHostClass):
         urls = []
         re_compile_srcreq = re.compile('<srcreq ([^>]+?)>')
         max_bitrate = int(config.plugins.iptvplayer.iplaDefaultformat.value)
+
         def __getLinkQuality(itemLink):
             return int(itemLink['bitrate'])
         try:
@@ -334,6 +338,7 @@ class Ipla(CBaseHostClass):
     #HISTORIA WYSZUKIWANIA
         elif category == "search_history":
             self.listsHistory()
+
 
 class IPTVHost(CHostBase):
 

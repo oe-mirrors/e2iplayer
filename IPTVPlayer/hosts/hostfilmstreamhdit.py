@@ -25,6 +25,7 @@ except Exception:
 def gettytul():
     return 'http://filmstreamhd.it/'
 
+
 class FilmStreamHD(CBaseHostClass):
  
     def __init__(self):
@@ -46,6 +47,7 @@ class FilmStreamHD(CBaseHostClass):
             addParams = dict(self.defaultParams)
         origBaseUrl = baseUrl
         baseUrl = self.cm.iriToUri(baseUrl)
+
         def _getFullUrl(url):
             if self.cm.isValidUrl(url):
                 return url
@@ -238,6 +240,8 @@ class FilmStreamHD(CBaseHostClass):
             printExc()
         
         CBaseHostClass.endHandleService(self, index, refresh)
+
+
 class IPTVHost(CHostBase):
 
     def __init__(self):

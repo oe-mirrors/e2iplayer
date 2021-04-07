@@ -24,6 +24,7 @@ config.plugins.iptvplayer.filmontvcom_premium = ConfigYesNo(default=False)
 config.plugins.iptvplayer.filmontvcom_login = ConfigText(default="", fixed_size=False)
 config.plugins.iptvplayer.filmontvcom_password = ConfigText(default="", fixed_size=False)
 
+
 def GetConfigList():
     optionList = []
     optionList.append(getConfigListEntry("FimOn.com " + _("Preferred streaming protocol") + ": ", config.plugins.iptvplayer.filmontvcom_streamprotocol))
@@ -33,6 +34,7 @@ def GetConfigList():
         optionList.append(getConfigListEntry("  " + _("password") + ": ", config.plugins.iptvplayer.filmontvcom_password))
     return optionList
 ###################################################
+
 
 class FilmOnComApi:
     HTTP_USER_AGENT = 'User-Agent: AndroidNative/2.0.90 (Linux; U; Android 2.3.4; pl-pl; SAMSUNG GT-N7000; Build/GRJ22; com.filmontvcom.android) tablet; xlarge; 1024x600; FilmOn-MIDDLE-EAST'
@@ -74,6 +76,7 @@ class FilmOnComApi:
     def getUrlForChannel(self, channelID):
         printDBG('FilmOnComApi.getGroupList channelID[%r]' % channelID)
         url = self.middleware + "/api/channel/%s?session_key=%s&quality=low" % (str(channelID), str(self.session_key))
+
         def getUrlImpl(self, url):
             urlsList = []
             sts, data = self.cm.getPage(url)
@@ -146,6 +149,7 @@ class FilmOnComApi:
     def _getJsonData(self, type):
         printDBG('FilmOnComApi._getJsonData type[%r]' % type)
         url = self.middleware + '/api/%s?session_key=%s' % (type, str(self.session_key))
+
         def getJsonDataImpl(self, url):
             sts, data = self.cm.getPage(url)
             if sts:

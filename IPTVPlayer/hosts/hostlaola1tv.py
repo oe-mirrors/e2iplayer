@@ -35,6 +35,7 @@ config.plugins.iptvplayer.laola1tv_language = ConfigSelection(default="en", choi
 config.plugins.iptvplayer.laola1tv_myip1 = ConfigText(default="146.0.32.8", fixed_size=False)
 config.plugins.iptvplayer.laola1tv_myip2 = ConfigText(default="85.128.142.29", fixed_size=False)
 
+
 def GetConfigList():
     optionList = []
     optionList.append(getConfigListEntry(_("Video default quality:"), config.plugins.iptvplayer.laola1tv_defquality))
@@ -49,6 +50,7 @@ def GetConfigList():
 
 def gettytul():
     return 'http://laola1.tv/'
+
 
 class Laola1TV(CBaseHostClass):
     HTTP_HEADER = {'User-Agent': 'Mozilla/5.0 (iPad; U; CPU OS 3_2 like Mac OS X; en-us) AppleWebKit/531.21.10 (KHTML, like Gecko) Version/4.0.4 Mobile/7B334b Safari/531.21.10'}
@@ -391,6 +393,7 @@ class Laola1TV(CBaseHostClass):
             
         if 0 < len(urlTab):
             max_bitrate = int(config.plugins.iptvplayer.laola1tv_defquality.value)
+
             def __getLinkQuality(itemLink):
                 try:
                     value = itemLink['bitrate']
@@ -454,6 +457,8 @@ class Laola1TV(CBaseHostClass):
             printExc()
         
         CBaseHostClass.endHandleService(self, index, refresh)
+
+
 class IPTVHost(CHostBase):
 
     def __init__(self):

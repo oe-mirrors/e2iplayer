@@ -24,6 +24,7 @@ except Exception:
 def gettytul():
     return 'http://movienight.ws/'
 
+
 class MoviesNight(CBaseHostClass):
     MAIN_URL = 'http://movienight.ws/'
     SRCH_URL = MAIN_URL + '?s='
@@ -37,7 +38,6 @@ class MoviesNight(CBaseHostClass):
                     {'category': 'search_history', 'title': _('Search history')} 
                    ]
 
- 
     def __init__(self):
         CBaseHostClass.__init__(self, {'history': 'MoviesNight', 'cookie': 'MoviesNight.cookie'})
         self.movieFiltersCache = {'genres': [], 'years': []}
@@ -134,7 +134,6 @@ class MoviesNight(CBaseHostClass):
             icon = self.cm.ph.getSearchGroups(item, 'src="([^"]+?)"')[0]
             title = self.cm.ph.getDataBeetwenMarkers(item, '<h2>', '</h2>', False)[1]
             desc = self.cleanHtmlStr(item)
-            
             
             params = dict(cItem)
             params.update({'title': self.cleanHtmlStr(title), 'url': self._getFullUrl(url), 'desc': desc, 'icon': self._getFullUrl(icon), 'good_for_fav': True})
@@ -292,7 +291,6 @@ class MoviesNight(CBaseHostClass):
             if len(tmp):
                 otherInfo['genres'] = ', '.join(tmp)
 
-        
         if title == '':
             title = cItem['title']
         if desc == '':
@@ -337,6 +335,8 @@ class MoviesNight(CBaseHostClass):
             printExc()
         
         CBaseHostClass.endHandleService(self, index, refresh)
+
+
 class IPTVHost(CHostBase):
 
     def __init__(self):

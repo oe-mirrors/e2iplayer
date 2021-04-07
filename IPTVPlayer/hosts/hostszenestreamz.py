@@ -17,8 +17,10 @@ import urllib.parse
 import urllib.error
 ###################################################
 
+
 def gettytul():
     return 'http://szene-streamz.com/'
+
 
 class Kkiste(CBaseHostClass):
  
@@ -45,7 +47,6 @@ class Kkiste(CBaseHostClass):
                              {'category': 'search_history', 'title': _('Search history'), } 
                             ]
         
-
     def getPage(self, url, addParams={}, post_data=None):
         if addParams == {}:
             addParams = dict(self.defaultParams)
@@ -313,7 +314,6 @@ class Kkiste(CBaseHostClass):
         cItem['url'] = self.getFullUrl('/publ/')
         self.listItems(cItem, 'explore_item', post_data)
         
-    
     def handleService(self, index, refresh=0, searchPattern='', searchType=''):
         printDBG('hostszenestreamz.handleService start')
         
@@ -348,6 +348,7 @@ class Kkiste(CBaseHostClass):
             printExc()
         
         CBaseHostClass.endHandleService(self, index, refresh)
+
 
 class IPTVHost(CHostBase):
 

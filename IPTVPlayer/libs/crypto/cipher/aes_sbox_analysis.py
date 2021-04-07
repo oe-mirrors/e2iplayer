@@ -48,6 +48,7 @@ sbbytes = (0x63, 0x7c, 0x77, 0x7b, 0xf2, 0x6b, 0x6f, 0xc5,
            0x8c, 0xa1, 0x89, 0x0d, 0xbf, 0xe6, 0x42, 0x68,
            0x41, 0x99, 0x2d, 0x0f, 0xb0, 0x54, 0xbb, 0x16)
 
+
 def groups(subbytes):
     gdict = {}     # a dictionary of the cycles indexed by the first cycle element
     touched = [0 for i in range(len(subbytes))]
@@ -68,6 +69,7 @@ def groups(subbytes):
             pass
     return gdict
 
+
 def grpv(subbytes):
     """" Returns a list of tuples (cycle start, cycle size) """
     v = []
@@ -75,6 +77,7 @@ def grpv(subbytes):
     for i in list(z.keys()):
         v.append([i, len(z[i])])
     return v
+
 
 def sgv(subbytes):
     x = grpv(subbytes)
@@ -91,6 +94,7 @@ def main():
     print('permutation subgroups')
     print('The AES sbox subgroups (start, length) are:')
     print(cycles)
+
 
 # Make this test module runnable from the command prompt
 if __name__ == "__main__":

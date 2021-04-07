@@ -38,6 +38,7 @@ import datetime
 SERVER_DOMAINS = {'vline': 'http://iptvplayer.vline.pl/', 'gitlab': 'http://zadmario.gitlab.io/', 'private': 'http://www.e2iplayer.gitlab.io/'}
 SERVER_UPDATE_PATH = {'vline': 'download/update2/', 'gitlab': 'update2/', 'private': 'update2/'}
 
+
 def GetServerKey(serverNum=None):
     if serverNum == None:
         serverNum = config.plugins.iptvplayer.preferredupdateserver.value
@@ -51,11 +52,13 @@ def GetServerKey(serverNum=None):
 
     return serverKey
 
+
 def GetUpdateServerUri(file='', serverNum=None):
     serverKey = GetServerKey(serverNum)
     uri = SERVER_DOMAINS[serverKey] + SERVER_UPDATE_PATH[serverKey] + file
     printDBG("GetUpdateServerUri -> %s" % uri)
     return uri
+
 
 def GetResourcesServerUri(file='', serverNum=None):
     serverKey = GetServerKey(serverNum)
@@ -63,8 +66,10 @@ def GetResourcesServerUri(file='', serverNum=None):
     printDBG("GetResourcesServerUri -> %s" % uri)
     return uri
 
+
 def UsePyCurl():
     return config.plugins.iptvplayer.usepycurl.value
+
 
 def GetIconsHash():
     iconsHashFile = resolveFilename(SCOPE_PLUGINS, 'Extensions/IPTVPlayer/icons/PlayerSelector/hash.txt')
@@ -74,9 +79,11 @@ def GetIconsHash():
     else:
         return ''
 
+
 def SetIconsHash(value):
     iconsHashFile = resolveFilename(SCOPE_PLUGINS, 'Extensions/IPTVPlayer/icons/PlayerSelector/hash.txt')
     return WriteTextFile(iconsHashFile, value)
+
 
 def GetGraphicsHash():
     graphicsHashFile = resolveFilename(SCOPE_PLUGINS, 'Extensions/IPTVPlayer/icons/hash.txt')
@@ -86,27 +93,36 @@ def GetGraphicsHash():
     else:
         return ''
 
+
 def SetGraphicsHash(value):
     graphicsHashFile = resolveFilename(SCOPE_PLUGINS, 'Extensions/IPTVPlayer/icons/hash.txt')
     return WriteTextFile(graphicsHashFile, value)
 
 ###################################################
+
+
 def DaysInMonth(dt):
     return (datetime.date(dt.year + (dt.month / 12), (dt.month % 12) + 1, 1) - dt).days + dt.day - 1
     
+
 def NextMonth(dt):
     return (dt.replace(day=28) + datetime.timedelta(days=4)).replace(day=1)
     
+
 def PrevMonth(dt):
     return (dt.replace(day=1) - datetime.timedelta(days=1)).replace(day=1)
     
+
 def NextDay(dt):
     return (dt + datetime.timedelta(days=1))
     
+
 def PrevDay(dt):
     return (dt - datetime.timedelta(days=1))
 
 ###################################################
+
+
 def GetNice(pid=None):
     nice = 0
     if None == pid:
@@ -121,12 +137,14 @@ def GetNice(pid=None):
         printExc()
     return nice
     
+
 def E2PrioFix(cmd, factor=2):
     if '/duk' not in cmd and config.plugins.iptvplayer.plarform.value in ('mipsel', 'armv7', 'armv5t'):
         return 'nice -n %d %s' % (GetNice() + factor, cmd)
     else:
         return cmd
     
+
 def GetDefaultLang(full=False):
     if full:
         try:
@@ -142,6 +160,7 @@ def GetDefaultLang(full=False):
             defaultLanguage = 'en'
     return defaultLanguage
     
+
 def GetPolishSubEncoding(filePath):
     encoding = 'utf-8'
     # Method provided by @areq: http://forum.dvhk.to/showpost.php?p=5367956&postcount=5331
@@ -169,6 +188,7 @@ def GetPolishSubEncoding(filePath):
         printExc()
     return encoding
     
+
 def MapUcharEncoding(encoding):
     ENCODING_MAP = {'X-MAC-CYRILLIC': "MAC-CYRILLIC", "ASCII": "UTF-8"}
     printDBG("MapUcharEncoding in encoding[%s]" % encoding)
@@ -179,9 +199,11 @@ def MapUcharEncoding(encoding):
     printDBG("MapUcharEncoding out encoding[%s]" % encoding)
     return encoding
 
+
 class eConnectCallbackObj:
     OBJ_ID = 0
     OBJ_NUM = 0
+
     def __init__(self, obj=None, connectHandler=None):
         eConnectCallbackObj.OBJ_ID += 1
         eConnectCallbackObj.OBJ_NUM += 1
@@ -206,6 +228,7 @@ class eConnectCallbackObj:
         self.connectHandler = None
         self.obj = None
 
+
 def eConnectCallback(obj, callbackFun, withExcept=False):
     try:
         if 'connect' in dir(obj):
@@ -220,6 +243,7 @@ def eConnectCallback(obj, callbackFun, withExcept=False):
         printExc("eConnectCallback")
     return eConnectCallbackObj()
     
+
 class iptv_system:
     '''
     Calling os.system is not recommended, it may fail due to lack of memory,
@@ -232,6 +256,7 @@ class iptv_system:
     iptv_execute class from asynccall module which is dedicated to be
     used inside other threads
     '''
+
     def __init__(self, cmd, callBackFun=None):
         printDBG("iptv_system.__init__ cmd [%s]" % cmd)
         self.callBackFun = callBackFun
@@ -275,9 +300,11 @@ class iptv_system:
     def __del__(self):
         printDBG("iptv_system.__del__ cmd[%s]" % self.cmd)
 
+
 def IsHttpsCertValidationEnabled():
     return config.plugins.iptvplayer.httpssslcertvalidation.value
     
+
 def IsWebInterfaceModuleAvailable(chekInit=False):
     if chekInit:
         file = '__init__'
@@ -290,6 +317,7 @@ def IsWebInterfaceModuleAvailable(chekInit=False):
     else:
         return False
     
+
 def GetAvailableIconSize(checkAll=True):
     iconSizes = [config.plugins.iptvplayer.IconsSize.value]
     if checkAll:
@@ -309,9 +337,12 @@ def GetAvailableIconSize(checkAll=True):
 # returns the directory path where specified resources are
 # stored, in the future, it can be changed in the config
 #############################################################
+
+
 def GetLogoDir(file=''):
     return resolveFilename(SCOPE_PLUGINS, 'Extensions/IPTVPlayer/icons/logos/') + file
     
+
 def GetPyScriptCmd(name):
     cmd = ''
     baseName = resolveFilename(SCOPE_PLUGINS, 'Extensions/IPTVPlayer/scripts/') + name
@@ -327,24 +358,32 @@ def GetPyScriptCmd(name):
                 break
     return cmd
 
+
 def GetJSScriptFile(file):
     return resolveFilename(SCOPE_PLUGINS, 'Extensions/IPTVPlayer/jsscripts/') + file
+
 
 def GetUchardetPath():
     return config.plugins.iptvplayer.uchardetpath.value
 
+
 def GetCmdwrapPath():
     return config.plugins.iptvplayer.cmdwrappath.value
     
+
 def GetDukPath():
     return config.plugins.iptvplayer.dukpath.value
 
+
 gE2iPlayerTempCookieDir = None
+
+
 def SetTmpCookieDir():
     global gE2iPlayerTempCookieDir
     gE2iPlayerTempCookieDir = '/tmp/e2iplayer_cookies/'
     mkdirs(gE2iPlayerTempCookieDir)
     
+
 def ClearTmpCookieDir():
     global gE2iPlayerTempCookieDir
     if gE2iPlayerTempCookieDir != None:
@@ -356,12 +395,14 @@ def ClearTmpCookieDir():
     
     gE2iPlayerTempCookieDir = None
 
+
 def TestTmpCookieDir():
     path = GetCookieDir(forceFromConfig=True)
     if not os.path.isdir(path):
         mkdirs(path, True)
     with open(path + ".rw_test", 'w') as f:
         f.write("test")
+
 
 def GetCookieDir(file='', forceFromConfig=False):
     global gE2iPlayerTempCookieDir
@@ -376,12 +417,16 @@ def GetCookieDir(file='', forceFromConfig=False):
         printExc()
     return cookieDir + file
 
+
 ###########################
 gE2iPlayerTempJSCache = None
+
+
 def SetTmpJSCacheDir():
     global gE2iPlayerTempJSCache
     gE2iPlayerTempJSCache = '/tmp/e2iplayer_js_cache/'
     mkdirs(gE2iPlayerTempJSCache)
+
 
 def ClearTmpJSCacheDir():
     global gE2iPlayerTempJSCache
@@ -393,12 +438,14 @@ def ClearTmpJSCacheDir():
             printExc()
     gE2iPlayerTempJSCache = None
 
+
 def TestTmpJSCacheDir():
     path = GetJSCacheDir(forceFromConfig=True)
     if not os.path.isdir(path):
         mkdirs(path, True)
     with open(path + ".rw_test", 'w') as f:
         f.write("test")
+
 
 def GetJSCacheDir(file='', forceFromConfig=False):
     global gE2iPlayerTempJSCache
@@ -414,18 +461,22 @@ def GetJSCacheDir(file='', forceFromConfig=False):
     return cookieDir + file
 ##############################
 
+
 def GetTmpDir(file=''):
     path = config.plugins.iptvplayer.NaszaTMP.value
     path = path.replace('//', '/')
     mkdirs(path)
     return path + '/' + file
 
+
 def GetE2iPlayerRootfsDir(file=''):
     return '/iptvplayer_rootfs/' + file
+
 
 def GetE2iPlayerVKLayoutDir(file=''):
     return GetE2iPlayerRootfsDir('etc/vk/' + file)
     
+
 def CreateTmpFile(filename, data=''):
     sts = False
     filePath = GetTmpDir(filename)
@@ -437,40 +488,60 @@ def CreateTmpFile(filename, data=''):
         printExc()
     return sts, filePath
     
+
 def GetCacheSubDir(dir, file=''):
     path = config.plugins.iptvplayer.SciezkaCache.value + "/" + dir
     path = path.replace('//', '/')
     mkdirs(path)
     return path + '/' + file
 
+
 def GetSearchHistoryDir(file=''):
     return GetCacheSubDir('SearchHistory', file)
     
+
 def GetFavouritesDir(file=''):
     return GetCacheSubDir('IPTVFavourites', file)
     
+
 def GetSubtitlesDir(file=''):
     return GetCacheSubDir('Subtitles', file)
     
+
 def GetMovieMetaDataDir(file=''):
     return GetCacheSubDir('MovieMetaData', file)
 
+
 def GetIPTVDMImgDir(file=''):
     return resolveFilename(SCOPE_PLUGINS, 'Extensions/IPTVPlayer/icons/') + file
+
+
 def GetIconDir(file=''):
     return resolveFilename(SCOPE_PLUGINS, 'Extensions/IPTVPlayer/icons/') + file
+
+
 def GetBinDir(file='', platform=None):
     if None == platform:
         platform = config.plugins.iptvplayer.plarform.value
     return resolveFilename(SCOPE_PLUGINS, 'Extensions/IPTVPlayer/bin/') + platform + '/' + file
+
+
 def GetPluginDir(file=''):
     return resolveFilename(SCOPE_PLUGINS, 'Extensions/IPTVPlayer/') + file
+
+
 def GetExtensionsDir(file=''):
     return resolveFilename(SCOPE_PLUGINS, 'Extensions/') + file
+
+
 def GetSkinsDir(path=''):
     return resolveFilename(SCOPE_PLUGINS, 'Extensions/IPTVPlayer/skins/') + path
+
+
 def GetConfigDir(path=''):
     return resolveFilename(SCOPE_CONFIG, path)
+
+
 def IsExecutable(fpath):
     try:
         if '' != Which(fpath):
@@ -479,6 +550,7 @@ def IsExecutable(fpath):
         printExc()
     return False
     
+
 def Which(program):
     try:
         def is_exe(fpath):
@@ -502,6 +574,8 @@ def Which(program):
 # class used to auto-select one link when video has several 
 # links with different qualities
 #############################################################
+
+
 class CSelOneLink():
 
     def __init__(self, listOfLinks, getQualiyFun, maxRes):
@@ -588,6 +662,8 @@ class CSelOneLink():
 # prints debugs on screen or to the file
 #############################################################
 # debugs
+
+
 def getDebugMode():
     DBG = ''
     try:
@@ -600,6 +676,7 @@ def getDebugMode():
                 DBG = line.split("=")[1].strip()
                 break
     return DBG
+
 
 def printDBG(DBGtxt):
     DBG = getDebugMode()
@@ -626,20 +703,25 @@ def printDBG(DBGtxt):
                 print("printDBG(II): %s" % traceback.format_exc())
                 print("========================================================")
 
+
 #####################################################
 # get host list based on files in /hosts folder
 #####################################################
 g_cacheHostsFromList = None
 g_cacheHostsFromFolder = None
+
+
 def __isHostNameValid(hostName):
     BLOCKED_MARKER = '_blocked_'
     if len(hostName) > 4 and BLOCKED_MARKER not in hostName and hostName.startswith("host"):
         return True
     return False
     
+
 def __getHostsPath(file=''):
     return resolveFilename(SCOPE_PLUGINS, 'Extensions/IPTVPlayer/hosts/' + file)
     
+
 def GetHostsFromList(useCache=True):
     global g_cacheHostsFromList
     if useCache and g_cacheHostsFromList != None:
@@ -661,6 +743,7 @@ def GetHostsFromList(useCache=True):
     g_cacheHostsFromList = list(lhosts)
     return lhosts
         
+
 def GetHostsFromFolder(useCache=True):
     global g_cacheHostsFromFolder
     if useCache and g_cacheHostsFromFolder != None:
@@ -685,6 +768,7 @@ def GetHostsFromFolder(useCache=True):
     g_cacheHostsFromFolder = list(lhosts)
     return lhosts
 
+
 def GetHostsList(fromList=True, fromHostFolder=True, useCache=True):
     printDBG('getHostsList begin')
     
@@ -703,6 +787,7 @@ def GetHostsList(fromList=True, fromHostFolder=True, useCache=True):
     
     return lhosts
 
+
 def GetHostsAliases():
     from Plugins.Extensions.IPTVPlayer.libs.e2ijson import loads as json_loads
     ret = {}
@@ -717,6 +802,7 @@ def GetHostsAliases():
         printExc()
     return ret
     
+
 def GetEnabledHostsList():
     hostsList = GetHostsList(fromList=True, fromHostFolder=True)
     enabledHostsList = []
@@ -725,6 +811,7 @@ def GetEnabledHostsList():
             enabledHostsList.append(hostName)
     return enabledHostsList
     
+
 def SortHostsList(hostsList):
     hostsList = list(hostsList)
     hostsOrderList = GetHostsOrderList()
@@ -735,6 +822,7 @@ def SortHostsList(hostsList):
             hostsList.remove(item)
     sortedList.extend(hostsList)
     return sortedList
+
 
 def SaveHostsOrderList(list, fileName="iptvplayerhostsorder"):
     printDBG('SaveHostsOrderList begin')
@@ -747,6 +835,7 @@ def SaveHostsOrderList(list, fileName="iptvplayerhostsorder"):
     except Exception:
         printExc()
     
+
 def GetHostsOrderList(fileName="iptvplayerhostsorder"):
     printDBG('GetHostsOrderList begin')
     fname = GetConfigDir(fileName)
@@ -765,6 +854,7 @@ def GetHostsOrderList(fileName="iptvplayerhostsorder"):
         printExc()
     return list
 
+
 def GetSkinsList():
     printDBG('getSkinsList begin')
     skins = []
@@ -779,6 +869,7 @@ def GetSkinsList():
     printDBG('getSkinsList end')
     return skins
     
+
 def IsHostEnabled(hostName):
     hostEnabled = False
     try:
@@ -793,6 +884,8 @@ def IsHostEnabled(hostName):
 # if required == None return free space instead of comparing
 # default unit = MB
 ##############################################################
+
+
 def FreeSpace(katalog, requiredSpace, unitDiv=1024 * 1024):
     try:
         s = os.statvfs(katalog)
@@ -812,6 +905,7 @@ def FreeSpace(katalog, requiredSpace, unitDiv=1024 * 1024):
         else:
             return False
 
+
 def IsValidFileName(name, NAME_MAX=255):
     prohibited_characters = ['/', "\000", '\\', ':', '*', '<', '>', '|', '"']
     if isinstance(name, str) and (1 <= len(name) <= NAME_MAX):
@@ -821,12 +915,14 @@ def IsValidFileName(name, NAME_MAX=255):
         return True
     return False
     
+
 def RemoveDisallowedFilenameChars(name, replacment='.'):
     prohibited_characters = ['/', "\000", '\\', ':', '*', '<', '>', '|', '"']
     for item in prohibited_characters:
         name = name.replace(item, replacment).replace(replacment + replacment, replacment)
     return name
         
+
 def touch(fname, times=None):
     try:
         with open(fname, 'a'):
@@ -850,6 +946,7 @@ def mkdir(newdir):
         msg = 'Katalog "%s" nie może zostać utworzony.' % newdir
         printExc()
     return sts, msg
+
 
 def mkdirs(newdir, raiseException=False):
     """ Create a directory and all parent folders.
@@ -877,6 +974,7 @@ def mkdirs(newdir, raiseException=False):
             raise e
     return False
         
+
 def rm(fullname):
     try:
         os.remove(fullname)
@@ -884,6 +982,7 @@ def rm(fullname):
     except Exception:
         printExc()
     return False
+
 
 def rmtree(path, ignore_errors=False, onerror=None):
     """Recursively delete a directory tree.
@@ -931,12 +1030,14 @@ def rmtree(path, ignore_errors=False, onerror=None):
     except os.error:
         onerror(os.rmdir, path) 
         
+
 def GetFileSize(filepath):
     try:
         return os.stat(filepath).st_size
     except Exception:
         return -1
        
+
 def DownloadFile(url, filePath):
     printDBG('DownloadFile [%s] from [%s]' % (filePath, url))
     try:
@@ -961,6 +1062,8 @@ def DownloadFile(url, filePath):
 ########################################################
 #                     For icon manager
 ########################################################  
+
+
 def GetLastDirNameFromPath(path):
     path = os.path.normcase(path)
     if path[-1] == '/':
@@ -968,9 +1071,11 @@ def GetLastDirNameFromPath(path):
     dirName = path.split('/')[-1]
     return dirName
 
+
 def GetIconDirBaseName():
     return '.iptvplayer_icons_'
     
+
 def CheckIconName(name):
     #check if name is correct 
     if 36 == len(name) and '.jpg' == name[-4:]:
@@ -981,8 +1086,10 @@ def CheckIconName(name):
             pass
     return False
 
+
 def GetNewIconsDirName():
     return "%s%f" % (GetIconDirBaseName(), float(time()))
+
 
 def CheckIconsDirName(path):
     dirName = GetLastDirNameFromPath(path)
@@ -995,6 +1102,7 @@ def CheckIconsDirName(path):
             pass
     return False
     
+
 def GetIconsDirs(basePath):
     iconsDirs = []
     try:
@@ -1007,6 +1115,7 @@ def GetIconsDirs(basePath):
         printExc()
     return iconsDirs
     
+
 def GetIconsFilesFromDir(basePath):
     iconsFiles = []
     if CheckIconsDirName(basePath):
@@ -1021,6 +1130,7 @@ def GetIconsFilesFromDir(basePath):
     
     return iconsFiles
     
+
 def GetCreationIconsDirTime(fullPath):
     try:
         dirName = GetLastDirNameFromPath(fullPath)
@@ -1029,6 +1139,7 @@ def GetCreationIconsDirTime(fullPath):
     except Exception:
         return None
         
+
 def GetCreateIconsDirDeltaDateInDays(fullPath):
     ret = -1
     createTime = GetCreationIconsDirTime(fullPath)
@@ -1042,6 +1153,7 @@ def GetCreateIconsDirDeltaDateInDays(fullPath):
             printExc()
     return ret
     
+
 def RemoveIconsDirByPath(path):
     printDBG("RemoveIconsDirByPath[%s]" % path)
     RemoveAllFilesIconsFromPath(path)
@@ -1050,6 +1162,7 @@ def RemoveIconsDirByPath(path):
     except Exception:
         printExc('RemoveIconsDirByPath dir[%s] is not empty' % path) 
     
+
 def RemoveOldDirsIcons(path, deltaInDays='7'):
     deltaInDays = int(deltaInDays)
     try:
@@ -1061,6 +1174,7 @@ def RemoveOldDirsIcons(path, deltaInDays='7'):
                 RemoveIconsDirByPath(currDir)
     except Exception:
         printExc()
+
 
 def RemoveAllFilesIconsFromPath(path):
     printDBG("RemoveAllFilesIconsFromPath")
@@ -1077,6 +1191,7 @@ def RemoveAllFilesIconsFromPath(path):
     except Exception:
         printExc('ERROR: in RemoveAllFilesIconsFromPath')
         
+
 def RemoveAllDirsIconsFromPath(path, old=False):
     if old:
         RemoveAllFilesIconsFromPath(path)
@@ -1089,6 +1204,7 @@ def RemoveAllDirsIconsFromPath(path, old=False):
         except Exception:
             printExc()
     
+
 def formatBytes(bytes, precision=2):
     import math
     units = ['B', 'KB', 'MB', 'GB', 'TB'] 
@@ -1102,6 +1218,7 @@ def formatBytes(bytes, precision=2):
     bytes /= math.pow(1024, pow)
     return ("%s%s" % (str(round(bytes, precision)), units[int(pow)])) 
     
+
 def remove_html_markup(s, replacement=''):
     tag = False
     quote = False
@@ -1118,8 +1235,10 @@ def remove_html_markup(s, replacement=''):
                 out = out + c
     return re.sub('&\w+;', ' ', out)
 
+
 class CSearchHistoryHelper():
     TYPE_SEP = '|--TYPE--|'
+
     def __init__(self, name, storeTypes=False):
         printDBG('CSearchHistoryHelper.__init__')
         self.storeTypes = storeTypes
@@ -1214,6 +1333,7 @@ class CSearchHistoryHelper():
         return ReadTextFile(filePath)
 # end CSearchHistoryHelper
 
+
 def ReadTextFile(filePath, encode='utf-8', errors='ignore'):
     sts, ret = False, ''
     try:
@@ -1227,6 +1347,7 @@ def ReadTextFile(filePath, encode='utf-8', errors='ignore'):
         printExc()
     return sts, ret
 
+
 def WriteTextFile(filePath, text, encode='utf-8', errors='ignore'):
     sts = False
     try:
@@ -1239,12 +1360,15 @@ def WriteTextFile(filePath, text, encode='utf-8', errors='ignore'):
         printExc()
     return sts
 
+
 class CFakeMoviePlayerOption():
     def __init__(self, value, text):
         self.value = value
         self.text = text
+
     def getText(self):
         return self.text
+
 
 class CMoviePlayerPerHost():
     def __init__(self, hostName):
@@ -1301,6 +1425,7 @@ class CMoviePlayerPerHost():
         self.activePlayer = activePlayer
         self.save()
         
+
 def byteify(input, noneReplacement=None, baseTypesAsString=False):
     if isinstance(input, dict):
         return dict([(byteify(key, noneReplacement, baseTypesAsString), byteify(value, noneReplacement, baseTypesAsString)) for key, value in input.items()])
@@ -1315,6 +1440,7 @@ def byteify(input, noneReplacement=None, baseTypesAsString=False):
     else:
         return input
 
+
 def printExc(msg=''):
     printDBG("===============================================")
     printDBG("                   EXCEPTION                   ")
@@ -1323,6 +1449,7 @@ def printExc(msg=''):
     printDBG(msg)
     printDBG("===============================================")
 
+
 def GetIPTVPlayerVerstion():
     try:
         from Plugins.Extensions.IPTVPlayer.version import IPTV_VERSION
@@ -1330,6 +1457,7 @@ def GetIPTVPlayerVerstion():
         IPTV_VERSION = "XX.YY.ZZ"
     return IPTV_VERSION
     
+
 def GetIPTVPlayerComitStamp():
     try:
         from Plugins.Extensions.IPTVPlayer.version import COMMIT_STAMP
@@ -1337,9 +1465,11 @@ def GetIPTVPlayerComitStamp():
         COMMIT_STAMP = ""
     return COMMIT_STAMP
 
+
 def GetShortPythonVersion():
     return "%d.%d" % (sys.version_info[0], sys.version_info[1])
     
+
 def GetVersionNum(ver):
     try:
         if None == re.match("[0-9]+\.[0-9][0-9]\.[0-9][0-9]\.[0-9][0-9]", ver):
@@ -1349,6 +1479,7 @@ def GetVersionNum(ver):
         printExc('Version[%r]' % ver)
         return 0
         
+
 def IsFPUAvailable():
     try:
         if None == IsFPUAvailable.available:
@@ -1363,7 +1494,10 @@ def IsFPUAvailable():
     except Exception:
         printExc()
     return IsFPUAvailable.available
+
+
 IsFPUAvailable.available = None
+
 
 def IsSubtitlesParserExtensionCanBeUsed():
     try:
@@ -1375,6 +1509,7 @@ def IsSubtitlesParserExtensionCanBeUsed():
         printExc()
     return False
     
+
 def IsBrokenDriver(filePath):
     # workaround for broken DVB driver mbtwinplus:
     # root@mbtwinplus:~# cat /proc/stb/video/policy2
@@ -1389,6 +1524,7 @@ def IsBrokenDriver(filePath):
         printExc()
     return False
         
+
 def GetE2OptionsFromFile(filePath):
     options = []
     if IsBrokenDriver(filePath):
@@ -1408,6 +1544,7 @@ def GetE2OptionsFromFile(filePath):
         printExc()
     return options
 
+
 def SetE2OptionByFile(filePath, value):
     if IsBrokenDriver(filePath):
         return False
@@ -1420,6 +1557,7 @@ def SetE2OptionByFile(filePath, value):
         printExc()
     return sts
 
+
 def GetE2VideoAspectChoices():
     tab = GetE2OptionsFromFile('/proc/stb/video/aspect_choices')
     # workaround for some STB
@@ -1429,44 +1567,55 @@ def GetE2VideoAspectChoices():
         tab = staticTab
     return tab
 
+
 def GetE2VideoAspect():
     options = GetE2OptionsFromFile('/proc/stb/video/aspect')
     if 1 == len(options):
         return options[0]
     return None
     
+
 def SetE2VideoAspect(value):
     return SetE2OptionByFile('/proc/stb/video/aspect', value)
     
+
 def GetE2VideoPolicyChoices(num=''):
     return GetE2OptionsFromFile('/proc/stb/video/policy%s_choices' % num)
     
+
 def GetE2VideoPolicy(num=''):
     options = GetE2OptionsFromFile('/proc/stb/video/policy' + num)
     if 1 == len(options):
         return options[0]
     return None
     
+
 def SetE2VideoPolicy(value, num=''):
     return SetE2OptionByFile('/proc/stb/video/policy' + num, value)
     
+
 def GetE2AudioCodecMixChoices(codec):
     return GetE2OptionsFromFile('/proc/stb/audio/%s_choices' % codec)
     
+
 def GetE2AudioCodecMixOption(codec):
     options = GetE2OptionsFromFile('/proc/stb/audio/%s' % codec)
     if 1 == len(options):
         return options[0]
     return None
     
+
 def SetE2AudioCodecMixOption(codec, value):
     return SetE2OptionByFile('/proc/stb/audio/%s' % codec, value)
 
 # videomode
+
+
 def GetE2VideoModeChoices():
     # return 'pal ntsc 480i 576i 480p 576p 720p50 720p 1080i50 1080i 1080p24 1080p25 1080p30 720p24 720p25 720p30 1080p50 1080p'.split(' ')
     return GetE2OptionsFromFile('/proc/stb/video/videomode_choices')
     
+
 def GetE2VideoMode():
     # return '1080p50'
     options = GetE2OptionsFromFile('/proc/stb/video/videomode')
@@ -1474,8 +1623,10 @@ def GetE2VideoMode():
         return options[0]
     return None
     
+
 def SetE2VideoMode(value):
     return SetE2OptionByFile('/proc/stb/video/videomode', value)
+
 
 def ReadUint16(tmp, le=True):
     if le:
@@ -1483,11 +1634,13 @@ def ReadUint16(tmp, le=True):
     else:
         return ord(tmp[0]) << 8 | ord(tmp[1])
 
+
 def ReadUint32(tmp, le=True):
     if le:
         return ord(tmp[3]) << 24 | ord(tmp[2]) << 16 | ord(tmp[1]) << 8 | ord(tmp[0])
     else:
         return ord(tmp[0]) << 24 | ord(tmp[1]) << 16 | ord(tmp[2]) << 8 | ord(tmp[3])
+
 
 def ReadGnuMIPSABIFP(elfFileName):
     SHT_GNU_ATTRIBUTES = 0x6ffffff5
@@ -1621,6 +1774,7 @@ def ReadGnuMIPSABIFP(elfFileName):
     except Exception:
         printExc()
     return Val_HAS_MIPS_ABI_FLAGS, Val_GNU_MIPS_ABI_FP
+
 
 def MergeDicts(*dict_args):
     result = {}

@@ -27,14 +27,18 @@ from Components.config import config, ConfigSelection, getConfigListEntry
 config.plugins.iptvplayer.cimaclub_proxy = ConfigSelection(default="None", choices=[("None", _("None")),
                                                                                         ("proxy_1", _("Alternative proxy server (1)")),
                                                                                         ("proxy_2", _("Alternative proxy server (2)"))])
+
+
 def GetConfigList():
     optionList = []
     optionList.append(getConfigListEntry(_("Use proxy server:"), config.plugins.iptvplayer.cimaclub_proxy))
     return optionList
 ###################################################
 
+
 def gettytul():
     return 'http://cimaclub.com/'
+
 
 class CimaClubCom(CBaseHostClass):
     
@@ -514,6 +518,7 @@ class CimaClubCom(CBaseHostClass):
             printExc()
         
         CBaseHostClass.endHandleService(self, index, refresh)
+
 
 class IPTVHost(CHostBase):
 

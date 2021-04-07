@@ -29,12 +29,16 @@ from datetime import datetime
 # Config options for HOST
 ###################################################
 
+
 def GetConfigList():
     optionList = []
     return optionList
 ###################################################
+
+
 def gettytul():
     return 'http://spiegel.tv/'
+
 
 class SpiegelTv(CBaseHostClass):
     
@@ -382,6 +386,7 @@ class SpiegelTv(CBaseHostClass):
                 data = data['streamdata']
                 azureLocator = data['azureLocator']
                 AZURE_URL = 'http://nx%s%02d.akamaized.net/'
+
                 def getCdnShieldBase(shieldType='', prefix='-p'):
                     for secure in ('', 's'):
                         cdnShield = data.get('cdnShield%sHTTP%s' % (shieldType, secure.upper()))
@@ -523,6 +528,7 @@ class SpiegelTv(CBaseHostClass):
             printExc()
         
         CBaseHostClass.endHandleService(self, index, refresh)
+
 
 class IPTVHost(CHostBase):
 

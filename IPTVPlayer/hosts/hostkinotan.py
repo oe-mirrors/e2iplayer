@@ -20,6 +20,7 @@ try:
 except Exception:
     import simplejson as json
 
+
 def gettytul():
     return 'http://kinotan.ru/'
 
@@ -36,7 +37,6 @@ class Kinotan(CBaseHostClass):
         
         self.MAIN_URL = 'http://kinotan.ru/'
         self.DEFAULT_ICON_URL = 'http://ipic.su/img/img7/fs/logo2.1460442551.png'
-
 
         self.MAIN_CAT_TAB = [{'category': 'cat_serials', 'title': _('Serials'), 'url': self.getFullUrl('/serial/')},
                              {'category': 'cat_tv_shows', 'title': _('TV shows'), 'url': self.getFullUrl('/tv-shou/')},

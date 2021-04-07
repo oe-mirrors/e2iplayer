@@ -26,6 +26,8 @@ from enigma import eConsoleAppContainer
 # One instance of this class can be used only for 
 # one download
 ###################################################
+
+
 class BuxyboxWgetDownloader(WgetDownloader):
                      
     def __init__(self):
@@ -79,7 +81,6 @@ class BuxyboxWgetDownloader(WgetDownloader):
         self.onStart()
         return BaseDownloader.CODE_OK
 
-                        
     def _terminate(self):
         printDBG("BuxyboxWgetDownloader._terminate")
         if None != self.iptv_sys:

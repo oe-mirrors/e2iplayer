@@ -21,6 +21,7 @@ from Tools.LoadPixmap import LoadPixmap
 import skin
 ###################################################
 
+
 class IPTVListComponentBase(GUIComponent, object):
     def __init__(self):
         printDBG("IPTVListComponent.__init__ ----------------------------------------------------")
@@ -86,8 +87,10 @@ class IPTVListComponentBase(GUIComponent, object):
     currentIndex = property(getCurrentIndex, moveToIndex)
     currentSelection = property(getCurrent)
 
+
 class IPTVMainNavigatorList(IPTVListComponentBase):
     ICONS_FILESNAMES = {CDisplayListItem.TYPE_MARKER: 'MarkerItem.png', CDisplayListItem.TYPE_SUB_PROVIDER: 'CategoryItem.png', CDisplayListItem.TYPE_SUBTITLE: 'ArticleItem.png', CDisplayListItem.TYPE_CATEGORY: 'CategoryItem.png', CDisplayListItem.TYPE_MORE: 'MoreItem.png', CDisplayListItem.TYPE_VIDEO: 'VideoItem.png', CDisplayListItem.TYPE_AUDIO: 'AudioItem.png', CDisplayListItem.TYPE_SEARCH: 'SearchItem.png', CDisplayListItem.TYPE_ARTICLE: 'ArticleItem.png', CDisplayListItem.TYPE_PICTURE: 'PictureItem.png', CDisplayListItem.TYPE_DATA: 'DataItem.png'}
+
     def __init__(self):
         IPTVListComponentBase.__init__(self)
         
@@ -129,8 +132,10 @@ class IPTVMainNavigatorList(IPTVListComponentBase):
         res.append((eListboxPythonMultiContent.TYPE_PIXMAP_ALPHABLEND, 3, 1, 40, 40, self.dictPIX.get(item.type, None)))  
         return res
         
+
 class IPTVRadioButtonList(IPTVMainNavigatorList):
     ICONS_FILESNAMES = {'on': 'radio_button_on.png', 'off': 'radio_button_off.png'}
+
     def __init__(self):
         IPTVMainNavigatorList.__init__(self)
             

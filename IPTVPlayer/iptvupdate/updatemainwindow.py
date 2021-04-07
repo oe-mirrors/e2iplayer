@@ -44,6 +44,7 @@ except Exception:
 from os import path as os_path, remove as os_remove, listdir as os_listdir
 ###################################################
 
+
 class IPTVUpdateWindow(Screen):
 
     skin = """
@@ -193,30 +194,42 @@ class IPTVUpdateWindow(Screen):
                 self["list"].setSelectionState(enabled=True)
         self.reloadList()
                 
+
 class IUpdateObjectInterface():
     def __init__(self, session):
         printDBG("IUpdateObjectInterface.__init__ -------------------------------")
+
     def __del__(self):
         printDBG("IUpdateObjectInterface.__del__ -------------------------------")
+
     def getSetupTitle(self):
         return " "
+
     def getTitle(self):
         return _(" ")
+
     def getSubTitle(self):
         return _(" ")
+
     def finalize(self, success=True):
         return
+
     def terminate(self):
         return
+
     def getStepsList(self):
         return []
+
     def isReadyToExecuteStep(currStepIdx):
         return False
+
     def setStepFinishedCallBack(self, stepFinishedCallbackFun):
         self.stepFinishedHandler = stepFinishedCallbackFun
+
     def stepFinished(self, stsCode=-1, msg=''):
         if self.stepFinishedHandler:
             self.stepFinishedHandler(stsCode, msg)
+
     def createPath(self, path):
         sts = True
         msg = ''
@@ -239,6 +252,7 @@ class IUpdateObjectInterface():
             msg = _("There is no space in the directory [%s]\n Available[%s], required [%s].") % (dir, formatBytes(FreeSpace(dir, None, 1)), formatBytes(requairedSpace))
         return sts, msg
     
+
 class UpdateMainAppImpl(IUpdateObjectInterface):
     VERSION_PATTERN = 'IPTV_VERSION="([0-9]+\.[0-9]+\.[0-9]+\.[0-9]+)"'
     

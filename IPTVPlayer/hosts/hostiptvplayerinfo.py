@@ -24,14 +24,17 @@ from Components.config import config, ConfigSelection, getConfigListEntry
 ###################################################
 config.plugins.iptvplayer.iptvplayerinfo_currversion_color = ConfigSelection(default="#008000", choices=COLORS_DEFINITONS)
 
+
 def GetConfigList():
     optionList = []
     optionList.append(getConfigListEntry(_("The color of the current version"), config.plugins.iptvplayer.iptvplayerinfo_currversion_color))
     return optionList
 ###################################################
 
+
 def gettytul():
     return 'E2iPlayer info'
+
 
 class IPTVPlayerInfo(CBaseHostClass):
  
@@ -56,8 +59,6 @@ class IPTVPlayerInfo(CBaseHostClass):
                              {'title': _('%s - subtitles provider') % 'http://prijevodi-online.org/', 'url': 'https://www.youtube.com/watch?v=lb8QvViUYq4'},
                             ]
                             
-                            
-        
     def getPage(self, baseUrl, addParams={}, post_data=None):
         if addParams == {}:
             addParams = dict(self.defaultParams)
@@ -150,6 +151,7 @@ class IPTVPlayerInfo(CBaseHostClass):
             printExc()
         
         CBaseHostClass.endHandleService(self, index, refresh)
+
 
 class IPTVHost(CHostBase):
 

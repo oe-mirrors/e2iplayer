@@ -26,6 +26,7 @@ from datetime import timedelta
 def gettytul():
     return 'https://twitch.tv/'
 
+
 def jstr(item, key, default=''):
     v = item.get(key, default)
     if type(v) == type(''):
@@ -34,6 +35,7 @@ def jstr(item, key, default=''):
         return v
     else:
         return default
+
 
 class Twitch(CBaseHostClass):
 
@@ -107,7 +109,6 @@ class Twitch(CBaseHostClass):
         if default:
             self.langItems.insert(0, default)
         self.langItems.insert(0, {'title': _('All')})
-        
         
         self.VIDEOS_TYPES_TAB = [{'title': _('All')}, 
                                  {'title': _('Past premieres'), 'videos_type': 'PAST_PREMIERE'},
@@ -647,6 +648,7 @@ class Twitch(CBaseHostClass):
             printExc()
         
         CBaseHostClass.endHandleService(self, index, refresh)
+
 
 class IPTVHost(CHostBase):
 

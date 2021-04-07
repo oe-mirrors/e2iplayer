@@ -14,6 +14,7 @@ from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT
 from Components.config import configfile
 ###################################################
 
+
 def SetupDownloaderCmdCreator(url, file):
     printDBG("SetupDownloaderCreator url[%s]" % url)
     if url.startswith('https'):
@@ -35,6 +36,7 @@ def SetupDownloaderCmdCreator(url, file):
             return 'python "%s" "%s" "%s" ' % (DMHelper.GET_PWGET_PATH(), url, file)
     printDBG("SetupDownloaderCreator downloader not available")
     return 'python "%s" "%s" "%s" ' % (DMHelper.GET_PWGET_PATH(), url, file)
+
 
 class CCmdValidator:
     def __init__(self, finishCallback, validatorFun, cmdTabs):
@@ -97,6 +99,7 @@ class CCmdValidator:
         
     def _detect(self):
         self.cmd = iptv_system(self.cmdTabs[self.detectIdx], self._cmdFinished)
+
 
 class CBinaryStepHelper:
     def __init__(self, name, platform, openSSLVersion, configOption):

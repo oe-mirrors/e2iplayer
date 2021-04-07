@@ -28,14 +28,18 @@ from Components.config import config, ConfigText, getConfigListEntry
 config.plugins.iptvplayer.plusdede_login = ConfigText(default="", fixed_size=False)
 config.plugins.iptvplayer.plusdede_password = ConfigText(default="", fixed_size=False)
 
+
 def GetConfigList():
     optionList = []
     optionList.append(getConfigListEntry(_("login") + ":", config.plugins.iptvplayer.plusdede_login))
     optionList.append(getConfigListEntry(_("password") + ":", config.plugins.iptvplayer.plusdede_password))
     return optionList
 ###################################################
+
+
 def gettytul():
     return 'https://dokumentalne.net/'
+
 
 class DokumentalneNET(CBaseHostClass):
     
@@ -60,6 +64,7 @@ class DokumentalneNET(CBaseHostClass):
             addParams = dict(self.defaultParams)
         origBaseUrl = baseUrl
         baseUrl = self.cm.iriToUri(baseUrl)
+
         def _getFullUrl(url):
             if self.cm.isValidUrl(url):
                 return url
@@ -210,6 +215,7 @@ class DokumentalneNET(CBaseHostClass):
             printExc()
         
         CBaseHostClass.endHandleService(self, index, refresh)
+
 
 class IPTVHost(CHostBase):
 

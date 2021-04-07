@@ -6,8 +6,10 @@ from distutils import cmd
 from distutils.command.build import build as _build
 import os
 
+
 class build_trans(cmd.Command):
 	description = 'Compile .po files into .mo files'
+
 	def initialize_options(self):
 		pass
 
@@ -27,10 +29,13 @@ class build_trans(cmd.Command):
 						if os.system("msgfmt '%s' -o '%s'" % (src, dest)) != 0:
 							raise_(Exception, "Failed to compile: " + src)
 
+
 class build(_build):
 	sub_commands = _build.sub_commands + [('build_trans', None)]
+
 	def run(self):
 		_build.run(self)
+
 
 cmdclass = {
 	'build': build,

@@ -34,8 +34,10 @@ def GetConfigList():
     return optionList
 ###################################################
 
+
 def gettytul():
     return 'http://sportdeutschland.tv/'
+
 
 class SportDeutschland(CBaseHostClass):
 
@@ -58,7 +60,6 @@ class SportDeutschland(CBaseHostClass):
                              {'category': 'search', 'title': _('Search'), 'search_item': True, },
                              {'category': 'search_history', 'title': _('Search history'), }]
                  
-            
     def _getJItemStr(self, item, key, default=''):
         v = item.get(key, None)
         if None == v:
@@ -240,6 +241,7 @@ class SportDeutschland(CBaseHostClass):
             self.listsHistory({'name': 'history', 'category': 'search'}, 'desc', _("Type: "))
         else:
             printExc()
+
 
 class IPTVHost(CHostBase):
 

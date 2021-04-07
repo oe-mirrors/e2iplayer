@@ -121,6 +121,7 @@ try:
 except NameError:
     compat_chr = chr
 
+
 def compat_ord(c):
     if type(c) is int:
         return c
@@ -133,6 +134,7 @@ def preferredencoding():
     pref = 'UTF-8'
     return pref
 
+
 if sys.version_info < (3, 0):
     def compat_print(s):
         printDBG(s.encode(preferredencoding(), 'xmlcharrefreplace'))
@@ -140,6 +142,7 @@ else:
     def compat_print(s):
         assert type(s) == type('')
         printDBG(s)
+
 
 def htmlentity_transform(entity):
     """Transforms an HTML entity to a character."""
@@ -165,6 +168,7 @@ def htmlentity_transform(entity):
             printExc()
     # Unknown entity in name, return its literal representation
     return ('&%s;' % entity)
+
 
 def clean_html(html):
     """Clean an HTML snippet into a readable string"""
@@ -199,6 +203,7 @@ def unescapeHTML(s):
 
 class ExtractorError(Exception):
     """Error during info extraction."""
+
     def __init__(self, msg, tb=None):
         """ tb, if given, is the original traceback (so that it can be printed out). """
         printDBG(msg)
@@ -210,6 +215,7 @@ class ExtractorError(Exception):
         if self.traceback is None:
             return None
         return ''.join(traceback.format_tb(self.traceback))
+
 
 def url_basename(url):
     path = compat_urllib_parse_urlparse(url).path

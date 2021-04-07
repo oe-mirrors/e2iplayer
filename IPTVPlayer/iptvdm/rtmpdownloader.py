@@ -28,6 +28,8 @@ import datetime
 # One instance of this class can be used only for 
 # one download
 ###################################################
+
+
 class RtmpDownloader(BaseDownloader):
     URI_TAB = ['rtmp://', 'rtmpt://', 'rtmpe://', 'rtmpte://', 'rtmps://']
     # rtmp status
@@ -70,7 +72,6 @@ class RtmpDownloader(BaseDownloader):
         paramsL = ['help', 'url', 'rtmp', 'host', 'port', 'socks', 'protocol', 'playpath', 'playlist', 'swfUrl', 'tcUrl', 'pageUrl', 'app', 'swfhash', 'swfsize', 'swfVfy', 'swfAge', 'auth', 'conn', 'flashVer', 'live', 'subscribe', 'realtime', 'flv', 'resume', 'timeout', 'start', 'stop', 'token', 'jtv', 'weeb', 'hashes', 'buffer', 'skip', 'quiet', 'verbose', 'debug']
         paramsS = ['h', 'i', 'r', 'n', 'c', 'S', 'l', 'y', 'Y', 's', 't', 'p', 'a', 'w', 'x', 'W', 'X', 'u', 'C', 'f', 'v', 'd', 'R', 'o', 'e', 'e', 'A', 'B', 'T', 'j', 'J', '#', 'b', 'k', 'q', 'V', 'z']
         paramsRequireValue = ['pageUrl']
-        
         
         url = 'rtmp ' + url
         tmpTab = url.split(' ')

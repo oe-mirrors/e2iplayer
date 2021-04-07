@@ -19,8 +19,10 @@ import urllib.error
 from datetime import timedelta
 ###################################################
 
+
 def gettytul():
     return 'https://vimeo.com/'
+
 
 class SuggestionsProvider:
 
@@ -41,6 +43,7 @@ class SuggestionsProvider:
                 retList.append(item['text'])
             return retList 
         return None
+
 
 class VimeoCom(CBaseHostClass):
     
@@ -354,7 +357,6 @@ class VimeoCom(CBaseHostClass):
             params.update({'good_for_fav': False, 'title': _('Next page'), 'page': page + 1})
             self.addDir(params)
         
-        
     def listSearchResult(self, cItem, searchPattern, searchType):
         printDBG("VimeoCom.listSearchResult cItem[%s], searchPattern[%s] searchType[%s]" % (cItem, searchPattern, searchType))
         
@@ -414,12 +416,14 @@ class VimeoCom(CBaseHostClass):
         printDBG('Vimeo.getSuggestionsProvider')
         return SuggestionsProvider()
 
+
 class IPTVHost(CHostBase):
 
     def __init__(self):
         CHostBase.__init__(self, VimeoCom(), True, [])
         
         {'clip': 'videos', 'ondemand': '', 'people': 'peoples', 'group': 'groups', 'channel': 'channels'}
+
     def getSearchTypes(self):
         searchTypesOptions = []
         searchTypesOptions.append((_('Videos'), "clip"))

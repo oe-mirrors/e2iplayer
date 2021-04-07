@@ -17,8 +17,10 @@ import re
 import time
 ###################################################
 
+
 def gettytul():
     return 'https://del.org/'
+
 
 class Del(CBaseHostClass):
 
@@ -221,6 +223,7 @@ class Del(CBaseHostClass):
             printExc()
         
         CBaseHostClass.endHandleService(self, index, refresh)
+
 
 class IPTVHost(CHostBase):
 

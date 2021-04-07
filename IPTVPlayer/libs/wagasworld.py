@@ -30,6 +30,7 @@ from Screens.MessageBox import MessageBox
 config.plugins.iptvplayer.wagasworld_login = ConfigText(default="", fixed_size=False)
 config.plugins.iptvplayer.wagasworld_password = ConfigText(default="", fixed_size=False)
 
+
 def GetConfigList():
     optionList = []
     optionList.append(getConfigListEntry('wagasworld.com ' + _("login") + ':', config.plugins.iptvplayer.wagasworld_login))

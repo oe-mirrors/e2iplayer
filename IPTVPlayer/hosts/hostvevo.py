@@ -36,8 +36,10 @@ def GetConfigList():
     return optionList
 ###################################################
 
+
 def gettytul():
     return 'https://vevo.com/'
+
 
 class VevoCom(CBaseHostClass):
     
@@ -182,7 +184,6 @@ class VevoCom(CBaseHostClass):
             sts, data = self.getPage(url)
         if not sts:
             return
-        
         
         data = self.cm.ph.getDataBeetwenNodes(data, ('<div', '>', 'containers'), ('<div', '>', 'footer'))[1]
         containers = self.cm.ph.getAllItemsBeetwenNodes(data, ('<div', '>', 'feedV2-title'), ('</ul', '>'))
@@ -480,6 +481,7 @@ class VevoCom(CBaseHostClass):
             printExc()
         
         CBaseHostClass.endHandleService(self, index, refresh)
+
 
 class IPTVHost(CHostBase):
 

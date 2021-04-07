@@ -32,6 +32,7 @@ config.plugins.iptvplayer.tvnowde_prefered_format = ConfigSelection(default="hls
 ("dash", _("DASH/mpd"))
 ])
 
+
 def GetConfigList():
     optionList = []
     optionList.append(getConfigListEntry(_("Show paid items (it may be illegal)"), config.plugins.iptvplayer.tvnowde_show_paid_items))
@@ -41,8 +42,10 @@ def GetConfigList():
     
 ###################################################
 
+
 def gettytul():
     return 'https://www.tvnow.de/'
+
 
 class TVNowDE(CBaseHostClass):
  
@@ -404,7 +407,6 @@ class TVNowDE(CBaseHostClass):
         except Exception:
             printExc()
 
-
     def listSearchResult(self, cItem, searchPattern, searchType):
         printDBG("TVNowDE.listSearchResult cItem[%s], searchPattern[%s] searchType[%s]" % (cItem, searchPattern, searchType))
         cItem = dict(cItem)
@@ -482,7 +484,6 @@ class TVNowDE(CBaseHostClass):
                             self.cacheLinks[key][idx]['name'] = '*' + self.cacheLinks[key][idx]['name']
                         break
         
-        
         if self.cm.isValidUrl(videoUrl):
             urlTab = self.up.getVideoLinkExt(videoUrl)
         
@@ -545,6 +546,7 @@ class TVNowDE(CBaseHostClass):
             printExc()
         
         CBaseHostClass.endHandleService(self, index, refresh)
+
 
 class IPTVHost(CHostBase):
 

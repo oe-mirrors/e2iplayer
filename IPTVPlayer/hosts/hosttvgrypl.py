@@ -26,6 +26,7 @@ config.plugins.iptvplayer.tvgrypl_default_quality = ConfigSelection(default="SD"
 config.plugins.iptvplayer.tvgrypl_use_dq = ConfigYesNo(default=True)
 config.plugins.iptvplayer.tvgrypl_date_of_birth = ConfigText(default="2017-01-31", fixed_size=False)
 
+
 def GetConfigList():
     optionList = []
     optionList.append(getConfigListEntry("Domyślna jakość wideo:", config.plugins.iptvplayer.tvgrypl_default_quality))
@@ -34,8 +35,10 @@ def GetConfigList():
     return optionList
 ###################################################
 
+
 def gettytul():
     return 'https://tvgry.pl/'
+
 
 class TvGryPL(CBaseHostClass):
 
@@ -182,7 +185,6 @@ class TvGryPL(CBaseHostClass):
             else:
                 SetIPTVPlayerLastHostError("Wprowadź datę urodzenia w konfiguracji hosta - wymagane przez serwis http://tvgry.pl/.")
                 
-        
         url = self.cm.ph.getSearchGroups(data, '''<iframe[^>]+?src=['"]([^"^']+?)['"]''', 1, True)[0]
         if self.cm.isValidUrl(url):
             allLinksTab = self.up.getVideoLinkExt(url)
@@ -289,6 +291,7 @@ class TvGryPL(CBaseHostClass):
         else:
             printExc()
         CBaseHostClass.endHandleService(self, index, refresh)
+
 
 class IPTVHost(CHostBase):
 

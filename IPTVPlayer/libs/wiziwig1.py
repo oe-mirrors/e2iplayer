@@ -13,6 +13,7 @@ import re
 import datetime
 import time
 
+
 class Wiziwig1Api(CBaseHostClass):
 
     def __init__(self):
@@ -36,7 +37,6 @@ class Wiziwig1Api(CBaseHostClass):
         time2 = date_time_obj.strftime("%H:%M")
         
         return time2
-        
         
     def getList(self, cItem):
         printDBG("Wiziwig1Api.getChannelsList")

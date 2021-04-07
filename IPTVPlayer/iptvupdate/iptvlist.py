@@ -21,6 +21,7 @@ from Tools.LoadPixmap import LoadPixmap
 import skin
 ###################################################
 
+
 class IPTVUpdateList(IPTVListComponentBase):
 
     def __init__(self, iconsPaths):

@@ -34,6 +34,7 @@ config.plugins.iptvplayer.bsto_bypassrecaptcha = ConfigSelection(default="None",
                                                                                               ("9kw.eu", "https://9kw.eu/"),
                                                                                               ("2captcha.com", "http://2captcha.com/")])
 
+
 def GetConfigList():
     optionList = []
     optionList.append(getConfigListEntry(_("Use links cache"), config.plugins.iptvplayer.bsto_linkcache))
@@ -49,8 +50,10 @@ def GetConfigList():
 def gettytul():
     return 'https://bs.to/'
 
+
 class BSTO(CBaseHostClass, CaptchaHelper):
     LINKS_CACHE = {}
+
     def __init__(self):
         CBaseHostClass.__init__(self, {'history': 'bs.to', 'cookie': 'bsto.cookie'})
         self.USER_AGENT = 'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:40.0) Gecko/20100101 Firefox/40.0'
@@ -416,6 +419,7 @@ class BSTO(CBaseHostClass, CaptchaHelper):
             printExc()
         
         CBaseHostClass.endHandleService(self, index, refresh)
+
 
 class IPTVHost(CHostBase):
 

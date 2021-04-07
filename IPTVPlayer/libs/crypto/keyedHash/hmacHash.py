@@ -22,10 +22,12 @@
 """
 from ..hash.hash import Hash
 
+
 class HMAC(Hash):
     """    To compute HMAC over the data `text' we perform
                     H(K XOR opad, H(K XOR ipad, text))
     """
+
     def __init__(self, hashFunction, key=None):
         """ initialize HMAC with hashfunction and optionally the key """
         # should check for right type of function
@@ -60,25 +62,35 @@ class HMAC(Hash):
             raise Exception('no key defined')
         self.H.update(self.k_xor_ipad) # start inner hash with key xored with ipad
                                        # outer hash always called as one full pass (no updates)
+
     def update(self, data):
         if self.keyed == None:
             raise Exception('no key defined')
         self.H.update(data)
+
     def digest(self):
         if self.keyed == None:
             raise Exception('no key defined')
         return self.H_outer(self.k_xor_opad + self.H.digest())
 
+
 from ..hash.sha1Hash import SHA1
+
+
 class HMAC_SHA1(HMAC):
     """ Predefined HMAC built on SHA1 """
+
     def __init__(self, key=None):
         """ optionally initialize with key """
         HMAC.__init__(self, SHA1, key)
 
+
 from ..hash.md5Hash import MD5
+
+
 class HMAC_MD5(HMAC):
     """ Predefined HMAC built on SHA1 """
+
     def __init__(self, key=None):
         """ optionally initialize with key """
         HMAC.__init__(self, MD5, key)

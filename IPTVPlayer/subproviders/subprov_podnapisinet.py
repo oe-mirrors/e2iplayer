@@ -54,10 +54,12 @@ from Screens.MessageBox import MessageBox
 # Config options for HOST
 ###################################################
 
+
 def GetConfigList():
     optionList = []
     return optionList
 ###################################################
+
 
 class PodnapisiNetProvider(CBaseSubProviderClass): 
     
@@ -144,7 +146,6 @@ class PodnapisiNetProvider(CBaseSubProviderClass):
                 newList.insert(0, promotedItem)
                 self.cacheFilters[defItem['key']] = newList
 
-        
     def listFilters(self, cItem, filter, nextCategory):
         printDBG("PodnapisiNetProvider.listFilters")
         if {} == self.cacheFilters:
@@ -319,6 +320,7 @@ class PodnapisiNetProvider(CBaseSubProviderClass):
             self.listSubsInPackedFile(self.currItem, 'list_sub_in_packed_file')
         
         CBaseSubProviderClass.endHandleService(self, index, refresh)
+
 
 class IPTVSubProvider(CSubProviderBase):
 

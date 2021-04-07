@@ -34,6 +34,7 @@ config.plugins.iptvplayer.hdstreams_bypassrecaptcha = ConfigSelection(default="N
                                                                                                  ("9kw.eu", "https://9kw.eu/"),
                                                                                                  ("2captcha.com", "http://2captcha.com/")])
 
+
 def GetConfigList():
     optionList = []
     #optionList.append(getConfigListEntry(_("Use links cache"), config.plugins.iptvplayer.hdstreams_linkcache))
@@ -48,6 +49,7 @@ def GetConfigList():
 
 def gettytul():
     return 'https://hd-streams.org/'
+
 
 class HDStreams(CBaseHostClass):
  
@@ -586,6 +588,7 @@ class HDStreams(CBaseHostClass):
             printExc()
         
         CBaseHostClass.endHandleService(self, index, refresh)
+
 
 class IPTVHost(CHostBase):
 

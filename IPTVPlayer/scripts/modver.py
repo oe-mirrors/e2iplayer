@@ -3,9 +3,11 @@
 
 import sys
 
+
 def printDBG(strDat):
     print("%s" % strDat)
     #print("%s" % strDat, file=sys.stderr)
+
 
 if __name__ == "__main__":
     if len(sys.argv) < 4:

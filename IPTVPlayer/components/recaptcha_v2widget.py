@@ -33,7 +33,6 @@ class UnCaptchaReCaptchaWidget(Screen):
         windowWidth = self.markerWidth * self.numOfCol + self.offsetCoverX * 2
         windowHeight = self.markerWidth * self.numOfRow + self.offsetCoverY + 70
         
-
         coversSkin = ''
         self.coversSelection = []
         for x in range(self.numOfCol):
@@ -152,6 +151,7 @@ class UnCaptchaReCaptchaWidget(Screen):
         self.calcMarkerPosX()
         self.moveMarker()
         return
+
     def keyLeft(self):
         self.currX -= 1
         self.calcMarkerPosX()
@@ -163,6 +163,7 @@ class UnCaptchaReCaptchaWidget(Screen):
         self.calcMarkerPosY()
         self.moveMarker()
         return
+
     def keyUp(self):
         self.currY -= 1
         self.calcMarkerPosY()

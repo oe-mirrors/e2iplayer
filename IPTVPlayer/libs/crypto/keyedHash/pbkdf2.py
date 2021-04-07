@@ -15,6 +15,7 @@ from ..common import xor
 from math import ceil
 from struct import pack
 
+
 def pbkdf2(password, salt, iterations, keySize, PRF=HMAC_SHA1):
 	""" Create key of size keySize from password and salt """
 	if len(password) > 63:
@@ -35,6 +36,7 @@ def pbkdf2(password, salt, iterations, keySize, PRF=HMAC_SHA1):
 			F = xor(F, U)
 		key = key + F
 	return key[:keySize]
+
 
 def dot11PassPhraseToPSK(passPhrase, ssid):
 	""" The 802.11 TGi recommended pass-phrase-to-preshared-key mapping.

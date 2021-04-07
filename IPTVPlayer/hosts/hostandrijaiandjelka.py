@@ -19,8 +19,10 @@ from binascii import hexlify
 from hashlib import md5
 ###################################################
 
+
 def gettytul():
     return 'https://andrija-i-andjelka.com/'
+
 
 class AndrijaIAndjelka(CBaseHostClass):
 
@@ -197,6 +199,7 @@ class AndrijaIAndjelka(CBaseHostClass):
             printExc()
         
         CBaseHostClass.endHandleService(self, index, refresh)
+
 
 class IPTVHost(CHostBase):
 

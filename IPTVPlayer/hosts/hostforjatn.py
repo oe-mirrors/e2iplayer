@@ -20,8 +20,10 @@ except Exception:
     import simplejson as json
 ###################################################
 
+
 def gettytul():
     return 'https://forja.tn/'
+
 
 class ForjaTN(CBaseHostClass):
     
@@ -406,6 +408,7 @@ class ForjaTN(CBaseHostClass):
             printExc()
         
         CBaseHostClass.endHandleService(self, index, refresh)
+
 
 class IPTVHost(CHostBase):
 

@@ -16,6 +16,8 @@ from Components.config import config
 import os
 
 ########################################################
+
+
 def IncludeHEADER(extraMetas=''):
 	tempText = """
 <head>
@@ -48,6 +50,8 @@ def IncludeHEADER(extraMetas=''):
 	return tempText
 	
 ########################################################
+
+
 def IncludeMENU(MenuStatusMSG='', ShowCancelButton=False):
 	if isActiveHostInitiated():
 		tempText = """
@@ -87,6 +91,8 @@ def IncludeMENU(MenuStatusMSG='', ShowCancelButton=False):
 	return tempText
 
 ########################################################
+
+
 class Body():
 	def __init__(self):
 		pass
@@ -101,6 +107,7 @@ class Body():
 		tempText += '</div></body>\n'
 		return tempText
 	########################################################
+
 	def logsPageContent(self, MenuStatusMSG, htmlError, DebugFileName, DBGFileContent):
 		tempText = '<body bgcolor=\"#666666\" text=\"#FFFFFF\">\n'
 		tempText += IncludeMENU(MenuStatusMSG)
@@ -185,6 +192,7 @@ class Body():
 					tableCFG.append([ConfName, ConfDesc, CFGElements])
 		return tableCFG
 	########################################################
+
 	def settingsPageContent(self, MenuStatusMSG):
 		usedCFG = []
 		tempText = '<body bgcolor=\"#666666\" text=\"#FFFFFF\">\n<div class="main">\n'
@@ -209,6 +217,7 @@ class Body():
 		tempText += pluginCFG + '<p><br</p>\n' + hostsCFG + '</div></body>\n'
 		return tempText
 	########################################################
+
 	def hostsPageContent(self, MenuStatusMSG, ShowCancelButton):
 		tempText = '<body bgcolor=\"#666666\" text=\"#FFFFFF\">\n'
 		tempText += IncludeMENU(MenuStatusMSG, ShowCancelButton)
@@ -356,6 +365,7 @@ class Body():
 		tempText += '</div></body>\n'
 		return tempText
 	########################################################
+
 	def useHostSubMenu(self, isTop=True, LVL=1):
 		txt = '<table border="0" width="800px" cellspacing="5px"><tbody>\n'
 		txtWarning = '<tr><td colspan="4" align="center"><p><b><font size="2" color="#FE642E">%s</font></b><font size="2">%s</font></p></td></tr>\n' % (
@@ -378,6 +388,7 @@ class Body():
 		txt += '</tbody></table><br>\n'
 		return txt
 	########################################################
+
 	def buildItemsListTable(self, item, index, allowedCategories=[], destinationURL=None):
 		iIndex = index
 		iName = removeSpecialChars(item.name)
@@ -413,6 +424,7 @@ class Body():
 		txt += '<tr><td style="text-indent: 40px">%s</td></tr>\n' % iDescr
 		return txt
 	########################################################
+
 	def buildUrlsTable(self, item, index):
 		iName = removeSpecialChars(item.name)
 		iUrl = item.url #.replace("ext://url/","") #to chyba sss zrobil do wymuszenia extplayera przyklad pierwszatv
@@ -429,6 +441,7 @@ class Body():
 				txt += '<td> <a href="%s" target="_blank" class = "lnkbtn">%s</a></td></tr>' % (iUrl, _('Watch'))
 		return txt
 	########################################################
+
 	def useHostPageContent(self, MenuStatusMSG, ShowCancelButton):
 		tempText = '<body bgcolor=\"#666666\" text=\"#FFFFFF\">\n'
 		tempText += IncludeMENU(MenuStatusMSG, ShowCancelButton)
@@ -476,6 +489,7 @@ class Body():
 		tempText += '</div></body>\n'
 		return tempText
 	########################################################
+
 	def SearchPageContent(self, MenuStatusMSG, ShowCancelButton):
 		tempText = '<body bgcolor=\"#666666\" text=\"#FFFFFF\">\n'
 		tempText += IncludeMENU(MenuStatusMSG, ShowCancelButton)

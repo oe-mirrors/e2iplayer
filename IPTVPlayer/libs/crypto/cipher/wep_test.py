@@ -16,8 +16,10 @@ from binascii_plus import a2b_p, b2a_p
 from zlib import crc32
 from struct import pack
 
+
 class WEP_TestVectors(unittest.TestCase):
     """ Test WEP algorithm using know values """
+
     def testKnowValues(self):
         """ Test using vectors from..."""
         def WEPtestVector(testCase, plainText, iv, key, keyId, cipherText):
@@ -65,6 +67,7 @@ class WEP_TestVectors(unittest.TestCase):
                             5f 8a a8 36 de a1 8d f4 2c 53 80 80 5a d0 c6 1a
                             5d 6f 58 f4 10 40 b2 4b 7d 1a 69 38 56 ed 0d 43
                             98 e7 ae e3 bf 0e 2a 2c a8 f7 """)
+
 
 # Make this test module runnable from the command prompt
 if __name__ == "__main__":

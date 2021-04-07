@@ -25,13 +25,16 @@ except Exception:
 ###################################################
 try:
     from hashlib import md5
+
     def hex_md5(e):
         return md5(e).hexdigest()
 except Exception:
     from Plugins.Extensions.IPTVPlayer.libs.crypto.hash.md5Hash import MD5 as md5
+
     def hex_md5(e):
         hashAlg = MD5()
         return hexlify(hashAlg(e))
+
 
 def int2base(x, base):
     digs = string.digits + string.lowercase
@@ -51,19 +54,25 @@ def int2base(x, base):
     digits.reverse()
     return ''.join(digits)
     
+
 def JS_toString(x, base):
     return int2base(x, base)
 
 # returns timestamp in milliseconds
+
+
 def JS_DateValueOf():
     return time.time() * 1000
     
+
 def JS_FromCharCode(*args): 
     return ''.join(map(chr, args))
     
+
 def unicode_escape(s):
     decoder = codecs.getdecoder('unicode_escape')
     return re.sub(r'\\u[0-9a-fA-F]{4,}', lambda m: decoder(m.group(0))[0], s).encode('utf-8')
+
 
 def drdX_fx(e):
     t = {}
@@ -103,12 +112,15 @@ def drdX_fx(e):
         n += 72
     return s
 
+
 def VIDEOMEGA_decryptPlayerParams(p, a, c, k, e, d):
     def e1(c):
         return JS_toString(c, 36)
         return ret
+
     def k1(matchobj):
         return d[matchobj.group(0)]
+
     def e2(t=None):
         return '\\w+'
     e = e1
@@ -129,6 +141,7 @@ def VIDEOMEGA_decryptPlayerParams(p, a, c, k, e, d):
             p = re.sub(reg, k[c], p)
     return p
             
+
 def SAWLIVETV_decryptPlayerParams(p, a, c, k, e, d):
     def e1(c):
         if c < a:
@@ -141,8 +154,10 @@ def SAWLIVETV_decryptPlayerParams(p, a, c, k, e, d):
         else:
             ret += JS_toString(c, 36)
         return ret
+
     def k1(matchobj):
         return d[matchobj.group(0)]
+
     def e2(t=None):
         return '\\w+'
     e = e1
@@ -163,6 +178,7 @@ def SAWLIVETV_decryptPlayerParams(p, a, c, k, e, d):
             p = re.sub(reg, k[c], p)
     return p
 
+
 def KINGFILESNET_decryptPlayerParams(p, a, c, k, e=None, d=None):
     def e1(c, a):
         return JS_toString(c, a)
@@ -173,6 +189,7 @@ def KINGFILESNET_decryptPlayerParams(p, a, c, k, e=None, d=None):
             reg = '\\b' + e(c, a) + '\\b'
             p = re.sub(reg, k[c], p)
     return p
+
 
 def TEAMCASTPL_decryptPlayerParams(p, a, c, k, e=None, d=None):
     def e1(c):
@@ -200,6 +217,7 @@ def TEAMCASTPL_decryptPlayerParams(p, a, c, k, e=None, d=None):
 # there is problem in exec when this functions are class methods
 # sub (even static) or functions
 
+
 def getParamsTouple(code, type=1, r1=False, r2=False):
     mark1Tab = ["}(", "}\r\n(", "}\n(", "}\r("]
     mark2 = "))"
@@ -224,6 +242,7 @@ def getParamsTouple(code, type=1, r1=False, r2=False):
     idx2 += type
     return code[idx1:idx2]
  
+
 def unpackJSPlayerParams(code, decryptionFun, type=1, r1=False, r2=False):
     printDBG('unpackJSPlayerParams')
     code = getParamsTouple(code, type, r1, r2)
@@ -232,6 +251,7 @@ def unpackJSPlayerParams(code, decryptionFun, type=1, r1=False, r2=False):
         data = unpackJS(code[:-1], decryptionFun)
     return data
     
+
 def unpackJS(data, decryptionFun, addCode=''):
     paramsCode = addCode
     paramsCode += 'paramsTouple = (' + data + ')'
@@ -255,6 +275,7 @@ def unpackJS(data, decryptionFun, addCode=''):
         printExc('decryptPlayerParams EXCEPTION')
     return ''
     
+
 def VIDUPME_decryptPlayerParams(p=None, a=None, c=None, k=None, e=None, d=None):
     while c > 0:
         c -= 1
@@ -311,6 +332,7 @@ def VIDEOWEED_decryptPlayerParams(w, i, s=None, e=None):
         lIll += 2
     return ''.join(l1ll)
 
+
 def VIDEOWEED_decryptPlayerParams2(w, i, s=None, e=None):
     s = 0
     while s < len(w):
@@ -319,6 +341,7 @@ def VIDEOWEED_decryptPlayerParams2(w, i, s=None, e=None):
     return i
 
 ###############################################################################
+
 
 class captchaParser:
     def __init__(self):
@@ -345,6 +368,7 @@ class captchaParser:
         pass
     
 ################################################################################
+
 
 def decorateUrl(url, metaParams={}):
     retUrl = strwithmeta(url)
@@ -376,6 +400,7 @@ def decorateUrl(url, metaParams={}):
         elif urlLower.startswith('mmsh'):
             retUrl.meta['iptv_proto'] = 'mmsh'
     return retUrl
+
 
 def getDirectM3U8Playlist(M3U8Url, checkExt=True, variantCheck=True, cookieParams={}, checkContent=False, sortWithMaxBitrate=-1, mergeAltAudio=True):
     if checkExt and not M3U8Url.split('?', 1)[0].endswith('.m3u8'):
@@ -459,6 +484,7 @@ def getDirectM3U8Playlist(M3U8Url, checkExt=True, variantCheck=True, cookieParam
         printExc()
     return retPlaylists
     
+
 def getF4MLinksWithMeta(manifestUrl, checkExt=True, cookieParams={}, sortWithMaxBitrate=-1):
     if checkExt and not manifestUrl.split('?')[0].endswith('.f4m'):
         return []
@@ -519,6 +545,7 @@ def getF4MLinksWithMeta(manifestUrl, checkExt=True, cookieParams={}, sortWithMax
             retPlaylists = CSelOneLink(retPlaylists, __getLinkQuality, sortWithMaxBitrate).getSortedLinks()
     return retPlaylists
     
+
 def getMPDLinksWithMeta(manifestUrl, checkExt=True, cookieParams={}, sortWithMaxBandwidth=-1):
     if checkExt and not manifestUrl.split('?')[0].endswith('.mpd'):
         return []

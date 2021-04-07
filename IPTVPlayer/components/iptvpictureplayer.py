@@ -31,6 +31,7 @@ import time
 
 ###################################################
 
+
 class IPTVSimpleAudioPlayer():
     def __init__(self):
         additionalParams = {}
@@ -100,6 +101,7 @@ class IPTVSimpleAudioPlayer():
             self.console = None
 
 #class IPTVSimpleAudioPlayer
+
 
 class IPTVPicturePlayerWidget(Screen):
     NUM_OF_ICON_FRAMES = 8

@@ -36,6 +36,7 @@ config.plugins.iptvplayer.videostar_show_all_channels = ConfigYesNo(default=Fals
 config.plugins.iptvplayer.videostar_login = ConfigText(default="", fixed_size=False)
 config.plugins.iptvplayer.videostar_password = ConfigText(default="", fixed_size=False)
 
+
 def GetConfigList():
     optionList = []
     optionList.append(getConfigListEntry(_('Show all channels') + ": ", config.plugins.iptvplayer.videostar_show_all_channels))
@@ -48,6 +49,7 @@ def GetConfigList():
 ###################################################
     
 ###################################################
+
 
 class VideoStarApi(CBaseHostClass, CaptchaHelper):
 
@@ -302,6 +304,7 @@ class VideoStarApi(CBaseHostClass, CaptchaHelper):
         
         if len(urlsTab):
             maxBitrate = int(config.plugins.iptvplayer.videostar_defquality.value) * 1.3
+
             def __getLinkQuality(itemLink):
                 try:
                     if 'bitrate' in itemLink:

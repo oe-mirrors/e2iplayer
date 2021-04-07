@@ -20,6 +20,7 @@ import urllib.error
 def gettytul():
     return 'http://ls-streaming.com/'
 
+
 class LibreStream(CBaseHostClass):
     MAIN_URL = 'http://ls-streaming.com/'
     SEARCH_URL = MAIN_URL + 'index.php?q='
@@ -139,7 +140,6 @@ class LibreStream(CBaseHostClass):
         cItem['category'] = category
         self.listsTab(tmpTab, cItem)
 
-    
     def listEpisodes(self, cItem):
         printDBG("LibreStream.listEpisodes")
         sts, data = self.cm.getPage(cItem['url'])
@@ -303,6 +303,8 @@ class LibreStream(CBaseHostClass):
             printExc()
         
         CBaseHostClass.endHandleService(self, index, refresh)
+
+
 class IPTVHost(CHostBase):
 
     def __init__(self):

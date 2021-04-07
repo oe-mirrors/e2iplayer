@@ -82,6 +82,7 @@ def main():
 
     sys.exit() # normal termination
 
+
 if __name__ == "__main__":
     """ Called when run from the command line """
     main()

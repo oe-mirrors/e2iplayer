@@ -27,11 +27,13 @@ from crypto.cipher.rijndael import *
 from binascii_plus import b2a_hex
 from copy import deepcopy
 
+
 class Icedoll(Rijndael):
     """ IceDoll encryption algorithm
         based on Rijndael, with added feedback for better integrity processing.
         Note - no integrity check is built into Icedoll directly
     """
+
     def __init__(self, key=None, padding=padWithPadLen(), keySize=16, blockSize=16, tapRound=6, extraRounds=6):
         """ key, keysize, blockSize same as Rijndael, tapROund is feedback tap, """
         self.tapRound = tapRound     # <------- !!! change from Rijndael !!!

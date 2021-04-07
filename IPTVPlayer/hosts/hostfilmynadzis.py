@@ -27,6 +27,7 @@ import re
 config.plugins.iptvplayer.filmynadzis_login = ConfigText(default="", fixed_size=False)
 config.plugins.iptvplayer.filmynadzis_password = ConfigText(default="", fixed_size=False)
 
+
 def GetConfigList():
     optionList = []
     optionList.append(getConfigListEntry(_("Username") + ":", config.plugins.iptvplayer.filmynadzis_login))
@@ -37,6 +38,7 @@ def GetConfigList():
 
 def gettytul():
     return 'https://filmynadzis.pl/'
+
 
 class FilmyNaDzis(CBaseHostClass):
     
@@ -107,7 +109,6 @@ class FilmyNaDzis(CBaseHostClass):
         printDBG('FilmyNaDzis.tryTologin end loggedIn[%s]' % self.loggedIn)
         return self.loggedIn
         
-
     def listMain(self, cItem):
         printDBG("FilmyNaDzis.listMainMenu")
         
@@ -160,7 +161,6 @@ class FilmyNaDzis(CBaseHostClass):
         cUrl = self.cm.meta['url']
         self.setMainUrl(cUrl)
 
-
         # page style categories
         tmp = ph.find(data, ('<div', '>', 'listing-wrap'), ('<div', '>', 'main-bottom-sidebar-wrap'), flags=0)[1]
         items = self.cm.ph.getAllItemsBeetwenMarkers(tmp, ('<article', '>'), '</article>')
@@ -171,7 +171,6 @@ class FilmyNaDzis(CBaseHostClass):
             printDBG(data)
             printDBG("--------------------------------")
             
-        
         for item in items:
             #printDBG("----------------------------")
             #printDBG(item)
@@ -179,7 +178,6 @@ class FilmyNaDzis(CBaseHostClass):
             url = ph.search(item, ph.A)[1]
             if url:
                 url = self.getFullUrl(url, self.MAIN_URL)
-            
             
             icon = self.cm.ph.getSearchGroups(item, '''data-src=['"]([^"^']+?)['"]''')[0]
             if icon:
@@ -192,7 +190,6 @@ class FilmyNaDzis(CBaseHostClass):
             params.update({'good_for_fav': True, 'title': title, 'url': url, 'desc': desc, 'icon': icon})
             printDBG(str(params))
             self.addVideo(params)
-
 
         #nextpage
         nextPage = ph.find(data, ('<div', '>', 'pagenavi'), '</div>', flags=0)[1]
@@ -319,6 +316,7 @@ class FilmyNaDzis(CBaseHostClass):
             printExc()
         
         CBaseHostClass.endHandleService(self, index, refresh)
+
 
 class IPTVHost(CHostBase):
 

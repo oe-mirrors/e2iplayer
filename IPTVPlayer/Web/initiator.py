@@ -20,6 +20,7 @@ IPTVwebRoot.putChild("settings", settingsPage())
 IPTVwebRoot.putChild("logs", logsPage())
 IPTVwebRoot.putChild("search", searchPage())
 
+
 def checkForFC():
 	ret = False
 	if os.path.exists(resolveFilename(SCOPE_PLUGINS, 'Extensions/OpenWebif/controllers/base.pyo')):
@@ -42,6 +43,7 @@ def checkForFC():
 	data = None
 	return ret
 	      
+
 # registration for old webinterface
 if os.path.exists(resolveFilename(SCOPE_PLUGINS, 'Extensions/WebInterface/web/external.xml')):
 	try:

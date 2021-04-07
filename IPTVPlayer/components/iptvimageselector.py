@@ -24,8 +24,10 @@ from Components.ActionMap import ActionMap
 from Components.Label import Label
 ###################################################
 
+
 class IPTVImagesSelectionList(IPTVListComponentBase):
     ICONS_FILESNAMES = {'on': 'radio_button_on.png', 'off': 'radio_button_off.png'}
+
     def __init__(self, height):
         IPTVListComponentBase.__init__(self)
         
@@ -71,6 +73,7 @@ class IPTVImagesSelectionList(IPTVListComponentBase):
         except Exception:
             printExc()
         return res
+
 
 class IPTVMultipleImageSelectorWidget(Screen):
 

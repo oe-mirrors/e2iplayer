@@ -24,6 +24,7 @@ except Exception:
 def gettytul():
     return 'http://kreskoweczki.pl/'
 
+
 class KreskoweczkiPL(CBaseHostClass):
  
     def __init__(self):
@@ -178,7 +179,6 @@ class KreskoweczkiPL(CBaseHostClass):
         printDBG("KreskoweczkiPL.getLinksForVideo [%s]" % cItem)
         urlTab = []
         
-        
         sts, data = self.getPage(cItem['url'])
         if not sts:
             return []
@@ -297,6 +297,8 @@ class KreskoweczkiPL(CBaseHostClass):
             printExc()
         
         CBaseHostClass.endHandleService(self, index, refresh)
+
+
 class IPTVHost(CHostBase):
 
     def __init__(self):

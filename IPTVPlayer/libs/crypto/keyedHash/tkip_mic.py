@@ -10,12 +10,14 @@
 """
 from crypto.keyedHash.michael import Michael
 
+
 class TKIP_MIC(Michael):
     """ The TKIP MIC Calculation for IEEE 802.11 TGi
         This MIC algorithm uses the Michael Message Integrity Check (MIC)
         and incorporates the DA, SA, priority and padding as
         part of the MIC calculation
     """
+
     def __init__(self, key=None, version='D3'):
         """ """
         self.version = version

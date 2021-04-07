@@ -13,13 +13,19 @@ import time
 
 import signal
 import os
+
+
 def signal_handler(sig, frame):
     os.kill(os.getpid(), signal.SIGTERM)
+
+
 signal.signal(signal.SIGINT, signal_handler)
+
 
 def printDBG(strDat):
     if 0:
         print("%s" % strDat)
+
 
 def printExc(msg=''):
     printDBG("===============================================")
@@ -28,6 +34,7 @@ def printExc(msg=''):
     msg = msg + ': \n%s' % traceback.format_exc()
     printDBG(msg)
     printDBG("===============================================")
+
 
 def getPage(url, params={}):
     printDBG('url [%s]' % url)
@@ -44,6 +51,7 @@ def getPage(url, params={}):
     except Exception:
         printExc()
     return sts, data
+
 
 if __name__ == "__main__":
     if len(sys.argv) < 5:

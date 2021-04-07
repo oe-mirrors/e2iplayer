@@ -8,9 +8,11 @@
 from struct import pack, unpack
 from binascii_plus import *
 
+
 def S(word):
     """ TKIP S-Box non-linear substitution of a 16 bit word """
     return (tkipSbox[0][word & 0x00FF] ^ tkipSbox[1][(word >> 8) & 0x00FF])
+
 
 """ tkipSbox consists of two 256 word arrays
     The tkip Sbox is formed from the AES/Rijndael Sbox
@@ -28,14 +30,17 @@ for i in range(256):
     tkipSbox[0][i] = (k2 << 8) ^ k3
     tkipSbox[1][i] = (k3 << 8) ^ k2  # second array is just byte swap of first array
 
+
 def rotR1(v16):
     """ circular right rotate on 16 bits """
     return ((((v16) >> 1) & 0x7FFF) ^ (((v16) & 1) << 15))
+
 
 class TKIP_Mixer:
     """ The TKIP_Mixer class generates dynamic keys for TKIP based on the
         TK (temporal key), TA and PN
     """
+
     def __init__(self, tk1=None, transmitterAddress=None, pnBytes=6 * chr(0)):
         """ The TKIP Mixer is initialized with tk1 and TA
             tk1 is a temporal key (16 octet string)
@@ -87,6 +92,7 @@ class TKIP_Mixer:
             self.phase1Key = phase1KeyMixing(self.tk, self.ta, self.pn)
         return phase2KeyMixing(self.tk, self.phase1Key, self.pn)
 
+
 def phase1KeyMixing(tk, ta, pn):
     """ Create a p1k (5 integers) from TK, TA and upper 4 octets of sequence number pn"""
     p1k = [0, 0, 0, 0, 0]           # array of 5 integers (each 2 octets)
@@ -103,6 +109,7 @@ def phase1KeyMixing(tk, ta, pn):
         p1k[3] = (p1k[3] + S(p1k[2] ^ (tk[j + 13] * 256 + tk[j + 12]))) & 0xFFFF
         p1k[4] = (p1k[4] + S(p1k[3] ^ (tk[j + 1] * 256 + tk[j])) + i) & 0xFFFF
     return p1k
+
 
 def phase2KeyMixing(tk, p1k, pn):
     """ Create a 16 octet key from the phase1Key (p1k)

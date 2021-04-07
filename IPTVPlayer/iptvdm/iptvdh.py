@@ -25,6 +25,7 @@ import os
 import re
 ###################################################
 
+
 class DMItemBase:
     def __init__(self, url, fileName):
         self.url = url
@@ -45,8 +46,10 @@ class DMItemBase:
         # instance of downloader
         self.downloader = None
         self.callback = None
+
     def __del__(self):
         printDBG("DMItemBase.__del__  ---------------------")
+
 
 class DMHelper:
     STATUS_FILE_PATH = '/tmp/iptvdownload'

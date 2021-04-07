@@ -38,6 +38,7 @@ from Components.Language import language
 config.plugins.iptvplayer.movie4kto_language = ConfigSelection(default="", choices=[("", _("Auto")), ("en", _("English")), ("de", _("German")), ("fr", _("French")), ("es", _("Spanish")), ("it", _("Italian")), ("jp", _("Japanese")), ("tr", _("Turkish")), ("ru", _("Russian"))])
 config.plugins.iptvplayer.movie4kto_alt_domain = ConfigText(default="", fixed_size=False)
 
+
 def GetConfigList():
     optionList = []
     optionList.append(getConfigListEntry(_("Language:"), config.plugins.iptvplayer.movie4kto_language))
@@ -45,8 +46,10 @@ def GetConfigList():
     return optionList
 ###################################################
 
+
 def gettytul():
     return 'http://movie4k.org/'
+
 
 class Movie4kTO(CBaseHostClass):
 
@@ -244,7 +247,6 @@ class Movie4kTO(CBaseHostClass):
         if nextPage:
             params = dict(cItem)
             params.update({'title': _('Next page'), 'page': page + 1})
-                    
                     
     def listsTVShow2(self, cItem, category):
         printDBG("Movie4kTO.listsTVShow2")
@@ -593,6 +595,7 @@ class Movie4kTO(CBaseHostClass):
         else:
             printExc()
         CBaseHostClass.endHandleService(self, index, refresh)
+
 
 class IPTVHost(CHostBase):
 

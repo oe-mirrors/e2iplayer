@@ -19,6 +19,7 @@ from crypto.keyedHash.tkip_key_mixing import TKIP_Mixer
 from crypto.errors import BadKeySizeError, IntegrityCheckError
 from binascii_plus import *
 
+
 class TKIP_encr:
     """ TKIP Stream Cipher Algorithm without the Michael integrity check
 
@@ -26,6 +27,7 @@ class TKIP_encr:
         and the TKIP key mixing algorithm .  This does NOT include
         the Michael integrity algorithm that operates on the MSDU data.
     """
+
     def __init__(self, key=None, transmitterAddress=None, keyID=None):
         """ Initialize TKIP_encr, key -> octet string for key """
         assert(keyID == 0 or keyID == None), 'keyID should be zero in TKIP'

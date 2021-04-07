@@ -31,6 +31,7 @@ config.plugins.iptvplayer.playpuls_usedf = ConfigYesNo(default=False)
 config.plugins.iptvplayer.playpuls_defaultproto = ConfigSelection(default="hls", choices=[("rtmp", "dash (mpd)"), ("hls", "hls (m3u8)")])
 config.plugins.iptvplayer.playpuls_proxy = ConfigYesNo(default=False)
 
+
 def GetConfigList():
     optionList = []
     optionList.append(getConfigListEntry("Preferowany protokół:", config.plugins.iptvplayer.playpuls_defaultproto))
@@ -40,8 +41,10 @@ def GetConfigList():
     return optionList
 ###################################################
 
+
 def gettytul():
     return 'http://playpuls.pl/'
+
 
 class Playpuls(CBaseHostClass):
     def __init__(self):
@@ -260,6 +263,7 @@ class Playpuls(CBaseHostClass):
             
         if 0 < len(videoUrls):
             max_bitrate = int(config.plugins.iptvplayer.playpuls_defaultformat.value)
+
             def __getLinkQuality(itemLink):
                 return int(itemLink['bitrate'])
             videoUrls = CSelOneLink(videoUrls, __getLinkQuality, max_bitrate).getSortedLinks()
@@ -295,6 +299,7 @@ class Playpuls(CBaseHostClass):
             self.listsHistory({'name': 'history', 'category': 'search'}, 'desc', _("Type: "))
         else:
             printExc()
+
 
 class IPTVHost(CHostBase):
 

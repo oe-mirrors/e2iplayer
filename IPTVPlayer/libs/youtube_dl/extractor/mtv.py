@@ -18,6 +18,7 @@ try:
 except Exception:
     import simplejson as json
 
+
 class MTVServicesInfoExtractor(InfoExtractor):
     _MOBILE_TEMPLATE = None
     _LANG = None
@@ -166,6 +167,7 @@ class MTVServicesInfoExtractor(InfoExtractor):
         videos_info = self._get_videos_info(mgid)
         return videos_info
 
+
 class MTVServicesEmbeddedIE(MTVServicesInfoExtractor):
     IE_NAME = 'mtvservices:embedded'
     _VALID_URL = r'https?://media\.mtvnservices\.com/embed/(?P<mgid>.+?)(\?|/|$)'
@@ -220,6 +222,7 @@ class MTVIggyIE(MTVServicesInfoExtractor):
     _VALID_URL = r'https?://www\.mtviggy\.com/videos/.+'
     _FEED_URL = 'http://all.mtvworldverticals.com/feed-xml/'
     
+
 class GametrailersIE(MTVServicesInfoExtractor):
     _VALID_URL = r'http://www\.gametrailers\.com/(?P<type>videos|reviews|full-episodes)/(?P<id>.*?)/(?P<title>.*)'
     _FEED_URL = 'http://www.gametrailers.com/feeds/mrss'

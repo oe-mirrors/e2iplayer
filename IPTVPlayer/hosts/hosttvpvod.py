@@ -52,6 +52,7 @@ config.plugins.iptvplayer.tvpVodPreferedformat = ConfigSelection(default="mp4", 
 # Config options for HOST
 ###################################################
 
+
 def GetConfigList():
     optionList = []
     optionList.append(getConfigListEntry("Strefa Widza", config.plugins.iptvplayer.tvpvod_premium))
@@ -65,8 +66,10 @@ def GetConfigList():
     return optionList
 ###################################################
 
+
 def gettytul():
     return 'https://vod.tvp.pl/'
+
 
 class TvpVod(CBaseHostClass, CaptchaHelper):
     DEFAULT_ICON_URL = 'https://s.tvp.pl/files/vod.tvp.pl/img/menu/logo_vod.png' #'http://sd-xbmc.org/repository/xbmc-addons/tvpvod.png'
@@ -138,6 +141,7 @@ class TvpVod(CBaseHostClass, CaptchaHelper):
         
         try:
             import http.client
+
             def patch_http_response_read(func):
                 def inner(*args):
                     try:
@@ -661,7 +665,6 @@ class TvpVod(CBaseHostClass, CaptchaHelper):
             data = self.cm.ph.getDataBeetwenMarkers(data, '<section id="menu"', '</section>', False)[1]
             self._addNavCategories(data, cItem, category)
         
-                
     def listItems2(self, cItem, category, data):
         printDBG("TvpVod.listItems2")
         itemMarker = '<div class="'
@@ -723,6 +726,7 @@ class TvpVod(CBaseHostClass, CaptchaHelper):
                 videoTab = getDirectM3U8Playlist(hlsUrl, checkExt=False, variantCheck=False)
                 if 1 < len(videoTab):
                     max_bitrate = int(config.plugins.iptvplayer.tvpVodDefaultformat.value)
+
                     def __getLinkQuality(itemLink):
                         if 'width' in itemLink and 'height' in itemLink:
                             bitrate = self.getBitrateFromFormat('%sx%s' % (itemLink['width'], itemLink['height']))
@@ -758,6 +762,7 @@ class TvpVod(CBaseHostClass, CaptchaHelper):
         def _sortVideoLinks(videoTab):
             if 1 < len(videoTab):
                 max_bitrate = int(config.plugins.iptvplayer.tvpVodDefaultformat.value)
+
                 def __getLinkQuality(itemLink):
                     if 'width' in itemLink and 'height' in itemLink:
                         bitrate = self.getBitrateFromFormat('%sx%s' % (itemLink['width'], itemLink['height']))
@@ -1069,6 +1074,7 @@ class TvpVod(CBaseHostClass, CaptchaHelper):
         else:
             printExc()
         CBaseHostClass.endHandleService(self, index, refresh)
+
 
 class IPTVHost(CHostBase):
 

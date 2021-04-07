@@ -31,6 +31,7 @@ config.plugins.iptvplayer.skstream_proxy = ConfigSelection(default="None", choic
                                                                                         ("proxy_2", _("Alternative proxy server (2)"))])
 config.plugins.iptvplayer.skstream_alt_domain = ConfigText(default="", fixed_size=False)
 
+
 def GetConfigList():
     optionList = []
     optionList.append(getConfigListEntry(_("Use proxy server:"), config.plugins.iptvplayer.skstream_proxy))
@@ -39,8 +40,10 @@ def GetConfigList():
     return optionList
 ###################################################
 
+
 def gettytul():
     return 'https://skstream.info/'
+
 
 class SKStream(CBaseHostClass):
  
@@ -475,6 +478,7 @@ class SKStream(CBaseHostClass):
             printExc()
         
         CBaseHostClass.endHandleService(self, index, refresh)
+
 
 class IPTVHost(CHostBase):
 

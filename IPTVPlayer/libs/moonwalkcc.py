@@ -33,8 +33,10 @@ config.plugins.iptvplayer.moonwalk_format = ConfigSelection(default="m3u8", choi
 config.plugins.iptvplayer.moonwalk_df_format = ConfigSelection(default=9999, choices=[(0, _("the worst")), (360, "360p"), (480, "480p"), (720, "720"), (9999, _("the best"))])
 config.plugins.iptvplayer.moonwalk_use_df = ConfigYesNo(default=False)
 
+
 class MoonwalkParser():
     USER_AGENT = 'Mozilla/5.0'
+
     def __init__(self):
         self.cm = common()
         self.HTTP_HEADER = {'User-Agent': self.USER_AGENT, 'Referer': ''}
@@ -198,6 +200,7 @@ class MoonwalkParser():
             if 'm3u8' == config.plugins.iptvplayer.moonwalk_format.value:
                 hlsUrl = strwithmeta(data['m3u8'], {'User-Agent': 'Mozilla/5.0 (iPad; U; CPU OS 3_2 like Mac OS X; en-us) AppleWebKit/531.21.10 (KHTML, like Gecko) Version/4.0.4 Mobile/7B334b Safari/531.21.10', 'Referer': url})
                 tmpTab = getDirectM3U8Playlist(hlsUrl)
+
                 def __getLinkQuality(itemLink):
                     return int(itemLink['heigth'])
                 maxRes = config.plugins.iptvplayer.moonwalk_df_format.value
@@ -208,6 +211,7 @@ class MoonwalkParser():
                     linksTab.append({'name': '[hls/m3u8] %sp' % __getLinkQuality(item), 'url': item['url']})
             else:
                 tmpTab = getF4MLinksWithMeta(data["manifest_f4m"])
+
                 def __getLinkQuality(itemLink):
                     printDBG(itemLink)
                     bitrate = int(self.cm.ph.getDataBeetwenMarkers(itemLink['name'], 'bitrate[', ']', False)[1])

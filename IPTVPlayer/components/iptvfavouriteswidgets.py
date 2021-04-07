@@ -77,6 +77,7 @@ class IPTVFavouritesAddNewGroupWidget(Screen):
     def iptvDoFinish(self, ret=None):
         self.close(self.group)
         
+
 class IPTVFavouritesAddItemWidget(Screen):
     def __init__(self, session, favItem, favourites=None, canAddNewGroup=True, ignoredGroups=[]):
         self.session = session
@@ -149,6 +150,7 @@ class IPTVFavouritesAddItemWidget(Screen):
     
     def iptvDoFinish(self, ret=None):
         self.close(self.result)
+
 
 class IPTVFavouritesMainWidget(Screen):
     sz_w = getDesktop(0).size().width() - 190

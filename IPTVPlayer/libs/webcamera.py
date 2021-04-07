@@ -21,10 +21,13 @@ import urllib.error
 ###################################################
 # Config options for HOST
 ###################################################
+
+
 def GetConfigList():
     optionList = []
     return optionList
 ###################################################
+
 
 class WebCameraApi(CBaseHostClass):
 

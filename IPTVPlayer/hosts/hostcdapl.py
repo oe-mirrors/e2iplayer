@@ -37,6 +37,7 @@ config.plugins.iptvplayer.cda_searchsort = ConfigSelection(default="best", choic
 config.plugins.iptvplayer.cda_login = ConfigText(default="", fixed_size=False)
 config.plugins.iptvplayer.cda_password = ConfigText(default="", fixed_size=False)
 
+
 def GetConfigList():
     optionList = []
     optionList.append(getConfigListEntry("Login:", config.plugins.iptvplayer.cda_login))
@@ -45,8 +46,10 @@ def GetConfigList():
     return optionList
 ###################################################
 
+
 def gettytul():
     return 'https://cda.pl/'
+
 
 class cda(CBaseHostClass, CaptchaHelper):
     
@@ -589,6 +592,7 @@ class cda(CBaseHostClass, CaptchaHelper):
             printExc()
         
         CBaseHostClass.endHandleService(self, index, refresh)
+
 
 class IPTVHost(CHostBase):
 

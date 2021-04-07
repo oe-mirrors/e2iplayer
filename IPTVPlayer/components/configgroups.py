@@ -24,6 +24,7 @@ from Components.config import config, getConfigListEntry, NumericalTextInput, Co
 from Tools.BoundFunction import boundFunction
 ###################################################
         
+
 class ConfigGroupsMenu(ConfigBaseWidget):
    
     def __init__(self, session):

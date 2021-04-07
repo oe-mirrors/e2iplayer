@@ -26,6 +26,7 @@ except Exception:
 def gettytul():
     return 'http://hdpopcorns.co/'
 
+
 class HDPopcornsCom(CBaseHostClass):
  
     def __init__(self):
@@ -51,6 +52,7 @@ class HDPopcornsCom(CBaseHostClass):
             addParams = dict(self.defaultParams)
         origBaseUrl = baseUrl
         baseUrl = self.cm.iriToUri(baseUrl)
+
         def _getFullUrl(url):
             if self.cm.isValidUrl(url):
                 return url
@@ -111,7 +113,6 @@ class HDPopcornsCom(CBaseHostClass):
                 else:
                     title = i
                 self.cacheFilters['ofrating'].append({'title': title, 'ofrating': i})
-        
         
         # quality
         tmpData = self.cm.ph.getDataBeetwenMarkers(data, 'ofquality', '</select>')[1]
@@ -405,6 +406,8 @@ class HDPopcornsCom(CBaseHostClass):
             printExc()
         
         CBaseHostClass.endHandleService(self, index, refresh)
+
+
 class IPTVHost(CHostBase):
 
     def __init__(self):

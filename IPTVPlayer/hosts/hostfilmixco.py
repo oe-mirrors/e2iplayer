@@ -31,6 +31,7 @@ config.plugins.iptvplayer.filmixco_alt_domain = ConfigText(default="", fixed_siz
 config.plugins.iptvplayer.filmixco_login = ConfigText(default="", fixed_size=False)
 config.plugins.iptvplayer.filmixco_password = ConfigText(default="", fixed_size=False)
 
+
 def GetConfigList():
     optionList = []
     optionList.append(getConfigListEntry(_("Alternative domain:"), config.plugins.iptvplayer.filmixco_alt_domain))
@@ -42,6 +43,7 @@ def GetConfigList():
 
 def gettytul():
     return 'https://filmix.co/'
+
 
 class FilmixCO(CBaseHostClass):
 
@@ -542,6 +544,7 @@ class FilmixCO(CBaseHostClass):
             printExc()
         
         CBaseHostClass.endHandleService(self, index, refresh)
+
 
 class IPTVHost(CHostBase):
 

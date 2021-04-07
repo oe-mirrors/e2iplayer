@@ -72,7 +72,6 @@ class UnshortenIt(object):
         if not domain:
             return uri, "No domain found in URI!"
 
-
         had_google_outbound, uri = self._clear_google_outbound_proxy(uri)
 
         if re.search(self._adfly_regex, domain, re.IGNORECASE) or type == 'adfly':
@@ -129,7 +128,6 @@ class UnshortenIt(object):
                         r = requests.head(uri, headers=HTTP_HEADER, timeout=self._timeout)
                     except (requests.exceptions.InvalidSchema, requests.exceptions.InvalidURL):
                         return uri, -1
-
 
                     retries = 0
                     if 'location' in r.headers and retries < self._maxretries:
@@ -241,7 +239,6 @@ class UnshortenIt(object):
             if not scripts:
                 return uri, "No script bodies found?"
 
-
             js = False
 
             for script in scripts:
@@ -249,7 +246,6 @@ class UnshortenIt(object):
                 script = re.sub(r"[\r\n\s]+\/\/\s*[^\r\n]+", "", script)
                 if re.search(r"\s*var\s*f\s*=\s*window\['init'\s*\+\s*'Lb'\s*\+\s*'js'\s*\+\s*''\];[\r\n\s]+", script):
                     js = script
-
 
             if not js:
                 return uri, "Could not find correct script?"
@@ -260,7 +256,6 @@ class UnshortenIt(object):
 
             assert token
 
-
             authKeyMatchStr = r"A(?:'\s*\+\s*')?u(?:'\s*\+\s*')?t(?:'\s*\+\s*')?h(?:'\s*\+\s*')?K(?:'\s*\+\s*')?e(?:'\s*\+\s*')?y"
             l1 = find_in_text(r"\s*params\['" + authKeyMatchStr + r"'\]\s*=\s*(\d+?);", js)
             l2 = find_in_text(r"\s*params\['" + authKeyMatchStr + r"'\]\s*=\s?params\['" + authKeyMatchStr + r"'\]\s*\+\s*(\d+?);", js)
@@ -270,14 +265,11 @@ class UnshortenIt(object):
 
             authkey = int(l1) + int(l2)
 
-
-
             p1_url = urljoin(baseloc, "/director/?t={tok}".format(tok=token))
             r2 = requests.get(p1_url, headers=HTTP_HEADER, timeout=self._timeout, cookies=r.cookies)
 
             p1_url = urljoin(baseloc, "/scripts/jquery.js?r={tok}&{key}".format(tok=token, key=l1))
             r2_1 = requests.get(p1_url, headers=HTTP_HEADER, timeout=self._timeout, cookies=r.cookies)
-
 
             time_left = 5.033 - (time.time() - firstGet)
             GetIPTVSleep().Sleep(max(time_left, 0))
@@ -290,7 +282,6 @@ class UnshortenIt(object):
                 return resp_json['Url'], r3.status_code
 
         return "Wat", "wat"
-
 
     def inValidate(self, s):
         # Original conditional:
@@ -306,7 +297,6 @@ class UnshortenIt(object):
     def _unshorten_adfocus(self, uri):
         orig_uri = uri
         try:
-
 
             r = requests.get(uri, headers=HTTP_HEADER, timeout=self._timeout)
             html = r.text
@@ -532,10 +522,12 @@ def unwrap_30x_only(uri, timeout=10):
     uri, status = unshortener.unwrap_30x(uri, timeout=timeout)
     return uri, status
 
+
 def unshorten_only(uri, type=None, timeout=10):
     unshortener = UnshortenIt()
     uri, status = unshortener.unshorten(uri, type=type)
     return uri, status
+
 
 def unshorten(uri, type=None, timeout=10):
     unshortener = UnshortenIt()

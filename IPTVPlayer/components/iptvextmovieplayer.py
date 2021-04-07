@@ -63,6 +63,7 @@ import time
 import socket
 ###################################################
 
+
 class ExtPlayerCommandsDispatcher():
     def __init__(self, owner):
         self.owner = owner
@@ -87,6 +88,7 @@ class ExtPlayerCommandsDispatcher():
     def play(self): 
         self.extPlayerSendCommand('PLAYBACK_CONTINUE')
         self.speedIdx = self.SEEK_SPEED_MAP.index(0)
+
     def pause(self):            
         self.extPlayerSendCommand('PLAYBACK_PAUSE')
         self.speedIdx = self.SEEK_SPEED_MAP.index(0)
@@ -109,9 +111,11 @@ class ExtPlayerCommandsDispatcher():
     def doSeek(self, diff):       
         self.extPlayerSendCommand('PLAYBACK_SEEK_RELATIVE', '%d' % diff)
         self.speedIdx = self.SEEK_SPEED_MAP.index(0)
+
     def doGoToSeek(self, arg):       
         self.extPlayerSendCommand('PLAYBACK_SEEK_ABS', arg)
         self.speedIdx = self.SEEK_SPEED_MAP.index(0)
+
     def doSeekFwd(self, arg): self.extPlayerSendCommand('PLAYBACK_FASTFORWARD', arg)
     def doSlowMotion(self, arg): self.extPlayerSendCommand('PLAYBACK_SLOWMOTION', arg)
     
@@ -126,11 +130,13 @@ class ExtPlayerCommandsDispatcher():
         return
         self.speedIdx += 1
         self.tipMode()
+
     def seekBack(self):
         printDBG('seekBack skipped')
         return
         self.speedIdx -= 1
         self.tipMode()
+
     def tipMode(self):
         printDBG("ExtPlayerCommandsDispatcher.tipMode speedIdx[%d]" % self.speedIdx)
         if self.speedIdx >= len(self.SEEK_SPEED_MAP):
@@ -158,9 +164,11 @@ class ExtPlayerCommandsDispatcher():
             printDBG(">> extPlayerSendCommand owner NONE")
         return ret
 
+
 class IPTVExtMoviePlayer(Screen):
     Y_CROPPING_GUARD = 0
     playback = {}
+
     def __prepareSkin(self):
         
         if self.subConfig['wrapping_enabled']:
@@ -885,7 +893,6 @@ class IPTVExtMoviePlayer(Screen):
                 currDir, tail = os_path.split(fileSRC)
             except Exception:
                 printExc()
-            
             
         fileMatch = re.compile("^.*?(:?\.%s)$" % '|\.'.join(IPTVSubtitlesHandler.getSupportedFormats()), re.IGNORECASE)
         self.openChild(boundFunction(self.childClosed, self.openSubtitlesFromFileCallback), IPTVFileSelectorWidget, currDir, _("Select subtitles file"), fileMatch)
@@ -1667,7 +1674,6 @@ class IPTVExtMoviePlayer(Screen):
                 elif "GST_MISSING_PLUGIN" == key:
                     self.showMessage(obj['msg'].encode('utf-8'), MessageBox.TYPE_INFO, None)
 
-                        
                 # {u'PLAYBACK_INFO': 
                 # {u'isSeeking': False, 
                 # u'BackWard': 0.0, 
@@ -2327,6 +2333,7 @@ class IPTVExtMoviePlayer(Screen):
             return IPTVExtMoviePlayerSummary
         return None
 
+
 class IPTVExtMoviePlayerSummary(Screen):
     try:
         summary_screenwidth = getDesktop(1).size().width()
@@ -2346,5 +2353,6 @@ class IPTVExtMoviePlayerSummary(Screen):
                         <convert type="ClockToText"></convert>
                 </widget>
             </screen>"""
+
         def __init__(self, session, parent):
                 Screen.__init__(self, session, parent=parent)

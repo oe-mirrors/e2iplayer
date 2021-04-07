@@ -30,6 +30,8 @@ import datetime
 # One instance of this class can be used only for 
 # one download
 ###################################################
+
+
 class WgetDownloader(BaseDownloader):
     # wget status
     WGET_STS = enum(NONE='WGET_NONE',

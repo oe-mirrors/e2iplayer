@@ -35,6 +35,7 @@ config.plugins.iptvplayer.putlockertv_proxy = ConfigSelection(default="None", ch
                                                                                            ("proxy_2", _("Alternative proxy server (2)"))])
 config.plugins.iptvplayer.putlockertv_alt_domain = ConfigText(default="", fixed_size=False)
 
+
 def GetConfigList():
     optionList = []
     optionList.append(getConfigListEntry(_("Use proxy server:"), config.plugins.iptvplayer.putlockertv_proxy))
@@ -46,6 +47,7 @@ def GetConfigList():
 
 def gettytul():
     return 'https://putlockertv.to/'
+
 
 class PutlockerTvTo(CBaseHostClass):
  
@@ -604,6 +606,7 @@ class PutlockerTvTo(CBaseHostClass):
             printExc()
         
         CBaseHostClass.endHandleService(self, index, refresh)
+
 
 class IPTVHost(CHostBase):
 

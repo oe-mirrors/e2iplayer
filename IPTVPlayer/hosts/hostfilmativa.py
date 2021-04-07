@@ -21,9 +21,9 @@ import urllib.error
 def gettytul():
     return 'https://filmativa.xyz/'
 
+
 class Filmativa(CBaseHostClass):
     
- 
     def __init__(self):
         CBaseHostClass.__init__(self, {'history': 'Filmativa', 'cookie': 'filmativa.cookie'})
 
@@ -49,7 +49,6 @@ class Filmativa(CBaseHostClass):
                       {'category': 'list_series', 'title': _('New episodes'), 'url': self.S_MAIN_URL + 'nove-epizode/'},
                       {'category': 'list_series', 'title': _('Popular'), 'url': self.S_MAIN_URL + 'popularno/'},
                  ]
-
 
         self.USER_AGENT = 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/73.0.3683.103 Safari/537.36'
         self.HEADER = {'User-Agent': self.USER_AGENT, 'Accept': 'text/html', 'Accept-Encoding': 'gzip'}
@@ -324,6 +323,8 @@ class Filmativa(CBaseHostClass):
             printExc()
         
         CBaseHostClass.endHandleService(self, index, refresh)
+
+
 class IPTVHost(CHostBase):
 
     def __init__(self):

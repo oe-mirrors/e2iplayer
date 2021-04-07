@@ -27,6 +27,7 @@ except Exception:
 def gettytul():
     return 'https://streaming-series.watch/'
 
+
 class StreamingSeriesWatch(CBaseHostClass):
     
     def __init__(self):
@@ -311,6 +312,8 @@ class StreamingSeriesWatch(CBaseHostClass):
             printExc()
         
         CBaseHostClass.endHandleService(self, index, refresh)
+
+
 class IPTVHost(CHostBase):
 
     def __init__(self):

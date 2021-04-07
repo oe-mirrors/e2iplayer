@@ -25,14 +25,17 @@ from Components.config import config, ConfigSelection, getConfigListEntry
 ###################################################
 config.plugins.iptvplayer.liveleak_searchsort = ConfigSelection(default="relevance", choices=[("relevance", "Najtrafniejsze"), ("date", "Najnowsze"), ("views", "Popularność"), ("votes", "Najlepiej oceniane")])
 
+
 def GetConfigList():
     optionList = []
     optionList.append(getConfigListEntry("Sortuj wyniki wyszukiwania po:", config.plugins.iptvplayer.liveleak_searchsort))
     return optionList
 ###################################################
 
+
 def gettytul():
     return 'https://liveleak.com/'
+
 
 class LiveLeak(CBaseHostClass):
     
@@ -199,6 +202,7 @@ class LiveLeak(CBaseHostClass):
             self.listsHistory({'name': 'history', 'category': 'search'}, 'desc', _("Type: "))
         else:
             printExc()
+
 
 class IPTVHost(CHostBase):
 

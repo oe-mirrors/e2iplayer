@@ -41,6 +41,7 @@ config.plugins.iptvplayer.serienstreamto_langpreference = ConfigSelection(defaul
 config.plugins.iptvplayer.serienstreamto_login = ConfigText(default="", fixed_size=False)
 config.plugins.iptvplayer.serienstreamto_password = ConfigText(default="", fixed_size=False)
 
+
 def GetConfigList():
     optionList = []
     optionList.append(getConfigListEntry(_("Your language preference:"), config.plugins.iptvplayer.serienstreamto_langpreference))
@@ -50,8 +51,10 @@ def GetConfigList():
     return optionList
 ###################################################
 
+
 def gettytul():
     return 'https://serienstream.to/'
+
 
 class SerienStreamTo(CBaseHostClass, CaptchaHelper):
  
@@ -66,7 +69,6 @@ class SerienStreamTo(CBaseHostClass, CaptchaHelper):
         
         self.MAIN_URL = 'https://s.to/'
         self.DEFAULT_ICON_URL = 'https://s.to/public/img/facebook.jpg'
-        
         
         self.MAIN_CAT_TAB = [{'category': 'all_series', 'title': 'Alle Serien', 'url': self.getFullUrl('/serien-alphabet')},
                              {'category': 'list_abc', 'title': _('A-Z'), 'url': self.MAIN_URL},
@@ -330,6 +332,7 @@ class SerienStreamTo(CBaseHostClass, CaptchaHelper):
         # 1 - de, 2 - en, 3 - de_sub
         langPreference = config.plugins.iptvplayer.serienstreamto_langpreference.value.replace('de_sub', '3').replace('de', '1').replace('en', '2').split(',')
         printDBG(langPreference)
+
         def compare(itemX, itemY):
             x = itemX['lang_id']
             if x in langPreference:
@@ -627,6 +630,8 @@ class SerienStreamTo(CBaseHostClass, CaptchaHelper):
             printExc()
         
         CBaseHostClass.endHandleService(self, index, refresh)
+
+
 class IPTVHost(CHostBase):
 
     def __init__(self):

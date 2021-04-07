@@ -26,6 +26,7 @@ except Exception:
 def gettytul():
     return 'http://kijk.nl/'
 
+
 class KijkNL(CBaseHostClass):
     
     def __init__(self):
@@ -384,6 +385,7 @@ class KijkNL(CBaseHostClass):
             printExc()
         
         CBaseHostClass.endHandleService(self, index, refresh)
+
 
 class IPTVHost(CHostBase):
 

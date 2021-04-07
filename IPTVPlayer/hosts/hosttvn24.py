@@ -20,14 +20,17 @@ from Components.config import config, ConfigSelection, getConfigListEntry
 ###################################################
 config.plugins.iptvplayer.TVN24httpType = ConfigSelection(default="http://", choices=[("http://", "http://"), ("https://", "https://")])
    
+
 def GetConfigList():
     optionList = []
     optionList.append(getConfigListEntry("Typ połączenia:", config.plugins.iptvplayer.TVN24httpType))
     return optionList
 ###################################################
 
+
 def gettytul():
     return 'TVN 24'
+
 
 class Tvn24(CBaseHostClass):
     HOST = 'Apache-HttpClient/UNAVAILABLE (java 1.4)'

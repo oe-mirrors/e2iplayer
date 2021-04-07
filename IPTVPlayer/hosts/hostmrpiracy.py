@@ -47,6 +47,7 @@ config.plugins.iptvplayer.mrpiracy_bypassrecaptcha = ConfigSelection(default="No
                                                                                                  ("9kw.eu", "https://9kw.eu/"),
                                                                                                  ("2captcha.com", "http://2captcha.com/")])
 
+
 def GetConfigList():
     optionList = []
     optionList.append(getConfigListEntry(_("e-mail"), config.plugins.iptvplayer.mrpiracy_login))
@@ -61,11 +62,14 @@ def GetConfigList():
     return optionList
 ###################################################
 
+
 def gettytul():
     return 'http://mrpiracy.site/'
 
+
 class MRPiracyGQ(CBaseHostClass, CaptchaHelper):
     LINKS_CACHE = {}
+
     def __init__(self):
         CBaseHostClass.__init__(self, {'history': 'mrpiracy.gq', 'cookie': 'mrpiracygq.cookie'})
         self.DEFAULT_ICON_URL = 'https://pbs.twimg.com/profile_images/790277002544766976/w_TjhbiK.jpg'
@@ -123,7 +127,6 @@ class MRPiracyGQ(CBaseHostClass, CaptchaHelper):
                              {'category': 'search_history', 'title': _('Search history'), } 
                             ]
     
-        
     def getFullUrl(self, url):
         if url.startswith('..'):
             url = url[2:]
@@ -730,6 +733,7 @@ class MRPiracyGQ(CBaseHostClass, CaptchaHelper):
             printExc()
         
         CBaseHostClass.endHandleService(self, index, refresh)
+
 
 class IPTVHost(CHostBase):
 

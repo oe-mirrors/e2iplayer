@@ -40,6 +40,7 @@ from Screens.MessageBox import MessageBox
 config.plugins.iptvplayer.treetv_login = ConfigText(default="", fixed_size=False)
 config.plugins.iptvplayer.treetv_password = ConfigText(default="", fixed_size=False)
 
+
 def GetConfigList():
     optionList = []
     optionList.append(getConfigListEntry(_("e-mail"), config.plugins.iptvplayer.treetv_login))
@@ -50,6 +51,7 @@ def GetConfigList():
 
 def gettytul():
     return 'http://tree.tv/'
+
 
 class TreeTv(CBaseHostClass):
  
@@ -527,6 +529,8 @@ class TreeTv(CBaseHostClass):
             printExc()
         
         CBaseHostClass.endHandleService(self, index, refresh)
+
+
 class IPTVHost(CHostBase):
 
     def __init__(self):

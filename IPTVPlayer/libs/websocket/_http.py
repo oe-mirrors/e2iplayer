@@ -35,6 +35,7 @@ from ._ssl_compat import *
 
 __all__ = ["proxy_info", "connect", "read_headers"]
 
+
 class proxy_info(object):
     def __init__(self, **options):
         self.host = options.get("http_proxy_host", None)
@@ -46,6 +47,7 @@ class proxy_info(object):
             self.port = 0
             self.auth = None
             self.no_proxy = None
+
 
 def connect(url, options, proxy, socket):
     hostname, port, resource, is_secure = parse_url(url)
@@ -172,6 +174,7 @@ def _ssl_socket(sock, user_sslopt, hostname):
 
     return sock
 
+
 def _tunnel(sock, host, port, auth):
     debug("Connecting proxy...")
     connect_header = "CONNECT %s:%d HTTP/1.0\r\n" % (host, port)
@@ -197,6 +200,7 @@ def _tunnel(sock, host, port, auth):
             "failed CONNECT via proxy status: %r" % status)
     
     return sock
+
 
 def read_headers(sock):
     status = None

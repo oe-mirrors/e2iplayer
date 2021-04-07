@@ -36,10 +36,12 @@ from Screens.MessageBox import MessageBox
 # Config options for HOST
 ###################################################
 
+
 def GetConfigList():
     optionList = []
     return optionList
 ###################################################
+
 
 class Napisy24plProvider(CBaseSubProviderClass): 
     
@@ -416,6 +418,7 @@ class Napisy24plProvider(CBaseSubProviderClass):
             self.getSubtitles(self.currItem)
         
         CBaseSubProviderClass.endHandleService(self, index, refresh)
+
 
 class IPTVSubProvider(CSubProviderBase):
 

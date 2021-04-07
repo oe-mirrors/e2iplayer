@@ -42,8 +42,10 @@ class E2iInput(Input):
         if self.e2iTimeoutCallback:
             self.e2iTimeoutCallback()
 
+
 class E2iVKSelectionList(IPTVListComponentBase):
     ICONS_FILESNAMES = {'on': 'radio_button_on.png', 'off': 'radio_button_off.png'}
+
     def __init__(self, withRatioButton=True):
         IPTVListComponentBase.__init__(self)
         if getDesktop(0).size().width() == 1920:
@@ -104,6 +106,7 @@ class E2iVKSelectionList(IPTVListComponentBase):
         except Exception:
             printExc()
         return res
+
 
 class E2iVirtualKeyBoard(Screen):
     FOCUS_LANGUAGES = 1

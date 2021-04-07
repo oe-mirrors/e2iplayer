@@ -35,6 +35,7 @@ from Screens.MessageBox import MessageBox
 config.plugins.iptvplayer.orthobulletscom_login = ConfigText(default="", fixed_size=False)
 config.plugins.iptvplayer.orthobulletscom_password = ConfigText(default="", fixed_size=False)
 
+
 def GetConfigList():
     optionList = []
     optionList.append(getConfigListEntry(_("login") + ":", config.plugins.iptvplayer.orthobulletscom_login))
@@ -45,6 +46,7 @@ def GetConfigList():
 
 def gettytul():
     return 'https://orthobullets.com/'
+
 
 class OrthoBullets(CBaseHostClass):
 
@@ -67,6 +69,7 @@ class OrthoBullets(CBaseHostClass):
     def getPage(self, baseUrl, addParams={}, post_data=None):
         if addParams == {}:
             addParams = dict(self.defaultParams)
+
         def _getFullUrl(url):
             if self.cm.isValidUrl(url):
                 return url
@@ -301,6 +304,7 @@ class OrthoBullets(CBaseHostClass):
             printExc()
         
         CBaseHostClass.endHandleService(self, index, refresh)
+
 
 class IPTVHost(CHostBase):
 

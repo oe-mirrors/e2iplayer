@@ -15,11 +15,13 @@ from binascii import b2a_hex
 
 defaultSeed = "An arbirary 32 byte string!!!!!!"  # can be changed by the truely paranoid
 
+
 class PRN_Rijndael:
     """ A Psudeo Random Number Generator based on Rijndael_256k_256b
         The algorithm is based on Section 13.4 of:
         "AES Proposal: Rijndael", Joan Daemen, Vincent Rijmen
     """
+
     def __init__(self, seed=defaultSeed):
         self.__algorithm = Rijndael(padding=noPadding(), keySize=32, blockSize=32)
         self.reset()

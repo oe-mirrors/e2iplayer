@@ -25,6 +25,7 @@ from Components.config import config
 def gettytul():
     return 'http://okgoals.com/'
 
+
 class OkGoals(CBaseHostClass):
  
     def __init__(self):
@@ -43,6 +44,7 @@ class OkGoals(CBaseHostClass):
                              {'category': 'search', 'title': _('Search'), 'search_item': True, },
                              {'category': 'search_history', 'title': _('Search history'), },
                             ]
+
     def getFullUrl(self, url):
         if url.startswith('//'):
             url = 'http:' + url
@@ -181,7 +183,6 @@ class OkGoals(CBaseHostClass):
             urlTab.extend(self.up.getVideoLinkExt(videoUrl))
         return urlTab
 
-        
     def getVideoLinks(self, videoUrl):
         printDBG("OkGoals.getVideoLinks [%s]" % videoUrl)
         urlTab = []
@@ -261,6 +262,8 @@ class OkGoals(CBaseHostClass):
             printExc()
         
         CBaseHostClass.endHandleService(self, index, refresh)
+
+
 class IPTVHost(CHostBase):
 
     def __init__(self):

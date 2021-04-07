@@ -7,6 +7,7 @@ import urllib.error
 import sys
 import traceback
 
+
 def formatExceptionInfo(maxTBlevel=1):
     cla, exc, trbk = sys.exc_info()
     excName = cla.__name__
@@ -20,6 +21,7 @@ def formatExceptionInfo(maxTBlevel=1):
     trbk = None
     return "%s\n%s\n%s" % (excName, excArgs, excTb)
     
+
 def CheckVer(params):
     url = "http://iptvplayer.vline.pl/check.php?" + params
     f = urllib.request.urlopen(url)
@@ -27,12 +29,14 @@ def CheckVer(params):
     print("CheckVer [%s]\n" % data)
     f.close()
 
+
 def download(url, file):
     try:
         (tmpfile, headers) = urllib.request.urlretrieve(url, file)
         return 0, str(headers)
     except Exception:
         return 2, str(formatExceptionInfo())
+
 
 if __name__ == "__main__":
     if len(sys.argv) < 3:

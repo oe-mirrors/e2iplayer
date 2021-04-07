@@ -18,8 +18,10 @@ from Plugins.Extensions.IPTVPlayer.components.cover import Cover3
 from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, GetIPTVPlayerVerstion, GetIconDir, GetAvailableIconSize
 from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _
 
+
 class PlayerSelectorWidget(Screen):
     LAST_SELECTION = {}
+
     def __init__(self, session, inList, outList, numOfLockedItems=0, groupName='', groupObj=None):
         printDBG("PlayerSelectorWidget.__init__ --------------------------------")
         screenwidth = getDesktop(0).size().width()
@@ -215,11 +217,9 @@ class PlayerSelectorWidget(Screen):
             "menu": self.keyMenu,
         }, -1)
         
-
         self["marker"] = Cover3()
         self["page_marker"] = Cover3()
         self["menu"] = Cover3()
-        
         
         for y in range(1, self.numOfRow + 1):
             for x in range(1, self.numOfCol + 1):
@@ -382,6 +382,7 @@ class PlayerSelectorWidget(Screen):
         self.calcMarkerPosX()
         self.moveMarker(prev_idx)
         return
+
     def keyLeft(self):
         prev_idx = self.currLine * self.numOfCol + self.dispX
         self.dispX -= 1
@@ -395,6 +396,7 @@ class PlayerSelectorWidget(Screen):
         self.calcMarkerPosY()
         self.moveMarker(prev_idx)
         return
+
     def keyUp(self):
         prev_idx = self.currLine * self.numOfCol + self.dispX
         self.currLine -= 1

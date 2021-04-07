@@ -23,6 +23,7 @@ import urllib.error
 def gettytul():
     return 'https://luxveritatis.pl/'
 
+
 class LuxVeritatisPL(CBaseHostClass):
     
     def __init__(self):
@@ -388,6 +389,7 @@ class LuxVeritatisPL(CBaseHostClass):
             printExc()
         
         CBaseHostClass.endHandleService(self, index, refresh)
+
 
 class IPTVHost(CHostBase):
 

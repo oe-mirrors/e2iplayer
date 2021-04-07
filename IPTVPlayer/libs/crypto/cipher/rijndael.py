@@ -16,8 +16,10 @@
 
 from .base import BlockCipher, padWithPadLen, noPadding
 
+
 class Rijndael(BlockCipher):
     """ Rijndael encryption algorithm """
+
     def __init__(self, key=None, padding=padWithPadLen(), keySize=16, blockSize=16):
         self.name = 'RIJNDAEL'
         self.keySize = keySize
@@ -55,7 +57,6 @@ class Rijndael(BlockCipher):
         AddRoundKey(self, self.__expandedKey[self.Nr * self.Nb:(self.Nr + 1) * self.Nb])
         return self._toBString(self.state)
 
-
     def decryptBlock(self, encryptedBlock):
         """ decrypt a block (array of bytes) """
         self.state = self._toBlock(encryptedBlock)
@@ -82,6 +83,8 @@ class Rijndael(BlockCipher):
             for rowElement in col:
                 l.append(chr(rowElement))
         return ''.join(l)
+
+
 #-------------------------------------
 """    Number of rounds Nr = NrTable[Nb][Nk]
 
@@ -93,6 +96,8 @@ NrTable = {4: {4: 10, 5: 11, 6: 12, 7: 13, 8: 14},
             7: {4: 13, 5: 13, 6: 13, 7: 13, 8: 14},
             8: {4: 14, 5: 14, 6: 14, 7: 14, 8: 14}}
 #-------------------------------------
+
+
 def keyExpansion(algInstance, keyString):
     """ Expand a string of size keySize into a larger array """
     Nk, Nb, Nr = algInstance.Nk, algInstance.Nb, algInstance.Nr # for readability
@@ -109,11 +114,14 @@ def keyExpansion(algInstance, keyString):
         w.append([w[i - Nk][byte] ^ temp[byte] for byte in range(4)])
     return w
 
+
 Rcon = (0, 0x01, 0x02, 0x04, 0x08, 0x10, 0x20, 0x40, 0x80, 0x1b, 0x36,     # note extra '0' !!!
         0x6c, 0xd8, 0xab, 0x4d, 0x9a, 0x2f, 0x5e, 0xbc, 0x63, 0xc6,
         0x97, 0x35, 0x6a, 0xd4, 0xb3, 0x7d, 0xfa, 0xef, 0xc5, 0x91)
 
 #-------------------------------------
+
+
 def AddRoundKey(algInstance, keyBlock):
     """ XOR the algorithm state with a block of key material """
     for column in range(algInstance.Nb):
@@ -121,15 +129,18 @@ def AddRoundKey(algInstance, keyBlock):
             algInstance.state[column][row] ^= keyBlock[column][row]
 #-------------------------------------
 
+
 def SubBytes(algInstance):
     for column in range(algInstance.Nb):
         for row in range(4):
             algInstance.state[column][row] = Sbox[algInstance.state[column][row]]
 
+
 def InvSubBytes(algInstance):
     for column in range(algInstance.Nb):
         for row in range(4):
             algInstance.state[column][row] = InvSbox[algInstance.state[column][row]]
+
 
 Sbox = (0x63, 0x7c, 0x77, 0x7b, 0xf2, 0x6b, 0x6f, 0xc5,
            0x30, 0x01, 0x67, 0x2b, 0xfe, 0xd7, 0xab, 0x76,
@@ -207,6 +218,8 @@ shiftOffset = {4: (0, 1, 2, 3),
                  6: (0, 1, 2, 3),
                  7: (0, 1, 2, 4),
                  8: (0, 1, 3, 4)}
+
+
 def ShiftRows(algInstance):
     tmp = [0] * algInstance.Nb   # list of size Nb
     for r in range(1, 4):       # row 0 reamains unchanged and can be skipped
@@ -214,6 +227,8 @@ def ShiftRows(algInstance):
             tmp[c] = algInstance.state[(c + shiftOffset[algInstance.Nb][r]) % algInstance.Nb][r]
         for c in range(algInstance.Nb):
             algInstance.state[c][r] = tmp[c]
+
+
 def InvShiftRows(algInstance):
     tmp = [0] * algInstance.Nb   # list of size Nb
     for r in range(1, 4):       # row 0 reamains unchanged and can be skipped
@@ -222,6 +237,8 @@ def InvShiftRows(algInstance):
         for c in range(algInstance.Nb):
             algInstance.state[c][r] = tmp[c]
 #-------------------------------------
+
+
 def MixColumns(a):
     Sprime = [0, 0, 0, 0]
     for j in range(a.Nb):    # for each column
@@ -231,6 +248,7 @@ def MixColumns(a):
         Sprime[3] = mul(3, a.state[j][0]) ^ mul(1, a.state[j][1]) ^ mul(1, a.state[j][2]) ^ mul(2, a.state[j][3])
         for i in range(4):
             a.state[j][i] = Sprime[i]
+
 
 def InvMixColumns(a):
     """ Mix the four bytes of every column in a linear way
@@ -245,6 +263,8 @@ def InvMixColumns(a):
             a.state[j][i] = Sprime[i]
 
 #-------------------------------------
+
+
 def mul(a, b):
     """ Multiply two elements of GF(2^m)
         needed for MixColumn and InvMixColumn """
@@ -252,6 +272,7 @@ def mul(a, b):
         return Alogtable[(Logtable[a] + Logtable[b]) % 255]
     else:
         return 0
+
 
 Logtable = (0, 0, 25, 1, 50, 2, 26, 198, 75, 199, 27, 104, 51, 238, 223, 3,
            100, 4, 224, 14, 52, 141, 129, 239, 76, 113, 8, 200, 248, 105, 28, 193,

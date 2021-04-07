@@ -21,11 +21,13 @@ from crypto.cipher.icedoll import Icedoll
 from crypto.errors import IntegrityCheckError
 from random import Random  # should change to crypto.random!!!
 
+
 class Trolldoll(Icedoll):
     """ Trolldoll encryption algorithm
         based on Icedoll, which is based on Rijndael
         Trolldoll adds an 'IV' and integrity checking to Icedoll
     """
+
     def __init__(self, key=None, keySize=32, blockSize=32, tapRound=6, extraRounds=6, micSize=16, ivSize=16):
         """  """
         Icedoll.__init__(self, key=None, keySize=32, blockSize=32, tapRound=6, extraRounds=6)

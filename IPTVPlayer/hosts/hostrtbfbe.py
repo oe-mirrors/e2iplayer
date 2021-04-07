@@ -38,6 +38,7 @@ from Screens.MessageBox import MessageBox
 config.plugins.iptvplayer.rtbfbe_login = ConfigText(default="", fixed_size=False)
 config.plugins.iptvplayer.rtbfbe_password = ConfigText(default="", fixed_size=False)
 
+
 def GetConfigList():
     optionList = []
     optionList.append(getConfigListEntry(_("e-mail") + ":", config.plugins.iptvplayer.rtbfbe_login))
@@ -45,11 +46,14 @@ def GetConfigList():
     return optionList
 ###################################################
 
+
 def gettytul():
     return 'https://www.rtbf.be/'
 
+
 class RTBFBE(CBaseHostClass):
     CHECK_GEO_LOCK = True
+
     def __init__(self):
         CBaseHostClass.__init__(self, {'history': 'rtbf.be', 'cookie': 'rtbf.be.cookie'})
         self.USER_AGENT = 'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:40.0) Gecko/20100101 Firefox/40.0'
@@ -732,6 +736,7 @@ class RTBFBE(CBaseHostClass):
             printExc()
         
         CBaseHostClass.endHandleService(self, index, refresh)
+
 
 class IPTVHost(CHostBase):
 

@@ -27,14 +27,17 @@ except Exception:
 ###################################################
 # None
 
+
 def GetConfigList():
     optionList = []
     # None
     return optionList
 ###################################################
 
+
 def gettytul():
     return 'http://ninateka.pl/'
+
 
 class Ninateka(CBaseHostClass):
     def __init__(self):
@@ -46,7 +49,6 @@ class Ninateka(CBaseHostClass):
         self.cm = common()
         self.history = CSearchHistoryHelper('ninateka')
 
-        
         self.MAIN_URL = 'http://ninateka.pl/'
         self.VIDEOS_URL = self.getFullUrl('filmy?MediaType=video&Paid=False&CategoryCodenames=')
         self.SEARCH_URL = self.VIDEOS_URL + '&SearchQuery='
@@ -101,6 +103,7 @@ class Ninateka(CBaseHostClass):
         try:
             arg = self.cm.ph.getDataBeetwenMarkers(data, '(playerOptionsWithMainSource,', ')', False)[1].strip()
             arg = int(arg)
+
             def _repFun(item):
                 url = ''
                 if not self.cm.isValidUrl(item):
@@ -250,6 +253,7 @@ class Ninateka(CBaseHostClass):
     #WRONG WAY
         else:
             printDBG('handleService WRONG WAY')
+
 
 class IPTVHost(CHostBase):
 

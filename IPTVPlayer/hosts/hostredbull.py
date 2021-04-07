@@ -26,6 +26,7 @@ from datetime import timedelta
 # Config options for HOST
 ###################################################
 
+
 def GetConfigList():
     optionList = []
     return optionList
@@ -34,6 +35,7 @@ def GetConfigList():
 
 def gettytul():
     return 'http://redbull.tv/'
+
 
 class Redbull(CBaseHostClass):
 
@@ -216,7 +218,6 @@ class Redbull(CBaseHostClass):
             params = {'title': title, 'icon': icon, 'desc': '[' + time + ']', 'url': url}
             self.addVideo(params)
 
-
     def getLinksForVideo(self, cItem):
         urlsTab = []
 
@@ -245,7 +246,6 @@ class Redbull(CBaseHostClass):
                 urlsTab.append({'name': name, 'url': item['url'], 'need_resolve': 0, 'bitrate': item['bitrate'], 'original': ''})
             urlsTab.sort(key=lambda x: x['bitrate'], reverse=True)
             return urlsTab
-
 
     def handleService(self, index, refresh=0, searchPattern='', searchType=''):
         printDBG('handleService start')
@@ -281,6 +281,7 @@ class Redbull(CBaseHostClass):
             printExc()
         
         CBaseHostClass.endHandleService(self, index, refresh)
+
 
 class IPTVHost(CHostBase):
 

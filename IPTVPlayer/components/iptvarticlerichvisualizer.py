@@ -32,8 +32,10 @@ import os
 from Tools.LoadPixmap import LoadPixmap
 ###################################################
 
+
 class IPTVArticleRichVisualizer(Screen):
     MAX_RICH_DESC_ROW_NUM = 5
+
     def __prepareSkin(self):
         skin = """
                     <screen name="IPTVArticleRichVisualizerWidget" position="center,center" size="1050,625" title="Info...">
@@ -367,7 +369,6 @@ class IPTVArticleRichVisualizer(Screen):
         self.newPage(page)
     
     #######################################################################
-
 
     def key_ok(self):
         self.showSpinner()

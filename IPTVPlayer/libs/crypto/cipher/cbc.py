@@ -23,6 +23,7 @@ class CBC(BlockCipher):
         algorithms.  The initialization (IV) is automatic if set to None.  Padding
         is also automatic based on the Pad class used to initialize the algorithm
     """
+
     def __init__(self, blockCipherInstance, padding=padWithPadLen()):
         """ CBC algorithms are created by initializing with a BlockCipher instance """
         self.baseCipher = blockCipherInstance

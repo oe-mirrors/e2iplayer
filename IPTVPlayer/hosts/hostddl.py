@@ -34,6 +34,7 @@ config.plugins.iptvplayer.ddlme_lang = ConfigSelection(default="", choices=[("",
                                                                                 ("de", "de"),
                                                                                 ("en", "en")])
 
+
 def GetConfigList():
     optionList = []
     optionList.append(getConfigListEntry(_("Language"), config.plugins.iptvplayer.ddlme_lang))
@@ -41,8 +42,10 @@ def GetConfigList():
     return optionList
 ###################################################
 
+
 def gettytul():
     return 'http://ddl.me/'
+
 
 class DDLMe(CBaseHostClass):
 
@@ -668,6 +671,7 @@ class DDLMe(CBaseHostClass):
             printExc()
         
         CBaseHostClass.endHandleService(self, index, refresh)
+
 
 class IPTVHost(CHostBase):
 

@@ -35,6 +35,7 @@ from os import remove as os_remove
 from datetime import timedelta
 ###################################################
 
+
 class E2iPlayerBufferingWidget(Screen):
     NUM_OF_ICON_FRAMES = 8
     #######################
@@ -464,7 +465,6 @@ class E2iPlayerBufferingWidget(Screen):
                 lFileSize = '??'
             else:
                 lFileSize = formatBytes(float(localSize))
-        
         
         # download speed
         dSpeed = self.downloader.getDownloadSpeed()

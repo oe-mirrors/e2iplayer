@@ -29,6 +29,7 @@ from Tools.BoundFunction import boundFunction
 from os import path as os_path, chmod as os_chmod
 ###################################################
 
+
 class CListItem:
     def __init__(self, name='', fullDir='', type='dir'):
         self.type = type
@@ -41,10 +42,12 @@ class CListItem:
     def getTextColor(self):
         return None
 
+
 class IPTVDirBrowserList(IPTVMainNavigatorList):
     def __init__(self):
         self.ICONS_FILESNAMES = {'dir': 'CategoryItem.png', 'file': 'ArticleItem.png'}
         IPTVMainNavigatorList.__init__(self)
+
 
 class IPTVDirectorySelectorWidget(Screen):
     screenwidth = getDesktop(0).size().width()
@@ -295,6 +298,7 @@ class IPTVDirectorySelectorWidget(Screen):
             else:
                 self.session.open(MessageBox, msg, type=MessageBox.TYPE_INFO, timeout=5)
 
+
 class IPTVFileSelectorWidget(IPTVDirectorySelectorWidget):
     screenwidth = getDesktop(0).size().width()
     if screenwidth and screenwidth == 1920:  
@@ -311,6 +315,7 @@ class IPTVFileSelectorWidget(IPTVDirectorySelectorWidget):
             <widget name="curr_dir"    position="10,50"  zPosition="2"  size="600,35" valign="center"  halign="left"   font="Regular;18" transparent="1" foregroundColor="white" />
             <widget name="list"        position="10,85"  zPosition="1"  size="580,335" transparent="1" scrollbarMode="showOnDemand" enableWrapAround="1" />
         </screen>"""      
+
     def __init__(self, session, currDir, title="File browser", fileMatch=None):
         printDBG("IPTVFileSelectorWidget.__init__ -------------------------------")
         IPTVDirectorySelectorWidget.__init__(self, session, currDir, title)

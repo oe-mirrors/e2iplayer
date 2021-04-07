@@ -40,6 +40,7 @@ config.plugins.iptvplayer.hdsto_proxy = ConfigSelection(default="None", choices=
 config.plugins.iptvplayer.hdsto_login = ConfigText(default="", fixed_size=False)
 config.plugins.iptvplayer.hdsto_password = ConfigText(default="", fixed_size=False)
 
+
 def GetConfigList():
     optionList = []
     optionList.append(getConfigListEntry(_("Use proxy server:"), config.plugins.iptvplayer.hdsto_proxy))
@@ -48,8 +49,10 @@ def GetConfigList():
     return optionList
 ###################################################
 
+
 def gettytul():
     return 'http://hds.to/'
+
 
 class HDSTo(CBaseHostClass):
 
@@ -597,6 +600,7 @@ class HDSTo(CBaseHostClass):
             printExc()
         
         CBaseHostClass.endHandleService(self, index, refresh)
+
 
 class IPTVHost(CHostBase):
 

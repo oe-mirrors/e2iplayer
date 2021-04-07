@@ -35,6 +35,7 @@ from Screens.MessageBox import MessageBox
 config.plugins.iptvplayer.streamliveto_login = ConfigText(default="", fixed_size=False)
 config.plugins.iptvplayer.streamliveto_password = ConfigText(default="", fixed_size=False)
 
+
 def GetConfigList():
     optionList = []
     optionList.append(getConfigListEntry(_("Login") + ": ", config.plugins.iptvplayer.streamliveto_login))
@@ -45,6 +46,7 @@ def GetConfigList():
 def gettytul():
     return 'https://streamlive.to/'
 
+
 class StreamLiveTo(CBaseHostClass):
     HTTP_HEADER = {'User-Agent': 'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:46.0) Gecko/20100101 Firefox/46.0', 'Accept': 'text/html'}
     HTTP_MOBILE_HEADER = {'User-Agent': 'Mozilla/5.0 (iPad; U; CPU OS 3_2 like Mac OS X; en-us) AppleWebKit/531.21.10 (KHTML, like Gecko) Version/4.0.4 Mobile/7B334b Safari/531.21.10', 'Accept': 'text/html'}
@@ -54,7 +56,6 @@ class StreamLiveTo(CBaseHostClass):
                     {'category': 'search', 'title': _('Search'), 'search_item': True},
                     {'category': 'search_history', 'title': _('Search history')}]
 
- 
     def __init__(self):
         CBaseHostClass.__init__(self, {'history': 'StreamLiveTo.tv', 'cookie': 'streamliveto.cookie'})
         self.defaultParams = {'header': self.HTTP_HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
@@ -457,6 +458,8 @@ class StreamLiveTo(CBaseHostClass):
             printExc()
         
         CBaseHostClass.endHandleService(self, index, refresh)
+
+
 class IPTVHost(CHostBase):
 
     def __init__(self):

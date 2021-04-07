@@ -22,6 +22,7 @@ from Components.config import config, getConfigListEntry, NumericalTextInput
 from Tools.BoundFunction import boundFunction
 ###################################################
 
+
 class ConfigHostMenu(ConfigBaseWidget):
    
     def __init__(self, session, hostName):
@@ -54,6 +55,7 @@ class ConfigHostMenu(ConfigBaseWidget):
         except Exception:
             pass
         
+
 class ConfigHostsMenu(ConfigBaseWidget):
    
     def __init__(self, session, listOfHostsNames):

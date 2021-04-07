@@ -35,6 +35,7 @@ def GetConfigList():
 def gettytul():
     return 'http://watchwrestling.nl/'
 
+
 class Watchwrestling(CBaseHostClass):
  
     def __init__(self):
@@ -304,6 +305,8 @@ class Watchwrestling(CBaseHostClass):
             printExc()
         
         CBaseHostClass.endHandleService(self, index, refresh)
+
+
 class IPTVHost(CHostBase):
 
     def __init__(self):

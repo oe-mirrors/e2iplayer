@@ -37,14 +37,18 @@ from Screens.MessageBox import MessageBox
 config.plugins.iptvplayer.plusdede_login = ConfigText(default="", fixed_size=False)
 config.plugins.iptvplayer.plusdede_password = ConfigText(default="", fixed_size=False)
 
+
 def GetConfigList():
     optionList = []
     optionList.append(getConfigListEntry(_("login") + ":", config.plugins.iptvplayer.plusdede_login))
     optionList.append(getConfigListEntry(_("password") + ":", config.plugins.iptvplayer.plusdede_password))
     return optionList
 ###################################################
+
+
 def gettytul():
     return 'https://megadede.com/'
+
 
 class PlusDEDE(CBaseHostClass):
     login = None
@@ -237,7 +241,6 @@ class PlusDEDE(CBaseHostClass):
             params = dict(cItem)
             params.update({'good_for_fav': False, 'title': _("Next page"), 'url': nextPage, 'page': page + 1})
             self.addDir(params)
-        
         
     def listItems(self, cItem, nextCategory):
         printDBG("PlusDEDE.listItems [%s]" % cItem)
@@ -691,6 +694,7 @@ class PlusDEDE(CBaseHostClass):
             printExc()
         
         CBaseHostClass.endHandleService(self, index, refresh)
+
 
 class IPTVHost(CHostBase):
 

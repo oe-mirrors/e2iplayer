@@ -37,13 +37,17 @@ from Screens.MessageBox import MessageBox
 ###################################################
 config.plugins.iptvplayer.ustvgo_alt_domain = ConfigText(default="", fixed_size=False)
 
+
 def GetConfigList():
     optionList = []
     optionList.append(getConfigListEntry(_("Alternative domain:"), config.plugins.iptvplayer.ustvgo_alt_domain))
     return optionList
 ###################################################
+
+
 def gettytul():
     return 'http://ustvgo.tv/'
+
 
 class ustvgo(CBaseHostClass):
     def __init__(self):
@@ -259,6 +263,7 @@ class ustvgo(CBaseHostClass):
             printExc()
         
         CBaseHostClass.endHandleService(self, index, refresh)
+
 
 class IPTVHost(CHostBase):
 

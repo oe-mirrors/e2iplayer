@@ -37,6 +37,7 @@ from Screens.MessageBox import MessageBox
 config.plugins.iptvplayer.firstonetv_login = ConfigText(default="", fixed_size=False)
 config.plugins.iptvplayer.firstonetv_password = ConfigText(default="", fixed_size=False)
 
+
 def GetConfigList():
     optionList = []
     optionList.append(getConfigListEntry('firstonetv.net ' + _("email") + ':', config.plugins.iptvplayer.firstonetv_login))
@@ -45,8 +46,10 @@ def GetConfigList():
     
 ###################################################
 
+
 class FirstOneTvApi(CBaseHostClass):
     CACHE_VARS = {}
+
     def __init__(self):
         CBaseHostClass.__init__(self)
         self.MAIN_URL = 'https://www.firstonetv.net/'
@@ -384,6 +387,7 @@ class FirstOneTvApi(CBaseHostClass):
                         break
 
         return self._getLinks(cUrl, params, channel_post_data)[1]
+
     def getResolvedVideoLink(self, videoUrl):
         printDBG("FirstOneTvApi.getResolvedVideoLink [%s]" % videoUrl)
         return getDirectM3U8Playlist(videoUrl)

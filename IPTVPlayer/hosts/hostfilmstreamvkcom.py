@@ -31,6 +31,7 @@ config.plugins.iptvplayer.filmstreamvk_proxy = ConfigSelection(default="None", c
                                                                                             ("proxy_2", _("Alternative proxy server (2)"))])
 config.plugins.iptvplayer.filmstreamvk_alt_domain = ConfigText(default="", fixed_size=False)
 
+
 def GetConfigList():
     optionList = []
     optionList.append(getConfigListEntry(_("Use proxy server:"), config.plugins.iptvplayer.filmstreamvk_proxy))
@@ -42,6 +43,7 @@ def GetConfigList():
 
 def gettytul():
     return 'http://filmstreamvk.club/'
+
 
 class FilmstreamvkCom(CBaseHostClass):
     
@@ -337,6 +339,8 @@ class FilmstreamvkCom(CBaseHostClass):
             printExc()
         
         CBaseHostClass.endHandleService(self, index, refresh)
+
+
 class IPTVHost(CHostBase):
 
     def __init__(self):

@@ -22,6 +22,7 @@ except Exception:
 def gettytul():
     return 'http://darshow.com/'
 
+
 class DarshowCom(CBaseHostClass):
     HEADER = {'User-Agent': 'Mozilla/5.0', 'Accept': 'text/html'}
     AJAX_HEADER = dict(HEADER)
@@ -369,6 +370,8 @@ class DarshowCom(CBaseHostClass):
             printExc()
         
         CBaseHostClass.endHandleService(self, index, refresh)
+
+
 class IPTVHost(CHostBase):
 
     def __init__(self):

@@ -35,6 +35,7 @@ config.plugins.iptvplayer.yify_proxy = ConfigSelection(default="None", choices=[
                                                                                     ("proxy_1", _("Alternative proxy server (1)")),
                                                                                     ("proxy_2", _("Alternative proxy server (2)"))])
 
+
 def GetConfigList():
     optionList = []
     optionList.append(getConfigListEntry(_("Use proxy server:"), config.plugins.iptvplayer.yify_proxy))
@@ -44,6 +45,7 @@ def GetConfigList():
 
 def gettytul():
     return 'https://ymovies.tv/'
+
 
 class YifyTV(CBaseHostClass):
     def __init__(self):
@@ -58,7 +60,6 @@ class YifyTV(CBaseHostClass):
         
         self.AJAX_HEADER = dict(self.HEADER)
         self.AJAX_HEADER.update({'X-Requested-With': 'XMLHttpRequest'})
-        
         
         self.MAIN_URL = 'https://ymovies.tv/'
         self.SRCH_URL = self.getFullUrl('?s=')
@@ -610,6 +611,8 @@ class YifyTV(CBaseHostClass):
             printExc()
         
         CBaseHostClass.endHandleService(self, index, refresh)
+
+
 class IPTVHost(CHostBase):
 
     def __init__(self):

@@ -23,8 +23,10 @@ except Exception:
     import simplejson as json
 ###################################################
 
+
 def gettytul():
     return 'https://musicmp3.ru/'
+
 
 class MusicMp3Ru(CBaseHostClass):
     
@@ -345,6 +347,7 @@ class MusicMp3Ru(CBaseHostClass):
             printExc()
         
         CBaseHostClass.endHandleService(self, index, refresh)
+
 
 class IPTVHost(CHostBase):
 

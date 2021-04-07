@@ -29,14 +29,18 @@ from Components.config import config, ConfigSelection, getConfigListEntry
 config.plugins.iptvplayer.akoam_proxy = ConfigSelection(default="None", choices=[("None", _("None")),
                                                                                      ("proxy_1", _("Alternative proxy server (1)")),
                                                                                      ("proxy_2", _("Alternative proxy server (2)"))])
+
+
 def GetConfigList():
     optionList = []
     optionList.append(getConfigListEntry(_("Use proxy server:"), config.plugins.iptvplayer.akoam_proxy))
     return optionList
 ###################################################
 
+
 def gettytul():
     return 'https://ar.akoam.net/'
+
 
 class AkoAm(CBaseHostClass):
     
@@ -481,6 +485,7 @@ class AkoAm(CBaseHostClass):
             printExc()
         
         CBaseHostClass.endHandleService(self, index, refresh)
+
 
 class IPTVHost(CHostBase):
 

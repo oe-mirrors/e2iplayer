@@ -44,8 +44,10 @@ def GetConfigList():
     return optionList
 ###################################################
 
+
 def gettytul():
     return 'ARDmediathek'
+
 
 class ARDmediathek(CBaseHostClass):
     
@@ -416,6 +418,7 @@ class ARDmediathek(CBaseHostClass):
                                     tmpUrlTab.append({'url': tmpItem['url'], 'quality_name': quality + ' {0}x{1}'.format(tmpItem['with'], tmpItem['heigth']), 'quality': qualityVal, 'quality_pref': qualityPref, 'format_name': type['name'], 'format_pref': formatPref})
             except Exception:
                 printExc()
+
             def _cmpLinks(it1, it2):
                 prefmoreimportantly = config.plugins.iptvplayer.ardmediathek_prefmoreimportant.value
                 if 'quality' == prefmoreimportantly:
@@ -486,7 +489,6 @@ class ARDmediathek(CBaseHostClass):
         elif 'list_tab' == category:
             self.listTab(self.currItem)
             
-            
         elif 'missed_date' == category:
             self.listMissedDate(self.currItem)
         elif 'list_missed' == category:
@@ -506,6 +508,7 @@ class ARDmediathek(CBaseHostClass):
         else:
             printExc()
         CBaseHostClass.endHandleService(self, index, refresh)
+
 
 class IPTVHost(CHostBase):
 

@@ -15,8 +15,10 @@ from Plugins.Extensions.IPTVPlayer.tools.e2ijs import js_execute
 import re
 ###################################################
 
+
 def gettytul():
     return 'https://wrealu24.tv/'
+
 
 class WRealu24TV(CBaseHostClass):
     
@@ -154,7 +156,6 @@ class WRealu24TV(CBaseHostClass):
     def getArticleContent(self, cItem, data=None):
         printDBG("WRealu24TV.getArticleContent [%s]" % cItem)
         
-        
         if self.up.getDomain(cItem['url']) not in self.up.getDomain(self.getMainUrl()):
             return []
         
@@ -217,6 +218,7 @@ class WRealu24TV(CBaseHostClass):
             printExc()
         
         CBaseHostClass.endHandleService(self, index, refresh)
+
 
 class IPTVHost(CHostBase):
 

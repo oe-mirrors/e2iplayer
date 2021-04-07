@@ -31,6 +31,7 @@ config.plugins.iptvplayer.seriesonlineio_proxy = ConfigSelection(default="None",
                                                                                               ("proxy_2", _("Alternative proxy server (2)"))])
 config.plugins.iptvplayer.seriesonlineio_alt_domain = ConfigText(default="", fixed_size=False)
 
+
 def GetConfigList():
     optionList = []
     optionList.append(getConfigListEntry(_("Use proxy server:"), config.plugins.iptvplayer.seriesonlineio_proxy))
@@ -42,6 +43,7 @@ def GetConfigList():
 
 def gettytul():
     return 'https://series9.io/'
+
 
 class SeriesOnlineIO(CBaseHostClass):
  
@@ -531,6 +533,7 @@ class SeriesOnlineIO(CBaseHostClass):
             printExc()
         
         CBaseHostClass.endHandleService(self, index, refresh)
+
 
 class IPTVHost(CHostBase):
 

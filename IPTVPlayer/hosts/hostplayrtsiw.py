@@ -29,6 +29,7 @@ from Components.config import config, ConfigYesNo, getConfigListEntry
 ###################################################
 config.plugins.iptvplayer.tv3player_use_web_proxy = ConfigYesNo(default=False)
 
+
 def GetConfigList():
     optionList = []
     optionList.append(getConfigListEntry(_("Use web-proxy for VODs (it may be illegal):"), config.plugins.iptvplayer.tv3player_use_web_proxy))
@@ -38,6 +39,7 @@ def GetConfigList():
 
 def gettytul():
     return 'https://srgssr.ch/'
+
 
 class PlayRTSIW(CBaseHostClass): 
  
@@ -683,6 +685,7 @@ class PlayRTSIW(CBaseHostClass):
             printExc()
         
         CBaseHostClass.endHandleService(self, index, refresh)
+
 
 class IPTVHost(CHostBase):
 

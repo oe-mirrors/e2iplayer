@@ -37,6 +37,7 @@ from Screens.MessageBox import MessageBox
 config.plugins.iptvplayer.efilmytv_login = ConfigText(default="", fixed_size=False)
 config.plugins.iptvplayer.efilmytv_password = ConfigText(default="", fixed_size=False)
 
+
 def GetConfigList():
     optionList = []
     optionList.append(getConfigListEntry(_("login") + ":", config.plugins.iptvplayer.efilmytv_login))
@@ -44,8 +45,10 @@ def GetConfigList():
     return optionList
 ###################################################
 
+
 def gettytul():
     return 'http://www.efilmy.tv/'
+
 
 class EFilmyTv(CBaseHostClass):
     
@@ -74,6 +77,7 @@ class EFilmyTv(CBaseHostClass):
             addParams = dict(self.defaultParams)
         origBaseUrl = baseUrl
         baseUrl = self.cm.iriToUri(baseUrl)
+
         def _getFullUrl(url):
             if self.cm.isValidUrl(url):
                 return url
@@ -814,6 +818,7 @@ class EFilmyTv(CBaseHostClass):
             printExc()
         
         CBaseHostClass.endHandleService(self, index, refresh)
+
 
 class IPTVHost(CHostBase):
 

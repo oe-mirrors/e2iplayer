@@ -24,6 +24,7 @@ except Exception:
 def gettytul():
     return 'http://filma24.io/'
 
+
 class Filma24IO(CBaseHostClass):
 
     def __init__(self):
@@ -298,6 +299,7 @@ class Filma24IO(CBaseHostClass):
             printExc()
         
         CBaseHostClass.endHandleService(self, index, refresh)
+
 
 class IPTVHost(CHostBase):
 

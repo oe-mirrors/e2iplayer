@@ -20,8 +20,10 @@ except Exception:
     import simplejson as json
 ###################################################
 
+
 def gettytul():
     return 'https://trailers.apple.com/'
+
 
 class TrailersApple(CBaseHostClass):
 
@@ -215,6 +217,7 @@ class TrailersApple(CBaseHostClass):
             printExc()
         
         CBaseHostClass.endHandleService(self, index, refresh)
+
 
 class IPTVHost(CHostBase):
 

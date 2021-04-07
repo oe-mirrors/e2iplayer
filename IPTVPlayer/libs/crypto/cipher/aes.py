@@ -17,10 +17,12 @@ from .rijndael import Rijndael
 from .base import BlockCipher, padWithPadLen, noPadding
 from ..errors import BadKeySizeError
 
+
 class AES(Rijndael):
     """ The AES algorithm is the Rijndael block cipher restricted to block
         sizes of 128 bits and key sizes of 128, 192 or 256 bits
     """
+
     def __init__(self, key=None, padding=padWithPadLen(), keySize=16):
         """ Initialize AES, keySize is in bytes """
         if not (keySize == 16 or keySize == 24 or keySize == 32):

@@ -120,6 +120,7 @@ def _get_resp_headers(sock, success_status=101):
         raise WebSocketBadStatusException("Handshake status %d", status)
     return status, resp_headers
 
+
 _HEADERS_TO_CHECK = {
     "upgrade": "websocket",
     "connection": "upgrade",

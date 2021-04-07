@@ -32,6 +32,7 @@ config.plugins.iptvplayer.filmeonlineto_proxy = ConfigSelection(default="None", 
                                                                                         ("proxy_2", _("Alternative proxy server (2)"))])
 config.plugins.iptvplayer.filmeonlineto_alt_domain = ConfigText(default="", fixed_size=False)
 
+
 def GetConfigList():
     optionList = []
     optionList.append(getConfigListEntry(_("Use proxy server:"), config.plugins.iptvplayer.filmeonlineto_proxy))
@@ -43,6 +44,7 @@ def GetConfigList():
 
 def gettytul():
     return 'https://filme-online.to/'
+
 
 class FilmeOnlineTo(CBaseHostClass):
  
@@ -534,6 +536,7 @@ class FilmeOnlineTo(CBaseHostClass):
             printExc()
         
         CBaseHostClass.endHandleService(self, index, refresh)
+
 
 class IPTVHost(CHostBase):
 

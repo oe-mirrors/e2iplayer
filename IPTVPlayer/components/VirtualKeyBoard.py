@@ -23,11 +23,13 @@ from Tools.LoadPixmap import LoadPixmap
 from Tools.NumericalTextInput import NumericalTextInput
 ###################################################
 
+
 class VirtualKeyBoardList(MenuList):
     def __init__(self, list, enableWrapAround=False):
         MenuList.__init__(self, list, enableWrapAround, eListboxPythonMultiContent)
         self.l.setFont(0, gFont("Regular", 28))
         self.l.setItemHeight(45)
+
 
 class IPTVVirtualKeyBoardWithCaptcha(Screen):
 

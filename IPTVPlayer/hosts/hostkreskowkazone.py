@@ -36,6 +36,7 @@ from Screens.MessageBox import MessageBox
 config.plugins.iptvplayer.kreskowkazone_login = ConfigText(default="", fixed_size=False)
 config.plugins.iptvplayer.kreskowkazone_password = ConfigText(default="", fixed_size=False)
 
+
 def GetConfigList():
     optionList = []
     optionList.append(getConfigListEntry("Login:", config.plugins.iptvplayer.kreskowkazone_login))
@@ -46,6 +47,7 @@ def GetConfigList():
 
 def gettytul():
     return 'http://kreskowkazone.pl/'
+
 
 class KreskowkaZonePL(CBaseHostClass):
  
@@ -361,6 +363,7 @@ class KreskowkaZonePL(CBaseHostClass):
         else:
             printExc()
         CBaseHostClass.endHandleService(self, index, refresh)
+
 
 class IPTVHost(CHostBase):
 

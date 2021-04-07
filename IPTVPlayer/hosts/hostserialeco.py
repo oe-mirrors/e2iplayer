@@ -22,8 +22,10 @@ except Exception:
     import simplejson as json
 ###################################################
 
+
 def gettytul():
     return 'http://seriale.co/'
+
 
 class SerialeCO(CBaseHostClass):
     
@@ -338,6 +340,7 @@ class SerialeCO(CBaseHostClass):
             printExc()
         
         CBaseHostClass.endHandleService(self, index, refresh)
+
 
 class IPTVHost(CHostBase):
 

@@ -38,6 +38,7 @@ from os import chmod as os_chmod, path as os_path, remove as os_remove
 #########################################################
 gIPTVDM_listChanged = False
 
+
 class IPTVDMWidget(Screen):
 
     sz_w = getDesktop(0).size().width() - 190
@@ -64,6 +65,7 @@ class IPTVDMWidget(Screen):
             )
         # <widget render="Label" source="key_yellow" position="220,9" size="180,27" zPosition="5" valign="center" halign="left" backgroundColor="black" font="Regular;21" transparent="1" foregroundColor="white" shadowColor="black" shadowOffset="-1,-1" />
         # <widget render="Label" source="key_blue" position="630,9" size="140,27" zPosition="5" valign="center" halign="left" backgroundColor="black" font="Regular;21" transparent="1" foregroundColor="white" shadowColor="black" shadowOffset="-1,-1" /> 
+
     def __init__(self, session, downloadmanager):
         self.session = session
         Screen.__init__(self, session)
@@ -268,7 +270,6 @@ class IPTVDMWidget(Screen):
         if self.iptvclosing:
             return
         
-        
         # wszystkie dostepne opcje
         play = []
         play.append((_('Play with [%s] player') % GetMoviePlayer(True, False).getText(), 'play', GetMoviePlayer(True, False).value))
@@ -428,6 +429,7 @@ class IPTVDMWidget(Screen):
     def __event(self, ev):
         pass
 
+
 class IPTVDMNotificationWidget(Screen):
     d_w = getDesktop(0).size().width() - 20
     #d_h = getDesktop(0).size().height()
@@ -443,6 +445,7 @@ class IPTVDMNotificationWidget(Screen):
 
     def setText(self, text):
         self['message_label'].setText(text)
+
 
 class IPTVDMNotification():
     def __init__(self):
@@ -466,7 +469,9 @@ class IPTVDMNotification():
             self.dialog.show()
             self.mainTimer.start(5000, 1)
 
+
 gIPTVDMNotification = IPTVDMNotification()
+
 
 def GetIPTVDMNotification():
     global gIPTVDMNotification

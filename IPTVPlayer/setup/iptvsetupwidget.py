@@ -26,6 +26,7 @@ from Tools.BoundFunction import boundFunction
 from Tools.LoadPixmap import LoadPixmap
 ###################################################
 
+
 class IPTVSetupMainWidget(Screen):
     IPTV_VERSION = GetIPTVPlayerVerstion()
     skin = """

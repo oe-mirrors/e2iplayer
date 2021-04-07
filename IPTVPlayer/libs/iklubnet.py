@@ -29,12 +29,14 @@ except Exception:
 ###################################################
 config.plugins.iptvplayer.iklubnet_categorization = ConfigYesNo(default=True)
 
+
 def GetConfigList():
     optionList = []
     optionList.append(getConfigListEntry(_('Categorization') + ": ", config.plugins.iptvplayer.iklubnet_categorization))
     return optionList
     
 ###################################################
+
 
 class IKlubNetApi(CBaseHostClass):
 

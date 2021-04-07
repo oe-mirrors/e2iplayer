@@ -30,10 +30,12 @@ from Screens.MessageBox import MessageBox
 # Config options for HOST
 ###################################################
 
+
 def GetConfigList():
     optionList = []
     return optionList
 ###################################################
+
 
 class OpenSubOrgProvider(CBaseSubProviderClass): 
     LANGUAGE_CACHE = []
@@ -427,6 +429,7 @@ class OpenSubOrgProvider(CBaseSubProviderClass):
             self.getSubtitles(self.currItem)
         
         CBaseSubProviderClass.endHandleService(self, index, refresh)
+
 
 class IPTVSubProvider(CSubProviderBase):
 
