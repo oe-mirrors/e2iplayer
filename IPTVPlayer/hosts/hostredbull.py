@@ -17,7 +17,7 @@ from Plugins.Extensions.IPTVPlayer.libs.e2ijson import loads as json_loads
 ###################################################
 import re
 import time
-import urllib
+import urllib.request, urllib.parse, urllib.error
 from datetime import  timedelta
 ###################################################
 ###################################################
@@ -177,7 +177,7 @@ class Redbull(CBaseHostClass):
 
     def listSearchResult(self, cItem, searchPattern, searchType):
 
-        url = self.REDBULL_API + "search?q=%s" % urllib.quote_plus(searchPattern)
+        url = self.REDBULL_API + "search?q=%s" % urllib.parse.quote_plus(searchPattern)
         cItem = MergeDicts(cItem, {'category':'list_search', 'url':url})
         self.listSearchItems(cItem)
 

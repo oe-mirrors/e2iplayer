@@ -11,9 +11,9 @@ from Plugins.Extensions.IPTVPlayer.tools.iptvtypes import strwithmeta
 ###################################################
 # FOREIGN import
 ###################################################
-import urlparse
+import urllib.parse
 import re
-import urllib
+import urllib.request, urllib.parse, urllib.error
 try:    import json
 except Exception: import simplejson as json
 from Components.config import config, ConfigSelection, ConfigText, getConfigListEntry
@@ -345,7 +345,7 @@ class Kinox(CBaseHostClass):
             if 'f_genre' in cItem: query['genre'] = cItem['f_genre']
             if 'f_country' in cItem: query['country'] = cItem['f_country']
             if query != {}: query.update({'q':'', 'actors':'', 'imdbop':'', 'imdbrating':'', 'year':'', 'extended_search':1})
-            query = urllib.urlencode(query)
+            query = urllib.parse.urlencode(query)
             if query != '': url += '?' + query
             
             sts, data = self.getPage(url)
@@ -453,7 +453,7 @@ class Kinox(CBaseHostClass):
         printDBG("Kinox.listSearchResult cItem[%s], searchPattern[%s] searchType[%s]" % (cItem, searchPattern, searchType))
         cItem = dict(cItem)
         cItem['get_list_mode'] = 'direct' 
-        cItem['url'] = self.getFullUrl('/Search.html?q=' + urllib.quote_plus(searchPattern))
+        cItem['url'] = self.getFullUrl('/Search.html?q=' + urllib.parse.quote_plus(searchPattern))
         self.listsLangFilter(cItem, 'list_items')
         
     def getLinksForVideo(self, cItem):
@@ -493,7 +493,7 @@ class Kinox(CBaseHostClass):
         orginUrl = str(videoUrl)
         
         # mark requested link as used one
-        if len(self.cacheLinks.keys()):
+        if len(list(self.cacheLinks.keys())):
             for key in self.cacheLinks:
                 for idx in range(len(self.cacheLinks[key])):
                     if videoUrl in self.cacheLinks[key][idx]['url']:

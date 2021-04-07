@@ -1149,7 +1149,7 @@ class IPTVExtMoviePlayer(Screen):
         if self.playback['Length'] > 0 and self.downloader != None and self.downloader.getName() == 'ffmpeg':
             stsObj['Length'] = self.playback['Length']
         
-        for key, val in stsObj.iteritems():
+        for key, val in stsObj.items():
             if 'Length' == key:
                 if 0 > val:
                     printDBG('IPTVExtMoviePlayer.playbackUpdateInfo Length[%d] - live stream?' % val )
@@ -1520,7 +1520,7 @@ class IPTVExtMoviePlayer(Screen):
                 try:
                     obj = json.loads(item.strip())
                     #printDBG("Status object [%r]" % obj)
-                    key = obj.keys()[0]
+                    key = list(obj.keys())[0]
                     obj = obj[key]
                 except Exception: 
                     printExc(item)
@@ -1665,7 +1665,7 @@ class IPTVExtMoviePlayer(Screen):
         self.subHandler['timer_conn'] = None
         
         self.updateInfoTimer_conn = None
-        for key in self.playback.iterkeys():
+        for key in self.playback.keys():
             self.playback[key] = None
         self.onClose.remove(self.__onClose)
         self.messageQueue = []

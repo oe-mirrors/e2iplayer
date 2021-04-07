@@ -13,7 +13,7 @@ from Plugins.Extensions.IPTVPlayer.libs.e2ijson import loads as json_loads
 # FOREIGN import
 ###################################################
 import re
-import urllib
+import urllib.request, urllib.parse, urllib.error
 ###################################################
 
 ###################################################
@@ -152,7 +152,7 @@ class WebCameraApi(CBaseHostClass):
                     #urlPrams['columns'] = '12'
                     
                     url = self.getFullUrl(cItem['more_url'])
-                    url += '?' + urllib.urlencode(urlPrams)
+                    url += '?' + urllib.parse.urlencode(urlPrams)
                     getPageParams['header']['X-Requested-With'] = 'XMLHttpRequest'
                     sts, data = self.getPage(url, getPageParams)
 

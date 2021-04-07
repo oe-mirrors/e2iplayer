@@ -17,15 +17,15 @@ from Plugins.Extensions.IPTVPlayer.tools.iptvtypes import strwithmeta
 from datetime import timedelta
 import time
 import re
-import urllib
+import urllib.request, urllib.parse, urllib.error
 import unicodedata
 import base64
 from os import listdir as os_listdir, path as os_path
 try:    import json
 except Exception: import simplejson as json
 try:
-    try: from cStringIO import StringIO
-    except Exception: from StringIO import StringIO 
+    try: from io import StringIO
+    except Exception: from io import StringIO 
     import gzip
 except Exception: pass
 from Components.config import config, ConfigSelection, ConfigYesNo, ConfigText, getConfigListEntry
@@ -169,7 +169,7 @@ class SubsceneComProvider(CBaseSubProviderClass):
     def searchByTitle(self, cItem, nextCategory):
         printDBG("SubsceneComProvider.searchByTitle")
         self.cache = {}
-        url = self.getFullUrl('/subtitles/title?q={0}&r=true'.format(urllib.quote_plus(self.params['confirmed_title'])))
+        url = self.getFullUrl('/subtitles/title?q={0}&r=true'.format(urllib.parse.quote_plus(self.params['confirmed_title'])))
         
         header = self._getHeader(cItem['lang_id'])
         sts, data = self.cm.getPage(url, {'header':header})
@@ -200,7 +200,7 @@ class SubsceneComProvider(CBaseSubProviderClass):
     
     def searchByReleaseName(self, cItem, nextCategory):
         printDBG("SubsceneComProvider.searchByReleaseName")
-        url = self.getFullUrl('/subtitles/release?q={0}&r=true'.format(urllib.quote_plus(self.params['confirmed_title'])))
+        url = self.getFullUrl('/subtitles/release?q={0}&r=true'.format(urllib.parse.quote_plus(self.params['confirmed_title'])))
         cItem = dict(cItem)
         cItem.update({'url':url})
         self.listSubItems(cItem, nextCategory)

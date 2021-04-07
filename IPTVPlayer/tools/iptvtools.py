@@ -13,15 +13,16 @@
 ###################################################
 # FOREIGN import
 ###################################################
-from __future__ import print_function
+
 from Components.config import config
 from Tools.Directories import resolveFilename, fileExists, SCOPE_PLUGINS, SCOPE_CONFIG
 from enigma import eConsoleAppContainer
 from Components.Language import language
 from time import sleep as time_sleep, time
-from urllib2 import Request, urlopen, URLError, HTTPError
-import urllib
-import urllib2
+from urllib.request import Request, urlopen
+from urllib.error import URLError, HTTPError
+import urllib.request, urllib.parse, urllib.error
+import urllib.request, urllib.error, urllib.parse
 import traceback
 import re
 import sys
@@ -786,7 +787,7 @@ def FreeSpace(katalog, requiredSpace, unitDiv=1024*1024):
 
 def IsValidFileName(name, NAME_MAX=255):
     prohibited_characters = ['/', "\000", '\\', ':', '*', '<', '>', '|', '"']
-    if isinstance(name, basestring) and (1 <= len(name) <= NAME_MAX):
+    if isinstance(name, str) and (1 <= len(name) <= NAME_MAX):
         for it in name:
             if it in prohibited_characters:
                 return False
@@ -911,7 +912,7 @@ def GetFileSize(filepath):
 def DownloadFile(url, filePath):
     printDBG('DownloadFile [%s] from [%s]' % (filePath, url) )
     try:
-        downloadFile = urllib2.urlopen(url)
+        downloadFile = urllib.request.urlopen(url)
         output = open(filePath, 'wb')
         output.write(downloadFile.read())
         output.close()
@@ -1270,7 +1271,7 @@ class CMoviePlayerPerHost():
         
 def byteify(input, noneReplacement=None, baseTypesAsString=False):
     if isinstance(input, dict):
-        return dict([(byteify(key, noneReplacement, baseTypesAsString), byteify(value, noneReplacement, baseTypesAsString)) for key, value in input.iteritems()])
+        return dict([(byteify(key, noneReplacement, baseTypesAsString), byteify(value, noneReplacement, baseTypesAsString)) for key, value in input.items()])
     elif isinstance(input, list):
         return [byteify(element, noneReplacement, baseTypesAsString) for element in input]
     elif isinstance(input, str):

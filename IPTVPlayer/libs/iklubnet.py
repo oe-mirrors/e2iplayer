@@ -15,7 +15,7 @@ from Plugins.Extensions.IPTVPlayer.components.ihost import CBaseHostClass
 ###################################################
 from Components.config import config, ConfigYesNo, getConfigListEntry
 import re
-import urllib
+import urllib.request, urllib.parse, urllib.error
 try:    import json
 except Exception: import simplejson as json
 ############################################
@@ -177,7 +177,7 @@ class IKlubNetApi(CBaseHostClass):
                         else:
                             tmp2 = re.compile('''unescape\(['"]([^"^']+?)['"]''').findall(item)
                             for item2 in tmp2:
-                                ddata += urllib.unquote(item2)
+                                ddata += urllib.parse.unquote(item2)
                 
                 printDBG("++++++++++++++++++++++++++++++++++++++++++++++++++++")
                 printDBG(ddata)
@@ -191,8 +191,8 @@ class IKlubNetApi(CBaseHostClass):
                 ddata =  self.cm.ph.getSearchGroups(ddata, '''document\.write[^'^"]+?['"]([^'^"]+?)['"]''')[0]
                 data  = ''
                 tmp   = ddata.split(sp)
-                ddata = urllib.unquote(tmp[0])
-                k = urllib.unquote(tmp[1] + modStr)
+                ddata = urllib.parse.unquote(tmp[0])
+                k = urllib.parse.unquote(tmp[1] + modStr)
                 for idx in range(len(ddata)):
                     data += chr((int(k[idx % len(k)]) ^ ord(ddata[idx])) + modInt)
                     

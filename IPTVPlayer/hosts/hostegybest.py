@@ -12,8 +12,8 @@ from Plugins.Extensions.IPTVPlayer.libs.urlparserhelper import getDirectM3U8Play
 ###################################################
 # FOREIGN import
 ###################################################
-import urlparse
-import urllib
+import urllib.parse
+import urllib.request, urllib.parse, urllib.error
 try:    import json
 except Exception: import simplejson as json
 from Components.config import config, ConfigText, getConfigListEntry
@@ -75,7 +75,7 @@ class EgyBest(CBaseHostClass):
         baseUrl = self.cm.iriToUri(baseUrl)
         def _getFullUrl(url):
             if self.cm.isValidUrl(url): return url
-            else: return urlparse.urljoin(baseUrl, url)
+            else: return urllib.parse.urljoin(baseUrl, url)
         addParams['cloudflare_params'] = {'domain':self.up.getDomain(baseUrl), 'cookie_file':self.COOKIE_FILE, 'User-Agent':self.USER_AGENT, 'full_url_handle':_getFullUrl}
         return self.cm.getPageCFProtection(baseUrl, addParams, post_data)
         
@@ -154,7 +154,7 @@ class EgyBest(CBaseHostClass):
             
             url += '-'.join(query) + ('?page=%s&output_format=json&output_mode=movies_list' % page)
         else:
-            url += ('?page=%s&q=%s&output_format=json' % (page, urllib.quote(cItem['f_search_query'])))
+            url += ('?page=%s&q=%s&output_format=json' % (page, urllib.parse.quote(cItem['f_search_query'])))
         
         sts, data = self.getPage(url)
         if not sts: return
@@ -323,7 +323,7 @@ class EgyBest(CBaseHostClass):
         urlTab = []
         
         # mark requested link as used one
-        if len(self.cacheLinks.keys()):
+        if len(list(self.cacheLinks.keys())):
             for key in self.cacheLinks:
                 for idx in range(len(self.cacheLinks[key])):
                     if videoUrl in self.cacheLinks[key][idx]['url']:

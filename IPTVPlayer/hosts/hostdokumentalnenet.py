@@ -10,9 +10,9 @@ from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc
 ###################################################
 # FOREIGN import
 ###################################################
-import urlparse
+import urllib.parse
 import re
-import urllib
+import urllib.request, urllib.parse, urllib.error
 try:    import json
 except Exception: import simplejson as json
 from Components.config import config, ConfigText, getConfigListEntry
@@ -57,7 +57,7 @@ class DokumentalneNET(CBaseHostClass):
         baseUrl = self.cm.iriToUri(baseUrl)
         def _getFullUrl(url):
             if self.cm.isValidUrl(url): return url
-            else: return urlparse.urljoin(baseUrl, url)
+            else: return urllib.parse.urljoin(baseUrl, url)
         addParams['cloudflare_params'] = {'domain':self.up.getDomain(baseUrl), 'cookie_file':self.COOKIE_FILE, 'User-Agent':self.USER_AGENT, 'full_url_handle':_getFullUrl}
         return self.cm.getPageCFProtection(baseUrl, addParams, post_data)
         
@@ -138,7 +138,7 @@ class DokumentalneNET(CBaseHostClass):
         printDBG("DokumentalneNET.listSearchResult cItem[%s], searchPattern[%s] searchType[%s]" % (cItem, searchPattern, searchType))
         cItem = dict(cItem)
         if 1 == cItem.get('page', 1):
-            cItem['url'] = self.getFullUrl('/?s=') + urllib.quote_plus(searchPattern)
+            cItem['url'] = self.getFullUrl('/?s=') + urllib.parse.quote_plus(searchPattern)
         self.listItems(cItem)
         
     def getLinksForVideo(self, cItem):

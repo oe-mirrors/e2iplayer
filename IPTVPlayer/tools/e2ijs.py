@@ -10,7 +10,7 @@ from Tools.Directories import fileExists
 from binascii import hexlify
 from hashlib import md5
 import time
-import thread
+import _thread
 
 DUKTAPE_VER = '226'
 
@@ -54,7 +54,7 @@ def js_execute_ext(items, params={}):
     fileList = []
     tmpFiles = []
 
-    tid = thread.get_ident()
+    tid = _thread.get_ident()
     uniqueId = 0;
     ret = {'sts':False, 'code':-13, 'data':''}
     try:

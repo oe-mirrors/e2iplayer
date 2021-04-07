@@ -14,7 +14,7 @@ from Plugins.Extensions.IPTVPlayer.libs.urlparser import urlparser
 # FOREIGN import
 ###################################################
 from Components.config import config, ConfigSelection
-import urllib
+import urllib.request, urllib.parse, urllib.error
 try:    import simplejson as json
 except Exception: import json
 ###################################################
@@ -154,7 +154,7 @@ class Hitbox(CBaseHostClass):
 
     def listSearchResult(self, cItem, searchPattern, searchType):
         printDBG("Hitbox.listSearchResult cItem[%s], searchPattern[%s] searchType[%s]" % (cItem, searchPattern, searchType))
-        searchPattern = urllib.quote_plus(searchPattern)
+        searchPattern = urllib.parse.quote_plus(searchPattern)
         item = dict(cItem)
         item['category'] = 'media'
         item['url'] = Hitbox.MAIN_URLS+'api/media/'+searchType+'/list?filter=popular&media=true&search='+searchPattern+'&limit={0}&media=true&start={1}&size=list'

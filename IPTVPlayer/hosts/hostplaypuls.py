@@ -14,7 +14,7 @@ from Plugins.Extensions.IPTVPlayer.libs.urlparserhelper import getDirectM3U8Play
 ###################################################
 from Components.config import config, ConfigSelection, ConfigYesNo, getConfigListEntry
 import re
-import urllib
+import urllib.request, urllib.parse, urllib.error
 import random
 try:    import simplejson as json
 except Exception: import json
@@ -219,7 +219,7 @@ class Playpuls(CBaseHostClass):
                 source3Data = byteify(json.loads(source3Data))
                 if 'sources' in source3Data:
                     source3Data = source3Data['sources']
-                for key, val in source3Data.iteritems():
+                for key, val in source3Data.items():
                     if val != '':
                         key = key.replace('src', '')
                         sources.append({'quality':key, 'src': '/play/%s' % val })
@@ -251,7 +251,7 @@ class Playpuls(CBaseHostClass):
     def listSearchResult(self, cItem, searchPattern, searchType):
         printDBG("Playpuls.listSearchResult cItem[%s], searchPattern[%s] searchType[%s]" % (cItem, searchPattern, searchType))
         cItem = dict(cItem)
-        cItem['url'] = self.SEARCH_URL + urllib.quote_plus(searchPattern)
+        cItem['url'] = self.SEARCH_URL + urllib.parse.quote_plus(searchPattern)
         self.listCategory(cItem, True)
     
     def handleService(self, index, refresh=0, searchPattern='', searchType=''):

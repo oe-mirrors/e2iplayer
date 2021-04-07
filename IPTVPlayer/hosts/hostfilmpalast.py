@@ -13,8 +13,8 @@ from Plugins.Extensions.IPTVPlayer.libs import ph
 ###################################################
 # FOREIGN import
 ###################################################
-import urllib
-from urlparse import urljoin
+import urllib.request, urllib.parse, urllib.error
+from urllib.parse import urljoin
 ###################################################
 
 def gettytul():
@@ -234,7 +234,7 @@ class FilmPalastTo(CBaseHostClass):
     def listSearchResult(self, cItem, searchPattern, searchType):
         printDBG("FilmPalastTo.listSearchResult cItem[%s], searchPattern[%s] searchType[%s]" % (cItem, searchPattern, searchType))
         cItem = dict(cItem)
-        cItem['url'] = self.getFullUrl('/search/title/%s' %  urllib.quote(searchPattern))
+        cItem['url'] = self.getFullUrl('/search/title/%s' %  urllib.parse.quote(searchPattern))
         self.listItems(cItem, 'explore_item')
         
     def getLinksForVideo(self, cItem):

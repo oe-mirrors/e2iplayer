@@ -15,7 +15,7 @@ from Plugins.Extensions.IPTVPlayer.libs.urlparserhelper import getDirectM3U8Play
 # FOREIGN import
 ###################################################
 import re
-import urllib
+import urllib.request, urllib.parse, urllib.error
 import datetime
 ###################################################
 
@@ -443,7 +443,7 @@ class Raiplay(CBaseHostClass):
             self.addVideo(params)
     
     def getLastContentByTag(self, tags="", numContents=16):
-        tags = urllib.quote(tags)
+        tags = urllib.parse.quote(tags)
         domain = "RaiTv"
         xsl = "rai_tv-statistiche-raiplay-json"
         

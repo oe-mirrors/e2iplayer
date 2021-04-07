@@ -3,7 +3,7 @@
 ###################################################
 # LOCAL import
 ###################################################
-from __future__ import print_function
+
 from Plugins.Extensions.IPTVPlayer.components.ihost import IHost, CDisplayListItem, RetHost, CUrlItem, CBaseHostClass
 from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, GetLogoDir, byteify
 from Plugins.Extensions.IPTVPlayer.libs.e2ijson import loads as json_loads

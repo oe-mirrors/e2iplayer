@@ -11,7 +11,7 @@ from Plugins.Extensions.IPTVPlayer.tools.iptvtypes import strwithmeta
 ###################################################
 # FOREIGN import
 ###################################################
-import urllib
+import urllib.request, urllib.parse, urllib.error
 try:    import json
 except Exception: import simplejson as json
 ###################################################
@@ -170,9 +170,9 @@ class Filma24IO(CBaseHostClass):
             self.addVideo(params)
         
     def listSearchResult(self, cItem, searchPattern, searchType):
-        searchPattern = urllib.quote_plus(searchPattern)
+        searchPattern = urllib.parse.quote_plus(searchPattern)
         cItem = dict(cItem)
-        cItem['url'] = self.getFullUrl('/?s=') + urllib.quote_plus(searchPattern)
+        cItem['url'] = self.getFullUrl('/?s=') + urllib.parse.quote_plus(searchPattern)
         cItem['category'] = 'list_items'
         self.listItems(cItem, 'explore_item')
         
@@ -185,7 +185,7 @@ class Filma24IO(CBaseHostClass):
     def getVideoLinks(self, videoUrl):
         printDBG("Filma24IO.getVideoLinks [%s]" % videoUrl)
         # mark requested link as used one
-        if len(self.cacheLinks.keys()):
+        if len(list(self.cacheLinks.keys())):
             for key in self.cacheLinks:
                 for idx in range(len(self.cacheLinks[key])):
                     if videoUrl in self.cacheLinks[key][idx]['url']:

@@ -13,7 +13,7 @@ from Plugins.Extensions.IPTVPlayer.tools.e2ijs import js_execute
 # FOREIGN import
 ###################################################
 import re
-import urllib
+import urllib.request, urllib.parse, urllib.error
 try:    import json
 except Exception: import simplejson as json
 ###################################################
@@ -187,7 +187,7 @@ class Altadefinizione(CBaseHostClass):
     def listSearchResult(self, cItem, searchPattern, searchType):
         printDBG("Altadefinizione.listSearchResult cItem[%s], searchPattern[%s] searchType[%s]" % (cItem, searchPattern, searchType))
         cItem = dict(cItem)
-        cItem['url'] = self.getFullUrl('/?s=') + urllib.quote_plus(searchPattern)
+        cItem['url'] = self.getFullUrl('/?s=') + urllib.parse.quote_plus(searchPattern)
         cItem['category'] = 'list_items'
         self.listItems(cItem, 'explore_item')
     
@@ -227,7 +227,7 @@ class Altadefinizione(CBaseHostClass):
             
             if '?' in actionUrl: actionUrl += '&'
             else: actionUrl += '?'
-            actionUrl += urllib.urlencode(query)
+            actionUrl += urllib.parse.urlencode(query)
             urlTab.append({'name':title, 'url':strwithmeta(actionUrl, {'Referer':cUrl}), 'need_resolve':1})
         
         if len(urlTab):
@@ -240,7 +240,7 @@ class Altadefinizione(CBaseHostClass):
         urlTab = []
         
         # mark requested link as used one
-        if len(self.cacheLinks.keys()):
+        if len(list(self.cacheLinks.keys())):
             for key in self.cacheLinks:
                 for idx in range(len(self.cacheLinks[key])):
                     if videoUrl in self.cacheLinks[key][idx]['url']:

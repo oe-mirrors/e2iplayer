@@ -11,7 +11,7 @@ from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, by
 # FOREIGN import
 ###################################################
 import re
-import urllib
+import urllib.request, urllib.parse, urllib.error
 try:    import json
 except Exception: import simplejson as json
 ###################################################
@@ -183,9 +183,9 @@ class MoviesNight(CBaseHostClass):
         self.listsTab(self.episodesCache.get(seasonKey, []), cItem, 'video')
         
     def listSearchResult(self, cItem, searchPattern, searchType):
-        searchPattern = urllib.quote_plus(searchPattern)
+        searchPattern = urllib.parse.quote_plus(searchPattern)
         cItem = dict(cItem)
-        cItem['url'] = self.SRCH_URL + urllib.quote_plus(searchPattern)
+        cItem['url'] = self.SRCH_URL + urllib.parse.quote_plus(searchPattern)
         self.listItems(cItem)
         
     def getLinksForVideo(self, cItem):

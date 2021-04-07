@@ -13,9 +13,9 @@ from Plugins.Extensions.IPTVPlayer.libs.youtube_dl.utils import unescapeHTML
 ###################################################
 # FOREIGN import
 ###################################################
-import urlparse
+import urllib.parse
 import re
-import urllib
+import urllib.request, urllib.parse, urllib.error
 import base64
 try:    import json
 except Exception: import simplejson as json
@@ -46,7 +46,7 @@ class Zaluknij(CBaseHostClass):
         baseUrl = self.cm.iriToUri(baseUrl)
         def _getFullUrl(url):
             if self.cm.isValidUrl(url): return url
-            else: return urlparse.urljoin(baseUrl, url)
+            else: return urllib.parse.urljoin(baseUrl, url)
         addParams['cloudflare_params'] = {'domain':self.up.getDomain(baseUrl), 'cookie_file':self.COOKIE_FILE, 'User-Agent':self.USER_AGENT, 'full_url_handle':_getFullUrl}
         return self.cm.getPageCFProtection(baseUrl, addParams, post_data)
         
@@ -198,7 +198,7 @@ class Zaluknij(CBaseHostClass):
 
     def listSearchResult(self, cItem, searchPattern, searchType):
         printDBG("Zaluknij.listSearchResult cItem[%s], searchPattern[%s] searchType[%s]" % (cItem, searchPattern, searchType))
-        url = self.getFullUrl('/?s=%s') % urllib.quote_plus(searchPattern)
+        url = self.getFullUrl('/?s=%s') % urllib.parse.quote_plus(searchPattern)
         params = {'name':'category', 'category':'list_items', 'good_for_fav':False, 'url':url}
         self.listItems(params)
         
@@ -249,7 +249,7 @@ class Zaluknij(CBaseHostClass):
         urlTab = []
         
         # mark requested link as used one
-        if len(self.cacheLinks.keys()):
+        if len(list(self.cacheLinks.keys())):
             for key in self.cacheLinks:
                 for idx in range(len(self.cacheLinks[key])):
                     if baseUrl in self.cacheLinks[key][idx]['url']:

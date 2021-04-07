@@ -1,4 +1,4 @@
-from __future__ import print_function
+
 # Language extension for distutils Python scripts. Based on this concept:
 # http://wiki.maemo.org/Internationalize_a_Python_application
 from future.utils import raise_

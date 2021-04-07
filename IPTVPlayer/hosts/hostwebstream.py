@@ -47,8 +47,8 @@ from Plugins.Extensions.IPTVPlayer.libs.wiziwig1          import Wiziwig1Api
 # FOREIGN import
 ###################################################
 import re
-import urllib
-from urlparse import urlsplit, urlunsplit
+import urllib.request, urllib.parse, urllib.error
+from urllib.parse import urlsplit, urlunsplit
 from Components.config import config, ConfigSelection, ConfigYesNo, getConfigListEntry
 ############################################
 
@@ -225,7 +225,7 @@ class HasBahCa(CBaseHostClass):
         
         if False and 'hasbahcaiptv.com' in url:
             printDBG(url)
-            proxy = 'http://www.proxy-german.de/index.php?q={0}&hl=2e5'.format(urllib.quote_plus(url))
+            proxy = 'http://www.proxy-german.de/index.php?q={0}&hl=2e5'.format(urllib.parse.quote_plus(url))
             params['header']['Referer'] = proxy
             url = proxy
         return self.cm.getPage(url, params, post_data)
@@ -266,7 +266,7 @@ class HasBahCa(CBaseHostClass):
     def listHasBahCa(self, item):
         url = item.get('url', '')
         if 'proxy-german.de' in url:
-            url = urllib.unquote(url.split('?q=')[-1])
+            url = urllib.parse.unquote(url.split('?q=')[-1])
         
         printDBG("listHasBahCa url[%s]" % url)
         BASE_URL = 'http://hasbahcaiptv.com/'
@@ -393,7 +393,7 @@ class HasBahCa(CBaseHostClass):
         listURL = strwithmeta(listURL)
         meta = listURL.meta
         if 'proxy-german.de' in listURL:
-            listURL = urllib.unquote(listURL.split('?q=')[-1])
+            listURL = urllib.parse.unquote(listURL.split('?q=')[-1])
         
         listURL = strwithmeta(listURL, meta)
         if 'cookiefile' in listURL.meta:
@@ -985,7 +985,7 @@ class HasBahCa(CBaseHostClass):
         _url = self.cm.ph.getSearchGroups(data, '''source:\swindow.atob\(['"]([^"^']+?)['"]''')[0]
         if _url != '':
             import base64
-            return [{'name':'others', 'url':urllib.unquote(base64.b64decode(_url))}]
+            return [{'name':'others', 'url':urllib.parse.unquote(base64.b64decode(_url))}]
         else:
             _url = self.cm.ph.getSearchGroups(data, '''source:\s['"]([^"^']+?)['"]''')[0]
             return [{'name':'others', 'url':_url}]
@@ -1128,7 +1128,7 @@ class IPTVHost(CHostBase):
         if isinstance(urlList, list):
             for item in urlList:
                 retlist.append(CUrlItem(item['name'], item['url'], item.get('need_resolve', 0)))
-        elif isinstance(url, basestring):
+        elif isinstance(url, str):
             if url.endswith('.m3u'):
                 tmpList = self.host.getDirectVideoHasBahCa(name, url)
                 for item in tmpList:
@@ -1140,7 +1140,7 @@ class IPTVHost(CHostBase):
                     if '84.114.88.26' == url.meta.get('X-Forwarded-For', ''):
                         url.meta['iptv_m3u8_custom_base_link'] = '' + url
                         url.meta['iptv_proxy_gateway'] = 'http://webproxy.at/surf/printer.php?u={0}&b=192&f=norefer'
-                        url.meta['Referer'] =  url.meta['iptv_proxy_gateway'].format(urllib.quote_plus(url))
+                        url.meta['Referer'] =  url.meta['iptv_proxy_gateway'].format(urllib.parse.quote_plus(url))
                         meta = url.meta
                         tmpList = getDirectM3U8Playlist(url, checkExt=False)
                         if 1 == len(tmpList):

@@ -10,7 +10,7 @@ from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, rm
 ###################################################
 # FOREIGN import
 ###################################################
-import urllib
+import urllib.request, urllib.parse, urllib.error
 ###################################################
 
 def gettytul():
@@ -46,7 +46,7 @@ class OtakuFR(CBaseHostClass):
     def getFullUrl(self, url):
         url = CBaseHostClass.getFullUrl(self, url)
         try: url.encode('ascii')
-        except Exception: url = urllib.quote(url, safe="/:&?%@[]()*$!+-=|<>;")
+        except Exception: url = urllib.parse.quote(url, safe="/:&?%@[]()*$!+-=|<>;")
         url = url.replace(' ', '%20')
         return url
         

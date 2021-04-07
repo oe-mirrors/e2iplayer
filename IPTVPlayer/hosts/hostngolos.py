@@ -12,7 +12,7 @@ from Plugins.Extensions.IPTVPlayer.libs.urlparserhelper import getDirectM3U8Play
 # FOREIGN import
 ###################################################
 import re
-import urllib
+import urllib.request, urllib.parse, urllib.error
 import base64
 try:    import json
 except Exception: import simplejson as json
@@ -253,7 +253,7 @@ class NGolosCOM(CBaseHostClass):
                 self.addVideo(params)
             
         return
-        data = re.sub('''unescape\(["']([^"^']+?)['"]\)''', lambda m: urllib.unquote(m.group(1)), data)
+        data = re.sub('''unescape\(["']([^"^']+?)['"]\)''', lambda m: urllib.parse.unquote(m.group(1)), data)
         
         titles = []
         titles2 = []
@@ -305,7 +305,7 @@ class NGolosCOM(CBaseHostClass):
         cItem = dict(cItem)
         page = cItem.get('page', 1)
         if page == 1:
-            cItem['url'] = self.SEARCH_URL + urllib.quote_plus(searchPattern)
+            cItem['url'] = self.SEARCH_URL + urllib.parse.quote_plus(searchPattern)
         self.listItems(cItem, 'explore_item')
     
     def getLinksForVideo(self, cItem):

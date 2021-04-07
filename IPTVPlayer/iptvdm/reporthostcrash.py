@@ -1,13 +1,13 @@
 # -*- coding: utf-8 -*-
 
-from __future__ import print_function
-import urllib2
-import urllib
+
+import urllib.request, urllib.error, urllib.parse
+import urllib.request, urllib.parse, urllib.error
 import sys
 
 def ReportCrash(url, except_msg):
-    request = urllib2.Request(url, data=urllib.urlencode({'except':except_msg}))
-    data = urllib2.urlopen(request).read()
+    request = urllib.request.Request(url, data=urllib.parse.urlencode({'except':except_msg}))
+    data = urllib.request.urlopen(request).read()
     print(data)
 
 if __name__ == "__main__":

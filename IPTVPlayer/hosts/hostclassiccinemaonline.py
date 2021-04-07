@@ -10,9 +10,9 @@ from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc
 ###################################################
 # FOREIGN import
 ###################################################
-import urlparse
+import urllib.parse
 import re
-import urllib
+import urllib.request, urllib.parse, urllib.error
 try:    import json
 except Exception: import simplejson as json
 ###################################################
@@ -51,7 +51,7 @@ class ClassicCinemaOnline(CBaseHostClass):
         baseUrl = self.cm.iriToUri(baseUrl)
         def _getFullUrl(url):
             if self.cm.isValidUrl(url): return url
-            else: return urlparse.urljoin(baseUrl, url)
+            else: return urllib.parse.urljoin(baseUrl, url)
         addParams['cloudflare_params'] = {'domain':self.up.getDomain(baseUrl), 'cookie_file':self.COOKIE_FILE, 'User-Agent':self.USER_AGENT, 'full_url_handle':_getFullUrl}
         return self.cm.getPageCFProtection(baseUrl, addParams, post_data)
         
@@ -132,7 +132,7 @@ class ClassicCinemaOnline(CBaseHostClass):
         printDBG("ClassicCinemaOnline.listSearchResult cItem[%s], searchPattern[%s] searchType[%s]" % (cItem, searchPattern, searchType))
         page = cItem.get('page', 0)
         if page == 0:
-            url = self.getFullUrl('/component/search/?searchword=%s&ordering=newest&searchphrase=all&limit=%s' % (urllib.quote(searchPattern), self.getMaxDisplayItems()))
+            url = self.getFullUrl('/component/search/?searchword=%s&ordering=newest&searchphrase=all&limit=%s' % (urllib.parse.quote(searchPattern), self.getMaxDisplayItems()))
         else:
             url = cItem['url']
         

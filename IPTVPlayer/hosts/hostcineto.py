@@ -13,9 +13,9 @@ from Plugins.Extensions.IPTVPlayer.libs.e2ijson import loads as json_loads
 ###################################################
 # FOREIGN import
 ###################################################
-import urlparse
+import urllib.parse
 import re
-import urllib
+import urllib.request, urllib.parse, urllib.error
 ###################################################
 
 
@@ -60,7 +60,7 @@ class CineTO(CBaseHostClass, CaptchaHelper):
             if self.cm.isValidUrl(url):
                 return url
             else:
-                return urlparse.urljoin(baseUrl, url)
+                return urllib.parse.urljoin(baseUrl, url)
             
         addParams['cloudflare_params'] = {'domain':self.up.getDomain(baseUrl), 'cookie_file':self.COOKIE_FILE, 'User-Agent':self.USER_AGENT, 'full_url_handle':_getFullUrl}
         return self.cm.getPageCFProtection(baseUrl, addParams, post_data)
@@ -78,7 +78,7 @@ class CineTO(CBaseHostClass, CaptchaHelper):
         post_data['page'] = cItem.get('page', 1)
         post_data['count'] = count
         
-        post_data = urllib.urlencode(post_data) + '&year%5B%5D={0}&year%5B%5D={1}'.format(sYear, eYear)
+        post_data = urllib.parse.urlencode(post_data) + '&year%5B%5D={0}&year%5B%5D={1}'.format(sYear, eYear)
         printDBG(post_data)
         return post_data
     
@@ -331,7 +331,7 @@ class CineTO(CBaseHostClass, CaptchaHelper):
         urlTab = []
         
         # mark requested link as used one
-        if len(self.cacheLinks.keys()):
+        if len(list(self.cacheLinks.keys())):
             for key in self.cacheLinks:
                 for idx in range(len(self.cacheLinks[key])):
                     if videoUrl in self.cacheLinks[key][idx]['url']:

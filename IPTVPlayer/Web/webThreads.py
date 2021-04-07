@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
-from __future__ import print_function
-from __future__ import absolute_import
+
+
 import os
 from . import settings
 import threading
@@ -216,7 +216,7 @@ class buildConfigsHTML(threading.Thread):
 				hostsCFG += '<td><a>%s</a></td>' % "" # _('Host does not have configuration options')
 			else:
 				hostsCFG += '<td><table border="1" style="width:100%">'
-				for item in self.buildSettingsTable(List2 = OptionsList, List1 = config.plugins.iptvplayer.dict().items(), exclList = usedCFG, direction = '2>1'):
+				for item in self.buildSettingsTable(List2 = OptionsList, List1 = list(config.plugins.iptvplayer.dict().items()), exclList = usedCFG, direction = '2>1'):
 					usedCFG.append(item[0])
 					#print 'hostsCFG:',item[0], item[1],item[2]
 					if item[0] == 'fake_separator':
@@ -229,7 +229,7 @@ class buildConfigsHTML(threading.Thread):
 		#now configs for plugin
 		OptionsList = []
 		ConfigMenu.fillConfigList(OptionsList, hiddenOptions=False)
-		for item in self.buildSettingsTable(List1 = config.plugins.iptvplayer.dict().items(), List2 = OptionsList, exclList = usedCFG, direction = '2>1'):
+		for item in self.buildSettingsTable(List1 = list(config.plugins.iptvplayer.dict().items()), List2 = OptionsList, exclList = usedCFG, direction = '2>1'):
 			settings.configsHTML[item[1]] = '<tr><td><tt>%s</tt></td><td>%s</td></tr>\n' % (item[1], formGET(item[2]))
 ########################################################
 class doUseHostAction(threading.Thread):
@@ -281,7 +281,7 @@ class doUseHostAction(threading.Thread):
 					if isinstance(item, CUrlItem): 
 						item.urlNeedsResolve = 0 # protection from recursion 
 						linkList.append(item)
-					elif isinstance(item, basestring): linkList.append(CUrlItem(item, item, 0))
+					elif isinstance(item, str): linkList.append(CUrlItem(item, item, 0))
 					else: print("selectResolvedVideoLinks: wrong resolved url type!")
 				settings.retObj = RetHost(RetHost.OK, value = linkList)
 			else:

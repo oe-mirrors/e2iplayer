@@ -11,7 +11,7 @@ from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc
 # FOREIGN import
 ###################################################
 import re
-import urllib
+import urllib.request, urllib.parse, urllib.error
 ###################################################
 
 ###################################################
@@ -192,7 +192,7 @@ class InteriaTv(CBaseHostClass):
         
     def listSearchResult(self, cItem, searchPattern, searchType):
         printDBG("InteriaTv.listSearchResult cItem[%s], searchPattern[%s] searchType[%s]" % (cItem, searchPattern, searchType))
-        url = self.getFullUrl('/szukaj?q=') + urllib.quote_plus(searchPattern)
+        url = self.getFullUrl('/szukaj?q=') + urllib.parse.quote_plus(searchPattern)
         
         sts, data = self.getPage(url)
         if not sts: return

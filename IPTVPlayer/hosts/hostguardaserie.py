@@ -11,7 +11,7 @@ from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, Me
 # FOREIGN import
 ###################################################
 import re
-import urllib
+import urllib.request, urllib.parse, urllib.error
 try:    import json
 except Exception: import simplejson as json
 ###################################################
@@ -159,7 +159,7 @@ class GuardaSerieClick(CBaseHostClass):
     def listSearchResult(self, cItem, searchPattern, searchType):
         printDBG("GuardaSerieClick.listSearchResult cItem[%s], searchPattern[%s] searchType[%s]" % (cItem, searchPattern, searchType))
         cItem = dict(cItem)
-        cItem['url'] = self.getFullUrl('/?s=') + urllib.quote_plus(searchPattern)
+        cItem['url'] = self.getFullUrl('/?s=') + urllib.parse.quote_plus(searchPattern)
         cItem['category'] = 'list_items'
         self.listItems(cItem, 'explore_item')
 
@@ -177,14 +177,14 @@ class GuardaSerieClick(CBaseHostClass):
             sts, data = self.cm.getPage(videoUrl)
             if sts: url = self.getFullUrl(self.cm.ph.getSearchGroups(data, '''<iframe[^>]+?src=['"]([^"^']+?)['"]''', 1, True)[0])
             if url == '':
-                videoUrl = 'http://www.safersurf.org/browse.php?u={0}&b=8&f=norefer'.format(urllib.quote_plus(videoUrl, ''))
+                videoUrl = 'http://www.safersurf.org/browse.php?u={0}&b=8&f=norefer'.format(urllib.parse.quote_plus(videoUrl, ''))
                 params = dict(self.defaultParams)
                 params['header'] = MergeDicts(params['header'], {'Referer':videoUrl})
                 sts, data = self.cm.getPage(videoUrl, params)
                 if sts:
                     printDBG(data)
                     url = self.getFullUrl(self.cm.ph.getSearchGroups(data, '''<iframe[^>]+?src=['"]([^"^']+?)['"]''', 1, True)[0])
-                    url = urllib.unquote(self.cm.ph.getDataBeetwenMarkers(url, '?u=', '&', False)[1])
+                    url = urllib.parse.unquote(self.cm.ph.getDataBeetwenMarkers(url, '?u=', '&', False)[1])
             
             if url != '':
                 videoUrl = url

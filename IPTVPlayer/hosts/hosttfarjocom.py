@@ -294,7 +294,7 @@ class TfarjoCom(CBaseHostClass):
         urlTab = []
         
         # mark requested link as used one
-        if len(self.cacheLinks.keys()):
+        if len(list(self.cacheLinks.keys())):
             for key in self.cacheLinks:
                 for idx in range(len(self.cacheLinks[key])):
                     if baseUrl in self.cacheLinks[key][idx]['url']:

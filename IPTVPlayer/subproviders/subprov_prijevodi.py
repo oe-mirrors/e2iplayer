@@ -11,7 +11,7 @@ from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, Ge
 # FOREIGN import
 ###################################################
 import re
-import urllib
+import urllib.request, urllib.parse, urllib.error
 from Components.config import config, ConfigSelection, ConfigYesNo, ConfigText, getConfigListEntry
 ###################################################
 
@@ -292,7 +292,7 @@ class PrijevodiOnline(CBaseSubProviderClass):
         for item in data:
             url = self.cm.ph.getSearchGroups(item, 'href="(https?://[^"]+?\.(?:rar|zip))"')[0]
             if not self.cm.isValidUrl(url): continue
-            title = urllib.unquote(url.split('/')[-1])
+            title = urllib.parse.unquote(url.split('/')[-1])
             url = url.replace(' ', '%20')
             
             desc   = self.cleanHtmlStr(item)

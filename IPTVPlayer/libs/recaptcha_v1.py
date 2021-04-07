@@ -13,7 +13,7 @@ from Plugins.Extensions.IPTVPlayer.components.iptvmultipleinputbox import IPTVMu
 ###################################################
 # FOREIGN import
 ###################################################
-import urllib
+import urllib.request, urllib.parse, urllib.error
 from copy import deepcopy
 ###################################################
 
@@ -80,7 +80,7 @@ class UnCaptchaReCaptcha:
             if retArg is not None and len(retArg) and retArg[0]:
                 recaptcha_response_field = retArg[0]
                 printDBG('>>>>>>>> Captcha recaptcha_response_field[%s]' % (recaptcha_response_field))
-                post_data = urllib.urlencode({'recaptcha_challenge_field': recaptcha_challenge_field, 'recaptcha_response_field':recaptcha_response_field, 'submit':accepLabel}, doseq=True)
+                post_data = urllib.parse.urlencode({'recaptcha_challenge_field': recaptcha_challenge_field, 'recaptcha_response_field':recaptcha_response_field, 'submit':accepLabel}, doseq=True)
             else:
                 break
         

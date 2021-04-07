@@ -18,7 +18,7 @@ from Plugins.Extensions.IPTVPlayer.components.recaptcha_v2helper import CaptchaH
 from Components.config import config, ConfigSelection, ConfigYesNo, ConfigText, getConfigListEntry
 from datetime import datetime, timedelta, date
 import re
-import urllib
+import urllib.request, urllib.parse, urllib.error
 import time
 ###################################################
 
@@ -135,19 +135,19 @@ class TvpVod(CBaseHostClass, CaptchaHelper):
     def _getPage(self, url, addParams = {}, post_data = None):
         
         try:
-            import httplib
+            import http.client
             def patch_http_response_read(func):
                 def inner(*args):
                     try:
                         return func(*args)
-                    except httplib.IncompleteRead as e:
+                    except http.client.IncompleteRead as e:
                         return e.partial
                 return inner
-            prev_read = httplib.HTTPResponse.read
-            httplib.HTTPResponse.read = patch_http_response_read(httplib.HTTPResponse.read)
+            prev_read = http.client.HTTPResponse.read
+            http.client.HTTPResponse.read = patch_http_response_read(http.client.HTTPResponse.read)
         except Exception: printExc()
         sts, data = self.cm.getPage(url, addParams, post_data)
-        try: httplib.HTTPResponse.read = prev_read
+        try: http.client.HTTPResponse.read = prev_read
         except Exception: printExc()
         return sts, data
         
@@ -606,7 +606,7 @@ class TvpVod(CBaseHostClass, CaptchaHelper):
             
     def listSearchResult(self, cItem, searchPattern, searchType):
         printDBG("TvpVod.listSearchResult cItem[%s], searchPattern[%s] searchType[%s]" % (cItem, searchPattern, searchType))
-        url = TvpVod.SEARCH_VOD_URL % urllib.quote(searchPattern)
+        url = TvpVod.SEARCH_VOD_URL % urllib.parse.quote(searchPattern)
         cItem = dict(cItem)
         cItem['url'] = url
         
@@ -727,7 +727,7 @@ class TvpVod(CBaseHostClass, CaptchaHelper):
                 def _getVideoLink(data, FORMATS):
                     videoTab = []
                     for item in data['formats']:
-                        if item['mimeType'] in FORMATS.keys():
+                        if item['mimeType'] in list(FORMATS.keys()):
                             formatType = FORMATS[item['mimeType']]
                             format = self.REAL_FORMATS.get(formatType, '')
                             name = self.getFormatFromBitrate( str(item['totalBitrate']) ) + '\t ' + formatType
@@ -783,7 +783,7 @@ class TvpVod(CBaseHostClass, CaptchaHelper):
                 if len(hlsTab) > 0 and 1 == len(mp4Tab) and mp4Tab[0]['id'] != '':
                     for item in hlsTab:
                         res = '%sx%s' % (item['width'], item['height'])
-                        for key in formatMap.keys():
+                        for key in list(formatMap.keys()):
                             if key == mp4Tab[0]['id']: continue
                             if formatMap[key][0] != res: continue
                             url = mp4Tab[0]['url']

@@ -9,7 +9,7 @@
 
     2002-11-05
 """
-from __future__ import print_function
+
 import unittest
 from crypto.cipher.wep import WEP
 from binascii_plus import a2b_p, b2a_p

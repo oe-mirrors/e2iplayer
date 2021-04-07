@@ -100,7 +100,7 @@ def _get_handshake_headers(resource, host, port, options):
     if "header" in options:
         header = options["header"]
         if isinstance(header, dict):
-            header = map(": ".join, header.items())
+            header = list(map(": ".join, list(header.items())))
         headers.extend(header)
 
     cookie = options.get("cookie", None)
@@ -128,7 +128,7 @@ _HEADERS_TO_CHECK = {
 
 def _validate(headers, key, subprotocols):
     subproto = None
-    for k, v in _HEADERS_TO_CHECK.items():
+    for k, v in list(_HEADERS_TO_CHECK.items()):
         r = headers.get(k, None)
         if not r:
             return False, None

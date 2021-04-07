@@ -11,9 +11,9 @@ from Plugins.Extensions.IPTVPlayer.tools.iptvtypes import strwithmeta
 ###################################################
 # FOREIGN import
 ###################################################
-import urlparse
+import urllib.parse
 import re
-import urllib
+import urllib.request, urllib.parse, urllib.error
 import base64
 try:    import json
 except Exception: import simplejson as json
@@ -84,7 +84,7 @@ class LosMovies(CBaseHostClass):
             if self.cm.isValidUrl(url):
                 return url
             else:
-                return urlparse.urljoin(baseUrl, url)
+                return urllib.parse.urljoin(baseUrl, url)
                 
         addParams['cloudflare_params'] = {'cookie_file':self.COOKIE_FILE, 'User-Agent':self.HEADER['User-Agent']}
         return self.cm.getPageCFProtection(baseUrl, addParams, post_data)
@@ -209,7 +209,7 @@ class LosMovies(CBaseHostClass):
             episodesData = self.cm.ph.getAllItemsBeetwenMarkers(sItem, '<h3', '</tbody>', True)
             for eItem in episodesData:
                 eTitle   = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(eItem, '<h3', '</h3>', True)[1])
-                eFakeUrl = '#season%s_%s' % (seasonKey, urllib.quote(eTitle))
+                eFakeUrl = '#season%s_%s' % (seasonKey, urllib.parse.quote(eTitle))
                 linksTab = self.getLinksForVideo(cItem, eItem)
                 if len(linksTab):
                     self.cacheLinks[eFakeUrl] = linksTab
@@ -233,7 +233,7 @@ class LosMovies(CBaseHostClass):
     def listSearchResult(self, cItem, searchPattern, searchType):
         printDBG("LosMovies.listSearchResult cItem[%s], searchPattern[%s] searchType[%s]" % (cItem, searchPattern, searchType))
         cItem = dict(cItem)
-        cItem['url'] = self.getFullUrl('search?type=movies&q=') + urllib.quote_plus(searchPattern)
+        cItem['url'] = self.getFullUrl('search?type=movies&q=') + urllib.parse.quote_plus(searchPattern)
         self.listItems(cItem, 'list_seasons')
         
     def getLinksForVideo(self, cItem, eItem=None):
@@ -301,7 +301,7 @@ class LosMovies(CBaseHostClass):
         urlTab = []
         
         # mark requested link as used one
-        if len(self.cacheLinks.keys()):
+        if len(list(self.cacheLinks.keys())):
             for key in self.cacheLinks:
                 for idx in range(len(self.cacheLinks[key])):
                     if videoUrl in self.cacheLinks[key][idx]['url']:

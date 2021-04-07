@@ -17,7 +17,7 @@ from Plugins.Extensions.IPTVPlayer.components.recaptcha_v2helper import CaptchaH
 # FOREIGN import
 ###################################################
 import time
-import urllib
+import urllib.request, urllib.parse, urllib.error
 from datetime import datetime, timedelta
 import operator
 from Components.config import config, ConfigText, getConfigListEntry

@@ -12,7 +12,7 @@ from Plugins.Extensions.IPTVPlayer.libs.urlparserhelper import getDirectM3U8Play
 # FOREIGN import
 ###################################################
 import re
-import urllib
+import urllib.request, urllib.parse, urllib.error
 ###################################################
 
 
@@ -248,7 +248,7 @@ class DancetrippinTV(CBaseHostClass):
     def listSearchResult(self, cItem, searchPattern, searchType):
         printDBG("DancetrippinTV.listSearchResult cItem[%s], searchPattern[%s] searchType[%s]" % (cItem, searchPattern, searchType))
         cItem = dict(cItem)
-        cItem['url'] = self.getFullUrl('/search.cfm?q=') + urllib.quote_plus(searchPattern)
+        cItem['url'] = self.getFullUrl('/search.cfm?q=') + urllib.parse.quote_plus(searchPattern)
         self.fillItems(cItem, 'list_filters', 'list_items')
     
     def getLinksForVideo(self, cItem):

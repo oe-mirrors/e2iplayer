@@ -10,9 +10,9 @@ from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, by
 ###################################################
 # FOREIGN import
 ###################################################
-from urlparse import urlparse
+from urllib.parse import urlparse
 import time
-import urllib
+import urllib.request, urllib.parse, urllib.error
 from datetime import  timedelta
 try:    import json
 except Exception: import simplejson as json
@@ -338,7 +338,7 @@ class VevoCom(CBaseHostClass):
         
     def listSearchResult(self, cItem, searchPattern, searchType):
         printDBG("VevoCom.listSearchResult cItem[%s], searchPattern[%s] searchType[%s]" % (cItem, searchPattern, searchType))
-        query = 'search?q=%s' % urllib.quote_plus(searchPattern)
+        query = 'search?q=%s' % urllib.parse.quote_plus(searchPattern)
         url = 'https://quest.vevo.com/%s' % query
         params = self._getApiHeaders({'url':self.getFullUrl(query)})
         

@@ -12,7 +12,7 @@ from Plugins.Extensions.IPTVPlayer.tools.iptvtypes import strwithmeta
 # FOREIGN import
 ###################################################
 import re
-import urllib
+import urllib.request, urllib.parse, urllib.error
 try:    import json
 except Exception: import simplejson as json
 from Components.config import config, ConfigSelection, ConfigText, getConfigListEntry
@@ -209,7 +209,7 @@ class FilmstreamvkCom(CBaseHostClass):
         printDBG("FilmstreamvkCom.listSearchResult cItem[%s], searchPattern[%s] searchType[%s]" % (cItem, searchPattern, searchType))
         self.selectDomain()
         cItem = dict(cItem)
-        cItem['url'] = self.getFullUrl('/?s=') + urllib.quote(searchPattern)
+        cItem['url'] = self.getFullUrl('/?s=') + urllib.parse.quote(searchPattern)
         self.listItems(cItem, 'episodes')
         
     def _getBaseVideoLink(self, wholeData):

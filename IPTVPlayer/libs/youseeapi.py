@@ -1,4 +1,4 @@
-from __future__ import print_function
+
 #
 #      Copyright (C) 2013 Tommy Winther
 #      http://tommy.winther.nu
@@ -20,8 +20,8 @@ from __future__ import print_function
 #
 # https://docs.google.com/document/d/1_rs5BXklnLqGS6g6eAjevVHsPafv4PXDCi_dAM2b7G0/edit?pli=1
 #
-import urllib
-import urllib2
+import urllib.request, urllib.parse, urllib.error
+import urllib.request, urllib.error, urllib.parse
 import re
 from Plugins.Extensions.IPTVPlayer.libs.e2ijson import loads as json_loads
 
@@ -51,19 +51,19 @@ class YouSeeApi(object):
     def _invoke(self, area, function, params=None, method=METHOD_GET):
         url = API_URL + '/' + area + '/' + function
         if method == METHOD_GET and params:
-            for key, value in params.items():
+            for key, value in list(params.items()):
                 url += '/' + key + '/' + str(value)
         url += '/format/json'
 
         try:
-            r = urllib2.Request(url, headers={'X-API-KEY': API_KEY})
+            r = urllib.request.Request(url, headers={'X-API-KEY': API_KEY})
             if method == METHOD_POST and params:
-                print("POST data: %s" % urllib.urlencode(params))
-                r.add_data(urllib.urlencode(params))
-            u = urllib2.urlopen(r)
+                print("POST data: %s" % urllib.parse.urlencode(params))
+                r.add_data(urllib.parse.urlencode(params))
+            u = urllib.request.urlopen(r)
             data = u.read()
             u.close()
-        except urllib2.HTTPError as error:
+        except urllib.error.HTTPError as error:
             data = error.read()
         except Exception as ex:
             raise YouSeeApiException(ex)

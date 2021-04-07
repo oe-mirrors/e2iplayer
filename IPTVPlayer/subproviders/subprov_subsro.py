@@ -18,7 +18,7 @@ from Plugins.Extensions.IPTVPlayer.tools.iptvtypes import strwithmeta
 from datetime import timedelta
 import time
 import re
-import urllib
+import urllib.request, urllib.parse, urllib.error
 import unicodedata
 import base64
 from os import listdir as os_listdir, path as os_path
@@ -90,7 +90,7 @@ class SubsRoProvider(CBaseSubProviderClass):
         actionUrl, query = self.getFormQuery(data, '', self.params['confirmed_title'])
         if '?' in actionUrl: actionUrl += '&'
         else: actionUrl += '?'
-        actionUrl += urllib.urlencode(query)
+        actionUrl += urllib.parse.urlencode(query)
         
         sts, data = self.cm.getPage(actionUrl, urlParams)
         if not sts: return

@@ -20,14 +20,14 @@ from Plugins.Extensions.IPTVPlayer.libs.urlparserhelper import hex_md5
 from datetime import timedelta
 import time
 import re
-import urllib
+import urllib.request, urllib.parse, urllib.error
 import unicodedata
 import base64
 try:    import json
 except Exception: import simplejson as json
 try:
-    try: from cStringIO import StringIO
-    except Exception: from StringIO import StringIO 
+    try: from io import StringIO
+    except Exception: from io import StringIO 
     import gzip
 except Exception: pass
 from Components.config import config, ConfigSelection, ConfigYesNo, ConfigText, getConfigListEntry
@@ -101,7 +101,7 @@ class NapiProjektProvider(CBaseSubProviderClass):
         
     def getMoviesList(self, cItem, nextCategoryMovie):
         printDBG("NapiProjektProvider.getMoviesList")
-        title = urllib.quote_plus( self.params['confirmed_title'] )
+        title = urllib.parse.quote_plus( self.params['confirmed_title'] )
         url = self.getFullUrl('/ajax/search_catalog.php')
         
         post_data = {'queryString':title, 'queryKind':cItem.get('kind', 0), 'queryYear':'', 'associate':''}
@@ -144,7 +144,7 @@ class NapiProjektProvider(CBaseSubProviderClass):
         movieId = self.cm.ph.getSearchGroups(tmp, "'movieID':([0-9]+?)[^0-9]")[0]
         urlPattern = self.cm.ph.getDataBeetwenMarkers(tmp, 'window.location.href=', ';', False)[1].replace("'", "").replace('"', '').strip()
         urlPattern = urlPattern.split('tytul=')
-        if 2 == len(urlPattern): urlPattern = urlPattern[0] + 'tytul=' + urllib.quote(urlPattern[1])
+        if 2 == len(urlPattern): urlPattern = urlPattern[0] + 'tytul=' + urllib.parse.quote(urlPattern[1])
         else: urlPattern = ''
         
         if '' != movieId and '' != urlPattern:

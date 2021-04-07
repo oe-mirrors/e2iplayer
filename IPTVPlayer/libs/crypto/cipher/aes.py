@@ -11,7 +11,7 @@
 
     2002-06-01
 """
-from __future__ import absolute_import
+
 
 from .rijndael import Rijndael
 from .base     import BlockCipher, padWithPadLen, noPadding

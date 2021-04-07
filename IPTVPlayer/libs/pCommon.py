@@ -13,23 +13,23 @@ from Plugins.Extensions.IPTVPlayer.libs.e2ijson import loads as json_loads, dump
 ###################################################
 # FOREIGN import
 ###################################################
-import urllib
-import urllib2
+import urllib.request, urllib.parse, urllib.error
+import urllib.request, urllib.error, urllib.parse
 import base64
 try: import ssl
 except Exception: pass
 import re
 import time
-import cookielib
+import http.cookiejar
 import unicodedata
 try: import pycurl
 except Exception: pass
 try:
-    try: from cStringIO import StringIO
-    except Exception: from StringIO import StringIO 
+    try: from io import StringIO
+    except Exception: from io import StringIO 
     import gzip
 except Exception: pass
-from urlparse import urljoin, urlparse, urlunparse
+from urllib.parse import urljoin, urlparse, urlunparse
 from binascii import hexlify
 ###################################################
 
@@ -47,7 +47,7 @@ def EncodeGzipped(data):
     f.close()
     return encoded
 
-class NoRedirection(urllib2.HTTPRedirectHandler):
+class NoRedirection(urllib.request.HTTPRedirectHandler):
     def http_error_302(self, req, fp, code, msg, headers):
         infourl = urllib.addinfourl(fp, headers, req.get_full_url())
         infourl.status = code
@@ -58,8 +58,8 @@ class NoRedirection(urllib2.HTTPRedirectHandler):
     http_error_303 = http_error_302
     http_error_307 = http_error_302
 
-class MultipartPostHandler(urllib2.BaseHandler):
-    handler_order = urllib2.HTTPHandler.handler_order - 10
+class MultipartPostHandler(urllib.request.BaseHandler):
+    handler_order = urllib.request.HTTPHandler.handler_order - 10
 
     def http_request(self, request):
         data = request.get_data()
@@ -311,7 +311,7 @@ class common:
     def buildHTTPQuery(query):
         def _process(query, data, key_prefix):
             if isinstance(data, dict):
-                for key, value in data.iteritems():
+                for key, value in data.items():
                     key = '%s[%s]' % (key_prefix, key) if key_prefix else key
                     _process(query, value, key)
             elif isinstance(data, list):
@@ -393,7 +393,7 @@ class common:
         return self.geolocation.get('countryCode', '').lower()
         
     def _pyCurlLoadCookie(self, cookiefile, ignoreDiscard=True, ignoreExpires=False):
-        cj = cookielib.MozillaCookieJar()
+        cj = http.cookiejar.MozillaCookieJar()
         f = open(cookiefile)
         lines = f.readlines()
         f.close()
@@ -418,7 +418,7 @@ class common:
             if self.usePyCurl():
                 cj = self._pyCurlLoadCookie(cookiefile, ignoreDiscard, ignoreExpires)
             else:
-                cj = cookielib.MozillaCookieJar()
+                cj = http.cookiejar.MozillaCookieJar()
             cj.load(cookiefile, ignore_discard = ignoreDiscard)
             for cookie in cj:
                 if cookie.name not in leaveNames and (None == removeNames or cookie.name in removeNames):
@@ -441,7 +441,7 @@ class common:
             if self.usePyCurl():
                 cj = self._pyCurlLoadCookie(cookiefile, ignoreDiscard, ignoreExpires)
             else:
-                cj = cookielib.MozillaCookieJar()
+                cj = http.cookiejar.MozillaCookieJar()
                 cj.load(cookiefile, ignore_discard = ignoreDiscard)
         except Exception:
             printExc()
@@ -464,7 +464,7 @@ class common:
             for name in cookiesDict:
                 if 0 < len(allowedNames) and name not in allowedNames: continue
                 value = cookiesDict[name]
-                if unquote: value = urllib.unquote(value)
+                if unquote: value = urllib.parse.unquote(value)
                 ret += '%s=%s; ' % (name, value)
         except Exception:
             printExc()
@@ -646,7 +646,7 @@ class common:
                 
             if params.get('use_cookie', False):
                 cookiesStr = ''
-                for cookieKey in params.get('cookie_items', {}).keys():
+                for cookieKey in list(params.get('cookie_items', {}).keys()):
                     printDBG("cookie_item[%s=%s]" % (cookieKey, params['cookie_items'][cookieKey]))
                     cookiesStr += '%s=%s; ' % (cookieKey, params['cookie_items'][cookieKey])
                 
@@ -699,7 +699,7 @@ class common:
             pageUrl = url
             proxy_gateway = params.get('proxy_gateway', '')
             if proxy_gateway != '':
-                pageUrl = proxy_gateway.format(urllib.quote_plus(pageUrl, ''))
+                pageUrl = proxy_gateway.format(urllib.parse.quote_plus(pageUrl, ''))
             printDBG("pageUrl: [%s]" % pageUrl)
             
             curlSession.setopt(pycurl.URL, pageUrl)
@@ -714,7 +714,7 @@ class common:
                     curlSession.setopt(pycurl.HTTPPOST, post_data)
                     #curlSession.setopt(pycurl.CUSTOMREQUEST, "PUT")
                 else:
-                    curlSession.setopt(pycurl.POSTFIELDS, urllib.urlencode(post_data))
+                    curlSession.setopt(pycurl.POSTFIELDS, urllib.parse.urlencode(post_data))
 
             curlSession.setopt(pycurl.HEADERFUNCTION, _headerFunction)
 
@@ -847,7 +847,7 @@ class common:
                     if key in responseHeaders:
                         metadata[key.lower()]=responseHeaders[key]
 
-            for header, value in responseHeaders.iteritems():
+            for header, value in responseHeaders.items():
                 metadata[header.lower()] = responseHeaders[header]
 
     def getPage(self, url, addParams = {}, post_data = None):
@@ -863,7 +863,7 @@ class common:
                 addParams['return_data'] = True
             response = self.getURLRequestData(addParams, post_data)
             status = True
-        except urllib2.HTTPError as e:
+        except urllib.error.HTTPError as e:
             try:
                 printExc()
                 status = False
@@ -884,7 +884,7 @@ class common:
                     e.fp.close()
             except Exception:
                 printExc()
-        except urllib2.URLError as e:
+        except urllib.error.URLError as e:
             printExc()
             errorMsg = str(e) 
             if 'ssl_protocol' not in addParams and 'TLSV1_ALERT_PROTOCOL_VERSION' in errorMsg:
@@ -909,7 +909,7 @@ class common:
             response = None
             status = False
         
-        if addParams['return_data'] and status and not isinstance(response, basestring):
+        if addParams['return_data'] and status and not isinstance(response, str):
             status = False
             
         return (status, response)
@@ -990,7 +990,7 @@ class common:
                                 url += '&'
                             else:
                                 url += '?'
-                            url += urllib.urlencode(post_data2)
+                            url += urllib.parse.urlencode(post_data2)
                             post_data2 = None
                             
                         sts, data = self.getPage(url, params2, post_data2)
@@ -1034,7 +1034,7 @@ class common:
                             get_data[name] = value
 #                        get_data = dict(re.findall(r'<input[^>]*name="([^"]*)"[^>]*value="([^"]*)"[^>]*>', verData))
                         get_data['jschl_answer'] = decoded['answer']
-                        post_data = 'r=%s&jschl_vc=%s&pass=%s&jschl_answer=%s' % (urllib.quote(get_data['r'], safe=''), urllib.quote(get_data['jschl_vc'], safe=''), urllib.quote(get_data['pass'], safe=''), get_data['jschl_answer'])
+                        post_data = 'r=%s&jschl_vc=%s&pass=%s&jschl_answer=%s' % (urllib.parse.quote(get_data['r'], safe=''), urllib.parse.quote(get_data['jschl_vc'], safe=''), urllib.parse.quote(get_data['pass'], safe=''), get_data['jschl_answer'])
                         verUrl = _getFullUrl2( verUrl, domain).replace('&amp;', '&')
                         params2 = dict(params)
                         params2['load_cookie'] = True
@@ -1157,7 +1157,7 @@ class common:
         return dictRet
         
     def getUrllibSSLProtocolVersion(self, protocolName):
-        if not isinstance(protocolName, basestring):
+        if not isinstance(protocolName, str):
             GetIPTVNotify().push('getUrllibSSLProtocolVersion error. Please report this problem to iptvplayere2@gmail.com', 'error', 40)
             return protocolName
         if protocolName == 'TLSv1_2':
@@ -1167,7 +1167,7 @@ class common:
         return None
         
     def getPyCurlSSLProtocolVersion(self, protocolName):
-        if not isinstance(protocolName, basestring):
+        if not isinstance(protocolName, str):
             GetIPTVNotify().push('getPyCurlSSLProtocolVersion error. Please report this problem to iptvplayere2@gmail.com', 'error', 40)
             return protocolName
         if protocolName == 'TLSv1_2':
@@ -1180,16 +1180,16 @@ class common:
         
         def urlOpen(req, customOpeners, timeout):
             if len(customOpeners) > 0:
-                opener = urllib2.build_opener( *customOpeners )
+                opener = urllib.request.build_opener( *customOpeners )
                 if timeout != None:
                     response = opener.open(req, timeout=timeout)
                 else:
                     response = opener.open(req)
             else:
                 if timeout != None:
-                    response = urllib2.urlopen(req, timeout=timeout)
+                    response = urllib.request.urlopen(req, timeout=timeout)
                 else:
-                    response = urllib2.urlopen(req)
+                    response = urllib.request.urlopen(req)
             return response
         
         if IsMainThread():
@@ -1201,7 +1201,7 @@ class common:
         if 'max_data_size' in params and not params.get('return_data', False):
             raise Exception("return_data == False is not accepted with max_data_size.\nPlease also note that return_data == False is deprecated and not supported with PyCurl HTTP backend!")
         
-        cj = cookielib.MozillaCookieJar()
+        cj = http.cookiejar.MozillaCookieJar()
         response = None
         req      = None
         out_data = None
@@ -1243,13 +1243,13 @@ class common:
                 except Exception:
                     printExc()
             try:
-                for cookieKey in params.get('cookie_items', {}).keys():
+                for cookieKey in list(params.get('cookie_items', {}).keys()):
                     printDBG("cookie_item[%s=%s]" % (cookieKey, params['cookie_items'][cookieKey]))
-                    cookieItem = cookielib.Cookie(version=0, name=cookieKey, value=params['cookie_items'][cookieKey], port=None, port_specified=False, domain='', domain_specified=False, domain_initial_dot=False, path='/', path_specified=True, secure=False, expires=None, discard=True, comment=None, comment_url=None, rest={'HttpOnly': None}, rfc2109=False)
+                    cookieItem = http.cookiejar.Cookie(version=0, name=cookieKey, value=params['cookie_items'][cookieKey], port=None, port_specified=False, domain='', domain_specified=False, domain_initial_dot=False, path='/', path_specified=True, secure=False, expires=None, discard=True, comment=None, comment_url=None, rest={'HttpOnly': None}, rfc2109=False)
                     cj.set_cookie(cookieItem)
             except Exception:
                 printExc()
-            customOpeners.append( urllib2.HTTPCookieProcessor(cj) )
+            customOpeners.append( urllib.request.HTTPCookieProcessor(cj) )
             
         if params.get('no_redirection', False):
             customOpeners.append( NoRedirection() )
@@ -1267,11 +1267,11 @@ class common:
                     ctx = ssl._create_unverified_context( sslProtoVer )
                 else:
                     ctx = ssl._create_unverified_context()
-                customOpeners.append(urllib2.HTTPSHandler(context=ctx))
+                customOpeners.append(urllib.request.HTTPSHandler(context=ctx))
             except Exception: pass
         elif sslProtoVer != None:
             ctx = ssl.SSLContext( sslProtoVer )
-            customOpeners.append(urllib2.HTTPSHandler(context=ctx))
+            customOpeners.append(urllib.request.HTTPSHandler(context=ctx))
         
         #proxy support
         if self.useProxy:
@@ -1283,13 +1283,13 @@ class common:
             http_proxy = params['http_proxy']
         if '' != http_proxy:
             printDBG('getURLRequestData USE PROXY')
-            customOpeners.append( urllib2.ProxyHandler({"http":http_proxy}) )
-            customOpeners.append( urllib2.ProxyHandler({"https":http_proxy}) )
+            customOpeners.append( urllib.request.ProxyHandler({"http":http_proxy}) )
+            customOpeners.append( urllib.request.ProxyHandler({"https":http_proxy}) )
         
         pageUrl = params['url']
         proxy_gateway = params.get('proxy_gateway', '')
         if proxy_gateway != '':
-            pageUrl = proxy_gateway.format(urllib.quote_plus(pageUrl, ''))
+            pageUrl = proxy_gateway.format(urllib.parse.quote_plus(pageUrl, ''))
         printDBG("pageUrl: [%s]" % pageUrl)
 
         if None != post_data:
@@ -1300,10 +1300,10 @@ class common:
                 customOpeners.append( MultipartPostHandler() )
                 dataPost = post_data
             else:
-                dataPost = urllib.urlencode(post_data)
-            req = urllib2.Request(pageUrl, dataPost, headers)
+                dataPost = urllib.parse.urlencode(post_data)
+            req = urllib.request.Request(pageUrl, dataPost, headers)
         else:
-            req = urllib2.Request(pageUrl, None, headers)
+            req = urllib.request.Request(pageUrl, None, headers)
 
         if not params.get('return_data', False):
             out_data = urlOpen(req, customOpeners, timeout)
@@ -1321,7 +1321,7 @@ class common:
                 
                 data = response.read(params.get('max_data_size', -1))
                 response.close()
-            except urllib2.HTTPError as e:
+            except urllib.error.HTTPError as e:
                 ignoreCodeRanges = params.get('ignore_http_code_ranges', [(404, 404), (500, 500)])
                 ignoreCode = False
                 metadata['status_code'] = e.code

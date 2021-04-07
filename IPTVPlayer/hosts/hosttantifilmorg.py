@@ -13,7 +13,7 @@ from Plugins.Extensions.IPTVPlayer.tools.e2ijs import js_execute
 # FOREIGN import
 ###################################################
 import re
-import urllib
+import urllib.request, urllib.parse, urllib.error
 try:    import json
 except Exception: import simplejson as json
 ###################################################
@@ -323,7 +323,7 @@ class TantiFilmOrg(CBaseHostClass):
     def listSearchResult(self, cItem, searchPattern, searchType):
         printDBG("TantiFilmOrg.listSearchResult cItem[%s], searchPattern[%s] searchType[%s]" % (cItem, searchPattern, searchType))
         
-        baseUrl = self.getFullUrl('?s=' + urllib.quote_plus(searchPattern))
+        baseUrl = self.getFullUrl('?s=' + urllib.parse.quote_plus(searchPattern))
         cItem = dict(cItem)
         cItem['url'] = baseUrl
         self.listItems(cItem, 'list_content')
@@ -381,8 +381,8 @@ class TantiFilmOrg(CBaseHostClass):
         urlTab = []
         
         # mark requested link as used one
-        if len(self.cacheLinks.keys()):
-            key = self.cacheLinks.keys()[0]
+        if len(list(self.cacheLinks.keys())):
+            key = list(self.cacheLinks.keys())[0]
             for idx in range(len(self.cacheLinks[key])):
                 if videoUrl in self.cacheLinks[key][idx]['url']:
                     if not self.cacheLinks[key][idx]['name'].startswith('*'):

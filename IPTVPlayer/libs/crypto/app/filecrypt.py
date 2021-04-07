@@ -9,7 +9,7 @@
     2002 by Paul A. Lambert
     Read LICENSE.txt for license information.
 """
-from __future__ import print_function
+
 import sys, getpass, getopt, os
 from crypto.cipher.trolldoll import Trolldoll
 from crypto.errors           import DecryptNotBlockAlignedError

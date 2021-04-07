@@ -13,7 +13,7 @@ from Plugins.Extensions.IPTVPlayer.tools.iptvtypes import strwithmeta
 # FOREIGN import
 ###################################################
 import re
-import urllib
+import urllib.request, urllib.parse, urllib.error
 import random
 try:    import json
 except Exception: import simplejson as json
@@ -236,7 +236,7 @@ class IceFilms(CBaseHostClass):
     def listSearchResult(self, cItem, searchPattern, searchType):
         printDBG("IceFilms.listSearchResult cItem[%s], searchPattern[%s] searchType[%s]" % (cItem, searchPattern, searchType))
         
-        baseUrl = self.getFullUrl('/search.php?q=%s&x=0&y=0' % urllib.quote_plus(searchPattern))
+        baseUrl = self.getFullUrl('/search.php?q=%s&x=0&y=0' % urllib.parse.quote_plus(searchPattern))
         sts, data = self.getPage(baseUrl)
         if not sts: return
 
@@ -292,8 +292,8 @@ class IceFilms(CBaseHostClass):
         urlTab = []
         
         # mark requested link as used one
-        if len(self.cacheLinks.keys()):
-            key = self.cacheLinks.keys()[0]
+        if len(list(self.cacheLinks.keys())):
+            key = list(self.cacheLinks.keys())[0]
             for idx in range(len(self.cacheLinks[key])):
                 if videoUrl in self.cacheLinks[key][idx]['url']:
                     if not self.cacheLinks[key][idx]['name'].startswith('*'):
@@ -359,7 +359,7 @@ class IceFilms(CBaseHostClass):
             if 1 == self.up.checkHostSupport(videoUrl):
                 urlTab.extend(self.up.getVideoLinkExt(videoUrl))
         
-        videoUrl = urllib.unquote(data.split('?url=')[-1].strip())
+        videoUrl = urllib.parse.unquote(data.split('?url=')[-1].strip())
         if self.cm.isValidUrl(videoUrl):
             return self.up.getVideoLinkExt(videoUrl)
         return urlTab

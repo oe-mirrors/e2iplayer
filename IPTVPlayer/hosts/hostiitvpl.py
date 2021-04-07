@@ -11,7 +11,7 @@ from Plugins.Extensions.IPTVPlayer.libs.unshortenit import unshorten
 ###################################################
 # FOREIGN import
 ###################################################
-import urllib
+import urllib.request, urllib.parse, urllib.error
 try:    import json
 except Exception: import simplejson as json
 ###################################################
@@ -139,7 +139,7 @@ class IITVPL(CBaseHostClass):
     def listSearchResult(self, cItem, searchPattern, searchType):
         printDBG("IITVPL.listSearchResult cItem[%s], searchPattern[%s] searchType[%s]" % (cItem, searchPattern, searchType))
         cItem = dict(cItem)
-        cItem['url'] = self.SEARCH_URL + '/' + urllib.quote_plus(searchPattern)
+        cItem['url'] = self.SEARCH_URL + '/' + urllib.parse.quote_plus(searchPattern)
         self.listItems(cItem, 'list_episodes')
     
     def getLinksForVideo(self, cItem):
@@ -176,7 +176,7 @@ class IITVPL(CBaseHostClass):
                         links[tabTitle].append({'name':'[{0}] '.format(tabTitle) + self.cleanHtmlStr(tmp[1]), 'url':tmp[0], 'need_resolve':1})
         
         keys = ['Lektor', 'Napisy PL', 'Oryginał']
-        keys.extend(links.keys())
+        keys.extend(list(links.keys()))
         for key in keys:
             for item in links.get(key, []):
                 urlTab.append(item)
@@ -190,8 +190,8 @@ class IITVPL(CBaseHostClass):
         urlTab = []
         
         # mark requested link as used one
-        if len(self.cacheLinks.keys()):
-            key = self.cacheLinks.keys()[0]
+        if len(list(self.cacheLinks.keys())):
+            key = list(self.cacheLinks.keys())[0]
             for idx in range(len(self.cacheLinks[key])):
                 if videoUrl in self.cacheLinks[key][idx]['url']:
                     if not self.cacheLinks[key][idx]['name'].startswith('*'):

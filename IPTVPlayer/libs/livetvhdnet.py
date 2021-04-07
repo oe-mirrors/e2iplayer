@@ -15,7 +15,7 @@ from Plugins.Extensions.IPTVPlayer.libs.e2ijson import loads as json_loads
 # FOREIGN import
 ###################################################
 import re
-import urllib
+import urllib.request, urllib.parse, urllib.error
 ############################################
 
 ###################################################
@@ -53,7 +53,7 @@ class LivetvhdNetApi(CBaseHostClass):
     def getFullIconUrl(self, url):
         url = self.getFullUrl(url)
         if url != '' and self.isNeedProxy():
-            proxy = 'http://www.proxy-german.de/index.php?q={0}&hl=2e1'.format(urllib.quote(url, ''))
+            proxy = 'http://www.proxy-german.de/index.php?q={0}&hl=2e1'.format(urllib.parse.quote(url, ''))
             params = {}
             params['User-Agent'] = self.HEADER['User-Agent'],
             params['Referer'] = proxy

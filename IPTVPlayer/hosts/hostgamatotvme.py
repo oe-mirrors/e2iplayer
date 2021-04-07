@@ -11,9 +11,9 @@ from Plugins.Extensions.IPTVPlayer.tools.iptvtypes import strwithmeta
 ###################################################
 # FOREIGN import
 ###################################################
-import urlparse
+import urllib.parse
 import re
-import urllib
+import urllib.request, urllib.parse, urllib.error
 try:    import json
 except Exception: import simplejson as json
 ###################################################
@@ -50,7 +50,7 @@ class GamatoTV(CBaseHostClass):
         
         def _getFullUrl(url):
             if self.cm.isValidUrl(url): return url
-            else: return urlparse.urljoin(baseUrl, url)
+            else: return urllib.parse.urljoin(baseUrl, url)
         
         addParams['cloudflare_params'] = {'domain':self.up.getDomain(baseUrl), 'cookie_file':self.COOKIE_FILE, 'User-Agent':self.USER_AGENT, 'full_url_handle':_getFullUrl}
         return self.cm.getPageCFProtection(baseUrl, addParams, post_data)
@@ -295,7 +295,7 @@ class GamatoTV(CBaseHostClass):
     def listSearchResult(self, cItem, searchPattern, searchType):
         printDBG("listSearchResult cItem[%s], searchPattern[%s] searchType[%s]" % (cItem, searchPattern, searchType))
         cItem = dict(cItem)
-        cItem['url'] = self.getFullUrl('/groups/group/search?ie=UTF-8&sa=Search&q=' + urllib.quote_plus(searchPattern))
+        cItem['url'] = self.getFullUrl('/groups/group/search?ie=UTF-8&sa=Search&q=' + urllib.parse.quote_plus(searchPattern))
         self.listItems(cItem, 'explore_item')
         
     def getLinksForVideo(self, cItem):
@@ -312,7 +312,7 @@ class GamatoTV(CBaseHostClass):
         orginUrl = str(videoUrl)
         
         # mark requested link as used one
-        if len(self.cacheLinks.keys()):
+        if len(list(self.cacheLinks.keys())):
             for key in self.cacheLinks:
                 for idx in range(len(self.cacheLinks[key])):
                     if videoUrl in self.cacheLinks[key][idx]['url']:

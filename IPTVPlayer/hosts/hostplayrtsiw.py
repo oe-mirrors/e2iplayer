@@ -13,7 +13,7 @@ from Plugins.Extensions.IPTVPlayer.libs.urlparserhelper import getDirectM3U8Play
 ###################################################
 # FOREIGN import
 ###################################################
-import urllib
+import urllib.request, urllib.parse, urllib.error
 try:    import json
 except Exception: import simplejson as json
 from datetime import datetime
@@ -419,7 +419,7 @@ class PlayRTSIW(CBaseHostClass):
        
         self.setMainUrl(self.URL_MAP[searchType.lower()]) 
         self.DEFAULT_ICON_URL = self.SEARCH_ICON_URL
-        pattern = urllib.quote(searchPattern)
+        pattern = urllib.parse.quote(searchPattern)
         
         baseUrl = 'search?searchQuery={0}&numberOf'.format(pattern)
         for type in ['tv', 'radio']:

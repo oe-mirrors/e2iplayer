@@ -13,7 +13,7 @@ from Plugins.Extensions.IPTVPlayer.libs.urlparserhelper import getDirectM3U8Play
 # FOREIGN import
 ###################################################
 import re
-import urllib
+import urllib.request, urllib.parse, urllib.error
 import random
 from datetime import datetime, timedelta
 try:    import json
@@ -234,16 +234,16 @@ class RTBFBE(CBaseHostClass):
         newData = ''
         if isinstance(obj, list):
             for idx in range(len(obj)):
-                newData += self.serParams(obj[idx], data + urllib.quote('[%d]' % idx))
+                newData += self.serParams(obj[idx], data + urllib.parse.quote('[%d]' % idx))
         elif isinstance(obj, dict):
             for key in obj:
-                newData += self.serParams(obj[key], data + urllib.quote('[%s]' % key))
+                newData += self.serParams(obj[key], data + urllib.parse.quote('[%s]' % key))
         elif obj == True:
             newData += data + '=true&'
         elif obj == False:
             newData += data + '=false&'
         else:
-            newData += data + '=%s&' % urllib.quote(str(obj))
+            newData += data + '=%s&' % urllib.parse.quote(str(obj))
         return newData
         
     def listSections(self, cItem, nextCategory1, nextCategory2):
@@ -383,7 +383,7 @@ class RTBFBE(CBaseHostClass):
     
     def listSearchResult(self, cItem, searchPattern, searchType):
         printDBG("RTBFBE.listSearchResult cItem[%s], searchPattern[%s] searchType[%s]" % (cItem, searchPattern, searchType))
-        params = {'name':'category', 'type':'category', 'default_media_type':searchType, 'url':self.getFullUrl('/auvio/recherche?q=%s&type=%s') % (urllib.quote_plus(searchPattern), searchType)}
+        params = {'name':'category', 'type':'category', 'default_media_type':searchType, 'url':self.getFullUrl('/auvio/recherche?q=%s&type=%s') % (urllib.parse.quote_plus(searchPattern), searchType)}
         self.listSections(params, 'list_sub_items', 'sections')
         
     def getUserGeoLoc(self):
@@ -461,7 +461,7 @@ class RTBFBE(CBaseHostClass):
                     
             # SUBTITLES
             for item in data['tracks']:
-                if isinstance(item, basestring): item = data['tracks'][item]
+                if isinstance(item, str): item = data['tracks'][item]
                 subtitleUrl = item['url']
                 if not self.cm.isValidUrl(subtitleUrl): continue
                 subsTab.append({'title':item['label'], 'url':subtitleUrl, 'lang':item['lang'], 'format':item['format']})
@@ -494,7 +494,7 @@ class RTBFBE(CBaseHostClass):
         self.tryTologin()
         
         # mark requested link as used one
-        if len(self.cacheLinks.keys()):
+        if len(list(self.cacheLinks.keys())):
             for key in self.cacheLinks:
                 for idx in range(len(self.cacheLinks[key])):
                     if videoUrl in self.cacheLinks[key][idx]['url']:

@@ -15,7 +15,7 @@ from Plugins.Extensions.IPTVPlayer.libs.youtube_dl.extractor.bbc import BBCCoUkI
 # FOREIGN import
 ###################################################
 import re
-import urllib
+import urllib.request, urllib.parse, urllib.error
 try:    import json
 except Exception: import simplejson as json
 from Components.config import config, getConfigListEntry
@@ -472,7 +472,7 @@ class BBCiPlayer(CBaseHostClass):
         # if search pattern was specified, use it to build the URL, otherwise 
         # leave the URL alone - it will already be set if this is a Next Page search
         if len(searchPattern):
-            cItem['url'] = self.getFullUrl('iplayer/search?q=' + urllib.quote_plus(searchPattern))
+            cItem['url'] = self.getFullUrl('iplayer/search?q=' + urllib.parse.quote_plus(searchPattern))
 
         self.listItems(cItem, 'list_episodes')
     

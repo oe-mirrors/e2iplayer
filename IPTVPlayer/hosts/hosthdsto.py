@@ -14,7 +14,7 @@ from Plugins.Extensions.IPTVPlayer.libs.urlparserhelper import getDirectM3U8Play
 # FOREIGN import
 ###################################################
 import re
-import urllib
+import urllib.request, urllib.parse, urllib.error
 try: import json
 except Exception: import simplejson as json
 from Components.config import config, ConfigText, ConfigSelection, getConfigListEntry
@@ -66,7 +66,7 @@ class HDSTo(CBaseHostClass):
     
     def getRealUrl(self, url):
         if config.plugins.iptvplayer.hdsto_proxy.value == 'webproxy' and url != None and 'browse.php?u=' in url:
-            url = urllib.unquote( self.cm.ph.getSearchGroups(url+'&', '''\?u=(http[^&]+?)&''')[0] )
+            url = urllib.parse.unquote( self.cm.ph.getSearchGroups(url+'&', '''\?u=(http[^&]+?)&''')[0] )
         return url
     
     def getFullUrl(self, url, baseUrl=None):
@@ -86,7 +86,7 @@ class HDSTo(CBaseHostClass):
         proxy = config.plugins.iptvplayer.hdsto_proxy.value
         if proxy == 'webproxy':
             addParams = dict(addParams)
-            proxy = 'http://n-guyot.fr/exit/browse.php?u={0}&b=4'.format(urllib.quote(baseUrl, ''))
+            proxy = 'http://n-guyot.fr/exit/browse.php?u={0}&b=4'.format(urllib.parse.quote(baseUrl, ''))
             addParams['header']['Referer'] = proxy + '&f=norefer'
             baseUrl = proxy
         elif proxy != 'None':
@@ -329,10 +329,10 @@ class HDSTo(CBaseHostClass):
     def listSearchResult(self, cItem, searchPattern, searchType):
         self.tryTologin()
 
-        searchPattern = urllib.quote_plus(searchPattern)
+        searchPattern = urllib.parse.quote_plus(searchPattern)
         cItem = dict(cItem)
         cItem['category'] = 'list_items'
-        cItem['url'] = self.getFullUrl('/search.php?q=') + urllib.quote_plus(searchPattern)
+        cItem['url'] = self.getFullUrl('/search.php?q=') + urllib.parse.quote_plus(searchPattern)
         sts, data = self.getPage(cItem['url'])
         if not sts: return
         self.setMainUrl(self.cm.meta['url'])
@@ -349,7 +349,7 @@ class HDSTo(CBaseHostClass):
     def getVideoLinks(self, videoUrl):
         printDBG("HDSTo.getVideoLinks [%s]" % videoUrl)
         # mark requested link as used one
-        if len(self.cacheLinks.keys()):
+        if len(list(self.cacheLinks.keys())):
             for key in self.cacheLinks:
                 for idx in range(len(self.cacheLinks[key])):
                     if videoUrl in self.cacheLinks[key][idx]['url']:
@@ -418,14 +418,14 @@ class HDSTo(CBaseHostClass):
                             
                             linksTab.extend(tmpLinksTab)
                     else:
-                        for key, dat in data.iteritems():
+                        for key, dat in data.items():
                             subsTab = []
                             for item in dat.get('ccFiles', []):
                                 if len(item) < 3: continue
                                 subsTab.append({'title':self.cleanHtmlStr(item[1]), 'url':self.getFullUrl(item[2], cUrl), 'lang':self.cleanHtmlStr(item[0]), 'format':self.cleanHtmlStr(item[0]).rsplit('.', 1)[-1]})
                             
                             tmpLinksTab = []
-                            for type, item in dat.get('bitrates', {}).iteritems():
+                            for type, item in dat.get('bitrates', {}).items():
                                 if type == 'hls':
                                     tmpLinksTab.extend( getDirectM3U8Playlist(item, checkExt=False, checkContent=True) )
                                 elif type == 'mp4' and isinstance(item, list):

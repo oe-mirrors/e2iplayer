@@ -12,7 +12,7 @@ from Plugins.Extensions.IPTVPlayer.tools.iptvtypes import strwithmeta
 ###################################################
 # FOREIGN import
 ###################################################
-import urllib
+import urllib.request, urllib.parse, urllib.error
 ###################################################
 
 
@@ -207,7 +207,7 @@ class Filmativa(CBaseHostClass):
         self.listsTab(self.seriesCache.get(season, []), cItem, 'video')
         
     def listSearchResult(self, cItem, searchPattern, searchType):
-        searchPattern = urllib.quote_plus(searchPattern)
+        searchPattern = urllib.parse.quote_plus(searchPattern)
         cItem = dict(cItem)
         if searchType == 'movies':
             cItem['url'] = self.SRCH_URL + searchPattern

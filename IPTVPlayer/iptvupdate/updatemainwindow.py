@@ -768,7 +768,7 @@ class UpdateMainAppImpl(IUpdateObjectInterface):
                     serverOK = True
                     extServer = {}
                     for key in ['name', 'version', 'url', 'subdir', 'pyver', 'packagetype', 'graphics_url', 'icons_url']:
-                        if key not in server.iterkeys():
+                        if key not in iter(server.keys()):
                             serverOK = False
                             break
                         else:

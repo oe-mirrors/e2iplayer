@@ -11,7 +11,7 @@ from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc
 # FOREIGN import
 ###################################################
 import re
-import urllib
+import urllib.request, urllib.parse, urllib.error
 try:    import json
 except Exception: import simplejson as json
 ###################################################
@@ -163,7 +163,7 @@ class WgranePL(CBaseHostClass):
     def listSearchResult(self, cItem, searchPattern, searchType):
         printDBG("WgranePL.listSearchResult cItem[%s], searchPattern[%s] searchType[%s]" % (cItem, searchPattern, searchType))
         cItem = dict(cItem)
-        cItem['url'] = self.getFullUrl('/watch.html?search=') + urllib.quote_plus(searchPattern)
+        cItem['url'] = self.getFullUrl('/watch.html?search=') + urllib.parse.quote_plus(searchPattern)
         cItem['category'] = 'list_items'
         self.listItems(cItem, 'list_playlist')
     

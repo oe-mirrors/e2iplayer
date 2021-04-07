@@ -12,7 +12,7 @@ from Plugins.Extensions.IPTVPlayer.components.iptvmultipleinputbox import IPTVMu
 # FOREIGN import
 ###################################################
 import re
-import urllib
+import urllib.request, urllib.parse, urllib.error
 try:    import json
 except Exception: import simplejson as json
 from Components.config import config, ConfigText, getConfigListEntry
@@ -98,7 +98,7 @@ class StreamLiveTo(CBaseHostClass):
         tmp = self.cm.ph.getDataBeetwenMarkers(data, '<select name="category"', '</select>', False)[1]
         tmp = re.compile('<option [^>]*?value="([^"]*?)"[^>]*?>([^<]+?)</option>').findall(tmp)
         for item in tmp:
-            tmpTab.append({'title':item[1], 'f_cat':urllib.quote(item[0])})
+            tmpTab.append({'title':item[1], 'f_cat':urllib.parse.quote(item[0])})
         if len(tmpTab): 
             self.cacheFilters['f_cat'] = tmpTab
             self.cacheFiltersKeys.append('f_cat')
@@ -210,7 +210,7 @@ class StreamLiveTo(CBaseHostClass):
     def listSearchResult(self, cItem, searchPattern, searchType):
         printDBG("StreamLiveTo.listSearchResult cItem[%s], searchPattern[%s] searchType[%s]" % (cItem, searchPattern, searchType))
         cItem = dict(cItem)
-        cItem['f_q'] = urllib.quote(searchPattern)
+        cItem['f_q'] = urllib.parse.quote(searchPattern)
         self.listChannels(cItem)
     
     def getLinksForVideo(self, cItem):

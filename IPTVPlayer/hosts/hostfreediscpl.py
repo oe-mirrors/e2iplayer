@@ -13,7 +13,7 @@ from Plugins.Extensions.IPTVPlayer.libs import ph
 # FOREIGN import
 ###################################################
 import re
-import urllib
+import urllib.request, urllib.parse, urllib.error
 from copy import deepcopy
 from Components.config import config, ConfigText, getConfigListEntry
 ###################################################
@@ -225,7 +225,7 @@ class FreeDiscPL(CBaseHostClass):
         params = dict(self.defaultParams)
         params['raw_post_data'] = True
         params['header'] = dict(self.AJAX_HEADER)
-        params['header']['Referer']= self.cm.getBaseUrl(self.getMainUrl()) + 'search/%s/%s' % (cItem.get('f_search_type', ''), urllib.quote(cItem.get('f_search_pattern', '')))
+        params['header']['Referer']= self.cm.getBaseUrl(self.getMainUrl()) + 'search/%s/%s' % (cItem.get('f_search_type', ''), urllib.parse.quote(cItem.get('f_search_pattern', '')))
         
         sts, data = self.getPage(cItem['url'], params, json_dumps(post_data))
         if not sts: return

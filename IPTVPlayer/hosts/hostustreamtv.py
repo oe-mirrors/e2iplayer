@@ -12,7 +12,7 @@ from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, Ge
 ###################################################
 import copy
 import re
-import urllib
+import urllib.request, urllib.parse, urllib.error
 try:    import json
 except Exception: import simplejson as json
 ###################################################
@@ -155,9 +155,9 @@ class UstreamTV(CBaseHostClass):
             self.addDir(params)
         
     def listSearchResult(self, cItem, searchPattern, searchType):
-        searchPattern = urllib.quote_plus(searchPattern)
+        searchPattern = urllib.parse.quote_plus(searchPattern)
         cItem = dict(cItem)
-        cItem['q']  = urllib.quote_plus(searchPattern)
+        cItem['q']  = urllib.parse.quote_plus(searchPattern)
         cItem['filters'] = {}
         self.listFilters(cItem, 'category', 'filter_type')
         

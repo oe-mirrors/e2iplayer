@@ -5,7 +5,7 @@
 #  $Id$
 #
 # 
-from __future__ import absolute_import
+
 from Screens.InputBox import InputBox
 from .cover import Cover3
 from Components.Label import Label

@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 #### Local imports
-from __future__ import print_function
-from __future__ import absolute_import
+
+
 from .__init__ import _
 from . import settings
 from . import webParts
@@ -21,7 +21,8 @@ from Components.Language import language
 #### system imports
 import os
 from twisted.web import resource, http, util
-import urllib
+import urllib.request, urllib.parse, urllib.error
+import importlib
 
 ########################################################
 def reloadScripts():
@@ -31,16 +32,16 @@ def reloadScripts():
         if os.path.exists(os.path.join(webPath, "webParts.pyo")):
             if (int(os.path.getmtime(os.path.join(webPath, "webParts.pyo"))) < 
                 int(os.path.getmtime(os.path.join(webPath, "webParts.py")))):
-                reload(webParts)
+                importlib.reload(webParts)
         else:
-            reload(webParts)
+            importlib.reload(webParts)
     if os.path.exists(os.path.join(webPath, "webThreads.py")):
         if os.path.exists(os.path.join(webPath, "webThreads.pyo")):
             if (int(os.path.getmtime(os.path.join(webPath, "webThreads.pyo"))) < 
                 int(os.path.getmtime(os.path.join(webPath, "webThreads.py")))):
-                reload(webThreads)
+                importlib.reload(webThreads)
         else:
-            reload(webThreads)
+            importlib.reload(webThreads)
 ########################################################
 class redirectionPage(resource.Resource):
     
@@ -84,8 +85,8 @@ class StartPage(resource.Resource):
         req.setHeader('Content-type', 'text/html')
         req.setHeader('charset', 'UTF-8')
         resetStatusMSG=[]
-        if len(req.args.keys()) > 0:
-            if req.args.keys()[0] == 'resetState':
+        if len(list(req.args.keys())) > 0:
+            if list(req.args.keys())[0] == 'resetState':
                 settings.activeHost = {}
                 settings.activeHostsHTML = {}
                 settings.currItem = {}
@@ -130,14 +131,14 @@ class searchPage(resource.Resource):
         req.setHeader('Content-type', 'text/html')
         req.setHeader('charset', 'UTF-8')
 
-        if len(req.args.keys()) > 0:
-            key = req.args.keys()[0]
+        if len(list(req.args.keys())) > 0:
+            key = list(req.args.keys())[0]
             arg = req.args.get(key, None)[0]
-            if len(req.args.keys()) > 1:
-                if req.args.keys()[1] == 'type':
-                    if req.args.get(req.args.keys()[1], 'ALL')[0] == '':
+            if len(list(req.args.keys())) > 1:
+                if list(req.args.keys())[1] == 'type':
+                    if req.args.get(list(req.args.keys())[1], 'ALL')[0] == '':
                         settings.GlobalSearchTypes = ["VIDEO", "AUDIO"]
-                    elif req.args.get(req.args.keys()[1], 'ALL')[0] == '':
+                    elif req.args.get(list(req.args.keys())[1], 'ALL')[0] == '':
                         settings.GlobalSearchTypes = ["AUDIO"]
                     else:
                         settings.GlobalSearchTypes = ["VIDEO"]
@@ -308,8 +309,8 @@ class settingsPage(resource.Resource):
         req.setHeader('charset', 'UTF-8')
 
         """ rendering server response """
-        if len(req.args.keys()) > 0:
-            key = req.args.keys()[0]
+        if len(list(req.args.keys())) > 0:
+            key = list(req.args.keys())[0]
             arg = req.args.get(key, None)[0]
             print('Received: ', key, '=', arg)
         
@@ -376,8 +377,8 @@ class downloaderPage(resource.Resource):
         arg2 = None
         arg3 = None
         DMlist = []
-        if len(req.args.keys()) >= 1:
-            key = req.args.keys()[0]
+        if len(list(req.args.keys())) >= 1:
+            key = list(req.args.keys())[0]
             arg = req.args.get(key, None)[0]
             try: arg2 = req.args.get(key, None)[1]
             except Exception: pass
@@ -406,7 +407,7 @@ class downloaderPage(resource.Resource):
             if None != Plugins.Extensions.IPTVPlayer.components.iptvplayerwidget.gDownloadManager:
                 DMlist = Plugins.Extensions.IPTVPlayer.components.iptvplayerwidget.gDownloadManager.getList()
         elif key == 'watchMovie' and os.path.exists(arg):
-            return util.redirectTo("/file?action=download&file=%s" % urllib.quote(arg.decode('utf8', 'ignore').encode('utf-8')), req)
+            return util.redirectTo("/file?action=download&file=%s" % urllib.parse.quote(arg.decode('utf8', 'ignore').encode('utf-8')), req)
         elif key == 'stopDownload' and arg.isdigit():
             if None != Plugins.Extensions.IPTVPlayer.components.iptvplayerwidget.gDownloadManager:
                 Plugins.Extensions.IPTVPlayer.components.iptvplayerwidget.gDownloadManager.stopDownloadItem(int(arg))
@@ -424,7 +425,7 @@ class downloaderPage(resource.Resource):
             if arg2 == 'deleteMovie' and os.path.exists(arg3):
                 os.remove(arg3)
             elif arg2 == 'watchMovie' and os.path.exists(arg3):
-                return util.redirectTo("/file?action=download&file=%s" % urllib.quote(arg3.decode('utf8', 'ignore').encode('utf-8')), req)
+                return util.redirectTo("/file?action=download&file=%s" % urllib.parse.quote(arg3.decode('utf8', 'ignore').encode('utf-8')), req)
             if os.path.exists(config.plugins.iptvplayer.NaszaSciezka.value) and None != Plugins.Extensions.IPTVPlayer.components.iptvplayerwidget.gDownloadManager:
                 files = os.listdir(config.plugins.iptvplayer.NaszaSciezka.value)
                 files.sort(key=lambda x: x.lower())
@@ -481,11 +482,11 @@ class useHostPage(resource.Resource):
         extraMeta = ''
         MenuStatusMSG = ''
         
-        if len(req.args.keys()) > 0:
-            self.key = req.args.keys()[0]
+        if len(list(req.args.keys())) > 0:
+            self.key = list(req.args.keys())[0]
             self.arg = req.args.get(self.key, None)[0]
-            if len(req.args.keys()) > 1:
-                self.searchType = req.args.keys()[1]
+            if len(list(req.args.keys())) > 1:
+                self.searchType = list(req.args.keys())[1]
                 print("useHostPage received: '%s'='%s' searchType='%s'" % (self.key, str(self.arg), self.searchType))
             else:
                 print("useHostPage received: '%s'='%s'" % (self.key, str(self.arg)))

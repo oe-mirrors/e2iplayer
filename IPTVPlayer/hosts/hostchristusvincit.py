@@ -17,7 +17,7 @@ from Plugins.Extensions.IPTVPlayer.libs.e2ijson import loads as json_loads
 ###################################################
 import re
 import time
-import urllib
+import urllib.request, urllib.parse, urllib.error
 from datetime import  timedelta
 ###################################################
 
@@ -394,7 +394,7 @@ class Christusvincit(CBaseHostClass):
                     playerConfig = json_loads(playerConfig)
                     playlistResult = playerConfig.get('playlistResult', {})
                     if not playlistResult: playlistResult['0'] = {'items':[playerConfig['entryResult']['meta']]}
-                    for key, section in playlistResult.iteritems():
+                    for key, section in playlistResult.items():
                         for item in section['items']:
                             icon = self.getFullUrl(item['thumbnailUrl'])
                             title = item['name']
@@ -410,7 +410,7 @@ class Christusvincit(CBaseHostClass):
 
     def listSearchResult(self, cItem, searchPattern, searchType):
 
-        url = self.getFullUrl('/search.php?stext=%s&search=Szukaj&method=AND&stype=articles&forum_id=0&datelimit=0&fields=2&sort=datestamp&order=0&chars=50' % urllib.quote_plus(searchPattern))
+        url = self.getFullUrl('/search.php?stext=%s&search=Szukaj&method=AND&stype=articles&forum_id=0&datelimit=0&fields=2&sort=datestamp&order=0&chars=50' % urllib.parse.quote_plus(searchPattern))
         cItem = MergeDicts(cItem, {'category':'list_search', 'url':url})
         self.listSearchItems(cItem)
 

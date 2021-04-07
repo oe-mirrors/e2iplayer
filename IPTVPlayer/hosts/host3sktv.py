@@ -13,8 +13,8 @@ from Plugins.Extensions.IPTVPlayer.libs.e2ijson import loads as json_loads
 # FOREIGN import
 ###################################################
 import re
-import urllib
-from urlparse import urlparse
+import urllib.request, urllib.parse, urllib.error
+from urllib.parse import urlparse
 ###################################################
 
 def gettytul():
@@ -201,7 +201,7 @@ class C3skTv(CBaseHostClass):
         urlTab = []
         
         # mark requested link as used one
-        if len(self.cacheLinks.keys()):
+        if len(list(self.cacheLinks.keys())):
             for key in self.cacheLinks:
                 for idx in range(len(self.cacheLinks[key])):
                     if videoUrl in self.cacheLinks[key][idx]['url']:
@@ -215,7 +215,7 @@ class C3skTv(CBaseHostClass):
         marker = 'google.search.Search.csqr2538'
         page = cItem.get('page', 0)
         if page == 0:
-            url = self.getFullUrl('/search.htm?q=%s&btnG=' % urllib.quote(searchPattern))
+            url = self.getFullUrl('/search.htm?q=%s&btnG=' % urllib.parse.quote(searchPattern))
             sts, data = self.getPage(url)
             if not sts: return
             cx = ph.search(data, '''var\s+?cx\s*?=\s*?['"]([^'^"]+?)['"]''')[0]

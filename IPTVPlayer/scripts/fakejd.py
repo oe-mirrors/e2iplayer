@@ -1,15 +1,15 @@
 # -*- encoding: utf-8 -*-
-from __future__ import print_function
+
 import socket
 import hashlib
 import hmac
 import time
-import urllib
-import urllib2
+import urllib.request, urllib.parse, urllib.error
+import urllib.request, urllib.error, urllib.parse
 import base64
 import sys
 import traceback
-from BaseHTTPServer import BaseHTTPRequestHandler
+from http.server import BaseHTTPRequestHandler
 try:    import json
 except Exception: import simplejson as json
 from binascii import hexlify
@@ -48,14 +48,14 @@ def getPage(url, headers={}, post_data=None):
     
     try:
         ctx = ssl._create_unverified_context()
-        customOpeners.append(urllib2.HTTPSHandler(context=ctx))
+        customOpeners.append(urllib.request.HTTPSHandler(context=ctx))
     except Exception:
         pass
     
     sts = 0
     data = ''
     try:
-        req = urllib2.Request(url)
+        req = urllib.request.Request(url)
         for key in headers:
             req.add_header(key, headers[key])
         
@@ -63,11 +63,11 @@ def getPage(url, headers={}, post_data=None):
         printDBG(req.headers)
         printDBG("++++HEADERS END++++")
         
-        opener = urllib2.build_opener( *customOpeners )
+        opener = urllib.request.build_opener( *customOpeners )
         response = opener.open(req)
         data = response.read()
         sts = response.getcode()
-    except urllib2.HTTPError as e:
+    except urllib.error.HTTPError as e:
         global LAST_HTTP_ERROR_CODE
         global LAST_HTTP_ERROR_DATA
         LAST_HTTP_ERROR_CODE = e.code
@@ -230,7 +230,7 @@ class Myjdapi:
             query = [path + "?"]
             for param in params:
                 if param[0] != "encryptedLoginSecret":
-                    query += ["%s=%s" % (param[0], urllib.quote(param[1]))]
+                    query += ["%s=%s" % (param[0], urllib.parse.quote(param[1]))]
                 else:
                     query += ["&%s=%s" % (param[0], param[1])]
             query += ["rid="+str(self._request_id)]

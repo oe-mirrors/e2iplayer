@@ -10,7 +10,7 @@ from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, by
 ###################################################
 # FOREIGN import
 ###################################################
-import urllib
+import urllib.request, urllib.parse, urllib.error
 try:    import json
 except Exception: import simplejson as json
 from datetime import datetime
@@ -106,7 +106,7 @@ class GamatoMovies(CBaseHostClass):
         page = cItem.get('page', 1)
         baseUrl = 'titles/paginate?_token=' + self.cacheFilters['token'] + '&perPage={0}'.format(perPage) + '&type={0}'.format(cItem['priv_type']) + '&availToStream=true' + '&page={0}'.format(page)
         if 'genres' in cItem:
-            baseUrl += '&genres%5B%5D={0}'.format(urllib.quote(cItem['genres']))
+            baseUrl += '&genres%5B%5D={0}'.format(urllib.parse.quote(cItem['genres']))
         if 'order' in cItem:
             baseUrl += '&order={0}'.format(cItem['order'])
         if 'year' in cItem:
@@ -222,7 +222,7 @@ class GamatoMovies(CBaseHostClass):
             if not sts: return
             self.cacheFilters['token'] = self.cm.ph.getSearchGroups(data, '''token\s*:\s*['"]([^'^"]+?)['"]''')[0]
         cItem = dict(cItem)
-        cItem.update({'priv_type':searchType, 'query':urllib.quote_plus(searchPattern)})
+        cItem.update({'priv_type':searchType, 'query':urllib.parse.quote_plus(searchPattern)})
         self.listItems(cItem, 'list_seasons')
     
     def getLinksForVideo(self, cItem):
@@ -275,8 +275,8 @@ class GamatoMovies(CBaseHostClass):
         urlTab = []
         
         # mark requested link as used one
-        if len(self.cacheLinks.keys()):
-            key = self.cacheLinks.keys()[0]
+        if len(list(self.cacheLinks.keys())):
+            key = list(self.cacheLinks.keys())[0]
             for idx in range(len(self.cacheLinks[key])):
                 if videoUrl in self.cacheLinks[key][idx]['url']:
                     if not self.cacheLinks[key][idx]['name'].startswith('*'):
@@ -298,8 +298,8 @@ class GamatoMovies(CBaseHostClass):
                 SetIPTVPlayerLastHostError(str(sts))
             else:
                 # set resolved uri in cache
-                if len(self.cacheLinks.keys()):
-                    key = self.cacheLinks.keys()[0]
+                if len(list(self.cacheLinks.keys())):
+                    key = list(self.cacheLinks.keys())[0]
                     for idx in range(len(self.cacheLinks[key])):
                         if shortUri in self.cacheLinks[key][idx]['url']:
                             self.cacheLinks[key][idx]['url'] = videoUrl

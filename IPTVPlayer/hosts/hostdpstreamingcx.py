@@ -13,8 +13,8 @@ from Plugins.Extensions.IPTVPlayer.tools.iptvtypes import strwithmeta
 ###################################################
 import datetime
 import re
-import urllib
-import urlparse
+import urllib.request, urllib.parse, urllib.error
+import urllib.parse
 try:    import json
 except Exception: import simplejson as json
 ###################################################
@@ -47,7 +47,7 @@ class StreamingSeriesWatch(CBaseHostClass):
             if self.cm.isValidUrl(url):
                 return url
             else:
-                return urlparse.urljoin(baseUrl, url)
+                return urllib.parse.urljoin(baseUrl, url)
             
         addParams['cloudflare_params'] = {'domain':self.up.getDomain(baseUrl), 'cookie_file':self.COOKIE_FILE, 'User-Agent':self.USER_AGENT, 'full_url_handle':_getFullUrl}
         sts, data = self.cm.getPageCFProtection(baseUrl, addParams, post_data)
@@ -127,7 +127,7 @@ class StreamingSeriesWatch(CBaseHostClass):
     def listSearchResult(self, cItem, searchPattern, searchType):
         printDBG("StreamingSeriesWatch.listSearchResult cItem[%s], searchPattern[%s] searchType[%s]" % (cItem, searchPattern, searchType))
         cItem = dict(cItem)
-        cItem['url'] = self.MAIN_URL + '?s=' + urllib.quote(searchPattern)
+        cItem['url'] = self.MAIN_URL + '?s=' + urllib.parse.quote(searchPattern)
         self.listItems(cItem, 'episodes')
     
     def getLinksForVideo(self, cItem):

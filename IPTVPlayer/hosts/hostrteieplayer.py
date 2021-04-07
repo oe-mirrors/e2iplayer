@@ -13,7 +13,7 @@ from Plugins.Extensions.IPTVPlayer.libs.urlparserhelper import getDirectM3U8Play
 # FOREIGN import
 ###################################################
 import re
-import urllib
+import urllib.request, urllib.parse, urllib.error
 try:    import json
 except Exception: import simplejson as json
 ###################################################
@@ -190,7 +190,7 @@ class RteIE(CBaseHostClass):
     def listSearchResult(self, cItem, searchPattern, searchType):
         printDBG("AnimeTo.listSearchResult cItem[%s], searchPattern[%s] searchType[%s]" % (cItem, searchPattern, searchType))
         cItem = dict(cItem)
-        cItem['url'] = self.getFullUrl('/player/search/?q=' + urllib.quote_plus(searchPattern))
+        cItem['url'] = self.getFullUrl('/player/search/?q=' + urllib.parse.quote_plus(searchPattern))
         self.listItems(cItem, 'list_items')
         
     def getLinksForVideo(self, cItem):

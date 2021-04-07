@@ -11,7 +11,7 @@ from Plugins.Extensions.IPTVPlayer.tools.iptvtypes import strwithmeta
 ###################################################
 # FOREIGN import
 ###################################################
-import urllib
+import urllib.request, urllib.parse, urllib.error
 from hashlib import md5
 try:    import json
 except Exception: import simplejson as json
@@ -173,7 +173,7 @@ class KreskowkaZonePL(CBaseHostClass):
         printDBG("KreskowkaZonePL.listSearchResult cItem[%s], searchPattern[%s] searchType[%s]" % (cItem, searchPattern, searchType))
         
         cItem = dict(cItem)
-        cItem['url'] = self.getFullUrl('szukaj?szukana=') + urllib.quote_plus(searchPattern)
+        cItem['url'] = self.getFullUrl('szukaj?szukana=') + urllib.parse.quote_plus(searchPattern)
         self.listItems(cItem, 'list_episodes')
         
     def getLinksForVideo(self, cItem):

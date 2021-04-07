@@ -13,7 +13,7 @@ from Plugins.Extensions.IPTVPlayer.libs import ph
 # FOREIGN import
 ###################################################
 from datetime import timedelta
-import urllib
+import urllib.request, urllib.parse, urllib.error
 import time
 from Components.config import config, ConfigSelection, getConfigListEntry
 ###################################################
@@ -123,7 +123,7 @@ class Dailymotion(CBaseHostClass):
         printDBG("Dailymotion.listVideos [%s]" % cItem)
         page = cItem.get('page', 1)
         if type in ('videos', 'playlist', 'channel'):
-            args = ['thumbnail_ratio=widescreen', 'limit={0}'.format(20), 'fields={0}'.format(urllib.quote('id,mode,title,duration,views_total,created_time,channel,thumbnail_240_url,url,live_publish_url'))]
+            args = ['thumbnail_ratio=widescreen', 'limit={0}'.format(20), 'fields={0}'.format(urllib.parse.quote('id,mode,title,duration,views_total,created_time,channel,thumbnail_240_url,url,live_publish_url'))]
             icon_key     = 'thumbnail_240_url'
             views_key    = 'views_total'
             title_key    = 'title'
@@ -135,7 +135,7 @@ class Dailymotion(CBaseHostClass):
             else:
                 args.insert(0, 'list=what-to-watch')
         elif 'tiles' == type:
-            args = ['thumbnail_ratio=widescreen', 'limit={0}'.format(20), 'fields={0}'.format(urllib.quote('video.id,video.mode,video.title,video.duration,video.views_total,created_time,video.channel,video.thumbnail_240_url,video.url,video.live_publish_url'))]
+            args = ['thumbnail_ratio=widescreen', 'limit={0}'.format(20), 'fields={0}'.format(urllib.parse.quote('video.id,video.mode,video.title,video.duration,video.views_total,created_time,video.channel,video.thumbnail_240_url,video.url,video.live_publish_url'))]
             icon_key     = 'video.thumbnail_240_url'
             views_key    = 'video.views_total'
             title_key    = 'video.title'
@@ -229,7 +229,7 @@ class Dailymotion(CBaseHostClass):
 
         params = self.getApiHeaders(cItem)
         post_data = '{"operationName":"SEARCH_QUERY","variables":{"query":"%s","pageVideo":%d,"pageLive":%d,"pageChannel":%d,"pageCollection":%d,"limitVideo":%d,"limitLive":%d,"limitChannel":%d,"limitCollection":%d,"uri":"/search/%s/%s"},"query":"fragment METADATA_FRAGMENT on Neon { web(uri: $uri) { author description title metadatas { attributes { name content __typename } __typename } language { codeAlpha2 __typename } country { codeAlpha2 __typename } __typename } __typename } fragment LOCALIZATION_FRAGMENT on Localization { me { id country { codeAlpha2 name __typename } __typename } __typename } query SEARCH_QUERY($query: String!, $pageVideo: Int, $pageLive: Int, $pageChannel: Int, $pageCollection: Int, $limitVideo: Int, $limitLive: Int, $limitChannel: Int, $limitCollection: Int, $uri: String!) { views { id neon { id ...METADATA_FRAGMENT __typename } __typename } localization { ...LOCALIZATION_FRAGMENT __typename } search { lives(query: $query, first: $limitLive, page: $pageLive) { pageInfo { hasNextPage nextPage __typename } edges { node { id xid title thumbURLx240: thumbnailURL(size: \\"x240\\") thumbURLx360: thumbnailURL(size: \\"x360\\") __typename } __typename } __typename } videos(query: $query, first: $limitVideo, page: $pageVideo) { pageInfo { hasNextPage nextPage __typename } edges { node { id xid title channel { id displayName __typename } duration thumbURLx240: thumbnailURL(size: \\"x240\\") thumbURLx360: thumbnailURL(size: \\"x360\\") __typename } __typename } __typename } channels(query: $query, first: $limitChannel, page: $pageChannel) { pageInfo { hasNextPage nextPage __typename } edges { node { id xid name description displayName accountType logoURL(size: \\"x60\\") __typename } __typename } __typename } playlists: collections(query: $query, first: $limitCollection, page: $pageCollection) { pageInfo { hasNextPage nextPage __typename } edges { node { id xid name channel { id displayName __typename } description thumbURLx240: thumbnailURL(size: \\"x240\\") thumbURLx480: thumbnailURL(size: \\"x480\\") stats { videos { total __typename } __typename } __typename } __typename } __typename } topics(query: $query, first: 5, page: 1) { pageInfo { hasNextPage nextPage __typename } edges { node { id xid name isFollowed __typename } __typename } __typename } __typename } } "}'
-        post_data = post_data % (cItem['f_query'], pages.get('videos', 1), pages.get('lives', 1), pages.get('channels', 1), pages.get('playlists', 1), limits.get('videos', 0), limits.get('lives', 0), limits.get('channels', 0), limits.get('playlists', 0), urllib.quote(cItem['f_query']), cItem['f_type'])
+        post_data = post_data % (cItem['f_query'], pages.get('videos', 1), pages.get('lives', 1), pages.get('channels', 1), pages.get('playlists', 1), limits.get('videos', 0), limits.get('lives', 0), limits.get('channels', 0), limits.get('playlists', 0), urllib.parse.quote(cItem['f_query']), cItem['f_type'])
 
         sts, data = self.cm.getPage(self.authData['url'], params, post_data)
         if not sts: return 
@@ -262,7 +262,7 @@ class Dailymotion(CBaseHostClass):
         
         currItem = dict(cItem)
         if searchType == 'videos':
-            currItem['search'] = urllib.quote(searchPattern)
+            currItem['search'] = urllib.parse.quote(searchPattern)
             currItem['sort'] = 'relevance'
             self.listVideos(currItem, 'tiles')
         else:

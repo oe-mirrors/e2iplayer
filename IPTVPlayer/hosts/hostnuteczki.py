@@ -137,7 +137,7 @@ class NuteczkiEU(CBaseHostClass):
             marker = self.cm.ph.getSearchGroups(item, '''href=['"]\#([^'^"]+?)['"]''')[0]
             if marker != '': mainMap[marker] = title
         
-        data = re.compile('''<div[^>]+?id=['"](%s)['"][^>]*?>''' % '|'.join(mainMap.keys())).split(data)
+        data = re.compile('''<div[^>]+?id=['"](%s)['"][^>]*?>''' % '|'.join(list(mainMap.keys()))).split(data)
         for mainIdx in range(1, len(data), 2):
             mainTitle = mainMap[data[mainIdx]]
             
@@ -150,7 +150,7 @@ class NuteczkiEU(CBaseHostClass):
                 if marker != '': subMap[marker] = title
             
             subItems = []
-            subData = re.compile('''<div[^>]+?id=['"](%s)['"][^>]*?>''' % '|'.join(subMap.keys())).split(data[mainIdx+1])
+            subData = re.compile('''<div[^>]+?id=['"](%s)['"][^>]*?>''' % '|'.join(list(subMap.keys()))).split(data[mainIdx+1])
             for subIdx in range(1, len(subData), 2):
                 subTitle = subMap[subData[subIdx]]
                 

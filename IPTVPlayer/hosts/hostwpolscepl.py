@@ -10,8 +10,8 @@ from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, by
 ###################################################
 # FOREIGN import
 ###################################################
-import urlparse
-import urllib
+import urllib.parse
+import urllib.request, urllib.parse, urllib.error
 from datetime import datetime, timedelta
 try:    import json
 except Exception: import simplejson as json
@@ -46,7 +46,7 @@ class WPolscePL(CBaseHostClass):
         baseUrl = self.cm.iriToUri(baseUrl)
         def _getFullUrl(url):
             if self.cm.isValidUrl(url): return url
-            else: return urlparse.urljoin(baseUrl, url)
+            else: return urllib.parse.urljoin(baseUrl, url)
         addParams['cloudflare_params'] = {'domain':self.up.getDomain(baseUrl), 'cookie_file':self.COOKIE_FILE, 'User-Agent':self.USER_AGENT, 'full_url_handle':_getFullUrl}
         return self.cm.getPageCFProtection(baseUrl, addParams, post_data)
     
@@ -216,7 +216,7 @@ class WPolscePL(CBaseHostClass):
     def listSearchResult(self, cItem, searchPattern, searchType):
         printDBG("WPolscePL.listSearchResult cItem[%s], searchPattern[%s] searchType[%s]" % (cItem, searchPattern, searchType))
 
-        url = self.getFullUrl('/szukaj?q=' + urllib.quote_plus(searchPattern))
+        url = self.getFullUrl('/szukaj?q=' + urllib.parse.quote_plus(searchPattern))
         sts, data = self.getPage(url)
         if not sts: return
         

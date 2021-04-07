@@ -11,7 +11,7 @@ from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, by
 # FOREIGN import
 ###################################################
 import re
-import urllib
+import urllib.request, urllib.parse, urllib.error
 try:    import json
 except Exception: import simplejson as json
 ###################################################
@@ -127,8 +127,8 @@ class TrailersApple(CBaseHostClass):
                 icon = self.getFullIconUrl(item['thumb'])
 
                 urls = []
-                for version, versionData in item.get('versions', {}).iteritems():
-                    for size, sizeData in versionData.get('sizes', {}).iteritems():
+                for version, versionData in item.get('versions', {}).items():
+                    for size, sizeData in versionData.get('sizes', {}).items():
                         url = sizeData.get('src')
                         if not url:
                             continue
@@ -150,9 +150,9 @@ class TrailersApple(CBaseHostClass):
             printExc()
     
     def listSearchResult(self, cItem, searchPattern, searchType):
-        searchPattern = urllib.quote_plus(searchPattern)
+        searchPattern = urllib.parse.quote_plus(searchPattern)
         
-        url = self.getFullUrl('/trailers/home/scripts/quickfind.php?q=') + urllib.quote_plus(searchPattern)
+        url = self.getFullUrl('/trailers/home/scripts/quickfind.php?q=') + urllib.parse.quote_plus(searchPattern)
         self.listItems({'url':url}, 'explore_item')
         
     def getLinksForVideo(self, cItem):
@@ -162,7 +162,7 @@ class TrailersApple(CBaseHostClass):
     def getVideoLinks(self, videoUrl):
         printDBG("TrailersApple.getVideoLinks [%s]" % videoUrl)
         # mark requested link as used one
-        if len(self.cacheLinks.keys()):
+        if len(list(self.cacheLinks.keys())):
             for key in self.cacheLinks:
                 for idx in range(len(self.cacheLinks[key])):
                     if videoUrl in self.cacheLinks[key][idx]['url']:

@@ -11,7 +11,7 @@
 
     November 2002
 """
-from __future__ import print_function
+
 from crypto.cipher.arc4 import ARC4
 from zlib   import crc32
 from struct import pack

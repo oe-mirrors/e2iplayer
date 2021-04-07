@@ -13,7 +13,7 @@ from Plugins.Extensions.IPTVPlayer.tools.e2ijs import js_execute
 # FOREIGN import
 ###################################################
 import re
-from urlparse import urlparse
+from urllib.parse import urlparse
 ###################################################
 
 

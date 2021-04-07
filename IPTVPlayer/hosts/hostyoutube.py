@@ -17,7 +17,7 @@ from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT
 ###################################################
 try:    import json
 except Exception: import simplejson as json
-import  re, urllib
+import  re, urllib.request, urllib.parse, urllib.error
 from Components.config import config, ConfigDirectory, getConfigListEntry
 ###################################################
 
@@ -207,9 +207,9 @@ class Youtube(CBaseHostClass):
         
         if url:
             printDBG("URL ricerca -----------> %s" % url)
-            tmpList =  self.ytp.getSearchResult(urllib.quote_plus(pattern), searchType, page, 'search', config.plugins.iptvplayer.ytSortBy.value, url)
+            tmpList =  self.ytp.getSearchResult(urllib.parse.quote_plus(pattern), searchType, page, 'search', config.plugins.iptvplayer.ytSortBy.value, url)
         else:
-            tmpList =  self.ytp.getSearchResult(urllib.quote_plus(pattern), searchType, page, 'search', config.plugins.iptvplayer.ytSortBy.value)
+            tmpList =  self.ytp.getSearchResult(urllib.parse.quote_plus(pattern), searchType, page, 'search', config.plugins.iptvplayer.ytSortBy.value)
         
         for item in tmpList:
             item.update({'name':'category'})

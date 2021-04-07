@@ -8,7 +8,7 @@
 
     2002-06-14
 """
-from __future__ import absolute_import
+
 
 from .aes  import AES
 from .cbc  import CBC

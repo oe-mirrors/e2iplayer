@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
-from __future__ import print_function
-from __future__ import absolute_import
+
+
 import os
 from . import settings
 import time
@@ -106,7 +106,7 @@ def initActiveHost( hostName ):
 def isActiveHostInitiated():
 	status = False
 	try:
-		if len(settings.activeHost.keys()) > 0:
+		if len(list(settings.activeHost.keys())) > 0:
 			status = True
 	except Exception as e:
 		print('EXCEPTION in webTools:isActiveHostInitiated - ', str(e))
@@ -115,20 +115,20 @@ def isActiveHostInitiated():
 def isCurrentItemSelected():
 	status = False
 	try:
-		if len(settings.currItem.keys()) > 0:
+		if len(list(settings.currItem.keys())) > 0:
 			status = True
 	except Exception as e:
 		print('EXCEPTION in webTools:isCurrentItemSelected - ', str(e))
 	return status
 ########################################################
 def iSactiveHostsHTMLempty():
-	if len(settings.activeHostsHTML.keys()) == 0:
+	if len(list(settings.activeHostsHTML.keys())) == 0:
 		return True
 	else:
 		return False
 ########################################################
 def isConfigsHTMLempty():
-	if len(settings.configsHTML.keys()) == 0:
+	if len(list(settings.configsHTML.keys())) == 0:
 		return True
 	else:
 		return False

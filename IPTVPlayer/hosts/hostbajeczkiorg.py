@@ -15,7 +15,7 @@ from Plugins.Extensions.IPTVPlayer.libs.urlparserhelper import getDirectM3U8Play
 # FOREIGN import
 ###################################################
 import re
-import urllib
+import urllib.request, urllib.parse, urllib.error
 ###################################################
 
 
@@ -167,7 +167,7 @@ class BajeczkiOrg(CBaseHostClass):
         urlTab = []
         
         # mark requested link as used one
-        if len(self.cacheLinks.keys()):
+        if len(list(self.cacheLinks.keys())):
             for key in self.cacheLinks:
                 for idx in range(len(self.cacheLinks[key])):
                     if videoUrl in self.cacheLinks[key][idx]['url']:
@@ -182,7 +182,7 @@ class BajeczkiOrg(CBaseHostClass):
     def listSearchResult(self, cItem, searchPattern, searchType):
         printDBG("FilmeHD.listSearchResult cItem[%s], searchPattern[%s] searchType[%s]" % (cItem, searchPattern, searchType))
         cItem = dict(cItem)
-        cItem.update({'category':'list_items', 'url':self.getFullUrl('/?s=') + urllib.quote_plus(searchPattern)})
+        cItem.update({'category':'list_items', 'url':self.getFullUrl('/?s=') + urllib.parse.quote_plus(searchPattern)})
         self.listItems(cItem)
         
     def handleService(self, index, refresh = 0, searchPattern = '', searchType = ''):

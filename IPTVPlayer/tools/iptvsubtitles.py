@@ -55,7 +55,7 @@ class IPTVSubtitlesHandler:
             tc  = tc[1:]
 
         match   = self.TIMECODE_RE.match(tc)
-        hh, mm, ss, ms = map(lambda x: 0 if x==None else int(x), match.groups())
+        hh, mm, ss, ms = [0 if x==None else int(x) for x in match.groups()]
         return ((hh*3600 + mm*60 + ss) * 1000 + ms) * sign
             
     def _srtTc2ms(self, time):

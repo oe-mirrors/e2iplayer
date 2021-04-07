@@ -14,7 +14,7 @@ from Plugins.Extensions.IPTVPlayer.libs.e2ijson import loads as json_loads
 ###################################################
 from Components.config import config, getConfigListEntry, ConfigInteger
 import re
-import urllib
+import urllib.request, urllib.parse, urllib.error
 import base64
 from datetime import datetime, timedelta
 ############################################
@@ -164,7 +164,7 @@ class MLBStreamTVApi(CBaseHostClass):
         
         cUrl = self.cm.meta['url']
         tmp = self.cm.ph.getDataBeetwenMarkers(data, 'unescape(', ')', False)[1].strip()
-        data = urllib.unquote(data[1:-1]) + data
+        data = urllib.parse.unquote(data[1:-1]) + data
         
         printDBG("+++")
         printDBG(data)

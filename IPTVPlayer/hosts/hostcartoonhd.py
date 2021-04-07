@@ -14,8 +14,8 @@ from Plugins.Extensions.IPTVPlayer.libs.e2ijson import loads as json_loads
 ###################################################
 import time
 import re
-import urllib
-from urlparse import urljoin
+import urllib.request, urllib.parse, urllib.error
+from urllib.parse import urljoin
 from Components.config import config, ConfigSelection, ConfigText, getConfigListEntry
 ###################################################
 
@@ -416,7 +416,7 @@ class CartoonHD(CBaseHostClass):
         httpParams['header'] =  {'Referer':cItem['url'], 'User-Agent':self.cm.HOST, 'X-Requested-With':'XMLHttpRequest', 'Accept':'application/json, text/javascript, */*; q=0.01', 'Content-Type':'application/x-www-form-urlencoded; charset=UTF-8'}
         encElid = gettt()
         __utmx = getCookieItem('__utmx')
-        httpParams['header']['Authorization'] = 'Bearer ' + urllib.unquote(__utmx)
+        httpParams['header']['Authorization'] = 'Bearer ' + urllib.parse.unquote(__utmx)
         
         requestLinks = [urljoin(baseurl, jsUrl)]
         if 'class="play"' in data and 'id="updateSources"' not in data:
@@ -424,7 +424,7 @@ class CartoonHD(CBaseHostClass):
         
         #httpParams['header']['Cookie'] = '%s=%s; PHPSESSID=%s; flixy=%s;'% (elid, urllib.quote(encElid), getCookieItem('PHPSESSID'), getCookieItem('flixy'))
         for url in requestLinks:
-            post_data = {'action':type, 'idEl':elid, 'token':tor, 'elid':urllib.quote(encElid), 'nopop':''}
+            post_data = {'action':type, 'idEl':elid, 'token':tor, 'elid':urllib.parse.quote(encElid), 'nopop':''}
             sts, data = self.cm.getPage(url, httpParams, post_data)
             if not sts: continue
             printDBG('===============================================================')
@@ -434,7 +434,7 @@ class CartoonHD(CBaseHostClass):
             try:
                 keys = re.compile('"(_[0-9]+?)"').findall(data)
                 data = json_loads(data)
-                for key in data.keys():
+                for key in list(data.keys()):
                     if key not in keys:
                         keys.append(key)
                 for key in keys:
@@ -462,8 +462,8 @@ class CartoonHD(CBaseHostClass):
         urlTab = []
         
         # mark requested link as used one
-        if len(self.cacheLinks.keys()):
-            key = self.cacheLinks.keys()[0]
+        if len(list(self.cacheLinks.keys())):
+            key = list(self.cacheLinks.keys())[0]
             for idx in range(len(self.cacheLinks[key])):
                 if videoUrl in self.cacheLinks[key][idx]['url']:
                     if not self.cacheLinks[key][idx]['name'].startswith('*'):

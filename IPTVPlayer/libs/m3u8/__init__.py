@@ -1,8 +1,8 @@
-from __future__ import absolute_import
+
 import os
 import re
-import urlparse
-from urllib2 import urlopen
+import urllib.parse
+from urllib.request import urlopen
 
 from .model import M3U8, Playlist
 from .parser import parse, is_url
@@ -15,10 +15,10 @@ def inits(content, uri):
     this content was downloaded returns a M3U8 object.
     Raises ValueError if invalid content
     '''
-    parsed_url = urlparse.urlparse(uri)
+    parsed_url = urllib.parse.urlparse(uri)
     prefix = parsed_url.scheme + '://' + parsed_url.netloc
     base_path = os.path.normpath(parsed_url.path + '/..')
-    base_uri = urlparse.urljoin(prefix, base_path)
+    base_uri = urllib.parse.urljoin(prefix, base_path)
     return M3U8(content, base_uri=base_uri)
 
 def loads(content):
@@ -42,10 +42,10 @@ def _load_from_uri(uri):
     open = urlopen(uri)
     uri = open.geturl()
     content = open.read().strip()
-    parsed_url = urlparse.urlparse(uri)
+    parsed_url = urllib.parse.urlparse(uri)
     prefix = parsed_url.scheme + '://' + parsed_url.netloc
     base_path = os.path.normpath(parsed_url.path + '/..')
-    base_uri = urlparse.urljoin(prefix, base_path)
+    base_uri = urllib.parse.urljoin(prefix, base_path)
     return M3U8(content, base_uri=base_uri)
 
 def _load_from_file(uri):

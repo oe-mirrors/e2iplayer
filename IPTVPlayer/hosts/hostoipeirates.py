@@ -13,7 +13,7 @@ from Plugins.Extensions.IPTVPlayer.libs import ph
 # FOREIGN import
 ###################################################
 import re
-import urllib
+import urllib.request, urllib.parse, urllib.error
 ###################################################
 
 
@@ -167,7 +167,7 @@ class OipeiratesOnline(CBaseHostClass):
         else:
             query.update({'page':page, 'seo_start_page':page})
 
-            url = cItem['ajaxurl'] + '?action=alm_query_posts&query_type=standard&' + urllib.urlencode(query)
+            url = cItem['ajaxurl'] + '?action=alm_query_posts&query_type=standard&' + urllib.parse.urlencode(query)
             sts, data = self.getPage(url)
             if not sts: return
             printDBG(data)
@@ -332,7 +332,7 @@ class OipeiratesOnline(CBaseHostClass):
         printDBG("OipeiratesOnline.listSearchResult cItem[%s], searchPattern[%s] searchType[%s]" % (cItem, searchPattern, searchType))
         cItem = dict(cItem)
         cItem['url'] = self.getMainUrl()
-        cItem['url_suffix'] = '?s=' + urllib.quote_plus(searchPattern)
+        cItem['url_suffix'] = '?s=' + urllib.parse.quote_plus(searchPattern)
         cItem['mode'] = 'search'
         self.listItems(cItem)
     

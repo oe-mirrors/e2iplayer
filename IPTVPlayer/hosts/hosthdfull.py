@@ -271,7 +271,7 @@ class HDFull(CBaseHostClass, CaptchaHelper):
             elif 'view' in item:
                 tabJs['view'] = {'url':self.getFullUrl(item), 'hash':version + '.1'}
 
-        for key in tabJs.iterkeys():
+        for key in tabJs.keys():
             tabJs[key]['name'] = 'hdfull.me_%s' % key
             if not is_js_cached(tabJs[key]['name'], tabJs[key]['hash']):
                 sts, jsdata = self.getPage(tabJs[key]['url'])
@@ -494,7 +494,7 @@ class HDFull(CBaseHostClass, CaptchaHelper):
     def getVideoLinks(self, videoUrl):
         printDBG("HDFull.getVideoLinks [%s]" % videoUrl)
         # mark requested link as used one
-        if len(self.cacheLinks.keys()):
+        if len(list(self.cacheLinks.keys())):
             for key in self.cacheLinks:
                 for idx in range(len(self.cacheLinks[key])):
                     if videoUrl in self.cacheLinks[key][idx]['url']:

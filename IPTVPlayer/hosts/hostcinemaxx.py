@@ -16,11 +16,11 @@ from Plugins.Extensions.IPTVPlayer.libs.hdgocc import HdgoccParser
 ###################################################
 # FOREIGN import
 ###################################################
-import urllib
+import urllib.request, urllib.parse, urllib.error
 import re
 import time
 import math
-import cookielib
+import http.cookiejar
 ###################################################
 
 
@@ -80,8 +80,8 @@ class Cinemaxx(CBaseHostClass):
                         if ret['sts'] and 0 == ret['code']:
                             cj = self.cm.getCookie(self.COOKIE_FILE)
                             for item in json_loads(ret['data'])['cookies']:
-                                for cookieKey, cookieValue in item.iteritems():
-                                    cookieItem = cookielib.Cookie(version=0, name=cookieKey, value=cookieValue, port=None, port_specified=False, domain='.'+self.cm.getBaseUrl(cUrl, True), domain_specified=True, domain_initial_dot=True, path='/', path_specified=True, secure=False, expires=time.time()+3600*48, discard=True, comment=None, comment_url=None, rest={'HttpOnly': None}, rfc2109=False)
+                                for cookieKey, cookieValue in item.items():
+                                    cookieItem = http.cookiejar.Cookie(version=0, name=cookieKey, value=cookieValue, port=None, port_specified=False, domain='.'+self.cm.getBaseUrl(cUrl, True), domain_specified=True, domain_initial_dot=True, path='/', path_specified=True, secure=False, expires=time.time()+3600*48, discard=True, comment=None, comment_url=None, rest={'HttpOnly': None}, rfc2109=False)
                                     cj.set_cookie(cookieItem)
                             cj.save(self.COOKIE_FILE, ignore_discard = True)
 
@@ -253,7 +253,7 @@ class Cinemaxx(CBaseHostClass):
 
     def listSearchResult(self, cItem, searchPattern, searchType):
 
-        url = self.getFullUrl('/api/private/get/search?query=%s&limit=100&f=1' % urllib.quote(searchPattern))
+        url = self.getFullUrl('/api/private/get/search?query=%s&limit=100&f=1' % urllib.parse.quote(searchPattern))
         sts, data = self.getPage(self.getMainUrl())
         if not sts: return
         self.setMainUrl(self.cm.meta['url'])
@@ -278,7 +278,7 @@ class Cinemaxx(CBaseHostClass):
     def getVideoLinks(self, videoUrl):
         printDBG("Cinemaxx.getVideoLinks [%s]" % videoUrl)
         # mark requested link as used one
-        if len(self.cacheLinks.keys()):
+        if len(list(self.cacheLinks.keys())):
             for key in self.cacheLinks:
                 for idx in range(len(self.cacheLinks[key])):
                     if videoUrl in self.cacheLinks[key][idx]['url']:

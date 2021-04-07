@@ -33,7 +33,7 @@ from Plugins.Extensions.IPTVPlayer.libs.youtube_dl.utils import clean_html
 from Components.config import config, ConfigYesNo, ConfigSelection, getConfigListEntry
 from time import time
 from os import path as os_path
-import urllib
+import urllib.request, urllib.parse, urllib.error
 import re
 
 try: import json
@@ -310,7 +310,7 @@ class Ipla(CBaseHostClass):
             self.getCategories(catId, refresh)
     #WYSZUKAJ
         elif category == 'Wyszukaj':
-            pattern = urllib.quote_plus(searchPattern)
+            pattern = urllib.parse.quote_plus(searchPattern)
             self.getVideosList(Ipla.SEARCH_URL + pattern)
     #HISTORIA WYSZUKIWANIA
         elif category == "search_history":

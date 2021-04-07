@@ -11,7 +11,7 @@ from Plugins.Extensions.IPTVPlayer.tools.iptvtypes import strwithmeta
 ###################################################
 # FOREIGN import
 ###################################################
-import urllib
+import urllib.request, urllib.parse, urllib.error
 try:    import json
 except Exception: import simplejson as json
 from Components.config import config, ConfigSelection, getConfigListEntry
@@ -307,7 +307,7 @@ class CimaClubCom(CBaseHostClass):
         cItem = dict(cItem)
         if 1 == cItem.get('page', 1):
             cItem['category'] = 'list_items'
-            cItem['url'] = self.getFullUrl('/?s=') + urllib.quote_plus(searchPattern)
+            cItem['url'] = self.getFullUrl('/?s=') + urllib.parse.quote_plus(searchPattern)
         self.listItems(cItem, 'explore_item')
         
     def getLinksForVideo(self, cItem):
@@ -367,7 +367,7 @@ class CimaClubCom(CBaseHostClass):
         urlTab = []
         
         # mark requested link as used one
-        if len(self.cacheLinks.keys()):
+        if len(list(self.cacheLinks.keys())):
             for key in self.cacheLinks:
                 for idx in range(len(self.cacheLinks[key])):
                     if baseUrl in self.cacheLinks[key][idx]['url']:

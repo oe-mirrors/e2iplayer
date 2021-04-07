@@ -13,9 +13,9 @@ from Plugins.Extensions.IPTVPlayer.libs.youtube_dl.utils import unescapeHTML
 ###################################################
 # FOREIGN import
 ###################################################
-import urlparse
+import urllib.parse
 import re
-import urllib
+import urllib.request, urllib.parse, urllib.error
 import base64
 try:    import json
 except Exception: import simplejson as json
@@ -212,7 +212,7 @@ class Vizjer(CBaseHostClass):
 
     def listSearchResult(self, cItem, searchPattern, searchType):
         printDBG("Vizjer.listSearchResult cItem[%s], searchPattern[%s] searchType[%s]" % (cItem, searchPattern, searchType))
-        url = self.getFullUrl('/wyszukiwarka?phrase=%s') % urllib.quote_plus(searchPattern)
+        url = self.getFullUrl('/wyszukiwarka?phrase=%s') % urllib.parse.quote_plus(searchPattern)
         params = {'name':'category', 'category':'list_items', 'good_for_fav':False, 'url':url}
         self.listItems(params)
         
@@ -262,7 +262,7 @@ class Vizjer(CBaseHostClass):
         urlTab = []
         
         # mark requested link as used one
-        if len(self.cacheLinks.keys()):
+        if len(list(self.cacheLinks.keys())):
             for key in self.cacheLinks:
                 for idx in range(len(self.cacheLinks[key])):
                     if baseUrl in self.cacheLinks[key][idx]['url']:

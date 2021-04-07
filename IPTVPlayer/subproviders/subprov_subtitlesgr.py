@@ -17,17 +17,17 @@ from Plugins.Extensions.IPTVPlayer.tools.iptvtypes import strwithmeta
 from datetime import timedelta
 import time
 import re
-import urllib
+import urllib.request, urllib.parse, urllib.error
 import unicodedata
 import base64
-try:    from urlparse import urlsplit, urlunsplit
+try:    from urllib.parse import urlsplit, urlunsplit
 except Exception: printExc()
 from os import listdir as os_listdir, path as os_path
 try:    import json
 except Exception: import simplejson as json
 try:
-    try: from cStringIO import StringIO
-    except Exception: from StringIO import StringIO 
+    try: from io import StringIO
+    except Exception: from io import StringIO 
     import gzip
 except Exception: pass
 from Components.config import config, ConfigSelection, ConfigYesNo, ConfigText, getConfigListEntry
@@ -73,7 +73,7 @@ class SubtitlesGrProvider(CBaseSubProviderClass):
     def listSubItems(self, cItem, nextCategory):
         printDBG("SubtitlesGrProvider.listSubItems")
         page = cItem.get('page', 0)
-        keywords = urllib.quote_plus(self.params['confirmed_title'])
+        keywords = urllib.parse.quote_plus(self.params['confirmed_title'])
         baseUrl  = "http://gr.greek-subtitles.com/search.php?page=%s&name=%s" % (page, keywords)
         
         url = self.getFullUrl(baseUrl)

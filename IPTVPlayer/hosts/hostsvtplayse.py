@@ -14,8 +14,8 @@ from Plugins.Extensions.IPTVPlayer.libs.urlparserhelper import getDirectM3U8Play
 # FOREIGN import
 ###################################################
 import re
-import urllib
-import urlparse
+import urllib.request, urllib.parse, urllib.error
+import urllib.parse
 try:    import json
 except Exception: import simplejson as json
 from datetime import datetime, timedelta
@@ -410,7 +410,7 @@ class SVTPlaySE(CBaseHostClass):
     def listSearchResult(self, cItem, searchPattern, searchType):
         printDBG("SVTPlaySE.listSearchResult cItem[%s], searchPattern[%s] searchType[%s]" % (cItem, searchPattern, searchType))
         
-        baseUrl = self.getFullUrl('sok?q=' + urllib.quote_plus(searchPattern))
+        baseUrl = self.getFullUrl('sok?q=' + urllib.parse.quote_plus(searchPattern))
         cItem = dict(cItem)
         cItem['url'] = baseUrl
         self.explorePage(cItem, 'list_tab_items')
@@ -475,8 +475,8 @@ class SVTPlaySE(CBaseHostClass):
                 vidTab = []
                 # item = strwithmeta(item, {'X-Forwarded-For':'83.172.75.170'})
                 try:
-                    tmp = urlparse.urlparse(item)
-                    tmp = urlparse.parse_qs(tmp.query)['alt'][0]
+                    tmp = urllib.parse.urlparse(item)
+                    tmp = urllib.parse.parse_qs(tmp.query)['alt'][0]
                     vidTab = getDirectM3U8Playlist(tmp, False, checkContent=True)
                 except Exception:
                     printExc()

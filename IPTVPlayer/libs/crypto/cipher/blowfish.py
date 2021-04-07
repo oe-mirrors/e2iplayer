@@ -29,7 +29,7 @@ on 64-bit blocks, or 8 byte strings.
 Send questions, comments, bugs my way:
     Michael Gilfix <mgilfix@eecs.tufts.edu>
 """
-from __future__ import print_function
+
 
 from future.utils import raise_
 __author__ = "Michael Gilfix <mgilfix@eecs.tufts.edu>"
@@ -84,7 +84,7 @@ class Blowfish:
 	DECRYPT = 1
 
 	# For the __round_func
-	modulus = long (2) ** 32
+	modulus = int (2) ** 32
 
 	def __init__ (self, key):
 
@@ -422,9 +422,9 @@ class Blowfish:
 
 		# Perform all ops as longs then and out the last 32-bits to
 		# obtain the integer
-		f = (long (self.s_boxes[0][a]) + long (self.s_boxes[1][b])) % self.modulus
-		f = f ^ long (self.s_boxes[2][c])
-		f = f + long (self.s_boxes[3][d])
+		f = (int (self.s_boxes[0][a]) + int (self.s_boxes[1][b])) % self.modulus
+		f = f ^ int (self.s_boxes[2][c])
+		f = f + int (self.s_boxes[3][d])
 		f = (f % self.modulus) & 0xFFFFFFFF
 
 		return f

@@ -11,7 +11,7 @@ from Plugins.Extensions.IPTVPlayer.tools.iptvtypes import strwithmeta
 ###################################################
 # FOREIGN import
 ###################################################
-import urllib
+import urllib.request, urllib.parse, urllib.error
 ###################################################
 
 
@@ -134,7 +134,7 @@ class MyTheWatchseries(CBaseHostClass):
         for key in keys:
             baseKey = key[2:] # "f_"
             if key in cItem: query[baseKey] = cItem[key]
-        query = urllib.urlencode(query)
+        query = urllib.parse.urlencode(query)
         if query != '': url += '?' + query
         
         sts, data = self.getPage(url)
@@ -171,7 +171,7 @@ class MyTheWatchseries(CBaseHostClass):
         if searchPattern != '':
             query['keyword'] = searchPattern
         if page > 1: query['page'] = page
-        query = urllib.urlencode(query)
+        query = urllib.parse.urlencode(query)
         if query != '':
             if url[-1] in ['&', '?']: sep = ''
             elif '?' in url: sep = '&'

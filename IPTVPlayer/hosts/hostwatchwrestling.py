@@ -12,7 +12,7 @@ from Plugins.Extensions.IPTVPlayer.tools.iptvtypes import strwithmeta
 # FOREIGN import
 ###################################################
 import re
-import urllib
+import urllib.request, urllib.parse, urllib.error
 try:    import json
 except Exception: import simplejson as json
 ###################################################
@@ -176,7 +176,7 @@ class Watchwrestling(CBaseHostClass):
             self.addVideo(params)
         
     def listSearchResult(self, cItem, searchPattern, searchType):
-        searchPattern = urllib.quote_plus(searchPattern)
+        searchPattern = urllib.parse.quote_plus(searchPattern)
         cItem = dict(cItem)
         cItem['url']  = self.SRCH_URL + searchPattern
         cItem['sort'] = searchType
@@ -201,7 +201,7 @@ class Watchwrestling(CBaseHostClass):
                 data = self._clearData(data)
                 #printDBG(data)
                 if 'eval(unescape' in data:
-                    data = urllib.unquote(self.cm.ph.getSearchGroups(data, '''eval\(unescape\(['"]([^"^']+?)['"]''')[0])
+                    data = urllib.parse.unquote(self.cm.ph.getSearchGroups(data, '''eval\(unescape\(['"]([^"^']+?)['"]''')[0])
                 url = self.cm.ph.getSearchGroups(data, '''<iframe[^>]*?src=['"]([^"^']+?)['"]''', 1, True)[0]
                 if 'protect.cgi' in url:
                     Referer = cItem['url']

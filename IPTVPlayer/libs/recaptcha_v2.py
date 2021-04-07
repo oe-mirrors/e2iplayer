@@ -13,7 +13,7 @@ from Plugins.Extensions.IPTVPlayer.libs import ph
 ###################################################
 # FOREIGN import
 ###################################################
-import urllib
+import urllib.request, urllib.parse, urllib.error
 ###################################################
 
 class UnCaptchaReCaptcha:
@@ -76,7 +76,7 @@ class UnCaptchaReCaptcha:
             if retArg is not None and len(retArg) and retArg[0]:
                 answer = retArg[0]
                 printDBG('>>>>>>>> Captcha answer[%s]' % (answer))
-                post_data = urllib.urlencode({'c': cval, 'response':answer}, doseq=True)
+                post_data = urllib.parse.urlencode({'c': cval, 'response':answer}, doseq=True)
             else:
                 break
         

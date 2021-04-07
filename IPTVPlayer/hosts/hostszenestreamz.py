@@ -12,7 +12,7 @@ from Plugins.Extensions.IPTVPlayer.libs import ph
 ###################################################
 # FOREIGN import
 ###################################################
-import urllib
+import urllib.request, urllib.parse, urllib.error
 ###################################################
 
 def gettytul():
@@ -295,7 +295,7 @@ class Kkiste(CBaseHostClass):
     
     def listSearchResult(self, cItem, searchPattern, searchType):
         printDBG("hostszenestreamz.listSearchResult cItem[%s], searchPattern[%s] searchType[%s]" % (cItem, searchPattern, searchType))
-        post_data = { 'query':urllib.unquote(searchPattern), 'sfSbm':'', 'a':'2' }
+        post_data = { 'query':urllib.parse.unquote(searchPattern), 'sfSbm':'', 'a':'2' }
         cItem = dict(cItem)
         cItem['url'] = self.getFullUrl('/publ/')
         self.listItems(cItem, 'explore_item', post_data)

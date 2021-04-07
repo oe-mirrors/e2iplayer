@@ -12,7 +12,7 @@ from Plugins.Extensions.IPTVPlayer.tools.iptvtypes import strwithmeta
 # FOREIGN import
 ###################################################
 import re
-import urllib
+import urllib.request, urllib.parse, urllib.error
 try:    import json
 except Exception: import simplejson as json
 from Components.config import config, ConfigText, getConfigListEntry
@@ -167,7 +167,7 @@ class OrthoBullets(CBaseHostClass):
         self.tryTologin()
         
         cItem = dict(cItem)
-        cItem['url'] = self.getFullUrl('/video/list?search=') + urllib.quote(searchPattern) 
+        cItem['url'] = self.getFullUrl('/video/list?search=') + urllib.parse.quote(searchPattern) 
         cItem['category'] = 'list_items'
         self.listItems(cItem)
 

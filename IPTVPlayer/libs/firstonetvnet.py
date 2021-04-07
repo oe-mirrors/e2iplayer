@@ -189,7 +189,7 @@ class FirstOneTvApi(CBaseHostClass):
                 surl = data['surl']
                 if surl.startswith('{'):
                     surl = json_loads(surl)
-                    for name, url in surl.iteritems():
+                    for name, url in surl.items():
                         url = strwithmeta(url, {'Referer':cUrl, 'name':'firstonetv.net'})
                         links.append({'name':name, 'url':self.getFullUrl(url, cUrl), 'need_resolve':1})
                 else:

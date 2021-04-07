@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 #### Local imports
-from __future__ import print_function
-from __future__ import absolute_import
+
+
 from .__init__ import _
 from . import settings
 
@@ -193,7 +193,7 @@ class Body():
 		hostsCFG = '<br><table width="850px" border="1"><tbody>\n'
 		hostsCFG += '<tr><td align="center" colspan="3"><p><font size="5" color="#9FF781">%s</font></p></td></tr>\n' % _('Hosts settings')
 		for hostName in SortHostsList(GetHostsList()):
-			if hostName in settings.configsHTML.keys():
+			if hostName in list(settings.configsHTML.keys()):
 				hostsCFG += settings.configsHTML[hostName]
 		hostsCFG += '</tbody></table>\n'
 		#build plugin global settings
@@ -203,7 +203,7 @@ class Body():
 		OptionsList = []
 		ConfigMenu.fillConfigList(OptionsList, hiddenOptions=False)
 		for item in OptionsList:
-			if item[0] in settings.configsHTML.keys():
+			if item[0] in list(settings.configsHTML.keys()):
 				pluginCFG += settings.configsHTML[item[0]]
 		pluginCFG += '</tbody></table>\n'
 		tempText += pluginCFG + '<p><br</p>\n' + hostsCFG + '</div></body>\n'
@@ -219,7 +219,7 @@ class Body():
 			try: displayHostsList.sort(key=lambda t : tuple('.'.join(str(t[0]).replace('://', '.').replace('www.', '').split('.')[1:-1]).lower()))
 			except Exception as e: print("Exception during sorting displayHostsList", str(e))
 		for hostName in displayHostsList:
-			if hostName in settings.activeHostsHTML.keys():
+			if hostName in list(settings.activeHostsHTML.keys()):
 				hostHTML = settings.activeHostsHTML[hostName]
 				tempText += hostHTML
 				#tempText += '<td><button type="button" disabled>%s</button> </td>' % _('Enter')
@@ -429,7 +429,7 @@ class Body():
 		tempText += IncludeMENU(MenuStatusMSG, ShowCancelButton)
 		tempText += '<div class="main">\n'
 		#Status table
-		if not isNewHostListShown() and not isThreadRunning('doUseHostAction') and 'Name' in  settings.activeHost.keys():
+		if not isNewHostListShown() and not isThreadRunning('doUseHostAction') and 'Name' in  list(settings.activeHost.keys()):
 			tempText += '<table border="0" cellspacing="5px"><tbody>\n'
 			tempText += '<tr>'
 			tempText += '<td align="right"><font color="#f0f0f0">%s</font></td><td><b><font color="#FFE4C4">%s</font></b></td>' % ( _('host:'), settings.activeHost['Name'] )
@@ -485,9 +485,9 @@ class Body():
 										    ('VIDEO', 'checked', _('Only videos')),
 										    ('AUDIO', '', _('Only music'))]
 										   )
-		if len(settings.GlobalSearchResults.keys()) > 0:
+		if len(list(settings.GlobalSearchResults.keys())) > 0:
 			tempText += '<table border="0" width="800px" cellspacing="5px"><tbody>\n'
-			for key in settings.GlobalSearchResults.keys():
+			for key in list(settings.GlobalSearchResults.keys()):
 				_tempHeader = '<tr><td colspan="2" align="left" style="color: #00A9d1;background: none;border: none;font-size:24px;">%s</td></tr>' % key
 				_tempBody = ''
 	      			index=0

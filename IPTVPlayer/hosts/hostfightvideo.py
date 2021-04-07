@@ -10,9 +10,9 @@ from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, by
 ###################################################
 # FOREIGN import
 ###################################################
-import urlparse
+import urllib.parse
 import re
-import urllib
+import urllib.request, urllib.parse, urllib.error
 try:    import json
 except Exception: import simplejson as json
 ###################################################
@@ -44,7 +44,7 @@ class FightVideo(CBaseHostClass):
             if self.cm.isValidUrl(url):
                 return url
             else:
-                return urlparse.urljoin(baseUrl, url)
+                return urllib.parse.urljoin(baseUrl, url)
             
         addParams['cloudflare_params'] = {'domain':self.up.getDomain(baseUrl), 'cookie_file':self.COOKIE_FILE, 'User-Agent':self.USER_AGENT, 'full_url_handle':_getFullUrl}
         sts, data = self.cm.getPageCFProtection(baseUrl, addParams, post_data)
@@ -129,9 +129,9 @@ class FightVideo(CBaseHostClass):
         keys.append('f_sd')
         for key in self.cacheFiltersKeys:
             baseKey = key[2:] # "f_"
-            if key in cItem: query[baseKey] = urllib.quote(cItem[key])
+            if key in cItem: query[baseKey] = urllib.parse.quote(cItem[key])
         
-        query = urllib.urlencode(query)
+        query = urllib.parse.urlencode(query)
         if '?' in url: url += '&' + query
         else: url += '?' + query
         

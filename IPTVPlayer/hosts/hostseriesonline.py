@@ -13,7 +13,7 @@ from Plugins.Extensions.IPTVPlayer.tools.e2ijs import js_execute
 # FOREIGN import
 ###################################################
 import re
-import urllib
+import urllib.request, urllib.parse, urllib.error
 try:    import json
 except Exception: import simplejson as json
 from Components.config import config, ConfigSelection, ConfigText, getConfigListEntry
@@ -261,7 +261,7 @@ class SeriesOnlineIO(CBaseHostClass):
         if self.MAIN_URL == None:
             self.selectDomain()
         
-        url = self.SEARCH_URL + '/' + urllib.quote_plus(searchPattern).replace('+', '-')
+        url = self.SEARCH_URL + '/' + urllib.parse.quote_plus(searchPattern).replace('+', '-')
         sts, data = self.getPage(url)
         if not sts: return
         cUrl = self.cm.meta['url']
@@ -281,7 +281,7 @@ class SeriesOnlineIO(CBaseHostClass):
                 searchUrl = self.getFullUrl(decoded.get('url', cUrl))
                 if '?' not in searchUrl: searchUrl += '?'
                 if 'data' in decoded:
-                    searchUrl += urllib.urlencode(decoded['data'])
+                    searchUrl += urllib.parse.urlencode(decoded['data'])
                 printDBG('searchUrl [%s]\n' % searchUrl)
                 cItem = dict(cItem)
                 cItem['url'] = searchUrl

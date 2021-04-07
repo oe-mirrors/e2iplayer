@@ -15,7 +15,7 @@ from Plugins.Extensions.IPTVPlayer.libs.urlparserhelper import getDirectM3U8Play
 import datetime
 import time
 import re
-import urllib
+import urllib.request, urllib.parse, urllib.error
 try:    import json
 except Exception: import simplejson as json
 from Components.config import config, ConfigSelection, ConfigYesNo, ConfigText, getConfigListEntry
@@ -248,7 +248,7 @@ class Laola1TV(CBaseHostClass):
             searchLive = ''
         
         page = cItem.get('page', 1)
-        url = 'http://search-api.laola1.at/?callback=ret&q=%s&p=%d&i=laola1tv-2015-int&include=[]&_=%s' % (urllib.quote_plus(searchPattern), page, str(time.time()))
+        url = 'http://search-api.laola1.at/?callback=ret&q=%s&p=%d&i=laola1tv-2015-int&include=[]&_=%s' % (urllib.parse.quote_plus(searchPattern), page, str(time.time()))
         sts, data = self.getPage(url)
         if not sts: return
         try:
@@ -305,7 +305,7 @@ class Laola1TV(CBaseHostClass):
         vidUrl = self.cm.ph.getSearchGroups(data, '\configUrl\s*:\s*"([^"]*?)"')[0]
         if vidUrl.startswith('//'):
             vidUrl = 'http:' + vidUrl
-        vidUrl += '?' + urllib.urlencode(getParams)
+        vidUrl += '?' + urllib.parse.urlencode(getParams)
         vidUrl = self._getFullUrl( vidUrl, baseUrl )
         
         sts, data = self.getPage(vidUrl)

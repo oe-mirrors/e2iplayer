@@ -26,7 +26,7 @@ from Plugins.Extensions.IPTVPlayer.tools.iptvtypes import strwithmeta
 ###################################################
 from time import sleep as time_sleep
 from os import remove as os_remove, path as os_path
-from urllib import quote as urllib_quote
+from urllib.parse import quote as urllib_quote
 from random import shuffle as random_shuffle
 
 from Screens.Screen import Screen
@@ -213,7 +213,7 @@ class IPTVSubDownloaderWidget(Screen):
         self.session.openWithCallback(self.confirmMovieTitleCallBack, GetVirtualKeyboard(), title=(_("Confirm the title of the movie")), text = self.movieTitle)
         
     def confirmMovieTitleCallBack(self, text = None):
-        if isinstance(text, basestring):
+        if isinstance(text, str):
             self.movieTitle = text
             self.listSubtitlesProviders()
         else:

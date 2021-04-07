@@ -15,7 +15,7 @@ from Plugins.Extensions.IPTVPlayer.libs.crypto.keyedHash.evp import EVP_BytesToK
 ###################################################
 # FOREIGN import
 ###################################################
-import urllib
+import urllib.request, urllib.parse, urllib.error
 try:    import json
 except Exception: import simplejson as json
 ###################################################
@@ -180,10 +180,10 @@ class AnimeOdcinkiPL(CBaseHostClass):
         for key in self.filtersTab:
             iKey = 'f_' + key
             if iKey in cItem:
-                getParams.append('%s=%s' % (urllib.quote(key), urllib.quote(cItem[iKey])))
+                getParams.append('%s=%s' % (urllib.parse.quote(key), urllib.parse.quote(cItem[iKey])))
                 
         if 'f_search' in cItem:
-            getParams.append('s=%s' % (urllib.quote_plus(cItem['f_search'])))
+            getParams.append('s=%s' % (urllib.parse.quote_plus(cItem['f_search'])))
         
         baseUrl = cItem['url']
         if page > 1: baseUrl += '/strona/%s' % page
@@ -298,8 +298,8 @@ class AnimeOdcinkiPL(CBaseHostClass):
         urlTab = []
         
         # mark requested link as used one
-        if len(self.cacheLinks.keys()):
-            key = self.cacheLinks.keys()[0]
+        if len(list(self.cacheLinks.keys())):
+            key = list(self.cacheLinks.keys())[0]
             for idx in range(len(self.cacheLinks[key])):
                 if videoUrl in self.cacheLinks[key][idx]['url']:
                     if not self.cacheLinks[key][idx]['name'].startswith('*'):

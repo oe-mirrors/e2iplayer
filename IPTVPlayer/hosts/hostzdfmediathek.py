@@ -16,7 +16,7 @@ from Plugins.Extensions.IPTVPlayer.libs.e2ijson import loads as json_loads
 from Components.config import config, ConfigSelection, ConfigYesNo, getConfigListEntry
 from datetime import datetime, timedelta
 import re
-import urllib
+import urllib.request, urllib.parse, urllib.error
 import time
 ###################################################
 
@@ -102,7 +102,7 @@ class ZDFmediathek(CBaseHostClass):
         params.update({'header':HTTP_HEADER})
         
         if 'zdf-cdn.live.cellular.de' in url and False:
-            proxy = 'http://www.proxy-german.de/index.php?q={0}&hl=2e1'.format(urllib.quote(url, ''))
+            proxy = 'http://www.proxy-german.de/index.php?q={0}&hl=2e1'.format(urllib.parse.quote(url, ''))
             params['header']['Referer'] = proxy
             #params['header']['Cookie'] = 'flags=2e5;'
             url = proxy
@@ -116,7 +116,7 @@ class ZDFmediathek(CBaseHostClass):
     def getIconUrl(self, url):
         url = self.getFullUrl(url)
         if  'zdf-cdn.live.cellular.de' in url and False:
-            proxy = 'http://www.proxy-german.de/index.php?q={0}&hl=2e1'.format(urllib.quote(url, ''))
+            proxy = 'http://www.proxy-german.de/index.php?q={0}&hl=2e1'.format(urllib.parse.quote(url, ''))
             params = {}
             params['User-Agent'] = self.HEADER['User-Agent'],
             params['Referer'] = proxy
@@ -129,7 +129,7 @@ class ZDFmediathek(CBaseHostClass):
         
     def getFullUrl(self, url):
         if 'proxy-german.de' in url:
-            url = urllib.unquote( self.cm.ph.getSearchGroups(url+'&', '''\?q=(http[^&]+?)&''')[0] )
+            url = urllib.parse.unquote( self.cm.ph.getSearchGroups(url+'&', '''\?q=(http[^&]+?)&''')[0] )
         return CBaseHostClass.getFullUrl(self, url)
         
     def _getNum(self, v, default=0):
@@ -149,7 +149,7 @@ class ZDFmediathek(CBaseHostClass):
     def _getIcon(self, iconsItem):
         iconssize = config.plugins.iptvplayer.zdfmediathek_iconssize.value
         iconsTab = []
-        for item in iconsItem.keys():
+        for item in list(iconsItem.keys()):
             item = iconsItem[item]
             if "/assets/" in item["url"]:
                 iconsTab.append({'size':item["width"], 'url':item["url"]})

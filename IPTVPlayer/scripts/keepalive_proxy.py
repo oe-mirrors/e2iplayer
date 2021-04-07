@@ -1,14 +1,14 @@
 # -*- coding: utf-8 -*-
 
-from __future__ import print_function
-import urllib
-import urllib2
+
+import urllib.request, urllib.parse, urllib.error
+import urllib.request, urllib.error, urllib.parse
 import sys
 import time
 import traceback
-import urlparse
-import SocketServer
-import SimpleHTTPServer
+import urllib.parse
+import socketserver
+import http.server
 
 import signal
 import os
@@ -25,14 +25,14 @@ def getPage(url, params={}, post_data=None):
     data = None
     return_data = params.get('return_data', True)
     try:
-        req = urllib2.Request(url, post_data, params)
+        req = urllib.request.Request(url, post_data, params)
         if 'Referer' in params:
             req.add_header('Referer', params['Referer'])
         if 'User-Agent' in params:
             req.add_header('User-Agent', params['User-Agent'])
         if 'Connection' in params:
             req.add_header('Connection', params['Connection'])
-        resp = urllib2.urlopen(req)
+        resp = urllib.request.urlopen(req)
         if return_data:
             data = resp.read()
             resp.close()
@@ -44,7 +44,7 @@ def getPage(url, params={}, post_data=None):
     return sts, data
 
 HTTP_HEADER = {'Connection':'keep-alive', 'return_data':False}
-class Proxy(SimpleHTTPServer.SimpleHTTPRequestHandler):
+class Proxy(http.server.SimpleHTTPRequestHandler):
     def do_GET(self):
         try:
             global HTTP_HEADER
@@ -85,12 +85,12 @@ if __name__ == "__main__":
         sys.path.insert(1, libsPath)
         from keepalive import HTTPHandler
         keepalive_handler = HTTPHandler()    
-        opener = urllib2.build_opener(keepalive_handler)    
-        urllib2.install_opener(opener)    
+        opener = urllib.request.build_opener(keepalive_handler)    
+        urllib.request.install_opener(opener)    
         
         HTTP_HEADER.update({'User-Agent':userAgent, 'Referer':refererUrl})
-        SocketServer.TCPServer.allow_reuse_address = True
-        httpd = SocketServer.TCPServer(('127.0.0.1', port), Proxy)
+        socketserver.TCPServer.allow_reuse_address = True
+        httpd = socketserver.TCPServer(('127.0.0.1', port), Proxy)
         port = httpd.server_address[1]
         print('\nhttp://127.0.0.1:%s/%s\n' % (port, m3u8Url.replace('://', '/', 1)), file=sys.stderr)
         httpd.serve_forever()

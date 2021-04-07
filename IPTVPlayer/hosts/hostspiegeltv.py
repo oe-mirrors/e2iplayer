@@ -14,11 +14,11 @@ from Plugins.Extensions.IPTVPlayer.libs.e2ijson import loads as json_loads
 ###################################################
 # FOREIGN import
 ###################################################
-import urlparse
+import urllib.parse
 import time
 import re
 import hashlib
-import urllib
+import urllib.request, urllib.parse, urllib.error
 import random
 from datetime import datetime
 ###################################################
@@ -248,7 +248,7 @@ class SpiegelTv(CBaseHostClass):
             if cItem.get('url', '').endswith('-livestream'):
                 self.listLiveVideos(cItem)
             self._fillOneConfig(cItem)
-            urlPath = urlparse.urlparse(cItem['url']).path[1:].split('/')
+            urlPath = urllib.parse.urlparse(cItem['url']).path[1:].split('/')
             method = cItem.get('f_method', urlPath[0])
             param = cItem.get('f_param', urlPath[-1])
             start = 0
@@ -296,7 +296,7 @@ class SpiegelTv(CBaseHostClass):
     def listSearchResult(self, cItem, searchPattern, searchType):
         printDBG("SpiegelTv.listSearchResult cItem[%s], searchPattern[%s] searchType[%s]" % (cItem, searchPattern, searchType))
         cItem = dict(cItem)
-        cItem['url'] = self.getFullUrl('/search/') + urllib.quote_plus(searchPattern)
+        cItem['url'] = self.getFullUrl('/search/') + urllib.parse.quote_plus(searchPattern)
         cItem['category'] = 'list_items'
         cItem['f_method'] = 'search'
         cItem['f_param'] = searchPattern
@@ -457,7 +457,7 @@ class SpiegelTv(CBaseHostClass):
         urlTab = []
         
         # mark requested link as used one
-        if len(self.cacheLinks.keys()):
+        if len(list(self.cacheLinks.keys())):
             for key in self.cacheLinks:
                 for idx in range(len(self.cacheLinks[key])):
                     if videoUrl in self.cacheLinks[key][idx]['url']:

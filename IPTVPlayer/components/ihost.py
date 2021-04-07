@@ -14,15 +14,15 @@ from Plugins.Extensions.IPTVPlayer.libs.e2ijson import loads as json_loads, dump
 from Components.config import config
 from skin import parseColor
 
-from urlparse import urljoin
+from urllib.parse import urljoin
 
 class CUrlItem:
     def __init__(self, name = "", url = "", urlNeedsResolve = 0):
-        if isinstance(name, basestring): self.name = name
+        if isinstance(name, str): self.name = name
         else: self.name = str(name)
         
         # used only for TYPE_VIDEO item 
-        if isinstance(url, basestring): self.url = url
+        if isinstance(url, str): self.url = url
         else: self.url = str(url)
         
         self.urlNeedsResolve = urlNeedsResolve #  additional request to host is needed to resolv this url (url is not direct link)
@@ -58,16 +58,16 @@ class CDisplayListItem:
                 textColor = '', \
                 pinCode = ''):
                 
-        if isinstance(name, basestring): self.name = name
+        if isinstance(name, str): self.name = name
         else: self.name = str(name)
         
-        if isinstance(description, basestring): self.description = description
+        if isinstance(description, str): self.description = description
         else: self.description = str(description)
         
-        if isinstance(type, basestring): self.type = type
+        if isinstance(type, str): self.type = type
         else: self.type = str(type)
         
-        if isinstance(iconimage, basestring): self.iconimage = iconimage
+        if isinstance(iconimage, str): self.iconimage = iconimage
         else: self.iconimage = str(iconimage)
         
         if pinLocked: self.pinLocked = True

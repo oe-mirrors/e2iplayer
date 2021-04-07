@@ -3,7 +3,7 @@
 # author : Djeman
 # Updated by Shani-08 (https://github.com/Shani-08/ShaniXBMCWork2)
 
-from __future__ import print_function
+
 import re
 
 class AADecoder(object):

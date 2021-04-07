@@ -14,7 +14,7 @@ from Plugins.Extensions.IPTVPlayer.tools.e2ijs import js_execute
 ###################################################
 import time
 import re
-import urllib
+import urllib.request, urllib.parse, urllib.error
 try:    import json
 except Exception: import simplejson as json
 from Components.config import config, ConfigSelection, ConfigText, getConfigListEntry
@@ -186,10 +186,10 @@ class FilmeOnlineTo(CBaseHostClass):
             valsTab = []
             if 'f_search' not in cItem:
                 for key in ['f_tip', 'f_genres[]', 'f_year', 'f_quality', 'f_subbed', 'f_sort']:
-                    valsTab.append(urllib.quote(cItem.get(key, 'all')))
+                    valsTab.append(urllib.parse.quote(cItem.get(key, 'all')))
                 url = self.getFullUrl('tip/' + '/'.join(valsTab))
             else:
-                url = self.getFullUrl('search/' + urllib.quote_plus(cItem['f_search']))
+                url = self.getFullUrl('search/' + urllib.parse.quote_plus(cItem['f_search']))
             sts, data = self.getPage(url)
             if not sts: return
             
@@ -343,7 +343,7 @@ class FilmeOnlineTo(CBaseHostClass):
         subTracks = []
         
         # mark requested link as used one
-        if len(self.cacheLinks.keys()):
+        if len(list(self.cacheLinks.keys())):
             for key in self.cacheLinks:
                 for idx in range(len(self.cacheLinks[key])):
                     if videoUrl in self.cacheLinks[key][idx]['url']:

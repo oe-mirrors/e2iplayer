@@ -219,7 +219,7 @@ class HD1080Online(CBaseHostClass):
     def getVideoLinks(self, videoUrl):
         printDBG("HD1080Online.getVideoLinks [%s]" % videoUrl)
         # mark requested link as used one
-        if len(self.cacheLinks.keys()):
+        if len(list(self.cacheLinks.keys())):
             for key in self.cacheLinks:
                 for idx in range(len(self.cacheLinks[key])):
                     if videoUrl in self.cacheLinks[key][idx]['url']:

@@ -14,7 +14,7 @@ from Plugins.Extensions.IPTVPlayer.libs.e2ijson import loads as json_loads
 # FOREIGN import
 ###################################################
 import time
-import urllib
+import urllib.request, urllib.parse, urllib.error
 from Components.config import config
 ###################################################
 
@@ -36,7 +36,7 @@ class UnCaptchaReCaptcha:
         token = ''
         errorMsgTab = []
         apiKey = config.plugins.iptvplayer.api_key_9kweu.value
-        apiUrl = self.getFullUrl('/index.cgi?apikey=') + apiKey + '&action=usercaptchaupload&interactive=1&json=1&file-upload-01=' + sitekey + '&oldsource=recaptchav2&pageurl=' + urllib.quote(referer)
+        apiUrl = self.getFullUrl('/index.cgi?apikey=') + apiKey + '&action=usercaptchaupload&interactive=1&json=1&file-upload-01=' + sitekey + '&oldsource=recaptchav2&pageurl=' + urllib.parse.quote(referer)
         try:
             token = ''
             sts, data = self.cm.getPage(apiUrl)

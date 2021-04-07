@@ -16,7 +16,7 @@ from Plugins.Extensions.IPTVPlayer.libs import ph
 ###################################################
 from Components.config import config, ConfigSelection, ConfigText, getConfigListEntry
 import re
-import urllib
+import urllib.request, urllib.parse, urllib.error
 from binascii import hexlify
 from hashlib import md5
 ###################################################
@@ -232,7 +232,7 @@ class cda(CBaseHostClass, CaptchaHelper):
     def listSearchResult(self, cItem, searchPattern, searchType):
         printDBG("cda.listSearchResult cItem[%s], searchPattern[%s] searchType[%s]" % (cItem, searchPattern, searchType))
         searchsort = config.plugins.iptvplayer.cda_searchsort.value
-        url = self.SEARCH_URL % (urllib.quote_plus(searchPattern), 1, searchsort)
+        url = self.SEARCH_URL % (urllib.parse.quote_plus(searchPattern), 1, searchsort)
         if searchType and searchType != 'all': 
             url += '&duration=' + searchType
             sts, data = self.getPage(url)

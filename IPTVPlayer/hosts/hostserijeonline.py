@@ -10,9 +10,9 @@ from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, by
 ###################################################
 # FOREIGN import
 ###################################################
-import urlparse
+import urllib.parse
 import re
-import urllib
+import urllib.request, urllib.parse, urllib.error
 try:    import json
 except Exception: import simplejson as json
 from Components.config import config, ConfigText, getConfigListEntry
@@ -71,7 +71,7 @@ class SerijeOnline(CBaseHostClass):
         baseUrl = self.cm.iriToUri(baseUrl)
         def _getFullUrl(url):
             if self.cm.isValidUrl(url): return url
-            else: return urlparse.urljoin(baseUrl, url)
+            else: return urllib.parse.urljoin(baseUrl, url)
         addParams['cloudflare_params'] = {'domain':self.up.getDomain(baseUrl), 'cookie_file':self.COOKIE_FILE, 'User-Agent':self.USER_AGENT, 'full_url_handle':_getFullUrl}
         return self.cm.getPageCFProtection(baseUrl, addParams, post_data)
         
@@ -220,7 +220,7 @@ class SerijeOnline(CBaseHostClass):
                 if 'getplayer' in item:
                     try:
                         query = byteify(json.loads(item + '}'), '', True)
-                        query = urllib.urlencode(query)
+                        query = urllib.parse.urlencode(query)
                         url = self.getFullUrl("/ajax.php") + '?' +  query
                         sts, data = self.getPage(url)
                         printDBG("---------------")
@@ -258,7 +258,7 @@ class SerijeOnline(CBaseHostClass):
         printDBG("SerijeOnline.listSearchResult cItem[%s], searchPattern[%s] searchType[%s]" % (cItem, searchPattern, searchType))
         cItem = dict(cItem)
         if 0 == cItem.get('page', 0):
-            cItem['url'] = self.getFullUrl('search.php?keywords=%s' % urllib.quote_plus(searchPattern))
+            cItem['url'] = self.getFullUrl('search.php?keywords=%s' % urllib.parse.quote_plus(searchPattern))
         self.listItems(cItem, 'explore_item')
         
     def getLinksForVideo(self, cItem):

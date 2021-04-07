@@ -17,7 +17,7 @@ from Plugins.Extensions.IPTVPlayer.libs.youtube_dl.utils import clean_html
 from Plugins.Extensions.IPTVPlayer.components.ihost import CDisplayListItem, RetHost
 
 import re
-import urllib
+import urllib.request, urllib.parse, urllib.error
 from os import listdir as os_listdir, path as os_path
 
 class CSubItem:
@@ -369,7 +369,7 @@ class CBaseSubProviderClass:
     def imdbGetMoviesByTitle(self, title):
         printDBG('CBaseSubProviderClass.imdbGetMoviesByTitle title[%s]' % (title))
         
-        sts, data = self.cm.getPage("http://www.imdb.com/find?ref_=nv_sr_fn&q=%s&s=tt" % urllib.quote_plus(title))
+        sts, data = self.cm.getPage("http://www.imdb.com/find?ref_=nv_sr_fn&q=%s&s=tt" % urllib.parse.quote_plus(title))
         if not sts: return False, []
         list = []
         data = self.cm.ph.getDataBeetwenMarkers(data, '<table class="findList">', '</table>', False)[1]
@@ -470,7 +470,7 @@ class CBaseSubProviderClass:
                     printDBG("downloadFileData: replace fileName[%s] with [%s]" % (fileName, tmpFileName))
                     fileName = tmpFileName
             else:
-                fileName = urllib.unquote(self.cm.meta['url'].split('/')[-1])
+                fileName = urllib.parse.unquote(self.cm.meta['url'].split('/')[-1])
             
             return data, fileName
 

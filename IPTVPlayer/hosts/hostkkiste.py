@@ -14,8 +14,8 @@ from Plugins.Extensions.IPTVPlayer.libs import ph
 # FOREIGN import
 ###################################################
 import re
-import urllib
-from urlparse import urlsplit, urlunsplit, urlparse
+import urllib.request, urllib.parse, urllib.error
+from urllib.parse import urlsplit, urlunsplit, urlparse
 from Components.config import config, ConfigSelection, ConfigText, getConfigListEntry
 ###################################################
 
@@ -177,7 +177,7 @@ class KKisteAG(CBaseHostClass):
                 val = cItem.get('f_' + key)
                 if not val: continue
                 query[key] = val
-            url = self.getFullUrl('?c=movie&m=filter&' + urllib.urlencode(query))
+            url = self.getFullUrl('?c=movie&m=filter&' + urllib.parse.urlencode(query))
         else:
             url = cItem['url']
 
@@ -228,7 +228,7 @@ class KKisteAG(CBaseHostClass):
     def listSearchResult(self, cItem, searchPattern, searchType):
         sts, data = self.getPage(self.getMainUrl())
         if not sts: return
-        url = self.getFullUrl('?c=movie&m=filter&keyword=' + urllib.quote_plus(searchPattern))
+        url = self.getFullUrl('?c=movie&m=filter&keyword=' + urllib.parse.quote_plus(searchPattern))
         self.listItems({'name':'category', 'category':'list_items', 'url':url})
 
     def exploreItem(self, cItem):
@@ -256,7 +256,7 @@ class KKisteAG(CBaseHostClass):
 
     def joinLink(self, params):
         tab = []
-        for key, value in params[1].iteritems():
+        for key, value in params[1].items():
             tab.append('%s=%s' % (key, value))
         return params[0] + '?' + '&'.join(tab)
 
@@ -334,7 +334,7 @@ class KKisteAG(CBaseHostClass):
     def getVideoLinks(self, videoUrl):
         printDBG("KKisteAG.getVideoLinks [%s]" % videoUrl)
         # mark requested link as used one
-        if len(self.cacheLinks.keys()):
+        if len(list(self.cacheLinks.keys())):
             for key in self.cacheLinks:
                 for idx in range(len(self.cacheLinks[key])):
                     if videoUrl in self.cacheLinks[key][idx]['url']:

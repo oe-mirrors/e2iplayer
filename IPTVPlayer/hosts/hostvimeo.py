@@ -13,7 +13,7 @@ from Plugins.Extensions.IPTVPlayer.libs.pCommon import common
 # FOREIGN import
 ###################################################
 import re
-import urllib
+import urllib.request, urllib.parse, urllib.error
 from datetime import  timedelta
 ###################################################
 
@@ -31,7 +31,7 @@ class SuggestionsProvider:
 
     def getSuggestions(self, text, locale):
         lang = locale.split('-', 1)[0]
-        url = 'https://vimeo.com/search/autocomplete?q=' + urllib.quote(text)
+        url = 'https://vimeo.com/search/autocomplete?q=' + urllib.parse.quote(text)
         sts, data = self.cm.getPage(url)
         if sts:
             retList = []
@@ -201,7 +201,7 @@ class VimeoCom(CBaseHostClass):
         url = self.api.get('url', '') + 'search?_video_override=true&filter_type=%s&page=%s&per_page=%s&sizes=250x115&fields=search_web' % (cItem.get('f_type', ''), page, ITEMS_PER_PAGE)
         sortMap = {'shortest':'duration&direction=asc', 'longest':'duration&direction=desc', 'alphabetical_desc':'alphabetical&direction=desc', 'alphabetical_asc':'alphabetical&direction=asc'}
         if cItem.get('f_type') == 'clip': url += '&filter_price=free'
-        if cItem.get('f_query', '') != '': url += '&query=%s' % urllib.quote(cItem['f_query'])
+        if cItem.get('f_query', '') != '': url += '&query=%s' % urllib.parse.quote(cItem['f_query'])
         if cItem.get('f_sort', '') != '': url += '&sort=%s' % sortMap.get(cItem['f_sort'], cItem['f_sort'])
         if cItem.get('f_cat', '') != '': url += '&filter_category=%s' % cItem['f_cat']
         url += '&c=%s' % cItem.get('f_c', 'b')
@@ -326,7 +326,7 @@ class VimeoCom(CBaseHostClass):
     def listSearchResult(self, cItem, searchPattern, searchType):
         printDBG("VimeoCom.listSearchResult cItem[%s], searchPattern[%s] searchType[%s]" % (cItem, searchPattern, searchType))
         
-        url = self.getFullUrl('/search?q=%s' % (urllib.quote(searchPattern)))
+        url = self.getFullUrl('/search?q=%s' % (urllib.parse.quote(searchPattern)))
         params = dict(cItem)
         params.update({'url':url, 'category':'list_items', 'f_type':searchType, 'f_c':'s', 'f_query':searchPattern})
         self.listItems(params)

@@ -15,7 +15,7 @@ from Plugins.Extensions.IPTVPlayer.tools.iptvtypes import strwithmeta
 from binascii import hexlify
 from hashlib import md5
 import re
-import urllib
+import urllib.request, urllib.parse, urllib.error
 from Components.config import config, ConfigText, getConfigListEntry
 ###################################################
 
@@ -382,7 +382,7 @@ class VidCorn(CBaseHostClass, CaptchaHelper):
     def listSearchResult(self, cItem, searchPattern, searchType):
         self.tryTologin()
 
-        url = self.getFullUrl('/buscar/') + urllib.quote_plus(searchPattern)
+        url = self.getFullUrl('/buscar/') + urllib.parse.quote_plus(searchPattern)
         sts, data = self.getPage(url)
         if not sts: return
         self.setMainUrl(self.cm.meta['url'])
@@ -433,7 +433,7 @@ class VidCorn(CBaseHostClass, CaptchaHelper):
     def getVideoLinks(self, videoUrl):
         printDBG("VidCorn.getVideoLinks [%s]" % videoUrl)
         # mark requested link as used one
-        if len(self.cacheLinks.keys()):
+        if len(list(self.cacheLinks.keys())):
             for key in self.cacheLinks:
                 for idx in range(len(self.cacheLinks[key])):
                     if videoUrl in self.cacheLinks[key][idx]['url']:

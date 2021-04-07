@@ -13,7 +13,7 @@ from Plugins.Extensions.IPTVPlayer.tools.iptvtypes import strwithmeta
 # FOREIGN import
 ###################################################
 import re
-import urllib
+import urllib.request, urllib.parse, urllib.error
 try: import json
 except Exception: import simplejson as json
 from Components.config import config, ConfigSelection, getConfigListEntry
@@ -55,7 +55,7 @@ class DDLMe(CBaseHostClass):
     
     def getRealUrl(self, url):
         if config.plugins.iptvplayer.ddlme_proxy.value == 'webproxy' and url != None and 'browse.php?u=' in url:
-            url = urllib.unquote( self.cm.ph.getSearchGroups(url+'&', '''\?u=(http[^&]+?)&''')[0] )
+            url = urllib.parse.unquote( self.cm.ph.getSearchGroups(url+'&', '''\?u=(http[^&]+?)&''')[0] )
         return url
     
     def getFullUrl(self, url, baseUrl=None):
@@ -83,7 +83,7 @@ class DDLMe(CBaseHostClass):
         proxy = config.plugins.iptvplayer.ddlme_proxy.value
         if proxy == 'webproxy':
             addParams = dict(addParams)
-            proxy = 'http://n-guyot.fr/exit/browse.php?u={0}&b=4'.format(urllib.quote(baseUrl, ''))
+            proxy = 'http://n-guyot.fr/exit/browse.php?u={0}&b=4'.format(urllib.parse.quote(baseUrl, ''))
             addParams['header']['Referer'] = proxy + '&f=norefer'
             baseUrl = proxy
         elif proxy != 'None':
@@ -382,8 +382,8 @@ class DDLMe(CBaseHostClass):
                 data = ret['data'].strip()
                 data = byteify(json.loads(data))
                 
-                for key, dat in data.iteritems():
-                    for name, item in dat['links'].iteritems():
+                for key, dat in data.items():
+                    for name, item in dat['links'].items():
                         for linkData in item:
                             pNum = int(linkData[0])
                             url = self.getFullUrl(linkData[3], cUrl)
@@ -449,10 +449,10 @@ class DDLMe(CBaseHostClass):
             printExc()
         
     def listSearchResult(self, cItem, searchPattern, searchType):
-        searchPattern = urllib.quote_plus(searchPattern)
+        searchPattern = urllib.parse.quote_plus(searchPattern)
         cItem = dict(cItem)
         cItem['category'] = 'list_items'
-        cItem['url'] = self.getFullUrl('/search_99/?q=') + urllib.quote_plus(searchPattern)
+        cItem['url'] = self.getFullUrl('/search_99/?q=') + urllib.parse.quote_plus(searchPattern)
         sts, data = self.getPage(cItem['url'])
         if not sts: return
         cUrl = self.cm.meta['url']
@@ -475,7 +475,7 @@ class DDLMe(CBaseHostClass):
     def getVideoLinks(self, videoUrl):
         printDBG("DDLMe.getVideoLinks [%s]" % videoUrl)
         # mark requested link as used one
-        if len(self.cacheLinks.keys()):
+        if len(list(self.cacheLinks.keys())):
             for key in self.cacheLinks:
                 for idx in range(len(self.cacheLinks[key])):
                     if videoUrl in self.cacheLinks[key][idx]['url']:

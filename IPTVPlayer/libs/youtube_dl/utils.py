@@ -34,7 +34,7 @@ try:
     try:
         from urllib.parse import urlparse as compat_urllib_parse_urlparse
     except ImportError: # Python 2
-        from urlparse import urlparse as compat_urllib_parse_urlparse
+        from urllib.parse import urlparse as compat_urllib_parse_urlparse
 except Exception:
     printDBG("YT import problem 4")
   
@@ -42,7 +42,7 @@ try:
     try:
         import http.cookiejar as compat_cookiejar
     except ImportError: # Python 2
-        import cookielib as compat_cookiejar
+        import http.cookiejar as compat_cookiejar
 except Exception:
     printDBG("YT import problem 5")
 
@@ -50,7 +50,7 @@ try:
     try:
         import html.entities as compat_html_entities
     except ImportError: # Python 2
-        import htmlentitydefs as compat_html_entities
+        import html.entities as compat_html_entities
 except Exception:
     printDBG("YT import problem 6")
   
@@ -58,7 +58,7 @@ try:
     try:
         import http.client as compat_http_client
     except ImportError: # Python 2
-        import httplib as compat_http_client
+        import http.client as compat_http_client
 except Exception:
     printDBG("YT import problem 8")
 

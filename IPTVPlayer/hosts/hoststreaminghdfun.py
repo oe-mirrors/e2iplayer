@@ -11,9 +11,9 @@ from Plugins.Extensions.IPTVPlayer.tools.iptvtypes import strwithmeta
 ###################################################
 # FOREIGN import
 ###################################################
-import urlparse
+import urllib.parse
 import re
-import urllib
+import urllib.request, urllib.parse, urllib.error
 ###################################################
 
 
@@ -41,7 +41,7 @@ class StreamingHDFun(CBaseHostClass):
         baseUrl = self.cm.iriToUri(baseUrl)
         def _getFullUrl(url):
             if self.cm.isValidUrl(url): return url
-            else: return urlparse.urljoin(baseUrl, url)
+            else: return urllib.parse.urljoin(baseUrl, url)
         addParams['cloudflare_params'] = {'domain':self.up.getDomain(baseUrl), 'cookie_file':self.COOKIE_FILE, 'User-Agent':self.USER_AGENT, 'full_url_handle':_getFullUrl}
         return self.cm.getPageCFProtection(baseUrl, addParams, post_data)
         
@@ -172,7 +172,7 @@ class StreamingHDFun(CBaseHostClass):
         if searchType == 'movies': url = '/'
         else: url = '/serietv/'
         
-        url = self.getFullUrl(url + '?s=') + urllib.quote_plus(searchPattern)
+        url = self.getFullUrl(url + '?s=') + urllib.parse.quote_plus(searchPattern)
         cItem = dict(cItem)
         cItem.update({'url':url, 'category':'list_items'})
         self.listItems(cItem, 'explore_item')
@@ -293,7 +293,7 @@ class StreamingHDFun(CBaseHostClass):
         urlTab = []
         
         # mark requested link as used one
-        if len(self.cacheLinks.keys()):
+        if len(list(self.cacheLinks.keys())):
             for key in self.cacheLinks:
                 for idx in range(len(self.cacheLinks[key])):
                     if baseUrl in self.cacheLinks[key][idx]['url']:

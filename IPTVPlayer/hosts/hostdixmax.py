@@ -16,7 +16,7 @@ from Plugins.Extensions.IPTVPlayer.libs.e2ijson import loads as json_loads
 ###################################################
 from binascii import hexlify
 from hashlib import md5
-import urllib
+import urllib.request, urllib.parse, urllib.error
 from datetime import datetime
 from Components.config import config, ConfigText, getConfigListEntry
 ###################################################
@@ -55,7 +55,7 @@ class SuggestionsProvider:
         return _("DixMax Suggestions")
 
     def getSuggestions(self, text, locale):
-        url = self.MAIN_URL + 'api/private/get/search?query=%s&limit=10&f=0' % (urllib.quote(text))
+        url = self.MAIN_URL + 'api/private/get/search?query=%s&limit=10&f=0' % (urllib.parse.quote(text))
         sts, data = self.cm.getPage(url, self.defaultParams)
         if sts:
             retList = []
@@ -316,7 +316,7 @@ class DixMax(CBaseHostClass):
     def listSearchResult(self, cItem, searchPattern, searchType):
         self.tryTologin()
 
-        url = self.getFullUrl('/api/private/get/search?query=%s&limit=100&f=1' % urllib.quote(searchPattern))
+        url = self.getFullUrl('/api/private/get/search?query=%s&limit=100&f=1' % urllib.parse.quote(searchPattern))
         sts, data = self.getPage(url)
         if not sts: return
         self.setMainUrl(self.cm.meta['url'])
@@ -382,7 +382,7 @@ class DixMax(CBaseHostClass):
     def getVideoLinks(self, videoUrl):
         printDBG("DixMax.getVideoLinks [%s]" % videoUrl)
         # mark requested link as used one
-        if len(self.cacheLinks.keys()):
+        if len(list(self.cacheLinks.keys())):
             for key in self.cacheLinks:
                 for idx in range(len(self.cacheLinks[key])):
                     if videoUrl in self.cacheLinks[key][idx]['url']:

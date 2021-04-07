@@ -11,7 +11,7 @@ from Plugins.Extensions.IPTVPlayer.libs.urlparserhelper import getDirectM3U8Play
 ###################################################
 # FOREIGN import
 ###################################################
-import urllib
+import urllib.request, urllib.parse, urllib.error
 import base64
 try:    import json
 except Exception: import simplejson as json
@@ -268,7 +268,7 @@ class VUMEDI(CBaseHostClass):
         self.tryTologin()
         
         cItem = dict(cItem)
-        cItem['url'] = self.getFullUrl('/search/?q=') + urllib.quote(searchPattern) 
+        cItem['url'] = self.getFullUrl('/search/?q=') + urllib.parse.quote(searchPattern) 
         cItem['category'] = 'list_items'
         self.listItems(cItem)
 
@@ -296,7 +296,7 @@ class VUMEDI(CBaseHostClass):
             try:
                 printDBG(data)
                 data = byteify(json.loads(data))['content_tree']
-                key = data.keys()[0]
+                key = list(data.keys())[0]
                 data = data[key]
                 
                 embedCode = data['embed_code']

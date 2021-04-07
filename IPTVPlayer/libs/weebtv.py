@@ -12,7 +12,7 @@ from Plugins.Extensions.IPTVPlayer.libs.e2ijson import loads as json_loads
 # FOREIGN import
 ###################################################
 from Components.config import config, ConfigSelection, ConfigYesNo, ConfigText, getConfigListEntry
-import urllib
+import urllib.request, urllib.parse, urllib.error
 ############################################
 
 ###################################################
@@ -62,7 +62,7 @@ class WeebTvApi:
     def _jsonToSortedTab(self, data):
         strTab = []
         outTab = []
-        for v, k in data.iteritems():
+        for v, k in data.items():
             strTab.append(int(v))
             strTab.append(k)
             outTab.append(strTab)
@@ -191,7 +191,7 @@ class UrlParser:
     def getParam(self, params, name):
         try:
             result = params[name]
-            result = urllib.unquote_plus(result)
+            result = urllib.parse.unquote_plus(result)
             return result
         except Exception:
             return None

@@ -14,7 +14,7 @@ from Plugins.Extensions.IPTVPlayer.tools.iptvtypes import strwithmeta
 # FOREIGN import
 ###################################################
 from Components.config import config, ConfigText, getConfigListEntry
-import urllib
+import urllib.request, urllib.parse, urllib.error
 from hashlib import md5
 try:    import simplejson as json
 except Exception: import json
@@ -84,9 +84,9 @@ class Chomikuj(CBaseHostClass):
             v = None
         if None != v:
             try:
-                NumberTypes = (int, long, float, complex)
+                NumberTypes = (int, int, float, complex)
             except NameError:
-                NumberTypes = (int, long, float)
+                NumberTypes = (int, int, float)
                 
             if isinstance(v, NumberTypes):
                 return v
@@ -161,7 +161,7 @@ class Chomikuj(CBaseHostClass):
         page   = cItem.get('page', 1)
         
         if 'accounts' == searchType:
-            url = self.SEARCH_ACCOUNT_URL % (page, urllib.quote_plus(searchPattern))
+            url = self.SEARCH_ACCOUNT_URL % (page, urllib.parse.quote_plus(searchPattern))
             sts, data = self.requestJsonData(url)
             if not sts: return
             printDBG(data)
@@ -184,7 +184,7 @@ class Chomikuj(CBaseHostClass):
                 self.addDir(params)
         else:
             map = {"images":"Image", "video":"Video", "music":"Music"}
-            self.handleDataRequest(cItem, self.SEARCH_URL % (urllib.quote_plus(searchPattern), page, map[searchType]))
+            self.handleDataRequest(cItem, self.SEARCH_URL % (urllib.parse.quote_plus(searchPattern), page, map[searchType]))
 
     def handleProfile(self, cItem):
         printDBG("Chomikuj.handleProfile cItem[%s]" % cItem)

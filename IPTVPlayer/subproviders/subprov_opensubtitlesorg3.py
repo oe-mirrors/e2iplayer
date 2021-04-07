@@ -13,12 +13,12 @@ from Plugins.Extensions.IPTVPlayer.libs.urlparserhelper import hex_md5
 # FOREIGN import
 ###################################################
 import re
-import urllib
+import urllib.request, urllib.parse, urllib.error
 try:    import json
 except Exception: import simplejson as json
 try:
-    try: from cStringIO import StringIO
-    except Exception: from StringIO import StringIO 
+    try: from io import StringIO
+    except Exception: from io import StringIO 
     import gzip
 except Exception: pass
 from Components.config import config, ConfigSelection, ConfigYesNo, ConfigText, getConfigListEntry
@@ -175,7 +175,7 @@ class OpenSubtitlesRest(CBaseSubProviderClass):
                 title = self.imdbGetOrginalByTitle(cItem['imdbid'])[1].get('title', cItem.get('base_title', ''))
             else:
                 title = self.params['confirmed_title']
-            queryTab.append('query-%s' % urllib.quote(title))
+            queryTab.append('query-%s' % urllib.parse.quote(title))
             
         if langid != '':
             queryTab.append('sublanguageid-%s' % langid)

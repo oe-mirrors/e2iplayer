@@ -14,9 +14,9 @@ from Plugins.Extensions.IPTVPlayer.libs.e2ijson import loads as json_loads
 # FOREIGN import
 ###################################################
 import re
-import urllib
+import urllib.request, urllib.parse, urllib.error
 import base64
-from urlparse import urlparse
+from urllib.parse import urlparse
 from Components.config import config, ConfigYesNo, getConfigListEntry
 ###################################################
 
@@ -315,7 +315,7 @@ class C3player(CBaseHostClass):
                 SetIPTVPlayerLastHostError(errorMsg)
             if embedToken == '' and config.plugins.iptvplayer.tv3player_use_web_proxy.value:
                 # http://getproxi.es/IE-proxies/
-                proxy = 'http://ruproxy.herokuapp.com/index.php?q={0}&hl=2e1'.format(urllib.quote_plus(cItem['url']))
+                proxy = 'http://ruproxy.herokuapp.com/index.php?q={0}&hl=2e1'.format(urllib.parse.quote_plus(cItem['url']))
                 params = {'header':dict(self.HEADER)}
                 params['header']['Referer'] = proxy
                 params.update({'cookie_items':{'flags':'2e1'}, 'use_cookie':True})
@@ -330,7 +330,7 @@ class C3player(CBaseHostClass):
                 parsedUri = urlparse(embedToken)
                 auth = parsedUri.path.split('/embed_token/', 1)[-1].split('/')
                 if len(auth) > 1:
-                    url = 'https://player.ooyala.com/sas/player_api/v2/authorization/embed_code/%s/%s?embedToken=%s&device=html5&domain=www.tv3.ie&auth_token=' % (auth[0], auth[1], urllib.quote_plus(embedToken) )
+                    url = 'https://player.ooyala.com/sas/player_api/v2/authorization/embed_code/%s/%s?embedToken=%s&device=html5&domain=www.tv3.ie&auth_token=' % (auth[0], auth[1], urllib.parse.quote_plus(embedToken) )
                     sts, data = self.cm.getPage(url)
                     if not sts: return []
                     try:

@@ -14,7 +14,7 @@ from Plugins.Extensions.IPTVPlayer.tools.iptvtypes import strwithmeta
 ###################################################
 from Components.config import config, ConfigSelection, ConfigText, getConfigListEntry
 import re
-import urllib
+import urllib.request, urllib.parse, urllib.error
 try:    import json
 except Exception: import simplejson as json
 ###################################################
@@ -399,7 +399,7 @@ class Movie4kTO(CBaseHostClass):
         cItem = dict(cItem)
         page = cItem.get('page', 1)
         if page == 1:
-            cItem['url'] = self.SRCH_URL + urllib.quote(searchPattern)
+            cItem['url'] = self.SRCH_URL + urllib.parse.quote(searchPattern)
             cItem['category'] = 'search'
         
         self.listsItems2(cItem, None)

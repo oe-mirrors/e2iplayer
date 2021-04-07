@@ -13,7 +13,7 @@ from Plugins.Extensions.IPTVPlayer.libs.e2ijson import loads as json_loads
 # FOREIGN import
 ###################################################
 import re
-import urllib
+import urllib.request, urllib.parse, urllib.error
 ###################################################
 
 
@@ -347,7 +347,7 @@ class ArteTV(CBaseHostClass):
     def listSearchResult(self, cItem, searchPattern, searchType):
         printDBG("ArteTV.listSearchResult cItem[%s], searchPattern[%s] searchType[%s]" % (cItem, searchPattern, searchType))
         
-        url = self.getFullUrl('/%s/search/?q=%s' % (searchType, urllib.quote_plus(searchPattern)))
+        url = self.getFullUrl('/%s/search/?q=%s' % (searchType, urllib.parse.quote_plus(searchPattern)))
         params = dict(cItem)
         params.update({'url':url, 'category':'list_items', 'f_lang':searchType})
         self.listItems(params, 'list_section_items')
@@ -368,7 +368,7 @@ class ArteTV(CBaseHostClass):
             data = self.cm.ph.getDataBeetwenNodes(data, ('var', '=', 'js_json'), ('</script', '>'), False)[1]
             data[:data.find('};')+1]
         else:
-            sts, data = self.getPage(urllib.unquote(jsonUrl))
+            sts, data = self.getPage(urllib.parse.unquote(jsonUrl))
             if not sts: return
 
         linksTab = []

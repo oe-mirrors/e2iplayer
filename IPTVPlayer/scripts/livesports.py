@@ -1,19 +1,19 @@
 # -*- coding: utf-8 -*-
 
-from __future__ import print_function
-import urllib
-import urllib2
+
+import urllib.request, urllib.parse, urllib.error
+import urllib.request, urllib.error, urllib.parse
 import sys
 import traceback
 import base64
-import SocketServer
-import SimpleHTTPServer
+import socketserver
+import http.server
 import re
 import ssl
-from urlparse import urlparse, urljoin
+from urllib.parse import urlparse, urljoin
 try:    import json
 except Exception: import simplejson as json
-import cookielib
+import http.cookiejar
 import time
 
 import signal
@@ -50,31 +50,31 @@ def getPage(url, params={}):
 
     try:
         ctx = ssl._create_unverified_context(params['ssl_protocol']) if params.get('ssl_protocol', None) != None else ssl._create_unverified_context()
-        customOpeners.append(urllib2.HTTPSHandler(context=ctx))
+        customOpeners.append(urllib.request.HTTPSHandler(context=ctx))
     except Exception:
         pass
 
     if params.get('cookiefile'):
         if cj == None:
-            cj = cookielib.MozillaCookieJar()
+            cj = http.cookiejar.MozillaCookieJar()
             try: cj.load(params['cookiefile'], ignore_discard = True)
             except IOError: pass
-        customOpeners.append( urllib2.HTTPCookieProcessor(cj) )
+        customOpeners.append( urllib.request.HTTPCookieProcessor(cj) )
 
     sts = False
     data = None
     try:
-        req = urllib2.Request(url)
+        req = urllib.request.Request(url)
         for key in ('Referer', 'User-Agent', 'Origin', 'Accept-Encoding', 'Accept'):
             if key in params: req.add_header(key, params[key])
         printDBG("++++HEADERS START++++")
         printDBG(req.headers)
         printDBG("++++HEADERS END++++")
-        opener = urllib2.build_opener( *customOpeners )
+        opener = urllib.request.build_opener( *customOpeners )
         resp = opener.open(req)
         data = resp.read()
         sts = True
-    except urllib2.HTTPError as e:
+    except urllib.error.HTTPError as e:
         data = e
     except Exception:
         printExc()
@@ -141,7 +141,7 @@ def getPageCF(url, params={}):
   
     return sts, data
 
-class Proxy(SimpleHTTPServer.SimpleHTTPRequestHandler):
+class Proxy(http.server.SimpleHTTPRequestHandler):
     def do_GET(self):
         global mainUrl
         global userAgent
@@ -200,9 +200,9 @@ if __name__ == "__main__":
         elif scriptUrl.startswith('|'):
             scriptUrl = json.loads(base64.b64decode(scriptUrl))
         
-        SocketServer.TCPServer.allow_reuse_address = True
+        socketserver.TCPServer.allow_reuse_address = True
         #httpd = SocketServer.ForkingTCPServer(('127.0.0.1', port), Proxy)
-        httpd = SocketServer.TCPServer(('127.0.0.1', port), Proxy)
+        httpd = socketserver.TCPServer(('127.0.0.1', port), Proxy)
         print('\n%s\n' % hlsUrl, file=sys.stderr)
         httpd.serve_forever()
     except KeyboardInterrupt:

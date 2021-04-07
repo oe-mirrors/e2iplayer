@@ -20,7 +20,7 @@ Copyright (C) 2010 Hiroki Ohtani(liris)
 
 """
 
-from urlparse import urlparse
+from urllib.parse import urlparse
 import os
 
 __all__ = ["parse_url", "get_proxy_info"]

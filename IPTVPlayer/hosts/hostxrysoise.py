@@ -12,7 +12,7 @@ from Plugins.Extensions.IPTVPlayer.libs.pCommon import  CParsingHelper
 # FOREIGN import
 ###################################################
 import re
-import urllib
+import urllib.request, urllib.parse, urllib.error
 try:    import json
 except Exception: import simplejson as json
 from Components.config import config, ConfigSelection
@@ -269,7 +269,7 @@ class XrysoiSE(CBaseHostClass):
         printDBG("XrysoiSE.listSearchResult cItem[%s], searchPattern[%s] searchType[%s]" % (cItem, searchPattern, searchType))
         cItem = dict(cItem)
         cItem['url'] = self.MAIN_URL
-        cItem['url_suffix'] = self.SEARCH_SUFFIX + urllib.quote_plus(searchPattern)
+        cItem['url_suffix'] = self.SEARCH_SUFFIX + urllib.parse.quote_plus(searchPattern)
         cItem['mode'] = 'search'
         self.listItems(cItem)
     

@@ -15,9 +15,9 @@ from Plugins.Extensions.IPTVPlayer.libs import ph
 # FOREIGN import
 ###################################################
 import re
-import urllib
+import urllib.request, urllib.parse, urllib.error
 from datetime import timedelta
-from urlparse import  urljoin
+from urllib.parse import  urljoin
 ###################################################
 
 
@@ -59,7 +59,7 @@ class TED(CBaseHostClass):
     def getFullUrl(self, url):
         url = CBaseHostClass.getFullUrl(self, url)
         try: url.encode('ascii')
-        except Exception: url = urllib.quote(url, safe="/:&?%@[]()*$!+-=|<>;")
+        except Exception: url = urllib.parse.quote(url, safe="/:&?%@[]()*$!+-=|<>;")
         url = url.replace(' ', '%20').replace('&amp;', '&')
         return url
         
@@ -274,7 +274,7 @@ class TED(CBaseHostClass):
             if key not in queryParamsMap: continue
             query[queryParamsMap[key]] = cItem[key]
         
-        query = urllib.urlencode(query)
+        query = urllib.parse.urlencode(query)
         if '?' in url: url += '&' + query
         else: url += '?' + query
         
@@ -334,7 +334,7 @@ class TED(CBaseHostClass):
             if key not in queryParamsMap: continue
             query[queryParamsMap[key]] = cItem[key]
         
-        query = urllib.urlencode(query)
+        query = urllib.parse.urlencode(query)
         if '?' in url: url += '&' + query
         else: url += '?' + query
         
@@ -397,7 +397,7 @@ class TED(CBaseHostClass):
         printDBG("TED.listSearchResult cItem[%s], searchPattern[%s] searchType[%s]" % (cItem, searchPattern, searchType))
         page = cItem.get('page', 1)
         
-        url = self.getFullUrl('/search?cat=%s&page=%s&per_page=12&q=%s' % (searchType, page, urllib.quote_plus(searchPattern)))
+        url = self.getFullUrl('/search?cat=%s&page=%s&per_page=12&q=%s' % (searchType, page, urllib.parse.quote_plus(searchPattern)))
         
         sts, data = self.getPage(url)
         if not sts: return

@@ -13,7 +13,7 @@ from Plugins.Extensions.IPTVPlayer.libs.e2ijson import loads as json_loads
 # FOREIGN import
 ###################################################
 import re
-import urllib
+import urllib.request, urllib.parse, urllib.error
 from datetime import datetime
 from hashlib import md5
 from copy import deepcopy
@@ -240,11 +240,11 @@ class PlusDEDE(CBaseHostClass):
                 for key in self.cacheFiltersKeys:
                     if key in cItem: query[key[2:]] = cItem[key]
                 
-                query = urllib.urlencode(query)
+                query = urllib.parse.urlencode(query)
                 if '?' in url: url += '&' + query
                 else: url += '?' + query
             else:
-                url += urllib.quote(cItem['f_search_query'])
+                url += urllib.parse.quote(cItem['f_search_query'])
         
         sts, data = self.getPage(url)
         if not sts: return
@@ -406,7 +406,7 @@ class PlusDEDE(CBaseHostClass):
         urlTab = []
         
         # mark requested link as used one
-        if len(self.cacheLinks.keys()):
+        if len(list(self.cacheLinks.keys())):
             for key in self.cacheLinks:
                 for idx in range(len(self.cacheLinks[key])):
                     if videoUrl in self.cacheLinks[key][idx]['url']:

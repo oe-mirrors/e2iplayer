@@ -12,8 +12,8 @@ from Plugins.Extensions.IPTVPlayer.tools.iptvtypes import strwithmeta
 # FOREIGN import
 ###################################################
 import re
-import urllib
-import urlparse
+import urllib.request, urllib.parse, urllib.error
+import urllib.parse
 ###################################################
 
 def gettytul():
@@ -155,7 +155,7 @@ class WatchwrestlingUNO(CBaseHostClass):
             parts = matchObj.findall(item)
             partsTab = []
             for part in parts:
-                url = urlparse.urljoin(baseUrl, part[0])
+                url = urllib.parse.urljoin(baseUrl, part[0])
                 title = cItem['title'] + '[%s]' % part[1]
                 partsTab.append({'title':title, 'url':strwithmeta(url, {'live':True, 'Referer':cItem['url']})})
             if len(partsTab):
@@ -180,13 +180,13 @@ class WatchwrestlingUNO(CBaseHostClass):
         data = self.cm.ph.getAllItemsBeetwenMarkers(data, '<a', '</a>', True)
         for item in data:
             title  = self.cleanHtmlStr(item)
-            url    = urlparse.urljoin(baseUrl, self.cm.ph.getSearchGroups(item, '''href=["']([^"^']+?)['"]''')[0])
+            url    = urllib.parse.urljoin(baseUrl, self.cm.ph.getSearchGroups(item, '''href=["']([^"^']+?)['"]''')[0])
             params = dict(cItem)
             params.update({'good_for_fav': False, 'title':title, 'url':strwithmeta(url, {'live':True, 'Referer':cItem['url']}), 'live':True})
             self.addVideo(params)
         
     def listSearchResult(self, cItem, searchPattern, searchType):
-        searchPattern = urllib.quote_plus(searchPattern)
+        searchPattern = urllib.parse.quote_plus(searchPattern)
         cItem = dict(cItem)
         cItem['url']  = self.SRCH_URL + searchPattern
         cItem['sort'] = searchType
@@ -214,7 +214,7 @@ class WatchwrestlingUNO(CBaseHostClass):
                 data = self._clearData(data)
                 #printDBG(data)
                 if 'eval(unescape' in data:
-                    data = urllib.unquote(self.cm.ph.getSearchGroups(data, '''eval\(unescape\(['"]([^"^']+?)['"]''')[0])
+                    data = urllib.parse.unquote(self.cm.ph.getSearchGroups(data, '''eval\(unescape\(['"]([^"^']+?)['"]''')[0])
                 url = self.cm.ph.getSearchGroups(data, '''<iframe[^>]*?src=['"]([^"^']+?)['"]''', 1, True)[0]
                 if '/cgi-bin/' in url:
                     referer = cItem['url']

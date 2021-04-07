@@ -4,7 +4,7 @@
 try:
     from urllib.parse import urlsplit, urlparse, parse_qs, urljoin
 except Exception:
-    from urlparse import urlsplit, urlparse, parse_qs, urljoin
+    from urllib.parse import urlsplit, urlparse, parse_qs, urljoin
 
 import re
 import os

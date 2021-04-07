@@ -10,7 +10,7 @@ from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, by
 ###################################################
 # FOREIGN import
 ###################################################
-import urllib
+import urllib.request, urllib.parse, urllib.error
 try:    import json
 except Exception: import simplejson as json
 from Components.config import config, ConfigSelection, ConfigYesNo, getConfigListEntry
@@ -219,7 +219,7 @@ class WpTV(CBaseHostClass):
         cItem = dict(cItem)
         page = cItem.get('page', 1)
         if page == 1:
-            cItem['url'] = self.getFullUrl('/query,%s,szukaj.html?' % urllib.quote(searchPattern))
+            cItem['url'] = self.getFullUrl('/query,%s,szukaj.html?' % urllib.parse.quote(searchPattern))
         self.listEpisodes(cItem)
     
     def getLinksForVideo(self, cItem):

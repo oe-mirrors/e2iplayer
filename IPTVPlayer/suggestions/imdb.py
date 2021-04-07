@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-import urllib
+import urllib.request, urllib.parse, urllib.error
 try:    import json
 except Exception: import simplejson as json
 

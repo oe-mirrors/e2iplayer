@@ -13,7 +13,7 @@ from Plugins.Extensions.IPTVPlayer.tools.e2ijs import js_execute
 # FOREIGN import
 ###################################################
 import re
-import urllib
+import urllib.request, urllib.parse, urllib.error
 try:    import json
 except Exception: import simplejson as json
 ###################################################
@@ -220,7 +220,7 @@ class SerialeCO(CBaseHostClass):
     def listSearchResult(self, cItem, searchPattern, searchType):
         printDBG("SerialeCO.listSearchResult cItem[%s], searchPattern[%s] searchType[%s]" % (cItem, searchPattern, searchType))
         cItem = dict(cItem)
-        cItem['url'] = self.getFullUrl('?s=') + urllib.quote_plus(searchPattern)
+        cItem['url'] = self.getFullUrl('?s=') + urllib.parse.quote_plus(searchPattern)
         cItem['category'] = 'list_items'
         cItem['f_marker'] = 'td_module_'
         

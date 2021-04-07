@@ -15,8 +15,8 @@ import re
 import time
 import string
 import codecs
-import urllib
-try:    from urlparse import urlsplit, urlunsplit, urljoin
+import urllib.request, urllib.parse, urllib.error
+try:    from urllib.parse import urlsplit, urlunsplit, urljoin
 except Exception: printExc()
 ###################################################
 try:
@@ -229,7 +229,7 @@ def unpackJS(data, decryptionFun, addCode=''):
     except Exception:
         printExc('unpackJS compile algo code EXCEPTION')
         return ''
-    vGlobals = {"__builtins__": None, 'string': string, 'decodeURIComponent':urllib.unquote, 'unescape':urllib.unquote}
+    vGlobals = {"__builtins__": None, 'string': string, 'decodeURIComponent':urllib.parse.unquote, 'unescape':urllib.parse.unquote}
     vLocals = { 'paramsTouple': None }
 
     try:

@@ -11,9 +11,9 @@ from Plugins.Extensions.IPTVPlayer.tools.iptvtypes import strwithmeta
 ###################################################
 # FOREIGN import
 ###################################################
-import urlparse
+import urllib.parse
 import re
-import urllib
+import urllib.request, urllib.parse, urllib.error
 from copy import deepcopy
 try:    import json
 except Exception: import simplejson as json
@@ -69,7 +69,7 @@ class MoovieCC(CBaseHostClass):
             if self.cm.isValidUrl(url):
                 return url
             else:
-                return urlparse.urljoin(baseUrl, url)
+                return urllib.parse.urljoin(baseUrl, url)
             
         addParams['cloudflare_params'] = {'domain':self.up.getDomain(baseUrl), 'cookie_file':self.COOKIE_FILE, 'User-Agent':self.USER_AGENT, 'full_url_handle':_getFullUrl}
         sts, data = self.cm.getPageCFProtection(baseUrl, addParams, post_data)
@@ -302,7 +302,7 @@ class MoovieCC(CBaseHostClass):
             printDBG("MoovieCC.exploreItem - missing link for sources")
             return
         
-        tmp = urllib.unquote(sourcesLink)
+        tmp = urllib.parse.unquote(sourcesLink)
         tmp = self.cm.ph.getSearchGroups(tmp[1:], '''(https?://.+)''')[0]
         if tmp != '': sourcesLink = tmp
         
@@ -322,7 +322,7 @@ class MoovieCC(CBaseHostClass):
             for item in data:
                 url = self.cm.ph.getSearchGroups(item, '''href=['"]([^'^"]+?)['"]''')[0]
                 if url != '' and not self.cm.isValidUrl(url): 
-                    url = urlparse.urljoin(sourcesLink, url)
+                    url = urllib.parse.urljoin(sourcesLink, url)
                 title = self.cleanHtmlStr(item)
                 params = dict(cItem)
                 params.update({'good_for_fav': False, 'category':nextCategory, 'title':title, 'prev_title':mainTitle, 'url':url, 'prev_url':cItem['url'], 'prev_desc':cItem.get('desc', ''), 'icon':icon, 'desc':desc})
@@ -383,7 +383,7 @@ class MoovieCC(CBaseHostClass):
         urlTab = []
         
         # mark requested link as used one
-        if len(self.cacheLinks.keys()):
+        if len(list(self.cacheLinks.keys())):
             for key in self.cacheLinks:
                 for idx in range(len(self.cacheLinks[key])):
                     if videoUrl in self.cacheLinks[key][idx]['url']:
@@ -417,13 +417,13 @@ class MoovieCC(CBaseHostClass):
                     
                     imgUrl = self.cm.ph.getSearchGroups(data, 'src="([^"]+?)"')[0]
                     if imgUrl != '' and not imgUrl.startswith('/'): imgUrl = '/' + imgUrl
-                    if imgUrl.startswith('/'): imgUrl = urlparse.urljoin(videoUrl, imgUrl)
+                    if imgUrl.startswith('/'): imgUrl = urllib.parse.urljoin(videoUrl, imgUrl)
                     
                     printDBG("img URL [%s]" % imgUrl)
                         
                     actionUrl = self.cm.ph.getSearchGroups(data, 'action="([^"]+?)"')[0]
                     if actionUrl != '': actionUrl = '/' + actionUrl
-                    if actionUrl.startswith('/'): actionUrl = urlparse.urljoin(videoUrl, actionUrl)
+                    if actionUrl.startswith('/'): actionUrl = urllib.parse.urljoin(videoUrl, actionUrl)
                     elif actionUrl == '': actionUrl = videoUrl
                         
                     captcha_post_data = dict(re.findall(r'''<input[^>]+?name=["']([^"^']*)["'][^>]+?value=["']([^"^']*)["'][^>]*>''', data))

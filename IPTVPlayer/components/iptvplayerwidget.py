@@ -6,10 +6,10 @@
 #
 # 
 
-from __future__ import absolute_import
+
 from time import sleep as time_sleep
 from os import remove as os_remove, path as os_path
-from urllib import quote as urllib_quote
+from urllib.parse import quote as urllib_quote
 from random import shuffle as random_shuffle
 import traceback
 
@@ -1047,7 +1047,7 @@ class E2iPlayerWidget(Screen):
                 if isinstance(item, CUrlItem): 
                     item.urlNeedsResolve = 0 # protection from recursion 
                     linkList.append(item)
-                elif isinstance(item, basestring): linkList.append(CUrlItem(item, item, 0))
+                elif isinstance(item, str): linkList.append(CUrlItem(item, item, 0))
                 else: printExc("selectResolvedVideoLinks: wrong resolved url type!")
         else: printExc()
         self.selectLinkForCurrVideo(linkList)
@@ -1547,7 +1547,7 @@ class E2iPlayerWidget(Screen):
         # retArg[2] - urlNeedsResolve
         if retArg and 3 == len(retArg):
             #check if we have URL
-            if isinstance(retArg[1], basestring):
+            if isinstance(retArg[1], str):
                 videoUrl = retArg[1]
                 if len(videoUrl) > 3:
                     #check if we need to resolve this URL
@@ -2173,7 +2173,7 @@ class E2iPlayerWidget(Screen):
            self.yellow_pressed()
         elif ret.status == RetHost.ERROR and \
              isinstance(ret.value, list) and 1 == len(ret.value) and \
-             isinstance(ret.value[0], basestring):
+             isinstance(ret.value[0], str):
            self.session.open(MessageBox, ret.value[0], type = MessageBox.TYPE_ERROR)
            
     def markItemAsViewedCallback(self, thread, ret):
@@ -2189,7 +2189,7 @@ class E2iPlayerWidget(Screen):
            self.getRefreshedCurrList()
         elif ret.status == RetHost.ERROR and \
              isinstance(ret.value, list) and 1 == len(ret.value) and \
-             isinstance(ret.value[0], basestring):
+             isinstance(ret.value[0], str):
            self.session.open(MessageBox, ret.value[0], type = MessageBox.TYPE_ERROR)
         else:
             self.checkAutoPlaySequencer()

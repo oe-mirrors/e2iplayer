@@ -17,17 +17,17 @@ from Plugins.Extensions.IPTVPlayer.tools.iptvtypes import strwithmeta
 from datetime import timedelta
 import time
 import re
-import urllib
+import urllib.request, urllib.parse, urllib.error
 import unicodedata
 import base64
-try:    from urlparse import urlsplit, urlunsplit
+try:    from urllib.parse import urlsplit, urlunsplit
 except Exception: printExc()
 from os import listdir as os_listdir, path as os_path
 try:    import json
 except Exception: import simplejson as json
 try:
-    try: from cStringIO import StringIO
-    except Exception: from StringIO import StringIO 
+    try: from io import StringIO
+    except Exception: from io import StringIO 
     import gzip
 except Exception: pass
 from Components.config import config, ConfigSelection, ConfigYesNo, ConfigText, getConfigListEntry
@@ -73,7 +73,7 @@ class PodnapisiNetProvider(CBaseSubProviderClass):
         if sts and params.get('use_cookie', True) and params.get('load_cookie', True) and params.get('save_cookie', True):
             session = self.cm.ph.getSearchGroups(data, '''var\s+phpbb3_session\s+=\s+['"]([^'^"]+?)['"]''')
             tmp = urlsplit(url)
-            checkUrl = self.getFullUrl('/forum/app.php/track?path=') + tmp.path + urllib.quote('?' + tmp.query)
+            checkUrl = self.getFullUrl('/forum/app.php/track?path=') + tmp.path + urllib.parse.quote('?' + tmp.query)
             checkSts, checkData = self.cm.getPage(checkUrl, params, post_data)
             if checkSts:
                 checkSession = self.cm.ph.getSearchGroups(checkData, '''var\s+my_session\s+=\s+['"]([^'^"]+?)['"]''')
@@ -148,7 +148,7 @@ class PodnapisiNetProvider(CBaseSubProviderClass):
     def listSubItems(self, cItem, nextCategory):
         printDBG("PodnapisiNetProvider.listSubItems")
         
-        keywords = urllib.quote_plus(self.params['confirmed_title'])
+        keywords = urllib.parse.quote_plus(self.params['confirmed_title'])
         year     = cItem.get('year', '')
         language = cItem.get('language', '')
         season   = None

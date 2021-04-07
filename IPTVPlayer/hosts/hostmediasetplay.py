@@ -18,13 +18,13 @@ from Screens.MessageBox import MessageBox
 ###################################################
 # FOREIGN import
 ###################################################
-import urllib
+import urllib.request, urllib.parse, urllib.error
 import re
 import uuid
 import time
 import datetime
 import math
-import cookielib
+import http.cookiejar
 from datetime import timedelta
 ###################################################
 
@@ -220,7 +220,7 @@ class MediasetPlay(CBaseHostClass):
 
         query = {'hitsPerPage':50}
         if 'f_onair' in cItem: query['inOnda'] = 'true'
-        url = self.API_BASE_URL + 'rec/azlisting/v1.0?' + urllib.urlencode(query)
+        url = self.API_BASE_URL + 'rec/azlisting/v1.0?' + urllib.parse.urlencode(query)
         if 'f_query' in cItem: url += '&query=%s' % cItem['f_query'] #query['query'] = cItem['f_query']
         if 'f_category' in cItem: url += '&categories=%s' % cItem['f_category'] #query['categories'] = cItem['f_category']
 
@@ -344,7 +344,7 @@ class MediasetPlay(CBaseHostClass):
         printDBG("MediasetPlay.listCatalogItems")
         query = {'uxReference':cItem['f_ref'], 'platform':'pc'}
         query.update(self.initData)
-        url = self.API_BASE_URL + 'rec/cataloguelisting/v1.0?' + urllib.urlencode(query)
+        url = self.API_BASE_URL + 'rec/cataloguelisting/v1.0?' + urllib.parse.urlencode(query)
 
         sts, data = self.getPage(url)
         if not sts: return
@@ -406,7 +406,7 @@ class MediasetPlay(CBaseHostClass):
         query = {'uxReference':'CWSEARCH%s' % searchType.upper(), 'query':searchPattern, 'platform':'pc'}
         query.update(self.initData)
 
-        url = self.API_BASE_URL + 'rec/search/v1.0?' + urllib.urlencode(query)
+        url = self.API_BASE_URL + 'rec/search/v1.0?' + urllib.parse.urlencode(query)
         if 'clip' == searchType: url += '&sort=Viewers=DESC'
 
         cItem = MergeDicts(cItem, {'category':'list_items', 'url':url})
@@ -441,7 +441,7 @@ class MediasetPlay(CBaseHostClass):
             if not sts: return
             try:
                 data = json_loads(data)
-                for tuningInstructions in data['response']['tuningInstruction'].itervalues():
+                for tuningInstructions in data['response']['tuningInstruction'].values():
                     for item in tuningInstructions:
                         printDBG(item)
                         url = item['streamingUrl'].split('?', 1)[0].replace('t-mediaset-it', '-mediaset-it')
@@ -486,7 +486,7 @@ class MediasetPlay(CBaseHostClass):
     def getVideoLinks(self, videoUrl):
         printDBG("MediasetPlay.getVideoLinks [%s]" % videoUrl)
         # mark requested link as used one
-        if len(self.cacheLinks.keys()):
+        if len(list(self.cacheLinks.keys())):
             for key in self.cacheLinks:
                 for idx in range(len(self.cacheLinks[key])):
                     if videoUrl in self.cacheLinks[key][idx]['url']:
