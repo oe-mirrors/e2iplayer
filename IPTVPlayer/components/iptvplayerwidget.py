@@ -2279,7 +2279,7 @@ class E2iPlayerWidget(Screen):
         if self.checkWrongImage:
             self.checkWrongImage = False
             try:
-                if os_path.isfile(GetExtensionsDir('/iPabUpdater/__init__.pyo')):
+                if os_path.isfile(GetExtensionsDir('/iPabUpdater/__init__.py')):
                     message = ["WARNING (phase 1/3)"]
                     message.append("Because of blocking part of functionality of the IPTVPlayer by http://ipab.tv/ developer your image was blacklisted.")
                     message.append("Please be also informed that users of http://ipab.tv/ will NOT get support, due to same reason.")

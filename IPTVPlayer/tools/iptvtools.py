@@ -310,9 +310,7 @@ def IsWebInterfaceModuleAvailable(chekInit=False):
         file = '__init__'
     else:
         file = 'initiator'
-    if (fileExists(resolveFilename(SCOPE_PLUGINS, 'Extensions/IPTVPlayer/Web/%s.py' % file)) or
-        fileExists(resolveFilename(SCOPE_PLUGINS, 'Extensions/IPTVPlayer/Web/%s.pyo' % file)) or
-        fileExists(resolveFilename(SCOPE_PLUGINS, 'Extensions/IPTVPlayer/Web/%s.pyc' % file))):
+    if (fileExists(resolveFilename(SCOPE_PLUGINS, 'Extensions/IPTVPlayer/Web/%s.py' % file)):
         return True
     else:
         return False
@@ -348,10 +346,8 @@ def GetPyScriptCmd(name):
     baseName = resolveFilename(SCOPE_PLUGINS, 'Extensions/IPTVPlayer/scripts/') + name
     if fileExists(baseName + '.py'):
         baseName += '.py'
-    elif fileExists(baseName + '.pyo'):
-        baseName += '.pyo'
     if baseName != '':
-        for item in ['python', 'python2.7', 'python2.6']:
+        for item in ['python']:
             pyPath = Which(item)
             if '' != pyPath:
                 cmd = '%s %s' % (pyPath, baseName)
