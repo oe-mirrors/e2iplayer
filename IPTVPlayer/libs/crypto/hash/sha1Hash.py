@@ -3,7 +3,7 @@
 
     Wrapper for python sha module to support crypo module standard interface
 
-    Copyright © (c) 2002 by Paul A. Lambert
+    Copyright (c) 2002 by Paul A. Lambert
     Read LICENSE.txt for license information.
 """
 import hashlib

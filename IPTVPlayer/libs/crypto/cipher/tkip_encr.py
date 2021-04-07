@@ -6,7 +6,7 @@
     TKIP uses WEP (ARC4 with crc32) and key mixing
     This is only the encryption and not the Michael integrity check!
 
-    Copyright © (c) 2002 by Paul A. Lambert
+    Copyright (c) 2002 by Paul A. Lambert
     Read LICENSE.txt for license information.
 
     November 2002
@@ -60,7 +60,7 @@ class TKIP_encr:
     def _makeARC4key(self, tscOctets, keyID=0):
         """ Make an ARC4 key from TKIP Sequence Counter Octets (little-endian) """
         if keyID!=0 :
-            raise 'TKIP expects keyID of zero'
+            raise Exception('TKIP expects keyID of zero')
         print "tscOctets in tkmixer=",b2a_p(tscOctets)
         newKey = self.keyMixer.newKey(tscOctets)
         print "newKey=", b2a_p(newKey)

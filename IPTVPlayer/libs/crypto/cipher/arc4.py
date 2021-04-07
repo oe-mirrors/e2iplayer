@@ -11,7 +11,7 @@
           ftp://ietf.org/draft-kaukonen-cipher-arcfour-03.txt
     Generally munged to map to crypto.cipher calling conventions
 
-    Copyright © (c) 2002 by Paul A. Lambert
+    Copyright (c) 2002 by Paul A. Lambert
     Read LICENSE.txt for license information.
 
     November 5, 2002
@@ -46,7 +46,7 @@ class ARC4:
             this continues the encryption
             New sessions of encrypt can NOT be called twice with the same key!!!!
         """
-        if self.keyReady != 1 : raise 'Error, ARC4 key already used once!'
+        if self.keyReady != 1 : raise Exception('Error, ARC4 key already used once!')
         if more != 1:
             self.keyReady = None
         cipherText = arcfourBlock(self.state, plainText)
@@ -56,7 +56,7 @@ class ARC4:
     def decrypt(self, cipherText, more = None):
         """ Decrypt a string and return a string """
         if self.keyReady != 1 :
-            raise 'set for decryption required'
+            raise Exception('set for decryption required')
         if more != 1:
             self.keyReady = None
         plainText = arcfourBlock(self.state, cipherText)

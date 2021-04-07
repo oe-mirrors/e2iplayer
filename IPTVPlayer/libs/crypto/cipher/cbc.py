@@ -9,7 +9,7 @@
     Note !!!! auto IV uses python default random :-(
     should not be 'too bad' (tm) for this cbc applicaiton
 
-    Copyright © (c) 2002 by Paul A. Lambert
+    Copyright (c) 2002 by Paul A. Lambert
     Read LICENSE.txt for license information.
 """
 from ..cipher.base import BlockCipher, padWithPadLen, noPadding

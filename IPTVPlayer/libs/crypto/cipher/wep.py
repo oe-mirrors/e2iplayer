@@ -3,7 +3,7 @@
 
     The WEP encryption algorithm used in IEEE 802.11
 
-    Copyright © (c) 2002 by Paul A. Lambert
+    Copyright (c) 2002 by Paul A. Lambert
     Read LICENSE.txt for license information.
 
     September 2002
@@ -45,7 +45,7 @@ class WEP:
         elif (0<=keyId<4):
             self.currentKeyId = keyId
         else:
-            raise 'WEP keyId must be value 0, 1, 2 or 3'
+            raise Exception('WEP keyId must be value 0, 1, 2 or 3')
 
     def encrypt(self, plainText, iv, keyId=None):
         """ Encrypt a string and return a binary string

@@ -7,7 +7,7 @@
     class was written to make the actual algorithm code more readable and
     not for performance.
 
-    Copyright © (c) 2002 by Paul A. Lambert
+    Copyright (c) 2002 by Paul A. Lambert
     Read LICENSE.txt for license information.
 
     2002-04-25   changed block input

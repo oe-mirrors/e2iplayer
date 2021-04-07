@@ -53,7 +53,8 @@ class TKIP_Mixer:
 
     def setKey(self, key):
         """ Set the temporal key (tk1) for key mixing """
-        if len(key)!= 16: raise 'Wrong key size'
+        if len(key)!= 16:
+            raise Exception('Wrong key size')
         # for readability of subroutines, make tk a list of 1 octet ints
         self.tk = [ord(byte) for byte in key]
         if self.ta != None : # reset phase1 value
@@ -61,7 +62,8 @@ class TKIP_Mixer:
 
     def setTA(self, taBytes):
         """ Set the transmitter address """
-        if len(taBytes) != 6: raise 'Bad size for transmitterAddress'
+        if len(taBytes) != 6:
+            raise Exception('Bad size for transmitterAddress')
         self.ta = [ord(byte) for byte in taBytes]
         if self.tk != None : # reset phase1 value
             self.phase1Key = phase1KeyMixing( self.tk, self.ta, self.pn )

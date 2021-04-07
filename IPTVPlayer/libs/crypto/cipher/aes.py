@@ -6,7 +6,7 @@
     The AES algorithm is just Rijndael algorithm restricted to the default
     blockSize of 128 bits.
 
-    Copyright © (c) 2002 by Paul A. Lambert
+    Copyright (c) 2002 by Paul A. Lambert
     Read LICENSE.txt for license information.
 
     2002-06-01

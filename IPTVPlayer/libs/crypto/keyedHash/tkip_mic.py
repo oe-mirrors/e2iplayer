@@ -34,7 +34,7 @@ class TKIP_MIC(Michael):
         elif self.version == 'D2':
             micData = da + sa + msduData
         else:
-            raise 'bad version'
+            raise Exception('bad version')
 
         return Michael.hash(self, micData)
 

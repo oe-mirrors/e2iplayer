@@ -6,7 +6,7 @@
 
     Michael is a 64-bit MIC, with a design strength of 20 bits.
 
-    Copyright © (c) 2002 by Paul A. Lambert
+    Copyright (c) 2002 by Paul A. Lambert
     Read LICENSE.txt for license information.
 """
 from struct import pack, unpack
@@ -48,11 +48,11 @@ class Michael:
         return digest
 
     def update(self,data):
-        raise 'No update method supported for Michael keyed hash'
+        raise Exception('No update method supported for Michael keyed hash')
     def digest(self):
-        raise 'No digest method supported for Michael keyed hash'
+        raise Exception('No digest method supported for Michael keyed hash')
     def final(self,data):
-        raise 'No final method supported for Michael keyed hash'
+        raise Exception('No final method supported for Michael keyed hash')
 
 def b(l,r):
     """ The 'b' block function for the IEEE 802.11i Michael Integrity Check """

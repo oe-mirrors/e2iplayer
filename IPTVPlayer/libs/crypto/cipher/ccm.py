@@ -8,7 +8,7 @@
     integrity check can optionally include unencrypted 'addAuthData'.
     CCM requires a nonce that MUST NEVER repeat for a given key.
 
-    Copyright © (c) 2002 by Paul A. Lambert
+    Copyright (c) 2002 by Paul A. Lambert
     Read LICENSE.txt for license information.
 """
 from crypto.cipher.base import BlockCipherWithIntegrity, noPadding

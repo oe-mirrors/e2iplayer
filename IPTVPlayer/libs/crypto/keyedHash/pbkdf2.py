@@ -7,7 +7,7 @@
 
 	This function is used for IEEE 802.11/WPA passphrase to key hashing
 
-	Copyright © (c) 2002 by Paul A. Lambert
+	Copyright (c) 2002 by Paul A. Lambert
 	Read LICENSE.txt for license information.
 """
 from ..keyedHash.hmacHash import HMAC_SHA1
@@ -18,10 +18,10 @@ from struct import pack
 def pbkdf2(password, salt, iterations, keySize, PRF=HMAC_SHA1):
 	""" Create key of size keySize from password and salt """
 	if len(password)>63:
-		raise 'Password too long for pbkdf2'
+        raise Exception('Password too long for pbkdf2')
 	#if len(password)<8 : raise 'Password too short for pbkdf2'
 	if (keySize > 10000):		  # spec says >4294967295L*digestSize
-		raise 'keySize too long for PBKDF2'
+        raise Exception('keySize too long for PBKDF2')
 
 	prf = PRF(key=password)  # HMAC_SHA1
 	numBlocks = int(ceil(1.*keySize/prf.digest_size)) # ceiling function

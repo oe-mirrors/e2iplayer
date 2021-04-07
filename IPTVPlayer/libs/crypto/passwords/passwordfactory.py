@@ -4,7 +4,7 @@
     Python classes to create and recover passwords.  Currently contains
     simple password generation.  <need to merge the dictionary based pws>
 
-    Copyright © (c) 2002 by Paul A. Lambert
+    Copyright (c) 2002 by Paul A. Lambert
     Read LICENSE.txt for license information.
 
     August 14, 2002
@@ -28,7 +28,7 @@ class PasswordFactory:
         self.rand = Random( self._factorySeed )
 
     def getPassword(self, pwSeed):
-        raise "MUST be overloaded"
+        raise Exception("MUST be overloaded")
 
     def __call__(self, pwSeed):
         """ Create a new password as a 'call' """
