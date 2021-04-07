@@ -74,7 +74,7 @@ def getPage(url, params={}):
         resp = opener.open(req)
         data = resp.read()
         sts = True
-    except urllib2.HTTPError, e:
+    except urllib2.HTTPError as e:
         data = e
     except Exception:
         printExc()

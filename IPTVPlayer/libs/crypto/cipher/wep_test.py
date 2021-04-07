@@ -9,6 +9,7 @@
 
     2002-11-05
 """
+from __future__ import print_function
 import unittest
 from crypto.cipher.wep import WEP
 from binascii_plus import a2b_p, b2a_p
@@ -21,7 +22,7 @@ class WEP_TestVectors(unittest.TestCase):
         """ Test using vectors from..."""
         def WEPtestVector(testCase,plainText,iv,key,keyId,cipherText):
             """ Process WEP test vectors from RFCxxxx"""
-            print '%s %s %s'%('='*((54-len(testCase))/2),testCase,'='*((54-len(testCase))/2))
+            print('%s %s %s'%('='*((54-len(testCase))/2),testCase,'='*((54-len(testCase))/2)))
             # Convert from octet lists to string
             pt  = a2b_p(plainText)
             iv  = a2b_p(iv)
@@ -30,17 +31,17 @@ class WEP_TestVectors(unittest.TestCase):
 
             alg = WEP(key,keyId=keyId)
 
-            print 'key:    %s'%b2a_p(key)[9:]
-            print 'keyId:  %x'%keyId
-            print 'iv:     %s'%b2a_p(iv)[9:]
-            print 'pt:     %s'%b2a_p(pt)[9:]
-            print 'kct:    %s'%b2a_p(kct)[9:]
+            print('key:    %s'%b2a_p(key)[9:])
+            print('keyId:  %x'%keyId)
+            print('iv:     %s'%b2a_p(iv)[9:])
+            print('pt:     %s'%b2a_p(pt)[9:])
+            print('kct:    %s'%b2a_p(kct)[9:])
 
             ct  = alg.encrypt(pt, iv, keyId)
-            print 'ct:     %s'%b2a_p(ct)[9:]
-            print 'crc:    %s'%b2a_p(pack('<I',crc32(plainText)))[9:]
+            print('ct:     %s'%b2a_p(ct)[9:])
+            print('crc:    %s'%b2a_p(pack('<I',crc32(plainText)))[9:])
 
-            print '========================================================'
+            print('========================================================')
             self.assertEqual( ct, kct )
             alg.setKey(key,keyId=keyId)
             dct = alg.decrypt( ct )

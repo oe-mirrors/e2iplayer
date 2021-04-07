@@ -1,12 +1,14 @@
+from __future__ import print_function
+from __future__ import absolute_import
 import os
 from Plugins.Extensions.WebInterface.WebChilds.Toplevel import addExternalChild
 from Tools.Directories import resolveFilename, SCOPE_PLUGINS
 
-from webSite import StartPage, redirectionPage, hostsPage, useHostPage, downloaderPage, settingsPage, logsPage, searchPage
+from .webSite import StartPage, redirectionPage, hostsPage, useHostPage, downloaderPage, settingsPage, logsPage, searchPage
 from twisted.web import static
 
 from Plugins.Extensions.IPTVPlayer.tools.iptvtools import GetPluginDir
-import settings
+from . import settings
 
 IPTVwebRoot = static.File(GetPluginDir('Web/')) #webRoot = pluginDir to get access to icons and logos
 IPTVwebRoot.putChild("icons", static.File(GetPluginDir('icons/')))
@@ -60,12 +62,12 @@ elif os.path.exists(resolveFilename(SCOPE_PLUGINS,'Extensions/OpenWebif/pluginsh
 			addExternalChild( ("fancontrol", fcRoot, "E2iPlayer", settings.WebInterfaceVersion) )
 			addExternalChild( ("iptvplayer", IPTVwebRoot, None, None) )
 		except Exception:
-			print "[E2iPlayer] exception registering Web interface in FC mode"
+			print("[E2iPlayer] exception registering Web interface in FC mode")
 	else: #user still can use IPTV web interface, but would need to mark URL manually depending on the openWebIf version
 		try:
 			addExternalChild( ("iptvplayer", IPTVwebRoot, "E2iPlayer", settings.WebInterfaceVersion) )
                         addExternalChild( ("e2iplayer", IPTVwebRoot, "E2iPlayer", settings.WebInterfaceVersion) )
 		except Exception:
-			print "[E2iPlayer] exception registering Web interface in NATIVE mode"
+			print("[E2iPlayer] exception registering Web interface in NATIVE mode")
 else:
-	print "No known webinterface available"
+	print("No known webinterface available")

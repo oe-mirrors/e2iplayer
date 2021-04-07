@@ -5,15 +5,16 @@
 #  $Id$
 #
 # 
+from __future__ import absolute_import
 from Screens.Screen import Screen
 from Components.ActionMap import ActionMap, NumberActionMap, HelpableActionMap
-from cover import Cover3
+from .cover import Cover3
 from Components.Label import Label
 from Tools.LoadPixmap import LoadPixmap
 from Tools.Directories import resolveFilename, SCOPE_PLUGINS
 
 from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, GetIconDir
-from cover import Cover3
+from .cover import Cover3
     
 
 #########################################################

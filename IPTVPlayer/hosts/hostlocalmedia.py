@@ -92,7 +92,7 @@ class LocalMedia(CBaseHostClass):
         
     def prepareCmd(self, path, start, end):
         lsdirPath = GetBinDir("lsdir")
-        try: os_chmod(lsdirPath, 0777)
+        try: os_chmod(lsdirPath, 0o777)
         except Exception: printExc()
         if config.plugins.iptvplayer.local_showhiddensdir.value:
             dWildcards = '[^.]*|.[^.]*|..[^.]*'

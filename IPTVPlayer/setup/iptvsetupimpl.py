@@ -190,7 +190,7 @@ class IPTVSetupImpl:
         cmdTabs = []
         for platform in self.supportedPlatforms:
             platformtesterPath = resolveFilename(SCOPE_PLUGINS, "Extensions/IPTVPlayer/bin/%s/platformtester" % platform)
-            try: os_chmod(platformtesterPath, 0777)
+            try: os_chmod(platformtesterPath, 0o777)
             except Exception: printExc()
             cmdTabs.append(platformtesterPath + "  2>&1 ")
         def _platformValidator(code, data):

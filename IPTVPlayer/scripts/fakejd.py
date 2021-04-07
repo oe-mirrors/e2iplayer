@@ -1,4 +1,5 @@
 # -*- encoding: utf-8 -*-
+from __future__ import print_function
 import socket
 import hashlib
 import hmac
@@ -66,7 +67,7 @@ def getPage(url, headers={}, post_data=None):
         response = opener.open(req)
         data = response.read()
         sts = response.getcode()
-    except urllib2.HTTPError, e:
+    except urllib2.HTTPError as e:
         global LAST_HTTP_ERROR_CODE
         global LAST_HTTP_ERROR_DATA
         LAST_HTTP_ERROR_CODE = e.code
@@ -224,7 +225,7 @@ class Myjdapi:
     def request_api(self, path, http_method="GET",params=None, action=None):
         data = None
         if not self.is_connected() and path != "/my/connect":
-            raise(MYJDException("No connection established\n"))
+            raise MYJDException
         if http_method == "GET":
             query = [path + "?"]
             for param in params:
@@ -267,7 +268,7 @@ class Myjdapi:
             msg+="\n"
             if data is not None:
                 msg+="DATA:\n"+data
-            raise(MYJDException(msg))
+            raise MYJDException
         if action is None:
             if not self._server_encryption_token:
                 response = self._decrypt(self._login_secret, encrypted_response_text)
@@ -359,7 +360,7 @@ class MyjdRequestHandler(BaseHTTPRequestHandler):
                 #sys.exit(-1)
         elif data['url'] == '/captcha/list':
             if jd.captcha_result == None:
-                return_data = [{'hoster': 'iptvplayer.gitlab.io', 'created': jd.captcha_data['id'], 'explain': None, 'id': jd.captcha_data['id'], 'captchaCategory': 'recaptchav2', 'link': 1535005786381L, 'timeout': 600000, 'type': 'RecaptchaV2Challenge', 'remaining': 593028}]
+                return_data = [{'hoster': 'iptvplayer.gitlab.io', 'created': jd.captcha_data['id'], 'explain': None, 'id': jd.captcha_data['id'], 'captchaCategory': 'recaptchav2', 'link': 1535005786381, 'timeout': 600000, 'type': 'RecaptchaV2Challenge', 'remaining': 593028}]
             else:
                 return_data = []
         elif data['url'] == '/events/subscribe':
@@ -390,7 +391,7 @@ class MyjdRequestHandler(BaseHTTPRequestHandler):
 
         elif data['url'] == '/captcha/getCaptchaJob':
             if jd.captcha_result == None:
-                return_data = {'hoster': 'iptvplayer.gitlab.io', 'created': jd.captcha_data['id'], 'explain': None, 'id': jd.captcha_data['id'], 'captchaCategory': 'recaptchav2', 'link': 1535005786381L, 'timeout': 600000, 'type': 'RecaptchaV2Challenge', 'remaining': 593028}
+                return_data = {'hoster': 'iptvplayer.gitlab.io', 'created': jd.captcha_data['id'], 'explain': None, 'id': jd.captcha_data['id'], 'captchaCategory': 'recaptchav2', 'link': 1535005786381, 'timeout': 600000, 'type': 'RecaptchaV2Challenge', 'remaining': 593028}
             else:
                 return_data = None
         elif data['url'] == '/captcha/get':

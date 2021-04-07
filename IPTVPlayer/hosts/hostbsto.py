@@ -230,7 +230,7 @@ class BSTO(CBaseHostClass, CaptchaHelper):
                 _getHeaders = compile(tmp, '', 'exec')
                 vGlobals = {"__builtins__": None, 'len': len, 'list': list, 'dict':dict, 'time':time, 'base64':base64, 'hashlib':hashlib, 'hmac':hmac, 'json':json, 'int':int, 'str':str}
                 vLocals = { '_getHeaders': '' }
-                exec _getHeaders in vGlobals, vLocals
+                exec(_getHeaders, vGlobals, vLocals)
                 self._getHeaders = vLocals['_getHeaders']
             except Exception:
                 printExc()

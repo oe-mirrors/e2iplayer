@@ -342,7 +342,7 @@ class PutlockerTvTo(CBaseHostClass):
                 _myFun = compile(tmp, '', 'exec')
                 vGlobals = {"__builtins__": None, 'len': len, 'dict':dict, 'list': list, 'ord':ord, 'range':range, 'str':str, 'max':max, 'hex':hex, 'True':True, 'False':False}
                 vLocals = { 'zaraza': '' }
-                exec _myFun in vGlobals, vLocals
+                exec(_myFun, vGlobals, vLocals)
                 self._myFun = vLocals['zaraza']
             except Exception:
                 printExc()

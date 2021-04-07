@@ -129,7 +129,7 @@ class ConnectionManager:
     def add(self, host, connection, ready):
         self._lock.acquire()
         try:
-            if not self._hostmap.has_key(host): self._hostmap[host] = []
+            if host not in self._hostmap: self._hostmap[host] = []
             self._hostmap[host].append(connection)
             self._connmap[connection] = host
             self._readymap[connection] = ready
@@ -159,7 +159,7 @@ class ConnectionManager:
         conn = None
         self._lock.acquire()
         try:
-            if self._hostmap.has_key(host):
+            if host in self._hostmap:
                 for c in self._hostmap[host]:
                     if self._readymap[c]:
                         self._readymap[c] = 0
@@ -237,7 +237,7 @@ class KeepAliveHandler:
                 self._cm.add(host, h, 0)
                 self._start_transaction(h, req)
                 r = h.getresponse()
-        except (socket.error, httplib.HTTPException), err:
+        except (socket.error, httplib.HTTPException) as err:
             raise urllib2.URLError(err)
             
         if DEBUG: DEBUG.info("STATUS: %s, %s", r.status, r.reason)
@@ -312,17 +312,17 @@ class KeepAliveHandler:
                     h.putrequest('POST', req.selector)
                 else:
                     h.putrequest('POST', req.get_selector())
-                if not req.headers.has_key('Content-type'):
+                if 'Content-type' not in req.headers:
                     h.putheader('Content-type',
                                 'application/x-www-form-urlencoded')
-                if not req.headers.has_key('Content-length'):
+                if 'Content-length' not in req.headers:
                     h.putheader('Content-length', '%d' % len(data))
             else:
                 if hasattr(req, 'selector'):
                     h.putrequest('GET', req.selector)
                 else:
                     h.putrequest('GET', req.get_selector())
-        except (socket.error, httplib.HTTPException), err:
+        except (socket.error, httplib.HTTPException) as err:
             raise urllib2.URLError(err)
 
         for args in self.parent.addheaders:

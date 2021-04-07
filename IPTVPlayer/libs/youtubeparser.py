@@ -2,6 +2,7 @@
 ###################################################
 # LOCAL import
 ###################################################
+from __future__ import print_function
 from Plugins.Extensions.IPTVPlayer.libs.youtube_dl.extractor.youtube import YoutubeIE
 from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, IsExecutable
 from Plugins.Extensions.IPTVPlayer.libs.pCommon import common, CParsingHelper

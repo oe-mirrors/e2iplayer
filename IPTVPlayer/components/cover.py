@@ -3,8 +3,9 @@
 ###################################################
 # LOCAL import
 ###################################################
+from __future__ import absolute_import
 from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, eConnectCallback
-from asynccall import AsyncMethod
+from .asynccall import AsyncMethod
 
 ###################################################
 # FOREIGN import

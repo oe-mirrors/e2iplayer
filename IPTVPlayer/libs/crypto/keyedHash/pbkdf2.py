@@ -18,10 +18,10 @@ from struct import pack
 def pbkdf2(password, salt, iterations, keySize, PRF=HMAC_SHA1):
 	""" Create key of size keySize from password and salt """
 	if len(password)>63:
-        raise Exception('Password too long for pbkdf2')
+		raise Exception('Password too long for pbkdf2')
 	#if len(password)<8 : raise 'Password too short for pbkdf2'
 	if (keySize > 10000):		  # spec says >4294967295L*digestSize
-        raise Exception('keySize too long for PBKDF2')
+		raise Exception('keySize too long for PBKDF2')
 
 	prf = PRF(key=password)  # HMAC_SHA1
 	numBlocks = int(ceil(1.*keySize/prf.digest_size)) # ceiling function

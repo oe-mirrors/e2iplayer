@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
 
-from Components.Language import language
-from Tools.Directories import resolveFilename, SCOPE_PLUGINS
+from __future__ import absolute_import
+from .Components.Language import language
+from .Tools.Directories import resolveFilename, SCOPE_PLUGINS
 import gettext
 
 PluginLanguageDomain = "IPTVPlayer"

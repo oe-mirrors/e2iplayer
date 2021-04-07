@@ -2,6 +2,8 @@
 ###################################################
 # LOCAL import
 ###################################################
+from __future__ import print_function
+from __future__ import absolute_import
 from Plugins.Extensions.IPTVPlayer.components.iptvplayerwidget import E2iPlayerWidget
 from Plugins.Extensions.IPTVPlayer.components.iptvconfigmenu import ConfigMenu
 from Plugins.Extensions.IPTVPlayer.components.iptvpin import IPTVPinWidget
@@ -17,9 +19,9 @@ from enigma import getDesktop
 from Screens.Screen import Screen
 from Plugins.Plugin import PluginDescriptor
 from Screens.MessageBox import MessageBox
-from Tools.BoundFunction import boundFunction
-from Components.config import config
-from Tools.Directories import resolveFilename, fileExists, SCOPE_PLUGINS
+from .Tools.BoundFunction import boundFunction
+from .Components.config import config
+from .Tools.Directories import resolveFilename, fileExists, SCOPE_PLUGINS
 ###################################################
 
 ####################################################
@@ -45,7 +47,7 @@ def Plugins(**kwargs):
         try:
             list.append(PluginDescriptor(where=PluginDescriptor.WHERE_SESSIONSTART, fnc=sessionstart, needsRestart=False)) # activating IPTV web interface
         except Exception:
-            print "IPTVplayer Exception appending PluginDescriptor.WHERE_SESSIONSTART descriptor."
+            print("IPTVplayer Exception appending PluginDescriptor.WHERE_SESSIONSTART descriptor.")
     return list
 
 ######################################################
@@ -141,6 +143,6 @@ def sessionstart(reason, **kwargs):
     if reason == 0 and 'session' in kwargs:
         try:
             import Plugins.Extensions.IPTVPlayer.Web.initiator
-        except Exception, e:
-            print "EXCEPTION initiating IPTVplayer WebComponent:", str(e)
+        except Exception as e:
+            print("EXCEPTION initiating IPTVplayer WebComponent:", str(e))
         

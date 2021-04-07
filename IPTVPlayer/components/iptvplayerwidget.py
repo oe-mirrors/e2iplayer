@@ -6,6 +6,7 @@
 #
 # 
 
+from __future__ import absolute_import
 from time import sleep as time_sleep
 from os import remove as os_remove, path as os_path
 from urllib import quote as urllib_quote
@@ -969,7 +970,7 @@ class E2iPlayerWidget(Screen):
                     self.stopAutoPlaySequencer()
                     self.currSelIndex = currSelIndex
                     if item.pinLocked:
-                        from iptvpin import IPTVPinWidget
+                        from .iptvpin import IPTVPinWidget
                         self.session.openWithCallback(boundFunction(self.checkDirPin, self.requestListFromHost, 'ForItem', currSelIndex, '', item.pinCode), IPTVPinWidget, title=_("Enter pin"))
                     else:
                         self.requestListFromHost('ForItem', currSelIndex, '')
@@ -1383,7 +1384,7 @@ class E2iPlayerWidget(Screen):
             
         if nextFunction and prevFunction:
             if True == protectedByPin:
-                from iptvpin import IPTVPinWidget
+                from .iptvpin import IPTVPinWidget
                 self.session.openWithCallback(boundFunction(self.checkPin, nextFunction, prevFunction), IPTVPinWidget, title=_("Enter pin"))
             else:
                 nextFunction()
@@ -1417,7 +1418,7 @@ class E2iPlayerWidget(Screen):
         
     def runConfigHostIfAllowed(self):
         if config.plugins.iptvplayer.configProtectedByPin.value:
-            from iptvpin import IPTVPinWidget
+            from .iptvpin import IPTVPinWidget
             self.session.openWithCallback(boundFunction(self.checkPin, self.runConfigHost, None), IPTVPinWidget, title=_("Enter pin"))
         else:
             self.runConfigHost()
@@ -1460,7 +1461,7 @@ class E2iPlayerWidget(Screen):
         except Exception: protected = False # should never happen
         
         if protectedByPin:
-            from iptvpin import IPTVPinWidget
+            from .iptvpin import IPTVPinWidget
             self.session.openWithCallback(boundFunction(self.checkPin, self.loadHostData, self.selectHost), IPTVPinWidget, title=_("Enter pin"))
         else: self.loadHostData();
 

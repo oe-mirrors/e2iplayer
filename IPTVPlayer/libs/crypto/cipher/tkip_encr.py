@@ -11,6 +11,7 @@
 
     November 2002
 """
+from __future__ import print_function
 from crypto.cipher.arc4 import ARC4
 from zlib   import crc32
 from struct import pack
@@ -61,9 +62,9 @@ class TKIP_encr:
         """ Make an ARC4 key from TKIP Sequence Counter Octets (little-endian) """
         if keyID!=0 :
             raise Exception('TKIP expects keyID of zero')
-        print "tscOctets in tkmixer=",b2a_p(tscOctets)
+        print("tscOctets in tkmixer=",b2a_p(tscOctets))
         newKey = self.keyMixer.newKey(tscOctets)
-        print "newKey=", b2a_p(newKey)
+        print("newKey=", b2a_p(newKey))
         return newKey
 
     def encrypt(self, plainText, iv):
@@ -88,7 +89,7 @@ class TKIP_encr:
         self.arc4.setKey( self._makeARC4key(iv) )
         plainText = self.arc4.decrypt(cipherText[self.encryptHeaderSize:])
         if plainText[-4:] != pack('<I',crc32(plainText[:-4])):  # check data integrity
-            raise IntegrityCheckError, 'WEP CRC Integrity Check Error'
+            raise IntegrityCheckError('WEP CRC Integrity Check Error')
         return plainText[:-4]
 
 

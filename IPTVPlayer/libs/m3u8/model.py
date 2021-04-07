@@ -1,3 +1,4 @@
+from __future__ import absolute_import
 from collections import namedtuple
 import os
 import errno
@@ -5,7 +6,7 @@ import math
 import urlparse
 import re
 
-import parser
+from . import parser
 
 
 class M3U8(object):

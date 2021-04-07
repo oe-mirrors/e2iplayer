@@ -3,7 +3,8 @@
 ###################################################
 # LOCAL import
 ###################################################
-from asynccall import AsyncMethod
+from __future__ import absolute_import
+from .asynccall import AsyncMethod
 from Plugins.Extensions.IPTVPlayer.libs.crypto.hash.md5Hash import MD5
 from Plugins.Extensions.IPTVPlayer.libs.pCommon import common
 from Plugins.Extensions.IPTVPlayer.libs.urlparser import urlparser

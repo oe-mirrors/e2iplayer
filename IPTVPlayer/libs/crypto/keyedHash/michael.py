@@ -56,14 +56,14 @@ class Michael:
 
 def b(l,r):
     """ The 'b' block function for the IEEE 802.11i Michael Integrity Check """
-    r ^= (((l<<17) & 0xffffffffL)|((l>>15) & 0x1ffffL))       # r = r ^ (l <<< 17)
-    l  = (l+r) & 0xffffffffL                                  # l = (l+r) mod 2**32
-    r ^= ((l & 0xff00ff00L)>>8)|((l & 0x00ff00ffL)<<8)        # r = r ^ XSWAP(l)
-    l  = (l+r) & 0xffffffffL                                  # l = (l+r) mod 2**32
-    r ^= (((l<<3) & 0xffffffffL) | ((l>>29)& 0x7))            # r  = r ^ (l <<< 3)
-    l  = (l+r) & 0xffffffffL                                  # l = (l+r) mod 2**32
-    r ^= (((l<<30L) & 0xffffffffL)|((l>>2) & 0x3fffffff))     # r  = r ^ (l >>> 2)
-    l  = (l+r) & 0xffffffffL                                  # l = (l+r) mod 2**32
+    r ^= (((l<<17) & 0xffffffff)|((l>>15) & 0x1ffff))       # r = r ^ (l <<< 17)
+    l  = (l+r) & 0xffffffff                                  # l = (l+r) mod 2**32
+    r ^= ((l & 0xff00ff00)>>8)|((l & 0x00ff00ff)<<8)        # r = r ^ XSWAP(l)
+    l  = (l+r) & 0xffffffff                                  # l = (l+r) mod 2**32
+    r ^= (((l<<3) & 0xffffffff) | ((l>>29)& 0x7))            # r  = r ^ (l <<< 3)
+    l  = (l+r) & 0xffffffff                                  # l = (l+r) mod 2**32
+    r ^= (((l<<30) & 0xffffffff)|((l>>2) & 0x3fffffff))     # r  = r ^ (l >>> 2)
+    l  = (l+r) & 0xffffffff                                  # l = (l+r) mod 2**32
     return (l,r)
 
 

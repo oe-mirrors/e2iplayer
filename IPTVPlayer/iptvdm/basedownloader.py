@@ -98,7 +98,7 @@ class BaseDownloader:
             os_rename(self.filePath, newPath)
             self.filePath = newPath
             bRet = True
-        except Exception, e:
+        except Exception as e:
             printExc()
             msg = str(e)
         return bRet, msg

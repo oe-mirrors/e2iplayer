@@ -8,6 +8,7 @@
 ###################################################
 # LOCAL import
 ###################################################
+from __future__ import print_function
 from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, iptv_system, eConnectCallback, E2PrioFix, rm
 from Plugins.Extensions.IPTVPlayer.tools.iptvtypes import enum
 from Plugins.Extensions.IPTVPlayer.iptvdm.basedownloader import BaseDownloader
@@ -221,7 +222,7 @@ class WgetDownloader(BaseDownloader):
             return
 
         if self.WGET_STS.DOWNLOADING == self.wgetStatus:
-            print self.outData
+            print(self.outData)
             dataLen = len(self.outData)
             for idx in range(dataLen):
                 if idx+1 < dataLen:

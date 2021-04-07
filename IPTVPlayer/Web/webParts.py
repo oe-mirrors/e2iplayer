@@ -1,9 +1,11 @@
 # -*- coding: utf-8 -*-
 #### Local imports
-from __init__ import _
-import settings
+from __future__ import print_function
+from __future__ import absolute_import
+from .__init__ import _
+from . import settings
 
-from webTools import *
+from .webTools import *
 from Plugins.Extensions.IPTVPlayer.iptvdm.iptvdh import DMHelper
 from Plugins.Extensions.IPTVPlayer.version import IPTV_VERSION
 from Plugins.Extensions.IPTVPlayer.tools.iptvtools import GetHostsList, IsHostEnabled, SaveHostsOrderList, SortHostsList, GetLogoDir, GetHostsOrderList, getDebugMode, formatBytes
@@ -141,7 +143,7 @@ class Body():
 			cfgtype = ''
 			try:
 				CFGElements = option.doException()
-			except Exception, e:
+			except Exception as e:
 				cfgtype = str(e).split("'")[1]
 			return cfgtype
 		########################################################
@@ -178,7 +180,7 @@ class Body():
 					else:
 						try:
 							CFGElements = confKey[1].getHTML('CFG:' + ConfName)
-						except Exception, e:
+						except Exception as e:
 							CFGElements = 'ERROR:%s' % str(e)
 					tableCFG.append([ConfName, ConfDesc, CFGElements])
 		return tableCFG
@@ -215,7 +217,7 @@ class Body():
 		displayHostsList = SortHostsList(GetHostsList())
 		if 0 == len(GetHostsOrderList()):
 			try: displayHostsList.sort(key=lambda t : tuple('.'.join(str(t[0]).replace('://','.').replace('www.','').split('.')[1:-1]).lower()))
-			except Exception, e: print "Exception during sorting displayHostsList", str(e)
+			except Exception as e: print("Exception during sorting displayHostsList", str(e))
 		for hostName in displayHostsList:
 			if hostName in settings.activeHostsHTML.keys():
 				hostHTML = settings.activeHostsHTML[hostName]
@@ -455,8 +457,8 @@ class Body():
 						else:
 							tempText += self.buildItemsListTable(item, index)
 						index += 1
-			except Exception, e:
-				print 'EXCEPTION in webParts:useHostPageContent - ', str(e)
+			except Exception as e:
+				print('EXCEPTION in webParts:useHostPageContent - ', str(e))
 				tempText += tableHorizontalRedLine( colspan = 3 )
 				tempText += '<td colspan="3" align="center">%s %s</td></tr>' % ( _('ERROR:'), str(e) )
 				tempText += tableHorizontalRedLine( colspan = 3 )
@@ -496,8 +498,8 @@ class Body():
 							_tempBody += self.buildItemsListTable(item, index, allowedCategories = settings.GlobalSearchTypes,
 											destinationURL = '/iptvplayer/usehost?activeHostSearchHistory=%s' % key )
 						index += 1
-				except Exception, e:
-					print 'EXCEPTION in webParts:useHostPageContent - ', str(e)
+				except Exception as e:
+					print('EXCEPTION in webParts:useHostPageContent - ', str(e))
 					tempText += tableHorizontalRedLine( colspan = 3 )
 					tempText += '<td colspan="2" align="left">%s %s</td></tr>' % ( _('ERROR:'), str(e) )
 					tempText += tableHorizontalRedLine( colspan = 3 )

@@ -446,7 +446,7 @@ class CFunctionProxyQueue:
         currThreadName = threading.currentThread().getName()
         if self.mainThreadName != currThreadName:
             printDBG("ERROR CFunctionProxyQueue.processQueue: Queue can be processed only from main thread, thread [%s] is not main thread" % currThreadName)
-            raise AssertionError, ("ERROR CFunctionProxyQueue.processQueue: Queue can be processed only from main thread, thread [%s] is not main thread" % currThreadName)
+            raise AssertionError("ERROR CFunctionProxyQueue.processQueue: Queue can be processed only from main thread, thread [%s] is not main thread" % currThreadName)
             return False
             
         if self.isQueueEmpty():

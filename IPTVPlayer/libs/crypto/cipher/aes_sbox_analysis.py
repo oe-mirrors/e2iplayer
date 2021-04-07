@@ -12,6 +12,7 @@
     2002-12-05 Added validation of equation form of AES
     2002-06-01 Original
 """
+from __future__ import print_function
 
 # The AES Sbox
 sbbytes = (0x63,0x7c,0x77,0x7b,0xf2,0x6b,0x6f,0xc5,
@@ -85,11 +86,11 @@ def sgv(subbytes):
 
 def main():
     cycles = grpv(sbbytes)
-    print 'The AES sbox contains ',
-    print len(cycles),
-    print 'permutation subgroups'
-    print 'The AES sbox subgroups (start, length) are:'
-    print cycles
+    print('The AES sbox contains ', end=' ')
+    print(len(cycles), end=' ')
+    print('permutation subgroups')
+    print('The AES sbox subgroups (start, length) are:')
+    print(cycles)
 
 # Make this test module runnable from the command prompt
 if __name__ == "__main__":

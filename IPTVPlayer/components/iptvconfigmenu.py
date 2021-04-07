@@ -7,6 +7,7 @@
 ###################################################
 # LOCAL import
 ###################################################
+from __future__ import absolute_import
 from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, GetSkinsList, GetHostsList, GetEnabledHostsList, \
                                                           IsHostEnabled, IsExecutable, CFakeMoviePlayerOption, GetAvailableIconSize, \
                                                           IsWebInterfaceModuleAvailable, SetIconsHash, SetGraphicsHash
@@ -172,7 +173,7 @@ config.plugins.iptvplayer.numOfCol = ConfigSelection(default = "0", choices = [(
 config.plugins.iptvplayer.skin = ConfigSelection(default = "auto", choices = GetSkinsList())
 
 #Pin code
-from iptvpin import IPTVPinWidget
+from .iptvpin import IPTVPinWidget
 config.plugins.iptvplayer.fakePin = ConfigSelection(default = "fake", choices = [("fake", "****")])
 config.plugins.iptvplayer.pin = ConfigText(default = "0000", fixed_size = False)
 config.plugins.iptvplayer.disable_live = ConfigYesNo(default = False)

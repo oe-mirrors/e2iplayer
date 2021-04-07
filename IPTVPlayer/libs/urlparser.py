@@ -3,7 +3,9 @@
 ###################################################
 # LOCAL import
 ###################################################
-from pCommon import common, CParsingHelper
+from __future__ import print_function
+from __future__ import absolute_import
+from .pCommon import common, CParsingHelper
 from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _, SetIPTVPlayerLastHostError, GetIPTVSleep
 from Plugins.Extensions.IPTVPlayer.components.recaptcha_v2helper import CaptchaHelper
 from Plugins.Extensions.IPTVPlayer.tools.iptvtypes import strwithmeta
@@ -1087,7 +1089,7 @@ class pageParser(CaptchaHelper):
     def getYTParser(self):
         if self.ytParser == None:
             try:
-                from youtubeparser import YouTubeParser
+                from .youtubeparser import YouTubeParser
                 self.ytParser = YouTubeParser()
             except Exception:
                 printExc()
@@ -1117,7 +1119,7 @@ class pageParser(CaptchaHelper):
     def getMoonwalkParser(self):
         if self.moonwalkParser == None:
             try:
-                from moonwalkcc import MoonwalkParser
+                from .moonwalkcc import MoonwalkParser
                 self.moonwalkParser = MoonwalkParser()
             except Exception:
                 printExc()
@@ -2398,7 +2400,7 @@ class pageParser(CaptchaHelper):
                 print ('linkVideo ' + linkVideo)
                 return linkVideo
             else:
-                print ('Przepraszamy','Obecnie zbyt dużo osób ogląda film za pomocą', 'darmowego playera premium.', 'Sproboj ponownie za jakis czas')
+                print(('Przepraszamy','Obecnie zbyt dużo osób ogląda film za pomocą', 'darmowego playera premium.', 'Sproboj ponownie za jakis czas'))
                 return False
         else:
             return False

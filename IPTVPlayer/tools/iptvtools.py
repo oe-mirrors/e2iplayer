@@ -13,6 +13,7 @@
 ###################################################
 # FOREIGN import
 ###################################################
+from __future__ import print_function
 from Components.config import config
 from Tools.Directories import resolveFilename, fileExists, SCOPE_PLUGINS, SCOPE_CONFIG
 from enigma import eConsoleAppContainer
@@ -842,7 +843,7 @@ def mkdirs(newdir, raiseException=False):
             if tail:
                 os.mkdir(newdir)
         return True
-    except Exception, e:
+    except Exception as e:
         printDBG('Exception mkdirs["%s"]' % e)
         if raiseException:
             raise e
@@ -881,7 +882,7 @@ def rmtree(path, ignore_errors=False, onerror=None):
     names = []
     try:
         names = os.listdir(path)
-    except os.error, err:
+    except os.error as err:
         onerror(os.listdir, path)
     for name in names:
         fullname = os.path.join(path, name)
@@ -894,7 +895,7 @@ def rmtree(path, ignore_errors=False, onerror=None):
         else:
             try:
                 os.remove(fullname)
-            except os.error, err:
+            except os.error as err:
                 onerror(os.remove, fullname)
     try:
         os.rmdir(path)

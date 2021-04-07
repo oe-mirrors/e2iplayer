@@ -18,7 +18,7 @@ def PRF( key, prefix, data, number_of_bits):
     """
     number_of_octets, remainder = divmod(number_of_bits,8)
     if remainder != 0:
-        raise ValueError, 'requested bits not multiple of 8'
+        raise ValueError('requested bits not multiple of 8')
     R = ''
     i = 0
     while len(R) <= number_of_octets :

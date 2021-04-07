@@ -1,10 +1,11 @@
+from __future__ import absolute_import
 import os
 import re
 import urlparse
 from urllib2 import urlopen
 
-from model import M3U8, Playlist
-from parser import parse, is_url
+from .model import M3U8, Playlist
+from .parser import parse, is_url
 
 __all__ = 'M3U8', 'Playlist', 'loads', 'load', 'parse'
 

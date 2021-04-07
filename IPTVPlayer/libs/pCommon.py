@@ -863,7 +863,7 @@ class common:
                 addParams['return_data'] = True
             response = self.getURLRequestData(addParams, post_data)
             status = True
-        except urllib2.HTTPError, e:
+        except urllib2.HTTPError as e:
             try:
                 printExc()
                 status = False
@@ -884,7 +884,7 @@ class common:
                     e.fp.close()
             except Exception:
                 printExc()
-        except urllib2.URLError, e:
+        except urllib2.URLError as e:
             printExc()
             errorMsg = str(e) 
             if 'ssl_protocol' not in addParams and 'TLSV1_ALERT_PROTOCOL_VERSION' in errorMsg:
@@ -1321,7 +1321,7 @@ class common:
                 
                 data = response.read(params.get('max_data_size', -1))
                 response.close()
-            except urllib2.HTTPError, e:
+            except urllib2.HTTPError as e:
                 ignoreCodeRanges = params.get('ignore_http_code_ranges', [(404, 404), (500, 500)])
                 ignoreCode = False
                 metadata['status_code'] = e.code
