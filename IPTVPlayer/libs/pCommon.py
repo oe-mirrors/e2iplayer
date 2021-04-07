@@ -206,10 +206,10 @@ class CParsingHelper:
     
     @staticmethod
     def getNormalizeStr(txt, idx=None):
-        POLISH_CHARACTERS = {u'ą': u'a', u'ć': u'c', u'ę': u'ę', u'ł': u'l', u'ń': u'n', u'ó': u'o', u'ś': u's', u'ż': u'z', u'ź': u'z',
-                             u'Ą': u'A', u'Ć': u'C', u'Ę': u'E', u'Ł': u'L', u'Ń': u'N', u'Ó': u'O', u'Ś': u'S', u'Ż': u'Z', u'Ź': u'Z',
-                             u'á': u'a', u'é': u'e', u'í': u'i', u'ñ': u'n', u'ó': u'o', u'ú': u'u', u'ü': u'u',
-                             u'Á': u'A', u'É': u'E', u'Í': u'I', u'Ñ': u'N', u'Ó': u'O', u'Ú': u'U', u'Ü': u'U',
+        POLISH_CHARACTERS = {'ą': 'a', 'ć': 'c', 'ę': 'ę', 'ł': 'l', 'ń': 'n', 'ó': 'o', 'ś': 's', 'ż': 'z', 'ź': 'z',
+                             'Ą': 'A', 'Ć': 'C', 'Ę': 'E', 'Ł': 'L', 'Ń': 'N', 'Ó': 'O', 'Ś': 'S', 'Ż': 'Z', 'Ź': 'Z',
+                             'á': 'a', 'é': 'e', 'í': 'i', 'ñ': 'n', 'ó': 'o', 'ú': 'u', 'ü': 'u',
+                             'Á': 'A', 'É': 'E', 'Í': 'I', 'Ñ': 'N', 'Ó': 'O', 'Ú': 'U', 'Ü': 'U',
                             }
         txt = txt.decode('utf-8')
         if None != idx: txt = txt[idx]
@@ -1426,5 +1426,5 @@ class common:
     def makeABCList(self, tab = ['0 - 9']):
         strTab = list(tab)
         for i in range(65, 91):
-            strTab.append(str(unichr(i)))    
+            strTab.append(str(chr(i)))    
         return strTab

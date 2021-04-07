@@ -378,7 +378,7 @@ class YoutubeIE(object):
         '271': 'DASH Video', 
         '313': 'DASH Video',
     }
-    IE_NAME = u'youtube'
+    IE_NAME = 'youtube'
 
     def __init__(self, params={}):
         proxyURL = params.get('proxyURL', '')

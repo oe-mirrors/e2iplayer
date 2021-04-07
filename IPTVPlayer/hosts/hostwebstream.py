@@ -234,7 +234,7 @@ class HasBahCa(CBaseHostClass):
         v = item.get(key, None)
         if None == v:
             return default
-        return clean_html(u'%s' % v).encode('utf-8')
+        return clean_html('%s' % v).encode('utf-8')
         
     def addItem(self, params):
         self.currList.append(params)
@@ -337,7 +337,7 @@ class HasBahCa(CBaseHostClass):
         return videoTabs
             
     def __getFilmOnIconUrl(self, item):
-        icon = u''
+        icon = ''
         try:
             icon = item.get('big_logo', '')
             if '' == icon: icon = item.get('logo_148x148_uri', '')

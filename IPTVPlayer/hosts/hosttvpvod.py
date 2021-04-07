@@ -155,7 +155,7 @@ class TvpVod(CBaseHostClass, CaptchaHelper):
         return self.cleanHtmlStr(self._encodeStr(v, default))
         
     def _encodeStr(self, v, default=''):
-        if type(v) == type(u''): return v.encode('utf-8')
+        if type(v) == type(''): return v.encode('utf-8')
         elif type(v) == type(''): return v
         else: return default
         

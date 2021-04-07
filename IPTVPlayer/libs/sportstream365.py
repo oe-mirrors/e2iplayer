@@ -52,7 +52,7 @@ class SportStream365Api(CBaseHostClass):
             GMTOffset = GMTOffset.rsplit(':', 1)[0]
         self.GMTOffset = GMTOffset
         # https://en.wikipedia.org/wiki/Cyrillic_alphabets#Common_letters
-        cyrillicAlphabets = [(u'а', 'a'), (u'б', 'b'), (u'в', 'v'), (u'г', 'ɡ'), (u'д', 'd'), (u'е', 'je'), (u'ж', 'ʒ'), (u'з', 'z'), (u'и', 'i'), (u'й', 'j'), (u'к', 'k'), (u'л', 'l'), (u'м', 'm'), (u'н', 'n'), (u'о', 'o'), (u'п', 'p'), (u'с', 's'), (u'т', 't'), (u'у', 'u'), (u'ф', 'f'), (u'х', 'x'), (u'ц', 'ts'), (u'ч', 'tʃ'), (u'ш', 'ʃ'), (u'щ', 'ʃtʃ'), (u'ь', 'ʲ'), (u'ю', 'ju'), (u'я', 'ja')]
+        cyrillicAlphabets = [('а', 'a'), ('б', 'b'), ('в', 'v'), ('г', 'ɡ'), ('д', 'd'), ('е', 'je'), ('ж', 'ʒ'), ('з', 'z'), ('и', 'i'), ('й', 'j'), ('к', 'k'), ('л', 'l'), ('м', 'm'), ('н', 'n'), ('о', 'o'), ('п', 'p'), ('с', 's'), ('т', 't'), ('у', 'u'), ('ф', 'f'), ('х', 'x'), ('ц', 'ts'), ('ч', 'tʃ'), ('ш', 'ʃ'), ('щ', 'ʃtʃ'), ('ь', 'ʲ'), ('ю', 'ju'), ('я', 'ja')]
         self.cyrillic2LatinMap = {}
         for item in cyrillicAlphabets: self.cyrillic2LatinMap[item[0]] = item[1]
         for item in cyrillicAlphabets: self.cyrillic2LatinMap[item[0].upper()] = item[1].upper()

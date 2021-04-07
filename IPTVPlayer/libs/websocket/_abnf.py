@@ -165,7 +165,7 @@ class ABNF(object):
 
         fin: fin flag. if set to 0, create continue fragmentation.
         """
-        if opcode == ABNF.OPCODE_TEXT and isinstance(data, unicode):
+        if opcode == ABNF.OPCODE_TEXT and isinstance(data, str):
             data = data.encode("utf-8")
         # mask must be set if send data from client
         return ABNF(fin, 0, 0, 0, opcode, 1, data)
@@ -206,7 +206,7 @@ class ABNF(object):
     def _get_masked(self, mask_key):
         s = ABNF.mask(mask_key, self.data)
 
-        if isinstance(mask_key, unicode):
+        if isinstance(mask_key, str):
             mask_key = mask_key.encode('utf-8')
 
         return mask_key + s
@@ -223,10 +223,10 @@ class ABNF(object):
         if data == None:
             data = ""
 
-        if isinstance(mask_key, unicode):
+        if isinstance(mask_key, str):
             mask_key = b"%s" % mask_key
 
-        if isinstance(data, unicode):
+        if isinstance(data, str):
             data = b"%s" % data
 
         _m = array.array("B", mask_key)

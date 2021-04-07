@@ -83,7 +83,7 @@ class Fenixsite(CBaseHostClass):
             for item in itemsList:
                 letter = item['title'].decode('utf-8')[0].upper()
                 if letter.isnumeric():
-                    letter = u'#'
+                    letter = '#'
                 if letter not in subItems:
                     subItems[letter] = []
                     letters.append(letter)

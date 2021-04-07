@@ -224,7 +224,7 @@ class CBaseSubProviderClass:
 
     @staticmethod 
     def getStr(v, default=''):
-        if type(v) == type(u''): return v.encode('utf-8')
+        if type(v) == type(''): return v.encode('utf-8')
         elif type(v) == type(''):  return v
         return default
             

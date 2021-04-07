@@ -24,7 +24,7 @@ def gettytul():
 
 def jstr(item, key, default=''):
     v = item.get(key, default)
-    if type(v) == type(u''): return v.encode('utf-8')
+    if type(v) == type(''): return v.encode('utf-8')
     elif type(v) == type(''): return v
     else: return default
 

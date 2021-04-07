@@ -52,7 +52,7 @@ def JS_DateValueOf():
     return time.time()*1000
     
 def JS_FromCharCode(*args): 
-    return ''.join(map(unichr, args))
+    return ''.join(map(chr, args))
     
 def unicode_escape(s):
     decoder = codecs.getdecoder('unicode_escape')

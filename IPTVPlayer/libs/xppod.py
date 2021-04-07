@@ -41,7 +41,7 @@ def Decode(param):
             if loc_3[j + 1] == 64:
                 break
             try:
-                loc_2 += unichr(loc_4[j])
+                loc_2 += chr(loc_4[j])
             except Exception:
                 pass
             j = j + 1

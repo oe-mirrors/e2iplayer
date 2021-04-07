@@ -61,7 +61,7 @@ class SportDeutschland(CBaseHostClass):
         v = item.get(key, None)
         if None == v:
             return default
-        return clean_html(u'%s' % v).encode('utf-8')
+        return clean_html('%s' % v).encode('utf-8')
         
     def _getJItemNum(self, item, key, default=0):
         v = item.get(key, None)
@@ -102,7 +102,7 @@ class SportDeutschland(CBaseHostClass):
         for item in data:
             icon = self._getJItemStr(item, 'image')
             try: 
-                if icon == '': icon = (u'%s' % item['images'][0]).encode('utf-8')
+                if icon == '': icon = ('%s' % item['images'][0]).encode('utf-8')
             except Exception: pass
             params = {'name':'category', 'title':self._getJItemStr(item, 'title'), 'category':'category', 'icon':icon, 'permalink':self._getJItemStr(item, 'permalink'), 'uuid':self._getJItemStr(item, 'uuid'), 'page':1}
             self.addDir(params)
@@ -123,7 +123,7 @@ class SportDeutschland(CBaseHostClass):
         for item in data:
             icon = self._getJItemStr(item, 'image')
             try: 
-                if icon == '': icon = (u'%s' % item['images'][0]).encode('utf-8')
+                if icon == '': icon = ('%s' % item['images'][0]).encode('utf-8')
             except Exception: pass
             
             desc = '%s[/br]%s' % (self._getJItemStr(item, 'duration'), self._getJItemStr(item, 'teaser'))

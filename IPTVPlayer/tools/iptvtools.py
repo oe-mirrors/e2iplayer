@@ -1154,8 +1154,8 @@ class CSearchHistoryHelper():
                 value = itemValue
                 if None != itemType:
                     value = value + self.TYPE_SEP + itemType
-                value = value if type(u'') == type(value) else value.decode('utf-8', 'replace')
-                file.write(value + u'\n')
+                value = value if type('') == type(value) else value.decode('utf-8', 'replace')
+                file.write(value + '\n')
                 printDBG('Added pattern: "%s"' % itemValue) 
                 file.close
         except Exception:
@@ -1199,7 +1199,7 @@ def ReadTextFile(filePath, encode='utf-8', errors='ignore'):
 def WriteTextFile(filePath, text, encode='utf-8', errors='ignore'):
     sts = False
     try:
-        toSave = text if type(u'') == type(text) else text.decode('utf-8', errors)
+        toSave = text if type('') == type(text) else text.decode('utf-8', errors)
         file = codecs.open(filePath, 'w', encode, errors)
         file.write(toSave)
         file.close()
@@ -1273,7 +1273,7 @@ def byteify(input, noneReplacement=None, baseTypesAsString=False):
         return dict([(byteify(key, noneReplacement, baseTypesAsString), byteify(value, noneReplacement, baseTypesAsString)) for key, value in input.iteritems()])
     elif isinstance(input, list):
         return [byteify(element, noneReplacement, baseTypesAsString) for element in input]
-    elif isinstance(input, unicode):
+    elif isinstance(input, str):
         return input.encode('utf-8')
     elif input == None and noneReplacement != None:
         return noneReplacement

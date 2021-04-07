@@ -101,7 +101,7 @@ except ImportError: # Python 2
 
     def _parse_qsl(qs, keep_blank_values=False, strict_parsing=False,
                 encoding='utf-8', errors='replace'):
-        qs, _coerce_result = qs, unicode
+        qs, _coerce_result = qs, str
         pairs = [s2 for s1 in qs.split('&') for s2 in s1.split(';')]
         r = []
         for name_value in pairs:
@@ -139,12 +139,12 @@ except ImportError: # Python 2
         return parsed_result
 
 try:
-    compat_str = unicode # Python 2
+    compat_str = str # Python 2
 except NameError:
     compat_str = str
 
 try:
-    compat_chr = unichr # Python 2
+    compat_chr = chr # Python 2
 except NameError:
     compat_chr = chr
 
@@ -163,7 +163,7 @@ if sys.version_info < (3, 0):
         printDBG(s.encode(preferredencoding(), 'xmlcharrefreplace'))
 else:
     def compat_print(s):
-        assert type(s) == type(u'')
+        assert type(s) == type('')
         printDBG(s)
 
 def htmlentity_transform(entity):
@@ -177,9 +177,9 @@ def htmlentity_transform(entity):
     mobj = re.match(r'#(x?[0-9A-Fa-f]+)', entity)
     if mobj is not None:
         numstr = mobj.group(1)
-        if numstr.startswith(u'x'):
+        if numstr.startswith('x'):
             base = 16
-            numstr = u'0%s' % numstr
+            numstr = '0%s' % numstr
         else:
             base = 10
         try:
@@ -188,11 +188,11 @@ def htmlentity_transform(entity):
         except Exception:
             printExc()
     # Unknown entity in name, return its literal representation
-    return (u'&%s;' % entity)
+    return ('&%s;' % entity)
 
 def clean_html(html):
     """Clean an HTML snippet into a readable string"""
-    if type(html) == type(u''):
+    if type(html) == type(''):
         strType = 'unicode'
     elif type(html) == type(''):
         strType = 'utf-8'
@@ -233,7 +233,7 @@ class ExtractorError(Exception):
     def format_traceback(self):
         if self.traceback is None:
             return None
-        return u''.join(traceback.format_tb(self.traceback))
+        return ''.join(traceback.format_tb(self.traceback))
 
 def url_basename(url):
     path = compat_urllib_parse_urlparse(url).path

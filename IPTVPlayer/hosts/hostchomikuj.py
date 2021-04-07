@@ -75,7 +75,7 @@ class Chomikuj(CBaseHostClass):
             v = None
         if None == v:
             return default
-        return clean_html(u'%s' % v).encode('utf-8')
+        return clean_html('%s' % v).encode('utf-8')
         
     def _getJItemNum(self, item, key, default=0):
         try:

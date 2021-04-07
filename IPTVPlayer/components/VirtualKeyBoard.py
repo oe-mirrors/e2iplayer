@@ -157,21 +157,21 @@ class IPTVVirtualKeyBoardWithCaptcha(Screen):
     def setLang(self, additionalParams):
         if 'keys_list' not in additionalParams:
             self.keys_list = [
-                [u"EXIT", u"1", u"2", u"3", u"4", u"5", u"6", u"7", u"8", u"9", u"0", u"BACKSPACE"],
-                [u"q", u"w", u"e", u"r", u"t", u"y", u"u", u"i", u"o", u"p", u"-", u"["],
-                [u"a", u"s", u"d", u"f", u"g", u"h", u"j", u"k", u"l", u";", u"'", u"\\"],
-                [u"<", u"z", u"x", u"c", u"v", u"b", u"n", u"m", u",", ".", u"/", u"CLEAR"],
-                [u"SHIFT", u"SPACE", u"OK", u"LEFT", u"RIGHT"]]
+                ["EXIT", "1", "2", "3", "4", "5", "6", "7", "8", "9", "0", "BACKSPACE"],
+                ["q", "w", "e", "r", "t", "y", "u", "i", "o", "p", "-", "["],
+                ["a", "s", "d", "f", "g", "h", "j", "k", "l", ";", "'", "\\"],
+                ["<", "z", "x", "c", "v", "b", "n", "m", ",", ".", "/", "CLEAR"],
+                ["SHIFT", "SPACE", "OK", "LEFT", "RIGHT"]]
         else:
             self.keys_list = additionalParams['keys_list']
             
         if 'shiftkeys_list' not in additionalParams:
             self.shiftkeys_list = [
-                [u"EXIT", u"!", u"@", u"#", u"$", u"%", u"^", u"&", u"(", u")", u"=", u"BACKSPACE"],
-                [u"Q", u"W", u"E", u"R", u"T", u"Y", u"U", u"I", u"O", u"P", u"*", u"]"],
-                [u"A", u"S", u"D", u"F", u"G", u"H", u"J", u"K", u"L", u"?", u'"', u"|"],
-                [u">", u"Z", u"X", u"C", u"V", u"B", u"N", u"M", u";", u":", u"_", u"CLEAR"],
-                [u"SHIFT", u"SPACE", u"OK", u"LEFT", u"RIGHT"]]
+                ["EXIT", "!", "@", "#", "$", "%", "^", "&", "(", ")", "=", "BACKSPACE"],
+                ["Q", "W", "E", "R", "T", "Y", "U", "I", "O", "P", "*", "]"],
+                ["A", "S", "D", "F", "G", "H", "J", "K", "L", "?", '"', "|"],
+                [">", "Z", "X", "C", "V", "B", "N", "M", ";", ":", "_", "CLEAR"],
+                ["SHIFT", "SPACE", "OK", "LEFT", "RIGHT"]]
         else:
             self.keys_list = additionalParams['shiftkeys_list']
             
@@ -324,7 +324,7 @@ class IPTVVirtualKeyBoardWithCaptcha(Screen):
 
     def keyGotAscii(self):
         self.smsChar = None
-        if self.selectAsciiKey(str(unichr(getPrevAsciiCode()).encode('utf-8'))):
+        if self.selectAsciiKey(str(chr(getPrevAsciiCode()).encode('utf-8'))):
             self.okClicked()
 
     def selectAsciiKey(self, char):

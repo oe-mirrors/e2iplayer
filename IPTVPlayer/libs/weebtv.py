@@ -86,7 +86,7 @@ class WeebTvApi:
         return ret
     
     def _getStr(self, v, default=''):
-        if type(v) == type(u''):
+        if type(v) == type(''):
             return v.encode('utf-8')
         elif type(v) == type(''):
             return v
