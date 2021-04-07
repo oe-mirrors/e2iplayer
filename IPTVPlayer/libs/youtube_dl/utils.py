@@ -6,37 +6,10 @@ import sys
 from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc
 
 
-try:
-    try:
-        import urllib.request as compat_urllib_request
-    except ImportError: # Python 2
-        import urllib2 as compat_urllib_request
-except Exception:
-    printDBG("YT import problem 1")
-
-try:
-    try:
-        import urllib.error as compat_urllib_error
-    except ImportError: # Python 2
-        import urllib2 as compat_urllib_error
-except Exception:
-    printDBG("YT import problem 2")
-
-try:
-    try:
-        import urllib.parse as compat_urllib_parse
-    except ImportError: # Python 2
-        import urllib as compat_urllib_parse
-except Exception:
-    printDBG("YT import problem 3")
-
-try:
-    try:
-        from urllib.parse import urlparse as compat_urllib_parse_urlparse
-    except ImportError: # Python 2
-        from urllib.parse import urlparse as compat_urllib_parse_urlparse
-except Exception:
-    printDBG("YT import problem 4")
+import urllib.request as compat_urllib_request
+import urllib.error as compat_urllib_error
+import urllib.parse as compat_urllib_parse
+from urllib.parse import urlparse as compat_urllib_parse_urlparse
   
 try:  
     try:
