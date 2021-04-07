@@ -287,7 +287,7 @@ class iptv_system:
 
     def _dataAvail(self, data):
         if None != data:
-            self.outData += data
+            self.outData += data.decode(encoding='utf-8', errors='strict')
 
     def _cmdFinished(self, code):
         printDBG("iptv_system._cmdFinished cmd[%s] code[%r]" % (self.cmd, code))

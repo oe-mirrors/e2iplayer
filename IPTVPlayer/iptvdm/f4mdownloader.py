@@ -115,7 +115,7 @@ class F4mDownloader(BaseDownloader):
     def _dataAvail(self, data):
         if None == data:
             return
-        data = self.outData + data
+        data = self.outData + data.decode(encoding='utf-8', errors='strict')
         if '\n' != data[-1]:
             truncated = True
         else:

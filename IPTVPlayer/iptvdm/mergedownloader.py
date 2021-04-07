@@ -147,7 +147,7 @@ class MergeDownloader(BaseDownloader):
     def _dataAvail(self, data):
         if None == data:
             return
-        self.outData += data
+        self.outData += data.decode(encoding='utf-8', errors='strict')
         if 'Saving to:' in self.outData:
             self.console_stderrAvail_conn = None
             lines = self.outData.replace('\r', '\n').split('\n')

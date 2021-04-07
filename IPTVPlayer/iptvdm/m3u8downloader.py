@@ -345,7 +345,7 @@ class M3U8Downloader(BaseDownloader):
 
     def _dataAvail(self, data):
         if None != data:
-            self.outData += data
+            self.outData += data.decode(encoding='utf-8', errors='strict')
             if self.DOWNLOAD_TYPE.M3U8 == self.downloadType:
                 return
 

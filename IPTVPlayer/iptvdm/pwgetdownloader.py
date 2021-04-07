@@ -93,7 +93,7 @@ class PwgetDownloader(BaseDownloader):
 
     def _dataAvail(self, data):
         if None != data:
-            self.outData += data
+            self.outData += data.decode(encoding='utf-8', errors='strict')
 
     def _terminate(self):
         printDBG("PwgetDownloader._terminate")

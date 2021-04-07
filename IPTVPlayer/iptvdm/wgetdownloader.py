@@ -148,7 +148,7 @@ class WgetDownloader(BaseDownloader):
 
     def _dataAvail(self, data):
         if None != data:
-            self.outData += data
+            self.outData += data.decode(encoding='utf-8', errors='strict')
             if self.infoFrom == WgetDownloader.INFO.FROM_FILE:
                 if 'Saving to:' in self.outData:
                     self.console_stderrAvail_conn = None

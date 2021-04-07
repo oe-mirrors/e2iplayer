@@ -181,7 +181,7 @@ class FFMPEGDownloader(BaseDownloader):
         if None == data:
             return
 
-        data = self.outData + data.replace('\n', '\r')
+        data = self.outData + data.decode(encoding='utf-8', errors='strict').replace('\n', '\r')
 
         data = data.split('\r')
         if data[-1].endswith('\r'):
