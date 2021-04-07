@@ -15,7 +15,9 @@ import re
 import time
 import string
 import codecs
-import urllib.request, urllib.parse, urllib.error
+import urllib.request
+import urllib.parse
+import urllib.error
 try:    from urllib.parse import urlsplit, urlunsplit, urljoin
 except Exception: printExc()
 ###################################################

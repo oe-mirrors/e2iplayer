@@ -104,7 +104,9 @@ EXTRA ATTRIBUTES AND METHODS
 
 # $Id: keepalive.py,v 1.17 2006/12/08 00:14:16 mstenner Exp $
 
-import urllib.request, urllib.error, urllib.parse
+import urllib.request
+import urllib.error
+import urllib.parse
 import http.client
 import socket
 import _thread

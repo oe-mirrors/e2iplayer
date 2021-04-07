@@ -13,7 +13,9 @@ from Plugins.Extensions.IPTVPlayer.libs.youtubeparser import YouTubeParser
 # FOREIGN import
 ###################################################
 import urllib.parse
-import urllib.request, urllib.parse, urllib.error
+import urllib.request
+import urllib.parse
+import urllib.error
 try:    import json
 except Exception: import simplejson as json
 from Components.config import config, ConfigText, getConfigListEntry

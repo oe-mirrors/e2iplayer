@@ -12,7 +12,10 @@ from Plugins.Extensions.IPTVPlayer.libs.pCommon import common, CParsingHelper
 ###################################################
 # FOREIGN import
 ###################################################
-import re, urllib.request, urllib.parse, urllib.error
+import re
+import urllib.request
+import urllib.parse
+import urllib.error
 try: import json
 except Exception: import simplejson
 ###################################################

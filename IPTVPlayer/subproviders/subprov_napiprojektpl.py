@@ -20,7 +20,9 @@ from Plugins.Extensions.IPTVPlayer.libs.urlparserhelper import hex_md5
 from datetime import timedelta
 import time
 import re
-import urllib.request, urllib.parse, urllib.error
+import urllib.request
+import urllib.parse
+import urllib.error
 import unicodedata
 import base64
 try:    import json

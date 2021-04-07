@@ -8,7 +8,8 @@ The parameter 'prefix' is a string that shall be a unique label for each
 different purpose of the PRF.
 """
 
-import hmac, sha        # available in any Python 2.x
+import hmac
+import sha        # available in any Python 2.x
 
 def PRF( key, prefix, data, number_of_bits):
     """ Key, prefix and data are arbitrary strings .

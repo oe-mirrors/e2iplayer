@@ -9,7 +9,9 @@ from Plugins.Extensions.IPTVPlayer.components.ihost import CBaseHostClass
 from Plugins.Extensions.IPTVPlayer.libs import ph
 ###################################################
 
-import re, datetime, time
+import re
+import datetime
+import time
 
 class Wiziwig1Api(CBaseHostClass):
 

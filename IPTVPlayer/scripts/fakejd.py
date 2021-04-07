@@ -4,8 +4,12 @@ import socket
 import hashlib
 import hmac
 import time
-import urllib.request, urllib.parse, urllib.error
-import urllib.request, urllib.error, urllib.parse
+import urllib.request
+import urllib.parse
+import urllib.error
+import urllib.request
+import urllib.error
+import urllib.parse
 import base64
 import sys
 import traceback

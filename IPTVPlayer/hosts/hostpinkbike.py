@@ -13,7 +13,9 @@ from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc
 ###################################################
 from Components.config import config, ConfigSelection
 import re
-import urllib.request, urllib.parse, urllib.error
+import urllib.request
+import urllib.parse
+import urllib.error
 try:    import simplejson as json
 except Exception: import json
 ###################################################

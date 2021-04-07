@@ -15,7 +15,9 @@ from Plugins.Extensions.IPTVPlayer.components.ihost import CBaseHostClass
 ###################################################
 from Components.config import config, ConfigYesNo, getConfigListEntry
 import re
-import urllib.request, urllib.parse, urllib.error
+import urllib.request
+import urllib.parse
+import urllib.error
 try:    import json
 except Exception: import simplejson as json
 ############################################

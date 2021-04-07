@@ -12,7 +12,9 @@ from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, by
 ###################################################
 from urllib.parse import urlparse
 import time
-import urllib.request, urllib.parse, urllib.error
+import urllib.request
+import urllib.parse
+import urllib.error
 from datetime import  timedelta
 try:    import json
 except Exception: import simplejson as json
