@@ -3,15 +3,12 @@
 import urllib.request
 import urllib.parse
 import urllib.error
-import urllib.request
-import urllib.error
-import urllib.parse
 import re
 import time
-from urllib.parse import urlparse, urlunparse
+from urllib.parse import urlparse, urlunparse, unquote as _unquote
 from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _, SetIPTVPlayerLastHostError
 from Plugins.Extensions.IPTVPlayer.libs.youtube_dl.utils import *
-from Plugins.Extensions.IPTVPlayer.libs.youtube_dl.utils import _unquote
+#from Plugins.Extensions.IPTVPlayer.libs.youtube_dl.utils import _unquote
 from Plugins.Extensions.IPTVPlayer.libs.pCommon import common
 from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, GetDefaultLang, byteify, GetCookieDir
 from Plugins.Extensions.IPTVPlayer.tools.iptvtypes import strwithmeta
