@@ -23,7 +23,7 @@ class MD5(Hash):
             equivalent to a single call with the concatenation of all the
             arguments: m.update(a); m.update(b) is equivalent to m.update(a+b).
         """
-        self.pymd5.update(data)
+        self.pymd5.update(data.encode('utf-8'))
 
     def digest(self):
         """ Return the digest of the strings passed to the update()

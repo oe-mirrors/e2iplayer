@@ -142,7 +142,7 @@ class IconMenager:
         if hashed == 0:
             hashAlg = MD5()
             name = hashAlg(item)
-            file = hexlify(name) + '.jpg'
+            file = hexlify(name).decode("utf-8", "strict") + '.jpg'
         else:
             file = item
         ret = False
@@ -161,7 +161,7 @@ class IconMenager:
 
         hashAlg = MD5()
         name = hashAlg(item)
-        filename = hexlify(name) + '.jpg'
+        filename = hexlify(name).decode("utf-8", "strict") + '.jpg'
 
         self.lockAA.acquire()
         file_path = self.queueAA.get(filename, '')
@@ -211,7 +211,7 @@ class IconMenager:
             if url != '':
                 hashAlg = MD5()
                 name = hashAlg(url)
-                file = hexlify(name) + '.jpg'
+                file = hexlify(name).decode("utf-8", "strict") + '.jpg'
 
                 #check if this image is not already available in cache AA list
                 if self.isItemInAAueue(file, 1):

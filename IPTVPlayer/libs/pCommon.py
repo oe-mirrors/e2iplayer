@@ -14,9 +14,6 @@ from Plugins.Extensions.IPTVPlayer.libs.e2ijson import loads as json_loads, dump
 # FOREIGN import
 ###################################################
 import urllib.request
-import urllib.parse
-import urllib.error
-import urllib.request
 import urllib.error
 import urllib.parse
 import base64
@@ -654,7 +651,7 @@ class common:
             printDBG('pCommon - getPageWithPyCurl() -> headers: ' + str(headers))
 
             if 'save_to_file' in params:
-                fileHandler = file(params['save_to_file'], "wb")
+                fileHandler = open(params['save_to_file'], "wb")
 
             # we can not kill thread when we are in any function of pycurl
             SetThreadKillable(False)
@@ -1193,7 +1190,8 @@ class common:
                     if len(checkFromFirstBytes):
                         OK = False
                         for item in checkFromFirstBytes:
-                            if buffer.startswith(item):
+                            _item = item.encode('utf-8', 'strict')
+                            if buffer.startswith(_item):
                                 OK = True
                                 break
                         if not OK:
@@ -1206,7 +1204,7 @@ class common:
                     downDataSize += len(buffer)
                     if len(buffer):
                         if fileHandler == None:
-                            fileHandler = file(file_path, "wb")
+                            fileHandler = open(file_path, "wb")
                         fileHandler.write(buffer)
                 if fileHandler != None:
                     fileHandler.close()
