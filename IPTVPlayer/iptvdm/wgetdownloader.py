@@ -32,13 +32,13 @@ import datetime
 ###################################################
 class WgetDownloader(BaseDownloader):
     # wget status
-    WGET_STS = enum( NONE         = 'WGET_NONE',
-                     CONNECTING   = 'WGET_CONNECTING',
-                     DOWNLOADING  = 'WGET_DOWNLOADING',
-                     ENDED        = 'WGET_ENDED')
+    WGET_STS = enum( NONE='WGET_NONE',
+                     CONNECTING='WGET_CONNECTING',
+                     DOWNLOADING='WGET_DOWNLOADING',
+                     ENDED='WGET_ENDED')
     # wget status
-    INFO = enum( FROM_FILE   = 'INFO_FROM_FILE',
-                 FROM_DOTS   = 'INFO_FROM_DOTS')
+    INFO = enum( FROM_FILE='INFO_FROM_FILE',
+                 FROM_DOTS='INFO_FROM_DOTS')
                      
     def __init__(self):
         printDBG('WgetDownloader.__init__ ')
@@ -103,7 +103,7 @@ class WgetDownloader(BaseDownloader):
         self.iptv_sys = None
         callBackFun(sts, reason)
     
-    def start(self, url, filePath, params = {}, info_from=None, retries=0):
+    def start(self, url, filePath, params={}, info_from=None, retries=0):
         '''
             Owervrite start from BaseDownloader
         '''

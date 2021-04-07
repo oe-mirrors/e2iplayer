@@ -31,7 +31,7 @@ from Components.config import config, ConfigSelection
 ###################################################
 # Config options for HOST
 ###################################################
-config.plugins.iptvplayer.movieshdco_sortby = ConfigSelection(default = "date", choices = [("date", _("Lastest")), ("views", _("Most viewed")), ("duree", _("Longest")), ("rate", _("Top rated")), ("random", _("Random"))]) 
+config.plugins.iptvplayer.movieshdco_sortby = ConfigSelection(default="date", choices=[("date", _("Lastest")), ("views", _("Most viewed")), ("duree", _("Longest")), ("rate", _("Top rated")), ("random", _("Random"))]) 
 
 def GetConfigList():
     optionList = []
@@ -356,7 +356,7 @@ class XrysoiSE(CBaseHostClass):
         self.addDir(params)
         return True
 
-    def handleService(self, index, refresh = 0, searchPattern = '', searchType = ''):
+    def handleService(self, index, refresh=0, searchPattern='', searchType=''):
         printDBG('handleService start')
         
         CBaseHostClass.handleService(self, index, refresh, searchPattern, searchType)

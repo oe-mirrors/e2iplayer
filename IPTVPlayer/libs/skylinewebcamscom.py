@@ -29,7 +29,7 @@ except Exception:
 ###################################################
 # Config options for HOST
 ###################################################
-config.plugins.iptvplayer.skylinewebcams_lang = ConfigSelection(default = "en", choices = [("en", "en"), ("it", "it"), ("es", "es"), ("de", "de"), ("fr", "fr"),
+config.plugins.iptvplayer.skylinewebcams_lang = ConfigSelection(default="en", choices=[("en", "en"), ("it", "it"), ("es", "es"), ("de", "de"), ("fr", "fr"),
                                                                                            ("el", "el"), ("hr", "hr"), ("sl", "sl"), ("zh", "zh")])
 
 def GetConfigList():

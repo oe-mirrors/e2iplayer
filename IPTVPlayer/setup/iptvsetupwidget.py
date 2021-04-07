@@ -144,7 +144,7 @@ class IPTVSetupMainWidget(Screen):
     def dochooseQuestion(self, title, list, callback):
         title += "                                                                         " # workaround for truncation message by stupid E2
         title = title.replace('\n', ' ').replace(' ', chr(160))
-        self.session.openWithCallback(callback, ChoiceBox, title=title, list = list)
+        self.session.openWithCallback(callback, ChoiceBox, title=title, list=list)
         
     def setInfo(self, title, message):
         if self.underClosing:

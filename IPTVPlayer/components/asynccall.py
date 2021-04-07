@@ -81,7 +81,7 @@ class AsyncCall(object):
 
     def __call__(self, *args, **kwargs):
         SetIPTVPlayerLastHostError()
-        self.Thread = threading.Thread(target = self.run, name = self.Callable.__name__, args = args, kwargs = kwargs)
+        self.Thread = threading.Thread(target=self.run, name=self.Callable.__name__, args=args, kwargs=kwargs)
         self.Thread._iptvplayer_ext = {'kill_lock':threading.Lock(), 'killable':True, 'terminated':False, 'iptv_execute':None}
         self.Thread.start()
         return self

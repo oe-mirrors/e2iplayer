@@ -25,7 +25,7 @@ except Exception:
 ###################################################
 # Config options for HOST
 ###################################################
-config.plugins.iptvplayer.hitbox_iconssize = ConfigSelection(default = "medium", choices = [ ("large", _("large")), ("medium", _("medium")), ("small", _("small")) ])
+config.plugins.iptvplayer.hitbox_iconssize = ConfigSelection(default="medium", choices=[ ("large", _("large")), ("medium", _("medium")), ("small", _("small")) ])
 
 def GetConfigList():
     optionList = []

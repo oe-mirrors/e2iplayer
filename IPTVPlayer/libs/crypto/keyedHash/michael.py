@@ -14,7 +14,7 @@ from binascii_plus import *
 
 class Michael:
     """ The Michael keyed hash as defined in IEEE 802.11i D2.0 """
-    def __init__(self, key = None):
+    def __init__(self, key=None):
         self.name = 'Michael'
         self.blocksize      = 1  # single octets can be hashed by padding to raw block size
         self.raw_block_size = 4  # operates on 32 bits or 4 byte blocks

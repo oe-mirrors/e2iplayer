@@ -26,10 +26,10 @@ except Exception:
 ###################################################
 # Config options for HOST
 ###################################################
-config.plugins.iptvplayer.playpuls_defaultformat = ConfigSelection(default = "999999", choices = [("0", "najgorsza"), ("600", "średnia"), ("800", "dobra"), ("999999", "najlepsza")])
-config.plugins.iptvplayer.playpuls_usedf = ConfigYesNo(default = False)
-config.plugins.iptvplayer.playpuls_defaultproto = ConfigSelection(default = "hls", choices = [("rtmp", "dash (mpd)"), ("hls", "hls (m3u8)")])
-config.plugins.iptvplayer.playpuls_proxy = ConfigYesNo(default = False)
+config.plugins.iptvplayer.playpuls_defaultformat = ConfigSelection(default="999999", choices=[("0", "najgorsza"), ("600", "średnia"), ("800", "dobra"), ("999999", "najlepsza")])
+config.plugins.iptvplayer.playpuls_usedf = ConfigYesNo(default=False)
+config.plugins.iptvplayer.playpuls_defaultproto = ConfigSelection(default="hls", choices=[("rtmp", "dash (mpd)"), ("hls", "hls (m3u8)")])
+config.plugins.iptvplayer.playpuls_proxy = ConfigYesNo(default=False)
 
 def GetConfigList():
     optionList = []

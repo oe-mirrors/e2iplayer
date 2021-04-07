@@ -18,7 +18,7 @@ from .base import BlockCipher, padWithPadLen, noPadding
 
 class Rijndael(BlockCipher):
     """ Rijndael encryption algorithm """
-    def __init__(self, key = None, padding = padWithPadLen(), keySize=16, blockSize=16 ):
+    def __init__(self, key=None, padding=padWithPadLen(), keySize=16, blockSize=16 ):
         self.name       = 'RIJNDAEL'
         self.keySize    = keySize
         self.strength   = keySize*8

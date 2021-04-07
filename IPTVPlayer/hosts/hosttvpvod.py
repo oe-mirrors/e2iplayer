@@ -30,12 +30,12 @@ import time
 ###################################################
 from Screens.MessageBox import MessageBox
 ###################################################
-config.plugins.iptvplayer.tvpvod_premium  = ConfigYesNo(default = False)
-config.plugins.iptvplayer.tvpvod_login    = ConfigText(default = "", fixed_size = False)
-config.plugins.iptvplayer.tvpvod_password = ConfigText(default = "", fixed_size = False)
+config.plugins.iptvplayer.tvpvod_premium  = ConfigYesNo(default=False)
+config.plugins.iptvplayer.tvpvod_login    = ConfigText(default="", fixed_size=False)
+config.plugins.iptvplayer.tvpvod_password = ConfigText(default="", fixed_size=False)
 
-config.plugins.iptvplayer.tvpVodProxyEnable = ConfigYesNo(default = False)
-config.plugins.iptvplayer.tvpVodDefaultformat = ConfigSelection(default = "590000", choices = [("360000",  "320x180"),
+config.plugins.iptvplayer.tvpVodProxyEnable = ConfigYesNo(default=False)
+config.plugins.iptvplayer.tvpVodDefaultformat = ConfigSelection(default="590000", choices=[("360000",  "320x180"),
                                                                                                ("590000",  "398x224"),
                                                                                                ("820000",  "480x270"),
                                                                                                ("1250000", "640x360"),
@@ -44,9 +44,9 @@ config.plugins.iptvplayer.tvpVodDefaultformat = ConfigSelection(default = "59000
                                                                                                ("5420000", "1280x720"),
                                                                                                ("6500000", "1600x900"),
                                                                                                ("9100000", "1920x1080") ])
-config.plugins.iptvplayer.tvpVodUseDF    = ConfigYesNo(default = True)
-config.plugins.iptvplayer.tvpVodNextPage = ConfigYesNo(default = True)
-config.plugins.iptvplayer.tvpVodPreferedformat = ConfigSelection(default = "mp4", choices = [("mp4",  "MP4"), ("m3u8",  "HLS/m3u8")])
+config.plugins.iptvplayer.tvpVodUseDF    = ConfigYesNo(default=True)
+config.plugins.iptvplayer.tvpVodNextPage = ConfigYesNo(default=True)
+config.plugins.iptvplayer.tvpVodPreferedformat = ConfigSelection(default="mp4", choices=[("mp4",  "MP4"), ("m3u8",  "HLS/m3u8")])
 
 ###################################################
 # Config options for HOST
@@ -134,7 +134,7 @@ class TvpVod(CBaseHostClass, CaptchaHelper):
                 return self.IMAGE_URL % (iconFile[0], iconFile[1], iconFile[2], tmp[0], tmp[1])
         return ''
         
-    def _getPage(self, url, addParams = {}, post_data = None):
+    def _getPage(self, url, addParams={}, post_data=None):
         
         try:
             import http.client
@@ -415,7 +415,7 @@ class TvpVod(CBaseHostClass, CaptchaHelper):
                 url   = self._getFullUrl(item['url'], 'http://sport.tvp.pl')
                 desc  = item['lead']
                 title = item['title']
-                icon  = item['image']['url'].format(width = '480', height = '360')
+                icon  = item['image']['url'].format(width='480', height='360')
                 if url.startswith('http'):
                     videosNum += 1
                     params = dict(cItem)
@@ -1003,7 +1003,7 @@ class TvpVod(CBaseHostClass, CaptchaHelper):
             if premium:
                 self.loggedIn, msg = self.tryTologin()
                 if self.loggedIn != True:
-                    self.sessionEx.open(MessageBox, msg, type = MessageBox.TYPE_INFO, timeout = 10 )
+                    self.sessionEx.open(MessageBox, msg, type=MessageBox.TYPE_INFO, timeout=10 )
 
         CBaseHostClass.handleService(self, index, refresh, searchPattern, searchType)
         

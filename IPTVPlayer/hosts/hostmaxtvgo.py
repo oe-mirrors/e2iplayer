@@ -33,8 +33,8 @@ from Screens.MessageBox import MessageBox
 ###################################################
 # Config options for HOST
 ###################################################
-config.plugins.iptvplayer.maxtvgo_login    = ConfigText(default = "", fixed_size = False)
-config.plugins.iptvplayer.maxtvgo_password = ConfigText(default = "", fixed_size = False)
+config.plugins.iptvplayer.maxtvgo_login    = ConfigText(default="", fixed_size=False)
+config.plugins.iptvplayer.maxtvgo_password = ConfigText(default="", fixed_size=False)
 
 def GetConfigList():
     optionList = []
@@ -69,7 +69,7 @@ class MaxtvGO(CBaseHostClass):
         self.login    = ''
         self.password = ''
         
-    def getPage(self, baseUrl, addParams = {}, post_data = None):
+    def getPage(self, baseUrl, addParams={}, post_data=None):
         if addParams == {}:
             addParams = dict(self.defaultParams)
         origBaseUrl = baseUrl
@@ -234,7 +234,7 @@ class MaxtvGO(CBaseHostClass):
                 printDBG('tryTologin OK')
                 self.loggedIn = True
             else:
-                self.sessionEx.open(MessageBox, _('Login failed.'), type = MessageBox.TYPE_ERROR, timeout = 10)
+                self.sessionEx.open(MessageBox, _('Login failed.'), type=MessageBox.TYPE_ERROR, timeout=10)
                 printDBG('tryTologin failed')
         return self.loggedIn
         
@@ -298,7 +298,7 @@ class MaxtvGO(CBaseHostClass):
         
         return [{'title':self.cleanHtmlStr( title ), 'text': self.cleanHtmlStr( desc ), 'images':[{'title':'', 'url':self.getFullIconUrl(icon)}], 'other_info':otherInfo}]
     
-    def handleService(self, index, refresh = 0, searchPattern = '', searchType = ''):
+    def handleService(self, index, refresh=0, searchPattern='', searchType=''):
         printDBG('handleService start')
         
         self.tryTologin()

@@ -30,8 +30,8 @@ from Screens.MessageBox import MessageBox
 ###################################################
 # Config options for HOST
 ###################################################
-config.plugins.iptvplayer.vidcorn_login     = ConfigText(default = "", fixed_size = False)
-config.plugins.iptvplayer.vidcorn_password  = ConfigText(default = "", fixed_size = False)
+config.plugins.iptvplayer.vidcorn_login     = ConfigText(default="", fixed_size=False)
+config.plugins.iptvplayer.vidcorn_password  = ConfigText(default="", fixed_size=False)
 
 def GetConfigList():
     optionList = []
@@ -318,7 +318,7 @@ class VidCorn(CBaseHostClass, CaptchaHelper):
         self.cacheLinks = {}
         
         if not self.loggedIn:
-            self.sessionEx.open(MessageBox, 'Debes iniciar sesión para ver los enlaces.', type = MessageBox.TYPE_ERROR, timeout=10)
+            self.sessionEx.open(MessageBox, 'Debes iniciar sesión para ver los enlaces.', type=MessageBox.TYPE_ERROR, timeout=10)
 
         sts, data = self.getPage(cItem['url'])
         if not sts:
@@ -613,7 +613,7 @@ class VidCorn(CBaseHostClass, CaptchaHelper):
                         item = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(item, '(', ')', False)[1].strip()[1:-1])
                         if item != '':
                             msgTab.append(item)
-                self.sessionEx.waitForFinishOpen(MessageBox, '\n'.join(msgTab), type = MessageBox.TYPE_ERROR, timeout = 10)
+                self.sessionEx.waitForFinishOpen(MessageBox, '\n'.join(msgTab), type=MessageBox.TYPE_ERROR, timeout=10)
                 printDBG('tryTologin failed')
             
             if self.loggedIn:
@@ -622,7 +622,7 @@ class VidCorn(CBaseHostClass, CaptchaHelper):
                 
         return self.loggedIn
         
-    def handleService(self, index, refresh = 0, searchPattern = '', searchType = ''):
+    def handleService(self, index, refresh=0, searchPattern='', searchType=''):
         printDBG('handleService start')
         
         CBaseHostClass.handleService(self, index, refresh, searchPattern, searchType)

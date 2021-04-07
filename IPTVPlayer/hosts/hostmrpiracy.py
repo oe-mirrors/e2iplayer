@@ -37,13 +37,13 @@ from Screens.MessageBox import MessageBox
 ###################################################
 # Config options for HOST
 ###################################################
-config.plugins.iptvplayer.mrpiracy_login     = ConfigText(default = "", fixed_size = False)
-config.plugins.iptvplayer.mrpiracy_password  = ConfigText(default = "", fixed_size = False)
+config.plugins.iptvplayer.mrpiracy_login     = ConfigText(default="", fixed_size=False)
+config.plugins.iptvplayer.mrpiracy_password  = ConfigText(default="", fixed_size=False)
 
-config.plugins.iptvplayer.api_key_9kweu = ConfigText(default = "", fixed_size = False)
-config.plugins.iptvplayer.api_key_2captcha = ConfigText(default = "", fixed_size = False)
-config.plugins.iptvplayer.mrpiracy_linkcache = ConfigYesNo(default = True)
-config.plugins.iptvplayer.mrpiracy_bypassrecaptcha = ConfigSelection(default = "None", choices = [("None",        _("None")),
+config.plugins.iptvplayer.api_key_9kweu = ConfigText(default="", fixed_size=False)
+config.plugins.iptvplayer.api_key_2captcha = ConfigText(default="", fixed_size=False)
+config.plugins.iptvplayer.mrpiracy_linkcache = ConfigYesNo(default=True)
+config.plugins.iptvplayer.mrpiracy_bypassrecaptcha = ConfigSelection(default="None", choices=[("None",        _("None")),
                                                                                                  ("9kw.eu",       "https://9kw.eu/"),
                                                                                                  ("2captcha.com", "http://2captcha.com/")])
 
@@ -129,7 +129,7 @@ class MRPiracyGQ(CBaseHostClass, CaptchaHelper):
             url = url[2:]
         return CBaseHostClass.getFullUrl(self, url)
         
-    def getPage(self, baseUrl, addParams = {}, post_data = None):
+    def getPage(self, baseUrl, addParams={}, post_data=None):
         if addParams == {}:
             addParams = dict(self.defaultParams)
 
@@ -673,7 +673,7 @@ class MRPiracyGQ(CBaseHostClass, CaptchaHelper):
         else:
             return False, 'NOT OK'
         
-    def handleService(self, index, refresh = 0, searchPattern = '', searchType = ''):
+    def handleService(self, index, refresh=0, searchPattern='', searchType=''):
         printDBG('handleService start')
         
         if self.MAIN_URL == None:
@@ -687,7 +687,7 @@ class MRPiracyGQ(CBaseHostClass, CaptchaHelper):
             self.loggedIn, msg = self.tryTologin()
             if not self.loggedIn:
                 userName = config.plugins.iptvplayer.mrpiracy_login.value
-                self.sessionEx.open(MessageBox, 'Login failed for user "%s".' % userName, type = MessageBox.TYPE_INFO, timeout = 10 )
+                self.sessionEx.open(MessageBox, 'Login failed for user "%s".' % userName, type=MessageBox.TYPE_INFO, timeout=10 )
             else:
                 self.loogin   = config.plugins.iptvplayer.mrpiracy_login.value
                 self.password = config.plugins.iptvplayer.mrpiracy_password.value

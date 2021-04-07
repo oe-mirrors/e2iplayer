@@ -27,10 +27,10 @@ from Components.config import config, ConfigSelection, ConfigYesNo, ConfigText, 
 ###################################################
 # Config options for HOST
 ###################################################
-config.plugins.iptvplayer.api_key_9kweu = ConfigText(default = "", fixed_size = False)
-config.plugins.iptvplayer.api_key_2captcha = ConfigText(default = "", fixed_size = False)
-config.plugins.iptvplayer.bsto_linkcache = ConfigYesNo(default = True)
-config.plugins.iptvplayer.bsto_bypassrecaptcha = ConfigSelection(default = "None", choices = [("None",        _("None")),
+config.plugins.iptvplayer.api_key_9kweu = ConfigText(default="", fixed_size=False)
+config.plugins.iptvplayer.api_key_2captcha = ConfigText(default="", fixed_size=False)
+config.plugins.iptvplayer.bsto_linkcache = ConfigYesNo(default=True)
+config.plugins.iptvplayer.bsto_bypassrecaptcha = ConfigSelection(default="None", choices=[("None",        _("None")),
                                                                                               ("9kw.eu",       "https://9kw.eu/"),
                                                                                               ("2captcha.com", "http://2captcha.com/")])
 
@@ -66,7 +66,7 @@ class BSTO(CBaseHostClass, CaptchaHelper):
         self.defaultParams = {'with_metadata':True, 'header':self.HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
         self._getHeaders = None
     
-    def getPage(self, baseUrl, addParams = {}, post_data = None):
+    def getPage(self, baseUrl, addParams={}, post_data=None):
         if addParams == {}:
             addParams = dict(self.defaultParams)
 
@@ -378,7 +378,7 @@ class BSTO(CBaseHostClass, CaptchaHelper):
         
         return [{'title':self.cleanHtmlStr( title ), 'text': self.cleanHtmlStr( desc ), 'images':[{'title':'', 'url':self.getFullIconUrl(icon)}], 'other_info':otherInfo}]
     
-    def handleService(self, index, refresh = 0, searchPattern = '', searchType = ''):
+    def handleService(self, index, refresh=0, searchPattern='', searchType=''):
         printDBG('handleService start')
         
         CBaseHostClass.handleService(self, index, refresh, searchPattern, searchType)

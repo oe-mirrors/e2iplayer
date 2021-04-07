@@ -85,7 +85,7 @@ class MergeDownloader(BaseDownloader):
         self.iptv_sys = None
         callBackFun(sts, reason)
     
-    def start(self, url, filePath, params = {}):
+    def start(self, url, filePath, params={}):
         self.downloaderParams = params
         self.fileExtension    = '' # should be implemented in future
         self.url              = url

@@ -57,7 +57,7 @@ class VevoCom(CBaseHostClass):
         self.webDataCache = {}
         self.authData = {'key':'', 'expires':0, 'token':''}
         
-    def getPage(self, baseUrl, addParams = {}, post_data = None):
+    def getPage(self, baseUrl, addParams={}, post_data=None):
         self._getAuthToken()
         if addParams == {}:
             addParams = dict(self.defaultParams)
@@ -178,7 +178,7 @@ class VevoCom(CBaseHostClass):
         sts, data = self.getPage(cItem['url'])
         if not sts and '404' in str(data):
             url = urlparse( cItem['url'] )
-            url = url._replace(path= '/'.join(url.path.split('/')[2:])).geturl()
+            url = url._replace(path='/'.join(url.path.split('/')[2:])).geturl()
             sts, data = self.getPage(url)
         if not sts:
             return
@@ -436,7 +436,7 @@ class VevoCom(CBaseHostClass):
         
         return urlTab
     
-    def handleService(self, index, refresh = 0, searchPattern = '', searchType = ''):
+    def handleService(self, index, refresh=0, searchPattern='', searchType=''):
         printDBG('handleService start')
         
         CBaseHostClass.handleService(self, index, refresh, searchPattern, searchType)

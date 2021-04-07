@@ -32,8 +32,8 @@ from Screens.MessageBox import MessageBox
 ###################################################
 # Config options for HOST
 ###################################################
-config.plugins.iptvplayer.orthobulletscom_login    = ConfigText(default = "", fixed_size = False)
-config.plugins.iptvplayer.orthobulletscom_password = ConfigText(default = "", fixed_size = False)
+config.plugins.iptvplayer.orthobulletscom_login    = ConfigText(default="", fixed_size=False)
+config.plugins.iptvplayer.orthobulletscom_password = ConfigText(default="", fixed_size=False)
 
 def GetConfigList():
     optionList = []
@@ -64,7 +64,7 @@ class OrthoBullets(CBaseHostClass):
         self.login    = ''
         self.password = ''
     
-    def getPage(self, baseUrl, addParams = {}, post_data = None):
+    def getPage(self, baseUrl, addParams={}, post_data=None):
         if addParams == {}:
             addParams = dict(self.defaultParams)
         def _getFullUrl(url):
@@ -209,7 +209,7 @@ class OrthoBullets(CBaseHostClass):
             self.loggedIn = False
             
             if '' == self.login.strip() or '' == self.password.strip():
-                self.sessionEx.open(MessageBox, _('The host %s requires registration. \nPlease fill your login and password in the host configuration. Available under blue button.' % self.getMainUrl()), type = MessageBox.TYPE_ERROR, timeout = 10)
+                self.sessionEx.open(MessageBox, _('The host %s requires registration. \nPlease fill your login and password in the host configuration. Available under blue button.' % self.getMainUrl()), type=MessageBox.TYPE_ERROR, timeout=10)
                 return False
             
             sts, data = self.getPage(self.getFullUrl('/login'))
@@ -262,11 +262,11 @@ class OrthoBullets(CBaseHostClass):
                     self.loggedIn = True
             
             if not self.loggedIn:
-                self.sessionEx.open(MessageBox, _('Login failed.'), type = MessageBox.TYPE_ERROR, timeout = 10)
+                self.sessionEx.open(MessageBox, _('Login failed.'), type=MessageBox.TYPE_ERROR, timeout=10)
                 printDBG('tryTologin failed')
         return self.loggedIn
     
-    def handleService(self, index, refresh = 0, searchPattern = '', searchType = ''):
+    def handleService(self, index, refresh=0, searchPattern='', searchType=''):
         printDBG('handleService start')
         
         CBaseHostClass.handleService(self, index, refresh, searchPattern, searchType)

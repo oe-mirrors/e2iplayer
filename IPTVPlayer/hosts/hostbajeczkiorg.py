@@ -36,7 +36,7 @@ class BajeczkiOrg(CBaseHostClass):
         self.defaultParams = {'with_metadata':True, 'header':self.HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
         self.cacheLinks = {}
     
-    def getPage(self, url, addParams = {}, post_data = None):
+    def getPage(self, url, addParams={}, post_data=None):
         if addParams == {}:
             addParams = dict(self.defaultParams)
         return self.cm.getPage(url, addParams, post_data)
@@ -195,7 +195,7 @@ class BajeczkiOrg(CBaseHostClass):
         cItem.update({'category':'list_items', 'url':self.getFullUrl('/?s=') + urllib.parse.quote_plus(searchPattern)})
         self.listItems(cItem)
         
-    def handleService(self, index, refresh = 0, searchPattern = '', searchType = ''):
+    def handleService(self, index, refresh=0, searchPattern='', searchType=''):
         printDBG('handleService start')
         
         CBaseHostClass.handleService(self, index, refresh, searchPattern, searchType)

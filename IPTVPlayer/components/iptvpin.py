@@ -33,7 +33,7 @@ class IPTVPinWidget(Screen):
          <ePixmap position="100,150" zPosition="4" size="100,100" pixmap="/usr/lib/enigma2/python/Plugins/Extensions/IPTVPlayer/icons/Pin/lock.png" transparent="1" alphatest="on" />
         </screen>"""
    
-    def __init__(self, session, title = ""):
+    def __init__(self, session, title=""):
         self.session = session
         Screen.__init__(self, session)
 
@@ -155,7 +155,7 @@ class IPTVPinWidget(Screen):
         self.keyNumPressed(9)
     def keyNum0(self):
         self.keyNumPressed(0)
-    def Error(self, error = None):
+    def Error(self, error=None):
         pass
         
 #class IPTVPinWidget

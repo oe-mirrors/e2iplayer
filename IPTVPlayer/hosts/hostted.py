@@ -50,7 +50,7 @@ class TED(CBaseHostClass):
         
         self._getHeaders = None
         
-    def getPage(self, baseUrl, addParams = {}, post_data = None):
+    def getPage(self, baseUrl, addParams={}, post_data=None):
         if addParams == {}:
             addParams = dict(self.defaultParams)
         
@@ -378,7 +378,7 @@ class TED(CBaseHostClass):
                 title = self.cleanHtmlStr(item['title'])
                 
                 descTab = ['%s: %s' %(_('Talks'), item['talks'])]
-                duration = str( timedelta( seconds = int(item['duration']) ) )
+                duration = str( timedelta( seconds=int(item['duration']) ) )
                 if duration.startswith("0:"):
                     duration = duration[2:]
                 descTab.append('%s: %s' % (_('Duration'), duration))
@@ -579,7 +579,7 @@ class TED(CBaseHostClass):
         printDBG("LosMovies.getVideoLinks [%s]" % videoUrl)
         return self.up.getVideoLinkExt(videoUrl)
         
-    def handleService(self, index, refresh = 0, searchPattern = '', searchType = ''):
+    def handleService(self, index, refresh=0, searchPattern='', searchType=''):
         printDBG('handleService start')
         
         CBaseHostClass.handleService(self, index, refresh, searchPattern, searchType)

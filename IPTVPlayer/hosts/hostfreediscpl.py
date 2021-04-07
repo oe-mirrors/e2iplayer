@@ -31,8 +31,8 @@ from Screens.MessageBox import MessageBox
 ###################################################
 # Config options for HOST
 ###################################################
-config.plugins.iptvplayer.freediscpl_login    = ConfigText(default = "", fixed_size = False)
-config.plugins.iptvplayer.freediscpl_password = ConfigText(default = "", fixed_size = False)
+config.plugins.iptvplayer.freediscpl_login    = ConfigText(default="", fixed_size=False)
+config.plugins.iptvplayer.freediscpl_password = ConfigText(default="", fixed_size=False)
 
 def GetConfigList():
     optionList = []
@@ -476,7 +476,7 @@ class FreeDiscPL(CBaseHostClass):
                 printExc()
             
             if self.loggedIn != True:
-                self.sessionEx.open(MessageBox, _('Login failed.') + '\n' + '\n'.join(errMsg), type = MessageBox.TYPE_ERROR, timeout = 10)
+                self.sessionEx.open(MessageBox, _('Login failed.') + '\n' + '\n'.join(errMsg), type=MessageBox.TYPE_ERROR, timeout=10)
             return self.loggedIn
         
     def listSearchResult(self, cItem, searchPattern, searchType):
@@ -485,7 +485,7 @@ class FreeDiscPL(CBaseHostClass):
         cItem.update({'url':self.SEARCH_URL, 'category':'list_items2', 'f_search_pattern':searchPattern, 'f_search_type':searchType})
         self.listItems2(cItem, 'explore_item')
 
-    def handleService(self, index, refresh = 0, searchPattern = '', searchType = ''):
+    def handleService(self, index, refresh=0, searchPattern='', searchType=''):
         printDBG('handleService start')
         self.tryTologin()
         

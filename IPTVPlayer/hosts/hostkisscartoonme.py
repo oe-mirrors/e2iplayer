@@ -25,7 +25,7 @@ from Components.config import config, ConfigSelection, getConfigListEntry
 ###################################################
 # Config options for HOST
 ###################################################
-config.plugins.iptvplayer.kisscartoon_defaultformat = ConfigSelection(default = "999999", choices = [("0", _("the worst")), ("360", "360p"), ("480", "480p"), ("720", "720p"),  ("1080", "1080p"), ("999999", "the best")])
+config.plugins.iptvplayer.kisscartoon_defaultformat = ConfigSelection(default="999999", choices=[("0", _("the worst")), ("360", "360p"), ("480", "480p"), ("720", "720p"),  ("1080", "1080p"), ("999999", "the best")])
 
 def GetConfigList():
     optionList = []
@@ -426,7 +426,7 @@ class KissCartoonMe(CBaseHostClass):
         self.addDir(params)
         return True
     
-    def handleService(self, index, refresh = 0, searchPattern = '', searchType = ''):
+    def handleService(self, index, refresh=0, searchPattern='', searchType=''):
         printDBG('handleService start')
         
         CBaseHostClass.handleService(self, index, refresh, searchPattern, searchType)

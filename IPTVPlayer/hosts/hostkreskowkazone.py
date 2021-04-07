@@ -33,8 +33,8 @@ from Screens.MessageBox import MessageBox
 # Config options for HOST
 ###################################################
 
-config.plugins.iptvplayer.kreskowkazone_login    = ConfigText(default = "", fixed_size = False)
-config.plugins.iptvplayer.kreskowkazone_password = ConfigText(default = "", fixed_size = False)
+config.plugins.iptvplayer.kreskowkazone_login    = ConfigText(default="", fixed_size=False)
+config.plugins.iptvplayer.kreskowkazone_password = ConfigText(default="", fixed_size=False)
 
 def GetConfigList():
     optionList = []
@@ -307,7 +307,7 @@ class KreskowkaZonePL(CBaseHostClass):
         else:
             return False, 'NOT OK'
         
-    def handleService(self, index, refresh = 0, searchPattern = '', searchType = ''):
+    def handleService(self, index, refresh=0, searchPattern='', searchType=''):
         printDBG('handleService start')
         
         if self.login != config.plugins.iptvplayer.kreskowkazone_login.value and \
@@ -316,7 +316,7 @@ class KreskowkaZonePL(CBaseHostClass):
            '' != config.plugins.iptvplayer.kreskowkazone_password.value.strip():
             loggedIn, msg = self.tryTologin(config.plugins.iptvplayer.kreskowkazone_login.value, config.plugins.iptvplayer.kreskowkazone_password.value)
             if not loggedIn:
-                self.sessionEx.open(MessageBox, 'Problem z zalogowaniem użytkownika "%s".' % config.plugins.iptvplayer.kreskowkazone_login.value, type = MessageBox.TYPE_INFO, timeout = 10 )
+                self.sessionEx.open(MessageBox, 'Problem z zalogowaniem użytkownika "%s".' % config.plugins.iptvplayer.kreskowkazone_login.value, type=MessageBox.TYPE_INFO, timeout=10 )
             else:
                 self.login    = config.plugins.iptvplayer.kreskowkazone_login.value
                 self.password = config.plugins.iptvplayer.kreskowkazone_password.value
@@ -367,7 +367,7 @@ class IPTVHost(CHostBase):
     def __init__(self):
         CHostBase.__init__(self, KreskowkaZonePL(), True, []) #[CDisplayListItem.TYPE_VIDEO, CDisplayListItem.TYPE_AUDIO]
     
-    def getLinksForVideo(self, Index = 0, selItem = None):
+    def getLinksForVideo(self, Index=0, selItem=None):
         retCode = RetHost.ERROR
         retlist = []
         if not self.isValidIndex(Index):
@@ -377,7 +377,7 @@ class IPTVHost(CHostBase):
         for item in urlList:
             retlist.append(CUrlItem(item["name"], item["url"], item.get('need_resolve', False)))
 
-        return RetHost(RetHost.OK, value = retlist)
+        return RetHost(RetHost.OK, value=retlist)
     # end getLinksForVideo
     
     def getResolvedURL(self, url):
@@ -388,7 +388,7 @@ class IPTVHost(CHostBase):
             need_resolve = 0
             retlist.append(CUrlItem(item["name"], item["url"], need_resolve))
 
-        return RetHost(RetHost.OK, value = retlist)
+        return RetHost(RetHost.OK, value=retlist)
     
     def converItem(self, cItem):
         hostList = []
@@ -425,12 +425,12 @@ class IPTVHost(CHostBase):
             icon = self.host.DEFAULT_ICON_URL
         isGoodForFavourites = cItem.get('good_for_fav', False)
         
-        return CDisplayListItem(name = title,
-                                    description = description,
-                                    type = type,
-                                    urlItems = hostLinks,
-                                    urlSeparateRequest = 1,
-                                    iconimage = icon,
-                                    possibleTypesOfSearch = possibleTypesOfSearch,
-                                    isGoodForFavourites = isGoodForFavourites)
+        return CDisplayListItem(name=title,
+                                    description=description,
+                                    type=type,
+                                    urlItems=hostLinks,
+                                    urlSeparateRequest=1,
+                                    iconimage=icon,
+                                    possibleTypesOfSearch=possibleTypesOfSearch,
+                                    isGoodForFavourites=isGoodForFavourites)
     # end converItem

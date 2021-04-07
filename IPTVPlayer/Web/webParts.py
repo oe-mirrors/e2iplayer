@@ -16,7 +16,7 @@ from Components.config import config
 import os
 
 ########################################################
-def IncludeHEADER(extraMetas = ''):
+def IncludeHEADER(extraMetas=''):
 	tempText = """
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
@@ -48,7 +48,7 @@ def IncludeHEADER(extraMetas = ''):
 	return tempText
 	
 ########################################################
-def IncludeMENU( MenuStatusMSG = '', ShowCancelButton = False):
+def IncludeMENU( MenuStatusMSG='', ShowCancelButton=False):
 	if isActiveHostInitiated():
 		tempText = """
   <div class="topbar">
@@ -81,7 +81,7 @@ def IncludeMENU( MenuStatusMSG = '', ShowCancelButton = False):
   </div>
 """ % ( _('Information'), _('Selected hosts'), _('Search'), _('Download manager'), _('Settings'), _('Logs'), _('Reset State'), _('version'), IPTV_VERSION, _('Web interface version'), settings.WebInterfaceVersion )
 	if MenuStatusMSG != '' and ShowCancelButton == True:
-		tempText += '<div class="main">%s<br></div>\n' % formSUBMITvalue([('cmd', 'stopThread')], _('Cancel'), input_text = MenuStatusMSG + '... ')
+		tempText += '<div class="main">%s<br></div>\n' % formSUBMITvalue([('cmd', 'stopThread')], _('Cancel'), input_text=MenuStatusMSG + '... ')
 	elif MenuStatusMSG != '':
 		tempText += '<div class="main">%s<br></div>\n' % MenuStatusMSG
 	return tempText
@@ -346,17 +346,17 @@ class Body():
 					icon = ''
 					info = ''
 					buttons = ''
-				tempText += tableHorizontalRedLine( colspan = 3 )
+				tempText += tableHorizontalRedLine( colspan=3 )
 				tempText += '<tr><td rowspan="4" align="center">%s</td><td colspan="2"><b>%s</b></td></tr>\n' % (icon, fileName)
 				tempText += '<tr><td><div style="text-indent: 20px">%s</div></td></tr>\n' % item.url
 				tempText += '<tr><td>%s</td><td align="right">%s</td></tr>\n' %(info, status)
 				tempText += '<tr><td colspan="3" align="right">%s</td></tr>\n' % (buttons)
-			tempText += tableHorizontalRedLine( colspan = 3 )
+			tempText += tableHorizontalRedLine( colspan=3 )
 			tempText += '</tbody></table>\n'
 		tempText += '</div></body>\n'
 		return tempText
 	########################################################
-	def useHostSubMenu(self, isTop = True, LVL = 1 ):
+	def useHostSubMenu(self, isTop=True, LVL=1 ):
 		txt = '<table border="0" width="800px" cellspacing="5px"><tbody>\n'
 		txtWarning = '<tr><td colspan="4" align="center"><p><b><font size="2" color="#FE642E">%s</font></b><font size="2">%s</font></p></td></tr>\n' % (
 				      _('REMEMBER: '), _('first check if host works properly in GUI and web <b>BEFORE</b> reporting error in it !!!'))
@@ -378,7 +378,7 @@ class Body():
 		txt += '</tbody></table><br>\n'
 		return txt
 	########################################################
-	def buildItemsListTable(self, item, index, allowedCategories = [], destinationURL = None):
+	def buildItemsListTable(self, item, index, allowedCategories=[], destinationURL=None):
 		iIndex = index
 		iName = removeSpecialChars(item.name)
 		iDescr= removeSpecialChars(item.description)
@@ -398,7 +398,7 @@ class Body():
 			iconSrc = './icons/AudioItem.png'
 		else:
 			iconSrc = iType
-		txt = tableHorizontalRedLine( colspan = 2 )
+		txt = tableHorizontalRedLine( colspan=2 )
 		txt += '<tr><td rowspan="2" style="width:64px"><img border="0" src="%s" width="64" height="64"></td>' % iconSrc
 		
 		if iType == "SEARCH":
@@ -417,7 +417,7 @@ class Body():
 		iName= removeSpecialChars(item.name)
 		iUrl= item.url #.replace("ext://url/","") #to chyba sss zrobil do wymuszenia extplayera przyklad pierwszatv
 		iurlNeedsResolve= int(item.urlNeedsResolve)
-		txt = tableHorizontalRedLine( colspan = 3 )
+		txt = tableHorizontalRedLine( colspan=3 )
 		if iUrl	in ['', 'fake', 'fakeUrl']:
 			txt += '<td colspan="2" align="center">%s</td></tr>' % ( iName )
 		else:
@@ -464,14 +464,14 @@ class Body():
 						index += 1
 			except Exception as e:
 				print('EXCEPTION in webParts:useHostPageContent - ', str(e))
-				tempText += tableHorizontalRedLine( colspan = 3 )
+				tempText += tableHorizontalRedLine( colspan=3 )
 				tempText += '<td colspan="3" align="center">%s %s</td></tr>' % ( _('ERROR:'), str(e) )
-				tempText += tableHorizontalRedLine( colspan = 3 )
+				tempText += tableHorizontalRedLine( colspan=3 )
 			tempText += '</tbody></table>\n'
 			# end main list
 			if index > 10:
 				tempText += '<tr><td><br></td>'
-				tempText += self.useHostSubMenu(isTop = False) #Submenu table
+				tempText += self.useHostSubMenu(isTop=False) #Submenu table
 			setNewHostListShown(True)
 		tempText += '</div></body>\n'
 		return tempText
@@ -500,14 +500,14 @@ class Body():
 		      			for item in settings.GlobalSearchResults.get(key, None)[1]:
 						Totest = removeSpecialChars(item.name + item.description).lower()
 						if Totest.find(settings.GlobalSearchQuery.lower()) != -1:
-							_tempBody += self.buildItemsListTable(item, index, allowedCategories = settings.GlobalSearchTypes,
-											destinationURL = '/iptvplayer/usehost?activeHostSearchHistory=%s' % key )
+							_tempBody += self.buildItemsListTable(item, index, allowedCategories=settings.GlobalSearchTypes,
+											destinationURL='/iptvplayer/usehost?activeHostSearchHistory=%s' % key )
 						index += 1
 				except Exception as e:
 					print('EXCEPTION in webParts:useHostPageContent - ', str(e))
-					tempText += tableHorizontalRedLine( colspan = 3 )
+					tempText += tableHorizontalRedLine( colspan=3 )
 					tempText += '<td colspan="2" align="left">%s %s</td></tr>' % ( _('ERROR:'), str(e) )
-					tempText += tableHorizontalRedLine( colspan = 3 )
+					tempText += tableHorizontalRedLine( colspan=3 )
 				if _tempBody != '':
 					tempText += _tempHeader + _tempBody
 			tempText += '</tbody></table>\n'

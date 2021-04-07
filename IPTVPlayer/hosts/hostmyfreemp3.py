@@ -42,7 +42,7 @@ class MyFreeMp3(CBaseHostClass):
                             ]
         self.streamUrl = 'http://s.mp3-music-downloads.com/'
         
-    def getPage(self, baseUrl, addParams = {}, post_data = None):
+    def getPage(self, baseUrl, addParams={}, post_data=None):
         if addParams == {}:
             addParams = dict(self.defaultParams)
         origBaseUrl = baseUrl
@@ -179,7 +179,7 @@ class MyFreeMp3(CBaseHostClass):
         
         return []
     
-    def handleService(self, index, refresh = 0, searchPattern = '', searchType = ''):
+    def handleService(self, index, refresh=0, searchPattern='', searchType=''):
         printDBG('handleService start')
         
         CBaseHostClass.handleService(self, index, refresh, searchPattern, searchType)

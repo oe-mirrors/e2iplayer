@@ -168,11 +168,11 @@ class E2iPlayerBufferingWidget(Screen):
         self.moovAtomOffset = 0
         self.moovAtomSize = 0
         
-        self.MOOV_STS = enum( UNKNOWN     = 0,
-                              WAITING     = 1,
-                              DOWNLOADING = 2,
-                              DOWNLOADED  = 3,
-                              ERROR       = 4)
+        self.MOOV_STS = enum( UNKNOWN=0,
+                              WAITING=1,
+                              DOWNLOADING=2,
+                              DOWNLOADED=3,
+                              ERROR=4)
         self.moovAtomStatus = self.MOOV_STS.UNKNOWN
         self.moovAtomDownloader = None
         self.moovAtomPath  = pathForBuffering + '/.iptv_buffering_moov.flv'
@@ -196,7 +196,7 @@ class E2iPlayerBufferingWidget(Screen):
         if self.downloader:
             self.downloader.isWorkingCorrectly(self._startDownloader)
         else:
-            self.session.openWithCallback(self.iptvDoClose, MessageBox, _("Downloading can not be started.\n The address ('%r') is incorrect.") % self.url, type = MessageBox.TYPE_ERROR, timeout = 10)
+            self.session.openWithCallback(self.iptvDoClose, MessageBox, _("Downloading can not be started.\n The address ('%r') is incorrect.") % self.url, type=MessageBox.TYPE_ERROR, timeout=10)
         
     def _startDownloader(self, sts, reason):
         if sts:
@@ -207,7 +207,7 @@ class E2iPlayerBufferingWidget(Screen):
             self.setMainTimerSts(True)
             self.canRunMoviePlayer = True
         else:
-            self.session.openWithCallback(self.iptvDoClose, MessageBox, _("Downloading can not be started.\n Downloader %s does not work properly.\nStatus[%s]") % (self.downloader.getName(), reason.strip()), type = MessageBox.TYPE_ERROR, timeout = 10 )
+            self.session.openWithCallback(self.iptvDoClose, MessageBox, _("Downloading can not be started.\n Downloader %s does not work properly.\nStatus[%s]") % (self.downloader.getName(), reason.strip()), type=MessageBox.TYPE_ERROR, timeout=10 )
 
     def _isInLiveMode(self):
         if isinstance(self.url, strwithmeta):
@@ -254,7 +254,7 @@ class E2iPlayerBufferingWidget(Screen):
             else:
                 printDBG("E2iPlayerBufferingWidget.leaveMoviePlayer: movie player consume all data from buffer - downloading finished")
                 if DMHelper.STS.DOWNLOADED != self.downloader.getStatus(): 
-                    self.session.openWithCallback(self.iptvDoClose, MessageBox, text=_("Error occurs during download."), type = MessageBox.TYPE_ERROR, timeout=5)
+                    self.session.openWithCallback(self.iptvDoClose, MessageBox, text=_("Error occurs during download."), type=MessageBox.TYPE_ERROR, timeout=5)
                 else:
                     self.iptvDoClose()
         elif ret in ['key_stop']:
@@ -585,7 +585,7 @@ class E2iPlayerBufferingWidget(Screen):
             errorCode, errorDesc = self.downloader.getLastError()
             if errorCode != None:
                 messageTab.append(_('%s returned %s: %s') % (self.downloader.getName(), errorCode, _(errorDesc)))
-            self.session.openWithCallback(self.iptvDoClose, MessageBox, '\n'.join(messageTab), type = MessageBox.TYPE_ERROR, timeout = 10 )
+            self.session.openWithCallback(self.iptvDoClose, MessageBox, '\n'.join(messageTab), type=MessageBox.TYPE_ERROR, timeout=10 )
             self.canRunMoviePlayer = False
             # stop timer before message
             self.setMainTimerSts(False)

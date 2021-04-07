@@ -34,7 +34,7 @@ HTTP_HEADER = {
 }
 
 
-def find_in_text(regex, text, flags = re.IGNORECASE | re.DOTALL):
+def find_in_text(regex, text, flags=re.IGNORECASE | re.DOTALL):
     rec = re.compile(regex, flags=flags)
     match = rec.search(text)
     if not match:

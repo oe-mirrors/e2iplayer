@@ -267,7 +267,7 @@ class IPTVPicturePlayerWidget(Screen):
             if self.downloader:
                 self.downloader.isWorkingCorrectly(self._startDownloader)
             else:
-                self.session.openWithCallback(self.close, MessageBox, _("Downloading cannot be started.\n Invalid URI[%s].") % self.url, type = MessageBox.TYPE_ERROR, timeout = 10)
+                self.session.openWithCallback(self.close, MessageBox, _("Downloading cannot be started.\n Invalid URI[%s].") % self.url, type=MessageBox.TYPE_ERROR, timeout=10)
             
     def _doStart(self, force=False):
         if self.addParams['seq_mode']:
@@ -288,7 +288,7 @@ class IPTVPicturePlayerWidget(Screen):
         if sts:
             self._doStart(True)
         else:
-            self.session.openWithCallback(self.close, MessageBox, _("Downloading cannot be started.\n Downloader [%s] not working properly.\n Status[%s]") % (self.downloader.getName(), reason.strip()), type = MessageBox.TYPE_ERROR, timeout = 10 )        
+            self.session.openWithCallback(self.close, MessageBox, _("Downloading cannot be started.\n Downloader [%s] not working properly.\n Status[%s]") % (self.downloader.getName(), reason.strip()), type=MessageBox.TYPE_ERROR, timeout=10 )        
         
     def onEnd(self, withCleanUp=True):
         self.setMainTimerSts(False)

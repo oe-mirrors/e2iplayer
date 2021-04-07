@@ -33,8 +33,8 @@ from Screens.MessageBox import MessageBox
 ###################################################
 # Config options for HOST
 ###################################################
-config.plugins.iptvplayer.edemtv_login    = ConfigText(default = "", fixed_size = False)
-config.plugins.iptvplayer.edemtv_password = ConfigText(default = "", fixed_size = False)
+config.plugins.iptvplayer.edemtv_login    = ConfigText(default="", fixed_size=False)
+config.plugins.iptvplayer.edemtv_password = ConfigText(default="", fixed_size=False)
 
 def GetConfigList():
     optionList = []
@@ -89,10 +89,10 @@ class EdemTvApi:
             passwd = config.plugins.iptvplayer.edemtv_password .value
             if '' != login.strip() and '' != passwd.strip():
                 if not self.doLogin(login, passwd):
-                    self.sessionEx.open(MessageBox, _('Login failed.'), type = MessageBox.TYPE_INFO, timeout = 10 )
+                    self.sessionEx.open(MessageBox, _('Login failed.'), type=MessageBox.TYPE_INFO, timeout=10 )
                     return []
             else:
-                self.sessionEx.open(MessageBox, _('This host requires registration. \nPlease fill your login and password in the host configuration. Available under blue button.'), type = MessageBox.TYPE_ERROR, timeout = 10 )
+                self.sessionEx.open(MessageBox, _('This host requires registration. \nPlease fill your login and password in the host configuration. Available under blue button.'), type=MessageBox.TYPE_ERROR, timeout=10 )
                 return []
             
             self.cacheChannels = {}

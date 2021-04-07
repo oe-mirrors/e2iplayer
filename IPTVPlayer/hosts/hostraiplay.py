@@ -48,7 +48,7 @@ class Raiplay(CBaseHostClass):
         self.defaultParams = { 'header': {'User-Agent': "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/57.0.2956.0 Safari/537.36"}}
 
         
-    def getPage(self, url, addParams = {}, post_data = None):
+    def getPage(self, url, addParams={}, post_data=None):
         if addParams == {}:
             addParams = dict(self.defaultParams)
         #printDBG(self.defaultParams)
@@ -471,7 +471,7 @@ class Raiplay(CBaseHostClass):
         response=json_loads(data)
         return response["list"]
     
-    def handleService(self, index, refresh = 0, searchPattern = '', searchType = ''):
+    def handleService(self, index, refresh=0, searchPattern='', searchType=''):
         printDBG('Raiplay - handleService start')
         
         CBaseHostClass.handleService(self, index, refresh, searchPattern, searchType)

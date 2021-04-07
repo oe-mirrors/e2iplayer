@@ -35,8 +35,8 @@ from Screens.MessageBox import MessageBox
 ###################################################
 # Config options for HOST
 ###################################################
-config.plugins.iptvplayer.rtbfbe_login    = ConfigText(default = "", fixed_size = False)
-config.plugins.iptvplayer.rtbfbe_password = ConfigText(default = "", fixed_size = False)
+config.plugins.iptvplayer.rtbfbe_login    = ConfigText(default="", fixed_size=False)
+config.plugins.iptvplayer.rtbfbe_password = ConfigText(default="", fixed_size=False)
 
 def GetConfigList():
     optionList = []
@@ -86,7 +86,7 @@ class RTBFBE(CBaseHostClass):
         if self.cm.isValidUrl(url):
             self.MAIN_URL = self.cm.getBaseUrl(url)
         
-    def getPage(self, baseUrl, addParams = {}, post_data = None):
+    def getPage(self, baseUrl, addParams={}, post_data=None):
         if addParams == {}:
             addParams = dict(self.defaultParams)
         baseUrl = self.cm.iriToUri(baseUrl)
@@ -677,10 +677,10 @@ class RTBFBE(CBaseHostClass):
             self.loggedIn = True
         else:
             self.loggedIn = False
-            self.sessionEx.open(MessageBox, _('Login failed.') + '\n' + message, type = MessageBox.TYPE_ERROR, timeout = 10)
+            self.sessionEx.open(MessageBox, _('Login failed.') + '\n' + message, type=MessageBox.TYPE_ERROR, timeout=10)
         return self.loggedIn
     
-    def handleService(self, index, refresh = 0, searchPattern = '', searchType = ''):
+    def handleService(self, index, refresh=0, searchPattern='', searchType=''):
         printDBG('handleService start')
         
         self.tryTologin()

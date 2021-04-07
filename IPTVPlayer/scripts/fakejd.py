@@ -522,7 +522,7 @@ if __name__ == "__main__":
         if True:
             threads = [None, None, None] #None, None, None
             for i in range(len(threads)):
-                threads[i] = threading.Thread(target = PoolConnection, name = 'PoolConnection %d' % i, kwargs = {'params':parameters})
+                threads[i] = threading.Thread(target=PoolConnection, name='PoolConnection %d' % i, kwargs={'params':parameters})
                 threads[i].daemon = True 
                 threads[i].start()
         

@@ -196,7 +196,7 @@ class HDFilmeTV(CBaseHostClass):
             query={'page': page, 'category':cItem['genre'],'country': cItem['country'], 'sort': cItem['sort'], 'sort_type': cItem['sort_type']}
         
         url += "?" + urllib.parse.urlencode(query)
-        sts, data = self.getPageCF(url, params, post_data = {'load':'full-page'})
+        sts, data = self.getPageCF(url, params, post_data={'load':'full-page'})
         #printDBG(data)
         if not sts:
             return
@@ -500,7 +500,7 @@ class HDFilmeTV(CBaseHostClass):
         
         return [{'title':self.cleanHtmlStr( title ), 'text': desc, 'images':[{'title':'', 'url':self.getIconUrl(icon)}], 'other_info':otherInfo}]
 
-    def handleService(self, index, refresh = 0, searchPattern = '', searchType = ''):
+    def handleService(self, index, refresh=0, searchPattern='', searchType=''):
         printDBG('handleService start')
         
         CBaseHostClass.handleService(self, index, refresh, searchPattern, searchType)
@@ -549,7 +549,7 @@ class IPTVHost(CHostBase):
         # for now we must disable favourites due to problem with links extraction for types other than movie
         CHostBase.__init__(self, HDFilmeTV(), True, favouriteTypes=[])
     
-    def getArticleContent(self, Index = 0):
+    def getArticleContent(self, Index=0):
         retCode = RetHost.ERROR
         retlist = []
         if not self.isValidIndex(Index):
@@ -564,5 +564,5 @@ class IPTVHost(CHostBase):
             text       = item.get('text', '')
             images     = item.get("images", [])
             othersInfo = item.get('other_info', '')
-            retlist.append( ArticleContent(title = title, text = text, images =  images, richDescParams = othersInfo) )
-        return RetHost(RetHost.OK, value = retlist)
+            retlist.append( ArticleContent(title=title, text=text, images=images, richDescParams=othersInfo) )
+        return RetHost(RetHost.OK, value=retlist)

@@ -3450,7 +3450,7 @@ class Context(object):
         return nc
     __copy__ = copy
 
-    def _raise_error(self, condition, explanation = None, *args):
+    def _raise_error(self, condition, explanation=None, *args):
         """Handles an error
 
         If the flag is in _ignored_flags, returns the default response.
@@ -4690,7 +4690,7 @@ class _WorkRep(object):
 
 
 
-def _normalize(op1, op2, prec = 0):
+def _normalize(op1, op2, prec=0):
     """Normalizes op1, op2 to have the same exp and length of coefficient.
 
     Done during addition.
@@ -4725,7 +4725,7 @@ def _normalize(op1, op2, prec = 0):
 # The correction being in the function definition is for speed, and
 # the whole function is not resolved with math.log because of avoiding
 # the use of floats.
-def _nbits(n, correction = {
+def _nbits(n, correction={
         '0': 4, '1': 3, '2': 2, '3': 2,
         '4': 1, '5': 1, '6': 1, '7': 1,
         '8': 0, '9': 0, 'a': 0, 'b': 0,
@@ -4769,7 +4769,7 @@ def _div_nearest(a, b):
     q, r = divmod(a, b)
     return q + (2*r + (q&1) > b)
 
-def _ilog(x, M, L = 8):
+def _ilog(x, M, L=8):
     """Integer approximation to M*log(x/M), with absolute error boundable
     in terms only of x/M.
 
@@ -5047,7 +5047,7 @@ def _dpower(xc, xe, yc, ye, p):
 
     return coeff, exp
 
-def _log10_lb(c, correction = {
+def _log10_lb(c, correction={
         '1': 100, '2': 70, '3': 53, '4': 40, '5': 31,
         '6': 23, '7': 16, '8': 10, '9': 5}):
     """Compute a lower bound for 100*log10(c) for a positive integer c."""

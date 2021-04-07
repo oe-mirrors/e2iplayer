@@ -27,8 +27,8 @@ from Plugins.Extensions.IPTVPlayer.components.iptvimageselector import IPTVMulti
 ###################################################
 # Config options for HOST
 ###################################################
-config.plugins.iptvplayer.kissanime_defaultformat = ConfigSelection(default = "999999", choices = [("0", _("the worst")), ("360", "360p"), ("480", "480p"), ("720", "720p"),  ("1080", "1080p"), ("999999", "the best")])
-config.plugins.iptvplayer.kissanime_proxy = ConfigSelection(default = "None", choices = [("None",     _("None")),
+config.plugins.iptvplayer.kissanime_defaultformat = ConfigSelection(default="999999", choices=[("0", _("the worst")), ("360", "360p"), ("480", "480p"), ("720", "720p"),  ("1080", "1080p"), ("999999", "the best")])
+config.plugins.iptvplayer.kissanime_proxy = ConfigSelection(default="None", choices=[("None",     _("None")),
                                                                                          ("proxy_1",  _("Alternative proxy server (1)")),
                                                                                          ("proxy_2",  _("Alternative proxy server (2)"))])
 
@@ -68,7 +68,7 @@ class KissAnimeTo(CBaseHostClass):
         self.cacheHome = {}
         self.cache = {}
         
-    def getPage(self, baseUrl, addParams = {}, post_data = None):
+    def getPage(self, baseUrl, addParams={}, post_data=None):
         images = []
         errorMessages = []
         if addParams == {}:
@@ -516,7 +516,7 @@ class KissAnimeTo(CBaseHostClass):
         cItem.update({'keyword':searchPattern, 'url':self.getFullUrl('/Search/Anime')})
         self.listItems(cItem, 'list_episodes')
     
-    def handleService(self, index, refresh = 0, searchPattern = '', searchType = ''):
+    def handleService(self, index, refresh=0, searchPattern='', searchType=''):
         printDBG('handleService start')
         
         CBaseHostClass.handleService(self, index, refresh, searchPattern, searchType)

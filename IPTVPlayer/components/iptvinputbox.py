@@ -21,7 +21,7 @@ from .cover import Cover2
 
 class IPTVInputBoxWidget(InputBox):
    
-    def __init__(self, session, icon={}, size=None, title = "", windowTitle = _("Input"), useableChars = None, **kwargs):
+    def __init__(self, session, icon={}, size=None, title="", windowTitle=_("Input"), useableChars=None, **kwargs):
         self.session = session
         InputBox.__init__(self, session, title, windowTitle, useableChars, **kwargs)
         width  = 300

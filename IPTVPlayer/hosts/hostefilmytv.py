@@ -34,8 +34,8 @@ from Screens.MessageBox import MessageBox
 ###################################################
 # Config options for HOST
 ###################################################
-config.plugins.iptvplayer.efilmytv_login    = ConfigText(default = "", fixed_size = False)
-config.plugins.iptvplayer.efilmytv_password = ConfigText(default = "", fixed_size = False)
+config.plugins.iptvplayer.efilmytv_login    = ConfigText(default="", fixed_size=False)
+config.plugins.iptvplayer.efilmytv_password = ConfigText(default="", fixed_size=False)
 
 def GetConfigList():
     optionList = []
@@ -69,7 +69,7 @@ class EFilmyTv(CBaseHostClass):
         self.cacheSort = []
         self.cacheABC = {}
         
-    def getPage(self, baseUrl, addParams = {}, post_data = None):
+    def getPage(self, baseUrl, addParams={}, post_data=None):
         if addParams == {}:
             addParams = dict(self.defaultParams)
         origBaseUrl = baseUrl
@@ -748,11 +748,11 @@ class EFilmyTv(CBaseHostClass):
             self.loginMessage = '[/br]'.join(self.loginMessage)
         else:
             message = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(data, ('<div', '>', 'warn'), ('</div', '>'))[1])
-            self.sessionEx.open(MessageBox, _('Login failed.') + '\n' + message, type = MessageBox.TYPE_ERROR, timeout = 10)
+            self.sessionEx.open(MessageBox, _('Login failed.') + '\n' + message, type=MessageBox.TYPE_ERROR, timeout=10)
             printDBG('tryTologin failed')
         return self.loggedIn
     
-    def handleService(self, index, refresh = 0, searchPattern = '', searchType = ''):
+    def handleService(self, index, refresh=0, searchPattern='', searchType=''):
         printDBG('handleService start')
         
         self.tryTologin()

@@ -36,7 +36,7 @@ class ShoutcastCom(CBaseHostClass):
         self.defaultParams = {'header':self.HTTP_HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
         self.cacheGenres = {}
         
-    def getPage(self, baseUrl, addParams = {}, post_data = None):
+    def getPage(self, baseUrl, addParams={}, post_data=None):
         if addParams == {}:
             addParams = dict(self.defaultParams)
         return self.cm.getPage(baseUrl, addParams, post_data)
@@ -112,14 +112,14 @@ class ShoutcastCom(CBaseHostClass):
         else:
             url = self.getFullUrl('/Search')
             post_data = {'query':searchPattern}
-            sts, data = self.getPage(url, post_data = post_data)
+            sts, data = self.getPage(url, post_data=post_data)
             if not sts:
                 return
             
             url = self.getFullUrl('/Search/UpdateSearch')
             post_data = {'query':searchPattern}
         
-        sts, data = self.getPage(url, post_data = post_data)
+        sts, data = self.getPage(url, post_data=post_data)
         if not sts:
             return
         
@@ -168,7 +168,7 @@ class ShoutcastCom(CBaseHostClass):
         
         return linksTab
     
-    def handleService(self, index, refresh = 0, searchPattern = '', searchType = ''):
+    def handleService(self, index, refresh=0, searchPattern='', searchType=''):
         printDBG('handleService start')
         
         CBaseHostClass.handleService(self, index, refresh, searchPattern, searchType)

@@ -35,7 +35,7 @@ from Screens.MessageBox import MessageBox
 ###################################################
 # Config options for HOST
 ###################################################
-config.plugins.iptvplayer.ustvgo_alt_domain = ConfigText(default = "", fixed_size = False)
+config.plugins.iptvplayer.ustvgo_alt_domain = ConfigText(default="", fixed_size=False)
 
 def GetConfigList():
     optionList = []
@@ -54,7 +54,7 @@ class ustvgo(CBaseHostClass):
         self.MAIN_URL = None
         self.defaultParams = {'with_metadata':True, 'header':self.HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
 
-    def getPage(self, baseUrl, addParams = {}, post_data = None):
+    def getPage(self, baseUrl, addParams={}, post_data=None):
         if addParams == {}:
             addParams = dict(self.defaultParams)
             
@@ -233,7 +233,7 @@ class ustvgo(CBaseHostClass):
         else:
             return []
     
-    def handleService(self, index, refresh = 0, searchPattern = '', searchType = ''):
+    def handleService(self, index, refresh=0, searchPattern='', searchType=''):
         printDBG('handleService start')
 
         CBaseHostClass.handleService(self, index, refresh, searchPattern, searchType)

@@ -27,10 +27,10 @@ from Components.config import config, ConfigSelection, ConfigText, getConfigList
 ###################################################
 # Config options for HOST
 ###################################################
-config.plugins.iptvplayer.icefilmsinfo_proxy = ConfigSelection(default = "None", choices = [("None",         _("None")),
+config.plugins.iptvplayer.icefilmsinfo_proxy = ConfigSelection(default="None", choices=[("None",         _("None")),
                                                                                             ("proxy_1",  _("Alternative proxy server (1)")),
                                                                                             ("proxy_2",  _("Alternative proxy server (2)"))])
-config.plugins.iptvplayer.icefilmsinfo_alt_domain = ConfigText(default = "", fixed_size = False)
+config.plugins.iptvplayer.icefilmsinfo_alt_domain = ConfigText(default="", fixed_size=False)
 def GetConfigList():
     optionList = []
     optionList.append(getConfigListEntry(_("Use proxy server:"), config.plugins.iptvplayer.icefilmsinfo_proxy))
@@ -85,7 +85,7 @@ class IceFilms(CBaseHostClass):
         self.cacheLinks = {}
         self.cacheSeries = {}
 
-    def getPage(self, baseUrl, addParams = {}, post_data = None):
+    def getPage(self, baseUrl, addParams={}, post_data=None):
         if addParams == {}:
             addParams = dict(self.defaultParams)
 
@@ -446,7 +446,7 @@ class IceFilms(CBaseHostClass):
         
         return [{'title':title, 'text': desc, 'images':[{'title':'', 'url':icon}], 'other_info':otherInfo}]
         
-    def handleService(self, index, refresh = 0, searchPattern = '', searchType = ''):
+    def handleService(self, index, refresh=0, searchPattern='', searchType=''):
         printDBG('handleService start')
         
         CBaseHostClass.handleService(self, index, refresh, searchPattern, searchType)

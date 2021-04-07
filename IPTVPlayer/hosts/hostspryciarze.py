@@ -346,7 +346,7 @@ class Spryciarze(CBaseHostClass):
         return linkstTab
     # end getVideoLink
     
-    def handleService(self, index, refresh = 0, searchPattern = ''):
+    def handleService(self, index, refresh=0, searchPattern=''):
     
         if 0 == refresh:
             if len(self.currList) <= index:
@@ -406,40 +406,40 @@ class IPTVHost(IHost):
         
         convList = self.convertList(self.host.getCurrList())
         
-        return RetHost(RetHost.OK, value = convList)
+        return RetHost(RetHost.OK, value=convList)
     
     # return List of item from current List
     # for given Index
     # 1 == refresh - force to read data from 
     #                server if possible 
     # server instead of cache 
-    def getListForItem(self, Index = 0, refresh = 0, selItem = None):
+    def getListForItem(self, Index=0, refresh=0, selItem=None):
         self.listOfprevList.append(self.host.getCurrList())
         
         self.currIndex = Index
         self.host.handleService(Index, refresh, self.searchPattern)
         convList = self.convertList(self.host.getCurrList())
         
-        return RetHost(RetHost.OK, value = convList)
+        return RetHost(RetHost.OK, value=convList)
         
     # return prev requested List of item 
     # for given Index
     # 1 == refresh - force to read data from 
     #                server if possible
-    def getPrevList(self, refresh = 0):
+    def getPrevList(self, refresh=0):
         if(len(self.listOfprevList) > 0):
             hostList = self.listOfprevList.pop()
             self.host.setCurrList(hostList)
             convList = self.convertList(hostList)
-            return RetHost(RetHost.OK, value = convList)
+            return RetHost(RetHost.OK, value=convList)
         else:
-            return RetHost(RetHost.ERROR, value = [])
+            return RetHost(RetHost.ERROR, value=[])
         
     # return current List
     # for given Index
     # 1 == refresh - force to read data from 
     #                server if possible
-    def getCurrentList(self, refresh = 0):      
+    def getCurrentList(self, refresh=0):      
         if refresh == 1:
             if len(self.listOfprevList) > 0:
                 hostList = self.listOfprevList.pop()
@@ -449,20 +449,20 @@ class IPTVHost(IHost):
                 return self.getInitList()           
                 
         convList = self.convertList(self.host.getCurrList())
-        return RetHost(RetHost.OK, value = convList)
+        return RetHost(RetHost.OK, value=convList)
     
     # return list of links for VIDEO with given Index
     # for given Index
-    def getLinksForVideo(self, Index = 0, selItem = None):
+    def getLinksForVideo(self, Index=0, selItem=None):
         listLen = len(self.host.currList)
         if listLen < Index and listLen > 0:
             print("ERROR getLinksForVideo - current list is to short len: %d, Index: %d" % (listLen, Index))
-            return RetHost(RetHost.ERROR, value = [])
+            return RetHost(RetHost.ERROR, value=[])
         
         selItem = self.host.currList[Index]
         if selItem['type'] != 'video':
             print("ERROR getLinksForVideo - current item has wrong type")
-            return RetHost(RetHost.ERROR, value = [])
+            return RetHost(RetHost.ERROR, value=[])
             
         retlist = []
         
@@ -472,9 +472,9 @@ class IPTVHost(IHost):
             for item in tmpList:
                 retlist.append(CUrlItem(item['name'], item['url'], 0))
             
-        return RetHost(RetHost.OK, value = retlist)
+        return RetHost(RetHost.OK, value=retlist)
             
-    def getSearchResults(self, searchpattern, searchType = None):
+    def getSearchResults(self, searchpattern, searchType=None):
         self.isSearch = True
         retList = []
         self.searchPattern = searchpattern.replace(' ',  '%20')
@@ -483,7 +483,7 @@ class IPTVHost(IHost):
             
     # return full path to player logo
     def getLogoPath(self):  
-        return RetHost(RetHost.OK, value = [ GetLogoDir('spryciarzelogo.png') ])
+        return RetHost(RetHost.OK, value=[ GetLogoDir('spryciarzelogo.png') ])
 
 
     def convertList(self, cList):
@@ -520,13 +520,13 @@ class IPTVHost(IHost):
             if ico == '':
                 ico = 'http://mamrodzine.pl/wp-content/uploads/2011/06/logo_transparent.png'
 
-            hostItem = CDisplayListItem(name = name + ' ' + ilosc,
-                                        description = opis,
-                                        type = type,
-                                        urlItems = hostLinks,
-                                        urlSeparateRequest = 1,
-                                        iconimage = ico,
-                                        possibleTypesOfSearch = possibleTypesOfSearch)
+            hostItem = CDisplayListItem(name=name + ' ' + ilosc,
+                                        description=opis,
+                                        type=type,
+                                        urlItems=hostLinks,
+                                        urlSeparateRequest=1,
+                                        iconimage=ico,
+                                        possibleTypesOfSearch=possibleTypesOfSearch)
             hostList.append(hostItem)
         # end for
             

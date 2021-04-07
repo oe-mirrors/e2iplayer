@@ -31,9 +31,9 @@ from Screens.MessageBox import MessageBox
 ###################################################
 # Config options for HOST
 ###################################################
-config.plugins.iptvplayer.movieshdco_sortby = ConfigSelection(default = "date", choices = [("date", _("Lastest")), ("views", _("Most viewed")), ("duree", _("Longest")), ("rate", _("Top rated")), ("random", _("Random"))]) 
-config.plugins.iptvplayer.cartoonhd_login    = ConfigText(default = "", fixed_size = False)
-config.plugins.iptvplayer.cartoonhd_password = ConfigText(default = "", fixed_size = False)
+config.plugins.iptvplayer.movieshdco_sortby = ConfigSelection(default="date", choices=[("date", _("Lastest")), ("views", _("Most viewed")), ("duree", _("Longest")), ("rate", _("Top rated")), ("random", _("Random"))]) 
+config.plugins.iptvplayer.cartoonhd_login    = ConfigText(default="", fixed_size=False)
+config.plugins.iptvplayer.cartoonhd_password = ConfigText(default="", fixed_size=False)
 
 def GetConfigList():
     optionList = []
@@ -614,11 +614,11 @@ class CartoonHD(CBaseHostClass):
             break
         
         if not sts:
-            self.sessionEx.open(MessageBox, _('Login failed.'), type = MessageBox.TYPE_ERROR, timeout = 10)
+            self.sessionEx.open(MessageBox, _('Login failed.'), type=MessageBox.TYPE_ERROR, timeout=10)
         printDBG('tryTologin failed')
         return sts
         
-    def handleService(self, index, refresh = 0, searchPattern = '', searchType = ''):
+    def handleService(self, index, refresh=0, searchPattern='', searchType=''):
         printDBG('handleService start')
         
         if None == self.loggedIn:

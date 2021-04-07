@@ -32,14 +32,14 @@ from Screens.MessageBox import MessageBox
 ###################################################
 # Config options for HOST
 ###################################################
-config.plugins.iptvplayer.serienstreamto_langpreference = ConfigSelection(default = "de,de_sub,en", choices = [("de,de_sub,en", "de,sub,en"),
+config.plugins.iptvplayer.serienstreamto_langpreference = ConfigSelection(default="de,de_sub,en", choices=[("de,de_sub,en", "de,sub,en"),
                                                                                                                ("de,en,de_sub", "de,en,sub"),
                                                                                                                ("de_sub,de,en", "sub,de,en"),
                                                                                                                ("de_sub,en,de", "sub,en,de"),
                                                                                                                ("en,de_sub,de", "en,sub,de"),
                                                                                                                ("en,de,de_sub", "en,de,sub")]) 
-config.plugins.iptvplayer.serienstreamto_login    = ConfigText(default = "", fixed_size = False)
-config.plugins.iptvplayer.serienstreamto_password = ConfigText(default = "", fixed_size = False)
+config.plugins.iptvplayer.serienstreamto_login    = ConfigText(default="", fixed_size=False)
+config.plugins.iptvplayer.serienstreamto_password = ConfigText(default="", fixed_size=False)
 
 def GetConfigList():
     optionList = []
@@ -466,7 +466,7 @@ class SerienStreamTo(CBaseHostClass, CaptchaHelper):
             elif sts:
                 'messageAlert'
      
-        self.sessionEx.open(MessageBox, _('Login failed.'), type = MessageBox.TYPE_ERROR, timeout = 10)
+        self.sessionEx.open(MessageBox, _('Login failed.'), type=MessageBox.TYPE_ERROR, timeout=10)
         printDBG('tryTologin failed')
         self.loggedIn = False
         return
@@ -576,11 +576,11 @@ class SerienStreamTo(CBaseHostClass, CaptchaHelper):
                 hash = hexlify(md5('%s@***@%s' % (self.login, self.password)).digest())
                 WriteTextFile(loginCookie, hash)
             else:
-                self.sessionEx.open(MessageBox, _('Login failed.') + '\n' + errorMsg, type = MessageBox.TYPE_ERROR, timeout = 10)
+                self.sessionEx.open(MessageBox, _('Login failed.') + '\n' + errorMsg, type=MessageBox.TYPE_ERROR, timeout=10)
 
         return self.loggedIn
         
-    def handleService(self, index, refresh = 0, searchPattern = '', searchType = ''):
+    def handleService(self, index, refresh=0, searchPattern='', searchType=''):
         printDBG('handleService start')
         
         CBaseHostClass.handleService(self, index, refresh, searchPattern, searchType)

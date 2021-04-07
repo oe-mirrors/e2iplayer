@@ -122,7 +122,7 @@ class urlparser:
         baseUrl= urlparser.decorateUrl(baseUrl)
         return baseUrl
 
-    def preparHostForSelect(self, v, resolveLink = False):
+    def preparHostForSelect(self, v, resolveLink=False):
         valTab = []
         i = 0
         if len(v) > 0:
@@ -632,7 +632,7 @@ class urlparser:
                     }
         return
     
-    def getHostName(self, url, nameOnly = False):
+    def getHostName(self, url, nameOnly=False):
         hostName = strwithmeta(url).meta.get('host_name', '')
         if not hostName:
             match = re.search('https?://(?:www.)?(.+?)/', url)
@@ -704,7 +704,7 @@ class urlparser:
             
         return videoTab
         
-    def getVideoLink(self, url, acceptsList = False):
+    def getVideoLink(self, url, acceptsList=False):
         try:
             url = self.decorateParamsFromUrl(url)
             nUrl=''
@@ -1102,7 +1102,7 @@ class pageParser(CaptchaHelper):
         self.jscode = {}
         self.jscode['jwplayer'] = 'window=this; function stub() {}; function jwplayer() {return {setup:function(){print(JSON.stringify(arguments[0]))}, onTime:stub, onPlay:stub, onComplete:stub, onReady:stub, addButton:stub}}; window.jwplayer=jwplayer;'
         
-    def getPageCF(self, baseUrl, addParams = {}, post_data = None):
+    def getPageCF(self, baseUrl, addParams={}, post_data=None):
         addParams['cloudflare_params'] = {'cookie_file':addParams['cookiefile'], 'User-Agent':addParams['header']['User-Agent']}
         sts, data = self.cm.getPageCFProtection(baseUrl, addParams, post_data)
         return sts, data
@@ -2181,11 +2181,11 @@ class pageParser(CaptchaHelper):
             
             if login.strip() == '' or password.strip() == '':
                 sessionEx = MainSessionWrapper() 
-                sessionEx.waitForFinishOpen(MessageBox, _('To watch videos from http://vk.com/ you need to login.\nPlease fill your login and password in the IPTVPlayer configuration.'), type = MessageBox.TYPE_INFO, timeout = 10 )
+                sessionEx.waitForFinishOpen(MessageBox, _('To watch videos from http://vk.com/ you need to login.\nPlease fill your login and password in the IPTVPlayer configuration.'), type=MessageBox.TYPE_INFO, timeout=10 )
                 return False
             elif not _doLogin(login, password):
                 sessionEx = MainSessionWrapper() 
-                sessionEx.waitForFinishOpen(MessageBox, _('Login user "%s" to http://vk.com/ failed!\nPlease check your login data in the IPTVPlayer configuration.' % login), type = MessageBox.TYPE_INFO, timeout = 10 )
+                sessionEx.waitForFinishOpen(MessageBox, _('Login user "%s" to http://vk.com/ failed!\nPlease check your login data in the IPTVPlayer configuration.' % login), type=MessageBox.TYPE_INFO, timeout=10 )
                 return False
             else:
                 sts, data = self.cm.getPage(baseUrl, params)
@@ -3128,7 +3128,7 @@ class pageParser(CaptchaHelper):
                 vp9     = False
                 age     = False
 
-            tmpTab, dashTab = self.getYTParser().getDirectLinks(url, formats, dash, dashSepareteList = True, allowVP9 = vp9, allowAgeGate = age)
+            tmpTab, dashTab = self.getYTParser().getDirectLinks(url, formats, dash, dashSepareteList=True, allowVP9=vp9, allowAgeGate=age)
             #tmpTab = CSelOneLink(tmpTab, __getLinkQuality, int(height)).getSortedLinks()
             #dashTab = CSelOneLink(dashTab, __getLinkQuality, int(height)).getSortedLinks()
 
@@ -3164,7 +3164,7 @@ class pageParser(CaptchaHelper):
         url = url.replace('topupload.tv', 'maxupload.tv')
         HTTP_HEADER = {'Referer':url}
         post_data = {'ok':'yes', 'confirm':'Close+Ad+and+Watch+as+Free+User', 'submited':'true'}        
-        sts, data = self.cm.getPage(url=url, addParams={'header':HTTP_HEADER}, post_data = post_data)
+        sts, data = self.cm.getPage(url=url, addParams={'header':HTTP_HEADER}, post_data=post_data)
         if sts:
             posibility = ["'file': '([^']+?)'", "file: '([^']+?)'", "'url': '(http[^']+?)'", "url: '(http[^']+?)'"]
             for posibe in posibility:
@@ -6131,7 +6131,7 @@ class pageParser(CaptchaHelper):
                 else:
                     error = clean_html(self.cm.ph.getDataBeetwenMarkers(data, '<div class="bloc2"', '</div>')[1])
                     sessionEx = MainSessionWrapper() 
-                    sessionEx.waitForFinishOpen(MessageBox, _('Login on {0} failed.').format('https://1fichier.com/') + '\n' + error, type = MessageBox.TYPE_INFO, timeout = 5)
+                    sessionEx.waitForFinishOpen(MessageBox, _('Login on {0} failed.').format('https://1fichier.com/') + '\n' + error, type=MessageBox.TYPE_INFO, timeout=5)
         
         sts, data = self.cm.getPage(baseUrl, params)
         if not sts:
@@ -6171,7 +6171,7 @@ class pageParser(CaptchaHelper):
             printDBG(timeout)
             if timeout > 0:
                 sessionEx = MainSessionWrapper() 
-                sessionEx.waitForFinishOpen(MessageBox, error, type = MessageBox.TYPE_INFO, timeout = timeout )
+                sessionEx.waitForFinishOpen(MessageBox, error, type=MessageBox.TYPE_INFO, timeout=timeout )
             else:
                 SetIPTVPlayerLastHostError(error)
         else:

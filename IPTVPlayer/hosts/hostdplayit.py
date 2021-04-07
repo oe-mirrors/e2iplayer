@@ -56,13 +56,13 @@ class Dplayit(CBaseHostClass):
         self.defaultParams = {'header': {'User-Agent' : 'okhttp/3.3.0'}}
         self.AccessToken=""
         
-    def getPage(self, url, addParams = {}, post_data = None):
+    def getPage(self, url, addParams={}, post_data=None):
         if addParams == {}:
             addParams = dict(self.defaultParams)
         #printDBG(self.defaultParams)
         return self.cm.getPage(url, addParams, post_data)
 
-    def getHeader(self, add_bearer = False):
+    def getHeader(self, add_bearer=False):
         if self.AccessToken == "":
             printDBG('Dplay init and get access token')
             
@@ -346,7 +346,7 @@ class Dplayit(CBaseHostClass):
         printDBG(data)
         response = json_loads(data)
         
-    def handleService(self, index, refresh = 0, searchPattern = '', searchType = ''):
+    def handleService(self, index, refresh=0, searchPattern='', searchType=''):
         printDBG('Dplay handleService start')
         
         CBaseHostClass.handleService(self, index, refresh, searchPattern, searchType)

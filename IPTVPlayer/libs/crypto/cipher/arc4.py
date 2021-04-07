@@ -40,7 +40,7 @@ class ARC4:
             self.state[i], self.state[j] = self.state[j], self.state[i]
         self.keyReady = 1 # Ready
 
-    def encrypt(self, plainText, more = None):
+    def encrypt(self, plainText, more=None):
         """ Encrypt a string and return a binary string
             multiple sequential calls can be made using more =1,
             this continues the encryption
@@ -54,7 +54,7 @@ class ARC4:
         return cipherText
 
 
-    def decrypt(self, cipherText, more = None):
+    def decrypt(self, cipherText, more=None):
         """ Decrypt a string and return a string """
         if self.keyReady != 1 :
             raise Exception('set for decryption required')

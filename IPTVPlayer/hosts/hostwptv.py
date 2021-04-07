@@ -23,8 +23,8 @@ from Components.config import config, ConfigSelection, ConfigYesNo, getConfigLis
 ###################################################
 # Config options for HOST
 ###################################################
-config.plugins.iptvplayer.wpDefaultformat = ConfigSelection(default = "2", choices = [("1", "Niska"), ("2", "Wysoka")])
-config.plugins.iptvplayer.wpUseDF = ConfigYesNo(default = False)
+config.plugins.iptvplayer.wpDefaultformat = ConfigSelection(default="2", choices=[("1", "Niska"), ("2", "Wysoka")])
+config.plugins.iptvplayer.wpUseDF = ConfigYesNo(default=False)
 
 def GetConfigList():
     optionList = []
@@ -299,7 +299,7 @@ class WpTV(CBaseHostClass):
         self.addDir(params)
         return True
         
-    def handleService(self, index, refresh = 0, searchPattern = '', searchType = ''):
+    def handleService(self, index, refresh=0, searchPattern='', searchType=''):
         printDBG('handleService start')
         
         CBaseHostClass.handleService(self, index, refresh, searchPattern, searchType)

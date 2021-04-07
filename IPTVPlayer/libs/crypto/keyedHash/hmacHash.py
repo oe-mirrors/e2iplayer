@@ -26,7 +26,7 @@ class HMAC(Hash):
     """    To compute HMAC over the data `text' we perform
                     H(K XOR opad, H(K XOR ipad, text))
     """
-    def __init__(self, hashFunction, key = None):
+    def __init__(self, hashFunction, key=None):
         """ initialize HMAC with hashfunction and optionally the key """
         # should check for right type of function
         self.H       = hashFunction()      # a new instance for inner hash
@@ -72,13 +72,13 @@ class HMAC(Hash):
 from ..hash.sha1Hash import SHA1
 class HMAC_SHA1(HMAC):
     """ Predefined HMAC built on SHA1 """
-    def __init__(self, key = None):
+    def __init__(self, key=None):
         """ optionally initialize with key """
         HMAC.__init__(self, SHA1, key)
 
 from ..hash.md5Hash  import MD5
 class HMAC_MD5(HMAC):
     """ Predefined HMAC built on SHA1 """
-    def __init__(self, key = None):
+    def __init__(self, key=None):
         """ optionally initialize with key """
         HMAC.__init__(self, MD5, key)

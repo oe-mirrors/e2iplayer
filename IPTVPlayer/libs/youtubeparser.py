@@ -30,13 +30,13 @@ from Components.config import config, ConfigSelection, ConfigYesNo
 ###################################################
 # Config options for HOST
 ###################################################
-config.plugins.iptvplayer.ytformat        = ConfigSelection(default = "mp4", choices = [("flv, mp4", "flv, mp4"), ("flv", "flv"), ("mp4", "mp4")]) 
-config.plugins.iptvplayer.ytDefaultformat = ConfigSelection(default = "720", choices = [("0", _("the worst")), ("144", "144p"), ("240", "240p"), ("360", "360p"), ("720", "720p"), ("1080", "1080p"), ("1440", "1440p"), ("2160", "2160p"), ("9999", _("the best"))])
-config.plugins.iptvplayer.ytUseDF         = ConfigYesNo(default = True)
-config.plugins.iptvplayer.ytAgeGate       = ConfigYesNo(default = False)
-config.plugins.iptvplayer.ytVP9           = ConfigYesNo(default = False)
-config.plugins.iptvplayer.ytShowDash      = ConfigSelection(default = "auto", choices = [("auto", _("Auto")), ("true", _("Yes")), ("false", _("No"))])
-config.plugins.iptvplayer.ytSortBy        = ConfigSelection(default = "A", choices = [("A", _("Relevance")), ("I", _("Upload date")), ("M", _("View count")), ("E", _("Rating"))]) 
+config.plugins.iptvplayer.ytformat        = ConfigSelection(default="mp4", choices=[("flv, mp4", "flv, mp4"), ("flv", "flv"), ("mp4", "mp4")]) 
+config.plugins.iptvplayer.ytDefaultformat = ConfigSelection(default="720", choices=[("0", _("the worst")), ("144", "144p"), ("240", "240p"), ("360", "360p"), ("720", "720p"), ("1080", "1080p"), ("1440", "1440p"), ("2160", "2160p"), ("9999", _("the best"))])
+config.plugins.iptvplayer.ytUseDF         = ConfigYesNo(default=True)
+config.plugins.iptvplayer.ytAgeGate       = ConfigYesNo(default=False)
+config.plugins.iptvplayer.ytVP9           = ConfigYesNo(default=False)
+config.plugins.iptvplayer.ytShowDash      = ConfigSelection(default="auto", choices=[("auto", _("Auto")), ("true", _("Yes")), ("false", _("No"))])
+config.plugins.iptvplayer.ytSortBy        = ConfigSelection(default="A", choices=[("A", _("Relevance")), ("I", _("Upload date")), ("M", _("View count")), ("E", _("Rating"))]) 
 
 
 class YouTubeParser():
@@ -88,7 +88,7 @@ class YouTubeParser():
                 self.sessionToken = token
                 self.postdata = {"session_token": token}
                 
-    def getDirectLinks(self, url, formats = 'flv, mp4', dash=True, dashSepareteList = False, allowVP9 = None, allowAgeGate = None):
+    def getDirectLinks(self, url, formats='flv, mp4', dash=True, dashSepareteList=False, allowVP9=None, allowAgeGate=None):
         printDBG('YouTubeParser.getDirectLinks')
         list = []
         try:
@@ -100,7 +100,7 @@ class YouTubeParser():
                         videoId = self.cm.ph.getSearchGroups(data, '''['"]REDIRECT_TO_VIDEO['"]\s*\,\s*['"]([^'^"]+?)['"]''')[0]
                     if videoId != '':
                         url = 'https://www.youtube.com/watch?v=' + videoId
-            list = YoutubeIE()._real_extract(url, allowVP9 = allowVP9, allowAgeGate = allowAgeGate)
+            list = YoutubeIE()._real_extract(url, allowVP9=allowVP9, allowAgeGate=allowAgeGate)
         except Exception:
             printExc()
             if dashSepareteList:
@@ -241,7 +241,7 @@ class YouTubeParser():
                 for x in self.findKeys(j, kv):
                     yield x
 
-    def getThumbnailUrl(self, thumbJson, maxWidth = 1000, hq=False):
+    def getThumbnailUrl(self, thumbJson, maxWidth=1000, hq=False):
         
         url = ''
         try:
@@ -660,7 +660,7 @@ class YouTubeParser():
     # SEARCH PARSER
     ########################################################
     #def getVideosFromSearch(self, pattern, page='1'):
-    def getSearchResult(self, pattern, searchType, page, nextPageCategory, sortBy='A', url = ''):
+    def getSearchResult(self, pattern, searchType, page, nextPageCategory, sortBy='A', url=''):
         printDBG('YouTubeParser.getSearchResult pattern[%s], searchType[%s], page[%s]' % (pattern, searchType, page))
         currList = []
               
@@ -818,7 +818,7 @@ class YouTubeParser():
                     img   = item['thumbnail']
                     time  = item['length_seconds']
                     if '' != time:
-                        time = str( timedelta( seconds = int(time) ) )
+                        time = str( timedelta( seconds=int(time) ) )
                     if time.startswith("0:"):
                         time = time[2:]
                     desc  = item['description']

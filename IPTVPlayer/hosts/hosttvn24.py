@@ -18,7 +18,7 @@ from Components.config import config, ConfigSelection, getConfigListEntry
 ###################################################
 # Config options for HOST
 ###################################################
-config.plugins.iptvplayer.TVN24httpType = ConfigSelection(default = "http://", choices = [("http://", "http://"), ("https://", "https://")])
+config.plugins.iptvplayer.TVN24httpType = ConfigSelection(default="http://", choices=[("http://", "http://"), ("https://", "https://")])
    
 def GetConfigList():
     optionList = []
@@ -275,7 +275,7 @@ class Tvn24(CBaseHostClass):
         
         return retList
 
-    def handleService(self, index, refresh = 0, searchPattern = '', searchType = ''):
+    def handleService(self, index, refresh=0, searchPattern='', searchType=''):
         printDBG('handleService start')
         CBaseHostClass.handleService(self, index, refresh, searchPattern, searchType)
 
@@ -318,17 +318,17 @@ class IPTVHost(CHostBase):
         CHostBase.__init__(self, Tvn24(), False) # without search history
 
     def getLogoPath(self):
-        return RetHost(RetHost.OK, value = [GetLogoDir('tvn24logo.png')])
+        return RetHost(RetHost.OK, value=[GetLogoDir('tvn24logo.png')])
 
-    def getLinksForVideo(self, Index = 0, selItem = None):
+    def getLinksForVideo(self, Index=0, selItem=None):
         listLen = len(self.host.currList)
         if listLen < Index and listLen > 0:
             printDBG( "ERROR getLinksForVideo - current list is to short len: %d, Index: %d" % (listLen, Index) )
-            return RetHost(RetHost.ERROR, value = [])
+            return RetHost(RetHost.ERROR, value=[])
         
         if self.host.currList[Index]["type"] != 'video':
             printDBG( "ERROR getLinksForVideo - current item has wrong type" )
-            return RetHost(RetHost.ERROR, value = [])
+            return RetHost(RetHost.ERROR, value=[])
 
         retlist = []
         urlList = self.host.getHostingTable(Index)
@@ -336,18 +336,18 @@ class IPTVHost(CHostBase):
             need_resolve = 0
             retlist.append(CUrlItem(item["name"], item["url"], need_resolve))
 
-        return RetHost(RetHost.OK, value = retlist)
+        return RetHost(RetHost.OK, value=retlist)
     # end getLinksForVideo
     
-    def getArticleContent(self, Index = 0):
+    def getArticleContent(self, Index=0):
         listLen = len(self.host.currList)
         if listLen < Index and listLen > 0:
             printDBG( "ERROR getArticleContent - current list is to short len: %d, Index: %d" % (listLen, Index) )
-            return RetHost(RetHost.ERROR, value = [])
+            return RetHost(RetHost.ERROR, value=[])
         
         if self.host.currList[Index]["type"] != 'article':
             printDBG( "ERROR getArticleContent - current item has wrong type" )
-            return RetHost(RetHost.ERROR, value = [])
+            return RetHost(RetHost.ERROR, value=[])
         
         retlist = []
         hList = self.host.getArticleContent(Index)
@@ -355,9 +355,9 @@ class IPTVHost(CHostBase):
             title  = clean_html( item.get('title', '') )
             text   = clean_html( item.get('text', '') )
             images = item.get("images", [])
-            retlist.append( ArticleContent(title = title, text = text, images =  images) )
+            retlist.append( ArticleContent(title=title, text=text, images=images) )
         
-        return RetHost(RetHost.OK, value = retlist)
+        return RetHost(RetHost.OK, value=retlist)
 
     def convertList(self, cList):
         hostList = []
@@ -391,13 +391,13 @@ class IPTVHost(CHostBase):
             description =  clean_html( cItem.get('plot', '') )
             icon        =  cItem.get('icon', '')
             
-            hostItem = CDisplayListItem(name = title,
-                                        description = description,
-                                        type = type,
-                                        urlItems = hostLinks,
-                                        urlSeparateRequest = 1,
-                                        iconimage = icon,
-                                        possibleTypesOfSearch = possibleTypesOfSearch)
+            hostItem = CDisplayListItem(name=title,
+                                        description=description,
+                                        type=type,
+                                        urlItems=hostLinks,
+                                        urlSeparateRequest=1,
+                                        iconimage=icon,
+                                        possibleTypesOfSearch=possibleTypesOfSearch)
             hostList.append(hostItem)
 
         return hostList

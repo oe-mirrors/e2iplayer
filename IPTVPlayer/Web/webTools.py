@@ -11,21 +11,21 @@ from Plugins.Extensions.IPTVPlayer.tools.iptvtools import GetLogoDir
 from Plugins.Extensions.IPTVPlayer.components.ihost import IHost, CDisplayListItem, RetHost, CUrlItem, ArticleContent, CFavItem
 
 ########################################################
-def formSUBMITvalue( inputHiddenObjects, caption, input_style = '', input_text = '' ):
+def formSUBMITvalue( inputHiddenObjects, caption, input_style='', input_text='' ):
 	retTxt = '\n<form method="GET">%s' % input_text
 	for inputObj in inputHiddenObjects:
 		retTxt += '<input type="hidden" name="%s" value="%s">' % (inputObj[0], inputObj[1])
 	retTxt += '<input type="submit" value="%s" %s></form>\n' % (caption, input_style)
 	return retTxt
 ########################################################
-def formSUBMITtext( caption, inputName, inputStyle = '', inputValue = '' ):
+def formSUBMITtext( caption, inputName, inputStyle='', inputValue='' ):
 	retTxt = '\n<form method="GET">'
 	retTxt += '<input type="text" name="%s" value="%s">' % (inputName, inputValue)
 	retTxt += '<input type="submit" value="%s" %s>' % (caption, inputStyle)
 	retTxt += '</form>\n'
 	return retTxt
 ########################################################
-def formSUBMITtextWithOptions( caption, inputName, inputStyle = '', inputValue = '', options = [] ):
+def formSUBMITtextWithOptions( caption, inputName, inputStyle='', inputValue='', options=[] ):
 	retTxt = '\n<form method="GET">'
 	retTxt += '<input type="text" name="%s" value="%s">' % (inputName, inputValue)
 	retTxt += '<input type="submit" value="%s" %s>' % (caption, inputStyle)
@@ -34,7 +34,7 @@ def formSUBMITtextWithOptions( caption, inputName, inputStyle = '', inputValue =
 	retTxt += '</form>\n'
 	return retTxt
 ########################################################
-def formMultipleSearchesSUBMITtext( captions, inputName, inputStyle = '', inputValue = '' ):
+def formMultipleSearchesSUBMITtext( captions, inputName, inputStyle='', inputValue='' ):
 	retTxt = '\n<form method="GET">'
 	retTxt += '<input type="text" name="%s" value="%s">' % (inputName, inputValue)
 	for caption in captions:

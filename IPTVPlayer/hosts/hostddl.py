@@ -26,11 +26,11 @@ from Components.config import config, ConfigSelection, getConfigListEntry
 ###################################################
 # Config options for HOST
 ###################################################
-config.plugins.iptvplayer.ddlme_proxy = ConfigSelection(default = "None", choices = [("None",     _("None")),
+config.plugins.iptvplayer.ddlme_proxy = ConfigSelection(default="None", choices=[("None",     _("None")),
                                                                                      ("webproxy", _("Web proxy")),
                                                                                      ("proxy_1",  _("Alternative proxy server (1)")),
                                                                                      ("proxy_2",  _("Alternative proxy server (2)"))])
-config.plugins.iptvplayer.ddlme_lang = ConfigSelection(default = "", choices = [("",   _("default")),
+config.plugins.iptvplayer.ddlme_lang = ConfigSelection(default="", choices=[("",   _("default")),
                                                                                 ("de", "de"),
                                                                                 ("en", "en")])
 
@@ -611,7 +611,7 @@ class DDLMe(CBaseHostClass):
         
         return [{'title':self.cleanHtmlStr( title ), 'text': self.cleanHtmlStr( desc ), 'images':[{'title':'', 'url':icon}], 'other_info':{'custom_items_list':itemsList}}]
         
-    def handleService(self, index, refresh = 0, searchPattern = '', searchType = ''):
+    def handleService(self, index, refresh=0, searchPattern='', searchType=''):
         printDBG('handleService start')
         
         CBaseHostClass.handleService(self, index, refresh, searchPattern, searchType)

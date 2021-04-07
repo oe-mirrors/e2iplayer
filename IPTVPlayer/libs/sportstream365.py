@@ -18,9 +18,9 @@ from datetime import datetime, timedelta
 # Config options for HOST
 ###################################################
 
-config.plugins.iptvplayer.sportstream365_language = ConfigSelection(default = "", choices = [("", _("Default")), ("de", "Deutsch"), ("en", "English"), ("es", "Español"), ("fr", "Français"), ("it", "Italiano"),
+config.plugins.iptvplayer.sportstream365_language = ConfigSelection(default="", choices=[("", _("Default")), ("de", "Deutsch"), ("en", "English"), ("es", "Español"), ("fr", "Français"), ("it", "Italiano"),
                                                                                              ("pt", "Português"), ("ru", "Русский"), ("tr", "Türkçe"), ("cn", "汉语")])
-config.plugins.iptvplayer.sportstream365_cyrillic2latin = ConfigYesNo(default = False)
+config.plugins.iptvplayer.sportstream365_cyrillic2latin = ConfigYesNo(default=False)
 def GetConfigList():
     optionList = []
     optionList.append(getConfigListEntry(_('Preferred language') + ": ", config.plugins.iptvplayer.sportstream365_language))
@@ -172,7 +172,7 @@ class SportStream365Api(CBaseHostClass):
                         return parseInt(x['FirstGameId']) - parseInt(y['FirstGameId'])
                 
                 data = json_loads(data['arguments'][0])['Value']
-                data.sort(cmp = cmp) #key = lambda item: (parseInt(item['SportId']), item['Liga'], parseInt(item['FirstGameId']))
+                data.sort(cmp=cmp) #key = lambda item: (parseInt(item['SportId']), item['Liga'], parseInt(item['FirstGameId']))
                 printDBG(data)
                 for item in data:
                     if None == item.get('VI'):

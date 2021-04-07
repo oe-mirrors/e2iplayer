@@ -17,7 +17,7 @@ from skin import parseColor
 from urllib.parse import urljoin
 
 class CUrlItem:
-    def __init__(self, name = "", url = "", urlNeedsResolve = 0):
+    def __init__(self, name="", url="", urlNeedsResolve=0):
         if isinstance(name, str):
             self.name = name
         else:
@@ -49,18 +49,18 @@ class CDisplayListItem:
     TYPE_SUB_PROVIDER  = "SUB_PROVIDER"
     TYPE_UNKNOWN       = "UNKNOWN"
     
-    def __init__(self, name = "",
-                description = "",
-                type = TYPE_UNKNOWN,
-                urlItems = [],
-                urlSeparateRequest = 0,
-                iconimage = '',
-                possibleTypesOfSearch = None,
-                pinLocked = False,
-                isGoodForFavourites = False,
-                isWatched = False,
-                textColor = '',
-                pinCode = ''):
+    def __init__(self, name="",
+                description="",
+                type=TYPE_UNKNOWN,
+                urlItems=[],
+                urlSeparateRequest=0,
+                iconimage='',
+                possibleTypesOfSearch=None,
+                pinLocked=False,
+                isGoodForFavourites=False,
+                isWatched=False,
+                textColor='',
+                pinCode=''):
                 
         if isinstance(name, str):
             self.name = name
@@ -177,7 +177,7 @@ class ArticleContent:
                         "budget":            "Budget:",
                         "translation":       "Translation:"
                         }
-    def __init__(self, title = '', text = '', images = [], trailers = [], richDescParams = {}, visualizer=None):
+    def __init__(self, title='', text='', images=[], trailers=[], richDescParams={}, visualizer=None):
         self.title    = title
         self.text     = text
         self.images   = images
@@ -193,12 +193,12 @@ class CFavItem:
     RESOLVER_SELF        = 'SELF'
     RESOLVER_URLLPARSER  = 'URLLPARSER'
     TYPE_UNKNOWN = CDisplayListItem.TYPE_UNKNOWN
-    def __init__( self, name         = '',
-                  description        = '',
-                  type               = TYPE_UNKNOWN,
-                  iconimage          = '',
-                  data               = '',
-                  resolver           = RESOLVER_SELF ):
+    def __init__( self, name='',
+                  description='',
+                  type=TYPE_UNKNOWN,
+                  iconimage='',
+                  data='',
+                  resolver=RESOLVER_SELF ):
         self.name        = name
         self.description = description
         self.type        = type
@@ -223,7 +223,7 @@ class CFavItem:
         return vars(self)
         
 class CHostsGroupItem:
-    def __init__( self, name = '', title = ''):
+    def __init__( self, name='', title=''):
         self.name = name
         self.title = title
        
@@ -231,7 +231,7 @@ class RetHost:
     OK = "OK"
     ERROR = "ERROR"
     NOT_IMPLEMENTED = "NOT_IMPLEMENTED"
-    def __init__(self, status , value, message = ''):
+    def __init__(self, status , value, message=''):
         self.status = status
         self.value = value  
         self.message = message
@@ -247,23 +247,23 @@ class IHost:
     
     # return list of types which can be added as favourite
     def getSupportedFavoritesTypes(self):
-        return RetHost(RetHost.NOT_IMPLEMENTED, value = [])
+        return RetHost(RetHost.NOT_IMPLEMENTED, value=[])
     
     # get favourite item CFavItem for item with given index
     def getFavouriteItem(self, Index=0):
-        return RetHost(RetHost.NOT_IMPLEMENTED, value = [])
+        return RetHost(RetHost.NOT_IMPLEMENTED, value=[])
         
     # similar as getLinksForItem, returns links 
     # for given CFavItem
     def getLinksForFavourite(self, favItem):
-        return RetHost(RetHost.NOT_IMPLEMENTED, value = [])
+        return RetHost(RetHost.NOT_IMPLEMENTED, value=[])
     
     def setInitFavouriteItem(self, favItem):
-        return RetHost(RetHost.NOT_IMPLEMENTED, value = [])
+        return RetHost(RetHost.NOT_IMPLEMENTED, value=[])
 
     # return firs available list of item category or video or link
     def getInitList(self):
-        return RetHost(RetHost.NOT_IMPLEMENTED, value = [])
+        return RetHost(RetHost.NOT_IMPLEMENTED, value=[])
     
     # return List of item from current List
     # for given Index
@@ -271,69 +271,69 @@ class IHost:
     #                server if possible 
     # server instead of cache 
     # item - object of CDisplayListItem for selected item
-    def getListForItem(self, Index = 0, refresh = 0, item = None):
-        return RetHost(RetHost.NOT_IMPLEMENTED, value = [])
+    def getListForItem(self, Index=0, refresh=0, item=None):
+        return RetHost(RetHost.NOT_IMPLEMENTED, value=[])
         
     # return prev requested List of item 
     # for given Index
     # 1 == refresh - force to read data from 
     #                server if possible
-    def getPrevList(self, refresh = 0):
-        return RetHost(RetHost.NOT_IMPLEMENTED, value = [])
+    def getPrevList(self, refresh=0):
+        return RetHost(RetHost.NOT_IMPLEMENTED, value=[])
         
     # return current List
     # for given Index
     # 1 == refresh - force to read data from 
     #                server if possible
-    def getCurrentList(self, refresh = 0):
-        return RetHost(RetHost.NOT_IMPLEMENTED, value = [])
+    def getCurrentList(self, refresh=0):
+        return RetHost(RetHost.NOT_IMPLEMENTED, value=[])
         
     # return current List
     # for given Index
     def getMoreForItem(self, Index=0):
-        return RetHost(RetHost.NOT_IMPLEMENTED, value = [])
+        return RetHost(RetHost.NOT_IMPLEMENTED, value=[])
         
-    def getLinksForVideo(self, Index = 0, item = None):
+    def getLinksForVideo(self, Index=0, item=None):
         return self.getLinksForItem(Index, item)
         
     # return list of links for AUDIO, VIDEO, PICTURE
     # for given Index, 
     # item - object of CDisplayListItem for selected item
-    def getLinksForItem(self, Index = 0, item = None):
-        return RetHost(RetHost.NOT_IMPLEMENTED, value = [])
+    def getLinksForItem(self, Index=0, item=None):
+        return RetHost(RetHost.NOT_IMPLEMENTED, value=[])
         
-    def getArticleContent(self, Index = 0):
-        return RetHost(RetHost.NOT_IMPLEMENTED, value = [])
+    def getArticleContent(self, Index=0):
+        return RetHost(RetHost.NOT_IMPLEMENTED, value=[])
         
     # return resolved url
     # for given url
     def getResolvedURL(self, url):
-        return RetHost(RetHost.NOT_IMPLEMENTED, value = [])
+        return RetHost(RetHost.NOT_IMPLEMENTED, value=[])
         
     # return full path to player logo
     def getLogoPath(self):
-        return RetHost(RetHost.OK, value = [GetLogoDir(getattr(self, '__module__').split('.')[-1][4:] + 'logo.png')])
+        return RetHost(RetHost.OK, value=[GetLogoDir(getattr(self, '__module__').split('.')[-1][4:] + 'logo.png')])
         
-    def getSearchResults(self, pattern, searchType = None):
-        return RetHost(RetHost.NOT_IMPLEMENTED, value = [])
+    def getSearchResults(self, pattern, searchType=None):
+        return RetHost(RetHost.NOT_IMPLEMENTED, value=[])
 
     # !!! NON BLOCKING !!!
     # return list of custom actions 
     # for given Index
-    def getCustomActions(self, Index = 0):
-        return RetHost(RetHost.NOT_IMPLEMENTED, value = [])
+    def getCustomActions(self, Index=0):
+        return RetHost(RetHost.NOT_IMPLEMENTED, value=[])
 
     # !!! NON BLOCKING !!!
     # return list with search suggestions providers
     # for given Index
-    def getSuggestionsProvider(self, Index = 0):
-        return RetHost(RetHost.NOT_IMPLEMENTED, value = [])
+    def getSuggestionsProvider(self, Index=0):
+        return RetHost(RetHost.NOT_IMPLEMENTED, value=[])
 
     def performCustomAction(self, privateData):
-        return RetHost(RetHost.NOT_IMPLEMENTED, value = [])
+        return RetHost(RetHost.NOT_IMPLEMENTED, value=[])
         
-    def markItemAsViewed(self, Index = 0):
-        return RetHost(RetHost.NOT_IMPLEMENTED, value = [])
+    def markItemAsViewed(self, Index=0):
+        return RetHost(RetHost.NOT_IMPLEMENTED, value=[])
     
 '''
 CHostBase implements some typical methods
@@ -353,7 +353,7 @@ class CHostBase(IHost):
         self.searchType = ''
         
     def getSupportedFavoritesTypes(self):
-        return RetHost(RetHost.OK, value = self.favouriteTypes)
+        return RetHost(RetHost.OK, value=self.favouriteTypes)
         
     def isValidIndex(self, Index, validTypes=None):
         listLen = len(self.host.currList)
@@ -368,7 +368,7 @@ class CHostBase(IHost):
     def withArticleContent(self, cItem):
         return False
     
-    def getArticleContent(self, Index = 0):
+    def getArticleContent(self, Index=0):
         retCode = RetHost.ERROR
         retlist = []
         if not self.isValidIndex(Index):
@@ -385,13 +385,13 @@ class CHostBase(IHost):
             text       = item.get('text', '')
             images     = item.get("images", [])
             othersInfo = item.get('other_info', '')
-            retlist.append( ArticleContent(title = title, text = text, images =  images, richDescParams = othersInfo) )
+            retlist.append( ArticleContent(title=title, text=text, images=images, richDescParams=othersInfo) )
         if len(hList):
             retCode = RetHost.OK
-        return RetHost(retCode, value = retlist)
+        return RetHost(retCode, value=retlist)
     # end getArticleContent
     
-    def getLinksForItem(self, Index = 0, selItem = None):
+    def getLinksForItem(self, Index=0, selItem=None):
         retCode = RetHost.ERROR
         retlist = []
         if not self.isValidIndex(Index):
@@ -403,7 +403,7 @@ class CHostBase(IHost):
                 need_resolve = item.get("need_resolve", 0)
                 retlist.append(CUrlItem(item["name"], item["url"], need_resolve))
 
-        return RetHost(RetHost.OK, value = retlist)
+        return RetHost(RetHost.OK, value=retlist)
     # end getLinksForVideo
     
     def getResolvedURL(self, url):
@@ -415,7 +415,7 @@ class CHostBase(IHost):
                 need_resolve = 0
                 retlist.append(CUrlItem(item["name"], item["url"], need_resolve))
 
-        return RetHost(RetHost.OK, value = retlist)
+        return RetHost(RetHost.OK, value=retlist)
     # end getResolvedURL
         
     def getFavouriteItem(self, Index=0):
@@ -445,7 +445,7 @@ class CHostBase(IHost):
                 name = self.host.cleanHtmlStr( item["name"] )
                 url  = item["url"]
                 retlist.append(CUrlItem(name, url, need_resolve))
-        return RetHost(RetHost.OK, value = retlist)
+        return RetHost(RetHost.OK, value=retlist)
         
     def setInitFavouriteItem(self, favItem):
         self.currIndex = -1
@@ -456,8 +456,8 @@ class CHostBase(IHost):
         self.host.setCurrItem({})
         
         if self.host.setInitListFromFavouriteItem(favItem.data):
-            return RetHost(RetHost.OK, value = None)
-        return RetHost(RetHost.ERROR, value = None)
+            return RetHost(RetHost.OK, value=None)
+        return RetHost(RetHost.ERROR, value=None)
     
     # return firs available list of item category or video or link
     def getInitList(self):
@@ -468,9 +468,9 @@ class CHostBase(IHost):
         self.host.handleService(self.currIndex)
         convList = self.convertList(self.host.getCurrList())
         
-        return RetHost(RetHost.OK, value = convList)
+        return RetHost(RetHost.OK, value=convList)
     
-    def getListForItem(self, Index = 0, refresh = 0, selItem = None):
+    def getListForItem(self, Index=0, refresh=0, selItem=None):
         self.listOfprevList.append(self.host.getCurrList())
         self.listOfprevItems.append(self.host.getCurrItem())
         
@@ -488,9 +488,9 @@ class CHostBase(IHost):
         self.host.handleService(Index, refresh, self.searchPattern, self.searchType)
         convList = self.convertList(self.host.getCurrList())
         
-        return RetHost(RetHost.OK, value = convList)
+        return RetHost(RetHost.OK, value=convList)
 
-    def getPrevList(self, refresh = 0):
+    def getPrevList(self, refresh=0):
         if(len(self.listOfprevList) > 0):
             hostList = self.listOfprevList.pop()
             hostCurrItem = self.listOfprevItems.pop()
@@ -498,27 +498,27 @@ class CHostBase(IHost):
             self.host.setCurrItem(hostCurrItem)
             
             convList = self.convertList(hostList)
-            return RetHost(RetHost.OK, value = convList)
+            return RetHost(RetHost.OK, value=convList)
         else:
-            return RetHost(RetHost.ERROR, value = [])
+            return RetHost(RetHost.ERROR, value=[])
 
-    def getCurrentList(self, refresh = 0):
+    def getCurrentList(self, refresh=0):
         if refresh == 1:
             self.host.handleService(self.currIndex, refresh, self.searchPattern, self.searchType)
         convList = self.convertList(self.host.getCurrList())
-        return RetHost(RetHost.OK, value = convList)
+        return RetHost(RetHost.OK, value=convList)
         
     def getMoreForItem(self, Index=0):
         self.host.handleService(Index, 2, self.searchPattern, self.searchType)
         convList = self.convertList(self.host.getCurrList())
-        return RetHost(RetHost.OK, value = convList)
+        return RetHost(RetHost.OK, value=convList)
 
-    def getSuggestionsProvider(self, Index = 0):
+    def getSuggestionsProvider(self, Index=0):
         getProvider = getattr(self.host, "getSuggestionsProvider", None)
         if callable(getProvider):
             val = getProvider(Index)
-            return RetHost(RetHost.OK, value = [val])
-        return RetHost(RetHost.NOT_IMPLEMENTED, value = [])
+            return RetHost(RetHost.OK, value=[val])
+        return RetHost(RetHost.NOT_IMPLEMENTED, value=[])
 
     def getSearchItemInx(self):
         try:
@@ -613,20 +613,20 @@ class CHostBase(IHost):
         pinCode   = cItem.get('pin_code', '')
         textColor = cItem.get('text_color', '')
         
-        return CDisplayListItem(name = title,
-                                    description = description,
-                                    type = type,
-                                    urlItems = hostLinks,
-                                    urlSeparateRequest = needUrlSeparateRequest,
-                                    iconimage = icon,
-                                    possibleTypesOfSearch = possibleTypesOfSearch,
-                                    pinLocked = pinLocked,
-                                    isGoodForFavourites = isGoodForFavourites,
-                                    textColor = textColor,
-                                    pinCode = pinCode)
+        return CDisplayListItem(name=title,
+                                    description=description,
+                                    type=type,
+                                    urlItems=hostLinks,
+                                    urlSeparateRequest=needUrlSeparateRequest,
+                                    iconimage=icon,
+                                    possibleTypesOfSearch=possibleTypesOfSearch,
+                                    pinLocked=pinLocked,
+                                    isGoodForFavourites=isGoodForFavourites,
+                                    textColor=textColor,
+                                    pinCode=pinCode)
     # end converItem
 
-    def getSearchResults(self, searchpattern, searchType = None):
+    def getSearchResults(self, searchpattern, searchType=None):
         retList = []
         if self.withSearchHistrory:
             self.host.history.addHistoryItem( searchpattern, searchType )
@@ -641,7 +641,7 @@ class CHostBase(IHost):
         if searchItemIdx > -1:
             return self.getListForItem( searchItemIdx )
         else:
-            return RetHost(RetHost.ERROR, value = [])
+            return RetHost(RetHost.ERROR, value=[])
             
     # end getSearchResults
     

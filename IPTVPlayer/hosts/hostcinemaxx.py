@@ -88,7 +88,7 @@ class Cinemaxx(CBaseHostClass):
                                 for cookieKey, cookieValue in item.items():
                                     cookieItem = http.cookiejar.Cookie(version=0, name=cookieKey, value=cookieValue, port=None, port_specified=False, domain='.'+self.cm.getBaseUrl(cUrl, True), domain_specified=True, domain_initial_dot=True, path='/', path_specified=True, secure=False, expires=time.time()+3600*48, discard=True, comment=None, comment_url=None, rest={'HttpOnly': None}, rfc2109=False)
                                     cj.set_cookie(cookieItem)
-                            cj.save(self.COOKIE_FILE, ignore_discard = True)
+                            cj.save(self.COOKIE_FILE, ignore_discard=True)
 
                             sleep_time -= time.time() * 1000 - timestamp
                             if  sleep_time > 0:
@@ -337,7 +337,7 @@ class Cinemaxx(CBaseHostClass):
         
         return [{'title':self.cleanHtmlStr( title ), 'text': self.cleanHtmlStr( desc ), 'images':[{'title':'', 'url':self.getFullUrl(icon)}], 'other_info':{'custom_items_list':itemsList}}]
 
-    def handleService(self, index, refresh = 0, searchPattern = '', searchType = ''):
+    def handleService(self, index, refresh=0, searchPattern='', searchType=''):
         printDBG('handleService start')
         
         CBaseHostClass.handleService(self, index, refresh, searchPattern, searchType)

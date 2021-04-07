@@ -106,7 +106,7 @@ class BaseDownloader:
     def getUrl(self):
         return self.url
 
-    def start(self, url, filePath, params = {}):
+    def start(self, url, filePath, params={}):
         self.url              = url
         self.filePath         = filePath
         self.downloaderParams = params

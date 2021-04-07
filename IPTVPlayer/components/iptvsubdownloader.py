@@ -213,9 +213,9 @@ class IPTVSubDownloaderWidget(Screen):
         
     def confirmMovieTitle(self):
         # first ask user to provide movie title
-        self.session.openWithCallback(self.confirmMovieTitleCallBack, GetVirtualKeyboard(), title=(_("Confirm the title of the movie")), text = self.movieTitle)
+        self.session.openWithCallback(self.confirmMovieTitleCallBack, GetVirtualKeyboard(), title=(_("Confirm the title of the movie")), text=self.movieTitle)
         
-    def confirmMovieTitleCallBack(self, text = None):
+    def confirmMovieTitleCallBack(self, text=None):
         if isinstance(text, str):
             self.movieTitle = text
             self.listSubtitlesProviders()
@@ -456,7 +456,7 @@ class IPTVSubDownloaderWidget(Screen):
         self["headertext"].setText(self.getCategoryPath())
         self.requestListFromHost('Initial')
         
-    def requestListFromHost(self, type, currSelIndex = -1, privateData = ''):
+    def requestListFromHost(self, type, currSelIndex=-1, privateData=''):
         
         if not self.isInWorkThread():
             self["list"].hide()
@@ -527,7 +527,7 @@ class IPTVSubDownloaderWidget(Screen):
             lastErrorMsg = GetIPTVPlayerLastHostError()
             if lastErrorMsg != '':
                 disMessage += "\n" + _('Last error: "%s"') % lastErrorMsg
-            self.session.open(MessageBox, disMessage, type = MessageBox.TYPE_ERROR)
+            self.session.open(MessageBox, disMessage, type=MessageBox.TYPE_ERROR)
         else:
             # subtitle downloaded, ask for finish
             ret = ret.value[0]

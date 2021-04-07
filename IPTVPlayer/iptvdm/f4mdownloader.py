@@ -78,7 +78,7 @@ class F4mDownloader(BaseDownloader):
         self.iptv_sys = None
         callBackFun(sts, reason)
     
-    def start(self, url, filePath, params = {}):
+    def start(self, url, filePath, params={}):
         '''
             Owervrite start from BaseDownloader
         '''

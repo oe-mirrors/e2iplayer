@@ -36,7 +36,7 @@ def _async_raise(tid, exctype):
 
 ########################################################
 class buildActiveHostsHTML(threading.Thread):
-	def __init__(self, args = []):
+	def __init__(self, args=[]):
 		''' Constructor. '''
 		threading.Thread.__init__(self)
 		self.name = 'buildActiveHostsHTML'
@@ -113,7 +113,7 @@ class buildtempLogsHTML(threading.Thread):
 				settings.tempLogsHTML += L + '<br>\n'
 ########################################################
 class buildConfigsHTML(threading.Thread):
-	def __init__(self, args = []):
+	def __init__(self, args=[]):
 		''' Constructor. '''
 		threading.Thread.__init__(self)
 		self.name = 'buildConfigsHTML'
@@ -217,7 +217,7 @@ class buildConfigsHTML(threading.Thread):
 				hostsCFG += '<td><a>%s</a></td>' % "" # _('Host does not have configuration options')
 			else:
 				hostsCFG += '<td><table border="1" style="width:100%">'
-				for item in self.buildSettingsTable(List2 = OptionsList, List1 = list(config.plugins.iptvplayer.dict().items()), exclList = usedCFG, direction = '2>1'):
+				for item in self.buildSettingsTable(List2=OptionsList, List1=list(config.plugins.iptvplayer.dict().items()), exclList=usedCFG, direction='2>1'):
 					usedCFG.append(item[0])
 					#print 'hostsCFG:',item[0], item[1],item[2]
 					if item[0] == 'fake_separator':
@@ -230,7 +230,7 @@ class buildConfigsHTML(threading.Thread):
 		#now configs for plugin
 		OptionsList = []
 		ConfigMenu.fillConfigList(OptionsList, hiddenOptions=False)
-		for item in self.buildSettingsTable(List1 = list(config.plugins.iptvplayer.dict().items()), List2 = OptionsList, exclList = usedCFG, direction = '2>1'):
+		for item in self.buildSettingsTable(List1=list(config.plugins.iptvplayer.dict().items()), List2=OptionsList, exclList=usedCFG, direction='2>1'):
 			settings.configsHTML[item[1]] = '<tr><td><tt>%s</tt></td><td>%s</td></tr>\n' % (item[1], formGET(item[2]))
 ########################################################
 class doUseHostAction(threading.Thread):
@@ -286,7 +286,7 @@ class doUseHostAction(threading.Thread):
 						linkList.append(CUrlItem(item, item, 0))
 					else:
 						print("selectResolvedVideoLinks: wrong resolved url type!")
-				settings.retObj = RetHost(RetHost.OK, value = linkList)
+				settings.retObj = RetHost(RetHost.OK, value=linkList)
 			else:
 				print("selectResolvedVideoLinks: wrong status or value")
 				
@@ -309,7 +309,7 @@ class doUseHostAction(threading.Thread):
 					settings.retObj = settings.activeHost['Obj'].getLinksForVideo(myID, settings.retObj.value[myID]) #returns "NOT_IMPLEMENTED" when host is using curlitem
 				except Exception as e:
 					print("ListForItem>getLinksForVideo exception:", str(e))
-					settings.retObj = RetHost(RetHost.NOT_IMPLEMENTED, value = [])
+					settings.retObj = RetHost(RetHost.NOT_IMPLEMENTED, value=[])
 				
 				if settings.retObj.status == RetHost.NOT_IMPLEMENTED and links != 'NOVALIDURLS':
 					print("getLinksForVideo not implemented, using CUrlItem")
@@ -321,9 +321,9 @@ class doUseHostAction(threading.Thread):
 						else:
 							tempUrls.append(CUrlItem(link.name, link.url, link.urlNeedsResolve))
 						iindex += 1
-					settings.retObj = RetHost(RetHost.OK, value = tempUrls)
+					settings.retObj = RetHost(RetHost.OK, value=tempUrls)
 				elif settings.retObj.status == RetHost.NOT_IMPLEMENTED:
-					settings.retObj = RetHost(RetHost.NOT_IMPLEMENTED, value = [(CUrlItem("No valid urls", "fakeUrl", 0))])
+					settings.retObj = RetHost(RetHost.NOT_IMPLEMENTED, value=[(CUrlItem("No valid urls", "fakeUrl", 0))])
 		elif self.key == 'ForSearch' and None is not self.arg and self.arg != '':
 			settings.retObj = settings.activeHost['Obj'].getSearchResults(self.arg, self.searchType)
 		elif self.key == 'activeHostSearchHistory' and self.arg != '':

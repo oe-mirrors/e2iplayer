@@ -485,7 +485,7 @@ class E2iPlayerWidget(Screen):
                     if self.hostName not in GetHostsList(fromList=True, fromHostFolder=False):
                         message = _('It seems that the host "%s" has crashed.') % self.hostName
                         message += _('\nThis host is not integral part of the E2iPlayer plugin.\nIt is not supported by E2iPlayer team.')
-                        self.session.open(MessageBox, message, type = MessageBox.TYPE_ERROR)
+                        self.session.open(MessageBox, message, type=MessageBox.TYPE_ERROR)
                     else:
                         message = _('It seems that the host "%s" has crashed. Do you want to report this problem?') % self.hostName
                         message += "\n"
@@ -523,7 +523,7 @@ class E2iPlayerWidget(Screen):
                                'error': MessageBox.TYPE_ERROR, 
                                'warning': MessageBox.TYPE_WARNING,
                               }
-                    self.session.openWithCallback(self.processIPTVNotify, MessageBox, notification.message, type = typeMap.get(notification.type, MessageBox.TYPE_INFO), timeout = notification.timeout )
+                    self.session.openWithCallback(self.processIPTVNotify, MessageBox, notification.message, type=typeMap.get(notification.type, MessageBox.TYPE_INFO), timeout=notification.timeout )
                     return
         except Exception:
             printExc()
@@ -629,7 +629,7 @@ class E2iPlayerWidget(Screen):
             printExc()
         options.append((_("Info"), "info"))
         options.append((_("Download manager"), "IPTVDM"))
-        self.session.openWithCallback(self.blue_pressed_next, ChoiceBox, title = _("Select option"), list = options)
+        self.session.openWithCallback(self.blue_pressed_next, ChoiceBox, title=_("Select option"), list=options)
 
     def pause_pressed(self):
         printDBG('pause_pressed')
@@ -726,7 +726,7 @@ class E2iPlayerWidget(Screen):
                     TextMSG += "\n\t- {0}, ".format(item['nick'])
                 TextMSG = TextMSG[:-2]
                 TextMSG += "\n\tand others\n"
-                self.session.open(MessageBox, TextMSG, type = MessageBox.TYPE_INFO )
+                self.session.open(MessageBox, TextMSG, type=MessageBox.TYPE_INFO )
             elif ret[1] == "IPTVDM":
                 self.runIPTVDM()
             elif ret[1] == "HostConfig":
@@ -1028,7 +1028,7 @@ class E2iPlayerWidget(Screen):
             if pin == pinCode:
                 callbackFun(arg1, arg2, arg3)
             else:
-                self.session.open(MessageBox, _("Pin incorrect!"), type = MessageBox.TYPE_INFO, timeout = 5 )
+                self.session.open(MessageBox, _("Pin incorrect!"), type=MessageBox.TYPE_INFO, timeout=5 )
     
     def leaveArticleView(self):
         printDBG("leaveArticleView")
@@ -1043,7 +1043,7 @@ class E2iPlayerWidget(Screen):
         if ret.status != RetHost.OK or 0 == len(ret.value):
             item = self.currList[self.currSelIndex]
             if len(item.description):
-                artItem = ArticleContent(title = item.name, text = item.description, images = [{'title':'Fot.', 'url':item.iconimage}]) #richDescParams={"alternate_title":"***alternate_title", "year":"year", "rating":"rating",  "duration":"duration",  "genre":"genre",  "director":"director",  "actors":"actors",  "awards":"awards"}
+                artItem = ArticleContent(title=item.name, text=item.description, images=[{'title':'Fot.', 'url':item.iconimage}]) #richDescParams={"alternate_title":"***alternate_title", "year":"year", "rating":"rating",  "duration":"duration",  "genre":"genre",  "director":"director",  "actors":"actors",  "awards":"awards"}
         else:
             artItem = ret.value[0]
         if None != artItem:
@@ -1188,7 +1188,7 @@ class E2iPlayerWidget(Screen):
             self.displayGroupsList.append((_("Update"), "update"))
         
         self.newDisplayGroupsList = []
-        self.session.openWithCallback(self.selectGroupCallback, PlayerSelectorWidget, inList = self.displayGroupsList, outList = self.newDisplayGroupsList, numOfLockedItems = self.getNumOfSpecialItems(self.displayGroupsList), groupName='selectgroup')
+        self.session.openWithCallback(self.selectGroupCallback, PlayerSelectorWidget, inList=self.displayGroupsList, outList=self.newDisplayGroupsList, numOfLockedItems=self.getNumOfSpecialItems(self.displayGroupsList), groupName='selectgroup')
         
     def selectGroupCallback(self, ret):
         printDBG(">> selectGroupCallback")
@@ -1262,19 +1262,19 @@ class E2iPlayerWidget(Screen):
         
         if "" != errorMessage and True == self.showHostsErrorMessage:
             self.showHostsErrorMessage = False
-            self.session.openWithCallback(self.displayListOfHostsFromGroup, MessageBox, errorMessage, type = MessageBox.TYPE_INFO, timeout = 10 )
+            self.session.openWithCallback(self.displayListOfHostsFromGroup, MessageBox, errorMessage, type=MessageBox.TYPE_INFO, timeout=10 )
         else:
             self.displayListOfHostsFromGroup()
         return
         
-    def displayListOfHostsFromGroup(self, arg = None):
+    def displayListOfHostsFromGroup(self, arg=None):
         printDBG(">> displayListOfHostsFromGroup")
         self.newDisplayHostsList = []
         if len(self.displayHostsList):
-            self.session.openWithCallback(self.selectHostFromGroupCallback, PlayerSelectorWidget, inList = self.displayHostsList, outList = self.newDisplayHostsList, numOfLockedItems = 0, groupName=self.group, groupObj=self.groupObj)
+            self.session.openWithCallback(self.selectHostFromGroupCallback, PlayerSelectorWidget, inList=self.displayHostsList, outList=self.newDisplayHostsList, numOfLockedItems=0, groupName=self.group, groupObj=self.groupObj)
         else:
             msg = _('There is no hosts in this group.')
-            self.session.openWithCallback(self.selectHost, MessageBox, msg, type = MessageBox.TYPE_INFO, timeout = 10 )
+            self.session.openWithCallback(self.selectHost, MessageBox, msg, type=MessageBox.TYPE_INFO, timeout=10 )
         
     def selectHostFromGroupCallback(self, ret):
         printDBG(">> selectHostFromGroupCallback")
@@ -1337,18 +1337,18 @@ class E2iPlayerWidget(Screen):
         
         if "" != errorMessage and True == self.showHostsErrorMessage:
             self.showHostsErrorMessage = False
-            self.session.openWithCallback(self.displayListOfHosts, MessageBox, errorMessage, type = MessageBox.TYPE_INFO, timeout = 10 )
+            self.session.openWithCallback(self.displayListOfHosts, MessageBox, errorMessage, type=MessageBox.TYPE_INFO, timeout=10 )
         else:
             self.displayListOfHosts()
         return
 
-    def displayListOfHosts(self, arg = None):
+    def displayListOfHosts(self, arg=None):
         if config.plugins.iptvplayer.ListaGraficzna.value == False or 0 == GetAvailableIconSize():
             self.newDisplayHostsList = None
-            self.session.openWithCallback(self.selectHostCallback, ChoiceBox, title=_("Select service"), list = self.displayHostsList)
+            self.session.openWithCallback(self.selectHostCallback, ChoiceBox, title=_("Select service"), list=self.displayHostsList)
         else:
             self.newDisplayHostsList = []
-            self.session.openWithCallback(self.selectHostCallback, PlayerSelectorWidget, inList = self.displayHostsList, outList = self.newDisplayHostsList, numOfLockedItems = self.getNumOfSpecialItems(self.displayHostsList), groupName='selecthost')
+            self.session.openWithCallback(self.selectHostCallback, PlayerSelectorWidget, inList=self.displayHostsList, outList=self.newDisplayHostsList, numOfLockedItems=self.getNumOfSpecialItems(self.displayHostsList), groupName='selecthost')
         return
     
     def getNumOfSpecialItems(self, inList, filters=['config', 'update', 'all']):
@@ -1428,7 +1428,7 @@ class E2iPlayerWidget(Screen):
                 
             if self.showMessageNoFreeSpaceForIcon and hasIcon:
                 self.showMessageNoFreeSpaceForIcon = False
-                self.session.open(MessageBox, (_("There is no free space on the drive [%s].") % config.plugins.iptvplayer.SciezkaCache.value) + "\n" + _("New icons will not be available."), type = MessageBox.TYPE_INFO, timeout=10)
+                self.session.open(MessageBox, (_("There is no free space on the drive [%s].") % config.plugins.iptvplayer.SciezkaCache.value) + "\n" + _("New icons will not be available."), type=MessageBox.TYPE_INFO, timeout=10)
         elif type in ['selecthost', 'selectgroup']:
             self.close()
             return
@@ -1450,7 +1450,7 @@ class E2iPlayerWidget(Screen):
     def configHostsCallback(self, arg1=None):
         if IsUpdateNeededForHostsChangesCommit(self.enabledHostsListOld):
             message = _('Some changes will be applied only after plugin update.\nDo you want to perform update now?')
-            self.session.openWithCallback(self.askForUpdateCallback, MessageBox, text = message, type = MessageBox.TYPE_YESNO)
+            self.session.openWithCallback(self.askForUpdateCallback, MessageBox, text=message, type=MessageBox.TYPE_YESNO)
         elif self.group != None:
             self.selectHostFromGroup()
         else:
@@ -1478,7 +1478,7 @@ class E2iPlayerWidget(Screen):
             self.runConfigHost()
 
     def runConfigHost(self):
-        self.session.openWithCallback(self.runConfigHostCallBack, ConfigHostMenu, hostName = self.hostName)
+        self.session.openWithCallback(self.runConfigHostCallBack, ConfigHostMenu, hostName=self.hostName)
         
     def runConfigHostCallBack(self, confgiChanged=False):
         if confgiChanged:
@@ -1489,7 +1489,7 @@ class E2iPlayerWidget(Screen):
             if pin == config.plugins.iptvplayer.pin.value:
                 callbackFun()
             else:
-                self.session.openWithCallback(self.close, MessageBox, _("Pin incorrect!"), type = MessageBox.TYPE_INFO, timeout = 5 )
+                self.session.openWithCallback(self.close, MessageBox, _("Pin incorrect!"), type=MessageBox.TYPE_INFO, timeout=5 )
         else:
             if failCallBackFun:
                 failCallBackFun()
@@ -1603,7 +1603,7 @@ class E2iPlayerWidget(Screen):
             return
 
         #options.sort(reverse=True)
-        self.session.openWithCallback(self.selectLinksCallback, ChoiceBox, title=_("Select link"), list = options)
+        self.session.openWithCallback(self.selectLinksCallback, ChoiceBox, title=_("Select link"), list=options)
 
     def selectLinksCallback(self, retArg):
         # retArg[0] - name
@@ -1621,9 +1621,9 @@ class E2iPlayerWidget(Screen):
                     else:
                         list = []
                         list.append(videoUrl)
-                        self.playVideo(RetHost(status = RetHost.OK, value = list))
+                        self.playVideo(RetHost(status=RetHost.OK, value=list))
                     return
-            self.playVideo(RetHost(status = RetHost.ERROR, value = []))
+            self.playVideo(RetHost(status=RetHost.ERROR, value=[]))
     # end selectLinksCallback(self, retArg):
         
     def checkBuffering(self, url):
@@ -1732,7 +1732,7 @@ class E2iPlayerWidget(Screen):
                         
             blocked, reaseon = self.isUrlBlocked(url, self.currItem.type)
             if blocked:
-                self.session.open(MessageBox, reaseon, type = MessageBox.TYPE_INFO, timeout = 10)
+                self.session.open(MessageBox, reaseon, type=MessageBox.TYPE_INFO, timeout=10)
                 return
 
             isBufferingMode = False if url.startswith('file://') else self.activePlayer.get('buffering', self.checkBuffering(url))
@@ -1830,7 +1830,7 @@ class E2iPlayerWidget(Screen):
                 self.session.open(MessageBox, _("No valid links available."), type=MessageBox.TYPE_INFO, timeout=10)
     #end playVideo(self, ret):
         
-    def leaveMoviePlayer(self, answer = None, lastPosition = None, clipLength = None, *args, **kwargs):
+    def leaveMoviePlayer(self, answer=None, lastPosition=None, clipLength=None, *args, **kwargs):
         self.writeCurrentTitleToFile("")
         videoMode = GetE2VideoMode()
         printDBG("Current video mode [%s], previus video mode [%s]" % (videoMode, self.prevVideoMode))
@@ -1858,10 +1858,10 @@ class E2iPlayerWidget(Screen):
             
         self.checkAutoPlaySequencer()
 
-    def leavePicturePlayer(self, answer = None, lastPosition = None, *args, **kwargs):
+    def leavePicturePlayer(self, answer=None, lastPosition=None, *args, **kwargs):
         self.checkAutoPlaySequencer()
         
-    def requestListFromHost(self, type, currSelIndex = -1, privateData = ''):
+    def requestListFromHost(self, type, currSelIndex=-1, privateData=''):
         
         if not self.isInWorkThread():
             self["list"].hide()
@@ -1938,12 +1938,12 @@ class E2iPlayerWidget(Screen):
         if sts:
             self.searchPattern = prevPattern
         if searchTypes:
-            self.session.openWithCallback(self.selectSearchTypeCallback, ChoiceBox, title=_("Search type"), list = searchTypes)
+            self.session.openWithCallback(self.selectSearchTypeCallback, ChoiceBox, title=_("Search type"), list=searchTypes)
         else:
             self.searchType = None
             self.doSearchWithVirtualKeyboard()
     
-    def selectSearchTypeCallback(self, ret = None):
+    def selectSearchTypeCallback(self, ret=None):
         if ret:
             self.searchType = ret[1]
             self.doSearchWithVirtualKeyboard()
@@ -2003,13 +2003,13 @@ class E2iPlayerWidget(Screen):
                         from Plugins.Extensions.IPTVPlayer.components.e2ivksuggestion import AutocompleteSearch
                         additionalParams['autocomplete']  = AutocompleteSearch(suggestionsProvider)
 
-                self.session.openWithCallback(self.enterPatternCallBack, virtualKeyboard, title=(_("Your search entry")), text = self.searchPattern, additionalParams=additionalParams)
+                self.session.openWithCallback(self.enterPatternCallBack, virtualKeyboard, title=(_("Your search entry")), text=self.searchPattern, additionalParams=additionalParams)
                 return
             except Exception:
                 printExc()
-        self.session.openWithCallback(self.enterPatternCallBack, virtualKeyboard, title=(_("Your search entry")), text = self.searchPattern)
+        self.session.openWithCallback(self.enterPatternCallBack, virtualKeyboard, title=(_("Your search entry")), text=self.searchPattern)
 
-    def enterPatternCallBack(self, callback = None):
+    def enterPatternCallBack(self, callback=None):
         if callback is not None and len(callback):  
             self.searchPattern = callback
             CSearchHistoryHelper.saveLastPattern(self.searchPattern)
@@ -2254,7 +2254,7 @@ class E2iPlayerWidget(Screen):
         elif ret.status == RetHost.ERROR and \
              isinstance(ret.value, list) and 1 == len(ret.value) and \
              isinstance(ret.value[0], str):
-           self.session.open(MessageBox, ret.value[0], type = MessageBox.TYPE_ERROR)
+           self.session.open(MessageBox, ret.value[0], type=MessageBox.TYPE_ERROR)
            
     def markItemAsViewedCallback(self, thread, ret):
         asynccall.gMainFunctionsQueueTab[0].addToQueue("handleMarkItemAsViewedCallback", [thread, ret])
@@ -2270,7 +2270,7 @@ class E2iPlayerWidget(Screen):
         elif ret.status == RetHost.ERROR and \
              isinstance(ret.value, list) and 1 == len(ret.value) and \
              isinstance(ret.value[0], str):
-           self.session.open(MessageBox, ret.value[0], type = MessageBox.TYPE_ERROR)
+           self.session.open(MessageBox, ret.value[0], type=MessageBox.TYPE_ERROR)
         else:
             self.checkAutoPlaySequencer()
             

@@ -35,10 +35,10 @@ from Tools.Directories import fileExists
 ###################################################
 # Config options for HOST
 ###################################################
-config.plugins.iptvplayer.local_alphasort = ConfigSelection(default = "alphabetically", choices = [("alphabetically", _("Alphabetically")), ("none", _("None"))])
-config.plugins.iptvplayer.local_showfilesize = ConfigYesNo(default = True)
-config.plugins.iptvplayer.local_showhiddensdir = ConfigYesNo(default = False)
-config.plugins.iptvplayer.local_showhiddensfiles = ConfigYesNo(default = False)
+config.plugins.iptvplayer.local_alphasort = ConfigSelection(default="alphabetically", choices=[("alphabetically", _("Alphabetically")), ("none", _("None"))])
+config.plugins.iptvplayer.local_showfilesize = ConfigYesNo(default=True)
+config.plugins.iptvplayer.local_showhiddensdir = ConfigYesNo(default=False)
+config.plugins.iptvplayer.local_showhiddensfiles = ConfigYesNo(default=False)
 config.plugins.iptvplayer.local_maxitems    = ConfigInteger(1000, (10, 1000000))
 
 def GetConfigList():
@@ -511,7 +511,7 @@ class LocalMedia(CBaseHostClass):
             need_resolve = 1
         return [{'name':'', 'url':fav_data, 'need_resolve':need_resolve}]
 
-    def handleService(self, index, refresh = 0, searchPattern = '', searchType = ''):
+    def handleService(self, index, refresh=0, searchPattern='', searchType=''):
         printDBG('handleService start')
         
         CBaseHostClass.handleService(self, index, refresh, searchPattern, searchType)
@@ -544,7 +544,7 @@ class IPTVHost(CHostBase):
         self.needRefresh = ''
         self.DEFAULT_ICON='http://www.ngonb.ru/files/res_media.png'
     
-    def getPrevList(self, refresh = 0):
+    def getPrevList(self, refresh=0):
         self.host.setCurrDir('')
         if(len(self.listOfprevList) > 0):
             hostList = self.listOfprevList.pop()
@@ -561,11 +561,11 @@ class IPTVHost(CHostBase):
                     convList = self.convertList(self.host.getCurrList())
             if None == convList:
                 convList = self.convertList(hostList)
-            return RetHost(RetHost.OK, value = convList)
+            return RetHost(RetHost.OK, value=convList)
         else:
-            return RetHost(RetHost.ERROR, value = [])
+            return RetHost(RetHost.ERROR, value=[])
         
-    def getCustomActions(self, Index = 0):
+    def getCustomActions(self, Index=0):
         retCode = RetHost.ERROR
         retlist = []
         
@@ -619,7 +619,7 @@ class IPTVHost(CHostBase):
             addPasteAction(path)
             retCode = RetHost.OK
         
-        return RetHost(retCode, value = retlist)
+        return RetHost(retCode, value=retlist)
         
     def performCustomAction(self, privateData):
         retCode = RetHost.ERROR
@@ -709,9 +709,9 @@ class IPTVHost(CHostBase):
             need_resolve = 0
             retlist.append(CUrlItem(item["name"], item["url"], need_resolve))
 
-        return RetHost(RetHost.OK, value = retlist)
+        return RetHost(RetHost.OK, value=retlist)
     
-    def getArticleContent(self, Index = 0):
+    def getArticleContent(self, Index=0):
         retCode = RetHost.ERROR
         retlist = []
         if not self.isValidIndex(Index):
@@ -723,8 +723,8 @@ class IPTVHost(CHostBase):
             text       = item.get('text', '')
             images     = item.get("images", [])
             othersInfo = item.get('other_info', '')
-            retlist.append( ArticleContent(title = title, text = text, images =  images, richDescParams = othersInfo) )
-        return RetHost(RetHost.OK, value = retlist)
+            retlist.append( ArticleContent(title=title, text=text, images=images, richDescParams=othersInfo) )
+        return RetHost(RetHost.OK, value=retlist)
         
     def getFullIconUrl(self, url):
         return url

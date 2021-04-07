@@ -34,7 +34,7 @@ class BlockCipher:
         """ Use pbkdf2 to hash passphrase into a key """
         self.setKey(  pbkdf2( passphrase, self.name, 4096, self.keySize) )
 
-    def encrypt(self, plainText, more = None):
+    def encrypt(self, plainText, more=None):
         """ Encrypt a string and return a binary string """
         self.bytesToEncrypt += plainText  # append plainText to any bytes from prior encrypt
         numBlocks, numExtraBytes = divmod(len(self.bytesToEncrypt), self.blockSize)
@@ -58,7 +58,7 @@ class BlockCipher:
             self.resetEncrypt()
         return cipherText
     
-    def decrypt(self, cipherText, more = None):
+    def decrypt(self, cipherText, more=None):
         """ Decrypt a string and return a string """
         self.bytesToDecrypt += cipherText  # append to any bytes from prior decrypt
 

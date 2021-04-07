@@ -48,9 +48,9 @@ except Exception:
 ###################################################
 # Config options for HOST
 ###################################################
-config.plugins.iptvplayer.iplacachexml      = ConfigSelection(default = "12", choices = [("0", "nigdy"), ("6", "przez 6 godzin"), ("12", "przez 12 godzin"), ("24", "przez dzień")])
-config.plugins.iptvplayer.iplaDefaultformat = ConfigSelection(default = "1900", choices = [("200", "bitrate: 200"), ("400", "bitrate: 400"), ("900", "bitrate: 900"), ("1900", "bitrate: 1900")])
-config.plugins.iptvplayer.iplaUseDF         = ConfigYesNo(default = True)
+config.plugins.iptvplayer.iplacachexml      = ConfigSelection(default="12", choices=[("0", "nigdy"), ("6", "przez 6 godzin"), ("12", "przez 12 godzin"), ("24", "przez dzień")])
+config.plugins.iptvplayer.iplaDefaultformat = ConfigSelection(default="1900", choices=[("200", "bitrate: 200"), ("400", "bitrate: 400"), ("900", "bitrate: 900"), ("1900", "bitrate: 1900")])
+config.plugins.iptvplayer.iplaUseDF         = ConfigYesNo(default=True)
 
 def GetConfigList():
     optionList = []
@@ -302,7 +302,7 @@ class Ipla(CBaseHostClass):
             printExc()
         return links
 
-    def handleService(self, index, refresh = 0, searchPattern = '', searchType = ''):
+    def handleService(self, index, refresh=0, searchPattern='', searchType=''):
         printDBG('handleService start')
         CBaseHostClass.handleService(self, index, refresh, searchPattern, searchType)
 
@@ -341,7 +341,7 @@ class IPTVHost(CHostBase):
         CHostBase.__init__(self, Ipla(), True, [CDisplayListItem.TYPE_VIDEO]) # with search history, can generate favorite item
 
     def getLogoPath(self):
-        return RetHost(RetHost.OK, value = [GetLogoDir('iplalogo.png')])
+        return RetHost(RetHost.OK, value=[GetLogoDir('iplalogo.png')])
     
     def converItem(self, cItem):
         searchTypesOptions = [] # ustawione alfabetycznie
@@ -364,13 +364,13 @@ class IPTVHost(CHostBase):
         title       =  clean_html( cItem.get('title', '') )
         description =  clean_html( cItem.get('plot', '') )
         icon        =  cItem.get('icon', '')
-        hostItem = CDisplayListItem(name = title,
-                                    description = description,
-                                    type = type,
-                                    urlItems = hostLinks,
-                                    urlSeparateRequest = 0,
-                                    iconimage = icon,
-                                    possibleTypesOfSearch = possibleTypesOfSearch)
+        hostItem = CDisplayListItem(name=title,
+                                    description=description,
+                                    type=type,
+                                    urlItems=hostLinks,
+                                    urlSeparateRequest=0,
+                                    iconimage=icon,
+                                    possibleTypesOfSearch=possibleTypesOfSearch)
         return hostItem
     
     def getSearchItemInx(self):

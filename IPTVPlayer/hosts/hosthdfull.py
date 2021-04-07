@@ -31,9 +31,9 @@ from Screens.MessageBox import MessageBox
 ###################################################
 # Config options for HOST
 ###################################################
-config.plugins.iptvplayer.hdfull_language  = ConfigSelection(default = "es", choices = [ ("es", _("Spanish")), ("en", _("English")) ])
-config.plugins.iptvplayer.hdfull_login     = ConfigText(default = "", fixed_size = False)
-config.plugins.iptvplayer.hdfull_password  = ConfigText(default = "", fixed_size = False)
+config.plugins.iptvplayer.hdfull_language  = ConfigSelection(default="es", choices=[ ("es", _("Spanish")), ("en", _("English")) ])
+config.plugins.iptvplayer.hdfull_login     = ConfigText(default="", fixed_size=False)
+config.plugins.iptvplayer.hdfull_password  = ConfigText(default="", fixed_size=False)
 
 def GetConfigList():
     optionList = []
@@ -642,7 +642,7 @@ class HDFull(CBaseHostClass, CaptchaHelper):
                 self.loggedIn = True
             else:
                 msgTab = [_('Login failed.')]
-                self.sessionEx.waitForFinishOpen(MessageBox, '\n'.join(msgTab), type = MessageBox.TYPE_ERROR, timeout = 10)
+                self.sessionEx.waitForFinishOpen(MessageBox, '\n'.join(msgTab), type=MessageBox.TYPE_ERROR, timeout=10)
                 printDBG('tryTologin failed')
 
             if self.loggedIn:
@@ -651,7 +651,7 @@ class HDFull(CBaseHostClass, CaptchaHelper):
 
         return self.loggedIn
 
-    def handleService(self, index, refresh = 0, searchPattern = '', searchType = ''):
+    def handleService(self, index, refresh=0, searchPattern='', searchType=''):
         printDBG('handleService start')
         
         CBaseHostClass.handleService(self, index, refresh, searchPattern, searchType)

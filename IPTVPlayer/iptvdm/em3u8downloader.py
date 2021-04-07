@@ -54,7 +54,7 @@ class EM3U8Downloader(M3U8Downloader):
     def __del__(self):
         printDBG("EM3U8Downloader.__del__ ----------------------------------")
     
-    def start(self, url, filePath, params = {}):
+    def start(self, url, filePath, params={}):
         self.em3u8_url = strwithmeta(url)
         self.em3u8_filePath = filePath
         self.em3i8_params = params

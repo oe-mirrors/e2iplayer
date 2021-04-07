@@ -22,7 +22,7 @@ from Components.config import config, ConfigText, getConfigListEntry
 ###################################################
 # Config options for HOST
 ###################################################
-config.plugins.iptvplayer.drdk_myip    = ConfigText(default = "213.173.226.190", fixed_size = False)
+config.plugins.iptvplayer.drdk_myip    = ConfigText(default="213.173.226.190", fixed_size=False)
 
 def GetConfigList():
     optionList = []
@@ -150,7 +150,7 @@ class DRDK(CBaseHostClass):
     def getLinksForFavourite(self, fav_data):
         return self.getLinksForVideo({'url':fav_data})
 
-    def handleService(self, index, refresh = 0, searchPattern = '', searchType = ''):
+    def handleService(self, index, refresh=0, searchPattern='', searchType=''):
         printDBG('handleService start')
         
         CBaseHostClass.handleService(self, index, refresh, searchPattern, searchType)
@@ -184,9 +184,9 @@ class IPTVHost(CHostBase):
         CHostBase.__init__(self, DRDK(), True) #, [CDisplayListItem.TYPE_VIDEO, CDisplayListItem.TYPE_AUDIO])
 
     def getLogoPath(self):
-        return RetHost(RetHost.OK, value = [GetLogoDir('drdklogo.png')])
+        return RetHost(RetHost.OK, value=[GetLogoDir('drdklogo.png')])
     
-    def getLinksForVideo(self, Index = 0, selItem = None):
+    def getLinksForVideo(self, Index=0, selItem=None):
         retCode = RetHost.ERROR
         retlist = []
         if not self.isValidIndex(Index):
@@ -196,7 +196,7 @@ class IPTVHost(CHostBase):
         for item in urlList:
             retlist.append(CUrlItem(item["name"], item["url"], item["need_resolve"]))
 
-        return RetHost(RetHost.OK, value = retlist)
+        return RetHost(RetHost.OK, value=retlist)
     # end getLinksForVideo
     
     def getResolvedURL(self, url):
@@ -207,7 +207,7 @@ class IPTVHost(CHostBase):
             need_resolve = 0
             retlist.append(CUrlItem(item["name"], item["url"], need_resolve))
 
-        return RetHost(RetHost.OK, value = retlist)
+        return RetHost(RetHost.OK, value=retlist)
     
     def converItem(self, cItem):
         hostList = []
@@ -241,13 +241,13 @@ class IPTVHost(CHostBase):
         description =  cItem.get('desc', '')
         icon        =  cItem.get('icon', '')
         
-        return CDisplayListItem(name = title,
-                                    description = description,
-                                    type = type,
-                                    urlItems = hostLinks,
-                                    urlSeparateRequest = 1,
-                                    iconimage = icon,
-                                    possibleTypesOfSearch = possibleTypesOfSearch)
+        return CDisplayListItem(name=title,
+                                    description=description,
+                                    type=type,
+                                    urlItems=hostLinks,
+                                    urlSeparateRequest=1,
+                                    iconimage=icon,
+                                    possibleTypesOfSearch=possibleTypesOfSearch)
     # end converItem
 
     def getSearchItemInx(self):

@@ -37,8 +37,8 @@ from Screens.MessageBox import MessageBox
 ###################################################
 # Config options for HOST
 ###################################################
-config.plugins.iptvplayer.treetv_login      = ConfigText(default = "", fixed_size = False)
-config.plugins.iptvplayer.treetv_password   = ConfigText(default = "", fixed_size = False)
+config.plugins.iptvplayer.treetv_login      = ConfigText(default="", fixed_size=False)
+config.plugins.iptvplayer.treetv_password   = ConfigText(default="", fixed_size=False)
 
 def GetConfigList():
     optionList = []
@@ -472,7 +472,7 @@ class TreeTv(CBaseHostClass):
         else:
             return False, data
         
-    def handleService(self, index, refresh = 0, searchPattern = '', searchType = ''):
+    def handleService(self, index, refresh=0, searchPattern='', searchType=''):
         printDBG('handleService start')
         
         CBaseHostClass.handleService(self, index, refresh, searchPattern, searchType)
@@ -483,7 +483,7 @@ class TreeTv(CBaseHostClass):
            '' != config.plugins.iptvplayer.treetv_password.value.strip():
             loggedIn, msg = self.tryTologin(config.plugins.iptvplayer.treetv_login.value, config.plugins.iptvplayer.treetv_password.value)
             if not loggedIn:
-                self.sessionEx.open(MessageBox, _('User login "%s" failed.') % config.plugins.iptvplayer.treetv_login.value, type = MessageBox.TYPE_INFO, timeout = 10 )
+                self.sessionEx.open(MessageBox, _('User login "%s" failed.') % config.plugins.iptvplayer.treetv_login.value, type=MessageBox.TYPE_INFO, timeout=10 )
             else:
                 self.login    = config.plugins.iptvplayer.treetv_login.value
                 self.password = config.plugins.iptvplayer.treetv_password.value

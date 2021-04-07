@@ -233,7 +233,7 @@ class IPTVSubSimpleDownloaderWidget(Screen):
         try:
             for item in tmpList:
                 printDBG(item)
-                dItem = CDisplayListItem(name = item['title'], type=CDisplayListItem.TYPE_ARTICLE)
+                dItem = CDisplayListItem(name=item['title'], type=CDisplayListItem.TYPE_ARTICLE)
                 dItem.privateData = item
                 list.append( (dItem,) )
         except Exception: 

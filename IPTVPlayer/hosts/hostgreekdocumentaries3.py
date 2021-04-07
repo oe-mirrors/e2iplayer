@@ -223,7 +223,7 @@ class GreekDocumentaries3(CBaseHostClass):
         cItem['url'] = self.SEARCH_URL + urllib.parse.quote(searchPattern)
         self.listItems(cItem)
 
-    def handleService(self, index, refresh = 0, searchPattern = '', searchType = ''):
+    def handleService(self, index, refresh=0, searchPattern='', searchType=''):
         printDBG('handleService start')
         
         CBaseHostClass.handleService(self, index, refresh, searchPattern, searchType)
@@ -264,9 +264,9 @@ class IPTVHost(CHostBase):
         CHostBase.__init__(self, GreekDocumentaries3(), True, favouriteTypes=[]) #, [CDisplayListItem.TYPE_VIDEO, CDisplayListItem.TYPE_AUDIO])
 
     def getLogoPath(self):
-        return RetHost(RetHost.OK, value = [GetLogoDir('greekdocumentaries3logo.png')])
+        return RetHost(RetHost.OK, value=[GetLogoDir('greekdocumentaries3logo.png')])
     
-    def getLinksForVideo(self, Index = 0, selItem = None):
+    def getLinksForVideo(self, Index=0, selItem=None):
         retCode = RetHost.ERROR
         retlist = []
         if not self.isValidIndex(Index):
@@ -276,7 +276,7 @@ class IPTVHost(CHostBase):
         for item in urlList:
             retlist.append(CUrlItem(item["name"], item["url"], item['need_resolve']))
 
-        return RetHost(RetHost.OK, value = retlist)
+        return RetHost(RetHost.OK, value=retlist)
     # end getLinksForVideo
     
     def getResolvedURL(self, url):
@@ -287,7 +287,7 @@ class IPTVHost(CHostBase):
             need_resolve = 0
             retlist.append(CUrlItem(item["name"], item["url"], need_resolve))
 
-        return RetHost(RetHost.OK, value = retlist)
+        return RetHost(RetHost.OK, value=retlist)
         
     #def getArticleContent(self, Index = 0):
     #    retCode = RetHost.ERROR
@@ -335,13 +335,13 @@ class IPTVHost(CHostBase):
         description =  cItem.get('desc', '')
         icon        =  cItem.get('icon', '')
         
-        return CDisplayListItem(name = title,
-                                    description = description,
-                                    type = type,
-                                    urlItems = hostLinks,
-                                    urlSeparateRequest = 1,
-                                    iconimage = icon,
-                                    possibleTypesOfSearch = possibleTypesOfSearch)
+        return CDisplayListItem(name=title,
+                                    description=description,
+                                    type=type,
+                                    urlItems=hostLinks,
+                                    urlSeparateRequest=1,
+                                    iconimage=icon,
+                                    possibleTypesOfSearch=possibleTypesOfSearch)
     # end converItem
 
     def getSearchItemInx(self):

@@ -27,8 +27,8 @@ from Screens.MessageBox import MessageBox
 ###################################################
 # Config options for HOST
 ###################################################
-config.plugins.iptvplayer.wagasworld_login    = ConfigText(default = "", fixed_size = False)
-config.plugins.iptvplayer.wagasworld_password = ConfigText(default = "", fixed_size = False)
+config.plugins.iptvplayer.wagasworld_login    = ConfigText(default="", fixed_size=False)
+config.plugins.iptvplayer.wagasworld_password = ConfigText(default="", fixed_size=False)
 
 def GetConfigList():
     optionList = []
@@ -113,7 +113,7 @@ class WagasWorldApi(CBaseHostClass):
                     self.loggedIn = True
                     self.http_params.update({'save_cookie': True, 'load_cookie': True, 'cookiefile': self.COOKIE_FILE})
                 else:
-                    self.sessionEx.open(MessageBox, _('"%s" login failed! Please check your login and password.') % login, type = MessageBox.TYPE_INFO, timeout = 10 )
+                    self.sessionEx.open(MessageBox, _('"%s" login failed! Please check your login and password.') % login, type=MessageBox.TYPE_INFO, timeout=10 )
         
             list = self.getGroups({'url':self.MAIN_URL + 'channel'})
             #list = self.getMainCategories(cItem)
@@ -152,7 +152,7 @@ class WagasWorldApi(CBaseHostClass):
         except Exception:
             printExc()
             if errorMsg != '':
-                self.sessionEx.open(MessageBox, errorMsg, type = MessageBox.TYPE_ERROR, timeout = 10 )
+                self.sessionEx.open(MessageBox, errorMsg, type=MessageBox.TYPE_ERROR, timeout=10 )
         return ret
 
     def exploreItem(self, cItem):

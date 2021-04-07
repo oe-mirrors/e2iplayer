@@ -19,7 +19,7 @@ class Wiz1NetApi(CBaseHostClass):
         self.http_params = {'header':self.HTTP_HEADER}
         self.getLinkJS = ''
 
-    def getPage(self, baseUrl, addParams = {}, post_data = None):
+    def getPage(self, baseUrl, addParams={}, post_data=None):
         if addParams == {}:
             addParams = dict(self.http_params)
         origBaseUrl = baseUrl

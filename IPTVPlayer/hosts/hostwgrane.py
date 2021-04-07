@@ -50,7 +50,7 @@ class WgranePL(CBaseHostClass):
         url = url.replace('&amp;', '&')
         return CBaseHostClass.getFullUrl(self, url, baseUrl)
     
-    def getPage(self, baseUrl, addParams = {}, post_data = None):
+    def getPage(self, baseUrl, addParams={}, post_data=None):
         if addParams == {}:
             addParams = dict(self.defaultParams)
         def _getFullUrl(url):
@@ -201,7 +201,7 @@ class WgranePL(CBaseHostClass):
             urlTab = self.up.getVideoLinkExt(cItem['url'])
         return urlTab
 
-    def handleService(self, index, refresh = 0, searchPattern = '', searchType = ''):
+    def handleService(self, index, refresh=0, searchPattern='', searchType=''):
         printDBG('handleService start')
         
         CBaseHostClass.handleService(self, index, refresh, searchPattern, searchType)

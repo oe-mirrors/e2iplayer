@@ -46,7 +46,7 @@ class Kkiste(CBaseHostClass):
                             ]
         
 
-    def getPage(self, url, addParams = {}, post_data = None):
+    def getPage(self, url, addParams={}, post_data=None):
         if addParams == {}:
             addParams = dict(self.defaultParams)
         
@@ -76,7 +76,7 @@ class Kkiste(CBaseHostClass):
 
         self.listsTab(cats, nextCat)
         
-    def listItems(self, cItem, nextCategory, post_data = None):
+    def listItems(self, cItem, nextCategory, post_data=None):
         printDBG("hostszenestreamz.listItems |%s|" % cItem)
         
         url  = cItem['url']
@@ -314,7 +314,7 @@ class Kkiste(CBaseHostClass):
         self.listItems(cItem, 'explore_item', post_data)
         
     
-    def handleService(self, index, refresh = 0, searchPattern = '', searchType = ''):
+    def handleService(self, index, refresh=0, searchPattern='', searchType=''):
         printDBG('hostszenestreamz.handleService start')
         
         CBaseHostClass.handleService(self, index, refresh, searchPattern, searchType)

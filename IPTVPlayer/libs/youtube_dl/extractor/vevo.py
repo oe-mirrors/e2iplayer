@@ -21,7 +21,7 @@ except Exception:
 
 from Components.config import config, ConfigSelection, ConfigYesNo, ConfigText, getConfigListEntry
 
-config.plugins.iptvplayer.vevo_default_quality = ConfigSelection(default = "1228800", choices = [
+config.plugins.iptvplayer.vevo_default_quality = ConfigSelection(default="1228800", choices=[
 ("0", _("the worst")),
 ("245760",  "30 KB/s"), 
 ("655360",  "80 KB/s"), 
@@ -36,8 +36,8 @@ config.plugins.iptvplayer.vevo_default_quality = ConfigSelection(default = "1228
 ("6553600", "800 KB/s"),
 ("99999999", _("the best"))
 ])
-config.plugins.iptvplayer.vevo_use_default_quality = ConfigYesNo(default = True)
-config.plugins.iptvplayer.vevo_allow_hls           = ConfigYesNo(default = True)
+config.plugins.iptvplayer.vevo_use_default_quality = ConfigYesNo(default=True)
+config.plugins.iptvplayer.vevo_allow_hls           = ConfigYesNo(default=True)
 
 def _int(data):
     ret = 0

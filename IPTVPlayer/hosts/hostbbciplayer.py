@@ -596,7 +596,7 @@ class BBCiPlayer(CBaseHostClass):
         printDBG("BBCiPlayer.getVideoLinks [%s]" % url)
         return self.up.getVideoLinkExt(url)
         
-    def handleService(self, index, refresh = 0, searchPattern = '', searchType = ''):
+    def handleService(self, index, refresh=0, searchPattern='', searchType=''):
         printDBG('BBCiPlayer.handleService - start')
         
         CBaseHostClass.handleService(self, index, refresh, searchPattern, searchType)

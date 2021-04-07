@@ -60,7 +60,7 @@ class OpenSubtitles(CBaseSubProviderClass):
         
         self.wasInformedAboutReCaptcha = False
         
-    def getPage(self, baseUrl, addParams = {}, post_data = None):
+    def getPage(self, baseUrl, addParams={}, post_data=None):
         if addParams == {}:
             addParams = dict(self.defaultParams)
         
@@ -140,13 +140,13 @@ class OpenSubtitles(CBaseSubProviderClass):
                 if logoutUrl != '':
                     sts, data = self.getPage(logoutUrl)
                     if not sts:
-                        self.sessionEx.open(MessageBox, errMsg, type = MessageBox.TYPE_INFO, timeout = 5)
+                        self.sessionEx.open(MessageBox, errMsg, type=MessageBox.TYPE_INFO, timeout=5)
                         return
                 
                 url  = self.getFullUrl(self.cm.ph.getSearchGroups(data, '<form[^>]+?name="loginform"[^>]+?action="([^"]+?)"')[0])
                 sts, data = self.getPage(url)
                 if not sts:
-                    self.sessionEx.open(MessageBox, errMsg, type = MessageBox.TYPE_INFO, timeout = 5)
+                    self.sessionEx.open(MessageBox, errMsg, type=MessageBox.TYPE_INFO, timeout=5)
                     return
                 
                 data = self.cm.ph.getDataBeetwenMarkers(data, '<form', '</form>')[1]
@@ -159,9 +159,9 @@ class OpenSubtitles(CBaseSubProviderClass):
                 
                 sts, data = self.getPage(loginUrl, post_data=post_data)
                 if not sts:
-                    self.sessionEx.open(MessageBox, errMsg, type = MessageBox.TYPE_INFO, timeout = 5)
+                    self.sessionEx.open(MessageBox, errMsg, type=MessageBox.TYPE_INFO, timeout=5)
                 elif 'logout' not in data:
-                    self.sessionEx.open(MessageBox, _('Failed to log in user "%s". Please check your login and password.') % login, type = MessageBox.TYPE_INFO, timeout = 5)
+                    self.sessionEx.open(MessageBox, _('Failed to log in user "%s". Please check your login and password.') % login, type=MessageBox.TYPE_INFO, timeout=5)
                     self.logedIn = False
                 else:
                     if self.searchURL == '':
@@ -171,7 +171,7 @@ class OpenSubtitles(CBaseSubProviderClass):
         elif logoutUrl != '':
             sts, data = self.getPage(logoutUrl)
             if not sts:
-                self.sessionEx.open(MessageBox, errMsg, type = MessageBox.TYPE_INFO, timeout = 5)
+                self.sessionEx.open(MessageBox, errMsg, type=MessageBox.TYPE_INFO, timeout=5)
                 return
         
     def listLanguages(self, cItem, nextCategory):
@@ -471,7 +471,7 @@ class OpenSubtitles(CBaseSubProviderClass):
         
         return retData
     
-    def handleService(self, index, refresh = 0):
+    def handleService(self, index, refresh=0):
         printDBG('handleService start')
         
         CBaseSubProviderClass.handleService(self, index, refresh)

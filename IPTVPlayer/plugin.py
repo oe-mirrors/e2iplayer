@@ -37,14 +37,14 @@ def Plugins(**kwargs):
     list = []
     if config.plugins.iptvplayer.plugin_autostart.value:
         if config.plugins.iptvplayer.plugin_autostart_method.value == 'wizard':
-            list.append(PluginDescriptor(name=(("E2iPlayer")), description=desc, where = [PluginDescriptor.WHERE_WIZARD], fnc=(9, pluginAutostart), needsRestart=False))
+            list.append(PluginDescriptor(name=(("E2iPlayer")), description=desc, where=[PluginDescriptor.WHERE_WIZARD], fnc=(9, pluginAutostart), needsRestart=False))
         elif config.plugins.iptvplayer.plugin_autostart_method.value == 'infobar':
             list.append(PluginDescriptor(where=[PluginDescriptor.WHERE_SESSIONSTART, PluginDescriptor.WHERE_AUTOSTART], fnc=pluginAutostartSetup))
     
-    list.append(PluginDescriptor(name=(("E2iPlayer")), description=desc, where = [PluginDescriptor.WHERE_PLUGINMENU], icon=iconFile, fnc=main)) # always show in plugin menu
-    list.append(PluginDescriptor(name=(("E2iPlayer")), description=desc, where = PluginDescriptor.WHERE_MENU, fnc=startIPTVfromMenu))
+    list.append(PluginDescriptor(name=(("E2iPlayer")), description=desc, where=[PluginDescriptor.WHERE_PLUGINMENU], icon=iconFile, fnc=main)) # always show in plugin menu
+    list.append(PluginDescriptor(name=(("E2iPlayer")), description=desc, where=PluginDescriptor.WHERE_MENU, fnc=startIPTVfromMenu))
     if config.plugins.iptvplayer.showinextensions.value:
-        list.append (PluginDescriptor(name=(("E2iPlayer")), description=desc, where = [PluginDescriptor.WHERE_EXTENSIONSMENU], fnc=main))
+        list.append (PluginDescriptor(name=(("E2iPlayer")), description=desc, where=[PluginDescriptor.WHERE_EXTENSIONSMENU], fnc=main))
     if  IsWebInterfaceModuleAvailable() and config.plugins.iptvplayer.IPTVWebIterface.value:
         try:
             list.append(PluginDescriptor(where=PluginDescriptor.WHERE_SESSIONSTART, fnc=sessionstart, needsRestart=False)) # activating IPTV web interface
@@ -99,7 +99,7 @@ def runSetup(session):
 
 def main(session, **kwargs):
     if config.plugins.iptvplayer.pluginProtectedByPin.value:
-        session.openWithCallback(boundFunction(pinCallback, session, runMain), IPTVPinWidget, title =_("Enter pin")) 
+        session.openWithCallback(boundFunction(pinCallback, session, runMain), IPTVPinWidget, title=_("Enter pin")) 
     else:
         runMain(session)
     
@@ -138,7 +138,7 @@ def pinCallback(session, callbackFun, pin=None):
     if None == pin:
         return
     if pin != config.plugins.iptvplayer.pin.value:
-        session.open(MessageBox, _("Pin incorrect!"), type = MessageBox.TYPE_INFO, timeout = 5)
+        session.open(MessageBox, _("Pin incorrect!"), type=MessageBox.TYPE_INFO, timeout=5)
         return
     callbackFun(session)
     

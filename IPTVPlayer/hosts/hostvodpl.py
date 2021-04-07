@@ -26,9 +26,9 @@ from Components.config import config, ConfigSelection, ConfigYesNo, getConfigLis
 ###################################################
 # Config options for HOST
 ###################################################
-config.plugins.iptvplayer.onetvodDefaultformat = ConfigSelection(default = "9999", choices = [("0", "bitrate: najgorszy"), ("200", "bitrate: 200p"), ("450", "bitrate: 450p"), ("900", "bitrate: 900"), ("1800", "bitrate: 1800"), ("9999", "bitrate: najlepszy")])
-config.plugins.iptvplayer.onetvodUseDF = ConfigYesNo(default = True)
-config.plugins.iptvplayer.proxyOnet = ConfigYesNo(default = False)
+config.plugins.iptvplayer.onetvodDefaultformat = ConfigSelection(default="9999", choices=[("0", "bitrate: najgorszy"), ("200", "bitrate: 200p"), ("450", "bitrate: 450p"), ("900", "bitrate: 900"), ("1800", "bitrate: 1800"), ("9999", "bitrate: najlepszy")])
+config.plugins.iptvplayer.onetvodUseDF = ConfigYesNo(default=True)
+config.plugins.iptvplayer.proxyOnet = ConfigYesNo(default=False)
 
 def GetConfigList():
     optionList = []
@@ -72,7 +72,7 @@ class VODPL(CBaseHostClass):
         url = url.replace('&amp;', '&')
         return CBaseHostClass.getFullIconUrl(self, url)
         
-    def getPage(self, baseUrl, addParams = {}, post_data = None):
+    def getPage(self, baseUrl, addParams={}, post_data=None):
         if addParams == {}:
             addParams = dict(self.defaultParams)
         
@@ -436,7 +436,7 @@ class VODPL(CBaseHostClass):
         
         return [{'title':self.cleanHtmlStr( title ), 'text': self.cleanHtmlStr( desc ), 'images':[{'title':'', 'url':self.getFullUrl(icon)}], 'other_info':otherInfo}]
     
-    def handleService(self, index, refresh = 0, searchPattern = '', searchType = ''):
+    def handleService(self, index, refresh=0, searchPattern='', searchType=''):
         printDBG('handleService start')
         
         CBaseHostClass.handleService(self, index, refresh, searchPattern, searchType)

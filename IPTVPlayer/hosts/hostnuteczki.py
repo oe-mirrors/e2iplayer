@@ -24,8 +24,8 @@ from Screens.MessageBox import MessageBox
 ###################################################
 # Config options for HOST
 ###################################################
-config.plugins.iptvplayer.nuteczki_login      = ConfigText(default = "", fixed_size = False)
-config.plugins.iptvplayer.nuteczki_password   = ConfigText(default = "", fixed_size = False)
+config.plugins.iptvplayer.nuteczki_login      = ConfigText(default="", fixed_size=False)
+config.plugins.iptvplayer.nuteczki_password   = ConfigText(default="", fixed_size=False)
 
 def GetConfigList():
     optionList = []
@@ -59,7 +59,7 @@ class NuteczkiEU(CBaseHostClass):
         self.login    = ''
         self.password = ''
     
-    def getPage(self, baseUrl, addParams = {}, post_data = None):
+    def getPage(self, baseUrl, addParams={}, post_data=None):
         if addParams == {}:
             addParams = dict(self.defaultParams)
         return self.cm.getPage(baseUrl, addParams, post_data)
@@ -256,7 +256,7 @@ class NuteczkiEU(CBaseHostClass):
         page = cItem.get('page', 1)
 
         postData = cItem.get('post_data')
-        sts, data = self.getPage(cItem['url'], post_data = postData)
+        sts, data = self.getPage(cItem['url'], post_data=postData)
         if not sts:
             return
 
@@ -437,11 +437,11 @@ class NuteczkiEU(CBaseHostClass):
                 msgTab = [_('Login failed.')]
                 if sts:
                     msgTab.append(self.cleanHtmlStr(self.cm.ph.getAllItemsBeetwenNodes(data, ('<div', '>', 'alert'), ('</div', '>'), False)[1])) 
-                self.sessionEx.open(MessageBox, '\n'.join(msgTab), type = MessageBox.TYPE_ERROR, timeout = 10)
+                self.sessionEx.open(MessageBox, '\n'.join(msgTab), type=MessageBox.TYPE_ERROR, timeout=10)
                 printDBG('tryTologin failed')
         return self.loggedIn
 
-    def handleService(self, index, refresh = 0, searchPattern = '', searchType = ''):
+    def handleService(self, index, refresh=0, searchPattern='', searchType=''):
         printDBG('handleService start')
         
         self.tryTologin()

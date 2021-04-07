@@ -33,9 +33,9 @@ from Components.config import config, ConfigText, ConfigSelection, ConfigYesNo, 
 #config.plugins.iptvplayer.ekstraklasa_usedf = ConfigYesNo(default = False)
 #config.plugins.iptvplayer.ekstraklasa_proxy = ConfigYesNo(default = False)
 
-config.plugins.iptvplayer.ekstraklasa_defaultres = ConfigSelection(default = "0", choices = [("0", _("Ask")), ("800", "800 kbps"), ("1000", "1000 kbps"), ("1800", "1800 kbps"), ("3600", "3600 kbps"), ("6000", "6000 kbps"), ("99999", "Max")])
-config.plugins.iptvplayer.ekstraklasa_login    = ConfigText(default = "", fixed_size = False)
-config.plugins.iptvplayer.ekstraklasa_password = ConfigText(default = "", fixed_size = False)
+config.plugins.iptvplayer.ekstraklasa_defaultres = ConfigSelection(default="0", choices=[("0", _("Ask")), ("800", "800 kbps"), ("1000", "1000 kbps"), ("1800", "1800 kbps"), ("3600", "3600 kbps"), ("6000", "6000 kbps"), ("99999", "Max")])
+config.plugins.iptvplayer.ekstraklasa_login    = ConfigText(default="", fixed_size=False)
+config.plugins.iptvplayer.ekstraklasa_password = ConfigText(default="", fixed_size=False)
 
 
 def GetConfigList():
@@ -116,7 +116,7 @@ class Ekstraklasa(CBaseHostClass):
                 "password": self.password.strip(),
             }
             
-            sts, data = self.cm.getPage(self.AUTH_URL, post_data = postData)
+            sts, data = self.cm.getPage(self.AUTH_URL, post_data=postData)
             
             if sts:
                 printDBG("------------- auth --------------")
@@ -162,7 +162,7 @@ class Ekstraklasa(CBaseHostClass):
 
         duration = video_json.get("duration", 0)
         if duration>0:
-            descStr.append( _("Duration") + ": " + str(datetime.timedelta(seconds = int(duration))))
+            descStr.append( _("Duration") + ": " + str(datetime.timedelta(seconds=int(duration))))
 
         vtype = video_json.get("sourceType", "")
 
@@ -395,7 +395,7 @@ class Ekstraklasa(CBaseHostClass):
             
         return linksTab
         
-    def handleService(self, index, refresh = 0, searchPattern = '', searchType = ''):
+    def handleService(self, index, refresh=0, searchPattern='', searchType=''):
         printDBG('handleService start')
         
         CBaseHostClass.handleService(self, index, refresh, searchPattern, searchType)

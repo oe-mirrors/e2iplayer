@@ -32,8 +32,8 @@ from Screens.MessageBox import MessageBox
 ###################################################
 # Config options for HOST
 ###################################################
-config.plugins.iptvplayer.vumedicom_login    = ConfigText(default = "", fixed_size = False)
-config.plugins.iptvplayer.vumedicom_password = ConfigText(default = "", fixed_size = False)
+config.plugins.iptvplayer.vumedicom_login    = ConfigText(default="", fixed_size=False)
+config.plugins.iptvplayer.vumedicom_password = ConfigText(default="", fixed_size=False)
 
 def GetConfigList():
     optionList = []
@@ -64,7 +64,7 @@ class VUMEDI(CBaseHostClass):
         self.login    = ''
         self.password = ''
     
-    def getPage(self, baseUrl, addParams = {}, post_data = None):
+    def getPage(self, baseUrl, addParams={}, post_data=None):
         if addParams == {}:
             addParams = dict(self.defaultParams)
         return self.cm.getPage(baseUrl, addParams, post_data)
@@ -359,7 +359,7 @@ class VUMEDI(CBaseHostClass):
             self.loggedIn = False
             
             if '' == self.login.strip() or '' == self.password.strip():
-                self.sessionEx.open(MessageBox, _('The host %s requires registration. \nPlease fill your login and password in the host configuration. Available under blue button.' % self.getMainUrl()), type = MessageBox.TYPE_ERROR, timeout = 10)
+                self.sessionEx.open(MessageBox, _('The host %s requires registration. \nPlease fill your login and password in the host configuration. Available under blue button.' % self.getMainUrl()), type=MessageBox.TYPE_ERROR, timeout=10)
                 return False
             
             sts, data = self.getPage(self.getFullUrl('/accounts/login/'))
@@ -398,11 +398,11 @@ class VUMEDI(CBaseHostClass):
                 errorMessage = [_('Login failed.')]
                 if sts:
                     errorMessage.append(self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(data, ('<div', '>', 'alert-warning'), ('<', '>'), False)[1]))
-                self.sessionEx.open(MessageBox, '\n'.join(errorMessage), type = MessageBox.TYPE_ERROR, timeout = 10)
+                self.sessionEx.open(MessageBox, '\n'.join(errorMessage), type=MessageBox.TYPE_ERROR, timeout=10)
                 printDBG('tryTologin failed')
         return self.loggedIn
     
-    def handleService(self, index, refresh = 0, searchPattern = '', searchType = ''):
+    def handleService(self, index, refresh=0, searchPattern='', searchType=''):
         printDBG('handleService start')
         
         CBaseHostClass.handleService(self, index, refresh, searchPattern, searchType)

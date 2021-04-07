@@ -472,7 +472,7 @@ class HTTPResponse(http.client.HTTPResponse):
         data, self._rbuf = self._rbuf[:i], self._rbuf[i:]
         return data
 
-    def readlines(self, sizehint = 0):
+    def readlines(self, sizehint=0):
         total = 0
         list = []
         while 1:

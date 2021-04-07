@@ -21,7 +21,7 @@ except Exception:
 ###################################################
 # Config options for HOST
 ###################################################
-config.plugins.iptvplayer.meteopl_locality = ConfigText(default = "", fixed_size = False)
+config.plugins.iptvplayer.meteopl_locality = ConfigText(default="", fixed_size=False)
 
 def GetConfigList():
     optionList = []

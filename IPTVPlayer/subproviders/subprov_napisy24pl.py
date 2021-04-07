@@ -94,14 +94,14 @@ class Napisy24plProvider(CBaseSubProviderClass):
             
             sts, data = self.getPage(loginUrl, post_data=post_data)
             if not sts:
-                self.sessionEx.open(MessageBox, errMsg, type = MessageBox.TYPE_ERROR, timeout = 5)
+                self.sessionEx.open(MessageBox, errMsg, type=MessageBox.TYPE_ERROR, timeout=5)
             elif 'logout' not in data:
-                self.sessionEx.open(MessageBox, _('Failed to log in user "%s". Please check your login and password.') % login, type = MessageBox.TYPE_ERROR, timeout = 10)
+                self.sessionEx.open(MessageBox, _('Failed to log in user "%s". Please check your login and password.') % login, type=MessageBox.TYPE_ERROR, timeout=10)
                 self.logedIn = False
             else:
                 self.logedIn = True
         else:
-            self.sessionEx.open(MessageBox, _('Service %s requires registration. \nPlease fill your login and password in the %s configuration.') % ('http://napisy24.pl/', 'E2iPlayer'), type = MessageBox.TYPE_ERROR, timeout = 10)
+            self.sessionEx.open(MessageBox, _('Service %s requires registration. \nPlease fill your login and password in the %s configuration.') % ('http://napisy24.pl/', 'E2iPlayer'), type=MessageBox.TYPE_ERROR, timeout=10)
         
     def sortSubtitlesByDurationMatch(self):
         # we need duration to sort
@@ -390,7 +390,7 @@ class Napisy24plProvider(CBaseSubProviderClass):
         __cleanFiles()
         return retData
     
-    def handleService(self, index, refresh = 0):
+    def handleService(self, index, refresh=0):
         printDBG('handleService start')
         
         CBaseSubProviderClass.handleService(self, index, refresh)

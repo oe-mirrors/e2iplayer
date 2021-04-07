@@ -24,7 +24,7 @@ class Wiziwig1Api(CBaseHostClass):
         self.getLinkJS = ''
         self.timeoffset = datetime.datetime.now() - datetime.datetime.utcnow() + datetime.timedelta(milliseconds=500)
 
-    def getPage(self, baseUrl, addParams = {}, post_data = None):
+    def getPage(self, baseUrl, addParams={}, post_data=None):
         if addParams == {}:
             addParams = dict(self.http_params)
         origBaseUrl = baseUrl

@@ -289,7 +289,7 @@ class FilmPertutti(CBaseHostClass):
         
         return [{'title':self.cleanHtmlStr( title ), 'text': '[/br][/br]'.join(descTab), 'images':[{'title':'', 'url':self.getFullUrl(icon)}], 'other_info':{'custom_items_list':itemsList}}]
         
-    def handleService(self, index, refresh = 0, searchPattern = '', searchType = ''):
+    def handleService(self, index, refresh=0, searchPattern='', searchType=''):
         printDBG('handleService start')
         
         CBaseHostClass.handleService(self, index, refresh, searchPattern, searchType)

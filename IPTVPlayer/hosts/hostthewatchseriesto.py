@@ -25,7 +25,7 @@ from Components.config import config, ConfigSelection, getConfigListEntry
 ###################################################
 # Config options for HOST
 ###################################################
-config.plugins.iptvplayer.swatchseries_web_proxy_gateway = ConfigSelection(default = "auto", choices = [("auto", _("Auto")), ("always", _("Always")), ("never",  _("Never"))])
+config.plugins.iptvplayer.swatchseries_web_proxy_gateway = ConfigSelection(default="auto", choices=[("auto", _("Auto")), ("always", _("Always")), ("never",  _("Never"))])
 
 def GetConfigList():
     optionList = []
@@ -319,7 +319,7 @@ class TheWatchseriesTo(CBaseHostClass):
         params = {'type':cItem['type'], 'category':cItem.get('category', ''), 'title':cItem['title'], 'url':cItem['url'], 'desc':cItem['desc'], 'icon':cItem['icon']}
         return json_dumps(params) 
 
-    def handleService(self, index, refresh = 0, searchPattern = '', searchType = ''):
+    def handleService(self, index, refresh=0, searchPattern='', searchType=''):
         printDBG('handleService start')
         
         CBaseHostClass.handleService(self, index, refresh, searchPattern, searchType)

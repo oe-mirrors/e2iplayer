@@ -76,7 +76,7 @@ class ConfigBaseWidget(Screen, ConfigListScreen):
         
         self.onChangedEntry = [ ]
         self.list = [ ]
-        ConfigListScreen.__init__(self, self.list, session = session, on_change = self.changedEntry)
+        ConfigListScreen.__init__(self, self.list, session=session, on_change=self.changedEntry)
         self.setup_title = (_("E2iPlayer - settings"))
 
         self["key_green"] = Label(_("Save"))
@@ -193,7 +193,7 @@ class ConfigBaseWidget(Screen, ConfigListScreen):
         return ''
     
     def askForSave(self, callbackYesFun, callBackNoFun):
-        self.session.openWithCallback(boundFunction(self.saveOrCancelChanges, callbackYesFun, callBackNoFun), MessageBox, text=_('Save changes?'), type = MessageBox.TYPE_YESNO)
+        self.session.openWithCallback(boundFunction(self.saveOrCancelChanges, callbackYesFun, callBackNoFun), MessageBox, text=_('Save changes?'), type=MessageBox.TYPE_YESNO)
         return
         
     def saveOrCancelChanges(self, callbackFun=None, failCallBackFun=None, answer=None):
@@ -237,7 +237,7 @@ class ConfigBaseWidget(Screen, ConfigListScreen):
         if message == '':
             self.close()
         else:
-            self.session.openWithCallback(self.closeAfterMessage, MessageBox, text = message, type = MessageBox.TYPE_INFO)
+            self.session.openWithCallback(self.closeAfterMessage, MessageBox, text=message, type=MessageBox.TYPE_INFO)
             
     def closeAfterMessage(self, arg=None):
         self.close()

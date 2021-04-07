@@ -26,7 +26,7 @@ from Components.config import config, ConfigYesNo, getConfigListEntry
 ###################################################
 # Config options for HOST
 ###################################################
-config.plugins.iptvplayer.favourites_use_watched_flag = ConfigYesNo(default = True)
+config.plugins.iptvplayer.favourites_use_watched_flag = ConfigYesNo(default=True)
 
 def GetConfigList():
     optionList = []
@@ -103,7 +103,7 @@ class Favourites(CBaseHostClass):
         
     def getLinksForVideo(self, cItem):
         printDBG("Favourites.getLinksForVideo idx[%r]" % cItem)
-        ret = RetHost(RetHost.ERROR, value = [])
+        ret = RetHost(RetHost.ERROR, value=[])
         sts, data = self.helper.getGroupItems(cItem['group_id'])
         if not sts:
             return ret
@@ -120,13 +120,13 @@ class Favourites(CBaseHostClass):
                 name = self.host.cleanHtmlStr( item["name"] )
                 url  = item["url"]
                 retlist.append(CUrlItem(name, url, 0))
-            ret = RetHost(RetHost.OK, value = retlist)
+            ret = RetHost(RetHost.OK, value=retlist)
         elif CFavItem.RESOLVER_DIRECT_LINK == item.resolver:
             self.host = None
             self.hostName = None
             retlist = []
             retlist.append(CUrlItem('direct link', item.data, 0))
-            ret = RetHost(RetHost.OK, value = retlist)
+            ret = RetHost(RetHost.OK, value=retlist)
         else:
             if self._setHost(item.resolver):
                 ret = self.host.getLinksForFavourite(item)
@@ -136,7 +136,7 @@ class Favourites(CBaseHostClass):
         try:
             return self.host.getResolvedURL(url)
         except Exception:
-            return RetHost(RetHost.ERROR, value = [])
+            return RetHost(RetHost.ERROR, value=[])
 
     def handleService(self, index, refresh=0, searchPattern='', searchType=''):
         printDBG('Favourites.handleService start')
@@ -234,7 +234,7 @@ class IPTVHost(CHostBase):
                 return True
         return False
         
-    def markItemAsViewed(self, Index = 0):
+    def markItemAsViewed(self, Index=0):
         retCode = RetHost.ERROR
         retlist = []
         if self.useWatchedFlag:
@@ -246,9 +246,9 @@ class IPTVHost(CHostBase):
                     retCode = RetHost.OK
                     retlist = ['refresh']
                     self.refreshAfterWatchedFlagChange = True
-        return RetHost(retCode, value = retlist)
+        return RetHost(retCode, value=retlist)
     
-    def getCustomActions(self, Index = 0):
+    def getCustomActions(self, Index=0):
         retCode = RetHost.ERROR
         retlist = []
         if self.useWatchedFlag:
@@ -262,7 +262,7 @@ class IPTVHost(CHostBase):
                         params = IPTVChoiceBoxItem(_('Set watched'), "", {'action':'set_watched_flag', 'item_index':Index, 'hash_data':tmp})
                     retlist.append(params)
                 retCode = RetHost.OK
-        return RetHost(retCode, value = retlist)
+        return RetHost(retCode, value=retlist)
         
     def performCustomAction(self, privateData):
         retCode = RetHost.ERROR
@@ -287,20 +287,20 @@ class IPTVHost(CHostBase):
         return RetHost(retCode, value=retlist)
         
     def getLogoPath(self):
-        return RetHost(RetHost.OK, value = [GetLogoDir('favouriteslogo.png')])
+        return RetHost(RetHost.OK, value=[GetLogoDir('favouriteslogo.png')])
 
-    def getLinksForVideo(self, Index = 0, selItem = None):
+    def getLinksForVideo(self, Index=0, selItem=None):
         if self.host.isQuestMode(): 
             return self.host.getCurrentGuestHost().getLinksForVideo(Index)
         else:
             listLen = len(self.host.currList)
             if listLen < Index and listLen > 0:
                 printDBG( "ERROR getLinksForVideo - current list is to short len: %d, Index: %d" % (listLen, Index) )
-                return RetHost(RetHost.ERROR, value = [])
+                return RetHost(RetHost.ERROR, value=[])
             
             if self.host.currList[Index]["type"] not in ['audio', 'video', 'picture']:
                 printDBG( "ERROR getLinksForVideo - current item has wrong type" )
-                return RetHost(RetHost.ERROR, value = [])
+                return RetHost(RetHost.ERROR, value=[])
             return self.host.getLinksForVideo(self.host.currList[Index])
     # end getLinksForVideo
         
@@ -310,9 +310,9 @@ class IPTVHost(CHostBase):
         else:
             return self.host.getResolvedURL(url)
     
-    def getListForItem(self, Index = 0, refresh = 0, selItem = None):
+    def getListForItem(self, Index=0, refresh=0, selItem=None):
         guestIndex = Index
-        ret = RetHost(RetHost.ERROR, value = [])
+        ret = RetHost(RetHost.ERROR, value=[])
         if not self.host.isQuestMode(): 
             ret = CHostBase.getListForItem(self, Index, refresh)
             guestIndex = 0
@@ -324,8 +324,8 @@ class IPTVHost(CHostBase):
         self.fixWatchedFlag(ret)
         return ret
 
-    def getPrevList(self, refresh = 0):
-        ret = RetHost(RetHost.ERROR, value = [])
+    def getPrevList(self, refresh=0):
+        ret = RetHost(RetHost.ERROR, value=[])
         if not self.host.isQuestMode() or len(self.host.getCurrentGuestHost().listOfprevList) <= 1:
             if self.host.isQuestMode():
                 self.host.clearQuestMode()
@@ -337,11 +337,11 @@ class IPTVHost(CHostBase):
         self.fixWatchedFlag(ret)
         return ret
 
-    def getCurrentList(self, refresh = 0):
+    def getCurrentList(self, refresh=0):
         if refresh == 1 and self.refreshAfterWatchedFlagChange and self.cachedRet != None:
             ret = self.cachedRet
         else: 
-            ret = RetHost(RetHost.ERROR, value = [])
+            ret = RetHost(RetHost.ERROR, value=[])
             if not self.host.isQuestMode(): 
                 ret = CHostBase.getCurrentList(self, refresh)
             if self.host.isQuestMode(): 
@@ -352,8 +352,8 @@ class IPTVHost(CHostBase):
         self.refreshAfterWatchedFlagChange = False
         return ret
         
-    def getMoreForItem(self, Index = 0):
-        ret = RetHost(RetHost.ERROR, value = [])
+    def getMoreForItem(self, Index=0):
+        ret = RetHost(RetHost.ERROR, value=[])
         if not self.host.isQuestMode(): 
             ret = CHostBase.getMoreForItem(self, Index)
         if self.host.isQuestMode(): 
@@ -363,7 +363,7 @@ class IPTVHost(CHostBase):
         self.fixWatchedFlag(ret)
         return ret
     
-    def getArticleContent(self, Index = 0):
+    def getArticleContent(self, Index=0):
         retCode = RetHost.ERROR
         retlist = []
         guestIndex = Index
@@ -373,6 +373,6 @@ class IPTVHost(CHostBase):
             guestIndex = 0
         if callQuestHost: 
             return self.host.getCurrentGuestHost().getArticleContent(guestIndex)
-        return RetHost(retCode, value = retlist)
+        return RetHost(retCode, value=retlist)
         
         

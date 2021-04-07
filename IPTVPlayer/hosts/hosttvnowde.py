@@ -25,9 +25,9 @@ from Components.config import config, ConfigSelection, ConfigYesNo, getConfigLis
 ###################################################
 # Config options for HOST
 ###################################################
-config.plugins.iptvplayer.tvnowde_show_paid_items = ConfigYesNo(default = False)
-config.plugins.iptvplayer.tvnowde_show_drm_items = ConfigYesNo(default = False)
-config.plugins.iptvplayer.tvnowde_prefered_format     = ConfigSelection(default = "hls", choices = [
+config.plugins.iptvplayer.tvnowde_show_paid_items = ConfigYesNo(default=False)
+config.plugins.iptvplayer.tvnowde_show_drm_items = ConfigYesNo(default=False)
+config.plugins.iptvplayer.tvnowde_prefered_format     = ConfigSelection(default="hls", choices=[
 ("hls",  _("HLS/m3u8")),
 ("dash", _("DASH/mpd"))
 ])
@@ -73,7 +73,7 @@ class TVNowDE(CBaseHostClass):
                              {'title':'Super RTL','f_channel':'superrtl'},
                             ]
         
-    def getPage(self, baseUrl, addParams = {}, post_data = None):
+    def getPage(self, baseUrl, addParams={}, post_data=None):
         if addParams == {}:
             addParams = dict(self.defaultParams)
         
@@ -494,7 +494,7 @@ class TVNowDE(CBaseHostClass):
         params.pop('dashclear', None)
         return json_dumps(params) 
 
-    def handleService(self, index, refresh = 0, searchPattern = '', searchType = ''):
+    def handleService(self, index, refresh=0, searchPattern='', searchType=''):
         printDBG('handleService start')
         
         CBaseHostClass.handleService(self, index, refresh, searchPattern, searchType)

@@ -27,7 +27,7 @@ class IPTVFileHost:
                 titleInGroup = title[idx+1:].strip()
         return groupTitle, titleInGroup
 
-    def addFile(self, filePath, encoding='utf-8', addItemParams = {}):
+    def addFile(self, filePath, encoding='utf-8', addItemParams={}):
         printDBG('IPTVFileHost.addFile file[%s]' % filePath)
         try:
             with codecs.open(filePath, 'r', encoding, 'replace') as fp:

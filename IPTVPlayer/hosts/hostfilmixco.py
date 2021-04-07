@@ -27,9 +27,9 @@ from Screens.MessageBox import MessageBox
 ###################################################
 # Config options for HOST
 ###################################################
-config.plugins.iptvplayer.filmixco_alt_domain = ConfigText(default = "", fixed_size = False)
-config.plugins.iptvplayer.filmixco_login     = ConfigText(default = "", fixed_size = False)
-config.plugins.iptvplayer.filmixco_password  = ConfigText(default = "", fixed_size = False)
+config.plugins.iptvplayer.filmixco_alt_domain = ConfigText(default="", fixed_size=False)
+config.plugins.iptvplayer.filmixco_login     = ConfigText(default="", fixed_size=False)
+config.plugins.iptvplayer.filmixco_password  = ConfigText(default="", fixed_size=False)
 
 def GetConfigList():
     optionList = []
@@ -76,7 +76,7 @@ class FilmixCO(CBaseHostClass):
             printExc()
         return ''
 
-    def getPage(self, baseUrl, addParams = {}, post_data = None):
+    def getPage(self, baseUrl, addParams={}, post_data=None):
         if addParams == {}:
             addParams = dict(self.defaultParams)
         addParams['cloudflare_params'] = {'cookie_file':self.COOKIE_FILE, 'User-Agent':self.USER_AGENT}
@@ -483,7 +483,7 @@ class FilmixCO(CBaseHostClass):
                 self.loggedIn = True
             else:
                 printDBG(data)
-                self.sessionEx.waitForFinishOpen(MessageBox, '\n'.join(msgTab), type = MessageBox.TYPE_ERROR, timeout = 10)
+                self.sessionEx.waitForFinishOpen(MessageBox, '\n'.join(msgTab), type=MessageBox.TYPE_ERROR, timeout=10)
                 printDBG('tryTologin failed')
 
             if self.loggedIn:
@@ -492,7 +492,7 @@ class FilmixCO(CBaseHostClass):
 
         return self.loggedIn
 
-    def handleService(self, index, refresh = 0, searchPattern = '', searchType = ''):
+    def handleService(self, index, refresh=0, searchPattern='', searchType=''):
         printDBG('handleService start')
         
         CBaseHostClass.handleService(self, index, refresh, searchPattern, searchType)

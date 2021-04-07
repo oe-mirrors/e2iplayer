@@ -27,8 +27,8 @@ from Components.config import config, ConfigText, getConfigListEntry
 ###################################################
 # Config options for HOST
 ###################################################
-config.plugins.iptvplayer.bbc_login    = ConfigText(default = "", fixed_size = False)
-config.plugins.iptvplayer.bbc_password = ConfigText(default = "", fixed_size = False)
+config.plugins.iptvplayer.bbc_login    = ConfigText(default="", fixed_size=False)
+config.plugins.iptvplayer.bbc_password = ConfigText(default="", fixed_size=False)
 
 def GetConfigList():
     optionList = []
@@ -100,7 +100,7 @@ class BBCSport(CBaseHostClass):
     def getFullIconUrl(self, icon, baseUrl=None):
         return CBaseHostClass.getFullIconUrl(self, icon, baseUrl).replace('/$recipe/', '/480x270_b/')
     
-    def getPage(self, url, addParams = {}, post_data = None):
+    def getPage(self, url, addParams={}, post_data=None):
         if addParams == {}:
             addParams = dict(self.defaultParams)
         
@@ -572,7 +572,7 @@ class BBCSport(CBaseHostClass):
             urlTab = self.up.getVideoLinkExt(videoUrl)
         return urlTab
         
-    def handleService(self, index, refresh = 0, searchPattern = '', searchType = ''):
+    def handleService(self, index, refresh=0, searchPattern='', searchType=''):
         printDBG('handleService start')
         
         CBaseHostClass.handleService(self, index, refresh, searchPattern, searchType)

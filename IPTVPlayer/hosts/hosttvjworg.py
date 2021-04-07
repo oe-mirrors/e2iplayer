@@ -27,15 +27,15 @@ from Components.config import config, ConfigSelection, ConfigYesNo, getConfigLis
 ###################################################
 # Config options for HOST
 ###################################################
-config.plugins.iptvplayer.tvjworg_language = ConfigSelection(default = "default", choices = [("default", _("Default")), ("P", _("Polish")), ("E", _("English"))]) 
-config.plugins.iptvplayer.tvjworg_icontype = ConfigSelection(default = "vertical", choices = [("vertical", _('vertical')), ("horizontal", _('horizontal'))]) 
-config.plugins.iptvplayer.tvjworg_default_format = ConfigSelection(default = "720", choices = [("0",  _("the worst")),
+config.plugins.iptvplayer.tvjworg_language = ConfigSelection(default="default", choices=[("default", _("Default")), ("P", _("Polish")), ("E", _("English"))]) 
+config.plugins.iptvplayer.tvjworg_icontype = ConfigSelection(default="vertical", choices=[("vertical", _('vertical')), ("horizontal", _('horizontal'))]) 
+config.plugins.iptvplayer.tvjworg_default_format = ConfigSelection(default="720", choices=[("0",  _("the worst")),
                                                                                                ("240", "240p"),
                                                                                                ("360", "360p"),
                                                                                                ("480", "480p"),
                                                                                                ("720", "720p"),
                                                                                                ("99999999", "the best") ])
-config.plugins.iptvplayer.tvjworg_use_df = ConfigYesNo(default = True)
+config.plugins.iptvplayer.tvjworg_use_df = ConfigYesNo(default=True)
 
 def GetConfigList():
     optionList = []
@@ -277,7 +277,7 @@ class TVJWORG(CBaseHostClass):
         
         return urlTab
         
-    def handleService(self, index, refresh = 0, searchPattern = '', searchType = ''):
+    def handleService(self, index, refresh=0, searchPattern='', searchType=''):
         printDBG('handleService start')
         
         CBaseHostClass.handleService(self, index, refresh, searchPattern, searchType)
@@ -308,9 +308,9 @@ class IPTVHost(CHostBase):
         CHostBase.__init__(self, TVJWORG(), True, []) #[CDisplayListItem.TYPE_VIDEO, CDisplayListItem.TYPE_AUDIO]
 
     def getLogoPath(self):
-        return RetHost(RetHost.OK, value = [GetLogoDir('tvjworglogo.png')])
+        return RetHost(RetHost.OK, value=[GetLogoDir('tvjworglogo.png')])
     
-    def getLinksForVideo(self, Index = 0, selItem = None):
+    def getLinksForVideo(self, Index=0, selItem=None):
         retCode = RetHost.ERROR
         retlist = []
         if not self.isValidIndex(Index):
@@ -320,7 +320,7 @@ class IPTVHost(CHostBase):
         for item in urlList:
             retlist.append(CUrlItem(item["name"], item["url"], item['need_resolve']))
 
-        return RetHost(RetHost.OK, value = retlist)
+        return RetHost(RetHost.OK, value=retlist)
     # end getLinksForVideo
     
     def converItem(self, cItem):
@@ -353,13 +353,13 @@ class IPTVHost(CHostBase):
         description =  cItem.get('desc', '')
         icon        =  cItem.get('icon', '')
         
-        return CDisplayListItem(name = title,
-                                    description = description,
-                                    type = type,
-                                    urlItems = hostLinks,
-                                    urlSeparateRequest = 1,
-                                    iconimage = icon,
-                                    possibleTypesOfSearch = possibleTypesOfSearch)
+        return CDisplayListItem(name=title,
+                                    description=description,
+                                    type=type,
+                                    urlItems=hostLinks,
+                                    urlSeparateRequest=1,
+                                    iconimage=icon,
+                                    possibleTypesOfSearch=possibleTypesOfSearch)
     # end converItem
 
     def getSearchItemInx(self):

@@ -31,7 +31,7 @@ from copy import deepcopy
 ###################################################
 # Config options for HOST
 ###################################################
-config.plugins.iptvplayer.yify_proxy = ConfigSelection(default = "None", choices = [("None",     _("None")),
+config.plugins.iptvplayer.yify_proxy = ConfigSelection(default="None", choices=[("None",     _("None")),
                                                                                     ("proxy_1",  _("Alternative proxy server (1)")),
                                                                                     ("proxy_2",  _("Alternative proxy server (2)"))])
 
@@ -79,7 +79,7 @@ class YifyTV(CBaseHostClass):
         
         self.defaultParams = {'header':self.HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
         
-    def getPage(self, baseUrl, addParams = {}, post_data = None):
+    def getPage(self, baseUrl, addParams={}, post_data=None):
         if addParams == {}:
             addParams = dict(self.defaultParams)
             
@@ -566,7 +566,7 @@ class YifyTV(CBaseHostClass):
         otherInfo['actors']   = cItem['actors']
         return [{'title':self.cleanHtmlStr( title ), 'text': self.cleanHtmlStr( desc ), 'images':[{'title':'', 'url':self.getFullUrl(icon)}], 'other_info':otherInfo}]
 
-    def handleService(self, index, refresh = 0, searchPattern = '', searchType = ''):
+    def handleService(self, index, refresh=0, searchPattern='', searchType=''):
         printDBG('handleService start')
         
         CBaseHostClass.handleService(self, index, refresh, searchPattern, searchType)

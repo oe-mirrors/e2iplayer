@@ -23,59 +23,59 @@ from Screens.MessageBox import MessageBox
 from Screens.ChoiceBox import ChoiceBox
 from Components.config import config, ConfigSubsection, ConfigSelection, ConfigDirectory, ConfigYesNo, ConfigOnOff, Config, ConfigInteger, ConfigSubList, ConfigText, getConfigListEntry, configfile
 ###################################################
-config.plugins.iptvplayer.extplayer_summary = ConfigSelection(default = "yes", choices = [('auto', _('Auto')), ('yes', _('Yes')), ('no', _('No'))])
-config.plugins.iptvplayer.use_clear_iframe = ConfigYesNo(default = False)
-config.plugins.iptvplayer.show_iframe = ConfigYesNo(default = True)
-config.plugins.iptvplayer.iframe_file = ConfigIPTVFileSelection(fileMatch = "^.*\.mvi$", default = "/usr/share/enigma2/radio.mvi")
-config.plugins.iptvplayer.clear_iframe_file = ConfigIPTVFileSelection(fileMatch = "^.*\.mvi$", default = "/usr/share/enigma2/black.mvi")
+config.plugins.iptvplayer.extplayer_summary = ConfigSelection(default="yes", choices=[('auto', _('Auto')), ('yes', _('Yes')), ('no', _('No'))])
+config.plugins.iptvplayer.use_clear_iframe = ConfigYesNo(default=False)
+config.plugins.iptvplayer.show_iframe = ConfigYesNo(default=True)
+config.plugins.iptvplayer.iframe_file = ConfigIPTVFileSelection(fileMatch="^.*\.mvi$", default="/usr/share/enigma2/radio.mvi")
+config.plugins.iptvplayer.clear_iframe_file = ConfigIPTVFileSelection(fileMatch="^.*\.mvi$", default="/usr/share/enigma2/black.mvi")
 
-config.plugins.iptvplayer.remember_last_position = ConfigYesNo(default = False)
+config.plugins.iptvplayer.remember_last_position = ConfigYesNo(default=False)
 config.plugins.iptvplayer.remember_last_position_time = ConfigInteger(0, (0, 99))
-config.plugins.iptvplayer.fakeExtePlayer3 = ConfigSelection(default = "fake", choices = [("fake", " ")])
+config.plugins.iptvplayer.fakeExtePlayer3 = ConfigSelection(default="fake", choices=[("fake", " ")])
 config.plugins.iptvplayer.rambuffer_sizemb_network_proto = ConfigInteger(0, (0, 999))
 config.plugins.iptvplayer.rambuffer_sizemb_files = ConfigInteger(0, (0, 999))
-config.plugins.iptvplayer.aac_software_decode = ConfigYesNo(default = False)
-config.plugins.iptvplayer.ac3_software_decode = ConfigYesNo(default = False)
-config.plugins.iptvplayer.eac3_software_decode = ConfigYesNo(default = False)
-config.plugins.iptvplayer.dts_software_decode = ConfigYesNo(default = False)
-config.plugins.iptvplayer.wma_software_decode = ConfigYesNo(default = True)
-config.plugins.iptvplayer.mp3_software_decode = ConfigYesNo(default = False)
-config.plugins.iptvplayer.stereo_software_decode = ConfigYesNo(default = False)
-config.plugins.iptvplayer.software_decode_as = ConfigSelection(default = "pcm", choices = [("pcm", "PCM"), ("lpcm", "LPCM")])
-config.plugins.iptvplayer.aac_mix = ConfigSelection(default = None, choices = [(None, _("from E2 settings"))])
-config.plugins.iptvplayer.ac3_mix = ConfigSelection(default = None, choices = [(None, _("from E2 settings"))])
+config.plugins.iptvplayer.aac_software_decode = ConfigYesNo(default=False)
+config.plugins.iptvplayer.ac3_software_decode = ConfigYesNo(default=False)
+config.plugins.iptvplayer.eac3_software_decode = ConfigYesNo(default=False)
+config.plugins.iptvplayer.dts_software_decode = ConfigYesNo(default=False)
+config.plugins.iptvplayer.wma_software_decode = ConfigYesNo(default=True)
+config.plugins.iptvplayer.mp3_software_decode = ConfigYesNo(default=False)
+config.plugins.iptvplayer.stereo_software_decode = ConfigYesNo(default=False)
+config.plugins.iptvplayer.software_decode_as = ConfigSelection(default="pcm", choices=[("pcm", "PCM"), ("lpcm", "LPCM")])
+config.plugins.iptvplayer.aac_mix = ConfigSelection(default=None, choices=[(None, _("from E2 settings"))])
+config.plugins.iptvplayer.ac3_mix = ConfigSelection(default=None, choices=[(None, _("from E2 settings"))])
 
-config.plugins.iptvplayer.extplayer_infobar_timeout = ConfigSelection(default = "5", choices = [
+config.plugins.iptvplayer.extplayer_infobar_timeout = ConfigSelection(default="5", choices=[
         ("1", "1 " + _("second")), ("2", "2 " + _("seconds")), ("3", "3 " + _("seconds")),
         ("4", "4 " + _("seconds")), ("5", "5 " + _("seconds")), ("6", "6 " + _("seconds")), ("7", "7 " + _("seconds")),
         ("8", "8 " + _("seconds")), ("9", "9 " + _("seconds")), ("10", "10 " + _("seconds"))])
-config.plugins.iptvplayer.extplayer_aspect = ConfigSelection(default = None, choices = [(None, _("from E2 settings"))])
-config.plugins.iptvplayer.extplayer_policy = ConfigSelection(default = None, choices = [(None, _("from E2 settings"))])
-config.plugins.iptvplayer.extplayer_policy2 = ConfigSelection(default = None, choices = [(None, _("from E2 settings"))])
+config.plugins.iptvplayer.extplayer_aspect = ConfigSelection(default=None, choices=[(None, _("from E2 settings"))])
+config.plugins.iptvplayer.extplayer_policy = ConfigSelection(default=None, choices=[(None, _("from E2 settings"))])
+config.plugins.iptvplayer.extplayer_policy2 = ConfigSelection(default=None, choices=[(None, _("from E2 settings"))])
 
-config.plugins.iptvplayer.extplayer_subtitle_auto_enable = ConfigYesNo(default = True)
-config.plugins.iptvplayer.extplayer_subtitle_font = ConfigSelection(default = "Regular", choices = [("Regular", "Regular")])
+config.plugins.iptvplayer.extplayer_subtitle_auto_enable = ConfigYesNo(default=True)
+config.plugins.iptvplayer.extplayer_subtitle_font = ConfigSelection(default="Regular", choices=[("Regular", "Regular")])
 config.plugins.iptvplayer.extplayer_subtitle_font_size = ConfigInteger(40, (20, 90))
-config.plugins.iptvplayer.extplayer_subtitle_font_color = ConfigSelection(default = "#FFFFFF", choices = COLORS_DEFINITONS)
-config.plugins.iptvplayer.extplayer_subtitle_wrapping_enabled = ConfigYesNo(default = False)
+config.plugins.iptvplayer.extplayer_subtitle_font_color = ConfigSelection(default="#FFFFFF", choices=COLORS_DEFINITONS)
+config.plugins.iptvplayer.extplayer_subtitle_wrapping_enabled = ConfigYesNo(default=False)
 config.plugins.iptvplayer.extplayer_subtitle_line_height = ConfigInteger(40, (20, 999))
 config.plugins.iptvplayer.extplayer_subtitle_line_spacing = ConfigInteger(4, (0, 99))
-config.plugins.iptvplayer.extplayer_subtitle_background = ConfigSelection(default = "#000000", choices = [('transparent', _('Transparent')), ('#000000', _('Black')), ('#80000000', _('Darkgray')), ('#cc000000', _('Lightgray'))])
+config.plugins.iptvplayer.extplayer_subtitle_background = ConfigSelection(default="#000000", choices=[('transparent', _('Transparent')), ('#000000', _('Black')), ('#80000000', _('Darkgray')), ('#cc000000', _('Lightgray'))])
 
-config.plugins.iptvplayer.extplayer_subtitle_border_color = ConfigSelection(default = "#000000", choices = COLORS_DEFINITONS)
-config.plugins.iptvplayer.extplayer_subtitle_shadow_color = ConfigSelection(default = "#000000", choices = COLORS_DEFINITONS)
+config.plugins.iptvplayer.extplayer_subtitle_border_color = ConfigSelection(default="#000000", choices=COLORS_DEFINITONS)
+config.plugins.iptvplayer.extplayer_subtitle_shadow_color = ConfigSelection(default="#000000", choices=COLORS_DEFINITONS)
 
-config.plugins.iptvplayer.extplayer_subtitle_border_enabled = ConfigYesNo(default = True)
-config.plugins.iptvplayer.extplayer_subtitle_shadow_enabled = ConfigYesNo(default = False)
+config.plugins.iptvplayer.extplayer_subtitle_border_enabled = ConfigYesNo(default=True)
+config.plugins.iptvplayer.extplayer_subtitle_shadow_enabled = ConfigYesNo(default=False)
 
 config.plugins.iptvplayer.extplayer_subtitle_border_width = ConfigInteger(3, (1, 6))
 config.plugins.iptvplayer.extplayer_subtitle_shadow_xoffset = ConfigInteger(3, (-6, 6))
 config.plugins.iptvplayer.extplayer_subtitle_shadow_yoffset = ConfigInteger(3, (-6, 6))
 config.plugins.iptvplayer.extplayer_subtitle_pos = ConfigInteger(50, (0, 400))
-config.plugins.iptvplayer.extplayer_subtitle_box_valign = ConfigSelection(default = "bottom", choices = [ ("bottom", _("bottom")), ("center", _("center")), ("top", _("top"))])
+config.plugins.iptvplayer.extplayer_subtitle_box_valign = ConfigSelection(default="bottom", choices=[ ("bottom", _("bottom")), ("center", _("center")), ("top", _("top"))])
 config.plugins.iptvplayer.extplayer_subtitle_box_height  = ConfigInteger(240, (50, 400))
 
-config.plugins.iptvplayer.extplayer_infobanner_clockformat = ConfigSelection(default = "", choices = [ ("", _("None")), ("24", _("24 hour format ")), ("12", _("12 hour format "))])
+config.plugins.iptvplayer.extplayer_infobanner_clockformat = ConfigSelection(default="", choices=[ ("", _("None")), ("24", _("24 hour format ")), ("12", _("12 hour format "))])
 
 class ConfigExtMoviePlayerBase():
     
@@ -92,7 +92,7 @@ class ConfigExtMoviePlayerBase():
             self.aac_mix_avaliable = True
         else:
             self.aac_mix_avaliable = False
-        config.plugins.iptvplayer.aac_mix = ConfigSelection(default = None, choices = options)
+        config.plugins.iptvplayer.aac_mix = ConfigSelection(default=None, choices=options)
         
         # fill ac3_mix option
         options = [(None, _("From E2 settings"))]
@@ -105,7 +105,7 @@ class ConfigExtMoviePlayerBase():
             self.ac3_mix_avaliable = True
         else:
             self.ac3_mix_avaliable = False
-        config.plugins.iptvplayer.ac3_mix = ConfigSelection(default = None, choices = options)
+        config.plugins.iptvplayer.ac3_mix = ConfigSelection(default=None, choices=options)
         
         # fill aspect option
         options = [(None, _("From E2 settings"))]
@@ -118,7 +118,7 @@ class ConfigExtMoviePlayerBase():
             self.aspect_avaliable = True
         else:
             self.aspect_avaliable = False
-        config.plugins.iptvplayer.extplayer_aspect = ConfigSelection(default = None, choices = options)
+        config.plugins.iptvplayer.extplayer_aspect = ConfigSelection(default=None, choices=options)
 
         # fill policy option 
         options = [(None, _("From E2 settings"))]
@@ -131,7 +131,7 @@ class ConfigExtMoviePlayerBase():
             self.policy_avaliable = True
         else:
             self.policy_avaliable = False
-        config.plugins.iptvplayer.extplayer_policy = ConfigSelection(default = None, choices = options)
+        config.plugins.iptvplayer.extplayer_policy = ConfigSelection(default=None, choices=options)
         
         # fill policy 2 option 
         options = [(None, _("From E2 settings"))]
@@ -147,7 +147,7 @@ class ConfigExtMoviePlayerBase():
             self.policy2_avaliable = True
         else:
             self.policy2_avaliable = False
-        config.plugins.iptvplayer.extplayer_policy2 = ConfigSelection(default = None, choices = options)
+        config.plugins.iptvplayer.extplayer_policy2 = ConfigSelection(default=None, choices=options)
         
         # fill fonts option
         options = [("Regular", "Regular")]
@@ -160,7 +160,7 @@ class ConfigExtMoviePlayerBase():
                     options.append((font, font))
         except Exception:
             printExc()
-        config.plugins.iptvplayer.extplayer_subtitle_font = ConfigSelection(default = "Regular", choices = options)
+        config.plugins.iptvplayer.extplayer_subtitle_font = ConfigSelection(default="Regular", choices=options)
         
         # check if border is avaliable
         self.subtitle_border_avaliable = False
@@ -264,7 +264,7 @@ class ConfigExtMoviePlayer(ConfigBaseWidget, ConfigExtMoviePlayerBase):
             else:
                 self.close()
         else:
-            self.session.openWithCallback(self.closeAfterMessage, MessageBox, text = message, type = MessageBox.TYPE_INFO)
+            self.session.openWithCallback(self.closeAfterMessage, MessageBox, text=message, type=MessageBox.TYPE_INFO)
         
     def closeAfterMessage(self, arg=None):
         if self.operatingPlayer:

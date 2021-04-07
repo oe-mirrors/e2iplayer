@@ -52,18 +52,18 @@ class DMHelper:
     STATUS_FILE_PATH = '/tmp/iptvdownload'
     STATUS_FILE_EXT = '.txt'
     
-    STS = enum( WAITING     = 'STS_WAITING',
-                DOWNLOADING = 'STS_DOWNLOADING',
-                DOWNLOADED  = 'STS_DOWNLOADED',
-                INTERRUPTED = 'STS_INTERRUPTED',
-                ERROR       = 'STS_ERROR',
-                POSTPROCESSING = 'STS_POSTPROCESSING')
-    DOWNLOAD_TYPE = enum( INITIAL  = 'INIT_DOWNLOAD',
-                          CONTINUE = 'CONTINUE_DOWNLOAD',
-                          RETRY    = 'RETRY_DOWNLOAD' )
+    STS = enum( WAITING='STS_WAITING',
+                DOWNLOADING='STS_DOWNLOADING',
+                DOWNLOADED='STS_DOWNLOADED',
+                INTERRUPTED='STS_INTERRUPTED',
+                ERROR='STS_ERROR',
+                POSTPROCESSING='STS_POSTPROCESSING')
+    DOWNLOAD_TYPE = enum( INITIAL='INIT_DOWNLOAD',
+                          CONTINUE='CONTINUE_DOWNLOAD',
+                          RETRY='RETRY_DOWNLOAD' )
     #
-    DOWNLOADER_TYPE = enum( WGET = 'WGET_DOWNLOADER',
-                            F4F  = 'F4F_DOWNLOADER' )
+    DOWNLOADER_TYPE = enum( WGET='WGET_DOWNLOADER',
+                            F4F='F4F_DOWNLOADER' )
                             
     HEADER_PARAMS = [{'marker':'Host=',             'name':'Host'},
                      {'marker':'Accept=',           'name':'Accept'},
@@ -125,7 +125,7 @@ class DMHelper:
             return DMHelper.getWgetCMD(downItem)
         
     @staticmethod
-    def makeUnikalFileName(fileName, withTmpFileName = True, addDateToFileName=False):
+    def makeUnikalFileName(fileName, withTmpFileName=True, addDateToFileName=False):
         # if this function is called
         # no more than once per second
         # date and time (with second)
@@ -183,7 +183,7 @@ class DMHelper:
         return ret
         
     @staticmethod
-    def getRemoteContentInfoByUrllib(url, addParams = {}):
+    def getRemoteContentInfoByUrllib(url, addParams={}):
         remoteContentInfo = {}
         addParams = DMHelper.downloaderParams2UrllibParams(addParams)
         addParams['max_data_size'] = 0
@@ -248,7 +248,7 @@ class DMHelper:
         return url, downloaderParams
         
     @staticmethod
-    def getBaseWgetCmd(downloaderParams = {}):
+    def getBaseWgetCmd(downloaderParams={}):
         printDBG("getBaseWgetCmd downloaderParams[%r]" % downloaderParams)
         headerOptions = ''
         proxyOptions = ''
@@ -287,7 +287,7 @@ class DMHelper:
         return cmd
         
     @staticmethod
-    def getBaseHLSDLCmd(downloaderParams = {}):
+    def getBaseHLSDLCmd(downloaderParams={}):
         printDBG("getBaseWgetCmd downloaderParams[%r]" % downloaderParams)
         headerOptions = ''
         proxyOptions = ''

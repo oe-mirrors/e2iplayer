@@ -206,7 +206,7 @@ class Sovdub(CBaseHostClass):
     def getLinksForFavourite(self, fav_data):
         return self.getLinksForVideo({'url': fav_data})
 
-    def handleService(self, index, refresh = 0, searchPattern = '', searchType = ''):
+    def handleService(self, index, refresh=0, searchPattern='', searchType=''):
         printDBG('handleService start')
 
         CBaseHostClass.handleService(self, index, refresh, searchPattern, searchType)

@@ -33,18 +33,18 @@ from Screens.MessageBox import MessageBox
 ###################################################
 # Config options for HOST
 ###################################################
-config.plugins.iptvplayer.tvplayercom_login    = ConfigText(default = "", fixed_size = False)
-config.plugins.iptvplayer.tvplayercom_password = ConfigText(default = "", fixed_size = False)
-config.plugins.iptvplayer.tvplayercom_password = ConfigText(default = "", fixed_size = False)
-config.plugins.iptvplayer.tvplayercom_drmbypass = ConfigYesNo(default = False)
-config.plugins.iptvplayer.tvplayercom_preferredbitrate = ConfigSelection(default = "99999999", choices = [("99999999", _("highest")),
+config.plugins.iptvplayer.tvplayercom_login    = ConfigText(default="", fixed_size=False)
+config.plugins.iptvplayer.tvplayercom_password = ConfigText(default="", fixed_size=False)
+config.plugins.iptvplayer.tvplayercom_password = ConfigText(default="", fixed_size=False)
+config.plugins.iptvplayer.tvplayercom_drmbypass = ConfigYesNo(default=False)
+config.plugins.iptvplayer.tvplayercom_preferredbitrate = ConfigSelection(default="99999999", choices=[("99999999", _("highest")),
                                                                                                ("2564000",  "2564k"),
                                                                                                ("1864000",  "1864k"),
                                                                                                ("1064000", "1064k"),
                                                                                                ("564000", "564k"),
                                                                                                ("214000", "214k"),
                                                                                                ("0",  _("lowest")) ])
-config.plugins.iptvplayer.tvplayercom_usepreferredbitrate = ConfigYesNo(default = False)
+config.plugins.iptvplayer.tvplayercom_usepreferredbitrate = ConfigYesNo(default=False)
 
 def GetConfigList():
     optionList = []
@@ -83,7 +83,7 @@ class TVPlayer(CBaseHostClass):
                              #{'category':'search_history',   'title': _('Search history'),            } 
                             ]
     
-    def getPage(self, baseUrl, addParams = {}, post_data = None):
+    def getPage(self, baseUrl, addParams={}, post_data=None):
         if addParams == {}:
             addParams = dict(self.defaultParams)
         return self.cm.getPage(baseUrl, addParams, post_data)
@@ -377,11 +377,11 @@ class TVPlayer(CBaseHostClass):
                 printDBG('tryTologin OK')
                 self.loggedIn = True
             else:
-                self.sessionEx.open(MessageBox, _('Login failed.'), type = MessageBox.TYPE_ERROR, timeout = 10)
+                self.sessionEx.open(MessageBox, _('Login failed.'), type=MessageBox.TYPE_ERROR, timeout=10)
                 printDBG('tryTologin failed')
         return self.loggedIn
     
-    def handleService(self, index, refresh = 0, searchPattern = '', searchType = ''):
+    def handleService(self, index, refresh=0, searchPattern='', searchType=''):
         printDBG('handleService start')
         
         self.tryTologin()

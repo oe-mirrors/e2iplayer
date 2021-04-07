@@ -25,7 +25,7 @@ except Exception:
 ###################################################
 # Config options for HOST
 ###################################################
-config.plugins.iptvplayer.sportdeutschland_streamprotocol = ConfigSelection(default = "hls", choices = [("rtmp", "rtmp"), ("hls", "HLS - m3u8")]) 
+config.plugins.iptvplayer.sportdeutschland_streamprotocol = ConfigSelection(default="hls", choices=[("rtmp", "rtmp"), ("hls", "HLS - m3u8")]) 
 
 
 def GetConfigList():

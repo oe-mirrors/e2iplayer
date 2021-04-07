@@ -23,11 +23,11 @@ import urllib.error
 from os import listdir as os_listdir, path as os_path
 
 class CSubItem:
-    def __init__(self, path = "",
-                       name = "",
-                       lang = "",
-                       imdbid = "",
-                       subId = "" ):
+    def __init__(self, path="",
+                       name="",
+                       lang="",
+                       imdbid="",
+                       subId="" ):
         self.path = path
         self.name = name
         self.lang = lang
@@ -42,39 +42,39 @@ class ISubProvider:
 
     # return firs available list of item category or video or link
     def getInitList(self):
-        return RetHost(RetHost.NOT_IMPLEMENTED, value = [])
+        return RetHost(RetHost.NOT_IMPLEMENTED, value=[])
     
     # return List of item from current List
     # for given Index
     # 1 == refresh - force to read data from 
     #                server if possible 
     # server instead of cache 
-    def getListForItem(self, Index = 0, refresh = 0):
-        return RetHost(RetHost.NOT_IMPLEMENTED, value = [])
+    def getListForItem(self, Index=0, refresh=0):
+        return RetHost(RetHost.NOT_IMPLEMENTED, value=[])
         
     # return prev requested List of item 
     # for given Index
     # 1 == refresh - force to read data from 
     #                server if possible
-    def getPrevList(self, refresh = 0):
-        return RetHost(RetHost.NOT_IMPLEMENTED, value = [])
+    def getPrevList(self, refresh=0):
+        return RetHost(RetHost.NOT_IMPLEMENTED, value=[])
         
     # return current List
     # for given Index
     # 1 == refresh - force to read data from 
     #                server if possible
-    def getCurrentList(self, refresh = 0):
-        return RetHost(RetHost.NOT_IMPLEMENTED, value = [])
+    def getCurrentList(self, refresh=0):
+        return RetHost(RetHost.NOT_IMPLEMENTED, value=[])
         
     # return current List
     # for given Index
     def getMoreForItem(self, Index=0):
-        return RetHost(RetHost.NOT_IMPLEMENTED, value = [])
+        return RetHost(RetHost.NOT_IMPLEMENTED, value=[])
     
     # return list of CSubItem objects
     # for given Index, 
-    def downloadSubtitleFile(self, Index = 0,):
-        return RetHost(RetHost.NOT_IMPLEMENTED, value = [])
+    def downloadSubtitleFile(self, Index=0,):
+        return RetHost(RetHost.NOT_IMPLEMENTED, value=[])
 '''
 CSubProviderBase implements some typical methods
           from ISubProvider interface
@@ -107,9 +107,9 @@ class CSubProviderBase(ISubProvider):
         self.subProvider.handleService(self.currIndex)
         convList = self.convertList(self.subProvider.getCurrList())
         
-        return RetHost(RetHost.OK, value = convList)
+        return RetHost(RetHost.OK, value=convList)
     
-    def getListForItem(self, Index = 0, refresh = 0, selItem = None):
+    def getListForItem(self, Index=0, refresh=0, selItem=None):
         self.listOfprevList.append(self.subProvider.getCurrList())
         self.listOfprevItems.append(self.subProvider.getCurrItem())
         
@@ -118,9 +118,9 @@ class CSubProviderBase(ISubProvider):
         self.subProvider.handleService(Index, refresh)
         convList = self.convertList(self.subProvider.getCurrList())
         
-        return RetHost(RetHost.OK, value = convList)
+        return RetHost(RetHost.OK, value=convList)
 
-    def getPrevList(self, refresh = 0):
+    def getPrevList(self, refresh=0):
         if(len(self.listOfprevList) > 0):
             subProviderList = self.listOfprevList.pop()
             subProviderCurrItem = self.listOfprevItems.pop()
@@ -128,27 +128,27 @@ class CSubProviderBase(ISubProvider):
             self.subProvider.setCurrItem(subProviderCurrItem)
             
             convList = self.convertList(subProviderList)
-            return RetHost(RetHost.OK, value = convList)
+            return RetHost(RetHost.OK, value=convList)
         else:
-            return RetHost(RetHost.ERROR, value = [])
+            return RetHost(RetHost.ERROR, value=[])
     
-    def getCurrentList(self, refresh = 0):
+    def getCurrentList(self, refresh=0):
         if refresh == 1:
             self.subProvider.handleService(self.currIndex, refresh)
         convList = self.convertList(self.subProvider.getCurrList())
-        return RetHost(RetHost.OK, value = convList)
+        return RetHost(RetHost.OK, value=convList)
         
     def getMoreForItem(self, Index=0):
         self.subProvider.handleService(Index, 2)
         convList = self.convertList(self.subProvider.getCurrList())
-        return RetHost(RetHost.OK, value = convList)
+        return RetHost(RetHost.OK, value=convList)
         
-    def downloadSubtitleFile(self, Index = 0):
+    def downloadSubtitleFile(self, Index=0):
         if self.isValidIndex(Index, [CDisplayListItem.TYPE_SUBTITLE]):
             retData = self.subProvider.downloadSubtitleFile(self.subProvider.currList[Index])
             if 'path' in retData and 'title' in retData:
-                return RetHost(RetHost.OK, value = [CSubItem(retData['path'], retData['title'], retData.get('lang', ''), retData.get('imdbid', ''), retData.get('sub_id', ''))])
-        return RetHost(RetHost.ERROR, value = [])
+                return RetHost(RetHost.OK, value=[CSubItem(retData['path'], retData['title'], retData.get('lang', ''), retData.get('imdbid', ''), retData.get('sub_id', ''))])
+        return RetHost(RetHost.ERROR, value=[])
     
     def convertList(self, cList):
         subProviderList = []
@@ -172,9 +172,9 @@ class CSubProviderBase(ISubProvider):
         title       =  cItem.get('title', '')
         description =  cItem.get('desc', '')
         
-        return CDisplayListItem(name = title,
-                                description = description,
-                                type = type)
+        return CDisplayListItem(name=title,
+                                description=description,
+                                type=type)
     # end converItem
 
 class CBaseSubProviderClass:

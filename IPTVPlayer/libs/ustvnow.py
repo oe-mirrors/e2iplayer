@@ -32,10 +32,10 @@ from Screens.MessageBox import MessageBox
 ###################################################
 # Config options for HOST
 ###################################################
-config.plugins.iptvplayer.ustvnow_login          = ConfigText(default = "", fixed_size = False)
-config.plugins.iptvplayer.ustvnow_password       = ConfigText(default = "", fixed_size = False)
-config.plugins.iptvplayer.ustvnow_only_available = ConfigYesNo(default = True)
-config.plugins.iptvplayer.ustvnow_epg            = ConfigYesNo(default = True)
+config.plugins.iptvplayer.ustvnow_login          = ConfigText(default="", fixed_size=False)
+config.plugins.iptvplayer.ustvnow_password       = ConfigText(default="", fixed_size=False)
+config.plugins.iptvplayer.ustvnow_only_available = ConfigYesNo(default=True)
+config.plugins.iptvplayer.ustvnow_epg            = ConfigYesNo(default=True)
 
 def GetConfigList():
     optionList = []
@@ -118,10 +118,10 @@ class UstvnowApi:
             self.token = self.doLogin(login, passwd)
             self.passkey = self.getPasskey()
             if self.token == '' or self.passkey == '':
-                self.sessionEx.open(MessageBox, _('An error occurred when try to sign in the user "%s.\nPlease check your login credentials and try again later..."') % login, type = MessageBox.TYPE_INFO, timeout = 10 )
+                self.sessionEx.open(MessageBox, _('An error occurred when try to sign in the user "%s.\nPlease check your login credentials and try again later..."') % login, type=MessageBox.TYPE_INFO, timeout=10 )
                 return []
         else:
-            self.sessionEx.open(MessageBox, _('You need to enter email and password in configuration.'), type = MessageBox.TYPE_INFO, timeout = 10 )
+            self.sessionEx.open(MessageBox, _('You need to enter email and password in configuration.'), type=MessageBox.TYPE_INFO, timeout=10 )
             return []
             
     

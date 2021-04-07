@@ -26,7 +26,7 @@ from Components.config import config, ConfigYesNo, getConfigListEntry
 ###################################################
 # Config options for HOST
 ###################################################
-config.plugins.iptvplayer.itv_use_x_forwarded_for = ConfigYesNo(default = False)
+config.plugins.iptvplayer.itv_use_x_forwarded_for = ConfigYesNo(default=False)
 
 def GetConfigList():
     optionList = []
@@ -60,7 +60,7 @@ class ITV(CBaseHostClass):
                             ]
         self.forwardedIP = ''
         
-    def getPage(self, baseUrl, addParams = {}, post_data = None):
+    def getPage(self, baseUrl, addParams={}, post_data=None):
         if addParams == {}:
             addParams = dict(self.defaultParams)
         origBaseUrl = baseUrl
@@ -279,7 +279,7 @@ class ITV(CBaseHostClass):
         return retTab
        
     
-    def handleService(self, index, refresh = 0, searchPattern = '', searchType = ''):
+    def handleService(self, index, refresh=0, searchPattern='', searchType=''):
         printDBG('handleService start')
         
         CBaseHostClass.handleService(self, index, refresh, searchPattern, searchType)

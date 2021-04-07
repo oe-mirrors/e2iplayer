@@ -25,7 +25,7 @@ from Screens.MessageBox import MessageBox
 ###################################################
 # Config options for HOST
 ###################################################
-config.plugins.iptvplayer.mediayou_language = ConfigSelection(default = "pol", choices = [("pol", _("Polish")), ("eng", _("English")), ("ger", _("Deutsch")), ("rus", _("Russian")), ("ita", _("Italian")), ("fre", _("French"))]) 
+config.plugins.iptvplayer.mediayou_language = ConfigSelection(default="pol", choices=[("pol", _("Polish")), ("eng", _("English")), ("ger", _("Deutsch")), ("rus", _("Russian")), ("ita", _("Italian")), ("fre", _("French"))]) 
 
 def GetConfigList():
     optionList = []
@@ -56,7 +56,7 @@ class MediayouNet(CBaseHostClass):
         
         self.countryCode = config.plugins.iptvplayer.mediayou_language.value
         
-    def getPage(self, baseUrl, addParams = {}, post_data = None):
+    def getPage(self, baseUrl, addParams={}, post_data=None):
         if addParams == {}:
             addParams = dict(self.defaultParams)
         return self.cm.getPage(baseUrl, addParams, post_data)
@@ -78,7 +78,7 @@ class MediayouNet(CBaseHostClass):
         printDBG("MediayouNet.listCategories [%s]" % cItem)
         
         option = cItem.get('option')
-        sts, data = self.getPage(cItem['url'], post_data = cItem.get('post_data'))
+        sts, data = self.getPage(cItem['url'], post_data=cItem.get('post_data'))
         if not sts:
             return
 #        printDBG("MediayouNet.listCategories data[%s]" % data)
@@ -101,7 +101,7 @@ class MediayouNet(CBaseHostClass):
     def listItems(self, cItem):
         printDBG("MediayouNet.listItems [%s]" % cItem)
 
-        sts, data = self.getPage(cItem['url'], post_data = cItem.get('post_data'))
+        sts, data = self.getPage(cItem['url'], post_data=cItem.get('post_data'))
         if not sts:
             return
 #        printDBG("MediayouNet.listItems data[%s]" % data)
@@ -141,7 +141,7 @@ class MediayouNet(CBaseHostClass):
         
         urlTab = []
         
-        sts, data = self.getPage(self.getFullUrl('/embedded/GetUrlSub_Website.php'), post_data = {'os':'PCWEB', 'id':cItem['url']})
+        sts, data = self.getPage(self.getFullUrl('/embedded/GetUrlSub_Website.php'), post_data={'os':'PCWEB', 'id':cItem['url']})
         if not sts:
             return []
 #        printDBG("MediayouNet.getLinksForVideo data[%s]" % data)
@@ -183,7 +183,7 @@ class MediayouNet(CBaseHostClass):
                         
         return self.up.getVideoLinkExt(baseUrl)
         
-    def handleService(self, index, refresh = 0, searchPattern = '', searchType = ''):
+    def handleService(self, index, refresh=0, searchPattern='', searchType=''):
         printDBG('handleService start')
         
 

@@ -23,7 +23,7 @@ from Components.config import config, ConfigSelection, getConfigListEntry
 ###################################################
 # Config options for HOST
 ###################################################
-config.plugins.iptvplayer.liveleak_searchsort = ConfigSelection(default = "relevance", choices = [("relevance", "Najtrafniejsze"), ("date", "Najnowsze"), ("views", "Popularność"), ("votes", "Najlepiej oceniane")])
+config.plugins.iptvplayer.liveleak_searchsort = ConfigSelection(default="relevance", choices=[("relevance", "Najtrafniejsze"), ("date", "Najnowsze"), ("views", "Popularność"), ("votes", "Najlepiej oceniane")])
 
 def GetConfigList():
     optionList = []

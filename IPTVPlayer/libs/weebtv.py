@@ -27,10 +27,10 @@ from Screens.MessageBox import MessageBox
 ###################################################
 # Config options for HOST
 ###################################################
-config.plugins.iptvplayer.weebtv_premium  = ConfigYesNo(default = True)
-config.plugins.iptvplayer.weebtv_login    = ConfigText(default = "", fixed_size = False)
-config.plugins.iptvplayer.weebtv_password = ConfigText(default = "", fixed_size = False)
-config.plugins.iptvplayer.weebtv_videoquality = ConfigSelection(default = "1", choices = [("0", _("Low")), ("1", _("Standard")), ("2", _("High (or HD)"))])
+config.plugins.iptvplayer.weebtv_premium  = ConfigYesNo(default=True)
+config.plugins.iptvplayer.weebtv_login    = ConfigText(default="", fixed_size=False)
+config.plugins.iptvplayer.weebtv_password = ConfigText(default="", fixed_size=False)
+config.plugins.iptvplayer.weebtv_videoquality = ConfigSelection(default="1", choices=[("0", _("Low")), ("1", _("Standard")), ("2", _("High (or HD)"))])
 
 def GetConfigList():
     optionList = []
@@ -220,7 +220,7 @@ class UrlParser:
         except Exception:
             return None
     
-    def getParams(self, paramstring = ''):
+    def getParams(self, paramstring=''):
         param=[]
         if len(paramstring) >= 2:
             params = paramstring

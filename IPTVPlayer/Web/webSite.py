@@ -29,7 +29,7 @@ import importlib
 ########################################################
 def reloadScripts():
     #### Reload scripts if new version of source exists ####
-    webPath = GetPluginDir(file = '/Web/')
+    webPath = GetPluginDir(file='/Web/')
     if os.path.exists(os.path.join(webPath, "webParts.py")):
         if os.path.exists(os.path.join(webPath, "webParts.pyo")):
             if (int(os.path.getmtime(os.path.join(webPath, "webParts.pyo"))) < 

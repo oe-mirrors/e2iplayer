@@ -45,7 +45,7 @@ class govodtv(CBaseHostClass):
     def getFullIconUrl(self, icon, baseUrl=None):
         return CBaseHostClass.getFullIconUrl(self, icon.replace('.webp', '.jpg').replace('/pictures/posters/t', '/posters/'), baseUrl)
 
-    def getPage(self, baseUrl, addParams = {}, post_data = None):
+    def getPage(self, baseUrl, addParams={}, post_data=None):
         if addParams == {}:
             addParams = dict(self.defaultParams)
         origBaseUrl = baseUrl
@@ -284,7 +284,7 @@ class govodtv(CBaseHostClass):
 
         return [{'title':self.cleanHtmlStr( title ), 'text': self.cleanHtmlStr( desc ), 'images':[{'title':'', 'url':self.getFullUrl(icon)}], 'other_info':{'custom_items_list':itemsList}}]
 
-    def handleService(self, index, refresh = 0, searchPattern = '', searchType = ''):
+    def handleService(self, index, refresh=0, searchPattern='', searchType=''):
         printDBG('handleService start')
         
         CBaseHostClass.handleService(self, index, refresh, searchPattern, searchType)

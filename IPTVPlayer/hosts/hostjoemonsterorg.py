@@ -32,8 +32,8 @@ from Screens.MessageBox import MessageBox
 # Config options for HOST
 ###################################################
 
-config.plugins.iptvplayer.joemonsterorg_login    = ConfigText(default = "", fixed_size = False)
-config.plugins.iptvplayer.joemonsterorg_password = ConfigText(default = "", fixed_size = False)
+config.plugins.iptvplayer.joemonsterorg_login    = ConfigText(default="", fixed_size=False)
+config.plugins.iptvplayer.joemonsterorg_password = ConfigText(default="", fixed_size=False)
 
 def GetConfigList():
     optionList = []
@@ -60,7 +60,7 @@ class JoeMonster(CBaseHostClass):
         self.login    = ''
         self.password = ''
 
-    def getPage(self, url, addParams = {}, post_data = None):
+    def getPage(self, url, addParams={}, post_data=None):
         if addParams == {}:
             addParams = dict(self.defaultParams)
         
@@ -201,7 +201,7 @@ class JoeMonster(CBaseHostClass):
         else:
             return False, 'NOT OK'
 
-    def handleService(self, index, refresh = 0, searchPattern = '', searchType = ''):
+    def handleService(self, index, refresh=0, searchPattern='', searchType=''):
         printDBG('handleService start')
 
         if self.login != config.plugins.iptvplayer.joemonsterorg_login.value and \
@@ -210,7 +210,7 @@ class JoeMonster(CBaseHostClass):
            '' != config.plugins.iptvplayer.joemonsterorg_password.value.strip():
             loggedIn, msg = self.tryTologin(config.plugins.iptvplayer.joemonsterorg_login.value, config.plugins.iptvplayer.joemonsterorg_password.value)
             if not loggedIn:
-                self.sessionEx.open(MessageBox, 'Problem z zalogowaniem użytkownika "%s".' % config.plugins.iptvplayer.joemonsterorg_login.value, type = MessageBox.TYPE_INFO, timeout = 10 )
+                self.sessionEx.open(MessageBox, 'Problem z zalogowaniem użytkownika "%s".' % config.plugins.iptvplayer.joemonsterorg_login.value, type=MessageBox.TYPE_INFO, timeout=10 )
             else:
                 self.login    = config.plugins.iptvplayer.joemonsterorg_login.value
                 self.password = config.plugins.iptvplayer.joemonsterorg_password.value

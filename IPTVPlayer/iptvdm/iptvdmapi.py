@@ -33,7 +33,7 @@ class DMItem(DMItemBase):
 
 class IPTVDMApi():
     
-    def __init__(self, refreshDelay = 2, parallelDownloadNum = 1, finishNotifyCallback=None):
+    def __init__(self, refreshDelay=2, parallelDownloadNum=1, finishNotifyCallback=None):
         self.running = False
         self.downloadIdx = 0
         self.downloading = False

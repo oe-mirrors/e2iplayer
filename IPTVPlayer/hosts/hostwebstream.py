@@ -63,10 +63,10 @@ from Plugins.Extensions.IPTVPlayer.components.asynccall import MainSessionWrappe
 ###################################################
 # Config options for HOST
 ###################################################
-config.plugins.iptvplayer.SortowanieWebstream              = ConfigYesNo(default = False)
-config.plugins.iptvplayer.weatherbymatzgprohibitbuffering  = ConfigYesNo(default = True)
-config.plugins.iptvplayer.weather_useproxy                 = ConfigYesNo(default = False)
-config.plugins.iptvplayer.fake_separator = ConfigSelection(default = " ", choices = [(" ", " ")])
+config.plugins.iptvplayer.SortowanieWebstream              = ConfigYesNo(default=False)
+config.plugins.iptvplayer.weatherbymatzgprohibitbuffering  = ConfigYesNo(default=True)
+config.plugins.iptvplayer.weather_useproxy                 = ConfigYesNo(default=False)
+config.plugins.iptvplayer.fake_separator = ConfigSelection(default=" ", choices=[(" ", " ")])
 
 def GetConfigList():
     optionList = []
@@ -1143,7 +1143,7 @@ class HasBahCa(CBaseHostClass):
         except Exception:
             printExc()
 
-    def handleService(self, index, refresh = 0, searchPattern = '', searchType = ''):
+    def handleService(self, index, refresh=0, searchPattern='', searchType=''):
         printDBG('handleService start')
         
         CBaseHostClass.handleService(self, index, refresh, searchPattern, searchType)
@@ -1236,20 +1236,20 @@ class HasBahCa(CBaseHostClass):
 class IPTVHost(CHostBase):
 
     def __init__(self):
-        CHostBase.__init__(self, HasBahCa(), withSearchHistrory = False)
+        CHostBase.__init__(self, HasBahCa(), withSearchHistrory=False)
 
     def getLogoPath(self):
-        return RetHost(RetHost.OK, value = [GetLogoDir('webstreamslogo.png')])
+        return RetHost(RetHost.OK, value=[GetLogoDir('webstreamslogo.png')])
 
-    def getLinksForVideo(self, Index = 0, selItem = None):
+    def getLinksForVideo(self, Index=0, selItem=None):
         listLen = len(self.host.currList)
         if listLen <= Index or Index < 0:
             printDBG( "ERROR getLinksForVideo - current list is to short len: %d, Index: %d" % (listLen, Index) )
-            return RetHost(RetHost.ERROR, value = [])
+            return RetHost(RetHost.ERROR, value=[])
         
         if self.host.currList[Index]["type"] not in ['video', 'audio', 'picture']:
             printDBG( "ERROR getLinksForVideo - current item has wrong type" )
-            return RetHost(RetHost.ERROR, value = [])
+            return RetHost(RetHost.ERROR, value=[])
 
         retlist = []
         cItem = self.host.currList[Index]
@@ -1361,7 +1361,7 @@ class IPTVHost(CHostBase):
                                 
                         retlist.append(CUrlItem("Link", url))
             
-        return RetHost(RetHost.OK, value = retlist)
+        return RetHost(RetHost.OK, value=retlist)
     # end getLinksForVideo
     
     def getResolvedURL(self, url):
@@ -1386,4 +1386,4 @@ class IPTVHost(CHostBase):
                 need_resolve = 0
                 retlist.append(CUrlItem(item["name"], item["url"], need_resolve))
 
-        return RetHost(RetHost.OK, value = retlist)
+        return RetHost(RetHost.OK, value=retlist)

@@ -26,10 +26,10 @@ from Components.config import config, ConfigSelection, ConfigText, getConfigList
 ###################################################
 # Config options for HOST
 ###################################################
-config.plugins.iptvplayer.skstream_proxy = ConfigSelection(default = "None", choices = [("None",     _("None")),
+config.plugins.iptvplayer.skstream_proxy = ConfigSelection(default="None", choices=[("None",     _("None")),
                                                                                         ("proxy_1",  _("Alternative proxy server (1)")),
                                                                                         ("proxy_2",  _("Alternative proxy server (2)"))])
-config.plugins.iptvplayer.skstream_alt_domain = ConfigText(default = "", fixed_size = False)
+config.plugins.iptvplayer.skstream_alt_domain = ConfigText(default="", fixed_size=False)
 
 def GetConfigList():
     optionList = []
@@ -59,7 +59,7 @@ class SKStream(CBaseHostClass):
         self.defaultParams = {'header':self.HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
         self._getHeaders = None
         
-    def getPage(self, baseUrl, addParams = {}, post_data = None):
+    def getPage(self, baseUrl, addParams={}, post_data=None):
         if addParams == {}:
             addParams = dict(self.defaultParams)
         
@@ -437,7 +437,7 @@ class SKStream(CBaseHostClass):
         self.addDir(params)
         return True
         
-    def handleService(self, index, refresh = 0, searchPattern = '', searchType = ''):
+    def handleService(self, index, refresh=0, searchPattern='', searchType=''):
         printDBG('handleService start')
         
         CBaseHostClass.handleService(self, index, refresh, searchPattern, searchType)

@@ -48,17 +48,17 @@ class WEP_TestVectors(unittest.TestCase):
             self.assertEqual( dct, pt )
 
         WEPtestVector(
-            testCase   = "Test Vectors from IEEE 802.11 TGi D2.x",
-            plainText  = """aa aa 03 00 00 00 08 00 45 00 00 4e 66 1a 00 00
+            testCase="Test Vectors from IEEE 802.11 TGi D2.x",
+            plainText="""aa aa 03 00 00 00 08 00 45 00 00 4e 66 1a 00 00
                             80 11 be 64 0a 00 01 22 0a ff ff ff 00 89 00 89
                             00 3a 00 00 80 a6 01 10 00 01 00 00 00 00 00 00
                             20 45 43 45 4a 45 48 45 43 46 43 45 50 46 45 45
                             49 45 46 46 43 43 41 43 41 43 41 43 41 43 41 41
                             41 00 00 20 00 01 """,
-            iv         = "fb 02 9e",
-            key        = "30 31 32 33 34",
-            keyId      = 2,
-            cipherText = """fb 02 9e 80
+            iv="fb 02 9e",
+            key="30 31 32 33 34",
+            keyId=2,
+            cipherText="""fb 02 9e 80
                             f6 9c 58 06 bd 6c e8 46 26 bc be fb 94 74 65 0a
                             ad 1f 79 09 b0 f6 4d 5f 58 a5 03 a2 58 b7 ed 22
                             eb 0e a6 49 30 d3 a0 56 a5 57 42 fc ce 14 1d 48

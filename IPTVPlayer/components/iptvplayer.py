@@ -24,8 +24,7 @@ class customMoviePlayer(InfoBarShowHide, InfoBarSeek, InfoBarAudioSelection, Inf
         Screen.__init__(self, session)
         self.skinName = "MoviePlayer"
         
-        self.__event_tracker = ServiceEventTracker(screen = self, eventmap =
-            {
+        self.__event_tracker = ServiceEventTracker(screen=self, eventmap={
                 iPlayableService.evEOF: self.__evEOF,
                 iPlayableService.evSOF: self.__evEOF,
             })

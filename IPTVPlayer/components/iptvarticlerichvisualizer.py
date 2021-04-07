@@ -204,7 +204,7 @@ class IPTVArticleRichVisualizer(Screen):
         if self.cover['downloader']:
             self.cover['downloader'].isWorkingCorrectly(self.startDownloader)
         else:
-            self.session.openWithCallback(self.close, MessageBox, _("Downloading cannot be started.\n Invalid URI[%s].") % self.cover['src'], type = MessageBox.TYPE_ERROR, timeout = 10)
+            self.session.openWithCallback(self.close, MessageBox, _("Downloading cannot be started.\n Invalid URI[%s].") % self.cover['src'], type=MessageBox.TYPE_ERROR, timeout=10)
 
     def startDownloader(self, sts, reason):
         if sts:
@@ -213,7 +213,7 @@ class IPTVArticleRichVisualizer(Screen):
             self.cover['downloader'] .start(url, self._getDownloadFilePath(), downloaderParams)
             self.showSpinner()
         else:
-            self.session.openWithCallback(self.close, MessageBox, _("Downloading cannot be started.\n Downloader [%s] not working properly.\n Status[%s]") % (self.cover['downloader'].getName(), reason.strip()), type = MessageBox.TYPE_ERROR, timeout = 10 )        
+            self.session.openWithCallback(self.close, MessageBox, _("Downloading cannot be started.\n Downloader [%s] not working properly.\n Status[%s]") % (self.cover['downloader'].getName(), reason.strip()), type=MessageBox.TYPE_ERROR, timeout=10 )        
         
     def _getDownloadFilePath(self):
         self.cover['files_to_remove'].append(self.cover['image_path'])

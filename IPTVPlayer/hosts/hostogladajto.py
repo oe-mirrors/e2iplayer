@@ -33,8 +33,8 @@ from Screens.MessageBox import MessageBox
 ###################################################
 # Config options for HOST
 ###################################################
-config.plugins.iptvplayer.ogladajto_login = ConfigText(default = "", fixed_size = False)
-config.plugins.iptvplayer.ogladajto_password = ConfigText(default = "", fixed_size = False)
+config.plugins.iptvplayer.ogladajto_login = ConfigText(default="", fixed_size=False)
+config.plugins.iptvplayer.ogladajto_password = ConfigText(default="", fixed_size=False)
 
 def GetConfigList():
     optionList = []
@@ -68,7 +68,7 @@ class ogladajto(CBaseHostClass):
         self.password  = ''
         self.postLogin = ''
 
-    def getPage(self, baseUrl, addParams = {}, post_data = None):
+    def getPage(self, baseUrl, addParams={}, post_data=None):
         if addParams == {}:
             addParams = dict(self.defaultParams)
         origBaseUrl = baseUrl
@@ -320,12 +320,12 @@ class ogladajto(CBaseHostClass):
                     message = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(data, ('<div', '>', 'notification error'), ('</div', '>'))[1])
                 else:
                     message = ''
-                self.sessionEx.open(MessageBox, _('Login failed.') + '\n' + message, type = MessageBox.TYPE_ERROR, timeout = 10)
+                self.sessionEx.open(MessageBox, _('Login failed.') + '\n' + message, type=MessageBox.TYPE_ERROR, timeout=10)
                 printDBG('tryTologin failed')
 
         return self.loggedIn
 
-    def handleService(self, index, refresh = 0, searchPattern = '', searchType = ''):
+    def handleService(self, index, refresh=0, searchPattern='', searchType=''):
         printDBG('handleService start')
         
         self.tryTologin()

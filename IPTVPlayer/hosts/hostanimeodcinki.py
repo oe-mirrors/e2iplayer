@@ -353,7 +353,7 @@ class AnimeOdcinkiPL(CBaseHostClass):
         
         return [{'title':title, 'text':desc, 'images':[{'title':'', 'url':self.getFullUrl(icon)}], 'other_info':{}}]
         
-    def handleService(self, index, refresh = 0, searchPattern = '', searchType = ''):
+    def handleService(self, index, refresh=0, searchPattern='', searchType=''):
         printDBG('handleService start')
         
         CBaseHostClass.handleService(self, index, refresh, searchPattern, searchType)

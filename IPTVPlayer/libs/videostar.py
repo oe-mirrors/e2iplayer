@@ -29,12 +29,12 @@ from Screens.MessageBox import MessageBox
 # Config options for HOST
 ###################################################
 
-config.plugins.iptvplayer.videostar_streamprotocol     = ConfigSelection(default = "2", choices = [("1", "rtmp"), ("2", "HLS - m3u8"), ("3", "DASHS - mpd"), ("4", "DASH - mpd")]) 
-config.plugins.iptvplayer.videostar_defquality         = ConfigSelection(default = "9999999999", choices = [("0", _("the worst")), ("400000", _("low")), ("950000", _("average")), ("1600000", _("high")), ("9999999999", _("the best"))])
-config.plugins.iptvplayer.videostar_use_defquality     = ConfigYesNo(default = True)
-config.plugins.iptvplayer.videostar_show_all_channels  = ConfigYesNo(default = False)
-config.plugins.iptvplayer.videostar_login              = ConfigText(default = "", fixed_size = False)
-config.plugins.iptvplayer.videostar_password           = ConfigText(default = "", fixed_size = False)
+config.plugins.iptvplayer.videostar_streamprotocol     = ConfigSelection(default="2", choices=[("1", "rtmp"), ("2", "HLS - m3u8"), ("3", "DASHS - mpd"), ("4", "DASH - mpd")]) 
+config.plugins.iptvplayer.videostar_defquality         = ConfigSelection(default="9999999999", choices=[("0", _("the worst")), ("400000", _("low")), ("950000", _("average")), ("1600000", _("high")), ("9999999999", _("the best"))])
+config.plugins.iptvplayer.videostar_use_defquality     = ConfigYesNo(default=True)
+config.plugins.iptvplayer.videostar_show_all_channels  = ConfigYesNo(default=False)
+config.plugins.iptvplayer.videostar_login              = ConfigText(default="", fixed_size=False)
+config.plugins.iptvplayer.videostar_password           = ConfigText(default="", fixed_size=False)
 
 def GetConfigList():
     optionList = []
@@ -176,7 +176,7 @@ class VideoStarApi(CBaseHostClass, CaptchaHelper):
                 self.loggedIn = True
                 self.accountInfo = msg
             else:
-                self.sessionEx.open(MessageBox, '%s\nProblem z zalogowanie użytkownika "%s". Sprawdź dane do logowania w konfiguracji hosta.' % (msg, login), type = MessageBox.TYPE_INFO, timeout = 10 )
+                self.sessionEx.open(MessageBox, '%s\nProblem z zalogowanie użytkownika "%s". Sprawdź dane do logowania w konfiguracji hosta.' % (msg, login), type=MessageBox.TYPE_INFO, timeout=10 )
                 self.loggedIn = False
         else:
             self.doLogin('guest', 'guest')
@@ -276,7 +276,7 @@ class VideoStarApi(CBaseHostClass, CaptchaHelper):
                     message.append('Oglądasz już kanał %s na urządeniu %s o adresie: %s.' % (info['channel_name'], info['device'], info['user_ip']))
                     message.append('W WP Pilocie nie możesz oglądać większej liczby kanałów jednocześnie.')
                     message.append('Czy chcesz kontynować tutaj?')
-                    arg1 = self.sessionEx.waitForFinishOpen(MessageBox, '\n'.join(message), type = MessageBox.TYPE_YESNO)
+                    arg1 = self.sessionEx.waitForFinishOpen(MessageBox, '\n'.join(message), type=MessageBox.TYPE_YESNO)
                     if arg1:
                         url = self.getFullUrl('v1/channels/close', 'api')
                         paramsUrl = dict(self.defaultParams)

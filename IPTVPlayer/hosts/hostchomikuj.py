@@ -35,9 +35,9 @@ from Screens.MessageBox import MessageBox
 ###################################################
 # Config options for HOST
 ################################################### 
-config.plugins.iptvplayer.Chomikuj_folder = ConfigText(default = "", fixed_size = False)
-config.plugins.iptvplayer.Chomikuj_password = ConfigText(default = "", fixed_size = False)
-config.plugins.iptvplayer.Chomikuj_login = ConfigText(default = "", fixed_size = False)
+config.plugins.iptvplayer.Chomikuj_folder = ConfigText(default="", fixed_size=False)
+config.plugins.iptvplayer.Chomikuj_password = ConfigText(default="", fixed_size=False)
+config.plugins.iptvplayer.Chomikuj_login = ConfigText(default="", fixed_size=False)
 
 def GetConfigList():
     optionList = []
@@ -143,7 +143,7 @@ class Chomikuj(CBaseHostClass):
         
         sts = False
         if '' == login or '' == password:
-            self.sessionEx.open(MessageBox, 'Wprowadź dane do swojego konta Chomikuj.pl (Niebieski klawisz).', type = MessageBox.TYPE_INFO, timeout = 10 )
+            self.sessionEx.open(MessageBox, 'Wprowadź dane do swojego konta Chomikuj.pl (Niebieski klawisz).', type=MessageBox.TYPE_INFO, timeout=10 )
         else:
             sts, data = self.requestJsonData(url, loginData)
             if sts and 0 == self._getJItemNum(data, 'Code', -1):
@@ -158,7 +158,7 @@ class Chomikuj(CBaseHostClass):
                     errorMessage += 'Błędne hasło.'
                 else:
                     errorMessage += 'Code="%d", message="%s".' % (self._getJItemNum(data, 'Code', 0), self._getJItemStr(data, 'Message', '')) 
-                self.sessionEx.open(MessageBox, errorMessage, type = MessageBox.TYPE_INFO, timeout = 10 )
+                self.sessionEx.open(MessageBox, errorMessage, type=MessageBox.TYPE_INFO, timeout=10 )
         return sts
 
     def listSearchResult(self, cItem, searchPattern, searchType):

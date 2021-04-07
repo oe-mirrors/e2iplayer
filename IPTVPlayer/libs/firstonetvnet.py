@@ -34,8 +34,8 @@ from Screens.MessageBox import MessageBox
 ###################################################
 # Config options for HOST
 ###################################################
-config.plugins.iptvplayer.firstonetv_login    = ConfigText(default = "", fixed_size = False)
-config.plugins.iptvplayer.firstonetv_password = ConfigText(default = "", fixed_size = False)
+config.plugins.iptvplayer.firstonetv_login    = ConfigText(default="", fixed_size=False)
+config.plugins.iptvplayer.firstonetv_password = ConfigText(default="", fixed_size=False)
 
 def GetConfigList():
     optionList = []
@@ -108,7 +108,7 @@ class FirstOneTvApi(CBaseHostClass):
                 msgTab = [_('Login failed.')]
                 if sts:
                     msgTab.append(self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(data, ('<div', '>', 'data-abide-error'), ('</div', '>'), False)[1]))
-                self.sessionEx.waitForFinishOpen(MessageBox, '\n'.join(msgTab), type = MessageBox.TYPE_ERROR, timeout = 10)
+                self.sessionEx.waitForFinishOpen(MessageBox, '\n'.join(msgTab), type=MessageBox.TYPE_ERROR, timeout=10)
                 printDBG('tryTologin failed')
         return self.loggedIn
     

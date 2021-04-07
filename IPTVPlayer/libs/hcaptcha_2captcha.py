@@ -88,5 +88,5 @@ class UnCaptchahCaptcha:
             sleepObj.Reset()
         
         if token == '':
-            self.sessionEx.waitForFinishOpen(MessageBox, (_('Resolving hCaptcha with %s failed!\n\n') % self.getMainUrl()) + '\n'.join(errorMsgTab), type = MessageBox.TYPE_ERROR, timeout = 10)
+            self.sessionEx.waitForFinishOpen(MessageBox, (_('Resolving hCaptcha with %s failed!\n\n') % self.getMainUrl()) + '\n'.join(errorMsgTab), type=MessageBox.TYPE_ERROR, timeout=10)
         return token

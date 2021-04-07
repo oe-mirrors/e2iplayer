@@ -33,9 +33,9 @@ from Screens.MessageBox import MessageBox
 ###################################################
 # Config options for HOST
 ###################################################
-config.plugins.iptvplayer.cda_searchsort = ConfigSelection(default = "best", choices = [("best", "Najtrafniejsze"), ("date", "Najnowsze"), ("rate", "Najlepiej oceniane"), ("alf", "Alfabetycznie")])
-config.plugins.iptvplayer.cda_login      = ConfigText(default = "", fixed_size = False)
-config.plugins.iptvplayer.cda_password   = ConfigText(default = "", fixed_size = False)
+config.plugins.iptvplayer.cda_searchsort = ConfigSelection(default="best", choices=[("best", "Najtrafniejsze"), ("date", "Najnowsze"), ("rate", "Najlepiej oceniane"), ("alf", "Alfabetycznie")])
+config.plugins.iptvplayer.cda_login      = ConfigText(default="", fixed_size=False)
+config.plugins.iptvplayer.cda_password   = ConfigText(default="", fixed_size=False)
 
 def GetConfigList():
     optionList = []
@@ -88,7 +88,7 @@ class cda(CBaseHostClass, CaptchaHelper):
         self.login    = ''
         self.password = ''
 
-    def getPage(self, url, addParams = {}, post_data = None):
+    def getPage(self, url, addParams={}, post_data=None):
         baseUrl = self.cm.iriToUri(url)
         return self.cm.getPage(baseUrl, addParams, post_data)
 
@@ -525,7 +525,7 @@ class cda(CBaseHostClass, CaptchaHelper):
                     continue
                 else:
                     #printDBG(data)
-                    self.sessionEx.waitForFinishOpen(MessageBox, '\n'.join(msgTab), type = MessageBox.TYPE_ERROR, timeout = 10)
+                    self.sessionEx.waitForFinishOpen(MessageBox, '\n'.join(msgTab), type=MessageBox.TYPE_ERROR, timeout=10)
                     printDBG('tryTologin failed')
                 break
 

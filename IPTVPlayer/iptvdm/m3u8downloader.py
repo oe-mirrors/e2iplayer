@@ -40,14 +40,14 @@ class M3U8Downloader(BaseDownloader):
     WGET_TIMEOUT = 10
     LIVE_START_OFFSET = 120
     # wget status
-    WGET_STS = enum( NONE         = 'WGET_NONE',
-                     CONNECTING   = 'WGET_CONNECTING',
-                     DOWNLOADING  = 'WGET_DOWNLOADING',
-                     ENDED        = 'WGET_ENDED')                 
+    WGET_STS = enum( NONE='WGET_NONE',
+                     CONNECTING='WGET_CONNECTING',
+                     DOWNLOADING='WGET_DOWNLOADING',
+                     ENDED='WGET_ENDED')                 
     # local status
-    DOWNLOAD_TYPE = enum( M3U8     = 'TYPE_M3U8',
-                          SEGMENT  = 'TYPE_SEGMENT',
-                          WAITTING = 'TYPE_WAITTING')
+    DOWNLOAD_TYPE = enum( M3U8='TYPE_M3U8',
+                          SEGMENT='TYPE_SEGMENT',
+                          WAITTING='TYPE_WAITTING')
 
     def __init__(self):
         printDBG('M3U8Downloader.__init__ ----------------------------------')
@@ -102,7 +102,7 @@ class M3U8Downloader(BaseDownloader):
         self.iptv_sys = None
         callBackFun(sts, reason)
     
-    def start(self, url, filePath, params = {}):
+    def start(self, url, filePath, params={}):
         '''
             Owervrite start from BaseDownloader
         '''

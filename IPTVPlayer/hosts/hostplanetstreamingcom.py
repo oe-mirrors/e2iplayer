@@ -18,10 +18,10 @@ from Components.config import config, ConfigSelection, ConfigText, getConfigList
 ###################################################
 # Config options for HOST
 ###################################################
-config.plugins.iptvplayer.planetstreaming_proxy = ConfigSelection(default = "None", choices = [("None",     _("None")),
+config.plugins.iptvplayer.planetstreaming_proxy = ConfigSelection(default="None", choices=[("None",     _("None")),
                                                                                                ("proxy_1",  _("Alternative proxy server (1)")),
                                                                                                ("proxy_2",  _("Alternative proxy server (2)"))])
-config.plugins.iptvplayer.planetstreaming_alt_domain = ConfigText(default = "", fixed_size = False)
+config.plugins.iptvplayer.planetstreaming_alt_domain = ConfigText(default="", fixed_size=False)
 
 def GetConfigList():
     optionList = []
@@ -51,7 +51,7 @@ class PlanetStreaming(CBaseHostClass):
         self.cacheLinks = {}
         self.defaultParams = {'header':self.HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE, 'with_metadata':True}
         
-    def getPage(self, url, addParams = {}, post_data = None):
+    def getPage(self, url, addParams={}, post_data=None):
         if addParams == {}:
             addParams = dict(self.defaultParams)
             
@@ -334,7 +334,7 @@ class PlanetStreaming(CBaseHostClass):
         
         return self.up.getVideoLinkExt(videoUrl)
         
-    def handleService(self, index, refresh = 0, searchPattern = '', searchType = ''):
+    def handleService(self, index, refresh=0, searchPattern='', searchType=''):
         printDBG('handleService start')
         
         CBaseHostClass.handleService(self, index, refresh, searchPattern, searchType)

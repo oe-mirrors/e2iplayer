@@ -1017,7 +1017,7 @@ class IPTVExtMoviePlayer(Screen):
         self.restartSubTimer()
         self.updateSubtitles(timeMS)
     
-    def updateSubtitles(self, timeMS, force = False):
+    def updateSubtitles(self, timeMS, force=False):
         if self.isClosing:
             return
         if not self.subHandler['enabled']:
@@ -1054,7 +1054,7 @@ class IPTVExtMoviePlayer(Screen):
         for idx in range(self.subLinesNum):
             self['subLabel%d'%(idx+1)].hide()
     
-    def setSubtitlesText(self, text, stripLine = True, breakToLongLine=True):
+    def setSubtitlesText(self, text, stripLine=True, breakToLongLine=True):
         back = True
         desktopW = getDesktop(0).size().width()
         desktopH = getDesktop(0).size().height()
@@ -1843,7 +1843,7 @@ class IPTVExtMoviePlayer(Screen):
         else:
             self.openChild(boundFunction(self.childClosed, self.downloadSubCallback), IPTVSubSimpleDownloaderWidget, {'movie_url':url, 'movie_title':self.title, 'sub_list':simpleTracksTab})
         
-    def downloadSubCallback(self, ret = None):
+    def downloadSubCallback(self, ret=None):
         if None != ret:
             self.subHandler['handler'].removeCacheFile(ret.get('path', ''))
             idx = self.metaHandler.addSubtitleTrack(ret)
@@ -2347,4 +2347,4 @@ class IPTVExtMoviePlayerSummary(Screen):
                 </widget>
             </screen>"""
         def __init__(self, session, parent):
-                Screen.__init__(self, session, parent = parent)
+                Screen.__init__(self, session, parent=parent)

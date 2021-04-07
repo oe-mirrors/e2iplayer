@@ -28,8 +28,8 @@ from Components.config import config, ConfigText, getConfigListEntry
 ###################################################
 # Config options for HOST
 ###################################################
-config.plugins.iptvplayer.eurosportplayer_login    = ConfigText(default = "", fixed_size = False)
-config.plugins.iptvplayer.eurosportplayer_password = ConfigText(default = "", fixed_size = False)
+config.plugins.iptvplayer.eurosportplayer_login    = ConfigText(default="", fixed_size=False)
+config.plugins.iptvplayer.eurosportplayer_password = ConfigText(default="", fixed_size=False)
 
 def GetConfigList():
     optionList = []
@@ -89,7 +89,7 @@ class EuroSportPlayer(CBaseHostClass):
         self.ABBREVIATED_MONTH_NAME_TAB = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
         self.ABBREVIATED_DAYS_NAME_TAB = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
         
-    def getPage(self, baseUrl, addParams = {}, post_data = None):
+    def getPage(self, baseUrl, addParams={}, post_data=None):
         if addParams == {}: 
             addParams = dict(self.defaultParams)
         return self.cm.getPage(baseUrl, addParams, post_data)
@@ -158,7 +158,7 @@ class EuroSportPlayer(CBaseHostClass):
         else:
             printDBG("unhandled type %s" % itemType)
     
-    def addVideoFromData(self, videoData, OnlyLive = False, label_format = None, future = False):
+    def addVideoFromData(self, videoData, OnlyLive=False, label_format=None, future=False):
         # printDBG(json_dumps(videoData))
         #{"relationships": {
         #       "txSports": {"data": [{"type": "taxonomyNode", "id": "bec78875-c777-4b6b-aa5f-6f73093fef69"}]}, 
@@ -267,7 +267,7 @@ class EuroSportPlayer(CBaseHostClass):
 
                 desc = "video id: %s\n" % video_id 
                 if 'videoDuration' in item_data:
-                    desc = desc + _("Duration") + ": %s" % str(timedelta(seconds = int(item_data['videoDuration'] / 1000))) + "\n"
+                    desc = desc + _("Duration") + ": %s" % str(timedelta(seconds=int(item_data['videoDuration'] / 1000))) + "\n"
                 if 'secondaryTitle' in item_data:
                     desc = desc + item_data['secondaryTitle'] + "\n"
 
@@ -383,7 +383,7 @@ class EuroSportPlayer(CBaseHostClass):
                 
             for id in videoList:
                 videoData = self.espVideos[id]
-                params = self.addVideoFromData(videoData, OnlyLive=True, label_format = 'schedule', future = False)
+                params = self.addVideoFromData(videoData, OnlyLive=True, label_format='schedule', future=False)
                 if params:
                     videoParamsList.append(params)
             
@@ -562,7 +562,7 @@ class EuroSportPlayer(CBaseHostClass):
                 
                 httpParams = {'header' : header, 'with_metadata':True, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE, 'raw_post_data': True}
                                     
-                sts, data = self.getPage(url, httpParams, post_data = json_dumps(postData))
+                sts, data = self.getPage(url, httpParams, post_data=json_dumps(postData))
                 
                 ''' good login
                 {
@@ -684,7 +684,7 @@ class EuroSportPlayer(CBaseHostClass):
         
         return linksTab
         
-    def handleService(self, index, refresh = 0, searchPattern = '', searchType = ''):
+    def handleService(self, index, refresh=0, searchPattern='', searchType=''):
         printDBG('handleService start')
         self.checkLogin()
         

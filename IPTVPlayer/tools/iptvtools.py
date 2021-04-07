@@ -309,7 +309,7 @@ def GetAvailableIconSize(checkAll=True):
 # returns the directory path where specified resources are
 # stored, in the future, it can be changed in the config
 #############################################################
-def GetLogoDir(file = ''):
+def GetLogoDir(file=''):
     return resolveFilename(SCOPE_PLUGINS, 'Extensions/IPTVPlayer/icons/logos/') + file
     
 def GetPyScriptCmd(name):
@@ -363,7 +363,7 @@ def TestTmpCookieDir():
     with open(path + ".rw_test", 'w') as f:
         f.write("test")
 
-def GetCookieDir(file = '', forceFromConfig=False):
+def GetCookieDir(file='', forceFromConfig=False):
     global gE2iPlayerTempCookieDir
     if gE2iPlayerTempCookieDir == None or forceFromConfig:
         cookieDir = config.plugins.iptvplayer.SciezkaCache.value + '/cookies/'
@@ -400,7 +400,7 @@ def TestTmpJSCacheDir():
     with open(path + ".rw_test", 'w') as f:
         f.write("test")
 
-def GetJSCacheDir(file = '', forceFromConfig=False):
+def GetJSCacheDir(file='', forceFromConfig=False):
     global gE2iPlayerTempJSCache
     if gE2iPlayerTempJSCache == None or forceFromConfig:
         cookieDir = config.plugins.iptvplayer.SciezkaCache.value + '/JSCache/'
@@ -414,16 +414,16 @@ def GetJSCacheDir(file = '', forceFromConfig=False):
     return cookieDir + file
 ##############################
 
-def GetTmpDir(file = ''):
+def GetTmpDir(file=''):
     path = config.plugins.iptvplayer.NaszaTMP.value
     path = path.replace('//', '/')
     mkdirs(path)
     return path + '/' + file
 
-def GetE2iPlayerRootfsDir(file = ''):
+def GetE2iPlayerRootfsDir(file=''):
     return '/iptvplayer_rootfs/' + file
 
-def GetE2iPlayerVKLayoutDir(file = ''):
+def GetE2iPlayerVKLayoutDir(file=''):
     return GetE2iPlayerRootfsDir('etc/vk/' + file)
     
 def CreateTmpFile(filename, data=''):
@@ -437,39 +437,39 @@ def CreateTmpFile(filename, data=''):
         printExc()
     return sts, filePath
     
-def GetCacheSubDir(dir, file = ''):
+def GetCacheSubDir(dir, file=''):
     path = config.plugins.iptvplayer.SciezkaCache.value + "/" + dir
     path = path.replace('//', '/')
     mkdirs(path)
     return path + '/' + file
 
-def GetSearchHistoryDir(file = ''):
+def GetSearchHistoryDir(file=''):
     return GetCacheSubDir('SearchHistory', file)
     
-def GetFavouritesDir(file = ''):
+def GetFavouritesDir(file=''):
     return GetCacheSubDir('IPTVFavourites', file)
     
-def GetSubtitlesDir(file = ''):
+def GetSubtitlesDir(file=''):
     return GetCacheSubDir('Subtitles', file)
     
-def GetMovieMetaDataDir(file = ''):
+def GetMovieMetaDataDir(file=''):
     return GetCacheSubDir('MovieMetaData', file)
 
-def GetIPTVDMImgDir(file = ''):
+def GetIPTVDMImgDir(file=''):
     return resolveFilename(SCOPE_PLUGINS, 'Extensions/IPTVPlayer/icons/') + file
-def GetIconDir(file = ''):
+def GetIconDir(file=''):
     return resolveFilename(SCOPE_PLUGINS, 'Extensions/IPTVPlayer/icons/') + file
-def GetBinDir(file = '', platform=None):
+def GetBinDir(file='', platform=None):
     if None == platform:
         platform = config.plugins.iptvplayer.plarform.value
     return resolveFilename(SCOPE_PLUGINS, 'Extensions/IPTVPlayer/bin/') + platform + '/' + file
-def GetPluginDir(file = ''):
+def GetPluginDir(file=''):
     return resolveFilename(SCOPE_PLUGINS, 'Extensions/IPTVPlayer/') + file
-def GetExtensionsDir(file = ''):
+def GetExtensionsDir(file=''):
     return resolveFilename(SCOPE_PLUGINS, 'Extensions/') + file
-def GetSkinsDir(path = ''):
+def GetSkinsDir(path=''):
     return resolveFilename(SCOPE_PLUGINS, 'Extensions/IPTVPlayer/skins/') + path
-def GetConfigDir(path = ''):
+def GetConfigDir(path=''):
     return resolveFilename(SCOPE_CONFIG, path)
 def IsExecutable(fpath):
     try:
@@ -1089,7 +1089,7 @@ def RemoveAllDirsIconsFromPath(path, old=False):
         except Exception:
             printExc()
     
-def formatBytes(bytes, precision = 2):
+def formatBytes(bytes, precision=2):
     import math
     units = ['B', 'KB', 'MB', 'GB', 'TB'] 
     bytes = max(bytes, 0)
@@ -1177,7 +1177,7 @@ class CSearchHistoryHelper():
             
         return historyList
     
-    def addHistoryItem(self, itemValue, itemType = None):
+    def addHistoryItem(self, itemValue, itemType=None):
         printDBG('CSearchHistoryHelper.addHistoryItem to file = "%s"' % self.PATH_FILE)
         try:
             if config.plugins.iptvplayer.search_history_size.value > 0:

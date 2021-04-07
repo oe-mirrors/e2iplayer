@@ -29,7 +29,7 @@ from Components.config import config, ConfigDirectory, getConfigListEntry
 ###################################################
 # Config options for HOST
 ###################################################
-config.plugins.iptvplayer.Sciezkaurllist = ConfigDirectory(default = "/hdd/")
+config.plugins.iptvplayer.Sciezkaurllist = ConfigDirectory(default="/hdd/")
 
 def GetConfigList():
     optionList = []

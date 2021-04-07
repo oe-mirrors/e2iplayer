@@ -134,7 +134,7 @@ class ConfigHostsMenu(ConfigBaseWidget):
                     if( len(self.host.GetConfigList()) < 1 ):
                         printDBG('ConfigMenu host "%s" does not have additional configs' % hostName)
                     else:
-                        self.session.open(ConfigHostMenu, hostName = hostName)
+                        self.session.open(ConfigHostMenu, hostName=hostName)
                         addConf = True
                 except Exception:
                     printExc('ConfigMenu host "%s" does not have method GetConfigList' % hostName)
@@ -212,7 +212,7 @@ class ConfigHostsMenu(ConfigBaseWidget):
     def changedEntry(self):
         if self["config"].getCurrent()[1] in self.privacePoliceWorningList and self["config"].getCurrent()[1].value:
             message = _('Using this host in your country can be illegal.\nDo you want to continue at your own risk?')
-            self.session.openWithCallback(boundFunction(self.privatePoliceWorningCallback, self["config"].getCurrent()[1]), MessageBox, text = message, type = MessageBox.TYPE_YESNO)
+            self.session.openWithCallback(boundFunction(self.privatePoliceWorningCallback, self["config"].getCurrent()[1]), MessageBox, text=message, type=MessageBox.TYPE_YESNO)
             
     def privatePoliceWorningCallback(self, configEntry=None, arg=None):
         if not arg:

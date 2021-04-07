@@ -30,15 +30,15 @@ from Components.config import config, ConfigSelection, ConfigYesNo, getConfigLis
 ###################################################
 # Config options for HOST
 ###################################################
-config.plugins.iptvplayer.svt_default_quality = ConfigSelection(default = "99999999", choices = [
+config.plugins.iptvplayer.svt_default_quality = ConfigSelection(default="99999999", choices=[
 ("0", _("the worst")),
 ("500",  "360p"), 
 ("600",  "480p"), 
 ("900",  "720p"), 
 ("99999999", _("the best"))
 ])
-config.plugins.iptvplayer.svt_use_default_quality = ConfigYesNo(default = False)
-config.plugins.iptvplayer.svt_prefered_format     = ConfigSelection(default = "hls", choices = [
+config.plugins.iptvplayer.svt_use_default_quality = ConfigYesNo(default=False)
+config.plugins.iptvplayer.svt_prefered_format     = ConfigSelection(default="hls", choices=[
 ("hls",  _("HLS/m3u8")),
 ("dash", _("DASH/mpd"))
 ])
@@ -559,7 +559,7 @@ class SVTPlaySE(CBaseHostClass):
         self.addDir(params)
         return True
         
-    def handleService(self, index, refresh = 0, searchPattern = '', searchType = ''):
+    def handleService(self, index, refresh=0, searchPattern='', searchType=''):
         printDBG('handleService start')
         
         CBaseHostClass.handleService(self, index, refresh, searchPattern, searchType)

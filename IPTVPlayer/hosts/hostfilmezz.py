@@ -35,8 +35,8 @@ from Screens.MessageBox import MessageBox
 ###################################################
 # Config options for HOST
 ###################################################
-config.plugins.iptvplayer.filmezzeu_login    = ConfigText(default = "", fixed_size = False)
-config.plugins.iptvplayer.filmezzeu_password = ConfigText(default = "", fixed_size = False)
+config.plugins.iptvplayer.filmezzeu_login    = ConfigText(default="", fixed_size=False)
+config.plugins.iptvplayer.filmezzeu_password = ConfigText(default="", fixed_size=False)
 
 def GetConfigList():
     optionList = []
@@ -81,7 +81,7 @@ class FilmezzEU(CBaseHostClass):
         url = url.replace('&amp;', '&')
         return CBaseHostClass.getFullIconUrl(self, url)
         
-    def getPage(self, baseUrl, addParams = {}, post_data = None):
+    def getPage(self, baseUrl, addParams={}, post_data=None):
         if addParams == {}:
             addParams = dict(self.defaultParams)
         
@@ -529,11 +529,11 @@ class FilmezzEU(CBaseHostClass):
             printDBG('tryTologin OK')
             return True
      
-        self.sessionEx.open(MessageBox, _('Login failed.'), type = MessageBox.TYPE_ERROR, timeout = 10)
+        self.sessionEx.open(MessageBox, _('Login failed.'), type=MessageBox.TYPE_ERROR, timeout=10)
         printDBG('tryTologin failed')
         return False
     
-    def handleService(self, index, refresh = 0, searchPattern = '', searchType = ''):
+    def handleService(self, index, refresh=0, searchPattern='', searchType=''):
         printDBG('handleService start')
         
         if None == self.loggedIn or self.login != config.plugins.iptvplayer.filmezzeu_login.value or\

@@ -329,7 +329,7 @@ class DarshowCom(CBaseHostClass):
             cItem['post_data']['search_start'] = cItem['page']
         self.listItems(cItem)
 
-    def handleService(self, index, refresh = 0, searchPattern = '', searchType = ''):
+    def handleService(self, index, refresh=0, searchPattern='', searchType=''):
         printDBG('handleService start')
         
         CBaseHostClass.handleService(self, index, refresh, searchPattern, searchType)

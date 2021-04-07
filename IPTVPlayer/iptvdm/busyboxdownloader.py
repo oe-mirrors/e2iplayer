@@ -51,7 +51,7 @@ class BuxyboxWgetDownloader(WgetDownloader):
         self.iptv_sys = None
         callBackFun(sts, reason)
     
-    def start(self, url, filePath, params = {}, info_from=None, retries=0):
+    def start(self, url, filePath, params={}, info_from=None, retries=0):
         '''
             Owervrite start from BaseDownloader
         '''

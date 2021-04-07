@@ -35,8 +35,8 @@ from Components.Language import language
 ###################################################
 # Config options for HOST
 ###################################################
-config.plugins.iptvplayer.movie4kto_language = ConfigSelection(default = "", choices = [("", _("Auto")), ("en", _("English")), ("de", _("German")), ("fr", _("French")), ("es", _("Spanish")), ("it", _("Italian")), ("jp", _("Japanese")), ("tr", _("Turkish")), ("ru", _("Russian")) ])
-config.plugins.iptvplayer.movie4kto_alt_domain = ConfigText(default = "", fixed_size = False)
+config.plugins.iptvplayer.movie4kto_language = ConfigSelection(default="", choices=[("", _("Auto")), ("en", _("English")), ("de", _("German")), ("fr", _("French")), ("es", _("Spanish")), ("it", _("Italian")), ("jp", _("Japanese")), ("tr", _("Turkish")), ("ru", _("Russian")) ])
+config.plugins.iptvplayer.movie4kto_alt_domain = ConfigText(default="", fixed_size=False)
 
 def GetConfigList():
     optionList = []
@@ -599,7 +599,7 @@ class IPTVHost(CHostBase):
     def __init__(self):
         CHostBase.__init__(self, Movie4kTO(), True, [CDisplayListItem.TYPE_VIDEO, CDisplayListItem.TYPE_AUDIO])
     
-    def getArticleContent(self, Index = 0):
+    def getArticleContent(self, Index=0):
         retCode = RetHost.ERROR
         retlist = []
         if not self.isValidIndex(Index):
@@ -610,7 +610,7 @@ class IPTVHost(CHostBase):
             title  = item.get('title', '')
             text   = item.get('text', '')
             images = item.get("images", [])
-            retlist.append( ArticleContent(title = title, text = text, images =  images) )
-        return RetHost(RetHost.OK, value = retlist)
+            retlist.append( ArticleContent(title=title, text=text, images=images) )
+        return RetHost(RetHost.OK, value=retlist)
     # end getArticleContent
 

@@ -26,7 +26,7 @@ except Exception:
 ###################################################
 # Config options for HOST
 ###################################################
-config.plugins.iptvplayer.hitbox_iconssize = ConfigSelection(default = "medium", choices = [ ("large", _("large")), ("medium", _("medium")), ("small", _("small")) ])
+config.plugins.iptvplayer.hitbox_iconssize = ConfigSelection(default="medium", choices=[ ("large", _("large")), ("medium", _("medium")), ("small", _("small")) ])
 
 def GetConfigList():
     optionList = []
@@ -279,9 +279,9 @@ class IPTVHost(CHostBase):
         CHostBase.__init__(self, Hitbox(), True)
 
     def getLogoPath(self):
-        return RetHost(RetHost.OK, value = [GetLogoDir('hitboxtvlogo.png')])
+        return RetHost(RetHost.OK, value=[GetLogoDir('hitboxtvlogo.png')])
 
-    def getLinksForVideo(self, Index = 0, selItem = None):
+    def getLinksForVideo(self, Index=0, selItem=None):
         retCode = RetHost.ERROR
         retlist = []
         if not self.isValidIndex(Index):
@@ -294,7 +294,7 @@ class IPTVHost(CHostBase):
             url  = item["url"]
             retlist.append(CUrlItem(name, url, need_resolve))
 
-        return RetHost(RetHost.OK, value = retlist)
+        return RetHost(RetHost.OK, value=retlist)
     # end getLinksForVideo
 
     def convertList(self, cList):
@@ -330,13 +330,13 @@ class IPTVHost(CHostBase):
             description =  self.host._getStr( cItem.get('desc', '') ).strip()
             icon        =  self.host._getStr( cItem.get('icon', '') )
             
-            hostItem = CDisplayListItem(name = title,
-                                        description = description,
-                                        type = type,
-                                        urlItems = hostLinks,
-                                        urlSeparateRequest = 1,
-                                        iconimage = icon,
-                                        possibleTypesOfSearch = possibleTypesOfSearch)
+            hostItem = CDisplayListItem(name=title,
+                                        description=description,
+                                        type=type,
+                                        urlItems=hostLinks,
+                                        urlSeparateRequest=1,
+                                        iconimage=icon,
+                                        possibleTypesOfSearch=possibleTypesOfSearch)
             hostList.append(hostItem)
 
         return hostList

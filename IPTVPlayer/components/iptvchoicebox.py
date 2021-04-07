@@ -28,10 +28,10 @@ class IPTVChoiceBoxItem:
     TYPE_OFF  = "off"
     TYPE_NONE = None
     
-    def __init__(self, name = "",
-                description = "",
-                privateData = None,
-                type = TYPE_NONE):
+    def __init__(self, name="",
+                description="",
+                privateData=None,
+                type=TYPE_NONE):
         self.name = name
         self.description = description
         self.type = type

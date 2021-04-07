@@ -57,7 +57,7 @@ class VimeoCom(CBaseHostClass):
         self.api = {}
         self.typeMaps = {'clip':'videos', 'ondemand':'', 'people':'peoples', 'group':'groups', 'channel':'channels'}
         
-    def getPage(self, baseUrl, addParams = {}, post_data = None):
+    def getPage(self, baseUrl, addParams={}, post_data=None):
         if addParams == {}:
             addParams = dict(self.defaultParams)
         return self.cm.getPage(baseUrl, addParams, post_data)
@@ -367,7 +367,7 @@ class VimeoCom(CBaseHostClass):
         printDBG("VimeoCom.getLinksForVideo [%s]" % cItem)
         return self.up.getVideoLinkExt(cItem['url'])
     
-    def handleService(self, index, refresh = 0, searchPattern = '', searchType = ''):
+    def handleService(self, index, refresh=0, searchPattern='', searchType=''):
         printDBG('handleService start')
         
         CBaseHostClass.handleService(self, index, refresh, searchPattern, searchType)

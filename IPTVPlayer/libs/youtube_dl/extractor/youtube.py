@@ -514,7 +514,7 @@ class YoutubeIE(object):
         printDBG(sub_tracks)
         return sub_tracks
 
-    def _real_extract(self, url, allowVP9 = False, allowAgeGate = False):
+    def _real_extract(self, url, allowVP9=False, allowAgeGate=False):
         # Extract original video URL from URL with redirection, like age verification, using next_url parameter
         
         mobj = re.search(self._NEXT_URL_RE, url)
@@ -859,7 +859,7 @@ class YoutubeIE(object):
             printDBG('unable to extract %s; please report this issue on http://yt-dl.org/bug' % name)
             return None
             
-    def _get_video_url_list(self, url_map, allowVP9 = False):
+    def _get_video_url_list(self, url_map, allowVP9=False):
         format_list = list(self._available_formats_prefer_free) # available_formats
         if allowVP9:
             format_list.extend(['313', '271'])

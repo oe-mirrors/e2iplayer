@@ -552,7 +552,7 @@ class PlayerSelectorWidget(Screen):
         self.visible = True
         self.show()
 
-    def Error(self, error = None):
+    def Error(self, error=None):
         pass
         
     def __event(self, ev):

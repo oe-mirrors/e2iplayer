@@ -48,7 +48,7 @@ class WebCameraApi(CBaseHostClass):
             return ''
         return CBaseHostClass.getFullUrl(self, url, baseUrl)
     
-    def getPage(self, baseUrl, addParams = {}, post_data = None):
+    def getPage(self, baseUrl, addParams={}, post_data=None):
         if addParams == {}:
             addParams = dict(self.defaultParams)
         return self.cm.getPage(baseUrl, addParams, post_data)

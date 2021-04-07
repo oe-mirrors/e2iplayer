@@ -22,9 +22,9 @@ from os.path import normpath
 ###################################################
 # Config options for HOST
 ###################################################
-config.plugins.iptvplayer.Sciezkaurllist = ConfigDirectory(default = "/hdd/")
-config.plugins.iptvplayer.grupujurllist  = ConfigYesNo(default = True)
-config.plugins.iptvplayer.sortuj         = ConfigYesNo(default = True)
+config.plugins.iptvplayer.Sciezkaurllist = ConfigDirectory(default="/hdd/")
+config.plugins.iptvplayer.grupujurllist  = ConfigYesNo(default=True)
+config.plugins.iptvplayer.sortuj         = ConfigYesNo(default=True)
 
 def GetConfigList():
     optionList = [] 
@@ -168,17 +168,17 @@ class IPTVHost(CHostBase):
         return False
 
     def getLogoPath(self):
-        return RetHost(RetHost.OK, value = [GetLogoDir('urllistlogo.png')])
+        return RetHost(RetHost.OK, value=[GetLogoDir('urllistlogo.png')])
 
-    def getLinksForVideo(self, Index = 0, selItem = None):
+    def getLinksForVideo(self, Index=0, selItem=None):
         listLen = len(self.host.currList)
         if listLen < Index and listLen > 0:
             printDBG( "ERROR getLinksForVideo - current list is to short len: %d, Index: %d" % (listLen, Index) )
-            return RetHost(RetHost.ERROR, value = [])
+            return RetHost(RetHost.ERROR, value=[])
         
         if self.host.currList[Index]["type"] != 'video':
             printDBG( "ERROR getLinksForVideo - current item has wrong type" )
-            return RetHost(RetHost.ERROR, value = [])
+            return RetHost(RetHost.ERROR, value=[])
 
         retlist = []
         uri = self.host.currList[Index].get('url', '')
@@ -189,7 +189,7 @@ class IPTVHost(CHostBase):
         else:
             retlist.append(CUrlItem('picture link', urlparser.decorateParamsFromUrl(uri, True), 0))
 
-        return RetHost(RetHost.OK, value = retlist)
+        return RetHost(RetHost.OK, value=retlist)
     # end getLinksForVideo
 
     def convertList(self, cList):
@@ -223,13 +223,13 @@ class IPTVHost(CHostBase):
             description =  ph.clean_html(cItem.get('desc', ''))
             icon        =  cItem.get('icon', '')
             
-            hostItem = CDisplayListItem(name = title,
-                                        description = description,
-                                        type = type,
-                                        urlItems = hostLinks,
-                                        urlSeparateRequest = 1,
-                                        iconimage = icon,
-                                        possibleTypesOfSearch = possibleTypesOfSearch)
+            hostItem = CDisplayListItem(name=title,
+                                        description=description,
+                                        type=type,
+                                        urlItems=hostLinks,
+                                        urlSeparateRequest=1,
+                                        iconimage=icon,
+                                        possibleTypesOfSearch=possibleTypesOfSearch)
             hostList.append(hostItem)
 
         return hostList

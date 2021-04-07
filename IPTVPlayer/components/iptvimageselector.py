@@ -201,7 +201,7 @@ class IPTVMultipleImageSelectorWidget(Screen):
         self.setMarker()
         self.decodedCallBack()
     
-    def decodedCallBack(self, picInfo = None):
+    def decodedCallBack(self, picInfo=None):
         if self.iptv_images_data != None:
             self.picload_conn = None
             self.iptv_images_data.append(self.picload.getData())

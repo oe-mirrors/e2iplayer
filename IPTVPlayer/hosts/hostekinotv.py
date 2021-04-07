@@ -33,11 +33,11 @@ from Components.config import config, ConfigText, ConfigSelection, getConfigList
 ###################################################
 # Config options for HOST
 ###################################################
-config.plugins.iptvplayer.ekinotv_login = ConfigText(default = "", fixed_size = False)
-config.plugins.iptvplayer.ekinotv_password = ConfigText(default = "", fixed_size = False)
+config.plugins.iptvplayer.ekinotv_login = ConfigText(default="", fixed_size=False)
+config.plugins.iptvplayer.ekinotv_password = ConfigText(default="", fixed_size=False)
 
-config.plugins.iptvplayer.ekinotv_sortby = ConfigSelection(default = "data-dodania", choices = [("alfabetycznie", "nazwy"), ("ocena", "oceny"), ("odslony", "ilości odsłon"), ("data-dodania", "daty dodania"), ("data-premiery", "daty premiery"), ('data-aktualizacji', 'daty aktualizacji')])            
-config.plugins.iptvplayer.ekinotv_sortorder = ConfigSelection(default = "desc", choices = [("desc", "malejąco"), ("asc", "rosnąco")]) 
+config.plugins.iptvplayer.ekinotv_sortby = ConfigSelection(default="data-dodania", choices=[("alfabetycznie", "nazwy"), ("ocena", "oceny"), ("odslony", "ilości odsłon"), ("data-dodania", "daty dodania"), ("data-premiery", "daty premiery"), ('data-aktualizacji', 'daty aktualizacji')])            
+config.plugins.iptvplayer.ekinotv_sortorder = ConfigSelection(default="desc", choices=[("desc", "malejąco"), ("asc", "rosnąco")]) 
 
 def GetConfigList():
     optionList = []
@@ -85,7 +85,7 @@ class EkinoTv(CBaseHostClass, CaptchaHelper):
         self.password = ''
         self.loginMessage = ''
         
-    def getPage(self, baseUrl, addParams = {}, post_data = None):
+    def getPage(self, baseUrl, addParams={}, post_data=None):
         if addParams == {}:
             addParams = dict(self.defaultParams)
         origBaseUrl = baseUrl
@@ -546,7 +546,7 @@ class EkinoTv(CBaseHostClass, CaptchaHelper):
                     message = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(data, ('<div', '>', 'alert'), ('</div', '>'))[1])
                 else:
                     message = ''
-                self.sessionEx.open(MessageBox, _('Login failed.') + '\n' + message, type = MessageBox.TYPE_ERROR, timeout = 10)
+                self.sessionEx.open(MessageBox, _('Login failed.') + '\n' + message, type=MessageBox.TYPE_ERROR, timeout=10)
                 printDBG('tryTologin failed')
         return self.loggedIn
     

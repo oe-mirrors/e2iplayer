@@ -202,7 +202,7 @@ class Kinotan(CBaseHostClass):
             cItem = dict(cItem)
             self.listContent(cItem, nextCategory2, data)
 
-    def listContent(self, cItem, category, data = None):
+    def listContent(self, cItem, category, data=None):
         printDBG("Kinotan.listContent")
         self.cacheContentTab = {}
         

@@ -54,7 +54,7 @@ class IPTVUpdateWindow(Screen):
     </screen>"""
 
     ICONS = ['iconwait1.png', 'iconwait2.png', 'iconwait3.png', 'icondone.png', 'iconerror.png', 'iconwarning.png', 'iconcancelled.png']
-    ICON  = enum( WAITING = 0, PROCESSING = 1, PROCESSING_NOT_BREAK = 2, PROCESSED = 3, ERROR = 4, WARNING = 5, CANCELLED = 6 )
+    ICON  = enum( WAITING=0, PROCESSING=1, PROCESSING_NOT_BREAK=2, PROCESSED=3, ERROR=4, WARNING=5, CANCELLED=6 )
     
     def __init__(self, session, updateObjImpl, autoStart=True):
         printDBG("IPTVUpdateMainWindow.__init__ -------------------------------")
@@ -100,7 +100,7 @@ class IPTVUpdateWindow(Screen):
         self.onShow.remove(self.onStart)
         self.setTitle( self.updateObjImpl.getTitle() )
         self["sub_title"].setText( self.updateObjImpl.getSubTitle() )
-        self["list"].setSelectionState(enabled = False)
+        self["list"].setSelectionState(enabled=False)
         self.preparUpdateStepsList()
         if self.autoStart:
             self.doStart()
@@ -127,12 +127,12 @@ class IPTVUpdateWindow(Screen):
         else:
             currItem = self["list"].getCurrent()
             if  self.status not in [None, 'working']:
-                artItem = ArticleContent(title = currItem['title'], text = currItem['info'], images = [])
+                artItem = ArticleContent(title=currItem['title'], text=currItem['info'], images=[])
                 self.session.open(ArticleView, artItem)
 
     def keyExit(self):
         if 'working' == self.status and not self.list[self.currStep].get('breakable', False):
-            self.session.open(MessageBox, self.messages['not_aborted'], type = MessageBox.TYPE_INFO, timeout = 5 )
+            self.session.open(MessageBox, self.messages['not_aborted'], type=MessageBox.TYPE_INFO, timeout=5 )
         else:
             self.close()
 
@@ -183,14 +183,14 @@ class IPTVUpdateWindow(Screen):
                     self.close()
                     return
                 else:
-                    self["list"].setSelectionState(enabled = True)
+                    self["list"].setSelectionState(enabled=True)
         else:
             self.status = 'error'
             if  self.updateObjImpl.finalize(False, msg):
                 self.close()
                 return
             else:
-                self["list"].setSelectionState(enabled = True)
+                self["list"].setSelectionState(enabled=True)
         self.reloadList()
                 
 class IUpdateObjectInterface():
@@ -322,7 +322,7 @@ class UpdateMainAppImpl(IUpdateObjectInterface):
             except Exception:
                 printExc()
                 msgtxt = _("Please remember that you use this plugin at your own risk.")
-                self.session.open(MessageBox, _("E2 GUI restart after IPTVPlayer update to version[%s].\n\n") % self.serversList[self.currServIdx]['version'] + msgtxt, type = MessageBox.TYPE_INFO, timeout = 5 )
+                self.session.open(MessageBox, _("E2 GUI restart after IPTVPlayer update to version[%s].\n\n") % self.serversList[self.currServIdx]['version'] + msgtxt, type=MessageBox.TYPE_INFO, timeout=5 )
                 from enigma import quitMainloop
                 quitMainloop(3)
         except Exception:
@@ -334,7 +334,7 @@ class UpdateMainAppImpl(IUpdateObjectInterface):
             self.list[currStep].update( {'info': _("Aborted"), 'icon': self.ICON.CANCELLED} )
         except Exception:
             printExc()
-        self.session.open(MessageBox, _("Restart GUI failed. \nPlease restart STB manually."), type = MessageBox.TYPE_INFO, timeout=5 )
+        self.session.open(MessageBox, _("Restart GUI failed. \nPlease restart STB manually."), type=MessageBox.TYPE_INFO, timeout=5 )
 
     #########################################################
     # INREFACE IMPLEMENTATION METHODS
@@ -350,13 +350,13 @@ class UpdateMainAppImpl(IUpdateObjectInterface):
         
     def finalize(self, success=True, errorMsg=""):
         if success:
-            self.session.openWithCallback(self.doRestart, MessageBox, _("Update completed successfully. For the moment, the system will reboot."), type = MessageBox.TYPE_INFO, timeout=10 )
+            self.session.openWithCallback(self.doRestart, MessageBox, _("Update completed successfully. For the moment, the system will reboot."), type=MessageBox.TYPE_INFO, timeout=10 )
             return False
         else:
             message = errorMsg 
             # Failed message:
             message += "\n\n" + _("Update failed.\nCheck the status by selecting interesting and pressing OK.") 
-            self.session.open(MessageBox, message, type = MessageBox.TYPE_ERROR, timeout = -1)
+            self.session.open(MessageBox, message, type=MessageBox.TYPE_ERROR, timeout=-1)
             return False
 
     def terminate(self):
@@ -374,17 +374,17 @@ class UpdateMainAppImpl(IUpdateObjectInterface):
     def getStepsList(self):
         self.list = []
         if config.plugins.iptvplayer.gitlab_repo.value and config.plugins.iptvplayer.preferredupdateserver.value == '2':
-            self.list.append( self.__getStepDesc(title = _("Add repository last version."),   execFunction = self.stepGetGitlab, ignoreError=True ) )
-        self.list.append( self.__getStepDesc(title = _("Obtaining server list."),          execFunction = self.stepGetServerLists ) )
-        self.list.append( self.__getStepDesc(title = _("Downloading an update packet."),   execFunction = self.stepGetArchive ) )
-        self.list.append( self.__getStepDesc(title = _("Extracting an update packet."),    execFunction = self.stepUnpackArchive ) )
-        self.list.append( self.__getStepDesc(title = _("Copy post installed binaries."),   execFunction = self.stepCopyPostInatalledBinaries, breakable=True, ignoreError=True ) )
-        self.list.append( self.__getStepDesc(title = _("Executing user scripts."),         execFunction = self.stepExecuteUserScripts ) )
-        self.list.append( self.__getStepDesc(title = _("Checking version."),               execFunction = self.stepCheckFiles ) )
-        self.list.append( self.__getStepDesc(title = _("Removing unnecessary files."),     execFunction = self.stepRemoveUnnecessaryFiles, breakable=True, ignoreError=True) )
-        self.list.append( self.__getStepDesc(title = _("Confirmation of installation."),   execFunction = self.stepConfirmInstalation) )
-        self.list.append( self.__getStepDesc(title = _("Removing the old version."),       execFunction = self.stepRemoveOldVersion, breakable=False, ignoreError=True, repeatCount=2) )
-        self.list.append( self.__getStepDesc(title = _("Installing new version."),         execFunction = self.stepInstallNewVersion,   breakable=False, ignoreError=False, repeatCount=3) )
+            self.list.append( self.__getStepDesc(title=_("Add repository last version."),   execFunction=self.stepGetGitlab, ignoreError=True ) )
+        self.list.append( self.__getStepDesc(title=_("Obtaining server list."),          execFunction=self.stepGetServerLists ) )
+        self.list.append( self.__getStepDesc(title=_("Downloading an update packet."),   execFunction=self.stepGetArchive ) )
+        self.list.append( self.__getStepDesc(title=_("Extracting an update packet."),    execFunction=self.stepUnpackArchive ) )
+        self.list.append( self.__getStepDesc(title=_("Copy post installed binaries."),   execFunction=self.stepCopyPostInatalledBinaries, breakable=True, ignoreError=True ) )
+        self.list.append( self.__getStepDesc(title=_("Executing user scripts."),         execFunction=self.stepExecuteUserScripts ) )
+        self.list.append( self.__getStepDesc(title=_("Checking version."),               execFunction=self.stepCheckFiles ) )
+        self.list.append( self.__getStepDesc(title=_("Removing unnecessary files."),     execFunction=self.stepRemoveUnnecessaryFiles, breakable=True, ignoreError=True) )
+        self.list.append( self.__getStepDesc(title=_("Confirmation of installation."),   execFunction=self.stepConfirmInstalation) )
+        self.list.append( self.__getStepDesc(title=_("Removing the old version."),       execFunction=self.stepRemoveOldVersion, breakable=False, ignoreError=True, repeatCount=2) )
+        self.list.append( self.__getStepDesc(title=_("Installing new version."),         execFunction=self.stepInstallNewVersion,   breakable=False, ignoreError=False, repeatCount=3) )
         return self.list
         
     def isReadyToExecuteStep(self, currStepIdx):
@@ -641,7 +641,7 @@ class UpdateMainAppImpl(IUpdateObjectInterface):
         
     def stepConfirmInstalation(self, confirmed=None):
         if None == confirmed:
-            self.session.openWithCallback(self.stepConfirmInstalation, MessageBox, _("Version [%s] is ready for installation. After installation, restart of the system will be done.\nDo you want to continue?") % self.serversList[self.currServIdx]['version'], type = MessageBox.TYPE_YESNO, timeout = -1)
+            self.session.openWithCallback(self.stepConfirmInstalation, MessageBox, _("Version [%s] is ready for installation. After installation, restart of the system will be done.\nDo you want to continue?") % self.serversList[self.currServIdx]['version'], type=MessageBox.TYPE_YESNO, timeout=-1)
         else:
             if confirmed:
                 self.stepFinished(0, _("Installation has been confirmed."))
@@ -842,7 +842,7 @@ class UpdateMainAppImpl(IUpdateObjectInterface):
                 if 1 == len(options) and not config.plugins.iptvplayer.downgradePossible.value:
                     self.__selServerCallBack(options[0])
                 elif 0 < len(options):
-                    self.session.openWithCallback(self.__selServerCallBack, ChoiceBox, title=_("Select update server"), list = options)
+                    self.session.openWithCallback(self.__selServerCallBack, ChoiceBox, title=_("Select update server"), list=options)
                 else:
                     self.stepFinished(-1, _("There is no update for the current configuration."))
             else:
@@ -858,8 +858,8 @@ class UpdateMainAppImpl(IUpdateObjectInterface):
             if 'graphics_url' in self.serversList[self.currServIdx]:
                 if  self.localGraphicsHash == '' or self.serverGraphicsHash == '' or \
                     self.localGraphicsHash != self.serverGraphicsHash:
-                    list.append( self.__getStepDesc(title = _("Downloading graphics package."),   execFunction = self.stepGetGraphicsArchive ) )
-                    list.append( self.__getStepDesc(title = _("Extracting graphics package."),    execFunction = self.stepUnpackGraphicsArchive ) )
+                    list.append( self.__getStepDesc(title=_("Downloading graphics package."),   execFunction=self.stepGetGraphicsArchive ) )
+                    list.append( self.__getStepDesc(title=_("Extracting graphics package."),    execFunction=self.stepUnpackGraphicsArchive ) )
                     oldGraphics = False
                 else:
                     oldGraphics = True
@@ -867,27 +867,27 @@ class UpdateMainAppImpl(IUpdateObjectInterface):
                 if self.localIconsHash == '' or self.serverIconsHash == '' or \
                    self.localIconsHash != self.serverIconsHash:
                     if oldGraphics:
-                        list.append( self.__getStepDesc(title = _("Copy graphics without icons."),    execFunction = self.stepCopyGraphicsWithoutIcons ) )
+                        list.append( self.__getStepDesc(title=_("Copy graphics without icons."),    execFunction=self.stepCopyGraphicsWithoutIcons ) )
 
                     if config.plugins.iptvplayer.ListaGraficzna.value:
-                        list.append( self.__getStepDesc(title = _("Downloading icons package."),      execFunction = self.stepGetIconsArchive ) )
-                        list.append( self.__getStepDesc(title = _("Extracting icons package."),       execFunction = self.stepUnpackIconsArchive ) )
+                        list.append( self.__getStepDesc(title=_("Downloading icons package."),      execFunction=self.stepGetIconsArchive ) )
+                        list.append( self.__getStepDesc(title=_("Extracting icons package."),       execFunction=self.stepUnpackIconsArchive ) )
                 else:
                     if oldGraphics:
                         if config.plugins.iptvplayer.ListaGraficzna.value:
-                            list.append( self.__getStepDesc(title = _("Copy all graphics."),    execFunction = self.stepCopyAllGraphics ) )
+                            list.append( self.__getStepDesc(title=_("Copy all graphics."),    execFunction=self.stepCopyAllGraphics ) )
                         else:
-                            list.append( self.__getStepDesc(title = _("Copy graphics without icons."),    execFunction = self.stepCopyGraphicsWithoutIcons ) )
+                            list.append( self.__getStepDesc(title=_("Copy graphics without icons."),    execFunction=self.stepCopyGraphicsWithoutIcons ) )
                     elif config.plugins.iptvplayer.ListaGraficzna.value:
-                        list.append( self.__getStepDesc(title = _("Copy icons."),    execFunction = self.stepCopyOnlyIcons ) )
+                        list.append( self.__getStepDesc(title=_("Copy icons."),    execFunction=self.stepCopyOnlyIcons ) )
 
             if config.plugins.iptvplayer.gitlab_repo.value and config.plugins.iptvplayer.preferredupdateserver.value == '2':
                 self.list[4:4] = list
             else:
                 self.list[3:3] = list
             if 'enc' in self.serversList[self.currServIdx]:
-                self.list.insert(1, self.__getStepDesc(title = _("Get decryption key."),    execFunction = self.stepGetEncKey ) )
-                self.list.insert(3, self.__getStepDesc(title = _("Decrypt archive."),       execFunction = self.stepDecryptArchive ) )
+                self.list.insert(1, self.__getStepDesc(title=_("Get decryption key."),    execFunction=self.stepGetEncKey ) )
+                self.list.insert(3, self.__getStepDesc(title=_("Decrypt archive."),       execFunction=self.stepDecryptArchive ) )
             
             self.stepFinished(0, _("Selected version [%s].") % retArg[0])
         else:

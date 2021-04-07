@@ -39,8 +39,8 @@ from Screens.MessageBox import MessageBox
 ###################################################
 # Config options for HOST
 ###################################################
-config.plugins.iptvplayer.rtlmosthu_login    = ConfigText(default = "", fixed_size = False)
-config.plugins.iptvplayer.rtlmosthu_password = ConfigText(default = "", fixed_size = False)
+config.plugins.iptvplayer.rtlmosthu_login    = ConfigText(default="", fixed_size=False)
+config.plugins.iptvplayer.rtlmosthu_password = ConfigText(default="", fixed_size=False)
 
 def GetConfigList():
     optionList = []
@@ -158,7 +158,7 @@ class RtlMostHU(CBaseHostClass):
         path = self.ICON_PATH.format(url[2:], width, height, 'scale_crop', 60, format, 1)
         return self.ICON_URL.format(path, sha1(path+self.ICON_HASH).hexdigest())
 
-    def getPage(self, url, addParams = {}, post_data = None):
+    def getPage(self, url, addParams={}, post_data=None):
         if addParams == {}:
             addParams = dict(self.defaultParams)
         baseUrl = self.cm.iriToUri(url)
@@ -420,7 +420,7 @@ class RtlMostHU(CBaseHostClass):
 
         if '' == self.login.strip() or '' == self.password.strip():
             printDBG('tryTologin wrong login data')
-            self.sessionEx.open(MessageBox, _('The host %s requires registration. \nPlease fill your login and password in the host configuration. Available under blue button.') % self.getMainUrl(), type = MessageBox.TYPE_ERROR, timeout = 10 )
+            self.sessionEx.open(MessageBox, _('The host %s requires registration. \nPlease fill your login and password in the host configuration. Available under blue button.') % self.getMainUrl(), type=MessageBox.TYPE_ERROR, timeout=10 )
             return False
 
         try:
@@ -481,10 +481,10 @@ class RtlMostHU(CBaseHostClass):
             return True
         except:
            printExc()
-           self.sessionEx.open(MessageBox, _('Login failed.'), type = MessageBox.TYPE_ERROR, timeout = 10)
+           self.sessionEx.open(MessageBox, _('Login failed.'), type=MessageBox.TYPE_ERROR, timeout=10)
         return False
 
-    def handleService(self, index, refresh = 0, searchPattern = '', searchType = ''):
+    def handleService(self, index, refresh=0, searchPattern='', searchType=''):
         printDBG('handleService start')
 
         CBaseHostClass.handleService(self, index, refresh, searchPattern, searchType)

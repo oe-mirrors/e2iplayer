@@ -294,7 +294,7 @@ class IPTVFavouritesMainWidget(Screen):
                 pass
             
     def askForSave(self):
-        self.session.openWithCallback(self.save, MessageBox, text = _("Save changes?"), type = MessageBox.TYPE_YESNO)
+        self.session.openWithCallback(self.save, MessageBox, text=_("Save changes?"), type=MessageBox.TYPE_YESNO)
         
     def save(self, ret):
         if ret:

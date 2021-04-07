@@ -33,12 +33,12 @@ from Screens.MessageBox import MessageBox
 ###################################################
 # Config options for HOST
 ###################################################
-config.plugins.iptvplayer.hdsto_proxy = ConfigSelection(default = "None", choices = [("None",     _("None")),
+config.plugins.iptvplayer.hdsto_proxy = ConfigSelection(default="None", choices=[("None",     _("None")),
                                                                                      ("webproxy", _("Web proxy")),
                                                                                      ("proxy_1",  _("Alternative proxy server (1)")),
                                                                                      ("proxy_2",  _("Alternative proxy server (2)"))])
-config.plugins.iptvplayer.hdsto_login      = ConfigText(default = "", fixed_size = False)
-config.plugins.iptvplayer.hdsto_password   = ConfigText(default = "", fixed_size = False)
+config.plugins.iptvplayer.hdsto_login      = ConfigText(default="", fixed_size=False)
+config.plugins.iptvplayer.hdsto_password   = ConfigText(default="", fixed_size=False)
 
 def GetConfigList():
     optionList = []
@@ -558,11 +558,11 @@ class HDSTo(CBaseHostClass):
                         idx = data[1].find('"')
                         if idx >= 0:
                             msgTab.append(self.cleanHtmlStr(data[1][idx+1:])) 
-                self.sessionEx.waitForFinishOpen(MessageBox, '\n'.join(msgTab), type = MessageBox.TYPE_ERROR, timeout = 10)
+                self.sessionEx.waitForFinishOpen(MessageBox, '\n'.join(msgTab), type=MessageBox.TYPE_ERROR, timeout=10)
                 printDBG('tryTologin failed')
         return self.loggedIn
         
-    def handleService(self, index, refresh = 0, searchPattern = '', searchType = ''):
+    def handleService(self, index, refresh=0, searchPattern='', searchType=''):
         printDBG('handleService start')
         
         CBaseHostClass.handleService(self, index, refresh, searchPattern, searchType)

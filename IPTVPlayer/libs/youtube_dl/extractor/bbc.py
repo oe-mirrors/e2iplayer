@@ -18,19 +18,19 @@ from Plugins.Extensions.IPTVPlayer.libs.e2ijson import loads as json_loads
 
 from Components.config import config, ConfigSelection, ConfigYesNo, ConfigText, getConfigListEntry
 
-config.plugins.iptvplayer.bbc_default_quality = ConfigSelection(default = "900", choices = [
+config.plugins.iptvplayer.bbc_default_quality = ConfigSelection(default="900", choices=[
 ("0", _("the worst")),
 ("500",  "360p"), 
 ("600",  "480p"), 
 ("900",  "720p"), 
 ("99999999", _("the best"))
 ])
-config.plugins.iptvplayer.bbc_use_default_quality = ConfigYesNo(default = False)
-config.plugins.iptvplayer.bbc_prefered_format     = ConfigSelection(default = "hls", choices = [
+config.plugins.iptvplayer.bbc_use_default_quality = ConfigYesNo(default=False)
+config.plugins.iptvplayer.bbc_prefered_format     = ConfigSelection(default="hls", choices=[
 ("hls", _("HLS/m3u8")),
 ("dash", _("DASH/mpd")),
 ])
-config.plugins.iptvplayer.bbc_use_web_proxy = ConfigYesNo(default = False)
+config.plugins.iptvplayer.bbc_use_web_proxy = ConfigYesNo(default=False)
 
 def int_or_none(data):
     ret = 0

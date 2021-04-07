@@ -31,7 +31,7 @@ from skin import parseColor
 ###################################################
 
 class IPTVMultipleInputBox(Screen):
-    DEF_INPUT_PARAMS = {'validator':None, 'title':'', 'useable_chars':None, 'label_font':'Regular;23', 'label_size':(550, 25), 'input_font':'Regular;20', 'input_size':(550, 25), 'input':dict(text="", maxSize = False, visible_width = False, type = Input.TEXT)}
+    DEF_INPUT_PARAMS = {'validator':None, 'title':'', 'useable_chars':None, 'label_font':'Regular;23', 'label_size':(550, 25), 'input_font':'Regular;20', 'input_size':(550, 25), 'input':dict(text="", maxSize=False, visible_width=False, type=Input.TEXT)}
     DEF_PARAMS = {'title':_("Input"), 'with_accept_button':False, 'accep_label':_("Save"), 'list':[]}
     def __init__(self, session, params={}):
         

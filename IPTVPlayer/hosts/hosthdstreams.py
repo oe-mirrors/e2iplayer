@@ -27,10 +27,10 @@ import base64
 ###################################################
 # Config options for HOST
 ###################################################
-config.plugins.iptvplayer.api_key_9kweu = ConfigText(default = "", fixed_size = False)
-config.plugins.iptvplayer.api_key_2captcha = ConfigText(default = "", fixed_size = False)
-config.plugins.iptvplayer.hdstreams_linkcache = ConfigYesNo(default = True)
-config.plugins.iptvplayer.hdstreams_bypassrecaptcha = ConfigSelection(default = "None", choices = [("None",        _("None")),
+config.plugins.iptvplayer.api_key_9kweu = ConfigText(default="", fixed_size=False)
+config.plugins.iptvplayer.api_key_2captcha = ConfigText(default="", fixed_size=False)
+config.plugins.iptvplayer.hdstreams_linkcache = ConfigYesNo(default=True)
+config.plugins.iptvplayer.hdstreams_bypassrecaptcha = ConfigSelection(default="None", choices=[("None",        _("None")),
                                                                                                  ("9kw.eu",       "https://9kw.eu/"),
                                                                                                  ("2captcha.com", "http://2captcha.com/")])
 
@@ -76,7 +76,7 @@ class HDStreams(CBaseHostClass):
                              {'category': 'search_history',  'title': _('Search history'),             } 
                             ]
     
-    def getPage(self, baseUrl, addParams = {}, post_data = None):
+    def getPage(self, baseUrl, addParams={}, post_data=None):
         if addParams == {}:
             addParams = dict(self.defaultParams)
         addParams['cloudflare_params'] = {'cookie_file':self.COOKIE_FILE, 'User-Agent':self.USER_AGENT}
@@ -546,7 +546,7 @@ class HDStreams(CBaseHostClass):
         
         return [{'title':self.cleanHtmlStr( title ), 'text': self.cleanHtmlStr( desc ), 'images':[{'title':'', 'url':self.getFullUrl(icon)}], 'other_info':otherInfo}]
         
-    def handleService(self, index, refresh = 0, searchPattern = '', searchType = ''):
+    def handleService(self, index, refresh=0, searchPattern='', searchType=''):
         printDBG('handleService start')
         
         CBaseHostClass.handleService(self, index, refresh, searchPattern, searchType)

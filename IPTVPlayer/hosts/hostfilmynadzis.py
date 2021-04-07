@@ -24,8 +24,8 @@ import re
 ###################################################
 # Config options for HOST
 ###################################################
-config.plugins.iptvplayer.filmynadzis_login    = ConfigText(default = "", fixed_size = False)
-config.plugins.iptvplayer.filmynadzis_password = ConfigText(default = "", fixed_size = False)
+config.plugins.iptvplayer.filmynadzis_login    = ConfigText(default="", fixed_size=False)
+config.plugins.iptvplayer.filmynadzis_password = ConfigText(default="", fixed_size=False)
 
 def GetConfigList():
     optionList = []
@@ -91,7 +91,7 @@ class FilmyNaDzis(CBaseHostClass):
         if not self.loggedIn :
             # try to login
             postData = {'ihcaction': 'login', 'log' : self.login, 'pwd': self.password}
-            sts, data = self.cm.getPage (self.MAIN_URL, self.defaultParams, post_data = postData)
+            sts, data = self.cm.getPage (self.MAIN_URL, self.defaultParams, post_data=postData)
 
             if sts:
                 responseUrl = self.cm.meta['url']
@@ -281,7 +281,7 @@ class FilmyNaDzis(CBaseHostClass):
         printDBG("FilmyNaDzis.getVideoLinks [%s]" % videoUrl)
         return self.up.getVideoLinkExt(videoUrl)
 
-    def handleService(self, index, refresh = 0, searchPattern = '', searchType = ''):
+    def handleService(self, index, refresh=0, searchPattern='', searchType=''):
         printDBG('handleService start')
 
         CBaseHostClass.handleService(self, index, refresh, searchPattern, searchType)

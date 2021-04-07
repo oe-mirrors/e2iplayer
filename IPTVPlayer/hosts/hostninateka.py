@@ -212,7 +212,7 @@ class Ninateka(CBaseHostClass):
         printDBG("listSearchResult cItem[%s], searchPattern[%s] searchType[%s]" % (cItem, searchPattern, searchType))
         self.getVideosList(self.SEARCH_URL + urllib.parse.quote_plus(searchPattern))
             
-    def handleService(self, index, refresh = 0, searchPattern = '', searchType = ''):
+    def handleService(self, index, refresh=0, searchPattern='', searchType=''):
         printDBG('handleService start')
         
         CBaseHostClass.handleService(self, index, refresh, searchPattern, searchType)

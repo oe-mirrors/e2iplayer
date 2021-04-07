@@ -271,7 +271,7 @@ class CrtankoCom(CBaseHostClass):
         cItem['search'] = urllib.parse.quote(searchPattern)
         self.listItems(cItem)
 
-    def handleService(self, index, refresh = 0, searchPattern = '', searchType = ''):
+    def handleService(self, index, refresh=0, searchPattern='', searchType=''):
         printDBG('handleService start')
         
         CBaseHostClass.handleService(self, index, refresh, searchPattern, searchType)

@@ -26,11 +26,11 @@ import time
 ###################################################
 # Config options for HOST
 ###################################################
-config.plugins.iptvplayer.zdfmediathek_iconssize = ConfigSelection(default = "medium", choices = [ ("large", _("large")), ("medium", _("medium")), ("small", _("small")) ])
-config.plugins.iptvplayer.zdfmediathek_prefformat = ConfigSelection(default = "mp4,m3u8", choices = [
+config.plugins.iptvplayer.zdfmediathek_iconssize = ConfigSelection(default="medium", choices=[ ("large", _("large")), ("medium", _("medium")), ("small", _("small")) ])
+config.plugins.iptvplayer.zdfmediathek_prefformat = ConfigSelection(default="mp4,m3u8", choices=[
 ("mp4,m3u8", "mp4,m3u8"), ("m3u8,mp4", "m3u8,mp4")])
-config.plugins.iptvplayer.zdfmediathek_prefquality = ConfigSelection(default = "4", choices = [("0", _("low")), ("1", _("medium")), ("2", _("high")), ("3", _("very high")), ("4", _("hd"))])
-config.plugins.iptvplayer.zdfmediathek_prefmoreimportant = ConfigSelection(default = "quality", choices = [("quality", _("quality")), ("format", _("format"))])
+config.plugins.iptvplayer.zdfmediathek_prefquality = ConfigSelection(default="4", choices=[("0", _("low")), ("1", _("medium")), ("2", _("high")), ("3", _("very high")), ("4", _("hd"))])
+config.plugins.iptvplayer.zdfmediathek_prefmoreimportant = ConfigSelection(default="quality", choices=[("quality", _("quality")), ("format", _("format"))])
 config.plugins.iptvplayer.zdfmediathek_onelinkmode = ConfigYesNo(default=True)
 
 

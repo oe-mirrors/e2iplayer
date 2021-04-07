@@ -34,8 +34,8 @@ from Screens.MessageBox import MessageBox
 ###################################################
 # Config options for HOST
 ###################################################
-config.plugins.iptvplayer.plusdede_login    = ConfigText(default = "", fixed_size = False)
-config.plugins.iptvplayer.plusdede_password = ConfigText(default = "", fixed_size = False)
+config.plugins.iptvplayer.plusdede_login    = ConfigText(default="", fixed_size=False)
+config.plugins.iptvplayer.plusdede_password = ConfigText(default="", fixed_size=False)
 
 def GetConfigList():
     optionList = []
@@ -76,7 +76,7 @@ class PlusDEDE(CBaseHostClass):
         self.loggedIn = None
         self.LOGIN_MARKER_FILE = self.COOKIE_FILE + '.mark'
         
-    def getPage(self, baseUrl, addParams = {}, post_data = None):
+    def getPage(self, baseUrl, addParams={}, post_data=None):
         if addParams == {}:
             addParams = dict(self.defaultParams)
         origBaseUrl = baseUrl
@@ -556,7 +556,7 @@ class PlusDEDE(CBaseHostClass):
             self.loggedIn = False
             
             if '' == PlusDEDE.login.strip() or '' == PlusDEDE.password.strip():
-                self.sessionEx.open(MessageBox, _('The host %s requires registration. \nPlease fill your login and password in the host configuration. Available under blue button.' % self.getMainUrl()), type = MessageBox.TYPE_ERROR, timeout = 10 )
+                self.sessionEx.open(MessageBox, _('The host %s requires registration. \nPlease fill your login and password in the host configuration. Available under blue button.' % self.getMainUrl()), type=MessageBox.TYPE_ERROR, timeout=10 )
                 return False
             
             url = self.getFullUrl('/login?popup=1')
@@ -652,7 +652,7 @@ class PlusDEDE(CBaseHostClass):
                 printDBG('tryTologin failed')
         return self.loggedIn
     
-    def handleService(self, index, refresh = 0, searchPattern = '', searchType = ''):
+    def handleService(self, index, refresh=0, searchPattern='', searchType=''):
         printDBG('handleService start')
         
         self.tryTologin()

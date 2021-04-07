@@ -33,8 +33,8 @@ from Screens.MessageBox import MessageBox
 ###################################################
 # Config options for HOST
 ###################################################
-config.plugins.iptvplayer.wizjatv_login    = ConfigText(default = "", fixed_size = False)
-config.plugins.iptvplayer.wizjatv_password = ConfigText(default = "", fixed_size = False)
+config.plugins.iptvplayer.wizjatv_login    = ConfigText(default="", fixed_size=False)
+config.plugins.iptvplayer.wizjatv_password = ConfigText(default="", fixed_size=False)
 
 def GetConfigList():
     optionList = []
@@ -104,12 +104,12 @@ class WizjaTvApi(CBaseHostClass):
             if ret[0]:
                 self.loggedIn = True
                 if not ret[1]:
-                    self.sessionEx.open(MessageBox, ('Użytkownika "%s" zalogowany poprawnie. Brak premium!') % login, type = MessageBox.TYPE_INFO, timeout = 10 )
+                    self.sessionEx.open(MessageBox, ('Użytkownika "%s" zalogowany poprawnie. Brak premium!') % login, type=MessageBox.TYPE_INFO, timeout=10 )
             else:
-                self.sessionEx.open(MessageBox, ('Problem z zalogowanie użytkownika "%s". Sprawdź dane do logowania w konfiguracji hosta.') % login, type = MessageBox.TYPE_INFO, timeout = 10 )
+                self.sessionEx.open(MessageBox, ('Problem z zalogowanie użytkownika "%s". Sprawdź dane do logowania w konfiguracji hosta.') % login, type=MessageBox.TYPE_INFO, timeout=10 )
                 self.loggedIn = False
         else:
-            self.sessionEx.open(MessageBox, 'Serwis ten wymaga zalogowania. Wprowadź swój login i hasło w konfiguracji hosta dostępnej po naciśnięciu niebieskiego klawisza.', type = MessageBox.TYPE_ERROR, timeout = 10 )
+            self.sessionEx.open(MessageBox, 'Serwis ten wymaga zalogowania. Wprowadź swój login i hasło w konfiguracji hosta dostępnej po naciśnięciu niebieskiego klawisza.', type=MessageBox.TYPE_ERROR, timeout=10 )
             return []
         
         channelsTab = []

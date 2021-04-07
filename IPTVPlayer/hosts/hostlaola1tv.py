@@ -28,12 +28,12 @@ from Components.config import config, ConfigSelection, ConfigYesNo, ConfigText, 
 ###################################################
 # Config options for HOST
 ###################################################
-config.plugins.iptvplayer.laola1tv_defquality  = ConfigSelection(default = "1000000", choices = [("0", _("The worst")), ("500000", _("Low")), ("1000000", _("Mid")), ("1500000", _("High")), ("9000000", _("The best"))]) 
-config.plugins.iptvplayer.laola1tv_onelink     = ConfigYesNo(default = False)
-config.plugins.iptvplayer.laola1tv_portal      = ConfigSelection(default = "int", choices = [("at", "AT"), ("de", "DE"), ("int", "INT")]) 
-config.plugins.iptvplayer.laola1tv_language    = ConfigSelection(default = "en", choices = [("en", _("English")), ("de", _("Deutsch"))]) 
-config.plugins.iptvplayer.laola1tv_myip1       = ConfigText(default = "146.0.32.8", fixed_size = False)
-config.plugins.iptvplayer.laola1tv_myip2       = ConfigText(default = "85.128.142.29", fixed_size = False)
+config.plugins.iptvplayer.laola1tv_defquality  = ConfigSelection(default="1000000", choices=[("0", _("The worst")), ("500000", _("Low")), ("1000000", _("Mid")), ("1500000", _("High")), ("9000000", _("The best"))]) 
+config.plugins.iptvplayer.laola1tv_onelink     = ConfigYesNo(default=False)
+config.plugins.iptvplayer.laola1tv_portal      = ConfigSelection(default="int", choices=[("at", "AT"), ("de", "DE"), ("int", "INT")]) 
+config.plugins.iptvplayer.laola1tv_language    = ConfigSelection(default="en", choices=[("en", _("English")), ("de", _("Deutsch"))]) 
+config.plugins.iptvplayer.laola1tv_myip1       = ConfigText(default="146.0.32.8", fixed_size=False)
+config.plugins.iptvplayer.laola1tv_myip2       = ConfigText(default="85.128.142.29", fixed_size=False)
 
 def GetConfigList():
     optionList = []
@@ -420,7 +420,7 @@ class Laola1TV(CBaseHostClass):
     def getLinksForFavourite(self, fav_data):
         return self.getLinksForVideo({'url':fav_data})
 
-    def handleService(self, index, refresh = 0, searchPattern = '', searchType = ''):
+    def handleService(self, index, refresh=0, searchPattern='', searchType=''):
         printDBG('handleService start')
         
         CBaseHostClass.handleService(self, index, refresh, searchPattern, searchType)
@@ -460,9 +460,9 @@ class IPTVHost(CHostBase):
         CHostBase.__init__(self, Laola1TV(), True, [CDisplayListItem.TYPE_VIDEO, CDisplayListItem.TYPE_AUDIO])
 
     def getLogoPath(self):
-        return RetHost(RetHost.OK, value = [GetLogoDir('laola1tvlogo.png')])
+        return RetHost(RetHost.OK, value=[GetLogoDir('laola1tvlogo.png')])
     
-    def getLinksForVideo(self, Index = 0, selItem = None):
+    def getLinksForVideo(self, Index=0, selItem=None):
         retCode = RetHost.ERROR
         retlist = []
         if not self.isValidIndex(Index):
@@ -472,7 +472,7 @@ class IPTVHost(CHostBase):
         for item in urlList:
             retlist.append(CUrlItem(item["name"], item["url"], item["need_resolve"]))
 
-        return RetHost(RetHost.OK, value = retlist)
+        return RetHost(RetHost.OK, value=retlist)
     # end getLinksForVideo
     
     def getResolvedURL(self, url):
@@ -483,7 +483,7 @@ class IPTVHost(CHostBase):
             need_resolve = 0
             retlist.append(CUrlItem(item["name"], item["url"], need_resolve))
 
-        return RetHost(RetHost.OK, value = retlist)
+        return RetHost(RetHost.OK, value=retlist)
     
     def converItem(self, cItem):
         hostList = []
@@ -517,13 +517,13 @@ class IPTVHost(CHostBase):
         description =  cItem.get('desc', '')
         icon        =  cItem.get('icon', '')
         
-        return CDisplayListItem(name = title,
-                                    description = description,
-                                    type = type,
-                                    urlItems = hostLinks,
-                                    urlSeparateRequest = 1,
-                                    iconimage = icon,
-                                    possibleTypesOfSearch = possibleTypesOfSearch)
+        return CDisplayListItem(name=title,
+                                    description=description,
+                                    type=type,
+                                    urlItems=hostLinks,
+                                    urlSeparateRequest=1,
+                                    iconimage=icon,
+                                    possibleTypesOfSearch=possibleTypesOfSearch)
     # end converItem
 
     def getSearchItemInx(self):

@@ -272,7 +272,7 @@ class IITVPL(CBaseHostClass):
         
         return [{'title':self.cleanHtmlStr( info['title'] ), 'text': self.cleanHtmlStr( info['desc'] ), 'images':[{'title':'', 'url':info['icon']}], 'other_info':otherInfo}]
         
-    def handleService(self, index, refresh = 0, searchPattern = '', searchType = ''):
+    def handleService(self, index, refresh=0, searchPattern='', searchType=''):
         printDBG('handleService start')
         
         CBaseHostClass.handleService(self, index, refresh, searchPattern, searchType)
