@@ -64,11 +64,11 @@ class Youtube(CBaseHostClass):
                                  {'category': 'feeds',                 'title': _("Trending Feeds"), 'desc': _("Browse youtube trending feeds")},
                                  {'category': 'search_history',        'title': _("Search history"), 'desc': _("History of searched phrases.")}]
         
-        self.SEARCH_TYPES = [  (_("Video"),    "video"   ), 
-                               (_("Channel"),  "channel" ),
+        self.SEARCH_TYPES = [(_("Video"),    "video"), 
+                               (_("Channel"),  "channel"),
                                (_("Playlist"), "playlist"),
                               #(_("Movie"),    "movie"   ),
-                               (_("Live"),     "live"    ) ]
+                               (_("Live"),     "live")]
                               #("Program",            "show"    ),
                               #("traylist",           "traylist"),
         self.ytp = YouTubeParser()
@@ -268,12 +268,12 @@ class Youtube(CBaseHostClass):
         
         name     = self.currItem.get("name", '')
         category = self.currItem.get("category", '')
-        printDBG( "Youtube.handleService: ---------> name[%s], category[%s] " % (name, category) )
+        printDBG("Youtube.handleService: ---------> name[%s], category[%s] " % (name, category))
         self.currList = []
         
         if None == name:
             self.listMainMenu()
-        elif 'from_file' == category :
+        elif 'from_file' == category:
             self.listCategory(self.currItem)
         elif category in ["channel", "playlist", "movie", "traylist"]:
             self.getVideos(self.currItem)

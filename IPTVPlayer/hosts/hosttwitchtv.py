@@ -111,22 +111,22 @@ class Twitch(CBaseHostClass):
         
         self.VIDEOS_TYPES_TAB = [{'title':_('All')}, 
                                  {'title':_('Past premieres'), 'videos_type':'PAST_PREMIERE'},
-                                 {'title':_('Archive'),        'videos_type':'ARCHIVE'      },
-                                 {'title':_('Highlights'),     'videos_type':'HIGHLIGHT'    },
-                                 {'title':_('Uploads'),        'videos_type':'UPLOAD'       },]
+                                 {'title':_('Archive'),        'videos_type':'ARCHIVE'},
+                                 {'title':_('Highlights'),     'videos_type':'HIGHLIGHT'},
+                                 {'title':_('Uploads'),        'videos_type':'UPLOAD'},]
  
-        self.VIDEOS_SORT_TAB = [{'title':_('Popular'), 'sort':'VIEWS' },
-                                {'title':_('Recent'),  'sort':'TIME'  },]
+        self.VIDEOS_SORT_TAB = [{'title':_('Popular'), 'sort':'VIEWS'},
+                                {'title':_('Recent'),  'sort':'TIME'},]
 
-        self.CLIPS_FILTERS_TAB = [{'title':_('Trending'),         'clips_filter':'TRENDING'   },
-                                  {'title':_('Last day'),         'clips_filter':'LAST_DAY'   },
-                                  {'title':_('Last week'),        'clips_filter':'LAST_WEEK'  },
-                                  {'title':_('Last month'),       'clips_filter':'LAST_MONTH' },
-                                  {'title':_('All time'),         'clips_filter':'ALL_TIME'   },]
+        self.CLIPS_FILTERS_TAB = [{'title':_('Trending'),         'clips_filter':'TRENDING'},
+                                  {'title':_('Last day'),         'clips_filter':'LAST_DAY'},
+                                  {'title':_('Last week'),        'clips_filter':'LAST_WEEK'},
+                                  {'title':_('Last month'),       'clips_filter':'LAST_MONTH'},
+                                  {'title':_('All time'),         'clips_filter':'ALL_TIME'},]
                                   
         self.GAME_CAT_TAB = [{'category':'game_lang', 'next_category':'game_channels',      'title': _('Channels')},
-                             {'category':'game_lang', 'next_category':'game_videos_types',  'title': _('Videos') },
-                             {'category':'game_lang', 'next_category':'game_clips_filters', 'title': _('Clips') },
+                             {'category':'game_lang', 'next_category':'game_videos_types',  'title': _('Videos')},
+                             {'category':'game_lang', 'next_category':'game_clips_filters', 'title': _('Clips')},
                             ]
 
     def getPage(self, baseUrl, addParams={}, post_data=None):
@@ -141,9 +141,9 @@ class Twitch(CBaseHostClass):
     def listMain(self, cItem):
         printDBG("Twitch.listMain")
 
-        MAIN_CAT_TAB = [{'category':'browse',         'title': _('Browse') },
-                        {'category':'search',         'title': _('Search'),       'search_item':True       },
-                        {'category': 'search_history', 'title': _('Search history'),                        }]
+        MAIN_CAT_TAB = [{'category':'browse',         'title': _('Browse')},
+                        {'category':'search',         'title': _('Search'),       'search_item':True},
+                        {'category': 'search_history', 'title': _('Search history'),}]
         self.listsTab(MAIN_CAT_TAB, cItem)
 
     def listDirectories(self, cItem):
@@ -152,14 +152,14 @@ class Twitch(CBaseHostClass):
         dirChannels = []
         for pItem in self.platformFilters:
             params = MergeDicts(cItem, pItem)
-            subItems = [ MergeDicts(params, x, {'category':'dir_channels'}) for x in self.langItems ]
+            subItems = [MergeDicts(params, x, {'category':'dir_channels'}) for x in self.langItems]
             params.update({'category':'sub_items', 'sub_items':subItems})
             dirChannels.append(params)
 
-        TAB = [{'category':'dir_games',         'title': _('Games') },
+        TAB = [{'category':'dir_games',         'title': _('Games')},
                #{'category':'dir_communities',   'title': _('Communities') },
                #{'category':'dir_communities',   'title': _('Creative') },
-               {'category':'sub_items',         'title': _('Channels'), 'sub_items':dirChannels },
+               {'category':'sub_items',         'title': _('Channels'), 'sub_items':dirChannels},
         ]
         self.listsTab(TAB, cItem)
 
@@ -179,11 +179,11 @@ class Twitch(CBaseHostClass):
                         descTab.append(jstr(item['broadcaster'], '__typename') + ': ' + jstr(item['broadcaster'], 'displayName'))
                     if item.get('game'):
                         descTab.append(jstr(item['game'], '__typename') + ': ' + jstr(item['game'], 'name'))
-                    params = {'good_for_fav':True, 'name':'category', 'type':'category', 'category':nextCategory, 'title':title, 'user_login':str(item['broadcaster']['login']), 'icon':icon, 'desc':'[/br]'.join( descTab )}
+                    params = {'good_for_fav':True, 'name':'category', 'type':'category', 'category':nextCategory, 'title':title, 'user_login':str(item['broadcaster']['login']), 'icon':icon, 'desc':'[/br]'.join(descTab)}
                     self.addDir(params)
 
             if cursor != '' and streamsData['pageInfo']['hasNextPage']:
-                self.addDir( MergeDicts(cItem, {'title':_('Next page'), 'cursor':cursor}) )
+                self.addDir(MergeDicts(cItem, {'title':_('Next page'), 'cursor':cursor}))
         except Exception:
             printExc()
 
@@ -227,7 +227,7 @@ class Twitch(CBaseHostClass):
                     self.addDir(params)
 
             if cursor != '' and data[0]['data']['directoriesWithTags']['pageInfo']['hasNextPage']:
-                self.addDir( MergeDicts(cItem, {'title':_('Next page'), 'cursor':cursor}) )
+                self.addDir(MergeDicts(cItem, {'title':_('Next page'), 'cursor':cursor}))
 
         except Exception:
             printExc()
@@ -276,7 +276,7 @@ class Twitch(CBaseHostClass):
                     title = jstr(data[4]['data']['user']['lastBroadcast'], 'title')
                     item = data[4]['data']['user']['stream']
                     if item.get('game'):
-                        descTab.append( '%s: %s' % (jstr(item['game'], '__typename'), jstr(item['game'], 'name')) )
+                        descTab.append('%s: %s' % (jstr(item['game'], '__typename'), jstr(item['game'], 'name')))
                         icon = self.getFullIconUrl(jstr(item['game'], 'boxArtURL'), self.cm.meta['url'])
                     else:
                         icon = ''
@@ -307,9 +307,9 @@ class Twitch(CBaseHostClass):
                 cursor = jstr(item, 'cursor')
                 item = item['node']
                 descTab = []
-                descTab.append( '{0}'.format(timedelta(seconds=item['lengthSeconds'])) )
-                descTab.append( _('%s viewers') % item['viewCount'] )
-                descTab.append( jstr(item, 'publishedAt') )
+                descTab.append('{0}'.format(timedelta(seconds=item['lengthSeconds'])))
+                descTab.append(_('%s viewers') % item['viewCount'])
+                descTab.append(jstr(item, 'publishedAt'))
                 descTab = [' | '.join(descTab)]
                 
                 icon = self.getFullIconUrl(jstr(item, 'previewThumbnailURL'), self.cm.meta['url'])
@@ -320,11 +320,11 @@ class Twitch(CBaseHostClass):
                 if item.get('game'):
                     descTab.append(jstr(item['game'], '__typename') + ': ' + jstr(item['game'], 'name'))
                      
-                params = {'good_for_fav':True, 'title':title, 'video_type':'video', 'video_id':jstr(item, 'id'), 'icon':icon, 'desc':'[/br]'.join( descTab )}
+                params = {'good_for_fav':True, 'title':title, 'video_type':'video', 'video_id':jstr(item, 'id'), 'icon':icon, 'desc':'[/br]'.join(descTab)}
                 self.addVideo(params)
 
             if cursor != '' and videosData['pageInfo']['hasNextPage']:
-                self.addDir( MergeDicts(cItem, {'title':_('Next page'), 'cursor':cursor}) )
+                self.addDir(MergeDicts(cItem, {'title':_('Next page'), 'cursor':cursor}))
         except Exception:
             printExc()
 
@@ -368,9 +368,9 @@ class Twitch(CBaseHostClass):
                 item = item['node']
                 descTab = []
 
-                descTab.append( jstr(item, 'language') )
-                descTab.append( '{0}'.format(timedelta(seconds=item['durationSeconds'])) )
-                descTab.append( _('%s viewers') % item['viewCount'] )
+                descTab.append(jstr(item, 'language'))
+                descTab.append('{0}'.format(timedelta(seconds=item['durationSeconds'])))
+                descTab.append(_('%s viewers') % item['viewCount'])
                 descTab = [' | '.join(descTab)]
 
                 icon = self.getFullIconUrl(jstr(item, 'thumbnailURL'), self.cm.meta['url'])
@@ -383,11 +383,11 @@ class Twitch(CBaseHostClass):
                 if item.get('game'):
                     descTab.append(jstr(item['game'], '__typename') + ': ' + jstr(item['game'], 'name'))
 
-                params = {'good_for_fav':True, 'title':title, 'url': jstr(item, 'url'), 'video_type':'clip', 'clip_slug':jstr(item, 'slug'), 'clip_id':jstr(item, 'id'), 'icon':icon, 'desc':'[/br]'.join( descTab )}
+                params = {'good_for_fav':True, 'title':title, 'url': jstr(item, 'url'), 'video_type':'clip', 'clip_slug':jstr(item, 'slug'), 'clip_id':jstr(item, 'id'), 'icon':icon, 'desc':'[/br]'.join(descTab)}
                 self.addVideo(params)
 
             if cursor != '' and clipsData['pageInfo']['hasNextPage']:
-                self.addDir( MergeDicts(cItem, {'title':_('Next page'), 'cursor':cursor}) )
+                self.addDir(MergeDicts(cItem, {'title':_('Next page'), 'cursor':cursor}))
 
         except Exception:
             printExc()
@@ -439,7 +439,7 @@ class Twitch(CBaseHostClass):
             for item in data['channels']:
                 descTab = [_('Language: %s') % (jstr(item, 'language'))]
                 descTab.append(_('%s views') % item['views'])
-                descTab.append(_('%s followers') % item['followers'] )
+                descTab.append(_('%s followers') % item['followers'])
                 params = {'good_for_fav':True, 'name':'category', 'type':'category', 'category':'list_channel', 'user_login':jstr(item, 'name'), 'title':jstr(item, 'display_name'), 'icon':jstr(item, 'logo'), 'desc':'[/br]'.join(descTab)}
                 self.addDir(params)
             offset += len(self.currList)
@@ -460,7 +460,7 @@ class Twitch(CBaseHostClass):
             for item in data['channels']:
                 descTab = [_('Language: %s') % (jstr(item, 'language'))]
                 descTab.append(_('%s views') % item['views'])
-                descTab.append(_('%s followers') % item['followers'] )
+                descTab.append(_('%s followers') % item['followers'])
                 params = {'good_for_fav':True, 'name':'category', 'type':'category', 'category':'list_channel', 'user_login':jstr(item, 'name'), 'title':jstr(item, 'display_name'), 'icon':jstr(item, 'logo'), 'desc':'[/br]'.join(descTab)}
                 self.addDir(params)
             offset += len(self.currList)
@@ -500,8 +500,8 @@ class Twitch(CBaseHostClass):
             for item in data['streams']:
                 descTab = [_('Language: %s') % (jstr(item['channel'], 'broadcaster_language'))]
                 descTab.append(_('%s viewers') % item['viewers'])
-                descTab.append(_('Broadcaster: %s') % jstr(item['channel'], 'display_name') )
-                descTab.append(_('Game: %s') % jstr(item, 'game') )
+                descTab.append(_('Broadcaster: %s') % jstr(item['channel'], 'display_name'))
+                descTab.append(_('Game: %s') % jstr(item, 'game'))
                 title = '[%s] %s' % (jstr(item, 'stream_type'), jstr(item['channel'], 'status'))
                 params = {'good_for_fav':False,  'title':title, 'video_type':jstr(item, 'stream_type'), 'channel_id':jstr(item['channel'], 'name'), 'icon':jstr(item['preview'], 'medium'), 'desc':'[/br]'.join(descTab)}
                 self.addVideo(params)
@@ -577,7 +577,7 @@ class Twitch(CBaseHostClass):
 
         name     = self.currItem.get("name", '')
         category = self.currItem.get("category", '')
-        printDBG( "handleService: ||| name[%s], category[%s] " % (name, category) )
+        printDBG("handleService: ||| name[%s], category[%s] " % (name, category))
         self.currList = []
 
     #MAIN MENU

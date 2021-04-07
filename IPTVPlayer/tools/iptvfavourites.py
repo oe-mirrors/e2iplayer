@@ -206,7 +206,7 @@ class IPTVFavourites:
                 data = json_loads(data)
                 favItems = []
                 for item in data:
-                    favItems.append( CFavItem().setFromDict(item) )
+                    favItems.append(CFavItem().setFromDict(item))
                 self.groups[groupIdx]['items'] = favItems
             except Exception:
                 printExc()
@@ -253,7 +253,7 @@ class IPTVFavourites:
         try:
             items = []
             for favItem in group['items']:
-                items.append( favItem.getAsDict() )
+                items.append(favItem.getAsDict())
             data = json_dumps(items)
             self._saveToFile(filePath, data)
         except Exception:

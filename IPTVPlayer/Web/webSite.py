@@ -294,7 +294,7 @@ class logsPage(resource.Resource):
             MenuStatusMSG = _('Loading data, please wait')
         html = '<html lang="%s">' % language.getLanguage()[:2]
         html += webParts.IncludeHEADER(extraMeta)
-        html += webParts.Body().logsPageContent(MenuStatusMSG, htmlError, DBGFileName, DBGFileContent )
+        html += webParts.Body().logsPageContent(MenuStatusMSG, htmlError, DBGFileName, DBGFileContent)
         return html
 #######################################################
 class settingsPage(resource.Resource):
@@ -320,13 +320,13 @@ class settingsPage(resource.Resource):
                 if key is None or arg is None:
                     pass
                 elif key == 'cmd' and arg[:3] == 'ON:':
-                    exec('config.plugins.iptvplayer.%s.setValue(True)\nconfig.plugins.iptvplayer.%s.save()' % (arg[3:], arg[3:]) )
+                    exec('config.plugins.iptvplayer.%s.setValue(True)\nconfig.plugins.iptvplayer.%s.save()' % (arg[3:], arg[3:]))
                     settings.configsHTML = {}
                     settings.activeHostsHTML = {}
                     return util.redirectTo("/iptvplayer/settings", req)
                 elif key == 'cmd' and arg[:4] == 'OFF:':
-                    print('config.plugins.iptvplayer.%s.setValue(False)\nconfig.plugins.iptvplayer.%s.save()' % (arg[4:], arg[4:]) )
-                    exec('config.plugins.iptvplayer.%s.setValue(False)\nconfig.plugins.iptvplayer.%s.save()' % (arg[4:], arg[4:]) )
+                    print('config.plugins.iptvplayer.%s.setValue(False)\nconfig.plugins.iptvplayer.%s.save()' % (arg[4:], arg[4:]))
+                    exec('config.plugins.iptvplayer.%s.setValue(False)\nconfig.plugins.iptvplayer.%s.save()' % (arg[4:], arg[4:]))
                     settings.activeHostsHTML.pop(arg[4:], None)
                     settings.activeHostsHTML.pop(arg[8:], None)
                     settings.configsHTML = {}
@@ -390,7 +390,7 @@ class downloaderPage(resource.Resource):
                 arg3 = req.args.get(key, None)[2]
             except Exception:
                 pass
-            print('Received: "%s"="%s","%s","%s"' % ( key, arg, arg2, arg3))
+            print('Received: "%s"="%s","%s","%s"' % (key, arg, arg2, arg3))
 
         if key is None or arg is None:
             if None != Plugins.Extensions.IPTVPlayer.components.iptvplayerwidget.gDownloadManager:
@@ -455,18 +455,18 @@ class downloaderPage(resource.Resource):
                         listItem.downloadedSize = 0
                     listItem.status      = DMHelper.STS.DOWNLOADED
                     listItem.downloadIdx = -1
-                    DMlist.append( listItem )
+                    DMlist.append(listItem)
                 if len(DMlist) == 0:
                     listItem = DMItemBase(_('Nothing has been downloaded yet.'), '')
                     listItem.status = 'INFO'
-                    DMlist.append( listItem )
+                    DMlist.append(listItem)
             
         if len(DMlist) == 0 and arg != 'arvchiveDM':
             listItem = DMItemBase(_('No materials waiting in the downloader queue'), '')
             listItem.status      = 'INFO'
-            DMlist.append( listItem )
+            DMlist.append(listItem)
             extraMeta = ''
-        elif len(DMlist) == 0 and arg in ['arvchiveDM', 'stopDM'] :
+        elif len(DMlist) == 0 and arg in ['arvchiveDM', 'stopDM']:
             extraMeta = ''
             
         reloadScripts()
@@ -543,6 +543,6 @@ class useHostPage(resource.Resource):
 
         html += '<html lang="%s">' % language.getLanguage()[:2]
         html += webParts.IncludeHEADER(extraMeta)
-        html += webParts.Body().useHostPageContent( MenuStatusMSG, True )
+        html += webParts.Body().useHostPageContent(MenuStatusMSG, True)
         return html
 ##########################################################

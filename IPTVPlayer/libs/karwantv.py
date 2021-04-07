@@ -36,7 +36,7 @@ class KarwanTvApi(CBaseHostClass):
         self.DEFAULT_ICON_URL = self.getFullUrl('images/KARWAN_TV_LOGO/www.karwan.tv.png')
         self.HEADER = {'User-Agent': 'Mozilla/5.0', 'Accept': 'text/html'}
         self.AJAX_HEADER = dict(self.HEADER)
-        self.AJAX_HEADER.update( {'X-Requested-With': 'XMLHttpRequest'} )
+        self.AJAX_HEADER.update({'X-Requested-With': 'XMLHttpRequest'})
         
         self.COOKIE_FILE = GetCookieDir('karwantv.cookie')
         
@@ -75,9 +75,9 @@ class KarwanTvApi(CBaseHostClass):
                 if category in ['radio', 'tv']:
                     data = self.cm.ph.getAllItemsBeetwenMarkers(data, '<div class="bt-inner">', '</div>')
                     for item in data:
-                        icon  = self.getFullUrl( self.cm.ph.getSearchGroups(item, '''src=['"]([^"^']+?)['"]''')[0] )
-                        url   = self.getFullUrl( self.cm.ph.getSearchGroups(item, '''href=['"]([^'^"]+?)['"]''')[0] )
-                        title = self.cleanHtmlStr( item )                
+                        icon  = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''src=['"]([^"^']+?)['"]''')[0])
+                        url   = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''href=['"]([^'^"]+?)['"]''')[0])
+                        title = self.cleanHtmlStr(item)                
                         params = {'name':'karwan.tv', 'title':title, 'url':url, 'icon':icon}
                         if category == 'radio':
                             params['type'] = 'audio'
@@ -90,10 +90,10 @@ class KarwanTvApi(CBaseHostClass):
                         m1 = '<div class="column"'
                     data = self.cm.ph.getAllItemsBeetwenMarkers(data, m1, '</a>')
                     for item in data:
-                        icon  = self.getFullUrl24( self.cm.ph.getSearchGroups(item, '''src=['"]([^"^']+?)['"]''')[0] )
-                        url   = self.getFullUrl24( self.cm.ph.getSearchGroups(item, '''href=['"]([^'^"]+?)['"]''')[0] )
-                        title = self.cleanHtmlStr( self.cm.ph.getSearchGroups(item, '''title=['"]([^'^"]+?)['"]''')[0] )
-                        desc = self.cleanHtmlStr( item )                
+                        icon  = self.getFullUrl24(self.cm.ph.getSearchGroups(item, '''src=['"]([^"^']+?)['"]''')[0])
+                        url   = self.getFullUrl24(self.cm.ph.getSearchGroups(item, '''href=['"]([^'^"]+?)['"]''')[0])
+                        title = self.cleanHtmlStr(self.cm.ph.getSearchGroups(item, '''title=['"]([^'^"]+?)['"]''')[0])
+                        desc = self.cleanHtmlStr(item)                
                         params = {'name':'karwan.tv', 'title':title, 'url':url, 'desc':desc, 'icon':icon}
                         if category == 'radio':
                             params['type'] = 'audio'
@@ -147,9 +147,9 @@ class KarwanTvApi(CBaseHostClass):
             dashUrl = self.cm.getFullUrl(self.cm.ph.getSearchGroups(data, '''['"]([^'^"]+?\.mpd(?:\?[^'^"]+?)?)['"]''')[0], self.cm.getBaseUrl(self.cm.meta['url']))
         
         if self.cm.isValidUrl(hlsUrl):
-            urlsTab.extend( getDirectM3U8Playlist(hlsUrl, checkContent=True) )
+            urlsTab.extend(getDirectM3U8Playlist(hlsUrl, checkContent=True))
         if 0 == len(urlsTab) and self.cm.isValidUrl(dashUrl):
-            urlsTab.extend( getMPDLinksWithMeta(dashUrl, checkExt=True) )
+            urlsTab.extend(getMPDLinksWithMeta(dashUrl, checkExt=True))
             
         if 0 == len(urlsTab):
             tmp = self.cm.ph.getDataBeetwenMarkers(data, 'playlist:', ']')[1]

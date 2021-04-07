@@ -54,7 +54,7 @@ class OrthoBullets(CBaseHostClass):
         self.USER_AGENT = 'Mozilla/5.0'
         self.HEADER = {'User-Agent': self.USER_AGENT, 'Accept': 'text/html'}
         self.AJAX_HEADER = dict(self.HEADER)
-        self.AJAX_HEADER.update( {'X-Requested-With':'XMLHttpRequest', 'Content-Type':'application/x-www-form-urlencoded; charset=UTF-8'} )
+        self.AJAX_HEADER.update({'X-Requested-With':'XMLHttpRequest', 'Content-Type':'application/x-www-form-urlencoded; charset=UTF-8'})
         
         self.MAIN_URL = 'https://www.orthobullets.com/'
         self.DEFAULT_ICON_URL = 'http://pic.accessify.com/thumbnails/777x423/o/orthobullets.com.png'
@@ -94,7 +94,7 @@ class OrthoBullets(CBaseHostClass):
             categories = []
             sItem = self.cm.ph.getAllItemsBeetwenMarkers(sItem[1], '<li', '</li>')
             for item in sItem:
-                url = self.getFullUrl( self.cm.ph.getSearchGroups(item, '''href=['"]([^"^']+?)['"]''')[0] )
+                url = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''href=['"]([^"^']+?)['"]''')[0])
                 title = self.cleanHtmlStr(item)
                 params = dict(cItem)
                 params.update({'name':'category', 'category':'list_sort', 'title':title, 'url':url})
@@ -106,7 +106,7 @@ class OrthoBullets(CBaseHostClass):
                 self.addDir(params)
 
         MAIN_CAT_TAB = [{'category':'search',          'title': _('Search'), 'search_item':True},
-                        {'category':'search_history',  'title': _('Search history')} ]
+                        {'category':'search_history',  'title': _('Search history')}]
         self.listsTab(MAIN_CAT_TAB, cItem)
         
     def listSort(self, cItem, nextCategory):
@@ -120,7 +120,7 @@ class OrthoBullets(CBaseHostClass):
         data = self.cm.ph.getDataBeetwenNodes(data, ('<div', '>', 'tabNavigation'), ('</div', '>'), False)[1]
         data = self.cm.ph.getAllItemsBeetwenMarkers(data, '<a', '</a>')
         for item in data:
-            url = self.getFullUrl( self.cm.ph.getSearchGroups(item, '''href=['"]([^"^']+?)['"]''')[0] )
+            url = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''href=['"]([^"^']+?)['"]''')[0])
             title = self.cleanHtmlStr(item)
             params = dict(cItem)
             params.update({'name':'category', 'category':nextCategory, 'title':title, 'url':url})
@@ -277,7 +277,7 @@ class OrthoBullets(CBaseHostClass):
         category = self.currItem.get("category", '')
         mode     = self.currItem.get("mode", '')
         
-        printDBG( "handleService: || name[%s], category[%s] " % (name, category) )
+        printDBG("handleService: || name[%s], category[%s] " % (name, category))
         self.currList = []
         
     #MAIN MENU

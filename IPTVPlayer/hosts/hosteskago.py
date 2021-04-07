@@ -28,7 +28,7 @@ class EskaGo(CBaseHostClass):
         
         self.HEADER = {'User-Agent': 'Mozilla/5.0', 'Accept': 'text/html'}
         self.AJAX_HEADER = dict(self.HEADER)
-        self.AJAX_HEADER.update( {'X-Requested-With': 'XMLHttpRequest'} )
+        self.AJAX_HEADER.update({'X-Requested-With': 'XMLHttpRequest'})
         self.defaultParams = {'header':self.HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
         
         self.MAIN_URL = 'http://www.eskago.pl/'
@@ -36,7 +36,7 @@ class EskaGo(CBaseHostClass):
         self.DEFAULT_ICON_URL = self.MAIN_URL + 'html/img/fb.jpg'
         
         self.MAIN_CAT_TAB = [#{'category':'list_vod_casts',          'title': 'VOD',                      'url':self.getFullUrl('vod')     },
-                             {'category':'list_radio_cats',         'title': 'Radio Eska Go',            'url':self.getFullUrl('radio')   },
+                             {'category':'list_radio_cats',         'title': 'Radio Eska Go',            'url':self.getFullUrl('radio')},
                              {'category':'list_radio_eskapl',       'title': 'Radio Eska PL',            'url':self.MAIN_ESKAPL_URL,       'icon':'https://www.press.pl/images/contents/photo_51546_1515158162_big.jpg'},
                              ]
                             # {'category':'search',                  'title': _('Search'),                'search_item':True,              },
@@ -63,7 +63,7 @@ class EskaGo(CBaseHostClass):
             headMarker = '<div class="head-title">'
             tmpTab = self.cm.ph.getAllItemsBeetwenMarkers(listData, headMarker, '</ul>')
             for tmp in tmpTab:
-                desc = self.cleanHtmlStr( self.cm.ph.getDataBeetwenMarkers(tmp, headMarker, '</div>', False)[1] )
+                desc = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(tmp, headMarker, '</div>', False)[1])
                 tmp  = self.cm.ph.getAllItemsBeetwenMarkers(tmp, '<li>', '</li>')
                 for item in tmp:
                     if 'play_icon' not in item:
@@ -80,7 +80,7 @@ class EskaGo(CBaseHostClass):
         tmp = self.cm.ph.getAllItemsBeetwenMarkers(tmp, '<a', '</a>')
         for item in tmp:
             url   = self.cm.ph.getSearchGroups(item, '''href=['"]([^'^"]+?)['"]''')[0]
-            icon  = self.getFullIconUrl( self.cm.ph.getSearchGroups(item, '''color[^>]+?src=['"]([^'^"]+?)['"]''')[0] )
+            icon  = self.getFullIconUrl(self.cm.ph.getSearchGroups(item, '''color[^>]+?src=['"]([^'^"]+?)['"]''')[0])
             if url != '#':
                 url = self.getFullUrl(url)
             if self.cm.isValidUrl(url):
@@ -120,11 +120,11 @@ class EskaGo(CBaseHostClass):
             if url == '':
                 continue
             url = self.cm.getFullUrl(url, self.cm.meta['url'])
-            icon   = self.cm.getFullUrl( ph.search(item, ph.IMAGE_SRC_URI_RE)[1], self.cm.meta['url'])
+            icon   = self.cm.getFullUrl(ph.search(item, ph.IMAGE_SRC_URI_RE)[1], self.cm.meta['url'])
             tmp = ph.findall(item, '<span', '</span>')
             title = self.cleanHtmlStr(tmp[-1]) if len(tmp) else self.cleanHtmlStr(item)
 
-            self.addDir( MergeDicts(cItem, {'good_for_fav': True, 'category':nextCategory, 'title':title, 'url':url, 'icon':icon}) )
+            self.addDir(MergeDicts(cItem, {'good_for_fav': True, 'category':nextCategory, 'title':title, 'url':url, 'icon':icon}))
 
     def listVodFilters(self, cItem, nextCategory):
         printDBG("EskaGo.listVodFilters")
@@ -151,7 +151,7 @@ class EskaGo(CBaseHostClass):
                 sData = ph.findall(sData, '<a', '</a>')
                 for item in sData:
                     url = self.cm.getFullUrl(ph.search(item, ph.A_HREF_URI_RE)[1], self.cm.meta['url'])
-                    icon   = self.cm.getFullUrl( ph.search(item, ph.IMAGE_SRC_URI_RE)[1], self.cm.meta['url'])
+                    icon   = self.cm.getFullUrl(ph.search(item, ph.IMAGE_SRC_URI_RE)[1], self.cm.meta['url'])
                     title = self.cleanHtmlStr(item)
                     subItems.append(MergeDicts(cItem, {'url':url, 'title':title, 'icon':icon, 'f_idx':idx + 1}))
                 if len(subItems):
@@ -202,8 +202,8 @@ class EskaGo(CBaseHostClass):
                 icon = self.cm.getFullUrl(ph.search(item, reIcon)[1], self.cm.meta['url'])
                 title = self.cleanHtmlStr(ph.find(item, ('<h', '>'), ('</h', '>'), flags=0)[1])
                 desc = []
-                desc.append( self.cleanHtmlStr(ph.find(item, ('<span', '>', 'cat-date'), '</span>', flags=0)[1]) )
-                desc.append( self.cleanHtmlStr(ph.find(item, ('<span', '>', 'cat-time'), '</span>', flags=0)[1]) )
+                desc.append(self.cleanHtmlStr(ph.find(item, ('<span', '>', 'cat-date'), '</span>', flags=0)[1]))
+                desc.append(self.cleanHtmlStr(ph.find(item, ('<span', '>', 'cat-time'), '</span>', flags=0)[1]))
                 desc = ' | '.join(desc) + '[/br]' + self.cleanHtmlStr(ph.find(item, ('<p', '>', 'opis-view'), '</p>', flags=0)[1])
                 self.addDir(MergeDicts(cItem, {'good_for_fav':True, 'category':nextCategory, 'title':title, 'url':url, 'icon':icon, 'desc':desc}))
         else:
@@ -232,7 +232,7 @@ class EskaGo(CBaseHostClass):
         if not sts:
             return
 
-        desc = self.cleanHtmlStr( ph.find(data, ('<div', '>', 'text-desc'), '</div>', flags=0)[1] )
+        desc = self.cleanHtmlStr(ph.find(data, ('<div', '>', 'text-desc'), '</div>', flags=0)[1])
         icon = ph.find(data, ('<div', '>', 'bg-film'), '</div>', flags=0)[1]
         icon = self.cm.getFullUrl(ph.search(icon, ph.IMAGE_SRC_URI_RE)[1], self.cm.meta['url'])
         if not icon:
@@ -398,7 +398,7 @@ class EskaGo(CBaseHostClass):
         category = self.currItem.get("category", '')
         mode     = self.currItem.get("mode", '')
         
-        printDBG( "handleService: |||||||||||||||||||||||||||||||||||| name[%s], category[%s] " % (name, category) )
+        printDBG("handleService: |||||||||||||||||||||||||||||||||||| name[%s], category[%s] " % (name, category))
         self.currList = []
         
     #MAIN MENU

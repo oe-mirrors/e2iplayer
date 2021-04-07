@@ -74,7 +74,7 @@ class GuardaSerieClick(CBaseHostClass):
         self.addDir(params)
         
         MAIN_CAT_TAB = [{'category':'search',          'title': _('Search'), 'search_item':True},
-                        {'category':'search_history',  'title': _('Search history')} ]
+                        {'category':'search_history',  'title': _('Search history')}]
         self.listsTab(MAIN_CAT_TAB, cItem)
         
     def getSeriesItems(self, cItem, nextCategory, rawItems):
@@ -82,7 +82,7 @@ class GuardaSerieClick(CBaseHostClass):
         items = []
         for item in rawItems:
             url = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''href=['"]([^"^']+?)['"]''')[0])
-            icon  = self.getFullIconUrl( self.cm.ph.getSearchGroups(item, '''<img[^>]+?src=['"]([^"^']+?)['"]''')[0] )
+            icon  = self.getFullIconUrl(self.cm.ph.getSearchGroups(item, '''<img[^>]+?src=['"]([^"^']+?)['"]''')[0])
             title = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(item, '<p', '</p>')[1])
             if title == '':
                 continue
@@ -159,7 +159,7 @@ class GuardaSerieClick(CBaseHostClass):
                 icon  = self.cm.ph.getSearchGroups(item, '''<img[^>]+?src=['"]([^"^']+?)['"]''')[0]
                 if icon == '':
                     icon  = self.cm.ph.getSearchGroups(item, '''<img[^>]+?data\-original=['"]([^"^']+?)['"]''')[0]
-                desc  = self.cleanHtmlStr( self.cm.ph.getDataBeetwenNodes(item, ('<p', '>', 'desc'), ('</p', '>'))[1] )
+                desc  = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(item, ('<p', '>', 'desc'), ('</p', '>'))[1])
                 season = self.cm.ph.getSearchGroups(item, '''meta\-stag=['"]([^"^']+?)['"]''')[0]
                 episode = self.cm.ph.getSearchGroups(item, '''meta\-ep=['"]([^"^']+?)['"]''')[0]
                 params = dict(cItem)
@@ -220,9 +220,9 @@ class GuardaSerieClick(CBaseHostClass):
             return
 
         data = self.cm.ph.getDataBeetwenNodes(data, ('<div', '>', 'container-title-single'), ('<input', '>'), False)[1]
-        icon = self.getFullUrl( self.cm.ph.getSearchGroups(data, '''<img[^>]+?src=['"]([^'^"]+?)['"]''')[0] )
-        title = self.cleanHtmlStr( self.cm.ph.getDataBeetwenNodes(data, ('<h', '>'), ('</h', '>'), False)[1] )
-        desc = self.cleanHtmlStr( self.cm.ph.getDataBeetwenNodes(data, ('<span', '>', 'desc'), ('</span', '>'), False)[1] )
+        icon = self.getFullUrl(self.cm.ph.getSearchGroups(data, '''<img[^>]+?src=['"]([^'^"]+?)['"]''')[0])
+        title = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(data, ('<h', '>'), ('</h', '>'), False)[1])
+        desc = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(data, ('<span', '>', 'desc'), ('</span', '>'), False)[1])
         
         try:
             tmp = self.cm.ph.getSearchGroups(data, '''star\s*?s([0-5][^'^"]*?)['"]''')[0].split('_', 1)
@@ -254,7 +254,7 @@ class GuardaSerieClick(CBaseHostClass):
         if desc == '':
             desc  = cItem.get('desc', '')
         
-        return [{'title':self.cleanHtmlStr( title ), 'text': self.cleanHtmlStr( desc ), 'images':[{'title':'', 'url':self.getFullUrl(icon)}], 'other_info':{'custom_items_list':itemsList}}]
+        return [{'title':self.cleanHtmlStr(title), 'text': self.cleanHtmlStr(desc), 'images':[{'title':'', 'url':self.getFullUrl(icon)}], 'other_info':{'custom_items_list':itemsList}}]
 
     def handleService(self, index, refresh=0, searchPattern='', searchType=''):
         printDBG('handleService start')
@@ -265,7 +265,7 @@ class GuardaSerieClick(CBaseHostClass):
         category = self.currItem.get("category", '')
         mode     = self.currItem.get("mode", '')
         
-        printDBG( "handleService: || name[%s], category[%s] " % (name, category) )
+        printDBG("handleService: || name[%s], category[%s] " % (name, category))
         self.currList = []
         self.currItem = dict(self.currItem)
         self.currItem.pop('good_for_fav', None)

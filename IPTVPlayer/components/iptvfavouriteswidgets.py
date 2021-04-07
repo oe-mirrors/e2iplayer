@@ -114,7 +114,7 @@ class IPTVFavouritesAddItemWidget(Screen):
         if len(options):
             self.session.openWithCallback(self.addFavouriteToGroup, ChoiceBox, title=_("Select favourite group"), list=options)
         else:
-            self.session.openWithCallback(self.iptvDoFinish, MessageBox, _("There are no other favourite groups"), type=MessageBox.TYPE_INFO, timeout=10 )
+            self.session.openWithCallback(self.iptvDoFinish, MessageBox, _("There are no other favourite groups"), type=MessageBox.TYPE_INFO, timeout=10)
         
     def addFavouriteToGroup(self, retArg):
         if retArg and 2 == len(retArg):
@@ -131,7 +131,7 @@ class IPTVFavouritesAddItemWidget(Screen):
                 else:
                     self.session.openWithCallback(self.iptvDoFinish, MessageBox, self.favourites.getLastError(), type=MessageBox.TYPE_ERROR, timeout=10)
             else: # addn new group
-                self.session.openWithCallback( self.addNewFavouriteGroup, IPTVFavouritesAddNewGroupWidget, self.favourites)
+                self.session.openWithCallback(self.addNewFavouriteGroup, IPTVFavouritesAddNewGroupWidget, self.favourites)
         else:
             self.iptvDoFinish()
                 
@@ -202,24 +202,24 @@ class IPTVFavouritesMainWidget(Screen):
         
         self["actions"] = ActionMap(["ColorActions", "WizardActions", "ListboxActions"],
             {
-                "back"  : self.keyExit,
+                "back": self.keyExit,
                 "cancel": self.keyExit,
-                "ok"    : self.keyOK,
-                "red"   : self.keyRed,
+                "ok": self.keyOK,
+                "red": self.keyRed,
                 "yellow": self.keyYellow,
-                "green" : self.keyGreen,
+                "green": self.keyGreen,
                 
-                "up"      : self.keyUp,
-                "down"    : self.keyDown,
-                "left"    : self.keyLeft,
-                "right"   : self.keyRight,
-                "moveUp"  : self.keyDrop,
+                "up": self.keyUp,
+                "down": self.keyDown,
+                "left": self.keyLeft,
+                "right": self.keyRight,
+                "moveUp": self.keyDrop,
                 "moveDown": self.keyDrop,
-                "moveTop" : self.keyDrop,
-                "moveEnd" : self.keyDrop,
-                "home"    : self.keyDrop,
-                "end"     : self.keyDrop,
-                "pageUp"  : self.keyDrop,
+                "moveTop": self.keyDrop,
+                "moveEnd": self.keyDrop,
+                "home": self.keyDrop,
+                "end": self.keyDrop,
+                "pageUp": self.keyDrop,
                 "pageDown": self.keyDrop
             }, -2)
             
@@ -248,7 +248,7 @@ class IPTVFavouritesMainWidget(Screen):
             for item in groups:
                 dItem = CDisplayListItem(name=item['title'], type=CDisplayListItem.TYPE_CATEGORY)
                 dItem.privateData = item['group_id']
-                list.append( (dItem,) )
+                list.append((dItem,))
         else:
             if not self.loadGroupItems(self.menu):
                 return 
@@ -260,7 +260,7 @@ class IPTVFavouritesMainWidget(Screen):
                 item = items[idx]
                 dItem = CDisplayListItem(name=item.name, type=item.type)
                 dItem.privateData = idx
-                list.append( (dItem,) )
+                list.append((dItem,))
         self["list"].setList(list)
         
     def loadGroupItems(self, groupId):
@@ -369,7 +369,7 @@ class IPTVFavouritesMainWidget(Screen):
     def keyGreen(self):
         printDBG(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> keyGreen 1")
         if ":groups:" == self.menu: 
-            self.session.openWithCallback( self._groupAdded, IPTVFavouritesAddNewGroupWidget, self.favourites)
+            self.session.openWithCallback(self._groupAdded, IPTVFavouritesAddNewGroupWidget, self.favourites)
         else:
             if None == self.getSelectedItem():
                 return
@@ -387,7 +387,7 @@ class IPTVFavouritesMainWidget(Screen):
             self.modified = True
             self.displayList()
             try:
-                self["list"].moveToIndex( len(self.favourites.getGroups())-1 )
+                self["list"].moveToIndex(len(self.favourites.getGroups())-1)
             except Exception:
                 pass
             

@@ -204,9 +204,9 @@ class OpenSubOrgProvider(CBaseSubProviderClass):
             if 'token' in data[0]:
                 self.loginToken = data[0]['token']
             else:
-                SetIPTVPlayerLastHostError(_('Get token failed!') + '\n' + _('Error message: \"%s\".\nError code: \"%s\".') % (self.lastApiError['code'], self.lastApiError['message']) )
+                SetIPTVPlayerLastHostError(_('Get token failed!') + '\n' + _('Error message: \"%s\".\nError code: \"%s\".') % (self.lastApiError['code'], self.lastApiError['message']))
         else:
-            SetIPTVPlayerLastHostError(_('Login failed!') + '\n' + _('Error message: \"%s\".\nError code: \"%s\".') % (self.lastApiError['code'], self.lastApiError['message']) )
+            SetIPTVPlayerLastHostError(_('Login failed!') + '\n' + _('Error message: \"%s\".\nError code: \"%s\".') % (self.lastApiError['code'], self.lastApiError['message']))
         
     def _getLanguages(self):        
         lang = GetDefaultLang()
@@ -220,7 +220,7 @@ class OpenSubOrgProvider(CBaseSubProviderClass):
                 list = []
                 defaultLanguageItem = None
                 for item in data:
-                    if 'LanguageName' in item and 'SubLanguageID' in item and 'ISO639' in item :
+                    if 'LanguageName' in item and 'SubLanguageID' in item and 'ISO639' in item:
                         params = {'title':'{0} [{1}]'.format(item['LanguageName'], item['SubLanguageID']), 'lang':item['SubLanguageID']}
                         if lang !=  item['ISO639']:
                             list.append(params)
@@ -405,7 +405,7 @@ class OpenSubOrgProvider(CBaseSubProviderClass):
         name     = self.currItem.get("name", '')
         category = self.currItem.get("category", '')
         
-        printDBG( "handleService: name[%s], category[%s] " % (name, category) )
+        printDBG("handleService: name[%s], category[%s] " % (name, category))
         self.currList = []
         
     #MAIN MENU

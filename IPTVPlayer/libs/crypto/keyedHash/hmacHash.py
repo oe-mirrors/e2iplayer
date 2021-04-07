@@ -56,16 +56,16 @@ class HMAC(Hash):
 
     def reset(self):
         self.H.reset()
-        if self.keyed == None :
+        if self.keyed == None:
             raise Exception('no key defined')
         self.H.update(self.k_xor_ipad) # start inner hash with key xored with ipad
                                        # outer hash always called as one full pass (no updates)
     def update(self, data):
-        if self.keyed == None :
+        if self.keyed == None:
             raise Exception('no key defined')
         self.H.update(data)
     def digest(self):
-        if self.keyed == None :
+        if self.keyed == None:
             raise Exception('no key defined')
         return self.H_outer(self.k_xor_opad+self.H.digest())
 

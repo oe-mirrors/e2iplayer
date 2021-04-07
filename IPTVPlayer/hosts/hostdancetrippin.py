@@ -29,7 +29,7 @@ class DancetrippinTV(CBaseHostClass):
         
         self.HEADER = {'User-Agent': 'Mozilla/5.0', 'Accept': 'text/html'}
         self.AJAX_HEADER = dict(self.HEADER)
-        self.AJAX_HEADER.update( {'X-Requested-With': 'XMLHttpRequest'} )
+        self.AJAX_HEADER.update({'X-Requested-With': 'XMLHttpRequest'})
         
         self.MAIN_URL = "http://www.dancetelevision.net/"
         self.DEFAULT_ICON_URL = 'https://frenezy.files.wordpress.com/2010/10/dancetrippin.jpg'
@@ -40,7 +40,7 @@ class DancetrippinTV(CBaseHostClass):
                              {'category':'fill_items',      'title': _('PARTIES'),        'url':self.getFullUrl('/parties')},
                              {'category':'fill_items',      'title': _('VENUES'),        'url':self.getFullUrl('/venues')},
                              {'category':'search',          'title': _('Search'),         'search_item':True},
-                             {'category':'search_history',  'title': _('Search history') } ]
+                             {'category':'search_history',  'title': _('Search history')}]
         
         self.ARTISTS_CAT_TAB = [{'category':'fill_items',    'title': _('Most featured'), 'url':self.getFullUrl('/artists')},
                                 {'category':'fill_items',    'title': _('Alphabetical '), 'url':self.getFullUrl('/artists/sort/alphabetical')}]
@@ -68,10 +68,10 @@ class DancetrippinTV(CBaseHostClass):
         data = self.cm.ph.getDataBeetwenNodes(data, ('<', '>', 'browsenetwork'), ('</ul', '>'), False)[1]
         data = data.split('</li>')
         for item in data:
-            url   = self.getFullUrl( self.cm.ph.getSearchGroups(item, '''\shref=['"]([^'^"]+?)['"]''')[0] )
+            url   = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''\shref=['"]([^'^"]+?)['"]''')[0])
             if url == '':
                 continue
-            icon  = self.getFullIconUrl( self.cm.ph.getSearchGroups(item, '''\ssrc=['"]([^'^"]+?)['"]''')[0] )
+            icon  = self.getFullIconUrl(self.cm.ph.getSearchGroups(item, '''\ssrc=['"]([^'^"]+?)['"]''')[0])
             title = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(item, ('<a', '>'), ('</a', '>'), False)[1])
             params = dict(cItem)
             params.update({'good_for_fav':False, 'category':nextCategory, 'url':url, 'title':title, 'icon':icon})
@@ -87,7 +87,7 @@ class DancetrippinTV(CBaseHostClass):
         data = self.cm.ph.getDataBeetwenNodes(data, ('<div', '>', 'navigation'), ('</div', '>'), False)[1]
         for item in ['menu-videos', 'menu-24', 'menu-djmixes']:
             tmp = self.cm.ph.getDataBeetwenNodes(data, ('<a', '>', item), ('</a', '>'))[1]
-            url = self.getFullUrl( self.cm.ph.getSearchGroups(tmp, '''\shref=['"]([^'^"]+?)['"]''')[0] )
+            url = self.getFullUrl(self.cm.ph.getSearchGroups(tmp, '''\shref=['"]([^'^"]+?)['"]''')[0])
             if url == '':
                 continue
             if item == 'menu-24':
@@ -113,10 +113,10 @@ class DancetrippinTV(CBaseHostClass):
         data = self.cm.ph.getDataBeetwenNodes(data, ('<div', '>', 'grid-content'), ('<footer', '>'), False)[1]
         data = self.cm.ph.rgetAllItemsBeetwenNodes(data, ('</div', '>'), ('<div', '>', '"single'))
         for item in data:
-            url  = self.getFullUrl( self.cm.ph.getSearchGroups(item, '''\shref=['"]([^'^"]+?)['"]''')[0] )
+            url  = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''\shref=['"]([^'^"]+?)['"]''')[0])
             if url == '':
                 continue
-            icon = self.getFullIconUrl( self.cm.ph.getDataBeetwenMarkers(item, 'url(', ')', False)[1].strip() )
+            icon = self.getFullIconUrl(self.cm.ph.getDataBeetwenMarkers(item, 'url(', ')', False)[1].strip())
             item = item.split('</h3>', 1)
             title = self.cleanHtmlStr(self.cleanHtmlStr(item[0]))
             desc  = self.cleanHtmlStr(item[-1]) 
@@ -141,11 +141,11 @@ class DancetrippinTV(CBaseHostClass):
                 self.currList = []
                 continue
             
-            streamUrl = self.getFullUrl( self.cm.ph.getSearchGroups(item, '''\sdata\-loc=['"]([^'^"]+?)['"]''')[0] )
+            streamUrl = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''\sdata\-loc=['"]([^'^"]+?)['"]''')[0])
             if streamUrl == '':
                 continue
             streamType = self.cm.ph.getSearchGroups(item, '''\sdata\-type=['"]([^'^"]+?)['"]''')[0].lower()
-            icon = self.getFullIconUrl( self.cm.ph.getSearchGroups(item, '''\sdata\-poster=['"]([^'^"]+?)['"]''')[0] )
+            icon = self.getFullIconUrl(self.cm.ph.getSearchGroups(item, '''\sdata\-poster=['"]([^'^"]+?)['"]''')[0])
             title = self.cleanHtmlStr(self.cm.ph.rgetDataBeetwenMarkers2(item, '</div>', '<div')[1])
             
             params = dict(cItem)
@@ -190,14 +190,14 @@ class DancetrippinTV(CBaseHostClass):
             tmp = data
         data = self.cm.ph.rgetAllItemsBeetwenNodes(tmp, ('</div', '>'), ('<div', '>', '"single'))
         for item in data:
-            url   = self.getFullUrl( self.cm.ph.getSearchGroups(item, '''\shref=['"]([^'^"]+?)['"]''')[0] )
+            url   = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''\shref=['"]([^'^"]+?)['"]''')[0])
             if url == '':
                 continue
             icon  = self.cm.ph.getDataBeetwenMarkers(item, 'url(', ')', False)[1].strip()
             if len(icon) > 2 and icon[0] in ['"', "'"] and icon[-1] in ['"', "'"]:
-                icon = self.getFullIconUrl( icon[1:-1] )
+                icon = self.getFullIconUrl(icon[1:-1])
             else:
-                icon = self.getFullIconUrl( icon )
+                icon = self.getFullIconUrl(icon)
             
             filters = []
             tmp = self.cm.ph.getAllItemsBeetwenNodes(item, ('<a', '>', 'filter'), ('</a', '>'), False)
@@ -333,7 +333,7 @@ class DancetrippinTV(CBaseHostClass):
         category = self.currItem.get("category", '')
         mode     = self.currItem.get("mode", '')
         
-        printDBG( "handleService: |||||||||||||||||||||||||||||||||||| name[%s], category[%s] " % (name, category) )
+        printDBG("handleService: |||||||||||||||||||||||||||||||||||| name[%s], category[%s] " % (name, category))
         self.currList = []
         
     #MAIN MENU

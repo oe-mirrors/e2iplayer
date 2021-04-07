@@ -54,15 +54,15 @@ class MaxtvGO(CBaseHostClass):
         self.MAIN_URL = 'https://maxtvgo.com/'
         self.HTTP_HEADER = {'User-Agent': self.USER_AGENT, 'DNT':'1', 'Accept': 'text/html', 'Accept-Encoding':'gzip, deflate', 'Referer':self.getMainUrl(), 'Origin':self.getMainUrl()}
         self.AJAX_HEADER = dict(self.HTTP_HEADER)
-        self.AJAX_HEADER.update( {'X-Requested-With': 'XMLHttpRequest', 'Accept-Encoding':'gzip, deflate', 'Content-Type':'application/x-www-form-urlencoded; charset=UTF-8', 'Accept':'application/json, text/javascript, */*; q=0.01'} )
+        self.AJAX_HEADER.update({'X-Requested-With': 'XMLHttpRequest', 'Accept-Encoding':'gzip, deflate', 'Content-Type':'application/x-www-form-urlencoded; charset=UTF-8', 'Accept':'application/json, text/javascript, */*; q=0.01'})
         
         self.defaultParams = {'header':self.HTTP_HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
         
         self.MAIN_CAT_TAB = [{'category':'list_items',        'title': 'MaxTVGo',             'url':self.getFullUrl('/api/videos.php?action=find')},
-                             {'category':'list_yt_channel',   'title': 'Max Kolonko - MaxTV', 'url':'https://www.youtube.com/user/Media2000Corp/videos' },
+                             {'category':'list_yt_channel',   'title': 'Max Kolonko - MaxTV', 'url':'https://www.youtube.com/user/Media2000Corp/videos'},
                              {'category':'list_yt_channel',   'title': 'MaxTVNews',           'url':'https://www.youtube.com/user/MaxTVTUBE/videos'},
                              {'category': 'search',          'title': _('Search'), 'search_item': True, },
-                             {'category': 'search_history',  'title': _('Search history'),             } 
+                             {'category': 'search_history',  'title': _('Search history'),} 
                             ]
         self.ytp = YouTubeParser()
         self.loggedIn = None
@@ -296,7 +296,7 @@ class MaxtvGO(CBaseHostClass):
         if icon == '':
             icon = cItem.get('icon', self.DEFAULT_ICON_URL)
         
-        return [{'title':self.cleanHtmlStr( title ), 'text': self.cleanHtmlStr( desc ), 'images':[{'title':'', 'url':self.getFullIconUrl(icon)}], 'other_info':otherInfo}]
+        return [{'title':self.cleanHtmlStr(title), 'text': self.cleanHtmlStr(desc), 'images':[{'title':'', 'url':self.getFullIconUrl(icon)}], 'other_info':otherInfo}]
     
     def handleService(self, index, refresh=0, searchPattern='', searchType=''):
         printDBG('handleService start')
@@ -309,7 +309,7 @@ class MaxtvGO(CBaseHostClass):
         category = self.currItem.get("category", '')
         mode     = self.currItem.get("mode", '')
         
-        printDBG( "handleService: || name[%s], category[%s] " % (name, category) )
+        printDBG("handleService: || name[%s], category[%s] " % (name, category))
         self.currList = []
         
     #MAIN MENU

@@ -45,7 +45,7 @@ class Raiplay(CBaseHostClass):
         self.HTTP_HEADER = self.cm.getDefaultHeader(browser='chrome')        
         self.defaultParams = {'header':self.HTTP_HEADER}
         #self.defaultParams = { 'header': {'User-Agent': 'Mozilla/5.0 (Windows NT 6.1; rv:17.0) Gecko/20100101 Firefox/17.0'}}
-        self.defaultParams = { 'header': {'User-Agent': "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/57.0.2956.0 Safari/537.36"}}
+        self.defaultParams = {'header': {'User-Agent': "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/57.0.2956.0 Safari/537.36"}}
 
         
     def getPage(self, url, addParams={}, post_data=None):
@@ -63,13 +63,13 @@ class Raiplay(CBaseHostClass):
         return url
 
     def getFullUrl(self, url):
-        if url == "" :
+        if url == "":
             return
         
         if url[:9] == "/raiplay/":
-            url = url.replace ("/raiplay/", self.MAIN_URL)
+            url = url.replace("/raiplay/", self.MAIN_URL)
 
-        while url[:1] == "/" :
+        while url[:1] == "/":
             url=url[1:]
             
         # Add the server to the URL if missing
@@ -93,19 +93,19 @@ class Raiplay(CBaseHostClass):
         linksTab=[]
         if (cItem["category"] == "live_tv") or (cItem["category"] == "live_radio") or (cItem["category"]=="video_link"): 
             
-            url=strwithmeta(cItem["url"], {'User-Agent': self.RELINKER_USER_AGENT })
+            url=strwithmeta(cItem["url"], {'User-Agent': self.RELINKER_USER_AGENT})
             linksTab.extend(getDirectM3U8Playlist(url, checkExt=False, variantCheck=True, checkContent=True, sortWithMaxBitrate=99999999))  
             
         elif (cItem["category"] == "program"):
             # read relinker page
             program_url=cItem["url"]
-            program_url=program_url.replace ("/raiplay/", self.MAIN_URL)
+            program_url=program_url.replace("/raiplay/", self.MAIN_URL)
             
             sts, data = self.getPage(program_url)
             response =json_loads(data)
             video_url=response["video"]["contentUrl"]
             printDBG(video_url)
-            video_url=strwithmeta(video_url, {'User-Agent': self.RELINKER_USER_AGENT })
+            video_url=strwithmeta(video_url, {'User-Agent': self.RELINKER_USER_AGENT})
             linksTab.extend(getDirectM3U8Playlist(video_url, checkExt=False, variantCheck=True, checkContent=True, sortWithMaxBitrate=99999999))  
             
         else:
@@ -160,7 +160,7 @@ class Raiplay(CBaseHostClass):
             if station["flussi"]["liveAndroid"] != "":
                 url = station["flussi"]["liveAndroid"]
             params = dict(cItem)
-            params = {'title':title, 'url':url, 'icon':icon, 'category': 'live_radio', 'desc': desc }
+            params = {'title':title, 'url':url, 'icon':icon, 'category': 'live_radio', 'desc': desc}
 
             self.addVideo(params)
 
@@ -168,7 +168,7 @@ class Raiplay(CBaseHostClass):
         for n in range((end_date - start_date).days + 1):
             yield end_date - datetime.timedelta(n)
 
-    def listReplayDate (self, cItem):
+    def listReplayDate(self, cItem):
         printDBG("Raiplay - start replay/EPG section")
 
         days = ["Domenica", "Lunedì", "Martedì", "Mercoledì", "Giovedì", "Venerdì", "Sabato"]
@@ -180,7 +180,7 @@ class Raiplay(CBaseHostClass):
     
         for day in self.daterange(epgStartDate, epgEndDate):
             day_str = days[int(day.strftime("%w"))] + " " + day.strftime("%d") + " " + months[int(day.strftime("%m"))-1]
-            self.addDir(MergeDicts(cItem, {'category':'replay_date', 'title': day_str , 'name': day.strftime("%d-%m-%Y")}))              
+            self.addDir(MergeDicts(cItem, {'category':'replay_date', 'title': day_str, 'name': day.strftime("%d-%m-%Y")}))              
 
     def listReplayChannels(self, cItem):
         day=cItem['name']
@@ -197,7 +197,7 @@ class Raiplay(CBaseHostClass):
             title = station["channel"] 
             name = day + "|" + station["channel"]
             icon = self.MAIN_URL + station["icon"]          
-            self.addDir(MergeDicts(cItem, {'category':'replay_channel', 'title': title , 'name': name }))              
+            self.addDir(MergeDicts(cItem, {'category':'replay_channel', 'title': title, 'name': name}))              
 
             
     def listEPG(self, cItem):
@@ -216,7 +216,7 @@ class Raiplay(CBaseHostClass):
             return
  
         response = json_loads(data)
-        programmes = response [channelName][0]["palinsesto"][0]["programmi"]
+        programmes = response[channelName][0]["palinsesto"][0]["programmi"]
 
         for programme in programmes:
             if not programme:
@@ -258,7 +258,7 @@ class Raiplay(CBaseHostClass):
                 title = startTime + " " + title
                 thumbnailImage=thumb
                 params = {'title':title, 'url':videoUrl, 'icon': thumb, 'category': 'program', 'desc': desc}
-                printDBG ("add program %s with pathId %s" % (title, videoUrl)) 
+                printDBG("add program %s with pathId %s" % (title, videoUrl)) 
             
             self.addVideo(params)
 
@@ -274,13 +274,13 @@ class Raiplay(CBaseHostClass):
         for item in items:
             if item["sub-type"] in ("RaiPlay Tipologia Page", "RaiPlay Genere Page"):
                 icon_url=self.MAIN_URL + item["image"]
-                self.addDir(MergeDicts(cItem, {'category':'ondemand_items', 'title': item["name"] , 'name': item["name"], 'url': item["PathID"], 'icon': icon_url, 'sub-type': item["sub-type"] }))            
+                self.addDir(MergeDicts(cItem, {'category':'ondemand_items', 'title': item["name"], 'name': item["name"], 'url': item["PathID"], 'icon': icon_url, 'sub-type': item["sub-type"]}))            
 
                 
     def listOnDemandCategory(self, cItem):
         pathId=cItem["url"]
         pathId=self.getFullUrl(pathId)
-        printDBG("Raiplay - processing item %s of sub-type %s with pathId %s" % (cItem["title"], cItem["sub-type"], pathId ))
+        printDBG("Raiplay - processing item %s of sub-type %s with pathId %s" % (cItem["title"], cItem["sub-type"], pathId))
         
         sts, data = self.getPage(pathId)
         if not sts:
@@ -293,25 +293,25 @@ class Raiplay(CBaseHostClass):
             printDBG("Blocchi: " + str(len(blocks)))
         
         for item in blocks[0]["lanci"]:
-            if item["images"]["portrait"]!="" :
+            if item["images"]["portrait"]!="":
                 icon_url=self.getThumbnailUrl(item["images"]["portrait"])
             else:
                 icon_url=self.getThumbnailUrl(item["images"]["landscape"])
 
-            self.addDir(MergeDicts(cItem, {'category':'ondemand_items', 'title': item["name"] , 'name': item["name"], 'url': item["PathID"], 'sub-type': item["sub-type"], 'icon': icon_url }))           
+            self.addDir(MergeDicts(cItem, {'category':'ondemand_items', 'title': item["name"], 'name': item["name"], 'url': item["PathID"], 'sub-type': item["sub-type"], 'icon': icon_url}))           
 
             
     def listOnDemandAZ(self, cItem):
         pathId=cItem["url"]
         pathId=self.getFullUrl(pathId)
-        printDBG("Raiplay - processing list with pathId %s" % pathId )
+        printDBG("Raiplay - processing list with pathId %s" % pathId)
 
         # 0-9
-        self.addDir(MergeDicts(cItem, {'category':'ondemand_list', 'title': "0-9" , 'name': "0-9", 'url': pathId} ))              
+        self.addDir(MergeDicts(cItem, {'category':'ondemand_list', 'title': "0-9", 'name': "0-9", 'url': pathId}))              
         
         #a-z
         for i in range(26):
-            self.addDir(MergeDicts(cItem, {'category':'ondemand_list', 'title': chr(ord('A')+i) , 'name': chr(ord('A')+i), 'url': pathId} ))              
+            self.addDir(MergeDicts(cItem, {'category':'ondemand_list', 'title': chr(ord('A')+i), 'name': chr(ord('A')+i), 'url': pathId}))              
 
             
     def listOnDemandIndex(self, cItem):
@@ -327,7 +327,7 @@ class Raiplay(CBaseHostClass):
         for item in items:
             name=item["name"]
             url=item["PathID"]
-            self.addDir(MergeDicts(cItem, {'category':'ondemand_items', 'title': name , 'name': name, 'url': url, 'sub-type': 'PLR programma Page' } ))              
+            self.addDir(MergeDicts(cItem, {'category':'ondemand_items', 'title': name, 'name': name, 'url': url, 'sub-type': 'PLR programma Page'}))              
             
     def listOnDemandProgram(self, cItem):
         pathId=cItem["url"]
@@ -344,7 +344,7 @@ class Raiplay(CBaseHostClass):
             for set in block["Sets"]:
                 name = set["Name"]
                 url=set["url"]
-                self.addDir(MergeDicts(cItem, {'category':'ondemand_program', 'title': name , 'name': name, 'url': url} ))              
+                self.addDir(MergeDicts(cItem, {'category':'ondemand_program', 'title': name, 'name': name, 'url': url}))              
                 
     def listOnDemandProgramItems(self, cItem):
         pathId=cItem["url"]
@@ -363,13 +363,13 @@ class Raiplay(CBaseHostClass):
                 title = title + " (" + item["subtitle"] + ")"
             
             videoUrl=item["pathID"]
-            if item["images"]["portrait"]!="" :
+            if item["images"]["portrait"]!="":
                 icon_url=self.getThumbnailUrl(item["images"]["portrait"])
             else:
                 icon_url=self.getThumbnailUrl(item["images"]["landscape"])
             
             params = {'title':title, 'url':videoUrl, 'icon': icon_url, 'category': 'program'}
-            printDBG ("add video '%s' with pathId '%s'" % (title, videoUrl)) 
+            printDBG("add video '%s' with pathId '%s'" % (title, videoUrl)) 
             
             self.addVideo(params)
     
@@ -382,7 +382,7 @@ class Raiplay(CBaseHostClass):
     
     def listTgr(self, cItem):
         printDBG("Raiplay. start tgr list")
-        if cItem["category"]!="tgr-root" :
+        if cItem["category"]!="tgr-root":
             url=cItem["url"]
         else:
             url =self.TG_URL
@@ -393,7 +393,7 @@ class Raiplay(CBaseHostClass):
         
         # search for dirs
         items = ph.findall(data, '<item behaviour="region">', '</item>', flags=0)
-        items.extend( ph.findall(data, '<item behaviour="list">', '</item>', flags=0))
+        items.extend(ph.findall(data, '<item behaviour="list">', '</item>', flags=0))
 
         for item in items:
             r_title=ph.find(item, '<label>', '</label>', flags=0)
@@ -407,7 +407,7 @@ class Raiplay(CBaseHostClass):
                     
                 title=r_title[1]
                 url=self.MAIN_URL + r_url[1]
-                self.addDir(MergeDicts(cItem, {'category':'tgr', 'title': title , 'url': url, 'icon': icon} ))              
+                self.addDir(MergeDicts(cItem, {'category':'tgr', 'title': title, 'url': url, 'icon': icon}))              
                 
         # search for video links
         items = ph.findall(data, '<item behaviour="video">', '</item>', flags=0)
@@ -424,14 +424,14 @@ class Raiplay(CBaseHostClass):
                 title=r_title[1]
                 videoUrl = r_url[1]
                 params = {'title':title, 'url':videoUrl, 'icon': icon, 'category': 'video_link'}
-                printDBG ("add video '%s' with pathId '%s'" % (title, videoUrl)) 
+                printDBG("add video '%s' with pathId '%s'" % (title, videoUrl)) 
                 self.addVideo(params)
     
     def searchLastTg(self, cItem):
         category=cItem['category']
-        if category == 'tg1' :
+        if category == 'tg1':
             tag="NomeProgramma:TG1^Tematica:Edizioni integrali"
-        elif category == 'tg2' :
+        elif category == 'tg2':
             tag="NomeProgramma:TG2^Tematica:Edizione integrale"
         elif category == 'tg3':
             tag="NomeProgramma:TG3^Tematica:Edizioni del TG3"
@@ -440,19 +440,19 @@ class Raiplay(CBaseHostClass):
             return
                        
         items=self.getLastContentByTag(tag)
-        if items == None :
+        if items == None:
             return
         
         for item in items:
             title=item["name"]
-            if item["images"]["portrait"]!="" :
+            if item["images"]["portrait"]!="":
                 icon_url=self.getThumbnailUrl(item["images"]["portrait"])
             else:
                 icon_url=self.getThumbnailUrl(item["images"]["landscape"])
 
             videoUrl=item["Url"]
             params = {'title':title, 'url':videoUrl, 'icon': icon_url, 'category': 'video_link'}
-            printDBG ("add video '%s' with pathId '%s'" % (title, videoUrl)) 
+            printDBG("add video '%s' with pathId '%s'" % (title, videoUrl)) 
             
             self.addVideo(params)
     
@@ -462,11 +462,11 @@ class Raiplay(CBaseHostClass):
         xsl = "rai_tv-statistiche-raiplay-json"
         
         url = "http://www.rai.it/StatisticheProxy/proxyPost.jsp?action=getLastContentByTag&numContents=%s&tags=%s&domain=%s&xsl=%s" % (str(numContents), tags, domain, xsl)
-        sts, data = self.getPage (url) 
+        sts, data = self.getPage(url) 
         if not sts:
             return 
         
-        if data == "" : 
+        if data == "": 
             return
         response=json_loads(data)
         return response["list"]
@@ -483,7 +483,7 @@ class Raiplay(CBaseHostClass):
         mode     = self.currItem.get("mode", '')
         subtype  = self.currItem.get("sub-type", '')
         
-        printDBG( "handleService: >> name[%s], category[%s] " % (name, category) )
+        printDBG("handleService: >> name[%s], category[%s] " % (name, category))
         self.currList = []
         
         #MAIN MENU

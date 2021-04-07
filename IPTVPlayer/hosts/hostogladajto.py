@@ -56,7 +56,7 @@ class ogladajto(CBaseHostClass):
         self.DEFAULT_ICON_URL = 'https://www.ogladaj.to/templates/oto/images/logo.png'
         self.HTTP_HEADER = {'User-Agent': self.USER_AGENT, 'DNT':'1', 'Accept': 'text/html', 'Accept-Encoding':'gzip, deflate', 'Referer':self.getMainUrl(), 'Origin':self.getMainUrl(), 'Upgrade-Insecure-Requests':'1', 'Connection':'keep-alive'}
         self.AJAX_HEADER = dict(self.HTTP_HEADER)
-        self.AJAX_HEADER.update( {'X-Requested-With': 'XMLHttpRequest', 'Accept-Encoding':'gzip, deflate', 'Content-Type':'application/x-www-form-urlencoded; charset=UTF-8', 'Accept':'application/json, text/javascript, */*; q=0.01'} )
+        self.AJAX_HEADER.update({'X-Requested-With': 'XMLHttpRequest', 'Accept-Encoding':'gzip, deflate', 'Content-Type':'application/x-www-form-urlencoded; charset=UTF-8', 'Accept':'application/json, text/javascript, */*; q=0.01'})
 
         self.cacheMovieFilters = {'cats':[], 'sort':[], 'years':[], 'az':[]}        
         self.cacheLinks    = {}
@@ -101,7 +101,7 @@ class ogladajto(CBaseHostClass):
     
     ###################################################
     def _fillMovieFilters(self, cItem):
-        self.cacheMovieFilters = { 'cats':[], 'sort':[], 'years':[], 'az':[]}
+        self.cacheMovieFilters = {'cats':[], 'sort':[], 'years':[], 'az':[]}
 
         sts, data = self.getPage(self.getFullUrl(cItem['url']))
         if not sts:
@@ -336,7 +336,7 @@ class ogladajto(CBaseHostClass):
         category = self.currItem.get("category", '')
         mode     = self.currItem.get("mode", '')
         
-        printDBG( "handleService: |||| name[%s], category[%s] " % (name, category) )
+        printDBG("handleService: |||| name[%s], category[%s] " % (name, category))
         self.cacheLinks = {}
         self.currList = []
         

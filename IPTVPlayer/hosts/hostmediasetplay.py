@@ -109,8 +109,8 @@ class MediasetPlay(CBaseHostClass):
         self.addDir(MergeDicts(cItem, {'category':'cat_channels',  'title':'Canali',      'url':self.getMainUrl()}))
         self.addDir(MergeDicts(cItem, {'category':'list_catalog_items',  'title':_('Top day'),      'f_ref':'CWTOPVIEWEDDAY'}))
 
-        MAIN_CAT_TAB = [{'category':'search',         'title': _('Search'),       'search_item':True       },
-                        {'category': 'search_history', 'title': _('Search history'),                        }]
+        MAIN_CAT_TAB = [{'category':'search',         'title': _('Search'),       'search_item':True},
+                        {'category': 'search_history', 'title': _('Search history'),}]
         self.listsTab(MAIN_CAT_TAB, cItem)
 
     def listSubItems(self, cItem):
@@ -127,9 +127,9 @@ class MediasetPlay(CBaseHostClass):
             for item in data['entries']:
                 if 'vip' in item['mediasetstation$pageUrl']:
                     continue
-                icon = self.getFullIconUrl( item['thumbnails']['channel_logo-100x100']['url']) #next(iter(item['thumbnails']))['url'] )
+                icon = self.getFullIconUrl(item['thumbnails']['channel_logo-100x100']['url']) #next(iter(item['thumbnails']))['url'] )
                 title = item['title']
-                url = self.getFullIconUrl( item['mediasetstation$pageUrl'] )
+                url = self.getFullIconUrl(item['mediasetstation$pageUrl'])
                 self.addVideo(MergeDicts(cItem, {'good_for_fav':True, 'title':title, 'url':url, 'icon':icon, 'call_sign':item['callSign'], 'is_live':True}))
         except Exception:
             printExc()
@@ -192,7 +192,7 @@ class MediasetPlay(CBaseHostClass):
                     desc.append(item['mediasetprogram$publishInfo']['last_published'].split('T', 1)[0]) 
                     desc.append(item['mediasetprogram$publishInfo']['description']) 
                     desc.append(str(timedelta(seconds=int(item['mediasetprogram$duration']))))
-                    desc.append(_('%s views') % item['mediasetprogram$numberOfViews'] )
+                    desc.append(_('%s views') % item['mediasetprogram$numberOfViews'])
                     desc = [' | '.join(desc)]
                     icon = item['thumbnails']['image_keyframe_poster-292x165']['url']
                     url = self.getFullUrl(videoUrl)
@@ -263,7 +263,7 @@ class MediasetPlay(CBaseHostClass):
                     desc.append(item['mediasetprogram$publishInfo']['last_published'].split('T', 1)[0]) 
                     desc.append(item['mediasetprogram$publishInfo']['description']) 
                     desc.append(str(timedelta(seconds=int(item['mediasetprogram$duration']))))
-                    desc.append(_('%s views') % item['mediasetprogram$numberOfViews'] )
+                    desc.append(_('%s views') % item['mediasetprogram$numberOfViews'])
                     desc = [' | '.join(desc)]
                     icon = item['thumbnails']['image_keyframe_poster-292x165']['url']
                     url = self.getFullUrl(videoUrl)
@@ -355,19 +355,19 @@ class MediasetPlay(CBaseHostClass):
         cItem = MergeDicts(cItem, {'good_for_fav':True, 'category':nextCategory1})
         if category == 'cat_movies':
             tab = [{'title':'Film più visti',                'f_ref':'CWFILMTOPVIEWED'},
-                   {'title':'Commedia',                      'f_ref':'CWFILMCOMEDY'   },
-                   {'title':'Drammatico',                    'f_ref':'CWFILMDRAMATIC' },
-                   {'title':'Thriller, Azione e Avventura',  'f_ref':'CWFILMACTION'   },
-                   {'title':'Documentari',                   'f_ref':'CWFILMDOCU'     },]
+                   {'title':'Commedia',                      'f_ref':'CWFILMCOMEDY'},
+                   {'title':'Drammatico',                    'f_ref':'CWFILMDRAMATIC'},
+                   {'title':'Thriller, Azione e Avventura',  'f_ref':'CWFILMACTION'},
+                   {'title':'Documentari',                   'f_ref':'CWFILMDOCU'},]
         elif category == 'cat_series':
-            tab = [{'title':'Poliziesco',                     'f_ref':'CWFICTIONPOLICE'       },
-                   {'title':'Sentimentale',                   'f_ref':'CWFICTIONSENTIMENTAL'  },
-                   {'title':'Commedia',                       'f_ref':'CWFICTIONCOMEDY'       },
-                   {'title':'Thriller, Azione e Avventura',   'f_ref':'CWFICTIONACTION'       },
-                   {'title':'Biografico',                     'f_ref':'CWFICTIONBIOGRAPHICAL' },
-                   {'title':'Sit-Com',                        'f_ref':'CWFICTIONSITCOM'       },
-                   {'title':'Drammatico',                     'f_ref':'CWFICTIONDRAMATIC'     },
-                   {'title':'Avventura',                      'f_ref':'CWFICTIONADVENTURE'    },]
+            tab = [{'title':'Poliziesco',                     'f_ref':'CWFICTIONPOLICE'},
+                   {'title':'Sentimentale',                   'f_ref':'CWFICTIONSENTIMENTAL'},
+                   {'title':'Commedia',                       'f_ref':'CWFICTIONCOMEDY'},
+                   {'title':'Thriller, Azione e Avventura',   'f_ref':'CWFICTIONACTION'},
+                   {'title':'Biografico',                     'f_ref':'CWFICTIONBIOGRAPHICAL'},
+                   {'title':'Sit-Com',                        'f_ref':'CWFICTIONSITCOM'},
+                   {'title':'Drammatico',                     'f_ref':'CWFICTIONDRAMATIC'},
+                   {'title':'Avventura',                      'f_ref':'CWFICTIONADVENTURE'},]
         self.listsTab(tab, cItem)
 
             
@@ -549,7 +549,7 @@ class MediasetPlay(CBaseHostClass):
 
         name     = self.currItem.get("name", '')
         category = self.currItem.get("category", '')
-        printDBG( "handleService: ||| name[%s], category[%s] " % (name, category) )
+        printDBG("handleService: ||| name[%s], category[%s] " % (name, category))
         self.currList = []
         self.initApi()
 

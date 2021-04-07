@@ -34,7 +34,7 @@ class SportStream365Api(CBaseHostClass):
     def __init__(self):
         CBaseHostClass.__init__(self, {'cookie':'sportstream365.com.cookie'})
         self.HTTP_HEADER = self.cm.getDefaultHeader(browser='iphone_3_0')
-        self.AJAX_HEADER = MergeDicts(self.HTTP_HEADER, {'X-Requested-With': 'XMLHttpRequest'} )
+        self.AJAX_HEADER = MergeDicts(self.HTTP_HEADER, {'X-Requested-With': 'XMLHttpRequest'})
         self.defaultParams = {'header':self.HTTP_HEADER, 'ignore_http_code_ranges':[], 'save_cookie': True, 'load_cookie': True, 'cookiefile': self.COOKIE_FILE}
         self.MAIN_URL = 'http://sportstream365.com/'
         self.DEFAULT_ICON_URL = self.getFullUrl('/img/logo.png')
@@ -75,7 +75,7 @@ class SportStream365Api(CBaseHostClass):
         return text
         
     def getList(self, cItem):
-        printDBG("SportStream365Api.getList cItem[%s]" % cItem )
+        printDBG("SportStream365Api.getList cItem[%s]" % cItem)
         channelsList = []
         
         if self.lang != config.plugins.iptvplayer.sportstream365_language.value:

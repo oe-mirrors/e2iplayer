@@ -67,7 +67,7 @@ class Cinemaxx(CBaseHostClass):
                         break
                 js_params= [{'path':GetJSScriptFile('cinemaxx1.byte')}]
                 js_params.append({'code':jscode})
-                ret = js_execute_ext( js_params )
+                ret = js_execute_ext(js_params)
                 if ret['sts'] and 0 == ret['code']:
                     try:
                         tmp = ret['data'].split('\n', 1)
@@ -81,7 +81,7 @@ class Cinemaxx(CBaseHostClass):
                             break
                         js_params= [{'path':GetJSScriptFile('cinemaxx2.byte')}]
                         js_params.append({'code':data2 + 'print(JSON.stringify(e2iobj));'})
-                        ret = js_execute_ext( js_params )
+                        ret = js_execute_ext(js_params)
                         if ret['sts'] and 0 == ret['code']:
                             cj = self.cm.getCookie(self.COOKIE_FILE)
                             for item in json_loads(ret['data'])['cookies']:
@@ -118,7 +118,7 @@ class Cinemaxx(CBaseHostClass):
             item = ph.find(item, ('<h2', '>'), '</h2>', flags=0)[1]
             url = self.getFullUrl(ph.search(item, ph.A_HREF_URI_RE)[1])
             title = self.cleanHtmlStr(item)
-            subItems.append( MergeDicts(cItem, {'good_for_fav':True, 'category':nextCategory, 'title':title, 'url':url}) )
+            subItems.append(MergeDicts(cItem, {'good_for_fav':True, 'category':nextCategory, 'title':title, 'url':url}))
 
         printDBG(subItems)
         sections = ph.find(data, ('<div', '>', 'navbar-collapse'), '</div>')[1]
@@ -138,14 +138,14 @@ class Cinemaxx(CBaseHostClass):
                 for item in section:
                     title = ph.clean_html(item)
                     url = self.getFullUrl(ph.search(item, ph.A_HREF_URI_RE)[1])
-                    subItems.append( MergeDicts(cItem, {'good_for_fav':True, 'category':nextCategory, 'title':title, 'url':url}) )
+                    subItems.append(MergeDicts(cItem, {'good_for_fav':True, 'category':nextCategory, 'title':title, 'url':url}))
                 if len(subItems):
                     self.addDir(MergeDicts(cItem, {'category':'sub_items', 'sub_items':subItems, 'title':sTitle}))
             else:
                 self.addDir(MergeDicts(cItem, {'category':nextCategory, 'url':self.getFullUrl(sUrl), 'title':sTitle}))
 
-        MAIN_CAT_TAB = [{'category':'search',         'title': _('Search'),       'search_item':True       },
-                        {'category': 'search_history', 'title': _('Search history'),                        }]
+        MAIN_CAT_TAB = [{'category':'search',         'title': _('Search'),       'search_item':True},
+                        {'category': 'search_history', 'title': _('Search history'),}]
         self.listsTab(MAIN_CAT_TAB, cItem)
 
     def listSubItems(self, cItem):
@@ -171,8 +171,8 @@ class Cinemaxx(CBaseHostClass):
         data = ph.find(data, ('<div', '>', 'shortstory'), ('<div', '>', 'clearfix'))[1]
         data = ph.rfindall(data, '</div>', ('<div', '>', 'shortstory'))
         for item in data:
-            url = self.getFullUrl( ph.search(item, ph.A_HREF_URI_RE)[1] )
-            icon = self.getFullIconUrl( ph.search(item, ph.IMAGE_SRC_URI_RE)[1] )
+            url = self.getFullUrl(ph.search(item, ph.A_HREF_URI_RE)[1])
+            icon = self.getFullIconUrl(ph.search(item, ph.IMAGE_SRC_URI_RE)[1])
             title = self.cleanHtmlStr(ph.find(item, ('<h', '>'), '</h', flags=0)[1])
 
             desc = []
@@ -208,12 +208,12 @@ class Cinemaxx(CBaseHostClass):
         data = ph.find(data, ('<div', '>', 'dle-content'), ('<div', '>', 'fstory-info'), flags=0)[1]
         trailer = ph.find(data, ('<', '>', '#trailer'), '</div>', flags=0)[1]
         title = self.cleanHtmlStr(trailer)
-        trailer = self.getFullUrl( ph.search(trailer, ph.IFRAME_SRC_URI_RE)[1] )
+        trailer = self.getFullUrl(ph.search(trailer, ph.IFRAME_SRC_URI_RE)[1])
         if trailer:
             self.addVideo({'good_for_fav':True, 'prev_url':cUrl, 'title':'%s %s' %(title, baseTitle), 'url':trailer, 'icon':icon, 'desc':desc})
 
         data = ph.find(data, ('<div', '>', 'full-video'), '</div>', flags=0)[1]
-        url = self.getFullUrl( ph.search(data, ph.IFRAME_SRC_URI_RE)[1] )
+        url = self.getFullUrl(ph.search(data, ph.IFRAME_SRC_URI_RE)[1])
         if url:
             if ('/video/' in url and '/serials/' in url) or 'playlist' in url:
                 url = strwithmeta(url, {'Referer':cUrl})
@@ -236,7 +236,7 @@ class Cinemaxx(CBaseHostClass):
             self.addVideo({'good_for_fav':False, 'prev_url':cUrl, 'title':baseTitle, 'url':url, 'icon':icon, 'desc':desc})
         else:
             data = ph.find(data, 'vk.show(', ');', flags=0)[1].split(',', 1)[-1]
-            ret = js_execute( 'print(JSON.stringify(%s));' % data )
+            ret = js_execute('print(JSON.stringify(%s));' % data)
             if ret['sts'] and 0 == ret['code']:
                 try:
                     data = json_loads(ret['data'])
@@ -335,7 +335,7 @@ class Cinemaxx(CBaseHostClass):
         if desc == '':
             desc = cItem.get('desc', '')
         
-        return [{'title':self.cleanHtmlStr( title ), 'text': self.cleanHtmlStr( desc ), 'images':[{'title':'', 'url':self.getFullUrl(icon)}], 'other_info':{'custom_items_list':itemsList}}]
+        return [{'title':self.cleanHtmlStr(title), 'text': self.cleanHtmlStr(desc), 'images':[{'title':'', 'url':self.getFullUrl(icon)}], 'other_info':{'custom_items_list':itemsList}}]
 
     def handleService(self, index, refresh=0, searchPattern='', searchType=''):
         printDBG('handleService start')
@@ -344,7 +344,7 @@ class Cinemaxx(CBaseHostClass):
 
         name     = self.currItem.get("name", '')
         category = self.currItem.get("category", '')
-        printDBG( "handleService: ||| name[%s], category[%s] " % (name, category) )
+        printDBG("handleService: ||| name[%s], category[%s] " % (name, category))
         self.currList = []
 
     #MAIN MENU

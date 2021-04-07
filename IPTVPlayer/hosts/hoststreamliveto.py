@@ -37,8 +37,8 @@ config.plugins.iptvplayer.streamliveto_password = ConfigText(default="", fixed_s
 
 def GetConfigList():
     optionList = []
-    optionList.append(getConfigListEntry( _("Login") + ": ", config.plugins.iptvplayer.streamliveto_login))
-    optionList.append(getConfigListEntry( _("Password") + ": ", config.plugins.iptvplayer.streamliveto_password))
+    optionList.append(getConfigListEntry(_("Login") + ": ", config.plugins.iptvplayer.streamliveto_login))
+    optionList.append(getConfigListEntry(_("Password") + ": ", config.plugins.iptvplayer.streamliveto_password))
     return optionList
 
 
@@ -52,7 +52,7 @@ class StreamLiveTo(CBaseHostClass):
     
     MAIN_CAT_TAB = [{'category':'list_filters',    'title': 'Live Channels', 'icon':''},
                     {'category':'search',          'title': _('Search'), 'search_item':True},
-                    {'category':'search_history',  'title': _('Search history')} ]
+                    {'category':'search_history',  'title': _('Search history')}]
 
  
     def __init__(self):
@@ -169,7 +169,7 @@ class StreamLiveTo(CBaseHostClass):
         page = cItem.get('page', 1)
         post_data = {'page':page}
         
-        keysMap = {'cat':'category', 'lang':'language', 'sort':'sortBy', 'q':'query', 'type':'list' }
+        keysMap = {'cat':'category', 'lang':'language', 'sort':'sortBy', 'q':'query', 'type':'list'}
         if 'f_q' in cItem:
             keys = ['f_q']
         else:
@@ -194,11 +194,11 @@ class StreamLiveTo(CBaseHostClass):
         
         data = self.cm.ph.rgetAllItemsBeetwenNodes(data.split('<nav>', 1)[0], ('</div', '>'), ('<div', '>', 'item'))
         for item in data:
-            url  = self._getFullUrl( self.cm.ph.getSearchGroups(item, 'href="([^"]+?)"')[0] )
-            icon = self._getFullUrl( self.cm.ph.getSearchGroups(item, 'src="([^"]+?)"')[0] )
-            title = self.cleanHtmlStr( self.cm.ph.getDataBeetwenMarkers(item, '<strong>', '</strong>', False)[1] )
+            url  = self._getFullUrl(self.cm.ph.getSearchGroups(item, 'href="([^"]+?)"')[0])
+            icon = self._getFullUrl(self.cm.ph.getSearchGroups(item, 'src="([^"]+?)"')[0])
+            title = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(item, '<strong>', '</strong>', False)[1])
             if '' == title:
-                title = self.cleanHtmlStr( self.cm.ph.getSearchGroups(item, 'title="([^"]+?)"')[0] )
+                title = self.cleanHtmlStr(self.cm.ph.getSearchGroups(item, 'title="([^"]+?)"')[0])
             if 'class="premium_only"' in item or 'Premium Only' in item:
                 postfix = 'PREMIUM ONLY'
             elif 'glyphicon-king' in item:
@@ -290,7 +290,7 @@ class StreamLiveTo(CBaseHostClass):
         if sts:
             captchaUrl = self.cm.ph.getSearchGroups(data, '''['"](http[^"']+?recaptcha/api[^"']*?)["']''')[0]
         if not sts or '' == captchaUrl or m1 not in data or m2 not in data: 
-            SetIPTVPlayerLastHostError( errMsg1 )
+            SetIPTVPlayerLastHostError(errMsg1)
             return 0
         sts, data = self.getPage(captchaUrl, httpParams)
         if not sts: 
@@ -301,7 +301,7 @@ class StreamLiveTo(CBaseHostClass):
         server    = self.cm.ph.getSearchGroups(data, '''server\s*:\s*['"]([^'^"]+?)['"]''')[0]
         site      = self.cm.ph.getSearchGroups(data, '''site\s*:\s*['"]([^'^"]+?)['"]''')[0]
         if '' == challenge or '' == lang or '' == server or '' == site: 
-            SetIPTVPlayerLastHostError( errMsg1 )
+            SetIPTVPlayerLastHostError(errMsg1)
             return 0
             
         captchaUrl = server + 'reload?c=%s&k=%s&reason=i&type=image&lang=%s&th=' % (challenge, site, lang)
@@ -312,7 +312,7 @@ class StreamLiveTo(CBaseHostClass):
            
         sts, challenge = self.cm.ph.getDataBeetwenMarkers(data, "finish_reload('", "'", False)
         if not sts:
-            SetIPTVPlayerLastHostError( errMsg1 )
+            SetIPTVPlayerLastHostError(errMsg1)
             return 0
         
         imgUrl = 'http://www.google.com/recaptcha/api/image?c=' + challenge
@@ -349,7 +349,7 @@ class StreamLiveTo(CBaseHostClass):
                 ret = -1
             if sts:
                 msg = self.cm.ph.getDataBeetwenMarkers(data, '<div style="color:', '</div>')[1]
-                SetIPTVPlayerLastHostError( self.cleanHtmlStr(msg) )
+                SetIPTVPlayerLastHostError(self.cleanHtmlStr(msg))
             else:
                 SetIPTVPlayerLastHostError(_('Fail to get "%s".') % baseUrl)
         else:
@@ -397,7 +397,7 @@ class StreamLiveTo(CBaseHostClass):
                 return False, None
             resultMarker = 'Your answer is wrong.'
             if  resultMarker in data:
-                self.sessionEx.open(MessageBox, resultMarker, type=MessageBox.TYPE_ERROR, timeout=10 )
+                self.sessionEx.open(MessageBox, resultMarker, type=MessageBox.TYPE_ERROR, timeout=10)
             else:
                 return True, data
         return False, None
@@ -405,12 +405,12 @@ class StreamLiveTo(CBaseHostClass):
     def doLogin(self, login, password):
         logged = False
         HTTP_HEADER= dict(self.HTTP_MOBILE_HEADER)
-        HTTP_HEADER.update( {'Content-Type':'application/x-www-form-urlencoded; charset=UTF-8', 'X-Requested-With' : 'XMLHttpRequest'} )
+        HTTP_HEADER.update({'Content-Type':'application/x-www-form-urlencoded; charset=UTF-8', 'X-Requested-With': 'XMLHttpRequest'})
 
         post_data = {'username':login, 'password':password, 'accessed_by':'web', 'submit':'Login', 'x':0, 'y':0}
-        params    = {'header' : HTTP_HEADER, 'cookiefile' : self.COOKIE_FILE, 'save_cookie' : True}
+        params    = {'header': HTTP_HEADER, 'cookiefile': self.COOKIE_FILE, 'save_cookie': True}
         loginUrl  = 'https://www.streamlive.to/login.php'
-        sts, data = self.cm.getPage( loginUrl, params, post_data)
+        sts, data = self.cm.getPage(loginUrl, params, post_data)
         if sts and ('/logout"' in data or '/logout.php"' in data):
             logged = True
         return logged
@@ -424,7 +424,7 @@ class StreamLiveTo(CBaseHostClass):
         category = self.currItem.get("category", '')
         mode     = self.currItem.get("mode", '')
         
-        printDBG( "handleService: |||||||||||||||||||||||||||||||||||| name[%s], category[%s] " % (name, category) )
+        printDBG("handleService: |||||||||||||||||||||||||||||||||||| name[%s], category[%s] " % (name, category))
         self.currList = []
         
     #MAIN MENU
@@ -435,7 +435,7 @@ class StreamLiveTo(CBaseHostClass):
             if '' != login.strip() and '' != passwd.strip():
                 logged = self.doLogin(login, passwd)
                 if not logged:
-                    self.sessionEx.open(MessageBox, _('Login failed.'), type=MessageBox.TYPE_INFO, timeout=10 )
+                    self.sessionEx.open(MessageBox, _('Login failed.'), type=MessageBox.TYPE_INFO, timeout=10)
             self.listsTab(self.MAIN_CAT_TAB, {'name':'category'})
             #if logged:  
             #    self.addDir({'name':'category', 'title':_('Get free credits'), 'category':'get_free_credits'})

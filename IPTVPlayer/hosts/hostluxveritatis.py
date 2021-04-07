@@ -36,7 +36,7 @@ class LuxVeritatisPL(CBaseHostClass):
         self.ICON_URL_T = 'http://archidiecezjalubelska.pl/wp-content/uploads/2016/07/trwam.jpg'
         self.HTTP_HEADER = {'User-Agent': self.USER_AGENT, 'DNT':'1', 'Accept': 'text/html', 'Accept-Encoding':'gzip, deflate'}
         self.AJAX_HEADER = dict(self.HTTP_HEADER)
-        self.AJAX_HEADER.update( {'X-Requested-With': 'XMLHttpRequest', 'Accept-Encoding':'gzip, deflate', 'Content-Type':'application/x-www-form-urlencoded; charset=UTF-8', 'Accept':'*/*'} )
+        self.AJAX_HEADER.update({'X-Requested-With': 'XMLHttpRequest', 'Accept-Encoding':'gzip, deflate', 'Content-Type':'application/x-www-form-urlencoded; charset=UTF-8', 'Accept':'*/*'})
         
         self.defaultParams = {'header':self.HTTP_HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
         
@@ -310,7 +310,7 @@ class LuxVeritatisPL(CBaseHostClass):
                 if not sts:
                     return linksTab
             url = ph.search(data, '''<a[^>]+?href=['"](https?://[^>]+?\.m3u8(?:\?[^'^"]*?)?)['"]''')[0]
-            linksTab.extend( getDirectM3U8Playlist(url, checkContent=True) )
+            linksTab.extend(getDirectM3U8Playlist(url, checkContent=True))
         elif 'tv-trwam' in url:
             sts, data = self.getPage(url)
             if not sts:
@@ -351,7 +351,7 @@ class LuxVeritatisPL(CBaseHostClass):
         category = self.currItem.get("category", '')
         mode     = self.currItem.get("mode", '')
         
-        printDBG( "handleService: |||| name[%s], category[%s] " % (name, category) )
+        printDBG("handleService: |||| name[%s], category[%s] " % (name, category))
         self.cacheLinks = {}
         self.currList = []
         

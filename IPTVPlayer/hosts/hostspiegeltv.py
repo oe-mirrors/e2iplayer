@@ -45,7 +45,7 @@ class SpiegelTv(CBaseHostClass):
         self.DEFAULT_ICON_URL = 'https://images-na.ssl-images-amazon.com/images/I/31bnL4xLAkL.png'
         self.HTTP_HEADER = {'User-Agent': self.USER_AGENT, 'DNT':'1', 'Accept': 'text/html', 'Accept-Encoding':'gzip, deflate', 'Referer':self.getMainUrl(), 'Origin':self.getMainUrl()}
         self.AJAX_HEADER = dict(self.HTTP_HEADER)
-        self.AJAX_HEADER.update( {'X-Requested-With': 'XMLHttpRequest', 'Accept-Encoding':'gzip, deflate', 'Content-Type':'application/x-www-form-urlencoded; charset=UTF-8', 'Accept':'application/json, text/javascript, */*; q=0.01'} )
+        self.AJAX_HEADER.update({'X-Requested-With': 'XMLHttpRequest', 'Accept-Encoding':'gzip, deflate', 'Content-Type':'application/x-www-form-urlencoded; charset=UTF-8', 'Accept':'application/json, text/javascript, */*; q=0.01'})
         
         self.cacheLinks    = {}
         self.defaultParams = {'header':self.HTTP_HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
@@ -135,7 +135,7 @@ class SpiegelTv(CBaseHostClass):
                 jscode.append(item)
                 break
         jscode.append('print(JSON.stringify(_oneconfig));')
-        ret = js_execute( '\n'.join(jscode) )
+        ret = js_execute('\n'.join(jscode))
         if ret['sts'] and 0 == ret['code']:
             try:
                 self.oneconfig.update(json_loads(ret['data'].strip(), '', True))
@@ -460,9 +460,9 @@ class SpiegelTv(CBaseHostClass):
 
                 retTab.sort(key=lambda item: item['tbr'], reverse=True)
                 if len(retTab) == 0:
-                    retTab.extend( getMPDLinksWithMeta(t % (streamData['cdnPathDASH'], 'mpd'), checkExt=False, sortWithMaxBandwidth=999999999) )
+                    retTab.extend(getMPDLinksWithMeta(t % (streamData['cdnPathDASH'], 'mpd'), checkExt=False, sortWithMaxBandwidth=999999999))
                 if len(retTab) == 0: 
-                    retTab.extend( getDirectM3U8Playlist(t % (streamData['cdnPathHLS'], 'm3u8'), checkExt=False, checkContent=True, sortWithMaxBitrate=999999999) )
+                    retTab.extend(getDirectM3U8Playlist(t % (streamData['cdnPathHLS'], 'm3u8'), checkExt=False, checkContent=True, sortWithMaxBitrate=999999999))
         
         except Exception:
             printExc()
@@ -498,7 +498,7 @@ class SpiegelTv(CBaseHostClass):
         category = self.currItem.get("category", '')
         mode     = self.currItem.get("mode", '')
         
-        printDBG( "handleService: |||| name[%s], category[%s] " % (name, category) )
+        printDBG("handleService: |||| name[%s], category[%s] " % (name, category))
         self.cacheLinks = {}
         self.currList = []
         

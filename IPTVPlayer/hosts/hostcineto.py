@@ -34,7 +34,7 @@ class CineTO(CBaseHostClass, CaptchaHelper):
         self.MAIN_URL = 'https://cine.to/'
         self.HEADER = {'User-Agent': self.USER_AGENT, 'DNT':'1', 'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8', 'Accept-Encoding':'gzip, deflate', 'Referer':self.getMainUrl(), 'Accept-Language':GetDefaultLang()}
         self.AJAX_HEADER = dict(self.HEADER)
-        self.AJAX_HEADER.update( {'X-Requested-With': 'XMLHttpRequest', 'Accept-Encoding':'gzip, deflate', 'Content-Type':'application/x-www-form-urlencoded; charset=UTF-8', 'Accept':'application/json, text/javascript, */*; q=0.01'} )
+        self.AJAX_HEADER.update({'X-Requested-With': 'XMLHttpRequest', 'Accept-Encoding':'gzip, deflate', 'Content-Type':'application/x-www-form-urlencoded; charset=UTF-8', 'Accept':'application/json, text/javascript, */*; q=0.01'})
         
         self.cacheFilters  = {}
         self.cacheLinks   = {}
@@ -42,7 +42,7 @@ class CineTO(CBaseHostClass, CaptchaHelper):
         
         self.MAIN_CAT_TAB = [
                              {'category': 'search',                'title': _('Search'),              'search_item': True, },
-                             {'category': 'search_history',        'title': _('Search history'),                          } 
+                             {'category': 'search_history',        'title': _('Search history'),} 
                             ]
         
     def _getStr(self, item, key, default=''):
@@ -461,7 +461,7 @@ class CineTO(CBaseHostClass, CaptchaHelper):
         if icon == '':
             icon = cItem.get('icon', self.DEFAULT_ICON_URL)
         
-        return [{'title':self.cleanHtmlStr( title ), 'text': self.cleanHtmlStr( desc ), 'images':[{'title':'', 'url':self.getFullUrl(icon)}], 'other_info':otherInfo}]
+        return [{'title':self.cleanHtmlStr(title), 'text': self.cleanHtmlStr(desc), 'images':[{'title':'', 'url':self.getFullUrl(icon)}], 'other_info':otherInfo}]
     
     def handleService(self, index, refresh=0, searchPattern='', searchType=''):
         printDBG('handleService start')
@@ -472,7 +472,7 @@ class CineTO(CBaseHostClass, CaptchaHelper):
         category = self.currItem.get("category", '')
         mode     = self.currItem.get("mode", '')
         
-        printDBG( "handleService: |||||||||||||||||||||||||||||||||||| name[%s], category[%s] " % (name, category) )
+        printDBG("handleService: |||||||||||||||||||||||||||||||||||| name[%s], category[%s] " % (name, category))
         self.currList = []
         
     #MAIN MENU

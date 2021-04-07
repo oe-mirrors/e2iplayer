@@ -54,7 +54,7 @@ class YesMovies(CBaseHostClass):
         self.DEFAULT_ICON_URL = 'https://cdn.yescdn.ru/images/logo.png'
         self.HEADER = {'User-Agent': 'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:40.0) Gecko/20100101 Firefox/40.0', 'DNT':'1', 'Accept': 'text/html'}
         self.AJAX_HEADER = dict(self.HEADER)
-        self.AJAX_HEADER.update( {'X-Requested-With': 'XMLHttpRequest'} )
+        self.AJAX_HEADER.update({'X-Requested-With': 'XMLHttpRequest'})
         self.MAIN_URL = None
         self.cacheFilters = {}
         self.cacheLinks = {}
@@ -106,10 +106,10 @@ class YesMovies(CBaseHostClass):
     def listMainMenu(self, cItem):
         if self.MAIN_URL == None:
             return
-        MAIN_CAT_TAB = [{'category':'list_filter_genre', 'title': 'Movies',    'url':self.getFullUrl('movie/filter/movie') },
+        MAIN_CAT_TAB = [{'category':'list_filter_genre', 'title': 'Movies',    'url':self.getFullUrl('movie/filter/movie')},
                         {'category':'list_filter_genre', 'title': 'TV-Series', 'url':self.getFullUrl('movie/filter/series')},
-                        {'category': 'search',          'title': _('Search'), 'search_item': True,                        },
-                        {'category': 'search_history',  'title': _('Search history'),                                    } 
+                        {'category': 'search',          'title': _('Search'), 'search_item': True,},
+                        {'category': 'search_history',  'title': _('Search history'),} 
                        ]
         self.listsTab(MAIN_CAT_TAB, cItem)
         
@@ -129,7 +129,7 @@ class YesMovies(CBaseHostClass):
             self.cacheFilters['sort_by'].append({'sort_by':value, 'title':self.cleanHtmlStr(item)})
             
         for filter in [{'key':'quality', 'marker':'quality-list'},
-                       {'key':'genre',   'marker':'genre-list'  },
+                       {'key':'genre',   'marker':'genre-list'},
                        {'key':'country', 'marker':'country-list'},
                        {'key':'year',    'marker':'release-list'}]:
             self.cacheFilters[filter['key']] = []
@@ -177,17 +177,17 @@ class YesMovies(CBaseHostClass):
         
         data = self.cm.ph.getAllItemsBeetwenMarkers(data, '<div class="ml-item">', '</a>', withMarkers=True)
         for item in data:
-            url  = self.getFullUrl( self.cm.ph.getSearchGroups(item, 'href="([^"]+?)"')[0] )
-            icon = self.getFullUrl( self.cm.ph.getSearchGroups(item, 'data-original="([^"]+?)"')[0] )
+            url  = self.getFullUrl(self.cm.ph.getSearchGroups(item, 'href="([^"]+?)"')[0])
+            icon = self.getFullUrl(self.cm.ph.getSearchGroups(item, 'data-original="([^"]+?)"')[0])
             dataUrl = self.cm.ph.getSearchGroups(item, 'data-url="([^"]+?)"')[0]
             if icon == '':
                 icon = cItem.get('icon', '')
-            desc = self.cleanHtmlStr( item )
-            title = self.cleanHtmlStr( self.cm.ph.getDataBeetwenMarkers(item, '<h2', '</h2>')[1] )
+            desc = self.cleanHtmlStr(item)
+            title = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(item, '<h2', '</h2>')[1])
             if title == '':
-                title  = self.cleanHtmlStr( self.cm.ph.getSearchGroups(item, 'title="([^"]+?)"')[0] )
+                title  = self.cleanHtmlStr(self.cm.ph.getSearchGroups(item, 'title="([^"]+?)"')[0])
             if title == '':
-                title  = self.cleanHtmlStr( self.cm.ph.getSearchGroups(item, 'alt="([^"]+?)"')[0] )
+                title  = self.cleanHtmlStr(self.cm.ph.getSearchGroups(item, 'alt="([^"]+?)"')[0])
             if url.startswith('http'):
                 params = {'good_for_fav': True, 'title':title, 'url':url, 'data_url':dataUrl, 'desc':desc, 'info_url':url, 'icon':icon}
                 if '-season-' not in url and 'class="mli-eps"' not in item:
@@ -301,7 +301,7 @@ class YesMovies(CBaseHostClass):
             for eItem in tmp:
                 serverId = self.cm.ph.getSearchGroups(item, '''data\-server=['"]([0-9]+?)['"]''')[0]
                 episodeId = self.cm.ph.getSearchGroups(item, '''data\-id=['"]([0-9]+?)['"]''')[0]
-                title = self.cleanHtmlStr( eItem )
+                title = self.cleanHtmlStr(eItem)
                 serverTitle = serversNameMap.get(serverId, serverId)
                 if not forEpisodes:
                     name = serverTitle + ': ' + title
@@ -317,7 +317,7 @@ class YesMovies(CBaseHostClass):
             elif val == '14':
                 return 0
             return 1000
-        urlTab.sort( key=_sortKey )
+        urlTab.sort(key=_sortKey)
         
         if len(urlTab) and self.cm.isValidUrl(trailer) and len(trailer) > 10:
             urlTab.insert(0, {'name':'Trailer', 'title':'Trailer', 'server_title':'Trailer', 'url':trailer, 'need_resolve':1})
@@ -360,7 +360,7 @@ class YesMovies(CBaseHostClass):
         printDBG('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> $$$$$$$$$$$$$$$$$$$$$$ ' + serverId)
         if serverId in ['12', '13', '14', '15', '16']:
             url = 'ajax/movie_embed/' + episodeId
-            url = self.getFullUrl( url )
+            url = self.getFullUrl(url)
             sts, data = self.getPage(url)
             if not sts:
                 return []
@@ -377,7 +377,7 @@ class YesMovies(CBaseHostClass):
             except Exception:
                 mid = ''
                 printExc()
-            url = self.getFullUrl( '/ajax/movie_token?eid=%s&mid=%s&_=%s' % (episodeId, mid, int(time.time() * 10000)))
+            url = self.getFullUrl('/ajax/movie_token?eid=%s&mid=%s&_=%s' % (episodeId, mid, int(time.time() * 10000)))
             if not self.cm.isValidUrl(url):
                 return []
             
@@ -393,7 +393,7 @@ class YesMovies(CBaseHostClass):
             xy = self.cm.ph.getSearchGroups(data, '''y=['"]([^'^"]+?)['"]''')[0]
             
             url = 'ajax/movie_sources/%s?x=%s&y=%s' % (episodeId, xx, xy)
-            url = self.getFullUrl( url )
+            url = self.getFullUrl(url)
 
             params = {}
             params['header'] = dict(self.AJAX_HEADER)
@@ -455,9 +455,9 @@ class YesMovies(CBaseHostClass):
         if not sts:
             return retTab
         
-        title = self.cleanHtmlStr( self.cm.ph.getSearchGroups(data, '<meta property="og:title"[^>]+?content="([^"]+?)"')[0] )
-        desc  = self.cleanHtmlStr( self.cm.ph.getSearchGroups(data, '<meta property="og:description"[^>]+?content="([^"]+?)"')[0] )
-        icon  = self.getFullUrl( self.cm.ph.getSearchGroups(data, '<meta property="og:image"[^>]+?content="([^"]+?)"')[0] )
+        title = self.cleanHtmlStr(self.cm.ph.getSearchGroups(data, '<meta property="og:title"[^>]+?content="([^"]+?)"')[0])
+        desc  = self.cleanHtmlStr(self.cm.ph.getSearchGroups(data, '<meta property="og:description"[^>]+?content="([^"]+?)"')[0])
+        icon  = self.getFullUrl(self.cm.ph.getSearchGroups(data, '<meta property="og:image"[^>]+?content="([^"]+?)"')[0])
         
         if title == '':
             title = cItem['title']
@@ -482,8 +482,8 @@ class YesMovies(CBaseHostClass):
             item = item.split('</strong>')
             if len(item) < 2:
                 continue
-            key = self.cleanHtmlStr( item[0] ).replace(':', '').strip()
-            val = self.cleanHtmlStr( item[1] )
+            key = self.cleanHtmlStr(item[0]).replace(':', '').strip()
+            val = self.cleanHtmlStr(item[1])
             if key == 'IMDb':
                 val += ' IMDb' 
             if key in descTabMap:
@@ -496,11 +496,11 @@ class YesMovies(CBaseHostClass):
             rating = ''
             sts, data = self.getPage(self.getFullUrl('ajax/movie_rate_info/' + cItem['movie_id']))
             if sts:
-                rating = self.cleanHtmlStr( self.cm.ph.getDataBeetwenMarkers(data, '<div id="movie-mark"', '</label>', True)[1] )
+                rating = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(data, '<div id="movie-mark"', '</label>', True)[1])
             if rating != '':
-                otherInfo['rating'] = self.cleanHtmlStr( rating )
+                otherInfo['rating'] = self.cleanHtmlStr(rating)
         
-        return [{'title':self.cleanHtmlStr( title ), 'text': self.cleanHtmlStr( desc ), 'images':[{'title':'', 'url':self.getFullUrl(icon)}], 'other_info':otherInfo}]
+        return [{'title':self.cleanHtmlStr(title), 'text': self.cleanHtmlStr(desc), 'images':[{'title':'', 'url':self.getFullUrl(icon)}], 'other_info':otherInfo}]
         
     def handleService(self, index, refresh=0, searchPattern='', searchType=''):
         printDBG('handleService start')
@@ -514,7 +514,7 @@ class YesMovies(CBaseHostClass):
         category = self.currItem.get("category", '')
         mode     = self.currItem.get("mode", '')
         
-        printDBG( "handleService: |||||||||||||||||||||||||||||||||||| name[%s], category[%s] " % (name, category) )
+        printDBG("handleService: |||||||||||||||||||||||||||||||||||| name[%s], category[%s] " % (name, category))
         self.currList = []
         
     #MAIN MENU

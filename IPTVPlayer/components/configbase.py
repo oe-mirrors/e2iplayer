@@ -74,8 +74,8 @@ class ConfigBaseWidget(Screen, ConfigListScreen):
         printDBG("ConfigBaseWidget.__init__ -------------------------------")
         Screen.__init__(self, session)
         
-        self.onChangedEntry = [ ]
-        self.list = [ ]
+        self.onChangedEntry = []
+        self.list = []
         ConfigListScreen.__init__(self, self.list, session=session, on_change=self.changedEntry)
         self.setup_title = (_("E2iPlayer - settings"))
 
@@ -91,22 +91,22 @@ class ConfigBaseWidget(Screen, ConfigListScreen):
         self["actions"] = ActionMap(["SetupActions", "ColorActions", "WizardActions", "ListboxActions", "IPTVPlayerListActions"],
             {
                 "cancel": self.keyExit,
-                "green" : self.keySave,
-                "ok"    : self.keyOK,
-                "red"   : self.keyCancel,
+                "green": self.keySave,
+                "ok": self.keyOK,
+                "red": self.keyCancel,
                 "yellow": self.keyYellow,
-                "blue"  : self.keyBlue,
-                "menu"  : self.keyMenu,
+                "blue": self.keyBlue,
+                "menu": self.keyMenu,
                 
-                "up"      : self.keyUp,
-                "down"    : self.keyDown,
-                "moveUp"  : self.keyUp,
+                "up": self.keyUp,
+                "down": self.keyDown,
+                "moveUp": self.keyUp,
                 "moveDown": self.keyDown,
-                "moveTop" : self.keyHome,
-                "moveEnd" : self.keyEnd,
-                "home"    : self.keyHome,
-                "end"     : self.keyEnd,
-                "pageUp"  : self.keyPageUp,
+                "moveTop": self.keyHome,
+                "moveEnd": self.keyEnd,
+                "home": self.keyHome,
+                "end": self.keyEnd,
+                "pageUp": self.keyPageUp,
                 "pageDown": self.keyPageDown
             }, -2)
 

@@ -402,8 +402,8 @@ class AkoAm(CBaseHostClass):
             item = reObj.split(item)
             if len(item) < 2:
                 continue
-            key = self.cleanHtmlStr( item[0] ).replace(':', '').strip()
-            val = self.cleanHtmlStr( item[1] )
+            key = self.cleanHtmlStr(item[0]).replace(':', '').strip()
+            val = self.cleanHtmlStr(item[1])
             if key in descTabMap:
                 try:
                     otherInfo[descTabMap[key]] = val
@@ -422,7 +422,7 @@ class AkoAm(CBaseHostClass):
             item = item.split('</span>', 1)
             if len(item) < 2:
                 continue
-            key = self.cleanHtmlStr( item[0] ).replace(':', '').strip()
+            key = self.cleanHtmlStr(item[0]).replace(':', '').strip()
             vals = []
             tmp = reObj.split(item[1])
             for val in tmp:
@@ -440,7 +440,7 @@ class AkoAm(CBaseHostClass):
         if icon == '':
             icon = cItem.get('icon', self.DEFAULT_ICON_URL)
         
-        return [{'title':self.cleanHtmlStr( title ), 'text': self.cleanHtmlStr( desc ), 'images':[{'title':'', 'url':self.getFullUrl(icon)}], 'other_info':otherInfo}]
+        return [{'title':self.cleanHtmlStr(title), 'text': self.cleanHtmlStr(desc), 'images':[{'title':'', 'url':self.getFullUrl(icon)}], 'other_info':otherInfo}]
     
     def handleService(self, index, refresh=0, searchPattern='', searchType=''):
         printDBG('handleService start')
@@ -451,7 +451,7 @@ class AkoAm(CBaseHostClass):
         category = self.currItem.get("category", '')
         mode     = self.currItem.get("mode", '')
         
-        printDBG( "handleService: |||| name[%s], category[%s] " % (name, category) )
+        printDBG("handleService: |||| name[%s], category[%s] " % (name, category))
         self.cacheLinks = {}
         self.currList = []
         

@@ -49,12 +49,12 @@ class Redbull(CBaseHostClass):
     def listMain(self, cItem, nextCategory):
         printDBG("Redbull.listMain")
 
-        MAIN_CAT_TAB = [{'category':'explore_item',         'title': _('Discover'),  'url':self.REDBULL_API + "products/discover"       },
-                         {'category':'explore_item',          'title': _('TV'),      'url':self.REDBULL_API + "products/tv"             },
-                         {'category':'explore_item',         'title': _('Channels'), 'url':self.REDBULL_API + "products/channels"       },
-                         {'category':'explore_item',          'title': _('Calendar'),'url':self.REDBULL_API + "products/calendar"       },
+        MAIN_CAT_TAB = [{'category':'explore_item',         'title': _('Discover'),  'url':self.REDBULL_API + "products/discover"},
+                         {'category':'explore_item',          'title': _('TV'),      'url':self.REDBULL_API + "products/tv"},
+                         {'category':'explore_item',         'title': _('Channels'), 'url':self.REDBULL_API + "products/channels"},
+                         {'category':'explore_item',          'title': _('Calendar'),'url':self.REDBULL_API + "products/calendar"},
                          {'category': 'search',             'title': _('Search'), 'search_item': True,},
-                         {'category': 'search_history',     'title': _('Search history'),            } 
+                         {'category': 'search_history',     'title': _('Search history'),} 
                         ]
 
         self.listsTab(MAIN_CAT_TAB, cItem)
@@ -67,7 +67,7 @@ class Redbull(CBaseHostClass):
         sTitle = self.cleanHtmlStr(tmp[0])
         if sTitle.lower() in ('linki',): #'kategorie'
             return
-        sIcon = self.getFullUrl( ph.search(section, ph.IMAGE_SRC_URI_RE)[1] )
+        sIcon = self.getFullUrl(ph.search(section, ph.IMAGE_SRC_URI_RE)[1])
 
         subItems = []
         uniques = set()
@@ -93,8 +93,8 @@ class Redbull(CBaseHostClass):
                 subItems.append(MergeDicts(cItem, {'category':nextCategory, 'title':sTitle, 'url':iframe}))
         section = ph.findall(section, ('<a', '>', ph.check(ph.any, ('articles.php', 'readarticle.php'))), '</a>')
         for item in section:
-            url = self.getFullUrl( ph.search(item, ph.A_HREF_URI_RE)[1] )
-            icon = self.getFullUrl( ph.search(item, self.reImgObj)[1] )
+            url = self.getFullUrl(ph.search(item, ph.A_HREF_URI_RE)[1])
+            icon = self.getFullUrl(ph.search(item, self.reImgObj)[1])
             title = self.cleanHtmlStr(item)
             if not title: 
                 title = icon.rsplit('/', 1)[-1].rsplit('.', 1)[0]
@@ -254,7 +254,7 @@ class Redbull(CBaseHostClass):
 
         name     = self.currItem.get("name", '')
         category = self.currItem.get("category", '')
-        printDBG( "handleService: ||| name[%s], category[%s] " % (name, category) )
+        printDBG("handleService: ||| name[%s], category[%s] " % (name, category))
         self.currList = []
 
     #MAIN MENU

@@ -26,8 +26,8 @@ config.plugins.iptvplayer.filmontvcom_password       = ConfigText(default="", fi
 
 def GetConfigList():
     optionList = []
-    optionList.append(getConfigListEntry( "FimOn.com " + _("Preferred streaming protocol") + ": ", config.plugins.iptvplayer.filmontvcom_streamprotocol))
-    optionList.append(getConfigListEntry( "FimOn.com " + _("Premium user") + ": ", config.plugins.iptvplayer.filmontvcom_premium))
+    optionList.append(getConfigListEntry("FimOn.com " + _("Preferred streaming protocol") + ": ", config.plugins.iptvplayer.filmontvcom_streamprotocol))
+    optionList.append(getConfigListEntry("FimOn.com " + _("Premium user") + ": ", config.plugins.iptvplayer.filmontvcom_premium))
     if config.plugins.iptvplayer.filmontvcom_premium.value:
         optionList.append(getConfigListEntry("  " + _("login") + ": ", config.plugins.iptvplayer.filmontvcom_login))
         optionList.append(getConfigListEntry("  " + _("password") + ": ", config.plugins.iptvplayer.filmontvcom_password))
@@ -39,7 +39,7 @@ class FilmOnComApi:
     MAINURL         = 'http://www.filmon.com/tv'
     
     BASE_INIT_PARAMS = "app_android_device_model=GT-N7000&app_android_test=false&app_version=2.0.90&app_android_device_tablet=true&app_android_device_manufacturer=SAMSUNG&app_secret=wis9Ohmu7i&app_id=android-native&app_android_api_version=10%20HTTP/1.1"
-    STREAMING_PROTOCOLS = {'rtsp' : "channelProvider=rtsp", 'rtmp' : "channelProvider=rtmp", 'hls' : "channelProvider=ipad&supported_streaming_protocol=livehttp"}
+    STREAMING_PROTOCOLS = {'rtsp': "channelProvider=rtsp", 'rtmp': "channelProvider=rtmp", 'hls': "channelProvider=ipad&supported_streaming_protocol=livehttp"}
 
     def __init__(self):
         self.cm = common()
@@ -48,7 +48,7 @@ class FilmOnComApi:
         self.middleware  = 'http://la.api.filmon.com'
         self.session_key = None
         self.comscore    = {}
-        self.jsonData = {'channels' : [], 'groups' : []}
+        self.jsonData = {'channels': [], 'groups': []}
         self.streamprotocol  = config.plugins.iptvplayer.filmontvcom_streamprotocol.value
         self.PREMIUM         = config.plugins.iptvplayer.filmontvcom_premium.value
         self.LOGIN           = config.plugins.iptvplayer.filmontvcom_login.value
@@ -98,8 +98,8 @@ class FilmOnComApi:
                             flashplayer = 'http://www.filmon.com/tv/modules/FilmOnTV/files/flashapp/filmon/FilmonPlayer.swf?v=55'
                             pageUrl     = 'http://www.filmon.com/tv/channel/export?channel_id=' + str(channelID)
                             url = url + '/' + stream['name'] + ' swfUrl=' + flashplayer + ' pageUrl=' + url
-                        url = urlparser.decorateUrl( url )
-                        url.meta.update({'iptv_urlwithlimit' : False, 'iptv_livestream' : not seekable})
+                        url = urlparser.decorateUrl(url)
+                        url.meta.update({'iptv_urlwithlimit': False, 'iptv_livestream': not seekable})
                         urlsList.append({'name':name, 'url':url})
                 except Exception:
                     printExc()

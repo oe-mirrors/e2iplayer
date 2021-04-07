@@ -52,18 +52,18 @@ class DMHelper:
     STATUS_FILE_PATH = '/tmp/iptvdownload'
     STATUS_FILE_EXT = '.txt'
     
-    STS = enum( WAITING='STS_WAITING',
+    STS = enum(WAITING='STS_WAITING',
                 DOWNLOADING='STS_DOWNLOADING',
                 DOWNLOADED='STS_DOWNLOADED',
                 INTERRUPTED='STS_INTERRUPTED',
                 ERROR='STS_ERROR',
                 POSTPROCESSING='STS_POSTPROCESSING')
-    DOWNLOAD_TYPE = enum( INITIAL='INIT_DOWNLOAD',
+    DOWNLOAD_TYPE = enum(INITIAL='INIT_DOWNLOAD',
                           CONTINUE='CONTINUE_DOWNLOAD',
-                          RETRY='RETRY_DOWNLOAD' )
+                          RETRY='RETRY_DOWNLOAD')
     #
-    DOWNLOADER_TYPE = enum( WGET='WGET_DOWNLOADER',
-                            F4F='F4F_DOWNLOADER' )
+    DOWNLOADER_TYPE = enum(WGET='WGET_DOWNLOADER',
+                            F4F='F4F_DOWNLOADER')
                             
     HEADER_PARAMS = [{'marker':'Host=',             'name':'Host'},
                      {'marker':'Accept=',           'name':'Accept'},

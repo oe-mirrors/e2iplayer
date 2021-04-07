@@ -32,14 +32,14 @@ class Kinotan(CBaseHostClass):
         self.hdgocc = HdgoccParser()
         self.HEADER = {'User-Agent': 'Mozilla/5.0', 'Accept': 'text/html'}
         self.AJAX_HEADER = dict(self.HEADER)
-        self.AJAX_HEADER.update( {'X-Requested-With': 'XMLHttpRequest'} )
+        self.AJAX_HEADER.update({'X-Requested-With': 'XMLHttpRequest'})
         
         self.MAIN_URL = 'http://kinotan.ru/'
         self.DEFAULT_ICON_URL = 'http://ipic.su/img/img7/fs/logo2.1460442551.png'
 
 
-        self.MAIN_CAT_TAB = [{'category':'cat_serials',  'title':_('Serials'),    'url':self.getFullUrl('/serial/')    },
-                             {'category':'cat_tv_shows', 'title':_('TV shows'),   'url':self.getFullUrl('/tv-shou/')   },
+        self.MAIN_CAT_TAB = [{'category':'cat_serials',  'title':_('Serials'),    'url':self.getFullUrl('/serial/')},
+                             {'category':'cat_tv_shows', 'title':_('TV shows'),   'url':self.getFullUrl('/tv-shou/')},
                              {'category':'cat_mult',     'title':_('Cartoons'),   'url':self.getFullUrl('/multserial/')},
                              
                              {'category':'search',         'title':_('Search'), 'search_item':True},
@@ -352,7 +352,7 @@ class Kinotan(CBaseHostClass):
         
         for item in episodes:
             params = dict(cItem)
-            params.update( {'title': '{0} - s{1}e{2} {3}'.format(title, id, item['id'], item['title']), 'url': item['url']})
+            params.update({'title': '{0} - s{1}e{2} {3}'.format(title, id, item['id'], item['title']), 'url': item['url']})
             self.addVideo(params)
         
     def listSearchResult(self, cItem, searchPattern, searchType):

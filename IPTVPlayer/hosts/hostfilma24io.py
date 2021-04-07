@@ -83,8 +83,8 @@ class Filma24IO(CBaseHostClass):
             params.update({'title':_('Categories'), 'category':'sub_items', 'sub_items':subItems})
             self.addDir(params)
             
-        MAIN_CAT_TAB = [{'category':'search',         'title': _('Search'),       'search_item':True       },
-                        {'category': 'search_history', 'title': _('Search history'),                        }]
+        MAIN_CAT_TAB = [{'category':'search',         'title': _('Search'),       'search_item':True},
+                        {'category': 'search_history', 'title': _('Search history'),}]
         self.listsTab(MAIN_CAT_TAB, cItem)
     
     def listSubItems(self, cItem):
@@ -120,7 +120,7 @@ class Filma24IO(CBaseHostClass):
                 icon = icon[1:-1]
             if icon == '':
                 icon = self.cm.ph.getSearchGroups(item, '''\ssrc=['"]([^"^']+?\.(?:jpe?g|png)(?:\?[^'^"]*?)?)['"]''')[0]
-            title = self.cleanHtmlStr( self.cm.ph.getDataBeetwenNodes(item, ('<h', '>'), ('</h', '>'), False)[1] )
+            title = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(item, ('<h', '>'), ('</h', '>'), False)[1])
             
             desc = []
             t = self.cm.ph.getDataBeetwenNodes(item, ('<div', '>', 'tags'), ('</div', '>'), False)[1]
@@ -132,14 +132,14 @@ class Filma24IO(CBaseHostClass):
                     desc.append(t)
             
             params = dict(cItem)
-            params.update( {'good_for_fav': True, 'title':baseTitle % title, 'url':url, 'desc':' | '.join(desc), 'icon':self.getFullIconUrl(icon)} )
+            params.update({'good_for_fav': True, 'title':baseTitle % title, 'url':url, 'desc':' | '.join(desc), 'icon':self.getFullIconUrl(icon)})
             if '/seriale/' not in url:
                 params['category'] = nextCategory
             self.addDir(params)
         
         if nextPage != '':
             params = dict(cItem)
-            params.update( {'good_for_fav': False, 'title':_('Next page'), 'page':page+1, 'url':nextPage} )
+            params.update({'good_for_fav': False, 'title':_('Next page'), 'page':page+1, 'url':nextPage})
             self.addDir(params)
         
     def exploreItem(self, cItem):
@@ -176,7 +176,7 @@ class Filma24IO(CBaseHostClass):
             tmpItem = self.cm.ph.getAllItemsBeetwenMarkers(tmpItem, '<a', '</a>')
             for item in tmpItem:
                 name = self.cleanHtmlStr(item)
-                url = self.getFullUrl( self.cm.ph.getSearchGroups(item, '''href=['"]([^"^']+?)['"]''')[0] )
+                url = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''href=['"]([^"^']+?)['"]''')[0])
                 self.cacheLinks[cUrl].append({'name':name, 'url':url, 'need_resolve':1})
         
         if len(self.cacheLinks[cUrl]):
@@ -231,8 +231,8 @@ class Filma24IO(CBaseHostClass):
         if '/seria/' in url:
             title = ''
         else:
-            title = self.cleanHtmlStr( self.cm.ph.getDataBeetwenNodes(data, ('<div', '>', 'title'), ('</div', '>'), False)[1] )
-        desc = self.cleanHtmlStr( self.cm.ph.getDataBeetwenNodes(data, ('<div', '>', 'synopsis'), ('</div', '>'), False)[1] )
+            title = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(data, ('<div', '>', 'title'), ('</div', '>'), False)[1])
+        desc = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(data, ('<div', '>', 'synopsis'), ('</div', '>'), False)[1])
 
         itemsList = []
         tmp = self.cm.ph.getDataBeetwenNodes(data, ('<div', '>', 'info-right'), ('</div', '>'), False)[1]
@@ -265,7 +265,7 @@ class Filma24IO(CBaseHostClass):
         if desc == '':
             desc  = cItem.get('desc', '')
         
-        return [{'title':self.cleanHtmlStr( title ), 'text': self.cleanHtmlStr( desc ), 'images':[{'title':'', 'url':self.getFullUrl(icon)}], 'other_info':{'custom_items_list':itemsList}}]
+        return [{'title':self.cleanHtmlStr(title), 'text': self.cleanHtmlStr(desc), 'images':[{'title':'', 'url':self.getFullUrl(icon)}], 'other_info':{'custom_items_list':itemsList}}]
         
     def handleService(self, index, refresh=0, searchPattern='', searchType=''):
         printDBG('handleService start')
@@ -274,7 +274,7 @@ class Filma24IO(CBaseHostClass):
 
         name     = self.currItem.get("name", '')
         category = self.currItem.get("category", '')
-        printDBG( "handleService: ||| name[%s], category[%s] " % (name, category) )
+        printDBG("handleService: ||| name[%s], category[%s] " % (name, category))
         self.currList = []
         
     #MAIN MENU

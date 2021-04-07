@@ -35,7 +35,7 @@ class KijkNL(CBaseHostClass):
         self.MAIN_URL = 'http://www.kijk.nl/'
         self.HEADER = {'User-Agent': self.USER_AGENT, 'DNT':'1', 'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8', 'Accept-Encoding':'gzip, deflate'}
         self.AJAX_HEADER = dict(self.HEADER)
-        self.AJAX_HEADER.update( {'X-Requested-With': 'XMLHttpRequest', 'Accept-Encoding':'gzip, deflate', 'Content-Type':'application/x-www-form-urlencoded; charset=UTF-8', 'Accept':'application/json, text/javascript, */*; q=0.01'} )
+        self.AJAX_HEADER.update({'X-Requested-With': 'XMLHttpRequest', 'Accept-Encoding':'gzip, deflate', 'Content-Type':'application/x-www-form-urlencoded; charset=UTF-8', 'Accept':'application/json, text/javascript, */*; q=0.01'})
         
         self.cacheLinks    = {}
         self.cacheFilters  = {}
@@ -52,24 +52,24 @@ class KijkNL(CBaseHostClass):
     def listMainMenu(self, cItem):
         printDBG("KijkNL.listMainMenu")
         self.MAIN_CAT_TAB = [
-                             {'category':'list_home',       'title': 'Home',                 'url':''               },
-                             {'category':'list_missed',     'title': 'Gemist',               'url':''               },
+                             {'category':'list_home',       'title': 'Home',                 'url':''},
+                             {'category':'list_missed',     'title': 'Gemist',               'url':''},
                              {'category':'list_popular',    'title': 'Populair',             'url':self.tmpUrl+'v2/templates/page/popular'},
-                             {'category':'list_letters',    'title': 'A-Z',                  'url':''               },
+                             {'category':'list_letters',    'title': 'A-Z',                  'url':''},
                              {'category':'list_themas',     'title': "THEMA'S",              'url':self.getMainUrl()},
                              {'category':'search',          'title': _('Search'),          'search_item':True}, 
                              {'category':'search_history',  'title': _('Search history')},
                             ]
         self.HOME_CAT_TAB = [
-                                {'category':'list_items', 'title': _("Episodes"), 'url':self.tmpUrl+'v1/default/sections/home_Episodes-popular'      },
-                                {'category':'list_items', 'title': _("Clips"),    'url':self.tmpUrl+'v1/default/sections/home_Clips-popular'         },
-                                {'category':'list_items', 'title': _("Missed"),   'url':self.tmpUrl+'v1/default/sections/home_HomeMissed'            },
+                                {'category':'list_items', 'title': _("Episodes"), 'url':self.tmpUrl+'v1/default/sections/home_Episodes-popular'},
+                                {'category':'list_items', 'title': _("Clips"),    'url':self.tmpUrl+'v1/default/sections/home_Clips-popular'},
+                                {'category':'list_items', 'title': _("Missed"),   'url':self.tmpUrl+'v1/default/sections/home_HomeMissed'},
                                 {'category':'list_items', 'title': _("Series"),   'url':self.tmpUrl+'v1/default/sections/home_Series-popularPrograms'},
                                ]
         self.POPULAR_CAT_TAB = [
-                                {'category':'list_items', 'title': "Populaire afleveringen", 'url':self.tmpUrl+'v2/default/sections/popular_PopularVODs'   },
+                                {'category':'list_items', 'title': "Populaire afleveringen", 'url':self.tmpUrl+'v2/default/sections/popular_PopularVODs'},
                                 {'category':'list_items', 'title': "Populaire programma's",  'url':self.tmpUrl+'v2/default/sections/popular_PopularFormats'},
-                                {'category':'list_items', 'title': "Populaire clips",        'url':self.tmpUrl+'v2/default/sections/popular_PopularClips'  },
+                                {'category':'list_items', 'title': "Populaire clips",        'url':self.tmpUrl+'v2/default/sections/popular_PopularClips'},
                                ]
         self.listsTab(self.MAIN_CAT_TAB, cItem)
         
@@ -326,7 +326,7 @@ class KijkNL(CBaseHostClass):
                 SetIPTVPlayerLastHostError(_('Player data parsing error.'))
                 printExc()
         
-        def __getLinkQuality( itemLink ):
+        def __getLinkQuality(itemLink):
             try:
                 return int(itemLink['bitrate'])
             except Exception:
@@ -347,7 +347,7 @@ class KijkNL(CBaseHostClass):
         category = self.currItem.get("category", '')
         mode     = self.currItem.get("mode", '')
         
-        printDBG( "handleService: |||||||||||||||||||||||||||||||||||| name[%s], category[%s] " % (name, category) )
+        printDBG("handleService: |||||||||||||||||||||||||||||||||||| name[%s], category[%s] " % (name, category))
         self.currList = []
         
         cItem = self.currItem

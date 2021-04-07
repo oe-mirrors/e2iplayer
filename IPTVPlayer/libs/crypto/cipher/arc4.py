@@ -46,7 +46,7 @@ class ARC4:
             this continues the encryption
             New sessions of encrypt can NOT be called twice with the same key!!!!
         """
-        if self.keyReady != 1 :
+        if self.keyReady != 1:
             raise Exception('Error, ARC4 key already used once!')
         if more != 1:
             self.keyReady = None
@@ -56,7 +56,7 @@ class ARC4:
 
     def decrypt(self, cipherText, more=None):
         """ Decrypt a string and return a string """
-        if self.keyReady != 1 :
+        if self.keyReady != 1:
             raise Exception('set for decryption required')
         if more != 1:
             self.keyReady = None

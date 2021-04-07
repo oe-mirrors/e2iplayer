@@ -3259,7 +3259,7 @@ class Decimal(object):
         return _dec_from_triple(self._sign,
                                 rotated.lstrip('0') or '0', self._exp)
 
-    def scaleb (self, other, context=None):
+    def scaleb(self, other, context=None):
         """Returns self operand after adding the second value to its exp."""
         if context is None:
             context = getcontext()
@@ -4512,7 +4512,7 @@ class Context(object):
         """
         return a.same_quantum(b)
 
-    def scaleb (self, a, b):
+    def scaleb(self, a, b):
         """Returns the first operand after adding the second value its exp.
 
         >>> ExtendedContext.scaleb(Decimal('7.50'), Decimal('-2'))
@@ -4522,7 +4522,7 @@ class Context(object):
         >>> ExtendedContext.scaleb(Decimal('7.50'), Decimal('3'))
         Decimal("7.50E+3")
         """
-        return a.scaleb (b, context=self)
+        return a.scaleb(b, context=self)
 
     def shift(self, a, b):
         """Returns a shifted copy of a, b times.

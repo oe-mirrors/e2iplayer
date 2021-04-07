@@ -36,19 +36,19 @@ class Cinemay(CBaseHostClass):
         self.MAIN_URL = 'http://cinemay.ws/'
         self.HEADER = {'User-Agent': self.USER_AGENT, 'DNT':'1', 'Accept': 'text/html', 'Accept-Encoding':'gzip, deflate', 'Referer':self.getMainUrl(), 'Origin':self.getMainUrl()}
         self.AJAX_HEADER = dict(self.HEADER)
-        self.AJAX_HEADER.update( {'X-Requested-With': 'XMLHttpRequest', 'Accept-Encoding':'gzip, deflate', 'Content-Type':'application/x-www-form-urlencoded; charset=UTF-8', 'Accept':'application/json, text/javascript, */*; q=0.01'} )
+        self.AJAX_HEADER.update({'X-Requested-With': 'XMLHttpRequest', 'Accept-Encoding':'gzip, deflate', 'Content-Type':'application/x-www-form-urlencoded; charset=UTF-8', 'Accept':'application/json, text/javascript, */*; q=0.01'})
         
         self.cacheSeriesByLetters = {}
         self.cacheSeriesLetters = []
         self.cacheLinks  = {}
         self.defaultParams = {'header':self.HEADER, 'raw_post_data':True, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
         
-        self.MAIN_CAT_TAB = [{'category':'list_movies',           'title': 'Film Box Office',   'url':self.getFullUrl('/film-box-office/')    },
-                             {'category':'list_movies',           'title': 'Films',             'url':self.getFullUrl('/films/')              },
+        self.MAIN_CAT_TAB = [{'category':'list_movies',           'title': 'Film Box Office',   'url':self.getFullUrl('/film-box-office/')},
+                             {'category':'list_movies',           'title': 'Films',             'url':self.getFullUrl('/films/')},
                              {'category':'list_series',           'title': 'Series',            'url':self.getFullUrl('/series-tv-streaming/')},
                              
                              {'category': 'search',                'title': _('Search'),              'search_item': True, },
-                             {'category': 'search_history',        'title': _('Search history'),                          } 
+                             {'category': 'search_history',        'title': _('Search history'),} 
                             ]
     
     def getPage(self, baseUrl, addParams={}, post_data=None):
@@ -97,7 +97,7 @@ class Cinemay(CBaseHostClass):
         for item in data:
             icon = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''<img[^>]+?src=['"]([^'^"]+?)['"]''')[0])
             url = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''href=['"]([^'^"]+?)['"]''')[0])
-            title = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(item, '<h3', '</h3>')[1] )
+            title = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(item, '<h3', '</h3>')[1])
             if title == '':
                 title = self.cleanHtmlStr(self.cm.ph.getSearchGroups(item, '''title=['"]([^'^"]+?)['"]''')[0])
             if title == '':
@@ -195,9 +195,9 @@ class Cinemay(CBaseHostClass):
                 for item in sItem:
                     icon = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''<img[^>]+?src=['"]([^'^"]+?)['"]''')[0])
                     url  = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''href=['"]([^'^"]+?)['"]''')[0])
-                    title = self.cleanHtmlStr(self.cm.ph.getDataBeetwenReMarkers(item, re.compile('<div[^>]+?episodiotitle'), re.compile('</a>'))[1] )
-                    desc  = self.cleanHtmlStr(self.cm.ph.getDataBeetwenReMarkers(item, re.compile('<span[^>]+?date'), re.compile('</span>'))[1] )
-                    num   = self.cleanHtmlStr(self.cm.ph.getDataBeetwenReMarkers(item, re.compile('<div[^>]+?numerando'), re.compile('</div>'))[1] ).replace(' ', '')
+                    title = self.cleanHtmlStr(self.cm.ph.getDataBeetwenReMarkers(item, re.compile('<div[^>]+?episodiotitle'), re.compile('</a>'))[1])
+                    desc  = self.cleanHtmlStr(self.cm.ph.getDataBeetwenReMarkers(item, re.compile('<span[^>]+?date'), re.compile('</span>'))[1])
+                    num   = self.cleanHtmlStr(self.cm.ph.getDataBeetwenReMarkers(item, re.compile('<div[^>]+?numerando'), re.compile('</div>'))[1]).replace(' ', '')
                     title = '%s - %s %s' % (cItem['title'], num, title)
                     episodesTab.append({'title':title, 'url':url, 'desc':desc, 'icon':icon})
                 
@@ -307,7 +307,7 @@ class Cinemay(CBaseHostClass):
                 scripts.append(item.strip())
             try:
                 jscode = base64.b64decode('''dmFyIGRvY3VtZW50PXt9LHdpbmRvdz10aGlzO3dpbmRvdy5sb2NhdGlvbj17aG9zdG5hbWU6IiVzIn0sZG9jdW1lbnQud3JpdGU9ZnVuY3Rpb24obil7cHJpbnQobil9Ow==''') % (self.up.getDomain(videoUrl, True))
-                ret = js_execute( jscode + '\n'.join(scripts))
+                ret = js_execute(jscode + '\n'.join(scripts))
                 if ret['sts'] and 0 == ret['code']:
                     data = ret['data'].strip()
                     videoUrl = self.cm.ph.getSearchGroups(data, '''url['"]?=['"]?([^'^"^>]+?)['">]''')[0].strip()
@@ -382,7 +382,7 @@ class Cinemay(CBaseHostClass):
         if icon == '':
             icon = cItem.get('icon', self.DEFAULT_ICON_URL)
         
-        return [{'title':self.cleanHtmlStr( title ), 'text': self.cleanHtmlStr( desc ), 'images':[{'title':'', 'url':self.getFullUrl(icon)}], 'other_info':otherInfo}]
+        return [{'title':self.cleanHtmlStr(title), 'text': self.cleanHtmlStr(desc), 'images':[{'title':'', 'url':self.getFullUrl(icon)}], 'other_info':otherInfo}]
     
     def handleService(self, index, refresh=0, searchPattern='', searchType=''):
         printDBG('handleService start')
@@ -393,7 +393,7 @@ class Cinemay(CBaseHostClass):
         category = self.currItem.get("category", '')
         mode     = self.currItem.get("mode", '')
         
-        printDBG( "handleService: |||||||||||||||||||||||||||||||||||| name[%s], category[%s] " % (name, category) )
+        printDBG("handleService: |||||||||||||||||||||||||||||||||||| name[%s], category[%s] " % (name, category))
         self.currList = []
         
     #MAIN MENU

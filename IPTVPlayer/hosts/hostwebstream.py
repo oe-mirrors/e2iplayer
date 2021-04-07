@@ -73,49 +73,49 @@ def GetConfigList():
 
     optionList.append(getConfigListEntry("----------------pilot.wp.pl-----------------", config.plugins.iptvplayer.fake_separator))
     try:
-        optionList.extend( VideoStar_GetConfigList() )
+        optionList.extend(VideoStar_GetConfigList())
     except Exception:
         printExc()
 
     optionList.append(getConfigListEntry("----------------internetowa.ws------------------", config.plugins.iptvplayer.fake_separator))
     try:
-        optionList.extend( Internetowa_GetConfigList() )
+        optionList.extend(Internetowa_GetConfigList())
     except Exception:
         printExc()
 
     optionList.append(getConfigListEntry("------------------meteo.pl------------------", config.plugins.iptvplayer.fake_separator))
     try:
-        optionList.extend( MeteoPL_GetConfigList() )
+        optionList.extend(MeteoPL_GetConfigList())
     except Exception:
         printExc()
 
     optionList.append(getConfigListEntry("-------------------WeebTV-------------------", config.plugins.iptvplayer.fake_separator))
     try:
-        optionList.extend( WeebTv_GetConfigList() )
+        optionList.extend(WeebTv_GetConfigList())
     except Exception:
         printExc()
 
     optionList.append(getConfigListEntry("-----------------FilmOn TV------------------", config.plugins.iptvplayer.fake_separator))
     try:
-        optionList.extend( FilmOn_GetConfigList() )
+        optionList.extend(FilmOn_GetConfigList())
     except Exception:
         printExc()
 
     optionList.append(getConfigListEntry("----------------ustvnow.com-----------------", config.plugins.iptvplayer.fake_separator))
     try:
-        optionList.extend( Ustvnow_GetConfigList() )
+        optionList.extend(Ustvnow_GetConfigList())
     except Exception:
         printExc()
 
     optionList.append(getConfigListEntry("-------------------edem.tv------------------", config.plugins.iptvplayer.fake_separator))
     try:
-        optionList.extend( EdemTv_GetConfigList() )
+        optionList.extend(EdemTv_GetConfigList())
     except Exception:
         printExc()
 
     optionList.append(getConfigListEntry("-------------SkyLineWebCams.com-------------", config.plugins.iptvplayer.fake_separator))
     try:
-        optionList.extend( WkylinewebcamsCom_GetConfigList() )
+        optionList.extend(WkylinewebcamsCom_GetConfigList())
     except Exception:
         printExc()
 
@@ -125,7 +125,7 @@ def GetConfigList():
 
     optionList.append(getConfigListEntry("----------------GoldVod.TV------------------", config.plugins.iptvplayer.fake_separator))
     try:
-        optionList.extend( GoldVodTV_GetConfigList() )
+        optionList.extend(GoldVodTV_GetConfigList())
     except Exception:
         printExc()
 
@@ -139,25 +139,25 @@ def GetConfigList():
 
     optionList.append(getConfigListEntry("----------------bilasport.pw-------------------", config.plugins.iptvplayer.fake_separator))
     try:
-        optionList.extend( BilaSportPw_GetConfigList() )
+        optionList.extend(BilaSportPw_GetConfigList())
     except Exception:
         printExc()
 
     optionList.append(getConfigListEntry("--------------sportstream365.com---------------", config.plugins.iptvplayer.fake_separator))
     try:
-        optionList.extend( SportStream365_GetConfigList() )
+        optionList.extend(SportStream365_GetConfigList())
     except Exception:
         printExc()
 
     optionList.append(getConfigListEntry("-----------------mlbstream.tv------------------", config.plugins.iptvplayer.fake_separator))
     try:
-        optionList.extend( MLBStreamTV_GetConfigList() )
+        optionList.extend(MLBStreamTV_GetConfigList())
     except Exception:
         printExc()
     
     optionList.append(getConfigListEntry("----------------firstonetv.net------------------", config.plugins.iptvplayer.fake_separator))
     try:
-        optionList.extend( FirstOneTv_GetConfigList() )
+        optionList.extend(FirstOneTv_GetConfigList())
     except Exception:
         printExc()
     
@@ -169,7 +169,7 @@ def gettytul():
     return _('"Web" streams player')
 
 class HasBahCa(CBaseHostClass):
-    HTTP_HEADER= { 'User-Agent': 'Mozilla/5.0 (Windows; U; Windows NT 5.1; en-GB; rv:1.9.0.3 Gecko/2008092417 Firefox/3.0.3' }
+    HTTP_HEADER= {'User-Agent': 'Mozilla/5.0 (Windows; U; Windows NT 5.1; en-GB; rv:1.9.0.3 Gecko/2008092417 Firefox/3.0.3'}
     MAIN_GROUPED_TAB = [{'alias_id':'weeb.tv',                 'name': 'weeb.tv',             'title': 'http://weeb.tv/',                   'url': '',                                                                   'icon': 'http://xmtvplayer.com/wp-content/uploads/2014/07/weebtv.png'},
                         {'alias_id':'videostar.pl',            'name': 'videostar.pl',        'title': 'https://pilot.wp.pl/',              'url': '',                                                                   'icon': 'http://satkurier.pl/uploads/53612.jpg'},
                         {'alias_id':'internetowa.ws',          'name': 'internetowa.ws',      'title': 'https://internetowa.ws/',           'url': '',                                                                   'icon': 'https://internetowa.ws/img/internetowa-logo-new-3.png'}, \
@@ -248,7 +248,7 @@ class HasBahCa(CBaseHostClass):
         self.webCameraParams = {}
         
     def getPage(self, url, params={}, post_data=None):
-        HTTP_HEADER= { 'User-Agent':'Mozilla/5.0 (X11; Ubuntu; Linux i686; rv:21.0) Gecko/20100101 Firefox/21.0'}
+        HTTP_HEADER= {'User-Agent':'Mozilla/5.0 (X11; Ubuntu; Linux i686; rv:21.0) Gecko/20100101 Firefox/21.0'}
         params.update({'header':HTTP_HEADER})
         
         if False and 'hasbahcaiptv.com' in url:
@@ -323,7 +323,7 @@ class HasBahCa(CBaseHostClass):
                 self.hasbahcaiptv['login']    = login.replace('&nbsp;', '').replace('\xc2\xa0', '').strip() 
                 self.hasbahcaiptv['password'] = password.replace('&nbsp;', '').replace('\xc2\xa0', '').strip()
             
-        sts, data = self.getPage( url, {'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': GetCookieDir('hasbahcaiptv')}, {'username':self.hasbahcaiptv.get('login', 'downloader'), 'password':self.hasbahcaiptv.get('password', 'hasbahcaiptv.com')} )
+        sts, data = self.getPage(url, {'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': GetCookieDir('hasbahcaiptv')}, {'username':self.hasbahcaiptv.get('login', 'downloader'), 'password':self.hasbahcaiptv.get('password', 'hasbahcaiptv.com')})
         if not sts:
             return
         
@@ -363,9 +363,9 @@ class HasBahCa(CBaseHostClass):
         videoTabs = []
         url = strwithmeta(url)
         if 'cookiefile' in url.meta:
-            sts, data = self.cm.getPage( url, {'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': GetCookieDir(url.meta['cookiefile'])} )
+            sts, data = self.cm.getPage(url, {'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': GetCookieDir(url.meta['cookiefile'])})
         else:
-            sts, data = self.cm.getPage( url )
+            sts, data = self.cm.getPage(url)
         if sts:
             data = data.strip()
             if data.startswith('http'):
@@ -399,11 +399,11 @@ class HasBahCa(CBaseHostClass):
         tmpList = self.filmOnApi.getGroupList()
         for item in tmpList:
             try:
-                params = { 'name'     : 'filmon_channels', 
-                           'title'    : item['title'].encode('utf-8'), 
-                           'desc'     : item['description'].encode('utf-8'), 
-                           'group_id' : item['group_id'],
-                           'icon'     : self.__getFilmOnIconUrl(item)
+                params = {'name': 'filmon_channels', 
+                           'title': item['title'].encode('utf-8'), 
+                           'desc': item['description'].encode('utf-8'), 
+                           'group_id': item['group_id'],
+                           'icon': self.__getFilmOnIconUrl(item)
                            }
                 self.addDir(params)
             except Exception:
@@ -414,12 +414,12 @@ class HasBahCa(CBaseHostClass):
         tmpList = self.filmOnApi.getChannelsListByGroupID(self.currItem['group_id'])
         for item in tmpList:
             try:
-                params = { 'name'     : 'filmon_channel', 
-                           'title'    : item['title'].encode('utf-8'), 
-                           'url'      : item['id'], 
-                           'desc'     : item['group'].encode('utf-8'), 
-                           'seekable' : item['seekable'],
-                           'icon'     : self.__getFilmOnIconUrl(item)
+                params = {'name': 'filmon_channel', 
+                           'title': item['title'].encode('utf-8'), 
+                           'url': item['id'], 
+                           'desc': item['group'].encode('utf-8'), 
+                           'seekable': item['seekable'],
+                           'icon': self.__getFilmOnIconUrl(item)
                            }
                 self.addVideo(params)
             except Exception:
@@ -436,7 +436,7 @@ class HasBahCa(CBaseHostClass):
         
         listURL = strwithmeta(listURL, meta)
         if 'cookiefile' in listURL.meta:
-            params.update({'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': GetCookieDir(listURL.meta['cookiefile'])} )
+            params.update({'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': GetCookieDir(listURL.meta['cookiefile'])})
             
         sts, data = self.getPage(listURL, params)
         if not sts:
@@ -1044,7 +1044,7 @@ class HasBahCa(CBaseHostClass):
 
     def getCrackstreamsGroups(self, url):
         printDBG("crackstreamsGroups start")
-        sts, data = self.getPage( url, {'use_cookie': True, 'cookie_items':{'challenge':'BitMitigate.com'}} )
+        sts, data = self.getPage(url, {'use_cookie': True, 'cookie_items':{'challenge':'BitMitigate.com'}})
 #        sts,data = self.cm.getPage(url)
         if not sts:
             return
@@ -1058,7 +1058,7 @@ class HasBahCa(CBaseHostClass):
             if len(url) and not url.startswith('http'):
                 url = 'http://crackstreams.net/'+url
             try:
-                params = { 'name': 'crackstreams_streams',
+                params = {'name': 'crackstreams_streams',
                            'url': url,
                            'title': title,
                            }
@@ -1068,7 +1068,7 @@ class HasBahCa(CBaseHostClass):
 
     def getCrackstreamsList(self, url):
         printDBG("crackstreamsList start")
-        sts, data = self.getPage( url, {'use_cookie': True, 'cookie_items':{'challenge':'BitMitigate.com'}} )
+        sts, data = self.getPage(url, {'use_cookie': True, 'cookie_items':{'challenge':'BitMitigate.com'}})
 #        sts,data = self.cm.getPage(url)
         if not sts:
             return
@@ -1086,7 +1086,7 @@ class HasBahCa(CBaseHostClass):
 
     def getCrackstreamsLink(self, url):
         printDBG("crackstreamsLink url[%r]" % url)
-        sts, data = self.getPage( url, {'use_cookie': True, 'cookie_items':{'challenge':'BitMitigate.com'}} )
+        sts, data = self.getPage(url, {'use_cookie': True, 'cookie_items':{'challenge':'BitMitigate.com'}})
 #        sts,data = self.cm.getPage(url)
         if not sts:
             return []
@@ -1152,7 +1152,7 @@ class HasBahCa(CBaseHostClass):
         title    = self.currItem.get("title", '')
         icon     = self.currItem.get("icon", '')
         url      = self.currItem.get("url", '')
-        printDBG( "handleService: |||||||||||||||||||||||||||||||||||| name[%s]" % (name) )
+        printDBG("handleService: |||||||||||||||||||||||||||||||||||| name[%s]" % (name))
         self.currList = []
         
     #MAIN MENU
@@ -1244,11 +1244,11 @@ class IPTVHost(CHostBase):
     def getLinksForVideo(self, Index=0, selItem=None):
         listLen = len(self.host.currList)
         if listLen <= Index or Index < 0:
-            printDBG( "ERROR getLinksForVideo - current list is to short len: %d, Index: %d" % (listLen, Index) )
+            printDBG("ERROR getLinksForVideo - current list is to short len: %d, Index: %d" % (listLen, Index))
             return RetHost(RetHost.ERROR, value=[])
         
         if self.host.currList[Index]["type"] not in ['video', 'audio', 'picture']:
-            printDBG( "ERROR getLinksForVideo - current item has wrong type" )
+            printDBG("ERROR getLinksForVideo - current item has wrong type")
             return RetHost(RetHost.ERROR, value=[])
 
         retlist = []

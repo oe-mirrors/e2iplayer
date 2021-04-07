@@ -49,7 +49,7 @@ class VevoCom(CBaseHostClass):
         self.DEFAULT_ICON_URL = 'http://1.bp.blogspot.com/-pSTjDlSgahQ/VVsbLaM40NI/AAAAAAAAHvU/wr8F9v9gPoE/s1600/Vevo.png'
         self.HTTP_HEADER = {'User-Agent': self.USER_AGENT, 'Accept': 'text/html', 'Accept-Encoding':'gzip, deflate'}
         self.AJAX_HEADER = dict(self.HTTP_HEADER)
-        self.AJAX_HEADER.update( {'X-Requested-With': 'XMLHttpRequest', 'Accept-Encoding':'gzip, deflate', 'Content-Type':'application/x-www-form-urlencoded; charset=UTF-8', 'Accept':'application/json, text/javascript, */*; q=0.01'} )
+        self.AJAX_HEADER.update({'X-Requested-With': 'XMLHttpRequest', 'Accept-Encoding':'gzip, deflate', 'Content-Type':'application/x-www-form-urlencoded; charset=UTF-8', 'Accept':'application/json, text/javascript, */*; q=0.01'})
         
         self.defaultParams = {'ignore_http_code_ranges':[], 'header':self.HTTP_HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
         
@@ -177,7 +177,7 @@ class VevoCom(CBaseHostClass):
         
         sts, data = self.getPage(cItem['url'])
         if not sts and '404' in str(data):
-            url = urlparse( cItem['url'] )
+            url = urlparse(cItem['url'])
             url = url._replace(path='/'.join(url.path.split('/')[2:])).geturl()
             sts, data = self.getPage(url)
         if not sts:
@@ -273,7 +273,7 @@ class VevoCom(CBaseHostClass):
     def _getApiHeaders(self, cItem):
         
         params = {}
-        params['header'] = {'User-Agent': self.USER_AGENT, 'Accept-Encoding': 'gzip, deflate, br' , 'Accept-Language': 'en-US,en;q=0.9,pl;q=0.8', 'Vevo-Device': 'Desktop', 'Vevo-Product': 'web/3.408-b252', 'Content-Type': 'application/json', 'Accept': '*/*', 'Vevo-OS': 'Windows/7'}
+        params['header'] = {'User-Agent': self.USER_AGENT, 'Accept-Encoding': 'gzip, deflate, br', 'Accept-Language': 'en-US,en;q=0.9,pl;q=0.8', 'Vevo-Device': 'Desktop', 'Vevo-Product': 'web/3.408-b252', 'Content-Type': 'application/json', 'Accept': '*/*', 'Vevo-OS': 'Windows/7'}
         params['header']['Referer'] = cItem['url']
         params['header']['Origin'] = self.cm.getBaseUrl(cItem['url'])[:-1]
         params['header']['Authorization'] = 'Bearer %s' % self._getAuthToken()
@@ -286,18 +286,18 @@ class VevoCom(CBaseHostClass):
                 if 'videoData' in item:
                     item = item['videoData']
                 item = item['basicMetaV3']
-                url = self.getFullUrl( self.getFullUrl('watch/' + item['isrc']) )
+                url = self.getFullUrl(self.getFullUrl('watch/' + item['isrc']))
                 
                 titleTab = []
                 try: 
                     title = item['artists'][0]['basicMeta']['name']
                     if title != '':
-                        titleTab.append(self.cleanHtmlStr( title ))
+                        titleTab.append(self.cleanHtmlStr(title))
                 except Exception:
                     printExc()
                 
                 if item['title'] != '':
-                    titleTab.append(self.cleanHtmlStr( item['title'] ))
+                    titleTab.append(self.cleanHtmlStr(item['title']))
                 
                 icon = self.getFullIconUrl(item['thumbnailUrl'])
                 desc = str(timedelta(seconds=item['duration']/1000))
@@ -400,8 +400,8 @@ class VevoCom(CBaseHostClass):
                 icon = self.getFullIconUrl(item['thumbnailUrl'])
                 url = self.getFullUrl('/watch/%s' % item['isrc'])
                 titleTab = []
-                titleTab.append(self.cleanHtmlStr( item['artists'][0]['name'] ))
-                titleTab.append(self.cleanHtmlStr( item['title'] ))
+                titleTab.append(self.cleanHtmlStr(item['artists'][0]['name']))
+                titleTab.append(self.cleanHtmlStr(item['title']))
                 params = {'good_for_fav':True, 'category':'video', 'title':' - '.join(titleTab), 'url':url, 'icon':icon}
                 videosTab.append(params)
                 
@@ -428,7 +428,7 @@ class VevoCom(CBaseHostClass):
     def getLinksForVideo(self, cItem):
         printDBG("VevoCom.getLinksForVideo [%s]" % cItem)
         videoUrl = self.getFullUrl('watch/' + cItem['url'].split('/')[-1])
-        return self.up.getVideoLinkExt( videoUrl )
+        return self.up.getVideoLinkExt(videoUrl)
         
     def getVideoLinks(self, videoLink):
         printDBG("VevoCom.getVideoLinks [%s]" % videoLink)
@@ -445,7 +445,7 @@ class VevoCom(CBaseHostClass):
         category = self.currItem.get("category", '')
         mode     = self.currItem.get("mode", '')
         
-        printDBG( "handleService: |||| name[%s], category[%s] " % (name, category) )
+        printDBG("handleService: |||| name[%s], category[%s] " % (name, category))
         self.currList = []
         
     #MAIN MENU

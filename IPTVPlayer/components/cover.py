@@ -90,19 +90,19 @@ class Cover(Pixmap):
     # ptrPixmap - decoded pixelmap to set
     # filename  - path to image corresponding to pixelmap 
     def updatePixmap(self, ptrPixmap, filename):
-        printDBG("updatePixmap %s=%s" % (filename, self.currIcon["FileName"]) )
+        printDBG("updatePixmap %s=%s" % (filename, self.currIcon["FileName"]))
         if ptrPixmap != None:
             self.instance.setPixmap(ptrPixmap)
 
     def decodeCallBack(self, picInfo=None):
-        printDBG( "decodeCallBack" )
+        printDBG("decodeCallBack")
         self.picload_conn = None
         self.decoding = False
         ptr = self.picload.getData()
         if '' != self.waitIcon.get('FileName', '') and self.waitIcon.get('FileName', '') != self.currIcon.get('FileName', ''):
             self.decodeCover(self.waitIcon['FileName'], self.waitIcon['CallBackFun'], self.waitIcon['Ident'])
         elif None != self.currIcon.get("CallBackFun", None):
-            self.currIcon["CallBackFun"](  {"Changed": True, "Pixmap": ptr, "FileName": self.currIcon['FileName'], "Ident": self.currIcon["Ident"]}  )
+            self.currIcon["CallBackFun"]({"Changed": True, "Pixmap": ptr, "FileName": self.currIcon['FileName'], "Ident": self.currIcon["Ident"]})
     # end decodeCallBack(self, picInfo=None):
         
 class Cover2(Pixmap):

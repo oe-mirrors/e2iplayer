@@ -59,7 +59,7 @@ class DDLMe(CBaseHostClass):
     
     def getRealUrl(self, url):
         if config.plugins.iptvplayer.ddlme_proxy.value == 'webproxy' and url != None and 'browse.php?u=' in url:
-            url = urllib.parse.unquote( self.cm.ph.getSearchGroups(url+'&', '''\?u=(http[^&]+?)&''')[0] )
+            url = urllib.parse.unquote(self.cm.ph.getSearchGroups(url+'&', '''\?u=(http[^&]+?)&''')[0])
         return url
     
     def getFullUrl(self, url, baseUrl=None):
@@ -145,8 +145,8 @@ class DDLMe(CBaseHostClass):
             params.update({'good_for_fav':False, 'category':type[1], 'title':title, 'url':url, 'desc':desc, 'f_type':type[0]})
             self.addDir(params)
         
-        MAIN_CAT_TAB = [{'category':'search',         'title': _('Search'),       'search_item':True       },
-                        {'category': 'search_history', 'title': _('Search history'),                        }]
+        MAIN_CAT_TAB = [{'category':'search',         'title': _('Search'),       'search_item':True},
+                        {'category': 'search_history', 'title': _('Search history'),}]
         self.listsTab(MAIN_CAT_TAB, cItem)
         
     def searchUrl(self, data):
@@ -286,7 +286,7 @@ class DDLMe(CBaseHostClass):
             desc = desc[::-1]
             
             params = dict(cItem)
-            params.update( {'good_for_fav': True, 'title':title, 'category':nextCategory, 'year':self.cleanHtmlStr(item[-1]), 'url':url, 'icon':icon, 'desc':'[/br]'.join(desc)} )
+            params.update({'good_for_fav': True, 'title':title, 'category':nextCategory, 'year':self.cleanHtmlStr(item[-1]), 'url':url, 'icon':icon, 'desc':'[/br]'.join(desc)})
             self.addDir(params)
         
     def listTagItems(self, cItem, nextCategory):
@@ -311,7 +311,7 @@ class DDLMe(CBaseHostClass):
             desc = self.cleanHtmlStr(self.cm.ph.getSearchGroups(item[-1], '''rel=['"]([^"^']+?)["']''', 1, True)[0]) + ' | ' + self.cleanHtmlStr(item[-1])
             
             params = dict(cItem)
-            params.update( {'good_for_fav': True, 'title':title, 'category':nextCategory, 'year':self.cleanHtmlStr(item[-1].split('#', 1)[0]), 'url':url, 'icon':icon, 'desc':desc} )
+            params.update({'good_for_fav': True, 'title':title, 'category':nextCategory, 'year':self.cleanHtmlStr(item[-1].split('#', 1)[0]), 'url':url, 'icon':icon, 'desc':desc})
             self.addDir(params)
 
         if nextPage and len(self.currList):
@@ -319,7 +319,7 @@ class DDLMe(CBaseHostClass):
                 tmp = int(self.cm.ph.getSearchGroups(nextPage, '''/([0-9]+)/?$''')[0])
                 if tmp > page:
                     params = dict(cItem)
-                    params.update( {'good_for_fav': False, 'title':_('Next page'), 'url':nextPage, 'page':tmp} )
+                    params.update({'good_for_fav': False, 'title':_('Next page'), 'url':nextPage, 'page':tmp})
                     self.addDir(params)
             except Exception:
                 printExc()
@@ -343,7 +343,7 @@ class DDLMe(CBaseHostClass):
                 tmp = int(self.cm.ph.getSearchGroups(nextPage, '''/([0-9]+)/?$''')[0])
                 if tmp > page:
                     params = dict(cItem)
-                    params.update( {'good_for_fav': False, 'title':_('Next page'), 'url':nextPage, 'page':tmp} )
+                    params.update({'good_for_fav': False, 'title':_('Next page'), 'url':nextPage, 'page':tmp})
                     self.addDir(params)
             except Exception:
                 printExc()
@@ -367,7 +367,7 @@ class DDLMe(CBaseHostClass):
         
         if nextPage:
             params = dict(cItem)
-            params.update( {'good_for_fav': False, 'title':_('Next page'), 'page':page + 1} )
+            params.update({'good_for_fav': False, 'title':_('Next page'), 'page':page + 1})
             self.addDir(params)
         
     def exploreItem(self, cItem):
@@ -493,7 +493,7 @@ class DDLMe(CBaseHostClass):
             title = self.cleanHtmlStr(item[0])
             desc = self.cleanHtmlStr(item[-1] + self.cm.ph.getSearchGroups(item[-1], '''rel=['"]([^"^']+?)["']''', 1, True)[0])
             params = dict(cItem)
-            params.update( {'good_for_fav': True, 'title':title, 'category':'explore_item', 'url':url, 'icon':icon, 'desc':desc} )
+            params.update({'good_for_fav': True, 'title':title, 'category':'explore_item', 'url':url, 'icon':icon, 'desc':desc})
             self.addDir(params)
         
     def getLinksForVideo(self, cItem):
@@ -527,7 +527,7 @@ class DDLMe(CBaseHostClass):
         title = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(data, ('<h', '>', 'itemHeading'), ('</h', '>'), False)[1].split('<b', 1)[0])
         icon = self.cm.ph.getSearchGroups(data, '''<img([^>]+?detailCover[^>]+?)>''')[0]
         icon = self.getFullIconUrl(self.cm.ph.getSearchGroups(icon, '''src=['"]([^"^']+?)["']''', 1, True)[0])
-        desc = self.cleanHtmlStr( self.cm.ph.getDataBeetwenNodes(data, ('<p', '>', 'detailDesc'), ('</p', '>'), False)[1] )
+        desc = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(data, ('<p', '>', 'detailDesc'), ('</p', '>'), False)[1])
 
         itemsList = []
         
@@ -609,7 +609,7 @@ class DDLMe(CBaseHostClass):
         printDBG(itemsList)
         printDBG(icon)
         
-        return [{'title':self.cleanHtmlStr( title ), 'text': self.cleanHtmlStr( desc ), 'images':[{'title':'', 'url':icon}], 'other_info':{'custom_items_list':itemsList}}]
+        return [{'title':self.cleanHtmlStr(title), 'text': self.cleanHtmlStr(desc), 'images':[{'title':'', 'url':icon}], 'other_info':{'custom_items_list':itemsList}}]
         
     def handleService(self, index, refresh=0, searchPattern='', searchType=''):
         printDBG('handleService start')
@@ -618,7 +618,7 @@ class DDLMe(CBaseHostClass):
 
         name     = self.currItem.get("name", '')
         category = self.currItem.get("category", '')
-        printDBG( "handleService: ||| name[%s], category[%s] " % (name, category) )
+        printDBG("handleService: ||| name[%s], category[%s] " % (name, category))
         self.currList = []
 
     #MAIN MENU

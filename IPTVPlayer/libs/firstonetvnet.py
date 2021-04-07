@@ -99,7 +99,7 @@ class FirstOneTvApi(CBaseHostClass):
                 params['header'] = MergeDicts(self.HTTP_HEADER, {'Referer':self.cm.meta['url']})
 
                 post_data = {'usrmail': self.login, 'password': self.password, 'login':''}
-                sts, data = self.cm.getPage( self.getFullUrl('/Register-Login'), params, post_data)
+                sts, data = self.cm.getPage(self.getFullUrl('/Register-Login'), params, post_data)
 
             if sts and '/Logout' in data:
                 printDBG('tryTologin OK')
@@ -274,7 +274,7 @@ class FirstOneTvApi(CBaseHostClass):
                     jscode = list(self.CACHE_VARS.get(streamJs, []))
                     jscode.append('try {print(eval("%s"));} catch (e) {print(e);}' % tmp['hiro'])
 
-                    ret = js_execute( '\n'.join(jscode) )
+                    ret = js_execute('\n'.join(jscode))
                     if 'identifier' in ret['data'] and 'undefined' in ret['data']:
                         identifier = ph.search(ret['data'], "'([^']+?)'")[0]
                         sts, tmp2 = self.cm.getPage(self.getFullUrl(streamJs, cUrl), self.http_params)
@@ -282,7 +282,7 @@ class FirstOneTvApi(CBaseHostClass):
                             if not streamJsData:
                                 jscode2 = ["top={'location':'%s'};self=top;document={'domain':'%s'};window=this;function eval(data){print(data);}" % (cUrl, self.cm.getBaseUrl(cUrl, True)), jscode1]
                                 jscode2.append(tmp2)
-                                ret = js_execute( '\n'.join(jscode2) )
+                                ret = js_execute('\n'.join(jscode2))
                                 if 0 != ret['code']:
                                     raise Exception('stream script failed')
                                 streamJsData = ret['data']

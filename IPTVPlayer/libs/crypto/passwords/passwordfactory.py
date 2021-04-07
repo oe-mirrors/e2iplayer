@@ -20,12 +20,12 @@ class PasswordFactory:
         Also used to recover passwords by using same pwSeed.
         If the seed is not saved, the password can not be recovered!!
     """
-    def __init__(self, pwFactorySeed, minSize=10, maxSize=10 ):
+    def __init__(self, pwFactorySeed, minSize=10, maxSize=10):
         """ An abstract class to create passwords """
         self._factorySeed = pwFactorySeed
         self.minSize = minSize
         self.maxSize = maxSize
-        self.rand = Random( self._factorySeed )
+        self.rand = Random(self._factorySeed)
 
     def getPassword(self, pwSeed):
         raise Exception("MUST be overloaded")
@@ -39,7 +39,7 @@ class PasswordFactory:
         total = 0
         for pwSize in range(self.minSize, self.maxSize+1):
             total = total + self.passwordsForSize(pwSize)
-        return powof2( total )
+        return powof2(total)
 
 def powof2(x):
     """ Convert x to a power of 2 """
@@ -50,16 +50,16 @@ class PasswordFactorySimple(PasswordFactory):
         Some characters have been removed to prevent confusion between similar shapes
         The removed characters are: (O,0,o), (l,1,I) , (u,v),(U,V)
     """
-    def __init__(self, pwFactorySeed, minSize=10, maxSize=10 ):
+    def __init__(self, pwFactorySeed, minSize=10, maxSize=10):
         """ Initialize password generation """
-        PasswordFactory.__init__(self, pwFactorySeed, minSize, maxSize )
+        PasswordFactory.__init__(self, pwFactorySeed, minSize, maxSize)
         self.lettersReduced    = 'abcdefghijkmnpqrstwxyzABCDEFGHJKLMNPQRSTWXYZ'
         self.digitsReduced     = '23456789'
         self.specialCharacters = '#%*+$'
 
     def getPassword(self, pwSeed):
         """ Create a new password from pwSeed. """
-        self.rand.seed( pwSeed + 'getPassword' + self._factorySeed )   # reset prf sequence
+        self.rand.seed(pwSeed + 'getPassword' + self._factorySeed)   # reset prf sequence
         self.passwordSize = self.rand.randrange(self.minSize, self.maxSize+1)
         password = ''
         for i in range(self.passwordSize):
@@ -80,10 +80,10 @@ class PasswordFactoryReadable_01(PasswordFactory):
         self.passwordSize = self.rand.randrange(self.minSize, self.maxSize+1)
         password = ''
         for i in range(self.passwordSize):
-            if i == 0 :
+            if i == 0:
                 password = password + self.rand.choice(consonants_01)
             else:
-                if password[-1] in consonants_01 :
+                if password[-1] in consonants_01:
                     password = password + self.rand.choice(vowels_01)
                 else:
                     password = password + self.rand.choice(consonants_01)

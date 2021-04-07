@@ -34,7 +34,7 @@ config.plugins.iptvplayer.tvjworg_default_format = ConfigSelection(default="720"
                                                                                                ("360", "360p"),
                                                                                                ("480", "480p"),
                                                                                                ("720", "720p"),
-                                                                                               ("99999999", "the best") ])
+                                                                                               ("99999999", "the best")])
 config.plugins.iptvplayer.tvjworg_use_df = ConfigYesNo(default=True)
 
 def GetConfigList():
@@ -261,7 +261,7 @@ class TVJWORG(CBaseHostClass):
             if 1 < len(urlTab):
                 error = False
                 max_bitrate = int(config.plugins.iptvplayer.tvjworg_default_format.value)
-                def __getLinkQuality( itemLink ):
+                def __getLinkQuality(itemLink):
                     try: 
                         return int(itemLink['name'][0:-1])
                     except Exception:
@@ -286,7 +286,7 @@ class TVJWORG(CBaseHostClass):
         category = self.currItem.get("category", '')
         mode     = self.currItem.get("mode", '')
         
-        printDBG( "handleService: |||||||||||||||||||||||||||||||||||| name[%s], category[%s] " % (name, category) )
+        printDBG("handleService: |||||||||||||||||||||||||||||||||||| name[%s], category[%s] " % (name, category))
         self.currList = []
         
     #MAIN MENU
@@ -365,7 +365,7 @@ class IPTVHost(CHostBase):
     def getSearchItemInx(self):
         try:
             list = self.host.getCurrList()
-            for i in range( len(list) ):
+            for i in range(len(list)):
                 if list[i]['category'] == 'search':
                     return i
         except Exception:
@@ -378,7 +378,7 @@ class IPTVHost(CHostBase):
             if 'history' == list[self.currIndex]['name']:
                 pattern = list[self.currIndex]['title']
                 search_type = list[self.currIndex]['search_type']
-                self.host.history.addHistoryItem( pattern, search_type)
+                self.host.history.addHistoryItem(pattern, search_type)
                 self.searchPattern = pattern
                 self.searchType = search_type
         except Exception:

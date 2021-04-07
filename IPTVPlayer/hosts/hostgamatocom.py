@@ -32,7 +32,7 @@ class GamatoMovies(CBaseHostClass):
         
         self.HEADER = {'User-Agent': 'Mozilla/5.0', 'Accept': 'text/html'}
         self.AJAX_HEADER = dict(self.HEADER)
-        self.AJAX_HEADER.update( {'X-Requested-With': 'XMLHttpRequest'} )
+        self.AJAX_HEADER.update({'X-Requested-With': 'XMLHttpRequest'})
         
         self.MAIN_URL = 'http://gamato-movies.com/'
         self.DEFAULT_ICON_URL = self.MAIN_URL + 'assets/uploads/images/aaw81QHKtm.png'
@@ -160,7 +160,7 @@ class GamatoMovies(CBaseHostClass):
         info = {}
         data = self.cm.ph.getDataBeetwenMarkers(data, '<div class="group series-info"', '</div>')[1]
         info['title'] = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(data, '<h1', '</h1>')[1])
-        info['icon']  = self.getFullUrl( self.cm.ph.getSearchGroups(data, 'src="([^"]+?)"')[0] )
+        info['icon']  = self.getFullUrl(self.cm.ph.getSearchGroups(data, 'src="([^"]+?)"')[0])
         info['desc']  = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(data, '<p class="description"', '</p>')[1].split('</strong>')[-1])
         info['full_desc']  = self.cleanHtmlStr(data.split('</h1>')[-1])
         keysMap = {'Gatunek:':'genre'}
@@ -358,7 +358,7 @@ class GamatoMovies(CBaseHostClass):
         category = self.currItem.get("category", '')
         mode     = self.currItem.get("mode", '')
         
-        printDBG( "handleService: |||||||||||||||||||||||||||||||||||| name[%s], category[%s] " % (name, category) )
+        printDBG("handleService: |||||||||||||||||||||||||||||||||||| name[%s], category[%s] " % (name, category))
         self.currList = []
         
     #MAIN MENU

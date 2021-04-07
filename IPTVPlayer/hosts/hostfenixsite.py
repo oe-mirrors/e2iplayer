@@ -61,8 +61,8 @@ class Fenixsite(CBaseHostClass):
                 self.addDir(MergeDicts(cItem, {'category':nextCategory, 'url':self.getFullUrl(url), 'title':title}))
 
         MAIN_CAT_TAB = [{'category':nextCategory,     'title': 'Anime',           'url':self.getFullUrl('/load/anime_serije/95')},
-                        {'category':'search',         'title': _('Search'),       'search_item':True       },
-                        {'category': 'search_history', 'title': _('Search history'),                        }]
+                        {'category':'search',         'title': _('Search'),       'search_item':True},
+                        {'category': 'search_history', 'title': _('Search history'),}]
         self.listsTab(MAIN_CAT_TAB, cItem)
 
     def listCategories(self, cItem, nextCategory):
@@ -154,12 +154,12 @@ class Fenixsite(CBaseHostClass):
         reIcon = re.compile(r'''<img[^>]+?src=(['"])([^>]*?\.(?:jpe?g|png|gif)(?:\?[^\1]*?)?)(?:\1)''', re.I)
         data = ph.findall(data, ('<div', '>', 'entry'), '</ul>')
         for item in data:
-            url = self.getFullUrl( ph.search(item, ph.A_HREF_URI_RE)[1] )
-            icon = self.getFullIconUrl( ph.search(item, reIcon)[1] )
+            url = self.getFullUrl(ph.search(item, ph.A_HREF_URI_RE)[1])
+            icon = self.getFullIconUrl(ph.search(item, reIcon)[1])
             title = self.cleanHtmlStr(ph.find(item, ('<h', '>'), '</h', flags=0)[1])
 
             desc = []
-            tmp = [ph.find(item, ('<i', '>', 'eye'), '</span', flags=0)[1], ph.find(item, ('<i', '>', 'comments'), '</span', flags=0)[1], ph.find(item, ('<i', '>', 'comments'), '</span', flags=0)[1] ]
+            tmp = [ph.find(item, ('<i', '>', 'eye'), '</span', flags=0)[1], ph.find(item, ('<i', '>', 'comments'), '</span', flags=0)[1], ph.find(item, ('<i', '>', 'comments'), '</span', flags=0)[1]]
             for t in tmp:
                 t = self.cleanHtmlStr(t)
                 if t:
@@ -256,7 +256,7 @@ class Fenixsite(CBaseHostClass):
                 idx1 = item.find('{')
                 idx2 = item.rfind('}')
                 if idx1 >=0 and idx2 >= 0:
-                    ret = js_execute( 'print(JSON.stringify(%s));' % item[idx1:idx2+1] )
+                    ret = js_execute('print(JSON.stringify(%s));' % item[idx1:idx2+1])
                     if ret['sts'] and 0 == ret['code']:
                         try:
                             item = json_loads(ret['data'])
@@ -296,7 +296,7 @@ class Fenixsite(CBaseHostClass):
             subTracks = meta.get('external_sub_tracks')
             if subTracks:
                 for item in linksTab:
-                    item['url'] = strwithmeta(item['url'], MergeDicts(meta, {'external_sub_tracks':subTracks + strwithmeta(item['url']).meta.get('external_sub_tracks', [])}) )
+                    item['url'] = strwithmeta(item['url'], MergeDicts(meta, {'external_sub_tracks':subTracks + strwithmeta(item['url']).meta.get('external_sub_tracks', [])}))
         return linksTab
 
     def getArticleContent(self, cItem, data=None):
@@ -343,7 +343,7 @@ class Fenixsite(CBaseHostClass):
         if desc == '':
             desc = cItem.get('desc', '')
         
-        return [{'title':self.cleanHtmlStr( title ), 'text': self.cleanHtmlStr( desc ), 'images':[{'title':'', 'url':self.getFullUrl(icon)}], 'other_info':{'custom_items_list':itemsList}}]
+        return [{'title':self.cleanHtmlStr(title), 'text': self.cleanHtmlStr(desc), 'images':[{'title':'', 'url':self.getFullUrl(icon)}], 'other_info':{'custom_items_list':itemsList}}]
 
     def handleService(self, index, refresh=0, searchPattern='', searchType=''):
         printDBG('handleService start')
@@ -352,7 +352,7 @@ class Fenixsite(CBaseHostClass):
 
         name     = self.currItem.get("name", '')
         category = self.currItem.get("category", '')
-        printDBG( "handleService: ||| name[%s], category[%s] " % (name, category) )
+        printDBG("handleService: ||| name[%s], category[%s] " % (name, category))
         self.currList = []
 
     #MAIN MENU

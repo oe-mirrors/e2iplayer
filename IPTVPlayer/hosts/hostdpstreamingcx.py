@@ -38,8 +38,8 @@ class StreamingSeriesWatch(CBaseHostClass):
         self.DEFAULT_ICON_URL = 'http://reviewme.co.za/wp-content/uploads/2013/06/lista_series_7327_622x.jpg'
         self.MAIN_CAT_TAB = [{'category':'list_items',      'title':'Nouveaux Films',   'url':self.getMainUrl()},
                              {'category':'sort',            'title':'Parcourir',        'url':self.getFullUrl('/parcourir/')},
-                             {'category':'search',          'title': _('Search'), 'search_item':True },
-                             {'category': 'search_history',  'title': _('Search history'),            } ]
+                             {'category':'search',          'title': _('Search'), 'search_item':True},
+                             {'category': 'search_history',  'title': _('Search history'),}]
                         
         self.defaultParams = {'header':self.HTTP_HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
         
@@ -104,7 +104,7 @@ class StreamingSeriesWatch(CBaseHostClass):
                 t = self.cleanHtmlStr(t)
                 if t != '':
                     desc.append(t)
-            season = self.cm.ph.getSearchGroups(url, 'saison-([0-9]+?)-' )[0]
+            season = self.cm.ph.getSearchGroups(url, 'saison-([0-9]+?)-')[0]
             params = dict(cItem)
             params.update({'good_for_fav': True, 'category':category, 'url':url, 'title':title, 'desc':'[/br]'.join(desc), 'icon':icon, 'season':season})
             self.addDir(params)
@@ -261,7 +261,7 @@ class StreamingSeriesWatch(CBaseHostClass):
         otherInfo = {}
         try:
             data = byteify(json.loads(data))
-            icon = self._viaProxy( self.getFullUrl(data['poster']) )
+            icon = self._viaProxy(self.getFullUrl(data['poster']))
             title = data['title']
             desc = data['overview']
             otherInfo['actors'] = data['actors']
@@ -276,7 +276,7 @@ class StreamingSeriesWatch(CBaseHostClass):
         except Exception:
             printExc()
         
-        return [{'title':self.cleanHtmlStr( title ), 'text': self.cleanHtmlStr( desc ), 'images':[{'title':'', 'url':icon}], 'other_info':otherInfo}]
+        return [{'title':self.cleanHtmlStr(title), 'text': self.cleanHtmlStr(desc), 'images':[{'title':'', 'url':icon}], 'other_info':otherInfo}]
         
     def handleService(self, index, refresh=0, searchPattern='', searchType=''):
         printDBG('handleService start')
@@ -287,7 +287,7 @@ class StreamingSeriesWatch(CBaseHostClass):
         category = self.currItem.get("category", '')
         mode     = self.currItem.get("mode", '')
         
-        printDBG( "handleService: |||||||||||||||||||||||||||||||||||| name[%s], category[%s] " % (name, category) )
+        printDBG("handleService: |||||||||||||||||||||||||||||||||||| name[%s], category[%s] " % (name, category))
         self.currList = []
         
     #MAIN MENU

@@ -31,7 +31,7 @@ class WorldFree4u(CBaseHostClass):
         self.HEADER = {'User-Agent': self.USER_AGENT, 'DNT':'1', 'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8', 'Accept-Language':'pl,en-US;q=0.7,en;q=0.3', 'Accept-Encoding':'gzip, deflate'}
         
         self.AJAX_HEADER = dict(self.HEADER)
-        self.AJAX_HEADER.update( {'X-Requested-With': 'XMLHttpRequest'} )
+        self.AJAX_HEADER.update({'X-Requested-With': 'XMLHttpRequest'})
         self.MAIN_URL = None
         self.cacheFilters = {}
         self.cacheFiltersKey = []
@@ -41,10 +41,10 @@ class WorldFree4u(CBaseHostClass):
         if addParams == {}:
             addParams = dict(self.defaultParams)
             
-        self.MAIN_CAT_TAB = [{'category':'list_items', 'title': _('LATEST'),    'url':self.getFullUrl('/seeAll/latestMovies/') },
-                             {'category':'list_items', 'title': _('RECENT'),    'url':self.getFullUrl('/seeAll/recentAdded/') },
-                             {'category': 'search',          'title': _('Search'), 'search_item': True,                        },
-                             {'category': 'search_history',  'title': _('Search history'),                                    } 
+        self.MAIN_CAT_TAB = [{'category':'list_items', 'title': _('LATEST'),    'url':self.getFullUrl('/seeAll/latestMovies/')},
+                             {'category':'list_items', 'title': _('RECENT'),    'url':self.getFullUrl('/seeAll/recentAdded/')},
+                             {'category': 'search',          'title': _('Search'), 'search_item': True,},
+                             {'category': 'search_history',  'title': _('Search history'),} 
                             ]
         
         return self.cm.getPage(baseUrl, addParams, post_data)
@@ -120,8 +120,8 @@ class WorldFree4u(CBaseHostClass):
         
         data = self.cm.ph.getAllItemsBeetwenNodes(data, ('<div', '>', 'item'), ('</div', '>'))
         for item in data:
-            url  = self.getFullUrl( self.cm.ph.getSearchGroups(item, '''href=['"]([^"^']+?)['"]''')[0] )
-            icon = self.getFullIconUrl( self.cm.ph.getSearchGroups(item, '''src=['"]([^"^']+?)['"]''')[0] )
+            url  = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''href=['"]([^"^']+?)['"]''')[0])
+            icon = self.getFullIconUrl(self.cm.ph.getSearchGroups(item, '''src=['"]([^"^']+?)['"]''')[0])
             title = self.cleanHtmlStr(item)
             
             params = {'good_for_fav': True, 'title':title, 'url':url, 'icon':icon}
@@ -221,10 +221,10 @@ class WorldFree4u(CBaseHostClass):
         if not sts:
             return retTab
         
-        title = self.cleanHtmlStr( self.cm.ph.getDataBeetwenMarkers(data, '<h3>', '</h3>')[1] )
-        desc  = self.cleanHtmlStr( self.cm.ph.getDataBeetwenReMarkers(data, re.compile('''<div[^>]+?class=['"]desc['"][^>]*?>'''), re.compile('''</div>'''))[1] )
+        title = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(data, '<h3>', '</h3>')[1])
+        desc  = self.cleanHtmlStr(self.cm.ph.getDataBeetwenReMarkers(data, re.compile('''<div[^>]+?class=['"]desc['"][^>]*?>'''), re.compile('''</div>'''))[1])
         icon  = self.cm.ph.getDataBeetwenMarkers(data, 'mvic-thumb', '>')[1]
-        icon  = self.getFullUrl( self.cm.ph.getSearchGroups(icon, '''url\(\s*['"]([^'^"]+?\.jpg[^'^"]*?)['"]''', 1, True)[0] )
+        icon  = self.getFullUrl(self.cm.ph.getSearchGroups(icon, '''url\(\s*['"]([^'^"]+?\.jpg[^'^"]*?)['"]''', 1, True)[0])
         
         if title == '':
             title = cItem['title']
@@ -249,8 +249,8 @@ class WorldFree4u(CBaseHostClass):
             item = item.split('</strong>')
             if len(item) < 2:
                 continue
-            key = self.cleanHtmlStr( item[0] ).replace(':', '').replace(' ', '').strip().lower()
-            val = self.cleanHtmlStr( item[1] )
+            key = self.cleanHtmlStr(item[0]).replace(':', '').replace(' ', '').strip().lower()
+            val = self.cleanHtmlStr(item[1])
             if key == 'IMDb':
                 val += ' IMDb' 
             if key in descTabMap:
@@ -259,7 +259,7 @@ class WorldFree4u(CBaseHostClass):
                 except Exception:
                     continue
         
-        return [{'title':self.cleanHtmlStr( title ), 'text': self.cleanHtmlStr( desc ), 'images':[{'title':'', 'url':self.getFullUrl(icon)}], 'other_info':otherInfo}]
+        return [{'title':self.cleanHtmlStr(title), 'text': self.cleanHtmlStr(desc), 'images':[{'title':'', 'url':self.getFullUrl(icon)}], 'other_info':otherInfo}]
     
     def handleService(self, index, refresh=0, searchPattern='', searchType=''):
         printDBG('handleService start')
@@ -273,7 +273,7 @@ class WorldFree4u(CBaseHostClass):
         category = self.currItem.get("category", '')
         mode     = self.currItem.get("mode", '')
         
-        printDBG( "handleService: |||||||||||||||||||||||||||||||||||| name[%s], category[%s] " % (name, category) )
+        printDBG("handleService: |||||||||||||||||||||||||||||||||||| name[%s], category[%s] " % (name, category))
         self.currList = []
         
     #MAIN MENU

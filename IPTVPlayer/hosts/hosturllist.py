@@ -47,7 +47,7 @@ class Urllist(CBaseHostClass):
         path = config.plugins.iptvplayer.Sciezkaurllist.value + '/'
         
         self.MAIN_GROUPED_TAB = [{'category': 'all',                            'title': _("All in one"),                'desc': _("Links from all files without categories"),                              'icon':'https://mikeharwood.files.wordpress.com/2011/01/all-in-one-logo-on-blue.jpg'}]
-        self.MAIN_GROUPED_TAB.extend( [{'category': Urllist.URLLIST_FILE,       'title': _("Videos"),                    'desc': _("Links from the file %s") % normpath(path + 'urllist.txt'),              'icon':'https://st2.depositphotos.com/3000465/12281/v/950/depositphotos_122812390-stock-illustration-video-play-sign-with-letter.jpg'},
+        self.MAIN_GROUPED_TAB.extend([{'category': Urllist.URLLIST_FILE,       'title': _("Videos"),                    'desc': _("Links from the file %s") % normpath(path + 'urllist.txt'),              'icon':'https://st2.depositphotos.com/3000465/12281/v/950/depositphotos_122812390-stock-illustration-video-play-sign-with-letter.jpg'},
                                        {'category': Urllist.URRLIST_STREAMS,    'title': _("Live streams"),              'desc': _("Links from the file %s") % normpath(path + 'urllist.stream'),           'icon':'http://asiamh.ru.images.1c-bitrix-cdn.ru/images/media_logo.jpg?136879146733721'},
                                        {'category': Urllist.URRLIST_USER,       'title': _("User files"),                'desc': _("Links from the file %s") % normpath(path + 'urllist.user'),             'icon':'http://kinovesti.ru/uploads/posts/2014-12/1419918660_1404722920_02.jpg'}])
         CBaseHostClass.__init__(self)
@@ -118,9 +118,9 @@ class Urllist(CBaseHostClass):
         
         printDBG("PROTOCOL [%s] " % protocol)
         
-        urlSupport = self.up.checkHostSupport( uri )
+        urlSupport = self.up.checkHostSupport(uri)
         if 1 == urlSupport:
-            retTab = self.up.getVideoLinkExt( uri )
+            retTab = self.up.getVideoLinkExt(uri)
             videoUrls.extend(retTab)
         elif 0 == urlSupport and self._uriIsValid(uri):
             if protocol == 'm3u8':
@@ -141,7 +141,7 @@ class Urllist(CBaseHostClass):
         CBaseHostClass.handleService(self, index, refresh, searchPattern, searchType)
         name     = self.currItem.get("name", None)
         category = self.currItem.get("category", '')
-        printDBG( "Urllist.handleService: ---------> name[%s], category[%s] " % (name, category) )
+        printDBG("Urllist.handleService: ---------> name[%s], category[%s] " % (name, category))
         self.currList = []
         
         if None == name:
@@ -173,11 +173,11 @@ class IPTVHost(CHostBase):
     def getLinksForVideo(self, Index=0, selItem=None):
         listLen = len(self.host.currList)
         if listLen < Index and listLen > 0:
-            printDBG( "ERROR getLinksForVideo - current list is to short len: %d, Index: %d" % (listLen, Index) )
+            printDBG("ERROR getLinksForVideo - current list is to short len: %d, Index: %d" % (listLen, Index))
             return RetHost(RetHost.ERROR, value=[])
         
         if self.host.currList[Index]["type"] != 'video':
-            printDBG( "ERROR getLinksForVideo - current item has wrong type" )
+            printDBG("ERROR getLinksForVideo - current item has wrong type")
             return RetHost(RetHost.ERROR, value=[])
 
         retlist = []
@@ -239,7 +239,7 @@ class IPTVHost(CHostBase):
         # Find 'Wyszukaj' item
         try:
             list = self.host.getCurrList()
-            for i in range( len(list) ):
+            for i in range(len(list)):
                 if list[i]['category'] == 'Wyszukaj':
                     return i
         except Exception:
@@ -252,7 +252,7 @@ class IPTVHost(CHostBase):
             if 'history' == list[self.currIndex]['name']:
                 pattern = list[self.currIndex]['title']
                 search_type = list[self.currIndex]['search_type']
-                self.host.history.addHistoryItem( pattern, search_type)
+                self.host.history.addHistoryItem(pattern, search_type)
                 self.searchPattern = pattern
                 self.searchType = search_type
         except Exception:

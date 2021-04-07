@@ -46,7 +46,7 @@ class NuteczkiEU(CBaseHostClass):
         self.USER_AGENT = 'Mozilla/5.0'
         self.HEADER = {'User-Agent': self.USER_AGENT, 'Accept': 'text/html'}
         self.AJAX_HEADER = dict(self.HEADER)
-        self.AJAX_HEADER.update( {'X-Requested-With':'XMLHttpRequest', 'Content-Type':'application/x-www-form-urlencoded; charset=UTF-8'} )
+        self.AJAX_HEADER.update({'X-Requested-With':'XMLHttpRequest', 'Content-Type':'application/x-www-form-urlencoded; charset=UTF-8'})
         
         self.MAIN_URL = 'https://nuteczki.eu/'
         self.DEFAULT_ICON_URL = 'https://i.pinimg.com/736x/2d/07/83/2d0783d156a48860691667dadd8de458--note-music-music-wallpaper.jpg'
@@ -90,10 +90,10 @@ class NuteczkiEU(CBaseHostClass):
                 printExc()
         
         MAIN_CAT_TAB = [
-                        {'category':'top10',           'title': _('TOP 10'),      'url':self.getFullUrl('/top10/') },
+                        {'category':'top10',           'title': _('TOP 10'),      'url':self.getFullUrl('/top10/')},
                         {'category':'filters',         'title': _('Filters'),     'url':self.getFullUrl('/muzyka/'), 'post_data':{}},
                         {'category':'search',          'title': _('Search'), 'search_item':True},
-                        {'category':'search_history',  'title': _('Search history')} ]
+                        {'category':'search_history',  'title': _('Search history')}]
         self.listsTab(MAIN_CAT_TAB, cItem)
         
        
@@ -163,17 +163,17 @@ class NuteczkiEU(CBaseHostClass):
                 items = []
                 tmp = self.cm.ph.rgetAllItemsBeetwenNodes(subData[subIdx+1], ('</div', '>'), ('<div', '>', 'row'), False)
                 for item in tmp:
-                    icon = self.getFullIconUrl( self.cm.ph.getSearchGroups(item, '''<img[^>]+?src=['"]([^"^']+?)['"]''')[0] )
+                    icon = self.getFullIconUrl(self.cm.ph.getSearchGroups(item, '''<img[^>]+?src=['"]([^"^']+?)['"]''')[0])
                     url = self.cm.ph.getSearchGroups(item, '''href=['"]([^"^']+?)['"]''')[0]
                     if url == '#': 
                         url = self.cm.ph.getSearchGroups(item, '''(<div[^>]+?getPlayer[^>]+?>)''')[0]
                         url = self.cm.ph.getSearchGroups(url, '''\sid=['"]([^"^']+?)['"]''')[0]
                         if url != '':
                             url = '/getPlayer.php?id=' + url
-                    url = self.getFullUrl( url )
+                    url = self.getFullUrl(url)
                     
-                    title = self.cleanHtmlStr( self.cm.ph.getSearchGroups(item, '''alt="([^"]+?)"''')[0] )
-                    desc = self.cleanHtmlStr( self.cm.ph.getDataBeetwenNodes(item, ('<div', '>', 'news-meta'), ('</div', '>'), False)[1] )
+                    title = self.cleanHtmlStr(self.cm.ph.getSearchGroups(item, '''alt="([^"]+?)"''')[0])
+                    desc = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(item, ('<div', '>', 'news-meta'), ('</div', '>'), False)[1])
                     params = dict(cItem)
                     params.update({'good_for_fav': True, 'title':title, 'url':url, 'desc':desc, 'icon':icon})
                     if url != '':
@@ -270,14 +270,14 @@ class NuteczkiEU(CBaseHostClass):
         data = self.cm.ph.getDataBeetwenNodes(data, ('<div', '>', 'dle-content'), ('<div', '>', 'clearfix'), False)[1]
         data = self.cm.ph.rgetAllItemsBeetwenNodes(data, ('</div', '>'), ('<div', '>', 'row'), False)
         for item in data:
-            icon = self.getFullIconUrl( self.cm.ph.getSearchGroups(item, '''<img[^>]+?src=['"]([^"^']+?)['"]''')[0] )
+            icon = self.getFullIconUrl(self.cm.ph.getSearchGroups(item, '''<img[^>]+?src=['"]([^"^']+?)['"]''')[0])
 
             tmp = self.cm.ph.getDataBeetwenNodes(item, ('<h2', '>', 'news-title'), ('</h2', '>'))[1]
             if tmp == '': 
                 tmp = self.cm.ph.getDataBeetwenNodes(item, ('<div', '>', 'short-result'), ('</div', '>'))[1]
-                title = self.cleanHtmlStr( self.cm.ph.getSearchGroups(tmp, '''alt="([^"]+?)"''')[0] )
+                title = self.cleanHtmlStr(self.cm.ph.getSearchGroups(tmp, '''alt="([^"]+?)"''')[0])
             else:
-                title = self.cleanHtmlStr( tmp )
+                title = self.cleanHtmlStr(tmp)
             
             url = self.cm.ph.getSearchGroups(tmp, '''href=['"]([^"^']+?)['"]''')[0]
             if url == '#': 
@@ -285,7 +285,7 @@ class NuteczkiEU(CBaseHostClass):
                 url = self.cm.ph.getSearchGroups(url, '''\sid=['"]([^"^']+?)['"]''')[0]
                 if url != '':
                     url = '/getPlayer.php?id=' + url
-            url = self.getFullUrl( url )
+            url = self.getFullUrl(url)
             
             desc = []
             tmp = self.cm.ph.getDataBeetwenNodes(item, ('<div', '>', 'news-meta'), ('</div', '>'))[1]
@@ -452,7 +452,7 @@ class NuteczkiEU(CBaseHostClass):
         category = self.currItem.get("category", '')
         mode     = self.currItem.get("mode", '')
         
-        printDBG( "handleService: || name[%s], category[%s] " % (name, category) )
+        printDBG("handleService: || name[%s], category[%s] " % (name, category))
         self.currList = []
         self.currItem = dict(self.currItem)
         self.currItem.pop('good_for_fav', None)

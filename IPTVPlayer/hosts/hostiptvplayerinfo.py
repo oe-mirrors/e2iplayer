@@ -41,12 +41,12 @@ class IPTVPlayerInfo(CBaseHostClass):
         self.USER_AGENT = 'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:40.0) Gecko/20100101 Firefox/40.0'
         self.HEADER = {'User-Agent': self.USER_AGENT, 'DNT':'1', 'Accept': 'text/html'}
         self.AJAX_HEADER = dict(self.HEADER)
-        self.AJAX_HEADER.update( {'X-Requested-With': 'XMLHttpRequest', 'Accept': 'application/json, text/javascript, */*; q=0.01', 'Accept-Encoding':'gzip, deflate'} )
+        self.AJAX_HEADER.update({'X-Requested-With': 'XMLHttpRequest', 'Accept': 'application/json, text/javascript, */*; q=0.01', 'Accept-Encoding':'gzip, deflate'})
         self.defaultParams = {'header':self.AJAX_HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
         self.MAIN_URL = 'https://gitlab.com/'
         self.MAIN_CAT_TAB = [
-                             {'category': 'commits',        'title': _('Commits'),       },
-                             {'category': 'tutorial',       'title': _('Tutorials'),     } 
+                             {'category': 'commits',        'title': _('Commits'),},
+                             {'category': 'tutorial',       'title': _('Tutorials'),} 
                             ]
                             
         self.TUTORIALS_TAB = [{'title': _('Services management'),                                     'url':'https://www.youtube.com/watch?v=pG-_csh2TDk'},
@@ -136,7 +136,7 @@ class IPTVPlayerInfo(CBaseHostClass):
         category = self.currItem.get("category", '')
         mode     = self.currItem.get("mode", '')
         
-        printDBG( "handleService: |||||||||||||||||||||||||||||||||||| name[%s], category[%s] " % (name, category) )
+        printDBG("handleService: |||||||||||||||||||||||||||||||||||| name[%s], category[%s] " % (name, category))
         self.currList = []
         
     #MAIN MENU

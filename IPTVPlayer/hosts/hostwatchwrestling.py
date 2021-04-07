@@ -45,20 +45,20 @@ class Watchwrestling(CBaseHostClass):
         self.SRCH_URL = self.getFullUrl('index.php?s=')
         self.DEFAULT_ICON_URL = 'http://watchwrestling.to/wp-content/uploads/2014/11/ww_fb.png'
         
-        self.MAIN_CAT_TAB = [{'category':'categories',    'title': _('Categories'),   'url':self.getMainUrl(),                              'm1':'Categories</h3>'   },
+        self.MAIN_CAT_TAB = [{'category':'categories',    'title': _('Categories'),   'url':self.getMainUrl(),                              'm1':'Categories</h3>'},
                              {'category':'categories',    'title': _('Monthly'),      'url':self.getFullUrl('video/watch-wwe-raw-101915/'), 'm1':'Monthly Posts</h3>'},
-                             {'category':'live',          'title': _('LIVE 24/7'),    'url':self.getFullUrl('watch-wwe-network-live/')                               },
-                             {'category':'categories',    'title': _('WWE'),          'url':self.getFullUrl('category/wwe/'),               'm1':'>WWE</a>'          },
-                             {'category':'list_filters',  'title': _('WWE Network'),  'url':self.getFullUrl('category/wwenetwork/')                                  },
-                             {'category':'categories',    'title': _('TNA'),          'url':self.getFullUrl('category/tna/'),               'm1':'>TNA</a>'          },
-                             {'category':'categories',    'title': _('Weekly Indys'), 'url':self.getFullUrl('category/weekly-indys/'),      'm1':'>Weekly Indys</a>' },
-                             {'category':'list_filters',  'title': _('NJPW'),         'url':self.getFullUrl('category/njpw/')                                        },
-                             {'category':'categories',    'title': _('Other Sports'), 'url':self.getFullUrl('category/other-sports/'),      'm1':'>Other Sports</a>' },
-                             {'category':'list_filters',  'title': _('RAW'),          'url':self.getFullUrl('category/wwe/raw/')                                     },
-                             {'category':'list_filters',  'title': _('Smackdown'),    'url':self.getFullUrl('category/wwe/smackdown/')                               },
-                             {'category':'list_filters',  'title': _('Total Divas'),  'url':self.getFullUrl('category/wwe/totaldivas/')                              },
-                             {'category':'list_filters',  'title': _('NXT'),          'url':self.getFullUrl('category/wwe/nxt/')                                     },
-                             {'category':'list_filters',  'title': _('Archives'),     'url':self.getFullUrl('category/archives/')                                    },
+                             {'category':'live',          'title': _('LIVE 24/7'),    'url':self.getFullUrl('watch-wwe-network-live/')},
+                             {'category':'categories',    'title': _('WWE'),          'url':self.getFullUrl('category/wwe/'),               'm1':'>WWE</a>'},
+                             {'category':'list_filters',  'title': _('WWE Network'),  'url':self.getFullUrl('category/wwenetwork/')},
+                             {'category':'categories',    'title': _('TNA'),          'url':self.getFullUrl('category/tna/'),               'm1':'>TNA</a>'},
+                             {'category':'categories',    'title': _('Weekly Indys'), 'url':self.getFullUrl('category/weekly-indys/'),      'm1':'>Weekly Indys</a>'},
+                             {'category':'list_filters',  'title': _('NJPW'),         'url':self.getFullUrl('category/njpw/')},
+                             {'category':'categories',    'title': _('Other Sports'), 'url':self.getFullUrl('category/other-sports/'),      'm1':'>Other Sports</a>'},
+                             {'category':'list_filters',  'title': _('RAW'),          'url':self.getFullUrl('category/wwe/raw/')},
+                             {'category':'list_filters',  'title': _('Smackdown'),    'url':self.getFullUrl('category/wwe/smackdown/')},
+                             {'category':'list_filters',  'title': _('Total Divas'),  'url':self.getFullUrl('category/wwe/totaldivas/')},
+                             {'category':'list_filters',  'title': _('NXT'),          'url':self.getFullUrl('category/wwe/nxt/')},
+                             {'category':'list_filters',  'title': _('Archives'),     'url':self.getFullUrl('category/archives/')},
                              
                              {'category':'search',        'title': _('Search'),       'search_item':True},
                              {'category':'search_history','title': _('Search history')} 
@@ -137,12 +137,12 @@ class Watchwrestling(CBaseHostClass):
             title  = self.cm.ph.getSearchGroups(item, 'title="([^"]+?)"')[0]
             desc   = tmp[-1]
             params = dict(cItem)
-            params.update( {'good_for_fav': True, 'category':nextCategory, 'title': self.cleanHtmlStr( title ), 'url':self.getFullUrl(url), 'desc': self.cleanHtmlStr( desc ), 'icon':self.getFullUrl(icon)} )
+            params.update({'good_for_fav': True, 'category':nextCategory, 'title': self.cleanHtmlStr(title), 'url':self.getFullUrl(url), 'desc': self.cleanHtmlStr(desc), 'icon':self.getFullUrl(icon)})
             self.addDir(params)
         
         if nextPage:
             params = dict(cItem)
-            params.update( {'good_for_fav': False, 'title':_('Next page'), 'page':page+1} )
+            params.update({'good_for_fav': False, 'title':_('Next page'), 'page':page+1})
             self.addDir(params)
             
     def listServers(self, cItem, nextCategory):
@@ -167,7 +167,7 @@ class Watchwrestling(CBaseHostClass):
                 partsTab.append({'title':cItem['title'] + '[%s]' % part[1], 'url':part[0], 'Referer':cItem['url']})
             if len(partsTab):
                 params = dict(cItem)
-                params.update( {'good_for_fav': False, 'category':nextCategory, 'title':serverName, 'part_idx':len(self.serversCache)} )
+                params.update({'good_for_fav': False, 'category':nextCategory, 'title':serverName, 'part_idx':len(self.serversCache)})
                 self.addDir(params)
                 self.serversCache.append(partsTab)
         
@@ -272,7 +272,7 @@ class Watchwrestling(CBaseHostClass):
 
         name     = self.currItem.get("name", '')
         category = self.currItem.get("category", '')
-        printDBG( "handleService: |||||||||||||||||||||||||||||||||||| name[%s], category[%s] " % (name, category) )
+        printDBG("handleService: |||||||||||||||||||||||||||||||||||| name[%s], category[%s] " % (name, category))
         self.currList = []
         
     #MAIN MENU

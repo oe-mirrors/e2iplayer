@@ -11,7 +11,7 @@ from ..hash.hash import Hash
 
 class SHA1(Hash):
 
-    def __init__( self ):
+    def __init__(self):
         self.name = 'SHA1'
         self.blocksize      = 1   # single octets can be hashed by padding to raw block size
         self.raw_block_size = 64  # SHA1 operates on 512 bit / 64 byte blocks

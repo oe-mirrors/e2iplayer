@@ -32,16 +32,16 @@ class OkGoals(CBaseHostClass):
         
         self.HEADER = {'User-Agent': 'Mozilla/5.0', 'Accept': 'text/html'}
         self.AJAX_HEADER = dict(self.HEADER)
-        self.AJAX_HEADER.update( {'X-Requested-With': 'XMLHttpRequest'} )
+        self.AJAX_HEADER.update({'X-Requested-With': 'XMLHttpRequest'})
         self.defaultParams = {'header':self.HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
         
         self.MAIN_URL = 'http://www.okgoals.com/'
         self.DEFAULT_ICON_URL = self.getFullUrl('/okgoals_logo.jpg')
         
-        self.MAIN_CAT_TAB = [{'category':'list_items',        'title': _('Main'),       'url':self.getFullUrl('index.php') },
-                             {'category':'list_categories',   'title': _('Categories'), 'url':self.getMainUrl()            },
-                             {'category': 'search',            'title': _('Search'),     'search_item': True,                },
-                             {'category': 'search_history',    'title': _('Search history'),                                },
+        self.MAIN_CAT_TAB = [{'category':'list_items',        'title': _('Main'),       'url':self.getFullUrl('index.php')},
+                             {'category':'list_categories',   'title': _('Categories'), 'url':self.getMainUrl()},
+                             {'category': 'search',            'title': _('Search'),     'search_item': True,},
+                             {'category': 'search_history',    'title': _('Search history'),},
                             ]
     def getFullUrl(self, url):
         if url.startswith('//'):
@@ -81,7 +81,7 @@ class OkGoals(CBaseHostClass):
                 continue
             icon  = self.getBiggerImage(self.cm.ph.getSearchGroups(item, '''src=['"]([^'^"]+?)['"]''')[0])
             title = self.cleanHtmlStr(item)
-            title = _( title.capitalize() )
+            title = _(title.capitalize())
             params = {'good_for_fav': True, 'category':nextCategory, 'title':title, 'url':url, 'icon':icon}
             self.addDir(params)
         
@@ -237,7 +237,7 @@ class OkGoals(CBaseHostClass):
         category = self.currItem.get("category", '')
         mode     = self.currItem.get("mode", '')
         
-        printDBG( "handleService: |||||||||||||||||||||||||||||||||||| name[%s], category[%s] " % (name, category) )
+        printDBG("handleService: |||||||||||||||||||||||||||||||||||| name[%s], category[%s] " % (name, category))
         self.currList = []
         
     #MAIN MENU

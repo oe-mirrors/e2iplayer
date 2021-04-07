@@ -73,7 +73,7 @@ class ExtPlayerCommandsDispatcher():
             self.SEEK_SPEED_MAP.append(1.0 / float(item))
         self.SEEK_SPEED_MAP.append(0)
         for item in config.seek.speeds_forward.value:
-            self.SEEK_SPEED_MAP.append( item )
+            self.SEEK_SPEED_MAP.append(item)
         self.speedIdx = self.SEEK_SPEED_MAP.index(0)
         
     def doAddTriggers(self, arg): self.extPlayerSendCommand('ADD_TRIGGERS', arg)
@@ -254,7 +254,7 @@ class IPTVExtMoviePlayer(Screen):
         else:
             clockWidget = ''
         
-        skin =  skin % ( getDesktop(0).size().width(), 
+        skin =  skin % (getDesktop(0).size().width(), 
                          getDesktop(0).size().height(),
                          GetIPTVDMImgDir(playbackBannerFile),
                          GetIPTVDMImgDir("playback_progress.png"),
@@ -422,7 +422,7 @@ class IPTVExtMoviePlayer(Screen):
         self['subSynchroLabel']        = Label("0.0s")
         self['subSynchroIcon']         = Cover3() 
         try:
-            self.subHandler['synchro']['icon'] = LoadPixmap( GetIPTVDMImgDir("sub_synchro.png") )
+            self.subHandler['synchro']['icon'] = LoadPixmap(GetIPTVDMImgDir("sub_synchro.png"))
         except Exception:
             printExc()
         self.hideSubSynchroControl()
@@ -436,13 +436,13 @@ class IPTVExtMoviePlayer(Screen):
         self.defAudioOptions  = {'ac3':None, 'aac':None}
         
         # meta data
-        self.metaHandler = IPTVMovieMetaDataHandler( self.hostName, self.title, self.fileSRC )
+        self.metaHandler = IPTVMovieMetaDataHandler(self.hostName, self.title, self.fileSRC)
         
         # goto seek  timer
         self.playback['GoToSeekTimer'] = eTimer()
         self.playback['GoToSeekTimer_conn'] = eConnectCallback(self.playback['GoToSeekTimer'].timeout, self.doGoToSeek)
         
-        self.playback.update( {'CurrentTime':    0,
+        self.playback.update({'CurrentTime':    0,
                                'BufferCTime':    0,
                                'ConfirmedCTime': 0,
                                'BufferFill':     0,
@@ -459,28 +459,28 @@ class IPTVExtMoviePlayer(Screen):
                                'AudioTracks':    [],
                                'SubtitleTrack':  {},
                                'SubtitleTracks': [],
-                              } )
+                              })
         # load pixmaps for statusIcon
         self.playback['loopIcons'] = {'On':None, 'Off':None}
         self.playback['statusIcons'] = {'Play':None, 'Pause':None, 'FastForward':None, 'SlowMotion':None}
         try:
-            self.playback['statusIcons']['Play']        = LoadPixmap( GetIPTVDMImgDir("playback_a_play.png") )
-            self.playback['statusIcons']['Pause']       = LoadPixmap( GetIPTVDMImgDir("playback_a_pause.png") )
-            self.playback['statusIcons']['FastForward'] = LoadPixmap( GetIPTVDMImgDir("playback_a_ff.png") )
+            self.playback['statusIcons']['Play']        = LoadPixmap(GetIPTVDMImgDir("playback_a_play.png"))
+            self.playback['statusIcons']['Pause']       = LoadPixmap(GetIPTVDMImgDir("playback_a_pause.png"))
+            self.playback['statusIcons']['FastForward'] = LoadPixmap(GetIPTVDMImgDir("playback_a_ff.png"))
             self.playback['statusIcons']['SlowMotion']  = self.playback['statusIcons']['FastForward']
             if 'gstplayer' == self.player: 
-                self.playback['logoIcon']               = LoadPixmap( GetIPTVDMImgDir("playback_gstreamer_logo.png") )
+                self.playback['logoIcon']               = LoadPixmap(GetIPTVDMImgDir("playback_gstreamer_logo.png"))
             else:
-                self.playback['logoIcon']             = LoadPixmap( GetIPTVDMImgDir("playback_ffmpeg_logo.png") )
-            self.playback['loopIcons']['On']  = LoadPixmap( GetIPTVDMImgDir("playback_loop_on.png") )
-            self.playback['loopIcons']['Off'] = LoadPixmap( GetIPTVDMImgDir("playback_loop_off.png") )
+                self.playback['logoIcon']             = LoadPixmap(GetIPTVDMImgDir("playback_ffmpeg_logo.png"))
+            self.playback['loopIcons']['On']  = LoadPixmap(GetIPTVDMImgDir("playback_loop_on.png"))
+            self.playback['loopIcons']['Off'] = LoadPixmap(GetIPTVDMImgDir("playback_loop_off.png"))
         except Exception:
             printExc()
         
         # show hide info bar functionality
         self.goToSeekRepeatCount = 0
         self.goToSeekStep = 0
-        self.playbackInfoBar = {'visible':False, 'blocked':False, 'guiElemNames':['playbackInfoBaner', 'progressBar', 'bufferingCBar', 'bufferingBar', 'goToSeekPointer', 'goToSeekLabel', 'infoBarTitle', 'currTimeLabel', 'remainedLabel', 'lengthTimeLabel', 'videoInfo', 'statusIcon', 'loopIcon', 'logoIcon'] }
+        self.playbackInfoBar = {'visible':False, 'blocked':False, 'guiElemNames':['playbackInfoBaner', 'progressBar', 'bufferingCBar', 'bufferingBar', 'goToSeekPointer', 'goToSeekLabel', 'infoBarTitle', 'currTimeLabel', 'remainedLabel', 'lengthTimeLabel', 'videoInfo', 'statusIcon', 'loopIcon', 'logoIcon']}
         if self.clockFormat: 
             self.playbackInfoBar['guiElemNames'].append('clockTime')
             self.playbackInfoBar['clock_timer'] = eTimer()
@@ -566,27 +566,27 @@ class IPTVExtMoviePlayer(Screen):
         
         for idx in range(self.subLinesNum):
             subLabel = "subLabel%d"%(idx+1)
-            self[subLabel].instance.setFont( gFont(sub['font'], sub['font_size']) )
-            self[subLabel].instance.setForegroundColor( parseColor(sub['font_color']) )
-            self[subLabel].instance.setBackgroundColor( parseColor(sub['background']) )
+            self[subLabel].instance.setFont(gFont(sub['font'], sub['font_size']))
+            self[subLabel].instance.setForegroundColor(parseColor(sub['font_color']))
+            self[subLabel].instance.setBackgroundColor(parseColor(sub['background']))
 
             if 'border' in sub:
-                self[subLabel].instance.setBorderColor( parseColor(sub['border']['color']) )
-                self[subLabel].instance.setBorderWidth( sub['border']['width'] )
+                self[subLabel].instance.setBorderColor(parseColor(sub['border']['color']))
+                self[subLabel].instance.setBorderWidth(sub['border']['width'])
             else:
                 try:
                     tmp = dir(eLabel)
                     if 'setBorderColor' in tmp:
-                        self[subLabel].instance.setBorderWidth( 0 )
+                        self[subLabel].instance.setBorderWidth(0)
                 except Exception:
                     printExc()
             
             if 'shadow' in sub:
-                self[subLabel].instance.setShadowColor( parseColor(sub['shadow']['color']) )
-                self[subLabel].instance.setShadowOffset( ePoint(sub['shadow']['xoffset'], sub['shadow']['yoffset']) )
+                self[subLabel].instance.setShadowColor(parseColor(sub['shadow']['color']))
+                self[subLabel].instance.setShadowOffset(ePoint(sub['shadow']['xoffset'], sub['shadow']['yoffset']))
             elif 'shadow' in prevSub:
-                self[subLabel].instance.setShadowOffset( ePoint(0, 0) )
-                self[subLabel].instance.setShadowColor( gRGB() ) # parseColor("#ff111111") )
+                self[subLabel].instance.setShadowOffset(ePoint(0, 0))
+                self[subLabel].instance.setShadowColor(gRGB()) # parseColor("#ff111111") )
             
             if self.subLinesNum > 1 or 'transparent' != self.subConfig['background']:
                 self[subLabel].instance.setVAlign(1)
@@ -597,8 +597,8 @@ class IPTVExtMoviePlayer(Screen):
                     
                     self[subLabel].instance.resize(eSize(getDesktop(0).size().width()-20, sub['box_height']))
                     self[subLabel].resize(eSize(getDesktop(0).size().width()-20, sub['box_height']))
-                    self[subLabel].move( ePoint(10, getDesktop(0).size().height()-sub['pos']-sub['box_height']) )
-                    self[subLabel].instance.move( ePoint(10, getDesktop(0).size().height()-sub['pos']-sub['box_height']) )
+                    self[subLabel].move(ePoint(10, getDesktop(0).size().height()-sub['pos']-sub['box_height']))
+                    self[subLabel].instance.move(ePoint(10, getDesktop(0).size().height()-sub['pos']-sub['box_height']))
                 except Exception:
                     printExc()
             self.setSubtitlesText(" ", False)
@@ -620,9 +620,9 @@ class IPTVExtMoviePlayer(Screen):
             currVal   = self.currVideoOptions[opt]
             defVal    = self.defVideoOptions[opt]
             
-            printDBG(">>>>>>>>>>>>> 0 [%s]" % (metaVal) )
+            printDBG(">>>>>>>>>>>>> 0 [%s]" % (metaVal))
             if None == metaVal:
-                printDBG(">>>>>>>>>>>>> A [%s] [%s]" % (currVal, playerVal) )
+                printDBG(">>>>>>>>>>>>> A [%s] [%s]" % (currVal, playerVal))
                 if currVal != playerVal:
                     printDBG(">>>>>>>>>>>>> B")
                     if None == playerVal:
@@ -673,7 +673,7 @@ class IPTVExtMoviePlayer(Screen):
         currIdx = 0
         optionsTab = [{'title':_('Video policy'), 'name': 'policy'}, {'title':_('Video policy for 4:3'), 'name': 'policy2'}, {'title':_('Aspect'), 'name': 'aspect'}, {'title':_('Video mode'), 'name': 'videomode'}]
         for option in optionsTab:
-            if len(self.defVideoOptions[option['name']+'_choices' ]) < 2:
+            if len(self.defVideoOptions[option['name']+'_choices']) < 2:
                 continue
             if None == self.defVideoOptions[option['name']]:
                 continue
@@ -719,7 +719,7 @@ class IPTVExtMoviePlayer(Screen):
                     currIdx = idx
                 else:
                     item.type = IPTVChoiceBoxItem.TYPE_OFF
-                options.append( item )
+                options.append(item)
             self.openChild(boundFunction(self.childClosed, self.selectVideoModeCallback), IPTVChoiceBoxWidget, {'width':500, 'current_idx':currIdx, 'title':_("Select %s") % ret.name, 'options':options})
         
     def selectVideoModeCallback(self, ret=None):
@@ -757,7 +757,7 @@ class IPTVExtMoviePlayer(Screen):
             self.metaHandler.setVideoOption(self.defVideoOptions['active'], ret.privateData)
             self.currVideoOptions[self.defVideoOptions['active']] = ret.privateData
         else:
-            ret = IPTVChoiceBoxItem("", "", self.currVideoOptions[self.defVideoOptions['active']] )
+            ret = IPTVChoiceBoxItem("", "", self.currVideoOptions[self.defVideoOptions['active']])
         self.videoOptionSelectionChanged(ret)
         self.selectVideoOptions()
         
@@ -777,7 +777,7 @@ class IPTVExtMoviePlayer(Screen):
                     currIdx = trackIdx
                 else:
                     item.type = IPTVChoiceBoxItem.TYPE_OFF
-                options.append( item )
+                options.append(item)
             self.openChild(boundFunction(self.childClosed, self.selectAudioTrackCallback), IPTVChoiceBoxWidget, {'width':500, 'height':240, 'current_idx':currIdx, 'title':_("Select audio track"), 'options':options})
         else:
             self.showMessage(_("Information about audio tracks not available."), MessageBox.TYPE_INFO, None)
@@ -787,8 +787,8 @@ class IPTVExtMoviePlayer(Screen):
         if isinstance(ret, IPTVChoiceBoxItem):
             ret = ret.privateData
             if 'track_id' in ret and ret['track_id'] != self.playback['AudioTrack'].get('id', -1):
-                self.metaHandler.setAudioTrackIdx( ret.get('track_idx', -1) )
-                self.extPlayerCmddDispatcher.setAudioTrack( ret['track_id'] )
+                self.metaHandler.setAudioTrackIdx(ret.get('track_idx', -1))
+                self.extPlayerCmddDispatcher.setAudioTrack(ret['track_id'])
             
     def selectSubtitle(self):
         printDBG("selectSubtitle")
@@ -807,7 +807,7 @@ class IPTVExtMoviePlayer(Screen):
             item.type = IPTVChoiceBoxItem.TYPE_ON
         else:
             item.type = IPTVChoiceBoxItem.TYPE_OFF
-        options.append( item )
+        options.append(item)
         
         #####################################
         for trackIdx in range(len(embeddedTracksTab)):
@@ -817,7 +817,7 @@ class IPTVExtMoviePlayer(Screen):
                 item.type = IPTVChoiceBoxItem.TYPE_ON
             else:
                 item.type = IPTVChoiceBoxItem.TYPE_OFF
-            options.append( item )
+            options.append(item)
         #####################################
         
         tracksTab = self.metaHandler.getSubtitlesTracks()
@@ -828,15 +828,15 @@ class IPTVExtMoviePlayer(Screen):
                 item.type = IPTVChoiceBoxItem.TYPE_ON
             else:
                 item.type = IPTVChoiceBoxItem.TYPE_OFF
-            options.append( item )
+            options.append(item)
         if self.subHandler['enabled'] and None != self.metaHandler.getSubtitleTrack():
-            options.append( IPTVChoiceBoxItem(_('Synchronize'), "", {'other':'synchro'}) )
+            options.append(IPTVChoiceBoxItem(_('Synchronize'), "", {'other':'synchro'}))
         if len(self.externalSubTracks):
             for item in self.externalSubTracks:
                 title = '[{0}] {1} ({2})'.format(item.get('lang', ''), item['title'], _('Download suggested'))
-                options.append( IPTVChoiceBoxItem(title, "", {'other':'download_suggested', 'track':item}) )
-        options.append( IPTVChoiceBoxItem(_('Load'), "", {'other':'load'}) )
-        options.append( IPTVChoiceBoxItem(_('Download'), "", {'other':'download'}) )
+                options.append(IPTVChoiceBoxItem(title, "", {'other':'download_suggested', 'track':item}))
+        options.append(IPTVChoiceBoxItem(_('Load'), "", {'other':'load'}))
+        options.append(IPTVChoiceBoxItem(_('Download'), "", {'other':'download'}))
         self.openChild(boundFunction(self.childClosed, self.selectSubtitleCallback), IPTVChoiceBoxWidget, {'width':600, 'current_idx':currIdx, 'title':_("Select subtitles track"), 'options':options})
     
     def selectSubtitleCallback(self, ret):
@@ -860,15 +860,15 @@ class IPTVExtMoviePlayer(Screen):
                 elif option == 'download_suggested' and 'track' in ret:
                     self.downloadSub([ret['track']])
             elif 'track_id' in ret:
-                self.metaHandler.setEmbeddedSubtileTrackIdx( ret['track_idx'] )
+                self.metaHandler.setEmbeddedSubtileTrackIdx(ret['track_idx'])
                 self.metaHandler.setSubtitleIdx(-1)
                 self.enableEmbeddedSubtitles(ret['track_id'])
             elif 'track_idx' in ret:
-                self.metaHandler.setSubtitleIdx( ret['track_idx'] )
+                self.metaHandler.setSubtitleIdx(ret['track_idx'])
                 # to speed up, should be set also as output from exteplayer3
                 self.playback['SubtitleTrack'] = {'id':-1}
-                self.metaHandler.setEmbeddedSubtileTrackIdx( -1 )
-                self.extPlayerCmddDispatcher.setSubtitleTrack( -1 )
+                self.metaHandler.setEmbeddedSubtileTrackIdx(-1)
+                self.extPlayerCmddDispatcher.setSubtitleTrack(-1)
                 self.subHandler['embedded_handler'].flushSubtitles()
                 self.enableSubtitles()
     
@@ -887,7 +887,7 @@ class IPTVExtMoviePlayer(Screen):
                 printExc()
             
             
-        fileMatch = re.compile("^.*?(:?\.%s)$" % '|\.'.join( IPTVSubtitlesHandler.getSupportedFormats() ),  re.IGNORECASE)
+        fileMatch = re.compile("^.*?(:?\.%s)$" % '|\.'.join(IPTVSubtitlesHandler.getSupportedFormats()),  re.IGNORECASE)
         self.openChild(boundFunction(self.childClosed, self.openSubtitlesFromFileCallback), IPTVFileSelectorWidget, currDir, _("Select subtitles file"), fileMatch)
         
     def openSubtitlesFromFileCallback(self, filePath=None):
@@ -914,7 +914,7 @@ class IPTVExtMoviePlayer(Screen):
         
         printDBG("enableSubtitlesFromFile filePath[%s] encoding[%s]" % (filePath, encoding))
         if None != filePath:
-            lang = CParsingHelper.getSearchGroups(filePath, "_([a-z]{2})_[0-9]+?_[0-9]+?_[0-9]+?(:?\.%s)$" % '|\.'.join( IPTVSubtitlesHandler.getSupportedFormats() ))[0]
+            lang = CParsingHelper.getSearchGroups(filePath, "_([a-z]{2})_[0-9]+?_[0-9]+?_[0-9]+?(:?\.%s)$" % '|\.'.join(IPTVSubtitlesHandler.getSupportedFormats()))[0]
             try:
                 currDir, fileName = os_path.split(filePath)
             except Exception: 
@@ -930,13 +930,13 @@ class IPTVExtMoviePlayer(Screen):
                 except Exception:
                     printExc()
             if -1 == trackIdx:
-                trackIdx = self.metaHandler.addSubtitleTrack( {"title":fileName, "id":"", "provider":"", "lang":lang, "delay_ms":0, "path":filePath} )
-            self.metaHandler.setSubtitleIdx( trackIdx )
+                trackIdx = self.metaHandler.addSubtitleTrack({"title":fileName, "id":"", "provider":"", "lang":lang, "delay_ms":0, "path":filePath})
+            self.metaHandler.setSubtitleIdx(trackIdx)
             self.enableSubtitles(encoding)
 
     def disableSubtitles(self):
         self.playback['SubtitleTrack'] = {'id': -1}
-        self.extPlayerCmddDispatcher.setSubtitleTrack( -1 )
+        self.extPlayerCmddDispatcher.setSubtitleTrack(-1)
         self.subHandler['embedded_handler'].flushSubtitles()
         self.hideSubtitles()
         self.subHandler['enabled'] = False
@@ -946,7 +946,7 @@ class IPTVExtMoviePlayer(Screen):
         printDBG("enableEmbeddedSubtitles")
         if self.playback['SubtitleTrack'].get('id', -1) != id:
             self.subHandler['embedded_handler'].flushSubtitles()
-            self.extPlayerCmddDispatcher.setSubtitleTrack( id )
+            self.extPlayerCmddDispatcher.setSubtitleTrack(id)
         self.subHandler['handler_type'] = 'embedded_handler'
         self.subHandler['marker']  = None
         self.subHandler['enabled'] = True
@@ -1117,9 +1117,9 @@ class IPTVExtMoviePlayer(Screen):
                     lH = lineHeight #textSize[1] + self.subConfig['font_size'] / 2
                     self[subLabel].instance.resize(eSize(lW, lH))
                     if not subOnTopHack:
-                        self[subLabel].instance.move( ePoint((desktopW-lW) / 2, desktopH - y - lH) )
+                        self[subLabel].instance.move(ePoint((desktopW-lW) / 2, desktopH - y - lH))
                     else:
-                        self[subLabel].instance.move( ePoint((desktopW-lW) / 2, y) )
+                        self[subLabel].instance.move(ePoint((desktopW-lW) / 2, y))
                     y += lH + self.subConfig['line_spacing']
                     self[subLabel].show()
                 except Exception:
@@ -1188,7 +1188,7 @@ class IPTVExtMoviePlayer(Screen):
         self.playback['Length'] = newLength
         self['progressBar'].range = (0, newLength)
         self['bufferingCBar'].range = (0, newLength)
-        self['lengthTimeLabel'].setText( str(timedelta(seconds=newLength)) )
+        self['lengthTimeLabel'].setText(str(timedelta(seconds=newLength)))
         
     def playbackUpdateInfo(self, stsObj):
         # workaround for missing playback length info for under muxing MKV
@@ -1198,7 +1198,7 @@ class IPTVExtMoviePlayer(Screen):
         for key, val in stsObj.items():
             if 'Length' == key:
                 if 0 > val:
-                    printDBG('IPTVExtMoviePlayer.playbackUpdateInfo Length[%d] - live stream?' % val )
+                    printDBG('IPTVExtMoviePlayer.playbackUpdateInfo Length[%d] - live stream?' % val)
                     val = 0
                     self.playback['IsLive'] = True
                 else:
@@ -1239,8 +1239,8 @@ class IPTVExtMoviePlayer(Screen):
                     diff = self.playback['CurrentTime'] - prevCTime
                     if diff > 0 and diff < 3: # CurrentTime in seconds
                         self.playback['ConfirmedCTime'] = self.playback['CurrentTime']
-                self['currTimeLabel'].setText( str(timedelta(seconds=self.playback['CurrentTime'])) )
-                self['remainedLabel'].setText( '-' + str(timedelta(seconds=self.playback['Length']-self.playback['CurrentTime'])) )
+                self['currTimeLabel'].setText(str(timedelta(seconds=self.playback['CurrentTime'])))
+                self['remainedLabel'].setText('-' + str(timedelta(seconds=self.playback['Length']-self.playback['CurrentTime'])))
                 self['pleaseWait'].hide()
             elif 'BufferCTime' == key:
                 if self.playback['Length'] < val:
@@ -1255,14 +1255,14 @@ class IPTVExtMoviePlayer(Screen):
                     elif val[0] in ['Pause', 'FastForward', 'SlowMotion']:
                         self.showPlaybackInfoBar(blocked=True)
                     self.playback['Status'] = val[0]
-                    self['statusIcon'].setPixmap( self.playback['statusIcons'].get(val[0], None) )
+                    self['statusIcon'].setPixmap(self.playback['statusIcons'].get(val[0], None))
             elif 'IsLoop' == key:
                 if self.playback['IsLoop'] != val:
                     self.playback['IsLoop'] = val
                     icon = 'Off'
                     if val:
                         icon = 'On'
-                    self['loopIcon'].setPixmap( self.playback['loopIcons'].get(icon, None) )
+                    self['loopIcon'].setPixmap(self.playback['loopIcons'].get(icon, None))
                     self.showPlaybackInfoBar()
                 
             elif 'VideoTrack' == key:
@@ -1278,7 +1278,7 @@ class IPTVExtMoviePlayer(Screen):
                     fps = int(fps)
                 text += ', %sfps' % fps
                 text += ', %s' % val['aspect_ratio'].replace('_', ':')
-                self['videoInfo'].setText( text )
+                self['videoInfo'].setText(text)
             else:
                 self.playback[key] = val
                 printDBG(">>> playback[%s] = %s" % (key, val))
@@ -1322,7 +1322,7 @@ class IPTVExtMoviePlayer(Screen):
             pos = 0
         
         self.playback['GoToSeekTime'] = pos
-        self["goToSeekLabel"].setText( str(timedelta(seconds=self.playback['GoToSeekTime'])) )
+        self["goToSeekLabel"].setText(str(timedelta(seconds=self.playback['GoToSeekTime'])))
         
         # update position
         # convert time to width
@@ -1338,7 +1338,7 @@ class IPTVExtMoviePlayer(Screen):
     def saveLastPlaybackTime(self):
         lastPosition = self.playback.get('ConfirmedCTime', 0)
         if config.plugins.iptvplayer.remember_last_position.value and lastPosition > 0 and self.playback['Length'] > (config.plugins.iptvplayer.remember_last_position_time.value * 60):
-                self.metaHandler.setLastPosition( lastPosition )
+                self.metaHandler.setLastPosition(lastPosition)
 
     def loadLastPlaybackTime(self):
         if config.plugins.iptvplayer.remember_last_position.value and self.lastPosition < 1:
@@ -1623,7 +1623,7 @@ class IPTVExtMoviePlayer(Screen):
                 elif "a_l" == key:
                     tracks = []
                     for item in obj:
-                        tracks.append( _mapTrack(item) )
+                        tracks.append(_mapTrack(item))
                     self.playbackUpdateInfo({'AudioTracks':tracks})
                 elif "s_c" == key:
                     tmpTrack = _mapTrack(obj)
@@ -1633,12 +1633,12 @@ class IPTVExtMoviePlayer(Screen):
                 elif "s_l" == key:
                     tracks = []
                     for item in obj:
-                        tracks.append( _mapTrack(item) )
+                        tracks.append(_mapTrack(item))
                     self.playbackUpdateInfo({'SubtitleTracks':tracks})
                 elif "s_a" == key:
                     if self.subHandler['enabled']:
                         subAtom = _mapSubAtom(obj)
-                        self.subHandler['embedded_handler'].addSubAtom( subAtom )
+                        self.subHandler['embedded_handler'].addSubAtom(subAtom)
                 elif "s_f" == key:
                     self.subHandler['embedded_handler'].flushSubtitles()
                 elif "N" == key:
@@ -1804,7 +1804,7 @@ class IPTVExtMoviePlayer(Screen):
         
         if blankIframeFilePath != '' and IsExecutable('showiframe') and fileExists(blankIframeFilePath):
             if not self.iframeParams['iframe_continue']:
-                self.iframeParams['console'] = iptv_system( 'showiframe "{0}"'.format(blankIframeFilePath), boundFunction(self.iptvDoClose, sts, currentTime))
+                self.iframeParams['console'] = iptv_system('showiframe "{0}"'.format(blankIframeFilePath), boundFunction(self.iptvDoClose, sts, currentTime))
                 return
         self.iptvDoClose(sts, currentTime)
     
@@ -1847,7 +1847,7 @@ class IPTVExtMoviePlayer(Screen):
         if None != ret:
             self.subHandler['handler'].removeCacheFile(ret.get('path', ''))
             idx = self.metaHandler.addSubtitleTrack(ret)
-            self.metaHandler.setSubtitleIdx( idx )
+            self.metaHandler.setSubtitleIdx(idx)
             self.enableSubtitles()
         
     def onStart(self):
@@ -1855,14 +1855,14 @@ class IPTVExtMoviePlayer(Screen):
         #self.onLayoutFinish.remove(self.onStart)
         
         if '' != self.refreshCmd and (self.downloader != None or not self.fileSRC.startswith('ext://')):
-            self.refreshCmdConsole = iptv_system( self.refreshCmd )
+            self.refreshCmdConsole = iptv_system(self.refreshCmd)
             
         if self.iframeParams['show_iframe'] and IsExecutable('showiframe')\
            and fileExists(self.iframeParams['iframe_file_start']):
             if self.iframeParams['iframe_continue']:
-                self.iframeParams['console'] = iptv_system( 'showiframe "{0}"'.format(self.iframeParams['iframe_file_start']))
+                self.iframeParams['console'] = iptv_system('showiframe "{0}"'.format(self.iframeParams['iframe_file_start']))
             else:
-                self.iframeParams['console'] = iptv_system( 'showiframe "{0}"'.format(self.iframeParams['iframe_file_start']), self.iptvGetUrlStart)
+                self.iframeParams['console'] = iptv_system('showiframe "{0}"'.format(self.iframeParams['iframe_file_start']), self.iptvGetUrlStart)
                 return
         self.iptvGetUrlStart()
         
@@ -1875,7 +1875,7 @@ class IPTVExtMoviePlayer(Screen):
             self.extLinkProv['console']    = eConsoleAppContainer()
             self.extLinkProv['close_conn'] = eConnectCallback(self.extLinkProv['console'].appClosed, self._updateGetUrlFinished)
             self.extLinkProv['data_conn']  = eConnectCallback(self.extLinkProv['console'].stderrAvail, self._updateGetUrlDataAvail)
-            self.extLinkProv['console'].execute( self.refreshCmd )
+            self.extLinkProv['console'].execute(self.refreshCmd)
         else:
             self.iptvDoStart()
             
@@ -1946,7 +1946,7 @@ class IPTVExtMoviePlayer(Screen):
                 timeout = self.gstAdditionalParams['file-download-timeout']
             else:
                 timeout = 0
-            cmd += ' {0} '.format( timeout )
+            cmd += ' {0} '.format(timeout)
             
             # file download live
             if self.gstAdditionalParams['file-download-live']:
@@ -1959,14 +1959,14 @@ class IPTVExtMoviePlayer(Screen):
                 tmp = strwithmeta(self.fileSRC)
                 url, httpParams = DMHelper.getDownloaderParamFromUrlWithMeta(tmp, True)
                 for key in httpParams:
-                    cmd += (' "%s=%s" ' % (key, httpParams[key]) )
+                    cmd += (' "%s=%s" ' % (key, httpParams[key]))
                 if 'http_proxy' in tmp.meta:
                     tmp = tmp.meta['http_proxy']
                     if '://' in tmp:
                         if '@' in tmp:
                             tmp = re.search('([^:]+?://)([^:]+?):([^@]+?)@(.+?)$', tmp)
                             if tmp:
-                                cmd += (' "proxy=%s" "proxy-id=%s" "proxy-pw=%s" ' % (tmp.group(1)+tmp.group(4), tmp.group(2), tmp.group(3)) )
+                                cmd += (' "proxy=%s" "proxy-id=%s" "proxy-pw=%s" ' % (tmp.group(1)+tmp.group(4), tmp.group(2), tmp.group(3)))
                         else:
                             cmd += (' "proxy=%s" ' % tmp)
             cmd += " > /dev/null"
@@ -1998,7 +1998,7 @@ class IPTVExtMoviePlayer(Screen):
                     elif key == 'User-Agent':
                         cmd += ' -u "%s"' %  httpParams[key]
                     else:
-                        headers += ('%s: %s\r\n' % (key, httpParams[key]) )
+                        headers += ('%s: %s\r\n' % (key, httpParams[key]))
                 if len(headers):
                     cmd += ' -h "%s"' % headers
                 if url.startswith('http'):
@@ -2076,11 +2076,11 @@ class IPTVExtMoviePlayer(Screen):
         #if 'gstplayer' == self.player: 
         #    self.console_stdoutAvail_conn = eConnectCallback(self.console.stdoutAvail, self.eplayer3DataAvailable2 ) # work around to catch EOF event after seeking, pause .etc
         printDBG("->||||||| onStart cmd[%s]" % cmd)
-        self.console.execute( E2PrioFix( cmd, 1 ) )
-        self['statusIcon'].setPixmap( self.playback['statusIcons']['Play'] ) # sulge for test
-        self['loopIcon'].setPixmap( self.playback['loopIcons']['Off'] )
-        self['logoIcon'].setPixmap( self.playback['logoIcon'] )
-        self['subSynchroIcon'].setPixmap( self.subHandler['synchro']['icon'] )
+        self.console.execute(E2PrioFix(cmd, 1))
+        self['statusIcon'].setPixmap(self.playback['statusIcons']['Play']) # sulge for test
+        self['loopIcon'].setPixmap(self.playback['loopIcons']['Off'])
+        self['logoIcon'].setPixmap(self.playback['logoIcon'])
+        self['subSynchroIcon'].setPixmap(self.subHandler['synchro']['icon'])
         
         # SET Video option
         videoOptions = ['aspect', 'policy', 'policy2']
@@ -2235,11 +2235,11 @@ class IPTVExtMoviePlayer(Screen):
         
     def consoleWrite(self, data):
         try:
-            self.console.write( data, len(data) )
+            self.console.write(data, len(data))
             return
         except Exception:
             try: 
-                self.console.write( data )
+                self.console.write(data)
                 return
             except Exception:
                 printExc()
@@ -2253,45 +2253,45 @@ class IPTVExtMoviePlayer(Screen):
             return False
         
         if 'ADD_TRIGGERS' == command:
-            self.consoleWrite( "t{0}\n".format(arg1) )
+            self.consoleWrite("t{0}\n".format(arg1))
         elif 'PLAYBACK_SET_LOOP_MODE'  == command:
-            self.consoleWrite( "n%s\n" % arg1 )
+            self.consoleWrite("n%s\n" % arg1)
         elif   'PLAYBACK_LENGTH'       == command: 
-            self.consoleWrite( "l\n" )
+            self.consoleWrite("l\n")
         elif 'PLAYBACK_CURRENT_TIME' == command: 
-            self.consoleWrite( "j\n" )
+            self.consoleWrite("j\n")
         elif 'PLAYBACK_INFO'         == command: 
-            self.consoleWrite( "i\n" )
+            self.consoleWrite("i\n")
         elif 'PLAYBACK_SET_DOWNLOAD_FILE_TIMEOUT' == command:
-            self.consoleWrite( "t%s\n" % arg1)
+            self.consoleWrite("t%s\n" % arg1)
         elif 'PLAYBACK_SET_PROGRESSIVE_DOWNLOAD' == command:
-            self.consoleWrite( "o%s\n" % arg1)
+            self.consoleWrite("o%s\n" % arg1)
         elif 'PLAYBACK_SET_SUBTITLE_TRACK' == command:
             if ('%s' % arg1) != '-1':
                 # we need be in play mode to switch/enabled embedded subtitles
-                self.consoleWrite( "c\n" )
-            self.consoleWrite( "s%s\n" % arg1)
-            self.consoleWrite( "sc\n")
+                self.consoleWrite("c\n")
+            self.consoleWrite("s%s\n" % arg1)
+            self.consoleWrite("sc\n")
         else:
             # All below commands require that 'PLAY ' status, 
             # so we first send command to resume playback
-            self.consoleWrite( "c\n" )
+            self.consoleWrite("c\n")
             
             if 'PLAYBACK_PAUSE'           == command: 
-                self.consoleWrite( "p\n" )
+                self.consoleWrite("p\n")
             elif 'PLAYBACK_SET_AUDIO_TRACK' == command:
-                self.consoleWrite( "a%s\n" % arg1)
-                self.consoleWrite( "ac\n")
+                self.consoleWrite("a%s\n" % arg1)
+                self.consoleWrite("ac\n")
             elif 'PLAYBACK_SEEK_RELATIVE' == command: 
-                self.consoleWrite( "kc%s\n" % (arg1) ) 
+                self.consoleWrite("kc%s\n" % (arg1)) 
             elif 'PLAYBACK_SEEK_ABS'      == command: 
-                self.consoleWrite( "gf%s\n" % (arg1) )
+                self.consoleWrite("gf%s\n" % (arg1))
             elif 'PLAYBACK_FASTFORWARD'   == command:
-                self.consoleWrite( "f%s\n" % arg1 )
+                self.consoleWrite("f%s\n" % arg1)
             elif 'PLAYBACK_FASTBACKWARD'  == command: 
-                self.consoleWrite( "b%s\n" % arg1 )
+                self.consoleWrite("b%s\n" % arg1)
             elif 'PLAYBACK_SLOWMOTION'    == command: 
-                self.consoleWrite( "m%s\n" % arg1 )
+                self.consoleWrite("m%s\n" % arg1)
             elif 'PLAYBACK_STOP'          == command: 
                 printDBG("IPTVExtMoviePlayer.extPlayerSendCommand PLAYBACK_STOP")
                 if not self.waitCloseFix['waiting']:
@@ -2306,7 +2306,7 @@ class IPTVExtMoviePlayer(Screen):
                     printExc()
                 finally:
                     sock.close()
-                self.consoleWrite( "q\n" )
+                self.consoleWrite("q\n")
             else:
                 printDBG("IPTVExtMoviePlayer.extPlayerSendCommand unknown command[%s]" % command)
                 return False

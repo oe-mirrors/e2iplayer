@@ -39,9 +39,9 @@ class HDKinoMir(CBaseHostClass):
         self.MAIN_URL    = 'http://hdkinomir.com/'
         self.DEFAULT_ICON_URL = self.getFullIconUrl('/templates/prokino/images/logo.png')
         
-        self.MAIN_CAT_TAB = [{'category':'categories',     'title': _('Movie categories'),     'url':self.getMainUrl() },
-                             {'category':'search',              'title': _('Search'),               'search_item':True },
-                             {'category':'search_history',      'title': _('Search history')                           } 
+        self.MAIN_CAT_TAB = [{'category':'categories',     'title': _('Movie categories'),     'url':self.getMainUrl()},
+                             {'category':'search',              'title': _('Search'),               'search_item':True},
+                             {'category':'search_history',      'title': _('Search history')} 
                             ]
         
         self.encoding = ''
@@ -112,11 +112,11 @@ class HDKinoMir(CBaseHostClass):
                 params['url'] = url
                 hostName = self.up.getHostName(url)
                 if 'youtube' in hostName and 'list=' in url:
-                    params.update({'host_name':'youtube_tray', 'category':category, 'title':self.cleanHtmlStr( item ), 'serie_title':title})
+                    params.update({'host_name':'youtube_tray', 'category':category, 'title':self.cleanHtmlStr(item), 'serie_title':title})
                     self.addDir(params)
                     continue
                 if 1 == self.up.checkHostSupport(url):
-                    params['title'] = '{0} - {1}'.format(title, self.cleanHtmlStr( item ))
+                    params['title'] = '{0} - {1}'.format(title, self.cleanHtmlStr(item))
                     self.addVideo(params)
             return
         
@@ -202,12 +202,12 @@ class HDKinoMir(CBaseHostClass):
             title = self.cm.ph.getSearchGroups(item, 'alt="([^"]+?)"')[0]
             if title == '{title}':
                 title = self.cm.ph.getDataBeetwenMarkers(item, '<span>', '</span>', False)[1]
-            title = self.cleanHtmlStr( title )
+            title = self.cleanHtmlStr(title)
             
             if title == '':
                 continue
             icon  = self.cm.ph.getSearchGroups(item, 'src="([^"]+?)"')[0]
-            desc  = self.cleanHtmlStr( item.split('<div class="ribbon">')[-1] )
+            desc  = self.cleanHtmlStr(item.split('<div class="ribbon">')[-1])
             params = dict(cItem)
             params.update({'category':category, 'title':title, 'icon':self.getFullUrl(icon), 'desc':desc, 'url':self.getFullUrl(url)})
             self.addDir(params)
@@ -285,7 +285,7 @@ class HDKinoMir(CBaseHostClass):
 
         name     = self.currItem.get("name", '')
         category = self.currItem.get("category", '')
-        printDBG( "handleService: |||||||||||||||||||||||||||||||||||| name[%s], category[%s] " % (name, category) )
+        printDBG("handleService: |||||||||||||||||||||||||||||||||||| name[%s], category[%s] " % (name, category))
         self.currList = []
         
     #MAIN MENU

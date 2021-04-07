@@ -30,7 +30,7 @@ def gettytul():
 class OurmatchNet(CBaseHostClass):
     HEADER = {'User-Agent': 'Mozilla/5.0', 'Accept': 'text/html'}
     AJAX_HEADER = dict(HEADER)
-    AJAX_HEADER.update( {'X-Requested-With': 'XMLHttpRequest'} )
+    AJAX_HEADER.update({'X-Requested-With': 'XMLHttpRequest'})
     
     MAIN_URL   = 'http://ourmatch.net/'
     
@@ -43,7 +43,7 @@ class OurmatchNet(CBaseHostClass):
                     {'category':'seasons',         'title': _('Previous Seasons'),  'url':MAIN_URL+'previous-seasons/', 'icon':DEFAULT_ICON},
                     {'category':'video',           'title': _('Goal Of The Month'), 'url':MAIN_URL+'goal-of-the-month/','icon':DEFAULT_ICON, 'type': 'video'},                    
                     {'category':'search',          'title': _('Search'), 'search_item':True,                            'icon':DEFAULT_ICON},
-                    {'category':'search_history',  'title': _('Search history'),                                        'icon':DEFAULT_ICON} ]
+                    {'category':'search_history',  'title': _('Search history'),                                        'icon':DEFAULT_ICON}]
  
     def __init__(self):
         CBaseHostClass.__init__(self, {'history':'ourmatch.net', 'cookie':'ourmatchnet.cookie'})
@@ -173,7 +173,7 @@ class OurmatchNet(CBaseHostClass):
             divisionsTab = []
             divisions = self.cm.ph.getAllItemsBeetwenMarkers(data[idx], '<li class="header">', '</ul>')
             for division in divisions:
-                divisionsTitle = self.cleanHtmlStr( self.cm.ph.getDataBeetwenMarkers(division, '<li class="header">', '</li>')[1] )
+                divisionsTitle = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(division, '<li class="header">', '</li>')[1])
                 regionsTab = []
                 regions = re.compile('<a[^>]+?href="([^"]+?)"[^>]*?>([^<]+?)</a>').findall(division)
                 for item in regions:
@@ -228,7 +228,7 @@ class OurmatchNet(CBaseHostClass):
                 continue
             icon  = self.cm.ph.getSearchGroups(item, '''src=['"]*(http[^'^"^>]+?)[>'"]''')[0]
             title = self.cm.ph.getSearchGroups(item, '''title=['"]([^'^"]+?)['"]''')[0] 
-            desc  = self.cleanHtmlStr( self.cm.ph.getDataBeetwenMarkers(item, '<div class="vidinfo">', '</div>')[1] )
+            desc  = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(item, '<div class="vidinfo">', '</div>')[1])
             
             if ' vs ' in title:
                 team1 = title[:title.find(' vs ')]
@@ -266,7 +266,7 @@ class OurmatchNet(CBaseHostClass):
             for key in ['lang', 'type', 'quality', 'source']:
                 name = self.cm.ph.getSearchGroups(item, '''['"]?%s['"]?:['"]([^'^"]+?)['"]''' % key)[0]
                 if name != '': 
-                    nameTab.append( name )
+                    nameTab.append(name)
             
             needResolve = 1
             url = self.cm.ph.getSearchGroups(item, '<iframe[^>]+?src="([^"]+?)"', 1, ignoreCase=True)[0]
@@ -275,7 +275,7 @@ class OurmatchNet(CBaseHostClass):
                 needResolve = 0
             url = self._getFullUrl(url)
             if url != '':
-                urlTab.append({'name':', '.join( nameTab ), 'url':self._getFullUrl(url), 'need_resolve':needResolve})
+                urlTab.append({'name':', '.join(nameTab), 'url':self._getFullUrl(url), 'need_resolve':needResolve})
         
         tmp = self.cm.ph.getDataBeetwenMarkers(data, '<div id="details" class="section-box">', '</div>', False)[1]
         tmp = self.cm.ph.getAllItemsBeetwenMarkers(tmp, '<p>', '</p>')
@@ -370,7 +370,7 @@ class OurmatchNet(CBaseHostClass):
         category = self.currItem.get("category", '')
         mode     = self.currItem.get("mode", '')
         
-        printDBG( "handleService: |||||||||||||||||||||||||||||||||||| name[%s], category[%s] " % (name, category) )
+        printDBG("handleService: |||||||||||||||||||||||||||||||||||| name[%s], category[%s] " % (name, category))
         self.currList = []
         
     #MAIN MENU

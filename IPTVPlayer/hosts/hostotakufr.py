@@ -25,7 +25,7 @@ class OtakuFR(CBaseHostClass):
         self.USER_AGENT = 'User-Agent=Mozilla/5.0 (Windows NT 6.1; WOW64; rv:40.0) Gecko/20100101 Firefox/40.0'
         self.HEADER = {'User-Agent': self.USER_AGENT, 'DNT':'1', 'Accept': 'text/html'}
         self.AJAX_HEADER = dict(self.HEADER)
-        self.AJAX_HEADER.update( {'X-Requested-With': 'XMLHttpRequest'} )
+        self.AJAX_HEADER.update({'X-Requested-With': 'XMLHttpRequest'})
         
         self.DEFAULT_ICON_URL = 'https://rocketdock.com/images/screenshots/thumbnails/21.png'
         self.MAIN_URL = None
@@ -63,7 +63,7 @@ class OtakuFR(CBaseHostClass):
                              {'category':'list_rank_items',  'title': 'Film',                     'url':self.getFullUrl('/anime-list/tag/Film/')},
                              
                              {'category': 'search',          'title': _('Search'), 'search_item': True, },
-                             {'category': 'search_history',  'title': _('Search history'),             } 
+                             {'category': 'search_history',  'title': _('Search history'),} 
                             ]
     def listABC(self, cItem, nextCategory):
         printDBG("OtakuFR.listABC")
@@ -290,7 +290,7 @@ class OtakuFR(CBaseHostClass):
         category = self.currItem.get("category", '')
         mode     = self.currItem.get("mode", '')
         
-        printDBG( "handleService: |||||||||||||||||||||||||||||||||||| name[%s], category[%s] " % (name, category) )
+        printDBG("handleService: |||||||||||||||||||||||||||||||||||| name[%s], category[%s] " % (name, category))
         self.currList = []
         
     #MAIN MENU

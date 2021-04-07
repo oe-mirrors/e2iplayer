@@ -60,7 +60,7 @@ class IPTVDownloadManagerList(IPTVListComponentBase):
         
     def _nullPIX(self):
         for key in self.ICONS_FILESNAMES:
-            self.dictPIX[ key ] = None
+            self.dictPIX[key] = None
 
     def onCreate(self):
         self._nullPIX()
@@ -78,7 +78,7 @@ class IPTVDownloadManagerList(IPTVListComponentBase):
     def buildEntry(self, item):
         width  = self.l.getItemSize().width()
         height = self.l.getItemSize().height()
-        res = [ None ]
+        res = [None]
         
         # Downloaded Size
         info1 = formatBytes(item.downloadedSize)

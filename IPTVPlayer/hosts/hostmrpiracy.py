@@ -72,7 +72,7 @@ class MRPiracyGQ(CBaseHostClass, CaptchaHelper):
         self.USER_AGENT = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10.11; rv:43.0) Gecko/20100101 Firefox/43.0'
         self.HEADER = {'User-Agent': self.USER_AGENT, 'DNT':'1', 'Accept': 'text/html'}
         self.AJAX_HEADER = dict(self.HEADER)
-        self.AJAX_HEADER.update( {'X-Requested-With': 'XMLHttpRequest', 'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8'} )
+        self.AJAX_HEADER.update({'X-Requested-With': 'XMLHttpRequest', 'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8'})
         self.MAIN_URL = None
         
         self.cacheLinks    = {}
@@ -115,12 +115,12 @@ class MRPiracyGQ(CBaseHostClass, CaptchaHelper):
         domain = domain.replace('http://', 'https://')
         self.MAIN_URL = domain
     
-        self.MAIN_CAT_TAB = [{'category':'list_filters',      'mode':'movie',   'title': 'Movies',       'url':self.getFullUrl('filmes.php') },
-                             {'category':'list_filters',      'mode':'serie',   'title': 'TV Shows',     'url':self.getFullUrl('series.php') },
-                             {'category':'list_filters',      'mode':'anime',   'title': 'Animes',       'url':self.getFullUrl('animes.php') },
+        self.MAIN_CAT_TAB = [{'category':'list_filters',      'mode':'movie',   'title': 'Movies',       'url':self.getFullUrl('filmes.php')},
+                             {'category':'list_filters',      'mode':'serie',   'title': 'TV Shows',     'url':self.getFullUrl('series.php')},
+                             {'category':'list_filters',      'mode':'anime',   'title': 'Animes',       'url':self.getFullUrl('animes.php')},
                              
-                             {'category': 'search',            'title': _('Search'), 'search_item': True,                                    },
-                             {'category': 'search_history',    'title': _('Search history'),                                                } 
+                             {'category': 'search',            'title': _('Search'), 'search_item': True,},
+                             {'category': 'search_history',    'title': _('Search history'),} 
                             ]
     
         
@@ -265,11 +265,11 @@ class MRPiracyGQ(CBaseHostClass, CaptchaHelper):
         for item in data:
             item = re.sub('<script.+?</script>', '', item)
             item = item.split('<div class="clear">')
-            url  = self.getFullUrl( self.cm.ph.getSearchGroups(item[0], 'href="([^"]+?)"')[0] )
+            url  = self.getFullUrl(self.cm.ph.getSearchGroups(item[0], 'href="([^"]+?)"')[0])
             if not self.cm.isValidUrl(url):
                 continue
-            icon = self.getFullUrl( self.cm.ph.getSearchGroups(item[0], 'src="([^"]+?)"')[0] )
-            title = self.cleanHtmlStr( item[0] )
+            icon = self.getFullUrl(self.cm.ph.getSearchGroups(item[0], 'src="([^"]+?)"')[0])
+            title = self.cleanHtmlStr(item[0])
             if title == '':
                 title = self.cleanHtmlStr(self.cm.ph.getSearchGroups(item[0], '''alt=['"]([^'^"]+?)['"]''')[0])
             if title == '':
@@ -278,7 +278,7 @@ class MRPiracyGQ(CBaseHostClass, CaptchaHelper):
             try:
                 tmp = self.cm.ph.getAllItemsBeetwenMarkers(item[1], '<div', '</div>')
                 tmp.insert(0, self.cleanHtmlStr(item[2]))
-                descTab.append('[/br]'.join( [self.cleanHtmlStr(x) for x in tmp]))
+                descTab.append('[/br]'.join([self.cleanHtmlStr(x) for x in tmp]))
                 descTab.append(self.cleanHtmlStr(item[3]))
             except Exception:
                 printExc()
@@ -304,7 +304,7 @@ class MRPiracyGQ(CBaseHostClass, CaptchaHelper):
         if not sts:
             return
         
-        seriesTitle = self.cleanHtmlStr( self.cm.ph.getSearchGroups(data, '<a[^>]+?class="movie-name"[^>]*?>([^<]+?)</a>')[0] )
+        seriesTitle = self.cleanHtmlStr(self.cm.ph.getSearchGroups(data, '<a[^>]+?class="movie-name"[^>]*?>([^<]+?)</a>')[0])
         if seriesTitle != '':
             seriesTitle = cItem['title']
         
@@ -577,10 +577,10 @@ class MRPiracyGQ(CBaseHostClass, CaptchaHelper):
         
         desc = self.cleanHtmlStr(self.cm.ph.getDataBeetwenReMarkers(data, re.compile('<[^>]+?id="movie-synopsis"[^>]*?>'), re.compile('</div>'))[1])
         if desc == '':
-            desc  = self.cleanHtmlStr( self.cm.ph.getSearchGroups(data, '<meta property="og:description"[^>]+?content="([^"]+?)"')[0] )
+            desc  = self.cleanHtmlStr(self.cm.ph.getSearchGroups(data, '<meta property="og:description"[^>]+?content="([^"]+?)"')[0])
         
-        title = self.cleanHtmlStr( self.cm.ph.getSearchGroups(data, '<meta property="og:title"[^>]+?content="([^"]+?)"')[0] )
-        icon  = self.getFullUrl( self.cm.ph.getSearchGroups(data, '<meta property="og:image"[^>]+?content="([^"]+?)"')[0] )
+        title = self.cleanHtmlStr(self.cm.ph.getSearchGroups(data, '<meta property="og:title"[^>]+?content="([^"]+?)"')[0])
+        icon  = self.getFullUrl(self.cm.ph.getSearchGroups(data, '<meta property="og:image"[^>]+?content="([^"]+?)"')[0])
         
         if title == '':
             title = cItem['title']
@@ -628,7 +628,7 @@ class MRPiracyGQ(CBaseHostClass, CaptchaHelper):
         if imdb_rating != '':
             otherInfo['imdb_rating'] = imdb_rating
         
-        return [{'title':self.cleanHtmlStr( title ), 'text': self.cleanHtmlStr( desc ), 'images':[{'title':'', 'url':self.getFullUrl(icon)}], 'other_info':otherInfo}]
+        return [{'title':self.cleanHtmlStr(title), 'text': self.cleanHtmlStr(desc), 'images':[{'title':'', 'url':self.getFullUrl(icon)}], 'other_info':otherInfo}]
     
     def tryTologin(self):
         printDBG('tryTologin start')
@@ -687,13 +687,13 @@ class MRPiracyGQ(CBaseHostClass, CaptchaHelper):
             self.loggedIn, msg = self.tryTologin()
             if not self.loggedIn:
                 userName = config.plugins.iptvplayer.mrpiracy_login.value
-                self.sessionEx.open(MessageBox, 'Login failed for user "%s".' % userName, type=MessageBox.TYPE_INFO, timeout=10 )
+                self.sessionEx.open(MessageBox, 'Login failed for user "%s".' % userName, type=MessageBox.TYPE_INFO, timeout=10)
             else:
                 self.loogin   = config.plugins.iptvplayer.mrpiracy_login.value
                 self.password = config.plugins.iptvplayer.mrpiracy_password.value
         elif ('' == config.plugins.iptvplayer.mrpiracy_login.value.strip() or
               '' == config.plugins.iptvplayer.mrpiracy_password.value.strip()):
-           self.sessionEx.open(MessageBox, 'Access to this service requires login.\nPlease register on the site \"%s\". Then log in and then put your login data in the host configuration under blue button.' % self.getMainUrl(), type=MessageBox.TYPE_INFO, timeout=20 )
+           self.sessionEx.open(MessageBox, 'Access to this service requires login.\nPlease register on the site \"%s\". Then log in and then put your login data in the host configuration under blue button.' % self.getMainUrl(), type=MessageBox.TYPE_INFO, timeout=20)
         
         CBaseHostClass.handleService(self, index, refresh, searchPattern, searchType)
 
@@ -701,7 +701,7 @@ class MRPiracyGQ(CBaseHostClass, CaptchaHelper):
         category = self.currItem.get("category", '')
         mode     = self.currItem.get("mode", '')
         
-        printDBG( "handleService: |||||||||||||||||||||||||||||||||||| name[%s], category[%s] " % (name, category) )
+        printDBG("handleService: |||||||||||||||||||||||||||||||||||| name[%s], category[%s] " % (name, category))
         self.currList = []
         
     #MAIN MENU

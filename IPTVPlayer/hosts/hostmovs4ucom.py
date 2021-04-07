@@ -33,27 +33,27 @@ class Movs4uCOM(CBaseHostClass):
         self.USER_AGENT = 'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:40.0) Gecko/20100101 Firefox/40.0'
         self.HEADER = {'User-Agent': self.USER_AGENT, 'DNT':'1', 'Accept': 'text/html'}
         self.AJAX_HEADER = dict(self.HEADER)
-        self.AJAX_HEADER.update( {'X-Requested-With': 'XMLHttpRequest'} )
+        self.AJAX_HEADER.update({'X-Requested-With': 'XMLHttpRequest'})
         self.MAIN_URL = 'http://www.movs4u.tv/' 
         self.DEFAULT_ICON_URL = self.getFullIconUrl('/wp-content/uploads/2018/03/TcCsO2w.png')
         self.cacheLinks    = {}
         self.cacheSeasons = {}
         self.defaultParams = {'header':self.HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
     
-        self.MAIN_CAT_TAB = [{'category':'list_items',       'title': _('Movies'),      'url':self.getFullUrl('/movie/')      },
-                             {'category':'list_items',       'title': _('Series'),      'url':self.getFullUrl('/tvshows/')    },
-                             {'category':'list_items',       'title': _('Collections'), 'url':self.getFullUrl('/collection/') },
-                             {'category': 'list_filters',     'title': _('Filters'),                                           },
+        self.MAIN_CAT_TAB = [{'category':'list_items',       'title': _('Movies'),      'url':self.getFullUrl('/movie/')},
+                             {'category':'list_items',       'title': _('Series'),      'url':self.getFullUrl('/tvshows/')},
+                             {'category':'list_items',       'title': _('Collections'), 'url':self.getFullUrl('/collection/')},
+                             {'category': 'list_filters',     'title': _('Filters'),},
                              
                              {'category': 'search',           'title': _('Search'), 'search_item': True,},
-                             {'category': 'search_history',   'title': _('Search history'),            } 
+                             {'category': 'search_history',   'title': _('Search history'),} 
                             ]
                             
-        self.FILTERS_CAT_TAB = [{'category':'list_main',     'title': _('Alphabetically'), 'tab_id':'abc'       },
+        self.FILTERS_CAT_TAB = [{'category':'list_main',     'title': _('Alphabetically'), 'tab_id':'abc'},
                                 {'category':'list_main',     'title': _('Categories'),     'tab_id':'categories'},
-                                {'category':'list_main',     'title': _('Genres'),         'tab_id':'genres'    },
-                                {'category':'list_main',     'title': _('Qualities'),      'tab_id':'qualities' },
-                                {'category':'list_main',     'title': _('Releases'),       'tab_id':'releases'  },
+                                {'category':'list_main',     'title': _('Genres'),         'tab_id':'genres'},
+                                {'category':'list_main',     'title': _('Qualities'),      'tab_id':'qualities'},
+                                {'category':'list_main',     'title': _('Releases'),       'tab_id':'releases'},
                                ]
         
     def getPage(self, baseUrl, addParams={}, post_data=None):
@@ -62,7 +62,7 @@ class Movs4uCOM(CBaseHostClass):
         
         origBaseUrl = baseUrl
         baseUrl = self.cm.iriToUri(baseUrl)
-        printDBG('+++> [%s] - > [%s]' % (origBaseUrl, baseUrl) )
+        printDBG('+++> [%s] - > [%s]' % (origBaseUrl, baseUrl))
         
         def _getFullUrl(url):
             if self.cm.isValidUrl(url):
@@ -103,7 +103,7 @@ class Movs4uCOM(CBaseHostClass):
         data = self.cm.ph.getDataBeetwenMarkers(data, ms, me)[1]
         data = self.cm.ph.getAllItemsBeetwenMarkers(data, m1, m2)
         for item in data:
-            url = self.getFullUrl( self.cm.ph.getSearchGroups(item, '''href=['"]([^"^']+?)['"]''')[0] )
+            url = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''href=['"]([^"^']+?)['"]''')[0])
             if not self.cm.isValidUrl(url):
                 continue
             title = self.cleanHtmlStr(item)
@@ -138,15 +138,15 @@ class Movs4uCOM(CBaseHostClass):
         data = self.cm.ph.getDataBeetwenNodes(data, ('<div', '>', 'class="content'), ('<div', '>', 'class="fixed-sidebar-blank"'))[1]
         data = self.cm.ph.getAllItemsBeetwenMarkers(data, '<article', '</article>')
         for item in data:
-            url = self.getFullUrl( self.cm.ph.getSearchGroups(item, '''href=['"]([^"^']+?)['"]''')[0] )
+            url = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''href=['"]([^"^']+?)['"]''')[0])
             if not self.cm.isValidUrl(url):
                 continue
-            icon = self.getFullIconUrl( self.cm.ph.getSearchGroups(item, '''src=['"]([^"^']+?)['"]''')[0] )
-            title = self.cleanHtmlStr( self.cm.ph.getDataBeetwenMarkers(item, '<div class="title">', '</div>')[1] )
+            icon = self.getFullIconUrl(self.cm.ph.getSearchGroups(item, '''src=['"]([^"^']+?)['"]''')[0])
+            title = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(item, '<div class="title">', '</div>')[1])
             if title == '':
-                title = self.cleanHtmlStr( self.cm.ph.getDataBeetwenMarkers(item, '<h3', '</h3>')[1] )
+                title = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(item, '<h3', '</h3>')[1])
             if title == '':
-                title = self.cleanHtmlStr( self.cm.ph.getSearchGroups(item, '''alt=['"]([^"^']+?)['"]''')[0] )
+                title = self.cleanHtmlStr(self.cm.ph.getSearchGroups(item, '''alt=['"]([^"^']+?)['"]''')[0])
 
             desc = []
             # season
@@ -178,9 +178,9 @@ class Movs4uCOM(CBaseHostClass):
             if len(genres):
                 desc +=  '[/br]' + ' | '.join(genres)
             
-            tmp = self.cleanHtmlStr( self.cm.ph.getDataBeetwenMarkers(item, '<div class="texto"', '</div>')[1] )
+            tmp = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(item, '<div class="texto"', '</div>')[1])
             if tmp == '':
-                tmp = self.cleanHtmlStr( self.cm.ph.getDataBeetwenMarkers(item, '<div class="contenido', '</div>')[1] )
+                tmp = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(item, '<div class="contenido', '</div>')[1])
             if tmp != '':
                 desc += '[/br]' + tmp
             
@@ -207,7 +207,7 @@ class Movs4uCOM(CBaseHostClass):
         
         mainDesc = self.cleanHtmlStr(self.cm.ph.getDataBeetwenReMarkers(data, re.compile('<div[^>]+?class="wp-content"[^>]*?>'), re.compile('</div>'))[1])
         mainIcon  = self.cm.ph.getDataBeetwenMarkers(data, '<div class="poster"', '</div>')[1]
-        mainIcon  = self.getFullIconUrl( self.cm.ph.getSearchGroups(mainIcon, '''<img[^>]+?src=['"]([^"^']+?\.jpe?g[^"^']*?)["']''')[0] )
+        mainIcon  = self.getFullIconUrl(self.cm.ph.getSearchGroups(mainIcon, '''<img[^>]+?src=['"]([^"^']+?\.jpe?g[^"^']*?)["']''')[0])
         if mainIcon == '':
             mainIcon = cItem.get('icon', '')
         
@@ -437,7 +437,7 @@ class Movs4uCOM(CBaseHostClass):
         
         title = self.cleanHtmlStr(self.cm.ph.getSearchGroups(data, '''<meta[^>]+?itemprop="name"[^>]+?content="([^"]+?)"''')[0])
         icon  = self.cm.ph.getDataBeetwenMarkers(data, '<div id="poster"', '</div>')[1]
-        icon  = self.getFullIconUrl( self.cm.ph.getSearchGroups(icon, '''<img[^>]+?src=['"]([^"^']+?\.jpe?g[^"^']*?)["']''')[0] )
+        icon  = self.getFullIconUrl(self.cm.ph.getSearchGroups(icon, '''<img[^>]+?src=['"]([^"^']+?\.jpe?g[^"^']*?)["']''')[0])
         desc  = self.cleanHtmlStr(self.cm.ph.getDataBeetwenReMarkers(data, re.compile('<div[^>]+?class="wp-content"[^>]*?>'), re.compile('</div>'))[1])
         
         mapDesc = {'Original title': 'alternate_title', 'IMDb Rating':'imdb_rating', 'TMDb Rating':'tmdb_rating', 'Status':'status',
@@ -507,7 +507,7 @@ class Movs4uCOM(CBaseHostClass):
         if icon == '':
             icon = cItem.get('icon', self.DEFAULT_ICON_URL)
         
-        return [{'title':self.cleanHtmlStr( title ), 'text': self.cleanHtmlStr( desc ), 'images':[{'title':'', 'url':self.getFullUrl(icon)}], 'other_info':otherInfo}]
+        return [{'title':self.cleanHtmlStr(title), 'text': self.cleanHtmlStr(desc), 'images':[{'title':'', 'url':self.getFullUrl(icon)}], 'other_info':otherInfo}]
     
     def handleService(self, index, refresh=0, searchPattern='', searchType=''):
         printDBG('handleService start')
@@ -518,7 +518,7 @@ class Movs4uCOM(CBaseHostClass):
         category = self.currItem.get("category", '')
         mode     = self.currItem.get("mode", '')
         
-        printDBG( "handleService: |||||||||||||||||||||||||||||||||||| name[%s], category[%s] " % (name, category) )
+        printDBG("handleService: |||||||||||||||||||||||||||||||||||| name[%s], category[%s] " % (name, category))
         self.currList = []
         
     #MAIN MENU

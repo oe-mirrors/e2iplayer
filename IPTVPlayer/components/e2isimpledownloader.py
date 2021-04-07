@@ -141,7 +141,7 @@ class SingleFileDownloaderWidget(Screen):
 
     def onStart(self):
         self.onShown.remove(self.onStart)
-        self.setTitle( self.title )
+        self.setTitle(self.title)
         self.loadIcons()
         self.hideButtons()
         self.startDownload()

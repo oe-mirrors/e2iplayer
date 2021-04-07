@@ -33,7 +33,7 @@ class UstreamTV(CBaseHostClass):
     MAIN_CAT_TAB = [{'category':'items',          'title': _('Popular'),        'icon':DEFAULT_ICON_URL, 'cat_id':'all', 'filters':{'subCategory':'', 'type':'no-offline', 'location':'anywhere'}},
                     {'category':'categories',     'title': _('Categories'),     'icon':DEFAULT_ICON_URL, 'filters':{}},
                     {'category':'search',         'title': _('Search'),         'icon':DEFAULT_ICON_URL, 'search_item':True},
-                    {'category':'search_history', 'title': _('Search history'), 'icon':DEFAULT_ICON_URL } 
+                    {'category':'search_history', 'title': _('Search history'), 'icon':DEFAULT_ICON_URL} 
                    ]
  
     def __init__(self):
@@ -63,7 +63,7 @@ class UstreamTV(CBaseHostClass):
             filterData = re.compile('<option value="([^"]*?)"[^>]*?>([^<]+?)</option>').findall(filterData)
             self.cacheFilters[filterName] = []
             for item in filterData:
-                self.cacheFilters[filterName].append({'title':self.cleanHtmlStr( item[1] ), 'value':item[0]})
+                self.cacheFilters[filterName].append({'title':self.cleanHtmlStr(item[1]), 'value':item[0]})
         #printDBG("KKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKK [%s]" % )
         
     def listFilters(self, cItem, filterName, category):
@@ -74,7 +74,7 @@ class UstreamTV(CBaseHostClass):
         tab = self.cacheFilters.get(filterName, [])
         
         for item in tab:
-            params = copy.deepcopy( cItem )
+            params = copy.deepcopy(cItem)
             params['category'] = category
             params['title'] = item['title']
             params['filters'][filterName] = item['value']
@@ -126,7 +126,7 @@ class UstreamTV(CBaseHostClass):
             if item[0] == 'all':
                 continue
             params = dict(cItem)
-            params.update({'category':category, 'title':self.cleanHtmlStr( item[1] ), 'cat_id':item[0]})
+            params.update({'category':category, 'title':self.cleanHtmlStr(item[1]), 'cat_id':item[0]})
             self.addDir(params)
         
     def listRegular(self, cItem):
@@ -154,8 +154,8 @@ class UstreamTV(CBaseHostClass):
                 url   = self.cm.ph.getSearchGroups(item, 'href="([^"]+?)"')[0]
                 title = self.cm.ph.getSearchGroups(item, 'title="([^"]+?)"')[0]
                 icon  = self.cm.ph.getSearchGroups(item, 'src="([^"]+?)"')[0]
-                desc  = self.cleanHtmlStr( item )
-                params.update({'title':self.cleanHtmlStr( title ), 'icon':self._getFullUrl(icon), 'desc':desc, 'url':self._getFullUrl(url)})
+                desc  = self.cleanHtmlStr(item)
+                params.update({'title':self.cleanHtmlStr(title), 'icon':self._getFullUrl(icon), 'desc':desc, 'url':self._getFullUrl(url)})
                 self.addVideo(params)
         except Exception:
             printExc()
@@ -194,7 +194,7 @@ class UstreamTV(CBaseHostClass):
 
         name     = self.currItem.get("name", '')
         category = self.currItem.get("category", '')
-        printDBG( "handleService: |||||||||||||||||||||||||||||||||||| name[%s], category[%s] " % (name, category) )
+        printDBG("handleService: |||||||||||||||||||||||||||||||||||| name[%s], category[%s] " % (name, category))
         self.currList = []
         
     #MAIN MENU
@@ -287,7 +287,7 @@ class IPTVHost(CHostBase):
     def getSearchItemInx(self):
         try:
             list = self.host.getCurrList()
-            for i in range( len(list) ):
+            for i in range(len(list)):
                 if list[i]['category'] == 'search':
                     return i
         except Exception:
@@ -300,7 +300,7 @@ class IPTVHost(CHostBase):
             if 'history' == list[self.currIndex]['name']:
                 pattern = list[self.currIndex]['title']
                 search_type = list[self.currIndex]['search_type']
-                self.host.history.addHistoryItem( pattern, search_type)
+                self.host.history.addHistoryItem(pattern, search_type)
                 self.searchPattern = pattern
                 self.searchType = search_type
         except Exception:

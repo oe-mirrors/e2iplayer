@@ -57,7 +57,7 @@ def getLink(width, mediaId, referer, userAgent):
     rpin = "_rpin.{0:x}".format(randint(0, 1e15))
     
     apiUrl = WS_URL.format(randint(0, 0xffffff), mediaId, 'channel', 'lp-live') + '/1/ustream'
-    url = apiUrl + '?' + urllib.parse.urlencode([('media', mediaId), ('referrer', referer), ('appVersion', 2), ('application', 'channel'), ('rsid', rsid), ('appId', 11), ('rpin', rpin), ('type', 'viewer') ])
+    url = apiUrl + '?' + urllib.parse.urlencode([('media', mediaId), ('referrer', referer), ('appVersion', 2), ('application', 'channel'), ('rsid', rsid), ('appId', 11), ('rpin', rpin), ('type', 'viewer')])
     
     params = {'Referer':referer, 'User-Agent':userAgent}
     sts, data = getPage(url, params)

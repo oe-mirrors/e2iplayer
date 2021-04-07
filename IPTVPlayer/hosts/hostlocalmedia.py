@@ -43,11 +43,11 @@ config.plugins.iptvplayer.local_maxitems    = ConfigInteger(1000, (10, 1000000))
 
 def GetConfigList():
     optionList = []
-    optionList.append(getConfigListEntry(_("Sort alphabetically"), config.plugins.iptvplayer.local_alphasort ))
-    optionList.append(getConfigListEntry(_("Show file size"), config.plugins.iptvplayer.local_showfilesize ))
-    optionList.append(getConfigListEntry(_("Show hiddens files"), config.plugins.iptvplayer.local_showhiddensfiles ))
-    optionList.append(getConfigListEntry(_("Show hiddens catalogs"), config.plugins.iptvplayer.local_showhiddensdir ))
-    optionList.append(getConfigListEntry(_("Max items per page"), config.plugins.iptvplayer.local_maxitems ))
+    optionList.append(getConfigListEntry(_("Sort alphabetically"), config.plugins.iptvplayer.local_alphasort))
+    optionList.append(getConfigListEntry(_("Show file size"), config.plugins.iptvplayer.local_showfilesize))
+    optionList.append(getConfigListEntry(_("Show hiddens files"), config.plugins.iptvplayer.local_showhiddensfiles))
+    optionList.append(getConfigListEntry(_("Show hiddens catalogs"), config.plugins.iptvplayer.local_showhiddensdir))
+    optionList.append(getConfigListEntry(_("Max items per page"), config.plugins.iptvplayer.local_maxitems))
     return optionList
 ###################################################
 
@@ -125,7 +125,7 @@ class LocalMedia(CBaseHostClass):
         predefined = [{'title':_('Downloads'), 'path':config.plugins.iptvplayer.NaszaSciezka.value}, {'title':_('rootfs'), 'path':'/'}]
         for item in predefined:
             params = dict(cItem)
-            params.update( item ) 
+            params.update(item) 
             self.addDir(params)
         
         table = self.getMountsTable()
@@ -137,7 +137,7 @@ class LocalMedia(CBaseHostClass):
                 
             if '/' != item['node'] and item['filesystem'] in self.FILE_SYSTEMS:
                 params = dict(cItem)
-                params.update( {'title':item['node'], 'path':item['node']} ) 
+                params.update({'title':item['node'], 'path':item['node']}) 
                 self.addDir(params)
         
     def _getM3uIcon(self, item, cItem):
@@ -195,7 +195,7 @@ class LocalMedia(CBaseHostClass):
             if item['f_type'] == 'inf':
                 if group == '':
                     need_resolve, url = self._getM3uPlayableUrl(baseUrl, url, item)
-                    params.update( {'good_for_fav':True, 'title':item['title'], 'category':'m3u_item', 'url':url, 'desc':item.get('tvg-name', ''), 'icon':icon, 'need_resolve':need_resolve} )
+                    params.update({'good_for_fav':True, 'title':item['title'], 'category':'m3u_item', 'url':url, 'desc':item.get('tvg-name', ''), 'icon':icon, 'need_resolve':need_resolve})
                     self.addVideo(params)
                 else:
                     if group not in groups:
@@ -205,13 +205,13 @@ class LocalMedia(CBaseHostClass):
                         if not self.cm.isValidUrl(groupIcon):
                             groupIcon = icon
                         groups[group] = []
-                        params.update( {'good_for_fav':False, 'title':group, 'category':nextCategory, 'f_group':group, 'url':baseUrl, 'desc':'', 'icon':groupIcon} )
+                        params.update({'good_for_fav':False, 'title':group, 'category':nextCategory, 'f_group':group, 'url':baseUrl, 'desc':'', 'icon':groupIcon})
                         if 'parent-code' in item:
                             params.update({'pin_locked':True, 'pin_code':item['parent-code']})
                         self.addDir(params)
                     groups[group].append(item)
             elif item['f_type'] == 'import' and self.cm.isValidUrl(url):
-                params.update( {'good_for_fav':True, 'title':item['title'], 'path':url, 'desc':'', 'icon':icon} )
+                params.update({'good_for_fav':True, 'title':item['title'], 'path':url, 'desc':'', 'icon':icon})
                 self.addDir(params)
         
         if groups != {}:
@@ -228,7 +228,7 @@ class LocalMedia(CBaseHostClass):
             url = item['uri']
             icon = self._getM3uIcon(item, cItem)
             need_resolve, url = self._getM3uPlayableUrl(baseUrl, url, item)
-            params.update( {'good_for_fav':True, 'title':item['title'], 'category':'m3u_item', 'url':url, 'desc':item.get('tvg-name', ''), 'icon':icon, 'need_resolve':need_resolve} )
+            params.update({'good_for_fav':True, 'title':item['title'], 'category':'m3u_item', 'url':url, 'desc':item.get('tvg-name', ''), 'icon':icon, 'need_resolve':need_resolve})
             self.addVideo(params)
             
     def showErrorMessage(self, message):
@@ -322,7 +322,7 @@ class LocalMedia(CBaseHostClass):
         
         if '' != mountPoint:
             params = dict(cItem)
-            params.update( {'next_good_for_fav':False, 'path':mountPoint, 'category':'dir'} )
+            params.update({'next_good_for_fav':False, 'path':mountPoint, 'category':'dir'})
             self.listDir(params)
         
     def listDir(self, cItem):
@@ -420,14 +420,14 @@ class LocalMedia(CBaseHostClass):
                 printExc()
         for item in tab:
             params = dict(params)
-            params.update( {'good_for_fav':params.get('next_good_for_fav', True), 'title':item['title'], 'category':category, 'desc':''} )
+            params.update({'good_for_fav':params.get('next_good_for_fav', True), 'title':item['title'], 'category':category, 'desc':''})
             if category in ['m3u', 'dir', 'iso']:
                 fullPath = os_path.join(path, item['raw_name'])
                 params['path']  = fullPath
                 if category != 'dir':
                     descTab = []
                     if item.get('size', -1) >= 0:
-                        descTab.append( _("Total size: ") + formatBytes(item['size']) )
+                        descTab.append(_("Total size: ") + formatBytes(item['size']))
                         
                     #if len(table):
                     #    params['iso_mount_path']  = self.getMountPoint(fullPath, table)
@@ -471,11 +471,11 @@ class LocalMedia(CBaseHostClass):
         uri = urlparser.decorateUrl(uri, params)
         
         if uri.meta.get('iptv_proto', '') in ['http', 'https']:
-            urlSupport = self.up.checkHostSupport( uri )
+            urlSupport = self.up.checkHostSupport(uri)
         else:
             urlSupport = 0
         if 1 == urlSupport:
-            retTab = self.up.getVideoLinkExt( uri )
+            retTab = self.up.getVideoLinkExt(uri)
             videoUrls.extend(retTab)
         elif 0 == urlSupport and self._uriIsValid(uri):
             if uri.split('?')[0].endswith('.m3u8'):
@@ -518,7 +518,7 @@ class LocalMedia(CBaseHostClass):
 
         name     = self.currItem.get("name", '')
         category = self.currItem.get("category", '')
-        printDBG( "handleService: |||||||||||||||||||||||||||||||||||| name[%s], category[%s] " % (name, category) )
+        printDBG("handleService: |||||||||||||||||||||||||||||||||||| name[%s], category[%s] " % (name, category))
         self.currList = []
         
     #MAIN MENU
@@ -723,7 +723,7 @@ class IPTVHost(CHostBase):
             text       = item.get('text', '')
             images     = item.get("images", [])
             othersInfo = item.get('other_info', '')
-            retlist.append( ArticleContent(title=title, text=text, images=images, richDescParams=othersInfo) )
+            retlist.append(ArticleContent(title=title, text=text, images=images, richDescParams=othersInfo))
         return RetHost(RetHost.OK, value=retlist)
         
     def getFullIconUrl(self, url):

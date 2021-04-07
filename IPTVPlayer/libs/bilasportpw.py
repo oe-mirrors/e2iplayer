@@ -44,7 +44,7 @@ class BilaSportPwApi(CBaseHostClass):
         self.DEFAULT_ICON_URL = 'https://projects.fivethirtyeight.com/2016-mlb-predictions/images/logos.png'
         self.HTTP_HEADER = self.cm.getDefaultHeader(browser='chrome')
         self.AJAX_HEADER = dict(self.HTTP_HEADER)
-        self.AJAX_HEADER.update( {'X-Requested-With': 'XMLHttpRequest'} )
+        self.AJAX_HEADER.update({'X-Requested-With': 'XMLHttpRequest'})
         self.COOKIE_FILE = GetCookieDir('bilasport.pw.cookie')
         self.defaultParams = {'header':self.HTTP_HEADER, 'save_cookie': True, 'load_cookie': True, 'cookiefile': self.COOKIE_FILE}
 

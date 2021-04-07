@@ -56,7 +56,7 @@ class OfficialFilmIllimite(CBaseHostClass):
         data = self.cm.ph.getDataBeetwenNodes(data, ('<div', '>', 'filter-widget'), ('<script', '>'), False)[1]
         printDBG(data)
         baseTitle = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(data, ('<div', '>', 'header'), ('</div', '>'), False)[1]) + ': %s'
-        tabsTitles = self.cm.ph.getAllItemsBeetwenNodes(data, ('<div', '>', 'filter-tab-'), ('</div', '>'), False )
+        tabsTitles = self.cm.ph.getAllItemsBeetwenNodes(data, ('<div', '>', 'filter-tab-'), ('</div', '>'), False)
         tabsData = data.split('</i>')
         if len(tabsData):
             del tabsData[0]
@@ -77,8 +77,8 @@ class OfficialFilmIllimite(CBaseHostClass):
         else:
             GetIPTVNotify().push("Parsing error. Number of tab titles mismatched number of tabs!", 'error', 10)
         
-        MAIN_CAT_TAB = [{'category':'search',         'title': _('Search'),       'search_item':True       },
-                        {'category': 'search_history', 'title': _('Search history'),                        }]
+        MAIN_CAT_TAB = [{'category':'search',         'title': _('Search'),       'search_item':True},
+                        {'category': 'search_history', 'title': _('Search history'),}]
         self.listsTab(MAIN_CAT_TAB, cItem)
     
     def listCatItems(self, cItem, nextCategory):
@@ -134,7 +134,7 @@ class OfficialFilmIllimite(CBaseHostClass):
             if url == '':
                 continue
             icon = self.cm.ph.getSearchGroups(item, '''\ssrc=['"]([^"^']+?\.(?:jpe?g|png)(?:\?[^'^"]*?)?)['"]''')[0]
-            title = self.cleanHtmlStr( self.cm.ph.getDataBeetwenNodes(item, ('<h', '>'), ('</h', '>'), False)[1] )
+            title = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(item, ('<h', '>'), ('</h', '>'), False)[1])
             desc = ''
             descTab = []
             item = self.cm.ph.getAllItemsBeetwenNodes(item, ('<span', '>'), ('</span', '>'))
@@ -150,12 +150,12 @@ class OfficialFilmIllimite(CBaseHostClass):
                     descTab.append(d)
             desc = ' | '.join(descTab[1:2] + descTab[2:3] + descTab[0:1] + descTab[3:]) + '[/br]' + desc
             params = dict(cItem)
-            params.update( {'good_for_fav': True, 'title':title, 'category':nextCategory, 'url':url, 'desc':desc, 'icon':self.getFullIconUrl(icon)} )
+            params.update({'good_for_fav': True, 'title':title, 'category':nextCategory, 'url':url, 'desc':desc, 'icon':self.getFullIconUrl(icon)})
             self.addDir(params)
         
         if nextPage != '':
             params = dict(cItem)
-            params.update( {'good_for_fav': False, 'title':_('Next page'), 'page':page+1, 'url':nextPage} )
+            params.update({'good_for_fav': False, 'title':_('Next page'), 'page':page+1, 'url':nextPage})
             self.addDir(params)
         
     def exploreItem(self, cItem):
@@ -201,7 +201,7 @@ class OfficialFilmIllimite(CBaseHostClass):
                 url = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''<iframe[^>]+?src=['"]([^"^']+?)['"]''', 1, True)[0])
                 if url == '':
                     continue
-                name = self.cleanHtmlStr( self.cm.ph.getDataBeetwenNodes(data, ('<a', '>', '#' + frameId), ('</a', '>'), False)[1] )
+                name = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(data, ('<a', '>', '#' + frameId), ('</a', '>'), False)[1])
                 self.cacheLinks[url] = [{'name':name, 'url':strwithmeta(url, {'Referer':cUrl}), 'need_resolve':1}]
                 params = dict(cItem)
                 params.update({'good_for_fav': False, 'url':url, 'title':cItem['title'] + ': ' + name, 'desc':desc, 'prev_url':cItem['url']})
@@ -254,8 +254,8 @@ class OfficialFilmIllimite(CBaseHostClass):
         if '/seria/' in url:
             title = ''
         else:
-            title = self.cleanHtmlStr( self.cm.ph.getDataBeetwenNodes(data, ('<div', '>', 'title'), ('</div', '>'), False)[1] )
-        desc = self.cleanHtmlStr( self.cm.ph.getDataBeetwenNodes(data, ('<div', '>', 'synopsis'), ('</div', '>'), False)[1] )
+            title = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(data, ('<div', '>', 'title'), ('</div', '>'), False)[1])
+        desc = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(data, ('<div', '>', 'synopsis'), ('</div', '>'), False)[1])
 
         itemsList = []
         tmp = self.cm.ph.getDataBeetwenNodes(data, ('<div', '>', 'info-right'), ('</div', '>'), False)[1]
@@ -288,7 +288,7 @@ class OfficialFilmIllimite(CBaseHostClass):
         if desc == '':
             desc  = cItem.get('desc', '')
         
-        return [{'title':self.cleanHtmlStr( title ), 'text': self.cleanHtmlStr( desc ), 'images':[{'title':'', 'url':self.getFullUrl(icon)}], 'other_info':{'custom_items_list':itemsList}}]
+        return [{'title':self.cleanHtmlStr(title), 'text': self.cleanHtmlStr(desc), 'images':[{'title':'', 'url':self.getFullUrl(icon)}], 'other_info':{'custom_items_list':itemsList}}]
         
     def handleService(self, index, refresh=0, searchPattern='', searchType=''):
         printDBG('handleService start')
@@ -297,7 +297,7 @@ class OfficialFilmIllimite(CBaseHostClass):
 
         name     = self.currItem.get("name", '')
         category = self.currItem.get("category", '')
-        printDBG( "handleService: ||| name[%s], category[%s] " % (name, category) )
+        printDBG("handleService: ||| name[%s], category[%s] " % (name, category))
         self.currList = []
         
     #MAIN MENU

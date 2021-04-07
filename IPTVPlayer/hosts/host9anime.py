@@ -35,7 +35,7 @@ class AnimeTo(CBaseHostClass, CaptchaHelper):
         self.USER_AGENT = 'User-Agent=Mozilla/5.0 (Windows NT 6.1; WOW64; rv:40.0) Gecko/20100101 Firefox/40.0'
         self.HEADER = {'User-Agent': self.USER_AGENT, 'DNT':'1', 'Accept': 'text/html'}
         self.AJAX_HEADER = dict(self.HEADER)
-        self.AJAX_HEADER.update( {'X-Requested-With': 'XMLHttpRequest'} )
+        self.AJAX_HEADER.update({'X-Requested-With': 'XMLHttpRequest'})
         self.MAIN_URL = 'https://www1.9anime.to/'
         self.cacheEpisodes = {}
         self.cacheLinks    = {}
@@ -43,14 +43,14 @@ class AnimeTo(CBaseHostClass, CaptchaHelper):
         self.cacheFiltersKeys = []
         self.defaultParams = {'header':self.HEADER, 'with_metadata':True, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
     
-        self.MAIN_CAT_TAB = [{'category':'list_filters',    'title': _('Home'),        'url':self.getFullUrl('/filter')      },
-                             {'category':'list_items',      'title': _('Newest'),      'url':self.getFullUrl('/newest')      },
-                             {'category':'list_items',      'title': _('Last update'), 'url':self.getFullUrl('/updated')     },
+        self.MAIN_CAT_TAB = [{'category':'list_filters',    'title': _('Home'),        'url':self.getFullUrl('/filter')},
+                             {'category':'list_items',      'title': _('Newest'),      'url':self.getFullUrl('/newest')},
+                             {'category':'list_items',      'title': _('Last update'), 'url':self.getFullUrl('/updated')},
                              {'category':'list_items',      'title': _('Most watched'),'url':self.getFullUrl('/most-watched')},
-                             {'category':'list_letters',    'title': _('A-Z List'),    'url':self.getFullUrl('/az-list')     },
+                             {'category':'list_letters',    'title': _('A-Z List'),    'url':self.getFullUrl('/az-list')},
                              
                              {'category': 'search',            'title': _('Search'), 'search_item': True,},
-                             {'category': 'search_history',    'title': _('Search history'),            } 
+                             {'category': 'search_history',    'title': _('Search history'),} 
                             ]
         self.scriptCache = {}
     
@@ -75,8 +75,8 @@ class AnimeTo(CBaseHostClass, CaptchaHelper):
         data = self.cm.ph.getDataBeetwenNodes(data, ('<ul', '>', 'letters'), ('</ul', '>'))[1]
         data = self.cm.ph.getAllItemsBeetwenMarkers(data, '<li', '</li>')
         for item in data:
-            url = self.getFullUrl( self.cm.ph.getSearchGroups(item, '''href=['"]([^"^']+?)['"]''')[0] )
-            title = self.cleanHtmlStr( item )
+            url = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''href=['"]([^"^']+?)['"]''')[0])
+            title = self.cleanHtmlStr(item)
             params = dict(cItem)
             params.update({'good_for_fav':False, 'category':nextCategory, 'title':title, 'url':url})
             self.addDir(params)
@@ -171,14 +171,14 @@ class AnimeTo(CBaseHostClass, CaptchaHelper):
         if nextPage and len(data):
             data[-1] = re.compile('<div[^>]+?paging\-wrapper[^>]+?>').split(data[-1], 1)[0]
         for item in data:
-            url = self.getFullUrl( self.cm.ph.getSearchGroups(item, 'href="([^"]+?)"')[0] )
-            tip = self.getFullUrl( self.cm.ph.getSearchGroups(item, 'data-tip="([^"]+?)"')[0] )
+            url = self.getFullUrl(self.cm.ph.getSearchGroups(item, 'href="([^"]+?)"')[0])
+            tip = self.getFullUrl(self.cm.ph.getSearchGroups(item, 'data-tip="([^"]+?)"')[0])
             if not self.cm.isValidUrl(url):
                 continue
-            icon = self.getFullIconUrl( self.cm.ph.getSearchGroups(item, 'src="([^"]+?)"')[0] )
-            title = self.cleanHtmlStr( self.cm.ph.getDataBeetwenNodes(item, ('<a', '>', 'name'), ('</a', '>'))[1])
+            icon = self.getFullIconUrl(self.cm.ph.getSearchGroups(item, 'src="([^"]+?)"')[0])
+            title = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(item, ('<a', '>', 'name'), ('</a', '>'))[1])
             if title == '':
-                title = self.cleanHtmlStr( item )
+                title = self.cleanHtmlStr(item)
             if title == '':
                 title = self.cleanHtmlStr(self.cm.ph.getSearchGroups(item, '''alt=['"]([^'^"]+?)['"]''')[0])
             if title == '':
@@ -370,7 +370,7 @@ class AnimeTo(CBaseHostClass, CaptchaHelper):
         jsCode = ''
         tmp = self.cm.ph.getAllItemsBeetwenNodes(data, ('<script', '>', 'all.js'), ('</script', '>'))
         for item in tmp:
-            jsUrl = self.getFullUrl( self.cm.ph.getSearchGroups(item, '''src=['"]([^'^"]+?all\.js(?:\?[^'^"]*?)?)['"]''')[0] )
+            jsUrl = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''src=['"]([^'^"]+?all\.js(?:\?[^'^"]*?)?)['"]''')[0])
             if jsUrl in self.scriptCache:
                 jsCode = self.scriptCache[jsUrl]
                 break
@@ -525,13 +525,13 @@ class AnimeTo(CBaseHostClass, CaptchaHelper):
         if desc == '':
             desc = self.cleanHtmlStr(data.split('<div class="meta">')[-1]) 
         if desc == '':
-            desc = self.cleanHtmlStr( self.cm.ph.getSearchGroups(data, '<meta property="og:description"[^>]+?content="([^"]+?)"')[0] )
+            desc = self.cleanHtmlStr(self.cm.ph.getSearchGroups(data, '<meta property="og:description"[^>]+?content="([^"]+?)"')[0])
         
         title = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(data, '<div class="title">', '<span>')[1])
         if title == '':
-            title = self.cleanHtmlStr( self.cm.ph.getSearchGroups(data, '<meta property="og:title"[^>]+?content="([^"]+?)"')[0] )
+            title = self.cleanHtmlStr(self.cm.ph.getSearchGroups(data, '<meta property="og:title"[^>]+?content="([^"]+?)"')[0])
         
-        icon  = self.getFullUrl( self.cm.ph.getSearchGroups(data, '<meta property="og:image"[^>]+?content="([^"]+?)"')[0] )
+        icon  = self.getFullUrl(self.cm.ph.getSearchGroups(data, '<meta property="og:image"[^>]+?content="([^"]+?)"')[0])
         
         if title == '':
             title = cItem.get('title', '')
@@ -580,7 +580,7 @@ class AnimeTo(CBaseHostClass, CaptchaHelper):
         if tmp != '':
             otherInfo['year'] = tmp
         
-        return [{'title':self.cleanHtmlStr( title ), 'text': self.cleanHtmlStr( desc ), 'images':[{'title':'', 'url':self.getFullUrl(icon)}], 'other_info':otherInfo}]
+        return [{'title':self.cleanHtmlStr(title), 'text': self.cleanHtmlStr(desc), 'images':[{'title':'', 'url':self.getFullUrl(icon)}], 'other_info':otherInfo}]
         
     def handleService(self, index, refresh=0, searchPattern='', searchType=''):
         printDBG('handleService start')
@@ -591,7 +591,7 @@ class AnimeTo(CBaseHostClass, CaptchaHelper):
         category = self.currItem.get("category", '')
         mode     = self.currItem.get("mode", '')
         
-        printDBG( "handleService: |||||||||||||||||||||||||||||||||||| name[%s], category[%s] " % (name, category) )
+        printDBG("handleService: |||||||||||||||||||||||||||||||||||| name[%s], category[%s] " % (name, category))
         self.currList = []
         
     #MAIN MENU

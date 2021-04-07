@@ -35,7 +35,7 @@ class OroroTV(CBaseHostClass):
         self.MAIN_URL = 'https://ororo.tv/'
         self.HEADER = {'User-Agent': self.USER_AGENT, 'DNT':'1', 'Accept': 'text/html', 'Accept-Encoding':'gzip, deflate', 'Referer':self.getMainUrl(), 'Origin':self.getMainUrl()}
         self.AJAX_HEADER = dict(self.HEADER)
-        self.AJAX_HEADER.update( {'X-Requested-With': 'XMLHttpRequest', 'Accept-Encoding':'gzip, deflate', 'Content-Type':'application/x-www-form-urlencoded; charset=UTF-8', 'Accept':'application/json, text/javascript, */*; q=0.01'} )
+        self.AJAX_HEADER.update({'X-Requested-With': 'XMLHttpRequest', 'Accept-Encoding':'gzip, deflate', 'Content-Type':'application/x-www-form-urlencoded; charset=UTF-8', 'Accept':'application/json, text/javascript, */*; q=0.01'})
         
         self.cacheFilters  = {}
         self.cacheLinks   = {}
@@ -44,7 +44,7 @@ class OroroTV(CBaseHostClass):
         self.MAIN_CAT_TAB = [
                              {'category':'list_channels',         'title': _('Channels'),            'url':self.getFullUrl('/channels')},
                              {'category': 'search',                'title': _('Search'),              'search_item': True, },
-                             {'category': 'search_history',        'title': _('Search history'),                          } 
+                             {'category': 'search_history',        'title': _('Search history'),} 
                             ]
     
     def getPage(self, baseUrl, addParams={}, post_data=None):
@@ -74,16 +74,16 @@ class OroroTV(CBaseHostClass):
         try:
             data = byteify(json.loads(data), '', True)
             for item in data:
-                url   = self.getFullUrl( item.get('url', '') )
-                icon  =  self.getFullUrl( item.get('banner', '') )
+                url   = self.getFullUrl(item.get('url', ''))
+                icon  =  self.getFullUrl(item.get('banner', ''))
                 if icon == '':
-                    icon  = self.getFullUrl( item.get('image', '') )
-                title = self.cleanHtmlStr( item.get('title', '') ) 
+                    icon  = self.getFullUrl(item.get('image', ''))
+                title = self.cleanHtmlStr(item.get('title', '')) 
                 
-                desc  = ' | '.join( item.get('parsed_tags', []) )
+                desc  = ' | '.join(item.get('parsed_tags', []))
                 if desc != '':
                     desc += ' [/br]' 
-                desc += self.cleanHtmlStr( item.get('description', '') )
+                desc += self.cleanHtmlStr(item.get('description', ''))
                 
                 params = dict(cItem)
                 params.update({'good_for_fav':True, 'category':nextCategory, 'title':title, 'desc':desc, 'url':url, 'icon':icon})
@@ -115,9 +115,9 @@ class OroroTV(CBaseHostClass):
         if len(data):
             del data[0]
         for item in data:
-            url   = self.getFullUrl( self.cm.ph.getSearchGroups(item, '''data\-href=['"]([^'^"]+?)['"]''')[0] )
-            icon  = self.getFullUrl( self.cm.ph.getSearchGroups(item, '''original=['"]([^'^"]+?)['"]''')[0] )
-            title = self.cleanHtmlStr( self.cm.ph.getDataBeetwenNodes(item, ('<a', '>', 'series-card-title'), ('</a', '>'))[1] )
+            url   = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''data\-href=['"]([^'^"]+?)['"]''')[0])
+            icon  = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''original=['"]([^'^"]+?)['"]''')[0])
+            title = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(item, ('<a', '>', 'series-card-title'), ('</a', '>'))[1])
             
             desc = []
             tmp = self.cm.ph.getAllItemsBeetwenMarkers(item, '<i', '</i>')
@@ -129,7 +129,7 @@ class OroroTV(CBaseHostClass):
                 if t == '':
                     continue
                 desc.append(t)
-            desc  = ' | '.join( desc ) 
+            desc  = ' | '.join(desc) 
             if desc != '':
                 desc += '[/br]' 
             
@@ -157,11 +157,11 @@ class OroroTV(CBaseHostClass):
         
         data = self.cm.ph.getAllItemsBeetwenMarkers(data, '<a', '</a>')
         for item in data:
-            url   = self.getFullUrl( self.cm.ph.getSearchGroups(item, '''href=['"]([^'^"]+?)['"]''')[0] )
-            icon  = self.getFullUrl( self.cm.ph.getSearchGroups(item, '''src=['"]([^'^"]+?)['"]''')[0] )
+            url   = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''href=['"]([^'^"]+?)['"]''')[0])
+            icon  = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''src=['"]([^'^"]+?)['"]''')[0])
             tmp   = self.cm.ph.getAllItemsBeetwenMarkers(item, '<p', '</p>')
-            title = self.cleanHtmlStr( tmp[0] )
-            desc  = self.cleanHtmlStr( tmp[1] )
+            title = self.cleanHtmlStr(tmp[0])
+            desc  = self.cleanHtmlStr(tmp[1])
             params = dict(cItem)
             params.update({'good_for_fav':True, 'title':title, 'url':url, 'desc':desc, 'icon':icon})
             if '/channels/' in url and '/videos/' not in url: 
@@ -218,7 +218,7 @@ class OroroTV(CBaseHostClass):
         category = self.currItem.get("category", '')
         mode     = self.currItem.get("mode", '')
         
-        printDBG( "handleService: |||||||||||||||||||||||||||||||||||| name[%s], category[%s] " % (name, category) )
+        printDBG("handleService: |||||||||||||||||||||||||||||||||||| name[%s], category[%s] " % (name, category))
         self.currList = []
         
     #MAIN MENU

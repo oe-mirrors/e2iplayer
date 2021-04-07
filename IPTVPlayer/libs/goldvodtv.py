@@ -46,7 +46,7 @@ def GetConfigList():
 
 class GoldVodTVApi:
     MAIN_URL   = 'http://goldvod.tv/'
-    HTTP_HEADER  = { 'User-Agent': 'Mozilla/5.0 (X11; Ubuntu; Linux i686; rv:12.0) Gecko/20100101 Firefox/12.0', 'Referer': MAIN_URL }
+    HTTP_HEADER  = {'User-Agent': 'Mozilla/5.0 (X11; Ubuntu; Linux i686; rv:12.0) Gecko/20100101 Firefox/12.0', 'Referer': MAIN_URL}
     
     def __init__(self):
         self.COOKIE_FILE = GetCookieDir('goldvodtv.cookie')
@@ -80,7 +80,7 @@ class GoldVodTVApi:
                 self.loggedIn = True
                 self.http_params.update({'save_cookie': True, 'load_cookie': True, 'cookiefile': self.COOKIE_FILE})
             else:
-                self.sessionEx.open(MessageBox, 'Problem z zalogowanie użytkownika "%s. Sprawdź dane do logowania w konfiguracji hosta."' % login, type=MessageBox.TYPE_INFO, timeout=10 )
+                self.sessionEx.open(MessageBox, 'Problem z zalogowanie użytkownika "%s. Sprawdź dane do logowania w konfiguracji hosta."' % login, type=MessageBox.TYPE_INFO, timeout=10)
                 self.loggedIn = False
         
         channelsTab = []
@@ -129,11 +129,11 @@ class GoldVodTVApi:
             return False
         
         HTTP_HEADER= dict(GoldVodTVApi.HTTP_HEADER)
-        HTTP_HEADER.update( {'Referer':loginUrl} )
+        HTTP_HEADER.update({'Referer':loginUrl})
         
         post_data = {'login': login, 'pass': password, 'remember': 1, 'logged': ''}
         params    = {'header': HTTP_HEADER, 'cookiefile': self.COOKIE_FILE, 'save_cookie': True, 'load_cookie': True}
-        sts, data = self.cm.getPage( loginUrl, params, post_data)
+        sts, data = self.cm.getPage(loginUrl, params, post_data)
         if sts:
             if os_path.isfile(self.COOKIE_FILE):
                 if 'logout.html' in data:

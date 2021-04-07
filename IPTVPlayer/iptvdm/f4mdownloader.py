@@ -52,7 +52,7 @@ class F4mDownloader(BaseDownloader):
         return "F4Mdump"
 
     def isWorkingCorrectly(self, callBackFun):
-        self.iptv_sys = iptv_system( DMHelper.GET_F4M_PATH() + " 2>&1 ", boundFunction(self._checkWorkingCallBack, callBackFun) )
+        self.iptv_sys = iptv_system(DMHelper.GET_F4M_PATH() + " 2>&1 ", boundFunction(self._checkWorkingCallBack, callBackFun))
         
     def _checkWorkingCallBack(self, callBackFun, code, data):
         reason = ''
@@ -67,7 +67,7 @@ class F4mDownloader(BaseDownloader):
             self._isWgetWorkingCorrectly(callBackFun)
         
     def _isWgetWorkingCorrectly(self, callBackFun):
-        self.iptv_sys = iptv_system( DMHelper.GET_WGET_PATH() + " -V 2>&1 ", boundFunction(self._checkWgetWorkingCallBack, callBackFun) )
+        self.iptv_sys = iptv_system(DMHelper.GET_WGET_PATH() + " -V 2>&1 ", boundFunction(self._checkWgetWorkingCallBack, callBackFun))
         
     def _checkWgetWorkingCallBack(self, callBackFun, code, data):
         reason = ''
@@ -103,7 +103,7 @@ class F4mDownloader(BaseDownloader):
         self.console = eConsoleAppContainer()
         self.console_appClosed_conn = eConnectCallback(self.console.appClosed, self._cmdFinished)
         self.console_stderrAvail_conn = eConnectCallback(self.console.stderrAvail, self._dataAvail)
-        self.console.execute( E2PrioFix( cmd ) )
+        self.console.execute(E2PrioFix(cmd))
         
         self.status     = DMHelper.STS.DOWNLOADING
         

@@ -200,7 +200,7 @@ def TEAMCASTPL_decryptPlayerParams(p, a, c, k, e=None, d=None):
 # there is problem in exec when this functions are class methods
 # sub (even static) or functions
 
-def getParamsTouple(code, type=1, r1=False, r2=False ):
+def getParamsTouple(code, type=1, r1=False, r2=False):
     mark1Tab = ["}(", "}\r\n(", "}\n(", "}\r("]
     mark2 = "))"
     
@@ -241,10 +241,10 @@ def unpackJS(data, decryptionFun, addCode=''):
         printExc('unpackJS compile algo code EXCEPTION')
         return ''
     vGlobals = {"__builtins__": None, 'string': string, 'decodeURIComponent':urllib.parse.unquote, 'unescape':urllib.parse.unquote}
-    vLocals = { 'paramsTouple': None }
+    vLocals = {'paramsTouple': None}
 
     try:
-        exec( paramsAlgoObj, vGlobals, vLocals )
+        exec(paramsAlgoObj, vGlobals, vLocals)
     except Exception:
         printExc('unpackJS exec code EXCEPTION')
         return ''
@@ -303,7 +303,7 @@ def VIDEOWEED_decryptPlayerParams(w, i, s=None, e=None):
         ll11 = -1
         if ord(I1lI[ll1I]) % 2:
             ll11 = 1
-        l1ll.append( JS_FromCharCode( int( lI1l[lIll:lIll+2], 36 ) - ll11 ) )
+        l1ll.append(JS_FromCharCode(int(lI1l[lIll:lIll+2], 36) - ll11))
         ll1I += 1
         if ll1I >= len(l1lI):
             ll1I = 0
@@ -347,7 +347,7 @@ class captchaParser:
 ################################################################################
 
 def decorateUrl(url, metaParams={}):
-    retUrl = strwithmeta( url )
+    retUrl = strwithmeta(url)
     retUrl.meta.update(metaParams)
     urlLower = url.lower()
     if 'iptv_proto' not in retUrl.meta:
@@ -430,7 +430,7 @@ def getDirectM3U8Playlist(M3U8Url, checkExt=True, variantCheck=True, cookieParam
                 item['name']  = "bitrate: %s res: %dx%d %s" % (item['bitrate'],
                                                                item['width'],
                                                                item['height'],
-                                                               item['codecs'] )
+                                                               item['codecs'])
                 if mergeAltAudio and playlist.alt_audio_streams and item['url'].meta.get('iptv_proto') == 'm3u8':
                     for audio_stream in playlist.alt_audio_streams:
                         audioUrl = strwithmeta(audio_stream.absolute_uri, item['url'].meta)
@@ -443,7 +443,7 @@ def getDirectM3U8Playlist(M3U8Url, checkExt=True, variantCheck=True, cookieParam
                     retPlaylists.append(item)
         
             if sortWithMaxBitrate > -1:
-                def __getLinkQuality( itemLink ):
+                def __getLinkQuality(itemLink):
                     try:
                         return int(itemLink['bitrate'])
                     except Exception:
@@ -510,7 +510,7 @@ def getF4MLinksWithMeta(manifestUrl, checkExt=True, cookieParams={}, sortWithMax
             retPlaylists.append({'name':'[f4m/hds]', 'bitrate':0, 'url':link})
         
         if sortWithMaxBitrate > -1:
-            def __getLinkQuality( itemLink ):
+            def __getLinkQuality(itemLink):
                 try:
                     return int(itemLink['bitrate'])
                 except Exception:
@@ -606,7 +606,7 @@ def getMPDLinksWithMeta(manifestUrl, checkExt=True, cookieParams={}, sortWithMax
                     videoItem['height']     = video['height']
                     videoItem['frame_rate'] = video['frame_rate']
                     
-                    videoItem['name']  = "[%s] bitrate: %s %dx%d %s %sfps" % ( videoItem['lang'],
+                    videoItem['name']  = "[%s] bitrate: %s %dx%d %s %sfps" % (videoItem['lang'],
                                                                                videoItem['bandwidth'],
                                                                                videoItem['width'],
                                                                                videoItem['height'],
@@ -616,7 +616,7 @@ def getMPDLinksWithMeta(manifestUrl, checkExt=True, cookieParams={}, sortWithMax
                     retPlaylists.append(videoItem)
                     videoIdx += 1
             else:
-                audioItem['name']  = "[%s] bandwidth: %s %s" % ( audioItem['lang'],
+                audioItem['name']  = "[%s] bandwidth: %s %s" % (audioItem['lang'],
                                                                  audioItem['bandwidth'],
                                                                  audioItem['codecs'])
                 audioItem['url'] = strwithmeta(manifestUrl, {'iptv_proto':'mpd', 'iptv_audio_rep_idx':audioIdx, 'iptv_livestream':audioItem['livestream']})
@@ -625,7 +625,7 @@ def getMPDLinksWithMeta(manifestUrl, checkExt=True, cookieParams={}, sortWithMax
             audioIdx += 1
             
     if sortWithMaxBandwidth > -1:
-        def __getLinkQuality( itemLink ):
+        def __getLinkQuality(itemLink):
             try:
                 return int(itemLink['bandwidth'])
             except Exception:

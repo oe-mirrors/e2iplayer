@@ -114,7 +114,7 @@ class SubsRoProvider(CBaseSubProviderClass):
             if url == '':
                 continue
             
-            title  = self.cleanHtmlStr( self.cm.ph.getDataBeetwenNodes(item, ('<h', '>', 'title'), ('</h', '>'), False)[1] )
+            title  = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(item, ('<h', '>', 'title'), ('</h', '>'), False)[1])
             lang   = self.cm.ph.getSearchGroups(item, 'flag\-([a-z]+?)\-big\.png')[0] 
             
             descTab = []
@@ -138,7 +138,7 @@ class SubsRoProvider(CBaseSubProviderClass):
         if not sts:
             return
         imdbid = self.cm.ph.getSearchGroups(data, '/title/(tt[0-9]+?)[^0-9]')[0]
-        url    = self.getFullUrl( self.cm.ph.getSearchGroups(data, 'href="([^"]*?/descarca/[^"]+?)"')[0] )
+        url    = self.getFullUrl(self.cm.ph.getSearchGroups(data, 'href="([^"]*?/descarca/[^"]+?)"')[0])
         subId  = url.rsplit('/', 1)[-1]
 
         try:
@@ -209,7 +209,7 @@ class SubsRoProvider(CBaseSubProviderClass):
         name     = self.currItem.get("name", '')
         category = self.currItem.get("category", '')
         
-        printDBG( "handleService: |||||||||||||||||||||||||||||||||||| name[%s], category[%s] " % (name, category) )
+        printDBG("handleService: |||||||||||||||||||||||||||||||||||| name[%s], category[%s] " % (name, category))
         self.currList = []
         
     #MAIN MENU

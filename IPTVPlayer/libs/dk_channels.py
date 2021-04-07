@@ -38,7 +38,7 @@ class TV2RChannel():
         self.cm = common()
         
     def getChannels(self):
-        return copy.deepcopy( self.CHANNELS )
+        return copy.deepcopy(self.CHANNELS)
         
     def __getFynskemedierIP(self):
         for attempt in range(0, 2):

@@ -34,7 +34,7 @@ class GamatoTV(CBaseHostClass):
         self.USER_AGENT = 'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:40.0) Gecko/20100101 Firefox/40.0'
         self.HEADER = {'User-Agent': self.USER_AGENT, 'DNT':'1', 'Accept': 'text/html'}
         self.AJAX_HEADER = dict(self.HEADER)
-        self.AJAX_HEADER.update( {'X-Requested-With': 'XMLHttpRequest'} )
+        self.AJAX_HEADER.update({'X-Requested-With': 'XMLHttpRequest'})
         self.MAIN_URL = 'http://gamatotv.co/'
         self.cacheLinks    = {}
         self.cacheFilters  = {}
@@ -43,7 +43,7 @@ class GamatoTV(CBaseHostClass):
     
         self.MAIN_CAT_TAB = [
                              {'category': 'search',           'title': _('Search'), 'search_item': True,},
-                             {'category': 'search_history',   'title': _('Search history'),            } 
+                             {'category': 'search_history',   'title': _('Search history'),} 
                             ]
         
     def getPage(self, baseUrl, addParams={}, post_data=None):
@@ -121,7 +121,7 @@ class GamatoTV(CBaseHostClass):
             item = item.split(',')
             for it in item:
                 it = self.cm.ph.getDataBeetwenMarkers(it, '<a', '</a>')[1]
-                url = self.getFullUrl( self.cm.ph.getSearchGroups(it, '''href=['"]([^"^']+?)['"]''')[0] )
+                url = self.getFullUrl(self.cm.ph.getSearchGroups(it, '''href=['"]([^"^']+?)['"]''')[0])
                 if not self.cm.isValidUrl(url):
                     continue
                 title = self.cleanHtmlStr(it)
@@ -164,11 +164,11 @@ class GamatoTV(CBaseHostClass):
         data = self.cm.ph.getDataBeetwenMarkers(data, 'xg_list_groups_main', '</ul></div>')[1]
         data = self.cm.ph.getAllItemsBeetwenMarkers(data, '<li', '</li>')
         for item in data:
-            url = self.getFullUrl( self.cm.ph.getSearchGroups(item, '''href=['"]([^"^']+?)['"]''')[0] )
-            if not self.cm.isValidUrl( url ):
+            url = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''href=['"]([^"^']+?)['"]''')[0])
+            if not self.cm.isValidUrl(url):
                 continue
-            icon = self.getFullIconUrl( self.cm.ph.getSearchGroups(item, '''src=['"]([^"^']+?)['"]''')[0] )
-            title = self.cleanHtmlStr( self.cm.ph.getDataBeetwenMarkers(item, '<h3', '</h3>')[1] )
+            icon = self.getFullIconUrl(self.cm.ph.getSearchGroups(item, '''src=['"]([^"^']+?)['"]''')[0])
+            title = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(item, '<h3', '</h3>')[1])
 
             tmp = self.cm.ph.getAllItemsBeetwenMarkers(item, '<span', '</span>')
             desc = []
@@ -240,7 +240,7 @@ class GamatoTV(CBaseHostClass):
             if len(tmp) > 1:
                 printDBG(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> SEASON %s" % len(tmp[0]))
                 for idx in range(2, len(tmp), 2):
-                    sTitle = self.cleanHtmlStr( tmp[idx-1] )
+                    sTitle = self.cleanHtmlStr(tmp[idx-1])
                     sNum = self.cm.ph.getSearchGroups(sTitle, '[^0-9]([0-9]+)')[0]
                     
                     episodesList = []
@@ -403,7 +403,7 @@ class GamatoTV(CBaseHostClass):
         
         title = self.cleanHtmlStr(self.cm.ph.getSearchGroups(data, '''<meta[^>]+?itemprop="name"[^>]+?content="([^"]+?)"''')[0])
         icon  = self.cm.ph.getDataBeetwenMarkers(data, '<div id="poster"', '</div>')[1]
-        icon  = self.getFullIconUrl( self.cm.ph.getSearchGroups(icon, '''<img[^>]+?src=['"]([^"^']+?\.jpe?g[^"^']*?)["']''')[0] )
+        icon  = self.getFullIconUrl(self.cm.ph.getSearchGroups(icon, '''<img[^>]+?src=['"]([^"^']+?\.jpe?g[^"^']*?)["']''')[0])
         desc  = self.cleanHtmlStr(self.cm.ph.getDataBeetwenReMarkers(data, re.compile('<div[^>]+?class="wp-content"[^>]*?>'), re.compile('</div>'))[1])
         
         mapDesc = {'Original title': 'alternate_title', 'IMDb Rating':'imdb_rating', 'TMDb Rating':'tmdb_rating', 'Status':'status',
@@ -473,7 +473,7 @@ class GamatoTV(CBaseHostClass):
         if icon == '':
             icon = cItem.get('icon', self.DEFAULT_ICON_URL)
         
-        return [{'title':self.cleanHtmlStr( title ), 'text': self.cleanHtmlStr( desc ), 'images':[{'title':'', 'url':self.getFullUrl(icon)}], 'other_info':otherInfo}]
+        return [{'title':self.cleanHtmlStr(title), 'text': self.cleanHtmlStr(desc), 'images':[{'title':'', 'url':self.getFullUrl(icon)}], 'other_info':otherInfo}]
     
     def handleService(self, index, refresh=0, searchPattern='', searchType=''):
         printDBG('handleService start')
@@ -484,7 +484,7 @@ class GamatoTV(CBaseHostClass):
         category = self.currItem.get("category", '')
         mode     = self.currItem.get("mode", '')
         
-        printDBG( "handleService: |||||||||||||||||||||||||||||||||||| name[%s], category[%s] " % (name, category) )
+        printDBG("handleService: |||||||||||||||||||||||||||||||||||| name[%s], category[%s] " % (name, category))
         self.currList = []
         
     #MAIN MENU

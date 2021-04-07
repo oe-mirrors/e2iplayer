@@ -43,7 +43,7 @@ class PlanetStreaming(CBaseHostClass):
         self.DEFAULT_ICON_URL = 'http://cdn-thumbshot.pearltrees.com/4d/72/4d725324089e9adab59eee4aa32f548f-pearlsquare.jpg'
         self.HEADER = {'User-Agent': 'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:40.0) Gecko/20100101 Firefox/40.0', 'DNT':'1', 'Accept': 'text/html'}
         self.AJAX_HEADER = dict(self.HEADER)
-        self.AJAX_HEADER.update( {'X-Requested-With': 'XMLHttpRequest'} )
+        self.AJAX_HEADER.update({'X-Requested-With': 'XMLHttpRequest'})
         self.MAIN_URL = None
         self.MAIN_MOVIES_URL = None
         self.MAIN_SERIES_URL = None
@@ -105,8 +105,8 @@ class PlanetStreaming(CBaseHostClass):
     def listMainMenu(self, cItem):
         printDBG("PlanetStreaming.listMainMenu")
         MAIN_CAT_TAB = [
-                        {'category': 'search',          'title': _('Search'), 'search_item': True,                        },
-                        {'category': 'search_history',  'title': _('Search history'),                                    } 
+                        {'category': 'search',          'title': _('Search'), 'search_item': True,},
+                        {'category': 'search_history',  'title': _('Search history'),} 
                        ]
         
         sts, data = self.getPage(self.getMainUrl())
@@ -211,9 +211,9 @@ class PlanetStreaming(CBaseHostClass):
         data = self.cm.ph.rgetAllItemsBeetwenNodes(data, ('</div', '>'), ('<div', '>', 'fullstreaming'))
         for item in data:
             tmp = self.cm.ph.getDataBeetwenMarkers(item, '<h3', '</h3>')[1]
-            url   = self.getFullUrl( self.cm.ph.getSearchGroups(tmp, '''\shref=['"]([^'^"]+?)['"]''')[0] )
+            url   = self.getFullUrl(self.cm.ph.getSearchGroups(tmp, '''\shref=['"]([^'^"]+?)['"]''')[0])
             title = self.cleanHtmlStr(tmp)
-            icon  = self.getFullIconUrl( self.cm.ph.getSearchGroups(item, '''\ssrc=['"]([^'^"]+?)['"]''')[0] )
+            icon  = self.getFullIconUrl(self.cm.ph.getSearchGroups(item, '''\ssrc=['"]([^'^"]+?)['"]''')[0])
             
             desc = []
             tmp  = reDescObj2.split(reDescObj.split(item)[-1])
@@ -255,7 +255,7 @@ class PlanetStreaming(CBaseHostClass):
             langTitle = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(langItem, '<div', '</div>')[1])
             langItem = self.cm.ph.getAllItemsBeetwenMarkers(langItem, '<a', '</a>')
             for item in langItem:
-                url = self.getFullUrl( self.cm.ph.getSearchGroups(item, '''\shref=['"]([^'^"]+?)['"]''')[0] )
+                url = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''\shref=['"]([^'^"]+?)['"]''')[0])
                 if url == '':
                     continue
                 title = self.cleanHtmlStr(item)
@@ -311,7 +311,7 @@ class PlanetStreaming(CBaseHostClass):
             langTitle = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(langItem, '<div', '</div>')[1])
             langItem = self.cm.ph.getAllItemsBeetwenMarkers(langItem, '<a', '</a>')
             for item in langItem:
-                url = self.getFullUrl( self.cm.ph.getSearchGroups(item, '''\shref=['"]([^'^"]+?)['"]''')[0] )
+                url = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''\shref=['"]([^'^"]+?)['"]''')[0])
                 if url == '':
                     continue
                 title = self.cleanHtmlStr(item)
@@ -346,7 +346,7 @@ class PlanetStreaming(CBaseHostClass):
         category = self.currItem.get("category", '')
         mode     = self.currItem.get("mode", '')
         
-        printDBG( "handleService: |||||||||||||||||||||||||||||||||||| name[%s], category[%s] " % (name, category) )
+        printDBG("handleService: |||||||||||||||||||||||||||||||||||| name[%s], category[%s] " % (name, category))
         self.currList = []
         
     #MAIN MENU

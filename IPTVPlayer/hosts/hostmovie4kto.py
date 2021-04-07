@@ -35,13 +35,13 @@ from Components.Language import language
 ###################################################
 # Config options for HOST
 ###################################################
-config.plugins.iptvplayer.movie4kto_language = ConfigSelection(default="", choices=[("", _("Auto")), ("en", _("English")), ("de", _("German")), ("fr", _("French")), ("es", _("Spanish")), ("it", _("Italian")), ("jp", _("Japanese")), ("tr", _("Turkish")), ("ru", _("Russian")) ])
+config.plugins.iptvplayer.movie4kto_language = ConfigSelection(default="", choices=[("", _("Auto")), ("en", _("English")), ("de", _("German")), ("fr", _("French")), ("es", _("Spanish")), ("it", _("Italian")), ("jp", _("Japanese")), ("tr", _("Turkish")), ("ru", _("Russian"))])
 config.plugins.iptvplayer.movie4kto_alt_domain = ConfigText(default="", fixed_size=False)
 
 def GetConfigList():
     optionList = []
-    optionList.append( getConfigListEntry( _("Language:"), config.plugins.iptvplayer.movie4kto_language) )
-    optionList.append( getConfigListEntry(_("Alternative domain:"), config.plugins.iptvplayer.movie4kto_alt_domain))
+    optionList.append(getConfigListEntry(_("Language:"), config.plugins.iptvplayer.movie4kto_language))
+    optionList.append(getConfigListEntry(_("Alternative domain:"), config.plugins.iptvplayer.movie4kto_alt_domain))
     return optionList
 ###################################################
 
@@ -59,7 +59,7 @@ class Movie4kTO(CBaseHostClass):
         self.USER_AGENT = 'Mozilla/5.0 (X11; Ubuntu; Linux i686; rv:21.0) Gecko/20100101 Firefox/21.0'
         self.HEADER = {'User-Agent': self.USER_AGENT, 'Accept': 'text/html'}
         self.AJAX_HEADER = dict(self.HEADER)
-        self.AJAX_HEADER.update( {'X-Requested-With': 'XMLHttpRequest'} )
+        self.AJAX_HEADER.update({'X-Requested-With': 'XMLHttpRequest'})
         
         self.MAIN_URL    = 'http://movie4k.org/'
         self.SRCH_URL    = self.getFullUrl('movies.php?list=search&search=')
@@ -68,20 +68,20 @@ class Movie4kTO(CBaseHostClass):
         
         self.MOVIES_ABC_URL   = self.getFullUrl('movies-all-%s-{0}.html')
         self.TV_SHOWS_ABC_URL = self.getFullUrl('tvshows-all-%s.html')
-        self.MAIN_CAT_TAB = [{'category': 'cat_movies',            'title': _('Movies'),     },
-                             {'category': 'cat_tv_shows',          'title': _('TV shows'),   },
+        self.MAIN_CAT_TAB = [{'category': 'cat_movies',            'title': _('Movies'),},
+                             {'category': 'cat_tv_shows',          'title': _('TV shows'),},
                              {'category':'search',                'title': _('Search'), 'search_item':True},
-                             {'category':'search_history',        'title': _('Search history')} ]
+                             {'category':'search_history',        'title': _('Search history')}]
                         
-        self.MOVIES_CAT_TAB = [{'category':'cat_movies_list1',    'title': _('Cinema movies'),  'url':self.getFullUrl('index.php')           },
-                               {'category':'cat_movies_list2',    'title': _('Latest updates'), 'url':self.getFullUrl('movies-updates.html') },
-                               {'category':'cat_movies_abc',      'title': _('All movies'),     'url':self.getFullUrl('movies-all.html')     },
-                               {'category':'cat_movies_genres',   'title': _('Genres'),         'url':self.getFullUrl('genres-movies.html')  } ]
+        self.MOVIES_CAT_TAB = [{'category':'cat_movies_list1',    'title': _('Cinema movies'),  'url':self.getFullUrl('index.php')},
+                               {'category':'cat_movies_list2',    'title': _('Latest updates'), 'url':self.getFullUrl('movies-updates.html')},
+                               {'category':'cat_movies_abc',      'title': _('All movies'),     'url':self.getFullUrl('movies-all.html')},
+                               {'category':'cat_movies_genres',   'title': _('Genres'),         'url':self.getFullUrl('genres-movies.html')}]
                           
         self.TV_SHOWS_CAT_TAB = [{'category':'cat_tv_shows_list1',  'title': _('Featured'),       'url':self.getFullUrl('featuredtvshows.html')},
                                  {'category':'cat_tv_shows_list2',  'title': _('Latest updates'), 'url':self.getFullUrl('tvshows-updates.html')},
-                                 {'category':'cat_tv_shows_abc',    'title': _('All TV shows'),   'url':self.getFullUrl('tvshows-all.html')    },
-                                 {'category':'cat_tv_shows_genres', 'title': _('Genres'),         'url':self.getFullUrl('genres-tvshows.html') } ]
+                                 {'category':'cat_tv_shows_abc',    'title': _('All TV shows'),   'url':self.getFullUrl('tvshows-all.html')},
+                                 {'category':'cat_tv_shows_genres', 'title': _('Genres'),         'url':self.getFullUrl('genres-tvshows.html')}]
                                  
     def getMainUrl(self):
         domain = config.plugins.iptvplayer.movie4kto_alt_domain.value.strip()
@@ -142,7 +142,7 @@ class Movie4kTO(CBaseHostClass):
                 url = self.cm.ph.getSearchGroups(tmpData, 'href="([^"]+?)"')[0]
                 if '' == url:
                     continue
-                sts, data = self.getPage( self.getFullUrl(url) )
+                sts, data = self.getPage(self.getFullUrl(url))
                 if not sts:
                     data = ''
             else:
@@ -157,7 +157,7 @@ class Movie4kTO(CBaseHostClass):
 
         data = data.split('</FORM>')
         if len(data):
-            del data [-1]
+            del data[-1]
         if 0 == len(data):
             return
         seasons = re.compile('<OPTION[^>]+?>([^<]+?)</OPTION>').findall(data[0])
@@ -170,13 +170,13 @@ class Movie4kTO(CBaseHostClass):
                 season = seasons[idx]
             else:
                 season = ''
-            episodes = episodesReObj.findall( data[idx] )
+            episodes = episodesReObj.findall(data[idx])
             for episod in episodes:
                 url   = episod[0]
                 title = episod[1]
                 if '' != url and '' != title:
                     params = dict(cItem)
-                    params.update( {'title':'%s, %s, %s' % (cItem['title'], season, title), 'url':self.getFullUrl(url)} )
+                    params.update({'title':'%s, %s, %s' % (cItem['title'], season, title), 'url':self.getFullUrl(url)})
                     self.addVideo(params)
                     
     def listsTVShow1(self, cItem, category):
@@ -236,7 +236,7 @@ class Movie4kTO(CBaseHostClass):
 
             if '' != url and '' != title:
                 params = dict(cItem)
-                params.update( {'category':category, 'title':self.cleanHtmlStr(title.replace('kostenlos', '')), 'url':self.getFullUrl(url), 'desc': self.cleanHtmlStr( desc ), 'icon':self.getFullUrl(icon)} )
+                params.update({'category':category, 'title':self.cleanHtmlStr(title.replace('kostenlos', '')), 'url':self.getFullUrl(url), 'desc': self.cleanHtmlStr(desc), 'icon':self.getFullUrl(icon)})
                 if None == category: 
                     self.addVideo(params)
                 else:
@@ -288,8 +288,8 @@ class Movie4kTO(CBaseHostClass):
         for item in data:
             if "tdmovies" not in item:
                 continue
-            url   = self.getFullUrl( self.cm.ph.getSearchGroups(item, 'href="([^"]+?)"')[0] )
-            title = self.cleanHtmlStr( self.cm.ph.getDataBeetwenMarkers(item, '<a', '</a>', caseSensitive=False)[1])
+            url   = self.getFullUrl(self.cm.ph.getSearchGroups(item, 'href="([^"]+?)"')[0])
+            title = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(item, '<a', '</a>', caseSensitive=False)[1])
             
             descTab = []
             # year
@@ -310,7 +310,7 @@ class Movie4kTO(CBaseHostClass):
             iconId = self.cm.ph.getSearchGroups(item, '''"coverPreview([0-9]+?)"''')[0]
             
             params = dict(cItem)
-            params.update( {'category':category, 'title':title, 'url':url, 'desc':' | '.join(descTab), 'icon':covers.get(iconId, '')} )
+            params.update({'category':category, 'title':title, 'url':url, 'desc':' | '.join(descTab), 'icon':covers.get(iconId, '')})
             if None == category:
                 self.addVideo(params)
             else:
@@ -325,7 +325,7 @@ class Movie4kTO(CBaseHostClass):
         
         if nextPage:
             params = dict(cItem)
-            params.update( {'title':_("Next page"), 'page':page+1} )
+            params.update({'title':_("Next page"), 'page':page+1})
             self.addDir(params)
             
     def listsTVShowABC(self, cItem, category):
@@ -342,7 +342,7 @@ class Movie4kTO(CBaseHostClass):
         for item in TAB:
             url = ABC_URL % item[-1]
             params = dict(cItem)
-            params.update( {'title':item[0], 'url':self.getFullUrl(url), 'category': category} )
+            params.update({'title':item[0], 'url':self.getFullUrl(url), 'category': category})
             self.addDir(params)
             
     def listsTVShowGenres(self, cItem, category):
@@ -370,12 +370,12 @@ class Movie4kTO(CBaseHostClass):
         for item in data:
             
             genreID = self.cm.ph.getSearchGroups(item, genreMarker+'([0-9]+?)-')[0]
-            title   = self.cleanHtmlStr( item ).replace('Random', '')
+            title   = self.cleanHtmlStr(item).replace('Random', '')
 
             if '' != genreID and '' != title:
                 url = GENRES_URL % genreID
                 params = dict(cItem)
-                params.update( {'title':title, 'url':self.getFullUrl(url), 'category': category} )
+                params.update({'title':title, 'url':self.getFullUrl(url), 'category': category})
                 self.addDir(params)
         
     def listCategories(self, cItem, category):
@@ -393,11 +393,11 @@ class Movie4kTO(CBaseHostClass):
         for item in data:
             url    = self.cm.ph.getSearchGroups(item, 'href="([^"]+?)"')[0]
             url    = url[0:url.rfind('/')]
-            title  = self.cleanHtmlStr( item )
+            title  = self.cleanHtmlStr(item)
             
             if '' != url and '' != title:
                 params = dict(cItem)
-                params.update( {'title':title, 'url':self.getFullUrl(url), 'category':category} )
+                params.update({'title':title, 'url':self.getFullUrl(url), 'category':category})
                 self.addDir(params)
         
     def listVideosFromCategory(self, cItem):
@@ -431,12 +431,12 @@ class Movie4kTO(CBaseHostClass):
             desc   =  ''
             if '' != url and '' != title:
                 params = dict(cItem)
-                params.update( {'title':self.cleanHtmlStr(title.replace('kostenlos', '')), 'url':self.getFullUrl(url), 'desc':desc, 'icon':self.getFullUrl(icon)} )
+                params.update({'title':self.cleanHtmlStr(title.replace('kostenlos', '')), 'url':self.getFullUrl(url), 'desc':desc, 'icon':self.getFullUrl(icon)})
                 self.addVideo(params)
                 
         if nextPage:
             params = dict(cItem)
-            params.update( {'title':_('Next page'), 'page':page+1} )
+            params.update({'title':_('Next page'), 'page':page+1})
             self.addDir(params)
         
     def listSearchResult(self, cItem, searchPattern, searchType):
@@ -463,7 +463,7 @@ class Movie4kTO(CBaseHostClass):
         
         title = self.cm.ph.getSearchGroups(data, 'title" content="([^"]+?)"')[0]
         icon = self.cm.ph.getSearchGroups(data, 'image" content="([^"]+?)"')[0]
-        desc = self.cleanHtmlStr( self.cm.ph.getDataBeetwenMarkers(data, '<div class="moviedescription">', '</div>', False)[1] )
+        desc = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(data, '<div class="moviedescription">', '</div>', False)[1])
 
         return [{'title':title, 'text':desc, 'images':[]}]
     
@@ -486,7 +486,7 @@ class Movie4kTO(CBaseHostClass):
                 data = data.split('<tr id="tablemoviesindex2"')
                 for idx in range(len(data)):
                     for marker in ['"<SCRIPT"', 'links = new Array();']:
-                        tmpIdx = data[idx].find( marker )
+                        tmpIdx = data[idx].find(marker)
                         if tmpIdx > 0:
                             data[idx] = data[idx][:tmpIdx]
                     data[idx] = data[idx].strip()
@@ -496,7 +496,7 @@ class Movie4kTO(CBaseHostClass):
 
             for item in data:
                 url = self.cm.ph.getSearchGroups(item, '''href=["']([^"']+?)['"]''')[0]
-                title = self.cleanHtmlStr( item )
+                title = self.cleanHtmlStr(item)
                 title += ' ' + self.cm.ph.getSearchGroups(item, '/img/smileys/([0-9]+?)\.gif')[0]
                 
                 if '' != url and '' != title:
@@ -545,7 +545,7 @@ class Movie4kTO(CBaseHostClass):
         CBaseHostClass.handleService(self, index, refresh, searchPattern, searchType)
         name     = self.currItem.get("name", None)
         category = self.currItem.get("category", '')
-        printDBG( "Movie4kTO.handleService: ---------> name[%s], category[%s] " % (name, category) )
+        printDBG("Movie4kTO.handleService: ---------> name[%s], category[%s] " % (name, category))
         searchPattern = self.currItem.get("search_pattern", searchPattern)
         self.currList = [] 
 
@@ -610,7 +610,7 @@ class IPTVHost(CHostBase):
             title  = item.get('title', '')
             text   = item.get('text', '')
             images = item.get("images", [])
-            retlist.append( ArticleContent(title=title, text=text, images=images) )
+            retlist.append(ArticleContent(title=title, text=text, images=images))
         return RetHost(RetHost.OK, value=retlist)
     # end getArticleContent
 

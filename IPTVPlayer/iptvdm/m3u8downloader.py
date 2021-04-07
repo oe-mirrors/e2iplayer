@@ -40,12 +40,12 @@ class M3U8Downloader(BaseDownloader):
     WGET_TIMEOUT = 10
     LIVE_START_OFFSET = 120
     # wget status
-    WGET_STS = enum( NONE='WGET_NONE',
+    WGET_STS = enum(NONE='WGET_NONE',
                      CONNECTING='WGET_CONNECTING',
                      DOWNLOADING='WGET_DOWNLOADING',
                      ENDED='WGET_ENDED')                 
     # local status
-    DOWNLOAD_TYPE = enum( M3U8='TYPE_M3U8',
+    DOWNLOAD_TYPE = enum(M3U8='TYPE_M3U8',
                           SEGMENT='TYPE_SEGMENT',
                           WAITTING='TYPE_WAITTING')
 
@@ -88,7 +88,7 @@ class M3U8Downloader(BaseDownloader):
         return "wget m3u8"
 
     def isWorkingCorrectly(self, callBackFun):
-        self.iptv_sys = iptv_system( DMHelper.GET_WGET_PATH() + " -V 2>&1 ", boundFunction(self._checkWorkingCallBack, callBackFun) )
+        self.iptv_sys = iptv_system(DMHelper.GET_WGET_PATH() + " -V 2>&1 ", boundFunction(self._checkWorkingCallBack, callBackFun))
         
     def isLiveStream(self):
         return self.liveStream
@@ -163,14 +163,14 @@ class M3U8Downloader(BaseDownloader):
             if self.refreshDelay < self.M3U8UpdaterRefreshDelay or 0 != code:
                 self.M3U8UpdaterRefreshDelay = 0
                 self.M3U8ListData = ''
-                m3u8Url = self._addTimeStampToUrl( self.m3u8Url )
+                m3u8Url = self._addTimeStampToUrl(self.m3u8Url)
                 printDBG(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> [%s]" % m3u8Url)
                 cmd = DMHelper.getBaseWgetCmd(self.downloaderParams) + (' --tries=0 --timeout=%d ' % self._getTimeout()) + '"' + m3u8Url + '" -O - 2> /dev/null'
                 printDBG("m3u8 _updateM3U8Finished download cmd[%s]" % cmd)
-                self.M3U8Updater.execute( E2PrioFix( cmd ) )
+                self.M3U8Updater.execute(E2PrioFix(cmd))
                 return
             else:
-                self.M3U8Updater.execute( E2PrioFix("sleep 1") )
+                self.M3U8Updater.execute(E2PrioFix("sleep 1"))
                 return
         printDBG("|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||")
         printDBG("||||||||||||| m3u8 _updateM3U8Finished FINISHED |||||||||||||")
@@ -272,14 +272,14 @@ class M3U8Downloader(BaseDownloader):
         # frist download m3u8 conntent
         ##############################################################################
         self.downloadType = self.DOWNLOAD_TYPE.M3U8
-        m3u8Url = self._addTimeStampToUrl( self.m3u8Url )
+        m3u8Url = self._addTimeStampToUrl(self.m3u8Url)
         cmd = DMHelper.getBaseWgetCmd(self.downloaderParams) + (' --tries=0 --timeout=%d ' % self._getTimeout()) + '"' + m3u8Url + '" -O - 2> /dev/null'
         if wait > 0:
             cmd = (' sleep %s && ' % wait) + cmd
         printDBG("Download cmd[%s]" % cmd)
-        self.console_appClosed_conn = eConnectCallback(self.console.appClosed,  self._cmdFinished )
-        self.console_stdoutAvail_conn = eConnectCallback(self.console.stdoutAvail, self._dataAvail )
-        self.console.execute( E2PrioFix( cmd ) )
+        self.console_appClosed_conn = eConnectCallback(self.console.appClosed,  self._cmdFinished)
+        self.console_stdoutAvail_conn = eConnectCallback(self.console.stdoutAvail, self._dataAvail)
+        self.console.execute(E2PrioFix(cmd))
         ##############################################################################
 
     def _startFragment(self, tryAgain=False):
@@ -301,8 +301,8 @@ class M3U8Downloader(BaseDownloader):
             self.console_appClosed_conn = None
             self.console_stderrAvail_conn = None
         #self.console = eConsoleAppContainer()
-        self.console_appClosed_conn = eConnectCallback(self.console.appClosed,  self._cmdFinished )
-        self.console_stderrAvail_conn = eConnectCallback(self.console.stderrAvail, self._dataAvail )
+        self.console_appClosed_conn = eConnectCallback(self.console.appClosed,  self._cmdFinished)
+        self.console_stderrAvail_conn = eConnectCallback(self.console.stderrAvail, self._dataAvail)
         
         if tryAgain and self.tries >= self.MAX_RETRIES:
             if not self.liveStream:
@@ -326,7 +326,7 @@ class M3U8Downloader(BaseDownloader):
             self.wgetStatus = self.WGET_STS.CONNECTING
             cmd = DMHelper.getBaseWgetCmd(self.downloaderParams) + (' --tries=1 --timeout=%d ' % self._getTimeout()) + '"' + currentFragment + '" -O - >> "' + self.filePath + '"'
             printDBG("Download cmd[%s]" % cmd)
-            self.console.execute( E2PrioFix( cmd ) )
+            self.console.execute(E2PrioFix(cmd))
             
             #DebugToFile(currentFragment)
             return DMHelper.STS.DOWNLOADING
@@ -335,7 +335,7 @@ class M3U8Downloader(BaseDownloader):
                 # we are in live so wait for new fragments
                 printDBG("m3u8 downloader - wait for new fragments ----------------------------------------------------------------")
                 self.downloadType = self.DOWNLOAD_TYPE.WAITTING
-                self.console.execute( E2PrioFix( "sleep 2" ) )
+                self.console.execute(E2PrioFix("sleep 2"))
                 return DMHelper.STS.DOWNLOADING 
             else:
                 return DMHelper.STS.DOWNLOADED
@@ -459,7 +459,7 @@ class M3U8Downloader(BaseDownloader):
             localStatus = self._startFragment()
         else:
             BaseDownloader.updateStatistic(self)
-            printDBG("m3u8 nextFragment finished: live[%r]: r[%d], l[%d], p[%d]" % (self.liveStream, self.remoteFragmentSize, self.localFileSize, self.m3u8_prevLocalFileSize ))
+            printDBG("m3u8 nextFragment finished: live[%r]: r[%d], l[%d], p[%d]" % (self.liveStream, self.remoteFragmentSize, self.localFileSize, self.m3u8_prevLocalFileSize))
             if 0 >= self.localFileSize:
                 if not self.liveStream:
                     localStatus = DMHelper.STS.ERROR

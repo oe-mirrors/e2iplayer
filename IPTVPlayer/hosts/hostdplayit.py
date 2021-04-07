@@ -53,7 +53,7 @@ class Dplayit(CBaseHostClass):
         
         #self.HTTP_HEADER = self.cm.getDefaultHeader(browser='chrome')        
         #self.defaultParams = { 'header': {'User-Agent' : 'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:53.0) Gecko/20100101 Firefox/53.0'}}
-        self.defaultParams = {'header': {'User-Agent' : 'okhttp/3.3.0'}}
+        self.defaultParams = {'header': {'User-Agent': 'okhttp/3.3.0'}}
         self.AccessToken=""
         
     def getPage(self, url, addParams={}, post_data=None):
@@ -76,11 +76,11 @@ class Dplayit(CBaseHostClass):
         
         if self.AccessToken != None and self.AccessToken != "":
             # create header with current access token
-            headers = {'User-Agent' : 'okhttp/3.3.0', 
-                       'Accept-Encoding' : 'gzip, deflate',
-                       'AccessToken' : self.AccessToken}
+            headers = {'User-Agent': 'okhttp/3.3.0', 
+                       'Accept-Encoding': 'gzip, deflate',
+                       'AccessToken': self.AccessToken}
             if add_bearer:
-                headers['Authorization'] = 'Bearer {0}'.format(self.AccessToken[0 : self.AccessToken.index('__!__') - len(self.AccessToken)])
+                headers['Authorization'] = 'Bearer {0}'.format(self.AccessToken[0: self.AccessToken.index('__!__') - len(self.AccessToken)])
             
             return headers
     
@@ -89,16 +89,16 @@ class Dplayit(CBaseHostClass):
         printDBG("Dplay getLinksForVideo [%s]" % cItem)
         linksTab=[]
 
-        if cItem["category"] == 'video' :
+        if cItem["category"] == 'video':
             video_id = cItem["video_id"] if "video_id" in cItem else ''
             url=cItem["url"]
             h=self.getHeader(True)
         
-            if h == None or h == "" :
+            if h == None or h == "":
                 printDBG('Dplay wrong initialization')
                 return linksTab
         
-            sts, data = self.getPage(url, { 'header': h })
+            sts, data = self.getPage(url, {'header': h})
             if not sts:
                 return
         
@@ -128,11 +128,11 @@ class Dplayit(CBaseHostClass):
         printDBG("Dplay start channel list")
         h=self.getHeader()
         
-        if h == None or h == "" :
+        if h == None or h == "":
             printDBG('Dplay wrong initialization')
             return
         
-        sts, data = self.getPage(self.CHANNEL_MENU_URL, { 'header': h })
+        sts, data = self.getPage(self.CHANNEL_MENU_URL, {'header': h})
         if not sts:
             return
         
@@ -144,7 +144,7 @@ class Dplayit(CBaseHostClass):
             desc = channel["Description"] if "Description" in channel else ''
             icon = channel['Images'][0]['Src']
             ch_id = channel['Id']
-            params={'category':'channel', 'title': title , 'desc': desc, 'icon': icon, 'id': ch_id}
+            params={'category':'channel', 'title': title, 'desc': desc, 'icon': icon, 'id': ch_id}
             self.addDir(params)     
     
     def listChannelById(self, cItem):
@@ -152,12 +152,12 @@ class Dplayit(CBaseHostClass):
         printDBG("Dplay start single channel list")
         h=self.getHeader()
         
-        if h == None or h == "" :
+        if h == None or h == "":
             printDBG('Dplay wrong initialization')
             return
         
         ch_id=cItem["id"]
-        sts, data = self.getPage(self.CHANNEL_URL.format(ch_id), { 'header': h })
+        sts, data = self.getPage(self.CHANNEL_URL.format(ch_id), {'header': h})
         if not sts:
             return
         
@@ -169,22 +169,22 @@ class Dplayit(CBaseHostClass):
             title = item["Label"]
             if "ResourceId" in item:
                 resource_id = item["ResourceId"] 
-                self.addDir(MergeDicts(cItem, {'category':'playlist', 'title': title, 'id' : resource_id }))  
+                self.addDir(MergeDicts(cItem, {'category':'playlist', 'title': title, 'id': resource_id}))  
             else:
                 url = item["Url"] if "Url" in item else ''
                 if url!="/api/video/GetVideoPopolari" and url !="/api/video/GetUltimiVideoAggiunti":
-                    self.addDir(MergeDicts(cItem, {'category':'channel_list', 'title': title, 'url' : url, 'id' : ch_id}))  
+                    self.addDir(MergeDicts(cItem, {'category':'channel_list', 'title': title, 'url': url, 'id': ch_id}))  
                 
         
     def listPrograms(self,cItem,ch_id='0'):
-        printDBG("Dplay start alphabetical index" )
+        printDBG("Dplay start alphabetical index")
 
         # 0-9
-        self.addDir(MergeDicts(cItem, {'category':'programs_az', 'title': "0-9", 'ch_id': ch_id }))  
+        self.addDir(MergeDicts(cItem, {'category':'programs_az', 'title': "0-9", 'ch_id': ch_id}))  
         
         #a-z
         for i in range(26):
-            self.addDir(MergeDicts(cItem, {'category':'programs_az', 'title': chr(ord('A')+i) , 'ch_id': ch_id}))  
+            self.addDir(MergeDicts(cItem, {'category':'programs_az', 'title': chr(ord('A')+i), 'ch_id': ch_id}))  
 
     
     def listProgramsByLetter(self, cItem):
@@ -193,11 +193,11 @@ class Dplayit(CBaseHostClass):
         ch_id=cItem["ch_id"]
         h=self.getHeader()
         
-        if h == None or h == "" :
+        if h == None or h == "":
             printDBG('Dplay wrong initialization')
             return
         
-        sts, data = self.getPage(self.PROGRAMS_URL, { 'header': h })
+        sts, data = self.getPage(self.PROGRAMS_URL, {'header': h})
         if not sts:
             return
         
@@ -212,28 +212,28 @@ class Dplayit(CBaseHostClass):
                     desc = show["Description"] if "Description" in show else ''
                     icon = show['Images'][0]['Src']
                     show_id = show['Id']
-                    params={'category':'program', 'title': title , 'desc': desc, 'icon': icon, 'id': show_id }
+                    params={'category':'program', 'title': title, 'desc': desc, 'icon': icon, 'id': show_id}
                     self.addDir(params)     
                 elif letter == "0-9" and title[:1].isdigit():
                     desc = show["Description"] if "Description" in show else ''
                     icon = show['Images'][0]['Src']
                     show_id = show['Id']
-                    params={'category':'program', 'title': title , 'desc': desc, 'icon': icon, 'id': show_id }
+                    params={'category':'program', 'title': title, 'desc': desc, 'icon': icon, 'id': show_id}
                     self.addDir(params)     
 
     
     def listProgramItems(self, cItem):
         title = cItem['title']
         show_id = cItem['id']
-        printDBG("Dplay start item list of program '%s' with Id %s" % (title, show_id) )
+        printDBG("Dplay start item list of program '%s' with Id %s" % (title, show_id))
         h=self.getHeader()
         
-        if h == None or h == "" :
+        if h == None or h == "":
             printDBG('Dplay wrong initialization')
             return
         
         url=self.SHOW_URL.format(show_id)
-        sts, data = self.getPage(url, { 'header': h })
+        sts, data = self.getPage(url, {'header': h})
         if not sts:
             return
 
@@ -258,27 +258,27 @@ class Dplayit(CBaseHostClass):
                         #printDBG ("add video '%s' with playback info url '%s'" % (title,videoUrl)) 
                         self.addVideo(MergeDicts(cItem, {'title': title,'name': title, 'desc': desc, 'video_id': video_id, 'url':videoUrl, 'icon': icon, 'category': 'video'}))  
     
-    def listGenres (self, cItem):
+    def listGenres(self, cItem):
         printDBG("Dplay start genres list")
         h=self.getHeader()
         
-        if h == None or h == "" :
+        if h == None or h == "":
             printDBG('Dplay wrong initialization')
             return
         
-        sts, data = self.getPage(self.GENRE_URL, { 'header': h })
+        sts, data = self.getPage(self.GENRE_URL, {'header': h})
         if not sts:
             return
         
         #printDBG(data)
         response = json_loads(data)
 
-        for genre in response ["Data"]:
+        for genre in response["Data"]:
             title = genre["Name"]
             icon = genre["Images"][0]["Src"]
             url = genre["Url"]
             gen_id = genre["Id"]
-            params={'category':'genre', 'title': title, 'icon': icon, 'id': gen_id, 'url': url }
+            params={'category':'genre', 'title': title, 'icon': icon, 'id': gen_id, 'url': url}
             self.addDir(params)     
         
     def listShowsByGenre(self, cItem):
@@ -286,11 +286,11 @@ class Dplayit(CBaseHostClass):
         gen_id=cItem["id"]
         h=self.getHeader()
         
-        if h == None or h == "" :
+        if h == None or h == "":
             printDBG('Dplay wrong initialization')
             return
         
-        sts, data = self.getPage(self.SHOWBYGENRE_URL.format(gen_id), { 'header': h })
+        sts, data = self.getPage(self.SHOWBYGENRE_URL.format(gen_id), {'header': h})
         if not sts:
             return
         
@@ -302,7 +302,7 @@ class Dplayit(CBaseHostClass):
             desc = show["Description"] if "Description" in show else ''
             icon = show['Images'][0]['Src']
             show_id = show['Id']
-            params={'category':'program', 'title': title , 'desc': desc, 'icon': icon, 'id': show_id }
+            params={'category':'program', 'title': title, 'desc': desc, 'icon': icon, 'id': show_id}
             self.addDir(params)     
             
     def showPlaylist(self, cItem):
@@ -310,11 +310,11 @@ class Dplayit(CBaseHostClass):
         list_id=cItem["id"]
         h=self.getHeader()
         
-        if h == None or h == "" :
+        if h == None or h == "":
             printDBG('Dplay wrong initialization')
             return
         
-        sts, data = self.getPage(self.PLAYLIST_URL.format(list_id), { 'header': h })
+        sts, data = self.getPage(self.PLAYLIST_URL.format(list_id), {'header': h})
         if not sts:
             return
         
@@ -327,7 +327,7 @@ class Dplayit(CBaseHostClass):
             desc = video["Description"]
             video_id = video["Id"]
             videoUrl = video["PlaybackInfoUrl"]
-            printDBG ("add video '%s' with playback info url '%s'" % (title, videoUrl)) 
+            printDBG("add video '%s' with playback info url '%s'" % (title, videoUrl)) 
             self.addVideo(MergeDicts(cItem, {'title': title,'name': title, 'desc': desc, 'video_id': video_id, 'url':videoUrl, 'icon': icon, 'category': 'video'}))  
 
         
@@ -335,11 +335,11 @@ class Dplayit(CBaseHostClass):
         printDBG("Dplay start popular list")
         h=self.getHeader()
         
-        if h == None or h == "" :
+        if h == None or h == "":
             printDBG('Dplay wrong initialization')
             return
         
-        sts, data = self.getPage(self.POPULAR_URL, { 'header': h })
+        sts, data = self.getPage(self.POPULAR_URL, {'header': h})
         if not sts:
             return
         
@@ -358,7 +358,7 @@ class Dplayit(CBaseHostClass):
         mode     = self.currItem.get("mode", '')
         subtype  = self.currItem.get("sub-type", '')
         
-        printDBG( "handleService: >> name[%s], category[%s] " % (name, category) )
+        printDBG("handleService: >> name[%s], category[%s] " % (name, category))
         self.currList = []
         
         #MAIN MENU

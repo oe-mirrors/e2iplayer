@@ -29,7 +29,7 @@ class FilmeHD(CBaseHostClass):
         self.DEFAULT_ICON_URL = 'https://i.ytimg.com/vi/BqUtWIyijtY/hqdefault.jpg'
         self.HEADER = {'User-Agent': 'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:40.0) Gecko/20100101 Firefox/40.0', 'DNT':'1', 'Accept': 'text/html'}
         self.AJAX_HEADER = dict(self.HEADER)
-        self.AJAX_HEADER.update( {'X-Requested-With': 'XMLHttpRequest'} )
+        self.AJAX_HEADER.update({'X-Requested-With': 'XMLHttpRequest'})
         self.MAIN_URL = 'http://filmehd.net/'
         self.cacheLinks    = {}
         self.cacheFilters  = {}
@@ -45,12 +45,12 @@ class FilmeHD(CBaseHostClass):
         
     def listMainMenu(self, cItem):
         url = self.getFullUrl('/page/1')
-        MAIN_CAT_TAB = [{'category':'list_sort',       'title': 'TOATE FILMELE',  'url':url  },
-                        {'category':'list_categories', 'title': 'GEN FILM',       'url':url  },
-                        {'category':'list_years',      'title': 'FILME DUPA AN',  'url':url  },
-                        {'category':'list_sort',       'title': 'SERIALE',        'url':self.getFullUrl('/seriale') },
+        MAIN_CAT_TAB = [{'category':'list_sort',       'title': 'TOATE FILMELE',  'url':url},
+                        {'category':'list_categories', 'title': 'GEN FILM',       'url':url},
+                        {'category':'list_years',      'title': 'FILME DUPA AN',  'url':url},
+                        {'category':'list_sort',       'title': 'SERIALE',        'url':self.getFullUrl('/seriale')},
                         {'category': 'search',          'title': _('Search'), 'search_item': True, },
-                        {'category': 'search_history',  'title': _('Search history'),             }]
+                        {'category': 'search_history',  'title': _('Search history'),}]
         self.listsTab(MAIN_CAT_TAB, cItem)
     
     def listSort(self, cItem, nextCategory1, nextCategory2):
@@ -66,7 +66,7 @@ class FilmeHD(CBaseHostClass):
                 continue
             section = self.cm.ph.getAllItemsBeetwenMarkers(section, '<li', '</li>')
             for item in section:
-                url = self.getFullUrl( self.cm.ph.getSearchGroups(item, '''href=['"]([^"^']+?)['"]''')[0] )
+                url = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''href=['"]([^"^']+?)['"]''')[0])
                 title = self.cleanHtmlStr(item)
                 params = dict(cItem)
                 params.update({'good_for_fav':False, 'category':nextCategory1, 'title':title, 'url':url})
@@ -92,7 +92,7 @@ class FilmeHD(CBaseHostClass):
         data = self.cm.ph.getDataBeetwenNodes(data, ('<ul', '>', m1), ('</ul', '>'), False)[1]
         data = self.cm.ph.getAllItemsBeetwenMarkers(data, '<li', '</li>')
         for item in data:
-            url = self.getFullUrl( self.cm.ph.getSearchGroups(item, '''href=['"]([^"^']+?)['"]''')[0] )
+            url = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''href=['"]([^"^']+?)['"]''')[0])
             title = self.cleanHtmlStr(item)
             params = dict(cItem)
             params.update({'good_for_fav':False, 'category':nextCategory, 'title':title, 'url':url})
@@ -108,16 +108,16 @@ class FilmeHD(CBaseHostClass):
                 return
         
         nextPage = self.cm.ph.getDataBeetwenNodes(data, ('<div', '>', 'pagenavi'), ('</div', '>'), False)[1]
-        nextPage = self.getFullUrl( self.cm.ph.getSearchGroups(nextPage, '''<a[^>]+?href=['"]([^"^']+?)['"][^>]*?>%s<''' % (page + 1))[0] )
+        nextPage = self.getFullUrl(self.cm.ph.getSearchGroups(nextPage, '''<a[^>]+?href=['"]([^"^']+?)['"][^>]*?>%s<''' % (page + 1))[0])
         
         data = self.cm.ph.getDataBeetwenNodes(data, ('<ul', '>', 'box-film'), ('</ul', '>'))[1]
         data = self.cm.ph.getAllItemsBeetwenMarkers(data, '<li', '</li>')
         for item in data:
-            url = self.getFullUrl( self.cm.ph.getSearchGroups(item, '''href=['"]([^"^']+?)['"]''')[0] )
-            title = self.cleanHtmlStr( self.cm.ph.getDataBeetwenNodes(item, ('<h', '>', 'title'), ('</h', '>'))[1])
+            url = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''href=['"]([^"^']+?)['"]''')[0])
+            title = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(item, ('<h', '>', 'title'), ('</h', '>'))[1])
             if not self.cm.isValidUrl(url):
                 continue
-            icon = self.getFullIconUrl( self.cm.ph.getSearchGroups(item, '''src=['"]([^"^']+?)['"]''')[0] )
+            icon = self.getFullIconUrl(self.cm.ph.getSearchGroups(item, '''src=['"]([^"^']+?)['"]''')[0])
 
             desc = []
             tmp = self.cm.ph.getAllItemsBeetwenMarkers(item, '<span', '</span>')
@@ -263,7 +263,7 @@ class FilmeHD(CBaseHostClass):
                 if sts:
                     jscode.append(item)
             
-            ret = js_execute( '\n'.join(jscode) )
+            ret = js_execute('\n'.join(jscode))
             if ret['sts'] and 0 == ret['code']:
                 printDBG(ret['data'])
                 url = self.getFullUrl(self.cm.ph.getSearchGroups(ret['data'], '''<iframe[^>]+?src=['"]([^"^']+?)['"]''', 1, True)[0].replace('&amp;', '&'))
@@ -290,12 +290,12 @@ class FilmeHD(CBaseHostClass):
         desc = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(descData, '<p', '</p>')[1])
         if desc == '':
             desc = self.cm.ph.getSearchGroups(data, '''(<meta[^>]+?description['"][^>]*?>)''')[0]
-            desc = self.cleanHtmlStr( self.cm.ph.getSearchGroups(desc, '''content=['"]([^'^"]+?)['"]''')[0] )
+            desc = self.cleanHtmlStr(self.cm.ph.getSearchGroups(desc, '''content=['"]([^'^"]+?)['"]''')[0])
         
         title = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(descData, '<h1', '</h1>')[1])
         if title == '': 
             title = self.cm.ph.getSearchGroups(data, '''(<meta[^>]+?title['"][^>]*?>)''')[0]
-            title = self.cleanHtmlStr( self.cm.ph.getSearchGroups(title, '''content=['"]([^'^"]+?)['"]''')[0] )
+            title = self.cleanHtmlStr(self.cm.ph.getSearchGroups(title, '''content=['"]([^'^"]+?)['"]''')[0])
         
         if title == '':
             title = cItem['title']
@@ -348,7 +348,7 @@ class FilmeHD(CBaseHostClass):
         if tmp != '':
             otherInfo['year'] = tmp
         
-        return [{'title':self.cleanHtmlStr( title ), 'text': self.cleanHtmlStr( desc ), 'images':[{'title':'', 'url':self.getFullUrl(icon)}], 'other_info':otherInfo}]
+        return [{'title':self.cleanHtmlStr(title), 'text': self.cleanHtmlStr(desc), 'images':[{'title':'', 'url':self.getFullUrl(icon)}], 'other_info':otherInfo}]
         
     def handleService(self, index, refresh=0, searchPattern='', searchType=''):
         printDBG('handleService start')
@@ -359,7 +359,7 @@ class FilmeHD(CBaseHostClass):
         category = self.currItem.get("category", '')
         mode     = self.currItem.get("mode", '')
         
-        printDBG( "handleService: |||||||||||||||||||||||||||||||||||| name[%s], category[%s] " % (name, category) )
+        printDBG("handleService: |||||||||||||||||||||||||||||||||||| name[%s], category[%s] " % (name, category))
         self.currList = []
         
     #MAIN MENU

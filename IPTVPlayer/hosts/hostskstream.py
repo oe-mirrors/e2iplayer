@@ -49,7 +49,7 @@ class SKStream(CBaseHostClass):
         self.USER_AGENT = 'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:40.0) Gecko/20100101 Firefox/40.0'
         self.HEADER = {'User-Agent': self.USER_AGENT, 'DNT':'1', 'Accept': 'text/html'}
         self.AJAX_HEADER = dict(self.HEADER)
-        self.AJAX_HEADER.update( {'X-Requested-With': 'XMLHttpRequest'} )
+        self.AJAX_HEADER.update({'X-Requested-With': 'XMLHttpRequest'})
         
         self.MAIN_URL = None
         self.cacheCategories = []
@@ -123,7 +123,7 @@ class SKStream(CBaseHostClass):
                         {'category':'list_categories',         'title': 'Mangas',                   'url':self.getFullUrl('/mangas')},
                         
                         {'category': 'search',          'title': _('Search'), 'search_item': True, },
-                        {'category': 'search_history',  'title': _('Search history'),             } 
+                        {'category': 'search_history',  'title': _('Search history'),} 
                        ]
         self.listsTab(MAIN_CAT_TAB, cItem)
         
@@ -447,7 +447,7 @@ class SKStream(CBaseHostClass):
         category = self.currItem.get("category", '')
         mode     = self.currItem.get("mode", '')
         
-        printDBG( "handleService: |||||||||||||||||||||||||||||||||||| name[%s], category[%s] " % (name, category) )
+        printDBG("handleService: |||||||||||||||||||||||||||||||||||| name[%s], category[%s] " % (name, category))
         self.currList = []
         
     #MAIN MENU

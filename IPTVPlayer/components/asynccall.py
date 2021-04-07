@@ -480,7 +480,7 @@ class CFunctionProxyQueue:
                 
             if isinstance(item, CPQItemCallBack) and None != self.procFun:
                 self.procFun(item)
-            elif isinstance(item, CPQItemDelegate) and hasattr(item.callFnc, '__call__') and hasattr(item.retFnc, '__call__') :
+            elif isinstance(item, CPQItemDelegate) and hasattr(item.callFnc, '__call__') and hasattr(item.retFnc, '__call__'):
                 item.retFnc(item.callFnc(self.session, *item.args, **item.kwargs))
             else:
                 printDBG("processQueue WRONG TYPE of proxy queue item")

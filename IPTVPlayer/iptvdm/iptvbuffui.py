@@ -76,7 +76,7 @@ class E2iPlayerBufferingWidget(Screen):
     b_x = sz_w - 10 - 35*3 
     b_y = sz_h - 10 - 25
     
-    printDBG("[E2iPlayerBufferingWidget] desktop size %dx%d" % (sz_w, sz_h) )
+    printDBG("[E2iPlayerBufferingWidget] desktop size %dx%d" % (sz_w, sz_h))
     skin = """
         <screen name="E2iPlayerBufferingWidget"  position="center,center" size="%d,%d" title="E2iPlayer buffering...">
          <widget name="percentage" size="%d,%d"   position="%d,%d"  zPosition="5" valign="center" halign="center"  font="Regular;21" backgroundColor="black" transparent="1" /> #foregroundColor="white" shadowColor="black" shadowOffset="-1,-1"
@@ -87,7 +87,7 @@ class E2iPlayerBufferingWidget(Screen):
          <widget name="ok_button"        position="%d,%d"                     size="35,25"   zPosition="8" pixmap="%s" transparent="1" alphatest="blend" />
          <widget name="rec_button"       position="%d,%d"                     size="35,25"   zPosition="8" pixmap="%s" transparent="1" alphatest="blend" />
          <widget name="exit_button"      position="%d,%d"                     size="35,25"   zPosition="8" pixmap="%s" transparent="1" alphatest="blend" />
-        </screen>""" %( sz_w, sz_h,         # screen
+        </screen>""" %(sz_w, sz_h,         # screen
                         p_w, p_h, p_x, p_y, # percentage
                         c_w, c_h, c_x, c_y, # console
                         i_w, i_h, i_x, i_y, # icon
@@ -138,7 +138,7 @@ class E2iPlayerBufferingWidget(Screen):
         # prepare icon frames path
         frames = []
         for idx in range(1, self.NUM_OF_ICON_FRAMES+1):
-            frames.append( resolveFilename(SCOPE_PLUGINS, 'Extensions/IPTVPlayer/icons/buffering/buffering_%d.png' % idx) )
+            frames.append(resolveFilename(SCOPE_PLUGINS, 'Extensions/IPTVPlayer/icons/buffering/buffering_%d.png' % idx))
         self["icon"].loadFrames(frames) 
         
         self.inMoviePlayer = False
@@ -168,7 +168,7 @@ class E2iPlayerBufferingWidget(Screen):
         self.moovAtomOffset = 0
         self.moovAtomSize = 0
         
-        self.MOOV_STS = enum( UNKNOWN=0,
+        self.MOOV_STS = enum(UNKNOWN=0,
                               WAITING=1,
                               DOWNLOADING=2,
                               DOWNLOADED=3,
@@ -207,7 +207,7 @@ class E2iPlayerBufferingWidget(Screen):
             self.setMainTimerSts(True)
             self.canRunMoviePlayer = True
         else:
-            self.session.openWithCallback(self.iptvDoClose, MessageBox, _("Downloading can not be started.\n Downloader %s does not work properly.\nStatus[%s]") % (self.downloader.getName(), reason.strip()), type=MessageBox.TYPE_ERROR, timeout=10 )
+            self.session.openWithCallback(self.iptvDoClose, MessageBox, _("Downloading can not be started.\n Downloader %s does not work properly.\nStatus[%s]") % (self.downloader.getName(), reason.strip()), type=MessageBox.TYPE_ERROR, timeout=10)
 
     def _isInLiveMode(self):
         if isinstance(self.url, strwithmeta):
@@ -329,7 +329,7 @@ class E2iPlayerBufferingWidget(Screen):
         
         self.inMoviePlayer = True
         buffSize = self.downloader.getLocalFileSize() - self.lastSize 
-        printDBG("Run MoviePlayer with buffer size [%s]" % formatBytes(float(buffSize)) )
+        printDBG("Run MoviePlayer with buffer size [%s]" % formatBytes(float(buffSize)))
         self.setMainTimerSts(False)
         
         player = self.activMoviePlayer
@@ -585,7 +585,7 @@ class E2iPlayerBufferingWidget(Screen):
             errorCode, errorDesc = self.downloader.getLastError()
             if errorCode != None:
                 messageTab.append(_('%s returned %s: %s') % (self.downloader.getName(), errorCode, _(errorDesc)))
-            self.session.openWithCallback(self.iptvDoClose, MessageBox, '\n'.join(messageTab), type=MessageBox.TYPE_ERROR, timeout=10 )
+            self.session.openWithCallback(self.iptvDoClose, MessageBox, '\n'.join(messageTab), type=MessageBox.TYPE_ERROR, timeout=10)
             self.canRunMoviePlayer = False
             # stop timer before message
             self.setMainTimerSts(False)

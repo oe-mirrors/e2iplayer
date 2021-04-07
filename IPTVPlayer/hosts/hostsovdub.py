@@ -30,8 +30,8 @@ class Sovdub(CBaseHostClass):
 
         self.MAIN_CAT_TAB = [{'category': 'genres',         'title': _('Genres'),    'url': self.getMainUrl()},
                              {'category': 'countries',      'title': _('Countries'), 'url': self.getMainUrl()},
-                             {'category': 'search',         'title': _('Search'),    'search_item': True     },
-                             {'category': 'search_history', 'title': _('Search history')                     }
+                             {'category': 'search',         'title': _('Search'),    'search_item': True},
+                             {'category': 'search_history', 'title': _('Search history')}
                             ]
         self.encoding = ''
     

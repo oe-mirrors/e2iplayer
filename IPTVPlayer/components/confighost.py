@@ -26,7 +26,7 @@ class ConfigHostMenu(ConfigBaseWidget):
    
     def __init__(self, session, hostName):
         printDBG("ConfigHostMenu.__init__ ")
-        self.list = [ ]
+        self.list = []
         self.hostName = hostName
         ConfigBaseWidget.__init__(self, session)
         self.setup_title = _("Configuration [%s] service") % self.hostName
@@ -131,7 +131,7 @@ class ConfigHostsMenu(ConfigBaseWidget):
                 addConf = False
                 try:
                     self.host = __import__('Plugins.Extensions.IPTVPlayer.hosts.host' + hostName, globals(), locals(), ['GetConfigList'], -1)
-                    if( len(self.host.GetConfigList()) < 1 ):
+                    if(len(self.host.GetConfigList()) < 1):
                         printDBG('ConfigMenu host "%s" does not have additional configs' % hostName)
                     else:
                         self.session.open(ConfigHostMenu, hostName=hostName)
@@ -166,7 +166,7 @@ class ConfigHostsMenu(ConfigBaseWidget):
             self.setOKLabel()
         
     def _moveItem(self, curIndex):
-        assert( len(self.list) == len(self.hostsConfigsAvailableList) == len(self.listOfHostsNames) )
+        assert(len(self.list) == len(self.hostsConfigsAvailableList) == len(self.listOfHostsNames))
         newIndex = self["config"].getCurrentIndex()
         if 0 <= curIndex and len(self.list) > curIndex and 0 <= newIndex and len(self.list) > newIndex:
             printDBG(">>>>>>>>>>>>>>>>>>> _moveItem")
@@ -231,10 +231,10 @@ class ConfigHostsMenu(ConfigBaseWidget):
         for hostName in sortedList:
             try:    
                 optionEntry = None
-                exec( 'optionEntry = config.plugins.iptvplayer.host' + hostName )
+                exec('optionEntry = config.plugins.iptvplayer.host' + hostName)
                 self.list.append(getConfigListEntry("%s" % hostsAliases.get('host' + hostName, hostName), optionEntry))
                 if hostName in ['ipla']:
-                    self.privacePoliceWorningList.append( optionEntry )
+                    self.privacePoliceWorningList.append(optionEntry)
                 self.hostsConfigsAvailableList.append(True)
                 self.listOfHostsNames.append(hostName)
             except Exception:

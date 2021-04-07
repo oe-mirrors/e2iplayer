@@ -26,13 +26,13 @@ class LibreStream(CBaseHostClass):
     DEFAULT_ICON_URL = 'http://thumbnail.easycounter.com/thumbnails/300x180/l/libre-stream.org.png'
     
     MAIN_CAT_TAB = [
-                    {'category':'cats',    'cache_key':'movie_cats',   'title': _('Movie'),         'url':MAIN_URL+'films/', 'icon':DEFAULT_ICON_URL },
-                    {'category':'cats',    'cache_key':'year_cats',   'title': _('Year'), 'url':MAIN_URL+'films/', 'icon':DEFAULT_ICON_URL },
-                    {'category':'cats',    'cache_key':'series_cats',  'title': _('Series TV'),     'url':MAIN_URL,          'icon':DEFAULT_ICON_URL },
-                    {'category':'cats',    'cache_key':'qualities',    'title': _('Quality'),       'url':MAIN_URL+'films/', 'icon':DEFAULT_ICON_URL },
-                    {'category':'cats',    'cache_key':'platforms',    'title': _('Platform'),      'url':MAIN_URL+'films/', 'icon':DEFAULT_ICON_URL },
+                    {'category':'cats',    'cache_key':'movie_cats',   'title': _('Movie'),         'url':MAIN_URL+'films/', 'icon':DEFAULT_ICON_URL},
+                    {'category':'cats',    'cache_key':'year_cats',   'title': _('Year'), 'url':MAIN_URL+'films/', 'icon':DEFAULT_ICON_URL},
+                    {'category':'cats',    'cache_key':'series_cats',  'title': _('Series TV'),     'url':MAIN_URL,          'icon':DEFAULT_ICON_URL},
+                    {'category':'cats',    'cache_key':'qualities',    'title': _('Quality'),       'url':MAIN_URL+'films/', 'icon':DEFAULT_ICON_URL},
+                    {'category':'cats',    'cache_key':'platforms',    'title': _('Platform'),      'url':MAIN_URL+'films/', 'icon':DEFAULT_ICON_URL},
                     {'category':'search',                              'title': _('Search'),                                 'icon':DEFAULT_ICON_URL, 'search_item':True},
-                    {'category':'search_history',                      'title': _('Search history'),                         'icon':DEFAULT_ICON_URL } 
+                    {'category':'search_history',                      'title': _('Search history'),                         'icon':DEFAULT_ICON_URL} 
                    ]
  
     def __init__(self):
@@ -183,11 +183,11 @@ class LibreStream(CBaseHostClass):
                 title = self.cm.ph.getSearchGroups(item, 'title="([^"]+?)"')[0] 
             if title == '':
                 title = self.cm.ph.getSearchGroups(item, '<h2[^>]*?>([^<]+?)</h2>')[0] 
-            title = self.cleanHtmlStr( title )
+            title = self.cleanHtmlStr(title)
             if title == '':
                 continue
             icon  = self.cm.ph.getSearchGroups(item, '<img[^>]+?data-src="([^"]+?)"')[0]
-            desc  = self.cleanHtmlStr( item.split('<div class="mcontent">')[-1] ).replace(' ---------------', ': ')
+            desc  = self.cleanHtmlStr(item.split('<div class="mcontent">')[-1]).replace(' ---------------', ': ')
             params = dict(cItem)
             params.update({'title':title, 'icon':self._getFullUrl(icon), 'desc':desc, 'url':self._getFullUrl(url)})
             if '-saison-' not in url and ' Saison ' not in title:
@@ -231,7 +231,7 @@ class LibreStream(CBaseHostClass):
         if len(servers):
             del servers[-1]
         for item in servers:
-            title = self.cleanHtmlStr( item )
+            title = self.cleanHtmlStr(item)
             id    = self.cm.ph.getSearchGroups(item, 'href="#([^"]+?)"')[0]
             if id in linksMap:
                 params = dict(baseItem)
@@ -275,7 +275,7 @@ class LibreStream(CBaseHostClass):
 
         name     = self.currItem.get("name", '')
         category = self.currItem.get("category", '')
-        printDBG( "handleService: |||||||||||||||||||||||||||||||||||| name[%s], category[%s] " % (name, category) )
+        printDBG("handleService: |||||||||||||||||||||||||||||||||||| name[%s], category[%s] " % (name, category))
         self.currList = []
         
     #MAIN MENU

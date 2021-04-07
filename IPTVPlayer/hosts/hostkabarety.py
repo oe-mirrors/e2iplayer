@@ -30,19 +30,19 @@ class Kabarety(CBaseHostClass):
         self.USER_AGENT = 'User-Agent=Mozilla/5.0 (Windows NT 6.1; WOW64; rv:40.0) Gecko/20100101 Firefox/40.0'
         self.HEADER = {'User-Agent': self.USER_AGENT, 'DNT':'1', 'Accept': 'text/html'}
         self.AJAX_HEADER = dict(self.HEADER)
-        self.AJAX_HEADER.update( {'X-Requested-With': 'XMLHttpRequest'} )
+        self.AJAX_HEADER.update({'X-Requested-With': 'XMLHttpRequest'})
         self.MAIN_URL = 'http://kabaret.tworzymyhistorie.pl/'
         self.cacheLinks    = {}
         self.cacheFilters  = {}
         self.cacheFiltersKeys = []
         self.defaultParams = {'header':self.HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
     
-        self.MAIN_CAT_TAB = [{'category':'list_filters',   'title': _('Main'),     'url':self.getFullUrl('kabarety/')   },
-                             {'category':'list_popular',   'title': _('Popular'),  'url':self.getFullUrl('kabarety/')   },
-                             {'category':'list_all',       'title': _('All'),      'url':self.getFullUrl('kabarety/')   },
+        self.MAIN_CAT_TAB = [{'category':'list_filters',   'title': _('Main'),     'url':self.getFullUrl('kabarety/')},
+                             {'category':'list_popular',   'title': _('Popular'),  'url':self.getFullUrl('kabarety/')},
+                             {'category':'list_all',       'title': _('All'),      'url':self.getFullUrl('kabarety/')},
 
                              {'category': 'search',         'title': _('Search'), 'search_item': True,},
-                             {'category': 'search_history', 'title': _('Search history'),            } 
+                             {'category': 'search_history', 'title': _('Search history'),} 
                             ]
     
     def getPage(self, baseUrl, addParams={}, post_data=None):
@@ -145,7 +145,7 @@ class Kabarety(CBaseHostClass):
         
         data = self.cm.ph.getAllItemsBeetwenMarkers(data, '<a', '</a>')
         for item in data:
-            url = self.getFullUrl( self.cm.ph.getSearchGroups(item, 'href="([^"]+?)"')[0] )
+            url = self.getFullUrl(self.cm.ph.getSearchGroups(item, 'href="([^"]+?)"')[0])
             if not self.cm.isValidUrl(url):
                 continue
             title = self.cleanHtmlStr(item)
@@ -185,11 +185,11 @@ class Kabarety(CBaseHostClass):
         data = self.cm.ph.getAllItemsBeetwenMarkers(data, '<div class="video', 'class="ico_play">')
         num = 0
         for item in data:
-            url = self.getFullUrl( self.cm.ph.getSearchGroups(item, 'href="([^"]+?)"')[0] )
+            url = self.getFullUrl(self.cm.ph.getSearchGroups(item, 'href="([^"]+?)"')[0])
             if not self.cm.isValidUrl(url):
                 continue
             
-            icon = self.getFullIconUrl( self.cm.ph.getSearchGroups(item, 'src="([^"]+?)"')[0] )
+            icon = self.getFullIconUrl(self.cm.ph.getSearchGroups(item, 'src="([^"]+?)"')[0])
             title = self.cleanHtmlStr(item)
             
             params = dict(cItem)
@@ -224,11 +224,11 @@ class Kabarety(CBaseHostClass):
             data = self.cm.ph.getAllItemsBeetwenMarkers(data, '<h1', '</h1>')
         
         for item in data:
-            url = self.getFullUrl( self.cm.ph.getSearchGroups(item, 'href="([^"]+?)"')[0] )
+            url = self.getFullUrl(self.cm.ph.getSearchGroups(item, 'href="([^"]+?)"')[0])
             if not self.cm.isValidUrl(url):
                 continue
             
-            icon = self.getFullIconUrl( self.cm.ph.getSearchGroups(item, 'src="([^"]+?)"')[0] )
+            icon = self.getFullIconUrl(self.cm.ph.getSearchGroups(item, 'src="([^"]+?)"')[0])
             title = self.cleanHtmlStr(item)
             
             params = dict(cItem)
@@ -308,7 +308,7 @@ class Kabarety(CBaseHostClass):
         category = self.currItem.get("category", '')
         mode     = self.currItem.get("mode", '')
         
-        printDBG( "handleService: |||||||||||||||||||||||||||||||||||| name[%s], category[%s] " % (name, category) )
+        printDBG("handleService: |||||||||||||||||||||||||||||||||||| name[%s], category[%s] " % (name, category))
         self.currList = []
         
     #MAIN MENU

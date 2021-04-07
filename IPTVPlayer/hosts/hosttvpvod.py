@@ -43,7 +43,7 @@ config.plugins.iptvplayer.tvpVodDefaultformat = ConfigSelection(default="590000"
                                                                                                ("2850000", "960x540"),
                                                                                                ("5420000", "1280x720"),
                                                                                                ("6500000", "1600x900"),
-                                                                                               ("9100000", "1920x1080") ])
+                                                                                               ("9100000", "1920x1080")])
 config.plugins.iptvplayer.tvpVodUseDF    = ConfigYesNo(default=True)
 config.plugins.iptvplayer.tvpVodNextPage = ConfigYesNo(default=True)
 config.plugins.iptvplayer.tvpVodPreferedformat = ConfigSelection(default="mp4", choices=[("mp4",  "MP4"), ("m3u8",  "HLS/m3u8")])
@@ -96,7 +96,7 @@ class TvpVod(CBaseHostClass, CaptchaHelper):
                     #{'category':'vods_sub_categories', 'title':'Programy',                  'marker':'Programy'},
                     #{'category':'vods_sub_categories', 'title':'Informacje i publicystyka', 'marker':'Informacje i publicystyka'},
                     {'category':'search',          'title':_('Search'), 'search_item':True},
-                    {'category':'search_history',  'title':_('Search history')} ]
+                    {'category':'search_history',  'title':_('Search history')}]
                     
     STREAMS_CAT_TAB = [{'category':'tvp3_streams',     'title':'TVP 3',                   'url':'http://tvpstream.tvp.pl/',       'icon':'http://ncplus.pl/~/media/n/npl/kanaly/logo%20na%20strony%20kanalow/tvp3.png?bc=white&w=480'},
                        {'category':'week_epg',         'title':'TVP SPORT',               'url':STREAMS_URL_TEMPLATE,             'icon':'https://upload.wikimedia.org/wikipedia/commons/9/9d/TVP_Sport_HD_Logo.png'},
@@ -112,8 +112,8 @@ class TvpVod(CBaseHostClass, CaptchaHelper):
                           'mjakmilosc.tvp.pl':     'http://vod.tvp.pl/1654521/m-jak-milosc',
                           'barwyszczescia.tvp.pl': 'http://vod.tvp.pl/8514286/barwy-szczescia',
                           'nasygnale.tvp.pl':      'http://vod.tvp.pl/13883615/na-sygnale'}
-        self.FormatBitrateMap = [ ("360000",  "320x180"), ("590000",  "398x224"), ("820000",  "480x270"), ("1250000", "640x360"),
-                                  ("1750000", "800x450"), ("2850000", "960x540"), ("5420000", "1280x720"), ("6500000", "1600x900"), ("9100000", "1920x1080") ]
+        self.FormatBitrateMap = [("360000",  "320x180"), ("590000",  "398x224"), ("820000",  "480x270"), ("1250000", "640x360"),
+                                  ("1750000", "800x450"), ("2850000", "960x540"), ("5420000", "1280x720"), ("6500000", "1600x900"), ("9100000", "1920x1080")]
         self.MAIN_URL = 'https://vod.tvp.pl/'
         self.loginMessage = ''
     
@@ -128,7 +128,7 @@ class TvpVod(CBaseHostClass, CaptchaHelper):
         iconFile = ""
         for key in keys:
             if None != item.get(key, None):
-                iconFile = self.getJItemStr( item[key][0], 'file_name')
+                iconFile = self.getJItemStr(item[key][0], 'file_name')
             if len(iconFile):
                 tmp = iconFile.split('.')
                 return self.IMAGE_URL % (iconFile[0], iconFile[1], iconFile[2], tmp[0], tmp[1])
@@ -233,7 +233,7 @@ class TvpVod(CBaseHostClass, CaptchaHelper):
             tmp = self.cm.ph.getDataBeetwenNodes(data, ('<section', '>', 'abo__section'), ('</section', '>'), False)[1]
             if tmp == '':
                 tmp = self.cm.ph.getDataBeetwenNodes(data, ('<section', '>', 'abo-inactive'), ('</section', '>'), False)[1]
-            data = self.cleanHtmlStr( self.cm.ph.getDataBeetwenNodes(tmp, ('<p', '>'), ('</p', '>'), False)[1] )
+            data = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(tmp, ('<p', '>'), ('</p', '>'), False)[1])
             msg = ['Użytkownik "%s"' % email]
             msg.append('Strefa Abo %s' % data)
             self.loginMessage = '[/br]'.join(msg)
@@ -723,7 +723,7 @@ class TvpVod(CBaseHostClass, CaptchaHelper):
                 videoTab = getDirectM3U8Playlist(hlsUrl, checkExt=False, variantCheck=False)
                 if 1 < len(videoTab):
                     max_bitrate = int(config.plugins.iptvplayer.tvpVodDefaultformat.value)
-                    def __getLinkQuality( itemLink ):
+                    def __getLinkQuality(itemLink):
                         if 'width' in itemLink and 'height' in itemLink:
                             bitrate = self.getBitrateFromFormat('%sx%s' % (itemLink['width'], itemLink['height']))
                             if bitrate != 0:
@@ -743,7 +743,7 @@ class TvpVod(CBaseHostClass, CaptchaHelper):
         return self.getVideoLink(asset_id)
         
     def isVideoData(self, asset_id):
-        sts, data = self.cm.getPage( 'http://www.tvp.pl/shared/cdn/tokenizer_v2.php?mime_type=video%2Fmp4&object_id=' + asset_id, self.defaultParams)
+        sts, data = self.cm.getPage('http://www.tvp.pl/shared/cdn/tokenizer_v2.php?mime_type=video%2Fmp4&object_id=' + asset_id, self.defaultParams)
         if not sts:
             return False
         return not 'NOT_FOUND' in data
@@ -758,7 +758,7 @@ class TvpVod(CBaseHostClass, CaptchaHelper):
         def _sortVideoLinks(videoTab):
             if 1 < len(videoTab):
                 max_bitrate = int(config.plugins.iptvplayer.tvpVodDefaultformat.value)
-                def __getLinkQuality( itemLink ):
+                def __getLinkQuality(itemLink):
                     if 'width' in itemLink and 'height' in itemLink:
                         bitrate = self.getBitrateFromFormat('%sx%s' % (itemLink['width'], itemLink['height']))
                         if bitrate != 0:
@@ -773,10 +773,10 @@ class TvpVod(CBaseHostClass, CaptchaHelper):
         
         # main routine
         if len(videoTab) == 0: 
-            sts, data = self.cm.getPage( 'http://www.tvp.pl/shared/cdn/tokenizer_v2.php?mime_type=video%2Fmp4&object_id=' + asset_id, self.defaultParams)
+            sts, data = self.cm.getPage('http://www.tvp.pl/shared/cdn/tokenizer_v2.php?mime_type=video%2Fmp4&object_id=' + asset_id, self.defaultParams)
             printDBG("%s -> [%s]" % (sts, data))
             try:
-                data = json_loads( data )
+                data = json_loads(data)
                 
                 def _getVideoLink(data, FORMATS):
                     videoTab = []
@@ -784,15 +784,15 @@ class TvpVod(CBaseHostClass, CaptchaHelper):
                         if item['mimeType'] in list(FORMATS.keys()):
                             formatType = FORMATS[item['mimeType']]
                             format = self.REAL_FORMATS.get(formatType, '')
-                            name = self.getFormatFromBitrate( str(item['totalBitrate']) ) + '\t ' + formatType
+                            name = self.getFormatFromBitrate(str(item['totalBitrate'])) + '\t ' + formatType
                             url = item['url']
                             if 'm3u8' == formatType:
-                                videoTab.extend( getDirectM3U8Playlist(url, checkExt=False, variantCheck=False) )
+                                videoTab.extend(getDirectM3U8Playlist(url, checkExt=False, variantCheck=False))
                             else:
                                 meta = {'iptv_format':format}
                                 if config.plugins.iptvplayer.tvpVodProxyEnable.value:
                                     meta['http_proxy'] = config.plugins.iptvplayer.proxyurl.value
-                                videoTab.append( {'name' : name, 'bitrate': str(item['totalBitrate']), 'url' : self.up.decorateUrl(url, meta) })
+                                videoTab.append({'name': name, 'bitrate': str(item['totalBitrate']), 'url': self.up.decorateUrl(url, meta)})
                     return videoTab
                 
                 preferedFormats  = []
@@ -802,7 +802,7 @@ class TvpVod(CBaseHostClass, CaptchaHelper):
                     preferedFormats = TvpVod.ALL_FORMATS
                 
                 for item in preferedFormats:
-                    videoTab.extend(_sortVideoLinks(_getVideoLink(data, item )))
+                    videoTab.extend(_sortVideoLinks(_getVideoLink(data, item)))
                 
             except Exception:
                 printExc("getVideoLink exception")
@@ -814,7 +814,7 @@ class TvpVod(CBaseHostClass, CaptchaHelper):
             params = dict(self.defaultParams)
             params['header'] = {'User-Agent':'okhttp/3.8.1', 'Authorization':'Basic YXBpOnZvZA==', 'Accept-Encoding':'gzip'}
 #            sts, data = self.cm.getPage( 'https://apivod.tvp.pl/tv/video/%s/default/default?device=android' % asset_id, params)
-            sts, data = self.cm.getPage( 'https://apivod.tvp.pl/tv/video/%s/' % asset_id, params)
+            sts, data = self.cm.getPage('https://apivod.tvp.pl/tv/video/%s/' % asset_id, params)
             printDBG("%s -> [%s]" % (sts, data))
             try:
                 data = json_loads(data, '', True)
@@ -1003,7 +1003,7 @@ class TvpVod(CBaseHostClass, CaptchaHelper):
             if premium:
                 self.loggedIn, msg = self.tryTologin()
                 if self.loggedIn != True:
-                    self.sessionEx.open(MessageBox, msg, type=MessageBox.TYPE_INFO, timeout=10 )
+                    self.sessionEx.open(MessageBox, msg, type=MessageBox.TYPE_INFO, timeout=10)
 
         CBaseHostClass.handleService(self, index, refresh, searchPattern, searchType)
         
@@ -1011,7 +1011,7 @@ class TvpVod(CBaseHostClass, CaptchaHelper):
         
         name     = self.currItem.get("name", '')
         category = self.currItem.get("category", '')
-        printDBG( "TvpVod.handleService: ---------> name[%s], category[%s] " % (name, category) )
+        printDBG("TvpVod.handleService: ---------> name[%s], category[%s] " % (name, category))
         searchPattern = self.currItem.get("search_pattern", searchPattern)
         self.currList = []
         currItem = dict(self.currItem)

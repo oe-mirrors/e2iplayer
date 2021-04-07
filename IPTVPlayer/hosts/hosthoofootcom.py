@@ -24,7 +24,7 @@ def gettytul():
 class HoofootCom(CBaseHostClass):
     HEADER = {'User-Agent': 'Mozilla/5.0', 'Accept': 'text/html'}
     AJAX_HEADER = dict(HEADER)
-    AJAX_HEADER.update( {'X-Requested-With': 'XMLHttpRequest'} )
+    AJAX_HEADER.update({'X-Requested-With': 'XMLHttpRequest'})
     
     MAIN_URL   = 'https://hoofoot.com/'
     DEFAULT_ICON_URL  = "http://th.hoofoot.com/pics/default.jpg"
@@ -32,8 +32,8 @@ class HoofootCom(CBaseHostClass):
     MAIN_CAT_TAB = [{'category': 'list_cats',       'title': _('Main'),              'url': MAIN_URL,},
                     {'category': 'list_cats2',      'title': _('Popular'),           'url': MAIN_URL,},
                     {'category': 'list_cats3',      'title': _('Promoted'),          'url': MAIN_URL,},
-                    {'category': 'search',          'title': _('Search'), 'search_item': True,       },
-                    {'category': 'search_history',  'title': _('Search history'),                   } ]
+                    {'category': 'search',          'title': _('Search'), 'search_item': True,},
+                    {'category': 'search_history',  'title': _('Search history'),}]
  
     def __init__(self):
         CBaseHostClass.__init__(self, {'history':'hoofoot.com', 'cookie':'hoofootcom.cookie'})
@@ -201,11 +201,11 @@ class HoofootCom(CBaseHostClass):
             if '' == url:
                 continue
             icon  = self.cm.ph.getSearchGroups(item, '''src=['"]([^'^"^>]+?\.jpg)['"]''')[0]
-            title = self.cleanHtmlStr( self.cm.ph.getSearchGroups(item, '''alt=['"]([^'^"]+?)['"]''')[0] )
+            title = self.cleanHtmlStr(self.cm.ph.getSearchGroups(item, '''alt=['"]([^'^"]+?)['"]''')[0])
             if title == '':
-                title = self.cleanHtmlStr( self.cm.ph.getDataBeetwenMarkers(item, '<h2 ', '</h2>')[1] )
+                title = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(item, '<h2 ', '</h2>')[1])
             
-            desc  = self.cleanHtmlStr( self.cm.ph.getDataBeetwenMarkers(item, 'class="info">', '</div>', False)[1] )
+            desc  = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(item, 'class="info">', '</div>', False)[1])
             params = dict(cItem)
             params.update({'title': _(title), 'url':self._getFullUrl(url), 'icon':icon, 'desc':desc})
             self.addVideo(params)
@@ -294,7 +294,7 @@ class HoofootCom(CBaseHostClass):
         category = self.currItem.get("category", '')
         mode     = self.currItem.get("mode", '')
         
-        printDBG( "handleService: |||||||||||||||||||||||||||||||||||| name[%s], category[%s] " % (name, category) )
+        printDBG("handleService: |||||||||||||||||||||||||||||||||||| name[%s], category[%s] " % (name, category))
         self.currList = []
         
     #MAIN MENU

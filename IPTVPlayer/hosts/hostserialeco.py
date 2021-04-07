@@ -34,7 +34,7 @@ class SerialeCO(CBaseHostClass):
         self.MAIN_URL = 'http://seriale.co/'
         self.HTTP_HEADER = {'User-Agent': self.USER_AGENT, 'DNT':'1', 'Accept': 'text/html', 'Accept-Encoding':'gzip, deflate', 'Referer':self.getMainUrl(), 'Origin':self.getMainUrl()}
         self.AJAX_HEADER = dict(self.HTTP_HEADER)
-        self.AJAX_HEADER.update( {'X-Requested-With': 'XMLHttpRequest', 'Accept-Encoding':'gzip, deflate', 'Content-Type':'application/x-www-form-urlencoded; charset=UTF-8', 'Accept':'application/json, text/javascript, */*; q=0.01'} )
+        self.AJAX_HEADER.update({'X-Requested-With': 'XMLHttpRequest', 'Accept-Encoding':'gzip, deflate', 'Content-Type':'application/x-www-form-urlencoded; charset=UTF-8', 'Accept':'application/json, text/javascript, */*; q=0.01'})
         
         self.defaultParams = {'header':self.HTTP_HEADER, 'with_metadata':True, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
         
@@ -163,7 +163,7 @@ class SerialeCO(CBaseHostClass):
         
         seasons = self.playerData.get('odc', '').split(',')
         for idx in range(len(seasons)):
-            if seasons[idx] == '' :
+            if seasons[idx] == '':
                 continue
             sNum = str(idx + 1)
             params = dict(cItem)
@@ -171,7 +171,7 @@ class SerialeCO(CBaseHostClass):
             self.addDir(params)
         
         if 0 == len(self.currList) and ajaxInfoVarName != '' and ajaxInfoData != '':
-            ret = js_execute( '{0}="{1}";\n'.format(ajaxInfoVarName, self.playerData.get(ajaxInfoVarName, '')) + 'print(JSON.stringify({0}));\n'.format(ajaxInfoData) )
+            ret = js_execute('{0}="{1}";\n'.format(ajaxInfoVarName, self.playerData.get(ajaxInfoVarName, '')) + 'print(JSON.stringify({0}));\n'.format(ajaxInfoData))
             if ret['sts'] and 0 == ret['code']:
                 data = ret['data'].strip()
                 printDBG('DECODED DATA -> \n[%s]\n' % data)
@@ -312,7 +312,7 @@ class SerialeCO(CBaseHostClass):
         category = self.currItem.get("category", '')
         mode     = self.currItem.get("mode", '')
         
-        printDBG( ">> handleService: name[%s], category[%s] " % (name, category) )
+        printDBG(">> handleService: name[%s], category[%s] " % (name, category))
         self.currList = []
         
     #MAIN MENU

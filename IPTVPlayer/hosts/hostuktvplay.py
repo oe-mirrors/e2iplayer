@@ -36,7 +36,7 @@ class UKTVPlay(CBaseHostClass):
         self.MAIN_URL = 'https://uktvplay.uktv.co.uk/'
         self.HEADER = {'User-Agent': self.USER_AGENT, 'DNT':'1', 'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8', 'Accept-Encoding':'gzip, deflate', 'Referer':self.getMainUrl(), 'Origin':self.getMainUrl()}
         self.AJAX_HEADER = dict(self.HEADER)
-        self.AJAX_HEADER.update( {'X-Requested-With': 'XMLHttpRequest', 'Accept-Encoding':'gzip, deflate', 'Content-Type':'application/x-www-form-urlencoded; charset=UTF-8', 'Accept':'application/json, text/javascript, */*; q=0.01'} )
+        self.AJAX_HEADER.update({'X-Requested-With': 'XMLHttpRequest', 'Accept-Encoding':'gzip, deflate', 'Content-Type':'application/x-www-form-urlencoded; charset=UTF-8', 'Accept':'application/json, text/javascript, */*; q=0.01'})
         
         self.cacheLinks    = {}
         self.cacheFilters  = {}
@@ -63,10 +63,10 @@ class UKTVPlay(CBaseHostClass):
     def listMainMenu(self, cItem):
         printDBG("UKTVPlay.listMainMenu")
         self.MAIN_CAT_TAB = [
-                             {'category':'list_items',   'title': 'DAVE',               'url':self.getChannelUrl('dave')     },
-                             {'category':'list_items',   'title': 'REALLY',             'url':self.getChannelUrl('really')   },
+                             {'category':'list_items',   'title': 'DAVE',               'url':self.getChannelUrl('dave')},
+                             {'category':'list_items',   'title': 'REALLY',             'url':self.getChannelUrl('really')},
                              {'category':'list_items',   'title': 'YESTERDAY',          'url':self.getChannelUrl('yesterday')},
-                             {'category':'list_items',   'title': 'DRAMA',              'url':self.getChannelUrl('drama')    },
+                             {'category':'list_items',   'title': 'DRAMA',              'url':self.getChannelUrl('drama')},
                              {'category':'list_items',   'title': 'BOX SET',            'url':'collections?collection_type=boxset&'},
                              {'category':'list_items',   'title': 'COLLECTIONS',        'url':'collections?collection_type=collection&'},
                              {'category':'list_genres',  'title': 'GENRES',             'url':'genres?'},
@@ -191,7 +191,7 @@ class UKTVPlay(CBaseHostClass):
     def listEpisodes(self, cItem):
         printDBG("UKTVPlay.listEpisodes [%s]" % cItem)
         try:
-            url = self.tmpUrl % ('brand_episodes?brand_id=%s&series_id=%s&' % (cItem['f_brand_id'], cItem['f_series_id']) )
+            url = self.tmpUrl % ('brand_episodes?brand_id=%s&series_id=%s&' % (cItem['f_brand_id'], cItem['f_series_id']))
             
             sts, data = self.getPage(url)
             if not sts:
@@ -256,7 +256,7 @@ class UKTVPlay(CBaseHostClass):
         videoUrl = 'http://c.brightcove.com/services/mobile/streaming/index/master.m3u8?videoId=%s' % cItem['f_video_id']
         retTab = getDirectM3U8Playlist(videoUrl, checkContent=True)
         
-        def __getLinkQuality( itemLink ):
+        def __getLinkQuality(itemLink):
             try:
                 return int(itemLink['bitrate'])
             except Exception:
@@ -277,7 +277,7 @@ class UKTVPlay(CBaseHostClass):
         category = self.currItem.get("category", '')
         mode     = self.currItem.get("mode", '')
         
-        printDBG( "handleService: |||||||||||||||||||||||||||||||||||| name[%s], category[%s] " % (name, category) )
+        printDBG("handleService: |||||||||||||||||||||||||||||||||||| name[%s], category[%s] " % (name, category))
         self.currList = []
         
     #MAIN MENU

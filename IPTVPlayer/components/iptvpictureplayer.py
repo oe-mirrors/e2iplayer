@@ -59,14 +59,14 @@ class IPTVSimpleAudioPlayer():
             tmp = strwithmeta(self.uri)
             url, httpParams = DMHelper.getDownloaderParamFromUrl(tmp)
             for key in httpParams:
-                cmd += (' "%s=%s" ' % (key, httpParams[key]) )
+                cmd += (' "%s=%s" ' % (key, httpParams[key]))
             if 'http_proxy' in tmp.meta:
                 tmp = tmp.meta['http_proxy']
                 if '://' in tmp:
                     if '@' in tmp:
                         tmp = re.search('([^:]+?://)([^:]+?):([^@]+?)@(.+?)$', tmp)
                         if tmp:
-                            cmd += (' "proxy=%s" "proxy-id=%s" "proxy-pw=%s" ' % (tmp.group(1)+tmp.group(4), tmp.group(2), tmp.group(3)) )
+                            cmd += (' "proxy=%s" "proxy-id=%s" "proxy-pw=%s" ' % (tmp.group(1)+tmp.group(4), tmp.group(2), tmp.group(3)))
                     else:
                         cmd += (' "proxy=%s" ' % tmp)
         else:
@@ -74,7 +74,7 @@ class IPTVSimpleAudioPlayer():
         self.console = eConsoleAppContainer()
         self.console_appClosed_conn = eConnectCallback(self.console.appClosed, self._playerFinished)
         printDBG("IPTVSimpleAudioPlayer.start cmd[%s]" % cmd)
-        self.console.execute( E2PrioFix( cmd ) )
+        self.console.execute(E2PrioFix(cmd))
         self.stopped = False
         
     def _playerFinished(self, code):
@@ -88,7 +88,7 @@ class IPTVSimpleAudioPlayer():
         if None == self.console:
             return
         self.stopped = True
-        self.console.write( "q\n" )
+        self.console.write("q\n")
     
     def close(self):
         self.isClosing = True
@@ -139,14 +139,14 @@ class IPTVPicturePlayerWidget(Screen):
     p_x = 10
     p_y = 10
     
-    printDBG("[IPTVPicturePlayerWidget] desktop size %dx%d" % (sz_w, sz_h) )
+    printDBG("[IPTVPicturePlayerWidget] desktop size %dx%d" % (sz_w, sz_h))
     skin = """
         <screen name="IPTVPicturePlayerWidget"  position="center,center" size="%d,%d" title="IPTV Picture Player...">
          <widget name="status"     size="%d,%d"   position="%d,%d"  zPosition="5" valign="center" halign="center"  font="Regular;21" backgroundColor="black" transparent="1" /> #foregroundColor="white" shadowColor="black" shadowOffset="-1,-1"
          <widget name="console"    size="%d,%d"   position="%d,%d"  zPosition="5" valign="center" halign="center"  font="Regular;21" backgroundColor="black" transparent="1" />
          <widget name="icon"       size="%d,%d"   position="%d,%d"  zPosition="4" transparent="1" alphatest="on" />
          <widget name="picture"    size="%d,%d"   position="%d,%d"  zPosition="6" transparent="1" alphatest="on" />
-        </screen>""" %( sz_w, sz_h,         # screen
+        </screen>""" %(sz_w, sz_h,         # screen
                         s_w, s_h, s_x, s_y, # status
                         c_w, c_h, c_x, c_y, # console
                         i_w, i_h, i_x, i_y, # icon
@@ -190,7 +190,7 @@ class IPTVPicturePlayerWidget(Screen):
         # prepare icon frames path
         frames = []
         for idx in range(1, self.NUM_OF_ICON_FRAMES+1):
-            frames.append( GetIconDir('/buffering/buffering_%d.png' % idx) )
+            frames.append(GetIconDir('/buffering/buffering_%d.png' % idx))
         self["icon"].loadFrames(frames) 
         
         #main Timer
@@ -243,7 +243,7 @@ class IPTVPicturePlayerWidget(Screen):
         #self.onLayoutFinish.remove(self.doStart)
         
     def _getDownloadFilePath(self):
-        return self.filePath + self.refreshPostfixes[self.refreshCount % len(self.refreshPostfixes) ]
+        return self.filePath + self.refreshPostfixes[self.refreshCount % len(self.refreshPostfixes)]
         
     def closeAfterTimeout(self):
         if self.canAutoClose:
@@ -288,7 +288,7 @@ class IPTVPicturePlayerWidget(Screen):
         if sts:
             self._doStart(True)
         else:
-            self.session.openWithCallback(self.close, MessageBox, _("Downloading cannot be started.\n Downloader [%s] not working properly.\n Status[%s]") % (self.downloader.getName(), reason.strip()), type=MessageBox.TYPE_ERROR, timeout=10 )        
+            self.session.openWithCallback(self.close, MessageBox, _("Downloading cannot be started.\n Downloader [%s] not working properly.\n Status[%s]") % (self.downloader.getName(), reason.strip()), type=MessageBox.TYPE_ERROR, timeout=10)        
         
     def onEnd(self, withCleanUp=True):
         self.setMainTimerSts(False)

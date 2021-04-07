@@ -32,7 +32,7 @@ class BlockCipher:
 
     def setPassphrase(self, passphrase):
         """ Use pbkdf2 to hash passphrase into a key """
-        self.setKey(  pbkdf2( passphrase, self.name, 4096, self.keySize) )
+        self.setKey(pbkdf2(passphrase, self.name, 4096, self.keySize))
 
     def encrypt(self, plainText, more=None):
         """ Encrypt a string and return a binary string """
@@ -68,14 +68,14 @@ class BlockCipher:
                 raise DecryptNotBlockAlignedError('Data not block aligned on decrypt')
 
         # hold back some bytes in case last decrypt has zero len
-        if (more != None) and (numExtraBytes == 0) and (numBlocks >0) :
+        if (more != None) and (numExtraBytes == 0) and (numBlocks >0):
             numBlocks -= 1
             numExtraBytes = self.blockSize
 
         plainText = ''
         for i in range(numBlocks):
             bStart = i*self.blockSize
-            ptBlock = self.decryptBlock(self.bytesToDecrypt[bStart : bStart+self.blockSize])
+            ptBlock = self.decryptBlock(self.bytesToDecrypt[bStart: bStart+self.blockSize])
             self.decryptBlockCount += 1
             plainText += ptBlock
 

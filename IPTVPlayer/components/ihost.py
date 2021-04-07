@@ -193,12 +193,12 @@ class CFavItem:
     RESOLVER_SELF        = 'SELF'
     RESOLVER_URLLPARSER  = 'URLLPARSER'
     TYPE_UNKNOWN = CDisplayListItem.TYPE_UNKNOWN
-    def __init__( self, name='',
+    def __init__(self, name='',
                   description='',
                   type=TYPE_UNKNOWN,
                   iconimage='',
                   data='',
-                  resolver=RESOLVER_SELF ):
+                  resolver=RESOLVER_SELF):
         self.name        = name
         self.description = description
         self.type        = type
@@ -223,7 +223,7 @@ class CFavItem:
         return vars(self)
         
 class CHostsGroupItem:
-    def __init__( self, name='', title=''):
+    def __init__(self, name='', title=''):
         self.name = name
         self.title = title
        
@@ -231,7 +231,7 @@ class RetHost:
     OK = "OK"
     ERROR = "ERROR"
     NOT_IMPLEMENTED = "NOT_IMPLEMENTED"
-    def __init__(self, status , value, message=''):
+    def __init__(self, status, value, message=''):
         self.status = status
         self.value = value  
         self.message = message
@@ -340,7 +340,7 @@ CHostBase implements some typical methods
           from IHost interface
 '''
 class CHostBase(IHost):
-    def __init__( self, host, withSearchHistrory, favouriteTypes=[] ):
+    def __init__(self, host, withSearchHistrory, favouriteTypes=[]):
         self.host = host
         self.withSearchHistrory = withSearchHistrory
         self.favouriteTypes     = favouriteTypes
@@ -358,10 +358,10 @@ class CHostBase(IHost):
     def isValidIndex(self, Index, validTypes=None):
         listLen = len(self.host.currList)
         if listLen <= Index or Index < 0:
-            printDBG( "ERROR isValidIndex - current list is to short len: %d, Index: %d" % (listLen, Index) )
+            printDBG("ERROR isValidIndex - current list is to short len: %d, Index: %d" % (listLen, Index))
             return False
         if None != validTypes and self.converItem(self.host.currList[Index]).type not in validTypes:
-            printDBG( "ERROR isValidIndex - current item has wrong type" )
+            printDBG("ERROR isValidIndex - current item has wrong type")
             return False
         return True
         
@@ -385,7 +385,7 @@ class CHostBase(IHost):
             text       = item.get('text', '')
             images     = item.get("images", [])
             othersInfo = item.get('other_info', '')
-            retlist.append( ArticleContent(title=title, text=text, images=images, richDescParams=othersInfo) )
+            retlist.append(ArticleContent(title=title, text=text, images=images, richDescParams=othersInfo))
         if len(hList):
             retCode = RetHost.OK
         return RetHost(retCode, value=retlist)
@@ -442,7 +442,7 @@ class CHostBase(IHost):
         if isinstance(urlList, list):
             for item in urlList:
                 need_resolve = item.get("need_resolve", 0)
-                name = self.host.cleanHtmlStr( item["name"] )
+                name = self.host.cleanHtmlStr(item["name"])
                 url  = item["url"]
                 retlist.append(CUrlItem(name, url, need_resolve))
         return RetHost(RetHost.OK, value=retlist)
@@ -523,7 +523,7 @@ class CHostBase(IHost):
     def getSearchItemInx(self):
         try:
             list = self.host.getCurrList()
-            for i in range( len(list) ):
+            for i in range(len(list)):
                 if list[i]['category'] == 'search':
                     return i
         except Exception:
@@ -536,7 +536,7 @@ class CHostBase(IHost):
             if 'history' == list[self.currIndex]['name']:
                 pattern = list[self.currIndex]['title']
                 search_type = list[self.currIndex]['search_type']
-                self.host.history.addHistoryItem( pattern, search_type)
+                self.host.history.addHistoryItem(pattern, search_type)
                 self.searchPattern = pattern
                 self.searchType = search_type
         except Exception:
@@ -605,7 +605,7 @@ class CHostBase(IHost):
             
         title       =  cItem.get('title', '')
         description =  cItem.get('desc', '')
-        icon        =  self.getFullIconUrl( cItem.get('icon', '') )
+        icon        =  self.getFullIconUrl(cItem.get('icon', ''))
         if icon == '':
             icon = self.getDefaulIcon(cItem)
         isGoodForFavourites = cItem.get('good_for_fav', False)
@@ -629,7 +629,7 @@ class CHostBase(IHost):
     def getSearchResults(self, searchpattern, searchType=None):
         retList = []
         if self.withSearchHistrory:
-            self.host.history.addHistoryItem( searchpattern, searchType )
+            self.host.history.addHistoryItem(searchpattern, searchType)
 
         self.searchPattern = searchpattern
         self.searchType = searchType
@@ -639,7 +639,7 @@ class CHostBase(IHost):
         
         searchItemIdx = self.getSearchItemInx()
         if searchItemIdx > -1:
-            return self.getListForItem( searchItemIdx )
+            return self.getListForItem(searchItemIdx)
         else:
             return RetHost(RetHost.ERROR, value=[])
             
@@ -676,7 +676,7 @@ class CBaseHostClass:
             data = json_loads(data.strip()[1:-1], '', True)
             if data['country'] != country:
                 message = _('%s uses "geo-blocking" measures to prevent you from accessing the services from abroad.\n Host country: %s, your country: %s') 
-                GetIPTVNotify().push(message % (self.getMainUrl(), country, data['country']  ), 'info', 5)
+                GetIPTVNotify().push(message % (self.getMainUrl(), country, data['country']), 'info', 5)
             self.isGeoBlockingChecked = True
         except Exception:
             printExc()
@@ -798,7 +798,7 @@ class CBaseHostClass:
         self.currList.append(params)
         return
     
-    def listsHistory(self, baseItem={'name': 'history', 'category': 'Wyszukaj'}, desc_key='plot', desc_base=(_("Type: ")) ):
+    def listsHistory(self, baseItem={'name': 'history', 'category': 'Wyszukaj'}, desc_key='plot', desc_base=(_("Type: "))):
         list = self.history.getHistoryList()
         for histItem in list:
             plot = ''
@@ -862,7 +862,7 @@ class CBaseHostClass:
             if len(self.currList) <= index:
                 return
             if -1 == index:
-                self.currItem = { "name": None }
+                self.currItem = {"name": None}
             else:
                 self.currItem = self.currList[index]
         if 2 == refresh: # refresh for more items
@@ -872,7 +872,7 @@ class CBaseHostClass:
             self.afterMoreItemList = self.currList[index+1:]
             self.moreMode = True
             if -1 == index:
-                self.currItem = { "name": None }
+                self.currItem = {"name": None}
             else:
                 self.currItem = self.currList[index]
     

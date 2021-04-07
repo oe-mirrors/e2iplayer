@@ -50,7 +50,7 @@ class GoMovies(CBaseHostClass):
         self.USER_AGENT = 'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:40.0) Gecko/20100101 Firefox/40.0'
         self.HEADER = {'User-Agent': self.USER_AGENT, 'DNT':'1', 'Accept': 'text/html'}
         self.AJAX_HEADER = dict(self.HEADER)
-        self.AJAX_HEADER.update( {'X-Requested-With': 'XMLHttpRequest'} )
+        self.AJAX_HEADER.update({'X-Requested-With': 'XMLHttpRequest'})
         self.MAIN_URL = None
         self.cacheFilters = {}
         self.cacheLinks = {}
@@ -123,10 +123,10 @@ class GoMovies(CBaseHostClass):
         printDBG("GoMovies.listMain")
         if self.MAIN_URL == None:
             self.selectDomain()
-        MAIN_CAT_TAB = [{'category':'list_filter_genre', 'title': 'Movies',    'url':self.getFullUrl('/movie/filter/movies/') },
+        MAIN_CAT_TAB = [{'category':'list_filter_genre', 'title': 'Movies',    'url':self.getFullUrl('/movie/filter/movies/')},
                         {'category':'list_filter_genre', 'title': 'TV-Series', 'url':self.getFullUrl('/movie/filter/seasons/')},
-                        {'category': 'search',          'title': _('Search'), 'search_item': True,                        },
-                        {'category': 'search_history',  'title': _('Search history'),                                    } 
+                        {'category': 'search',          'title': _('Search'), 'search_item': True,},
+                        {'category': 'search_history',  'title': _('Search history'),} 
                        ]
         self.listsTab(MAIN_CAT_TAB, cItem)
         
@@ -147,7 +147,7 @@ class GoMovies(CBaseHostClass):
             self.cacheFilters['sort_by'].append({'sort_by':value, 'title':self.cleanHtmlStr(item)})
             
         for filter in [{'key':'quality', 'marker':'Quality</span>'},
-                       {'key':'genre',   'marker':'Genre</span>'  },
+                       {'key':'genre',   'marker':'Genre</span>'},
                        {'key':'country', 'marker':'Country</span>'},
                        {'key':'year',    'marker':'Release</span>'}]:
             self.cacheFilters[filter['key']] = []
@@ -195,18 +195,18 @@ class GoMovies(CBaseHostClass):
         
         data = self.cm.ph.getAllItemsBeetwenNodes(data, ('<div', '>', 'item'), ('</div', '>'), False)
         for item in data:
-            url  = self.getFullUrl( self.cm.ph.getSearchGroups(item, 'href="([^"]+?)"')[0] )
-            icon = self.getFullIconUrl( self.cm.ph.getSearchGroups(item, 'data\-original="([^"]+?)"')[0] )
+            url  = self.getFullUrl(self.cm.ph.getSearchGroups(item, 'href="([^"]+?)"')[0])
+            icon = self.getFullIconUrl(self.cm.ph.getSearchGroups(item, 'data\-original="([^"]+?)"')[0])
             
             movieId = self.cm.ph.getSearchGroups(item, 'data-movie-id="([^"]+?)"')[0]
             if icon == '':
                 icon = cItem.get('icon', '')
-            desc = self.cleanHtmlStr( item )
-            title = self.cleanHtmlStr( self.cm.ph.getDataBeetwenMarkers(item, '<h2', '</h2>')[1] )
+            desc = self.cleanHtmlStr(item)
+            title = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(item, '<h2', '</h2>')[1])
             if title == '':
-                title  = self.cleanHtmlStr( self.cm.ph.getSearchGroups(item, 'title="([^"]+?)"')[0] )
+                title  = self.cleanHtmlStr(self.cm.ph.getSearchGroups(item, 'title="([^"]+?)"')[0])
             if title == '':
-                title  = self.cleanHtmlStr( self.cm.ph.getSearchGroups(item, 'alt="([^"]+?)"')[0] )
+                title  = self.cleanHtmlStr(self.cm.ph.getSearchGroups(item, 'alt="([^"]+?)"')[0])
             if url.startswith('http'):
                 params = dict(cItem)
                 params.update({'good_for_fav': True, 'category':nextCategory, 'title':title, 'url':url, 'movie_id':movieId, 'desc':desc, 'info_url':url, 'icon':icon})
@@ -233,7 +233,7 @@ class GoMovies(CBaseHostClass):
             self.addVideo(params)
 
         playerUrl = ph.find(data, ('<a', '>', 'watching('), '</a>')[1]
-        playerUrl = self.getFullUrl( ph.getattr(playerUrl, 'href'))
+        playerUrl = self.getFullUrl(ph.getattr(playerUrl, 'href'))
 
         params = dict(self.defaultParams)
         params['header'] = dict(params['header'])
@@ -319,9 +319,9 @@ class GoMovies(CBaseHostClass):
         if not sts:
             return retTab
         
-        title = self.cleanHtmlStr( self.cm.ph.getSearchGroups(data, '<meta property="og:title"[^>]+?content="([^"]+?)"')[0] )
-        desc  = self.cleanHtmlStr( self.cm.ph.getSearchGroups(data, '<meta property="og:description"[^>]+?content="([^"]+?)"')[0] )
-        icon  = self.getFullUrl( self.cm.ph.getSearchGroups(data, '<meta property="og:image"[^>]+?content="([^"]+?)"')[0] )
+        title = self.cleanHtmlStr(self.cm.ph.getSearchGroups(data, '<meta property="og:title"[^>]+?content="([^"]+?)"')[0])
+        desc  = self.cleanHtmlStr(self.cm.ph.getSearchGroups(data, '<meta property="og:description"[^>]+?content="([^"]+?)"')[0])
+        icon  = self.getFullUrl(self.cm.ph.getSearchGroups(data, '<meta property="og:image"[^>]+?content="([^"]+?)"')[0])
         
         if title == '':
             title = cItem['title']
@@ -346,8 +346,8 @@ class GoMovies(CBaseHostClass):
             item = item.split('</strong>')
             if len(item) < 2:
                 continue
-            key = self.cleanHtmlStr( item[0] ).replace(':', '').strip()
-            val = self.cleanHtmlStr( item[1] )
+            key = self.cleanHtmlStr(item[0]).replace(':', '').strip()
+            val = self.cleanHtmlStr(item[1])
             if key == 'IMDb':
                 val += ' IMDb' 
             if key in descTabMap:
@@ -360,11 +360,11 @@ class GoMovies(CBaseHostClass):
             rating = ''
             sts, data = self.getPage(self.getFullUrl('ajax/movie_rate_info/' + cItem['movie_id']))
             if sts:
-                rating = self.cleanHtmlStr( self.cm.ph.getDataBeetwenMarkers(data, '<div id="movie-mark"', '</label>', True)[1] )
+                rating = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(data, '<div id="movie-mark"', '</label>', True)[1])
             if rating != '':
-                otherInfo['rating'] = self.cleanHtmlStr( rating )
+                otherInfo['rating'] = self.cleanHtmlStr(rating)
         
-        return [{'title':self.cleanHtmlStr( title ), 'text': self.cleanHtmlStr( desc ), 'images':[{'title':'', 'url':self.getFullUrl(icon)}], 'other_info':otherInfo}]
+        return [{'title':self.cleanHtmlStr(title), 'text': self.cleanHtmlStr(desc), 'images':[{'title':'', 'url':self.getFullUrl(icon)}], 'other_info':otherInfo}]
         
     def handleService(self, index, refresh=0, searchPattern='', searchType=''):
         printDBG('handleService start')
@@ -378,7 +378,7 @@ class GoMovies(CBaseHostClass):
         category = self.currItem.get("category", '')
         mode     = self.currItem.get("mode", '')
         
-        printDBG( "handleService: || name[%s], category[%s] " % (name, category) )
+        printDBG("handleService: || name[%s], category[%s] " % (name, category))
         self.currList = []
         
     #MAIN MENU

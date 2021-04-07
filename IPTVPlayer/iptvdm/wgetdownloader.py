@@ -32,12 +32,12 @@ import datetime
 ###################################################
 class WgetDownloader(BaseDownloader):
     # wget status
-    WGET_STS = enum( NONE='WGET_NONE',
+    WGET_STS = enum(NONE='WGET_NONE',
                      CONNECTING='WGET_CONNECTING',
                      DOWNLOADING='WGET_DOWNLOADING',
                      ENDED='WGET_ENDED')
     # wget status
-    INFO = enum( FROM_FILE='INFO_FROM_FILE',
+    INFO = enum(FROM_FILE='INFO_FROM_FILE',
                  FROM_DOTS='INFO_FROM_DOTS')
                      
     def __init__(self):
@@ -89,7 +89,7 @@ class WgetDownloader(BaseDownloader):
             self.lastErrorDesc = 'Unknown error code.'
 
     def isWorkingCorrectly(self, callBackFun):
-        self.iptv_sys = iptv_system( DMHelper.GET_WGET_PATH() + " -V 2>&1 ", boundFunction(self._checkWorkingCallBack, callBackFun) )
+        self.iptv_sys = iptv_system(DMHelper.GET_WGET_PATH() + " -V 2>&1 ", boundFunction(self._checkWorkingCallBack, callBackFun))
     
     def getMimeType(self):
         return self.remoteContentType
@@ -136,7 +136,7 @@ class WgetDownloader(BaseDownloader):
         self.console = eConsoleAppContainer()
         self.console_appClosed_conn  = eConnectCallback(self.console.appClosed, self._cmdFinished)
         self.console_stderrAvail_conn = eConnectCallback(self.console.stderrAvail, self._dataAvail)
-        self.console.execute( E2PrioFix( self.downloadCmd ) )
+        self.console.execute(E2PrioFix(self.downloadCmd))
 
         self.wgetStatus = self.WGET_STS.CONNECTING
         self.status     = DMHelper.STS.DOWNLOADING
@@ -204,7 +204,7 @@ class WgetDownloader(BaseDownloader):
            and self.remoteFileSize > self.localFileSize \
            and self.curContinueRetry < self.maxContinueRetry:
             self.curContinueRetry += 1
-            self.console.execute( E2PrioFix( self.downloadCmd ) )
+            self.console.execute(E2PrioFix(self.downloadCmd))
             return
         
         self._setLastError(code)

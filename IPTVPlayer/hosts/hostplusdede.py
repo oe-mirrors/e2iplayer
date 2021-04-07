@@ -57,7 +57,7 @@ class PlusDEDE(CBaseHostClass):
         self.MAIN_URL = 'https://www.megadede.com/'
         self.HTTP_HEADER = {'User-Agent': self.USER_AGENT, 'DNT':'1', 'Accept': 'text/html', 'Accept-Encoding':'gzip, deflate', 'Referer':self.getMainUrl(), 'Origin':self.getMainUrl()}
         self.AJAX_HEADER = dict(self.HTTP_HEADER)
-        self.AJAX_HEADER.update( {'X-Requested-With': 'XMLHttpRequest', 'Accept-Encoding':'gzip, deflate', 'Content-Type':'application/x-www-form-urlencoded; charset=UTF-8', 'Accept':'application/json, text/javascript, */*; q=0.01'} )
+        self.AJAX_HEADER.update({'X-Requested-With': 'XMLHttpRequest', 'Accept-Encoding':'gzip, deflate', 'Content-Type':'application/x-www-form-urlencoded; charset=UTF-8', 'Accept':'application/json, text/javascript, */*; q=0.01'})
         
         self.cacheLinks    = {}
         self.cacheFilters  = {}
@@ -66,7 +66,7 @@ class PlusDEDE(CBaseHostClass):
         self.defaultParams = {'header':self.HTTP_HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
         
         self.MAIN_CAT_TAB = [{'category':'list_filters',   'title': 'Series',        'url':self.getFullUrl('/series')},
-                             {'category':'list_filters',   'title': 'Pelis',         'url':self.getFullUrl('/pelis') },
+                             {'category':'list_filters',   'title': 'Pelis',         'url':self.getFullUrl('/pelis')},
                              {'category':'list_lists',     'title': 'Listas',        'url':self.getFullUrl('/listas')},
 
                              
@@ -518,7 +518,7 @@ class PlusDEDE(CBaseHostClass):
         if icon == '':
             icon = cItem.get('icon', self.DEFAULT_ICON_URL)
         
-        return [{'title':self.cleanHtmlStr( title ), 'text': self.cleanHtmlStr( desc ), 'images':[{'title':'', 'url':self.getFullUrl(icon)}], 'other_info':otherInfo}]
+        return [{'title':self.cleanHtmlStr(title), 'text': self.cleanHtmlStr(desc), 'images':[{'title':'', 'url':self.getFullUrl(icon)}], 'other_info':otherInfo}]
     
     def tryTologin(self):
         printDBG('tryTologin start')
@@ -556,7 +556,7 @@ class PlusDEDE(CBaseHostClass):
             self.loggedIn = False
             
             if '' == PlusDEDE.login.strip() or '' == PlusDEDE.password.strip():
-                self.sessionEx.open(MessageBox, _('The host %s requires registration. \nPlease fill your login and password in the host configuration. Available under blue button.' % self.getMainUrl()), type=MessageBox.TYPE_ERROR, timeout=10 )
+                self.sessionEx.open(MessageBox, _('The host %s requires registration. \nPlease fill your login and password in the host configuration. Available under blue button.' % self.getMainUrl()), type=MessageBox.TYPE_ERROR, timeout=10)
                 return False
             
             url = self.getFullUrl('/login?popup=1')
@@ -585,7 +585,7 @@ class PlusDEDE(CBaseHostClass):
                 header = dict(self.HTTP_HEADER)
                 header['Accept'] = 'image/png,image/*;q=0.8,*/*;q=0.5'
                 params = dict(self.defaultParams)
-                params.update( {'maintype': 'image', 'subtypes':['jpeg', 'png'], 'check_first_bytes':['\xFF\xD8', '\xFF\xD9', '\x89\x50\x4E\x47'], 'header':header} )
+                params.update({'maintype': 'image', 'subtypes':['jpeg', 'png'], 'check_first_bytes':['\xFF\xD8', '\xFF\xD9', '\x89\x50\x4E\x47'], 'header':header})
                 filePath = GetTmpDir('.iptvplayer_captcha.jpg')
                 ret = self.cm.saveWebFile(filePath, imgUrl.replace('&amp;', '&'), params)
                 if not ret.get('sts'):
@@ -663,7 +663,7 @@ class PlusDEDE(CBaseHostClass):
         category = self.currItem.get("category", '')
         mode     = self.currItem.get("mode", '')
         
-        printDBG( "handleService: |||||||||||||||||||||||||||||||||||| name[%s], category[%s] " % (name, category) )
+        printDBG("handleService: |||||||||||||||||||||||||||||||||||| name[%s], category[%s] " % (name, category))
         self.currList = []
         
     #MAIN MENU

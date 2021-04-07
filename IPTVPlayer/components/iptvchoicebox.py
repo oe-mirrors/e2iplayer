@@ -87,7 +87,7 @@ class IPTVChoiceBoxWidget(Screen):
     def onStart(self):
         self.onShown.remove(self.onStart)
         
-        self["list"].setList([ (x,) for x in self.params['options']])
+        self["list"].setList([(x,) for x in self.params['options']])
         try:
             self["list"].moveToIndex(self.params['current_idx'])
         except Exception:

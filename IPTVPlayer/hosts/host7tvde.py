@@ -56,8 +56,8 @@ class C7tvDe(CBaseHostClass):
         MAIN_CAT_TAB = [{'category':'programs',       'title': 'Sendungen A-Z',       'url':self.getFullUrl('/sendungen-a-z')},
                         {'category':'missed',         'title': 'Sendung verpasst',    'url':self.getFullUrl('/sendung-verpasst')},
                         {'category':'channels',       'title': 'Sender',              'url':self.getMainUrl()},
-                        {'category':'search',         'title': _('Search'),       'search_item':True       },
-                        {'category': 'search_history', 'title': _('Search history'),                        }]
+                        {'category':'search',         'title': _('Search'),       'search_item':True},
+                        {'category': 'search_history', 'title': _('Search history'),}]
         self.listsTab(MAIN_CAT_TAB, cItem)
 
     def listMissed(self, cItem, nextCategory):
@@ -222,7 +222,7 @@ class C7tvDe(CBaseHostClass):
         for idx in range(1, len(data), 2):
             item = data[idx]
             url = ph.search(item, ph.A)[1]
-            icon = self.getFullIconUrl( ph.getattr(item, 'data-src') )
+            icon = self.getFullIconUrl(ph.getattr(item, 'data-src'))
             desc = ph.clean_html(ph.find(item, ('<div', '>', 'caption'), '</div>', flags=0)[1])
             title = ph.clean_html(ph.find(item, ('<h5', '>', 'title'), '</h5>', flags=0)[1])
             if title == '':
@@ -328,7 +328,7 @@ class C7tvDe(CBaseHostClass):
             for it in  (False, True):
                 hlsLinks  = self.doGetLinks(video_id, client_location, 'application/x-mpegURL', it)
                 if hlsLinks:
-                    linksTab.extend( getDirectM3U8Playlist(hlsLinks[0]['url'], checkExt=True, checkContent=True, sortWithMaxBitrate=999999999) )
+                    linksTab.extend(getDirectM3U8Playlist(hlsLinks[0]['url'], checkExt=True, checkContent=True, sortWithMaxBitrate=999999999))
                     break
 
             for it in  (True, False):
@@ -443,7 +443,7 @@ class C7tvDe(CBaseHostClass):
 
         name     = self.currItem.get("name", '')
         category = self.currItem.get("category", '')
-        printDBG( "handleService: ||| name[%s], category[%s] " % (name, category) )
+        printDBG("handleService: ||| name[%s], category[%s] " % (name, category))
         self.currList = []
 
     #MAIN MENU

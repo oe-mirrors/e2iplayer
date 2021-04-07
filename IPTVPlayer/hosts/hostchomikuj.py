@@ -66,7 +66,7 @@ class Chomikuj(CBaseHostClass):
         self.FILE_REQUEST_URL   = 'api/v3/files/download?fileId='
         self.SEARCH_URL         = 'api/v3/files/search?Query=%s&PageNumber=%s&SizeMin=0&MediaType=%s'
         self.SEARCH_ACCOUNT_URL = 'api/v3/account/search?PageNumber=%s&Query=%s'
-        self.HTTP_JSON_HEADER   = {'User-Agent'  : "android/2.1.01 (a675e974-0def-4cbc-a955-ac6c6f99707b; unknown androVM for VirtualBox ('Tablet' version with phone caps))", 
+        self.HTTP_JSON_HEADER   = {'User-Agent': "android/2.1.01 (a675e974-0def-4cbc-a955-ac6c6f99707b; unknown androVM for VirtualBox ('Tablet' version with phone caps))", 
                                    'Content-Type': "application/json; charset=utf-8",
                                    'Accept-Encoding':  'gzip'
                                   }
@@ -143,7 +143,7 @@ class Chomikuj(CBaseHostClass):
         
         sts = False
         if '' == login or '' == password:
-            self.sessionEx.open(MessageBox, 'Wprowadź dane do swojego konta Chomikuj.pl (Niebieski klawisz).', type=MessageBox.TYPE_INFO, timeout=10 )
+            self.sessionEx.open(MessageBox, 'Wprowadź dane do swojego konta Chomikuj.pl (Niebieski klawisz).', type=MessageBox.TYPE_INFO, timeout=10)
         else:
             sts, data = self.requestJsonData(url, loginData)
             if sts and 0 == self._getJItemNum(data, 'Code', -1):
@@ -158,7 +158,7 @@ class Chomikuj(CBaseHostClass):
                     errorMessage += 'Błędne hasło.'
                 else:
                     errorMessage += 'Code="%d", message="%s".' % (self._getJItemNum(data, 'Code', 0), self._getJItemStr(data, 'Message', '')) 
-                self.sessionEx.open(MessageBox, errorMessage, type=MessageBox.TYPE_INFO, timeout=10 )
+                self.sessionEx.open(MessageBox, errorMessage, type=MessageBox.TYPE_INFO, timeout=10)
         return sts
 
     def listSearchResult(self, cItem, searchPattern, searchType):
@@ -177,11 +177,11 @@ class Chomikuj(CBaseHostClass):
                 title = self._getJItemStr(item, 'AccountName', '') 
                 desc = 'Plików: %s' % self._getJItemNum(item, 'TotalFilesCount', -1)
                 params.update({'category': 'foreign_folder',
-                               'parent'  : 0,
-                               'owner'   : self._getJItemNum(item, 'AccountId', -1),
-                               'title'   : title,
-                               'desc'    : desc,
-                               'page'    : 1 })
+                               'parent': 0,
+                               'owner': self._getJItemNum(item, 'AccountId', -1),
+                               'title': title,
+                               'desc': desc,
+                               'page': 1})
                 self.addDir(params)
                 
             if data.get('IsNextPageAvailable', False):
@@ -235,13 +235,13 @@ class Chomikuj(CBaseHostClass):
                     desc = '%s, %s, %s' % (size, self._getJItemStr(item, 'MediaType', ''), self._getJItemStr(item, 'FileType', ''))
                     if item.get('IsFileFreeForUser', False):
                         desc = 'Darmowy[/br]'+desc
-                    params.update({'title'  : title,
+                    params.update({'title': title,
                                    'file_id': self._getJItemNum(item, 'FileId', -1),
-                                   'icon'   : self._getJItemStr(item, 'SmallThumbnailImg', ''),
-                                   'desc'   : desc,
-                                   'size'   : size,
+                                   'icon': self._getJItemStr(item, 'SmallThumbnailImg', ''),
+                                   'desc': desc,
+                                   'size': size,
                                    'is_free': item.get('IsFileFreeForUser', False),
-                                   'page'   : 1 })
+                                   'page': 1})
                     
                     if 'FolderId' in item and 'Owner' in item and 'Id' in item['Owner'] and 'Name' in item['Owner']:
                         params.update({'category':'explore_item', 'raw_item':dict(item)})
@@ -383,7 +383,7 @@ class Chomikuj(CBaseHostClass):
         CBaseHostClass.handleService(self, index, refresh, searchPattern, searchType)
         name     = self.currItem.get("name", None)
         category = self.currItem.get("category", '')
-        printDBG( "Chomikuj.handleService: ---------> name[%s], category[%s] " % (name, category) )
+        printDBG("Chomikuj.handleService: ---------> name[%s], category[%s] " % (name, category))
         self.currList = []
         
         if None == name:

@@ -116,18 +116,18 @@ class IPTVMultipleInputBox(Screen):
         self["actions"] = NumberActionMap(["ColorActions", "WizardActions", "InputBoxActions", "InputAsciiActions", "KeyboardInputActions"], 
         {
             "gotAsciiCode": self.gotAsciiCode,
-            "green" : self.keySave,
-            "ok"    : self.keyOK,
-            "red"   : self.keyCancel,
-            "back"  : self.keyCancel,
-            "left"  : self.keyLeft,
-            "right" : self.keyRight,
-            "up"    : self.keyUp,
-            "down"  : self.keyDown,
-            "right" : self.keyRight,
-            "home"  : self.keyHome,
-            "end"   : self.keyEnd,
-            "deleteForward" : self.keyDelete,
+            "green": self.keySave,
+            "ok": self.keyOK,
+            "red": self.keyCancel,
+            "back": self.keyCancel,
+            "left": self.keyLeft,
+            "right": self.keyRight,
+            "up": self.keyUp,
+            "down": self.keyDown,
+            "right": self.keyRight,
+            "home": self.keyHome,
+            "end": self.keyEnd,
+            "deleteForward": self.keyDelete,
             "deleteBackward": self.keyBackspace,
             "tab": self.keyTab,
             "toggleOverwrite": self.keyInsert,
@@ -169,7 +169,7 @@ class IPTVMultipleInputBox(Screen):
         for item in self.icons:
             try:
                 printDBG('Update icon: [%s]' % item['path'])
-                self[item['name']].updateIcon( item['path'] )
+                self[item['name']].updateIcon(item['path'])
             except Exception:
                 printExc()
         
@@ -219,11 +219,11 @@ class IPTVMultipleInputBox(Screen):
     def setMarker(self, prevIdx=None):
         if self.withAcceptButton:
             if self.idx == len(self.list):
-                self['accept_button'].instance.setForegroundColor( parseColor("#000000") )
-                self['accept_button'].instance.setBackgroundColor( parseColor("#32CD32") )
+                self['accept_button'].instance.setForegroundColor(parseColor("#000000"))
+                self['accept_button'].instance.setBackgroundColor(parseColor("#32CD32"))
             else:
-                self['accept_button'].instance.setForegroundColor( parseColor("#FFFFFF") )
-                self['accept_button'].instance.setBackgroundColor( parseColor("#320F0F0F") )
+                self['accept_button'].instance.setForegroundColor(parseColor("#FFFFFF"))
+                self['accept_button'].instance.setBackgroundColor(parseColor("#320F0F0F"))
         
         if "marker" in self:
             if self.idx < len(self.list):
@@ -303,7 +303,7 @@ class IPTVMultipleInputBox(Screen):
         
         def VirtualKeyBoardCallBack(newTxt):
             if isinstance(newTxt, str):
-                self[self.activeInput].setText( newTxt )
+                self[self.activeInput].setText(newTxt)
             self.setKeyboardMode()
         
         # title

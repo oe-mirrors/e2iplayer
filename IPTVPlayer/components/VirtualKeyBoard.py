@@ -45,7 +45,7 @@ class IPTVVirtualKeyBoardWithCaptcha(Screen):
                            <widget name="text"   position="25,200" size="536,34" transparent="1" noWrap="1" font="Regular;26" valign="center" halign="right" />
                            <widget name="list"   position="25,250" size="550,225" selectionDisabled="1" transparent="1" />
                        </screen>
-                    ''' % ( winWidth, 10, 55,
+                    ''' % (winWidth, 10, 55,
                             winWidth - 20, 100,
                             winWidth-20,
                             winWidth-20,
@@ -149,7 +149,7 @@ class IPTVVirtualKeyBoardWithCaptcha(Screen):
         self["text"].currPos = len(self.startText)
         self["text"].right()
         try:
-            self['captcha'].updateIcon( self.captchaPath )
+            self['captcha'].updateIcon(self.captchaPath)
         except Exception:
             printExc()
     

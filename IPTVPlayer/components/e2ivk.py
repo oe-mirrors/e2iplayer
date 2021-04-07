@@ -43,7 +43,7 @@ class E2iInput(Input):
             self.e2iTimeoutCallback()
 
 class E2iVKSelectionList(IPTVListComponentBase):
-    ICONS_FILESNAMES = {'on' : 'radio_button_on.png', 'off' : 'radio_button_off.png'}
+    ICONS_FILESNAMES = {'on': 'radio_button_on.png', 'off': 'radio_button_off.png'}
     def __init__(self, withRatioButton=True):
         IPTVListComponentBase.__init__(self)
         if getDesktop(0).size().width() == 1920:
@@ -66,7 +66,7 @@ class E2iVKSelectionList(IPTVListComponentBase):
     
     def _nullPIX(self):
         for key in self.ICONS_FILESNAMES:
-            self.dictPIX[ key ] = None
+            self.dictPIX[key] = None
 
     def onCreate(self):
         printDBG('--- onCreate ---')
@@ -87,7 +87,7 @@ class E2iVKSelectionList(IPTVListComponentBase):
             self._nullPIX()
         
     def buildEntry(self, item):
-        res = [ None ]
+        res = [None]
         width  = self.l.getItemSize().width()
         height = self.l.getItemSize().height()
         try:
@@ -146,7 +146,7 @@ class E2iVirtualKeyBoard(Screen):
         bg_color = config.plugins.iptvplayer.osk_background_color.value
         bg_color = ' backgroundColor="%s" ' % bg_color if bg_color else ''
 
-        skinTab = ["""<screen position="center,center" size="%d,%d" title="E2iPlayer virtual keyboard" %s >""" %( sz_w, sz_h, bg_color ) ]
+        skinTab = ["""<screen position="center,center" size="%d,%d" title="E2iPlayer virtual keyboard" %s >""" %(sz_w, sz_h, bg_color)]
         
         def _addPixmapWidget(name, x, y, w, h, p):
             skinTab.append('<widget name="%s" zPosition="%d" position="%d,%d" size="%d,%d" transparent="1" alphatest="blend" />' % (name, p, x, y, w, h))
@@ -412,14 +412,14 @@ class E2iVirtualKeyBoard(Screen):
         
         for i in range(0, 63):
             key = self.graphicsMap.get(str(i), 'k')
-            self[str(i)].setPixmap( self.graphics[key] )
+            self[str(i)].setPixmap(self.graphics[key])
         
         for key in ['e_m', 'k_m', 'k2_m', 'k3_m']:
             self[key].hide()
-            self[key].setPixmap( self.graphics[key] )
+            self[key].setPixmap(self.graphics[key])
         
-        self['b'].setPixmap( self.graphics['b'] )
-        self['l'].setPixmap( self.graphics['l'] )
+        self['b'].setPixmap(self.graphics['b'])
+        self['l'].setPixmap(self.graphics['l'])
         
         self.currentKeyId = self.KEYIDMAP[self.rowIdx][self.colIdx]
         self.moveKeyMarker(-1, self.currentKeyId)
@@ -618,7 +618,7 @@ class E2iVirtualKeyBoard(Screen):
             return
         else:
             vkLayoutItem = self.getKeyboardLayoutItem(vkLayoutId)
-            if fileExists( filePath ):
+            if fileExists(filePath):
                 try:
                     from ast import literal_eval
                     import codecs
@@ -680,7 +680,7 @@ class E2iVirtualKeyBoard(Screen):
             color = self.colors['normal']
 
         for keyid in keysidTab:
-            self['_%s' % keyid].instance.setForegroundColor( color )
+            self['_%s' % keyid].instance.setForegroundColor(color)
 
     def getKeyValue(self, keyid):
         state = self.specialKeyState
@@ -711,7 +711,7 @@ class E2iVirtualKeyBoard(Screen):
             color = self.colors['inactive']
 
         skinKey = self['_%s' % keyid]
-        skinKey.instance.setForegroundColor( color )
+        skinKey.instance.setForegroundColor(color)
         skinKey.setText(val.encode('utf-8'))
 
     def updateKeysLabels(self):
@@ -722,7 +722,7 @@ class E2iVirtualKeyBoard(Screen):
     def showSearchHistory(self):
         if self.searchHistory:
             leftList = self['left_list']
-            leftList.setList([ (x,) for x in self.searchHistory])
+            leftList.setList([(x,) for x in self.searchHistory])
             leftList.moveToIndex(0)
             leftList.show()
             self['left_header'].setText(_('Search history'))
@@ -747,9 +747,9 @@ class E2iVirtualKeyBoard(Screen):
                 selIdx = i
             else:
                 sel = False
-            listValue.append( ({'sel':sel, 'val':x}, ) )
+            listValue.append(({'sel':sel, 'val':x}, ))
 
-        leftList.setList( listValue )
+        leftList.setList(listValue)
         if selIdx != None:
             leftList.moveToIndex(selIdx)
         leftList.setSelectionState(True)
@@ -1023,7 +1023,7 @@ class E2iVirtualKeyBoard(Screen):
         # is under selection item from it
         if self.focus != self.FOCUS_SUGGESTIONS and self["text"].Text:
             if list:
-                self['right_list'].setList([ (x,) for x in list])
+                self['right_list'].setList([(x,) for x in list])
             self.setSuggestionVisible(True if list else False)
         else:
             printDBG("setSuggestions ignored")

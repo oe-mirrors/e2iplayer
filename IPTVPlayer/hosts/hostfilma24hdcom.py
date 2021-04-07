@@ -68,7 +68,7 @@ class Filma24hdCom(CBaseHostClass):
         data = self.cm.ph.getDataBeetwenMarkers(data, '<!-- Menu Starts -->', '<!-- Menu Ends -->', False)[1]
         data = self.cm.ph.getAllItemsBeetwenMarkers(data, '<a ', '</a>')
         for item in data:
-            title = self.cleanHtmlStr( item )
+            title = self.cleanHtmlStr(item)
             url   = self._getFullUrl(self.cm.ph.getSearchGroups(item, '''href=['"]([^"^']+?)["']''', 1, True)[0])
             if url == '' or 'seriale' in url:
                 continue
@@ -92,13 +92,13 @@ class Filma24hdCom(CBaseHostClass):
             tmp = item.split(marker)
             subCategoryTitle = self.cm.ph.rgetDataBeetwenMarkers(tmp[0], '<a', '</a>')[1]
             subCategoryUrl   = self.cm.ph.getSearchGroups(subCategoryTitle, '''href=['"]([^"^']+?)["']''', 1, True)[0]
-            subCategoryUrl   = self._getFullUrl( subCategoryUrl )
-            subCategoryTitle = self.cleanHtmlStr( subCategoryTitle )
+            subCategoryUrl   = self._getFullUrl(subCategoryUrl)
+            subCategoryTitle = self.cleanHtmlStr(subCategoryTitle)
             
             subItemsTab = []
             subItems = self.cm.ph.getAllItemsBeetwenMarkers(tmp[1], '<a ', '</a>')
             for subItem in subItems:
-                title = self.cleanHtmlStr( subItem )
+                title = self.cleanHtmlStr(subItem)
                 url   = self.cm.ph.getSearchGroups(subItem, '''href=['"]([^"^']+?)["']''', 1, True)[0]
                 subItemsTab.append({'title':title, 'url':self._getFullUrl(url)})
                 
@@ -158,15 +158,15 @@ class Filma24hdCom(CBaseHostClass):
                 continue
             icon  = self.cm.ph.getSearchGroups(item, 'src="([^"]+?)"')[0]
             title = self.cm.ph.getDataBeetwenMarkers(item, '<h2', '</h2>')[1]
-            desc  = self.cleanHtmlStr( item.split('<p class="entry-meta">')[-1] )
+            desc  = self.cleanHtmlStr(item.split('<p class="entry-meta">')[-1])
             
             params = dict(cItem)
-            params.update( {'title': self.cleanHtmlStr( title ), 'url':self._getFullUrl(url), 'desc': desc, 'icon':self._getFullUrl(icon)} )
+            params.update({'title': self.cleanHtmlStr(title), 'url':self._getFullUrl(url), 'desc': desc, 'icon':self._getFullUrl(icon)})
             self.addVideo(params)
         
         if nextPage:
             params = dict(cItem)
-            params.update( {'title':_('Next page'), 'page':page+1} )
+            params.update({'title':_('Next page'), 'page':page+1})
             self.addDir(params)
             
     def listSeasons(self, cItem, nextCategory):
@@ -238,13 +238,13 @@ class Filma24hdCom(CBaseHostClass):
         if m2 not in data:
             m2 = '<tbody>'
         desc = self.cm.ph.getDataBeetwenMarkers(data, m1, m2)[1]
-        desc = self.cleanHtmlStr( desc )
+        desc = self.cleanHtmlStr(desc)
         
         icon  = cItem.get('icon', '')
         title = cItem.get('title', '')
         otherInfo = {}
         
-        return [{'title':self.cleanHtmlStr( title ), 'text': self.cleanHtmlStr( desc ), 'images':[{'title':'', 'url':self._getFullUrl(icon)}], 'other_info':otherInfo}]
+        return [{'title':self.cleanHtmlStr(title), 'text': self.cleanHtmlStr(desc), 'images':[{'title':'', 'url':self._getFullUrl(icon)}], 'other_info':otherInfo}]
         
     def handleService(self, index, refresh=0, searchPattern='', searchType=''):
         printDBG('handleService start')
@@ -253,7 +253,7 @@ class Filma24hdCom(CBaseHostClass):
 
         name     = self.currItem.get("name", '')
         category = self.currItem.get("category", '')
-        printDBG( "handleService: |||||||||||||||||||||||||||||||||||| name[%s], category[%s] " % (name, category) )
+        printDBG("handleService: |||||||||||||||||||||||||||||||||||| name[%s], category[%s] " % (name, category))
         self.currList = []
         
     #MAIN MENU
@@ -330,7 +330,7 @@ class IPTVHost(CHostBase):
             text       = item.get('text', '')
             images     = item.get("images", [])
             othersInfo = item.get('other_info', '')
-            retlist.append( ArticleContent(title=title, text=text, images=images, richDescParams=othersInfo) )
+            retlist.append(ArticleContent(title=title, text=text, images=images, richDescParams=othersInfo))
         return RetHost(RetHost.OK, value=retlist)
     
     def converItem(self, cItem):
@@ -375,7 +375,7 @@ class IPTVHost(CHostBase):
     def getSearchItemInx(self):
         try:
             list = self.host.getCurrList()
-            for i in range( len(list) ):
+            for i in range(len(list)):
                 if list[i]['category'] == 'search':
                     return i
         except Exception:
@@ -388,7 +388,7 @@ class IPTVHost(CHostBase):
             if 'history' == list[self.currIndex]['name']:
                 pattern = list[self.currIndex]['title']
                 search_type = list[self.currIndex]['search_type']
-                self.host.history.addHistoryItem( pattern, search_type)
+                self.host.history.addHistoryItem(pattern, search_type)
                 self.searchPattern = pattern
                 self.searchType = search_type
         except Exception:

@@ -87,11 +87,11 @@ class Fullmatchtv(CBaseHostClass):
         data = data.replace('\\', '')
         data = self.cm.ph.getAllItemsBeetwenNodes(data, ('<div', '>', 'td-module-thumb'), ('</div', '>'))
         for item in data:
-            url = self.getFullUrl( self.cm.ph.getSearchGroups(item, '''\shref=['"]([^"^']+?)['"]''')[0] )
+            url = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''\shref=['"]([^"^']+?)['"]''')[0])
             title = self.cm.ph.getSearchGroups(item, '''\stitle=['"]([^"^']+?)['"]''')[0].replace('&#8211;', '-')
             if not self.cm.isValidUrl(url):
                 continue
-            icon = self.getFullUrl( self.cm.ph.getSearchGroups(item, '''\ssrc=['"]([^"^']+?)['"]''')[0] )
+            icon = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''\ssrc=['"]([^"^']+?)['"]''')[0])
             params = dict(cItem)
             params = {'good_for_fav': True, 'title':title, 'url':url, 'icon':icon}
             self.addVideo(params)
@@ -141,7 +141,7 @@ class Fullmatchtv(CBaseHostClass):
         category = self.currItem.get("category", '')
         mode     = self.currItem.get("mode", '')
         
-        printDBG( "handleService: >> name[%s], category[%s] " % (name, category) )
+        printDBG("handleService: >> name[%s], category[%s] " % (name, category))
         self.currList = []
         
     #MAIN MENU

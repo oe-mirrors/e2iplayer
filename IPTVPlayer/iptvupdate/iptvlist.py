@@ -45,7 +45,7 @@ class IPTVUpdateList(IPTVListComponentBase):
         
         self.l.setItemHeight(height)
         self.iconsPaths    = iconsPaths
-        self.iconsPixList  = [ None for x in self.iconsPaths ]
+        self.iconsPixList  = [None for x in self.iconsPaths]
         self.releaseIcons()
 
     def onCreate(self):
@@ -61,7 +61,7 @@ class IPTVUpdateList(IPTVListComponentBase):
     def buildEntry(self, item):
         width  = self.l.getItemSize().width()
         height = self.l.getItemSize().height()
-        res = [ None ]
+        res = [None]
         
         res.append((eListboxPythonMultiContent.TYPE_TEXT, 70, 0,                width-70, self.fonts[1][2], 1, RT_HALIGN_LEFT|RT_VALIGN_CENTER, item.get('title', '')))
         res.append((eListboxPythonMultiContent.TYPE_TEXT, 70, self.fonts[1][2], width-70, self.fonts[0][2], 0, RT_HALIGN_LEFT|RT_VALIGN_CENTER, item.get('info', '')))

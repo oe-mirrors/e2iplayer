@@ -57,7 +57,7 @@ class CartoonHD(CBaseHostClass):
         
         self.HEADER = {'User-Agent': 'Mozilla/5.0', 'Accept': 'text/html'}
         self.AJAX_HEADER = dict(self.HEADER)
-        self.AJAX_HEADER.update( {'X-Requested-With': 'XMLHttpRequest'} )
+        self.AJAX_HEADER.update({'X-Requested-With': 'XMLHttpRequest'})
         
         self.defaultParams = {'header':self.HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
         
@@ -83,7 +83,7 @@ class CartoonHD(CBaseHostClass):
                         {'category':'list_genres',     'title': 'Movies',    'url':self.getFullUrl('/full-movies')},
                         {'category':'list_genres',     'title': 'TV shows',  'url':self.getFullUrl('/tv-shows')},
                         {'category':'search',          'title': _('Search'), 'search_item':True},
-                        {'category':'search_history',  'title': _('Search history')} ]
+                        {'category':'search_history',  'title': _('Search history')}]
         self.listsTab(MAIN_CAT_TAB, cItem)
     
     def _getToken(self, data):
@@ -160,7 +160,7 @@ class CartoonHD(CBaseHostClass):
         if len(data):
             del data[-1]
         for item in data:
-            icon = self.getFullUrl( self.cm.ph.getSearchGroups(item, 'src="([^"]+?\.jpg[^"]*?)"')[0] )
+            icon = self.getFullUrl(self.cm.ph.getSearchGroups(item, 'src="([^"]+?\.jpg[^"]*?)"')[0])
             desc = 'IMDb ' + self.cm.ph.getSearchGroups(item, '>([ 0-9.]+?)<')[0] + ', '
             desc += self.cleanHtmlStr(' '.join(self.cm.ph.getAllItemsBeetwenMarkers(item, '<p>', '</p>', False)))
             tmp   = self.cm.ph.rgetAllItemsBeetwenMarkers(item, '</a>', '<a', True)
@@ -255,10 +255,10 @@ class CartoonHD(CBaseHostClass):
         data = self.cm.ph.getDataBeetwenMarkers(data, '<div class="episode', '</article>', False)[1]
         data = data.split('<div class="episode')
         for item in data:
-            url   = self.getFullUrl( self.cm.ph.getSearchGroups(item, 'href="([^"#]+?)"')[0] )
+            url   = self.getFullUrl(self.cm.ph.getSearchGroups(item, 'href="([^"#]+?)"')[0])
             desc  = self.cm.ph.getDataBeetwenMarkers(item, '<p>', '</p>', False)[1]
             title = self.cm.ph.getSearchGroups(item, 'title="([^"]+?)"')[0]
-            icon  = self.getFullUrl( self.cm.ph.getSearchGroups(item, 'data-src="([^"]+?)"')[0] )
+            icon  = self.getFullUrl(self.cm.ph.getSearchGroups(item, 'data-src="([^"]+?)"')[0])
             if '' == icon:
                 icon = cItem.get('icon', '')
             
@@ -298,7 +298,7 @@ class CartoonHD(CBaseHostClass):
             js_params = [{'path':GetJSScriptFile('cartoonhd.byte')}]
             js_params.append({'code':vars})
             js_params.append({'name':'cartoonhd', 'hash':jsHash, 'code':jsdata})
-            ret = js_execute_ext( js_params )
+            ret = js_execute_ext(js_params)
             if ret['sts'] and 0 == ret['code']:
                 decoded = ret['data'].strip()
                 printDBG('DECODED DATA -> [%s]' % decoded)
@@ -369,7 +369,7 @@ class CartoonHD(CBaseHostClass):
                 h2   = bits >> 12 & mask
                 h3   = bits >> 6 & mask
                 h4   = bits & mask
-                tmp_arr.append( b64[h1] + b64[h2] + b64[h3] + b64[h4] )
+                tmp_arr.append(b64[h1] + b64[h2] + b64[h3] + b64[h4])
                 if i >= len(data):
                     break
             enc = ''.join(tmp_arr)
@@ -508,7 +508,7 @@ class CartoonHD(CBaseHostClass):
                         self.cacheLinks[key][idx]['name'] = '*' + self.cacheLinks[key][idx]['name']
                     break
         
-        if self.cm.isValidUrl( videoUrl ):
+        if self.cm.isValidUrl(videoUrl):
             urlTab = self.up.getVideoLinkExt(videoUrl)
         return urlTab
 
@@ -556,7 +556,7 @@ class CartoonHD(CBaseHostClass):
         icon = self.cm.ph.getDataBeetwenNodes(data, ('<div', '>', 'poster'), ('</div', '>'), False)[1]
         icon = self.getFullIconUrl(self.cm.ph.getSearchGroups(icon, '''src=['"]([^"^']+?\.jpe?g(?:\?[^'^"]*?)?)['"]''')[0])
 
-        desc = self.cleanHtmlStr( self.cm.ph.getDataBeetwenNodes(data, ('<p', '>', 'desc'), ('</p', '>'), False)[1] )
+        desc = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(data, ('<p', '>', 'desc'), ('</p', '>'), False)[1])
         
         data = self.cm.ph.getAllItemsBeetwenMarkers(data, '<p', '</p>')
         for item in data:
@@ -580,7 +580,7 @@ class CartoonHD(CBaseHostClass):
         if desc == '':
             desc  = cItem.get('desc', '')
         
-        return [{'title':self.cleanHtmlStr( title ), 'text': self.cleanHtmlStr( desc ), 'images':[{'title':'', 'url':self.getFullUrl(icon)}], 'other_info':{'custom_items_list':itemsList}}]
+        return [{'title':self.cleanHtmlStr(title), 'text': self.cleanHtmlStr(desc), 'images':[{'title':'', 'url':self.getFullUrl(icon)}], 'other_info':{'custom_items_list':itemsList}}]
 
     def tryTologin(self):
         printDBG('tryTologin start')
@@ -629,7 +629,7 @@ class CartoonHD(CBaseHostClass):
         name     = self.currItem.get("name", '')
         category = self.currItem.get("category", '')
         
-        printDBG( "handleService: |||||||||||||||||||||||||||||||||||| name[%s], category[%s] " % (name, category) )
+        printDBG("handleService: |||||||||||||||||||||||||||||||||||| name[%s], category[%s] " % (name, category))
         self.currList = []
         
     #MAIN MENU

@@ -41,9 +41,9 @@ class gledajfilmDecrypter:
 
 	def MyInt(self, x):
 		x = 0xffffffff & x
-		if x > 0x7fffffff :
-			return - ( ~(x - 1) & 0xffffffff )
-		else :
+		if x > 0x7fffffff:
+			return - (~(x - 1) & 0xffffffff)
+		else:
 			return x   
 
 

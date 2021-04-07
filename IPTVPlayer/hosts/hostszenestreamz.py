@@ -28,7 +28,7 @@ class Kkiste(CBaseHostClass):
         self.USER_AGENT = 'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:40.0) Gecko/20100101 Firefox/40.0'
         self.HEADER = {'User-Agent': self.USER_AGENT, 'DNT':'1', 'Accept': 'text/html'}
         self.AJAX_HEADER = dict(self.HEADER)
-        self.AJAX_HEADER.update( {'X-Requested-With': 'XMLHttpRequest'} )
+        self.AJAX_HEADER.update({'X-Requested-With': 'XMLHttpRequest'})
         self.MAIN_URL = 'http://szene-streamz.com/'
         self.cacheLinks   = {}
         self.cacheFilters  = {}
@@ -37,12 +37,12 @@ class Kkiste(CBaseHostClass):
         self.MOVIES_GENRE_CAT = []
         self.SERIES_GENRE_CAT = []
         self.defaultParams = {'header':self.HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
-        self.MAIN_CAT_TAB = [{'category':'list_items',         'title': _('Movies'),        'url':self.getFullUrl('publ/')                                },
-                             {'category':'list_cats',          'title': _('Genre selection')+': '+_('Movies'), 'url':self.getFullUrl('publ/')             },
-                             {'category':'list_items',         'title': _('Series'),            'url':self.getFullUrl('load/')                            },
-                             {'category':'list_cats',          'title': _('Genre selection')+': '+_('Series'), 'url':self.getFullUrl('load/')             },
+        self.MAIN_CAT_TAB = [{'category':'list_items',         'title': _('Movies'),        'url':self.getFullUrl('publ/')},
+                             {'category':'list_cats',          'title': _('Genre selection')+': '+_('Movies'), 'url':self.getFullUrl('publ/')},
+                             {'category':'list_items',         'title': _('Series'),            'url':self.getFullUrl('load/')},
+                             {'category':'list_cats',          'title': _('Genre selection')+': '+_('Series'), 'url':self.getFullUrl('load/')},
                              {'category': 'search',             'title': _('Search'), 'search_item': True,},
-                             {'category': 'search_history',     'title': _('Search history'),            } 
+                             {'category': 'search_history',     'title': _('Search history'),} 
                             ]
         
 
@@ -308,7 +308,7 @@ class Kkiste(CBaseHostClass):
     
     def listSearchResult(self, cItem, searchPattern, searchType):
         printDBG("hostszenestreamz.listSearchResult cItem[%s], searchPattern[%s] searchType[%s]" % (cItem, searchPattern, searchType))
-        post_data = { 'query':urllib.parse.unquote(searchPattern), 'sfSbm':'', 'a':'2' }
+        post_data = {'query':urllib.parse.unquote(searchPattern), 'sfSbm':'', 'a':'2'}
         cItem = dict(cItem)
         cItem['url'] = self.getFullUrl('/publ/')
         self.listItems(cItem, 'explore_item', post_data)
@@ -322,7 +322,7 @@ class Kkiste(CBaseHostClass):
         name     = self.currItem.get("name", '')
         category = self.currItem.get("category", '')
         
-        printDBG( "handleService: |||||||||||||||||||||||||||||||||||| name[%s], category[%s] " % (name, category) )
+        printDBG("handleService: |||||||||||||||||||||||||||||||||||| name[%s], category[%s] " % (name, category))
         self.currList = []
         
     #MAIN MENU

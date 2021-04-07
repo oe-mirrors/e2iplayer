@@ -31,15 +31,15 @@ class CYTSignAlgoExtractor:
         self.cm = cm
 
     def _getAllLocalSubFunNames(self, mainFunBody):
-        match = self.RE_FUNCTION_NAMES.findall( mainFunBody )
+        match = self.RE_FUNCTION_NAMES.findall(mainFunBody)
         if len(match):
-            funNameTab = set( match[1:] )
+            funNameTab = set(match[1:])
             return funNameTab
         return set()
 
     def _getAllObjectsWithMethods(self, mainFunBody):
         objects = {}
-        data = self.RE_OBJECTS.findall( mainFunBody )
+        data = self.RE_OBJECTS.findall(mainFunBody)
         for item in data:
             if item[1] not in ['split', 'length', 'slice', 'join']:
                 if item[0] not in objects:
@@ -151,17 +151,17 @@ class CYTSignAlgoExtractor:
 
             code.append('e2i_dec=[];for (var idx in e2i_enc){e2i_dec.push(%s(e2i_enc[idx]));};print(JSON.stringify(e2i_dec));' % mainFunctionName)
             code = '\n'.join(code)
-            printDBG( "---------------------------------------" )
-            printDBG( "|    ALGO FOR SIGNATURE DECRYPTION    |" )
-            printDBG( "---------------------------------------" )
-            printDBG( code )
-            printDBG( "---------------------------------------" )
+            printDBG("---------------------------------------")
+            printDBG("|    ALGO FOR SIGNATURE DECRYPTION    |")
+            printDBG("---------------------------------------")
+            printDBG(code)
+            printDBG("---------------------------------------")
         else:
             printDBG("USE ALGO FROM CACHE: %s" % jshash)
 
         js_params = [{'code':'e2i_enc = %s;' % json_dumps(encSignatures)}]
         js_params.append({'name':jsname, 'code':code, 'hash':jshash})
-        ret = js_execute_ext( js_params )
+        ret = js_execute_ext(js_params)
         if ret['sts'] and 0 == ret['code']:
             try:
                 decSignatures = json_loads(ret['data'])
@@ -571,7 +571,7 @@ class YoutubeIE(object):
                     sts, video_info = self.cm.getPage(video_info_url, videoInfoparams)
                     if not sts: 
                         continue
-                    if 'token' in video_info or 'Token' in video_info :
+                    if 'token' in video_info or 'Token' in video_info:
                         if 'channel_creation_token' in video_info:
                             printDBG("channel_creation_token found!")
                         elif 'account_playback_token' in video_info:

@@ -56,7 +56,7 @@ def GetConfigList():
 ###################################################
 
 def GetLanguageTab():
-    tab = [ ["Albanian",     "sq", "alb"],
+    tab = [["Albanian",     "sq", "alb"],
             ["Arabic",       "ar", "ara"],
             ["Belarusian",   "hy", "arm"],
             ["Bosnian",      "bs", "bos"],
@@ -103,7 +103,7 @@ def GetLanguageTab():
             ["Vietnamese",   "vi", "vie"],
             ["BosnianLatin", "bs", "bos"],
             ["Farsi",        "fa", "per"],
-            ["Espanol",      "es", "spa"] ]
+            ["Espanol",      "es", "spa"]]
     return tab
 
 class SubsceneComProvider(CBaseSubProviderClass): 
@@ -118,7 +118,7 @@ class SubsceneComProvider(CBaseSubProviderClass):
         CBaseSubProviderClass.__init__(self, params)
         
         self.defaultParams = {'header':self.HTTP_HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
-        self.SEARCH_TYPE_TAB = [{'title':_('By media title'),  'category':'search_by_title'  },
+        self.SEARCH_TYPE_TAB = [{'title':_('By media title'),  'category':'search_by_title'},
                                 {'title':_('By release name'), 'category':'search_by_release'}]
         self.cache = {} 
     
@@ -188,7 +188,7 @@ class SubsceneComProvider(CBaseSubProviderClass):
         data = self.cm.ph.getDataBeetwenMarkers(data, '<div class="search-result">', '<div class="alternativeSearch">', False)[1]
         data = self.cm.ph.getAllItemsBeetwenMarkers(data, '<h2', '</ul>')
         for groupItem in data:
-            groupTitle = self.cleanHtmlStr( self.cm.ph.getDataBeetwenMarkers(groupItem, '<h2', '</h2>', True)[1] )
+            groupTitle = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(groupItem, '<h2', '</h2>', True)[1])
             if '' == groupTitle:
                 continue
             items = self.cm.ph.getAllItemsBeetwenMarkers(groupItem, '<li', '</li>')
@@ -245,7 +245,7 @@ class SubsceneComProvider(CBaseSubProviderClass):
         data = self.cm.ph.getDataBeetwenMarkers(data, '<tbody>', '</tbody>', False)[1]
         data = self.cm.ph.getAllItemsBeetwenMarkers(data, '<td class="a1">', '</tr>')
         for item in data:
-            url = self.getFullUrl( self.cm.ph.getSearchGroups(item, 'href="([^"]+?)"')[0] )
+            url = self.getFullUrl(self.cm.ph.getSearchGroups(item, 'href="([^"]+?)"')[0])
             if url == '':
                 continue
             
@@ -261,7 +261,7 @@ class SubsceneComProvider(CBaseSubProviderClass):
             title = t1 + ' ' + self.cleanHtmlStr(bodyData[0])
             
             #lang 
-            lang  = _getLangCode( self.cleanHtmlStr( self.cm.ph.getDataBeetwenMarkers(bodyData[0], '<span class="l', '</span>')[1] ) )
+            lang  = _getLangCode(self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(bodyData[0], '<span class="l', '</span>')[1]))
             
             # desc
             descTab = []
@@ -273,7 +273,7 @@ class SubsceneComProvider(CBaseSubProviderClass):
                             val = _('Yes')
                         elif 'class="a40"' in bodyData[idx]:
                             val = _('No')
-                    descTab.append( '{0}: {1}'.format(heads[idx], val) )
+                    descTab.append('{0}: {1}'.format(heads[idx], val))
                 desc = '[/br]'.join(descTab[1:])
             else:
                 desc = cItem['desc']
@@ -292,10 +292,10 @@ class SubsceneComProvider(CBaseSubProviderClass):
         
         imdbid = self.cm.ph.getSearchGroups(data, '/title/(tt[0-9]+?)[^0-9]')[0]
         subId  = self.cm.ph.getSearchGroups(data, 'SubtitleId[^0-9]*?([0-9]+?)[^0-9]')[0]
-        url    = self.getFullUrl( self.cm.ph.getSearchGroups(data, 'href="([^"]*?/subtitle/download[^"]+?)"')[0], cUrl)
+        url    = self.getFullUrl(self.cm.ph.getSearchGroups(data, 'href="([^"]*?/subtitle/download[^"]+?)"')[0], cUrl)
         if url == '':
             url = self.cm.ph.getDataBeetwenNodes(data, ('<a', '>', 'downloadButton'), ('</a', '>'))[1]
-            url = self.getFullUrl( self.cm.ph.getSearchGroups(url, 'href="([^"]+?)"')[0], cUrl)
+            url = self.getFullUrl(self.cm.ph.getSearchGroups(url, 'href="([^"]+?)"')[0], cUrl)
         
         urlParams = dict(self.defaultParams)
         tmpDIR = self.downloadAndUnpack(url, urlParams)
@@ -358,7 +358,7 @@ class SubsceneComProvider(CBaseSubProviderClass):
         name     = self.currItem.get("name", '')
         category = self.currItem.get("category", '')
         
-        printDBG( "handleService: |||||||||||||||||||||||||||||||||||| name[%s], category[%s] " % (name, category) )
+        printDBG("handleService: |||||||||||||||||||||||||||||||||||| name[%s], category[%s] " % (name, category))
         self.currList = []
         
     #MAIN MENU

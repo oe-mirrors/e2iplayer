@@ -56,7 +56,7 @@ class EFilmyTv(CBaseHostClass):
         self.DEFAULT_ICON_URL = 'https://superrepo.org/static/images/icons/original/xplugin.video.efilmy.png.pagespeed.ic.ISN8CDQxwg.png'
         self.HTTP_HEADER = {'User-Agent': self.USER_AGENT, 'DNT':'1', 'Accept': 'text/html', 'Accept-Encoding':'gzip, deflate', 'Referer':self.getMainUrl(), 'Origin':self.getMainUrl()}
         self.AJAX_HEADER = dict(self.HTTP_HEADER)
-        self.AJAX_HEADER.update( {'X-Requested-With': 'XMLHttpRequest', 'Accept-Encoding':'gzip, deflate', 'Content-Type':'application/x-www-form-urlencoded; charset=UTF-8', 'Accept':'application/json, text/javascript, */*; q=0.01'} )
+        self.AJAX_HEADER.update({'X-Requested-With': 'XMLHttpRequest', 'Accept-Encoding':'gzip, deflate', 'Content-Type':'application/x-www-form-urlencoded; charset=UTF-8', 'Accept':'application/json, text/javascript, */*; q=0.01'})
         
         self.defaultParams = {'header':self.HTTP_HEADER, 'with_metadata':True, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
         self.login = ''
@@ -85,7 +85,7 @@ class EFilmyTv(CBaseHostClass):
     def listMainMenu(self, cItem, nextCategory):
         printDBG("EFilmyTv.listMainMenu")
         
-        CAT_TAB = [{'category':'movies',         'title': _('Movies'),     'url':self.getFullUrl('/filmy.html')  },
+        CAT_TAB = [{'category':'movies',         'title': _('Movies'),     'url':self.getFullUrl('/filmy.html')},
                    {'category':'series',         'title': _('Series'),     'url':self.getFullUrl('/seriale.html')},
                    {'category':'search',         'title': _('Search'),          'search_item':True}, 
                    {'category':'search_history', 'title': _('Search history')},]
@@ -115,7 +115,7 @@ class EFilmyTv(CBaseHostClass):
     def listMoviesCats(self, cItem, nextCategory):
         printDBG("EFilmyTv.listSeriesCats")
         CAT_TAB = [{'category':'movies_all',   'title': _('--All--')},
-                   {'category':'movies_top',   'title': _('Top')    },]
+                   {'category':'movies_top',   'title': _('Top')},]
         cItem = dict(cItem)
         cItem['desc'] = ''
         self.listsTab(CAT_TAB, cItem)
@@ -124,8 +124,8 @@ class EFilmyTv(CBaseHostClass):
     def listSeriesCats(self, cItem, nextCategory):
         printDBG("EFilmyTv.listSeriesCats")
         CAT_TAB = [{'category':'series_all',         'title': _('--All--')},
-                   {'category':'series_abc',         'title': 'ABC'       },
-                   {'category':'series_top',         'title': _('Top')    },
+                   {'category':'series_abc',         'title': 'ABC'},
+                   {'category':'series_top',         'title': _('Top')},
                    {'category':'series_last',        'title': 'Ostatnio Aktualizowane'},]
         cItem = dict(cItem)
         cItem['desc'] = ''
@@ -588,7 +588,7 @@ class EFilmyTv(CBaseHostClass):
             header = dict(self.HTTP_HEADER)
             header['Accept'] = 'image/png,image/*;q=0.8,*/*;q=0.5'
             params = dict(self.defaultParams)
-            params.update( {'maintype': 'image', 'subtypes':['jpeg', 'png'], 'check_first_bytes':['\xFF\xD8', '\xFF\xD9', '\x89\x50\x4E\x47'], 'header':header} )
+            params.update({'maintype': 'image', 'subtypes':['jpeg', 'png'], 'check_first_bytes':['\xFF\xD8', '\xFF\xD9', '\x89\x50\x4E\x47'], 'header':header})
             filePath = GetTmpDir('.iptvplayer_captcha.jpg')
             rm(filePath)
             ret = self.cm.saveWebFile(filePath, imgUrl.replace('&amp;', '&'), params)
@@ -691,7 +691,7 @@ class EFilmyTv(CBaseHostClass):
         if icon == '':
             icon = cItem.get('icon', self.DEFAULT_ICON_URL)
         
-        return [{'title':self.cleanHtmlStr( title ), 'text': self.cleanHtmlStr( desc ), 'images':[{'title':'', 'url':self.getFullIconUrl(icon)}], 'other_info':otherInfo}]
+        return [{'title':self.cleanHtmlStr(title), 'text': self.cleanHtmlStr(desc), 'images':[{'title':'', 'url':self.getFullIconUrl(icon)}], 'other_info':otherInfo}]
         
     def tryTologin(self):
         printDBG('EFilmyTv.tryTologin start')
@@ -763,7 +763,7 @@ class EFilmyTv(CBaseHostClass):
         category = self.currItem.get("category", '')
         mode     = self.currItem.get("mode", '')
         
-        printDBG( "handleService: |||| name[%s], category[%s] " % (name, category) )
+        printDBG("handleService: |||| name[%s], category[%s] " % (name, category))
         self.cacheLinks = {}
         self.currList = []
         

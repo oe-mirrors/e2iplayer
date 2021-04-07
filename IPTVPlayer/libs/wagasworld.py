@@ -54,7 +54,7 @@ class WagasWorldApi(CBaseHostClass):
         printDBG("WagasWorldApi.getMainCategories")
         list = []
         list.append({'type':'waga_cat', 'waga_cat':'groups', 'title':_('Channel'), 'url':self.MAIN_URL + 'channel'})
-        list.append({'type':'waga_cat', 'waga_cat':'groups', 'title':_('LiveTv'),  'url':self.MAIN_URL + 'LiveTv' })
+        list.append({'type':'waga_cat', 'waga_cat':'groups', 'title':_('LiveTv'),  'url':self.MAIN_URL + 'LiveTv'})
         return list
 
     def getGroups(self, cItem):
@@ -93,16 +93,16 @@ class WagasWorldApi(CBaseHostClass):
             del data[-1]
         for item in data:
             title = ph.search(item, '>([^<]+?)</a>')[0]
-            url   = self.getFullUrl( ph.getattr(item, 'href') )
-            icon  = self.getFullIconUrl( ph.search(item, ph.IMG)[1] )
+            url   = self.getFullUrl(ph.getattr(item, 'href'))
+            icon  = self.getFullIconUrl(ph.search(item, ph.IMG)[1])
             if '' != url and '' != title:
-                list.append( {'waga_cat':'explore', 'type':'waga_cat', 'title':ph.clean_html(title), 'icon':icon, 'url':url} )
+                list.append({'waga_cat':'explore', 'type':'waga_cat', 'title':ph.clean_html(title), 'icon':icon, 'url':url})
         if nextPage:
             list.append({'type':'waga_cat', 'waga_cat':'items', 'title':_('Next page'), 'url':cItem['url'], 'page':page+1})
         return list
         
     def getChannelsList(self, cItem):
-        printDBG("WagasWorldApi.getChannelsList waga_cat[%s]" % cItem.get('waga_cat',  '') )
+        printDBG("WagasWorldApi.getChannelsList waga_cat[%s]" % cItem.get('waga_cat',  ''))
         list = []
         waga_cat = cItem.get('waga_cat',  '')
         if '' == waga_cat:
@@ -113,7 +113,7 @@ class WagasWorldApi(CBaseHostClass):
                     self.loggedIn = True
                     self.http_params.update({'save_cookie': True, 'load_cookie': True, 'cookiefile': self.COOKIE_FILE})
                 else:
-                    self.sessionEx.open(MessageBox, _('"%s" login failed! Please check your login and password.') % login, type=MessageBox.TYPE_INFO, timeout=10 )
+                    self.sessionEx.open(MessageBox, _('"%s" login failed! Please check your login and password.') % login, type=MessageBox.TYPE_INFO, timeout=10)
         
             list = self.getGroups({'url':self.MAIN_URL + 'channel'})
             #list = self.getMainCategories(cItem)
@@ -152,7 +152,7 @@ class WagasWorldApi(CBaseHostClass):
         except Exception:
             printExc()
             if errorMsg != '':
-                self.sessionEx.open(MessageBox, errorMsg, type=MessageBox.TYPE_ERROR, timeout=10 )
+                self.sessionEx.open(MessageBox, errorMsg, type=MessageBox.TYPE_ERROR, timeout=10)
         return ret
 
     def exploreItem(self, cItem):
@@ -239,10 +239,10 @@ class WagasWorldApi(CBaseHostClass):
         post_data.update({'name':login, 'pass':password})
         
         HTTP_HEADER= dict(self.HTTP_HEADER)
-        HTTP_HEADER.update( {'Referer':loginUrl} )
+        HTTP_HEADER.update({'Referer':loginUrl})
         
-        params    = {'header' : HTTP_HEADER, 'cookiefile' : self.COOKIE_FILE, 'save_cookie' : True, 'load_cookie' : True}
-        sts, data = self.cm.getPage( loginUrl, params, post_data)
+        params    = {'header': HTTP_HEADER, 'cookiefile': self.COOKIE_FILE, 'save_cookie': True, 'load_cookie': True}
+        sts, data = self.cm.getPage(loginUrl, params, post_data)
         if sts:
             if os_path.isfile(self.COOKIE_FILE):
                 if 'user/logout' in data:

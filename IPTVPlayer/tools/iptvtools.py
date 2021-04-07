@@ -242,7 +242,7 @@ class iptv_system:
             self.console_appClosed_conn = eConnectCallback(self.console.appClosed, self._cmdFinished)
             self.console_stdoutAvail_conn = eConnectCallback(self.console.stdoutAvail, self._dataAvail)
             self.outData     = ""
-        self.console.execute( E2PrioFix( cmd ) )
+        self.console.execute(E2PrioFix(cmd))
         
     def terminate(self, doCallBackFun=False):
         self.kill(doCallBackFun)
@@ -349,7 +349,7 @@ def ClearTmpCookieDir():
     global gE2iPlayerTempCookieDir
     if gE2iPlayerTempCookieDir != None:
         try:
-            for file in os.listdir( gE2iPlayerTempCookieDir ):
+            for file in os.listdir(gE2iPlayerTempCookieDir):
                 rm(gE2iPlayerTempCookieDir + '/' + file)
         except Exception:
             printExc()
@@ -387,7 +387,7 @@ def ClearTmpJSCacheDir():
     global gE2iPlayerTempJSCache
     if gE2iPlayerTempJSCache != None:
         try:
-            for file in os.listdir( gE2iPlayerTempJSCache ):
+            for file in os.listdir(gE2iPlayerTempJSCache):
                 rm(gE2iPlayerTempJSCache + '/' + file)
         except Exception:
             printExc()
@@ -526,11 +526,11 @@ class CSelOneLink():
     def getBestSortedList(self):
         printDBG('getBestSortedList')
         sortList = self.listOfLinks[::-1]
-        sortList.sort( self._cmpLinksBest )
+        sortList.sort(self._cmpLinksBest)
         retList = []
         tmpList = []
         for item in sortList:
-            linkRes = self.getQualiyFun( item )
+            linkRes = self.getQualiyFun(item)
             if linkRes <= self.maxRes:
                 retList.append(item)
             else:
@@ -541,7 +541,7 @@ class CSelOneLink():
     def getSortedLinks(self, defaultFirst=True):
         printDBG('getSortedLinks defaultFirst[%r]' % defaultFirst)
         sortList = self.listOfLinks[::-1]
-        sortList.sort( self._cmpLinks )
+        sortList.sort(self._cmpLinks)
         if len(self.listOfLinks) < 2 or None == self.maxRes:
             return self.listOfLinks
         
@@ -552,23 +552,23 @@ class CSelOneLink():
             group1 = []
             group2 = []
             for idx in range(len(self.listOfLinks)):
-                if  self.getQualiyFun( self.listOfLinks[idx] ) <= self.maxRes:
+                if  self.getQualiyFun(self.listOfLinks[idx]) <= self.maxRes:
                     group1.append(self.listOfLinks[idx])
                 else:
                     group2.append(self.listOfLinks[idx])
-            group1.sort( self._cmpLinks )
+            group1.sort(self._cmpLinks)
             group1.reverse()
-            group2.sort( self._cmpLinks )
+            group2.sort(self._cmpLinks)
             group1.extend(group2)
             return group1
         
         defIdx = -1
         for idx in range(len(sortList)):
-            linkRes = self.getQualiyFun( sortList[idx] )
+            linkRes = self.getQualiyFun(sortList[idx])
             printDBG("=============== getOneLink [%r] res[%r] maxRes[%r]" % (sortList[idx], linkRes, self.maxRes))
             if linkRes <= self.maxRes:
                 defIdx = idx
-                printDBG('getOneLink use format %d/%d' % (linkRes, self.maxRes) )
+                printDBG('getOneLink use format %d/%d' % (linkRes, self.maxRes))
                 
         if defaultFirst and -1 < defIdx:
             item = sortList[defIdx]
@@ -581,7 +581,7 @@ class CSelOneLink():
         tab = self.getSortedLinks()
         if len(tab) == 0:
             return tab
-        return [ tab[0] ]
+        return [tab[0]]
 # end CSelOneLink
 
 #############################################################
@@ -596,12 +596,12 @@ def getDebugMode():
     except Exception:
         file = open(resolveFilename(SCOPE_CONFIG, "settings"))
         for line in file:
-            if line.startswith('config.plugins.iptvplayer.debugprint=' ) :
+            if line.startswith('config.plugins.iptvplayer.debugprint='):
                 DBG=line.split("=")[1].strip()
                 break
     return DBG
 
-def printDBG( DBGtxt ):
+def printDBG(DBGtxt):
     DBG = getDebugMode()
     if DBG == '':
         return
@@ -647,13 +647,13 @@ def GetHostsFromList(useCache=True):
     
     lhosts = []
     try:
-        sts, data = ReadTextFile(__getHostsPath('/list.txt') )
+        sts, data = ReadTextFile(__getHostsPath('/list.txt'))
         if sts:
             data = data.split('\n')
             for item in data:
                 line = item.strip()
                 if __isHostNameValid(line):
-                    lhosts.append( line[4:] )
+                    lhosts.append(line[4:])
                     printDBG('getHostsList add host from list.txt hostName: "%s"' % line[4:])
     except Exception:
         printExc()
@@ -668,14 +668,14 @@ def GetHostsFromFolder(useCache=True):
     
     lhosts = []
     try:
-        fileList = os.listdir( __getHostsPath() )
+        fileList = os.listdir(__getHostsPath())
         for wholeFileName in fileList:
             # separate file name and file extension
             fileName, fileExt = os.path.splitext(wholeFileName)
-            nameLen = len( fileName )
+            nameLen = len(fileName)
             if fileExt in ['.pyo', '.pyc', '.py'] and nameLen >  4 and __isHostNameValid(fileName):
                 if fileName[4:] not in lhosts:
-                    lhosts.append( fileName[4:] )
+                    lhosts.append(fileName[4:])
                     printDBG('getHostsList add host with fileName: "%s"' % fileName[4:])
         printDBG('getHostsList end')
         lhosts.sort()
@@ -699,7 +699,7 @@ def GetHostsList(fromList=True, fromHostFolder=True, useCache=True):
         tmp = GetHostsFromList(useCache)
         for host in tmp:
             if host not in lhosts:
-                lhosts.append( host )
+                lhosts.append(host)
     
     return lhosts
 
@@ -769,7 +769,7 @@ def GetSkinsList():
     printDBG('getSkinsList begin')
     skins = []
     SKINS_PATH = resolveFilename(SCOPE_PLUGINS, 'Extensions/IPTVPlayer/skins/')
-    fileList = os.listdir( SKINS_PATH )
+    fileList = os.listdir(SKINS_PATH)
     for filename in fileList:
         skins.append((filename, filename))
     skins.sort()
@@ -779,7 +779,7 @@ def GetSkinsList():
     printDBG('getSkinsList end')
     return skins
     
-def IsHostEnabled( hostName ):
+def IsHostEnabled(hostName):
     hostEnabled  = False
     try:
         if getattr(config.plugins.iptvplayer, 'host' + hostName).value:
@@ -938,7 +938,7 @@ def GetFileSize(filepath):
         return -1
        
 def DownloadFile(url, filePath):
-    printDBG('DownloadFile [%s] from [%s]' % (filePath, url) )
+    printDBG('DownloadFile [%s] from [%s]' % (filePath, url))
     try:
         downloadFile = urllib.request.urlopen(url)
         output = open(filePath, 'wb')
@@ -1063,17 +1063,17 @@ def RemoveOldDirsIcons(path, deltaInDays='7'):
         printExc()
 
 def RemoveAllFilesIconsFromPath(path):
-    printDBG( "RemoveAllFilesIconsFromPath" )
+    printDBG("RemoveAllFilesIconsFromPath")
     try:
         list = os.listdir(path)
         for item in list:
             filePath = os.path.join(path, item)
             if CheckIconName(item) and os.path.isfile(filePath):
-                printDBG( 'RemoveAllFilesIconsFromPath img: ' + filePath )
+                printDBG('RemoveAllFilesIconsFromPath img: ' + filePath)
                 try:
                     os.remove(filePath)
                 except Exception:
-                    printDBG( "ERROR while removing file %s" % filePath )
+                    printDBG("ERROR while removing file %s" % filePath)
     except Exception:
         printExc('ERROR: in RemoveAllFilesIconsFromPath')
         
@@ -1195,10 +1195,10 @@ class CSearchHistoryHelper():
     def _saveHistoryList(self, list):
         printDBG('CSearchHistoryHelper._saveHistoryList to file = "%s"' % self.PATH_FILE)
         try:
-            file = open( self.PATH_FILE, 'w' )
+            file = open(self.PATH_FILE, 'w')
             l = len(list)
-            for i in range( l ):
-                file.write( list[l - 1 -i] + '\n' )
+            for i in range(l):
+                file.write(list[l - 1 -i] + '\n')
             file.close
         except Exception:
             printExc('CSearchHistoryHelper._saveHistoryList EXCEPTION')

@@ -18,15 +18,15 @@ from .base import BlockCipher, padWithPadLen, noPadding
 
 class Rijndael(BlockCipher):
     """ Rijndael encryption algorithm """
-    def __init__(self, key=None, padding=padWithPadLen(), keySize=16, blockSize=16 ):
+    def __init__(self, key=None, padding=padWithPadLen(), keySize=16, blockSize=16):
         self.name       = 'RIJNDAEL'
         self.keySize    = keySize
         self.strength   = keySize*8
         self.blockSize  = blockSize  # blockSize is in bytes
         self.padding    = padding    # change default to noPadding() to get normal ECB behavior
 
-        assert( keySize%4==0 and keySize/4 in NrTable[4]), 'key size must be 16,20,24,29 or 32 bytes'
-        assert( blockSize%4==0 and blockSize/4 in NrTable), 'block size must be 16,20,24,29 or 32 bytes'
+        assert(keySize%4==0 and keySize/4 in NrTable[4]), 'key size must be 16,20,24,29 or 32 bytes'
+        assert(blockSize%4==0 and blockSize/4 in NrTable), 'block size must be 16,20,24,29 or 32 bytes'
 
         self.Nb = self.blockSize/4          # Nb is number of columns of 32 bit words
         self.Nk = keySize/4                 # Nk is the key length in 32-bit words
@@ -37,7 +37,7 @@ class Rijndael(BlockCipher):
 
     def setKey(self, key):
         """ Set a key and generate the expanded key """
-        assert( len(key) == (self.Nk*4) ), 'Key length must be same as keySize parameter'
+        assert(len(key) == (self.Nk*4)), 'Key length must be same as keySize parameter'
         self.__expandedKey = keyExpansion(self, key)
         self.reset()                   # BlockCipher.reset()
 
@@ -72,7 +72,7 @@ class Rijndael(BlockCipher):
 
     def _toBlock(self, bs):
         """ Convert binary string to array of bytes, state[col][row]"""
-        assert ( len(bs) == 4*self.Nb ), 'Rijndarl blocks must be of size blockSize'
+        assert (len(bs) == 4*self.Nb), 'Rijndarl blocks must be of size blockSize'
         return [[ord(bs[4*i]), ord(bs[4*i+1]), ord(bs[4*i+2]), ord(bs[4*i+3])] for i in range(self.Nb)]
 
     def _toBString(self, block):
@@ -100,13 +100,13 @@ def keyExpansion(algInstance, keyString):
     w = [[key[4*i], key[4*i+1], key[4*i+2], key[4*i+3]] for i in range(Nk)]
     for i in range(Nk, Nb*(Nr+1)):
         temp = w[i-1]        # a four byte column
-        if (i%Nk) == 0 :
+        if (i%Nk) == 0:
             temp     = temp[1:]+[temp[0]]  # RotWord(temp)
-            temp     = [ Sbox[byte] for byte in temp ]
+            temp     = [Sbox[byte] for byte in temp]
             temp[0] ^= Rcon[i/Nk]
-        elif Nk > 6 and  i%Nk == 4 :
-            temp     = [ Sbox[byte] for byte in temp ]  # SubWord(temp)
-        w.append( [ w[i-Nk][byte]^temp[byte] for byte in range(4) ] )
+        elif Nk > 6 and  i%Nk == 4:
+            temp     = [Sbox[byte] for byte in temp]  # SubWord(temp)
+        w.append([w[i-Nk][byte]^temp[byte] for byte in range(4)])
     return w
 
 Rcon = (0, 0x01, 0x02, 0x04, 0x08, 0x10, 0x20, 0x40, 0x80, 0x1b, 0x36,     # note extra '0' !!!
@@ -202,11 +202,11 @@ InvSbox = (0x52, 0x09, 0x6a, 0xd5, 0x30, 0x36, 0xa5, 0x38,
     by the amount Ci.  Note that row 0 is not shifted.
                  Nb      C1 C2 C3
                -------------------  """
-shiftOffset  = { 4 : ( 0, 1, 2, 3),
-                 5 : ( 0, 1, 2, 3),
-                 6 : ( 0, 1, 2, 3),
-                 7 : ( 0, 1, 2, 4),
-                 8 : ( 0, 1, 3, 4) }
+shiftOffset  = {4: (0, 1, 2, 3),
+                 5: (0, 1, 2, 3),
+                 6: (0, 1, 2, 3),
+                 7: (0, 1, 2, 4),
+                 8: (0, 1, 3, 4)}
 def ShiftRows(algInstance):
     tmp = [0]*algInstance.Nb   # list of size Nb
     for r in range(1, 4):       # row 0 reamains unchanged and can be skipped
@@ -253,7 +253,7 @@ def mul(a, b):
     else:
         return 0
 
-Logtable = ( 0,   0,  25,   1,  50,   2,  26, 198,  75, 199,  27, 104,  51, 238, 223,   3,
+Logtable = (0,   0,  25,   1,  50,   2,  26, 198,  75, 199,  27, 104,  51, 238, 223,   3,
            100,   4, 224,  14,  52, 141, 129, 239,  76, 113,   8, 200, 248, 105,  28, 193,
            125, 194,  29, 181, 249, 185,  39, 106,  77, 228, 166, 114, 154, 201,   9, 120,
            101,  47, 138,   5,  33,  15, 225,  36,  18, 240, 130,  69,  53, 147, 218, 142,
@@ -270,7 +270,7 @@ Logtable = ( 0,   0,  25,   1,  50,   2,  26, 198,  75, 199,  27, 104,  51, 238,
             68,  17, 146, 217,  35,  32,  46, 137, 180, 124, 184,  38, 119, 153, 227, 165,
            103,  74, 237, 222, 197,  49, 254,  24,  13,  99, 140, 128, 192, 247, 112,   7)
 
-Alogtable= ( 1,   3,   5,  15,  17,  51,  85, 255,  26,  46, 114, 150, 161, 248,  19,  53,
+Alogtable= (1,   3,   5,  15,  17,  51,  85, 255,  26,  46, 114, 150, 161, 248,  19,  53,
             95, 225,  56,  72, 216, 115, 149, 164, 247,   2,   6,  10,  30,  34, 102, 170,
            229,  52,  92, 228,  55,  89, 235,  38, 106, 190, 217, 112, 144, 171, 230,  49,
             83, 245,   4,  12,  20,  60,  68, 204,  79, 209, 104, 184, 211, 110, 178, 205,

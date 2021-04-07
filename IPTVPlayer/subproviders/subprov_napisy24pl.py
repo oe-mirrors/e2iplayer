@@ -131,7 +131,7 @@ class Napisy24plProvider(CBaseSubProviderClass):
     def getMoviesList(self, cItem, nextCategoryMovie):
         printDBG("Napisy24plProvider.getMoviesList")
         page = cItem.get('page', 1)
-        title = urllib.parse.quote_plus( self.params['confirmed_title'] )
+        title = urllib.parse.quote_plus(self.params['confirmed_title'])
         url = self.getFullUrl('szukaj?page={0}&lang=0&search={1}&typ=0'.format(page, title))
         
         sts, data = self.getPage(url)
@@ -151,9 +151,9 @@ class Napisy24plProvider(CBaseSubProviderClass):
                 for item in tmp:
                     imdbid = self.cm.ph.getSearchGroups(item, 'data-imdb="(tt[0-9]+?)"')[0]
                     url    = self.cm.ph.getSearchGroups(item, 'href="([^"]+?)"')[0]
-                    title  = self.cleanHtmlStr( self.cm.ph.getDataBeetwenMarkers(item, '<h2', '</h2>')[1] )
+                    title  = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(item, '<h2', '</h2>')[1])
                     if title == '':
-                        title = self.cleanHtmlStr( urllib.parse.unquote_plus( url.split('/')[-1] ).title() )
+                        title = self.cleanHtmlStr(urllib.parse.unquote_plus(url.split('/')[-1]).title())
                     desc   = item.split('</h2>')[-1]
                     
                     params = dict(cItem)
@@ -307,7 +307,7 @@ class Napisy24plProvider(CBaseSubProviderClass):
         fileName = GetSubtitlesDir(fileName)
         
         url = 'http://napisy24.pl/download?napisId={0}&typ=sru'.format(subId)
-        tmpFile = GetTmpDir( self.TMP_FILE_NAME )
+        tmpFile = GetTmpDir(self.TMP_FILE_NAME)
         tmpFileZip = tmpFile + '.zip'
         
         urlParams = dict(self.defaultParams)
@@ -398,7 +398,7 @@ class Napisy24plProvider(CBaseSubProviderClass):
         name     = self.currItem.get("name", '')
         category = self.currItem.get("category", '')
         
-        printDBG( "handleService: name[%s], category[%s] " % (name, category) )
+        printDBG("handleService: name[%s], category[%s] " % (name, category))
         self.currList = []
         
     #MAIN MENU

@@ -42,8 +42,8 @@ class FilmPertutti(CBaseHostClass):
                         {'category':'list_cats',       'title':'Serie TV',               'url':self.getFullUrl('/category/serie-tv/')},
                         {'category':'list_items',      'title':'Prime visioni',          'url':self.getFullUrl('/prime-visioni/')},
                         {'category':'list_items',      'title':'Aggiornamenti Serie TV', 'url':self.getFullUrl('/aggiornamenti-serie-tv/')},
-                        {'category':'search',          'title': _('Search'),       'search_item':True       },
-                        {'category': 'search_history',  'title': _('Search history'),                        }]
+                        {'category':'search',          'title': _('Search'),       'search_item':True},
+                        {'category': 'search_history',  'title': _('Search history'),}]
         self.listsTab(MAIN_CAT_TAB, cItem)
     
     def listCategories(self, cItem, nextCategory):
@@ -54,7 +54,7 @@ class FilmPertutti(CBaseHostClass):
         self.setMainUrl(self.cm.meta['url'])
         
         params = dict(cItem)
-        params.update( {'good_for_fav': False, 'title':_('--All--'), 'category':nextCategory} )
+        params.update({'good_for_fav': False, 'title':_('--All--'), 'category':nextCategory})
         self.addDir(params)
         
         data = self.cm.ph.getDataBeetwenNodes(data, ('<select', '>', '"cats"'), ('</select', '>'), False)[1]
@@ -65,7 +65,7 @@ class FilmPertutti(CBaseHostClass):
                 continue
             title = self.cleanHtmlStr(item)
             params = dict(cItem)
-            params.update( {'good_for_fav': False, 'title':title, 'category':nextCategory, 'url':url} )
+            params.update({'good_for_fav': False, 'title':title, 'category':nextCategory, 'url':url})
             self.addDir(params)
             
     def listSubItems(self, cItem):
@@ -107,12 +107,12 @@ class FilmPertutti(CBaseHostClass):
                 title = descTab.pop(0) if len(descTab) else ''
                 
                 params = dict(cItem)
-                params.update( {'good_for_fav': True, 'title':title, 'category':nextCategory, 'url':url, 'desc':' | '.join(descTab), 'icon':self.getFullIconUrl(icon)} )
+                params.update({'good_for_fav': True, 'title':title, 'category':nextCategory, 'url':url, 'desc':' | '.join(descTab), 'icon':self.getFullIconUrl(icon)})
                 self.addDir(params)
         
         if nextPage != '':
             params = dict(cItem)
-            params.update( {'good_for_fav': False, 'title':_('Next page'), 'page':page+1, 'url':nextPage} )
+            params.update({'good_for_fav': False, 'title':_('Next page'), 'page':page+1, 'url':nextPage})
             self.addDir(params)
         
     def exploreItem(self, cItem):
@@ -165,7 +165,7 @@ class FilmPertutti(CBaseHostClass):
                 if idx2 < 0:
                     idx2 = item.find('</strong', idx1 + 7)
             
-            if -1 not in [idx1, idx2] : 
+            if -1 not in [idx1, idx2]: 
                 linksCategory = self.cleanHtmlStr(item[idx1:idx2])
                 printDBG("linksCategory %s" % linksCategory)
             
@@ -262,9 +262,9 @@ class FilmPertutti(CBaseHostClass):
 
         data = self.cm.ph.getDataBeetwenNodes(data, ('<section', '>', 'content'), ('</section', '>'), False)[1]
         icon = ''
-        title = self.cleanHtmlStr( self.cm.ph.getDataBeetwenMarkers(data, '<h1', '</h1>')[1] )
+        title = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(data, '<h1', '</h1>')[1])
         
-        item = self.cleanHtmlStr( self.cm.ph.getDataBeetwenNodes(data, ('<div', '>', 'rating'), ('<div', '>', 'stars'), False)[1] )
+        item = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(data, ('<div', '>', 'rating'), ('<div', '>', 'stars'), False)[1])
         itemsList.append((_('Rating'), item))
         
         data = self.cm.ph.getDataBeetwenNodes(data, ('<div', '>', 'subtitle'), ('<div', '>', 'clear'))[1]
@@ -287,7 +287,7 @@ class FilmPertutti(CBaseHostClass):
         if icon == '':
             icon  = cItem.get('icon', self.DEFAULT_ICON_URL)
         
-        return [{'title':self.cleanHtmlStr( title ), 'text': '[/br][/br]'.join(descTab), 'images':[{'title':'', 'url':self.getFullUrl(icon)}], 'other_info':{'custom_items_list':itemsList}}]
+        return [{'title':self.cleanHtmlStr(title), 'text': '[/br][/br]'.join(descTab), 'images':[{'title':'', 'url':self.getFullUrl(icon)}], 'other_info':{'custom_items_list':itemsList}}]
         
     def handleService(self, index, refresh=0, searchPattern='', searchType=''):
         printDBG('handleService start')
@@ -296,7 +296,7 @@ class FilmPertutti(CBaseHostClass):
 
         name     = self.currItem.get("name", '')
         category = self.currItem.get("category", '')
-        printDBG( "handleService: ||| name[%s], category[%s] " % (name, category) )
+        printDBG("handleService: ||| name[%s], category[%s] " % (name, category))
         self.currList = []
         
     #MAIN MENU

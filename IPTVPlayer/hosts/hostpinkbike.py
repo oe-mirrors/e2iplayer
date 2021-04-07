@@ -25,7 +25,7 @@ except Exception:
 ###################################################
 # Config options for HOST
 ###################################################
-config.plugins.iptvplayer.hitbox_iconssize = ConfigSelection(default="medium", choices=[ ("large", _("large")), ("medium", _("medium")), ("small", _("small")) ])
+config.plugins.iptvplayer.hitbox_iconssize = ConfigSelection(default="medium", choices=[("large", _("large")), ("medium", _("medium")), ("small", _("small"))])
 
 def GetConfigList():
     optionList = []
@@ -42,10 +42,10 @@ class Pinkbike(CBaseHostClass):
     VID_SRCH_URL = VID_MAIN_URL + 'search/?q='
     DEFAULT_ICON_URL = 'http://ep1.pinkbike.org/p2pb10472249/p2pb10472249.jpg'
 
-    MAIN_CAT_TAB = [{'category':'best_video_categories', 'title':_('Best Pinkbike Videos') },
-                    {'category':'video_categories',      'title':_('Categories') },
+    MAIN_CAT_TAB = [{'category':'best_video_categories', 'title':_('Best Pinkbike Videos')},
+                    {'category':'video_categories',      'title':_('Categories')},
                     {'category':'search',         'title':_('Search'), 'search_item':True},
-                    {'category':'search_history', 'title':_('Search history')} ]
+                    {'category':'search_history', 'title':_('Search history')}]
     
     def __init__(self):
         printDBG("Pinkbike.__init__")
@@ -58,7 +58,7 @@ class Pinkbike(CBaseHostClass):
         printDBG("Pinkbike._fillCategories")
         if len(self.best):
             return
-        sts, data = self.cm.getPage( Pinkbike.VID_MAIN_URL )
+        sts, data = self.cm.getPage(Pinkbike.VID_MAIN_URL)
         if not sts:
             return
         bestData = self.cm.ph.getDataBeetwenMarkers(data, 'Best Pinkbike Videos', '</div>', False)[1]
@@ -144,7 +144,7 @@ class Pinkbike(CBaseHostClass):
             icon  = self.cm.ph.getSearchGroups(item[0], 'src="([^"]+?)"')[0]
             desc  = self.cleanHtmlStr(item[1])
             url   = self.cm.ph.getSearchGroups(item[1], 'href="([^"]+?)"')[0]
-            title = self.cleanHtmlStr( self.cm.ph.getSearchGroups(item[1], 'title="([^"]+?)"')[0] + ' ' + self.cm.ph.getSearchGroups(item[1], '<a [^>]+?>(.+?)</a>')[0] )
+            title = self.cleanHtmlStr(self.cm.ph.getSearchGroups(item[1], 'title="([^"]+?)"')[0] + ' ' + self.cm.ph.getSearchGroups(item[1], '<a [^>]+?>(.+?)</a>')[0])
             self.addVideo({'title':title, 'url':self.getFullUrl(url), 'icon':self.getFullUrl(icon), 'desc':desc})
 
         if nextPage:
@@ -184,7 +184,7 @@ class Pinkbike(CBaseHostClass):
         CBaseHostClass.handleService(self, index, refresh, searchPattern, searchType)
         name     = self.currItem.get("name", None)
         category = self.currItem.get("category", '')
-        printDBG( "Pinkbike.handleService: ---------> name[%s], category[%s] " % (name, category) )
+        printDBG("Pinkbike.handleService: ---------> name[%s], category[%s] " % (name, category))
         searchPattern = self.currItem.get("search_pattern", searchPattern)
         self.currList = [] 
 

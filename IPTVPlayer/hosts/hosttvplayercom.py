@@ -43,7 +43,7 @@ config.plugins.iptvplayer.tvplayercom_preferredbitrate = ConfigSelection(default
                                                                                                ("1064000", "1064k"),
                                                                                                ("564000", "564k"),
                                                                                                ("214000", "214k"),
-                                                                                               ("0",  _("lowest")) ])
+                                                                                               ("0",  _("lowest"))])
 config.plugins.iptvplayer.tvplayercom_usepreferredbitrate = ConfigYesNo(default=False)
 
 def GetConfigList():
@@ -67,7 +67,7 @@ class TVPlayer(CBaseHostClass):
         self.USER_AGENT = 'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:40.0) Gecko/20100101 Firefox/40.0'
         self.HEADER = {'User-Agent': self.USER_AGENT, 'DNT':'1', 'Accept-Encoding':'gzip, deflate', 'Accept': 'text/html'}
         self.AJAX_HEADER = dict(self.HEADER)
-        self.AJAX_HEADER.update( {'X-Requested-With': 'XMLHttpRequest'} )
+        self.AJAX_HEADER.update({'X-Requested-With': 'XMLHttpRequest'})
         self.MAIN_URL = 'https://tvplayer.com/'
         self.cacheChannelsFlags = {}
         self.cacheChannelsGenres = []
@@ -77,7 +77,7 @@ class TVPlayer(CBaseHostClass):
         
         self.defaultParams = {'header':self.HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE, 'ignore_http_code_ranges':[(404, 500)]}
     
-        self.MAIN_CAT_TAB = [{'category':'list_channels_genres',         'title': _('Channels'),    'url':self.getFullUrl('/channels')      },
+        self.MAIN_CAT_TAB = [{'category':'list_channels_genres',         'title': _('Channels'),    'url':self.getFullUrl('/channels')},
                              
                              #{'category':'search',           'title': _('Search'), 'search_item':True,},
                              #{'category':'search_history',   'title': _('Search history'),            } 
@@ -257,7 +257,7 @@ class TVPlayer(CBaseHostClass):
                 for idx in range(len(retTab)):
                     retTab[idx]['url'] =  strwithmeta(retTab[idx]['url'], {'iptv_proto':'m3u8', 'Cookie':cookieHeader, 'User-Agent': self.defaultParams['header']['User-Agent']})
                     
-                def __getLinkQuality( itemLink ):
+                def __getLinkQuality(itemLink):
                     try: 
                         return int(itemLink['bitrate'])
                     except Exception:
@@ -331,7 +331,7 @@ class TVPlayer(CBaseHostClass):
             desc += '[/br]'.join(tab)
             desc += '[/br][/br]'
         
-        return [{'title':self.cleanHtmlStr( title ), 'text': self.cleanHtmlStr( desc ), 'images':[{'title':'', 'url':self.DEFAULT_ICON_URL}], 'other_info':{}}]
+        return [{'title':self.cleanHtmlStr(title), 'text': self.cleanHtmlStr(desc), 'images':[{'title':'', 'url':self.DEFAULT_ICON_URL}], 'other_info':{}}]
         
     def tryTologin(self):
         printDBG('tryTologin start')
@@ -366,7 +366,7 @@ class TVPlayer(CBaseHostClass):
                 value = self.cm.ph.getSearchGroups(item, '''value=['"]([^'^"]+?)['"]''')[0]
                 post_data[name] = value
             
-            post_data.update({'email':self.login, 'password':self.password, 'remember_me' :1})
+            post_data.update({'email':self.login, 'password':self.password, 'remember_me':1})
             
             httpParams = dict(self.defaultParams)
             httpParams['header'] = dict(httpParams['header'])
@@ -392,7 +392,7 @@ class TVPlayer(CBaseHostClass):
         category = self.currItem.get("category", '')
         mode     = self.currItem.get("mode", '')
         
-        printDBG( "handleService: |||||||||||||||||||||||||||||||||||| name[%s], category[%s] " % (name, category) )
+        printDBG("handleService: |||||||||||||||||||||||||||||||||||| name[%s], category[%s] " % (name, category))
         self.currList = []
         
     #MAIN MENU

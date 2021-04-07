@@ -33,9 +33,9 @@ class TVProart(CBaseHostClass):
         self.API_URL     = self.getFullUrl('ajaxVod/')
         self.SEARCH_URL  = self.getFullUrl('search?q=')
         
-        self.MAIN_CAT_TAB = [{'category':'categories',     'title': 'VOD' },
+        self.MAIN_CAT_TAB = [{'category':'categories',     'title': 'VOD'},
                              {'category':'search',         'title': _('Search'), 'search_item':True},
-                             {'category':'search_history', 'title': _('Search history')} ]
+                             {'category':'search_history', 'title': _('Search history')}]
         self.categories = {}
             
     def addNextPage(self, cItem, nextPage, page):
@@ -78,7 +78,7 @@ class TVProart(CBaseHostClass):
             if data['status'] != '200':
                 return
             for item in data['content']:
-                icon = self.getFullUrl( item['thumb'].encode('utf-8') )
+                icon = self.getFullUrl(item['thumb'].encode('utf-8'))
                 item = item['data']
                 url = self.API_URL + 'video?id={0}&slug={1}'.format(str(item['id']), item['slug'].encode('utf-8'))
                 title = item['title'].encode('utf-8')
@@ -146,7 +146,7 @@ class TVProart(CBaseHostClass):
 
         name     = self.currItem.get("name", '')
         category = self.currItem.get("category", '')
-        printDBG( "handleService: || name[%s], category[%s] " % (name, category) )
+        printDBG("handleService: || name[%s], category[%s] " % (name, category))
         self.currList = []
         
     #MAIN MENU

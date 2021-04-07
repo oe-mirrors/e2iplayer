@@ -33,10 +33,10 @@ config.plugins.iptvplayer.playpuls_proxy = ConfigYesNo(default=False)
 
 def GetConfigList():
     optionList = []
-    optionList.append( getConfigListEntry( "Preferowany protokół:", config.plugins.iptvplayer.playpuls_defaultproto ) )
-    optionList.append( getConfigListEntry( "Domyślny jakość video:", config.plugins.iptvplayer.playpuls_defaultformat ) )
-    optionList.append( getConfigListEntry( "Używaj domyślnej jakości video:", config.plugins.iptvplayer.playpuls_usedf ) )
-    optionList.append( getConfigListEntry( "PlayPuls korzystaj z proxy?", config.plugins.iptvplayer.playpuls_proxy) )
+    optionList.append(getConfigListEntry("Preferowany protokół:", config.plugins.iptvplayer.playpuls_defaultproto))
+    optionList.append(getConfigListEntry("Domyślny jakość video:", config.plugins.iptvplayer.playpuls_defaultformat))
+    optionList.append(getConfigListEntry("Używaj domyślnej jakości video:", config.plugins.iptvplayer.playpuls_usedf))
+    optionList.append(getConfigListEntry("PlayPuls korzystaj z proxy?", config.plugins.iptvplayer.playpuls_proxy))
     return optionList
 ###################################################
 
@@ -222,17 +222,17 @@ class Playpuls(CBaseHostClass):
                         item['name'] = 'Mobile(hls) - %s' % item['bitrate']
                         videoUrls.append(item)
             else:
-                sources.append({'quality':'M1', 'src': '/bucket/%s/m1.mp4' % source1Data })
-                sources.append({'quality':'M2', 'src': '/bucket/%s/m2.mp4' % source1Data })
-                sources.append({'quality':'D1', 'src': '/bucket/%s/d1.mp4' % source1Data })
-                sources.append({'quality':'D2', 'src': '/bucket/%s/d2.mp4' % source1Data })
-                sources.append({'quality':'D3', 'src': '/bucket/%s/d3.mp4' % source1Data })
+                sources.append({'quality':'M1', 'src': '/bucket/%s/m1.mp4' % source1Data})
+                sources.append({'quality':'M2', 'src': '/bucket/%s/m2.mp4' % source1Data})
+                sources.append({'quality':'D1', 'src': '/bucket/%s/d1.mp4' % source1Data})
+                sources.append({'quality':'D2', 'src': '/bucket/%s/d2.mp4' % source1Data})
+                sources.append({'quality':'D3', 'src': '/bucket/%s/d3.mp4' % source1Data})
         elif len(source2Data) > 0:
             for item in source2Data:
-                sources.append({'quality':item[0].upper(), 'src': '/play/%s' % item[1] })
+                sources.append({'quality':item[0].upper(), 'src': '/play/%s' % item[1]})
         elif len(source4Data) > 0:
             for item in source4Data:
-                sources.append({'quality':item[0].upper(), 'src': '/play/%s' % item[1] })
+                sources.append({'quality':item[0].upper(), 'src': '/play/%s' % item[1]})
         elif source3Data != '':
             try:
                 source3Data = byteify(json.loads(source3Data))
@@ -241,7 +241,7 @@ class Playpuls(CBaseHostClass):
                 for key, val in source3Data.items():
                     if val != '':
                         key = key.replace('src', '')
-                        sources.append({'quality':key, 'src': '/play/%s' % val })
+                        sources.append({'quality':key, 'src': '/play/%s' % val})
             except Exception:
                 printExc()
         
@@ -260,7 +260,7 @@ class Playpuls(CBaseHostClass):
             
         if 0 < len(videoUrls):
             max_bitrate = int(config.plugins.iptvplayer.playpuls_defaultformat.value)
-            def __getLinkQuality( itemLink ):
+            def __getLinkQuality(itemLink):
                 return int(itemLink['bitrate'])
             videoUrls = CSelOneLink(videoUrls, __getLinkQuality, max_bitrate).getSortedLinks()
             if config.plugins.iptvplayer.playpuls_usedf.value:
@@ -278,7 +278,7 @@ class Playpuls(CBaseHostClass):
         CBaseHostClass.handleService(self, index, refresh, searchPattern, searchType)
         name     = self.currItem.get("name", None)
         category = self.currItem.get("category", '')
-        printDBG( "Playpuls.handleService: ---------> name[%s], category[%s] " % (name, category) )
+        printDBG("Playpuls.handleService: ---------> name[%s], category[%s] " % (name, category))
         self.currList = []
         
         if None == name:

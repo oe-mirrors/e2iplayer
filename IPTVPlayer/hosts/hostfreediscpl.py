@@ -48,7 +48,7 @@ def gettytul():
 class FreeDiscPL(CBaseHostClass):
     HTTP_HEADER = {'User-Agent': 'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:40.0) Gecko/20100101 Firefox/40.0', 'Accept': 'text/html', 'Accept-Encoding':'gzip, deflate'}
     AJAX_HEADER = dict(HTTP_HEADER)
-    AJAX_HEADER.update( {'X-Requested-With': 'XMLHttpRequest', 'Accept':'application/json, text/javascript, */*; q=0.01', 'Content-Type':'application/json; charset=UTF-8'} )
+    AJAX_HEADER.update({'X-Requested-With': 'XMLHttpRequest', 'Accept':'application/json, text/javascript, */*; q=0.01', 'Content-Type':'application/json; charset=UTF-8'})
     
     MAIN_URL = 'https://freedisc.pl/'
     SEARCH_URL = MAIN_URL + 'search/get'
@@ -57,7 +57,7 @@ class FreeDiscPL(CBaseHostClass):
     MAIN_CAT_TAB = [{'category':'list_filters',  'title': 'Najnowsze publiczne pliki użytkowników',  'url':MAIN_URL+'explore/start/get_tabs_pages_data/%s/newest/'},
                     {'category':'list_filters',  'title': 'Ostatnio przeglądane pliki',              'url':MAIN_URL+'explore/start/get_tabs_pages_data/%s/visited/'},
                     {'category':'search',        'title': _('Search'), 'search_item':True},
-                    {'category':'search_history','title': _('Search history')} ]
+                    {'category':'search_history','title': _('Search history')}]
     
     FILTERS_TAB = [{'title':_('Movies'),    'filter':'movies'},
                    {'title':_('Music'),     'filter':'music'}]
@@ -101,7 +101,7 @@ class FreeDiscPL(CBaseHostClass):
 
                     captchaTitle = self.cleanHtmlStr(tmp.split('<form', 1)[0])
 
-                    sendLabel = self.cleanHtmlStr( ph.getattr(ph.find(tmp, ('<input', '>', 'Button'), flags=(ph.IGNORECASE|ph.START_E))[1], 'value') )
+                    sendLabel = self.cleanHtmlStr(ph.getattr(ph.find(tmp, ('<input', '>', 'Button'), flags=(ph.IGNORECASE|ph.START_E))[1], 'value'))
                     captchaLabel = self.cleanHtmlStr(ph.getattr(tmp, 'placeholder'))
                     captchaLabel = '%s %s' % (sendLabel, captchaLabel)
 
@@ -131,7 +131,7 @@ class FreeDiscPL(CBaseHostClass):
                     header = dict(self.HTTP_HEADER)
                     header['Accept'] = 'image/png,image/*;q=0.8,*/*;q=0.5'
                     params = dict(self.defaultParams)
-                    params.update( {'maintype': 'image', 'subtypes':['jpeg', 'png'], 'check_first_bytes':['\xFF\xD8', '\xFF\xD9', '\x89\x50\x4E\x47'], 'header':header} )
+                    params.update({'maintype': 'image', 'subtypes':['jpeg', 'png'], 'check_first_bytes':['\xFF\xD8', '\xFF\xD9', '\x89\x50\x4E\x47'], 'header':header})
                     filePath = GetTmpDir('.iptvplayer_captcha.jpg')
                     rm(filePath)
                     ret = self.cm.saveWebFile(filePath, imgUrl.replace('&amp;', '&'), params)
@@ -258,7 +258,7 @@ class FreeDiscPL(CBaseHostClass):
                 icon = 'http://img.freedisc.pl/photo/%s/7/2/%s.png' % (item['id'], item['name_url'])
                 url = '/%s,f-%s,%s' % (userItem['url'], item['id'], item['name_url'])
                 title = item['name']
-                desc = ' | '.join( [item['date_add_format'], item['size_format']] )
+                desc = ' | '.join([item['date_add_format'], item['size_format']])
                 desc += '[/br]' + (_('Added by: %s, directory: %s') % (userItem['display'], dirItem['name']))
                 params = dict(cItem)
                 params.update({'good_for_fav':True, 'f_user_item':userItem, 'f_dir_item':dirItem, 'category':nextCategory, 'title':self.cleanHtmlStr(title), 'url':self.getFullUrl(url), 'icon':self.getFullIconUrl(icon), 'desc':desc, 'f_type':item.get('type_fk', '')})
@@ -372,7 +372,7 @@ class FreeDiscPL(CBaseHostClass):
                     
                     url = '/%s,f-%s,%s' % (userId, item['id'], item['name_url'])
                     title = self.cleanHtmlStr(item['name'])
-                    desc = ' | '.join( [item['date_add_format'], item['size_format']] )
+                    desc = ' | '.join([item['date_add_format'], item['size_format']])
                     params = dict(cItem)
                     params.update({'good_for_fav':True, 'title':title, 'url':self.getFullUrl(url), 'icon':self.getFullIconUrl(icon), 'desc':desc, 'f_type':item.get('type_fk', '')})
                     if params['f_type'] == '7':
@@ -496,7 +496,7 @@ class FreeDiscPL(CBaseHostClass):
         mode     = self.currItem.get("mode", '')
         filter   = self.currItem.get("filter", '')
         
-        printDBG( "handleService: |||||||||||||||||||||||||||||||||||| name[%s], category[%s] " % (name, category) )
+        printDBG("handleService: |||||||||||||||||||||||||||||||||||| name[%s], category[%s] " % (name, category))
         self.currList = []
         
     #MAIN MENU

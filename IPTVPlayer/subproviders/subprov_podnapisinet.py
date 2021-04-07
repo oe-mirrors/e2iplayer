@@ -103,7 +103,7 @@ class PodnapisiNetProvider(CBaseSubProviderClass):
         
         data = self.cm.ph.getDataBeetwenNodes(data, ('<div', '>', 'advanced_search_panel'), ('</form', '>'))[1]
         for filter in [{'key':'movie_type',   'marker':'movie_type'},
-                       {'key':'episode_type', 'marker':'episode_type'  },
+                       {'key':'episode_type', 'marker':'episode_type'},
                        {'key':'flags',        'marker':'flags'},
                        {'key':'fps',          'marker':'fps'},
                        {'key':'language',     'marker':'language'}]:
@@ -301,7 +301,7 @@ class PodnapisiNetProvider(CBaseSubProviderClass):
         name     = self.currItem.get("name", '')
         category = self.currItem.get("category", '')
         
-        printDBG( "handleService: |||||||||||||||||||||||||||||||||||| name[%s], category[%s] " % (name, category) )
+        printDBG("handleService: |||||||||||||||||||||||||||||||||||| name[%s], category[%s] " % (name, category))
         self.currList = []
         
     #MAIN MENU

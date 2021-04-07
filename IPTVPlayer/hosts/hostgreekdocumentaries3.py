@@ -27,7 +27,7 @@ def gettytul():
 class GreekDocumentaries3(CBaseHostClass):
     HEADER = {'User-Agent': 'Mozilla/5.0', 'Accept': 'text/html'}
     AJAX_HEADER = dict(HEADER)
-    AJAX_HEADER.update( {'X-Requested-With': 'XMLHttpRequest'} )
+    AJAX_HEADER.update({'X-Requested-With': 'XMLHttpRequest'})
     
     MAIN_URL      = 'http://greekdocumentaries2.blogspot.gr/'
     SEARCH_URL    = MAIN_URL + '/search?sitesearch=http%3A%2F%2Fjohny-jossbanget.blogspot.com&q='
@@ -39,7 +39,7 @@ class GreekDocumentaries3(CBaseHostClass):
                     {'category':'categories', 'title': _('Labels'),      'url':MAIN_URL,  'icon':DEFAULT_ICON, 'filter':'labels'},
                     {'category':'list_items', 'title': _('TV series'),   'url':MAIN_URL + 'search/label/TV-Series', 'icon':DEFAULT_ICON},
                     {'category':'search',          'title': _('Search'), 'search_item':True, 'icon':DEFAULT_ICON},
-                    {'category':'search_history',  'title': _('Search history'),             'icon':DEFAULT_ICON} ]
+                    {'category':'search_history',  'title': _('Search history'),             'icon':DEFAULT_ICON}]
  
     def __init__(self):
         CBaseHostClass.__init__(self, {'history':'  GreekDocumentaries3.tv', 'cookie':'GreekDocumentaries3tv.cookie'})
@@ -129,9 +129,9 @@ class GreekDocumentaries3(CBaseHostClass):
         data = data.split(m1)
         for item in data:
             tmp   = self.cm.ph.getSearchGroups(item, '''<a[^>]+?href=['"]([^'^"]+?)['"][^>]*?>([^<]+?)<''', 2)
-            url   = self._getFullUrl( tmp[0] )
-            title = self.cleanHtmlStr( tmp[1] )
-            icon  = self._getFullUrl( self.cm.ph.getSearchGroups(item, '''src=['"]([^"^']+?)['"]''')[0] )
+            url   = self._getFullUrl(tmp[0])
+            title = self.cleanHtmlStr(tmp[1])
+            icon  = self._getFullUrl(self.cm.ph.getSearchGroups(item, '''src=['"]([^"^']+?)['"]''')[0])
             desc  = self.cleanHtmlStr(item.split('<br />\n<br />')[0])
             if url.startswith('http'):
                 params = dict(cItem)
@@ -232,7 +232,7 @@ class GreekDocumentaries3(CBaseHostClass):
         category = self.currItem.get("category", '')
         mode     = self.currItem.get("mode", '')
         
-        printDBG( "handleService: |||||||||||||||||||||||||||||||||||| name[%s], category[%s] " % (name, category) )
+        printDBG("handleService: |||||||||||||||||||||||||||||||||||| name[%s], category[%s] " % (name, category))
         self.currList = []
         
     #MAIN MENU
@@ -347,7 +347,7 @@ class IPTVHost(CHostBase):
     def getSearchItemInx(self):
         try:
             list = self.host.getCurrList()
-            for i in range( len(list) ):
+            for i in range(len(list)):
                 if list[i]['category'] == 'search':
                     return i
         except Exception:
@@ -360,7 +360,7 @@ class IPTVHost(CHostBase):
             if 'history' == list[self.currIndex]['name']:
                 pattern = list[self.currIndex]['title']
                 search_type = list[self.currIndex]['search_type']
-                self.host.history.addHistoryItem( pattern, search_type)
+                self.host.history.addHistoryItem(pattern, search_type)
                 self.searchPattern = pattern
                 self.searchType = search_type
         except Exception:

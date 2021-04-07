@@ -44,7 +44,7 @@ class MediayouNet(CBaseHostClass):
         self.USER_AGENT = 'Mozilla/5.0'
         self.HEADER = {'User-Agent': self.USER_AGENT, 'Accept': 'text/html'}
         self.AJAX_HEADER = dict(self.HEADER)
-        self.AJAX_HEADER.update( {'X-Requested-With':'XMLHttpRequest', 'Content-Type':'application/x-www-form-urlencoded; charset=UTF-8'} )
+        self.AJAX_HEADER.update({'X-Requested-With':'XMLHttpRequest', 'Content-Type':'application/x-www-form-urlencoded; charset=UTF-8'})
         
         self.MAIN_URL = 'https://www.mediayou.net/'
         self.DEFAULT_ICON_URL = 'https://www.mediayou.net/web/images/mediaU_icon.png'
@@ -70,7 +70,7 @@ class MediayouNet(CBaseHostClass):
                         {'category':'categories',      'title': _('Countries'),      'url':self.getFullUrl('/web/getdata.php'), 'post_data':{'option':'LOCATION','id':self.countryCode}, 'option':'RADIO_Country'},
                         {'category':'categories',      'title': _('Categories'),     'url':self.getFullUrl('/web/getdata.php'), 'post_data':{'option':'GENRE','id':self.countryCode}, 'option':'RADIO_Genre'},
                         {'category':'search',          'title': _('Search'), 'search_item':True},
-                        {'category':'search_history',  'title': _('Search history')} ]
+                        {'category':'search_history',  'title': _('Search history')}]
         self.listsTab(MAIN_CAT_TAB, cItem)
         
        
@@ -112,7 +112,7 @@ class MediayouNet(CBaseHostClass):
             printExc()
 
         for item in data:
-            icon = self.getFullIconUrl( '/logo/radio/%s.png' % item['rad_id'])
+            icon = self.getFullIconUrl('/logo/radio/%s.png' % item['rad_id'])
             title = item['rad_name']
             url = item['rad_id']
         
@@ -193,7 +193,7 @@ class MediayouNet(CBaseHostClass):
         category = self.currItem.get("category", '')
         mode     = self.currItem.get("mode", '')
         
-        printDBG( "handleService: || name[%s], category[%s] " % (name, category) )
+        printDBG("handleService: || name[%s], category[%s] " % (name, category))
         self.currList = []
         self.currItem = dict(self.currItem)
         self.currItem.pop('good_for_fav', None)

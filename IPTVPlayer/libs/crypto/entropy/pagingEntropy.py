@@ -68,7 +68,7 @@ if __name__ == "__main__":
     e = PagingEntropyCollector()
     for i in range(20):
         e.rand.seed(1)        # make each sample set the same to allow examination of statistics
-        print(b2a_hex( e.randomBytes(16) ))
+        print(b2a_hex(e.randomBytes(16)))
 
 
 

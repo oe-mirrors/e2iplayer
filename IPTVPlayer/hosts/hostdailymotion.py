@@ -23,7 +23,7 @@ from Components.config import config, ConfigSelection, getConfigListEntry
 ###################################################
 # Config options for HOST
 ###################################################
-config.plugins.iptvplayer.dailymotion_localization = ConfigSelection(default="auto", choices=[("auto", _("auto")), ("ar_AA", "\xd8\xa7\xd9\x84\xd8\xb9\xd8\xb1\xd8\xa8\xd9\x8a\xd8\xa9"), ("es_AR", "Argentina"), ("en_AU", "Australia"), ("de_AT", "\xc3\x96sterreich"), ("nl_BE", "Belgi\xc3\xab"), ("fr_BE", "Belgique"), ("pt_BR", "Brasil"), ("en_CA", "Canada"), ("fr_CA", "Canada"), ("zh_CN", "\xe4\xb8\xad\xe5\x9b\xbd"), ("fr_FR", "France"), ("de_DE", "Deutschland"), ("el_GR", "\xce\x95\xce\xbb\xce\xbb\xce\xac\xce\xb4\xce\xb1"), ("en_IN", "India"), ("id_ID", "Indonesia"), ("en_EN", "International"), ("en_IE", "Ireland"), ("it_IT", "Italia"), ("ja_JP", "\xe6\x97\xa5\xe6\x9c\xac"), ("ms_MY", "Malaysia"), ("es_MX", "M\xc3\xa9xico"), ("fr_MA", "Maroc"), ("nl_NL", "Nederland"), ("en_PK", "Pakistan"), ("en_PH", "Pilipinas"), ("pl_PL", "Polska"), ("pt_PT", "Portugal"), ("ro_RO", "Rom\xc3\xa2nia"), ("ru_RU", "\xd0\xa0\xd0\xbe\xd1\x81\xd1\x81\xd0\xb8\xd1\x8f"), ("en_SG", "Singapore"), ("ko_KR", "\xeb\x8c\x80\xed\x95\x9c\xeb\xaf\xbc\xea\xb5\xad"), ("es_ES", "Espa\xc3\xb1a"), ("fr_CH", "Suisse"), ("it_CH", "Svizzera"), ("de_CH", "Schweiz"), ("fr_TN", "Tunisie"), ("tr_TR", "T\xc3\xbcrkiye"), ("en_GB", "United Kingdom"), ("en_US", "United States"), ("vi_VN", "Vi\xe1\xbb\x87t Nam") ])
+config.plugins.iptvplayer.dailymotion_localization = ConfigSelection(default="auto", choices=[("auto", _("auto")), ("ar_AA", "\xd8\xa7\xd9\x84\xd8\xb9\xd8\xb1\xd8\xa8\xd9\x8a\xd8\xa9"), ("es_AR", "Argentina"), ("en_AU", "Australia"), ("de_AT", "\xc3\x96sterreich"), ("nl_BE", "Belgi\xc3\xab"), ("fr_BE", "Belgique"), ("pt_BR", "Brasil"), ("en_CA", "Canada"), ("fr_CA", "Canada"), ("zh_CN", "\xe4\xb8\xad\xe5\x9b\xbd"), ("fr_FR", "France"), ("de_DE", "Deutschland"), ("el_GR", "\xce\x95\xce\xbb\xce\xbb\xce\xac\xce\xb4\xce\xb1"), ("en_IN", "India"), ("id_ID", "Indonesia"), ("en_EN", "International"), ("en_IE", "Ireland"), ("it_IT", "Italia"), ("ja_JP", "\xe6\x97\xa5\xe6\x9c\xac"), ("ms_MY", "Malaysia"), ("es_MX", "M\xc3\xa9xico"), ("fr_MA", "Maroc"), ("nl_NL", "Nederland"), ("en_PK", "Pakistan"), ("en_PH", "Pilipinas"), ("pl_PL", "Polska"), ("pt_PT", "Portugal"), ("ro_RO", "Rom\xc3\xa2nia"), ("ru_RU", "\xd0\xa0\xd0\xbe\xd1\x81\xd1\x81\xd0\xb8\xd1\x8f"), ("en_SG", "Singapore"), ("ko_KR", "\xeb\x8c\x80\xed\x95\x9c\xeb\xaf\xbc\xea\xb5\xad"), ("es_ES", "Espa\xc3\xb1a"), ("fr_CH", "Suisse"), ("it_CH", "Svizzera"), ("de_CH", "Schweiz"), ("fr_TN", "Tunisie"), ("tr_TR", "T\xc3\xbcrkiye"), ("en_GB", "United Kingdom"), ("en_US", "United States"), ("vi_VN", "Vi\xe1\xbb\x87t Nam")])
 
 def GetConfigList():
     optionList = []
@@ -45,9 +45,9 @@ class Dailymotion(CBaseHostClass):
         self.SITE_URL = 'https://www.dailymotion.com/'
         self.MAIN_URL = 'https://api.dailymotion.com/'
         self.DEFAULT_ICON_URL = 'http://static1.dmcdn.net/images/dailymotion-logo-ogtag.png'
-        self.MAIN_CAT_TAB = [{'category':'categories',            'title': _('Categories') },
+        self.MAIN_CAT_TAB = [{'category':'categories',            'title': _('Categories')},
                              {'category':'search',                'title': _('Search'), 'search_item':True},
-                             {'category':'search_history',        'title': _('Search history')} ]
+                             {'category':'search_history',        'title': _('Search history')}]
 
         self.SORT_TAB = [{'title':_('Most viewed'),   'sort':'visited'},
                          {'title':_('Most recent'),   'sort':'recent'},
@@ -215,7 +215,7 @@ class Dailymotion(CBaseHostClass):
 
     def getApiHeaders(self, cItem):
         params = {}
-        params['header'] = {'User-Agent': self.HTTP_HEADER['User-Agent'], 'Accept-Encoding': 'gzip, deflate, br' , 'Accept-Language': 'en-US,en;q=0.9,pl;q=0.8', 'Content-Type': 'application/json', 'Accept': '*/*'}
+        params['header'] = {'User-Agent': self.HTTP_HEADER['User-Agent'], 'Accept-Encoding': 'gzip, deflate, br', 'Accept-Language': 'en-US,en;q=0.9,pl;q=0.8', 'Content-Type': 'application/json', 'Accept': '*/*'}
         params['header']['Referer'] = self.SITE_URL
         params['header']['Origin'] = self.SITE_URL[:-1]
         params['header']['Authorization'] = 'Bearer %s' % self.getAuthToken()
@@ -249,7 +249,7 @@ class Dailymotion(CBaseHostClass):
                 if item['__typename'] == 'Collection':
                     title = item['name'] + ' (%s)' % item['stats']['videos']['total']
                     desc = []
-                    desc.append('%s: %s' % (item['channel']['__typename'], item['channel']['displayName']) )
+                    desc.append('%s: %s' % (item['channel']['__typename'], item['channel']['displayName']))
                     if item.get('description'):
                         desc.append(item['description'])
                     params = {'good_for_fav':True, 'name':'category', 'category':'list_playlist', 'title':title, 'f_xid':item['xid'], 'icon':item['thumbURLx480'], 'desc':'[/br]'.join(desc)}
@@ -306,7 +306,7 @@ class Dailymotion(CBaseHostClass):
 
         name     = self.currItem.get("name", '')
         category = self.currItem.get("category", '')
-        printDBG( "handleService: |||||||||||||||||||||||||||||||||||| name[%s], category[%s] " % (name, category) )
+        printDBG("handleService: |||||||||||||||||||||||||||||||||||| name[%s], category[%s] " % (name, category))
         self.currList = []
         
     #MAIN MENU

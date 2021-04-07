@@ -77,7 +77,7 @@ class InternetowaApi(CBaseHostClass):
                 params['header'] = MergeDicts(self.HTTP_HEADER, {'Referer':self.getFullUrl('/logowanie/')})
 
                 post_data = {'email': self.login, 'password': self.password}
-                sts, data = self.cm.getPage( self.getFullUrl('/logowanie/'), params, post_data)
+                sts, data = self.cm.getPage(self.getFullUrl('/logowanie/'), params, post_data)
 
             if sts and '/wyloguj' in data:
                 printDBG('tryTologin OK')
@@ -121,13 +121,13 @@ class InternetowaApi(CBaseHostClass):
                     subItems2 = []
                     subSections = self.cm.ph.getAllItemsBeetwenMarkers(section[idx], '<a', '</a>')
                     for item in subSections:
-                        url = self.getFullIconUrl( self.cm.ph.getSearchGroups(item, '''href=['"]([^'^"]+?)['"]''')[0] )
+                        url = self.getFullIconUrl(self.cm.ph.getSearchGroups(item, '''href=['"]([^'^"]+?)['"]''')[0])
                         if not self.cm.isValidUrl(url):
                             continue
                         title = self.cleanHtmlStr(item)
                         if title == '':
                             title = self.cleanHtmlStr(self.cm.ph.getSearchGroups(item, '''title=['"]([^'^"]+?)['"]''')[0])
-                        icon = self.getFullUrl( self.cm.ph.getSearchGroups(item, '''src=['"]([^"^']+?)['"]''')[0] )
+                        icon = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''src=['"]([^"^']+?)['"]''')[0])
                         type = title.lower()
                         type = 'audio' if 'radio' in type or 'rmf ' in type else 'video'
                         subItems2.append(MergeDicts(cItem, {'type':type, 'title':title, 'url':url, 'icon':icon}))
@@ -160,7 +160,7 @@ class InternetowaApi(CBaseHostClass):
                 continue
             if 1 == self.up.checkHostSupport(url):
                 url = strwithmeta(url, {'Referer':cUrl})
-                urlsTab.extend( self.up.getVideoLinkExt(url) )
+                urlsTab.extend(self.up.getVideoLinkExt(url))
             else:
                 params = dict(self.http_params)
                 params['header'] = MergeDicts(self.HTTP_HEADER, {'Referer':cUrl})
@@ -173,7 +173,7 @@ class InternetowaApi(CBaseHostClass):
                 for it in tmp:
                     printDBG(it)
                     type = self.cm.ph.getSearchGroups(it, '''type=['"]([^"^']+?)['"]''')[0].lower().split('/', 1)
-                    mediaUrl = self.cm.getFullUrl( self.cm.ph.getSearchGroups(it, '''src=['"]([^"^']+?)['"]''')[0], self.cm.meta['url'])
+                    mediaUrl = self.cm.getFullUrl(self.cm.ph.getSearchGroups(it, '''src=['"]([^"^']+?)['"]''')[0], self.cm.meta['url'])
                     if type[0] in ('audio', 'video'):
                         mediaUrl = strwithmeta(mediaUrl, {'User-Agent':params['header']['User-Agent'], 'Referer':self.cm.meta['url']})
                         urlsTab.append({'name':'[%s] %s' % (type[1], self.cm.getBaseUrl(url, True)), 'url':mediaUrl, 'need_resolve':0})

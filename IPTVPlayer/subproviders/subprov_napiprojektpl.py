@@ -74,7 +74,7 @@ class NapiProjektProvider(CBaseSubProviderClass):
         
         self.kaindTab = [{'title':'Film & Serial', 'kind':0},
                          {'title':'Serial',        'kind':1},
-                         {'title':'Film',          'kind':2} ]
+                         {'title':'Film',          'kind':2}]
         
     def sortSubtitlesByDurationMatch(self):
         # we need duration to sort
@@ -111,7 +111,7 @@ class NapiProjektProvider(CBaseSubProviderClass):
         
     def getMoviesList(self, cItem, nextCategoryMovie):
         printDBG("NapiProjektProvider.getMoviesList")
-        title = urllib.parse.quote_plus( self.params['confirmed_title'] )
+        title = urllib.parse.quote_plus(self.params['confirmed_title'])
         url = self.getFullUrl('/ajax/search_catalog.php')
         
         post_data = {'queryString':title, 'queryKind':cItem.get('kind', 0), 'queryYear':'', 'associate':''}
@@ -149,7 +149,7 @@ class NapiProjektProvider(CBaseSubProviderClass):
         sts, data = self.cm.ph.getDataBeetwenMarkers(data, '-&gt;', '>napisy<')
         if not sts:
             return
-        url = self.getFullUrl( self.cm.ph.getSearchGroups(data, 'href="([^"]+?)"')[0] )
+        url = self.getFullUrl(self.cm.ph.getSearchGroups(data, 'href="([^"]+?)"')[0])
         if '' == url:
             return
         sts, data = self.cm.getPage(url, self.defaultParams)
@@ -208,7 +208,7 @@ class NapiProjektProvider(CBaseSubProviderClass):
         data = self.cm.ph.getDataBeetwenMarkers(data, '<tbody>', '</tbody>')[1]
         data = self.cm.ph.getAllItemsBeetwenMarkers(data, '<tr', '</tr>')
         for item in data:
-            desc = self.cleanHtmlStr( self.cm.ph.getSearchGroups(item, 'title="([^"]+?)"')[0] )
+            desc = self.cleanHtmlStr(self.cm.ph.getSearchGroups(item, 'title="([^"]+?)"')[0])
             tmp = self.cm.ph.getAllItemsBeetwenMarkers(item, '<td', '</td>')
             if len(tmp) != 7:
                 continue
@@ -218,7 +218,7 @@ class NapiProjektProvider(CBaseSubProviderClass):
             title = self.cleanHtmlStr(tmp[0])
             
             try:
-                fps = float( tmp[2].strip() )
+                fps = float(tmp[2].strip())
             except Exception:
                 fps = 0
             
@@ -293,10 +293,10 @@ class NapiProjektProvider(CBaseSubProviderClass):
         imdbid = cItem['imdbid']
         fps    = cItem.get('fps', 0)
         
-        post_data = {"mode" : "32770",
-                     "client" : "pynapi",
-                     "client_ver" : "0.1",
-                     "VideoFileInfoID" : subId}
+        post_data = {"mode": "32770",
+                     "client": "pynapi",
+                     "client_ver": "0.1",
+                     "VideoFileInfoID": subId}
         
         url = self.getFullUrl('api/api-napiprojekt3.php')
         sts, data = self.cm.getPage(url, self.defaultParams, post_data)
@@ -305,16 +305,16 @@ class NapiProjektProvider(CBaseSubProviderClass):
        
         fps = self.cm.ph.getDataBeetwenMarkers(data, '<fps>', '</fps>', False)[1]
         try:
-            fps = float( fps.strip() )
+            fps = float(fps.strip())
         except Exception:
             fps = 0
         
-        post_data = {"downloaded_subtitles_id" : subId, 
-                     "mode" : "1", 
-                     "client" : "pynapi",
-                     "client_ver" : "0.1",
-                     "downloaded_subtitles_lang" : lang.upper(),
-                     "downloaded_subtitles_txt" : "1"}
+        post_data = {"downloaded_subtitles_id": subId, 
+                     "mode": "1", 
+                     "client": "pynapi",
+                     "client_ver": "0.1",
+                     "downloaded_subtitles_lang": lang.upper(),
+                     "downloaded_subtitles_txt": "1"}
         
         url = self.getFullUrl('api/api-napiprojekt3.php')
         sts, data = self.cm.getPage(url, self.defaultParams, post_data)
@@ -335,7 +335,7 @@ class NapiProjektProvider(CBaseSubProviderClass):
                 if ext == '':
                     SetIPTVPlayerLastHostError(_('Unknown subtitle parser for format "%s".') % subsObj['type'])
                     return retData
-                tmpFile = GetTmpDir( self.TMP_FILE_NAME )
+                tmpFile = GetTmpDir(self.TMP_FILE_NAME)
                 if not self.writeFile(tmpFile, data):
                     return retData
                 fileName = self._getFileName(title, lang, subId, imdbid, fps, ext)
@@ -358,7 +358,7 @@ class NapiProjektProvider(CBaseSubProviderClass):
         name     = self.currItem.get("name", '')
         category = self.currItem.get("category", '')
         
-        printDBG( "handleService: |||||||||||||||||||||||||||||||||||| name[%s], category[%s] " % (name, category) )
+        printDBG("handleService: |||||||||||||||||||||||||||||||||||| name[%s], category[%s] " % (name, category))
         self.currList = []
         
     #MAIN MENU

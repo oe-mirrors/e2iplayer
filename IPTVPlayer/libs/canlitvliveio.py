@@ -22,7 +22,7 @@ class CanlitvliveIoApi(CBaseHostClass):
         self.DEFAULT_ICON_URL = 'http://www.canlitvlive.io/images/footer_simge.png'
         self.HTTP_HEADER = {'User-Agent': 'Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/62.0.3202.94 Safari/537.36', 'Accept': 'text/html', 'Accept-Encoding':'gzip, deflate'}
         self.AJAX_HEADER = dict(self.HTTP_HEADER)
-        self.AJAX_HEADER.update( {'X-Requested-With': 'XMLHttpRequest'} )
+        self.AJAX_HEADER.update({'X-Requested-With': 'XMLHttpRequest'})
         
         self.COOKIE_FILE = GetCookieDir('canlitvlive.io.cookie')
         
@@ -46,10 +46,10 @@ class CanlitvliveIoApi(CBaseHostClass):
             data.insert(0, '<a href="/tum-radyolar.html">All')
             nextType = 'audio'
         for item in data:
-            url   = self.getFullUrl( self.cm.ph.getSearchGroups(item, '''href=['"]([^'^"]+?)['"]''')[0] )
+            url   = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''href=['"]([^'^"]+?)['"]''')[0])
             if not self.cm.isValidUrl(url):
                 continue
-            title = self.cleanHtmlStr( item )
+            title = self.cleanHtmlStr(item)
             params = {'name':cItem['name'], 'priv_category':nextCategory, 'priv_next_type':nextType, 'type':'dir', 'title':title, 'url':url, 'icon':self.DEFAULT_ICON_URL}
             itemsList.append(params)
         
@@ -67,13 +67,13 @@ class CanlitvliveIoApi(CBaseHostClass):
         for section in data:
             section = self.cm.ph.getAllItemsBeetwenMarkers(section, '<li', '</li>')
             for item in section:
-                url   = self.getFullUrl( self.cm.ph.getSearchGroups(item, '''href=['"]([^'^"]+?)['"]''')[0] )
+                url   = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''href=['"]([^'^"]+?)['"]''')[0])
                 if not self.cm.isValidUrl(url):
                     continue
-                icon = self.getFullUrl( self.cm.ph.getSearchGroups(item, '''src=['"]([^'^"]+?)['"]''')[0] )
+                icon = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''src=['"]([^'^"]+?)['"]''')[0])
                 if icon == '':
                     icon = self.DEFAULT_ICON_URL
-                title = self.cleanHtmlStr( item )
+                title = self.cleanHtmlStr(item)
                 params = {'name':cItem['name'], 'type':cItem.get('priv_next_type', 'video'), 'title':title, 'url':url, 'icon':icon}
                 itemsList.append(params)
         

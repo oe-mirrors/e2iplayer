@@ -51,7 +51,7 @@ class SolarMovie(CBaseHostClass):
         self.USER_AGENT = self.cm.getDefaultHeader()['User-Agent']
         self.HEADER = {'User-Agent': self.USER_AGENT, 'DNT':'1', 'Accept': 'text/html'}
         self.AJAX_HEADER = dict(self.HEADER)
-        self.AJAX_HEADER.update( {'X-Requested-With': 'XMLHttpRequest'} )
+        self.AJAX_HEADER.update({'X-Requested-With': 'XMLHttpRequest'})
         
         self.defaultParams = {'header':self.HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
         
@@ -126,12 +126,12 @@ class SolarMovie(CBaseHostClass):
         if self.MAIN_URL == None:
             self.MAIN_URL = domains[0]
         
-        self.MAIN_CAT_TAB = [{'category':'list_items',      'title': 'Featured movies',     'url':self.MAIN_URL+'featured'                       },
-                             {'category':'list_filters',    'title': 'Movies',              'url':self.MAIN_URL+'filter',    'f_type[]':'movie'  },
-                             {'category':'list_filters',    'title': 'TV-Series',           'url':self.MAIN_URL+'filter',    'f_type[]':'series' },
+        self.MAIN_CAT_TAB = [{'category':'list_items',      'title': 'Featured movies',     'url':self.MAIN_URL+'featured'},
+                             {'category':'list_filters',    'title': 'Movies',              'url':self.MAIN_URL+'filter',    'f_type[]':'movie'},
+                             {'category':'list_filters',    'title': 'TV-Series',           'url':self.MAIN_URL+'filter',    'f_type[]':'series'},
                              
                              {'category': 'search',          'title': _('Search'), 'search_item': True, },
-                             {'category': 'search_history',  'title': _('Search history'),             } 
+                             {'category': 'search_history',  'title': _('Search history'),} 
                             ]
         
     def fillCacheFilters(self, cItem):
@@ -235,14 +235,14 @@ class SolarMovie(CBaseHostClass):
         if len(data):
             del data[0]
         for item in data:
-            url = self.getFullUrl( self.cm.ph.getSearchGroups(item, 'href="([^"]+?)"')[0] )
-            tip = self.getFullUrl( self.cm.ph.getSearchGroups(item, 'data-tip="([^"]+?)"')[0] )
+            url = self.getFullUrl(self.cm.ph.getSearchGroups(item, 'href="([^"]+?)"')[0])
+            tip = self.getFullUrl(self.cm.ph.getSearchGroups(item, 'data-tip="([^"]+?)"')[0])
             if not self.cm.isValidUrl(url):
                 continue
-            icon = self.getFullIconUrl( self.cm.ph.getSearchGroups(item, 'src="([^"]+?)"')[0] )
+            icon = self.getFullIconUrl(self.cm.ph.getSearchGroups(item, 'src="([^"]+?)"')[0])
             tmp  = item.split('</a>')
-            title = self.cleanHtmlStr( tmp[-1] )
-            desc  = self.cleanHtmlStr( tmp[0] )
+            title = self.cleanHtmlStr(tmp[-1])
+            desc  = self.cleanHtmlStr(tmp[0])
             if title == '':
                 title = self.cleanHtmlStr(self.cm.ph.getSearchGroups(item, '''alt=['"]([^'^"]+?)['"]''')[0])
             if title == '':
@@ -343,7 +343,7 @@ class SolarMovie(CBaseHostClass):
                 tmp = base64.b64decode(tmp.split('\r')[-1]).replace('\r', '')
                 _myFun = compile(tmp, '', 'exec')
                 vGlobals = {"__builtins__": None, 'len': len, 'dict':dict, 'list': list, 'ord':ord, 'range':range, 'str':str, 'max':max, 'hex':hex}
-                vLocals = { 'zaraza': '' }
+                vLocals = {'zaraza': ''}
                 exec(_myFun, vGlobals, vLocals)
                 self._myFun = vLocals['zaraza']
             except Exception:
@@ -484,13 +484,13 @@ class SolarMovie(CBaseHostClass):
         
         desc = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(data, '<p class="desc">', '</p>')[1])
         if desc == '':
-            desc  = self.cleanHtmlStr( self.cm.ph.getSearchGroups(data, '<meta property="og:description"[^>]+?content="([^"]+?)"')[0] )
+            desc  = self.cleanHtmlStr(self.cm.ph.getSearchGroups(data, '<meta property="og:description"[^>]+?content="([^"]+?)"')[0])
         
         title = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(data, '<h1', '</h1>')[1])
         if title == '':
-            title = self.cleanHtmlStr( self.cm.ph.getSearchGroups(data, '<meta property="og:title"[^>]+?content="([^"]+?)"')[0] )
+            title = self.cleanHtmlStr(self.cm.ph.getSearchGroups(data, '<meta property="og:title"[^>]+?content="([^"]+?)"')[0])
         
-        icon  = self.getFullUrl( self.cm.ph.getSearchGroups(data, '<meta property="og:image"[^>]+?content="([^"]+?)"')[0] )
+        icon  = self.getFullUrl(self.cm.ph.getSearchGroups(data, '<meta property="og:image"[^>]+?content="([^"]+?)"')[0])
         
         if title == '':
             title = cItem['title']
@@ -531,7 +531,7 @@ class SolarMovie(CBaseHostClass):
         if tmp != '':
             otherInfo['year'] = tmp
         
-        return [{'title':self.cleanHtmlStr( title ), 'text': self.cleanHtmlStr( desc ), 'images':[{'title':'', 'url':self.getFullUrl(icon)}], 'other_info':otherInfo}]
+        return [{'title':self.cleanHtmlStr(title), 'text': self.cleanHtmlStr(desc), 'images':[{'title':'', 'url':self.getFullUrl(icon)}], 'other_info':otherInfo}]
     
     def getFavouriteData(self, cItem):
         printDBG('SolarMovie.getFavouriteData')
@@ -573,7 +573,7 @@ class SolarMovie(CBaseHostClass):
         category = self.currItem.get("category", '')
         mode     = self.currItem.get("mode", '')
         
-        printDBG( "handleService: |||||||||||||||||||||||||||||||||||| name[%s], category[%s] " % (name, category) )
+        printDBG("handleService: |||||||||||||||||||||||||||||||||||| name[%s], category[%s] " % (name, category))
         self.currList = []
         
     #MAIN MENU

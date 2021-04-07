@@ -173,7 +173,7 @@ class UnCaptchaReCaptchaMyJDWidget(Screen):
         self.workconsole['close_conn'] = eConnectCallback(self.workconsole['console'].appClosed, self._scriptClosed)
         self.workconsole['stderr_conn']  = eConnectCallback(self.workconsole['console'].stderrAvail, self._scriptStderrAvail)
         self.workconsole['stdout_conn']  = eConnectCallback(self.workconsole['console'].stdoutAvail, self._scriptStdoutAvail)
-        self.workconsole["console"].execute( E2PrioFix( cmd, 0 ) )
+        self.workconsole["console"].execute(E2PrioFix(cmd, 0))
         printDBG(">>> EXEC CMD [%s]" % cmd)
     
     def onStart(self):

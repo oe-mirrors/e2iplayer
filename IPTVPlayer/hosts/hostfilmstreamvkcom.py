@@ -101,12 +101,12 @@ class FilmstreamvkCom(CBaseHostClass):
         
     def listMain(self, cItem):
         printDBG("FilmstreamvkCom.listMain")
-        MAIN_CAT_TAB = [{'category':'main',            'title':_('Main'),         'url':self.getMainUrl()        },
-                        {'category':'categories',      'title':_('Categories'),   'url':self.getMainUrl()        },
-                        {'category':'list_items',      'title':_('Series'),       'url':self.getFullUrl('serie') },
-                        {'category':'list_items',      'title':_('Manga'),        'url':self.getFullUrl('manga') },
-                        {'category': 'search',          'title': _('Search'), 'search_item': True,          },
-                        {'category': 'search_history',  'title': _('Search history'),                      } ]
+        MAIN_CAT_TAB = [{'category':'main',            'title':_('Main'),         'url':self.getMainUrl()},
+                        {'category':'categories',      'title':_('Categories'),   'url':self.getMainUrl()},
+                        {'category':'list_items',      'title':_('Series'),       'url':self.getFullUrl('serie')},
+                        {'category':'list_items',      'title':_('Manga'),        'url':self.getFullUrl('manga')},
+                        {'category': 'search',          'title': _('Search'), 'search_item': True,},
+                        {'category': 'search_history',  'title': _('Search history'),}]
         
         self.listsTab(MAIN_CAT_TAB, cItem)
     
@@ -155,7 +155,7 @@ class FilmstreamvkCom(CBaseHostClass):
             params = dict(cItem)
             params.update({'category':category, 'url':url, 'title':self.cleanHtmlStr(title), 'icon':icon, 'desc':desc})
             if 'saison-' in url or '/manga/' in url or '/serie/' in url:
-                season = self.cm.ph.getSearchGroups(url+'-', 'aison-([0-9]+?)-' )[0]
+                season = self.cm.ph.getSearchGroups(url+'-', 'aison-([0-9]+?)-')[0]
                 params['season'] = season
                 self.addDir(params)
             else:
@@ -308,7 +308,7 @@ class FilmstreamvkCom(CBaseHostClass):
         category = self.currItem.get("category", '')
         mode     = self.currItem.get("mode", '')
         
-        printDBG( "handleService: |||||||||||||||||||||||||||||||||||| name[%s], category[%s] " % (name, category) )
+        printDBG("handleService: |||||||||||||||||||||||||||||||||||| name[%s], category[%s] " % (name, category))
         self.currList = []
         
         self.selectDomain()

@@ -69,7 +69,7 @@ def getPage(url, params={}):
                 cj.load(params['cookiefile'], ignore_discard=True)
             except IOError:
                 pass
-        customOpeners.append( urllib.request.HTTPCookieProcessor(cj) )
+        customOpeners.append(urllib.request.HTTPCookieProcessor(cj))
 
     sts = False
     data = None
@@ -81,7 +81,7 @@ def getPage(url, params={}):
         printDBG("++++HEADERS START++++")
         printDBG(req.headers)
         printDBG("++++HEADERS END++++")
-        opener = urllib.request.build_opener( *customOpeners )
+        opener = urllib.request.build_opener(*customOpeners)
         resp = opener.open(req)
         data = resp.read()
         sts = True
@@ -121,7 +121,7 @@ def getPageCF(url, params={}):
                         dat = item
                         break
 
-                jsdata = "var location = {hash:''}; var iptv_domain='%s';\n%s\niptv_fun();" % ('{uri.scheme}://{uri.netloc}/'.format(uri=urlparse( cUrl )), dat)
+                jsdata = "var location = {hash:''}; var iptv_domain='%s';\n%s\niptv_fun();" % ('{uri.scheme}://{uri.netloc}/'.format(uri=urlparse(cUrl)), dat)
                 jstmp = '/tmp/cf_%s' % os.getpid()
                 with open(jstmp + '.js', 'w') as f:
                     f.write(jsdata)
@@ -189,7 +189,7 @@ class Proxy(http.server.SimpleHTTPRequestHandler):
             if keyUrl[0] == '/':
                 keyUrl = keyUrl[1:]
             keyUrl = mainUrl + keyUrl
-        parsedUri = urlparse( mainUrl )
+        parsedUri = urlparse(mainUrl)
         sts, data = getPageCF(keyUrl, {'User-Agent':userAgent, 'Referer':mainUrl, 'Origin':'{uri.scheme}://{uri.netloc}'.format(uri=parsedUri), 'cookiefile':cookiefile})
         #printDBG("sts [%s] data[%s]" % (sts, data))
         if sts:

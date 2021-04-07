@@ -32,9 +32,9 @@ config.plugins.iptvplayer.proxyOnet = ConfigYesNo(default=False)
 
 def GetConfigList():
     optionList = []
-    optionList.append( getConfigListEntry( "Domyślny format video:", config.plugins.iptvplayer.onetvodDefaultformat ) )
-    optionList.append( getConfigListEntry( "Używaj domyślnego format video:", config.plugins.iptvplayer.onetvodUseDF ) )
-    optionList.append(getConfigListEntry( "Korzystaj z proxy?", config.plugins.iptvplayer.proxyOnet))
+    optionList.append(getConfigListEntry("Domyślny format video:", config.plugins.iptvplayer.onetvodDefaultformat))
+    optionList.append(getConfigListEntry("Używaj domyślnego format video:", config.plugins.iptvplayer.onetvodUseDF))
+    optionList.append(getConfigListEntry("Korzystaj z proxy?", config.plugins.iptvplayer.proxyOnet))
     return optionList
 ###################################################
 
@@ -52,20 +52,20 @@ class VODPL(CBaseHostClass):
         self.USER_AGENT = 'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:40.0) Gecko/20100101 Firefox/40.0'
         self.HEADER = {'User-Agent': self.USER_AGENT, 'DNT':'1', 'Accept': 'text/html'}
         self.AJAX_HEADER = dict(self.HEADER)
-        self.AJAX_HEADER.update( {'X-Requested-With': 'XMLHttpRequest'} )
+        self.AJAX_HEADER.update({'X-Requested-With': 'XMLHttpRequest'})
         self.MAIN_URL = 'https://vod.pl/'
         self.cacheFilters  = {}
         self.cacheFiltersKeys = []
         self.defaultParams = {'header':self.HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
     
-        self.MAIN_CAT_TAB = [{'category': 'list_filters',  'title': _('Movies'),         'url': self.getFullUrl('filmy'),              'f_element': 'SiteFilmy',        },
-                             {'category': 'list_items',    'title': _('Series'),         'url': self.getFullUrl('seriale'),            'f_element': 'SiteSeriale',      },
+        self.MAIN_CAT_TAB = [{'category': 'list_filters',  'title': _('Movies'),         'url': self.getFullUrl('filmy'),              'f_element': 'SiteFilmy',},
+                             {'category': 'list_items',    'title': _('Series'),         'url': self.getFullUrl('seriale'),            'f_element': 'SiteSeriale',},
                              {'category': 'list_filters',  'title': 'Programy onetu',    'url': self.getFullUrl('programy-onetu'),     'f_element': 'SiteProgramyOnetu',},
-                             {'category': 'list_filters',  'title': 'Dokumentalne',      'url': self.getFullUrl('filmy-dokumentalne'), 'f_element': 'SiteDokumenty',    },
+                             {'category': 'list_filters',  'title': 'Dokumentalne',      'url': self.getFullUrl('filmy-dokumentalne'), 'f_element': 'SiteDokumenty',},
                              
                              
                              {'category': 'search',            'title': _('Search'), 'search_item': True,},
-                             {'category': 'search_history',    'title': _('Search history'),            } 
+                             {'category': 'search_history',    'title': _('Search history'),} 
                             ]
                             
     def getFullIconUrl(self, url):
@@ -194,12 +194,12 @@ class VODPL(CBaseHostClass):
         
         data = self.cm.ph.getAllItemsBeetwenMarkers(data, '<li', '</li>')
         for item in data:
-            url = self.getFullUrl( self.cm.ph.getSearchGroups(item, '''href=['"]([^"^']+?)['"]''')[0] )
+            url = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''href=['"]([^"^']+?)['"]''')[0])
             if not self.cm.isValidUrl(url):
                 continue
             
-            icon = self.getFullIconUrl( self.cm.ph.getSearchGroups(item, '''data-original=['"]([^"^']+?)['"]''')[0] )
-            title = self.cleanHtmlStr( self.cm.ph.getSearchGroups(item, '''alt=['"]([^"^']+?)['"]''')[0] )
+            icon = self.getFullIconUrl(self.cm.ph.getSearchGroups(item, '''data-original=['"]([^"^']+?)['"]''')[0])
+            title = self.cleanHtmlStr(self.cm.ph.getSearchGroups(item, '''alt=['"]([^"^']+?)['"]''')[0])
             episodeTitle = ''
             
             # desc start
@@ -293,7 +293,7 @@ class VODPL(CBaseHostClass):
         self.listItems(cItem, 'explore_item')
         
     def _getVideoTab(self, ckmId):
-        printDBG("VODPL.getVideoTab_ETV ckmId[%r]" % ckmId )
+        printDBG("VODPL.getVideoTab_ETV ckmId[%r]" % ckmId)
         tm = str(int(time.time() * 1000))
         jQ = str(random.randrange(562674473039806, 962674473039806))
         authKey = 'FDF9406DE81BE0B573142F380CFA6043'
@@ -344,7 +344,7 @@ class VODPL(CBaseHostClass):
             if item[0] == 'mp4':
                 tab.append(item)
         
-        def __getLinkQuality( itemLink ):
+        def __getLinkQuality(itemLink):
             try:
                 return int(itemLink[2])
             except Exception:
@@ -405,7 +405,7 @@ class VODPL(CBaseHostClass):
         data = self.cm.ph.getDataBeetwenMarkers(data, '<div class="row" id="content-tab">', '<div id="zone')[1]
         
         title = '' #self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(data, '<div class="f_t_b">', '</div>')[1])
-        icon  = self.getFullIconUrl( self.cm.ph.getSearchGroups(data, '''<img[^>]+?src=['"]([^"^']+?\.jpe?g[^"^']*?)["']''')[0] )
+        icon  = self.getFullIconUrl(self.cm.ph.getSearchGroups(data, '''<img[^>]+?src=['"]([^"^']+?\.jpe?g[^"^']*?)["']''')[0])
         desc  = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(data, '<p>', '</p>', False)[1])
         
         for item in [('Rendező(k):', 'directors'),
@@ -434,7 +434,7 @@ class VODPL(CBaseHostClass):
         if icon == '':
             icon = cItem.get('icon', self.DEFAULT_ICON_URL)
         
-        return [{'title':self.cleanHtmlStr( title ), 'text': self.cleanHtmlStr( desc ), 'images':[{'title':'', 'url':self.getFullUrl(icon)}], 'other_info':otherInfo}]
+        return [{'title':self.cleanHtmlStr(title), 'text': self.cleanHtmlStr(desc), 'images':[{'title':'', 'url':self.getFullUrl(icon)}], 'other_info':otherInfo}]
     
     def handleService(self, index, refresh=0, searchPattern='', searchType=''):
         printDBG('handleService start')
@@ -445,7 +445,7 @@ class VODPL(CBaseHostClass):
         category = self.currItem.get("category", '')
         mode     = self.currItem.get("mode", '')
         
-        printDBG( "handleService: |||||||||||||||||||||||||||||||||||| name[%s], category[%s] " % (name, category) )
+        printDBG("handleService: |||||||||||||||||||||||||||||||||||| name[%s], category[%s] " % (name, category))
         self.currList = []
         
     #MAIN MENU

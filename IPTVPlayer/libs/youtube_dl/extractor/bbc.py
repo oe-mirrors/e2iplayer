@@ -250,7 +250,7 @@ class BBCCoUkIE(InfoExtractor):
                             })
                         formats.append(fmt)
             elif kind == 'captions' and withSubtitles:
-                subtitles.extend( self._get_subtitles(media, programme_id) )
+                subtitles.extend(self._get_subtitles(media, programme_id))
         return formats, subtitles
 
     def _real_extract(self, url):

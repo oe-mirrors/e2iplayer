@@ -66,12 +66,12 @@ class CCM(BlockCipherWithIntegrity):
 
 
         self.M = macSize        # Number of octets
-        if  not((3 < self.M < 17) and (macSize%2==0)) :
+        if  not((3 < self.M < 17) and (macSize%2==0)):
             raise InitCryptoError('CCM, M (size of auth field) is out of bounds')
 
         self.nonceSize  = nonceSize
         self.L = self.baseCipher.blockSize - self.nonceSize - 1
-        if not(1 < self.L < 9) :
+        if not(1 < self.L < 9):
             raise InitCryptoError('CCM, L (size of length field) is out of bounds')
         self.reset()
 
@@ -100,7 +100,7 @@ class CCM(BlockCipherWithIntegrity):
         Lfield     =  self.L-1                    # bits 2,1,0 encode L size = blockSize-nonceSize-1
         flagsByte  =  chr(Adata^Mfield^Lfield)
 
-        if len(nonce) != self.nonceSize :
+        if len(nonce) != self.nonceSize:
             raise EncryptError('wrong sized nonce')
 
         lenMessage = len(plainText)
@@ -125,9 +125,9 @@ class CCM(BlockCipherWithIntegrity):
         assert (extra==0), 'bad block size on cbc_mac calculation'
 
         cbcMicValue = self.blockSize*chr(0x00)
-        for i in range(numCbcBlocks) :
+        for i in range(numCbcBlocks):
             cbcBlock    = cbcInput[i*self.blockSize:(i+1)*self.blockSize]
-            cbcMicValue = self.baseCipher.encrypt( xor(cbcMicValue, cbcBlock) )
+            cbcMicValue = self.baseCipher.encrypt(xor(cbcMicValue, cbcBlock))
         counter   = 0
         # the counter mode preload with counter starting at zero
         ctrModePl = chr(self.L-1)+ nonce + pack('>Q', counter)[-self.L:]
@@ -135,10 +135,10 @@ class CCM(BlockCipherWithIntegrity):
 
         ct = ''
         numCtrBlocks, extra = divmod(len(plainText)+self.blockSize, self.blockSize)
-        while counter < numCtrBlocks :
+        while counter < numCtrBlocks:
             counter   = counter + 1
             ctrModePl = chr(self.L-1) + nonce + pack('>Q', counter)[-self.L:]
-            ct = ct + xor(self.baseCipher.encrypt(ctrModePl), plainText[(counter-1)*16:counter*16] )
+            ct = ct + xor(self.baseCipher.encrypt(ctrModePl), plainText[(counter-1)*16:counter*16])
         ct = ct + ccmMIC
         return  ct
 
@@ -155,13 +155,13 @@ class CCM(BlockCipherWithIntegrity):
         Lfield     =  self.L-1                    # bits 2,1,0 encode L size = blockSize-nonceSize-1
         flagsByte  =  chr(Adata^Mfield^Lfield)
 
-        if len(nonce) != self.nonceSize :
+        if len(nonce) != self.nonceSize:
             raise DecryptError('wrong sized nonce')
 
         lenMessage = len(cipherText)-self.M
         if lenMessage >= 1<<(8*self.L):
             raise DecryptError('CCM cipherText too long for given L field size')
-        if lenMessage < 0 :
+        if lenMessage < 0:
             raise DecryptError('Too small of cipherText for MIC size')
         packedLenMessage = pack('!Q', lenMessage)[-self.L:]  # pack and truncate to L bytes
 
@@ -169,11 +169,11 @@ class CCM(BlockCipherWithIntegrity):
         ct = cipherText[:-self.M]      # trim of MIC field
 
         numCtrBlocks, extra = divmod(len(ct)+self.blockSize, self.blockSize)
-        for counter in range(1, numCtrBlocks+1) :
+        for counter in range(1, numCtrBlocks+1):
             ctrModePl = chr(self.L-1) + nonce + pack('>Q', counter)[-self.L:]
             ctr     = self.baseCipher.encrypt(ctrModePl)
             ctBlock = ct[(counter-1)*self.blockSize:counter*self.blockSize]
-            pt = pt + xor( ctr, ctBlock )
+            pt = pt + xor(ctr, ctBlock)
         #------- CBC Mac Calculation
         blockZero = flagsByte+nonce+packedLenMessage
         if len(blockZero) != self.baseCipher.blockSize:
@@ -191,21 +191,21 @@ class CCM(BlockCipherWithIntegrity):
         numCbcBlocks, extra = divmod(len(cbcInput), self.blockSize)
         assert (extra==0), 'bad block size on cbc_mac calculation'
         cbcMicValue = self.blockSize*chr(0x00)
-        for i in range(numCbcBlocks) :
+        for i in range(numCbcBlocks):
             cbcBlock    = cbcInput[i*self.blockSize:(i+1)*self.blockSize]
-            cbcMicValue = self.baseCipher.encrypt( xor(cbcMicValue, cbcBlock) )
+            cbcMicValue = self.baseCipher.encrypt(xor(cbcMicValue, cbcBlock))
 
         ctrModePl0 = chr(self.L-1)+ nonce + pack('>Q', 0)[-self.L:]
         ccmMIC = xor(self.baseCipher.encrypt(ctrModePl0), cbcMicValue)[:self.M] # first 8 bytes of xor
 
-        if ccmMIC != cipherText[-self.M:] :
+        if ccmMIC != cipherText[-self.M:]:
             raise IntegrityCheckError('CCM Integrity check failed on decrypt')
 
         return  pt
 
     def _encodeAuthLength(self, length):
         """ construct byte string representing length, returns 2 to 10 bytes """
-        if length < 0 :
+        if length < 0:
             raise EncryptError('CCM illegal length value')
         elif 0 <= length < 0xFF00:
             byteString = pack('!H', length)         # pack into two bytes

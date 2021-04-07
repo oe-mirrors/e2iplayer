@@ -32,7 +32,7 @@ class IITVPL(CBaseHostClass):
         
         self.HEADER = {'User-Agent': 'Mozilla/5.0', 'Accept': 'text/html'}
         self.AJAX_HEADER = dict(self.HEADER)
-        self.AJAX_HEADER.update( {'X-Requested-With': 'XMLHttpRequest'} )
+        self.AJAX_HEADER.update({'X-Requested-With': 'XMLHttpRequest'})
         
         self.MAIN_URL = 'http://iitvx.pl/'
         self.DEFAULT_ICON_URL = self.MAIN_URL + 'assets/img/logo-iitvx.png'
@@ -53,7 +53,7 @@ class IITVPL(CBaseHostClass):
         info = {}
         data = self.cm.ph.getDataBeetwenMarkers(data, '<div class="group series-info"', '</div>')[1]
         info['title'] = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(data, '<h1', '</h1>')[1])
-        info['icon']  = self.getFullUrl( self.cm.ph.getSearchGroups(data, 'src="([^"]+?)"')[0] )
+        info['icon']  = self.getFullUrl(self.cm.ph.getSearchGroups(data, 'src="([^"]+?)"')[0])
         info['desc']  = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(data, '<p class="description"', '</p>')[1].split('</strong>')[-1])
         info['full_desc']  = self.cleanHtmlStr(data.split('</h1>')[-1])
         keysMap = {'Gatunek:':'genre', 'Stacja:':'station'}
@@ -84,7 +84,7 @@ class IITVPL(CBaseHostClass):
                     letter = '0-9'
                 if letter not in self.cacheSeries:
                     self.cacheSeries[letter] = []
-                self.cacheSeries[letter].append( {'title':title, 'url':url} )
+                self.cacheSeries[letter].append({'title':title, 'url':url})
         
         letterTab = ["0-9", "a", "A", "ą", "Ą", "b", "B", "c", "C", "ć", "Ć", "d", "D", "e", "E", "ę", "Ę", "f", "F", "g", "G", "h", "H", "i", "I", "j", "J", "k", "K", "l", "L", "ł", "Ł", "m", "M", "n", "N", "ń", "Ń", "o", "O", "ó", "Ó", "p", "P", "q", "Q", "r", "R", "s", "S", "ś", "Ś", "t", "T", "u", "U", "v", "V", "w", "W", "x", "X", "y", "Y", "z", "Z", "ź", "Ź", "ż", "Ż"]
         for letter in letterTab:
@@ -138,7 +138,7 @@ class IITVPL(CBaseHostClass):
             del data[-1]
         
         for sItem in data:
-            season   = self.cleanHtmlStr( self.cm.ph.getDataBeetwenMarkers(sItem, '<h2', '</h2>')[1] )
+            season   = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(sItem, '<h2', '</h2>')[1])
             eDataTab = self.cm.ph.getAllItemsBeetwenMarkers(sItem, '<li', '</li>', withMarkers=True)
             for item in eDataTab:
                 title = info['title'] + ': ' + self.cleanHtmlStr(item)
@@ -256,7 +256,7 @@ class IITVPL(CBaseHostClass):
         url = cItem.get('url', '')
         
         if cItem['type'] == 'video':
-            url = '/'.join( url.split('/')[:-1])
+            url = '/'.join(url.split('/')[:-1])
             
         sts, data = self.cm.getPage(url)
         if not sts:
@@ -270,7 +270,7 @@ class IITVPL(CBaseHostClass):
         if 'station' in info:
             otherInfo['station'] = info['station']
         
-        return [{'title':self.cleanHtmlStr( info['title'] ), 'text': self.cleanHtmlStr( info['desc'] ), 'images':[{'title':'', 'url':info['icon']}], 'other_info':otherInfo}]
+        return [{'title':self.cleanHtmlStr(info['title']), 'text': self.cleanHtmlStr(info['desc']), 'images':[{'title':'', 'url':info['icon']}], 'other_info':otherInfo}]
         
     def handleService(self, index, refresh=0, searchPattern='', searchType=''):
         printDBG('handleService start')
@@ -281,7 +281,7 @@ class IITVPL(CBaseHostClass):
         category = self.currItem.get("category", '')
         mode     = self.currItem.get("mode", '')
         
-        printDBG( "handleService: |||||||||||||||||||||||||||||||||||| name[%s], category[%s] " % (name, category) )
+        printDBG("handleService: |||||||||||||||||||||||||||||||||||| name[%s], category[%s] " % (name, category))
         self.currList = []
         
     #MAIN MENU

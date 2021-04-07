@@ -33,7 +33,7 @@ class KinogoCC(CBaseHostClass):
         self.DEFAULT_ICON_URL = 'https://image.winudf.com/v2/image/Y29tLndQbGVlcmRseWFraW5vZ29fc2NyZWVuc2hvdHNfMF9iMzUzZjkyNw/screen-0.jpg?h=355&fakeurl=1&type=.jpg'
         self.HTTP_HEADER = {'User-Agent': self.USER_AGENT, 'DNT':'1', 'Accept': 'text/html', 'Accept-Encoding':'gzip, deflate', 'Referer':self.getMainUrl(), 'Origin':self.getMainUrl()}
         self.AJAX_HEADER = dict(self.HTTP_HEADER)
-        self.AJAX_HEADER.update( {'X-Requested-With': 'XMLHttpRequest', 'Accept-Encoding':'gzip, deflate', 'Content-Type':'application/x-www-form-urlencoded; charset=UTF-8', 'Accept':'application/json, text/javascript, */*; q=0.01'} )
+        self.AJAX_HEADER.update({'X-Requested-With': 'XMLHttpRequest', 'Accept-Encoding':'gzip, deflate', 'Content-Type':'application/x-www-form-urlencoded; charset=UTF-8', 'Accept':'application/json, text/javascript, */*; q=0.01'})
         
         self.cacheLinks    = {}
         self.defaultParams = {'header':self.HTTP_HEADER, 'search_charset':True, 'with_metadata':True, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
@@ -241,7 +241,7 @@ class KinogoCC(CBaseHostClass):
                             printDBG(">>\n%s\n<<" % tmp)
                             tmp = tmp.split('},')
                             for item in tmp:
-                                title =  self.cleanHtmlStr( self.cm.ph.getSearchGroups(item, '''['"]comment['"]\s*?:\s*?['"]([^'^"]+?)['"]''')[0] )
+                                title =  self.cleanHtmlStr(self.cm.ph.getSearchGroups(item, '''['"]comment['"]\s*?:\s*?['"]([^'^"]+?)['"]''')[0])
                                 url = self.cm.ph.getSearchGroups(item, '''['"]file['"]\s*?:\s*?['"](https?://[^'^"]+?)['"]''')[0]
                                 if url == '':
                                     continue
@@ -285,7 +285,7 @@ class KinogoCC(CBaseHostClass):
         category = self.currItem.get("category", '')
         mode     = self.currItem.get("mode", '')
         
-        printDBG( "handleService: |||| name[%s], category[%s] " % (name, category) )
+        printDBG("handleService: |||| name[%s], category[%s] " % (name, category))
         self.cacheLinks = {}
         self.currList = []
         

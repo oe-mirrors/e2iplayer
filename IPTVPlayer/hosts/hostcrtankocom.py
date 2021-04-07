@@ -34,7 +34,7 @@ class CrtankoCom(CBaseHostClass):
         self.DEFAULT_ICON_URL  = "http://www.crtanko.com/wp-content/uploads/2015/04/logo5.png"
         
         self.MAIN_CAT_TAB = [{'category': 'search',          'title': _('Search'), 'search_item': True,},
-                             {'category': 'search_history',  'title': _('Search history'),            } ]
+                             {'category': 'search_history',  'title': _('Search history'),}]
                         
         self.BY_LETTER_TAB = [{'title':_('All')},
                               {'title':'#', 'letter':'numeric'}, {'title':'', 'letter':'A'},
@@ -51,7 +51,7 @@ class CrtankoCom(CBaseHostClass):
                               {'title':'', 'letter':'T'},        {'title':'', 'letter':'U'},
                               {'title':'', 'letter':'V'},        {'title':'', 'letter':'W'},
                               {'title':'', 'letter':'Y'},        {'title':'', 'letter':'Z'},
-                              {'title':'', 'letter':'Ž'} ]
+                              {'title':'', 'letter':'Ž'}]
         
         self.defaultParams = {'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
         self.cacheSubCategory = []
@@ -155,7 +155,7 @@ class CrtankoCom(CBaseHostClass):
         for item in data:
             title = self.cm.ph.getSearchGroups(item, '''title=['"]([^"^']+?)['"]''')[0]
             icon  = self.getFullIconUrl(self.cm.ph.getSearchGroups(item, '''data-src=['"]([^"^']+?)['"]''')[0])
-            url   = self._getFullUrl( self.cm.ph.getSearchGroups(item, '''href=['"]([^"^']+?)['"]''')[0] )
+            url   = self._getFullUrl(self.cm.ph.getSearchGroups(item, '''href=['"]([^"^']+?)['"]''')[0])
             if self.cm.isValidUrl(url):
                 params = dict(cItem)
                 params.update({'good_for_fav': True, 'category':nextCategory, 'title':self.cleanHtmlStr(title), 'url':url, 'icon':icon, 'desc':self.cleanHtmlStr(item.split('</noscript>')[-1])})
@@ -280,7 +280,7 @@ class CrtankoCom(CBaseHostClass):
         category = self.currItem.get("category", '')
         mode     = self.currItem.get("mode", '')
         
-        printDBG( "handleService: |||||||||||||||||||||||||||||||||||| [%s] " % self.currItem )
+        printDBG("handleService: |||||||||||||||||||||||||||||||||||| [%s] " % self.currItem)
         self.currList = []
         
     #MAIN MENU

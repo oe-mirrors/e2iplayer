@@ -30,7 +30,7 @@ import datetime
 ###################################################
 class PwgetDownloader(BaseDownloader):
     # wget status
-    WGET_STS = enum( NONE='WGET_NONE',
+    WGET_STS = enum(NONE='WGET_NONE',
                      CONNECTING='WGET_CONNECTING',
                      DOWNLOADING='WGET_DOWNLOADING',
                      ENDED='WGET_ENDED')
@@ -51,7 +51,7 @@ class PwgetDownloader(BaseDownloader):
         return "pwget"
 
     def isWorkingCorrectly(self, callBackFun):
-        self.iptv_sys = iptv_system( "python " + DMHelper.GET_PWGET_PATH() + " 2>&1", boundFunction(self._checkWorkingCallBack, callBackFun) )
+        self.iptv_sys = iptv_system("python " + DMHelper.GET_PWGET_PATH() + " 2>&1", boundFunction(self._checkWorkingCallBack, callBackFun))
         
     def _checkWorkingCallBack(self, callBackFun, code, data):
         reason = ''
@@ -81,7 +81,7 @@ class PwgetDownloader(BaseDownloader):
         self.console_appClosed_conn = eConnectCallback(self.console.appClosed, self._cmdFinished)
         self.console_stderrAvail_conn = eConnectCallback(self.console.stderrAvail, self._dataAvail)
 
-        self.console.execute( E2PrioFix( cmd ) )
+        self.console.execute(E2PrioFix(cmd))
 
         self.wgetStatus = self.WGET_STS.CONNECTING
         self.status     = DMHelper.STS.DOWNLOADING

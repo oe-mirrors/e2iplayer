@@ -318,7 +318,7 @@ class OpenSubtitlesRest(CBaseSubProviderClass):
         name     = self.currItem.get("name", '')
         category = self.currItem.get("category", '')
         
-        printDBG( "handleService: name[%s], category[%s] " % (name, category) )
+        printDBG("handleService: name[%s], category[%s] " % (name, category))
         self.currList = []
         
     #MAIN MENU

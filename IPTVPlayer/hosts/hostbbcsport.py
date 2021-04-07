@@ -55,7 +55,7 @@ class BBCSport(CBaseHostClass):
         self.DEFAULT_ICON_URL = 'https://pbs.twimg.com/profile_images/878266143571443712/goIG59xP_400x400.jpg'
         self.HEADER = {'User-Agent': 'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:40.0) Gecko/20100101 Firefox/40.0', 'DNT':'1', 'Accept': 'text/html', 'Accept-Encoding':'gzip, deflate'}
         self.AJAX_HEADER = dict(self.HEADER)
-        self.AJAX_HEADER.update( {'X-Requested-With': 'XMLHttpRequest'} )
+        self.AJAX_HEADER.update({'X-Requested-With': 'XMLHttpRequest'})
         self.defaultParams = {'with_metadata':True, 'ignore_http_code_ranges':[], 'header':self.HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
         
         self.loggedIn = None
@@ -117,7 +117,7 @@ class BBCSport(CBaseHostClass):
         
         liveguideData = self.cm.ph.getDataBeetwenNodes(data, ('<aside', '</aside>', 'liveguide'), ('<div', '</div>'))[1]
         icon = self.getFullIconUrl(self.cm.ph.getSearchGroups(liveguideData, '''\ssrc=['"]([^"^']+?\.(?:jpe?g|png)(?:\?[^"^']+?)?)['"]''')[0])
-        url = self.getFullUrl( self.cm.ph.getSearchGroups(liveguideData, '''\shref=['"]([^"^']+?)['"]''')[0] )
+        url = self.getFullUrl(self.cm.ph.getSearchGroups(liveguideData, '''\shref=['"]([^"^']+?)['"]''')[0])
         if url != '':
             title = self.cleanHtmlStr(self.cm.ph.getSearchGroups(liveguideData, 'alt="([^"]+?)"')[0])
             desc = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(liveguideData, ('<p', '>', 'summary'), ('</p', '>'), False)[1])
@@ -130,7 +130,7 @@ class BBCSport(CBaseHostClass):
         data = self.cm.ph.getAllItemsBeetwenMarkers(data, '<li', '</li>')
         for item in data:
             title = self.cleanHtmlStr(item)
-            url = self.getFullUrl( self.cm.ph.getSearchGroups(item, '''\shref=['"]([^"^']+?)['"]''')[0] )
+            url = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''\shref=['"]([^"^']+?)['"]''')[0])
             if not self.cm.isValidUrl(url):
                 continue
             if '/my-sport' in url:
@@ -157,7 +157,7 @@ class BBCSport(CBaseHostClass):
         
         data = self.cm.ph.getAllItemsBeetwenNodes(data, ('<li', '>', 'list-item'), ('</li', '>'), False)
         for item in data:
-            url = self.getFullUrl( self.cm.ph.getSearchGroups(item, '''\shref=['"]([^"^']+?)['"]''')[0] )
+            url = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''\shref=['"]([^"^']+?)['"]''')[0])
             if not self.cm.isValidUrl(url):
                 continue
             title = self.cleanHtmlStr(item)
@@ -221,7 +221,7 @@ class BBCSport(CBaseHostClass):
                         
                         desc = [datItem['sectionName'], item['status']]
                         if 'schedule' in item and 'formattedStartTime' in item['schedule']:
-                            desc.append('%s-%s' % (item['schedule']['formattedStartTime'], item['schedule']['formattedEndTime']) )
+                            desc.append('%s-%s' % (item['schedule']['formattedStartTime'], item['schedule']['formattedEndTime']))
                         h = self.cm.ph.getSearchGroups(item.get('duration', ''), '''([0-9]+)H''')[0]
                         if h == '':
                             h = '0'
@@ -300,7 +300,7 @@ class BBCSport(CBaseHostClass):
             data = self.cm.ph.getAllItemsBeetwenNodes(data, ('<article', '>', 'has-media'), ('</article', '>'))
             for item in data:
                 tmp = self.cm.ph.getDataBeetwenMarkers(item, '<h3', '</h3>')[1]
-                url = self.getFullUrl( self.cm.ph.getSearchGroups(tmp, '''\shref=['"]([^"^']+?)['"]''')[0] )
+                url = self.getFullUrl(self.cm.ph.getSearchGroups(tmp, '''\shref=['"]([^"^']+?)['"]''')[0])
                 if not self.cm.isValidUrl(url):
                     continue
                 
@@ -389,7 +389,7 @@ class BBCSport(CBaseHostClass):
                 
                 desc = [item['status']]
                 if 'schedule' in item and 'formattedStartTime' in item['schedule']:
-                    desc.append('%s-%s' % (item['schedule']['formattedStartTime'], item['schedule']['formattedEndTime']) )
+                    desc.append('%s-%s' % (item['schedule']['formattedStartTime'], item['schedule']['formattedEndTime']))
                 elif 'duration' in item and 'formattedDuration' in item['duration']:
                     desc.append(item['duration']['formattedDuration'])
                     
@@ -505,7 +505,7 @@ class BBCSport(CBaseHostClass):
                     printDBG('tryTologin OK')
                     
                     if '/signin' in data.meta['url']:
-                        msg = self.cleanHtmlStr( self.cm.ph.getDataBeetwenNodes(data, ('<p', '>', 'form-message'), ('</p', '>'))[1] )
+                        msg = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(data, ('<p', '>', 'form-message'), ('</p', '>'))[1])
                         GetIPTVNotify().push(_('Login failed.') + '\n' + msg, 'error', 10)
                         return False
                     
@@ -583,7 +583,7 @@ class BBCSport(CBaseHostClass):
         category = self.currItem.get("category", '')
         mode     = self.currItem.get("mode", '')
         
-        printDBG( "handleService: >> name[%s], category[%s] " % (name, category) )
+        printDBG("handleService: >> name[%s], category[%s] " % (name, category))
         self.currList = []
         
     #MAIN MENU

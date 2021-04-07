@@ -54,10 +54,10 @@ class Ninateka(CBaseHostClass):
         #DEFAULT_GET_PARAM = 'MediaType=video&Paid=False'
         
         self.MAIN_CAT_TAB = [{'category':'list_all',       'title': 'Wszystkie',             'url':self.VIDEOS_URL},
-                             {'category':'list_cats',      'title': 'Kategorie',             'url':self.MAIN_URL  },
+                             {'category':'list_cats',      'title': 'Kategorie',             'url':self.MAIN_URL},
                              
                              {'category': 'search',            'title': _('Search'), 'search_item': True,},
-                             {'category': 'search_history',    'title': _('Search history'),            } 
+                             {'category': 'search_history',    'title': _('Search history'),} 
                             ]
         
     def getMenuHTML(self):
@@ -65,7 +65,7 @@ class Ninateka(CBaseHostClass):
         
         if True == self.refresh or '' == self.menuHTML:
             self.menuHTML = ''
-            sts, data = self.cm.getPage( self.MAIN_URL )
+            sts, data = self.cm.getPage(self.MAIN_URL)
             if sts:
                 self.menuHTML = CParsingHelper.getDataBeetwenMarkers(data, '<div class="nav-collapse collapse">', '<!--/.nav-collapse -->', False)[1]
         return self.menuHTML
@@ -73,21 +73,21 @@ class Ninateka(CBaseHostClass):
     def getMainCategory(self):
         menuHTML = self.getMenuHTML()
         
-        match = re.compile('<li data-codename="([^"]+?)"><a href="/filmy/([^"^,^/]+?)">([^<]+?)</a>').findall( menuHTML )
+        match = re.compile('<li data-codename="([^"]+?)"><a href="/filmy/([^"^,^/]+?)">([^<]+?)</a>').findall(menuHTML)
         if len(match) > 0:
             for i in range(len(match)):
                 params = {'name': 'main-category', 'page': match[i][0], 'title': match[i][2]}
-                self.addDir( params )
+                self.addDir(params)
                 
     def getSubCategory(self, cat):
         menuHTML = self.getMenuHTML()
         
         pattern = '<li data-codename="([^"]+?)"><a href="/filmy/(%s,[^"^,^/]+?)">([^<]+?)</a></li>' % cat
-        match = re.compile( pattern ).findall( menuHTML )
+        match = re.compile(pattern).findall(menuHTML)
         if len(match) > 0:
             for i in range(len(match)):
                 params = {'name': 'sub-category', 'page': self.VIDEOS_URL + (match[i][1]).replace(',', '%2C'), 'title': match[i][2]}
-                self.addDir( params )
+                self.addDir(params)
 
     def getLinksForVideo(self, cItem):
         printDBG("getVideoUrl url[%s]" % cItem)
@@ -117,7 +117,7 @@ class Ninateka(CBaseHostClass):
                 type = item.get('type', '').lower()
                 if '/mp4' in type:
                     url = _repFun(item['src'])
-                    linksTab.append( {'name': 'mp4', 'url': url, 'need_resolve':0} )
+                    linksTab.append({'name': 'mp4', 'url': url, 'need_resolve':0})
                 if '/x-mpegurl' in type:
                     url = _repFun(item['src'])
                     linksTab.extend(getDirectM3U8Playlist(url))
@@ -167,7 +167,7 @@ class Ninateka(CBaseHostClass):
                     url   = self.MAIN_URL + match.group(1)
                     title = match.group(2)
                     params = {'good_for_fav': True, 'url': url, 'title': title, 'icon': icon, 'desc': ' | '.join([duration, gatunek]) + '[/br]' + desc}
-                    self.addVideo( params )
+                    self.addVideo(params)
 
         # check next page
         nextPageUrl = ''
@@ -181,7 +181,7 @@ class Ninateka(CBaseHostClass):
 
         if '' != nextPageUrl:
             params = {'name': 'sub-category', 'page': self.MAIN_URL + nextPageUrl.replace('&amp;', '&'), 'title': 'Następna strona'}
-            self.addDir( params )
+            self.addDir(params)
     # end getVideosList
     
     def getFavouriteData(self, cItem):
@@ -222,7 +222,7 @@ class Ninateka(CBaseHostClass):
         mode     = self.currItem.get("mode", '')
         page     = self.currItem.get("page", '')
         
-        printDBG( "handleService: |||||||||||||||||||||||||||||||||||| name[%s], category[%s] " % (name, category) )
+        printDBG("handleService: |||||||||||||||||||||||||||||||||||| name[%s], category[%s] " % (name, category))
         self.currList = []
 
     #MAIN MENU

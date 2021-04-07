@@ -59,7 +59,7 @@ class MergeDownloader(BaseDownloader):
         return "MergeDownloader"
 
     def isWorkingCorrectly(self, callBackFun):
-        self.iptv_sys = iptv_system( DMHelper.GET_FFMPEG_PATH() + ' -version ' + " 2>&1 ", boundFunction(self._checkWorkingCallBack, callBackFun) )
+        self.iptv_sys = iptv_system(DMHelper.GET_FFMPEG_PATH() + ' -version ' + " 2>&1 ", boundFunction(self._checkWorkingCallBack, callBackFun))
         
     def _checkWorkingCallBack(self, callBackFun, code, data):
         reason = ''
@@ -74,7 +74,7 @@ class MergeDownloader(BaseDownloader):
             self._isWgetWorkingCorrectly(callBackFun)
         
     def _isWgetWorkingCorrectly(self, callBackFun):
-        self.iptv_sys = iptv_system( DMHelper.GET_WGET_PATH() + " -V 2>&1 ", boundFunction(self._checkWgetWorkingCallBack, callBackFun) )
+        self.iptv_sys = iptv_system(DMHelper.GET_WGET_PATH() + " -V 2>&1 ", boundFunction(self._checkWgetWorkingCallBack, callBackFun))
         
     def _checkWgetWorkingCallBack(self, callBackFun, code, data):
         reason = ''
@@ -125,7 +125,7 @@ class MergeDownloader(BaseDownloader):
         self.console = eConsoleAppContainer()
         self.console_appClosed_conn = eConnectCallback(self.console.appClosed, self._cmdFinished)
         self.console_stderrAvail_conn = eConnectCallback(self.console.stderrAvail, self._dataAvail)
-        self.console.execute( E2PrioFix( cmd ) )
+        self.console.execute(E2PrioFix(cmd))
         
         self.status = DMHelper.STS.DOWNLOADING
         
@@ -140,7 +140,7 @@ class MergeDownloader(BaseDownloader):
         printDBG("doStartPostProcess cmd[%s]" % cmd)
         self.console = eConsoleAppContainer()
         self.console_appClosed_conn = eConnectCallback(self.console.appClosed, self._cmdFinished)
-        self.console.execute( E2PrioFix( cmd ) )
+        self.console.execute(E2PrioFix(cmd))
 
     def _dataAvail(self, data):
         if None == data:

@@ -26,7 +26,7 @@ except Exception:
 ###################################################
 # Config options for HOST
 ###################################################
-config.plugins.iptvplayer.hitbox_iconssize = ConfigSelection(default="medium", choices=[ ("large", _("large")), ("medium", _("medium")), ("small", _("small")) ])
+config.plugins.iptvplayer.hitbox_iconssize = ConfigSelection(default="medium", choices=[("large", _("large")), ("medium", _("medium")), ("small", _("small"))])
 
 def GetConfigList():
     optionList = []
@@ -46,10 +46,10 @@ class Hitbox(CBaseHostClass):
                     {'category':'media',          'title':_('Live'),   'url':MAIN_URL+'api/media/live/list?filter=popular&game=0&hiddenOnly=false&showHidden=true&fast=true&limit={0}&media=true&offset={1}&size=list&liveonly=true'},
                     {'category':'media',          'title':_('Videos'), 'url':MAIN_URL+'api/media/video/list?filter=weekly&follower_id=&game=0&fast=true&limit={0}&media=true&offset={1}&size=list'},
                     {'category':'search',         'title':_('Search'), 'search_item':True},
-                    {'category':'search_history', 'title':_('Search history')} ]
+                    {'category':'search_history', 'title':_('Search history')}]
                     
-    GAME_CAT_TAB = [{'category':'media',  'title':_('Live Channels'), 'url':'live' },
-                    {'category':'media',  'title':_('Videos'),        'url':'video'} ]
+    GAME_CAT_TAB = [{'category':'media',  'title':_('Live Channels'), 'url':'live'},
+                    {'category':'media',  'title':_('Videos'),        'url':'video'}]
     
     def __init__(self):
         printDBG("Hitbox.__init__")
@@ -72,15 +72,15 @@ class Hitbox(CBaseHostClass):
             
     def _getCategoryBaseParams(self, item):
         params = {}
-        params['title'] = self._getStr( item.get("category_name") )
+        params['title'] = self._getStr(item.get("category_name"))
         if '' == params['title']:
-            params['title'] = self._getStr( item.get("category_name_short") )
-        params['icon'] = self._getFullUrl( self._getStr( item.get("category_logo_small") ), Hitbox.STATIC_URL )
+            params['title'] = self._getStr(item.get("category_name_short"))
+        params['icon'] = self._getFullUrl(self._getStr(item.get("category_logo_small")), Hitbox.STATIC_URL)
         if '' == params['icon']:
-            params['icon'] = self._getFullUrl( self._getStr( item.get("category_logo_large") ), Hitbox.STATIC_URL )
+            params['icon'] = self._getFullUrl(self._getStr(item.get("category_logo_large")), Hitbox.STATIC_URL)
         params['desc'] = ''
         for tmp in [('category_viewers', _('viewers: ')), ('category_media_count', _('media count: ')), ('category_updated', _('updated: '))]:
-            desc = self._getStr( item.get(tmp[0]) )
+            desc = self._getStr(item.get(tmp[0]))
             if '' != desc:
                 params['desc'] += ('%s %s, ' % (tmp[1], desc))
         if '' != params['desc']:
@@ -89,21 +89,21 @@ class Hitbox(CBaseHostClass):
         
     def _getLiveStreamsBaseParams(self, item):
         params = {}
-        params['title'] = '%s (%s)' % ( self._getStr( item.get("media_display_name") ), self._getStr( item.get("media_status") ))
-        params['icon'] = self._getFullUrl( self._getStr( item.get("media_thumbnail") ), Hitbox.STATIC_URL )
+        params['title'] = '%s (%s)' % (self._getStr(item.get("media_display_name")), self._getStr(item.get("media_status")))
+        params['icon'] = self._getFullUrl(self._getStr(item.get("media_thumbnail")), Hitbox.STATIC_URL)
         if '' == params['icon']:
-            params['icon'] = self._getFullUrl( self._getStr( item.get("media_thumbnail_large") ), Hitbox.STATIC_URL )
+            params['icon'] = self._getFullUrl(self._getStr(item.get("media_thumbnail_large")), Hitbox.STATIC_URL)
         if '' == params['icon']:
-            params['icon'] = self._getFullUrl( self._getStr( item.get("user_logo_small") ), Hitbox.STATIC_URL )
+            params['icon'] = self._getFullUrl(self._getStr(item.get("user_logo_small")), Hitbox.STATIC_URL)
         if '' == params['icon']:
-            params['icon'] = self._getFullUrl( self._getStr( item.get("user_logo") ), Hitbox.STATIC_URL )
+            params['icon'] = self._getFullUrl(self._getStr(item.get("user_logo")), Hitbox.STATIC_URL)
         if '' == params['icon']:
-            params['icon'] = self._getFullUrl( self._getStr( item.get('channel', {}).get("user_logo_small") ), Hitbox.STATIC_URL )
+            params['icon'] = self._getFullUrl(self._getStr(item.get('channel', {}).get("user_logo_small")), Hitbox.STATIC_URL)
         if '' == params['icon']:
-            params['icon'] = self._getFullUrl( self._getStr( item.get('channel', {}).get("user_logo") ), Hitbox.STATIC_URL )
+            params['icon'] = self._getFullUrl(self._getStr(item.get('channel', {}).get("user_logo")), Hitbox.STATIC_URL)
         params['desc'] = ''
         for tmp in [('media_views', _('views: ')), ('media_countries', _('countries: ')), ('media_live_since', _('live since: '))]:
-            desc = self._getStr( item.get(tmp[0]) )
+            desc = self._getStr(item.get(tmp[0]))
             if '' != desc:
                 params['desc'] += ('%s %s, ' % (tmp[1], desc))
         if '' != params['desc']:
@@ -113,7 +113,7 @@ class Hitbox(CBaseHostClass):
     def listGames(self, cItem, category):
         printDBG("Hitbox.listGames")
         page = cItem.get('page', 0)
-        sts, data = self.cm.getPage(cItem['url'].format(Hitbox.NUM_OF_ITEMS, page*Hitbox.NUM_OF_ITEMS) )
+        sts, data = self.cm.getPage(cItem['url'].format(Hitbox.NUM_OF_ITEMS, page*Hitbox.NUM_OF_ITEMS))
         if not sts:
             return 
         try:
@@ -122,16 +122,16 @@ class Hitbox(CBaseHostClass):
                 params = dict(cItem)
                 params['url'] =  item['category_id']
                 params['category'] = category
-                params.update( self._getCategoryBaseParams(item) )
+                params.update(self._getCategoryBaseParams(item))
                 #params['seo_key'] = item['category_seo_key']
                 self.addDir(params)
             # check next page
-            sts, data = self.cm.getPage(cItem['url'].format(1, (page+1)*Hitbox.NUM_OF_ITEMS) )
+            sts, data = self.cm.getPage(cItem['url'].format(1, (page+1)*Hitbox.NUM_OF_ITEMS))
             if not sts:
                 return 
             if len(json.loads(data)["categories"]):
                 params = dict(cItem)
-                params.update( {'title':_('Next page'), 'page':page+1} )
+                params.update({'title':_('Next page'), 'page':page+1})
                 self.addDir(params)
         except Exception:
             printExc()
@@ -148,7 +148,7 @@ class Hitbox(CBaseHostClass):
     def listMedia(self, cItem):
         printDBG("Hitbox.listMedia")
         page = cItem.get('page', 0)
-        sts, data = self.cm.getPage(cItem['url'].format(Hitbox.NUM_OF_ITEMS, page*Hitbox.NUM_OF_ITEMS) )
+        sts, data = self.cm.getPage(cItem['url'].format(Hitbox.NUM_OF_ITEMS, page*Hitbox.NUM_OF_ITEMS))
         if not sts:
             return 
         try:
@@ -164,19 +164,19 @@ class Hitbox(CBaseHostClass):
             data = data[key]
             for item in data:
                 params = dict(cItem)
-                params.update( self._getLiveStreamsBaseParams(item) )
+                params.update(self._getLiveStreamsBaseParams(item))
                 if key == 'video':
                     params['media_id'] = item['media_id']
                 else:
                     params['channel_link'] = item['channel']['channel_link']
                 self.addVideo(params)
             # check next page
-            sts, data = self.cm.getPage(cItem['url'].format(1, (page+1)*Hitbox.NUM_OF_ITEMS) )
+            sts, data = self.cm.getPage(cItem['url'].format(1, (page+1)*Hitbox.NUM_OF_ITEMS))
             if not sts:
                 return 
             if len(json.loads(data)[key]):
                 params = dict(cItem)
-                params.update( {'title':_('Next page'), 'page':page+1} )
+                params.update({'title':_('Next page'), 'page':page+1})
                 self.addDir(params)
         except Exception:
             printExc()
@@ -196,13 +196,13 @@ class Hitbox(CBaseHostClass):
         urls = []
         if 'channel_link' in cItem:
             live = True
-            urls.append( { 'name':'hls', 'type':'hls', 'url':Hitbox.MAIN_URL + 'player/hls/%s.m3u8' % cItem['channel_link'].split('/')[-1] } )
+            urls.append({'name':'hls', 'type':'hls', 'url':Hitbox.MAIN_URL + 'player/hls/%s.m3u8' % cItem['channel_link'].split('/')[-1]})
         elif 'media_id' in cItem:
             live = False
-            sts, data = self.cm.getPage( Hitbox.MAIN_URL + 'api/player/config/video/%s?redis=true&embed=false&qos=false&redis=true&showHidden=true' % cItem['media_id'] )
+            sts, data = self.cm.getPage(Hitbox.MAIN_URL + 'api/player/config/video/%s?redis=true&embed=false&qos=false&redis=true&showHidden=true' % cItem['media_id'])
             if sts:
                 try:
-                    data = byteify( json.loads(data) )
+                    data = byteify(json.loads(data))
                     baseUrl = data['clip']['baseUrl']
                     if None == baseUrl:
                         baseUrl = ''
@@ -220,7 +220,7 @@ class Hitbox(CBaseHostClass):
                                 url = Hitbox.MAIN_URL + '/' + url
                             
                         if url.startswith('http'):
-                            urls.append( {'name':item.get('label', 'vod'), 'type':type, 'url':url} )
+                            urls.append({'name':item.get('label', 'vod'), 'type':type, 'url':url})
                             if 'vod' == type:
                                 break
                 except Exception:
@@ -247,7 +247,7 @@ class Hitbox(CBaseHostClass):
         CBaseHostClass.handleService(self, index, refresh, searchPattern, searchType)
         name     = self.currItem.get("name", None)
         category = self.currItem.get("category", '')
-        printDBG( "Hitbox.handleService: ---------> name[%s], category[%s] " % (name, category) )
+        printDBG("Hitbox.handleService: ---------> name[%s], category[%s] " % (name, category))
         searchPattern = self.currItem.get("search_pattern", searchPattern)
         self.currList = [] 
 
@@ -290,7 +290,7 @@ class IPTVHost(CHostBase):
         urlList = self.host.getLinksForVideo(self.host.currList[Index])
         for item in urlList:
             need_resolve = 0
-            name = self.host._getStr( item["name"] )
+            name = self.host._getStr(item["name"])
             url  = item["url"]
             retlist.append(CUrlItem(name, url, need_resolve))
 
@@ -326,9 +326,9 @@ class IPTVHost(CHostBase):
                 if '' != url:
                     hostLinks.append(CUrlItem("Link", url, 1))
                 
-            title       =  self.host._getStr( cItem.get('title', '') )
-            description =  self.host._getStr( cItem.get('desc', '') ).strip()
-            icon        =  self.host._getStr( cItem.get('icon', '') )
+            title       =  self.host._getStr(cItem.get('title', ''))
+            description =  self.host._getStr(cItem.get('desc', '')).strip()
+            icon        =  self.host._getStr(cItem.get('icon', ''))
             
             hostItem = CDisplayListItem(name=title,
                                         description=description,
@@ -345,7 +345,7 @@ class IPTVHost(CHostBase):
     def getSearchItemInx(self):
         try:
             list = self.host.getCurrList()
-            for i in range( len(list) ):
+            for i in range(len(list)):
                 if list[i]['category'] == 'search':
                     return i
         except Exception:
@@ -358,7 +358,7 @@ class IPTVHost(CHostBase):
             if 'history' == list[self.currIndex]['name']:
                 pattern = list[self.currIndex]['title']
                 search_type = list[self.currIndex]['search_type']
-                self.host.history.addHistoryItem( pattern, search_type)
+                self.host.history.addHistoryItem(pattern, search_type)
                 self.searchPattern = pattern
                 self.searchType = search_type
         except Exception:

@@ -32,7 +32,7 @@ class RteIE(CBaseHostClass):
         self.USER_AGENT = 'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:40.0) Gecko/20100101 Firefox/40.0'
         self.HEADER = {'User-Agent': self.USER_AGENT, 'DNT':'1', 'Accept': 'text/html'}
         self.AJAX_HEADER = dict(self.HEADER)
-        self.AJAX_HEADER.update( {'X-Requested-With': 'XMLHttpRequest'} )
+        self.AJAX_HEADER.update({'X-Requested-With': 'XMLHttpRequest'})
         
         self.defaultParams = {'header':self.HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
         
@@ -51,7 +51,7 @@ class RteIE(CBaseHostClass):
                              {'category':'list_categories',      'title': _('Programmes'),       'url':self.getFullUrl('/player/date/latest/')},
                              
                              {'category': 'search',          'title': _('Search'), 'search_item': True, },
-                             {'category': 'search_history',  'title': _('Search history'),             } 
+                             {'category': 'search_history',  'title': _('Search history'),} 
                             ]
     
     def _getIdFromUrl(self, url):
@@ -73,7 +73,7 @@ class RteIE(CBaseHostClass):
         data = self.cm.ph.getDataBeetwenMarkers(data, '<div id="top-live-schedule">', '</ul>')[1]
         data = self.cm.ph.getAllItemsBeetwenMarkers(data, '<li', '</li>')
         for item in data:
-            url = self.getFullUrl( self.cm.ph.getSearchGroups(item, '''href=['"]([^"^']+)['"]''')[0] )
+            url = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''href=['"]([^"^']+)['"]''')[0])
             tmp = self.cm.ph.rgetAllItemsBeetwenMarkers(item, '</span>', '<span class')
             if 0 == len(tmp):
                 continue
@@ -107,7 +107,7 @@ class RteIE(CBaseHostClass):
         data = self.cm.ph.getDataBeetwenMarkers(data, 'dropdown-programmes', '</ul>')[1]
         data = self.cm.ph.getAllItemsBeetwenMarkers(data, '<li', '</li>')
         for item in data:
-            url = self.getFullUrl( self.cm.ph.getSearchGroups(item, '''href=['"]([^"^']+)['"]''')[0] )
+            url = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''href=['"]([^"^']+)['"]''')[0])
             title = self.cleanHtmlStr(item)
             
             if  '/a-z/' in url:
@@ -139,7 +139,7 @@ class RteIE(CBaseHostClass):
         data = self.cm.ph.getDataBeetwenMarkers(data, marker, '</table>')[1]
         data = self.cm.ph.getAllItemsBeetwenMarkers(data, '<td', '</td>')
         for item in data:
-            url = self.getFullUrl( self.cm.ph.getSearchGroups(item, '''href=['"]([^"^']+)['"]''')[0] )
+            url = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''href=['"]([^"^']+)['"]''')[0])
             if not self.cm.isValidUrl(url):
                 continue
             title = url.split('/')[-2] #self.cleanHtmlStr(item)
@@ -178,21 +178,21 @@ class RteIE(CBaseHostClass):
         
         data = self.cm.ph.getAllItemsBeetwenMarkers(data, '<article', '</article>')
         for item in data:
-            url = self.getFullUrl( self.cm.ph.getSearchGroups(item, 'href="([^"]+?)"')[0] )
+            url = self.getFullUrl(self.cm.ph.getSearchGroups(item, 'href="([^"]+?)"')[0])
             if not self.cm.isValidUrl(url):
                 continue
-            icon = self.getFullIconUrl( self.cm.ph.getSearchGroups(item, 'src="([^"]+?)"')[0] )
+            icon = self.getFullIconUrl(self.cm.ph.getSearchGroups(item, 'src="([^"]+?)"')[0])
             if '/search/' not in cItem['url']:
                 titleTab = []
                 if episodes:
                     tmp = self.cleanHtmlStr(self.cm.ph.getSearchGroups(item, '''alt=['"]([^'^"]+?)['"]''')[0])
                     if tmp != '':
                         titleTab.append(tmp)
-                tmp = self.cleanHtmlStr( self.cm.ph.getDataBeetwenMarkers(item, '<span class="thumbnail-title">', '</span>')[1] )
+                tmp = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(item, '<span class="thumbnail-title">', '</span>')[1])
                 if tmp != '' and tmp not in titleTab:
                     titleTab.append(tmp)
                 title = ' '.join(titleTab)
-                desc  = self.cleanHtmlStr( self.cm.ph.getDataBeetwenMarkers(item, '<span class="thumbnail-date">', '</span>')[1] )
+                desc  = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(item, '<span class="thumbnail-date">', '</span>')[1])
             else:
                 tmp = item.split('</h3>')
                 title = self.cleanHtmlStr(tmp[0])
@@ -290,7 +290,7 @@ class RteIE(CBaseHostClass):
             tmp = self.cm.ph.getAllItemsBeetwenMarkers(tmp, '<li', '</li>')
             
             for idx in range(len(tmp)):
-                chId = self.getFullUrl( self.cm.ph.getSearchGroups(tmp[idx], '''href=['"]([^"^']+)['"]''')[0] )
+                chId = self.getFullUrl(self.cm.ph.getSearchGroups(tmp[idx], '''href=['"]([^"^']+)['"]''')[0])
                 chId = self._getIdFromUrl(chId)
                 idsMap[chId] = idx
             
@@ -313,7 +313,7 @@ class RteIE(CBaseHostClass):
             
             desc = self.cleanHtmlStr(self.cm.ph.getDataBeetwenReMarkers(data, re.compile('<h2[^>]+?"description"[^>]*?>'), re.compile('</h2>'))[1])
             title = self.cleanHtmlStr(self.cm.ph.getDataBeetwenReMarkers(data, re.compile('<h1[^>]+?"name"[^>]*?>'), re.compile('</h1>'))[1])
-            icon  = self.getFullIconUrl( self.cm.ph.getSearchGroups(data, '''src=['"]([^"^']+)['"]''')[0] )
+            icon  = self.getFullIconUrl(self.cm.ph.getSearchGroups(data, '''src=['"]([^"^']+)['"]''')[0])
             
             otherInfo = {}
             tmp = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(data, 'Duration</strong>', '</li>', False, False)[1])
@@ -335,7 +335,7 @@ class RteIE(CBaseHostClass):
         if icon == '':
             icon = cItem.get('icon', self.DEFAULT_ICON_URL)
         
-        return [{'title':self.cleanHtmlStr( title ), 'text': self.cleanHtmlStr( desc ), 'images':[{'title':'', 'url':self.getFullUrl(icon)}], 'other_info':otherInfo}]
+        return [{'title':self.cleanHtmlStr(title), 'text': self.cleanHtmlStr(desc), 'images':[{'title':'', 'url':self.getFullUrl(icon)}], 'other_info':otherInfo}]
 
     def handleService(self, index, refresh=0, searchPattern='', searchType=''):
         printDBG('handleService start')
@@ -351,7 +351,7 @@ class RteIE(CBaseHostClass):
         category = self.currItem.get("category", '')
         mode     = self.currItem.get("mode", '')
         
-        printDBG( "handleService: || name[%s], category[%s] " % (name, category) )
+        printDBG("handleService: || name[%s], category[%s] " % (name, category))
         self.currList = []
         
     #MAIN MENU

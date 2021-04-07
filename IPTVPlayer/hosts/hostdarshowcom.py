@@ -25,7 +25,7 @@ def gettytul():
 class DarshowCom(CBaseHostClass):
     HEADER = {'User-Agent': 'Mozilla/5.0', 'Accept': 'text/html'}
     AJAX_HEADER = dict(HEADER)
-    AJAX_HEADER.update( {'X-Requested-With': 'XMLHttpRequest'} )
+    AJAX_HEADER.update({'X-Requested-With': 'XMLHttpRequest'})
     
     MAIN_URL      = 'http://www.darshow.com/'
     SEARCH_URL    = MAIN_URL + 'index.php?do=search'
@@ -35,7 +35,7 @@ class DarshowCom(CBaseHostClass):
                     {'category':'list_items',      'title': _('New series'), 'url':MAIN_URL+'newseries.html', 'icon':DEFAULT_ICON},
                     {'category':'top',             'title': _('Top'),        'url':MAIN_URL+'topseries.html', 'icon':DEFAULT_ICON},
                     {'category':'search',          'title': _('Search'), 'search_item':True, 'icon':DEFAULT_ICON},
-                    {'category':'search_history',  'title': _('Search history'),             'icon':DEFAULT_ICON} ]
+                    {'category':'search_history',  'title': _('Search history'),             'icon':DEFAULT_ICON}]
  
     def __init__(self):
         CBaseHostClass.__init__(self, {'history':'  DarshowCom.tv', 'cookie':'darshowcom.cookie'})
@@ -85,14 +85,14 @@ class DarshowCom(CBaseHostClass):
         
         data = self.cm.ph.getAllItemsBeetwenMarkers(data, '<li dir="rtl">', '</li>')
         for item in data:
-            url   = self._getFullUrl( self.cm.ph.getSearchGroups(item, 'href="([^"]+?)"')[0] )
+            url   = self._getFullUrl(self.cm.ph.getSearchGroups(item, 'href="([^"]+?)"')[0])
             if url == '':
                 continue
-            icon  = self._getFullUrl( self.cm.ph.getSearchGroups(item, 'src="([^"]+?)"')[0] )
+            icon  = self._getFullUrl(self.cm.ph.getSearchGroups(item, 'src="([^"]+?)"')[0])
             desc  = self.cleanHtmlStr(item)
-            title = self.cleanHtmlStr( self.cm.ph.getDataBeetwenMarkers(item, '<b>', '</b>')[1] )
+            title = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(item, '<b>', '</b>')[1])
             if title == '':
-                title = self.cleanHtmlStr( self.cm.ph.getSearchGroups(item, 'title="([^"]+?)"')[0] )
+                title = self.cleanHtmlStr(self.cm.ph.getSearchGroups(item, 'title="([^"]+?)"')[0])
             params = dict(cItem)
             params.update({'category':nextCategory, 'title':title, 'url':url, 'desc':desc, 'icon':icon})
             self.addDir(params)
@@ -107,8 +107,8 @@ class DarshowCom(CBaseHostClass):
         data = self.cm.ph.getDataBeetwenMarkers(data, '<ul class="menu_body">', '</ul>')[1]
         data = self.cm.ph.getAllItemsBeetwenMarkers(data, '<li>', '</li>')
         for item in data:
-            url   = self._getFullUrl( self.cm.ph.getSearchGroups(item, '''href=['"]([^"^']+?)['"]''')[0] )
-            title = self.cleanHtmlStr( item )
+            url   = self._getFullUrl(self.cm.ph.getSearchGroups(item, '''href=['"]([^"^']+?)['"]''')[0])
+            title = self.cleanHtmlStr(item)
             if not url.startswith('http'):
                 continue
             if 'maincat' in item:
@@ -161,9 +161,9 @@ class DarshowCom(CBaseHostClass):
         data = self.cm.ph.getDataBeetwenMarkers(data, m1, 'container-content')[1]
         data = self.cm.ph.getAllItemsBeetwenMarkers(data, m1, '</span></span>')
         for item in data:
-            title = self.cleanHtmlStr( self.cm.ph.getDataBeetwenMarkers(item, 'class="title-shorts">', '<', False)[1] )
+            title = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(item, 'class="title-shorts">', '<', False)[1])
             if title == '':
-                title = self.cleanHtmlStr( self.cm.ph.getDataBeetwenMarkers(item, 'dir="rtl">', '<', False)[1] )
+                title = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(item, 'dir="rtl">', '<', False)[1])
             if title == '':
                 title = self.cm.ph.getSearchGroups(item, '''title=['"]([^"^']+?)['"]''')[0]
             if 'serie_title' in cItem:
@@ -173,8 +173,8 @@ class DarshowCom(CBaseHostClass):
             if icon.startswith('['):
                 icon = ''
             else:
-                icon = self._getFullUrl( icon )
-            url   = self._getFullUrl( self.cm.ph.getSearchGroups(item, '''href=['"]([^"^']+?)['"]''')[0] )
+                icon = self._getFullUrl(icon)
+            url   = self._getFullUrl(self.cm.ph.getSearchGroups(item, '''href=['"]([^"^']+?)['"]''')[0])
             if url.startswith('http'):
                 params = {}
                 params.update({'good_for_fav':False, 'title':self.cleanHtmlStr(title), 'url':url, 'icon':icon, 'desc':self.cleanHtmlStr(item)})
@@ -213,7 +213,7 @@ class DarshowCom(CBaseHostClass):
                 params.update({'good_for_fav':False, 'title':title, 'serie_title': cItem['title'], 'url':url, 'category':category, 'icon':icon, 'desc':desc})
                 self.addDir(params)
         else:
-            url  = self._getFullUrl( self.cm.ph.getSearchGroups(data, '''<a[^>]+?href=['"](https?://on\.[^"^']+?)['"][^>]*?btn_showmore1''')[0] )
+            url  = self._getFullUrl(self.cm.ph.getSearchGroups(data, '''<a[^>]+?href=['"](https?://on\.[^"^']+?)['"][^>]*?btn_showmore1''')[0])
             params = dict(cItem)
             params.update({'good_for_fav':False, 'title':_('Episodes'), 'serie_title': cItem['title'], 'url':url, 'category':category, 'icon':icon, 'desc':desc})
             self.listItems(params, 'video')
@@ -243,7 +243,7 @@ class DarshowCom(CBaseHostClass):
             data = tmp
         if 'trailer' not in cItem and len(data) != len(tabsNames):
             printDBG('>>>>>>>>>>>>>>>>>>>ERROR<<<<<<<<<<<<<<<<<<<<')
-            printDBG('>>>>>>>>>>>>>>>>>>> Something is wrong len(data)[%d] != len(tabsNames)[%d] !!!' % (len(data), len(tabsNames)) )
+            printDBG('>>>>>>>>>>>>>>>>>>> Something is wrong len(data)[%d] != len(tabsNames)[%d] !!!' % (len(data), len(tabsNames)))
         
         for idx in range(len(data)):
             item = data[idx]
@@ -268,8 +268,8 @@ class DarshowCom(CBaseHostClass):
                 # diffrents servers
                 servers   = re.compile('''<a[^>]+?href=['"]([^'^"]+?)['"][^>]*?>([^<]+?)<''').findall(item)
                 for server in servers:
-                    url   = self._getFullUrl( server[0] )
-                    title = tabName + ' ' + self.cleanHtmlStr( server[1] )
+                    url   = self._getFullUrl(server[0])
+                    title = tabName + ' ' + self.cleanHtmlStr(server[1])
                     if url.startswith('http'):
                         urlTab.append({'name':title, 'url':strwithmeta(url, {'Referer':cItem['url']}), 'need_resolve':1})
                 url = ''
@@ -277,7 +277,7 @@ class DarshowCom(CBaseHostClass):
                 url = self.cm.ph.getSearchGroups(item, '''<iframe[^>]+?src=['"]([^"^']+?)['"]''', 1, True)[0]
                 title = tabName
             
-            url = self._getFullUrl( url )
+            url = self._getFullUrl(url)
             if url.startswith('http'):
                 if title == 'ERROR':
                     title = self.up.getHostName(url, nameOnly=True)
@@ -312,7 +312,7 @@ class DarshowCom(CBaseHostClass):
                     url = ''
             if url == '':
                 url = self.cm.ph.getSearchGroups(data, '''<iframe[^>]+?src=['"]([^"^']+?)['"]''', 1, True)[0]
-            url = self._getFullUrl( url )
+            url = self._getFullUrl(url)
             videoUrl = url
         
         urlTab = []
@@ -338,7 +338,7 @@ class DarshowCom(CBaseHostClass):
         category = self.currItem.get("category", '')
         mode     = self.currItem.get("mode", '')
         
-        printDBG( "handleService: ||||| [%s] " % self.currItem )
+        printDBG("handleService: ||||| [%s] " % self.currItem)
         self.currList = []
         
     #MAIN MENU

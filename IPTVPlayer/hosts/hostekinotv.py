@@ -69,7 +69,7 @@ class EkinoTv(CBaseHostClass, CaptchaHelper):
                              {'category':'series_abc',            'title': 'Seriale',         'url':self.getFullUrl('/serie/')},
                              {'category':'list_movies',           'title': 'Dla dzieci',      'url':self.FILMS_CAT_URL, 'cat':'2,3,5,6'},
                              {'category':'search',                'title': _('Search'), 'search_item':True},
-                             {'category':'search_history',        'title': _('Search history')} ]
+                             {'category':'search_history',        'title': _('Search history')}]
         
         self.SORT_MAP  = {'data-dodania': 'add',
                           'data-aktualizacji': 'update',
@@ -113,7 +113,7 @@ class EkinoTv(CBaseHostClass, CaptchaHelper):
     
     ###################################################
     def _fillMovieFilters(self):
-        self.cacheMovieFilters = { 'cats':[], 'vers':[], 'years':[]}
+        self.cacheMovieFilters = {'cats':[], 'vers':[], 'years':[]}
         sts, data = self.getPage(self.FILMS_CAT_URL)
         if not sts:
             return
@@ -345,7 +345,7 @@ class EkinoTv(CBaseHostClass, CaptchaHelper):
                 playerParams = self.cm.ph.getSearchGroups(item, '''ShowPlayer[^"^']*?['"]([^"^']+?)['"]\s*\,\s*['"]([^"^']+?)['"]''', 2)
                 url = ''
                 if premium and '' not in playerParams:
-                    ret = js_execute( jscode + ('\nShowPlayer("%s","%s");' % (playerParams[0], playerParams[1])))
+                    ret = js_execute(jscode + ('\nShowPlayer("%s","%s");' % (playerParams[0], playerParams[1])))
                     if ret['sts'] and 0 == ret['code']:
                         printDBG(ret['data'])
                         url = self.getFullUrl(self.cm.ph.getSearchGroups(ret['data'], '''<iframe[^>]+?src=['"]([^"^']+?)['"]''', ignoreCase=True)[0])
@@ -559,7 +559,7 @@ class EkinoTv(CBaseHostClass, CaptchaHelper):
         
         name     = self.currItem.get("name", None)
         category = self.currItem.get("category", '')
-        printDBG( "EkinoTv.handleService: ---------> name[%s], category[%s] " % (name, category) )
+        printDBG("EkinoTv.handleService: ---------> name[%s], category[%s] " % (name, category))
         searchPattern = self.currItem.get("search_pattern", searchPattern)
         self.currList = []
         

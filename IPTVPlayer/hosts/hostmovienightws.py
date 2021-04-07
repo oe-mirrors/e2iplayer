@@ -66,7 +66,7 @@ class MoviesNight(CBaseHostClass):
         tmp = self.cm.ph.getDataBeetwenMarkers(data, '<ul class="scrolling years">', '</ul>', False)[1]
         tmp = self.cm.ph.getAllItemsBeetwenMarkers(tmp, '<a ', '</a>')
         for item in tmp:
-            title = self.cleanHtmlStr( item )
+            title = self.cleanHtmlStr(item)
             url   = self._getFullUrl(self.cm.ph.getSearchGroups(item, '''href=['"]([^"^']+?)["']''', 1, True)[0])
             if url.startswith('http'):
                 cache['years'].append({'title':title, 'url':url})
@@ -74,7 +74,7 @@ class MoviesNight(CBaseHostClass):
         data = self.cm.ph.getDataBeetwenMarkers(data, 'Genre', '</ul>', False)[1]
         data = data.split('</li>')
         for item in data:
-            title = self.cleanHtmlStr( item )
+            title = self.cleanHtmlStr(item)
             url   = self._getFullUrl(self.cm.ph.getSearchGroups(item, '''href=['"]([^"^']+?)["']''', 1, True)[0])
             if url.startswith('http'):
                 cache['genres'].append({'title':title, 'url':url})
@@ -133,11 +133,11 @@ class MoviesNight(CBaseHostClass):
                 continue
             icon   = self.cm.ph.getSearchGroups(item, 'src="([^"]+?)"')[0]
             title = self.cm.ph.getDataBeetwenMarkers(item, '<h2>', '</h2>', False)[1]
-            desc = self.cleanHtmlStr( item )
+            desc = self.cleanHtmlStr(item)
             
             
             params = dict(cItem)
-            params.update( {'title': self.cleanHtmlStr( title ), 'url':self._getFullUrl(url), 'desc': desc, 'icon':self._getFullUrl(icon), 'good_for_fav': True} )
+            params.update({'title': self.cleanHtmlStr(title), 'url':self._getFullUrl(url), 'desc': desc, 'icon':self._getFullUrl(icon), 'good_for_fav': True})
             if '/tvshows/' in url:
                 params['category'] = category
                 self.addDir(params)
@@ -146,7 +146,7 @@ class MoviesNight(CBaseHostClass):
         
         if nextPage:
             params = dict(cItem)
-            params.update( {'title':_('Next page'), 'page':page+1} )
+            params.update({'title':_('Next page'), 'page':page+1})
             self.addDir(params)
             
     def listSeasons(self, cItem, category):
@@ -172,16 +172,16 @@ class MoviesNight(CBaseHostClass):
             episodesData = self.cm.ph.getAllItemsBeetwenMarkers(item, '<li', '</li>')
             for eItem in episodesData:
                 eTmp = re.split('''<span class=['"]datix['"]>''', eItem)
-                title = self.cleanHtmlStr( eTmp[0] )
-                desc  = self.cleanHtmlStr( eTmp[-1] )
+                title = self.cleanHtmlStr(eTmp[0])
+                desc  = self.cleanHtmlStr(eTmp[-1])
                 url   = self._getFullUrl(self.cm.ph.getSearchGroups(eItem, '''href=['"]([^"^']+?)["']''', 1, True)[0])
                 if url.startswith('http'):
-                    episodesTab.append({'title':'{0} - {1}: {2}'.format( cItem['title'], seasonTitle, title),  'url':url, 'desc':desc})
+                    episodesTab.append({'title':'{0} - {1}: {2}'.format(cItem['title'], seasonTitle, title),  'url':url, 'desc':desc})
             
             if len(episodesTab):
                 self.episodesCache[seasonTitle] = episodesTab
                 params = dict(cItem)
-                params.update( {'category':category, 'title': seasonTitle, 'season_key':seasonTitle, 'good_for_fav': False} )
+                params.update({'category':category, 'title': seasonTitle, 'season_key':seasonTitle, 'good_for_fav': False})
                 self.addDir(params)
         
     def listEpisodes(self, cItem):
@@ -257,9 +257,9 @@ class MoviesNight(CBaseHostClass):
             m2 = ' id="player'
         
         data = self.cm.ph.getDataBeetwenMarkers(data, '<div class="post">', m2)[1]
-        title = self.cleanHtmlStr( self.cm.ph.getDataBeetwenMarkers(data, '<h1', '</h1>')[1] )
-        icon  = self.getFullIconUrl( self.cm.ph.getSearchGroups(data, '''<img[^>]+?src=['"]([^"^']+?\.jpe?g[^"^']*?)["']''')[0] )
-        desc  = self.cleanHtmlStr( self.cm.ph.getDataBeetwenMarkers(data, '<div id="dato-2"', '</p>')[1].split('</h2>')[-1] )
+        title = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(data, '<h1', '</h1>')[1])
+        icon  = self.getFullIconUrl(self.cm.ph.getSearchGroups(data, '''<img[^>]+?src=['"]([^"^']+?\.jpe?g[^"^']*?)["']''')[0])
+        desc  = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(data, '<div id="dato-2"', '</p>')[1].split('</h2>')[-1])
         
         if '/episode/' in url:
             data = self.cm.ph.getAllItemsBeetwenMarkers(data, '<p', '</p>')
@@ -300,7 +300,7 @@ class MoviesNight(CBaseHostClass):
         if icon == '':
             icon = cItem.get('icon', self.DEFAULT_ICON_URL)
         
-        return [{'title':self.cleanHtmlStr( title ), 'text': self.cleanHtmlStr( desc ), 'images':[{'title':'', 'url':self.getFullUrl(icon)}], 'other_info':otherInfo}]
+        return [{'title':self.cleanHtmlStr(title), 'text': self.cleanHtmlStr(desc), 'images':[{'title':'', 'url':self.getFullUrl(icon)}], 'other_info':otherInfo}]
     
     def handleService(self, index, refresh=0, searchPattern='', searchType=''):
         printDBG('handleService start')
@@ -309,7 +309,7 @@ class MoviesNight(CBaseHostClass):
 
         name     = self.currItem.get("name", '')
         category = self.currItem.get("category", '')
-        printDBG( "handleService: |||||||||||||||||||||||||||||||||||| name[%s], category[%s] " % (name, category) )
+        printDBG("handleService: |||||||||||||||||||||||||||||||||||| name[%s], category[%s] " % (name, category))
         self.currList = []
         
     #MAIN MENU

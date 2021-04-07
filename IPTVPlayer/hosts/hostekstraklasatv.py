@@ -40,9 +40,9 @@ config.plugins.iptvplayer.ekstraklasa_password = ConfigText(default="", fixed_si
 
 def GetConfigList():
     optionList = []
-    optionList.append( getConfigListEntry( _("Max bitrate:"), config.plugins.iptvplayer.ekstraklasa_defaultres ) )
-    optionList.append( getConfigListEntry( _("Username"), config.plugins.iptvplayer.ekstraklasa_login))
-    optionList.append( getConfigListEntry( _("Password"), config.plugins.iptvplayer.ekstraklasa_password))
+    optionList.append(getConfigListEntry(_("Max bitrate:"), config.plugins.iptvplayer.ekstraklasa_defaultres))
+    optionList.append(getConfigListEntry(_("Username"), config.plugins.iptvplayer.ekstraklasa_login))
+    optionList.append(getConfigListEntry(_("Password"), config.plugins.iptvplayer.ekstraklasa_password))
     
     #optionList.append( getConfigListEntry( "Używaj domyślnego format video:", config.plugins.iptvplayer.ekstraklasa_usedf ) )
     #optionList.append( getConfigListEntry( "Ekstraklasa korzystaj z proxy?", config.plugins.iptvplayer.ekstraklasa_proxy) )
@@ -73,8 +73,8 @@ class Ekstraklasa(CBaseHostClass):
         #self.defaultParams = {'header':self.HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
         
         self.MAIN_CAT_TAB = [
-                            {'category':'matches',          'title': _('Matches'),                      'url': self.MAIN_URL + 'ekstraklasa/schedule'  },
-                            {'category':'categories',       'title': _('Videos'),                       'url': self.MAIN_URL + 'ekstraklasa/browse' },
+                            {'category':'matches',          'title': _('Matches'),                      'url': self.MAIN_URL + 'ekstraklasa/schedule'},
+                            {'category':'categories',       'title': _('Videos'),                       'url': self.MAIN_URL + 'ekstraklasa/browse'},
                             #{'category':'search',           'title': _('Search'), 'search_item':True,   },
                             #{'category':'search_history',   'title': _('Search history'),               } 
                             ]
@@ -162,18 +162,18 @@ class Ekstraklasa(CBaseHostClass):
 
         duration = video_json.get("duration", 0)
         if duration>0:
-            descStr.append( _("Duration") + ": " + str(datetime.timedelta(seconds=int(duration))))
+            descStr.append(_("Duration") + ": " + str(datetime.timedelta(seconds=int(duration))))
 
         vtype = video_json.get("sourceType", "")
 
         if vtype:
-            descStr.append( _("Source type") + ": " + vtype)
+            descStr.append(_("Source type") + ": " + vtype)
             
         free = video_json.get("isFree", False)
         if free:
-            descStr.append( _("Free") )
+            descStr.append(_("Free"))
         else:
-            descStr.append( _("Not Free") )
+            descStr.append(_("Not Free"))
             
         playFrom = video_json.get("playableFrom", '') #"2020-06-07T17:55:00.000Z"
         if playFrom:
@@ -181,7 +181,7 @@ class Ekstraklasa(CBaseHostClass):
             date_time_obj = datetime.datetime.strptime(date_time_str, '%Y-%m-%dT%H:%M:%S.%fZ') + self.timeoffset #"2020-06-09T15:55:00.000Z"
             date_time_text = date_time_obj.strftime("%d/%m/%Y, %H:%M")
 
-            descStr.append( _("Playable from ") + date_time_text) 
+            descStr.append(_("Playable from ") + date_time_text) 
 
         desc = '|'.join(descStr)
         
@@ -207,7 +207,7 @@ class Ekstraklasa(CBaseHostClass):
 
         desc = '|'.join(descStr)
 
-        params = {'title': title ,'url': url, 'icon': icon , 'category': 'cat', 'desc': desc}    
+        params = {'title': title,'url': url, 'icon': icon, 'category': 'cat', 'desc': desc}    
 
         return params
         
@@ -330,7 +330,7 @@ class Ekstraklasa(CBaseHostClass):
                 if len(response['data']) >= 25:
                     page = page + 1
                     params = dict(cItem)
-                    params.update({'title': _("Next page") , 'page' : page })
+                    params.update({'title': _("Next page"), 'page': page})
                     printDBG(str(params))
                     self.addMore(params)      
 
@@ -404,7 +404,7 @@ class Ekstraklasa(CBaseHostClass):
         category = self.currItem.get("category", '')
         mode     = self.currItem.get("mode", '')
         
-        printDBG( "handleService: || name[%s], category[%s] " % (name, category) )
+        printDBG("handleService: || name[%s], category[%s] " % (name, category))
         self.currList = []
         
         #MAIN MENU

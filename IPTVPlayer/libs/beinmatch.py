@@ -73,7 +73,7 @@ class BeinmatchApi(CBaseHostClass):
         urlsTab = []
 
         jscode = ['window={open:function(){print(JSON.stringify(arguments));}};', self.getLinkJS, cItem['url']]
-        ret = js_execute( '\n'.join(jscode) )
+        ret = js_execute('\n'.join(jscode))
         try:
             data = json_loads(ret['data'])
             url = self.getFullUrl(data['0'])

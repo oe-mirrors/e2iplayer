@@ -33,7 +33,7 @@ class WolnelekturyPL(CBaseHostClass):
         self.MAIN_URL = 'http://wolnelektury.pl/'
         self.DEFAULT_ICON_URL = 'http://m.img.brothersoft.com/android/598/1352446551_icon.png'
         MAIN_CAT_TAB = [{'category':'categories',  'key':'author', 'title':'Autorzy'},
-                        {'category':'categories',  'key':'epoch',  'title':'Epoki'  },
+                        {'category':'categories',  'key':'epoch',  'title':'Epoki'},
                         {'category':'categories',  'key':'genre',  'title':'Gatunki'},
                         {'category':'categories',  'key':'kind',   'title':'Rodzaje'}]
         self.defaultParams = {'header':self.HTTP_HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
@@ -68,7 +68,7 @@ class WolnelekturyPL(CBaseHostClass):
             section = self.cm.ph.getAllItemsBeetwenMarkers(section, '<a', '</a>')
             for item in section:
                 title = self.cleanHtmlStr(item)
-                url = self.getFullUrl( self.cm.ph.getSearchGroups(item, '''\shref=['"]([^"^']+?)['"]''')[0] )
+                url = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''\shref=['"]([^"^']+?)['"]''')[0])
                 itemsTab.append({'title':title, 'url':url})
             if len(itemsTab):
                 params = dict(cItem)
@@ -116,8 +116,8 @@ class WolnelekturyPL(CBaseHostClass):
                 continue
             tmp = self.cm.ph.getDataBeetwenNodes(item, ('<div', '>', 'title'), ('</div', '>'))[1]
             title = self.cleanHtmlStr(tmp)
-            url = self.getFullUrl( self.cm.ph.getSearchGroups(tmp, '''\shref=['"]([^"^']+?)['"]''')[0] )
-            icon = self.getFullIconUrl( self.cm.ph.getSearchGroups(item, '''\ssrc=['"]([^"^']+?)['"]''')[0] )
+            url = self.getFullUrl(self.cm.ph.getSearchGroups(tmp, '''\shref=['"]([^"^']+?)['"]''')[0])
+            icon = self.getFullIconUrl(self.cm.ph.getSearchGroups(item, '''\ssrc=['"]([^"^']+?)['"]''')[0])
             
             desc = []
             tmp = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(item, ('<div', '>', 'book-box-head'), ('</div', '>'))[1]).replace(' , ', ', ')
@@ -147,7 +147,7 @@ class WolnelekturyPL(CBaseHostClass):
                 if 'header' in item:
                     author = self.cleanHtmlStr(item)
                     continue
-                url = self.getFullUrl( self.cm.ph.getSearchGroups(item, '''\shref=['"]([^"^']+?)['"]''')[0] )
+                url = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''\shref=['"]([^"^']+?)['"]''')[0])
                 if url == '':
                     continue
                 if url.endswith('/'):
@@ -186,8 +186,8 @@ class WolnelekturyPL(CBaseHostClass):
             title = self.cleanHtmlStr(tmp[0])
             desc  = self.cleanHtmlStr(tmp[1])
             urlTab = []
-            mp3Url = self.getFullUrl( self.cm.ph.getSearchGroups(item, '''\sdata\-mp3=['"]([^"^']+?)['"]''')[0] )
-            oggUrl = self.getFullUrl( self.cm.ph.getSearchGroups(item, '''\sdata\-ogg=['"]([^"^']+?)['"]''')[0] )
+            mp3Url = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''\sdata\-mp3=['"]([^"^']+?)['"]''')[0])
+            oggUrl = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''\sdata\-ogg=['"]([^"^']+?)['"]''')[0])
             if mp3Url != '':
                 urlTab.append({'name': 'mp3', 'url':mp3Url, 'need_resolve':0})
             if oggUrl != '':
@@ -221,7 +221,7 @@ class WolnelekturyPL(CBaseHostClass):
             if not sts:
                 desc = ''
             otherInfo = {}
-            return [{'title':self.cleanHtmlStr( data['title'] ), 'text': self.cleanHtmlStr( desc ), 'images':[{'title':'', 'url':data['cover']}], 'other_info':otherInfo}]
+            return [{'title':self.cleanHtmlStr(data['title']), 'text': self.cleanHtmlStr(desc), 'images':[{'title':'', 'url':data['cover']}], 'other_info':otherInfo}]
         except Exception:
             printExc()
         
@@ -231,7 +231,7 @@ class WolnelekturyPL(CBaseHostClass):
         otherInfo = {}
         try:
             data = byteify(json.loads(data))
-            icon = self._viaProxy( self._getFullUrl(data['poster'], False) )
+            icon = self._viaProxy(self._getFullUrl(data['poster'], False))
             title = data['title']
             desc = data['overview']
             otherInfo['actors'] = data['actors']
@@ -255,7 +255,7 @@ class WolnelekturyPL(CBaseHostClass):
         category = self.currItem.get("category", '')
         mode     = self.currItem.get("mode", '')
         
-        printDBG( "handleService: |||||||||||||||||||||||||||||||||||| name[%s], category[%s] " % (name, category) )
+        printDBG("handleService: |||||||||||||||||||||||||||||||||||| name[%s], category[%s] " % (name, category))
         self.currList = []
         
     #MAIN MENU

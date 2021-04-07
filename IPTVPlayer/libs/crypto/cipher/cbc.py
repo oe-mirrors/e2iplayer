@@ -82,10 +82,10 @@ class CBC(BlockCipher):
                 self.prior_encr_CT_block = self.iv
                 auto_IV = self.prior_encr_CT_block    # prepend IV if it's automatic
             else:                       # application provided IV
-                assert(len(self.iv) == self.blockSize ), 'IV must be same length as block'
+                assert(len(self.iv) == self.blockSize), 'IV must be same length as block'
                 self.prior_encr_CT_block = self.iv
         """ encrypt the prior CT XORed with the PT """
-        ct = self.baseCipher.encryptBlock( xor(self.prior_encr_CT_block, plainTextBlock) )
+        ct = self.baseCipher.encryptBlock(xor(self.prior_encr_CT_block, plainTextBlock))
         self.prior_encr_CT_block = ct
         return auto_IV+ct
 
@@ -102,7 +102,7 @@ class CBC(BlockCipher):
 
         dct = self.baseCipher.decryptBlock(encryptedBlock)
         """ XOR the prior decrypted CT with the prior CT """
-        dct_XOR_priorCT = xor( self.prior_CT_block, dct )
+        dct_XOR_priorCT = xor(self.prior_CT_block, dct)
 
         self.prior_CT_block = encryptedBlock
 

@@ -52,7 +52,7 @@ class WizjaTvApi(CBaseHostClass):
         self.DEFAULT_ICON_URL = 'http://wizja.tv/logo.png'
         self.HTTP_HEADER = {'User-Agent': 'Mozilla/5.0', 'Accept': 'text/html'}
         self.AJAX_HEADER = dict(self.HTTP_HEADER)
-        self.AJAX_HEADER.update( {'X-Requested-With': 'XMLHttpRequest'} )
+        self.AJAX_HEADER.update({'X-Requested-With': 'XMLHttpRequest'})
         
         self.COOKIE_FILE = GetCookieDir('wizjatv.cookie')
         
@@ -71,12 +71,12 @@ class WizjaTvApi(CBaseHostClass):
             return False, False
         
         HTTP_HEADER= dict(self.HTTP_HEADER)
-        HTTP_HEADER.update( {'Referer':loginUrl} )
+        HTTP_HEADER.update({'Referer':loginUrl})
         params = dict(self.http_params)
         params['header'] = HTTP_HEADER
         
         post_data = {'user_name': login, 'user_password': password, 'login': 'Zaloguj'}
-        sts, data = self.cm.getPage( loginUrl, params, post_data)
+        sts, data = self.cm.getPage(loginUrl, params, post_data)
         printDBG("-------------------------------------")
         printDBG(data)
         printDBG("-------------------------------------")
@@ -104,12 +104,12 @@ class WizjaTvApi(CBaseHostClass):
             if ret[0]:
                 self.loggedIn = True
                 if not ret[1]:
-                    self.sessionEx.open(MessageBox, ('Użytkownika "%s" zalogowany poprawnie. Brak premium!') % login, type=MessageBox.TYPE_INFO, timeout=10 )
+                    self.sessionEx.open(MessageBox, ('Użytkownika "%s" zalogowany poprawnie. Brak premium!') % login, type=MessageBox.TYPE_INFO, timeout=10)
             else:
-                self.sessionEx.open(MessageBox, ('Problem z zalogowanie użytkownika "%s". Sprawdź dane do logowania w konfiguracji hosta.') % login, type=MessageBox.TYPE_INFO, timeout=10 )
+                self.sessionEx.open(MessageBox, ('Problem z zalogowanie użytkownika "%s". Sprawdź dane do logowania w konfiguracji hosta.') % login, type=MessageBox.TYPE_INFO, timeout=10)
                 self.loggedIn = False
         else:
-            self.sessionEx.open(MessageBox, 'Serwis ten wymaga zalogowania. Wprowadź swój login i hasło w konfiguracji hosta dostępnej po naciśnięciu niebieskiego klawisza.', type=MessageBox.TYPE_ERROR, timeout=10 )
+            self.sessionEx.open(MessageBox, 'Serwis ten wymaga zalogowania. Wprowadź swój login i hasło w konfiguracji hosta dostępnej po naciśnięciu niebieskiego klawisza.', type=MessageBox.TYPE_ERROR, timeout=10)
             return []
         
         channelsTab = []
@@ -121,11 +121,11 @@ class WizjaTvApi(CBaseHostClass):
         data = self.cm.ph.getDataBeetwenMarkers(data, '<ul class="dropdown-menu">', '</ul>')[1]
         data = self.cm.ph.getAllItemsBeetwenMarkers(data, '<a', '</a>')
         for item in data:
-            icon  = self.getFullUrl( self.cm.ph.getSearchGroups(item, '''src=['"]([^"^']+?)['"]''')[0] )
-            url   = self.getFullUrl( self.cm.ph.getSearchGroups(item, '''href=['"]([^'^"]+?)['"]''')[0] )
+            icon  = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''src=['"]([^"^']+?)['"]''')[0])
+            url   = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''href=['"]([^'^"]+?)['"]''')[0])
             if not self.cm.isValidUrl(url):
                 continue
-            title = self.cleanHtmlStr( item )
+            title = self.cleanHtmlStr(item)
             if title == '':
                 title = icon.split('/')[-1][:-4].upper()
             
@@ -149,7 +149,7 @@ class WizjaTvApi(CBaseHostClass):
             if not self.cm.isValidUrl(url):
                 continue
             HTTP_HEADER= dict(self.HTTP_HEADER)
-            HTTP_HEADER.update( {'Referer':cItem['url']} )
+            HTTP_HEADER.update({'Referer':cItem['url']})
             params = dict(self.http_params)
             params['header'] = HTTP_HEADER
             

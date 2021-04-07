@@ -36,7 +36,7 @@ class IconMenager:
     #HEADER = {'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/73.0.3683.103 Safari/537.36'}
 
     def __init__(self, updateFun=None, downloadNew=True):
-        printDBG( "IconMenager.__init__" )
+        printDBG("IconMenager.__init__")
         self.DOWNLOADED_IMAGE_PATH_BASE = config.plugins.iptvplayer.SciezkaCache.value
         self.cm = common()
 
@@ -70,7 +70,7 @@ class IconMenager:
         self.downloadNew = downloadNew
 
     def __del__(self):
-        printDBG( "IconMenager.__del__ -------------------------------")
+        printDBG("IconMenager.__del__ -------------------------------")
         self.clearDQueue()
         self.clearAAueue()
         
@@ -79,7 +79,7 @@ class IconMenager:
         else:
             # remove all icons as they are not more needed due to config changes
             AsyncMethod(RemoveAllDirsIconsFromPath)(self.DOWNLOADED_IMAGE_PATH_BASE)
-        printDBG( "IconMenager.__del__ end" )
+        printDBG("IconMenager.__del__ end")
         
     def setUpdateCallBack(self, updateFun):
         self.updateFun = updateFun
@@ -170,7 +170,7 @@ class IconMenager:
                 if os_path.normcase(self.currDownloadDir+'/') != os_path.normcase(file_path+'/'):
                     file_path = os_path.normcase(file_path + '/' + filename)
                     os_rename(file_path, os_path.normcase(self.currDownloadDir + '/' + filename))
-                    self.queueAA[filename] = os_path.normcase(self.currDownloadDir + '/' )
+                    self.queueAA[filename] = os_path.normcase(self.currDownloadDir + '/')
                     file_path = os_path.normcase(self.currDownloadDir + '/' + filename)
                 else:
                     file_path = os_path.normcase(file_path + '/' + filename)
@@ -182,7 +182,7 @@ class IconMenager:
         return file_path
         
     def processDQ(self):
-        printDBG( "IconMenager.processDQ: Thread started" )
+        printDBG("IconMenager.processDQ: Thread started")
         
         while 1:
             die = 0
@@ -207,7 +207,7 @@ class IconMenager:
             if die:
                 return
             
-            printDBG( "IconMenager.processDQ url: [%s]" % url )
+            printDBG("IconMenager.processDQ url: [%s]" % url)
             if url != '':
                 hashAlg = MD5()
                 name = hashAlg(url)

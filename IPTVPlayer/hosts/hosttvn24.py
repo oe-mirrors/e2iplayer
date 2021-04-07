@@ -55,17 +55,17 @@ class Tvn24(CBaseHostClass):
         icon = ''
         if None != item:
             try:
-                icon = self.getStr( item['Main_Content_Photo']['url'] )
+                icon = self.getStr(item['Main_Content_Photo']['url'])
             except Exception:
                 pass
             if '' == icon:
                 try:
-                    icon = self.getStr( item['Photo_Photo']['url'] )
+                    icon = self.getStr(item['Photo_Photo']['url'])
                 except Exception:
                     pass
             if '' == icon:
                 try:
-                    icon = self.getStr( item['Headbg_Photo']['url'] )
+                    icon = self.getStr(item['Headbg_Photo']['url'])
                 except Exception:
                     pass
         return icon
@@ -75,11 +75,11 @@ class Tvn24(CBaseHostClass):
         
         VIDEO_PLAYLIST = Tvn24.MAIN_URL + '/video/playlists/' + Tvn24.API_KEY
         MAIN_CATEGORIES = [
-            {'name': 'category', 'title': 'Najnowsze',     'category': 'end_cat',      'url': Tvn24.MAIN_URL + '/articles/newest/' + Tvn24.API_KEY + '/20' },
-            {'name': 'category', 'title': 'Najważniejsze', 'category': 'end_cat',      'url': Tvn24.MAIN_URL + '/articles/important/' + Tvn24.API_KEY },
+            {'name': 'category', 'title': 'Najnowsze',     'category': 'end_cat',      'url': Tvn24.MAIN_URL + '/articles/newest/' + Tvn24.API_KEY + '/20'},
+            {'name': 'category', 'title': 'Najważniejsze', 'category': 'end_cat',      'url': Tvn24.MAIN_URL + '/articles/important/' + Tvn24.API_KEY},
             {'name': 'category', 'title': 'Informacje',    'category': 'playlist',     'url': VIDEO_PLAYLIST + '/1'},
-            {'name': 'category', 'title': 'Magazyny',      'category': 'magazines',    'url': Tvn24.MAIN_URL + '/magazines/' + Tvn24.API_KEY + '/', 'page':'1' },
-            {'name': 'category', 'title': 'Kategorie',     'category': 'categories',   'url': Tvn24.MAIN_URL + '/categories/' + Tvn24.API_KEY },
+            {'name': 'category', 'title': 'Magazyny',      'category': 'magazines',    'url': Tvn24.MAIN_URL + '/magazines/' + Tvn24.API_KEY + '/', 'page':'1'},
+            {'name': 'category', 'title': 'Kategorie',     'category': 'categories',   'url': Tvn24.MAIN_URL + '/categories/' + Tvn24.API_KEY},
             ]
         for item in MAIN_CATEGORIES:
             self.addDir(item)
@@ -87,13 +87,13 @@ class Tvn24(CBaseHostClass):
     def listPlaylists(self, url):
         printDBG("listPlaylist url[%s]" % (url))
         try:
-            sts, data = self.cm.getPage( url, {'host' : Tvn24.HOST} )
-            data = json_loads( data )
+            sts, data = self.cm.getPage(url, {'host': Tvn24.HOST})
+            data = json_loads(data)
             for item in data:
-                title  = self.getStr( item.get('title', '') )
-                plot   = self.getStr( item.get('description', '') )
-                icon  = self.getStr( item.get('pht_url', '') )
-                videosNum = int(self.getStr( item.get('videos_count', '0'), '0'))
+                title  = self.getStr(item.get('title', ''))
+                plot   = self.getStr(item.get('description', ''))
+                icon  = self.getStr(item.get('pht_url', ''))
+                videosNum = int(self.getStr(item.get('videos_count', '0'), '0'))
                 
                 if videosNum > 0:
                     videos = item.get('videos', [])
@@ -107,10 +107,10 @@ class Tvn24(CBaseHostClass):
         printDBG("listPlaylistVideos")
         try:
             for item in videos:
-                title  = self.getStr( item.get('title', '') )
-                plot   = self.getStr( item.get('description', '') )
-                icon   = self.getStr( item.get('still_url', '') )
-                url   = self.getStr( item.get('url', '') )
+                title  = self.getStr(item.get('title', ''))
+                plot   = self.getStr(item.get('description', ''))
+                icon   = self.getStr(item.get('still_url', ''))
+                url   = self.getStr(item.get('url', ''))
 
                 if url != '':
                     params = {'title': title, 'url':url, 'icon':icon, 'plot':plot, 'tar_id':'', 'id':''}
@@ -122,8 +122,8 @@ class Tvn24(CBaseHostClass):
         printDBG("listSubCategories")
         try:
             for item in subCategiories:
-                title  = self.getStr( item.get('name', '') )
-                id = int( self.getStr( item.get('id', '-1'), '-1' ) )
+                title  = self.getStr(item.get('name', ''))
+                id = int(self.getStr(item.get('id', '-1'), '-1'))
                 if id != -1:
                     url = Tvn24.MAIN_URL + '/categories/articles/' + Tvn24.API_KEY + '/' + str(id)
                     params = {'name': 'category', 'category': 'end_cat', 'parent_cat': category, 'title': title, 'url':url, 'page':'1'}
@@ -150,19 +150,19 @@ class Tvn24(CBaseHostClass):
                 params = {'name': 'category', 'category': 'end_cat', 'parent_cat': category, 'title': item['name'], 'url':sUrl, 'icon':item['icon'], 'page':'1'}
                 self.addDir(params)
         try:
-            sts, data = self.cm.getPage( url, {'host' : Tvn24.HOST} )
-            data = json_loads( data )
+            sts, data = self.cm.getPage(url, {'host': Tvn24.HOST})
+            data = json_loads(data)
             if pagination:
                 if int(data['pageCount']) > int(data['currentPageNumber']):
                     nextPage = str(int(page) + 1)
                 data = data['items']
             for item in data:
-                title  = self.getStr( item.get('title', '') )
-                plot   = self.getStr( item.get('lead', '') )
+                title  = self.getStr(item.get('title', ''))
+                plot   = self.getStr(item.get('lead', ''))
                 icon   = self.getIconFromRelated(item.get('related', None))
-                id     = int( self.getStr( item.get('tcg_id', '-1'), '-1' ) )
+                id     = int(self.getStr(item.get('tcg_id', '-1'), '-1'))
                 if -1 == id:
-                    id = int( self.getStr( item.get('id', '-1'), '-1' ) )
+                    id = int(self.getStr(item.get('id', '-1'), '-1'))
 
                 if id != -1:
                     url = Tvn24.MAIN_URL + '/' + category + '/articles/' + Tvn24.API_KEY + '/' + str(id)
@@ -190,8 +190,8 @@ class Tvn24(CBaseHostClass):
                 pagination = True
         nextPage = None
         try:
-            sts, data = self.cm.getPage( url, {'host' : Tvn24.HOST} )
-            data = json_loads( data )
+            sts, data = self.cm.getPage(url, {'host': Tvn24.HOST})
+            data = json_loads(data)
             if pagination:
                 if int(data['pageCount']) > int(data['currentPageNumber']):
                     nextPage = str(int(page) + 1)
@@ -199,15 +199,15 @@ class Tvn24(CBaseHostClass):
                 
             for item in data:
                 url = ''
-                title  = self.getStr( item.get('title', '') )
-                plot   = self.getStr( item.get('lead', '') )
-                id     = self.getStr( item.get('id', '') )
-                tar_id = self.getStr( item.get('tar_id', '') )
+                title  = self.getStr(item.get('title', ''))
+                plot   = self.getStr(item.get('lead', ''))
+                id     = self.getStr(item.get('id', ''))
+                tar_id = self.getStr(item.get('tar_id', ''))
                 
                 # get icon
-                icon  = self.getStr( item.get('pht_main_content_url', '') )
+                icon  = self.getStr(item.get('pht_main_content_url', ''))
                 if '' == icon:
-                    icon = self.getStr( item.get('pht_url', '') )
+                    icon = self.getStr(item.get('pht_url', ''))
                 
                 # get data from related
                 item = item.get('related', None)
@@ -218,12 +218,12 @@ class Tvn24(CBaseHostClass):
                     videoItem = item.get('Video_Video', None)
                     if None != videoItem:
                         if '' == title:
-                            title = self.getStr( videoItem.get('title', '') )
+                            title = self.getStr(videoItem.get('title', ''))
                         if '' == plot:
-                            plot  = self.getStr( videoItem.get('description', '') )
+                            plot  = self.getStr(videoItem.get('description', ''))
                         if '' == icon:
-                            icon   = self.getStr( videoItem.get('still_url', '') )
-                        url                   = self.getStr( videoItem.get('url', '') )
+                            icon   = self.getStr(videoItem.get('still_url', ''))
+                        url                   = self.getStr(videoItem.get('url', ''))
                         
                 if url != '' or tar_id != '' or id != '':
                     params = {'title': title, 'url':url, 'icon':icon, 'plot':plot, 'tar_id':tar_id, 'id':id}
@@ -256,20 +256,20 @@ class Tvn24(CBaseHostClass):
         if '' != articleID:
             try:
                 url = Tvn24.MAIN_URL + '/articles/' + Tvn24.API_KEY + '/%s,0,1,10' % articleID
-                sts, data = self.cm.getPage( url, {'host' : Tvn24.HOST} )
-                data = json_loads( data )
+                sts, data = self.cm.getPage(url, {'host': Tvn24.HOST})
+                data = json_loads(data)
                 data = data['getArticleDetail']
                 item = {}
-                item['title']  = self.getStr( data.get('title',     ''), '')
-                item['text']   = self.getStr( data.get('content',   ''), '').strip()
+                item['title']  = self.getStr(data.get('title',     ''), '')
+                item['text']   = self.getStr(data.get('content',   ''), '').strip()
                 if '' == item['text']:
-                    item['text']   = self.getStr( data.get('lead',   ''), '').strip()
-                img_title    = self.getStr( data.get('pht_title', ''), '')
-                img_author   = self.getStr( data.get('pht_author', ''), '')
-                img_url      = self.getStr( data.get('pht_url',   ''), '')
+                    item['text']   = self.getStr(data.get('lead',   ''), '').strip()
+                img_title    = self.getStr(data.get('pht_title', ''), '')
+                img_author   = self.getStr(data.get('pht_author', ''), '')
+                img_url      = self.getStr(data.get('pht_url',   ''), '')
                 
-                item['images'] = [ {'title':img_title, 'author': img_author, 'url': img_url} ]
-                retList.append( item )
+                item['images'] = [{'title':img_title, 'author': img_author, 'url': img_url}]
+                retList.append(item)
             except Exception:
                 printExc()
         
@@ -287,7 +287,7 @@ class Tvn24(CBaseHostClass):
         icon     = self.currItem.get("icon", '')
         url      = self.currItem.get("url", '')
         plot     = self.currItem.get("plot", '')
-        printDBG( "handleService: |||||||||||||||||||||||||||||||||||| name[%s], category[%s] " % (name, category) )
+        printDBG("handleService: |||||||||||||||||||||||||||||||||||| name[%s], category[%s] " % (name, category))
         self.currList = []
         
     #MAIN MENU
@@ -323,11 +323,11 @@ class IPTVHost(CHostBase):
     def getLinksForVideo(self, Index=0, selItem=None):
         listLen = len(self.host.currList)
         if listLen < Index and listLen > 0:
-            printDBG( "ERROR getLinksForVideo - current list is to short len: %d, Index: %d" % (listLen, Index) )
+            printDBG("ERROR getLinksForVideo - current list is to short len: %d, Index: %d" % (listLen, Index))
             return RetHost(RetHost.ERROR, value=[])
         
         if self.host.currList[Index]["type"] != 'video':
-            printDBG( "ERROR getLinksForVideo - current item has wrong type" )
+            printDBG("ERROR getLinksForVideo - current item has wrong type")
             return RetHost(RetHost.ERROR, value=[])
 
         retlist = []
@@ -342,20 +342,20 @@ class IPTVHost(CHostBase):
     def getArticleContent(self, Index=0):
         listLen = len(self.host.currList)
         if listLen < Index and listLen > 0:
-            printDBG( "ERROR getArticleContent - current list is to short len: %d, Index: %d" % (listLen, Index) )
+            printDBG("ERROR getArticleContent - current list is to short len: %d, Index: %d" % (listLen, Index))
             return RetHost(RetHost.ERROR, value=[])
         
         if self.host.currList[Index]["type"] != 'article':
-            printDBG( "ERROR getArticleContent - current item has wrong type" )
+            printDBG("ERROR getArticleContent - current item has wrong type")
             return RetHost(RetHost.ERROR, value=[])
         
         retlist = []
         hList = self.host.getArticleContent(Index)
         for item in hList:
-            title  = clean_html( item.get('title', '') )
-            text   = clean_html( item.get('text', '') )
+            title  = clean_html(item.get('title', ''))
+            text   = clean_html(item.get('text', ''))
             images = item.get("images", [])
-            retlist.append( ArticleContent(title=title, text=text, images=images) )
+            retlist.append(ArticleContent(title=title, text=text, images=images))
         
         return RetHost(RetHost.OK, value=retlist)
 
@@ -387,8 +387,8 @@ class IPTVHost(CHostBase):
                 if '' != url:
                     hostLinks.append(CUrlItem("Link", url, 1))
                 
-            title       =  clean_html( cItem.get('title', '') )
-            description =  clean_html( cItem.get('plot', '') )
+            title       =  clean_html(cItem.get('title', ''))
+            description =  clean_html(cItem.get('plot', ''))
             icon        =  cItem.get('icon', '')
             
             hostItem = CDisplayListItem(name=title,

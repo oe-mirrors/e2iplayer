@@ -45,7 +45,7 @@ class TheWatchseriesTo(CBaseHostClass):
     
     HEADER = {'User-Agent': 'Mozilla/5.0', 'Accept': 'text/html', 'Accept-Encoding':'gzip, deflate', 'Referer':MAIN_URL}
     AJAX_HEADER = dict(HEADER)
-    AJAX_HEADER.update( {'X-Requested-With': 'XMLHttpRequest'} )
+    AJAX_HEADER.update({'X-Requested-With': 'XMLHttpRequest'})
     
     MAIN_CAT_TAB = [{'icon':DEFAULT_ICON, 'category':'list_series',     'title': _('Series list'),           'url':MAIN_URL+'series'},
                     {'icon':DEFAULT_ICON, 'category':'episodes',        'title': _('Popular Episodes'),      'url':MAIN_URL+'new'},
@@ -53,7 +53,7 @@ class TheWatchseriesTo(CBaseHostClass):
                     {'icon':DEFAULT_ICON, 'category':'categories',      'title': _('All A-Z'),               'url':MAIN_URL+'letters/A'},
                     {'icon':DEFAULT_ICON, 'category':'categories',      'title': _('Genres'),                'url':MAIN_URL+'genres/action'},
                     {'icon':DEFAULT_ICON, 'category':'search',          'title': _('Search'), 'search_item':True},
-                    {'icon':DEFAULT_ICON, 'category':'search_history',  'title': _('Search history')} ]
+                    {'icon':DEFAULT_ICON, 'category':'search_history',  'title': _('Search history')}]
  
     def __init__(self):
         CBaseHostClass.__init__(self, {'history':'TheWatchseriesTo.tv', 'cookie':'thewatchseriesto.cookie'})
@@ -104,7 +104,7 @@ class TheWatchseriesTo(CBaseHostClass):
         
     def getFullUrl(self, url):
         if self.isNeedProxy() and ('securefor.com' in url or '/browse.php' in url):
-            url2 = urllib.parse.unquote( self.cm.ph.getSearchGroups(url+'&', '''\?u=(http[^&]+?)&''')[0] ).replace('&amp;', '&')
+            url2 = urllib.parse.unquote(self.cm.ph.getSearchGroups(url+'&', '''\?u=(http[^&]+?)&''')[0]).replace('&amp;', '&')
             printDBG("[%s] --> [%s]" % (url, url2))
             url = url2
         return CBaseHostClass.getFullUrl(self, url)
@@ -141,7 +141,7 @@ class TheWatchseriesTo(CBaseHostClass):
         
         for item in data:
             url = self.cm.ph.getSearchGroups(item, '''href=['"]([^'^"]+?)['"]''', 1)[0]
-            url = self.getFullUrl( url )
+            url = self.getFullUrl(url)
             if not url.startswith('http') or 'latest' in url:
                 continue
             title = self.cleanHtmlStr(item)
@@ -199,7 +199,7 @@ class TheWatchseriesTo(CBaseHostClass):
             title = self.cm.ph.getSearchGroups(item, '''title=['"]([^'^"]+?)['"]''')[0]
             if title == '':
                 title = item.split('<span class="epnum"')[0]
-            desc = self.cleanHtmlStr( self.cm.ph.getDataBeetwenMarkers(item, '<div class="info">', '</div>', False)[1] )
+            desc = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(item, '<div class="info">', '</div>', False)[1])
             if desc == '':
                 desc = self.cleanHtmlStr(item)
             
@@ -225,7 +225,7 @@ class TheWatchseriesTo(CBaseHostClass):
         
         seasons = self.cm.ph.getAllItemsBeetwenMarkers(data, '<h2 class="lists"', '</ul>')
         for season in seasons:
-            seasonName = self.cleanHtmlStr( self.cm.ph.getDataBeetwenMarkers(season, 'itemprop="name">', '</span>', False)[1] )
+            seasonName = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(season, 'itemprop="name">', '</span>', False)[1])
             seasonNum = self.cm.ph.getSearchGroups(seasonName+'|', '''Season\s+?([0-9]+?)[^0-9]''', 1, True)[0]
             
             episodesTab = []
@@ -233,10 +233,10 @@ class TheWatchseriesTo(CBaseHostClass):
             for item in data:
                 if '(0 links)' in item:
                     continue
-                title = self.cleanHtmlStr( self.cm.ph.getDataBeetwenReMarkers(item, re.compile('itemprop="name"[^>]*?>'), re.compile('</span>'), False)[1] )
+                title = self.cleanHtmlStr(self.cm.ph.getDataBeetwenReMarkers(item, re.compile('itemprop="name"[^>]*?>'), re.compile('</span>'), False)[1])
                 url = self.cm.ph.getSearchGroups(item, '''href=['"]([^'^"]+?)['"]''')[0]
                 episodeNum = self.cm.ph.getSearchGroups(title + '|', '''Episode\s+?([0-9]+?)[^0-9]''', 1, True)[0]
-                printDBG(">> e[%s] s[%s]" % (episodeNum, seasonNum) )
+                printDBG(">> e[%s] s[%s]" % (episodeNum, seasonNum))
                 if '' != episodeNum and '' != seasonNum:
                     title = 's%se%s'% (seasonNum.zfill(2), episodeNum.zfill(2)) + ' - ' + title.replace('Episode %s' % episodeNum, '')
                 params = dict(cItem)
@@ -328,7 +328,7 @@ class TheWatchseriesTo(CBaseHostClass):
         category = self.currItem.get("category", '')
         mode     = self.currItem.get("mode", '')
         
-        printDBG( "handleService: || name[%s], category[%s] " % (name, category) )
+        printDBG("handleService: || name[%s], category[%s] " % (name, category))
         self.currList = []
         
     #MAIN MENU

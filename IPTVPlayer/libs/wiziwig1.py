@@ -59,7 +59,7 @@ class Wiziwig1Api(CBaseHostClass):
                     if a.startswith("http"):
                         n_link = n_link + 1
                         name = "Link %s " % n_link
-                        urls.append({"name" : name, "url" : a})
+                        urls.append({"name": name, "url": a})
 
             if urls: 
                 title = re.findall("<h4>(.*?)</h4>", item)
@@ -116,6 +116,6 @@ class Wiziwig1Api(CBaseHostClass):
                         
                     urlsTab.extend(urlsTab2)
                 else:
-                    urlsTab.append({"name": name + " (not in urlparser)", "url" : url})
+                    urlsTab.append({"name": name + " (not in urlparser)", "url": url})
         return urlsTab
     

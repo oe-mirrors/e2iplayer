@@ -29,7 +29,7 @@ class AndrijaIAndjelka(CBaseHostClass):
         self.USER_AGENT = 'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:56.0) Gecko/20100101 Firefox/56.0'
         self.HEADER = {'User-Agent': self.USER_AGENT, 'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8', 'Accept-Language':'pl,en-US;q=0.7,en;q=0.3', 'Accept-Encoding':'gzip, deflate', 'Upgrade-Insecure-Requests':'1', 'Connection':'keep-alive'}
         self.AJAX_HEADER = dict(self.HEADER)
-        self.AJAX_HEADER.update( {'X-Requested-With':'XMLHttpRequest', 'Content-Type':'application/x-www-form-urlencoded; charset=UTF-8'} )
+        self.AJAX_HEADER.update({'X-Requested-With':'XMLHttpRequest', 'Content-Type':'application/x-www-form-urlencoded; charset=UTF-8'})
         
         self.MAIN_URL = 'https://andrija-i-andjelka.com/'
         #https://previews.123rf.com/images/yusufsangdes89/yusufsangdes891507/yusufsangdes89150700042/42557652-cinema-camera-icon-movie-lover-series-icon.jpg
@@ -68,7 +68,7 @@ class AndrijaIAndjelka(CBaseHostClass):
         tmp = self.cm.ph.getDataBeetwenNodes(data, ('<li', '>', 'has-children'), ('</ul', '>'))[1]
         tmp = self.cm.ph.getAllItemsBeetwenMarkers(tmp, '<a', '</a>')
         for item in tmp:
-            url = self.getFullUrl( self.cm.ph.getSearchGroups(item, '''href=['"]([^"^']+?)['"]''')[0] )
+            url = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''href=['"]([^"^']+?)['"]''')[0])
             title = self.cleanHtmlStr(item)
             params = dict(cItem)
             params.update({'name':'category', 'category':'list_items', 'title':title, 'url':url})
@@ -81,10 +81,10 @@ class AndrijaIAndjelka(CBaseHostClass):
             params.update({'category':'sub_items',  'title':title, 'sub_items':categories})
             self.addDir(params)
 
-        MAIN_CAT_TAB = [{'category':'list_items',      'title':'NAJNOVIJE', 'url':self.getMainUrl()          },
-                        {'category':'list_series',     'title':'SERIJE',    'url':self.getFullUrl('serije/') },
+        MAIN_CAT_TAB = [{'category':'list_items',      'title':'NAJNOVIJE', 'url':self.getMainUrl()},
+                        {'category':'list_series',     'title':'SERIJE',    'url':self.getFullUrl('serije/')},
                         {'category':'search',          'title': _('Search'), 'search_item':True},
-                        {'category':'search_history',  'title': _('Search history')} ]
+                        {'category':'search_history',  'title': _('Search history')}]
         self.listsTab(MAIN_CAT_TAB, cItem)
         
     def listItems(self, cItem):
@@ -101,9 +101,9 @@ class AndrijaIAndjelka(CBaseHostClass):
 
         data = self.cm.ph.getAllItemsBeetwenNodes(data, ('<article', '>', 'post-'), ('</article', '>'), False)
         for item in data:
-            icon  = self.getFullIconUrl( self.cm.ph.getSearchGroups(item, '''<img[^>]+?src=['"]([^"^']+?\.jpe?g(?:\?[^'^"]*?)?)['"]''')[0] )
-            url   = self.getFullUrl( self.cm.ph.getSearchGroups(item, '''href=['"]([^"^']+?)['"]''')[0] )
-            title = self.cleanHtmlStr( self.cm.ph.getDataBeetwenNodes(item, ('<h', '>', 'title'), ('</h', '>'), False)[1] )
+            icon  = self.getFullIconUrl(self.cm.ph.getSearchGroups(item, '''<img[^>]+?src=['"]([^"^']+?\.jpe?g(?:\?[^'^"]*?)?)['"]''')[0])
+            url   = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''href=['"]([^"^']+?)['"]''')[0])
+            title = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(item, ('<h', '>', 'title'), ('</h', '>'), False)[1])
 
             params = dict(cItem)
             params.update({'good_for_fav': True, 'title':title, 'url':url, 'icon':icon})
@@ -125,9 +125,9 @@ class AndrijaIAndjelka(CBaseHostClass):
         data = self.cm.ph.getDataBeetwenNodes(data, ('<article', '>', 'post-'), ('</article', '>'), False)[1]
         data = self.cm.ph.getAllItemsBeetwenMarkers(data, '<td', '</td>')
         for item in data:
-            icon  = self.getFullIconUrl( self.cm.ph.getSearchGroups(item, '''<img[^>]+?src=['"]([^"^']+?\.jpe?g(?:\?[^'^"]*?)?)['"]''')[0] )
-            url   = self.getFullUrl( self.cm.ph.getSearchGroups(item, '''href=['"]([^"^']+?)['"]''')[0] )
-            title = self.cleanHtmlStr( item )
+            icon  = self.getFullIconUrl(self.cm.ph.getSearchGroups(item, '''<img[^>]+?src=['"]([^"^']+?\.jpe?g(?:\?[^'^"]*?)?)['"]''')[0])
+            url   = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''href=['"]([^"^']+?)['"]''')[0])
+            title = self.cleanHtmlStr(item)
 
             params = dict(cItem)
             params.update({'good_for_fav': True, 'category':nextCategory, 'title':title, 'url':url, 'icon':icon})
@@ -171,7 +171,7 @@ class AndrijaIAndjelka(CBaseHostClass):
         category = self.currItem.get("category", '')
         mode     = self.currItem.get("mode", '')
         
-        printDBG( "handleService: || name[%s], category[%s] " % (name, category) )
+        printDBG("handleService: || name[%s], category[%s] " % (name, category))
         self.currList = []
         self.currItem = dict(self.currItem)
         self.currItem.pop('good_for_fav', None)

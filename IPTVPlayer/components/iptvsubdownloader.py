@@ -67,7 +67,7 @@ class IPTVSubDownloaderWidget(Screen):
                             <widget name="spinner_3" zPosition="1" position="540,240" size="16,16" transparent="1" alphatest="blend" />
                             <widget name="spinner_4" zPosition="1" position="556,240" size="16,16" transparent="1" alphatest="blend" />
                     </screen>
-                """ %( IPTV_VERSION, GetIconDir('red.png'), GetIconDir('line.png'))
+                """ %(IPTV_VERSION, GetIconDir('red.png'), GetIconDir('line.png'))
     else:
         skin =  """
                     <screen name="IPTVSubDownloaderWidget" position="center,center" size="1090,525" title="E2iPlayer v%s">
@@ -84,11 +84,11 @@ class IPTVSubDownloaderWidget(Screen):
                             <widget name="spinner_3" zPosition="1" position="540,240" size="16,16" transparent="1" alphatest="blend" />
                             <widget name="spinner_4" zPosition="1" position="556,240" size="16,16" transparent="1" alphatest="blend" />
                     </screen>
-                """ %( IPTV_VERSION, GetIconDir('red.png'), GetIconDir('line.png'))
+                """ %(IPTV_VERSION, GetIconDir('red.png'), GetIconDir('line.png'))
         
     def __init__(self, session, params={}):
         # params: vk_title, movie_title
-        printDBG("IPTVSubDownloaderWidget.__init__ desktop IPTV_VERSION[%s]\n" % (IPTVSubDownloaderWidget.IPTV_VERSION) )
+        printDBG("IPTVSubDownloaderWidget.__init__ desktop IPTV_VERSION[%s]\n" % (IPTVSubDownloaderWidget.IPTV_VERSION))
         self.session = session
         path = GetSkinsDir(config.plugins.iptvplayer.skin.value) + "/subplaylist.xml" 
         if os_path.exists(path):
@@ -256,7 +256,7 @@ class IPTVSubDownloaderWidget(Screen):
             if len(self.prevSelList) > 0:
                 self.nextSelIndex = self.prevSelList.pop()
                 self.categoryList.pop()
-                printDBG("back_pressed prev sel index %s" % self.nextSelIndex )
+                printDBG("back_pressed prev sel index %s" % self.nextSelIndex)
                 if len(self.prevSelList) > 0:
                     self.requestListFromHost('Previous')
                 else:
@@ -277,15 +277,15 @@ class IPTVSubDownloaderWidget(Screen):
                 self.getRefreshedCurrList()
                 return
             if sel is None:
-                printDBG( "ok_pressed sel is None" )
+                printDBG("ok_pressed sel is None")
                 return
             
             elif len(self.currList) <= 0:
-                printDBG( "ok_pressed list is empty" )
+                printDBG("ok_pressed list is empty")
                 self.getRefreshedCurrList()
                 return
             else:
-                printDBG( "ok_pressed selected item: %s" % (sel.name) )
+                printDBG("ok_pressed selected item: %s" % (sel.name))
                 
                 item = self.getSelItem()  
                 self.currItem = item
@@ -302,11 +302,11 @@ class IPTVSubDownloaderWidget(Screen):
                 elif item.type in [CDisplayListItem.TYPE_SUBTITLE]:
                     self.requestListFromHost('ForDownloadSubFile', currSelIndex, '')
                 elif item.type == CDisplayListItem.TYPE_CATEGORY:
-                    printDBG( "ok_pressed selected TYPE_CATEGORY" )
+                    printDBG("ok_pressed selected TYPE_CATEGORY")
                     self.currSelIndex = currSelIndex
                     self.requestListFromHost('ForItem', currSelIndex, '')
                 elif item.type == CDisplayListItem.TYPE_MORE:
-                    printDBG( "ok_pressed selected TYPE_MORE" )
+                    printDBG("ok_pressed selected TYPE_MORE")
                     self.currSelIndex = currSelIndex
                     self.requestListFromHost('ForMore', currSelIndex, '')
         else:
@@ -324,7 +324,7 @@ class IPTVSubDownloaderWidget(Screen):
                 self.close()
                 return
         except Exception:
-            printExc( 'Cannot import class IPTVSubProvider for host [%r]' %  self.hostName)
+            printExc('Cannot import class IPTVSubProvider for host [%r]' %  self.hostName)
             self.close()
             return
         # request initial list from host        
@@ -501,7 +501,7 @@ class IPTVSubDownloaderWidget(Screen):
                     self["statustext"].setText(IDS_DOWNLOADING)
                     self.workThread = asynccall.AsyncMethod(self.host.downloadSubtitleFile, boundFunction(self.downloadSubtitleFileCallback, {}), True)(currSelIndex)
                 else:
-                    printDBG( 'requestListFromHost unknown list type: ' + type )
+                    printDBG('requestListFromHost unknown list type: ' + type)
                 self["headertext"].setText(self.getCategoryPath())
                 self.showSpinner()
             except Exception:
@@ -555,10 +555,10 @@ class IPTVSubDownloaderWidget(Screen):
             self.nextSelIndex = selIndex
         
         if ret.status != RetHost.OK:
-            printDBG( "++++++++++++++++++++++ reloadList ret.status = %s" % ret.status )
+            printDBG("++++++++++++++++++++++ reloadList ret.status = %s" % ret.status)
 
         self.currList = ret.value
-        self["list"].setList([ (x,) for x in self.currList])
+        self["list"].setList([(x,) for x in self.currList])
         
         self["headertext"].setText(self.getCategoryPath())
         if len(self.currList) <= 0:
@@ -587,19 +587,19 @@ class IPTVSubDownloaderWidget(Screen):
     def listSubtitlesProviders(self):
         printDBG("IPTVSubDownloaderWidget.listSubtitlesProviders")
         subProvidersList = []
-        napisy24pl       = {'title':"Napisy24.pl",                'sub_provider':'napisy24pl'        }
-        openSubtitles    = {'title':"OpenSubtitles.org API",      'sub_provider':'opensubtitlesorg'  }
-        openSubtitles2   = {'title':"OpenSubtitles.org WWW",      'sub_provider':'opensubtitlesorg2' }
-        openSubtitles3   = {'title':"OpenSubtitles.org REST",     'sub_provider':'opensubtitlesorg3' }
-        napiprojektpl    = {'title':"Napiprojekt.pl",             'sub_provider':'napiprojektpl'     }
-        podnapisinet     = {'title':"Podnapisi.net",              'sub_provider':'podnapisinet'      }
-        titlovi          = {'title':"Titlovi.com",                'sub_provider':'titlovicom'        }
-        subscene         = {'title':"Subscene.com",               'sub_provider':'subscenecom'       }
-        youtube          = {'title':"Youtube.com",                'sub_provider':'youtubecom'        }
-        popcornsubtitles = {'title':"PopcornSubtitles.com",       'sub_provider':'popcornsubtitles'  }
-        subtitlesgr      = {'title':"Subtitles.gr",               'sub_provider':'subtitlesgr'       }
-        prijevodi        = {'title':"Prijevodi-Online.org",       'sub_provider':'prijevodi'         }
-        subsro           = {'title':"Subs.ro",                    'sub_provider':'subsro'            }
+        napisy24pl       = {'title':"Napisy24.pl",                'sub_provider':'napisy24pl'}
+        openSubtitles    = {'title':"OpenSubtitles.org API",      'sub_provider':'opensubtitlesorg'}
+        openSubtitles2   = {'title':"OpenSubtitles.org WWW",      'sub_provider':'opensubtitlesorg2'}
+        openSubtitles3   = {'title':"OpenSubtitles.org REST",     'sub_provider':'opensubtitlesorg3'}
+        napiprojektpl    = {'title':"Napiprojekt.pl",             'sub_provider':'napiprojektpl'}
+        podnapisinet     = {'title':"Podnapisi.net",              'sub_provider':'podnapisinet'}
+        titlovi          = {'title':"Titlovi.com",                'sub_provider':'titlovicom'}
+        subscene         = {'title':"Subscene.com",               'sub_provider':'subscenecom'}
+        youtube          = {'title':"Youtube.com",                'sub_provider':'youtubecom'}
+        popcornsubtitles = {'title':"PopcornSubtitles.com",       'sub_provider':'popcornsubtitles'}
+        subtitlesgr      = {'title':"Subtitles.gr",               'sub_provider':'subtitlesgr'}
+        prijevodi        = {'title':"Prijevodi-Online.org",       'sub_provider':'prijevodi'}
+        subsro           = {'title':"Subs.ro",                    'sub_provider':'subsro'}
         
         defaultLang = GetDefaultLang()
         
@@ -657,7 +657,7 @@ class IPTVSubDownloaderWidget(Screen):
                 selIndex = idx
                 break
         
-        self["list"].setList([ (x,) for x in self.currList])
+        self["list"].setList([(x,) for x in self.currList])
         #restor previus selection
         if len(self.currList) > selIndex:
             self["list"].moveToIndex(selIndex)
@@ -685,7 +685,7 @@ class IPTVSubDownloaderWidget(Screen):
     def getSelItem(self):
         currSelIndex = self["list"].getCurrentIndex()
         if len(self.currList) <= currSelIndex:
-            printDBG( "ERROR: getSelItem there is no item with index: %d, listOfItems.len: %d" % (currSelIndex, len(self.currList)) )
+            printDBG("ERROR: getSelItem there is no item with index: %d, listOfItems.len: %d" % (currSelIndex, len(self.currList)))
             return None
         return self.currList[currSelIndex]
     
@@ -704,15 +704,15 @@ class IPTVSubDownloaderWidget(Screen):
         
         # discovered information
         dInfo = {'movie_title':None, 'season':None, 'episode':None}
-        dInfo['movie_title'] = CParsingHelper.getNormalizeStr( movieTitle )
+        dInfo['movie_title'] = CParsingHelper.getNormalizeStr(movieTitle)
         # try to guess season and episode number
         try:
             tmp = CParsingHelper.getSearchGroups(' ' + dInfo['movie_title'] + ' ', 's([0-9]+?)e([0-9]+?)[^0-9]', 2)
-            dInfo.update( {'season': int(tmp[0]), 'episode':int(tmp[1])} )
+            dInfo.update({'season': int(tmp[0]), 'episode':int(tmp[1])})
         except Exception:
             try:
                 tmp = CParsingHelper.getSearchGroups(' ' + dInfo['movie_title'] + ' ', '[^0-9]([0-9]+?)x([0-9]+?)[^0-9]', 2)
-                dInfo.update( {'season': int(tmp[0]), 'episode':int(tmp[1])} )
+                dInfo.update({'season': int(tmp[0]), 'episode':int(tmp[1])})
             except Exception:
                 pass
         return dInfo

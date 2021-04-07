@@ -56,7 +56,7 @@ class FilmezzEU(CBaseHostClass):
         self.USER_AGENT = 'User-Agent=Mozilla/5.0 (Windows NT 6.1; WOW64; rv:40.0) Gecko/20100101 Firefox/40.0'
         self.HEADER = {'User-Agent': self.USER_AGENT, 'DNT':'1', 'Accept': 'text/html'}
         self.AJAX_HEADER = dict(self.HEADER)
-        self.AJAX_HEADER.update( {'X-Requested-With': 'XMLHttpRequest'} )
+        self.AJAX_HEADER.update({'X-Requested-With': 'XMLHttpRequest'})
         self.MAIN_URL = 'http://filmezz.eu/'
         self.cacheLinks    = {}
         self.cacheFilters  = {}
@@ -66,15 +66,15 @@ class FilmezzEU(CBaseHostClass):
         self.password = ''
         self.defaultParams = {'header':self.HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
     
-        self.MAIN_CAT_TAB = [{'category':'list_filters',    'title': _('Home'),               'url':self.getFullUrl('kereses.php')   },
-                             {'category':'list_items',      'title': _('Movies'),             'url':self.getFullUrl('kereses.php?q=0&l=0&e=0&c=0&t=1&h=0&o=feltoltve')  },
-                             {'category':'list_items',      'title': _('Series'),             'url':self.getFullUrl('kereses.php?q=0&l=0&e=0&c=0&t=2&h=0&o=feltoltve')  },
-                             {'category':'list_items',      'title': _('Top movies'),         'url':self.getFullUrl('kereses.php?q=0&l=0&e=0&c=0&t=1&h=0&o=nezettseg')  },
-                             {'category':'list_items',      'title': _('Top series'),         'url':self.getFullUrl('kereses.php?q=0&l=0&e=0&c=0&t=2&h=0&o=nezettseg')  },
-                             {'category':'list_items',      'title': _('Latest added'),       'url':self.getFullUrl('kereses.php?q=0&l=0&e=0&c=0&t=0&h=0&o=feltoltve')  },
+        self.MAIN_CAT_TAB = [{'category':'list_filters',    'title': _('Home'),               'url':self.getFullUrl('kereses.php')},
+                             {'category':'list_items',      'title': _('Movies'),             'url':self.getFullUrl('kereses.php?q=0&l=0&e=0&c=0&t=1&h=0&o=feltoltve')},
+                             {'category':'list_items',      'title': _('Series'),             'url':self.getFullUrl('kereses.php?q=0&l=0&e=0&c=0&t=2&h=0&o=feltoltve')},
+                             {'category':'list_items',      'title': _('Top movies'),         'url':self.getFullUrl('kereses.php?q=0&l=0&e=0&c=0&t=1&h=0&o=nezettseg')},
+                             {'category':'list_items',      'title': _('Top series'),         'url':self.getFullUrl('kereses.php?q=0&l=0&e=0&c=0&t=2&h=0&o=nezettseg')},
+                             {'category':'list_items',      'title': _('Latest added'),       'url':self.getFullUrl('kereses.php?q=0&l=0&e=0&c=0&t=0&h=0&o=feltoltve')},
                              
                              {'category': 'search',            'title': _('Search'), 'search_item': True,},
-                             {'category': 'search_history',    'title': _('Search history'),            } 
+                             {'category': 'search_history',    'title': _('Search history'),} 
                             ]
                             
     def getFullIconUrl(self, url):
@@ -181,14 +181,14 @@ class FilmezzEU(CBaseHostClass):
         data = self.cm.ph.getAllItemsBeetwenMarkers(data, '<li', '</a>')
         reDescObj = re.compile('title="([^"]+?)"')
         for item in data:
-            url = self.getFullUrl( self.cm.ph.getSearchGroups(item, 'href="([^"]+?)"')[0] )
+            url = self.getFullUrl(self.cm.ph.getSearchGroups(item, 'href="([^"]+?)"')[0])
             if not self.cm.isValidUrl(url):
                 continue
             if 'kereses.php' in url:
                 continue
             
-            icon = self.getFullIconUrl( self.cm.ph.getSearchGroups(item, 'src="([^"]+?)"')[0] )
-            title = self.cleanHtmlStr( self.cm.ph.getDataBeetwenMarkers(item, '<span class="title">', '</span>')[1] )
+            icon = self.getFullIconUrl(self.cm.ph.getSearchGroups(item, 'src="([^"]+?)"')[0])
+            title = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(item, '<span class="title">', '</span>')[1])
             if title == '':
                 title = self.cleanHtmlStr(self.cm.ph.getSearchGroups(item, '''alt=['"]([^'^"]+?)['"]''')[0])
             if title == '':
@@ -364,10 +364,10 @@ class FilmezzEU(CBaseHostClass):
                     
                     if self.cm.isValidUrl(imgUrl):
                         params = dict(self.defaultParams)
-                        params['header'] = dict(params['header'] )
+                        params['header'] = dict(params['header'])
                         params['header']['Accept'] = 'image/png,image/*;q=0.8,*/*;q=0.5'
                         params = dict(self.defaultParams)
-                        params.update( {'maintype': 'image', 'subtypes':['jpeg', 'png'], 'check_first_bytes':['\xFF\xD8', '\xFF\xD9', '\x89\x50\x4E\x47'], 'header':params['header']} )
+                        params.update({'maintype': 'image', 'subtypes':['jpeg', 'png'], 'check_first_bytes':['\xFF\xD8', '\xFF\xD9', '\x89\x50\x4E\x47'], 'header':params['header']})
                         filePath = GetTmpDir('.iptvplayer_captcha.jpg')
                         ret = self.cm.saveWebFile(filePath, imgUrl.replace('&amp;', '&'), params)
                         if not ret.get('sts'):
@@ -457,14 +457,14 @@ class FilmezzEU(CBaseHostClass):
         
         desc = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(data, '<div class="text"', '</div>')[1])
         if desc == '':
-            desc = self.cleanHtmlStr( self.cm.ph.getSearchGroups(data, '<meta[^>]+?name="description"[^>]+?content="([^"]+?)"')[0] )
+            desc = self.cleanHtmlStr(self.cm.ph.getSearchGroups(data, '<meta[^>]+?name="description"[^>]+?content="([^"]+?)"')[0])
         titleData = self.cm.ph.getDataBeetwenMarkers(data, '<div class="title"', '</div>')[1]
         
-        title = self.cleanHtmlStr( self.cm.ph.getDataBeetwenMarkers(titleData, '<h1', '</h1>')[1] )
-        altTitle = self.cleanHtmlStr( self.cm.ph.getDataBeetwenMarkers(titleData, '<h2', '</h2>')[1] )
+        title = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(titleData, '<h1', '</h1>')[1])
+        altTitle = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(titleData, '<h2', '</h2>')[1])
         if title != '':
-            title = self.cleanHtmlStr( self.cm.ph.getSearchGroups(data, '<meta[^>]+?name="title"[^>]+?content="([^"]+?)"')[0] )
-        icon  = self.getFullUrl( self.cm.ph.getSearchGroups(data, '<link[^>]+?rel="image_src"[^>]+?href="([^"]+?)"')[0] )
+            title = self.cleanHtmlStr(self.cm.ph.getSearchGroups(data, '<meta[^>]+?name="title"[^>]+?content="([^"]+?)"')[0])
+        icon  = self.getFullUrl(self.cm.ph.getSearchGroups(data, '<link[^>]+?rel="image_src"[^>]+?href="([^"]+?)"')[0])
         
         if title == '':
             title = cItem['title']
@@ -503,7 +503,7 @@ class FilmezzEU(CBaseHostClass):
         if year != '':
             otherInfo['year'] = year
         
-        return [{'title':self.cleanHtmlStr( title ), 'text': self.cleanHtmlStr( desc ), 'images':[{'title':'', 'url':self.getFullUrl(icon)}], 'other_info':otherInfo}]
+        return [{'title':self.cleanHtmlStr(title), 'text': self.cleanHtmlStr(desc), 'images':[{'title':'', 'url':self.getFullUrl(icon)}], 'other_info':otherInfo}]
         
     def tryTologin(self):
         printDBG('tryTologin start')
@@ -546,7 +546,7 @@ class FilmezzEU(CBaseHostClass):
         category = self.currItem.get("category", '')
         mode     = self.currItem.get("mode", '')
         
-        printDBG( "handleService: |||||||||||||||||||||||||||||||||||| name[%s], category[%s] " % (name, category) )
+        printDBG("handleService: |||||||||||||||||||||||||||||||||||| name[%s], category[%s] " % (name, category))
         self.currList = []
         
     #MAIN MENU

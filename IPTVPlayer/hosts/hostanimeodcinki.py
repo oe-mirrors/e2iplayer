@@ -35,22 +35,22 @@ class AnimeOdcinkiPL(CBaseHostClass):
         
         self.HEADER = {'User-Agent': 'Mozilla/5.0', 'Accept': 'text/html'}
         self.AJAX_HEADER = dict(self.HEADER)
-        self.AJAX_HEADER.update( {'X-Requested-With': 'XMLHttpRequest'} )
+        self.AJAX_HEADER.update({'X-Requested-With': 'XMLHttpRequest'})
         self.defaultParams = {'header':self.HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
         
         self.MAIN_URL = 'https://anime-odcinki.pl/'
         self.DEFAULT_ICON_URL = 'https://anime-odcinki.pl/wp-content/uploads/2017/07/A-O_logo.png'
         
-        self.MAIN_CAT_TAB = [{'category':'new',               'title': _('New'),                          'url':self.MAIN_URL                    },
-                             {'category':'list_emitowane',    'title': 'Emitowane',                       'url':self.MAIN_URL                    },
-                             {'category':'list_abc',          'title': _('Anime list'),                   'url':self.getFullUrl('anime')         },
-                             {'category':'list_abc',          'title': _('Movies list'),                  'url':self.getFullUrl('filmy')         },
-                             {'category':'list_filters',      'title': _('Genres'),                       'url':self.getFullUrl('gatunki')       },
-                             {'category': 'search',            'title': _('Search'), 'search_item': True,                                          },
-                             {'category': 'search_history',    'title': _('Search history'),                                                      } 
+        self.MAIN_CAT_TAB = [{'category':'new',               'title': _('New'),                          'url':self.MAIN_URL},
+                             {'category':'list_emitowane',    'title': 'Emitowane',                       'url':self.MAIN_URL},
+                             {'category':'list_abc',          'title': _('Anime list'),                   'url':self.getFullUrl('anime')},
+                             {'category':'list_abc',          'title': _('Movies list'),                  'url':self.getFullUrl('filmy')},
+                             {'category':'list_filters',      'title': _('Genres'),                       'url':self.getFullUrl('gatunki')},
+                             {'category': 'search',            'title': _('Search'), 'search_item': True,},
+                             {'category': 'search_history',    'title': _('Search history'),} 
                             ]
         
-        self.NEW_CAT_TAB = [{'category':'list_new', 'title': 'Nowe odcinki emitowane',                        'm1':'>Nowe'    },
+        self.NEW_CAT_TAB = [{'category':'list_new', 'title': 'Nowe odcinki emitowane',                        'm1':'>Nowe'},
                             {'category':'list_new', 'title': 'Ostatnio dodane odcinki z poprzednich sezonów', 'm1':'>Ostatnio'}]
                             
         self.filtersTab = []
@@ -278,7 +278,7 @@ class AnimeOdcinkiPL(CBaseHostClass):
                 alg = AES_CBC(key, keySize=kSize)
                 decrypted = alg.decrypt(a2b_base64(data["a"]), iv=iv)
                 decrypted = decrypted.split('\x00')[0]
-            decrypted = "%s" % json.loads( decrypted ).encode('utf-8')
+            decrypted = "%s" % json.loads(decrypted).encode('utf-8')
         except Exception:
             printExc()
             decrypted = ''
@@ -362,7 +362,7 @@ class AnimeOdcinkiPL(CBaseHostClass):
         category = self.currItem.get("category", '')
         mode     = self.currItem.get("mode", '')
         
-        printDBG( "handleService: |||||||||||||||||||||||||||||||||||| name[%s], category[%s] " % (name, category) )
+        printDBG("handleService: |||||||||||||||||||||||||||||||||||| name[%s], category[%s] " % (name, category))
         self.currList = []
         
     #MAIN MENU

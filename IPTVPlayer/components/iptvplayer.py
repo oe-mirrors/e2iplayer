@@ -95,9 +95,9 @@ class customMoviePlayer(InfoBarShowHide, InfoBarSeek, InfoBarAudioSelection, Inf
             if -1 == self.waitForSeekToLastPosition:
                 if position > 0:
                     self.waitForSeekToLastPosition = position
-                printDBG('________waitForSeekToLastPosition position[%r]' % (position) )
+                printDBG('________waitForSeekToLastPosition position[%r]' % (position))
                 return
-            printDBG('________timerCallBack position [%r], length[%r], seekstate[%r]' % (position, length, self.seekstate) )
+            printDBG('________timerCallBack position [%r], length[%r], seekstate[%r]' % (position, length, self.seekstate))
             if self.waitForSeekToLastPosition > 0 and self.waitForSeekToLastPosition >= position:
                 return
             self.waitForSeekToLastPosition = 0
@@ -156,11 +156,11 @@ class customMoviePlayer(InfoBarShowHide, InfoBarSeek, InfoBarAudioSelection, Inf
                 self._doClose('key_stop')
 
     def doEofInternal(self, playing):
-        printDBG( "--- eofint movieplayer ---" )
+        printDBG("--- eofint movieplayer ---")
         self.leavePlayer(True)
         
     def _doClose(self, sts):
-        printDBG("_doClose sts[%r], lastPosition[%r]" % (sts, self.lastPosition) )
+        printDBG("_doClose sts[%r], lastPosition[%r]" % (sts, self.lastPosition))
         try:
             self.hide()
             self.isClosing = True
@@ -172,7 +172,7 @@ class customMoviePlayer(InfoBarShowHide, InfoBarSeek, InfoBarAudioSelection, Inf
         self.close(sts, self.lastPosition)
         
     def __evEOF(self):
-        printDBG( "evEOF=%d" % iPlayableService.evEOF)
+        printDBG("evEOF=%d" % iPlayableService.evEOF)
         self.leavePlayer(True)
         
     def __onClose(self):
@@ -208,7 +208,7 @@ class IPTVStandardMoviePlayer(standardMoviePlayer):
         self.WithoutStopClose = True
         #if '://' not in uri: uri = 'file://' + uri
         fileRef = eServiceReference(4097, 0, uri)
-        fileRef.setName (title)
+        fileRef.setName(title)
 
         standardMoviePlayer.__init__(self, self.session, fileRef)
         self.skinName = "MoviePlayer"
@@ -232,6 +232,6 @@ class IPTVMiniMoviePlayer(customMoviePlayer):
         self.WithoutStopClose = True
         #if '://' not in uri: uri = 'file://' + uri
         fileRef = eServiceReference(4097, 0, uri)
-        fileRef.setName (title)
+        fileRef.setName(title)
         customMoviePlayer.__init__(self, self.session, fileRef, lastPosition, bugEOFworkaround)
 #####################################################

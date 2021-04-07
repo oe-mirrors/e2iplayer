@@ -33,7 +33,7 @@ class TED(CBaseHostClass):
         self.USER_AGENT = 'User-Agent=Mozilla/5.0 (Windows NT 6.1; WOW64; rv:40.0) Gecko/20100101 Firefox/40.0'
         self.HEADER = {'User-Agent': self.USER_AGENT, 'DNT':'1', 'Accept': 'text/html'}
         self.AJAX_HEADER = dict(self.HEADER)
-        self.AJAX_HEADER.update( {'X-Requested-With': 'XMLHttpRequest'} )
+        self.AJAX_HEADER.update({'X-Requested-With': 'XMLHttpRequest'})
         
         self.DEFAULT_ICON_URL = 'https://tedconfblog.files.wordpress.com/2015/03/jr-and-ted-logo.jpg?w=400'
         self.MAIN_URL = None
@@ -55,7 +55,7 @@ class TED(CBaseHostClass):
             addParams = dict(self.defaultParams)
         
         
-        addParams['cloudflare_params'] = { 'cookie_file':self.COOKIE_FILE, 'User-Agent':self.USER_AGENT}
+        addParams['cloudflare_params'] = {'cookie_file':self.COOKIE_FILE, 'User-Agent':self.USER_AGENT}
         return self.cm.getPageCFProtection(baseUrl, addParams, post_data)
         
     def getFullUrl(self, url):
@@ -79,7 +79,7 @@ class TED(CBaseHostClass):
                              {'category':'list_playlists_filters',  'title': _('Playlists'),                'url':self.getFullUrl('/playlists')},
                              
                              {'category': 'search',          'title': _('Search'), 'search_item': True, },
-                             {'category': 'search_history',  'title': _('Search history'),             } 
+                             {'category': 'search_history',  'title': _('Search history'),} 
                             ]
     
     def _addFilter(self, data, cacheTab, key, anyTitle='', titleBase=''):
@@ -378,7 +378,7 @@ class TED(CBaseHostClass):
                 title = self.cleanHtmlStr(item['title'])
                 
                 descTab = ['%s: %s' %(_('Talks'), item['talks'])]
-                duration = str( timedelta( seconds=int(item['duration']) ) )
+                duration = str(timedelta(seconds=int(item['duration'])))
                 if duration.startswith("0:"):
                     duration = duration[2:]
                 descTab.append('%s: %s' % (_('Duration'), duration))
@@ -540,7 +540,7 @@ class TED(CBaseHostClass):
                 #for item in tmp:
                 #    _addLinkItem(urlTab, item, item['url'], '[HLS] ')
 
-            def __getLinkQuality( itemLink ):
+            def __getLinkQuality(itemLink):
                 try:
                     return int(itemLink['bitrate'])
                 except Exception:
@@ -591,7 +591,7 @@ class TED(CBaseHostClass):
         category = self.currItem.get("category", '')
         mode     = self.currItem.get("mode", '')
         
-        printDBG( "handleService: |||||||||||||||||||||||||||||||||||| name[%s], category[%s] " % (name, category) )
+        printDBG("handleService: |||||||||||||||||||||||||||||||||||| name[%s], category[%s] " % (name, category))
         self.currList = []
         
     #MAIN MENU

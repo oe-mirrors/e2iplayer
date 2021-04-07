@@ -30,7 +30,7 @@ class OipeiratesOnline(CBaseHostClass):
         self.USER_AGENT = 'Mozilla/5.0'
         self.HEADER = {'User-Agent': self.USER_AGENT, 'Accept': 'text/html'}
         self.AJAX_HEADER = dict(self.HEADER)
-        self.AJAX_HEADER.update( {'X-Requested-With': 'XMLHttpRequest'} )
+        self.AJAX_HEADER.update({'X-Requested-With': 'XMLHttpRequest'})
         
         self.MAIN_URL = 'https://oipeirates.tv/'
         self.DEFAULT_ICON_URL = 'http://1.bp.blogspot.com/-EWw9aeMT-bo/U1_TUm3oM-I/AAAAAAAABiE/n07eIp9i6CI/s1600/oipeirates.jpg'
@@ -65,21 +65,21 @@ class OipeiratesOnline(CBaseHostClass):
                 try:
                     cTree = self.listToDir(data[1:-1], 0)[0]
 
-                    title = self.cleanHtmlStr(cTree['list'][0] ['list'][0]['dat'])
-                    url = self.getFullUrl(self.cm.ph.getSearchGroups(cTree['list'][0] ['list'][0]['dat'], '''href=['"]([^'^"]+?)['"]''')[0])
+                    title = self.cleanHtmlStr(cTree['list'][0]['list'][0]['dat'])
+                    url = self.getFullUrl(self.cm.ph.getSearchGroups(cTree['list'][0]['list'][0]['dat'], '''href=['"]([^'^"]+?)['"]''')[0])
                     params = dict(cItem)
                     params.update({'good_for_fav':False, 'type':'category', 'category':'list_sort', 'title':title, 'url':url})
                     self.addDir(params)
 
                     params = dict(cItem)
-                    params['c_tree'] = cTree['list'][0] ['list'][1]
+                    params['c_tree'] = cTree['list'][0]['list'][1]
                     params['category'] = 'list_categories'
                     self.listCategories(params, 'list_items')
                 except Exception:
                     printExc()
                 
         MAIN_CAT_TAB = [{'category':'search',          'title': _('Search'), 'search_item':True},
-                        {'category':'search_history',  'title': _('Search history')} ]
+                        {'category':'search_history',  'title': _('Search history')}]
         self.listsTab(MAIN_CAT_TAB, cItem)
     
     def listCategories(self, cItem, nextCategory):
@@ -191,9 +191,9 @@ class OipeiratesOnline(CBaseHostClass):
 
         data = self.cm.ph.getAllItemsBeetwenNodes(data, ('<div', '>', 'moviefilm'), ('</div', '>'), False)
         for item in data:
-            url  = self.getFullUrl( self.cm.ph.getSearchGroups(item, 'href="([^"]+?)"')[0] )
-            icon = self.getFullUrl( self.cm.ph.getSearchGroups(item, 'src="([^"]+?)"')[0] )
-            title  = self.cleanHtmlStr( self.cm.ph.getSearchGroups(item, 'alt="([^"]+?)"')[0])
+            url  = self.getFullUrl(self.cm.ph.getSearchGroups(item, 'href="([^"]+?)"')[0])
+            icon = self.getFullUrl(self.cm.ph.getSearchGroups(item, 'src="([^"]+?)"')[0])
+            title  = self.cleanHtmlStr(self.cm.ph.getSearchGroups(item, 'alt="([^"]+?)"')[0])
             if url != '':
                 params = dict(cItem)
                 params.update({'category':nextCategory, 'good_for_fav': True, 'title':title, 'url':url, 'icon':icon})
@@ -212,8 +212,8 @@ class OipeiratesOnline(CBaseHostClass):
         if not sts:
             return
 
-        desc  = self.cleanHtmlStr( self.cm.ph.getSearchGroups(data, '<meta[^>]*?property="og:description"[^>]*?content="([^"]+?)"')[0] )
-        title = self.cleanHtmlStr( self.cm.ph.getSearchGroups(data, '<meta[^>]*?property="og:title"[^>]*?content="([^"]+?)"')[0] )
+        desc  = self.cleanHtmlStr(self.cm.ph.getSearchGroups(data, '<meta[^>]*?property="og:description"[^>]*?content="([^"]+?)"')[0])
+        title = self.cleanHtmlStr(self.cm.ph.getSearchGroups(data, '<meta[^>]*?property="og:title"[^>]*?content="([^"]+?)"')[0])
         if '' == title:
             title = cItem['title']
 
@@ -263,7 +263,7 @@ class OipeiratesOnline(CBaseHostClass):
                 itemTitle = item.find('<')
                 if itemTitle < 0:
                     continue
-                itemTitle = self.cleanHtmlStr( item[:itemTitle] )
+                itemTitle = self.cleanHtmlStr(item[:itemTitle])
                 linksData = re.compile('<a[^>]*?href="([^"]+?)"[^>]*?>').findall(item)
                 links = []
                 for itemUrl in linksData:
@@ -319,7 +319,7 @@ class OipeiratesOnline(CBaseHostClass):
                     linksID = linksID.strip()
                     if linksID not in eLinks:
                         eLinks[linksID] = []
-                        episodes.append( {'linksID':linksID, 'episode':eID, 'season':seasonID} )
+                        episodes.append({'linksID':linksID, 'episode':eID, 'season':seasonID})
                     eLinks[linksID].append({'name':self.up.getHostName(eUrl), 'url':eUrl, 'need_resolve':1})
             
             for item in episodes:
@@ -398,15 +398,15 @@ class OipeiratesOnline(CBaseHostClass):
         title = cItem['title']
         
         descMarker = 'ΠΕΡΙΛΗΨΗ'
-        desc = self.cleanHtmlStr( self.cm.ph.getDataBeetwenNodes(data, ('<span', '</span>', descMarker), ('<a', '>'), False)[1] )
+        desc = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(data, ('<span', '</span>', descMarker), ('<a', '>'), False)[1])
         data = self.cm.ph.getDataBeetwenNodes(data, ('<script', '>', 'oipeirates/vp'), ('<img', '>'))[1]
-        icon = self.getFullIconUrl( self.cm.ph.getSearchGroups(data, '''<img[^>]+?src=['"]([^'^"]+?(?:\.jpe?g|\.png)(?:\?[^'^"]*?)?)['"]''')[0] )
+        icon = self.getFullIconUrl(self.cm.ph.getSearchGroups(data, '''<img[^>]+?src=['"]([^'^"]+?(?:\.jpe?g|\.png)(?:\?[^'^"]*?)?)['"]''')[0])
         t = self.cleanHtmlStr(data.split('</div>', 1)[-1])
         if t != '' and t != title:
             otherInfo['alternate_title'] = t
         if icon == '':
             icon = cItem['icon']
-        return [{'title':self.cleanHtmlStr( title ), 'text': self.cleanHtmlStr( desc ), 'images':[{'title':'', 'url':self.getFullUrl(icon)}], 'other_info':otherInfo}]
+        return [{'title':self.cleanHtmlStr(title), 'text': self.cleanHtmlStr(desc), 'images':[{'title':'', 'url':self.getFullUrl(icon)}], 'other_info':otherInfo}]
 
     def handleService(self, index, refresh=0, searchPattern='', searchType=''):
         printDBG('handleService start')
@@ -417,7 +417,7 @@ class OipeiratesOnline(CBaseHostClass):
         category = self.currItem.get("category", '')
         mode     = self.currItem.get("mode", '')
         
-        printDBG( "handleService: |||||||||||||||||||||||||||||||||||| name[%s], category[%s] " % (name, category) )
+        printDBG("handleService: |||||||||||||||||||||||||||||||||||| name[%s], category[%s] " % (name, category))
         self.currList = []
         self.currItem = dict(self.currItem)
         self.currItem.pop('good_for_fav', None)

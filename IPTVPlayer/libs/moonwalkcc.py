@@ -114,7 +114,7 @@ class MoonwalkParser():
         printDBG('Code start:')
         printDBG(jscode)
         printDBG('Code end:')
-        ret = js_execute( jscode, {'timeout_sec':30} )
+        ret = js_execute(jscode, {'timeout_sec':30})
         if ret['sts'] and 0 == ret['code']:
             printDBG(ret['data'])
             try:
@@ -150,7 +150,7 @@ class MoonwalkParser():
             self._setBaseUrl(url)
             params = copy.deepcopy(self.defaultParams)
             params['header']['Referer'] = url
-            sts, data = self.cm.getPage( url, params)
+            sts, data = self.cm.getPage(url, params)
             if not sts:
                 return []
             
@@ -183,7 +183,7 @@ class MoonwalkParser():
                     if mp4Url.split('?')[0].endswith('.mp4'):
                         tmpTab.append({'url':mp4Url, 'heigth':key})
                     
-                def __getLinkQuality( itemLink ):
+                def __getLinkQuality(itemLink):
                     return int(itemLink['heigth'])
                     
                 maxRes = config.plugins.iptvplayer.moonwalk_df_format.value
@@ -198,7 +198,7 @@ class MoonwalkParser():
             if 'm3u8' == config.plugins.iptvplayer.moonwalk_format.value:
                 hlsUrl = strwithmeta(data['m3u8'], {'User-Agent':'Mozilla/5.0 (iPad; U; CPU OS 3_2 like Mac OS X; en-us) AppleWebKit/531.21.10 (KHTML, like Gecko) Version/4.0.4 Mobile/7B334b Safari/531.21.10', 'Referer':url})
                 tmpTab = getDirectM3U8Playlist(hlsUrl)
-                def __getLinkQuality( itemLink ):
+                def __getLinkQuality(itemLink):
                     return int(itemLink['heigth'])
                 maxRes = config.plugins.iptvplayer.moonwalk_df_format.value
                 tmpTab = CSelOneLink(tmpTab, __getLinkQuality, maxRes).getSortedLinks()
@@ -208,7 +208,7 @@ class MoonwalkParser():
                     linksTab.append({'name':'[hls/m3u8] %sp' % __getLinkQuality(item), 'url':item['url']})
             else:
                 tmpTab = getF4MLinksWithMeta(data["manifest_f4m"])
-                def __getLinkQuality( itemLink ):
+                def __getLinkQuality(itemLink):
                     printDBG(itemLink)
                     bitrate = int(self.cm.ph.getDataBeetwenMarkers(itemLink['name'], 'bitrate[', ']', False)[1])
                     if bitrate < 400:
@@ -236,12 +236,12 @@ class MoonwalkParser():
             params = copy.deepcopy(self.defaultParams)
             params['header']['Referer'] = url
             params['with_metadata'] = True
-            sts, data = self.cm.getPage( url, params)
+            sts, data = self.cm.getPage(url, params)
             if not sts:
                 return []
             
             url = data.meta['url']
-            parsedUri = urlparse( url )
+            parsedUri = urlparse(url)
             baseUrl = '{uri.scheme}://{uri.netloc}{uri.path}'.format(uri=parsedUri)
             query = dict(parse_qsl(parsedUri.query))
             
@@ -277,12 +277,12 @@ class MoonwalkParser():
             params = copy.deepcopy(self.defaultParams)
             params['header']['Referer'] = url
             params['with_metadata'] = True
-            sts, data = self.cm.getPage( url, params)
+            sts, data = self.cm.getPage(url, params)
             if not sts:
                 return []
             
             url = data.meta['url']
-            parsedUri = urlparse( url )
+            parsedUri = urlparse(url)
             baseUrl = '{uri.scheme}://{uri.netloc}{uri.path}'.format(uri=parsedUri)
             query = dict(parse_qsl(parsedUri.query))
             

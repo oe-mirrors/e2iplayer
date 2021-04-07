@@ -33,14 +33,14 @@ class WEP:
         """
         if not(len(key) in (5, 13)):
             raise BadKeySizeError('Key not valid size of 5 or 13 octets')
-        if keyId != None :
+        if keyId != None:
             self.setCurrentKeyId(keyId)
         self.__key[self.currentKeyId] = key
         self.keySize = len(key)
         self.strength = self.keySize * 8
 
     def setCurrentKeyId(self, keyId):
-        if keyId == None :
+        if keyId == None:
             self.currentKeyId = 0
         elif (0<=keyId<4):
             self.currentKeyId = keyId
@@ -52,10 +52,10 @@ class WEP:
             Adds WEP encryption header and crc
         """
         assert(len(iv)==3), 'Wrong size WEP IV'
-        if keyId != None :
+        if keyId != None:
             self.setCurrentKeyId(keyId)
         assert(self.__key[self.currentKeyId]!=None), 'Must set key for specific keyId before encryption'
-        self.arc4.setKey( iv + self.__key[self.currentKeyId] )
+        self.arc4.setKey(iv + self.__key[self.currentKeyId])
         crc = pack('<I', crc32(plainText))
         cipherText = self.arc4.encrypt(plainText+crc)
         # add header that contains IV
@@ -67,7 +67,7 @@ class WEP:
         iv = cipherText[:3]
         self.currentKeyId = (ord(cipherText[3])&0xC0)>>6
         assert(self.__key[self.currentKeyId]!=None), 'Must set key for specific keyId before encryption'
-        self.arc4.setKey( iv + self.__key[self.currentKeyId] )
+        self.arc4.setKey(iv + self.__key[self.currentKeyId])
         plainText = self.arc4.decrypt(cipherText[self.encryptHeaderSize:])
         if plainText[-self.encryptHeaderSize:] == pack('<I', crc32(plainText)):  # check data integrity
             raise IntegrityCheckError('WEP Integrity Check Error')

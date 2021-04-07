@@ -57,7 +57,7 @@ class TreeTv(CBaseHostClass):
         CBaseHostClass.__init__(self, {'history':'TreeTv.tv', 'cookie':'treetv.cookie'})
         self.HEADER = {'User-Agent': 'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/52.0.2743.116 Safari/537.36', 'Accept': 'text/html'}
         self.AJAX_HEADER = dict(self.HEADER)
-        self.AJAX_HEADER.update( {'X-Requested-With': 'XMLHttpRequest'} )
+        self.AJAX_HEADER.update({'X-Requested-With': 'XMLHttpRequest'})
         
         self.defaultParams = {'header':self.HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE, 'cookie_items':{'mycook':md5(str(time.time())).hexdigest()}}
         
@@ -423,16 +423,16 @@ class TreeTv(CBaseHostClass):
                     uri = self.cm.ph.getSearchGroups(item, '''['"]?src['"]?\s*:\s*['"]([^'^"]+?)['"]''', 1, True)[0]
                     if not self.cm.isValidUrl(uri):
                         continue
-                    uri = strwithmeta(uri, {'User-Agent':params['header']['User-Agent'] , 'Referer':params['header']['Referer'], 'Origin':'http://player.tree.tv'})
+                    uri = strwithmeta(uri, {'User-Agent':params['header']['User-Agent'], 'Referer':params['header']['Referer'], 'Origin':'http://player.tree.tv'})
                     point = self.cm.ph.getSearchGroups(item, '''['"]?point['"]?\s*:\s*['"]([^'^"]+?)['"]''', 1, True)[0]
                     label = self.cm.ph.getSearchGroups(item, '''['"]?label['"]?\s*:\s*['"]([^'^"]+?)['"]''', 1, True)[0]
                     if label == '':
                         label = name
                     if str(fileId) == str(point) or point == '':
                         if '/playlist/' in uri:
-                            urlTab.extend( getDirectM3U8Playlist(uri, checkExt=False, cookieParams=params, checkContent=True) )
+                            urlTab.extend(getDirectM3U8Playlist(uri, checkExt=False, cookieParams=params, checkContent=True))
                         elif source == '3':
-                            urlTab.extend( [{'name':label, 'url':uri}] )
+                            urlTab.extend([{'name':label, 'url':uri}])
         except Exception:
             printExc()
         return urlTab
@@ -483,7 +483,7 @@ class TreeTv(CBaseHostClass):
            '' != config.plugins.iptvplayer.treetv_password.value.strip():
             loggedIn, msg = self.tryTologin(config.plugins.iptvplayer.treetv_login.value, config.plugins.iptvplayer.treetv_password.value)
             if not loggedIn:
-                self.sessionEx.open(MessageBox, _('User login "%s" failed.') % config.plugins.iptvplayer.treetv_login.value, type=MessageBox.TYPE_INFO, timeout=10 )
+                self.sessionEx.open(MessageBox, _('User login "%s" failed.') % config.plugins.iptvplayer.treetv_login.value, type=MessageBox.TYPE_INFO, timeout=10)
             else:
                 self.login    = config.plugins.iptvplayer.treetv_login.value
                 self.password = config.plugins.iptvplayer.treetv_password.value
@@ -495,7 +495,7 @@ class TreeTv(CBaseHostClass):
         category = self.currItem.get("category", '')
         mode     = self.currItem.get("mode", '')
         
-        printDBG( "handleService: |||||||||||||||||||||||||||||||||||| name[%s], category[%s] " % (name, category) )
+        printDBG("handleService: |||||||||||||||||||||||||||||||||||| name[%s], category[%s] " % (name, category))
         self.currList = []
         
     #MAIN MENU

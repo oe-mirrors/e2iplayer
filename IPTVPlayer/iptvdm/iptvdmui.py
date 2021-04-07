@@ -155,7 +155,7 @@ class IPTVDMWidget(Screen):
                 fileName = os_path.join(config.plugins.iptvplayer.NaszaSciezka.value, params[0])
                 skip = False
                 for item2 in self.currList:  
-                    printDBG("AAA:[%s]\nBBB:[%s]" % (item2.fileName, fileName) )
+                    printDBG("AAA:[%s]\nBBB:[%s]" % (item2.fileName, fileName))
                     if fileName == item2.fileName.replace('//', '/'): 
                         skip = True
                         break
@@ -168,7 +168,7 @@ class IPTVDMWidget(Screen):
                     listItem.downloadedSize = 0
                 listItem.status      = DMHelper.STS.DOWNLOADED
                 listItem.downloadIdx = -1
-                self.tmpList.append( listItem )
+                self.tmpList.append(listItem)
     
     def leaveMoviePlayer(self, answer=None, position=None, *args, **kwargs):
         self.DM.setUpdateProgress(True)
@@ -242,7 +242,7 @@ class IPTVDMWidget(Screen):
                 printExc()
             cmd = '%s "%s" rl r' % (lsdirPath, config.plugins.iptvplayer.NaszaSciezka.value)
             printDBG("cmd[%s]" % cmd)
-            self.console.execute( E2PrioFix( cmd ) )
+            self.console.execute(E2PrioFix(cmd))
         
         self.localMode = True
         self.reloadList(True)
@@ -313,7 +313,7 @@ class IPTVDMWidget(Screen):
     def makeActionOnDownloadItem(self, ret):
         item = self.getSelItem()
         if None != ret and None != item:
-            printDBG("makeActionOnDownloadItem " + ret[1] + (" for downloadIdx[%d]" % item.downloadIdx) )
+            printDBG("makeActionOnDownloadItem " + ret[1] + (" for downloadIdx[%d]" % item.downloadIdx))
             if ret[1] == "play":
                 title = item.fileName
                 try:
@@ -405,12 +405,12 @@ class IPTVDMWidget(Screen):
                 gIPTVDM_listChanged = False
                 # get current List from api
                 self.currList = self.DM.getList()
-                self["list"].setList([ (x,) for x in self.currList])
+                self["list"].setList([(x,) for x in self.currList])
                 self["list"].show()
         elif force:
             printDBG("IPTV_DM_UI reload archive list")
             self["list"].hide()
-            self["list"].setList([ (x,) for x in self.localFiles])
+            self["list"].setList([(x,) for x in self.localFiles])
             self["list"].show()
     #end reloadList
 

@@ -40,8 +40,8 @@ class UnCaptchaReCaptchaWidget(Screen):
             self.coversSelection.append([])
             for y in range(self.numOfRow):
                 coversSkin += """<widget name="cover_%s%s" zPosition="5" position="%d,%d" size="%d,%d" transparent="1" alphatest="blend" />""" % (x, y, 
-                    (self.offsetCoverX + self.markerWidth  * x ), # pos X image
-                    (self.offsetCoverY + self.markerHeight * y ), # pos Y image
+                    (self.offsetCoverX + self.markerWidth  * x), # pos X image
+                    (self.offsetCoverY + self.markerHeight * y), # pos Y image
                     self.markerWidth, 
                     self.markerHeight
                 )
@@ -108,7 +108,7 @@ class UnCaptchaReCaptchaWidget(Screen):
         
     def onStart(self):
         self.onLayoutFinish.remove(self.onStart)
-        self['puzzle_image'].updateIcon( self.imgFilePath )
+        self['puzzle_image'].updateIcon(self.imgFilePath)
         self['marker'].setPixmap(self.markerPixmap)
         self['marker'].show()
         
@@ -120,13 +120,13 @@ class UnCaptchaReCaptchaWidget(Screen):
                 
     def updateAccpetButton(self):
         if self.focusOnAcceptButton and self.currY < self.numOfRow:
-            self['accept'].instance.setForegroundColor( parseColor("#FFFFFF") )
-            self['accept'].instance.setBackgroundColor( parseColor("#FFFFFFFF") )
+            self['accept'].instance.setForegroundColor(parseColor("#FFFFFF"))
+            self['accept'].instance.setBackgroundColor(parseColor("#FFFFFFFF"))
             self.focusOnAcceptButton = False
             self['marker'].show()
         elif self.currY >= self.numOfRow:
-            self['accept'].instance.setForegroundColor( parseColor("#000000") )
-            self['accept'].instance.setBackgroundColor( parseColor("#32CD32") )
+            self['accept'].instance.setForegroundColor(parseColor("#000000"))
+            self['accept'].instance.setBackgroundColor(parseColor("#32CD32"))
             self.focusOnAcceptButton = True
             self['marker'].hide()
         return self.focusOnAcceptButton

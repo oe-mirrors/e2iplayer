@@ -99,8 +99,8 @@ class M3U8(object):
 
     def _initialize_attributes(self):
         self.key = Key(base_uri=self.base_uri, **self.data['key']) if 'key' in self.data else None
-        self.segments = SegmentList([ Segment(base_uri=self.base_uri, **params)
-                                      for params in self.data.get('segments', []) ])
+        self.segments = SegmentList([Segment(base_uri=self.base_uri, **params)
+                                      for params in self.data.get('segments', [])])
 
         for attr, param in self.simple_attributes:
             setattr(self, attr, self.data.get(param))
@@ -110,8 +110,8 @@ class M3U8(object):
             self.files.append(self.key.uri)
         self.files.extend(self.segments.uri)
 
-        self.playlists = PlaylistList([ Playlist(base_uri=self.base_uri, **playlist)
-                                        for playlist in self.data.get('playlists', []) ])
+        self.playlists = PlaylistList([Playlist(base_uri=self.base_uri, **playlist)
+                                        for playlist in self.data.get('playlists', [])])
 
     def __unicode__(self):
         return self.dumps()
@@ -355,8 +355,8 @@ class Playlist(BasePathMixin):
                                       program_id=stream_info.get('program_id'),
                                       resolution=resolution_pair,
                                       codecs=stream_info.get('codecs'))
-        self.alt_audio_streams = [ AudioStream(base_uri=self.base_uri, uri=alt_audio_stream.get('uri'), name=alt_audio_stream.get('name'), language=alt_audio_stream.get('language'))
-                                    for alt_audio_stream in alt_audio_streams ]
+        self.alt_audio_streams = [AudioStream(base_uri=self.base_uri, uri=alt_audio_stream.get('uri'), name=alt_audio_stream.get('name'), language=alt_audio_stream.get('language'))
+                                    for alt_audio_stream in alt_audio_streams]
 
     def __str__(self):
         stream_inf = []

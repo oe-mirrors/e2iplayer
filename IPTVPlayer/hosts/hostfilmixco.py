@@ -51,7 +51,7 @@ class FilmixCO(CBaseHostClass):
         self.USER_AGENT = 'Mozilla/5.0'
         self.HEADER = {'User-Agent': self.USER_AGENT, 'Accept': 'text/html'}
         self.AJAX_HEADER = dict(self.HEADER)
-        self.AJAX_HEADER.update( {'X-Requested-With':'XMLHttpRequest', 'Content-Type':'application/x-www-form-urlencoded; charset=UTF-8'} )
+        self.AJAX_HEADER.update({'X-Requested-With':'XMLHttpRequest', 'Content-Type':'application/x-www-form-urlencoded; charset=UTF-8'})
 
         self.MAIN_URL = 'https://filmix.co/'
         self.DEFAULT_ICON_URL = 'http://www.userlogos.org/files/logos/jumpordie/filmix.png'
@@ -129,10 +129,10 @@ class FilmixCO(CBaseHostClass):
                     if len(values):
                         self.cacheFilters.append({'scope':scope, 'values':values})
        
-        MAIN_CAT_TAB = [{'category':'top250',          'title':'ТОП 250', 'url':self.getFullUrl('/top250') },
+        MAIN_CAT_TAB = [{'category':'top250',          'title':'ТОП 250', 'url':self.getFullUrl('/top250')},
                         {'category':'filters',         'title': _('Filters')},
                         {'category':'search',          'title': _('Search'), 'search_item':True},
-                        {'category':'search_history',  'title': _('Search history')} ]
+                        {'category':'search_history',  'title': _('Search history')}]
         self.listsTab(MAIN_CAT_TAB, cItem)
         
     def top250Type(self, cItem, nextCategory):
@@ -284,12 +284,12 @@ class FilmixCO(CBaseHostClass):
 
         data = self.cm.ph.getAllItemsBeetwenNodes(data, ('<article', '>', 'itemtype'), ('</article', '>'), False)
         for item in data:
-            icon = self.getFullIconUrl( self.cm.ph.getSearchGroups(item, '''<img[^>]+?src=['"]([^"^']+?)['"]''')[0] )
+            icon = self.getFullIconUrl(self.cm.ph.getSearchGroups(item, '''<img[^>]+?src=['"]([^"^']+?)['"]''')[0])
 
             tmp = self.cm.ph.getDataBeetwenNodes(item, ('<div', '>', 'name-block'), ('</div', '>'))[1]
-            url = self.getFullUrl( self.cm.ph.getSearchGroups(tmp, '''href=['"]([^"^']+?)['"]''')[0] )
-            title = self.cleanHtmlStr( self.cm.ph.getDataBeetwenMarkers(tmp, '<h2', '</h2>')[1] )
-            titleOrg = self.cleanHtmlStr( self.cm.ph.getDataBeetwenNodes(item, ('<div', '>', 'origin-name'), ('</div', '>'))[1] )
+            url = self.getFullUrl(self.cm.ph.getSearchGroups(tmp, '''href=['"]([^"^']+?)['"]''')[0])
+            title = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(tmp, '<h2', '</h2>')[1])
+            titleOrg = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(item, ('<div', '>', 'origin-name'), ('</div', '>'))[1])
             if titleOrg != '':
                 if title == '':
                     title = titleOrg
@@ -501,7 +501,7 @@ class FilmixCO(CBaseHostClass):
         category = self.currItem.get("category", '')
         mode     = self.currItem.get("mode", '')
 
-        printDBG( "handleService: || name[%s], category[%s] " % (name, category) )
+        printDBG("handleService: || name[%s], category[%s] " % (name, category))
         self.currList = []
         self.tryTologin()
 

@@ -31,7 +31,7 @@ class C3skTv(CBaseHostClass):
         self.DEFAULT_ICON_URL = 'http://33sk.tv/images/logo-footer.png'
         self.HEADER = {'User-Agent': 'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:40.0) Gecko/20100101 Firefox/40.0', 'DNT':'1', 'Accept':'text/html', 'Accept-Encoding':'gzip, deflate'}
         self.AJAX_HEADER = dict(self.HEADER)
-        self.AJAX_HEADER.update( {'X-Requested-With': 'XMLHttpRequest', 'Content-Type':'application/x-www-form-urlencoded; charset=UTF-8', 'Accept':'*/*'} )
+        self.AJAX_HEADER.update({'X-Requested-With': 'XMLHttpRequest', 'Content-Type':'application/x-www-form-urlencoded; charset=UTF-8', 'Accept':'*/*'})
         self.MAIN_URL = None
         self.cacheLinks = {}
         self.seasonsCache = {}
@@ -76,12 +76,12 @@ class C3skTv(CBaseHostClass):
                 elif '/pdep' in url or (parsedUri.path == '/' and parsedUri.query == ''):
                     nextCategory = 'list_items'
                 title = self.cleanHtmlStr(item)
-                printDBG(">>>>>>>>>>>>>>>>> title[%s] url[%s] path[%s] query[%s]" % (title, url, parsedUri.path, parsedUri.query ))
+                printDBG(">>>>>>>>>>>>>>>>> title[%s] url[%s] path[%s] query[%s]" % (title, url, parsedUri.path, parsedUri.query))
                 params = dict(cItem)
                 params.update({'good_for_fav':False, 'category':nextCategory, 'title':title, 'url':url})
                 self.addDir(params)
-        MAIN_CAT_TAB = [{'category':'search',         'title': _('Search'),       'search_item':True       },
-                        {'category': 'search_history', 'title': _('Search history'),                        }]
+        MAIN_CAT_TAB = [{'category':'search',         'title': _('Search'),       'search_item':True},
+                        {'category': 'search_history', 'title': _('Search history'),}]
         self.listsTab(MAIN_CAT_TAB, cItem)
 
         
@@ -300,7 +300,7 @@ class C3skTv(CBaseHostClass):
         category = self.currItem.get("category", '')
         mode     = self.currItem.get("mode", '')
         
-        printDBG( "handleService: |||||||||||||||||||||||||||||||||||| name[%s], category[%s] " % (name, category) )
+        printDBG("handleService: |||||||||||||||||||||||||||||||||||| name[%s], category[%s] " % (name, category))
         self.currList = []
         
     #MAIN MENU

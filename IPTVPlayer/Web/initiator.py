@@ -30,7 +30,7 @@ def checkForFC():
 		return False
 	
 	try:
-		with open (myfileName, "r") as myfile:
+		with open(myfileName, "r") as myfile:
 			data = myfile.read()
 			myfile.close()
 		if data.find('fancontrol') > 0 and data.find('iptvplayer') < 0:
@@ -45,11 +45,11 @@ def checkForFC():
 # registration for old webinterface
 if os.path.exists(resolveFilename(SCOPE_PLUGINS, 'Extensions/WebInterface/web/external.xml')):
 	try:
-		addExternalChild( ("e2iplayer", IPTVwebRoot, "E2iPlayer", settings.WebInterfaceVersion, True) )
-                addExternalChild( ("iptvplayer", IPTVwebRoot, "E2iPlayer", settings.WebInterfaceVersion, True) )
+		addExternalChild(("e2iplayer", IPTVwebRoot, "E2iPlayer", settings.WebInterfaceVersion, True))
+                addExternalChild(("iptvplayer", IPTVwebRoot, "E2iPlayer", settings.WebInterfaceVersion, True))
 	except Exception:
-		addExternalChild( ("e2iplayer", IPTVwebRoot) )
-                addExternalChild( ("iptvplayer", IPTVwebRoot) )
+		addExternalChild(("e2iplayer", IPTVwebRoot))
+                addExternalChild(("iptvplayer", IPTVwebRoot))
 # registration for openwebif
 elif os.path.exists(resolveFilename(SCOPE_PLUGINS, 'Extensions/OpenWebif/pluginshook.src')):
 	# Old openwebif version (prior July the 14th 2017) has a bug and does not populate links to all properly registered web addons except fancontrol
@@ -59,14 +59,14 @@ elif os.path.exists(resolveFilename(SCOPE_PLUGINS, 'Extensions/OpenWebif/plugins
 		fcRoot = static.File(GetPluginDir('Web/'))
 		fcRoot.putChild("", redirectionPage())
 		try:
-			addExternalChild( ("fancontrol", fcRoot, "E2iPlayer", settings.WebInterfaceVersion) )
-			addExternalChild( ("iptvplayer", IPTVwebRoot, None, None) )
+			addExternalChild(("fancontrol", fcRoot, "E2iPlayer", settings.WebInterfaceVersion))
+			addExternalChild(("iptvplayer", IPTVwebRoot, None, None))
 		except Exception:
 			print("[E2iPlayer] exception registering Web interface in FC mode")
 	else: #user still can use IPTV web interface, but would need to mark URL manually depending on the openWebIf version
 		try:
-			addExternalChild( ("iptvplayer", IPTVwebRoot, "E2iPlayer", settings.WebInterfaceVersion) )
-                        addExternalChild( ("e2iplayer", IPTVwebRoot, "E2iPlayer", settings.WebInterfaceVersion) )
+			addExternalChild(("iptvplayer", IPTVwebRoot, "E2iPlayer", settings.WebInterfaceVersion))
+                        addExternalChild(("e2iplayer", IPTVwebRoot, "E2iPlayer", settings.WebInterfaceVersion))
 		except Exception:
 			print("[E2iPlayer] exception registering Web interface in NATIVE mode")
 else:

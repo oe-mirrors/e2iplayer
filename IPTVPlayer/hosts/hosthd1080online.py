@@ -56,12 +56,12 @@ class HD1080Online(CBaseHostClass):
             for item in section:
                 url = self.getFullUrl(ph.search(item, ph.A)[1])
                 title = ph.clean_html(item)
-                subItems.append( MergeDicts(cItem, {'good_for_fav':True, 'category':nextCategory, 'title':title, 'url':url}) )
+                subItems.append(MergeDicts(cItem, {'good_for_fav':True, 'category':nextCategory, 'title':title, 'url':url}))
             if len(subItems):
                 self.addDir(MergeDicts(cItem, {'category':'sub_items', 'sub_items':subItems, 'title':sTitle}))
 
-        MAIN_CAT_TAB = [{'category':'search',         'title': _('Search'),       'search_item':True       },
-                        {'category': 'search_history', 'title': _('Search history'),                        }]
+        MAIN_CAT_TAB = [{'category':'search',         'title': _('Search'),       'search_item':True},
+                        {'category': 'search_history', 'title': _('Search history'),}]
         self.listsTab(MAIN_CAT_TAB, cItem)
 
     def listSubItems(self, cItem):
@@ -86,8 +86,8 @@ class HD1080Online(CBaseHostClass):
             data[-1] = ph.find(data[-1], '<div', ('<div', '>', 'pagi-nav'))[1]
 
         for item in data:
-            url = self.getFullUrl( ph.search(item, ph.A)[1] )
-            icon = self.getFullIconUrl( ph.search(item, ph.IMG)[1] )
+            url = self.getFullUrl(ph.search(item, ph.A)[1])
+            icon = self.getFullIconUrl(ph.search(item, ph.IMG)[1])
             title = self.cleanHtmlStr(ph.find(item, ('<div', '>', 'title'), '</div>', flags=0)[1])
 
             desc = []
@@ -138,7 +138,7 @@ class HD1080Online(CBaseHostClass):
         data = ph.findall(data, ('<div', '>', 'player-box'), '</div>', flags=0)
 
         for idx, item in enumerate(data):
-            url = self.getFullUrl( ph.search(item, ph.IFRAME)[1] )
+            url = self.getFullUrl(ph.search(item, ph.IFRAME)[1])
             if not url:
                 continue
             title = baseTitle
@@ -191,8 +191,8 @@ class HD1080Online(CBaseHostClass):
 
         data = ph.findall(data, ('<a', '>', 'sres-wrap'), '</a>')
         for item in data:
-            url = self.getFullUrl( ph.search(item, ph.A)[1] )
-            icon = self.getFullIconUrl( ph.search(item, ph.IMG)[1] )
+            url = self.getFullUrl(ph.search(item, ph.A)[1])
+            icon = self.getFullIconUrl(ph.search(item, ph.IMG)[1])
             title = self.cleanHtmlStr(ph.find(item, ('<h', '>'), '</h', flags=0)[1])
 
             desc = []
@@ -276,7 +276,7 @@ class HD1080Online(CBaseHostClass):
         if desc == '':
             desc = cItem.get('desc', '')
         
-        return [{'title':self.cleanHtmlStr( title ), 'text': self.cleanHtmlStr( desc ), 'images':[{'title':'', 'url':self.getFullUrl(icon)}], 'other_info':{'custom_items_list':itemsList}}]
+        return [{'title':self.cleanHtmlStr(title), 'text': self.cleanHtmlStr(desc), 'images':[{'title':'', 'url':self.getFullUrl(icon)}], 'other_info':{'custom_items_list':itemsList}}]
 
     def handleService(self, index, refresh=0, searchPattern='', searchType=''):
         printDBG('handleService start')
@@ -285,7 +285,7 @@ class HD1080Online(CBaseHostClass):
 
         name     = self.currItem.get("name", '')
         category = self.currItem.get("category", '')
-        printDBG( "handleService: ||| name[%s], category[%s] " % (name, category) )
+        printDBG("handleService: ||| name[%s], category[%s] " % (name, category))
         self.currList = []
 
     #MAIN MENU

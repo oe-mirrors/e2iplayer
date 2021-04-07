@@ -96,7 +96,7 @@ class Ipla(CBaseHostClass):
     def getVideosList(self, url):
         printDBG("Ipla.getVideosList url[%s]" % url)
             
-        sts, videosXMLTree = self.cm.getPage(url, {'host' : Ipla.HOST})
+        sts, videosXMLTree = self.cm.getPage(url, {'host': Ipla.HOST})
         if sts:
             videosXMLTree = self.getStr(videosXMLTree).split('</vod>')
             del videosXMLTree[-1]
@@ -143,7 +143,7 @@ class Ipla(CBaseHostClass):
         urls = []
         re_compile_srcreq = re.compile('<srcreq ([^>]+?)>')
         max_bitrate = int(config.plugins.iptvplayer.iplaDefaultformat.value)
-        def __getLinkQuality( itemLink ):
+        def __getLinkQuality(itemLink):
             return int(itemLink['bitrate'])
         try:
             links = re_compile_srcreq.findall(vodData)
@@ -154,7 +154,7 @@ class Ipla(CBaseHostClass):
                     if config.plugins.iptvplayer.ZablokujWMV.value and attrib['format'] == '0':
                         continue
                     name = "Jakość: %s\t format: %s\t  bitrate: %s" % (attrib['quality'], attrib['format'], attrib['bitrate'])
-                    urls.append( {'name':name, 'url':attrib['url'], 'bitrate':attrib['bitrate']} )
+                    urls.append({'name':name, 'url':attrib['url'], 'bitrate':attrib['bitrate']})
         except Exception:
             printExc()
         urls = CSelOneLink(urls, __getLinkQuality, max_bitrate).getSortedLinks()
@@ -167,7 +167,7 @@ class Ipla(CBaseHostClass):
         try:
             if "0" == config.plugins.iptvplayer.iplacachexml.value:
                 return
-            data = str({"timestamp" : int(time()), "data":data})
+            data = str({"timestamp": int(time()), "data":data})
             with open(self.cacheFilePath, 'w') as f:
                 f.write(str(data))            
         except Exception:
@@ -200,7 +200,7 @@ class Ipla(CBaseHostClass):
         printDBG("setCatXmlTree refresh[%r]" %  refresh)
         
         def _fromUrl():
-            sts, data = self.cm.getPage(Ipla.CAT_URL, {'host' : Ipla.HOST})
+            sts, data = self.cm.getPage(Ipla.CAT_URL, {'host': Ipla.HOST})
             if not sts:
                 data = ''
             return data
@@ -236,7 +236,7 @@ class Ipla(CBaseHostClass):
         return data
         
     def getCategories(self, parentCatId, refresh):
-        printDBG( "getCategories parentCatId[%s]" % parentCatId )
+        printDBG("getCategories parentCatId[%s]" % parentCatId)
         xmlTree = self.getCatXmlTree(refresh)
         if xmlTree:
             try:
@@ -271,7 +271,7 @@ class Ipla(CBaseHostClass):
                             self.addDir(params)
                         #printDBG("||||||||||||||||: %s" %pid)
                     except Exception:
-                        printDBG( "getCategories except" )
+                        printDBG("getCategories except")
                         printExc()
                 if listVideo and numOfSubCat < 2:
                     self.getVideosList(Ipla.MOV_URL + parentCatId)
@@ -282,8 +282,8 @@ class Ipla(CBaseHostClass):
     def listsMainMenu(self, refresh=False):
         printDBG('listsMainMenu')
         self.getCategories('0', refresh)
-        self.addDir( {'category': 'Wyszukaj',  'title': 'Wyszukaj'} )
-        self.addDir( {'category': 'search_history',   'title': 'Historia wyszukiwania'} )
+        self.addDir({'category': 'Wyszukaj',  'title': 'Wyszukaj'})
+        self.addDir({'category': 'search_history',   'title': 'Historia wyszukiwania'})
         
     def getFavouriteData(self, cItem):
         return json.dumps(cItem['fav_item'])
@@ -291,11 +291,11 @@ class Ipla(CBaseHostClass):
     def getLinksForFavourite(self, fav_data):
         links = []
         try: 
-            favItem = byteify( json.loads(fav_data) )
+            favItem = byteify(json.loads(fav_data))
             printDBG(favItem)
-            sts, data = self.cm.getPage(favItem['url'], {'host' : Ipla.HOST})
+            sts, data = self.cm.getPage(favItem['url'], {'host': Ipla.HOST})
             if sts:
-                sts, data = self.cm.ph.getDataBeetwenReMarkers(data, re.compile('<vod[^>]+?id="%s"[^>]*?>'% favItem['vod_id']), re.compile('</vod>' ), False)
+                sts, data = self.cm.ph.getDataBeetwenReMarkers(data, re.compile('<vod[^>]+?id="%s"[^>]*?>'% favItem['vod_id']), re.compile('</vod>'), False)
                 if sts:
                     links = self._getVideoUrls(data)
         except Exception:
@@ -318,7 +318,7 @@ class Ipla(CBaseHostClass):
         icon       = self.currItem.get("icon", '')
         url        = self.currItem.get("url", '')
         plot       = self.currItem.get("plot", '')
-        printDBG( "handleService: |||||||||||||||||||||||||||||||||||| category[%r] " % (category) )
+        printDBG("handleService: |||||||||||||||||||||||||||||||||||| category[%r] " % (category))
         self.currList = []
         
     #MAIN MENU
@@ -361,8 +361,8 @@ class IPTVHost(CHostBase):
             for urlItem in urls:
                 hostLinks.append(CUrlItem(urlItem['name'], urlItem['url'], 0))
             
-        title       =  clean_html( cItem.get('title', '') )
-        description =  clean_html( cItem.get('plot', '') )
+        title       =  clean_html(cItem.get('title', ''))
+        description =  clean_html(cItem.get('plot', ''))
         icon        =  cItem.get('icon', '')
         hostItem = CDisplayListItem(name=title,
                                     description=description,
@@ -377,7 +377,7 @@ class IPTVHost(CHostBase):
         # Find 'Wyszukaj' item
         try:
             list = self.host.getCurrList()
-            for i in range( len(list) ):
+            for i in range(len(list)):
                 if list[i]['category'] == 'Wyszukaj':
                     return i
         except Exception:
@@ -390,7 +390,7 @@ class IPTVHost(CHostBase):
             if 'history' == list[self.currIndex].get('name'):
                 pattern = list[self.currIndex]['title']
                 search_type = None
-                self.host.history.addHistoryItem( pattern, search_type)
+                self.host.history.addHistoryItem(pattern, search_type)
                 self.searchPattern = pattern
                 self.searchType = search_type
         except Exception:

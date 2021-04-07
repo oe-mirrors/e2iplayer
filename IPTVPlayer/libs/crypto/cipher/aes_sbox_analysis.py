@@ -57,7 +57,7 @@ def groups(subbytes):
         element = i
         cycle = []
         if not touched[element]:
-            for j in range (i, len(sbbytes)):
+            for j in range(i, len(sbbytes)):
                 touched[element] = 1
                 cycle.append(element)
                 element = sbbytes[element]
@@ -73,7 +73,7 @@ def grpv(subbytes):
     v=[]
     z=groups(subbytes)
     for i in list(z.keys()):
-        v.append( [i, len(z[i])] )
+        v.append([i, len(z[i])])
     return v
 
 def sgv(subbytes):

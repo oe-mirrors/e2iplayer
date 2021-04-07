@@ -50,7 +50,7 @@ def GetConfigList():
 
 class Sport365LiveApi:
     MAIN_URL   = 'http://www.sport365.live/'
-    HTTP_HEADER  = { 'User-Agent':'Mozilla/5.0 (X11; Linux i686) AppleWebKit/537.36 (KHTML, like Gecko) Ubuntu Chromium/37.0.2062.120 Chrome/37.0.2062.120 Safari/537.36', 'Accept-Encoding':'gzip, deflate', 'Referer': MAIN_URL }
+    HTTP_HEADER  = {'User-Agent':'Mozilla/5.0 (X11; Linux i686) AppleWebKit/537.36 (KHTML, like Gecko) Ubuntu Chromium/37.0.2062.120 Chrome/37.0.2062.120 Safari/537.36', 'Accept-Encoding':'gzip, deflate', 'Referer': MAIN_URL}
     CACHE_AES_PASSWORD = ''
     
     def __init__(self):
@@ -253,7 +253,7 @@ class Sport365LiveApi:
         if not sts:
             return []
         
-        desc = self.cleanHtmlStr( self.cm.ph.getDataBeetwenMarkers(data, '<table', '</table>')[1] ) + '[/br]' + cItem.get('desc', '')
+        desc = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(data, '<table', '</table>')[1]) + '[/br]' + cItem.get('desc', '')
         data = self.cm.ph.getAllItemsBeetwenMarkers(data, '<tr', '</tr>')
         for item in data:
             sourceTitle = self.cleanHtmlStr(item.split('<span')[0])
@@ -311,7 +311,7 @@ class Sport365LiveApi:
                 try:
                     jscode = base64.b64decode('''dmFyIGRvY3VtZW50ID0ge307DQp2YXIgd2luZG93ID0gdGhpczsNCmRvY3VtZW50LndyaXRlID0gZnVuY3Rpb24oKXt9Ow0Kd2luZG93LmF0b2IgPSBmdW5jdGlvbigpe3JldHVybiAiIjt9Ow0KDQpmdW5jdGlvbiBkZWNyeXB0KCl7DQogICAgdmFyIHRleHQgPSBKU09OLnN0cmluZ2lmeSh7YWVzOmFyZ3VtZW50c1sxXX0pOw0KICAgIHByaW50KHRleHQpOw0KICAgIHJldHVybiAiIjsNCn0NCg0KdmFyIENyeXB0b0pTID0ge307DQpDcnlwdG9KUy5BRVMgPSB7fTsNCkNyeXB0b0pTLkFFUy5kZWNyeXB0ID0gZGVjcnlwdDsNCkNyeXB0b0pTLmVuYyA9IHt9Ow0KQ3J5cHRvSlMuZW5jLlV0ZjggPSAidXRmLTgiOw0K''')                   
                     jscode = '%s %s %s' % (jscode, tmpData, jsData)
-                    ret = js_execute( jscode )
+                    ret = js_execute(jscode)
                     if ret['sts'] and 0 == ret['code']:
                         decoded = ret['data'].strip()
                         aes = json_loads(decoded)['aes']
@@ -340,7 +340,7 @@ class Sport365LiveApi:
 
         for commonUrl in data:
             num += 1
-            printDBG("common url n. %s : %s " % (str(num), commonUrl) )
+            printDBG("common url n. %s : %s " % (str(num), commonUrl))
 
             sts, tmpData = self.getPage(commonUrl, self.http_params)
             if not sts:
@@ -357,9 +357,9 @@ class Sport365LiveApi:
                             if not (item.startswith('function(w,i,s,e){for') and decFun == VIDEOWEED_decryptPlayerParams):
                                 tmpData = unpackJSPlayerParams('eval(' + item, decFun, 0)
                                 if '' != tmpData:
-                                    printDBG ('**********************************')
-                                    printDBG (tmpData)
-                                    printDBG ('**********************************')
+                                    printDBG('**********************************')
+                                    printDBG(tmpData)
+                                    printDBG('**********************************')
                                     break
                         
                         aes = self.cm.ph.getSearchGroups(tmpData, 'aes_key="([^"]+?)"')[0]
@@ -479,7 +479,7 @@ class Sport365LiveApi:
                                         playerUrl = self.decryptUrl(link2[0], aes).replace("/i", "/master.m3u8")
                                         printDBG("Final player Url ----------->  %s " % str(playerUrl))
 
-                                        playerUrl = strwithmeta(playerUrl, {'User-Agent' : h['header']['User-Agent'], 'Referer': action[0] })
+                                        playerUrl = strwithmeta(playerUrl, {'User-Agent': h['header']['User-Agent'], 'Referer': action[0]})
 
                                         COOKIE_FILE_M3U8 = GetCookieDir('sport365live.cookie')
                                         params = {'cookiefile':COOKIE_FILE_M3U8, 'use_cookie': True, 'load_cookie':False, 'save_cookie':True}
@@ -494,7 +494,7 @@ class Sport365LiveApi:
 
                         else:
                             data = self.cm.ph.getDataBeetwenMarkers(data, 'document.write(', '(')[1]
-                            playerUrl = self.cleanHtmlStr( self.cm.ph.getSearchGroups(data, '''<iframe[^>]+?src=['"](http[^"^']+?)['"]''', 1, True)[0] )
+                            playerUrl = self.cleanHtmlStr(self.cm.ph.getSearchGroups(data, '''<iframe[^>]+?src=['"](http[^"^']+?)['"]''', 1, True)[0])
 
                         urlsTab = self.up.getVideoLinkExt(strwithmeta(playerUrl, {'aes_key':aes}))
                         if len(urlsTab):

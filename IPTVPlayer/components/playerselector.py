@@ -73,7 +73,7 @@ class PlayerSelectorWidget(Screen):
         coverHeight = iconSize
         
         # space/distance between images
-        disWidth = int(coverWidth / 3 )
+        disWidth = int(coverWidth / 3)
         disHeight = int(coverHeight / 4)
         
         # marker size should be larger than img
@@ -172,8 +172,8 @@ class PlayerSelectorWidget(Screen):
         for y in range(1, numOfRow+1):
             for x in range(1, numOfCol+1):
                 skinCoverLine = """<widget name="cover_%s%s" zPosition="4" position="%d,%d" size="%d,%d" transparent="1" alphatest="blend" />""" % (x, y, 
-                    (offsetCoverX + tmpX * (x - 1) ), # pos X image
-                    (offsetCoverY + tmpY * (y - 1) ), # pos Y image
+                    (offsetCoverX + tmpX * (x - 1)), # pos X image
+                    (offsetCoverY + tmpY * (y - 1)), # pos Y image
                     coverWidth, 
                     coverHeight
                 )
@@ -182,7 +182,7 @@ class PlayerSelectorWidget(Screen):
         # add pagination items
         for pageItemOffset in range(self.numOfPages):
             pageItemX = self.pageItemStartX + pageItemOffset * self.pageItemSize
-            skinCoverLine = """<ePixmap zPosition="2" position="%d,%d" size="%d,%d" pixmap="%s" transparent="1" alphatest="blend" />""" % (pageItemX, self.pageItemStartY, self.pageItemSize, self.pageItemSize, GetIconDir('radio_button_off.png') )
+            skinCoverLine = """<ePixmap zPosition="2" position="%d,%d" size="%d,%d" pixmap="%s" transparent="1" alphatest="blend" />""" % (pageItemX, self.pageItemStartY, self.pageItemSize, self.pageItemSize, GetIconDir('radio_button_off.png'))
             skin += '\n' + skinCoverLine
         skin += '</screen>'
         self.skin = skin
@@ -196,7 +196,7 @@ class PlayerSelectorWidget(Screen):
         # load icons
         self.pixmapList = []
         for idx in range(0, self.numOfItems):
-            self.pixmapList.append( LoadPixmap(GetIconDir('PlayerSelector/' + self.currList[idx][1] + '%i.png' % self.IconsSize)) )
+            self.pixmapList.append(LoadPixmap(GetIconDir('PlayerSelector/' + self.currList[idx][1] + '%i.png' % self.IconsSize)))
 
         self.markerPixmap = LoadPixmap(GetIconDir('PlayerSelector/marker%i.png' % self.MarkerSize))
         self.markerPixmapSel = LoadPixmap(GetIconDir('PlayerSelector/markerSel%i.png' % self.MarkerSize))
@@ -295,9 +295,9 @@ class PlayerSelectorWidget(Screen):
         
     def onStart(self):
         self.onLayoutFinish.remove(self.onStart)
-        self["marker"].setPixmap( self.markerPixmap )
-        self["page_marker"].setPixmap( self.pageMarkerPixmap )
-        self["menu"].setPixmap( self.menuPixmap )
+        self["marker"].setPixmap(self.markerPixmap)
+        self["page_marker"].setPixmap(self.pageMarkerPixmap)
+        self["menu"].setPixmap(self.menuPixmap)
         self.offsetCoverX = self['marker'].position[0] + (self.markerWidth - self.coverWidth)/2
         self.offsetCoverY = self['marker'].position[1] + (self.markerHeight - self.coverHeight)/2
         self.pageItemStartX = self['page_marker'].position[0]
@@ -444,10 +444,10 @@ class PlayerSelectorWidget(Screen):
     def ok_pressed(self):
         if self.reorderingMode:
             if self.reorderingItemSelected:
-                self["marker"].setPixmap( self.markerPixmap )
+                self["marker"].setPixmap(self.markerPixmap)
                 self.reorderingItemSelected = False
             else:
-                self["marker"].setPixmap( self.markerPixmapSel )
+                self["marker"].setPixmap(self.markerPixmapSel)
                 self.reorderingItemSelected = True
             return
         
@@ -536,7 +536,7 @@ class PlayerSelectorWidget(Screen):
                 self.reInitDisplayList()
         else:
             if self.reorderingItemSelected:
-                self["marker"].setPixmap( self.markerPixmap )
+                self["marker"].setPixmap(self.markerPixmap)
             self.reorderingMode = False
             if self.numOfLockedItems > 0:
                 self.currList.extend(self.inList[len(self.inList)-self.numOfLockedItems:])

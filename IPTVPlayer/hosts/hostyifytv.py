@@ -57,25 +57,25 @@ class YifyTV(CBaseHostClass):
         self.HEADER = {'User-Agent': self.USER_AGENT, 'DNT':'1', 'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8', 'Accept-Language':'pl,en-US;q=0.7,en;q=0.3', 'Accept-Encoding':'gzip, deflate'}
         
         self.AJAX_HEADER = dict(self.HEADER)
-        self.AJAX_HEADER.update( {'X-Requested-With': 'XMLHttpRequest'} )
+        self.AJAX_HEADER.update({'X-Requested-With': 'XMLHttpRequest'})
         
         
         self.MAIN_URL    = 'https://ymovies.tv/'
         self.SRCH_URL    = self.getFullUrl('?s=')
         
-        self.MAIN_CAT_TAB = [{'category':'list_items',            'title': _('Releases'),          'url':self.getFullUrl('files/releases/') },
-                             {'category':'list_popular',          'title': _('Popular'),           'url':self.getFullUrl('wp-admin/admin-ajax.php?action=noprivate_movies_loop&asec=get_pop&needcap=1') },
-                             {'category':'list_items',            'title': _('Top +250'),          'url':self.getFullUrl('files/movies/?meta_key=imdbRating&orderby=meta_value&order=desc') },
-                             {'category':'list_genres_filter',    'title': _('Genres'),            'url':self.getFullUrl('files/movies/') },
-                             {'category':'list_languages_filter', 'title': _('Languages'),         'url':self.getFullUrl('languages/')    },
-                             {'category':'list_countries_filter', 'title': _('Countries'),         'url':self.getFullUrl('countries/') },
+        self.MAIN_CAT_TAB = [{'category':'list_items',            'title': _('Releases'),          'url':self.getFullUrl('files/releases/')},
+                             {'category':'list_popular',          'title': _('Popular'),           'url':self.getFullUrl('wp-admin/admin-ajax.php?action=noprivate_movies_loop&asec=get_pop&needcap=1')},
+                             {'category':'list_items',            'title': _('Top +250'),          'url':self.getFullUrl('files/movies/?meta_key=imdbRating&orderby=meta_value&order=desc')},
+                             {'category':'list_genres_filter',    'title': _('Genres'),            'url':self.getFullUrl('files/movies/')},
+                             {'category':'list_languages_filter', 'title': _('Languages'),         'url':self.getFullUrl('languages/')},
+                             {'category':'list_countries_filter', 'title': _('Countries'),         'url':self.getFullUrl('countries/')},
                              {'category': 'search',                'title': _('Search'), 'search_item': True, },
-                             {'category': 'search_history',        'title': _('Search history'),             } ]
+                             {'category': 'search_history',        'title': _('Search history'),}]
                         
-        self.POPULAR_TAB = [{'category':'list_items2', 'title': _('All'),        'url':self.getFullUrl('wp-admin/admin-ajax.php?action=noprivate_movies_loop&asec=get_pop&needcap=1')       },
-                            {'category':'list_items2', 'title': _('Comedies'),   'url':self.getFullUrl('wp-admin/admin-ajax.php?action=noprivate_movies_loop&asec=get_pop&genre=comedy')    },
-                            {'category':'list_items2', 'title': _('Animations'), 'url':self.getFullUrl('wp-admin/admin-ajax.php?action=noprivate_movies_loop&asec=get_pop&genre=animation') },
-                            {'category':'list_items2', 'title': _('Dramas'),     'url':self.getFullUrl('wp-admin/admin-ajax.php?action=noprivate_movies_loop&asec=get_pop&genre=drama')     }]
+        self.POPULAR_TAB = [{'category':'list_items2', 'title': _('All'),        'url':self.getFullUrl('wp-admin/admin-ajax.php?action=noprivate_movies_loop&asec=get_pop&needcap=1')},
+                            {'category':'list_items2', 'title': _('Comedies'),   'url':self.getFullUrl('wp-admin/admin-ajax.php?action=noprivate_movies_loop&asec=get_pop&genre=comedy')},
+                            {'category':'list_items2', 'title': _('Animations'), 'url':self.getFullUrl('wp-admin/admin-ajax.php?action=noprivate_movies_loop&asec=get_pop&genre=animation')},
+                            {'category':'list_items2', 'title': _('Dramas'),     'url':self.getFullUrl('wp-admin/admin-ajax.php?action=noprivate_movies_loop&asec=get_pop&genre=drama')}]
         
         self.defaultParams = {'header':self.HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
         
@@ -124,7 +124,7 @@ class YifyTV(CBaseHostClass):
                 jscode = self.cm.ph.getDataBeetwenNodes(data, ('<script', '>'), ('</script', '>'), False)[1]
                 if 'eval' in jscode:
                     jscode = '%s\n%s' % (base64.b64decode('''dmFyIGlwdHZfY29va2llcz1bXSxkb2N1bWVudD17fTtPYmplY3QuZGVmaW5lUHJvcGVydHkoZG9jdW1lbnQsImNvb2tpZSIse2dldDpmdW5jdGlvbigpe3JldHVybiIifSxzZXQ6ZnVuY3Rpb24obyl7bz1vLnNwbGl0KCI7IiwxKVswXS5zcGxpdCgiPSIsMiksb2JqPXt9LG9ialtvWzBdXT1vWzFdLGlwdHZfY29va2llcy5wdXNoKG9iail9fSk7dmFyIHdpbmRvdz10aGlzLGxvY2F0aW9uPXt9O2xvY2F0aW9uLnJlbG9hZD1mdW5jdGlvbigpe3ByaW50KEpTT04uc3RyaW5naWZ5KGlwdHZfY29va2llcykpfTs='''), jscode)
-                    ret = js_execute( jscode )
+                    ret = js_execute(jscode)
                     if ret['sts'] and 0 == ret['code']:
                         try:
                             cookies = byteify(json.loads(ret['data'].strip()))
@@ -281,7 +281,7 @@ class YifyTV(CBaseHostClass):
         if nextPage:
             page = cItem.get('page', 1)
             params = dict(cItem)
-            params.update( {'title':_('Next page'), 'page':page+1} )
+            params.update({'title':_('Next page'), 'page':page+1})
             self.addDir(params)
         
     def listSearchResult(self, cItem, searchPattern, searchType):
@@ -320,7 +320,7 @@ class YifyTV(CBaseHostClass):
             printDBG("+++++++++++++++++++++++  CODE  ++++++++++++++++++++++++")
             printDBG(jscode)
             printDBG("+++++++++++++++++++++++++++++++++++++++++++++++++++++++")
-            ret = js_execute( jscode )
+            ret = js_execute(jscode)
             if ret['sts'] and 0 == ret['code']:
                 decoded = ret['data'].strip()
                 printDBG('DECODED DATA -> [%s]' % decoded)
@@ -430,9 +430,9 @@ class YifyTV(CBaseHostClass):
                                     printDBG("+++++++++++++++++++++++  CODE  ++++++++++++++++++++++++")
                                     printDBG(jscode)
                                     printDBG("+++++++++++++++++++++++++++++++++++++++++++++++++++++++")
-                                    ret = js_execute( jscode )
+                                    ret = js_execute(jscode)
                                     if not ret['sts'] or  0 != ret['code']:
-                                        ret = js_execute( jscode.replace('eval(', 'print(') )
+                                        ret = js_execute(jscode.replace('eval(', 'print('))
                                     if ret['sts'] and 0 == ret['code']:
                                         decoded = ret['data'].strip()
                                         printDBG('DECODED DATA -> [%s]' % decoded)
@@ -505,11 +505,11 @@ class YifyTV(CBaseHostClass):
                                         cipher = AES_CBC(key=key, padding=noPadding(), keySize=32)
                                         data = cipher.decrypt(encrypted, iv).split('\x00')[0]
                                         if 'ucl' == paramSite:
-                                            urlTab.extend( self.up.getVideoLinkExt("https://userscloud.com/embed-" + data + "-1280x534.html") )
+                                            urlTab.extend(self.up.getVideoLinkExt("https://userscloud.com/embed-" + data + "-1280x534.html"))
                                         elif 'tus' == paramSite:
-                                            urlTab.extend( self.up.getVideoLinkExt("https://tusfiles.net/embed-" + data + "-1280x534.html?v=34") )
+                                            urlTab.extend(self.up.getVideoLinkExt("https://tusfiles.net/embed-" + data + "-1280x534.html?v=34"))
                                         elif 'up' == paramSite:
-                                            urlTab.extend( self.up.getVideoLinkExt("http://uptobox.com/" + data) )
+                                            urlTab.extend(self.up.getVideoLinkExt("http://uptobox.com/" + data))
                                         break
                         
                         if '("' in data: 
@@ -564,7 +564,7 @@ class YifyTV(CBaseHostClass):
         otherInfo['genre']    = cItem['genre']
         otherInfo['director'] = cItem['director']
         otherInfo['actors']   = cItem['actors']
-        return [{'title':self.cleanHtmlStr( title ), 'text': self.cleanHtmlStr( desc ), 'images':[{'title':'', 'url':self.getFullUrl(icon)}], 'other_info':otherInfo}]
+        return [{'title':self.cleanHtmlStr(title), 'text': self.cleanHtmlStr(desc), 'images':[{'title':'', 'url':self.getFullUrl(icon)}], 'other_info':otherInfo}]
 
     def handleService(self, index, refresh=0, searchPattern='', searchType=''):
         printDBG('handleService start')
@@ -573,7 +573,7 @@ class YifyTV(CBaseHostClass):
 
         name     = self.currItem.get("name", '')
         category = self.currItem.get("category", '')
-        printDBG( "handleService: |||||||||||||||||||||||||||||||||||| name[%s], category[%s] " % (name, category) )
+        printDBG("handleService: |||||||||||||||||||||||||||||||||||| name[%s], category[%s] " % (name, category))
         self.currList = []
         
         self.cacheLinks = {}

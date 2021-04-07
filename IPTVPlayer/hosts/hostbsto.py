@@ -56,7 +56,7 @@ class BSTO(CBaseHostClass, CaptchaHelper):
         self.USER_AGENT = 'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:40.0) Gecko/20100101 Firefox/40.0'
         self.HEADER = {'User-Agent': self.USER_AGENT, 'DNT':'1', 'Accept': 'text/html'}
         self.AJAX_HEADER = dict(self.HEADER)
-        self.AJAX_HEADER.update( {'X-Requested-With': 'XMLHttpRequest'} )
+        self.AJAX_HEADER.update({'X-Requested-With': 'XMLHttpRequest'})
         
         self.DEFAULT_ICON_URL = 'https://bs.to/opengraph.jpg'
         self.MAIN_URL = None
@@ -81,7 +81,7 @@ class BSTO(CBaseHostClass, CaptchaHelper):
         self.MAIN_CAT_TAB = [{'category':'list_genres',     'title': 'Genres',   'url':self.getFullUrl('/serie-genre')},
                              {'category':'list_genres',     'title': 'Alphabet', 'url':self.getFullUrl('/serie-alphabet')},
                              {'category': 'search',          'title': _('Search'), 'search_item': True, },
-                             {'category': 'search_history',  'title': _('Search history'),             } 
+                             {'category': 'search_history',  'title': _('Search history'),} 
                             ]
         
     def listGenres(self, cItem, nextCategory):
@@ -240,7 +240,7 @@ class BSTO(CBaseHostClass, CaptchaHelper):
                 tmp = base64.b64decode(tmp.split('\r')[-1]).replace('\r', '')
                 _getHeaders = compile(tmp, '', 'exec')
                 vGlobals = {"__builtins__": None, 'len': len, 'list': list, 'dict':dict, 'time':time, 'base64':base64, 'hashlib':hashlib, 'hmac':hmac, 'json':json, 'int':int, 'str':str}
-                vLocals = { '_getHeaders': '' }
+                vLocals = {'_getHeaders': ''}
                 exec(_getHeaders, vGlobals, vLocals)
                 self._getHeaders = vLocals['_getHeaders']
             except Exception:
@@ -364,7 +364,7 @@ class BSTO(CBaseHostClass, CaptchaHelper):
                       "Autoren":          "writer"}
         otherInfo = {}
         for item in data:
-            key = self.cleanHtmlStr( self.cm.ph.getDataBeetwenMarkers(item, '<span', '</span>')[1] )
+            key = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(item, '<span', '</span>')[1])
             tmp = self.cm.ph.getDataBeetwenMarkers(item, '<p', '</p>')[1]
             val = self.cleanHtmlStr(' '.join(self.cm.ph.getAllItemsBeetwenMarkers(tmp, '<span', '</span>')))
             if val == '':
@@ -376,7 +376,7 @@ class BSTO(CBaseHostClass, CaptchaHelper):
                 except Exception:
                     continue
         
-        return [{'title':self.cleanHtmlStr( title ), 'text': self.cleanHtmlStr( desc ), 'images':[{'title':'', 'url':self.getFullIconUrl(icon)}], 'other_info':otherInfo}]
+        return [{'title':self.cleanHtmlStr(title), 'text': self.cleanHtmlStr(desc), 'images':[{'title':'', 'url':self.getFullIconUrl(icon)}], 'other_info':otherInfo}]
     
     def handleService(self, index, refresh=0, searchPattern='', searchType=''):
         printDBG('handleService start')
@@ -390,7 +390,7 @@ class BSTO(CBaseHostClass, CaptchaHelper):
         category = self.currItem.get("category", '')
         mode     = self.currItem.get("mode", '')
         
-        printDBG( "handleService: |||||||||||||||||||||||||||||||||||| name[%s], category[%s] " % (name, category) )
+        printDBG("handleService: |||||||||||||||||||||||||||||||||||| name[%s], category[%s] " % (name, category))
         self.currList = []
         
     #MAIN MENU

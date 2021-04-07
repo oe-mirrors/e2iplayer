@@ -33,7 +33,7 @@ class StreamComplet(CBaseHostClass):
     
     MAIN_CAT_TAB = [{'category':'categories',     'title': _('Categories'),     'icon':DEFAULT_ICON_URL, 'filters':{}},
                     {'category':'search',         'title': _('Search'),         'icon':DEFAULT_ICON_URL, 'search_item':True},
-                    {'category':'search_history', 'title': _('Search history'), 'icon':DEFAULT_ICON_URL } 
+                    {'category':'search_history', 'title': _('Search history'), 'icon':DEFAULT_ICON_URL} 
                    ]
  
     def __init__(self):
@@ -89,11 +89,11 @@ class StreamComplet(CBaseHostClass):
             params = dict(cItem)
             url   = self.cm.ph.getSearchGroups(item, 'href="([^"]+?)"')[0]
             title = self.cm.ph.getSearchGroups(item, 'alt="([^"]+?)"')[0]
-            title = self.cleanHtmlStr( title )
+            title = self.cleanHtmlStr(title)
             if title == '':
                 continue
             icon  = self.cm.ph.getSearchGroups(item, 'src="([^"]+?)"')[0]
-            desc  = self.cleanHtmlStr( item )
+            desc  = self.cleanHtmlStr(item)
             params.update({'title':title, 'icon':self.getFullUrl(icon), 'desc':desc, 'url':self.getFullUrl(url)})
             self.addVideo(params)
         
@@ -111,8 +111,8 @@ class StreamComplet(CBaseHostClass):
     def _unpackJS(self, data, name):
         try:
             vGlobals = {"__builtins__": None, 'str':str, 'chr':chr, 'list':list}
-            vLocals = { name: None }
-            exec( data, vGlobals, vLocals )
+            vLocals = {name: None}
+            exec(data, vGlobals, vLocals)
         except Exception:
             printExc('_unpackJS exec code EXCEPTION')
             return ''
@@ -251,7 +251,7 @@ class StreamComplet(CBaseHostClass):
 
         name     = self.currItem.get("name", '')
         category = self.currItem.get("category", '')
-        printDBG( "handleService: |||||||||||||||||||||||||||||||||||| name[%s], category[%s] " % (name, category) )
+        printDBG("handleService: |||||||||||||||||||||||||||||||||||| name[%s], category[%s] " % (name, category))
         self.currList = []
         
     #MAIN MENU

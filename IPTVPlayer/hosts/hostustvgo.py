@@ -90,7 +90,7 @@ class ustvgo(CBaseHostClass):
                 jscode = self.cm.ph.getDataBeetwenNodes(data, ('<script', '>'), ('</script', '>'), False)[1]
                 if 'eval' in jscode:
                     jscode = '%s\n%s' % (base64.b64decode('''dmFyIGlwdHZfY29va2llcz1bXSxkb2N1bWVudD17fTtPYmplY3QuZGVmaW5lUHJvcGVydHkoZG9jdW1lbnQsImNvb2tpZSIse2dldDpmdW5jdGlvbigpe3JldHVybiIifSxzZXQ6ZnVuY3Rpb24obyl7bz1vLnNwbGl0KCI7IiwxKVswXS5zcGxpdCgiPSIsMiksb2JqPXt9LG9ialtvWzBdXT1vWzFdLGlwdHZfY29va2llcy5wdXNoKG9iail9fSk7dmFyIHdpbmRvdz10aGlzLGxvY2F0aW9uPXt9O2xvY2F0aW9uLnJlbG9hZD1mdW5jdGlvbigpe3ByaW50KEpTT04uc3RyaW5naWZ5KGlwdHZfY29va2llcykpfTs='''), jscode)
-                    ret = js_execute( jscode )
+                    ret = js_execute(jscode)
                     if ret['sts'] and 0 == ret['code']:
                         try:
                             cookies = byteify(json_loads(ret['data'].strip()))
@@ -138,12 +138,12 @@ class ustvgo(CBaseHostClass):
     def listMainMenu(self, cItem):
         if self.MAIN_URL == None:
             self.selectDomain()
-        MAIN_CAT_TAB = [{'category':'list_category',       'title': 'Home'          ,   'url':self.getFullUrl('/')                         },
-                        {'category':'list_category',       'title': 'Entertainment' ,   'url':self.getFullUrl('/category/entertainment/')  },
-                        {'category':'list_category',       'title': 'News'          ,   'url':self.getFullUrl('/category/news/')           },
-                        {'category':'list_category',       'title': 'Sports'        ,   'url':self.getFullUrl('/category/sports/')         },
-                        {'category':'list_category',       'title': 'Kids'          ,   'url':self.getFullUrl('/category/kids/')           },
-                        {'category':'list_items',          'title': _('All')        ,   'url':self.getFullUrl('/')                         },]
+        MAIN_CAT_TAB = [{'category':'list_category',       'title': 'Home',   'url':self.getFullUrl('/')},
+                        {'category':'list_category',       'title': 'Entertainment',   'url':self.getFullUrl('/category/entertainment/')},
+                        {'category':'list_category',       'title': 'News',   'url':self.getFullUrl('/category/news/')},
+                        {'category':'list_category',       'title': 'Sports',   'url':self.getFullUrl('/category/sports/')},
+                        {'category':'list_category',       'title': 'Kids',   'url':self.getFullUrl('/category/kids/')},
+                        {'category':'list_items',          'title': _('All'),   'url':self.getFullUrl('/')},]
         self.listsTab(MAIN_CAT_TAB, cItem)
     
     def listItems(self, cItem):
@@ -156,7 +156,7 @@ class ustvgo(CBaseHostClass):
         data = self.cm.ph.getDataBeetwenNodes(data, ('<ul', '>', 'ul_pis_posts_in_sidebar-2'), ('</ul', '>'))[1]
         data = self.cm.ph.rgetAllItemsBeetwenNodes(data, ('</li', '>'), ('<li', '>', 'pis-li'))
         for item in data:
-            url = self.getFullUrl( self.cm.ph.getSearchGroups(item, '''\shref=['"]([^"^']+?)['"]''')[0] )
+            url = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''\shref=['"]([^"^']+?)['"]''')[0])
             title = self.cleanHtmlStr(item)
             params = dict(cItem)
             params = {'good_for_fav': True, 'title':title, 'url':url}
@@ -178,11 +178,11 @@ class ustvgo(CBaseHostClass):
         data = self.cm.ph.getAllItemsBeetwenNodes(data, ('<article', '>', 'mh-posts'), ('</article', '>'))
         for item in data:
             tmp = self.cm.ph.getDataBeetwenNodes(item, ('<h3', '>'), ('</h3', '>'))[1]
-            url = self.getFullUrl( self.cm.ph.getSearchGroups(tmp, '''\shref=['"]([^"^']+?)['"]''')[0] )
+            url = self.getFullUrl(self.cm.ph.getSearchGroups(tmp, '''\shref=['"]([^"^']+?)['"]''')[0])
             title  = self.cleanHtmlStr(tmp)
             if not self.cm.isValidUrl(url):
                 continue
-            icon = self.getFullIconUrl( self.cm.ph.getSearchGroups(item, '''\sdata-lazy-src=['"]([^"^']+?)['"]''')[0] )
+            icon = self.getFullIconUrl(self.cm.ph.getSearchGroups(item, '''\sdata-lazy-src=['"]([^"^']+?)['"]''')[0])
             params = dict(cItem)
             params = {'good_for_fav': True, 'title':title, 'url':url, 'icon':icon}
             self.addVideo(params)
@@ -225,7 +225,7 @@ class ustvgo(CBaseHostClass):
         tmp = self.cm.ph.getDataBeetwenNodes(data, ('function', '{', jsfunc), '}')[1]
         jscode.append(tmp)
         jscode.append('print(%s);' % jsfunc)
-        ret = js_execute( '\n'.join(jscode) )
+        ret = js_execute('\n'.join(jscode))
         if ret['sts'] and 0 == ret['code']:
             url = "".join(ret['data'].split())
             url = strwithmeta(url, {'User-Agent': self.USER_AGENT, 'Origin':self.MAIN_URL, 'Referer':cItem['url']})
@@ -245,7 +245,7 @@ class ustvgo(CBaseHostClass):
         category = self.currItem.get("category", '')
         mode     = self.currItem.get("mode", '')
         
-        printDBG( "handleService: >> name[%s], category[%s] " % (name, category) )
+        printDBG("handleService: >> name[%s], category[%s] " % (name, category))
         self.currList = []
         
     #MAIN MENU

@@ -32,7 +32,7 @@ class Altadefinizione(CBaseHostClass):
         self.USER_AGENT = 'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:40.0) Gecko/20100101 Firefox/40.0'
         self.HEADER = {'User-Agent': self.USER_AGENT, 'DNT':'1', 'Accept': 'text/html'}
         self.AJAX_HEADER = dict(self.HEADER)
-        self.AJAX_HEADER.update( {'X-Requested-With': 'XMLHttpRequest'} )
+        self.AJAX_HEADER.update({'X-Requested-With': 'XMLHttpRequest'})
         self.MAIN_URL = 'https://altadefinizione.fm/'
         self.DEFAULT_ICON_URL = self.getFullIconUrl('/wp-content/themes/alta/img/logo.png')
         
@@ -103,7 +103,7 @@ class Altadefinizione(CBaseHostClass):
                 
         MAIN_CAT_TAB = [{'category':'list_categories', 'title': 'Categorie'},
                         {'category': 'search',          'title': _('Search'), 'search_item': True, },
-                        {'category': 'search_history',  'title': _('Search history'),             }]
+                        {'category': 'search_history',  'title': _('Search history'),}]
         self.listsTab(MAIN_CAT_TAB, cItem)
     
     def listSubItems(self, cItem):
@@ -120,16 +120,16 @@ class Altadefinizione(CBaseHostClass):
                 return
         
         nextPage = self.cm.ph.getDataBeetwenNodes(data, ('<ul', '>', 'pagination'), ('</ul', '>'), False)[1]
-        nextPage = self.getFullUrl( self.cm.ph.getSearchGroups(nextPage, '''<a[^>]+?href=['"]([^"^']+?)['"][^>]*?>%s<''' % (page + 1))[0] )
+        nextPage = self.getFullUrl(self.cm.ph.getSearchGroups(nextPage, '''<a[^>]+?href=['"]([^"^']+?)['"][^>]*?>%s<''' % (page + 1))[0])
         
         data = self.cm.ph.getDataBeetwenNodes(data, ('<section', '>', 'lastUpdate'), ('<div', '>', 'ismobile'), False)[1]
         data = self.cm.ph.getAllItemsBeetwenMarkers(data, '<div', '</div>')
         for item in data:
-            url = self.getFullUrl( self.cm.ph.getSearchGroups(item, '''href=['"]([^"^']+?)['"]''')[0] )
+            url = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''href=['"]([^"^']+?)['"]''')[0])
             if url == '':
                 continue
-            title = self.cleanHtmlStr( self.cm.ph.getDataBeetwenNodes(item, ('<h', '>', 'title'), ('</h', '>'))[1])
-            icon = self.getFullIconUrl( self.cm.ph.getSearchGroups(item, '''<img[^>]+?src=['"]([^"^']+?)['"]''')[0] )
+            title = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(item, ('<h', '>', 'title'), ('</h', '>'))[1])
+            icon = self.getFullIconUrl(self.cm.ph.getSearchGroups(item, '''<img[^>]+?src=['"]([^"^']+?)['"]''')[0])
 
             desc = []
             tmp = self.cm.ph.getAllItemsBeetwenMarkers(item, '<span', '</span>')
@@ -189,7 +189,7 @@ class Altadefinizione(CBaseHostClass):
         data = self.cm.ph.getDataBeetwenNodes(data, ('<div', '>', 'listRes'), ('</div', '>'), False)[1]
         data = self.cm.ph.getAllItemsBeetwenMarkers(data, '<a', '</a>')
         for item in data:
-            url = self.getFullUrl( self.cm.ph.getSearchGroups(item, '''href=['"]([^"^']+?)['"]''')[0] )
+            url = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''href=['"]([^"^']+?)['"]''')[0])
             if url == '':
                 continue
             title = self.cleanHtmlStr(item)
@@ -315,7 +315,7 @@ class Altadefinizione(CBaseHostClass):
                 printExc()
             
         jscode = ['var $={base64:function(not_used,e){e.length%4==3&&(e+="="),e.length%4==2&&(e+="=="),e=Duktape.dec("base64",e),decText="";for(var t=0;t<e.byteLength;t++)decText+=String.fromCharCode(e[t]);return decText},trim:function(e){return null==e?"":(e+"").replace(n,"")}};', self.cacheJSCode, 'print(clearify("%s"))' % playerData]
-        ret = js_execute( '\n'.join(jscode) )
+        ret = js_execute('\n'.join(jscode))
         if ret['sts'] and 0 == ret['code']:
             printDBG(ret['data'])
             urlTab = self.up.getVideoLinkExt(ret['data'])
@@ -337,7 +337,7 @@ class Altadefinizione(CBaseHostClass):
         desc = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(descData, '<p', '</p>')[1])
         if desc == '':
             desc = self.cm.ph.getSearchGroups(data, '''(<meta[^>]+?description['"][^>]*?>)''')[0]
-            desc = self.cleanHtmlStr( self.cm.ph.getSearchGroups(desc, '''content=['"]([^'^"]+?)['"]''')[0] )
+            desc = self.cleanHtmlStr(self.cm.ph.getSearchGroups(desc, '''content=['"]([^'^"]+?)['"]''')[0])
         
         try:
             title = str(byteify(json.loads(self.cm.ph.getSearchGroups(data, '''"disqusTitle"\:("[^"]+?")''')[0])))
@@ -364,11 +364,11 @@ class Altadefinizione(CBaseHostClass):
             otherInfo['rating'] = t
         
         descMap = {'genere':    'genres',
-                   'anno'  :    'year',
+                   'anno':    'year',
                    'qualitá':   'quality',
                    'scrittore': 'writers',
                    'attori':    'actors',
-                   'regia':     'directors' } #stars
+                   'regia':     'directors'} #stars
         
         descData = self.cm.ph.getAllItemsBeetwenNodes(descData, ('<li', '>'), ('</li', '>'), False)
         for item in descData:
@@ -387,7 +387,7 @@ class Altadefinizione(CBaseHostClass):
             if len(t):
                 otherInfo[descMap[marker]] = ', '.join(t)
         
-        return [{'title':self.cleanHtmlStr( title ), 'text': self.cleanHtmlStr( desc ), 'images':[{'title':'', 'url':self.getFullUrl(icon)}], 'other_info':otherInfo}]
+        return [{'title':self.cleanHtmlStr(title), 'text': self.cleanHtmlStr(desc), 'images':[{'title':'', 'url':self.getFullUrl(icon)}], 'other_info':otherInfo}]
         
     def handleService(self, index, refresh=0, searchPattern='', searchType=''):
         printDBG('Altadefinizione.handleService start')
@@ -398,7 +398,7 @@ class Altadefinizione(CBaseHostClass):
         category = self.currItem.get("category", '')
         mode     = self.currItem.get("mode", '')
         
-        printDBG( "handleService: |||||||||||||||||||||||||||||||||||| name[%s], category[%s] " % (name, category) )
+        printDBG("handleService: |||||||||||||||||||||||||||||||||||| name[%s], category[%s] " % (name, category))
         self.currList = []
         
     #MAIN MENU

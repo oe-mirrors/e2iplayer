@@ -39,7 +39,7 @@ class DjingComApi(CBaseHostClass):
         self.DEFAULT_ICON_URL = 'https://www.djing.com/newimages/content/c01.jpg'
         self.HTTP_HEADER = {'User-Agent': 'Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/62.0.3202.94 Safari/537.36', 'Accept': 'text/html', 'Accept-Encoding':'gzip, deflate'}
         self.AJAX_HEADER = dict(self.HTTP_HEADER)
-        self.AJAX_HEADER.update( {'X-Requested-With': 'XMLHttpRequest'} )
+        self.AJAX_HEADER.update({'X-Requested-With': 'XMLHttpRequest'})
         
         self.COOKIE_FILE = GetCookieDir('viortv.cookie')
         
@@ -60,13 +60,13 @@ class DjingComApi(CBaseHostClass):
         data = self.cm.ph.getDataBeetwenNodes(data, ('<ul', '>', 'bgImages'), ('</ul', '>'))[1]
         data = self.cm.ph.getAllItemsBeetwenMarkers(data, '<li', '</li>')
         for item in data:
-            icon  = self.getFullUrl( self.cm.ph.getSearchGroups(item, '''<img[^>]+?src=['"]([^"^']+?)['"]''')[0] )
-            url   = self.getFullUrl( self.cm.ph.getSearchGroups(item, '''<source[^>]+?src=['"]([^"^']+?)['"]''')[0] )
+            icon  = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''<img[^>]+?src=['"]([^"^']+?)['"]''')[0])
+            url   = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''<source[^>]+?src=['"]([^"^']+?)['"]''')[0])
             if not self.cm.isValidUrl(url):
                 continue
             
-            title = self.cleanHtmlStr( self.cm.ph.getDataBeetwenMarkers(item, '<h3', '</h3>')[1] )
-            desc  = self.cleanHtmlStr( self.cm.ph.getDataBeetwenMarkers(item, '<p', '</p>')[1] )
+            title = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(item, '<h3', '</h3>')[1])
+            desc  = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(item, '<p', '</p>')[1])
             params = {'name':cItem['name'], 'type':'video', 'title':title, 'url':self.getMainUrl(), 'iptv_hls_url':url, 'icon':icon, 'desc':desc}
             channelsTab.append(params)
         
@@ -81,7 +81,7 @@ class DjingComApi(CBaseHostClass):
             hlsUrl = strwithmeta(hlsUrl, {'User-Agent':self.defaultParams['header']['User-Agent'], 'Referer':cItem['url']})
             urlsTab = getDirectM3U8Playlist(hlsUrl, checkContent=True)
             
-        def __getLinkQuality( itemLink ):
+        def __getLinkQuality(itemLink):
             try:
                 return int(itemLink['bitrate'])
             except Exception:

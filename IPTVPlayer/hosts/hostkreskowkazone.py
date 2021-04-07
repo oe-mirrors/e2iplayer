@@ -54,7 +54,7 @@ class KreskowkaZonePL(CBaseHostClass):
         self.HEADER = {'User-Agent': 'Mozilla/5.0', 'Accept': 'text/html'}
         self.defaultParams = {'header': self.HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
         self.AJAX_HEADER = dict(self.HEADER)
-        self.AJAX_HEADER.update( {'X-Requested-With': 'XMLHttpRequest'} )
+        self.AJAX_HEADER.update({'X-Requested-With': 'XMLHttpRequest'})
         
         self.MAIN_URL = 'https://www.kreskowkazone.pl/'
         self.DEFAULT_ICON_URL = self.MAIN_URL + 'images/sprites.png'
@@ -316,7 +316,7 @@ class KreskowkaZonePL(CBaseHostClass):
            '' != config.plugins.iptvplayer.kreskowkazone_password.value.strip():
             loggedIn, msg = self.tryTologin(config.plugins.iptvplayer.kreskowkazone_login.value, config.plugins.iptvplayer.kreskowkazone_password.value)
             if not loggedIn:
-                self.sessionEx.open(MessageBox, 'Problem z zalogowaniem użytkownika "%s".' % config.plugins.iptvplayer.kreskowkazone_login.value, type=MessageBox.TYPE_INFO, timeout=10 )
+                self.sessionEx.open(MessageBox, 'Problem z zalogowaniem użytkownika "%s".' % config.plugins.iptvplayer.kreskowkazone_login.value, type=MessageBox.TYPE_INFO, timeout=10)
             else:
                 self.login    = config.plugins.iptvplayer.kreskowkazone_login.value
                 self.password = config.plugins.iptvplayer.kreskowkazone_password.value
@@ -328,7 +328,7 @@ class KreskowkaZonePL(CBaseHostClass):
         category = self.currItem.get("category", '')
         mode     = self.currItem.get("mode", '')
         
-        printDBG( "handleService: |||||||||||||||||||||||||||||||||||| name[%s], category[%s] " % (name, category) )
+        printDBG("handleService: |||||||||||||||||||||||||||||||||||| name[%s], category[%s] " % (name, category))
         self.currList = []
         
     #MAIN MENU

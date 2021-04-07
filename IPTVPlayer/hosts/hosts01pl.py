@@ -39,7 +39,7 @@ class S01pl(CBaseHostClass):
         self.DEFAULT_ICON_URL = 'http://s01.pl/storage/branding_media/OLh3Gg0Bv1jRmDjeHBDibsQNXx5GllOHjOAAEkJh.png'
         self.HTTP_HEADER = {'User-Agent': self.USER_AGENT, 'DNT':'1', 'Accept': 'text/html', 'Accept-Encoding':'gzip, deflate', 'Referer':self.getMainUrl(), 'Origin':self.getMainUrl(), 'Upgrade-Insecure-Requests':'1', 'Connection':'keep-alive'}
         self.AJAX_HEADER = dict(self.HTTP_HEADER)
-        self.AJAX_HEADER.update( {'X-Requested-With': 'XMLHttpRequest', 'Accept-Encoding':'gzip, deflate', 'Content-Type':'application/x-www-form-urlencoded; charset=UTF-8', 'Accept':'application/json, text/javascript, */*; q=0.01'} )
+        self.AJAX_HEADER.update({'X-Requested-With': 'XMLHttpRequest', 'Accept-Encoding':'gzip, deflate', 'Content-Type':'application/x-www-form-urlencoded; charset=UTF-8', 'Accept':'application/json, text/javascript, */*; q=0.01'})
 
         self.itemsPerPage = 30
         self.cacheMovieFilters = {'cats':[], 'sort':[], 'years':[], 'az':[]}
@@ -77,7 +77,7 @@ class S01pl(CBaseHostClass):
     
     ###################################################
     def _fillMovieFilters(self, cItem):
-        self.cacheMovieFilters = { 'cats':[], 'sort':[], 'years':[], 'az':[]}
+        self.cacheMovieFilters = {'cats':[], 'sort':[], 'years':[], 'az':[]}
 
         # fill sort
         dat = [('&order=created_at:desc', 'Data dodania'),
@@ -297,7 +297,7 @@ class S01pl(CBaseHostClass):
         category = self.currItem.get("category", '')
         mode     = self.currItem.get("mode", '')
         
-        printDBG( "handleService: |||| name[%s], category[%s] " % (name, category) )
+        printDBG("handleService: |||| name[%s], category[%s] " % (name, category))
         self.cacheLinks = {}
         self.currList = []
         

@@ -40,7 +40,7 @@ class BuxyboxWgetDownloader(WgetDownloader):
         return "busybox wget"
 
     def isWorkingCorrectly(self, callBackFun):
-        self.iptv_sys = iptv_system( "wget 2>&1 ", boundFunction(self._checkWorkingCallBack, callBackFun) )
+        self.iptv_sys = iptv_system("wget 2>&1 ", boundFunction(self._checkWorkingCallBack, callBackFun))
         
     def _checkWorkingCallBack(self, callBackFun, code, data):
         reason = ''
@@ -71,7 +71,7 @@ class BuxyboxWgetDownloader(WgetDownloader):
         
         self.console = eConsoleAppContainer()
         self.console_appClosed_conn = eConnectCallback(self.console.appClosed, self._cmdFinished)
-        self.console.execute( E2PrioFix( cmd ) )
+        self.console.execute(E2PrioFix(cmd))
 
         self.wgetStatus = self.WGET_STS.CONNECTING
         self.status     = DMHelper.STS.DOWNLOADING

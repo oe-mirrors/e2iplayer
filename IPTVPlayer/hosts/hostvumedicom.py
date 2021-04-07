@@ -54,7 +54,7 @@ class VUMEDI(CBaseHostClass):
         self.USER_AGENT = 'Mozilla/5.0'
         self.HEADER = {'User-Agent': self.USER_AGENT, 'Accept': 'text/html'}
         self.AJAX_HEADER = dict(self.HEADER)
-        self.AJAX_HEADER.update( {'X-Requested-With':'XMLHttpRequest', 'Content-Type':'application/x-www-form-urlencoded; charset=UTF-8'} )
+        self.AJAX_HEADER.update({'X-Requested-With':'XMLHttpRequest', 'Content-Type':'application/x-www-form-urlencoded; charset=UTF-8'})
         
         self.MAIN_URL = 'https://www.vumedi.com/'
         self.DEFAULT_ICON_URL = 'https://pbs.twimg.com/media/DZTZrVhW4AAekGB.jpg'
@@ -80,10 +80,10 @@ class VUMEDI(CBaseHostClass):
     def listMainMenu(self, cItem):
         printDBG("VUMEDI.listMainMenu")
 
-        MAIN_CAT_TAB = [{'category':'list_spec',       'title': _('Specialities'),        'url':self.getMainUrl()                },
+        MAIN_CAT_TAB = [{'category':'list_spec',       'title': _('Specialities'),        'url':self.getMainUrl()},
                         {'category':'list_sort',       'title': _('Browse videos'),       'url':self.getFullUrl('/video/browse/')},
                         {'category':'search',          'title': _('Search'), 'search_item':True},
-                        {'category':'search_history',  'title': _('Search history')} ]
+                        {'category':'search_history',  'title': _('Search history')}]
         self.listsTab(MAIN_CAT_TAB, cItem)
         
     def listCategories(self, cItem, nextCategory1, nextCategory2):
@@ -105,11 +105,11 @@ class VUMEDI(CBaseHostClass):
             if len(sItem) < 2:
                 continue
             sTitle = self.cleanHtmlStr(sItem[0])
-            sUrl = self.getFullUrl( self.cm.ph.getSearchGroups(sItem[0], '''href=['"]([^"^']+?)['"]''')[0].split('#', 1)[0], cUrl )
+            sUrl = self.getFullUrl(self.cm.ph.getSearchGroups(sItem[0], '''href=['"]([^"^']+?)['"]''')[0].split('#', 1)[0], cUrl)
             categories = []
             sItem = self.cm.ph.getAllItemsBeetwenMarkers(sItem[1], '<a', '</a>')
             for item in sItem:
-                url = self.getFullUrl( self.cm.ph.getSearchGroups(item, '''href=['"]([^"^']+?)['"]''')[0], cUrl )
+                url = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''href=['"]([^"^']+?)['"]''')[0], cUrl)
                 title = self.cleanHtmlStr(item)
                 params = dict(cItem)
                 params.update({'good_for_fav':True, 'name':'category', 'category':nextCategory2, 'title':title, 'url':url})
@@ -146,7 +146,7 @@ class VUMEDI(CBaseHostClass):
             categories = []
             sItem = self.cm.ph.getAllItemsBeetwenMarkers(sItem[1], '<a', '</a>')
             for item in sItem:
-                url = self.getFullUrl( self.cm.ph.getSearchGroups(item, '''href=['"]([^"^']+?)['"]''')[0], cUrl )
+                url = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''href=['"]([^"^']+?)['"]''')[0], cUrl)
                 title = self.cleanHtmlStr(item)
                 params = dict(cItem)
                 params.update({'good_for_fav':True, 'name':'category', 'category':nextCategory, 'title':title, 'url':url})
@@ -174,7 +174,7 @@ class VUMEDI(CBaseHostClass):
         data = self.cm.ph.getDataBeetwenNodes(data, ('<div', '>', 'navbarSpecDropdown'), ('</div', '>'), False)[1]
         data = self.cm.ph.getAllItemsBeetwenMarkers(data, '<a', '</a>')
         for item in data:
-            url = self.getFullUrl( self.cm.ph.getSearchGroups(item, '''href=['"]([^"^']+?)['"]''')[0], cUrl )
+            url = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''href=['"]([^"^']+?)['"]''')[0], cUrl)
             title = self.cleanHtmlStr(item)
             params = dict(cItem)
             params.update({'good_for_fav':True, 'name':'category', 'category':nextCategory, 'title':title, 'url':url})
@@ -413,7 +413,7 @@ class VUMEDI(CBaseHostClass):
         category = self.currItem.get("category", '')
         mode     = self.currItem.get("mode", '')
         
-        printDBG( "handleService: || name[%s], category[%s] " % (name, category) )
+        printDBG("handleService: || name[%s], category[%s] " % (name, category))
         self.currList = []
         
     #MAIN MENU

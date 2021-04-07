@@ -53,7 +53,7 @@ class FilmeOnlineTo(CBaseHostClass):
         self.DEFAULT_ICON_URL = 'https://filme-online.to/assets/images/filme-online-logo4e.png'
         self.HEADER = {'User-Agent': 'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:40.0) Gecko/20100101 Firefox/40.0', 'DNT':'1', 'Accept':'text/html', 'Accept-Encoding':'gzip, deflate'}
         self.AJAX_HEADER = dict(self.HEADER)
-        self.AJAX_HEADER.update( {'X-Requested-With': 'XMLHttpRequest', 'Content-Type':'application/x-www-form-urlencoded; charset=UTF-8', 'Accept':'*/*'} )
+        self.AJAX_HEADER.update({'X-Requested-With': 'XMLHttpRequest', 'Content-Type':'application/x-www-form-urlencoded; charset=UTF-8', 'Accept':'*/*'})
         self.MAIN_URL = None
         self.cacheLinks = {}
         self.cacheFilters  = {}
@@ -113,9 +113,9 @@ class FilmeOnlineTo(CBaseHostClass):
             self.MAIN_URL = domains[-1]
         
         self.MAIN_CAT_TAB = [{'category':'list_filters',   'title': _('Movies'),    'url':self.getFullUrl('/filter'), 'f_tip':'film'},
-                             {'category':'list_filters',   'title': _('TV-Series'), 'url':self.getFullUrl('/filter'), 'f_tip':'tv'  },
+                             {'category':'list_filters',   'title': _('TV-Series'), 'url':self.getFullUrl('/filter'), 'f_tip':'tv'},
                              {'category': 'search',         'title': _('Search'),    'search_item': True,},
-                             {'category': 'search_history', 'title': _('Search history'),               }]
+                             {'category': 'search_history', 'title': _('Search history'),}]
                             
     def fillCacheFilters(self, cItem):
         printDBG("FilmeOnlineTo.listCategories")
@@ -233,12 +233,12 @@ class FilmeOnlineTo(CBaseHostClass):
         
         data = self.cm.ph.getAllItemsBeetwenNodes(data, ('<div', '>', 'data-movie-id'), ('</div', '>'))
         for item in data:
-            url  = self.getFullUrl( self.cm.ph.getSearchGroups(item, '''href=['"]([^"^']+?)['"]''')[0] )
+            url  = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''href=['"]([^"^']+?)['"]''')[0])
             if url == '':
                 continue
-            icon = self.getFullUrl( self.cm.ph.getSearchGroups(item, '''data\-original=['"]([^"^']+?)['"]''')[0] )
+            icon = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''data\-original=['"]([^"^']+?)['"]''')[0])
             tmp = item.split('<h2>', 1)
-            title = self.cleanHtmlStr( tmp[-1] )
+            title = self.cleanHtmlStr(tmp[-1])
             desc = []
             tmp = self.cm.ph.getAllItemsBeetwenMarkers(tmp[0], '<span', '</span>')
             for t in tmp:
@@ -247,9 +247,9 @@ class FilmeOnlineTo(CBaseHostClass):
                     desc.append(t)
             
             if title == '':
-                title  = self.cleanHtmlStr( self.cm.ph.getSearchGroups(item, 'title="([^"]+?)"')[0] )
+                title  = self.cleanHtmlStr(self.cm.ph.getSearchGroups(item, 'title="([^"]+?)"')[0])
             if title == '':
-                title  = self.cleanHtmlStr( self.cm.ph.getSearchGroups(item, 'alt="([^"]+?)"')[0] )
+                title  = self.cleanHtmlStr(self.cm.ph.getSearchGroups(item, 'alt="([^"]+?)"')[0])
             movieId = self.cm.ph.getSearchGroups(item, '''data\-movie\-id=['"]([^"^']+?)['"]''')[0]
             params = {'good_for_fav': True, 'name':'category', 'category':nextCategory, 'title':title, 'url':url, 'movie_id':movieId, 'desc':' | '.join(desc), 'info_url':url, 'icon':icon}
             self.addDir(params)
@@ -268,7 +268,7 @@ class FilmeOnlineTo(CBaseHostClass):
             return
         
         data = self.cm.ph.getDataBeetwenReMarkers(data, re.compile('var\s*?movie\s*?\=\s*?\{'), re.compile('}'))[1]
-        ret = js_execute( data + '; print(JSON.stringify(movie));' )
+        ret = js_execute(data + '; print(JSON.stringify(movie));')
         try:
             printDBG(ret['data'])
             movieData = byteify(json.loads(ret['data']), '', True)
@@ -378,7 +378,7 @@ class FilmeOnlineTo(CBaseHostClass):
             return
         
         data = self.cm.ph.getDataBeetwenReMarkers(data, re.compile('var\s*?movie\s*?\=\s*?\{'), re.compile('}'))[1]
-        ret = js_execute( data + '; print(JSON.stringify(movie));' )
+        ret = js_execute(data + '; print(JSON.stringify(movie));')
         try:
             movieData = byteify(json.loads(ret['data']), '', True)
             urlParams = dict(self.defaultParams)
@@ -448,9 +448,9 @@ class FilmeOnlineTo(CBaseHostClass):
         if not sts:
             return retTab
         
-        title = self.cleanHtmlStr( self.cm.ph.getSearchGroups(data, '<meta property="og:title"[^>]+?content="([^"]+?)"')[0] )
-        desc  = self.cleanHtmlStr( self.cm.ph.getSearchGroups(data, '<meta property="og:description"[^>]+?content="([^"]+?)"')[0] )
-        icon  = self.getFullUrl( self.cm.ph.getSearchGroups(data, '<meta property="og:image"[^>]+?content="([^"]+?)"')[0] )
+        title = self.cleanHtmlStr(self.cm.ph.getSearchGroups(data, '<meta property="og:title"[^>]+?content="([^"]+?)"')[0])
+        desc  = self.cleanHtmlStr(self.cm.ph.getSearchGroups(data, '<meta property="og:description"[^>]+?content="([^"]+?)"')[0])
+        icon  = self.getFullUrl(self.cm.ph.getSearchGroups(data, '<meta property="og:image"[^>]+?content="([^"]+?)"')[0])
         
         if title == '':
             title = cItem['title']
@@ -483,8 +483,8 @@ class FilmeOnlineTo(CBaseHostClass):
             item = item.split('</strong>')
             if len(item) < 2:
                 continue
-            key = self.cleanHtmlStr( item[0] ).replace(':', '').strip()
-            val = self.cleanHtmlStr( item[1] ).replace(' , ', ', ')
+            key = self.cleanHtmlStr(item[0]).replace(':', '').strip()
+            val = self.cleanHtmlStr(item[1]).replace(' , ', ', ')
             if val.endswith(','):
                 val = val[:-1]
             if key == 'IMDb':
@@ -495,7 +495,7 @@ class FilmeOnlineTo(CBaseHostClass):
                 except Exception:
                     continue
         
-        return [{'title':self.cleanHtmlStr( title ), 'text': self.cleanHtmlStr( desc ), 'images':[{'title':'', 'url':self.getFullUrl(icon)}], 'other_info':otherInfo}]
+        return [{'title':self.cleanHtmlStr(title), 'text': self.cleanHtmlStr(desc), 'images':[{'title':'', 'url':self.getFullUrl(icon)}], 'other_info':otherInfo}]
         
     def handleService(self, index, refresh=0, searchPattern='', searchType=''):
         printDBG('handleService start')
@@ -509,7 +509,7 @@ class FilmeOnlineTo(CBaseHostClass):
         category = self.currItem.get("category", '')
         mode     = self.currItem.get("mode", '')
         
-        printDBG( "handleService: |||||||||||||||||||||||||||||||||||| name[%s], category[%s] " % (name, category) )
+        printDBG("handleService: |||||||||||||||||||||||||||||||||||| name[%s], category[%s] " % (name, category))
         self.currList = []
         
     #MAIN MENU

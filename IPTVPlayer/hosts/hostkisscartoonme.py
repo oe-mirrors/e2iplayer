@@ -29,7 +29,7 @@ config.plugins.iptvplayer.kisscartoon_defaultformat = ConfigSelection(default="9
 
 def GetConfigList():
     optionList = []
-    optionList.append( getConfigListEntry( _("Default video quality:"), config.plugins.iptvplayer.kisscartoon_defaultformat ) )
+    optionList.append(getConfigListEntry(_("Default video quality:"), config.plugins.iptvplayer.kisscartoon_defaultformat))
     return optionList
 ###################################################
 
@@ -40,15 +40,15 @@ class KissCartoonMe(CBaseHostClass):
     USER_AGENT = 'Mozilla/5.0 (X11; Linux i686) AppleWebKit/537.36 (KHTML, like Gecko) Ubuntu Chromium/37.0.2062.120 Chrome/37.0.2062.120 Safari/537.36'
     HEADER = {'User-Agent': USER_AGENT, 'Accept': 'text/html'}
     AJAX_HEADER = dict(HEADER)
-    AJAX_HEADER.update( {'X-Requested-With': 'XMLHttpRequest', 'Content-Type':'application/x-www-form-urlencoded; charset=UTF-8'} )
+    AJAX_HEADER.update({'X-Requested-With': 'XMLHttpRequest', 'Content-Type':'application/x-www-form-urlencoded; charset=UTF-8'})
     
     MAIN_URL = 'https://kisscartoon.ac/'
     DEFAULT_ICON_URL = "http://kisscartoon.bz/image/logo.png"
     
-    MAIN_CAT_TAB = [{'category': 'home',            'title': _('Home'),              'url': MAIN_URL,               },
+    MAIN_CAT_TAB = [{'category': 'home',            'title': _('Home'),              'url': MAIN_URL,},
                     {'category': 'list_cats',       'title': _('Catrtoon list'),     'url': MAIN_URL+'CartoonList', },
-                    {'category': 'search',          'title': _('Search'), 'search_item': True,                      },
-                    {'category': 'search_history',  'title': _('Search history'),                                  } ]
+                    {'category': 'search',          'title': _('Search'), 'search_item': True,},
+                    {'category': 'search_history',  'title': _('Search history'),}]
     SORT_BY_TAB = [{'title':_('Sort by alphabet')},
                    {'title':_('Sort by popularity'), 'sort_by':'MostPopular'},
                    {'title':_('Latest update'),      'sort_by':'LatestUpdate'},
@@ -346,8 +346,8 @@ class KissCartoonMe(CBaseHostClass):
         
         referer = strwithmeta(videoUrl).meta.get('Referer', videoUrl)
         params = dict(self.defaultParams)
-        params['header'] = dict(params['header'] )
-        params['header'] ['Referer'] = referer
+        params['header'] = dict(params['header'])
+        params['header']['Referer'] = referer
         
         sts, data = self.getPage(videoUrl, params)
         videoUrl = self.cm.meta.get('url', videoUrl)
@@ -382,7 +382,7 @@ class KissCartoonMe(CBaseHostClass):
             
         if 0 < len(urlTab):
             max_bitrate = int(config.plugins.iptvplayer.kisscartoon_defaultformat.value)
-            def __getLinkQuality( itemLink ):
+            def __getLinkQuality(itemLink):
                 try:
                     return int(self.cm.ph.getSearchGroups('|'+itemLink['name']+'|', '[^0-9]([0-9]+?)[^0-9]')[0])
                 except Exception:
@@ -435,7 +435,7 @@ class KissCartoonMe(CBaseHostClass):
         category = self.currItem.get("category", '')
         mode     = self.currItem.get("mode", '')
         
-        printDBG( "handleService: |||||||||||||||||||||||||||||||||||| name[%s], category[%s] " % (name, category) )
+        printDBG("handleService: |||||||||||||||||||||||||||||||||||| name[%s], category[%s] " % (name, category))
         self.currList = []
         
     #MAIN MENU

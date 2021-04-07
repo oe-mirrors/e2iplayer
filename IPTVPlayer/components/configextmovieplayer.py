@@ -72,10 +72,10 @@ config.plugins.iptvplayer.extplayer_subtitle_border_width = ConfigInteger(3, (1,
 config.plugins.iptvplayer.extplayer_subtitle_shadow_xoffset = ConfigInteger(3, (-6, 6))
 config.plugins.iptvplayer.extplayer_subtitle_shadow_yoffset = ConfigInteger(3, (-6, 6))
 config.plugins.iptvplayer.extplayer_subtitle_pos = ConfigInteger(50, (0, 400))
-config.plugins.iptvplayer.extplayer_subtitle_box_valign = ConfigSelection(default="bottom", choices=[ ("bottom", _("bottom")), ("center", _("center")), ("top", _("top"))])
+config.plugins.iptvplayer.extplayer_subtitle_box_valign = ConfigSelection(default="bottom", choices=[("bottom", _("bottom")), ("center", _("center")), ("top", _("top"))])
 config.plugins.iptvplayer.extplayer_subtitle_box_height  = ConfigInteger(240, (50, 400))
 
-config.plugins.iptvplayer.extplayer_infobanner_clockformat = ConfigSelection(default="", choices=[ ("", _("None")), ("24", _("24 hour format ")), ("12", _("12 hour format "))])
+config.plugins.iptvplayer.extplayer_infobanner_clockformat = ConfigSelection(default="", choices=[("", _("None")), ("24", _("24 hour format ")), ("12", _("12 hour format "))])
 
 class ConfigExtMoviePlayerBase():
     
@@ -241,7 +241,7 @@ class ConfigExtMoviePlayer(ConfigBaseWidget, ConfigExtMoviePlayerBase):
    
     def __init__(self, session, operatingPlayer=False):
         printDBG("ConfigExtMoviePlayer.__init__ -------------------------------")
-        self.list = [ ]
+        self.list = []
         ConfigBaseWidget.__init__(self, session)
         ConfigExtMoviePlayerBase.__init__(self)
         self.setup_title = _("Configuring an external movie player")
@@ -330,42 +330,42 @@ class ConfigExtMoviePlayer(ConfigBaseWidget, ConfigExtMoviePlayerBase):
         list.append(getConfigListEntry(_("Info bar timeout"), config.plugins.iptvplayer.extplayer_infobar_timeout))
         
         if self.aspect_avaliable:
-            list.append(getConfigListEntry(_("Default video aspect ratio"), config.plugins.iptvplayer.extplayer_aspect) )
+            list.append(getConfigListEntry(_("Default video aspect ratio"), config.plugins.iptvplayer.extplayer_aspect))
         if self.policy_avaliable:
-            list.append(getConfigListEntry(_("Default video policy for 16:9"), config.plugins.iptvplayer.extplayer_policy) )
+            list.append(getConfigListEntry(_("Default video policy for 16:9"), config.plugins.iptvplayer.extplayer_policy))
         if self.policy2_avaliable:
-            list.append(getConfigListEntry(_("Default video policy for 4:3"), config.plugins.iptvplayer.extplayer_policy2) )
+            list.append(getConfigListEntry(_("Default video policy for 4:3"), config.plugins.iptvplayer.extplayer_policy2))
         
-        list.append(getConfigListEntry(_("Automatically turn on external subtitles"), config.plugins.iptvplayer.extplayer_subtitle_auto_enable) )
-        list.append(getConfigListEntry(_("Subtitle line wrapping"), config.plugins.iptvplayer.extplayer_subtitle_wrapping_enabled) )
-        list.append(getConfigListEntry(_("Subtitle font"), config.plugins.iptvplayer.extplayer_subtitle_font) )
-        list.append(getConfigListEntry(_("Subtitle font size"), config.plugins.iptvplayer.extplayer_subtitle_font_size) )
+        list.append(getConfigListEntry(_("Automatically turn on external subtitles"), config.plugins.iptvplayer.extplayer_subtitle_auto_enable))
+        list.append(getConfigListEntry(_("Subtitle line wrapping"), config.plugins.iptvplayer.extplayer_subtitle_wrapping_enabled))
+        list.append(getConfigListEntry(_("Subtitle font"), config.plugins.iptvplayer.extplayer_subtitle_font))
+        list.append(getConfigListEntry(_("Subtitle font size"), config.plugins.iptvplayer.extplayer_subtitle_font_size))
         if not config.plugins.iptvplayer.extplayer_subtitle_wrapping_enabled.value:
-            list.append(getConfigListEntry(_("Subtitle line height"), config.plugins.iptvplayer.extplayer_subtitle_line_height) )
-            list.append(getConfigListEntry(_("Line Spacing"), config.plugins.iptvplayer.extplayer_subtitle_line_spacing) )
+            list.append(getConfigListEntry(_("Subtitle line height"), config.plugins.iptvplayer.extplayer_subtitle_line_height))
+            list.append(getConfigListEntry(_("Line Spacing"), config.plugins.iptvplayer.extplayer_subtitle_line_spacing))
         elif 'transparent' != config.plugins.iptvplayer.extplayer_subtitle_background.value:
-            list.append(getConfigListEntry(_("Subtitle line height"), config.plugins.iptvplayer.extplayer_subtitle_line_height) )
+            list.append(getConfigListEntry(_("Subtitle line height"), config.plugins.iptvplayer.extplayer_subtitle_line_height))
         
-        list.append(getConfigListEntry(_("Subtitle font color"), config.plugins.iptvplayer.extplayer_subtitle_font_color) )
-        list.append(getConfigListEntry(_("Subtitle background"), config.plugins.iptvplayer.extplayer_subtitle_background) )
+        list.append(getConfigListEntry(_("Subtitle font color"), config.plugins.iptvplayer.extplayer_subtitle_font_color))
+        list.append(getConfigListEntry(_("Subtitle background"), config.plugins.iptvplayer.extplayer_subtitle_background))
         
-        list.append(getConfigListEntry(_("Subtitle box position"), config.plugins.iptvplayer.extplayer_subtitle_pos) )
+        list.append(getConfigListEntry(_("Subtitle box position"), config.plugins.iptvplayer.extplayer_subtitle_pos))
         if config.plugins.iptvplayer.extplayer_subtitle_wrapping_enabled.value:
             if 'transparent' == config.plugins.iptvplayer.extplayer_subtitle_background.value:
-                list.append(getConfigListEntry(_("Subtitle box height"), config.plugins.iptvplayer.extplayer_subtitle_box_height) )
-                list.append(getConfigListEntry(_("Subtitle vertical alignment"), config.plugins.iptvplayer.extplayer_subtitle_box_valign) )
+                list.append(getConfigListEntry(_("Subtitle box height"), config.plugins.iptvplayer.extplayer_subtitle_box_height))
+                list.append(getConfigListEntry(_("Subtitle vertical alignment"), config.plugins.iptvplayer.extplayer_subtitle_box_valign))
         
         if self.subtitle_border_avaliable:
-            list.append(getConfigListEntry(_("Subtitle border enabled"), config.plugins.iptvplayer.extplayer_subtitle_border_enabled) )
+            list.append(getConfigListEntry(_("Subtitle border enabled"), config.plugins.iptvplayer.extplayer_subtitle_border_enabled))
             if config.plugins.iptvplayer.extplayer_subtitle_border_enabled.value:
-                list.append(getConfigListEntry(_("Subtitle border color"), config.plugins.iptvplayer.extplayer_subtitle_border_color) )
-                list.append(getConfigListEntry(_("Subtitle border width"), config.plugins.iptvplayer.extplayer_subtitle_border_width) )
+                list.append(getConfigListEntry(_("Subtitle border color"), config.plugins.iptvplayer.extplayer_subtitle_border_color))
+                list.append(getConfigListEntry(_("Subtitle border width"), config.plugins.iptvplayer.extplayer_subtitle_border_width))
                 
-        list.append(getConfigListEntry(_("Subtitle shadow enabled"), config.plugins.iptvplayer.extplayer_subtitle_shadow_enabled) )
+        list.append(getConfigListEntry(_("Subtitle shadow enabled"), config.plugins.iptvplayer.extplayer_subtitle_shadow_enabled))
         if config.plugins.iptvplayer.extplayer_subtitle_shadow_enabled.value:
-            list.append(getConfigListEntry(_("Subtitle shadow color"), config.plugins.iptvplayer.extplayer_subtitle_shadow_color) )
-            list.append(getConfigListEntry(_("Subtitle shadow X offset"), config.plugins.iptvplayer.extplayer_subtitle_shadow_xoffset) )
-            list.append(getConfigListEntry(_("Subtitle shadow Y offset"), config.plugins.iptvplayer.extplayer_subtitle_shadow_yoffset) )
+            list.append(getConfigListEntry(_("Subtitle shadow color"), config.plugins.iptvplayer.extplayer_subtitle_shadow_color))
+            list.append(getConfigListEntry(_("Subtitle shadow X offset"), config.plugins.iptvplayer.extplayer_subtitle_shadow_xoffset))
+            list.append(getConfigListEntry(_("Subtitle shadow Y offset"), config.plugins.iptvplayer.extplayer_subtitle_shadow_yoffset))
         
         list.append(getConfigListEntry(_("Inject black iframe at video playback finish"), config.plugins.iptvplayer.use_clear_iframe))
         list.append(getConfigListEntry(_("Show iframe during audio playback"), config.plugins.iptvplayer.show_iframe))

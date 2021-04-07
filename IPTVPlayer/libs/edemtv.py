@@ -38,8 +38,8 @@ config.plugins.iptvplayer.edemtv_password = ConfigText(default="", fixed_size=Fa
 
 def GetConfigList():
     optionList = []
-    optionList.append(getConfigListEntry( _("Email") + ": ", config.plugins.iptvplayer.edemtv_login))
-    optionList.append(getConfigListEntry( _("Password") + ": ", config.plugins.iptvplayer.edemtv_password))
+    optionList.append(getConfigListEntry(_("Email") + ": ", config.plugins.iptvplayer.edemtv_login))
+    optionList.append(getConfigListEntry(_("Password") + ": ", config.plugins.iptvplayer.edemtv_password))
     return optionList
     
 ###################################################
@@ -48,12 +48,12 @@ class EdemTvApi:
 
     def __init__(self):
         self.MAIN_URL   = 'https://edem.tv/'
-        self.HTTP_HEADER  = { 'User-Agent': 'Mozilla/5.0 (X11; Ubuntu; Linux i686; rv:12.0) Gecko/20100101 Firefox/12.0', 'Referer': self.MAIN_URL }
+        self.HTTP_HEADER  = {'User-Agent': 'Mozilla/5.0 (X11; Ubuntu; Linux i686; rv:12.0) Gecko/20100101 Firefox/12.0', 'Referer': self.MAIN_URL}
         self.COOKIE_FILE = GetCookieDir('edemtv.cookie')
         self.cm = common()
         self.up = urlparser()
         self.http_params = {}
-        self.http_params.update({'header' : self.HTTP_HEADER, 'save_cookie': True, 'load_cookie': True, 'cookiefile': self.COOKIE_FILE})
+        self.http_params.update({'header': self.HTTP_HEADER, 'save_cookie': True, 'load_cookie': True, 'cookiefile': self.COOKIE_FILE})
         self.cacheChannels = {}
         self.sessionEx = MainSessionWrapper()
         
@@ -70,12 +70,12 @@ class EdemTvApi:
     def doLogin(self, login, password):
         logged = False
         HTTP_HEADER= dict(self.HTTP_HEADER)
-        HTTP_HEADER.update( {'Content-Type':'application/x-www-form-urlencoded; charset=UTF-8', 'X-Requested-With' : 'XMLHttpRequest'} )
+        HTTP_HEADER.update({'Content-Type':'application/x-www-form-urlencoded; charset=UTF-8', 'X-Requested-With': 'XMLHttpRequest'})
 
-        post_data = {'email' : login, 'password' : password}
-        params    = {'header' : HTTP_HEADER, 'cookiefile' : self.COOKIE_FILE, 'save_cookie' : True}
+        post_data = {'email': login, 'password': password}
+        params    = {'header': HTTP_HEADER, 'cookiefile': self.COOKIE_FILE, 'save_cookie': True}
         loginUrl  = self.getFullUrl('account/login')
-        sts, data = self.cm.getPage( loginUrl, params, post_data)
+        sts, data = self.cm.getPage(loginUrl, params, post_data)
         if sts and '/account/logout' in data:
             logged = True
         return logged
@@ -89,10 +89,10 @@ class EdemTvApi:
             passwd = config.plugins.iptvplayer.edemtv_password .value
             if '' != login.strip() and '' != passwd.strip():
                 if not self.doLogin(login, passwd):
-                    self.sessionEx.open(MessageBox, _('Login failed.'), type=MessageBox.TYPE_INFO, timeout=10 )
+                    self.sessionEx.open(MessageBox, _('Login failed.'), type=MessageBox.TYPE_INFO, timeout=10)
                     return []
             else:
-                self.sessionEx.open(MessageBox, _('This host requires registration. \nPlease fill your login and password in the host configuration. Available under blue button.'), type=MessageBox.TYPE_ERROR, timeout=10 )
+                self.sessionEx.open(MessageBox, _('This host requires registration. \nPlease fill your login and password in the host configuration. Available under blue button.'), type=MessageBox.TYPE_ERROR, timeout=10)
                 return []
             
             self.cacheChannels = {}
@@ -168,7 +168,7 @@ class EdemTvApi:
             domainTab = self.cm.ph.getSearchGroups(data, '''<option[^>]*?value="([0-9]+?)"[^>]*?selected[^>]*?>([^<]+?)</option>''', 2)
             if subdomain == '' or '' == domainTab[0] or '' == domainTab[1]:
                 HTTP_HEADER= dict(self.HTTP_HEADER)
-                HTTP_HEADER.update( {'Referer':playlistUrl, 'Content-Type':'application/x-www-form-urlencoded; charset=UTF-8', 'X-Requested-With' : 'XMLHttpRequest'} )
+                HTTP_HEADER.update({'Referer':playlistUrl, 'Content-Type':'application/x-www-form-urlencoded; charset=UTF-8', 'X-Requested-With': 'XMLHttpRequest'})
                 
                 login = config.plugins.iptvplayer.edemtv_login.value
                 passwd = config.plugins.iptvplayer.edemtv_password.value
@@ -177,11 +177,11 @@ class EdemTvApi:
                 params    = dict(self.http_params)
                 params['header'] = HTTP_HEADER
                 url = self.getFullUrl('ajax/user_server')
-                sts, data = self.cm.getPage( url, params, post_data)
+                sts, data = self.cm.getPage(url, params, post_data)
                 printDBG(data)
                 if 'success' in data:
                     post_data = {'server':tries, 'subdomain':subdomain, 'type':1}
-                    sts, data = self.cm.getPage( playlistUrl, params, post_data)
+                    sts, data = self.cm.getPage(playlistUrl, params, post_data)
                     printDBG(data)
             else:
                 break

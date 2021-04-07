@@ -32,16 +32,16 @@ class TantiFilmOrg(CBaseHostClass):
         self.USER_AGENT = 'Mozilla/5.0'
         self.HEADER = {'User-Agent':self.USER_AGENT, 'Accept':'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8', 'Accept-Encoding':'gzip, deflate'}
         self.AJAX_HEADER = dict(self.HEADER)
-        self.AJAX_HEADER.update( {'X-Requested-With': 'XMLHttpRequest'} )
+        self.AJAX_HEADER.update({'X-Requested-With': 'XMLHttpRequest'})
         self.cm.HEADER = self.HEADER # default header
         self.defaultParams = {'header':self.HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
         
         self.MAIN_URL = 'https://tantifilm.eu/'
         self.DEFAULT_ICON_URL = 'https://raw.githubusercontent.com/Zanzibar82/images/master/posters/tantifilm.png'
         
-        self.MAIN_CAT_TAB = [{'category':'list_categories',    'title': _('Categories'),                           'url':self.MAIN_URL  },
-                             {'category': 'search',             'title': _('Search'), 'search_item': True,         },
-                             {'category': 'search_history',     'title': _('Search history'),                     } 
+        self.MAIN_CAT_TAB = [{'category':'list_categories',    'title': _('Categories'),                           'url':self.MAIN_URL},
+                             {'category': 'search',             'title': _('Search'), 'search_item': True,},
+                             {'category': 'search_history',     'title': _('Search history'),} 
                             ]
         
         self.cacheCollections = {}
@@ -441,7 +441,7 @@ class TantiFilmOrg(CBaseHostClass):
                     tmp = self.cm.ph.getAllItemsBeetwenNodes(data, ('<script', '>'), ('</script', '>'), False)
                     for item in tmp:
                         jscode.append(item)
-                    ret = js_execute( '\n'.join(jscode) )
+                    ret = js_execute('\n'.join(jscode))
                     if ret['sts'] and 0 == ret['code']:
                         data = ret['data'].strip()
                         if self.cm.isValidUrl(data):
@@ -474,7 +474,7 @@ class TantiFilmOrg(CBaseHostClass):
         category = self.currItem.get("category", '')
         mode     = self.currItem.get("mode", '')
         
-        printDBG( "handleService: || name[%s], category[%s] " % (name, category) )
+        printDBG("handleService: || name[%s], category[%s] " % (name, category))
         self.currList = []
         
     #MAIN MENU

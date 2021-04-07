@@ -53,7 +53,7 @@ class JoeMonster(CBaseHostClass):
         self.DEFAULT_ICON_URL = 'https://joemonster.org/images/logo/jm-logo-1450873307.png'
         self.HEADER = {'User-Agent': 'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:40.0) Gecko/20100101 Firefox/40.0', 'DNT':'1', 'Accept': 'text/html'}
         self.AJAX_HEADER = dict(self.HEADER)
-        self.AJAX_HEADER.update( {'X-Requested-With': 'XMLHttpRequest'} )
+        self.AJAX_HEADER.update({'X-Requested-With': 'XMLHttpRequest'})
         self.MAIN_URL = 'https://joemonster.org/'
         self.defaultParams = {'with_metadata':True, 'header':self.HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
 
@@ -67,10 +67,10 @@ class JoeMonster(CBaseHostClass):
         return self.cm.getPage(url, addParams, post_data)
         
     def listMainMenu(self, cItem):
-        MAIN_CAT_TAB = [{'category':'list_items',       'title': 'Monster TV - Najnowsze filmy',   'url':self.getFullUrl('/filmy')            },
-                        {'category':'list_items',       'title': 'Monster TV - Najlepsze filmy',   'url':self.getFullUrl('/filmy/ulubione')   },
+        MAIN_CAT_TAB = [{'category':'list_items',       'title': 'Monster TV - Najnowsze filmy',   'url':self.getFullUrl('/filmy')},
+                        {'category':'list_items',       'title': 'Monster TV - Najlepsze filmy',   'url':self.getFullUrl('/filmy/ulubione')},
                         {'category':'list_poczekalnia', 'title': 'Monster TV - Poczekalnia',       'url':self.getFullUrl('/filmy/poczekalnia')},
-                        {'category':'list_poczekalnia', 'title': 'Monster TV - Kolejka',           'url':self.getFullUrl('/filmy/kolejka')    },]
+                        {'category':'list_poczekalnia', 'title': 'Monster TV - Kolejka',           'url':self.getFullUrl('/filmy/kolejka')},]
         self.listsTab(MAIN_CAT_TAB, cItem)
     
     def listItems(self, cItem):
@@ -89,15 +89,15 @@ class JoeMonster(CBaseHostClass):
         data = self.cm.ph.getDataBeetwenNodes(data, ('<div', '>', 'mtvLeftColumn'), ('<div', '>', 'footer'))[1]
         data = self.cm.ph.rgetAllItemsBeetwenNodes(data, ('</div', '>'), ('<div id', '>', 'mtv-row'))
         for item in data:
-            url = self.getFullUrl( self.cm.ph.getSearchGroups(item, '''\shref=['"]([^"^']+?)['"]''')[0] )
-            title = self.cleanHtmlStr( self.cm.ph.getDataBeetwenNodes(item, ('<div', '>', 'mtv-desc'), ('</a', '>'))[1])
-            time  = self.cleanHtmlStr( self.cm.ph.getDataBeetwenNodes(item, ('<time', '>', 'video-time'), ('</time', '>'))[1])
+            url = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''\shref=['"]([^"^']+?)['"]''')[0])
+            title = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(item, ('<div', '>', 'mtv-desc'), ('</a', '>'))[1])
+            time  = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(item, ('<time', '>', 'video-time'), ('</time', '>'))[1])
             if len(time) > 0:
                 time = '[%s] ' % time
-            desc  = time + self.cleanHtmlStr( self.cm.ph.getDataBeetwenNodes(item, ('<div', '>', 'mtv-desc-text'), ('</div', '>'))[1])
+            desc  = time + self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(item, ('<div', '>', 'mtv-desc-text'), ('</div', '>'))[1])
             if not self.cm.isValidUrl(url):
                 continue
-            icon = self.getFullIconUrl( self.cm.ph.getSearchGroups(item, '''\ssrc=['"]([^"^']+?)['"]''')[0] )
+            icon = self.getFullIconUrl(self.cm.ph.getSearchGroups(item, '''\ssrc=['"]([^"^']+?)['"]''')[0])
             params = dict(cItem)
             params = {'good_for_fav': True, 'title':title, 'url':url, 'icon':icon, 'desc':desc}
             self.addVideo(params)
@@ -123,16 +123,16 @@ class JoeMonster(CBaseHostClass):
         data = self.cm.ph.getDataBeetwenNodes(data, ('<div', '>', 'mtv-poczekalnia-container'), ('<br', '>'))[1]
         data = self.cm.ph.getAllItemsBeetwenNodes(data, ('<div', '>', 'mtvPoczekalniaFilm'), ('<!--', '>'))
         for item in data:
-            url = self.getFullUrl( self.cm.ph.getSearchGroups(item, '''\shref=['"]([^"^']+?)['"]''')[0] )
-            title  = self.cleanHtmlStr( self.cm.ph.getDataBeetwenNodes(item, ('<h2', '>'), ('</h2', '>'))[1])
+            url = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''\shref=['"]([^"^']+?)['"]''')[0])
+            title  = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(item, ('<h2', '>'), ('</h2', '>'))[1])
             if title == "":
-                title  = self.cleanHtmlStr( self.cm.ph.getDataBeetwenNodes(item, ('<a', '>', 'movie-title-link'), ('</a', '>'))[1])
-            time  = self.cleanHtmlStr( self.cm.ph.getDataBeetwenNodes(item, ('<time', '>', 'video-time'), ('</time', '>'))[1])
+                title  = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(item, ('<a', '>', 'movie-title-link'), ('</a', '>'))[1])
+            time  = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(item, ('<time', '>', 'video-time'), ('</time', '>'))[1])
             if len(time) > 0:
                 time = '[%s] ' % time
             if not self.cm.isValidUrl(url):
                 continue
-            icon = self.getFullIconUrl( self.cm.ph.getSearchGroups(item, '''\ssrc=['"]([^"^']+?)['"]''')[0] )
+            icon = self.getFullIconUrl(self.cm.ph.getSearchGroups(item, '''\ssrc=['"]([^"^']+?)['"]''')[0])
             params = dict(cItem)
             params = {'good_for_fav': True, 'title':title, 'url':url, 'icon':icon, 'desc':time}
             self.addVideo(params)
@@ -210,7 +210,7 @@ class JoeMonster(CBaseHostClass):
            '' != config.plugins.iptvplayer.joemonsterorg_password.value.strip():
             loggedIn, msg = self.tryTologin(config.plugins.iptvplayer.joemonsterorg_login.value, config.plugins.iptvplayer.joemonsterorg_password.value)
             if not loggedIn:
-                self.sessionEx.open(MessageBox, 'Problem z zalogowaniem użytkownika "%s".' % config.plugins.iptvplayer.joemonsterorg_login.value, type=MessageBox.TYPE_INFO, timeout=10 )
+                self.sessionEx.open(MessageBox, 'Problem z zalogowaniem użytkownika "%s".' % config.plugins.iptvplayer.joemonsterorg_login.value, type=MessageBox.TYPE_INFO, timeout=10)
             else:
                 self.login    = config.plugins.iptvplayer.joemonsterorg_login.value
                 self.password = config.plugins.iptvplayer.joemonsterorg_password.value
@@ -221,7 +221,7 @@ class JoeMonster(CBaseHostClass):
         category = self.currItem.get("category", '')
         mode     = self.currItem.get("mode", '')
         
-        printDBG( "handleService: >> name[%s], category[%s] " % (name, category) )
+        printDBG("handleService: >> name[%s], category[%s] " % (name, category))
         self.currList = []
         
     #MAIN MENU

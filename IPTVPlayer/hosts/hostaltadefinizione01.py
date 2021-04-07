@@ -29,7 +29,7 @@ class Altadefinizione(CBaseHostClass):
         self.USER_AGENT = 'Mozilla/5.0'
         self.HEADER = {'User-Agent': self.USER_AGENT, 'Accept': 'text/html'}
         self.AJAX_HEADER = dict(self.HEADER)
-        self.AJAX_HEADER.update( {'X-Requested-With':'XMLHttpRequest', 'Content-Type':'application/x-www-form-urlencoded; charset=UTF-8'} )
+        self.AJAX_HEADER.update({'X-Requested-With':'XMLHttpRequest', 'Content-Type':'application/x-www-form-urlencoded; charset=UTF-8'})
         
         self.MAIN_URL = 'https://www.altadefinizione01.film/'
         self.DEFAULT_ICON_URL = 'https://previews.123rf.com/images/yusufsangdes89/yusufsangdes891507/yusufsangdes89150700042/42557652-cinema-camera-icon-movie-lover-series-icon.jpg'
@@ -59,7 +59,7 @@ class Altadefinizione(CBaseHostClass):
         tmp = re.compile('''<div[^>]+?tab\-content[^>]*?>''').split(data)
         if len(tmp) == 2:
             tabs = []
-            mainTitle = self.cleanHtmlStr( self.cm.ph.getDataBeetwenNodes(tmp[0], ('<div', '>', 'widget-title'), ('</div', '>'))[1] )
+            mainTitle = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(tmp[0], ('<div', '>', 'widget-title'), ('</div', '>'))[1])
             tmp[0] = self.cm.ph.getAllItemsBeetwenMarkers(tmp[0], '<li', '</li>')
             for tabItem in tmp[0]:
                 tabTitle = self.cleanHtmlStr(tabItem)
@@ -70,7 +70,7 @@ class Altadefinizione(CBaseHostClass):
                 tmp[1] = self.cm.ph.getDataBeetwenNodes(data, ('<div', '>', key), ('</ul', '>'), False)[1]
                 tmp[1] = self.cm.ph.getAllItemsBeetwenMarkers(tmp[1], '<li', '</li>')
                 for item in tmp[1]:
-                    url = self.getFullUrl( self.cm.ph.getSearchGroups(item, '''href=['"]([^"^']+?)['"]''')[0] )
+                    url = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''href=['"]([^"^']+?)['"]''')[0])
                     title = self.cleanHtmlStr(item)
                     params = dict(cItem)
                     params.update({'name':'category', 'category':'list_items', 'title':title, 'url':url})
@@ -102,7 +102,7 @@ class Altadefinizione(CBaseHostClass):
             self.addDir(params)
 
         MAIN_CAT_TAB = [{'category':'search',          'title': _('Search'), 'search_item':True},
-                        {'category':'search_history',  'title': _('Search history')} ]
+                        {'category':'search_history',  'title': _('Search history')}]
         self.listsTab(MAIN_CAT_TAB, cItem)
         
     def listItems(self, cItem, nextCategory):
@@ -130,9 +130,9 @@ class Altadefinizione(CBaseHostClass):
             for item in dataItem:
                 tmp = self.cm.ph.getDataBeetwenNodes(item, ('<h', '>'), ('</h', '>'), False)[1]
 
-                icon  = self.getFullIconUrl( self.cm.ph.getSearchGroups(item, '''<img[^>]+?src=['"]([^"^']+?)['"]''')[0] )
-                url   = self.getFullUrl( self.cm.ph.getSearchGroups(tmp, '''href=['"]([^"^']+?)['"]''')[0] )
-                title = self.cleanHtmlStr( tmp )
+                icon  = self.getFullIconUrl(self.cm.ph.getSearchGroups(item, '''<img[^>]+?src=['"]([^"^']+?)['"]''')[0])
+                url   = self.getFullUrl(self.cm.ph.getSearchGroups(tmp, '''href=['"]([^"^']+?)['"]''')[0])
+                title = self.cleanHtmlStr(tmp)
 
                 desc = []
                 t = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(item, ('<div', '>', 'trdublaj'), ('</div', '>'), False)[1])
@@ -204,9 +204,9 @@ class Altadefinizione(CBaseHostClass):
         for item in data:
             tmp = self.cm.ph.getDataBeetwenNodes(item, ('<h', '>'), ('</h', '>'), False)[1]
 
-            icon  = self.getFullIconUrl( self.cm.ph.getSearchGroups(item, '''<img[^>]+?src=['"]([^"^']+?)['"]''')[0].replace('/40x59-', '/203x293-') )
-            url   = self.getFullUrl( self.cm.ph.getSearchGroups(tmp, '''href=['"]([^"^']+?)['"]''')[0] )
-            title = self.cleanHtmlStr( tmp )
+            icon  = self.getFullIconUrl(self.cm.ph.getSearchGroups(item, '''<img[^>]+?src=['"]([^"^']+?)['"]''')[0].replace('/40x59-', '/203x293-'))
+            url   = self.getFullUrl(self.cm.ph.getSearchGroups(tmp, '''href=['"]([^"^']+?)['"]''')[0])
+            title = self.cleanHtmlStr(tmp)
             if url == '':
                 continue
 
@@ -296,9 +296,9 @@ class Altadefinizione(CBaseHostClass):
         data = self.cm.ph.getDataBeetwenNodes(data, ('<div', '>', 's_left'), ('<div', '>', 'comment'), False)[1]
         
         icon = self.cm.ph.getDataBeetwenNodes(data, ('<div', '>', 'imagen'), ('</div', '>'), False)[1]
-        icon = self.getFullUrl( self.cm.ph.getSearchGroups(icon, '''<img[^>]+?src=['"]([^'^"]+?)['"]''')[0] )
-        title = self.cleanHtmlStr( self.cm.ph.getDataBeetwenNodes(data, ('<p', '>', 'title'), ('</p', '>'), False)[1] )
-        desc = self.cleanHtmlStr( self.cm.ph.getDataBeetwenNodes(data, ('<div', '>', 'entry-content'), ('</div', '>'), False)[1] )
+        icon = self.getFullUrl(self.cm.ph.getSearchGroups(icon, '''<img[^>]+?src=['"]([^'^"]+?)['"]''')[0])
+        title = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(data, ('<p', '>', 'title'), ('</p', '>'), False)[1])
+        desc = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(data, ('<div', '>', 'entry-content'), ('</div', '>'), False)[1])
 
         tmp = self.cm.ph.getAllItemsBeetwenNodes(data, ('<p', '>', 'meta_dd'), ('</p', '>'), False)
         for item in tmp:
@@ -332,7 +332,7 @@ class Altadefinizione(CBaseHostClass):
         if desc == '':
             desc  = cItem.get('desc', '')
         
-        return [{'title':self.cleanHtmlStr( title ), 'text': self.cleanHtmlStr( desc ), 'images':[{'title':'', 'url':self.getFullUrl(icon)}], 'other_info':{'custom_items_list':itemsList}}]
+        return [{'title':self.cleanHtmlStr(title), 'text': self.cleanHtmlStr(desc), 'images':[{'title':'', 'url':self.getFullUrl(icon)}], 'other_info':{'custom_items_list':itemsList}}]
 
     def handleService(self, index, refresh=0, searchPattern='', searchType=''):
         printDBG('handleService start')
@@ -343,7 +343,7 @@ class Altadefinizione(CBaseHostClass):
         category = self.currItem.get("category", '')
         mode     = self.currItem.get("mode", '')
         
-        printDBG( "handleService: || name[%s], category[%s] " % (name, category) )
+        printDBG("handleService: || name[%s], category[%s] " % (name, category))
         self.currList = []
         self.currItem = dict(self.currItem)
         self.currItem.pop('good_for_fav', None)

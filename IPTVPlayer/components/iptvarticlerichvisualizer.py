@@ -74,8 +74,8 @@ class IPTVArticleRichVisualizer(Screen):
             for idx in range(self.richDesc['pages_count']):
                 pageItemX = self.richDesc['page_item_start_x'] + idx * self.richDesc['page_item_size']
                 if 0 == idx:
-                    skin += """<widget name="page_marker" zPosition="3" position="%d,%d" size="%d,%d" transparent="1" alphatest="blend" />""" % (pageItemX, self.richDesc['page_item_start_y'], self.richDesc['page_item_size'], self.richDesc['page_item_size'] )
-                skin += """<ePixmap zPosition="2" position="%d,%d" size="%d,%d" pixmap="%s" transparent="1" alphatest="blend" />\n""" % (pageItemX, self.richDesc['page_item_start_y'], self.richDesc['page_item_size'], self.richDesc['page_item_size'], GetIconDir('radio_button_off.png') )
+                    skin += """<widget name="page_marker" zPosition="3" position="%d,%d" size="%d,%d" transparent="1" alphatest="blend" />""" % (pageItemX, self.richDesc['page_item_start_y'], self.richDesc['page_item_size'], self.richDesc['page_item_size'])
+                skin += """<ePixmap zPosition="2" position="%d,%d" size="%d,%d" pixmap="%s" transparent="1" alphatest="blend" />\n""" % (pageItemX, self.richDesc['page_item_start_y'], self.richDesc['page_item_size'], self.richDesc['page_item_size'], GetIconDir('radio_button_off.png'))
         skin += '</screen>'
         self.skin = skin
         self.skinName = "IPTVArticleRichVisualizerWidget"
@@ -87,7 +87,7 @@ class IPTVArticleRichVisualizer(Screen):
         #############################################
         # calculate num of rich desc items and pages
         #############################################
-        self.richDesc = {'items_count': 0, 'pages_count': 0, 'page': 0, 'avalable_params':[] }
+        self.richDesc = {'items_count': 0, 'pages_count': 0, 'page': 0, 'avalable_params':[]}
         try:
             if 'custom_items_list' in artItem.richDescParams:
                 self.richDesc['custom_items_list'] = artItem.richDescParams['custom_items_list']
@@ -181,7 +181,7 @@ class IPTVArticleRichVisualizer(Screen):
     def onStart(self):
         self.onLayoutFinish.remove(self.onStart)
         self.loadSpinner()
-        self["page_marker"].setPixmap( self.spinner["pixmap"][0] ) # the same png file is used by page_maker as spinner
+        self["page_marker"].setPixmap(self.spinner["pixmap"][0]) # the same png file is used by page_maker as spinner
         #self.setTitle(self.artItem.title)
         self["title"].setText(self.artItem.title)
         self.setText()
@@ -200,7 +200,7 @@ class IPTVArticleRichVisualizer(Screen):
         if not self.cover['src'].startswith('http'):
             return
         
-        self.cover['downloader'] = DownloaderCreator( self.cover['src'] )
+        self.cover['downloader'] = DownloaderCreator(self.cover['src'])
         if self.cover['downloader']:
             self.cover['downloader'].isWorkingCorrectly(self.startDownloader)
         else:
@@ -208,19 +208,19 @@ class IPTVArticleRichVisualizer(Screen):
 
     def startDownloader(self, sts, reason):
         if sts:
-            url, downloaderParams = DMHelper.getDownloaderParamFromUrl( self.cover['src'] )
+            url, downloaderParams = DMHelper.getDownloaderParamFromUrl(self.cover['src'])
             self.cover['downloader'] .subscribeFor_Finish(self.downloaderEnd)
             self.cover['downloader'] .start(url, self._getDownloadFilePath(), downloaderParams)
             self.showSpinner()
         else:
-            self.session.openWithCallback(self.close, MessageBox, _("Downloading cannot be started.\n Downloader [%s] not working properly.\n Status[%s]") % (self.cover['downloader'].getName(), reason.strip()), type=MessageBox.TYPE_ERROR, timeout=10 )        
+            self.session.openWithCallback(self.close, MessageBox, _("Downloading cannot be started.\n Downloader [%s] not working properly.\n Status[%s]") % (self.cover['downloader'].getName(), reason.strip()), type=MessageBox.TYPE_ERROR, timeout=10)        
         
     def _getDownloadFilePath(self):
         self.cover['files_to_remove'].append(self.cover['image_path'])
         return self.cover['image_path']
         
     def downloaderEnd(self, status):
-        if None != self.cover['downloader'] :
+        if None != self.cover['downloader']:
             if DMHelper.STS.DOWNLOADED == status:
                 if self["cover"].decodeCover(self._getDownloadFilePath(), self.decodePictureEnd, ' '): 
                     return

@@ -30,7 +30,7 @@ class BaseDownloader:
     CODE_WRONG_LINK = 2      # wrong link
     
     # posible fileds
-    DOWNLOAD_PARAMS = { 'User-Agent':'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/73.0.3683.103 Safari/537.36',
+    DOWNLOAD_PARAMS = {'User-Agent':'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/73.0.3683.103 Safari/537.36',
                         'Cookie':''
                       }
 

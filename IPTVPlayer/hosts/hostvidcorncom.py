@@ -85,8 +85,8 @@ class VidCorn(CBaseHostClass, CaptchaHelper):
             params = MergeDicts(cItem, {'category':category, 'f_type':category, 'title':title, 'url':self.getFullUrl(url)})
             self.addDir(params)
         
-        MAIN_CAT_TAB = [{'category':'search',         'title': _('Search'),       'search_item':True       },
-                        {'category': 'search_history', 'title': _('Search history'),                        }]
+        MAIN_CAT_TAB = [{'category':'search',         'title': _('Search'),       'search_item':True},
+                        {'category': 'search_history', 'title': _('Search history'),}]
         self.listsTab(MAIN_CAT_TAB, cItem)
 
     def listFilters(self, cItem, nextCategory):
@@ -335,7 +335,7 @@ class VidCorn(CBaseHostClass, CaptchaHelper):
         trailer = self.cm.ph.getDataBeetwenNodes(data, ('<div', '>', 'trailer'), ('<button', '>', 'onclick'), False)[1]
         printDBG(trailer)
         title = self.cleanHtmlStr(trailer)
-        trailer = self.getFullUrl( self.cm.ph.getSearchGroups(trailer, '''<iframe[^>]+?src=['"]([^"^']+?)["']''', 1, True)[0], cUrl)
+        trailer = self.getFullUrl(self.cm.ph.getSearchGroups(trailer, '''<iframe[^>]+?src=['"]([^"^']+?)["']''', 1, True)[0], cUrl)
         if trailer:
             params = dict(cItem)
             params.update({'good_for_fav': False, 'title':title, 'url':strwithmeta(trailer, {'Referer':cUrl}), 'desc':desc, 'prev_url':cUrl})
@@ -472,7 +472,7 @@ class VidCorn(CBaseHostClass, CaptchaHelper):
             linksTab
         
         data = self.cm.ph.getDataBeetwenNodes(data, ('<div', '>', 'go-link-container'), ('</div', '>'), False)[1]
-        videoUrl = self.getFullUrl( self.cm.ph.getSearchGroups(data, '''href=['"]([^"^']+?)["']''', 1, True)[0], self.cm.meta['url'])
+        videoUrl = self.getFullUrl(self.cm.ph.getSearchGroups(data, '''href=['"]([^"^']+?)["']''', 1, True)[0], self.cm.meta['url'])
         
         if 0 == self.up.checkHostSupport(videoUrl): 
             urlParams['header']['Referer'] = self.cm.meta['url']
@@ -507,7 +507,7 @@ class VidCorn(CBaseHostClass, CaptchaHelper):
         if title1:
             title  = '%s (%s)' % (title, title1)
 
-        desc = self.cleanHtmlStr( self.cm.ph.getDataBeetwenNodes(tmp, ('<div', '>', 'description'), ('</div', '>'), False)[1] )
+        desc = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(tmp, ('<div', '>', 'description'), ('</div', '>'), False)[1])
 
         itemsList = []
 
@@ -546,7 +546,7 @@ class VidCorn(CBaseHostClass, CaptchaHelper):
         if desc == '':
             desc  = cItem.get('desc', '')
         
-        return [{'title':self.cleanHtmlStr( title ), 'text': self.cleanHtmlStr( desc ), 'images':[{'title':'', 'url':self.getFullUrl(icon)}], 'other_info':{'custom_items_list':itemsList}}]
+        return [{'title':self.cleanHtmlStr(title), 'text': self.cleanHtmlStr(desc), 'images':[{'title':'', 'url':self.getFullUrl(icon)}], 'other_info':{'custom_items_list':itemsList}}]
         
     def tryTologin(self):
         printDBG('tryTologin start')
@@ -629,7 +629,7 @@ class VidCorn(CBaseHostClass, CaptchaHelper):
 
         name     = self.currItem.get("name", '')
         category = self.currItem.get("category", '')
-        printDBG( "handleService: ||| name[%s], category[%s] " % (name, category) )
+        printDBG("handleService: ||| name[%s], category[%s] " % (name, category))
         self.currList = []
 
         self.tryTologin()

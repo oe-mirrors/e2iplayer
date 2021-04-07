@@ -42,8 +42,8 @@ def GetConfigList():
     optionList.append(getConfigListEntry(_('Preferred streaming protocol') + ": ", config.plugins.iptvplayer.videostar_streamprotocol))
     optionList.append(getConfigListEntry(_('Preferred quality') + ": ", config.plugins.iptvplayer.videostar_defquality))
     optionList.append(getConfigListEntry(_('Use preferred quality') + ": ", config.plugins.iptvplayer.videostar_use_defquality))
-    optionList.append(getConfigListEntry( _("Login") + ": ", config.plugins.iptvplayer.videostar_login))
-    optionList.append(getConfigListEntry( _("Password") + ": ", config.plugins.iptvplayer.videostar_password))
+    optionList.append(getConfigListEntry(_("Login") + ": ", config.plugins.iptvplayer.videostar_login))
+    optionList.append(getConfigListEntry(_("Password") + ": ", config.plugins.iptvplayer.videostar_password))
     return optionList
 ###################################################
     
@@ -61,7 +61,7 @@ class VideoStarApi(CBaseHostClass, CaptchaHelper):
         self.USER_AGENT  = 'Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/62.0.3202.94 Safari/537.36'
         self.HTTP_HEADER = {'User-Agent': self.USER_AGENT, 'Accept': 'text/html', 'Accept-Encoding':'gzip, deflate'}
         self.AJAX_HEADER = dict(self.HTTP_HEADER)
-        self.AJAX_HEADER.update( {'X-Requested-With': 'XMLHttpRequest'} )
+        self.AJAX_HEADER.update({'X-Requested-With': 'XMLHttpRequest'})
         
         self.COOKIE_FILE = GetCookieDir('pilot.wp.pl.cookie')
         
@@ -176,7 +176,7 @@ class VideoStarApi(CBaseHostClass, CaptchaHelper):
                 self.loggedIn = True
                 self.accountInfo = msg
             else:
-                self.sessionEx.open(MessageBox, '%s\nProblem z zalogowanie użytkownika "%s". Sprawdź dane do logowania w konfiguracji hosta.' % (msg, login), type=MessageBox.TYPE_INFO, timeout=10 )
+                self.sessionEx.open(MessageBox, '%s\nProblem z zalogowanie użytkownika "%s". Sprawdź dane do logowania w konfiguracji hosta.' % (msg, login), type=MessageBox.TYPE_INFO, timeout=10)
                 self.loggedIn = False
         else:
             self.doLogin('guest', 'guest')
@@ -302,7 +302,7 @@ class VideoStarApi(CBaseHostClass, CaptchaHelper):
         
         if len(urlsTab):
             maxBitrate = int(config.plugins.iptvplayer.videostar_defquality.value) * 1.3
-            def __getLinkQuality( itemLink ):
+            def __getLinkQuality(itemLink):
                 try:
                     if 'bitrate' in itemLink:
                         return int(itemLink['bitrate'])

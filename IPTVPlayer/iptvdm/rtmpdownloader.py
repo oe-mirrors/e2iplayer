@@ -31,12 +31,12 @@ import datetime
 class RtmpDownloader(BaseDownloader):
     URI_TAB = ['rtmp://', 'rtmpt://', 'rtmpe://', 'rtmpte://', 'rtmps://']
     # rtmp status
-    RTMP_STS = enum( NONE='RTMP_NONE',
+    RTMP_STS = enum(NONE='RTMP_NONE',
                      CONNECTING='RTMP_CONNECTING',
                      DOWNLOADING='RTMP_DOWNLOADING',
                      ENDED='RTMP_ENDED')
     # rtmp status
-    INFO = enum( FROM_FILE='INFO_FROM_FILE',
+    INFO = enum(FROM_FILE='INFO_FROM_FILE',
                  FROM_DOTS='INFO_FROM_DOTS')
                      
     def __init__(self):
@@ -55,7 +55,7 @@ class RtmpDownloader(BaseDownloader):
         return "rtmpdump"
 
     def isWorkingCorrectly(self, callBackFun):
-        self.iptv_sys = iptv_system( DMHelper.GET_RTMPDUMP_PATH() + " -h 2>&1 ", boundFunction(self._checkWorkingCallBack, callBackFun) )
+        self.iptv_sys = iptv_system(DMHelper.GET_RTMPDUMP_PATH() + " -h 2>&1 ", boundFunction(self._checkWorkingCallBack, callBackFun))
 
     def _checkWorkingCallBack(self, callBackFun, code, data):
         reason = ''
@@ -68,7 +68,7 @@ class RtmpDownloader(BaseDownloader):
         
     def _getCMD(self, url):
         paramsL = ['help', 'url', 'rtmp', 'host', 'port', 'socks', 'protocol', 'playpath', 'playlist', 'swfUrl', 'tcUrl', 'pageUrl', 'app', 'swfhash', 'swfsize', 'swfVfy', 'swfAge', 'auth', 'conn', 'flashVer', 'live', 'subscribe', 'realtime', 'flv', 'resume', 'timeout', 'start', 'stop', 'token', 'jtv', 'weeb', 'hashes', 'buffer', 'skip', 'quiet', 'verbose', 'debug']
-        paramsS = [   'h',   'i',    'r',    'n',    'c',     'S',        'l',        'y',        'Y',      's',     't',       'p',   'a',       'w',       'x',      'W',     'X',    'u',    'C',         'f',    'v',         'd',        'R',   'o',      'e',       'e',     'A',    'B',     'T',   'j',    'J',      '#',      'b',    'k',     'q',       'V',     'z']
+        paramsS = ['h',   'i',    'r',    'n',    'c',     'S',        'l',        'y',        'Y',      's',     't',       'p',   'a',       'w',       'x',      'W',     'X',    'u',    'C',         'f',    'v',         'd',        'R',   'o',      'e',       'e',     'A',    'B',     'T',   'j',    'J',      '#',      'b',    'k',     'q',       'V',     'z']
         paramsRequireValue = ['pageUrl']
         
         
@@ -80,7 +80,7 @@ class RtmpDownloader(BaseDownloader):
         
         def _processItem(item, parameter, value, cmd):
             printDBG(item)
-            if (item in paramsL and (parameter not in paramsRequireValue or '' != value) ) or '##fake##' == item:                
+            if (item in paramsL and (parameter not in paramsRequireValue or '' != value)) or '##fake##' == item:                
                 if None != parameter:
                     cmd += ' --' + parameter.strip()
                     if '' != value:
@@ -104,11 +104,11 @@ class RtmpDownloader(BaseDownloader):
         for item in tmpTab:
             tmp = item.find('=')
             if -1 < tmp and item[:tmp] in paramsL:
-                params.append( item[:tmp] )
+                params.append(item[:tmp])
                 if 'live' != item[:tmp]:
-                    params.append( item[tmp+1:] )
+                    params.append(item[tmp+1:])
             else:
-                params.append( item )
+                params.append(item)
             
         for item in params:
             item, parameter, value, cmd = _processItem(item, parameter, value, cmd)
@@ -160,7 +160,7 @@ class RtmpDownloader(BaseDownloader):
         self.console = eConsoleAppContainer()
         self.console_appClosed_conn = eConnectCallback(self.console.appClosed, self._cmdFinished)
         #self.console.stderrAvail.append( self._dataAvail )
-        self.console.execute( E2PrioFix( cmd ) )
+        self.console.execute(E2PrioFix(cmd))
 
         self.rtmpStatus = self.RTMP_STS.CONNECTING
         self.status     = DMHelper.STS.DOWNLOADING

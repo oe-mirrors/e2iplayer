@@ -11,7 +11,7 @@ different purpose of the PRF.
 import hmac
 import sha        # available in any Python 2.x
 
-def PRF( key, prefix, data, number_of_bits):
+def PRF(key, prefix, data, number_of_bits):
     """ Key, prefix and data are arbitrary strings .
         number_of_bits must be a multiple of 8
         HMAC_SHA1 generates 20 byte blocks.  Enough are generated to get the
@@ -22,8 +22,8 @@ def PRF( key, prefix, data, number_of_bits):
         raise ValueError('requested bits not multiple of 8')
     R = ''
     i = 0
-    while len(R) <= number_of_octets :
-        hmac_sha_1= hmac.new( key, prefix + chr(0x00) + data + chr(i), sha )
+    while len(R) <= number_of_octets:
+        hmac_sha_1= hmac.new(key, prefix + chr(0x00) + data + chr(i), sha)
         i = i + 1
         R = R + hmac_sha_1.digest()       # concatenate latest hash to result string
     return R[:number_of_octets]           # return R truncated to 'number_of_octets'

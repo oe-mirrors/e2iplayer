@@ -55,7 +55,7 @@ class HLSDownloader(BaseDownloader):
         return "hlsdl m3u8"
 
     def isWorkingCorrectly(self, callBackFun):
-        self.iptv_sys = iptv_system( DMHelper.GET_HLSDL_PATH() + " 2>&1 ", boundFunction(self._checkWorkingCallBack, callBackFun) )
+        self.iptv_sys = iptv_system(DMHelper.GET_HLSDL_PATH() + " 2>&1 ", boundFunction(self._checkWorkingCallBack, callBackFun))
         
     def _checkWorkingCallBack(self, callBackFun, code, data):
         reason = ''
@@ -104,7 +104,7 @@ class HLSDownloader(BaseDownloader):
         self.console = eConsoleAppContainer()
         self.console_appClosed_conn = eConnectCallback(self.console.appClosed, self._cmdFinished)
         self.console_stderrAvail_conn = eConnectCallback(self.console.stderrAvail, self._dataAvail)
-        self.console.execute( E2PrioFix( cmd ) )
+        self.console.execute(E2PrioFix(cmd))
         
         self.status = DMHelper.STS.DOWNLOADING
         

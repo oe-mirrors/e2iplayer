@@ -25,7 +25,7 @@ from Components.Label import Label
 ###################################################
 
 class IPTVImagesSelectionList(IPTVListComponentBase):
-    ICONS_FILESNAMES = {'on' : 'radio_button_on.png', 'off' : 'radio_button_off.png'}
+    ICONS_FILESNAMES = {'on': 'radio_button_on.png', 'off': 'radio_button_off.png'}
     def __init__(self, height):
         IPTVListComponentBase.__init__(self)
         
@@ -35,7 +35,7 @@ class IPTVImagesSelectionList(IPTVListComponentBase):
     
     def _nullPIX(self):
         for key in self.ICONS_FILESNAMES:
-            self.dictPIX[ key ] = None
+            self.dictPIX[key] = None
 
     def onCreate(self):
         printDBG('--- onCreate ---')
@@ -53,12 +53,12 @@ class IPTVImagesSelectionList(IPTVListComponentBase):
         self._nullPIX()
     
     def buildEntry(self, item):
-        res = [ None ]
+        res = [None]
         width  = self.l.getItemSize().width()
         height = self.l.getItemSize().height()
         try:
             printDBG('--- buildEntry ---')
-            printDBG('%s: ' % (item['id']) )
+            printDBG('%s: ' % (item['id']))
             x = (width - item['width']) / 2
             y = (height - item['height']) / 2
             res.append((eListboxPythonMultiContent.TYPE_PIXMAP_ALPHABLEND, x, y, item['width'], item['height'], item['pixmap']))
@@ -98,7 +98,7 @@ class IPTVMultipleImageSelectorWidget(Screen):
         if self.iptv_accep_label != None:
             list_height -= self.iptv_accep_height + 10 
         
-        x = (self.iptv_width - (10 * (self.iptv_col_num + 1) + list_width * self.iptv_col_num )) / 2
+        x = (self.iptv_width - (10 * (self.iptv_col_num + 1) + list_width * self.iptv_col_num)) / 2
         for idx in range(self.iptv_col_num):
             if idx != self.iptv_col_num - 1: 
                 scrollbar_mode = 'showNever'
@@ -231,7 +231,7 @@ class IPTVMultipleImageSelectorWidget(Screen):
         
         for i in range(self.iptv_col_num):
             item = self["col_%d" % i]
-            item.setList([ (x,) for x in self.iptv_grid[i] ])
+            item.setList([(x,) for x in self.iptv_grid[i]])
         self.changeColumnSelection()
         
     def changeColumnSelection(self):
@@ -285,14 +285,14 @@ class IPTVMultipleImageSelectorWidget(Screen):
     def setMarker(self, prevIdx=None):
         if self.iptv_accep_label != None:
             if self.row_index == self.iptv_row_num:
-                self['accept_button'].instance.setForegroundColor( parseColor("#000000") )
-                self['accept_button'].instance.setBackgroundColor( parseColor("#32CD32") )
+                self['accept_button'].instance.setForegroundColor(parseColor("#000000"))
+                self['accept_button'].instance.setBackgroundColor(parseColor("#32CD32"))
                 for i in range(self.iptv_col_num):
                     item = self["col_%d" % i]
                     item.instance.setSelectionEnable(0)
             else:
-                self['accept_button'].instance.setForegroundColor( parseColor("#FFFFFF") )
-                self['accept_button'].instance.setBackgroundColor( parseColor("#320F0F0F") )
+                self['accept_button'].instance.setForegroundColor(parseColor("#FFFFFF"))
+                self['accept_button'].instance.setBackgroundColor(parseColor("#320F0F0F"))
                 self.changeColumnSelection()
                 
     def move_list_up(self):

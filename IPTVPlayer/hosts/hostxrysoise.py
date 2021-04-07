@@ -45,7 +45,7 @@ def gettytul():
 class XrysoiSE(CBaseHostClass):
     HEADER = {'User-Agent': 'Mozilla/5.0', 'Accept': 'text/html'}
     AJAX_HEADER = dict(HEADER)
-    AJAX_HEADER.update( {'X-Requested-With': 'XMLHttpRequest'} )
+    AJAX_HEADER.update({'X-Requested-With': 'XMLHttpRequest'})
     
     MAIN_URL = 'https://xrysoi.tv/'
     SEARCH_SUFFIX = '?s='
@@ -54,7 +54,7 @@ class XrysoiSE(CBaseHostClass):
                     {'category':'list_items',     'mode':'series',     'title': 'Ξένες σειρές', 'url':MAIN_URL + 'category/ξένες-σειρές/',    'icon':''},
                     #{'category':'list_items',     'mode':'collection', 'title': 'Συλλογες',     'url':MAIN_URL + 'category/collection/',      'icon':''},
                     {'category':'search',          'title': _('Search'), 'search_item':True},
-                    {'category':'search_history',  'title': _('Search history')} ]
+                    {'category':'search_history',  'title': _('Search history')}]
  
     def __init__(self):
         CBaseHostClass.__init__(self, {'history':'XrysoiSE.tv', 'cookie':'XrysoiSEtv.cookie'})
@@ -146,9 +146,9 @@ class XrysoiSE(CBaseHostClass):
         data = self.cm.ph.getDataBeetwenMarkers(data, '<h1 class=', 'class="filmborder">', False)[1]
         data = data.split('class="moviefilm">')
         for item in data:
-            url  = self._getFullUrl( self.cm.ph.getSearchGroups(item, 'href="([^"]+?)"')[0] )
-            icon = self._getFullUrl( self.cm.ph.getSearchGroups(item, 'src="([^"]+?)"')[0] )
-            title  = self.cleanHtmlStr( self.cm.ph.getSearchGroups(item, 'alt="([^"]+?)"')[0])
+            url  = self._getFullUrl(self.cm.ph.getSearchGroups(item, 'href="([^"]+?)"')[0])
+            icon = self._getFullUrl(self.cm.ph.getSearchGroups(item, 'src="([^"]+?)"')[0])
+            title  = self.cleanHtmlStr(self.cm.ph.getSearchGroups(item, 'alt="([^"]+?)"')[0])
             #if 'search' == cItem.get('mode'):
             #    if '-collection' in url: continue
             if url.startswith('http'):
@@ -166,8 +166,8 @@ class XrysoiSE(CBaseHostClass):
         if not sts:
             return
         
-        desc  = self.cleanHtmlStr( self.cm.ph.getSearchGroups(data, '<meta[^>]*?property="og:description"[^>]*?content="([^"]+?)"')[0] )
-        title = self.cleanHtmlStr( self.cm.ph.getSearchGroups(data, '<meta[^>]*?property="og:title"[^>]*?content="([^"]+?)"')[0] )
+        desc  = self.cleanHtmlStr(self.cm.ph.getSearchGroups(data, '<meta[^>]*?property="og:description"[^>]*?content="([^"]+?)"')[0])
+        title = self.cleanHtmlStr(self.cm.ph.getSearchGroups(data, '<meta[^>]*?property="og:title"[^>]*?content="([^"]+?)"')[0])
         if '' == title:
             title = cItem['title']
         
@@ -217,7 +217,7 @@ class XrysoiSE(CBaseHostClass):
                 itemTitle = item.find('<')
                 if itemTitle < 0:
                     continue
-                itemTitle = self.cleanHtmlStr( item[:itemTitle] )
+                itemTitle = self.cleanHtmlStr(item[:itemTitle])
                 linksData = re.compile('<a[^>]*?href="([^"]+?)"[^>]*?>').findall(item)
                 links = []
                 for itemUrl in linksData:
@@ -257,7 +257,7 @@ class XrysoiSE(CBaseHostClass):
                     linksID = '-s{0}e{1}'.format(seasonID, eID)
                     if linksID not in eLinks:
                         eLinks[linksID] = []
-                        episodes.append( {'linksID':linksID, 'episode':eID, 'season':seasonID} )
+                        episodes.append({'linksID':linksID, 'episode':eID, 'season':seasonID})
                     eLinks[linksID].append({'name':self.up.getHostName(eUrl), 'url':eUrl, 'need_resolve':1})
             for item in episodes:
                 linksID = item['linksID']
@@ -337,7 +337,7 @@ class XrysoiSE(CBaseHostClass):
             icon  = self.cm.ph.getSearchGroups(data, '<meta[^>]*?property="og:image"[^>]*?content="(http[^"]+?)"')[0]
             title = self.cm.ph.getSearchGroups(data, '<meta[^>]*?property="og:title"[^>]*?content="([^"]+?)"')[0]
             desc  = self.cm.ph.getSearchGroups(data, '<meta[^>]*?property="og:description"[^>]*?content="([^"]+?)"')[0]
-            return [{'title':self.cleanHtmlStr( title ), 'text': self.cleanHtmlStr( desc ), 'images':[{'title':'', 'url':self._getFullUrl(icon)}], 'other_info':{}}]
+            return [{'title':self.cleanHtmlStr(title), 'text': self.cleanHtmlStr(desc), 'images':[{'title':'', 'url':self._getFullUrl(icon)}], 'other_info':{}}]
         else:
              return retTab
         
@@ -365,7 +365,7 @@ class XrysoiSE(CBaseHostClass):
         category = self.currItem.get("category", '')
         mode     = self.currItem.get("mode", '')
         
-        printDBG( "handleService: |||||||||||||||||||||||||||||||||||| name[%s], category[%s] " % (name, category) )
+        printDBG("handleService: |||||||||||||||||||||||||||||||||||| name[%s], category[%s] " % (name, category))
         self.currList = []
         self.currItem = dict(self.currItem)
         self.currItem.pop('good_for_fav', None)

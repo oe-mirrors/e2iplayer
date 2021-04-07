@@ -47,7 +47,7 @@ class BBCiPlayer(CBaseHostClass):
         CBaseHostClass.__init__(self, {'history':'BBCiPlayer.tv', 'cookie':'bbciplayer.cookie'})
         self.HEADER = {'User-Agent':'Mozilla/5.0', 'Accept':'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8', 'Accept-Encoding':'gzip, deflate'}
         self.AJAX_HEADER = dict(self.HEADER)
-        self.AJAX_HEADER.update( {'X-Requested-With': 'XMLHttpRequest'} )
+        self.AJAX_HEADER.update({'X-Requested-With': 'XMLHttpRequest'})
         self.cm.HEADER = self.HEADER # default header
         self.defaultParams = {'header':self.HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
         
@@ -55,12 +55,12 @@ class BBCiPlayer(CBaseHostClass):
         self.DEFAULT_ICON_URL = 'http://iplayer-web.files.bbci.co.uk/tviplayer-static-assets/10.75.0-1/img/navigation/iplayer_pink.png' 
         #'http://iplayer-web.files.bbci.co.uk/tviplayer-static-assets/10.75.0-1/img/navigation/iplayer_white.png'
         
-        self.MAIN_CAT_TAB = [{'category':'list_channels',      'title': _('Channels'),                           'url':self.getFullUrl('iplayer')  },
-                             {'category':'list_categories',    'title': _('Categories'),                         'url':self.getFullUrl('iplayer')  },
-                             {'category':'list_az_menu',       'title': _('A-Z'),                                'url':self.getFullUrl('iplayer/a-z/')  },
-                             {'category':'list_items',         'title': _('Most Popular'),                       'url':self.getFullUrl('iplayer/group/most-popular')  },
+        self.MAIN_CAT_TAB = [{'category':'list_channels',      'title': _('Channels'),                           'url':self.getFullUrl('iplayer')},
+                             {'category':'list_categories',    'title': _('Categories'),                         'url':self.getFullUrl('iplayer')},
+                             {'category':'list_az_menu',       'title': _('A-Z'),                                'url':self.getFullUrl('iplayer/a-z/')},
+                             {'category':'list_items',         'title': _('Most Popular'),                       'url':self.getFullUrl('iplayer/group/most-popular')},
                              {'category':'search',             'title': _('Search'), 'search_item':True,         'icon':'https://raw.githubusercontent.com/vonH/plugin.video.iplayerwww/master/media/search.png'},
-                             {'category': 'search_history',     'title': _('Search history'),                     }]
+                             {'category': 'search_history',     'title': _('Search history'),}]
         self.otherIconsTemplate = 'https://raw.githubusercontent.com/vonH/plugin.video.iplayerwww/master/media/%s.png'
     
     def getFullUrl(self, url):
@@ -607,7 +607,7 @@ class BBCiPlayer(CBaseHostClass):
         category = self.currItem.get("category", '')
         mode     = self.currItem.get("mode", '')
         
-        printDBG( "handleService: |||||||||||||||||||||||||||||||||||| name[%s], category[%s] " % (name, category) )
+        printDBG("handleService: |||||||||||||||||||||||||||||||||||| name[%s], category[%s] " % (name, category))
         self.currList = []
         
     #MAIN MENU

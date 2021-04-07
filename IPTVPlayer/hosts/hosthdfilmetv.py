@@ -37,11 +37,11 @@ class HDFilmeTV(CBaseHostClass):
     SEARCH_URL    = MAIN_URL + 'movie-search'
     DEFAULT_ICON  = "https://raw.githubusercontent.com/StoneOffStones/plugin.video.xstream/c88b2a6953febf6e46cf77f891d550a3c2ee5eea/resources/art/sites/hdfilme.png" #"http://hdfilme.tv/public/site/images/logo.png"
 
-    MAIN_CAT_TAB = [{'icon':DEFAULT_ICON, 'category':'list_filters',    'filter':'genre',    'title': _('Movies'),  'url' : MAIN_URL + 'filme1'},
-                    {'icon':DEFAULT_ICON, 'category':'list_filters',    'filter':'genre',    'title': _('Series'),  'url' : MAIN_URL + 'serien1'},
-                    {'icon':DEFAULT_ICON, 'category':'list_filters',    'filter':'genre',    'title': _('Trailers'),'url' : MAIN_URL + 'trailer'},
+    MAIN_CAT_TAB = [{'icon':DEFAULT_ICON, 'category':'list_filters',    'filter':'genre',    'title': _('Movies'),  'url': MAIN_URL + 'filme1'},
+                    {'icon':DEFAULT_ICON, 'category':'list_filters',    'filter':'genre',    'title': _('Series'),  'url': MAIN_URL + 'serien1'},
+                    {'icon':DEFAULT_ICON, 'category':'list_filters',    'filter':'genre',    'title': _('Trailers'),'url': MAIN_URL + 'trailer'},
                     {'icon':DEFAULT_ICON, 'category':'search',          'title': _('Search'), 'search_item':True},
-                    {'icon':DEFAULT_ICON, 'category':'search_history',  'title': _('Search history')} ]
+                    {'icon':DEFAULT_ICON, 'category':'search_history',  'title': _('Search history')}]
  
     def __init__(self):
         CBaseHostClass.__init__(self, {'history':'  HDFilmeTV.cc', 'cookie':'hdfilmenet.cookie'})
@@ -94,7 +94,7 @@ class HDFilmeTV(CBaseHostClass):
         movie_id = self.cm.ph.getSearchGroups(code, "id : ([0-9]+?),")[0]
         movie_name = self.cm.ph.getSearchGroups(code, '''name : ['"]([^'^"]+?)['"]''')[0]
         movie_url= self.cm.ph.getSearchGroups(code, '''url : ['"]([^'^"]+?)['"]''')[0]
-        movieData = { 'id' : movie_id , 'name': movie_name, 'url': movie_url }
+        movieData = {'id': movie_id, 'name': movie_name, 'url': movie_url}
         printDBG(str(movieData))
         return movieData
     
@@ -122,7 +122,7 @@ class HDFilmeTV(CBaseHostClass):
         printDBG("HDFilmeTV.fillFiltersCache")
         self.filtersCache = {'genre':[], 'country':[], 'sort':[]}
         
-        params = MergeDicts(self.defaultParams, {'user-agent': self.USER_AGENT, 'referer': self.MAIN_URL, "accept-encoding" : "gzip", "accept" : "text/html"})
+        params = MergeDicts(self.defaultParams, {'user-agent': self.USER_AGENT, 'referer': self.MAIN_URL, "accept-encoding": "gzip", "accept": "text/html"})
         printDBG("^^^^^^^^^^^^^^^^^^^^^^^")
         printDBG(str(params))
                             
@@ -187,7 +187,7 @@ class HDFilmeTV(CBaseHostClass):
         page      = cItem.get('page', 1)
         url       = cItem['url']
         
-        params = MergeDicts(self.defaultParams, { 'header': {'User-Agent': self.USER_AGENT, "Accept-Encoding" : "gzip", "Accept" : "text/html", "content-length":"14", "content-type": "application/x-www-form-urlencoded; charset=UTF-8", "Origin" : self.MAIN_URL, "Referer": url, "x-requested-with":"XMLHttpRequest"}})
+        params = MergeDicts(self.defaultParams, {'header': {'User-Agent': self.USER_AGENT, "Accept-Encoding": "gzip", "Accept": "text/html", "content-length":"14", "content-type": "application/x-www-form-urlencoded; charset=UTF-8", "Origin": self.MAIN_URL, "Referer": url, "x-requested-with":"XMLHttpRequest"}})
 
         query={}
         if 'search_pattern' in cItem:
@@ -223,9 +223,9 @@ class HDFilmeTV(CBaseHostClass):
             if url == '': 
                 continue
             #title
-            title = self.cleanHtmlStr( self.cm.ph.getDataBeetwenMarkers(item, '<div class="title-product">', '</div>')[1] )
+            title = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(item, '<div class="title-product">', '</div>')[1])
             if title == '': 
-                title = self.cleanHtmlStr( self.cm.ph.getDataBeetwenMarkers(item, '<h3 ', '</h3>')[1] )
+                title = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(item, '<h3 ', '</h3>')[1])
             #desc
             desc = self.cleanHtmlStr(item)
             
@@ -243,7 +243,7 @@ class HDFilmeTV(CBaseHostClass):
     def exploreItem(self, cItem):
         printDBG("HDFilmeTV.exploreItem")
  
-        params = MergeDicts(self.defaultParams, {'user-agent': self.USER_AGENT, 'referer': self.MAIN_URL, "accept-encoding" : "gzip", "accept" : "text/html"})
+        params = MergeDicts(self.defaultParams, {'user-agent': self.USER_AGENT, 'referer': self.MAIN_URL, "accept-encoding": "gzip", "accept": "text/html"})
 
         sts, data = self.getPageCF(cItem['url'], params)
         #printDBG(data)
@@ -289,7 +289,7 @@ class HDFilmeTV(CBaseHostClass):
             else:
                 trailerUrl = self.getFullUrl(trailerUrl)
                 params = dict(cItem)
-                params.update({'good_for_fav': False, 'title':'%s [%s]' % (cItem['title'], _('Trailer')), 'urls':[{'name':'trailer', 'url' : strwithmeta(trailerUrl.replace('&amp;', '&'), {'trailer': 1}), 'need_resolve':1}]})
+                params.update({'good_for_fav': False, 'title':'%s [%s]' % (cItem['title'], _('Trailer')), 'urls':[{'name':'trailer', 'url': strwithmeta(trailerUrl.replace('&amp;', '&'), {'trailer': 1}), 'need_resolve':1}]})
                 self.addVideo(params)
         
         # find links page url
@@ -315,12 +315,12 @@ class HDFilmeTV(CBaseHostClass):
                 data.extend(data_part)
         
         for server in data:
-            serverName = self.cleanHtmlStr( self.cm.ph.getDataBeetwenMarkers(server, '<i ', '</div>')[1] )
+            serverName = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(server, '<i ', '</div>')[1])
             serverData = ph.findall(server, '<li>', '</li>')
             for link in serverData:
                 #printDBG("----->" + link)
-                episodeName = self.cleanHtmlStr( link )
-                episodeUrl  = self.getFullUrl( self.cm.ph.getSearchGroups(link, '''href=['"]([^'^"]+?)['"]''')[0] )
+                episodeName = self.cleanHtmlStr(link)
+                episodeUrl  = self.getFullUrl(self.cm.ph.getSearchGroups(link, '''href=['"]([^'^"]+?)['"]''')[0])
                 episodeId = self.cm.ph.getSearchGroups(link, '''data-episode-id=['"]([^'^"]+?)['"]''')[0]
                 
                 if not episodeUrl.startswith('http'): 
@@ -329,7 +329,7 @@ class HDFilmeTV(CBaseHostClass):
                     episodesTab.append(episodeName)
                     episodesLinks[episodeName] = []
                 
-                params={'name':serverName, 'url': strwithmeta(episodeUrl.replace('&amp;', '&'), {'episodeId':episodeId, 'movieId': movieId}) , 'need_resolve':1}
+                params={'name':serverName, 'url': strwithmeta(episodeUrl.replace('&amp;', '&'), {'episodeId':episodeId, 'movieId': movieId}), 'need_resolve':1}
                 #printDBG("------------->" + str(params))
                 episodesLinks[episodeName].append(params)
         
@@ -375,7 +375,7 @@ class HDFilmeTV(CBaseHostClass):
             else:
                 movie_id = ''
                 
-        params = MergeDicts(self.defaultParams, {'user-agent': self.USER_AGENT, 'referer': videoUrl, "accept-encoding" : "gzip", "accept" : "text/html"})
+        params = MergeDicts(self.defaultParams, {'user-agent': self.USER_AGENT, 'referer': videoUrl, "accept-encoding": "gzip", "accept": "text/html"})
 
         sts, data = self.getPageCF(videoUrl, params)
         printDBG(data)
@@ -391,7 +391,7 @@ class HDFilmeTV(CBaseHostClass):
             else:
                 url=self.getFullUrl(url + movie_id + '/' + episode_id + "?")
             printDBG("video link---->" + url)
-            sts, tmp = self.getPage( url, params)
+            sts, tmp = self.getPage(url, params)
             #printDBG (tmp)
             #printDBG ("+++++++++++++++++")
             
@@ -401,7 +401,7 @@ class HDFilmeTV(CBaseHostClass):
                 url.meta['iptv_m3u8_seg_download_retry'] = 10
                 urlTab.extend(getDirectM3U8Playlist(url, checkExt=False, checkContent=True, sortWithMaxBitrate=999999999))
                 
-                printDBG ("------->" + url)
+                printDBG("------->" + url)
                 
                 '''
                 url = strwithmeta(url, {'Accept':'*/*', 'Referer':self.getMainUrl(), 'Origin':self.getMainUrl()[:-1], 'User-Agent':self.defaultParams['header']['User-Agent']})
@@ -462,11 +462,11 @@ class HDFilmeTV(CBaseHostClass):
         if icon == '':
             icon = cItem.get('icon', '')
         
-        title = self.cleanHtmlStr( self.cm.ph.getDataBeetwenMarkers(data, '<b class="text-blue title-film">', '</b>', False)[1] )
+        title = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(data, '<b class="text-blue title-film">', '</b>', False)[1])
         if title == '':
             title = cItem['title']
         
-        desc = self.cleanHtmlStr( self.cm.ph.getDataBeetwenMarkers(data, '<div class="caption">', '</div>', False)[1] )
+        desc = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(data, '<div class="caption">', '</div>', False)[1])
         
         descData = self.cm.ph.getDataBeetwenMarkers(data, '<div class="movie-info pull-left">', '</div>', False)[1]
         descData = self.cm.ph.getAllItemsBeetwenMarkers(descData, '<p', '</p>', caseSensitive=False)
@@ -485,8 +485,8 @@ class HDFilmeTV(CBaseHostClass):
             item = item.split('</span>')
             if len(item) < 2:
                 continue
-            key = self.cleanHtmlStr( item[0] ).replace(':', '').strip()
-            val = self.cleanHtmlStr( item[1] )
+            key = self.cleanHtmlStr(item[0]).replace(':', '').strip()
+            val = self.cleanHtmlStr(item[1])
             for dKey in descTabMap:
                 if dKey in key:
                     if descTabMap[dKey] == 'rating':
@@ -498,7 +498,7 @@ class HDFilmeTV(CBaseHostClass):
         if views != '':
             otherInfo['views'] = views
         
-        return [{'title':self.cleanHtmlStr( title ), 'text': desc, 'images':[{'title':'', 'url':self.getIconUrl(icon)}], 'other_info':otherInfo}]
+        return [{'title':self.cleanHtmlStr(title), 'text': desc, 'images':[{'title':'', 'url':self.getIconUrl(icon)}], 'other_info':otherInfo}]
 
     def handleService(self, index, refresh=0, searchPattern='', searchType=''):
         printDBG('handleService start')
@@ -510,7 +510,7 @@ class HDFilmeTV(CBaseHostClass):
         mode     = self.currItem.get("mode", '')
         filter   = self.currItem.get("filter", '')
         
-        printDBG( "handleService: |||||||||||||||||||||||||||||||||||| name[%s], category[%s] " % (name, category) )
+        printDBG("handleService: |||||||||||||||||||||||||||||||||||| name[%s], category[%s] " % (name, category))
         self.currList = []
         
     #MAIN MENU
@@ -564,5 +564,5 @@ class IPTVHost(CHostBase):
             text       = item.get('text', '')
             images     = item.get("images", [])
             othersInfo = item.get('other_info', '')
-            retlist.append( ArticleContent(title=title, text=text, images=images, richDescParams=othersInfo) )
+            retlist.append(ArticleContent(title=title, text=text, images=images, richDescParams=othersInfo))
         return RetHost(RetHost.OK, value=retlist)

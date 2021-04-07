@@ -32,7 +32,7 @@ class ForjaTN(CBaseHostClass):
         self.MAIN_URL = 'https://forja.tn/'
         self.HTTP_HEADER = {'User-Agent': self.USER_AGENT, 'DNT':'1', 'Accept': 'text/html', 'Accept-Encoding':'gzip, deflate'}
         self.AJAX_HEADER = dict(self.HTTP_HEADER)
-        self.AJAX_HEADER.update( {'X-Requested-With': 'XMLHttpRequest', 'Accept-Encoding':'gzip, deflate', 'Content-Type':'application/x-www-form-urlencoded; charset=UTF-8', 'Accept':'application/json, text/javascript, */*; q=0.01'} )
+        self.AJAX_HEADER.update({'X-Requested-With': 'XMLHttpRequest', 'Accept-Encoding':'gzip, deflate', 'Content-Type':'application/x-www-form-urlencoded; charset=UTF-8', 'Accept':'application/json, text/javascript, */*; q=0.01'})
         
         self.cacheFilters  = {}
         self.cacheFiltersKeys = []
@@ -158,7 +158,7 @@ class ForjaTN(CBaseHostClass):
                 desc = ' | '.join(desc) + '[/br]' + self.cleanHtmlStr(item.get('Plot', ''))
                 id   = item.get('_id', '') 
                 imdbID = item.get('imdbID', '') 
-                url = self.getFullUrl('/%s/%s/' % (type[:-1], imdbID) )
+                url = self.getFullUrl('/%s/%s/' % (type[:-1], imdbID))
                 params = dict(cItem)
                 params.update({'good_for_fav':True, 'category':nextCategory, 'title':title, 'url':url, '_id':id, 'imdb_id':imdbID, 'icon':icon, 'desc':desc})
                 self.addDir(params)
@@ -181,7 +181,7 @@ class ForjaTN(CBaseHostClass):
         if not sts:
             return
         
-        SetIPTVPlayerLastHostError( self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(data, ('<div', '>', 'medias_container'), ('</div', '>'), False)[1]) )
+        SetIPTVPlayerLastHostError(self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(data, ('<div', '>', 'medias_container'), ('</div', '>'), False)[1]))
         
         if type == 'series':
             seasonsTab = []
@@ -256,7 +256,7 @@ class ForjaTN(CBaseHostClass):
             
             data = self.cm.ph.getDataBeetwenReMarkers(data, re.compile('''episodes\s*='''), re.compile('''];'''), False)[1]
             data = data.strip() + ']'
-            ret = js_execute( 'print(JSON.stringify(%s));' % data)
+            ret = js_execute('print(JSON.stringify(%s));' % data)
             if ret['sts'] and 0 == ret['code']:
                 try:
                     data = byteify(json.loads(ret['data']), '', True)
@@ -369,7 +369,7 @@ class ForjaTN(CBaseHostClass):
         if icon == '':
             icon = cItem.get('icon', self.DEFAULT_ICON_URL)
         
-        return [{'title':self.cleanHtmlStr( title ), 'text': self.cleanHtmlStr( desc ), 'images':[{'title':'', 'url':self.getFullUrl(icon)}], 'other_info':otherInfo}]
+        return [{'title':self.cleanHtmlStr(title), 'text': self.cleanHtmlStr(desc), 'images':[{'title':'', 'url':self.getFullUrl(icon)}], 'other_info':otherInfo}]
     
     def handleService(self, index, refresh=0, searchPattern='', searchType=''):
         printDBG('handleService start')
@@ -380,7 +380,7 @@ class ForjaTN(CBaseHostClass):
         category = self.currItem.get("category", '')
         mode     = self.currItem.get("mode", '')
         
-        printDBG( "handleService: |||||||||||||||||||||||||||||||||||| name[%s], category[%s] " % (name, category) )
+        printDBG("handleService: |||||||||||||||||||||||||||||||||||| name[%s], category[%s] " % (name, category))
         self.currList = []
         
     #MAIN MENU

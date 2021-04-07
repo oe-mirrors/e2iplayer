@@ -51,23 +51,23 @@ class LosMovies(CBaseHostClass):
         self.DEFAULT_ICON_URL = 'https://superrepo.org/static/images/icons/original/xplugin.video.losmovies.png.pagespeed.ic.JtaWsQ6YWz.jpg'
         self.HEADER = self.cm.getDefaultHeader(browser='chrome')
         self.AJAX_HEADER = dict(self.HEADER)
-        self.AJAX_HEADER.update( {'X-Requested-With': 'XMLHttpRequest'} )
+        self.AJAX_HEADER.update({'X-Requested-With': 'XMLHttpRequest'})
         self.MAIN_URL = 'http://losmovies.cx/'
         self.cacheEpisodes = {}
         self.cacheLinks = {}
         self.defaultParams = {'header':self.HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
         
-        self.MAIN_CAT_TAB = [{'category':'list_cats',      'mode':'movie',   'title': 'Movies',           'url':self.getMainUrl()                         },
-                             {'category':'list_cats',      'mode':'serie',   'title': 'TV Shows',         'url':self.getFullUrl('watch-popular-tv-shows') },
-                             {'category':'list_top_cats',  'mode':'movie',   'title': 'Top Movie Lists',  'url':self.getFullUrl('top-movie-lists')        },
+        self.MAIN_CAT_TAB = [{'category':'list_cats',      'mode':'movie',   'title': 'Movies',           'url':self.getMainUrl()},
+                             {'category':'list_cats',      'mode':'serie',   'title': 'TV Shows',         'url':self.getFullUrl('watch-popular-tv-shows')},
+                             {'category':'list_top_cats',  'mode':'movie',   'title': 'Top Movie Lists',  'url':self.getFullUrl('top-movie-lists')},
                              
-                             {'category': 'search',            'title': _('Search'), 'search_item': True,                                    },
-                             {'category': 'search_history',    'title': _('Search history'),                                                } 
+                             {'category': 'search',            'title': _('Search'), 'search_item': True,},
+                             {'category': 'search_history',    'title': _('Search history'),} 
                             ]
                             
-        self.MAIN_SUB_CATS_TAB = [{'category': 'list_abc',        'title': 'Alphabetically',                                  },
-                                  {'category':'list_categories', 'title': 'Genres',    'url':self.getFullUrl('movie-genres') },
-                                  {'category':'list_categories', 'title': 'Countries', 'url':self.getFullUrl('countries')    },
+        self.MAIN_SUB_CATS_TAB = [{'category': 'list_abc',        'title': 'Alphabetically',},
+                                  {'category':'list_categories', 'title': 'Genres',    'url':self.getFullUrl('movie-genres')},
+                                  {'category':'list_categories', 'title': 'Countries', 'url':self.getFullUrl('countries')},
                                  ]
         
     def getPage(self, baseUrl, addParams={}, post_data=None):
@@ -139,7 +139,7 @@ class LosMovies(CBaseHostClass):
         for item in data:
             url   = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''href=['"]([^'^"]+?{0})['"]'''.format(marker))[0])
             title = self.cleanHtmlStr(self.cm.ph.getDataBeetwenReMarkers(item, re.compile('<div[^>]+?showRowName'), re.compile('</div>'))[1])
-            icon  = self.getFullUrl( self.cm.ph.getSearchGroups(item, 'src="([^"]+?)"')[0] )
+            icon  = self.getFullUrl(self.cm.ph.getSearchGroups(item, 'src="([^"]+?)"')[0])
             params = dict(cItem)
             params.update({'category':nextCategory, 'title':title, 'url':url, 'icon':icon})
             self.addDir(params)
@@ -179,16 +179,16 @@ class LosMovies(CBaseHostClass):
         
         data = self.cm.ph.getAllItemsBeetwenMarkers(data, '<div id="' + marker, '</h4>', withMarkers=True)
         for item in data:
-            url  = self.getFullUrl( self.cm.ph.getSearchGroups(item, 'href="([^"]+?)"')[0] )
+            url  = self.getFullUrl(self.cm.ph.getSearchGroups(item, 'href="([^"]+?)"')[0])
             if not self.cm.isValidUrl(url):
                 continue
-            icon = self.getFullUrl( self.cm.ph.getSearchGroups(item, 'src="([^"]+?)"')[0] )
-            desc = self.cleanHtmlStr( item )
-            title = self.cleanHtmlStr( self.cm.ph.getDataBeetwenMarkers(item, '<h4', '</h4>')[1] )
+            icon = self.getFullUrl(self.cm.ph.getSearchGroups(item, 'src="([^"]+?)"')[0])
+            desc = self.cleanHtmlStr(item)
+            title = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(item, '<h4', '</h4>')[1])
             if title == '':
-                title  = self.cleanHtmlStr( self.cm.ph.getSearchGroups(item, 'title="([^"]+?)"')[0] )
+                title  = self.cleanHtmlStr(self.cm.ph.getSearchGroups(item, 'title="([^"]+?)"')[0])
             if title == '':
-                title  = self.cleanHtmlStr( self.cm.ph.getSearchGroups(item, 'alt="([^"]+?)"')[0] )
+                title  = self.cleanHtmlStr(self.cm.ph.getSearchGroups(item, 'alt="([^"]+?)"')[0])
             
             params = {'good_for_fav': True, 'title':title, 'url':url, 'desc':desc, 'info_url':url, 'icon':icon}
             if 'class="movieTV"' not in item and '/movie-list/' not in item:
@@ -316,8 +316,8 @@ class LosMovies(CBaseHostClass):
             printDBG(data)
             printDBG('++++++++++++++++++++')
             vGlobals = {"__builtins__": None, '__name__':__name__, 'str':str, 'chr':chr}
-            vLocals = { 'param': None }
-            exec( data, vGlobals, vLocals)
+            vLocals = {'param': None}
+            exec(data, vGlobals, vLocals)
             tmp = vLocals['iptv_param'].split(';')[0].split('=')
             return {tmp[0]:tmp[1]}
         except Exception:
@@ -408,13 +408,13 @@ class LosMovies(CBaseHostClass):
         if not sts:
             return retTab
         
-        title = self.cleanHtmlStr( self.cm.ph.getSearchGroups(data, '<meta property="og:title"[^>]+?content="([^"]+?)"')[0] )
-        desc  = self.cleanHtmlStr( self.cm.ph.getDataBeetwenReMarkers(data, re.compile('showRowDescription[^>]+?>'), re.compile('</div>'), False)[1] )
+        title = self.cleanHtmlStr(self.cm.ph.getSearchGroups(data, '<meta property="og:title"[^>]+?content="([^"]+?)"')[0])
+        desc  = self.cleanHtmlStr(self.cm.ph.getDataBeetwenReMarkers(data, re.compile('showRowDescription[^>]+?>'), re.compile('</div>'), False)[1])
         
         icon  = self.cm.ph.getDataBeetwenMarkers(data, 'showRowImage">', '</div>')[1] 
-        icon  = self.getFullUrl( self.cm.ph.getSearchGroups(icon, 'src="([^"]+?)"')[0] )
+        icon  = self.getFullUrl(self.cm.ph.getSearchGroups(icon, 'src="([^"]+?)"')[0])
         
-        self.getFullUrl( self.cm.ph.getSearchGroups(data, '<meta property="og:image"[^>]+?content="([^"]+?)"')[0] )
+        self.getFullUrl(self.cm.ph.getSearchGroups(data, '<meta property="og:image"[^>]+?content="([^"]+?)"')[0])
         
         if title == '':
             title = cItem['title']
@@ -434,14 +434,14 @@ class LosMovies(CBaseHostClass):
         
         otherInfo = {}
         for item in descKeys:
-            val = self.cleanHtmlStr( self.cm.ph.getDataBeetwenMarkers(data, 'showValue%s">' % item[0], '</div>', False)[1] )
+            val = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(data, 'showValue%s">' % item[0], '</div>', False)[1])
             if val != '' and item[1] != '':
                 try:
                     otherInfo[item[1]] = val.replace(' , ', ', ')
                 except Exception:
                     continue
         
-        return [{'title':self.cleanHtmlStr( title ), 'text': self.cleanHtmlStr( desc ), 'images':[{'title':'', 'url':self.getFullUrl(icon)}], 'other_info':otherInfo}]
+        return [{'title':self.cleanHtmlStr(title), 'text': self.cleanHtmlStr(desc), 'images':[{'title':'', 'url':self.getFullUrl(icon)}], 'other_info':otherInfo}]
     
     def getFavouriteData(self, cItem):
         printDBG('LosMovies.getFavouriteData')
@@ -481,7 +481,7 @@ class LosMovies(CBaseHostClass):
         category = self.currItem.get("category", '')
         mode     = self.currItem.get("mode", '')
         
-        printDBG( "handleService: |||||||||||||||||||||||||||||||||||| name[%s], category[%s] " % (name, category) )
+        printDBG("handleService: |||||||||||||||||||||||||||||||||||| name[%s], category[%s] " % (name, category))
         self.currList = []
         
     #MAIN MENU

@@ -254,7 +254,7 @@ class TitlovicomProvider(CBaseSubProviderClass):
         
         imdbid = self.cm.ph.getSearchGroups(data, '/title/(tt[0-9]+?)[^0-9]')[0]
         subId  = self.cm.ph.getSearchGroups(data, 'mediaid=([0-9]+?)[^0-9]')[0]
-        url    = self.getFullUrl( self.cm.ph.getSearchGroups(data, 'href="([^"]*?/download[^"]+?mediaid=[^"]+?)"')[0] )
+        url    = self.getFullUrl(self.cm.ph.getSearchGroups(data, 'href="([^"]*?/download[^"]+?mediaid=[^"]+?)"')[0])
         
         try:
             fps = float(self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(data, 'class="fps">', 'FPS', False)[1].upper()))
@@ -315,7 +315,7 @@ class TitlovicomProvider(CBaseSubProviderClass):
         name     = self.currItem.get("name", '')
         category = self.currItem.get("category", '')
         
-        printDBG( "handleService: |||||||||||||||||||||||||||||||||||| name[%s], category[%s] " % (name, category) )
+        printDBG("handleService: |||||||||||||||||||||||||||||||||||| name[%s], category[%s] " % (name, category))
         self.currList = []
         
     #MAIN MENU

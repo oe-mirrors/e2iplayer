@@ -53,7 +53,7 @@ class Spryciarze(CBaseHostClass):
         catTab = data.split('<div class="card-header bg-light">')
         # free memory
         data = ''
-        if len(catTab) > 0 :
+        if len(catTab) > 0:
             del catTab[0]
             
         printDBG('catTab len %d' % len(catTab))
@@ -100,7 +100,7 @@ class Spryciarze(CBaseHostClass):
         catTab = data.split('<div class="card-header bg-light">')
         # free memory
         data = ''
-        if len(catTab) > 0 :
+        if len(catTab) > 0:
             del catTab[0]
             
         printDBG('catTab len %d' % len(catTab))
@@ -204,13 +204,13 @@ class Spryciarze(CBaseHostClass):
         for i in range(pageNum):
             tmpItem = {}
             tmpItem['type'] = 'subSubPage'
-            tmpItem['url'] =  self.MAIN_URL + 'szukaj/' + pattern + ( '/film/page:%d' % (i+1) ) + '/sort:ocena'
+            tmpItem['url'] =  self.MAIN_URL + 'szukaj/' + pattern + ('/film/page:%d' % (i+1)) + '/sort:ocena'
             tmpItem['name'] = 'Strona %d' % (i + 1)
             
             if (i+1) < pageNum:
-                tmpItem['opis'] = 'Wyniki wyszukiwania od %d do %d' % ( i * self.SEARCH_RES_PER_PAGE + 1, (i + 1) * self.SEARCH_RES_PER_PAGE )
+                tmpItem['opis'] = 'Wyniki wyszukiwania od %d do %d' % (i * self.SEARCH_RES_PER_PAGE + 1, (i + 1) * self.SEARCH_RES_PER_PAGE)
             else:
-                tmpItem['opis'] = 'Wyniki wyszukiwania od %d do %d' % ( i * self.SEARCH_RES_PER_PAGE + 1, itemNum )
+                tmpItem['opis'] = 'Wyniki wyszukiwania od %d do %d' % (i * self.SEARCH_RES_PER_PAGE + 1, itemNum)
                 
             self.currList.append(tmpItem)
             
@@ -234,7 +234,7 @@ class Spryciarze(CBaseHostClass):
             
         printDBG('getVideoList tab_len %d' % len(tab))
         
-        searchItems = [ {'keys': ['url'], 'req': False, 'pattern': '<a href="([^"]+?)"'},
+        searchItems = [{'keys': ['url'], 'req': False, 'pattern': '<a href="([^"]+?)"'},
                         {'keys': ['ico'], 'req': False, 'pattern': '<img src="([^"]+?)"'},
 #                        {'keys': ['odslony'], 'req': False, 'pattern': '<span><span class="film_odslony"></span>.+?: <span>([0-9]+?)</span></span>'},
 #                        {'keys': ['odslony'], 'req': False, 'pattern': '<span><span class="film_odslony"></span>.+?: <span>([0-9]+?)</span></span>'},
@@ -262,7 +262,7 @@ class Spryciarze(CBaseHostClass):
                     printDBG('Znaleziono ' + it['keys'][0])
                         
                 keyNums = len(it['keys'])
-                if( keyNums > 1 ):
+                if(keyNums > 1):
                     for j in range(keyNums):
                         videoItem[it['keys'][j]] = match[0][j]
                 else:
@@ -350,12 +350,12 @@ class Spryciarze(CBaseHostClass):
     
         if 0 == refresh:
             if len(self.currList) <= index:
-                printDBG( "Spryciarze.handleService wrong index: %s, len(self.currList): %d" % (index, len(self.currList)) )
+                printDBG("Spryciarze.handleService wrong index: %s, len(self.currList): %d" % (index, len(self.currList)))
                 return
         
             if -1 == index:
                 self.type = None
-                printDBG( "Spryciarze.handleService for first self.category" )
+                printDBG("Spryciarze.handleService for first self.category")
             else:
                 item = self.currList[index]
                 self.type = item['type']
@@ -365,26 +365,26 @@ class Spryciarze(CBaseHostClass):
                     self.url = self.currList[index]['url']
                 self.prevList = self.currList
 
-                printDBG( "|||||||||||||||||||||||||||||||||||| %s " % item['type'] )
+                printDBG("|||||||||||||||||||||||||||||||||||| %s " % item['type'])
 
     #MAIN MENU
         if self.type == None:
             self.getMainCategory()
     #SUB CATEGORY
         elif self.type == 'main':
-            self.getSubCategory( self.index )
+            self.getSubCategory(self.index)
     #SUB_SUB_CATEGORY
         elif self.type == 'sub':
-            self.getSubSubCategory( self.index )
+            self.getSubSubCategory(self.index)
     #SUB__SUB_PAGES
         elif self.type == 'subSub':
-            self.getItemsForCat( self.index )
+            self.getItemsForCat(self.index)
     #VIDEOS
         elif self.type == 'subSubPage':
-            self.getVideoList2( self.url )
+            self.getVideoList2(self.url)
     #SEARCH
         elif self.type == 'search':
-            self.getSearchResut( searchPattern )
+            self.getSearchResut(searchPattern)
     # end handleService
 
 class IPTVHost(IHost):
@@ -467,7 +467,7 @@ class IPTVHost(IHost):
         retlist = []
         
         if None != selItem and 'url' in selItem and 1 < len(selItem['url']):
-            tmpList = self.host.getVideoLinks( selItem['url'] )
+            tmpList = self.host.getVideoLinks(selItem['url'])
             
             for item in tmpList:
                 retlist.append(CUrlItem(item['name'], item['url'], 0))
@@ -479,11 +479,11 @@ class IPTVHost(IHost):
         retList = []
         self.searchPattern = searchpattern.replace(' ',  '%20')
         
-        return self.getListForItem( len(self.host.getCurrList()) -1 )
+        return self.getListForItem(len(self.host.getCurrList()) -1)
             
     # return full path to player logo
     def getLogoPath(self):  
-        return RetHost(RetHost.OK, value=[ GetLogoDir('spryciarzelogo.png') ])
+        return RetHost(RetHost.OK, value=[GetLogoDir('spryciarzelogo.png')])
 
 
     def convertList(self, cList):

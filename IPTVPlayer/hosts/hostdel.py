@@ -52,7 +52,7 @@ class Del(CBaseHostClass):
         data = ph.find(data, ('<div', '>', 'select_rechts'), '</div>', flags=0)[1]
         data = ph.findall(data, ('<option', '>'), '</option>', flags=ph.START_S)
         for idx in range(1, len(data), 2):
-            url = self.cm.getFullUrl( ph.getattr(data[idx-1], 'value'), self.cm.meta['url'])
+            url = self.cm.getFullUrl(ph.getattr(data[idx-1], 'value'), self.cm.meta['url'])
             title = self.cleanHtmlStr(data[idx])
             self.addDir(MergeDicts(cItem, {'good_for_fav':True, 'category':nextCategory, 'title':title, 'url':url}))
 
@@ -136,14 +136,14 @@ class Del(CBaseHostClass):
             try:
                 data = json_loads(data)['videos'][0]['source']
                 if data.get('hls'):
-                    hlsUrl = self.cm.getFullUrl( data['hls'], self.cm.meta['url'])
+                    hlsUrl = self.cm.getFullUrl(data['hls'], self.cm.meta['url'])
                     urlsTab = getDirectM3U8Playlist(hlsUrl, checkContent=True, sortWithMaxBitrate=999999999, mergeAltAudio=True)
                     if len(urlsTab):
                         urlsTab.append({'name':'Variable M3U8/HLS', 'url':hlsUrl, 'need_resolve':0})
 
                 # progressive links seem do not work why?
                 if False and data.get('progressive'):
-                    mp4Url = self.cm.getFullUrl( data['progressive'], self.cm.meta['url'])
+                    mp4Url = self.cm.getFullUrl(data['progressive'], self.cm.meta['url'])
                     urlsTab.append({'name':'progressive mp4', 'url':mp4Url, 'need_resolve':0})
             except Exception:
                 printExc()
@@ -164,7 +164,7 @@ class Del(CBaseHostClass):
                 sts, data = self.getPage(url, urlParams)
                 try:
                     url = json_loads(data)['video']['streamAccess']
-                    url = self.cm.getFullUrl( url, self.cm.meta['url'])
+                    url = self.cm.getFullUrl(url, self.cm.meta['url'])
                     sts, data = self.getPage(url, urlParams, '[""]')
                     try:
                         printDBG("++++")
@@ -172,14 +172,14 @@ class Del(CBaseHostClass):
                         printDBG("++++")
                         data = json_loads(data)['data']['stream-access']
                         for url in data:
-                            sts, streamData = self.getPage(self.cm.getFullUrl( url, self.cm.meta['url']), urlParams)
+                            sts, streamData = self.getPage(self.cm.getFullUrl(url, self.cm.meta['url']), urlParams)
                             if not sts:
                                 continue
                             printDBG("?----?")
                             printDBG(data)
                             printDBG("?----?")
                             token = ph.getattr(streamData, 'auth')
-                            hlsUrl = self.cm.getFullUrl( ph.getattr(streamData, 'url'), self.cm.meta['url']) + '?hdnea=' + token
+                            hlsUrl = self.cm.getFullUrl(ph.getattr(streamData, 'url'), self.cm.meta['url']) + '?hdnea=' + token
                             urlsTab = getDirectM3U8Playlist(hlsUrl, checkContent=True, sortWithMaxBitrate=999999999, mergeAltAudio=True)
                             break
                     except Exception:
@@ -195,7 +195,7 @@ class Del(CBaseHostClass):
 
         name     = self.currItem.get("name", '')
         category = self.currItem.get("category", '')
-        printDBG( "handleService: ||| name[%s], category[%s] " % (name, category) )
+        printDBG("handleService: ||| name[%s], category[%s] " % (name, category))
         self.currList = []
 
     #MAIN MENU

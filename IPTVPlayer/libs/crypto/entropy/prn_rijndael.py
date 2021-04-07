@@ -30,19 +30,19 @@ class PRN_Rijndael:
         self.__state = self.__algorithm.blockSize*chr(0)              # a single block of zeros
 
     def reseed(self, seed):
-        while len(seed) > 0 :
+        while len(seed) > 0:
             if len(seed) < self.__algorithm.blockSize:
                 block = seed + (self.__algorithm.blockSize-len(seed))*chr(0)
                 seed = ''
             else:
                 block =  seed[:self.__algorithm.blockSize]
                 seed = seed[self.__algorithm.blockSize:]
-            self.__algorithm.setKey( self.__algorithm.encrypt(block) )
+            self.__algorithm.setKey(self.__algorithm.encrypt(block))
 
     def getBytes(self, numBytes):
         """ Return a psuedo random byte string of length numBytes """
         bytes = ''
-        while len(bytes)< numBytes :
+        while len(bytes)< numBytes:
             bytes = bytes + self.getSomeBytes()
         return bytes[:numBytes]     # truncate to the requested length
 

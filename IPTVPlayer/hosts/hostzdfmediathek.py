@@ -26,7 +26,7 @@ import time
 ###################################################
 # Config options for HOST
 ###################################################
-config.plugins.iptvplayer.zdfmediathek_iconssize = ConfigSelection(default="medium", choices=[ ("large", _("large")), ("medium", _("medium")), ("small", _("small")) ])
+config.plugins.iptvplayer.zdfmediathek_iconssize = ConfigSelection(default="medium", choices=[("large", _("large")), ("medium", _("medium")), ("small", _("small"))])
 config.plugins.iptvplayer.zdfmediathek_prefformat = ConfigSelection(default="mp4,m3u8", choices=[
 ("mp4,m3u8", "mp4,m3u8"), ("m3u8,mp4", "m3u8,mp4")])
 config.plugins.iptvplayer.zdfmediathek_prefquality = ConfigSelection(default="4", choices=[("0", _("low")), ("1", _("medium")), ("2", _("high")), ("3", _("very high")), ("4", _("hd"))])
@@ -51,7 +51,7 @@ class ZDFmediathek(CBaseHostClass):
     HOST = 'Mozilla/5.0 (X11; U; Linux i686; en-US; rv:1.9.2.18) Gecko/20110621 Mandriva Linux/1.9.2.18-0.1mdv2010.2 (2010.2) Firefox/3.6.18'
     HEADER = {'User-Agent': HOST, 'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8'}
     AJAX_HEADER = dict(HEADER)
-    AJAX_HEADER.update( {'X-Requested-With': 'XMLHttpRequest', 'Connection': 'keep-alive', 'Pragma': 'no-cache', 'Cache-Control': 'no-cache'} )
+    AJAX_HEADER.update({'X-Requested-With': 'XMLHttpRequest', 'Connection': 'keep-alive', 'Pragma': 'no-cache', 'Cache-Control': 'no-cache'})
     
     MAIN_URL     = 'https://www.zdf.de/'
     MAIN_API_URL = 'https://zdf-cdn.live.cellular.de/'
@@ -84,11 +84,11 @@ class ZDFmediathek(CBaseHostClass):
                     {'category':'list_cluster',    'title':_('Program A-Z'), 'simplify':False, 'url': BRANDS_ALPHABETICAL_API_URL},
                     {'category':'list_cluster',    'title':_('Categories'), 'url': CATEGORIES_PAGE_API_URL},
                     #{'category':'themen',         'title':_('Topics'), 'url': NEWS_API_URL},
-                    {'category':'kinder',          'title':_('Children') },
+                    {'category':'kinder',          'title':_('Children')},
                     {'category':'search',          'title':_('Search'), 'search_item':True},
-                    {'category':'search_history',  'title':_('Search history')} ]
+                    {'category':'search_history',  'title':_('Search history')}]
                        
-    QUALITY_MAP = {'hd':4, 'veryhigh':3, 'high':2, 'med':1, 'low':0 }
+    QUALITY_MAP = {'hd':4, 'veryhigh':3, 'high':2, 'med':1, 'low':0}
     
     def __init__(self):
         printDBG("ZDFmediathek.__init__")
@@ -131,7 +131,7 @@ class ZDFmediathek(CBaseHostClass):
         
     def getFullUrl(self, url):
         if 'proxy-german.de' in url:
-            url = urllib.parse.unquote( self.cm.ph.getSearchGroups(url+'&', '''\?q=(http[^&]+?)&''')[0] )
+            url = urllib.parse.unquote(self.cm.ph.getSearchGroups(url+'&', '''\?q=(http[^&]+?)&''')[0])
         return CBaseHostClass.getFullUrl(self, url)
         
     def _getNum(self, v, default=0):
@@ -475,36 +475,36 @@ class ZDFmediathek(CBaseHostClass):
             def _cmpLinks(it1, it2):
                 prefmoreimportantly = config.plugins.iptvplayer.zdfmediathek_prefmoreimportant.value
                 if 'quality' == prefmoreimportantly:
-                    if it1['quality_pref'] < it2['quality_pref'] :
+                    if it1['quality_pref'] < it2['quality_pref']:
                         return -1
-                    elif it1['quality_pref']  > it2['quality_pref'] :
+                    elif it1['quality_pref']  > it2['quality_pref']:
                         return 1
                     else:
-                        if it1['quality'] < it2['quality'] :
+                        if it1['quality'] < it2['quality']:
                             return -1
-                        elif it1['quality']  > it2['quality'] :
+                        elif it1['quality']  > it2['quality']:
                             return 1
                         else:
-                            if it1['format_pref'] < it2['format_pref'] :
+                            if it1['format_pref'] < it2['format_pref']:
                                 return -1
-                            elif it1['format_pref']  > it2['format_pref'] :
+                            elif it1['format_pref']  > it2['format_pref']:
                                 return 1
                             else:
                                 return 0
                 else:
-                    if it1['format_pref'] < it2['format_pref'] :
+                    if it1['format_pref'] < it2['format_pref']:
                         return -1
-                    elif it1['format_pref']  > it2['format_pref'] :
+                    elif it1['format_pref']  > it2['format_pref']:
                         return 1
                     else:
-                        if it1['quality_pref'] < it2['quality_pref'] :
+                        if it1['quality_pref'] < it2['quality_pref']:
                             return -1
-                        elif it1['quality_pref']  > it2['quality_pref'] :
+                        elif it1['quality_pref']  > it2['quality_pref']:
                             return 1
                         else:
-                            if it1['quality'] < it2['quality'] :
+                            if it1['quality'] < it2['quality']:
                                 return -1
-                            elif it1['quality']  > it2['quality'] :
+                            elif it1['quality']  > it2['quality']:
                                 return 1
                             else:
                                 return 0
@@ -532,7 +532,7 @@ class ZDFmediathek(CBaseHostClass):
         CBaseHostClass.handleService(self, index, refresh, searchPattern, searchType)
         name     = self.currItem.get("name", None)
         category = self.currItem.get("category", '')
-        printDBG( "ZDFmediathek.handleService: ---------> name[%s], category[%s] " % (name, category) )
+        printDBG("ZDFmediathek.handleService: ---------> name[%s], category[%s] " % (name, category))
         searchPattern = self.currItem.get("search_pattern", searchPattern)
         self.currList = [] 
 

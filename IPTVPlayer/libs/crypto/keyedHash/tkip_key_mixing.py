@@ -20,7 +20,7 @@ from crypto.cipher.rijndael import Sbox
 tkipSbox = [list(range(256)), list(range(256))] # arbitrary initialization
 for i in range(256):
     k  = Sbox[i]           # the rijndael S box (imported)
-    if k & 0x80 :          # calculate k*2 polynomial math
+    if k & 0x80:          # calculate k*2 polynomial math
         k2 = (k<<1)^0x11b  # reduce by rijndael modulas
     else:
         k2 = k<<1
@@ -46,9 +46,9 @@ class TKIP_Mixer:
         self.ta = None
         self.setPnBytes(pnBytes)   # sets self.pnBytes and validates input
         self.upper4SequenceOctets = self.pnBytes[-4:]
-        if tk1 != None :
+        if tk1 != None:
             self.setKey(tk1)
-        if transmitterAddress != None :
+        if transmitterAddress != None:
             self.setTA(transmitterAddress)
 
     def setKey(self, key):
@@ -57,20 +57,20 @@ class TKIP_Mixer:
             raise Exception('Wrong key size')
         # for readability of subroutines, make tk a list of 1 octet ints
         self.tk = [ord(byte) for byte in key]
-        if self.ta != None : # reset phase1 value
-            self.phase1Key = phase1KeyMixing( self.tk, self.ta, self.pn)
+        if self.ta != None: # reset phase1 value
+            self.phase1Key = phase1KeyMixing(self.tk, self.ta, self.pn)
 
     def setTA(self, taBytes):
         """ Set the transmitter address """
         if len(taBytes) != 6:
             raise Exception('Bad size for transmitterAddress')
         self.ta = [ord(byte) for byte in taBytes]
-        if self.tk != None : # reset phase1 value
-            self.phase1Key = phase1KeyMixing( self.tk, self.ta, self.pn )
+        if self.tk != None: # reset phase1 value
+            self.phase1Key = phase1KeyMixing(self.tk, self.ta, self.pn)
 
     def setPnBytes(self, pnBytes):
         """ Set the pnBytes from the packet number (int) """
-        assert( len(pnBytes)==6 ), 'pnBytes must be 6 octets'
+        assert(len(pnBytes)==6), 'pnBytes must be 6 octets'
         self.pnBytes = pnBytes
         self.pn = [ord(byte) for byte in pnBytes] # int list for readability
 
@@ -84,8 +84,8 @@ class TKIP_Mixer:
         if self.pnBytes[-4:] != self.upper4SequenceOctets: # check if upper bits change
             # calculate phase1 key only when upper bytes change
             self.upper4SequenceOctets = pnBytes[-4:]
-            self.phase1Key = phase1KeyMixing( self.tk, self.ta, self.pn )
-        return  phase2KeyMixing( self.tk, self.phase1Key, self.pn )
+            self.phase1Key = phase1KeyMixing(self.tk, self.ta, self.pn)
+        return  phase2KeyMixing(self.tk, self.phase1Key, self.pn)
 
 def phase1KeyMixing(tk, ta, pn):
     """ Create a p1k (5 integers) from TK, TA and upper 4 octets of sequence number pn"""
@@ -97,25 +97,25 @@ def phase1KeyMixing(tk, ta, pn):
     p1k[4] = ta[5]*256 + ta[4]  # 2 octets of MAC as an integer (little-endian)
     for i in range(8):
         j = 2*(i&1)
-        p1k[0] = ( p1k[0] + S( p1k[4]^(tk[j+ 1]*256 + tk[j+ 0])))   & 0xFFFF
-        p1k[1] = ( p1k[1] + S( p1k[0]^(tk[j+ 5]*256 + tk[j+ 4])))   & 0xFFFF
-        p1k[2] = ( p1k[2] + S( p1k[1]^(tk[j+ 9]*256 + tk[j+ 8])))   & 0xFFFF
-        p1k[3] = ( p1k[3] + S( p1k[2]^(tk[j+13]*256 + tk[j+12])))   & 0xFFFF
-        p1k[4] = ( p1k[4] + S( p1k[3]^(tk[j+ 1]*256 + tk[j])) + i ) & 0xFFFF
+        p1k[0] = (p1k[0] + S(p1k[4]^(tk[j+ 1]*256 + tk[j+ 0])))   & 0xFFFF
+        p1k[1] = (p1k[1] + S(p1k[0]^(tk[j+ 5]*256 + tk[j+ 4])))   & 0xFFFF
+        p1k[2] = (p1k[2] + S(p1k[1]^(tk[j+ 9]*256 + tk[j+ 8])))   & 0xFFFF
+        p1k[3] = (p1k[3] + S(p1k[2]^(tk[j+13]*256 + tk[j+12])))   & 0xFFFF
+        p1k[4] = (p1k[4] + S(p1k[3]^(tk[j+ 1]*256 + tk[j])) + i) & 0xFFFF
     return p1k
 
 def phase2KeyMixing(tk, p1k, pn):
     """ Create a 16 octet key from the phase1Key (p1k)
         and 2 octets of sequence counter """
     ppk = [i for i in p1k]
-    ppk.append( p1k[4] + pn[1]*256 + pn[0] ) # append value for ppk[5]
+    ppk.append(p1k[4] + pn[1]*256 + pn[0]) # append value for ppk[5]
     # Bijective non-linear mixing of the 96 bits of ppk
-    ppk[0] = (ppk[0] + S(ppk[5] ^ (tk[1]*256 + tk[0]) ))  & 0xFFFF
-    ppk[1] = (ppk[1] + S(ppk[0] ^ (tk[3]*256 + tk[2]) ))  & 0xFFFF
-    ppk[2] = (ppk[2] + S(ppk[1] ^ (tk[5]*256 + tk[4]) ))  & 0xFFFF
-    ppk[3] = (ppk[3] + S(ppk[2] ^ (tk[7]*256 + tk[6]) ))  & 0xFFFF
-    ppk[4] = (ppk[4] + S(ppk[3] ^ (tk[9]*256 + tk[8]) ))  & 0xFFFF
-    ppk[5] = (ppk[5] + S(ppk[4] ^ (tk[11]*256+ tk[10]) )) & 0xFFFF
+    ppk[0] = (ppk[0] + S(ppk[5] ^ (tk[1]*256 + tk[0])))  & 0xFFFF
+    ppk[1] = (ppk[1] + S(ppk[0] ^ (tk[3]*256 + tk[2])))  & 0xFFFF
+    ppk[2] = (ppk[2] + S(ppk[1] ^ (tk[5]*256 + tk[4])))  & 0xFFFF
+    ppk[3] = (ppk[3] + S(ppk[2] ^ (tk[7]*256 + tk[6])))  & 0xFFFF
+    ppk[4] = (ppk[4] + S(ppk[3] ^ (tk[9]*256 + tk[8])))  & 0xFFFF
+    ppk[5] = (ppk[5] + S(ppk[4] ^ (tk[11]*256+ tk[10]))) & 0xFFFF
     # Final sweep
     ppk[0] = (ppk[0] + rotR1(ppk[5] ^ (tk[13]*256+tk[12]))) & 0xFFFF
     ppk[1] = (ppk[1] + rotR1(ppk[0] ^ (tk[15]*256+tk[14]))) & 0xFFFF

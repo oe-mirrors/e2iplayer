@@ -70,7 +70,7 @@ class HDSTo(CBaseHostClass):
     
     def getRealUrl(self, url):
         if config.plugins.iptvplayer.hdsto_proxy.value == 'webproxy' and url != None and 'browse.php?u=' in url:
-            url = urllib.parse.unquote( self.cm.ph.getSearchGroups(url+'&', '''\?u=(http[^&]+?)&''')[0] )
+            url = urllib.parse.unquote(self.cm.ph.getSearchGroups(url+'&', '''\?u=(http[^&]+?)&''')[0])
         return url
     
     def getFullUrl(self, url, baseUrl=None):
@@ -152,8 +152,8 @@ class HDSTo(CBaseHostClass):
             except Exception:
                 printExc()
         
-        MAIN_CAT_TAB = [{'category':'search',         'title': _('Search'),       'search_item':True       },
-                        {'category': 'search_history', 'title': _('Search history'),                        }]
+        MAIN_CAT_TAB = [{'category':'search',         'title': _('Search'),       'search_item':True},
+                        {'category': 'search_history', 'title': _('Search history'),}]
         self.listsTab(MAIN_CAT_TAB, cItem)
         
     def searchUrl(self, data):
@@ -224,18 +224,18 @@ class HDSTo(CBaseHostClass):
             icon = self.cm.ph.getSearchGroups(item, '''\ssrc=['"]([^"^']+?\.(?:jpe?g|png)(?:\?[^'^"]*?)?)['"]''')[0]
             if icon == '':
                 icon = self.cm.ph.getSearchGroups(item, '''\ssrc=['"]([^"^']+?)['"]''')[0]
-            title = self.cleanHtmlStr( self.cm.ph.getDataBeetwenNodes(item, ('<h', '>'), ('</h', '>'), False)[1] )
+            title = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(item, ('<h', '>'), ('</h', '>'), False)[1])
             if 'details-serie' in cItem['url']:
-                title += ' ' + self.cleanHtmlStr( self.cm.ph.getDataBeetwenNodes(item, ('<span', '>', 'opacity'), ('</span', '>'), False)[1] )
+                title += ' ' + self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(item, ('<span', '>', 'opacity'), ('</span', '>'), False)[1])
             if title == '':
-                title = self.cleanHtmlStr( self.cm.ph.getDataBeetwenNodes(item, ('<a', '>', 'name'), ('</a', '>'), False)[1] )
+                title = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(item, ('<a', '>', 'name'), ('</a', '>'), False)[1])
             
             desc = ''
             descTab = []
             
             desc = self.cm.ph.getAllItemsBeetwenMarkers(item, '<h3', '</h3>')
             desc.append(self.cm.ph.getDataBeetwenNodes(item, ('<div', '>', 'genre'), ('</div', '>'))[1])
-            desc.extend( self.cm.ph.getAllItemsBeetwenNodes(item, ('<span', '>'), ('</span', '>')) )
+            desc.extend(self.cm.ph.getAllItemsBeetwenNodes(item, ('<span', '>'), ('</span', '>')))
 
             for t in desc:
                 d = self.cleanHtmlStr(t)
@@ -246,13 +246,13 @@ class HDSTo(CBaseHostClass):
             desc = ' | '.join(descTab)
             params = dict(cItem)
             if 'tout_voir' in icon:
-                params.update( {'good_for_fav': False, 'title':'TOUT VOIR >>'})
+                params.update({'good_for_fav': False, 'title':'TOUT VOIR >>'})
             elif 'details-serie' in url:
-                params.update( {'good_for_fav': True, 'title':title})
+                params.update({'good_for_fav': True, 'title':title})
             else:
-                params.update( {'good_for_fav': True, 'category':nextCategory, 'title':title})
+                params.update({'good_for_fav': True, 'category':nextCategory, 'title':title})
                 
-            params.update( {'url':url, 'desc':desc, 'icon':self.getFullIconUrl(icon)} )
+            params.update({'url':url, 'desc':desc, 'icon':self.getFullIconUrl(icon)})
             retList.append(params)
         return retList
         
@@ -277,12 +277,12 @@ class HDSTo(CBaseHostClass):
                 subItems = self.getItems(cItem, nextCategory, item)
                 if len(subItems):
                     params = dict(cItem)
-                    params.update( {'good_for_fav': False, 'title':title, 'category':'sub_items', 'sub_items':subItems} )
+                    params.update({'good_for_fav': False, 'title':title, 'category':'sub_items', 'sub_items':subItems})
                     self.addDir(params)
         
         if nextPage != '':
             params = dict(cItem)
-            params.update( {'good_for_fav': False, 'title':_('Next page'), 'page':page+1, 'url':nextPage} )
+            params.update({'good_for_fav': False, 'title':_('Next page'), 'page':page+1, 'url':nextPage})
             self.addDir(params)
         
     def exploreItem(self, cItem):
@@ -303,7 +303,7 @@ class HDSTo(CBaseHostClass):
             if 'file-video-o' not in item:
                 continue
             title = self.cleanHtmlStr(item)
-            url = self.getFullUrl( self.cm.ph.getSearchGroups(item, '''href=['"]([^"^']+?)["']''', 1, True)[0], cUrl)
+            url = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''href=['"]([^"^']+?)["']''', 1, True)[0], cUrl)
             if url == '':
                 continue
             self.cacheLinks[url] = [{'name':'', 'url':strwithmeta(url, {'Referer':cUrl}), 'need_resolve':1}]
@@ -319,7 +319,7 @@ class HDSTo(CBaseHostClass):
             self.addVideo(params)
             self.cacheLinks[cUrl] = [{'name':'', 'url':strwithmeta(cUrl, {'Referer':cUrl}), 'need_resolve':1}]
             
-            url = self.getFullUrl( self.cm.ph.getSearchGroups(tmp, '''href=['"]([^"^']+?)["']''', 1, True)[0], cUrl)
+            url = self.getFullUrl(self.cm.ph.getSearchGroups(tmp, '''href=['"]([^"^']+?)["']''', 1, True)[0], cUrl)
             title = self.cleanHtmlStr(tmp)
             if url != '':
                 params = dict(cItem)
@@ -336,7 +336,7 @@ class HDSTo(CBaseHostClass):
             item = self.cm.ph.getAllItemsBeetwenMarkers(item, '<a', '</a>')
             for it in item:
                 linkName  = self.cleanHtmlStr(it)
-                linkUrl = self.getFullUrl( self.cm.ph.getSearchGroups(it, '''href=['"]([^"^']+?)["']''', 1, True)[0], cUrl)
+                linkUrl = self.getFullUrl(self.cm.ph.getSearchGroups(it, '''href=['"]([^"^']+?)["']''', 1, True)[0], cUrl)
                 if linkUrl == '':
                     continue
                 urls.append({'name':linkName, 'url':strwithmeta(linkUrl, {'Referer':cUrl}), 'need_resolve':1})
@@ -389,7 +389,7 @@ class HDSTo(CBaseHostClass):
                     tmp = self.cm.ph.getAllItemsBeetwenMarkers(tmp, '<source', '>', False, False)
                     for item in tmp:
                         if 'video/mp4' in item.lower():
-                            url = self.getFullUrl( self.cm.ph.getSearchGroups(item, '''src=['"]([^"^']+?)['"]''')[0] )
+                            url = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''src=['"]([^"^']+?)['"]''')[0])
                             if url != '':
                                 linksTab.append({'name':str(len(linksTab)+1) + ' mp4', 'url':url})
                 
@@ -408,7 +408,7 @@ class HDSTo(CBaseHostClass):
                 else:
                     jscode.insert(0, 'window=this; function stub() {}; function jwplayer() {return {setup:function(){print(JSON.stringify(arguments[0]))}, onTime:stub, onPlay:stub, onComplete:stub, onReady:stub, addButton:stub}}; window.jwplayer=jwplayer;')
                 
-                ret = js_execute( '\n'.join(jscode) )
+                ret = js_execute('\n'.join(jscode))
                 try:
                     data = byteify(json.loads(ret['data'].strip()))
                     if jwplayer:
@@ -436,7 +436,7 @@ class HDSTo(CBaseHostClass):
                                     url = item
                                 type = url.split('.')[-1].split('?', 1)[0].lower()
                                 if type == 'm3u8':
-                                    tmpLinksTab.extend( getDirectM3U8Playlist(url, checkExt=False, checkContent=True) )
+                                    tmpLinksTab.extend(getDirectM3U8Playlist(url, checkExt=False, checkContent=True))
                                 elif type == 'mp4':
                                     tmpLinksTab.append({'name':name, 'url':url})
                             
@@ -456,7 +456,7 @@ class HDSTo(CBaseHostClass):
                             tmpLinksTab = []
                             for type, item in dat.get('bitrates', {}).items():
                                 if type == 'hls':
-                                    tmpLinksTab.extend( getDirectM3U8Playlist(item, checkExt=False, checkContent=True) )
+                                    tmpLinksTab.extend(getDirectM3U8Playlist(item, checkExt=False, checkContent=True))
                                 elif type == 'mp4' and isinstance(item, list):
                                     for url in item:
                                         if '-' in url:
@@ -490,7 +490,7 @@ class HDSTo(CBaseHostClass):
         data = data.split('title-holder', 1)[-1]
         title = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(data, ('<h', '>'), ('</h', '>'), False)[1])
         icon = ''
-        desc = self.cleanHtmlStr( self.cm.ph.getDataBeetwenNodes(data, ('<div', '>', 'text-hold'), ('</div', '>'), False)[1] )
+        desc = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(data, ('<div', '>', 'text-hold'), ('</div', '>'), False)[1])
 
         itemsList = []
         tmp = self.cm.ph.getDataBeetwenNodes(data, ('<ul', '>', 'descr-list'), ('</ul', '>'), False)[1]
@@ -517,7 +517,7 @@ class HDSTo(CBaseHostClass):
         if desc == '':
             desc  = cItem.get('desc', '')
         
-        return [{'title':self.cleanHtmlStr( title ), 'text': self.cleanHtmlStr( desc ), 'images':[{'title':'', 'url':self.getFullUrl(icon)}], 'other_info':{'custom_items_list':itemsList}}]
+        return [{'title':self.cleanHtmlStr(title), 'text': self.cleanHtmlStr(desc), 'images':[{'title':'', 'url':self.getFullUrl(icon)}], 'other_info':{'custom_items_list':itemsList}}]
         
     def tryTologin(self):
         printDBG('tryTologin start')
@@ -569,7 +569,7 @@ class HDSTo(CBaseHostClass):
 
         name     = self.currItem.get("name", '')
         category = self.currItem.get("category", '')
-        printDBG( "handleService: ||| name[%s], category[%s] " % (name, category) )
+        printDBG("handleService: ||| name[%s], category[%s] " % (name, category))
         self.currList = []
 
         self.tryTologin()

@@ -60,7 +60,7 @@ class EuroSportPlayer(CBaseHostClass):
         self.DEFAULT_ICON_URL = 'http://mirrors.kodi.tv/addons/leia/plugin.video.eurosportplayer/resources/icon.png'
         
         self.HTTP_HEADER = {'User-Agent': self.USER_AGENT, 'Referer':self.getMainUrl(), 'Origin':self.getMainUrl(), 'X-disco-client': 'WEB:UNKNOWN:esp-web:prod'}
-        self.defaultParams = {'header': {'User-Agent': self.USER_AGENT} , 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
+        self.defaultParams = {'header': {'User-Agent': self.USER_AGENT}, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
         
         self.recaptcha_sitekey = "6LfvErIUAAAAABlpqACnxRiUhqhX4p14sPxx_sKf"
         
@@ -106,9 +106,9 @@ class EuroSportPlayer(CBaseHostClass):
         
         try:
             CAT_TAB = [
-                       {'category': 'on_air',             'title': _('On Air'),          }, 
-                       {'category': 'schedule',           'title': _('Schedule'),        },
-                       {'category': 'vod_sport_filters',  'title': _('All Sports'),          } #,
+                       {'category': 'on_air',             'title': _('On Air'),}, 
+                       {'category': 'schedule',           'title': _('Schedule'),},
+                       {'category': 'vod_sport_filters',  'title': _('All Sports'),} #,
                        #{'category':'search',             'title': _('Search'),          'search_item':True    }, 
                        #{'category':'search_history',     'title': _('Search history')}
                       ]
@@ -260,10 +260,10 @@ class EuroSportPlayer(CBaseHostClass):
                             title =" %s %s - %s - %s" % (txtTime, txtSport.upper(), item_data['name'], txtChannel)
                     # elif altri casi
                     else:
-                        title = item_data['name'] + "  [%s] - (%s)" % (bt,  txtDate )
+                        title = item_data['name'] + "  [%s] - (%s)" % (bt,  txtDate)
 
                 else:
-                    title = item_data['name'] + "  [%s] - (%s)" % (bt, txtDate )
+                    title = item_data['name'] + "  [%s] - (%s)" % (bt, txtDate)
 
                 desc = "video id: %s\n" % video_id 
                 if 'videoDuration' in item_data:
@@ -367,7 +367,7 @@ class EuroSportPlayer(CBaseHostClass):
         try:
             
             url = "https://eu3-prod-direct.eurosportplayer.com/cms/routes/home?include=default"
-            sts, data = self.getPage(url, {'header' : {'User-Agent': self.USER_AGENT}, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE })
+            sts, data = self.getPage(url, {'header': {'User-Agent': self.USER_AGENT}, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE})
             if not sts: 
                 return
             
@@ -400,7 +400,7 @@ class EuroSportPlayer(CBaseHostClass):
         
         def _dataLabel(d):
             weekday = self.ABBREVIATED_DAYS_NAME_TAB[d.weekday()]
-            text = ( "%s %s %s" % ( _(d.strftime('%A')), d.strftime('%d'), _(d.strftime('%B'))) )
+            text = ("%s %s %s" % (_(d.strftime('%A')), d.strftime('%d'), _(d.strftime('%B'))))
             return text.capitalize()
         
         try:
@@ -557,10 +557,10 @@ class EuroSportPlayer(CBaseHostClass):
                           'content-type': 'application/json'
                          }
                 
-                postData = {'credentials': {'username': self.login , 'password': self.password }}
+                postData = {'credentials': {'username': self.login, 'password': self.password}}
                 url = "https://eu3-prod-direct.eurosportplayer.com/login"
                 
-                httpParams = {'header' : header, 'with_metadata':True, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE, 'raw_post_data': True}
+                httpParams = {'header': header, 'with_metadata':True, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE, 'raw_post_data': True}
                                     
                 sts, data = self.getPage(url, httpParams, post_data=json_dumps(postData))
                 
@@ -632,7 +632,7 @@ class EuroSportPlayer(CBaseHostClass):
             video_id = cItem['video_id']
             # open video page
             video_page_url = cItem['url']
-            sts, data = self.getPage( video_page_url, {'header' : {'User-Agent': self.USER_AGENT, 'Referer' : video_page_url}, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE })
+            sts, data = self.getPage(video_page_url, {'header': {'User-Agent': self.USER_AGENT, 'Referer': video_page_url}, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE})
             
             if not sts:
                 return []
@@ -656,7 +656,7 @@ class EuroSportPlayer(CBaseHostClass):
             # open video playback json page
             playback_info_url = self.PLAYBACK_URL.replace('{%video_id%}', video_id)
             
-            sts, data = self.getPage(playback_info_url, {'header' : {'User-Agent': self.USER_AGENT, 'Referer' : video_page_url}, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE })
+            sts, data = self.getPage(playback_info_url, {'header': {'User-Agent': self.USER_AGENT, 'Referer': video_page_url}, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE})
             
             if not sts:
                 return []
@@ -669,7 +669,7 @@ class EuroSportPlayer(CBaseHostClass):
             s = j['data']['attributes']['streaming']
             
             if 'hls' in s:
-                link_url = strwithmeta(s['hls']['url'], {'User-Agent': self.USER_AGENT, 'Referer' : video_page_url})
+                link_url = strwithmeta(s['hls']['url'], {'User-Agent': self.USER_AGENT, 'Referer': video_page_url})
                 linksTab.append({'name':'auto hls', 'url': link_url})
                 linksTab.extend(getDirectM3U8Playlist(link_url, checkExt=False, variantCheck=True, checkContent=True, sortWithMaxBitrate=99999999)) 
             #if 'dash' in s:
@@ -694,7 +694,7 @@ class EuroSportPlayer(CBaseHostClass):
         category = self.currItem.get("category", '')
         mode     = self.currItem.get("mode", '')
         
-        printDBG( "handleService: |||| name[%s], category[%s] " % (name, category) )
+        printDBG("handleService: |||| name[%s], category[%s] " % (name, category))
         self.cacheLinks = {}
         self.currList = []
         

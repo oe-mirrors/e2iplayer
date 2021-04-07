@@ -21,7 +21,7 @@ def duktape_execute(cmd_params):
     if cmd != '':
         cmd += ' ' + cmd_params + ' 2> /dev/null'
         printDBG("duktape_execute cmd[%s]" % cmd)
-        ret = iptv_execute()( cmd )
+        ret = iptv_execute()(cmd)
 
         if ret['code'] == 127:
             noDuk = True
@@ -41,7 +41,7 @@ def js_execute(jscode, params={}):
     ret = {'sts':False, 'code':-12, 'data':''}
     sts, tmpPath = CreateTmpFile('.iptv_js.js', jscode)
     if sts: 
-        ret = duktape_execute('-t %s ' % params.get('timeout_sec', 20) + ' ' + tmpPath )
+        ret = duktape_execute('-t %s ' % params.get('timeout_sec', 20) + ' ' + tmpPath)
         
     # leave last script for debug purpose
     if getDebugMode() == '':
@@ -101,7 +101,7 @@ def js_execute_ext(items, params={}):
 
                     # compile
                     if 0 != duktape_execute('-c "%s" "%s" ' % (byteFileName, path))['code']:
-                        raise Exception('Compile to bytecode file "%s" > "%s" failed!' % (path, byteFileName) )
+                        raise Exception('Compile to bytecode file "%s" > "%s" failed!' % (path, byteFileName))
 
                     # update meta
                     if not WriteTextFile(metaFileName, '%s|%s' % (DUKTAPE_VER, hash)):
@@ -120,7 +120,7 @@ def js_execute_ext(items, params={}):
                     tmpFiles.append(path)
                     fileList.append(path)
         #ret = duktape_execute('-t %s ' % params.get('timeout_sec', 20) + ' '.join([ '"%s"' % file for file in fileList ]) )
-        ret = duktape_execute(' '.join([ '"%s"' % file for file in fileList ]) )
+        ret = duktape_execute(' '.join(['"%s"' % file for file in fileList]))
     except Exception:
         printExc()
 

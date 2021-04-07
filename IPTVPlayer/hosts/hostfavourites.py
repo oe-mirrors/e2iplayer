@@ -117,7 +117,7 @@ class Favourites(CBaseHostClass):
             retlist = []
             urlList = self.up.getVideoLinkExt(item.data)
             for item in urlList:
-                name = self.host.cleanHtmlStr( item["name"] )
+                name = self.host.cleanHtmlStr(item["name"])
                 url  = item["url"]
                 retlist.append(CUrlItem(name, url, 0))
             ret = RetHost(RetHost.OK, value=retlist)
@@ -212,7 +212,7 @@ class IPTVHost(CHostBase):
     def isItemWatched(self, index, displayItem):
         ret = self.getItemHashData(index, displayItem)
         if ret != None:
-            return fileExists( GetFavouritesDir('IPTVWatched/%s/.%s.iptvhash' % ret) )
+            return fileExists(GetFavouritesDir('IPTVWatched/%s/.%s.iptvhash' % ret))
         else:
             return False
             
@@ -228,7 +228,7 @@ class IPTVHost(CHostBase):
         return ret
         
     def _createViewedFile(self, hashData):
-        if hashData != None and mkdirs( GetFavouritesDir('IPTVWatched') + ('/%s/' % hashData[0]) ):
+        if hashData != None and mkdirs(GetFavouritesDir('IPTVWatched') + ('/%s/' % hashData[0])):
             flagFilePath = GetFavouritesDir('IPTVWatched/%s/.%s.iptvhash' % hashData)
             if touch(flagFilePath):
                 return True
@@ -295,11 +295,11 @@ class IPTVHost(CHostBase):
         else:
             listLen = len(self.host.currList)
             if listLen < Index and listLen > 0:
-                printDBG( "ERROR getLinksForVideo - current list is to short len: %d, Index: %d" % (listLen, Index) )
+                printDBG("ERROR getLinksForVideo - current list is to short len: %d, Index: %d" % (listLen, Index))
                 return RetHost(RetHost.ERROR, value=[])
             
             if self.host.currList[Index]["type"] not in ['audio', 'video', 'picture']:
-                printDBG( "ERROR getLinksForVideo - current item has wrong type" )
+                printDBG("ERROR getLinksForVideo - current item has wrong type")
                 return RetHost(RetHost.ERROR, value=[])
             return self.host.getLinksForVideo(self.host.currList[Index])
     # end getLinksForVideo

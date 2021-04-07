@@ -34,7 +34,7 @@ class MuziCsillangCC(CBaseHostClass):
         self.USER_AGENT = 'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:40.0) Gecko/20100101 Firefox/40.0'
         self.HEADER = {'User-Agent': self.USER_AGENT, 'DNT':'1', 'Accept': 'text/html'}
         self.AJAX_HEADER = dict(self.HEADER)
-        self.AJAX_HEADER.update( {'X-Requested-With': 'XMLHttpRequest'} )
+        self.AJAX_HEADER.update({'X-Requested-With': 'XMLHttpRequest'})
         self.MAIN_URL = 'https://mozicsillag.me/'
         self.DEFAULT_ICON_URL =  strwithmeta('https://mozicsillag.me/img/logo.png', {'Referer':self.getMainUrl()})
         self.cacheLinks    = {}
@@ -43,12 +43,12 @@ class MuziCsillangCC(CBaseHostClass):
         self.cacheSortOrder = []
         self.defaultParams = {'header':self.HEADER, 'with_metadata':True, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
     
-        self.MAIN_CAT_TAB = [{'category':'list_filters',    'title': _('Catalog'), 'url':self.getMainUrl(), 'use_query':True },
-                             {'category':'list_movies',     'title': _('Movies'),  'url':self.getMainUrl()  },
-                             {'category':'list_series',     'title': _('Series'),  'url':self.getMainUrl()  },
+        self.MAIN_CAT_TAB = [{'category':'list_filters',    'title': _('Catalog'), 'url':self.getMainUrl(), 'use_query':True},
+                             {'category':'list_movies',     'title': _('Movies'),  'url':self.getMainUrl()},
+                             {'category':'list_series',     'title': _('Series'),  'url':self.getMainUrl()},
                              
                              {'category': 'search',            'title': _('Search'), 'search_item': True,},
-                             {'category': 'search_history',    'title': _('Search history'),            } 
+                             {'category': 'search_history',    'title': _('Search history'),} 
                             ]
                             
     def getFullIconUrl(self, url):
@@ -97,7 +97,7 @@ class MuziCsillangCC(CBaseHostClass):
                 title = self.cleanHtmlStr(item)
                 if title in ['Összes']:
                     allTitle = ''
-                self.cacheFilters[key].append({'title':title.title(), key:value, ('%s_type' % key):type })
+                self.cacheFilters[key].append({'title':title.title(), key:value, ('%s_type' % key):type})
                 
             if len(self.cacheFilters[key]):
                 if allTitle != '':
@@ -211,14 +211,14 @@ class MuziCsillangCC(CBaseHostClass):
         data = self.cm.ph.getAllItemsBeetwenMarkers(data, '<li', '</li>')
         reFlagObj = re.compile('''<img[^>]+?src=['"][^"^']+?/([^/]+?)\.png['"]''')
         for item in data:
-            url = self.getFullUrl( self.cm.ph.getSearchGroups(item, '''href=['"]([^"^']+?)['"]''')[0] )
+            url = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''href=['"]([^"^']+?)['"]''')[0])
             if not self.cm.isValidUrl(url):
                 continue
             
-            icon = self.getFullIconUrl( self.cm.ph.getSearchGroups(item, '''data-original=['"]([^"^']+?\.jpe?g)['"]''')[0] )
-            title = self.cleanHtmlStr( self.cm.ph.getDataBeetwenMarkers(item, '<strong', '</strong>')[1] )
+            icon = self.getFullIconUrl(self.cm.ph.getSearchGroups(item, '''data-original=['"]([^"^']+?\.jpe?g)['"]''')[0])
+            title = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(item, '<strong', '</strong>')[1])
             if title == '':
-                title = self.cleanHtmlStr( self.cm.ph.getDataBeetwenMarkers(item, '<h2', '</h2>')[1] )
+                title = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(item, '<h2', '</h2>')[1])
             
             # desc start
             descTab = []
@@ -376,7 +376,7 @@ class MuziCsillangCC(CBaseHostClass):
     def listSearchResult(self, cItem, searchPattern, searchType):
         printDBG("MuziCsillangCC.listSearchResult cItem[%s], searchPattern[%s] searchType[%s]" % (cItem, searchPattern, searchType))
         cItem = dict(cItem)
-        query = base64.b64encode('search_term=%s&search_type=0&search_where=0&search_rating_start=1&search_rating_end=10&search_year_from=1900&search_year_to=2100' % urllib.parse.quote_plus(searchPattern) ) 
+        query = base64.b64encode('search_term=%s&search_type=0&search_where=0&search_rating_start=1&search_rating_end=10&search_year_from=1900&search_year_to=2100' % urllib.parse.quote_plus(searchPattern)) 
         cItem['url'] = self.getFullUrl('kereses/' + query)
         self.listItems(cItem, 'explore_item')
         
@@ -468,7 +468,7 @@ class MuziCsillangCC(CBaseHostClass):
         data = self.cm.ph.getDataBeetwenMarkers(data, '<div class="row" id="content-tab">', '<div id="zone')[1]
         
         title = '' #self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(data, '<div class="f_t_b">', '</div>')[1])
-        icon  = self.getFullIconUrl( self.cm.ph.getSearchGroups(data, '''<img[^>]+?src=['"]([^"^']+?\.jpe?g[^"^']*?)["']''')[0] )
+        icon  = self.getFullIconUrl(self.cm.ph.getSearchGroups(data, '''<img[^>]+?src=['"]([^"^']+?\.jpe?g[^"^']*?)["']''')[0])
         desc  = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(data, '<p>', '</p>', False)[1])
         
         for item in [('Rendező(k):', 'directors'),
@@ -497,7 +497,7 @@ class MuziCsillangCC(CBaseHostClass):
         if icon == '':
             icon = cItem.get('icon', self.DEFAULT_ICON_URL)
         
-        return [{'title':self.cleanHtmlStr( title ), 'text': self.cleanHtmlStr( desc ), 'images':[{'title':'', 'url':self.getFullUrl(icon)}], 'other_info':otherInfo}]
+        return [{'title':self.cleanHtmlStr(title), 'text': self.cleanHtmlStr(desc), 'images':[{'title':'', 'url':self.getFullUrl(icon)}], 'other_info':otherInfo}]
     
     def handleService(self, index, refresh=0, searchPattern='', searchType=''):
         printDBG('handleService start')
@@ -508,7 +508,7 @@ class MuziCsillangCC(CBaseHostClass):
         category = self.currItem.get("category", '')
         mode     = self.currItem.get("mode", '')
         
-        printDBG( "handleService: |||||||||||||||||||||||||||||||||||| name[%s], category[%s] " % (name, category) )
+        printDBG("handleService: |||||||||||||||||||||||||||||||||||| name[%s], category[%s] " % (name, category))
         self.currList = []
         
     #MAIN MENU

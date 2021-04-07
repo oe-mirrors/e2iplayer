@@ -29,13 +29,13 @@ class DardarkomCom(CBaseHostClass):
         
         self.HEADER = {'User-Agent': 'Mozilla/5.0', 'Accept': 'text/html'}
         self.AJAX_HEADER = dict(self.HEADER)
-        self.AJAX_HEADER.update( {'X-Requested-With': 'XMLHttpRequest'} )
+        self.AJAX_HEADER.update({'X-Requested-With': 'XMLHttpRequest'})
         
         self.MAIN_URL = 'http://www.dardarkom.com/'
         self.DEFAULT_ICON_URL  = "https://lh5.ggpht.com/xTFuZwF3HX9yPcDhbyCNnjDtZZ1l9qEwUVwoWsPW9Pxry9JsNLSPvWpbvL9waHbHMg=h900"
         
         self.MAIN_CAT_TAB = [{'category':'search',          'title': _('Search'), 'search_item':True},
-                             {'category':'search_history',  'title': _('Search history')            } ]
+                             {'category':'search_history',  'title': _('Search history')}]
         
         self.cacheLinks = {}
         
@@ -126,10 +126,10 @@ class DardarkomCom(CBaseHostClass):
         #printDBG(tmp)
         data = self.cm.ph.getAllItemsBeetwenMarkers(tmp, '<a', '</a>')
         for item in data:
-            url   = self.getFullUrl( self.cm.ph.getSearchGroups(item, '''href=['"]([^"^']+?)['"]''')[0] )
+            url   = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''href=['"]([^"^']+?)['"]''')[0])
             if not self.cm.isValidUrl(url):
                 continue
-            icon  = self.getFullUrl( self.cm.ph.getSearchGroups(item, '''src=['"]([^"^']+?(:?\.jpe?g|\.png)(:?\?[^'^"]*?)?)['"]''')[0] )
+            icon  = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''src=['"]([^"^']+?(:?\.jpe?g|\.png)(:?\?[^'^"]*?)?)['"]''')[0])
             title = ''
             desc = []
             item = self.cm.ph.getAllItemsBeetwenNodes(item, ('<div', '>', 'short-'), ('</div', '>'))
@@ -168,10 +168,10 @@ class DardarkomCom(CBaseHostClass):
         #printDBG(data)
         data = self.cm.ph.getAllItemsBeetwenNodes(data, ('<a', '>', 'sres-wrap'), ('</a', '>'))
         for item in data:
-            url   = self.getFullUrl( self.cm.ph.getSearchGroups(item, '''href=['"]([^"^']+?)['"]''')[0] )
+            url   = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''href=['"]([^"^']+?)['"]''')[0])
             if not self.cm.isValidUrl(url):
                 continue
-            icon  = self.getFullUrl( self.cm.ph.getSearchGroups(item, '''src=['"]([^"^']+?(:?\.jpe?g|\.png)(:?\?[^'^"]*?)?)['"]''')[0] )
+            icon  = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''src=['"]([^"^']+?(:?\.jpe?g|\.png)(:?\?[^'^"]*?)?)['"]''')[0])
             title = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(item, ('<h', '>'), ('</h', '>'))[1])
             
             desc = []
@@ -204,7 +204,7 @@ class DardarkomCom(CBaseHostClass):
         trailers = []
         tmp = self.cm.ph.getAllItemsBeetwenMarkers(data, '<iframe', '</iframe>')
         for server in tmp:
-            url = self.getFullUrl( self.cm.ph.getSearchGroups(server, '''src=['"]([^'^"]+?)['"]''')[0] )
+            url = self.getFullUrl(self.cm.ph.getSearchGroups(server, '''src=['"]([^'^"]+?)['"]''')[0])
             if 'youtube' in url and url not in trailers:
                 trailers.append(url)
                 params = dict(cItem)
@@ -281,17 +281,17 @@ class DardarkomCom(CBaseHostClass):
             tmp = self.cm.ph.getAllItemsBeetwenMarkers(data[idx], '<a', '</a>')
             for server in tmp:
                 printDBG(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> SERVER: " + server)
-                url = self.getFullUrl( self.cm.ph.getSearchGroups(server, '''href=['"]([^'^"]+?\.video/[^'^"]+?)['"]''')[0] ) #
+                url = self.getFullUrl(self.cm.ph.getSearchGroups(server, '''href=['"]([^'^"]+?\.video/[^'^"]+?)['"]''')[0]) #
                 if url == '' or url in uniqueUrls:
                     continue
-                name = self.cleanHtmlStr( server )
+                name = self.cleanHtmlStr(server)
                 urlTab.append({'name':name, 'url':url, 'need_resolve':1})
                 uniqueUrls.append(url)
             
             tmp = self.cm.ph.getAllItemsBeetwenMarkers(data[idx], '<iframe', '</iframe>')
             for server in tmp:
                 printDBG(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> SERVER: " + server)
-                url = self.getFullUrl( self.cm.ph.getSearchGroups(server, '''src=['"]([^'^"]+?)['"]''')[0] )
+                url = self.getFullUrl(self.cm.ph.getSearchGroups(server, '''src=['"]([^'^"]+?)['"]''')[0])
                 if url == '' or url in uniqueUrls or '/templates/' in url:
                     continue
                 if 'youtube' in url:
@@ -345,7 +345,7 @@ class DardarkomCom(CBaseHostClass):
             if url == '':
                 url = self.cm.ph.getSearchGroups(data, '''window\.open\(\s*['"](https?://[^"^']+?)['"]''', 1, True)[0]
             printDBG(url)
-            url = self.getFullUrl( url )
+            url = self.getFullUrl(url)
             urlParams['header']['Referer'] = videoUrl
             videoUrl = strwithmeta(url, {'Referer':videoUrl})
         
@@ -380,9 +380,9 @@ class DardarkomCom(CBaseHostClass):
 
         data = self.cm.ph.getDataBeetwenMarkers(data, '<article', '</article>', False)[1]
         icon = self.cm.ph.getDataBeetwenNodes(data, ('<div', '>', 'fposter'), ('</div', '>'), False)[1]
-        icon = self.getFullUrl( self.cm.ph.getSearchGroups(icon, '''<img[^>]+?src=['"]([^'^"]+?)['"]''')[0] )
-        title = self.cleanHtmlStr( self.cm.ph.getDataBeetwenNodes(data, ('<h', '>', 's-title'), ('</h', '>'), False)[1] )
-        desc = self.cleanHtmlStr( self.cm.ph.getDataBeetwenNodes(data, ('<div', '>', 'desc'), ('</div', '>'), False)[1] )
+        icon = self.getFullUrl(self.cm.ph.getSearchGroups(icon, '''<img[^>]+?src=['"]([^'^"]+?)['"]''')[0])
+        title = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(data, ('<h', '>', 's-title'), ('</h', '>'), False)[1])
+        desc = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(data, ('<div', '>', 'desc'), ('</div', '>'), False)[1])
 
         tmpTab = self.cm.ph.getAllItemsBeetwenNodes(data, ('<ul', '>', 'flist-col'), ('</ul', '>'), False)
         for tmp in tmpTab:
@@ -400,7 +400,7 @@ class DardarkomCom(CBaseHostClass):
                     continue
                 itemsList.append((key, val))
 
-        return [{'title':self.cleanHtmlStr( title ), 'text': self.cleanHtmlStr( desc ), 'images':[{'title':'', 'url':self.getFullUrl(icon)}], 'other_info':{'custom_items_list':itemsList}}]
+        return [{'title':self.cleanHtmlStr(title), 'text': self.cleanHtmlStr(desc), 'images':[{'title':'', 'url':self.getFullUrl(icon)}], 'other_info':{'custom_items_list':itemsList}}]
     
     def handleService(self, index, refresh=0, searchPattern='', searchType=''):
         printDBG('handleService start')
@@ -411,7 +411,7 @@ class DardarkomCom(CBaseHostClass):
         category = self.currItem.get("category", '')
         mode     = self.currItem.get("mode", '')
         
-        printDBG( "handleService: |||||||||||||||||||||||||||||||||||| name[%s], category[%s] " % (name, category) )
+        printDBG("handleService: |||||||||||||||||||||||||||||||||||| name[%s], category[%s] " % (name, category))
         self.currList = []
         
     #MAIN MENU

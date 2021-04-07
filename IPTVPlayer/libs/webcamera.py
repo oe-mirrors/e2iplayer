@@ -34,7 +34,7 @@ class WebCameraApi(CBaseHostClass):
         self.DEFAULT_ICON_URL = 'http://static.webcamera.pl/webcamera/img/loader-min.png'
         self.HEADER = {'User-Agent': 'Mozilla/5.0 (X11; Ubuntu; Linux i686; rv:21.0) Gecko/20100101 Firefox/21.0', 'Referer':self.getMainUrl(), 'Accept': 'text/html'}
         self.AJAX_HEADER = dict(self.HEADER)
-        self.AJAX_HEADER.update( {'X-Requested-With': 'XMLHttpRequest'} )
+        self.AJAX_HEADER.update({'X-Requested-With': 'XMLHttpRequest'})
         
         self.COOKIE_FILE = GetCookieDir('webcamerapl')
         self.defaultParams = {'with_metadata':True, 'header':self.HEADER, 'save_cookie': True, 'load_cookie': True, 'cookiefile': self.COOKIE_FILE}
@@ -75,19 +75,19 @@ class WebCameraApi(CBaseHostClass):
                 data = self.cm.ph.getDataBeetwenMarkers(data, '<nav', '</nav>', False)[1]
                 data = self.cm.ph.getAllItemsBeetwenMarkers(data, '<a', '</a>')
                 for item in data:
-                    catUrl   = self.getFullUrl( self.cm.ph.getSearchGroups(item, """href=['"]([^'^"]+?)['"]""")[0] )
+                    catUrl   = self.getFullUrl(self.cm.ph.getSearchGroups(item, """href=['"]([^'^"]+?)['"]""")[0])
                     if catUrl == '' or '#' in catUrl:
                         continue
                     info = ' ['+catUrl.split(',')[-1]+']'
-                    catTitle = self.cleanHtmlStr( self.cm.ph.getDataBeetwenMarkers(item, '<a', '</a>')[1] )
+                    catTitle = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(item, '<a', '</a>')[1])
                     if 'Wszystkie' in catTitle:
                         catTitle = catTitle + info
-                    catIcon  = self.getFullUrl( 'images/logo_mobile.png' )
+                    catIcon  = self.getFullUrl('images/logo_mobile.png')
 
                     subCats = []
                     item = self.cm.ph.getAllItemsBeetwenMarkers(item.split('<ul', 1)[-1], '<li', '</li>')
                     for it in item:
-                        url = self.getFullUrl( self.cm.ph.getSearchGroups(it, """href=['"]([^'^"]+?)['"]""")[0] )
+                        url = self.getFullUrl(self.cm.ph.getSearchGroups(it, """href=['"]([^'^"]+?)['"]""")[0])
                         if 'kategoria' not in url:
                             continue
                         subCats.append({'title':self._cleanHtmlStr(it), 'url':url, 'icon':catIcon, catKey:'list_videos'})

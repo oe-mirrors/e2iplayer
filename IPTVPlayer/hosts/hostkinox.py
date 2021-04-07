@@ -52,7 +52,7 @@ class Kinox(CBaseHostClass):
         self.USER_AGENT = 'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:40.0) Gecko/20100101 Firefox/40.0'
         self.HEADER = {'User-Agent': self.USER_AGENT, 'DNT':'1', 'Accept': 'text/html'}
         self.AJAX_HEADER = dict(self.HEADER)
-        self.AJAX_HEADER.update( {'X-Requested-With': 'XMLHttpRequest'} )
+        self.AJAX_HEADER.update({'X-Requested-With': 'XMLHttpRequest'})
         self.MAIN_URL = None
         self.cacheFilters  = {}
         self.cacheFiltersKeys = []
@@ -90,14 +90,14 @@ class Kinox(CBaseHostClass):
         if confirmedDomain == None:
             self.MAIN_URL = 'https://kinox.to/'
         
-        self.MAIN_CAT_TAB = [{'category':'news',               'title': _('News'),              'url':self.getMainUrl()                                       },
-                             {'category':'list_langs',         'title': _('Cinema movies'),     'url':self.getFullUrl('/Kino-filme.html'), 'get_list_mode':'direct'  },
+        self.MAIN_CAT_TAB = [{'category':'news',               'title': _('News'),              'url':self.getMainUrl()},
+                             {'category':'list_langs',         'title': _('Cinema movies'),     'url':self.getFullUrl('/Kino-filme.html'), 'get_list_mode':'direct'},
                              {'category':'list_sub_cats',      'title': _('Movies'),            'url':self.getMainUrl(), 'f_type':'movie',         'sub_idx':2},
                              {'category':'list_sub_cats',      'title': _('Documentaries'),     'url':self.getMainUrl(), 'f_type':'documentation', 'sub_idx':3},
                              {'category':'list_sub_cats',      'title': _('Series'),            'url':self.getMainUrl(), 'f_type':'series',        'sub_idx':4},
                              
                              {'category': 'search',             'title': _('Search'), 'search_item': True,},
-                             {'category': 'search_history',     'title': _('Search history'),            } 
+                             {'category': 'search_history',     'title': _('Search history'),} 
                             ]
         
     def getPage(self, baseUrl, addParams={}, post_data=None):
@@ -234,7 +234,7 @@ class Kinox(CBaseHostClass):
                 langId = self.cm.ph.getSearchGroups(item[0], '''/lng/([0-9]+?)\.png''')[0]
                 desc = _('Language') + ': ' + langsMap.get(langId, _('Unknown')) + ' | ' + _('Rating') + ': ' + self.cleanHtmlStr(item[5])
                 desc = self.cleanHtmlStr(item[1]) + '[/br]' + desc
-                icon = self.getFullIconUrl( self.cm.ph.getSearchGroups(item[1], '''rel=['"]([^"^']+?\.jpe?g[^"^']*?)["']''')[0] )
+                icon = self.getFullIconUrl(self.cm.ph.getSearchGroups(item[1], '''rel=['"]([^"^']+?\.jpe?g[^"^']*?)["']''')[0])
                 self.cacheNewTab[tTitle].append({'url':url, 'title':title, 'icon':icon, 'desc':desc})
             
             if len(self.cacheNewTab[tTitle]):
@@ -591,7 +591,7 @@ class Kinox(CBaseHostClass):
         data = self.cm.ph.getDataBeetwenReMarkers(data, re.compile('''<table[^>]+?class=['"]CommonModuleTable["']'''), re.compile('''</table>'''))[1]
         
         title = self.cleanHtmlStr(self.cm.ph.getSearchGroups(data1, '''alt=['"]([^'^"]+?)['"]''')[0])
-        icon  = self.getFullIconUrl( self.cm.ph.getSearchGroups(data1, '''<img[^>]+?src=['"]([^"^']+?\.jpe?g[^"^']*?)["']''')[0] )
+        icon  = self.getFullIconUrl(self.cm.ph.getSearchGroups(data1, '''<img[^>]+?src=['"]([^"^']+?\.jpe?g[^"^']*?)["']''')[0])
         desc  = self.cleanHtmlStr(self.cm.ph.getDataBeetwenReMarkers(data1, re.compile('''<div[^>]+?class="Descriptore"[^>]*?>'''), re.compile('</div>'))[1])
         
         mapDesc = {'director':'director', 'country':'country', 'runtime':'duration', 'genre':'genres', 'views':'views'}
@@ -633,7 +633,7 @@ class Kinox(CBaseHostClass):
         if icon == '':
             icon = cItem.get('icon', self.DEFAULT_ICON_URL)
         
-        return [{'title':self.cleanHtmlStr( title ), 'text': self.cleanHtmlStr( desc ), 'images':[{'title':'', 'url':self.getFullUrl(icon)}], 'other_info':otherInfo}]
+        return [{'title':self.cleanHtmlStr(title), 'text': self.cleanHtmlStr(desc), 'images':[{'title':'', 'url':self.getFullUrl(icon)}], 'other_info':otherInfo}]
     
     def handleService(self, index, refresh=0, searchPattern='', searchType=''):
         printDBG('handleService start')
@@ -644,7 +644,7 @@ class Kinox(CBaseHostClass):
         category = self.currItem.get("category", '')
         mode     = self.currItem.get("mode", '')
         
-        printDBG( "handleService: |||||||||||||||||||||||||||||||||||| name[%s], category[%s] " % (name, category) )
+        printDBG("handleService: |||||||||||||||||||||||||||||||||||| name[%s], category[%s] " % (name, category))
         self.currList = []
         
     #MAIN MENU

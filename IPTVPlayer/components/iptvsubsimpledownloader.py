@@ -201,7 +201,7 @@ class IPTVSubSimpleDownloaderWidget(Screen):
     
     def onStart(self):
         self.onShown.remove(self.onStart)
-        self.setTitle( _("Subtitles for: %s") % self.params.get('movie_title', '') )
+        self.setTitle(_("Subtitles for: %s") % self.params.get('movie_title', ''))
         self.loadIcons()
         tmpList = self.params.get('sub_list', [])
         if len(tmpList) > 1:
@@ -235,7 +235,7 @@ class IPTVSubSimpleDownloaderWidget(Screen):
                 printDBG(item)
                 dItem = CDisplayListItem(name=item['title'], type=CDisplayListItem.TYPE_ARTICLE)
                 dItem.privateData = item
-                list.append( (dItem,) )
+                list.append((dItem,))
         except Exception: 
             printExc()
         self["list"].setList(list)

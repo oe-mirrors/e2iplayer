@@ -42,10 +42,10 @@ class WEP_TestVectors(unittest.TestCase):
             print('crc:    %s'%b2a_p(pack('<I', crc32(plainText)))[9:])
 
             print('========================================================')
-            self.assertEqual( ct, kct )
+            self.assertEqual(ct, kct)
             alg.setKey(key, keyId=keyId)
-            dct = alg.decrypt( ct )
-            self.assertEqual( dct, pt )
+            dct = alg.decrypt(ct)
+            self.assertEqual(dct, pt)
 
         WEPtestVector(
             testCase="Test Vectors from IEEE 802.11 TGi D2.x",

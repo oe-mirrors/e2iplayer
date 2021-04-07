@@ -33,19 +33,19 @@ class KreskoweczkiPL(CBaseHostClass):
         
         self.HEADER = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:68.0) Gecko/20100101 Firefox/68.0', 'Accept': 'text/html'}
         self.AJAX_HEADER = dict(self.HEADER)
-        self.AJAX_HEADER.update( {'X-Requested-With': 'XMLHttpRequest'} )
+        self.AJAX_HEADER.update({'X-Requested-With': 'XMLHttpRequest'})
         
         self.MAIN_URL      = 'https://www.kreskoweczki.pl/'
         self.DEFAULT_ICON  = "http://svn.sd-xbmc.org/filedetails.php?repname=sd-xbmc&path=%2Ftrunk%2Fxbmc-addons%2Fsrc%2Fxbmc-addons%2Fkreskoweczki.png&rev=936&peg=936"
 
-        self.MAIN_CAT_TAB = [{'icon':self.DEFAULT_ICON, 'category':'list_abc',        'title': 'Alfabetycznie',   'url':self.MAIN_URL },
+        self.MAIN_CAT_TAB = [{'icon':self.DEFAULT_ICON, 'category':'list_abc',        'title': 'Alfabetycznie',   'url':self.MAIN_URL},
                              {'icon':self.DEFAULT_ICON, 'category':'list_items',      'title': 'Ostatnio dodane', 'url':self.MAIN_URL + 'ostatnio-dodane/wszystkie'},
                              {'icon':self.DEFAULT_ICON, 'category':'list_items',      'title': 'Anime',           'url':self.MAIN_URL + 'typ/anime/'},
                              {'icon':self.DEFAULT_ICON, 'category':'list_items',      'title': 'Bajki',           'url':self.MAIN_URL + 'typ/toon/'},
                              {'icon':self.DEFAULT_ICON, 'category':'list_items',      'title': 'Seriale',         'url':self.MAIN_URL + 'typ/serial/'},
                              {'icon':self.DEFAULT_ICON, 'category':'list_items',      'title': 'Pozostałe',       'url':self.MAIN_URL + 'typ/pozostale/'},
                              {'icon':self.DEFAULT_ICON, 'category':'search',          'title': _('Search'), 'search_item':True},
-                             {'icon':self.DEFAULT_ICON, 'category':'search_history',  'title': _('Search history')} ]
+                             {'icon':self.DEFAULT_ICON, 'category':'search_history',  'title': _('Search history')}]
         self.needProxy = None
         
     def getPage(self, url, params={}, post_data=None):
@@ -77,7 +77,7 @@ class KreskoweczkiPL(CBaseHostClass):
         data = self.cm.ph.getAllItemsBeetwenMarkers(data, '<li', '</li>')
         for item in data:
             title = self.cleanHtmlStr(item)
-            url   = self.getFullUrl( self.cm.ph.getSearchGroups(item, '''href=['"]([^'^"]+?)['"]''')[0] )
+            url   = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''href=['"]([^'^"]+?)['"]''')[0])
             params = dict(cItem)
             params.update({'category':category, 'title':title, 'url':url})
             self.addDir(params)
@@ -103,7 +103,7 @@ class KreskoweczkiPL(CBaseHostClass):
         
         if '/odcinki' not in url:
             url = self.cm.ph.getDataBeetwenNodes(data, ('<a', '</a>', 'Lista Odcinków'), ('</div', '>'))[1]
-            url = self.getFullUrl( self.cm.ph.getSearchGroups(url, '''href=['"]([^'^"]+?)['"]''')[0] )
+            url = self.getFullUrl(self.cm.ph.getSearchGroups(url, '''href=['"]([^'^"]+?)['"]''')[0])
             if url != '':
                 sts, data = self.getPage(url)
                 if not sts:
@@ -204,7 +204,7 @@ class KreskoweczkiPL(CBaseHostClass):
         
         HEADER = dict(self.HEADER)
         HEADER['Referer'] = ref
-        post_data = {'source_id' : vid}
+        post_data = {'source_id': vid}
         sts, data = self.getPage(videoUrl, {'header': HEADER}, post_data)
         if not sts:
             return []
@@ -217,7 +217,7 @@ class KreskoweczkiPL(CBaseHostClass):
                 videoUrl = self.getFullUrl(self.cm.ph.getSearchGroups(item, "src='([^']+?)'", ignoreCase=True)[0])
             if 1 != self.up.checkHostSupport(videoUrl):
                 continue 
-            urlTab.extend( self.up.getVideoLinkExt(videoUrl) )
+            urlTab.extend(self.up.getVideoLinkExt(videoUrl))
             
         if 0 == len(urlTab):
             tmp = self.cm.ph.getAllItemsBeetwenNodes(data, ('<div', '>', 'playerholder'), ('</div', '>'), caseSensitive=False)
@@ -228,7 +228,7 @@ class KreskoweczkiPL(CBaseHostClass):
                     videoUrl = self.getFullUrl(self.cm.ph.getSearchGroups(item, "href='([^']+?)'", ignoreCase=True)[0])
                 if 1 != self.up.checkHostSupport(videoUrl):
                     continue 
-                urlTab.extend( self.up.getVideoLinkExt(videoUrl) )
+                urlTab.extend(self.up.getVideoLinkExt(videoUrl))
         
         return urlTab
         
@@ -273,7 +273,7 @@ class KreskoweczkiPL(CBaseHostClass):
         mode     = self.currItem.get("mode", '')
         filter   = self.currItem.get("filter", '')
         
-        printDBG( "handleService: |||||||||||||||||||||||||||||||||||| name[%s], category[%s] " % (name, category) )
+        printDBG("handleService: |||||||||||||||||||||||||||||||||||| name[%s], category[%s] " % (name, category))
         self.currList = []
         
     #MAIN MENU

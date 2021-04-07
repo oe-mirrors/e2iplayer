@@ -39,10 +39,10 @@ config.plugins.iptvplayer.ustvnow_epg            = ConfigYesNo(default=True)
 
 def GetConfigList():
     optionList = []
-    optionList.append(getConfigListEntry( _("Email") + ": ", config.plugins.iptvplayer.ustvnow_login))
-    optionList.append(getConfigListEntry( _("Password") + ": ", config.plugins.iptvplayer.ustvnow_password))
-    optionList.append(getConfigListEntry( _("List only channels with subscription") + ": ", config.plugins.iptvplayer.ustvnow_only_available))
-    optionList.append(getConfigListEntry( _("Get EPG") + ": ", config.plugins.iptvplayer.ustvnow_epg))
+    optionList.append(getConfigListEntry(_("Email") + ": ", config.plugins.iptvplayer.ustvnow_login))
+    optionList.append(getConfigListEntry(_("Password") + ": ", config.plugins.iptvplayer.ustvnow_password))
+    optionList.append(getConfigListEntry(_("List only channels with subscription") + ": ", config.plugins.iptvplayer.ustvnow_only_available))
+    optionList.append(getConfigListEntry(_("Get EPG") + ": ", config.plugins.iptvplayer.ustvnow_epg))
     
     return optionList
     
@@ -51,7 +51,7 @@ def GetConfigList():
 class UstvnowApi:
     MAIN_URL = 'http://m.ustvnow.com/'
     LIVE_URL = MAIN_URL + 'iphone/1/live/playingnow?pgonly=true'
-    HTTP_HEADER  = { 'User-Agent': 'Mozilla/5.0 (iPad; U; CPU OS 3_2 like Mac OS X; en-us) AppleWebKit/531.21.10 (KHTML, like Gecko) Version/4.0.4 Mobile/7B334b Safari/531.21.10', 'Referer': MAIN_URL }
+    HTTP_HEADER  = {'User-Agent': 'Mozilla/5.0 (iPad; U; CPU OS 3_2 like Mac OS X; en-us) AppleWebKit/531.21.10 (KHTML, like Gecko) Version/4.0.4 Mobile/7B334b Safari/531.21.10', 'Referer': MAIN_URL}
 
     def __init__(self):
         self.cm = common()
@@ -62,7 +62,7 @@ class UstvnowApi:
         self.passkey = ''
         
         HTTP_HEADER= dict(self.HTTP_HEADER)
-        HTTP_HEADER.update( {'Content-Type':'application/x-www-form-urlencoded'} )
+        HTTP_HEADER.update({'Content-Type':'application/x-www-form-urlencoded'})
         self.defParams = {'header':HTTP_HEADER, 'cookiefile': self.cookiePath, 'use_cookie': True, 'load_cookie':True, 'save_cookie':True}
         
     def getFullUrl(self, url):
@@ -118,10 +118,10 @@ class UstvnowApi:
             self.token = self.doLogin(login, passwd)
             self.passkey = self.getPasskey()
             if self.token == '' or self.passkey == '':
-                self.sessionEx.open(MessageBox, _('An error occurred when try to sign in the user "%s.\nPlease check your login credentials and try again later..."') % login, type=MessageBox.TYPE_INFO, timeout=10 )
+                self.sessionEx.open(MessageBox, _('An error occurred when try to sign in the user "%s.\nPlease check your login credentials and try again later..."') % login, type=MessageBox.TYPE_INFO, timeout=10)
                 return []
         else:
-            self.sessionEx.open(MessageBox, _('You need to enter email and password in configuration.'), type=MessageBox.TYPE_INFO, timeout=10 )
+            self.sessionEx.open(MessageBox, _('You need to enter email and password in configuration.'), type=MessageBox.TYPE_INFO, timeout=10)
             return []
             
     

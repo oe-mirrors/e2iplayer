@@ -37,7 +37,7 @@ class MLBStreamTVApi(CBaseHostClass):
     def __init__(self):
         CBaseHostClass.__init__(self, {'cookie':'mlbstream.tv.cookie'})
         self.HTTP_HEADER = self.cm.getDefaultHeader(browser='chrome')
-        self.AJAX_HEADER = MergeDicts(self.HTTP_HEADER, {'X-Requested-With': 'XMLHttpRequest'} )
+        self.AJAX_HEADER = MergeDicts(self.HTTP_HEADER, {'X-Requested-With': 'XMLHttpRequest'})
         self.defaultParams = {'header':self.HTTP_HEADER, 'ignore_http_code_ranges':[], 'save_cookie': True, 'load_cookie': True, 'cookiefile': self.COOKIE_FILE}
         self.MAIN_URL = 'http://mlbstream.tv/'
         self.DEFAULT_ICON_URL = self.getFullUrl('/wp-content/uploads/2018/03/mlb-network-291x300.png')
@@ -65,7 +65,7 @@ class MLBStreamTVApi(CBaseHostClass):
         return datetime.strptime(txt, '%Y-%m-%dT%H:%M:%S') + self.offset
     
     def getList(self, cItem):
-        printDBG("MLBStreamTVApi.getList cItem[%s]" % cItem )
+        printDBG("MLBStreamTVApi.getList cItem[%s]" % cItem)
         channelsList = []
         
         category = cItem.get('priv_cat')
@@ -87,7 +87,7 @@ class MLBStreamTVApi(CBaseHostClass):
             tmp = self.cm.ph.getDataBeetwenNodes(data, ('<ul', '>', 'menu-menu'), ('</ul', '>'), False)[1]
             tmp = self.cm.ph.getAllItemsBeetwenMarkers(tmp, '<a', '</a>')
             if len(tmp):
-                url = self.getFullUrl( self.cm.ph.getSearchGroups(tmp[-1], '''href=['"]([^'^"]+?)['"]''')[0], cUrl)
+                url = self.getFullUrl(self.cm.ph.getSearchGroups(tmp[-1], '''href=['"]([^'^"]+?)['"]''')[0], cUrl)
                 title = self.cleanHtmlStr(tmp[-1])
                 sts, tmp = self.cm.getPage(url, self.defaultParams)
                 if sts and '<iframe' in tmp:
@@ -95,7 +95,7 @@ class MLBStreamTVApi(CBaseHostClass):
                     url = self.getFullUrl(self.cm.ph.getSearchGroups(tmp, '''<iframe[^>]+?src=['"]([^"^']+?)['"]''', 1, True)[0], self.cm.meta['url'])
                     channelsList.append({'name':'mlbstream.tv', 'type':'video', 'url':url, 'title':title, 'Referer':self.cm.meta['url'], 'icon':defaultIcon})
             
-            sDesc = self.cleanHtmlStr( self.cm.ph.getDataBeetwenNodes(data, ('<div', '>', 'entry-content'), ('</', '>'), False)[1] )
+            sDesc = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(data, ('<div', '>', 'entry-content'), ('</', '>'), False)[1])
             data = self.cm.ph.getDataBeetwenReMarkers(data, re.compile('var\s+?timezoneJSON\s*?=\s*?\['), re.compile('\];'), False)[1]
             try:
                 data = json_loads('[%s]' % data)
@@ -120,7 +120,7 @@ class MLBStreamTVApi(CBaseHostClass):
                         title = self.cleanHtmlStr(''.join(item[3:]))
                         icon = self.getFullIconUrl(self.cm.ph.getSearchGroups(item[3], '''<img[^>]+?src=['"]([^'^"]+?)['"]''')[0])
                         desc = self.cleanHtmlStr(item[2])
-                        desc += '[/br]%s %s' % ( self.cm.getBaseUrl(self.cm.meta['url'], True), date.strftime('%A, %-d %B %H:%M') )
+                        desc += '[/br]%s %s' % (self.cm.getBaseUrl(self.cm.meta['url'], True), date.strftime('%A, %-d %B %H:%M'))
                         
                         subItems.append({'name':'mlbstream.tv', 'type':'dir', 'priv_cat':'links', 'title':title, 'url':self.getFullUrl(url, self.cm.meta['url']), 'desc':desc, 'icon':icon})
                     if len(subItems):
@@ -140,7 +140,7 @@ class MLBStreamTVApi(CBaseHostClass):
             tmp = self.cm.ph.getDataBeetwenNodes(data, ('<div', '>', 'custom-related-links'), ('</div', '>'))[1]
             tmp = self.cm.ph.getAllItemsBeetwenNodes(tmp, ('<a', '>'), ('</a', '>'))
             for item in tmp:
-                url = self.getFullUrl( self.cm.ph.getSearchGroups(item, '''href=['"]([^'^"]+?)['"]''')[0], self.cm.meta['url'])
+                url = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''href=['"]([^'^"]+?)['"]''')[0], self.cm.meta['url'])
                 title = '%s - %s' % (cItem['title'], self.cleanHtmlStr(item))
                 params = dict(cItem)
                 params.update({'type':'video', 'title':title, 'url':url, 'Referer':self.cm.meta['url'], 'get_iframe':True})

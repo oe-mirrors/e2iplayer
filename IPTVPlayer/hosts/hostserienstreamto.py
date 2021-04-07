@@ -43,7 +43,7 @@ config.plugins.iptvplayer.serienstreamto_password = ConfigText(default="", fixed
 
 def GetConfigList():
     optionList = []
-    optionList.append( getConfigListEntry( _("Your language preference:"), config.plugins.iptvplayer.serienstreamto_langpreference ) )
+    optionList.append(getConfigListEntry(_("Your language preference:"), config.plugins.iptvplayer.serienstreamto_langpreference))
     
     optionList.append(getConfigListEntry(_("e-mail")+":", config.plugins.iptvplayer.serienstreamto_login))
     optionList.append(getConfigListEntry(_("password")+":", config.plugins.iptvplayer.serienstreamto_password))
@@ -60,7 +60,7 @@ class SerienStreamTo(CBaseHostClass, CaptchaHelper):
         self.USER_AGENT = 'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/52.0.2743.116 Safari/537.36'
         self.HEADER = {'User-Agent':self.USER_AGENT, 'Accept': 'text/html'}
         self.AJAX_HEADER = dict(self.HEADER)
-        self.AJAX_HEADER.update( {'X-Requested-With': 'XMLHttpRequest'} )
+        self.AJAX_HEADER.update({'X-Requested-With': 'XMLHttpRequest'})
         
         self.defaultParams = {'header':self.HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
         
@@ -68,13 +68,13 @@ class SerienStreamTo(CBaseHostClass, CaptchaHelper):
         self.DEFAULT_ICON_URL = 'https://s.to/public/img/facebook.jpg'
         
         
-        self.MAIN_CAT_TAB = [{'category':'all_series',        'title': 'Alle Serien',                     'url':self.getFullUrl('/serien-alphabet') },
-                             {'category':'list_abc',          'title': _('A-Z'),                          'url':self.MAIN_URL                       },
-                             {'category':'list_genres',       'title': _('Genres'),                       'url':self.MAIN_URL                       },
-                             {'category':'list_items',        'title': _('New'),                          'url':self.getFullUrl('/neu')             },
-                             {'category':'list_items',        'title': _('Popular'),                      'url':self.getFullUrl('/beliebte-serien') },
-                             {'category': 'search',            'title': _('Search'),                       'search_item': True,                       },
-                             {'category': 'search_history',    'title': _('Search history'),                                                         } 
+        self.MAIN_CAT_TAB = [{'category':'all_series',        'title': 'Alle Serien',                     'url':self.getFullUrl('/serien-alphabet')},
+                             {'category':'list_abc',          'title': _('A-Z'),                          'url':self.MAIN_URL},
+                             {'category':'list_genres',       'title': _('Genres'),                       'url':self.MAIN_URL},
+                             {'category':'list_items',        'title': _('New'),                          'url':self.getFullUrl('/neu')},
+                             {'category':'list_items',        'title': _('Popular'),                      'url':self.getFullUrl('/beliebte-serien')},
+                             {'category': 'search',            'title': _('Search'),                       'search_item': True,},
+                             {'category': 'search_history',    'title': _('Search history'),} 
                             ]
         
         self.cacheLinks = {}
@@ -84,8 +84,8 @@ class SerienStreamTo(CBaseHostClass, CaptchaHelper):
         self.password = ''
         self.loggedIn = None
         
-        self.ALL_SERIES_TAB = [{'category':'all_letters',  'title': 'Alphabet',  'url':self.getFullUrl('/serien-alphabet') },
-                               {'category':'all_genres',   'title': 'Genres',    'url':self.getFullUrl('/serien-genres')   },]
+        self.ALL_SERIES_TAB = [{'category':'all_letters',  'title': 'Alphabet',  'url':self.getFullUrl('/serien-alphabet')},
+                               {'category':'all_genres',   'title': 'Genres',    'url':self.getFullUrl('/serien-genres')},]
         
         self.allCache = {'genres_list':[], 'genres_keys':{}, 'letters_list':[], 'letters_keys':{}}
         
@@ -208,7 +208,7 @@ class SerienStreamTo(CBaseHostClass, CaptchaHelper):
             return
         
         nextPage = self.cm.ph.getDataBeetwenNodes(data, ('<div', '>', 'pagination'), ('</div', '>'), False)[1]
-        nextPage = self.getFullUrl( self.cm.ph.getSearchGroups(nextPage, '''<a[^>]*?href=['"]([^'^"]+?)['"][^>]*?>%s<''' % (page + 1))[0] )
+        nextPage = self.getFullUrl(self.cm.ph.getSearchGroups(nextPage, '''<a[^>]*?href=['"]([^'^"]+?)['"][^>]*?>%s<''' % (page + 1))[0])
         
         data = self.cm.ph.getDataBeetwenMarkers(data, '<div class="seriesListContainer', '<div class="cf">', withMarkers=True)[1]
         data = self.cm.ph.getAllItemsBeetwenMarkers(data, '<a ', '</a>', withMarkers=True)
@@ -539,7 +539,7 @@ class SerienStreamTo(CBaseHostClass, CaptchaHelper):
                         header = dict(httpParams['header'])
                         header['Accept'] = 'image/png,image/*;q=0.8,*/*;q=0.5'
                         params = dict(self.defaultParams)
-                        params.update( {'maintype': 'image', 'subtypes':['jpeg', 'png'], 'check_first_bytes':['\xFF\xD8', '\xFF\xD9', '\x89\x50\x4E\x47'], 'header':header} )
+                        params.update({'maintype': 'image', 'subtypes':['jpeg', 'png'], 'check_first_bytes':['\xFF\xD8', '\xFF\xD9', '\x89\x50\x4E\x47'], 'header':header})
                         filePath = GetTmpDir('.iptvplayer_captcha.jpg')
                         rm(filePath)
                         ret = self.cm.saveWebFile(filePath, imgUrl.replace('&amp;', '&'), params)
@@ -589,7 +589,7 @@ class SerienStreamTo(CBaseHostClass, CaptchaHelper):
         category = self.currItem.get("category", '')
         mode     = self.currItem.get("mode", '')
         
-        printDBG( "handleService: |||||||||||||||||||||||||||||||||||| name[%s], category[%s] " % (name, category) )
+        printDBG("handleService: |||||||||||||||||||||||||||||||||||| name[%s], category[%s] " % (name, category))
         self.currList = []
         
         self.tryTologin()

@@ -48,15 +48,15 @@ class SportDeutschland(CBaseHostClass):
         self.MAINURL      = 'http://sportdeutschland.tv/'
         self.MAIN_API_URL = 'http://proxy.vidibusdynamic.net/sportdeutschland.tv/api/'
         self.HTTP_JSON_HEADER  = {'User-Agent': 'Mozilla/5.0 (X11; Ubuntu; Linux i686; rv:12.0) Gecko/20100101 Firefox/12.0', 
-                                  'Accept'    : 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
+                                  'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
                                   'Accept-Encoding': 'gzip, deflate',
-                                  'Referer'   : self.MAINURL, 
-                                  'Origin'    : self.MAINURL
+                                  'Referer': self.MAINURL, 
+                                  'Origin': self.MAINURL
                                  }
         self.cm.HEADER = dict(self.HTTP_JSON_HEADER)
         self.MAIN_CAT_TAB = [{'category': 'categories',        'title': _('Categories'),},
                              {'category': 'search',            'title': _('Search'), 'search_item': True,},
-                             {'category': 'search_history',    'title': _('Search history'),            }]
+                             {'category': 'search_history',    'title': _('Search history'),}]
                  
             
     def _getJItemStr(self, item, key, default=''):
@@ -170,8 +170,8 @@ class SportDeutschland(CBaseHostClass):
             
     def getLinksForVideo(self, cItem):
         printDBG("SportDeutschland.getLinksForVideo [%s]" % cItem)
-        HTTP_HEADER= { 'User-Agent':'Mozilla/5.0 (X11; Ubuntu; Linux i686; rv:21.0) Gecko/20100101 Firefox/21.0',
-                       'Accept':'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' }
+        HTTP_HEADER= {'User-Agent':'Mozilla/5.0 (X11; Ubuntu; Linux i686; rv:21.0) Gecko/20100101 Firefox/21.0',
+                       'Accept':'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8'}
         videoUrls =[]
         
         if self.cm.isValidUrl(cItem['url']):
@@ -221,7 +221,7 @@ class SportDeutschland(CBaseHostClass):
         CBaseHostClass.handleService(self, index, refresh, searchPattern, searchType)
         name     = self.currItem.get("name", None)
         category = self.currItem.get("category", '')
-        printDBG( "SportDeutschland.handleService: ---------> name[%s], category[%s] " % (name, category) )
+        printDBG("SportDeutschland.handleService: ---------> name[%s], category[%s] " % (name, category))
         self.currList = []
         
         if None == name:

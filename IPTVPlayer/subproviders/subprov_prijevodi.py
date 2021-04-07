@@ -47,7 +47,7 @@ class PrijevodiOnline(CBaseSubProviderClass):
         self.languages = []
         
         self.dInfo = params['discover_info']
-        self.searchTypes = [{'title':_('Series'), 'f_type':'series', 'url':self.getFullUrl('serije')}, {'title':_('Movies'), 'f_type':'movies', 'url':self.getFullUrl('filmovi')} ]
+        self.searchTypes = [{'title':_('Series'), 'f_type':'series', 'url':self.getFullUrl('serije')}, {'title':_('Movies'), 'f_type':'movies', 'url':self.getFullUrl('filmovi')}]
         self.episodesCache = {}
         self.logedIn = None
         self.searchURL = ""
@@ -82,7 +82,7 @@ class PrijevodiOnline(CBaseSubProviderClass):
         data = self.cm.ph.getAllItemsBeetwenMarkers(data, '<li', '</li>')
         for item in data:
             title = self.cleanHtmlStr(item)
-            url   = self.getFullUrl( self.cm.ph.getSearchGroups(item, 'href="([^"]+?)"')[0] )
+            url   = self.getFullUrl(self.cm.ph.getSearchGroups(item, 'href="([^"]+?)"')[0])
             if not self.cm.isValidUrl(url):
                 continue
             params = dict(cItem)
@@ -109,7 +109,7 @@ class PrijevodiOnline(CBaseSubProviderClass):
             title = self.cleanHtmlStr(tmp)
             if title == '':
                 title = self.cm.ph.getSearchGroups(tmp, '''title=['"]([^'^"]+?)['"]''')[0]
-            url   = self.getFullUrl( self.cm.ph.getSearchGroups(tmp, 'href="([^"]+?)"')[0] )
+            url   = self.getFullUrl(self.cm.ph.getSearchGroups(tmp, 'href="([^"]+?)"')[0])
             if not self.cm.isValidUrl(url):
                 continue
             descTab = []
@@ -163,7 +163,7 @@ class PrijevodiOnline(CBaseSubProviderClass):
                 tmp = self.cm.ph.getAllItemsBeetwenMarkers(eItem, '<li', '</li>')
                 if len(tmp) < 2:
                     continue
-                url   = self.getFullUrl( self.cm.ph.getSearchGroups(tmp[1], 'rel="([^"]+?/get/[^"]+?)"')[0] )
+                url   = self.getFullUrl(self.cm.ph.getSearchGroups(tmp[1], 'rel="([^"]+?/get/[^"]+?)"')[0])
                 if not self.cm.isValidUrl(url):
                     continue
                 
@@ -218,7 +218,7 @@ class PrijevodiOnline(CBaseSubProviderClass):
         data = self.cm.ph.getDataBeetwenMarkers(data, '<table', '</table>')[1]
         data = data.split('<td rowspan="2" class="extra">')
         for item in data:
-            url = self.getFullUrl( self.cm.ph.getSearchGroups(item, 'href="([^"]+?)"')[0] )
+            url = self.getFullUrl(self.cm.ph.getSearchGroups(item, 'href="([^"]+?)"')[0])
             if not self.cm.isValidUrl(url):
                 continue
             
@@ -260,7 +260,7 @@ class PrijevodiOnline(CBaseSubProviderClass):
                 if title == '':
                     title = self.cm.ph.getSearchGroups(item, '''title=['"]([^'^"]+?)['"]''')[0]
                 desc = self.cleanHtmlStr(item)
-                url = self.getFullUrl( self.cm.ph.getSearchGroups(item, 'href="([^"]+?)"')[0] )
+                url = self.getFullUrl(self.cm.ph.getSearchGroups(item, 'href="([^"]+?)"')[0])
                 if url == '':
                     continue
                 
@@ -278,7 +278,7 @@ class PrijevodiOnline(CBaseSubProviderClass):
                 title = self.cleanHtmlStr(tmp)
                 if title == '':
                     title = self.cm.ph.getSearchGroups(tmp, '''title=['"]([^'^"]+?)['"]''')[0]
-                url   = self.getFullUrl( self.cm.ph.getSearchGroups(tmp, 'href="([^"]+?)"')[0] )
+                url   = self.getFullUrl(self.cm.ph.getSearchGroups(tmp, 'href="([^"]+?)"')[0])
                 if '' == url:
                     continue
                 descTab = []
@@ -400,7 +400,7 @@ class PrijevodiOnline(CBaseSubProviderClass):
         name     = self.currItem.get("name", '')
         category = self.currItem.get("category", '')
         
-        printDBG( "handleService: |||||||||||||||||||||||||||||||||||| name[%s], category[%s] " % (name, category) )
+        printDBG("handleService: |||||||||||||||||||||||||||||||||||| name[%s], category[%s] " % (name, category))
         self.currList = []
         
     #MAIN MENU

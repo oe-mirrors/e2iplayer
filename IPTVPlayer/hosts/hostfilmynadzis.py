@@ -48,7 +48,7 @@ class FilmyNaDzis(CBaseHostClass):
         self.DEFAULT_ICON_URL = 'https://filmynadzis.pl/wp-content/uploads/2016/07/logo2.png'
         self.HTTP_HEADER = self.cm.getDefaultHeader('chrome')
         #{'Referer':self.getMainUrl(), 'Origin':self.getMainUrl()})
-        self.AJAX_HEADER = MergeDicts(self.HTTP_HEADER, {'X-Requested-With': ' XMLHttpRequest', 'Accept':'*/*'} )
+        self.AJAX_HEADER = MergeDicts(self.HTTP_HEADER, {'X-Requested-With': ' XMLHttpRequest', 'Accept':'*/*'})
         self.defaultParams = {'header':self.HTTP_HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
 
         self.cacheLinks    = {}
@@ -88,10 +88,10 @@ class FilmyNaDzis(CBaseHostClass):
                 GetIPTVNotify().push(msg, 'info', 10)
                 return False
             
-        if not self.loggedIn :
+        if not self.loggedIn:
             # try to login
-            postData = {'ihcaction': 'login', 'log' : self.login, 'pwd': self.password}
-            sts, data = self.cm.getPage (self.MAIN_URL, self.defaultParams, post_data=postData)
+            postData = {'ihcaction': 'login', 'log': self.login, 'pwd': self.password}
+            sts, data = self.cm.getPage(self.MAIN_URL, self.defaultParams, post_data=postData)
 
             if sts:
                 responseUrl = self.cm.meta['url']
@@ -146,8 +146,8 @@ class FilmyNaDzis(CBaseHostClass):
             printDBG("Categories: %s" % str(params))
             self.addDir(params)
 
-        tabs = [{'category':'search',         'title': _('Search'), 'search_item':True },
-                {'category': 'search_history', 'title': _('Search history'),            }]
+        tabs = [{'category':'search',         'title': _('Search'), 'search_item':True},
+                {'category': 'search_history', 'title': _('Search history'),}]
         self.listsTab(tabs, cItem)
 
     def listItems(self, cItem):
@@ -237,7 +237,7 @@ class FilmyNaDzis(CBaseHostClass):
         printDBG("FilmyNaDzis.getLinksForVideo --> token --> name '%s' - content '%s'" % (token_name, token_content))
         
         urlParams = self.getDefaultParams(True)
-        urlParams['header'] = MergeDicts(urlParams['header'], {'Referer': cUrl, 'x-csrf-' +  token_name: token_content })
+        urlParams['header'] = MergeDicts(urlParams['header'], {'Referer': cUrl, 'x-csrf-' +  token_name: token_content})
 
         data = ph.find(data, ('<div', '>', 'video_thumbnail'), '</div>', flags=0)[1]
         printDBG("------------------------")
@@ -248,7 +248,7 @@ class FilmyNaDzis(CBaseHostClass):
         if tmp: 
             if self.cm.getBaseUrl(tmp) != self.cm.getBaseUrl(cUrl):
                 name = self.cm.getBaseUrl(tmp)
-                params = {'name': name, 'url':strwithmeta(tmp, {'Referer': cUrl, 'x-csrf-' +  token_name: token_content }), 'need_resolve':1}
+                params = {'name': name, 'url':strwithmeta(tmp, {'Referer': cUrl, 'x-csrf-' +  token_name: token_content}), 'need_resolve':1}
                 printDBG("-------> link: %s" % str(params))
                 urlTab.append(params)
             else:
@@ -289,7 +289,7 @@ class FilmyNaDzis(CBaseHostClass):
         category = self.currItem.get("category", '')
         title = self.currItem.get("title", "")
         
-        printDBG( "handleService: || category[%s] " % (category) )
+        printDBG("handleService: || category[%s] " % (category))
         self.currList = []
 
     #MAIN MENU

@@ -28,7 +28,7 @@ class WatchCartoonOnline(CBaseHostClass):
         self.USER_AGENT = 'Mozilla/5.0'
         self.HEADER = {'User-Agent': self.USER_AGENT, 'Accept': 'text/html'}
         self.AJAX_HEADER = dict(self.HEADER)
-        self.AJAX_HEADER.update( {'X-Requested-With':'XMLHttpRequest', 'Content-Type':'application/x-www-form-urlencoded; charset=UTF-8'} )
+        self.AJAX_HEADER.update({'X-Requested-With':'XMLHttpRequest', 'Content-Type':'application/x-www-form-urlencoded; charset=UTF-8'})
         
         self.MAIN_URL = 'https://www.watchcartoononline.com/'
         self.DEFAULT_ICON_URL = 'https://mk0echouaawhk9ls0i7l.kinstacdn.com/wp-content/uploads/websites/website%20to%20watch%20cartoons/www.watchcartoononline.com.1280.jpg'
@@ -63,7 +63,7 @@ class WatchCartoonOnline(CBaseHostClass):
         for item in tmp:
             if 'active' in item:
                 continue
-            url = self.getFullUrl( self.cm.ph.getSearchGroups(item, '''href=['"]([^"^']+?)['"]''')[0] )
+            url = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''href=['"]([^"^']+?)['"]''')[0])
             title = self.cleanHtmlStr(item)
             params = dict(cItem)
             params.update({'category':'list_abc', 'title':title, 'url':url})
@@ -82,9 +82,9 @@ class WatchCartoonOnline(CBaseHostClass):
             
             tabItems = []
             for item in data:
-                url = self.getFullUrl( self.cm.ph.getSearchGroups(item, '''href=['"]([^"^']+?)['"]''')[0] )
+                url = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''href=['"]([^"^']+?)['"]''')[0])
                 title = self.cleanHtmlStr(item)
-                icon  = self.getFullIconUrl( self.cm.ph.getSearchGroups(item, '''<img[^>]+?src=['"]([^"^']+?)['"]''')[0] )
+                icon  = self.getFullIconUrl(self.cm.ph.getSearchGroups(item, '''<img[^>]+?src=['"]([^"^']+?)['"]''')[0])
                 
                 params = dict(cItem)
                 params.update({'title':title, 'url':url, 'icon':icon})
@@ -106,7 +106,7 @@ class WatchCartoonOnline(CBaseHostClass):
             _fillItems(item)
 
         MAIN_CAT_TAB = [{'category':'search',          'title': _('Search'), 'search_item':True},
-                        {'category':'search_history',  'title': _('Search history')} ]
+                        {'category':'search_history',  'title': _('Search history')}]
         self.listsTab(MAIN_CAT_TAB, cItem)
         
     def listABC(self, cItem, nextCategory):
@@ -119,13 +119,13 @@ class WatchCartoonOnline(CBaseHostClass):
         data = self.cm.ph.getDataBeetwenNodes(data, ('<div', '>', 'ddmcc_container'), ('</div', '>'), False)[1]
         data = data.split('<p')
         for idx in range(len(data)):
-            tabTitle = self.cleanHtmlStr( self.cm.ph.rgetDataBeetwenMarkers2(data[idx], '</p>', '>', False)[1] )
+            tabTitle = self.cleanHtmlStr(self.cm.ph.rgetDataBeetwenMarkers2(data[idx], '</p>', '>', False)[1])
             tabData = self.cm.ph.getAllItemsBeetwenMarkers(data[idx], '<li', '</li>')
             tabItems = []
             for item  in tabData:
-                url = self.getFullUrl( self.cm.ph.getSearchGroups(item, '''href=['"]([^"^']+?)['"]''')[0] )
+                url = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''href=['"]([^"^']+?)['"]''')[0])
                 title = self.cleanHtmlStr(item)
-                icon  = self.getFullIconUrl( self.cm.ph.getSearchGroups(item, '''<img[^>]+?src=['"]([^"^']+?)['"]''')[0] )
+                icon  = self.getFullIconUrl(self.cm.ph.getSearchGroups(item, '''<img[^>]+?src=['"]([^"^']+?)['"]''')[0])
                 
                 params = dict(cItem)
                 params.update({'good_for_fav':True, 'category':'explore_item', 'title':title, 'url':url, 'icon':icon})
@@ -149,7 +149,7 @@ class WatchCartoonOnline(CBaseHostClass):
         
         # desc
         descData = self.cm.ph.getDataBeetwenNodes(data, ('<div', '>', 'video-title'), ('<div', '>', 'sidebar-titles'), False)[1]
-        icon = self.getFullUrl( self.cm.ph.getSearchGroups(descData, '''<img[^>]+?src=['"]([^'^"]+?)['"]''')[0] )
+        icon = self.getFullUrl(self.cm.ph.getSearchGroups(descData, '''<img[^>]+?src=['"]([^'^"]+?)['"]''')[0])
         
         desc = []
         tmp = self.cm.ph.getDataBeetwenMarkers(descData, '<b', '</div>')[1]
@@ -184,7 +184,7 @@ class WatchCartoonOnline(CBaseHostClass):
         data = self.cm.ph.getDataBeetwenNodes(data, ('<div', '>', 'cat-eps'), ('<div', '>', 'sidebar'))[1]
         data = self.cm.ph.getAllItemsBeetwenNodes(data, ('<div', '>', 'cat-eps'), ('</div', '>'))
         for item in data:
-            url = self.getFullUrl( self.cm.ph.getSearchGroups(item, '''href=['"]([^"^']+?)['"]''')[0] )
+            url = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''href=['"]([^"^']+?)['"]''')[0])
             title = self.cleanHtmlStr(item)
             
             params = dict(cItem)
@@ -207,9 +207,9 @@ class WatchCartoonOnline(CBaseHostClass):
         data = self.cm.ph.getDataBeetwenNodes(data, ('<ul', '>', 'items'), ('</ul', '>'), False)[1]
         data = self.cm.ph.getAllItemsBeetwenMarkers(data, '<li', '</li>')
         for item in data:
-            url = self.getFullUrl( self.cm.ph.getSearchGroups(item, '''href=['"]([^"^']+?)['"]''')[0] )
+            url = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''href=['"]([^"^']+?)['"]''')[0])
             title = self.cleanHtmlStr(item)
-            icon  = self.getFullIconUrl( self.cm.ph.getSearchGroups(item, '''<img[^>]+?src=['"]([^"^']+?)['"]''')[0] )
+            icon  = self.getFullIconUrl(self.cm.ph.getSearchGroups(item, '''<img[^>]+?src=['"]([^"^']+?)['"]''')[0])
             
             try:
                 url = self.getFullUrl(urlparse(url).path)
@@ -321,7 +321,7 @@ class WatchCartoonOnline(CBaseHostClass):
         category = self.currItem.get("category", '')
         mode     = self.currItem.get("mode", '')
         
-        printDBG( "handleService: || name[%s], category[%s] " % (name, category) )
+        printDBG("handleService: || name[%s], category[%s] " % (name, category))
         self.currList = []
         self.currItem = dict(self.currItem)
         self.currItem.pop('good_for_fav', None)

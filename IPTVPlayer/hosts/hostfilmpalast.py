@@ -29,7 +29,7 @@ class FilmPalastTo(CBaseHostClass):
         self.USER_AGENT = 'Mozilla/5.0'
         self.HEADER = {'User-Agent': self.USER_AGENT, 'Accept': 'text/html'}
         self.AJAX_HEADER = dict(self.HEADER)
-        self.AJAX_HEADER.update( {'X-Requested-With': 'XMLHttpRequest'} )
+        self.AJAX_HEADER.update({'X-Requested-With': 'XMLHttpRequest'})
         
         self.defaultParams = {'header':self.HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
         
@@ -42,11 +42,11 @@ class FilmPalastTo(CBaseHostClass):
     def selectDomain(self):
         self.MAIN_URL = 'http://filmpalast.to/'
         self.MAIN_CAT_TAB = [{'category':'list_items',      'title': _("Main"),      'url':self.getMainUrl()},
-                             {'category':'movies',          'title': _("Movies")                            },
-                             {'category': 'series',          'title': _("Series"),                           },
+                             {'category':'movies',          'title': _("Movies")},
+                             {'category': 'series',          'title': _("Series"),},
                              
                              {'category': 'search',          'title': _('Search'), 'search_item': True, },
-                             {'category': 'search_history',  'title': _('Search history'),             },
+                             {'category': 'search_history',  'title': _('Search history'),},
                             ]
                             
         self.MOVIES_CAT_TAB = [{'category':'list_items',    'title': _("New"),                'url':self.getFullUrl('/movies/new')},
@@ -337,7 +337,7 @@ class FilmPalastTo(CBaseHostClass):
         
         title = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(data, '<h2', '</h2>')[1])
         desc = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(data, '<span class="hidden', '</span>')[1])
-        icon = self.getFullIconUrl( self.cm.ph.getSearchGroups(data, '''src=['"]([^"^']+\.jpe?g)['"]''')[0] )
+        icon = self.getFullIconUrl(self.cm.ph.getSearchGroups(data, '''src=['"]([^"^']+\.jpe?g)['"]''')[0])
         
         tmpTab = []
         tmp = self.cm.ph.getDataBeetwenMarkers(data, 'enre</p>', '</li>', False)[1]
@@ -398,7 +398,7 @@ class FilmPalastTo(CBaseHostClass):
         if icon == '':
             icon = cItem.get('icon', self.DEFAULT_ICON_URL)
         
-        return [{'title':self.cleanHtmlStr( title ), 'text': self.cleanHtmlStr( desc ), 'images':[{'title':'', 'url':self.getFullUrl(icon)}], 'other_info':otherInfo}]
+        return [{'title':self.cleanHtmlStr(title), 'text': self.cleanHtmlStr(desc), 'images':[{'title':'', 'url':self.getFullUrl(icon)}], 'other_info':otherInfo}]
 
     def handleService(self, index, refresh=0, searchPattern='', searchType=''):
         printDBG('handleService start')
@@ -412,7 +412,7 @@ class FilmPalastTo(CBaseHostClass):
         category = self.currItem.get("category", '')
         mode     = self.currItem.get("mode", '')
         
-        printDBG( "handleService: |||||||||||||||||||||||||||||||||||| name[%s], category[%s] " % (name, category) )
+        printDBG("handleService: |||||||||||||||||||||||||||||||||||| name[%s], category[%s] " % (name, category))
         self.currList = []
         
     #MAIN MENU

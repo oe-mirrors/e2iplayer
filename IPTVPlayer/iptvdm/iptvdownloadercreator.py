@@ -71,10 +71,10 @@ def DownloaderCreator(url):
     
     return downloader
 
-def UpdateDownloaderCreator( url):
+def UpdateDownloaderCreator(url):
     printDBG("UpdateDownloaderCreator url[%s]" % url)
     if url.startswith('https'):
-        if IsExecutable( DMHelper.GET_WGET_PATH() ): 
+        if IsExecutable(DMHelper.GET_WGET_PATH()): 
             printDBG("UpdateDownloaderCreator WgetDownloader")
             return WgetDownloader()
         elif IsExecutable('python'): 
@@ -84,7 +84,7 @@ def UpdateDownloaderCreator( url):
         if IsExecutable('wget'):
             printDBG("UpdateDownloaderCreator BuxyboxWgetDownloader")
             return BuxyboxWgetDownloader()
-        elif IsExecutable( DMHelper.GET_WGET_PATH() ): 
+        elif IsExecutable(DMHelper.GET_WGET_PATH()): 
             printDBG("UpdateDownloaderCreator WgetDownloader")
             return WgetDownloader()
         elif IsExecutable('python'): 

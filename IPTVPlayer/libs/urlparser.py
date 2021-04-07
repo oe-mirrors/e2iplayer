@@ -85,7 +85,7 @@ class urlparser:
         
     @staticmethod
     def getDomain(url, onlyDomain=True):
-        parsed_uri = urlparse( url )
+        parsed_uri = urlparse(url)
         if onlyDomain:
             domain = '{uri.netloc}'.format(uri=parsed_uri)
         else:
@@ -131,7 +131,7 @@ class urlparser:
                     hostName = self.getHostName(url, True)
                     i=i+1
                     if resolveLink:
-                        url = self.getVideoLink( url )
+                        url = self.getVideoLink(url)
                     if isinstance(url, str) and url.startswith('http'):
                         valTab.append({'name': (str(i) + '. ' + hostName), 'url': url})
         return valTab
@@ -741,7 +741,7 @@ class urlparser:
                 url = strwithmeta(url)
                 HTTP_HEADER = dict(pageParser.HTTP_HEADER) 
                 HTTP_HEADER['Referer'] = url.meta.get('Referer', url)
-                sts, data = self.cm.getPage(url, {'header' : HTTP_HEADER})
+                sts, data = self.cm.getPage(url, {'header': HTTP_HEADER})
                 if not sts:
                     return []
             data = re.sub("<!--[\s\S]*?-->", "", data)
@@ -1084,9 +1084,9 @@ class urlparser:
             return []
 
 class pageParser(CaptchaHelper):
-    HTTP_HEADER= {  'User-Agent'  : 'Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/59.0.3071.115 Safari/537.36',
-                    'Accept'      :  'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
-                    'Content-type': 'application/x-www-form-urlencoded' }
+    HTTP_HEADER= {'User-Agent': 'Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/59.0.3071.115 Safari/537.36',
+                    'Accept':  'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
+                    'Content-type': 'application/x-www-form-urlencoded'}
     FICHIER_DOWNLOAD_NUM = 0
     def __init__(self):
         self.cm = common()
@@ -1272,7 +1272,7 @@ class pageParser(CaptchaHelper):
         return False
         
     def _parserUNIVERSAL_A(self, baseUrl, embedUrl, _findLinks, _preProcessing=None, httpHeader={}, params={}):
-        HTTP_HEADER = { 'User-Agent':"Mozilla/5.0"}
+        HTTP_HEADER = {'User-Agent':"Mozilla/5.0"}
         if 'Referer' in strwithmeta(baseUrl).meta:
             HTTP_HEADER['Referer'] = strwithmeta(baseUrl).meta['Referer']
         HTTP_HEADER.update(httpHeader)
@@ -1319,7 +1319,7 @@ class pageParser(CaptchaHelper):
             jscode += vplayerData
             vplayerData = ''
             tmp = []
-            ret = js_execute( jscode )
+            ret = js_execute(jscode)
             if ret['sts'] and 0 == ret['code'] or 'sources' in ret.get('data', ''):
                 vplayerData = ret['data'].strip()
         
@@ -1330,7 +1330,7 @@ class pageParser(CaptchaHelper):
             mrk2 = 'eval("'
             if mrk1  in data:
                 m1 = mrk1
-            elif mrk2 in data :
+            elif mrk2 in data:
                 m1 = mrk2
             else:
                 m1 = "eval(" 
@@ -1360,7 +1360,7 @@ class pageParser(CaptchaHelper):
         post_data = None
         
         if '/embed' not in url: 
-            sts, data = self.cm.getPage( url, {'header':{'User-Agent': userAgent}} )
+            sts, data = self.cm.getPage(url, {'header':{'User-Agent': userAgent}})
             if not sts:
                 return False
             try:
@@ -1376,7 +1376,7 @@ class pageParser(CaptchaHelper):
             except Exception:
                 printExc()
         videoTab = []
-        params = {'header':{ 'User-Agent': userAgent, 'Content-Type':'application/x-www-form-urlencoded','Referer':url} }
+        params = {'header':{'User-Agent': userAgent, 'Content-Type':'application/x-www-form-urlencoded','Referer':url}}
         try:
             sts, data = self.cm.getPage(url, params, post_data)
             #printDBG(data)
@@ -1437,14 +1437,14 @@ class pageParser(CaptchaHelper):
             tries -= 1
             HTTP_HEADER = dict(self.HTTP_HEADER) 
             HTTP_HEADER['Referer'] = baseUrl
-            sts, data = self.cm.getPage(baseUrl, {'header' : HTTP_HEADER})
+            sts, data = self.cm.getPage(baseUrl, {'header': HTTP_HEADER})
 
             if sts:
                 HTTP_HEADER = dict(self.HTTP_HEADER) 
                 HTTP_HEADER['Referer'] = baseUrl
                 url = self.cm.ph.getSearchGroups(data, 'iframe[ ]+src="(https?://[^"]*?embed[^"]+?)"')[0]
                 if '' != url and (serverName in url or folowIframe): 
-                    sts, data = self.cm.getPage(url, {'header' : HTTP_HEADER}) 
+                    sts, data = self.cm.getPage(url, {'header': HTTP_HEADER}) 
                 else:
                     url = baseUrl
             
@@ -1468,7 +1468,7 @@ class pageParser(CaptchaHelper):
                                     GetIPTVSleep().Sleep(sleep_time)
                                 printExc()
                         HTTP_HEADER['Referer'] = url
-                        sts, data = self.cm.getPage(url, {'header' : HTTP_HEADER}, post_data)
+                        sts, data = self.cm.getPage(url, {'header': HTTP_HEADER}, post_data)
                         if sts:
                             tmp = self.cm.ph.getAllItemsBeetwenMarkers(data, ">eval(", '</script>')
                             for tmpItem in tmp:
@@ -1488,13 +1488,13 @@ class pageParser(CaptchaHelper):
         return linkList
             
     def parserFIREDRIVE(self, url):
-        HTTP_HEADER= { 'User-Agent':'Mozilla/5.0 (X11; Ubuntu; Linux i686; rv:21.0) Gecko/20100101 Firefox/21.0',
-                       'Accept':'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' }
+        HTTP_HEADER= {'User-Agent':'Mozilla/5.0 (X11; Ubuntu; Linux i686; rv:21.0) Gecko/20100101 Firefox/21.0',
+                       'Accept':'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8'}
         COOKIEFILE = self.COOKIE_PATH + "firedrive.cookie"
         url = url.replace('putlocker', 'firedrive').replace('file', 'embed')
         HTTP_HEADER['Referer'] = url
         
-        sts, data = self.cm.getPage( url, {'header':HTTP_HEADER, 'use_cookie': True, 'save_cookie': True, 'load_cookie': False, 'cookiefile': COOKIEFILE} )
+        sts, data = self.cm.getPage(url, {'header':HTTP_HEADER, 'use_cookie': True, 'save_cookie': True, 'load_cookie': False, 'cookiefile': COOKIEFILE})
         if not sts:
             return False
         if not 'Continue to ' in data:
@@ -1502,8 +1502,8 @@ class pageParser(CaptchaHelper):
         data = re.search('name="confirm" value="([^"]+?)"', data)
         if not data:
             return False
-        data = {'confirm' : data.group(1)}
-        sts, data = self.cm.getPage( url, {'header':HTTP_HEADER, 'use_cookie': True, 'save_cookie': True, 'load_cookie': True, 'cookiefile': COOKIEFILE}, data)
+        data = {'confirm': data.group(1)}
+        sts, data = self.cm.getPage(url, {'header':HTTP_HEADER, 'use_cookie': True, 'save_cookie': True, 'load_cookie': True, 'cookiefile': COOKIEFILE}, data)
         if not sts:
             return False
         sts, link_data = CParsingHelper.getDataBeetwenMarkers(data, "function getVideoUrl(){", 'return', False)
@@ -1562,7 +1562,7 @@ class pageParser(CaptchaHelper):
             vidHash = re.search("([0-9a-fA-F]{32})$", url)
             if not vidHash:
                 return False
-            paramsUrl.update( {'use_cookie': True, 'load_cookie':False, 'save_cookie':False} )
+            paramsUrl.update({'use_cookie': True, 'load_cookie':False, 'save_cookie':False})
             url = "http://www.wgrane.pl/index.html?%s=%s" % (agree, vidHash.group(1))
             sts, data = self.cm.getPage(url, paramsUrl)
             if not sts:
@@ -1612,10 +1612,10 @@ class pageParser(CaptchaHelper):
             for cookie in cj:
                 if (cookie.name == 'vToken' and cookie.path in inUrl) or cookie.name == 'PHPSESSID':
                     cookies.append('%s=%s;' % (cookie.name, cookie.value))
-                    printDBG(">> \t%s \t%s \t%s \t%s" % (cookie.domain, cookie.path, cookie.name, cookie.value) )
+                    printDBG(">> \t%s \t%s \t%s \t%s" % (cookie.domain, cookie.path, cookie.name, cookie.value))
 
             # prepare extended link
-            retUrl = strwithmeta( inUrl )
+            retUrl = strwithmeta(inUrl)
             retUrl.meta['User-Agent']        = HTTP_HEADER['User-Agent']
             retUrl.meta['Referer']           = referer
             retUrl.meta['Cookie']            = ' '.join(cookies)
@@ -1711,7 +1711,7 @@ class pageParser(CaptchaHelper):
             tmp = self.cm.ph.getSearchGroups(jsdata, '''\(this\.options,"video"\)&&\((.*?)=this\.options\.video\);''')[0] + "."
             jscode += self.cm.ph.getDataBeetwenMarkers(jsdata, "%sfile" % tmp, ';', True)[1].replace(tmp, '')
             jscode += 'print(file);'
-            ret = js_execute( jscode )
+            ret = js_execute(jscode)
             if ret['sts'] and 0 == ret['code']:
                 return  ret['data'].strip('\n')
             else:
@@ -1761,9 +1761,9 @@ class pageParser(CaptchaHelper):
             else:
                 data = [tmp]
             if 0 < len(data) and data[0].startswith('http'):
-                __appendVideoUrl( {'name': urlItem['name'] + ' flv', 'url':_decorateUrl(data[0], 'cda.pl', urlItem['url']) } )
+                __appendVideoUrl({'name': urlItem['name'] + ' flv', 'url':_decorateUrl(data[0], 'cda.pl', urlItem['url'])})
             if 1 < len(data) and data[1].startswith('http'):
-                __appendVideoUrl( {'name': urlItem['name'] + ' mp4', 'url':_decorateUrl(data[1], 'cda.pl', urlItem['url']) } )
+                __appendVideoUrl({'name': urlItem['name'] + ' mp4', 'url':_decorateUrl(data[1], 'cda.pl', urlItem['url'])})
             if 0 == len(data):
                 data = self.cm.ph.getDataBeetwenReMarkers(tmpData, re.compile('video:[\s]*{'), re.compile('}'), False)[1]
                 data = self.cm.ph.getSearchGroups(data, "'(http[^']+?(?:\.mp4|\.flv)[^']*?)'")[0]
@@ -1771,7 +1771,7 @@ class pageParser(CaptchaHelper):
                     type = ' flv '
                     if '.mp4' in data:
                         type = ' mp4 '
-                    __appendVideoUrl( {'name': urlItem['name'] + type, 'url':_decorateUrl(data, 'cda.pl', urlItem['url']) } )
+                    __appendVideoUrl({'name': urlItem['name'] + type, 'url':_decorateUrl(data, 'cda.pl', urlItem['url'])})
         return videoUrls[::-1]
 
     def parserDWN(self, url):
@@ -1783,7 +1783,7 @@ class pageParser(CaptchaHelper):
                 return False
             match = re.search('src="([^"]+?)" width=', url)
             if match:
-                sts, url = self.cm.getPage( match.group(1) )
+                sts, url = self.cm.getPage(match.group(1))
                 if not sts:
                     return False
             match = re.search("play4.swf([^']+?)',", url)
@@ -1838,7 +1838,7 @@ class pageParser(CaptchaHelper):
     def parserNOWVIDEO(self, baseUrl):
         urlTab = []
 
-        HTTP_HEADER= { 'User-Agent':"Mozilla/5.0" }
+        HTTP_HEADER= {'User-Agent':"Mozilla/5.0"}
         
         COOKIE_FILE = GetCookieDir('nowvideo.sx')
         params_s  = {'header':HTTP_HEADER, 'cookiefile':COOKIE_FILE, 'use_cookie': True, 'save_cookie':True}
@@ -1883,8 +1883,8 @@ class pageParser(CaptchaHelper):
         sts, link = self.cm.getPage(url)
         r = re.search('value="(.+?)" name="fuck_you"', link)
         if r:
-            params = { 'url': url.replace('file', 'embed'), 'use_cookie': True, 'save_cookie': True, 'load_cookie': False, 'cookiefile': GetCookieDir("sockshare.cookie")}
-            postdata = {'fuck_you' : r.group(1), 'confirm' : 'Close Ad and Watch as Free User'}
+            params = {'url': url.replace('file', 'embed'), 'use_cookie': True, 'save_cookie': True, 'load_cookie': False, 'cookiefile': GetCookieDir("sockshare.cookie")}
+            postdata = {'fuck_you': r.group(1), 'confirm': 'Close Ad and Watch as Free User'}
             
             sts, link = self.cm.getPage(url, params, postdata)
 
@@ -2125,7 +2125,7 @@ class pageParser(CaptchaHelper):
         printDBG("parserVK url[%s]" % baseUrl)
         
         COOKIE_FILE = GetCookieDir('vkcom.cookie')
-        HTTP_HEADER= { 'User-Agent':'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/52.0.2743.116 Safari/537.36'}
+        HTTP_HEADER= {'User-Agent':'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/52.0.2743.116 Safari/537.36'}
         params = {'header':HTTP_HEADER, 'cookiefile':COOKIE_FILE, 'use_cookie': True, 'save_cookie':True, 'load_cookie':True}
         
         def _doLogin(login, password):
@@ -2181,11 +2181,11 @@ class pageParser(CaptchaHelper):
             
             if login.strip() == '' or password.strip() == '':
                 sessionEx = MainSessionWrapper() 
-                sessionEx.waitForFinishOpen(MessageBox, _('To watch videos from http://vk.com/ you need to login.\nPlease fill your login and password in the IPTVPlayer configuration.'), type=MessageBox.TYPE_INFO, timeout=10 )
+                sessionEx.waitForFinishOpen(MessageBox, _('To watch videos from http://vk.com/ you need to login.\nPlease fill your login and password in the IPTVPlayer configuration.'), type=MessageBox.TYPE_INFO, timeout=10)
                 return False
             elif not _doLogin(login, password):
                 sessionEx = MainSessionWrapper() 
-                sessionEx.waitForFinishOpen(MessageBox, _('Login user "%s" to http://vk.com/ failed!\nPlease check your login data in the IPTVPlayer configuration.' % login), type=MessageBox.TYPE_INFO, timeout=10 )
+                sessionEx.waitForFinishOpen(MessageBox, _('Login user "%s" to http://vk.com/ failed!\nPlease check your login data in the IPTVPlayer configuration.' % login), type=MessageBox.TYPE_INFO, timeout=10)
                 return False
             else:
                 sts, data = self.cm.getPage(baseUrl, params)
@@ -2197,7 +2197,7 @@ class pageParser(CaptchaHelper):
         movieUrls = []
         item = self.cm.ph.getSearchGroups(data, '''['"]?cache([0-9]+?)['"]?[=:]['"]?(http[^"]+?\.mp4[^;^"^']*)[;"']''', 2)
         if '' != item[1]:
-            cacheItem = { 'name': 'vk.com: ' + item[0] + 'p (cache)', 'url':item[1].replace('\\/', '/').encode('UTF-8') }
+            cacheItem = {'name': 'vk.com: ' + item[0] + 'p (cache)', 'url':item[1].replace('\\/', '/').encode('UTF-8')}
         else:
             cacheItem = None
         
@@ -2214,7 +2214,7 @@ class pageParser(CaptchaHelper):
                     found = True
                     break
             if not found:        
-                movieUrls.append({ 'name': 'vk.com: ' + item[0] + 'p', 'url':item[1].encode('UTF-8') })
+                movieUrls.append({'name': 'vk.com: ' + item[0] + 'p', 'url':item[1].encode('UTF-8')})
         ##move default format to first position in urls list
         ##default format should be a configurable
         DEFAULT_FORMAT = 'vk.com: 720p'
@@ -2256,7 +2256,7 @@ class pageParser(CaptchaHelper):
         
         if len(match) > 0:
             linkVideo = match[0]
-            printDBG ('linkVideo ' + linkVideo)
+            printDBG('linkVideo ' + linkVideo)
             return linkVideo
         else:
             SetIPTVPlayerLastHostError('Przepraszamy\nObecnie zbyt dużo osób ogląda film za pomocą\ndarmowego playera premium.\nSproboj ponownie za jakis czas')
@@ -2275,7 +2275,7 @@ class pageParser(CaptchaHelper):
         HTTP_HEADER = dict(self.HTTP_HEADER)
         HTTP_HEADER['User-Agent'] = USER_AGENT
         HTTP_HEADER['Referer'] = baseUrl
-        sts, data = self.cm.getPage(baseUrl, {'header' : HTTP_HEADER})
+        sts, data = self.cm.getPage(baseUrl, {'header': HTTP_HEADER})
         
         tries = 0
         while tries < 3:
@@ -2294,7 +2294,7 @@ class pageParser(CaptchaHelper):
                 continue
             post_data = dict(re.findall(r'<input[^>]*name="([^"]*)"[^>]*value="([^"]*)"[^>]*>', data))
             HTTP_HEADER['Referer'] = url
-            sts, data = self.cm.getPage(url, {'header' : HTTP_HEADER}, post_data)
+            sts, data = self.cm.getPage(url, {'header': HTTP_HEADER}, post_data)
             if not sts:
                 continue
             #printDBG(data)
@@ -2318,7 +2318,7 @@ class pageParser(CaptchaHelper):
         HASH = re.search('name="hash" value="(.+?)">', link)
         if ID and FNAME and HASH > 0:
             GetIPTVSleep().Sleep(105)
-            postdata = {'fname' : FNAME.group(1), 'hash' : HASH.group(1), 'id' : ID.group(1), 'imhuman' : 'Proceed to video', 'op' : 'download1', 'referer' : url, 'usr_login' : '' }
+            postdata = {'fname': FNAME.group(1), 'hash': HASH.group(1), 'id': ID.group(1), 'imhuman': 'Proceed to video', 'op': 'download1', 'referer': url, 'usr_login': ''}
             params.update({'save_cookie': False, 'load_cookie': True})
             sts, link = self.cm.getPage(url, params, postdata)
             match = re.compile('file: "(.+?)"').findall(link)
@@ -2403,14 +2403,14 @@ class pageParser(CaptchaHelper):
         ID = re.search('name="id" value="(.+?)">', link)
         FNAME = re.search('name="fname" value="(.+?)">', link)
         if ID and FNAME > 0:
-            postdata = { 'op': 'download1', 'id': ID.group(1), 'fname': FNAME.group(1), 'referer': url, 'method_free': 'Free Download', 'usr_login': '' }
+            postdata = {'op': 'download1', 'id': ID.group(1), 'fname': FNAME.group(1), 'referer': url, 'method_free': 'Free Download', 'usr_login': ''}
             sts, link = self.cm.getPage(url, {}, postdata)
             data = link.replace('|', '<>')
             PL = re.search('<>player<>(.+?)<>flvplayer<>', data)
             HS = re.search('video<>(.+?)<>(.+?)<>file<>', data)
             if PL and HS > 0:
                 linkVideo = 'http://' + PL.group(1) + '.ginbig.com:' + HS.group(2) + '/d/' + HS.group(1) + '/video.mp4?start=0'
-                print ('linkVideo ' + linkVideo)
+                print('linkVideo ' + linkVideo)
                 return linkVideo
             else:
                 return False
@@ -2421,7 +2421,7 @@ class pageParser(CaptchaHelper):
         match = re.compile('"PSST",url: "(.+?)"').findall(self.cm.getPage(url)[1])
         if len(match) > 0:
             linkVideo = match[0]
-            print ('linkVideo ' + linkVideo)
+            print('linkVideo ' + linkVideo)
             return linkVideo
         else:
             return False
@@ -2481,16 +2481,16 @@ class pageParser(CaptchaHelper):
         FNAME = re.search('name="fname" value="(.+?)">', link)
         if ID and FNAME > 0:
             GetIPTVSleep().Sleep(205)
-            postdata = {'fname' : FNAME.group(1), 'id' : ID.group(1), 'method_free' : 'Continue to Video', 'op' : 'download1', 'referer' : url, 'usr_login' : '' }
+            postdata = {'fname': FNAME.group(1), 'id': ID.group(1), 'method_free': 'Continue to Video', 'op': 'download1', 'referer': url, 'usr_login': ''}
             sts, link = self.cm.getPage(url, {}, postdata)
             ID = re.search('name="id" value="(.+?)">', link)
             RAND = re.search('name="rand" value="(.+?)">', link)
             table = self.captcha.textCaptcha(link)
-            value = table[0][0] + table [1][0] + table [2][0] + table [3][0]
+            value = table[0][0] + table[1][0] + table[2][0] + table[3][0]
             code = clean_html(value)
             printDBG('captcha-code :' + code)
             if ID and RAND > 0:
-                postdata = {'rand' : RAND.group(1), 'id' : ID.group(1), 'method_free' : 'Continue to Video', 'op' : 'download2', 'referer' : url, 'down_direct' : '1', 'code' : code, 'method_premium' : '' }
+                postdata = {'rand': RAND.group(1), 'id': ID.group(1), 'method_free': 'Continue to Video', 'op': 'download2', 'referer': url, 'down_direct': '1', 'code': code, 'method_premium': ''}
                 sts, link = self.cm.getPage(url, {}, postdata)
                 data = link.replace('|', '<>')
                 PL = re.search('<>player<>video<>(.+?)<>(.+?)<>(.+?)<><>(.+?)<>flvplayer<>', data)
@@ -2505,12 +2505,12 @@ class pageParser(CaptchaHelper):
         sts, link = self.cm.getPage(url)
         ID = re.search('"(.+?)"; ccc', link)
         if ID > 0:
-            postdata = {'f' : ID.group(1) }
+            postdata = {'f': ID.group(1)}
             sts, link = self.cm.getPage('http://scs.pl/getVideo.html', {}, postdata)
             match = re.compile("url: '(.+?)',").findall(link)
             if len(match) > 0:
                 linkVideo = match[0]
-                print ('linkVideo ' + linkVideo)
+                print('linkVideo ' + linkVideo)
                 return linkVideo
             else:
                 print(('Przepraszamy', 'Obecnie zbyt dużo osób ogląda film za pomocą', 'darmowego playera premium.', 'Sproboj ponownie za jakis czas'))
@@ -2524,7 +2524,7 @@ class pageParser(CaptchaHelper):
         else:
             url = baseUrl.replace('org/', 'org/embed-').replace('to/', 'to/embed-') + '.html'
         COOKIE_FILE = GetCookieDir('youwatchorg.cookie')
-        HTTP_HEADER= { 'User-Agent':'Mozilla/5.0'}
+        HTTP_HEADER= {'User-Agent':'Mozilla/5.0'}
         params = {'header':HTTP_HEADER, 'cookiefile':COOKIE_FILE, 'use_cookie': True, 'save_cookie':True, 'load_cookie':True}
         
         tries = 0
@@ -2680,7 +2680,7 @@ class pageParser(CaptchaHelper):
         if video_id == '':
             video_id = self.cm.ph.getSearchGroups(baseUrl + '&', 'ref=([A-Za-z0-9]+)[^A-Za-z0-9]')[0]
         COOKIE_FILE = GetCookieDir('videomegatv.cookie')
-        HTTP_HEADER= { 'User-Agent':'Mozilla/5.0 (X11; Linux i686) AppleWebKit/537.36 (KHTML, like Gecko) Ubuntu Chromium/37.0.2062.120 Chrome/37.0.2062.120 Safari/537.36',
+        HTTP_HEADER= {'User-Agent':'Mozilla/5.0 (X11; Linux i686) AppleWebKit/537.36 (KHTML, like Gecko) Ubuntu Chromium/37.0.2062.120 Chrome/37.0.2062.120 Safari/537.36',
                        'Accept-Encoding':  'gzip,deflate,sdch'} # (iPad; U; CPU OS 3_2 like Mac OS X; en-us) AppleWebKit/531.21.10 (KHTML, like Gecko) Version/4.0.4 Mobile/7B334b Safari/531.21.10' }
         params = {'header':HTTP_HEADER, 'cookiefile':COOKIE_FILE, 'use_cookie': True, 'save_cookie':True}
         
@@ -2771,13 +2771,13 @@ class pageParser(CaptchaHelper):
 
     def parserVIDTO(self, baseUrl):
         printDBG('parserVIDTO baseUrl[%s]' % baseUrl)
-        HTTP_HEADER= { 'User-Agent':"Mozilla/5.0", 'Referer':baseUrl }
+        HTTP_HEADER= {'User-Agent':"Mozilla/5.0", 'Referer':baseUrl}
         if 'embed' not in baseUrl:
             video_id = self.cm.ph.getSearchGroups(baseUrl+'/', '/([A-Za-z0-9]{12})[\./]')[0]
             url = 'http://vidto.me/embed-{0}-640x360.html'.format(video_id)
         else:
             url = baseUrl 
-        params = {'header' : HTTP_HEADER}
+        params = {'header': HTTP_HEADER}
         sts, data = self.cm.getPage(url, params)
         
         if '<b>File Not Found</b>' in data:
@@ -2828,12 +2828,12 @@ class pageParser(CaptchaHelper):
         if ID and FNAME and HASH > 0:
             # previous version
             GetIPTVSleep().Sleep(55)
-            postdata = {'fname' : FNAME.group(1), 'id' : ID.group(1), 'hash' : HASH.group(1), 'imhuman' : 'Proceed to video', 'op' : 'download1', 'referer' : url, 'usr_login' : '' }
+            postdata = {'fname': FNAME.group(1), 'id': ID.group(1), 'hash': HASH.group(1), 'imhuman': 'Proceed to video', 'op': 'download1', 'referer': url, 'usr_login': ''}
             sts, link = self.cm.getPage(url, {}, postdata)
             match = re.compile('file: "(.+?)",').findall(link)
             if len(match) > 0:
                 linkVideo = match[0]
-                printDBG ('linkVideo :' + linkVideo)
+                printDBG('linkVideo :' + linkVideo)
                 return linkVideo
             else:
                 return False
@@ -2937,7 +2937,7 @@ class pageParser(CaptchaHelper):
 #                            printDBG("------------ deloplen[%s]" % data)
 
                             cv_url = "https://vidstream.to/cv.php?verify=" + bigString
-                            postData={ post_key : 'ok'}
+                            postData={post_key: 'ok'}
                             AJAX_HEADER = {
                                 'Accept': '*/*',
                                 'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
@@ -3024,7 +3024,7 @@ class pageParser(CaptchaHelper):
                 fileName = FORMATS_MAP.get(videoFormat.tag, '')
                 if '' != fileName:
                     bitrate  = int(videoFormat.get('bitrate', 0))
-                    formatItem = { 'bitrate': bitrate, 'file':fileName, 'ext':fileName[-3:] }
+                    formatItem = {'bitrate': bitrate, 'file':fileName, 'ext':fileName[-3:]}
                     if DEFAULT_FORMAT == videoFormat.tag:
                         defaultItem = formatItem
                     else:
@@ -3047,7 +3047,7 @@ class pageParser(CaptchaHelper):
                 sts, location = self.cm.getPage(location)
                 sts, location = CParsingHelper.getDataBeetwenMarkers(location, "<video-location>", '</video-location>', False)
                 if sts:
-                    movieUrls.append({ 'name': 'yandex.ru: ' + item['ext'] + ' bitrate: ' + str(item['bitrate']), 'url':location.replace('&amp;', '&') })
+                    movieUrls.append({'name': 'yandex.ru: ' + item['ext'] + ' bitrate: ' + str(item['bitrate']), 'url':location.replace('&amp;', '&')})
                 else:
                     printDBG("parserYANDEX - get location problem")
             return movieUrls
@@ -3105,7 +3105,7 @@ class pageParser(CaptchaHelper):
         return videoUrls
     
     def parserYOUTUBE(self, url):
-        def __getLinkQuality( itemLink ):
+        def __getLinkQuality(itemLink):
             val = itemLink['format'].split('x', 1)[0].split('p', 1)[0]
             try:
                 val = int(val) if 'x' in itemLink['format'] else int(val) - 1
@@ -3135,7 +3135,7 @@ class pageParser(CaptchaHelper):
             videoUrls = []
             for item in tmpTab:
                 url = strwithmeta(item['url'], {'youtube_id':item.get('id', '')})
-                videoUrls.append({ 'name': 'YouTube | {0}: {1}'.format(item['ext'], item['format']), 'url':url, 'format':item.get('format', '')})
+                videoUrls.append({'name': 'YouTube | {0}: {1}'.format(item['ext'], item['format']), 'url':url, 'format':item.get('format', '')})
             for item in dashTab:
                 url = strwithmeta(item['url'], {'youtube_id':item.get('id', '')})
                 if item.get('ext', '') == 'mpd':
@@ -3155,7 +3155,7 @@ class pageParser(CaptchaHelper):
             match = re.search("url: '([^']+?.mp4|[^']+?.flv)',", data)
             if match:
                 linkVideo = match.group(1)
-                printDBG ('parserTINYMOV linkVideo :' + linkVideo)
+                printDBG('parserTINYMOV linkVideo :' + linkVideo)
                 return linkVideo
             
         return False
@@ -3225,7 +3225,7 @@ class pageParser(CaptchaHelper):
                 if 'eval' in item:
                     item = self.cm.ph.getDataBeetwenReMarkers(item, re.compile('<script[^>]*?>'), re.compile('</script>'), False)[1]
                     jscode = base64.b64decode('''dmFyIGRvY3VtZW50ID0ge307DQpkb2N1bWVudC53cml0ZSA9IGZ1bmN0aW9uIChzdHIpDQp7DQogICAgcHJpbnQoc3RyKTsNCn07DQoNCiVz''') % (item)
-                    ret = js_execute( jscode )
+                    ret = js_execute(jscode)
                     if ret['sts'] and 0 == ret['code']:
                         item = self.cm.ph.getSearchGroups(ret['data'], '''<script[^>]+?src=['"]([^'^"]+?)['"]''')[0]
                         if item != '':
@@ -3235,7 +3235,7 @@ class pageParser(CaptchaHelper):
                                 jscode = self.cm.ph.getDataBeetwenReMarkers(data, re.compile('var\s*jwConfig[^=]*\s*=\s*\{'), re.compile('\};'))[1]
                                 varName = jscode[3:jscode.find('=')].strip()
                                 jscode = base64.b64decode('''JXMNCnZhciBpcHR2YWxhID0gandDb25maWcoJXMpOw0KcHJpbnQoSlNPTi5zdHJpbmdpZnkoaXB0dmFsYSkpOw==''') % (item + '\n' + jscode, varName)
-                                ret = js_execute( jscode )
+                                ret = js_execute(jscode)
                                 if ret['sts'] and 0 == ret['code']:
                                     printDBG(ret['data'])
                                     return ret['data']
@@ -3257,7 +3257,7 @@ class pageParser(CaptchaHelper):
                 jscode += item
         linksTab = []
         jscode = base64.b64decode('''dmFyIGlwdHZfc3JjZXM9W10sZG9jdW1lbnQ9e30sd2luZG93PXRoaXM7ZG9jdW1lbnQud3JpdGU9ZnVuY3Rpb24oKXt9O3ZhciBqd3BsYXllcj1mdW5jdGlvbigpe3JldHVybntzZXR1cDpmdW5jdGlvbih0KXt0cnl7aXB0dl9zcmNlcy5wdXNoKHQuZmlsZSl9Y2F0Y2gobil7fX19fTsgJXM7cHJpbnQoSlNPTi5zdHJpbmdpZnkoaXB0dl9zcmNlcykpOw==''') % jscode
-        ret = js_execute( jscode )
+        ret = js_execute(jscode)
         if ret['sts'] and 0 == ret['code']:
             data = json_loads(ret['data'])
             for url in data:
@@ -3290,7 +3290,7 @@ class pageParser(CaptchaHelper):
         urlTab = []
         try:
             jscode = '\n'.join(jscode)
-            ret = js_execute( jscode )
+            ret = js_execute(jscode)
             tmp = json_loads(ret['data'])
             for item in tmp['sources']:
                 url = item['file']
@@ -3362,7 +3362,7 @@ class pageParser(CaptchaHelper):
                 jscode.append(item)
         
         jscode = '\n'.join(jscode)
-        ret = js_execute( jscode )
+        ret = js_execute(jscode)
         try:
             data = json_loads(ret['data'])['tracks']
             for tmp in data:
@@ -3395,7 +3395,7 @@ class pageParser(CaptchaHelper):
                 jscode += item
         linksTab = []
         jscode = base64.b64decode('''dmFyIGlwdHZfc3JjZXM9W10sZG9jdW1lbnQ9e30sd2luZG93PXRoaXM7ZG9jdW1lbnQud3JpdGU9ZnVuY3Rpb24oKXt9O3ZhciBqd3BsYXllcj1mdW5jdGlvbigpe3JldHVybntzZXR1cDpmdW5jdGlvbihlKXt0cnl7aXB0dl9zcmNlcy5wdXNoKGUuZmlsZSl9Y2F0Y2gobil7fX19fSxlbGVtZW50PWZ1bmN0aW9uKGUpe3RoaXMucGFyZW50Tm9kZT17aW5zZXJ0QmVmb3JlOmZ1bmN0aW9uKCl7fX19LCQ9ZnVuY3Rpb24oZSl7cmV0dXJuIG5ldyBlbGVtZW50KGUpfTtkb2N1bWVudC5nZXRFbGVtZW50QnlJZD1mdW5jdGlvbihlKXtyZXR1cm4gbmV3IGVsZW1lbnQoZSl9LGRvY3VtZW50LmNyZWF0ZUVsZW1lbnQ9ZG9jdW1lbnQuZ2V0RWxlbWVudEJ5SWQsZG9jdW1lbnQuZ2V0RWxlbWVudHNCeVRhZ05hbWU9ZnVuY3Rpb24oZSl7cmV0dXJuW25ldyBlbGVtZW50KGUpXX07JXM7cHJpbnQoSlNPTi5zdHJpbmdpZnkoaXB0dl9zcmNlcykpOw==''') % jscode
-        ret = js_execute( jscode )
+        ret = js_execute(jscode)
         if ret['sts'] and 0 == ret['code']:
             data = json_loads(ret['data'])
             for url in data:
@@ -3418,7 +3418,7 @@ class pageParser(CaptchaHelper):
         linksTab = []
         hlsTab = []
         jscode = base64.b64decode('''dmFyIGlwdHZfc3JjZXM9W10sZG9jdW1lbnQ9e30sd2luZG93PXRoaXM7ZG9jdW1lbnQud3JpdGU9ZnVuY3Rpb24oKXt9O3ZhciBqd3BsYXllcj1mdW5jdGlvbigpe3JldHVybntzZXR1cDpmdW5jdGlvbihlKXt0cnl7aXB0dl9zcmNlcy5wdXNoLmFwcGx5KGlwdHZfc3JjZXMsZS5zb3VyY2VzKX1jYXRjaChuKXt9fSxvblRpbWU6ZG9jdW1lbnQud3JpdGUsb25QbGF5OmRvY3VtZW50LndyaXRlLG9uQ29tcGxldGU6ZG9jdW1lbnQud3JpdGUsb25QYXVzZTpkb2N1bWVudC53cml0ZSxkb1BsYXk6ZG9jdW1lbnQud3JpdGV9fSxlbGVtZW50PWZ1bmN0aW9uKGUpe3RoaXMucGFyZW50Tm9kZT17aW5zZXJ0QmVmb3JlOmZ1bmN0aW9uKCl7fX19LCQ9ZnVuY3Rpb24oZSl7cmV0dXJuIG5ldyBlbGVtZW50KGUpfTtkb2N1bWVudC5nZXRFbGVtZW50QnlJZD1mdW5jdGlvbihlKXtyZXR1cm4gbmV3IGVsZW1lbnQoZSl9LGRvY3VtZW50LmNyZWF0ZUVsZW1lbnQ9ZG9jdW1lbnQuZ2V0RWxlbWVudEJ5SWQsZG9jdW1lbnQuZ2V0RWxlbWVudHNCeVRhZ05hbWU9ZnVuY3Rpb24oZSl7cmV0dXJuW25ldyBlbGVtZW50KGUpXX07JXM7cHJpbnQoSlNPTi5zdHJpbmdpZnkoaXB0dl9zcmNlcykpOw==''') % jscode
-        ret = js_execute( jscode )
+        ret = js_execute(jscode)
         if ret['sts'] and 0 == ret['code']:
             data = json_loads(ret['data'], '', True)
             for item in data:
@@ -3433,7 +3433,7 @@ class pageParser(CaptchaHelper):
         
     def parserWATCHUPVIDCO(self, baseUrl):
         printDBG("parserWATCHUPVIDCO baseUrl[%r]" % baseUrl)
-        urlParams = {'header':{ 'User-Agent':"Mozilla/5.0", 'Referer':baseUrl }}
+        urlParams = {'header':{'User-Agent':"Mozilla/5.0", 'Referer':baseUrl}}
         url = baseUrl
         subFrameNum = 0
         while subFrameNum < 6:
@@ -3472,7 +3472,7 @@ class pageParser(CaptchaHelper):
         
         jscode.append('print(iptv_decoded_code);')
         
-        ret = js_execute( '\n'.join(jscode) )
+        ret = js_execute('\n'.join(jscode))
         videoUrl = self.cm.ph.getSearchGroups(ret['data'], '''['"](https?://[^"^']+?\.mp4(?:\?[^'^"]+?)?)['"]''', 1, True)[0]
         printDBG(">>")
         printDBG(videoUrl)
@@ -3528,7 +3528,7 @@ class pageParser(CaptchaHelper):
         jscode.insert(0, data[data.find('var S='):])
         jscode.insert(0, base64.b64decode('''aXB0dl9zb3VyY2VzPVtdO3ZhciBkb2N1bWVudD17fTt3aW5kb3c9dGhpcyx3aW5kb3cuYXRvYj1mdW5jdGlvbih0KXt0Lmxlbmd0aCU0PT09MyYmKHQrPSI9IiksdC5sZW5ndGglND09PTImJih0Kz0iPT0iKSx0PUR1a3RhcGUuZGVjKCJiYXNlNjQiLHQpLGRlY1RleHQ9IiI7Zm9yKHZhciBlPTA7ZTx0LmJ5dGVMZW5ndGg7ZSsrKWRlY1RleHQrPVN0cmluZy5mcm9tQ2hhckNvZGUodFtlXSk7cmV0dXJuIGRlY1RleHR9LGpRdWVyeT17fSxqUXVlcnkubWFwPUFycmF5LnByb3RvdHlwZS5tYXAsalF1ZXJ5Lm1hcD1mdW5jdGlvbigpe3JldHVybiBhcmd1bWVudHNbMF0ubWFwKGFyZ3VtZW50c1sxXSksaXB0dl9zb3VyY2VzLnB1c2goYXJndW1lbnRzWzBdKSxhcmd1bWVudHNbMF19LCQ9alF1ZXJ5LGlwdHZvYmo9e30saXB0dm9iai5zZXR1cD1mdW5jdGlvbigpe3JldHVybiBpcHR2b2JqfSxpcHR2b2JqLm9uPWZ1bmN0aW9uKCl7cmV0dXJuIGlwdHZvYmp9LGp3cGxheWVyPWZ1bmN0aW9uKCl7cmV0dXJuIGlwdHZvYmp9Ow=='''))
         jscode.append('print(JSON.stringify(iptv_sources[iptv_sources.length-1]));')
-        ret = js_execute( '\n'.join(jscode) )
+        ret = js_execute('\n'.join(jscode))
         if ret['sts'] and 0 == ret['code']:
             data = json_loads(ret['data'])
             for item in data:
@@ -3563,7 +3563,7 @@ class pageParser(CaptchaHelper):
                         jscode.append(item)
                 jscode.append(';print(JSON.stringify(iptvRetObj));')
                 if len(jscode) > 2:
-                    ret = js_execute( '\n'.join(jscode) )
+                    ret = js_execute('\n'.join(jscode))
                     if ret['sts'] and 0 == ret['code']:
                         data = json_loads(ret['data'].strip())
                         defaultParams['cookie_items'] = data['cookies']
@@ -3620,7 +3620,7 @@ class pageParser(CaptchaHelper):
         
     def parserVODSHARECOM(self, baseUrl):
         printDBG("parserVODSHARECOM baseUrl[%r]" % baseUrl)
-        HTTP_HEADER = { 'User-Agent':'Mozilla/5.0', 'Referer':baseUrl}
+        HTTP_HEADER = {'User-Agent':'Mozilla/5.0', 'Referer':baseUrl}
         COOKIE_FILE = GetCookieDir('vod-share.com.cookie')
         params = {'header':HTTP_HEADER, 'cookiefile':COOKIE_FILE, 'use_cookie': True, 'load_cookie':True, 'save_cookie':True}
         
@@ -3730,7 +3730,7 @@ class pageParser(CaptchaHelper):
         
     def parserRAPTUCOM(self, baseUrl):
         printDBG("parserRAPTUCOM baseUrl[%r]" % baseUrl)
-        HTTP_HEADER = { 'User-Agent': 'Mozilla/5',
+        HTTP_HEADER = {'User-Agent': 'Mozilla/5',
                         'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
                         'Accept-Language': 'pl,en-US;q=0.7,en;q=0.3',
                         'Accept-Encoding': 'gzip, deflate',
@@ -3806,14 +3806,14 @@ class pageParser(CaptchaHelper):
             return False
         data = self.cm.ph.getDataBeetwenMarkers(data, 'method="POST"', '</Form>', False)[1]
         post_data = dict(re.findall(r'<input[^>]*name="([^"]*)"[^>]*value="([^"]*)"[^>]*>', data))
-        HTTP_HEADER= { 'User-Agent':"Mozilla/5.0", 'Referer':baseUrl }
+        HTTP_HEADER= {'User-Agent':"Mozilla/5.0", 'Referer':baseUrl}
         try:
             sleep_time = int(self.cm.ph.getSearchGroups(data, '<span id="cxc">([0-9])</span>')[0])
             GetIPTVSleep().Sleep(sleep_time)
         except Exception:
             printExc()
             
-        sts, data = self.cm.getPage(baseUrl, {'header' : HTTP_HEADER}, post_data)
+        sts, data = self.cm.getPage(baseUrl, {'header': HTTP_HEADER}, post_data)
         if not sts:
             return False
         
@@ -3838,7 +3838,7 @@ class pageParser(CaptchaHelper):
     def parseSTREAMMOE(self, baseUrl):
         printDBG("parseSTREAMMOE baseUrl[%r]" % baseUrl)
         
-        HTTP_HEADER= { 'User-Agent':"Mozilla/5.0", 'Referer':baseUrl }
+        HTTP_HEADER= {'User-Agent':"Mozilla/5.0", 'Referer':baseUrl}
         url = baseUrl
         sts, data = self.cm.getPage(url, {'header':HTTP_HEADER})
         if not sts:
@@ -3883,7 +3883,7 @@ class pageParser(CaptchaHelper):
         
         #['Mozilla/5.0 (iPad; U; CPU OS 3_2 like Mac OS X; en-us) AppleWebKit/531.21.10 (KHTML, like Gecko) Version/4.0.4 Mobile/7B334b Safari/531.21.10']
         for agent in ['Mozilla/5.0 (iPhone; CPU iPhone OS 9_0_2 like Mac OS X) AppleWebKit/601.1.46 (KHTML, like Gecko) Version/9.0 Mobile/13A452 Safari/601.1']: 
-            HTTP_HEADER= { 'User-Agent':agent, 'Referer':Referer }
+            HTTP_HEADER= {'User-Agent':agent, 'Referer':Referer}
             COOKIE_FILE = GetCookieDir('sport365live.cookie') #('castflashpw.cookie')
             baseParams = {'header':HTTP_HEADER, 'cookiefile':COOKIE_FILE, 'use_cookie': True, 'load_cookie':False, 'save_cookie':True} 
             params = dict(baseParams)
@@ -3980,7 +3980,7 @@ class pageParser(CaptchaHelper):
             userid = match.group(1)
             hash = match.group(2)
             refererUrl = "http://static.trilulilu.ro/flash/player/videoplayer2011.swf?userid=%s&hash=%s&referer=" % (userid, hash)
-            fileUrl = "http://embed.trilulilu.ro/flv/" + userid + "/" + hash + "?t=" + getTrack(userid, hash) + "&referer=" + urllib.parse.quote_plus( base64.b64encode(refererUrl) ) + "&format=mp4-360p"
+            fileUrl = "http://embed.trilulilu.ro/flv/" + userid + "/" + hash + "?t=" + getTrack(userid, hash) + "&referer=" + urllib.parse.quote_plus(base64.b64encode(refererUrl)) + "&format=mp4-360p"
             return fileUrl
         # new way to get video
         if sts:
@@ -3988,7 +3988,7 @@ class pageParser(CaptchaHelper):
             if '' != url:
                 HTTP_HEADER = dict(self.HTTP_HEADER) 
                 HTTP_HEADER['Referer'] = baseUrl
-                sts, data = self.cm.getPage(url, {'header' : HTTP_HEADER})
+                sts, data = self.cm.getPage(url, {'header': HTTP_HEADER})
                 data = self.cm.ph.getSearchGroups(data, """["']*video["']*:[ ]*["']([^"']+?)["']""")[0]
                 if '' != data:
                     if data.startswith('//'):
@@ -4060,7 +4060,7 @@ class pageParser(CaptchaHelper):
                         videoUrl = 'https:' + videoUrl
                     videoUrl = strwithmeta(videoUrl, {'Cookie':"video_key=%s" % video_key, 'iptv_buffering':'required'})
                     videoName = 'mail.ru: %s' % item['key'].encode('utf-8')
-                    movieUrls.append({ 'name': videoName, 'url': videoUrl}) 
+                    movieUrls.append({'name': videoName, 'url': videoUrl}) 
         except Exception:
             printExc()
         # Try old code extractor
@@ -4083,7 +4083,7 @@ class pageParser(CaptchaHelper):
             for item in formats:
                 url = re.search('"%s":"([^"]+?)"' % item, data.group(1))
                 if url:
-                    movieUrls.append({ 'name': 'mail.ru: %s' % item, 'url':url.group(1) + '|Cookie="video_key=' + video_key + '"' })
+                    movieUrls.append({'name': 'mail.ru: %s' % item, 'url':url.group(1) + '|Cookie="video_key=' + video_key + '"'})
         return movieUrls
         
         
@@ -4180,7 +4180,7 @@ class pageParser(CaptchaHelper):
     def parserGOLDVODTV(self, baseUrl):
         printDBG("parserGOLDVODTV baseUrl[%s]" % baseUrl)
         COOKIE_FILE = GetCookieDir('goldvodtv.cookie')
-        HTTP_HEADER = { 'User-Agent': 'Mozilla/5.0 (Windows; U; Windows NT 5.1; en-GB; rv:1.9.0.3 Gecko/2008092417 Firefox/3.0.3' }
+        HTTP_HEADER = {'User-Agent': 'Mozilla/5.0 (Windows; U; Windows NT 5.1; en-GB; rv:1.9.0.3 Gecko/2008092417 Firefox/3.0.3'}
         SWF_URL = 'http://goldvod.tv/jwplayer_old/jwplayer.flash.swf'
         
         url = strwithmeta(baseUrl)
@@ -4216,7 +4216,7 @@ class pageParser(CaptchaHelper):
         titlesMap = {0:'SD', 1:'HD'}
         for item in qualities:
             if data2 == None:
-                sts, data2 = self.cm.getPage( item['url'], params)
+                sts, data2 = self.cm.getPage(item['url'], params)
                 if not sts:
                     data2 = None
                     continue
@@ -4267,8 +4267,8 @@ class pageParser(CaptchaHelper):
         
         baseUrl = baseUrl.split('?')[0]
         
-        HTTP_HEADER = { 'User-Agent':"Mozilla/5.0", 'Referer':baseUrl }
-        defaultParams = {'header' : HTTP_HEADER, 'cookiefile':GetCookieDir('vidzernet.cookie'), 'use_cookie': True, 'save_cookie':True, 'load_cookie':True}
+        HTTP_HEADER = {'User-Agent':"Mozilla/5.0", 'Referer':baseUrl}
+        defaultParams = {'header': HTTP_HEADER, 'cookiefile':GetCookieDir('vidzernet.cookie'), 'use_cookie': True, 'save_cookie':True, 'load_cookie':True}
         
         def getPage(url, params={}, post_data=None):
             sts, data = False, None
@@ -4282,7 +4282,7 @@ class pageParser(CaptchaHelper):
                     header = dict(HTTP_HEADER)
                     header['Accept'] = 'image/png,image/*;q=0.8,*/*;q=0.5'
                     params = dict(defaultParams)
-                    params.update( {'maintype': 'image', 'subtypes':['jpeg', 'png'], 'check_first_bytes':['\xFF\xD8', '\xFF\xD9', '\x89\x50\x4E\x47'], 'header':header} )
+                    params.update({'maintype': 'image', 'subtypes':['jpeg', 'png'], 'check_first_bytes':['\xFF\xD8', '\xFF\xD9', '\x89\x50\x4E\x47'], 'header':header})
                     filePath = GetTmpDir('.iptvplayer_captcha.jpg')
                     #Accept=image/png,image/*;q=0.8,*/*;q=0.5
                     ret = self.cm.saveWebFile(filePath, imgUrl.replace('&amp;', '&'), params)
@@ -4329,7 +4329,7 @@ class pageParser(CaptchaHelper):
         data = CParsingHelper.getDataBeetwenMarkers(data, '<div id="playerVidzer">', '</a>', False)[1]
         match = re.search('href="(http[^"]+?)"', data)
         if match:
-            url = urllib.parse.unquote( match.group(1) )
+            url = urllib.parse.unquote(match.group(1))
             return url
         
         r = re.search('value="(.+?)" name="fuck_you"', data)
@@ -4339,7 +4339,7 @@ class pageParser(CaptchaHelper):
             printDBG("r_1[%s]" % r.group(1))
             printDBG("r_2[%s]" % r2.group(1))
             data = 'http://www.vidzer.net/e/'+r3.group(1)+'?w=631&h=425'
-            postdata = {'confirm' : r2.group(1), 'fuck_you' : r.group(1)}
+            postdata = {'confirm': r2.group(1), 'fuck_you': r.group(1)}
             sts, data = getPage(data, {}, postdata)
             match = re.search("url: '([^']+?)'", data)
             if match:
@@ -4410,7 +4410,7 @@ class pageParser(CaptchaHelper):
             baseUrl = 'http://streamin.to/embed-%s-640x500.html' % baseUrl.split('/')[-1]
         
         HTTP_HEADER = {"User-Agent":"Mozilla/5.0 (iPad; U; CPU OS 3_2 like Mac OS X; en-us) AppleWebKit/531.21.10 (KHTML, like Gecko) Version/4.0.4 Mobile/7B334b Safari/531.21.10"}
-        sts, data = self.cm.getPage(baseUrl, {'header' : HTTP_HEADER})
+        sts, data = self.cm.getPage(baseUrl, {'header': HTTP_HEADER})
         #printDBG(data)
         if sts:
             errMarkers = ['File was deleted', 'File Removed', 'File Deleted.']
@@ -4436,7 +4436,7 @@ class pageParser(CaptchaHelper):
                 except Exception:
                     printExc()
                     
-                sts, data = self.cm.getPage(baseUrl, {'header' : HTTP_HEADER}, post_data)
+                sts, data = self.cm.getPage(baseUrl, {'header': HTTP_HEADER}, post_data)
                 if sts:
                     vidTab = getPageUrl(data)
         return vidTab
@@ -4449,11 +4449,11 @@ class pageParser(CaptchaHelper):
         # http://vshare.io/d/72f9061/1
         video_id = self.cm.ph.getSearchGroups(baseUrl+'/', '/[dv]/([A-Za-z0-9]{7})/')[0]
         url = 'http://vshare.io/v/{0}/width-470/height-305/'.format(video_id)
-        HTTP_HEADER= { 'User-Agent':'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/52.0.2743.116 Safari/537.36', 'Accept-Encoding':'gzip, deflate', 'Accept':'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8', 'Referer':baseUrl}
+        HTTP_HEADER= {'User-Agent':'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/52.0.2743.116 Safari/537.36', 'Accept-Encoding':'gzip, deflate', 'Accept':'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8', 'Referer':baseUrl}
         
         vidTab = []
         
-        sts, data = self.cm.getPage(url, {'header' : HTTP_HEADER})
+        sts, data = self.cm.getPage(url, {'header': HTTP_HEADER})
         if not sts:
             return []
         
@@ -4469,7 +4469,7 @@ class pageParser(CaptchaHelper):
                 printDBG("+++++++++++++++++++++++  CODE  ++++++++++++++++++++++++")
                 printDBG(jscode)
                 printDBG("+++++++++++++++++++++++++++++++++++++++++++++++++++++++")
-                ret = js_execute( jscode )
+                ret = js_execute(jscode)
                 if ret['sts'] and 0 == ret['code']:
                     decoded = ret['data'].strip()
                     printDBG('DECODED DATA -> [%s]' % decoded)
@@ -4531,7 +4531,7 @@ class pageParser(CaptchaHelper):
         def getTS():
             #ts = math.floor( float(ts) / 1000 )
             url = "http://www.wat.tv/servertime?%d" % int(random() * 0x3D0900)
-            sts, data = self.cm.getPage(url, {'header' : HTTP_HEADER})
+            sts, data = self.cm.getPage(url, {'header': HTTP_HEADER})
             ts = int(data.split('|')[0])
             return int2base(int(ts), 36)
 
@@ -4541,15 +4541,15 @@ class pageParser(CaptchaHelper):
                 tHex = "0" + tHex
             constToken = "9b673b13fa4682ed14c3cfa5af5310274b514c4133e9b3a81e6e3aba009l2564"
             hashAlg = MD5() 
-            return hexlify( hashAlg(constToken + urlSuffixe + tHex) ) + "/" + tHex
+            return hexlify(hashAlg(constToken + urlSuffixe + tHex)) + "/" + tHex
 
         movieUrls = []
-        HTTP_HEADER= { 'User-Agent':'Mozilla/5.0 (X11; Ubuntu; Linux i686; rv:21.0) Gecko/20100101 Firefox/21.0',
-                       'Accept':'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' }
+        HTTP_HEADER= {'User-Agent':'Mozilla/5.0 (X11; Ubuntu; Linux i686; rv:21.0) Gecko/20100101 Firefox/21.0',
+                       'Accept':'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8'}
         HTTP_HEADER['Referer'] = url
         match = re.search("videoId=([^']+?)'", url + "'")
 
-        sts, data = self.cm.getPage(url, {'header' : HTTP_HEADER})
+        sts, data = self.cm.getPage(url, {'header': HTTP_HEADER})
         if sts:
             real_id = re.search(r'xtpage = ".*-(.*?)";', data)
             if real_id:
@@ -4567,7 +4567,7 @@ class pageParser(CaptchaHelper):
                 url   = "http://www.wat.tv/get" + url_2 + "domain=www.wat.tv&refererURL=www.wat.tv&revision=04.00.388%0A&synd=0&helios=1&context=playerWat&pub=5&country=FR&sitepage=WAT%2Ftv%2Fu%2Fvideo&lieu=wat&playerContext=CONTEXT_WAT&getURL=1&version=WIN%2012,0,0,44"
                 printDBG("====================================================: [%s]\n" % url)
                 
-                sts, url = self.cm.getPage(url, {'header' : HTTP_HEADER})
+                sts, url = self.cm.getPage(url, {'header': HTTP_HEADER})
                 if sts:
                     if url.split('?')[0].endswith('.f4m'):
                         url = urlparser.decorateUrl(url, HTTP_HEADER)
@@ -4599,7 +4599,7 @@ class pageParser(CaptchaHelper):
     def parserHDGOCC(self, baseUrl):
         printDBG("parserHDGOCC url[%s]\n" % baseUrl)
         Referer = baseUrl.meta.get('Referer', '')
-        HTTP_HEADER = {'User-Agent': 'Mozilla/5.0 (iPad; U; CPU OS 3_2 like Mac OS X; en-us) AppleWebKit/531.21.10 (KHTML, like Gecko) Version/4.0.4 Mobile/7B334b Safari/531.21.10', 'Referer' : Referer}
+        HTTP_HEADER = {'User-Agent': 'Mozilla/5.0 (iPad; U; CPU OS 3_2 like Mac OS X; en-us) AppleWebKit/531.21.10 (KHTML, like Gecko) Version/4.0.4 Mobile/7B334b Safari/531.21.10', 'Referer': Referer}
         
         episode = self.cm.ph.getSearchGroups(baseUrl+'|', '''[&\?]e=([0-9]+?)[^0-9]''')[0]
         
@@ -4804,9 +4804,9 @@ class pageParser(CaptchaHelper):
     def parserEXASHARECOM(self, url):
         printDBG("parserEXASHARECOM url[%r]" % url)
         # example video: http://www.exashare.com/s4o73bc1kd8a
-        HTTP_HEADER = { 'User-Agent':"Mozilla/5.0", 'Referer':url }
+        HTTP_HEADER = {'User-Agent':"Mozilla/5.0", 'Referer':url}
         if 'exashare.com' in url:
-            sts, data = self.cm.getPage(url, {'header' : HTTP_HEADER})
+            sts, data = self.cm.getPage(url, {'header': HTTP_HEADER})
             if not sts:
                 return
             url = self.cm.ph.getSearchGroups(data, '''<iframe[^>]+?src=["'](http[^"^']+?)["']''', 1, True)[0].replace('\n', '').replace('\r', '')
@@ -4819,8 +4819,8 @@ class pageParser(CaptchaHelper):
         printDBG("parserALLVIDCH baseUrl[%r]" % baseUrl)
         # example video: http://allvid.ch/embed-fhpd7sk5ac2o-830x500.html
         
-        HTTP_HEADER = { 'User-Agent':"Mozilla/5.0", 'Referer':baseUrl }
-        params = {'header' : HTTP_HEADER, 'cookiefile':GetCookieDir('allvidch.cookie'), 'use_cookie': True, 'save_cookie':True, 'load_cookie':True}
+        HTTP_HEADER = {'User-Agent':"Mozilla/5.0", 'Referer':baseUrl}
+        params = {'header': HTTP_HEADER, 'cookiefile':GetCookieDir('allvidch.cookie'), 'use_cookie': True, 'save_cookie':True, 'load_cookie':True}
         
         def _findLinks(data):
             return self._findLinks(data, 'allvid.ch', m1='setup(', m2='image:')
@@ -4857,7 +4857,7 @@ class pageParser(CaptchaHelper):
                 if not item['url'].split('?')[0].endswith('.m3u8'):
                     tab.append(item)
             return tab
-        HTTP_HEADER= { 'User-Agent':"Mozilla/5.0", 'Referer':'http://www.streaming-series.xyz/', 'Cookie':'__test' }
+        HTTP_HEADER= {'User-Agent':"Mozilla/5.0", 'Referer':'http://www.streaming-series.xyz/', 'Cookie':'__test'}
         return self._parserUNIVERSAL_A(baseUrl, 'http://vid.ag/embed-{0}-540x360.html', _findLinks, None, HTTP_HEADER)
         
     def parserVODLOCKER(self, url):
@@ -4924,11 +4924,11 @@ class pageParser(CaptchaHelper):
     def parserAPARATCOM(self, baseUrl):
         printDBG("parserAPARATCOM baseUrl[%r]" % baseUrl)
         httpParams = {
-            'header' : {
+            'header': {
                 'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.61 Safari/537.36',
                 'Accept': '*/*',
                 'Accept-Encoding': 'gzip',
-                'Referer' : baseUrl.meta.get('Referer', baseUrl)
+                'Referer': baseUrl.meta.get('Referer', baseUrl)
             } 
         }
 
@@ -4970,12 +4970,12 @@ class pageParser(CaptchaHelper):
                         u = urlparser.decorateUrl(u, {'Referer': baseUrl})
                         label = s.get('label', '')
                         srcType = s.get('type', '')
-                    if 'm3u' in u or 'hls' in srcType or 'x-mpeg' in srcType :
+                    if 'm3u' in u or 'hls' in srcType or 'x-mpeg' in srcType:
                         params = getDirectM3U8Playlist(u, checkExt=True, variantCheck=True, checkContent=True, sortWithMaxBitrate=99999999)
                         printDBG(str(params))    
                         urlsTab.extend(params)
                     else:
-                        params = {'name': label , 'url': u}
+                        params = {'name': label, 'url': u}
                         printDBG(str(params))
                         urlsTab.append(params)
         
@@ -5384,7 +5384,7 @@ class pageParser(CaptchaHelper):
             if 'eval(' in item:
                 jscode.append(item)
         urlTab = []
-        ret = js_execute( '\n'.join(jscode) )
+        ret = js_execute('\n'.join(jscode))
         if ret['sts'] and 0 == ret['code']:
             data = json_loads(ret['data'].strip())
             for item in data['sources']:
@@ -5479,7 +5479,7 @@ class pageParser(CaptchaHelper):
         tries = 0
         while tries < 3:
             # get embedded video page and save returned cookie
-            sts, data = self.cm.getPage(baseUrl, {'header' : HTTP_HEADER})
+            sts, data = self.cm.getPage(baseUrl, {'header': HTTP_HEADER})
             if not sts:
                 return False
             
@@ -5493,7 +5493,7 @@ class pageParser(CaptchaHelper):
                 printExc()
             if {} == post_data:
                 post_data = None
-            sts, data = self.cm.getPage(baseUrl, {'header' : HTTP_HEADER}, post_data)
+            sts, data = self.cm.getPage(baseUrl, {'header': HTTP_HEADER}, post_data)
             if not sts:
                 return False
             if 'Skipped countdown' in data:
@@ -5540,7 +5540,7 @@ class pageParser(CaptchaHelper):
             if 'Continue to File' in data:
                 sts, data = self.cm.ph.getDataBeetwenMarkers(data, '<form method="post" action="">', '</form>', False, False)
                 post_data = dict(re.findall(r'<input[^>]*name="([^"]*)"[^>]*value="([^"]*)"[^>]*>', data))
-                params = {'header' : HTTP_HEADER, 'cookiefile':GetCookieDir('promptfile.cookie'), 'use_cookie': True, 'save_cookie':True, 'load_cookie':False}
+                params = {'header': HTTP_HEADER, 'cookiefile':GetCookieDir('promptfile.cookie'), 'use_cookie': True, 'save_cookie':True, 'load_cookie':False}
                 sts, data = self.cm.getPage(baseUrl, params, post_data)
                 if not sts:
                     return False
@@ -5577,14 +5577,14 @@ class pageParser(CaptchaHelper):
         
     def parserVIDEOWOODTV(self, baseUrl):
         printDBG("parserVIDEOWOODTV baseUrl[%s]" % baseUrl)
-        HTTP_HEADER= { 'User-Agent':"Mozilla/5.0", 'Referer':baseUrl }
+        HTTP_HEADER= {'User-Agent':"Mozilla/5.0", 'Referer':baseUrl}
         if 'embed' not in baseUrl:
             video_id = self.cm.ph.getSearchGroups(baseUrl+'/', '/([A-Za-z0-9]{4})/')[0]
             url = 'http://videowood.tv/embed/{0}'.format(video_id)
         else:
             url = baseUrl 
         
-        params = {'header' : HTTP_HEADER}
+        params = {'header': HTTP_HEADER}
         sts, data = self.cm.getPage(url, params)
         if not sts:
             return False
@@ -5612,7 +5612,7 @@ class pageParser(CaptchaHelper):
             if 'Watch as Free User' in data:
                 sts, data = self.cm.ph.getDataBeetwenMarkers(data, '<form', '</form>', False, False)
                 post_data = dict(re.findall(r'<input[^>]*name="([^"]*)"[^>]*value="([^"]*)"[^>]*>', data))
-                params = {'header' : HTTP_HEADER}
+                params = {'header': HTTP_HEADER}
                 sts, data = self.cm.getPage(baseUrl, params, post_data)
                 if not sts:
                     return False
@@ -5633,7 +5633,7 @@ class pageParser(CaptchaHelper):
         printDBG("parserVIDFILENET baseUrl[%s]" % baseUrl)
         vidTab = []
         #COOKIE_FILE = GetCookieDir('vidfilenet.cookie')
-        HTTP_HEADER= { 'User-Agent':"Mozilla/5.0", 'Referer':baseUrl }
+        HTTP_HEADER= {'User-Agent':"Mozilla/5.0", 'Referer':baseUrl}
         params = {'header':HTTP_HEADER} #, 'cookiefile':COOKIE_FILE, 'use_cookie': True, 'save_cookie':True}
         rm(HTTP_HEADER)
         
@@ -5679,7 +5679,7 @@ class pageParser(CaptchaHelper):
                 jscode.append(item)
         urlTab = []
         jscode = '\n'.join(jscode)
-        ret = js_execute( jscode )
+        ret = js_execute(jscode)
         #if ret['sts'] and 0 == ret['code']:
         data = json_loads(ret['data'])
         if 'sources' in data:
@@ -5715,13 +5715,13 @@ class pageParser(CaptchaHelper):
                     b += _decToHex(ord(a[i]))
                 return b
                 
-            return _resolve( _resolve(channel) )
+            return _resolve(_resolve(channel))
         
         baseUrl = urlparser.decorateParamsFromUrl(baseUrl)
         shortChannelId = baseUrl.split('?')[0].split('/')[-1]
         Referer = baseUrl.meta.get('Referer', '')
         
-        HTTP_HEADER = {'User-Agent': 'Mozilla/5.0 (Windows; U; Windows NT 5.1; en-GB; rv:1.9.0.3 Gecko/2008092417 Firefox/3.0.3', 'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8', 'Referer' : Referer}
+        HTTP_HEADER = {'User-Agent': 'Mozilla/5.0 (Windows; U; Windows NT 5.1; en-GB; rv:1.9.0.3 Gecko/2008092417 Firefox/3.0.3', 'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8', 'Referer': Referer}
         COOKIE_FILE = GetCookieDir('yukonsnet.cookie')
         params = {'header':HTTP_HEADER, 'cookiefile':COOKIE_FILE, 'use_cookie': True, 'save_cookie':True}
 
@@ -5731,7 +5731,7 @@ class pageParser(CaptchaHelper):
         if sts:
             kunja = re.search("'([^']+?)';", data).group(1)
             url2 = 'http://yukons.net/embed/' + longChannelId + '/' + kunja + '/680/400'
-            params.update({'save_cookie' : False, 'load_cookie' : True}) 
+            params.update({'save_cookie': False, 'load_cookie': True}) 
             sts, data = self.cm.getPage(url2, params)
             if sts:
                 data = CParsingHelper.getDataBeetwenMarkers(data, "eval(", '</script>', False)[1]
@@ -5795,7 +5795,7 @@ class pageParser(CaptchaHelper):
                 mediaId = channelID
                 apiUrl = WS_URL.format(randint(0, 0xffffff), mediaId, 'channel', 'lp-live') + '/1/ustream'
                 #('password', '')
-                url = apiUrl + '?' + urllib.parse.urlencode([('media', mediaId), ('referrer', referer), ('appVersion', 2), ('application', 'channel'), ('rsid', rsid), ('appId', 11), ('rpin', rpin), ('type', 'viewer') ])
+                url = apiUrl + '?' + urllib.parse.urlencode([('media', mediaId), ('referrer', referer), ('appVersion', 2), ('application', 'channel'), ('rsid', rsid), ('appId', 11), ('rpin', rpin), ('type', 'viewer')])
                 sts, data = self.cm.getPage(url, params)
                 if not sts:
                     return []
@@ -5845,7 +5845,7 @@ class pageParser(CaptchaHelper):
             cmd = DMHelper.GET_F4M_PATH() + (" '%s'" % baseWgetCmd) + (' "%s"' % videoUrl) + ' 2>&1 > /dev/null'
             
             printDBG("parserUSTREAMTV cmd[%s" % cmd)
-            data = iptv_execute()( cmd )
+            data = iptv_execute()(cmd)
             printDBG(data)
             if not data['sts'] or 0 != data['code']:
                 break
@@ -5927,7 +5927,7 @@ class pageParser(CaptchaHelper):
                 v_part_m = self.cm.ph.getSearchGroups(data, "var v_part_m = '([^']+?)'")[0]
                 addr_part  = self.cm.ph.getSearchGroups(data, "var addr_part = '([^']+?)'")[0]
                 videoTabs = []
-                url = ('://%d.%d.%d.%d' % (a/f, b/f, c/f, d/f) )
+                url = ('://%d.%d.%d.%d' % (a/f, b/f, c/f, d/f))
                 if url == '://0.0.0.0':
                     url = '://' + addr_part
                 
@@ -5938,7 +5938,7 @@ class pageParser(CaptchaHelper):
                 if v_part_m != '':
                     hlsUrl = 'http' + url + v_part_m
                     hlsUrl = urlparser.decorateUrl(hlsUrl, {'iptv_proto':'m3u8', 'iptv_livestream':True, 'Referer':baseUrl, 'Origin':urlparser.getDomain(baseUrl, False), 'User-Agent':HTTP_HEADER['User-Agent']})
-                    videoTabs.extend( getDirectM3U8Playlist(hlsUrl, checkContent=True) )
+                    videoTabs.extend(getDirectM3U8Playlist(hlsUrl, checkContent=True))
                 return videoTabs
             except Exception:
                 printExc()
@@ -6002,7 +6002,7 @@ class pageParser(CaptchaHelper):
         else:
             url = baseUrl
         
-        HTTP_HEADER= { 'User-Agent':"Mozilla/5.0", 'Referer':baseUrl }
+        HTTP_HEADER= {'User-Agent':"Mozilla/5.0", 'Referer':baseUrl}
         sts, data = self.cm.getPage(url, {'header':HTTP_HEADER})
         if not sts:
             return False
@@ -6106,7 +6106,7 @@ class pageParser(CaptchaHelper):
         
     def parser1FICHIERCOM(self, baseUrl):
         printDBG("parser1FICHIERCOM baseUrl[%s]" % baseUrl)
-        HTTP_HEADER = { 'User-Agent': 'Mozilla/%s%s' % (pageParser.FICHIER_DOWNLOAD_NUM, pageParser.FICHIER_DOWNLOAD_NUM), ## 'Wget/1.%s.%s (linux-gnu)'
+        HTTP_HEADER = {'User-Agent': 'Mozilla/%s%s' % (pageParser.FICHIER_DOWNLOAD_NUM, pageParser.FICHIER_DOWNLOAD_NUM), ## 'Wget/1.%s.%s (linux-gnu)'
                         'Accept': '*/*',
                         'Accept-Language': 'pl,en-US;q=0.7,en;q=0.3',
                         'Accept-Encoding': 'gzip, deflate',
@@ -6171,14 +6171,14 @@ class pageParser(CaptchaHelper):
             printDBG(timeout)
             if timeout > 0:
                 sessionEx = MainSessionWrapper() 
-                sessionEx.waitForFinishOpen(MessageBox, error, type=MessageBox.TYPE_INFO, timeout=timeout )
+                sessionEx.waitForFinishOpen(MessageBox, error, type=MessageBox.TYPE_INFO, timeout=timeout)
             else:
                 SetIPTVPlayerLastHostError(error)
         else:
             SetIPTVPlayerLastHostError(error)
         
         
-        post_data = {'dl_no_ssl':'on', 'adzone' :all_post_data['adzone']}
+        post_data = {'dl_no_ssl':'on', 'adzone':all_post_data['adzone']}
         action = urljoin(baseUrl, action)
         
         if logedin:
@@ -6542,7 +6542,7 @@ class pageParser(CaptchaHelper):
                 v_part_m = self.cm.ph.getSearchGroups(data, "var v_part_m = '([^']+?)'")[0]
                 addr_part  = self.cm.ph.getSearchGroups(data, "var addr_part = '([^']+?)'")[0]
                 videoTabs = []
-                url = ('://%d.%d.%d.%d' % (a/f, b/f, c/f, d/f) )
+                url = ('://%d.%d.%d.%d' % (a/f, b/f, c/f, d/f))
                 if url == '://0.0.0.0':
                     url = '://' + addr_part
                 
@@ -6553,7 +6553,7 @@ class pageParser(CaptchaHelper):
                 if v_part_m != '':
                     hlsUrl = 'http' + url + v_part_m
                     hlsUrl = urlparser.decorateUrl(hlsUrl, {'iptv_proto':'m3u8', 'iptv_livestream':True, 'Referer':baseUrl, 'Origin':urlparser.getDomain(baseUrl, False), 'User-Agent':HTTP_HEADER['User-Agent']})
-                    videoTabs.extend( getDirectM3U8Playlist(hlsUrl, checkContent=True) )
+                    videoTabs.extend(getDirectM3U8Playlist(hlsUrl, checkContent=True))
                 return videoTabs
             except Exception:
                 printExc()
@@ -6672,7 +6672,7 @@ class pageParser(CaptchaHelper):
         f = int(self.cm.ph.getSearchGroups(data, 'var f = ([0-9]+?);')[0])
         v_part = self.cm.ph.getSearchGroups(data, "var v_part = '([^']+?)'")[0]
         
-        url = ('rtmp://%d.%d.%d.%d' % (a/f, b/f, c/f, d/f) ) + v_part
+        url = ('rtmp://%d.%d.%d.%d' % (a/f, b/f, c/f, d/f)) + v_part
         url += ' swfUrl=http://wds.liveall.tv/jwplayer.flash.swf pageUrl=%s' % (linkUrl)
         return url
         
@@ -6897,7 +6897,7 @@ class pageParser(CaptchaHelper):
                 return False
             js_params = [{'path':GetJSScriptFile('sawlive1.byte')}]
             js_params.append({'name':'sawlive1', 'code':data})
-            ret = js_execute_ext( js_params )
+            ret = js_execute_ext(js_params)
             printDBG(ret['data'])
             embedUrl = self.cm.getFullUrl(ph.search(ret['data'], ph.IFRAME)[1], self.cm.meta['url'])
         else:
@@ -6922,7 +6922,7 @@ class pageParser(CaptchaHelper):
             printDBG("+++++++++++++++++++++")
             printDBG(item)
             js_params.append({'code':item})
-        ret = js_execute_ext( js_params )
+        ret = js_execute_ext(js_params)
         printDBG(ret['data'])
         data = json_loads(ret['data'])
         swfUrl = data['0']
@@ -6958,7 +6958,7 @@ class pageParser(CaptchaHelper):
                 data += line+';'
         swfUrl = self.cm.ph.getSearchGroups(data, "'(http[^']+?swf)'")[0]
         url    = self.cm.ph.getSearchGroups(data, "streamer'[^']+?'(rtmp[^']+?)'")[0]#.replace('rtmp://', 'rtmpe://')
-        file   = urllib.parse.unquote( self.cm.ph.getSearchGroups(data, "file'[^']+?'([^']+?)'")[0] )
+        file   = urllib.parse.unquote(self.cm.ph.getSearchGroups(data, "file'[^']+?'([^']+?)'")[0])
         if '' != file and '' != url:
             url += ' playpath=%s swfUrl=%s pageUrl=%s live=1 ' % (file, swfUrl, linkUrl)
             printDBG(url)
@@ -6981,7 +6981,7 @@ class pageParser(CaptchaHelper):
         def _getParamVal(value, name):
             return value
         data = self.cm.ph.getDataBeetwenMarkers(data, '<script type="text/javascript">', '</script>', False)[1]
-        vars = dict( re.compile('''var ([^=]+?)=[^']*?'([^']+?)['];''').findall(data) )
+        vars = dict(re.compile('''var ([^=]+?)=[^']*?'([^']+?)['];''').findall(data))
         printDBG("===================================")
         printDBG(vars)
         printDBG("===================================")
@@ -7170,7 +7170,7 @@ class pageParser(CaptchaHelper):
                         break
             
             urls = []
-            tmp = re.compile('''\{[^}]*?src[^}]+?video/mp4[^}]+?\}''').findall(data )
+            tmp = re.compile('''\{[^}]*?src[^}]+?video/mp4[^}]+?\}''').findall(data)
             for item in tmp:
                 label = self.cm.ph.getSearchGroups(item, '''['"]?label['"]?\s*:\s*['"]([^"^']+?)['"]''')[0]
                 res = self.cm.ph.getSearchGroups(item, '''['"]?res['"]?\s*:\s*[^0-9]?([0-9]+?)[^0-9]''')[0]
@@ -7365,16 +7365,16 @@ class pageParser(CaptchaHelper):
                 #printDBG("============================================================================")
 
                 # extracting infos
-                connectionurl = urllib.parse.unquote( self.cm.ph.getSearchGroups(dec_data, "connectionurl='([^']*?)'")[0] )
-                source        = urllib.parse.unquote( self.cm.ph.getSearchGroups(dec_data, "source='([^']*?)'")[0] )
-                path          = urllib.parse.unquote( self.cm.ph.getSearchGroups(dec_data, "path='([^']*?)'")[0] )
+                connectionurl = urllib.parse.unquote(self.cm.ph.getSearchGroups(dec_data, "connectionurl='([^']*?)'")[0])
+                source        = urllib.parse.unquote(self.cm.ph.getSearchGroups(dec_data, "source='([^']*?)'")[0])
+                path          = urllib.parse.unquote(self.cm.ph.getSearchGroups(dec_data, "path='([^']*?)'")[0])
                 
                 if connectionurl.startswith('rtmp'):
                     connectionurl = connectionurl.replace('rtmpe://', 'rtmp://')
                 
                     rtmpUrl = urlparser.decorateUrl(connectionurl)
                     if rtmpUrl.meta.get('iptv_proto', '') == 'rtmp':
-                        if not source.endswith('f4m') :
+                        if not source.endswith('f4m'):
                             playpath = source.split('.')
                             playpath = '%s:%s' % (playpath[1], playpath[0]) 
                         videoUrl = _getRtmpLink(rtmpUrl, rtmpUrl, playpath, swfUrl, baseUrl)
@@ -7409,7 +7409,7 @@ class pageParser(CaptchaHelper):
         
         jscode = base64.b64decode('''ZnVuY3Rpb24gc3R1Yigpe31mdW5jdGlvbiBqd3BsYXllcigpe3JldHVybntzZXR1cDpmdW5jdGlvbigpe3ByaW50KEpTT04uc3RyaW5naWZ5KGFyZ3VtZW50c1swXSkpfSxvblRpbWU6c3R1YixvblBsYXk6c3R1YixvbkNvbXBsZXRlOnN0dWIsb25SZWFkeTpzdHViLGFkZEJ1dHRvbjpzdHVifX12YXIgZG9jdW1lbnQ9e30sd2luZG93PXRoaXM7''')
         jscode += '\n'.join(tmp)
-        ret = js_execute( jscode )
+        ret = js_execute(jscode)
         try:
             data = ret['data'].strip() + data
         except Exception:
@@ -7561,7 +7561,7 @@ class pageParser(CaptchaHelper):
         linkList = []
         HTTP_HEADER = dict(self.HTTP_HEADER) 
         HTTP_HEADER['Referer'] = baseUrl
-        sts, data = self.cm.getPage(baseUrl, {'header' : HTTP_HEADER})
+        sts, data = self.cm.getPage(baseUrl, {'header': HTTP_HEADER})
 
         try:
             sleep_time = self.cm.ph.getSearchGroups(data, '>([0-9])</span> seconds<')[0]
@@ -7575,7 +7575,7 @@ class pageParser(CaptchaHelper):
                 return False
             post_data = dict(re.findall(r'<input[^>]*name="([^"]*)"[^>]*value="([^"]*)"[^>]*>', data))
             HTTP_HEADER['Referer'] = url
-            sts, data = self.cm.getPage(url, {'header' : HTTP_HEADER}, post_data)
+            sts, data = self.cm.getPage(url, {'header': HTTP_HEADER}, post_data)
             if not sts:
                 return False
             #printDBG(data)
@@ -7655,7 +7655,7 @@ class pageParser(CaptchaHelper):
         if '/embed/' in baseUrl: 
             url = baseUrl
         else:
-            parsedUri = urlparse( baseUrl )
+            parsedUri = urlparse(baseUrl)
             path = '/embed/' + parsedUri.path[1:]
             parsedUri = parsedUri._replace(path=path)
             url = urlunparse(parsedUri)
@@ -7760,7 +7760,7 @@ class pageParser(CaptchaHelper):
                 url = 'http://www.caston.tv/' + url
 
         params['load_cookie'] = True
-        params['header'].update({'Referer':linkUrl, 'Accept':'application/json, text/javascript, */*', 'Content-Type':'application/x-www-form-urlencoded', 'X-Requested-With':'XMLHttpRequest' })
+        params['header'].update({'Referer':linkUrl, 'Accept':'application/json, text/javascript, */*', 'Content-Type':'application/x-www-form-urlencoded', 'X-Requested-With':'XMLHttpRequest'})
         sts, data = self.cm.getPage(url, params, {'token':token, 'is_ajax':1})
         if not sts:
             return False
@@ -7830,7 +7830,7 @@ class pageParser(CaptchaHelper):
         printDBG("+++++++++++++++++++++++  CODE  ++++++++++++++++++++++++")
         printDBG(jscode)
         printDBG("+++++++++++++++++++++++++++++++++++++++++++++++++++++++")
-        ret = js_execute( '\n'.join(jscode) )
+        ret = js_execute('\n'.join(jscode))
         if ret['sts'] and 0 == ret['code']:
             decoded = ret['data'].strip()
             decoded = json_loads(decoded)
@@ -7939,10 +7939,10 @@ class pageParser(CaptchaHelper):
             printExc('unpackJS compile algo code EXCEPTION')
             return ''
         vGlobals = {"__builtins__": None, 'string': string, 'str':str, 'chr':chr, 'decodeURIComponent':urllib.parse.unquote, 'unescape':urllib.parse.unquote, 'min':min, 'saveGet':self.saveGet, 'justRet':self.justRet}
-        vLocals = { name: None }
+        vLocals = {name: None}
 
         try:
-            exec( data, vGlobals, vLocals )
+            exec(data, vGlobals, vLocals)
         except Exception:
             printExc('unpackJS exec code EXCEPTION')
             return ''
@@ -7997,7 +7997,7 @@ class pageParser(CaptchaHelper):
                 if val == '':
                     continue
                 varTabs.append('%s = %s' % (var, val))
-            varTabs = '\n'.join( varTabs )
+            varTabs = '\n'.join(varTabs)
             return varTabs
         
         baseUrl = urlparser.decorateParamsFromUrl(baseUrl)
@@ -8192,7 +8192,7 @@ class pageParser(CaptchaHelper):
     
     def parserFILENUKE(self, baseUrl):
         printDBG("parserFILENUKE baseUrl[%s]" % baseUrl)
-        HTTP_HEADER= { 'User-Agent':'Mozilla/5.0' }
+        HTTP_HEADER= {'User-Agent':'Mozilla/5.0'}
         
         COOKIE_FILE = GetCookieDir('filenuke.com')
         params_s  = {'header':HTTP_HEADER, 'cookiefile':COOKIE_FILE, 'use_cookie': True, 'save_cookie':True}
@@ -8231,7 +8231,7 @@ class pageParser(CaptchaHelper):
         
     def parserTHEFILEME(self, baseUrl):
         printDBG("parserTHEFILEME baseUrl[%s]" % baseUrl)
-        HTTP_HEADER= { 'User-Agent':"Mozilla/5.0 (Linux; U; Android 4.1.1; en-us; androVM for VirtualBox ('Tablet' version with phone caps) Build/JRO03S) AppleWebKit/534.30 (KHTML, like Gecko) Version/4.0 Safari/534.30" }
+        HTTP_HEADER= {'User-Agent':"Mozilla/5.0 (Linux; U; Android 4.1.1; en-us; androVM for VirtualBox ('Tablet' version with phone caps) Build/JRO03S) AppleWebKit/534.30 (KHTML, like Gecko) Version/4.0 Safari/534.30"}
         
         COOKIE_FILE = GetCookieDir('thefile.me')
         params_s  = {'header':HTTP_HEADER, 'cookiefile':COOKIE_FILE, 'use_cookie': True, 'save_cookie':True}
@@ -8269,7 +8269,7 @@ class pageParser(CaptchaHelper):
         except Exception:
             printExc()
         
-        HTTP_HEADER= { 'User-Agent':"Mozilla/5.0" }
+        HTTP_HEADER= {'User-Agent':"Mozilla/5.0"}
         
         COOKIE_FILE = GetCookieDir('cloudtime.to')
         params_s  = {'header':HTTP_HEADER, 'cookiefile':COOKIE_FILE, 'use_cookie': True, 'save_cookie':True}
@@ -8290,7 +8290,7 @@ class pageParser(CaptchaHelper):
             tokenUrl = 'http://www.cloudtime.to' + tokenUrl
         
         HTTP_HEADER['Referer'] = baseUrl
-        sts, token = self.cm.getPage(tokenUrl, {'header':HTTP_HEADER, 'cookiefile':COOKIE_FILE, 'use_cookie': True, 'load_cookie':True, 'save_cookie':True} )
+        sts, token = self.cm.getPage(tokenUrl, {'header':HTTP_HEADER, 'cookiefile':COOKIE_FILE, 'use_cookie': True, 'load_cookie':True, 'save_cookie':True})
         if not sts:
             return False
         token = self.cm.ph.getDataBeetwenMarkers(token, '=', ';', False)[1].strip()
@@ -8307,7 +8307,7 @@ class pageParser(CaptchaHelper):
     def parserNOSVIDEO(self, baseUrl):
         printDBG("parserNOSVIDEO baseUrl[%s]" % baseUrl)
         # code from https://github.com/rg3/youtube-dl/blob/master/youtube_dl/extractor/nosvideo.py
-        HTTP_HEADER= { 'User-Agent':"Mozilla/5.0 (iPad; U; CPU OS 3_2 like Mac OS X; en-us) AppleWebKit/531.21.10 (KHTML, like Gecko) Version/4.0.4 Mobile/7B334b Safari/531.21.10", 'Referer':baseUrl }
+        HTTP_HEADER= {'User-Agent':"Mozilla/5.0 (iPad; U; CPU OS 3_2 like Mac OS X; en-us) AppleWebKit/531.21.10 (KHTML, like Gecko) Version/4.0.4 Mobile/7B334b Safari/531.21.10", 'Referer':baseUrl}
 
         if 'embed' not in baseUrl:
             videoID = self.cm.ph.getSearchGroups(baseUrl+'/', '[^A-Za-z0-9]([A-Za-z0-9]{12})[^A-Za-z0-9]')[0]
@@ -8423,7 +8423,7 @@ class pageParser(CaptchaHelper):
     def parseVEEHDCOM(self, baseUrl):
         printDBG("parseVEEHDCOM baseUrl[%s]" % baseUrl)
         COOKIE_FILE = GetCookieDir('veehdcom.cookie')
-        HTTP_HEADER= { 'User-Agent':'Mozilla/5.0 (X11; Linux i686) AppleWebKit/537.36 (KHTML, like Gecko) Ubuntu Chromium/37.0.2062.120 Chrome/37.0.2062.120 Safari/537.36',
+        HTTP_HEADER= {'User-Agent':'Mozilla/5.0 (X11; Linux i686) AppleWebKit/537.36 (KHTML, like Gecko) Ubuntu Chromium/37.0.2062.120 Chrome/37.0.2062.120 Safari/537.36',
                        'Referer':baseUrl}
         params = {'header':HTTP_HEADER, 'cookiefile':COOKIE_FILE, 'use_cookie': True, 'save_cookie':True}
         
@@ -8446,7 +8446,7 @@ class pageParser(CaptchaHelper):
         
     def parseSHAREREPOCOM(self, baseUrl):
         printDBG("parseSHAREREPOCOM baseUrl[%s]" % baseUrl)
-        HTTP_HEADER= { 'User-Agent':'Mozilla/5.0'}
+        HTTP_HEADER= {'User-Agent':'Mozilla/5.0'}
         sts, data = self.cm.getPage(baseUrl, {'header':HTTP_HEADER})
         tab = []
         tmp = self._findLinks(data, m1='setup', m2='</script>')
@@ -8457,7 +8457,7 @@ class pageParser(CaptchaHelper):
         
     def parserEASYVIDEOME(self, baseUrl):
         printDBG("parserEASYVIDEOME baseUrl[%s]" % baseUrl)
-        HTTP_HEADER= { 'User-Agent':'Mozilla/5.0'}
+        HTTP_HEADER= {'User-Agent':'Mozilla/5.0'}
         sts, data = self.cm.getPage(baseUrl, {'header':HTTP_HEADER})
         if not sts:
             return False
@@ -8520,7 +8520,7 @@ class pageParser(CaptchaHelper):
                     printDBG("---------- javascript code -----------")
                     printDBG(code)
                     
-                    ret = js_execute( code )
+                    ret = js_execute(code)
                     if ret['sts'] and 0 == ret['code']:
                         data = ret['data'].split('}')
                         for item in data:
@@ -8619,7 +8619,7 @@ class pageParser(CaptchaHelper):
                 jscode.append(self.cm.ph.getDataBeetwenNodes(item, ('<script', '>'), ('</script', '>'), False)[1])
         
         urlTab = []
-        ret = js_execute( '\n'.join(jscode) )
+        ret = js_execute('\n'.join(jscode))
         if ret['sts'] and 0 == ret['code']:
             data = ret['data']
             data = json_loads(data)
@@ -8639,7 +8639,7 @@ class pageParser(CaptchaHelper):
     def parseJACVIDEOCOM(self, baseUrl):
         printDBG("parseJACVIDEOCOM baseUrl[%s]" % baseUrl)
         
-        HTTP_HEADER= { 'User-Agent':"Mozilla/5.0", 'Referer':baseUrl }
+        HTTP_HEADER= {'User-Agent':"Mozilla/5.0", 'Referer':baseUrl}
         params = {'header':HTTP_HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': GetCookieDir('jacvideocom.cookie')}
         
         sts, data = self.cm.getPage(baseUrl, params)
@@ -8766,7 +8766,7 @@ class pageParser(CaptchaHelper):
         
     def parserSTREAMPLAYCC(self, baseUrl):
         printDBG("parserSTREAMPLAYCC baseUrl[%s]" % baseUrl)
-        HTTP_HEADER= { 'User-Agent':"Mozilla/5.0", 'Referer':baseUrl }
+        HTTP_HEADER= {'User-Agent':"Mozilla/5.0", 'Referer':baseUrl}
         if '/embed/' not in baseUrl:
             video_id = self.cm.ph.getSearchGroups(baseUrl+'/', '/([A-Za-z0-9]{16})/')[0]
             url = 'http://www.streamplay.cc/embed/{0}'.format(video_id)
@@ -8882,7 +8882,7 @@ class pageParser(CaptchaHelper):
         mainData = data
         
         data = self.cm.ph.getSearchGroups(data, "drdX_fx\('([^']+?)'\)")[0]
-        data = drdX_fx( data )
+        data = drdX_fx(data)
         data = self.cm.ph.getSearchGroups(data, 'proxy.link=linkcdn%2A([^"]+?)"')[0]
         printDBG(data)
         if data != '':
@@ -8897,7 +8897,7 @@ class pageParser(CaptchaHelper):
         return self._findLinks(data)
         
     def parserONETTV(self, baseUrl):
-        printDBG("parserONETTV baseUrl[%r]" % baseUrl )
+        printDBG("parserONETTV baseUrl[%r]" % baseUrl)
         
         videoUrls = []
         sts, data = self.cm.getPage(baseUrl)
@@ -8940,8 +8940,8 @@ class pageParser(CaptchaHelper):
         return videoUrls
         
     def paserBYETVORG(self, baseUrl):
-        printDBG("paserBYETVORG baseUrl[%r]" % baseUrl )
-        HTTP_HEADER= { 'User-Agent':"Mozilla/5.0", 'Referer':baseUrl.meta.get('Referer', baseUrl) }
+        printDBG("paserBYETVORG baseUrl[%r]" % baseUrl)
+        HTTP_HEADER= {'User-Agent':"Mozilla/5.0", 'Referer':baseUrl.meta.get('Referer', baseUrl)}
         file = self.cm.ph.getSearchGroups(baseUrl, "file=([0-9]+?)[^0-9]")[0]
         if '' == file:
             file = self.cm.ph.getSearchGroups(baseUrl, "a=([0-9]+?)[^0-9]")[0]
@@ -8960,14 +8960,14 @@ class pageParser(CaptchaHelper):
         streamsTab = []
         streamUrl = ''
         jscode = base64.b64decode('''dmFyIGRvY3VtZW50PXt9LHdpbmRvdz10aGlzLGVsZW1lbnQ9ZnVuY3Rpb24obil7dGhpcy5fbmFtZT1uLHRoaXMuc2V0QXR0cmlidXRlPWZ1bmN0aW9uKCl7fSx0aGlzLmF0dGFjaFRvPWZ1bmN0aW9uKCl7fX0sJD1mdW5jdGlvbihuKXtyZXR1cm4gbmV3IGVsZW1lbnQobil9O0NsYXBwcj17fSxDbGFwcHIuUGxheWVyPWZ1bmN0aW9uKG4pe3JldHVybiBwcmludChKU09OLnN0cmluZ2lmeShuKSksbmV3IGVsZW1lbnQoInBsYXllciIpfSxkb2N1bWVudC5nZXRFbGVtZW50QnlJZD1mdW5jdGlvbihuKXtyZXR1cm4gbmV3IGVsZW1lbnQobil9Ow==''') + '\n'.join(jscode)
-        ret = js_execute( jscode )
+        ret = js_execute(jscode)
         if ret['sts'] and 0 == ret['code']:
             streamUrl = json_loads(ret['data'])['source']
         return getDirectM3U8Playlist(streamUrl, checkContent=False)
         
     def paserPUTLIVEIN(self, baseUrl):
-        printDBG("paserPUTLIVEIN baseUrl[%r]" % baseUrl )
-        HTTP_HEADER= { 'User-Agent':"Mozilla/5.0", 'Referer':baseUrl.meta.get('Referer', baseUrl) }
+        printDBG("paserPUTLIVEIN baseUrl[%r]" % baseUrl)
+        HTTP_HEADER= {'User-Agent':"Mozilla/5.0", 'Referer':baseUrl.meta.get('Referer', baseUrl)}
         file = self.cm.ph.getSearchGroups(baseUrl, "file=([0-9]+?)[^0-9]")[0]
         if '' == file:
             file = self.cm.ph.getSearchGroups(baseUrl+'/', "/e/([^/]+?)/")[0]
@@ -9003,7 +9003,7 @@ class pageParser(CaptchaHelper):
         return False
         
     def paserSTREAMLIVETO(self, baseUrl):
-        printDBG("paserSTREAMLIVETO baseUrl[%r]" % baseUrl )
+        printDBG("paserSTREAMLIVETO baseUrl[%r]" % baseUrl)
         #COOKIE_FILE = GetCookieDir('rocketmediaworld.com.cookie')
         #rm(COOKIE_FILE)
         COOKIE_FILE = GetCookieDir('streamliveto.cookie')
@@ -9065,7 +9065,7 @@ class pageParser(CaptchaHelper):
         jscode = base64.b64decode('''dmFyIGRvY3VtZW50ID0ge307DQp2YXIgd2luZG93ID0gdGhpczsNCg0KJXMNCg0KdmFyIGVsZW1lbnQgPSBmdW5jdGlvbiAoaW5uZXJIVE1MKQ0Kew0KICAgIHRoaXMuX2lubmVySFRNTCA9IGlubmVySFRNTDsNCiAgICANCiAgICBPYmplY3QuZGVmaW5lUHJvcGVydHkodGhpcywgImlubmVySFRNTCIsIHsNCiAgICAgICAgZ2V0IDogZnVuY3Rpb24gKCkgew0KICAgICAgICAgICAgcmV0dXJuIHRoaXMuX2lubmVySFRNTDsNCiAgICAgICAgfSwNCiAgICAgICAgc2V0IDogZnVuY3Rpb24gKHZhbCkgew0KICAgICAgICAgICAgdGhpcy5faW5uZXJIVE1MID0gdmFsOw0KICAgICAgICB9DQogICAgfSk7DQp9Ow0KDQpkb2N1bWVudC5nZXRFbGVtZW50QnlJZCA9IGZ1bmN0aW9uKGlkKXsNCiAgICByZXR1cm4gbmV3IGVsZW1lbnQoYXNzb2NpYXRpdmVBcnJheVtpZF0pOw0KfQ0KDQpmdW5jdGlvbiBqd3BsYXllcigpIHsNCiAgICByZXR1cm4gandwbGF5ZXI7DQp9DQoNCmp3cGxheWVyLnNldHVwID0gZnVuY3Rpb24oc3JjZXMpew0KICAgIHByaW50KEpTT04uc3RyaW5naWZ5KHNyY2VzKSk7DQp9''')
         jscode = jscode % ('\n'.join(associativeArray))
         jscode += tmp
-        ret = js_execute( jscode )
+        ret = js_execute(jscode)
         if ret['sts'] and 0 == ret['code']:
             tmp = ret['data'].strip()
             data += tmp
@@ -9146,7 +9146,7 @@ class pageParser(CaptchaHelper):
             linksTab.append({'name':'http', 'url': rtmpUrl.replace('video://', 'http://')})
         elif '' != file and '' != rtmpUrl:
             printDBG("streamer[%s]" % streamer)
-            parsed_uri = urlparse( streamer )
+            parsed_uri = urlparse(streamer)
             printDBG("parsed_uri[%r]" % [parsed_uri])
             rtmpUrl    = '{uri.scheme}://{uri.netloc}/'.format(uri=parsed_uri)
             app        = '{uri.path}'.format(uri=parsed_uri)[1:]
@@ -9158,8 +9158,8 @@ class pageParser(CaptchaHelper):
         return linksTab
         
     def paserMEGOMTV(self, baseUrl):
-        printDBG("paserMEGOMTV baseUrl[%r]" % baseUrl )
-        HTTP_HEADER= { 'User-Agent':"Mozilla/5.0", 'Referer':baseUrl.meta.get('Referer', baseUrl) }
+        printDBG("paserMEGOMTV baseUrl[%r]" % baseUrl)
+        HTTP_HEADER= {'User-Agent':"Mozilla/5.0", 'Referer':baseUrl.meta.get('Referer', baseUrl)}
         
         id = self.cm.ph.getSearchGroups(baseUrl, "id=([^&]+?)&")[0]
         linkUrl = "http://distro.megom.tv/player-inside.php?id={0}&width=100%&height=450".format(id)
@@ -9179,13 +9179,13 @@ class pageParser(CaptchaHelper):
         f = int(self.cm.ph.getSearchGroups(data, 'var f = ([0-9]+?);')[0])
         v_part = self.cm.ph.getSearchGroups(data, "var v_part = '([^']+?)'")[0]
         
-        rtmpUrl = ('rtmp://%d.%d.%d.%d' % (a/f, b/f, c/f, d/f) ) + v_part
+        rtmpUrl = ('rtmp://%d.%d.%d.%d' % (a/f, b/f, c/f, d/f)) + v_part
         rtmpUrl += ' swfUrl=%s pageUrl=%s live=1 ' % (swfUrl, linkUrl)
         printDBG(rtmpUrl)
         return rtmpUrl
 
     def parserVIDEOHOUSE(self, baseUrl):
-        printDBG("parserVIDEOHOUSE baseUrl[%r]" % baseUrl )
+        printDBG("parserVIDEOHOUSE baseUrl[%r]" % baseUrl)
         HTTP_HEADER = MergeDicts(self.cm.getDefaultHeader('firefox'), {'Referer':baseUrl})
         sts, data = self.cm.getPage(baseUrl, {'header':HTTP_HEADER})
         if not sts:
@@ -9203,7 +9203,7 @@ class pageParser(CaptchaHelper):
         return False
 
     def parserVERYSTREAM(self, baseUrl):
-        printDBG("parserVERYSTREAM baseUrl[%r]" % baseUrl )
+        printDBG("parserVERYSTREAM baseUrl[%r]" % baseUrl)
         HTTP_HEADER = MergeDicts(self.cm.getDefaultHeader('firefox'), {'Referer':baseUrl})
         sts, data = self.cm.getPage(baseUrl, {'header':HTTP_HEADER})
         if not sts:
@@ -9239,7 +9239,7 @@ class pageParser(CaptchaHelper):
         return urlsTab
 
     def parserJUSTUPLOAD(self, baseUrl):
-        printDBG("parserJUSTUPLOAD baseUrl[%r]" % baseUrl )
+        printDBG("parserJUSTUPLOAD baseUrl[%r]" % baseUrl)
         HTTP_HEADER = MergeDicts(self.cm.getDefaultHeader('firefox'), {'Referer':baseUrl})
         sts, data = self.cm.getPage(baseUrl, {'header':HTTP_HEADER})
         if not sts:
@@ -9364,7 +9364,7 @@ class pageParser(CaptchaHelper):
         return urlparser.decorateUrl(videoUrl, params)
 
     def parserGAMETRAILERS(self, baseUrl):
-        printDBG("parserGAMETRAILERS baseUrl[%r]" % baseUrl )
+        printDBG("parserGAMETRAILERS baseUrl[%r]" % baseUrl)
         list = GametrailersIE()._real_extract(baseUrl)[0]['formats']
         
         for idx in range(len(list)):
@@ -9381,7 +9381,7 @@ class pageParser(CaptchaHelper):
         return list
         
     def parserVEVO(self, baseUrl):
-        printDBG("parserVEVO baseUrl[%r]" % baseUrl )
+        printDBG("parserVEVO baseUrl[%r]" % baseUrl)
         videoUrls = self.getVevoIE()._real_extract(baseUrl)['formats']
         
         for idx in range(len(videoUrls)):
@@ -9398,7 +9398,7 @@ class pageParser(CaptchaHelper):
             videoUrls[idx]['name'] = name
         if 0 < len(videoUrls):
             max_bitrate = int(config.plugins.iptvplayer.vevo_default_quality.value)
-            def __getLinkQuality( itemLink ):
+            def __getLinkQuality(itemLink):
                 return int(itemLink['bitrate'])
             videoUrls = CSelOneLink(videoUrls, __getLinkQuality, max_bitrate).getSortedLinks()
             if config.plugins.iptvplayer.vevo_use_default_quality.value:
@@ -9406,7 +9406,7 @@ class pageParser(CaptchaHelper):
         return videoUrls
         
     def parserBBC(self, baseUrl):
-        printDBG("parserBBC baseUrl[%r]" % baseUrl )
+        printDBG("parserBBC baseUrl[%r]" % baseUrl)
         
         vpid = self.cm.ph.getSearchGroups(baseUrl, '/vpid/([^/]+?)/')[0]
         
@@ -9441,7 +9441,7 @@ class pageParser(CaptchaHelper):
         
         max_bitrate = int(config.plugins.iptvplayer.bbc_default_quality.value)
         for item in tmpTab:
-            def __getLinkQuality( itemLink ):
+            def __getLinkQuality(itemLink):
                 try:
                     return int(itemLink['height'])
                 except Exception:
@@ -9459,7 +9459,7 @@ class pageParser(CaptchaHelper):
         return videoUrls
         
     def parserSHAREDSX(self, baseUrl):
-        printDBG("parserSHAREDSX baseUrl[%r]" % baseUrl )
+        printDBG("parserSHAREDSX baseUrl[%r]" % baseUrl)
         # based on https://github.com/rg3/youtube-dl/blob/master/youtube_dl/extractor/shared.py
         sts, data = self.cm.getPage(baseUrl)
 
@@ -9481,7 +9481,7 @@ class pageParser(CaptchaHelper):
         
     def parserPOSIEDZEPL(self, baseUrl):
         printDBG("parserPOSIEDZEPL baseUrl[%r]" % baseUrl)
-        HTTP_HEADER= { 'User-Agent':"Mozilla/5.0", 'Referer':baseUrl }
+        HTTP_HEADER= {'User-Agent':"Mozilla/5.0", 'Referer':baseUrl}
         if '/e.' not in baseUrl:
             video_id = self.cm.ph.getSearchGroups(baseUrl+'/', '/([A-Za-z0-9]{10})[/.?]')[0]
             url = 'http://e.posiedze.pl/' + video_id
@@ -9499,7 +9499,7 @@ class pageParser(CaptchaHelper):
     def parserNEODRIVECO(self, baseUrl):
         printDBG("parserNEODRIVECO baseUrl[%r]" % baseUrl)
         #http://neodrive.co/embed/EG0F2UYFNR2CN1CUDNT2I5OPN/
-        HTTP_HEADER= { 'User-Agent':"Mozilla/5.0", 'Referer':baseUrl }
+        HTTP_HEADER= {'User-Agent':"Mozilla/5.0", 'Referer':baseUrl}
         sts, data = self.cm.getPage(baseUrl, {'header':HTTP_HEADER})
         if not sts:
             return False
@@ -9512,7 +9512,7 @@ class pageParser(CaptchaHelper):
     def parserMIPLAYERNET(self, baseUrl):
         printDBG("parserMIPLAYERNET baseUrl[%r]" % baseUrl)
         Referer = strwithmeta(baseUrl).meta.get('Referer', baseUrl)
-        HTTP_HEADER= { 'User-Agent':"Mozilla/5.0", 'Referer':Referer }
+        HTTP_HEADER= {'User-Agent':"Mozilla/5.0", 'Referer':Referer}
         sts, data = self.cm.getPage(baseUrl, {'header':HTTP_HEADER})
         if not sts:
             return False
@@ -9537,7 +9537,7 @@ class pageParser(CaptchaHelper):
     def parserYOCASTTV(self, baseUrl):
         printDBG("parserYOCASTTV baseUrl[%r]" % baseUrl)
         Referer = strwithmeta(baseUrl).meta.get('Referer', baseUrl)
-        HTTP_HEADER= { 'User-Agent':"Mozilla/5.0", 'Referer':Referer }
+        HTTP_HEADER= {'User-Agent':"Mozilla/5.0", 'Referer':Referer}
         sts, data = self.cm.getPage(baseUrl, {'header':HTTP_HEADER})
         if not sts:
             return False
@@ -9554,7 +9554,7 @@ class pageParser(CaptchaHelper):
     def parserSOSTARTORG(self, baseUrl):
         printDBG("parserSOSTARTORG baseUrl[%r]" % baseUrl)
         Referer = strwithmeta(baseUrl).meta.get('Referer', baseUrl)
-        HTTP_HEADER= { 'User-Agent':"Mozilla/5.0", 'Referer':Referer }
+        HTTP_HEADER= {'User-Agent':"Mozilla/5.0", 'Referer':Referer}
         sts, data = self.cm.getPage(baseUrl, {'header':HTTP_HEADER})
         if not sts:
             return False
@@ -9632,7 +9632,7 @@ class pageParser(CaptchaHelper):
         printDBG("parseBROADCAST baseUrl[%r]" % baseUrl)
         baseUrl = urlparser.decorateParamsFromUrl(baseUrl)
         Referer = baseUrl.meta.get('Referer', '')
-        HTTP_HEADER= { 'User-Agent':"Mozilla/5.0", 'Referer':Referer }
+        HTTP_HEADER= {'User-Agent':"Mozilla/5.0", 'Referer':Referer}
         params = {'header':HTTP_HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': GetCookieDir('broadcast.cookie')}
         
         sts, data = self.cm.getPage(baseUrl, params)
@@ -9677,7 +9677,7 @@ class pageParser(CaptchaHelper):
             
             hlsUrl = hlsUrl + token
             hlsUrl = urlparser.decorateUrl(hlsUrl, {'iptv_proto':'m3u8', 'iptv_livestream':True, 'Origin':self.cm.getBaseUrl(baseUrl), 'User-Agent':HTTP_HEADER['User-Agent'], 'Referer':baseUrl})
-            vidTab.extend( getDirectM3U8Playlist(hlsUrl, checkContent=True) )
+            vidTab.extend(getDirectM3U8Playlist(hlsUrl, checkContent=True))
         return vidTab
     
     def parserGOODRTMP(self, baseUrl):
@@ -9693,7 +9693,7 @@ class pageParser(CaptchaHelper):
     def parserTHEACTIONLIVE(self, baseUrl):
         printDBG("parserTHEACTIONLIVE baseUrl[%r]" % baseUrl)
         Referer = strwithmeta(baseUrl).meta.get('Referer', baseUrl)
-        HTTP_HEADER= { 'User-Agent':"Mozilla/5.0", 'Referer':Referer }
+        HTTP_HEADER= {'User-Agent':"Mozilla/5.0", 'Referer':Referer}
         sts, data = self.cm.getPage(baseUrl, {'header':HTTP_HEADER})
         if not sts:
             return False
@@ -9703,7 +9703,7 @@ class pageParser(CaptchaHelper):
     def parserBIGGESTPLAYER(self, baseUrl):
         printDBG("parserBIGGESTPLAYER baseUrl[%r]" % baseUrl)
         Referer = strwithmeta(baseUrl).meta.get('Referer', baseUrl)
-        HTTP_HEADER= { 'User-Agent':"Mozilla/5.0", 'Referer':Referer }
+        HTTP_HEADER= {'User-Agent':"Mozilla/5.0", 'Referer':Referer}
         sts, data = self.cm.getPage(baseUrl, {'header':HTTP_HEADER})
         if not sts:
             return False
@@ -9715,7 +9715,7 @@ class pageParser(CaptchaHelper):
     def parserLIVEONLINE247(self, baseUrl):
         printDBG("parserLIVEONLINE247 baseUrl[%r]" % baseUrl)
         Referer = strwithmeta(baseUrl).meta.get('Referer', baseUrl)
-        HTTP_HEADER= { 'User-Agent':"Mozilla/5.0", 'Referer':Referer }
+        HTTP_HEADER= {'User-Agent':"Mozilla/5.0", 'Referer':Referer}
         sts, data = self.cm.getPage(baseUrl, {'header':HTTP_HEADER})
         if not sts:
             return False
@@ -9737,7 +9737,7 @@ class pageParser(CaptchaHelper):
     def parserFILEPUPNET(self, baseUrl):
         printDBG("parserFILEPUPNET baseUrl[%r]" % baseUrl)
         Referer = strwithmeta(baseUrl).meta.get('Referer', baseUrl)
-        HTTP_HEADER= { 'User-Agent':"Mozilla/5.0", 'Referer':Referer }
+        HTTP_HEADER= {'User-Agent':"Mozilla/5.0", 'Referer':Referer}
         sts, data = self.cm.getPage(baseUrl, {'header':HTTP_HEADER})
         if not sts:
             return False
@@ -9858,7 +9858,7 @@ class pageParser(CaptchaHelper):
     def parserSSH101COM(self, baseUrl):
         printDBG("parserFILEHOOT baseUrl[%r]" % baseUrl)
         Referer = strwithmeta(baseUrl).meta.get('Referer', baseUrl)
-        HTTP_HEADER= { 'User-Agent':"Mozilla/5.0", 'Referer':Referer }
+        HTTP_HEADER= {'User-Agent':"Mozilla/5.0", 'Referer':Referer}
         sts, data = self.cm.getPage(baseUrl, {'header':HTTP_HEADER})
         if not sts:
             return False
@@ -9916,7 +9916,7 @@ class pageParser(CaptchaHelper):
         
     def parserOKRU(self, baseUrl):
         printDBG("parserOKRU baseUrl[%r]" % baseUrl)
-        HTTP_HEADER= { 'User-Agent':'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/52.0.2743.116 Safari/537.36',
+        HTTP_HEADER= {'User-Agent':'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/52.0.2743.116 Safari/537.36',
                        'Accept':'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
                        'Referer':baseUrl,
                        'Cookie':'_flashVersion=18',
@@ -10040,7 +10040,7 @@ class pageParser(CaptchaHelper):
     def parserLIVESTRAMTV(self, baseUrl):
         printDBG("parserLIVESTRAMTV baseUrl[%r]" % baseUrl)
         url = 'http://www.live-stream.tv/'
-        HTTP_HEADER= { 'User-Agent':'Mozilla/5.0',
+        HTTP_HEADER= {'User-Agent':'Mozilla/5.0',
                        'Accept':'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
                        'Referer':baseUrl}
                        
@@ -10073,7 +10073,7 @@ class pageParser(CaptchaHelper):
         jscode = base64.b64decode('''dmFyIGlwdHZfc3JjZXM9W10sZG9jdW1lbnQ9e30sd2luZG93PXRoaXMsTGV2ZWxTZWxlY3Rvcj0iIixDbGFwcHI9e307Q2xhcHByLlBsYXllcj1mdW5jdGlvbihyKXt0cnl7aXB0dl9zcmNlcy5wdXNoKHIuc291cmNlKX1jYXRjaChlKXt9fTt2YXIgJD1mdW5jdGlvbigpe3JldHVybntyZWFkeTpmdW5jdGlvbihyKXtyKCl9fX07''')
         jscode += tmp + '\nprint(JSON.stringify(iptv_srces));'
         tmp = []
-        ret = js_execute( jscode )
+        ret = js_execute(jscode)
         if ret['sts'] and 0 == ret['code']:
             tmp = ret['data'].strip()
             tmp = json_loads(tmp)
@@ -10232,7 +10232,7 @@ class pageParser(CaptchaHelper):
         sts, data = self.cm.getPage(baseUrl)
         if not sts:
             return []
-        data = data[data.find('x="')+2 : data.rfind('"')+1]
+        data = data[data.find('x="')+2: data.rfind('"')+1]
         dataTab = data.split('+\n')
         data = ""
         for line in dataTab:
@@ -10256,12 +10256,12 @@ class pageParser(CaptchaHelper):
             
         def printDBG2(data):
             printDBG("================================================================")
-            printDBG( data )
+            printDBG(data)
             printDBG("================================================================")
         data = backslashUnEscaped(data)
         
         data = data[data.find('f("')+3:data.rfind('"')]
-        data = fun1( data )
+        data = fun1(data)
         printDBG2(data)
         data = backslashUnEscaped(data)
         
@@ -10270,7 +10270,7 @@ class pageParser(CaptchaHelper):
         data = data[data.find('f("')+3:data.rfind('"')]
         printDBG2(data)
         data = data.decode('string_escape')
-        data = fun3( data, 50, 0)
+        data = fun3(data, 50, 0)
         data = backslashUnEscaped(data)
         
         printDBG2(data)
@@ -10278,20 +10278,20 @@ class pageParser(CaptchaHelper):
         return
         
         data = data[data.find('f("')+3:data.rfind('"')]
-        data = fun2( data )
+        data = fun2(data)
         data = data.decode('string-escape')
 
         data = data[data.find('f("')+3:data.rfind('"')]
-        data = fun3( data, 23, 1)
+        data = fun3(data, 23, 1)
         data = backslashUnEscaped(data)
         
         printDBG(data)
 
     def parseMETAUA(self, baseUrl):
         printDBG("parseMETAUA baseUrl[%s]" % baseUrl)
-        HTTP_HEADER= { 'User-Agent':'Mozilla/5.0 (iPad; U; CPU OS 3_2 like Mac OS X; en-us) AppleWebKit/531.21.10 (KHTML, like Gecko) Version/4.0.4 Mobile/7B334b Safari/531.21.10', #'Mozilla/5.0 (X11; Ubuntu; Linux i686; rv:21.0) Gecko/20100101 Firefox/21.0',
-                       'Accept':'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' }
-        sts, data = self.cm.getPage(baseUrl, {'header' : HTTP_HEADER})
+        HTTP_HEADER= {'User-Agent':'Mozilla/5.0 (iPad; U; CPU OS 3_2 like Mac OS X; en-us) AppleWebKit/531.21.10 (KHTML, like Gecko) Version/4.0.4 Mobile/7B334b Safari/531.21.10', #'Mozilla/5.0 (X11; Ubuntu; Linux i686; rv:21.0) Gecko/20100101 Firefox/21.0',
+                       'Accept':'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8'}
+        sts, data = self.cm.getPage(baseUrl, {'header': HTTP_HEADER})
         if not sts:
             return False
         file_url = self.cm.ph.getSearchGroups(data, '''st_html5=['"]([^'^"]+?)['"]''')[0]
@@ -10314,7 +10314,7 @@ class pageParser(CaptchaHelper):
         
         jscode = self.cm.ph.getDataBeetwenMarkers(data, 'JSON.parse(', '),', False)[1]
         jscode = 'print(%s);' % jscode
-        ret = js_execute( jscode )
+        ret = js_execute(jscode)
         if ret['sts'] and 0 == ret['code']:
             decoded = ret['data'].strip()
             printDBG('DECODED DATA -> [%s]' % decoded)
@@ -10339,7 +10339,7 @@ class pageParser(CaptchaHelper):
         hashFrom = self.cm.ph.getSearchGroups(url, '''hash_from=([0-9a-zA-Z]+?)[^0-9^a-z^A-Z]''')[0]
         
         # User-Agent - is important!!!
-        HTTP_HEADER = { 'User-Agent':'Mozilla/5.0 (iPad; U; CPU OS 3_2 like Mac OS X; en-us) AppleWebKit/531.21.10 (KHTML, like Gecko) Version/4.0.4 Mobile/7B334b Safari/531.21.10', #'Mozilla/5.0 (X11; Ubuntu; Linux i686; rv:21.0) Gecko/20100101 Firefox/21.0',
+        HTTP_HEADER = {'User-Agent':'Mozilla/5.0 (iPad; U; CPU OS 3_2 like Mac OS X; en-us) AppleWebKit/531.21.10 (KHTML, like Gecko) Version/4.0.4 Mobile/7B334b Safari/531.21.10', #'Mozilla/5.0 (X11; Ubuntu; Linux i686; rv:21.0) Gecko/20100101 Firefox/21.0',
                         'Accept':'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
                         'Referer': 'http://hqq.watch/'
                       }
@@ -10409,7 +10409,7 @@ class pageParser(CaptchaHelper):
         jscode = 'var need_captcha="0"; var server_referer="http://hqq.watch/"; var orig_vid="'+orig_vid+'"; print(' + jscode + ');'
 
         gt = self.cm.getCookieItem(COOKIE_FILE, 'gt')
-        ret = js_execute( jscode )
+        ret = js_execute(jscode)
         if ret['sts'] and 0 == ret['code']:
             secPlayerUrl = self.cm.getFullUrl(ret['data'].strip(), self.cm.getBaseUrl(cUrl)).replace('$secured', '0') #'https://hqq.tv/'
             if 'need_captcha=1' in secPlayerUrl and ipData['need_captcha'] == 0 and gt != '':
@@ -10478,7 +10478,7 @@ class pageParser(CaptchaHelper):
             jscode.append(wise)
             tmp = ph.search(data, '''(['"][^'^"]*?get_md5\.php[^;]+?);''')[0]
             jscode.append('print(%s)' % tmp)
-            ret = js_execute( '\n'.join(jscode) )
+            ret = js_execute('\n'.join(jscode))
 
             playerUrl = self.cm.getFullUrl(ret['data'].strip(), cUrl)
             params['header']['Accept'] = '*/*'
@@ -10503,7 +10503,7 @@ class pageParser(CaptchaHelper):
                 file_url = urlparser.decorateUrl(file_url, {'iptv_livestream':False, 'User-Agent':HTTP_HEADER['User-Agent'], 'Referer':cUrl, 'external_sub_tracks':sub_tracks})
                 if file_url.split('?')[0].endswith('.m3u8') or '/hls-' in file_url:
                     file_url = strwithmeta(file_url, {'iptv_proto':'m3u8'})
-                    retUrls.extend( getDirectM3U8Playlist(file_url, False, checkContent=True) )
+                    retUrls.extend(getDirectM3U8Playlist(file_url, False, checkContent=True))
         return retUrls
         
     def parserSTREAMPLAYTO(self, baseUrl):
@@ -10592,7 +10592,7 @@ class pageParser(CaptchaHelper):
         jscode.insert(0, "isAdb = '';$.cookie=function(){}")
         jscode.insert(0, base64.b64decode('''YXRvYj1mdW5jdGlvbihlKXtlLmxlbmd0aCU0PT09MyYmKGUrPSI9IiksZS5sZW5ndGglND09PTImJihlKz0iPT0iKSxlPUR1a3RhcGUuZGVjKCJiYXNlNjQiLGUpLGRlY1RleHQ9IiI7Zm9yKHZhciB0PTA7dDxlLmJ5dGVMZW5ndGg7dCsrKWRlY1RleHQrPVN0cmluZy5mcm9tQ2hhckNvZGUoZVt0XSk7cmV0dXJuIGRlY1RleHR9LHdpbmRvdz10aGlzLGpRdWVyeT17fSxqUXVlcnkubWFwPWZ1bmN0aW9uKGUsdCl7Zm9yKHZhciByPWUubGVuZ3RoLG49MDtyPm47bisrKWVbbl09dChlW25dKTtyZXR1cm4gZX0sJD1qUXVlcnk7'''))
         jscode.append('''var dupa = %s;dupa['size']();print(JSON.stringify(dupa));''' % json_dumps(tab))
-        ret = js_execute( '\n'.join(jscode) )
+        ret = js_execute('\n'.join(jscode))
         if ret['sts'] and 0 == ret['code']:
             data = json_loads(ret['data'])
             for url in data:
@@ -10716,7 +10716,7 @@ class pageParser(CaptchaHelper):
         else:
             url = baseUrl
         
-        sts, data = self.cm.getPage(url, {'header' : HTTP_HEADER})
+        sts, data = self.cm.getPage(url, {'header': HTTP_HEADER})
         if not sts:
             return videoTab
         cUrl = self.cm.meta['url']
@@ -10743,7 +10743,7 @@ class pageParser(CaptchaHelper):
         data = self.cm.ph.getAllItemsBeetwenMarkers(data, 'srces.push(', ');')
         jscode = '\nvar srces=[];\n' + '\n'.join(data) + '\nprint(JSON.stringify(srces));'
         js_params.append({'code':jscode})
-        ret = js_execute_ext( js_params )
+        ret = js_execute_ext(js_params)
         data = ret['data'].strip()
         data = json_loads(data)
         
@@ -10832,7 +10832,7 @@ class pageParser(CaptchaHelper):
         baseUrl = strwithmeta(baseUrl)
         referer = baseUrl.meta.get('Referer', baseUrl)
         
-        HTTP_HEADER = { 'User-Agent':'Mozilla/5.0', 'Referer':referer}
+        HTTP_HEADER = {'User-Agent':'Mozilla/5.0', 'Referer':referer}
         params = {'header':HTTP_HEADER}
         
         sts, data = self.cm.getPage(baseUrl, params)
@@ -10852,7 +10852,7 @@ class pageParser(CaptchaHelper):
         printDBG("parserTUNEINCOM url[%s]\n" % baseUrl)
         streamsTab = []
         
-        HTTP_HEADER= { 'User-Agent':'Mozilla/5.0', 'Referer':baseUrl}
+        HTTP_HEADER= {'User-Agent':'Mozilla/5.0', 'Referer':baseUrl}
         
         sts, data = self.cm.getPage(baseUrl, {'header':HTTP_HEADER})
         if not sts:
@@ -10960,7 +10960,7 @@ class pageParser(CaptchaHelper):
                 sts, link = self.cm.getPage(videoUrl)
                 if sts:
                     printDBG(" '%s' ---> '%s' " % (videoUrl, link))
-                    urlsTab.append({'name':'link', 'url': link })
+                    urlsTab.append({'name':'link', 'url': link})
                     return urlsTab
         
         tmp = self.cm.ph.getDataBeetwenReMarkers(data, re.compile('''['"]?sources['"]?\s*:\s*\['''), re.compile('\]'), False)[1]
@@ -11004,7 +11004,7 @@ class pageParser(CaptchaHelper):
         baseUrl = strwithmeta(baseUrl)
         referer = baseUrl.meta.get('Referer', baseUrl)
         
-        HTTP_HEADER = { 'User-Agent':'Mozilla/5.0', 'Referer':referer}
+        HTTP_HEADER = {'User-Agent':'Mozilla/5.0', 'Referer':referer}
         params = {'header':HTTP_HEADER}
         
         sts, data = self.cm.getPage(baseUrl, params)
@@ -11062,7 +11062,7 @@ class pageParser(CaptchaHelper):
         baseUrl = strwithmeta(baseUrl)
         referer = baseUrl.meta.get('Referer', baseUrl)
         
-        HTTP_HEADER = { 'User-Agent':'Mozilla/5.0', 'Referer':referer}
+        HTTP_HEADER = {'User-Agent':'Mozilla/5.0', 'Referer':referer}
         params = {'header':HTTP_HEADER}
         
         sts, data = self.cm.getPage(baseUrl, params)
@@ -11108,7 +11108,7 @@ class pageParser(CaptchaHelper):
         baseUrl = strwithmeta(baseUrl)
         referer = baseUrl.meta.get('Referer', baseUrl)
         
-        HTTP_HEADER = { 'User-Agent':'Mozilla/5.0', 'Referer':referer}
+        HTTP_HEADER = {'User-Agent':'Mozilla/5.0', 'Referer':referer}
         params = {'header':HTTP_HEADER}
         
         tries = 0
@@ -11166,7 +11166,7 @@ class pageParser(CaptchaHelper):
         baseUrl = strwithmeta(baseUrl)
         referer = baseUrl.meta.get('Referer', baseUrl)
         
-        HTTP_HEADER = { 'User-Agent':'Mozilla/5.0 (iPad; U; CPU OS 3_2 like Mac OS X; en-us) AppleWebKit/531.21.10 (KHTML, like Gecko) Version/4.0.4 Mobile/7B334b Safari/531.21.10',
+        HTTP_HEADER = {'User-Agent':'Mozilla/5.0 (iPad; U; CPU OS 3_2 like Mac OS X; en-us) AppleWebKit/531.21.10 (KHTML, like Gecko) Version/4.0.4 Mobile/7B334b Safari/531.21.10',
                         'Accept':'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
                         'Referer': referer
                       }
@@ -11206,7 +11206,7 @@ class pageParser(CaptchaHelper):
         return False
         
     def _parserEKSTRAKLASATV(self, ckmId):
-        printDBG("_parserEKSTRAKLASATV ckmId[%r]" % ckmId )
+        printDBG("_parserEKSTRAKLASATV ckmId[%r]" % ckmId)
         tm = str(int(time.time() * 1000))
         jQ = str(randrange(562674473039806, 962674473039806))
         authKey = 'FDF9406DE81BE0B573142F380CFA6043'
@@ -11309,7 +11309,7 @@ class pageParser(CaptchaHelper):
             except Exception:
                 pass
                             
-            sts, data = self.cm.getPage(baseUrl, {'header':HTTP_HEADER}, post_data )
+            sts, data = self.cm.getPage(baseUrl, {'header':HTTP_HEADER}, post_data)
             if not sts:
                 return False
         
@@ -11343,7 +11343,7 @@ class pageParser(CaptchaHelper):
         baseUrl = strwithmeta(baseUrl)
         referer = baseUrl.meta.get('Referer', baseUrl)
         
-        HTTP_HEADER = { 'User-Agent':     'Mozilla/5.0 (iPad; U; CPU OS 3_2 like Mac OS X; en-us) AppleWebKit/531.21.10 (KHTML, like Gecko) Version/4.0.4 Mobile/7B334b Safari/531.21.10',
+        HTTP_HEADER = {'User-Agent':     'Mozilla/5.0 (iPad; U; CPU OS 3_2 like Mac OS X; en-us) AppleWebKit/531.21.10 (KHTML, like Gecko) Version/4.0.4 Mobile/7B334b Safari/531.21.10',
                         'Accept':         'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8', 
                         'Accept-Encoding': 'gzip, deflate',
                       }
@@ -11377,7 +11377,7 @@ class pageParser(CaptchaHelper):
         part1 = base64.b64decode('''dmFyIGRvY3VtZW50ID0ge307DQpmdW5jdGlvbiBhdG9iKHIpe3ZhciBuPS9bXHRcblxmXHIgXS9nLHQ9KHI9U3RyaW5nKHIpLnJlcGxhY2UobiwiIikpLmxlbmd0aDt0JTQ9PTAmJih0PShyPXIucmVwbGFjZSgvPT0/JC8sIiIpKS5sZW5ndGgpO2Zvcih2YXIgZSxhLGk9MCxvPSIiLGY9LTE7KytmPHQ7KWE9IkFCQ0RFRkdISUpLTE1OT1BRUlNUVVZXWFlaYWJjZGVmZ2hpamtsbW5vcHFyc3R1dnd4eXowMTIzNDU2Nzg5Ky8iLmluZGV4T2Yoci5jaGFyQXQoZikpLGU9aSU0PzY0KmUrYTphLGkrKyU0JiYobys9U3RyaW5nLmZyb21DaGFyQ29kZSgyNTUmZT4+KC0yKmkmNikpKTtyZXR1cm4gb30NCnZhciB3aW5kb3cgPSB0aGlzOw0KDQpTdHJpbmcucHJvdG90eXBlLml0YWxpY3M9ZnVuY3Rpb24oKXtyZXR1cm4gIjxpPjwvaT4iO307DQpTdHJpbmcucHJvdG90eXBlLmxpbms9ZnVuY3Rpb24oKXtyZXR1cm4gIjxhIGhyZWY9XCJ1bmRlZmluZWRcIj48L2E+Ijt9Ow0KU3RyaW5nLnByb3RvdHlwZS5mb250Y29sb3I9ZnVuY3Rpb24oKXtyZXR1cm4gIjxmb250IGNvbG9yPVwidW5kZWZpbmVkXCI+PC9mb250PiI7fTsNCkFycmF5LnByb3RvdHlwZS5maW5kPSJmdW5jdGlvbiBmaW5kKCkgeyBbbmF0aXZlIGNvZGVdIH0iOw0KQXJyYXkucHJvdG90eXBlLmZpbGw9ImZ1bmN0aW9uIGZpbGwoKSB7IFtuYXRpdmUgY29kZV0gfSI7DQpmdW5jdGlvbiBmaWx0ZXIoKQ0Kew0KICAgIGZ1biA9IGFyZ3VtZW50c1swXTsNCiAgICB2YXIgbGVuID0gdGhpcy5sZW5ndGg7DQogICAgaWYgKHR5cGVvZiBmdW4gIT0gImZ1bmN0aW9uIikNCiAgICAgICAgdGhyb3cgbmV3IFR5cGVFcnJvcigpOw0KICAgIHZhciByZXMgPSBuZXcgQXJyYXkoKTsNCiAgICB2YXIgdGhpc3AgPSBhcmd1bWVudHNbMV07DQogICAgZm9yICh2YXIgaSA9IDA7IGkgPCBsZW47IGkrKykNCiAgICB7DQogICAgICAgIGlmIChpIGluIHRoaXMpDQogICAgICAgIHsNCiAgICAgICAgICAgIHZhciB2YWwgPSB0aGlzW2ldOw0KICAgICAgICAgICAgaWYgKGZ1bi5jYWxsKHRoaXNwLCB2YWwsIGksIHRoaXMpKQ0KICAgICAgICAgICAgICAgIHJlcy5wdXNoKHZhbCk7DQogICAgICAgIH0NCiAgICB9DQogICAgcmV0dXJuIHJlczsNCn07DQpPYmplY3QuZGVmaW5lUHJvcGVydHkoZG9jdW1lbnQsICJjb29raWUiLCB7DQogICAgZ2V0IDogZnVuY3Rpb24gKCkgew0KICAgICAgICByZXR1cm4gdGhpcy5fY29va2llOw0KICAgIH0sDQogICAgc2V0IDogZnVuY3Rpb24gKHZhbCkgew0KICAgICAgICBwcmludCh2YWwpOw0KICAgICAgICB0aGlzLl9jb29raWUgPSB2YWw7DQogICAgfQ0KfSk7DQpBcnJheS5wcm90b3R5cGUuZmlsdGVyID0gZmlsdGVyOw0KDQp2YXIgc2Vzc2lvbl9tczsNCnZhciBzZXNzaW9uX2lkOw==''') 
         part2 =  base64.b64decode('''DQpwcmludCgiXG5zZXNzaW9uX21zPSIgKyBzZXNzaW9uX21zICsgIjtcbiIpOw0KcHJpbnQoIlxzZXNzaW9uX2lkPSIgKyBzZXNzaW9uX2lkICsgIjtcbiIpOw0KDQo=''')
         jscode = part1 + '\n' + jscode + '\n' + part2
-        ret = js_execute( jscode )
+        ret = js_execute(jscode)
         if ret['sts'] and 0 == ret['code']:
             decoded = ret['data'].strip()
             decoded = decoded.split('\n')
@@ -11437,10 +11437,10 @@ class pageParser(CaptchaHelper):
     def parserSHAREVIDEOPL(self, baseUrl):
         printDBG("parserSHAREVIDEOPL url[%s]\n" % baseUrl)
         baseUrl = strwithmeta(baseUrl)
-        HTTP_HEADER= { 'User-Agent':'Mozilla/5.0 (X11; Ubuntu; Linux i686; rv:21.0) Gecko/20100101 Firefox/21.0',
-                       'Accept':'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' }
+        HTTP_HEADER= {'User-Agent':'Mozilla/5.0 (X11; Ubuntu; Linux i686; rv:21.0) Gecko/20100101 Firefox/21.0',
+                       'Accept':'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8'}
         COOKIE_FILE = GetCookieDir("sharevideo.pl.cookie")
-        rm (COOKIE_FILE)
+        rm(COOKIE_FILE)
         params = {'header':HTTP_HEADER, 'use_cookie': True, 'save_cookie': True, 'load_cookie': True, 'cookiefile': COOKIE_FILE}
         
         videoTab = []
@@ -11483,7 +11483,7 @@ class pageParser(CaptchaHelper):
         jscode = base64.b64decode('''ZnVuY3Rpb24gaXRhbGljcygpe3JldHVybiI8aT4iK3RoaXMrIjwvaT4ifWZ1bmN0aW9uIGxpbmsoKXtyZXR1cm4nPGEgaHJlZj0iJythcmd1bWVudHNbMF0ucmVwbGFjZSgnIicsIiZxdW90ZTsiKSsnIj4nK3RoaXMrIjwvYT4ifWZ1bmN0aW9uIGZvbnRjb2xvcigpe3JldHVybic8Zm9udCBjb2xvcj0iJythcmd1bWVudHNbMF0rJyI+Jyt0aGlzKyI8L2ZvbnQ+In1mdW5jdGlvbiBmaW5kKCl7dmFyIHQsbj1hcmd1bWVudHNbMF0sZT1hcmd1bWVudHNbMV0scj1PYmplY3QodGhpcyksaT0wO2lmKCJudW1iZXIiPT10eXBlb2Ygci5sZW5ndGgmJnIubGVuZ3RoPj0wKWZvcih0PU1hdGguZmxvb3Ioci5sZW5ndGgpO3Q+aTsrK2kpaWYobi5jYWxsKGUscltpXSxpLHIpKXJldHVybiByW2ldfWZ1bmN0aW9uIGVudHJpZXMoKXt2YXIgdD1PYmplY3QodGhpcyk7cmV0dXJuIG5ldyBBcnJheUl0ZXJhdG9yKHQsMSl9ZnVuY3Rpb24gZmlsbCgpe2Zvcih2YXIgdD1hcmd1bWVudHNbMF0sbj1PYmplY3QodGhpcyksZT1wYXJzZUludChuLmxlbmd0aCwxMCkscj1hcmd1bWVudHNbMV0saT1wYXJzZUludChyLDEwKXx8MCxvPTA+aT9NYXRoLm1heChlK2ksMCk6TWF0aC5taW4oaSxlKSxzPWFyZ3VtZW50c1syXSx1PXZvaWQgMD09PXM/ZTpwYXJzZUludChzKXx8MCxhPTA+dT9NYXRoLm1heChlK3UsMCk6TWF0aC5taW4odSxlKTthPm87bysrKW5bb109dDtyZXR1cm4gbn1mdW5jdGlvbiBmaWx0ZXIoKXtmdW49YXJndW1lbnRzWzBdO3ZhciB0PXRoaXMubGVuZ3RoO2lmKCJmdW5jdGlvbiIhPXR5cGVvZiBmdW4pdGhyb3cgbmV3IFR5cGVFcnJvcjtmb3IodmFyIG49bmV3IEFycmF5LGU9YXJndW1lbnRzWzFdLHI9MDt0PnI7cisrKWlmKHIgaW4gdGhpcyl7dmFyIGk9dGhpc1tyXTtmdW4uY2FsbChlLGkscix0aGlzKSYmbi5wdXNoKGkpfXJldHVybiBufWZ1bmN0aW9uIHNldFRpbWVvdXQoKXt9ZnVuY3Rpb24gRGF0ZSgpe3JldHVybiJTdW4gU2VwIDE3IDIwMTcgMjM6NTQ6NDMgR01UKzAyMDAgKENlbnRyYWwgRXVyb3BlYW4gRGF5bGlnaHQgVGltZSkifXZhciBpcHR2X3NyY2VzPVtdLGRvY3VtZW50PXt9LHdpbmRvdz10aGlzO1N0cmluZy5wcm90b3R5cGUuaXRhbGljcz1pdGFsaWNzLFN0cmluZy5wcm90b3R5cGUubGluaz1saW5rLFN0cmluZy5wcm90b3R5cGUuZm9udGNvbG9yPWZvbnRjb2xvcjt2YXIgQXJyYXlJdGVyYXRvcj1mdW5jdGlvbih0LG4pe3RoaXMuX2FycmF5PXQsdGhpcy5fZmxhZz1uLHRoaXMuX25leHRJbmRleD0wfTtBcnJheS5wcm90b3R5cGUuZmlsdGVyPWZpbHRlcixBcnJheS5wcm90b3R5cGUuZmlsbD1maWxsLEFycmF5LnByb3RvdHlwZS5lbnRyaWVzPWVudHJpZXMsQXJyYXkucHJvdG90eXBlLmZpbmQ9ZmluZDt2YXIgZWxlbWVudD1mdW5jdGlvbih0KXt0aGlzLl9uYW1lPXQsdGhpcy5fc3JjPSIiLHRoaXMuX2lubmVySFRNTD0iIix0aGlzLl9wYXJlbnRFbGVtZW50PSIiLHRoaXMuc2hvdz1mdW5jdGlvbigpe30sdGhpcy5hdHRyPWZ1bmN0aW9uKHQsbil7cmV0dXJuInNyYyI9PXQmJiIjdmlkZW8iPT10aGlzLl9uYW1lJiZpcHR2X3NyY2VzLnB1c2gobiksdGhpc30sdGhpcy5tZWRpYWVsZW1lbnRwbGF5ZXI9ZnVuY3Rpb24oKXt9LE9iamVjdC5kZWZpbmVQcm9wZXJ0eSh0aGlzLCJzcmMiLHtnZXQ6ZnVuY3Rpb24oKXtyZXR1cm4gdGhpcy5fc3JjfSxzZXQ6ZnVuY3Rpb24odCl7dGhpcy5fc3JjPXQscHJpbnREQkcodCl9fSksT2JqZWN0LmRlZmluZVByb3BlcnR5KHRoaXMsImlubmVySFRNTCIse2dldDpmdW5jdGlvbigpe3JldHVybiB0aGlzLl9pbm5lckhUTUx9LHNldDpmdW5jdGlvbih0KXt0aGlzLl9pbm5lckhUTUw9dH19KSxPYmplY3QuZGVmaW5lUHJvcGVydHkodGhpcywicGFyZW50RWxlbWVudCIse2dldDpmdW5jdGlvbigpe3JldHVybiBuZXcgZWxlbWVudH0sc2V0OmZ1bmN0aW9uKHQpe319KX0sJD1mdW5jdGlvbih0KXtyZXR1cm4gbmV3IGVsZW1lbnQodCl9O2RvY3VtZW50LmdldEVsZW1lbnRCeUlkPWZ1bmN0aW9uKHQpe3JldHVybiBuZXcgZWxlbWVudCh0KX0sZG9jdW1lbnQuY3VycmVudFNjcmlwdD1uZXcgZWxlbWVudCxkb2N1bWVudC5ib2R5PW5ldyBlbGVtZW50LGRvY3VtZW50LmRvY3VtZW50RWxlbWVudD1uZXcgZWxlbWVudCx0aGlzLnRvU3RyaW5nPWZ1bmN0aW9uKCl7cmV0dXJuIltvYmplY3QgV2luZG93XSJ9Ow==''')
         jscode += tmp + '\nprint(JSON.stringify(iptv_srces));'
         tmp = []
-        ret = js_execute( jscode )
+        ret = js_execute(jscode)
         if ret['sts'] and 0 == ret['code']:
             tmp = ret['data'].strip()
             tmp = json_loads(tmp)
@@ -11544,7 +11544,7 @@ class pageParser(CaptchaHelper):
             if 'eval(' in item and 'jwplayer' in item:
                 jscode.append(item)
 
-        ret = js_execute( '\n'.join(jscode) )
+        ret = js_execute('\n'.join(jscode))
         if ret['sts']:
             data += ret['data']
 
@@ -11612,7 +11612,7 @@ class pageParser(CaptchaHelper):
         data = self.cm.ph.getDataBeetwenNodes(data, ('<script', '>'), ('</script', '>'), False)[1]
         
         jscode = '''window=this;document={};document.write=function(){print(arguments[0]);}'''
-        ret = js_execute( jscode + '\n' + data )
+        ret = js_execute(jscode + '\n' + data)
         if ret['sts'] and 0 == ret['code']:
             videoUrl = self.cm.ph.getSearchGroups(ret['data'], '''href=['"]([^"^']+?)['"]''')[0]
             if self.cm.isValidUrl(videoUrl):
@@ -11632,7 +11632,7 @@ class pageParser(CaptchaHelper):
         
         COOKIE_FILE = GetCookieDir('wstream.video')
         params = {'header':HTTP_HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': COOKIE_FILE}
-        params['cloudflare_params'] = { 'cookie_file':COOKIE_FILE, 'User-Agent':HTTP_HEADER['User-Agent']}
+        params['cloudflare_params'] = {'cookie_file':COOKIE_FILE, 'User-Agent':HTTP_HEADER['User-Agent']}
         
         sts, data = self.cm.getPageCFProtection(baseUrl, params)
         if not sts:
@@ -11648,7 +11648,7 @@ class pageParser(CaptchaHelper):
                 playerData = item
         jscode.append(playerData)
         urlTab = []
-        ret = js_execute( '\n'.join(jscode) )
+        ret = js_execute('\n'.join(jscode))
         data = json_loads(ret['data'].strip())
         for item in data['sources']:
             name = 'direct'
@@ -11685,7 +11685,7 @@ class pageParser(CaptchaHelper):
             url = data[key]
             url = urlparser.decorateUrl(url, {'iptv_livestream':True, 'Referer':referer, 'User-Agent':USER_AGENT, 'Origin':origin})
             if key == 'hls':
-                linksTab.extend( getDirectM3U8Playlist(url, checkExt=False, checkContent=True) )
+                linksTab.extend(getDirectM3U8Playlist(url, checkExt=False, checkContent=True))
             #elif key == 'hds': linksTab.extend( getF4MLinksWithMeta(url) )
             #elif key == 'rtmp': linksTab.append( {'name':key, 'url':url} )
         return linksTab
@@ -11698,11 +11698,11 @@ class pageParser(CaptchaHelper):
         printDBG("parserVIDSHARETV baseUrl[%s]" % baseUrl)
         
         baseUrl = strwithmeta(baseUrl)
-        HTTP_HEADER= { 'User-Agent': 'Mozilla/5.0 (X11; Ubuntu; Linux i686; rv:21.0) Gecko/20100101 Firefox/21.0',
+        HTTP_HEADER= {'User-Agent': 'Mozilla/5.0 (X11; Ubuntu; Linux i686; rv:21.0) Gecko/20100101 Firefox/21.0',
                        'Referer': baseUrl.meta.get('Referer', ''),
                      }
         COOKIE_FILE = GetCookieDir("vidshare.tv.cookie")
-        rm (COOKIE_FILE)
+        rm(COOKIE_FILE)
         params = {'header':HTTP_HEADER, 'use_cookie': True, 'save_cookie': True, 'load_cookie': True, 'cookiefile': COOKIE_FILE}
         
         sts, data = self.cm.getPage(baseUrl, params)
@@ -11713,7 +11713,7 @@ class pageParser(CaptchaHelper):
         
         data = self.cm.ph.getDataBeetwenMarkers(data, '.setup(', ');', False)[1]
         jscode = 'var iptv_srces = %s; \nprint(JSON.stringify(iptv_srces));' % data
-        ret = js_execute( jscode )
+        ret = js_execute(jscode)
         if ret['sts'] and 0 == ret['code']:
             data = ret['data'].strip()
             data = json_loads(data)
@@ -11855,7 +11855,7 @@ class pageParser(CaptchaHelper):
         
         printDBG(data)
         data = json_loads(data)
-        if self.cm.isValidUrl( data['clientUrl'] ):
+        if self.cm.isValidUrl(data['clientUrl']):
             return strwithmeta(data['clientUrl'], {'Referer':cUrl, 'User-Agent':HTTP_HEADER['User-Agent']})
         return False
         
@@ -11882,7 +11882,7 @@ class pageParser(CaptchaHelper):
                     URL, UA=aLink[1].split('|User-Agent=', 1)
                 URL = strwithmeta(URL, {'User-Agent':UA})
                 printDBG('URL='+URL)
-                urlTab.append({'url':URL , 'name': 'mystream'})
+                urlTab.append({'url':URL, 'name': 'mystream'})
         except Exception:
             printExc()
 
@@ -11994,7 +11994,7 @@ class pageParser(CaptchaHelper):
         for item in data:
             if 'eval(' in item:
                 jscode.append(item)
-        ret = js_execute( '\n'.join(jscode) )
+        ret = js_execute('\n'.join(jscode))
         if ret['sts'] and 0 == ret['code']:
             data = ret['data']
         
@@ -12023,7 +12023,7 @@ class pageParser(CaptchaHelper):
         for fileId in googleDriveFiles:
             tmp = urlparser().getVideoLinkExt('https://drive.google.com/file/d/%s/view' % fileId)
             if len(tmp):
-                tmp.extend( urlsTab )
+                tmp.extend(urlsTab)
                 urlsTab = tmp
         return urlsTab
     
@@ -12100,7 +12100,7 @@ class pageParser(CaptchaHelper):
         HTTP_HEADER = self.cm.getDefaultHeader()
         if 'Referer' in baseUrl.meta:
             HTTP_HEADER['Referer'] = baseUrl.meta['Referer']
-        params = {'header' : HTTP_HEADER}
+        params = {'header': HTTP_HEADER}
         
         if 'embed' not in baseUrl:
             sts, data = self.cm.getPage(baseUrl, params)
@@ -12154,7 +12154,7 @@ class pageParser(CaptchaHelper):
         HTTP_HEADER = self.cm.getDefaultHeader()
         if 'Referer' in baseUrl.meta:
             HTTP_HEADER['Referer'] = baseUrl.meta['Referer']
-        params = {'header' : HTTP_HEADER}
+        params = {'header': HTTP_HEADER}
         
         sts, data = self.cm.getPage(baseUrl, params)
         if not sts:
@@ -12179,7 +12179,7 @@ class pageParser(CaptchaHelper):
         
         urlTab = []
         jscode = '\n'.join(jscode)
-        ret = js_execute( jscode )
+        ret = js_execute(jscode)
         if ret['sts'] and 0 == ret['code']:
             data = json_loads(ret['data'])
             for item in data['sources']:
@@ -12204,7 +12204,7 @@ class pageParser(CaptchaHelper):
         HTTP_HEADER = self.cm.getDefaultHeader()
         if 'Referer' in baseUrl.meta:
             HTTP_HEADER['Referer'] = baseUrl.meta['Referer']
-        params = {'header' : HTTP_HEADER}
+        params = {'header': HTTP_HEADER}
         
         sts, data = self.cm.getPage(baseUrl, params)
         if not sts:
@@ -12248,7 +12248,7 @@ class pageParser(CaptchaHelper):
                 jscode.append(item)
         urlTab = []
         jscode = '\n'.join(jscode)
-        ret = js_execute( jscode )
+        ret = js_execute(jscode)
         data = json_loads(ret['data'])
         for item in data['sources']:
             url = item['file']
@@ -12431,7 +12431,7 @@ class pageParser(CaptchaHelper):
         for item in tmp:
             if 'finish' in item:
                 jscode = item + '\n' +  "retObj={};for(var name in global) { if (global[name] != retObj) {retObj[name] = global[name];} } retObj['real_wait'] = Math.ceil((retObj['finish'].getTime() - Date.now()) / 1000);print(JSON.stringify(retObj));"
-                ret = js_execute( jscode )
+                ret = js_execute(jscode)
                 downloadData = json_loads(ret['data'])
         sleep_time = downloadData['real_wait']
         captcha = base64.b64decode(downloadData['dl']).split('hk||')[1]
@@ -12499,7 +12499,7 @@ class pageParser(CaptchaHelper):
             if 'eval(' in item:
                 js_params[2]['code'] = item
 
-        ret = js_execute_ext( js_params )
+        ret = js_execute_ext(js_params)
         data = json_loads(ret['data'])
 
         url = self.cm.getFullUrl(data['url'], cUrl)
@@ -12513,7 +12513,7 @@ class pageParser(CaptchaHelper):
         printDBG(">>>: " + data)
         js_params[0]['code'] = js_params[0]['code'].replace('resp:""', 'resp:"%s"' % data)
 
-        ret = js_execute_ext( js_params )
+        ret = js_execute_ext(js_params)
         data = json_loads(ret['data'])
 
         url = self.cm.getFullUrl(data['source'], cUrl)
@@ -12620,7 +12620,7 @@ class pageParser(CaptchaHelper):
                     break
 
             jscode = tmp.replace('eval(', 'print(')
-            ret = js_execute( jscode )
+            ret = js_execute(jscode)
             tmp = re.compile('''['"](https?://[^'^"]+?\.mp4(?:\?[^'^"]*?)?)['"]''', re.IGNORECASE).findall(ret['data'])
             for item in tmp:
                 url = strwithmeta(item, {'User-Agent':HTTP_HEADER['User-Agent'], 'Referer':self.cm.meta['url']})
@@ -12693,12 +12693,12 @@ class pageParser(CaptchaHelper):
                 data = json_loads(data)
                 dashUrl = data['data']['playlist']['items'][0]['dash_url']
                 dashUrl = urlparser.decorateUrl(dashUrl, {'iptv_proto':'m3u8', 'User-Agent':urlParams['header']['User-Agent'], 'Referer':cUrl, 'Origin':urlparser.getDomain(cUrl, False)})
-                videoUrls.extend( getMPDLinksWithMeta(dashUrl, checkExt=False, sortWithMaxBandwidth=999999999, cookieParams={'header':urlParams['header']}) )
+                videoUrls.extend(getMPDLinksWithMeta(dashUrl, checkExt=False, sortWithMaxBandwidth=999999999, cookieParams={'header':urlParams['header']}))
                 
                 f4mUrl = data['data']['playlist']['items'][0]['video_url']
                 if f4mUrl.split('?', 1)[0].rsplit('.', 1)[-1] == 'f4m':
                     f4mUrl = urlparser.decorateUrl(f4mUrl, {'iptv_proto':'m3u8', 'User-Agent':urlParams['header']['User-Agent'], 'Referer':cUrl, 'Origin':urlparser.getDomain(cUrl, False)})
-                    videoUrls.extend( getF4MLinksWithMeta(f4mUrl, checkExt=False, sortWithMaxBitrate=999999999, cookieParams={'header':urlParams['header']}) )
+                    videoUrls.extend(getF4MLinksWithMeta(f4mUrl, checkExt=False, sortWithMaxBitrate=999999999, cookieParams={'header':urlParams['header']}))
             except Exception:
                 printExc()
                 
@@ -13128,16 +13128,16 @@ class pageParser(CaptchaHelper):
             return False
 
         if "eval(function(p,a,c,k,e,d)" in data:
-            printDBG( 'Host resolveUrl packed' )
+            printDBG('Host resolveUrl packed')
             packed = re.compile('>eval\(function\(p,a,c,k,e,d\)(.+?)</script>', re.DOTALL).findall(data)
             if packed:
                 data2 = packed[-1]
             else:
                 return ''
-            printDBG( 'Host pack: [%s]' % data2)
+            printDBG('Host pack: [%s]' % data2)
             try:
                 data = unpackJSPlayerParams(data2, TEAMCASTPL_decryptPlayerParams, 0, True, True)
-                printDBG( 'OK unpack: [%s]' % data)
+                printDBG('OK unpack: [%s]' % data)
             except Exception:
                 pass
 
@@ -13209,7 +13209,7 @@ class pageParser(CaptchaHelper):
             return False
 
         if 'This video has been removed' in data:
-            SetIPTVPlayerLastHostError( 'This video has been removed')
+            SetIPTVPlayerLastHostError('This video has been removed')
             return False
         
         vidTab=[]
@@ -13236,16 +13236,16 @@ class pageParser(CaptchaHelper):
             return False
 
         if "eval(function(p,a,c,k,e,d)" in data:
-            printDBG( 'Host resolveUrl packed' )
+            printDBG('Host resolveUrl packed')
             packed = re.compile('>eval\(function\(p,a,c,k,e,d\)(.+?)</script>', re.DOTALL).findall(data)
             if packed:
                 data2 = packed[-1]
             else:
                 return ''
-            printDBG( 'Host pack: [%s]' % data2)
+            printDBG('Host pack: [%s]' % data2)
             try:
                 data = unpackJSPlayerParams(data2, TEAMCASTPL_decryptPlayerParams, 0, True, True)
-                printDBG( 'OK unpack: [%s]' % data)
+                printDBG('OK unpack: [%s]' % data)
             except Exception:
                 pass
 
@@ -13304,7 +13304,7 @@ class pageParser(CaptchaHelper):
             script = script.replace("))\n", ");\n")
 
             # duktape
-            ret = js_execute( script )
+            ret = js_execute(script)
             decoded = ret['data']
 
             subData = urllib.parse.unquote(self.cm.ph.getSearchGroups(decoded, '''remotesub=['"](http[^'^"]+?)['"]''')[0])
@@ -13317,7 +13317,7 @@ class pageParser(CaptchaHelper):
                     video_url = "https:" + link
                 else:
                     video_url = link
-                video_url = urlparser.decorateUrl(video_url, {'Referer' : baseUrl, 'external_sub_tracks':sub_tracks})
+                video_url = urlparser.decorateUrl(video_url, {'Referer': baseUrl, 'external_sub_tracks':sub_tracks})
                 params = {'name': 'link', 'url': video_url}
                 printDBG(params)
                 urlsTab.append(params)
@@ -13337,7 +13337,7 @@ class pageParser(CaptchaHelper):
         urlParams = {'header': HTTP_HEADER}
 
         urlParams['ignore_http_code_ranges'] = [(502, 502)]
-        urlParams['header'].update({'Accept':'application/json, text/javascript, */*', 'Content-Type':'application/x-www-form-urlencoded', 'X-Requested-With':'XMLHttpRequest' })
+        urlParams['header'].update({'Accept':'application/json, text/javascript, */*', 'Content-Type':'application/x-www-form-urlencoded', 'X-Requested-With':'XMLHttpRequest'})
         url = 'https://jetload.net/api/fetch/{0}'.format(video_id)
         sts, data = self.cm.getPage(url, urlParams)
         if not sts:
@@ -13370,7 +13370,7 @@ class pageParser(CaptchaHelper):
         printDBG("parserJETLOADNET data[%s]" % data)
         urlTab=[]
         url = self.cm.ph.getSearchGroups(data, '''['"]src['"]:['"]([^'^"]+?)['"]''')[0]
-        if url != '' and 'm3u8' not in url :
+        if url != '' and 'm3u8' not in url:
             url = strwithmeta(url, {'Origin':"https://" + urlparser.getDomain(baseUrl), 'Referer':baseUrl})
             urlTab.append({'name':'mp4', 'url':url})
         hlsUrl = self.cm.ph.getSearchGroups(data, '''["'](https?://[^'^"]+?\.m3u8(?:\?[^"^']+?)?)["']''', ignoreCase=True)[0]
@@ -13416,7 +13416,7 @@ class pageParser(CaptchaHelper):
 
         urlTab=[]
         url = self.cm.getFullUrl(self.cm.ph.getSearchGroups(data, '''<source[^>]+?src=['"]([^'^"]+?)['"][^>]+?video/mp4''')[0], cUrl)
-        if url != '' and 'm3u8' not in url :
+        if url != '' and 'm3u8' not in url:
             url = strwithmeta(url, {'Origin':"https://" + urlparser.getDomain(baseUrl), 'Referer':baseUrl})
             urlTab.append({'name':'mp4', 'url':url})
         hlsUrl = self.cm.ph.getSearchGroups(data, '''["'](https?://[^'^"]+?\.m3u8(?:\?[^"^']+?)?)["']''', ignoreCase=True)[0]
@@ -13459,11 +13459,11 @@ class pageParser(CaptchaHelper):
         printDBG("parserABCVIDEO baseUrl[%r]" % baseUrl)
 
         httpParams = {
-            'header' : {
+            'header': {
                 'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.61 Safari/537.36',
                 'Accept': '*/*',
                 'Accept-Encoding': 'gzip',
-                'Referer' : baseUrl.meta.get('Referer', baseUrl)
+                'Referer': baseUrl.meta.get('Referer', baseUrl)
             } 
         }
 
@@ -13472,16 +13472,16 @@ class pageParser(CaptchaHelper):
         sts, data = self.cm.getPage(baseUrl, httpParams)
 
         if "eval(function(p,a,c,k,e,d)" in data:
-            printDBG( 'Host resolveUrl packed' )
+            printDBG('Host resolveUrl packed')
             packed = re.compile('>eval\(function\(p,a,c,k,e,d\)(.+?)</script>', re.DOTALL).findall(data)
             if packed:
                 data2 = packed[-1]
             else:
                 return ''
-            printDBG( 'Host pack: [%s]' % data2)
+            printDBG('Host pack: [%s]' % data2)
             try:
                 data = unpackJSPlayerParams(data2, TEAMCASTPL_decryptPlayerParams, 0, True, True)
-                printDBG( 'OK unpack: [%s]' % data)
+                printDBG('OK unpack: [%s]' % data)
             except Exception:
                 pass
 
@@ -13529,12 +13529,12 @@ class pageParser(CaptchaHelper):
                                 if self.cm.isValidUrl(url):
                                     url = urlparser.decorateUrl(url, {'Referer': baseUrl})
                                     label = u.get('label', '')
-                                if 'm3u' in url :
+                                if 'm3u' in url:
                                     params = getDirectM3U8Playlist(url, checkExt=True, variantCheck=True, checkContent=True, sortWithMaxBitrate=99999999)
                                     printDBG(str(params))    
                                     urlsTab.extend(params)
                                 else:
-                                    params = {'name': label , 'url': url}
+                                    params = {'name': label, 'url': url}
                                     printDBG(str(params))
                                     urlsTab.append(params)
                                 
@@ -13601,7 +13601,7 @@ class pageParser(CaptchaHelper):
                                 printDBG(str(params))    
                                 urlTabs.extend(params)
                             else:
-                                params = {'name': 'link' , 'url': link_url}
+                                params = {'name': 'link', 'url': link_url}
                                 printDBG(str(params))
                                 urlTabs.append(params)
 
@@ -13644,7 +13644,7 @@ class pageParser(CaptchaHelper):
                 mirror_link = self.cm.ph.getSearchGroups(m, '''data-link=['"]([^'^"]+?)['"]''')[0]
                 mirror_t = self.cm.ph.getSearchGroups(m, '''data-t=['"]([^'^"]+?)['"]''')[0]
                 
-                if (mirror_file != "") and (mirror_link !="") and (mirror_t != "") :
+                if (mirror_file != "") and (mirror_link !="") and (mirror_t != ""):
                     ajax_pd = {'file': mirror_file, 'link': mirror_link, 't': mirror_t}
                     
                     sts, ajax_data = self.cm.getPage(ajax_url, ajax_params, post_data=ajax_pd)
@@ -13660,7 +13660,7 @@ class pageParser(CaptchaHelper):
                                 url2 = urlparser().getVideoLinkExt(mirror_url)
                                 if url2:
                                     for u in url2:
-                                        params = {'name': mirror_name , 'url': u.get('url', '')}
+                                        params = {'name': mirror_name, 'url': u.get('url', '')}
                                         printDBG(str(params))
                                         urlTabs.append(params)
                                 else:
@@ -13703,7 +13703,7 @@ class pageParser(CaptchaHelper):
                 
                 printDBG(d)
                 
-                ret = js_execute( d )
+                ret = js_execute(d)
                 if ret['sts'] and 0 == ret['code']:
                     decoded = ret['data'].decode('string_escape') 
                     printDBG("--------- decoded -----------")
@@ -13715,7 +13715,7 @@ class pageParser(CaptchaHelper):
                         if self.cm.isValidUrl(u):
                             printDBG("Found link %s" % u)
                             u = urlparser.decorateUrl(u, {'Referer': baseUrl})
-                            urlTabs.append({'name': 'link' , 'url': u}) 
+                            urlTabs.append({'name': 'link', 'url': u}) 
                             
         return urlTabs
 
@@ -13723,11 +13723,11 @@ class pageParser(CaptchaHelper):
         printDBG("parserDOOD baseUrl [%s]" % baseUrl)
         
         httpParams = {
-            'header' : {
+            'header': {
                 'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.61 Safari/537.36',
                 'Accept': '*/*',
                 'Accept-Encoding': 'gzip',
-                'Referer' : baseUrl.meta.get('Referer', baseUrl)
+                'Referer': baseUrl.meta.get('Referer', baseUrl)
             }, 
             'use_cookie':True,
             'load_cookie':True,
@@ -13782,7 +13782,7 @@ class pageParser(CaptchaHelper):
                         newUrl = urlparser.decorateUrl(newUrl, {'Referer': baseUrl,'external_sub_tracks':subTracks})
                     else:
                         newUrl = urlparser.decorateUrl(newUrl, {'Referer': baseUrl})
-                    params = {'name': 'link' , 'url': newUrl}
+                    params = {'name': 'link', 'url': newUrl}
                     printDBG(str(params))
                     urlsTab.append(params)
         
@@ -13807,7 +13807,7 @@ class pageParser(CaptchaHelper):
                 t = "https:" + t
             if self.cm.isValidUrl(t):
                 t = urlparser.decorateUrl(t, {'Referer': baseUrl})
-                params = {'name': 'link' , 'url': t}
+                params = {'name': 'link', 'url': t}
                 printDBG(params)
                 urlTabs.append(params)
                 
@@ -13817,11 +13817,11 @@ class pageParser(CaptchaHelper):
         printDBG("parserNINJASTREAMTO baseUrl [%s]" % baseUrl)
 
         httpParams = {
-            'header' : {
+            'header': {
                 'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.61 Safari/537.36',
                 'Accept': '*/*',
                 'Accept-Encoding': 'gzip',
-                'Referer' : baseUrl.meta.get('Referer', baseUrl)
+                'Referer': baseUrl.meta.get('Referer', baseUrl)
             }
         }
 
@@ -13921,16 +13921,16 @@ class pageParser(CaptchaHelper):
             return False
 
         if "eval(function(p,a,c,k,e,d)" in data:
-            printDBG( 'Host resolveUrl packed' )
+            printDBG('Host resolveUrl packed')
             packed = re.compile('>eval\(function\(p,a,c,k,e,d\)(.+?)</script>', re.DOTALL).findall(data)
             if packed:
                 data2 = packed[-1]
             else:
                 return ''
-            printDBG( 'Host pack: [%s]' % data2)
+            printDBG('Host pack: [%s]' % data2)
             try:
                 data = unpackJSPlayerParams(data2, TEAMCASTPL_decryptPlayerParams, 0, True, True)
-                printDBG( 'OK unpack: [%s]' % data)
+                printDBG('OK unpack: [%s]' % data)
             except Exception:
                 pass
 

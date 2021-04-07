@@ -36,12 +36,12 @@ class IPTVInputBoxWidget(InputBox):
             <widget name="text" position="center,10" size="%d,30" font="Regular;24" valign="center" halign="center" />
             <widget name="input" position="center,60" size="%d,50" font="Regular;40" valign="center" halign="center" />
             <widget name="cover" zPosition="4" position="center,%d" size="%d,%d" transparent="1" alphatest="on" />
-            </screen>""" % ( width,      height,
+            </screen>""" % (width,      height,
                              width - 20,
                              width - 20,
                              85 + (height - 85 - icon['size'][1]) / 2,
                              icon['size'][0],
-                             icon['size'][1] )
+                             icon['size'][1])
         self.skin = skin
         self.icon = icon
         self["cover"] = Cover2()
@@ -51,7 +51,7 @@ class IPTVInputBoxWidget(InputBox):
     def setIcon(self):
         if 0 < len(self.icon.get('icon_path', '')):
             try:
-                self["cover"].updateIcon( self.icon['icon_path'] )
+                self["cover"].updateIcon(self.icon['icon_path'])
             except Exception:
                 printExc()
 #class IPTVInputBoxWidget

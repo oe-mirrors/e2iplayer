@@ -51,7 +51,7 @@ class IceFilms(CBaseHostClass):
         self.USER_AGENT = 'Mozilla/5.0'
         self.HEADER = {'User-Agent':self.USER_AGENT, 'Accept':'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8', 'Accept-Encoding':'gzip, deflate'}
         self.AJAX_HEADER = dict(self.HEADER)
-        self.AJAX_HEADER.update( {'X-Requested-With': 'XMLHttpRequest'} )
+        self.AJAX_HEADER.update({'X-Requested-With': 'XMLHttpRequest'})
         self.cm.HEADER = self.HEADER # default header
         self.defaultParams = {'header':self.HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
         self.DEFAULT_ICON_URL = 'http://whatyouremissing.weebly.com/uploads/1/9/6/3/19639721/144535_orig.jpg'
@@ -77,8 +77,8 @@ class IceFilms(CBaseHostClass):
         self.MAIN_CAT_TAB = [{'category':'list_filters',    'title': _('TV Shows'),                       'url':self.getFullUrl('tv/popular/1'),      'f_idx':0},
                              {'category':'list_filters',    'title': _('Movies'),                         'url':self.getFullUrl('movies/popular/1'),  'f_idx':0},
                              {'category':'list_filters',    'title': _('Stand-Up'),                       'url':self.getFullUrl('standup/popular/1'), 'f_idx':0},
-                             {'category': 'search',          'title': _('Search'), 'search_item': True,         },
-                             {'category': 'search_history',  'title': _('Search history'),                     } 
+                             {'category': 'search',          'title': _('Search'), 'search_item': True,},
+                             {'category': 'search_history',  'title': _('Search history'),} 
                             ]
         
         self.cacheFilters = {}
@@ -290,7 +290,7 @@ class IceFilms(CBaseHostClass):
         url = self.getFullUrl(self.cm.ph.getSearchGroups(data, '''<iframe[^>]+?src=['"]([^"^']+?)['"]''', 1, True)[0])
         url = self.getFullUrl(url)
         
-        sts, data = self.getPage(url, self.defaultParams )
+        sts, data = self.getPage(url, self.defaultParams)
         if not sts:
             return []
         
@@ -405,11 +405,11 @@ class IceFilms(CBaseHostClass):
         sts, data = self.getPage(url)
         if not sts:
             return retTab
-        title = self.cleanHtmlStr( self.cm.ph.getSearchGroups(data, '''<meta property=['"]?og\:title['"]?[^>]+?content=['"]([^"^']+?)['"]''')[0] )
-        desc  = self.cleanHtmlStr( self.cm.ph.getDataBeetwenMarkers(data, '<div class="summary_text"', '</div>')[1] )
+        title = self.cleanHtmlStr(self.cm.ph.getSearchGroups(data, '''<meta property=['"]?og\:title['"]?[^>]+?content=['"]([^"^']+?)['"]''')[0])
+        desc  = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(data, '<div class="summary_text"', '</div>')[1])
         if desc == '':
-            desc  = self.cleanHtmlStr( self.cm.ph.getSearchGroups(data, '''<meta property=['"]?og\:description['"]?[^>]+?content=['"]([^"^']+?)['"]''')[0] )
-        icon  = self.getFullUrl( self.cm.ph.getSearchGroups(data, '''<meta property=['"]?og\:image['"]?[^>]+?content=['"]([^"^']+?)['"]''')[0] )
+            desc  = self.cleanHtmlStr(self.cm.ph.getSearchGroups(data, '''<meta property=['"]?og\:description['"]?[^>]+?content=['"]([^"^']+?)['"]''')[0])
+        icon  = self.getFullUrl(self.cm.ph.getSearchGroups(data, '''<meta property=['"]?og\:image['"]?[^>]+?content=['"]([^"^']+?)['"]''')[0])
         
         if title == '':
             title = cItem['title']
@@ -436,10 +436,10 @@ class IceFilms(CBaseHostClass):
             printDBG(item)
             if len(item) < 2:
                 continue
-            key = self.cleanHtmlStr( item[0] ).replace(':', '').strip().lower()
+            key = self.cleanHtmlStr(item[0]).replace(':', '').strip().lower()
             if key not in descKeyMap:
                 continue
-            val = self.cleanHtmlStr( item[1] ).split('See more')[0]
+            val = self.cleanHtmlStr(item[1]).split('See more')[0]
             otherInfo[descKeyMap[key]] = val
         data = self.cm.ph.getDataBeetwenMarkers(data, '<div class="ratingValue">', '</div>')[1]
         otherInfo['imdb_rating'] = self.cm.ph.getSearchGroups(data, '''title=['"]([^"^']+?)['"]''')[0]
@@ -457,7 +457,7 @@ class IceFilms(CBaseHostClass):
         category = self.currItem.get("category", '')
         mode     = self.currItem.get("mode", '')
         
-        printDBG( "handleService: |||||||||||||||||||||||||||||||||||| name[%s], category[%s] " % (name, category) )
+        printDBG("handleService: |||||||||||||||||||||||||||||||||||| name[%s], category[%s] " % (name, category))
         self.currList = []
         
     #MAIN MENU

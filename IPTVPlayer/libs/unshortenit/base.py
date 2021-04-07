@@ -474,7 +474,7 @@ class UnshortenIt(object):
         try:
             COOKIE_FILE = GetCookieDir('rapidcrypt.net')
             params = {'header':HTTP_HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': COOKIE_FILE}
-            params['cloudflare_params'] = { 'cookie_file':COOKIE_FILE, 'User-Agent':HTTP_HEADER['User-Agent']}
+            params['cloudflare_params'] = {'cookie_file':COOKIE_FILE, 'User-Agent':HTTP_HEADER['User-Agent']}
             sts, data = self.cm.getPageCFProtection(uri, params)
             uri = self.cm.ph.getDataBeetwenNodes(data, ('<a', '>', 'push_button'), ('</a', '>'))[1]
             printDBG(uri)
@@ -494,7 +494,7 @@ class UnshortenIt(object):
         try:
             COOKIE_FILE = GetCookieDir('vcrypt.net')
             params = {'header':HTTP_HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': COOKIE_FILE}
-            params['cloudflare_params'] = { 'cookie_file':COOKIE_FILE, 'User-Agent':HTTP_HEADER['User-Agent']}
+            params['cloudflare_params'] = {'cookie_file':COOKIE_FILE, 'User-Agent':HTTP_HEADER['User-Agent']}
             sts, data = self.cm.getPageCFProtection(uri, params)
             uri = self.cm.ph.getDataBeetwenNodes(data, ('<a', '>', 'push_button'), ('</a', '>'))[1]
             

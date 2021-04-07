@@ -33,7 +33,7 @@ class WgranePL(CBaseHostClass):
         self.USER_AGENT = 'Mozilla/5.0'
         self.HEADER = {'User-Agent': self.USER_AGENT, 'Accept': 'text/html'}
         self.AJAX_HEADER = dict(self.HEADER)
-        self.AJAX_HEADER.update( {'X-Requested-With': 'XMLHttpRequest'} )
+        self.AJAX_HEADER.update({'X-Requested-With': 'XMLHttpRequest'})
         
         self.MAIN_URL = 'http://www.wgrane.pl/'
         self.DEFAULT_ICON_URL = 'https://i.ytimg.com/vi/HpTrVOZVNhA/maxresdefault.jpg'
@@ -65,10 +65,10 @@ class WgranePL(CBaseHostClass):
         printDBG("WgranePL.listMainMenu")
 
 
-        MAIN_CAT_TAB = [{'category':'list_sort',       'title': 'Przeglądaj pliki',    'url':self.getFullUrl('/watch.html') },
-                        {'category':'categories',      'title': 'Kategorie',           'url':self.getFullUrl('/categories.html') },
+        MAIN_CAT_TAB = [{'category':'list_sort',       'title': 'Przeglądaj pliki',    'url':self.getFullUrl('/watch.html')},
+                        {'category':'categories',      'title': 'Kategorie',           'url':self.getFullUrl('/categories.html')},
                         {'category':'search',          'title': _('Search'), 'search_item':True},
-                        {'category':'search_history',  'title': _('Search history')} ]
+                        {'category':'search_history',  'title': _('Search history')}]
         self.listsTab(MAIN_CAT_TAB, cItem)
     
     def listCategories(self, cItem, nextCategory):
@@ -86,25 +86,25 @@ class WgranePL(CBaseHostClass):
             del data[0]
 
         for item in data:
-            url  = self.getFullUrl( self.cm.ph.getSearchGroups(item, '''\shref=['"]([^"^']+?)['"]''')[0] )
+            url  = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''\shref=['"]([^"^']+?)['"]''')[0])
             if url == '':
                 continue
-            icon = self.getFullIconUrl( self.cm.ph.getSearchGroups(item, '''<img[^>]+?src=['"]([^"^']+?)['"]''')[0] )
+            icon = self.getFullIconUrl(self.cm.ph.getSearchGroups(item, '''<img[^>]+?src=['"]([^"^']+?)['"]''')[0])
             tmp = self.cm.ph.getAllItemsBeetwenMarkers(item, '<div', '</div>')
             if len(tmp):
                 title = self.cleanHtmlStr(tmp[0])
                 desc = []
                 for it in tmp[1:]:
-                    it = self.cleanHtmlStr( it )
+                    it = self.cleanHtmlStr(it)
                     if it != '':
                         desc.append(it)
                 desc = '[/br]'.join(desc)
             else:
                 if title == '':
-                    title = self.cleanHtmlStr( self.cm.ph.getSearchGroups(item, '''\stitle=['"]([^"^']+?)['"]''')[0] )
+                    title = self.cleanHtmlStr(self.cm.ph.getSearchGroups(item, '''\stitle=['"]([^"^']+?)['"]''')[0])
                 desc = self.cleanHtmlStr(item)
             if title == '':
-                self.cleanHtmlStr( self.cm.ph.getSearchGroups(item, '''\salt=['"]([^"^']+?)['"]''')[0] )
+                self.cleanHtmlStr(self.cm.ph.getSearchGroups(item, '''\salt=['"]([^"^']+?)['"]''')[0])
 
             params = dict(cItem)
             params.update({'good_for_fav': True, 'category':nextCategory, 'title':title, 'url':url, 'icon':icon, 'desc':desc})
@@ -141,25 +141,25 @@ class WgranePL(CBaseHostClass):
         descObj = re.compile('''<br\s*?/>''', re.I)
         data = re.compile('''<div[^>]+?class=['"]list['"][^>]*?>''').split(data)
         for item in data:
-            url  = self.getFullUrl( self.cm.ph.getSearchGroups(item, '''\shref=['"]([^"^'^\:]+?)['"]''')[0] )
+            url  = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''\shref=['"]([^"^'^\:]+?)['"]''')[0])
             if url == '':
                 continue
             if 'playlist=' in url:
-                icon = self.getFullIconUrl( self.cm.ph.getSearchGroups(item, '''<img[^>]+?src=['"]([^"^']+?)['"]''')[0] )
+                icon = self.getFullIconUrl(self.cm.ph.getSearchGroups(item, '''<img[^>]+?src=['"]([^"^']+?)['"]''')[0])
                 continue # playlists not supported now
             else:
-                icon = self.getFullIconUrl( self.cm.ph.getSearchGroups(item, '''<img[^>]+?src=['"]([^"^']*?video_picture[^"^']+?)['"]''')[0] )
+                icon = self.getFullIconUrl(self.cm.ph.getSearchGroups(item, '''<img[^>]+?src=['"]([^"^']*?video_picture[^"^']+?)['"]''')[0])
                 if icon == '':
                     continue
 
-            title = self.cleanHtmlStr( self.cm.ph.getDataBeetwenNodes(item, ('<div', '>', 'list_title'), ('</div', '>'), False)[1] )
+            title = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(item, ('<div', '>', 'list_title'), ('</div', '>'), False)[1])
             if title == '':
-                title = self.cleanHtmlStr( self.cm.ph.getSearchGroups(item, '''\stitle=['"]([^"^']+?)['"]''')[0] )
+                title = self.cleanHtmlStr(self.cm.ph.getSearchGroups(item, '''\stitle=['"]([^"^']+?)['"]''')[0])
             if title == '':
-                self.cleanHtmlStr( self.cm.ph.getSearchGroups(item, '''\salt=['"]([^"^']+?)['"]''')[0] )
+                self.cleanHtmlStr(self.cm.ph.getSearchGroups(item, '''\salt=['"]([^"^']+?)['"]''')[0])
 
             desc = self.cm.ph.getDataBeetwenNodes(item, ('<div', '>', 'list_detail'), ('</div', '>'), False)[1]
-            desc = self.cleanHtmlStr( descObj.sub('[/br]', desc) )
+            desc = self.cleanHtmlStr(descObj.sub('[/br]', desc))
 
             params = dict(cItem)
             params.update({'good_for_fav': True, 'title':title, 'url':url, 'icon':icon, 'desc':desc})
@@ -192,7 +192,7 @@ class WgranePL(CBaseHostClass):
             sts, data = self.getPage(cItem['url'])
             if sts:
                 data = self.cm.ph.getDataBeetwenNodes(data, ('<div', '>', 'FileContent'), ('<div', '>', 'ajaxWaitLinks'), False)[1]
-                icon = self.getFullIconUrl( self.cm.ph.getSearchGroups(data, '''<img[^>]+?src=['"]([^"^']*?download.php[^"^']+?)['"]''')[0] )
+                icon = self.getFullIconUrl(self.cm.ph.getSearchGroups(data, '''<img[^>]+?src=['"]([^"^']*?download.php[^"^']+?)['"]''')[0])
             if icon == '':
                 icon = cItem.get('icon', '')
             if icon != '':
@@ -210,7 +210,7 @@ class WgranePL(CBaseHostClass):
         category = self.currItem.get("category", '')
         mode     = self.currItem.get("mode", '')
         
-        printDBG( "handleService: || name[%s], category[%s] " % (name, category) )
+        printDBG("handleService: || name[%s], category[%s] " % (name, category))
         self.currList = []
         self.currItem = dict(self.currItem)
         self.currItem.pop('good_for_fav', None)

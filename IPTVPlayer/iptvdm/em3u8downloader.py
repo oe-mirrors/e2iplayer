@@ -40,7 +40,7 @@ class EM3U8Downloader(M3U8Downloader):
         self.EM3U8linkProv = eConsoleAppContainer()
         self.EM3U8linkProv_appClosed_conn   = eConnectCallback(self.EM3U8linkProv.appClosed, self._updateEM3U8Finished)
         #self.EM3U8linkProv_stdoutAvail_conn = eConnectCallback(self.EM3U8linkProv.stdoutAvail, self._updateEM3U8DataAvail)
-        self.EM3U8linkProv_stderrAvail_conn = eConnectCallback(self.EM3U8linkProv.stderrAvail, self._updateEM3U8DataAvail )
+        self.EM3U8linkProv_stderrAvail_conn = eConnectCallback(self.EM3U8linkProv.stderrAvail, self._updateEM3U8DataAvail)
 
         self.EM3U8ListData = ''
         self.em3u8Started = False
@@ -63,7 +63,7 @@ class EM3U8Downloader(M3U8Downloader):
         printDBG(self.em3u8_url.meta)
         printDBG(self.em3u8_url.meta.get('iptv_refresh_cmd', ''))
         printDBG("=====================================================")
-        self.EM3U8linkProv.execute( self.em3u8_url.meta.get('iptv_refresh_cmd', '') )
+        self.EM3U8linkProv.execute(self.em3u8_url.meta.get('iptv_refresh_cmd', ''))
         
         return BaseDownloader.CODE_OK
         

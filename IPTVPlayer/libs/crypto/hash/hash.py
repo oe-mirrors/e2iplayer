@@ -7,7 +7,7 @@
 from binascii import b2a_hex
 
 class Hash:
-    def __init__( self ):
+    def __init__(self):
         raise Exception('must overload')
     def reset(self):
         raise Exception('must overload')

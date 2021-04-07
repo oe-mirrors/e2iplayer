@@ -41,7 +41,7 @@ def GetConfigList():
     optionList = []
     optionList.append(getConfigListEntry("Login:", config.plugins.iptvplayer.cda_login))
     optionList.append(getConfigListEntry("Hasło:", config.plugins.iptvplayer.cda_password))
-    optionList.append( getConfigListEntry( "Sortuj wyniki wyszukiwania po:", config.plugins.iptvplayer.cda_searchsort ) )
+    optionList.append(getConfigListEntry("Sortuj wyniki wyszukiwania po:", config.plugins.iptvplayer.cda_searchsort))
     return optionList
 ###################################################
 
@@ -56,7 +56,7 @@ class cda(CBaseHostClass, CaptchaHelper):
         self.HEADER = {'User-Agent': 'Mozilla/5.0', 'Accept': 'text/html'}
         self.defaultParams = {'header': self.HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
         self.AJAX_HEADER = dict(self.HEADER)
-        self.AJAX_HEADER.update( {'X-Requested-With': 'XMLHttpRequest'} )
+        self.AJAX_HEADER.update({'X-Requested-With': 'XMLHttpRequest'})
         
         self.MAIN_URL = 'https://www.cda.pl/'
         self.SEARCH_URL = self.getFullUrl('video/show/%s/p%d?s=%s')
@@ -71,17 +71,17 @@ class cda(CBaseHostClass, CaptchaHelper):
         self.VIDEO_TAB = [{'category':'categories',       'title': 'Główna',       'base_url':'video'},
                           {'category':'categories',       'title': 'Poczekalnia',  'base_url':'video/poczekalnia'}]
 
-        self.CATEGORIES_TAB = [{'url' : '',       'category':'category', 'title' : '--Wszystkie--'}, 
-                               {'url' : '/kat26', 'category':'category', 'title' : 'Krótkie filmy i animacje'}, 
-                               {'url' : '/kat24', 'category':'category', 'title' : 'Filmy Extremalne'}, 
-                               {'url' : '/kat27', 'category':'category', 'title' : 'Motoryzacja, wypadki'}, 
-                               {'url' : '/kat28', 'category':'category', 'title' : 'Muzyka'}, 
-                               {'url' : '/kat29', 'category':'category', 'title' : 'Prosto z Polski'}, 
-                               {'url' : '/kat30', 'category':'category', 'title' : 'Rozrywka'}, 
-                               {'url' : '/kat31', 'category':'category', 'title' : 'Sport'}, 
-                               {'url' : '/kat32', 'category':'category', 'title' : 'Śmieszne filmy'}, 
-                               {'url' : '/kat33', 'category':'category', 'title' : 'Różności'}, 
-                               {'url' : '/kat34', 'category':'category', 'title' : 'Życie studenckie'} ]
+        self.CATEGORIES_TAB = [{'url': '',       'category':'category', 'title': '--Wszystkie--'}, 
+                               {'url': '/kat26', 'category':'category', 'title': 'Krótkie filmy i animacje'}, 
+                               {'url': '/kat24', 'category':'category', 'title': 'Filmy Extremalne'}, 
+                               {'url': '/kat27', 'category':'category', 'title': 'Motoryzacja, wypadki'}, 
+                               {'url': '/kat28', 'category':'category', 'title': 'Muzyka'}, 
+                               {'url': '/kat29', 'category':'category', 'title': 'Prosto z Polski'}, 
+                               {'url': '/kat30', 'category':'category', 'title': 'Rozrywka'}, 
+                               {'url': '/kat31', 'category':'category', 'title': 'Sport'}, 
+                               {'url': '/kat32', 'category':'category', 'title': 'Śmieszne filmy'}, 
+                               {'url': '/kat33', 'category':'category', 'title': 'Różności'}, 
+                               {'url': '/kat34', 'category':'category', 'title': 'Życie studenckie'}]
         self.cacheFilters = {}
         self.filtersTab = []
         self.loggedIn = None
@@ -234,7 +234,7 @@ class cda(CBaseHostClass, CaptchaHelper):
     def listCategory(self, cItem):
         printDBG("cda.listCategory cItem[%s]" % cItem)
         page = cItem.get('page', 1)
-        url = self.getFullUrl( cItem['base_url'] + ('/p%d' % page))
+        url = self.getFullUrl(cItem['base_url'] + ('/p%d' % page))
         self.listItems(cItem, url, page)
         
     def listSearchResult(self, cItem, searchPattern, searchType):
@@ -287,26 +287,26 @@ class cda(CBaseHostClass, CaptchaHelper):
                 desc = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(item, '<div class="text text-video">', '</div>', False)[1])
                 if '' != desc:
                     descTab.append(desc)
-                desc  = self.cleanHtmlStr( self.cm.ph.getSearchGroups(item, '''<label[^>]+title=['"]([^"^']+?)["']''', 1, True)[0] )
+                desc  = self.cleanHtmlStr(self.cm.ph.getSearchGroups(item, '''<label[^>]+title=['"]([^"^']+?)["']''', 1, True)[0])
                 if '' == desc: 
                     desc = self.cm.ph.getDataBeetwenMarkers(item, '<div class="text"', '</div>')[1]
-                    desc = self.cleanHtmlStr( self.cm.ph.getSearchGroups(item, '''title=['"]([^"^']+?)["']''', 1, True)[0] )
+                    desc = self.cleanHtmlStr(self.cm.ph.getSearchGroups(item, '''title=['"]([^"^']+?)["']''', 1, True)[0])
                 if '' != desc:
                     descTab.append(desc)
                 desc = self.cleanHtmlStr('[/br]'.join(descTab))
                 if desc == '':
                     desc = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(item, ('<', '>', 'count-files'), ('</a', '>'))[1])  
                 
-                title  = self.cleanHtmlStr( self.cm.ph.getDataBeetwenMarkers(item, '<div class="text">', '</div>', False)[1] )
+                title  = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(item, '<div class="text">', '</div>', False)[1])
                 if '' == title:
-                    title  = self.cleanHtmlStr( self.cm.ph.getDataBeetwenMarkers(item, '<span style="color: #B82D2D; font-size: 14px">', '</a>', False)[1] )
+                    title  = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(item, '<span style="color: #B82D2D; font-size: 14px">', '</a>', False)[1])
                 if '' == title:
-                    title  = self.cleanHtmlStr( self.cm.ph.getDataBeetwenMarkers(item, 'alt="', '"', False)[1] )
+                    title  = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(item, 'alt="', '"', False)[1])
                 if '' == title:
                     title = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(item, ('<a', '>', 'link-title'), ('</a', '>'))[1])
                 
-                url    = self.getFullUrl(self.cleanHtmlStr( self.cm.ph.getDataBeetwenMarkers(item, 'href="', '"', False)[1] ))
-                icon   = self.cleanHtmlStr( self.cm.ph.getDataBeetwenMarkers(item, 'src="', '"', False)[1] )
+                url    = self.getFullUrl(self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(item, 'href="', '"', False)[1]))
+                icon   = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(item, 'src="', '"', False)[1])
                 params = {'good_for_fav':True, 'title':self.cleanHtmlStr(title), 'url':url, 'icon':icon, 'desc':desc}
                 if '/video' in url:
                     self.addVideo(params)
@@ -543,7 +543,7 @@ class cda(CBaseHostClass, CaptchaHelper):
 
         name     = self.currItem.get("name", None)
         category = self.currItem.get("category", '')
-        printDBG( "cda.handleService: ---------> name[%s], category[%s] " % (name, category) )
+        printDBG("cda.handleService: ---------> name[%s], category[%s] " % (name, category))
         searchPattern = self.currItem.get("search_pattern", searchPattern)
         self.currList = []
         

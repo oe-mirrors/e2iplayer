@@ -29,7 +29,7 @@ class Michael:
 
     def setKey(self, key):
         """ setKey(key) ... key is binary string """
-        assert( len(key)== self.keySize), 'Key must be 8 octets'
+        assert(len(key)== self.keySize), 'Key must be 8 octets'
         self._key = unpack('<II', key) # unpack into 2 32bit integers
 
     def __call__(self,data,more=None):
@@ -44,7 +44,7 @@ class Michael:
             mSub_i = unpack('<I', paddedData[i*4:i*4+4])[0]  # ith block as 32 bit integer
             l = l ^ mSub_i
             l, r = b(l, r)
-        digest = pack('<II', l, r )
+        digest = pack('<II', l, r)
         return digest
 
     def update(self, data):

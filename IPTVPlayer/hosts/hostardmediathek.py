@@ -26,7 +26,7 @@ except Exception:
 ###################################################
 # Config options for HOST
 ###################################################
-config.plugins.iptvplayer.ardmediathek_iconquality = ConfigSelection(default="medium", choices=[ ("large", _("high")), ("medium", _("medium")), ("small", _("low")) ])
+config.plugins.iptvplayer.ardmediathek_iconquality = ConfigSelection(default="medium", choices=[("large", _("high")), ("medium", _("medium")), ("small", _("low"))])
 config.plugins.iptvplayer.ardmediathek_prefformat = ConfigSelection(default="mp4,m3u8", choices=[
 ("mp4,m3u8", "mp4,m3u8"), ("m3u8,mp4", "m3u8,mp4")])
 config.plugins.iptvplayer.ardmediathek_prefquality = ConfigSelection(default="4", choices=[("0", _("low")), ("1", _("medium")), ("2", _("high")), ("3", _("very high")), ("4", _("hd"))])
@@ -55,7 +55,7 @@ class ARDmediathek(CBaseHostClass):
         self.HOST = 'Mozilla/5.0 (X11; U; Linux i686; en-US; rv:1.9.2.18) Gecko/20110621 Mandriva Linux/1.9.2.18-0.1mdv2010.2 (2010.2) Firefox/3.6.18'
         self.HEADER = {'User-Agent': self.HOST, 'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8'}
         self.AJAX_HEADER = dict(self.HEADER)
-        self.AJAX_HEADER.update( {'X-Requested-With': 'XMLHttpRequest', 'Connection': 'keep-alive', 'Pragma': 'no-cache', 'Cache-Control': 'no-cache'} )
+        self.AJAX_HEADER.update({'X-Requested-With': 'XMLHttpRequest', 'Connection': 'keep-alive', 'Pragma': 'no-cache', 'Cache-Control': 'no-cache'})
         
         self.MAIN_URL     = 'http://www.ardmediathek.de/'
         self.MAIN_API_URL = 'http://www.ardmediathek.de/'
@@ -66,10 +66,10 @@ class ARDmediathek(CBaseHostClass):
                              {'category':'list_items',       'title':_('Live TV'),             'url': self.getFullUrl('appdata/servlet/tv/live?json')},
                              {'category':'list_items',       'title':_('Live Radio'),          'url': self.getFullUrl('appdata/servlet/radio/live?json')},
                              {'category':'search',          'title':_('Search'), 'search_item':True},
-                             {'category':'search_history',  'title':_('Search history')} ]
+                             {'category':'search_history',  'title':_('Search history')}]
         
         self.ICON_QUALITY_MAP = {'large':1080, 'medium':640, 'small':240}
-        self.STREAM_QUALITY_MAP = {'hd':4, 'veryhigh':3, 'high':2, 'med':1, 'low':0 }
+        self.STREAM_QUALITY_MAP = {'hd':4, 'veryhigh':3, 'high':2, 'med':1, 'low':0}
         
     def _getQualityName(self, qualityValue):
         for key in self.STREAM_QUALITY_MAP:
@@ -419,36 +419,36 @@ class ARDmediathek(CBaseHostClass):
             def _cmpLinks(it1, it2):
                 prefmoreimportantly = config.plugins.iptvplayer.ardmediathek_prefmoreimportant.value
                 if 'quality' == prefmoreimportantly:
-                    if it1['quality_pref'] < it2['quality_pref'] :
+                    if it1['quality_pref'] < it2['quality_pref']:
                         return -1
-                    elif it1['quality_pref']  > it2['quality_pref'] :
+                    elif it1['quality_pref']  > it2['quality_pref']:
                         return 1
                     else:
-                        if it1['quality'] < it2['quality'] :
+                        if it1['quality'] < it2['quality']:
                             return -1
-                        elif it1['quality']  > it2['quality'] :
+                        elif it1['quality']  > it2['quality']:
                             return 1
                         else:
-                            if it1['format_pref'] < it2['format_pref'] :
+                            if it1['format_pref'] < it2['format_pref']:
                                 return -1
-                            elif it1['format_pref']  > it2['format_pref'] :
+                            elif it1['format_pref']  > it2['format_pref']:
                                 return 1
                             else:
                                 return 0
                 else:
-                    if it1['format_pref'] < it2['format_pref'] :
+                    if it1['format_pref'] < it2['format_pref']:
                         return -1
-                    elif it1['format_pref']  > it2['format_pref'] :
+                    elif it1['format_pref']  > it2['format_pref']:
                         return 1
                     else:
-                        if it1['quality_pref'] < it2['quality_pref'] :
+                        if it1['quality_pref'] < it2['quality_pref']:
                             return -1
-                        elif it1['quality_pref']  > it2['quality_pref'] :
+                        elif it1['quality_pref']  > it2['quality_pref']:
                             return 1
                         else:
-                            if it1['quality'] < it2['quality'] :
+                            if it1['quality'] < it2['quality']:
                                 return -1
-                            elif it1['quality']  > it2['quality'] :
+                            elif it1['quality']  > it2['quality']:
                                 return 1
                             else:
                                 return 0
@@ -475,7 +475,7 @@ class ARDmediathek(CBaseHostClass):
         CBaseHostClass.handleService(self, index, refresh, searchPattern, searchType)
         name     = self.currItem.get("name", None)
         category = self.currItem.get("category", '')
-        printDBG( "ARDmediathek.handleService: ---------> name[%s], category[%s] " % (name, category) )
+        printDBG("ARDmediathek.handleService: ---------> name[%s], category[%s] " % (name, category))
         searchPattern = self.currItem.get("search_pattern", searchPattern)
         self.currList = [] 
 

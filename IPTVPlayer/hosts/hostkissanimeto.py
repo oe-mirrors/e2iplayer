@@ -34,7 +34,7 @@ config.plugins.iptvplayer.kissanime_proxy = ConfigSelection(default="None", choi
 
 def GetConfigList():
     optionList = []
-    optionList.append(getConfigListEntry(_("Default video quality:"),   config.plugins.iptvplayer.kissanime_defaultformat ))
+    optionList.append(getConfigListEntry(_("Default video quality:"),   config.plugins.iptvplayer.kissanime_defaultformat))
     optionList.append(getConfigListEntry(_("Use proxy server:"),        config.plugins.iptvplayer.kissanime_proxy))
     return optionList
 ###################################################
@@ -50,16 +50,16 @@ class KissAnimeTo(CBaseHostClass):
         self.USER_AGENT = 'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:56.0) Gecko/20100101 Firefox/56.0'
         self.HTTP_HEADER = {'User-Agent': self.USER_AGENT, 'Accept': 'text/html'}
         self.AJAX_HEADER = dict(self.HTTP_HEADER)
-        self.AJAX_HEADER.update( {'X-Requested-With': 'XMLHttpRequest'} )
+        self.AJAX_HEADER.update({'X-Requested-With': 'XMLHttpRequest'})
         self.defaultParams = {'header':self.HTTP_HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
         
         self.MAIN_URL = 'http://kissanime.ru/'
         self.DEFAULT_ICON_URL = "https://ausanimecons.files.wordpress.com/2015/01/kissanime-logo.jpg"
         
-        self.MAIN_CAT_TAB = [{'category': 'home',            'title': _('Home'),              'url': self.getMainUrl(),           },
+        self.MAIN_CAT_TAB = [{'category': 'home',            'title': _('Home'),              'url': self.getMainUrl(),},
                              {'category': 'list_cats',       'title': _('Anime list'),        'url': self.getFullUrl('AnimeList'),},
-                             {'category': 'search',          'title': _('Search'), 'search_item': True,                   },
-                             {'category': 'search_history',  'title': _('Search history'),                               } ]
+                             {'category': 'search',          'title': _('Search'), 'search_item': True,},
+                             {'category': 'search_history',  'title': _('Search history'),}]
         
         self.SORT_BY_TAB = [{'title':_('Sort by alphabet')},
                             {'title':_('Sort by popularity'), 'sort_by':'MostPopular'},
@@ -123,7 +123,7 @@ class KissAnimeTo(CBaseHostClass):
                 header = dict(self.HTTP_HEADER)
                 header['Accept'] = 'image/png,image/*;q=0.8,*/*;q=0.5'
                 params = dict(self.defaultParams)
-                params.update( {'maintype': 'image', 'subtypes':['jpeg', 'jpg', 'png'], 'check_first_bytes':['\xFF\xD8', '\xFF\xD9', '\x89\x50\x4E\x47'], 'header':header} )
+                params.update({'maintype': 'image', 'subtypes':['jpeg', 'jpg', 'png'], 'check_first_bytes':['\xFF\xD8', '\xFF\xD9', '\x89\x50\x4E\x47'], 'header':header})
                 
                 prevMeta = self.cm.meta
                 images = []
@@ -408,7 +408,7 @@ class KissAnimeTo(CBaseHostClass):
             data = self.cm.ph.getAllItemsBeetwenMarkers(data, '<option', '</option>')
             for item in data:
                 serverTitle = self.cleanHtmlStr(item)
-                serverUrl   = self.getFullUrl( self.cm.ph.getSearchGroups(item, '''value="([^"]+?)"''')[0] )
+                serverUrl   = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''value="([^"]+?)"''')[0])
                 if self.cm.isValidUrl(serverUrl):
                     urlTab.append({'name':serverTitle, 'url':serverUrl, 'need_resolve':1})
             
@@ -427,7 +427,7 @@ class KissAnimeTo(CBaseHostClass):
         
         def _decUrl(data, password):
             printDBG('PASSWORD 2: ' + sha256(password).hexdigest())
-            key = a2b_hex( sha256(password).hexdigest() )
+            key = a2b_hex(sha256(password).hexdigest())
             printDBG("key: [%s]" % key)
             iv = a2b_hex("a5e8d2e9c1721ae0e84ad660c472c1f3")
             encrypted = base64.b64decode(data)
@@ -491,7 +491,7 @@ class KissAnimeTo(CBaseHostClass):
             
         if 0 < len(urlTab):
             max_bitrate = int(config.plugins.iptvplayer.kissanime_defaultformat.value)
-            def __getLinkQuality( itemLink ):
+            def __getLinkQuality(itemLink):
                 try:
                     return int(self.cm.ph.getSearchGroups('|'+itemLink['name']+'|', '[^0-9]([0-9]+?)[^0-9]')[0])
                 except Exception:
@@ -525,7 +525,7 @@ class KissAnimeTo(CBaseHostClass):
         category = self.currItem.get("category", '')
         mode     = self.currItem.get("mode", '')
         
-        printDBG( "handleService: |||||||||||||||||||||||||||||||||||| name[%s], category[%s] " % (name, category) )
+        printDBG("handleService: |||||||||||||||||||||||||||||||||||| name[%s], category[%s] " % (name, category))
         self.currList = []
         
     #MAIN MENU

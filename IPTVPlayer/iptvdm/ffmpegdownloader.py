@@ -58,7 +58,7 @@ class FFMPEGDownloader(BaseDownloader):
         return "ffmpeg"
 
     def isWorkingCorrectly(self, callBackFun):
-        self.iptv_sys = iptv_system( DMHelper.GET_FFMPEG_PATH() + " -version 2>&1 ", boundFunction(self._checkWorkingCallBack, callBackFun) )
+        self.iptv_sys = iptv_system(DMHelper.GET_FFMPEG_PATH() + " -version 2>&1 ", boundFunction(self._checkWorkingCallBack, callBackFun))
         
     def _checkWorkingCallBack(self, callBackFun, code, data):
         reason = ''
@@ -138,7 +138,7 @@ class FFMPEGDownloader(BaseDownloader):
         self.console = eConsoleAppContainer()
         self.console_appClosed_conn = eConnectCallback(self.console.appClosed, self._cmdFinished)
         self.console_stderrAvail_conn = eConnectCallback(self.console.stderrAvail, self._dataAvail)
-        self.console.execute( cmd )
+        self.console.execute(cmd)
         
         self.status = DMHelper.STS.DOWNLOADING
         
