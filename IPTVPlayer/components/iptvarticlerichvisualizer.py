@@ -200,7 +200,7 @@ class IPTVArticleRichVisualizer(Screen):
 
     def startDownloader(self, sts, reason):
         if sts:
-            url,downloaderParams = DMHelper.getDownloaderParamFromUrl( self.cover['src'] )
+            url, downloaderParams = DMHelper.getDownloaderParamFromUrl( self.cover['src'] )
             self.cover['downloader'] .subscribeFor_Finish(self.downloaderEnd)
             self.cover['downloader'] .start(url, self._getDownloadFilePath(), downloaderParams)
             self.showSpinner()
@@ -333,7 +333,7 @@ class IPTVArticleRichVisualizer(Screen):
             
             x = self.richDesc['page_item_start_x'] + page * self.richDesc['page_item_size']
             y = self.richDesc['page_item_start_y']
-            self["page_marker"].instance.move(ePoint(x,y))
+            self["page_marker"].instance.move(ePoint(x, y))
             
     def nextRichDescPage(self):
         page = self.richDesc['page'] 

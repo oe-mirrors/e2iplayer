@@ -20,16 +20,16 @@ class WEP_TestVectors(unittest.TestCase):
     """ Test WEP algorithm using know values """
     def testKnowValues(self):
         """ Test using vectors from..."""
-        def WEPtestVector(testCase,plainText,iv,key,keyId,cipherText):
+        def WEPtestVector(testCase, plainText, iv, key, keyId, cipherText):
             """ Process WEP test vectors from RFCxxxx"""
-            print('%s %s %s'%('='*((54-len(testCase))/2),testCase,'='*((54-len(testCase))/2)))
+            print('%s %s %s'%('='*((54-len(testCase))/2), testCase, '='*((54-len(testCase))/2)))
             # Convert from octet lists to string
             pt  = a2b_p(plainText)
             iv  = a2b_p(iv)
             key = a2b_p(key)
             kct = a2b_p(cipherText)
 
-            alg = WEP(key,keyId=keyId)
+            alg = WEP(key, keyId=keyId)
 
             print('key:    %s'%b2a_p(key)[9:])
             print('keyId:  %x'%keyId)
@@ -39,11 +39,11 @@ class WEP_TestVectors(unittest.TestCase):
 
             ct  = alg.encrypt(pt, iv, keyId)
             print('ct:     %s'%b2a_p(ct)[9:])
-            print('crc:    %s'%b2a_p(pack('<I',crc32(plainText)))[9:])
+            print('crc:    %s'%b2a_p(pack('<I', crc32(plainText)))[9:])
 
             print('========================================================')
             self.assertEqual( ct, kct )
-            alg.setKey(key,keyId=keyId)
+            alg.setKey(key, keyId=keyId)
             dct = alg.decrypt( ct )
             self.assertEqual( dct, pt )
 

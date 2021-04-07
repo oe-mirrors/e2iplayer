@@ -108,7 +108,7 @@ class EgyBest(CBaseHostClass):
             addFilter(tmp, 'href', 'sort')
         
         keyMap = {0:'year', 1:'language', 2:'country', 3:'genre', 4:'category', 5:'quality', 6:'resolution'}
-        data = self.cm.ph.getAllItemsBeetwenNodes(data, ('<div', '>', 'dropdown'), ('</div' , '>'))
+        data = self.cm.ph.getAllItemsBeetwenNodes(data, ('<div', '>', 'dropdown'), ('</div', '>'))
         for idx in range(len(data)):
             tmp = data[idx]
             key = keyMap.get(idx, '')

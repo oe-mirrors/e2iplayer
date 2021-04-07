@@ -146,7 +146,7 @@ class FilmyNaDzis(CBaseHostClass):
             self.addDir(params)
 
         tabs = [{'category':'search',         'title': _('Search'), 'search_item':True },
-                {'category':'search_history', 'title': _('Search history'),            }]
+                {'category': 'search_history', 'title': _('Search history'),            }]
         self.listsTab(tabs, cItem)
 
     def listItems(self, cItem):
@@ -161,7 +161,7 @@ class FilmyNaDzis(CBaseHostClass):
 
 
         # page style categories
-        tmp = ph.find(data, ('<div', '>', 'listing-wrap'), ('<div','>', 'main-bottom-sidebar-wrap'), flags=0)[1]
+        tmp = ph.find(data, ('<div', '>', 'listing-wrap'), ('<div', '>', 'main-bottom-sidebar-wrap'), flags=0)[1]
         items = self.cm.ph.getAllItemsBeetwenMarkers(tmp, ('<article', '>'), '</article>')
         
         if not items:
@@ -286,7 +286,7 @@ class FilmyNaDzis(CBaseHostClass):
         CBaseHostClass.handleService(self, index, refresh, searchPattern, searchType)
 
         category = self.currItem.get("category", '')
-        title = self.currItem.get("title","")
+        title = self.currItem.get("title", "")
         
         printDBG( "handleService: || category[%s] " % (category) )
         self.currList = []

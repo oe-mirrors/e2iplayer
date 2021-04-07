@@ -66,7 +66,7 @@ class UnCaptchaReCaptchaMyJDWidget(Screen):
             {
                 "cancel": self.keyExit,
                 #"ok"    : self.keyOK,
-                "red"   : self.keyRed,
+                "red": self.keyRed,
             }, -2)
         
         self.workconsole = {'console':None, 'close_conn':None, 'stderr_conn':None, 'stdout_conn':None, 'stderr':'', 'stdout':''}

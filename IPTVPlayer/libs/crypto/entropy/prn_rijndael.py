@@ -21,7 +21,7 @@ class PRN_Rijndael:
         "AES Proposal: Rijndael", Joan Daemen, Vincent Rijmen
     """
     def __init__(self, seed=defaultSeed):
-        self.__algorithm = Rijndael(padding=noPadding(),keySize=32, blockSize=32)
+        self.__algorithm = Rijndael(padding=noPadding(), keySize=32, blockSize=32)
         self.reset()
         self.reseed(seed)
 
@@ -29,7 +29,7 @@ class PRN_Rijndael:
         self.__algorithm.setKey(self.__algorithm.keySize*chr(0))      # set key to all zeros
         self.__state = self.__algorithm.blockSize*chr(0)              # a single block of zeros
 
-    def reseed(self,seed):
+    def reseed(self, seed):
         while len(seed) > 0 :
             if len(seed) < self.__algorithm.blockSize:
                 block = seed + (self.__algorithm.blockSize-len(seed))*chr(0)

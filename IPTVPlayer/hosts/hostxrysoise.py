@@ -276,7 +276,7 @@ class XrysoiSE(CBaseHostClass):
     def getLinksForVideo(self, cItem):
         printDBG("XrysoiSE.getLinksForVideo [%s]" % cItem)
         # Use Season and Episode information when exist for cache index
-        idx = cItem['mode'] + cItem['url'] + cItem.get('season','') + cItem.get('episode','')
+        idx = cItem['mode'] + cItem['url'] + cItem.get('season', '') + cItem.get('episode', '')
         urlTab = self.cacheLinks.get(idx,  [])
         if len(urlTab): return urlTab
         self.cacheLinks = {}

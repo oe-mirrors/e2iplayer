@@ -151,7 +151,7 @@ class WagasWorldApi(CBaseHostClass):
 
     def exploreItem(self, cItem):
         printDBG("WagasWorldApi.exploreItem url[%s]" % cItem['url'])
-        sts,data = self.cm.getPage(cItem['url'], self.http_params)
+        sts, data = self.cm.getPage(cItem['url'], self.http_params)
         if not sts: return []
 
         desc = ph.clean_html(ph.find(data, ('<div', '>', 'alert-danger'), '</div>', flags=0)[1])
@@ -205,7 +205,7 @@ class WagasWorldApi(CBaseHostClass):
             if data:
                 return [{'name':data['title'], 'url':data['url']}]
         else:
-            sts,data = self.cm.getPage(baseUrl, self.http_params)
+            sts, data = self.cm.getPage(baseUrl, self.http_params)
             if not sts: return []
             data = self.cm.ph.getDataBeetwenMarkers(data, '<div class="videoWrapper">', '</section>', False)[1]
             return self.up.getAutoDetectedStreamLink(baseUrl, data)

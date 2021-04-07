@@ -80,7 +80,7 @@ class Fullmatchtv(CBaseHostClass):
         post_data = {'action':'td_ajax_loop', 'loopState[moduleId]':'1', 'loopState[currentPage]':page, 'loopState[atts][category_id]':self.categoryId}
         sts, data = self.getPage('https://fullmatchtv.com/wp-admin/admin-ajax.php?td_theme_name=Newspaper&v=10.1', self.defaultParams, post_data)
         if not sts: return
-        data = data.replace('\\','')
+        data = data.replace('\\', '')
         data = self.cm.ph.getAllItemsBeetwenNodes(data, ('<div', '>', 'td-module-thumb'), ('</div', '>'))
         for item in data:
             url = self.getFullUrl( self.cm.ph.getSearchGroups(item, '''\shref=['"]([^"^']+?)['"]''')[0] )

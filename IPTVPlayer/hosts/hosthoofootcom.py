@@ -27,11 +27,11 @@ class HoofootCom(CBaseHostClass):
     MAIN_URL   = 'https://hoofoot.com/'
     DEFAULT_ICON_URL  = "http://th.hoofoot.com/pics/default.jpg"
     
-    MAIN_CAT_TAB = [{'category':'list_cats',       'title': _('Main'),              'url':MAIN_URL,},
-                    {'category':'list_cats2',      'title': _('Popular'),           'url':MAIN_URL,},
-                    {'category':'list_cats3',      'title': _('Promoted'),          'url':MAIN_URL,},
-                    {'category':'search',          'title': _('Search'), 'search_item':True,       },
-                    {'category':'search_history',  'title': _('Search history'),                   } ]
+    MAIN_CAT_TAB = [{'category': 'list_cats',       'title': _('Main'),              'url': MAIN_URL,},
+                    {'category': 'list_cats2',      'title': _('Popular'),           'url': MAIN_URL,},
+                    {'category': 'list_cats3',      'title': _('Promoted'),          'url': MAIN_URL,},
+                    {'category': 'search',          'title': _('Search'), 'search_item': True,       },
+                    {'category': 'search_history',  'title': _('Search history'),                   } ]
  
     def __init__(self):
         CBaseHostClass.__init__(self, {'history':'hoofoot.com', 'cookie':'hoofootcom.cookie'})

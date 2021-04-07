@@ -42,7 +42,7 @@ class TrailersApple(CBaseHostClass):
                         {'category':'list_items',     'title':'Most Popular',  'url':self.getFullUrl('/trailers/home/feeds/most_pop.json')},
                         {'category':'list_items',     'title':'Movie Studios', 'url':self.getFullUrl('/trailers/home/feeds/studios.json')},
                         {'category':'search',         'title': _('Search'),       'search_item':True       },
-                        {'category':'search_history', 'title': _('Search history'),                        }]
+                        {'category': 'search_history', 'title': _('Search history'),                        }]
         self.listsTab(MAIN_CAT_TAB, cItem)
     
     def listCatItems(self, cItem, nextCategory):

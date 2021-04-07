@@ -54,7 +54,7 @@ class TVJWORG(CBaseHostClass):
     DEFAULT_ICON = 'https://s-media-cache-ak0.pinimg.com/236x/3b/aa/32/3baa3268cdbc9dc5114bbe1ab0b00ce0.jpg'
     
     ICONS_KEYS = ["xl", "lg", "md", "sm", "xs"]
-    ICONS_TYPES = {'vertical':['pss', 'psr', 'sqr', 'sqs'], 'horizontal':['lsr', 'lss', 'wss', 'wsr','pnr']}
+    ICONS_TYPES = {'vertical':['pss', 'psr', 'sqr', 'sqs'], 'horizontal':['lsr', 'lss', 'wss', 'wsr', 'pnr']}
     
     def __init__(self):
         CBaseHostClass.__init__(self, {'history':'filmydokumentalne.eu', 'cookie':'filmydokumentalne.eu.cookie'})

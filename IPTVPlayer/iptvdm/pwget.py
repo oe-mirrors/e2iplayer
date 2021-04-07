@@ -28,9 +28,9 @@ def CheckVer(params):
 def download(url, file):
     try:
         (tmpfile, headers) = urllib.urlretrieve(url, file)
-        return 0,str(headers)
+        return 0, str(headers)
     except Exception:
-        return 2,str( formatExceptionInfo() )
+        return 2, str( formatExceptionInfo() )
 
 if __name__ == "__main__":
     if len(sys.argv) < 3:
@@ -43,6 +43,6 @@ if __name__ == "__main__":
     except Exception:
         pass
 
-    sts,data = download(sys.argv[1], sys.argv[2])
+    sts, data = download(sys.argv[1], sys.argv[2])
     print(data, file=sys.stderr)
     sys.exit(sts)

@@ -48,8 +48,8 @@ class TainieskaiSeiresTv(CBaseHostClass):
         if sts: self.MAIN_URL = self.cm.getBaseUrl(data.meta['url'])
         else: self.MAIN_URL = domain
         
-        self.MAIN_CAT_TAB = [{'category':'search',         'title': _('Search'),    'search_item':True,},
-                             {'category':'search_history', 'title': _('Search history'),}]
+        self.MAIN_CAT_TAB = [{'category': 'search',         'title': _('Search'),    'search_item': True,},
+                             {'category': 'search_history', 'title': _('Search history'),}]
     
     def listMainMenu(self, cItem):
         printDBG("TainieskaiSeiresTv.listMainMenu")

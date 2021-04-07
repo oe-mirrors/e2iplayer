@@ -107,12 +107,12 @@ class IPTVSubDownloaderWidget(Screen):
         self["statustext"] = Label("Loading...")
         self["actions"] = ActionMap(["IPTVPlayerListActions", "WizardActions", "DirectionActions", "ColorActions", "NumberActions"],
         {
-            "red"     :   self.red_pressed,
-            "green"   :   self.green_pressed,
-            "yellow"  :   self.yellow_pressed,
-            "blue"    :   self.blue_pressed,
-            "ok"      :   self.ok_pressed,
-            "back"    :   self.back_pressed,
+            "red":   self.red_pressed,
+            "green":   self.green_pressed,
+            "yellow":   self.yellow_pressed,
+            "blue":   self.blue_pressed,
+            "ok":   self.ok_pressed,
+            "back":   self.back_pressed,
         }, -1)
 
         self["headertext"] = Label()
@@ -653,7 +653,7 @@ class IPTVSubDownloaderWidget(Screen):
         selItem = self.getSelItem()
         if selItem and selItem.description != '':
             data = selItem.description
-            sData = data.replace('\n','')
+            sData = data.replace('\n', '')
             sData = data.replace('[/br]', '\n')
             self["console"].setText(sData)
         else:

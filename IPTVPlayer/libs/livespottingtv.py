@@ -39,7 +39,7 @@ class LivespottingTvApi:
         sts, data = self.cm.getPage('https://livespotting.com/showroom.json')
         if not sts: return list
         printDBG("data: %s" % data)
-        data = data.replace('Showroom.Load(','').replace(');','')
+        data = data.replace('Showroom.Load(', '').replace(');', '')
         try:
             data = json_loads(data)
             for item in data:

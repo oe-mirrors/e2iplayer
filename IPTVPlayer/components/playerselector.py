@@ -167,8 +167,8 @@ class PlayerSelectorWidget(Screen):
               offsetCoverX + tmpX * numOfCol + offsetCoverX - disWidth - 70,
               )
         
-        for y in range(1,numOfRow+1):
-            for x in range(1,numOfCol+1):
+        for y in range(1, numOfRow+1):
+            for x in range(1, numOfCol+1):
                 skinCoverLine = """<widget name="cover_%s%s" zPosition="4" position="%d,%d" size="%d,%d" transparent="1" alphatest="blend" />""" % (x, y, 
                     (offsetCoverX + tmpX * (x - 1) ), # pos X image
                     (offsetCoverY + tmpY * (y - 1) ), # pos Y image
@@ -193,7 +193,7 @@ class PlayerSelectorWidget(Screen):
         
         # load icons
         self.pixmapList = []
-        for idx in range(0,self.numOfItems):
+        for idx in range(0, self.numOfItems):
             self.pixmapList.append( LoadPixmap(GetIconDir('PlayerSelector/' + self.currList[idx][1] + '%i.png' % self.IconsSize)) )
 
         self.markerPixmap = LoadPixmap(GetIconDir('PlayerSelector/marker%i.png' % self.MarkerSize))
@@ -219,9 +219,9 @@ class PlayerSelectorWidget(Screen):
         self["menu"] = Cover3()
         
         
-        for y in range(1,self.numOfRow+1):
-            for x in range(1,self.numOfCol+1):
-                strIndex = "cover_%s%s" % (x,y)
+        for y in range(1, self.numOfRow+1):
+            for x in range(1, self.numOfCol+1):
+                strIndex = "cover_%s%s" % (x, y)
                 self[strIndex] = Cover3()
                 
         self["statustext"] = Label(self.currList[0][0])
@@ -337,19 +337,19 @@ class PlayerSelectorWidget(Screen):
         
     def updateIconsList(self, rangeList):
         idx = self.currPage * (self.numOfCol*self.numOfRow)
-        for y in range(1,self.numOfRow+1):
-            for x in range(1,self.numOfCol+1):
+        for y in range(1, self.numOfRow+1):
+            for x in range(1, self.numOfCol+1):
                 if idx >= rangeList[0] and idx <= rangeList[1]:
-                    strIndex = "cover_%s%s" % (x,y)
+                    strIndex = "cover_%s%s" % (x, y)
                     printDBG("updateIconsList [%s]" % strIndex)
                     self[strIndex].setPixmap(self.pixmapList[idx])
                 idx += 1
     
     def updateIcons(self):
         idx = self.currPage * (self.numOfCol*self.numOfRow)
-        for y in range(1,self.numOfRow+1):
-            for x in range(1,self.numOfCol+1):
-                strIndex = "cover_%s%s" % (x,y)
+        for y in range(1, self.numOfRow+1):
+            for x in range(1, self.numOfCol+1):
+                strIndex = "cover_%s%s" % (x, y)
                 printDBG("updateIcon for self[%s]" % strIndex)
                 if idx < self.numOfItems:
                     #self[strIndex].updateIcon( resolveFilename(SCOPE_PLUGINS, 'Extensions/IPTVPlayer/icons/PlayerSelector/' + self.currList[idx][1] + '.png'))
@@ -360,7 +360,7 @@ class PlayerSelectorWidget(Screen):
                     self[strIndex].hide()
         x = self.pageItemStartX + self.currPage * self.pageItemSize
         y = self.pageItemStartY
-        self["page_marker"].instance.move(ePoint(x,y))
+        self["page_marker"].instance.move(ePoint(x, y))
         
     def setIdx(self, selIdx):
         if selIdx > self.numOfItems:
@@ -424,7 +424,7 @@ class PlayerSelectorWidget(Screen):
         
         #x =  30 + self.dispX * 180
         #y = 130 + self.dispY * 125
-        self["marker"].instance.move(ePoint(x,y))
+        self["marker"].instance.move(ePoint(x, y))
         self["statustext"].setText(self.currList[new_idx][0])
         return
         

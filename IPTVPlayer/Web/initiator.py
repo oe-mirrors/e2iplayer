@@ -22,10 +22,10 @@ IPTVwebRoot.putChild("search", searchPage())
 
 def checkForFC():
 	ret = False
-	if os.path.exists(resolveFilename(SCOPE_PLUGINS,'Extensions/OpenWebif/controllers/base.pyo')):
-		myfileName = resolveFilename(SCOPE_PLUGINS,'Extensions/OpenWebif/controllers/base.pyo')
-	elif os.path.exists(resolveFilename(SCOPE_PLUGINS,'Extensions/OpenWebif/controllers/base.pyc')):
-		myfileName = resolveFilename(SCOPE_PLUGINS,'Extensions/OpenWebif/controllers/base.pyc')
+	if os.path.exists(resolveFilename(SCOPE_PLUGINS, 'Extensions/OpenWebif/controllers/base.pyo')):
+		myfileName = resolveFilename(SCOPE_PLUGINS, 'Extensions/OpenWebif/controllers/base.pyo')
+	elif os.path.exists(resolveFilename(SCOPE_PLUGINS, 'Extensions/OpenWebif/controllers/base.pyc')):
+		myfileName = resolveFilename(SCOPE_PLUGINS, 'Extensions/OpenWebif/controllers/base.pyc')
 	else:
 		return False
 	
@@ -43,7 +43,7 @@ def checkForFC():
 	return ret
 	      
 # registration for old webinterface
-if os.path.exists(resolveFilename(SCOPE_PLUGINS,'Extensions/WebInterface/web/external.xml')):
+if os.path.exists(resolveFilename(SCOPE_PLUGINS, 'Extensions/WebInterface/web/external.xml')):
 	try:
 		addExternalChild( ("e2iplayer", IPTVwebRoot, "E2iPlayer", settings.WebInterfaceVersion, True) )
                 addExternalChild( ("iptvplayer", IPTVwebRoot, "E2iPlayer", settings.WebInterfaceVersion, True) )
@@ -51,11 +51,11 @@ if os.path.exists(resolveFilename(SCOPE_PLUGINS,'Extensions/WebInterface/web/ext
 		addExternalChild( ("e2iplayer", IPTVwebRoot) )
                 addExternalChild( ("iptvplayer", IPTVwebRoot) )
 # registration for openwebif
-elif os.path.exists(resolveFilename(SCOPE_PLUGINS,'Extensions/OpenWebif/pluginshook.src')):
+elif os.path.exists(resolveFilename(SCOPE_PLUGINS, 'Extensions/OpenWebif/pluginshook.src')):
 	# Old openwebif version (prior July the 14th 2017) has a bug and does not populate links to all properly registered web addons except fancontrol
 	# see: https://github.com/E2OpenPlugins/e2openplugin-OpenWebif/pull/629
 	#  A HACK: we will canibalize fancontrol entry point (if not installed) to present IPTVplayer option on the web
-	if checkForFC() == True and not os.path.exists(resolveFilename(SCOPE_PLUGINS,'Extensions/FanControl2/FC2webSite.pyo')):
+	if checkForFC() == True and not os.path.exists(resolveFilename(SCOPE_PLUGINS, 'Extensions/FanControl2/FC2webSite.pyo')):
 		fcRoot = static.File(GetPluginDir('Web/'))
 		fcRoot.putChild("", redirectionPage())
 		try:

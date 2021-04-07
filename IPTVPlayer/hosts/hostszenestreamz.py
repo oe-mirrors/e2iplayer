@@ -39,8 +39,8 @@ class Kkiste(CBaseHostClass):
                              {'category':'list_cats',          'title': _('Genre selection')+': '+_('Movies'), 'url':self.getFullUrl('publ/')             },
                              {'category':'list_items',         'title': _('Series'),            'url':self.getFullUrl('load/')                            },
                              {'category':'list_cats',          'title': _('Genre selection')+': '+_('Series'), 'url':self.getFullUrl('load/')             },
-                             {'category':'search',             'title': _('Search'), 'search_item':True,},
-                             {'category':'search_history',     'title': _('Search history'),            } 
+                             {'category': 'search',             'title': _('Search'), 'search_item': True,},
+                             {'category': 'search_history',     'title': _('Search history'),            } 
                             ]
         
 
@@ -65,7 +65,7 @@ class Kkiste(CBaseHostClass):
             for item in data:
                 url = self.getFullUrl(ph.search(item, ph.A_HREF_URI_RE)[1])
                 title = ph.search(item, '''class="CatNameInf">([^<]+)<''')[0]
-                if title.startswith('S-'): title = title.replace('S-','')
+                if title.startswith('S-'): title = title.replace('S-', '')
                 cats.append({'category':'list_items', 'title':title, 'url':url})
 
         self.listsTab(cats, nextCat)
@@ -96,8 +96,8 @@ class Kkiste(CBaseHostClass):
         for item in gdata:
             if '<script>' in item: continue
             genre = self.cleanHtmlStr(ph.search(item, '''href=['"][^'^"]+['"]>([^<]+)</''')[0])
-            genre = genre.replace('Genre: ','')
-            if genre.startswith('S-'): genre = genre.replace('S-','')
+            genre = genre.replace('Genre: ', '')
+            if genre.startswith('S-'): genre = genre.replace('S-', '')
             genres.append(genre)
 
         index = 0
@@ -142,7 +142,7 @@ class Kkiste(CBaseHostClass):
         if '<div class="noEntry"' in data:
             return
 
-        title = cItem.get('title','')
+        title = cItem.get('title', '')
 
         trailerurl = ''
         trailerdata =  ph.findall(data, '<iframe src=', '</iframe>')
@@ -155,13 +155,13 @@ class Kkiste(CBaseHostClass):
         plot = ''
         plotdata = ph.findall(data, '<p><b>', '</b></p>', flags=0)
         for item in plotdata:
-            item = item.replace('\n','')
-            item = item.replace('\r','')
+            item = item.replace('\n', '')
+            item = item.replace('\r', '')
             plot = item
 
-        desc = cItem.get('desc','')
-        url = cItem.get('url','')
-        icon = cItem.get('icon','')
+        desc = cItem.get('desc', '')
+        url = cItem.get('url', '')
+        icon = cItem.get('icon', '')
 
         if plot != '':
             if desc != '':
@@ -184,8 +184,8 @@ class Kkiste(CBaseHostClass):
             params = dict(cItem)
             url = ''
             for item in links:
-                item = item.replace('\n','')
-                item = item.replace('\r','')
+                item = item.replace('\n', '')
+                item = item.replace('\r', '')
                 url = ph.search(item, ph.A_HREF_URI_RE)[1]
                 name = ph.search(url, '''//([^/]+)/''')[0]
                 nameparts = name.split('.')
@@ -207,11 +207,11 @@ class Kkiste(CBaseHostClass):
             episodesList = []
             eNum = 1
             for item in seasons:
-                item = item.replace('\n','')
-                item = item.replace('\r','')
+                item = item.replace('\n', '')
+                item = item.replace('\r', '')
                 season = ph.search(item, '''STAFFEL ([^<]+)<''')[0]
                 if len(season):
-                    if season.startswith('0'): season = season.replace('0','')
+                    if season.startswith('0'): season = season.replace('0', '')
                     episodesList = []
                     links = ph.findall(item, '<a href="', '</a>')
                     eNum = 1

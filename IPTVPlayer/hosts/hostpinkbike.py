@@ -111,7 +111,7 @@ class Pinkbike(CBaseHostClass):
         if '?' in cItem['url']: url = cItem['url'] + '&'
         else: url = cItem['url'] + '?'
         url = url + 'page=' + str(page)
-        sts,data = self.cm.getPage(url)
+        sts, data = self.cm.getPage(url)
         if not sts: return
         if ('page=%d"' % (page+1)) in data: nextPage = True
         else: nextPage = False
@@ -146,7 +146,7 @@ class Pinkbike(CBaseHostClass):
     def getLinksForVideo(self, cItem):
         printDBG("Pinkbike.getLinksForVideo [%s]" % cItem)
         urlTab = []
-        sts,data = self.cm.getPage(cItem['url'])
+        sts, data = self.cm.getPage(cItem['url'])
         if not sts: return urlTab
         data = self.cm.ph.getDataBeetwenMarkers(data, '<video', '</video>', False)[1].replace('\\"', '"')
         data = re.compile('data-quality="([^"]+?)"[^>]+?src="([^"]+?)"').findall(data)

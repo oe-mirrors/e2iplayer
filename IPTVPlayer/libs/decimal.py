@@ -501,7 +501,7 @@ def localcontext(ctx=None):
 class Decimal(object):
     """Floating point class for decimal arithmetic."""
 
-    __slots__ = ('_exp','_int','_sign', '_is_special')
+    __slots__ = ('_exp', '_int', '_sign', '_is_special')
     # Generally, the value of the Decimal instance is given by
     #  (-1)**_sign * _int * 10**_exp
     # Special values are signified by _is_special == True
@@ -573,7 +573,7 @@ class Decimal(object):
             return self
 
         # From an integer
-        if isinstance(value, (int,long)):
+        if isinstance(value, (int, long)):
             if value >= 0:
                 self._sign = 0
             else:
@@ -600,13 +600,13 @@ class Decimal(object):
             return self
 
         # tuple/list conversion (possibly from as_tuple())
-        if isinstance(value, (list,tuple)):
+        if isinstance(value, (list, tuple)):
             if len(value) != 3:
                 raise ValueError('Invalid tuple size in creation of Decimal '
                                  'from list or tuple.  The list or tuple '
                                  'should have exactly three elements.')
             # process sign.  The isinstance test rejects floats
-            if not (isinstance(value[0], (int, long)) and value[0] in (0,1)):
+            if not (isinstance(value[0], (int, long)) and value[0] in (0, 1)):
                 raise ValueError("Invalid sign.  The first value in the tuple "
                                  "should be an integer; either 0 for a "
                                  "positive number or 1 for a negative number.")
@@ -1815,7 +1815,7 @@ class Decimal(object):
         # of 2 or a power of 5.
         if y.sign == 1:
             last_digit = xc % 10
-            if last_digit in (2,4,6,8):
+            if last_digit in (2, 4, 6, 8):
                 # quick test for power of 2
                 if xc & -xc != xc:
                     return None
@@ -2993,14 +2993,14 @@ class Decimal(object):
         (opa, opb) = self._fill_logical(context, self._int, other._int)
 
         # make the operation, and clean starting zeroes
-        result = "".join([str(int(a)&int(b)) for a,b in zip(opa,opb)])
+        result = "".join([str(int(a)&int(b)) for a, b in zip(opa, opb)])
         return _dec_from_triple(0, result.lstrip('0') or '0', 0)
 
     def logical_invert(self, context=None):
         """Invert all its digits."""
         if context is None:
             context = getcontext()
-        return self.logical_xor(_dec_from_triple(0,'1'*context.prec,0),
+        return self.logical_xor(_dec_from_triple(0, '1'*context.prec, 0),
                                 context)
 
     def logical_or(self, other, context=None):
@@ -3014,7 +3014,7 @@ class Decimal(object):
         (opa, opb) = self._fill_logical(context, self._int, other._int)
 
         # make the operation, and clean starting zeroes
-        result = "".join(str(int(a)|int(b)) for a,b in zip(opa,opb))
+        result = "".join(str(int(a)|int(b)) for a, b in zip(opa, opb))
         return _dec_from_triple(0, result.lstrip('0') or '0', 0)
 
     def logical_xor(self, other, context=None):
@@ -3028,7 +3028,7 @@ class Decimal(object):
         (opa, opb) = self._fill_logical(context, self._int, other._int)
 
         # make the operation, and clean starting zeroes
-        result = "".join(str(int(a)^int(b)) for a,b in zip(opa,opb))
+        result = "".join(str(int(a)^int(b)) for a, b in zip(opa, opb))
         return _dec_from_triple(0, result.lstrip('0') or '0', 0)
 
     def max_mag(self, other, context=None):
@@ -3405,10 +3405,10 @@ class Context(object):
         if _ignored_flags is None:
             _ignored_flags = []
         if not isinstance(flags, dict):
-            flags = dict([(s,s in flags) for s in _signals])
+            flags = dict([(s, s in flags) for s in _signals])
             del s
         if traps is not None and not isinstance(traps, dict):
-            traps = dict([(s,s in traps) for s in _signals])
+            traps = dict([(s, s in traps) for s in _signals])
             del s
         for name, val in locals().items():
             if val is None:
@@ -3484,7 +3484,7 @@ class Context(object):
 
     def _regard_flags(self, *flags):
         """Stop ignoring the flags, if they are raised"""
-        if flags and isinstance(flags[0], (tuple,list)):
+        if flags and isinstance(flags[0], (tuple, list)):
             flags = flags[0]
         for flag in flags:
             self._ignored_flags.remove(flag)
@@ -4063,7 +4063,7 @@ class Context(object):
         """
         return a.logical_xor(b, context=self)
 
-    def max(self, a,b):
+    def max(self, a, b):
         """max compares two values numerically and returns the maximum.
 
         If either operand is a NaN then the general rules apply.
@@ -4087,7 +4087,7 @@ class Context(object):
         """Compares the values numerically with their sign ignored."""
         return a.max_mag(b, context=self)
 
-    def min(self, a,b):
+    def min(self, a, b):
         """min compares two values numerically and returns the minimum.
 
         If either operand is a NaN then the general rules apply.
@@ -4662,7 +4662,7 @@ class Context(object):
     to_integral = to_integral_value
 
 class _WorkRep(object):
-    __slots__ = ('sign','int','exp')
+    __slots__ = ('sign', 'int', 'exp')
     # sign: 0 or 1
     # int:  int or long
     # exp:  None, int, or string

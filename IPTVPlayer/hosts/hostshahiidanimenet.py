@@ -41,9 +41,9 @@ class ShahiidAnime(CBaseHostClass):
         self.defaultParams = {'header':self.HEADER, 'raw_post_data':True, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
         
         self.MAIN_CAT_TAB = [
-                             {'category':'list_filters',          'title': _('Anime list'),          'url':self.getFullUrl('/filter'), },
-                             {'category':'search',                'title': _('Search'),              'search_item':True, }, 
-                             {'category':'search_history',        'title': _('Search history'),                          } 
+                             {'category': 'list_filters',          'title': _('Anime list'),          'url': self.getFullUrl('/filter'), },
+                             {'category': 'search',                'title': _('Search'),              'search_item': True, }, 
+                             {'category': 'search_history',        'title': _('Search history'),                          } 
                             ]
         
     def getPage(self, baseUrl, addParams = {}, post_data = None):
@@ -85,7 +85,7 @@ class ShahiidAnime(CBaseHostClass):
                 if addAll: self.cacheFilters[key].insert(0, {'title':_('All')})
                 self.cacheFiltersKeys.append(key)
         
-        data = self.cm.ph.getAllItemsBeetwenNodes(data, ('<select', '>', 'Select2'), ('</' , 'select>'))
+        data = self.cm.ph.getAllItemsBeetwenNodes(data, ('<select', '>', 'Select2'), ('</', 'select>'))
         for tmp in data:
             key = self.cm.ph.getSearchGroups(tmp, '''name="([^"]+?)"''')[0]
             tmp = self.cm.ph.getAllItemsBeetwenMarkers(tmp, '<option', '</option>')
@@ -300,13 +300,13 @@ class ShahiidAnime(CBaseHostClass):
         desc = self.cleanHtmlStr(tmp)
         icon = self.getFullIconUrl(self.cm.ph.getSearchGroups(tmp, '''src=['"]([^'^"]+?)['"]''')[0])
         
-        keysMap = {'الأسم بالعربى':'alternate_title',
-                   'عدد الحلقات' :'episodes',
-                   'النوع'       :'type',
-                   'المنتج'      :'production',
-                   'تاريخ الأنتاج':'released',
-                   'الحالة'      :'status',
-                   'التصنيف'     :'genres',}
+        keysMap = {'الأسم بالعربى': 'alternate_title',
+                   'عدد الحلقات': 'episodes',
+                   'النوع': 'type',
+                   'المنتج': 'production',
+                   'تاريخ الأنتاج': 'released',
+                   'الحالة': 'status',
+                   'التصنيف': 'genres',}
         
         data = self.cm.ph.getAllItemsBeetwenNodes(data, ('<span', '>', 'class="name"'), ('</div', '>'))
         for item in data:

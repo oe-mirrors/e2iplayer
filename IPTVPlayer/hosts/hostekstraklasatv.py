@@ -30,7 +30,7 @@ from Components.config import config, ConfigText, ConfigSelection, ConfigYesNo, 
 #config.plugins.iptvplayer.ekstraklasa_usedf = ConfigYesNo(default = False)
 #config.plugins.iptvplayer.ekstraklasa_proxy = ConfigYesNo(default = False)
 
-config.plugins.iptvplayer.ekstraklasa_defaultres = ConfigSelection(default = "0", choices = [("0", _("Ask")),("800", "800 kbps"), ("1000", "1000 kbps"),("1800", "1800 kbps"),("3600", "3600 kbps"), ("6000", "6000 kbps"), ("99999", "Max")])
+config.plugins.iptvplayer.ekstraklasa_defaultres = ConfigSelection(default = "0", choices = [("0", _("Ask")), ("800", "800 kbps"), ("1000", "1000 kbps"), ("1800", "1800 kbps"), ("3600", "3600 kbps"), ("6000", "6000 kbps"), ("99999", "Max")])
 config.plugins.iptvplayer.ekstraklasa_login    = ConfigText(default = "", fixed_size = False)
 config.plugins.iptvplayer.ekstraklasa_password = ConfigText(default = "", fixed_size = False)
 
@@ -143,7 +143,7 @@ class Ekstraklasa(CBaseHostClass):
             url = ''
 
 
-        title = video_json.get('title','')
+        title = video_json.get('title', '')
 
         if "scheduledAirDate" in video_json: 
             date_time_str = video_json["scheduledAirDate"] 
@@ -155,7 +155,7 @@ class Ekstraklasa(CBaseHostClass):
         else:
             scheduleDate = ""
 
-        icon = video_json.get('posterUrl','')
+        icon = video_json.get('posterUrl', '')
 
         duration = video_json.get("duration", 0)
         if duration>0:
@@ -172,7 +172,7 @@ class Ekstraklasa(CBaseHostClass):
         else:
             descStr.append( _("Not Free") )
             
-        playFrom = video_json.get("playableFrom",'') #"2020-06-07T17:55:00.000Z"
+        playFrom = video_json.get("playableFrom", '') #"2020-06-07T17:55:00.000Z"
         if playFrom:
             date_time_str = playFrom
             date_time_obj = datetime.datetime.strptime(date_time_str, '%Y-%m-%dT%H:%M:%S.%fZ') + self.timeoffset #"2020-06-09T15:55:00.000Z"
@@ -194,11 +194,11 @@ class Ekstraklasa(CBaseHostClass):
         
         descStr = []
 
-        icon = coll_json.get('posterUrl','')
-        title = coll_json.get('name','') 
-        count = coll_json.get('videoCount',0)
+        icon = coll_json.get('posterUrl', '')
+        title = coll_json.get('name', '') 
+        count = coll_json.get('videoCount', 0)
         if count>0:
-            title = '%s [%s]' % (title,count)
+            title = '%s [%s]' % (title, count)
 
         url = coll_json['_links']['videosCollectionsV2']
 
@@ -208,7 +208,7 @@ class Ekstraklasa(CBaseHostClass):
 
         return params
         
-    def listMainMenu(self,cItem):
+    def listMainMenu(self, cItem):
         printDBG("Ekstraklasa.listMainMenu")
         self.listsTab(self.MAIN_CAT_TAB, cItem)
  
@@ -231,10 +231,10 @@ class Ekstraklasa(CBaseHostClass):
                     response = json_loads(data)
 
                     for item in response['data']['data']:
-                        tmp = item.get('_meta',{})
+                        tmp = item.get('_meta', {})
                         playing = tmp.get('isNowPlaying', False)
                         
-                        v_json = item.get('video','')
+                        v_json = item.get('video', '')
                         
                         if v_json:
                             params2= self.getVideoInfo(v_json)
@@ -253,7 +253,7 @@ class Ekstraklasa(CBaseHostClass):
                     printExc()
                     
         
-    def listCategories(self,cItem):
+    def listCategories(self, cItem):
         printDBG("Ekstraklasa.listCategories")
         
         sts, data = self.cm.getPage(self.CHANNELS_JSON_URL)
@@ -274,7 +274,7 @@ class Ekstraklasa(CBaseHostClass):
 
                     for item in response['data']:
                         
-                        c_json = item.get('collection','')
+                        c_json = item.get('collection', '')
                         
                         if c_json:
                             params2 = self.getCollectionInfo(c_json)
@@ -289,7 +289,7 @@ class Ekstraklasa(CBaseHostClass):
     def exploreCategory(self, cItem):
         printDBG("Ekstraklasa.exploreCategory '%s'" % cItem)
         
-        url = cItem.get('url','')
+        url = cItem.get('url', '')
         page = cItem.get('page', 0)
         
         if not url:
@@ -307,7 +307,7 @@ class Ekstraklasa(CBaseHostClass):
 
                 for item in response['data']:
 
-                    c_json = item.get('collection','')
+                    c_json = item.get('collection', '')
                     if c_json:
                         params2 = self.getCollectionInfo(c_json)
                         params = dict(cItem)
@@ -315,7 +315,7 @@ class Ekstraklasa(CBaseHostClass):
                         printDBG(str(params))
                         self.addDir(params)
                     
-                    v_json = item.get('video','')
+                    v_json = item.get('video', '')
                     if v_json:
                         params2 = self.getVideoInfo(v_json)
                         
@@ -337,9 +337,9 @@ class Ekstraklasa(CBaseHostClass):
     def getLinksForVideo(self, cItem):
         printDBG("Ekstraklasa.getLinksForVideo '%s'" % cItem)
         
-        url = cItem.get('url','')
+        url = cItem.get('url', '')
         if not url:
-            scheduleDate = cItem.get('schedule_date','')
+            scheduleDate = cItem.get('schedule_date', '')
             if scheduleDate:
                 msg = _("Stream starts from %s") % scheduleDate 
                 GetIPTVNotify().push(msg, 'info', 10)
@@ -382,7 +382,7 @@ class Ekstraklasa(CBaseHostClass):
                 def_res = int(config.plugins.iptvplayer.ekstraklasa_defaultres.value)
                 printDBG(json_dumps(playlist))
                 for track in playlist:
-                    if int(track.get("bitrate","0")) < (def_res * 1000):
+                    if int(track.get("bitrate", "0")) < (def_res * 1000):
                         linksTab.append(track)
                         break
                 

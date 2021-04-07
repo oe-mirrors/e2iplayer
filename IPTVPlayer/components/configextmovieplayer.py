@@ -85,7 +85,7 @@ class ConfigExtMoviePlayerBase():
         options = [(None, _("From E2 settings"))]
         tmp = GetE2AudioCodecMixChoices('aac')
         for item in tmp:
-            options.append((item,_(item)))
+            options.append((item, _(item)))
         if config.plugins.iptvplayer.aac_mix.value not in tmp:
             config.plugins.iptvplayer.aac_mix.value = None
         if len(tmp):
@@ -97,7 +97,7 @@ class ConfigExtMoviePlayerBase():
         options = [(None, _("From E2 settings"))]
         tmp = GetE2AudioCodecMixChoices('ac3')
         for item in tmp:
-            options.append((item,_(item)))
+            options.append((item, _(item)))
         if config.plugins.iptvplayer.ac3_mix.value not in tmp:
             config.plugins.iptvplayer.ac3_mix.value = None
         if len(tmp):
@@ -109,7 +109,7 @@ class ConfigExtMoviePlayerBase():
         options = [(None, _("From E2 settings"))]
         tmp = GetE2VideoAspectChoices()
         for item in tmp:
-            options.append((item,_(item)))
+            options.append((item, _(item)))
         if config.plugins.iptvplayer.extplayer_aspect.value not in tmp:
             config.plugins.iptvplayer.extplayer_aspect.value = None
         if len(tmp):
@@ -121,7 +121,7 @@ class ConfigExtMoviePlayerBase():
         options = [(None, _("From E2 settings"))]
         tmp = GetE2VideoPolicyChoices()
         for item in tmp:
-            options.append((item,_(item)))
+            options.append((item, _(item)))
         if config.plugins.iptvplayer.extplayer_policy.value not in tmp:
             config.plugins.iptvplayer.extplayer_policy.value = None
         if len(tmp):
@@ -134,7 +134,7 @@ class ConfigExtMoviePlayerBase():
         if None != GetE2VideoPolicy('2'):
             tmp = GetE2VideoPolicyChoices()
             for item in tmp:
-                options.append((item,_(item)))
+                options.append((item, _(item)))
         else: tmp = []
         if config.plugins.iptvplayer.extplayer_policy2.value not in tmp:
             config.plugins.iptvplayer.extplayer_policy2.value = None

@@ -42,7 +42,7 @@ class ArteTV(CBaseHostClass):
         
         lang = GetDefaultLang()
         url = self.getMainUrl()
-        if lang in ['en','fr','de','es','pl']:
+        if lang in ['en', 'fr', 'de', 'es', 'pl']:
             url += lang
         
         sts, data = self.getPage(url)

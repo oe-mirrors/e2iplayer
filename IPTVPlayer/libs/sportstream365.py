@@ -18,8 +18,8 @@ from datetime import datetime, timedelta
 # Config options for HOST
 ###################################################
 
-config.plugins.iptvplayer.sportstream365_language = ConfigSelection(default = "", choices = [("", _("Default")),("de", "Deutsch"),("en", "English"),("es", "Español"),("fr", "Français"),("it", "Italiano"),\
-                                                                                             ("pt", "Português"),("ru", "Русский"),("tr", "Türkçe"),("cn", "汉语")])
+config.plugins.iptvplayer.sportstream365_language = ConfigSelection(default = "", choices = [("", _("Default")), ("de", "Deutsch"), ("en", "English"), ("es", "Español"), ("fr", "Français"), ("it", "Italiano"),\
+                                                                                             ("pt", "Português"), ("ru", "Русский"), ("tr", "Türkçe"), ("cn", "汉语")])
 config.plugins.iptvplayer.sportstream365_cyrillic2latin = ConfigYesNo(default = False)
 def GetConfigList():
     optionList = []
@@ -52,7 +52,7 @@ class SportStream365Api(CBaseHostClass):
             GMTOffset = GMTOffset.rsplit(':', 1)[0]
         self.GMTOffset = GMTOffset
         # https://en.wikipedia.org/wiki/Cyrillic_alphabets#Common_letters
-        cyrillicAlphabets = [(u'а', 'a'),(u'б', 'b'),(u'в', 'v'),(u'г', 'ɡ'),(u'д', 'd'),(u'е', 'je'),(u'ж', 'ʒ'),(u'з', 'z'),(u'и', 'i'),(u'й', 'j'),(u'к', 'k'),(u'л', 'l'),(u'м', 'm'),(u'н', 'n'),(u'о', 'o'),(u'п', 'p'),(u'с', 's'),(u'т', 't'),(u'у', 'u'),(u'ф', 'f'),(u'х', 'x'),(u'ц', 'ts'),(u'ч', 'tʃ'),(u'ш', 'ʃ'),(u'щ', 'ʃtʃ'),(u'ь', 'ʲ'),(u'ю', 'ju'),(u'я', 'ja')]
+        cyrillicAlphabets = [(u'а', 'a'), (u'б', 'b'), (u'в', 'v'), (u'г', 'ɡ'), (u'д', 'd'), (u'е', 'je'), (u'ж', 'ʒ'), (u'з', 'z'), (u'и', 'i'), (u'й', 'j'), (u'к', 'k'), (u'л', 'l'), (u'м', 'm'), (u'н', 'n'), (u'о', 'o'), (u'п', 'p'), (u'с', 's'), (u'т', 't'), (u'у', 'u'), (u'ф', 'f'), (u'х', 'x'), (u'ц', 'ts'), (u'ч', 'tʃ'), (u'ш', 'ʃ'), (u'щ', 'ʃtʃ'), (u'ь', 'ʲ'), (u'ю', 'ju'), (u'я', 'ja')]
         self.cyrillic2LatinMap = {}
         for item in cyrillicAlphabets: self.cyrillic2LatinMap[item[0]] = item[1]
         for item in cyrillicAlphabets: self.cyrillic2LatinMap[item[0].upper()] = item[1].upper()
@@ -75,7 +75,7 @@ class SportStream365Api(CBaseHostClass):
             lang = self.lang
             if lang == '': 
                 userLang = GetDefaultLang()
-                if userLang in ['de','en','es','fr','it','pt','ru','tr','cn']:
+                if userLang in ['de', 'en', 'es', 'fr', 'it', 'pt', 'ru', 'tr', 'cn']:
                     lang = userLang
             if lang != '': self.defaultParams['cookie_items'] = {'lng':lang}
             else: self.defaultParams['cookie_items'] = {'lng':'en'} #self.defaultParams.pop('cookie_items', None)
@@ -137,7 +137,7 @@ class SportStream365Api(CBaseHostClass):
                         continue
                     break
                 
-                parseInt = lambda sin: int(''.join([c for c in str(sin).replace(',','.').split('.')[0] if c.isdigit()])) if sum(map(int,[s.isdigit() for s in str(sin)])) and not callable(sin) and str(sin)[0].isdigit() else 0
+                parseInt = lambda sin: int(''.join([c for c in str(sin).replace(',', '.').split('.')[0] if c.isdigit()])) if sum(map(int, [s.isdigit() for s in str(sin)])) and not callable(sin) and str(sin)[0].isdigit() else 0
                 def parseInt2(string):
                     try: return int(''.join([x for x in string if x.isdigit()]))
                     except Exception: return 0

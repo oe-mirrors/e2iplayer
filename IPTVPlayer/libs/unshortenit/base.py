@@ -118,7 +118,7 @@ class UnshortenIt(object):
             # p.ost.im uses meta http refresh to redirect.
             if domain == 'p.ost.im':
                 r = requests.get(uri, headers=HTTP_HEADER, timeout=self._timeout)
-                uri = re.findall(r'.*url\=(.*?)\"\.*',r.text)[0]
+                uri = re.findall(r'.*url\=(.*?)\"\.*', r.text)[0]
                 return uri, r.status_code
             else:
 

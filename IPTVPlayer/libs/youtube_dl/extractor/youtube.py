@@ -59,7 +59,7 @@ class CYTSignAlgoExtractor:
         ]
         
         for reg in patterns:
-            tmp = re.findall(reg,data)                    
+            tmp = re.findall(reg, data)                    
             for name in tmp:
                 if name and not any((c in name) for c in ''', '"'''):
                     printDBG('pattern: ' + reg)
@@ -199,7 +199,7 @@ class YoutubeIE(object):
                           '85', '84', '102', '83', '101', '82', '100',
                           # Dash video
                           '138', '137', '248', '136', '247', '135', '246',
-                          '245', '244', '134', '243', '133', '242', '160','298','299',
+                          '245', '244', '134', '243', '133', '242', '160', '298', '299',
                           '313', '271',
                           # Dash audio
                           '141', '172', '140', '171', '139',
@@ -211,7 +211,7 @@ class YoutubeIE(object):
                                       '85', '102', '84', '101', '83', '100', '82',
                                       # Dash video
                                       '138', '248', '137', '247', '136', '246', '245',
-                                      '244', '135', '243', '134', '242', '133', '160','298','299',
+                                      '244', '135', '243', '134', '242', '133', '160', '298', '299',
                                       # Dash audio
                                       '172', '141', '171', '140', '139'
                                       ]
@@ -219,7 +219,7 @@ class YoutubeIE(object):
     _supported_formats = ['18', '22', '37', '38', # mp4
                           '82', '83', '84', '85', # mp4 3D
                           '92', '93', '94', '95', '96', '132', '151', # Apple HTTP Live Streaming
-                          '133', '134', '135', '136', '137', '138', '160','298','299', # Dash mp4
+                          '133', '134', '135', '136', '137', '138', '160', '298', '299', # Dash mp4
                           '139', '140', '141', # Dash mp4 audio
                           ]
     
@@ -538,7 +538,7 @@ class YoutubeIE(object):
                                                   'hl': 'en',
                                                   'eurl': 'https://youtube.googleapis.com/v/' + video_id,
                                                   'asv': 3,
-                                                  'sts':'1588',
+                                                  'sts': '1588',
                                                   })
             video_info_url = videoInfoBase + data
             sts, video_info = self.cm.getPage(video_info_url, videoInfoparams)
@@ -623,7 +623,7 @@ class YoutubeIE(object):
         video_url_list = {}
 
         if len(video_info.get('url_encoded_fmt_stream_map', [])) >= 1 or len(video_info.get('adaptive_fmts', [])) >= 1:
-            encoded_url_map = video_info.get('url_encoded_fmt_stream_map', [''])[0] + ',' + video_info.get('adaptive_fmts',[''])[0]
+            encoded_url_map = video_info.get('url_encoded_fmt_stream_map', [''])[0] + ',' + video_info.get('adaptive_fmts', [''])[0]
             _supported_formats = self._supported_formats
             if allowVP9:
                 _supported_formats.extend(['313', '271'])
@@ -697,7 +697,7 @@ class YoutubeIE(object):
                     if 'url' in url_data:
                         url_item = {'url': url_data['url']}
                     else:
-                        cipher = url_data.get('cipher','') + url_data.get('signatureCipher','')
+                        cipher = url_data.get('cipher', '') + url_data.get('signatureCipher', '')
                         printDBG(cipher)
                         
                         cipher = cipher.split('&')
@@ -705,10 +705,10 @@ class YoutubeIE(object):
                             #sig_item = ''
                             #s_item = ''
                             #sp_item = ''
-                            if 'url=' in item: url_item = {'url':_unquote(item.replace('url=',''), None)}
-                            if 'sig=' in item: sig_item = item.replace('sig=','')
-                            if 's=' in item: s_item = item.replace('s=','')
-                            if 'sp=' in item: sp_item = item.replace('sp=','')
+                            if 'url=' in item: url_item = {'url':_unquote(item.replace('url=', ''), None)}
+                            if 'sig=' in item: sig_item = item.replace('sig=', '')
+                            if 's=' in item: s_item = item.replace('s=', '')
+                            if 'sp=' in item: sp_item = item.replace('sp=', '')
                         if 'sig' in cipher:
                             signature = sig_item
                             url_item['url'] += '&signature=' + signature
@@ -795,7 +795,7 @@ class YoutubeIE(object):
                 'thumbnail':    '',
                 'duration':     video_duration,
                 'player_url':   '',
-                'm3u8'      :   is_m3u8,
+                'm3u8':   is_m3u8,
             })
             
         return results

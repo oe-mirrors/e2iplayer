@@ -104,7 +104,7 @@ class WizjaTvApi(CBaseHostClass):
                 self.sessionEx.open(MessageBox, ('Problem z zalogowanie użytkownika "%s". Sprawdź dane do logowania w konfiguracji hosta.') % login, type = MessageBox.TYPE_INFO, timeout = 10 )
                 self.loggedIn = False
         else:
-            self.sessionEx.open(MessageBox,'Serwis ten wymaga zalogowania. Wprowadź swój login i hasło w konfiguracji hosta dostępnej po naciśnięciu niebieskiego klawisza.', type = MessageBox.TYPE_ERROR, timeout = 10 )
+            self.sessionEx.open(MessageBox, 'Serwis ten wymaga zalogowania. Wprowadź swój login i hasło w konfiguracji hosta dostępnej po naciśnięciu niebieskiego klawisza.', type = MessageBox.TYPE_ERROR, timeout = 10 )
             return []
         
         channelsTab = []

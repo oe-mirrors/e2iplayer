@@ -72,8 +72,8 @@ class IceFilms(CBaseHostClass):
         self.MAIN_CAT_TAB = [{'category':'list_filters',    'title': _('TV Shows'),                       'url':self.getFullUrl('tv/popular/1'),      'f_idx':0},
                              {'category':'list_filters',    'title': _('Movies'),                         'url':self.getFullUrl('movies/popular/1'),  'f_idx':0},
                              {'category':'list_filters',    'title': _('Stand-Up'),                       'url':self.getFullUrl('standup/popular/1'), 'f_idx':0},
-                             {'category':'search',          'title': _('Search'), 'search_item':True,         },
-                             {'category':'search_history',  'title': _('Search history'),                     } 
+                             {'category': 'search',          'title': _('Search'), 'search_item': True,         },
+                             {'category': 'search_history',  'title': _('Search history'),                     } 
                             ]
         
         self.cacheFilters = {}
@@ -374,7 +374,7 @@ class IceFilms(CBaseHostClass):
         sts, data = self.getPage(url)
         if not sts: return retTab
         title = self.cleanHtmlStr( self.cm.ph.getSearchGroups(data, '''<meta property=['"]?og\:title['"]?[^>]+?content=['"]([^"^']+?)['"]''')[0] )
-        desc  = self.cleanHtmlStr( self.cm.ph.getDataBeetwenMarkers(data, '<div class="summary_text"' , '</div>')[1] )
+        desc  = self.cleanHtmlStr( self.cm.ph.getDataBeetwenMarkers(data, '<div class="summary_text"', '</div>')[1] )
         if desc == '': desc  = self.cleanHtmlStr( self.cm.ph.getSearchGroups(data, '''<meta property=['"]?og\:description['"]?[^>]+?content=['"]([^"^']+?)['"]''')[0] )
         icon  = self.getFullUrl( self.cm.ph.getSearchGroups(data, '''<meta property=['"]?og\:image['"]?[^>]+?content=['"]([^"^']+?)['"]''')[0] )
         

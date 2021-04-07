@@ -59,7 +59,7 @@ class CBC(BlockCipher):
         else:
             assert(iv==None), 'IV used only on first call to encrypt'
 
-        return BlockCipher.encrypt(self,plainText, more=more)
+        return BlockCipher.encrypt(self, plainText, more=more)
 
     def decrypt(self, cipherText, iv=None, more=None):
         """ CBC decryption - overloads baseCipher to allow optional explicit IV
@@ -82,7 +82,7 @@ class CBC(BlockCipher):
                 self.prior_encr_CT_block = self.iv
                 auto_IV = self.prior_encr_CT_block    # prepend IV if it's automatic
             else:                       # application provided IV
-                assert(len(self.iv) == self.blockSize ),'IV must be same length as block'
+                assert(len(self.iv) == self.blockSize ), 'IV must be same length as block'
                 self.prior_encr_CT_block = self.iv
         """ encrypt the prior CT XORed with the PT """
         ct = self.baseCipher.encryptBlock( xor(self.prior_encr_CT_block, plainTextBlock) )
@@ -97,7 +97,7 @@ class CBC(BlockCipher):
                 self.prior_CT_block = encryptedBlock
                 return ''
             else:
-                assert(len(self.iv)==self.blockSize),"Bad IV size on CBC decryption"
+                assert(len(self.iv)==self.blockSize), "Bad IV size on CBC decryption"
                 self.prior_CT_block = self.iv
 
         dct = self.baseCipher.decryptBlock(encryptedBlock)

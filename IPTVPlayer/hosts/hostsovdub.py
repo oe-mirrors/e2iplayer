@@ -36,9 +36,9 @@ class Sovdub(CBaseHostClass):
         self.encoding = ''
     
     def getPage(self, url, params={}, post_data=None):
-        sts,data = self.cm.getPage(url, params, post_data)
+        sts, data = self.cm.getPage(url, params, post_data)
         if sts and self.encoding == '': self.encoding = self.cm.ph.getSearchGroups(data, 'charset=([^"]+?)"')[0]
-        return sts,data
+        return sts, data
     
     def getFullUrl(self, url):
         url = url.replace('&amp;', '&')

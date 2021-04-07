@@ -95,13 +95,13 @@ class MediasetPlay(CBaseHostClass):
         subItems.append(MergeDicts(cItem, {'category':'cat_series', 'title':'Fiction e Serie TV', 'url':self.getFullUrl('/fiction')}))
         subItems.append(MergeDicts(cItem, {'category':'cat_movies', 'title':'Film',               'url':self.getFullUrl('/film')}))
 
-        self.addDir(MergeDicts(cItem, {'category':'sub_items',     'title':'On Demand',   'sub_items':subItems,}))
+        self.addDir(MergeDicts(cItem, {'category': 'sub_items',     'title': 'On Demand',   'sub_items': subItems,}))
         self.addDir(MergeDicts(cItem, {'category':'on_air',        'title':'Ora in onda', 'url':self.getMainUrl()}))
         self.addDir(MergeDicts(cItem, {'category':'cat_channels',  'title':'Canali',      'url':self.getMainUrl()}))
         self.addDir(MergeDicts(cItem, {'category':'list_catalog_items',  'title':_('Top day'),      'f_ref':'CWTOPVIEWEDDAY'}))
 
         MAIN_CAT_TAB = [{'category':'search',         'title': _('Search'),       'search_item':True       },
-                        {'category':'search_history', 'title': _('Search history'),                        }]
+                        {'category': 'search_history', 'title': _('Search history'),                        }]
         self.listsTab(MAIN_CAT_TAB, cItem)
 
     def listSubItems(self, cItem):
@@ -161,7 +161,7 @@ class MediasetPlay(CBaseHostClass):
             subItems.append(MergeDicts(cItem, {'good_for_fav':False, 'category':nextCategory, 'title':title, 'url':url}))
             start = PrevDay(start)
             end = PrevDay(end)
-        self.addDir(MergeDicts(cItem, {'category':'sub_items', 'title':'Ultima settimana', 'sub_items':subItems,}))
+        self.addDir(MergeDicts(cItem, {'category': 'sub_items', 'title': 'Ultima settimana', 'sub_items': subItems,}))
 
     def listTime(self, cItem, nextCategory):
         printDBG("MediasetPlay.listTime")

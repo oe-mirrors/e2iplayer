@@ -46,7 +46,7 @@ class HDFilmeTV(CBaseHostClass):
         self.seasonCache = {}
         self.cacheLinks = {}
     
-    def c_int(self,n):
+    def c_int(self, n):
         if n.isdigit():
             return int(n)
         else:
@@ -130,7 +130,7 @@ class HDFilmeTV(CBaseHostClass):
             #printDBG("^^^^^^^^^^^^^^^^^^")
             #printDBG(filterData[0])
             optionsData = []
-            optionsData = ph.findall(filterData[0] , ('<option', '>'), '</option>')
+            optionsData = ph.findall(filterData[0], ('<option', '>'), '</option>')
             #printDBG("^^^^^^^^^^^^^^^^^^")
             #printDBG(str(optionsData))
             optionsData.sort()

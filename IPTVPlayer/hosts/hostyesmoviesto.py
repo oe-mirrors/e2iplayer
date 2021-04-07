@@ -102,8 +102,8 @@ class YesMovies(CBaseHostClass):
         if self.MAIN_URL == None: return
         MAIN_CAT_TAB = [{'category':'list_filter_genre', 'title': 'Movies',    'url':self.getFullUrl('movie/filter/movie') },
                         {'category':'list_filter_genre', 'title': 'TV-Series', 'url':self.getFullUrl('movie/filter/series')},
-                        {'category':'search',          'title': _('Search'), 'search_item':True,                        },
-                        {'category':'search_history',  'title': _('Search history'),                                    } 
+                        {'category': 'search',          'title': _('Search'), 'search_item': True,                        },
+                        {'category': 'search_history',  'title': _('Search history'),                                    } 
                        ]
         self.listsTab(MAIN_CAT_TAB, cItem)
         

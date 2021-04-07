@@ -43,8 +43,8 @@ class BajeczkiOrg(CBaseHostClass):
         MAIN_CAT_TAB = [{'category':'categories',      'title': 'Wszystkie bajki',    'url':self.getFullUrl('/all-categories/')},
                         {'category':'list_items',      'title': 'Ostatnio dodane',    'url':self.getFullUrl('/?s=')},
                         {'category':'list_items',      'title': 'Filmy',              'url':self.getFullUrl('/pelnometrazowe/')},
-                        {'category':'search',          'title': _('Search'), 'search_item':True, },
-                        {'category':'search_history',  'title': _('Search history'),             }]
+                        {'category': 'search',          'title': _('Search'), 'search_item': True, },
+                        {'category': 'search_history',  'title': _('Search history'),             }]
         self.listsTab(MAIN_CAT_TAB, cItem)
     
     def listCategories(self, cItem, nextCategory):

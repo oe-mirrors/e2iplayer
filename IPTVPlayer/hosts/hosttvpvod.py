@@ -578,7 +578,7 @@ class TvpVod(CBaseHostClass, CaptchaHelper):
                             params.update({'good_for_fav':True, 'type':'video'})
                             itemsTab.append(params)
                         else:
-                            params.update({'category':nextCategory,})
+                            params.update({'category': nextCategory,})
                             itemsTab.append(params)
                             
                 if self.cm.isValidUrl(sectionUrl) and (len(itemsTab) > 1 or 0 == len(itemsTab)):

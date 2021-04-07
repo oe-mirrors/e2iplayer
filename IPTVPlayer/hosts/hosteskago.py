@@ -310,7 +310,7 @@ class EskaGo(CBaseHostClass):
             if mp4 != '': urlTab.append({'name':'mp4', 'url':mp4, 'need_resolve':0})
             return urlTab
 
-        if self.up.getDomain(self.MAIN_ESKAPL_URL , onlyDomain=True) in url:
+        if self.up.getDomain(self.MAIN_ESKAPL_URL, onlyDomain=True) in url:
             sts, data = self.cm.getPage(url, self.defaultParams)
             if not sts: return []
             data = self.cm.ph.getDataBeetwenMarkers(data, '<div class="play_player">', '</div>')[1]

@@ -47,8 +47,8 @@ class MoovieCC(CBaseHostClass):
                              {'category':'list_series',       'title': _('Series') },
                              {'category':'list_main',         'title': 'Legjobbra értékelt',     'tab_id':'now_watched'},
                              {'category':'list_main',         'title': 'Épp most nézik',         'tab_id':'best_rated' },
-                             {'category':'search',            'title': _('Search'), 'search_item':True,},
-                             {'category':'search_history',    'title': _('Search history'),            } 
+                             {'category': 'search',            'title': _('Search'), 'search_item': True,},
+                             {'category': 'search_history',    'title': _('Search history'),            } 
                             ]
                             
         self.MOVIES_CAT_TAB = [{'category':'movies_cats',     'title': _('Categories'),          'url':self.getFullUrl('/online-filmek/') },
@@ -433,7 +433,7 @@ class MoovieCC(CBaseHostClass):
                         params['header'] = dict(params['header'] )
                         params['header']['Accept'] = 'image/png,image/*;q=0.8,*/*;q=0.5'
                         params = dict(self.defaultParams)
-                        params.update( {'maintype': 'image', 'subtypes':['jpeg', 'png'], 'check_first_bytes':['\xFF\xD8','\xFF\xD9','\x89\x50\x4E\x47'], 'header':params['header']} )
+                        params.update( {'maintype': 'image', 'subtypes':['jpeg', 'png'], 'check_first_bytes':['\xFF\xD8', '\xFF\xD9', '\x89\x50\x4E\x47'], 'header':params['header']} )
                         filePath = GetTmpDir('.iptvplayer_captcha.jpg')
                         ret = self.cm.saveWebFile(filePath, imgUrl.replace('&amp;', '&'), params)
                         if not ret.get('sts'):
@@ -447,8 +447,8 @@ class MoovieCC(CBaseHostClass):
                         params['with_accept_button'] = True
                         params['list'] = []
                         item = deepcopy(IPTVMultipleInputBox.DEF_INPUT_PARAMS)
-                        item['label_size'] = (160,75)
-                        item['input_size'] = (480,25)
+                        item['label_size'] = (160, 75)
+                        item['input_size'] = (480, 25)
                         item['icon_path'] = filePath
                         item['title'] = _('Answer')
                         item['input']['text'] = ''

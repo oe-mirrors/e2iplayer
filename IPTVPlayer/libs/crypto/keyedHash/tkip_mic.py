@@ -19,7 +19,7 @@ class TKIP_MIC(Michael):
     def __init__(self, key=None, version='D3'):
         """ """
         self.version = version
-        Michael.__init__(self,key)
+        Michael.__init__(self, key)
 
     def hash(self, sa, da, priority, msduData ):
         """ The TKIP MIC appends sa, da and priority to msduData

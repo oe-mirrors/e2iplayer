@@ -74,7 +74,7 @@ class OfficialFilmIllimite(CBaseHostClass):
             GetIPTVNotify().push("Parsing error. Number of tab titles mismatched number of tabs!", 'error', 10)
         
         MAIN_CAT_TAB = [{'category':'search',         'title': _('Search'),       'search_item':True       },
-                        {'category':'search_history', 'title': _('Search history'),                        }]
+                        {'category': 'search_history', 'title': _('Search history'),                        }]
         self.listsTab(MAIN_CAT_TAB, cItem)
     
     def listCatItems(self, cItem, nextCategory):

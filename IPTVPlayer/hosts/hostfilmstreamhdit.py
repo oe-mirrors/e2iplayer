@@ -34,7 +34,7 @@ class FilmStreamHD(CBaseHostClass):
         self.MAIN_CAT_TAB = [{'category':'list_items',     'title': _('HOME'),         'url':self.getMainUrl()},
                              {'category':'genres',         'title': _('FILM ARCHIVE'), 'url':self.getFullUrl('/film-archivio')},
                              {'category':'search',         'title': _('Search'), 'search_item':True},
-                             {'category':'search_history', 'title': _('Search history'), } 
+                             {'category': 'search_history', 'title': _('Search history'), } 
                             ]
 
     def getPage(self, baseUrl, addParams = {}, post_data = None):

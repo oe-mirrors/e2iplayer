@@ -71,7 +71,7 @@ class IPTVChoiceBoxWidget(Screen):
         self["actions"] = ActionMap(["ColorActions", "SetupActions", "WizardActions", "ListboxActions"],
             {
                 "cancel": self.key_cancel,
-                "ok"    : self.key_ok,
+                "ok": self.key_ok,
             }, -2)
             
         self.prevIdx = 0

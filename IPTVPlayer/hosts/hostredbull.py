@@ -51,8 +51,8 @@ class Redbull(CBaseHostClass):
                          {'category':'explore_item',          'title': _('TV'),      'url':self.REDBULL_API + "products/tv"             },
                          {'category':'explore_item',         'title': _('Channels'), 'url':self.REDBULL_API + "products/channels"       },
                          {'category':'explore_item',          'title': _('Calendar'),'url':self.REDBULL_API + "products/calendar"       },
-                         {'category':'search',             'title': _('Search'), 'search_item':True,},
-                         {'category':'search_history',     'title': _('Search history'),            } 
+                         {'category': 'search',             'title': _('Search'), 'search_item': True,},
+                         {'category': 'search_history',     'title': _('Search history'),            } 
                         ]
 
         self.listsTab(MAIN_CAT_TAB, cItem)

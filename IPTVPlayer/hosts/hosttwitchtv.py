@@ -134,7 +134,7 @@ class Twitch(CBaseHostClass):
 
         MAIN_CAT_TAB = [{'category':'browse',         'title': _('Browse') },
                         {'category':'search',         'title': _('Search'),       'search_item':True       },
-                        {'category':'search_history', 'title': _('Search history'),                        }]
+                        {'category': 'search_history', 'title': _('Search history'),                        }]
         self.listsTab(MAIN_CAT_TAB, cItem)
 
     def listDirectories(self, cItem):

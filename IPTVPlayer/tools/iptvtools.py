@@ -745,8 +745,8 @@ def GetSkinsList():
     fileList = os.listdir( SKINS_PATH )
     for filename in fileList: skins.append((filename, filename))
     skins.sort()
-    skins.insert(0,("Auto", "Auto"))
-    skins.insert(0,("Default", "Default"))
+    skins.insert(0, ("Auto", "Auto"))
+    skins.insert(0, ("Default", "Default"))
     skins.append(("auto", "auto"))
     printDBG('getSkinsList end')
     return skins
@@ -821,7 +821,7 @@ def mkdir(newdir):
         sts = False
         msg = 'Katalog "%s" nie może zostać utworzony.' % newdir
         printExc()
-    return sts,msg
+    return sts, msg
 
 def mkdirs(newdir, raiseException=False):
     """ Create a directory and all parent folders.
@@ -1071,7 +1071,7 @@ def formatBytes(bytes, precision = 2):
     pow = math.floor(pow / math.log(1024)) 
     pow = min(pow, len(units) - 1) 
     bytes /= math.pow(1024, pow);
-    return ("%s%s" % (str(round(bytes, precision)),units[int(pow)])) 
+    return ("%s%s" % (str(round(bytes, precision)), units[int(pow)])) 
     
 def remove_html_markup(s, replacement=''):
     tag = False
@@ -1087,7 +1087,7 @@ def remove_html_markup(s, replacement=''):
                 quote = not quote
             elif not tag:
                 out = out + c
-    return re.sub('&\w+;', ' ',out)
+    return re.sub('&\w+;', ' ', out)
 
 class CSearchHistoryHelper():
     TYPE_SEP = '|--TYPE--|'

@@ -189,7 +189,7 @@ class M3U8Downloader(BaseDownloader):
         for item in reversed(newFragments):
             if item in self.fragmentList:
                 break
-            tmpList.insert(0,item)
+            tmpList.insert(0, item)
         
         if 0 < len(tmpList):
             printDBG(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> DODANO[%d]" % len(tmpList))
@@ -222,7 +222,7 @@ class M3U8Downloader(BaseDownloader):
             for item in reversed(newFragments):
                 if item in self.fragmentList:
                     break
-                tmpList.insert(0,item)
+                tmpList.insert(0, item)
         
         if 0 < len(tmpList):
             printDBG(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> DODANO[%d]" % len(tmpList))

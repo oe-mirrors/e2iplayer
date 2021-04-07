@@ -27,7 +27,7 @@ from hashlib import md5
 ###################################################
 # Config options for HOST
 ###################################################
-config.plugins.iptvplayer.bilasportpw_port = ConfigInteger(8193, (1024,65535))
+config.plugins.iptvplayer.bilasportpw_port = ConfigInteger(8193, (1024, 65535))
 
 def GetConfigList():
     optionList = []

@@ -327,37 +327,37 @@ class IPTVExtMoviePlayer(Screen):
         
         self["actions"] = ActionMap(['IPTVAlternateVideoPlayer', 'MoviePlayerActions', 'MediaPlayerActions', 'MediaPlayerSeekActions', 'WizardActions'],
             {
-                "leavePlayer"  : self.key_stop,
-                'play'         : self.key_play,
-                'pause'        : self.key_pause,
-                'exit'         : self.key_exit,
-                'back'         : self.key_exit,
-                'info'         : self.key_info,
-                'seekdef:1'    : self.key_seek1,
-                'seekdef:3'    : self.key_seek3,
-                'seekdef:4'    : self.key_seek4,
-                'seekdef:6'    : self.key_seek6,
-                'seekdef:7'    : self.key_seek7,
-                'seekdef:9'    : self.key_seek9,
-                'seekFwd'      : self.key_seekFwd,
-                'seekBack'     : self.key_seekBack,
-                'left_press'   : self.key_left_press,
-                'left_repeat'  : self.key_left_repeat,
-                'rigth_press'  : self.key_rigth_press,
-                'rigth_repeat' : self.key_rigth_repeat,
+                "leavePlayer": self.key_stop,
+                'play': self.key_play,
+                'pause': self.key_pause,
+                'exit': self.key_exit,
+                'back': self.key_exit,
+                'info': self.key_info,
+                'seekdef:1': self.key_seek1,
+                'seekdef:3': self.key_seek3,
+                'seekdef:4': self.key_seek4,
+                'seekdef:6': self.key_seek6,
+                'seekdef:7': self.key_seek7,
+                'seekdef:9': self.key_seek9,
+                'seekFwd': self.key_seekFwd,
+                'seekBack': self.key_seekBack,
+                'left_press': self.key_left_press,
+                'left_repeat': self.key_left_repeat,
+                'rigth_press': self.key_rigth_press,
+                'rigth_repeat': self.key_rigth_repeat,
                
-                'up_press'     : self.key_up_press,
-                'up_repeat'    : self.key_up_repeat,
-                'down_press'   : self.key_down_press,
-                'down_repeat'  : self.key_down_repeat,
+                'up_press': self.key_up_press,
+                'up_repeat': self.key_up_repeat,
+                'down_press': self.key_down_press,
+                'down_repeat': self.key_down_repeat,
                 
-                'ok'           : self.key_ok,
-                'subtitles'    : self.key_subtitles,
-                'audio'        : self.key_audio,
-                'videooptions' : self.key_videooption,
-                'menu'         : self.key_menu,
-                'loop'         : self.key_loop,
-                'record'       : self.key_record,
+                'ok': self.key_ok,
+                'subtitles': self.key_subtitles,
+                'audio': self.key_audio,
+                'videooptions': self.key_videooption,
+                'menu': self.key_menu,
+                'loop': self.key_loop,
+                'record': self.key_record,
             }, -1)
         
         self.onClose.append(self.__onClose)
@@ -1484,7 +1484,7 @@ class IPTVExtMoviePlayer(Screen):
                 try:
                     DAR = float(obj.get('an', 1) * params['width']) / float(obj.get('ad', 1) * params['height'])
                     aTab = []
-                    for item in [(16,9,'16_9'), (4,3,'4_3'), (16,10,'16_10'), (3,2,'3_2'), (5,4,'5_4'), (1.85,1,'1.85'), (2.35,1,'2.35')]:
+                    for item in [(16, 9, '16_9'), (4, 3, '4_3'), (16, 10, '16_10'), (3, 2, '3_2'), (5, 4, '5_4'), (1.85, 1, '1.85'), (2.35, 1, '2.35')]:
                         diff = fabs(float(item[0])/item[1] - DAR)
                         aTab.append((diff, item[2]))
                     aTab.sort(key=lambda item: item[0])
@@ -1879,7 +1879,7 @@ class IPTVExtMoviePlayer(Screen):
             if "://" in self.fileSRC: 
                 cmd += ' "%s" "%s"  "%s"  "%s" ' % (self.gstAdditionalParams['download-buffer-path'], self.gstAdditionalParams['ring-buffer-max-size'], self.gstAdditionalParams['buffer-duration'], self.gstAdditionalParams['buffer-size'])
                 tmp = strwithmeta(self.fileSRC)
-                url,httpParams = DMHelper.getDownloaderParamFromUrlWithMeta(tmp, True)
+                url, httpParams = DMHelper.getDownloaderParamFromUrlWithMeta(tmp, True)
                 for key in httpParams: cmd += (' "%s=%s" ' % (key, httpParams[key]) )
                 if 'http_proxy' in tmp.meta:
                     tmp = tmp.meta['http_proxy']
@@ -1908,7 +1908,7 @@ class IPTVExtMoviePlayer(Screen):
                     self.showMessage(msg, MessageBox.TYPE_ERROR)
             if "://" in self.fileSRC:
                 ramBufferSizeMB = config.plugins.iptvplayer.rambuffer_sizemb_network_proto.value
-                url,httpParams = DMHelper.getDownloaderParamFromUrlWithMeta(tmpUri, True)
+                url, httpParams = DMHelper.getDownloaderParamFromUrlWithMeta(tmpUri, True)
                 #cmd += ' ""' # cookies for now will be send in headers
                 headers = ''
                 for key in httpParams:
@@ -2252,7 +2252,7 @@ class IPTVExtMoviePlayerSummary(Screen):
         skin = """
             <screen position="0,0" size="%s,%s">
                 <widget source="parent.Title" render="Label" position="6,4" size="%s,%s" font="Regular;42" />
-            </screen>""" % (summary_screenwidth,summary_screenheight,summary_screenwidth-12,summary_screenheight-8)
+            </screen>""" % (summary_screenwidth, summary_screenheight, summary_screenwidth-12, summary_screenheight-8)
     else:
         skin = """
             <screen position="0,0" size="132,64">

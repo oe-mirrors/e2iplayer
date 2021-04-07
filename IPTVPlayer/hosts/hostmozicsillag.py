@@ -43,8 +43,8 @@ class MuziCsillangCC(CBaseHostClass):
                              {'category':'list_movies',     'title': _('Movies'),  'url':self.getMainUrl()  },
                              {'category':'list_series',     'title': _('Series'),  'url':self.getMainUrl()  },
                              
-                             {'category':'search',            'title': _('Search'), 'search_item':True,},
-                             {'category':'search_history',    'title': _('Search history'),            } 
+                             {'category': 'search',            'title': _('Search'), 'search_item': True,},
+                             {'category': 'search_history',    'title': _('Search history'),            } 
                             ]
                             
     def getFullIconUrl(self, url):

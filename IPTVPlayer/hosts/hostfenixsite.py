@@ -59,7 +59,7 @@ class Fenixsite(CBaseHostClass):
 
         MAIN_CAT_TAB = [{'category':nextCategory,     'title': 'Anime',           'url':self.getFullUrl('/load/anime_serije/95')},
                         {'category':'search',         'title': _('Search'),       'search_item':True       },
-                        {'category':'search_history', 'title': _('Search history'),                        }]
+                        {'category': 'search_history', 'title': _('Search history'),                        }]
         self.listsTab(MAIN_CAT_TAB, cItem)
 
     def listCategories(self, cItem, nextCategory):

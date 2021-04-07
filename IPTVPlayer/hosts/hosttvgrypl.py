@@ -20,7 +20,7 @@ except Exception: import json
 ###################################################
 # Config options for HOST
 ###################################################
-config.plugins.iptvplayer.tvgrypl_default_quality = ConfigSelection(default = "SD", choices = [("MOB", "MOB: niska"),("SD", "SD: standardowa"),("HD", "HD: wysoka")]) #, ("FHD", "FHD: bardzo wysoka")
+config.plugins.iptvplayer.tvgrypl_default_quality = ConfigSelection(default = "SD", choices = [("MOB", "MOB: niska"), ("SD", "SD: standardowa"), ("HD", "HD: wysoka")]) #, ("FHD", "FHD: bardzo wysoka")
 config.plugins.iptvplayer.tvgrypl_use_dq          = ConfigYesNo(default = True)
 config.plugins.iptvplayer.tvgrypl_date_of_birth   = ConfigText(default = "2017-01-31", fixed_size = False)
 

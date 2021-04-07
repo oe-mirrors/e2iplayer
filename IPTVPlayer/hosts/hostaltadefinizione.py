@@ -96,8 +96,8 @@ class Altadefinizione(CBaseHostClass):
                 self.addDir(params)
                 
         MAIN_CAT_TAB = [{'category':'list_categories', 'title': 'Categorie'},
-                        {'category':'search',          'title': _('Search'), 'search_item':True, },
-                        {'category':'search_history',  'title': _('Search history'),             }]
+                        {'category': 'search',          'title': _('Search'), 'search_item': True, },
+                        {'category': 'search_history',  'title': _('Search history'),             }]
         self.listsTab(MAIN_CAT_TAB, cItem)
     
     def listSubItems(self, cItem):

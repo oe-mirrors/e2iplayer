@@ -44,8 +44,8 @@ except Exception: import simplejson as json
 ###################################################
 # Config options for HOST
 ###################################################
-config.plugins.iptvplayer.iplacachexml      = ConfigSelection(default = "12", choices = [("0", "nigdy"), ("6", "przez 6 godzin"), ("12", "przez 12 godzin"),("24", "przez dzień")])
-config.plugins.iptvplayer.iplaDefaultformat = ConfigSelection(default = "1900", choices = [("200", "bitrate: 200"),("400", "bitrate: 400"),("900", "bitrate: 900"),("1900", "bitrate: 1900")])
+config.plugins.iptvplayer.iplacachexml      = ConfigSelection(default = "12", choices = [("0", "nigdy"), ("6", "przez 6 godzin"), ("12", "przez 12 godzin"), ("24", "przez dzień")])
+config.plugins.iptvplayer.iplaDefaultformat = ConfigSelection(default = "1900", choices = [("200", "bitrate: 200"), ("400", "bitrate: 400"), ("900", "bitrate: 900"), ("1900", "bitrate: 1900")])
 config.plugins.iptvplayer.iplaUseDF         = ConfigYesNo(default = True)
 
 def GetConfigList():
@@ -188,7 +188,7 @@ class Ipla(CBaseHostClass):
         printDBG("setCatXmlTree refresh[%r]" %  refresh)
         
         def _fromUrl():
-            sts,data = self.cm.getPage(Ipla.CAT_URL, {'host' : Ipla.HOST})
+            sts, data = self.cm.getPage(Ipla.CAT_URL, {'host' : Ipla.HOST})
             if not sts: data = ''
             return data
             

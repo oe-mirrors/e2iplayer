@@ -56,10 +56,10 @@ class KissAnimeTo(CBaseHostClass):
         self.MAIN_URL = 'http://kissanime.ru/'
         self.DEFAULT_ICON_URL = "https://ausanimecons.files.wordpress.com/2015/01/kissanime-logo.jpg"
         
-        self.MAIN_CAT_TAB = [{'category':'home',            'title': _('Home'),              'url':self.getMainUrl(),           },
-                             {'category':'list_cats',       'title': _('Anime list'),        'url':self.getFullUrl('AnimeList'),},
-                             {'category':'search',          'title': _('Search'), 'search_item':True,                   },
-                             {'category':'search_history',  'title': _('Search history'),                               } ]
+        self.MAIN_CAT_TAB = [{'category': 'home',            'title': _('Home'),              'url': self.getMainUrl(),           },
+                             {'category': 'list_cats',       'title': _('Anime list'),        'url': self.getFullUrl('AnimeList'),},
+                             {'category': 'search',          'title': _('Search'), 'search_item': True,                   },
+                             {'category': 'search_history',  'title': _('Search history'),                               } ]
         
         self.SORT_BY_TAB = [{'title':_('Sort by alphabet')},
                             {'title':_('Sort by popularity'), 'sort_by':'MostPopular'},
@@ -120,7 +120,7 @@ class KissAnimeTo(CBaseHostClass):
                 header = dict(self.HTTP_HEADER)
                 header['Accept'] = 'image/png,image/*;q=0.8,*/*;q=0.5'
                 params = dict(self.defaultParams)
-                params.update( {'maintype': 'image', 'subtypes':['jpeg', 'jpg', 'png'], 'check_first_bytes':['\xFF\xD8','\xFF\xD9','\x89\x50\x4E\x47'], 'header':header} )
+                params.update( {'maintype': 'image', 'subtypes':['jpeg', 'jpg', 'png'], 'check_first_bytes':['\xFF\xD8', '\xFF\xD9', '\x89\x50\x4E\x47'], 'header':header} )
                 
                 prevMeta = self.cm.meta
                 images = []

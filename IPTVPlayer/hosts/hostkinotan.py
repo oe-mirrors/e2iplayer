@@ -258,7 +258,7 @@ class Kinotan(CBaseHostClass):
         params['desc'] = desc
         params['url'] = url
         hostName = self.up.getHostName(url)
-        if hostName in ['serpens.nl', 'daaidaij.com','37.220.36.15']:
+        if hostName in ['serpens.nl', 'daaidaij.com', '37.220.36.15']:
             hostName = 'moonwalk.cc'
             
         params.update({'category': category, 'serie_title': title}) 

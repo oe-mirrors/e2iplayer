@@ -112,7 +112,7 @@ class BaseDownloader:
         self.downloaderParams = params
         self.fileExtension    = '' # should be implemented in future
         
-        sts,remoteInfo = DMHelper.getRemoteContentInfoByUrllib(url, params)
+        sts, remoteInfo = DMHelper.getRemoteContentInfoByUrllib(url, params)
         if False == sts:
             return BaseDownloader.CODE_WRONG_LINK
         else:

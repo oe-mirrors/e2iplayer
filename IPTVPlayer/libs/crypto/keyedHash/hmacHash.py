@@ -43,7 +43,7 @@ class HMAC(Hash):
         else:
             self.keyed = None
 
-    def setKey(self,key):
+    def setKey(self, key):
         """ setKey(key) ... key is binary string """
         if len(key) > self.B:   # if key is too long then hash it
             key = self.H(key)   # humm... this is odd, hash can be smaller than B
@@ -60,7 +60,7 @@ class HMAC(Hash):
             raise Exception('no key defined')
         self.H.update(self.k_xor_ipad) # start inner hash with key xored with ipad
                                        # outer hash always called as one full pass (no updates)
-    def update(self,data):
+    def update(self, data):
         if self.keyed == None :
             raise Exception('no key defined')
         self.H.update(data)
@@ -74,11 +74,11 @@ class HMAC_SHA1(HMAC):
     """ Predefined HMAC built on SHA1 """
     def __init__(self, key = None):
         """ optionally initialize with key """
-        HMAC.__init__(self,SHA1,key)
+        HMAC.__init__(self, SHA1, key)
 
 from ..hash.md5Hash  import MD5
 class HMAC_MD5(HMAC):
     """ Predefined HMAC built on SHA1 """
     def __init__(self, key = None):
         """ optionally initialize with key """
-        HMAC.__init__(self,MD5,key)
+        HMAC.__init__(self, MD5, key)

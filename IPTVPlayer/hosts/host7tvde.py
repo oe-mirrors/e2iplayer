@@ -53,7 +53,7 @@ class C7tvDe(CBaseHostClass):
                         {'category':'missed',         'title': 'Sendung verpasst',    'url':self.getFullUrl('/sendung-verpasst')},
                         {'category':'channels',       'title': 'Sender',              'url':self.getMainUrl()},
                         {'category':'search',         'title': _('Search'),       'search_item':True       },
-                        {'category':'search_history', 'title': _('Search history'),                        }]
+                        {'category': 'search_history', 'title': _('Search history'),                        }]
         self.listsTab(MAIN_CAT_TAB, cItem)
 
     def listMissed(self, cItem, nextCategory):
@@ -350,7 +350,7 @@ class C7tvDe(CBaseHostClass):
             server_id = json_data['server_id']
             
             #client_name = 'kolibri-1.2.5'
-            client_id = salt[:2] + sha1(''.join([salt, video_id, access_token, server_id,client_location, str(source_id), salt, client_name]).encode('utf-8')).hexdigest()
+            client_id = salt[:2] + sha1(''.join([salt, video_id, access_token, server_id, client_location, str(source_id), salt, client_name]).encode('utf-8')).hexdigest()
             url_api_url = 'http://vas.sim-technik.de/vas/live/v2/videos/%s/sources/url?%s' % (video_id, urllib.urlencode({
                 'access_token': access_token,
                 'client_id': client_id,

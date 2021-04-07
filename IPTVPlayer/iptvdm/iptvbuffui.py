@@ -137,7 +137,7 @@ class E2iPlayerBufferingWidget(Screen):
         self["icon"] = SimpleAnimatedCover()
         # prepare icon frames path
         frames = []
-        for idx in range(1,self.NUM_OF_ICON_FRAMES+1): frames.append( resolveFilename(SCOPE_PLUGINS, 'Extensions/IPTVPlayer/icons/buffering/buffering_%d.png' % idx) )
+        for idx in range(1, self.NUM_OF_ICON_FRAMES+1): frames.append( resolveFilename(SCOPE_PLUGINS, 'Extensions/IPTVPlayer/icons/buffering/buffering_%d.png' % idx) )
         self["icon"].loadFrames(frames) 
         
         self.inMoviePlayer = False
@@ -199,7 +199,7 @@ class E2iPlayerBufferingWidget(Screen):
         
     def _startDownloader(self, sts, reason):
         if sts:
-            url,downloaderParams = DMHelper.getDownloaderParamFromUrl(self.url)
+            url, downloaderParams = DMHelper.getDownloaderParamFromUrl(self.url)
             if url.split('?', 1)[0].lower().endswith('.mp4'):
                 self.clouldBeMP4 = True
             self.downloader.start(url, self.filePath, downloaderParams)

@@ -109,8 +109,8 @@ class FilmeOnlineTo(CBaseHostClass):
         
         self.MAIN_CAT_TAB = [{'category':'list_filters',   'title': _('Movies'),    'url':self.getFullUrl('/filter'), 'f_tip':'film'},
                              {'category':'list_filters',   'title': _('TV-Series'), 'url':self.getFullUrl('/filter'), 'f_tip':'tv'  },
-                             {'category':'search',         'title': _('Search'),    'search_item':True,},
-                             {'category':'search_history', 'title': _('Search history'),               }]
+                             {'category': 'search',         'title': _('Search'),    'search_item': True,},
+                             {'category': 'search_history', 'title': _('Search history'),               }]
                             
     def fillCacheFilters(self, cItem):
         printDBG("FilmeOnlineTo.listCategories")

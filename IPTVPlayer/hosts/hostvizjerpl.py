@@ -43,15 +43,15 @@ class Vizjer(CBaseHostClass):
     def getPage(self, baseUrl, addParams = {}, post_data = None):
         if addParams == {}: addParams = dict(self.defaultParams)
         baseUrl = self.cm.iriToUri(baseUrl)
-        sts,data = self.cm.getPage(baseUrl, addParams, post_data)
+        sts, data = self.cm.getPage(baseUrl, addParams, post_data)
         if not sts:
             sts, data = self.cm.getPage('https://check.ddos-guard.net/check.js', addParams)
             if sts:
                 jsurl = self.getFullUrl(self.cm.ph.getSearchGroups(data, '''src = ['"]([^"^']+?)['"]''')[0])
                 sts, data = self.cm.getPage(jsurl, addParams)
                 if sts:
-                    sts,data = self.cm.getPage(baseUrl, addParams, post_data)
-        return sts,data
+                    sts, data = self.cm.getPage(baseUrl, addParams, post_data)
+        return sts, data
         
     def getFullIconUrl(self, url):
         url = self.getFullUrl(url)

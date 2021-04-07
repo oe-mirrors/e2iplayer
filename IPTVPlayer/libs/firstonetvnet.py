@@ -333,8 +333,8 @@ class FirstOneTvApi(CBaseHostClass):
                 params['with_accept_button'] = True
                 params['list'] = []
                 item = deepcopy(IPTVMultipleInputBox.DEF_INPUT_PARAMS)
-                item['label_size'] = (660,110)
-                item['input_size'] = (680,25)
+                item['label_size'] = (660, 110)
+                item['input_size'] = (680, 25)
                 item['icon_path'] = filePath
                 item['title'] = _('Answer')
                 item['input']['text'] = ''

@@ -70,8 +70,8 @@ class HDStreams(CBaseHostClass):
         self.MAIN_CAT_TAB = [{'category':'list_filters',    'title': _('MOVIES'),      'url':self.getFullUrl('/movies')},
                              {'category':'list_filters',    'title': _('TV SERIES'),   'url':self.getFullUrl('/seasons')},
                              
-                             {'category':'search',          'title': _('Search'), 'search_item':True, },
-                             {'category':'search_history',  'title': _('Search history'),             } 
+                             {'category': 'search',          'title': _('Search'), 'search_item': True, },
+                             {'category': 'search_history',  'title': _('Search history'),             } 
                             ]
     
     def getPage(self, baseUrl, addParams = {}, post_data = None):
@@ -190,7 +190,7 @@ class HDStreams(CBaseHostClass):
         if nextPage != '': nextPage = True
         else: nextPage = False
         
-        data = self.cm.ph.getAllItemsBeetwenNodes(data, ('<div', '>', 'movie-wrap'), ('</a' , '>'))
+        data = self.cm.ph.getAllItemsBeetwenNodes(data, ('<div', '>', 'movie-wrap'), ('</a', '>'))
         for item in data:
             url = self.getFullIconUrl(self.cm.ph.getSearchGroups(item, '''href=['"]([^'^"]+?)['"]''')[0])
             icon = self.getFullIconUrl(self.cm.ph.getSearchGroups(item, '''url\(\s*['"]([^'^"]+?)['"]''')[0])

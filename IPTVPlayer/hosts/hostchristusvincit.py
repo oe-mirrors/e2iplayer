@@ -31,7 +31,7 @@ config.plugins.iptvplayer.christusvincit_preferred_bitrate = ConfigSelection(def
                                                                                                     ("5420000", "5420000"),
                                                                                                     ("6500000", "6500000"),
                                                                                                     ("9100000", "9100000"),
-                                                                                                    ("99999999",_("the highest")),
+                                                                                                    ("99999999", _("the highest")),
                                                                                                     ])
 config.plugins.iptvplayer.christusvincit_use_preferred_bitrate = ConfigYesNo(default = True)
 
@@ -300,7 +300,7 @@ class Christusvincit(CBaseHostClass):
                 self.currList.append(item)
 
         MAIN_CAT_TAB = [{'category':'search',         'title': _('Search'),       'search_item':True},
-                        {'category':'search_history', 'title': _('Search history'),                 }]
+                        {'category': 'search_history', 'title': _('Search history'),                 }]
         self.listsTab(MAIN_CAT_TAB, cItem)
 
     def handleSection(self, cItem, nextCategory, section):

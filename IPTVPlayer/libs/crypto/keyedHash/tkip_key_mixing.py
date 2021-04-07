@@ -17,7 +17,7 @@ def S(word):
 """
 
 from crypto.cipher.rijndael import Sbox
-tkipSbox = [list(range(256)),list(range(256))] # arbitrary initialization
+tkipSbox = [list(range(256)), list(range(256))] # arbitrary initialization
 for i in range(256):
     k  = Sbox[i]           # the rijndael S box (imported)
     if k & 0x80 :          # calculate k*2 polynomial math
@@ -87,9 +87,9 @@ class TKIP_Mixer:
             self.phase1Key = phase1KeyMixing( self.tk, self.ta, self.pn )
         return  phase2KeyMixing( self.tk, self.phase1Key, self.pn )
 
-def phase1KeyMixing(tk,ta,pn):
+def phase1KeyMixing(tk, ta, pn):
     """ Create a p1k (5 integers) from TK, TA and upper 4 octets of sequence number pn"""
-    p1k = [0,0,0,0,0]           # array of 5 integers (each 2 octets)
+    p1k = [0, 0, 0, 0, 0]           # array of 5 integers (each 2 octets)
     p1k[0] = pn[3]*256 + pn[2]
     p1k[1] = pn[5]*256 + pn[4]
     p1k[2] = ta[1]*256 + ta[0]  # 2 octets of MAC as an integer (little-endian)
@@ -104,7 +104,7 @@ def phase1KeyMixing(tk,ta,pn):
         p1k[4] = ( p1k[4] + S( p1k[3]^(tk[j+ 1]*256 + tk[j])) + i ) & 0xFFFF
     return p1k
 
-def phase2KeyMixing(tk,p1k,pn):
+def phase2KeyMixing(tk, p1k, pn):
     """ Create a 16 octet key from the phase1Key (p1k)
         and 2 octets of sequence counter """
     ppk = [i for i in p1k]

@@ -22,7 +22,7 @@ class WEP:
         self.name        = 'WEP'
         self.strength    = None # depends on keySize
         self.arc4 = ARC4()       # base algorithm
-        self.__key = [None,None,None,None]  # four possible keys, initialize to invalid keys
+        self.__key = [None, None, None, None]  # four possible keys, initialize to invalid keys
         self.encryptHeaderSize = 4
         self.setCurrentKeyId(keyId)
         if key != None:
@@ -31,7 +31,7 @@ class WEP:
     def setKey(self, key, keyId=None):
         """ Set key, key string is typically 5 or 13 octets long
         """
-        if not(len(key) in (5,13)):
+        if not(len(key) in (5, 13)):
             raise BadKeySizeError('Key not valid size of 5 or 13 octets')
         if keyId != None :
             self.setCurrentKeyId(keyId)
@@ -51,12 +51,12 @@ class WEP:
         """ Encrypt a string and return a binary string
             Adds WEP encryption header and crc
         """
-        assert(len(iv)==3),'Wrong size WEP IV'
+        assert(len(iv)==3), 'Wrong size WEP IV'
         if keyId != None :
             self.setCurrentKeyId(keyId)
         assert(self.__key[self.currentKeyId]!=None), 'Must set key for specific keyId before encryption'
         self.arc4.setKey( iv + self.__key[self.currentKeyId] )
-        crc = pack('<I',crc32(plainText))
+        crc = pack('<I', crc32(plainText))
         cipherText = self.arc4.encrypt(plainText+crc)
         # add header that contains IV
         cipherText = iv + chr((self.currentKeyId<<6)) + cipherText
@@ -69,7 +69,7 @@ class WEP:
         assert(self.__key[self.currentKeyId]!=None), 'Must set key for specific keyId before encryption'
         self.arc4.setKey( iv + self.__key[self.currentKeyId] )
         plainText = self.arc4.decrypt(cipherText[self.encryptHeaderSize:])
-        if plainText[-self.encryptHeaderSize:] == pack('<I',crc32(plainText)):  # check data integrity
+        if plainText[-self.encryptHeaderSize:] == pack('<I', crc32(plainText)):  # check data integrity
             raise IntegrityCheckError('WEP Integrity Check Error')
         return plainText[:-4]
 

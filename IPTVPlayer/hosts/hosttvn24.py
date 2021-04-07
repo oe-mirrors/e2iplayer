@@ -18,7 +18,7 @@ from Components.config import config, ConfigSelection, getConfigListEntry
 ###################################################
 # Config options for HOST
 ###################################################
-config.plugins.iptvplayer.TVN24httpType = ConfigSelection(default = "http://", choices = [("http://", "http://"),("https://", "https://")])
+config.plugins.iptvplayer.TVN24httpType = ConfigSelection(default = "http://", choices = [("http://", "http://"), ("https://", "https://")])
    
 def GetConfigList():
     optionList = []
@@ -81,7 +81,7 @@ class Tvn24(CBaseHostClass):
     def listPlaylists(self, url):
         printDBG("listPlaylist url[%s]" % (url))
         try:
-            sts,data = self.cm.getPage( url, {'host' : Tvn24.HOST} )
+            sts, data = self.cm.getPage( url, {'host' : Tvn24.HOST} )
             data = json_loads( data )
             for item in data:
                 title  = self.getStr( item.get('title', '') )
@@ -143,7 +143,7 @@ class Tvn24(CBaseHostClass):
                 params = {'name': 'category', 'category': 'end_cat', 'parent_cat': category, 'title': item['name'], 'url':sUrl, 'icon':item['icon'], 'page':'1'}
                 self.addDir(params)
         try:
-            sts,data = self.cm.getPage( url, {'host' : Tvn24.HOST} )
+            sts, data = self.cm.getPage( url, {'host' : Tvn24.HOST} )
             data = json_loads( data )
             if pagination:
                 if int(data['pageCount']) > int(data['currentPageNumber']):
@@ -182,7 +182,7 @@ class Tvn24(CBaseHostClass):
                 pagination = True
         nextPage = None
         try:
-            sts,data = self.cm.getPage( url, {'host' : Tvn24.HOST} )
+            sts, data = self.cm.getPage( url, {'host' : Tvn24.HOST} )
             data = json_loads( data )
             if pagination:
                 if int(data['pageCount']) > int(data['currentPageNumber']):
@@ -243,7 +243,7 @@ class Tvn24(CBaseHostClass):
         if '' != articleID:
             try:
                 url = Tvn24.MAIN_URL + '/articles/' + Tvn24.API_KEY + '/%s,0,1,10' % articleID
-                sts,data = self.cm.getPage( url, {'host' : Tvn24.HOST} )
+                sts, data = self.cm.getPage( url, {'host' : Tvn24.HOST} )
                 data = json_loads( data )
                 data = data['getArticleDetail']
                 item = {}
@@ -252,7 +252,7 @@ class Tvn24(CBaseHostClass):
                 if '' == item['text']:
                     item['text']   = self.getStr( data.get('lead',   ''), '').strip()
                 img_title    = self.getStr( data.get('pht_title', ''), '')
-                img_author   = self.getStr( data.get('pht_author',''), '')
+                img_author   = self.getStr( data.get('pht_author', ''), '')
                 img_url      = self.getStr( data.get('pht_url',   ''), '')
                 
                 item['images'] = [ {'title':img_title, 'author': img_author, 'url': img_url} ]

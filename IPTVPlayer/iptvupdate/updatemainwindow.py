@@ -68,7 +68,7 @@ class IPTVUpdateWindow(Screen):
         self["actions"] = ActionMap(["SetupActions", "ColorActions"],
             {
                 "cancel": self.keyExit,
-                "ok"    : self.keyOK,
+                "ok": self.keyOK,
             }, -2)
         self.list = []
         self["list"] = IPTVUpdateList( [GetIPTVDMImgDir(x) for x in IPTVUpdateWindow.ICONS] )
@@ -431,7 +431,7 @@ class UpdateMainAppImpl(IUpdateObjectInterface):
         self.downloader.start(url, self.sourceArchive)
 
     def stepUnpackArchive(self):
-        self.destinationArchive  = os_path.join(self.tmpDir , 'iptv_archive')
+        self.destinationArchive  = os_path.join(self.tmpDir, 'iptv_archive')
         self.ExtensionTmpPath    = os_path.join(self.destinationArchive, self.serversList[self.currServIdx]['subdir'])
         printDBG('UpdateMainAppImpl.stepUnpackArchive: sourceArchive[%s] -> destinationArchive[%s] -> ExtensionTmpPath[%s]' % (self.sourceArchive, self.destinationArchive, self.ExtensionTmpPath) )
         sts, msg = self.createPath(self.destinationArchive)
@@ -1073,7 +1073,7 @@ class UpdateMainAppImpl(IUpdateObjectInterface):
             if self.localGraphicsHash != self.serverGraphicsHash:
                 SetGraphicsHash(self.serverGraphicsHash)
 
-            self.cmd = iptv_system( 'rm -rf ' + self.tmpDir + " && sync" , self.__doSyncCallBack )
+            self.cmd = iptv_system( 'rm -rf ' + self.tmpDir + " && sync", self.__doSyncCallBack )
         return
 
     def __doSyncCallBack(self, status, outData):

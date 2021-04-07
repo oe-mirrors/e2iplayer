@@ -36,8 +36,8 @@ class HDPopcornsCom(CBaseHostClass):
         self.DEFAULT_ICON_URL = 'http://7428.net/wp-content/uploads/2014/07/Movie-Time-Ticket-Vector.jpg' 
         
         self.MAIN_CAT_TAB = [{'category':'list_items',        'title': _('Categories'),           'url':self.getMainUrl()           },
-                             {'category':'search',            'title': _('Search'),               'search_item':True,               },
-                             {'category':'search_history',    'title': _('Search history'),                                         } 
+                             {'category': 'search',            'title': _('Search'),               'search_item': True,               },
+                             {'category': 'search_history',    'title': _('Search history'),                                         } 
                             ]
         
         self.cacheFilters = {}
@@ -86,7 +86,7 @@ class HDPopcornsCom(CBaseHostClass):
         tmpData = self.cm.ph.getAllItemsBeetwenMarkers(tmpData, '<option', '</option>', withMarkers=True)
         addFilter(tmpData, 'ofcategory', False, '', 'value') 
         if 0 == len(self.cacheFilters['ofcategory']):
-            for item in [("46","Action"),("24","Adventure"),("25","Animation"),("26","Biography"),("27","Comedy"),("28","Crime"),("29","Documentary"),("30","Drama"),("31","Family"),("32","Fantasy"),("33","Film-Noir"),("35","History"),("36","Horror"),("37","Music"),("38","Musical"),("39","Mystery"),("40","Romance"),("41","Sci-Fi"),("42","Sports"),("43","Thriller")]:
+            for item in [("46", "Action"), ("24", "Adventure"), ("25", "Animation"), ("26", "Biography"), ("27", "Comedy"), ("28", "Crime"), ("29", "Documentary"), ("30", "Drama"), ("31", "Family"), ("32", "Fantasy"), ("33", "Film-Noir"), ("35", "History"), ("36", "Horror"), ("37", "Music"), ("38", "Musical"), ("39", "Mystery"), ("40", "Romance"), ("41", "Sci-Fi"), ("42", "Sports"), ("43", "Thriller")]:
                 self.cacheFilters['ofcategory'].append({'title':item[1], 'ofcategory':item[0]})
         
         # rating
@@ -106,7 +106,7 @@ class HDPopcornsCom(CBaseHostClass):
         tmpData = self.cm.ph.getAllItemsBeetwenMarkers(tmpData, '<option', '</option>', withMarkers=True)
         addFilter(tmpData, 'ofquality', False, '', 'value') 
         if 0 == len(self.cacheFilters['ofquality']):
-            for item in [("0","All Qualities"),("47","1080p"),("48","720p")]:
+            for item in [("0", "All Qualities"), ("47", "1080p"), ("48", "720p")]:
                 self.cacheFilters['ofquality'].append({'title':item[1], 'ofquality':item[0]})
         
         printDBG(self.cacheFilters)

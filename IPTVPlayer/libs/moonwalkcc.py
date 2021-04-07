@@ -27,7 +27,7 @@ from Components.config import config, ConfigSelection, ConfigYesNo
 ###################################################
 # Config options for HOST
 ###################################################
-config.plugins.iptvplayer.moonwalk_format    = ConfigSelection(default = "m3u8", choices = [("hls/m3u8", "m3u8"),("f4m", "f4m/hds")]) 
+config.plugins.iptvplayer.moonwalk_format    = ConfigSelection(default = "m3u8", choices = [("hls/m3u8", "m3u8"), ("f4m", "f4m/hds")]) 
 config.plugins.iptvplayer.moonwalk_df_format = ConfigSelection(default = 9999, choices = [(0, _("the worst")), (360, "360p"), (480, "480p"), (720, "720"), (9999, _("the best"))])
 config.plugins.iptvplayer.moonwalk_use_df    = ConfigYesNo(default = False)
 

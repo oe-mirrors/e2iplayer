@@ -57,8 +57,8 @@ class MaxtvGO(CBaseHostClass):
         self.MAIN_CAT_TAB = [{'category':'list_items',        'title': 'MaxTVGo',             'url':self.getFullUrl('/api/videos.php?action=find')},
                              {'category':'list_yt_channel',   'title': 'Max Kolonko - MaxTV', 'url':'https://www.youtube.com/user/Media2000Corp/videos' },
                              {'category':'list_yt_channel',   'title': 'MaxTVNews',           'url':'https://www.youtube.com/user/MaxTVTUBE/videos'},
-                             {'category':'search',          'title': _('Search'), 'search_item':True, },
-                             {'category':'search_history',  'title': _('Search history'),             } 
+                             {'category': 'search',          'title': _('Search'), 'search_item': True, },
+                             {'category': 'search_history',  'title': _('Search history'),             } 
                             ]
         self.ytp = YouTubeParser()
         self.loggedIn = None

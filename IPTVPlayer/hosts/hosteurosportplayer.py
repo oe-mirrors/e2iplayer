@@ -102,9 +102,9 @@ class EuroSportPlayer(CBaseHostClass):
         
         try:
             CAT_TAB = [
-                       {'category':'on_air',             'title': _('On Air'),          }, 
-                       {'category':'schedule',           'title': _('Schedule'),        },
-                       {'category':'vod_sport_filters',  'title': _('All Sports'),          } #,
+                       {'category': 'on_air',             'title': _('On Air'),          }, 
+                       {'category': 'schedule',           'title': _('Schedule'),        },
+                       {'category': 'vod_sport_filters',  'title': _('All Sports'),          } #,
                        #{'category':'search',             'title': _('Search'),          'search_item':True    }, 
                        #{'category':'search_history',     'title': _('Search history')}
                       ]
@@ -121,7 +121,7 @@ class EuroSportPlayer(CBaseHostClass):
         utc_date = self._str2date(txt)
         utc_date = utc_date + self.OFFSET
         if utc_date.time().second == 59:
-            utc_date = utc_date + timedelta(0,1)
+            utc_date = utc_date + timedelta(0, 1)
         return utc_date
         
     def _absTimeDelta(self, d1, d2, div=60):
@@ -265,12 +265,12 @@ class EuroSportPlayer(CBaseHostClass):
                 if 'secondaryTitle' in item_data:
                     desc = desc + item_data['secondaryTitle'] + "\n"
 
-                desc = desc + item_data.get('description','')
+                desc = desc + item_data.get('description', '')
 
                 icon_id = videoData['relationships']['images']['data'][0]['id']
                 icon = self.espImages[icon_id]['attributes']['src']
 
-                url = self.getFullPath(item_data['path'],'video') 
+                url = self.getFullPath(item_data['path'], 'video') 
 
                 params = {'title': title, 'desc': desc, 'url': url, 'icon': icon, 'video_id': video_id, 'schedule_date': scheduleDate, 'route_id': route_id}
                 printDBG(str(params))
@@ -314,7 +314,7 @@ class EuroSportPlayer(CBaseHostClass):
                 #printDBG(json_dumps(routeData))                
                 title = node['attributes']['name']
                 icon = iconData['attributes']['src']
-                url = self.getFullPath(routeData['attributes']['url'],'route')
+                url = self.getFullPath(routeData['attributes']['url'], 'route')
                 params = {'good_for_fav':False, 'category':nextCategory, 'title':title, 'icon':icon, 'url': url}
                 printDBG(str(params))
                 self.addDir(params)
@@ -556,7 +556,7 @@ class EuroSportPlayer(CBaseHostClass):
                 
                 httpParams = {'header' : header, 'with_metadata':True, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE, 'raw_post_data': True}
                                     
-                sts, data = self.getPage(url, httpParams , post_data = json_dumps(postData))
+                sts, data = self.getPage(url, httpParams, post_data = json_dumps(postData))
                 
                 ''' good login
                 {
@@ -632,13 +632,13 @@ class EuroSportPlayer(CBaseHostClass):
                 return []
             
             # open route json page
-            route_id = cItem.get('route_id','')
+            route_id = cItem.get('route_id', '')
             if route_id:
                 route = self.espRoutes[route_id]
                 printDBG(json_dumps(route))
 
                 #{"attributes": {"url": "/videos/eurosport/world-championship-239400", "canonical": true}, "type": "route", "id": "292e72a63ebcccb480984a84f3497b7702623ab6fe6e7d7d29b1dce79ed3da35"}
-                route_url = self.getFullPath(route['attributes']['url'],'route') + "?include=default"
+                route_url = self.getFullPath(route['attributes']['url'], 'route') + "?include=default"
                 
                 sts, data = self.getPage(route_url)
                 

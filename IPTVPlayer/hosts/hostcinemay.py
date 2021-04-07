@@ -45,8 +45,8 @@ class Cinemay(CBaseHostClass):
                              {'category':'list_movies',           'title': 'Films',             'url':self.getFullUrl('/films/')              },
                              {'category':'list_series',           'title': 'Series',            'url':self.getFullUrl('/series-tv-streaming/')},
                              
-                             {'category':'search',                'title': _('Search'),              'search_item':True, },
-                             {'category':'search_history',        'title': _('Search history'),                          } 
+                             {'category': 'search',                'title': _('Search'),              'search_item': True, },
+                             {'category': 'search_history',        'title': _('Search history'),                          } 
                             ]
     
     def getPage(self, baseUrl, addParams = {}, post_data = None):

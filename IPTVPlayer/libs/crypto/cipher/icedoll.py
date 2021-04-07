@@ -42,7 +42,7 @@ class Icedoll(Rijndael):
         self.blockSize   = blockSize  # blockSize is in bytes
         self.padding     = padding    # change default to noPadding() to get normal ECB behavior
 
-        assert( keySize%4==0 and keySize/4 in NrTable[4]),'key size must be 16,20,24,29 or 32 bytes'
+        assert( keySize%4==0 and keySize/4 in NrTable[4]), 'key size must be 16,20,24,29 or 32 bytes'
         assert( blockSize%4==0 and blockSize/4 in NrTable), 'block size must be 16,20,24,29 or 32 bytes'
 
         self.Nb = self.blockSize/4          # Nb is number of columns of 32 bit words
@@ -65,7 +65,7 @@ class Icedoll(Rijndael):
             self.priorFeedBack = self._toBlock(chr(0)*(4*self.Nb)) # <------- !!! change from Rijndael !!!
         AddRoundKey(self, self.priorFeedBack)                      # <------- !!! change from Rijndael !!!
         AddRoundKey(self, self.__expandedKey[0:self.Nb])
-        for round in range(1,self.Nr):          #for round = 1 step 1 to Nr�1
+        for round in range(1, self.Nr):          #for round = 1 step 1 to Nr�1
             SubBytes(self)
             ShiftRows(self)
             MixColumns(self)
@@ -86,7 +86,7 @@ class Icedoll(Rijndael):
             self.priorFeedBack = self._toBlock( chr(0)*(4*self.Nb) ) # <------- !!! change from Rijndael !!!
         AddRoundKey(self, self.priorFeedBack)                        # <------- !!! change from Rijndael !!!
         AddRoundKey(self, self.__expandedKey[self.Nr*self.Nb:(self.Nr+1)*self.Nb])
-        for round in range(self.Nr-1,0,-1):
+        for round in range(self.Nr-1, 0, -1):
             InvShiftRows(self)
             InvSubBytes(self)
             AddRoundKey(self, self.__expandedKey[round*self.Nb:(round+1)*self.Nb])

@@ -295,7 +295,7 @@ class StreamLiveTo(CBaseHostClass):
         
         imgUrl = 'http://www.google.com/recaptcha/api/image?c=' + challenge
         #return
-        params = {'maintype': 'image', 'subtypes':['jpeg'], 'check_first_bytes':['\xFF\xD8','\xFF\xD9']}
+        params = {'maintype': 'image', 'subtypes':['jpeg'], 'check_first_bytes':['\xFF\xD8', '\xFF\xD9']}
         filePath = GetTmpDir('.iptvplayer_captcha.jpg')
         ret = self.cm.saveWebFile(filePath, imgUrl, params)
         if not ret.get('sts'):
@@ -308,8 +308,8 @@ class StreamLiveTo(CBaseHostClass):
         params['title'] = _('Answer')
         params['list'] = []
         item = deepcopy(IPTVMultipleInputBox.DEF_INPUT_PARAMS)
-        item['label_size'] = (300,57)
-        item['input_size'] = (300,25)
+        item['label_size'] = (300, 57)
+        item['input_size'] = (300, 25)
         item['icon_path'] = filePath
         item['input']['text'] = ''
         params['list'].append(item)
@@ -353,7 +353,7 @@ class StreamLiveTo(CBaseHostClass):
         params['title'] = title
         params['list'] = []
         item = deepcopy(IPTVMultipleInputBox.DEF_INPUT_PARAMS)
-        item['label_size'] = (550,50 + 25 * question.count('\n'))
+        item['label_size'] = (550, 50 + 25 * question.count('\n'))
         item['title'] = question
         item['input']['text'] = ''
         params['list'].append(item)

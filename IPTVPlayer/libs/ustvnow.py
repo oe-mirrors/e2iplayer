@@ -163,7 +163,7 @@ class UstvnowApi:
                             utc_date = datetime.strptime(item.get('event_date', '') + ' ' + item.get('event_time', ''), '%Y-%m-%d %H:%M:%S')
                             utc_date = utc_date + OFFSET
                             if utc_date.time().second == 59:
-                                utc_date = utc_date + timedelta(0,1)
+                                utc_date = utc_date + timedelta(0, 1)
                             channelsTab[idx]['desc'] += '[/br][/br] [%s][/br]%s[/br]%s[/br]%s[/br]%s' % (utc_date.strftime('%Y-%m-%d %H:%M:%S'), item.get('title', ''), item.get('synopsis', ''), item.get('description', ''), item.get('episode_title', ''))
                 except Exception:
                     printExc()

@@ -57,7 +57,7 @@ class IPTVSimpleAudioPlayer():
         if "://" in self.uri: 
             cmd += ' "%s" "%s"  "%s"  "%s" ' % (self.gstAdditionalParams['download-buffer-path'], self.gstAdditionalParams['ring-buffer-max-size'], self.gstAdditionalParams['buffer-duration'], self.gstAdditionalParams['buffer-size'])
             tmp = strwithmeta(self.uri)
-            url,httpParams = DMHelper.getDownloaderParamFromUrl(tmp)
+            url, httpParams = DMHelper.getDownloaderParamFromUrl(tmp)
             for key in httpParams: cmd += (' "%s=%s" ' % (key, httpParams[key]) )
             if 'http_proxy' in tmp.meta:
                 tmp = tmp.meta['http_proxy']
@@ -168,12 +168,12 @@ class IPTVPicturePlayerWidget(Screen):
        
         self["actions"] = ActionMap(['IPTVAlternateVideoPlayer', 'MoviePlayerActions', 'MediaPlayerActions', 'WizardActions', 'DirectionActions'],
         {
-            'leavePlayer'  : self.key_exit,
-            'play'         : self.key_play,
-            'pause'        : self.key_pause,
-            'exit'         : self.key_exit,
-            'back'         : self.key_exit,
-            'ok'           : self.key_ok,
+            'leavePlayer': self.key_exit,
+            'play': self.key_play,
+            'pause': self.key_pause,
+            'exit': self.key_exit,
+            'back': self.key_exit,
+            'ok': self.key_ok,
         }, -1)     
 
         self["status"]  = Label()
@@ -183,7 +183,7 @@ class IPTVPicturePlayerWidget(Screen):
 
         # prepare icon frames path
         frames = []
-        for idx in range(1,self.NUM_OF_ICON_FRAMES+1): frames.append( GetIconDir('/buffering/buffering_%d.png' % idx) )
+        for idx in range(1, self.NUM_OF_ICON_FRAMES+1): frames.append( GetIconDir('/buffering/buffering_%d.png' % idx) )
         self["icon"].loadFrames(frames) 
         
         #main Timer
@@ -266,7 +266,7 @@ class IPTVPicturePlayerWidget(Screen):
             self.refreshing = True
             self.downloader = DownloaderCreator(self.url)
             
-            url,downloaderParams = DMHelper.getDownloaderParamFromUrl(self.url)
+            url, downloaderParams = DMHelper.getDownloaderParamFromUrl(self.url)
             self.downloader.subscribeFor_Finish(self.downloaderEnd)
             self.downloader.start(url, self._getDownloadFilePath(), downloaderParams)
             self.setMainTimerSts(True)

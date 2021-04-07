@@ -456,7 +456,7 @@ class Sport365LiveApi:
                                     link2 = re.compile('\([\'"][^"\']+[\'"], [\'"][^"\']+[\'"], [\'"]([^"\']+)[\'"], 1\)').findall(data)
                                     if link2:
                                         printDBG(link2[0])
-                                        playerUrl = self.decryptUrl(link2[0], aes).replace("/i","/master.m3u8")
+                                        playerUrl = self.decryptUrl(link2[0], aes).replace("/i", "/master.m3u8")
                                         printDBG("Final player Url ----------->  %s " % str(playerUrl))
 
                                         playerUrl = strwithmeta(playerUrl, {'User-Agent' : h['header']['User-Agent'], 'Referer': action[0] })

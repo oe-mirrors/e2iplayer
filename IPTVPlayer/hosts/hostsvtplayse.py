@@ -82,7 +82,7 @@ class SVTPlaySE(CBaseHostClass):
                              {'category':'list_items',        'title': _('Categories'),                         'url':'/active_clusters' },  
                              
                              {'category':'search',             'title': _('Search'), 'search_item':True,           'icon':'https://raw.githubusercontent.com/vonH/plugin.video.iplayerwww/master/media/search.png'},
-                             {'category':'search_history',     'title': _('Search history'),                     }]
+                             {'category': 'search_history',     'title': _('Search history'),                     }]
         self.itemsPerPage = 48
         self.programsAZCache = {'keys':[], 'dict':{}}
         
@@ -172,7 +172,7 @@ class SVTPlaySE(CBaseHostClass):
                 offsetMins = -offsetMins
             utc_date = date + timedelta(hours=offsetHours, minutes=offsetMins) + OFFSET
             if utc_date.time().second == 59:
-                utc_date = utc_date + timedelta(0,1)
+                utc_date = utc_date + timedelta(0, 1)
             return utc_date
         
         sts, data = self.cm.getPage(url, self.defaultParams)

@@ -165,7 +165,7 @@ class DMHelper:
         except Exception:
             return ret
         if 0 < len(lines):
-            match = re.search("|PROGRESS|([0-9]+?)/([0-9]+?)|" , lines[1])
+            match = re.search("|PROGRESS|([0-9]+?)/([0-9]+?)|", lines[1])
             if match:
                 ret = 100 * int(match.group(1)) / int(match.group(2))
         return ret
@@ -190,7 +190,7 @@ class DMHelper:
         sts = cm.getPage(url, addParams)[0]
         if sts: remoteContentInfo = {'Content-Length': cm.meta.get('content-length', -1), 'Content-Type': cm.meta.get('content-type', '')}
         printDBG("getRemoteContentInfoByUrllib: [%r]" % remoteContentInfo)
-        return sts,remoteContentInfo
+        return sts, remoteContentInfo
 
     @staticmethod  
     def downloaderParams2UrllibParams(params):
@@ -239,7 +239,7 @@ class DMHelper:
         if -1 < url.find('apple.com'):
             downloaderParams['User-Agent'] = 'QuickTime/7.6.2'
         
-        return url,downloaderParams
+        return url, downloaderParams
         
     @staticmethod
     def getBaseWgetCmd(downloaderParams = {}):

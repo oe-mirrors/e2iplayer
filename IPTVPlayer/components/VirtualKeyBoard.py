@@ -101,7 +101,7 @@ class IPTVVirtualKeyBoardWithCaptcha(Screen):
         self["key_red"]   = Label(_("Cancel"))
         
         self["header"] = Label(title)
-        self["text"]   = Input(text=text.decode("utf-8",'ignore'))
+        self["text"]   = Input(text=text.decode("utf-8", 'ignore'))
         self["list"]   = VirtualKeyBoardList([])
         
         self["actions"] = NumberActionMap(["OkCancelActions", "WizardActions", "ColorActions", "KeyboardInputActions", "InputBoxActions", "InputAsciiActions"],

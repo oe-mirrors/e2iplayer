@@ -80,9 +80,9 @@ class IPTVSubSimpleDownloaderWidget(Screen):
         self["actions"] = ActionMap(["ColorActions", "SetupActions", "WizardActions", "ListboxActions"],
             {
                 "cancel": self.keyExit,
-                "ok"    : self.keyOK,
-                "red"   : self.keyRed,
-                "green" : self.keyGreen,
+                "ok": self.keyOK,
+                "red": self.keyRed,
+                "green": self.keyGreen,
             }, -2)
         
         self.iconPixmap = {}
@@ -132,7 +132,7 @@ class IPTVSubSimpleDownloaderWidget(Screen):
     def _startDownloader(self, sts, reason):
         if sts:
             self.downloader.subscribeFor_Finish(self.downloadFinished)
-            url,downloaderParams = DMHelper.getDownloaderParamFromUrl(self.currItem.get('url', ''))
+            url, downloaderParams = DMHelper.getDownloaderParamFromUrl(self.currItem.get('url', ''))
             self.downloader.start(url, GetTmpDir(self._TMP_FILE_NAME), downloaderParams)
         else:
             self["console"].setText(_("Download can not be started.\nDownloader %s not working correctly.\nStatus[%s]"))

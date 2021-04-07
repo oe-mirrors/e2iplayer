@@ -77,7 +77,7 @@ class BBCSport(CBaseHostClass):
         utc_date = self._str2date(txt)
         utc_date = utc_date + self.OFFSET
         if utc_date.time().second == 59:
-            utc_date = utc_date + timedelta(0,1)
+            utc_date = utc_date + timedelta(0, 1)
         return utc_date
     
     def _absTimeDelta(self, d1, d2, div=60):

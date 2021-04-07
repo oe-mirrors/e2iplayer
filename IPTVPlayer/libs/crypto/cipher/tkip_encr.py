@@ -34,7 +34,7 @@ class TKIP_encr:
         self.strength    = 128
         self.encryptHeaderSize = 8        # used to skip octets on decrypt
         self.arc4 = ARC4()                # base algorithm
-        self.keyMixer = TKIP_Mixer(key,transmitterAddress)
+        self.keyMixer = TKIP_Mixer(key, transmitterAddress)
         if key != None:                   # normally in base init, uses adjusted keySize
             self.setKey(key)
         if transmitterAddress!=None:
@@ -54,7 +54,7 @@ class TKIP_encr:
         """ Parse the TKIP header to get iv and set KeyID
             iv is returned as octet string and is little-endian!!!
         """
-        assert(ord(cipherText[3])& 0x20),'extIV SHOULD be set in TKIP header'
+        assert(ord(cipherText[3])& 0x20), 'extIV SHOULD be set in TKIP header'
         self.setCurrentKeyID = (ord(cipherText[3])&0xC0)>>6
         return cipherText[:3] + cipherText[5:9] # note iv octets are little-endian!!!
 
@@ -62,7 +62,7 @@ class TKIP_encr:
         """ Make an ARC4 key from TKIP Sequence Counter Octets (little-endian) """
         if keyID!=0 :
             raise Exception('TKIP expects keyID of zero')
-        print("tscOctets in tkmixer=",b2a_p(tscOctets))
+        print("tscOctets in tkmixer=", b2a_p(tscOctets))
         newKey = self.keyMixer.newKey(tscOctets)
         print("newKey=", b2a_p(newKey))
         return newKey
@@ -71,7 +71,7 @@ class TKIP_encr:
         """ Encrypt a string and return a binary string
             iv is 6 octets of little-endian encoded pn
         """
-        assert(len(iv)==6),'TKIP bad IV size on encryption'
+        assert(len(iv)==6), 'TKIP bad IV size on encryption'
         self.pnField = iv
         self.arc4.setKey( self._makeARC4key(iv) )
         eh1 = chr((ord(iv[0])|0x20)&0x7f)
@@ -82,13 +82,13 @@ class TKIP_encr:
 
     def decrypt(self, cipherText):
         """ Decrypt a WEP packet, assumes WEP 4 byte header on packet """
-        assert(ord(cipherText[3])& 0x20),'extIV SHOULD be set in TKIP header'
+        assert(ord(cipherText[3])& 0x20), 'extIV SHOULD be set in TKIP header'
         self.setCurrentKeyID = (ord(cipherText[3])&0xC0)>>6
         iv = cipherText[0]+cipherText[2]+cipherText[4:8]
         self.pnField = iv
         self.arc4.setKey( self._makeARC4key(iv) )
         plainText = self.arc4.decrypt(cipherText[self.encryptHeaderSize:])
-        if plainText[-4:] != pack('<I',crc32(plainText[:-4])):  # check data integrity
+        if plainText[-4:] != pack('<I', crc32(plainText[:-4])):  # check data integrity
             raise IntegrityCheckError('WEP CRC Integrity Check Error')
         return plainText[:-4]
 

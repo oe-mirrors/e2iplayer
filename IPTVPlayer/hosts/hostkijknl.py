@@ -105,13 +105,13 @@ class KijkNL(CBaseHostClass):
     def listLetters(self, cItem, nextCategory):
         printDBG("KijkNL.listLetters [%s]" % cItem)
         catList = [{'title':'0 T/M 9', 'url':'0123456789'},
-                  {'title':'ABCD',},
-                  {'title':'EFGH',},
-                  {'title':'IJKL',},
-                  {'title':'MNOP',},
-                  {'title':'QRST',},
-                  {'title':'UVW', },
-                  {'title':'XYZ', }]
+                  {'title': 'ABCD',},
+                  {'title': 'EFGH',},
+                  {'title': 'IJKL',},
+                  {'title': 'MNOP',},
+                  {'title': 'QRST',},
+                  {'title': 'UVW', },
+                  {'title': 'XYZ', }]
         
         for item in catList:
             url = item.get('url', '')

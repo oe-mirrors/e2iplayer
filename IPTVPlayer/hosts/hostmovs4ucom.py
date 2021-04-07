@@ -39,10 +39,10 @@ class Movs4uCOM(CBaseHostClass):
         self.MAIN_CAT_TAB = [{'category':'list_items',       'title': _('Movies'),      'url':self.getFullUrl('/movie/')      },
                              {'category':'list_items',       'title': _('Series'),      'url':self.getFullUrl('/tvshows/')    },
                              {'category':'list_items',       'title': _('Collections'), 'url':self.getFullUrl('/collection/') },
-                             {'category':'list_filters',     'title': _('Filters'),                                           },
+                             {'category': 'list_filters',     'title': _('Filters'),                                           },
                              
-                             {'category':'search',           'title': _('Search'), 'search_item':True,},
-                             {'category':'search_history',   'title': _('Search history'),            } 
+                             {'category': 'search',           'title': _('Search'), 'search_item': True,},
+                             {'category': 'search_history',   'title': _('Search history'),            } 
                             ]
                             
         self.FILTERS_CAT_TAB = [{'category':'list_main',     'title': _('Alphabetically'), 'tab_id':'abc'       },

@@ -69,8 +69,8 @@ class FilmezzEU(CBaseHostClass):
                              {'category':'list_items',      'title': _('Top series'),         'url':self.getFullUrl('kereses.php?q=0&l=0&e=0&c=0&t=2&h=0&o=nezettseg')  },
                              {'category':'list_items',      'title': _('Latest added'),       'url':self.getFullUrl('kereses.php?q=0&l=0&e=0&c=0&t=0&h=0&o=feltoltve')  },
                              
-                             {'category':'search',            'title': _('Search'), 'search_item':True,},
-                             {'category':'search_history',    'title': _('Search history'),            } 
+                             {'category': 'search',            'title': _('Search'), 'search_item': True,},
+                             {'category': 'search_history',    'title': _('Search history'),            } 
                             ]
                             
     def getFullIconUrl(self, url):
@@ -329,7 +329,7 @@ class FilmezzEU(CBaseHostClass):
                         params['header'] = dict(params['header'] )
                         params['header']['Accept'] = 'image/png,image/*;q=0.8,*/*;q=0.5'
                         params = dict(self.defaultParams)
-                        params.update( {'maintype': 'image', 'subtypes':['jpeg', 'png'], 'check_first_bytes':['\xFF\xD8','\xFF\xD9','\x89\x50\x4E\x47'], 'header':params['header']} )
+                        params.update( {'maintype': 'image', 'subtypes':['jpeg', 'png'], 'check_first_bytes':['\xFF\xD8', '\xFF\xD9', '\x89\x50\x4E\x47'], 'header':params['header']} )
                         filePath = GetTmpDir('.iptvplayer_captcha.jpg')
                         ret = self.cm.saveWebFile(filePath, imgUrl.replace('&amp;', '&'), params)
                         if not ret.get('sts'):
@@ -343,8 +343,8 @@ class FilmezzEU(CBaseHostClass):
                         params['with_accept_button'] = True
                         params['list'] = []
                         item = deepcopy(IPTVMultipleInputBox.DEF_INPUT_PARAMS)
-                        item['label_size'] = (160,75)
-                        item['input_size'] = (480,25)
+                        item['label_size'] = (160, 75)
+                        item['input_size'] = (480, 25)
                         item['icon_path'] = filePath
                         item['title'] = _('Answer')
                         item['input']['text'] = ''

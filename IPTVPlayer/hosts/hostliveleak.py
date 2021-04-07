@@ -43,9 +43,9 @@ class LiveLeak(CBaseHostClass):
         CHANNEL_URL = self.getFullUrl('c/')
         self.DEFAULT_ICON_URL = 'https://cdn.liveleak.com/80281E/ll_a_u/ll3/images/img_logo.png'
         self.MAIN_CAT_TAB = [{ 'category':'tab_items',       'title': _('Items')                       },
-                             { 'category':'tab_channels',    'title': _('Channels'),                   },
-                             { 'category':'search',          'title': _('Search'), 'search_item':True, },
-                             { 'category':'search_history',  'title': _('Search history'),             }]
+                             { 'category': 'tab_channels',    'title': _('Channels'),                   },
+                             { 'category': 'search',          'title': _('Search'), 'search_item': True, },
+                             { 'category': 'search_history',  'title': _('Search history'),             }]
         
         self.ITEMS_CAT_TAB = [{ 'category':'recent_items', 'title':'Recent Items (Popular)',  'url':ITEMS_BROWSE_URL + 'selection=popular'},
                               { 'category':'recent_items', 'title':'Recent Items (All)',      'url':ITEMS_BROWSE_URL + 'selection=all'    },

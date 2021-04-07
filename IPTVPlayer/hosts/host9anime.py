@@ -47,8 +47,8 @@ class AnimeTo(CBaseHostClass, CaptchaHelper):
                              {'category':'list_items',      'title': _('Most watched'),'url':self.getFullUrl('/most-watched')},
                              {'category':'list_letters',    'title': _('A-Z List'),    'url':self.getFullUrl('/az-list')     },
                              
-                             {'category':'search',            'title': _('Search'), 'search_item':True,},
-                             {'category':'search_history',    'title': _('Search history'),            } 
+                             {'category': 'search',            'title': _('Search'), 'search_item': True,},
+                             {'category': 'search_history',    'title': _('Search history'),            } 
                             ]
         self.scriptCache = {}
     

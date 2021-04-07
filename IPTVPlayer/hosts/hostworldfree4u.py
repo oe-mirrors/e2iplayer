@@ -41,8 +41,8 @@ class WorldFree4u(CBaseHostClass):
             
         self.MAIN_CAT_TAB = [{'category':'list_items', 'title': _('LATEST'),    'url':self.getFullUrl('/seeAll/latestMovies/') },
                              {'category':'list_items', 'title': _('RECENT'),    'url':self.getFullUrl('/seeAll/recentAdded/') },
-                             {'category':'search',          'title': _('Search'), 'search_item':True,                        },
-                             {'category':'search_history',  'title': _('Search history'),                                    } 
+                             {'category': 'search',          'title': _('Search'), 'search_item': True,                        },
+                             {'category': 'search_history',  'title': _('Search history'),                                    } 
                             ]
         
         return self.cm.getPage(baseUrl, addParams, post_data)

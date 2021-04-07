@@ -8,7 +8,7 @@ import re
 
 class AADecoder(object):
     def __init__(self, aa_encoded_data):
-        self.encoded_str = aa_encoded_data.replace('/*´∇｀*/','')
+        self.encoded_str = aa_encoded_data.replace('/*´∇｀*/', '')
 
         self.b = ["(c^_^o)", "(ﾟΘﾟ)", "((o^_^o) - (ﾟΘﾟ))", "(o^_^o)",
                   "(ﾟｰﾟ)", "((ﾟｰﾟ) + (ﾟΘﾟ))", "((o^_^o) +(o^_^o))", "((ﾟｰﾟ) + (o^_^o))",
@@ -118,8 +118,8 @@ class AADecoder(object):
                     if c.strip().endswith('+'):
                         c=c.strip()[:-1]
 
-                    startbrackets=len(c)-len(c.replace('(',''))
-                    endbrackets=len(c)-len(c.replace(')',''))
+                    startbrackets=len(c)-len(c.replace('(', ''))
+                    endbrackets=len(c)-len(c.replace(')', ''))
                     
                     if startbrackets>endbrackets:
                         c+=')'*startbrackets-endbrackets
@@ -128,9 +128,9 @@ class AADecoder(object):
                     #fh.write(c)
                     #fh.close()
                     
-                    c = c.replace('!+[]','1')
-                    c = c.replace('-~','1+')
-                    c = c.replace('[]','0')
+                    c = c.replace('!+[]', '1')
+                    c = c.replace('-~', '1+')
+                    c = c.replace('[]', '0')
                     
                     v+=str(eval(c))
                     

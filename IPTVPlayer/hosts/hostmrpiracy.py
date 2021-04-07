@@ -114,8 +114,8 @@ class MRPiracyGQ(CBaseHostClass, CaptchaHelper):
                              {'category':'list_filters',      'mode':'serie',   'title': 'TV Shows',     'url':self.getFullUrl('series.php') },
                              {'category':'list_filters',      'mode':'anime',   'title': 'Animes',       'url':self.getFullUrl('animes.php') },
                              
-                             {'category':'search',            'title': _('Search'), 'search_item':True,                                    },
-                             {'category':'search_history',    'title': _('Search history'),                                                } 
+                             {'category': 'search',            'title': _('Search'), 'search_item': True,                                    },
+                             {'category': 'search_history',    'title': _('Search history'),                                                } 
                             ]
     
         
@@ -220,7 +220,7 @@ class MRPiracyGQ(CBaseHostClass, CaptchaHelper):
         uriParams = {}
         if page > 1: uriParams['pagina'] = page
         
-        for item in [('f_class','e'),('f_cat','categoria'),('f_year','anos')]:
+        for item in [('f_class', 'e'), ('f_cat', 'categoria'), ('f_year', 'anos')]:
             if item[0] in cItem:
                 uriParams[item[1]] = cItem[item[0]]
         

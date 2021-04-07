@@ -232,7 +232,7 @@ class ITV(CBaseHostClass):
             
             params['header'].update({'Content-Type':'application/json', 'Accept':'application/vnd.itv.vod.playlist.v2+json', 'Origin':self.getMainUrl(), 'Referer':cItem['url'], 'hmac':hmac})
             params['raw_post_data'] = True
-            post_data = {"user":{"itvUserId":"","entitlements":[],"token":""},"device":{"manufacturer":"Apple","model":"iPhone","os":{"name":"iPad OS","version":"9.3","type":"ios"}},"client":{"version":"4.1","id":"browser"},"variantAvailability":{"featureset":{"min":["hls","aes"],"max":["hls","aes"]},"platformTag":"mobile"}}
+            post_data = {"user":{"itvUserId":"","entitlements":[],"token":""},"device":{"manufacturer":"Apple","model":"iPhone","os":{"name":"iPad OS","version":"9.3","type":"ios"}},"client":{"version":"4.1","id":"browser"},"variantAvailability":{"featureset":{"min":["hls", "aes"],"max":["hls", "aes"]},"platformTag":"mobile"}}
             try:
                 sts, data = self.getPage(url, params, json.dumps(post_data))
                 if not sts: return []

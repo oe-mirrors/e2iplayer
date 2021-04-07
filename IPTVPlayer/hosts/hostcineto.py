@@ -39,8 +39,8 @@ class CineTO(CBaseHostClass, CaptchaHelper):
         self.defaultParams = {'with_metadata':True, 'header':self.HEADER, 'raw_post_data':True, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
         
         self.MAIN_CAT_TAB = [
-                             {'category':'search',                'title': _('Search'),              'search_item':True, },
-                             {'category':'search_history',        'title': _('Search history'),                          } 
+                             {'category': 'search',                'title': _('Search'),              'search_item': True, },
+                             {'category': 'search_history',        'title': _('Search history'),                          } 
                             ]
         
     def _getStr(self, item, key, default=''):
@@ -355,7 +355,7 @@ class CineTO(CBaseHostClass, CaptchaHelper):
                         
                         if token != '':
                             params = MergeDicts(self.defaultParams, {'max_data_size':0})
-                            params['header'] = MergeDicts(params['header'] , {'Referer':self.cm.meta['url']})
+                            params['header'] = MergeDicts(params['header'], {'Referer':self.cm.meta['url']})
                             sts, data = self.getPage(videoUrl + '?token=' + token, params)
                             if sts: videoUrl = self.cm.meta['url']
                     if 1 == self.up.checkHostSupport(videoUrl):

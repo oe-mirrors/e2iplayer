@@ -157,23 +157,23 @@ class IPTVMultipleImageSelectorWidget(Screen):
         self["actions"] = ActionMap(["SetupActions", "ColorActions", "WizardActions", "ListboxActions", "IPTVPlayerListActions"],
             {
                 "cancel": self.key_cancel,
-                "ok"    : self.key_ok,
-                "green" : self.key_green,
-                "read"  : self.key_read,
+                "ok": self.key_ok,
+                "green": self.key_green,
+                "read": self.key_read,
                 
-                "up"      : self.key_up,
-                "down"    : self.key_down,
-                "moveUp"  : self.key_up,
+                "up": self.key_up,
+                "down": self.key_down,
+                "moveUp": self.key_up,
                 "moveDown": self.key_down,
-                "moveTop" : self.key_home,
-                "moveEnd" : self.key_end,
-                "home"    : self.key_home,
-                "end"     : self.key_end,
-                "pageUp"  : self.key_page_up,
+                "moveTop": self.key_home,
+                "moveEnd": self.key_end,
+                "home": self.key_home,
+                "end": self.key_end,
+                "pageUp": self.key_page_up,
                 "pageDown": self.key_page_down,
                 
-                "left"  : self.key_left,
-                "right" : self.key_right,
+                "left": self.key_left,
+                "right": self.key_right,
             }, -2)
             
         self.column_index = 0

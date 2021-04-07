@@ -29,8 +29,8 @@ from Screens.MessageBox import MessageBox
 # Config options for HOST
 ###################################################
 
-config.plugins.iptvplayer.videostar_streamprotocol     = ConfigSelection(default = "2", choices = [("1", "rtmp"),("2", "HLS - m3u8"),("3", "DASHS - mpd"),("4", "DASH - mpd")]) 
-config.plugins.iptvplayer.videostar_defquality         = ConfigSelection(default = "9999999999", choices = [("0", _("the worst")),("400000", _("low")),("950000", _("average")),("1600000", _("high")), ("9999999999", _("the best"))])
+config.plugins.iptvplayer.videostar_streamprotocol     = ConfigSelection(default = "2", choices = [("1", "rtmp"), ("2", "HLS - m3u8"), ("3", "DASHS - mpd"), ("4", "DASH - mpd")]) 
+config.plugins.iptvplayer.videostar_defquality         = ConfigSelection(default = "9999999999", choices = [("0", _("the worst")), ("400000", _("low")), ("950000", _("average")), ("1600000", _("high")), ("9999999999", _("the best"))])
 config.plugins.iptvplayer.videostar_use_defquality     = ConfigYesNo(default = True)
 config.plugins.iptvplayer.videostar_show_all_channels  = ConfigYesNo(default = False)
 config.plugins.iptvplayer.videostar_login              = ConfigText(default = "", fixed_size = False)

@@ -27,7 +27,7 @@ class Michael:
     def __del__(self):
         self.setKey(8*chr(0))   # feable attempt to clear keys on exit
 
-    def setKey(self,key):
+    def setKey(self, key):
         """ setKey(key) ... key is binary string """
         assert( len(key)== self.keySize), 'Key must be 8 octets'
         self._key = unpack('<II', key) # unpack into 2 32bit integers
@@ -35,26 +35,26 @@ class Michael:
     def __call__(self,data,more=None):
         return self.hash(data)
 
-    def hash(self,data):
+    def hash(self, data):
         """ Michael keyed hash """
-        fullBlocks, extraOctets = divmod(len(data),4)
+        fullBlocks, extraOctets = divmod(len(data), 4)
         paddedData = data + chr(0x5a) + chr(0)*(7-extraOctets)
         l, r = self._key
         for i in range(fullBlocks+2):
             mSub_i = unpack('<I', paddedData[i*4:i*4+4])[0]  # ith block as 32 bit integer
             l = l ^ mSub_i
-            l, r = b(l,r)
+            l, r = b(l, r)
         digest = pack('<II', l, r )
         return digest
 
-    def update(self,data):
+    def update(self, data):
         raise Exception('No update method supported for Michael keyed hash')
     def digest(self):
         raise Exception('No digest method supported for Michael keyed hash')
-    def final(self,data):
+    def final(self, data):
         raise Exception('No final method supported for Michael keyed hash')
 
-def b(l,r):
+def b(l, r):
     """ The 'b' block function for the IEEE 802.11i Michael Integrity Check """
     r ^= (((l<<17) & 0xffffffff)|((l>>15) & 0x1ffff))       # r = r ^ (l <<< 17)
     l  = (l+r) & 0xffffffff                                  # l = (l+r) mod 2**32
@@ -64,7 +64,7 @@ def b(l,r):
     l  = (l+r) & 0xffffffff                                  # l = (l+r) mod 2**32
     r ^= (((l<<30) & 0xffffffff)|((l>>2) & 0x3fffffff))     # r  = r ^ (l >>> 2)
     l  = (l+r) & 0xffffffff                                  # l = (l+r) mod 2**32
-    return (l,r)
+    return (l, r)
 
 
 

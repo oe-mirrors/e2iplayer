@@ -99,7 +99,7 @@ class FFMPEGDownloader(BaseDownloader):
             cmdTab.extend(['-key_uri_old', str(tmpUri.meta['iptv_m3u8_key_uri_replace_old']), '-key_uri_new', str(tmpUri.meta['iptv_m3u8_key_uri_replace_new'])])
         
         if "://" in self.url: 
-            url,httpParams = DMHelper.getDownloaderParamFromUrlWithMeta(tmpUri, True)
+            url, httpParams = DMHelper.getDownloaderParamFromUrlWithMeta(tmpUri, True)
             headers = []
             for key in httpParams:
                 if key == 'Range': #Range is always used by ffmpeg

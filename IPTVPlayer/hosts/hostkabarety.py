@@ -39,8 +39,8 @@ class Kabarety(CBaseHostClass):
                              {'category':'list_popular',   'title': _('Popular'),  'url':self.getFullUrl('kabarety/')   },
                              {'category':'list_all',       'title': _('All'),      'url':self.getFullUrl('kabarety/')   },
 
-                             {'category':'search',         'title': _('Search'), 'search_item':True,},
-                             {'category':'search_history', 'title': _('Search history'),            } 
+                             {'category': 'search',         'title': _('Search'), 'search_item': True,},
+                             {'category': 'search_history', 'title': _('Search history'),            } 
                             ]
     
     def getPage(self, baseUrl, addParams = {}, post_data = None):

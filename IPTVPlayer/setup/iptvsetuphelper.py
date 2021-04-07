@@ -133,8 +133,8 @@ class CBinaryStepHelper:
         return path + " 2>&1 "
         
     def _detectValidator(self, code, data):
-        if 0==code: return True,False
-        else: return False,True
+        if 0==code: return True, False
+        else: return False, True
         
     def _downloadCmdBuilder(self, binName, platform, openSSLVersion, server, tmpPath):
         url = server + 'bin/' + platform + ('/%s_openssl' % binName) + openSSLVersion
@@ -143,8 +143,8 @@ class CBinaryStepHelper:
         return cmd
         
     def _downloadValidator(self, code, data):
-        if 0==code: return True,False
-        else: return False,True
+        if 0==code: return True, False
+        else: return False, True
     
     def _installCmdBuilder(self, binName, binaryInstallPath, tmpPath):
         srcFile = tmpPath + binName
@@ -152,8 +152,8 @@ class CBinaryStepHelper:
         return cmd
     
     def _installValidator(self, code, data):
-        if 0==code: return True,False
-        else: return False,True
+        if 0==code: return True, False
+        else: return False, True
         
     def _saveConfigOptionHandler(self, configOption, value):
         if None != configOption:

@@ -24,7 +24,7 @@ except Exception: import json
 ###################################################
 config.plugins.iptvplayer.ardmediathek_iconquality = ConfigSelection(default = "medium", choices = [ ("large", _("high")), ("medium", _("medium")), ("small", _("low")) ])
 config.plugins.iptvplayer.ardmediathek_prefformat = ConfigSelection(default = "mp4,m3u8", choices = [\
-("mp4,m3u8", "mp4,m3u8"),("m3u8,mp4", "m3u8,mp4")])
+("mp4,m3u8", "mp4,m3u8"), ("m3u8,mp4", "m3u8,mp4")])
 config.plugins.iptvplayer.ardmediathek_prefquality = ConfigSelection(default = "4", choices = [("0", _("low")), ("1", _("medium")), ("2", _("high")), ("3", _("very high")), ("4", _("hd"))])
 config.plugins.iptvplayer.ardmediathek_prefmoreimportant = ConfigSelection(default = "quality", choices = [("quality", _("quality")), ("format", _("format"))])
 config.plugins.iptvplayer.ardmediathek_onelinkmode = ConfigYesNo(default=True)

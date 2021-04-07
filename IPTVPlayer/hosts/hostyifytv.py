@@ -65,8 +65,8 @@ class YifyTV(CBaseHostClass):
                              {'category':'list_genres_filter',    'title': _('Genres'),            'url':self.getFullUrl('files/movies/') },
                              {'category':'list_languages_filter', 'title': _('Languages'),         'url':self.getFullUrl('languages/')    },
                              {'category':'list_countries_filter', 'title': _('Countries'),         'url':self.getFullUrl('countries/') },
-                             {'category':'search',                'title': _('Search'), 'search_item':True, },
-                             {'category':'search_history',        'title': _('Search history'),             } ]
+                             {'category': 'search',                'title': _('Search'), 'search_item': True, },
+                             {'category': 'search_history',        'title': _('Search history'),             } ]
                         
         self.POPULAR_TAB = [{'category':'list_items2', 'title': _('All'),        'url':self.getFullUrl('wp-admin/admin-ajax.php?action=noprivate_movies_loop&asec=get_pop&needcap=1')       },
                             {'category':'list_items2', 'title': _('Comedies'),   'url':self.getFullUrl('wp-admin/admin-ajax.php?action=noprivate_movies_loop&asec=get_pop&genre=comedy')    },

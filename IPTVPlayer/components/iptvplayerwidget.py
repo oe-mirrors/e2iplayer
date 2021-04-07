@@ -179,23 +179,23 @@ class E2iPlayerWidget(Screen):
         self["statustext"] = Label("Loading...")
         self["actions"] = ActionMap(["IPTVPlayerListActions", "WizardActions", "DirectionActions", "ColorActions", "NumberActions"],
         {
-            "red"     :   self.red_pressed,
-            "green"   :   self.green_pressed,
-            "yellow"  :   self.yellow_pressed,
-            "blue"    :   self.blue_pressed,
-            "ok"      :   self.ok_pressed,
-            "back"    :   self.back_pressed,
-            "info"    :   self.info_pressed,
-            "8"       :   self.startAutoPlaySequencer,
-            "0"       :   self.ok_pressed0,
-            "1"       :   self.ok_pressed1,
-            "2"       :   self.ok_pressed2,
-            "3"       :   self.ok_pressed3,
-            "4"       :   self.ok_pressed4,
-            "play"    :   self.startAutoPlaySequencer,
-            "menu"    :   self.menu_pressed,
-            "tools"   :   self.blue_pressed,
-            "record"  :   self.green_pressed,
+            "red":   self.red_pressed,
+            "green":   self.green_pressed,
+            "yellow":   self.yellow_pressed,
+            "blue":   self.blue_pressed,
+            "ok":   self.ok_pressed,
+            "back":   self.back_pressed,
+            "info":   self.info_pressed,
+            "8":   self.startAutoPlaySequencer,
+            "0":   self.ok_pressed0,
+            "1":   self.ok_pressed1,
+            "2":   self.ok_pressed2,
+            "3":   self.ok_pressed3,
+            "4":   self.ok_pressed4,
+            "play":   self.startAutoPlaySequencer,
+            "menu":   self.menu_pressed,
+            "tools":   self.blue_pressed,
+            "record":   self.green_pressed,
         }, -1)
 
         self["headertext"] = Label()
@@ -508,8 +508,8 @@ class E2iPlayerWidget(Screen):
             if not notifyObj.isEmpty():
                 notification = notifyObj.pop()
                 if notification:
-                    typeMap = {'info'   : MessageBox.TYPE_INFO, 
-                               'error'  : MessageBox.TYPE_ERROR, 
+                    typeMap = {'info': MessageBox.TYPE_INFO, 
+                               'error': MessageBox.TYPE_ERROR, 
                                'warning': MessageBox.TYPE_WARNING,
                               }
                     self.session.openWithCallback(self.processIPTVNotify, MessageBox, notification.message, type = typeMap.get(notification.type, MessageBox.TYPE_INFO), timeout = notification.timeout )
@@ -691,15 +691,15 @@ class E2iPlayerWidget(Screen):
                 TextMSG += _("E-mail: ") + "\n\t- iptvplayere2@gmail.com\n"
                 TextMSG += _("www: ") + "\n\t- http://iptvplayer.vline.pl/" + '\n\t- http://www.iptvplayer.gitlab.io/\n'
                 TextMSG += _("Developers: ") 
-                developersTab = [{'nick':'zdzislaw22',},
-                                 {'nick':'mamrot',    },
-                                 {'nick':'MarcinO',   },
-                                 {'nick':'skalita',   },
-                                 {'nick':'atilaks',   },
-                                 {'nick':'huball',    },
-                                 {'nick':'matzg',     },
-                                 {'nick':'tomashj291',},
-                                 {'nick':'a4tech',    },
+                developersTab = [{'nick': 'zdzislaw22',},
+                                 {'nick': 'mamrot',    },
+                                 {'nick': 'MarcinO',   },
+                                 {'nick': 'skalita',   },
+                                 {'nick': 'atilaks',   },
+                                 {'nick': 'huball',    },
+                                 {'nick': 'matzg',     },
+                                 {'nick': 'tomashj291',},
+                                 {'nick': 'a4tech',    },
                                 ]
                 # present alphabetically, the order does not mean validity
                 sortedList = sorted(developersTab, key=lambda k: k['nick'].upper())
@@ -838,7 +838,7 @@ class E2iPlayerWidget(Screen):
         selItem = self.getSelItem()
         if selItem and selItem.description != '':
             data = selItem.description
-            sData = data.replace('\n','')
+            sData = data.replace('\n', '')
             sData = data.replace('[/br]', '\n')
             self["console"].setText(sData)
         else:
@@ -1148,7 +1148,7 @@ class E2iPlayerWidget(Screen):
             self.displayGroupsList.append((_("Update"), "update"))
         
         self.newDisplayGroupsList = []
-        self.session.openWithCallback(self.selectGroupCallback, PlayerSelectorWidget, inList = self.displayGroupsList, outList = self.newDisplayGroupsList, numOfLockedItems = self.getNumOfSpecialItems(self.displayGroupsList) , groupName='selectgroup')
+        self.session.openWithCallback(self.selectGroupCallback, PlayerSelectorWidget, inList = self.displayGroupsList, outList = self.newDisplayGroupsList, numOfLockedItems = self.getNumOfSpecialItems(self.displayGroupsList), groupName='selectgroup')
         
     def selectGroupCallback(self, ret):
         printDBG(">> selectGroupCallback")
@@ -1268,7 +1268,7 @@ class E2iPlayerWidget(Screen):
                 # The 'http...' in host titles is annoying on regular choiceBox and impacts sorting.
                 # To simplify choiceBox usage and clearly show service is a webpage, list is build using the "<service name> (<service URL>)" schema.
                 if (config.plugins.iptvplayer.ListaGraficzna.value == False or 0 == GetAvailableIconSize()) and title[:4] == 'http':
-                    try: title = ('%s   (%s)') % ('.'.join(title.replace('://','.').replace('www.','').split('.')[1:-1]) , title)
+                    try: title = ('%s   (%s)') % ('.'.join(title.replace('://', '.').replace('www.', '').split('.')[1:-1]), title)
                     except Exception: pass
                 self.displayHostsList.append((title, hostName))
         # if there is no order hosts list use old behavior
@@ -1407,7 +1407,7 @@ class E2iPlayerWidget(Screen):
         
     def askForUpdateCallback(self, arg1=None):
         if arg1:
-            self.session.openWithCallback(self.selectHost, IPTVUpdateWindow,UpdateMainAppImpl(self.session, allowTheSameVersion=True))
+            self.session.openWithCallback(self.selectHost, IPTVUpdateWindow, UpdateMainAppImpl(self.session, allowTheSameVersion=True))
         elif self.group != None:
             self.selectHostFromGroup()
         else:
@@ -1656,7 +1656,7 @@ class E2iPlayerWidget(Screen):
             else:
                 recorderMode = self.recorderMode
             url = urlparser.decorateUrl(url)
-            titleOfMovie = self.currItem.name.replace('/','-').replace(':','-').replace('*','-').replace('?','-').replace('"','-').replace('<','-').replace('>','-').replace('|','-')
+            titleOfMovie = self.currItem.name.replace('/', '-').replace(':', '-').replace('*', '-').replace('?', '-').replace('"', '-').replace('<', '-').replace('>', '-').replace('|', '-')
             fileExtension = self.getFileExt(url, self.currItem.type)
                         
             blocked, reaseon = self.isUrlBlocked(url, self.currItem.type)

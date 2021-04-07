@@ -121,7 +121,7 @@ class CCM(BlockCipherWithIntegrity):
         cbcInput     = cbcInput + cbcEndPad
 
         # Calculate CBC_MAC
-        numCbcBlocks,extra = divmod(len(cbcInput),self.blockSize)
+        numCbcBlocks, extra = divmod(len(cbcInput), self.blockSize)
         assert (extra==0), 'bad block size on cbc_mac calculation'
 
         cbcMicValue = self.blockSize*chr(0x00)
@@ -131,10 +131,10 @@ class CCM(BlockCipherWithIntegrity):
         counter   = 0
         # the counter mode preload with counter starting at zero
         ctrModePl = chr(self.L-1)+ nonce + pack('>Q', counter)[-self.L:]
-        ccmMIC = xor(self.baseCipher.encrypt(ctrModePl),cbcMicValue)[:self.M] # first M bytes of xor
+        ccmMIC = xor(self.baseCipher.encrypt(ctrModePl), cbcMicValue)[:self.M] # first M bytes of xor
 
         ct = ''
-        numCtrBlocks,extra = divmod(len(plainText)+self.blockSize,self.blockSize)
+        numCtrBlocks, extra = divmod(len(plainText)+self.blockSize, self.blockSize)
         while counter < numCtrBlocks :
             counter   = counter + 1
             ctrModePl = chr(self.L-1) + nonce + pack('>Q', counter)[-self.L:]
@@ -168,7 +168,7 @@ class CCM(BlockCipherWithIntegrity):
         pt = ''
         ct = cipherText[:-self.M]      # trim of MIC field
 
-        numCtrBlocks,extra = divmod(len(ct)+self.blockSize,self.blockSize)
+        numCtrBlocks, extra = divmod(len(ct)+self.blockSize, self.blockSize)
         for counter in range(1, numCtrBlocks+1) :
             ctrModePl = chr(self.L-1) + nonce + pack('>Q', counter)[-self.L:]
             ctr     = self.baseCipher.encrypt(ctrModePl)
@@ -188,7 +188,7 @@ class CCM(BlockCipherWithIntegrity):
         cbcInput     = cbcInput + cbcEndPad
 
         # Calculate CBC_MAC
-        numCbcBlocks,extra = divmod(len(cbcInput),self.blockSize)
+        numCbcBlocks, extra = divmod(len(cbcInput), self.blockSize)
         assert (extra==0), 'bad block size on cbc_mac calculation'
         cbcMicValue = self.blockSize*chr(0x00)
         for i in range(numCbcBlocks) :
@@ -196,7 +196,7 @@ class CCM(BlockCipherWithIntegrity):
             cbcMicValue = self.baseCipher.encrypt( xor(cbcMicValue, cbcBlock) )
 
         ctrModePl0 = chr(self.L-1)+ nonce + pack('>Q', 0)[-self.L:]
-        ccmMIC = xor(self.baseCipher.encrypt(ctrModePl0),cbcMicValue)[:self.M] # first 8 bytes of xor
+        ccmMIC = xor(self.baseCipher.encrypt(ctrModePl0), cbcMicValue)[:self.M] # first 8 bytes of xor
 
         if ccmMIC != cipherText[-self.M:] :
             raise IntegrityCheckError('CCM Integrity check failed on decrypt')
@@ -210,9 +210,9 @@ class CCM(BlockCipherWithIntegrity):
         elif 0 <= length < 0xFF00:
             byteString = pack('!H', length)         # pack into two bytes
         elif 0xFF00 <= length < 0x100000000:
-            byteString = pack('!HI',0xFFFE, length) # pack into 0xFFFE + four bytes
+            byteString = pack('!HI', 0xFFFE, length) # pack into 0xFFFE + four bytes
         elif 0x100000000 <= length < 0x10000000000000000:
-            byteString = pack('!HQ',0xFFFF, length) # pack into 0xFFFF + eigth bytes
+            byteString = pack('!HQ', 0xFFFF, length) # pack into 0xFFFF + eigth bytes
         else:
             raise EncryptError('CCM length error')
         return byteString
@@ -220,7 +220,7 @@ class CCM(BlockCipherWithIntegrity):
     def _decodeAuthLength(self, byteString):
         """ decode byte string representing length, returns length
             Only the first 2 to 10 bytes of the byte string are examined """
-        firstTwoOctets == unpack('!H',bytesString[0:2])   # two bytes used for length
+        firstTwoOctets == unpack('!H', bytesString[0:2])   # two bytes used for length
         if firstTwoOctets == 0:
             raise DecryptError('CCM auth length zero with auth bit set')
         elif 0 < firstTwoOctets < 0xFEFF:
@@ -228,9 +228,9 @@ class CCM(BlockCipherWithIntegrity):
         elif 0xFEFF < firstTwoOctets < 0xFFFE:
             raise DecryptError('CCM auth length illegal values')
         elif firstTwoOctets == 0xFFFE:
-            messageLength = unpack('!I',byteString[2:6])  # four bytes used for length
+            messageLength = unpack('!I', byteString[2:6])  # four bytes used for length
         elif firstTwoOctets == 0xFFFF:
-            messageLength = unpack('!Q',byteString[2:10]) # eight bytes used for length
+            messageLength = unpack('!Q', byteString[2:10]) # eight bytes used for length
         else:
             raise DecryptError('CCM auth length error')
         return messageLength

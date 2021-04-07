@@ -29,8 +29,8 @@ class CrtankoCom(CBaseHostClass):
         self.SEARCH_URL    = self.MAIN_URL
         self.DEFAULT_ICON_URL  = "http://www.crtanko.com/wp-content/uploads/2015/04/logo5.png"
         
-        self.MAIN_CAT_TAB = [{'category':'search',          'title': _('Search'), 'search_item':True,},
-                             {'category':'search_history',  'title': _('Search history'),            } ]
+        self.MAIN_CAT_TAB = [{'category': 'search',          'title': _('Search'), 'search_item': True,},
+                             {'category': 'search_history',  'title': _('Search history'),            } ]
                         
         self.BY_LETTER_TAB = [{'title':_('All')},
                               {'title':'#', 'letter':'numeric'}, {'title':'', 'letter':'A'},

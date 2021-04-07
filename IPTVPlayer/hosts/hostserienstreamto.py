@@ -73,8 +73,8 @@ class SerienStreamTo(CBaseHostClass, CaptchaHelper):
                              {'category':'list_genres',       'title': _('Genres'),                       'url':self.MAIN_URL                       },
                              {'category':'list_items',        'title': _('New'),                          'url':self.getFullUrl('/neu')             },
                              {'category':'list_items',        'title': _('Popular'),                      'url':self.getFullUrl('/beliebte-serien') },
-                             {'category':'search',            'title': _('Search'),                       'search_item':True,                       },
-                             {'category':'search_history',    'title': _('Search history'),                                                         } 
+                             {'category': 'search',            'title': _('Search'),                       'search_item': True,                       },
+                             {'category': 'search_history',    'title': _('Search history'),                                                         } 
                             ]
         
         self.cacheLinks = {}
@@ -500,7 +500,7 @@ class SerienStreamTo(CBaseHostClass, CaptchaHelper):
                     self.loggedIn = True
                     break
                 elif sts:
-                    errorMsg = ph.clean_html(ph.find(data, ('<div', '>','messageAlert'), '</div>', flags=0)[1])
+                    errorMsg = ph.clean_html(ph.find(data, ('<div', '>', 'messageAlert'), '</div>', flags=0)[1])
                     tmp1 = ph.find(data, ('<div', '>', 'formCaptcha'), '</div>', flags=0)[1]
                     imgUrl = self.getFullUrl(ph.search(tmp1, ph.IMAGE_SRC_URI_RE)[1], self.cm.meta['url'])
                     tmp2 = ph.find(data, ('<input', '>', 'captcha'), flags=0)[1]
@@ -512,7 +512,7 @@ class SerienStreamTo(CBaseHostClass, CaptchaHelper):
                         header = dict(httpParams['header'])
                         header['Accept'] = 'image/png,image/*;q=0.8,*/*;q=0.5'
                         params = dict(self.defaultParams)
-                        params.update( {'maintype': 'image', 'subtypes':['jpeg', 'png'], 'check_first_bytes':['\xFF\xD8','\xFF\xD9','\x89\x50\x4E\x47'], 'header':header} )
+                        params.update( {'maintype': 'image', 'subtypes':['jpeg', 'png'], 'check_first_bytes':['\xFF\xD8', '\xFF\xD9', '\x89\x50\x4E\x47'], 'header':header} )
                         filePath = GetTmpDir('.iptvplayer_captcha.jpg')
                         rm(filePath)
                         ret = self.cm.saveWebFile(filePath, imgUrl.replace('&amp;', '&'), params)
@@ -527,8 +527,8 @@ class SerienStreamTo(CBaseHostClass, CaptchaHelper):
                         params['with_accept_button'] = True
                         params['list'] = []
                         item = deepcopy(IPTVMultipleInputBox.DEF_INPUT_PARAMS)
-                        item['label_size'] = (660,110)
-                        item['input_size'] = (680,25)
+                        item['label_size'] = (660, 110)
+                        item['input_size'] = (680, 25)
                         item['icon_path'] = filePath
                         item['title'] = _('Answer')
                         item['input']['text'] = ''

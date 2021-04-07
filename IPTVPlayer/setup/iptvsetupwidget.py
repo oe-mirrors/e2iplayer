@@ -48,8 +48,8 @@ class IPTVSetupMainWidget(Screen):
         
         self["actions"] = ActionMap(["SetupActions", "ColorActions"],
             {
-                "cancel"  :  self.cancelPressed,
-                "ok"      :  self.startPressed,
+                "cancel":  self.cancelPressed,
+                "ok":  self.startPressed,
             }, -1)
         try:
             for idx in range(5):

@@ -64,7 +64,7 @@ class FreeDiscPL(CBaseHostClass):
     
     def __init__(self):
         CBaseHostClass.__init__(self, {'history':'  FreeDiscPL.tv', 'cookie':'FreeDiscPL.cookie'})
-        self.defaultParams = {'with_metadata':True, 'ignore_http_code_ranges':[(410,410),(404,404)], 'header':self.HTTP_HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
+        self.defaultParams = {'with_metadata':True, 'ignore_http_code_ranges':[(410, 410), (404, 404)], 'header':self.HTTP_HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
         self.loggedIn = None
         self.login    = ''
         self.password = ''
@@ -122,7 +122,7 @@ class FreeDiscPL(CBaseHostClass):
                     header = dict(self.HTTP_HEADER)
                     header['Accept'] = 'image/png,image/*;q=0.8,*/*;q=0.5'
                     params = dict(self.defaultParams)
-                    params.update( {'maintype': 'image', 'subtypes':['jpeg', 'png'], 'check_first_bytes':['\xFF\xD8','\xFF\xD9','\x89\x50\x4E\x47'], 'header':header} )
+                    params.update( {'maintype': 'image', 'subtypes':['jpeg', 'png'], 'check_first_bytes':['\xFF\xD8', '\xFF\xD9', '\x89\x50\x4E\x47'], 'header':header} )
                     filePath = GetTmpDir('.iptvplayer_captcha.jpg')
                     rm(filePath)
                     ret = self.cm.saveWebFile(filePath, imgUrl.replace('&amp;', '&'), params)
@@ -139,8 +139,8 @@ class FreeDiscPL(CBaseHostClass):
                     params['with_accept_button'] = True
                     params['list'] = []
                     item = deepcopy(IPTVMultipleInputBox.DEF_INPUT_PARAMS)
-                    item['label_size'] = (660,110)
-                    item['input_size'] = (680,25)
+                    item['label_size'] = (660, 110)
+                    item['input_size'] = (680, 25)
                     item['icon_path'] = filePath
                     item['title'] = _('Answer')
                     item['input']['text'] = ''

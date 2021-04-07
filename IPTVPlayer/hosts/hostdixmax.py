@@ -122,7 +122,7 @@ class DixMax(CBaseHostClass):
         MAIN_CAT_TAB = [{'category':'list_popular',   'title': title1,        'url':self.getFullUrl('/api/private/get/popular')},
                         {'category':'list_filters',   'title': title2,        'url':self.getFullUrl('/api/private/get/popular')},
                         {'category':'search',         'title': _('Search'),       'search_item':True       },
-                        {'category':'search_history', 'title': _('Search history'),                        }]
+                        {'category': 'search_history', 'title': _('Search history'),                        }]
         self.listsTab(MAIN_CAT_TAB, cItem)
 
     def fillCacheFilters(self, cItem, data):
@@ -176,7 +176,7 @@ class DixMax(CBaseHostClass):
 
         try:
             data = json_loads(data)
-            for item in (('series','Series mas populares'), ('movie','Peliculas mas populares'), ('latest','Ultimas fichas agregadas')):
+            for item in (('series', 'Series mas populares'), ('movie', 'Peliculas mas populares'), ('latest', 'Ultimas fichas agregadas')):
                 subItems = self._listItems(cItem, 'explore_item', data['result'][item[0]])
                 if subItems:
                     self.addDir(MergeDicts(cItem, {'title':item[1], 'category':'sub_items', 'sub_items':subItems}))
@@ -404,7 +404,7 @@ class DixMax(CBaseHostClass):
 
         otherInfo = {}
 
-        for key in ('f_season', 'f_episode', 'f_seasons','f_episodes', 'f_year','f_duration', 'f_rating', 'f_genres', 'f_country', 'f_popularity'):
+        for key in ('f_season', 'f_episode', 'f_seasons', 'f_episodes', 'f_year', 'f_duration', 'f_rating', 'f_genres', 'f_country', 'f_popularity'):
             if key in cItem:
                 otherInfo[key[2:]] = cItem[key]
 

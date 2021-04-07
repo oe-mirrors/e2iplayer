@@ -311,7 +311,7 @@ class MusicBox(CBaseHostClass):
     def getLinksForVideo(self, cItem):
         printDBG("getLinksForVideo cItem[%s]" % cItem)
         
-        search_list = YouTubeParser().getSearchResult(cItem.get('page', ''), "music", 1 , '')
+        search_list = YouTubeParser().getSearchResult(cItem.get('page', ''), "music", 1, '')
         if not search_list: return []
 
         video_path = search_list[0]['url']

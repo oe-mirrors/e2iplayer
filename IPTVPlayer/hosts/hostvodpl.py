@@ -22,7 +22,7 @@ from Components.config import config, ConfigSelection, ConfigYesNo, getConfigLis
 ###################################################
 # Config options for HOST
 ###################################################
-config.plugins.iptvplayer.onetvodDefaultformat = ConfigSelection(default = "9999", choices = [("0", "bitrate: najgorszy"), ("200", "bitrate: 200p"), ("450", "bitrate: 450p"),("900", "bitrate: 900"),("1800", "bitrate: 1800"), ("9999", "bitrate: najlepszy")])
+config.plugins.iptvplayer.onetvodDefaultformat = ConfigSelection(default = "9999", choices = [("0", "bitrate: najgorszy"), ("200", "bitrate: 200p"), ("450", "bitrate: 450p"), ("900", "bitrate: 900"), ("1800", "bitrate: 1800"), ("9999", "bitrate: najlepszy")])
 config.plugins.iptvplayer.onetvodUseDF = ConfigYesNo(default = True)
 config.plugins.iptvplayer.proxyOnet = ConfigYesNo(default = False)
 
@@ -54,14 +54,14 @@ class VODPL(CBaseHostClass):
         self.cacheFiltersKeys = []
         self.defaultParams = {'header':self.HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
     
-        self.MAIN_CAT_TAB = [{'category':'list_filters',  'title': _('Movies'),         'url':self.getFullUrl('filmy'),              'f_element':'SiteFilmy',        },
-                             {'category':'list_items',    'title': _('Series'),         'url':self.getFullUrl('seriale'),            'f_element':'SiteSeriale',      },
-                             {'category':'list_filters',  'title': 'Programy onetu',    'url':self.getFullUrl('programy-onetu'),     'f_element':'SiteProgramyOnetu',},
-                             {'category':'list_filters',  'title': 'Dokumentalne',      'url':self.getFullUrl('filmy-dokumentalne'), 'f_element':'SiteDokumenty',    },
+        self.MAIN_CAT_TAB = [{'category': 'list_filters',  'title': _('Movies'),         'url': self.getFullUrl('filmy'),              'f_element': 'SiteFilmy',        },
+                             {'category': 'list_items',    'title': _('Series'),         'url': self.getFullUrl('seriale'),            'f_element': 'SiteSeriale',      },
+                             {'category': 'list_filters',  'title': 'Programy onetu',    'url': self.getFullUrl('programy-onetu'),     'f_element': 'SiteProgramyOnetu',},
+                             {'category': 'list_filters',  'title': 'Dokumentalne',      'url': self.getFullUrl('filmy-dokumentalne'), 'f_element': 'SiteDokumenty',    },
                              
                              
-                             {'category':'search',            'title': _('Search'), 'search_item':True,},
-                             {'category':'search_history',    'title': _('Search history'),            } 
+                             {'category': 'search',            'title': _('Search'), 'search_item': True,},
+                             {'category': 'search_history',    'title': _('Search history'),            } 
                             ]
                             
     def getFullIconUrl(self, url):
@@ -268,7 +268,7 @@ class VODPL(CBaseHostClass):
     def _getVideoTab(self, ckmId):
         printDBG("VODPL.getVideoTab_ETV ckmId[%r]" % ckmId )
         tm = str(int(time.time() * 1000))
-        jQ = str(random.randrange(562674473039806,962674473039806))
+        jQ = str(random.randrange(562674473039806, 962674473039806))
         authKey = 'FDF9406DE81BE0B573142F380CFA6043'
         contentUrl = 'http://qi.ckm.onetapi.pl/?callback=jQuery183040'+ jQ + '_' + tm + '&body%5Bid%5D=' + authKey + '&body%5Bjsonrpc%5D=2.0&body%5Bmethod%5D=get_asset_detail&body%5Bparams%5D%5BID_Publikacji%5D=' + ckmId + '&body%5Bparams%5D%5BService%5D=ekstraklasa.onet.pl&content-type=application%2Fjsonp&x-onet-app=player.front.onetapi.pl&_=' + tm
         sts, data = self.cm.getPage(contentUrl)

@@ -266,8 +266,8 @@ class IPTVDirectorySelectorWidget(Screen):
         if None != self.currDir and newDirName != None:
             sts = False
             if IsValidFileName(newDirName):
-                try: sts,msg = mkdir(os_path.join(self.currDir, newDirName))
-                except Exception: sts,msg = False, _("Exception occurs")
+                try: sts, msg = mkdir(os_path.join(self.currDir, newDirName))
+                except Exception: sts, msg = False, _("Exception occurs")
             else:
                 msg = _("Invalid name.")
             if sts:

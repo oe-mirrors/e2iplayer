@@ -39,8 +39,8 @@ class OroroTV(CBaseHostClass):
         
         self.MAIN_CAT_TAB = [
                              {'category':'list_channels',         'title': _('Channels'),            'url':self.getFullUrl('/channels')},
-                             {'category':'search',                'title': _('Search'),              'search_item':True, },
-                             {'category':'search_history',        'title': _('Search history'),                          } 
+                             {'category': 'search',                'title': _('Search'),              'search_item': True, },
+                             {'category': 'search_history',        'title': _('Search history'),                          } 
                             ]
     
     def getPage(self, baseUrl, addParams = {}, post_data = None):

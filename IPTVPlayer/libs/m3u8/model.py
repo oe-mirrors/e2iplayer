@@ -379,7 +379,7 @@ class PlaylistList(list, GroupedBasePathMixin):
 
 
 def denormalize_attribute(attribute):
-    return attribute.replace('_','-').upper()
+    return attribute.replace('_', '-').upper()
 
 def quoted(string):
     return '"%s"' % string

@@ -34,8 +34,8 @@ from Components.config import config, ConfigText, ConfigSelection, getConfigList
 config.plugins.iptvplayer.ekinotv_login = ConfigText(default = "", fixed_size = False)
 config.plugins.iptvplayer.ekinotv_password = ConfigText(default = "", fixed_size = False)
 
-config.plugins.iptvplayer.ekinotv_sortby = ConfigSelection(default = "data-dodania", choices = [("alfabetycznie", "nazwy"), ("ocena", "oceny"),("odslony", "ilości odsłon"),("data-dodania", "daty dodania"),("data-premiery", "daty premiery"), ('data-aktualizacji', 'daty aktualizacji')])            
-config.plugins.iptvplayer.ekinotv_sortorder = ConfigSelection(default = "desc", choices = [("desc", "malejąco"),("asc", "rosnąco")]) 
+config.plugins.iptvplayer.ekinotv_sortby = ConfigSelection(default = "data-dodania", choices = [("alfabetycznie", "nazwy"), ("ocena", "oceny"), ("odslony", "ilości odsłon"), ("data-dodania", "daty dodania"), ("data-premiery", "daty premiery"), ('data-aktualizacji', 'daty aktualizacji')])            
+config.plugins.iptvplayer.ekinotv_sortorder = ConfigSelection(default = "desc", choices = [("desc", "malejąco"), ("asc", "rosnąco")]) 
 
 def GetConfigList():
     optionList = []
@@ -69,13 +69,13 @@ class EkinoTv(CBaseHostClass, CaptchaHelper):
                              {'category':'search',                'title': _('Search'), 'search_item':True},
                              {'category':'search_history',        'title': _('Search history')} ]
         
-        self.SORT_MAP  = {'data-dodania':'add',
-                          'data-aktualizacji':'update',
-                          'data-premiery':'premiera',
-                          'data-premiery':'premiera',
-                          'odslony':'views',
-                          'ocena':'rate',
-                          'alfabetycznie':'alfa',}
+        self.SORT_MAP  = {'data-dodania': 'add',
+                          'data-aktualizacji': 'update',
+                          'data-premiery': 'premiera',
+                          'data-premiery': 'premiera',
+                          'odslony': 'views',
+                          'ocena': 'rate',
+                          'alfabetycznie': 'alfa',}
         
         self.cacheMovieFilters = {'cats':[], 'vers':[], 'years':[]}
         self.loggedIn = None

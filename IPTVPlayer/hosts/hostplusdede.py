@@ -151,7 +151,7 @@ class PlusDEDE(CBaseHostClass):
                     start = datetime.now().year #int(val[1])
                     end = 1900 #int(val[0])
                     self.cacheFilters[key] = []
-                    for val in range(start,end-1, -1):
+                    for val in range(start, end-1, -1):
                         self.cacheFilters[key].append({'title':str(val), key:'%s;%s' % (val, val)})
                     if len(self.cacheFilters[key]):
                         self.cacheFilters[key].insert(0, {'title':_('--Any--'), key:'%s;%s' % (end, start)})
@@ -542,7 +542,7 @@ class PlusDEDE(CBaseHostClass):
                 header = dict(self.HTTP_HEADER)
                 header['Accept'] = 'image/png,image/*;q=0.8,*/*;q=0.5'
                 params = dict(self.defaultParams)
-                params.update( {'maintype': 'image', 'subtypes':['jpeg', 'png'], 'check_first_bytes':['\xFF\xD8','\xFF\xD9','\x89\x50\x4E\x47'], 'header':header} )
+                params.update( {'maintype': 'image', 'subtypes':['jpeg', 'png'], 'check_first_bytes':['\xFF\xD8', '\xFF\xD9', '\x89\x50\x4E\x47'], 'header':header} )
                 filePath = GetTmpDir('.iptvplayer_captcha.jpg')
                 ret = self.cm.saveWebFile(filePath, imgUrl.replace('&amp;', '&'), params)
                 if not ret.get('sts'):
@@ -557,8 +557,8 @@ class PlusDEDE(CBaseHostClass):
                 params['with_accept_button'] = True
                 params['list'] = []
                 item = deepcopy(IPTVMultipleInputBox.DEF_INPUT_PARAMS)
-                item['label_size'] = (300,80)
-                item['input_size'] = (480,25)
+                item['label_size'] = (300, 80)
+                item['input_size'] = (480, 25)
                 item['icon_path'] = filePath
                 item['title'] = _('Answer')
                 item['input']['text'] = ''

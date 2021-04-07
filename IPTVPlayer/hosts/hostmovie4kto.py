@@ -64,8 +64,8 @@ class Movie4kTO(CBaseHostClass):
         
         self.MOVIES_ABC_URL   = self.getFullUrl('movies-all-%s-{0}.html')
         self.TV_SHOWS_ABC_URL = self.getFullUrl('tvshows-all-%s.html')
-        self.MAIN_CAT_TAB = [{'category':'cat_movies',            'title': _('Movies'),     },
-                             {'category':'cat_tv_shows',          'title': _('TV shows'),   },
+        self.MAIN_CAT_TAB = [{'category': 'cat_movies',            'title': _('Movies'),     },
+                             {'category': 'cat_tv_shows',          'title': _('TV shows'),   },
                              {'category':'search',                'title': _('Search'), 'search_item':True},
                              {'category':'search_history',        'title': _('Search history')} ]
                         
@@ -304,7 +304,7 @@ class Movie4kTO(CBaseHostClass):
         
     def listsABC(self, cItem, category, ABC_URL):
         printDBG("Movie4kTO.listsABC")
-        TAB = ['#1','A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','R','S','T','U','V','W','X','Y','Z']
+        TAB = ['#1', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z']
         for item in TAB:
             url = ABC_URL % item[-1]
             params = dict(cItem)

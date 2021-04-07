@@ -26,17 +26,17 @@ def pbkdf2(password, salt, iterations, keySize, PRF=HMAC_SHA1):
 	prf = PRF(key=password)  # HMAC_SHA1
 	numBlocks = int(ceil(1.*keySize/prf.digest_size)) # ceiling function
 	key = ''
-	for block in range(1,numBlocks+1):
+	for block in range(1, numBlocks+1):
 		# Calculate F(P, salt, iterations, i)
-		F = prf(salt+pack('>i',block)) # i is packed into 4 big-endian bytes
-		U = prf(salt+pack('>i',block)) # i is packed into 4 big-endian bytes
-		for count in range(2,iterations+1):
+		F = prf(salt+pack('>i', block)) # i is packed into 4 big-endian bytes
+		U = prf(salt+pack('>i', block)) # i is packed into 4 big-endian bytes
+		for count in range(2, iterations+1):
 			U = prf(U)
-			F = xor(F,U)
+			F = xor(F, U)
 		key = key + F
 	return key[:keySize]
 
-def dot11PassPhraseToPSK(passPhrase,ssid):
+def dot11PassPhraseToPSK(passPhrase, ssid):
 	""" The 802.11 TGi recommended pass-phrase-to-preshared-key mapping.
 		This function simply uses pbkdf2 with interations=4096 and keySize=32
 	"""

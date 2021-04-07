@@ -65,7 +65,7 @@ class UnCaptchaReCaptcha:
             printDBG(">>>>>>>> Captcha accep label[%s]" % (accepLabel))
             printDBG(">>>>>>>> Captcha imgUrl[%s] filePath[%s]" % (imgUrl, filePath))
             
-            params = {'maintype': 'image', 'subtypes':['jpeg'], 'check_first_bytes':['\xFF\xD8','\xFF\xD9']}
+            params = {'maintype': 'image', 'subtypes':['jpeg'], 'check_first_bytes':['\xFF\xD8', '\xFF\xD9']}
             ret = self.cm.saveWebFile(filePath, imgUrl, params)
             if not ret.get('sts'):
                 SetIPTVPlayerLastHostError(_('Fail to get "%s".') % imgUrl)

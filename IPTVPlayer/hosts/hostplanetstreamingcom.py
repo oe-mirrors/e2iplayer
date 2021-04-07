@@ -104,8 +104,8 @@ class PlanetStreaming(CBaseHostClass):
     def listMainMenu(self, cItem):
         printDBG("PlanetStreaming.listMainMenu")
         MAIN_CAT_TAB = [
-                        {'category':'search',          'title': _('Search'), 'search_item':True,                        },
-                        {'category':'search_history',  'title': _('Search history'),                                    } 
+                        {'category': 'search',          'title': _('Search'), 'search_item': True,                        },
+                        {'category': 'search_history',  'title': _('Search history'),                                    } 
                        ]
         
         sts, data = self.getPage(self.getMainUrl())

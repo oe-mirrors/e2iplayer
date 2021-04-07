@@ -49,7 +49,7 @@ def GetM3uAttribs(txt, firstKeyAsLength=False):
 def ParseM3u(data):
     printDBG('ParseM3u')
     list = []
-    data = data.replace("\r","\n").replace('\n\n', '\n').split('\n')
+    data = data.replace("\r", "\n").replace('\n\n', '\n').split('\n')
     printDBG("ParseM3u: data0[%s]" % data[0])
     if '#EXT' not in data[0]:
         return list

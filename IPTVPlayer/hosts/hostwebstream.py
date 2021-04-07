@@ -292,8 +292,8 @@ class HasBahCa(CBaseHostClass):
             if sts:
                 login    = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(data, 'Downloads Login', '</h3>', False)[1])
                 password = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(data, 'Downloads Pass', '</h3>', False)[1])
-                self.hasbahcaiptv['login']    = login.replace('&nbsp;','').replace('\xc2\xa0','').strip() 
-                self.hasbahcaiptv['password'] = password.replace('&nbsp;','').replace('\xc2\xa0', '').strip()
+                self.hasbahcaiptv['login']    = login.replace('&nbsp;', '').replace('\xc2\xa0', '').strip() 
+                self.hasbahcaiptv['password'] = password.replace('&nbsp;', '').replace('\xc2\xa0', '').strip()
             
         sts, data = self.getPage( url, {'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': GetCookieDir('hasbahcaiptv')}, {'username':self.hasbahcaiptv.get('login', 'downloader'), 'password':self.hasbahcaiptv.get('password', 'hasbahcaiptv.com')} )
         if not sts: return
@@ -403,7 +403,7 @@ class HasBahCa(CBaseHostClass):
         if not sts:
             printDBG("getHTMLlist ERROR geting [%s]" % listURL)
             return
-        data = data.replace("\r","\n").replace('\n\n', '\n').split('\n')
+        data = data.replace("\r", "\n").replace('\n\n', '\n').split('\n')
         printDBG("[\n%s\n]" % data)
         title    = ''
         nr       = ''
@@ -896,7 +896,7 @@ class HasBahCa(CBaseHostClass):
         printDBG("prognozaPogodyList start")
         if config.plugins.iptvplayer.weather_useproxy.value: params = {'http_proxy':config.plugins.iptvplayer.proxyurl.value}
         else: params = {}
-        sts,data = self.cm.getPage(url, params)
+        sts, data = self.cm.getPage(url, params)
         if not sts: return
         data = CParsingHelper.getDataBeetwenMarkers(data, '<div id="items">', '</div>', False)[1]    
         data = data.split('</a>')
@@ -914,7 +914,7 @@ class HasBahCa(CBaseHostClass):
         printDBG("prognozaPogodyLink url[%r]" % url)
         if config.plugins.iptvplayer.weather_useproxy.value: params = {'http_proxy':config.plugins.iptvplayer.proxyurl.value}
         else: params = {}
-        sts,data = self.cm.getPage(url, params)
+        sts, data = self.cm.getPage(url, params)
         if not sts: return []
         url = self.cm.ph.getSearchGroups(data, 'src="([^"]+?\.mp4[^"]*?)"')[0]
         
@@ -940,9 +940,9 @@ class HasBahCa(CBaseHostClass):
             url   = self.cm.ph.getSearchGroups(item, 'href="([^"]+?)"')[0]
             if len(url) and not url.startswith('http'): url = 'http://crackstreams.net/'+url
             try:
-                params = { 'name'     : 'crackstreams_streams',
-                           'url'      : url,
-                           'title'    : title,
+                params = { 'name': 'crackstreams_streams',
+                           'url': url,
+                           'title': title,
                            }
                 self.addDir(params)
             except Exception:
@@ -974,12 +974,12 @@ class HasBahCa(CBaseHostClass):
         if 'youtube' in _url:
             urlsTab = self.up.getVideoLinkExt(_url)
             return urlsTab
-        sts,data = self.cm.getPage(_url)
+        sts, data = self.cm.getPage(_url)
         if not sts: return []
         data = CParsingHelper.getDataBeetwenNodes(data, ('<iframe', '>', 'allowfullscreen'), ('</iframe', '>'))[1]
         _url  = self.cm.ph.getSearchGroups(data, '''src=['"]([^"^']+?)['"]''')[0]
         if len(_url) and not _url.startswith('http'): _url = url+_url
-        sts,data = self.cm.getPage(_url)
+        sts, data = self.cm.getPage(_url)
         if not sts: return []
         printDBG("crackstreamsLink data[%r]" % data)
         _url = self.cm.ph.getSearchGroups(data, '''source:\swindow.atob\(['"]([^"^']+?)['"]''')[0]
@@ -993,7 +993,7 @@ class HasBahCa(CBaseHostClass):
 
     def getNhl66List(self, url):
         printDBG("nhl66List start")
-        sts,data = self.cm.getPage(url)
+        sts, data = self.cm.getPage(url)
         if not sts: return
         try:
             data = json_loads(data)

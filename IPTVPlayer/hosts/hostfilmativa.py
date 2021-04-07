@@ -39,11 +39,11 @@ class Filmativa(CBaseHostClass):
                             {'category':'search_history', 'title': _('Search history')} 
                             ]
         
-        self.MOVIES_TAB = [{'category':'list_movies',  'title': _('New'),       'url':self.MAIN_URL,              },
+        self.MOVIES_TAB = [{'category': 'list_movies',  'title': _('New'),       'url': self.MAIN_URL,              },
                             {'category':'list_movies',  'title': _('Popular'),   'url':self.MAIN_URL + 'popularno/'},
                             ]
         
-        self.SERIES_TAB = [{'category':'list_series',  'title': _('New'),          'url':self.S_MAIN_URL,                 },
+        self.SERIES_TAB = [{'category': 'list_series',  'title': _('New'),          'url': self.S_MAIN_URL,                 },
                       {'category':'list_series',  'title': _('New episodes'),       'url':self.S_MAIN_URL + 'nove-epizode/'},
                       {'category':'list_series',  'title': _('Popular'),            'url':self.S_MAIN_URL + 'popularno/'   },
                  ]
@@ -152,7 +152,7 @@ class Filmativa(CBaseHostClass):
         tvShowTitle = cItem['title']
         self.seriesCache = {}
         self.seasons = []
-        data = self.cm.ph.getDataBeetwenMarkers(data, ('<div','>', 'seasons'), '<script>', False)[1]
+        data = self.cm.ph.getDataBeetwenMarkers(data, ('<div', '>', 'seasons'), '<script>', False)[1]
         
         seasons = data.split('<dt>')
         
@@ -165,9 +165,9 @@ class Filmativa(CBaseHostClass):
                 if not self.seriesCache.get(season, []):
                     self.seriesCache[season] = []
 
-                episodes = self.cm.ph.getAllItemsBeetwenMarkers(item, ('<dd','>'), '</dd>')
+                episodes = self.cm.ph.getAllItemsBeetwenMarkers(item, ('<dd', '>'), '</dd>')
                 for tmp in episodes:
-                    episodeTitle = self.cm.ph.getDataBeetwenMarkers(tmp, ('<div','>','title'), '</div>', False)[1]
+                    episodeTitle = self.cm.ph.getDataBeetwenMarkers(tmp, ('<div', '>', 'title'), '</div>', False)[1]
                     episodeTitle = self.cleanHtmlStr(episodeTitle)
 
                     postId = self.cm.ph.getSearchGroups(tmp, 'data-postid="([^"]+?)"')[0]
@@ -220,12 +220,12 @@ class Filmativa(CBaseHostClass):
         printDBG("Filmativa.getLinksForVideo [%s]" % cItem)
         urlTab = []
         
-        if not cItem.get('url',''):
+        if not cItem.get('url', ''):
             return []
         
         if cItem.get('direct', False):
-            if cItem.get('subtitles',''):
-                subtitlesTab = [{'title': 'Serbian', 'url': cItem.get('subtitles',''), 'lang': 'srp', 'format': 'vtt'}]
+            if cItem.get('subtitles', ''):
+                subtitlesTab = [{'title': 'Serbian', 'url': cItem.get('subtitles', ''), 'lang': 'srp', 'format': 'vtt'}]
                 url = strwithmeta(cItem['url'], {'external_sub_tracks':subtitlesTab})
                 urlTab.append({'name':'link', 'url': url, 'need_resolve':1 })
             else:
@@ -240,7 +240,7 @@ class Filmativa(CBaseHostClass):
                 SetIPTVPlayerLastHostError('USKORO!')
                 return urlTab
                 
-            divIframe = self.cm.ph.getDataBeetwenMarkers(data, ('<div','>','trailer'), '</div>', False)[1]
+            divIframe = self.cm.ph.getDataBeetwenMarkers(data, ('<div', '>', 'trailer'), '</div>', False)[1]
             url = self.cm.ph.getSearchGroups(divIframe, 'src="([^"]+?)"')[0]
             if 'videomega.tv/validatehash.php?' in url:
                 sts, data = self.cm.getPage(url, {'header':{'Referer':cItem['url'], 'User-Agent':'Mozilla/5.0'}})

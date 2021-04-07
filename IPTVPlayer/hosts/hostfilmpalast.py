@@ -41,10 +41,10 @@ class FilmPalastTo(CBaseHostClass):
         self.MAIN_URL = 'http://filmpalast.to/'
         self.MAIN_CAT_TAB = [{'category':'list_items',      'title': _("Main"),      'url':self.getMainUrl()},
                              {'category':'movies',          'title': _("Movies")                            },
-                             {'category':'series',          'title': _("Series"),                           },
+                             {'category': 'series',          'title': _("Series"),                           },
                              
-                             {'category':'search',          'title': _('Search'), 'search_item':True, },
-                             {'category':'search_history',  'title': _('Search history'),             },
+                             {'category': 'search',          'title': _('Search'), 'search_item': True, },
+                             {'category': 'search_history',  'title': _('Search history'),             },
                             ]
                             
         self.MOVIES_CAT_TAB = [{'category':'list_items',    'title': _("New"),                'url':self.getFullUrl('/movies/new')},

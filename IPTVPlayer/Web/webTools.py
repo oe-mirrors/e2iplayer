@@ -71,7 +71,7 @@ def getHostLogo(hostName):
 		logo = _temp.IPTVHost().getLogoPath().value[0]
 		_temp = None
 		if os.path.exists(logo):
-			logo = '<img border="0" alt="hostLogo" src="./icons/logos/%s" width="120" height="40">' % logo.replace(GetLogoDir(),'')
+			logo = '<img border="0" alt="hostLogo" src="./icons/logos/%s" width="120" height="40">' % logo.replace(GetLogoDir(), '')
 		else:
 			raise Exception
 	except Exception:

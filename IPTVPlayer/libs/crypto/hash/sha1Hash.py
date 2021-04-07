@@ -21,7 +21,7 @@ class SHA1(Hash):
     def reset(self):
         self.pysha1 = hashlib.sha1()
 
-    def update(self,data):
+    def update(self, data):
         """ Update the sha object with the string arg. Repeated calls are
             equivalent to a single call with the concatenation of all the
             arguments: m.update(a); m.update(b) is equivalent to m.update(a+b).

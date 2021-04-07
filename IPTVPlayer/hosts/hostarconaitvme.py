@@ -51,8 +51,8 @@ class ArconaitvME(CBaseHostClass):
                              {'category':'list_cabletv',   'title': _('Cable'),     'url':self.MAIN_URL},
                              {'category':'list_movies',    'title': _('Movies'),    'url':self.MAIN_URL},
                              
-                             {'category':'search',            'title': _('Search'), 'search_item':True,},
-                             {'category':'search_history',    'title': _('Search history'),            } 
+                             {'category': 'search',            'title': _('Search'), 'search_item': True,},
+                             {'category': 'search_history',    'title': _('Search history'),            } 
                             ]
         self.proxyUrl = 'http://myproxysite.ga/browse.php?u={0}&b=4&f=norefer'
         

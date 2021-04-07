@@ -79,7 +79,7 @@ class IITVPL(CBaseHostClass):
                     self.cacheSeries[letter] = []
                 self.cacheSeries[letter].append( {'title':title, 'url':url} )
         
-        letterTab = ["0-9","a","A","ą","Ą","b","B","c","C","ć","Ć","d","D","e","E","ę","Ę","f","F","g","G","h","H","i","I","j","J","k","K","l","L","ł","Ł","m","M","n","N","ń","Ń","o","O","ó","Ó","p","P","q","Q","r","R","s","S","ś","Ś","t","T","u","U","v","V","w","W","x","X","y","Y","z","Z","ź","Ź","ż","Ż"]
+        letterTab = ["0-9", "a", "A", "ą", "Ą", "b", "B", "c", "C", "ć", "Ć", "d", "D", "e", "E", "ę", "Ę", "f", "F", "g", "G", "h", "H", "i", "I", "j", "J", "k", "K", "l", "L", "ł", "Ł", "m", "M", "n", "N", "ń", "Ń", "o", "O", "ó", "Ó", "p", "P", "q", "Q", "r", "R", "s", "S", "ś", "Ś", "t", "T", "u", "U", "v", "V", "w", "W", "x", "X", "y", "Y", "z", "Z", "ź", "Ź", "ż", "Ż"]
         for letter in letterTab:
             if 0 == len(self.cacheSeries.get(letter, [])): continue
             params = dict(cItem)

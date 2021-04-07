@@ -16,7 +16,7 @@ def PRF( key, prefix, data, number_of_bits):
         HMAC_SHA1 generates 20 byte blocks.  Enough are generated to get the
         requested number of octets and the reslut is truncated to the requested size.
     """
-    number_of_octets, remainder = divmod(number_of_bits,8)
+    number_of_octets, remainder = divmod(number_of_bits, 8)
     if remainder != 0:
         raise ValueError('requested bits not multiple of 8')
     R = ''
@@ -27,12 +27,12 @@ def PRF( key, prefix, data, number_of_bits):
         R = R + hmac_sha_1.digest()       # concatenate latest hash to result string
     return R[:number_of_octets]           # return R truncated to 'number_of_octets'
 
-def PRF_128(key,A,B): return PRF(key,A,B,128)
-def PRF_192(key,A,B): return PRF(key,A,B,192)
-def PRF_256(key,A,B): return PRF(key,A,B,256)
-def PRF_384(key,A,B): return PRF(key,A,B,384)
-def PRF_512(key,A,B): return PRF(key,A,B,512)
-def PRF_768(key,A,B): return PRF(key,A,B,768)
+def PRF_128(key, A, B): return PRF(key, A, B, 128)
+def PRF_192(key, A, B): return PRF(key, A, B, 192)
+def PRF_256(key, A, B): return PRF(key, A, B, 256)
+def PRF_384(key, A, B): return PRF(key, A, B, 384)
+def PRF_512(key, A, B): return PRF(key, A, B, 512)
+def PRF_768(key, A, B): return PRF(key, A, B, 768)
 
 
 

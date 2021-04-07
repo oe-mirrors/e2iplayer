@@ -41,10 +41,10 @@ class UnCaptchaSweetCaptchaWidget(Screen):
 
         self["actions"] = ActionMap(["WizardActions", "DirectionActions", "ColorActions"],
         {
-            "left"  : self.keyLeft,
-            "right" : self.keyRight,
-            "ok"    : self.keyOK,
-            "back"  : self.keyCancel,
+            "left": self.keyLeft,
+            "right": self.keyRight,
+            "ok": self.keyOK,
+            "back": self.keyCancel,
         }, -1)
         
         self["statustext"] = Label(params.get('challenge', ''))
@@ -94,7 +94,7 @@ class UnCaptchaSweetCaptchaWidget(Screen):
         offset = x - cx
         cx, cy = self["cover_%d"%self.selIdx].getPosition()
         x = cx + offset
-        self["marker"].instance.move(ePoint(x,y))
+        self["marker"].instance.move(ePoint(x, y))
     
     def keyRight(self):
         self.moveMarker(1)

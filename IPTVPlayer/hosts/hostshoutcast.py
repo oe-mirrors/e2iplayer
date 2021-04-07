@@ -79,7 +79,7 @@ class ShoutcastCom(CBaseHostClass):
         
         cItem = dict(cItem)
         itemsTab = cItem.pop('items', [])
-        cItem.update({'good_for_fav':True, 'category':nextCategory, })
+        cItem.update({'good_for_fav': True, 'category': nextCategory, })
         self.listsTab(itemsTab, cItem)
             
     def listSort(self, cItem, nextCategory):

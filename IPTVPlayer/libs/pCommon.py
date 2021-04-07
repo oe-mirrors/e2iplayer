@@ -206,10 +206,10 @@ class CParsingHelper:
     
     @staticmethod
     def getNormalizeStr(txt, idx=None):
-        POLISH_CHARACTERS = {u'ą':u'a', u'ć':u'c', u'ę':u'ę', u'ł':u'l', u'ń':u'n', u'ó':u'o', u'ś':u's', u'ż':u'z', u'ź':u'z',
-                             u'Ą':u'A', u'Ć':u'C', u'Ę':u'E', u'Ł':u'L', u'Ń':u'N', u'Ó':u'O', u'Ś':u'S', u'Ż':u'Z', u'Ź':u'Z',
-                             u'á':u'a', u'é':u'e', u'í':u'i', u'ñ':u'n', u'ó':u'o', u'ú':u'u', u'ü':u'u',
-                             u'Á':u'A', u'É':u'E', u'Í':u'I', u'Ñ':u'N', u'Ó':u'O', u'Ú':u'U', u'Ü':u'U',
+        POLISH_CHARACTERS = {u'ą': u'a', u'ć': u'c', u'ę': u'ę', u'ł': u'l', u'ń': u'n', u'ó': u'o', u'ś': u's', u'ż': u'z', u'ź': u'z',
+                             u'Ą': u'A', u'Ć': u'C', u'Ę': u'E', u'Ł': u'L', u'Ń': u'N', u'Ó': u'O', u'Ś': u'S', u'Ż': u'Z', u'Ź': u'Z',
+                             u'á': u'a', u'é': u'e', u'í': u'i', u'ñ': u'n', u'ó': u'o', u'ú': u'u', u'ü': u'u',
+                             u'Á': u'A', u'É': u'E', u'Í': u'I', u'Ñ': u'N', u'Ó': u'O', u'Ú': u'U', u'Ü': u'U',
                             }
         txt = txt.decode('utf-8')
         if None != idx: txt = txt[idx]
@@ -745,8 +745,8 @@ class common:
                 
                 # reset will cause lost all cookies, so we force to saved them in the file
                 if params.get('use_cookie', False) and params.get('save_cookie', False):
-                    curlSession.setopt(pycurl.COOKIELIST , 'FLUSH')
-                    curlSession.setopt(pycurl.COOKIELIST , 'ALL')
+                    curlSession.setopt(pycurl.COOKIELIST, 'FLUSH')
+                    curlSession.setopt(pycurl.COOKIELIST, 'ALL')
                 
                 curlSession.reset()
                 # to be re-used in next request
@@ -1014,7 +1014,7 @@ class common:
 
                         js_params = [{'path':GetJSScriptFile('cf.byte')}]
                         try:
-                            dat = dat.replace(dat[dat.index('var isIE'):dat.index('setTimeout')],'')
+                            dat = dat.replace(dat[dat.index('var isIE'):dat.index('setTimeout')], '')
                         except Exception:
                             printExc()
                         js_params.append({'code': "function setInterval(func, delay) { return 1 };var navigator={cookieEnabled:1}; var ELEMS_TEXT = %s; var location = {hash:''}; var iptv_domain='%s';\n%s\niptv_fun();" % (json_dumps(elemsText), domain, dat)})
@@ -1034,8 +1034,8 @@ class common:
                             get_data[name] = value
 #                        get_data = dict(re.findall(r'<input[^>]*name="([^"]*)"[^>]*value="([^"]*)"[^>]*>', verData))
                         get_data['jschl_answer'] = decoded['answer']
-                        post_data = 'r=%s&jschl_vc=%s&pass=%s&jschl_answer=%s' % (urllib.quote(get_data['r'],safe=''), urllib.quote(get_data['jschl_vc'],safe=''), urllib.quote(get_data['pass'],safe=''), get_data['jschl_answer'])
-                        verUrl = _getFullUrl2( verUrl, domain).replace('&amp;','&')
+                        post_data = 'r=%s&jschl_vc=%s&pass=%s&jschl_answer=%s' % (urllib.quote(get_data['r'], safe=''), urllib.quote(get_data['jschl_vc'], safe=''), urllib.quote(get_data['pass'], safe=''), get_data['jschl_answer'])
+                        verUrl = _getFullUrl2( verUrl, domain).replace('&amp;', '&')
                         params2 = dict(params)
                         params2['load_cookie'] = True
                         params2['save_cookie'] = True
@@ -1425,6 +1425,6 @@ class common:
 
     def makeABCList(self, tab = ['0 - 9']):
         strTab = list(tab)
-        for i in range(65,91):
+        for i in range(65, 91):
             strTab.append(str(unichr(i)))    
         return strTab

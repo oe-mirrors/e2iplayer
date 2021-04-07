@@ -56,8 +56,8 @@ class C3player(CBaseHostClass):
                         {'category':'list_by_day',     'title': _('BY DAY'), 'url':self.getFullUrl('/3player/byday')},
                         {'category':'list_az',         'title': _('A-Z'),    'url':self.getFullUrl('/3player/a-z')},
                         
-                        {'category':'search',          'title': _('Search'), 'search_item':True, },
-                        {'category':'search_history',  'title': _('Search history'),             } 
+                        {'category': 'search',          'title': _('Search'), 'search_item': True, },
+                        {'category': 'search_history',  'title': _('Search history'),             } 
                        ]
         self.listsTab(MAIN_CAT_TAB, cItem)
     
@@ -120,7 +120,7 @@ class C3player(CBaseHostClass):
             
             if time != '' and len(descTab): descTab.insert(1, time)
             
-            params = {'good_for_fav':True, 'title':baseTitle % title, 'url':url, 'icon':icon, }
+            params = {'good_for_fav': True, 'title': baseTitle % title, 'url': url, 'icon': icon, }
             if '/videos/' in icon:
                 if date not in params['title']: params['title'] = params['title'] + ': ' + date
                 if len(descTab): params['desc'] = ' | '.join(descTab[1:]) + '[/br]' + descTab[0]

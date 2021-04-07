@@ -56,7 +56,7 @@ class TitlovicomProvider(CBaseSubProviderClass):
         params['cookie'] = 'titlovicom.cookie'
         CBaseSubProviderClass.__init__(self, params)
         
-        self.LANGUAGE_CACHE = ['hr', 'ba' , 'mk', 'si', 'rs']
+        self.LANGUAGE_CACHE = ['hr', 'ba', 'mk', 'si', 'rs']
         self.BASE_URL_CACHE = {'hr':'titlovi', 'ba':'prijevodi', 'mk':'prevodi', 'si':'podnapisi', 'rs':'prevodi'}
         self.pageLang = 'hr'
         self.USER_AGENT    = 'Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/64.0.3282.168 Safari/537.36'

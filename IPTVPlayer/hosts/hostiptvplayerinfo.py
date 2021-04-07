@@ -43,8 +43,8 @@ class IPTVPlayerInfo(CBaseHostClass):
         self.defaultParams = {'header':self.AJAX_HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
         self.MAIN_URL = 'https://gitlab.com/'
         self.MAIN_CAT_TAB = [
-                             {'category':'commits',        'title': _('Commits'),       },
-                             {'category':'tutorial',       'title': _('Tutorials'),     } 
+                             {'category': 'commits',        'title': _('Commits'),       },
+                             {'category': 'tutorial',       'title': _('Tutorials'),     } 
                             ]
                             
         self.TUTORIALS_TAB = [{'title': _('Services management'),                                     'url':'https://www.youtube.com/watch?v=pG-_csh2TDk'},

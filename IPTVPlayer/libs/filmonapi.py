@@ -19,7 +19,7 @@ from hashlib import md5
 ###################################################
 # Config options for HOST
 ###################################################
-config.plugins.iptvplayer.filmontvcom_streamprotocol = ConfigSelection(default = "rtmp", choices = [("rtmp", "rtmp"),("rtsp", "rtsp"),("hls", "HLS - m3u8")]) 
+config.plugins.iptvplayer.filmontvcom_streamprotocol = ConfigSelection(default = "rtmp", choices = [("rtmp", "rtmp"), ("rtsp", "rtsp"), ("hls", "HLS - m3u8")]) 
 config.plugins.iptvplayer.filmontvcom_premium        = ConfigYesNo(default = False)
 config.plugins.iptvplayer.filmontvcom_login          = ConfigText(default = "", fixed_size = False)
 config.plugins.iptvplayer.filmontvcom_password       = ConfigText(default = "", fixed_size = False)

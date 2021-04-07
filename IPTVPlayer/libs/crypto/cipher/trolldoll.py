@@ -28,7 +28,7 @@ class Trolldoll(Icedoll):
     """
     def __init__(self,key=None,keySize=32,blockSize=32,tapRound=6,extraRounds=6,micSize=16,ivSize=16):
         """  """
-        Icedoll.__init__(self,key=None,keySize=32,blockSize=32,tapRound=6,extraRounds=6)
+        Icedoll.__init__(self, key=None, keySize=32, blockSize=32, tapRound=6, extraRounds=6)
         self.name    = 'TROLLDOLL'
         self.micSize = micSize
         self.ivSize  = ivSize
@@ -49,7 +49,7 @@ class Trolldoll(Icedoll):
         """ Make the integrity check """
         return self.micSize*chr(0x00)
 
-    def _verifyIC(self,integrityCheck):
+    def _verifyIC(self, integrityCheck):
         """ Verify the integrity check """
         if self.micSize*chr(0x00) == integrityCheck :
             return 1  # matches

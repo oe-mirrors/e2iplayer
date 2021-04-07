@@ -74,8 +74,8 @@ class TED(CBaseHostClass):
         self.MAIN_CAT_TAB = [{'category':'list_talks_filters',      'title': _('Talks'),                    'url':self.getFullUrl('/talks')},
                              {'category':'list_playlists_filters',  'title': _('Playlists'),                'url':self.getFullUrl('/playlists')},
                              
-                             {'category':'search',          'title': _('Search'), 'search_item':True, },
-                             {'category':'search_history',  'title': _('Search history'),             } 
+                             {'category': 'search',          'title': _('Search'), 'search_item': True, },
+                             {'category': 'search_history',  'title': _('Search history'),             } 
                             ]
     
     def _addFilter(self, data, cacheTab, key, anyTitle='', titleBase=''):

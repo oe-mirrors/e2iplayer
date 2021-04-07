@@ -105,7 +105,7 @@ class Dplayit(CBaseHostClass):
             linksTab.extend(getDirectM3U8Playlist(stream_url, checkExt=False, variantCheck=True, checkContent=True, sortWithMaxBitrate=99999999))  
                         
         else: 
-            printDBG("Dplay: video form category %s with url %s not handled" % (cItem["category"],cItem["url"]));
+            printDBG("Dplay: video form category %s with url %s not handled" % (cItem["category"], cItem["url"]));
             linksTab.append({'url': cItem["url"], 'name': 'link1'})
         
         return linksTab
@@ -120,7 +120,7 @@ class Dplayit(CBaseHostClass):
                         #{'category':'lastadded', 'title': 'Ultimi aggiunti'}]  
         self.listsTab(MAIN_CAT_TAB, cItem)  
 
-    def listChannels(self,cItem):
+    def listChannels(self, cItem):
         printDBG("Dplay start channel list")
         h=self.getHeader()
         
@@ -142,7 +142,7 @@ class Dplayit(CBaseHostClass):
             params={'category':'channel', 'title': title , 'desc': desc, 'icon': icon, 'id': ch_id}
             self.addDir(params)     
     
-    def listChannelById(self,cItem):
+    def listChannelById(self, cItem):
         
         printDBG("Dplay start single channel list")
         h=self.getHeader()
@@ -181,7 +181,7 @@ class Dplayit(CBaseHostClass):
             self.addDir(MergeDicts(cItem, {'category':'programs_az', 'title': chr(ord('A')+i) , 'ch_id': ch_id}))  
 
     
-    def listProgramsByLetter(self,cItem):
+    def listProgramsByLetter(self, cItem):
         printDBG("Dplay start programs list")
         letter=cItem["title"]
         ch_id=cItem["ch_id"]
@@ -215,10 +215,10 @@ class Dplayit(CBaseHostClass):
                     self.addDir(params)     
 
     
-    def listProgramItems(self,cItem):
+    def listProgramItems(self, cItem):
         title = cItem['title']
         show_id = cItem['id']
-        printDBG("Dplay start item list of program '%s' with Id %s" % (title,show_id) )
+        printDBG("Dplay start item list of program '%s' with Id %s" % (title, show_id) )
         h=self.getHeader()
         
         if h == None or h == "" :
@@ -295,7 +295,7 @@ class Dplayit(CBaseHostClass):
             params={'category':'program', 'title': title , 'desc': desc, 'icon': icon, 'id': show_id }
             self.addDir(params)     
             
-    def showPlaylist(self,cItem):
+    def showPlaylist(self, cItem):
         printDBG("Dplay show playlist")
         list_id=cItem["id"]
         h=self.getHeader()
@@ -316,7 +316,7 @@ class Dplayit(CBaseHostClass):
             desc = video["Description"]
             video_id = video["Id"]
             videoUrl = video["PlaybackInfoUrl"]
-            printDBG ("add video '%s' with playback info url '%s'" % (title,videoUrl)) 
+            printDBG ("add video '%s' with playback info url '%s'" % (title, videoUrl)) 
             self.addVideo(MergeDicts(cItem, {'title': title,'name': title, 'desc': desc, 'video_id': video_id, 'url':videoUrl, 'icon': icon, 'category': 'video'}))  
 
         
@@ -344,7 +344,7 @@ class Dplayit(CBaseHostClass):
         name     = self.currItem.get("name", '')
         category = self.currItem.get("category", '')
         mode     = self.currItem.get("mode", '')
-        subtype  = self.currItem.get("sub-type",'')
+        subtype  = self.currItem.get("sub-type", '')
         
         printDBG( "handleService: >> name[%s], category[%s] " % (name, category) )
         self.currList = []
@@ -371,8 +371,8 @@ class Dplayit(CBaseHostClass):
         elif category == 'playlist':
             self.showPlaylist(self.currItem)
         elif category == 'channel_list':
-            if self.currItem.get("url",'') == '/api/show/GetList':
-                self.listPrograms(self.currItem, self.currItem.get("ch_id",'0'))
+            if self.currItem.get("url", '') == '/api/show/GetList':
+                self.listPrograms(self.currItem, self.currItem.get("ch_id", '0'))
         else:
             printExc()
         

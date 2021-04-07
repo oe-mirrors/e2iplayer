@@ -36,8 +36,8 @@ class OkGoals(CBaseHostClass):
         
         self.MAIN_CAT_TAB = [{'category':'list_items',        'title': _('Main'),       'url':self.getFullUrl('index.php') },
                              {'category':'list_categories',   'title': _('Categories'), 'url':self.getMainUrl()            },
-                             {'category':'search',            'title': _('Search'),     'search_item':True,                },
-                             {'category':'search_history',    'title': _('Search history'),                                },
+                             {'category': 'search',            'title': _('Search'),     'search_item': True,                },
+                             {'category': 'search_history',    'title': _('Search history'),                                },
                             ]
     def getFullUrl(self, url):
         if url.startswith('//'): url = 'http:' + url
@@ -110,7 +110,7 @@ class OkGoals(CBaseHostClass):
         sts, data = self.cm.getPage(cItem['url'])
         if not sts: return
         
-        tmp = self.cm.ph.getDataBeetwenMarkers(data, ('<div','>','matchcontainer'), '</div>', False)[1]
+        tmp = self.cm.ph.getDataBeetwenMarkers(data, ('<div', '>', 'matchcontainer'), '</div>', False)[1]
         tmp = tmp.split('</script>')
         for item in tmp:
             url = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''['"]([^'^"]*?//config\.playwire\.com[^'^"]+?\.json)['"]''')[0])

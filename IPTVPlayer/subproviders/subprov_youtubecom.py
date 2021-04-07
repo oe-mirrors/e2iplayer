@@ -126,7 +126,7 @@ class YoutubeComProvider(CBaseSubProviderClass):
         
     #MAIN MENU
         if name == None:
-            self.getSubtitles({'name':'category', })
+            self.getSubtitles({'name': 'category', })
         
         CBaseSubProviderClass.endHandleService(self, index, refresh)
 

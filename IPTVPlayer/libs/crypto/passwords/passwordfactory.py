@@ -66,7 +66,7 @@ class PasswordFactorySimple(PasswordFactory):
                 password = password + self.rand.choice(self.lettersReduced+self.digitsReduced)
         return password
 
-    def passwordsForSize(self,pwSize):
+    def passwordsForSize(self, pwSize):
         return (len(self.lettersReduced)+len(self.digitsReduced))**pwSize
 
 consonants_01 = 'bcdfghjklmnpqrstvwxz'
@@ -89,7 +89,7 @@ class PasswordFactoryReadable_01(PasswordFactory):
                     password = password + self.rand.choice(consonants_01)
         return password
 
-    def passwordsForSize(self,pwSize):
+    def passwordsForSize(self, pwSize):
         return (len(vowels_01)**(pwSize/2))*(len(consonants_01)**ceil(pwSize/2))
 
 

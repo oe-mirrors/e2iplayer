@@ -272,11 +272,11 @@ class cda(CBaseHostClass, CaptchaHelper):
                 descTab = []
                 desc = self.cleanHtmlStr(self.cm.ph.getDataBeetwenReMarkers(item, re.compile('''<span class=["']timeElem[^>]*?>'''), re.compile('</span>'), False)[1])
                 if '' != desc: descTab.append(desc)
-                desc = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(item, '<div class="text text-video">' , '</div>', False)[1])
+                desc = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(item, '<div class="text text-video">', '</div>', False)[1])
                 if '' != desc: descTab.append(desc)
                 desc  = self.cleanHtmlStr( self.cm.ph.getSearchGroups(item, '''<label[^>]+title=['"]([^"^']+?)["']''', 1, True)[0] )
                 if '' == desc: 
-                    desc = self.cm.ph.getDataBeetwenMarkers(item, '<div class="text"' , '</div>')[1]
+                    desc = self.cm.ph.getDataBeetwenMarkers(item, '<div class="text"', '</div>')[1]
                     desc = self.cleanHtmlStr( self.cm.ph.getSearchGroups(item, '''title=['"]([^"^']+?)["']''', 1, True)[0] )
                 if '' != desc: descTab.append(desc)
                 desc = self.cleanHtmlStr('[/br]'.join(descTab))

@@ -73,7 +73,7 @@ class Wiziwig1Api(CBaseHostClass):
                         time = self.localTime(time[0])
                         title = time + " - " + title
                     
-                    icon = re.findall("src='(.*?)'",item)
+                    icon = re.findall("src='(.*?)'", item)
                     if icon:
                         icon = self.getFullUrl(icon[0])
                     else:
@@ -89,7 +89,7 @@ class Wiziwig1Api(CBaseHostClass):
         printDBG("Wiziwig1Api.getVideoLink")
         urlsTab = []
 
-        for u in cItem.get("url_list",[]):
+        for u in cItem.get("url_list", []):
 
             sts, data = self.getPage(u['url'], self.http_params)
             if not sts: 
@@ -108,7 +108,7 @@ class Wiziwig1Api(CBaseHostClass):
                     urlsTab2 = [] 
                     for u2 in uuu:
                         printDBG(str(u2))
-                        u2['name']= name + ' '+ u2.get('name','')
+                        u2['name']= name + ' '+ u2.get('name', '')
                         urlsTab2.append(u2)
                         
                     urlsTab.extend(urlsTab2)

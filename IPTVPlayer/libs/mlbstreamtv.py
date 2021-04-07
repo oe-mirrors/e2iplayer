@@ -22,7 +22,7 @@ from datetime import datetime, timedelta
 ###################################################
 # Config options for HOST
 ###################################################
-config.plugins.iptvplayer.mlbstreamtv_port = ConfigInteger(8193, (1024,65535))
+config.plugins.iptvplayer.mlbstreamtv_port = ConfigInteger(8193, (1024, 65535))
 
 def GetConfigList():
     optionList = []

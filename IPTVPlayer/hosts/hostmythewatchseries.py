@@ -67,8 +67,8 @@ class MyTheWatchseries(CBaseHostClass):
                         
                         #{'category':'list_categories', 'title': _('CATEGORIES'),  'url':self.getMainUrl()}, 
                         
-                        {'category':'search',          'title': _('Search'), 'search_item':True, },
-                        {'category':'search_history',  'title': _('Search history'),             } 
+                        {'category': 'search',          'title': _('Search'), 'search_item': True, },
+                        {'category': 'search_history',  'title': _('Search history'),             } 
                        ]
         self.listsTab(MAIN_CAT_TAB, cItem)
         
@@ -95,10 +95,10 @@ class MyTheWatchseries(CBaseHostClass):
                 if addAll: self.cacheFilters[key].insert(0, {'title':_('All')})
                 self.cacheFiltersKeys.append(key)
         
-        tmp = self.cm.ph.getAllItemsBeetwenNodes(data, ('<li', '>', 'first-char'), ('</li' , '>'))
+        tmp = self.cm.ph.getAllItemsBeetwenNodes(data, ('<li', '>', 'first-char'), ('</li', '>'))
         addFilter(tmp, 'rel', 'key')
         
-        data = self.cm.ph.getAllItemsBeetwenNodes(data, ('<li', '>', 'class="text'), ('</' , 'select>'))
+        data = self.cm.ph.getAllItemsBeetwenNodes(data, ('<li', '>', 'class="text'), ('</', 'select>'))
         for tmp in data:
             key = self.cm.ph.getSearchGroups(tmp, '''name="([^"]+?)"''')[0]
             tmp = self.cm.ph.getAllItemsBeetwenMarkers(tmp, '<option', '</option>')
@@ -366,8 +366,8 @@ class MyTheWatchseries(CBaseHostClass):
         icon  = self.cm.ph.getDataBeetwenNodes(data, ('<div', '>', 'picture'), ('</div', '>'), False)[1]
         icon  = self.cm.ph.getSearchGroups(icon, '<img[^>]+?src="([^"]+?)"')[0]
         
-        keysMap = {'release':'released',
-                   'country' :'country',}
+        keysMap = {'release': 'released',
+                   'country': 'country',}
         
         data = self.cm.ph.getDataBeetwenNodes(data, ('<ul', '>', '"three"'), ('</ul', '>'))[1]
         data = self.cm.ph.getAllItemsBeetwenMarkers(data, '<li', '</li>')

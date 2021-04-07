@@ -6,8 +6,8 @@
 
 def Decode(param):
     #-- define variables
-    loc_3 = [0,0,0,0]
-    loc_4 = [0,0,0]
+    loc_3 = [0, 0, 0, 0]
+    loc_4 = [0, 0, 0]
     loc_2 = ''
     #-- define hash parameters for decoding
     dec = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/='

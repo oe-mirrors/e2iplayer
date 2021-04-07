@@ -53,7 +53,7 @@ class buildActiveHostsHTML(threading.Thread):
 
 	def run(self):
 		for hostName in SortHostsList(GetHostsList()):
-			if hostName in ['localmedia','urllist']: # those are local hosts, nothing to do via web interface
+			if hostName in ['localmedia', 'urllist']: # those are local hosts, nothing to do via web interface
 				continue
 			if not IsHostEnabled(hostName):
 				continue
@@ -69,12 +69,12 @@ class buildActiveHostsHTML(threading.Thread):
 	
 			if title[:4] == 'http' and logo == "":
 				try:
-					hostNameWithURLandLOGO = '<br><a href="./usehost?activeHost=%s" target="_blank"><font size="2" color="#58D3F7">%s</font></a>' % (hostName, '.'.join(title.replace('://','.').replace('www.','').split('.')[1:-1]))
+					hostNameWithURLandLOGO = '<br><a href="./usehost?activeHost=%s" target="_blank"><font size="2" color="#58D3F7">%s</font></a>' % (hostName, '.'.join(title.replace('://', '.').replace('www.', '').split('.')[1:-1]))
 				except Exception:
 					hostNameWithURLandLOGO = '<br><a href="%s" target="_blank"><font size="2" color="#58D3F7">%s</font></a>' % (title, title)
 			elif title[:4] == 'http' and logo != "":
 				try:
-					hostNameWithURLandLOGO = '<a href="./usehost?activeHost=%s">%s</a><br><a href="%s" target="_blank"><font size="2" color="#58D3F7">%s</font></a>' % (hostName, logo, title, '.'.join(title.replace('://','.').replace('www.','').split('.')[1:-1]))
+					hostNameWithURLandLOGO = '<a href="./usehost?activeHost=%s">%s</a><br><a href="%s" target="_blank"><font size="2" color="#58D3F7">%s</font></a>' % (hostName, logo, title, '.'.join(title.replace('://', '.').replace('www.', '').split('.')[1:-1]))
 				except Exception as e:
 					print(str(e))
 					hostNameWithURLandLOGO = '<a href="%s" target="_blank">%s</a><br><a href="%s" target="_blank"><font size="2" color="#58D3F7">%s</font></a>' % (title, logo, title, _('visit site'))
@@ -157,7 +157,7 @@ class buildConfigsHTML(threading.Thread):
 						ConfDesc = itemL1[0]
 					CFGtype = getCFGType(itemL1[1])
 					#print ConfName, '=' , CFGtype
-					if CFGtype in ['ConfigYesNo','ConfigOnOff', 'ConfigEnableDisable', 'ConfigBoolean']:
+					if CFGtype in ['ConfigYesNo', 'ConfigOnOff', 'ConfigEnableDisable', 'ConfigBoolean']:
 						if int(confKey[1].getValue()) == 0 :
 							CFGElements =  '<input type="radio" name="cmd" value="ON:%s">%s</input>' % (ConfName, _('Yes'))
 							CFGElements += '<input type="radio" name="cmd" value="OFF:%s" checked="checked">%s</input>' % (ConfName, _('No'))
@@ -165,7 +165,7 @@ class buildConfigsHTML(threading.Thread):
 							CFGElements =  '<input type="radio" name="cmd" value="ON:%s" checked="checked">%s</input>' % (ConfName, _('Yes'))
 							CFGElements += '<input type="radio" name="cmd" value="OFF:%s">%s</input>' % (ConfName, _('No'))
 					elif CFGtype in ['ConfigInteger']:
-						CFGElements = '<input type="number" name="%s" value="%d" />' %('INT:' + ConfName , int(confKey[1].getValue()))
+						CFGElements = '<input type="number" name="%s" value="%d" />' %('INT:' + ConfName, int(confKey[1].getValue()))
 					else:
 						try:
 							CFGElements = confKey[1].getHTML('CFG:' + ConfName)
@@ -197,7 +197,7 @@ class buildConfigsHTML(threading.Thread):
 	
 			# Column 3 enable/disable host in GUI
 			if IsHostEnabled(hostName):
-				OnOffState = formSUBMITvalue( [('cmd','OFF:host'+ hostName)], _('Disable'))
+				OnOffState = formSUBMITvalue( [('cmd', 'OFF:host'+ hostName)], _('Disable'))
 			else:
 				OnOffState = formSUBMITvalue( [('cmd', 'ON:host'+ hostName)],  _('Enable'))
 
@@ -264,7 +264,7 @@ class doUseHostAction(threading.Thread):
 			myID = int(self.arg)
 			url = settings.retObj.value[myID].url
 			if url != '' and IsUrlDownloadable(url):
-				titleOfMovie = settings.currItem['itemTitle'].replace('/','-').replace(':','-').replace('*','-').replace('?','-').replace('"','-').replace('<','-').replace('>','-').replace('|','-')
+				titleOfMovie = settings.currItem['itemTitle'].replace('/', '-').replace(':', '-').replace('*', '-').replace('?', '-').replace('"', '-').replace('<', '-').replace('>', '-').replace('|', '-')
 				fullFilePath = config.plugins.iptvplayer.NaszaSciezka.value + '/' + titleOfMovie + '.mp4'
 				if None == Plugins.Extensions.IPTVPlayer.components.iptvplayerwidget.gDownloadManager:
 					printDBG('============webThreads.py Initialize Download Manager============')
@@ -293,7 +293,7 @@ class doUseHostAction(threading.Thread):
 			if settings.activeHost['selectedItemType'] in ['CATEGORY']:
 				settings.activeHost['Status'] += '>' + settings.retObj.value[myID].name
 				settings.currItem = {}
-				settings.retObj = settings.activeHost['Obj'].getListForItem(myID,0,settings.retObj.value[myID])
+				settings.retObj = settings.activeHost['Obj'].getListForItem(myID, 0, settings.retObj.value[myID])
 				settings.activeHost['PathLevel'] += 1
 			elif settings.activeHost['selectedItemType'] in ['VIDEO']:
 				settings.currItem['itemTitle'] = settings.retObj.value[myID].name
@@ -303,7 +303,7 @@ class doUseHostAction(threading.Thread):
 					print("ListForItem>urlItems exception:", str(e))
 					links='NOVALIDURLS'
 				try:
-					settings.retObj = settings.activeHost['Obj'].getLinksForVideo(myID,settings.retObj.value[myID]) #returns "NOT_IMPLEMENTED" when host is using curlitem
+					settings.retObj = settings.activeHost['Obj'].getLinksForVideo(myID, settings.retObj.value[myID]) #returns "NOT_IMPLEMENTED" when host is using curlitem
 				except Exception as e:
 					print("ListForItem>getLinksForVideo exception:", str(e))
 					settings.retObj = RetHost(RetHost.NOT_IMPLEMENTED, value = [])
@@ -357,9 +357,9 @@ class doGlobalSearch(threading.Thread):
 			return
 		for hostName in SortHostsList(GetHostsList()):
 			self.stopIfRequested()
-			if hostName in ['localmedia','urllist']: # those are local hosts, nothing to do via web interface
+			if hostName in ['localmedia', 'urllist']: # those are local hosts, nothing to do via web interface
 				continue
-                        elif hostName in ['localmedia','urllist']: # those are local hosts, nothing to do via web interface
+                        elif hostName in ['localmedia', 'urllist']: # those are local hosts, nothing to do via web interface
                                 continue
 			elif hostName in ['seriesonline']: # those hosts have issues wth global search, need more investigation
 				continue
@@ -391,12 +391,12 @@ class doGlobalSearch(threading.Thread):
 				ret = self.host.getSearchResults(settings.GlobalSearchQuery, '')
 				self.stopIfRequested()
 				if len(ret.value) >0:
-					settings.GlobalSearchResults[hostName] = (None,ret.value)
+					settings.GlobalSearchResults[hostName] = (None, ret.value)
 			else:
 				for SearchType in searchTypes:
 					ret = self.host.getSearchResults(settings.GlobalSearchQuery, SearchType[1])
 					self.stopIfRequested()
-					print(SearchType[1] ,' searched ' , ret.value)
+					print(SearchType[1], ' searched ', ret.value)
 					
 		settings.searchingInHost = None
 		

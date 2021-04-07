@@ -57,7 +57,7 @@ class UnCaptchaReCaptcha:
             printDBG(">>>>>>>> Captcha accep label[%s]" % (accepLabel))
             printDBG(">>>>>>>> Captcha imgUrl[%s] filePath[%s]" % (imgUrl, filePath))
             
-            params = {'maintype': 'image', 'subtypes':['jpeg'], 'check_first_bytes':['\xFF\xD8','\xFF\xD9']}
+            params = {'maintype': 'image', 'subtypes':['jpeg'], 'check_first_bytes':['\xFF\xD8', '\xFF\xD9']}
             ret = self.cm.saveWebFile(filePath, imgUrl, params)
             if not ret.get('sts'):
                 SetIPTVPlayerLastHostError(_('Fail to get "%s".') % imgUrl)
@@ -68,8 +68,8 @@ class UnCaptchaReCaptcha:
             params['title'] = accepLabel
             params['list'] = []
             item = deepcopy(IPTVMultipleInputBox.DEF_INPUT_PARAMS)
-            item['label_size'] = (300,57)
-            item['input_size'] = (300,25)
+            item['label_size'] = (300, 57)
+            item['input_size'] = (300, 25)
             item['icon_path'] = filePath
             item['input']['text'] = ''
             params['list'].append(item)
