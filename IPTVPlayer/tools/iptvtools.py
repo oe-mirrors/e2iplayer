@@ -1338,6 +1338,7 @@ def ReadTextFile(filePath, encode='utf-8', errors='ignore'):
         file.close()
         if ret.startswith(codecs.BOM_UTF8):
             ret = ret[3:]
+        ret = ret.decode(encoding='utf-8', errors='strict')
         sts = True
     except Exception:
         printExc()
