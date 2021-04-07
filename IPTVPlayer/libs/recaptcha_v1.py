@@ -7,7 +7,7 @@ from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT
 from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, GetTmpDir
 from Plugins.Extensions.IPTVPlayer.libs.pCommon import common
 from Plugins.Extensions.IPTVPlayer.libs.youtube_dl.utils import clean_html
-from Plugins.Extensions.IPTVPlayer.components.asynccall import  MainSessionWrapper
+from Plugins.Extensions.IPTVPlayer.components.asynccall import MainSessionWrapper
 from Plugins.Extensions.IPTVPlayer.components.iptvmultipleinputbox import IPTVMultipleInputBox
 
 ###################################################
@@ -25,7 +25,7 @@ class UnCaptchaReCaptcha:
         self.cm = common()
         self.sessionEx = MainSessionWrapper() 
         self.challenge = ''
-        self.response  = ''
+        self.response = ''
         
     def processCaptcha(self, key):
         post_data = None

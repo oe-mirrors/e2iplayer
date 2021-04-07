@@ -22,9 +22,9 @@ class ARC4:
     """
     def __init__(self,key=None):
         """ key -> octet string for key """
-        self.name        = 'ARC4'
-        self.strength    = None # depends on keySize
-        self.blockSize   = 1    # blockSize is in bytes
+        self.name = 'ARC4'
+        self.strength = None # depends on keySize
+        self.blockSize = 1    # blockSize is in bytes
 
         if key != None:
             self.setKey(key)
@@ -32,8 +32,8 @@ class ARC4:
     def setKey(self, key):
         """ Set initial state from key. Never use the same key more than once!
         """
-        self.keySize     = len(key)
-        self.strength    = self.keySize  # this does not include subtracting IV size :-(
+        self.keySize = len(key)
+        self.strength = self.keySize  # this does not include subtracting IV size :-(
         i, j, self.state = 0, 0, list(range(256))
         for i in range(256):
             j = (j + self.state[i] + ord(key[i % len(key)])) % 256

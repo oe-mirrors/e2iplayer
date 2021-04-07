@@ -40,7 +40,7 @@ class BilaSportPwApi(CBaseHostClass):
 
     def __init__(self):
         CBaseHostClass.__init__(self)
-        self.MAIN_URL =  'http://bilasport.net/'
+        self.MAIN_URL = 'http://bilasport.net/'
         self.DEFAULT_ICON_URL = 'https://projects.fivethirtyeight.com/2016-mlb-predictions/images/logos.png'
         self.HTTP_HEADER = self.cm.getDefaultHeader(browser='chrome')
         self.AJAX_HEADER = dict(self.HTTP_HEADER)

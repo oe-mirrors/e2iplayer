@@ -24,7 +24,7 @@ class UnCaptchaSweetCaptchaWidget(Screen):
    
     def __init__(self, session, params):
         self.session = session
-        self.markerWidth  = 100
+        self.markerWidth = 100
         
         self.skin = """
             <screen position="center,center" title="%s" size="500,200">
@@ -55,10 +55,10 @@ class UnCaptchaSweetCaptchaWidget(Screen):
         for i in range(4):
             strIndx = "cover_%d" % i
             self[strIndx] = Cover2()
-        self['cover']  = Cover2()
+        self['cover'] = Cover2()
         self["marker"] = Cover3()
         
-        self.selIdx  = 0
+        self.selIdx = 0
         self.maxIcons = len(self.iconList) - 1
         self.onLayoutFinish.append(self.onStart)
     
@@ -81,18 +81,18 @@ class UnCaptchaSweetCaptchaWidget(Screen):
         
     def moveMarker(self, m):
         x, y = self["marker"].getPosition()
-        cx, cy = self["cover_%d"%self.selIdx].getPosition()
+        cx, cy = self["cover_%d" % self.selIdx].getPosition()
 
         self.selIdx += m
         
         # correct new selection idx
         if self.selIdx < 0:
             self.selIdx = self.maxIcons - 1
-        elif  self.selIdx >= self.maxIcons:
+        elif self.selIdx >= self.maxIcons:
             self.selIdx = 0
         
         offset = x - cx
-        cx, cy = self["cover_%d"%self.selIdx].getPosition()
+        cx, cy = self["cover_%d" % self.selIdx].getPosition()
         x = cx + offset
         self["marker"].instance.move(ePoint(x, y))
     

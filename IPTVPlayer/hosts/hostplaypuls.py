@@ -69,7 +69,7 @@ class Playpuls(CBaseHostClass):
                 params = {'name':'category', 'title':item[1], 'category':'menu', 'url':self.getFullUrl(item[0]), 'icon':self.DEFAULT_ICON_URL}
                 self.addDir(params)
             #
-            self.addDir({'name':'category', 'title':_('Search'),         'category':'search', 'search_item':True})
+            self.addDir({'name':'category', 'title':_('Search'), 'category':'search', 'search_item':True})
             self.addDir({'name':'category', 'title':_('Search history'), 'category':'search_history'})
         
     def listCategory(self, cItem, searchMode=False):
@@ -115,14 +115,14 @@ class Playpuls(CBaseHostClass):
         del data[0]
         descMarker = '<div class="video-description">'
         for idx in range(len(data)):
-            if idx < len(data)-1:
+            if idx < len(data) - 1:
                 item = data[idx] + '>'
             else:
                 item = data[idx]
             #printDBG("============================================")
             #printDBG(item)
             #printDBG("============================================")
-            url  = self.cm.ph.getSearchGroups(item, 'href="([^"]+?)"')[0]
+            url = self.cm.ph.getSearchGroups(item, 'href="([^"]+?)"')[0]
             icon = self.cm.ph.getSearchGroups(item, 'class="cover" src="([^"]+?)"')[0]
             if '' == icon:
                 icon = self.cm.ph.getSearchGroups(item, 'class="screenshot" src="([^"]+?)"')[0]
@@ -138,7 +138,7 @@ class Playpuls(CBaseHostClass):
             if descMarker in item:
                 desc = self.cleanHtmlStr(item.split(descMarker)[-1])
             else:
-                desc  = self.cleanHtmlStr(item)#self.cm.ph.getDataBeetwenMarkers(item, '<p>', '</p>', False)[1]
+                desc = self.cleanHtmlStr(item)#self.cm.ph.getDataBeetwenMarkers(item, '<p>', '</p>', False)[1]
             
             if '/vod' in url:
                 category = 'vod'
@@ -173,11 +173,11 @@ class Playpuls(CBaseHostClass):
         source2Data = re.compile("([MDmd][123]) = '([^']+?)'").findall(data)
         source3Data = self.cm.ph.getSearchGroups(data, "sources[ ]*=[ ]*(\{[^;]+?);")[0]
         source4Data = re.compile("([MDmd][123])\s*:\s*\{\s*source\s*\:\s*'([^']+?)'").findall(data)
-        quality     = self.cm.ph.getSearchGroups(data, "quality = '([01])';")[0]
+        quality = self.cm.ph.getSearchGroups(data, "quality = '([01])';")[0]
         
         if (source1Data + source3Data + quality) == '' and 0 == len(source2Data) and 0 == len(source4Data):
             url = 'http://playpuls.pl/sites/all/modules/vod/player.php'
-            id  = self.cm.ph.getSearchGroups(data, 'id\s*=\s*([0-9]+?);')[0]
+            id = self.cm.ph.getSearchGroups(data, 'id\s*=\s*([0-9]+?);')[0]
             post_data = None #{'id':id}
             url += '?id=%s' % id
             header['Content-Type'] = 'application/x-www-form-urlencoded; charset=UTF-8'
@@ -196,20 +196,20 @@ class Playpuls(CBaseHostClass):
                 if '1' == quality:
                     if 'hls' != proto:
                         mobileSrc = urlBase + '/mp4/864x486_800_bp.mp4'
-                    desktopHtmlHdHighSrc   = urlBase + '/mp4/1280x720_2500_hp.mp4'
+                    desktopHtmlHdHighSrc = urlBase + '/mp4/1280x720_2500_hp.mp4'
                     desktopHtmlHdMediumSrc = urlBase + '/mp4/864x486_1600_hp.mp4'
-                    desktopHtmlHdLowSrc    = urlBase + '/mp4/864x486_800_bp.mp4'
-                    videoUrls.append({'bitrate':'2500', 'name':'High - 2500',   'url':desktopHtmlHdHighSrc})
+                    desktopHtmlHdLowSrc = urlBase + '/mp4/864x486_800_bp.mp4'
+                    videoUrls.append({'bitrate':'2500', 'name':'High - 2500', 'url':desktopHtmlHdHighSrc})
                     videoUrls.append({'bitrate':'1600', 'name':'Medium - 1600', 'url':desktopHtmlHdMediumSrc})
-                    videoUrls.append({'bitrate':'800',  'name':'Low - 800',     'url':desktopHtmlHdLowSrc})
+                    videoUrls.append({'bitrate':'800', 'name':'Low - 800', 'url':desktopHtmlHdLowSrc})
         
                 elif '0' == quality:
                     if 'hls' != proto:
                         mobileSrc = urlBase + '/mp4/720x576_800_bp.mp4'
                     desktopHtmlSdHighSrc = urlBase + '/mp4/720x576_1600_hp.mp4'
-                    desktopHtmlSdLowSrc  = urlBase + '/mp4/720x576_800_bp.mp4'
+                    desktopHtmlSdLowSrc = urlBase + '/mp4/720x576_800_bp.mp4'
                     videoUrls.append({'bitrate':'1600', 'name':'Medium - 1600', 'url':desktopHtmlSdHighSrc})
-                    videoUrls.append({'bitrate':'800',  'name':'Low - 800',     'url':desktopHtmlSdLowSrc})
+                    videoUrls.append({'bitrate':'800', 'name':'Low - 800', 'url':desktopHtmlSdLowSrc})
                 
                 if '' != mobileSrc:
                     videoUrls.append({'bitrate':'800', 'name':'Mobile - 800', 'url':mobileSrc})
@@ -218,7 +218,7 @@ class Playpuls(CBaseHostClass):
                     mobileSrc = getDirectM3U8Playlist(mobileSrc, checkExt=False)
                     for item in mobileSrc:
                         item['url'] = self.up.decorateUrl(item['url'], {'iptv_proto':'m3u8', 'iptv_livestream':False})
-                        item['bitrate'] = str(int(item.get('bitrate', '800000'))/1000)
+                        item['bitrate'] = str(int(item.get('bitrate', '800000')) / 1000)
                         item['name'] = 'Mobile(hls) - %s' % item['bitrate']
                         videoUrls.append(item)
             else:
@@ -276,7 +276,7 @@ class Playpuls(CBaseHostClass):
     def handleService(self, index, refresh=0, searchPattern='', searchType=''):
         printDBG('Playpuls.handleService start')
         CBaseHostClass.handleService(self, index, refresh, searchPattern, searchType)
-        name     = self.currItem.get("name", None)
+        name = self.currItem.get("name", None)
         category = self.currItem.get("category", '')
         printDBG("Playpuls.handleService: ---------> name[%s], category[%s] " % (name, category))
         self.currList = []

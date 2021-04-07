@@ -148,7 +148,7 @@ class IconMenager:
         ret = False
         #without locking. Is it safety?
         self.lockAA.acquire()
-        if  None != self.queueAA.get(file, None):
+        if None != self.queueAA.get(file, None):
             ret = True
         self.lockAA.release()
         
@@ -167,7 +167,7 @@ class IconMenager:
         file_path = self.queueAA.get(filename, '')
         if file_path != '':
             try:
-                if os_path.normcase(self.currDownloadDir+'/') != os_path.normcase(file_path+'/'):
+                if os_path.normcase(self.currDownloadDir + '/') != os_path.normcase(file_path + '/'):
                     file_path = os_path.normcase(file_path + '/' + filename)
                     os_rename(file_path, os_path.normcase(self.currDownloadDir + '/' + filename))
                     self.queueAA[filename] = os_path.normcase(self.currDownloadDir + '/')
@@ -272,10 +272,10 @@ class IconMenager:
             params_cfad = {'with_metadata':True, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True} 
             domain = urlparser.getDomain(img_url, onlyDomain=True)
             
-            params_cfad['cookiefile']= '/hdd/IPTVCache//cookies/{0}.cookie'.format(domain)
+            params_cfad['cookiefile'] = '/hdd/IPTVCache//cookies/{0}.cookie'.format(domain)
 
         else:
-            params_cfad={}
+            params_cfad = {}
         
         if img_url.endswith('need_resolve.jpeg'):
             domain = urlparser.getDomain(img_url)

@@ -49,21 +49,21 @@ class UnCaptchaReCaptchaMyJDWidget(Screen):
              <widget name="label_red"    position="45,9"  zPosition="5" size="175,27" valign="center" halign="left" backgroundColor="black" font="Regular;21" transparent="1" foregroundColor="white" shadowColor="black" shadowOffset="-1,-1" />
              <widget name="title"        position="5,47"  zPosition="1" size="%d,23" font="Regular;20"            transparent="1"  backgroundColor="#00000000"/>
              <widget name="console"      position="10,%d" zPosition="2" size="%d,160" valign="center" halign="center"   font="Regular;24" transparent="0" foregroundColor="white" backgroundColor="black"/>
-            </screen>""" %(
+            </screen>""" % (
                 title,
                 sz_w, sz_h,                # size
                 GetIconDir('red' + '.png'),
                 sz_w - 135,                # size title
-                (sz_h - 160)/2, sz_w - 20, # console
+                (sz_h - 160) / 2, sz_w - 20, # console
                 )
         
         self.onShown.append(self.onStart)
         self.onClose.append(self.__onClose)
         
-        self["title"]         = Label(" ")
-        self["console"]       = Label(" ")
+        self["title"] = Label(" ")
+        self["console"] = Label(" ")
         
-        self["label_red"]     = Label(_("Cancel"))
+        self["label_red"] = Label(_("Cancel"))
         
         self["actions"] = ActionMap(["ColorActions", "SetupActions", "WizardActions", "ListboxActions"],
             {
@@ -87,7 +87,7 @@ class UnCaptchaReCaptchaMyJDWidget(Screen):
         self.workconsole['close_conn'] = None
         self.workconsole['stderr_conn'] = None
         self.workconsole['stdout_conn'] = None
-        if  self.workconsole['console']:
+        if self.workconsole['console']:
             self.workconsole['console'].sendCtrlC()
         self.workconsole['console'] = None
         
@@ -169,10 +169,10 @@ class UnCaptchaReCaptchaMyJDWidget(Screen):
         
         self["console"].setText(_('JDownloader script execution'))
         
-        self.workconsole['console']    = eConsoleAppContainer()
+        self.workconsole['console'] = eConsoleAppContainer()
         self.workconsole['close_conn'] = eConnectCallback(self.workconsole['console'].appClosed, self._scriptClosed)
-        self.workconsole['stderr_conn']  = eConnectCallback(self.workconsole['console'].stderrAvail, self._scriptStderrAvail)
-        self.workconsole['stdout_conn']  = eConnectCallback(self.workconsole['console'].stdoutAvail, self._scriptStdoutAvail)
+        self.workconsole['stderr_conn'] = eConnectCallback(self.workconsole['console'].stderrAvail, self._scriptStderrAvail)
+        self.workconsole['stdout_conn'] = eConnectCallback(self.workconsole['console'].stdoutAvail, self._scriptStdoutAvail)
         self.workconsole["console"].execute(E2PrioFix(cmd, 0))
         printDBG(">>> EXEC CMD [%s]" % cmd)
     

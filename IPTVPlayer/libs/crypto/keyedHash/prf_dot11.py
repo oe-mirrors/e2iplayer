@@ -23,7 +23,7 @@ def PRF(key, prefix, data, number_of_bits):
     R = ''
     i = 0
     while len(R) <= number_of_octets:
-        hmac_sha_1= hmac.new(key, prefix + chr(0x00) + data + chr(i), sha)
+        hmac_sha_1 = hmac.new(key, prefix + chr(0x00) + data + chr(i), sha)
         i = i + 1
         R = R + hmac_sha_1.digest()       # concatenate latest hash to result string
     return R[:number_of_octets]           # return R truncated to 'number_of_octets'

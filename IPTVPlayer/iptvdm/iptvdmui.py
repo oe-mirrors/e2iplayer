@@ -56,7 +56,7 @@ class IPTVDMWidget(Screen):
          <widget render="Label" source="key_blue"   position="635,9" size="300,27" zPosition="5" valign="center" halign="left" backgroundColor="black" font="Regular;21" transparent="1" foregroundColor="white" shadowColor="black" shadowOffset="-1,-1" />            
          <widget name="list" position="5,100" zPosition="2" size="%d,%d" scrollbarMode="showOnDemand" transparent="0"  backgroundColor="#00000000" enableWrapAround="1" />
          <widget name="titel" position="5,47" zPosition="1" size="%d,23" font="Regular;20" transparent="1"  backgroundColor="#00000000"/>
-        </screen>""" %(_("%s download manager") % "E2iPlayer",
+        </screen>""" % (_("%s download manager") % "E2iPlayer",
             sz_w, sz_h, # size
             GetIconDir('red.png'), GetIconDir('green.png'), GetIconDir('yellow.png'), GetIconDir('blue.png'),
             sz_w - 10, sz_h - 20, # size list
@@ -71,10 +71,10 @@ class IPTVDMWidget(Screen):
         self.currentService = self.session.nav.getCurrentlyPlayingServiceReference()
         self.session.nav.event.append(self.__event)
 
-        self["key_red"]    = StaticText(_("Stop"))
-        self["key_green"]  = StaticText(_("Start"))
+        self["key_red"] = StaticText(_("Stop"))
+        self["key_green"] = StaticText(_("Start"))
         self["key_yellow"] = StaticText(_("Archive"))
-        self["key_blue"]   = StaticText(_("Downloads"))
+        self["key_blue"] = StaticText(_("Downloads"))
 
         self["list"] = IPTVDownloadManagerList()
         self["list"].connectSelChanged(self.onSelectionChanged)
@@ -112,7 +112,7 @@ class IPTVDMWidget(Screen):
         self.localMode = False
         self.localFiles = []
         self.console = eConsoleAppContainer()
-        self.console_appClosed_conn   = eConnectCallback(self.console.appClosed, self.refreshFinished)
+        self.console_appClosed_conn = eConnectCallback(self.console.appClosed, self.refreshFinished)
         self.console_stderrAvail_conn = eConnectCallback(self.console.stderrAvail, self.refreshNewData)
         self.underRefreshing = False
         
@@ -166,7 +166,7 @@ class IPTVDMWidget(Screen):
                     listItem.downloadedSize = os_path.getsize(fileName)
                 except Exception:
                     listItem.downloadedSize = 0
-                listItem.status      = DMHelper.STS.DOWNLOADED
+                listItem.status = DMHelper.STS.DOWNLOADED
                 listItem.downloadIdx = -1
                 self.tmpList.append(listItem)
     
@@ -194,7 +194,7 @@ class IPTVDMWidget(Screen):
         # unsubscribe callback functions and break cycles references
         self.iptvclosing = True
         if None != self.console:
-            self.console_appClosed_conn   = None
+            self.console_appClosed_conn = None
             self.console_stderrAvail_conn = None
             self.console_stdoutAvail_conn = None
             self.console.sendCtrlC()
@@ -274,12 +274,12 @@ class IPTVDMWidget(Screen):
         play.append((_('Play with [%s] player') % GetMoviePlayer(True, False).getText(), 'play', GetMoviePlayer(True, False).value))
         play.append((_('Play with [%s] player') % GetMoviePlayer(True, True).getText(), 'play', GetMoviePlayer(True, True).value))
         
-        cont   = ((_('Continue downloading'), 'continue'),)
-        retry  = ((_('Download again'), 'retry'),)
-        stop   = ((_('Stop downloading'), 'stop'),)
+        cont = ((_('Continue downloading'), 'continue'),)
+        retry = ((_('Download again'), 'retry'),)
+        stop = ((_('Stop downloading'), 'stop'),)
         remove = ((_('Remove file'), 'remove'),)
-        delet  = ((_('Remove item'), 'delet'),)
-        move   = ((_('Promote item'), 'move'),)
+        delet = ((_('Remove item'), 'delet'),)
+        move = ((_('Promote item'), 'move'),)
             
         options = []
         item = self.getSelItem()
@@ -434,7 +434,7 @@ class IPTVDMNotificationWidget(Screen):
     
     skin = """<screen name="IPTVDMNotificationWidget" position="%d,%d" zPosition="10" size="350,60" title="IPTVPlayer downloader" backgroundColor="#31000000" >
             <widget name="message_label" font="Regular;24" position="0,0" zPosition="2" valign="center" halign="center" size="350,60" backgroundColor="#31000000" transparent="1" />
-        </screen>""" % (d_w-350, 60)
+        </screen>""" % (d_w - 350, 60)
     
     def __init__(self, session):
         Screen.__init__(self, session)

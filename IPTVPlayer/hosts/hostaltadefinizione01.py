@@ -89,7 +89,7 @@ class Altadefinizione(CBaseHostClass):
         data = self.cm.ph.getDataBeetwenNodes(data, ('<ul', '>', 'menu-menu'), ('</ul', '>'), False)[1]
         data = self.cm.ph.getAllItemsBeetwenMarkers(data, '<a', '</a>')
         for item in data:
-            url =  self.cm.ph.getSearchGroups(item, '''href=['"]([^"^']+?)['"]''')[0]
+            url = self.cm.ph.getSearchGroups(item, '''href=['"]([^"^']+?)['"]''')[0]
             if 'attori' in url or '/domande' in url or '/richiedi' in url or '/player' in url:
                 continue
             title = self.cleanHtmlStr(item)
@@ -101,8 +101,8 @@ class Altadefinizione(CBaseHostClass):
                 params['category'] = 'list_items'
             self.addDir(params)
 
-        MAIN_CAT_TAB = [{'category':'search',          'title': _('Search'), 'search_item':True},
-                        {'category':'search_history',  'title': _('Search history')}]
+        MAIN_CAT_TAB = [{'category':'search', 'title': _('Search'), 'search_item':True},
+                        {'category':'search_history', 'title': _('Search history')}]
         self.listsTab(MAIN_CAT_TAB, cItem)
         
     def listItems(self, cItem, nextCategory):
@@ -130,8 +130,8 @@ class Altadefinizione(CBaseHostClass):
             for item in dataItem:
                 tmp = self.cm.ph.getDataBeetwenNodes(item, ('<h', '>'), ('</h', '>'), False)[1]
 
-                icon  = self.getFullIconUrl(self.cm.ph.getSearchGroups(item, '''<img[^>]+?src=['"]([^"^']+?)['"]''')[0])
-                url   = self.getFullUrl(self.cm.ph.getSearchGroups(tmp, '''href=['"]([^"^']+?)['"]''')[0])
+                icon = self.getFullIconUrl(self.cm.ph.getSearchGroups(item, '''<img[^>]+?src=['"]([^"^']+?)['"]''')[0])
+                url = self.getFullUrl(self.cm.ph.getSearchGroups(tmp, '''href=['"]([^"^']+?)['"]''')[0])
                 title = self.cleanHtmlStr(tmp)
 
                 desc = []
@@ -158,14 +158,14 @@ class Altadefinizione(CBaseHostClass):
 
         if nextPage != '':
             params = dict(cItem)
-            params.update({'title':_("Next page"), 'page':page+1})
+            params.update({'title':_("Next page"), 'page':page + 1})
             if nextPage != '#':
                 params['url'] = self.getFullUrl(nextPage)
                 self.addDir(params)
             elif postData != {}:
                 postData = dict(postData)
                 postData.pop('titleonly', None)
-                postData.update({'search_start':page+1, 'full_search':'0', 'result_from':10*page+1})
+                postData.update({'search_start':page + 1, 'full_search':'0', 'result_from':10 * page + 1})
                 params['post_data'] = postData
                 self.addDir(params)
             else:
@@ -204,8 +204,8 @@ class Altadefinizione(CBaseHostClass):
         for item in data:
             tmp = self.cm.ph.getDataBeetwenNodes(item, ('<h', '>'), ('</h', '>'), False)[1]
 
-            icon  = self.getFullIconUrl(self.cm.ph.getSearchGroups(item, '''<img[^>]+?src=['"]([^"^']+?)['"]''')[0].replace('/40x59-', '/203x293-'))
-            url   = self.getFullUrl(self.cm.ph.getSearchGroups(tmp, '''href=['"]([^"^']+?)['"]''')[0])
+            icon = self.getFullIconUrl(self.cm.ph.getSearchGroups(item, '''<img[^>]+?src=['"]([^"^']+?)['"]''')[0].replace('/40x59-', '/203x293-'))
+            url = self.getFullUrl(self.cm.ph.getSearchGroups(tmp, '''href=['"]([^"^']+?)['"]''')[0])
             title = self.cleanHtmlStr(tmp)
             if url == '':
                 continue
@@ -223,7 +223,7 @@ class Altadefinizione(CBaseHostClass):
         
         if nextPage != '':
             params = dict(cItem)
-            params.update({'title':_("Next page"), 'url':self.getFullUrl(nextPage), 'page':page+1})
+            params.update({'title':_("Next page"), 'url':self.getFullUrl(nextPage), 'page':page + 1})
             self.addDir(params)
 
     def exploreItem(self, cItem):
@@ -277,7 +277,7 @@ class Altadefinizione(CBaseHostClass):
 
     def getVideoLinks(self, videoUrl):
         printDBG("Altadefinizione.getVideoLinks [%s]" % videoUrl)
-        return  self.up.getVideoLinkExt(videoUrl)
+        return self.up.getVideoLinkExt(videoUrl)
 
     def getArticleContent(self, cItem):
         printDBG("Altadefinizione.getVideoLinks [%s]" % cItem)
@@ -328,9 +328,9 @@ class Altadefinizione(CBaseHostClass):
         if title == '':
             title = cItem['title']
         if icon == '':
-            icon  = cItem.get('icon', self.DEFAULT_ICON_URL)
+            icon = cItem.get('icon', self.DEFAULT_ICON_URL)
         if desc == '':
-            desc  = cItem.get('desc', '')
+            desc = cItem.get('desc', '')
         
         return [{'title':self.cleanHtmlStr(title), 'text': self.cleanHtmlStr(desc), 'images':[{'title':'', 'url':self.getFullUrl(icon)}], 'other_info':{'custom_items_list':itemsList}}]
 
@@ -339,9 +339,9 @@ class Altadefinizione(CBaseHostClass):
         
         CBaseHostClass.handleService(self, index, refresh, searchPattern, searchType)
 
-        name     = self.currItem.get("name", '')
+        name = self.currItem.get("name", '')
         category = self.currItem.get("category", '')
-        mode     = self.currItem.get("mode", '')
+        mode = self.currItem.get("mode", '')
         
         printDBG("handleService: || name[%s], category[%s] " % (name, category))
         self.currList = []

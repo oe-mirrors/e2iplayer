@@ -17,7 +17,7 @@ DUKTAPE_VER = '226'
 def duktape_execute(cmd_params):
     ret = {'sts':False, 'code':-12, 'data':''}
     noDuk = False
-    cmd =  GetDukPath()
+    cmd = GetDukPath()
     if cmd != '':
         cmd += ' ' + cmd_params + ' 2> /dev/null'
         printDBG("duktape_execute cmd[%s]" % cmd)

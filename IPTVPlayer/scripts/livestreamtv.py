@@ -51,16 +51,16 @@ if __name__ == "__main__":
         sys.exit(1)
     try:
         timeout = 20 # 20s
-        hlsUrl     = sys.argv[1]
+        hlsUrl = sys.argv[1]
         refreshUrl = sys.argv[2]
-        referer    = sys.argv[3]
-        userAgent  = sys.argv[4]
+        referer = sys.argv[3]
+        userAgent = sys.argv[4]
         print(hlsUrl, file=sys.stderr)
         while True:
             printDBG("Refreshing....")
             start_time = time.time()
             tm = str(int(start_time * 1000))
-            url = refreshUrl + "&_="+tm+"&callback=?"
+            url = refreshUrl + "&_=" + tm + "&callback=?"
             getPage(url, {'Referer':referer, 'User-Agent':userAgent})
             dt = time.time() - start_time
             if dt > 0 and dt < 20:

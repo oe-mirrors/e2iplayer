@@ -37,10 +37,10 @@ class GamatoMovies(CBaseHostClass):
         self.MAIN_URL = 'http://gamato-movies.com/'
         self.DEFAULT_ICON_URL = self.MAIN_URL + 'assets/uploads/images/aaw81QHKtm.png'
         
-        self.MAIN_CAT_TAB = [{'category':'movies',            'title': _('Movies'),                       'priv_type':'movie',  'url':self.getFullUrl('movies'),  'icon':self.DEFAULT_ICON_URL},
-                             {'category':'series',            'title': _('Series'),                       'priv_type':'series', 'url':self.getFullUrl('series'),  'icon':self.DEFAULT_ICON_URL},
-                             {'category':'search',            'title': _('Search'), 'search_item':True,         'icon':self.DEFAULT_ICON_URL},
-                             {'category':'search_history',    'title': _('Search history'),                     'icon':self.DEFAULT_ICON_URL} 
+        self.MAIN_CAT_TAB = [{'category':'movies', 'title': _('Movies'), 'priv_type':'movie', 'url':self.getFullUrl('movies'), 'icon':self.DEFAULT_ICON_URL},
+                             {'category':'series', 'title': _('Series'), 'priv_type':'series', 'url':self.getFullUrl('series'), 'icon':self.DEFAULT_ICON_URL},
+                             {'category':'search', 'title': _('Search'), 'search_item':True, 'icon':self.DEFAULT_ICON_URL},
+                             {'category':'search_history', 'title': _('Search history'), 'icon':self.DEFAULT_ICON_URL} 
                             ]
         
         self.cacheFilters = {}
@@ -118,8 +118,8 @@ class GamatoMovies(CBaseHostClass):
         if 'order' in cItem:
             baseUrl += '&order={0}'.format(cItem['order'])
         if 'year' in cItem:
-            baseUrl += '&after={0}-12-31'.format(cItem['year']-1)
-            baseUrl += '&before={0}-1-1'.format(cItem['year']+1)
+            baseUrl += '&after={0}-12-31'.format(cItem['year'] - 1)
+            baseUrl += '&before={0}-1-1'.format(cItem['year'] + 1)
         if 'min_rating' in cItem:
             baseUrl += '&minRating={0}'.format(cItem['min_rating'])
         if 'query' in cItem:
@@ -136,9 +136,9 @@ class GamatoMovies(CBaseHostClass):
                         url = 'movies'
                     else:
                         url = item['type']
-                    url   = self.getFullUrl(url + '/'  + str(item['id']))
+                    url = self.getFullUrl(url + '/' + str(item['id']))
                     title = '{0} ({1})'.format(self.getStr(item, 'title'), self.getStr(item, 'year'))
-                    desc  = '{0}/10|{1}[/br]{2}'.format(self.getStr(item, 'imdb_rating'), self.getStr(item, 'genre'), self.getStr(item, 'plot'))
+                    desc = '{0}/10|{1}[/br]{2}'.format(self.getStr(item, 'imdb_rating'), self.getStr(item, 'genre'), self.getStr(item, 'plot'))
                     params = dict(cItem)
                     params.update({'good_for_fav': True, 'title':title, 'url':url, 'priv_type':self.getStr(item, 'type'), 'priv_id':self.getStr(item, 'id'), 'icon':self.getStr(item, 'poster'), 'desc':desc})
                     if item['type'] == 'movie':
@@ -150,7 +150,7 @@ class GamatoMovies(CBaseHostClass):
                     printExc()
             if data['totalItems'] > page * perPage:
                 params = dict(cItem)
-                params.update({'title':_('Next page'), 'page':page+1})
+                params.update({'title':_('Next page'), 'page':page + 1})
                 self.addDir(params)
         except Exception:
             printExc()
@@ -160,14 +160,14 @@ class GamatoMovies(CBaseHostClass):
         info = {}
         data = self.cm.ph.getDataBeetwenMarkers(data, '<div class="group series-info"', '</div>')[1]
         info['title'] = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(data, '<h1', '</h1>')[1])
-        info['icon']  = self.getFullUrl(self.cm.ph.getSearchGroups(data, 'src="([^"]+?)"')[0])
-        info['desc']  = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(data, '<p class="description"', '</p>')[1].split('</strong>')[-1])
-        info['full_desc']  = self.cleanHtmlStr(data.split('</h1>')[-1])
+        info['icon'] = self.getFullUrl(self.cm.ph.getSearchGroups(data, 'src="([^"]+?)"')[0])
+        info['desc'] = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(data, '<p class="description"', '</p>')[1].split('</strong>')[-1])
+        info['full_desc'] = self.cleanHtmlStr(data.split('</h1>')[-1])
         keysMap = {'Gatunek:':'genre'}
         data = self.cm.ph.getAllItemsBeetwenMarkers(data, '<strong>', '<br/>', withMarkers=True)
         for item in data:
-            tmp   = item.split('</strong>')
-            key   = self.cleanHtmlStr(tmp[0])
+            tmp = item.split('</strong>')
+            key = self.cleanHtmlStr(tmp[0])
             value = self.cleanHtmlStr(tmp[-1])
             if key in keysMap:
                 info[keysMap[key]] = value
@@ -197,12 +197,12 @@ class GamatoMovies(CBaseHostClass):
                 title = self.getStr(item, 'title')
                 if '' == title:
                     title = _('Season {0}'.format(item['number']))
-                url   = self.getFullUrl(cItem['url'] + '/seasons/'  + str(item['number']))
+                url = self.getFullUrl(cItem['url'] + '/seasons/' + str(item['number']))
                 overview = self.getStr(item, 'overview')
                 if overview == '':
                     desc = cItem['desc']
                 else:
-                    desc  = '{0}[/br]{1}'.format(self.getStr(item, 'release_date'), overview)
+                    desc = '{0}[/br]{1}'.format(self.getStr(item, 'release_date'), overview)
                 params = {'good_for_fav': True, 'category':nextCategory, 'priv_type':cItem['priv_type'], 'title':title, 'url':url, 'priv_stitle':cItem['title'], 'priv_snum':self.getStr(item, 'number'), 'priv_id':self.getStr(item, 'id'), 'icon':self.getStr(item, 'poster'), 'desc':desc}
                 self.addDir(params)
         except Exception:
@@ -218,13 +218,13 @@ class GamatoMovies(CBaseHostClass):
         
         data = self.cm.ph.getAllItemsBeetwenMarkers(data, '<li class="media">', '</li>', withMarkers=True)
         for item in data:
-            url    = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''href=['"]([^'^"]+?)['"]''')[0])
+            url = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''href=['"]([^'^"]+?)['"]''')[0])
             status = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(item, '<a', '</a>')[1])
-            title  = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(item, '<h4', '</h4>')[1])
-            icon   = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''src=['"]([^'^"]+?)['"]''')[0])
-            desc   = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(item, '<strong', '</div>')[1].replace('</strong>', '[/br]'))
-            eNum   = url.split('/')[-1]
-            title  = cItem['priv_stitle'] + ': s{0}e{1} {2}'.format(sNum.zfill(2), eNum.zfill(2), title)
+            title = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(item, '<h4', '</h4>')[1])
+            icon = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''src=['"]([^'^"]+?)['"]''')[0])
+            desc = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(item, '<strong', '</div>')[1].replace('</strong>', '[/br]'))
+            eNum = url.split('/')[-1]
+            title = cItem['priv_stitle'] + ': s{0}e{1} {2}'.format(sNum.zfill(2), eNum.zfill(2), title)
             params = {'good_for_fav': True, 'priv_type':cItem['priv_type'], 'title':title, 'url':url, 'icon':icon, 'desc':status + '[/br]' + desc}
             self.addVideo(params)
 
@@ -246,7 +246,7 @@ class GamatoMovies(CBaseHostClass):
         if 'trailer' == cItem['priv_type']:
             return self.up.getVideoLinkExt(cItem['url'])
             
-        urlTab = self.cacheLinks.get(cItem['url'],  [])
+        urlTab = self.cacheLinks.get(cItem['url'], [])
         if len(urlTab):
             return urlTab
         self.cacheLinks = {}
@@ -268,7 +268,7 @@ class GamatoMovies(CBaseHostClass):
         data = self.cm.ph.getAllItemsBeetwenMarkers(data, '<tr data-id=', '</tr>', withMarkers=True)
         for item in data:
             name = self.cleanHtmlStr(item)
-            url  = self.cm.ph.getSearchGroups(item, '''playVideo[^'^"]+?['"](http[^'^"]+?)['"]''')[0].strip()
+            url = self.cm.ph.getSearchGroups(item, '''playVideo[^'^"]+?['"](http[^'^"]+?)['"]''')[0].strip()
             urlTab.append({'name':name, 'url':url, 'need_resolve':1})
         #try:
         #    data = '[' + self.cm.ph.getDataBeetwenMarkers(data, '"link":[', ']', False)[1] + ']'
@@ -354,9 +354,9 @@ class GamatoMovies(CBaseHostClass):
         
         CBaseHostClass.handleService(self, index, refresh, searchPattern, searchType)
 
-        name     = self.currItem.get("name", '')
+        name = self.currItem.get("name", '')
         category = self.currItem.get("category", '')
-        mode     = self.currItem.get("mode", '')
+        mode = self.currItem.get("mode", '')
         
         printDBG("handleService: |||||||||||||||||||||||||||||||||||| name[%s], category[%s] " % (name, category))
         self.currList = []

@@ -27,7 +27,7 @@ import random
 import base64
 from time import time
 from Plugins.Extensions.IPTVPlayer.libs.crypto.cipher.aes_cbc import AES_CBC
-from binascii import  a2b_hex
+from binascii import a2b_hex
 from hashlib import md5
 from datetime import datetime
 ############################################
@@ -49,8 +49,8 @@ def GetConfigList():
 ###################################################
 
 class Sport365LiveApi:
-    MAIN_URL   = 'http://www.sport365.live/'
-    HTTP_HEADER  = {'User-Agent':'Mozilla/5.0 (X11; Linux i686) AppleWebKit/537.36 (KHTML, like Gecko) Ubuntu Chromium/37.0.2062.120 Chrome/37.0.2062.120 Safari/537.36', 'Accept-Encoding':'gzip, deflate', 'Referer': MAIN_URL}
+    MAIN_URL = 'http://www.sport365.live/'
+    HTTP_HEADER = {'User-Agent':'Mozilla/5.0 (X11; Linux i686) AppleWebKit/537.36 (KHTML, like Gecko) Ubuntu Chromium/37.0.2062.120 Chrome/37.0.2062.120 Safari/537.36', 'Accept-Encoding':'gzip, deflate', 'Referer': MAIN_URL}
     CACHE_AES_PASSWORD = ''
     
     def __init__(self):
@@ -90,7 +90,7 @@ class Sport365LiveApi:
             while len(d) < key_length + iv_length:
                 d_i = md5(d_i + password + salt).digest()
                 d += d_i
-            return d[:key_length], d[key_length:key_length+iv_length]
+            return d[:key_length], d[key_length:key_length + iv_length]
         bs = 16
         key, iv = derive_key_and_iv(password, salt, 32, 16)
         cipher = AES_CBC(key=key, keySize=32)
@@ -100,10 +100,10 @@ class Sport365LiveApi:
         playerUrl = ''
         if linkData:
             try:
-                linkData   = json_loads(base64.b64decode(linkData))
+                linkData = json_loads(base64.b64decode(linkData))
                 ciphertext = base64.b64decode(linkData['ct'])
-                iv         = a2b_hex(linkData['iv'])
-                salt       = a2b_hex(linkData['s'])
+                iv = a2b_hex(linkData['iv'])
+                salt = a2b_hex(linkData['s'])
 
                 playerUrl = json_loads(self.cryptoJS_AES_decrypt(ciphertext, aes, salt))
                 printDBG("player Url -->  %s " % str(playerUrl))
@@ -120,7 +120,7 @@ class Sport365LiveApi:
             id = '403'
             
         printDBG(">> id[%s]\n" % id)
-        xz = str(int(time() * 1000)) + id + str(int(random.random()*1000)) + str(2 * int(random.random()*4)) + str(num)
+        xz = str(int(time() * 1000)) + id + str(int(random.random() * 1000)) + str(2 * int(random.random() * 4)) + str(num)
         xz = base64.b64encode(xz)
         return 'MarketGidStorage=%s; ' % urllib.parse.quote('{"0":{"svspr":"%s","svsds":%s,"TejndEEDj":"%s"},"C%s":{"page":1,"time":%s}}' % (referer, num, xz, id, int(time() * 100)))
         
@@ -148,7 +148,7 @@ class Sport365LiveApi:
         awrapperUrls = re.compile('''['"]([^"^']*?/awrapper/[^'^"]*?)["']''').findall(data)
         
         D = datetime.now()
-        timeMarker = '{0}{1}{2}{3}'.format(D.year-1900, D.month-1, D.day, D.hour)
+        timeMarker = '{0}{1}{2}{3}'.format(D.year - 1900, D.month - 1, D.day, D.hour)
         jscUrl = self.cm.ph.getSearchGroups(data, '''['"]([^'^"]*?jsc\.mgid[^'^"]*?)['"]''')[0]
         printDBG(">> [%s]" % jscUrl)
         if jscUrl.endswith('t='):
@@ -226,8 +226,8 @@ class Sport365LiveApi:
                 else:
                     title = ''
                 title += self.cleanHtmlStr(item)
-                desc  = self.cm.ph.getSearchGroups(item, '''alt=['"]([^'^"]+?)['"]''')[0]
-                desc  = date + ' ' + self.cleanHtmlStr(desc)
+                desc = self.cm.ph.getSearchGroups(item, '''alt=['"]([^'^"]+?)['"]''')[0]
+                desc = date + ' ' + self.cleanHtmlStr(desc)
                 linksData = []
                 tmp = self.cm.ph.getSearchGroups(item, '''onClick=[^(]*?\(([^)]+?)\)''')[0].split(',')
                 for t in tmp:
@@ -262,7 +262,7 @@ class Sport365LiveApi:
                 linkTitle = self.cleanHtmlStr(link)
                 if '{' in linkTitle:
                     continue
-                linkData  = self.cm.ph.getSearchGroups(link, '''onClick=[^(]*?\(([^)]+?)\)''')[0].split(',')[0].replace('"', '').replace("'", '').strip()
+                linkData = self.cm.ph.getSearchGroups(link, '''onClick=[^(]*?\(([^)]+?)\)''')[0].split(',')[0].replace('"', '').replace("'", '').strip()
                 if linkData != '':
                     params = dict(cItem)
                     params.update({'type':'video', 'link_data':linkData, 'event_id':eventId, 'desc':desc, 'title':sourceTitle + ' ' + linkTitle})
@@ -336,7 +336,7 @@ class Sport365LiveApi:
         data = re.compile('''src=['"](http[^"^']*?/js/[0-9a-fA-F]{32}\.js[^'^"]*?)["']''').findall(data)[::-1]
         num = 0
         deObfuscatedData = ''
-        aes_password=[]
+        aes_password = []
 
         for commonUrl in data:
             num += 1

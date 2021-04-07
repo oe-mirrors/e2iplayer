@@ -12,7 +12,7 @@ from Plugins.Extensions.IPTVPlayer.tools.iptvtypes import strwithmeta
 # FOREIGN import
 ###################################################
 import urllib.parse
-from datetime import  timedelta
+from datetime import timedelta
 try:
     import json
 except Exception:
@@ -37,7 +37,7 @@ class MyFreeMp3(CBaseHostClass):
         self.defaultParams = {'header':self.HTTP_HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
         
         self.MAIN_CAT_TAB = [
-                             {'category':'search',         'title': _('Search'),          'search_item':True}, 
+                             {'category':'search', 'title': _('Search'), 'search_item':True}, 
                              {'category':'search_history', 'title': _('Search history')},
                             ]
         self.streamUrl = 'http://s.mp3-music-downloads.com/'
@@ -84,7 +84,7 @@ class MyFreeMp3(CBaseHostClass):
             sort = self.cm.ph.getSearchGroups(item, '''value=['"]([^'^"]+?)['"]''')[0]
             params = dict(cItem)
             params.update({'category':'list_items', 'url':url})
-            params['post_data'] =  {'q':searchPattern} #'sort':'2', 'count':'300', 'performer_only':'0'
+            params['post_data'] = {'q':searchPattern} #'sort':'2', 'count':'300', 'performer_only':'0'
             if sort == '':
                 params['title'] = _('Default')
             else:
@@ -108,7 +108,7 @@ class MyFreeMp3(CBaseHostClass):
         if -1 in [m1, m2]:
             return
         
-        data = data[m1+1:m2]
+        data = data[m1 + 1:m2]
         try:
             data = byteify(json.loads(data), '')
             printDBG(data)
@@ -171,7 +171,7 @@ class MyFreeMp3(CBaseHostClass):
             else:
                 id = item['id']
             
-            url  = self.streamUrl + 'stream/%s:%s' % (encode(item['owner_id']), encode(id))
+            url = self.streamUrl + 'stream/%s:%s' % (encode(item['owner_id']), encode(id))
             #url  = 'http://streams.my-free-mp3.net/stream/%s:%s' % (encode(item['owner_id']), encode(item['aid']))
             return [{'name':'direct', 'url':strwithmeta(url, {'User-Agent':self.USER_AGENT, 'Referer':self.getMainUrl()})}]
         except Exception:
@@ -184,9 +184,9 @@ class MyFreeMp3(CBaseHostClass):
         
         CBaseHostClass.handleService(self, index, refresh, searchPattern, searchType)
 
-        name     = self.currItem.get("name", '')
+        name = self.currItem.get("name", '')
         category = self.currItem.get("category", '')
-        mode     = self.currItem.get("mode", '')
+        mode = self.currItem.get("mode", '')
         
         printDBG("handleService: |||| name[%s], category[%s] " % (name, category))
         self.cacheLinks = {}

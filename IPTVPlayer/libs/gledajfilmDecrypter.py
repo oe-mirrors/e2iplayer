@@ -30,10 +30,10 @@ class gledajfilmDecrypter:
 
 		while _loc9_ > 0:
 			_loc5_ = self.decryption(_loc6_[_loc9_ * _loc7_:(_loc9_ + 1) * _loc7_], _loc8_)
-			_loc4_ = _loc5_+(_loc4_)
+			_loc4_ = _loc5_ + (_loc4_)
 			_loc9_ -= 1
 		_loc44 = self.decryption(_loc6_[0:int(_loc7_)], _loc8_)
-		_loc4_ = _loc44+_loc4_
+		_loc4_ = _loc44 + _loc4_
 		_loc4_ = self.charsToStr(_loc4_)
 		
 		return _loc4_
@@ -55,16 +55,16 @@ class gledajfilmDecrypter:
 		_loc3_ = []
 		self.Nr = self.roundsArray[self.Nk][self.Nb] # ==12, what if this was 10?
 		_loc4_ = 0
-		_loc3_ = [0]*(self.Nb * (self.Nr + 1))
+		_loc3_ = [0] * (self.Nb * (self.Nr + 1))
 		while _loc4_ < self.Nk:
-			if (_loc4_)<len(param1)/4:
+			if (_loc4_) < len(param1) / 4:
 				_loc3_[_loc4_] = param1[4 * _loc4_] | param1[4 * _loc4_ + 1] << 8 | param1[4 * _loc4_ + 2] << 16 | param1[4 * _loc4_ + 3] << 24
 			_loc4_ += 1 
 		_loc4_ = self.Nk
 		while _loc4_ < self.Nb * (self.Nr + 1):
 			_loc2_ = _loc3_[_loc4_ - 1]
 			if(_loc4_ % self.Nk == 0):
-				_loc2_ = (self.SBox[_loc2_ >> 8 & 255] | self.SBox[_loc2_ >> 16 & 255] << 8 | self.SBox[_loc2_ >> 24 & 255] << 16 | self.SBox[_loc2_ & 255] << 24) ^ self.Rcon[int(math.floor(_loc4_ / self.Nk))-1]
+				_loc2_ = (self.SBox[_loc2_ >> 8 & 255] | self.SBox[_loc2_ >> 16 & 255] << 8 | self.SBox[_loc2_ >> 24 & 255] << 16 | self.SBox[_loc2_ & 255] << 24) ^ self.Rcon[int(math.floor(_loc4_ / self.Nk)) - 1]
 			else:
 				if(self.Nk > 6 and _loc4_ % self.Nk == 4):
 					_loc2_ = self.SBox[_loc2_ >> 24 & 255] << 24 | self.SBox[_loc2_ >> 16 & 255] << 16 | self.SBox[_loc2_ >> 8 & 255] << 8 | self.SBox[_loc2_ & 255]
@@ -81,7 +81,7 @@ class gledajfilmDecrypter:
 			_loc3_ = 2
 		
 		while _loc3_ < len(param1):
-			_loc2_.append(int(param1[_loc3_:_loc3_+2], 16))
+			_loc2_.append(int(param1[_loc3_:_loc3_ + 2], 16))
 			_loc3_ = _loc3_ + 2
 
 		return _loc2_
@@ -92,7 +92,7 @@ class gledajfilmDecrypter:
 		_loc3_ = 0
 		while(_loc3_ < len(param1)):
 			_loc2_.append(ord(param1[_loc3_]))
-			_loc3_+=1
+			_loc3_ += 1
 		
 		return _loc2_
 
@@ -174,7 +174,7 @@ class gledajfilmDecrypter:
 			else:
 				param1[_loc3_] = self.cyclicShiftLeft(param1[_loc3_], self.Nb - self.shiftOffsets[self.Nb][_loc3_])
                   
-			_loc3_+=1
+			_loc3_ += 1
 
 			
 	def cyclicShiftLeft(self, param1, param2):
@@ -191,7 +191,7 @@ class gledajfilmDecrypter:
 		_loc3_ = self.Nr - 1
 		while(_loc3_ > 0):
 			self.InverseRound(param1, param2[(self.Nb * _loc3_):self.Nb * (_loc3_ + 1)])
-			_loc3_-=1
+			_loc3_ -= 1
          
 		self.addRoundKey(param1, param2)
 		reVal = self.unpackBytes(param1)
@@ -270,7 +270,7 @@ def hexToChars(param1):
 		_loc3_ = 2
 		
 	while _loc3_ < len(param1):
-		_loc2_.append(int(param1[_loc3_:_loc3_+1], 16))
+		_loc2_.append(int(param1[_loc3_:_loc3_ + 1], 16))
 		_loc3_ = _loc3_ + 2
 
 	return "".join(_loc2_)
@@ -284,7 +284,7 @@ def arrNametoString(param1):
 	_loc3_ = 0
 	while(_loc3_ < len(param1)):
 		_loc2_ = _loc2_ + chr(param1[_loc3_])
-		_loc3_+=1
+		_loc3_ += 1
 
 	return _loc2_
 

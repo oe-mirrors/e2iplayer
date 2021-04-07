@@ -32,8 +32,8 @@ class TeledunetParser:
         
         url = self.TELEDUNET_TIMEPLAYER_URL % channel_name
         
-        HTTP_HEADER= {'Host':       self.HEADER_HOST,
-                       'Referer':    self.HEADER_REFERER,
+        HTTP_HEADER = {'Host': self.HEADER_HOST,
+                       'Referer': self.HEADER_REFERER,
                        'User-agent': self.HEADER_USER_AGENT}
                        
         params = {'header':HTTP_HEADER, 'cookiefile':self.COOKIE_FILE, 'use_cookie': True, 'load_cookie':True, 'save_cookie':False} 

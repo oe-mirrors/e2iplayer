@@ -66,8 +66,8 @@ class TitlovicomProvider(CBaseSubProviderClass):
         self.LANGUAGE_CACHE = ['hr', 'ba', 'mk', 'si', 'rs']
         self.BASE_URL_CACHE = {'hr':'titlovi', 'ba':'prijevodi', 'mk':'prevodi', 'si':'podnapisi', 'rs':'prevodi'}
         self.pageLang = 'hr'
-        self.USER_AGENT    = 'Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/64.0.3282.168 Safari/537.36'
-        self.HTTP_HEADER   = {'User-Agent':self.USER_AGENT, 'Referer':self.getMainUrl(), 'Accept':'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8', 'Accept-Encoding':'gzip, deflate'}
+        self.USER_AGENT = 'Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/64.0.3282.168 Safari/537.36'
+        self.HTTP_HEADER = {'User-Agent':self.USER_AGENT, 'Referer':self.getMainUrl(), 'Accept':'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8', 'Accept-Encoding':'gzip, deflate'}
         
         self.defaultParams = {'header':self.HTTP_HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
         self.dInfo = params['discover_info']
@@ -98,7 +98,7 @@ class TitlovicomProvider(CBaseSubProviderClass):
     def getType(self, cItem):
         printDBG("TitlovicomProvider.getType")
         imdbid = cItem['imdbid']
-        title  = cItem['title']
+        title = cItem['title']
         type = self.getTypeFromThemoviedb(imdbid, title)
         if type == 'series':
             promSeason = self.dInfo.get('season')
@@ -114,9 +114,9 @@ class TitlovicomProvider(CBaseSubProviderClass):
             
     def getEpisodes(self, cItem, nextCategory):
         printDBG("TitlovicomProvider.getEpisodes")
-        imdbid    = cItem['imdbid']
+        imdbid = cItem['imdbid']
         itemTitle = cItem['item_title']
-        season    = cItem['season']
+        season = cItem['season']
         
         promEpisode = self.dInfo.get('episode')
         sts, tab = self.imdbGetEpisodesForSeason(imdbid, season, promEpisode)
@@ -169,7 +169,7 @@ class TitlovicomProvider(CBaseSubProviderClass):
             data = self.cm.ph.getDataBeetwenMarkers(data, '<div class="advanced_search hidden">', '</form>', False)[1]
             data = self.cm.ph.getAllItemsBeetwenMarkers(data, '<input', '/>')
             for item in data:
-                name  = self.cm.ph.getSearchGroups(item, 'name="([^"]+?)"')[0]
+                name = self.cm.ph.getSearchGroups(item, 'name="([^"]+?)"')[0]
                 value = self.cm.ph.getSearchGroups(item, 'value="([^"]+?)"')[0]
                 if 'Token' in name:
                     post_data[name] = value
@@ -218,8 +218,8 @@ class TitlovicomProvider(CBaseSubProviderClass):
             url = self.cm.ph.getSearchGroups(item, 'href="([^"]+?)"')[0]
             if url == '':
                 continue
-            title  = item.split('<h5>')[0] #self.cm.ph.getDataBeetwenMarkers(item, '<h4', '</h4>')[1]
-            lang   = self.cm.ph.getSearchGroups(item, 'flags/([a-z]{2})')[0] 
+            title = item.split('<h5>')[0] #self.cm.ph.getDataBeetwenMarkers(item, '<h4', '</h4>')[1]
+            lang = self.cm.ph.getSearchGroups(item, 'flags/([a-z]{2})')[0] 
             
             # lang name
             desc = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(item, '<span class="lang', '</span>')[1])
@@ -242,7 +242,7 @@ class TitlovicomProvider(CBaseSubProviderClass):
             
         if nextPage != '':
             params = dict(cItem) 
-            params.update({'title':_('Next page'), 'page':page+1, 'next_page_url':self.getFullUrl(nextPage)})
+            params.update({'title':_('Next page'), 'page':page + 1, 'next_page_url':self.getFullUrl(nextPage)})
             self.addDir(params)
             
     def getSubtitlesList(self, cItem):
@@ -253,8 +253,8 @@ class TitlovicomProvider(CBaseSubProviderClass):
             return
         
         imdbid = self.cm.ph.getSearchGroups(data, '/title/(tt[0-9]+?)[^0-9]')[0]
-        subId  = self.cm.ph.getSearchGroups(data, 'mediaid=([0-9]+?)[^0-9]')[0]
-        url    = self.getFullUrl(self.cm.ph.getSearchGroups(data, 'href="([^"]*?/download[^"]+?mediaid=[^"]+?)"')[0])
+        subId = self.cm.ph.getSearchGroups(data, 'mediaid=([0-9]+?)[^0-9]')[0]
+        url = self.getFullUrl(self.cm.ph.getSearchGroups(data, 'href="([^"]*?/download[^"]+?mediaid=[^"]+?)"')[0])
         
         try:
             fps = float(self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(data, 'class="fps">', 'FPS', False)[1].upper()))
@@ -286,13 +286,13 @@ class TitlovicomProvider(CBaseSubProviderClass):
     def downloadSubtitleFile(self, cItem):
         printDBG("SubsceneComProvider.downloadSubtitleFile")
         retData = {}
-        title    = cItem['title']
-        lang     = cItem['lang']
-        subId    = cItem['sub_id']
-        imdbid   = cItem['imdbid']
+        title = cItem['title']
+        lang = cItem['lang']
+        subId = cItem['sub_id']
+        imdbid = cItem['imdbid']
         inFilePath = cItem['file_path']
-        ext      = cItem.get('ext', 'srt')
-        fps      = cItem.get('fps', 0)
+        ext = cItem.get('ext', 'srt')
+        fps = cItem.get('fps', 0)
         
         outFileName = self._getFileName(title, lang, subId, imdbid, fps, ext)
         outFileName = GetSubtitlesDir(outFileName)
@@ -312,7 +312,7 @@ class TitlovicomProvider(CBaseSubProviderClass):
         
         CBaseSubProviderClass.handleService(self, index, refresh)
 
-        name     = self.currItem.get("name", '')
+        name = self.currItem.get("name", '')
         category = self.currItem.get("category", '')
         
         printDBG("handleService: |||||||||||||||||||||||||||||||||||| name[%s], category[%s] " % (name, category))

@@ -36,19 +36,19 @@ class MuziCsillangCC(CBaseHostClass):
         self.AJAX_HEADER = dict(self.HEADER)
         self.AJAX_HEADER.update({'X-Requested-With': 'XMLHttpRequest'})
         self.MAIN_URL = 'https://mozicsillag.me/'
-        self.DEFAULT_ICON_URL =  strwithmeta('https://mozicsillag.me/img/logo.png', {'Referer':self.getMainUrl()})
-        self.cacheLinks    = {}
-        self.cacheFilters  = {}
+        self.DEFAULT_ICON_URL = strwithmeta('https://mozicsillag.me/img/logo.png', {'Referer':self.getMainUrl()})
+        self.cacheLinks = {}
+        self.cacheFilters = {}
         self.cacheFiltersKeys = []
         self.cacheSortOrder = []
         self.defaultParams = {'header':self.HEADER, 'with_metadata':True, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
     
-        self.MAIN_CAT_TAB = [{'category':'list_filters',    'title': _('Catalog'), 'url':self.getMainUrl(), 'use_query':True},
-                             {'category':'list_movies',     'title': _('Movies'),  'url':self.getMainUrl()},
-                             {'category':'list_series',     'title': _('Series'),  'url':self.getMainUrl()},
+        self.MAIN_CAT_TAB = [{'category':'list_filters', 'title': _('Catalog'), 'url':self.getMainUrl(), 'use_query':True},
+                             {'category':'list_movies', 'title': _('Movies'), 'url':self.getMainUrl()},
+                             {'category':'list_series', 'title': _('Series'), 'url':self.getMainUrl()},
                              
-                             {'category': 'search',            'title': _('Search'), 'search_item': True,},
-                             {'category': 'search_history',    'title': _('Search history'),} 
+                             {'category': 'search', 'title': _('Search'), 'search_item': True,},
+                             {'category': 'search_history', 'title': _('Search history'),} 
                             ]
                             
     def getFullIconUrl(self, url):
@@ -90,7 +90,7 @@ class MuziCsillangCC(CBaseHostClass):
             key = 'f_' + baseKey
             self.cacheFilters[key] = []
             for item in data:
-                type  = self.cm.ph.getSearchGroups(item, '''type="([^"]+?)"''')[0]
+                type = self.cm.ph.getSearchGroups(item, '''type="([^"]+?)"''')[0]
                 value = self.cm.ph.getSearchGroups(item, marker + '''="([^"]+?)"''')[0]
                 if value == '':
                     continue
@@ -159,7 +159,7 @@ class MuziCsillangCC(CBaseHostClass):
         filter = self.cacheFiltersKeys[f_idx]
         f_idx += 1
         cItem['f_idx'] = f_idx
-        if f_idx  == len(self.cacheFiltersKeys):
+        if f_idx == len(self.cacheFiltersKeys):
             cItem['category'] = nextCategory
         self.listsTab(self.cacheFilters.get(filter, []), cItem)
         
@@ -202,7 +202,7 @@ class MuziCsillangCC(CBaseHostClass):
             return
         
         nextPage = self.cm.ph.getDataBeetwenMarkers(data, 'pagination', '</ul>')[1]
-        if  '' != self.cm.ph.getSearchGroups(nextPage, 'page=(%s)[^0-9]' % (page+1))[0]:
+        if '' != self.cm.ph.getSearchGroups(nextPage, 'page=(%s)[^0-9]' % (page + 1))[0]:
             nextPage = True
         else:
             nextPage = False
@@ -241,7 +241,7 @@ class MuziCsillangCC(CBaseHostClass):
         
         if nextPage and len(self.currList) > 0:
             params = dict(cItem)
-            params.update({'title':_("Next page"), 'page':page+1})
+            params.update({'title':_("Next page"), 'page':page + 1})
             self.addDir(params)
             
     def _listCategories(self, cItem, nextCategory, m1, m2):
@@ -253,7 +253,7 @@ class MuziCsillangCC(CBaseHostClass):
         data = self.cm.ph.getDataBeetwenMarkers(data, m1, m2)[1]
         data = self.cm.ph.getAllItemsBeetwenMarkers(data, '<a', '</a>')
         for item in data:
-            url   = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''href=['"]([^'^"]+?)['"]''')[0])
+            url = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''href=['"]([^'^"]+?)['"]''')[0])
             title = self.cleanHtmlStr(item)
             params = dict(cItem)
             params.update({'category':nextCategory, 'title':title, 'url':url})
@@ -276,7 +276,7 @@ class MuziCsillangCC(CBaseHostClass):
             data = self.cm.ph.getDataBeetwenMarkers(data, '<dl ', '</dl>')[1]
             data = self.cm.ph.getAllItemsBeetwenMarkers(data, '<a', '</a>')
             for item in data:
-                sort  = self.cm.ph.getSearchGroups(item, '''href=['"]([^'^"]+?)['"]''')[0].split('/')[-1]
+                sort = self.cm.ph.getSearchGroups(item, '''href=['"]([^'^"]+?)['"]''')[0].split('/')[-1]
                 if sort == '':
                     continue
                 title = self.cleanHtmlStr(item)
@@ -308,10 +308,10 @@ class MuziCsillangCC(CBaseHostClass):
             if title.endswith(':'):
                 title = title[:-1]
             if title == '':
-                title = '%s - %s' %(cItem['title'], _('trailer'))
+                title = '%s - %s' % (cItem['title'], _('trailer'))
             if 1 == self.up.checkHostSupport(url):
                 params = dict(cItem)
-                params.update({'good_for_fav': False, 'title':'%s. %s' % (idx+1, title), 'prev_title':cItem['title'], 'url':url, 'prev_url':cItem['url'], 'prev_desc':cItem.get('desc', ''), 'desc':desc})
+                params.update({'good_for_fav': False, 'title':'%s. %s' % (idx + 1, title), 'prev_title':cItem['title'], 'url':url, 'prev_url':cItem['url'], 'prev_desc':cItem.get('desc', ''), 'desc':desc})
                 self.addVideo(params)
         
         sourcesLink = self.cm.ph.rgetDataBeetwenMarkers2(data, 'Beküldött linkek megtekintése', '<a', caseSensitive=False)[1]
@@ -333,7 +333,7 @@ class MuziCsillangCC(CBaseHostClass):
                 return
             lastUrl = data.meta['url']
         
-        self.cacheLinks  = {}
+        self.cacheLinks = {}
         
         data = self.cm.ph.getDataBeetwenMarkers(data, '<div class="links_holder', '<script type="text/javascript">', False)[1]
         data = data.split('accordion-episodes')
@@ -468,24 +468,24 @@ class MuziCsillangCC(CBaseHostClass):
         data = self.cm.ph.getDataBeetwenMarkers(data, '<div class="row" id="content-tab">', '<div id="zone')[1]
         
         title = '' #self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(data, '<div class="f_t_b">', '</div>')[1])
-        icon  = self.getFullIconUrl(self.cm.ph.getSearchGroups(data, '''<img[^>]+?src=['"]([^"^']+?\.jpe?g[^"^']*?)["']''')[0])
-        desc  = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(data, '<p>', '</p>', False)[1])
+        icon = self.getFullIconUrl(self.cm.ph.getSearchGroups(data, '''<img[^>]+?src=['"]([^"^']+?\.jpe?g[^"^']*?)["']''')[0])
+        desc = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(data, '<p>', '</p>', False)[1])
         
         for item in [('Rendező(k):', 'directors'),
-                     ('Színészek:',     'actors'),
-                     ('Kategoria:',      'genre')]:
+                     ('Színészek:', 'actors'),
+                     ('Kategoria:', 'genre')]:
             tmpTab = []
             tmp = self.cm.ph.getDataBeetwenMarkers(data, item[0], '</li>', False)[1].split('<br>')
             for t in tmp:
-                t = self.cleanHtmlStr(t).replace(' , ',  ', ')
+                t = self.cleanHtmlStr(t).replace(' , ', ', ')
                 if t != '':
                     tmpTab.append(t)
             if len(tmpTab):
                 otherInfo[item[1]] = ', '.join(tmpTab)
         
-        for item in [('Játékidő:',     'duration'),
+        for item in [('Játékidő:', 'duration'),
                      ('IMDB Pont:', 'imdb_rating'),
-                     ('Nézettség:',       'views')]:
+                     ('Nézettség:', 'views')]:
             tmp = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(data, item[0], '</li>', False)[1])
             if tmp != '':
                 otherInfo[item[1]] = tmp
@@ -504,9 +504,9 @@ class MuziCsillangCC(CBaseHostClass):
         
         CBaseHostClass.handleService(self, index, refresh, searchPattern, searchType)
 
-        name     = self.currItem.get("name", '')
+        name = self.currItem.get("name", '')
         category = self.currItem.get("category", '')
-        mode     = self.currItem.get("mode", '')
+        mode = self.currItem.get("mode", '')
         
         printDBG("handleService: |||||||||||||||||||||||||||||||||||| name[%s], category[%s] " % (name, category))
         self.currList = []

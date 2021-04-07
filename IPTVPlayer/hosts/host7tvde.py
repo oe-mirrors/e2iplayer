@@ -32,7 +32,7 @@ class C7tvDe(CBaseHostClass):
         self.HTTP_HEADER = self.cm.getDefaultHeader(browser='chrome')
         self.defaultParams = {'header':self.HTTP_HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
 
-        self.MAIN_URL    = 'https://www.7tv.de/'
+        self.MAIN_URL = 'https://www.7tv.de/'
         self.DEFAULT_ICON_URL = 'https://s.p7s1.io/xfiles/7tv/android-icon-192x192.png'
 
         self.cacheLinks = {}
@@ -53,10 +53,10 @@ class C7tvDe(CBaseHostClass):
             return
         self.setMainUrl(self.cm.meta['url'])
 
-        MAIN_CAT_TAB = [{'category':'programs',       'title': 'Sendungen A-Z',       'url':self.getFullUrl('/sendungen-a-z')},
-                        {'category':'missed',         'title': 'Sendung verpasst',    'url':self.getFullUrl('/sendung-verpasst')},
-                        {'category':'channels',       'title': 'Sender',              'url':self.getMainUrl()},
-                        {'category':'search',         'title': _('Search'),       'search_item':True},
+        MAIN_CAT_TAB = [{'category':'programs', 'title': 'Sendungen A-Z', 'url':self.getFullUrl('/sendungen-a-z')},
+                        {'category':'missed', 'title': 'Sendung verpasst', 'url':self.getFullUrl('/sendung-verpasst')},
+                        {'category':'channels', 'title': 'Sender', 'url':self.getMainUrl()},
+                        {'category':'search', 'title': _('Search'), 'search_item':True},
                         {'category': 'search_history', 'title': _('Search history'),}]
         self.listsTab(MAIN_CAT_TAB, cItem)
 
@@ -109,7 +109,7 @@ class C7tvDe(CBaseHostClass):
             sTitle = ph.clean_html(ph.find(sData, ('<h3', '>'), '</h3>', flags=0)[1])
             sData = ph.findall(sData, ('<a', '>'), '</a>', flags=ph.START_S)
             for idx in range(1, len(sData), 2):
-                url = self.getFullUrl(ph.getattr(sData[idx-1], 'data-href'))
+                url = self.getFullUrl(ph.getattr(sData[idx - 1], 'data-href'))
                 title = ph.clean_html(sData[idx])
                 if url:
                     subItems.append(MergeDicts(cItem, {'url':url, 'title':title, 'category':nextCategory2}))
@@ -232,7 +232,7 @@ class C7tvDe(CBaseHostClass):
             if sTitle:
                 title = '%s: %s' % (sTitle, title)
             params = MergeDicts(cItem, {'good_for_fav':True, 'title':title, 'url':self.getFullUrl(url), 'icon':icon, 'desc':'[/br]'.join(desc)})
-            if 'class-clip' in data[idx-1]: # and '-clip' in url:
+            if 'class-clip' in data[idx - 1]: # and '-clip' in url:
                 params.update({'type':'video'})
             else:
                 params.update({'category':nextCategory})
@@ -273,7 +273,7 @@ class C7tvDe(CBaseHostClass):
             data = ph.find(data, ('<ul', '>', 'format-nav-list'), '</ul>', flags=0)[1]
             data = ph.findall(data, ('<a', '>'), '</a>', flags=ph.START_S)
             for idx in range(1, len(data), 2):
-                url = self.getFullUrl(ph.getattr(data[idx-1], 'href'))
+                url = self.getFullUrl(ph.getattr(data[idx - 1], 'href'))
                 if '7tv.de' not in self.cm.getBaseUrl(url, True):
                     continue
                 title = self.cleanHtmlStr(data[idx])
@@ -291,7 +291,7 @@ class C7tvDe(CBaseHostClass):
     def listSearchResultNext(self, cItem, nextCategory):
         ITEMS_NUM = 6
         page = cItem.get('page', 0)
-        url = cItem['url'].format(page*ITEMS_NUM, ITEMS_NUM)
+        url = cItem['url'].format(page * ITEMS_NUM, ITEMS_NUM)
         params = MergeDicts(cItem, {'url':url})
         self.listItems(params, nextCategory)
         if len(self.currList) == ITEMS_NUM:
@@ -325,14 +325,14 @@ class C7tvDe(CBaseHostClass):
 
         #dashLinks = self.doGetLinks(video_id, client_location, 'application/dash+xml')
         try:
-            for it in  (False, True):
-                hlsLinks  = self.doGetLinks(video_id, client_location, 'application/x-mpegURL', it)
+            for it in (False, True):
+                hlsLinks = self.doGetLinks(video_id, client_location, 'application/x-mpegURL', it)
                 if hlsLinks:
                     linksTab.extend(getDirectM3U8Playlist(hlsLinks[0]['url'], checkExt=True, checkContent=True, sortWithMaxBitrate=999999999))
                     break
 
-            for it in  (True, False):
-                mp4Links  = self.doGetLinks(video_id, client_location, 'video/mp4', it)
+            for it in (True, False):
+                mp4Links = self.doGetLinks(video_id, client_location, 'video/mp4', it)
                 for item in mp4Links:
                     if item['mimetype'] == 'video/mp4':
                         linksTab.append({'name':'[MP4] bitrate: %s' % item['bitrate'], 'url':item['url'], 'bitrate':item['bitrate']})
@@ -352,7 +352,7 @@ class C7tvDe(CBaseHostClass):
             if web:
                 access_token = 'h''b''b''t''v'  
                 salt = '0''1''r''e''e''6''e''L''e''i''w''i''u''m''i''e''7''i''e''V''8''p''a''h''g''e''i''T''u''i''3''B'
-                client_name='h''b''b''t''v'
+                client_name = 'h''b''b''t''v'
             else:
               access_token = 'seventv-web'  
               salt = '01!8d8F_)r9]4s[qeuXfP%'
@@ -368,7 +368,7 @@ class C7tvDe(CBaseHostClass):
 
             source_id = -1
             for stream in json_data['sources']:
-                if  stream['mimetype'] == mimetype and int(source_id) <  int(stream['id']):
+                if stream['mimetype'] == mimetype and int(source_id) < int(stream['id']):
                     source_id = stream['id']
 
             if source_id < 0:
@@ -441,7 +441,7 @@ class C7tvDe(CBaseHostClass):
         
         CBaseHostClass.handleService(self, index, refresh, searchPattern, searchType)
 
-        name     = self.currItem.get("name", '')
+        name = self.currItem.get("name", '')
         category = self.currItem.get("category", '')
         printDBG("handleService: ||| name[%s], category[%s] " % (name, category))
         self.currList = []
@@ -495,7 +495,7 @@ class IPTVHost(CHostBase):
 
     def getSearchTypes(self):
         searchTypesOptions = []
-        searchTypesOptions.append(("Sendungen",    "format"))
+        searchTypesOptions.append(("Sendungen", "format"))
         searchTypesOptions.append(("Ganze Folgen", "episode"))
-        searchTypesOptions.append(("Clips",        "clip"))
+        searchTypesOptions.append(("Clips", "clip"))
         return searchTypesOptions

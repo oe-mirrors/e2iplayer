@@ -16,7 +16,7 @@ import re
 import urllib.request
 import urllib.parse
 import urllib.error
-from datetime import  timedelta
+from datetime import timedelta
 ###################################################
 
 def gettytul():
@@ -65,8 +65,8 @@ class VimeoCom(CBaseHostClass):
     def listMainMenu(self, cItem):
         printDBG("VimeoCom.listMainMenu")
         
-        MAIN_CAT_TAB = [{'category':'categories',     'title': _('Categories'),      'url':self.getFullUrl('/categories')}, 
-                        {'category':'search',         'title': _('Search'),          'search_item':True}, 
+        MAIN_CAT_TAB = [{'category':'categories', 'title': _('Categories'), 'url':self.getFullUrl('/categories')}, 
+                        {'category':'search', 'title': _('Search'), 'search_item':True}, 
                         {'category':'search_history', 'title': _('Search history')},]
         
         self.listsTab(MAIN_CAT_TAB, cItem)
@@ -98,9 +98,9 @@ class VimeoCom(CBaseHostClass):
         
         data = self.cm.ph.getAllItemsBeetwenNodes(data, ('<div', '>', 'category category'), ('</a', '>'))
         for item in data:
-            icon  = self.cm.ph.getSearchGroups(item, '''\ssrc=['"]([^'^"]+?)['"]''')[0]
-            url   = self.cm.ph.getSearchGroups(item, '''\shref=['"]([^'^"]+?)['"]''')[0]
-            cat  = url.split('/')
+            icon = self.cm.ph.getSearchGroups(item, '''\ssrc=['"]([^'^"]+?)['"]''')[0]
+            url = self.cm.ph.getSearchGroups(item, '''\shref=['"]([^'^"]+?)['"]''')[0]
+            cat = url.split('/')
             if url.endswith('/'):
                 cat = cat[-2]
             else:
@@ -141,9 +141,9 @@ class VimeoCom(CBaseHostClass):
                     continue
                 
                 title = self.cleanHtmlStr(item['text'])
-                type  = item['name']
-                desc  = str(item['total'])
-                url   = cItem['url'] + '/' + self.typeMaps.get(type, '')
+                type = item['name']
+                desc = str(item['total'])
+                url = cItem['url'] + '/' + self.typeMaps.get(type, '')
                 params = dict(cItem)
                 params.update({'good_for_fav':False, 'category':nextCategory, 'url':url, 'title':title, 'f_type':type, 'desc':desc})
                 self.addDir(params)
@@ -175,9 +175,9 @@ class VimeoCom(CBaseHostClass):
             data = json_loads(data)
             for item in data['facets']['subcategory']['options']:
                 title = self.cleanHtmlStr(item['text'])
-                type  = item['name']
-                desc  = str(item['total'])
-                url   = cItem['url'] + '?subcategory=' + type
+                type = item['name']
+                desc = str(item['total'])
+                url = cItem['url'] + '?subcategory=' + type
                 params = dict(cItem)
                 params.update({'good_for_fav':False, 'category':nextCategory, 'title':title, 'f_subcategory':type, 'desc':desc})
                 self.addDir(params)
@@ -240,7 +240,7 @@ class VimeoCom(CBaseHostClass):
             printDBG(data)
             for item in data['data']:
                 type = item['type']
-                item  = item[type]
+                item = item[type]
                 title = self.cleanHtmlStr(item['name'])
                 url = self.getFullUrl(item['link'])
                 icon = self.getFullIconUrl(item['pictures']['sizes'][-1]['link'])
@@ -278,7 +278,7 @@ class VimeoCom(CBaseHostClass):
                 else:
                     self.addDir(params)
             
-            if data['total'] > data['page']*data['per_page']:
+            if data['total'] > data['page'] * data['per_page']:
                 params = dict(cItem)
                 params.update({'good_for_fav':False, 'title':_('Next page'), 'page':page + 1})
                 self.addDir(params)
@@ -318,16 +318,16 @@ class VimeoCom(CBaseHostClass):
             return
         
         nextPage = self.cm.ph.getDataBeetwenNodes(data, ('<div', '>', 'pagination'), ('</div', '>'))[1]
-        if ('/page:%s/' % (page+1)) in nextPage:
+        if ('/page:%s/' % (page + 1)) in nextPage:
             nextPage = True
         else:
             nextPage = False
         
         data = self.cm.ph.getAllItemsBeetwenNodes(data, ('<li', '>', 'id="clip_'), ('</li', '>'))
         for item in data:
-            icon  = self.cm.ph.getSearchGroups(item, '''\ssrc=['"]([^'^"]+?)['"]''')[0]
-            url   = self.cm.ph.getSearchGroups(item, '''\shref=['"]([^'^"]+?)['"]''')[0]
-            url   = url.split('/')[-1]
+            icon = self.cm.ph.getSearchGroups(item, '''\ssrc=['"]([^'^"]+?)['"]''')[0]
+            url = self.cm.ph.getSearchGroups(item, '''\shref=['"]([^'^"]+?)['"]''')[0]
+            url = url.split('/')[-1]
             title = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(item, ('<p', '>', 'title'), ('</p', '>'))[1])
             duration = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(item, ('<div', '>', 'duration'), ('</div', '>'))[1])
             desc = [duration]
@@ -372,9 +372,9 @@ class VimeoCom(CBaseHostClass):
         
         CBaseHostClass.handleService(self, index, refresh, searchPattern, searchType)
 
-        name     = self.currItem.get("name", '')
+        name = self.currItem.get("name", '')
         category = self.currItem.get("category", '')
-        mode     = self.currItem.get("mode", '')
+        mode = self.currItem.get("mode", '')
         
         printDBG("handleService: |||| name[%s], category[%s] " % (name, category))
         self.cacheLinks = {}
@@ -422,9 +422,9 @@ class IPTVHost(CHostBase):
         {'clip':'videos', 'ondemand':'', 'people':'peoples', 'group':'groups', 'channel':'channels'}
     def getSearchTypes(self):
         searchTypesOptions = []
-        searchTypesOptions.append((_('Videos'),   "clip"))
-        searchTypesOptions.append((_('People'),   "people"))
+        searchTypesOptions.append((_('Videos'), "clip"))
+        searchTypesOptions.append((_('People'), "people"))
         searchTypesOptions.append((_('Channels'), "channel"))
-        searchTypesOptions.append((_('Groups'),   "group"))
+        searchTypesOptions.append((_('Groups'), "group"))
         return searchTypesOptions
     

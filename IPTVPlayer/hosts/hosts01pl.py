@@ -35,7 +35,7 @@ class S01pl(CBaseHostClass):
         CBaseHostClass.__init__(self, {'history':'s01.pl', 'cookie':'s01.pl.cookie'})
         self.USER_AGENT = 'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:40.0) Gecko/20100101 Firefox/40.0'
         self.MAIN_URL = 'http://s01.pl/'
-        self.API_URL  = self.getFullUrl('secure/titles')
+        self.API_URL = self.getFullUrl('secure/titles')
         self.DEFAULT_ICON_URL = 'http://s01.pl/storage/branding_media/OLh3Gg0Bv1jRmDjeHBDibsQNXx5GllOHjOAAEkJh.png'
         self.HTTP_HEADER = {'User-Agent': self.USER_AGENT, 'DNT':'1', 'Accept': 'text/html', 'Accept-Encoding':'gzip, deflate', 'Referer':self.getMainUrl(), 'Origin':self.getMainUrl(), 'Upgrade-Insecure-Requests':'1', 'Connection':'keep-alive'}
         self.AJAX_HEADER = dict(self.HTTP_HEADER)
@@ -43,7 +43,7 @@ class S01pl(CBaseHostClass):
 
         self.itemsPerPage = 30
         self.cacheMovieFilters = {'cats':[], 'sort':[], 'years':[], 'az':[]}
-        self.cacheLinks    = {}
+        self.cacheLinks = {}
         self.defaultParams = {'header':self.HTTP_HEADER, 'with_metadata':True, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
 
     def getPage(self, baseUrl, addParams={}, post_data=None):
@@ -66,12 +66,12 @@ class S01pl(CBaseHostClass):
     def listMainMenu(self, cItem):
         printDBG("S01pl.listMainMenu")
 
-        MAIN_CAT_TAB = [{'category':'list_sort',       'title': _('Movies'),          'url':self.API_URL + '?type=movie&onlyStreamable=true&perPage=%d' % self.itemsPerPage},
-                        {'category':'list_sort',       'title': _('Series'),          'url':self.API_URL + '?type=series&onlyStreamable=true&perPage=%d' % self.itemsPerPage},
+        MAIN_CAT_TAB = [{'category':'list_sort', 'title': _('Movies'), 'url':self.API_URL + '?type=movie&onlyStreamable=true&perPage=%d' % self.itemsPerPage},
+                        {'category':'list_sort', 'title': _('Series'), 'url':self.API_URL + '?type=series&onlyStreamable=true&perPage=%d' % self.itemsPerPage},
 #                        {'category':'list_years',     'title': _('Filter By Year'),    'url':self.MAIN_URL},
-                        {'category':'list_cats',       'title': _('Movies genres'),   'url':self.API_URL + '?onlyStreamable=true&perPage=%d' % self.itemsPerPage},
+                        {'category':'list_cats', 'title': _('Movies genres'), 'url':self.API_URL + '?onlyStreamable=true&perPage=%d' % self.itemsPerPage},
 #                        {'category':'list_az',        'title': _('Alphabetically'),    'url':self.MAIN_URL},
-                        {'category':'search',         'title': _('Search'),         'search_item':True}, 
+                        {'category':'search', 'title': _('Search'), 'search_item':True}, 
                         {'category':'search_history', 'title': _('Search history')},]
         self.listsTab(MAIN_CAT_TAB, cItem)
     
@@ -138,7 +138,7 @@ class S01pl(CBaseHostClass):
     def listItems(self, cItem):
         printDBG("S01pl.listItems [%s]" % cItem)
         page = cItem.get('page', 1)
-        url  = cItem['url']
+        url = cItem['url']
 
         sort = cItem.get('sort', '')
         if sort not in url:
@@ -293,9 +293,9 @@ class S01pl(CBaseHostClass):
         
         CBaseHostClass.handleService(self, index, refresh, searchPattern, searchType)
 
-        name     = self.currItem.get("name", '')
+        name = self.currItem.get("name", '')
         category = self.currItem.get("category", '')
-        mode     = self.currItem.get("mode", '')
+        mode = self.currItem.get("mode", '')
         
         printDBG("handleService: |||| name[%s], category[%s] " % (name, category))
         self.cacheLinks = {}

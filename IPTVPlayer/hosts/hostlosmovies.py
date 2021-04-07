@@ -28,9 +28,9 @@ from Components.config import config, ConfigSelection, getConfigListEntry
 ###################################################
 # Config options for HOST
 ###################################################
-config.plugins.iptvplayer.losmovies_proxy = ConfigSelection(default="None", choices=[("None",         _("None")),
-                                                                                         ("proxy_1",  _("Alternative proxy server (1)")),
-                                                                                         ("proxy_2",  _("Alternative proxy server (2)"))])
+config.plugins.iptvplayer.losmovies_proxy = ConfigSelection(default="None", choices=[("None", _("None")),
+                                                                                         ("proxy_1", _("Alternative proxy server (1)")),
+                                                                                         ("proxy_2", _("Alternative proxy server (2)"))])
 
 def GetConfigList():
     optionList = []
@@ -57,16 +57,16 @@ class LosMovies(CBaseHostClass):
         self.cacheLinks = {}
         self.defaultParams = {'header':self.HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
         
-        self.MAIN_CAT_TAB = [{'category':'list_cats',      'mode':'movie',   'title': 'Movies',           'url':self.getMainUrl()},
-                             {'category':'list_cats',      'mode':'serie',   'title': 'TV Shows',         'url':self.getFullUrl('watch-popular-tv-shows')},
-                             {'category':'list_top_cats',  'mode':'movie',   'title': 'Top Movie Lists',  'url':self.getFullUrl('top-movie-lists')},
+        self.MAIN_CAT_TAB = [{'category':'list_cats', 'mode':'movie', 'title': 'Movies', 'url':self.getMainUrl()},
+                             {'category':'list_cats', 'mode':'serie', 'title': 'TV Shows', 'url':self.getFullUrl('watch-popular-tv-shows')},
+                             {'category':'list_top_cats', 'mode':'movie', 'title': 'Top Movie Lists', 'url':self.getFullUrl('top-movie-lists')},
                              
-                             {'category': 'search',            'title': _('Search'), 'search_item': True,},
-                             {'category': 'search_history',    'title': _('Search history'),} 
+                             {'category': 'search', 'title': _('Search'), 'search_item': True,},
+                             {'category': 'search_history', 'title': _('Search history'),} 
                             ]
                             
-        self.MAIN_SUB_CATS_TAB = [{'category': 'list_abc',        'title': 'Alphabetically',},
-                                  {'category':'list_categories', 'title': 'Genres',    'url':self.getFullUrl('movie-genres')},
+        self.MAIN_SUB_CATS_TAB = [{'category': 'list_abc', 'title': 'Alphabetically',},
+                                  {'category':'list_categories', 'title': 'Genres', 'url':self.getFullUrl('movie-genres')},
                                   {'category':'list_categories', 'title': 'Countries', 'url':self.getFullUrl('countries')},
                                  ]
         
@@ -104,7 +104,7 @@ class LosMovies(CBaseHostClass):
         data = self.cm.ph.getDataBeetwenMarkers(data, '<div class="btn-group">', '</div>')[1]
         data = self.cm.ph.getAllItemsBeetwenMarkers(data, '<a', '</a>', withMarkers=True)
         for item in data:
-            url   = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''href=['"]([^'^"]+?)['"]''')[0])
+            url = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''href=['"]([^'^"]+?)['"]''')[0])
             title = self.cleanHtmlStr(item)
             params = {'category':nextCategory, 'title':title, 'url':url}
             self.addDir(params)
@@ -137,9 +137,9 @@ class LosMovies(CBaseHostClass):
         if len(data):
             del data[0]
         for item in data:
-            url   = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''href=['"]([^'^"]+?{0})['"]'''.format(marker))[0])
+            url = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''href=['"]([^'^"]+?{0})['"]'''.format(marker))[0])
             title = self.cleanHtmlStr(self.cm.ph.getDataBeetwenReMarkers(item, re.compile('<div[^>]+?showRowName'), re.compile('</div>'))[1])
-            icon  = self.getFullUrl(self.cm.ph.getSearchGroups(item, 'src="([^"]+?)"')[0])
+            icon = self.getFullUrl(self.cm.ph.getSearchGroups(item, 'src="([^"]+?)"')[0])
             params = dict(cItem)
             params.update({'category':nextCategory, 'title':title, 'url':url, 'icon':icon})
             self.addDir(params)
@@ -147,7 +147,7 @@ class LosMovies(CBaseHostClass):
     def listItems(self, cItem, nextCategory=None):
         printDBG("LosMovies.listItems")
         url = cItem['url']
-        page   = cItem.get('page', 1)
+        page = cItem.get('page', 1)
         letter = cItem.get('letter', '')
         
         getParams = []
@@ -167,7 +167,7 @@ class LosMovies(CBaseHostClass):
         self.setMainUrl(self.cm.meta['url'])
         
         nextPage = self.cm.ph.getDataBeetwenMarkers(data, 'pagination', '</div>', False)[1]
-        if '' != self.cm.ph.getSearchGroups(nextPage, 'page=(%s)[^0-9]' % (page+1))[0]:
+        if '' != self.cm.ph.getSearchGroups(nextPage, 'page=(%s)[^0-9]' % (page + 1))[0]:
             nextPage = True
         else:
             nextPage = False
@@ -179,16 +179,16 @@ class LosMovies(CBaseHostClass):
         
         data = self.cm.ph.getAllItemsBeetwenMarkers(data, '<div id="' + marker, '</h4>', withMarkers=True)
         for item in data:
-            url  = self.getFullUrl(self.cm.ph.getSearchGroups(item, 'href="([^"]+?)"')[0])
+            url = self.getFullUrl(self.cm.ph.getSearchGroups(item, 'href="([^"]+?)"')[0])
             if not self.cm.isValidUrl(url):
                 continue
             icon = self.getFullUrl(self.cm.ph.getSearchGroups(item, 'src="([^"]+?)"')[0])
             desc = self.cleanHtmlStr(item)
             title = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(item, '<h4', '</h4>')[1])
             if title == '':
-                title  = self.cleanHtmlStr(self.cm.ph.getSearchGroups(item, 'title="([^"]+?)"')[0])
+                title = self.cleanHtmlStr(self.cm.ph.getSearchGroups(item, 'title="([^"]+?)"')[0])
             if title == '':
-                title  = self.cleanHtmlStr(self.cm.ph.getSearchGroups(item, 'alt="([^"]+?)"')[0])
+                title = self.cleanHtmlStr(self.cm.ph.getSearchGroups(item, 'alt="([^"]+?)"')[0])
             
             params = {'good_for_fav': True, 'title':title, 'url':url, 'desc':desc, 'info_url':url, 'icon':icon}
             if 'class="movieTV"' not in item and '/movie-list/' not in item:
@@ -201,7 +201,7 @@ class LosMovies(CBaseHostClass):
         
         if nextPage and len(self.currList) > 0:
             params = dict(cItem)
-            params.update({'title':_("Next page"), 'page':page+1})
+            params.update({'title':_("Next page"), 'page':page + 1})
             self.addDir(params)
             
     def listSeasons(self, cItem, nextCategory='list_episodes'):
@@ -219,7 +219,7 @@ class LosMovies(CBaseHostClass):
         seasonsData = self.cm.ph.getAllItemsBeetwenMarkers(seasonsData, '<a ', '</a>', withMarkers=True)
         for item in seasonsData:
             seasonTitle = self.cleanHtmlStr(item)
-            seasonKey   = self.cm.ph.getSearchGroups(item, '''href=['"]#tabs\-([^'^"]+?)['"]''')[0]
+            seasonKey = self.cm.ph.getSearchGroups(item, '''href=['"]#tabs\-([^'^"]+?)['"]''')[0]
             seasonsTitlesTab[seasonKey] = seasonTitle
         
         marker = '<div id="tabs-'
@@ -230,7 +230,7 @@ class LosMovies(CBaseHostClass):
             episodesTab = []
             episodesData = self.cm.ph.getAllItemsBeetwenMarkers(sItem, '<h3', '</tbody>', True)
             for eItem in episodesData:
-                eTitle   = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(eItem, '<h3', '</h3>', True)[1])
+                eTitle = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(eItem, '<h3', '</h3>', True)[1])
                 eFakeUrl = '#season%s_%s' % (seasonKey, urllib.parse.quote(eTitle))
                 linksTab = self.getLinksForVideo(cItem, eItem)
                 if len(linksTab):
@@ -247,7 +247,7 @@ class LosMovies(CBaseHostClass):
         printDBG("LosMovies.listEpisodes")
         
         sKey = cItem.get('s_key', '')
-        tab  = self.cacheEpisodes.get(sKey, [])
+        tab = self.cacheEpisodes.get(sKey, [])
         
         params = dict(cItem)
         self.listsTab(tab, params, 'video')
@@ -263,7 +263,7 @@ class LosMovies(CBaseHostClass):
         urlTab = []
         
         if eItem == None:
-            urlTab = self.cacheLinks.get(cItem['url'],  [])
+            urlTab = self.cacheLinks.get(cItem['url'], [])
             if len(urlTab):
                 return urlTab
             
@@ -276,7 +276,7 @@ class LosMovies(CBaseHostClass):
         
         linksData = self.cm.ph.getAllItemsBeetwenMarkers(data, '<tr class="linkTr"', '</tr>', True)
         for item in linksData:
-            url  = self.cm.ph.getDataBeetwenReMarkers(item, re.compile('<td[^>]+?linkHiddenUrl[^>]+?>'), re.compile('</td>'), False)[1].strip()
+            url = self.cm.ph.getDataBeetwenReMarkers(item, re.compile('<td[^>]+?linkHiddenUrl[^>]+?>'), re.compile('</td>'), False)[1].strip()
             if not self.cm.isValidUrl(url):
                 continue
             tmp = self.cm.ph.getAllItemsBeetwenMarkers(item, '<td', '</td>', True)
@@ -373,7 +373,7 @@ class LosMovies(CBaseHostClass):
             sp = '='
         
         for item in tmp:
-            url  = self.cm.ph.getSearchGroups(item.replace('\\/', '/'), r'''['"]?{0}['"]?\s*{1}\s*['"](https?://[^"^']+)['"]'''.format(urlAttrName, sp))[0]
+            url = self.cm.ph.getSearchGroups(item.replace('\\/', '/'), r'''['"]?{0}['"]?\s*{1}\s*['"](https?://[^"^']+)['"]'''.format(urlAttrName, sp))[0]
             if not self.cm.isValidUrl(url):
                 continue
             name = self.cm.ph.getSearchGroups(item, r'''['"]?label['"]?\s*{0}\s*['"]?([^"^'^,]+)[,'"]'''.format(sp))[0]
@@ -409,10 +409,10 @@ class LosMovies(CBaseHostClass):
             return retTab
         
         title = self.cleanHtmlStr(self.cm.ph.getSearchGroups(data, '<meta property="og:title"[^>]+?content="([^"]+?)"')[0])
-        desc  = self.cleanHtmlStr(self.cm.ph.getDataBeetwenReMarkers(data, re.compile('showRowDescription[^>]+?>'), re.compile('</div>'), False)[1])
+        desc = self.cleanHtmlStr(self.cm.ph.getDataBeetwenReMarkers(data, re.compile('showRowDescription[^>]+?>'), re.compile('</div>'), False)[1])
         
-        icon  = self.cm.ph.getDataBeetwenMarkers(data, 'showRowImage">', '</div>')[1] 
-        icon  = self.getFullUrl(self.cm.ph.getSearchGroups(icon, 'src="([^"]+?)"')[0])
+        icon = self.cm.ph.getDataBeetwenMarkers(data, 'showRowImage">', '</div>')[1] 
+        icon = self.getFullUrl(self.cm.ph.getSearchGroups(icon, 'src="([^"]+?)"')[0])
         
         self.getFullUrl(self.cm.ph.getSearchGroups(data, '<meta property="og:image"[^>]+?content="([^"]+?)"')[0])
         
@@ -423,14 +423,14 @@ class LosMovies(CBaseHostClass):
         if icon == '':
             title = cItem['icon']
         
-        descKeys = [('ImdbRating',   'rated'),
-                    ('Actors',      'actors'),
+        descKeys = [('ImdbRating', 'rated'),
+                    ('Actors', 'actors'),
                     ('Directors', 'director'),
-                    ('Countries',  'country'),
-                    ('Release',   'released'),
-                    ('Categories',   'genre'),
-                    ('Duration',  'duration'),
-                    ('Budget',      'budget')]
+                    ('Countries', 'country'),
+                    ('Release', 'released'),
+                    ('Categories', 'genre'),
+                    ('Duration', 'duration'),
+                    ('Budget', 'budget')]
         
         otherInfo = {}
         for item in descKeys:
@@ -477,9 +477,9 @@ class LosMovies(CBaseHostClass):
         
         CBaseHostClass.handleService(self, index, refresh, searchPattern, searchType)
 
-        name     = self.currItem.get("name", '')
+        name = self.currItem.get("name", '')
         category = self.currItem.get("category", '')
-        mode     = self.currItem.get("mode", '')
+        mode = self.currItem.get("mode", '')
         
         printDBG("handleService: |||||||||||||||||||||||||||||||||||| name[%s], category[%s] " % (name, category))
         self.currList = []

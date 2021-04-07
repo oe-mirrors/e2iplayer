@@ -65,10 +65,10 @@ class WgranePL(CBaseHostClass):
         printDBG("WgranePL.listMainMenu")
 
 
-        MAIN_CAT_TAB = [{'category':'list_sort',       'title': 'Przeglądaj pliki',    'url':self.getFullUrl('/watch.html')},
-                        {'category':'categories',      'title': 'Kategorie',           'url':self.getFullUrl('/categories.html')},
-                        {'category':'search',          'title': _('Search'), 'search_item':True},
-                        {'category':'search_history',  'title': _('Search history')}]
+        MAIN_CAT_TAB = [{'category':'list_sort', 'title': 'Przeglądaj pliki', 'url':self.getFullUrl('/watch.html')},
+                        {'category':'categories', 'title': 'Kategorie', 'url':self.getFullUrl('/categories.html')},
+                        {'category':'search', 'title': _('Search'), 'search_item':True},
+                        {'category':'search_history', 'title': _('Search history')}]
         self.listsTab(MAIN_CAT_TAB, cItem)
     
     def listCategories(self, cItem, nextCategory):
@@ -86,7 +86,7 @@ class WgranePL(CBaseHostClass):
             del data[0]
 
         for item in data:
-            url  = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''\shref=['"]([^"^']+?)['"]''')[0])
+            url = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''\shref=['"]([^"^']+?)['"]''')[0])
             if url == '':
                 continue
             icon = self.getFullIconUrl(self.cm.ph.getSearchGroups(item, '''<img[^>]+?src=['"]([^"^']+?)['"]''')[0])
@@ -141,7 +141,7 @@ class WgranePL(CBaseHostClass):
         descObj = re.compile('''<br\s*?/>''', re.I)
         data = re.compile('''<div[^>]+?class=['"]list['"][^>]*?>''').split(data)
         for item in data:
-            url  = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''\shref=['"]([^"^'^\:]+?)['"]''')[0])
+            url = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''\shref=['"]([^"^'^\:]+?)['"]''')[0])
             if url == '':
                 continue
             if 'playlist=' in url:
@@ -173,7 +173,7 @@ class WgranePL(CBaseHostClass):
         
         if nextPage != '':
             params = dict(cItem)
-            params.update({'title':_("Next page"), 'url':self.getFullUrl(nextPage), 'page':page+1})
+            params.update({'title':_("Next page"), 'url':self.getFullUrl(nextPage), 'page':page + 1})
             self.addDir(params)
 
     def listSearchResult(self, cItem, searchPattern, searchType):
@@ -206,9 +206,9 @@ class WgranePL(CBaseHostClass):
         
         CBaseHostClass.handleService(self, index, refresh, searchPattern, searchType)
 
-        name     = self.currItem.get("name", '')
+        name = self.currItem.get("name", '')
         category = self.currItem.get("category", '')
-        mode     = self.currItem.get("mode", '')
+        mode = self.currItem.get("mode", '')
         
         printDBG("handleService: || name[%s], category[%s] " % (name, category))
         self.currList = []

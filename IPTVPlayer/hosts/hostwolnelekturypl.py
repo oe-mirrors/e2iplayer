@@ -32,10 +32,10 @@ class WolnelekturyPL(CBaseHostClass):
         self.HTTP_HEADER = {'User-Agent': 'Mozilla/5.0', 'Accept': 'text/html'}
         self.MAIN_URL = 'http://wolnelektury.pl/'
         self.DEFAULT_ICON_URL = 'http://m.img.brothersoft.com/android/598/1352446551_icon.png'
-        MAIN_CAT_TAB = [{'category':'categories',  'key':'author', 'title':'Autorzy'},
-                        {'category':'categories',  'key':'epoch',  'title':'Epoki'},
-                        {'category':'categories',  'key':'genre',  'title':'Gatunki'},
-                        {'category':'categories',  'key':'kind',   'title':'Rodzaje'}]
+        MAIN_CAT_TAB = [{'category':'categories', 'key':'author', 'title':'Autorzy'},
+                        {'category':'categories', 'key':'epoch', 'title':'Epoki'},
+                        {'category':'categories', 'key':'genre', 'title':'Gatunki'},
+                        {'category':'categories', 'key':'kind', 'title':'Rodzaje'}]
         self.defaultParams = {'header':self.HTTP_HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
         self.cacheFilters = {}
         
@@ -75,7 +75,7 @@ class WolnelekturyPL(CBaseHostClass):
                 params.update({'good_for_fav':False, 'category':nextCategory, 'title':sTitle, 'items_tab':itemsTab})
                 self.addDir(params)
         
-        MAIN_CAT_TAB = [{'category':'search',         'title': _('Search'),          'search_item':True}, 
+        MAIN_CAT_TAB = [{'category':'search', 'title': _('Search'), 'search_item':True}, 
                         {'category':'search_history', 'title': _('Search history')},]
         
         self.listsTab(MAIN_CAT_TAB, cItem)
@@ -142,7 +142,7 @@ class WolnelekturyPL(CBaseHostClass):
             sTitle = self.cleanHtmlStr(section[0])
             section = self.cm.ph.getAllItemsBeetwenMarkers(section[1], '<p', '</p>')
             itemsTab = []
-            author   = ''
+            author = ''
             for item in section:
                 if 'header' in item:
                     author = self.cleanHtmlStr(item)
@@ -184,7 +184,7 @@ class WolnelekturyPL(CBaseHostClass):
             
             tmp = objReDesc.split(item)
             title = self.cleanHtmlStr(tmp[0])
-            desc  = self.cleanHtmlStr(tmp[1])
+            desc = self.cleanHtmlStr(tmp[1])
             urlTab = []
             mp3Url = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''\sdata\-mp3=['"]([^"^']+?)['"]''')[0])
             oggUrl = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''\sdata\-ogg=['"]([^"^']+?)['"]''')[0])
@@ -227,7 +227,7 @@ class WolnelekturyPL(CBaseHostClass):
         
         return []
         
-        icon  = cItem.get('icon', '')
+        icon = cItem.get('icon', '')
         otherInfo = {}
         try:
             data = byteify(json.loads(data))
@@ -240,8 +240,8 @@ class WolnelekturyPL(CBaseHostClass):
             for item in data['genre']:
                 genres.append(item['name'])
             otherInfo['genre'] = ', '.join(genres)
-            otherInfo['rating']= data['imdb_rating']
-            otherInfo['year']  = data['year']
+            otherInfo['rating'] = data['imdb_rating']
+            otherInfo['year'] = data['year']
             otherInfo['duration'] = str(datetime.timedelta(seconds=data['runtime']))
         except Exception:
             printExc()
@@ -251,9 +251,9 @@ class WolnelekturyPL(CBaseHostClass):
         
         CBaseHostClass.handleService(self, index, refresh, searchPattern, searchType)
 
-        name     = self.currItem.get("name", '')
+        name = self.currItem.get("name", '')
         category = self.currItem.get("category", '')
-        mode     = self.currItem.get("mode", '')
+        mode = self.currItem.get("mode", '')
         
         printDBG("handleService: |||||||||||||||||||||||||||||||||||| name[%s], category[%s] " % (name, category))
         self.currList = []

@@ -39,11 +39,11 @@ class ClassicCinemaOnline(CBaseHostClass):
         self.defaultParams = {'header':self.HTTP_HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
         
         self.MAIN_CAT_TAB = [{'category':'list_movies_cats','title': 'Movie Billboards', 'url':self.getMainUrl()},
-                             {'category':'list_items',      'title': 'Serials',          'url':self.getFullUrl('/serials')},
-                             {'category':'list_items',      'title': 'Silent Films',     'url':self.getFullUrl('/silent-films')},
+                             {'category':'list_items', 'title': 'Serials', 'url':self.getFullUrl('/serials')},
+                             {'category':'list_items', 'title': 'Silent Films', 'url':self.getFullUrl('/silent-films')},
                              
-                             {'category':'search',          'title': _('Search'),          'search_item':True}, 
-                             {'category':'search_history',  'title': _('Search history')},
+                             {'category':'search', 'title': _('Search'), 'search_item':True}, 
+                             {'category':'search_history', 'title': _('Search history')},
                             ]
         
     def getMaxDisplayItems(self):
@@ -117,7 +117,7 @@ class ClassicCinemaOnline(CBaseHostClass):
             url = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''href=['"]([^'^"]+?)['"]''')[0])
             tmp = item.split('</h3>', 1)
             title = self.cleanHtmlStr(tmp[0])
-            desc  = self.cleanHtmlStr(tmp[-1])
+            desc = self.cleanHtmlStr(tmp[-1])
             params = dict(cItem)
             params.update({'good_for_fav':True, 'category':nextCategory, 'title':title, 'url':self.getFullUrl(url), 'desc':desc})
             self.addDir(params)
@@ -127,7 +127,7 @@ class ClassicCinemaOnline(CBaseHostClass):
             url = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''href=['"]([^'^"]+?)['"]''')[0])
             tmp = item.split('</td>', 1)
             title = self.cleanHtmlStr(tmp[0])
-            desc  = 'Hits: %s' % self.cleanHtmlStr(tmp[-1])
+            desc = 'Hits: %s' % self.cleanHtmlStr(tmp[-1])
             icon = url + '?fake=need_resolve.jpeg'
             params = dict(cItem)
             params.update({'good_for_fav':True, 'category':nextCategory, 'title':title, 'url':self.getFullUrl(url), 'icon':icon, 'desc':desc})
@@ -135,7 +135,7 @@ class ClassicCinemaOnline(CBaseHostClass):
         
         if self.cm.isValidUrl(nextPage):
             params = dict(cItem)
-            params.update({'good_for_fav':False, 'title':_("Next page"), 'url':nextPage, 'page':page+1})
+            params.update({'good_for_fav':False, 'title':_("Next page"), 'url':nextPage, 'page':page + 1})
             self.addDir(params)
         
     def listSearchResult(self, cItem, searchPattern, searchType):
@@ -162,7 +162,7 @@ class ClassicCinemaOnline(CBaseHostClass):
             tmp = item.split('</dt>', 1)
             url = self.getFullUrl(self.cm.ph.getSearchGroups(tmp[0], '''href=['"]([^'^"]+?)['"]''')[0])
             title = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(tmp[0], '<a', '</a>')[1])
-            desc  = self.cleanHtmlStr(tmp[-1])
+            desc = self.cleanHtmlStr(tmp[-1])
             
             params = dict(cItem)
             params.update({'good_for_fav':True, 'category':'explore_item', 'title':title, 'url':url, 'desc':desc})
@@ -170,7 +170,7 @@ class ClassicCinemaOnline(CBaseHostClass):
         
         if self.cm.isValidUrl(nextPage):
             params = dict(cItem)
-            params.update({'good_for_fav':False, 'title':_("Next page"), 'url':nextPage, 'page':page+1})
+            params.update({'good_for_fav':False, 'title':_("Next page"), 'url':nextPage, 'page':page + 1})
             self.addDir(params)
             
     def exploreItem(self, cItem, nextCategory):
@@ -241,10 +241,10 @@ class ClassicCinemaOnline(CBaseHostClass):
             return retTab
         
         title = self.cleanHtmlStr(self.cm.ph.getSearchGroups(data, '''<meta property=['"]?og\:title['"]?[^>]+?content=['"]([^"^']+?)['"]''')[0])
-        desc  = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(data, '<div class="summary_text"', '</div>')[1])
+        desc = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(data, '<div class="summary_text"', '</div>')[1])
         if desc == '':
-            desc  = self.cleanHtmlStr(self.cm.ph.getSearchGroups(data, '''<meta property=['"]?og\:description['"]?[^>]+?content=['"]([^"^']+?)['"]''')[0])
-        icon  = self.getFullUrl(self.cm.ph.getSearchGroups(data, '''<meta property=['"]?og\:image['"]?[^>]+?content=['"]([^"^']+?)['"]''')[0])
+            desc = self.cleanHtmlStr(self.cm.ph.getSearchGroups(data, '''<meta property=['"]?og\:description['"]?[^>]+?content=['"]([^"^']+?)['"]''')[0])
+        icon = self.getFullUrl(self.cm.ph.getSearchGroups(data, '''<meta property=['"]?og\:image['"]?[^>]+?content=['"]([^"^']+?)['"]''')[0])
         
         if title == '':
             title = cItem['title']
@@ -254,16 +254,16 @@ class ClassicCinemaOnline(CBaseHostClass):
         descData = self.cm.ph.getAllItemsBeetwenMarkers(data, '<h4 class="inline"', '</div>')
         descKeyMap = {"also known as": "alternate_title",
                       "production co": "production",
-                      "director":      "director",
-                      "directors":     "directors",
-                      "creators":      "creators",
-                      "creator":      "creator",
-                      "Stars":         "stars",
-                      "genres":        "genres",
-                      "country":       "country",
-                      "language":      "language",
-                      "release date":  "released",
-                      "runtime":       "duration"}
+                      "director": "director",
+                      "directors": "directors",
+                      "creators": "creators",
+                      "creator": "creator",
+                      "Stars": "stars",
+                      "genres": "genres",
+                      "country": "country",
+                      "language": "language",
+                      "release date": "released",
+                      "runtime": "duration"}
         
         otherInfo = {}
         for item in descData:
@@ -286,9 +286,9 @@ class ClassicCinemaOnline(CBaseHostClass):
         
         CBaseHostClass.handleService(self, index, refresh, searchPattern, searchType)
 
-        name     = self.currItem.get("name", '')
+        name = self.currItem.get("name", '')
         category = self.currItem.get("category", '')
-        mode     = self.currItem.get("mode", '')
+        mode = self.currItem.get("mode", '')
         
         printDBG("handleService: |||||||||||||||||||||||||||||||||||| name[%s], category[%s] " % (name, category))
         self.currList = []

@@ -6,9 +6,9 @@ from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT
 from Plugins.Extensions.IPTVPlayer.components.ihost import CHostBase, CBaseHostClass
 from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc
 from Plugins.Extensions.IPTVPlayer.tools.iptvtypes import strwithmeta
-from binascii import  a2b_hex, a2b_base64
+from binascii import a2b_hex, a2b_base64
 from hashlib import md5
-from Plugins.Extensions.IPTVPlayer.libs.crypto.cipher.aes_cbc  import AES_CBC
+from Plugins.Extensions.IPTVPlayer.libs.crypto.cipher.aes_cbc import AES_CBC
 from Plugins.Extensions.IPTVPlayer.libs.crypto.keyedHash.evp import EVP_BytesToKey
 ###################################################
 
@@ -41,16 +41,16 @@ class AnimeOdcinkiPL(CBaseHostClass):
         self.MAIN_URL = 'https://anime-odcinki.pl/'
         self.DEFAULT_ICON_URL = 'https://anime-odcinki.pl/wp-content/uploads/2017/07/A-O_logo.png'
         
-        self.MAIN_CAT_TAB = [{'category':'new',               'title': _('New'),                          'url':self.MAIN_URL},
-                             {'category':'list_emitowane',    'title': 'Emitowane',                       'url':self.MAIN_URL},
-                             {'category':'list_abc',          'title': _('Anime list'),                   'url':self.getFullUrl('anime')},
-                             {'category':'list_abc',          'title': _('Movies list'),                  'url':self.getFullUrl('filmy')},
-                             {'category':'list_filters',      'title': _('Genres'),                       'url':self.getFullUrl('gatunki')},
-                             {'category': 'search',            'title': _('Search'), 'search_item': True,},
-                             {'category': 'search_history',    'title': _('Search history'),} 
+        self.MAIN_CAT_TAB = [{'category':'new', 'title': _('New'), 'url':self.MAIN_URL},
+                             {'category':'list_emitowane', 'title': 'Emitowane', 'url':self.MAIN_URL},
+                             {'category':'list_abc', 'title': _('Anime list'), 'url':self.getFullUrl('anime')},
+                             {'category':'list_abc', 'title': _('Movies list'), 'url':self.getFullUrl('filmy')},
+                             {'category':'list_filters', 'title': _('Genres'), 'url':self.getFullUrl('gatunki')},
+                             {'category': 'search', 'title': _('Search'), 'search_item': True,},
+                             {'category': 'search_history', 'title': _('Search history'),} 
                             ]
         
-        self.NEW_CAT_TAB = [{'category':'list_new', 'title': 'Nowe odcinki emitowane',                        'm1':'>Nowe'},
+        self.NEW_CAT_TAB = [{'category':'list_new', 'title': 'Nowe odcinki emitowane', 'm1':'>Nowe'},
                             {'category':'list_new', 'title': 'Ostatnio dodane odcinki z poprzednich sezonów', 'm1':'>Ostatnio'}]
                             
         self.filtersTab = []
@@ -76,7 +76,7 @@ class AnimeOdcinkiPL(CBaseHostClass):
         return str(item[key])
         
     def fillFilters(self, cItem):
-        self.filtersTab   = []
+        self.filtersTab = []
         self.cacheFilters = {}
         sts, data = self.cm.getPage(cItem['url'])
         if not sts:
@@ -85,12 +85,12 @@ class AnimeOdcinkiPL(CBaseHostClass):
         data = self.cm.ph.getAllItemsBeetwenMarkers(data, '<div class="search-category-checkbox checkbox">', '</div>')
         for item in data:
             title = self.cleanHtmlStr(item)
-            key   = self.cm.ph.getSearchGroups(item, '''name=['"]([^'^"]+?)['"]''')[0]
+            key = self.cm.ph.getSearchGroups(item, '''name=['"]([^'^"]+?)['"]''')[0]
             value = self.cm.ph.getSearchGroups(item, '''value=['"]([^'^"]+?)['"]''')[0]
             if key not in self.cacheFilters:
                 self.cacheFilters[key] = [{'title':_('All')}]
                 self.filtersTab.append(key)
-            self.cacheFilters[key].append({'title':title, 'f_'+key:value})
+            self.cacheFilters[key].append({'title':title, 'f_' + key:value})
         
     def listFilter(self, cItem, filters):
         params = dict(cItem)
@@ -112,13 +112,13 @@ class AnimeOdcinkiPL(CBaseHostClass):
         tmp = self.cm.ph.getAllItemsBeetwenMarkers(tmp, '<a', '</span>')
         for item in tmp:
             letter = self.cm.ph.getSearchGroups(item, '''data-index=['"]([^'^"]+?)['"]''')[0]
-            title  = self.cleanHtmlStr(item.replace('|', ''))
+            title = self.cleanHtmlStr(item.replace('|', ''))
             self.cacheItems[baseUrl]['letters'].append({'title':title, 'letter':letter})
         
         data = self.cm.ph.getAllItemsBeetwenMarkers(data, '<tr class="list-item" data-fl=', '</td>')
         for item in data:
-            url    = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''href=['"]([^'^"]+?)['"]''')[0])
-            title  = self.cleanHtmlStr(item)
+            url = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''href=['"]([^'^"]+?)['"]''')[0])
+            title = self.cleanHtmlStr(item)
             letter = self.cm.ph.getSearchGroups(item, '''data-fl=['"]([^'^"]+?)['"]''')[0]
             self.cacheItems[baseUrl]['items'].append({'title':title, 'url':url, 'letter':letter})
    
@@ -133,14 +133,14 @@ class AnimeOdcinkiPL(CBaseHostClass):
             
         for item in self.cacheItems[baseUrl]['letters']:
             letter = item['letter'] 
-            title  = item['title']
+            title = item['title']
             params = dict(cItem)
             params.update({'category':nextCategory, 'title':title, 'f_abc':letter})
             self.addDir(params)
             
     def listItems(self, cItem, nextCategory):
         printDBG("AnimeOdcinkiPL.listItems")
-        letter  = cItem.get('f_abc', '')
+        letter = cItem.get('f_abc', '')
         baseUrl = cItem['url']
         
         cacheItem = self.cacheItems.get(baseUrl, {})
@@ -151,7 +151,7 @@ class AnimeOdcinkiPL(CBaseHostClass):
         for item in self.cacheItems[baseUrl]['items']:
             if letter != '' and letter != item['letter']:
                 continue
-            url   = item['url'] 
+            url = item['url'] 
             title = item['title']
             icon = strwithmeta(url, {'icon_resolver':AnimeOdcinkiPL.resolveIconUrl})
             params = {'good_for_fav': True, 'title':title, 'url':url, 'icon':icon}
@@ -168,19 +168,19 @@ class AnimeOdcinkiPL(CBaseHostClass):
         data = self.cm.ph.getDataBeetwenMarkers(data, m1, m2)[1]
         data = self.cm.ph.getAllItemsBeetwenMarkers(data, sp1, sp2)
         for item in data:
-            title  = self.cleanHtmlStr(item)
-            url    = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''href=['"]([^'^"]+?)['"]''')[0])
+            title = self.cleanHtmlStr(item)
+            url = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''href=['"]([^'^"]+?)['"]''')[0])
             if not self.cm.isValidUrl(url):
                 continue
             #icon   = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''src=['"]([^'^"]+?)['"]''')[0])
             #if icon == '': icon   = strwithmeta(url, {'icon_resolver':AnimeOdcinkiPL.resolveIconUrl})
             params = {'good_for_fav': True, 'title':title, 'url':url}
             if nextCategory != 'video':
-                icon   = strwithmeta(url, {'icon_resolver':AnimeOdcinkiPL.resolveIconUrl})
+                icon = strwithmeta(url, {'icon_resolver':AnimeOdcinkiPL.resolveIconUrl})
                 params.update({'category':nextCategory, 'icon':icon})
                 self.addDir(params)
             else:
-                icon   = strwithmeta(url[:url.rfind('/')], {'icon_resolver':AnimeOdcinkiPL.resolveIconUrl})
+                icon = strwithmeta(url[:url.rfind('/')], {'icon_resolver':AnimeOdcinkiPL.resolveIconUrl})
                 params.update({'category':nextCategory, 'icon':icon})
                 self.addVideo(params)
         
@@ -213,10 +213,10 @@ class AnimeOdcinkiPL(CBaseHostClass):
         
         data = self.cm.ph.getAllItemsBeetwenMarkers(data, '<li class="search-result">', '</li>')
         for item in data:
-            url    = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''href=['"]([^'^"]+?)['"]''')[0])
-            title  = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(item, '<h3', '</h3>')[1])
-            icon   = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''src=['"]([^'^"]+?)['"]''')[0])
-            desc   = self.cleanHtmlStr(item.split('</h3>')[-1])
+            url = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''href=['"]([^'^"]+?)['"]''')[0])
+            title = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(item, '<h3', '</h3>')[1])
+            icon = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''src=['"]([^'^"]+?)['"]''')[0])
+            desc = self.cleanHtmlStr(item.split('</h3>')[-1])
             if icon == '':
                 icon = strwithmeta(url, {'icon_resolver':AnimeOdcinkiPL.resolveIconUrl})
             params = {'good_for_fav': True, 'title':title, 'url':url, 'icon':icon, 'desc':desc}
@@ -245,8 +245,8 @@ class AnimeOdcinkiPL(CBaseHostClass):
         
         data = self.cm.ph.getAllItemsBeetwenMarkers(data, '<li class="lista_odc', '</li>')
         for item in data:
-            url    = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''href=['"]([^'^"]+?)['"]''')[0])
-            title  = self.cleanHtmlStr(item)
+            url = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''href=['"]([^'^"]+?)['"]''')[0])
+            title = self.cleanHtmlStr(item)
             params = dict(cItem)
             params.update({'good_for_fav': True, 'title':title, 'url':url, 'desc':desc})
             self.addVideo(params)
@@ -298,9 +298,9 @@ class AnimeOdcinkiPL(CBaseHostClass):
         
         data = self.cm.ph.getAllItemsBeetwenMarkers(data, '<div class="video-player-mode"', '</div>')
         for item in data:
-            url  = self.cm.ph.getSearchGroups(item, "data-hash='([^']+?)'")[0]
+            url = self.cm.ph.getSearchGroups(item, "data-hash='([^']+?)'")[0]
             if url == '':
-                url  = self.cm.ph.getSearchGroups(item, 'data-hash="([^"]+?)"')[0]
+                url = self.cm.ph.getSearchGroups(item, 'data-hash="([^"]+?)"')[0]
             try:
                 tmp = json.loads(url)
                 url = self._encryptPlayerUrl(tmp)
@@ -347,7 +347,7 @@ class AnimeOdcinkiPL(CBaseHostClass):
         
         title = cItem.get('title', '')
         desc = cItem.get('desc', '')
-        icon  = self.resolveIconUrl(self.cm, cItem.get('icon', ''))
+        icon = self.resolveIconUrl(self.cm, cItem.get('icon', ''))
         if icon == '':
             icon = self.getDefaulIcon()
         
@@ -358,9 +358,9 @@ class AnimeOdcinkiPL(CBaseHostClass):
         
         CBaseHostClass.handleService(self, index, refresh, searchPattern, searchType)
 
-        name     = self.currItem.get("name", '')
+        name = self.currItem.get("name", '')
         category = self.currItem.get("category", '')
-        mode     = self.currItem.get("mode", '')
+        mode = self.currItem.get("mode", '')
         
         printDBG("handleService: |||||||||||||||||||||||||||||||||||| name[%s], category[%s] " % (name, category))
         self.currList = []

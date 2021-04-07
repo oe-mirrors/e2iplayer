@@ -73,7 +73,7 @@ class E2iPlayerBufferingWidget(Screen):
     a_x = 10
     a_y = sz_h - 160
     #button
-    b_x = sz_w - 10 - 35*3 
+    b_x = sz_w - 10 - 35 * 3 
     b_y = sz_h - 10 - 25
     
     printDBG("[E2iPlayerBufferingWidget] desktop size %dx%d" % (sz_w, sz_h))
@@ -87,7 +87,7 @@ class E2iPlayerBufferingWidget(Screen):
          <widget name="ok_button"        position="%d,%d"                     size="35,25"   zPosition="8" pixmap="%s" transparent="1" alphatest="blend" />
          <widget name="rec_button"       position="%d,%d"                     size="35,25"   zPosition="8" pixmap="%s" transparent="1" alphatest="blend" />
          <widget name="exit_button"      position="%d,%d"                     size="35,25"   zPosition="8" pixmap="%s" transparent="1" alphatest="blend" />
-        </screen>""" %(sz_w, sz_h,         # screen
+        </screen>""" % (sz_w, sz_h,         # screen
                         p_w, p_h, p_x, p_y, # percentage
                         c_w, c_h, c_x, c_y, # console
                         i_w, i_h, i_x, i_y, # icon
@@ -105,13 +105,13 @@ class E2iPlayerBufferingWidget(Screen):
         
         self.downloadingPath = pathForDownloading
         self.bufferingPath = pathForBuffering
-        self.filePath      = pathForBuffering + '/.iptv_buffering.flv'
-        self.url           = url
-        self.movieTitle    = movieTitle
+        self.filePath = pathForBuffering + '/.iptv_buffering.flv'
+        self.url = url
+        self.movieTitle = movieTitle
         self.downloadManager = downloadManager
         self.fileExtension = fileExtension
         
-        self.currentService   = self.session.nav.getCurrentlyPlayingServiceReference()
+        self.currentService = self.session.nav.getCurrentlyPlayingServiceReference()
         self.activMoviePlayer = activMoviePlayer
         
         self.onClose.append(self.__onClose)
@@ -121,23 +121,23 @@ class E2iPlayerBufferingWidget(Screen):
         
         self["actions"] = ActionMap(["IPTVAlternateVideoPlayer", "WizardActions", "MoviePlayerActions"],
         {
-            "ok":          self.ok_pressed,
-            "back":        self.back_pressed,
+            "ok": self.ok_pressed,
+            "back": self.back_pressed,
             "leavePlayer": self.back_pressed,
-            "record":      self.record_pressed,
+            "record": self.record_pressed,
         }, -1)
 
         self["console"] = Label()
         self["percentage"] = Label()
         self["addinfo"] = Label()
-        self['ok_button']   = Cover3()
-        self['rec_button']  = Cover3()
+        self['ok_button'] = Cover3()
+        self['rec_button'] = Cover3()
         self['exit_button'] = Cover3()
         
         self["icon"] = SimpleAnimatedCover()
         # prepare icon frames path
         frames = []
-        for idx in range(1, self.NUM_OF_ICON_FRAMES+1):
+        for idx in range(1, self.NUM_OF_ICON_FRAMES + 1):
             frames.append(resolveFilename(SCOPE_PLUGINS, 'Extensions/IPTVPlayer/icons/buffering/buffering_%d.png' % idx))
         self["icon"].loadFrames(frames) 
         
@@ -175,7 +175,7 @@ class E2iPlayerBufferingWidget(Screen):
                               ERROR=4)
         self.moovAtomStatus = self.MOOV_STS.UNKNOWN
         self.moovAtomDownloader = None
-        self.moovAtomPath  = pathForBuffering + '/.iptv_buffering_moov.flv'
+        self.moovAtomPath = pathForBuffering + '/.iptv_buffering_moov.flv'
         self.closeRequestedByUser = None
         
         printDBG(">> activMoviePlayer[%s]" % self.activMoviePlayer)
@@ -397,7 +397,7 @@ class E2iPlayerBufferingWidget(Screen):
             return
 
         self.downloader.updateStatistic()
-        localSize  = self.downloader.getLocalFileSize()
+        localSize = self.downloader.getLocalFileSize()
         remoteSize = self.downloader.getRemoteFileSize()
         
         if self.checkMOOVAtom and \
@@ -415,7 +415,7 @@ class E2iPlayerBufferingWidget(Screen):
                     f = open(self.filePath, "rb")
                     currOffset = 0
                     while currOffset < localSize:
-                        rawSize =  ReadUint32(f.read(4), False)
+                        rawSize = ReadUint32(f.read(4), False)
                         rawType = f.read(4)
                         printDBG(">> rawType [%s]" % rawType)
                         printDBG(">> rawSize [%d]" % rawSize)
@@ -473,8 +473,8 @@ class E2iPlayerBufferingWidget(Screen):
         else:
             dSpeed = ''
         
-        speed     = self.downloader.getDownloadSpeed()
-        tmpStr    = ''
+        speed = self.downloader.getDownloadSpeed()
+        tmpStr = ''
         if '??' != lFileSize:
             if '??' != rFileSize:
                 tmpStr = "\n%s/%s" % (lFileSize, rFileSize)
@@ -528,7 +528,7 @@ class E2iPlayerBufferingWidget(Screen):
             elif self.moovAtomStatus == self.MOOV_STS.DOWNLOADING:
                 self.moovAtomDownloader.updateStatistic()
                 status = self.moovAtomDownloader.getStatus()
-                moovLocalSize  = self.moovAtomDownloader.getLocalFileSize()
+                moovLocalSize = self.moovAtomDownloader.getLocalFileSize()
                 moovRemoteSize = self.moovAtomDownloader.getRemoteFileSize()
                 if status == DMHelper.STS.DOWNLOADING:
                     if moovLocalSize > 0 and self.moovAtomSize > 0:

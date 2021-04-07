@@ -73,7 +73,7 @@ class AsyncCall(object):
 
         self.mainLock = threading.Lock()
         self.finished = False
-        self.Thread   = None
+        self.Thread = None
         self.exceptStack = ''
 
     def __del__(self):
@@ -191,7 +191,7 @@ class AsyncCall(object):
             else:
                 self.Callback(result)
             
-        self.Thread   = None
+        self.Thread = None
         self.Callable = None
         self.Callback = None
         self.CallbackWithThreadID = None
@@ -209,7 +209,7 @@ class AsyncMethod(object):
         printDBG("AsyncMethod.__del__ ---")
 
     def __call__(self, *args, **kwargs):
-        fnc      = self.Callable
+        fnc = self.Callable
         callback = self.Callback
         callbackWithThreadID = self.CallbackWithThreadID
         self.Callable = None
@@ -369,9 +369,9 @@ class CPQItemDelegate(CPQItemBase):
     def __init__(self, callFnc, args, kwargs, retFnc):
         CPQItemBase.__init__(self)
         self.callFnc = callFnc
-        self.args    = args
-        self.kwargs  = kwargs
-        self.retFnc  = retFnc
+        self.args = args
+        self.kwargs = kwargs
+        self.retFnc = retFnc
 
 class CPQItemCallBack(CPQItemBase):
     def __init__(self, clientFunName, retValue):

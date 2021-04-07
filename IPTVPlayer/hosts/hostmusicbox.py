@@ -57,25 +57,25 @@ class MusicBox(CBaseHostClass):
         
         self.DEFAULT_ICON_URL = 'http://www.darmowe-na-telefon.pl/uploads/tapeta_240x320_muzyka_23.jpg'
         self.BILLBOARD_URL = 'https://www.billboard.com/charts/'
-        self.SERVICE_MENU_TABLE = [{'category':'itunes',    'title':"Itunes - Top songs by country",  'item':'song',  'url':'http://www.geonames.org/flags/x/'},
-                                   {'category':'itunes',    'title':"Itunes - Top albums by country", 'item':'album', 'url':'http://www.geonames.org/flags/x/'},
-                                   {'category':'beatport',  'title':"Beatport - Top 100",                             'url':'https://pro.beatport.com/top-100'},
+        self.SERVICE_MENU_TABLE = [{'category':'itunes', 'title':"Itunes - Top songs by country", 'item':'song', 'url':'http://www.geonames.org/flags/x/'},
+                                   {'category':'itunes', 'title':"Itunes - Top albums by country", 'item':'album', 'url':'http://www.geonames.org/flags/x/'},
+                                   {'category':'beatport', 'title':"Beatport - Top 100", 'url':'https://pro.beatport.com/top-100'},
                                    
-                                   {'category':'billboard_charts', 'title':"Bilboard - The Hot 100",                         'url':self.BILLBOARD_URL + 'hot-100'},
-                                   {'category':'billboard_charts', 'title':"Bilboard - 200",                                 'url':self.BILLBOARD_URL + 'billboard-200'},
-                                   {'category':'billboard_charts', 'title':"Bilboard - Heatseekers Songs",                   'url':self.BILLBOARD_URL + 'heatseekers-songs'},
-                                   {'category':'billboard_albums', 'title':"Bilboard - Heatseekers Albums",                  'url':self.BILLBOARD_URL + 'heatseekers-albums'},
-                                   {'category':'billboard_charts', 'title':"Bilboard - Hot Pop Songs",                       'url':self.BILLBOARD_URL + 'pop-songs'},
-                                   {'category':'billboard_charts', 'title':"Bilboard - Hot Country Songs",                   'url':self.BILLBOARD_URL + 'country-songs'},
-                                   {'category':'billboard_albums', 'title':"Bilboard - Hot Country Albums",                  'url':self.BILLBOARD_URL + 'country-albums'},
-                                   {'category':'billboard_charts', 'title':"Bilboard - Hot Rock Songs",                      'url':self.BILLBOARD_URL + 'rock-songs'},
-                                   {'category':'billboard_albums', 'title':"Bilboard - Hot Rock Albums",                     'url':self.BILLBOARD_URL + 'rock-albums'},
-                                   {'category':'billboard_charts', 'title':"Bilboard - Hot R&B/Hip-Hop Songs",               'url':self.BILLBOARD_URL + 'r-b-hip-hop-songs'},
-                                   {'category':'billboard_albums', 'title':"Bilboard - Hot R&B/Hip-Hop Albums",              'url':self.BILLBOARD_URL + 'r-b-hip-hop-albums'},
-                                   {'category':'billboard_charts', 'title':"Bilboard - Hot Dance/Electronic Songs",          'url':self.BILLBOARD_URL + 'dance-electronic-songs'},
-                                   {'category':'billboard_albums', 'title':"Bilboard - Hot Dance/Electronic Albums",         'url':self.BILLBOARD_URL + 'dance-electronic-albums'},
-                                   {'category':'billboard_charts', 'title':"Bilboard - Hot Latin Songs",                     'url':self.BILLBOARD_URL + 'latin-songs'},
-                                   {'category':'billboard_albums', 'title':"Bilboard - Hot Latin Albums",                    'url':self.BILLBOARD_URL + 'latin-albums'},
+                                   {'category':'billboard_charts', 'title':"Bilboard - The Hot 100", 'url':self.BILLBOARD_URL + 'hot-100'},
+                                   {'category':'billboard_charts', 'title':"Bilboard - 200", 'url':self.BILLBOARD_URL + 'billboard-200'},
+                                   {'category':'billboard_charts', 'title':"Bilboard - Heatseekers Songs", 'url':self.BILLBOARD_URL + 'heatseekers-songs'},
+                                   {'category':'billboard_albums', 'title':"Bilboard - Heatseekers Albums", 'url':self.BILLBOARD_URL + 'heatseekers-albums'},
+                                   {'category':'billboard_charts', 'title':"Bilboard - Hot Pop Songs", 'url':self.BILLBOARD_URL + 'pop-songs'},
+                                   {'category':'billboard_charts', 'title':"Bilboard - Hot Country Songs", 'url':self.BILLBOARD_URL + 'country-songs'},
+                                   {'category':'billboard_albums', 'title':"Bilboard - Hot Country Albums", 'url':self.BILLBOARD_URL + 'country-albums'},
+                                   {'category':'billboard_charts', 'title':"Bilboard - Hot Rock Songs", 'url':self.BILLBOARD_URL + 'rock-songs'},
+                                   {'category':'billboard_albums', 'title':"Bilboard - Hot Rock Albums", 'url':self.BILLBOARD_URL + 'rock-albums'},
+                                   {'category':'billboard_charts', 'title':"Bilboard - Hot R&B/Hip-Hop Songs", 'url':self.BILLBOARD_URL + 'r-b-hip-hop-songs'},
+                                   {'category':'billboard_albums', 'title':"Bilboard - Hot R&B/Hip-Hop Albums", 'url':self.BILLBOARD_URL + 'r-b-hip-hop-albums'},
+                                   {'category':'billboard_charts', 'title':"Bilboard - Hot Dance/Electronic Songs", 'url':self.BILLBOARD_URL + 'dance-electronic-songs'},
+                                   {'category':'billboard_albums', 'title':"Bilboard - Hot Dance/Electronic Albums", 'url':self.BILLBOARD_URL + 'dance-electronic-albums'},
+                                   {'category':'billboard_charts', 'title':"Bilboard - Hot Latin Songs", 'url':self.BILLBOARD_URL + 'latin-songs'},
+                                   {'category':'billboard_albums', 'title':"Bilboard - Hot Latin Albums", 'url':self.BILLBOARD_URL + 'latin-albums'},
                                    
                                    {'category':'lastfm', 'title':"Last.fm - Moja lista"},
                                    ]
@@ -148,7 +148,7 @@ class MusicBox(CBaseHostClass):
             printExc()  # wypisz co poszło nie tak
 
     def Itunes_list_album_tracks(self, url, album, country):
-        sts, data = self.cm.getPage('https://itunes.apple.com/lookup?id='+url+'&country='+country+'&entity=song&limit=200', {'header': HEADER})
+        sts, data = self.cm.getPage('https://itunes.apple.com/lookup?id=' + url + '&country=' + country + '&entity=song&limit=200', {'header': HEADER})
         if not sts:
             return
         try:
@@ -242,11 +242,11 @@ class MusicBox(CBaseHostClass):
 
     def List_album_tracks(self, url, artist, album, albumIcon):
         if url != 0:
-            sts, data = self.cm.getPage('http://ws.audioscrobbler.com/2.0/?method=album.getInfo&mbid='+url+'&api_key=' + audioscrobbler_api_key + '&format=json', {'header': HEADER})
+            sts, data = self.cm.getPage('http://ws.audioscrobbler.com/2.0/?method=album.getInfo&mbid=' + url + '&api_key=' + audioscrobbler_api_key + '&format=json', {'header': HEADER})
             if not sts:
                 return
         else:
-            sts, data = self.cm.getPage('http://ws.audioscrobbler.com/2.0/?method=album.getInfo&artist='+urllib.parse.quote(artist)+'&album='+urllib.parse.quote(album)+'&api_key=' + audioscrobbler_api_key + '&format=json', {'header': HEADER})
+            sts, data = self.cm.getPage('http://ws.audioscrobbler.com/2.0/?method=album.getInfo&artist=' + urllib.parse.quote(artist) + '&album=' + urllib.parse.quote(album) + '&api_key=' + audioscrobbler_api_key + '&format=json', {'header': HEADER})
             if not sts:
                 return
         try:
@@ -342,17 +342,17 @@ class MusicBox(CBaseHostClass):
         CBaseHostClass.handleService(self, index, refresh, searchPattern, searchType)
 
         name = self.currItem.get("name", '')
-        title    = self.currItem.get("title", '')
+        title = self.currItem.get("title", '')
         category = self.currItem.get("category", '')
         page = self.currItem.get("page", '')
-        icon     = self.currItem.get("icon", '')
+        icon = self.currItem.get("icon", '')
         album = self.currItem.get("album", '')
         country = self.currItem.get("country", '')
         artist = self.currItem.get("artist", '')
         printDBG("handleService: |||||||||||||||||||||||||||||||||||| [%s] " % name)
         self.currList = []
 
-        if str(page)=='None' or page=='':
+        if str(page) == 'None' or page == '':
             page = '0'
 
     #MAIN MENU

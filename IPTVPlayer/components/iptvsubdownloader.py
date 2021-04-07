@@ -52,7 +52,7 @@ class IPTVSubDownloaderWidget(Screen):
     IPTV_VERSION = GetIPTVPlayerVerstion()
     screenwidth = getDesktop(0).size().width()
     if screenwidth and screenwidth == 1920:
-        skin =  """
+        skin = """
                     <screen name="IPTVSubDownloaderWidget" position="center,center" size="1590,825" title="E2iPlayer v%s">
                             <ePixmap position="5,9" zPosition="4" size="30,30" pixmap="%s" transparent="1" alphatest="on" />
                             <widget render="Label" source="key_red" position="45,9" size="140,32" zPosition="5" valign="center" halign="left" backgroundColor="black" font="Regular;32" transparent="1" foregroundColor="white" shadowColor="black" shadowOffset="-1,-1" />
@@ -67,9 +67,9 @@ class IPTVSubDownloaderWidget(Screen):
                             <widget name="spinner_3" zPosition="1" position="540,240" size="16,16" transparent="1" alphatest="blend" />
                             <widget name="spinner_4" zPosition="1" position="556,240" size="16,16" transparent="1" alphatest="blend" />
                     </screen>
-                """ %(IPTV_VERSION, GetIconDir('red.png'), GetIconDir('line.png'))
+                """ % (IPTV_VERSION, GetIconDir('red.png'), GetIconDir('line.png'))
     else:
-        skin =  """
+        skin = """
                     <screen name="IPTVSubDownloaderWidget" position="center,center" size="1090,525" title="E2iPlayer v%s">
                             <ePixmap position="30,9" zPosition="4" size="30,30" pixmap="%s" transparent="1" alphatest="on" />
                             <widget render="Label" source="key_red"    position="65,9"  size="210,27" zPosition="5" valign="center" halign="left" backgroundColor="black" font="Regular;21" transparent="1" foregroundColor="white" shadowColor="black" shadowOffset="-1,-1" />
@@ -84,7 +84,7 @@ class IPTVSubDownloaderWidget(Screen):
                             <widget name="spinner_3" zPosition="1" position="540,240" size="16,16" transparent="1" alphatest="blend" />
                             <widget name="spinner_4" zPosition="1" position="556,240" size="16,16" transparent="1" alphatest="blend" />
                     </screen>
-                """ %(IPTV_VERSION, GetIconDir('red.png'), GetIconDir('line.png'))
+                """ % (IPTV_VERSION, GetIconDir('red.png'), GetIconDir('line.png'))
         
     def __init__(self, session, params={}):
         # params: vk_title, movie_title
@@ -101,19 +101,19 @@ class IPTVSubDownloaderWidget(Screen):
                 
         Screen.__init__(self, session)
         
-        self["key_red"]    = StaticText(_("Cancel"))
+        self["key_red"] = StaticText(_("Cancel"))
 
         self["list"] = IPTVMainNavigatorList()
         self["list"].connectSelChanged(self.onSelectionChanged)
         self["statustext"] = Label("Loading...")
         self["actions"] = ActionMap(["IPTVPlayerListActions", "WizardActions", "DirectionActions", "ColorActions", "NumberActions"],
         {
-            "red":   self.red_pressed,
-            "green":   self.green_pressed,
-            "yellow":   self.yellow_pressed,
-            "blue":   self.blue_pressed,
-            "ok":   self.ok_pressed,
-            "back":   self.back_pressed,
+            "red": self.red_pressed,
+            "green": self.green_pressed,
+            "yellow": self.yellow_pressed,
+            "blue": self.blue_pressed,
+            "ok": self.ok_pressed,
+            "back": self.back_pressed,
         }, -1)
 
         self["headertext"] = Label()
@@ -144,8 +144,8 @@ class IPTVSubDownloaderWidget(Screen):
         self.movieTitle = self.params['discover_info']['movie_title']
         
         self.workThread = None
-        self.host       = None
-        self.hostName     = ''
+        self.host = None
+        self.hostName = ''
         
         self.nextSelIndex = 0
         self.currSelIndex = 0
@@ -225,8 +225,8 @@ class IPTVSubDownloaderWidget(Screen):
     def hideButtons(self, buttons=['green', 'yellow', 'blue']):
         try:
             for button in buttons:
-                self['icon_'+button].hide()
-                self['label_'+button].hide()
+                self['icon_' + button].hide()
+                self['label_' + button].hide()
         except Exception:
             printExc()
             
@@ -324,7 +324,7 @@ class IPTVSubDownloaderWidget(Screen):
                 self.close()
                 return
         except Exception:
-            printExc('Cannot import class IPTVSubProvider for host [%r]' %  self.hostName)
+            printExc('Cannot import class IPTVSubProvider for host [%r]' % self.hostName)
             self.close()
             return
         # request initial list from host        
@@ -366,7 +366,7 @@ class IPTVSubDownloaderWidget(Screen):
                 if self.workThread.isAlive():
                     if "spinner" in self:
                         x, y = self["spinner"].getPosition()
-                        x   += self["spinner"].getWidth()
+                        x += self["spinner"].getWidth()
                         if x > self["spinner_4"].getPosition()[0]:
                             x = self["spinner_1"].getPosition()[0]
                         self["spinner"].setPosition(x, y)
@@ -479,8 +479,8 @@ class IPTVSubDownloaderWidget(Screen):
             
             dots = ""#_("...............")
             IDS_DOWNLOADING = _("Downloading") + dots
-            IDS_LOADING     = _("Loading") + dots
-            IDS_REFRESHING  = _("Refreshing") + dots
+            IDS_LOADING = _("Loading") + dots
+            IDS_REFRESHING = _("Refreshing") + dots
             try:
                 if type == 'Refresh':
                     self["statustext"].setText(IDS_REFRESHING)
@@ -547,9 +547,9 @@ class IPTVSubDownloaderWidget(Screen):
         
     def reloadList(self, params):
         printDBG("IPTVSubDownloaderWidget.reloadList")
-        refresh  = params['add_param'].get('refresh', 0)
+        refresh = params['add_param'].get('refresh', 0)
         selIndex = params['add_param'].get('selIndex', 0)
-        ret      = params['ret']
+        ret = params['ret']
         printDBG("IPTVSubDownloaderWidget.reloadList refresh[%s], selIndex[%s]" % (refresh, selIndex))
         if 0 < refresh and 0 < selIndex:
             self.nextSelIndex = selIndex
@@ -587,19 +587,19 @@ class IPTVSubDownloaderWidget(Screen):
     def listSubtitlesProviders(self):
         printDBG("IPTVSubDownloaderWidget.listSubtitlesProviders")
         subProvidersList = []
-        napisy24pl       = {'title':"Napisy24.pl",                'sub_provider':'napisy24pl'}
-        openSubtitles    = {'title':"OpenSubtitles.org API",      'sub_provider':'opensubtitlesorg'}
-        openSubtitles2   = {'title':"OpenSubtitles.org WWW",      'sub_provider':'opensubtitlesorg2'}
-        openSubtitles3   = {'title':"OpenSubtitles.org REST",     'sub_provider':'opensubtitlesorg3'}
-        napiprojektpl    = {'title':"Napiprojekt.pl",             'sub_provider':'napiprojektpl'}
-        podnapisinet     = {'title':"Podnapisi.net",              'sub_provider':'podnapisinet'}
-        titlovi          = {'title':"Titlovi.com",                'sub_provider':'titlovicom'}
-        subscene         = {'title':"Subscene.com",               'sub_provider':'subscenecom'}
-        youtube          = {'title':"Youtube.com",                'sub_provider':'youtubecom'}
-        popcornsubtitles = {'title':"PopcornSubtitles.com",       'sub_provider':'popcornsubtitles'}
-        subtitlesgr      = {'title':"Subtitles.gr",               'sub_provider':'subtitlesgr'}
-        prijevodi        = {'title':"Prijevodi-Online.org",       'sub_provider':'prijevodi'}
-        subsro           = {'title':"Subs.ro",                    'sub_provider':'subsro'}
+        napisy24pl = {'title':"Napisy24.pl", 'sub_provider':'napisy24pl'}
+        openSubtitles = {'title':"OpenSubtitles.org API", 'sub_provider':'opensubtitlesorg'}
+        openSubtitles2 = {'title':"OpenSubtitles.org WWW", 'sub_provider':'opensubtitlesorg2'}
+        openSubtitles3 = {'title':"OpenSubtitles.org REST", 'sub_provider':'opensubtitlesorg3'}
+        napiprojektpl = {'title':"Napiprojekt.pl", 'sub_provider':'napiprojektpl'}
+        podnapisinet = {'title':"Podnapisi.net", 'sub_provider':'podnapisinet'}
+        titlovi = {'title':"Titlovi.com", 'sub_provider':'titlovicom'}
+        subscene = {'title':"Subscene.com", 'sub_provider':'subscenecom'}
+        youtube = {'title':"Youtube.com", 'sub_provider':'youtubecom'}
+        popcornsubtitles = {'title':"PopcornSubtitles.com", 'sub_provider':'popcornsubtitles'}
+        subtitlesgr = {'title':"Subtitles.gr", 'sub_provider':'subtitlesgr'}
+        prijevodi = {'title':"Prijevodi-Online.org", 'sub_provider':'prijevodi'}
+        subsro = {'title':"Subs.ro", 'sub_provider':'subsro'}
         
         defaultLang = GetDefaultLang()
         

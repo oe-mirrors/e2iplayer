@@ -82,7 +82,7 @@ class E2iPlayerWidget(Screen):
     IPTV_VERSION = GetIPTVPlayerVerstion()
     screenwidth = getDesktop(0).size().width()
     if screenwidth and screenwidth == 1920:
-        skin =  """
+        skin = """
                     <screen position="center,center" size="1590,825" title="E2iPlayer %s">
                             <ePixmap position="5,9" zPosition="4" size="30,30" pixmap="%s" transparent="1" alphatest="on" />
                             <ePixmap position="180,9" zPosition="4" size="30,30" pixmap="%s" transparent="1" alphatest="on" />
@@ -105,9 +105,9 @@ class E2iPlayerWidget(Screen):
                             <widget name="spinner_3" zPosition="1" position="495,200" size="16,16" transparent="1" alphatest="blend" />
                             <widget name="spinner_4" zPosition="1" position="511,200" size="16,16" transparent="1" alphatest="blend" />
                     </screen>
-                """ %(IPTV_VERSION, GetIconDir('red.png'), GetIconDir('yellow.png'), GetIconDir('green.png'), GetIconDir('blue.png'))
+                """ % (IPTV_VERSION, GetIconDir('red.png'), GetIconDir('yellow.png'), GetIconDir('green.png'), GetIconDir('blue.png'))
     else:
-        skin =  """
+        skin = """
                     <screen position="center,center" size="1090,525" title="E2iPlayer %s">
                             <ePixmap position="30,9" zPosition="4" size="30,30" pixmap="%s" transparent="1" alphatest="on" />
                             <ePixmap position="287,9" zPosition="4" size="30,30" pixmap="%s" transparent="1" alphatest="on" />
@@ -132,7 +132,7 @@ class E2iPlayerWidget(Screen):
                             <widget name="spinner_3" zPosition="1" position="495,200" size="16,16" transparent="1" alphatest="blend" />
                             <widget name="spinner_4" zPosition="1" position="511,200" size="16,16" transparent="1" alphatest="blend" />
                     </screen>
-                """ %(IPTV_VERSION, GetIconDir('red.png'), GetIconDir('green.png'), GetIconDir('yellow.png'), GetIconDir('blue.png'), GetIconDir('line.png'))
+                """ % (IPTV_VERSION, GetIconDir('red.png'), GetIconDir('green.png'), GetIconDir('yellow.png'), GetIconDir('blue.png'), GetIconDir('line.png'))
     def __init__(self, session):
         printDBG("E2iPlayerWidget.__init__ desktop IPTV_VERSION[%s]\n" % (E2iPlayerWidget.IPTV_VERSION))
         self.session = session
@@ -168,35 +168,35 @@ class E2iPlayerWidget(Screen):
         if config.plugins.iptvplayer.disable_live.value:
             self.session.nav.stopService()
 
-        self["key_red"]    = StaticText(_("Exit"))
+        self["key_red"] = StaticText(_("Exit"))
         #self["key_green"]  = StaticText(_("Download"))
-        self["key_green_ext"]  = Label(_("Download"))
+        self["key_green_ext"] = Label(_("Download"))
         
         self["key_yellow"] = StaticText(_("Refresh"))
-        self["key_blue"]   = StaticText(_("More"))
+        self["key_blue"] = StaticText(_("More"))
 
         self["list"] = IPTVMainNavigatorList()
         self["list"].connectSelChanged(self.onSelectionChanged)
         self["statustext"] = Label("Loading...")
         self["actions"] = ActionMap(["IPTVPlayerListActions", "WizardActions", "DirectionActions", "ColorActions", "NumberActions"],
         {
-            "red":   self.red_pressed,
-            "green":   self.green_pressed,
-            "yellow":   self.yellow_pressed,
-            "blue":   self.blue_pressed,
-            "ok":   self.ok_pressed,
-            "back":   self.back_pressed,
-            "info":   self.info_pressed,
-            "8":   self.startAutoPlaySequencer,
-            "0":   self.ok_pressed0,
-            "1":   self.ok_pressed1,
-            "2":   self.ok_pressed2,
-            "3":   self.ok_pressed3,
-            "4":   self.ok_pressed4,
-            "play":   self.startAutoPlaySequencer,
-            "menu":   self.menu_pressed,
-            "tools":   self.blue_pressed,
-            "record":   self.green_pressed,
+            "red": self.red_pressed,
+            "green": self.green_pressed,
+            "yellow": self.yellow_pressed,
+            "blue": self.blue_pressed,
+            "ok": self.ok_pressed,
+            "back": self.back_pressed,
+            "info": self.info_pressed,
+            "8": self.startAutoPlaySequencer,
+            "0": self.ok_pressed0,
+            "1": self.ok_pressed1,
+            "2": self.ok_pressed2,
+            "3": self.ok_pressed3,
+            "4": self.ok_pressed4,
+            "play": self.startAutoPlaySequencer,
+            "menu": self.menu_pressed,
+            "tools": self.blue_pressed,
+            "record": self.green_pressed,
         }, -1)
 
         self["headertext"] = Label()
@@ -217,7 +217,7 @@ class E2iPlayerWidget(Screen):
             printExc()
         
         # Check for plugin update
-        self.lastPluginVersion  = ''
+        self.lastPluginVersion = ''
         self.checkUpdateConsole = None 
         self.checkUpdateTimer = eTimer()
         self.checkUpdateTimer_conn = eConnectCallback(self.checkUpdateTimer.timeout, self.__requestCheckUpdate)
@@ -249,11 +249,11 @@ class E2iPlayerWidget(Screen):
         self.searchPattern = CSearchHistoryHelper.loadLastPattern()[1]
         self.searchType = None
         self.workThread = None
-        self.group      = None
-        self.groupObj   = None
-        self.host       = None
-        self.hostName     = ''
-        self.hostTitle    = ''
+        self.group = None
+        self.groupObj = None
+        self.host = None
+        self.hostName = ''
+        self.hostTitle = ''
         self.hostFavTypes = []
         
         self.nextSelIndex = 0
@@ -474,7 +474,7 @@ class E2iPlayerWidget(Screen):
                     
                     if "spinner" in self:
                         x, y = self["spinner"].getPosition()
-                        x   += self["spinner"].getWidth()
+                        x += self["spinner"].getWidth()
                         if x > self["spinner_4"].getPosition()[0]:
                             x = self["spinner_1"].getPosition()[0]
                         self["spinner"].setPosition(x, y)
@@ -580,7 +580,7 @@ class E2iPlayerWidget(Screen):
         self.stopAutoPlaySequencer()
         self.updateDownloadButton()
         self.recorderMode = self.downloadable
-        if  self.downloadable:
+        if self.downloadable:
             self.ok_pressed('green')
 
     def yellow_pressed(self):
@@ -706,7 +706,7 @@ class E2iPlayerWidget(Screen):
         TextMSG = ''
         if ret:
             if ret[1] == "info": #information about plugin
-                TextMSG  = _("Lead programmer: ") + "\n\t- samsamsam\n"
+                TextMSG = _("Lead programmer: ") + "\n\t- samsamsam\n"
                 TextMSG += _("E-mail: ") + "\n\t- iptvplayere2@gmail.com\n"
                 TextMSG += _("www: ") + "\n\t- http://iptvplayer.vline.pl/" + '\n\t- http://www.iptvplayer.gitlab.io/\n'
                 TextMSG += _("Developers: ") 
@@ -1135,8 +1135,8 @@ class E2iPlayerWidget(Screen):
         
     def askUpdateAvailable(self, NoUpdateCallback):
         printDBG(">> askUpdateAvailable")
-        if  config.plugins.iptvplayer.autoCheckForUpdate.value \
-            and  0 < GetVersionNum(self.lastPluginVersion) \
+        if config.plugins.iptvplayer.autoCheckForUpdate.value \
+            and 0 < GetVersionNum(self.lastPluginVersion) \
             and GetVersionNum(self.lastPluginVersion) > GetVersionNum(GetIPTVPlayerVerstion()) \
             and self.lastPluginVersion != config.plugins.iptvplayer.updateLastCheckedVersion.value:
             
@@ -1196,7 +1196,7 @@ class E2iPlayerWidget(Screen):
         if self.newDisplayGroupsList != self.displayGroupsList:
             numOfSpecialItems = self.getNumOfSpecialItems(self.newDisplayGroupsList)
             groupList = []
-            for idx in range(len(self.newDisplayGroupsList)-numOfSpecialItems):
+            for idx in range(len(self.newDisplayGroupsList) - numOfSpecialItems):
                 groupList.append(self.newDisplayGroupsList[idx][1])
             self.groupObj.setGroupList(groupList)
         
@@ -1238,13 +1238,13 @@ class E2iPlayerWidget(Screen):
         brokenHostList = []
         for hostName in hostsList:
             try:
-                title = self.hostsAliases.get('host'+hostName, '')
+                title = self.hostsAliases.get('host' + hostName, '')
                 if not title:
                     _temp = __import__('Plugins.Extensions.IPTVPlayer.hosts.host' + hostName, globals(), locals(), ['gettytul'], -1)
                     title = _temp.gettytul()
             except Exception:
                 printExc('get host name exception for host "%s"' % hostName)
-                brokenHostList.append('host'+hostName)
+                brokenHostList.append('host' + hostName)
                 continue 
             self.displayHostsList.append((title, hostName))
             
@@ -1302,13 +1302,13 @@ class E2iPlayerWidget(Screen):
         for hostName in sortedList:
             if IsHostEnabled(hostName):
                 try:
-                    title = self.hostsAliases.get('host'+hostName, '')
+                    title = self.hostsAliases.get('host' + hostName, '')
                     if not title:
                         _temp = __import__('Plugins.Extensions.IPTVPlayer.hosts.host' + hostName, globals(), locals(), ['gettytul'], -1)
                         title = _temp.gettytul()
                 except Exception:
                     printExc('get host name exception for host "%s"' % hostName)
-                    brokenHostList.append('host'+hostName)
+                    brokenHostList.append('host' + hostName)
                     continue
 
                 # The 'http...' in host titles is annoying on regular choiceBox and impacts sorting.
@@ -1364,7 +1364,7 @@ class E2iPlayerWidget(Screen):
         if self.newDisplayHostsList != None and self.newDisplayHostsList != self.displayHostsList:
             numOfSpecialItems = self.getNumOfSpecialItems(self.newDisplayHostsList)
             hostsList = []
-            for idx in range(len(self.newDisplayHostsList)-numOfSpecialItems):
+            for idx in range(len(self.newDisplayHostsList) - numOfSpecialItems):
                 hostsList.append(self.newDisplayHostsList[idx][1])
             SaveHostsOrderList(hostsList)
         
@@ -1504,12 +1504,12 @@ class E2iPlayerWidget(Screen):
                 self.close()
                 return
         except Exception as e:
-            printExc('Cannot import class IPTVHost for host [%r]' %  self.hostName)
+            printExc('Cannot import class IPTVHost for host [%r]' % self.hostName)
             errorMessage = [_('Loading %s failed due to following error:') % self.hostName]
             elines = traceback.format_exc().splitlines()
             errorMessage.append("%s" % '\n'.join(elines[-3:]))
             self.session.open(MessageBox, '\n'.join(errorMessage), type=MessageBox.TYPE_ERROR, timeout=10)
-            self.setStatusTex(_("Failed: %s") %  e)
+            self.setStatusTex(_("Failed: %s") % e)
             return
 
         try:
@@ -1531,8 +1531,8 @@ class E2iPlayerWidget(Screen):
         self["playerlogo"].hide()
         self.session.summary.LCD_hide('LCDlogo')
         try:
-            hRet= self.host.getLogoPath()
-            if hRet.status == RetHost.OK and  len(hRet.value):
+            hRet = self.host.getLogoPath()
+            if hRet.status == RetHost.OK and len(hRet.value):
                 logoPath = hRet.value[0]
                 if logoPath != '':
                     printDBG('Logo Path: ' + logoPath)
@@ -1672,8 +1672,8 @@ class E2iPlayerWidget(Screen):
         fileExtension = ''
         tmp = url.lower().split('?', 1)[0]
         for item in ['avi', 'flv', 'mp4', 'ts', 'mov', 'wmv', 'mpeg', 'mpg', 'mkv', 'vob', 'divx', 'm2ts', 'mp3', 'm4a', 'ogg', 'wma', 'fla', 'wav', 'flac']:
-            if tmp.endswith('.'+item):
-                fileExtension = '.'+item
+            if tmp.endswith('.' + item):
+                fileExtension = '.' + item
                 break
         
         if '' == fileExtension:
@@ -1749,7 +1749,7 @@ class E2iPlayerWidget(Screen):
                     errorTab.append(_("Directory \"%s\" does not exists.") % destinationPath)
                     errorTab.append(_("Please set valid %s in the %s configuration.") % (_("downloads location") if recorderMode else _("buffering location"), 'E2iPlayer'))
                 else:
-                    requiredSpace = 3*512*1024*1024 # 1,5 GB
+                    requiredSpace = 3 * 512 * 1024 * 1024 # 1,5 GB
                     availableSpace = iptvtools_FreeSpace(destinationPath, requiredSpace=None, unitDiv=1)
                     if requiredSpace > availableSpace:
                         errorTab.append(_("There is no enough free space in the folder \"%s\".") % destinationPath)
@@ -1816,10 +1816,10 @@ class E2iPlayerWidget(Screen):
                                 #use the default value, due to small amount of RAM
                                 #in the future it will be configurable
                                 gstAdditionalParams['buffer-duration'] = -1
-                                gstAdditionalParams['buffer-size']     = 0
+                                gstAdditionalParams['buffer-size'] = 0
                             else:
                                 gstAdditionalParams['buffer-duration'] = 18000 # 300min
-                                gstAdditionalParams['buffer-size']     = 10240 # 10MB
+                                gstAdditionalParams['buffer-size'] = 10240 # 10MB
                         else:
                             assert("exteplayer" == player.value)
                             playerVal = 'eplayer'
@@ -1849,7 +1849,7 @@ class E2iPlayerWidget(Screen):
         
         if 'favourites' == self.hostName and lastPosition != None and clipLength != None:
             try:
-                if config.plugins.iptvplayer.favourites_use_watched_flag.value and (lastPosition*100 / clipLength) > 80:
+                if config.plugins.iptvplayer.favourites_use_watched_flag.value and (lastPosition * 100 / clipLength) > 80:
                     currSelIndex = self["list"].getCurrentIndex()
                     self.requestListFromHost('MarkItemAsViewed', currSelIndex)
                     return
@@ -1889,8 +1889,8 @@ class E2iPlayerWidget(Screen):
             
             dots = ""#_("...............")
             IDS_DOWNLOADING = _("Downloading") + dots
-            IDS_LOADING     = _("Loading") + dots
-            IDS_REFRESHING  = _("Refreshing") + dots
+            IDS_LOADING = _("Loading") + dots
+            IDS_REFRESHING = _("Refreshing") + dots
             try:
                 if type == 'Refresh':
                     self.setStatusTex(IDS_REFRESHING)
@@ -1965,7 +1965,7 @@ class E2iPlayerWidget(Screen):
                     try:
                         if self.visible and not self.isInWorkThread():
                             currSelIndex = self.getSelItem().itemIdx 
-                            hRet= self.host.getSuggestionsProvider(currSelIndex)
+                            hRet = self.host.getSuggestionsProvider(currSelIndex)
                             if hRet.status == RetHost.OK and hRet.value and hRet.value[0]:
                                 suggestionsProvider = hRet.value[0] if hRet.value[0] != None else False
                     except Exception:
@@ -2001,7 +2001,7 @@ class E2iPlayerWidget(Screen):
 
                     if suggestionsProvider:
                         from Plugins.Extensions.IPTVPlayer.components.e2ivksuggestion import AutocompleteSearch
-                        additionalParams['autocomplete']  = AutocompleteSearch(suggestionsProvider)
+                        additionalParams['autocomplete'] = AutocompleteSearch(suggestionsProvider)
 
                 self.session.openWithCallback(self.enterPatternCallBack, virtualKeyboard, title=(_("Your search entry")), text=self.searchPattern, additionalParams=additionalParams)
                 return
@@ -2054,9 +2054,9 @@ class E2iPlayerWidget(Screen):
     
     def reloadList(self, params):
         printDBG("reloadList")
-        refresh  = params['add_param'].get('refresh', 0)
+        refresh = params['add_param'].get('refresh', 0)
         selIndex = params['add_param'].get('selIndex', -1)
-        ret      = params['ret']
+        ret = params['ret']
         printDBG("> E2iPlayerWidget.reloadList refresh[%s], selIndex[%s]" % (refresh, selIndex))
         if 0 < refresh and -1 < selIndex:
             self.nextSelIndex = selIndex
@@ -2224,8 +2224,8 @@ class E2iPlayerWidget(Screen):
                     currSelIndex = item.itemIdx #self["list"].getCurrentIndex()
                 else:
                     currSelIndex = -1
-                hRet= self.host.getCustomActions(currSelIndex)
-                if hRet.status == RetHost.OK and  len(hRet.value):
+                hRet = self.host.getCustomActions(currSelIndex)
+                if hRet.status == RetHost.OK and len(hRet.value):
                     for item in hRet.value:
                         if isinstance(item, IPTVChoiceBoxItem):
                             options.append(item)
@@ -2334,7 +2334,7 @@ class IPTVPlayerLCDScreen(Screen):
     def __init__(self, session, parent):
         Screen.__init__(self, session)
         try: 
-            self["text1"] =  Label("E2iPlayer")
+            self["text1"] = Label("E2iPlayer")
             self["text2"] = Label("")
             self["LCDlogo"] = Pixmap()
         except Exception:

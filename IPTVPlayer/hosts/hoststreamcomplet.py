@@ -27,12 +27,12 @@ def gettytul():
     return 'https://streamcomplet.me/'
 
 class StreamComplet(CBaseHostClass):
-    MAIN_URL    = 'https://www.streamcomplet.me/'
-    SRCH_URL    = MAIN_URL + '?s='
+    MAIN_URL = 'https://www.streamcomplet.me/'
+    SRCH_URL = MAIN_URL + '?s='
     DEFAULT_ICON_URL = 'https://streamcomplet.me/wp-content/themes/streaming/logo/logo.png'
     
-    MAIN_CAT_TAB = [{'category':'categories',     'title': _('Categories'),     'icon':DEFAULT_ICON_URL, 'filters':{}},
-                    {'category':'search',         'title': _('Search'),         'icon':DEFAULT_ICON_URL, 'search_item':True},
+    MAIN_CAT_TAB = [{'category':'categories', 'title': _('Categories'), 'icon':DEFAULT_ICON_URL, 'filters':{}},
+                    {'category':'search', 'title': _('Search'), 'icon':DEFAULT_ICON_URL, 'search_item':True},
                     {'category':'search_history', 'title': _('Search history'), 'icon':DEFAULT_ICON_URL} 
                    ]
  
@@ -79,7 +79,7 @@ class StreamComplet(CBaseHostClass):
             return
         
         nextPage = False
-        if ('/page/%s/' % (page+1)) in data:
+        if ('/page/%s/' % (page + 1)) in data:
             nextPage = True
         m1 = '<div class="moviefilm">'
         data = self.cm.ph.getDataBeetwenMarkers(data, m1, '<div class="filmborder">', False)[1]
@@ -87,19 +87,19 @@ class StreamComplet(CBaseHostClass):
         for item in data:
             params = dict(cItem)
             params = dict(cItem)
-            url   = self.cm.ph.getSearchGroups(item, 'href="([^"]+?)"')[0]
+            url = self.cm.ph.getSearchGroups(item, 'href="([^"]+?)"')[0]
             title = self.cm.ph.getSearchGroups(item, 'alt="([^"]+?)"')[0]
             title = self.cleanHtmlStr(title)
             if title == '':
                 continue
-            icon  = self.cm.ph.getSearchGroups(item, 'src="([^"]+?)"')[0]
-            desc  = self.cleanHtmlStr(item)
+            icon = self.cm.ph.getSearchGroups(item, 'src="([^"]+?)"')[0]
+            desc = self.cleanHtmlStr(item)
             params.update({'title':title, 'icon':self.getFullUrl(icon), 'desc':desc, 'url':self.getFullUrl(url)})
             self.addVideo(params)
         
         if nextPage:
             params = dict(cItem)
-            params.update({'title':_('Next page'), 'page':cItem.get('page', 1)+1})
+            params.update({'title':_('Next page'), 'page':cItem.get('page', 1) + 1})
             self.addDir(params)
         
     def listSearchResult(self, cItem, searchPattern, searchType):
@@ -137,7 +137,7 @@ class StreamComplet(CBaseHostClass):
                 for tmpItem in tmp:
                     tmpDec = ''
                     for decFun in [VIDEOMEGA_decryptPlayerParams, SAWLIVETV_decryptPlayerParams]:
-                        tmpDec = unpackJSPlayerParams('eval('+tmpItem, decFun, 0)
+                        tmpDec = unpackJSPlayerParams('eval(' + tmpItem, decFun, 0)
                         if '' != tmpDec:   
                             break
                     decData += tmpDec
@@ -167,8 +167,8 @@ class StreamComplet(CBaseHostClass):
         
         subTab = re.compile('''(['"]\s*\+[^\+]+?\+\s*['"])''').findall(fullDecData)
         for item in subTab:
-            var  = self.cm.ph.getSearchGroups(item, '''\+([^\+]+?)\+''')[0].strip()
-            val  = self.cm.ph.getSearchGroups(fullDecData, '''var\s*%s\s*=\s*['"]([^'^"]+?)['"]''' % var)[0] 
+            var = self.cm.ph.getSearchGroups(item, '''\+([^\+]+?)\+''')[0].strip()
+            val = self.cm.ph.getSearchGroups(fullDecData, '''var\s*%s\s*=\s*['"]([^'^"]+?)['"]''' % var)[0] 
             fullDecData = fullDecData.replace(item, val)
         fullData = baseData + fullDecData
         fullData = fullData.replace('\\"', '"').replace('\\/', '/')
@@ -249,7 +249,7 @@ class StreamComplet(CBaseHostClass):
         
         CBaseHostClass.handleService(self, index, refresh, searchPattern, searchType)
 
-        name     = self.currItem.get("name", '')
+        name = self.currItem.get("name", '')
         category = self.currItem.get("category", '')
         printDBG("handleService: |||||||||||||||||||||||||||||||||||| name[%s], category[%s] " % (name, category))
         self.currList = []

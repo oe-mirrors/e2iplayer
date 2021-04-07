@@ -27,7 +27,7 @@ class TrailersApple(CBaseHostClass):
 
     def __init__(self):
         CBaseHostClass.__init__(self, {'history':'TrailersApple', 'cookie':'TrailersApple.cookie'})
-        self.MAIN_URL    = 'https://trailers.apple.com/'
+        self.MAIN_URL = 'https://trailers.apple.com/'
         self.DEFAULT_ICON_URL = 'http://www.userlogos.org/files/logos/mafi0z/apple%20trailers.png'
         self.cacheLinks = {}
     
@@ -40,12 +40,12 @@ class TrailersApple(CBaseHostClass):
     def listMain(self, cItem):
         printDBG("TrailersApple.listMain")
         
-        MAIN_CAT_TAB = [{'category':'list_items',     'title':'Just Added',    'url':self.getFullUrl('/trailers/home/feeds/just_added.json')},
-                        {'category':'list_items',     'title':'Exclusive',     'url':self.getFullUrl('/trailers/home/feeds/exclusive.json')},
-                        {'category':'list_items',     'title':'Just HD',       'url':self.getFullUrl('/trailers/home/feeds/just_hd.json')},
-                        {'category':'list_items',     'title':'Most Popular',  'url':self.getFullUrl('/trailers/home/feeds/most_pop.json')},
-                        {'category':'list_items',     'title':'Movie Studios', 'url':self.getFullUrl('/trailers/home/feeds/studios.json')},
-                        {'category':'search',         'title': _('Search'),       'search_item':True},
+        MAIN_CAT_TAB = [{'category':'list_items', 'title':'Just Added', 'url':self.getFullUrl('/trailers/home/feeds/just_added.json')},
+                        {'category':'list_items', 'title':'Exclusive', 'url':self.getFullUrl('/trailers/home/feeds/exclusive.json')},
+                        {'category':'list_items', 'title':'Just HD', 'url':self.getFullUrl('/trailers/home/feeds/just_hd.json')},
+                        {'category':'list_items', 'title':'Most Popular', 'url':self.getFullUrl('/trailers/home/feeds/most_pop.json')},
+                        {'category':'list_items', 'title':'Movie Studios', 'url':self.getFullUrl('/trailers/home/feeds/studios.json')},
+                        {'category':'search', 'title': _('Search'), 'search_item':True},
                         {'category': 'search_history', 'title': _('Search history'),}]
         self.listsTab(MAIN_CAT_TAB, cItem)
     
@@ -62,7 +62,7 @@ class TrailersApple(CBaseHostClass):
             
             for item in cTree['list']:
                 title = self.cleanHtmlStr(item['dat'])
-                url   = self.getFullUrl(self.cm.ph.getSearchGroups(item['dat'], '''href=['"]([^'^"]+?)['"]''')[0])
+                url = self.getFullUrl(self.cm.ph.getSearchGroups(item['dat'], '''href=['"]([^'^"]+?)['"]''')[0])
                 if 'list' not in item:
                     if url != '' and title != '':
                         params = dict(cItem)
@@ -187,7 +187,7 @@ class TrailersApple(CBaseHostClass):
         
         CBaseHostClass.handleService(self, index, refresh, searchPattern, searchType)
 
-        name     = self.currItem.get("name", '')
+        name = self.currItem.get("name", '')
         category = self.currItem.get("category", '')
         printDBG("handleService: ||| name[%s], category[%s] " % (name, category))
         self.currList = []

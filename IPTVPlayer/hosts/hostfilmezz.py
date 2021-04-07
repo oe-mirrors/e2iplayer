@@ -35,13 +35,13 @@ from Screens.MessageBox import MessageBox
 ###################################################
 # Config options for HOST
 ###################################################
-config.plugins.iptvplayer.filmezzeu_login    = ConfigText(default="", fixed_size=False)
+config.plugins.iptvplayer.filmezzeu_login = ConfigText(default="", fixed_size=False)
 config.plugins.iptvplayer.filmezzeu_password = ConfigText(default="", fixed_size=False)
 
 def GetConfigList():
     optionList = []
-    optionList.append(getConfigListEntry(_("login")+":", config.plugins.iptvplayer.filmezzeu_login))
-    optionList.append(getConfigListEntry(_("password")+":", config.plugins.iptvplayer.filmezzeu_password))
+    optionList.append(getConfigListEntry(_("login") + ":", config.plugins.iptvplayer.filmezzeu_login))
+    optionList.append(getConfigListEntry(_("password") + ":", config.plugins.iptvplayer.filmezzeu_password))
     return optionList
 ###################################################
 
@@ -58,23 +58,23 @@ class FilmezzEU(CBaseHostClass):
         self.AJAX_HEADER = dict(self.HEADER)
         self.AJAX_HEADER.update({'X-Requested-With': 'XMLHttpRequest'})
         self.MAIN_URL = 'http://filmezz.eu/'
-        self.cacheLinks    = {}
-        self.cacheFilters  = {}
+        self.cacheLinks = {}
+        self.cacheFilters = {}
         self.cacheFiltersKeys = []
         self.loggedIn = None
         self.login = ''
         self.password = ''
         self.defaultParams = {'header':self.HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
     
-        self.MAIN_CAT_TAB = [{'category':'list_filters',    'title': _('Home'),               'url':self.getFullUrl('kereses.php')},
-                             {'category':'list_items',      'title': _('Movies'),             'url':self.getFullUrl('kereses.php?q=0&l=0&e=0&c=0&t=1&h=0&o=feltoltve')},
-                             {'category':'list_items',      'title': _('Series'),             'url':self.getFullUrl('kereses.php?q=0&l=0&e=0&c=0&t=2&h=0&o=feltoltve')},
-                             {'category':'list_items',      'title': _('Top movies'),         'url':self.getFullUrl('kereses.php?q=0&l=0&e=0&c=0&t=1&h=0&o=nezettseg')},
-                             {'category':'list_items',      'title': _('Top series'),         'url':self.getFullUrl('kereses.php?q=0&l=0&e=0&c=0&t=2&h=0&o=nezettseg')},
-                             {'category':'list_items',      'title': _('Latest added'),       'url':self.getFullUrl('kereses.php?q=0&l=0&e=0&c=0&t=0&h=0&o=feltoltve')},
+        self.MAIN_CAT_TAB = [{'category':'list_filters', 'title': _('Home'), 'url':self.getFullUrl('kereses.php')},
+                             {'category':'list_items', 'title': _('Movies'), 'url':self.getFullUrl('kereses.php?q=0&l=0&e=0&c=0&t=1&h=0&o=feltoltve')},
+                             {'category':'list_items', 'title': _('Series'), 'url':self.getFullUrl('kereses.php?q=0&l=0&e=0&c=0&t=2&h=0&o=feltoltve')},
+                             {'category':'list_items', 'title': _('Top movies'), 'url':self.getFullUrl('kereses.php?q=0&l=0&e=0&c=0&t=1&h=0&o=nezettseg')},
+                             {'category':'list_items', 'title': _('Top series'), 'url':self.getFullUrl('kereses.php?q=0&l=0&e=0&c=0&t=2&h=0&o=nezettseg')},
+                             {'category':'list_items', 'title': _('Latest added'), 'url':self.getFullUrl('kereses.php?q=0&l=0&e=0&c=0&t=0&h=0&o=feltoltve')},
                              
-                             {'category': 'search',            'title': _('Search'), 'search_item': True,},
-                             {'category': 'search_history',    'title': _('Search history'),} 
+                             {'category': 'search', 'title': _('Search'), 'search_item': True,},
+                             {'category': 'search_history', 'title': _('Search history'),} 
                             ]
                             
     def getFullIconUrl(self, url):
@@ -143,7 +143,7 @@ class FilmezzEU(CBaseHostClass):
         filter = self.cacheFiltersKeys[f_idx]
         f_idx += 1
         cItem['f_idx'] = f_idx
-        if f_idx  == len(self.cacheFiltersKeys):
+        if f_idx == len(self.cacheFiltersKeys):
             cItem['category'] = nextCategory
         self.listsTab(self.cacheFilters.get(filter, []), cItem)
         
@@ -172,7 +172,7 @@ class FilmezzEU(CBaseHostClass):
             return
         
         nextPage = self.cm.ph.getDataBeetwenMarkers(data, 'pagination', '</ul>')[1]
-        if  '' != self.cm.ph.getSearchGroups(nextPage, 'p=(%s)[^0-9]' % (page+1))[0]:
+        if '' != self.cm.ph.getSearchGroups(nextPage, 'p=(%s)[^0-9]' % (page + 1))[0]:
             nextPage = True
         else:
             nextPage = False
@@ -217,7 +217,7 @@ class FilmezzEU(CBaseHostClass):
         
         if nextPage and len(self.currList) > 0:
             params = dict(cItem)
-            params.update({'title':_("Next page"), 'page':page+1})
+            params.update({'title':_("Next page"), 'page':page + 1})
             self.addDir(params)
             
     def exploreItem(self, cItem):
@@ -240,7 +240,7 @@ class FilmezzEU(CBaseHostClass):
         
         reDescObj = re.compile('title="([^"]+?)"')
         titlesTab = []
-        self.cacheLinks  = {}
+        self.cacheLinks = {}
         data = self.cm.ph.getDataBeetwenMarkers(data, 'url-list', '</section>')[1]
         data = data.split('<div class="col-sm-4 col-xs-12 host">')
         if len(data):
@@ -464,7 +464,7 @@ class FilmezzEU(CBaseHostClass):
         altTitle = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(titleData, '<h2', '</h2>')[1])
         if title != '':
             title = self.cleanHtmlStr(self.cm.ph.getSearchGroups(data, '<meta[^>]+?name="title"[^>]+?content="([^"]+?)"')[0])
-        icon  = self.getFullUrl(self.cm.ph.getSearchGroups(data, '<link[^>]+?rel="image_src"[^>]+?href="([^"]+?)"')[0])
+        icon = self.getFullUrl(self.cm.ph.getSearchGroups(data, '<link[^>]+?rel="image_src"[^>]+?href="([^"]+?)"')[0])
         
         if title == '':
             title = cItem['title']
@@ -473,9 +473,9 @@ class FilmezzEU(CBaseHostClass):
         if icon == '':
             title = cItem['icon']
         
-        descTabMap = {"Kategória":    "genre",
-                      "Rendező":      "director",
-                      "Hossz":        "duration"}
+        descTabMap = {"Kategória": "genre",
+                      "Rendező": "director",
+                      "Hossz": "duration"}
         
         otherInfo = {}
         descData = cItem.get('prev_desc', '')
@@ -542,9 +542,9 @@ class FilmezzEU(CBaseHostClass):
         
         CBaseHostClass.handleService(self, index, refresh, searchPattern, searchType)
 
-        name     = self.currItem.get("name", '')
+        name = self.currItem.get("name", '')
         category = self.currItem.get("category", '')
-        mode     = self.currItem.get("mode", '')
+        mode = self.currItem.get("mode", '')
         
         printDBG("handleService: |||||||||||||||||||||||||||||||||||| name[%s], category[%s] " % (name, category))
         self.currList = []

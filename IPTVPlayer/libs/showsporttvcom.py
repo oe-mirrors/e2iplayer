@@ -40,8 +40,8 @@ def GetConfigList():
 class ShowsportTVApi(CBaseHostClass):
     
     def __init__(self):
-        self.MAIN_URL   = 'http://showsport-tv.com/'
-        self.HTTP_HEADER  = {'User-Agent': 'Mozilla/5.0 (X11; Ubuntu; Linux i686; rv:12.0) Gecko/20100101 Firefox/12.0', 'Referer': self.MAIN_URL}
+        self.MAIN_URL = 'http://showsport-tv.com/'
+        self.HTTP_HEADER = {'User-Agent': 'Mozilla/5.0 (X11; Ubuntu; Linux i686; rv:12.0) Gecko/20100101 Firefox/12.0', 'Referer': self.MAIN_URL}
         self.COOKIE_FILE = GetCookieDir('showsporttvcom.cookie')
         self.sessionEx = MainSessionWrapper()
         self.cm = common()
@@ -56,20 +56,20 @@ class ShowsportTVApi(CBaseHostClass):
         sts, data = self.cm.getPage(self.MAIN_URL)
         if not sts:
             return []
-        data = self.cm.ph.getAllItemsBeetwenNodes(data,  ('<ul ', '>', 'nav-second-level'), ('</nav', '>'), False, numNodes=1)
+        data = self.cm.ph.getAllItemsBeetwenNodes(data, ('<ul ', '>', 'nav-second-level'), ('</nav', '>'), False, numNodes=1)
         if len(data):
             data = data[0]
         else:
             data = ''
         data = self.cm.ph.getAllItemsBeetwenMarkers(data, '<li', '</li>')
         for item in data:
-            url   = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''href="([^"]+?)"''', 1, True)[0])
-            icon  = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''src="([^"]+?)"''', 1, True)[0])
+            url = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''href="([^"]+?)"''', 1, True)[0])
+            icon = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''src="([^"]+?)"''', 1, True)[0])
             title = self.cm.ph.getDataBeetwenMarkers(url, 'watch-', '-online.html', False)[1].replace('-', ' ').title()
             if 'Offline' in item:
-                desc  = _('Off Air')
+                desc = _('Off Air')
             else:
-                desc  = _('On Air')
+                desc = _('On Air')
             if title == '':
                 continue
             if not url.startswith('http'):
@@ -89,7 +89,7 @@ class ShowsportTVApi(CBaseHostClass):
         basePlayerUrl = self.cm.ph.getDataBeetwenMarkers(data, 'function switchServer', '}')[1]
         basePlayerUrl = self.getFullUrl(self.cm.ph.getSearchGroups(basePlayerUrl, '''['"]src['"][^'^"]*?['"]([^'^"]+?)['"]''')[0])
         
-        data = self.cm.ph.getAllItemsBeetwenNodes(data,  ('<ul ', '>', 'nav-tabs'), ('</ul', '>'), numNodes=1)
+        data = self.cm.ph.getAllItemsBeetwenNodes(data, ('<ul ', '>', 'nav-tabs'), ('</ul', '>'), numNodes=1)
         if len(data):
             data = data[0]
         else:
@@ -100,7 +100,7 @@ class ShowsportTVApi(CBaseHostClass):
                 continue
             url = self.cm.ph.getSearchGroups(item, '''switchServer\(\s*([0-9]+?)\s*\)''')[0]
             if url != '':
-                url =  basePlayerUrl + url
+                url = basePlayerUrl + url
             else:
                 url = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''switchServer\(\s*['"]([^'^"]+?)['"]''')[0])
             params = dict(cItem)
@@ -130,12 +130,12 @@ class ShowsportTVApi(CBaseHostClass):
             dat = self.cm.ph.getAllItemsBeetwenNodes(dat, ('<tr', '>', 'e_row'), ('</tr', '>'))
             printDBG(dat)
             for item in dat:
-                url   = self.cm.ph.getAllItemsBeetwenMarkers(item, '<a', '>')
+                url = self.cm.ph.getAllItemsBeetwenMarkers(item, '<a', '>')
                 if len(url):
                     url = self.getFullUrl(self.cm.ph.getSearchGroups(url[-1], '''href="([^"]+?)"''', 1, True)[0])
                 else:
                     continue
-                icon  = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''src="([^"]+?)"''', 1, True)[0])
+                icon = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''src="([^"]+?)"''', 1, True)[0])
                 title = self.cleanHtmlStr(item)
                 if 'blink' in item:
                     title = '[LIVE] ' + title
@@ -166,7 +166,7 @@ class ShowsportTVApi(CBaseHostClass):
     def getVideoLink(self, cItem):
         printDBG("ShowsportTVApi.getVideoLink")
         urlsTab = []
-        params    = {'header': self.HTTP_HEADER, 'cookiefile': self.COOKIE_FILE, 'save_cookie': True}
+        params = {'header': self.HTTP_HEADER, 'cookiefile': self.COOKIE_FILE, 'save_cookie': True}
         sts, data = self.cm.getPage(cItem['url'], params)
         if not sts:
             return []

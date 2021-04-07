@@ -24,9 +24,9 @@ from Components.config import config, ConfigSelection, getConfigListEntry
 ###################################################
 # Config options for HOST
 ###################################################
-config.plugins.iptvplayer.cimaclub_proxy = ConfigSelection(default="None", choices=[("None",     _("None")),
-                                                                                        ("proxy_1",  _("Alternative proxy server (1)")),
-                                                                                        ("proxy_2",  _("Alternative proxy server (2)"))])
+config.plugins.iptvplayer.cimaclub_proxy = ConfigSelection(default="None", choices=[("None", _("None")),
+                                                                                        ("proxy_1", _("Alternative proxy server (1)")),
+                                                                                        ("proxy_2", _("Alternative proxy server (2)"))])
 def GetConfigList():
     optionList = []
     optionList.append(getConfigListEntry(_("Use proxy server:"), config.plugins.iptvplayer.cimaclub_proxy))
@@ -47,12 +47,12 @@ class CimaClubCom(CBaseHostClass):
         self.AJAX_HEADER = dict(self.HTTP_HEADER)
         self.AJAX_HEADER.update({'X-Requested-With': 'XMLHttpRequest', 'Accept-Encoding':'gzip, deflate', 'Content-Type':'application/x-www-form-urlencoded; charset=UTF-8', 'Accept':'application/json, text/javascript, */*; q=0.01'})
         
-        self.cacheLinks    = {}
+        self.cacheLinks = {}
         self.defaultParams = {'header':self.HTTP_HEADER, 'with_metadata':True, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
         
         self.MAIN_CAT_TAB = [
-                             {'category':'search',           'title': _('Search'),          'search_item':True}, 
-                             {'category':'search_history',   'title': _('Search history')},
+                             {'category':'search', 'title': _('Search'), 'search_item':True}, 
+                             {'category':'search_history', 'title': _('Search history')},
                             ]
         self.cacheSubSections = {}
         self.cacheMainMenu = []
@@ -210,7 +210,7 @@ class CimaClubCom(CBaseHostClass):
         filter = self.cacheFiltersKeys[f_idx]
         f_idx += 1
         cItem['f_idx'] = f_idx
-        if f_idx  == len(self.cacheFiltersKeys):
+        if f_idx == len(self.cacheFiltersKeys):
             cItem['category'] = nextCategory
         self.listsTab(self.cacheFilters.get(filter, []), cItem)
         
@@ -247,8 +247,8 @@ class CimaClubCom(CBaseHostClass):
         
         data = self.cm.ph.getAllItemsBeetwenNodes(data, ('<div', '>', 'movie'), ('</a', '>'))
         for item in data:
-            url   = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''href=['"]([^'^"]+?)['"]''')[0])
-            icon  = self.getFullIconUrl(self.cm.ph.getSearchGroups(item, '''[\s\-]src=['"]([^'^"]+?)['"]''')[0])
+            url = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''href=['"]([^'^"]+?)['"]''')[0])
+            icon = self.getFullIconUrl(self.cm.ph.getSearchGroups(item, '''[\s\-]src=['"]([^'^"]+?)['"]''')[0])
             title = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(item, '<h2', '</h2>')[1])
             if title == '': 
                 printDBG("ERROR: NO TITLE IN ITEM")
@@ -271,7 +271,7 @@ class CimaClubCom(CBaseHostClass):
         
         if self.cm.isValidUrl(nextPage):
             params = dict(baseItem)
-            params.update({'title':_("Next page"), 'url':nextPage, 'page':page+1})
+            params.update({'title':_("Next page"), 'url':nextPage, 'page':page + 1})
             self.addDir(params)
             
     def exploreItem(self, cItem, nextCategory):
@@ -382,7 +382,7 @@ class CimaClubCom(CBaseHostClass):
         for item in tmp:
             sId = self.cm.ph.getSearchGroups(item, '''data\-server=['"]([^'^"]+?)['"]''')[0]
             name = self.cleanHtmlStr(item)
-            url  = self.getFullUrl(serwerUrl + '?' + serwerQuery + sId)
+            url = self.getFullUrl(serwerUrl + '?' + serwerQuery + sId)
             retTab.append({'name':name, 'url':strwithmeta(url, {'Referer':viewUrl}), 'need_resolve':1})
         
         if len(retTab):
@@ -436,18 +436,18 @@ class CimaClubCom(CBaseHostClass):
         
         desc = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(data, ('<div', '>', 'contentFilm'), ('</div', '>'))[1])
         title = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(data, ('<h1', '>', 'entry-title'), ('</h1', '>'))[1])
-        icon  = self.getFullIconUrl(self.cm.ph.getSearchGroups(data, '''\ssrc=['"]([^'^"]+?(:?\.jpe?g|\.png)(:?\?[^'^"]*?)?)['"]''')[0])
+        icon = self.getFullIconUrl(self.cm.ph.getSearchGroups(data, '''\ssrc=['"]([^'^"]+?(:?\.jpe?g|\.png)(:?\?[^'^"]*?)?)['"]''')[0])
         
         item = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(data, ('<div', '>', 'views'), ('</div', '>'))[1])
         if item != '':
             otherInfo['rating'] = item
         
-        keysMap = {'quality':        'quality',
-                   'category':       'category',
-                   'genre':          'genre',
-                   'year':           'year',
-                   'runtime':        'duration',
-                   'datePublished':  'released',}
+        keysMap = {'quality': 'quality',
+                   'category': 'category',
+                   'genre': 'genre',
+                   'year': 'year',
+                   'runtime': 'duration',
+                   'datePublished': 'released',}
         data = self.cm.ph.getAllItemsBeetwenNodes(data, ('<span', '>', 'class='), ('</span', '>'))
         printDBG(data)
         for item in data:
@@ -457,7 +457,7 @@ class CimaClubCom(CBaseHostClass):
             printDBG(">>> %s" % marker)
             if marker not in keysMap:
                 continue
-            value  = self.cleanHtmlStr(item)
+            value = self.cleanHtmlStr(item)
             printDBG(">>>>> %s" % value)
             if value == '':
                 continue
@@ -479,9 +479,9 @@ class CimaClubCom(CBaseHostClass):
         
         CBaseHostClass.handleService(self, index, refresh, searchPattern, searchType)
 
-        name     = self.currItem.get("name", '')
+        name = self.currItem.get("name", '')
         category = self.currItem.get("category", '')
-        mode     = self.currItem.get("mode", '')
+        mode = self.currItem.get("mode", '')
         
         printDBG("handleService: |||| name[%s], category[%s] " % (name, category))
         self.cacheLinks = {}

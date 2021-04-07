@@ -48,9 +48,9 @@ except Exception:
 ###################################################
 # Config options for HOST
 ###################################################
-config.plugins.iptvplayer.iplacachexml      = ConfigSelection(default="12", choices=[("0", "nigdy"), ("6", "przez 6 godzin"), ("12", "przez 12 godzin"), ("24", "przez dzień")])
+config.plugins.iptvplayer.iplacachexml = ConfigSelection(default="12", choices=[("0", "nigdy"), ("6", "przez 6 godzin"), ("12", "przez 12 godzin"), ("24", "przez dzień")])
 config.plugins.iptvplayer.iplaDefaultformat = ConfigSelection(default="1900", choices=[("200", "bitrate: 200"), ("400", "bitrate: 400"), ("900", "bitrate: 900"), ("1900", "bitrate: 1900")])
-config.plugins.iptvplayer.iplaUseDF         = ConfigYesNo(default=True)
+config.plugins.iptvplayer.iplaUseDF = ConfigYesNo(default=True)
 
 def GetConfigList():
     optionList = []
@@ -64,17 +64,17 @@ def gettytul():
     return 'https://ipla.tv/'
 
 class Ipla(CBaseHostClass):
-    HOST       = 'mipla/23'
-    IDENTITY   = 'ver=600&login=common_user&cuid=-11033141'
-    MAIN_URL   = 'http://getmedia.redefine.pl'
-    CAT_URL    = MAIN_URL + '/r/l_x_35_ipla/categories/list/?' + IDENTITY
-    MOV_URL    = MAIN_URL + '/action/2.0/vod/list/?' + IDENTITY + '&category='
+    HOST = 'mipla/23'
+    IDENTITY = 'ver=600&login=common_user&cuid=-11033141'
+    MAIN_URL = 'http://getmedia.redefine.pl'
+    CAT_URL = MAIN_URL + '/r/l_x_35_ipla/categories/list/?' + IDENTITY
+    MOV_URL = MAIN_URL + '/action/2.0/vod/list/?' + IDENTITY + '&category='
     SEARCH_URL = MAIN_URL + '/vods/search/?vod_limit=150&' + IDENTITY + '&page=0&keywords='
     
     def __init__(self):
         CBaseHostClass.__init__(self, {'history':'ipla'})
         self.categoryXMLTree = None
-        self.cacheFilePath   = os_path.join(config.plugins.iptvplayer.SciezkaCache.value, "iplaxml.cache")
+        self.cacheFilePath = os_path.join(config.plugins.iptvplayer.SciezkaCache.value, "iplaxml.cache")
         self.cm.HEADER = {'User-Agent': self.HOST, 'DNT':'1', 'Accept': 'text/html', 'Accept-Encoding':'gzip, deflate'}
         
     def getStr(self, v, default=''):
@@ -87,9 +87,9 @@ class Ipla(CBaseHostClass):
 
     def __getAttribs(self, data):
         re_compile = re.compile('([^= ]+?)="([^"]+?)"')
-        item={}
+        item = {}
         attribs = re_compile.findall(data)
-        for attrib in  attribs:
+        for attrib in attribs:
             item[attrib[0]] = attrib[1]
         return item
     
@@ -100,7 +100,7 @@ class Ipla(CBaseHostClass):
         if sts:
             videosXMLTree = self.getStr(videosXMLTree).split('</vod>')
             del videosXMLTree[-1]
-            re_compile_vod    = re.compile('<vod ([^>]+?)>')
+            re_compile_vod = re.compile('<vod ([^>]+?)>')
             re_compile_thumbs = re.compile('<thumb ([^>]+?)>')
             try:
                 vodList = []
@@ -111,8 +111,8 @@ class Ipla(CBaseHostClass):
                             continue
                         val = self.__getAttribs(val.group(1))
                         title = val.get('title', '')
-                        plot  = val.get('descr', '')
-                        icon  = val.get('thumbnail', '')
+                        plot = val.get('descr', '')
+                        icon = val.get('thumbnail', '')
                         try:
                             thumbs = re_compile_thumbs.findall(vod)
                             thumbSizePrev = 9999
@@ -197,7 +197,7 @@ class Ipla(CBaseHostClass):
         return data
         
     def getCatXmlTree(self, refresh=False):
-        printDBG("setCatXmlTree refresh[%r]" %  refresh)
+        printDBG("setCatXmlTree refresh[%r]" % refresh)
         
         def _fromUrl():
             sts, data = self.cm.getPage(Ipla.CAT_URL, {'host': Ipla.HOST})
@@ -256,13 +256,13 @@ class Ipla(CBaseHostClass):
                         if pid == parentCatId:
                             numOfSubCat += 1
                             title = self.getStr(val.get('title', ''), '')
-                            plot  = self.getStr(val.get('descr', ''), '')
-                            icon  = self.getStr(val.get('thumbnail', ''), '')
+                            plot = self.getStr(val.get('descr', ''), '')
+                            icon = self.getStr(val.get('thumbnail', ''), '')
                             #check if this is only link to diffrent category
                             try:
                                 link = self.getStr(val.get('action', ''), '')
                                 linkMarker = "ipla://cmd-cmd=gotocat&catid="
-                                if linkMarker  in link:
+                                if linkMarker in link:
                                     # if this is only linkt to another category, update category id
                                     catId = link.replace(linkMarker, "")
                             except Exception:
@@ -282,8 +282,8 @@ class Ipla(CBaseHostClass):
     def listsMainMenu(self, refresh=False):
         printDBG('listsMainMenu')
         self.getCategories('0', refresh)
-        self.addDir({'category': 'Wyszukaj',  'title': 'Wyszukaj'})
-        self.addDir({'category': 'search_history',   'title': 'Historia wyszukiwania'})
+        self.addDir({'category': 'Wyszukaj', 'title': 'Wyszukaj'})
+        self.addDir({'category': 'search_history', 'title': 'Historia wyszukiwania'})
         
     def getFavouriteData(self, cItem):
         return json.dumps(cItem['fav_item'])
@@ -295,7 +295,7 @@ class Ipla(CBaseHostClass):
             printDBG(favItem)
             sts, data = self.cm.getPage(favItem['url'], {'host': Ipla.HOST})
             if sts:
-                sts, data = self.cm.ph.getDataBeetwenReMarkers(data, re.compile('<vod[^>]+?id="%s"[^>]*?>'% favItem['vod_id']), re.compile('</vod>'), False)
+                sts, data = self.cm.ph.getDataBeetwenReMarkers(data, re.compile('<vod[^>]+?id="%s"[^>]*?>' % favItem['vod_id']), re.compile('</vod>'), False)
                 if sts:
                     links = self._getVideoUrls(data)
         except Exception:
@@ -311,13 +311,13 @@ class Ipla(CBaseHostClass):
         else:
             refresh = True
 
-        title      = self.currItem.get("title", '')
-        category   = self.currItem.get("category", None)
-        catId      = self.currItem.get("catId", '')
-        pCatId     = self.currItem.get("pCatId", '')
-        icon       = self.currItem.get("icon", '')
-        url        = self.currItem.get("url", '')
-        plot       = self.currItem.get("plot", '')
+        title = self.currItem.get("title", '')
+        category = self.currItem.get("category", None)
+        catId = self.currItem.get("catId", '')
+        pCatId = self.currItem.get("pCatId", '')
+        icon = self.currItem.get("icon", '')
+        url = self.currItem.get("url", '')
+        plot = self.currItem.get("plot", '')
         printDBG("handleService: |||||||||||||||||||||||||||||||||||| category[%r] " % (category))
         self.currList = []
         
@@ -361,9 +361,9 @@ class IPTVHost(CHostBase):
             for urlItem in urls:
                 hostLinks.append(CUrlItem(urlItem['name'], urlItem['url'], 0))
             
-        title       =  clean_html(cItem.get('title', ''))
-        description =  clean_html(cItem.get('plot', ''))
-        icon        =  cItem.get('icon', '')
+        title = clean_html(cItem.get('title', ''))
+        description = clean_html(cItem.get('plot', ''))
+        icon = cItem.get('icon', '')
         hostItem = CDisplayListItem(name=title,
                                     description=description,
                                     type=type,

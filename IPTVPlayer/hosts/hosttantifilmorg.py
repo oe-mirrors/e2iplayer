@@ -39,9 +39,9 @@ class TantiFilmOrg(CBaseHostClass):
         self.MAIN_URL = 'https://tantifilm.eu/'
         self.DEFAULT_ICON_URL = 'https://raw.githubusercontent.com/Zanzibar82/images/master/posters/tantifilm.png'
         
-        self.MAIN_CAT_TAB = [{'category':'list_categories',    'title': _('Categories'),                           'url':self.MAIN_URL},
-                             {'category': 'search',             'title': _('Search'), 'search_item': True,},
-                             {'category': 'search_history',     'title': _('Search history'),} 
+        self.MAIN_CAT_TAB = [{'category':'list_categories', 'title': _('Categories'), 'url':self.MAIN_URL},
+                             {'category': 'search', 'title': _('Search'), 'search_item': True,},
+                             {'category': 'search_history', 'title': _('Search history'),} 
                             ]
         
         self.cacheCollections = {}
@@ -115,7 +115,7 @@ class TantiFilmOrg(CBaseHostClass):
             title = self.cleanHtmlStr(item)
             if title.upper() == 'HOME':
                 continue # not items on home page
-            url   = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''href=['"]([^'^"]+?)['"]''')[0])
+            url = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''href=['"]([^'^"]+?)['"]''')[0])
             if self.cm.getBaseUrl(self.getMainUrl(), True) != self.cm.getBaseUrl(url, True) or '/supporto/' in url:
                 continue
             params = dict(cItem)
@@ -137,7 +137,7 @@ class TantiFilmOrg(CBaseHostClass):
         data = self.cm.ph.getAllItemsBeetwenMarkers(data, "<li", '</li>', withMarkers=True)
         for item in data:
             title = self.cleanHtmlStr(item)
-            url   = self.cm.ph.getSearchGroups(item, '''href=['"]([^'^"]+?)['"]''')[0]
+            url = self.cm.ph.getSearchGroups(item, '''href=['"]([^'^"]+?)['"]''')[0]
             params = dict(cItem)
             params.update({'category':nextCategory, 'title':title, 'url':self.getFullUrl(url)})
             self.addDir(params)
@@ -159,9 +159,9 @@ class TantiFilmOrg(CBaseHostClass):
             tmpTab = []
             tmp = self.cm.ph.getAllItemsBeetwenMarkers(item, "<a", '</a>', withMarkers=True)
             for tmpItem in tmp:
-                url   = self.cm.ph.getSearchGroups(tmpItem, '''href=['"]([^'^"]+?)['"]''')[0]
+                url = self.cm.ph.getSearchGroups(tmpItem, '''href=['"]([^'^"]+?)['"]''')[0]
                 title = self.cleanHtmlStr(tmpItem)
-                params= {'good_for_fav': True, 'title':title, 'url':self.getFullUrl(url), 'icon':self.getFullIconUrl(icon)}
+                params = {'good_for_fav': True, 'title':title, 'url':self.getFullUrl(url), 'icon':self.getFullIconUrl(icon)}
                 tmpTab.append(params)
             
             if len(tmpTab):
@@ -179,7 +179,7 @@ class TantiFilmOrg(CBaseHostClass):
     def listItems(self, cItem, nextCategory):
         printDBG("TantiFilmOrg.listItems")
         
-        url  = cItem['url']
+        url = cItem['url']
         page = cItem.get('page', 1)
         if page > 1:
             tmp = url.split('?')
@@ -194,7 +194,7 @@ class TantiFilmOrg(CBaseHostClass):
         if not sts:
             return
         
-        if 'page/{0}/'.format(page+1) in data:
+        if 'page/{0}/'.format(page + 1) in data:
             nextPage = True
         else:
             nextPage = False
@@ -213,7 +213,7 @@ class TantiFilmOrg(CBaseHostClass):
             idx = item.find('</h2>')
             if idx > 0:
                 item = item[:idx]
-            url   = self.cm.ph.getSearchGroups(item, '''href=['"]([^'^"]+?)['"]''')[0]
+            url = self.cm.ph.getSearchGroups(item, '''href=['"]([^'^"]+?)['"]''')[0]
             if '/film-di-natale-streaming/' in url:
                 continue
             if 'saghe/' in url:
@@ -221,11 +221,11 @@ class TantiFilmOrg(CBaseHostClass):
             title = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(item, '<div class="title-film', '</a>')[1])
             if title.endswith('streaming'):
                 title = title[:-9].strip()
-            icon  = self.cm.ph.getSearchGroups(item, '''src=['"]([^'^"]+?)['"]''')[0]
-            desc  = self.cleanHtmlStr(item.replace('</p>', '[/br]'))
+            icon = self.cm.ph.getSearchGroups(item, '''src=['"]([^'^"]+?)['"]''')[0]
+            desc = self.cleanHtmlStr(item.replace('</p>', '[/br]'))
             
             try:
-                raiting = str(int(((float(self.cm.ph.getSearchGroups(item, '''data\-rateit\-value=['"]([^'^"]+?)['"]''')[0]) * 5) / 3)*10)/10.0) + '/5'
+                raiting = str(int(((float(self.cm.ph.getSearchGroups(item, '''data\-rateit\-value=['"]([^'^"]+?)['"]''')[0]) * 5) / 3) * 10) / 10.0) + '/5'
                 desc = raiting + ' | ' + desc
             except Exception:
                 pass
@@ -235,7 +235,7 @@ class TantiFilmOrg(CBaseHostClass):
         
         if nextPage:
             params = dict(cItem)
-            params.update({'good_for_fav': False, 'title':_('Next page'), 'page':page+1})
+            params.update({'good_for_fav': False, 'title':_('Next page'), 'page':page + 1})
             self.addDir(params)
             
             
@@ -303,7 +303,7 @@ class TantiFilmOrg(CBaseHostClass):
         data = self.cm.ph.getAllItemsBeetwenMarkers(data, '<option', '</option>')
         printDBG(data)
         for item in data:
-            url   = self.cm.ph.getSearchGroups(item, '''href=['"]([^'^"]+?)['"]''')[0]
+            url = self.cm.ph.getSearchGroups(item, '''href=['"]([^'^"]+?)['"]''')[0]
             if not self.cm.isValidUrl(url):
                 continue
             seasonTitle = self.cleanHtmlStr(item)
@@ -345,9 +345,9 @@ class TantiFilmOrg(CBaseHostClass):
                 episodeNum = ''
             
             if '' != episodeNum and '' != seasonNum:
-                title = seriesTitle + ' - ' + 's%se%s'% (seasonNum.zfill(2), episodeNum.zfill(2))
+                title = seriesTitle + ' - ' + 's%se%s' % (seasonNum.zfill(2), episodeNum.zfill(2))
             else: 
-                title = seriesTitle + ' - ' +  cItem['title'] + ' ' + '%s %s' % (episodeName, episodeTitle)
+                title = seriesTitle + ' - ' + cItem['title'] + ' ' + '%s %s' % (episodeName, episodeTitle)
            
             params = {'good_for_fav': False, 'title': title, 'video_type':'episode', 'url':url, 'icon':cItem.get('icon', ''), 'desc':cItem.get('desc', '')}
             self.addVideo(params)
@@ -402,7 +402,7 @@ class TantiFilmOrg(CBaseHostClass):
             data = self.cm.ph.getAllItemsBeetwenMarkers(data, '<option', '</option>')
             printDBG(data)
             for item in data:
-                url   = self.cm.ph.getSearchGroups(item, '''href=['"]([^'^"]+?)['"]''')[0]
+                url = self.cm.ph.getSearchGroups(item, '''href=['"]([^'^"]+?)['"]''')[0]
                 if not self.cm.isValidUrl(url):
                     continue
                 title = self.cleanHtmlStr(item)
@@ -470,9 +470,9 @@ class TantiFilmOrg(CBaseHostClass):
         
         CBaseHostClass.handleService(self, index, refresh, searchPattern, searchType)
 
-        name     = self.currItem.get("name", '')
+        name = self.currItem.get("name", '')
         category = self.currItem.get("category", '')
-        mode     = self.currItem.get("mode", '')
+        mode = self.currItem.get("mode", '')
         
         printDBG("handleService: || name[%s], category[%s] " % (name, category))
         self.currList = []

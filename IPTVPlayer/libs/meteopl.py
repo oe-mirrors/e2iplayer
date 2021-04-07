@@ -34,7 +34,7 @@ class MeteoPLApi(CBaseHostClass):
 
     def __init__(self):
         CBaseHostClass.__init__(self)
-        self.MAIN_URL    = 'http://www.meteo.pl/'
+        self.MAIN_URL = 'http://www.meteo.pl/'
         self.HEADER = {'User-Agent': 'Mozilla/5.0', 'Accept': 'text/html'}
         self.COOKIE_FILE = GetCookieDir('iklubnet.cookie')
         
@@ -79,9 +79,9 @@ class MeteoPLApi(CBaseHostClass):
             post_data = None
             cat = cItem.get('meteo_cat', '')
             if 'woj' == cat:
-                post_data={'woj':cItem['meteo_woj'], 'litera':''}
+                post_data = {'woj':cItem['meteo_woj'], 'litera':''}
             elif 'name' == cat:
-                post_data={'name':cItem['meteo_name']}
+                post_data = {'name':cItem['meteo_name']}
             if post_data != None:
                 sts, data = self.getPage(cItem['url'], post_data=post_data)
                 if not sts:
@@ -91,7 +91,7 @@ class MeteoPLApi(CBaseHostClass):
                     mgram = self.cm.ph.getDataBeetwenMarkers(item, 'show_mgram(', ')', False)[1].strip()
                     if mgram == '':
                         continue
-                    title  = self.cleanHtmlStr(item)
+                    title = self.cleanHtmlStr(item)
                     params = dict(cItem)
                     params.update({'type':'picture', 'title':title, 'meteo_cat':True, 'url':self.getFullUrl('um/php/meteorogram_id_um.php?ntype=0u&id=' + mgram)})
                     channelsTab.append(params)

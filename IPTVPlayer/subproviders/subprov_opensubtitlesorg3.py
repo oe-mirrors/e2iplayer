@@ -51,10 +51,10 @@ def GetConfigList():
 class OpenSubtitlesRest(CBaseSubProviderClass): 
     
     def __init__(self, params={}):
-        self.USER_AGENT   = 'IPTVPlayer v1'
+        self.USER_AGENT = 'IPTVPlayer v1'
         #self.USER_AGENT    = 'Subliminal v0.3'
-        self.MAIN_URL      = 'https://rest.opensubtitles.org/'
-        self.HTTP_HEADER   = {'User-Agent':self.USER_AGENT, 'Referer':self.MAIN_URL, 'Accept':'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8', 'Accept-Encoding':'gzip, deflate'}
+        self.MAIN_URL = 'https://rest.opensubtitles.org/'
+        self.HTTP_HEADER = {'User-Agent':self.USER_AGENT, 'Referer':self.MAIN_URL, 'Accept':'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8', 'Accept-Encoding':'gzip, deflate'}
         
         params['cookie'] = 'opensubtitlesorg3.cookie'
         CBaseSubProviderClass.__init__(self, params)
@@ -82,7 +82,7 @@ class OpenSubtitlesRest(CBaseSubProviderClass):
     def getType(self, cItem):
         printDBG("OpenSubtitlesRest.getType")
         imdbid = cItem['imdbid']
-        title  = cItem['title']
+        title = cItem['title']
         type = self.getTypeFromThemoviedb(imdbid, title)
         if type == 'series':
             promSeason = self.dInfo.get('season')
@@ -98,9 +98,9 @@ class OpenSubtitlesRest(CBaseSubProviderClass):
             
     def getEpisodes(self, cItem, nextCategory):
         printDBG("OpenSubtitlesRest.getEpisodes")
-        imdbid    = cItem['imdbid']
+        imdbid = cItem['imdbid']
         itemTitle = cItem['item_title']
-        season    = cItem['season']
+        season = cItem['season']
         
         promEpisode = self.dInfo.get('episode')
         sts, tab = self.imdbGetEpisodesForSeason(imdbid, season, promEpisode)
@@ -122,9 +122,9 @@ class OpenSubtitlesRest(CBaseSubProviderClass):
         engLanguageItem = None
         for item in self.languages:
             params = {'title':'{0} [{1}]'.format(_(item['name']), item['id']), 'search_lang':item['id']}
-            if lang ==  item['iso']:
+            if lang == item['iso']:
                 defaultLanguageItem = params
-            elif 'en' ==  item['iso']:
+            elif 'en' == item['iso']:
                 engLanguageItem = params
             else:
                 tmpList.append(params)
@@ -152,7 +152,7 @@ class OpenSubtitlesRest(CBaseSubProviderClass):
         title = '[%s] %s' % (item['ISO639'], title.strip())
         
         cdMax = item.get('SubSumCD', '1')
-        cd    = item.get('SubActualCD', '1')
+        cd = item.get('SubActualCD', '1')
         if cdMax != '1':
             title += ' CD[{0}/{1}]'.format(cdMax, cd)
         
@@ -162,7 +162,7 @@ class OpenSubtitlesRest(CBaseSubProviderClass):
         return RemoveDisallowedFilenameChars(title)
         
     def _getFileName(self, subItem):
-        title = self._getSubtitleTitle(subItem).replace('_', '.').replace('.'+subItem['SubFormat'], '').replace(' ', '.')
+        title = self._getSubtitleTitle(subItem).replace('_', '.').replace('.' + subItem['SubFormat'], '').replace(' ', '.')
         match = re.search(r'[^.]', title)
         if match:
             title = title[match.start():]
@@ -225,13 +225,13 @@ class OpenSubtitlesRest(CBaseSubProviderClass):
     def downloadSubtitleFile(self, cItem):
         printDBG("OpenSubtitlesRest.downloadSubtitleFile")
         retData = {}
-        title    = cItem['title']
+        title = cItem['title']
         fileName = cItem['file_name']
-        baseUrl  = cItem['url']
-        lang     = cItem['lang']
+        baseUrl = cItem['url']
+        lang = cItem['lang']
         encoding = cItem['encoding']
-        imdbid   = cItem['imdbid']
-        fps      = cItem.get('fps', 0)
+        imdbid = cItem['imdbid']
+        fps = cItem.get('fps', 0)
         
         urlParams = dict(self.defaultParams)
         urlParams['max_data_size'] = self.getMaxFileSize()
@@ -315,7 +315,7 @@ class OpenSubtitlesRest(CBaseSubProviderClass):
         
         CBaseSubProviderClass.handleService(self, index, refresh)
 
-        name     = self.currItem.get("name", '')
+        name = self.currItem.get("name", '')
         category = self.currItem.get("category", '')
         
         printDBG("handleService: name[%s], category[%s] " % (name, category))

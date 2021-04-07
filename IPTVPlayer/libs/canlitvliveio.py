@@ -16,8 +16,8 @@ class CanlitvliveIoApi(CBaseHostClass):
 
     def __init__(self):
         CBaseHostClass.__init__(self)
-        self.MAIN_URL_TV      = 'http://www.canlitvlive.io/'
-        self.MAIN_URL_RADIO   = 'http://www.canliradyolive.com/'
+        self.MAIN_URL_TV = 'http://www.canlitvlive.io/'
+        self.MAIN_URL_RADIO = 'http://www.canliradyolive.com/'
         self.MAIN_URL = self.MAIN_URL_TV
         self.DEFAULT_ICON_URL = 'http://www.canlitvlive.io/images/footer_simge.png'
         self.HTTP_HEADER = {'User-Agent': 'Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/62.0.3202.94 Safari/537.36', 'Accept': 'text/html', 'Accept-Encoding':'gzip, deflate'}
@@ -46,7 +46,7 @@ class CanlitvliveIoApi(CBaseHostClass):
             data.insert(0, '<a href="/tum-radyolar.html">All')
             nextType = 'audio'
         for item in data:
-            url   = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''href=['"]([^'^"]+?)['"]''')[0])
+            url = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''href=['"]([^'^"]+?)['"]''')[0])
             if not self.cm.isValidUrl(url):
                 continue
             title = self.cleanHtmlStr(item)
@@ -67,7 +67,7 @@ class CanlitvliveIoApi(CBaseHostClass):
         for section in data:
             section = self.cm.ph.getAllItemsBeetwenMarkers(section, '<li', '</li>')
             for item in section:
-                url   = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''href=['"]([^'^"]+?)['"]''')[0])
+                url = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''href=['"]([^'^"]+?)['"]''')[0])
                 if not self.cm.isValidUrl(url):
                     continue
                 icon = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''src=['"]([^'^"]+?)['"]''')[0])
@@ -85,9 +85,9 @@ class CanlitvliveIoApi(CBaseHostClass):
         
         category = cItem.get('priv_category', None)
         if category == None:
-            itemsList.append({'name':cItem['name'], 'priv_category':'tv',    'type':'video', 'title':'TELE 1',   'url':'https://tele1.com.tr/canli-yayin/',    'desc':'https://tele1.com.tr/canli-yayin/',    'icon':'https://i0.wp.com/tele1.com.tr/wp-content/uploads/2016/11/tele1_logo_yeni.png'})
-            itemsList.append({'name':cItem['name'], 'priv_category':'tv',    'type':'dir',   'title':_('TV'),    'url':self.MAIN_URL_TV,    'desc':self.MAIN_URL_TV,    'icon':self.DEFAULT_ICON_URL})
-            itemsList.append({'name':cItem['name'], 'priv_category':'radio', 'type':'dir',   'title':_('RADIO'), 'url':self.MAIN_URL_RADIO, 'desc':self.MAIN_URL_RADIO, 'icon':self.DEFAULT_ICON_URL})
+            itemsList.append({'name':cItem['name'], 'priv_category':'tv', 'type':'video', 'title':'TELE 1', 'url':'https://tele1.com.tr/canli-yayin/', 'desc':'https://tele1.com.tr/canli-yayin/', 'icon':'https://i0.wp.com/tele1.com.tr/wp-content/uploads/2016/11/tele1_logo_yeni.png'})
+            itemsList.append({'name':cItem['name'], 'priv_category':'tv', 'type':'dir', 'title':_('TV'), 'url':self.MAIN_URL_TV, 'desc':self.MAIN_URL_TV, 'icon':self.DEFAULT_ICON_URL})
+            itemsList.append({'name':cItem['name'], 'priv_category':'radio', 'type':'dir', 'title':_('RADIO'), 'url':self.MAIN_URL_RADIO, 'desc':self.MAIN_URL_RADIO, 'icon':self.DEFAULT_ICON_URL})
             return itemsList
         elif category == 'tv':
             self.MAIN_URL = self.MAIN_URL_TV

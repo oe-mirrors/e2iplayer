@@ -18,9 +18,9 @@ from Components.config import config, ConfigSelection, ConfigText, getConfigList
 ###################################################
 # Config options for HOST
 ###################################################
-config.plugins.iptvplayer.planetstreaming_proxy = ConfigSelection(default="None", choices=[("None",     _("None")),
-                                                                                               ("proxy_1",  _("Alternative proxy server (1)")),
-                                                                                               ("proxy_2",  _("Alternative proxy server (2)"))])
+config.plugins.iptvplayer.planetstreaming_proxy = ConfigSelection(default="None", choices=[("None", _("None")),
+                                                                                               ("proxy_1", _("Alternative proxy server (1)")),
+                                                                                               ("proxy_2", _("Alternative proxy server (2)"))])
 config.plugins.iptvplayer.planetstreaming_alt_domain = ConfigText(default="", fixed_size=False)
 
 def GetConfigList():
@@ -105,8 +105,8 @@ class PlanetStreaming(CBaseHostClass):
     def listMainMenu(self, cItem):
         printDBG("PlanetStreaming.listMainMenu")
         MAIN_CAT_TAB = [
-                        {'category': 'search',          'title': _('Search'), 'search_item': True,},
-                        {'category': 'search_history',  'title': _('Search history'),} 
+                        {'category': 'search', 'title': _('Search'), 'search_item': True,},
+                        {'category': 'search_history', 'title': _('Search history'),} 
                        ]
         
         sts, data = self.getPage(self.getMainUrl())
@@ -187,7 +187,7 @@ class PlanetStreaming(CBaseHostClass):
                 
     def listItems(self, cItem, nextCategory):
         printDBG("LibreStream.listItems")
-        pageUrl  = cItem['url']
+        pageUrl = cItem['url']
         page = cItem.get('page', 1)
         
         params = dict(self.defaultParams)
@@ -202,7 +202,7 @@ class PlanetStreaming(CBaseHostClass):
         self.MAIN_URL = self.cm.getBaseUrl(pageUrl)
         
         nextPage = self.cm.ph.getDataBeetwenMarkers(data, 'class="navigation', '</div>')[1]
-        nextPage = self.getFullUrl(self.cm.ph.getSearchGroups(nextPage, '''<a[^>]+?href=['"]([^"^']+?)['"][^>]*?>\s*%s\s*</a>''' % (page+1))[0])
+        nextPage = self.getFullUrl(self.cm.ph.getSearchGroups(nextPage, '''<a[^>]+?href=['"]([^"^']+?)['"][^>]*?>\s*%s\s*</a>''' % (page + 1))[0])
         
         reDescObj = re.compile('''<div[^>]+?fullmask[^>]+?>''')
         reDescObj2 = re.compile('''<hr\s*/\s*>''')
@@ -211,12 +211,12 @@ class PlanetStreaming(CBaseHostClass):
         data = self.cm.ph.rgetAllItemsBeetwenNodes(data, ('</div', '>'), ('<div', '>', 'fullstreaming'))
         for item in data:
             tmp = self.cm.ph.getDataBeetwenMarkers(item, '<h3', '</h3>')[1]
-            url   = self.getFullUrl(self.cm.ph.getSearchGroups(tmp, '''\shref=['"]([^'^"]+?)['"]''')[0])
+            url = self.getFullUrl(self.cm.ph.getSearchGroups(tmp, '''\shref=['"]([^'^"]+?)['"]''')[0])
             title = self.cleanHtmlStr(tmp)
-            icon  = self.getFullIconUrl(self.cm.ph.getSearchGroups(item, '''\ssrc=['"]([^'^"]+?)['"]''')[0])
+            icon = self.getFullIconUrl(self.cm.ph.getSearchGroups(item, '''\ssrc=['"]([^'^"]+?)['"]''')[0])
             
             desc = []
-            tmp  = reDescObj2.split(reDescObj.split(item)[-1])
+            tmp = reDescObj2.split(reDescObj.split(item)[-1])
             for t in tmp:
                 t = self.cleanHtmlStr(t)
                 if t != '':
@@ -267,7 +267,7 @@ class PlanetStreaming(CBaseHostClass):
         
         for eNum in episodeKeys:
             title = '%s - s%se%s' % (cItem['title'], sNum.zfill(2), eNum.zfill(2))
-            url   = cItem['url'] + '#EPS=' +  eNum
+            url = cItem['url'] + '#EPS=' + eNum
             self.cacheLinks[url] = episodeLinks.get(eNum, [])
             params = dict(cItem)
             params.update({'good_for_fav':False, 'title':title, 'url':url})
@@ -298,7 +298,7 @@ class PlanetStreaming(CBaseHostClass):
         printDBG("PlanetStreaming.getLinksForVideo [%s]" % cItem)
         
         if cItem['url'] in self.cacheLinks:
-            return self.cacheLinks.get(cItem['url'],  [])
+            return self.cacheLinks.get(cItem['url'], [])
         
         sts, data = self.getPage(cItem['url'])
         if not sts:
@@ -342,9 +342,9 @@ class PlanetStreaming(CBaseHostClass):
             #rm(self.COOKIE_FILE)
             self.selectDomain()
 
-        name     = self.currItem.get("name", '')
+        name = self.currItem.get("name", '')
         category = self.currItem.get("category", '')
-        mode     = self.currItem.get("mode", '')
+        mode = self.currItem.get("mode", '')
         
         printDBG("handleService: |||||||||||||||||||||||||||||||||||| name[%s], category[%s] " % (name, category))
         self.currList = []

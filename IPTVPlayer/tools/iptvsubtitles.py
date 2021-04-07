@@ -51,14 +51,14 @@ class IPTVSubtitlesHandler:
         #<font color=”#rrggbb”></font>
         
     def _srtTc2ms2(self, tc):
-        sign    = 1
+        sign = 1
         if tc[0] in "+-":
-            sign    = -1 if tc[0] == "-" else 1
-            tc  = tc[1:]
+            sign = -1 if tc[0] == "-" else 1
+            tc = tc[1:]
 
-        match   = self.TIMECODE_RE.match(tc)
-        hh, mm, ss, ms = [0 if x==None else int(x) for x in match.groups()]
-        return ((hh*3600 + mm*60 + ss) * 1000 + ms) * sign
+        match = self.TIMECODE_RE.match(tc)
+        hh, mm, ss, ms = [0 if x == None else int(x) for x in match.groups()]
+        return ((hh * 3600 + mm * 60 + ss) * 1000 + ms) * sign
             
     def _srtTc2ms(self, time):
         if ',' in time:
@@ -67,7 +67,7 @@ class IPTVSubtitlesHandler:
             split_time = time.split('.')
         minor = split_time[1]
         major = split_time[0].split(':')
-        return (int(major[0])*3600 + int(major[1])*60 + int(major[2])) * 1000 + int(minor)
+        return (int(major[0]) * 3600 + int(major[1]) * 60 + int(major[2])) * 1000 + int(minor)
 
     def _srtToAtoms(self, srtText):
         subAtoms = []
@@ -80,7 +80,7 @@ class IPTVSubtitlesHandler:
             #printDBG("++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++")
             #printDBG(st)
             #printDBG("++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++")
-            if len(st)>=2:
+            if len(st) >= 2:
                 try:
                     try:
                         tmp = int(st[0].strip())
@@ -90,10 +90,10 @@ class IPTVSubtitlesHandler:
                             i = 1
                         else:
                             i = 0
-                    if len(st)<(i+2):
+                    if len(st) < (i + 2):
                         continue
                     split = st[i].split(' --> ')
-                    subAtoms.append({'start':self._srtTc2ms(split[0].strip()), 'end':self._srtTc2ms(split[1].strip()), 'text':self._srtClearText('\n'.join(j for j in st[i+1:len(st)]))})
+                    subAtoms.append({'start':self._srtTc2ms(split[0].strip()), 'end':self._srtTc2ms(split[1].strip()), 'text':self._srtClearText('\n'.join(j for j in st[i + 1:len(st)]))})
                 except Exception:
                     printExc("Line number [%d]" % line)
         return subAtoms
@@ -144,7 +144,7 @@ class IPTVSubtitlesHandler:
         tmp = currTimeMS / self.CAPACITY
         tmp = self.pailsOfAtoms.get(tmp, [])
         
-        ret    = None
+        ret = None
         validAtomsIdexes = []
         for idx in tmp:
             item = self.subAtoms[idx]
@@ -171,7 +171,7 @@ class IPTVSubtitlesHandler:
             
     def _getCacheFileName(self, filePath):
         tmp = filePath.split('/')[-1]
-        return GetSubtitlesDir(tmp+'.iptv')
+        return GetSubtitlesDir(tmp + '.iptv')
         
     def _loadFromCache(self, orgFilePath, encoding='utf-8'):
         printDBG("OpenSubOrg._loadFromCache")
@@ -223,7 +223,7 @@ class IPTVSubtitlesHandler:
                 try:
                     if fps <= 0:
                         filename, file_extension = os_path.splitext(filePath)
-                        tmp = CParsingHelper.getSearchGroups(filename.upper()+'_', '_FPS([0-9.]+)_')[0]
+                        tmp = CParsingHelper.getSearchGroups(filename.upper() + '_', '_FPS([0-9.]+)_')[0]
                         if '' != tmp:
                             fps = float(tmp)
                 except Exception:

@@ -27,9 +27,9 @@ from Components.config import config, ConfigSelection, ConfigText, getConfigList
 ###################################################
 # Config options for HOST
 ###################################################
-config.plugins.iptvplayer.kinox_proxy = ConfigSelection(default="None", choices=[("None",     _("None")),
-                                                                                     ("proxy_1",  _("Alternative proxy server (1)")),
-                                                                                     ("proxy_2",  _("Alternative proxy server (2)"))])
+config.plugins.iptvplayer.kinox_proxy = ConfigSelection(default="None", choices=[("None", _("None")),
+                                                                                     ("proxy_1", _("Alternative proxy server (1)")),
+                                                                                     ("proxy_2", _("Alternative proxy server (2)"))])
 config.plugins.iptvplayer.kinox_alt_domain = ConfigText(default="", fixed_size=False)
 
 def GetConfigList():
@@ -54,13 +54,13 @@ class Kinox(CBaseHostClass):
         self.AJAX_HEADER = dict(self.HEADER)
         self.AJAX_HEADER.update({'X-Requested-With': 'XMLHttpRequest'})
         self.MAIN_URL = None
-        self.cacheFilters  = {}
+        self.cacheFilters = {}
         self.cacheFiltersKeys = []
         self.cacheSubCategories = []
         self.cacheLangFlags = {'list':[], 'map':{}}
-        self.cacheLinks   = {}
+        self.cacheLinks = {}
         self.cacheSeasons = {}
-        self.cacheNewTab  = {}
+        self.cacheNewTab = {}
         self.defaultParams = {'header':self.HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE, 'cookie_items':{'ListMode':'cover', 'CinemaMode':'cover'}}
         
     def selectDomain(self):
@@ -90,14 +90,14 @@ class Kinox(CBaseHostClass):
         if confirmedDomain == None:
             self.MAIN_URL = 'https://kinox.to/'
         
-        self.MAIN_CAT_TAB = [{'category':'news',               'title': _('News'),              'url':self.getMainUrl()},
-                             {'category':'list_langs',         'title': _('Cinema movies'),     'url':self.getFullUrl('/Kino-filme.html'), 'get_list_mode':'direct'},
-                             {'category':'list_sub_cats',      'title': _('Movies'),            'url':self.getMainUrl(), 'f_type':'movie',         'sub_idx':2},
-                             {'category':'list_sub_cats',      'title': _('Documentaries'),     'url':self.getMainUrl(), 'f_type':'documentation', 'sub_idx':3},
-                             {'category':'list_sub_cats',      'title': _('Series'),            'url':self.getMainUrl(), 'f_type':'series',        'sub_idx':4},
+        self.MAIN_CAT_TAB = [{'category':'news', 'title': _('News'), 'url':self.getMainUrl()},
+                             {'category':'list_langs', 'title': _('Cinema movies'), 'url':self.getFullUrl('/Kino-filme.html'), 'get_list_mode':'direct'},
+                             {'category':'list_sub_cats', 'title': _('Movies'), 'url':self.getMainUrl(), 'f_type':'movie', 'sub_idx':2},
+                             {'category':'list_sub_cats', 'title': _('Documentaries'), 'url':self.getMainUrl(), 'f_type':'documentation', 'sub_idx':3},
+                             {'category':'list_sub_cats', 'title': _('Series'), 'url':self.getMainUrl(), 'f_type':'series', 'sub_idx':4},
                              
-                             {'category': 'search',             'title': _('Search'), 'search_item': True,},
-                             {'category': 'search_history',     'title': _('Search history'),} 
+                             {'category': 'search', 'title': _('Search'), 'search_item': True,},
+                             {'category': 'search_history', 'title': _('Search history'),} 
                             ]
         
     def getPage(self, baseUrl, addParams={}, post_data=None):
@@ -193,7 +193,7 @@ class Kinox(CBaseHostClass):
     def listNewTab(self, cItem, nextCategory):
         printDBG("Kinox.listNewTab")
         
-        self.cacheNewTab  = {}
+        self.cacheNewTab = {}
         
         langsMap = self.getLangFlags().get('map', {})
         langsList = self.getLangFlags().get('list', {})
@@ -267,7 +267,7 @@ class Kinox(CBaseHostClass):
         filter = self.cacheFiltersKeys[f_idx]
         f_idx += 1
         cItem['f_idx'] = f_idx
-        if f_idx  == len(self.cacheFiltersKeys):
+        if f_idx == len(self.cacheFiltersKeys):
             cItem['category'] = nextCategory
         self.listsTab(self.cacheFilters.get(filter, []), cItem)
         
@@ -324,7 +324,7 @@ class Kinox(CBaseHostClass):
                     url = self.getFullUrl(self.cm.ph.getSearchGroups(it, '''href=['"]([^'^"]+?)['"]''')[0])
                     if not self.cm.isValidUrl(url):
                         continue
-                    title  = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(it, '<a', '</a>')[1])
+                    title = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(it, '<a', '</a>')[1])
                     if 0 == len(subCats):
                         mode = 'post_mode'
                     else:
@@ -348,7 +348,7 @@ class Kinox(CBaseHostClass):
         printDBG("Kinox.listItems [%s]" % cItem)
         ITEMS_PER_PAGE = 30
         page = cItem.get('page', 0)
-        url  = cItem['url']
+        url = cItem['url']
         
         langsMap = self.getLangFlags().get('map', {})
         langsList = self.getLangFlags().get('list', {})
@@ -387,18 +387,18 @@ class Kinox(CBaseHostClass):
         else:
             lettersMap = {'#':1}
             additionalParams = {"Length":ITEMS_PER_PAGE, "Search":"","Subtitle":"", "iDisplayStart":page * ITEMS_PER_PAGE,"iDisplayLength":ITEMS_PER_PAGE}
-            if 'f_type'    in cItem:
-                additionalParams['fType']        = cItem['f_type']
-            if 'f_letter'  in cItem:
-                additionalParams['fLetter']      = lettersMap.get(cItem['f_letter'], cItem['f_letter'])
-            if 'f_genre'   in cItem:
-                additionalParams['fGenre']       = cItem['f_genre']
+            if 'f_type' in cItem:
+                additionalParams['fType'] = cItem['f_type']
+            if 'f_letter' in cItem:
+                additionalParams['fLetter'] = lettersMap.get(cItem['f_letter'], cItem['f_letter'])
+            if 'f_genre' in cItem:
+                additionalParams['fGenre'] = cItem['f_genre']
             if 'f_country' in cItem:
-                additionalParams['fCountry']     = cItem['f_country']
-            if 'f_lang'    in cItem:
+                additionalParams['fCountry'] = cItem['f_country']
+            if 'f_lang' in cItem:
                 additionalParams['onlyLanguage'] = cItem['f_lang']
             
-            post_data={'Page':page, 'Per_Page':ITEMS_PER_PAGE, 'per_page':ITEMS_PER_PAGE, 'dir':'desc', 'sort':'title', 'ListMode':'cover', 'additional':json.dumps(additionalParams).encode('utf-8')}
+            post_data = {'Page':page, 'Per_Page':ITEMS_PER_PAGE, 'per_page':ITEMS_PER_PAGE, 'dir':'desc', 'sort':'title', 'ListMode':'cover', 'additional':json.dumps(additionalParams).encode('utf-8')}
             sts, data = self.getPage(self.getFullUrl('/aGET/List/'), post_data=post_data)
             if not sts:
                 return
@@ -406,7 +406,7 @@ class Kinox(CBaseHostClass):
             try:
                 data = byteify(json.loads(data))
                 if ((page + 1) * ITEMS_PER_PAGE) < data['Total']:
-                   nextPage =  True
+                   nextPage = True
                 data = data['Content']
             except Exception:
                 printExc()
@@ -417,18 +417,18 @@ class Kinox(CBaseHostClass):
             url = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''href=['"]([^'^"]+?)['"]''')[0])
             if not self.cm.isValidUrl(url):
                 continue
-            title  = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(item, '<a', '</a>')[1])
-            icon   = self.getFullIconUrl(self.cm.ph.getSearchGroups(item, '''src=['"]([^'^"]+?)['"]''')[0]) 
+            title = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(item, '<a', '</a>')[1])
+            icon = self.getFullIconUrl(self.cm.ph.getSearchGroups(item, '''src=['"]([^'^"]+?)['"]''')[0]) 
             langId = self.cm.ph.getSearchGroups(item, '''/lng/([0-9]+?)\.png''')[0]
-            desc   = _('Language') + ': ' + langsMap.get(langId, _('Unknown')) + ' | ' + self.cleanHtmlStr(self.cm.ph.getDataBeetwenReMarkers(item, re.compile('<div[^>]*?class="Genre"[^>]*?>'), re.compile('<div class="clearboth">'))[1].replace('<div class="floatright">', '|')).replace(' , ', ', ')
-            desc   += '[/br]' + self.cleanHtmlStr(self.cm.ph.getDataBeetwenReMarkers(item, re.compile('<div[^>]*?class="Descriptor"[^>]*?>'), re.compile('</div>'))[1])
+            desc = _('Language') + ': ' + langsMap.get(langId, _('Unknown')) + ' | ' + self.cleanHtmlStr(self.cm.ph.getDataBeetwenReMarkers(item, re.compile('<div[^>]*?class="Genre"[^>]*?>'), re.compile('<div class="clearboth">'))[1].replace('<div class="floatright">', '|')).replace(' , ', ', ')
+            desc += '[/br]' + self.cleanHtmlStr(self.cm.ph.getDataBeetwenReMarkers(item, re.compile('<div[^>]*?class="Descriptor"[^>]*?>'), re.compile('</div>'))[1])
             params = dict(cItem)
             params.update({'good_for_fav':True, 'category':nextCategory, 'title':title, 'url':url, 'icon':icon, 'desc':desc})
             self.addDir(params)
         
         if nextPage:
             params = dict(cItem)
-            params.update({'title':_("Next page"), 'page':page+1})
+            params.update({'title':_("Next page"), 'page':page + 1})
             self.addDir(params)
     
     def exploreItem(self, cItem, nextCategory=''):
@@ -449,8 +449,8 @@ class Kinox(CBaseHostClass):
             
             data = self.cm.ph.getAllItemsBeetwenMarkers(data, '<option', '</option>')
             for sItem in data:
-                sTtile   = self.cleanHtmlStr(sItem)
-                sNum     = self.cleanHtmlStr(self.cm.ph.getSearchGroups(sItem, '''value=['"]([0-9]+?)['"]''')[0])
+                sTtile = self.cleanHtmlStr(sItem)
+                sNum = self.cleanHtmlStr(self.cm.ph.getSearchGroups(sItem, '''value=['"]([0-9]+?)['"]''')[0])
                 
                 episodesList = []
                 sItem = self.cm.ph.getSearchGroups(sItem, '''rel=['"]([^'^"]+?)['"]''')[0].split(',')
@@ -591,8 +591,8 @@ class Kinox(CBaseHostClass):
         data = self.cm.ph.getDataBeetwenReMarkers(data, re.compile('''<table[^>]+?class=['"]CommonModuleTable["']'''), re.compile('''</table>'''))[1]
         
         title = self.cleanHtmlStr(self.cm.ph.getSearchGroups(data1, '''alt=['"]([^'^"]+?)['"]''')[0])
-        icon  = self.getFullIconUrl(self.cm.ph.getSearchGroups(data1, '''<img[^>]+?src=['"]([^"^']+?\.jpe?g[^"^']*?)["']''')[0])
-        desc  = self.cleanHtmlStr(self.cm.ph.getDataBeetwenReMarkers(data1, re.compile('''<div[^>]+?class="Descriptore"[^>]*?>'''), re.compile('</div>'))[1])
+        icon = self.getFullIconUrl(self.cm.ph.getSearchGroups(data1, '''<img[^>]+?src=['"]([^"^']+?\.jpe?g[^"^']*?)["']''')[0])
+        desc = self.cleanHtmlStr(self.cm.ph.getDataBeetwenReMarkers(data1, re.compile('''<div[^>]+?class="Descriptore"[^>]*?>'''), re.compile('</div>'))[1])
         
         mapDesc = {'director':'director', 'country':'country', 'runtime':'duration', 'genre':'genres', 'views':'views'}
         tmp = self.cm.ph.getAllItemsBeetwenMarkers(data1, '<li', '</li>')
@@ -640,9 +640,9 @@ class Kinox(CBaseHostClass):
         
         CBaseHostClass.handleService(self, index, refresh, searchPattern, searchType)
 
-        name     = self.currItem.get("name", '')
+        name = self.currItem.get("name", '')
         category = self.currItem.get("category", '')
-        mode     = self.currItem.get("mode", '')
+        mode = self.currItem.get("mode", '')
         
         printDBG("handleService: |||||||||||||||||||||||||||||||||||| name[%s], category[%s] " % (name, category))
         self.currList = []

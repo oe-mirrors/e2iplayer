@@ -37,8 +37,8 @@ from Screens.MessageBox import MessageBox
 ###################################################
 # Config options for HOST
 ###################################################
-config.plugins.iptvplayer.treetv_login      = ConfigText(default="", fixed_size=False)
-config.plugins.iptvplayer.treetv_password   = ConfigText(default="", fixed_size=False)
+config.plugins.iptvplayer.treetv_login = ConfigText(default="", fixed_size=False)
+config.plugins.iptvplayer.treetv_password = ConfigText(default="", fixed_size=False)
 
 def GetConfigList():
     optionList = []
@@ -64,21 +64,21 @@ class TreeTv(CBaseHostClass):
         self.MAIN_URL = 'http://tree.tv/'
         self.DEFAULT_ICON_URL = 'https://superrepo.org/static/images/icons/original/xplugin.video.tree.tv.dev.png.pagespeed.ic.bFRA1qn2nT.png'
         
-        self.MAIN_CAT_TAB = [{'category':'list_items',        'title': _('Movies'),                       'url':self.getFullUrl('/films'),        'icon':self.DEFAULT_ICON_URL},
-                             {'category':'list_items',        'title': _('Series'),                       'url':self.getFullUrl('/serials'),      'icon':self.DEFAULT_ICON_URL},
-                             {'category':'list_items',        'title': _('Cartoons'),                     'url':self.getFullUrl('/multfilms'),    'icon':self.DEFAULT_ICON_URL},
-                             {'category':'list_items',        'title': _('Anime'),                        'url':self.getFullUrl('/anime'),        'icon':self.DEFAULT_ICON_URL},
-                             {'category':'list_items',        'title': _('TV Shows'),                     'url':self.getFullUrl('/onlinetv'),     'icon':self.DEFAULT_ICON_URL},
-                             {'category':'list_collections',  'title': _('Collections'),                  'url':self.getFullUrl('/collection'),   'icon':self.DEFAULT_ICON_URL},
+        self.MAIN_CAT_TAB = [{'category':'list_items', 'title': _('Movies'), 'url':self.getFullUrl('/films'), 'icon':self.DEFAULT_ICON_URL},
+                             {'category':'list_items', 'title': _('Series'), 'url':self.getFullUrl('/serials'), 'icon':self.DEFAULT_ICON_URL},
+                             {'category':'list_items', 'title': _('Cartoons'), 'url':self.getFullUrl('/multfilms'), 'icon':self.DEFAULT_ICON_URL},
+                             {'category':'list_items', 'title': _('Anime'), 'url':self.getFullUrl('/anime'), 'icon':self.DEFAULT_ICON_URL},
+                             {'category':'list_items', 'title': _('TV Shows'), 'url':self.getFullUrl('/onlinetv'), 'icon':self.DEFAULT_ICON_URL},
+                             {'category':'list_collections', 'title': _('Collections'), 'url':self.getFullUrl('/collection'), 'icon':self.DEFAULT_ICON_URL},
                              
-                             {'category':'search',            'title': _('Search'), 'search_item':True,         'icon':self.DEFAULT_ICON_URL},
-                             {'category':'search_history',    'title': _('Search history'),                     'icon':self.DEFAULT_ICON_URL} 
+                             {'category':'search', 'title': _('Search'), 'search_item':True, 'icon':self.DEFAULT_ICON_URL},
+                             {'category':'search_history', 'title': _('Search history'), 'icon':self.DEFAULT_ICON_URL} 
                             ]
         
         self.cacheFilters = {}
         self.filtersTab = []
         self.cacheLinks = []
-        self.login    = ''
+        self.login = ''
         self.password = ''
         
     def getPage(self, url, params={}, post_data=None):
@@ -219,15 +219,15 @@ class TreeTv(CBaseHostClass):
         data = self.cm.ph.getDataBeetwenMarkers(data, m1, m2, withMarkers=False)[1]
         data = data.split(m1)
         for item in data:
-            tmp    = self.cm.ph.rgetDataBeetwenMarkers2(item, '<div class="item_content">', '<a ')[1]
-            url    = self.getFullUrl(self.cm.ph.getSearchGroups(tmp, '''href=['"]([^'^"]+?)['"]''')[0])
+            tmp = self.cm.ph.rgetDataBeetwenMarkers2(item, '<div class="item_content">', '<a ')[1]
+            url = self.getFullUrl(self.cm.ph.getSearchGroups(tmp, '''href=['"]([^'^"]+?)['"]''')[0])
             if not self.cm.isValidUrl(url):
                 continue
-            icon   = self.getFullUrl(self.cm.ph.getSearchGroups(tmp, '''src=['"]([^'^"]+?)['"]''')[0])
-            title  = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(tmp, 'alt="', '" ', withMarkers=False)[1])
+            icon = self.getFullUrl(self.cm.ph.getSearchGroups(tmp, '''src=['"]([^'^"]+?)['"]''')[0])
+            title = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(tmp, 'alt="', '" ', withMarkers=False)[1])
             if title == '':
-                title  = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(item, '<h2>', '</h2>', withMarkers=False)[1])
-            desc   = self.cleanHtmlStr(item)
+                title = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(item, '<h2>', '</h2>', withMarkers=False)[1])
+            desc = self.cleanHtmlStr(item)
             params = {'category': nextCategory, 'good_for_fav': True, 'title':title, 'url':url, 'icon':icon, 'desc':desc}
             self.addDir(params)
         
@@ -246,8 +246,8 @@ class TreeTv(CBaseHostClass):
         
         # trailer
         item = ph.find(data, ('<div ', '>', 'film_play_button'), '</div>')[1]
-        url    = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''href=['"]([^'^"]+?)['"]''')[0])
-        title  = self.cleanHtmlStr(item)
+        url = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''href=['"]([^'^"]+?)['"]''')[0])
+        title = self.cleanHtmlStr(item)
         if self.cm.isValidUrl(url):
             self.addVideo({'good_for_fav': False, 'title':title, 'icon':cItem['icon'], 'urls':[{'name':'', 'url':url}]})
 
@@ -296,7 +296,7 @@ class TreeTv(CBaseHostClass):
         self.cacheLinks = cItem.get('urls', [])
         
         for item in self.cacheLinks:
-            url  = item['url']
+            url = item['url']
             name = item['name']
             urlTab.append({'name':name, 'url':url, 'need_resolve':1})
         
@@ -347,9 +347,9 @@ class TreeTv(CBaseHostClass):
         printDBG(data)
         
         sourceUrl = self.cm.ph.getSearchGroups(data, '''['"]?sourceUrl['"]?\s*:\s*['"]([^'^"]+?)['"]''', 1, True)[0]
-        filmId    = self.cm.ph.getSearchGroups(data, '''['"]?filmId['"]?\s*:\s*['"]([^'^"]+?)['"]''', 1, True)[0]
-        fileId    = self.cm.ph.getSearchGroups(data, '''['"]?fileId['"]?\s*:\s*['"]([^'^"]+?)['"]''', 1, True)[0]
-        source    = self.cm.ph.getSearchGroups(data, '''['"]?source['"]?\s*:\s*['"]([^'^"]+?)['"]''', 1, True)[0]
+        filmId = self.cm.ph.getSearchGroups(data, '''['"]?filmId['"]?\s*:\s*['"]([^'^"]+?)['"]''', 1, True)[0]
+        fileId = self.cm.ph.getSearchGroups(data, '''['"]?fileId['"]?\s*:\s*['"]([^'^"]+?)['"]''', 1, True)[0]
+        source = self.cm.ph.getSearchGroups(data, '''['"]?source['"]?\s*:\s*['"]([^'^"]+?)['"]''', 1, True)[0]
         
         #if source == '': source = self.cm.ph.getSearchGroups(url+'|', '''source=([0-9]+?)[^0-9]''', 1, True)[0]
         #if fileId == '': fileId = self.cm.ph.getSearchGroups(url+'|', '''file=([0-9]+?)[^0-9]''', 1, True)[0]
@@ -391,7 +391,7 @@ class TreeTv(CBaseHostClass):
                 printDBG("playerKeyParams [%s]" % playerKeyParams)
                 return []
                 
-            b =  math.pow(serverData['s_key'], playerKeyParams['key'])
+            b = math.pow(serverData['s_key'], playerKeyParams['key'])
             skc = int(math.fmod(b, serverData['p']))
         except Exception:
             printExc()
@@ -485,15 +485,15 @@ class TreeTv(CBaseHostClass):
             if not loggedIn:
                 self.sessionEx.open(MessageBox, _('User login "%s" failed.') % config.plugins.iptvplayer.treetv_login.value, type=MessageBox.TYPE_INFO, timeout=10)
             else:
-                self.login    = config.plugins.iptvplayer.treetv_login.value
+                self.login = config.plugins.iptvplayer.treetv_login.value
                 self.password = config.plugins.iptvplayer.treetv_password.value
         elif config.plugins.iptvplayer.treetv_login.value.strip() == '' or  \
              config.plugins.iptvplayer.treetv_password.value.strip() == '':
             rm(self.COOKIE_FILE)
 
-        name     = self.currItem.get("name", '')
+        name = self.currItem.get("name", '')
         category = self.currItem.get("category", '')
-        mode     = self.currItem.get("mode", '')
+        mode = self.currItem.get("mode", '')
         
         printDBG("handleService: |||||||||||||||||||||||||||||||||||| name[%s], category[%s] " % (name, category))
         self.currList = []

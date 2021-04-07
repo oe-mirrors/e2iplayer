@@ -29,7 +29,7 @@ from Components.config import config, ConfigSelection, ConfigYesNo, getConfigLis
 ###################################################
 config.plugins.iptvplayer.tvjworg_language = ConfigSelection(default="default", choices=[("default", _("Default")), ("P", _("Polish")), ("E", _("English"))]) 
 config.plugins.iptvplayer.tvjworg_icontype = ConfigSelection(default="vertical", choices=[("vertical", _('vertical')), ("horizontal", _('horizontal'))]) 
-config.plugins.iptvplayer.tvjworg_default_format = ConfigSelection(default="720", choices=[("0",  _("the worst")),
+config.plugins.iptvplayer.tvjworg_default_format = ConfigSelection(default="720", choices=[("0", _("the worst")),
                                                                                                ("240", "240p"),
                                                                                                ("360", "360p"),
                                                                                                ("480", "480p"),
@@ -70,7 +70,7 @@ class TVJWORG(CBaseHostClass):
             if url.startswith('//'):
                 url = 'http:' + url
             elif not url.startswith('http'):
-                url =  baseUrl + url
+                url = baseUrl + url
         if not baseUrl.startswith('https://'):
             url = url.replace('https://', 'http://')
         return url
@@ -85,7 +85,7 @@ class TVJWORG(CBaseHostClass):
         for item in tab:
             params = dict(cItem)
             params.update(item)
-            params['name']  = 'category'
+            params['name'] = 'category'
             if type == 'dir':
                 self.addDir(params)
             else:
@@ -159,7 +159,7 @@ class TVJWORG(CBaseHostClass):
                 data = data['categories']
             for item in data:
                 icon = self._getIcon(item)
-                key  = item['key']
+                key = item['key']
                 title = item['name']
                 category = item['type']
                 desc = item['description']
@@ -282,9 +282,9 @@ class TVJWORG(CBaseHostClass):
         
         CBaseHostClass.handleService(self, index, refresh, searchPattern, searchType)
 
-        name     = self.currItem.get("name", '')
+        name = self.currItem.get("name", '')
         category = self.currItem.get("category", '')
-        mode     = self.currItem.get("mode", '')
+        mode = self.currItem.get("mode", '')
         
         printDBG("handleService: |||||||||||||||||||||||||||||||||||| name[%s], category[%s] " % (name, category))
         self.currList = []
@@ -349,9 +349,9 @@ class IPTVHost(CHostBase):
             if '' != url:
                 hostLinks.append(CUrlItem("Link", url, 1))
             
-        title       =  cItem.get('title', '')
-        description =  cItem.get('desc', '')
-        icon        =  cItem.get('icon', '')
+        title = cItem.get('title', '')
+        description = cItem.get('desc', '')
+        icon = cItem.get('icon', '')
         
         return CDisplayListItem(name=title,
                                     description=description,

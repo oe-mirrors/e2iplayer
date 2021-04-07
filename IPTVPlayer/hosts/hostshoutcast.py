@@ -44,8 +44,8 @@ class ShoutcastCom(CBaseHostClass):
     def listMainMenu(self, cItem):
         printDBG("ShoutcastCom.listMainMenu")
         
-        MAIN_CAT_TAB = [{'category':'genres',         'title': _('Genres'),          'url':self.getMainUrl()}, 
-                        {'category':'search',         'title': _('Search'),          'search_item':True}, 
+        MAIN_CAT_TAB = [{'category':'genres', 'title': _('Genres'), 'url':self.getMainUrl()}, 
+                        {'category':'search', 'title': _('Search'), 'search_item':True}, 
                         {'category':'search_history', 'title': _('Search history')},]
         
         self.listsTab(MAIN_CAT_TAB, cItem)
@@ -173,9 +173,9 @@ class ShoutcastCom(CBaseHostClass):
         
         CBaseHostClass.handleService(self, index, refresh, searchPattern, searchType)
 
-        name     = self.currItem.get("name", '')
+        name = self.currItem.get("name", '')
         category = self.currItem.get("category", '')
-        mode     = self.currItem.get("mode", '')
+        mode = self.currItem.get("mode", '')
         
         printDBG("handleService: |||| name[%s], category[%s] " % (name, category))
         self.cacheLinks = {}

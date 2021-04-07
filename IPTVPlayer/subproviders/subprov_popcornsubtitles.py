@@ -35,9 +35,9 @@ def GetConfigList():
 class YoutubeComProvider(CBaseSubProviderClass): 
     
     def __init__(self, params={}):
-        self.MAIN_URL      = 'http://popcornsubtitles.com/'
-        self.USER_AGENT    = 'Mozilla/5.0 (X11; Linux i686) AppleWebKit/537.36 (KHTML, like Gecko) Ubuntu Chromium/37.0.2062.120 Chrome/37.0.2062.120 Safari/537.36'
-        self.HTTP_HEADER   = {'User-Agent':self.USER_AGENT, 'Referer':self.MAIN_URL, 'Accept':'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8', 'Accept-Encoding':'gzip, deflate'}
+        self.MAIN_URL = 'http://popcornsubtitles.com/'
+        self.USER_AGENT = 'Mozilla/5.0 (X11; Linux i686) AppleWebKit/537.36 (KHTML, like Gecko) Ubuntu Chromium/37.0.2062.120 Chrome/37.0.2062.120 Safari/537.36'
+        self.HTTP_HEADER = {'User-Agent':self.USER_AGENT, 'Referer':self.MAIN_URL, 'Accept':'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8', 'Accept-Encoding':'gzip, deflate'}
 
         params['cookie'] = 'popcornsubtitlescom.cookie'
         CBaseSubProviderClass.__init__(self, params)
@@ -67,7 +67,7 @@ class YoutubeComProvider(CBaseSubProviderClass):
         for item in tmp:
             url = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''href=['"]([^'^"]+?)['"]''')[0])
             title = self.cleanHtmlStr(item)
-            lang  = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(item, '<td', '</td>')[1])
+            lang = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(item, '<td', '</td>')[1])
             if self.cm.isValidUrl(url):
                 params = dict(cItem)
                 params.update({'title':lang, 'url':url, 'lang':lang, 'imdbid':imdbid, 'desc':title})
@@ -86,10 +86,10 @@ class YoutubeComProvider(CBaseSubProviderClass):
     def downloadSubtitleFile(self, cItem):
         printDBG("downloadSubtitleFile")
         retData = {}
-        title    = cItem['title']
-        lang     = cItem['lang']
-        subId    = cItem.get('sub_id', '0')
-        imdbid   = cItem['imdbid']
+        title = cItem['title']
+        lang = cItem['lang']
+        subId = cItem.get('sub_id', '0')
+        imdbid = cItem['imdbid']
         fileName = self._getFileName(title, lang, subId, imdbid)
         fileName = GetSubtitlesDir(fileName)
         
@@ -166,7 +166,7 @@ class YoutubeComProvider(CBaseSubProviderClass):
         
         CBaseSubProviderClass.handleService(self, index, refresh)
 
-        name     = self.currItem.get("name", '')
+        name = self.currItem.get("name", '')
         category = self.currItem.get("category", '')
         
         printDBG("handleService: |||||||||||||||||||||||||||||||||||| name[%s], category[%s] " % (name, category))

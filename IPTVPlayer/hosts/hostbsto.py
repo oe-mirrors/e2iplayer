@@ -30,8 +30,8 @@ from Components.config import config, ConfigSelection, ConfigYesNo, ConfigText, 
 config.plugins.iptvplayer.api_key_9kweu = ConfigText(default="", fixed_size=False)
 config.plugins.iptvplayer.api_key_2captcha = ConfigText(default="", fixed_size=False)
 config.plugins.iptvplayer.bsto_linkcache = ConfigYesNo(default=True)
-config.plugins.iptvplayer.bsto_bypassrecaptcha = ConfigSelection(default="None", choices=[("None",        _("None")),
-                                                                                              ("9kw.eu",       "https://9kw.eu/"),
+config.plugins.iptvplayer.bsto_bypassrecaptcha = ConfigSelection(default="None", choices=[("None", _("None")),
+                                                                                              ("9kw.eu", "https://9kw.eu/"),
                                                                                               ("2captcha.com", "http://2captcha.com/")])
 
 def GetConfigList():
@@ -78,10 +78,10 @@ class BSTO(CBaseHostClass, CaptchaHelper):
         
     def selectDomain(self):                
         self.MAIN_URL = 'https://bs.to/'
-        self.MAIN_CAT_TAB = [{'category':'list_genres',     'title': 'Genres',   'url':self.getFullUrl('/serie-genre')},
-                             {'category':'list_genres',     'title': 'Alphabet', 'url':self.getFullUrl('/serie-alphabet')},
-                             {'category': 'search',          'title': _('Search'), 'search_item': True, },
-                             {'category': 'search_history',  'title': _('Search history'),} 
+        self.MAIN_CAT_TAB = [{'category':'list_genres', 'title': 'Genres', 'url':self.getFullUrl('/serie-genre')},
+                             {'category':'list_genres', 'title': 'Alphabet', 'url':self.getFullUrl('/serie-alphabet')},
+                             {'category': 'search', 'title': _('Search'), 'search_item': True, },
+                             {'category': 'search_history', 'title': _('Search history'),} 
                             ]
         
     def listGenres(self, cItem, nextCategory):
@@ -98,7 +98,7 @@ class BSTO(CBaseHostClass, CaptchaHelper):
             genreItem = self.cm.ph.getAllItemsBeetwenMarkers(genreItem, '<li>', '</li>', False)
             self.cacheGenres[genreTitle] = []
             for item in genreItem:
-                url   = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''href=['"]([^'^"]+?)['"]''')[0])
+                url = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''href=['"]([^'^"]+?)['"]''')[0])
                 title = self.cleanHtmlStr(item)
                 if title == '':
                     title = self.cleanHtmlStr(self.cm.ph.getSearchGroups(item, '''title=['"]([^'^"]+?)['"]''')[0])
@@ -130,7 +130,7 @@ class BSTO(CBaseHostClass, CaptchaHelper):
         seasonLabel = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(data, '<strong>', '</strong>', False)[1])
         data = self.cm.ph.getAllItemsBeetwenMarkers(data, '<li>', '</li>', False)
         for item in data:
-            url   = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''href=['"]([^'^"]+?)['"]''')[0])
+            url = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''href=['"]([^'^"]+?)['"]''')[0])
             title = self.cleanHtmlStr(item)
             params = dict(cItem)
             params.update({'good_for_fav':False, 'category':nextCategory, 'title':'%s %s' % (seasonLabel, title), 's_num':title, 'series_title':cItem['title'], 'url':url, 'icon':icon, 'desc':desc})
@@ -151,22 +151,22 @@ class BSTO(CBaseHostClass, CaptchaHelper):
             item = self.cm.ph.getAllItemsBeetwenMarkers(item, '<td', '</td>')
             if len(item) < 3:
                 continue
-            url  = self.getFullUrl(self.cm.ph.getSearchGroups(item[0], '''href=['"]([^'^"]+?)['"]''')[0])
+            url = self.getFullUrl(self.cm.ph.getSearchGroups(item[0], '''href=['"]([^'^"]+?)['"]''')[0])
             eNum = self.cleanHtmlStr(item[0])
             
             title1 = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(item[1], '<strong>', '</strong>', False)[1])
             title2 = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(item[1], '<i>', '</i>', False)[1])
             
-            key = 's%se%s'% (sNum.zfill(2), eNum.zfill(2))
+            key = 's%se%s' % (sNum.zfill(2), eNum.zfill(2))
             self.cacheLinks[key] = []
             title = cItem['series_title'] + ', ' + key + ' ' + title1
             if title2 != '':
-                title+= ' (%s)' % title2
+                title += ' (%s)' % title2
             
             item = self.cm.ph.getAllItemsBeetwenMarkers(item[2], '<a', '</a>')
             for link in item:
                 name = self.cleanHtmlStr(link)
-                url  = self.getFullUrl(self.cm.ph.getSearchGroups(link, '''href=['"]([^'^"]+?)['"]''')[0])
+                url = self.getFullUrl(self.cm.ph.getSearchGroups(link, '''href=['"]([^'^"]+?)['"]''')[0])
                 if name == '':
                     name = url.rsplit('/', 1)[-1]
                 self.cacheLinks[key].append({'name':name, 'url':strwithmeta(url, {'links_key':key}), 'need_resolve':1})
@@ -187,7 +187,7 @@ class BSTO(CBaseHostClass, CaptchaHelper):
         
             data = self.cm.ph.getAllItemsBeetwenMarkers(data, '<li>', '</li>', False)
             for item in data:
-                url   = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''href=['"]([^'^"]+?)['"]''')[0])
+                url = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''href=['"]([^'^"]+?)['"]''')[0])
                 title = self.cleanHtmlStr(item)
                 if title == '':
                     title = self.cleanHtmlStr(self.cm.ph.getSearchGroups(item, '''title=['"]([^'^"]+?)['"]''')[0])
@@ -224,7 +224,7 @@ class BSTO(CBaseHostClass, CaptchaHelper):
             while len(d) < key_length + iv_length:
                 d_i = hashlib.md5(d_i + password).digest()
                 d += d_i
-            return d[:key_length], d[key_length:key_length+iv_length]
+            return d[:key_length], d[key_length:key_length + iv_length]
         bs = 16
         key, iv = derive_key_and_iv(password, 32, 16)
         cipher = AES_CBC(key=key, keySize=32)
@@ -268,7 +268,7 @@ class BSTO(CBaseHostClass, CaptchaHelper):
         
         errorMsgTab = []
         
-        baseUrl  = self.cm.ph.getSearchGroups(data, '''href=['"][^'^"]*?(/out/[^'^"]+?)['"]''')[0]
+        baseUrl = self.cm.ph.getSearchGroups(data, '''href=['"][^'^"]*?(/out/[^'^"]+?)['"]''')[0]
         url = self.getFullUrl(baseUrl)
         prevUrl = url
         
@@ -295,7 +295,7 @@ class BSTO(CBaseHostClass, CaptchaHelper):
                 
                 sitekey = self.cm.ph.getSearchGroups(data, '''['"]sitekey['"]\s*?:\s*?['"]([^'^"]+?)['"]''')[0]
                 if sitekey != '' and 'bitte das Captcha' in data:
-                    token, errorMsgTab = self.processCaptcha(sitekey,  self.cm.meta['url'], config.plugins.iptvplayer.bsto_bypassrecaptcha.value)
+                    token, errorMsgTab = self.processCaptcha(sitekey, self.cm.meta['url'], config.plugins.iptvplayer.bsto_bypassrecaptcha.value)
                     if token != '':
                         sts, data = self.cm.getPage(url + '?t=%s&s=%s' % (token, query.get('s', '')), self.defaultParams)
                         if not sts:
@@ -303,7 +303,7 @@ class BSTO(CBaseHostClass, CaptchaHelper):
                         url = data.meta['url']
             
             if 1 != self.up.checkHostSupport(url):
-                url  = baseUrl.replace('/out/', '/watch/')[1:]
+                url = baseUrl.replace('/out/', '/watch/')[1:]
                 
                 hostUrl = ''
                 try:
@@ -340,28 +340,28 @@ class BSTO(CBaseHostClass, CaptchaHelper):
         
         desc = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(data, '<div class="justify" id="desc_spoiler">', '</div>')[1])
         
-        data  = self.cm.ph.getDataBeetwenMarkers(data, '<div id="sp_left">', '<script', False)[1]
+        data = self.cm.ph.getDataBeetwenMarkers(data, '<div id="sp_left">', '<script', False)[1]
         title = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(data, '<h2', '</h2>')[1].split('<small>')[0])
         if desc == '':
             desc = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(data, '<p ', '</p>')[1])
-        icon  = self.getFullIconUrl(self.cm.ph.getSearchGroups(data, '''src=['"]([^'^"]+?)['"]''')[0])
+        icon = self.getFullIconUrl(self.cm.ph.getSearchGroups(data, '''src=['"]([^'^"]+?)['"]''')[0])
         
         if title == '':
             title = cItem['title']
         if desc == '':
-            desc  = cItem.get('desc', '')
+            desc = cItem.get('desc', '')
         if icon == '':
-            icon  = cItem.get('icon', '')
+            icon = cItem.get('icon', '')
         
         data = data.split('<div class="infos">')[-1]
         data = self.cm.ph.getAllItemsBeetwenMarkers(data, '<span>', '</p>')
         printDBG(data)
-        descTabMap = {"Genres":           "genre",
+        descTabMap = {"Genres": "genre",
                       "Produktionsjahre": "year",
-                      "Hauptdarsteller":  "actors",
-                      "Regisseure":       "director",
-                      "Produzenten":      "production",
-                      "Autoren":          "writer"}
+                      "Hauptdarsteller": "actors",
+                      "Regisseure": "director",
+                      "Produzenten": "production",
+                      "Autoren": "writer"}
         otherInfo = {}
         for item in data:
             key = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(item, '<span', '</span>')[1])
@@ -386,9 +386,9 @@ class BSTO(CBaseHostClass, CaptchaHelper):
             #rm(self.COOKIE_FILE)
             self.selectDomain()
 
-        name     = self.currItem.get("name", '')
+        name = self.currItem.get("name", '')
         category = self.currItem.get("category", '')
-        mode     = self.currItem.get("mode", '')
+        mode = self.currItem.get("mode", '')
         
         printDBG("handleService: |||||||||||||||||||||||||||||||||||| name[%s], category[%s] " % (name, category))
         self.currList = []

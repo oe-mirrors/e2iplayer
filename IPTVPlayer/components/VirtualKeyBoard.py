@@ -47,9 +47,9 @@ class IPTVVirtualKeyBoardWithCaptcha(Screen):
                        </screen>
                     ''' % (winWidth, 10, 55,
                             winWidth - 20, 100,
-                            winWidth-20,
-                            winWidth-20,
-                            winWidth-20,
+                            winWidth - 20,
+                            winWidth - 20,
+                            winWidth - 20,
                             GetIconDir("vk/vkey_text.png"))
         
         Screen.__init__(self, session)
@@ -60,67 +60,67 @@ class IPTVVirtualKeyBoardWithCaptcha(Screen):
         self.smsChar = None
         self.sms = NumericalTextInput(self.smsOK)
         
-        self.key_bg        = LoadPixmap(GetIconDir("vk/vkey_bg.png"))
-        self.key_sel       = LoadPixmap(GetIconDir("vk/vkey_sel.png"))
+        self.key_bg = LoadPixmap(GetIconDir("vk/vkey_bg.png"))
+        self.key_sel = LoadPixmap(GetIconDir("vk/vkey_sel.png"))
         self.key_backspace = LoadPixmap(GetIconDir("vk/vkey_backspace.png"))
-        self.key_all       = LoadPixmap(GetIconDir("vk/vkey_all.png"))
-        self.key_clr       = LoadPixmap(GetIconDir("vk/vkey_clr.png"))
-        self.key_esc       = LoadPixmap(GetIconDir("vk/vkey_esc.png"))
-        self.key_ok        = LoadPixmap(GetIconDir("vk/vkey_ok.png"))
-        self.key_shift     = LoadPixmap(GetIconDir("vk/vkey_shift.png"))
+        self.key_all = LoadPixmap(GetIconDir("vk/vkey_all.png"))
+        self.key_clr = LoadPixmap(GetIconDir("vk/vkey_clr.png"))
+        self.key_esc = LoadPixmap(GetIconDir("vk/vkey_esc.png"))
+        self.key_ok = LoadPixmap(GetIconDir("vk/vkey_ok.png"))
+        self.key_shift = LoadPixmap(GetIconDir("vk/vkey_shift.png"))
         self.key_shift_sel = LoadPixmap(GetIconDir("vk/vkey_shift_sel.png"))
-        self.key_space     = LoadPixmap(GetIconDir("vk/vkey_space.png"))
-        self.key_left      = LoadPixmap(GetIconDir("vk/vkey_left.png"))
-        self.key_right     = LoadPixmap(GetIconDir("vk/vkey_right.png"))
+        self.key_space = LoadPixmap(GetIconDir("vk/vkey_space.png"))
+        self.key_left = LoadPixmap(GetIconDir("vk/vkey_left.png"))
+        self.key_right = LoadPixmap(GetIconDir("vk/vkey_right.png"))
 
-        self.keyImages =  {
+        self.keyImages = {
                 "BACKSPACE": self.key_backspace,
-                "CLEAR":     self.key_clr,
-                "ALL":       self.key_all,
-                "EXIT":      self.key_esc,
-                "OK":        self.key_ok,
-                "SHIFT":     self.key_shift,
-                "SPACE":     self.key_space,
-                "LEFT":      self.key_left,
-                "RIGHT":     self.key_right
+                "CLEAR": self.key_clr,
+                "ALL": self.key_all,
+                "EXIT": self.key_esc,
+                "OK": self.key_ok,
+                "SHIFT": self.key_shift,
+                "SPACE": self.key_space,
+                "LEFT": self.key_left,
+                "RIGHT": self.key_right
             }
         self.keyImagesShift = {
                 "BACKSPACE": self.key_backspace,
-                "CLEAR":     self.key_clr,
-                "ALL":       self.key_all,
-                "EXIT":      self.key_esc,
-                "OK":        self.key_ok,
-                "SHIFT":     self.key_shift_sel,
-                "SPACE":     self.key_space,
-                "LEFT":      self.key_left,
-                "RIGHT":     self.key_right
+                "CLEAR": self.key_clr,
+                "ALL": self.key_all,
+                "EXIT": self.key_esc,
+                "OK": self.key_ok,
+                "SHIFT": self.key_shift_sel,
+                "SPACE": self.key_space,
+                "LEFT": self.key_left,
+                "RIGHT": self.key_right
             }
             
         self["key_green"] = Label(_("Accept"))
-        self["key_ok"]    = Label(_("OK"))
-        self["key_red"]   = Label(_("Cancel"))
+        self["key_ok"] = Label(_("OK"))
+        self["key_red"] = Label(_("Cancel"))
         
         self["header"] = Label(title)
-        self["text"]   = Input(text=text.decode("utf-8", 'ignore'))
-        self["list"]   = VirtualKeyBoardList([])
+        self["text"] = Input(text=text.decode("utf-8", 'ignore'))
+        self["list"] = VirtualKeyBoardList([])
         
         self["actions"] = NumberActionMap(["OkCancelActions", "WizardActions", "ColorActions", "KeyboardInputActions", "InputBoxActions", "InputAsciiActions"],
             {
                 "gotAsciiCode": self.keyGotAscii,
-                "ok":     self.okClicked,
+                "ok": self.okClicked,
                 "cancel": self.exit,
-                "left":   self.left,
-                "right":  self.right,
-                "up":     self.up,
-                "down":   self.down,
-                "red":    self.exit,
-                "green":  self.ok,
+                "left": self.left,
+                "right": self.right,
+                "up": self.up,
+                "down": self.down,
+                "red": self.exit,
+                "green": self.ok,
                 "yellow": self.switchLang,
-                "blue":   self.shiftClicked,
+                "blue": self.shiftClicked,
                 "deleteBackward": self.backClicked,
-                "deleteForward":  self.forwardClicked,
-                "back":     self.exit,
-                "pageUp":   self.cursorRight,
+                "deleteForward": self.forwardClicked,
+                "back": self.exit,
+                "pageUp": self.cursorRight,
                 "pageDown": self.cursorLeft,
                 "1": self.keyNumberGlobal,
                 "2": self.keyNumberGlobal,
@@ -189,7 +189,7 @@ class IPTVVirtualKeyBoardWithCaptcha(Screen):
                         else:
                             keys_list[row][idx] = upper
         
-        self.max_key=47+len(self.keys_list[4])
+        self.max_key = 47 + len(self.keys_list[4])
 
     def virtualKeyBoardEntryComponent(self, keys):
         key_bg_width = self.key_bg and self.key_bg.size().width() or 45
@@ -218,9 +218,9 @@ class IPTVVirtualKeyBoardWithCaptcha(Screen):
 
     def markSelectedKey(self):
         if self.previousSelectedKey is not None:
-            self.list[self.previousSelectedKey /12] = self.list[self.previousSelectedKey /12][:-1]
+            self.list[self.previousSelectedKey / 12] = self.list[self.previousSelectedKey / 12][:-1]
         width = self.key_sel.size().width()
-        x = self.list[self.selectedKey/12][self.selectedKey % 12 + 1][1]
+        x = self.list[self.selectedKey / 12][self.selectedKey % 12 + 1][1]
         self.list[self.selectedKey / 12].append(MultiContentEntryPixmapAlphaTest(pos=(x, 0), size=(width, 45), png=self.key_sel))
         self.previousSelectedKey = self.selectedKey
         self["list"].setList(self.list)

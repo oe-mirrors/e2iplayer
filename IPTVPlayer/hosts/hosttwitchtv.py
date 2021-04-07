@@ -56,7 +56,7 @@ class Twitch(CBaseHostClass):
         self.VOD_URL = 'https://usher.ttvnw.net/vod/%s.m3u8?token=%s&sig=%s&allow_source=true'
 
         self.platformFilters = [{'title':_('All Platforms'), 'platform_type':'all'}, {'title':_('Xbox One'), 'platform_type':'xbox'}, {'title':_('PlayStation 4'), 'platform_type':'ps4'}]
-        self.languagesFilters =     [
+        self.languagesFilters = [
                                             # nice of them to change from meaningful identifers to guid
                                             # screwing things up with the language filtering.  CM
                                             {'lang':"73cc486a-e56b-41ed-a1df-7afedbc84f6f",'title':"العربية"},
@@ -111,21 +111,21 @@ class Twitch(CBaseHostClass):
         
         self.VIDEOS_TYPES_TAB = [{'title':_('All')}, 
                                  {'title':_('Past premieres'), 'videos_type':'PAST_PREMIERE'},
-                                 {'title':_('Archive'),        'videos_type':'ARCHIVE'},
-                                 {'title':_('Highlights'),     'videos_type':'HIGHLIGHT'},
-                                 {'title':_('Uploads'),        'videos_type':'UPLOAD'},]
+                                 {'title':_('Archive'), 'videos_type':'ARCHIVE'},
+                                 {'title':_('Highlights'), 'videos_type':'HIGHLIGHT'},
+                                 {'title':_('Uploads'), 'videos_type':'UPLOAD'},]
  
         self.VIDEOS_SORT_TAB = [{'title':_('Popular'), 'sort':'VIEWS'},
-                                {'title':_('Recent'),  'sort':'TIME'},]
+                                {'title':_('Recent'), 'sort':'TIME'},]
 
-        self.CLIPS_FILTERS_TAB = [{'title':_('Trending'),         'clips_filter':'TRENDING'},
-                                  {'title':_('Last day'),         'clips_filter':'LAST_DAY'},
-                                  {'title':_('Last week'),        'clips_filter':'LAST_WEEK'},
-                                  {'title':_('Last month'),       'clips_filter':'LAST_MONTH'},
-                                  {'title':_('All time'),         'clips_filter':'ALL_TIME'},]
+        self.CLIPS_FILTERS_TAB = [{'title':_('Trending'), 'clips_filter':'TRENDING'},
+                                  {'title':_('Last day'), 'clips_filter':'LAST_DAY'},
+                                  {'title':_('Last week'), 'clips_filter':'LAST_WEEK'},
+                                  {'title':_('Last month'), 'clips_filter':'LAST_MONTH'},
+                                  {'title':_('All time'), 'clips_filter':'ALL_TIME'},]
                                   
-        self.GAME_CAT_TAB = [{'category':'game_lang', 'next_category':'game_channels',      'title': _('Channels')},
-                             {'category':'game_lang', 'next_category':'game_videos_types',  'title': _('Videos')},
+        self.GAME_CAT_TAB = [{'category':'game_lang', 'next_category':'game_channels', 'title': _('Channels')},
+                             {'category':'game_lang', 'next_category':'game_videos_types', 'title': _('Videos')},
                              {'category':'game_lang', 'next_category':'game_clips_filters', 'title': _('Clips')},
                             ]
 
@@ -141,8 +141,8 @@ class Twitch(CBaseHostClass):
     def listMain(self, cItem):
         printDBG("Twitch.listMain")
 
-        MAIN_CAT_TAB = [{'category':'browse',         'title': _('Browse')},
-                        {'category':'search',         'title': _('Search'),       'search_item':True},
+        MAIN_CAT_TAB = [{'category':'browse', 'title': _('Browse')},
+                        {'category':'search', 'title': _('Search'), 'search_item':True},
                         {'category': 'search_history', 'title': _('Search history'),}]
         self.listsTab(MAIN_CAT_TAB, cItem)
 
@@ -156,10 +156,10 @@ class Twitch(CBaseHostClass):
             params.update({'category':'sub_items', 'sub_items':subItems})
             dirChannels.append(params)
 
-        TAB = [{'category':'dir_games',         'title': _('Games')},
+        TAB = [{'category':'dir_games', 'title': _('Games')},
                #{'category':'dir_communities',   'title': _('Communities') },
                #{'category':'dir_communities',   'title': _('Creative') },
-               {'category':'sub_items',         'title': _('Channels'), 'sub_items':dirChannels},
+               {'category':'sub_items', 'title': _('Channels'), 'sub_items':dirChannels},
         ]
         self.listsTab(TAB, cItem)
 
@@ -503,7 +503,7 @@ class Twitch(CBaseHostClass):
                 descTab.append(_('Broadcaster: %s') % jstr(item['channel'], 'display_name'))
                 descTab.append(_('Game: %s') % jstr(item, 'game'))
                 title = '[%s] %s' % (jstr(item, 'stream_type'), jstr(item['channel'], 'status'))
-                params = {'good_for_fav':False,  'title':title, 'video_type':jstr(item, 'stream_type'), 'channel_id':jstr(item['channel'], 'name'), 'icon':jstr(item['preview'], 'medium'), 'desc':'[/br]'.join(descTab)}
+                params = {'good_for_fav':False, 'title':title, 'video_type':jstr(item, 'stream_type'), 'channel_id':jstr(item['channel'], 'name'), 'icon':jstr(item['preview'], 'medium'), 'desc':'[/br]'.join(descTab)}
                 self.addVideo(params)
             offset += len(self.currList)
             if offset < data['_total']:
@@ -546,12 +546,12 @@ class Twitch(CBaseHostClass):
         elif cItem['video_type'] == 'live':
             id = cItem['channel_id']
             tokenUrl = self.CHANNEL_TOKEN_URL
-            vidUrl   = self.LIVE_URL
+            vidUrl = self.LIVE_URL
             liveStream = True
         else:
             id = cItem.get('video_id', '')
             tokenUrl = self.VOD_TOKEN_URL
-            vidUrl   = self.VOD_URL
+            vidUrl = self.VOD_URL
             liveStream = False
 
         if id != '':
@@ -560,7 +560,7 @@ class Twitch(CBaseHostClass):
             if sts:
                 try:
                     data = json.loads(data)
-                    url =  vidUrl % (id, urllib.parse.quote(jstr(data, 'token')), jstr(data, 'sig'))
+                    url = vidUrl % (id, urllib.parse.quote(jstr(data, 'token')), jstr(data, 'sig'))
                     data = getDirectM3U8Playlist(url, checkExt=False)
                     for item in data:
                         item['url'] = urlparser.decorateUrl(item['url'], {'iptv_proto':'m3u8', 'iptv_livestream':liveStream})
@@ -575,7 +575,7 @@ class Twitch(CBaseHostClass):
         
         CBaseHostClass.handleService(self, index, refresh, searchPattern, searchType)
 
-        name     = self.currItem.get("name", '')
+        name = self.currItem.get("name", '')
         category = self.currItem.get("category", '')
         printDBG("handleService: ||| name[%s], category[%s] " % (name, category))
         self.currList = []

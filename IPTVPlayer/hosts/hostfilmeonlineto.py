@@ -27,9 +27,9 @@ from Components.config import config, ConfigSelection, ConfigText, getConfigList
 ###################################################
 # Config options for HOST
 ###################################################
-config.plugins.iptvplayer.filmeonlineto_proxy = ConfigSelection(default="None", choices=[("None",         _("None")),
-                                                                                        ("proxy_1",  _("Alternative proxy server (1)")),
-                                                                                        ("proxy_2",  _("Alternative proxy server (2)"))])
+config.plugins.iptvplayer.filmeonlineto_proxy = ConfigSelection(default="None", choices=[("None", _("None")),
+                                                                                        ("proxy_1", _("Alternative proxy server (1)")),
+                                                                                        ("proxy_2", _("Alternative proxy server (2)"))])
 config.plugins.iptvplayer.filmeonlineto_alt_domain = ConfigText(default="", fixed_size=False)
 
 def GetConfigList():
@@ -56,7 +56,7 @@ class FilmeOnlineTo(CBaseHostClass):
         self.AJAX_HEADER.update({'X-Requested-With': 'XMLHttpRequest', 'Content-Type':'application/x-www-form-urlencoded; charset=UTF-8', 'Accept':'*/*'})
         self.MAIN_URL = None
         self.cacheLinks = {}
-        self.cacheFilters  = {}
+        self.cacheFilters = {}
         self.cacheFiltersKeys = []
         self.defaultParams = {'header':self.HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
         
@@ -112,9 +112,9 @@ class FilmeOnlineTo(CBaseHostClass):
         if self.MAIN_URL == None:
             self.MAIN_URL = domains[-1]
         
-        self.MAIN_CAT_TAB = [{'category':'list_filters',   'title': _('Movies'),    'url':self.getFullUrl('/filter'), 'f_tip':'film'},
-                             {'category':'list_filters',   'title': _('TV-Series'), 'url':self.getFullUrl('/filter'), 'f_tip':'tv'},
-                             {'category': 'search',         'title': _('Search'),    'search_item': True,},
+        self.MAIN_CAT_TAB = [{'category':'list_filters', 'title': _('Movies'), 'url':self.getFullUrl('/filter'), 'f_tip':'film'},
+                             {'category':'list_filters', 'title': _('TV-Series'), 'url':self.getFullUrl('/filter'), 'f_tip':'tv'},
+                             {'category': 'search', 'title': _('Search'), 'search_item': True,},
                              {'category': 'search_history', 'title': _('Search history'),}]
                             
     def fillCacheFilters(self, cItem):
@@ -184,7 +184,7 @@ class FilmeOnlineTo(CBaseHostClass):
         filter = self.cacheFiltersKeys[f_idx]
         f_idx += 1
         cItem['f_idx'] = f_idx
-        if f_idx  == len(self.cacheFiltersKeys):
+        if f_idx == len(self.cacheFiltersKeys):
             cItem['category'] = nextCategory
         self.listsTab(self.cacheFilters.get(filter, []), cItem)
         
@@ -233,7 +233,7 @@ class FilmeOnlineTo(CBaseHostClass):
         
         data = self.cm.ph.getAllItemsBeetwenNodes(data, ('<div', '>', 'data-movie-id'), ('</div', '>'))
         for item in data:
-            url  = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''href=['"]([^"^']+?)['"]''')[0])
+            url = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''href=['"]([^"^']+?)['"]''')[0])
             if url == '':
                 continue
             icon = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''data\-original=['"]([^"^']+?)['"]''')[0])
@@ -247,16 +247,16 @@ class FilmeOnlineTo(CBaseHostClass):
                     desc.append(t)
             
             if title == '':
-                title  = self.cleanHtmlStr(self.cm.ph.getSearchGroups(item, 'title="([^"]+?)"')[0])
+                title = self.cleanHtmlStr(self.cm.ph.getSearchGroups(item, 'title="([^"]+?)"')[0])
             if title == '':
-                title  = self.cleanHtmlStr(self.cm.ph.getSearchGroups(item, 'alt="([^"]+?)"')[0])
+                title = self.cleanHtmlStr(self.cm.ph.getSearchGroups(item, 'alt="([^"]+?)"')[0])
             movieId = self.cm.ph.getSearchGroups(item, '''data\-movie\-id=['"]([^"^']+?)['"]''')[0]
             params = {'good_for_fav': True, 'name':'category', 'category':nextCategory, 'title':title, 'url':url, 'movie_id':movieId, 'desc':' | '.join(desc), 'info_url':url, 'icon':icon}
             self.addDir(params)
         
         if nextPage and len(self.currList) > 0:
             params = dict(cItem)
-            params.update({'title':_("Next page"), 'page':page+1})
+            params.update({'title':_("Next page"), 'page':page + 1})
             self.addDir(params)
         
     def exploreItem(self, cItem, nextCategory):
@@ -275,7 +275,7 @@ class FilmeOnlineTo(CBaseHostClass):
             url = movieData.get('trailer', '')
             if self.cm.isValidUrl(url):
                 params = dict(cItem)
-                params.update({'title':'%s %s' %(_('[trailer]'),  self.cleanHtmlStr(movieData['name'])), 'url':url})
+                params.update({'title':'%s %s' % (_('[trailer]'), self.cleanHtmlStr(movieData['name'])), 'url':url})
                 self.addVideo(params)
 
             params = dict(self.defaultParams)
@@ -357,7 +357,7 @@ class FilmeOnlineTo(CBaseHostClass):
         if 1 == self.up.checkHostSupport(cItem['url']): 
             return self.up.getVideoLinkExt(cItem['url'])
         
-        return self.cacheLinks.get(cItem['url'],  [])
+        return self.cacheLinks.get(cItem['url'], [])
         
     def getVideoLinks(self, videoUrl):
         printDBG("FilmeOnlineTo.getVideoLinks [%s]" % videoUrl)
@@ -406,7 +406,7 @@ class FilmeOnlineTo(CBaseHostClass):
                     subTracks.append({'title':label, 'url':strwithmeta(item[1], urlParams), 'lang':label, 'format':'srt'})
                 urlTab = self.up.getVideoLinkExt(url)
             elif params.get('tip', '') == 'vip':
-                url = '/ajax/mtoken.php?eid=%s&mid=%s&so=%s&server=NaN&epNr=%s&srvr=NaN&_=%s' % (params['id'], movieData['id'], params['so'], params['epNr'], int(time.time()*1000))
+                url = '/ajax/mtoken.php?eid=%s&mid=%s&so=%s&server=NaN&epNr=%s&srvr=NaN&_=%s' % (params['id'], movieData['id'], params['so'], params['epNr'], int(time.time() * 1000))
                 sts, data = self.getPage(self.getFullUrl(url), urlParams)
                 if not sts:
                     return
@@ -449,8 +449,8 @@ class FilmeOnlineTo(CBaseHostClass):
             return retTab
         
         title = self.cleanHtmlStr(self.cm.ph.getSearchGroups(data, '<meta property="og:title"[^>]+?content="([^"]+?)"')[0])
-        desc  = self.cleanHtmlStr(self.cm.ph.getSearchGroups(data, '<meta property="og:description"[^>]+?content="([^"]+?)"')[0])
-        icon  = self.getFullUrl(self.cm.ph.getSearchGroups(data, '<meta property="og:image"[^>]+?content="([^"]+?)"')[0])
+        desc = self.cleanHtmlStr(self.cm.ph.getSearchGroups(data, '<meta property="og:description"[^>]+?content="([^"]+?)"')[0])
+        icon = self.getFullUrl(self.cm.ph.getSearchGroups(data, '<meta property="og:image"[^>]+?content="([^"]+?)"')[0])
         
         if title == '':
             title = cItem['title']
@@ -461,22 +461,22 @@ class FilmeOnlineTo(CBaseHostClass):
         
         descData = self.cm.ph.getDataBeetwenMarkers(data, '<div class="mvic-info">', '<div class="clearfix">', False)[1]
         descData = self.cm.ph.getAllItemsBeetwenMarkers(descData, '<p', '</p>')
-        descTabMap = {"Director":     "director",
-                      "Actor":        "actors",
-                      "Genre":        "genre",
-                      "Country":      "country",
-                      "Release":      "released",
-                      "Duration":     "duration",
-                      "Quality":      "quality",
-                      "IMDb":         "rated",
+        descTabMap = {"Director": "director",
+                      "Actor": "actors",
+                      "Genre": "genre",
+                      "Country": "country",
+                      "Release": "released",
+                      "Duration": "duration",
+                      "Quality": "quality",
+                      "IMDb": "rated",
                       
-                      "Genul":        "genre",
-                      "Actori":       "actors",
-                      "Director":     "director",
-                      "Tara":         "Country",
-                      "Durata":       "duration",
-                      "Anul":         "year",
-                      "Calitate":     "quality"}
+                      "Genul": "genre",
+                      "Actori": "actors",
+                      "Director": "director",
+                      "Tara": "Country",
+                      "Durata": "duration",
+                      "Anul": "year",
+                      "Calitate": "quality"}
         
         otherInfo = {}
         for item in descData:
@@ -505,9 +505,9 @@ class FilmeOnlineTo(CBaseHostClass):
             rm(self.COOKIE_FILE)
             self.selectDomain()
 
-        name     = self.currItem.get("name", '')
+        name = self.currItem.get("name", '')
         category = self.currItem.get("category", '')
-        mode     = self.currItem.get("mode", '')
+        mode = self.currItem.get("mode", '')
         
         printDBG("handleService: |||||||||||||||||||||||||||||||||||| name[%s], category[%s] " % (name, category))
         self.currList = []

@@ -39,15 +39,15 @@ class ShahiidAnime(CBaseHostClass):
         self.AJAX_HEADER = dict(self.HEADER)
         self.AJAX_HEADER.update({'X-Requested-With': 'XMLHttpRequest', 'Accept-Encoding':'gzip, deflate', 'Content-Type':'application/x-www-form-urlencoded; charset=UTF-8', 'Accept':'application/json, text/javascript, */*; q=0.01'})
         
-        self.cacheLinks    = {}
-        self.cacheFilters  = {}
+        self.cacheLinks = {}
+        self.cacheFilters = {}
         self.cacheFiltersKeys = []
         self.defaultParams = {'header':self.HEADER, 'raw_post_data':True, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
         
         self.MAIN_CAT_TAB = [
-                             {'category': 'list_filters',          'title': _('Anime list'),          'url': self.getFullUrl('/filter'), },
-                             {'category': 'search',                'title': _('Search'),              'search_item': True, }, 
-                             {'category': 'search_history',        'title': _('Search history'),} 
+                             {'category': 'list_filters', 'title': _('Anime list'), 'url': self.getFullUrl('/filter'), },
+                             {'category': 'search', 'title': _('Search'), 'search_item': True, }, 
+                             {'category': 'search_history', 'title': _('Search history'),} 
                             ]
         
     def getPage(self, baseUrl, addParams={}, post_data=None):
@@ -114,7 +114,7 @@ class ShahiidAnime(CBaseHostClass):
         filter = self.cacheFiltersKeys[f_idx]
         f_idx += 1
         cItem['f_idx'] = f_idx
-        if f_idx  == len(self.cacheFiltersKeys):
+        if f_idx == len(self.cacheFiltersKeys):
             cItem['category'] = nextCategory
         self.listsTab(self.cacheFilters.get(filter, []), cItem)
     
@@ -146,19 +146,19 @@ class ShahiidAnime(CBaseHostClass):
         if not sts:
             return
         
-        nextPage = self.cm.ph.getAllItemsBeetwenNodes(data,  ('<nav ', '>', 'pagination'), ('</nav', '>'), False, numNodes=1)
+        nextPage = self.cm.ph.getAllItemsBeetwenNodes(data, ('<nav ', '>', 'pagination'), ('</nav', '>'), False, numNodes=1)
         if len(nextPage) and ('/page/%s/' % (page + 1)) in nextPage[0]: 
             nextPage = True
         else:
             nextPage = False
         
         splitObj = re.compile('''<div[^>]+?class=['"]online\-block['"][^>]*?>''')
-        data = self.cm.ph.getAllItemsBeetwenNodes(data,  ('<div ', '>', 'online-block'), ('<div', '>', 'clear:'), False)
+        data = self.cm.ph.getAllItemsBeetwenNodes(data, ('<div ', '>', 'online-block'), ('<div', '>', 'clear:'), False)
         for dat in data:
             dat = splitObj.split(dat)
             for item in dat:
-                url   = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''href=['"]([^'^"]+?)['"]''')[0])
-                icon  = self.getFullIconUrl(self.cm.ph.getSearchGroups(item, '''src=['"]([^'^"]+?)['"]''')[0])
+                url = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''href=['"]([^'^"]+?)['"]''')[0])
+                icon = self.getFullIconUrl(self.cm.ph.getSearchGroups(item, '''src=['"]([^'^"]+?)['"]''')[0])
                 title = self.cleanHtmlStr(self.cm.ph.getSearchGroups(item, '''title=['"]([^'^"]+?)['"]''')[0])
                 descTab = []
                 desc = ''
@@ -168,7 +168,7 @@ class ShahiidAnime(CBaseHostClass):
                     if val != '':
                         if '"title' in it or 'title"' in it:
                             continue
-                        elif '"story"'in it:
+                        elif '"story"' in it:
                             desc = val
                         else:
                             descTab.append(val)
@@ -180,7 +180,7 @@ class ShahiidAnime(CBaseHostClass):
         
         if nextPage:
             params = dict(cItem)
-            params.update({'good_for_fav':False, 'title':_("Next page"), 'page':page+1})
+            params.update({'good_for_fav':False, 'title':_("Next page"), 'page':page + 1})
             self.addDir(params)
         
     def exploreItem(self, cItem):
@@ -198,14 +198,14 @@ class ShahiidAnime(CBaseHostClass):
         if not sts:
             return
         
-        nextPage = self.cm.ph.getDataBeetwenNodes(data,  ('<div ', '>', 'pagination'), ('</div', '>'), False)[1]
+        nextPage = self.cm.ph.getDataBeetwenNodes(data, ('<div ', '>', 'pagination'), ('</div', '>'), False)[1]
         if ('/page/%s/' % (page + 1)) in nextPage: 
             nextPage = True
         else:
             nextPage = False
         
         if page == 1:
-            tmp = self.cm.ph.getAllItemsBeetwenNodes(data,  ('<div ', '>', 'imgboxsinpost'), ('</div', '>'), False)
+            tmp = self.cm.ph.getAllItemsBeetwenNodes(data, ('<div ', '>', 'imgboxsinpost'), ('</div', '>'), False)
             for item in tmp:
                 url = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''<iframe[^>]+?src=['"]([^"^']+?)['"]''', 1, True)[0])
                 title = self.cleanHtmlStr(item)
@@ -217,16 +217,16 @@ class ShahiidAnime(CBaseHostClass):
                     params.update({'good_for_fav':True, 'title':title, 'url':url})
                     self.addVideo(params)
         
-        data = self.cm.ph.getAllItemsBeetwenNodes(data,  ('<div ', '>', 'online-block'), ('</a', '>'), False)
+        data = self.cm.ph.getAllItemsBeetwenNodes(data, ('<div ', '>', 'online-block'), ('</a', '>'), False)
         for item in data:
-            url   = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''href=['"]([^'^"]+?)['"]''')[0])
-            icon  = self.getFullIconUrl(self.cm.ph.getSearchGroups(item, '''src=['"]([^'^"]+?)['"]''')[0])
+            url = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''href=['"]([^'^"]+?)['"]''')[0])
+            icon = self.getFullIconUrl(self.cm.ph.getSearchGroups(item, '''src=['"]([^'^"]+?)['"]''')[0])
             try:
-                title = self.cleanHtmlStr(self.cm.ph.getAllItemsBeetwenNodes(item,  ('<div ', '>', 'title-online'), ('</div', '>'), False, numNodes=1)[0])
+                title = self.cleanHtmlStr(self.cm.ph.getAllItemsBeetwenNodes(item, ('<div ', '>', 'title-online'), ('</div', '>'), False, numNodes=1)[0])
             except Exception:
                 continue
             try:
-                title += ' - ' + self.cleanHtmlStr(self.cm.ph.getAllItemsBeetwenNodes(item,  ('<div ', '>', 'numepisode'), ('</div', '>'), False, numNodes=1)[0])
+                title += ' - ' + self.cleanHtmlStr(self.cm.ph.getAllItemsBeetwenNodes(item, ('<div ', '>', 'numepisode'), ('</div', '>'), False, numNodes=1)[0])
             except Exception:
                 pass
             
@@ -236,7 +236,7 @@ class ShahiidAnime(CBaseHostClass):
             
         if nextPage:
             params = dict(cItem)
-            params.update({'good_for_fav':False, 'title':_("Next page"), 'page':page+1})
+            params.update({'good_for_fav':False, 'title':_("Next page"), 'page':page + 1})
             self.addDir(params)
         
     def listSearchResult(self, cItem, searchPattern, searchType):
@@ -264,14 +264,14 @@ class ShahiidAnime(CBaseHostClass):
         if not sts:
             return
         
-        data = self.cm.ph.getAllItemsBeetwenNodes(data,  ('<ul ', '>', 'server-position'), ('</ul', '>'), False)
+        data = self.cm.ph.getAllItemsBeetwenNodes(data, ('<ul ', '>', 'server-position'), ('</ul', '>'), False)
         for dat in data:
-            dat = self.cm.ph.getAllItemsBeetwenMarkers(dat,  '<li', '</li>')
+            dat = self.cm.ph.getAllItemsBeetwenMarkers(dat, '<li', '</li>')
             for item in dat:
-                dataId   = self.cm.ph.getSearchGroups(item, '''\s=['"]([^'^"]+?)['"]''')[0]
+                dataId = self.cm.ph.getSearchGroups(item, '''\s=['"]([^'^"]+?)['"]''')[0]
                 dataType = self.cm.ph.getSearchGroups(item, '''\sdata\-type=['"]([^'^"]+?)['"]''')[0]
                 dataCode = self.cm.ph.getSearchGroups(item, '''\sdata\-code=['"]([^'^"]+?)['"]''')[0]
-                id       = self.cm.ph.getSearchGroups(item, '''\sid=['"]([^'^"]+?)['"]''')[0]
+                id = self.cm.ph.getSearchGroups(item, '''\sid=['"]([^'^"]+?)['"]''')[0]
                 name = self.cleanHtmlStr(item)
                 url = '%s|%s|%s|%s' % (dataId, dataType, dataCode, id)
                 retTab.append({'name':name, 'url':url, 'need_resolve':1})
@@ -295,7 +295,7 @@ class ShahiidAnime(CBaseHostClass):
                             self.cacheLinks[key][idx]['name'] = '*' + self.cacheLinks[key][idx]['name']
                         break
         data = videoUrl.split('|')
-        query = {'action':'play_video', 'code':data[2], 'type':data[1], '_':str(int(time.time()*1000))}
+        query = {'action':'play_video', 'code':data[2], 'type':data[1], '_':str(int(time.time() * 1000))}
         query = urllib.parse.urlencode(query)
         url = self.getFullUrl('?' + query)
         
@@ -363,9 +363,9 @@ class ShahiidAnime(CBaseHostClass):
         
         CBaseHostClass.handleService(self, index, refresh, searchPattern, searchType)
 
-        name     = self.currItem.get("name", '')
+        name = self.currItem.get("name", '')
         category = self.currItem.get("category", '')
-        mode     = self.currItem.get("mode", '')
+        mode = self.currItem.get("mode", '')
         
         printDBG("handleService: |||||||||||||||||||||||||||||||||||| name[%s], category[%s] " % (name, category))
         self.currList = []

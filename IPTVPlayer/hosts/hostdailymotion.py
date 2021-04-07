@@ -45,16 +45,16 @@ class Dailymotion(CBaseHostClass):
         self.SITE_URL = 'https://www.dailymotion.com/'
         self.MAIN_URL = 'https://api.dailymotion.com/'
         self.DEFAULT_ICON_URL = 'http://static1.dmcdn.net/images/dailymotion-logo-ogtag.png'
-        self.MAIN_CAT_TAB = [{'category':'categories',            'title': _('Categories')},
-                             {'category':'search',                'title': _('Search'), 'search_item':True},
-                             {'category':'search_history',        'title': _('Search history')}]
+        self.MAIN_CAT_TAB = [{'category':'categories', 'title': _('Categories')},
+                             {'category':'search', 'title': _('Search'), 'search_item':True},
+                             {'category':'search_history', 'title': _('Search history')}]
 
-        self.SORT_TAB = [{'title':_('Most viewed'),   'sort':'visited'},
-                         {'title':_('Most recent'),   'sort':'recent'},
-                         {'title':_('Most rated'),    'sort':'rated'},
-                         {'title':_('Ranking'),       'sort':'ranking'},
-                         {'title':_('Trending'),      'sort':'trending'},
-                         {'title':_('Random'),        'sort':'random'},]
+        self.SORT_TAB = [{'title':_('Most viewed'), 'sort':'visited'},
+                         {'title':_('Most recent'), 'sort':'recent'},
+                         {'title':_('Most rated'), 'sort':'rated'},
+                         {'title':_('Ranking'), 'sort':'ranking'},
+                         {'title':_('Trending'), 'sort':'trending'},
+                         {'title':_('Random'), 'sort':'random'},]
                          #{'title':_('Most relevant'), 'sort':'relevance'}
                          #recent, visited, visited-hour, visited-today, visited-week, visited-month, commented, commented-hour, commented-today, commented-week, commented-month, rated, rated-hour, rated-today, rated-week, rated-month, relevance, random, ranking, trending, old, live-audience
 
@@ -91,7 +91,7 @@ class Dailymotion(CBaseHostClass):
     def addNextPage(self, cItem, nextPage, page):
         if nextPage:
             params = dict(cItem)
-            params.update({'title':_('Next page'), 'page':page+1})
+            params.update({'title':_('Next page'), 'page':page + 1})
             self.addDir(params)
         
     def listCategories(self, cItem, category):
@@ -127,24 +127,24 @@ class Dailymotion(CBaseHostClass):
         page = cItem.get('page', 1)
         if type in ('videos', 'playlist', 'channel'):
             args = ['thumbnail_ratio=widescreen', 'limit={0}'.format(20), 'fields={0}'.format(urllib.parse.quote('id,mode,title,duration,views_total,created_time,channel,thumbnail_240_url,url,live_publish_url'))]
-            icon_key     = 'thumbnail_240_url'
-            views_key    = 'views_total'
-            title_key    = 'title'
-            url_key      = 'url'
+            icon_key = 'thumbnail_240_url'
+            views_key = 'views_total'
+            title_key = 'title'
+            url_key = 'url'
             duration_key = 'duration'
-            mode_key     = 'mode'
+            mode_key = 'mode'
             if type == 'playlist':
                 type = 'playlist/%s/videos' % cItem['f_xid']
             else:
                 args.insert(0, 'list=what-to-watch')
         elif 'tiles' == type:
             args = ['thumbnail_ratio=widescreen', 'limit={0}'.format(20), 'fields={0}'.format(urllib.parse.quote('video.id,video.mode,video.title,video.duration,video.views_total,created_time,video.channel,video.thumbnail_240_url,video.url,video.live_publish_url'))]
-            icon_key     = 'video.thumbnail_240_url'
-            views_key    = 'video.views_total'
-            title_key    = 'video.title'
-            url_key      = 'video.url'
+            icon_key = 'video.thumbnail_240_url'
+            views_key = 'video.views_total'
+            title_key = 'video.title'
+            url_key = 'video.url'
             duration_key = 'video.duration'
-            mode_key     = 'video.mode'
+            mode_key = 'video.mode'
 
         if 'cat_id' in cItem:
             args.append('channel={0}'.format(cItem['cat_id']))
@@ -174,7 +174,7 @@ class Dailymotion(CBaseHostClass):
         self.addNextPage(cItem, nextPage, page)
 
     def getAuthToken(self):
-        if '' in (self.authData['client_id'], self.authData['client_secret'], self.authData['visitor_id'], self.authData['traffic_segment'], self.authData['url'],  self.authData['auth_url'], self.authData['token']):
+        if '' in (self.authData['client_id'], self.authData['client_secret'], self.authData['visitor_id'], self.authData['traffic_segment'], self.authData['url'], self.authData['auth_url'], self.authData['token']):
             rm(self.COOKIE_FILE)
 
             sts, data = self.cm.getPage(self.SITE_URL, self.defaultParams)
@@ -304,7 +304,7 @@ class Dailymotion(CBaseHostClass):
         
         CBaseHostClass.handleService(self, index, refresh, searchPattern, searchType)
 
-        name     = self.currItem.get("name", '')
+        name = self.currItem.get("name", '')
         category = self.currItem.get("category", '')
         printDBG("handleService: |||||||||||||||||||||||||||||||||||| name[%s], category[%s] " % (name, category))
         self.currList = []
@@ -348,7 +348,7 @@ class IPTVHost(CHostBase):
 
     def getSearchTypes(self):
         searchTypesOptions = []
-        searchTypesOptions.append((_("Videos"),    "videos"))
+        searchTypesOptions.append((_("Videos"), "videos"))
         #searchTypesOptions.append((_("Lives"),     "lives"))
         #searchTypesOptions.append((_("Topics"),    "topics"))
         #searchTypesOptions.append((_("Channels"),  "channels"))

@@ -7,10 +7,10 @@
 ###################################################
 # LOCAL import
 ###################################################
-from Plugins.Extensions.IPTVPlayer.tools.iptvtools           import printDBG, printExc, GetIPTVPlayerVerstion, GetIconDir
+from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, GetIPTVPlayerVerstion, GetIconDir
 from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _, IPTVPlayerNeedInit
-from Plugins.Extensions.IPTVPlayer.components.cover          import Cover3
-from Plugins.Extensions.IPTVPlayer.setup.iptvsetupimpl       import IPTVSetupImpl
+from Plugins.Extensions.IPTVPlayer.components.cover import Cover3
+from Plugins.Extensions.IPTVPlayer.setup.iptvsetupimpl import IPTVSetupImpl
 ###################################################
 
 ###################################################
@@ -38,18 +38,18 @@ class IPTVSetupMainWidget(Screen):
             <widget name="spinner_2" zPosition="1" position="479,200" size="16,16" transparent="1" alphatest="blend" />
             <widget name="spinner_3" zPosition="1" position="495,200" size="16,16" transparent="1" alphatest="blend" />
             <widget name="spinner_4" zPosition="1" position="511,200" size="16,16" transparent="1" alphatest="blend" />
-    </screen>""" %(IPTV_VERSION)
+    </screen>""" % (IPTV_VERSION)
 
     def __init__(self, session, autoStart=False):
         printDBG("IPTVUpdateMainWindow.__init__ -------------------------------")
         Screen.__init__(self, session)
-        self["sub_title"]  = Label(_(" "))
+        self["sub_title"] = Label(_(" "))
         self["info_field"] = Label(_(" "))
         
         self["actions"] = ActionMap(["SetupActions", "ColorActions"],
             {
-                "cancel":  self.cancelPressed,
-                "ok":  self.startPressed,
+                "cancel": self.cancelPressed,
+                "ok": self.startPressed,
             }, -1)
         try:
             for idx in range(5):
@@ -66,11 +66,11 @@ class IPTVSetupMainWidget(Screen):
         self.onShow.append(self.onStart)
         
         #flags
-        self.autoStart          = autoStart
-        self.underCloseMessage  = False
-        self.underClosing       = False
-        self.deferredAction     = None
-        self.started            = False
+        self.autoStart = autoStart
+        self.underCloseMessage = False
+        self.underClosing = False
+        self.deferredAction = None
+        self.started = False
 
         self.setupImpl = IPTVSetupImpl(self.finished, self.chooseQuestion, self.showMessage, self.setInfo)
 
@@ -125,7 +125,7 @@ class IPTVSetupMainWidget(Screen):
         if self.underClosing:
             return
         if self.underCloseMessage:
-            self.deferredAction =  boundFunction(self.doShowMessage, message, type, callback)
+            self.deferredAction = boundFunction(self.doShowMessage, message, type, callback)
         else:
             self.doShowMessage(message, type, callback)
         
@@ -137,7 +137,7 @@ class IPTVSetupMainWidget(Screen):
         if self.underClosing:
             return
         if self.underCloseMessage:
-            self.deferredAction =  boundFunction(self.dochooseQuestion, title, list, callback)
+            self.deferredAction = boundFunction(self.dochooseQuestion, title, list, callback)
         else:
             self.dochooseQuestion(title, list, callback)
         

@@ -43,26 +43,26 @@ class MoovieCC(CBaseHostClass):
         self.AJAX_HEADER = dict(self.HEADER)
         self.AJAX_HEADER.update({'X-Requested-With': 'XMLHttpRequest'})
         self.MAIN_URL = 'https://moovie.cc/'
-        self.cacheLinks    = {}
+        self.cacheLinks = {}
         self.cacheSortOrder = []
         self.defaultParams = {'header':self.HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
     
-        self.MAIN_CAT_TAB = [{'category':'list_movies',       'title': _('Movies')},
-                             {'category':'list_series',       'title': _('Series')},
-                             {'category':'list_main',         'title': 'Legjobbra értékelt',     'tab_id':'now_watched'},
-                             {'category':'list_main',         'title': 'Épp most nézik',         'tab_id':'best_rated'},
-                             {'category': 'search',            'title': _('Search'), 'search_item': True,},
-                             {'category': 'search_history',    'title': _('Search history'),} 
+        self.MAIN_CAT_TAB = [{'category':'list_movies', 'title': _('Movies')},
+                             {'category':'list_series', 'title': _('Series')},
+                             {'category':'list_main', 'title': 'Legjobbra értékelt', 'tab_id':'now_watched'},
+                             {'category':'list_main', 'title': 'Épp most nézik', 'tab_id':'best_rated'},
+                             {'category': 'search', 'title': _('Search'), 'search_item': True,},
+                             {'category': 'search_history', 'title': _('Search history'),} 
                             ]
                             
-        self.MOVIES_CAT_TAB = [{'category':'movies_cats',     'title': _('Categories'),          'url':self.getFullUrl('/online-filmek/')},
-                               {'category':'list_main',       'title': 'Premier filmek',         'tab_id':'prem_movies'},
-                               {'category':'list_main',       'title': 'Népszerű online filmek', 'tab_id':'pop_movies'},
+        self.MOVIES_CAT_TAB = [{'category':'movies_cats', 'title': _('Categories'), 'url':self.getFullUrl('/online-filmek/')},
+                               {'category':'list_main', 'title': 'Premier filmek', 'tab_id':'prem_movies'},
+                               {'category':'list_main', 'title': 'Népszerű online filmek', 'tab_id':'pop_movies'},
                               ]
         
-        self.SERIES_CAT_TAB = [{'category':'series_cats',     'title': _('Categories'),             'url':self.getFullUrl('/online-sorozatok/')},
-                               {'category':'list_main',       'title': 'Népszerű online sorozatok', 'tab_id':'pop_series'},
-                               {'category':'list_main',       'title': 'Új Epizódok',               'tab_id':'new_episodes'},
+        self.SERIES_CAT_TAB = [{'category':'series_cats', 'title': _('Categories'), 'url':self.getFullUrl('/online-sorozatok/')},
+                               {'category':'list_main', 'title': 'Népszerű online sorozatok', 'tab_id':'pop_series'},
+                               {'category':'list_main', 'title': 'Új Epizódok', 'tab_id':'new_episodes'},
                               ]
         
     def getPage(self, baseUrl, addParams={}, post_data=None):
@@ -159,7 +159,7 @@ class MoovieCC(CBaseHostClass):
             inputCache = {}
             cItem['filters'] = []
             for item in tmp:
-                name  = self.cm.ph.getSearchGroups(item, '''name=['"]([^"^']+?)['"]''')[0]
+                name = self.cm.ph.getSearchGroups(item, '''name=['"]([^"^']+?)['"]''')[0]
                 if name == '':
                     continue
                 value = self.cm.ph.getSearchGroups(item, '''value=['"]([^"^']+?)['"]''')[0]
@@ -170,7 +170,7 @@ class MoovieCC(CBaseHostClass):
                 cItem['filters'].append(item)
                 if item in ['sort', 'page']:
                     continue
-                cItem['f_'+item] = inputCache.get(item,  '')
+                cItem['f_' + item] = inputCache.get(item, '')
             tmp = self.cm.ph.getDataBeetwenMarkers(data, '$.ajax(', '});', False)[1]
             cItem['url'] = self.getFullUrl(self.cm.ph.getSearchGroups(tmp, '''['"]?url['"]?\s*:\s*['"]([^'^"]+?)['"]''')[0])
             cItem['f_query'] = self.cm.ph.getSearchGroups(tmp, '''['"]?data['"]?\s*:\s*['"]([^'^"]+?)['"]''')[0]
@@ -178,10 +178,10 @@ class MoovieCC(CBaseHostClass):
         # prepare query
         query = []
         for filter in cItem.get('filters', []):
-            name = 'f_'+filter
+            name = 'f_' + filter
             if name in cItem:
                 value = cItem[name]
-                if not str(value).startswith(filter+':'):
+                if not str(value).startswith(filter + ':'):
                     value = '%s:%s' % (filter, cItem[name])
                 if not value.endswith('|'):
                     value += '|'
@@ -222,7 +222,7 @@ class MoovieCC(CBaseHostClass):
         
         if nextPage and len(self.currList) > 0:
             params = dict(cItem)
-            params.update({'title':_("Next page"), 'f_page':cItem.get('f_page', 1)+1})
+            params.update({'title':_("Next page"), 'f_page':cItem.get('f_page', 1) + 1})
             self.addDir(params)
             
     def _listCategories(self, cItem, nextCategory, m1, m2):
@@ -234,7 +234,7 @@ class MoovieCC(CBaseHostClass):
         data = self.cm.ph.getDataBeetwenMarkers(data, m1, m2)[1]
         data = self.cm.ph.getAllItemsBeetwenMarkers(data, '<div', '</div>')
         for item in data:
-            url   = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''href\s*=\s*['"]([^'^"]+?)['"]''')[0])
+            url = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''href\s*=\s*['"]([^'^"]+?)['"]''')[0])
             title = self.cleanHtmlStr(item)
             params = dict(cItem)
             params.update({'category':nextCategory, 'title':title, 'url':url})
@@ -259,7 +259,7 @@ class MoovieCC(CBaseHostClass):
             for item in data:
                 if not self.cm.ph.getSearchGroups(item, '''href=['"]([^'^"]+?)['"]''')[0].startswith('javascript'):
                     continue
-                sort  = self.cm.ph.getSearchGroups(item, '''id=['"]([^'^"]+?)['"]''')[0]
+                sort = self.cm.ph.getSearchGroups(item, '''id=['"]([^'^"]+?)['"]''')[0]
                 if sort == '':
                     continue
                 title = self.cleanHtmlStr(item)
@@ -311,8 +311,8 @@ class MoovieCC(CBaseHostClass):
             return
         
         desc = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(data, '<div id="plot">', '</div>')[1])
-        icon  = self.cm.ph.getDataBeetwenMarkers(data, '<div id="poster"', '</div>')[1]
-        icon  = self.getFullIconUrl(self.cm.ph.getSearchGroups(icon, '''<img[^>]+?src=['"]([^"^']+?\.jpe?g[^"^']*?)["']''')[0])
+        icon = self.cm.ph.getDataBeetwenMarkers(data, '<div id="poster"', '</div>')[1]
+        icon = self.getFullIconUrl(self.cm.ph.getSearchGroups(icon, '''<img[^>]+?src=['"]([^"^']+?\.jpe?g[^"^']*?)["']''')[0])
         if icon == '':
             icon = cItem.get('icon', '')
         
@@ -321,7 +321,7 @@ class MoovieCC(CBaseHostClass):
         url = self.getFullUrl(self.cm.ph.getSearchGroups(tmp, '''href=['"]([^'^"]+?)['"]''')[0])
         if 1 == self.up.checkHostSupport(url):
             title = self.cleanHtmlStr(tmp)
-            title = '%s - %s' %(cItem['title'], title)
+            title = '%s - %s' % (cItem['title'], title)
             params = dict(cItem)
             params.update({'good_for_fav': False, 'title':title, 'prev_title':cItem['title'], 'url':url, 'prev_url':cItem['url'], 'prev_desc':cItem.get('desc', ''), 'icon':icon, 'desc':desc})
             self.addVideo(params)
@@ -346,7 +346,7 @@ class MoovieCC(CBaseHostClass):
         if mainTitle == '':
             mainTitle = cItem['title']
         
-        self.cacheLinks  = {}
+        self.cacheLinks = {}
         
         if 'seasonList' in data:
             # list seasons
@@ -447,7 +447,7 @@ class MoovieCC(CBaseHostClass):
                 elif '<input name="captcha"' in data:
                     tmp = self.cm.ph.getDataBeetwenMarkers(data, '<content', '</form>')[1]
                     captchaTitle = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(tmp, '<h1', '</h1>')[1])
-                    captchaDesc  = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(tmp, '<p', '</p>')[1])
+                    captchaDesc = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(tmp, '<p', '</p>')[1])
                     
                     # parse form data
                     data = self.cm.ph.getDataBeetwenMarkers(data, '<form', '</form>')[1]
@@ -578,9 +578,9 @@ class MoovieCC(CBaseHostClass):
         
         
         title = self.cleanHtmlStr(self.cm.ph.getSearchGroups(data, '''<meta[^>]+?itemprop="name"[^>]+?content="([^"]+?)"''')[0])
-        icon  = self.cm.ph.getDataBeetwenMarkers(data, '<div id="poster"', '</div>')[1]
-        icon  = self.getFullIconUrl(self.cm.ph.getSearchGroups(icon, '''<img[^>]+?src=['"]([^"^']+?\.jpe?g[^"^']*?)["']''')[0])
-        desc  = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(data, '<div id="plot"', '</div>')[1])
+        icon = self.cm.ph.getDataBeetwenMarkers(data, '<div id="poster"', '</div>')[1]
+        icon = self.getFullIconUrl(self.cm.ph.getSearchGroups(icon, '''<img[^>]+?src=['"]([^"^']+?\.jpe?g[^"^']*?)["']''')[0])
+        desc = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(data, '<div id="plot"', '</div>')[1])
         
         rating = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(data, '<span class="rating_all"', '</div>')[1])
         
@@ -593,7 +593,7 @@ class MoovieCC(CBaseHostClass):
             if len(item) != 2:
                 continue
             marker = self.cleanHtmlStr(item[0])
-            tmp  =  self.cm.ph.getAllItemsBeetwenMarkers(item[1], '<a', '</a>')
+            tmp = self.cm.ph.getAllItemsBeetwenMarkers(item[1], '<a', '</a>')
             value = []
             for t in tmp:
                 t = self.cleanHtmlStr(t)
@@ -626,9 +626,9 @@ class MoovieCC(CBaseHostClass):
         
         CBaseHostClass.handleService(self, index, refresh, searchPattern, searchType)
 
-        name     = self.currItem.get("name", '')
+        name = self.currItem.get("name", '')
         category = self.currItem.get("category", '')
-        mode     = self.currItem.get("mode", '')
+        mode = self.currItem.get("mode", '')
         
         printDBG("handleService: |||||||||||||||||||||||||||||||||||| name[%s], category[%s] " % (name, category))
         self.currList = []

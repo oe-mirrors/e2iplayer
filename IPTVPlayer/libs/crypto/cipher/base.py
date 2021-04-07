@@ -40,8 +40,8 @@ class BlockCipher:
         numBlocks, numExtraBytes = divmod(len(self.bytesToEncrypt), self.blockSize)
         cipherText = ''
         for i in range(numBlocks):
-            bStart = i*self.blockSize
-            ctBlock = self.encryptBlock(self.bytesToEncrypt[bStart:bStart+self.blockSize])
+            bStart = i * self.blockSize
+            ctBlock = self.encryptBlock(self.bytesToEncrypt[bStart:bStart + self.blockSize])
             self.encryptBlockCount += 1
             cipherText += ctBlock
         if numExtraBytes > 0:        # save any bytes that are not block aligned
@@ -64,18 +64,18 @@ class BlockCipher:
 
         numBlocks, numExtraBytes = divmod(len(self.bytesToDecrypt), self.blockSize)
         if more == None:  # no more calls to decrypt, should have all the data
-            if numExtraBytes  != 0:
+            if numExtraBytes != 0:
                 raise DecryptNotBlockAlignedError('Data not block aligned on decrypt')
 
         # hold back some bytes in case last decrypt has zero len
-        if (more != None) and (numExtraBytes == 0) and (numBlocks >0):
+        if (more != None) and (numExtraBytes == 0) and (numBlocks > 0):
             numBlocks -= 1
             numExtraBytes = self.blockSize
 
         plainText = ''
         for i in range(numBlocks):
-            bStart = i*self.blockSize
-            ptBlock = self.decryptBlock(self.bytesToDecrypt[bStart: bStart+self.blockSize])
+            bStart = i * self.blockSize
+            ptBlock = self.decryptBlock(self.bytesToDecrypt[bStart: bStart + self.blockSize])
             self.decryptBlockCount += 1
             plainText += ptBlock
 
@@ -107,11 +107,11 @@ class padWithPadLen(Pad):
             of the block size """
         blocks, numExtraBytes = divmod(len(extraBytes), blockSize)
         padLength = blockSize - numExtraBytes
-        return extraBytes + padLength*chr(padLength)
+        return extraBytes + padLength * chr(padLength)
     
     def removePad(self, paddedBinaryString, blockSize):
         """ Remove padding from a binary string """
-        if not(0<len(paddedBinaryString)):
+        if not(0 < len(paddedBinaryString)):
             raise DecryptNotBlockAlignedError('Expected More Data')
         return paddedBinaryString[:-ord(paddedBinaryString[-1])]
 
@@ -134,7 +134,7 @@ class padWithZeros(Pad):
             of the block size """
         blocks, numExtraBytes = divmod(len(extraBytes), blockSize)
         padLength = blockSize - numExtraBytes
-        return extraBytes + padLength*chr(0x00)
+        return extraBytes + padLength * chr(0x00)
 
     def removePad(self, paddedBinaryString, blockSize):
         """ Remove no padding, you really should, but no way to tell padding size """

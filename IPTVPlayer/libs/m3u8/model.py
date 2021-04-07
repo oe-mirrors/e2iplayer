@@ -80,12 +80,12 @@ class M3U8(object):
 
     simple_attributes = (
         # obj attribute      # parser attribute
-        ('is_variant',       'is_variant'),
-        ('is_endlist',       'is_endlist'),
-        ('target_duration',  'targetduration'),
-        ('media_sequence',   'media_sequence'),
-        ('version',          'version'),
-        ('allow_cache',      'allow_cache'),
+        ('is_variant', 'is_variant'),
+        ('is_endlist', 'is_endlist'),
+        ('target_duration', 'targetduration'),
+        ('media_sequence', 'media_sequence'),
+        ('version', 'version'),
+        ('allow_cache', 'allow_cache'),
         )
 
     def __init__(self, content=None, base_path=None, base_uri=None):
@@ -204,7 +204,7 @@ class BasePathMixin(object):
         proxyUri = 'englandproxy.co.uk'
         if proxyUri in self.base_uri and proxyUri not in uri:
             try:
-                uri = 'http://www.englandproxy.co.uk/' + uri[uri.find('://')+3:]
+                uri = 'http://www.englandproxy.co.uk/' + uri[uri.find('://') + 3:]
             except Exception:
                 pass
         return uri

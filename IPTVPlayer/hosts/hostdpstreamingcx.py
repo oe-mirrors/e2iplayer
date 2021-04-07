@@ -36,10 +36,10 @@ class StreamingSeriesWatch(CBaseHostClass):
         self.HTTP_HEADER = {'User-Agent': self.USER_AGENT, 'Accept': 'text/html'}
         self.MAIN_URL = 'https://www.streaming-series.watch/'
         self.DEFAULT_ICON_URL = 'http://reviewme.co.za/wp-content/uploads/2013/06/lista_series_7327_622x.jpg'
-        self.MAIN_CAT_TAB = [{'category':'list_items',      'title':'Nouveaux Films',   'url':self.getMainUrl()},
-                             {'category':'sort',            'title':'Parcourir',        'url':self.getFullUrl('/parcourir/')},
-                             {'category':'search',          'title': _('Search'), 'search_item':True},
-                             {'category': 'search_history',  'title': _('Search history'),}]
+        self.MAIN_CAT_TAB = [{'category':'list_items', 'title':'Nouveaux Films', 'url':self.getMainUrl()},
+                             {'category':'sort', 'title':'Parcourir', 'url':self.getFullUrl('/parcourir/')},
+                             {'category':'search', 'title': _('Search'), 'search_item':True},
+                             {'category': 'search_history', 'title': _('Search history'),}]
                         
         self.defaultParams = {'header':self.HTTP_HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
         
@@ -73,7 +73,7 @@ class StreamingSeriesWatch(CBaseHostClass):
         data = self.cm.ph.getDataBeetwenNodes(data, ('<ul', '>', 'dropdown'), ('</ul', '>'))[1]
         data = self.cm.ph.getAllItemsBeetwenMarkers(data, '<a', '</a>')
         for item in data:
-            url   = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''href=['"]([^'^"]+?)['"]''')[0])
+            url = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''href=['"]([^'^"]+?)['"]''')[0])
             title = self.cleanHtmlStr(item)
             params = dict(cItem)
             params.update({'category':nextCategory, 'url':url, 'title':title})
@@ -93,8 +93,8 @@ class StreamingSeriesWatch(CBaseHostClass):
         if len(data):
             del data[0]
         for item in data:
-            url   = self.cm.ph.getSearchGroups(item, '''href=['"]([^'^"]+?)['"]''')[0]
-            icon  = self.cm.ph.getSearchGroups(item, '''src=['"]([^'^"]+?)['"]''')[0]
+            url = self.cm.ph.getSearchGroups(item, '''href=['"]([^'^"]+?)['"]''')[0]
+            icon = self.cm.ph.getSearchGroups(item, '''src=['"]([^'^"]+?)['"]''')[0]
             title = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(item, ('<div', '>', 'title'), ('</div', '>'))[1])
             if title == '':
                 title = self.cleanHtmlStr(self.cm.ph.getSearchGroups(item, '''alt=['"]([^'^"]+?)['"]''')[0])
@@ -121,7 +121,7 @@ class StreamingSeriesWatch(CBaseHostClass):
         if not sts:
             return
         
-        descData  = self.cm.ph.getDataBeetwenNodes(data, ('<div', '>', 'video-container'), ('<div', '>', 'clear'))[1]
+        descData = self.cm.ph.getDataBeetwenNodes(data, ('<div', '>', 'video-container'), ('<div', '>', 'clear'))[1]
         desc = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(descData, 'Synopsis', '</p>')[1])
         icon = self.cm.ph.getSearchGroups(descData, '''src=['"]([^'^"]+?)['"]''')[0]
         titleSeason = cItem['title'].split('Saison')[0]
@@ -129,7 +129,7 @@ class StreamingSeriesWatch(CBaseHostClass):
         data = self.cm.ph.getDataBeetwenMarkers(data, 'Episodes', '</div>')[1]
         data = self.cm.ph.getAllItemsBeetwenMarkers(data, '<a', '</a>')
         for item in data:
-            url   = self.cm.ph.getSearchGroups(item, '''href=['"]([^'^"]+?)['"]''')[0]
+            url = self.cm.ph.getSearchGroups(item, '''href=['"]([^'^"]+?)['"]''')[0]
             title = self.cleanHtmlStr(item)
             params = dict(cItem)
             params.update({'good_for_fav': False, 'url':url, 'title':titleSeason + ' s%se%s' % (cItem['season'], title), 'icon':icon, 'desc':desc})
@@ -256,8 +256,8 @@ class StreamingSeriesWatch(CBaseHostClass):
             return []
         
         title = cItem['title']
-        desc  = cItem.get('desc', '')
-        icon  = cItem.get('icon', '')
+        desc = cItem.get('desc', '')
+        icon = cItem.get('icon', '')
         otherInfo = {}
         try:
             data = byteify(json.loads(data))
@@ -270,8 +270,8 @@ class StreamingSeriesWatch(CBaseHostClass):
             for item in data['genre']:
                 genres.append(item['name'])
             otherInfo['genre'] = ', '.join(genres)
-            otherInfo['rating']= data['imdb_rating']
-            otherInfo['year']  = data['year']
+            otherInfo['rating'] = data['imdb_rating']
+            otherInfo['year'] = data['year']
             otherInfo['duration'] = str(datetime.timedelta(seconds=data['runtime']))
         except Exception:
             printExc()
@@ -283,9 +283,9 @@ class StreamingSeriesWatch(CBaseHostClass):
         
         CBaseHostClass.handleService(self, index, refresh, searchPattern, searchType)
 
-        name     = self.currItem.get("name", '')
+        name = self.currItem.get("name", '')
         category = self.currItem.get("category", '')
-        mode     = self.currItem.get("mode", '')
+        mode = self.currItem.get("mode", '')
         
         printDBG("handleService: |||||||||||||||||||||||||||||||||||| name[%s], category[%s] " % (name, category))
         self.currList = []

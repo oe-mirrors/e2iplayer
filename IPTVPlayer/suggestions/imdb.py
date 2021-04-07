@@ -28,7 +28,7 @@ class SuggestionsProvider:
             sts, data = self.cm.getPage(url)
             if sts:
                 retList = []
-                data = data[data.find('(')+1:data.rfind(')')]
+                data = data[data.find('(') + 1:data.rfind(')')]
                 printDBG(data)
                 data = json.loads(data)['d']
                 for item in data:

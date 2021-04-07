@@ -35,9 +35,9 @@ class FilmStreamHD(CBaseHostClass):
         self.HTTP_HEADER = {'User-Agent': self.USER_AGENT, 'DNT':'1', 'Accept': 'text/html', 'Accept-Encoding':'gzip, deflate', 'Referer':self.getMainUrl(), 'Origin':self.getMainUrl()}
         self.defaultParams = {'header':self.HTTP_HEADER, 'with_metadata':True, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
         
-        self.MAIN_CAT_TAB = [{'category':'list_items',     'title': _('HOME'),         'url':self.getMainUrl()},
-                             {'category':'genres',         'title': _('FILM ARCHIVE'), 'url':self.getFullUrl('/film-archivio')},
-                             {'category':'search',         'title': _('Search'), 'search_item':True},
+        self.MAIN_CAT_TAB = [{'category':'list_items', 'title': _('HOME'), 'url':self.getMainUrl()},
+                             {'category':'genres', 'title': _('FILM ARCHIVE'), 'url':self.getFullUrl('/film-archivio')},
+                             {'category':'search', 'title': _('Search'), 'search_item':True},
                              {'category': 'search_history', 'title': _('Search history'), } 
                             ]
 
@@ -73,7 +73,7 @@ class FilmStreamHD(CBaseHostClass):
         data = self.cm.ph.getDataBeetwenMarkers(data, m1, '</ul>', False)[1]
         data = self.cm.ph.getAllItemsBeetwenMarkers(data, '<a', '</a>')
         for item in data:
-            url   = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''href=['"]([^"^']+?)['"]''')[0])
+            url = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''href=['"]([^"^']+?)['"]''')[0])
             title = self.cleanHtmlStr(item)
             if title == '':
                 title = self.cleanHtmlStr(self.cm.ph.getSearchGroups(item, '''title=['"]([^"^']+?)['"]''')[0])
@@ -96,8 +96,8 @@ class FilmStreamHD(CBaseHostClass):
         for dataItem in data:
             dataItem = self.cm.ph.rgetAllItemsBeetwenNodes(dataItem, ('</div', '>'), ('<div', '>', 'preview'))
             for item in dataItem:
-                icon  = self.getFullIconUrl(self.cm.ph.getSearchGroups(item, '''src=['"]([^"^']+?)['"]''')[0])
-                url   = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''href=['"]([^"^']+?)['"]''')[0])
+                icon = self.getFullIconUrl(self.cm.ph.getSearchGroups(item, '''src=['"]([^"^']+?)['"]''')[0])
+                url = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''href=['"]([^"^']+?)['"]''')[0])
                 title = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(item, ('<span', '>', 'movie-title'), ('</span', '>'), False)[1])
                 
                 desc = []
@@ -126,7 +126,7 @@ class FilmStreamHD(CBaseHostClass):
         
         if nextPage:
             params = dict(cItem)
-            params.update({'good_for_fav':False, 'title':_('Next page'), 'url':nextPage, 'page':cItem.get('page', 1)+1})
+            params.update({'good_for_fav':False, 'title':_('Next page'), 'url':nextPage, 'page':cItem.get('page', 1) + 1})
             self.addDir(params)
         
     def listSearchResult(self, cItem, searchPattern, searchType):
@@ -178,15 +178,15 @@ class FilmStreamHD(CBaseHostClass):
             if len(tmp):
                 key = self.cleanHtmlStr(tmp[1])
                 val = self.cleanHtmlStr(tmp[0])
-                itemsList.append((key+':', val))
+                itemsList.append((key + ':', val))
         
         tmp = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(data, ('<div', '>', 'release'), ('</div', '>'), False)[1].replace('(', ''))
         if tmp != '':
-            itemsList.append((_('Release:'),  tmp[:-1]))
+            itemsList.append((_('Release:'), tmp[:-1]))
         
         tmp = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(data, ('<div', '>', 'categories'), ('</div', '>'), False)[1].replace('</a>', ', ').replace(' , ', ', '))
         if tmp != '':
-            itemsList.append((_('Categories:'),  tmp[:-1]))
+            itemsList.append((_('Categories:'), tmp[:-1]))
         
         for m in ['director', 'actor']:
             tmp = self.cm.ph.getDataBeetwenNodes(data, ('<div', '>', m), ('</div', '>'), False)[1].split('</h4>', 1)
@@ -209,7 +209,7 @@ class FilmStreamHD(CBaseHostClass):
         
         CBaseHostClass.handleService(self, index, refresh, searchPattern, searchType)
 
-        name     = self.currItem.get("name", '')
+        name = self.currItem.get("name", '')
         category = self.currItem.get("category", '')
         printDBG("handleService: |||||||||||||||||||||||||||||||||||| name[%s], category[%s] " % (name, category))
         self.currList = []

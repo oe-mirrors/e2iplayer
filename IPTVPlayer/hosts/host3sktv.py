@@ -80,7 +80,7 @@ class C3skTv(CBaseHostClass):
                 params = dict(cItem)
                 params.update({'good_for_fav':False, 'category':nextCategory, 'title':title, 'url':url})
                 self.addDir(params)
-        MAIN_CAT_TAB = [{'category':'search',         'title': _('Search'),       'search_item':True},
+        MAIN_CAT_TAB = [{'category':'search', 'title': _('Search'), 'search_item':True},
                         {'category': 'search_history', 'title': _('Search history'),}]
         self.listsTab(MAIN_CAT_TAB, cItem)
 
@@ -113,7 +113,7 @@ class C3skTv(CBaseHostClass):
                 continue
             icon = self.getFullIconUrl(self.cm.ph.getSearchGroups(item, '''\ssrc=['"]([^'^"]+?)['"]''')[0], currentUrl)
             title = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(item, '<a', '</a>')[1])
-            desc  = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(item, '<p', '</p>')[1])
+            desc = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(item, '<p', '</p>')[1])
             
             params = dict(cItem)
             params.update({'good_for_fav':True, 'category':nextCategory, 'title':title, 'url':url, 'icon':icon, 'desc':desc})
@@ -202,7 +202,7 @@ class C3skTv(CBaseHostClass):
                 url = self.getFullUrl(self.cm.ph.getSearchGroups(data[idx], '''\ssrc=['"]([^"^']+?)['"]''', 1, True)[0], currentUrl)
                 if url == '':
                     continue
-                name = str(idx+1)
+                name = str(idx + 1)
                 name = 'الجزء ' + nameMap.get(name, name)
                 urlTab.append({'url':url, 'name':name, 'need_resolve':1})
         
@@ -242,7 +242,7 @@ class C3skTv(CBaseHostClass):
             tmp = ph.find(data, ')(', ');', flags=0)[1]
             try:
                 tmp = json_loads(tmp)
-                url = tmp['protocol'] + '://' + tmp['uds'] + '/' +  tmp['loaderPath']
+                url = tmp['protocol'] + '://' + tmp['uds'] + '/' + tmp['loaderPath']
                 url += '?autoload=%7B%22modules%22%3A%5B%7B%22name%22%3A%22search%22%2C%22version%22%3A%221.0%22%2C%22callback%22%3A%22__gcse.scb%22%2C%22style%22%3A%22http%3A%2F%2Fwww.google.com%2Fcse%2Fstatic%2Fstyle%2Flook%2Fv2%2Fdefault.css%22%2C%22language%22%3A%22'
                 url += tmp['language'] + '%22%7D%5D%7D'
                 lang = tmp['language']
@@ -261,13 +261,13 @@ class C3skTv(CBaseHostClass):
             baseUrl = cItem['url']
 
         try:
-            url = baseUrl.format(str(page*10))
+            url = baseUrl.format(str(page * 10))
             sts, data = self.getPage(url)
             if not sts:
                 return
 
             data = data.strip()
-            data = json_loads(data[data.find(marker) + len(marker)+1:-2])
+            data = json_loads(data[data.find(marker) + len(marker) + 1:-2])
             for item in data['results']:
                 url = item['unescapedUrl']
 
@@ -283,7 +283,7 @@ class C3skTv(CBaseHostClass):
 
                 self.addDir(MergeDicts(cItem, {'good_for_fav':True, 'category':nextCategory, 'title':title, 'url':url, 'desc':desc}))
             page += 1
-            if page*10 < int(data['cursor']['resultCount']):
+            if page * 10 < int(data['cursor']['resultCount']):
                 self.addDir(MergeDicts(cItem, {'good_for_fav':False, 'title':_('Next page'), 'url':baseUrl, 'page':page}))
         except Exception:
             printExc()
@@ -296,9 +296,9 @@ class C3skTv(CBaseHostClass):
             rm(self.COOKIE_FILE)
             self.selectDomain()
 
-        name     = self.currItem.get("name", '')
+        name = self.currItem.get("name", '')
         category = self.currItem.get("category", '')
-        mode     = self.currItem.get("mode", '')
+        mode = self.currItem.get("mode", '')
         
         printDBG("handleService: |||||||||||||||||||||||||||||||||||| name[%s], category[%s] " % (name, category))
         self.currList = []

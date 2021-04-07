@@ -19,17 +19,17 @@ from .base import BlockCipher, padWithPadLen, noPadding
 class Rijndael(BlockCipher):
     """ Rijndael encryption algorithm """
     def __init__(self, key=None, padding=padWithPadLen(), keySize=16, blockSize=16):
-        self.name       = 'RIJNDAEL'
-        self.keySize    = keySize
-        self.strength   = keySize*8
-        self.blockSize  = blockSize  # blockSize is in bytes
-        self.padding    = padding    # change default to noPadding() to get normal ECB behavior
+        self.name = 'RIJNDAEL'
+        self.keySize = keySize
+        self.strength = keySize * 8
+        self.blockSize = blockSize  # blockSize is in bytes
+        self.padding = padding    # change default to noPadding() to get normal ECB behavior
 
-        assert(keySize%4==0 and keySize/4 in NrTable[4]), 'key size must be 16,20,24,29 or 32 bytes'
-        assert(blockSize%4==0 and blockSize/4 in NrTable), 'block size must be 16,20,24,29 or 32 bytes'
+        assert(keySize % 4 == 0 and keySize / 4 in NrTable[4]), 'key size must be 16,20,24,29 or 32 bytes'
+        assert(blockSize % 4 == 0 and blockSize / 4 in NrTable), 'block size must be 16,20,24,29 or 32 bytes'
 
-        self.Nb = self.blockSize/4          # Nb is number of columns of 32 bit words
-        self.Nk = keySize/4                 # Nk is the key length in 32-bit words
+        self.Nb = self.blockSize / 4          # Nb is number of columns of 32 bit words
+        self.Nk = keySize / 4                 # Nk is the key length in 32-bit words
         self.Nr = NrTable[self.Nb][self.Nk] # The number of rounds (Nr) is a function of
                                             # the block (Nb) and key (Nk) sizes.
         if key != None:
@@ -37,7 +37,7 @@ class Rijndael(BlockCipher):
 
     def setKey(self, key):
         """ Set a key and generate the expanded key """
-        assert(len(key) == (self.Nk*4)), 'Key length must be same as keySize parameter'
+        assert(len(key) == (self.Nk * 4)), 'Key length must be same as keySize parameter'
         self.__expandedKey = keyExpansion(self, key)
         self.reset()                   # BlockCipher.reset()
 
@@ -49,21 +49,21 @@ class Rijndael(BlockCipher):
             SubBytes(self)
             ShiftRows(self)
             MixColumns(self)
-            AddRoundKey(self, self.__expandedKey[round*self.Nb:(round+1)*self.Nb])
+            AddRoundKey(self, self.__expandedKey[round * self.Nb:(round + 1) * self.Nb])
         SubBytes(self)
         ShiftRows(self)
-        AddRoundKey(self, self.__expandedKey[self.Nr*self.Nb:(self.Nr+1)*self.Nb])
+        AddRoundKey(self, self.__expandedKey[self.Nr * self.Nb:(self.Nr + 1) * self.Nb])
         return self._toBString(self.state)
 
 
     def decryptBlock(self, encryptedBlock):
         """ decrypt a block (array of bytes) """
         self.state = self._toBlock(encryptedBlock)
-        AddRoundKey(self, self.__expandedKey[self.Nr*self.Nb:(self.Nr+1)*self.Nb])
-        for round in range(self.Nr-1, 0, -1):
+        AddRoundKey(self, self.__expandedKey[self.Nr * self.Nb:(self.Nr + 1) * self.Nb])
+        for round in range(self.Nr - 1, 0, -1):
             InvShiftRows(self)
             InvSubBytes(self)
-            AddRoundKey(self, self.__expandedKey[round*self.Nb:(round+1)*self.Nb])
+            AddRoundKey(self, self.__expandedKey[round * self.Nb:(round + 1) * self.Nb])
             InvMixColumns(self)
         InvShiftRows(self)
         InvSubBytes(self)
@@ -72,8 +72,8 @@ class Rijndael(BlockCipher):
 
     def _toBlock(self, bs):
         """ Convert binary string to array of bytes, state[col][row]"""
-        assert (len(bs) == 4*self.Nb), 'Rijndarl blocks must be of size blockSize'
-        return [[ord(bs[4*i]), ord(bs[4*i+1]), ord(bs[4*i+2]), ord(bs[4*i+3])] for i in range(self.Nb)]
+        assert (len(bs) == 4 * self.Nb), 'Rijndarl blocks must be of size blockSize'
+        return [[ord(bs[4 * i]), ord(bs[4 * i + 1]), ord(bs[4 * i + 2]), ord(bs[4 * i + 3])] for i in range(self.Nb)]
 
     def _toBString(self, block):
         """ Convert block (array of bytes) to binary string """
@@ -87,26 +87,26 @@ class Rijndael(BlockCipher):
 
             Nb  Nk=4   Nk=5   Nk=6   Nk=7   Nk=8
             -------------------------------------   """
-NrTable =  {4: {4:10,  5:11,  6:12,  7:13,  8:14},
-            5: {4:11,  5:11,  6:12,  7:13,  8:14},
-            6: {4:12,  5:12,  6:12,  7:13,  8:14},
-            7: {4:13,  5:13,  6:13,  7:13,  8:14},
-            8: {4:14,  5:14,  6:14,  7:14,  8:14}}
+NrTable = {4: {4:10, 5:11, 6:12, 7:13, 8:14},
+            5: {4:11, 5:11, 6:12, 7:13, 8:14},
+            6: {4:12, 5:12, 6:12, 7:13, 8:14},
+            7: {4:13, 5:13, 6:13, 7:13, 8:14},
+            8: {4:14, 5:14, 6:14, 7:14, 8:14}}
 #-------------------------------------
 def keyExpansion(algInstance, keyString):
     """ Expand a string of size keySize into a larger array """
     Nk, Nb, Nr = algInstance.Nk, algInstance.Nb, algInstance.Nr # for readability
     key = [ord(byte) for byte in keyString]  # convert string to list
-    w = [[key[4*i], key[4*i+1], key[4*i+2], key[4*i+3]] for i in range(Nk)]
-    for i in range(Nk, Nb*(Nr+1)):
-        temp = w[i-1]        # a four byte column
-        if (i%Nk) == 0:
-            temp     = temp[1:]+[temp[0]]  # RotWord(temp)
-            temp     = [Sbox[byte] for byte in temp]
-            temp[0] ^= Rcon[i/Nk]
-        elif Nk > 6 and  i%Nk == 4:
-            temp     = [Sbox[byte] for byte in temp]  # SubWord(temp)
-        w.append([w[i-Nk][byte]^temp[byte] for byte in range(4)])
+    w = [[key[4 * i], key[4 * i + 1], key[4 * i + 2], key[4 * i + 3]] for i in range(Nk)]
+    for i in range(Nk, Nb * (Nr + 1)):
+        temp = w[i - 1]        # a four byte column
+        if (i % Nk) == 0:
+            temp = temp[1:] + [temp[0]]  # RotWord(temp)
+            temp = [Sbox[byte] for byte in temp]
+            temp[0] ^= Rcon[i / Nk]
+        elif Nk > 6 and i % Nk == 4:
+            temp = [Sbox[byte] for byte in temp]  # SubWord(temp)
+        w.append([w[i - Nk][byte] ^ temp[byte] for byte in range(4)])
     return w
 
 Rcon = (0, 0x01, 0x02, 0x04, 0x08, 0x10, 0x20, 0x40, 0x80, 0x1b, 0x36,     # note extra '0' !!!
@@ -131,7 +131,7 @@ def InvSubBytes(algInstance):
         for row in range(4):
             algInstance.state[column][row] = InvSbox[algInstance.state[column][row]]
 
-Sbox =    (0x63, 0x7c, 0x77, 0x7b, 0xf2, 0x6b, 0x6f, 0xc5,
+Sbox = (0x63, 0x7c, 0x77, 0x7b, 0xf2, 0x6b, 0x6f, 0xc5,
            0x30, 0x01, 0x67, 0x2b, 0xfe, 0xd7, 0xab, 0x76,
            0xca, 0x82, 0xc9, 0x7d, 0xfa, 0x59, 0x47, 0xf0,
            0xad, 0xd4, 0xa2, 0xaf, 0x9c, 0xa4, 0x72, 0xc0,
@@ -202,33 +202,33 @@ InvSbox = (0x52, 0x09, 0x6a, 0xd5, 0x30, 0x36, 0xa5, 0x38,
     by the amount Ci.  Note that row 0 is not shifted.
                  Nb      C1 C2 C3
                -------------------  """
-shiftOffset  = {4: (0, 1, 2, 3),
+shiftOffset = {4: (0, 1, 2, 3),
                  5: (0, 1, 2, 3),
                  6: (0, 1, 2, 3),
                  7: (0, 1, 2, 4),
                  8: (0, 1, 3, 4)}
 def ShiftRows(algInstance):
-    tmp = [0]*algInstance.Nb   # list of size Nb
+    tmp = [0] * algInstance.Nb   # list of size Nb
     for r in range(1, 4):       # row 0 reamains unchanged and can be skipped
         for c in range(algInstance.Nb):
-            tmp[c] = algInstance.state[(c+shiftOffset[algInstance.Nb][r]) % algInstance.Nb][r]
+            tmp[c] = algInstance.state[(c + shiftOffset[algInstance.Nb][r]) % algInstance.Nb][r]
         for c in range(algInstance.Nb):
             algInstance.state[c][r] = tmp[c]
 def InvShiftRows(algInstance):
-    tmp = [0]*algInstance.Nb   # list of size Nb
+    tmp = [0] * algInstance.Nb   # list of size Nb
     for r in range(1, 4):       # row 0 reamains unchanged and can be skipped
         for c in range(algInstance.Nb):
-            tmp[c] = algInstance.state[(c+algInstance.Nb-shiftOffset[algInstance.Nb][r]) % algInstance.Nb][r]
+            tmp[c] = algInstance.state[(c + algInstance.Nb - shiftOffset[algInstance.Nb][r]) % algInstance.Nb][r]
         for c in range(algInstance.Nb):
             algInstance.state[c][r] = tmp[c]
 #-------------------------------------
 def MixColumns(a):
     Sprime = [0, 0, 0, 0]
     for j in range(a.Nb):    # for each column
-        Sprime[0] = mul(2, a.state[j][0])^mul(3, a.state[j][1])^mul(1, a.state[j][2])^mul(1, a.state[j][3])
-        Sprime[1] = mul(1, a.state[j][0])^mul(2, a.state[j][1])^mul(3, a.state[j][2])^mul(1, a.state[j][3])
-        Sprime[2] = mul(1, a.state[j][0])^mul(1, a.state[j][1])^mul(2, a.state[j][2])^mul(3, a.state[j][3])
-        Sprime[3] = mul(3, a.state[j][0])^mul(1, a.state[j][1])^mul(1, a.state[j][2])^mul(2, a.state[j][3])
+        Sprime[0] = mul(2, a.state[j][0]) ^ mul(3, a.state[j][1]) ^ mul(1, a.state[j][2]) ^ mul(1, a.state[j][3])
+        Sprime[1] = mul(1, a.state[j][0]) ^ mul(2, a.state[j][1]) ^ mul(3, a.state[j][2]) ^ mul(1, a.state[j][3])
+        Sprime[2] = mul(1, a.state[j][0]) ^ mul(1, a.state[j][1]) ^ mul(2, a.state[j][2]) ^ mul(3, a.state[j][3])
+        Sprime[3] = mul(3, a.state[j][0]) ^ mul(1, a.state[j][1]) ^ mul(1, a.state[j][2]) ^ mul(2, a.state[j][3])
         for i in range(4):
             a.state[j][i] = Sprime[i]
 
@@ -237,10 +237,10 @@ def InvMixColumns(a):
         This is the opposite operation of Mixcolumn """
     Sprime = [0, 0, 0, 0]
     for j in range(a.Nb):    # for each column
-        Sprime[0] = mul(0x0E, a.state[j][0])^mul(0x0B, a.state[j][1])^mul(0x0D, a.state[j][2])^mul(0x09, a.state[j][3])
-        Sprime[1] = mul(0x09, a.state[j][0])^mul(0x0E, a.state[j][1])^mul(0x0B, a.state[j][2])^mul(0x0D, a.state[j][3])
-        Sprime[2] = mul(0x0D, a.state[j][0])^mul(0x09, a.state[j][1])^mul(0x0E, a.state[j][2])^mul(0x0B, a.state[j][3])
-        Sprime[3] = mul(0x0B, a.state[j][0])^mul(0x0D, a.state[j][1])^mul(0x09, a.state[j][2])^mul(0x0E, a.state[j][3])
+        Sprime[0] = mul(0x0E, a.state[j][0]) ^ mul(0x0B, a.state[j][1]) ^ mul(0x0D, a.state[j][2]) ^ mul(0x09, a.state[j][3])
+        Sprime[1] = mul(0x09, a.state[j][0]) ^ mul(0x0E, a.state[j][1]) ^ mul(0x0B, a.state[j][2]) ^ mul(0x0D, a.state[j][3])
+        Sprime[2] = mul(0x0D, a.state[j][0]) ^ mul(0x09, a.state[j][1]) ^ mul(0x0E, a.state[j][2]) ^ mul(0x0B, a.state[j][3])
+        Sprime[3] = mul(0x0B, a.state[j][0]) ^ mul(0x0D, a.state[j][1]) ^ mul(0x09, a.state[j][2]) ^ mul(0x0E, a.state[j][3])
         for i in range(4):
             a.state[j][i] = Sprime[i]
 
@@ -248,43 +248,43 @@ def InvMixColumns(a):
 def mul(a, b):
     """ Multiply two elements of GF(2^m)
         needed for MixColumn and InvMixColumn """
-    if (a !=0 and  b!=0):
-        return Alogtable[(Logtable[a] + Logtable[b])%255]
+    if (a != 0 and b != 0):
+        return Alogtable[(Logtable[a] + Logtable[b]) % 255]
     else:
         return 0
 
-Logtable = (0,   0,  25,   1,  50,   2,  26, 198,  75, 199,  27, 104,  51, 238, 223,   3,
-           100,   4, 224,  14,  52, 141, 129, 239,  76, 113,   8, 200, 248, 105,  28, 193,
-           125, 194,  29, 181, 249, 185,  39, 106,  77, 228, 166, 114, 154, 201,   9, 120,
-           101,  47, 138,   5,  33,  15, 225,  36,  18, 240, 130,  69,  53, 147, 218, 142,
-           150, 143, 219, 189,  54, 208, 206, 148,  19,  92, 210, 241,  64,  70, 131,  56,
-           102, 221, 253,  48, 191,   6, 139,  98, 179,  37, 226, 152,  34, 136, 145,  16,
-           126, 110,  72, 195, 163, 182,  30,  66,  58, 107,  40,  84, 250, 133,  61, 186,
-            43, 121,  10,  21, 155, 159,  94, 202,  78, 212, 172, 229, 243, 115, 167,  87,
-           175,  88, 168,  80, 244, 234, 214, 116,  79, 174, 233, 213, 231, 230, 173, 232,
-            44, 215, 117, 122, 235,  22,  11, 245,  89, 203,  95, 176, 156, 169,  81, 160,
-           127,  12, 246, 111,  23, 196,  73, 236, 216,  67,  31,  45, 164, 118, 123, 183,
-           204, 187,  62,  90, 251,  96, 177, 134,  59,  82, 161, 108, 170,  85,  41, 157,
-           151, 178, 135, 144,  97, 190, 220, 252, 188, 149, 207, 205,  55,  63,  91, 209,
-            83,  57, 132,  60,  65, 162, 109,  71,  20,  42, 158,  93,  86, 242, 211, 171,
-            68,  17, 146, 217,  35,  32,  46, 137, 180, 124, 184,  38, 119, 153, 227, 165,
-           103,  74, 237, 222, 197,  49, 254,  24,  13,  99, 140, 128, 192, 247, 112,   7)
+Logtable = (0, 0, 25, 1, 50, 2, 26, 198, 75, 199, 27, 104, 51, 238, 223, 3,
+           100, 4, 224, 14, 52, 141, 129, 239, 76, 113, 8, 200, 248, 105, 28, 193,
+           125, 194, 29, 181, 249, 185, 39, 106, 77, 228, 166, 114, 154, 201, 9, 120,
+           101, 47, 138, 5, 33, 15, 225, 36, 18, 240, 130, 69, 53, 147, 218, 142,
+           150, 143, 219, 189, 54, 208, 206, 148, 19, 92, 210, 241, 64, 70, 131, 56,
+           102, 221, 253, 48, 191, 6, 139, 98, 179, 37, 226, 152, 34, 136, 145, 16,
+           126, 110, 72, 195, 163, 182, 30, 66, 58, 107, 40, 84, 250, 133, 61, 186,
+            43, 121, 10, 21, 155, 159, 94, 202, 78, 212, 172, 229, 243, 115, 167, 87,
+           175, 88, 168, 80, 244, 234, 214, 116, 79, 174, 233, 213, 231, 230, 173, 232,
+            44, 215, 117, 122, 235, 22, 11, 245, 89, 203, 95, 176, 156, 169, 81, 160,
+           127, 12, 246, 111, 23, 196, 73, 236, 216, 67, 31, 45, 164, 118, 123, 183,
+           204, 187, 62, 90, 251, 96, 177, 134, 59, 82, 161, 108, 170, 85, 41, 157,
+           151, 178, 135, 144, 97, 190, 220, 252, 188, 149, 207, 205, 55, 63, 91, 209,
+            83, 57, 132, 60, 65, 162, 109, 71, 20, 42, 158, 93, 86, 242, 211, 171,
+            68, 17, 146, 217, 35, 32, 46, 137, 180, 124, 184, 38, 119, 153, 227, 165,
+           103, 74, 237, 222, 197, 49, 254, 24, 13, 99, 140, 128, 192, 247, 112, 7)
 
-Alogtable= (1,   3,   5,  15,  17,  51,  85, 255,  26,  46, 114, 150, 161, 248,  19,  53,
-            95, 225,  56,  72, 216, 115, 149, 164, 247,   2,   6,  10,  30,  34, 102, 170,
-           229,  52,  92, 228,  55,  89, 235,  38, 106, 190, 217, 112, 144, 171, 230,  49,
-            83, 245,   4,  12,  20,  60,  68, 204,  79, 209, 104, 184, 211, 110, 178, 205,
-            76, 212, 103, 169, 224,  59,  77, 215,  98, 166, 241,   8,  24,  40, 120, 136,
-           131, 158, 185, 208, 107, 189, 220, 127, 129, 152, 179, 206,  73, 219, 118, 154,
-           181, 196,  87, 249,  16,  48,  80, 240,  11,  29,  39, 105, 187, 214,  97, 163,
-           254,  25,  43, 125, 135, 146, 173, 236,  47, 113, 147, 174, 233,  32,  96, 160,
-           251,  22,  58,  78, 210, 109, 183, 194,  93, 231,  50,  86, 250,  21,  63,  65,
-           195,  94, 226,  61,  71, 201,  64, 192,  91, 237,  44, 116, 156, 191, 218, 117,
-           159, 186, 213, 100, 172, 239,  42, 126, 130, 157, 188, 223, 122, 142, 137, 128,
-           155, 182, 193,  88, 232,  35, 101, 175, 234,  37, 111, 177, 200,  67, 197,  84,
-           252,  31,  33,  99, 165, 244,   7,   9,  27,  45, 119, 153, 176, 203,  70, 202,
-            69, 207,  74, 222, 121, 139, 134, 145, 168, 227,  62,  66, 198,  81, 243,  14,
-            18,  54,  90, 238,  41, 123, 141, 140, 143, 138, 133, 148, 167, 242,  13,  23,
-            57,  75, 221, 124, 132, 151, 162, 253,  28,  36, 108, 180, 199,  82, 246,   1)
+Alogtable = (1, 3, 5, 15, 17, 51, 85, 255, 26, 46, 114, 150, 161, 248, 19, 53,
+            95, 225, 56, 72, 216, 115, 149, 164, 247, 2, 6, 10, 30, 34, 102, 170,
+           229, 52, 92, 228, 55, 89, 235, 38, 106, 190, 217, 112, 144, 171, 230, 49,
+            83, 245, 4, 12, 20, 60, 68, 204, 79, 209, 104, 184, 211, 110, 178, 205,
+            76, 212, 103, 169, 224, 59, 77, 215, 98, 166, 241, 8, 24, 40, 120, 136,
+           131, 158, 185, 208, 107, 189, 220, 127, 129, 152, 179, 206, 73, 219, 118, 154,
+           181, 196, 87, 249, 16, 48, 80, 240, 11, 29, 39, 105, 187, 214, 97, 163,
+           254, 25, 43, 125, 135, 146, 173, 236, 47, 113, 147, 174, 233, 32, 96, 160,
+           251, 22, 58, 78, 210, 109, 183, 194, 93, 231, 50, 86, 250, 21, 63, 65,
+           195, 94, 226, 61, 71, 201, 64, 192, 91, 237, 44, 116, 156, 191, 218, 117,
+           159, 186, 213, 100, 172, 239, 42, 126, 130, 157, 188, 223, 122, 142, 137, 128,
+           155, 182, 193, 88, 232, 35, 101, 175, 234, 37, 111, 177, 200, 67, 197, 84,
+           252, 31, 33, 99, 165, 244, 7, 9, 27, 45, 119, 153, 176, 203, 70, 202,
+            69, 207, 74, 222, 121, 139, 134, 145, 168, 227, 62, 66, 198, 81, 243, 14,
+            18, 54, 90, 238, 41, 123, 141, 140, 143, 138, 133, 148, 167, 242, 13, 23,
+            57, 75, 221, 124, 132, 151, 162, 253, 28, 36, 108, 180, 199, 82, 246, 1)
 
 

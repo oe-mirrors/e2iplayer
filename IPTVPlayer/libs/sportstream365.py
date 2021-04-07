@@ -49,7 +49,7 @@ class SportStream365Api(CBaseHostClass):
         if seconds > 0:
             GMTOffset = '+' + str(timedelta(seconds=seconds))
         elif seconds < 0:
-            GMTOffset = '-' + str(timedelta(seconds=seconds*-1))
+            GMTOffset = '-' + str(timedelta(seconds=seconds * -1))
         else:
             GMTOffset = ''
 
@@ -122,7 +122,7 @@ class SportStream365Api(CBaseHostClass):
             try:
                 from Plugins.Extensions.IPTVPlayer.libs import websocket
                 
-                lang  = self.defaultParams['cookie_items']['lng']
+                lang = self.defaultParams['cookie_items']['lng']
                 for i in range(3):
                     url = self.getFullUrl('/signcon/negotiate')
                     sts, data = self.cm.getPage(url, MergeDicts(self.defaultParams, {'header':self.AJAX_HEADER, 'raw_post_data':True}), post_data='')

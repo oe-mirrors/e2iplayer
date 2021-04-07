@@ -10,19 +10,19 @@
 ###################################################
 from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, IsExecutable
 from Plugins.Extensions.IPTVPlayer.tools.iptvtypes import strwithmeta
-from Plugins.Extensions.IPTVPlayer.libs.urlparser  import urlparser
-from Plugins.Extensions.IPTVPlayer.iptvdm.wgetdownloader    import WgetDownloader
-from Plugins.Extensions.IPTVPlayer.iptvdm.pwgetdownloader   import PwgetDownloader
+from Plugins.Extensions.IPTVPlayer.libs.urlparser import urlparser
+from Plugins.Extensions.IPTVPlayer.iptvdm.wgetdownloader import WgetDownloader
+from Plugins.Extensions.IPTVPlayer.iptvdm.pwgetdownloader import PwgetDownloader
 from Plugins.Extensions.IPTVPlayer.iptvdm.busyboxdownloader import BuxyboxWgetDownloader
-from Plugins.Extensions.IPTVPlayer.iptvdm.m3u8downloader    import M3U8Downloader
-from Plugins.Extensions.IPTVPlayer.iptvdm.em3u8downloader   import EM3U8Downloader
-from Plugins.Extensions.IPTVPlayer.iptvdm.hlsdownloader     import HLSDownloader
-from Plugins.Extensions.IPTVPlayer.iptvdm.ehlsdownloader    import EHLSDownloader
-from Plugins.Extensions.IPTVPlayer.iptvdm.rtmpdownloader    import RtmpDownloader
-from Plugins.Extensions.IPTVPlayer.iptvdm.f4mdownloader     import F4mDownloader
-from Plugins.Extensions.IPTVPlayer.iptvdm.mergedownloader   import MergeDownloader
-from Plugins.Extensions.IPTVPlayer.iptvdm.ffmpegdownloader  import FFMPEGDownloader
-from Plugins.Extensions.IPTVPlayer.iptvdm.iptvdh            import DMHelper
+from Plugins.Extensions.IPTVPlayer.iptvdm.m3u8downloader import M3U8Downloader
+from Plugins.Extensions.IPTVPlayer.iptvdm.em3u8downloader import EM3U8Downloader
+from Plugins.Extensions.IPTVPlayer.iptvdm.hlsdownloader import HLSDownloader
+from Plugins.Extensions.IPTVPlayer.iptvdm.ehlsdownloader import EHLSDownloader
+from Plugins.Extensions.IPTVPlayer.iptvdm.rtmpdownloader import RtmpDownloader
+from Plugins.Extensions.IPTVPlayer.iptvdm.f4mdownloader import F4mDownloader
+from Plugins.Extensions.IPTVPlayer.iptvdm.mergedownloader import MergeDownloader
+from Plugins.Extensions.IPTVPlayer.iptvdm.ffmpegdownloader import FFMPEGDownloader
+from Plugins.Extensions.IPTVPlayer.iptvdm.iptvdh import DMHelper
 ###################################################
 
 ###################################################

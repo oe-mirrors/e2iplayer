@@ -32,7 +32,7 @@ class KarwanTvApi(CBaseHostClass):
 
     def __init__(self):
         CBaseHostClass.__init__(self)
-        self.MAIN_URL         = 'http://karwan.tv/'
+        self.MAIN_URL = 'http://karwan.tv/'
         self.DEFAULT_ICON_URL = self.getFullUrl('images/KARWAN_TV_LOGO/www.karwan.tv.png')
         self.HEADER = {'User-Agent': 'Mozilla/5.0', 'Accept': 'text/html'}
         self.AJAX_HEADER = dict(self.HEADER)
@@ -75,8 +75,8 @@ class KarwanTvApi(CBaseHostClass):
                 if category in ['radio', 'tv']:
                     data = self.cm.ph.getAllItemsBeetwenMarkers(data, '<div class="bt-inner">', '</div>')
                     for item in data:
-                        icon  = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''src=['"]([^"^']+?)['"]''')[0])
-                        url   = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''href=['"]([^'^"]+?)['"]''')[0])
+                        icon = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''src=['"]([^"^']+?)['"]''')[0])
+                        url = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''href=['"]([^'^"]+?)['"]''')[0])
                         title = self.cleanHtmlStr(item)                
                         params = {'name':'karwan.tv', 'title':title, 'url':url, 'icon':icon}
                         if category == 'radio':
@@ -90,8 +90,8 @@ class KarwanTvApi(CBaseHostClass):
                         m1 = '<div class="column"'
                     data = self.cm.ph.getAllItemsBeetwenMarkers(data, m1, '</a>')
                     for item in data:
-                        icon  = self.getFullUrl24(self.cm.ph.getSearchGroups(item, '''src=['"]([^"^']+?)['"]''')[0])
-                        url   = self.getFullUrl24(self.cm.ph.getSearchGroups(item, '''href=['"]([^'^"]+?)['"]''')[0])
+                        icon = self.getFullUrl24(self.cm.ph.getSearchGroups(item, '''src=['"]([^"^']+?)['"]''')[0])
+                        url = self.getFullUrl24(self.cm.ph.getSearchGroups(item, '''href=['"]([^'^"]+?)['"]''')[0])
                         title = self.cleanHtmlStr(self.cm.ph.getSearchGroups(item, '''title=['"]([^'^"]+?)['"]''')[0])
                         desc = self.cleanHtmlStr(item)                
                         params = {'name':'karwan.tv', 'title':title, 'url':url, 'desc':desc, 'icon':icon}
@@ -125,7 +125,7 @@ class KarwanTvApi(CBaseHostClass):
         for item in tmp:
             if 'google' in item:
                 continue
-            url  = self.cm.ph.getSearchGroups(item, '<iframe[^>]+?src="([^"]+?)"', ignoreCase=True)[0]
+            url = self.cm.ph.getSearchGroups(item, '<iframe[^>]+?src="([^"]+?)"', ignoreCase=True)[0]
             if 'karwan24' in self.up.getDomain(cItem['url']):
                 url = self.getFullUrl24(url)
             else:
@@ -139,7 +139,7 @@ class KarwanTvApi(CBaseHostClass):
         if not sts:
             return urlsTab
         
-        hlsUrl  = self.cm.ph.getSearchGroups(data, '''['"]?hls['"]?\s*:\s*['"]([^"^']+?)['"]''')[0]
+        hlsUrl = self.cm.ph.getSearchGroups(data, '''['"]?hls['"]?\s*:\s*['"]([^"^']+?)['"]''')[0]
         if not self.cm.isValidUrl(hlsUrl) == '':
             hlsUrl = self.cm.getFullUrl(self.cm.ph.getSearchGroups(data, '''['"]([^'^"]+?\.m3u8(?:\?[^'^"]+?)?)['"]''')[0], self.cm.getBaseUrl(self.cm.meta['url']))
         dashUrl = self.cm.ph.getSearchGroups(data, '''['"]?dash['"]?\s*:\s*['"]([^"^']+?)['"]''')[0]

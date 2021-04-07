@@ -73,7 +73,7 @@ config.plugins.iptvplayer.extplayer_subtitle_shadow_xoffset = ConfigInteger(3, (
 config.plugins.iptvplayer.extplayer_subtitle_shadow_yoffset = ConfigInteger(3, (-6, 6))
 config.plugins.iptvplayer.extplayer_subtitle_pos = ConfigInteger(50, (0, 400))
 config.plugins.iptvplayer.extplayer_subtitle_box_valign = ConfigSelection(default="bottom", choices=[("bottom", _("bottom")), ("center", _("center")), ("top", _("top"))])
-config.plugins.iptvplayer.extplayer_subtitle_box_height  = ConfigInteger(240, (50, 400))
+config.plugins.iptvplayer.extplayer_subtitle_box_height = ConfigInteger(240, (50, 400))
 
 config.plugins.iptvplayer.extplayer_infobanner_clockformat = ConfigSelection(default="", choices=[("", _("None")), ("24", _("24 hour format ")), ("12", _("12 hour format "))])
 
@@ -209,16 +209,16 @@ class ConfigExtMoviePlayerBase():
             printExc()
         
     def getDefaultPlayerVideoOptions(self):
-        defVideoOptions  = {'aspect':  config.plugins.iptvplayer.extplayer_aspect.value, 
-                            'policy':  config.plugins.iptvplayer.extplayer_policy.value, 
+        defVideoOptions = {'aspect': config.plugins.iptvplayer.extplayer_aspect.value, 
+                            'policy': config.plugins.iptvplayer.extplayer_policy.value, 
                             'policy2': config.plugins.iptvplayer.extplayer_policy2.value 
                            }
         printDBG(">>>>>>>>>>>>>>>>>>>>> getE2VideoOptions[%s]" % defVideoOptions)
         return defVideoOptions
         
     def getDefaultAudioOptions(self):
-        defAudioOptions  = {'aac':  config.plugins.iptvplayer.aac_mix.value, 
-                            'ac3':  config.plugins.iptvplayer.ac3_mix.value, 
+        defAudioOptions = {'aac': config.plugins.iptvplayer.aac_mix.value, 
+                            'ac3': config.plugins.iptvplayer.ac3_mix.value, 
                            }
         printDBG(">>>>>>>>>>>>>>>>>>>>> getDefaultAudioOptions[%s]" % defAudioOptions)
         return defAudioOptions

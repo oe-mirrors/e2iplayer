@@ -33,12 +33,12 @@ from Screens.MessageBox import MessageBox
 ###################################################
 # Config options for HOST
 ###################################################
-config.plugins.iptvplayer.hdsto_proxy = ConfigSelection(default="None", choices=[("None",     _("None")),
+config.plugins.iptvplayer.hdsto_proxy = ConfigSelection(default="None", choices=[("None", _("None")),
                                                                                      ("webproxy", _("Web proxy")),
-                                                                                     ("proxy_1",  _("Alternative proxy server (1)")),
-                                                                                     ("proxy_2",  _("Alternative proxy server (2)"))])
-config.plugins.iptvplayer.hdsto_login      = ConfigText(default="", fixed_size=False)
-config.plugins.iptvplayer.hdsto_password   = ConfigText(default="", fixed_size=False)
+                                                                                     ("proxy_1", _("Alternative proxy server (1)")),
+                                                                                     ("proxy_2", _("Alternative proxy server (2)"))])
+config.plugins.iptvplayer.hdsto_login = ConfigText(default="", fixed_size=False)
+config.plugins.iptvplayer.hdsto_password = ConfigText(default="", fixed_size=False)
 
 def GetConfigList():
     optionList = []
@@ -59,18 +59,18 @@ class HDSTo(CBaseHostClass):
         self.HTTP_HEADER = self.cm.getDefaultHeader(browser='chrome')
         self.defaultParams = {'header':self.HTTP_HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
 
-        self.MAIN_URL    = 'http://www.hds.to/'
+        self.MAIN_URL = 'http://www.hds.to/'
         self.DEFAULT_ICON_URL = self.getFullIconUrl('/images/logox2.png')
 
         self.cacheLinks = {}
         self.loggedIn = None
-        self.login    = ''
+        self.login = ''
         self.password = ''
         self.membersOnly = [_('Page accessible to logged in members only.'), _('You can try to use proxy as workaround, check options under blue button.')]
     
     def getRealUrl(self, url):
         if config.plugins.iptvplayer.hdsto_proxy.value == 'webproxy' and url != None and 'browse.php?u=' in url:
-            url = urllib.parse.unquote(self.cm.ph.getSearchGroups(url+'&', '''\?u=(http[^&]+?)&''')[0])
+            url = urllib.parse.unquote(self.cm.ph.getSearchGroups(url + '&', '''\?u=(http[^&]+?)&''')[0])
         return url
     
     def getFullUrl(self, url, baseUrl=None):
@@ -152,7 +152,7 @@ class HDSTo(CBaseHostClass):
             except Exception:
                 printExc()
         
-        MAIN_CAT_TAB = [{'category':'search',         'title': _('Search'),       'search_item':True},
+        MAIN_CAT_TAB = [{'category':'search', 'title': _('Search'), 'search_item':True},
                         {'category': 'search_history', 'title': _('Search history'),}]
         self.listsTab(MAIN_CAT_TAB, cItem)
         
@@ -190,7 +190,7 @@ class HDSTo(CBaseHostClass):
                 for item in cTree.get('list', []):
                     title = self.cleanHtmlStr(item['dat'])
                     printDBG('>> ' + title)
-                    url   = self.searchUrl(item['dat'])
+                    url = self.searchUrl(item['dat'])
                     if 'list' not in item:
                         if url != '' and title != '':
                             params = dict(cItem)
@@ -282,7 +282,7 @@ class HDSTo(CBaseHostClass):
         
         if nextPage != '':
             params = dict(cItem)
-            params.update({'good_for_fav': False, 'title':_('Next page'), 'page':page+1, 'url':nextPage})
+            params.update({'good_for_fav': False, 'title':_('Next page'), 'page':page + 1, 'url':nextPage})
             self.addDir(params)
         
     def exploreItem(self, cItem):
@@ -335,7 +335,7 @@ class HDSTo(CBaseHostClass):
             urls = []
             item = self.cm.ph.getAllItemsBeetwenMarkers(item, '<a', '</a>')
             for it in item:
-                linkName  = self.cleanHtmlStr(it)
+                linkName = self.cleanHtmlStr(it)
                 linkUrl = self.getFullUrl(self.cm.ph.getSearchGroups(it, '''href=['"]([^"^']+?)["']''', 1, True)[0], cUrl)
                 if linkUrl == '':
                     continue
@@ -391,7 +391,7 @@ class HDSTo(CBaseHostClass):
                         if 'video/mp4' in item.lower():
                             url = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''src=['"]([^"^']+?)['"]''')[0])
                             if url != '':
-                                linksTab.append({'name':str(len(linksTab)+1) + ' mp4', 'url':url})
+                                linksTab.append({'name':str(len(linksTab) + 1) + ' mp4', 'url':url})
                 
                 jwplayer = False
                 jscode = []
@@ -513,9 +513,9 @@ class HDSTo(CBaseHostClass):
         if title == '':
             title = cItem['title']
         if icon == '':
-            icon  = cItem.get('icon', self.DEFAULT_ICON_URL)
+            icon = cItem.get('icon', self.DEFAULT_ICON_URL)
         if desc == '':
-            desc  = cItem.get('desc', '')
+            desc = cItem.get('desc', '')
         
         return [{'title':self.cleanHtmlStr(title), 'text': self.cleanHtmlStr(desc), 'images':[{'title':'', 'url':self.getFullUrl(icon)}], 'other_info':{'custom_items_list':itemsList}}]
         
@@ -557,7 +557,7 @@ class HDSTo(CBaseHostClass):
                     if len(data) == 3:
                         idx = data[1].find('"')
                         if idx >= 0:
-                            msgTab.append(self.cleanHtmlStr(data[1][idx+1:])) 
+                            msgTab.append(self.cleanHtmlStr(data[1][idx + 1:])) 
                 self.sessionEx.waitForFinishOpen(MessageBox, '\n'.join(msgTab), type=MessageBox.TYPE_ERROR, timeout=10)
                 printDBG('tryTologin failed')
         return self.loggedIn
@@ -567,7 +567,7 @@ class HDSTo(CBaseHostClass):
         
         CBaseHostClass.handleService(self, index, refresh, searchPattern, searchType)
 
-        name     = self.currItem.get("name", '')
+        name = self.currItem.get("name", '')
         category = self.currItem.get("category", '')
         printDBG("handleService: ||| name[%s], category[%s] " % (name, category))
         self.currList = []

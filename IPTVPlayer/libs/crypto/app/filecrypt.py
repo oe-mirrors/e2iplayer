@@ -15,8 +15,8 @@ import getpass
 import getopt
 import os
 from crypto.cipher.trolldoll import Trolldoll
-from crypto.errors           import DecryptNotBlockAlignedError
-from binascii_plus           import *
+from crypto.errors import DecryptNotBlockAlignedError
+from binascii_plus import *
 
 
 def main():
@@ -57,11 +57,11 @@ def main():
         input = sys.stdin.read()
 
     print("input (%d bytes): %s" % (len(input), b2a_pt(input)))
-    alg=Trolldoll(ivSize=160)
+    alg = Trolldoll(ivSize=160)
     alg.setPassphrase(passPhrase)
 
     # Encrypt or decrypt depending on the option selected
-    if   '-e' in optdict:
+    if '-e' in optdict:
         output = alg.encrypt(input)
     elif '-d' in optdict:
         try:

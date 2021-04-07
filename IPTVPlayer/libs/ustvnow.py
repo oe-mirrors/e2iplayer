@@ -32,10 +32,10 @@ from Screens.MessageBox import MessageBox
 ###################################################
 # Config options for HOST
 ###################################################
-config.plugins.iptvplayer.ustvnow_login          = ConfigText(default="", fixed_size=False)
-config.plugins.iptvplayer.ustvnow_password       = ConfigText(default="", fixed_size=False)
+config.plugins.iptvplayer.ustvnow_login = ConfigText(default="", fixed_size=False)
+config.plugins.iptvplayer.ustvnow_password = ConfigText(default="", fixed_size=False)
 config.plugins.iptvplayer.ustvnow_only_available = ConfigYesNo(default=True)
-config.plugins.iptvplayer.ustvnow_epg            = ConfigYesNo(default=True)
+config.plugins.iptvplayer.ustvnow_epg = ConfigYesNo(default=True)
 
 def GetConfigList():
     optionList = []
@@ -51,7 +51,7 @@ def GetConfigList():
 class UstvnowApi:
     MAIN_URL = 'http://m.ustvnow.com/'
     LIVE_URL = MAIN_URL + 'iphone/1/live/playingnow?pgonly=true'
-    HTTP_HEADER  = {'User-Agent': 'Mozilla/5.0 (iPad; U; CPU OS 3_2 like Mac OS X; en-us) AppleWebKit/531.21.10 (KHTML, like Gecko) Version/4.0.4 Mobile/7B334b Safari/531.21.10', 'Referer': MAIN_URL}
+    HTTP_HEADER = {'User-Agent': 'Mozilla/5.0 (iPad; U; CPU OS 3_2 like Mac OS X; en-us) AppleWebKit/531.21.10 (KHTML, like Gecko) Version/4.0.4 Mobile/7B334b Safari/531.21.10', 'Referer': MAIN_URL}
 
     def __init__(self):
         self.cm = common()
@@ -61,7 +61,7 @@ class UstvnowApi:
         self.token = ''
         self.passkey = ''
         
-        HTTP_HEADER= dict(self.HTTP_HEADER)
+        HTTP_HEADER = dict(self.HTTP_HEADER)
         HTTP_HEADER.update({'Content-Type':'application/x-www-form-urlencoded'})
         self.defParams = {'header':HTTP_HEADER, 'cookiefile': self.cookiePath, 'use_cookie': True, 'load_cookie':True, 'save_cookie':True}
         
@@ -71,7 +71,7 @@ class UstvnowApi:
         if url.startswith('/'):
             url = url[1:]
         if 0 < len(url) and not url.startswith('http'):
-            url =  self.MAIN_URL + url
+            url = self.MAIN_URL + url
         if not self.MAIN_URL.startswith('https://'):
             url = url.replace('https://', 'http://')
         return url
@@ -91,15 +91,15 @@ class UstvnowApi:
             data = json_loads(data)
             for item in data['results']['streamnames']:
                 params = {}
-                params['sname']         = item['sname']
-                params['img']           = item['img']
-                params['scode']         = item['scode']
-                params['t']             = item['t']
-                params['callsign']      = item['callsign']
-                params['prgsvcid']      = item['prgsvcid']
+                params['sname'] = item['sname']
+                params['img'] = item['img']
+                params['scode'] = item['scode']
+                params['t'] = item['t']
+                params['callsign'] = item['callsign']
+                params['prgsvcid'] = item['prgsvcid']
                 params['data_provider'] = item['data_provider']
-                params['lang']          = item['lang']
-                params['af']            = item['af']
+                params['lang'] = item['lang']
+                params['af'] = item['af']
                 channelList.append(params)
                 
             printDBG(channelList)
@@ -111,7 +111,7 @@ class UstvnowApi:
     def getChannelsList(self, cItem):
         printDBG("UstvnowApi.getChannelsList")
         
-        login  = config.plugins.iptvplayer.ustvnow_login.value
+        login = config.plugins.iptvplayer.ustvnow_login.value
         passwd = config.plugins.iptvplayer.ustvnow_password.value
 
         if '' != login.strip() and '' != passwd.strip():
@@ -135,8 +135,8 @@ class UstvnowApi:
         data = data.split('</li>')
         prgsvcidMap = {}
         for item in data:
-            url  = self.cm.ph.getSearchGroups(item, 'href="([^"]+?)"')[0]
-            ui   = url.split('ui-page=')[-1]
+            url = self.cm.ph.getSearchGroups(item, 'href="([^"]+?)"')[0]
+            ui = url.split('ui-page=')[-1]
             icon = self.cm.ph.getSearchGroups(item, 'src="([^"]+?)"')[0]
             desc = self.cleanHtmlStr(item)
             params = dict(cItem)
@@ -147,9 +147,9 @@ class UstvnowApi:
                 if nameItem['img'] in icon:
                     if config.plugins.iptvplayer.ustvnow_only_available.value and 0 == nameItem['t']:
                         break
-                    params['title']    = nameItem['sname'] + ' [%s]' % nameItem['t']
+                    params['title'] = nameItem['sname'] + ' [%s]' % nameItem['t']
                     params['prgsvcid'] = nameItem['prgsvcid']
-                    params['scode']    = nameItem['scode']
+                    params['scode'] = nameItem['scode']
                     prgsvcidMap[params['prgsvcid']] = len(channelsTab)
                     channelsTab.append(params)
                     break

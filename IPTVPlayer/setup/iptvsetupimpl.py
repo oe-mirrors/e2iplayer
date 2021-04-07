@@ -3,19 +3,19 @@
 ###################################################
 # LOCAL import
 ###################################################
-from Plugins.Extensions.IPTVPlayer.tools.iptvtools           import printDBG, printExc, GetBinDir, GetTmpDir, GetPyScriptCmd, IsFPUAvailable, ReadGnuMIPSABIFP, GetResourcesServerUri
-from Plugins.Extensions.IPTVPlayer.setup.iptvsetuphelper     import CBinaryStepHelper, CCmdValidator, SetupDownloaderCmdCreator
+from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, GetBinDir, GetTmpDir, GetPyScriptCmd, IsFPUAvailable, ReadGnuMIPSABIFP, GetResourcesServerUri
+from Plugins.Extensions.IPTVPlayer.setup.iptvsetuphelper import CBinaryStepHelper, CCmdValidator, SetupDownloaderCmdCreator
 from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _
 ###################################################
 
 ###################################################
 # FOREIGN import
 ###################################################
-from Screens.MessageBox  import MessageBox
-from Components.config   import config, configfile
+from Screens.MessageBox import MessageBox
+from Components.config import config, configfile
 from Tools.BoundFunction import boundFunction
-from Tools.Directories   import resolveFilename, SCOPE_PLUGINS
-from os                  import path as os_path, chmod as os_chmod, remove as os_remove, listdir as os_listdir, getpid as os_getpid, symlink as os_symlink, unlink as os_unlink
+from Tools.Directories import resolveFilename, SCOPE_PLUGINS
+from os import path as os_path, chmod as os_chmod, remove as os_remove, listdir as os_listdir, getpid as os_getpid, symlink as os_symlink, unlink as os_unlink
 import re
 import sys
 ###################################################
@@ -25,13 +25,13 @@ class IPTVSetupImpl:
         printDBG("IPTVSetupImpl.__init__ -------------------------------")
         
         # callbacks
-        self._finished    = finished
+        self._finished = finished
         self._chooseQuestion = chooseQuestion
         self._showMessage = showMessage
-        self._setInfo     = setInfo
-        self.workingObj   = None
-        self.stepHelper   = None
-        self.termination  = False
+        self._setInfo = setInfo
+        self.workingObj = None
+        self.stepHelper = None
+        self.termination = False
         
         self.tmpDir = GetTmpDir()
         self.resourceServers = [GetResourcesServerUri()]
@@ -125,11 +125,11 @@ class IPTVSetupImpl:
         
     def terminate(self):
         printDBG("IPTVSetupImpl.terminate -------------------------------")
-        self.termination  = True
-        self._finished    = None
+        self.termination = True
+        self._finished = None
         self._chooseQuestion = None
         self._showMessage = None
-        self._setInfo     = None 
+        self._setInfo = None 
         if self.workingObj:
             self.workingObj.terminate()
         
@@ -219,7 +219,7 @@ class IPTVSetupImpl:
             configfile.save()
         
         if len(stsTab) > 0 and True == stsTab[-1]:
-            _saveConfig(self.supportedPlatforms[len(stsTab)-1])
+            _saveConfig(self.supportedPlatforms[len(stsTab) - 1])
             self.detectFPU()
         else:
             _saveConfig("unknown")
@@ -392,11 +392,11 @@ class IPTVSetupImpl:
                     library += ver
                     fullLibraryPath = os_path.join(path, library)
                     if os_path.isfile(fullLibraryPath):
-                        openSSlVerMap[library] =  fullLibraryPath
+                        openSSlVerMap[library] = fullLibraryPath
         
         linksTab = []
         for library in ['libssl.so', 'libcrypto.so']:
-            if (library + '.1.0.0') not in openSSlVerMap and (library +'.1.0.2') in openSSlVerMap:
+            if (library + '.1.0.0') not in openSSlVerMap and (library + '.1.0.2') in openSSlVerMap:
                 linksTab.append([openSSlVerMap[library + '.1.0.2'], openSSlVerMap[library + '.1.0.2'][:-1] + '0'])
         
         # there is need to create symlinks for libssl.so.1.0.0 and libcrypto.so.1.0.0
@@ -563,7 +563,7 @@ class IPTVSetupImpl:
         def _detectValidator(code, data):
             try:
                 rawVer = re.search("([0-9]{4})\-([0-9]{2})\-([0-9]{2})", data)
-                ver = int(rawVer.group(1)+rawVer.group(2)+rawVer.group(3))
+                ver = int(rawVer.group(1) + rawVer.group(2) + rawVer.group(3))
                 if self.rtmpdumpVersion <= ver:
                     return True, False
             except Exception:
@@ -630,9 +630,9 @@ class IPTVSetupImpl:
                 self.stepHelper.setInstallChoiseList(self._uchardetInstallChoiseList)
             try: 
                 rawVer = re.search("Version\s([0-9])\.([0-9])\.([0-9])", data)
-                UCHARDET_VERSION_MAJOR     = int(rawVer.group(1))
-                UCHARDET_VERSION_MINOR     = int(rawVer.group(2))
-                UCHARDET_VERSION_REVISION  = int(rawVer.group(3))
+                UCHARDET_VERSION_MAJOR = int(rawVer.group(1))
+                UCHARDET_VERSION_MINOR = int(rawVer.group(2))
+                UCHARDET_VERSION_REVISION = int(rawVer.group(3))
                 if (UCHARDET_VERSION_MAJOR > self.uchardetVersion[0]) or \
                    (UCHARDET_VERSION_MAJOR == self.uchardetVersion[0] and UCHARDET_VERSION_MINOR > self.uchardetVersion[1]) or \
                    (UCHARDET_VERSION_MAJOR == self.uchardetVersion[0] and UCHARDET_VERSION_MINOR == self.uchardetVersion[1] and UCHARDET_VERSION_REVISION >= self.uchardetVersion[2]):
@@ -1322,7 +1322,7 @@ class IPTVSetupImpl:
         printDBG("IPTVSetupImpl.binaryDetectFinished")
         
         if len(stsTab) > 0 and True == stsTab[-1]:
-            path = self.stepHelper.getPaths()[len(stsTab)-1]
+            path = self.stepHelper.getPaths()[len(stsTab) - 1]
             self.stepHelper.getSaveConfigOptionHandler()(self.stepHelper.getConfigOption(), path)
             # NEXT STEP
             if self.stepHelper.isDebugMessagesAllowed():

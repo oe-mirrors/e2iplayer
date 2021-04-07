@@ -49,8 +49,8 @@ sbbytes = (0x63, 0x7c, 0x77, 0x7b, 0xf2, 0x6b, 0x6f, 0xc5,
            0x41, 0x99, 0x2d, 0x0f, 0xb0, 0x54, 0xbb, 0x16)
 
 def groups(subbytes):
-    gdict={}     # a dictionary of the cycles indexed by the first cycle element
-    touched=[0 for i in range(len(subbytes))]
+    gdict = {}     # a dictionary of the cycles indexed by the first cycle element
+    touched = [0 for i in range(len(subbytes))]
     for i in range(len(sbbytes)):
         touched.append(0) 
     for i in range(len(sbbytes)):
@@ -63,15 +63,15 @@ def groups(subbytes):
                 element = sbbytes[element]
                 if element == i:
                     break
-            gdict[cycle[1]]=cycle
+            gdict[cycle[1]] = cycle
         else:
             pass
     return gdict
 
 def grpv(subbytes):
     """" Returns a list of tuples (cycle start, cycle size) """
-    v=[]
-    z=groups(subbytes)
+    v = []
+    z = groups(subbytes)
     for i in list(z.keys()):
         v.append([i, len(z[i])])
     return v

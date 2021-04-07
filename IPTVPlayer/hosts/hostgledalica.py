@@ -38,7 +38,7 @@ class Gledalica(CBaseHostClass):
         self.AJAX_HEADER = dict(self.HTTP_HEADER)
         self.AJAX_HEADER.update({'X-Requested-With': 'XMLHttpRequest', 'Accept-Encoding':'gzip, deflate', 'Content-Type':'application/x-www-form-urlencoded; charset=UTF-8', 'Accept':'application/json, text/javascript, */*; q=0.01'})
         
-        self.cacheLinks    = {}
+        self.cacheLinks = {}
         self.defaultParams = {'header':self.HTTP_HEADER, 'with_metadata':True, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
         
         self.cacheSeriesLetter = []
@@ -68,11 +68,11 @@ class Gledalica(CBaseHostClass):
         #sts, data = self.getPage(self.getMainUrl())
         #if not sts: return
         #self.setMainUrl(data.meta['url'])
-        MAIN_CAT_TAB = [{'category':'sort',           'title': 'FILMOVI',     'url':self.getFullUrl('/browse-all-videos-1.html')},
-                        {'category':'sort',           'title': 'SERIJE ',          'url':self.getFullUrl('/browse-series-videos-1.html')},
+        MAIN_CAT_TAB = [{'category':'sort', 'title': 'FILMOVI', 'url':self.getFullUrl('/browse-all-videos-1.html')},
+                        {'category':'sort', 'title': 'SERIJE ', 'url':self.getFullUrl('/browse-series-videos-1.html')},
 #                        {'category':'years',          'title': _('By years'),      'url':self.getMainUrl()},
 #                        {'category':'cats',           'title': _('By category'),   'url':self.getMainUrl()},
-                        {'category':'search',         'title': _('Search'),        'search_item':True}, 
+                        {'category':'search', 'title': _('Search'), 'search_item':True}, 
                         {'category':'search_history', 'title': _('Search history')},]
         self.listsTab(MAIN_CAT_TAB, cItem)
     
@@ -98,7 +98,7 @@ class Gledalica(CBaseHostClass):
             cTree = cItem['c_tree']
             for item in cTree['list']:
                 title = self.cleanHtmlStr(item['dat']) #self.cm.ph.getDataBeetwenNodes(item['dat'], ('<div', '>', 'title'), ('</div', '>'))[1]
-                url   = self.getFullUrl(self.cm.ph.getSearchGroups(item['dat'], '''href=['"]([^'^"]+?)['"]''')[0])
+                url = self.getFullUrl(self.cm.ph.getSearchGroups(item['dat'], '''href=['"]([^'^"]+?)['"]''')[0])
                 if 'list' not in item:
                     if self.cm.isValidUrl(url) and title != '':
                         params = dict(cItem)
@@ -175,7 +175,7 @@ class Gledalica(CBaseHostClass):
                 continue
             icon = self.getFullIconUrl(self.cm.ph.getSearchGroups(item[1], '''src=['"]([^"^']+?)['"]''')[0])
             title = self.cleanHtmlStr(item[3])
-            if title  == '':
+            if title == '':
                 title = self.cm.ph.rgetDataBeetwenMarkers2(url, '-video_', '/', False)[1].replace('-', ' ').title()
             desc = ' | '.join([self.cleanHtmlStr(item[0]), self.cleanHtmlStr(item[2]), self.cleanHtmlStr(item[4])])
             params = {'good_for_fav':True, 'url':url, 'title':title, 'desc':desc, 'icon':icon}
@@ -225,7 +225,7 @@ class Gledalica(CBaseHostClass):
             icon = self.getFullIconUrl(self.cm.ph.getSearchGroups(item, '''data-original=['"]([^"^']+?)['"]''')[0])
             title = self.cleanHtmlStr(self.cm.ph.getSearchGroups(item, '''title=['"]([^"^']+?)['"]''')[0])
             desc = []
-            tmp =  self.cm.ph.getAllItemsBeetwenMarkers(item, '<a', '</a>')
+            tmp = self.cm.ph.getAllItemsBeetwenMarkers(item, '<a', '</a>')
             for t in tmp:
                 t = self.cleanHtmlStr(t)
                 if t != '':
@@ -303,13 +303,13 @@ class Gledalica(CBaseHostClass):
                 data = data['episodes']
                 y = 1
                 for item in data:
-                    links = test[x-1].split('$(".openload')
+                    links = test[x - 1].split('$(".openload')
                     url = self.getFullUrl(self.cm.ph.getSearchGroups(links[y], '''src=['"]([^"^']+?)['"]''')[0])
                     y += 1
                     if url == '':
                         continue
-                    title = 'S'+str(item['season_number'])+'E'+str(item['episode_number'])+' - '+item['name']
-                    desc  = item['overview']
+                    title = 'S' + str(item['season_number']) + 'E' + str(item['episode_number']) + ' - ' + item['name']
+                    desc = item['overview']
                     params = {'good_for_fav':True, 'url':url, 'title':title, 'desc':desc, 'icon':cItem['icon']}
                     self.addVideo(params)
             except Exception:
@@ -455,15 +455,15 @@ class Gledalica(CBaseHostClass):
         icon = self.getFullIconUrl(self.cm.ph.getSearchGroups(data, '<img[^>]+?src="([^"]+?\.(:?jpe?g|png)(:?\?[^"]+?)?)"')[0], cUrl)
         title = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(data, ('<h', '>'), ('</h', '>'))[1])
         
-        keysMap = {'kategorija:':       'genre',
-                   'imdb rating:':      'imdb_rating',
-                   'runtime:':          'duration',
-                   'uloge:':            'actors',
-                   'premijera':         'released',
-                   'zemlja:':           'country',
-                   'jezik:':            'language',
-                   'reziser:':          'director',
-                   'votes:':            'views'}
+        keysMap = {'kategorija:': 'genre',
+                   'imdb rating:': 'imdb_rating',
+                   'runtime:': 'duration',
+                   'uloge:': 'actors',
+                   'premijera': 'released',
+                   'zemlja:': 'country',
+                   'jezik:': 'language',
+                   'reziser:': 'director',
+                   'votes:': 'views'}
         
         tmp = self.cm.ph.getAllItemsBeetwenNodes(data, ('<span', '>'), ('</span', '>'))
         printDBG(tmp)
@@ -471,7 +471,7 @@ class Gledalica(CBaseHostClass):
             val = self.cleanHtmlStr(tmp[idx])
             if val == '' or val.lower() == 'n/a':
                 continue
-            key = self.cleanHtmlStr(tmp[idx-1]).decode('utf-8').lower().encode('utf-8')
+            key = self.cleanHtmlStr(tmp[idx - 1]).decode('utf-8').lower().encode('utf-8')
             if key not in keysMap:
                 continue
             otherInfo[keysMap[key]] = val
@@ -488,9 +488,9 @@ class Gledalica(CBaseHostClass):
         
         CBaseHostClass.handleService(self, index, refresh, searchPattern, searchType)
 
-        name     = self.currItem.get("name", '')
+        name = self.currItem.get("name", '')
         category = self.currItem.get("category", '')
-        mode     = self.currItem.get("mode", '')
+        mode = self.currItem.get("mode", '')
         
         printDBG("handleService: |||| name[%s], category[%s] " % (name, category))
         self.cacheLinks = {}

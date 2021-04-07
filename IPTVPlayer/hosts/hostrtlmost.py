@@ -39,13 +39,13 @@ from Screens.MessageBox import MessageBox
 ###################################################
 # Config options for HOST
 ###################################################
-config.plugins.iptvplayer.rtlmosthu_login    = ConfigText(default="", fixed_size=False)
+config.plugins.iptvplayer.rtlmosthu_login = ConfigText(default="", fixed_size=False)
 config.plugins.iptvplayer.rtlmosthu_password = ConfigText(default="", fixed_size=False)
 
 def GetConfigList():
     optionList = []
-    optionList.append(getConfigListEntry(_("Email")+":", config.plugins.iptvplayer.rtlmosthu_login))
-    optionList.append(getConfigListEntry(_("password")+":", config.plugins.iptvplayer.rtlmosthu_password))
+    optionList.append(getConfigListEntry(_("Email") + ":", config.plugins.iptvplayer.rtlmosthu_login))
+    optionList.append(getConfigListEntry(_("password") + ":", config.plugins.iptvplayer.rtlmosthu_password))
     return optionList
 ###################################################
 
@@ -79,7 +79,7 @@ class RtlMostHU(CBaseHostClass):
         self.SEARCH_TYPES = [
             (_("Program"), "Program"),
             (_("Video"), "Video"),
-            (_("Preview"),  "Preview"),
+            (_("Preview"), "Preview"),
             (_("Playlist"), "Playlist")
         ]
 
@@ -91,17 +91,17 @@ class RtlMostHU(CBaseHostClass):
             'tTe30d2iC0I8n0AC1pKH23W1ieIDaJggkw=='))
         self.API_HEADER = dict(self.HEADER)
         self.API_HEADER.update({'x-customer-name': 'rtlhu'})
-        self.MENU_URL = self.API_URL+zlib.decompress(base64.b64decode(
+        self.MENU_URL = self.API_URL + zlib.decompress(base64.b64decode(
             'eJxLy89JSS0qts/JzM0ssa2uVctPSytOBbEAjDgKZQ=='))
-        self.PROGRAMS_URL = self.API_URL+zlib.decompress(base64.b64decode(
+        self.PROGRAMS_URL = self.API_URL + zlib.decompress(base64.b64decode(
             'eJxLy89JSS0q1q+u1S8oyk8vSswtts/JzM0ssa2uVctPSytOBbOSixNtTdXKM0sybAsSi1LzSpLz'
             '80pSK0oAFDYYow=='))
-        self.SUBCATS_URL = self.API_URL+zlib.decompress(base64.b64decode(
+        self.SUBCATS_URL = self.API_URL + zlib.decompress(base64.b64decode(
             'eJwrKMpPL0rMLdavrrUvzyzJsM3JzMsu1ikuTUpOLCnWKcpMzygpBgAacg7K'))
-        self.EPISODES_URL = self.API_URL+zlib.decompress(base64.b64decode(
+        self.EPISODES_URL = self.API_URL + zlib.decompress(base64.b64decode(
             'eJwlyjEKwzAMBdDbeDJk6ih6FlWVU1EbC3/FIYTcvZBub3g++jq4YTmvZdpbO54CpkfaLT4k1Ry5'
             'DNVmW3OWL1IcrjQtT8le+aiGSNhewkHnlao1u9FLgd5CH0H/8QMyYSqT'))
-        self.VIDEO_URL = self.API_URL+zlib.decompress(base64.b64decode(
+        self.VIDEO_URL = self.API_URL + zlib.decompress(base64.b64decode(
             'eJwtyDEKgDAMAMDfOBWcHItPKSGNNbShIdGKiH938cYbnKn7/LwrOsRluvjYIzZWD5sRCZ+igNWD'
             'Wi8GkligkAcnG4yUMrs2uP/+AKaUHqw='))
         self.ICON_PATH = zlib.decompress(base64.b64decode(
@@ -119,7 +119,7 @@ class RtlMostHU(CBaseHostClass):
             'eJwlxt0KgjAUAOC38U6NDKFAokhEo1gYZd3IGHPz7xzZjtgPvXtE39WniQa78v0OVQ2eoa5HS54e'
             'fS4EjkDWU5I2/6dQ4Rr5SLokbCVE749jpTCSfqvQ9JyixiI4fKj38hkFJWOje5g3LbLzjRY9uPqy'
             'TUJI2LaZ4iLMMjXlx3u9LFylXicz6+ARJBSoON1ZkefXL7XkOfU='))
-        self.queryFiltered =zlib.decompress(base64.b64decode(
+        self.queryFiltered = zlib.decompress(base64.b64decode(
             'eJylzLEKwjAQBuB3CcTRoUUHoYNVnPsG4VqvbTAx8S6paOm7m4KDc4SfO/7h++dZeCCwLA7iEZFe'
             '1bxsPAy4/lEHbpCab+2hw3DRJiBxJXf1mqIAMzijYesNhN6RVYw06Q5lebT7gVz06omtLGsKZowq'
             'XXUzsU1SFqc8r/U/OoFrru+cM7mW30jIbB2H3Ik7Tj8Lu3OKWJYP1PGh/Q=='))
@@ -156,7 +156,7 @@ class RtlMostHU(CBaseHostClass):
         else:
             format = 'jpeg'
         path = self.ICON_PATH.format(url[2:], width, height, 'scale_crop', 60, format, 1)
-        return self.ICON_URL.format(path, sha1(path+self.ICON_HASH).hexdigest())
+        return self.ICON_URL.format(path, sha1(path + self.ICON_HASH).hexdigest())
 
     def getPage(self, url, addParams={}, post_data=None):
         if addParams == {}:
@@ -179,7 +179,7 @@ class RtlMostHU(CBaseHostClass):
                 self.addDir(params)
         except Exception:
             printExc()
-        MAIN_CAT_TAB = [{'category':'search',         'title': _('Search'),       'search_item':True},
+        MAIN_CAT_TAB = [{'category':'search', 'title': _('Search'), 'search_item':True},
                         {'category': 'search_history', 'title': _('Search history'),}]
         self.listsTab(MAIN_CAT_TAB, cItem)
 
@@ -198,7 +198,7 @@ class RtlMostHU(CBaseHostClass):
                 icon = _getImageExtKey(i['images'], 'totem')
                 params = dict(cItem)
                 if icon:
-                    params['icon'] = 'tj'+icon
+                    params['icon'] = 'tj' + icon
                 params.update({'good_for_fav': True, 'category':'list_subcategories', 'title': title, 'url': url, 'desc':desc, 'other_info':{}})
                 self.addDir(params)
         except Exception:
@@ -214,7 +214,7 @@ class RtlMostHU(CBaseHostClass):
             data = json_loads(data)
             for c in data['clips']:
                 title = c['title']
-                otherInfo =dict(cItem['other_info'])
+                otherInfo = dict(cItem['other_info'])
                 _updateOtherInfo(otherInfo, c)
                 desc = c.get('description')
                 icon = _getImageExtKey(c['images'], 'vignette')
@@ -222,7 +222,7 @@ class RtlMostHU(CBaseHostClass):
                 if desc:
                     params['desc'] = desc
                 if icon:
-                    params['icon'] = 'vj'+icon
+                    params['icon'] = 'vj' + icon
                 params.update({'good_for_fav': True, 'title': title, 'url': c['video_id'], 'other_info': otherInfo})
                 self.addVideo(params)
         except Exception:
@@ -240,7 +240,7 @@ class RtlMostHU(CBaseHostClass):
                 clips = i['clips']
                 if 0 == len(clips):
                     continue
-                otherInfo =dict(cItem['other_info'])
+                otherInfo = dict(cItem['other_info'])
                 if 1 == len(clips):
                     c = clips[0]
                     isVideo = True
@@ -248,7 +248,7 @@ class RtlMostHU(CBaseHostClass):
                 else:
                     c = i
                     isVideo = False
-                    url =c['id']
+                    url = c['id']
                 _updateOtherInfo(otherInfo, c)
                 title = c['title']
                 desc = c.get('description')
@@ -258,12 +258,12 @@ class RtlMostHU(CBaseHostClass):
                 if desc:
                     params['desc'] = desc
                 if icon:
-                    params['icon'] = 'vj'+icon
+                    params['icon'] = 'vj' + icon
                 params.update({'good_for_fav': True, 'title': title, 'url': url, 'other_info': otherInfo})
                 if isVideo:
                     self.addVideo(params)
                 else:
-                    params['category']='list_playlist'
+                    params['category'] = 'list_playlist'
                     self.addDir(params)
         except Exception:
             printExc()
@@ -328,18 +328,18 @@ class RtlMostHU(CBaseHostClass):
             hits = data['hits']
             nbPages = data.get('nbPages')
             for i in hits:
-                otherInfo ={}
+                otherInfo = {}
                 _updateOtherInfo(otherInfo, i)
                 title = i['title']
                 params = dict(cItem)
                 params.pop('page', None)
                 icon = _getImageExtKey(i['images'], role)
                 if icon:
-                    params['icon'] = role[:1]+'j'+icon
+                    params['icon'] = role[:1] + 'j' + icon
                 elif role == 'vignette':
                     icon = _getImageExtKey(i['program']['images'], 'totem')
                     if icon:
-                        params['icon'] = 'tj'+icon
+                        params['icon'] = 'tj' + icon
                 params.update({'good_for_fav': True, 'title': title, 'url': i['id'], 'desc': i.get('description', ''), 'other_info': otherInfo})
                 if isVideo:
                     self.addVideo(params)
@@ -454,7 +454,7 @@ class RtlMostHU(CBaseHostClass):
             hash = cookies[2]
             valid = cookies[3]
             needLogin = needLogin or not(token.value and secret.value and hash.value
-                        and sha1(self.login+self.password+token.value+secret.value).hexdigest() == hash.value)
+                        and sha1(self.login + self.password + token.value + secret.value).hexdigest() == hash.value)
             if not needLogin:
                 if valid.value == '1':
                     self.loggedIn = True
@@ -473,7 +473,7 @@ class RtlMostHU(CBaseHostClass):
                     raise Exception(data.get('errorMessage'))
                 token.value = data['sessionInfo']['sessionToken']
                 secret.value = data['sessionInfo']['sessionSecret']
-                hash.value = sha1(self.login+self.password+token.value+secret.value).hexdigest()
+                hash.value = sha1(self.login + self.password + token.value + secret.value).hexdigest()
             valid.value = '1'
             valid.expires = int(time.time()) + 86400
             cj.save(self.COOKIE_FILE)
@@ -489,9 +489,9 @@ class RtlMostHU(CBaseHostClass):
 
         CBaseHostClass.handleService(self, index, refresh, searchPattern, searchType)
 
-        name     = self.currItem.get("name", '')
+        name = self.currItem.get("name", '')
         category = self.currItem.get("category", '')
-        mode     = self.currItem.get("mode", '')
+        mode = self.currItem.get("mode", '')
 
         printDBG("handleService: |||||||||||||||||||||||||||||||||||| name[%s], category[%s] " % (name, category))
         self.currList = []

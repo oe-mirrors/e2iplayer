@@ -27,7 +27,7 @@ from Screens.MessageBox import MessageBox
 ###################################################
 # Config options for HOST
 ###################################################
-config.plugins.iptvplayer.wagasworld_login    = ConfigText(default="", fixed_size=False)
+config.plugins.iptvplayer.wagasworld_login = ConfigText(default="", fixed_size=False)
 config.plugins.iptvplayer.wagasworld_password = ConfigText(default="", fixed_size=False)
 
 def GetConfigList():
@@ -44,8 +44,8 @@ class WagasWorldApi(CBaseHostClass):
     def __init__(self):
         CBaseHostClass.__init__(self)
         self.sessionEx = MainSessionWrapper()
-        self.MAIN_URL      = 'http://www.wagasworld.com/'
-        self.HTTP_HEADER  = {'User-Agent': 'Mozilla/5.0 (X11; Ubuntu; Linux i686; rv:12.0) Gecko/20100101 Firefox/12.0', 'Referer': self.MAIN_URL}
+        self.MAIN_URL = 'http://www.wagasworld.com/'
+        self.HTTP_HEADER = {'User-Agent': 'Mozilla/5.0 (X11; Ubuntu; Linux i686; rv:12.0) Gecko/20100101 Firefox/12.0', 'Referer': self.MAIN_URL}
         self.COOKIE_FILE = GetCookieDir('wagasworld.cookie')
         self.http_params = {'header': dict(self.HTTP_HEADER), 'save_cookie': True, 'load_cookie': True, 'cookiefile': self.COOKIE_FILE}
         self.DEFAULT_URL_ICON = self.getFullIconUrl('/sites/default/files/styles/slideshow_full/public/12_0.jpg?itok=LHobtpyX')
@@ -54,7 +54,7 @@ class WagasWorldApi(CBaseHostClass):
         printDBG("WagasWorldApi.getMainCategories")
         list = []
         list.append({'type':'waga_cat', 'waga_cat':'groups', 'title':_('Channel'), 'url':self.MAIN_URL + 'channel'})
-        list.append({'type':'waga_cat', 'waga_cat':'groups', 'title':_('LiveTv'),  'url':self.MAIN_URL + 'LiveTv'})
+        list.append({'type':'waga_cat', 'waga_cat':'groups', 'title':_('LiveTv'), 'url':self.MAIN_URL + 'LiveTv'})
         return list
 
     def getGroups(self, cItem):
@@ -73,7 +73,7 @@ class WagasWorldApi(CBaseHostClass):
         printDBG("WagasWorldApi.getItems")
         list = []
         page = cItem.get('page', 0)
-        url  = cItem['url']
+        url = cItem['url']
         if page > 0:
             if '?' in url:
                 url += '&'
@@ -85,7 +85,7 @@ class WagasWorldApi(CBaseHostClass):
             return list
         
         nextPage = False
-        if '&amp;page={0}"'.format(page+1) in data:
+        if '&amp;page={0}"'.format(page + 1) in data:
             nextPage = True
         data = ph.find(data, '<div class="view-content">', '</section>')[1]
         data = data.split('</span>')
@@ -93,20 +93,20 @@ class WagasWorldApi(CBaseHostClass):
             del data[-1]
         for item in data:
             title = ph.search(item, '>([^<]+?)</a>')[0]
-            url   = self.getFullUrl(ph.getattr(item, 'href'))
-            icon  = self.getFullIconUrl(ph.search(item, ph.IMG)[1])
+            url = self.getFullUrl(ph.getattr(item, 'href'))
+            icon = self.getFullIconUrl(ph.search(item, ph.IMG)[1])
             if '' != url and '' != title:
                 list.append({'waga_cat':'explore', 'type':'waga_cat', 'title':ph.clean_html(title), 'icon':icon, 'url':url})
         if nextPage:
-            list.append({'type':'waga_cat', 'waga_cat':'items', 'title':_('Next page'), 'url':cItem['url'], 'page':page+1})
+            list.append({'type':'waga_cat', 'waga_cat':'items', 'title':_('Next page'), 'url':cItem['url'], 'page':page + 1})
         return list
         
     def getChannelsList(self, cItem):
-        printDBG("WagasWorldApi.getChannelsList waga_cat[%s]" % cItem.get('waga_cat',  ''))
+        printDBG("WagasWorldApi.getChannelsList waga_cat[%s]" % cItem.get('waga_cat', ''))
         list = []
-        waga_cat = cItem.get('waga_cat',  '')
+        waga_cat = cItem.get('waga_cat', '')
         if '' == waga_cat:
-            login    = config.plugins.iptvplayer.wagasworld_login.value
+            login = config.plugins.iptvplayer.wagasworld_login.value
             password = config.plugins.iptvplayer.wagasworld_password.value
             if login != '' and password != '':        
                 if self.doLogin(login, password):
@@ -134,7 +134,7 @@ class WagasWorldApi(CBaseHostClass):
         if episode > -1:
             url += 'episode=%s&' % episode
         
-        url += 'v=%s' % (int(time()*1000))
+        url += 'v=%s' % (int(time() * 1000))
         
         HTTP_HEADER = dict(self.HTTP_HEADER)
         HTTP_HEADER['Referer'] = baseUrl
@@ -178,7 +178,7 @@ class WagasWorldApi(CBaseHostClass):
             retTab.append(params)
 
             params = dict(cItem)
-            params.update({'type':'more', 'waga_cat':'more', 'title':_('More'), 'waga_title':cItem['title'], 'waga_url':url, 'waga_episode':int(data['episode'])+1})
+            params.update({'type':'more', 'waga_cat':'more', 'title':_('More'), 'waga_title':cItem['title'], 'waga_url':url, 'waga_episode':int(data['episode']) + 1})
             retTab.append(params)
         return retTab
 
@@ -187,7 +187,7 @@ class WagasWorldApi(CBaseHostClass):
         
         episode = cItem.get('waga_episode', 1)
         baseUrl = cItem.get('waga_url', '')
-        title   = cItem.get('waga_title', '')
+        title = cItem.get('waga_title', '')
         
         retTab = [] 
         data = self._getEpisode(baseUrl, episode)
@@ -197,7 +197,7 @@ class WagasWorldApi(CBaseHostClass):
             retTab.append(params)
             
             params = dict(cItem)
-            params.update({'waga_episode':int(data['episode'])+1})
+            params.update({'waga_episode':int(data['episode']) + 1})
             retTab.append(params)
         
         return retTab
@@ -238,10 +238,10 @@ class WagasWorldApi(CBaseHostClass):
         post_data = dict(re.findall(r'<(?:input|button)[^>]*name="([^"]*)"[^>]*value="([^"]*)"[^>]*>', data))
         post_data.update({'name':login, 'pass':password})
         
-        HTTP_HEADER= dict(self.HTTP_HEADER)
+        HTTP_HEADER = dict(self.HTTP_HEADER)
         HTTP_HEADER.update({'Referer':loginUrl})
         
-        params    = {'header': HTTP_HEADER, 'cookiefile': self.COOKIE_FILE, 'save_cookie': True, 'load_cookie': True}
+        params = {'header': HTTP_HEADER, 'cookiefile': self.COOKIE_FILE, 'save_cookie': True, 'load_cookie': True}
         sts, data = self.cm.getPage(loginUrl, params, post_data)
         if sts:
             if os_path.isfile(self.COOKIE_FILE):

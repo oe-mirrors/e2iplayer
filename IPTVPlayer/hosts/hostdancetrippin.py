@@ -34,16 +34,16 @@ class DancetrippinTV(CBaseHostClass):
         self.MAIN_URL = "http://www.dancetelevision.net/"
         self.DEFAULT_ICON_URL = 'https://frenezy.files.wordpress.com/2010/10/dancetrippin.jpg'
         
-        self.MAIN_CAT_TAB = [{'category':'fill_items',      'title': _('LATEST CONTENT'), 'url':self.getMainUrl()},
-                             {'category':'channels',        'title': _('CHANNELS '),      'url':self.getMainUrl()},
-                             {'category':'artists',         'title': _('ARTISTS'),        'url':self.getMainUrl()},
-                             {'category':'fill_items',      'title': _('PARTIES'),        'url':self.getFullUrl('/parties')},
-                             {'category':'fill_items',      'title': _('VENUES'),        'url':self.getFullUrl('/venues')},
-                             {'category':'search',          'title': _('Search'),         'search_item':True},
-                             {'category':'search_history',  'title': _('Search history')}]
+        self.MAIN_CAT_TAB = [{'category':'fill_items', 'title': _('LATEST CONTENT'), 'url':self.getMainUrl()},
+                             {'category':'channels', 'title': _('CHANNELS '), 'url':self.getMainUrl()},
+                             {'category':'artists', 'title': _('ARTISTS'), 'url':self.getMainUrl()},
+                             {'category':'fill_items', 'title': _('PARTIES'), 'url':self.getFullUrl('/parties')},
+                             {'category':'fill_items', 'title': _('VENUES'), 'url':self.getFullUrl('/venues')},
+                             {'category':'search', 'title': _('Search'), 'search_item':True},
+                             {'category':'search_history', 'title': _('Search history')}]
         
-        self.ARTISTS_CAT_TAB = [{'category':'fill_items',    'title': _('Most featured'), 'url':self.getFullUrl('/artists')},
-                                {'category':'fill_items',    'title': _('Alphabetical '), 'url':self.getFullUrl('/artists/sort/alphabetical')}]
+        self.ARTISTS_CAT_TAB = [{'category':'fill_items', 'title': _('Most featured'), 'url':self.getFullUrl('/artists')},
+                                {'category':'fill_items', 'title': _('Alphabetical '), 'url':self.getFullUrl('/artists/sort/alphabetical')}]
         
         self.cacheItems = []
         self.cacheFilters = []
@@ -68,10 +68,10 @@ class DancetrippinTV(CBaseHostClass):
         data = self.cm.ph.getDataBeetwenNodes(data, ('<', '>', 'browsenetwork'), ('</ul', '>'), False)[1]
         data = data.split('</li>')
         for item in data:
-            url   = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''\shref=['"]([^'^"]+?)['"]''')[0])
+            url = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''\shref=['"]([^'^"]+?)['"]''')[0])
             if url == '':
                 continue
-            icon  = self.getFullIconUrl(self.cm.ph.getSearchGroups(item, '''\ssrc=['"]([^'^"]+?)['"]''')[0])
+            icon = self.getFullIconUrl(self.cm.ph.getSearchGroups(item, '''\ssrc=['"]([^'^"]+?)['"]''')[0])
             title = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(item, ('<a', '>'), ('</a', '>'), False)[1])
             params = dict(cItem)
             params.update({'good_for_fav':False, 'category':nextCategory, 'url':url, 'title':title, 'icon':icon})
@@ -113,13 +113,13 @@ class DancetrippinTV(CBaseHostClass):
         data = self.cm.ph.getDataBeetwenNodes(data, ('<div', '>', 'grid-content'), ('<footer', '>'), False)[1]
         data = self.cm.ph.rgetAllItemsBeetwenNodes(data, ('</div', '>'), ('<div', '>', '"single'))
         for item in data:
-            url  = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''\shref=['"]([^'^"]+?)['"]''')[0])
+            url = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''\shref=['"]([^'^"]+?)['"]''')[0])
             if url == '':
                 continue
             icon = self.getFullIconUrl(self.cm.ph.getDataBeetwenMarkers(item, 'url(', ')', False)[1].strip())
             item = item.split('</h3>', 1)
             title = self.cleanHtmlStr(self.cleanHtmlStr(item[0]))
-            desc  = self.cleanHtmlStr(item[-1]) 
+            desc = self.cleanHtmlStr(item[-1]) 
             params = dict(cItem)
             params.update({'good_for_fav':True, 'category':nextCategory, 'url':url, 'title':title, 'icon':icon, 'desc':desc})
             self.addDir(params)
@@ -190,10 +190,10 @@ class DancetrippinTV(CBaseHostClass):
             tmp = data
         data = self.cm.ph.rgetAllItemsBeetwenNodes(tmp, ('</div', '>'), ('<div', '>', '"single'))
         for item in data:
-            url   = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''\shref=['"]([^'^"]+?)['"]''')[0])
+            url = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''\shref=['"]([^'^"]+?)['"]''')[0])
             if url == '':
                 continue
-            icon  = self.cm.ph.getDataBeetwenMarkers(item, 'url(', ')', False)[1].strip()
+            icon = self.cm.ph.getDataBeetwenMarkers(item, 'url(', ')', False)[1].strip()
             if len(icon) > 2 and icon[0] in ['"', "'"] and icon[-1] in ['"', "'"]:
                 icon = self.getFullIconUrl(icon[1:-1])
             else:
@@ -293,7 +293,7 @@ class DancetrippinTV(CBaseHostClass):
         tmp = self.cm.ph.getDataBeetwenMarkers(data, 'videoplayer', '</div>')[1]
         url = self.getFullUrl(self.cm.ph.getSearchGroups(tmp, '''<iframe[^>]+?src=['"]([^"^']+?)['"]''', 1, True)[0]).replace('&amp;', '&')
         if 1 == self.up.checkHostSupport(url):
-            return  self.up.getVideoLinkExt(url)
+            return self.up.getVideoLinkExt(url)
         
         tmp = self.cm.ph.getDataBeetwenMarkers(data, '<video', '</video>', False)[1]
         tmp = self.cm.ph.getAllItemsBeetwenMarkers(tmp, '<source', '>')
@@ -301,7 +301,7 @@ class DancetrippinTV(CBaseHostClass):
             for item in tmp:
                 type = self.cm.ph.getSearchGroups(item, '''type=['"]([^'^"]+?)['"]''')[0].lower()
                 name = self.cm.ph.getSearchGroups(item, '''label=['"]([^'^"]+?)['"]''')[0]
-                url  = self.cm.ph.getSearchGroups(item, '''src=['"]([^'^"]+?)['"]''')[0]
+                url = self.cm.ph.getSearchGroups(item, '''src=['"]([^'^"]+?)['"]''')[0]
                 
                 if 'video/mp4' == type: 
                     urlTab.append({'name':name, 'url':self.getFullUrl(url), 'need_resolve':0})
@@ -329,9 +329,9 @@ class DancetrippinTV(CBaseHostClass):
         
         CBaseHostClass.handleService(self, index, refresh, searchPattern, searchType)
 
-        name     = self.currItem.get("name", '')
+        name = self.currItem.get("name", '')
         category = self.currItem.get("category", '')
-        mode     = self.currItem.get("mode", '')
+        mode = self.currItem.get("mode", '')
         
         printDBG("handleService: |||||||||||||||||||||||||||||||||||| name[%s], category[%s] " % (name, category))
         self.currList = []

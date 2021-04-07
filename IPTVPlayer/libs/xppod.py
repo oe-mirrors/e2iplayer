@@ -28,8 +28,8 @@ def Decode(param):
     i = 0
     while i < len(param):
         j = 0
-        while j < 4 and i+j < len(param):
-            loc_3[j] = dec.find(param[i+j])
+        while j < 4 and i + j < len(param):
+            loc_3[j] = dec.find(param[i + j])
             j = j + 1
 
         loc_4[0] = (loc_3[0] << 2) + ((loc_3[1] & 48) >> 4)

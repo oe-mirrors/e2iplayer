@@ -46,10 +46,10 @@ def localPrintDBG(txt):
     pass
 
 class IPTVMovieMetaDataHandler():
-    META_DATA      = {"host":"", "title":"", "file_path":"", "aspect_ratio":-1, "last_position":-1,"tracks":{"audio":-1, "video":-1, "subtitle":-1, "subtitles":{"idx":-1, "tracks":[]}}}
+    META_DATA = {"host":"", "title":"", "file_path":"", "aspect_ratio":-1, "last_position":-1,"tracks":{"audio":-1, "video":-1, "subtitle":-1, "subtitles":{"idx":-1, "tracks":[]}}}
     SUBTITLE_TRACK = {"title":"", "id":"", "provider":"", "lang":"", "delay_ms":0, "path":""}
     EXTENSION = 'iptv'
-    ENCODING  = 'utf-8'
+    ENCODING = 'utf-8'
     
     def __init__(self, host="", title="", filePath=""):
         printDBG(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>... [%s]\n" % self.META_DATA)
@@ -57,7 +57,7 @@ class IPTVMovieMetaDataHandler():
         if "" != host:
             fileName = "{0}_{1}.{2}".format(host, title, self.EXTENSION)
         else:
-            fileName = filePath.split('/')[-1]+'.' + self.EXTENSION
+            fileName = filePath.split('/')[-1] + '.' + self.EXTENSION
         
         self.filePath = GetMovieMetaDataDir(RemoveDisallowedFilenameChars(fileName))
         self.data = deepcopy(self.META_DATA)

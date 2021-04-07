@@ -36,13 +36,13 @@ class CineTO(CBaseHostClass, CaptchaHelper):
         self.AJAX_HEADER = dict(self.HEADER)
         self.AJAX_HEADER.update({'X-Requested-With': 'XMLHttpRequest', 'Accept-Encoding':'gzip, deflate', 'Content-Type':'application/x-www-form-urlencoded; charset=UTF-8', 'Accept':'application/json, text/javascript, */*; q=0.01'})
         
-        self.cacheFilters  = {}
-        self.cacheLinks   = {}
+        self.cacheFilters = {}
+        self.cacheLinks = {}
         self.defaultParams = {'with_metadata':True, 'header':self.HEADER, 'raw_post_data':True, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
         
         self.MAIN_CAT_TAB = [
-                             {'category': 'search',                'title': _('Search'),              'search_item': True, },
-                             {'category': 'search_history',        'title': _('Search history'),} 
+                             {'category': 'search', 'title': _('Search'), 'search_item': True, },
+                             {'category': 'search_history', 'title': _('Search history'),} 
                             ]
         
     def _getStr(self, item, key, default=''):
@@ -71,8 +71,8 @@ class CineTO(CBaseHostClass, CaptchaHelper):
         
     def _getSearchParams(self, cItem, count=1):
         post_data = {}
-        post_data['kind']   = cItem.get('f_kind', 'all')
-        post_data['genre']  = cItem.get('f_genres', '0')
+        post_data['kind'] = cItem.get('f_kind', 'all')
+        post_data['genre'] = cItem.get('f_genres', '0')
         post_data['rating'] = cItem.get('f_rating', '1')
         
         sYear = cItem.get('f_year', self.cacheFilters['year'][-1]['f_year'])
@@ -87,7 +87,7 @@ class CineTO(CBaseHostClass, CaptchaHelper):
         return post_data
     
     def listMainMenu(self, cItem, nextCategory):
-        self.cacheFilters  = {'kind':[], 'genres':[], 'rating':[], 'year':[]}
+        self.cacheFilters = {'kind':[], 'genres':[], 'rating':[], 'year':[]}
         
         sts, data = self.getPage(self.getMainUrl())
         if not sts:
@@ -119,9 +119,9 @@ class CineTO(CBaseHostClass, CaptchaHelper):
             
             # year
             tmp = self.cm.ph.getDataBeetwenMarkers(data, '<ul id="year"', '</ul>')[1]
-            end   = int(self.cm.ph.getSearchGroups(tmp, '''data-end=['"]([0-9]+?)['"]''')[0])
+            end = int(self.cm.ph.getSearchGroups(tmp, '''data-end=['"]([0-9]+?)['"]''')[0])
             start = int(self.cm.ph.getSearchGroups(tmp, '''data-start=['"]([0-9]+?)['"]''')[0])
-            for idx in range(end, start-1, -1):
+            for idx in range(end, start - 1, -1):
                 value = str(idx)
                 title = _('Year %s') % idx
                 self.cacheFilters['year'].append({'f_year':value, 'title':title})
@@ -177,7 +177,7 @@ class CineTO(CBaseHostClass, CaptchaHelper):
         printDBG(item)
         title = self.cleanHtmlStr(item['title'])
         if 'cover' in item:
-            icon  = self.getFullIconUrl(item['cover'])
+            icon = self.getFullIconUrl(item['cover'])
         else:
             icon = 'https://s.cine.to/cover/%s.jpg' % str(item['imdb']).zfill(7)
         
@@ -222,7 +222,7 @@ class CineTO(CBaseHostClass, CaptchaHelper):
         
         if nextPage:
             params = dict(cItem)
-            params.update({'good_for_fav':False, 'title':_("Next page"), 'page':page+1})
+            params.update({'good_for_fav':False, 'title':_("Next page"), 'page':page + 1})
             self.addDir(params)
             
     def exploreItem(self, cItem, nextCategory):
@@ -284,7 +284,7 @@ class CineTO(CBaseHostClass, CaptchaHelper):
                 if trailerUrl != '':
                     url = 'https://www.youtube.com/watch?v=%s' % trailerUrl
                     title = '[TRAILER] [%s] %s' % (langName, baseTitle)
-                    params = {'title':title,  'imdb':cItem['imdb'], 'f_lang_id':langId, 'f_lang':lang, 'url':url, 'icon':icon, 'desc':desc}
+                    params = {'title':title, 'imdb':cItem['imdb'], 'f_lang_id':langId, 'f_lang':lang, 'url':url, 'icon':icon, 'desc':desc}
                     self.addVideo(params)
                 
                 title = '[%s] %s (%s)' % (langName, baseTitle, data.get('year', ''))
@@ -332,7 +332,7 @@ class CineTO(CBaseHostClass, CaptchaHelper):
                 quality = qualityMap.get(quality, quality)
                 for idx in range(1, len(links), 1):
                     name = '[%s] %s' % (quality, hosting)
-                    url  = self.getFullUrl('/out/' + links[idx]) 
+                    url = self.getFullUrl('/out/' + links[idx]) 
                     retTab.append({'name':name, 'url':url, 'need_resolve':1})
         except Exception:
             printExc()
@@ -386,7 +386,7 @@ class CineTO(CBaseHostClass, CaptchaHelper):
         
         if 0 == len(urlTab):
             if returnCode == 404:
-                errorMsgTab= [_("Server return 404 - Not Found.")]
+                errorMsgTab = [_("Server return 404 - Not Found.")]
                 errorMsgTab.append(_("It looks like some kind of protection. Try again later."))
             
             if len(errorMsgTab):
@@ -428,7 +428,7 @@ class CineTO(CBaseHostClass, CaptchaHelper):
                 else:
                     lang = langKeys[0]
             
-            desc = self.cleanHtmlStr(data.get('plot_'+lang, ''))
+            desc = self.cleanHtmlStr(data.get('plot_' + lang, ''))
             
             tmp = data.get('year', '')
             if tmp != '':
@@ -468,9 +468,9 @@ class CineTO(CBaseHostClass, CaptchaHelper):
         
         CBaseHostClass.handleService(self, index, refresh, searchPattern, searchType)
 
-        name     = self.currItem.get("name", '')
+        name = self.currItem.get("name", '')
         category = self.currItem.get("category", '')
-        mode     = self.currItem.get("mode", '')
+        mode = self.currItem.get("mode", '')
         
         printDBG("handleService: |||||||||||||||||||||||||||||||||||| name[%s], category[%s] " % (name, category))
         self.currList = []

@@ -51,12 +51,12 @@ class WpTV(CBaseHostClass):
         self.MAIN_URL = 'http://wp.tv/'
         self.DEFAULT_ICON_URL = 'http://static.wirtualnemedia.pl/media/top/wp-kanaltv-logo655ciemne.png'
         
-        self.MAIN_CAT_TAB = [{'category':'list_sections',      'title': _('Main'),                       'url':self.MAIN_URL},
-                             {'category':'list_sections',      'title': _('Series'),                     'url':self.getFullUrl('seriale')},
-                             {'category':'list_sections',      'title': _('Programs'),                   'url':self.getFullUrl('programy')},
-                             {'category':'list_groups',        'title': _('Others'),                     'url':self.getFullUrl('inne')},
-                             {'category':'search',             'title': _('Search'), 'search_item':True},
-                             {'category':'search_history',     'title': _('Search history')} 
+        self.MAIN_CAT_TAB = [{'category':'list_sections', 'title': _('Main'), 'url':self.MAIN_URL},
+                             {'category':'list_sections', 'title': _('Series'), 'url':self.getFullUrl('seriale')},
+                             {'category':'list_sections', 'title': _('Programs'), 'url':self.getFullUrl('programy')},
+                             {'category':'list_groups', 'title': _('Others'), 'url':self.getFullUrl('inne')},
+                             {'category':'search', 'title': _('Search'), 'search_item':True},
+                             {'category':'search_history', 'title': _('Search history')} 
                             ]
         
         self.cacheSections = {}
@@ -82,7 +82,7 @@ class WpTV(CBaseHostClass):
             dur = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(item, '<time', '</time>')[1])
             des = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(item, ('<div', '>', 'description'), ('</div', '>'))[1])
             
-            url  = self.getFullUrl(self._getAttrVal(item, 'href'))
+            url = self.getFullUrl(self._getAttrVal(item, 'href'))
             icon = self._getAttrVal(item, 'src')
             if icon == '' or icon.startswith('data:image'):
                 icon = self._getAttrVal(item, 'data-src')
@@ -92,7 +92,7 @@ class WpTV(CBaseHostClass):
             if title == '':
                 title = self.cleanHtmlStr(self._getAttrVal(item, 'alt'))
             if 'odcinek' in cat.lower():
-                title += ' - ' +  cat
+                title += ' - ' + cat
             
             if cat != '' and dur != '' and des != '':
                 desc = '%s | %s [/br]%s' % (dur, cat, des)
@@ -117,7 +117,7 @@ class WpTV(CBaseHostClass):
         if not sts:
             return
         
-        nextPage = self.getFullUrl(self.cm.ph.getSearchGroups(data, '''href=['"]([^'^"]+?\,page\,%d\,[^'^"]+?)['"]''' % (page+1))[0])
+        nextPage = self.getFullUrl(self.cm.ph.getSearchGroups(data, '''href=['"]([^'^"]+?\,page\,%d\,[^'^"]+?)['"]''' % (page + 1))[0])
         
         titlesTab = []
         data = self.cm.ph.getAllItemsBeetwenMarkers(data, '<section', '</section>')
@@ -142,7 +142,7 @@ class WpTV(CBaseHostClass):
         if self.cm.isValidUrl(nextPage):
             params = dict(cItem)
             params.pop('good_for_fav', None)
-            params.update({'title':_('Next page'), 'url':nextPage, 'page':page+1})
+            params.update({'title':_('Next page'), 'url':nextPage, 'page':page + 1})
             self.addDir(params)
         
     def listSectionItems(self, cItem, nextCategory):
@@ -176,7 +176,7 @@ class WpTV(CBaseHostClass):
             itemTab = []
             group = self.cm.ph.getAllItemsBeetwenMarkers(group, '<li', '</li>')
             for item in group:
-                url   = self.getFullUrl(self._getAttrVal(item, 'href'))
+                url = self.getFullUrl(self._getAttrVal(item, 'href'))
                 title = self.cleanHtmlStr(item)
                 itemTab.append({'title':title, 'url':url})
             
@@ -203,13 +203,13 @@ class WpTV(CBaseHostClass):
         if not sts:
             return
         
-        nextPage = self.getFullUrl(self.cm.ph.getSearchGroups(data, '''href=['"]([^'^"]+?\,page\,%d\,[^'^"]+?)['"]''' % (page+1))[0])
+        nextPage = self.getFullUrl(self.cm.ph.getSearchGroups(data, '''href=['"]([^'^"]+?\,page\,%d\,[^'^"]+?)['"]''' % (page + 1))[0])
         mainDesc = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(data, '<main class="main-content"', '</p>')[1])
         
         if page == 1:
-            trailerData  = self.cm.ph.getDataBeetwenMarkers(data, '<a class="see-trailer"', '</a>', withMarkers=True)[1]
+            trailerData = self.cm.ph.getDataBeetwenMarkers(data, '<a class="see-trailer"', '</a>', withMarkers=True)[1]
             trailerTitle = '{0} - {1}'.format(cItem['title'], self.cleanHtmlStr(trailerData))
-            trailerUrl   = self.getFullUrl(self._getAttrVal(trailerData, 'href'))
+            trailerUrl = self.getFullUrl(self._getAttrVal(trailerData, 'href'))
             if self.cm.isValidUrl(trailerUrl) and ',klip.html' in trailerUrl:
                 params = {'good_for_fav': True, 'url':trailerUrl, 'title':trailerTitle, 'icon':cItem.get('icon', ''), 'desc':mainDesc}
                 self.addVideo(params)
@@ -226,7 +226,7 @@ class WpTV(CBaseHostClass):
         if self.cm.isValidUrl(nextPage):
             params = dict(cItem)
             params.pop('good_for_fav', None)
-            params.update({'title':_('Next page'), 'url':nextPage, 'page':page+1})
+            params.update({'title':_('Next page'), 'url':nextPage, 'page':page + 1})
             self.addDir(params)
 
     def listSearchResult(self, cItem, searchPattern, searchType):
@@ -304,9 +304,9 @@ class WpTV(CBaseHostClass):
         
         CBaseHostClass.handleService(self, index, refresh, searchPattern, searchType)
 
-        name     = self.currItem.get("name", '')
+        name = self.currItem.get("name", '')
         category = self.currItem.get("category", '')
-        mode     = self.currItem.get("mode", '')
+        mode = self.currItem.get("mode", '')
         
         printDBG("handleService: |||||||||||||||||||||||||||||||||||| name[%s], category[%s] " % (name, category))
         self.currList = []

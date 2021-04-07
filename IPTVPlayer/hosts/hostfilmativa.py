@@ -27,27 +27,27 @@ class Filmativa(CBaseHostClass):
     def __init__(self):
         CBaseHostClass.__init__(self, {'history':'Filmativa', 'cookie':'filmativa.cookie'})
 
-        self.MAIN_URL    = 'https://filmativa.xyz/'
-        self.SRCH_URL    = self.MAIN_URL + '?s='
+        self.MAIN_URL = 'https://filmativa.xyz/'
+        self.SRCH_URL = self.MAIN_URL + '?s='
         self.DEFAULT_ICON_URL = 'https://zoxh.com/screenshot/bupxbupx/pxlr/pxjk/pxos/filmativa.ws-desktop.jpg'
     
-        self.S_MAIN_URL    = 'http://epizode.ws/'
-        self.S_SRCH_URL    = self.S_MAIN_URL + '?s='
+        self.S_MAIN_URL = 'http://epizode.ws/'
+        self.S_SRCH_URL = self.S_MAIN_URL + '?s='
         self.S_DEFAULT_ICON_URL = "https://zoxh.com/screenshot/bupxbupx/pxlr/pxjk/pxos/filmativa.ws-desktop.jpg"
 
-        self.MAIN_CAT_TAB = [{'category':'movies',         'title': _('Movies'),       'url':self.MAIN_URL, 'icon':self.DEFAULT_ICON_URL},
-                            {'category':'series',         'title': _('TV series'),    'url':self.S_MAIN_URL, 'icon':self.S_DEFAULT_ICON_URL},
-                            {'category':'search',         'title': _('Search'),       'search_item':True},
+        self.MAIN_CAT_TAB = [{'category':'movies', 'title': _('Movies'), 'url':self.MAIN_URL, 'icon':self.DEFAULT_ICON_URL},
+                            {'category':'series', 'title': _('TV series'), 'url':self.S_MAIN_URL, 'icon':self.S_DEFAULT_ICON_URL},
+                            {'category':'search', 'title': _('Search'), 'search_item':True},
                             {'category':'search_history', 'title': _('Search history')} 
                             ]
         
-        self.MOVIES_TAB = [{'category': 'list_movies',  'title': _('New'),       'url': self.MAIN_URL,},
-                            {'category':'list_movies',  'title': _('Popular'),   'url':self.MAIN_URL + 'popularno/'},
+        self.MOVIES_TAB = [{'category': 'list_movies', 'title': _('New'), 'url': self.MAIN_URL,},
+                            {'category':'list_movies', 'title': _('Popular'), 'url':self.MAIN_URL + 'popularno/'},
                             ]
         
-        self.SERIES_TAB = [{'category': 'list_series',  'title': _('New'),          'url': self.S_MAIN_URL,},
-                      {'category':'list_series',  'title': _('New episodes'),       'url':self.S_MAIN_URL + 'nove-epizode/'},
-                      {'category':'list_series',  'title': _('Popular'),            'url':self.S_MAIN_URL + 'popularno/'},
+        self.SERIES_TAB = [{'category': 'list_series', 'title': _('New'), 'url': self.S_MAIN_URL,},
+                      {'category':'list_series', 'title': _('New episodes'), 'url':self.S_MAIN_URL + 'nove-epizode/'},
+                      {'category':'list_series', 'title': _('Popular'), 'url':self.S_MAIN_URL + 'popularno/'},
                  ]
 
 
@@ -121,11 +121,11 @@ class Filmativa(CBaseHostClass):
         for item in data:
             if '"cover"' not in item:
                 continue
-            tmp    = item.split('<span class="rating')
-            url    = self.cm.ph.getSearchGroups(item, 'href="([^"]+?)"')[0]
-            icon   = self.cm.ph.getSearchGroups(item, 'src="([^"]+?)"')[0]
-            title  = tmp[0]
-            desc   = ""
+            tmp = item.split('<span class="rating')
+            url = self.cm.ph.getSearchGroups(item, 'href="([^"]+?)"')[0]
+            icon = self.cm.ph.getSearchGroups(item, 'src="([^"]+?)"')[0]
+            title = tmp[0]
+            desc = ""
             if len(tmp) > 1:
                 desc = self.cm.ph.getSearchGroups(tmp[1], 'title="([^"]+?)"')[0]
             params = dict(cItem)
@@ -138,7 +138,7 @@ class Filmativa(CBaseHostClass):
         
         if nextPage:
             params = dict(cItem)
-            params.update({'title':_('Next page'), 'page':page+1})
+            params.update({'title':_('Next page'), 'page':page + 1})
             self.addDir(params)
             
     def listMovies(self, cItem):
@@ -180,7 +180,7 @@ class Filmativa(CBaseHostClass):
                     dataS = self.cm.ph.getSearchGroups(tmp, 'data-s="([^"]+?)"')[0]
                     dataE = self.cm.ph.getSearchGroups(tmp, 'data-e="([^"]+?)"')[0]
 
-                    subtitleUrl = "https://cdn.opensubtitles.ml/sub/" + postId + "-" + dataS + "-" + dataE +".vtt"
+                    subtitleUrl = "https://cdn.opensubtitles.ml/sub/" + postId + "-" + dataS + "-" + dataE + ".vtt"
 
                     dataDood = self.cm.ph.getSearchGroups(tmp, 'data-doodstream="([^"]+?)"')[0]
                     dataMix = self.cm.ph.getSearchGroups(tmp, 'data-mix="([^"]+?)"')[0]
@@ -290,7 +290,7 @@ class Filmativa(CBaseHostClass):
         
         CBaseHostClass.handleService(self, index, refresh, searchPattern, searchType)
 
-        name     = self.currItem.get("name", '')
+        name = self.currItem.get("name", '')
         category = self.currItem.get("category", '')
         printDBG("handleService: |||||||||||||||||||||||||||||||||||| name[%s], category[%s] " % (name, category))
         self.currList = []
@@ -383,9 +383,9 @@ class IPTVHost(CHostBase):
             if '' != url:
                 hostLinks.append(CUrlItem("Link", url, 1))
             
-        title       =  cItem.get('title', '')
-        description =  cItem.get('desc', '')
-        icon        =  cItem.get('icon', '')
+        title = cItem.get('title', '')
+        description = cItem.get('desc', '')
+        icon = cItem.get('icon', '')
         
         return CDisplayListItem(name=title,
                                     description=description,

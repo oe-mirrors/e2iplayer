@@ -84,16 +84,16 @@ class IPTVFavouritesAddItemWidget(Screen):
         
         self.onShown.append(self.onStart)
         self.started = False
-        self.result  = False
+        self.result = False
         
-        self.favItem        = favItem
+        self.favItem = favItem
         if None != favourites:
             self.saveLoad = False
         else:
             self.saveLoad = True
-        self.favourites     = favourites
+        self.favourites = favourites
         self.canAddNewGroup = canAddNewGroup
-        self.ignoredGroups  = ignoredGroups
+        self.ignoredGroups = ignoredGroups
     
     def onStart(self):
         self.onShown.remove(self.onStart)
@@ -167,7 +167,7 @@ class IPTVFavouritesMainWidget(Screen):
 
          <widget name="list"  position="5,80"  zPosition="2" size="%d,%d" scrollbarMode="showOnDemand" transparent="1"  backgroundColor="#00000000" enableWrapAround="1" />
          <widget name="title" position="5,47"  zPosition="1" size="%d,23" font="Regular;20"            transparent="1"  backgroundColor="#00000000"/>
-        </screen>""" %(
+        </screen>""" % (
             _("Favourites manager"),
             sz_w, sz_h, # size
             GetIconDir("red.png"),
@@ -184,18 +184,18 @@ class IPTVFavouritesMainWidget(Screen):
         self.onShown.append(self.onStart)
         self.onClose.append(self.__onClose)
         self.favourites = None
-        self.started    = False
-        self.menu       = ":groups:" # "items"
-        self.modified   = False
+        self.started = False
+        self.menu = ":groups:" # "items"
+        self.modified = False
         
         self.IDS_ENABLE_REORDERING = _('Enable reordering')
         self.IDS_DISABLE_REORDERING = _('Disable reordering')
         self.reorderingMode = False
         
-        self["title"]         = Label(_("Favourites groups"))
-        self["label_red"]     = Label(_("Remove group"))
-        self["label_yellow"]  = Label(self.IDS_ENABLE_REORDERING)
-        self["label_green"]   = Label(_("Add new group"))
+        self["title"] = Label(_("Favourites groups"))
+        self["label_red"] = Label(_("Remove group"))
+        self["label_yellow"] = Label(self.IDS_ENABLE_REORDERING)
+        self["label_green"] = Label(_("Add new group"))
         
         self["list"] = IPTVMainNavigatorList()
         self["list"].connectSelChanged(self.onSelectionChanged)
@@ -387,7 +387,7 @@ class IPTVFavouritesMainWidget(Screen):
             self.modified = True
             self.displayList()
             try:
-                self["list"].moveToIndex(len(self.favourites.getGroups())-1)
+                self["list"].moveToIndex(len(self.favourites.getGroups()) - 1)
             except Exception:
                 pass
             

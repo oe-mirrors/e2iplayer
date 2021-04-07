@@ -29,8 +29,8 @@ class DMItemBase:
     def __init__(self, url, fileName):
         self.url = url
         
-        self.fileName       = fileName
-        self.tmpFileName    = ""
+        self.fileName = fileName
+        self.tmpFileName = ""
 
         self.fileSize = -1 
         self.downloadedSize = 0
@@ -65,19 +65,19 @@ class DMHelper:
     DOWNLOADER_TYPE = enum(WGET='WGET_DOWNLOADER',
                             F4F='F4F_DOWNLOADER')
                             
-    HEADER_PARAMS = [{'marker':'Host=',             'name':'Host'},
-                     {'marker':'Accept=',           'name':'Accept'},
-                     {'marker':'Cookie=',           'name':'Cookie'},
-                     {'marker':'Referer=',          'name':'Referer'},
-                     {'marker':'User-Agent=',       'name':'User-Agent'},
-                     {'marker':'Range=',            'name':'Range'},
-                     {'marker':'Orgin=',            'name':'Orgin'},
-                     {'marker':'Origin=',           'name':'Origin'},
-                     {'marker':'X-Playback-Session-Id=',           'name':'X-Playback-Session-Id'},
+    HEADER_PARAMS = [{'marker':'Host=', 'name':'Host'},
+                     {'marker':'Accept=', 'name':'Accept'},
+                     {'marker':'Cookie=', 'name':'Cookie'},
+                     {'marker':'Referer=', 'name':'Referer'},
+                     {'marker':'User-Agent=', 'name':'User-Agent'},
+                     {'marker':'Range=', 'name':'Range'},
+                     {'marker':'Orgin=', 'name':'Orgin'},
+                     {'marker':'Origin=', 'name':'Origin'},
+                     {'marker':'X-Playback-Session-Id=', 'name':'X-Playback-Session-Id'},
                      {'marker':'If-Modified-Since=','name':'If-Modified-Since'},
-                     {'marker':'If-None-Match=',    'name':'If-None-Match'},
-                     {'marker':'X-Forwarded-For=',  'name':'X-Forwarded-For'},
-                     {'marker':'Authorization=',    'name':'Authorization'},
+                     {'marker':'If-None-Match=', 'name':'If-None-Match'},
+                     {'marker':'X-Forwarded-For=', 'name':'X-Forwarded-For'},
+                     {'marker':'Authorization=', 'name':'Authorization'},
                      ]
                      
     HANDLED_HTTP_HEADER_PARAMS = ['Host', 'Accept', 'Cookie', 'Referer', 'User-Agent', 'Range', 'Orgin', 'Origin', 'X-Playback-Session-Id', 'If-Modified-Since', 'If-None-Match', 'X-Forwarded-For', 'Authorization']
@@ -137,7 +137,7 @@ class DMHelper:
             tries = 10
             for idx in range(tries):
                 if idx > 0:
-                    uniqueID = str(idx+1) + '. '
+                    uniqueID = str(idx + 1) + '. '
                 else:
                     uniqueID = ''
                 newFileName = os.path.dirname(fileName) + os.sep + uniqueID + os.path.basename(fileName)

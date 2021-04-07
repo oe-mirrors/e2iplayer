@@ -86,7 +86,7 @@ class StartPage(resource.Resource):
     def render(self, req):
         req.setHeader('Content-type', 'text/html')
         req.setHeader('charset', 'UTF-8')
-        resetStatusMSG=[]
+        resetStatusMSG = []
         if len(list(req.args.keys())) > 0:
             if list(req.args.keys())[0] == 'resetState':
                 settings.activeHost = {}
@@ -270,12 +270,12 @@ class logsPage(resource.Resource):
             html += webParts.Body().logsPageContent(MenuStatusMSG, htmlError, DBGFileName, DBGFileContent)
             html += '<p align="center"><b><font color="#FFE4C4">%s</font></b></p>' % _('Debug file does not exist - nothing to download')
             return html
-        elif command[0] ==  "downloadLog":
+        elif command[0] == "downloadLog":
             req.responseHeaders.setRawHeaders('content-disposition', ['attachment; filename="iptv_dbg.txt"'])
             with open(DBGFileName, 'r') as f:
                   html = f.read()
                   f.close()
-        elif command[0] ==  'deleteLog':
+        elif command[0] == 'deleteLog':
             if os.path.exists(DBGFileName):
                 try:
                     os.remove(DBGFileName)
@@ -288,7 +288,7 @@ class logsPage(resource.Resource):
         req.setHeader('Content-type', 'text/html')
         req.setHeader('charset', 'UTF-8')
         reloadScripts()
-        if  settings.tempLogsHTML == '' and not isThreadRunning('buildtempLogsHTML'):
+        if settings.tempLogsHTML == '' and not isThreadRunning('buildtempLogsHTML'):
             webThreads.buildtempLogsHTML(DBGFileName).start()
             extraMeta = '<meta http-equiv="refresh" content="1">'
             MenuStatusMSG = _('Loading data, please wait')
@@ -331,17 +331,17 @@ class settingsPage(resource.Resource):
                     settings.activeHostsHTML.pop(arg[8:], None)
                     settings.configsHTML = {}
                     return util.redirectTo("/iptvplayer/settings", req)
-                elif key[:4] ==  "CFG:":
+                elif key[:4] == "CFG:":
                     exec('config.plugins.iptvplayer.%s.setValue("%s")\nconfig.plugins.iptvplayer.%s.save()' % (key[4:], arg, key[4:]))
                     settings.configsHTML = {}
                     return util.redirectTo("/iptvplayer/settings", req)
-                elif key[:4] ==  "INT:":
+                elif key[:4] == "INT:":
                     exec('config.plugins.iptvplayer.%s.setValue("%s")\nconfig.plugins.iptvplayer.%s.save()' % (key[4:], arg, key[4:]))
                     settings.configsHTML = {}
                     return util.redirectTo("/iptvplayer/settings", req)
                 configfile.save()
             except Exception:
-                printDBG("[webSite.py:settingsPage] EXCEPTION for updating value '%s' for key '%s'" %(arg, key))
+                printDBG("[webSite.py:settingsPage] EXCEPTION for updating value '%s' for key '%s'" % (arg, key))
 
         if isConfigsHTMLempty() and not isThreadRunning('buildConfigsHTML'):
             webThreads.buildConfigsHTML().start()
@@ -453,7 +453,7 @@ class downloaderPage(resource.Resource):
                         listItem.downloadedSize = os.path.getsize(fileName)
                     except Exception:
                         listItem.downloadedSize = 0
-                    listItem.status      = DMHelper.STS.DOWNLOADED
+                    listItem.status = DMHelper.STS.DOWNLOADED
                     listItem.downloadIdx = -1
                     DMlist.append(listItem)
                 if len(DMlist) == 0:
@@ -463,7 +463,7 @@ class downloaderPage(resource.Resource):
             
         if len(DMlist) == 0 and arg != 'arvchiveDM':
             listItem = DMItemBase(_('No materials waiting in the downloader queue'), '')
-            listItem.status      = 'INFO'
+            listItem.status = 'INFO'
             DMlist.append(listItem)
             extraMeta = ''
         elif len(DMlist) == 0 and arg in ['arvchiveDM', 'stopDM']:
@@ -489,7 +489,7 @@ class useHostPage(resource.Resource):
         self.key = None
         self.arg = None
         self.searchType = None
-        html= ''
+        html = ''
         extraMeta = ''
         MenuStatusMSG = ''
         
@@ -516,7 +516,7 @@ class useHostPage(resource.Resource):
             settings.retObj = settings.activeHost['Obj'].getInitList()
             settings.activeHost['PathLevel'] = 1
             settings.activeHost['ListType'] = 'ListForItem'
-            settings.activeHost['Status'] =  ''
+            settings.activeHost['Status'] = ''
             settings.currItem = {}
             setNewHostListShown(False)
         elif self.key == 'cmd' and self.arg == 'PreviousList':

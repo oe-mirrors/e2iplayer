@@ -5,7 +5,7 @@
 ###################################################
 from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _
 from Plugins.Extensions.IPTVPlayer.components.ihost import CHostBase, CBaseHostClass
-from Plugins.Extensions.IPTVPlayer.tools.iptvtools import  printDBG, printExc
+from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc
 from Plugins.Extensions.IPTVPlayer.libs.urlparserhelper import getDirectM3U8Playlist
 from Plugins.Extensions.IPTVPlayer.libs.e2ijson import loads as json_loads
 ###################################################
@@ -53,40 +53,40 @@ class ZDFmediathek(CBaseHostClass):
     AJAX_HEADER = dict(HEADER)
     AJAX_HEADER.update({'X-Requested-With': 'XMLHttpRequest', 'Connection': 'keep-alive', 'Pragma': 'no-cache', 'Cache-Control': 'no-cache'})
     
-    MAIN_URL     = 'https://www.zdf.de/'
+    MAIN_URL = 'https://www.zdf.de/'
     MAIN_API_URL = 'https://zdf-cdn.live.cellular.de/'
-    ZDF_API_URL  = 'https://api.zdf.de/'
-    DOCUMENT_API_URL            = MAIN_API_URL + 'mediathekV2/document/%s'
-    BROADSCAST_MISSED_API_URL   = MAIN_API_URL + 'mediathekV2/broadcast-missed/%s'
-    LIVE_TV_API_URL             = MAIN_API_URL + 'mediathekV2/live-tv/%s"'
+    ZDF_API_URL = 'https://api.zdf.de/'
+    DOCUMENT_API_URL = MAIN_API_URL + 'mediathekV2/document/%s'
+    BROADSCAST_MISSED_API_URL = MAIN_API_URL + 'mediathekV2/broadcast-missed/%s'
+    LIVE_TV_API_URL = MAIN_API_URL + 'mediathekV2/live-tv/%s"'
     BRANDS_ALPHABETICAL_API_URL = MAIN_API_URL + 'mediathekV2/brands-alphabetical'
-    TYPEAHEAD_API_URL           = MAIN_API_URL + 'mediathekV2/search/typeahead?q=%s&context=%s'
-    SEARCH_API_URL              = MAIN_API_URL + 'mediathekV2/search?q=%s&contentTypes=%s'
-    START_PAGE_API_URL          = MAIN_API_URL + 'mediathekV2/start-page'
-    IMPRINT_PAGE_API_URL        = MAIN_API_URL + 'mediathekV2/page/imprint'
-    CONTACT_PAGE_API_URL        = MAIN_API_URL + 'mediathekV2/page/contact'
-    PRIVACY_PAGE_API_URL        = MAIN_API_URL + 'mediathekV2/page/privacy'
-    CATEGORIES_PAGE_API_URL     = MAIN_API_URL + 'mediathekV2/categories'
-    MYZDF_API_URL               = MAIN_API_URL + 'mediathekV2/user/my-zdf'
-    CLIP_GROUP_API_URL          = MAIN_API_URL + 'mediathek/champions-league/match/%s/clip-group/%s'
-    LOGIN_URL                   = ZDF_API_URL  + 'identity/login'
-    LOGIN_FACEBOOK_URL          = ZDF_API_URL  + 'identity/thirdparty/facebook/login'
-    LOGIN_GOOGLE_URL            = ZDF_API_URL  + 'identity/thirdparty/google/login'
-    REGISTER_URL                = MAIN_URL     + 'mein-zdf#start'
-    SUBSCRIPTIONS_API_URL       = MAIN_API_URL + 'mediathekV2/user/subscriptions'
-    PUSH_SUBSCRIBE_URL           = 'http://push.live.cellular.de/api/device/'
-    BOOKMARKS_API_URL           = MAIN_API_URL + 'mediathekV2/user/bookmarks'
-    AUTH_TOKEN_API_URL          = MAIN_API_URL + 'mediathekV2/token'
-    AKAMAI_TOKEN_API_URL        = 'https://tg2cl15.zdf.de/generate'
+    TYPEAHEAD_API_URL = MAIN_API_URL + 'mediathekV2/search/typeahead?q=%s&context=%s'
+    SEARCH_API_URL = MAIN_API_URL + 'mediathekV2/search?q=%s&contentTypes=%s'
+    START_PAGE_API_URL = MAIN_API_URL + 'mediathekV2/start-page'
+    IMPRINT_PAGE_API_URL = MAIN_API_URL + 'mediathekV2/page/imprint'
+    CONTACT_PAGE_API_URL = MAIN_API_URL + 'mediathekV2/page/contact'
+    PRIVACY_PAGE_API_URL = MAIN_API_URL + 'mediathekV2/page/privacy'
+    CATEGORIES_PAGE_API_URL = MAIN_API_URL + 'mediathekV2/categories'
+    MYZDF_API_URL = MAIN_API_URL + 'mediathekV2/user/my-zdf'
+    CLIP_GROUP_API_URL = MAIN_API_URL + 'mediathek/champions-league/match/%s/clip-group/%s'
+    LOGIN_URL = ZDF_API_URL + 'identity/login'
+    LOGIN_FACEBOOK_URL = ZDF_API_URL + 'identity/thirdparty/facebook/login'
+    LOGIN_GOOGLE_URL = ZDF_API_URL + 'identity/thirdparty/google/login'
+    REGISTER_URL = MAIN_URL + 'mein-zdf#start'
+    SUBSCRIPTIONS_API_URL = MAIN_API_URL + 'mediathekV2/user/subscriptions'
+    PUSH_SUBSCRIBE_URL = 'http://push.live.cellular.de/api/device/'
+    BOOKMARKS_API_URL = MAIN_API_URL + 'mediathekV2/user/bookmarks'
+    AUTH_TOKEN_API_URL = MAIN_API_URL + 'mediathekV2/token'
+    AKAMAI_TOKEN_API_URL = 'https://tg2cl15.zdf.de/generate'
     
-    MAIN_CAT_TAB = [{'category':'list_start',      'title':_('Home page'), 'url': START_PAGE_API_URL},
-                    {'category':'missed_date',     'title':_('Missed the show?')},
-                    {'category':'list_cluster',    'title':_('Program A-Z'), 'simplify':False, 'url': BRANDS_ALPHABETICAL_API_URL},
-                    {'category':'list_cluster',    'title':_('Categories'), 'url': CATEGORIES_PAGE_API_URL},
+    MAIN_CAT_TAB = [{'category':'list_start', 'title':_('Home page'), 'url': START_PAGE_API_URL},
+                    {'category':'missed_date', 'title':_('Missed the show?')},
+                    {'category':'list_cluster', 'title':_('Program A-Z'), 'simplify':False, 'url': BRANDS_ALPHABETICAL_API_URL},
+                    {'category':'list_cluster', 'title':_('Categories'), 'url': CATEGORIES_PAGE_API_URL},
                     #{'category':'themen',         'title':_('Topics'), 'url': NEWS_API_URL},
-                    {'category':'kinder',          'title':_('Children')},
-                    {'category':'search',          'title':_('Search'), 'search_item':True},
-                    {'category':'search_history',  'title':_('Search history')}]
+                    {'category':'kinder', 'title':_('Children')},
+                    {'category':'search', 'title':_('Search'), 'search_item':True},
+                    {'category':'search_history', 'title':_('Search history')}]
                        
     QUALITY_MAP = {'hd':4, 'veryhigh':3, 'high':2, 'med':1, 'low':0}
     
@@ -95,12 +95,12 @@ class ZDFmediathek(CBaseHostClass):
         CBaseHostClass.__init__(self, {'history':'ZDFmediathek.tv', 'cookie':'zdfde.cookie'})
         self.DEFAULT_ICON_URL = 'https://www.zdf.de/static//img/bgs/zdf-typical-fallback-314x314.jpg'
         
-        self.KINDER_TAB = [{'category':'explore_item',         'title':_('Home page'),        'url': self.getFullUrl('/kinder'),                 'icon':self.getIconUrl('/assets/zdftivi-home-100~384x216')},
-                           {'category':'kinder_list_abc',      'title':_('Program A-Z'),      'url': self.getFullUrl('/kinder/sendungen-a-z'),   'icon':self.getIconUrl('/assets/a-z-teaser-100~384x216')},
-                           {'category':'explore_item',         'title':_('Missed the show?'), 'url': self.getFullUrl('/kinder/sendung-verpasst'),'icon':self.getIconUrl('/assets/buehne-tivi-sendung-verpasst-100~384x216')}]
+        self.KINDER_TAB = [{'category':'explore_item', 'title':_('Home page'), 'url': self.getFullUrl('/kinder'), 'icon':self.getIconUrl('/assets/zdftivi-home-100~384x216')},
+                           {'category':'kinder_list_abc', 'title':_('Program A-Z'), 'url': self.getFullUrl('/kinder/sendungen-a-z'), 'icon':self.getIconUrl('/assets/a-z-teaser-100~384x216')},
+                           {'category':'explore_item', 'title':_('Missed the show?'), 'url': self.getFullUrl('/kinder/sendung-verpasst'),'icon':self.getIconUrl('/assets/buehne-tivi-sendung-verpasst-100~384x216')}]
     
     def getPage(self, url, params={}, post_data=None):
-        HTTP_HEADER= dict(self.HEADER)
+        HTTP_HEADER = dict(self.HEADER)
         params.update({'header':HTTP_HEADER})
         
         if 'zdf-cdn.live.cellular.de' in url and False:
@@ -117,7 +117,7 @@ class ZDFmediathek(CBaseHostClass):
         
     def getIconUrl(self, url):
         url = self.getFullUrl(url)
-        if  'zdf-cdn.live.cellular.de' in url and False:
+        if 'zdf-cdn.live.cellular.de' in url and False:
             proxy = 'http://www.proxy-german.de/index.php?q={0}&hl=2e1'.format(urllib.parse.quote(url, ''))
             params = {}
             params['User-Agent'] = self.HEADER['User-Agent'],
@@ -131,7 +131,7 @@ class ZDFmediathek(CBaseHostClass):
         
     def getFullUrl(self, url):
         if 'proxy-german.de' in url:
-            url = urllib.parse.unquote(self.cm.ph.getSearchGroups(url+'&', '''\?q=(http[^&]+?)&''')[0])
+            url = urllib.parse.unquote(self.cm.ph.getSearchGroups(url + '&', '''\?q=(http[^&]+?)&''')[0])
         return CBaseHostClass.getFullUrl(self, url)
         
     def _getNum(self, v, default=0):
@@ -164,7 +164,7 @@ class ZDFmediathek(CBaseHostClass):
             if 'large' == iconssize:
                 idx -= 1
             elif 'medium' == iconssize:
-                idx /=  2
+                idx /= 2
             elif 'small' == iconssize:
                 idx = 0
             return iconsTab[idx]['url']
@@ -371,7 +371,7 @@ class ZDFmediathek(CBaseHostClass):
         # convert to timestamp
         now = int(time.time())
         for item in range(7):
-            date =  datetime.fromtimestamp(now - item * 24 * 3600).strftime('%Y-%m-%d')
+            date = datetime.fromtimestamp(now - item * 24 * 3600).strftime('%Y-%m-%d')
             params = dict(cItem)
             params.update({'category':'list_missed', 'title':date, 'url':self.BROADSCAST_MISSED_API_URL % date})
             self.addDir(params)
@@ -393,7 +393,7 @@ class ZDFmediathek(CBaseHostClass):
                 self._addItem(cItem, item)
             if data['nextPage']:
                 params = dict(cItem)
-                params.update({'title':_('Next page'), 'url':self.getFullUrl(data['nextPageUrl']), 'page':page+1})
+                params.update({'title':_('Next page'), 'url':self.getFullUrl(data['nextPageUrl']), 'page':page + 1})
                 self.addDir(params)
         except Exception:
             printExc()
@@ -414,7 +414,7 @@ class ZDFmediathek(CBaseHostClass):
             return []
         
         preferedQuality = int(config.plugins.iptvplayer.zdfmediathek_prefquality.value)
-        preferedFormat  = config.plugins.iptvplayer.zdfmediathek_prefformat.value
+        preferedFormat = config.plugins.iptvplayer.zdfmediathek_prefformat.value
         tmp = preferedFormat.split(',')
         formatMap = {}
         for i in range(len(tmp)):
@@ -448,7 +448,7 @@ class ZDFmediathek(CBaseHostClass):
                                 quality = 'hd'
                             qualityVal = ZDFmediathek.QUALITY_MAP.get(quality, 10)
                             qualityPref = abs(qualityVal - preferedQuality)
-                            formatPref  = formatMap.get(type['name'], 10)
+                            formatPref = formatMap.get(type['name'], 10)
                             tmpUrlTab.append({'url':url, 'quality_name':quality, 'quality':qualityVal, 'quality_pref':qualityPref, 'format_name':type['name'], 'format_pref':formatPref})
                         elif type['name'] == 'm3u8':
                             tmpList = getDirectM3U8Playlist(url, checkExt=False)
@@ -468,7 +468,7 @@ class ZDFmediathek(CBaseHostClass):
                                     quality = 'hd'
                                 qualityVal = ZDFmediathek.QUALITY_MAP.get(quality, 10)
                                 qualityPref = abs(qualityVal - preferedQuality)
-                                formatPref  = formatMap.get(type['name'], 10)
+                                formatPref = formatMap.get(type['name'], 10)
                                 tmpUrlTab.append({'url':tmpItem['url'], 'quality_name':quality, 'quality':qualityVal, 'quality_pref':qualityPref, 'format_name':type['name'], 'format_pref':formatPref})
             except Exception:
                 printExc()
@@ -477,34 +477,34 @@ class ZDFmediathek(CBaseHostClass):
                 if 'quality' == prefmoreimportantly:
                     if it1['quality_pref'] < it2['quality_pref']:
                         return -1
-                    elif it1['quality_pref']  > it2['quality_pref']:
+                    elif it1['quality_pref'] > it2['quality_pref']:
                         return 1
                     else:
                         if it1['quality'] < it2['quality']:
                             return -1
-                        elif it1['quality']  > it2['quality']:
+                        elif it1['quality'] > it2['quality']:
                             return 1
                         else:
                             if it1['format_pref'] < it2['format_pref']:
                                 return -1
-                            elif it1['format_pref']  > it2['format_pref']:
+                            elif it1['format_pref'] > it2['format_pref']:
                                 return 1
                             else:
                                 return 0
                 else:
                     if it1['format_pref'] < it2['format_pref']:
                         return -1
-                    elif it1['format_pref']  > it2['format_pref']:
+                    elif it1['format_pref'] > it2['format_pref']:
                         return 1
                     else:
                         if it1['quality_pref'] < it2['quality_pref']:
                             return -1
-                        elif it1['quality_pref']  > it2['quality_pref']:
+                        elif it1['quality_pref'] > it2['quality_pref']:
                             return 1
                         else:
                             if it1['quality'] < it2['quality']:
                                 return -1
-                            elif it1['quality']  > it2['quality']:
+                            elif it1['quality'] > it2['quality']:
                                 return 1
                             else:
                                 return 0
@@ -530,7 +530,7 @@ class ZDFmediathek(CBaseHostClass):
     def handleService(self, index, refresh=0, searchPattern='', searchType=''):
         printDBG('ZDFmediathek.handleService start')
         CBaseHostClass.handleService(self, index, refresh, searchPattern, searchType)
-        name     = self.currItem.get("name", None)
+        name = self.currItem.get("name", None)
         category = self.currItem.get("category", '')
         printDBG("ZDFmediathek.handleService: ---------> name[%s], category[%s] " % (name, category))
         searchPattern = self.currItem.get("search_pattern", searchPattern)

@@ -23,8 +23,8 @@ except Exception:
 # Config options for HOST
 ###################################################
 config.plugins.iptvplayer.tvgrypl_default_quality = ConfigSelection(default="SD", choices=[("MOB", "MOB: niska"), ("SD", "SD: standardowa"), ("HD", "HD: wysoka")]) #, ("FHD", "FHD: bardzo wysoka")
-config.plugins.iptvplayer.tvgrypl_use_dq          = ConfigYesNo(default=True)
-config.plugins.iptvplayer.tvgrypl_date_of_birth   = ConfigText(default="2017-01-31", fixed_size=False)
+config.plugins.iptvplayer.tvgrypl_use_dq = ConfigYesNo(default=True)
+config.plugins.iptvplayer.tvgrypl_date_of_birth = ConfigText(default="2017-01-31", fixed_size=False)
 
 def GetConfigList():
     optionList = []
@@ -51,11 +51,11 @@ class TvGryPL(CBaseHostClass):
         self.DEFAULT_ICON_URL = 'http://www.gry-online.pl/apple-touch-icon-120x120.png'
         self.MAIN_URL = 'https://tvgry.pl/'
         self.SEARCH_URL = self.getFullUrl('wyszukiwanie.asp')
-        self.MAIN_CAT_TAB = [{'category':'list_tabs',          'title':'Materiały',            'url': self.getFullUrl('/wideo-tvgry.asp')},
-                             {'category':'list_items',         'title':'Tematy',               'url': self.getFullUrl('/tematy.asp')},
-                             {'category':'list_tabs',          'title':'Zwiastuny gier',       'url': self.getFullUrl('/trailery-z-gier.asp')},
-                             {'category':'list_tabs',          'title':'Zwiastuny filmów',     'url': self.getFullUrl('/trailery-filmowe.asp')},
-                             {'category':'search',         'title':_('Search'), 'search_item':True},
+        self.MAIN_CAT_TAB = [{'category':'list_tabs', 'title':'Materiały', 'url': self.getFullUrl('/wideo-tvgry.asp')},
+                             {'category':'list_items', 'title':'Tematy', 'url': self.getFullUrl('/tematy.asp')},
+                             {'category':'list_tabs', 'title':'Zwiastuny gier', 'url': self.getFullUrl('/trailery-z-gier.asp')},
+                             {'category':'list_tabs', 'title':'Zwiastuny filmów', 'url': self.getFullUrl('/trailery-filmowe.asp')},
+                             {'category':'search', 'title':_('Search'), 'search_item':True},
                              {'category':'search_history', 'title':_('Search history')}]
     
     def getPage(self, url, params={}, post_data=None):
@@ -73,11 +73,11 @@ class TvGryPL(CBaseHostClass):
         if tabIdx < len(data):
             data = self.cm.ph.getAllItemsBeetwenMarkers(data[tabIdx], '<a ', '</a>')
             for item in data:
-                url   = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''href=['"]([^'^"]+?)['"]''')[0])
+                url = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''href=['"]([^'^"]+?)['"]''')[0])
                 title = self.cleanHtmlStr(item)
                 if self.cm.isValidUrl(url):
                     params = dict(cItem)
-                    params.update({'tab_idx':tabIdx+1, 'title':title, 'url':url})
+                    params.update({'tab_idx':tabIdx + 1, 'title':title, 'url':url})
                     self.addDir(params)
                 
         if 0 == len(self.currList):
@@ -86,7 +86,7 @@ class TvGryPL(CBaseHostClass):
     def listItems(self, cItem, post_data=None):
         printDBG("TvGryPL.listItems")
         page = cItem.get('page', 1)
-        url  = cItem['url']
+        url = cItem['url']
         if 1 < page:
             if '?' in url:
                 url += '&'
@@ -108,7 +108,7 @@ class TvGryPL(CBaseHostClass):
         
         data = self.cm.ph.getAllItemsBeetwenMarkers(data[0], '<a ', '</a>')
         for item in data:
-            url  = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''href=['"]([^'^"]+?)['"]''')[0])
+            url = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''href=['"]([^'^"]+?)['"]''')[0])
             icon = self.getFullIconUrl(self.cm.ph.getSearchGroups(item, '''src=['"]([^'^"]+?)['"]''')[0])
             title = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(item, '<p class="tv-box-title"', '</p>')[1])
             if title == '':
@@ -265,7 +265,7 @@ class TvGryPL(CBaseHostClass):
     def handleService(self, index, refresh=0, searchPattern='', searchType=''):
         printDBG('TvGryPL.handleService start')
         CBaseHostClass.handleService(self, index, refresh, searchPattern, searchType)
-        name     = self.currItem.get("name", None)
+        name = self.currItem.get("name", None)
         category = self.currItem.get("category", '')
         
         printDBG("handleService: |||||||||||||||||||||||||||||||||||| name[%s], category[%s] " % (name, category))

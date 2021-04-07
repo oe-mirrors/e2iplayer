@@ -30,9 +30,9 @@ from Components.config import config, ConfigSelection, ConfigText, getConfigList
 ###################################################
 # Config options for HOST
 ###################################################
-config.plugins.iptvplayer.putlockertv_proxy = ConfigSelection(default="None", choices=[("None",     _("None")),
-                                                                                           ("proxy_1",  _("Alternative proxy server (1)")),
-                                                                                           ("proxy_2",  _("Alternative proxy server (2)"))])
+config.plugins.iptvplayer.putlockertv_proxy = ConfigSelection(default="None", choices=[("None", _("None")),
+                                                                                           ("proxy_1", _("Alternative proxy server (1)")),
+                                                                                           ("proxy_2", _("Alternative proxy server (2)"))])
 config.plugins.iptvplayer.putlockertv_alt_domain = ConfigText(default="", fixed_size=False)
 
 def GetConfigList():
@@ -57,8 +57,8 @@ class PutlockerTvTo(CBaseHostClass):
         self.AJAX_HEADER = dict(self.HEADER)
         self.AJAX_HEADER.update({'X-Requested-With': 'XMLHttpRequest'})
         self.MAIN_URL = None
-        self.cacheLinks    = {}
-        self.cacheFilters  = {}
+        self.cacheLinks = {}
+        self.cacheFilters = {}
         self.cacheFiltersKeys = []
         self.defaultParams = {'with_metadata':True, 'header':self.HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
         self._myFun = None
@@ -138,11 +138,11 @@ class PutlockerTvTo(CBaseHostClass):
     def listMainMenu(self, cItem):
         if self.MAIN_URL == None:
             return
-        MAIN_CAT_TAB = [{'category':'list_items',      'title': 'Featured',  'url':self.getFullUrl('/featured')},
-                        {'category':'list_filters',    'title': 'Movies',    'url':self.getFullUrl('/movies'),   'f_type[]':'movie'},
-                        {'category':'list_filters',    'title': 'TV-Series', 'url':self.getFullUrl('/tv-series'),'f_type[]':'series'},
-                        {'category': 'search',          'title': _('Search'), 'search_item': True,},
-                        {'category': 'search_history',  'title': _('Search history'),} 
+        MAIN_CAT_TAB = [{'category':'list_items', 'title': 'Featured', 'url':self.getFullUrl('/featured')},
+                        {'category':'list_filters', 'title': 'Movies', 'url':self.getFullUrl('/movies'), 'f_type[]':'movie'},
+                        {'category':'list_filters', 'title': 'TV-Series', 'url':self.getFullUrl('/tv-series'),'f_type[]':'series'},
+                        {'category': 'search', 'title': _('Search'), 'search_item': True,},
+                        {'category': 'search_history', 'title': _('Search history'),} 
                        ]
         self.listsTab(MAIN_CAT_TAB, cItem)
         
@@ -201,7 +201,7 @@ class PutlockerTvTo(CBaseHostClass):
         filter = self.cacheFiltersKeys[f_idx]
         f_idx += 1
         cItem['f_idx'] = f_idx
-        if f_idx  == len(self.cacheFiltersKeys):
+        if f_idx == len(self.cacheFiltersKeys):
             cItem['category'] = nextCategory
         self.listsTab(self.cacheFilters.get(filter, []), cItem)
         
@@ -237,7 +237,7 @@ class PutlockerTvTo(CBaseHostClass):
         if not sts:
             return
         
-        if  '>&raquo;<' in data:
+        if '>&raquo;<' in data:
             nextPage = True
         else:
             nextPage = False
@@ -276,7 +276,7 @@ class PutlockerTvTo(CBaseHostClass):
         
         if nextPage and len(self.currList) > 0:
             params = dict(cItem)
-            params.update({'good_for_fav': False, 'title':_("Next page"), 'page':page+1})
+            params.update({'good_for_fav': False, 'title':_("Next page"), 'page':page + 1})
             self.addDir(params)
     
     def exploreItem(self, cItem):
@@ -308,17 +308,17 @@ class PutlockerTvTo(CBaseHostClass):
             printExc()
         
         titlesTab = []
-        self.cacheLinks  = {}
+        self.cacheLinks = {}
         #data = self.cm.ph.getDataBeetwenMarkers(data, '<div id="servers">', '<div class="widget')[1]
         data = data.split('<div class="server row"')
         for tmp in data:
             serverName = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(tmp, '<label', '</label>')[1])
-            serverId   = self.cm.ph.getSearchGroups(tmp, '''data-id=['"]([^'^"]+?)['"]''')[0]
+            serverId = self.cm.ph.getSearchGroups(tmp, '''data-id=['"]([^'^"]+?)['"]''')[0]
             tmp = self.cm.ph.getAllItemsBeetwenMarkers(tmp, '<li', '</li>')
             for item in tmp:
                 title = self.cleanHtmlStr(item)
-                id    = self.cm.ph.getSearchGroups(item, '''data-id=['"]([^'^"]+?)['"]''')[0]
-                url   = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''href=['"]([^'^"]+?)['"]''')[0])
+                id = self.cm.ph.getSearchGroups(item, '''data-id=['"]([^'^"]+?)['"]''')[0]
+                url = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''href=['"]([^'^"]+?)['"]''')[0])
                 if title not in titlesTab:
                     titlesTab.append(title)
                     self.cacheLinks[title] = []
@@ -348,7 +348,7 @@ class PutlockerTvTo(CBaseHostClass):
             while len(d) < key_length + iv_length:
                 d_i = md5(d_i + password).digest()
                 d += d_i
-            return d[:key_length], d[key_length:key_length+iv_length]
+            return d[:key_length], d[key_length:key_length + iv_length]
         bs = 16
         key, iv = derive_key_and_iv(password, 32, 16)
         cipher = AES_CBC(key=key, keySize=32)
@@ -519,13 +519,13 @@ class PutlockerTvTo(CBaseHostClass):
         
         desc = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(data, '<p class="desc">', '</p>')[1])
         if desc == '':
-            desc  = self.cleanHtmlStr(self.cm.ph.getSearchGroups(data, '<meta property="og:description"[^>]+?content="([^"]+?)"')[0])
+            desc = self.cleanHtmlStr(self.cm.ph.getSearchGroups(data, '<meta property="og:description"[^>]+?content="([^"]+?)"')[0])
         
         title = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(data, '<h1', '</h1>')[1])
         if title == '':
             title = self.cleanHtmlStr(self.cm.ph.getSearchGroups(data, '<meta property="og:title"[^>]+?content="([^"]+?)"')[0])
         
-        icon  = self.getFullUrl(self.cm.ph.getSearchGroups(data, '<meta property="og:image"[^>]+?content="([^"]+?)"')[0])
+        icon = self.getFullUrl(self.cm.ph.getSearchGroups(data, '<meta property="og:image"[^>]+?content="([^"]+?)"')[0])
         
         if title == '':
             title = cItem['title']
@@ -576,9 +576,9 @@ class PutlockerTvTo(CBaseHostClass):
             #rm(self.COOKIE_FILE)
             self.selectDomain()
 
-        name     = self.currItem.get("name", '')
+        name = self.currItem.get("name", '')
         category = self.currItem.get("category", '')
-        mode     = self.currItem.get("mode", '')
+        mode = self.currItem.get("mode", '')
         
         printDBG("handleService: |||||||||||||||||||||||||||||||||||| name[%s], category[%s] " % (name, category))
         self.currList = []

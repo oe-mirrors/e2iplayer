@@ -36,14 +36,14 @@ class GamatoTV(CBaseHostClass):
         self.AJAX_HEADER = dict(self.HEADER)
         self.AJAX_HEADER.update({'X-Requested-With': 'XMLHttpRequest'})
         self.MAIN_URL = 'http://gamatotv.co/'
-        self.cacheLinks    = {}
-        self.cacheFilters  = {}
+        self.cacheLinks = {}
+        self.cacheFilters = {}
         self.cacheFiltersKeys = []
         self.defaultParams = {'header':self.HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
     
         self.MAIN_CAT_TAB = [
-                             {'category': 'search',           'title': _('Search'), 'search_item': True,},
-                             {'category': 'search_history',   'title': _('Search history'),} 
+                             {'category': 'search', 'title': _('Search'), 'search_item': True,},
+                             {'category': 'search_history', 'title': _('Search history'),} 
                             ]
         
     def getPage(self, baseUrl, addParams={}, post_data=None):
@@ -143,7 +143,7 @@ class GamatoTV(CBaseHostClass):
     def listItems(self, cItem, nextCategory):
         printDBG("listItems [%s]" % cItem)
         page = cItem.get('page', 1)
-        url  = cItem['url']
+        url = cItem['url']
         
         if page > 1:
             if '?' in url:
@@ -183,13 +183,13 @@ class GamatoTV(CBaseHostClass):
         
         if nextPage and len(self.currList) > 0:
             params = dict(cItem)
-            params.update({'title':_("Next page"), 'page':page+1})
+            params.update({'title':_("Next page"), 'page':page + 1})
             self.addDir(params)
     
     def exploreItem(self, cItem, nextCategory=''):
         printDBG("exploreItem")
         
-        self.cacheLinks  = {}
+        self.cacheLinks = {}
         
         sts, data = self.getPage(cItem['url'])
         if not sts:
@@ -218,11 +218,11 @@ class GamatoTV(CBaseHostClass):
                 mainDesc.append(item)
         
         mainDesc.append(self.cleanHtmlStr(tmp.split('<span id="groups121">', 1)[-1]))
-        mainDesc  = '[/br]'.join(mainDesc)
+        mainDesc = '[/br]'.join(mainDesc)
         
         # trailer 
         if trailer != None:
-            title = '%s - %s' %(cItem['title'], _('TRAILER'))
+            title = '%s - %s' % (cItem['title'], _('TRAILER'))
             params = dict(cItem)
             params.update({'good_for_fav': False, 'title':title, 'url':trailer['url'], 'desc':trailer['name']})
             self.addVideo(params)
@@ -240,7 +240,7 @@ class GamatoTV(CBaseHostClass):
             if len(tmp) > 1:
                 printDBG(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> SEASON %s" % len(tmp[0]))
                 for idx in range(2, len(tmp), 2):
-                    sTitle = self.cleanHtmlStr(tmp[idx-1])
+                    sTitle = self.cleanHtmlStr(tmp[idx - 1])
                     sNum = self.cm.ph.getSearchGroups(sTitle, '[^0-9]([0-9]+)')[0]
                     
                     episodesList = []
@@ -275,7 +275,7 @@ class GamatoTV(CBaseHostClass):
                         title = self.cleanHtmlStr(self.cm.ph.rgetDataBeetwenMarkers2(item, '</a>', '<a')[1])
                     if title == '':
                         title = self.cleanHtmlStr(item)
-                    icon = self.getFullIconUrl(self.cm.ph.getSearchGroups(tmp[idx-1], '''src=['"]([^'^"]+?)['"]''')[0])
+                    icon = self.getFullIconUrl(self.cm.ph.getSearchGroups(tmp[idx - 1], '''src=['"]([^'^"]+?)['"]''')[0])
                     if icon == '':
                         icon = cItem.get('icon', '')
                     linksTab = []
@@ -311,7 +311,7 @@ class GamatoTV(CBaseHostClass):
         cItem = dict(cItem)
         sNum = cItem.pop('s_num', '')
         sTitle = cItem.pop('series_title', '')
-        episodesList  = cItem.pop('e_list', [])
+        episodesList = cItem.pop('e_list', [])
         episodesLinks = cItem.pop('e_links', {})
         
         for eNum in episodesList:
@@ -402,22 +402,22 @@ class GamatoTV(CBaseHostClass):
             return retTab
         
         title = self.cleanHtmlStr(self.cm.ph.getSearchGroups(data, '''<meta[^>]+?itemprop="name"[^>]+?content="([^"]+?)"''')[0])
-        icon  = self.cm.ph.getDataBeetwenMarkers(data, '<div id="poster"', '</div>')[1]
-        icon  = self.getFullIconUrl(self.cm.ph.getSearchGroups(icon, '''<img[^>]+?src=['"]([^"^']+?\.jpe?g[^"^']*?)["']''')[0])
-        desc  = self.cleanHtmlStr(self.cm.ph.getDataBeetwenReMarkers(data, re.compile('<div[^>]+?class="wp-content"[^>]*?>'), re.compile('</div>'))[1])
+        icon = self.cm.ph.getDataBeetwenMarkers(data, '<div id="poster"', '</div>')[1]
+        icon = self.getFullIconUrl(self.cm.ph.getSearchGroups(icon, '''<img[^>]+?src=['"]([^"^']+?\.jpe?g[^"^']*?)["']''')[0])
+        desc = self.cleanHtmlStr(self.cm.ph.getDataBeetwenReMarkers(data, re.compile('<div[^>]+?class="wp-content"[^>]*?>'), re.compile('</div>'))[1])
         
         mapDesc = {'Original title': 'alternate_title', 'IMDb Rating':'imdb_rating', 'TMDb Rating':'tmdb_rating', 'Status':'status',
                    'Firt air date':'first_air_date', 'Last air date':'last_air_date', 'Seasons':'seasons', 'Episodes':'episodes'}
         tmp = self.cm.ph.getAllItemsBeetwenMarkers(data, '<div class="custom_fields">', '</div>')
         for item in tmp:
             item = item.split('<span class="valor">')
-            if len(item)<2:
+            if len(item) < 2:
                 continue
             marker = self.cleanHtmlStr(item[0])
             key = mapDesc.get(marker, '')
             if key == '':
                 continue
-            value  = self.cleanHtmlStr(item[1])
+            value = self.cleanHtmlStr(item[1])
             if value != '':
                 otherInfo[key] = value
         
@@ -431,7 +431,7 @@ class GamatoTV(CBaseHostClass):
             if key == '':
                 continue
             item = self.cm.ph.getAllItemsBeetwenMarkers(item, '<div class="name">', '</div>') 
-            value  = []
+            value = []
             for t in item:
                 t = self.cleanHtmlStr(t)
                 if t != '':
@@ -442,7 +442,7 @@ class GamatoTV(CBaseHostClass):
         key = 'genres'
         tmp = self.cm.ph.getDataBeetwenMarkers(data, '<div class="sgeneros">', '</div>')[1]
         tmp = self.cm.ph.getAllItemsBeetwenMarkers(tmp, '<a', '</a>')
-        value  = []
+        value = []
         for t in tmp:
             t = self.cleanHtmlStr(t)
             if t != '':
@@ -480,9 +480,9 @@ class GamatoTV(CBaseHostClass):
         
         CBaseHostClass.handleService(self, index, refresh, searchPattern, searchType)
 
-        name     = self.currItem.get("name", '')
+        name = self.currItem.get("name", '')
         category = self.currItem.get("category", '')
-        mode     = self.currItem.get("mode", '')
+        mode = self.currItem.get("mode", '')
         
         printDBG("handleService: |||||||||||||||||||||||||||||||||||| name[%s], category[%s] " % (name, category))
         self.currList = []

@@ -59,24 +59,24 @@ class RtmpDownloader(BaseDownloader):
 
     def _checkWorkingCallBack(self, callBackFun, code, data):
         reason = ''
-        sts    = True
+        sts = True
         if code != 0:
-            sts    = False
+            sts = False
             reason = data
         self.iptv_sys = None
         callBackFun(sts, reason)
         
     def _getCMD(self, url):
         paramsL = ['help', 'url', 'rtmp', 'host', 'port', 'socks', 'protocol', 'playpath', 'playlist', 'swfUrl', 'tcUrl', 'pageUrl', 'app', 'swfhash', 'swfsize', 'swfVfy', 'swfAge', 'auth', 'conn', 'flashVer', 'live', 'subscribe', 'realtime', 'flv', 'resume', 'timeout', 'start', 'stop', 'token', 'jtv', 'weeb', 'hashes', 'buffer', 'skip', 'quiet', 'verbose', 'debug']
-        paramsS = ['h',   'i',    'r',    'n',    'c',     'S',        'l',        'y',        'Y',      's',     't',       'p',   'a',       'w',       'x',      'W',     'X',    'u',    'C',         'f',    'v',         'd',        'R',   'o',      'e',       'e',     'A',    'B',     'T',   'j',    'J',      '#',      'b',    'k',     'q',       'V',     'z']
+        paramsS = ['h', 'i', 'r', 'n', 'c', 'S', 'l', 'y', 'Y', 's', 't', 'p', 'a', 'w', 'x', 'W', 'X', 'u', 'C', 'f', 'v', 'd', 'R', 'o', 'e', 'e', 'A', 'B', 'T', 'j', 'J', '#', 'b', 'k', 'q', 'V', 'z']
         paramsRequireValue = ['pageUrl']
         
         
         url = 'rtmp ' + url
         tmpTab = url.split(' ')
         parameter = None
-        value     = ''
-        cmd       = ''
+        value = ''
+        cmd = ''
         
         def _processItem(item, parameter, value, cmd):
             printDBG(item)
@@ -106,7 +106,7 @@ class RtmpDownloader(BaseDownloader):
             if -1 < tmp and item[:tmp] in paramsL:
                 params.append(item[:tmp])
                 if 'live' != item[:tmp]:
-                    params.append(item[tmp+1:])
+                    params.append(item[tmp + 1:])
             else:
                 params.append(item)
             
@@ -119,10 +119,10 @@ class RtmpDownloader(BaseDownloader):
         '''
             Owervrite start from BaseDownloader
         '''
-        self.url              = url
-        self.filePath         = filePath
+        self.url = url
+        self.filePath = filePath
         self.downloaderParams = params
-        self.fileExtension    = '' # should be implemented in future
+        self.fileExtension = '' # should be implemented in future
         
         rtmpdump_url = self._getCMD(url)
         
@@ -143,8 +143,8 @@ class RtmpDownloader(BaseDownloader):
                 idx = item.find('=')
                 if -1 == idx:
                     continue
-                argName  = item[:idx] 
-                argValue = item[idx+1:]
+                argName = item[:idx] 
+                argValue = item[idx + 1:]
                 if 'live' in argName:
                     item = 'live'
                 else:
@@ -154,7 +154,7 @@ class RtmpDownloader(BaseDownloader):
                     prevflashVer = item
                     continue
                 rtmpdump_url += ' --' + item
-        cmd = DMHelper.GET_RTMPDUMP_PATH() + " " + rtmpdump_url +  ' --realtime -o "' + self.filePath + '" > /dev/null 2>&1'
+        cmd = DMHelper.GET_RTMPDUMP_PATH() + " " + rtmpdump_url + ' --realtime -o "' + self.filePath + '" > /dev/null 2>&1'
         printDBG("rtmpdump cmd[%s]" % cmd)
         
         self.console = eConsoleAppContainer()
@@ -163,7 +163,7 @@ class RtmpDownloader(BaseDownloader):
         self.console.execute(E2PrioFix(cmd))
 
         self.rtmpStatus = self.RTMP_STS.CONNECTING
-        self.status     = DMHelper.STS.DOWNLOADING
+        self.status = DMHelper.STS.DOWNLOADING
         
         self.onStart()
         return BaseDownloader.CODE_OK

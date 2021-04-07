@@ -38,12 +38,12 @@ class LiveStreamTvApi(CBaseHostClass):
             epgstart = self.cleanHtmlStr(self.cm.ph.getSearchGroups(item, '''epgstart=['"]([^'^"]+?)['"]''')[0])
             epgend = self.cleanHtmlStr(self.cm.ph.getSearchGroups(item, '''epgend=['"]([^'^"]+?)['"]''')[0])
             epgtitle = self.cleanHtmlStr(self.cm.ph.getSearchGroups(item, '''epgtitle=['"]([^'^"]+?)['"]''')[0])
-            epgdesc  = re.sub("</?br\s*/?>", "[/br]", self.cleanHtmlStr(self.cm.ph.getSearchGroups(item, '''epgdesc=['"]([^'^"]+?)['"]''')[0]))
+            epgdesc = re.sub("</?br\s*/?>", "[/br]", self.cleanHtmlStr(self.cm.ph.getSearchGroups(item, '''epgdesc=['"]([^'^"]+?)['"]''')[0]))
             
             desc = '%s - %s %s' % (epgstart, epgend, epgtitle) + '[/br]' + epgdesc
             
-            icon  = self.getFullUrl(self.cm.ph.getSearchGroups(item, 'src="([^"]+?)"')[0])
-            url   = self.getFullUrl(self.cm.ph.getSearchGroups(item, 'href="([^"]+?)"')[0])
+            icon = self.getFullUrl(self.cm.ph.getSearchGroups(item, 'src="([^"]+?)"')[0])
+            url = self.getFullUrl(self.cm.ph.getSearchGroups(item, 'href="([^"]+?)"')[0])
             if 'filterGray' in item:
                 desc = '[offline] ' + title
             else:

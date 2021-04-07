@@ -15,8 +15,8 @@ def formatExceptionInfo(maxTBlevel=1):
     except KeyError:
         excArgs = "<no args>"
     excTb = traceback.format_tb(trbk, maxTBlevel)
-    cla  = None
-    exc  = None
+    cla = None
+    exc = None
     trbk = None
     return "%s\n%s\n%s" % (excName, excArgs, excTb)
     

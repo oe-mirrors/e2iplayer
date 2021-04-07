@@ -33,7 +33,7 @@ from Screens.MessageBox import MessageBox
 ###################################################
 # Config options for HOST
 ###################################################
-config.plugins.iptvplayer.wizjatv_login    = ConfigText(default="", fixed_size=False)
+config.plugins.iptvplayer.wizjatv_login = ConfigText(default="", fixed_size=False)
 config.plugins.iptvplayer.wizjatv_password = ConfigText(default="", fixed_size=False)
 
 def GetConfigList():
@@ -48,7 +48,7 @@ class WizjaTvApi(CBaseHostClass):
 
     def __init__(self):
         CBaseHostClass.__init__(self)
-        self.MAIN_URL         = 'http://wizja.tv/'
+        self.MAIN_URL = 'http://wizja.tv/'
         self.DEFAULT_ICON_URL = 'http://wizja.tv/logo.png'
         self.HTTP_HEADER = {'User-Agent': 'Mozilla/5.0', 'Accept': 'text/html'}
         self.AJAX_HEADER = dict(self.HTTP_HEADER)
@@ -70,7 +70,7 @@ class WizjaTvApi(CBaseHostClass):
         if not sts:
             return False, False
         
-        HTTP_HEADER= dict(self.HTTP_HEADER)
+        HTTP_HEADER = dict(self.HTTP_HEADER)
         HTTP_HEADER.update({'Referer':loginUrl})
         params = dict(self.http_params)
         params['header'] = HTTP_HEADER
@@ -97,7 +97,7 @@ class WizjaTvApi(CBaseHostClass):
     def getList(self, cItem):
         printDBG("WizjaTvApi.getChannelsList")
         
-        login    = config.plugins.iptvplayer.wizjatv_login.value
+        login = config.plugins.iptvplayer.wizjatv_login.value
         password = config.plugins.iptvplayer.wizjatv_password.value
         if login != '' and password != '':
             ret = self.doLogin(login, password)
@@ -121,8 +121,8 @@ class WizjaTvApi(CBaseHostClass):
         data = self.cm.ph.getDataBeetwenMarkers(data, '<ul class="dropdown-menu">', '</ul>')[1]
         data = self.cm.ph.getAllItemsBeetwenMarkers(data, '<a', '</a>')
         for item in data:
-            icon  = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''src=['"]([^"^']+?)['"]''')[0])
-            url   = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''href=['"]([^'^"]+?)['"]''')[0])
+            icon = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''src=['"]([^"^']+?)['"]''')[0])
+            url = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''href=['"]([^'^"]+?)['"]''')[0])
             if not self.cm.isValidUrl(url):
                 continue
             title = self.cleanHtmlStr(item)
@@ -148,7 +148,7 @@ class WizjaTvApi(CBaseHostClass):
             url = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''src=['"]([^'^"]+?)['"]''')[0])
             if not self.cm.isValidUrl(url):
                 continue
-            HTTP_HEADER= dict(self.HTTP_HEADER)
+            HTTP_HEADER = dict(self.HTTP_HEADER)
             HTTP_HEADER.update({'Referer':cItem['url']})
             params = dict(self.http_params)
             params['header'] = HTTP_HEADER
@@ -163,9 +163,9 @@ class WizjaTvApi(CBaseHostClass):
                         break
                     printDBG(tmp)
                     videoUrl = urllib.parse.unquote(self.cm.ph.getSearchGroups(tmp, '''['"]?src['"]?\s*:\s*['"](rtmp[^'^"]+?)['"]''')[0])
-                    killUrl  = self.getFullUrl(self.cm.ph.getSearchGroups(tmp, '''<a[^>]+?href=["']([^'^"]*?killme\.php[^'^"]*?)''')[0])
+                    killUrl = self.getFullUrl(self.cm.ph.getSearchGroups(tmp, '''<a[^>]+?href=["']([^'^"]*?killme\.php[^'^"]*?)''')[0])
                     if videoUrl != '':
-                        urlTab   = self.cm.ph.getSearchGroups(videoUrl, '''rtmp://([^/]+?)/([^/]+?)/([^/]+?)\?(.+?)&streamType''', 4)
+                        urlTab = self.cm.ph.getSearchGroups(videoUrl, '''rtmp://([^/]+?)/([^/]+?)/([^/]+?)\?(.+?)&streamType''', 4)
                         rtmp = 'rtmp://' + urlTab[0] + '/' + urlTab[1] + '?' + urlTab[3] + \
                                ' playpath=' + urlTab[2] + '?' + urlTab[3] + \
                                ' app=' + urlTab[1] + '?' + urlTab[3] + \

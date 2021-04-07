@@ -62,9 +62,9 @@ def GetConfigList():
 class SubtitlesGrProvider(CBaseSubProviderClass): 
     
     def __init__(self, params={}):
-        self.MAIN_URL      = 'http://gr.greek-subtitles.com/'
-        self.USER_AGENT    = 'Mozilla/5.0 (X11; Linux i686) AppleWebKit/537.36 (KHTML, like Gecko) Ubuntu Chromium/37.0.2062.120 Chrome/37.0.2062.120 Safari/537.36'
-        self.HTTP_HEADER   = {'User-Agent':self.USER_AGENT, 'Referer':self.MAIN_URL, 'Accept':'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8', 'Accept-Encoding':'gzip, deflate'}
+        self.MAIN_URL = 'http://gr.greek-subtitles.com/'
+        self.USER_AGENT = 'Mozilla/5.0 (X11; Linux i686) AppleWebKit/537.36 (KHTML, like Gecko) Ubuntu Chromium/37.0.2062.120 Chrome/37.0.2062.120 Safari/537.36'
+        self.HTTP_HEADER = {'User-Agent':self.USER_AGENT, 'Referer':self.MAIN_URL, 'Accept':'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8', 'Accept-Encoding':'gzip, deflate'}
         
         params['cookie'] = 'subtitlesgr.cookie'
         CBaseSubProviderClass.__init__(self, params)
@@ -83,31 +83,31 @@ class SubtitlesGrProvider(CBaseSubProviderClass):
         printDBG("SubtitlesGrProvider.listSubItems")
         page = cItem.get('page', 0)
         keywords = urllib.parse.quote_plus(self.params['confirmed_title'])
-        baseUrl  = "http://gr.greek-subtitles.com/search.php?page=%s&name=%s" % (page, keywords)
+        baseUrl = "http://gr.greek-subtitles.com/search.php?page=%s&name=%s" % (page, keywords)
         
         url = self.getFullUrl(baseUrl)
         sts, data = self.cm.getPage(url)
         if not sts:
             return
         
-        if ('page=%s&' % (page+1)) in data:
+        if ('page=%s&' % (page + 1)) in data:
             nextPage = True
         else:
             nextPage = False
         
         data = self.cm.ph.getAllItemsBeetwenMarkers(data, '<tr on', '</tr>')
         for item in data:
-            url   = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''href=["']([^'^"]+?)['"]''')[0])
-            lang  = self.cm.ph.getSearchGroups(item, '''flags/([^\.]+?)\.gif''')[0]
+            url = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''href=["']([^'^"]+?)['"]''')[0])
+            lang = self.cm.ph.getSearchGroups(item, '''flags/([^\.]+?)\.gif''')[0]
             title = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(item, '<a', '</a>')[1])
-            desc  = self.cleanHtmlStr(item.replace('</td>', ' | ').replace('</a>', ' | '))
+            desc = self.cleanHtmlStr(item.replace('</td>', ' | ').replace('</a>', ' | '))
             params = dict(cItem)
             params.update({'name':'category', 'category':nextCategory, 'title':title, 'url':url, 'lang':lang, 'fps':0, 'desc':desc})
             self.addDir(params)
             
         if nextPage:
             params = dict(cItem)
-            params.update({'title':_('Next page'), 'page':page+1})
+            params.update({'title':_('Next page'), 'page':page + 1})
             self.addDir(params)
         
     def getSubtitlesList(self, cItem):
@@ -119,8 +119,8 @@ class SubtitlesGrProvider(CBaseSubProviderClass):
             return
         
         imdbid = self.cm.ph.getSearchGroups(data, '''/tt([0-9]+?)[^0-9]''')[0]
-        subId  = self.cm.ph.getSearchGroups(url + '/', '''/([0-9]+?)/''')[0]
-        fps    = cItem.get('fps', 0)
+        subId = self.cm.ph.getSearchGroups(url + '/', '''/([0-9]+?)/''')[0]
+        fps = cItem.get('fps', 0)
         
         url = self.cm.ph.getSearchGroups(data, '''href="(https?://[^"]+?getp\.php[^"]+?)"''')[0]
         if not self.cm.isValidUrl(url):
@@ -150,13 +150,13 @@ class SubtitlesGrProvider(CBaseSubProviderClass):
     def downloadSubtitleFile(self, cItem):
         printDBG("SubsceneComProvider.downloadSubtitleFile")
         retData = {}
-        title    = cItem['title']
-        lang     = cItem['lang']
-        subId    = cItem['sub_id']
-        imdbid   = cItem['imdbid']
+        title = cItem['title']
+        lang = cItem['lang']
+        subId = cItem['sub_id']
+        imdbid = cItem['imdbid']
         inFilePath = cItem['file_path']
-        ext      = cItem.get('ext', 'srt')
-        fps      = cItem.get('fps', 0)
+        ext = cItem.get('ext', 'srt')
+        fps = cItem.get('fps', 0)
         
         outFileName = self._getFileName(title, lang, subId, imdbid, fps, ext)
         outFileName = GetSubtitlesDir(outFileName)
@@ -176,7 +176,7 @@ class SubtitlesGrProvider(CBaseSubProviderClass):
         
         CBaseSubProviderClass.handleService(self, index, refresh)
 
-        name     = self.currItem.get("name", '')
+        name = self.currItem.get("name", '')
         category = self.currItem.get("category", '')
         
         printDBG("handleService: |||||||||||||||||||||||||||||||||||| name[%s], category[%s] " % (name, category))

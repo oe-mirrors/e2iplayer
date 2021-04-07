@@ -37,14 +37,14 @@ def gettytul():
 
 class Pinkbike(CBaseHostClass):
 
-    MAIN_URL     = 'http://www.pinkbike.com/'
+    MAIN_URL = 'http://www.pinkbike.com/'
     VID_MAIN_URL = MAIN_URL + 'video/'
     VID_SRCH_URL = VID_MAIN_URL + 'search/?q='
     DEFAULT_ICON_URL = 'http://ep1.pinkbike.org/p2pb10472249/p2pb10472249.jpg'
 
     MAIN_CAT_TAB = [{'category':'best_video_categories', 'title':_('Best Pinkbike Videos')},
-                    {'category':'video_categories',      'title':_('Categories')},
-                    {'category':'search',         'title':_('Search'), 'search_item':True},
+                    {'category':'video_categories', 'title':_('Categories')},
+                    {'category':'search', 'title':_('Search'), 'search_item':True},
                     {'category':'search_history', 'title':_('Search history')}]
     
     def __init__(self):
@@ -75,7 +75,7 @@ class Pinkbike(CBaseHostClass):
             del data[-1]
         for item in data:
             title = self.cm.ph.getDataBeetwenMarkers(item, '<h3>', '</h3>', False)[1]
-            desc  = self.cm.ph.getDataBeetwenMarkers(item, '<h5>', '</h5>', False)[1]
+            desc = self.cm.ph.getDataBeetwenMarkers(item, '<h5>', '</h5>', False)[1]
             
             catItems = []
             tmp = re.compile('<td>(.+?)</td>').findall(item)
@@ -126,7 +126,7 @@ class Pinkbike(CBaseHostClass):
         sts, data = self.cm.getPage(url)
         if not sts:
             return
-        if ('page=%d"' % (page+1)) in data:
+        if ('page=%d"' % (page + 1)) in data:
             nextPage = True
         else:
             nextPage = False
@@ -141,15 +141,15 @@ class Pinkbike(CBaseHostClass):
             del data[-1]
         for item in data:
             item = item.split('</li>')
-            icon  = self.cm.ph.getSearchGroups(item[0], 'src="([^"]+?)"')[0]
-            desc  = self.cleanHtmlStr(item[1])
-            url   = self.cm.ph.getSearchGroups(item[1], 'href="([^"]+?)"')[0]
+            icon = self.cm.ph.getSearchGroups(item[0], 'src="([^"]+?)"')[0]
+            desc = self.cleanHtmlStr(item[1])
+            url = self.cm.ph.getSearchGroups(item[1], 'href="([^"]+?)"')[0]
             title = self.cleanHtmlStr(self.cm.ph.getSearchGroups(item[1], 'title="([^"]+?)"')[0] + ' ' + self.cm.ph.getSearchGroups(item[1], '<a [^>]+?>(.+?)</a>')[0])
             self.addVideo({'title':title, 'url':self.getFullUrl(url), 'icon':self.getFullUrl(icon), 'desc':desc})
 
         if nextPage:
             params = dict(cItem)
-            params.update({'title':_('Next page'), 'page':page+1})
+            params.update({'title':_('Next page'), 'page':page + 1})
             self.addDir(params)
 
 
@@ -182,7 +182,7 @@ class Pinkbike(CBaseHostClass):
     def handleService(self, index, refresh=0, searchPattern='', searchType=''):
         printDBG('Pinkbike.handleService start')
         CBaseHostClass.handleService(self, index, refresh, searchPattern, searchType)
-        name     = self.currItem.get("name", None)
+        name = self.currItem.get("name", None)
         category = self.currItem.get("category", '')
         printDBG("Pinkbike.handleService: ---------> name[%s], category[%s] " % (name, category))
         searchPattern = self.currItem.get("search_pattern", searchPattern)

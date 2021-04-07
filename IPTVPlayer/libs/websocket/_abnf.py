@@ -74,12 +74,12 @@ class ABNF(object):
     """
 
     # operation code values.
-    OPCODE_CONT   = 0x0
-    OPCODE_TEXT   = 0x1
+    OPCODE_CONT = 0x0
+    OPCODE_TEXT = 0x1
     OPCODE_BINARY = 0x2
-    OPCODE_CLOSE  = 0x8
-    OPCODE_PING   = 0x9
-    OPCODE_PONG   = 0xa
+    OPCODE_CLOSE = 0x8
+    OPCODE_PING = 0x9
+    OPCODE_PONG = 0xa
 
     # available operation code value tuple
     OPCODES = (OPCODE_CONT, OPCODE_TEXT, OPCODE_BINARY, OPCODE_CLOSE,
@@ -96,7 +96,7 @@ class ABNF(object):
         }
 
     # data length threshold.
-    LENGTH_7  = 0x7e
+    LENGTH_7 = 0x7e
     LENGTH_16 = 1 << 16
     LENGTH_63 = 1 << 63
 
@@ -140,12 +140,12 @@ class ABNF(object):
             if l > 2 and not skip_utf8_validation and not validate_utf8(self.data[2:]):
                 raise WebSocketProtocolException("Invalid close frame.")
 
-            code = 256*ord(self.data[0:1][0]) + ord(self.data[1:2][0]) #ord(bs[0])
+            code = 256 * ord(self.data[0:1][0]) + ord(self.data[1:2][0]) #ord(bs[0])
             if not self._is_valid_close_status(code):
                 raise WebSocketProtocolException("Invalid close opcode.")
 
     def _is_valid_close_status(self, code):
-        return code in VALID_CLOSE_STATUS or (3000 <= code <5000)
+        return code in VALID_CLOSE_STATUS or (3000 <= code < 5000)
 
     def __str__(self):
         return "fin=" + str(self.fin) \
@@ -251,7 +251,7 @@ class frame_buffer(object):
         self.mask = None
 
     def has_received_header(self):
-        return  self.header is None
+        return self.header is None
 
     def recv_header(self):
         header = self.recv_strict(2)

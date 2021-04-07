@@ -27,7 +27,7 @@ from Components.config import config, ConfigText, getConfigListEntry
 ###################################################
 # Config options for HOST
 ###################################################
-config.plugins.iptvplayer.bbc_login    = ConfigText(default="", fixed_size=False)
+config.plugins.iptvplayer.bbc_login = ConfigText(default="", fixed_size=False)
 config.plugins.iptvplayer.bbc_password = ConfigText(default="", fixed_size=False)
 
 def GetConfigList():
@@ -35,12 +35,12 @@ def GetConfigList():
     optionList.append(getConfigListEntry(_("Use web-proxy (it may be illegal):"), config.plugins.iptvplayer.bbc_use_web_proxy))
     # there is no support to login when web-proxy option is used 
     if not config.plugins.iptvplayer.bbc_use_web_proxy.value:
-        optionList.append(getConfigListEntry(_("e-mail")+":",    config.plugins.iptvplayer.bbc_login))
-        optionList.append(getConfigListEntry(_("password")+":", config.plugins.iptvplayer.bbc_password))
+        optionList.append(getConfigListEntry(_("e-mail") + ":", config.plugins.iptvplayer.bbc_login))
+        optionList.append(getConfigListEntry(_("password") + ":", config.plugins.iptvplayer.bbc_password))
     
-    optionList.append(getConfigListEntry(_("Default video quality:"),             config.plugins.iptvplayer.bbc_default_quality))
-    optionList.append(getConfigListEntry(_("Use default video quality:"),         config.plugins.iptvplayer.bbc_use_default_quality))
-    optionList.append(getConfigListEntry(_("Preferred format:"),                  config.plugins.iptvplayer.bbc_prefered_format))
+    optionList.append(getConfigListEntry(_("Default video quality:"), config.plugins.iptvplayer.bbc_default_quality))
+    optionList.append(getConfigListEntry(_("Use default video quality:"), config.plugins.iptvplayer.bbc_use_default_quality))
+    optionList.append(getConfigListEntry(_("Preferred format:"), config.plugins.iptvplayer.bbc_prefered_format))
     return optionList
 ###################################################
 
@@ -59,7 +59,7 @@ class BBCSport(CBaseHostClass):
         self.defaultParams = {'with_metadata':True, 'ignore_http_code_ranges':[], 'header':self.HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
         
         self.loggedIn = None
-        self.login    = ''
+        self.login = ''
         self.password = ''
         
         self.sessionUrl = "https://session.bbc.com/session"
@@ -211,7 +211,7 @@ class BBCSport(CBaseHostClass):
                         vpid = item['identifiers']['playablePid']
                         if vpid == '':
                             continue
-                        url  = self.getFullUrl('/iplayer/vpid/%s/' % vpid)
+                        url = self.getFullUrl('/iplayer/vpid/%s/' % vpid)
                         icon = self.getFullIconUrl(item['coverImage'])
                         title = self.cleanHtmlStr(item['title'])
                         mediaType = item['mediaType']
@@ -254,7 +254,7 @@ class BBCSport(CBaseHostClass):
                     if diff >= 0 and diff < 7:
                         if NOW.day == sDate.day:
                             desc.append('%s:%s' % (str(sDate.hour).zfill(2), str(sDate.minute).zfill(2)))
-                        elif diff  == 1:
+                        elif diff == 1:
                             desc.append('Tomorrow at %s:%s' % (str(sDate.hour).zfill(2), str(sDate.minute).zfill(2)))
                         else:
                             desc.append('%s at %s:%s' % (self.ABBREVIATED_DAYS_NAME_TAB[sDate.weekday()], str(sDate.hour).zfill(2), str(sDate.minute).zfill(2)))
@@ -379,7 +379,7 @@ class BBCSport(CBaseHostClass):
                 vpid = item['identifiers']['playablePid']
                 if vpid == '':
                     continue
-                url  = self.getFullUrl('/iplayer/vpid/%s/' % vpid)
+                url = self.getFullUrl('/iplayer/vpid/%s/' % vpid)
                 icon = self.getFullIconUrl(item['coverImage'])
                 title = self.cleanHtmlStr(item['title'])
                 mediaType = item['mediaType']
@@ -418,7 +418,7 @@ class BBCSport(CBaseHostClass):
             
             if vpid == '':
                 continue
-            url  = self.getFullUrl('/iplayer/vpid/%s/' % vpid)
+            url = self.getFullUrl('/iplayer/vpid/%s/' % vpid)
             
             params = dict(cItem)
             params = {'good_for_fav': True, 'title':title, 'url':url, 'icon':icon, 'desc':duration}
@@ -491,7 +491,7 @@ class BBCSport(CBaseHostClass):
                 formData = self.cm.ph.getAllItemsBeetwenMarkers(data, '<input', '>')
                 post_data = {}
                 for item in formData:
-                    name  = self.cm.ph.getSearchGroups(item, '''name=['"]([^'^"]+?)['"]''')[0]
+                    name = self.cm.ph.getSearchGroups(item, '''name=['"]([^'^"]+?)['"]''')[0]
                     value = self.cm.ph.getSearchGroups(item, '''value=['"]([^'^"]+?)['"]''')[0]
                     post_data[name] = value
                 
@@ -541,7 +541,7 @@ class BBCSport(CBaseHostClass):
                 try:
                     mediaData = byteify(json.loads('{%s}' % mediaData), '', True)
                     if mediaData['media'] and mediaData['media']['mediaType'].lower() == 'video' and '' != mediaData['media']['pid']:
-                        url  = self.getFullUrl('/iplayer/vpid/%s/' % mediaData['media']['pid'])
+                        url = self.getFullUrl('/iplayer/vpid/%s/' % mediaData['media']['pid'])
                         urlTab.append({'name':mediaData['media']['entityType'], 'url':url, 'need_resolve':1})
                 except Exception:
                     printExc()
@@ -554,7 +554,7 @@ class BBCSport(CBaseHostClass):
                     for tmp in mediaData:
                         title = self.cleanHtmlStr(tmp['smpConfig']['title'])
                         for item in tmp['smpConfig']['items']:
-                            url  = self.getFullUrl('/iplayer/vpid/%s/' % item['vpid'])
+                            url = self.getFullUrl('/iplayer/vpid/%s/' % item['vpid'])
                             if url in uniqueTab:
                                 continue
                             uniqueTab.append(url)
@@ -579,9 +579,9 @@ class BBCSport(CBaseHostClass):
         self.informAboutGeoBlockingIfNeeded('GB')
         self.tryTologin()
         
-        name     = self.currItem.get("name", '')
+        name = self.currItem.get("name", '')
         category = self.currItem.get("category", '')
-        mode     = self.currItem.get("mode", '')
+        mode = self.currItem.get("mode", '')
         
         printDBG("handleService: >> name[%s], category[%s] " % (name, category))
         self.currList = []

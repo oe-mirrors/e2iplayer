@@ -40,7 +40,7 @@ class WPolscePL(CBaseHostClass):
         self.defaultParams = {'header':self.HTTP_HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
         
         self.MAIN_CAT_TAB = [                             
-                             {'category':'search',         'title': _('Search'),          'search_item':True}, 
+                             {'category':'search', 'title': _('Search'), 'search_item':True}, 
                              {'category':'search_history', 'title': _('Search history')},
                             ]
         
@@ -162,10 +162,10 @@ class WPolscePL(CBaseHostClass):
                 if onlyLiveItems and not item.get('is_live', False):
                     continue
                 
-                url   = self.getFullUrl(item['url'])
-                icon  = self.getFullIconUrl(item['picture_url'])
+                url = self.getFullUrl(item['url'])
+                icon = self.getFullIconUrl(item['picture_url'])
                 if icon == '':
-                    icon  = self.getFullIconUrl(item['thumbnail_url'])
+                    icon = self.getFullIconUrl(item['thumbnail_url'])
                 
                 title = self.cleanHtmlStr(item['title'])
                 desc = []
@@ -214,8 +214,8 @@ class WPolscePL(CBaseHostClass):
             if data.get('has_next', False):
                 nextPage = True
             for item in data['publications']:
-                url   = self.getFullUrl(item['url'])
-                icon  = self.getFullIconUrl(item['thumbnail_url'])
+                url = self.getFullUrl(item['url'])
+                icon = self.getFullIconUrl(item['thumbnail_url'])
                 title = self.cleanHtmlStr(item['title'])
                 desc = []
                 if item['is_future_publication']:
@@ -236,7 +236,7 @@ class WPolscePL(CBaseHostClass):
         
         if nextPage:
             params = dict(cItem)
-            params.update({'good_for_fav':False, 'title':_("Next page"), 'page':page+1})
+            params.update({'good_for_fav':False, 'title':_("Next page"), 'page':page + 1})
             self.addDir(params)
         
     def listSearchResult(self, cItem, searchPattern, searchType):
@@ -249,8 +249,8 @@ class WPolscePL(CBaseHostClass):
         
         data = self.cm.ph.getAllItemsBeetwenNodes(data, ('<div', '>', 'result__single'), ('</ul', '>'))
         for item in data:
-            url   = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''\shref=['"]([^'^"]+?)['"]''')[0])
-            icon  = self.getFullIconUrl(self.cm.ph.getSearchGroups(item, '''\ssrc=['"]([^'^"]+?)['"]''')[0])
+            url = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''\shref=['"]([^'^"]+?)['"]''')[0])
+            icon = self.getFullIconUrl(self.cm.ph.getSearchGroups(item, '''\ssrc=['"]([^'^"]+?)['"]''')[0])
             title = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(item, '<h3', '</h3>')[1])
             if title == '':
                 title = self.cleanHtmlStr(self.cm.ph.getSearchGroups(item, '''\stitle=['"]([^'^"]+?)['"]''')[0])
@@ -294,9 +294,9 @@ class WPolscePL(CBaseHostClass):
         
         CBaseHostClass.handleService(self, index, refresh, searchPattern, searchType)
 
-        name     = self.currItem.get("name", '')
+        name = self.currItem.get("name", '')
         category = self.currItem.get("category", '')
-        mode     = self.currItem.get("mode", '')
+        mode = self.currItem.get("mode", '')
         
         printDBG("handleService: |||| name[%s], category[%s] " % (name, category))
         self.cacheLinks = {}

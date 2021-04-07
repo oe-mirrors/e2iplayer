@@ -55,9 +55,9 @@ class MeczykiPL(CBaseHostClass):
         data = self.cm.ph.getDataBeetwenMarkers(data, '<div class="content-box-text"', 'shortcuts-content-start')[1]
         data = self.cm.ph.getAllItemsBeetwenMarkers(data, '<a', '</a>')
         for item in data:
-            cat   = self.cm.ph.getSearchGroups(item, '''setCategory\(\s*([0-9]+?)\s*\)''')[0]
-            icon  = self.getFullIconUrl(self.cm.ph.getSearchGroups(item, '''url\(\s*['"]([^'^"]+?)['"]\s*\)''')[0])
-            url   = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''href=['"]([^'^"]+?)['"]''')[0])
+            cat = self.cm.ph.getSearchGroups(item, '''setCategory\(\s*([0-9]+?)\s*\)''')[0]
+            icon = self.getFullIconUrl(self.cm.ph.getSearchGroups(item, '''url\(\s*['"]([^'^"]+?)['"]\s*\)''')[0])
+            url = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''href=['"]([^'^"]+?)['"]''')[0])
             title = self.cleanHtmlStr(item)
             params = dict(cItem)
             params.update({'category':nextCategory, 'title':title, 'url':url, 'icon':icon, 'f_cat':cat})
@@ -66,9 +66,9 @@ class MeczykiPL(CBaseHostClass):
     def listItems(self, cItem, nextCategory):
         printDBG("MeczykiPL.listItems |%s|" % cItem)
         
-        baseUrl  = self.getFullUrl('/front/shortcut/get-shortcuts')
+        baseUrl = self.getFullUrl('/front/shortcut/get-shortcuts')
         page = cItem.get('page', 1)
-        cat  = cItem.get('f_cat', '0')
+        cat = cItem.get('f_cat', '0')
         
         query = {'category':cat, 'page':page}
         url = baseUrl + '?' + urllib.parse.urlencode(query)
@@ -85,11 +85,11 @@ class MeczykiPL(CBaseHostClass):
             for key in keys:
                 for item in data[key]['shortcuts']:
                     title = self.cleanHtmlStr(item['title']) + ' ' + item['score']
-                    url   = self.getFullUrl(item['url'])
-                    icon  = self.getFullIconUrl(self.cm.ph.getSearchGroups(item['title'], '''src=['"]([^'^"]+?)['"]''')[0])
+                    url = self.getFullUrl(item['url'])
+                    icon = self.getFullIconUrl(self.cm.ph.getSearchGroups(item['title'], '''src=['"]([^'^"]+?)['"]''')[0])
                     if icon == '':
                         icon = self.getFullIconUrl(item['area'])
-                    desc  = '%s | %s' % (item['competition'], item['event_date'])
+                    desc = '%s | %s' % (item['competition'], item['event_date'])
                     params = dict(cItem)
                     params.update({'good_for_fav':True, 'category':nextCategory, 'title':title, 'url':url, 'icon':icon, 'desc':desc})
                     self.addDir(params)
@@ -108,7 +108,7 @@ class MeczykiPL(CBaseHostClass):
         try:
             if len(list(json_loads(data)['shortcuts'].keys())):
                 params = dict(cItem)
-                params.update({'good_for_fav':False, 'title':_('Next page'), 'page':page+1})
+                params.update({'good_for_fav':False, 'title':_('Next page'), 'page':page + 1})
                 self.addDir(params)
         except Exception:
             printExc()
@@ -140,8 +140,8 @@ class MeczykiPL(CBaseHostClass):
             url = self.getFullUrl(tmp[idx])
             if not self.cm.isValidUrl(url):
                 continue
-            if 'playwire.com' not in url and  self.up.checkHostSupport(url) != 1:
-                video_id  = ph.search(url, r'''https?://.*([a-zA-Z0-9]{10})''')[0]
+            if 'playwire.com' not in url and self.up.checkHostSupport(url) != 1:
+                video_id = ph.search(url, r'''https?://.*([a-zA-Z0-9]{10})''')[0]
                 if video_id != '':
                     url = 'https://viuclips.net/&force_parserVIUCLIPS[%s]' % url
                 else:
@@ -175,7 +175,7 @@ class MeczykiPL(CBaseHostClass):
                 baseUrl = self.cm.ph.getDataBeetwenMarkers(data, '<baseURL>', '</baseURL>', False)[1].strip()
                 data = self.cm.ph.getAllItemsBeetwenMarkers(data, '<media ', '>')
                 for item in data:
-                    url  = self.cm.ph.getSearchGroups(item, '''url=['"]([^'^"]+?)['"]''')[0]
+                    url = self.cm.ph.getSearchGroups(item, '''url=['"]([^'^"]+?)['"]''')[0]
                     height = self.cm.ph.getSearchGroups(item, '''height=['"]([^'^"]+?)['"]''')[0]
                     bitrate = self.cm.ph.getSearchGroups(item, '''bitrate=['"]([^'^"]+?)['"]''')[0]
                     name = '[%s] bitrate:%s height: %s' % (url.split('.')[-1], bitrate, height)
@@ -203,9 +203,9 @@ class MeczykiPL(CBaseHostClass):
             #rm(self.COOKIE_FILE)
             self.selectDomain()
 
-        name     = self.currItem.get("name", '')
+        name = self.currItem.get("name", '')
         category = self.currItem.get("category", '')
-        mode     = self.currItem.get("mode", '')
+        mode = self.currItem.get("mode", '')
         
         printDBG("handleService: |||||||||||||||||||||||||||||||||||| name[%s], category[%s] " % (name, category))
         self.currList = []

@@ -56,9 +56,9 @@ class MusicMp3Ru(CBaseHostClass):
         try:
             data = byteify(json.loads(ajaxData))
             moreItem['params'] = data
-            moreItem['query']  = queryData
-            moreItem['next']   = self.getFullUrl(data['url'] + '?' + queryData + '&page={0}', cUrl)
-            moreItem['pages']  = data.get('k', 0)
+            moreItem['query'] = queryData
+            moreItem['next'] = self.getFullUrl(data['url'] + '?' + queryData + '&page={0}', cUrl)
+            moreItem['pages'] = data.get('k', 0)
         except Exception:
             printExc()
         printDBG(moreItem)
@@ -84,7 +84,7 @@ class MusicMp3Ru(CBaseHostClass):
             params.update({'good_for_fav':False, 'category':nextCategory, 'url':self.getFullUrl(url, cUrl), 'title':title, 'f_type':type})
             self.addDir(params)
         
-        MAIN_CAT_TAB = [{'category':'search',         'title': _('Search'),          'search_item':True}, 
+        MAIN_CAT_TAB = [{'category':'search', 'title': _('Search'), 'search_item':True}, 
                         {'category':'search_history', 'title': _('Search history')},]
         self.listsTab(MAIN_CAT_TAB, cItem)
         
@@ -105,7 +105,7 @@ class MusicMp3Ru(CBaseHostClass):
             url = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''\shref=['"]([^'^"]+?)['"]''')[0], cUrl)
             title = self.cleanHtmlStr(item)
             params = dict(cItem)
-            params.update({'good_for_fav':False, 'url':url, 'title':title, 'sub_menu_idx':subMenuIdx+1})
+            params.update({'good_for_fav':False, 'url':url, 'title':title, 'sub_menu_idx':subMenuIdx + 1})
             if subMenuIdx > 0:
                 params.update({'good_for_fav':True, 'category':nextCategory})
             self.addDir(params)
@@ -147,7 +147,7 @@ class MusicMp3Ru(CBaseHostClass):
         page = cItem.get('page', 1)
         if len(self.currList) and moreItem.get('next', '') != '':
             params = dict(cItem)
-            params.update({'good_for_fav':False, 'f_more':moreItem, 'title':_('Next page'), 'page':page+1})
+            params.update({'good_for_fav':False, 'f_more':moreItem, 'title':_('Next page'), 'page':page + 1})
             self.addDir(params)
         
     def listArtists(self, cItem, nextCategory):
@@ -196,7 +196,7 @@ class MusicMp3Ru(CBaseHostClass):
                 t = self.cleanHtmlStr(it)
                 if t == '':
                     continue
-                if '_name'in it:
+                if '_name' in it:
                     title = t
                 else:
                     descTab.append(t)
@@ -230,7 +230,7 @@ class MusicMp3Ru(CBaseHostClass):
                 t = self.cleanHtmlStr(it)
                 if t == '':
                     continue
-                if '_name'in it:
+                if '_name' in it:
                     title = t
                 else:
                     desc.append(t)
@@ -314,9 +314,9 @@ class MusicMp3Ru(CBaseHostClass):
         
         CBaseHostClass.handleService(self, index, refresh, searchPattern, searchType)
 
-        name     = self.currItem.get("name", '')
+        name = self.currItem.get("name", '')
         category = self.currItem.get("category", '')
-        mode     = self.currItem.get("mode", '')
+        mode = self.currItem.get("mode", '')
         
         printDBG("handleService: |||| name[%s], category[%s] " % (name, category))
         self.cacheLinks = {}
@@ -353,8 +353,8 @@ class IPTVHost(CHostBase):
     
     def getSearchTypes(self):
         searchTypesOptions = []
-        searchTypesOptions.append((_("SONGS"),     "songs"))
-        searchTypesOptions.append((_("ALBUMS"),   "albums"))
+        searchTypesOptions.append((_("SONGS"), "songs"))
+        searchTypesOptions.append((_("ALBUMS"), "albums"))
         searchTypesOptions.append((_("ARTISTS"), "artists"))
         return searchTypesOptions
         

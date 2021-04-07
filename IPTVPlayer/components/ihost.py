@@ -35,19 +35,19 @@ class CUrlItem:
 # communicate display layer with host
 #
 class CDisplayListItem:
-    TYPE_CATEGORY  = "CATEGORY"
-    TYPE_VIDEO     = "VIDEO"
-    TYPE_AUDIO     = "AUDIO"
-    TYPE_SEARCH    = "SEARCH"
-    TYPE_ARTICLE   = "ARTICLE"
-    TYPE_PICTURE   = "PICTURE"
-    TYPE_DATA      = "DATA"
-    TYPE_MORE      = "MORE"
-    TYPE_MARKER    = "MARKER"
+    TYPE_CATEGORY = "CATEGORY"
+    TYPE_VIDEO = "VIDEO"
+    TYPE_AUDIO = "AUDIO"
+    TYPE_SEARCH = "SEARCH"
+    TYPE_ARTICLE = "ARTICLE"
+    TYPE_PICTURE = "PICTURE"
+    TYPE_DATA = "DATA"
+    TYPE_MORE = "MORE"
+    TYPE_MARKER = "MARKER"
     
-    TYPE_SUBTITLE      = "SUBTITLE"
-    TYPE_SUB_PROVIDER  = "SUB_PROVIDER"
-    TYPE_UNKNOWN       = "UNKNOWN"
+    TYPE_SUBTITLE = "SUBTITLE"
+    TYPE_SUB_PROVIDER = "SUB_PROVIDER"
+    TYPE_UNKNOWN = "UNKNOWN"
     
     def __init__(self, name="",
                 description="",
@@ -129,58 +129,58 @@ class CDisplayListItem:
 class ArticleContent:
     VISUALIZER_DEFAULT = 'DEFAULT'
     # Posible args and values for richDescParams:
-    RICH_DESC_PARAMS        = ["alternate_title", "original_title", "station", "price", "age_limit", "views", "status", "type", "first_air_date", "last_air_date", "seasons", "episodes", "country", "language", "duration", "quality", "subtitles", "year", "imdb_rating", "tmdb_rating",
+    RICH_DESC_PARAMS = ["alternate_title", "original_title", "station", "price", "age_limit", "views", "status", "type", "first_air_date", "last_air_date", "seasons", "episodes", "country", "language", "duration", "quality", "subtitles", "year", "imdb_rating", "tmdb_rating",
                                "released", "broadcast", "remaining", "rating", "rated", "genre", "genres", "category", "categories", "production", "director", "directors", "writer", "writers",
                                "creator", "creators", "cast", "actors", "stars", "awards", "budget", "translation",]
     # labels here must be in english language 
     # translation should be done before presentation using "locals" mechanism
-    RICH_DESC_LABELS = {"alternate_title":   "Alternate Title:",
-                        "original_title":    "Original Title:",
-                        "station":           "Station:",
-                        "price":             "Price:",
-                        "status":            "Status:",
-                        "type":              "Type:",
-                        "age_limit":         "Age limit:",
-                        "first_air_date":    "First air date:",  
-                        "last_air_date":     "Last air date:", 
-                        "seasons":           "Seasons:",
-                        "episodes":          "Episodes:",
-                        "quality":           "Quality:",
-                        "subtitles":         "Subtitles:",
-                        "country":           "Country:", 
-                        "language":          "Language",
-                        "year":              "Year:", 
-                        "released":          "Released:",
-                        "broadcast":         "Broadcast:",
-                        "remaining":         "Remaining:",
-                        "imdb_rating":       "IMDb Rating:",
-                        "tmdb_rating":       "TMDb Rating:",
-                        "rating":            "Rating:", 
-                        "rated":             "Rated:",
-                        "duration":          "Duration:", 
-                        "genre":             "Genre:", 
-                        "genres":            "Genres:", 
-                        "category":          "Category:",
-                        "categories":        "Categories:",
-                        "production":        "Production:",
-                        "director":          "Director:",
-                        "directors":         "Directors:",
-                        "writer":            "Writer:",
-                        "writers":           "Writers:",
-                        "creator":           "Creator:",
-                        "creators":          "Creators:",
-                        "cast":              "Cast:",
-                        "actors":            "Actors:", 
-                        "stars":             "Stars:",
-                        "awards":            "Awards:",
-                        "views":             "Views:",
-                        "budget":            "Budget:",
-                        "translation":       "Translation:"
+    RICH_DESC_LABELS = {"alternate_title": "Alternate Title:",
+                        "original_title": "Original Title:",
+                        "station": "Station:",
+                        "price": "Price:",
+                        "status": "Status:",
+                        "type": "Type:",
+                        "age_limit": "Age limit:",
+                        "first_air_date": "First air date:",  
+                        "last_air_date": "Last air date:", 
+                        "seasons": "Seasons:",
+                        "episodes": "Episodes:",
+                        "quality": "Quality:",
+                        "subtitles": "Subtitles:",
+                        "country": "Country:", 
+                        "language": "Language",
+                        "year": "Year:", 
+                        "released": "Released:",
+                        "broadcast": "Broadcast:",
+                        "remaining": "Remaining:",
+                        "imdb_rating": "IMDb Rating:",
+                        "tmdb_rating": "TMDb Rating:",
+                        "rating": "Rating:", 
+                        "rated": "Rated:",
+                        "duration": "Duration:", 
+                        "genre": "Genre:", 
+                        "genres": "Genres:", 
+                        "category": "Category:",
+                        "categories": "Categories:",
+                        "production": "Production:",
+                        "director": "Director:",
+                        "directors": "Directors:",
+                        "writer": "Writer:",
+                        "writers": "Writers:",
+                        "creator": "Creator:",
+                        "creators": "Creators:",
+                        "cast": "Cast:",
+                        "actors": "Actors:", 
+                        "stars": "Stars:",
+                        "awards": "Awards:",
+                        "views": "Views:",
+                        "budget": "Budget:",
+                        "translation": "Translation:"
                         }
     def __init__(self, title='', text='', images=[], trailers=[], richDescParams={}, visualizer=None):
-        self.title    = title
-        self.text     = text
-        self.images   = images
+        self.title = title
+        self.text = text
+        self.images = images
         self.trailers = trailers
         self.richDescParams = richDescParams
         if None == visualizer: 
@@ -190,8 +190,8 @@ class ArticleContent:
         
 class CFavItem:
     RESOLVER_DIRECT_LINK = 'DIRECT_LINK'
-    RESOLVER_SELF        = 'SELF'
-    RESOLVER_URLLPARSER  = 'URLLPARSER'
+    RESOLVER_SELF = 'SELF'
+    RESOLVER_URLLPARSER = 'URLLPARSER'
     TYPE_UNKNOWN = CDisplayListItem.TYPE_UNKNOWN
     def __init__(self, name='',
                   description='',
@@ -199,19 +199,19 @@ class CFavItem:
                   iconimage='',
                   data='',
                   resolver=RESOLVER_SELF):
-        self.name        = name
+        self.name = name
         self.description = description
-        self.type        = type
-        self.iconimage   = iconimage 
-        self.data        = data
-        self.resolver    = resolver
-        self.hostName    = ''
+        self.type = type
+        self.iconimage = iconimage 
+        self.data = data
+        self.resolver = resolver
+        self.hostName = ''
         
     def fromDisplayListItem(self, dispItem):
-        self.name        = dispItem.name
+        self.name = dispItem.name
         self.description = dispItem.description
-        self.type        = dispItem.type
-        self.iconimage   = dispItem.iconimage
+        self.type = dispItem.type
+        self.iconimage = dispItem.iconimage
         return self
     
     def setFromDict(self, data):
@@ -343,7 +343,7 @@ class CHostBase(IHost):
     def __init__(self, host, withSearchHistrory, favouriteTypes=[]):
         self.host = host
         self.withSearchHistrory = withSearchHistrory
-        self.favouriteTypes     = favouriteTypes
+        self.favouriteTypes = favouriteTypes
 
         self.currIndex = -1
         self.listOfprevList = [] 
@@ -381,9 +381,9 @@ class CHostBase(IHost):
         if None == hList:
             return RetHost(retCode, value=retlist)
         for item in hList:
-            title      = item.get('title', '')
-            text       = item.get('text', '')
-            images     = item.get("images", [])
+            title = item.get('title', '')
+            text = item.get('text', '')
+            images = item.get("images", [])
             othersInfo = item.get('other_info', '')
             retlist.append(ArticleContent(title=title, text=text, images=images, richDescParams=othersInfo))
         if len(hList):
@@ -443,7 +443,7 @@ class CHostBase(IHost):
             for item in urlList:
                 need_resolve = item.get("need_resolve", 0)
                 name = self.host.cleanHtmlStr(item["name"])
-                url  = item["url"]
+                url = item["url"]
                 retlist.append(CUrlItem(name, url, need_resolve))
         return RetHost(RetHost.OK, value=retlist)
         
@@ -603,14 +603,14 @@ class CHostBase(IHost):
             if '' != url:
                 hostLinks.append(CUrlItem("Link", url, needUrlResolve))
             
-        title       =  cItem.get('title', '')
-        description =  cItem.get('desc', '')
-        icon        =  self.getFullIconUrl(cItem.get('icon', ''))
+        title = cItem.get('title', '')
+        description = cItem.get('desc', '')
+        icon = self.getFullIconUrl(cItem.get('icon', ''))
         if icon == '':
             icon = self.getDefaulIcon(cItem)
         isGoodForFavourites = cItem.get('good_for_fav', False)
         pinLocked = cItem.get('pin_locked', False)
-        pinCode   = cItem.get('pin_code', '')
+        pinCode = cItem.get('pin_code', '')
         textColor = cItem.get('text_color', '')
         
         return CDisplayListItem(name=title,
@@ -686,7 +686,7 @@ class CBaseHostClass:
         for item in tab:
             params = dict(cItem)
             params.update(item)
-            params['name']  = 'category'
+            params['name'] = 'category'
             type = item.get('type', defaultType)
             if type == 'dir':
                 self.addDir(params)
@@ -804,15 +804,15 @@ class CBaseHostClass:
             plot = ''
             try:
                 if type(histItem) == type({}):
-                    pattern     = histItem.get('pattern', '')
+                    pattern = histItem.get('pattern', '')
                     search_type = histItem.get('type', '')
                     if '' != search_type:
                         plot = desc_base + _(search_type)
                 else:
-                    pattern     = histItem
+                    pattern = histItem
                     search_type = None
                 params = dict(baseItem)
-                params.update({'title': pattern, 'search_type': search_type,  desc_key: plot})
+                params.update({'title': pattern, 'search_type': search_type, desc_key: plot})
                 self.addDir(params)
             except Exception:
                 printExc()
@@ -869,7 +869,7 @@ class CBaseHostClass:
             printDBG(">> endHandleService index[%s]" % index)
             # remove item more and store items before and after item more
             self.beforeMoreItemList = self.currList[0:index]
-            self.afterMoreItemList = self.currList[index+1:]
+            self.afterMoreItemList = self.currList[index + 1:]
             self.moreMode = True
             if -1 == index:
                 self.currItem = {"name": None}
@@ -885,6 +885,6 @@ class CBaseHostClass:
                     self.currList.append(item)
             self.currList.extend(self.afterMoreItemList)
             self.beforeMoreItemList = []
-            self.afterMoreItemList  = []
+            self.afterMoreItemList = []
         self.moreMode = False
     

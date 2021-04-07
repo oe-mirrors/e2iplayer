@@ -17,20 +17,20 @@ from struct import pack
 
 def pbkdf2(password, salt, iterations, keySize, PRF=HMAC_SHA1):
 	""" Create key of size keySize from password and salt """
-	if len(password)>63:
+	if len(password) > 63:
 		raise Exception('Password too long for pbkdf2')
 	#if len(password)<8 : raise 'Password too short for pbkdf2'
 	if (keySize > 10000):		  # spec says >4294967295L*digestSize
 		raise Exception('keySize too long for PBKDF2')
 
 	prf = PRF(key=password)  # HMAC_SHA1
-	numBlocks = int(ceil(1.*keySize/prf.digest_size)) # ceiling function
+	numBlocks = int(ceil(1. * keySize / prf.digest_size)) # ceiling function
 	key = ''
-	for block in range(1, numBlocks+1):
+	for block in range(1, numBlocks + 1):
 		# Calculate F(P, salt, iterations, i)
-		F = prf(salt+pack('>i', block)) # i is packed into 4 big-endian bytes
-		U = prf(salt+pack('>i', block)) # i is packed into 4 big-endian bytes
-		for count in range(2, iterations+1):
+		F = prf(salt + pack('>i', block)) # i is packed into 4 big-endian bytes
+		U = prf(salt + pack('>i', block)) # i is packed into 4 big-endian bytes
+		for count in range(2, iterations + 1):
 			U = prf(U)
 			F = xor(F, U)
 		key = key + F
@@ -40,5 +40,5 @@ def dot11PassPhraseToPSK(passPhrase, ssid):
 	""" The 802.11 TGi recommended pass-phrase-to-preshared-key mapping.
 		This function simply uses pbkdf2 with interations=4096 and keySize=32
 	"""
-	assert(7<len(passPhrase)<64), 'Passphrase must be greater than 7 or less than 64 characters'
+	assert(7 < len(passPhrase) < 64), 'Passphrase must be greater than 7 or less than 64 characters'
 	return pbkdf2(passPhrase, ssid, iterations=4096, keySize=32)

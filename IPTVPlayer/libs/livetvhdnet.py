@@ -32,7 +32,7 @@ class LivetvhdNetApi(CBaseHostClass):
 
     def __init__(self):
         CBaseHostClass.__init__(self)
-        self.MAIN_URL    = 'https://livetvhd.net/'
+        self.MAIN_URL = 'https://livetvhd.net/'
         self.HEADER = {'User-Agent': 'Mozilla/5.0 (iPad; U; CPU OS 3_2 like Mac OS X; en-us) AppleWebKit/531.21.10 (KHTML, like Gecko) Version/4.0.4 Mobile/7B334b Safari/531.21.10', 'Accept': 'text/html'}
         self.AJAX_HEADER = dict(self.HEADER)
         self.AJAX_HEADER.update({'X-Requested-With': 'XMLHttpRequest'})
@@ -91,10 +91,10 @@ class LivetvhdNetApi(CBaseHostClass):
                 if 'videos' in data:
                     data = data['videos']
                 for item in data:
-                    url   = item['url']
-                    icon  = item['thumbnail']
+                    url = item['url']
+                    icon = item['thumbnail']
                     title = self.cleanHtmlStr(item['title'])
-                    desc  = _('Views: ') + str(item.get('views', ''))
+                    desc = _('Views: ') + str(item.get('views', ''))
                     params = dict(cItem)
                     params.update({'type':'video', 'title':title, 'url':url, 'desc':desc, 'icon':self.getFullIconUrl(icon)})
                     channelsTab.append(params)
@@ -119,5 +119,5 @@ class LivetvhdNetApi(CBaseHostClass):
         videoUrl = cItem['url'] + '?token=' + token 
         
         videoUrl = strwithmeta(videoUrl, {'Referer':self.MAIN_URL, 'User-Agent':self.HEADER['User-Agent']})
-        urlsTab  = getDirectM3U8Playlist(videoUrl, checkContent=True)
+        urlsTab = getDirectM3U8Playlist(videoUrl, checkContent=True)
         return urlsTab

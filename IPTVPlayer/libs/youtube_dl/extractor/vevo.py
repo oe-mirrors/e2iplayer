@@ -23,11 +23,11 @@ from Components.config import config, ConfigSelection, ConfigYesNo, ConfigText, 
 
 config.plugins.iptvplayer.vevo_default_quality = ConfigSelection(default="1228800", choices=[
 ("0", _("the worst")),
-("245760",  "30 KB/s"), 
-("655360",  "80 KB/s"), 
-("409600",  "50 KB/s"), 
-("655360",  "80 KB/s"), 
-("737280",  "90 KB/s"), 
+("245760", "30 KB/s"), 
+("655360", "80 KB/s"), 
+("409600", "50 KB/s"), 
+("655360", "80 KB/s"), 
+("737280", "90 KB/s"), 
 ("1228800", "150 KB/s"),
 ("1638400", "200 KB/s"),
 ("2867200", "350 KB/s"),
@@ -37,7 +37,7 @@ config.plugins.iptvplayer.vevo_default_quality = ConfigSelection(default="122880
 ("99999999", _("the best"))
 ])
 config.plugins.iptvplayer.vevo_use_default_quality = ConfigYesNo(default=True)
-config.plugins.iptvplayer.vevo_allow_hls           = ConfigYesNo(default=True)
+config.plugins.iptvplayer.vevo_allow_hls = ConfigYesNo(default=True)
 
 def _int(data):
     ret = 0
@@ -121,7 +121,7 @@ class VevoIE(InfoExtractor):
             formats.append({
                 'url': self.xmlGetArg(attr, 'url'),
                 'format_id': self.xmlGetArg(attr, 'name'),
-                'bitrate': (_int(self.xmlGetArg(attr, 'videoBitrate')) + _int(self.xmlGetArg(attr, 'audioBitrate')))*1000,
+                'bitrate': (_int(self.xmlGetArg(attr, 'videoBitrate')) + _int(self.xmlGetArg(attr, 'audioBitrate'))) * 1000,
                 #'format_note': format_note,
                 'height': _int(self.xmlGetArg(attr, 'frameheight')),
                 'width': _int(self.xmlGetArg(attr, 'frameWidth')),
@@ -133,7 +133,7 @@ class VevoIE(InfoExtractor):
         
         els = re.compile('<video ([^>]+?)>').findall(smil_xml)
         for el in els:
-            src =  self.xmlGetArg(el, 'src')
+            src = self.xmlGetArg(el, 'src')
             m = re.match(r'''(?xi)
                 (?P<ext>[a-z0-9]+):
                 (?P<path>

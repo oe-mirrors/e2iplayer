@@ -60,10 +60,10 @@ def GetConfigList():
 class NapiProjektProvider(CBaseSubProviderClass): 
     
     def __init__(self, params={}):
-        self.MAIN_URL      = 'http://www.napiprojekt.pl/'
-        self.USER_AGENT    = 'DMnapi 13.1.30'
-        self.HTTP_HEADER   = {'User-Agent':'Mozilla/5.0', 'Referer':self.MAIN_URL, 'Accept':'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8', 'Accept-Encoding':'gzip, deflate'}
-        self.AJAX_HEADER   = {'User-Agent':'Mozilla/5.0', 'Referer':self.MAIN_URL, 'Accept':'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8', 'Accept-Encoding':'gzip, deflate', 'X-Requested-With': 'XMLHttpRequest'}
+        self.MAIN_URL = 'http://www.napiprojekt.pl/'
+        self.USER_AGENT = 'DMnapi 13.1.30'
+        self.HTTP_HEADER = {'User-Agent':'Mozilla/5.0', 'Referer':self.MAIN_URL, 'Accept':'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8', 'Accept-Encoding':'gzip, deflate'}
+        self.AJAX_HEADER = {'User-Agent':'Mozilla/5.0', 'Referer':self.MAIN_URL, 'Accept':'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8', 'Accept-Encoding':'gzip, deflate', 'X-Requested-With': 'XMLHttpRequest'}
 
         params['cookie'] = 'napiprojektpl.cookie'
         CBaseSubProviderClass.__init__(self, params)
@@ -73,8 +73,8 @@ class NapiProjektProvider(CBaseSubProviderClass):
         self.dInfo = params['discover_info']
         
         self.kaindTab = [{'title':'Film & Serial', 'kind':0},
-                         {'title':'Serial',        'kind':1},
-                         {'title':'Film',          'kind':2}]
+                         {'title':'Serial', 'kind':1},
+                         {'title':'Film', 'kind':2}]
         
     def sortSubtitlesByDurationMatch(self):
         # we need duration to sort
@@ -126,14 +126,14 @@ class NapiProjektProvider(CBaseSubProviderClass):
         for item in data:
             imdbid = self.cm.ph.getSearchGroups(item, 'imdb\.com/title/(tt[0-9]+?)[^0-9]')[0]
             
-            item   = item.split('<div class="movieBottom">')[0]
-            subId  = self.cm.ph.getSearchGroups(item, 'id="([0-9]+?)"')[0]
-            title  = self.cm.ph.getDataBeetwenMarkers(item, '<h3', '</h3>')[1]
-            url    = self.cm.ph.getSearchGroups(item, 'href="([^"]+?)"')[0]
+            item = item.split('<div class="movieBottom">')[0]
+            subId = self.cm.ph.getSearchGroups(item, 'id="([0-9]+?)"')[0]
+            title = self.cm.ph.getDataBeetwenMarkers(item, '<h3', '</h3>')[1]
+            url = self.cm.ph.getSearchGroups(item, 'href="([^"]+?)"')[0]
             if '' == url:
                 continue
             
-            desc   = self.cm.ph.getDataBeetwenMarkers(item, '<p', '</p>')[1]
+            desc = self.cm.ph.getDataBeetwenMarkers(item, '<p', '</p>')[1]
             params = dict(cItem)
             params.update({'category':nextCategoryMovie, 'title':self.cleanHtmlStr(title), 'url':self.getFullUrl(url), 'sub_id':subId, 'imdbid':imdbid, 'desc':self.cleanHtmlStr(desc)})
             self.addDir(params)
@@ -204,7 +204,7 @@ class NapiProjektProvider(CBaseSubProviderClass):
         if not sts:
             return
         
-        nextPage = self.cm.ph.getSearchGroups(data, '"(napisy%s,[^"]+?)"' % (page+1))[0]
+        nextPage = self.cm.ph.getSearchGroups(data, '"(napisy%s,[^"]+?)"' % (page + 1))[0]
         data = self.cm.ph.getDataBeetwenMarkers(data, '<tbody>', '</tbody>')[1]
         data = self.cm.ph.getAllItemsBeetwenMarkers(data, '<tr', '</tr>')
         for item in data:
@@ -223,7 +223,7 @@ class NapiProjektProvider(CBaseSubProviderClass):
                 fps = 0
             
             duration = self.cleanHtmlStr(tmp[3])
-            durationSecTab = self.cm.ph.getSearchGroups('|%s|' %duration, '[^0-9]([0-9]{2}):([0-9]{2}):([0-9]{2})[^0-9]', 3)
+            durationSecTab = self.cm.ph.getSearchGroups('|%s|' % duration, '[^0-9]([0-9]{2}):([0-9]{2}):([0-9]{2})[^0-9]', 3)
             if '' not in durationSecTab:
                 durationSec = int(durationSecTab[0]) * 3600 + int(durationSecTab[1]) * 60 + int(durationSecTab[2])
             else:
@@ -236,7 +236,7 @@ class NapiProjektProvider(CBaseSubProviderClass):
         
         if '' != nextPage:
             params = dict(cItem)
-            params.update({'title':_('Next page'), 'url':self.getFullUrl(nextPage), 'page':page+1})
+            params.update({'title':_('Next page'), 'url':self.getFullUrl(nextPage), 'page':page + 1})
             self.addDir(params)
             
     def getEpisodes(self, cItem, nextCategory):
@@ -287,11 +287,11 @@ class NapiProjektProvider(CBaseSubProviderClass):
     def downloadSubtitleFile(self, cItem):
         printDBG("NapiProjektProvider.downloadSubtitleFile")
         retData = {}
-        title  = cItem['title']
-        lang   = cItem.get('lang', 'pl')
-        subId  = cItem['sub_id']
+        title = cItem['title']
+        lang = cItem.get('lang', 'pl')
+        subId = cItem['sub_id']
         imdbid = cItem['imdbid']
-        fps    = cItem.get('fps', 0)
+        fps = cItem.get('fps', 0)
         
         post_data = {"mode": "32770",
                      "client": "pynapi",
@@ -355,7 +355,7 @@ class NapiProjektProvider(CBaseSubProviderClass):
         
         CBaseSubProviderClass.handleService(self, index, refresh)
 
-        name     = self.currItem.get("name", '')
+        name = self.currItem.get("name", '')
         category = self.currItem.get("category", '')
         
         printDBG("handleService: |||||||||||||||||||||||||||||||||||| name[%s], category[%s] " % (name, category))

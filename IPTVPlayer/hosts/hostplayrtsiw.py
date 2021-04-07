@@ -59,8 +59,8 @@ class PlayRTSIW(CBaseHostClass):
         
         self.PORTALS_MAP = {}
         for item in self.PLAYER_MAP:
-            self.URL_MAP['%s_icon' % item] = self.URL_MAP[item]+'play/static/img/srg/%s/play%s_logo.png' % (item, item)
-            self.PORTALS_MAP[item] = {'title':item.upper(), 'url':self.URL_MAP[item]+'play/tv', 'icon':self.URL_MAP['%s_icon' % item]}
+            self.URL_MAP['%s_icon' % item] = self.URL_MAP[item] + 'play/static/img/srg/%s/play%s_logo.png' % (item, item)
+            self.PORTALS_MAP[item] = {'title':item.upper(), 'url':self.URL_MAP[item] + 'play/tv', 'icon':self.URL_MAP['%s_icon' % item]}
         self.SEARCH_ICON_URL = 'https://www.srgssr.ch/fileadmin/dam/images/quicklinks/srgssr-auf-einen-blick.png'
         self.DEFAULT_ICON_URL = 'https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/SRG_SSR_2011_logo.svg/2000px-SRG_SSR_2011_logo.svg.png'
         self.MAIN_URL = None
@@ -94,8 +94,8 @@ class PlayRTSIW(CBaseHostClass):
                 params.update({'category':nextCategory1})
             self.addDir(params)
         
-        MAIN_CAT_TAB = [{'category':'search',          'title': _('Search'), 'search_item':True, 'icon':self.SEARCH_ICON_URL},
-                        {'category':'search_history',  'title': _('Search history'),             'icon':self.SEARCH_ICON_URL}]
+        MAIN_CAT_TAB = [{'category':'search', 'title': _('Search'), 'search_item':True, 'icon':self.SEARCH_ICON_URL},
+                        {'category':'search_history', 'title': _('Search history'), 'icon':self.SEARCH_ICON_URL}]
         self.listsTab(MAIN_CAT_TAB, cItem)
         
     def listType(self, cItem):
@@ -225,7 +225,7 @@ class PlayRTSIW(CBaseHostClass):
                 latestSubItems = []
                 mostSubItems = []
                 
-                for it in  item.get('subTopics', []):
+                for it in item.get('subTopics', []):
                     title = self.cleanHtmlStr(it['title'])
                     url = self.getFullUrl(it['url'])
                     
@@ -393,7 +393,7 @@ class PlayRTSIW(CBaseHostClass):
             if not sts:
                 return
             
-            data = clean_html(self.cm.ph.getDataBeetwenMarkers(data, 'data-alphabetical-sections="',  '"', False)[1])
+            data = clean_html(self.cm.ph.getDataBeetwenMarkers(data, 'data-alphabetical-sections="', '"', False)[1])
             try:
                 self.cacheShowsMap = byteify(json.loads(data))
             except Exception:
@@ -488,7 +488,7 @@ class PlayRTSIW(CBaseHostClass):
                 countKey = 'numberOfAvailable' + self.ITEMS_TYPE_MAP[type].title()
                 if data[countKey] > 0:
                     params = dict(baseItem)
-                    params.update({'category':'search_items', 'title':_(self.ITEMS_TYPE_MAP[type].upper()), 'url':cUrl + '100', 'desc':_('Search for "%s", %s, %s %s') % (searchPattern, _(type),  data[countKey], _(self.ITEMS_TYPE_MAP[type]))})
+                    params.update({'category':'search_items', 'title':_(self.ITEMS_TYPE_MAP[type].upper()), 'url':cUrl + '100', 'desc':_('Search for "%s", %s, %s %s') % (searchPattern, _(type), data[countKey], _(self.ITEMS_TYPE_MAP[type]))})
                     subItems.append(params)
                 countDesc.append(_('%s ' + self.ITEMS_TYPE_MAP[type]) % (data[countKey]))
             except Exception:
@@ -635,9 +635,9 @@ class PlayRTSIW(CBaseHostClass):
         
         CBaseHostClass.handleService(self, index, refresh, searchPattern, searchType)
         
-        name     = self.currItem.get("name", '')
+        name = self.currItem.get("name", '')
         category = self.currItem.get("category", '')
-        mode     = self.currItem.get("mode", '')
+        mode = self.currItem.get("mode", '')
         
         printDBG("handleService: || name[%s], category[%s] " % (name, category))
         self.currList = []

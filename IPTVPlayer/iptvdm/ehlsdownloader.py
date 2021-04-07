@@ -13,7 +13,7 @@ from Plugins.Extensions.IPTVPlayer.tools.iptvtypes import enum, strwithmeta
 from Plugins.Extensions.IPTVPlayer.libs import m3u8
 from Plugins.Extensions.IPTVPlayer.iptvdm.basedownloader import BaseDownloader
 from Plugins.Extensions.IPTVPlayer.iptvdm.iptvdh import DMHelper
-from Plugins.Extensions.IPTVPlayer.iptvdm.hlsdownloader    import HLSDownloader
+from Plugins.Extensions.IPTVPlayer.iptvdm.hlsdownloader import HLSDownloader
 ###################################################
 
 ###################################################
@@ -38,7 +38,7 @@ class EHLSDownloader(HLSDownloader):
         
         # M3U8list link provider
         self.EM3U8linkProv = eConsoleAppContainer()
-        self.EM3U8linkProv_appClosed_conn   = eConnectCallback(self.EM3U8linkProv.appClosed, self._updateEM3U8Finished)
+        self.EM3U8linkProv_appClosed_conn = eConnectCallback(self.EM3U8linkProv.appClosed, self._updateEM3U8Finished)
         #self.EM3U8linkProv_stdoutAvail_conn = eConnectCallback(self.EM3U8linkProv.stdoutAvail, self._updateEM3U8DataAvail)
         self.EM3U8linkProv_stderrAvail_conn = eConnectCallback(self.EM3U8linkProv.stderrAvail, self._updateEM3U8DataAvail)
 
@@ -94,7 +94,7 @@ class EHLSDownloader(HLSDownloader):
     def _terminate(self):
         printDBG("HLSDownloader._terminate")
         if self.EM3U8linkProv:
-            self.EM3U8linkProv_appClosed_conn   = None
+            self.EM3U8linkProv_appClosed_conn = None
             #self.EM3U8linkProv_stdoutAvail_conn = None
             self.EM3U8linkProv_stderrAvail_conn = None
             self.EM3U8linkProv.sendCtrlC()

@@ -29,19 +29,19 @@ class TVProart(CBaseHostClass):
     def __init__(self):
         CBaseHostClass.__init__(self, {'history':'TVProart', 'cookie':'tvproart.cookie'})
         self.DEFAULT_ICON_URL = 'http://www.ostrowwlkp.info/images/firmy-i-instytucje/39/logo.jpg'
-        self.MAIN_URL    = 'http://tvproart.pl/'
-        self.API_URL     = self.getFullUrl('ajaxVod/')
-        self.SEARCH_URL  = self.getFullUrl('search?q=')
+        self.MAIN_URL = 'http://tvproart.pl/'
+        self.API_URL = self.getFullUrl('ajaxVod/')
+        self.SEARCH_URL = self.getFullUrl('search?q=')
         
-        self.MAIN_CAT_TAB = [{'category':'categories',     'title': 'VOD'},
-                             {'category':'search',         'title': _('Search'), 'search_item':True},
+        self.MAIN_CAT_TAB = [{'category':'categories', 'title': 'VOD'},
+                             {'category':'search', 'title': _('Search'), 'search_item':True},
                              {'category':'search_history', 'title': _('Search history')}]
         self.categories = {}
             
     def addNextPage(self, cItem, nextPage, page):
         if nextPage:
             params = dict(cItem)
-            params.update({'title':_('Next page'), 'page':page+1})
+            params.update({'title':_('Next page'), 'page':page + 1})
             self.addDir(params)
         
     def listCategories(self, cItem, category):
@@ -92,7 +92,7 @@ class TVProart(CBaseHostClass):
             
         nextPage = False
         try:
-            sts, data = self.cm.getPage(url + '&page={0}'.format(page+1))
+            sts, data = self.cm.getPage(url + '&page={0}'.format(page + 1))
             data = byteify(json.loads(data))
             if len(data['content']) > 0:
                 nextPage = True
@@ -144,7 +144,7 @@ class TVProart(CBaseHostClass):
         
         CBaseHostClass.handleService(self, index, refresh, searchPattern, searchType)
 
-        name     = self.currItem.get("name", '')
+        name = self.currItem.get("name", '')
         category = self.currItem.get("category", '')
         printDBG("handleService: || name[%s], category[%s] " % (name, category))
         self.currList = []

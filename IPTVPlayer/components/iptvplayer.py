@@ -88,7 +88,7 @@ class customMoviePlayer(InfoBarShowHide, InfoBarSeek, InfoBarAudioSelection, Inf
                 # not sure why but riginal MP doSeek method does nothing, so I use on seeking only doSeekRelative
                 self.doSeekRelative(self.lastPosition - position)
                 self.doSeekToLastPosition = False
-                self.stopTimeFix  = 0
+                self.stopTimeFix = 0
                 self.lastPosition = 0
                 return
                 
@@ -110,7 +110,7 @@ class customMoviePlayer(InfoBarShowHide, InfoBarSeek, InfoBarAudioSelection, Inf
 
         if position != self.position:
             self.position = position
-            self.stopTimeFix  = 0
+            self.stopTimeFix = 0
         else:
             self.stopTimeFix += 1
         if self.stopTimeFix >= self.bugEOFworkaround:

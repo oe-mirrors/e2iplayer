@@ -29,17 +29,17 @@ class GreekDocumentaries3(CBaseHostClass):
     AJAX_HEADER = dict(HEADER)
     AJAX_HEADER.update({'X-Requested-With': 'XMLHttpRequest'})
     
-    MAIN_URL      = 'http://greekdocumentaries2.blogspot.gr/'
-    SEARCH_URL    = MAIN_URL + '/search?sitesearch=http%3A%2F%2Fjohny-jossbanget.blogspot.com&q='
-    DEFAULT_ICON  = "http://3.bp.blogspot.com/-s80VMsgUq0w/VsYj0rd4nrI/AAAAAAAAAAw/y-ix9jhy1Gg/s1600-r/%25CF%2586%25CE%25BF%25CF%2584%25CE%25BF%2Bblog%2BHeader.png"
+    MAIN_URL = 'http://greekdocumentaries2.blogspot.gr/'
+    SEARCH_URL = MAIN_URL + '/search?sitesearch=http%3A%2F%2Fjohny-jossbanget.blogspot.com&q='
+    DEFAULT_ICON = "http://3.bp.blogspot.com/-s80VMsgUq0w/VsYj0rd4nrI/AAAAAAAAAAw/y-ix9jhy1Gg/s1600-r/%25CF%2586%25CE%25BF%25CF%2584%25CE%25BF%2Bblog%2BHeader.png"
     
-    MAIN_CAT_TAB = [{'category':'list_items', 'title': _('Recent'),      'url':MAIN_URL,  'icon':DEFAULT_ICON},
-                    {'category':'categories', 'title': _('Categories'),  'url':MAIN_URL,  'icon':DEFAULT_ICON, 'filter':'categories'},
-                    {'category':'categories', 'title': _('Programs'),    'url':MAIN_URL,  'icon':DEFAULT_ICON, 'filter':'programs'},
-                    {'category':'categories', 'title': _('Labels'),      'url':MAIN_URL,  'icon':DEFAULT_ICON, 'filter':'labels'},
-                    {'category':'list_items', 'title': _('TV series'),   'url':MAIN_URL + 'search/label/TV-Series', 'icon':DEFAULT_ICON},
-                    {'category':'search',          'title': _('Search'), 'search_item':True, 'icon':DEFAULT_ICON},
-                    {'category':'search_history',  'title': _('Search history'),             'icon':DEFAULT_ICON}]
+    MAIN_CAT_TAB = [{'category':'list_items', 'title': _('Recent'), 'url':MAIN_URL, 'icon':DEFAULT_ICON},
+                    {'category':'categories', 'title': _('Categories'), 'url':MAIN_URL, 'icon':DEFAULT_ICON, 'filter':'categories'},
+                    {'category':'categories', 'title': _('Programs'), 'url':MAIN_URL, 'icon':DEFAULT_ICON, 'filter':'programs'},
+                    {'category':'categories', 'title': _('Labels'), 'url':MAIN_URL, 'icon':DEFAULT_ICON, 'filter':'labels'},
+                    {'category':'list_items', 'title': _('TV series'), 'url':MAIN_URL + 'search/label/TV-Series', 'icon':DEFAULT_ICON},
+                    {'category':'search', 'title': _('Search'), 'search_item':True, 'icon':DEFAULT_ICON},
+                    {'category':'search_history', 'title': _('Search history'), 'icon':DEFAULT_ICON}]
  
     def __init__(self):
         CBaseHostClass.__init__(self, {'history':'  GreekDocumentaries3.tv', 'cookie':'GreekDocumentaries3tv.cookie'})
@@ -52,7 +52,7 @@ class GreekDocumentaries3(CBaseHostClass):
             url = 'http:' + url
         else:
             if 0 < len(url) and not url.startswith('http'):
-                url =  self.MAIN_URL + url
+                url = self.MAIN_URL + url
             if not self.MAIN_URL.startswith('https://'):
                 url = url.replace('https://', 'http://')
                 
@@ -75,7 +75,7 @@ class GreekDocumentaries3(CBaseHostClass):
         for item in tab:
             params = dict(cItem)
             params.update(item)
-            params['name']  = 'category'
+            params['name'] = 'category'
             if type == 'dir':
                 self.addDir(params)
             else:
@@ -88,7 +88,7 @@ class GreekDocumentaries3(CBaseHostClass):
         if not sts:
             return
         
-        for cat in  [('labels', 'list-label-widget-content', '</ul>'),
+        for cat in [('labels', 'list-label-widget-content', '</ul>'),
                      ('categories', 'ΚΑΤΗΓΟΡΙΕΣ', 'ΠΑΡΑΓΩΓΗΣ'),
                      ('programs', 'ΠΑΡΑΓΩΓΗΣ', '</ul>')]:
             self.cacheFilters[cat[0]] = [] 
@@ -128,11 +128,11 @@ class GreekDocumentaries3(CBaseHostClass):
         data = self.cm.ph.getDataBeetwenMarkers(data, m1, "<span id='home-link'>", False)[1]
         data = data.split(m1)
         for item in data:
-            tmp   = self.cm.ph.getSearchGroups(item, '''<a[^>]+?href=['"]([^'^"]+?)['"][^>]*?>([^<]+?)<''', 2)
-            url   = self._getFullUrl(tmp[0])
+            tmp = self.cm.ph.getSearchGroups(item, '''<a[^>]+?href=['"]([^'^"]+?)['"][^>]*?>([^<]+?)<''', 2)
+            url = self._getFullUrl(tmp[0])
             title = self.cleanHtmlStr(tmp[1])
-            icon  = self._getFullUrl(self.cm.ph.getSearchGroups(item, '''src=['"]([^"^']+?)['"]''')[0])
-            desc  = self.cleanHtmlStr(item.split('<br />\n<br />')[0])
+            icon = self._getFullUrl(self.cm.ph.getSearchGroups(item, '''src=['"]([^"^']+?)['"]''')[0])
+            desc = self.cleanHtmlStr(item.split('<br />\n<br />')[0])
             if url.startswith('http'):
                 params = dict(cItem)
                 params.update({'title':title, 'url':url, 'icon':icon, 'desc':desc})
@@ -140,7 +140,7 @@ class GreekDocumentaries3(CBaseHostClass):
                 self.addDir(params)
         if nextPageUrl != '':
             params = dict(cItem)
-            params.update({'title':_('Next page'), 'page':cItem.get('page', 1)+1, 'url':self._getFullUrl(nextPageUrl)})
+            params.update({'title':_('Next page'), 'page':cItem.get('page', 1) + 1, 'url':self._getFullUrl(nextPageUrl)})
             self.addDir(params)
             
     def exploreItem(self, cItem):
@@ -228,9 +228,9 @@ class GreekDocumentaries3(CBaseHostClass):
         
         CBaseHostClass.handleService(self, index, refresh, searchPattern, searchType)
 
-        name     = self.currItem.get("name", '')
+        name = self.currItem.get("name", '')
         category = self.currItem.get("category", '')
-        mode     = self.currItem.get("mode", '')
+        mode = self.currItem.get("mode", '')
         
         printDBG("handleService: |||||||||||||||||||||||||||||||||||| name[%s], category[%s] " % (name, category))
         self.currList = []
@@ -331,9 +331,9 @@ class IPTVHost(CHostBase):
             if '' != url:
                 hostLinks.append(CUrlItem("Link", url, 1))
             
-        title       =  cItem.get('title', '')
-        description =  cItem.get('desc', '')
-        icon        =  cItem.get('icon', '')
+        title = cItem.get('title', '')
+        description = cItem.get('desc', '')
+        icon = cItem.get('icon', '')
         
         return CDisplayListItem(name=title,
                                     description=description,

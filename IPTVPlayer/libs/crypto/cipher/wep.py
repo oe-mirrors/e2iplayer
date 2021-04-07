@@ -10,7 +10,7 @@
 """
 from crypto.cipher.arc4 import ARC4
 from crypto.errors import IntegrityCheckError, BadKeySizeError
-from zlib   import crc32
+from zlib import crc32
 from struct import pack
 
 class WEP:
@@ -19,8 +19,8 @@ class WEP:
     """
     def __init__(self, key=None, keyId=None):
         """ key -> octet string for key """
-        self.name        = 'WEP'
-        self.strength    = None # depends on keySize
+        self.name = 'WEP'
+        self.strength = None # depends on keySize
         self.arc4 = ARC4()       # base algorithm
         self.__key = [None, None, None, None]  # four possible keys, initialize to invalid keys
         self.encryptHeaderSize = 4
@@ -42,7 +42,7 @@ class WEP:
     def setCurrentKeyId(self, keyId):
         if keyId == None:
             self.currentKeyId = 0
-        elif (0<=keyId<4):
+        elif (0 <= keyId < 4):
             self.currentKeyId = keyId
         else:
             raise Exception('WEP keyId must be value 0, 1, 2 or 3')
@@ -51,22 +51,22 @@ class WEP:
         """ Encrypt a string and return a binary string
             Adds WEP encryption header and crc
         """
-        assert(len(iv)==3), 'Wrong size WEP IV'
+        assert(len(iv) == 3), 'Wrong size WEP IV'
         if keyId != None:
             self.setCurrentKeyId(keyId)
-        assert(self.__key[self.currentKeyId]!=None), 'Must set key for specific keyId before encryption'
+        assert(self.__key[self.currentKeyId] != None), 'Must set key for specific keyId before encryption'
         self.arc4.setKey(iv + self.__key[self.currentKeyId])
         crc = pack('<I', crc32(plainText))
-        cipherText = self.arc4.encrypt(plainText+crc)
+        cipherText = self.arc4.encrypt(plainText + crc)
         # add header that contains IV
-        cipherText = iv + chr((self.currentKeyId<<6)) + cipherText
+        cipherText = iv + chr((self.currentKeyId << 6)) + cipherText
         return cipherText
 
     def decrypt(self, cipherText):
         """ Decrypt a WEP packet, assumes WEP 4 byte header on packet """
         iv = cipherText[:3]
-        self.currentKeyId = (ord(cipherText[3])&0xC0)>>6
-        assert(self.__key[self.currentKeyId]!=None), 'Must set key for specific keyId before encryption'
+        self.currentKeyId = (ord(cipherText[3]) & 0xC0) >> 6
+        assert(self.__key[self.currentKeyId] != None), 'Must set key for specific keyId before encryption'
         self.arc4.setKey(iv + self.__key[self.currentKeyId])
         plainText = self.arc4.decrypt(cipherText[self.encryptHeaderSize:])
         if plainText[-self.encryptHeaderSize:] == pack('<I', crc32(plainText)):  # check data integrity

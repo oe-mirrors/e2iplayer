@@ -89,7 +89,7 @@ class Blowfish:
 	def __init__(self, key):
 
 		if not key or len(key) < 8 or len(key) > 56:
-			raise_(RuntimeError, "Attempted to initialize Blowfish cipher with key of invalid length: %s" %len(key))
+			raise_(RuntimeError, "Attempted to initialize Blowfish cipher with key of invalid length: %s" % len(key))
 
 		self.p_boxes = [
 			0x243F6A88, 0x85A308D3, 0x13198A2E, 0x03707344,
@@ -432,7 +432,7 @@ class Blowfish:
 	def encrypt(self, data):
 
 		if not len(data) == 8:
-			raise_(RuntimeError, "Attempted to encrypt data of invalid block length: %s" %len(data))
+			raise_(RuntimeError, "Attempted to encrypt data of invalid block length: %s" % len(data))
 
 		# Use big endianess since that's what everyone else uses
 		xl = ord(data[3]) | (ord(data[2]) << 8) | (ord(data[1]) << 16) | (ord(data[0]) << 24)
@@ -448,7 +448,7 @@ class Blowfish:
 	def decrypt(self, data):
 
 		if not len(data) == 8:
-			raise_(RuntimeError, "Attempted to encrypt data of invalid block length: %s" %len(data))
+			raise_(RuntimeError, "Attempted to encrypt data of invalid block length: %s" % len(data))
 
 		# Use big endianess since that's what everyone else uses
 		cl = ord(data[3]) | (ord(data[2]) << 8) | (ord(data[1]) << 16) | (ord(data[0]) << 24)
@@ -480,16 +480,16 @@ if __name__ == '__main__':
 	print("Testing encryption:")
 	xl = 123456
 	xr = 654321
-	print("\tPlain text: (%s, %s)" %(xl, xr))
+	print("\tPlain text: (%s, %s)" % (xl, xr))
 	cl, cr = cipher.cipher(xl, xr, cipher.ENCRYPT)
-	print("\tCrypted is: (%s, %s)" %(cl, cr))
+	print("\tCrypted is: (%s, %s)" % (cl, cr))
 	dl, dr = cipher.cipher(cl, cr, cipher.DECRYPT)
-	print("\tUnencrypted is: (%s, %s)" %(dl, dr))
+	print("\tUnencrypted is: (%s, %s)" % (dl, dr))
 
 	print("Testing buffer encrypt:")
 	text = 'testtest'
-	print("\tText: %s" %text)
+	print("\tText: %s" % text)
 	crypted = cipher.encrypt(text)
-	print("\tEncrypted: %s" %crypted)
+	print("\tEncrypted: %s" % crypted)
 	decrypted = cipher.decrypt(crypted)
-	print("\tDecrypted: %s" %decrypted)
+	print("\tDecrypted: %s" % decrypted)

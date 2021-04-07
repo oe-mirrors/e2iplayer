@@ -18,11 +18,11 @@ class PagingEntropyCollector:
     def __init__(self, memSize=500000000):            #? how should this be picked?
         """ Initialize paging entropy collector,
             memSize must be larger than allocated memory """
-        self.size     = memSize
-        self.memBlock = self.size*chr(0) # long string of length self.size
-        self.index    = 0
+        self.size = memSize
+        self.memBlock = self.size * chr(0) # long string of length self.size
+        self.index = 0
         import random
-        self.rand     = random.Random(1555551)
+        self.rand = random.Random(1555551)
 
     def randomBytes(self, numberOfBytes, secondsPerBit=.05):
         byteString = ''
@@ -40,11 +40,11 @@ class PagingEntropyCollector:
             time interval """
         t1 = time()
         count = 0
-        while (time()-t1) < secondsPerBit:           # seconds per sample
+        while (time() - t1) < secondsPerBit:           # seconds per sample
             # use random to sample various virtual memory locations
-            sample = self.memBlock[int(self.rand.random()*self.size)]
+            sample = self.memBlock[int(self.rand.random() * self.size)]
             count += 1
-        randomBit = intToParity(count)^floatToParity(time()-t1)
+        randomBit = intToParity(count) ^ floatToParity(time() - t1)
         return randomBit
 
 def intToParity(integer):
@@ -52,7 +52,7 @@ def intToParity(integer):
     parity = 0
     for character in s:
         byte = ord(character)
-        parity = parity^(0x01&(byte^(byte>>1)^(byte>>2)^(byte>>3)^(byte>>4)^(byte>>5)^(byte>>6)^(byte>>7)))
+        parity = parity ^ (0x01 & (byte ^ (byte >> 1) ^ (byte >> 2) ^ (byte >> 3) ^ (byte >> 4) ^ (byte >> 5) ^ (byte >> 6) ^ (byte >> 7)))
     return parity
 
 def floatToParity(float):
@@ -60,7 +60,7 @@ def floatToParity(float):
     parity = 0
     for character in s:
         byte = ord(character)
-        parity = parity^(0x01&(byte^(byte>>1)^(byte>>2)^(byte>>3)^(byte>>4)^(byte>>5)^(byte>>6)^(byte>>7)))
+        parity = parity ^ (0x01 & (byte ^ (byte >> 1) ^ (byte >> 2) ^ (byte >> 3) ^ (byte >> 4) ^ (byte >> 5) ^ (byte >> 6) ^ (byte >> 7)))
     return parity
 
 if __name__ == "__main__":

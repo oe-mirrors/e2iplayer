@@ -36,12 +36,12 @@ class HDKinoMir(CBaseHostClass):
         self.moonwalkParser = MoonwalkParser()
         self.ytParser = YouTubeParser()
         
-        self.MAIN_URL    = 'http://hdkinomir.com/'
+        self.MAIN_URL = 'http://hdkinomir.com/'
         self.DEFAULT_ICON_URL = self.getFullIconUrl('/templates/prokino/images/logo.png')
         
-        self.MAIN_CAT_TAB = [{'category':'categories',     'title': _('Movie categories'),     'url':self.getMainUrl()},
-                             {'category':'search',              'title': _('Search'),               'search_item':True},
-                             {'category':'search_history',      'title': _('Search history')} 
+        self.MAIN_CAT_TAB = [{'category':'categories', 'title': _('Movie categories'), 'url':self.getMainUrl()},
+                             {'category':'search', 'title': _('Search'), 'search_item':True},
+                             {'category':'search_history', 'title': _('Search history')} 
                             ]
         
         self.encoding = ''
@@ -97,8 +97,8 @@ class HDKinoMir(CBaseHostClass):
         if not sts:
             return
         
-        desc  = self.cm.ph.getDataBeetwenMarkers(data, '<div class="full-right-detailes">', '<div style="clear:both;">', False)[1]
-        desc  = self.cleanHtmlStr(desc)
+        desc = self.cm.ph.getDataBeetwenMarkers(data, '<div class="full-right-detailes">', '<div style="clear:both;">', False)[1]
+        desc = self.cleanHtmlStr(desc)
         title = cItem['title']
         
         seriesData = self.cm.ph.getAllItemsBeetwenMarkers(data, '<strong class="seria">', '</center>', False) 
@@ -148,7 +148,7 @@ class HDKinoMir(CBaseHostClass):
         hostName = cItem['host_name']
         if hostName == 'moonwalk':
             title = cItem['serie_title']
-            id    = cItem['season_id']
+            id = cItem['season_id']
             episodes = self.moonwalkParser.getEpiodesList(cItem['url'], id)
             
             for item in episodes:
@@ -188,7 +188,7 @@ class HDKinoMir(CBaseHostClass):
             return
         
         nextPage = False
-        if ('/page/%s/' % (page+1)) in data:
+        if ('/page/%s/' % (page + 1)) in data:
             nextPage = True
         
         m1 = '<div class="filmposters">'
@@ -198,7 +198,7 @@ class HDKinoMir(CBaseHostClass):
         if len(data):
             data[-1] = data[-1].split('<div class="navigation">')[0]
         for item in data:
-            url   = self.cm.ph.getSearchGroups(item, 'href="([^"]+?)"')[0]
+            url = self.cm.ph.getSearchGroups(item, 'href="([^"]+?)"')[0]
             title = self.cm.ph.getSearchGroups(item, 'alt="([^"]+?)"')[0]
             if title == '{title}':
                 title = self.cm.ph.getDataBeetwenMarkers(item, '<span>', '</span>', False)[1]
@@ -206,15 +206,15 @@ class HDKinoMir(CBaseHostClass):
             
             if title == '':
                 continue
-            icon  = self.cm.ph.getSearchGroups(item, 'src="([^"]+?)"')[0]
-            desc  = self.cleanHtmlStr(item.split('<div class="ribbon">')[-1])
+            icon = self.cm.ph.getSearchGroups(item, 'src="([^"]+?)"')[0]
+            desc = self.cleanHtmlStr(item.split('<div class="ribbon">')[-1])
             params = dict(cItem)
             params.update({'category':category, 'title':title, 'icon':self.getFullUrl(icon), 'desc':desc, 'url':self.getFullUrl(url)})
             self.addDir(params)
         
         if nextPage:
             params = dict(cItem)
-            params.update({'title':_('Next page'), 'page':cItem.get('page', 1)+1})
+            params.update({'title':_('Next page'), 'page':cItem.get('page', 1) + 1})
             self.addDir(params)
         
     def listSearchResult(self, cItem, searchPattern, searchType):
@@ -243,9 +243,9 @@ class HDKinoMir(CBaseHostClass):
             title = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(item, '<h2', '</h2>')[1])
             if title == '':
                 title = self.cleanHtmlStr(self.cm.ph.getSearchGroups(item, '''alt=['"]([^'^"]+?)['"]''')[0])
-            icon  = self.getFullIconUrl(self.cm.ph.getSearchGroups(item, '''src=['"]([^'^"]+?)['"]''')[0])
-            url   = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''href=['"]([^'^"]+?)['"]''')[0])
-            desc  = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(item, '</h2>', '</div>')[1])
+            icon = self.getFullIconUrl(self.cm.ph.getSearchGroups(item, '''src=['"]([^'^"]+?)['"]''')[0])
+            url = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''href=['"]([^'^"]+?)['"]''')[0])
+            desc = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(item, '</h2>', '</div>')[1])
             if self.cm.isValidUrl(url):
                 params = dict(cItem)
                 params.update({'category': 'list_content', 'title': title, 'icon': icon, 'desc': desc, 'url': url})
@@ -283,7 +283,7 @@ class HDKinoMir(CBaseHostClass):
         
         CBaseHostClass.handleService(self, index, refresh, searchPattern, searchType)
 
-        name     = self.currItem.get("name", '')
+        name = self.currItem.get("name", '')
         category = self.currItem.get("category", '')
         printDBG("handleService: |||||||||||||||||||||||||||||||||||| name[%s], category[%s] " % (name, category))
         self.currList = []

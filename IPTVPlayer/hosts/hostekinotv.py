@@ -5,7 +5,7 @@
 ###################################################
 from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _, SetIPTVPlayerLastHostError
 from Plugins.Extensions.IPTVPlayer.components.ihost import CHostBase, CBaseHostClass
-from Plugins.Extensions.IPTVPlayer.tools.iptvtools import  printDBG, printExc, GetDefaultLang, rm, byteify
+from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, GetDefaultLang, rm, byteify
 from Plugins.Extensions.IPTVPlayer.tools.iptvtypes import strwithmeta
 from Plugins.Extensions.IPTVPlayer.libs.recaptcha_v2 import UnCaptchaReCaptcha
 from Plugins.Extensions.IPTVPlayer.components.recaptcha_v2helper import CaptchaHelper
@@ -65,13 +65,13 @@ class EkinoTv(CBaseHostClass, CaptchaHelper):
         
         self.defaultParams = {'header':self.HTTP_HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE, 'cookie_items':{'prch':'true'}}
         
-        self.MAIN_CAT_TAB = [{'category':'list_cats',             'title': 'Filmy',           'url':self.FILMS_CAT_URL},
-                             {'category':'series_abc',            'title': 'Seriale',         'url':self.getFullUrl('/serie/')},
-                             {'category':'list_movies',           'title': 'Dla dzieci',      'url':self.FILMS_CAT_URL, 'cat':'2,3,5,6'},
-                             {'category':'search',                'title': _('Search'), 'search_item':True},
-                             {'category':'search_history',        'title': _('Search history')}]
+        self.MAIN_CAT_TAB = [{'category':'list_cats', 'title': 'Filmy', 'url':self.FILMS_CAT_URL},
+                             {'category':'series_abc', 'title': 'Seriale', 'url':self.getFullUrl('/serie/')},
+                             {'category':'list_movies', 'title': 'Dla dzieci', 'url':self.FILMS_CAT_URL, 'cat':'2,3,5,6'},
+                             {'category':'search', 'title': _('Search'), 'search_item':True},
+                             {'category':'search_history', 'title': _('Search history')}]
         
-        self.SORT_MAP  = {'data-dodania': 'add',
+        self.SORT_MAP = {'data-dodania': 'add',
                           'data-aktualizacji': 'update',
                           'data-premiery': 'premiera',
                           'data-premiery': 'premiera',
@@ -81,7 +81,7 @@ class EkinoTv(CBaseHostClass, CaptchaHelper):
         
         self.cacheMovieFilters = {'cats':[], 'vers':[], 'years':[]}
         self.loggedIn = None
-        self.login    = ''
+        self.login = ''
         self.password = ''
         self.loginMessage = ''
         
@@ -165,8 +165,8 @@ class EkinoTv(CBaseHostClass, CaptchaHelper):
             ids = self.cm.ph.getSearchGroups(item[0], 'id="([^"]+?)"')[0].split('-')
             if len(ids) > 2 and '' != ids[-1]:
                 title += ' [%s]' % (ids[-1])
-            url    = self.cm.ph.getSearchGroups(item[0], 'href="([^"]+?)"')[0]
-            icon   = self.cm.ph.getSearchGroups(item[0], 'src="([^"]+?jpg)"')[0]
+            url = self.cm.ph.getSearchGroups(item[0], 'href="([^"]+?)"')[0]
+            icon = self.cm.ph.getSearchGroups(item[0], 'src="([^"]+?jpg)"')[0]
             if url == '':
                 continue
             params = dict(cItem)
@@ -181,10 +181,10 @@ class EkinoTv(CBaseHostClass, CaptchaHelper):
         printDBG("EkinoTv.listMovies")
         
         # prepare url
-        sortby    = config.plugins.iptvplayer.ekinotv_sortby.value          
+        sortby = config.plugins.iptvplayer.ekinotv_sortby.value          
         sortorder = config.plugins.iptvplayer.ekinotv_sortorder.value
         page = cItem.get('page', 1)
-        url  = cItem['url'] + 'strona[%s]+sort[%s]+method[%s]+' % (page, self.SORT_MAP[sortby], sortorder)
+        url = cItem['url'] + 'strona[%s]+sort[%s]+method[%s]+' % (page, self.SORT_MAP[sortby], sortorder)
         
         for item in [('cat', 'kategoria'), ('ver', 'wersja'), ('year', 'rok')]:
             if item[0] in cItem:
@@ -195,7 +195,7 @@ class EkinoTv(CBaseHostClass, CaptchaHelper):
             return
         
         # parse data
-        nextPage = self._checkNexPage(data, page+1)
+        nextPage = self._checkNexPage(data, page + 1)
         sp = '<div class="movies-list-item"'
         data = self.cm.ph.getDataBeetwenMarkers(data, sp, '<div id="pager">', False)[1]
         data = data.split(sp)
@@ -203,7 +203,7 @@ class EkinoTv(CBaseHostClass, CaptchaHelper):
         
         if nextPage:
             params = dict(cItem)
-            params.update({'title':_('Next page'), 'page':page+1})
+            params.update({'title':_('Next page'), 'page':page + 1})
             self.addDir(params)
                 
     def listsSeriesABC(self, cItem, category):
@@ -220,14 +220,14 @@ class EkinoTv(CBaseHostClass, CaptchaHelper):
     def listsSeries(self, cItem, category):
         printDBG('EkinoTv.listsSeries start')
         page = cItem.get('page', 1)
-        url  = cItem['url'] + ',strona=%s' % page
+        url = cItem['url'] + ',strona=%s' % page
         
         sts, data = self.getPage(url)
         if not sts:
             return
         
         nextPage = False
-        if (',strona=%s"' % (page+1)) in data:
+        if (',strona=%s"' % (page + 1)) in data:
             nextPage = True
         
         sp = '<div class="movies-list-item"'
@@ -237,7 +237,7 @@ class EkinoTv(CBaseHostClass, CaptchaHelper):
         
         if nextPage:
             params = dict(cItem)
-            params.update({'title':_('Next page'), 'page':page+1})
+            params.update({'title':_('Next page'), 'page':page + 1})
             self.addDir(params)
                 
     def listEpisodes(self, cItem):
@@ -341,7 +341,7 @@ class EkinoTv(CBaseHostClass, CaptchaHelper):
             if len(tmp):
                 del tmp[-1]
             for item in tmp:
-                id  = self.cm.ph.getSearchGroups(item, 'id="([^"]+?)"')[0]
+                id = self.cm.ph.getSearchGroups(item, 'id="([^"]+?)"')[0]
                 playerParams = self.cm.ph.getSearchGroups(item, '''ShowPlayer[^"^']*?['"]([^"^']+?)['"]\s*\,\s*['"]([^"^']+?)['"]''', 2)
                 url = ''
                 if premium and '' not in playerParams:
@@ -380,7 +380,7 @@ class EkinoTv(CBaseHostClass, CaptchaHelper):
                     continue
                 url = self.getFullUrl(baseVidUrl + '/'.join(playerParams))
                 title = self.cleanHtmlStr(item)
-                tmp   = reTitleObj.findall(item)
+                tmp = reTitleObj.findall(item)
                 title += ' ' + ' '.join(tmp)
                 premiumTab.append({'name':'[premium] %s' % title, 'url':strwithmeta(url, {'Referer':cItem['url'], 'is_premium':True}), 'need_resolve':1})
             
@@ -423,7 +423,7 @@ class EkinoTv(CBaseHostClass, CaptchaHelper):
             printDBG(">>>\n%s\n<<<" % data)
             if 'hcaptcha' in data:
                 SetIPTVPlayerLastHostError(_('Link protected with hCaptcha.')) 
-                sitekey  = self.cm.ph.getSearchGroups(data, 'data-sitekey="([^"]+?)"')[0]
+                sitekey = self.cm.ph.getSearchGroups(data, 'data-sitekey="([^"]+?)"')[0]
                 if sitekey == '':
                     sitekey = self.cm.ph.getSearchGroups(data, '''['"]?sitekey['"]?\s*:\s*['"]([^"^']+?)['"]''')[0]
                 if sitekey != '':
@@ -475,7 +475,7 @@ class EkinoTv(CBaseHostClass, CaptchaHelper):
                     urlTab.append({'name':name, 'url':vidUrl, 'need_resolve':0})
                     return urlTab
 
-            printDBG("|||"  + url)
+            printDBG("|||" + url)
             printDBG("#################################################################")
             printDBG(data)
             printDBG("#################################################################")
@@ -490,7 +490,7 @@ class EkinoTv(CBaseHostClass, CaptchaHelper):
         except Exception:
             cItem = {'url':favData}
             printExc()
-        return  self.getLinksForVideo(cItem)
+        return self.getLinksForVideo(cItem)
     
     def tryTologin(self):
         printDBG('tryTologin start')
@@ -521,7 +521,7 @@ class EkinoTv(CBaseHostClass, CaptchaHelper):
             data = self.cm.ph.getAllItemsBeetwenMarkers(data, '<input', '>')
             post_data = {}
             for item in data:
-                name  = self.cm.ph.getSearchGroups(item, '''name=['"]([^'^"]+?)['"]''')[0]
+                name = self.cm.ph.getSearchGroups(item, '''name=['"]([^'^"]+?)['"]''')[0]
                 value = self.cm.ph.getSearchGroups(item, '''value=['"]([^'^"]+?)['"]''')[0]
                 post_data[name] = value
             
@@ -535,7 +535,7 @@ class EkinoTv(CBaseHostClass, CaptchaHelper):
                 self.loggedIn = True
                 data = self.cm.ph.getDataBeetwenNodes(data, ('<div', '>', 'menu'), ('</div', '>'))[1]
                 data = self.cm.ph.getAllItemsBeetwenNodes(data, ('<a', '>'), ('<br', '>', '/'))
-                self.loginMessage =  []
+                self.loginMessage = []
                 for t in data:
                     t = self.cleanHtmlStr(t)
                     if t != '':
@@ -557,7 +557,7 @@ class EkinoTv(CBaseHostClass, CaptchaHelper):
                 
         CBaseHostClass.handleService(self, index, refresh, searchPattern, searchType)
         
-        name     = self.currItem.get("name", None)
+        name = self.currItem.get("name", None)
         category = self.currItem.get("category", '')
         printDBG("EkinoTv.handleService: ---------> name[%s], category[%s] " % (name, category))
         searchPattern = self.currItem.get("search_pattern", searchPattern)

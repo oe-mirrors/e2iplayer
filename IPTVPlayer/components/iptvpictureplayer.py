@@ -37,8 +37,8 @@ class IPTVSimpleAudioPlayer():
         self.gstAdditionalParams = {'buffer-duration':2}
         self.gstAdditionalParams['download-buffer-path'] = additionalParams.get('download-buffer-path', '') # File template to store temporary files in, should contain directory and XXXXXX
         self.gstAdditionalParams['ring-buffer-max-size'] = additionalParams.get('ring-buffer-max-size', 0) # in MB
-        self.gstAdditionalParams['buffer-duration']      = additionalParams.get('buffer-duration', -1) # in s
-        self.gstAdditionalParams['buffer-size']          = additionalParams.get('buffer-size', 0)
+        self.gstAdditionalParams['buffer-duration'] = additionalParams.get('buffer-duration', -1) # in s
+        self.gstAdditionalParams['buffer-size'] = additionalParams.get('buffer-size', 0)
             
         self.uri = ""
         self.playMode = ""
@@ -53,7 +53,7 @@ class IPTVSimpleAudioPlayer():
         
         gstplayerPath = config.plugins.iptvplayer.gstplayerpath.value
         #'export GST_DEBUG="*:6" &&' + 
-        cmd = gstplayerPath  + ' "%s"' % self.uri
+        cmd = gstplayerPath + ' "%s"' % self.uri
         if "://" in self.uri: 
             cmd += ' "%s" "%s"  "%s"  "%s" ' % (self.gstAdditionalParams['download-buffer-path'], self.gstAdditionalParams['ring-buffer-max-size'], self.gstAdditionalParams['buffer-duration'], self.gstAdditionalParams['buffer-size'])
             tmp = strwithmeta(self.uri)
@@ -66,7 +66,7 @@ class IPTVSimpleAudioPlayer():
                     if '@' in tmp:
                         tmp = re.search('([^:]+?://)([^:]+?):([^@]+?)@(.+?)$', tmp)
                         if tmp:
-                            cmd += (' "proxy=%s" "proxy-id=%s" "proxy-pw=%s" ' % (tmp.group(1)+tmp.group(4), tmp.group(2), tmp.group(3)))
+                            cmd += (' "proxy=%s" "proxy-id=%s" "proxy-pw=%s" ' % (tmp.group(1) + tmp.group(4), tmp.group(2), tmp.group(3)))
                     else:
                         cmd += (' "proxy=%s" ' % tmp)
         else:
@@ -120,8 +120,8 @@ class IPTVPicturePlayerWidget(Screen):
     c_w = sz_w
     c_h = 80
     # picture 
-    p_w = sz_w-20
-    p_h = sz_h-20
+    p_w = sz_w - 20
+    p_h = sz_h - 20
     #######################
     #     POSITIONS
     #######################  
@@ -146,7 +146,7 @@ class IPTVPicturePlayerWidget(Screen):
          <widget name="console"    size="%d,%d"   position="%d,%d"  zPosition="5" valign="center" halign="center"  font="Regular;21" backgroundColor="black" transparent="1" />
          <widget name="icon"       size="%d,%d"   position="%d,%d"  zPosition="4" transparent="1" alphatest="on" />
          <widget name="picture"    size="%d,%d"   position="%d,%d"  zPosition="6" transparent="1" alphatest="on" />
-        </screen>""" %(sz_w, sz_h,         # screen
+        </screen>""" % (sz_w, sz_h,         # screen
                         s_w, s_h, s_x, s_y, # status
                         c_w, c_h, c_x, c_y, # console
                         i_w, i_h, i_x, i_y, # icon
@@ -168,9 +168,9 @@ class IPTVPicturePlayerWidget(Screen):
         self.addParams = {'seq_mode':False}
         self.addParams.update(addParams)
         
-        self.url           = url
-        self.pictureTitle  = pictureTitle
-        self.audioUrl      = strwithmeta(url).meta.get("iptv_audio_url", '')
+        self.url = url
+        self.pictureTitle = pictureTitle
+        self.audioUrl = strwithmeta(url).meta.get("iptv_audio_url", '')
        
         self["actions"] = ActionMap(['IPTVAlternateVideoPlayer', 'MoviePlayerActions', 'MediaPlayerActions', 'WizardActions', 'DirectionActions'],
         {
@@ -182,14 +182,14 @@ class IPTVPicturePlayerWidget(Screen):
             'ok': self.key_ok,
         }, -1)     
 
-        self["status"]  = Label()
+        self["status"] = Label()
         self["console"] = Label()
-        self["icon"]    = SimpleAnimatedCover()
+        self["icon"] = SimpleAnimatedCover()
         self["picture"] = Cover()
 
         # prepare icon frames path
         frames = []
-        for idx in range(1, self.NUM_OF_ICON_FRAMES+1):
+        for idx in range(1, self.NUM_OF_ICON_FRAMES + 1):
             frames.append(GetIconDir('/buffering/buffering_%d.png' % idx))
         self["icon"].loadFrames(frames) 
         
@@ -219,7 +219,7 @@ class IPTVPicturePlayerWidget(Screen):
         if len(self.audioUrl) and len(config.plugins.iptvplayer.gstplayerpath.value):
             self.audioPlayer = IPTVSimpleAudioPlayer()
         else:
-            self.audioPlayer  = None
+            self.audioPlayer = None
        
     #end def __init__(self, session):
     

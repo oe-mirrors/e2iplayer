@@ -24,13 +24,13 @@ import re
 ###################################################
 # Config options for HOST
 ###################################################
-config.plugins.iptvplayer.filmynadzis_login    = ConfigText(default="", fixed_size=False)
+config.plugins.iptvplayer.filmynadzis_login = ConfigText(default="", fixed_size=False)
 config.plugins.iptvplayer.filmynadzis_password = ConfigText(default="", fixed_size=False)
 
 def GetConfigList():
     optionList = []
-    optionList.append(getConfigListEntry(_("Username")+":",    config.plugins.iptvplayer.filmynadzis_login))
-    optionList.append(getConfigListEntry(_("Password")+":", config.plugins.iptvplayer.filmynadzis_password))
+    optionList.append(getConfigListEntry(_("Username") + ":", config.plugins.iptvplayer.filmynadzis_login))
+    optionList.append(getConfigListEntry(_("Password") + ":", config.plugins.iptvplayer.filmynadzis_password))
     return optionList
 ###################################################
 
@@ -51,10 +51,10 @@ class FilmyNaDzis(CBaseHostClass):
         self.AJAX_HEADER = MergeDicts(self.HTTP_HEADER, {'X-Requested-With': ' XMLHttpRequest', 'Accept':'*/*'})
         self.defaultParams = {'header':self.HTTP_HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
 
-        self.cacheLinks    = {}
+        self.cacheLinks = {}
 
         self.loggedIn = None
-        self.login    = ''
+        self.login = ''
         self.password = ''
 
     def getDefaultParams(self, forAjax=False):
@@ -98,7 +98,7 @@ class FilmyNaDzis(CBaseHostClass):
                 printDBG("response url : %s" % responseUrl)
                 
                 if 'ihc_login_fail' in responseUrl:
-                    msg =  _('Login failed. Invalid email or password.')
+                    msg = _('Login failed. Invalid email or password.')
                     GetIPTVNotify().push(msg, 'error', 10)
                     self.loggedIn = False
                 elif 'ihc_success_login' in responseUrl:
@@ -146,7 +146,7 @@ class FilmyNaDzis(CBaseHostClass):
             printDBG("Categories: %s" % str(params))
             self.addDir(params)
 
-        tabs = [{'category':'search',         'title': _('Search'), 'search_item':True},
+        tabs = [{'category':'search', 'title': _('Search'), 'search_item':True},
                 {'category': 'search_history', 'title': _('Search history'),}]
         self.listsTab(tabs, cItem)
 
@@ -237,7 +237,7 @@ class FilmyNaDzis(CBaseHostClass):
         printDBG("FilmyNaDzis.getLinksForVideo --> token --> name '%s' - content '%s'" % (token_name, token_content))
         
         urlParams = self.getDefaultParams(True)
-        urlParams['header'] = MergeDicts(urlParams['header'], {'Referer': cUrl, 'x-csrf-' +  token_name: token_content})
+        urlParams['header'] = MergeDicts(urlParams['header'], {'Referer': cUrl, 'x-csrf-' + token_name: token_content})
 
         data = ph.find(data, ('<div', '>', 'video_thumbnail'), '</div>', flags=0)[1]
         printDBG("------------------------")
@@ -248,7 +248,7 @@ class FilmyNaDzis(CBaseHostClass):
         if tmp: 
             if self.cm.getBaseUrl(tmp) != self.cm.getBaseUrl(cUrl):
                 name = self.cm.getBaseUrl(tmp)
-                params = {'name': name, 'url':strwithmeta(tmp, {'Referer': cUrl, 'x-csrf-' +  token_name: token_content}), 'need_resolve':1}
+                params = {'name': name, 'url':strwithmeta(tmp, {'Referer': cUrl, 'x-csrf-' + token_name: token_content}), 'need_resolve':1}
                 printDBG("-------> link: %s" % str(params))
                 urlTab.append(params)
             else:
@@ -265,7 +265,7 @@ class FilmyNaDzis(CBaseHostClass):
         if len(tmp):
             for item in tmp:
                 type = self.cm.ph.getSearchGroups(item, '''type=['"]([^'^"]+?)['"]''')[0].lower()
-                url  = self.cm.ph.getSearchGroups(item, '''src=['"]([^'^"]+?)['"]''')[0]
+                url = self.cm.ph.getSearchGroups(item, '''src=['"]([^'^"]+?)['"]''')[0]
                 
                 if 'video/mp4' == type: 
                     urlTab.append({'name':self.up.getHostName(url), 'url':self.getFullUrl(url), 'need_resolve':0})

@@ -18,13 +18,13 @@ class IPTVFileHost:
         
     def _getGroup(self, title):
         # for now only first group is considered: "[group1][group2] ala" will return "[group1]" and "[group2] ala"
-        titleInGroup  = ''
-        groupTitle    = ''
+        titleInGroup = ''
+        groupTitle = ''
         if 2 < len(title) and '[' == title[0]:
             idx = title.find(']')
             if -1 < idx:
-                groupTitle   = title[1:idx].strip()
-                titleInGroup = title[idx+1:].strip()
+                groupTitle = title[1:idx].strip()
+                titleInGroup = title[idx + 1:].strip()
         return groupTitle, titleInGroup
 
     def addFile(self, filePath, encoding='utf-8', addItemParams={}):
@@ -47,18 +47,18 @@ class IPTVFileHost:
                         fullTitle = line[0:idx1].strip()
                         desc = ''
                         icon = ''
-                        idx2 = line.find(';;', idx1+1)
+                        idx2 = line.find(';;', idx1 + 1)
                         if -1 < idx2:
-                            url  = line[idx1+1:idx2].strip()
+                            url = line[idx1 + 1:idx2].strip()
                             idx1 = idx2 + 2
                             idx2 = line.find(';;;', idx1)
                             if -1 < idx2:
                                 icon = line[idx1:idx2].strip()
-                                desc = line[idx2+3:].strip()
+                                desc = line[idx2 + 3:].strip()
                             else:
                                 icon = line[idx1:].strip()
                         else:
-                            url = line[idx1+1:].strip()
+                            url = line[idx1 + 1:].strip()
                         if '' != fullTitle and url != '': 
                             # get group
                             groupTitle, titleInGroup = self._getGroup(fullTitle)

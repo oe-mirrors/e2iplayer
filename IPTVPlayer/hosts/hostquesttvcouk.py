@@ -114,7 +114,7 @@ class QuesttvCoUK(CBaseHostClass):
                 data = self.cm.ph.getDataBeetwenMarkers(data, '"renditions":', ']', False)[1]
                 try:
                     printDBG(data)
-                    data = byteify(json.loads(data+']'), '', True)
+                    data = byteify(json.loads(data + ']'), '', True)
                     for item in data:
                         if item['videoCodec'] != 'H264':
                             continue
@@ -147,9 +147,9 @@ class QuesttvCoUK(CBaseHostClass):
         
         CBaseHostClass.handleService(self, index, refresh, searchPattern, searchType)
 
-        name     = self.currItem.get("name", '')
+        name = self.currItem.get("name", '')
         category = self.currItem.get("category", '')
-        mode     = self.currItem.get("mode", '')
+        mode = self.currItem.get("mode", '')
         
         printDBG("handleService: |||||||||||||||||||||||||||||||||||| name[%s], category[%s] " % (name, category))
         self.currList = []

@@ -38,9 +38,9 @@ class Altadefinizione(CBaseHostClass):
         
         self.cacheCategories = []
         
-        self.cacheJSCode   = ''
-        self.cacheLinks    = {}
-        self.cacheFilters  = {}
+        self.cacheJSCode = ''
+        self.cacheLinks = {}
+        self.cacheFilters = {}
         self.cacheFiltersKeys = []
         self.defaultParams = {'with_metadata':True, 'header':self.HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
         self._myFun = None
@@ -102,8 +102,8 @@ class Altadefinizione(CBaseHostClass):
                 self.addDir(params)
                 
         MAIN_CAT_TAB = [{'category':'list_categories', 'title': 'Categorie'},
-                        {'category': 'search',          'title': _('Search'), 'search_item': True, },
-                        {'category': 'search_history',  'title': _('Search history'),}]
+                        {'category': 'search', 'title': _('Search'), 'search_item': True, },
+                        {'category': 'search_history', 'title': _('Search history'),}]
         self.listsTab(MAIN_CAT_TAB, cItem)
     
     def listSubItems(self, cItem):
@@ -146,7 +146,7 @@ class Altadefinizione(CBaseHostClass):
         
         if nextPage and len(self.currList) > 0:
             params = dict(cItem)
-            params.update({'good_for_fav': False, 'title':_("Next page"), 'url':nextPage, 'page':page+1})
+            params.update({'good_for_fav': False, 'title':_("Next page"), 'url':nextPage, 'page':page + 1})
             self.addDir(params)
     
     def exploreItem(self, cItem):
@@ -235,7 +235,7 @@ class Altadefinizione(CBaseHostClass):
             title = ''
             query = {}
             for it in item:
-                name  = self.cm.ph.getSearchGroups(it, '''name=['"]([^'^"]+?)['"]''')[0]
+                name = self.cm.ph.getSearchGroups(it, '''name=['"]([^'^"]+?)['"]''')[0]
                 value = self.cm.ph.getSearchGroups(it, '''value=['"]([^'^"]+?)['"]''')[0]
                 query[name] = value
                 if title == '' and name.startswith('mir'):
@@ -299,7 +299,7 @@ class Altadefinizione(CBaseHostClass):
                 idxS = data.find('function clearify')
                 num = 1
                 idx = data.find('{', idxS)
-                for idx in range(idx+1, len(data), 1):
+                for idx in range(idx + 1, len(data), 1):
                     if data[idx] == '{':
                         num += 1
                     if data[idx] == '}':
@@ -308,7 +308,7 @@ class Altadefinizione(CBaseHostClass):
                         printDBG("JS_CODE_IDX: [%s:%s]" % (idxS, idx))
                         break
                   
-                jscode = data[idxS:idx+1]
+                jscode = data[idxS:idx + 1]
                 printDBG('JS_CODE: %s\n' % jscode)
                 self.cacheJSCode = jscode
             except Exception:
@@ -363,12 +363,12 @@ class Altadefinizione(CBaseHostClass):
         if t != '':
             otherInfo['rating'] = t
         
-        descMap = {'genere':    'genres',
-                   'anno':    'year',
-                   'qualitá':   'quality',
+        descMap = {'genere': 'genres',
+                   'anno': 'year',
+                   'qualitá': 'quality',
                    'scrittore': 'writers',
-                   'attori':    'actors',
-                   'regia':     'directors'} #stars
+                   'attori': 'actors',
+                   'regia': 'directors'} #stars
         
         descData = self.cm.ph.getAllItemsBeetwenNodes(descData, ('<li', '>'), ('</li', '>'), False)
         for item in descData:
@@ -394,9 +394,9 @@ class Altadefinizione(CBaseHostClass):
         
         CBaseHostClass.handleService(self, index, refresh, searchPattern, searchType)
 
-        name     = self.currItem.get("name", '')
+        name = self.currItem.get("name", '')
         category = self.currItem.get("category", '')
-        mode     = self.currItem.get("mode", '')
+        mode = self.currItem.get("mode", '')
         
         printDBG("handleService: |||||||||||||||||||||||||||||||||||| name[%s], category[%s] " % (name, category))
         self.currList = []

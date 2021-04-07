@@ -42,11 +42,11 @@ class BajeczkiOrg(CBaseHostClass):
         return self.cm.getPage(url, addParams, post_data)
         
     def listMainMenu(self, cItem):
-        MAIN_CAT_TAB = [{'category':'categories',      'title': 'Wszystkie bajki',    'url':self.getFullUrl('/all-categories/')},
-                        {'category':'list_items',      'title': 'Ostatnio dodane',    'url':self.getFullUrl('/?s=')},
-                        {'category':'list_items',      'title': 'Filmy',              'url':self.getFullUrl('/pelnometrazowe/')},
-                        {'category': 'search',          'title': _('Search'), 'search_item': True, },
-                        {'category': 'search_history',  'title': _('Search history'),}]
+        MAIN_CAT_TAB = [{'category':'categories', 'title': 'Wszystkie bajki', 'url':self.getFullUrl('/all-categories/')},
+                        {'category':'list_items', 'title': 'Ostatnio dodane', 'url':self.getFullUrl('/?s=')},
+                        {'category':'list_items', 'title': 'Filmy', 'url':self.getFullUrl('/pelnometrazowe/')},
+                        {'category': 'search', 'title': _('Search'), 'search_item': True, },
+                        {'category': 'search_history', 'title': _('Search history'),}]
         self.listsTab(MAIN_CAT_TAB, cItem)
     
     def listCategories(self, cItem, nextCategory):
@@ -63,7 +63,7 @@ class BajeczkiOrg(CBaseHostClass):
                 continue
             item = item.split('</span>', 1)
             title = ph.clean_html(item[0])
-            desc  = ph.clean_html(item[-1])
+            desc = ph.clean_html(item[-1])
             icon = url + '?fake=need_resolve.jpeg'
             params = dict(cItem)
             params = {'good_for_fav': True, 'category':nextCategory, 'title':title, 'url':url, 'icon':icon, 'desc':desc}
@@ -134,7 +134,7 @@ class BajeczkiOrg(CBaseHostClass):
                 name = self.up.getDomain(url)
                 urlTab.append({'name':name, 'url':strwithmeta(url, {'direct_link':True, 'Referer':self.cm.meta['url']}), 'need_resolve':1})
 
-        tmp = ph.findall(data, ('<div', '>', 'data-item'), flags=ph.IGNORECASE|ph.START_E)
+        tmp = ph.findall(data, ('<div', '>', 'data-item'), flags=ph.IGNORECASE | ph.START_E)
         for item in tmp:
             if 'sources' not in item:
                 continue
@@ -200,9 +200,9 @@ class BajeczkiOrg(CBaseHostClass):
         
         CBaseHostClass.handleService(self, index, refresh, searchPattern, searchType)
 
-        name     = self.currItem.get("name", '')
+        name = self.currItem.get("name", '')
         category = self.currItem.get("category", '')
-        mode     = self.currItem.get("mode", '')
+        mode = self.currItem.get("mode", '')
         
         printDBG("handleService: >> name[%s], category[%s] " % (name, category))
         self.currList = []

@@ -31,13 +31,13 @@ from Screens.MessageBox import MessageBox
 ###################################################
 # Config options for HOST
 ###################################################
-config.plugins.iptvplayer.freediscpl_login    = ConfigText(default="", fixed_size=False)
+config.plugins.iptvplayer.freediscpl_login = ConfigText(default="", fixed_size=False)
 config.plugins.iptvplayer.freediscpl_password = ConfigText(default="", fixed_size=False)
 
 def GetConfigList():
     optionList = []
-    optionList.append(getConfigListEntry(_("e-mail")+":", config.plugins.iptvplayer.freediscpl_login))
-    optionList.append(getConfigListEntry(_("password")+":", config.plugins.iptvplayer.freediscpl_password))
+    optionList.append(getConfigListEntry(_("e-mail") + ":", config.plugins.iptvplayer.freediscpl_login))
+    optionList.append(getConfigListEntry(_("password") + ":", config.plugins.iptvplayer.freediscpl_password))
     return optionList
 ###################################################
 
@@ -54,13 +54,13 @@ class FreeDiscPL(CBaseHostClass):
     SEARCH_URL = MAIN_URL + 'search/get'
     DEFAULT_ICON_URL = "http://i.imgur.com/mANjWqL.png"
 
-    MAIN_CAT_TAB = [{'category':'list_filters',  'title': 'Najnowsze publiczne pliki użytkowników',  'url':MAIN_URL+'explore/start/get_tabs_pages_data/%s/newest/'},
-                    {'category':'list_filters',  'title': 'Ostatnio przeglądane pliki',              'url':MAIN_URL+'explore/start/get_tabs_pages_data/%s/visited/'},
-                    {'category':'search',        'title': _('Search'), 'search_item':True},
+    MAIN_CAT_TAB = [{'category':'list_filters', 'title': 'Najnowsze publiczne pliki użytkowników', 'url':MAIN_URL + 'explore/start/get_tabs_pages_data/%s/newest/'},
+                    {'category':'list_filters', 'title': 'Ostatnio przeglądane pliki', 'url':MAIN_URL + 'explore/start/get_tabs_pages_data/%s/visited/'},
+                    {'category':'search', 'title': _('Search'), 'search_item':True},
                     {'category':'search_history','title': _('Search history')}]
     
-    FILTERS_TAB = [{'title':_('Movies'),    'filter':'movies'},
-                   {'title':_('Music'),     'filter':'music'}]
+    FILTERS_TAB = [{'title':_('Movies'), 'filter':'movies'},
+                   {'title':_('Music'), 'filter':'music'}]
                    #{'title':_('Pictures'),  'filter':'pictures'} ]
     TYPES = {'movies':7, 'music':6}#, 'pictures':2}
     
@@ -68,7 +68,7 @@ class FreeDiscPL(CBaseHostClass):
         CBaseHostClass.__init__(self, {'history':'  FreeDiscPL.tv', 'cookie':'FreeDiscPL.cookie'})
         self.defaultParams = {'with_metadata':True, 'ignore_http_code_ranges':[(410, 410), (404, 404)], 'header':self.HTTP_HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
         self.loggedIn = None
-        self.login    = ''
+        self.login = ''
         self.password = ''
         self.loginMessage = ''
         self.treeCache = {}
@@ -101,7 +101,7 @@ class FreeDiscPL(CBaseHostClass):
 
                     captchaTitle = self.cleanHtmlStr(tmp.split('<form', 1)[0])
 
-                    sendLabel = self.cleanHtmlStr(ph.getattr(ph.find(tmp, ('<input', '>', 'Button'), flags=(ph.IGNORECASE|ph.START_E))[1], 'value'))
+                    sendLabel = self.cleanHtmlStr(ph.getattr(ph.find(tmp, ('<input', '>', 'Button'), flags=(ph.IGNORECASE | ph.START_E))[1], 'value'))
                     captchaLabel = self.cleanHtmlStr(ph.getattr(tmp, 'placeholder'))
                     captchaLabel = '%s %s' % (sendLabel, captchaLabel)
 
@@ -176,7 +176,7 @@ class FreeDiscPL(CBaseHostClass):
         for item in tab:
             params = dict(cItem)
             params.update(item)
-            params['name']  = 'category'
+            params['name'] = 'category'
             if type == 'dir':
                 self.addDir(params)
             else:
@@ -189,8 +189,8 @@ class FreeDiscPL(CBaseHostClass):
         if type == -1:
             return
         
-        page      = cItem.get('page', 0)
-        url       = cItem['url'] % (type) + '{0}'.format(page)
+        page = cItem.get('page', 0)
+        url = cItem['url'] % (type) + '{0}'.format(page)
         
         sts, data = self.getPage(url)
         if not sts:
@@ -207,7 +207,7 @@ class FreeDiscPL(CBaseHostClass):
             if len(data):
                 del data[0]
             for item in data:
-                icon  = self.cm.ph.getSearchGroups(item, '''url\(['"]([^'^"]+?)['"]''')[0]
+                icon = self.cm.ph.getSearchGroups(item, '''url\(['"]([^'^"]+?)['"]''')[0]
                 url = self.cm.ph.getSearchGroups(item, '''href=['"]([^'^"]+?)['"]''')[0]
                 if url == '':
                     continue
@@ -226,7 +226,7 @@ class FreeDiscPL(CBaseHostClass):
             printExc()
         
         params = dict(cItem)
-        params.update({'title':_('Next page'), 'page':page+1})
+        params.update({'title':_('Next page'), 'page':page + 1})
         self.addDir(params)
         
     def listItems2(self, cItem, nextCategory):
@@ -240,7 +240,7 @@ class FreeDiscPL(CBaseHostClass):
         params = dict(self.defaultParams)
         params['raw_post_data'] = True
         params['header'] = dict(self.AJAX_HEADER)
-        params['header']['Referer']= self.cm.getBaseUrl(self.getMainUrl()) + 'search/%s/%s' % (cItem.get('f_search_type', ''), urllib.parse.quote(cItem.get('f_search_pattern', '')))
+        params['header']['Referer'] = self.cm.getBaseUrl(self.getMainUrl()) + 'search/%s/%s' % (cItem.get('f_search_type', ''), urllib.parse.quote(cItem.get('f_search_pattern', '')))
         
         sts, data = self.getPage(cItem['url'], params, json_dumps(post_data))
         if not sts:
@@ -266,7 +266,7 @@ class FreeDiscPL(CBaseHostClass):
                     self.addDir(params)
             if data['pages'] > page:
                 params = dict(cItem)
-                params.update({'good_for_fav':False, 'title':_('Next page'), 'page':page+1})
+                params.update({'good_for_fav':False, 'title':_('Next page'), 'page':page + 1})
                 self.addDir(params)
         except Exception:
             printExc()
@@ -317,7 +317,7 @@ class FreeDiscPL(CBaseHostClass):
         urlParams = dict(self.defaultParams)
         urlParams['raw_post_data'] = True
         urlParams['header'] = dict(self.AJAX_HEADER)
-        urlParams['header']['Referer']= cItem['url']
+        urlParams['header']['Referer'] = cItem['url']
         
         try:
             dirIcon = self.getFullIconUrl('/static/img/icons/big_dir.png')
@@ -459,7 +459,7 @@ class FreeDiscPL(CBaseHostClass):
             params = dict(self.defaultParams)
             params['raw_post_data'] = True
             params['header'] = dict(self.AJAX_HEADER)
-            params['header']['Referer']= self.getMainUrl()
+            params['header']['Referer'] = self.getMainUrl()
             
             post_data = {"email_login":self.login,"password_login":self.password,"remember_login":1,"provider_login":""}
             sts, data = self.getPage(self.getFullUrl('/account/signin_set'), params, json_dumps(post_data))
@@ -491,10 +491,10 @@ class FreeDiscPL(CBaseHostClass):
         
         CBaseHostClass.handleService(self, index, refresh, searchPattern, searchType)
 
-        name     = self.currItem.get("name", '')
+        name = self.currItem.get("name", '')
         category = self.currItem.get("category", '')
-        mode     = self.currItem.get("mode", '')
-        filter   = self.currItem.get("filter", '')
+        mode = self.currItem.get("mode", '')
+        filter = self.currItem.get("filter", '')
         
         printDBG("handleService: |||||||||||||||||||||||||||||||||||| name[%s], category[%s] " % (name, category))
         self.currList = []

@@ -19,7 +19,7 @@ try:
     import json
 except Exception:
     import simplejson as json
-import  re
+import re
 import urllib.request
 import urllib.parse
 import urllib.error
@@ -57,18 +57,18 @@ class Youtube(CBaseHostClass):
     def __init__(self):
         printDBG("Youtube.__init__")
         CBaseHostClass.__init__(self, {'history':'ytlist', 'cookie':'youtube.cookie'})
-        self.UTLIST_FILE      = 'ytlist.txt'
+        self.UTLIST_FILE = 'ytlist.txt'
         self.DEFAULT_ICON_URL = 'https://www.vippng.com/png/full/85-853653_patreon-logo-png-transparent-background-youtube-logo.png'
-        self.MAIN_GROUPED_TAB = [{'category': 'from_file',             'title': _("User links"),     'desc': _("User links stored in the ytlist.txt file.")},
-                                 {'category': 'search',                'title': _("Search"),         'desc': _("Search youtube materials "), 'search_item':True},
-                                 {'category': 'feeds',                 'title': _("Trending Feeds"), 'desc': _("Browse youtube trending feeds")},
-                                 {'category': 'search_history',        'title': _("Search history"), 'desc': _("History of searched phrases.")}]
+        self.MAIN_GROUPED_TAB = [{'category': 'from_file', 'title': _("User links"), 'desc': _("User links stored in the ytlist.txt file.")},
+                                 {'category': 'search', 'title': _("Search"), 'desc': _("Search youtube materials "), 'search_item':True},
+                                 {'category': 'feeds', 'title': _("Trending Feeds"), 'desc': _("Browse youtube trending feeds")},
+                                 {'category': 'search_history', 'title': _("Search history"), 'desc': _("History of searched phrases.")}]
         
-        self.SEARCH_TYPES = [(_("Video"),    "video"), 
-                               (_("Channel"),  "channel"),
+        self.SEARCH_TYPES = [(_("Video"), "video"), 
+                               (_("Channel"), "channel"),
                                (_("Playlist"), "playlist"),
                               #(_("Movie"),    "movie"   ),
-                               (_("Live"),     "live")]
+                               (_("Live"), "live")]
                               #("Program",            "show"    ),
                               #("traylist",           "traylist"),
         self.ytp = YouTubeParser()
@@ -80,7 +80,7 @@ class Youtube(CBaseHostClass):
             category = 'playlist'
         elif url.split('?')[0].endswith('/playlists'):
             category = 'playlists'
-        elif None != re.search('/watch\?v=[^\&]+?\&list=',  url):
+        elif None != re.search('/watch\?v=[^\&]+?\&list=', url):
             category = 'traylist'
         elif 'user/' in url or ('channel/' in url and not url.endswith('/live')):
             category = 'channel'
@@ -101,7 +101,7 @@ class Youtube(CBaseHostClass):
         sortList = True
         filespath = config.plugins.iptvplayer.Sciezkaurllist.value
         groupList = True
-        if 'sub_file_category'  not in cItem:
+        if 'sub_file_category' not in cItem:
             self.currFileHost = IPTVFileHost()
             self.currFileHost.addFile(filespath + self.UTLIST_FILE, encoding='utf-8')
             tmpList = self.currFileHost.getGroups(sortList)
@@ -150,8 +150,8 @@ class Youtube(CBaseHostClass):
     def listItems(self, cItem):
         printDBG('Youtube.listItems cItem[%s]' % (cItem))
         category = cItem.get("category", '')
-        url      = cItem.get("url", '')
-        page     = cItem.get("page", '1')
+        url = cItem.get("url", '')
+        page = cItem.get("page", '1')
         
         if "playlists" == category:
             self.currList = self.ytp.getListPlaylistsItems(url, category, page, cItem)
@@ -191,8 +191,8 @@ class Youtube(CBaseHostClass):
         printDBG('Youtube.getVideos cItem[%s]' % (cItem))
         
         category = cItem.get("category", '')
-        url      = strwithmeta(cItem.get("url", ''))
-        page     = cItem.get("page", '1')
+        url = strwithmeta(cItem.get("url", ''))
+        page = cItem.get("page", '1')
                 
         if "channel" == category:
             if not ('browse' in url) and (not 'ctoken' in url):
@@ -214,9 +214,9 @@ class Youtube(CBaseHostClass):
         
         if url:
             printDBG("URL ricerca -----------> %s" % url)
-            tmpList =  self.ytp.getSearchResult(urllib.parse.quote_plus(pattern), searchType, page, 'search', config.plugins.iptvplayer.ytSortBy.value, url)
+            tmpList = self.ytp.getSearchResult(urllib.parse.quote_plus(pattern), searchType, page, 'search', config.plugins.iptvplayer.ytSortBy.value, url)
         else:
-            tmpList =  self.ytp.getSearchResult(urllib.parse.quote_plus(pattern), searchType, page, 'search', config.plugins.iptvplayer.ytSortBy.value)
+            tmpList = self.ytp.getSearchResult(urllib.parse.quote_plus(pattern), searchType, page, 'search', config.plugins.iptvplayer.ytSortBy.value)
         
         for item in tmpList:
             item.update({'name':'category'})
@@ -266,7 +266,7 @@ class Youtube(CBaseHostClass):
         
         CBaseHostClass.handleService(self, index, refresh, searchPattern, searchType)
         
-        name     = self.currItem.get("name", '')
+        name = self.currItem.get("name", '')
         category = self.currItem.get("category", '')
         printDBG("Youtube.handleService: ---------> name[%s], category[%s] " % (name, category))
         self.currList = []

@@ -7,19 +7,19 @@
 ###################################################
 # LOCAL import
 ###################################################
-from Plugins.Extensions.IPTVPlayer.tools.iptvtools          import printDBG, printExc, mkdirs, rmtree, FreeSpace, formatBytes, iptv_system, \
+from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, mkdirs, rmtree, FreeSpace, formatBytes, iptv_system, \
                                                                    GetIPTVDMImgDir, GetIPTVPlayerVerstion, GetShortPythonVersion, GetTmpDir, \
                                                                    GetHostsList, GetEnabledHostsList, WriteTextFile, IsExecutable, GetUpdateServerUri, \
                                                                    GetIconsHash, SetIconsHash, GetGraphicsHash, SetGraphicsHash, rm, GetPyScriptCmd
-from Plugins.Extensions.IPTVPlayer.tools.iptvtypes          import enum
-from Plugins.Extensions.IPTVPlayer.iptvupdate.iptvlist      import IPTVUpdateList
+from Plugins.Extensions.IPTVPlayer.tools.iptvtypes import enum
+from Plugins.Extensions.IPTVPlayer.iptvupdate.iptvlist import IPTVUpdateList
 from Plugins.Extensions.IPTVPlayer.iptvdm.iptvdownloadercreator import UpdateDownloaderCreator
-from Plugins.Extensions.IPTVPlayer.iptvdm.iptvdh            import DMHelper
-from Plugins.Extensions.IPTVPlayer.libs.pCommon             import CParsingHelper
+from Plugins.Extensions.IPTVPlayer.iptvdm.iptvdh import DMHelper
+from Plugins.Extensions.IPTVPlayer.libs.pCommon import CParsingHelper
 
-from Plugins.Extensions.IPTVPlayer.components.articleview   import ArticleView
-from Plugins.Extensions.IPTVPlayer.components.ihost         import ArticleContent
-from Plugins.Extensions.IPTVPlayer.libs.pCommon             import common
+from Plugins.Extensions.IPTVPlayer.components.articleview import ArticleView
+from Plugins.Extensions.IPTVPlayer.components.ihost import ArticleContent
+from Plugins.Extensions.IPTVPlayer.libs.pCommon import common
 from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _
 ###################################################
 
@@ -54,7 +54,7 @@ class IPTVUpdateWindow(Screen):
     </screen>"""
 
     ICONS = ['iconwait1.png', 'iconwait2.png', 'iconwait3.png', 'icondone.png', 'iconerror.png', 'iconwarning.png', 'iconcancelled.png']
-    ICON  = enum(WAITING=0, PROCESSING=1, PROCESSING_NOT_BREAK=2, PROCESSED=3, ERROR=4, WARNING=5, CANCELLED=6)
+    ICON = enum(WAITING=0, PROCESSING=1, PROCESSING_NOT_BREAK=2, PROCESSED=3, ERROR=4, WARNING=5, CANCELLED=6)
     
     def __init__(self, session, updateObjImpl, autoStart=True):
         printDBG("IPTVUpdateMainWindow.__init__ -------------------------------")
@@ -77,12 +77,12 @@ class IPTVUpdateWindow(Screen):
         self.currStep = 0
         self.onShow.append(self.onStart)
         self.onClose.append(self.__onClose)
-        self.status =  None
+        self.status = None
         
         self.messages = {}
-        self.messages['not_interrupt']   = _("During processing, please do not interrupt.")
-        self.messages['please_wait']     = _("During processing, please wait.")
-        self.messages['not_aborted']     = _("Step [%s] cannot be aborted. Please wait.")
+        self.messages['not_interrupt'] = _("During processing, please do not interrupt.")
+        self.messages['please_wait'] = _("During processing, please wait.")
+        self.messages['not_aborted'] = _("Step [%s] cannot be aborted. Please wait.")
 
     def __del__(self):
         printDBG("IPTVUpdateMainWindow.__del__ -------------------------------")
@@ -110,7 +110,7 @@ class IPTVUpdateWindow(Screen):
     def doStart(self):
         if 0 < len(self.list):
             self.currStep = 0
-            self.status     = 'working'
+            self.status = 'working'
             self.stepExecute()
             self["console"].hide()
         else:
@@ -126,7 +126,7 @@ class IPTVUpdateWindow(Screen):
             self.doStart()
         else:
             currItem = self["list"].getCurrent()
-            if  self.status not in [None, 'working']:
+            if self.status not in [None, 'working']:
                 artItem = ArticleContent(title=currItem['title'], text=currItem['info'], images=[])
                 self.session.open(ArticleView, artItem)
 
@@ -179,14 +179,14 @@ class IPTVUpdateWindow(Screen):
                self.stepExecute()
             else:
                 self.status = 'done'
-                if  self.updateObjImpl.finalize():
+                if self.updateObjImpl.finalize():
                     self.close()
                     return
                 else:
                     self["list"].setSelectionState(enabled=True)
         else:
             self.status = 'error'
-            if  self.updateObjImpl.finalize(False, msg):
+            if self.updateObjImpl.finalize(False, msg):
                 self.close()
                 return
             else:
@@ -240,7 +240,7 @@ class IUpdateObjectInterface():
         return sts, msg
     
 class UpdateMainAppImpl(IUpdateObjectInterface):
-    VERSION_PATTERN   = 'IPTV_VERSION="([0-9]+\.[0-9]+\.[0-9]+\.[0-9]+)"'
+    VERSION_PATTERN = 'IPTV_VERSION="([0-9]+\.[0-9]+\.[0-9]+\.[0-9]+)"'
     
     def __init__(self, session, allowTheSameVersion=False):
         printDBG("UpdateMainAppImpl.__init__ -------------------------------")
@@ -257,11 +257,11 @@ class UpdateMainAppImpl(IUpdateObjectInterface):
         self.ExtensionTmpPath = None
         
         self.terminating = False
-        self.status      = 'none'
-        self.downloader  = None
-        self.cmd         = None
+        self.status = 'none'
+        self.downloader = None
+        self.cmd = None
         self.serversList = []
-        self.gitlabList  = {}
+        self.gitlabList = {}
 
         self.serverGraphicsHash = ''
         self.serverIconsHash = ''
@@ -269,7 +269,7 @@ class UpdateMainAppImpl(IUpdateObjectInterface):
         self.localIconsHash = ''
         self.currServIdx = 0
 
-        self.sourceArchive      = None
+        self.sourceArchive = None
         self.graphicsSourceArchive = None
         self.iconsSourceArchive = None
 
@@ -277,13 +277,13 @@ class UpdateMainAppImpl(IUpdateObjectInterface):
         self.decKeyFilePath = None
 
         self.destinationArchive = None
-        self.serverIdx          = 0
+        self.serverIdx = 0
 
         self.messages = {}
-        self.messages['completed']       = _("Completed.")
+        self.messages['completed'] = _("Completed.")
         self.messages['problem_removal'] = _("Problem with the removal of the previous version.\nStatus[%d], outData[%s].")
         self.messages['problem_install'] = _("Problem with installing the new version.\nStatus[%d], outData[%s]")
-        self.messages['problem_copy']    = _("Problem with copy files.\nStatus[%d], outData[%s]")
+        self.messages['problem_copy'] = _("Problem with copy files.\nStatus[%d], outData[%s]")
 
         self.list = []
         self.user = config.plugins.iptvplayer.iptvplayer_login.value
@@ -291,7 +291,7 @@ class UpdateMainAppImpl(IUpdateObjectInterface):
 
     def checkVersionFile(self, newVerPath):
         code = 0
-        msg  = _('Correct version.')
+        msg = _('Correct version.')
         
         newVerFile = os_path.join(newVerPath, 'version.py')
         if os_path.isfile(newVerFile):
@@ -307,11 +307,11 @@ class UpdateMainAppImpl(IUpdateObjectInterface):
             newVerNum = CParsingHelper.getSearchGroups(data, verPattern)[0]
             if newVerNum != self.serversList[self.currServIdx]['version']:
                 code = -1
-                msg  = _("Wrong version. \n downloaded version [%s] is different from the requested [%s].") % (newVerNum, self.serversList[self.currServIdx]['version'])
+                msg = _("Wrong version. \n downloaded version [%s] is different from the requested [%s].") % (newVerNum, self.serversList[self.currServIdx]['version'])
         except Exception:
             printExc()
             code = -1
-            msg  = _("File [%s] reading failed.") % newVerFile
+            msg = _("File [%s] reading failed.") % newVerFile
         return code, msg
         
     def doRestart(self, *args):
@@ -369,22 +369,22 @@ class UpdateMainAppImpl(IUpdateObjectInterface):
         self.clearTmpData()
     
     def __getStepDesc(self, title, execFunction, breakable=True, ignoreError=False, repeatCount=0):
-        return  {'title': title, 'execFunction': execFunction, 'breakable': breakable, 'ignoreError': ignoreError, 'info': _("Pending"), 'progressFun': None, 'repeatCount': repeatCount, 'icon': IPTVUpdateWindow.ICON.WAITING}
+        return {'title': title, 'execFunction': execFunction, 'breakable': breakable, 'ignoreError': ignoreError, 'info': _("Pending"), 'progressFun': None, 'repeatCount': repeatCount, 'icon': IPTVUpdateWindow.ICON.WAITING}
     
     def getStepsList(self):
         self.list = []
         if config.plugins.iptvplayer.gitlab_repo.value and config.plugins.iptvplayer.preferredupdateserver.value == '2':
-            self.list.append(self.__getStepDesc(title=_("Add repository last version."),   execFunction=self.stepGetGitlab, ignoreError=True))
-        self.list.append(self.__getStepDesc(title=_("Obtaining server list."),          execFunction=self.stepGetServerLists))
-        self.list.append(self.__getStepDesc(title=_("Downloading an update packet."),   execFunction=self.stepGetArchive))
-        self.list.append(self.__getStepDesc(title=_("Extracting an update packet."),    execFunction=self.stepUnpackArchive))
-        self.list.append(self.__getStepDesc(title=_("Copy post installed binaries."),   execFunction=self.stepCopyPostInatalledBinaries, breakable=True, ignoreError=True))
-        self.list.append(self.__getStepDesc(title=_("Executing user scripts."),         execFunction=self.stepExecuteUserScripts))
-        self.list.append(self.__getStepDesc(title=_("Checking version."),               execFunction=self.stepCheckFiles))
-        self.list.append(self.__getStepDesc(title=_("Removing unnecessary files."),     execFunction=self.stepRemoveUnnecessaryFiles, breakable=True, ignoreError=True))
-        self.list.append(self.__getStepDesc(title=_("Confirmation of installation."),   execFunction=self.stepConfirmInstalation))
-        self.list.append(self.__getStepDesc(title=_("Removing the old version."),       execFunction=self.stepRemoveOldVersion, breakable=False, ignoreError=True, repeatCount=2))
-        self.list.append(self.__getStepDesc(title=_("Installing new version."),         execFunction=self.stepInstallNewVersion,   breakable=False, ignoreError=False, repeatCount=3))
+            self.list.append(self.__getStepDesc(title=_("Add repository last version."), execFunction=self.stepGetGitlab, ignoreError=True))
+        self.list.append(self.__getStepDesc(title=_("Obtaining server list."), execFunction=self.stepGetServerLists))
+        self.list.append(self.__getStepDesc(title=_("Downloading an update packet."), execFunction=self.stepGetArchive))
+        self.list.append(self.__getStepDesc(title=_("Extracting an update packet."), execFunction=self.stepUnpackArchive))
+        self.list.append(self.__getStepDesc(title=_("Copy post installed binaries."), execFunction=self.stepCopyPostInatalledBinaries, breakable=True, ignoreError=True))
+        self.list.append(self.__getStepDesc(title=_("Executing user scripts."), execFunction=self.stepExecuteUserScripts))
+        self.list.append(self.__getStepDesc(title=_("Checking version."), execFunction=self.stepCheckFiles))
+        self.list.append(self.__getStepDesc(title=_("Removing unnecessary files."), execFunction=self.stepRemoveUnnecessaryFiles, breakable=True, ignoreError=True))
+        self.list.append(self.__getStepDesc(title=_("Confirmation of installation."), execFunction=self.stepConfirmInstalation))
+        self.list.append(self.__getStepDesc(title=_("Removing the old version."), execFunction=self.stepRemoveOldVersion, breakable=False, ignoreError=True, repeatCount=2))
+        self.list.append(self.__getStepDesc(title=_("Installing new version."), execFunction=self.stepInstallNewVersion, breakable=False, ignoreError=False, repeatCount=3))
         return self.list
         
     def isReadyToExecuteStep(self, currStepIdx):
@@ -434,8 +434,8 @@ class UpdateMainAppImpl(IUpdateObjectInterface):
         self.downloader.start(url, self.sourceArchive)
 
     def stepUnpackArchive(self):
-        self.destinationArchive  = os_path.join(self.tmpDir, 'iptv_archive')
-        self.ExtensionTmpPath    = os_path.join(self.destinationArchive, self.serversList[self.currServIdx]['subdir'])
+        self.destinationArchive = os_path.join(self.tmpDir, 'iptv_archive')
+        self.ExtensionTmpPath = os_path.join(self.destinationArchive, self.serversList[self.currServIdx]['subdir'])
         printDBG('UpdateMainAppImpl.stepUnpackArchive: sourceArchive[%s] -> destinationArchive[%s] -> ExtensionTmpPath[%s]' % (self.sourceArchive, self.destinationArchive, self.ExtensionTmpPath))
         sts, msg = self.createPath(self.destinationArchive)
         if not sts:
@@ -518,7 +518,7 @@ class UpdateMainAppImpl(IUpdateObjectInterface):
         playerSelectorPath = os_path.join(self.ExtensionTmpPath, 'IPTVPlayer/icons/PlayerSelector/')
         logosPath = os_path.join(self.ExtensionTmpPath, 'IPTVPlayer/icons/logos/')
         hostsPath = os_path.join(self.ExtensionTmpPath, 'IPTVPlayer/hosts/')
-        webPath   = os_path.join(self.ExtensionTmpPath, 'IPTVPlayer/Web/')
+        webPath = os_path.join(self.ExtensionTmpPath, 'IPTVPlayer/Web/')
         cmds = []
         iconSize = int(config.plugins.iptvplayer.IconsSize.value)
         if not config.plugins.iptvplayer.ListaGraficzna.value:
@@ -535,8 +535,8 @@ class UpdateMainAppImpl(IUpdateObjectInterface):
         # removing not needed hosts
         if config.plugins.iptvplayer.remove_diabled_hosts.value:
             enabledHostsList = GetEnabledHostsList()
-            hostsFromList    = GetHostsList(fromList=True, fromHostFolder=False)
-            hostsFromFolder  = GetHostsList(fromList=False, fromHostFolder=True)
+            hostsFromList = GetHostsList(fromList=True, fromHostFolder=False)
+            hostsFromFolder = GetHostsList(fromList=False, fromHostFolder=True)
             hostsToRemove = []
             for hostItem in hostsFromList:
                 if hostItem not in enabledHostsList and hostItem in hostsFromFolder:
@@ -625,7 +625,7 @@ class UpdateMainAppImpl(IUpdateObjectInterface):
         # get users scripts
         if init:
             self.customUserCmdList = self.__getUserCmdsList()
-            if 0 <len(self.customUserCmdList):
+            if 0 < len(self.customUserCmdList):
                 self.customUserMsg = ''
             else:
                 self.customUserMsg = _("No user scripts.")
@@ -700,8 +700,8 @@ class UpdateMainAppImpl(IUpdateObjectInterface):
                 printDBG("Wrong crcSum[%s]" % crcSum)
 
     def __serversListGitlabFinished(self, arg, status):
-        url            = self.downloader.getUrl()
-        filePath       = self.downloader.getFullFileName()
+        url = self.downloader.getUrl()
+        filePath = self.downloader.getFullFileName()
         self.downloader = None
         printDBG('UpdateMainAppImpl.__serversListGitlabFinished url[%s], filePath[%s] ' % (url, filePath))
         if DMHelper.STS.DOWNLOADED != status:
@@ -750,12 +750,12 @@ class UpdateMainAppImpl(IUpdateObjectInterface):
             currVerNum = 0
         pythonVer = GetShortPythonVersion()
 
-        url      = self.downloader.getUrl()
+        url = self.downloader.getUrl()
         filePath = self.downloader.getFullFileName()
         self.downloader = None
         if DMHelper.STS.DOWNLOADED != status:
             self.serverIdx += 1
-            if self.serverIdx <  len(self.SERVERS_LIST_URLS):
+            if self.serverIdx < len(self.SERVERS_LIST_URLS):
                 self.stepGetServerLists()
             else:
                 urls = ""
@@ -802,7 +802,7 @@ class UpdateMainAppImpl(IUpdateObjectInterface):
             except Exception:
                 printExc()
                 self.serverIdx += 1
-                if self.serverIdx <  len(self.SERVERS_LIST_URLS):
+                if self.serverIdx < len(self.SERVERS_LIST_URLS):
                     self.stepGetServerLists()
                 else:
                     self.stepFinished(-1, _("Problem with parsing the server list."))
@@ -856,10 +856,10 @@ class UpdateMainAppImpl(IUpdateObjectInterface):
             self.currServIdx = retArg[1]
             list = []
             if 'graphics_url' in self.serversList[self.currServIdx]:
-                if  self.localGraphicsHash == '' or self.serverGraphicsHash == '' or \
+                if self.localGraphicsHash == '' or self.serverGraphicsHash == '' or \
                     self.localGraphicsHash != self.serverGraphicsHash:
-                    list.append(self.__getStepDesc(title=_("Downloading graphics package."),   execFunction=self.stepGetGraphicsArchive))
-                    list.append(self.__getStepDesc(title=_("Extracting graphics package."),    execFunction=self.stepUnpackGraphicsArchive))
+                    list.append(self.__getStepDesc(title=_("Downloading graphics package."), execFunction=self.stepGetGraphicsArchive))
+                    list.append(self.__getStepDesc(title=_("Extracting graphics package."), execFunction=self.stepUnpackGraphicsArchive))
                     oldGraphics = False
                 else:
                     oldGraphics = True
@@ -867,27 +867,27 @@ class UpdateMainAppImpl(IUpdateObjectInterface):
                 if self.localIconsHash == '' or self.serverIconsHash == '' or \
                    self.localIconsHash != self.serverIconsHash:
                     if oldGraphics:
-                        list.append(self.__getStepDesc(title=_("Copy graphics without icons."),    execFunction=self.stepCopyGraphicsWithoutIcons))
+                        list.append(self.__getStepDesc(title=_("Copy graphics without icons."), execFunction=self.stepCopyGraphicsWithoutIcons))
 
                     if config.plugins.iptvplayer.ListaGraficzna.value:
-                        list.append(self.__getStepDesc(title=_("Downloading icons package."),      execFunction=self.stepGetIconsArchive))
-                        list.append(self.__getStepDesc(title=_("Extracting icons package."),       execFunction=self.stepUnpackIconsArchive))
+                        list.append(self.__getStepDesc(title=_("Downloading icons package."), execFunction=self.stepGetIconsArchive))
+                        list.append(self.__getStepDesc(title=_("Extracting icons package."), execFunction=self.stepUnpackIconsArchive))
                 else:
                     if oldGraphics:
                         if config.plugins.iptvplayer.ListaGraficzna.value:
-                            list.append(self.__getStepDesc(title=_("Copy all graphics."),    execFunction=self.stepCopyAllGraphics))
+                            list.append(self.__getStepDesc(title=_("Copy all graphics."), execFunction=self.stepCopyAllGraphics))
                         else:
-                            list.append(self.__getStepDesc(title=_("Copy graphics without icons."),    execFunction=self.stepCopyGraphicsWithoutIcons))
+                            list.append(self.__getStepDesc(title=_("Copy graphics without icons."), execFunction=self.stepCopyGraphicsWithoutIcons))
                     elif config.plugins.iptvplayer.ListaGraficzna.value:
-                        list.append(self.__getStepDesc(title=_("Copy icons."),    execFunction=self.stepCopyOnlyIcons))
+                        list.append(self.__getStepDesc(title=_("Copy icons."), execFunction=self.stepCopyOnlyIcons))
 
             if config.plugins.iptvplayer.gitlab_repo.value and config.plugins.iptvplayer.preferredupdateserver.value == '2':
                 self.list[4:4] = list
             else:
                 self.list[3:3] = list
             if 'enc' in self.serversList[self.currServIdx]:
-                self.list.insert(1, self.__getStepDesc(title=_("Get decryption key."),    execFunction=self.stepGetEncKey))
-                self.list.insert(3, self.__getStepDesc(title=_("Decrypt archive."),       execFunction=self.stepDecryptArchive))
+                self.list.insert(1, self.__getStepDesc(title=_("Get decryption key."), execFunction=self.stepGetEncKey))
+                self.list.insert(3, self.__getStepDesc(title=_("Decrypt archive."), execFunction=self.stepDecryptArchive))
             
             self.stepFinished(0, _("Selected version [%s].") % retArg[0])
         else:
@@ -897,10 +897,10 @@ class UpdateMainAppImpl(IUpdateObjectInterface):
     # GET ARCHIVE STEP'S PRIVATES METHODS
     ############################################################################## 
     def __archiveDownloadFinished(self, arg, status):
-        url            = self.downloader.getUrl()
-        filePath       = self.downloader.getFullFileName()
+        url = self.downloader.getUrl()
+        filePath = self.downloader.getFullFileName()
         remoteFileSize = self.downloader.getRemoteFileSize()
-        localFileSize  = self.downloader.getLocalFileSize(True)
+        localFileSize = self.downloader.getLocalFileSize(True)
         self.downloader = None
         printDBG('UpdateMainAppImpl.__archiveDownloadFinished url[%s], filePath[%s], remoteFileSize[%d], localFileSize[%d] ' % (url, filePath, remoteFileSize, localFileSize))
         if DMHelper.STS.DOWNLOADED != status and remoteFileSize > localFileSize:
@@ -916,10 +916,10 @@ class UpdateMainAppImpl(IUpdateObjectInterface):
     # GET ARCHIVE STEP'S PRIVATES METHODS
     ############################################################################## 
     def __encKeyDownloadFinished(self, arg, status):
-        url            = self.downloader.getUrl()
-        filePath       = self.downloader.getFullFileName()
+        url = self.downloader.getUrl()
+        filePath = self.downloader.getFullFileName()
         remoteFileSize = self.downloader.getRemoteFileSize()
-        localFileSize  = self.downloader.getLocalFileSize(True)
+        localFileSize = self.downloader.getLocalFileSize(True)
         self.downloader = None
         printDBG('UpdateMainAppImpl.__encKeyDownloadFinished url[%s], filePath[%s], remoteFileSize[%d], localFileSize[%d] ' % (url, filePath, remoteFileSize, localFileSize))
         if DMHelper.STS.DOWNLOADED != status and remoteFileSize > localFileSize:
@@ -937,7 +937,7 @@ class UpdateMainAppImpl(IUpdateObjectInterface):
 
                 userKey = sha256(self.password).digest()[:16]
                 cipher = AES(userKey, keySize=len(userKey), padding=noPadding())
-                data  = cipher.decrypt(data)
+                data = cipher.decrypt(data)
                 check = md5(data).hexdigest()[:16]
                 if check != self.serversList[self.currServIdx]['enc']:
                     self.stepFinished(-1, _("Problem with decryption the key."))
@@ -956,18 +956,18 @@ class UpdateMainAppImpl(IUpdateObjectInterface):
     ##############################################################################
     def __unpackCmdFinished(self, status, outData):
         code = -1
-        msg  = ""
+        msg = ""
         self.cmd = None
         if 0 != status:
             code = -1
-            msg  = _("Problem with extracting the archive. Return code [%d]\n%s.") % (status, outData)
+            msg = _("Problem with extracting the archive. Return code [%d]\n%s.") % (status, outData)
         else:
             try:
                 os_remove
             except Exception:
                 printExc()
             code = 0
-            msg  = _("Unpacking the archive completed successfully.")
+            msg = _("Unpacking the archive completed successfully.")
         self.stepFinished(code, msg)
 
     ##############################################################################
@@ -977,18 +977,18 @@ class UpdateMainAppImpl(IUpdateObjectInterface):
         if self.decKeyFilePath:
             rm(self.decKeyFilePath)
         code = -1
-        msg  = ""
+        msg = ""
         self.cmd = None
         if 0 != status:
             code = -1
-            msg  = _("Problem with decryption the archive. Return code [%d]\n%s.") % (status, outData)
+            msg = _("Problem with decryption the archive. Return code [%d]\n%s.") % (status, outData)
         else:
             try:
                 os_remove
             except Exception:
                 printExc()
             code = 0
-            msg  = _("Decryption the archive completed successfully.")
+            msg = _("Decryption the archive completed successfully.")
         self.stepFinished(code, msg)
 
     ##############################################################################
@@ -996,14 +996,14 @@ class UpdateMainAppImpl(IUpdateObjectInterface):
     ##############################################################################
     def __removeUnnecessaryFilesCmdFinished(self, status, outData):
         code = -1
-        msg  = ""
+        msg = ""
         self.cmd = None
         if 0 != status:
             code = -1
-            msg  = _("Error. Return code [%d]\n%s.") % (status, outData)
+            msg = _("Error. Return code [%d]\n%s.") % (status, outData)
         else:
             code = 0
-            msg  = _("Success.")
+            msg = _("Success.")
         self.stepFinished(code, msg)
         
     ##############################################################################
@@ -1013,7 +1013,7 @@ class UpdateMainAppImpl(IUpdateObjectInterface):
         printDBG('UpdateMainAppImpl.__getScriptsList begin')
         cmdList = [] 
         try:
-            pathWithUserScripts =  os_path.join(self.ExtensionPath, 'IPTVPlayer/iptvupdate/custom/')
+            pathWithUserScripts = os_path.join(self.ExtensionPath, 'IPTVPlayer/iptvupdate/custom/')
             fileList = os_listdir(pathWithUserScripts)
             for wholeFileName in fileList:
                 # separate file name and file extension
@@ -1039,7 +1039,7 @@ class UpdateMainAppImpl(IUpdateObjectInterface):
             code = -1
         else:
             code = 0
-        msg  = '------------\nstatus[%d]\n[%s]\n------------\n' % (status, outData)
+        msg = '------------\nstatus[%d]\n[%s]\n------------\n' % (status, outData)
         self.stepCopyPostInatalledBinaries(init=False, code=code, msg=msg)
      
     def __userCmdFinished(self, status, outData):
@@ -1048,7 +1048,7 @@ class UpdateMainAppImpl(IUpdateObjectInterface):
             code = -1
         else:
             code = 0
-        msg  = '------------\nstatus[%d]\n[%s]\n------------\n' % (status, outData)
+        msg = '------------\nstatus[%d]\n[%s]\n------------\n' % (status, outData)
         self.stepExecuteUserScripts(init=False, code=code, msg=msg)
         
     ##############################################################################

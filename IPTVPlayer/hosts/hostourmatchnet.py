@@ -5,7 +5,7 @@
 from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _
 from Plugins.Extensions.IPTVPlayer.components.ihost import CHostBase, CBaseHostClass, CDisplayListItem
 from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, byteify
-from Plugins.Extensions.IPTVPlayer.libs.urlparserhelper import  getDirectM3U8Playlist
+from Plugins.Extensions.IPTVPlayer.libs.urlparserhelper import getDirectM3U8Playlist
 from Plugins.Extensions.IPTVPlayer.libs import ph
 ###################################################
 
@@ -32,18 +32,18 @@ class OurmatchNet(CBaseHostClass):
     AJAX_HEADER = dict(HEADER)
     AJAX_HEADER.update({'X-Requested-With': 'XMLHttpRequest'})
     
-    MAIN_URL   = 'http://ourmatch.net/'
+    MAIN_URL = 'http://ourmatch.net/'
     
-    DEFAULT_ICON  = "http://ourmatch.net/wp-content/themes/OurMatch/images/logo.png"
+    DEFAULT_ICON = "http://ourmatch.net/wp-content/themes/OurMatch/images/logo.png"
     
-    MAIN_CAT_TAB = [{'category':'list_items',      'title': _('Home'),              'url':MAIN_URL,                     'icon':DEFAULT_ICON},
-                    {'category':'trending',        'title': _('Trending'),          'url':MAIN_URL,                     'icon':DEFAULT_ICON},
-                    {'category':'popular',         'title': _('Popular'),           'url':MAIN_URL,                     'icon':DEFAULT_ICON},
-                    {'category':'allleagues',      'title': _('All Leagues'),       'url':MAIN_URL,                     'icon':DEFAULT_ICON},
-                    {'category':'seasons',         'title': _('Previous Seasons'),  'url':MAIN_URL+'previous-seasons/', 'icon':DEFAULT_ICON},
-                    {'category':'video',           'title': _('Goal Of The Month'), 'url':MAIN_URL+'goal-of-the-month/','icon':DEFAULT_ICON, 'type': 'video'},                    
-                    {'category':'search',          'title': _('Search'), 'search_item':True,                            'icon':DEFAULT_ICON},
-                    {'category':'search_history',  'title': _('Search history'),                                        'icon':DEFAULT_ICON}]
+    MAIN_CAT_TAB = [{'category':'list_items', 'title': _('Home'), 'url':MAIN_URL, 'icon':DEFAULT_ICON},
+                    {'category':'trending', 'title': _('Trending'), 'url':MAIN_URL, 'icon':DEFAULT_ICON},
+                    {'category':'popular', 'title': _('Popular'), 'url':MAIN_URL, 'icon':DEFAULT_ICON},
+                    {'category':'allleagues', 'title': _('All Leagues'), 'url':MAIN_URL, 'icon':DEFAULT_ICON},
+                    {'category':'seasons', 'title': _('Previous Seasons'), 'url':MAIN_URL + 'previous-seasons/', 'icon':DEFAULT_ICON},
+                    {'category':'video', 'title': _('Goal Of The Month'), 'url':MAIN_URL + 'goal-of-the-month/','icon':DEFAULT_ICON, 'type': 'video'},                    
+                    {'category':'search', 'title': _('Search'), 'search_item':True, 'icon':DEFAULT_ICON},
+                    {'category':'search_history', 'title': _('Search history'), 'icon':DEFAULT_ICON}]
  
     def __init__(self):
         CBaseHostClass.__init__(self, {'history':'ourmatch.net', 'cookie':'ourmatchnet.cookie'})
@@ -56,7 +56,7 @@ class OurmatchNet(CBaseHostClass):
             url = 'http:' + url
         else:
             if 0 < len(url) and not url.startswith('http'):
-                url =  self.MAIN_URL + url
+                url = self.MAIN_URL + url
             if not self.MAIN_URL.startswith('https://'):
                 url = url.replace('https://', 'http://')
                 
@@ -159,7 +159,7 @@ class OurmatchNet(CBaseHostClass):
         tmp = self.cm.ph.getAllItemsBeetwenMarkers(tmp, '<a ', '</a>')
         tabs = []
         for tab in tmp:
-            tabId  = self.cm.ph.getSearchGroups(tab, '''href=['"]#([^'^"]+?)['"]''')[0]
+            tabId = self.cm.ph.getSearchGroups(tab, '''href=['"]#([^'^"]+?)['"]''')[0]
             tabTitle = self.cleanHtmlStr(tab)
             tabs.append({'title':tabTitle, 'id':tabId})
             
@@ -215,7 +215,7 @@ class OurmatchNet(CBaseHostClass):
         if not sts:
             return
         
-        if ('/page/%d/' % (page+1)) in data:
+        if ('/page/%d/' % (page + 1)) in data:
             nextPage = True
         else:
             nextPage = False
@@ -223,16 +223,16 @@ class OurmatchNet(CBaseHostClass):
         data = self.cm.ph.getDataBeetwenMarkers(data, sp, '<footer id="footer">')[1]
         data = data.split(sp)
         for item in data:
-            url  = self.cm.ph.getSearchGroups(item, '''href=['"](http[^'^"]+?)['"]''')[0]
+            url = self.cm.ph.getSearchGroups(item, '''href=['"](http[^'^"]+?)['"]''')[0]
             if '' == url:
                 continue
-            icon  = self.cm.ph.getSearchGroups(item, '''src=['"]*(http[^'^"^>]+?)[>'"]''')[0]
+            icon = self.cm.ph.getSearchGroups(item, '''src=['"]*(http[^'^"^>]+?)[>'"]''')[0]
             title = self.cm.ph.getSearchGroups(item, '''title=['"]([^'^"]+?)['"]''')[0] 
-            desc  = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(item, '<div class="vidinfo">', '</div>')[1])
+            desc = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(item, '<div class="vidinfo">', '</div>')[1])
             
             if ' vs ' in title:
                 team1 = title[:title.find(' vs ')]
-                team2 = title[title.find(' vs ')+4:]
+                team2 = title[title.find(' vs ') + 4:]
                 title = _(team1) + " vs " + _(team2)
             
             params = dict(cItem)
@@ -241,7 +241,7 @@ class OurmatchNet(CBaseHostClass):
         
         if nextPage:
             params = dict(cItem)
-            params.update({'title':_('Next page'), 'page':page+1})
+            params.update({'title':_('Next page'), 'page':page + 1})
             self.addMore(params)
         
     def getLinksForVideo(self, cItem):
@@ -255,7 +255,7 @@ class OurmatchNet(CBaseHostClass):
         tmp = self.cm.ph.getAllItemsBeetwenMarkers(data, '<li data-pos="top" ', '</li>')
         for item in tmp:
             name = self.cleanHtmlStr(item)
-            url  = self.cm.ph.getDataBeetwenMarkers(item, 'data-config=&quot;', '&quot;', False)[1]
+            url = self.cm.ph.getDataBeetwenMarkers(item, 'data-config=&quot;', '&quot;', False)[1]
             if url != '':
                 urlTab.append({'name':name, 'url': self._getFullUrl(url), 'need_resolve':1})
         
@@ -281,7 +281,7 @@ class OurmatchNet(CBaseHostClass):
         tmp = self.cm.ph.getAllItemsBeetwenMarkers(tmp, '<p>', '</p>')
         for item in tmp:
             name = self.cleanHtmlStr(item)
-            url  = self.cm.ph.getDataBeetwenMarkers(item, 'data-config="', '"', False)[1]
+            url = self.cm.ph.getDataBeetwenMarkers(item, 'data-config="', '"', False)[1]
             if url == '':
                 url = self.cm.ph.getSearchGroups(item, '<iframe[^>]+?src="([^"]+?)"', 1, ignoreCase=True)[0]
             url = self._getFullUrl(url)
@@ -327,7 +327,7 @@ class OurmatchNet(CBaseHostClass):
                 baseUrl = self.cm.ph.getDataBeetwenMarkers(data, '<baseURL>', '</baseURL>', False)[1].strip()
                 data = self.cm.ph.getAllItemsBeetwenMarkers(data, '<media ', '>')
                 for item in data:
-                    url  = self.cm.ph.getSearchGroups(item, '''url=['"]([^'^"]+?)['"]''')[0]
+                    url = self.cm.ph.getSearchGroups(item, '''url=['"]([^'^"]+?)['"]''')[0]
                     name = self.cm.ph.getSearchGroups(item, '''height=['"]([^'^"]+?)['"]''')[0]
                     if name == '':
                         self.cm.ph.getSearchGroups(item, '''bitrate=['"]([^'^"]+?)['"]''')[0]
@@ -343,7 +343,7 @@ class OurmatchNet(CBaseHostClass):
                 printExc()
         elif videoUrl.startswith('http'):
             if self.up.checkHostSupport(videoUrl) != 1:
-                video_id  = ph.search(videoUrl, r'''https?://.*([a-zA-Z0-9]{10})''')[0]
+                video_id = ph.search(videoUrl, r'''https?://.*([a-zA-Z0-9]{10})''')[0]
                 if video_id != '':
                     videoUrl = 'https://viuclips.net/&force_parserVIUCLIPS[%s]' % videoUrl
             urlTab.extend(self.up.getVideoLinkExt(videoUrl))
@@ -366,9 +366,9 @@ class OurmatchNet(CBaseHostClass):
         
         CBaseHostClass.handleService(self, index, refresh, searchPattern, searchType)
 
-        name     = self.currItem.get("name", '')
+        name = self.currItem.get("name", '')
         category = self.currItem.get("category", '')
-        mode     = self.currItem.get("mode", '')
+        mode = self.currItem.get("mode", '')
         
         printDBG("handleService: |||||||||||||||||||||||||||||||||||| name[%s], category[%s] " % (name, category))
         self.currList = []

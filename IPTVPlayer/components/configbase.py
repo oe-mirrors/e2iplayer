@@ -63,12 +63,12 @@ class ConfigBaseWidget(Screen, ConfigListScreen):
             <widget name="key_blue"    position="0,0" zPosition="2" size="%d,35" valign="center" halign="right"  font="Regular;%d" transparent="1" foregroundColor="green" />
             <widget name="key_yellow"  position="0,0" zPosition="2" size="%d,35" valign="center" halign="right"  font="Regular;%d" transparent="1" foregroundColor="green" />
         </screen>""" % (width, height, 
-                        width-20, height-80, 
-                        width-20, font,
-                        width-20, font,
-                        width-20, font,
-                        width-20, font,
-                        width-20, font)
+                        width - 20, height - 80, 
+                        width - 20, font,
+                        width - 20, font,
+                        width - 20, font,
+                        width - 20, font,
+                        width - 20, font)
 
     def __init__(self, session):
         printDBG("ConfigBaseWidget.__init__ -------------------------------")
@@ -268,14 +268,14 @@ class ConfigBaseWidget(Screen, ConfigListScreen):
             except Exception:
                 printExc()
                 return
-            self.session.openWithCallback(boundFunction(SetFilePathCallBack, curIndex), IPTVFileSelectorWidget, currItem.value,  _('Select the file'), fileMatch)
+            self.session.openWithCallback(boundFunction(SetFilePathCallBack, curIndex), IPTVFileSelectorWidget, currItem.value, _('Select the file'), fileMatch)
             return
         
         elif isinstance(currItem, ConfigDirectory):
             def SetDirPathCallBack(curIndex, newPath):
                 if None != newPath:
                     self["config"].list[curIndex][1].value = newPath
-            self.session.openWithCallback(boundFunction(SetDirPathCallBack, curIndex), IPTVDirectorySelectorWidget, currDir=currItem.value,  title=_('Select the directory'))
+            self.session.openWithCallback(boundFunction(SetDirPathCallBack, curIndex), IPTVDirectorySelectorWidget, currDir=currItem.value, title=_('Select the directory'))
             return
         elif isinstance(currItem, ConfigText):
             def VirtualKeyBoardCallBack(curIndex, newTxt):

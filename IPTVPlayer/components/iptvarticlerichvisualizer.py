@@ -35,7 +35,7 @@ from Tools.LoadPixmap import LoadPixmap
 class IPTVArticleRichVisualizer(Screen):
     MAX_RICH_DESC_ROW_NUM = 5
     def __prepareSkin(self):
-        skin =  """
+        skin = """
                     <screen name="IPTVArticleRichVisualizerWidget" position="center,center" size="1050,625" title="Info...">
                         <widget name="title" position="5,10"  zPosition="1" size="1040,70"  font="Regular;30" halign="center" valign="center"   transparent="1" backgroundColor="transparent" foregroundColor="#000E83F5" shadowColor="black" shadowOffset="-1,-1" />
                         <widget name="cover"     zPosition="1" position="10,110"  size="236,357" alphatest="blend" borderWidth="2" borderColor="white" backgroundColor="black" />
@@ -48,15 +48,15 @@ class IPTVArticleRichVisualizer(Screen):
         # adds rows items
         self.richDesc['row_label_x'] = 260
         self.richDesc['row_label_w'] = 190
-        self.richDesc['row_text_x']  = 455
-        self.richDesc['row_text_w']  = 590
-        self.richDesc['row_y']       = 110
-        self.richDesc['row_h']       = 30
+        self.richDesc['row_text_x'] = 455
+        self.richDesc['row_text_w'] = 590
+        self.richDesc['row_y'] = 110
+        self.richDesc['row_h'] = 30
         
         y = self.richDesc['row_y'] 
         for idx in range(self.richDesc['rows_count']):
-            skin += """<widget name="dsc_label_%d" noWrap="1" position="%d,%d"  zPosition="1" size="%d,%d"  font="Regular;20" halign="right" valign="center"   transparent="1" backgroundColor="transparent" foregroundColor="#000E83F5" shadowColor="black" shadowOffset="-1,-1" />""" % (idx+1, self.richDesc['row_label_x'], y, self.richDesc['row_label_w'], self.richDesc['row_h'])
-            skin += """<widget name="dsc_text_%d"  noWrap="1" position="%d,%d"  zPosition="1" size="%d,%d"  font="Regular;20" halign="left"  valign="center"   transparent="1" backgroundColor="transparent" foregroundColor="#00EFEFEF" shadowColor="black" shadowOffset="-1,-1" />""" % (idx+1, self.richDesc['row_text_x'], y, self.richDesc['row_text_w'], self.richDesc['row_h'])
+            skin += """<widget name="dsc_label_%d" noWrap="1" position="%d,%d"  zPosition="1" size="%d,%d"  font="Regular;20" halign="right" valign="center"   transparent="1" backgroundColor="transparent" foregroundColor="#000E83F5" shadowColor="black" shadowOffset="-1,-1" />""" % (idx + 1, self.richDesc['row_label_x'], y, self.richDesc['row_label_w'], self.richDesc['row_h'])
+            skin += """<widget name="dsc_text_%d"  noWrap="1" position="%d,%d"  zPosition="1" size="%d,%d"  font="Regular;20" halign="left"  valign="center"   transparent="1" backgroundColor="transparent" foregroundColor="#00EFEFEF" shadowColor="black" shadowOffset="-1,-1" />""" % (idx + 1, self.richDesc['row_text_x'], y, self.richDesc['row_text_w'], self.richDesc['row_h'])
             y += self.richDesc['row_h']
         if y != self.richDesc['row_y']:
             y += self.richDesc['row_h']
@@ -67,8 +67,8 @@ class IPTVArticleRichVisualizer(Screen):
             x1 = self.richDesc['row_label_x']
             x2 = self.richDesc['row_text_x'] + self.richDesc['row_text_w'] - self.richDesc['row_label_x']
             
-            self.richDesc['page_item_size']    = 16
-            self.richDesc['page_item_start_x'] = x1 + (x2-x1 - (self.richDesc['page_item_size'] * self.richDesc['pages_count']))/2
+            self.richDesc['page_item_size'] = 16
+            self.richDesc['page_item_start_x'] = x1 + (x2 - x1 - (self.richDesc['page_item_size'] * self.richDesc['pages_count'])) / 2
             self.richDesc['page_item_start_y'] = self.richDesc['row_y'] - 20
 
             for idx in range(self.richDesc['pages_count']):
@@ -114,8 +114,8 @@ class IPTVArticleRichVisualizer(Screen):
         Screen.__init__(self, session)
             
         for idx in range(self.richDesc['rows_count']):
-            self["dsc_label_{0}".format(idx+1)] = Label("")
-            self["dsc_text_{0}".format(idx+1)]  = Label("")
+            self["dsc_label_{0}".format(idx + 1)] = Label("")
+            self["dsc_text_{0}".format(idx + 1)] = Label("")
         
         self["title"] = Label("")
         self["text"] = ScrollLabel(" ")
@@ -153,12 +153,12 @@ class IPTVArticleRichVisualizer(Screen):
        
         self["actions"] = ActionMap(['IPTVAlternateVideoPlayer', 'MoviePlayerActions', 'MediaPlayerActions', 'WizardActions', 'DirectionActions'],
         {
-            "ok":    self.key_ok,
-            "back":  self.key_back,
-            "left":  self.key_left,
+            "ok": self.key_ok,
+            "back": self.key_back,
+            "left": self.key_left,
             "right": self.key_right,
-            "up":    self.key_up,
-            "down":  self.key_down,
+            "up": self.key_up,
+            "down": self.key_down,
         }, -1)
         
         self.onClose.append(self.__onClose)
@@ -175,7 +175,7 @@ class IPTVArticleRichVisualizer(Screen):
         self.onClose.remove(self.__onClose)
         self.onEnd()
         self.hideSpinner()
-        self.spinner["timer"]      = None
+        self.spinner["timer"] = None
         self.spinner["timer_conn"] = None
  
     def onStart(self):
@@ -290,7 +290,7 @@ class IPTVArticleRichVisualizer(Screen):
             if self.spinner["enabled"]:
                 if "spinner" in self:
                     x, y = self["spinner"].getPosition()
-                    x   += self["spinner"].getWidth()
+                    x += self["spinner"].getWidth()
                     if x > self["spinner_4"].getPosition()[0]:
                         x = self["spinner_1"].getPosition()[0]
                     self["spinner"].setPosition(x, y)
@@ -323,23 +323,23 @@ class IPTVArticleRichVisualizer(Screen):
                 for idx in range(self.richDesc['rows_count']):
                     if idx < len(params):
                         label = str(params[idx][0])
-                        text  = str(params[idx][1])
+                        text = str(params[idx][1])
                     else:
                         label = " "
-                        text  = " "
-                    self["dsc_label_{0}".format(idx+1)].setText(label)
-                    self["dsc_text_{0}".format(idx+1)].setText(text)
+                        text = " "
+                    self["dsc_label_{0}".format(idx + 1)].setText(label)
+                    self["dsc_text_{0}".format(idx + 1)].setText(text)
             else:
                 params = self.richDesc['avalable_params'][firstIdx:]
                 for idx in range(self.richDesc['rows_count']):
                     if idx < len(params):
                         label = _(ArticleContent.RICH_DESC_LABELS[params[idx]]) # we call _() to translate label
-                        text  = self.artItem.richDescParams[params[idx]]
+                        text = self.artItem.richDescParams[params[idx]]
                     else:
                         label = " "
-                        text  = " "
-                    self["dsc_label_{0}".format(idx+1)].setText(label)
-                    self["dsc_text_{0}".format(idx+1)].setText(text)
+                        text = " "
+                    self["dsc_label_{0}".format(idx + 1)].setText(label)
+                    self["dsc_text_{0}".format(idx + 1)].setText(text)
         except Exception:
             printExc()
             

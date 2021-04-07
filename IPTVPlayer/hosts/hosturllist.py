@@ -5,7 +5,7 @@
 ###################################################
 from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _
 from Plugins.Extensions.IPTVPlayer.components.ihost import CHostBase, CBaseHostClass, CDisplayListItem, RetHost, CUrlItem
-from Plugins.Extensions.IPTVPlayer.tools.iptvtools import  printDBG, GetLogoDir
+from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, GetLogoDir
 from Plugins.Extensions.IPTVPlayer.tools.iptvfilehost import IPTVFileHost
 from Plugins.Extensions.IPTVPlayer.libs.urlparserhelper import getDirectM3U8Playlist, getF4MLinksWithMeta, getMPDLinksWithMeta
 from Plugins.Extensions.IPTVPlayer.libs.urlparser import urlparser
@@ -23,8 +23,8 @@ from os.path import normpath
 # Config options for HOST
 ###################################################
 config.plugins.iptvplayer.Sciezkaurllist = ConfigDirectory(default="/hdd/")
-config.plugins.iptvplayer.grupujurllist  = ConfigYesNo(default=True)
-config.plugins.iptvplayer.sortuj         = ConfigYesNo(default=True)
+config.plugins.iptvplayer.grupujurllist = ConfigYesNo(default=True)
+config.plugins.iptvplayer.sortuj = ConfigYesNo(default=True)
 
 def GetConfigList():
     optionList = [] 
@@ -38,18 +38,18 @@ def gettytul():
     return _('Urllists player')
 
 class Urllist(CBaseHostClass):
-    URLLIST_FILE     = 'urllist.txt'
-    URRLIST_STREAMS  = 'urllist.stream'
-    URRLIST_USER     = 'urllist.user'
+    URLLIST_FILE = 'urllist.txt'
+    URRLIST_STREAMS = 'urllist.stream'
+    URRLIST_USER = 'urllist.user'
 
     def __init__(self):
         printDBG("Urllist.__init__")
         path = config.plugins.iptvplayer.Sciezkaurllist.value + '/'
         
-        self.MAIN_GROUPED_TAB = [{'category': 'all',                            'title': _("All in one"),                'desc': _("Links from all files without categories"),                              'icon':'https://mikeharwood.files.wordpress.com/2011/01/all-in-one-logo-on-blue.jpg'}]
-        self.MAIN_GROUPED_TAB.extend([{'category': Urllist.URLLIST_FILE,       'title': _("Videos"),                    'desc': _("Links from the file %s") % normpath(path + 'urllist.txt'),              'icon':'https://st2.depositphotos.com/3000465/12281/v/950/depositphotos_122812390-stock-illustration-video-play-sign-with-letter.jpg'},
-                                       {'category': Urllist.URRLIST_STREAMS,    'title': _("Live streams"),              'desc': _("Links from the file %s") % normpath(path + 'urllist.stream'),           'icon':'http://asiamh.ru.images.1c-bitrix-cdn.ru/images/media_logo.jpg?136879146733721'},
-                                       {'category': Urllist.URRLIST_USER,       'title': _("User files"),                'desc': _("Links from the file %s") % normpath(path + 'urllist.user'),             'icon':'http://kinovesti.ru/uploads/posts/2014-12/1419918660_1404722920_02.jpg'}])
+        self.MAIN_GROUPED_TAB = [{'category': 'all', 'title': _("All in one"), 'desc': _("Links from all files without categories"), 'icon':'https://mikeharwood.files.wordpress.com/2011/01/all-in-one-logo-on-blue.jpg'}]
+        self.MAIN_GROUPED_TAB.extend([{'category': Urllist.URLLIST_FILE, 'title': _("Videos"), 'desc': _("Links from the file %s") % normpath(path + 'urllist.txt'), 'icon':'https://st2.depositphotos.com/3000465/12281/v/950/depositphotos_122812390-stock-illustration-video-play-sign-with-letter.jpg'},
+                                       {'category': Urllist.URRLIST_STREAMS, 'title': _("Live streams"), 'desc': _("Links from the file %s") % normpath(path + 'urllist.stream'), 'icon':'http://asiamh.ru.images.1c-bitrix-cdn.ru/images/media_logo.jpg?136879146733721'},
+                                       {'category': Urllist.URRLIST_USER, 'title': _("User files"), 'desc': _("Links from the file %s") % normpath(path + 'urllist.user'), 'icon':'http://kinovesti.ru/uploads/posts/2014-12/1419918660_1404722920_02.jpg'}])
         CBaseHostClass.__init__(self)
         self.currFileHost = None
 
@@ -139,7 +139,7 @@ class Urllist(CBaseHostClass):
     def handleService(self, index, refresh=0, searchPattern='', searchType=''):
         printDBG('Urllist.handleService start')
         CBaseHostClass.handleService(self, index, refresh, searchPattern, searchType)
-        name     = self.currItem.get("name", None)
+        name = self.currItem.get("name", None)
         category = self.currItem.get("category", '')
         printDBG("Urllist.handleService: ---------> name[%s], category[%s] " % (name, category))
         self.currList = []
@@ -219,9 +219,9 @@ class IPTVHost(CHostBase):
                 if '' != url:
                     hostLinks.append(CUrlItem("Link", url, 1))
                 
-            title       =  cItem.get('title', '')
-            description =  ph.clean_html(cItem.get('desc', ''))
-            icon        =  cItem.get('icon', '')
+            title = cItem.get('title', '')
+            description = ph.clean_html(cItem.get('desc', ''))
+            icon = cItem.get('icon', '')
             
             hostItem = CDisplayListItem(name=title,
                                         description=description,

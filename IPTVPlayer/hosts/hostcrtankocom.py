@@ -29,28 +29,28 @@ class CrtankoCom(CBaseHostClass):
     def __init__(self):
         CBaseHostClass.__init__(self, {'history':'  CrtankoCom.tv', 'cookie':'crtankocom.cookie'})
         
-        self.MAIN_URL      = 'http://www.crtanko.com/'
-        self.SEARCH_URL    = self.MAIN_URL
-        self.DEFAULT_ICON_URL  = "http://www.crtanko.com/wp-content/uploads/2015/04/logo5.png"
+        self.MAIN_URL = 'http://www.crtanko.com/'
+        self.SEARCH_URL = self.MAIN_URL
+        self.DEFAULT_ICON_URL = "http://www.crtanko.com/wp-content/uploads/2015/04/logo5.png"
         
-        self.MAIN_CAT_TAB = [{'category': 'search',          'title': _('Search'), 'search_item': True,},
-                             {'category': 'search_history',  'title': _('Search history'),}]
+        self.MAIN_CAT_TAB = [{'category': 'search', 'title': _('Search'), 'search_item': True,},
+                             {'category': 'search_history', 'title': _('Search history'),}]
                         
         self.BY_LETTER_TAB = [{'title':_('All')},
                               {'title':'#', 'letter':'numeric'}, {'title':'', 'letter':'A'},
-                              {'title':'', 'letter':'B'},        {'title':'', 'letter':'C'},
-                              {'title':'', 'letter':'Č'},        {'title':'', 'letter':'D'},
-                              {'title':'', 'letter':'E'},        {'title':'', 'letter':'F'},
-                              {'title':'', 'letter':'G'},        {'title':'', 'letter':'H'},
-                              {'title':'', 'letter':'I'},        {'title':'', 'letter':'J'},
-                              {'title':'', 'letter':'K'},        {'title':'', 'letter':'L'},
-                              {'title':'', 'letter':'LJ'},       {'title':'', 'letter':'M'},
-                              {'title':'', 'letter':'N'},        {'title':'', 'letter':'O'},
-                              {'title':'', 'letter':'P'},        {'title':'', 'letter':'R'},
-                              {'title':'', 'letter':'S'},        {'title':'', 'letter':'Š'},
-                              {'title':'', 'letter':'T'},        {'title':'', 'letter':'U'},
-                              {'title':'', 'letter':'V'},        {'title':'', 'letter':'W'},
-                              {'title':'', 'letter':'Y'},        {'title':'', 'letter':'Z'},
+                              {'title':'', 'letter':'B'}, {'title':'', 'letter':'C'},
+                              {'title':'', 'letter':'Č'}, {'title':'', 'letter':'D'},
+                              {'title':'', 'letter':'E'}, {'title':'', 'letter':'F'},
+                              {'title':'', 'letter':'G'}, {'title':'', 'letter':'H'},
+                              {'title':'', 'letter':'I'}, {'title':'', 'letter':'J'},
+                              {'title':'', 'letter':'K'}, {'title':'', 'letter':'L'},
+                              {'title':'', 'letter':'LJ'}, {'title':'', 'letter':'M'},
+                              {'title':'', 'letter':'N'}, {'title':'', 'letter':'O'},
+                              {'title':'', 'letter':'P'}, {'title':'', 'letter':'R'},
+                              {'title':'', 'letter':'S'}, {'title':'', 'letter':'Š'},
+                              {'title':'', 'letter':'T'}, {'title':'', 'letter':'U'},
+                              {'title':'', 'letter':'V'}, {'title':'', 'letter':'W'},
+                              {'title':'', 'letter':'Y'}, {'title':'', 'letter':'Z'},
                               {'title':'', 'letter':'Ž'}]
         
         self.defaultParams = {'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
@@ -62,7 +62,7 @@ class CrtankoCom(CBaseHostClass):
             url = 'http:' + url
         else:
             if 0 < len(url) and not url.startswith('http'):
-                url =  self.MAIN_URL + url
+                url = self.MAIN_URL + url
             if not self.MAIN_URL.startswith('https://'):
                 url = url.replace('https://', 'http://')
                 
@@ -98,7 +98,7 @@ class CrtankoCom(CBaseHostClass):
             cTree = cItem['c_tree']
             for item in cTree['list']:
                 title = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(item['dat'], '<a', '</a>')[1])
-                url   = self.getFullUrl(self.cm.ph.getSearchGroups(item['dat'], '''href=['"]([^'^"]+?)['"]''')[0])
+                url = self.getFullUrl(self.cm.ph.getSearchGroups(item['dat'], '''href=['"]([^'^"]+?)['"]''')[0])
                 if url.endswith('/dugometrazni/') or url.endswith('/kratkometrazni/') or \
                    url.endswith('/prijevod/') or url.endswith('/prijevod/'):
                         params = dict(cItem)
@@ -129,10 +129,10 @@ class CrtankoCom(CBaseHostClass):
             
     def listItems(self, cItem, nextCategory='explore_item'):
         printDBG("CrtankoCom.listItems")
-        page   = cItem.get('page', 1)
+        page = cItem.get('page', 1)
         search = cItem.get('search', '') 
         letter = cItem.get('letter', '') 
-        url    = cItem['url'] 
+        url = cItem['url'] 
         
         if page > 1:
             url += 'page/%s/' % page
@@ -146,7 +146,7 @@ class CrtankoCom(CBaseHostClass):
             return
         
         nextPage = self.cm.ph.getDataBeetwenMarkers(data, 'rel="next"', '>', False)[1]
-        if '/page/{0}/'.format(page+1) in nextPage:
+        if '/page/{0}/'.format(page + 1) in nextPage:
             nextPage = True
         else:
             nextPage = False
@@ -154,8 +154,8 @@ class CrtankoCom(CBaseHostClass):
         data = self.cm.ph.getAllItemsBeetwenNodes(data, ('<article', '>'), ('</article', '>'))
         for item in data:
             title = self.cm.ph.getSearchGroups(item, '''title=['"]([^"^']+?)['"]''')[0]
-            icon  = self.getFullIconUrl(self.cm.ph.getSearchGroups(item, '''data-src=['"]([^"^']+?)['"]''')[0])
-            url   = self._getFullUrl(self.cm.ph.getSearchGroups(item, '''href=['"]([^"^']+?)['"]''')[0])
+            icon = self.getFullIconUrl(self.cm.ph.getSearchGroups(item, '''data-src=['"]([^"^']+?)['"]''')[0])
+            url = self._getFullUrl(self.cm.ph.getSearchGroups(item, '''href=['"]([^"^']+?)['"]''')[0])
             if self.cm.isValidUrl(url):
                 params = dict(cItem)
                 params.update({'good_for_fav': True, 'category':nextCategory, 'title':self.cleanHtmlStr(title), 'url':url, 'icon':icon, 'desc':self.cleanHtmlStr(item.split('</noscript>')[-1])})
@@ -163,13 +163,13 @@ class CrtankoCom(CBaseHostClass):
         
         if nextPage:
             params = dict(cItem)
-            params.update({'good_for_fav': False, 'title':_('Next page'), 'page':page+1})
+            params.update({'good_for_fav': False, 'title':_('Next page'), 'page':page + 1})
             self.addDir(params)
             
     def exploreItem(self, cItem, category):
         printDBG("CrtankoCom.exploreItem")
         page = cItem.get('page', 1)
-        url  = cItem['url']
+        url = cItem['url']
         
         if page > 1:
             url += '%s/' % page
@@ -179,7 +179,7 @@ class CrtankoCom(CBaseHostClass):
             return
         
         nextPage = self.cm.ph.getDataBeetwenMarkers(data, 'Pages:', '</section>', False)[1]
-        if '>{0}<'.format(page+1) in nextPage:
+        if '>{0}<'.format(page + 1) in nextPage:
             nextPage = True
         else:
             nextPage = False
@@ -213,7 +213,7 @@ class CrtankoCom(CBaseHostClass):
             
         if nextPage:
             params = dict(cItem)
-            params.update({'good_for_fav': False, 'title':_('Next page'), 'page':page+1})
+            params.update({'good_for_fav': False, 'title':_('Next page'), 'page':page + 1})
             self.addDir(params)
     
     def getLinksForVideo(self, cItem):
@@ -276,9 +276,9 @@ class CrtankoCom(CBaseHostClass):
         
         CBaseHostClass.handleService(self, index, refresh, searchPattern, searchType)
 
-        name     = self.currItem.get("name", '')
+        name = self.currItem.get("name", '')
         category = self.currItem.get("category", '')
-        mode     = self.currItem.get("mode", '')
+        mode = self.currItem.get("mode", '')
         
         printDBG("handleService: |||||||||||||||||||||||||||||||||||| [%s] " % self.currItem)
         self.currList = []

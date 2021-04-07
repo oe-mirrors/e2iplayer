@@ -51,7 +51,7 @@ class MLBStreamTVApi(CBaseHostClass):
         if seconds > 0:
             GMTOffset = '+' + str(timedelta(seconds=seconds))
         elif seconds < 0:
-            GMTOffset = '-' + str(timedelta(seconds=seconds*-1))
+            GMTOffset = '-' + str(timedelta(seconds=seconds * -1))
         else:
             GMTOffset = ''
 
@@ -181,9 +181,9 @@ class MLBStreamTVApi(CBaseHostClass):
         printDBG(data)
         printDBG("+++")
         
-        source  = self.cm.ph.getSearchGroups(data, '''[\s\{\,]['"]?source['"]?\s*:\s*['"](https?://[^'^"]+?)['"]''', 1, True)[0]
+        source = self.cm.ph.getSearchGroups(data, '''[\s\{\,]['"]?source['"]?\s*:\s*['"](https?://[^'^"]+?)['"]''', 1, True)[0]
         replace = self.cm.ph.getSearchGroups(data, '''[\s\{\,]['"]?replace['"]?\s*:\s*['"](https?://[^'^"]+?)['"]''', 1, True)[0]
-        keyurl  = self.cm.ph.getSearchGroups(data, '''[\s\{\,]['"]?keyurl['"]?\s*:\s*['"](https?://[^'^"]+?)['"]''', 1, True)[0]
+        keyurl = self.cm.ph.getSearchGroups(data, '''[\s\{\,]['"]?keyurl['"]?\s*:\s*['"](https?://[^'^"]+?)['"]''', 1, True)[0]
         rewrittenUrl = self.cm.ph.getSearchGroups(data, '''\=\s*?['"]([^'^"]+?)['"]\s*?\+\s*?btoa''', 1, True)[0]
         
         replaceTab = self.cm.ph.getDataBeetwenMarkers(data, 'prototype.open', '};', False)[1]

@@ -21,18 +21,18 @@ def gettytul():
     return 'http://ls-streaming.com/'
 
 class LibreStream(CBaseHostClass):
-    MAIN_URL   = 'http://ls-streaming.com/'
+    MAIN_URL = 'http://ls-streaming.com/'
     SEARCH_URL = MAIN_URL + 'index.php?q='
     DEFAULT_ICON_URL = 'http://thumbnail.easycounter.com/thumbnails/300x180/l/libre-stream.org.png'
     
     MAIN_CAT_TAB = [
-                    {'category':'cats',    'cache_key':'movie_cats',   'title': _('Movie'),         'url':MAIN_URL+'films/', 'icon':DEFAULT_ICON_URL},
-                    {'category':'cats',    'cache_key':'year_cats',   'title': _('Year'), 'url':MAIN_URL+'films/', 'icon':DEFAULT_ICON_URL},
-                    {'category':'cats',    'cache_key':'series_cats',  'title': _('Series TV'),     'url':MAIN_URL,          'icon':DEFAULT_ICON_URL},
-                    {'category':'cats',    'cache_key':'qualities',    'title': _('Quality'),       'url':MAIN_URL+'films/', 'icon':DEFAULT_ICON_URL},
-                    {'category':'cats',    'cache_key':'platforms',    'title': _('Platform'),      'url':MAIN_URL+'films/', 'icon':DEFAULT_ICON_URL},
-                    {'category':'search',                              'title': _('Search'),                                 'icon':DEFAULT_ICON_URL, 'search_item':True},
-                    {'category':'search_history',                      'title': _('Search history'),                         'icon':DEFAULT_ICON_URL} 
+                    {'category':'cats', 'cache_key':'movie_cats', 'title': _('Movie'), 'url':MAIN_URL + 'films/', 'icon':DEFAULT_ICON_URL},
+                    {'category':'cats', 'cache_key':'year_cats', 'title': _('Year'), 'url':MAIN_URL + 'films/', 'icon':DEFAULT_ICON_URL},
+                    {'category':'cats', 'cache_key':'series_cats', 'title': _('Series TV'), 'url':MAIN_URL, 'icon':DEFAULT_ICON_URL},
+                    {'category':'cats', 'cache_key':'qualities', 'title': _('Quality'), 'url':MAIN_URL + 'films/', 'icon':DEFAULT_ICON_URL},
+                    {'category':'cats', 'cache_key':'platforms', 'title': _('Platform'), 'url':MAIN_URL + 'films/', 'icon':DEFAULT_ICON_URL},
+                    {'category':'search', 'title': _('Search'), 'icon':DEFAULT_ICON_URL, 'search_item':True},
+                    {'category':'search_history', 'title': _('Search history'), 'icon':DEFAULT_ICON_URL} 
                    ]
  
     def __init__(self):
@@ -59,7 +59,7 @@ class LibreStream(CBaseHostClass):
         for item in tab:
             params = dict(cItem)
             params.update(item)
-            params['name']  = 'category'
+            params['name'] = 'category'
             if type == 'dir':
                 self.addDir(params)
             else:
@@ -148,7 +148,7 @@ class LibreStream(CBaseHostClass):
         
         episodes = self._getLinksFromContent(data, 'id')
         title = cItem['title']
-        id    = self.cm.ph.getSearchGroups(cItem['url'], '-saison-([0-9]+?)\.')[0] 
+        id = self.cm.ph.getSearchGroups(cItem['url'], '-saison-([0-9]+?)\.')[0] 
         
         for item in episodes:
             params = dict(cItem)
@@ -158,7 +158,7 @@ class LibreStream(CBaseHostClass):
     def listItems(self, cItem, category):
         printDBG("LibreStream.listItems")
         url = cItem['url']
-        page =cItem.get('page', 1)
+        page = cItem.get('page', 1)
         
         post_data = cItem.get('post_data', None)
         sts, data = self.cm.getPage(url, {}, post_data)
@@ -174,10 +174,10 @@ class LibreStream(CBaseHostClass):
             navMarker = '<div class="navigation">'
             tmp = data[-1].split(navMarker)
             data[-1] = tmp[0]
-            nextPageUrl = self.cm.ph.getSearchGroups(tmp[-1], '<a[^<]+?href="([^"]+?)"[^<]*?>%s</a>' % (page+1))[0]
+            nextPageUrl = self.cm.ph.getSearchGroups(tmp[-1], '<a[^<]+?href="([^"]+?)"[^<]*?>%s</a>' % (page + 1))[0]
             
         for item in data:
-            url   = self.cm.ph.getSearchGroups(item, "location.href='([^']+?)'")[0]
+            url = self.cm.ph.getSearchGroups(item, "location.href='([^']+?)'")[0]
             title = self.cm.ph.getSearchGroups(item, 'alt="([^"]+?)"')[0]            
             if title == '':
                 title = self.cm.ph.getSearchGroups(item, 'title="([^"]+?)"')[0] 
@@ -186,8 +186,8 @@ class LibreStream(CBaseHostClass):
             title = self.cleanHtmlStr(title)
             if title == '':
                 continue
-            icon  = self.cm.ph.getSearchGroups(item, '<img[^>]+?data-src="([^"]+?)"')[0]
-            desc  = self.cleanHtmlStr(item.split('<div class="mcontent">')[-1]).replace(' ---------------', ': ')
+            icon = self.cm.ph.getSearchGroups(item, '<img[^>]+?data-src="([^"]+?)"')[0]
+            desc = self.cleanHtmlStr(item.split('<div class="mcontent">')[-1]).replace(' ---------------', ': ')
             params = dict(cItem)
             params.update({'title':title, 'icon':self._getFullUrl(icon), 'desc':desc, 'url':self._getFullUrl(url)})
             if '-saison-' not in url and ' Saison ' not in title:
@@ -198,7 +198,7 @@ class LibreStream(CBaseHostClass):
         
         if nextPageUrl != '':
             params = dict(cItem)
-            params.update({'title':_('Next page'), 'page':cItem.get('page', 1)+1, 'url':self._getFullUrl(nextPageUrl)})
+            params.update({'title':_('Next page'), 'page':cItem.get('page', 1) + 1, 'url':self._getFullUrl(nextPageUrl)})
             self.addDir(params)
         
     def listSearchResult(self, cItem, searchPattern, searchType):
@@ -222,8 +222,8 @@ class LibreStream(CBaseHostClass):
             id = self.cm.ph.getSearchGroups(item, 'id="([^"]+?)"')[0]
             playerUrl = self.cm.ph.getSearchGroups(item, '''<iframe[^>]+?src=["'](http[^"^']+?)["']''', 1, True)[0]
             if playerUrl.startswith('http') and id != '':
-                linksMap[id]  = playerUrl
-                episodeTitle  = self.cm.ph.getDataBeetwenMarkers(item, '<h3 class="episodetitle">', '</h3>', False)[1]
+                linksMap[id] = playerUrl
+                episodeTitle = self.cm.ph.getDataBeetwenMarkers(item, '<h3 class="episodetitle">', '</h3>', False)[1]
                 etitleMap[id] = self.cleanHtmlStr(episodeTitle)
         
         servers = self.cm.ph.getDataBeetwenMarkers(data, "<ul class='etabs'", '</ul>')[1]
@@ -232,7 +232,7 @@ class LibreStream(CBaseHostClass):
             del servers[-1]
         for item in servers:
             title = self.cleanHtmlStr(item)
-            id    = self.cm.ph.getSearchGroups(item, 'href="#([^"]+?)"')[0]
+            id = self.cm.ph.getSearchGroups(item, 'href="#([^"]+?)"')[0]
             if id in linksMap:
                 params = dict(baseItem)
                 params.update({title_key:title, 'episode_title':etitleMap.get(id, ''), 'url':linksMap[id]})
@@ -273,7 +273,7 @@ class LibreStream(CBaseHostClass):
         
         CBaseHostClass.handleService(self, index, refresh, searchPattern, searchType)
 
-        name     = self.currItem.get("name", '')
+        name = self.currItem.get("name", '')
         category = self.currItem.get("category", '')
         printDBG("handleService: |||||||||||||||||||||||||||||||||||| name[%s], category[%s] " % (name, category))
         self.currList = []

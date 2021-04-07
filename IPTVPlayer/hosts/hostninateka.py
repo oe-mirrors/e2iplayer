@@ -3,7 +3,7 @@
 ###################################################
 # LOCAL import
 ###################################################
-from Plugins.Extensions.IPTVPlayer.components.ihost import  CHostBase, CBaseHostClass
+from Plugins.Extensions.IPTVPlayer.components.ihost import CHostBase, CBaseHostClass
 from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, CSearchHistoryHelper, printExc, byteify
 from Plugins.Extensions.IPTVPlayer.libs.urlparserhelper import getDirectM3U8Playlist
 from Plugins.Extensions.IPTVPlayer.libs.pCommon import common, CParsingHelper
@@ -53,11 +53,11 @@ class Ninateka(CBaseHostClass):
         
         #DEFAULT_GET_PARAM = 'MediaType=video&Paid=False'
         
-        self.MAIN_CAT_TAB = [{'category':'list_all',       'title': 'Wszystkie',             'url':self.VIDEOS_URL},
-                             {'category':'list_cats',      'title': 'Kategorie',             'url':self.MAIN_URL},
+        self.MAIN_CAT_TAB = [{'category':'list_all', 'title': 'Wszystkie', 'url':self.VIDEOS_URL},
+                             {'category':'list_cats', 'title': 'Kategorie', 'url':self.MAIN_URL},
                              
-                             {'category': 'search',            'title': _('Search'), 'search_item': True,},
-                             {'category': 'search_history',    'title': _('Search history'),} 
+                             {'category': 'search', 'title': _('Search'), 'search_item': True,},
+                             {'category': 'search_history', 'title': _('Search history'),} 
                             ]
         
     def getMenuHTML(self):
@@ -112,7 +112,7 @@ class Ninateka(CBaseHostClass):
                 return url
             data = self.cm.ph.getDataBeetwenMarkers(data, 'playerOptionsWithMainSource =', '};', False)[1]
             printDBG(data)
-            data = byteify(json.loads(data+'}'))
+            data = byteify(json.loads(data + '}'))
             for item in data['sources']:
                 type = item.get('type', '').lower()
                 if '/mp4' in type:
@@ -141,12 +141,12 @@ class Ninateka(CBaseHostClass):
         
         for videoItemData in data:
             printDBG('videoItemData')
-            icon     = ''
+            icon = ''
             duration = ''
-            gatunek  = ''
-            desc     = ''
-            title    = ''
-            url      = ''
+            gatunek = ''
+            desc = ''
+            title = ''
+            url = ''
             
             if 'class="playIcon"' in videoItemData:
                 # get icon src
@@ -164,7 +164,7 @@ class Ninateka(CBaseHostClass):
                 # get title and url
                 match = re.search('<a href="([^"]+?)" class="title"[^>]*?>([^<]+?)</a>', videoItemData)
                 if match:
-                    url   = self.MAIN_URL + match.group(1)
+                    url = self.MAIN_URL + match.group(1)
                     title = match.group(2)
                     params = {'good_for_fav': True, 'url': url, 'title': title, 'icon': icon, 'desc': ' | '.join([duration, gatunek]) + '[/br]' + desc}
                     self.addVideo(params)
@@ -217,10 +217,10 @@ class Ninateka(CBaseHostClass):
         
         CBaseHostClass.handleService(self, index, refresh, searchPattern, searchType)
 
-        name     = self.currItem.get("name", '')
+        name = self.currItem.get("name", '')
         category = self.currItem.get("category", '')
-        mode     = self.currItem.get("mode", '')
-        page     = self.currItem.get("page", '')
+        mode = self.currItem.get("mode", '')
+        page = self.currItem.get("page", '')
         
         printDBG("handleService: |||||||||||||||||||||||||||||||||||| name[%s], category[%s] " % (name, category))
         self.currList = []

@@ -34,7 +34,7 @@ class WatchCartoonOnline(CBaseHostClass):
         self.DEFAULT_ICON_URL = 'https://mk0echouaawhk9ls0i7l.kinstacdn.com/wp-content/uploads/websites/website%20to%20watch%20cartoons/www.watchcartoononline.com.1280.jpg'
         
         self.defaultParams = {'header':self.HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
-        self.cacheLinks    = {}
+        self.cacheLinks = {}
         
     def getPage(self, baseUrl, addParams={}, post_data=None):
         if addParams == {}:
@@ -73,7 +73,7 @@ class WatchCartoonOnline(CBaseHostClass):
             data = data.split('</div>', 1)
             tabTitle = self.cleanHtmlStr(data[0].split(' - ', 1)[0])
             if 'genre' in tabTitle.lower(): 
-                node='a'
+                node = 'a'
                 genre = True
             else: 
                 node = 'li'
@@ -84,7 +84,7 @@ class WatchCartoonOnline(CBaseHostClass):
             for item in data:
                 url = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''href=['"]([^"^']+?)['"]''')[0])
                 title = self.cleanHtmlStr(item)
-                icon  = self.getFullIconUrl(self.cm.ph.getSearchGroups(item, '''<img[^>]+?src=['"]([^"^']+?)['"]''')[0])
+                icon = self.getFullIconUrl(self.cm.ph.getSearchGroups(item, '''<img[^>]+?src=['"]([^"^']+?)['"]''')[0])
                 
                 params = dict(cItem)
                 params.update({'title':title, 'url':url, 'icon':icon})
@@ -105,8 +105,8 @@ class WatchCartoonOnline(CBaseHostClass):
         for item in tmp:
             _fillItems(item)
 
-        MAIN_CAT_TAB = [{'category':'search',          'title': _('Search'), 'search_item':True},
-                        {'category':'search_history',  'title': _('Search history')}]
+        MAIN_CAT_TAB = [{'category':'search', 'title': _('Search'), 'search_item':True},
+                        {'category':'search_history', 'title': _('Search history')}]
         self.listsTab(MAIN_CAT_TAB, cItem)
         
     def listABC(self, cItem, nextCategory):
@@ -122,10 +122,10 @@ class WatchCartoonOnline(CBaseHostClass):
             tabTitle = self.cleanHtmlStr(self.cm.ph.rgetDataBeetwenMarkers2(data[idx], '</p>', '>', False)[1])
             tabData = self.cm.ph.getAllItemsBeetwenMarkers(data[idx], '<li', '</li>')
             tabItems = []
-            for item  in tabData:
+            for item in tabData:
                 url = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''href=['"]([^"^']+?)['"]''')[0])
                 title = self.cleanHtmlStr(item)
-                icon  = self.getFullIconUrl(self.cm.ph.getSearchGroups(item, '''<img[^>]+?src=['"]([^"^']+?)['"]''')[0])
+                icon = self.getFullIconUrl(self.cm.ph.getSearchGroups(item, '''<img[^>]+?src=['"]([^"^']+?)['"]''')[0])
                 
                 params = dict(cItem)
                 params.update({'good_for_fav':True, 'category':'explore_item', 'title':title, 'url':url, 'icon':icon})
@@ -209,7 +209,7 @@ class WatchCartoonOnline(CBaseHostClass):
         for item in data:
             url = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''href=['"]([^"^']+?)['"]''')[0])
             title = self.cleanHtmlStr(item)
-            icon  = self.getFullIconUrl(self.cm.ph.getSearchGroups(item, '''<img[^>]+?src=['"]([^"^']+?)['"]''')[0])
+            icon = self.getFullIconUrl(self.cm.ph.getSearchGroups(item, '''<img[^>]+?src=['"]([^"^']+?)['"]''')[0])
             
             try:
                 url = self.getFullUrl(urlparse(url).path)
@@ -304,22 +304,22 @@ class WatchCartoonOnline(CBaseHostClass):
             label = self.cm.ph.getSearchGroups(item, '''label['"]?\s*[=:]\s*['"]([^"^']+?)['"]''')[0]
             if label == '':
                 label = self.cm.ph.getSearchGroups(item, '''format['"]?\s*[=:]\s*['"]([^"^']+?)['"]''')[0]
-            url  = self.cm.ph.getSearchGroups(item, '''src['"]?\s*[=:]\s*['"]([^"^']+?)['"]''')[0]
+            url = self.cm.ph.getSearchGroups(item, '''src['"]?\s*[=:]\s*['"]([^"^']+?)['"]''')[0]
             if url not in uniqueUrls:
                 uniqueUrls.append(url)
                 url = self.cm.getFullUrl(url, self.cm.getBaseUrl(cUrl))
                 urlTab.append({'name':'[{0}] {1} {2}'.format(type.split('/', 1)[0], label, domain), 'url':strwithmeta(url, {'Referer':referer})})
         
-        return  urlTab
+        return urlTab
 
     def handleService(self, index, refresh=0, searchPattern='', searchType=''):
         printDBG('handleService start')
         
         CBaseHostClass.handleService(self, index, refresh, searchPattern, searchType)
 
-        name     = self.currItem.get("name", '')
+        name = self.currItem.get("name", '')
         category = self.currItem.get("category", '')
-        mode     = self.currItem.get("mode", '')
+        mode = self.currItem.get("mode", '')
         
         printDBG("handleService: || name[%s], category[%s] " % (name, category))
         self.currList = []

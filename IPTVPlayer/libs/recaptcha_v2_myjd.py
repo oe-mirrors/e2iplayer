@@ -13,7 +13,7 @@ class UnCaptchaReCaptcha:
     
     def processCaptcha(self, sitekey, referer=''):
         answer = ''
-        retArg = self.sessionEx.waitForFinishOpen(UnCaptchaReCaptchaMyJDWidget,  title=_("My JDownloader reCAPTCHA v2 solution"), sitekey=sitekey, referer=referer)
+        retArg = self.sessionEx.waitForFinishOpen(UnCaptchaReCaptchaMyJDWidget, title=_("My JDownloader reCAPTCHA v2 solution"), sitekey=sitekey, referer=referer)
         if retArg is not None and len(retArg) and retArg[0]:
             answer = retArg[0]
         return answer

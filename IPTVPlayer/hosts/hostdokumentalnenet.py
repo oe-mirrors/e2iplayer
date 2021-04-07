@@ -25,13 +25,13 @@ from Components.config import config, ConfigText, getConfigListEntry
 ###################################################
 # Config options for HOST
 ###################################################
-config.plugins.iptvplayer.plusdede_login    = ConfigText(default="", fixed_size=False)
+config.plugins.iptvplayer.plusdede_login = ConfigText(default="", fixed_size=False)
 config.plugins.iptvplayer.plusdede_password = ConfigText(default="", fixed_size=False)
 
 def GetConfigList():
     optionList = []
-    optionList.append(getConfigListEntry(_("login")+":",    config.plugins.iptvplayer.plusdede_login))
-    optionList.append(getConfigListEntry(_("password")+":", config.plugins.iptvplayer.plusdede_password))
+    optionList.append(getConfigListEntry(_("login") + ":", config.plugins.iptvplayer.plusdede_login))
+    optionList.append(getConfigListEntry(_("password") + ":", config.plugins.iptvplayer.plusdede_password))
     return optionList
 ###################################################
 def gettytul():
@@ -46,10 +46,10 @@ class DokumentalneNET(CBaseHostClass):
         self.MAIN_URL = 'https://dokumentalne.net/'
         self.HTTP_HEADER = {'User-Agent': self.USER_AGENT, 'DNT':'1', 'Accept': 'text/html', 'Accept-Encoding':'gzip, deflate', 'Referer':self.getMainUrl(), 'Origin':self.getMainUrl()}
         self.defaultParams = {'header':self.HTTP_HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
-        self.MAIN_CAT_TAB = [{'category':'list_categories',   'title': 'Kategorie',        'url':self.getMainUrl()},
+        self.MAIN_CAT_TAB = [{'category':'list_categories', 'title': 'Kategorie', 'url':self.getMainUrl()},
                              
-                             {'category':'search',            'title': _('Search'),          'search_item':True}, 
-                             {'category':'search_history',    'title': _('Search history')},
+                             {'category':'search', 'title': _('Search'), 'search_item':True}, 
+                             {'category':'search_history', 'title': _('Search history')},
                             ]
         
     def getFullUrl(self, url):
@@ -122,12 +122,12 @@ class DokumentalneNET(CBaseHostClass):
         
         data = self.cm.ph.getAllItemsBeetwenNodes(data, ('<article', '>', 'post-item'), ('</article', '>'))
         for item in data:
-            url   = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''href=['"]([^'^"]+?)['"]''')[0])
-            icon  = self.getFullIconUrl(self.cm.ph.getSearchGroups(item, '''[\s'"](https?://[^'^"^\s]+?)\s*300w''')[0].strip())
+            url = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''href=['"]([^'^"]+?)['"]''')[0])
+            icon = self.getFullIconUrl(self.cm.ph.getSearchGroups(item, '''[\s'"](https?://[^'^"^\s]+?)\s*300w''')[0].strip())
             if icon == '':
                 icon = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''\ssrc=['"]([^'^"]+?)['"]''')[0])
             title = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(item, ('<h3', '>'), ('</h3', '>'), False)[1])
-            desc  = []
+            desc = []
             tmp = self.cm.ph.getDataBeetwenNodes(item, ('<div', '>', 'posted-on '), ('</div', '>'), False)[1]
             tmp = self.cm.ph.getAllItemsBeetwenMarkers(tmp, '<a', '</a>')
             for t in tmp:
@@ -143,7 +143,7 @@ class DokumentalneNET(CBaseHostClass):
         
         if self.cm.isValidUrl(nextPage):
             params = dict(cItem)
-            params.update({'good_for_fav':False, 'title':_("Next page"), 'url':nextPage, 'page':page+1})
+            params.update({'good_for_fav':False, 'title':_("Next page"), 'url':nextPage, 'page':page + 1})
             self.addDir(params)
         
     def listSearchResult(self, cItem, searchPattern, searchType):
@@ -182,9 +182,9 @@ class DokumentalneNET(CBaseHostClass):
         
         CBaseHostClass.handleService(self, index, refresh, searchPattern, searchType)
 
-        name     = self.currItem.get("name", '')
+        name = self.currItem.get("name", '')
         category = self.currItem.get("category", '')
-        mode     = self.currItem.get("mode", '')
+        mode = self.currItem.get("mode", '')
         
         printDBG("handleService: |||||||||||||||||||||||||||||||||||| name[%s], category[%s] " % (name, category))
         self.currList = []

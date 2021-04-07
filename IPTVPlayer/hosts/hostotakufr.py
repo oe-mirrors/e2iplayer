@@ -56,14 +56,14 @@ class OtakuFR(CBaseHostClass):
         
     def selectDomain(self):                
         self.MAIN_URL = 'http://www.otakufr.com/'
-        self.MAIN_CAT_TAB = [{'category':'list_abc',         'title': 'Toute La Liste',           'url':self.getFullUrl('/anime-list-all/')},
-                             {'category':'list_abc',         'title': 'En Cours',                 'url':self.getFullUrl('/anime-en-cours/')},
-                             {'category':'list_rank_items',  'title': 'Populaire',                'url':self.getFullUrl('/anime-list/all/any/most-popular/')},
-                             {'category':'list_abc',         'title': 'Terminé',                  'url':self.getFullUrl('/anime-termine/')},
-                             {'category':'list_rank_items',  'title': 'Film',                     'url':self.getFullUrl('/anime-list/tag/Film/')},
+        self.MAIN_CAT_TAB = [{'category':'list_abc', 'title': 'Toute La Liste', 'url':self.getFullUrl('/anime-list-all/')},
+                             {'category':'list_abc', 'title': 'En Cours', 'url':self.getFullUrl('/anime-en-cours/')},
+                             {'category':'list_rank_items', 'title': 'Populaire', 'url':self.getFullUrl('/anime-list/all/any/most-popular/')},
+                             {'category':'list_abc', 'title': 'Terminé', 'url':self.getFullUrl('/anime-termine/')},
+                             {'category':'list_rank_items', 'title': 'Film', 'url':self.getFullUrl('/anime-list/tag/Film/')},
                              
-                             {'category': 'search',          'title': _('Search'), 'search_item': True, },
-                             {'category': 'search_history',  'title': _('Search history'),} 
+                             {'category': 'search', 'title': _('Search'), 'search_item': True, },
+                             {'category': 'search_history', 'title': _('Search history'),} 
                             ]
     def listABC(self, cItem, nextCategory):
         printDBG("OtakuFR.listABC")
@@ -119,16 +119,16 @@ class OtakuFR(CBaseHostClass):
         
         data = self.cm.ph.getAllItemsBeetwenMarkers(data, '<span class="rnk">', '<div class="clear">')
         for item in data:
-            url   = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''href=['"]([^'^"]+?)['"]''')[0])
+            url = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''href=['"]([^'^"]+?)['"]''')[0])
             if not self.cm.isValidUrl(url):
                 continue
             title = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(item, '<h2>', '</h2>')[1])
             if title == '':
                 title = self.cleanHtmlStr(self.cm.ph.getSearchGroups(item, '''title=['"]([^'^"]+?)['"]''')[0])
-            icon  = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''<img[^>]+?src=['"]([^'^"]+?)['"]''')[0])
+            icon = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''<img[^>]+?src=['"]([^'^"]+?)['"]''')[0])
             
             descTab = []
-            tmpTab  = self.cm.ph.getAllItemsBeetwenMarkers(item, '<p', '</p>')
+            tmpTab = self.cm.ph.getAllItemsBeetwenMarkers(item, '<p', '</p>')
             for idx in range(len(tmpTab)):
                 tmpDesc = self.cleanHtmlStr(tmpTab[idx])
                 if tmpDesc != '':
@@ -140,7 +140,7 @@ class OtakuFR(CBaseHostClass):
         
         if self.cm.isValidUrl(nextPage):
             params = dict(cItem)
-            params.update({'good_for_fav':False, 'title':_('Next page'), 'url':nextPage, 'page':page+1})
+            params.update({'good_for_fav':False, 'title':_('Next page'), 'url':nextPage, 'page':page + 1})
             self.addDir(params)
             
     def exploreItem(self, cItem):
@@ -150,20 +150,20 @@ class OtakuFR(CBaseHostClass):
         if not sts:
             return
         
-        tmp  = self.cm.ph.getDataBeetwenMarkers(data, '<input class=', '<div class="clr">')[1]
+        tmp = self.cm.ph.getDataBeetwenMarkers(data, '<input class=', '<div class="clr">')[1]
         printDBG(tmp)
         icon = self.getFullUrl(self.cm.ph.getSearchGroups(tmp, '''<img[^>]+?src=['"]([^'^"]+?)['"]''')[0])
         
         data = self.cm.ph.getDataBeetwenMarkers(data, '<ul class="lst">', '</ul>')[1]
         data = self.cm.ph.getAllItemsBeetwenMarkers(data, '<li', '</li>')
         for item in data:
-            url   = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''href=['"]([^'^"]+?)['"]''')[0])
+            url = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''href=['"]([^'^"]+?)['"]''')[0])
             if not self.cm.isValidUrl(url):
                 continue
             title = self.cleanHtmlStr(self.cm.ph.getSearchGroups(item, '''title=['"]([^'^"]+?)['"]''')[0])
             
             descTab = []
-            tmpTab  = self.cm.ph.getAllItemsBeetwenMarkers(item, '<b', '</b>')
+            tmpTab = self.cm.ph.getAllItemsBeetwenMarkers(item, '<b', '</b>')
             for idx in range(len(tmpTab)):
                 tmpDesc = self.cleanHtmlStr(tmpTab[idx])
                 if tmpDesc != '':
@@ -183,7 +183,7 @@ class OtakuFR(CBaseHostClass):
         data = self.cm.ph.getDataBeetwenMarkers(data, 'video-listing-filter', '</div>')[1]
         data = self.cm.ph.getAllItemsBeetwenMarkers(data, '<a ', '</a>')
         for item in data:
-            url   = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''href=['"]([^'^"]+?)['"]''')[0])
+            url = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''href=['"]([^'^"]+?)['"]''')[0])
             if not self.cm.isValidUrl(url):
                 continue
             title = self.cleanHtmlStr(item)
@@ -212,13 +212,13 @@ class OtakuFR(CBaseHostClass):
                 del section[0]
             itemsTab = []
             for item in section:
-                url   = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''href=['"]([^'^"]+?)['"]''')[0])
+                url = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''href=['"]([^'^"]+?)['"]''')[0])
                 if not self.cm.isValidUrl(url):
                     continue
                 title = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(item, '<h3>', '</h3>')[1])
                 if title == '':
                     title = self.cleanHtmlStr(self.cm.ph.getSearchGroups(item, '''title=['"]([^'^"]+?)['"]''')[0])
-                icon  = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''data-lazy-src=['"]([^'^"]+?)['"]''')[0])
+                icon = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''data-lazy-src=['"]([^'^"]+?)['"]''')[0])
                 desc = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(item, '<p>', '</p>')[1])
                 itemsTab.append({'good_for_fav':True, 'title':title, 'url':url, 'icon':icon, 'desc':desc})
             
@@ -286,9 +286,9 @@ class OtakuFR(CBaseHostClass):
             #rm(self.COOKIE_FILE)
             self.selectDomain()
 
-        name     = self.currItem.get("name", '')
+        name = self.currItem.get("name", '')
         category = self.currItem.get("category", '')
-        mode     = self.currItem.get("mode", '')
+        mode = self.currItem.get("mode", '')
         
         printDBG("handleService: |||||||||||||||||||||||||||||||||||| name[%s], category[%s] " % (name, category))
         self.currList = []

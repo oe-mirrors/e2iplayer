@@ -31,9 +31,9 @@ from Screens.MessageBox import MessageBox
 ###################################################
 # Config options for HOST
 ###################################################
-config.plugins.iptvplayer.hdfull_language  = ConfigSelection(default="es", choices=[("es", _("Spanish")), ("en", _("English"))])
-config.plugins.iptvplayer.hdfull_login     = ConfigText(default="", fixed_size=False)
-config.plugins.iptvplayer.hdfull_password  = ConfigText(default="", fixed_size=False)
+config.plugins.iptvplayer.hdfull_language = ConfigSelection(default="es", choices=[("es", _("Spanish")), ("en", _("English"))])
+config.plugins.iptvplayer.hdfull_login = ConfigText(default="", fixed_size=False)
+config.plugins.iptvplayer.hdfull_password = ConfigText(default="", fixed_size=False)
 
 def GetConfigList():
     optionList = []
@@ -65,7 +65,7 @@ class SuggestionsProvider:
             self.lang = lang
 
         url = self.MAIN_URL + '/ajax/search.php'
-        sts, data = self.cm.getPage(url, post_data={'q':text, 'limit':'10', 'timestamp':str(int(time.time()*1000)), 'verifiedCheck':''})
+        sts, data = self.cm.getPage(url, post_data={'q':text, 'limit':'10', 'timestamp':str(int(time.time() * 1000)), 'verifiedCheck':''})
         if sts:
             retList = []
             for item in json_loads(data):
@@ -92,13 +92,13 @@ class HDFull(CBaseHostClass, CaptchaHelper):
         language = config.plugins.iptvplayer.hdfull_language.value
         self.defaultParams = {'header':self.HTTP_HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE, 'cookie_items':{'language':language}}
 
-        self.MAIN_URL    = 'https://hdfull.me/'
+        self.MAIN_URL = 'https://hdfull.me/'
         self.DEFAULT_ICON_URL = 'https://ocio.farodevigo.es/img_contenido/noticias/2018/02/642946/web_cine_pirata.jpg'
 
         self.filters = []
         self.cacheLinks = {}
         self.loggedIn = None
-        self.login    = ''
+        self.login = ''
         self.password = ''
 
     def getPage(self, baseUrl, addParams={}, post_data=None):
@@ -156,7 +156,7 @@ class HDFull(CBaseHostClass, CaptchaHelper):
             if len(subItems):
                 self.addDir(MergeDicts(cItem, {'url':menuUrl, 'title':menuTitle, 'category':'sub_items', 'sub_items':subItems}))
 
-        MAIN_CAT_TAB = [{'category':'search',         'title': _('Search'),       'search_item':True},
+        MAIN_CAT_TAB = [{'category':'search', 'title': _('Search'), 'search_item':True},
                         {'category': 'search_history', 'title': _('Search history'),}]
         self.listsTab(MAIN_CAT_TAB, cItem)
 
@@ -261,7 +261,7 @@ class HDFull(CBaseHostClass, CaptchaHelper):
             nextPage += '/%d' % (page + 1)
         else:
             nextPage = self.cm.ph.getDataBeetwenMarkers(data, 'filter-title', '</div>', False)[1]
-            nextPage = self.getFullUrl(self.cm.ph.getSearchGroups(nextPage, '''<a[^>]+?href=['"]([^'^"]+?)['"][^>]*?>\s*?%s\s*?<''' % (page+1))[0]) 
+            nextPage = self.getFullUrl(self.cm.ph.getSearchGroups(nextPage, '''<a[^>]+?href=['"]([^'^"]+?)['"][^>]*?>\s*?%s\s*?<''' % (page + 1))[0]) 
 
         self.currList.extend(self._listItems(cItem, nextCategory, data))
 
@@ -288,9 +288,9 @@ class HDFull(CBaseHostClass, CaptchaHelper):
                 if sts: 
                     if 'providers' == key:
                         idx1 = jsdata.find('providers')
-                        idx2 = jsdata.find(';', idx1+9)
-                        funName = self.cm.ph.getSearchGroups(jsdata[idx2+1:], '''function\s+?([^\(]+?)\(''')[0]
-                        tabJs[key]['code'] = 'function buildIframeEmbed(){return arguments[0];}\nbuildIframeGenericEmbed=buildIframeEmbed;\n'  + jsdata[:idx2+1] + '; function %s(){return function(){};}' % funName
+                        idx2 = jsdata.find(';', idx1 + 9)
+                        funName = self.cm.ph.getSearchGroups(jsdata[idx2 + 1:], '''function\s+?([^\(]+?)\(''')[0]
+                        tabJs[key]['code'] = 'function buildIframeEmbed(){return arguments[0];}\nbuildIframeGenericEmbed=buildIframeEmbed;\n' + jsdata[:idx2 + 1] + '; function %s(){return function(){};}' % funName
                         printDBG(">>>>")
                         printDBG(tabJs[key]['code'])
                         printDBG("<<<<")
@@ -301,7 +301,7 @@ class HDFull(CBaseHostClass, CaptchaHelper):
                             idx1 = jsdata.find('String.prototype.', start)
                             if idx1 < 0:
                                 break
-                            idx2 = jsdata.find('{', idx1+17)
+                            idx2 = jsdata.find('{', idx1 + 17)
                             if idx2 < 0:
                                 break
                             num = 1
@@ -314,8 +314,8 @@ class HDFull(CBaseHostClass, CaptchaHelper):
                                 elif jsdata[idx2] == '}':
                                     num -= 1
                             if num == 0:
-                                tmp.append(jsdata[idx1:idx2+1])
-                                start = idx2+1
+                                tmp.append(jsdata[idx1:idx2 + 1])
+                                start = idx2 + 1
                             else:
                                 break
                         mark = 'this.options.links'
@@ -404,8 +404,8 @@ class HDFull(CBaseHostClass, CaptchaHelper):
 
         page = cItem.get('page', 0)
 
-        baseEpisodeUrl = '/show/%s/season-%s/episode-%s' if lang  == 'en' else '/serie/%s/temporada-%s/episodio-%s'
-        post_data= {'action':cItem['f_action'], 'start':page*ITEMS, 'limit':ITEMS}
+        baseEpisodeUrl = '/show/%s/season-%s/episode-%s' if lang == 'en' else '/serie/%s/temporada-%s/episodio-%s'
+        post_data = {'action':cItem['f_action'], 'start':page * ITEMS, 'limit':ITEMS}
         if 'f_show' in cItem:
             post_data['show'] = cItem['f_show']
         if 'f_season' in cItem:
@@ -428,7 +428,7 @@ class HDFull(CBaseHostClass, CaptchaHelper):
 
                 icon = self.getFullIconUrl(baseIconUrl + jstr(item, 'thumbnail'))
                 title = '%s - s%se%s %s' % (jstr(item['show']['title'], lang), sNum.zfill(2), eNum.zfill(2), jstr(item['title'], lang))
-                desc =  jstr(item, 'date_aired') + ' | ' + (', '.join(item.get('languages', [])))
+                desc = jstr(item, 'date_aired') + ' | ' + (', '.join(item.get('languages', [])))
                 url = self.getFullUrl(baseEpisodeUrl % (jstr(item, 'permalink'), sNum, eNum))
                 
                 self.addVideo({'good_for_fav': True, 'title':title, 'url':url, 'icon':icon, 'desc':desc})
@@ -576,9 +576,9 @@ class HDFull(CBaseHostClass, CaptchaHelper):
         if title == '':
             title = cItem['title']
         if icon == '':
-            icon  = cItem.get('icon', self.DEFAULT_ICON_URL)
+            icon = cItem.get('icon', self.DEFAULT_ICON_URL)
         if desc == '':
-            desc  = cItem.get('desc', '')
+            desc = cItem.get('desc', '')
         
         return [{'title':self.cleanHtmlStr(title), 'text': self.cleanHtmlStr(desc), 'images':[{'title':'', 'url':self.getFullUrl(icon)}], 'other_info':{'custom_items_list':itemsList}}]
         
@@ -656,7 +656,7 @@ class HDFull(CBaseHostClass, CaptchaHelper):
         
         CBaseHostClass.handleService(self, index, refresh, searchPattern, searchType)
 
-        name     = self.currItem.get("name", '')
+        name = self.currItem.get("name", '')
         category = self.currItem.get("category", '')
         printDBG("handleService: ||| name[%s], category[%s] " % (name, category))
         self.currList = []
@@ -713,7 +713,7 @@ class IPTVHost(CHostBase):
         CHostBase.__init__(self, HDFull(), True, [])
     
     def withArticleContent(self, cItem):
-        if cItem.get('prev_url') or cItem.get('type') == 'video' or  cItem.get('category') == 'explore_item':
+        if cItem.get('prev_url') or cItem.get('type') == 'video' or cItem.get('category') == 'explore_item':
             return True
         else:
             return False

@@ -138,12 +138,12 @@ class ustvgo(CBaseHostClass):
     def listMainMenu(self, cItem):
         if self.MAIN_URL == None:
             self.selectDomain()
-        MAIN_CAT_TAB = [{'category':'list_category',       'title': 'Home',   'url':self.getFullUrl('/')},
-                        {'category':'list_category',       'title': 'Entertainment',   'url':self.getFullUrl('/category/entertainment/')},
-                        {'category':'list_category',       'title': 'News',   'url':self.getFullUrl('/category/news/')},
-                        {'category':'list_category',       'title': 'Sports',   'url':self.getFullUrl('/category/sports/')},
-                        {'category':'list_category',       'title': 'Kids',   'url':self.getFullUrl('/category/kids/')},
-                        {'category':'list_items',          'title': _('All'),   'url':self.getFullUrl('/')},]
+        MAIN_CAT_TAB = [{'category':'list_category', 'title': 'Home', 'url':self.getFullUrl('/')},
+                        {'category':'list_category', 'title': 'Entertainment', 'url':self.getFullUrl('/category/entertainment/')},
+                        {'category':'list_category', 'title': 'News', 'url':self.getFullUrl('/category/news/')},
+                        {'category':'list_category', 'title': 'Sports', 'url':self.getFullUrl('/category/sports/')},
+                        {'category':'list_category', 'title': 'Kids', 'url':self.getFullUrl('/category/kids/')},
+                        {'category':'list_items', 'title': _('All'), 'url':self.getFullUrl('/')},]
         self.listsTab(MAIN_CAT_TAB, cItem)
     
     def listItems(self, cItem):
@@ -179,7 +179,7 @@ class ustvgo(CBaseHostClass):
         for item in data:
             tmp = self.cm.ph.getDataBeetwenNodes(item, ('<h3', '>'), ('</h3', '>'))[1]
             url = self.getFullUrl(self.cm.ph.getSearchGroups(tmp, '''\shref=['"]([^"^']+?)['"]''')[0])
-            title  = self.cleanHtmlStr(tmp)
+            title = self.cleanHtmlStr(tmp)
             if not self.cm.isValidUrl(url):
                 continue
             icon = self.getFullIconUrl(self.cm.ph.getSearchGroups(item, '''\sdata-lazy-src=['"]([^"^']+?)['"]''')[0])
@@ -189,7 +189,7 @@ class ustvgo(CBaseHostClass):
 
         if nextPage != '':
             params = dict(cItem)
-            params.update({'title':_("Next page"), 'url':self.getFullUrl(nextPage), 'page':page+1})
+            params.update({'title':_("Next page"), 'url':self.getFullUrl(nextPage), 'page':page + 1})
             self.addDir(params)
         
     def getLinksForVideo(self, cItem):
@@ -213,7 +213,7 @@ class ustvgo(CBaseHostClass):
         interHtmlElements = {}
         tmp = ph.findall(data, ('<span', '>', 'display:none'), '</span>', flags=ph.START_S)
         for idx in range(1, len(tmp), 2):
-            elemId = self.cm.ph.getSearchGroups(tmp[idx-1], '''id=([^>]+?)>''', 1, True)[0]
+            elemId = self.cm.ph.getSearchGroups(tmp[idx - 1], '''id=([^>]+?)>''', 1, True)[0]
             interHtmlElements[elemId] = tmp[idx].strip()
         jscode.append('var interHtmlElements=%s;' % json_dumps(interHtmlElements))
         data = self.cm.ph.getAllItemsBeetwenNodes(data, ('<script', '>'), ('</script', '>'), False)
@@ -241,9 +241,9 @@ class ustvgo(CBaseHostClass):
         if self.MAIN_URL == None:
             self.selectDomain()
 
-        name     = self.currItem.get("name", '')
+        name = self.currItem.get("name", '')
         category = self.currItem.get("category", '')
-        mode     = self.currItem.get("mode", '')
+        mode = self.currItem.get("mode", '')
         
         printDBG("handleService: >> name[%s], category[%s] " % (name, category))
         self.currList = []

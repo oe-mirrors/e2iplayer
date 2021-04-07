@@ -82,11 +82,11 @@ if __name__ == "__main__":
         sys.exit(1)
     
     try:
-        port       = int(sys.argv[1])
-        libsPath   = sys.argv[2]
-        userAgent  = sys.argv[3]
+        port = int(sys.argv[1])
+        libsPath = sys.argv[2]
+        userAgent = sys.argv[3]
         refererUrl = sys.argv[4]
-        m3u8Url    = sys.argv[5]
+        m3u8Url = sys.argv[5]
         
         sys.path.insert(1, libsPath)
         from keepalive import HTTPHandler

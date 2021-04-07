@@ -25,16 +25,16 @@ def gettytul():
     return 'http://www.filma24hd.com/'
 
 class Filma24hdCom(CBaseHostClass):
-    MAIN_URL    = 'http://www.filma24hd.com/'
-    SRCH_URL    = MAIN_URL + '?s='
+    MAIN_URL = 'http://www.filma24hd.com/'
+    SRCH_URL = MAIN_URL + '?s='
     DEFAULT_ICON_URL = 'http://www.filma24hd.com/wp-content/uploads/2015/12/f24hd.png'
     
-    MAIN_TV_SERIES_URL  = 'http://seriale.filma24hd.com/'
+    MAIN_TV_SERIES_URL = 'http://seriale.filma24hd.com/'
     DEFAULT_TV_SERIES_ICON_URL = 'http://seriale.filma24hd.com/wp-content/uploads/2015/12/f24hdserie.png'
     
-    MAIN_CAT_TAB = [{'category':'movies',     'title': _('Movies'),                           'url':MAIN_URL,            'icon':DEFAULT_ICON_URL},
-                    {'category':'series',     'title': _('TV Series'),                        'url':MAIN_TV_SERIES_URL,  'icon':DEFAULT_TV_SERIES_ICON_URL},
-                    {'category':'search',         'title': _('Search'),       'search_item':True, 'icon':DEFAULT_ICON_URL},
+    MAIN_CAT_TAB = [{'category':'movies', 'title': _('Movies'), 'url':MAIN_URL, 'icon':DEFAULT_ICON_URL},
+                    {'category':'series', 'title': _('TV Series'), 'url':MAIN_TV_SERIES_URL, 'icon':DEFAULT_TV_SERIES_ICON_URL},
+                    {'category':'search', 'title': _('Search'), 'search_item':True, 'icon':DEFAULT_ICON_URL},
                     {'category':'search_history', 'title': _('Search history'), 'icon':DEFAULT_ICON_URL} 
                    ]
 
@@ -69,7 +69,7 @@ class Filma24hdCom(CBaseHostClass):
         data = self.cm.ph.getAllItemsBeetwenMarkers(data, '<a ', '</a>')
         for item in data:
             title = self.cleanHtmlStr(item)
-            url   = self._getFullUrl(self.cm.ph.getSearchGroups(item, '''href=['"]([^"^']+?)["']''', 1, True)[0])
+            url = self._getFullUrl(self.cm.ph.getSearchGroups(item, '''href=['"]([^"^']+?)["']''', 1, True)[0])
             if url == '' or 'seriale' in url:
                 continue
             params = dict(cItem)
@@ -91,15 +91,15 @@ class Filma24hdCom(CBaseHostClass):
                 continue
             tmp = item.split(marker)
             subCategoryTitle = self.cm.ph.rgetDataBeetwenMarkers(tmp[0], '<a', '</a>')[1]
-            subCategoryUrl   = self.cm.ph.getSearchGroups(subCategoryTitle, '''href=['"]([^"^']+?)["']''', 1, True)[0]
-            subCategoryUrl   = self._getFullUrl(subCategoryUrl)
+            subCategoryUrl = self.cm.ph.getSearchGroups(subCategoryTitle, '''href=['"]([^"^']+?)["']''', 1, True)[0]
+            subCategoryUrl = self._getFullUrl(subCategoryUrl)
             subCategoryTitle = self.cleanHtmlStr(subCategoryTitle)
             
             subItemsTab = []
             subItems = self.cm.ph.getAllItemsBeetwenMarkers(tmp[1], '<a ', '</a>')
             for subItem in subItems:
                 title = self.cleanHtmlStr(subItem)
-                url   = self.cm.ph.getSearchGroups(subItem, '''href=['"]([^"^']+?)["']''', 1, True)[0]
+                url = self.cm.ph.getSearchGroups(subItem, '''href=['"]([^"^']+?)["']''', 1, True)[0]
                 subItemsTab.append({'title':title, 'url':self._getFullUrl(url)})
                 
             if len(subItemsTab):
@@ -114,7 +114,7 @@ class Filma24hdCom(CBaseHostClass):
         for item in tab:
             params = dict(cItem)
             params.update(item)
-            params['name']  = 'category'
+            params['name'] = 'category'
             if type == 'dir':
                 self.addDir(params)
             else:
@@ -125,7 +125,7 @@ class Filma24hdCom(CBaseHostClass):
         url = cItem['url']
         if '?' in url:
             post = url.split('?')
-            url  = post[0]
+            url = post[0]
             post = post[1] 
         else:
             post = ''
@@ -153,12 +153,12 @@ class Filma24hdCom(CBaseHostClass):
             if serieItem:
                 item = item.split('<!-- end')[0]
             
-            url    = self.cm.ph.getSearchGroups(item, 'href="([^"]+?)"')[0]
+            url = self.cm.ph.getSearchGroups(item, 'href="([^"]+?)"')[0]
             if url == '':
                 continue
-            icon  = self.cm.ph.getSearchGroups(item, 'src="([^"]+?)"')[0]
+            icon = self.cm.ph.getSearchGroups(item, 'src="([^"]+?)"')[0]
             title = self.cm.ph.getDataBeetwenMarkers(item, '<h2', '</h2>')[1]
-            desc  = self.cleanHtmlStr(item.split('<p class="entry-meta">')[-1])
+            desc = self.cleanHtmlStr(item.split('<p class="entry-meta">')[-1])
             
             params = dict(cItem)
             params.update({'title': self.cleanHtmlStr(title), 'url':self._getFullUrl(url), 'desc': desc, 'icon':self._getFullUrl(icon)})
@@ -166,7 +166,7 @@ class Filma24hdCom(CBaseHostClass):
         
         if nextPage:
             params = dict(cItem)
-            params.update({'title':_('Next page'), 'page':page+1})
+            params.update({'title':_('Next page'), 'page':page + 1})
             self.addDir(params)
             
     def listSeasons(self, cItem, nextCategory):
@@ -202,7 +202,7 @@ class Filma24hdCom(CBaseHostClass):
         videoUrlTab = self.cm.ph.getDataBeetwenMarkers(data, '<video ', '</video>', caseSensitive=False)[1]
         videoUrlTab = re.compile('''<source[^>]*?src=['"](http[^"]+?)['"][^>]*?mp4[^>]*?''', re.IGNORECASE).findall(videoUrlTab)
         for idx in range(len(videoUrlTab)):
-            urlTab.append({'name':'direct %d' % (idx+1), 'url':videoUrlTab[idx], 'need_resolve':0})
+            urlTab.append({'name':'direct %d' % (idx + 1), 'url':videoUrlTab[idx], 'need_resolve':0})
         
         videoUrlTab = self.cm.ph.getDataBeetwenMarkers(data, '<tbody>', '</tbody>', caseSensitive=False)[1]
         videoUrlTab += self.cm.ph.getDataBeetwenMarkers(data, '<map ', '</map>', caseSensitive=False)[1]
@@ -240,7 +240,7 @@ class Filma24hdCom(CBaseHostClass):
         desc = self.cm.ph.getDataBeetwenMarkers(data, m1, m2)[1]
         desc = self.cleanHtmlStr(desc)
         
-        icon  = cItem.get('icon', '')
+        icon = cItem.get('icon', '')
         title = cItem.get('title', '')
         otherInfo = {}
         
@@ -251,7 +251,7 @@ class Filma24hdCom(CBaseHostClass):
         
         CBaseHostClass.handleService(self, index, refresh, searchPattern, searchType)
 
-        name     = self.currItem.get("name", '')
+        name = self.currItem.get("name", '')
         category = self.currItem.get("category", '')
         printDBG("handleService: |||||||||||||||||||||||||||||||||||| name[%s], category[%s] " % (name, category))
         self.currList = []
@@ -326,9 +326,9 @@ class IPTVHost(CHostBase):
             return RetHost(retCode, value=retlist)
         hList = self.host.getArticleContent(cItem)
         for item in hList:
-            title      = item.get('title', '')
-            text       = item.get('text', '')
-            images     = item.get("images", [])
+            title = item.get('title', '')
+            text = item.get('text', '')
+            images = item.get("images", [])
             othersInfo = item.get('other_info', '')
             retlist.append(ArticleContent(title=title, text=text, images=images, richDescParams=othersInfo))
         return RetHost(RetHost.OK, value=retlist)
@@ -359,9 +359,9 @@ class IPTVHost(CHostBase):
             if '' != url:
                 hostLinks.append(CUrlItem("Link", url, 1))
             
-        title       =  cItem.get('title', '')
-        description =  cItem.get('desc', '')
-        icon        =  cItem.get('icon', '')
+        title = cItem.get('title', '')
+        description = cItem.get('desc', '')
+        icon = cItem.get('icon', '')
         
         return CDisplayListItem(name=title,
                                     description=description,

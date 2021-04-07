@@ -52,9 +52,9 @@ class LuxVeritatisPL(CBaseHostClass):
     def listMainMenu(self, cItem):
         printDBG("LuxVeritatisPL.listMainMenu")
         
-        MAIN_CAT_TAB = [{'category':'tv_trwam',       'title': 'TV Trwam',          'url':self.MAIN_URL_T, 'desc':self.MAIN_URL_T, 'icon':self.ICON_URL_T}, 
-                        {'category':'radio',          'title': 'Radio Maryja',      'url':self.MAIN_URL_R, 'desc':self.MAIN_URL_R, 'icon':self.ICON_URL_R}, 
-                        {'category':'search',         'title': _('Search'),          'search_item':True}, 
+        MAIN_CAT_TAB = [{'category':'tv_trwam', 'title': 'TV Trwam', 'url':self.MAIN_URL_T, 'desc':self.MAIN_URL_T, 'icon':self.ICON_URL_T}, 
+                        {'category':'radio', 'title': 'Radio Maryja', 'url':self.MAIN_URL_R, 'desc':self.MAIN_URL_R, 'icon':self.ICON_URL_R}, 
+                        {'category':'search', 'title': _('Search'), 'search_item':True}, 
                         {'category':'search_history', 'title': _('Search history')},]
         
         self.listsTab(MAIN_CAT_TAB, cItem)
@@ -93,7 +93,7 @@ class LuxVeritatisPL(CBaseHostClass):
             tabItems = []
             sectionItem = self.cm.ph.getAllItemsBeetwenMarkers(sectionItem, '<a', '</a>')
             for idx in range(len(sectionItem)):
-                url   = self.getFullUrl(self.cm.ph.getSearchGroups(sectionItem[idx], '''\shref=['"]([^'^"]+?)['"]''')[0])
+                url = self.getFullUrl(self.cm.ph.getSearchGroups(sectionItem[idx], '''\shref=['"]([^'^"]+?)['"]''')[0])
                 title = self.cleanHtmlStr(sectionItem[idx])
                 if idx == 0:
                     title = '--Wszystkie--'
@@ -131,7 +131,7 @@ class LuxVeritatisPL(CBaseHostClass):
             desc = []
             desc.append(self.cleanHtmlStr(tmp[-1]))
             desc.append(self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(item, ('<div', '>', 'text'), ('</div', '>'))[1]))
-            url  = self.getFullUrl(self.cm.ph.getSearchGroups(tmp[0], '''\shref=['"]([^'^"]+?)['"]''')[0])
+            url = self.getFullUrl(self.cm.ph.getSearchGroups(tmp[0], '''\shref=['"]([^'^"]+?)['"]''')[0])
             if '/multimedia/' not in url:
                 continue
             icon = self.getFullIconUrl(self.cm.ph.getSearchGroups(item, '''<img[^>]+?src=['"]([^'^"]+?)['"]''')[0])
@@ -200,7 +200,7 @@ class LuxVeritatisPL(CBaseHostClass):
         tabItems = []
         sectionItem = self.cm.ph.getAllItemsBeetwenMarkers(sectionItem, '<a', '</a>')
         for idx in range(len(sectionItem)):
-            url   = self.getFullUrl(self.cm.ph.getSearchGroups(sectionItem[idx], '''\shref=['"]([^'^"]+?)['"]''')[0])
+            url = self.getFullUrl(self.cm.ph.getSearchGroups(sectionItem[idx], '''\shref=['"]([^'^"]+?)['"]''')[0])
             title = self.cleanHtmlStr(sectionItem[idx])
             if idx == 0:
                 title = '--Wszystkie--'
@@ -253,7 +253,7 @@ class LuxVeritatisPL(CBaseHostClass):
         data = self.cm.ph.getAllItemsBeetwenMarkers(data, '<article', '</article>')
         for item in data:
             title = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(item, '<h1', '</h1>')[1])
-            url  = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''\shref=['"]([^'^"]+?)['"]''')[0])
+            url = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''\shref=['"]([^'^"]+?)['"]''')[0])
             icon = self.getFullIconUrl(self.cm.ph.getSearchGroups(item, '''\ssrc=['"]([^'^"]+?)['"]''')[0])
             
             desc = []
@@ -347,9 +347,9 @@ class LuxVeritatisPL(CBaseHostClass):
         
         CBaseHostClass.handleService(self, index, refresh, searchPattern, searchType)
 
-        name     = self.currItem.get("name", '')
+        name = self.currItem.get("name", '')
         category = self.currItem.get("category", '')
-        mode     = self.currItem.get("mode", '')
+        mode = self.currItem.get("mode", '')
         
         printDBG("handleService: |||| name[%s], category[%s] " % (name, category))
         self.cacheLinks = {}
@@ -396,7 +396,7 @@ class IPTVHost(CHostBase):
     
     def getSearchTypes(self):
         searchTypesOptions = []
-        searchTypesOptions.append(("TV Trwam",     "tv"))
+        searchTypesOptions.append(("TV Trwam", "tv"))
         searchTypesOptions.append(("Radio Maryja", "radio"))
         return searchTypesOptions
     

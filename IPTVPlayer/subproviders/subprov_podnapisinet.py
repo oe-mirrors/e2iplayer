@@ -62,9 +62,9 @@ def GetConfigList():
 class PodnapisiNetProvider(CBaseSubProviderClass): 
     
     def __init__(self, params={}):
-        self.MAIN_URL      = 'https://www.podnapisi.net/'
-        self.USER_AGENT    = 'Mozilla/5.0 (X11; Linux i686) AppleWebKit/537.36 (KHTML, like Gecko) Ubuntu Chromium/37.0.2062.120 Chrome/37.0.2062.120 Safari/537.36'
-        self.HTTP_HEADER   = {'User-Agent':self.USER_AGENT, 'Referer':self.MAIN_URL, 'Accept':'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8', 'Accept-Encoding':'gzip, deflate'}
+        self.MAIN_URL = 'https://www.podnapisi.net/'
+        self.USER_AGENT = 'Mozilla/5.0 (X11; Linux i686) AppleWebKit/537.36 (KHTML, like Gecko) Ubuntu Chromium/37.0.2062.120 Chrome/37.0.2062.120 Safari/537.36'
+        self.HTTP_HEADER = {'User-Agent':self.USER_AGENT, 'Referer':self.MAIN_URL, 'Accept':'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8', 'Accept-Encoding':'gzip, deflate'}
         
         params['cookie'] = 'podnapisinet.cookie'
         CBaseSubProviderClass.__init__(self, params)
@@ -102,11 +102,11 @@ class PodnapisiNetProvider(CBaseSubProviderClass):
             return
         
         data = self.cm.ph.getDataBeetwenNodes(data, ('<div', '>', 'advanced_search_panel'), ('</form', '>'))[1]
-        for filter in [{'key':'movie_type',   'marker':'movie_type'},
+        for filter in [{'key':'movie_type', 'marker':'movie_type'},
                        {'key':'episode_type', 'marker':'episode_type'},
-                       {'key':'flags',        'marker':'flags'},
-                       {'key':'fps',          'marker':'fps'},
-                       {'key':'language',     'marker':'language'}]:
+                       {'key':'flags', 'marker':'flags'},
+                       {'key':'fps', 'marker':'fps'},
+                       {'key':'language', 'marker':'language'}]:
             self.cacheFilters[filter['key']] = []
             tmp = self.cm.ph.getDataBeetwenMarkers(data, filter['marker'], '</select>', False)[1]
             tmp = self.cm.ph.getAllItemsBeetwenMarkers(tmp, '<option', '</option>', withMarkers=True, caseSensitive=False)
@@ -120,7 +120,7 @@ class PodnapisiNetProvider(CBaseSubProviderClass):
                 self.cacheFilters[filter['key']].insert(0, {filter['key']:'', 'title':_('Any')})
                 
         # prepare default values for filters
-        season  = self.dInfo.get('season', None)
+        season = self.dInfo.get('season', None)
         episode = self.dInfo.get('episode', None)
         if season != None and episode != None:
             defaultType = 'tv-series'
@@ -163,12 +163,12 @@ class PodnapisiNetProvider(CBaseSubProviderClass):
         printDBG("PodnapisiNetProvider.listSubItems")
         
         keywords = urllib.parse.quote_plus(self.params['confirmed_title'])
-        year     = cItem.get('year', '')
+        year = cItem.get('year', '')
         language = cItem.get('language', '')
-        season   = None
-        episode  = None
+        season = None
+        episode = None
         if 'tv-series' == cItem.get('movie_type'):
-            season  = self.dInfo.get('season', None)
+            season = self.dInfo.get('season', None)
             episode = self.dInfo.get('episode', None)
         elif 'mini-series' == cItem.get('movie_type'):
             episode = self.dInfo.get('episode', None)
@@ -206,7 +206,7 @@ class PodnapisiNetProvider(CBaseSubProviderClass):
             if len(item) < 1:
                 continue
             title = self.cleanHtmlStr(item[0])
-            url   = self.cm.ph.getSearchGroups(item[0], '''href=["']?([^"^'^\s^>]+?)[\s"'>]''')[0].strip()
+            url = self.cm.ph.getSearchGroups(item[0], '''href=["']?([^"^'^\s^>]+?)[\s"'>]''')[0].strip()
             descTab = []
             for idx in range(len(item)):
                 if idx >= len(rawDesc):
@@ -233,8 +233,8 @@ class PodnapisiNetProvider(CBaseSubProviderClass):
         printDBG("PodnapisiNetProvider.getSubtitlesList")
         
         imdbid = ''
-        subId  = cItem['url'].split('/')[-2]
-        fps    = cItem.get('fps', 0)
+        subId = cItem['url'].split('/')[-2]
+        fps = cItem.get('fps', 0)
         
         urlParams = dict(self.defaultParams)
         tmpDIR = self.downloadAndUnpack(cItem['url'], urlParams)
@@ -248,7 +248,7 @@ class PodnapisiNetProvider(CBaseSubProviderClass):
     def listSubsInPackedFile(self, cItem, nextCategory):
         printDBG("PodnapisiNetProvider.listSubsInPackedFile")
         tmpFile = cItem['file_path']
-        tmpDIR  = tmpFile[:-4]
+        tmpDIR = tmpFile[:-4]
         
         if not self.unpackArchive(tmpFile, tmpDIR):
             return
@@ -272,13 +272,13 @@ class PodnapisiNetProvider(CBaseSubProviderClass):
     def downloadSubtitleFile(self, cItem):
         printDBG("SubsceneComProvider.downloadSubtitleFile")
         retData = {}
-        title    = cItem['title']
-        lang     = cItem['lang']
-        subId    = cItem['sub_id']
-        imdbid   = cItem['imdbid']
+        title = cItem['title']
+        lang = cItem['lang']
+        subId = cItem['sub_id']
+        imdbid = cItem['imdbid']
         inFilePath = cItem['file_path']
-        ext      = cItem.get('ext', 'srt')
-        fps      = cItem.get('fps', 0)
+        ext = cItem.get('ext', 'srt')
+        fps = cItem.get('fps', 0)
         
         outFileName = self._getFileName(title, lang, subId, imdbid, fps, ext)
         outFileName = GetSubtitlesDir(outFileName)
@@ -298,7 +298,7 @@ class PodnapisiNetProvider(CBaseSubProviderClass):
         
         CBaseSubProviderClass.handleService(self, index, refresh)
 
-        name     = self.currItem.get("name", '')
+        name = self.currItem.get("name", '')
         category = self.currItem.get("category", '')
         
         printDBG("handleService: |||||||||||||||||||||||||||||||||||| name[%s], category[%s] " % (name, category))

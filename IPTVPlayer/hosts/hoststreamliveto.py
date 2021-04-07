@@ -32,7 +32,7 @@ from Screens.MessageBox import MessageBox
 ###################################################
 # Config options for HOST
 ###################################################
-config.plugins.iptvplayer.streamliveto_login    = ConfigText(default="", fixed_size=False)
+config.plugins.iptvplayer.streamliveto_login = ConfigText(default="", fixed_size=False)
 config.plugins.iptvplayer.streamliveto_password = ConfigText(default="", fixed_size=False)
 
 def GetConfigList():
@@ -50,9 +50,9 @@ class StreamLiveTo(CBaseHostClass):
     HTTP_MOBILE_HEADER = {'User-Agent': 'Mozilla/5.0 (iPad; U; CPU OS 3_2 like Mac OS X; en-us) AppleWebKit/531.21.10 (KHTML, like Gecko) Version/4.0.4 Mobile/7B334b Safari/531.21.10', 'Accept': 'text/html'}
     MAIN_URL = 'https://www.streamlive.to/'
     
-    MAIN_CAT_TAB = [{'category':'list_filters',    'title': 'Live Channels', 'icon':''},
-                    {'category':'search',          'title': _('Search'), 'search_item':True},
-                    {'category':'search_history',  'title': _('Search history')}]
+    MAIN_CAT_TAB = [{'category':'list_filters', 'title': 'Live Channels', 'icon':''},
+                    {'category':'search', 'title': _('Search'), 'search_item':True},
+                    {'category':'search_history', 'title': _('Search history')}]
 
  
     def __init__(self):
@@ -67,7 +67,7 @@ class StreamLiveTo(CBaseHostClass):
             if url.startswith('//'):
                 url = 'https:' + url
             elif not url.startswith('http'):
-                url =  self.MAIN_URL + url
+                url = self.MAIN_URL + url
         return url
         
     def getPage(self, url, params={}, post_data=None):
@@ -84,7 +84,7 @@ class StreamLiveTo(CBaseHostClass):
         for item in tab:
             params = dict(cItem)
             params.update(item)
-            params['name']  = 'category'
+            params['name'] = 'category'
             if type == 'dir':
                 self.addDir(params)
             else:
@@ -160,7 +160,7 @@ class StreamLiveTo(CBaseHostClass):
         filter = self.cacheFiltersKeys[f_idx]
         f_idx += 1
         cItem['f_idx'] = f_idx
-        if f_idx  == len(self.cacheFiltersKeys):
+        if f_idx == len(self.cacheFiltersKeys):
             cItem['category'] = nextCategory
         self.listsTab(self.cacheFilters.get(filter, []), cItem)
         
@@ -187,14 +187,14 @@ class StreamLiveTo(CBaseHostClass):
         if not sts:
             return
         
-        if 'data-page="{0}"'.format(page+1) in data:
+        if 'data-page="{0}"'.format(page + 1) in data:
             nextPage = True
         else:
             nextPage = False
         
         data = self.cm.ph.rgetAllItemsBeetwenNodes(data.split('<nav>', 1)[0], ('</div', '>'), ('<div', '>', 'item'))
         for item in data:
-            url  = self._getFullUrl(self.cm.ph.getSearchGroups(item, 'href="([^"]+?)"')[0])
+            url = self._getFullUrl(self.cm.ph.getSearchGroups(item, 'href="([^"]+?)"')[0])
             icon = self._getFullUrl(self.cm.ph.getSearchGroups(item, 'src="([^"]+?)"')[0])
             title = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(item, '<strong>', '</strong>', False)[1])
             if '' == title:
@@ -226,7 +226,7 @@ class StreamLiveTo(CBaseHostClass):
                 self.addVideo(params)
         if nextPage:
             params = dict(cItem)
-            params.update({'title':_("Next page"), 'page':page+1})
+            params.update({'title':_("Next page"), 'page':page + 1})
             self.addDir(params)
     
     def listSearchResult(self, cItem, searchPattern, searchType):
@@ -297,9 +297,9 @@ class StreamLiveTo(CBaseHostClass):
             SetIPTVPlayerLastHostError(_('Fail to get "%s".') % captchaUrl)
             return 0
         challenge = self.cm.ph.getSearchGroups(data, '''challenge\s*:\s*['"]([^'^"]+?)['"]''')[0]
-        lang      = self.cm.ph.getSearchGroups(data, '''lang\s*:\s*['"]([^'^"]+?)['"]''')[0]
-        server    = self.cm.ph.getSearchGroups(data, '''server\s*:\s*['"]([^'^"]+?)['"]''')[0]
-        site      = self.cm.ph.getSearchGroups(data, '''site\s*:\s*['"]([^'^"]+?)['"]''')[0]
+        lang = self.cm.ph.getSearchGroups(data, '''lang\s*:\s*['"]([^'^"]+?)['"]''')[0]
+        server = self.cm.ph.getSearchGroups(data, '''server\s*:\s*['"]([^'^"]+?)['"]''')[0]
+        site = self.cm.ph.getSearchGroups(data, '''site\s*:\s*['"]([^'^"]+?)['"]''')[0]
         if '' == challenge or '' == lang or '' == server or '' == site: 
             SetIPTVPlayerLastHostError(errMsg1)
             return 0
@@ -364,8 +364,8 @@ class StreamLiveTo(CBaseHostClass):
             return False, None
         if captchaMarker not in data:
             return True, data
-        data     = self.cm.ph.getDataBeetwenReMarkers(data, re.compile('<form [^>]+?>'), re.compile('</form>'), True)[1]    
-        title    = self.cm.ph.getDataBeetwenMarkers(data, '<h1>', '</h1>')[1]
+        data = self.cm.ph.getDataBeetwenReMarkers(data, re.compile('<form [^>]+?>'), re.compile('</form>'), True)[1]    
+        title = self.cm.ph.getDataBeetwenMarkers(data, '<h1>', '</h1>')[1]
         question = self.cm.ph.getDataBeetwenReMarkers(data, re.compile('</h1>'), re.compile('</form>'), True)[1]
         
         title = self.cleanHtmlStr(title)
@@ -396,7 +396,7 @@ class StreamLiveTo(CBaseHostClass):
             if not sts:
                 return False, None
             resultMarker = 'Your answer is wrong.'
-            if  resultMarker in data:
+            if resultMarker in data:
                 self.sessionEx.open(MessageBox, resultMarker, type=MessageBox.TYPE_ERROR, timeout=10)
             else:
                 return True, data
@@ -404,12 +404,12 @@ class StreamLiveTo(CBaseHostClass):
         
     def doLogin(self, login, password):
         logged = False
-        HTTP_HEADER= dict(self.HTTP_MOBILE_HEADER)
+        HTTP_HEADER = dict(self.HTTP_MOBILE_HEADER)
         HTTP_HEADER.update({'Content-Type':'application/x-www-form-urlencoded; charset=UTF-8', 'X-Requested-With': 'XMLHttpRequest'})
 
         post_data = {'username':login, 'password':password, 'accessed_by':'web', 'submit':'Login', 'x':0, 'y':0}
-        params    = {'header': HTTP_HEADER, 'cookiefile': self.COOKIE_FILE, 'save_cookie': True}
-        loginUrl  = 'https://www.streamlive.to/login.php'
+        params = {'header': HTTP_HEADER, 'cookiefile': self.COOKIE_FILE, 'save_cookie': True}
+        loginUrl = 'https://www.streamlive.to/login.php'
         sts, data = self.cm.getPage(loginUrl, params, post_data)
         if sts and ('/logout"' in data or '/logout.php"' in data):
             logged = True
@@ -420,16 +420,16 @@ class StreamLiveTo(CBaseHostClass):
         
         CBaseHostClass.handleService(self, index, refresh, searchPattern, searchType)
 
-        name     = self.currItem.get("name", '')
+        name = self.currItem.get("name", '')
         category = self.currItem.get("category", '')
-        mode     = self.currItem.get("mode", '')
+        mode = self.currItem.get("mode", '')
         
         printDBG("handleService: |||||||||||||||||||||||||||||||||||| name[%s], category[%s] " % (name, category))
         self.currList = []
         
     #MAIN MENU
         if name == None:
-            login  = config.plugins.iptvplayer.streamliveto_login.value
+            login = config.plugins.iptvplayer.streamliveto_login.value
             passwd = config.plugins.iptvplayer.streamliveto_password.value
             logged = False
             if '' != login.strip() and '' != passwd.strip():

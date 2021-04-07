@@ -5,7 +5,7 @@
 from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _
 from Plugins.Extensions.IPTVPlayer.components.ihost import CHostBase, CBaseHostClass
 from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, byteify
-from Plugins.Extensions.IPTVPlayer.libs.urlparserhelper import  getDirectM3U8Playlist
+from Plugins.Extensions.IPTVPlayer.libs.urlparserhelper import getDirectM3U8Playlist
 ###################################################
 
 ###################################################
@@ -38,10 +38,10 @@ class OkGoals(CBaseHostClass):
         self.MAIN_URL = 'http://www.okgoals.com/'
         self.DEFAULT_ICON_URL = self.getFullUrl('/okgoals_logo.jpg')
         
-        self.MAIN_CAT_TAB = [{'category':'list_items',        'title': _('Main'),       'url':self.getFullUrl('index.php')},
-                             {'category':'list_categories',   'title': _('Categories'), 'url':self.getMainUrl()},
-                             {'category': 'search',            'title': _('Search'),     'search_item': True,},
-                             {'category': 'search_history',    'title': _('Search history'),},
+        self.MAIN_CAT_TAB = [{'category':'list_items', 'title': _('Main'), 'url':self.getFullUrl('index.php')},
+                             {'category':'list_categories', 'title': _('Categories'), 'url':self.getMainUrl()},
+                             {'category': 'search', 'title': _('Search'), 'search_item': True,},
+                             {'category': 'search_history', 'title': _('Search history'),},
                             ]
     def getFullUrl(self, url):
         if url.startswith('//'):
@@ -51,12 +51,12 @@ class OkGoals(CBaseHostClass):
     
     def getBiggerImage(self, icon):
         ICON_PATH = [
-                    {'orig':'images/it.png',    'new':'https://www.bandiere-mondo.it/data/flags/h80/it.png'},
-                    {'orig':'images/pt.png',    'new':'https://www.bandiere-mondo.it/data/flags/h80/pt.png'},
-                    {'orig':'images/fr.png',    'new':'https://www.bandiere-mondo.it/data/flags/h80/fr.png'},
-                    {'orig':'images/de.png',    'new':'https://www.bandiere-mondo.it/data/flags/h80/de.png'},
-                    {'orig':'images/cl.png',    'new':'https://www.calcioweb.eu/wp-content/uploads/2014/04/Logo-Champions-League-bianco.jpg'},
-                    {'orig':'images/uef.png',   'new':'https://img.uefa.com/imgml/uefaorg/new/logo.png'},
+                    {'orig':'images/it.png', 'new':'https://www.bandiere-mondo.it/data/flags/h80/it.png'},
+                    {'orig':'images/pt.png', 'new':'https://www.bandiere-mondo.it/data/flags/h80/pt.png'},
+                    {'orig':'images/fr.png', 'new':'https://www.bandiere-mondo.it/data/flags/h80/fr.png'},
+                    {'orig':'images/de.png', 'new':'https://www.bandiere-mondo.it/data/flags/h80/de.png'},
+                    {'orig':'images/cl.png', 'new':'https://www.calcioweb.eu/wp-content/uploads/2014/04/Logo-Champions-League-bianco.jpg'},
+                    {'orig':'images/uef.png', 'new':'https://img.uefa.com/imgml/uefaorg/new/logo.png'},
                      ]
 
         for i in ICON_PATH:
@@ -76,10 +76,10 @@ class OkGoals(CBaseHostClass):
         data = self.cm.ph.getDataBeetwenMarkers(data, '<ul id="mediamenu">', '</ul>')[1]
         data = self.cm.ph.getAllItemsBeetwenMarkers(data, '<li', '</li>', withMarkers=True)
         for item in data:
-            url   = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''href=['"]([^'^"]+?)['"]''')[0])
+            url = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''href=['"]([^'^"]+?)['"]''')[0])
             if not self.cm.isValidUrl(url):
                 continue
-            icon  = self.getBiggerImage(self.cm.ph.getSearchGroups(item, '''src=['"]([^'^"]+?)['"]''')[0])
+            icon = self.getBiggerImage(self.cm.ph.getSearchGroups(item, '''src=['"]([^'^"]+?)['"]''')[0])
             title = self.cleanHtmlStr(item)
             title = _(title.capitalize())
             params = {'good_for_fav': True, 'category':nextCategory, 'title':title, 'url':url, 'icon':icon}
@@ -95,13 +95,13 @@ class OkGoals(CBaseHostClass):
             return
         
         nextPage = self.cm.ph.getDataBeetwenMarkers(data, '<div class="wpnavi">', '<div class="clear">')[1]
-        nextPage = self.cm.ph.getSearchGroups(nextPage, '''<a[^>]+?href=["']([^'^"]+?)["'][^>]*?>\s*{0}\s*</a>'''.format(page+1))[0]
+        nextPage = self.cm.ph.getSearchGroups(nextPage, '''<a[^>]+?href=["']([^'^"]+?)["'][^>]*?>\s*{0}\s*</a>'''.format(page + 1))[0]
         
         data = self.cm.ph.getAllItemsBeetwenMarkers(data, '<div id="matchlistng">', '</a>', withMarkers=False)
         for item in data:
-            url   = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''href=['"]([^'^"]+?)['"]''')[0])
-            icon  = self.getBiggerImage(self.cm.ph.getSearchGroups(item, '''src=['"]([^'^"]+?)['"]''')[0])
-            desc  = self.cleanHtmlStr(self.cm.ph.getSearchGroups(item, '''alt=['"]([^'^"]+?)['"]''')[0].replace('icon', ''))
+            url = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''href=['"]([^'^"]+?)['"]''')[0])
+            icon = self.getBiggerImage(self.cm.ph.getSearchGroups(item, '''src=['"]([^'^"]+?)['"]''')[0])
+            desc = self.cleanHtmlStr(self.cm.ph.getSearchGroups(item, '''alt=['"]([^'^"]+?)['"]''')[0].replace('icon', ''))
             title = self.cleanHtmlStr(item)
 
             params = {'good_for_fav': True, 'category':nextCategory, 'title':title, 'url':url, 'icon':icon, 'desc':desc}
@@ -161,7 +161,7 @@ class OkGoals(CBaseHostClass):
                 baseUrl = self.cm.ph.getDataBeetwenMarkers(data, '<baseURL>', '</baseURL>', False)[1].strip()
                 data = self.cm.ph.getAllItemsBeetwenMarkers(data, '<media ', '>')
                 for item in data:
-                    url  = self.cm.ph.getSearchGroups(item, '''url=['"]([^'^"]+?)['"]''')[0]
+                    url = self.cm.ph.getSearchGroups(item, '''url=['"]([^'^"]+?)['"]''')[0]
                     height = self.cm.ph.getSearchGroups(item, '''height=['"]([^'^"]+?)['"]''')[0]
                     bitrate = self.cm.ph.getSearchGroups(item, '''bitrate=['"]([^'^"]+?)['"]''')[0]
                     name = '[%s] bitrate:%s height: %s' % (url.split('.')[-1], bitrate, height)
@@ -198,7 +198,7 @@ class OkGoals(CBaseHostClass):
         data = self.cm.ph.getDataBeetwenMarkers(data, 'Founded matches', '<div class="clear">')[1]
         data = self.cm.ph.getAllItemsBeetwenMarkers(data, '<a', '</a>', withMarkers=True)
         for item in data:
-            url   = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''href=['"]([^'^"]+?)['"]''')[0])
+            url = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''href=['"]([^'^"]+?)['"]''')[0])
             title = self.cleanHtmlStr(item)
 
             params = {'good_for_fav': True, 'category':'explore_item', 'title':title, 'url':url}
@@ -233,9 +233,9 @@ class OkGoals(CBaseHostClass):
         
         CBaseHostClass.handleService(self, index, refresh, searchPattern, searchType)
 
-        name     = self.currItem.get("name", '')
+        name = self.currItem.get("name", '')
         category = self.currItem.get("category", '')
-        mode     = self.currItem.get("mode", '')
+        mode = self.currItem.get("mode", '')
         
         printDBG("handleService: |||||||||||||||||||||||||||||||||||| name[%s], category[%s] " % (name, category))
         self.currList = []

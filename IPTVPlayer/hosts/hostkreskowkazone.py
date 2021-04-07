@@ -33,7 +33,7 @@ from Screens.MessageBox import MessageBox
 # Config options for HOST
 ###################################################
 
-config.plugins.iptvplayer.kreskowkazone_login    = ConfigText(default="", fixed_size=False)
+config.plugins.iptvplayer.kreskowkazone_login = ConfigText(default="", fixed_size=False)
 config.plugins.iptvplayer.kreskowkazone_password = ConfigText(default="", fixed_size=False)
 
 def GetConfigList():
@@ -59,23 +59,23 @@ class KreskowkaZonePL(CBaseHostClass):
         self.MAIN_URL = 'https://www.kreskowkazone.pl/'
         self.DEFAULT_ICON_URL = self.MAIN_URL + 'images/sprites.png'
         
-        self.MAIN_TAB = [{'category':'main',              'title': 'Główna',       'url':self.MAIN_URL,                   'icon':self.DEFAULT_ICON_URL},
-                         {'category':'cartoons',          'title': 'Kreskówki',    'url':self.MAIN_URL,                   'icon':self.DEFAULT_ICON_URL},
-                         {'category':'list_items',        'title': 'Seriale',      'url':self.MAIN_URL+'seriale',         'icon':self.DEFAULT_ICON_URL},
-                         {'category':'rank',              'title': 'Ranking',      'url':self.MAIN_URL+'ranking_anime',   'icon':self.DEFAULT_ICON_URL},
-                         {'category':'search',            'title': _('Search'), 'search_item':True,         'icon':self.DEFAULT_ICON_URL},
-                         {'category':'search_history',    'title': _('Search history'),                     'icon':self.DEFAULT_ICON_URL}]
+        self.MAIN_TAB = [{'category':'main', 'title': 'Główna', 'url':self.MAIN_URL, 'icon':self.DEFAULT_ICON_URL},
+                         {'category':'cartoons', 'title': 'Kreskówki', 'url':self.MAIN_URL, 'icon':self.DEFAULT_ICON_URL},
+                         {'category':'list_items', 'title': 'Seriale', 'url':self.MAIN_URL + 'seriale', 'icon':self.DEFAULT_ICON_URL},
+                         {'category':'rank', 'title': 'Ranking', 'url':self.MAIN_URL + 'ranking_anime', 'icon':self.DEFAULT_ICON_URL},
+                         {'category':'search', 'title': _('Search'), 'search_item':True, 'icon':self.DEFAULT_ICON_URL},
+                         {'category':'search_history', 'title': _('Search history'), 'icon':self.DEFAULT_ICON_URL}]
                              
-        self.CARTOONS_CAT_TAB = [{'category':'list_abc',    'title': 'Lista kreskówek',       'url':self.MAIN_URL+'lista_kreskowek-0'},
-                                 {'category':'list_abc',    'title': 'Lista filmów',          'url':self.MAIN_URL+'lista_filmow-0'},
-                                 {'category':'list_items',  'title': 'Wychodzące kreskówki',  'url':self.MAIN_URL+'wychodzace'},
-                                 {'category':'list_items',  'title': 'Wychodzące seriale',    'url':self.MAIN_URL+'wychodzace-seriale'},
-                                 {'category':'list_items',  'title': 'Nadchodzące',           'url':self.MAIN_URL+'nadchodzace'}]
+        self.CARTOONS_CAT_TAB = [{'category':'list_abc', 'title': 'Lista kreskówek', 'url':self.MAIN_URL + 'lista_kreskowek-0'},
+                                 {'category':'list_abc', 'title': 'Lista filmów', 'url':self.MAIN_URL + 'lista_filmow-0'},
+                                 {'category':'list_items', 'title': 'Wychodzące kreskówki', 'url':self.MAIN_URL + 'wychodzace'},
+                                 {'category':'list_items', 'title': 'Wychodzące seriale', 'url':self.MAIN_URL + 'wychodzace-seriale'},
+                                 {'category':'list_items', 'title': 'Nadchodzące', 'url':self.MAIN_URL + 'nadchodzace'}]
                                  
-        self.MAIN_CAT_TAB = [{'category':'list_items',                            'title': 'Najnowsze seriale',       'url':self.MAIN_URL},
-                             {'category':'list_items',    'm1':'Najnowsze serie', 'title': 'Lista filmów',            'url':self.MAIN_URL}]
+        self.MAIN_CAT_TAB = [{'category':'list_items', 'title': 'Najnowsze seriale', 'url':self.MAIN_URL},
+                             {'category':'list_items', 'm1':'Najnowsze serie', 'title': 'Lista filmów', 'url':self.MAIN_URL}]
 
-        self.login    = ''
+        self.login = ''
         self.password = ''
         self.cacheLinks = {}
         self.rankCache = {}
@@ -95,12 +95,12 @@ class KreskowkaZonePL(CBaseHostClass):
         self.rankCache = {}
         data = self.cm.ph.getAllItemsBeetwenMarkers(data, '<div class="naglowek naglowek-click">', '</table>', withMarkers=True)
         for rankData in data:
-            rankTile  = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(rankData, '<h2>', '</h2>')[1])
+            rankTile = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(rankData, '<h2>', '</h2>')[1])
             rankItems = []
             items = self.cm.ph.getAllItemsBeetwenMarkers(rankData, '<tr class="wiersz">', '</tr>', withMarkers=True)
             for item in items:
-                url    = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''href=['"]([^'^"]+?)['"]''')[0])
-                title   = self.cleanHtmlStr(item)
+                url = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''href=['"]([^'^"]+?)['"]''')[0])
+                title = self.cleanHtmlStr(item)
                 rankItems.append({'title':title, 'url':url})
                 
             if len(rankItems):
@@ -125,8 +125,8 @@ class KreskowkaZonePL(CBaseHostClass):
         data = self.cm.ph.getDataBeetwenMarkers(data, '<ul class="litery-conteiner">', '</ul>')[1]
         data = self.cm.ph.getAllItemsBeetwenMarkers(data, '<li ', '</li>', withMarkers=True)
         for item in data:
-            url    = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''href=['"]([^'^"]+?)['"]''')[0])
-            title  = self.cleanHtmlStr(item)
+            url = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''href=['"]([^'^"]+?)['"]''')[0])
+            title = self.cleanHtmlStr(item)
             params = dict(cItem)
             params.update({'good_for_fav': False, 'category':nextCategory, 'title':title, 'url':url})
             self.addDir(params)
@@ -145,12 +145,12 @@ class KreskowkaZonePL(CBaseHostClass):
         data = self.cm.ph.getDataBeetwenMarkers(data, m1, '</ul>')[1]
         data = self.cm.ph.getAllItemsBeetwenMarkers(data, '<div class="box">', '</li>', withMarkers=True)
         for item in data:
-            tmp    = self.cm.ph.getDataBeetwenMarkers(item, '<div class="box-title">', '</div>')[1]
-            url    = self.getFullUrl(self.cm.ph.getSearchGroups(tmp, '''href=['"]([^'^"]+?)['"]''')[0])
+            tmp = self.cm.ph.getDataBeetwenMarkers(item, '<div class="box-title">', '</div>')[1]
+            url = self.getFullUrl(self.cm.ph.getSearchGroups(tmp, '''href=['"]([^'^"]+?)['"]''')[0])
             if not self.cm.isValidUrl(url):
                 url = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''href=['"]([^'^"]+?)['"]''')[0])
-            icon   = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''src=['"]([^'^"]+?)['"]''')[0])
-            title  = self.cleanHtmlStr(tmp)
+            icon = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''src=['"]([^'^"]+?)['"]''')[0])
+            title = self.cleanHtmlStr(tmp)
             if title == '':
                 title = self.cm.ph.getSearchGroups(item, '''title=['"]([^'^"]+?)['"]''')[0]
             if title == '':
@@ -160,7 +160,7 @@ class KreskowkaZonePL(CBaseHostClass):
             if newUrl != '':
                 url = newUrl
             
-            desc   = self.cleanHtmlStr(item)
+            desc = self.cleanHtmlStr(item)
             params = dict(cItem)
             params.update({'good_for_fav': True, 'category':nextCategory, 'title':title, 'url':url, 'icon':icon, 'desc':desc})
             self.addDir(params)
@@ -174,9 +174,9 @@ class KreskowkaZonePL(CBaseHostClass):
         
         data = self.cm.ph.getAllItemsBeetwenMarkers(data, '<tr class="wiersz">', '</tr>', withMarkers=True)
         for item in data:
-            url    = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''href=['"]([^'^"]+?)['"]''')[0])
-            tmp    = self.cm.ph.getAllItemsBeetwenMarkers(item, '<td ', '</td>', withMarkers=True)
-            title  = self.cleanHtmlStr(' '.join(tmp[:-1]))
+            url = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''href=['"]([^'^"]+?)['"]''')[0])
+            tmp = self.cm.ph.getAllItemsBeetwenMarkers(item, '<td ', '</td>', withMarkers=True)
+            title = self.cleanHtmlStr(' '.join(tmp[:-1]))
             params = dict(cItem)
             params.update({'good_for_fav': True, 'title':cItem['title'] + ': ' + title, 'url':url})
             self.addVideo(params)
@@ -202,9 +202,9 @@ class KreskowkaZonePL(CBaseHostClass):
         varName = self.cm.ph.getSearchGroups(data, '''var\s*__gaq\s*=\s*['"]([^'^"]+?)['"]''')[0]
         data = self.cm.ph.getAllItemsBeetwenMarkers(data, '<tr class="wiersz">', '</tr>', withMarkers=True)
         for item in data:
-            url    = self.cm.ph.getSearchGroups(item, '''%s=['"]([^'^"]+?)['"]''' % varName)[0]
-            tmp    = self.cm.ph.getAllItemsBeetwenMarkers(item, '<td ', '</td>', withMarkers=True)
-            title  = self.cleanHtmlStr(' '.join(tmp))
+            url = self.cm.ph.getSearchGroups(item, '''%s=['"]([^'^"]+?)['"]''' % varName)[0]
+            tmp = self.cm.ph.getAllItemsBeetwenMarkers(item, '<td ', '</td>', withMarkers=True)
+            title = self.cleanHtmlStr(' '.join(tmp))
             url = strwithmeta(url, {'origin_url':cItem['url']})
             urlTab.append({'name':title, 'url':url, 'need_resolve':1})
         
@@ -318,15 +318,15 @@ class KreskowkaZonePL(CBaseHostClass):
             if not loggedIn:
                 self.sessionEx.open(MessageBox, 'Problem z zalogowaniem użytkownika "%s".' % config.plugins.iptvplayer.kreskowkazone_login.value, type=MessageBox.TYPE_INFO, timeout=10)
             else:
-                self.login    = config.plugins.iptvplayer.kreskowkazone_login.value
+                self.login = config.plugins.iptvplayer.kreskowkazone_login.value
                 self.password = config.plugins.iptvplayer.kreskowkazone_password.value
                 #self.sessionEx.open(MessageBox, 'Zostałeś poprawnie \nzalogowany.\n' + msg, type = MessageBox.TYPE_INFO, timeout = 10 )
         
         CBaseHostClass.handleService(self, index, refresh, searchPattern, searchType)
 
-        name     = self.currItem.get("name", '')
+        name = self.currItem.get("name", '')
         category = self.currItem.get("category", '')
-        mode     = self.currItem.get("mode", '')
+        mode = self.currItem.get("mode", '')
         
         printDBG("handleService: |||||||||||||||||||||||||||||||||||| name[%s], category[%s] " % (name, category))
         self.currList = []
@@ -418,9 +418,9 @@ class IPTVHost(CHostBase):
             if '' != url:
                 hostLinks.append(CUrlItem("Link", url, 1))
             
-        title       =  cItem.get('title', '')
-        description =  cItem.get('desc', '')
-        icon        =  cItem.get('icon', '')
+        title = cItem.get('title', '')
+        description = cItem.get('desc', '')
+        icon = cItem.get('icon', '')
         if icon == '':
             icon = self.host.DEFAULT_ICON_URL
         isGoodForFavourites = cItem.get('good_for_fav', False)

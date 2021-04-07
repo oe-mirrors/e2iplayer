@@ -35,7 +35,7 @@ class KinogoCC(CBaseHostClass):
         self.AJAX_HEADER = dict(self.HTTP_HEADER)
         self.AJAX_HEADER.update({'X-Requested-With': 'XMLHttpRequest', 'Accept-Encoding':'gzip, deflate', 'Content-Type':'application/x-www-form-urlencoded; charset=UTF-8', 'Accept':'application/json, text/javascript, */*; q=0.01'})
         
-        self.cacheLinks    = {}
+        self.cacheLinks = {}
         self.defaultParams = {'header':self.HTTP_HEADER, 'search_charset':True, 'with_metadata':True, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
         
         self.cacheSeriesLetter = []
@@ -94,7 +94,7 @@ class KinogoCC(CBaseHostClass):
                 params.update({'good_for_fav':True, 'category':'sub_items', 'title':sTitle, 'sub_items':subItems})
                 self.addDir(params)
         
-        MAIN_CAT_TAB = [{'category':'search',         'title': _('Search'),        'search_item':True}, 
+        MAIN_CAT_TAB = [{'category':'search', 'title': _('Search'), 'search_item':True}, 
                         {'category':'search_history', 'title': _('Search history')},]
         self.listsTab(MAIN_CAT_TAB, cItem)
         
@@ -158,7 +158,7 @@ class KinogoCC(CBaseHostClass):
                 params.update({'title':_('Next page'), 'url':self.getFullUrl(nextPage), 'page':page + 1})
                 self.addDir(params)
             elif post_data != None:
-                params['post_data'].update({'search_start':page+1, 'result_from':(page) * 30 + 1})
+                params['post_data'].update({'search_start':page + 1, 'result_from':(page) * 30 + 1})
                 params.update({'title':_('Next page'), 'page':page + 1})
                 self.addDir(params)
     
@@ -241,7 +241,7 @@ class KinogoCC(CBaseHostClass):
                             printDBG(">>\n%s\n<<" % tmp)
                             tmp = tmp.split('},')
                             for item in tmp:
-                                title =  self.cleanHtmlStr(self.cm.ph.getSearchGroups(item, '''['"]comment['"]\s*?:\s*?['"]([^'^"]+?)['"]''')[0])
+                                title = self.cleanHtmlStr(self.cm.ph.getSearchGroups(item, '''['"]comment['"]\s*?:\s*?['"]([^'^"]+?)['"]''')[0])
                                 url = self.cm.ph.getSearchGroups(item, '''['"]file['"]\s*?:\s*?['"](https?://[^'^"]+?)['"]''')[0]
                                 if url == '':
                                     continue
@@ -281,9 +281,9 @@ class KinogoCC(CBaseHostClass):
         
         CBaseHostClass.handleService(self, index, refresh, searchPattern, searchType)
 
-        name     = self.currItem.get("name", '')
+        name = self.currItem.get("name", '')
         category = self.currItem.get("category", '')
-        mode     = self.currItem.get("mode", '')
+        mode = self.currItem.get("mode", '')
         
         printDBG("handleService: |||| name[%s], category[%s] " % (name, category))
         self.cacheLinks = {}

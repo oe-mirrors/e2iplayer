@@ -59,13 +59,13 @@ class ogladajto(CBaseHostClass):
         self.AJAX_HEADER.update({'X-Requested-With': 'XMLHttpRequest', 'Accept-Encoding':'gzip, deflate', 'Content-Type':'application/x-www-form-urlencoded; charset=UTF-8', 'Accept':'application/json, text/javascript, */*; q=0.01'})
 
         self.cacheMovieFilters = {'cats':[], 'sort':[], 'years':[], 'az':[]}        
-        self.cacheLinks    = {}
+        self.cacheLinks = {}
         self.defaultParams = {'header':self.HTTP_HEADER, 'with_metadata':True, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
         self.ajaxParams = {'header':self.AJAX_HEADER, 'with_metadata':True, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
 
         self.loggedIn = None
-        self.login     = ''
-        self.password  = ''
+        self.login = ''
+        self.password = ''
         self.postLogin = ''
 
     def getPage(self, baseUrl, addParams={}, post_data=None):
@@ -88,14 +88,14 @@ class ogladajto(CBaseHostClass):
     def listMainMenu(self, cItem):
         printDBG("ogladajto.listMainMenu")
 
-        MAIN_CAT_TAB = [{'category':'list_sort',      'title': _('Movies'),         'url':self.getFullUrl('/filmy/')},
-                        {'category':'list_sort',      'title': _('Series'),         'url':self.getFullUrl('/seriale/')},
-                        {'category':'list_sort',      'title': _('Children'),       'url':self.getFullUrl('/gatunek/dla-dzieci/')},
-                        {'category':'list_items',     'title': _('Highlights'),     'url':self.getFullUrl('/polecane/')},
+        MAIN_CAT_TAB = [{'category':'list_sort', 'title': _('Movies'), 'url':self.getFullUrl('/filmy/')},
+                        {'category':'list_sort', 'title': _('Series'), 'url':self.getFullUrl('/seriale/')},
+                        {'category':'list_sort', 'title': _('Children'), 'url':self.getFullUrl('/gatunek/dla-dzieci/')},
+                        {'category':'list_items', 'title': _('Highlights'), 'url':self.getFullUrl('/polecane/')},
 #                        {'category':'list_years',     'title': _('Movies by year'), 'url':self.MAIN_URL},
-                        {'category':'list_cats',      'title': _('Categories'),     'url':self.MAIN_URL},
+                        {'category':'list_cats', 'title': _('Categories'), 'url':self.MAIN_URL},
 #                        {'category':'list_az',        'title': _('Alphabetically'), 'url':self.MAIN_URL},
-                        {'category':'search',         'title': _('Search'),         'search_item':True}, 
+                        {'category':'search', 'title': _('Search'), 'search_item':True}, 
                         {'category':'search_history', 'title': _('Search history')},]
         self.listsTab(MAIN_CAT_TAB, cItem)
     
@@ -168,7 +168,7 @@ class ogladajto(CBaseHostClass):
         self.setMainUrl(data.meta['url'])
             
         nextPage = self.cm.ph.getDataBeetwenNodes(data, ('<div', '>', 'pagination'), ('</div', '>'))[1]
-        if '' != self.cm.ph.getSearchGroups(nextPage, 'strona(%s)[^0-9]' % (page+1))[0]:
+        if '' != self.cm.ph.getSearchGroups(nextPage, 'strona(%s)[^0-9]' % (page + 1))[0]:
             nextPage = True
         else:
             nextPage = False
@@ -256,7 +256,7 @@ class ogladajto(CBaseHostClass):
         urlTab = []
         tmp = self.cm.ph.getAllItemsBeetwenNodes(data, ('<iframe', '>'), ('</iframe', '>'))
         for item in tmp:
-            url  = self.cm.ph.getSearchGroups(item, '''src=['"]([^'^"]+?)['"]''')[0]
+            url = self.cm.ph.getSearchGroups(item, '''src=['"]([^'^"]+?)['"]''')[0]
             urlTab.append({'name':self.up.getHostName(url), 'url':strwithmeta(url, {'Referer':cItem['url']}), 'need_resolve':1})
 
         return urlTab
@@ -300,10 +300,10 @@ class ogladajto(CBaseHostClass):
 
             post_data = {'submit':'', 'ahd_username':self.login, 'ahd_password':self.password}
             data = self.cm.ph.getDataBeetwenNodes(data, ('<form', '>', 'zaloguj'), ('</form', '>'))[1]
-            url  = self.cm.ph.getSearchGroups(data, '''action=['"]([^'^"]+?)['"]''')[0]
+            url = self.cm.ph.getSearchGroups(data, '''action=['"]([^'^"]+?)['"]''')[0]
             inputData = self.cm.ph.getAllItemsBeetwenMarkers(data, '<input type="hidden"', '>')
             for item in inputData:
-                name  = self.cm.ph.getSearchGroups(item, '''name=['"]([^'^"]+?)['"]''')[0]
+                name = self.cm.ph.getSearchGroups(item, '''name=['"]([^'^"]+?)['"]''')[0]
                 value = self.cm.ph.getSearchGroups(item, '''value=['"]([^'^"]+?)['"]''')[0]
                 post_data[name] = value
             self.postLogin = post_data
@@ -332,9 +332,9 @@ class ogladajto(CBaseHostClass):
         
         CBaseHostClass.handleService(self, index, refresh, searchPattern, searchType)
 
-        name     = self.currItem.get("name", '')
+        name = self.currItem.get("name", '')
         category = self.currItem.get("category", '')
-        mode     = self.currItem.get("mode", '')
+        mode = self.currItem.get("mode", '')
         
         printDBG("handleService: |||| name[%s], category[%s] " % (name, category))
         self.cacheLinks = {}

@@ -26,9 +26,9 @@ from Components.config import config, ConfigSelection, getConfigListEntry
 ###################################################
 # Config options for HOST
 ###################################################
-config.plugins.iptvplayer.akoam_proxy = ConfigSelection(default="None", choices=[("None",     _("None")),
-                                                                                     ("proxy_1",  _("Alternative proxy server (1)")),
-                                                                                     ("proxy_2",  _("Alternative proxy server (2)"))])
+config.plugins.iptvplayer.akoam_proxy = ConfigSelection(default="None", choices=[("None", _("None")),
+                                                                                     ("proxy_1", _("Alternative proxy server (1)")),
+                                                                                     ("proxy_2", _("Alternative proxy server (2)"))])
 def GetConfigList():
     optionList = []
     optionList.append(getConfigListEntry(_("Use proxy server:"), config.plugins.iptvplayer.akoam_proxy))
@@ -50,7 +50,7 @@ class AkoAm(CBaseHostClass):
         
         self.DEFAULT_ICON_URL = self.getFullIconUrl('/scripts/site/img/main_logo.png')
         
-        self.cacheLinks    = {}
+        self.cacheLinks = {}
         self.defaultParams = {'header':self.HTTP_HEADER, 'with_metadata':True, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
         
     def setMainUrl(self, url):
@@ -111,8 +111,8 @@ class AkoAm(CBaseHostClass):
         data = self.cm.ph.getAllItemsBeetwenMarkers(data, '<li', '</li>')
         for item in data:
             title = self.cleanHtmlStr(item)
-            url   = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''href=['"]([^"^']+?)['"]''')[0])
-            desc  = self.cleanHtmlStr(self.cm.ph.getSearchGroups(item, '''title=['"]([^"^']+?)['"]''')[0])
+            url = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''href=['"]([^"^']+?)['"]''')[0])
+            desc = self.cleanHtmlStr(self.cm.ph.getSearchGroups(item, '''title=['"]([^"^']+?)['"]''')[0])
             params = dict(cItem)
             params.update({'category':nextCategory, 'title':title, 'url':url, 'desc':desc})
             self.addDir(params)
@@ -120,7 +120,7 @@ class AkoAm(CBaseHostClass):
         if 0 == len(self.currList):
             return
         
-        MAIN_CAT_TAB = [{'category':'search',         'title': _('Search'),        'search_item':True}, 
+        MAIN_CAT_TAB = [{'category':'search', 'title': _('Search'), 'search_item':True}, 
                         {'category':'search_history', 'title': _('Search history')},]
         self.listsTab(MAIN_CAT_TAB, cItem)
         
@@ -135,7 +135,7 @@ class AkoAm(CBaseHostClass):
         tmp = self.cm.ph.getDataBeetwenNodes(data, ('<div', '>', 'sect_parts'), ('</ul', '>'), False)[1]
         tmp = self.cm.ph.getAllItemsBeetwenMarkers(tmp, '<li', '</li>')
         for item in tmp:
-            url   = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''href=['"]([^"^']+?)['"]''')[0])
+            url = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''href=['"]([^"^']+?)['"]''')[0])
             if url == '':
                 continue
             title = self.cleanHtmlStr(item)
@@ -178,12 +178,12 @@ class AkoAm(CBaseHostClass):
         for item in data:
             if 'next_prev' in item:
                 continue
-            url   = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''href=['"]([^"^']+?)['"]''')[0])
-            icon  = self.getFullIconUrl(self.cm.ph.getSearchGroups(item, '''src=['"]([^"^']+?)['"]''')[0])
+            url = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''href=['"]([^"^']+?)['"]''')[0])
+            icon = self.getFullIconUrl(self.cm.ph.getSearchGroups(item, '''src=['"]([^"^']+?)['"]''')[0])
             if icon == '':
-                icon  = self.getFullIconUrl(self.cm.ph.getDataBeetwenMarkers(item, 'url(', ');', False)[1].strip())
+                icon = self.getFullIconUrl(self.cm.ph.getDataBeetwenMarkers(item, 'url(', ');', False)[1].strip())
             title = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(item, ('<h', '>'), ('</h', '>'), False)[1])
-            desc  = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(item, ('<span', '>', 'desc'), ('</span', '>'), False)[1])
+            desc = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(item, ('<span', '>', 'desc'), ('</span', '>'), False)[1])
             params = {'good_for_fav':True, 'priv_has_art':True, 'category':nextCategory, 'url':url, 'title':title, 'desc':desc, 'icon':icon}
             self.addDir(params)
         
@@ -240,10 +240,10 @@ class AkoAm(CBaseHostClass):
         cUrl = data.meta['url']
         self.setMainUrl(cUrl)
         
-        iIcon  = self.cm.ph.getDataBeetwenNodes(data, ('<img', '>', 'main_img'), ('<', '>'))[1]
-        iIcon  = self.getFullIconUrl(self.cm.ph.getSearchGroups(iIcon, '''src=['"]([^"^']+?)['"]''', 1, True)[0])
+        iIcon = self.cm.ph.getDataBeetwenNodes(data, ('<img', '>', 'main_img'), ('<', '>'))[1]
+        iIcon = self.getFullIconUrl(self.cm.ph.getSearchGroups(iIcon, '''src=['"]([^"^']+?)['"]''', 1, True)[0])
         iTitle = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(data, ('<', '>', 'sub_title'), ('</h', '>'))[1])
-        iDesc  = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(data, ('<div', '>', 'sub_desc'), ('</div', '>'))[1])
+        iDesc = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(data, ('<div', '>', 'sub_desc'), ('</div', '>'))[1])
         
         tmp = self.cm.ph.getDataBeetwenNodes(data, ('<div', '>', 'sub_trailer'), ('</div', '>'))[1]
         iTrailer = self.getFullUrl(self.cm.ph.getSearchGroups(tmp, '''<iframe[^>]+?src=['"]([^"^']+?youtube[^"^']+?)['"]''', 1, True)[0])
@@ -273,7 +273,7 @@ class AkoAm(CBaseHostClass):
                 if '#FFD700' not in item:
                     continue
                 title = self.cleanHtmlStr(item)
-                url   = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''href=['"]([^"^']+?)['"]''')[0])
+                url = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''href=['"]([^"^']+?)['"]''')[0])
                 params = dict(cItem)
                 params.update({'title':'%s - %s' % (iTitle, title), 'url':url, 'icon':iIcon, 'desc':''})
                 self.addDir(params)
@@ -379,10 +379,10 @@ class AkoAm(CBaseHostClass):
         cUrl = data.meta['url']
         self.setMainUrl(cUrl)
         
-        icon  = self.cm.ph.getDataBeetwenNodes(data, ('<img', '>', 'main_img'), ('<', '>'))[1]
-        icon  = self.getFullIconUrl(self.cm.ph.getSearchGroups(icon, '''src=['"]([^"^']+?)['"]''', 1, True)[0])
+        icon = self.cm.ph.getDataBeetwenNodes(data, ('<img', '>', 'main_img'), ('<', '>'))[1]
+        icon = self.getFullIconUrl(self.cm.ph.getSearchGroups(icon, '''src=['"]([^"^']+?)['"]''', 1, True)[0])
         title = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(data, ('<', '>', 'sub_title'), ('</h', '>'))[1])
-        desc  = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(data, ('<div', '>', 'sub_desc'), ('</div', '>'))[1])
+        desc = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(data, ('<div', '>', 'sub_desc'), ('</div', '>'))[1])
         
         descData = self.cm.ph.getDataBeetwenNodes(data, ('<div', '>', 'sub_mainInfo'), ('<div', '>', 'sub_socialMedia'), False)[1]
         
@@ -390,11 +390,11 @@ class AkoAm(CBaseHostClass):
         if tmp != '':
             otherInfo['imdb_rating'] = tmp.replace(' ', '')
 
-        descTabMap = {"المدة الزمنية":     "duration",
-                      "سنة الانتاج":        "year",
-                      "محتوى الفيلم":      "genre",
-                      "اللغة":             "language",
-                      "جودة الصورة":       "quality"}
+        descTabMap = {"المدة الزمنية": "duration",
+                      "سنة الانتاج": "year",
+                      "محتوى الفيلم": "genre",
+                      "اللغة": "language",
+                      "جودة الصورة": "quality"}
         
         reObj = re.compile('''<i[^>]*?>''', re.I)
         descData = self.cm.ph.getAllItemsBeetwenNodes(descData, ('<li', '>'), ('</li', '>'), False)
@@ -411,10 +411,10 @@ class AkoAm(CBaseHostClass):
                     continue
         
         reObj = re.compile('''<[\s\\/]*?br[\s\\/]*?>''', re.I)
-        descTabMap = {"بطولة الفيلم":     "actors",
-                      "ﺇﺧﺮاﺝ":            "director",
-                      "ﺗﺄﻟﻴﻒ":            "writers",
-                      "التصنيف":          "categories",
+        descTabMap = {"بطولة الفيلم": "actors",
+                      "ﺇﺧﺮاﺝ": "director",
+                      "ﺗﺄﻟﻴﻒ": "writers",
+                      "التصنيف": "categories",
                       }
         descData = self.cm.ph.getDataBeetwenNodes(data, ('<div', '>', 'sub_desc'), ('<div', '>', 'clear'), False)[1]
         descData = re.compile('''<span[^>]+?color\:[^>]+?>''').split(descData)
@@ -447,9 +447,9 @@ class AkoAm(CBaseHostClass):
         
         CBaseHostClass.handleService(self, index, refresh, searchPattern, searchType)
 
-        name     = self.currItem.get("name", '')
+        name = self.currItem.get("name", '')
         category = self.currItem.get("category", '')
-        mode     = self.currItem.get("mode", '')
+        mode = self.currItem.get("mode", '')
         
         printDBG("handleService: |||| name[%s], category[%s] " % (name, category))
         self.cacheLinks = {}

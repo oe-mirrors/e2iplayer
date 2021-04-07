@@ -26,13 +26,13 @@ def gettytul():
     return 'http://ustream.tv/'
 
 class UstreamTV(CBaseHostClass):
-    MAIN_URL    = 'https://www.ustream.tv/'
-    SRCH_URL    = MAIN_URL + 'search?q='
+    MAIN_URL = 'https://www.ustream.tv/'
+    SRCH_URL = MAIN_URL + 'search?q='
     DEFAULT_ICON_URL = 'http://occopwatch-com.secure40.ezhostingserver.com/wp-content/uploads/2013/10/ustream-logo.jpg'
     
-    MAIN_CAT_TAB = [{'category':'items',          'title': _('Popular'),        'icon':DEFAULT_ICON_URL, 'cat_id':'all', 'filters':{'subCategory':'', 'type':'no-offline', 'location':'anywhere'}},
-                    {'category':'categories',     'title': _('Categories'),     'icon':DEFAULT_ICON_URL, 'filters':{}},
-                    {'category':'search',         'title': _('Search'),         'icon':DEFAULT_ICON_URL, 'search_item':True},
+    MAIN_CAT_TAB = [{'category':'items', 'title': _('Popular'), 'icon':DEFAULT_ICON_URL, 'cat_id':'all', 'filters':{'subCategory':'', 'type':'no-offline', 'location':'anywhere'}},
+                    {'category':'categories', 'title': _('Categories'), 'icon':DEFAULT_ICON_URL, 'filters':{}},
+                    {'category':'search', 'title': _('Search'), 'icon':DEFAULT_ICON_URL, 'search_item':True},
                     {'category':'search_history', 'title': _('Search history'), 'icon':DEFAULT_ICON_URL} 
                    ]
  
@@ -85,7 +85,7 @@ class UstreamTV(CBaseHostClass):
         for item in tab:
             params = dict(cItem)
             params.update(item)
-            params['name']  = 'category'
+            params['name'] = 'category'
             if type == 'dir':
                 self.addDir(params)
             else:
@@ -94,21 +94,21 @@ class UstreamTV(CBaseHostClass):
     def buildUrl(self, cItem):
         if 'q' in cItem:
             return self.SRCH_URL + cItem['q']
-        cat_id  = cItem['cat_id']
+        cat_id = cItem['cat_id']
         url = self.MAIN_URL + 'explore/%s/all' % (cat_id)
         return url.replace('/all/all', '/all')
     
     def buildJsonUrl(self, cItem):
         if 'q' in cItem:
-            cat_id  = cItem['q']
+            cat_id = cItem['q']
             url = self.MAIN_URL + 'ajax/search.json?q=%s&category=%s&type=%s&location=%s'
             catFilterName = 'category'
         else:
-            cat_id  = cItem['cat_id']
+            cat_id = cItem['cat_id']
             url = self.MAIN_URL + 'ajax-alwayscache/explore/%s/all.json?subCategory=%s&type=%s&location=%s'
             catFilterName = 'subCategory'
         filters = cItem.get('filters', {})
-        page    = cItem.get('page', 1)
+        page = cItem.get('page', 1)
         url = url % (cat_id, filters.get(catFilterName, ''), filters.get('type', ''), filters.get('location', ''))
         if page > 1:
             url += '&page=%s' % page
@@ -151,10 +151,10 @@ class UstreamTV(CBaseHostClass):
             del data[0]
             for item in data:
                 params = dict(cItem)
-                url   = self.cm.ph.getSearchGroups(item, 'href="([^"]+?)"')[0]
+                url = self.cm.ph.getSearchGroups(item, 'href="([^"]+?)"')[0]
                 title = self.cm.ph.getSearchGroups(item, 'title="([^"]+?)"')[0]
-                icon  = self.cm.ph.getSearchGroups(item, 'src="([^"]+?)"')[0]
-                desc  = self.cleanHtmlStr(item)
+                icon = self.cm.ph.getSearchGroups(item, 'src="([^"]+?)"')[0]
+                desc = self.cleanHtmlStr(item)
                 params.update({'title':self.cleanHtmlStr(title), 'icon':self._getFullUrl(icon), 'desc':desc, 'url':self._getFullUrl(url)})
                 self.addVideo(params)
         except Exception:
@@ -162,13 +162,13 @@ class UstreamTV(CBaseHostClass):
         
         if nextPage:
             params = dict(cItem)
-            params.update({'title':_('Next page'), 'page':cItem.get('page', 1)+1})
+            params.update({'title':_('Next page'), 'page':cItem.get('page', 1) + 1})
             self.addDir(params)
         
     def listSearchResult(self, cItem, searchPattern, searchType):
         searchPattern = urllib.parse.quote_plus(searchPattern)
         cItem = dict(cItem)
-        cItem['q']  = urllib.parse.quote_plus(searchPattern)
+        cItem['q'] = urllib.parse.quote_plus(searchPattern)
         cItem['filters'] = {}
         self.listFilters(cItem, 'category', 'filter_type')
         
@@ -192,7 +192,7 @@ class UstreamTV(CBaseHostClass):
         
         CBaseHostClass.handleService(self, index, refresh, searchPattern, searchType)
 
-        name     = self.currItem.get("name", '')
+        name = self.currItem.get("name", '')
         category = self.currItem.get("category", '')
         printDBG("handleService: |||||||||||||||||||||||||||||||||||| name[%s], category[%s] " % (name, category))
         self.currList = []
@@ -271,9 +271,9 @@ class IPTVHost(CHostBase):
             if '' != url:
                 hostLinks.append(CUrlItem("Link", url, 1))
             
-        title       =  cItem.get('title', '')
-        description =  cItem.get('desc', '')
-        icon        =  cItem.get('icon', '')
+        title = cItem.get('title', '')
+        description = cItem.get('desc', '')
+        icon = cItem.get('icon', '')
         
         return CDisplayListItem(name=title,
                                     description=description,

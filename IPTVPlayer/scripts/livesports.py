@@ -112,7 +112,7 @@ def getPageCF(url, params={}):
                 current += 1
                 e = data
                 cUrl = data.fp.geturl()
-                verData = e.fp.read(1*1024*1024)
+                verData = e.fp.read(1 * 1024 * 1024)
                 e.fp.close()
                 
                 dat = reCFScript.findall(verData)
@@ -129,12 +129,12 @@ def getPageCF(url, params={}):
                 os.system(cmd)
                 with open(jstmp, 'r') as f:
                     decoded = f.read()
-                rm(jstmp+'.js')
+                rm(jstmp + '.js')
                 rm(jstmp)
                 printDBG(">>" + cmd)
                 decoded = json.loads(decoded.strip())
                 verData = reCFForm.search(verData).group(0)
-                verUrl =  reCFAction.search(verData).group(1)
+                verUrl = reCFAction.search(verData).group(1)
                 get_data = dict(reCFInput.findall(verData))
                 get_data['jschl_answer'] = decoded['answer']
                 verUrl += '?jschl_vc=%s&pass=%s&jschl_answer=%s' % (get_data['jschl_vc'], get_data['pass'], get_data['jschl_answer'])
@@ -143,7 +143,7 @@ def getPageCF(url, params={}):
                 params2.update({'Referer':cUrl, 'Accept-Encoding':'text', 'Accept':'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8'})
                 printDBG("Time spent: [%s]" % (time.time() - start_time))
                 if current == 1:
-                    time.sleep(1 + (decoded['timeout'] / 1000.0)-(time.time() - start_time))
+                    time.sleep(1 + (decoded['timeout'] / 1000.0) - (time.time() - start_time))
                 else:
                     time.sleep((decoded['timeout'] / 1000.0))
                 printDBG("Time spent: [%s]" % (time.time() - start_time))
@@ -176,7 +176,7 @@ class Proxy(http.server.SimpleHTTPRequestHandler):
                 keyUrl = keyUrl.replace(item[0], item[1])
         elif scriptUrl.startswith('/tmp'):
             hash = scriptUrl[1:]
-            with open(scriptUrl+'.js', 'w') as f:
+            with open(scriptUrl + '.js', 'w') as f:
                 f.write("tmp.open('', '%s')" % keyUrl)
             cmd = '%s "%s.byte" "%s.js" > %s 2> /dev/null' % (duktape, scriptUrl, scriptUrl, scriptUrl)
             os.system(cmd)
@@ -202,13 +202,13 @@ if __name__ == "__main__":
         print('Wrong parameters', file=sys.stderr)
         sys.exit(1)
     try:
-        port        = int(sys.argv[1])
-        hlsUrl      = sys.argv[2]
-        mainUrl     = sys.argv[3]
-        scriptUrl   = sys.argv[4]
-        userAgent   = sys.argv[5]
-        cookiefile  = sys.argv[6] if len(sys.argv) > 6 else None
-        duktape     = sys.argv[7] if len(sys.argv) > 7 else ''
+        port = int(sys.argv[1])
+        hlsUrl = sys.argv[2]
+        mainUrl = sys.argv[3]
+        scriptUrl = sys.argv[4]
+        userAgent = sys.argv[5]
+        cookiefile = sys.argv[6] if len(sys.argv) > 6 else None
+        duktape = sys.argv[7] if len(sys.argv) > 7 else ''
 
         if scriptUrl.startswith('<proxy>'):
             urlPath = scriptUrl[7:]

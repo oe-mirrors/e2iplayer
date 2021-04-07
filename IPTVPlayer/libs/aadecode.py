@@ -56,33 +56,33 @@ class AADecoder(object):
 
             if not found:
                 for i in range(len(self.b)):             
-                    enc_char=enc_char.replace(self.b[i], str(i))
+                    enc_char = enc_char.replace(self.b[i], str(i))
                 
-                startpos=0
-                findClose=True
-                balance=1
-                result=[]
+                startpos = 0
+                findClose = True
+                balance = 1
+                result = []
                 if enc_char.startswith('('):
-                    l=0
+                    l = 0
                     
                     for t in enc_char[1:]:
-                        l+=1
-                        if findClose and t==')':
-                            balance-=1
-                            if balance==0:
-                                result+=[enc_char[startpos:l+1]]
-                                findClose=False
+                        l += 1
+                        if findClose and t == ')':
+                            balance -= 1
+                            if balance == 0:
+                                result += [enc_char[startpos:l + 1]]
+                                findClose = False
                                 continue
-                        elif not findClose and t=='(':
-                            startpos=l
-                            findClose=True
-                            balance=1
+                        elif not findClose and t == '(':
+                            startpos = l
+                            findClose = True
+                            balance = 1
                             continue
-                        elif t=='(':
-                            balance+=1
+                        elif t == '(':
+                            balance += 1
                  
 
-                if result is None or len(result)==0:
+                if result is None or len(result) == 0:
                     return ""
                 else:
                     
@@ -106,7 +106,7 @@ class AADecoder(object):
         #enc_int=enc_int.replace('(ﾟΘﾟ)','1').replace('(ﾟｰﾟ)','4').replace('(c^_^o)','0').replace('(o^_^o)','3')  
 
         rr = '(\(.+?\)\))\+'
-        rerr=enc_int.split('))+')
+        rerr = enc_int.split('))+')
         v = ''
         
         #new mode
@@ -114,15 +114,15 @@ class AADecoder(object):
 
             for c in rerr:
                 
-                if len(c)>0:
+                if len(c) > 0:
                     if c.strip().endswith('+'):
-                        c=c.strip()[:-1]
+                        c = c.strip()[:-1]
 
-                    startbrackets=len(c)-len(c.replace('(', ''))
-                    endbrackets=len(c)-len(c.replace(')', ''))
+                    startbrackets = len(c) - len(c.replace('(', ''))
+                    endbrackets = len(c) - len(c.replace(')', ''))
                     
-                    if startbrackets>endbrackets:
-                        c+=')'*startbrackets-endbrackets
+                    if startbrackets > endbrackets:
+                        c += ')' * startbrackets - endbrackets
                     
                     #fh = open('c:\\test.txt', "w")
                     #fh.write(c)
@@ -132,7 +132,7 @@ class AADecoder(object):
                     c = c.replace('-~', '1+')
                     c = c.replace('[]', '0')
                     
-                    v+=str(eval(c))
+                    v += str(eval(c))
                     
             return v
          

@@ -42,8 +42,8 @@ class WRealu24TV(CBaseHostClass):
     def listMainMenu(self, cItem):
         printDBG("WRealu24TV.listMainMenu")
         
-        MAIN_CAT_TAB = [{'category':'list_items',     'title': _('Main'),      'url':self.getMainUrl()}, 
-                        {'category':'list_items',     'title': _('Videos'),    'url':self.getFullUrl('/filmy')}, 
+        MAIN_CAT_TAB = [{'category':'list_items', 'title': _('Main'), 'url':self.getMainUrl()}, 
+                        {'category':'list_items', 'title': _('Videos'), 'url':self.getFullUrl('/filmy')}, 
                        ]
         
         self.listsTab(MAIN_CAT_TAB, cItem)
@@ -69,7 +69,7 @@ class WRealu24TV(CBaseHostClass):
         
         data = self.cm.ph.getAllItemsBeetwenNodes(data, ('<a', '>',), ('</a', '>'))
         for item in data:
-            url  = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''href=['"]([^'^"]+?)['"]''')[0])
+            url = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''href=['"]([^'^"]+?)['"]''')[0])
             if '/na-zywo/' not in url and '/film/' not in url:
                 continue
             icon = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''src=['"]([^'^"]+?)['"]''')[0])
@@ -167,7 +167,7 @@ class WRealu24TV(CBaseHostClass):
         desc = []
         
         data = self.cm.ph.getDataBeetwenNodes(data, ('<div', '>', 'chat_round'), ('<div', '>', 'modal-dialog'))[1]
-        icon  = self.getFullIconUrl(self.cm.ph.getSearchGroups(data, '''poster=['"]([^'^"]+?)['"]''')[0])
+        icon = self.getFullIconUrl(self.cm.ph.getSearchGroups(data, '''poster=['"]([^'^"]+?)['"]''')[0])
         title = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(data, ('<div', '>', 'chat-video-title'), ('</div', '>'), False)[1])
         released = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(data, ('<div', '>', 'chat-video-date'), ('</div', '>'), False)[1])
         if released != '':
@@ -179,8 +179,8 @@ class WRealu24TV(CBaseHostClass):
             del data[0]
         for item in data:
             author = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(item, ('<div', '>', 'chat-comment-author'), ('</div', '>'), False)[1])
-            date   = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(item, ('<div', '>', 'chat-comment-content-data'), ('</div', '>'), False)[1])
-            text   = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(item, ('<div', '>', 'chat-comment-content"'), ('</div', '>'), False)[1])
+            date = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(item, ('<div', '>', 'chat-comment-content-data'), ('</div', '>'), False)[1])
+            text = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(item, ('<div', '>', 'chat-comment-content"'), ('</div', '>'), False)[1])
             desc.append('%s[/br]%s[/br]%s[/br]' % (author, date, text))
             printDBG("============================================================================")
             printDBG('%s\n%s\n%s\n' % (author, date, text))
@@ -201,9 +201,9 @@ class WRealu24TV(CBaseHostClass):
         
         CBaseHostClass.handleService(self, index, refresh, searchPattern, searchType)
 
-        name     = self.currItem.get("name", '')
+        name = self.currItem.get("name", '')
         category = self.currItem.get("category", '')
-        mode     = self.currItem.get("mode", '')
+        mode = self.currItem.get("mode", '')
         
         printDBG("handleService: |||||||||||||||||||||||||||||||||||| name[%s], category[%s] " % (name, category))
         self.currList = []

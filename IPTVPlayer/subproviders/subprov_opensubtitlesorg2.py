@@ -42,9 +42,9 @@ def GetConfigList():
 class OpenSubtitles(CBaseSubProviderClass): 
     
     def __init__(self, params={}):
-        self.MAIN_URL      = 'https://www.opensubtitles.org/'
-        self.USER_AGENT    = 'Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/66.0.3359.139 Safari/537.36'
-        self.HTTP_HEADER   = {'User-Agent':self.USER_AGENT, 'Referer':self.MAIN_URL, 'Accept':'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8', 'Accept-Encoding':'gzip, deflate'}
+        self.MAIN_URL = 'https://www.opensubtitles.org/'
+        self.USER_AGENT = 'Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/66.0.3359.139 Safari/537.36'
+        self.HTTP_HEADER = {'User-Agent':self.USER_AGENT, 'Referer':self.MAIN_URL, 'Accept':'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8', 'Accept-Encoding':'gzip, deflate'}
         
         params['cookie'] = 'opensubtitlesorg2.cookie'
         CBaseSubProviderClass.__init__(self, params)
@@ -84,7 +84,7 @@ class OpenSubtitles(CBaseSubProviderClass):
         printDBG("OpenSubtitles.initSubProvider")
         self.logedIn = False
         
-        login  = config.plugins.iptvplayer.opensuborg_login.value
+        login = config.plugins.iptvplayer.opensuborg_login.value
         passwd = config.plugins.iptvplayer.opensuborg_password.value
         currentHash = md5('\n\n--\n\n'.join((login, passwd))).hexdigest()
         cokieFile = self.COOKIE_FILE + '.hash'
@@ -112,7 +112,7 @@ class OpenSubtitles(CBaseSubProviderClass):
         tmp = self.cm.ph.getDataBeetwenNodes(data, ('<ul', '>', 'lang-selector'), ('</ul', '>'))[1]
         printDBG(">>>\n%s\n<<" % tmp)
         lang = GetDefaultLang()
-        url  = self.getFullUrl(self.cm.ph.getSearchGroups(tmp, 'href="([^"]+?setlang\-%s[^"]*?)"' % lang)[0])
+        url = self.getFullUrl(self.cm.ph.getSearchGroups(tmp, 'href="([^"]+?setlang\-%s[^"]*?)"' % lang)[0])
         printDBG(">> LANG URL: " + url)
         if self.cm.isValidUrl(url):
             sts, data = self.getPage(url)
@@ -143,7 +143,7 @@ class OpenSubtitles(CBaseSubProviderClass):
                         self.sessionEx.open(MessageBox, errMsg, type=MessageBox.TYPE_INFO, timeout=5)
                         return
                 
-                url  = self.getFullUrl(self.cm.ph.getSearchGroups(data, '<form[^>]+?name="loginform"[^>]+?action="([^"]+?)"')[0])
+                url = self.getFullUrl(self.cm.ph.getSearchGroups(data, '<form[^>]+?name="loginform"[^>]+?action="([^"]+?)"')[0])
                 sts, data = self.getPage(url)
                 if not sts:
                     self.sessionEx.open(MessageBox, errMsg, type=MessageBox.TYPE_INFO, timeout=5)
@@ -194,27 +194,27 @@ class OpenSubtitles(CBaseSubProviderClass):
             keywords = urllib.parse.quote_plus(self.params['confirmed_title'])
             subLanguageID = cItem.get('sub_language_id', '')
             searchOnlyTVSeries = cItem.get('search_only_tv_series', '')
-            searchOnlyMovies   = cItem.get('search_only_movies', '')
+            searchOnlyMovies = cItem.get('search_only_movies', '')
             
             if 'on' == searchOnlyTVSeries:
-                season  = self.dInfo.get('season', None)
+                season = self.dInfo.get('season', None)
                 episode = self.dInfo.get('episode', None)
             else:
-                season   = None
-                episode  = None
+                season = None
+                episode = None
             
             if season == None:
                 season = '' 
             if episode == None:
                 episode = '' 
             
-            query['MovieName']     = keywords
+            query['MovieName'] = keywords
             query['SubLanguageID'] = subLanguageID
             if 'on' == searchOnlyTVSeries:
                 query['SearchOnlyTVSeries'] = searchOnlyTVSeries
             if 'on' == searchOnlyMovies:
-                query['SearchOnlyMovies']   = searchOnlyMovies
-            query['Season']  = season
+                query['SearchOnlyMovies'] = searchOnlyMovies
+            query['Season'] = season
             query['Episode'] = episode
             
             if self.searchURL != '':
@@ -230,9 +230,9 @@ class OpenSubtitles(CBaseSubProviderClass):
             return
         
         tmp = self.cm.ph.getDataBeetwenMarkers(data, '<table id="search_results"', '</tbody>')[1]
-        m1  = '<tr id="name'
-        m2  = '<tr onclick'
-        m3  = '<span id="season'
+        m1 = '<tr id="name'
+        m2 = '<tr onclick'
+        m3 = '<span id="season'
         
         cItem = dict(cItem)
         cItem['url'] = url
@@ -258,11 +258,11 @@ class OpenSubtitles(CBaseSubProviderClass):
         data = self.cm.ph.getDataBeetwenMarkers(data, '<tr id="name', '</tbody>')[1]
         data = self.cm.ph.getAllItemsBeetwenMarkers(data, '<tr id="name', '</tr>')
         for item in data:
-            url   = self.cm.ph.getSearchGroups(item, 'href="([^"]+?)"')[0]
+            url = self.cm.ph.getSearchGroups(item, 'href="([^"]+?)"')[0]
             title = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(item, '<td', '</a>')[1])
             imdbid = self.cm.ph.getSearchGroups(item, '''/tt([0-9]+?)[^0-9]''')[0]
             
-            descTab  = []
+            descTab = []
             tmp = self.cm.ph.getAllItemsBeetwenMarkers(item, '<td', '</td>') 
             for t in tmp:
                 t = t.split('<a rel="nofollow"')[0]
@@ -275,7 +275,7 @@ class OpenSubtitles(CBaseSubProviderClass):
         
         if self.cm.isValidUrl(nextPage):
             params = dict(cItem)
-            params.update({'title':_('Next page'), 'page':page+1})
+            params.update({'title':_('Next page'), 'page':page + 1})
             self.addDir(params)
         
     def listDownloadItems(self, cItem, nextCategory, data=None):
@@ -290,12 +290,12 @@ class OpenSubtitles(CBaseSubProviderClass):
         data = self.cm.ph.getDataBeetwenMarkers(data, '<tr onclick', '</tbody>')[1]
         data = self.cm.ph.getAllItemsBeetwenMarkers(data, '<tr onclick', '</tr>')
         for item in data:
-            url    = self.cm.ph.getSearchGroups(item, 'href="([^"]+?/sub/[^"]+?)"')[0]
-            title  = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(item, '<td', '</td>')[1].split('<a rel="nofollow"')[0])
+            url = self.cm.ph.getSearchGroups(item, 'href="([^"]+?/sub/[^"]+?)"')[0]
+            title = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(item, '<td', '</td>')[1].split('<a rel="nofollow"')[0])
             imdbid = self.cm.ph.getSearchGroups(item, '''/tt([0-9]+?)[^0-9]''')[0]
-            lang   = self.cm.ph.getSearchGroups(item, '''class="flag\s*([^"]+?)"''')[0]
+            lang = self.cm.ph.getSearchGroups(item, '''class="flag\s*([^"]+?)"''')[0]
             
-            descTab  = []
+            descTab = []
             tmp = self.cm.ph.getAllItemsBeetwenMarkers(item, '<td', '</td>') 
             if len(tmp) > 3:
                 fps = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(tmp[3], '<span', '</span>')[1])
@@ -317,7 +317,7 @@ class OpenSubtitles(CBaseSubProviderClass):
         
         if self.cm.isValidUrl(nextPage):
             params = dict(cItem)
-            params.update({'title':_('Next page'), 'page':page+1})
+            params.update({'title':_('Next page'), 'page':page + 1})
             self.addDir(params)
         
     def listSeasonsItems(self, cItem, nextCategory, data=None):
@@ -339,9 +339,9 @@ class OpenSubtitles(CBaseSubProviderClass):
             tmp = self.cm.ph.getAllItemsBeetwenMarkers(seasonItem, '<tr itemprop="episode"', '</tr>')
             for item in tmp:
                 td = self.cm.ph.getAllItemsBeetwenMarkers(item, '<td', '</td>')
-                title  = self.cleanHtmlStr(td[0])
-                desc   = self.cleanHtmlStr(item)
-                url    = self.cm.ph.getSearchGroups(td[0], 'href="([^"]+?)"')[0]
+                title = self.cleanHtmlStr(td[0])
+                desc = self.cleanHtmlStr(item)
+                url = self.cm.ph.getSearchGroups(td[0], 'href="([^"]+?)"')[0]
                 if url == '':
                     continue
                 imdbid = self.cm.ph.getSearchGroups(item, '''/tt([0-9]+?)[^0-9]''')[0]
@@ -400,8 +400,8 @@ class OpenSubtitles(CBaseSubProviderClass):
                 return 
         
         imdbid = cItem.get('imdbid', '')
-        subId  = url.split('/')[-2]
-        fps    = cItem.get('fps', 0)
+        subId = url.split('/')[-2]
+        fps = cItem.get('fps', 0)
         
         if not self.logedIn and downloadUrl == '' and url != cItem['url']:
             downloadUrl = _getDownloadUrl(url)
@@ -426,7 +426,7 @@ class OpenSubtitles(CBaseSubProviderClass):
     def listSubsInPackedFile(self, cItem, nextCategory):
         printDBG("OpenSubtitles.listSubsInPackedFile")
         tmpFile = cItem['file_path']
-        tmpDIR  = tmpFile[:-4]
+        tmpDIR = tmpFile[:-4]
         
         if not self.unpackArchive(tmpFile, tmpDIR):
             return
@@ -450,13 +450,13 @@ class OpenSubtitles(CBaseSubProviderClass):
     def downloadSubtitleFile(self, cItem):
         printDBG("SubsceneComProvider.downloadSubtitleFile")
         retData = {}
-        title    = cItem['title']
-        lang     = cItem.get('lang', '')
-        subId    = cItem['sub_id']
-        imdbid   = cItem['imdbid']
+        title = cItem['title']
+        lang = cItem.get('lang', '')
+        subId = cItem['sub_id']
+        imdbid = cItem['imdbid']
         inFilePath = cItem['file_path']
-        ext      = cItem.get('ext', 'srt')
-        fps      = cItem.get('fps', 0)
+        ext = cItem.get('ext', 'srt')
+        fps = cItem.get('fps', 0)
         
         outFileName = self._getFileName(title, lang, subId, imdbid, fps, ext)
         outFileName = GetSubtitlesDir(outFileName)
@@ -476,7 +476,7 @@ class OpenSubtitles(CBaseSubProviderClass):
         
         CBaseSubProviderClass.handleService(self, index, refresh)
 
-        name     = self.currItem.get("name", '')
+        name = self.currItem.get("name", '')
         category = self.currItem.get("category", '')
         
         printDBG("handleService: name[%s], category[%s] " % (name, category))

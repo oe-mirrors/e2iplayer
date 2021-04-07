@@ -77,7 +77,7 @@ class UnshortenIt(object):
 
         if re.search(self._adfly_regex, domain, re.IGNORECASE) or type == 'adfly':
             return self._unshorten_adfly(uri)
-        if re.search(self._adfocus_regex, domain, re.IGNORECASE) or type =='adfocus':
+        if re.search(self._adfocus_regex, domain, re.IGNORECASE) or type == 'adfocus':
             return self._unshorten_adfocus(uri)
         if re.search(self._linkbucks_regex, domain, re.IGNORECASE) or type == 'linkbucks':
             return self._unshorten_linkbucks(uri)
@@ -181,7 +181,7 @@ class UnshortenIt(object):
                 left = ''
                 right = ''
 
-                for c in [ysmm[i:i+2] for i in range(0, len(ysmm), 2)]:
+                for c in [ysmm[i:i + 2] for i in range(0, len(ysmm), 2)]:
                     left += c[0]
                     right = c[1] + right
 
@@ -318,7 +318,7 @@ class UnshortenIt(object):
                 if re.search(r'http(s|)\://adfoc\.us/serve/skip/\?id\=', uri):
 
                     http_header = copy.copy(HTTP_HEADER)
-                    http_header["Host"]    = "adfoc.us"
+                    http_header["Host"] = "adfoc.us"
                     http_header["Referer"] = orig_uri
 
                     r = requests.get(uri, headers=http_header, timeout=self._timeout)
@@ -355,10 +355,10 @@ class UnshortenIt(object):
                 session_id = re.sub(r'\s\"', '', session_id[0])
 
                 http_header = copy.copy(HTTP_HEADER)
-                http_header["Content-Type"]     = "application/x-www-form-urlencoded"
-                http_header["Host"]             = "sh.st"
-                http_header["Referer"]          = uri
-                http_header["Origin"]           = "http://sh.st"
+                http_header["Content-Type"] = "application/x-www-form-urlencoded"
+                http_header["Host"] = "sh.st"
+                http_header["Referer"] = uri
+                http_header["Origin"] = "http://sh.st"
                 http_header["X-Requested-With"] = "XMLHttpRequest"
 
                 GetIPTVSleep().Sleep(5)
@@ -440,10 +440,10 @@ class UnshortenIt(object):
                 session_id = re.sub(r'\s\"', '', session_id[0])
 
                 http_header = copy.copy(HTTP_HEADER)
-                http_header["Content-Type"]     = "application/x-www-form-urlencoded"
-                http_header["Host"]             = "viid.me"
-                http_header["Referer"]          = uri
-                http_header["Origin"]           = "http://viid.me"
+                http_header["Content-Type"] = "application/x-www-form-urlencoded"
+                http_header["Host"] = "viid.me"
+                http_header["Referer"] = uri
+                http_header["Origin"] = "http://viid.me"
                 http_header["X-Requested-With"] = "XMLHttpRequest"
 
                 GetIPTVSleep().Sleep(5)

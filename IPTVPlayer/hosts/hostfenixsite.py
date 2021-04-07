@@ -33,10 +33,10 @@ class Fenixsite(CBaseHostClass):
         self.HTTP_HEADER = self.cm.getDefaultHeader(browser='chrome')
         self.defaultParams = {'header':self.HTTP_HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
 
-        self.MAIN_URL    = 'http://www.fenixsite.com/'
+        self.MAIN_URL = 'http://www.fenixsite.com/'
         self.DEFAULT_ICON_URL = 'https://i.pinimg.com/originals/67/70/a3/6770a3fa9bdcc1bd33770106cd70fb22.png'
 
-        self.cacheFilters  = {}
+        self.cacheFilters = {}
         self.cacheFiltersKeys = []
         self.cacheLinks = {}
 
@@ -60,8 +60,8 @@ class Fenixsite(CBaseHostClass):
                 title = self.cleanHtmlStr(item)
                 self.addDir(MergeDicts(cItem, {'category':nextCategory, 'url':self.getFullUrl(url), 'title':title}))
 
-        MAIN_CAT_TAB = [{'category':nextCategory,     'title': 'Anime',           'url':self.getFullUrl('/load/anime_serije/95')},
-                        {'category':'search',         'title': _('Search'),       'search_item':True},
+        MAIN_CAT_TAB = [{'category':nextCategory, 'title': 'Anime', 'url':self.getFullUrl('/load/anime_serije/95')},
+                        {'category':'search', 'title': _('Search'), 'search_item':True},
                         {'category': 'search_history', 'title': _('Search history'),}]
         self.listsTab(MAIN_CAT_TAB, cItem)
 
@@ -77,7 +77,7 @@ class Fenixsite(CBaseHostClass):
         
         itemsList = []
         for idx in range(1, len(data), 2):
-            url = self.getFullUrl(ph.getattr(data[idx-1], 'href'))
+            url = self.getFullUrl(ph.getattr(data[idx - 1], 'href'))
             title = self.cleanHtmlStr(data[idx])
             itemsList.append(MergeDicts(cItem, {'good_for_fav':True, 'category':nextCategory, 'url':url, 'title':title}))
 
@@ -113,7 +113,7 @@ class Fenixsite(CBaseHostClass):
 
         items = [[], []]
         for idx in range(1, len(data), 2):
-            item = ph.find(data[idx-1], 'ssorts(', ')', flags=0)[1].split(',')
+            item = ph.find(data[idx - 1], 'ssorts(', ')', flags=0)[1].split(',')
             if len(item) != 3:
                 continue 
             title = self.cleanHtmlStr(data[idx])
@@ -246,7 +246,7 @@ class Fenixsite(CBaseHostClass):
         data = ph.find(data, ('<div', '>', 'tab-content'), ('<div', '>', 'fstory'), flags=0)[1]
         data = ph.rfindall(data, '</div>', ('<div', '>', 'tab-pane'), flags=ph.END_S)
         for idx in range(1, len(data), 2):
-            id = ph.getattr(data[idx-1], 'id')
+            id = ph.getattr(data[idx - 1], 'id')
             item = data[idx]
             title = titlesMap.get('#%s' % id, '')
             url = ph.search(item, ph.IFRAME_SRC_URI_RE)[1]
@@ -255,8 +255,8 @@ class Fenixsite(CBaseHostClass):
             elif 'gkpluginsphp' in item:
                 idx1 = item.find('{')
                 idx2 = item.rfind('}')
-                if idx1 >=0 and idx2 >= 0:
-                    ret = js_execute('print(JSON.stringify(%s));' % item[idx1:idx2+1])
+                if idx1 >= 0 and idx2 >= 0:
+                    ret = js_execute('print(JSON.stringify(%s));' % item[idx1:idx2 + 1])
                     if ret['sts'] and 0 == ret['code']:
                         try:
                             item = json_loads(ret['data'])
@@ -323,7 +323,7 @@ class Fenixsite(CBaseHostClass):
             if 'Pomoc' in key or 'Prijavi' in key:
                 continue
             if 'imdbRatingPlugin' in item:
-                url ='http://p.media-imdb.com/static-content/documents/v1/title/{0}/ratings%3Fjsonp=imdb.rating.run:imdb.api.title.ratings/data.json?u={1}&s={2}'.format(ph.getattr(item, 'data-title'), ph.getattr(item, 'data-user'), ph.getattr(item, 'data-style'))
+                url = 'http://p.media-imdb.com/static-content/documents/v1/title/{0}/ratings%3Fjsonp=imdb.rating.run:imdb.api.title.ratings/data.json?u={1}&s={2}'.format(ph.getattr(item, 'data-title'), ph.getattr(item, 'data-user'), ph.getattr(item, 'data-style'))
                 try:
                     sts, tmp = self.getPage(url)
                     printDBG(">>" + tmp.strip()[16:-1])
@@ -350,7 +350,7 @@ class Fenixsite(CBaseHostClass):
         
         CBaseHostClass.handleService(self, index, refresh, searchPattern, searchType)
 
-        name     = self.currItem.get("name", '')
+        name = self.currItem.get("name", '')
         category = self.currItem.get("category", '')
         printDBG("handleService: ||| name[%s], category[%s] " % (name, category))
         self.currList = []

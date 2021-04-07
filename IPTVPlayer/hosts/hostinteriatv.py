@@ -54,7 +54,7 @@ class InteriaTv(CBaseHostClass):
                 except Exception:
                     printExc()
         
-        MAIN_CAT_TAB = [{'category':'search',         'title': _('Search'), 'search_item':True}, 
+        MAIN_CAT_TAB = [{'category':'search', 'title': _('Search'), 'search_item':True}, 
                         {'category':'search_history', 'title': _('Search history')},]
                         
         params = dict(cItem)
@@ -69,7 +69,7 @@ class InteriaTv(CBaseHostClass):
             cTree = cItem['c_tree']
             for item in cTree['list']:
                 title = self.cleanHtmlStr(item['dat']) #self.cm.ph.getDataBeetwenNodes(item['dat'], ('<div', '>', 'title'), ('</div', '>'))[1]
-                url   = self.getFullUrl(self.cm.ph.getSearchGroups(item['dat'], '''href=['"]([^'^"]+?)['"]''')[0])
+                url = self.getFullUrl(self.cm.ph.getSearchGroups(item['dat'], '''href=['"]([^'^"]+?)['"]''')[0])
                 if 'list' not in item:
                     if self.cm.isValidUrl(url) and title != '':
                         params = dict(cItem)
@@ -142,7 +142,7 @@ class InteriaTv(CBaseHostClass):
         
         if nextPage:
             params = dict(cItem)
-            params.update({'good_for_fav':False, 'title':_("Next page"), 'page':page+1, 'url':nextPage})
+            params.update({'good_for_fav':False, 'title':_("Next page"), 'page':page + 1, 'url':nextPage})
             self.addDir(params)
         
     def listSearchItems(self, cItem, nextCategory, data=None):
@@ -187,7 +187,7 @@ class InteriaTv(CBaseHostClass):
         
         if nextPage:
             params = dict(cItem)
-            params.update({'good_for_fav':False, 'title':_("Next page"), 'page':page+1, 'url':nextPage})
+            params.update({'good_for_fav':False, 'title':_("Next page"), 'page':page + 1, 'url':nextPage})
             self.addDir(params)
             
     def listPlaylistItems(self, cItem):
@@ -240,8 +240,8 @@ class InteriaTv(CBaseHostClass):
             item = self.searchFiltersData[cItem['f_idx']][idx]
             params = dict(cItem)
             params.update(item)
-            params.update({'category':nextCategory, 'f_idx':cItem['f_idx']+1})
-            if idx == 0 and cItem['f_idx'] + 1 <  len(self.searchFiltersData):
+            params.update({'category':nextCategory, 'f_idx':cItem['f_idx'] + 1})
+            if idx == 0 and cItem['f_idx'] + 1 < len(self.searchFiltersData):
                 params['category'] = cItem['category']
             self.addDir(params)
             
@@ -254,9 +254,9 @@ class InteriaTv(CBaseHostClass):
         
         CBaseHostClass.handleService(self, index, refresh, searchPattern, searchType)
 
-        name     = self.currItem.get("name", '')
+        name = self.currItem.get("name", '')
         category = self.currItem.get("category", '')
-        mode     = self.currItem.get("mode", '')
+        mode = self.currItem.get("mode", '')
         
         printDBG("handleService: |||| name[%s], category[%s] " % (name, category))
         self.cacheLinks = {}

@@ -47,16 +47,16 @@ class ArconaitvME(CBaseHostClass):
         self.AJAX_HEADER = dict(self.HEADER)
         self.AJAX_HEADER.update({'X-Requested-With': 'XMLHttpRequest'})
         
-        self.MAIN_URL      = 'https://www.arconaitv.us/'
-        self.DEFAULT_ICON_URL  = "https://raw.githubusercontent.com/piplongrun/arconaitv.bundle/master/Contents/Resources/icon-default.jpg"
+        self.MAIN_URL = 'https://www.arconaitv.us/'
+        self.DEFAULT_ICON_URL = "https://raw.githubusercontent.com/piplongrun/arconaitv.bundle/master/Contents/Resources/icon-default.jpg"
 
-        self.MAIN_CAT_TAB = [{'category':'list_main',      'title': _('Main'),      'url':self.MAIN_URL},
-                             {'category':'list_shows',     'title': _('Shows'),     'url':self.MAIN_URL},
-                             {'category':'list_cabletv',   'title': _('Cable'),     'url':self.MAIN_URL},
-                             {'category':'list_movies',    'title': _('Movies'),    'url':self.MAIN_URL},
+        self.MAIN_CAT_TAB = [{'category':'list_main', 'title': _('Main'), 'url':self.MAIN_URL},
+                             {'category':'list_shows', 'title': _('Shows'), 'url':self.MAIN_URL},
+                             {'category':'list_cabletv', 'title': _('Cable'), 'url':self.MAIN_URL},
+                             {'category':'list_movies', 'title': _('Movies'), 'url':self.MAIN_URL},
                              
-                             {'category': 'search',            'title': _('Search'), 'search_item': True,},
-                             {'category': 'search_history',    'title': _('Search history'),} 
+                             {'category': 'search', 'title': _('Search'), 'search_item': True,},
+                             {'category': 'search_history', 'title': _('Search history'),} 
                             ]
         self.proxyUrl = 'http://myproxysite.ga/browse.php?u={0}&b=4&f=norefer'
         
@@ -67,7 +67,7 @@ class ArconaitvME(CBaseHostClass):
         return self.getFullIconUrl(self.DEFAULT_ICON_URL)
         
     def getPage(self, url, params={}, post_data=None):
-        HTTP_HEADER= dict(self.HEADER)
+        HTTP_HEADER = dict(self.HEADER)
         if post_data != None:
             HTTP_HEADER['Content-Type'] = 'application/x-www-form-urlencoded'
         params.update({'header':HTTP_HEADER})
@@ -94,7 +94,7 @@ class ArconaitvME(CBaseHostClass):
         
     def getFullUrl(self, url):
         if self.up.getDomain(self.proxyUrl) in url:
-            url = urllib.parse.unquote(self.cm.ph.getSearchGroups(url+'&', '''\?u=(http[^&]+?)&''')[0])
+            url = urllib.parse.unquote(self.cm.ph.getSearchGroups(url + '&', '''\?u=(http[^&]+?)&''')[0])
         return CBaseHostClass.getFullUrl(self, url)
     
     def listItems(self, cItem, m1, m2, post_data=None):
@@ -107,7 +107,7 @@ class ArconaitvME(CBaseHostClass):
         data = self.cm.ph.getAllItemsBeetwenMarkers(data, '<a ', '</a>', False)
         
         for item in data:
-            icon  = self.cm.ph.getSearchGroups(item, '''src=['"]([^'^"]+?)['"]''')[0]
+            icon = self.cm.ph.getSearchGroups(item, '''src=['"]([^'^"]+?)['"]''')[0]
             url = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''href=['"]([^'^"]+?)['"]''')[0])
             if url == '':
                 continue
@@ -201,10 +201,10 @@ class ArconaitvME(CBaseHostClass):
         
         CBaseHostClass.handleService(self, index, refresh, searchPattern, searchType)
 
-        name     = self.currItem.get("name", '')
+        name = self.currItem.get("name", '')
         category = self.currItem.get("category", '')
-        mode     = self.currItem.get("mode", '')
-        filter   = self.currItem.get("filter", '')
+        mode = self.currItem.get("mode", '')
+        filter = self.currItem.get("filter", '')
         
         printDBG("handleService: |||||||||||||||||||||||||||||||||||| name[%s], category[%s] " % (name, category))
         self.currList = []

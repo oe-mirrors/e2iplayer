@@ -92,7 +92,7 @@ def SetGraphicsHash(value):
 
 ###################################################
 def DaysInMonth(dt):
-    return (datetime.date(dt.year+(dt.month / 12), (dt.month % 12) + 1, 1) - dt).days + dt.day - 1
+    return (datetime.date(dt.year + (dt.month / 12), (dt.month % 12) + 1, 1) - dt).days + dt.day - 1
     
 def NextMonth(dt):
     return (dt.replace(day=28) + datetime.timedelta(days=4)).replace(day=1)
@@ -241,7 +241,7 @@ class iptv_system:
         if None != self.callBackFun:
             self.console_appClosed_conn = eConnectCallback(self.console.appClosed, self._cmdFinished)
             self.console_stdoutAvail_conn = eConnectCallback(self.console.stdoutAvail, self._dataAvail)
-            self.outData     = ""
+            self.outData = ""
         self.console.execute(E2PrioFix(cmd))
         
     def terminate(self, doCallBackFun=False):
@@ -283,7 +283,7 @@ def IsWebInterfaceModuleAvailable(chekInit=False):
         file = '__init__'
     else:
         file = 'initiator'
-    if (fileExists(resolveFilename(SCOPE_PLUGINS, 'Extensions/IPTVPlayer/Web/%s.py'  % file)) or
+    if (fileExists(resolveFilename(SCOPE_PLUGINS, 'Extensions/IPTVPlayer/Web/%s.py' % file)) or
         fileExists(resolveFilename(SCOPE_PLUGINS, 'Extensions/IPTVPlayer/Web/%s.pyo' % file)) or
         fileExists(resolveFilename(SCOPE_PLUGINS, 'Extensions/IPTVPlayer/Web/%s.pyc' % file))):
         return True
@@ -552,7 +552,7 @@ class CSelOneLink():
             group1 = []
             group2 = []
             for idx in range(len(self.listOfLinks)):
-                if  self.getQualiyFun(self.listOfLinks[idx]) <= self.maxRes:
+                if self.getQualiyFun(self.listOfLinks[idx]) <= self.maxRes:
                     group1.append(self.listOfLinks[idx])
                 else:
                     group2.append(self.listOfLinks[idx])
@@ -589,7 +589,7 @@ class CSelOneLink():
 #############################################################
 # debugs
 def getDebugMode():
-    DBG=''
+    DBG = ''
     try:
         from Components.config import config
         DBG = config.plugins.iptvplayer.debugprint.value
@@ -597,7 +597,7 @@ def getDebugMode():
         file = open(resolveFilename(SCOPE_CONFIG, "settings"))
         for line in file:
             if line.startswith('config.plugins.iptvplayer.debugprint='):
-                DBG=line.split("=")[1].strip()
+                DBG = line.split("=")[1].strip()
                 break
     return DBG
 
@@ -673,7 +673,7 @@ def GetHostsFromFolder(useCache=True):
             # separate file name and file extension
             fileName, fileExt = os.path.splitext(wholeFileName)
             nameLen = len(fileName)
-            if fileExt in ['.pyo', '.pyc', '.py'] and nameLen >  4 and __isHostNameValid(fileName):
+            if fileExt in ['.pyo', '.pyc', '.py'] and nameLen > 4 and __isHostNameValid(fileName):
                 if fileName[4:] not in lhosts:
                     lhosts.append(fileName[4:])
                     printDBG('getHostsList add host with fileName: "%s"' % fileName[4:])
@@ -780,7 +780,7 @@ def GetSkinsList():
     return skins
     
 def IsHostEnabled(hostName):
-    hostEnabled  = False
+    hostEnabled = False
     try:
         if getattr(config.plugins.iptvplayer, 'host' + hostName).value:
             hostEnabled = True
@@ -793,7 +793,7 @@ def IsHostEnabled(hostName):
 # if required == None return free space instead of comparing
 # default unit = MB
 ##############################################################
-def FreeSpace(katalog, requiredSpace, unitDiv=1024*1024):
+def FreeSpace(katalog, requiredSpace, unitDiv=1024 * 1024):
     try:
         s = os.statvfs(katalog)
         freeSpace = s.f_bfree * s.f_frsize # all free space
@@ -824,7 +824,7 @@ def IsValidFileName(name, NAME_MAX=255):
 def RemoveDisallowedFilenameChars(name, replacment='.'):
     prohibited_characters = ['/', "\000", '\\', ':', '*', '<', '>', '|', '"']
     for item in prohibited_characters:
-        name = name.replace(item, replacment).replace(replacment+replacment, replacment)
+        name = name.replace(item, replacment).replace(replacment + replacment, replacment)
     return name
         
 def touch(fname, times=None):
@@ -1023,8 +1023,8 @@ def GetIconsFilesFromDir(basePath):
     
 def GetCreationIconsDirTime(fullPath):
     try:
-        dirName    = GetLastDirNameFromPath(fullPath)
-        baseName   = GetIconDirBaseName()
+        dirName = GetLastDirNameFromPath(fullPath)
+        baseName = GetIconDirBaseName()
         return float(dirName[len(baseName):])
     except Exception:
         return None
@@ -1034,9 +1034,9 @@ def GetCreateIconsDirDeltaDateInDays(fullPath):
     createTime = GetCreationIconsDirTime(fullPath)
     if None != createTime:
         try:
-            currTime   = datetime.datetime.now()
-            modTime    = datetime.datetime.fromtimestamp(createTime)
-            deltaTime  = currTime - modTime
+            currTime = datetime.datetime.now()
+            modTime = datetime.datetime.fromtimestamp(createTime)
+            deltaTime = currTime - modTime
             ret = deltaTime.days
         except Exception:
             printExc()
@@ -1198,7 +1198,7 @@ class CSearchHistoryHelper():
             file = open(self.PATH_FILE, 'w')
             l = len(list)
             for i in range(l):
-                file.write(list[l - 1 -i] + '\n')
+                file.write(list[l - 1 - i] + '\n')
             file.close
         except Exception:
             printExc('CSearchHistoryHelper._saveHistoryList EXCEPTION')
@@ -1242,7 +1242,7 @@ def WriteTextFile(filePath, text, encode='utf-8', errors='ignore'):
 class CFakeMoviePlayerOption():
     def __init__(self, value, text):
         self.value = value
-        self.text  = text
+        self.text = text
     def getText(self):
         return self.text
 
@@ -1269,7 +1269,7 @@ class CMoviePlayerPerHost():
                 ret = json_loads(ret)
                 activePlayer['buffering'] = ret['buffering']
                 activePlayer['player'] = CFakeMoviePlayerOption(ret['player']['value'], ret['player']['text'])
-                self.activePlayer  = activePlayer
+                self.activePlayer = activePlayer
                 sts = True
         except Exception:
             printExc()
@@ -1284,7 +1284,7 @@ class CMoviePlayerPerHost():
             else:
                 data = {}
                 data['buffering'] = self.activePlayer['buffering']
-                data['player']    = {'value':self.activePlayer['player'].value, 'text':self.activePlayer['player'].getText()}
+                data['player'] = {'value':self.activePlayer['player'].value, 'text':self.activePlayer['player'].getText()}
                 data = json_dumps(data).encode('utf-8')
                 file = codecs.open(self.filePath, 'w', 'utf-8', 'replace')
                 file.write(data)
@@ -1327,14 +1327,14 @@ def GetIPTVPlayerVerstion():
     try:
         from Plugins.Extensions.IPTVPlayer.version import IPTV_VERSION
     except Exception:
-        IPTV_VERSION="XX.YY.ZZ"
+        IPTV_VERSION = "XX.YY.ZZ"
     return IPTV_VERSION
     
 def GetIPTVPlayerComitStamp():
     try:
         from Plugins.Extensions.IPTVPlayer.version import COMMIT_STAMP
     except Exception:
-        COMMIT_STAMP=""
+        COMMIT_STAMP = ""
     return COMMIT_STAMP
 
 def GetShortPythonVersion():
@@ -1442,13 +1442,13 @@ def GetE2VideoPolicyChoices(num=''):
     return GetE2OptionsFromFile('/proc/stb/video/policy%s_choices' % num)
     
 def GetE2VideoPolicy(num=''):
-    options = GetE2OptionsFromFile('/proc/stb/video/policy'+num)
+    options = GetE2OptionsFromFile('/proc/stb/video/policy' + num)
     if 1 == len(options):
         return options[0]
     return None
     
 def SetE2VideoPolicy(value, num=''):
-    return SetE2OptionByFile('/proc/stb/video/policy'+num, value)
+    return SetE2OptionByFile('/proc/stb/video/policy' + num, value)
     
 def GetE2AudioCodecMixChoices(codec):
     return GetE2OptionsFromFile('/proc/stb/audio/%s_choices' % codec)
@@ -1490,18 +1490,18 @@ def ReadUint32(tmp, le=True):
         return ord(tmp[0]) << 24 | ord(tmp[1]) << 16 | ord(tmp[2]) << 8 | ord(tmp[3])
 
 def ReadGnuMIPSABIFP(elfFileName):
-    SHT_GNU_ATTRIBUTES=0x6ffffff5
-    SHT_MIPS_ABIFLAGS=0x7000002a
-    Tag_GNU_MIPS_ABI_FP=4
-    Val_GNU_MIPS_ABI_FP_ANY=0
-    Val_GNU_MIPS_ABI_FP_DOUBLE=1
-    Val_GNU_MIPS_ABI_FP_SINGLE=2
-    Val_GNU_MIPS_ABI_FP_SOFT=3
-    Val_GNU_MIPS_ABI_FP_OLD_64=4
-    Val_GNU_MIPS_ABI_FP_XX=5
-    Val_GNU_MIPS_ABI_FP_64=6
-    Val_GNU_MIPS_ABI_FP_64A=7
-    Val_GNU_MIPS_ABI_FP_NAN2008=8
+    SHT_GNU_ATTRIBUTES = 0x6ffffff5
+    SHT_MIPS_ABIFLAGS = 0x7000002a
+    Tag_GNU_MIPS_ABI_FP = 4
+    Val_GNU_MIPS_ABI_FP_ANY = 0
+    Val_GNU_MIPS_ABI_FP_DOUBLE = 1
+    Val_GNU_MIPS_ABI_FP_SINGLE = 2
+    Val_GNU_MIPS_ABI_FP_SOFT = 3
+    Val_GNU_MIPS_ABI_FP_OLD_64 = 4
+    Val_GNU_MIPS_ABI_FP_XX = 5
+    Val_GNU_MIPS_ABI_FP_64 = 6
+    Val_GNU_MIPS_ABI_FP_64A = 7
+    Val_GNU_MIPS_ABI_FP_NAN2008 = 8
     
     def _readLeb128(data, start, end):
         result = 0
@@ -1563,13 +1563,13 @@ def ReadGnuMIPSABIFP(elfFileName):
                 if sh_type == SHT_GNU_ATTRIBUTES:
                     file.seek(offset + 16)
                     sh_offset = ReadUint32(file.read(4))
-                    sh_size   = ReadUint32(file.read(4))
+                    sh_size = ReadUint32(file.read(4))
                     file.seek(sh_offset)
                     contents = file.read(sh_size)
                     p = 0
                     if contents.startswith('A'):
                         p += 1
-                        sectionLen = sh_size -1
+                        sectionLen = sh_size - 1
                         while sectionLen > 0:
                             attrLen = ReadUint32(contents[p:])
                             p += 4
@@ -1580,7 +1580,7 @@ def ReadGnuMIPSABIFP(elfFileName):
                                 break
                             sectionLen -= attrLen
                             attrLen -= 4
-                            attrName =  _getStr(contents, p)
+                            attrName = _getStr(contents, p)
                             
                             p += len(attrName) + 1
                             attrLen -= len(attrName) + 1

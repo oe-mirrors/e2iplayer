@@ -27,7 +27,7 @@ from Components.config import config, ConfigSelection, ConfigInteger, ConfigYesN
 ###################################################
 # E2 GUI COMMPONENTS 
 ###################################################
-from Plugins.Extensions.IPTVPlayer.components.asynccall import  iptv_execute
+from Plugins.Extensions.IPTVPlayer.components.asynccall import iptv_execute
 from Screens.MessageBox import MessageBox
 from Tools.Directories import fileExists
 ###################################################
@@ -39,7 +39,7 @@ config.plugins.iptvplayer.local_alphasort = ConfigSelection(default="alphabetica
 config.plugins.iptvplayer.local_showfilesize = ConfigYesNo(default=True)
 config.plugins.iptvplayer.local_showhiddensdir = ConfigYesNo(default=False)
 config.plugins.iptvplayer.local_showhiddensfiles = ConfigYesNo(default=False)
-config.plugins.iptvplayer.local_maxitems    = ConfigInteger(1000, (10, 1000000))
+config.plugins.iptvplayer.local_maxitems = ConfigInteger(1000, (10, 1000000))
 
 def GetConfigList():
     optionList = []
@@ -66,11 +66,11 @@ def iptv_execute_wrapper(cmd):
 class LocalMedia(CBaseHostClass):
     ISO_MOUNT_POINT_NAME = '.iptvplayer_iso'
     FILE_SYSTEMS = ['ext2', 'ext3', 'ext4', 'vfat', 'msdos', 'iso9660', 'nfs', 'jffs2', 'autofs', 'fuseblk', 'udf', 'cifs', 'ntfs']
-    VIDEO_FILE_EXTENSIONS    = ['avi', 'flv', 'mp4', 'ts', 'mov', 'wmv', 'mpeg', 'mpg', 'mkv', 'vob', 'divx', 'm2ts', 'evo']
-    AUDIO_FILES_EXTENSIONS   = ['mp3', 'm4a', 'ogg', 'wma', 'fla', 'wav', 'flac']
+    VIDEO_FILE_EXTENSIONS = ['avi', 'flv', 'mp4', 'ts', 'mov', 'wmv', 'mpeg', 'mpg', 'mkv', 'vob', 'divx', 'm2ts', 'evo']
+    AUDIO_FILES_EXTENSIONS = ['mp3', 'm4a', 'ogg', 'wma', 'fla', 'wav', 'flac']
     PICTURE_FILES_EXTENSIONS = ['jpg', 'jpeg', 'png']
-    M3U_FILES_EXTENSIONS     = ['m3u']
-    ISO_FILES_EXTENSIONS     = ['iso']
+    M3U_FILES_EXTENSIONS = ['m3u']
+    ISO_FILES_EXTENSIONS = ['iso']
     
     def __init__(self):
         CBaseHostClass.__init__(self, {'history':'LocalMedia'})
@@ -109,7 +109,7 @@ class LocalMedia(CBaseHostClass):
                 wilcard = '*'
             else:
                 wilcard = '[^.]*'
-            insensitiveExt=''
+            insensitiveExt = ''
             for l in ext:
                 insensitiveExt += '[%s%s]' % (l.upper(), l.lower())
             wilcard += '.' + insensitiveExt
@@ -288,7 +288,7 @@ class LocalMedia(CBaseHostClass):
     def listIso(self, cItem):
         printDBG("LocalMedia.listIso [%s]" % cItem)
         # check if iso file is mounted
-        path  = cItem['path']
+        path = cItem['path']
         defaultMountPoint = GetTmpDir(self.ISO_MOUNT_POINT_NAME)
         defaultMountPoint = defaultMountPoint.replace('//', '/')
         
@@ -330,13 +330,13 @@ class LocalMedia(CBaseHostClass):
         page = cItem.get('page', 0)
         
         start = cItem.get('start', 0)
-        end   = start + config.plugins.iptvplayer.local_maxitems.value
+        end = start + config.plugins.iptvplayer.local_maxitems.value
         
         cItem = dict(cItem)
         cItem['start'] = 0
         
-        path  = cItem['path']
-        cmd = self.prepareCmd(path, start, end+1) + ' 2>&1'
+        path = cItem['path']
+        cmd = self.prepareCmd(path, start, end + 1) + ' 2>&1'
         printDBG("cmd [%s]" % cmd) 
         ret = iptv_execute_wrapper(cmd)
         printDBG(ret)
@@ -423,7 +423,7 @@ class LocalMedia(CBaseHostClass):
             params.update({'good_for_fav':params.get('next_good_for_fav', True), 'title':item['title'], 'category':category, 'desc':''})
             if category in ['m3u', 'dir', 'iso']:
                 fullPath = os_path.join(path, item['raw_name'])
-                params['path']  = fullPath
+                params['path'] = fullPath
                 if category != 'dir':
                     descTab = []
                     if item.get('size', -1) >= 0:
@@ -439,7 +439,7 @@ class LocalMedia(CBaseHostClass):
                 self.addDir(params)
             else:
                 fullPath = 'file://' + os_path.join(path, item['raw_name'])
-                params['url']  = fullPath
+                params['url'] = fullPath
                 params['type'] = category
                 if 'picture' == category:
                     params['icon'] = fullPath
@@ -464,9 +464,9 @@ class LocalMedia(CBaseHostClass):
         videoUrls = []
         
         if url.startswith('/') and fileExists(url):
-            url = 'file://'+url
+            url = 'file://' + url
         
-        uri, params   = DMHelper.getDownloaderParamFromUrl(url)
+        uri, params = DMHelper.getDownloaderParamFromUrl(url)
         printDBG(params)
         uri = urlparser.decorateUrl(uri, params)
         
@@ -516,7 +516,7 @@ class LocalMedia(CBaseHostClass):
         
         CBaseHostClass.handleService(self, index, refresh, searchPattern, searchType)
 
-        name     = self.currItem.get("name", '')
+        name = self.currItem.get("name", '')
         category = self.currItem.get("category", '')
         printDBG("handleService: |||||||||||||||||||||||||||||||||||| name[%s], category[%s] " % (name, category))
         self.currList = []
@@ -542,7 +542,7 @@ class IPTVHost(CHostBase):
         self.cFilePath = ''
         self.cType = ''
         self.needRefresh = ''
-        self.DEFAULT_ICON='http://www.ngonb.ru/files/res_media.png'
+        self.DEFAULT_ICON = 'http://www.ngonb.ru/files/res_media.png'
     
     def getPrevList(self, refresh=0):
         self.host.setCurrDir('')
@@ -685,8 +685,8 @@ class IPTVHost(CHostBase):
                     ok = False
                 
                 if ok:
-                    self.cType =  ''
-                    self.cFilePath =  ''
+                    self.cType = ''
+                    self.cFilePath = ''
                     retlist = ['refresh']
                     retCode = RetHost.OK
             except Exception:
@@ -719,9 +719,9 @@ class IPTVHost(CHostBase):
 
         hList = self.host.getArticleContent(self.host.currList[Index])
         for item in hList:
-            title      = item.get('title', '')
-            text       = item.get('text', '')
-            images     = item.get("images", [])
+            title = item.get('title', '')
+            text = item.get('text', '')
+            images = item.get("images", [])
             othersInfo = item.get('other_info', '')
             retlist.append(ArticleContent(title=title, text=text, images=images, richDescParams=othersInfo))
         return RetHost(RetHost.OK, value=retlist)

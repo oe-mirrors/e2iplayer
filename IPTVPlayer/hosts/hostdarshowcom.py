@@ -27,15 +27,15 @@ class DarshowCom(CBaseHostClass):
     AJAX_HEADER = dict(HEADER)
     AJAX_HEADER.update({'X-Requested-With': 'XMLHttpRequest'})
     
-    MAIN_URL      = 'http://www.darshow.com/'
-    SEARCH_URL    = MAIN_URL + 'index.php?do=search'
-    DEFAULT_ICON  = "http://www.darshow.com/templates/style/images/logo.png"
+    MAIN_URL = 'http://www.darshow.com/'
+    SEARCH_URL = MAIN_URL + 'index.php?do=search'
+    DEFAULT_ICON = "http://www.darshow.com/templates/style/images/logo.png"
     
     MAIN_CAT_TAB = [
-                    {'category':'list_items',      'title': _('New series'), 'url':MAIN_URL+'newseries.html', 'icon':DEFAULT_ICON},
-                    {'category':'top',             'title': _('Top'),        'url':MAIN_URL+'topseries.html', 'icon':DEFAULT_ICON},
-                    {'category':'search',          'title': _('Search'), 'search_item':True, 'icon':DEFAULT_ICON},
-                    {'category':'search_history',  'title': _('Search history'),             'icon':DEFAULT_ICON}]
+                    {'category':'list_items', 'title': _('New series'), 'url':MAIN_URL + 'newseries.html', 'icon':DEFAULT_ICON},
+                    {'category':'top', 'title': _('Top'), 'url':MAIN_URL + 'topseries.html', 'icon':DEFAULT_ICON},
+                    {'category':'search', 'title': _('Search'), 'search_item':True, 'icon':DEFAULT_ICON},
+                    {'category':'search_history', 'title': _('Search history'), 'icon':DEFAULT_ICON}]
  
     def __init__(self):
         CBaseHostClass.__init__(self, {'history':'  DarshowCom.tv', 'cookie':'darshowcom.cookie'})
@@ -48,7 +48,7 @@ class DarshowCom(CBaseHostClass):
             url = 'http:' + url
         else:
             if 0 < len(url) and not url.startswith('http'):
-                url =  self.MAIN_URL + url
+                url = self.MAIN_URL + url
             if not self.MAIN_URL.startswith('https://'):
                 url = url.replace('https://', 'http://')
                 
@@ -71,7 +71,7 @@ class DarshowCom(CBaseHostClass):
         for item in tab:
             params = dict(cItem)
             params.update(item)
-            params['name']  = 'category'
+            params['name'] = 'category'
             if type == 'dir':
                 self.addDir(params)
             else:
@@ -85,11 +85,11 @@ class DarshowCom(CBaseHostClass):
         
         data = self.cm.ph.getAllItemsBeetwenMarkers(data, '<li dir="rtl">', '</li>')
         for item in data:
-            url   = self._getFullUrl(self.cm.ph.getSearchGroups(item, 'href="([^"]+?)"')[0])
+            url = self._getFullUrl(self.cm.ph.getSearchGroups(item, 'href="([^"]+?)"')[0])
             if url == '':
                 continue
-            icon  = self._getFullUrl(self.cm.ph.getSearchGroups(item, 'src="([^"]+?)"')[0])
-            desc  = self.cleanHtmlStr(item)
+            icon = self._getFullUrl(self.cm.ph.getSearchGroups(item, 'src="([^"]+?)"')[0])
+            desc = self.cleanHtmlStr(item)
             title = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(item, '<b>', '</b>')[1])
             if title == '':
                 title = self.cleanHtmlStr(self.cm.ph.getSearchGroups(item, 'title="([^"]+?)"')[0])
@@ -107,7 +107,7 @@ class DarshowCom(CBaseHostClass):
         data = self.cm.ph.getDataBeetwenMarkers(data, '<ul class="menu_body">', '</ul>')[1]
         data = self.cm.ph.getAllItemsBeetwenMarkers(data, '<li>', '</li>')
         for item in data:
-            url   = self._getFullUrl(self.cm.ph.getSearchGroups(item, '''href=['"]([^"^']+?)['"]''')[0])
+            url = self._getFullUrl(self.cm.ph.getSearchGroups(item, '''href=['"]([^"^']+?)['"]''')[0])
             title = self.cleanHtmlStr(item)
             if not url.startswith('http'):
                 continue
@@ -133,9 +133,9 @@ class DarshowCom(CBaseHostClass):
         
     def listItems(self, cItem, nextCategory='explore_item'):
         printDBG("DarshowCom.listItems")
-        page      = cItem.get('page', 1)
+        page = cItem.get('page', 1)
         post_data = cItem.get('post_data', None) 
-        url       = cItem['url'] 
+        url = cItem['url'] 
         
         if page > 1:
             if post_data != None:
@@ -152,12 +152,12 @@ class DarshowCom(CBaseHostClass):
         printDBG('++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++')
         printDBG(nextPageUrl)
         printDBG('++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++')
-        if ('/{0}/'.format(page+1)) in nextPageUrl:
+        if ('/{0}/'.format(page + 1)) in nextPageUrl:
             nextPageUrl = self.cm.ph.getSearchGroups(nextPageUrl, '''href=['"]([^"^']+?)['"]''')[0]
         else:
             nextPageUrl = '#'
         
-        m1   = '<div class="shortmail">'
+        m1 = '<div class="shortmail">'
         data = self.cm.ph.getDataBeetwenMarkers(data, m1, 'container-content')[1]
         data = self.cm.ph.getAllItemsBeetwenMarkers(data, m1, '</span></span>')
         for item in data:
@@ -169,12 +169,12 @@ class DarshowCom(CBaseHostClass):
             if 'serie_title' in cItem:
                 title = cItem['serie_title'] + ' - ' + title
 
-            icon  =  self.cm.ph.getSearchGroups(item, '''src=['"]([^"^']+?)['"]''')[0]
+            icon = self.cm.ph.getSearchGroups(item, '''src=['"]([^"^']+?)['"]''')[0]
             if icon.startswith('['):
                 icon = ''
             else:
                 icon = self._getFullUrl(icon)
-            url   = self._getFullUrl(self.cm.ph.getSearchGroups(item, '''href=['"]([^"^']+?)['"]''')[0])
+            url = self._getFullUrl(self.cm.ph.getSearchGroups(item, '''href=['"]([^"^']+?)['"]''')[0])
             if url.startswith('http'):
                 params = {}
                 params.update({'good_for_fav':False, 'title':self.cleanHtmlStr(title), 'url':url, 'icon':icon, 'desc':self.cleanHtmlStr(item)})
@@ -187,7 +187,7 @@ class DarshowCom(CBaseHostClass):
         
         if nextPageUrl != '#':
             params = dict(cItem)
-            params.update({'good_for_fav':False, 'title':_('Next page'), 'url':nextPageUrl, 'page':page+1})
+            params.update({'good_for_fav':False, 'title':_('Next page'), 'url':nextPageUrl, 'page':page + 1})
             self.addDir(params)
             
     def exploreItem(self, cItem, category):
@@ -200,20 +200,20 @@ class DarshowCom(CBaseHostClass):
         params.update({'good_for_fav':False, 'title':_('Trailer'), 'trailer':True})
         self.addVideo(params)
         
-        tmp  = self.cm.ph.getDataBeetwenMarkers(data, '<div class="leftxlbar">', '<div class="fullin', False)[1]
+        tmp = self.cm.ph.getDataBeetwenMarkers(data, '<div class="leftxlbar">', '<div class="fullin', False)[1]
         desc = self.cleanHtmlStr(tmp)
         icon = self.cm.ph.getSearchGroups(tmp, '''src=['"]([^"^']+?)['"]''')[0]
         
-        tmp  = self.cm.ph.getAllItemsBeetwenMarkers(data, '<div class="seasonname">', '</a>')
+        tmp = self.cm.ph.getAllItemsBeetwenMarkers(data, '<div class="seasonname">', '</a>')
         if len(tmp):
             for item in tmp:
                 title = self.cleanHtmlStr(item)
-                url   = self._getFullUrl(self.cm.ph.getSearchGroups(item, '''<a[^>]+?href=['"](https?://on\.[^"^']+?)['"]''')[0])
+                url = self._getFullUrl(self.cm.ph.getSearchGroups(item, '''<a[^>]+?href=['"](https?://on\.[^"^']+?)['"]''')[0])
                 params = dict(cItem)
                 params.update({'good_for_fav':False, 'title':title, 'serie_title': cItem['title'], 'url':url, 'category':category, 'icon':icon, 'desc':desc})
                 self.addDir(params)
         else:
-            url  = self._getFullUrl(self.cm.ph.getSearchGroups(data, '''<a[^>]+?href=['"](https?://on\.[^"^']+?)['"][^>]*?btn_showmore1''')[0])
+            url = self._getFullUrl(self.cm.ph.getSearchGroups(data, '''<a[^>]+?href=['"](https?://on\.[^"^']+?)['"][^>]*?btn_showmore1''')[0])
             params = dict(cItem)
             params.update({'good_for_fav':False, 'title':_('Episodes'), 'serie_title': cItem['title'], 'url':url, 'category':category, 'icon':icon, 'desc':desc})
             self.listItems(params, 'video')
@@ -266,9 +266,9 @@ class DarshowCom(CBaseHostClass):
                 title = _('[Trailer]') + ' ' + tabName
             elif 'باقي السيرفرات' in tabName:
                 # diffrents servers
-                servers   = re.compile('''<a[^>]+?href=['"]([^'^"]+?)['"][^>]*?>([^<]+?)<''').findall(item)
+                servers = re.compile('''<a[^>]+?href=['"]([^'^"]+?)['"][^>]*?>([^<]+?)<''').findall(item)
                 for server in servers:
-                    url   = self._getFullUrl(server[0])
+                    url = self._getFullUrl(server[0])
                     title = tabName + ' ' + self.cleanHtmlStr(server[1])
                     if url.startswith('http'):
                         urlTab.append({'name':title, 'url':strwithmeta(url, {'Referer':cItem['url']}), 'need_resolve':1})
@@ -297,7 +297,7 @@ class DarshowCom(CBaseHostClass):
         
         m1 = '?s=http'
         if m1 in videoUrl:
-            videoUrl = videoUrl[videoUrl.find(m1)+3:]
+            videoUrl = videoUrl[videoUrl.find(m1) + 3:]
         
         if 'dardarkom.com' in videoUrl:
             sts, data = self.cm.getPage(videoUrl)
@@ -334,9 +334,9 @@ class DarshowCom(CBaseHostClass):
         
         CBaseHostClass.handleService(self, index, refresh, searchPattern, searchType)
 
-        name     = self.currItem.get("name", '')
+        name = self.currItem.get("name", '')
         category = self.currItem.get("category", '')
-        mode     = self.currItem.get("mode", '')
+        mode = self.currItem.get("mode", '')
         
         printDBG("handleService: ||||| [%s] " % self.currItem)
         self.currList = []

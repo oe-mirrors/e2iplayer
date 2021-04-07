@@ -28,7 +28,7 @@ class Filma24IO(CBaseHostClass):
 
     def __init__(self):
         CBaseHostClass.__init__(self, {'history':'Filma24IO', 'cookie':'Filma24IO.cookie'})
-        self.MAIN_URL    = 'http://www.filma24.io/'
+        self.MAIN_URL = 'http://www.filma24.io/'
         self.DEFAULT_ICON_URL = 'http://www.filma24.io/wp-content/themes/cr_filma_greenv2/assets/img/logo2018.png'
         self.cacheLinks = {}
     
@@ -83,7 +83,7 @@ class Filma24IO(CBaseHostClass):
             params.update({'title':_('Categories'), 'category':'sub_items', 'sub_items':subItems})
             self.addDir(params)
             
-        MAIN_CAT_TAB = [{'category':'search',         'title': _('Search'),       'search_item':True},
+        MAIN_CAT_TAB = [{'category':'search', 'title': _('Search'), 'search_item':True},
                         {'category': 'search_history', 'title': _('Search history'),}]
         self.listsTab(MAIN_CAT_TAB, cItem)
     
@@ -139,7 +139,7 @@ class Filma24IO(CBaseHostClass):
         
         if nextPage != '':
             params = dict(cItem)
-            params.update({'good_for_fav': False, 'title':_('Next page'), 'page':page+1, 'url':nextPage})
+            params.update({'good_for_fav': False, 'title':_('Next page'), 'page':page + 1, 'url':nextPage})
             self.addDir(params)
         
     def exploreItem(self, cItem):
@@ -155,7 +155,7 @@ class Filma24IO(CBaseHostClass):
         desc = []
         try:
             descObj = self.getArticleContent(cItem, data)[0]
-            for item in  descObj['other_info']['custom_items_list']:
+            for item in descObj['other_info']['custom_items_list']:
                 desc.append(item[1])
             desc = ' | '.join(desc) + '[/br]' + descObj['text'] 
         except Exception:
@@ -238,7 +238,7 @@ class Filma24IO(CBaseHostClass):
         tmp = self.cm.ph.getDataBeetwenNodes(data, ('<div', '>', 'info-right'), ('</div', '>'), False)[1]
         tmp = self.cm.ph.getAllItemsBeetwenMarkers(tmp, '<span', '</span>')
         for idx in range(1, len(tmp), 2):
-            key = self.cleanHtmlStr(tmp[idx-1])
+            key = self.cleanHtmlStr(tmp[idx - 1])
             val = self.cleanHtmlStr(tmp[idx])
             if key == '' or val == '':
                 continue
@@ -261,9 +261,9 @@ class Filma24IO(CBaseHostClass):
         if title == '':
             title = cItem['title']
         if icon == '':
-            icon  = cItem.get('icon', self.DEFAULT_ICON_URL)
+            icon = cItem.get('icon', self.DEFAULT_ICON_URL)
         if desc == '':
-            desc  = cItem.get('desc', '')
+            desc = cItem.get('desc', '')
         
         return [{'title':self.cleanHtmlStr(title), 'text': self.cleanHtmlStr(desc), 'images':[{'title':'', 'url':self.getFullUrl(icon)}], 'other_info':{'custom_items_list':itemsList}}]
         
@@ -272,7 +272,7 @@ class Filma24IO(CBaseHostClass):
         
         CBaseHostClass.handleService(self, index, refresh, searchPattern, searchType)
 
-        name     = self.currItem.get("name", '')
+        name = self.currItem.get("name", '')
         category = self.currItem.get("category", '')
         printDBG("handleService: ||| name[%s], category[%s] " % (name, category))
         self.currList = []

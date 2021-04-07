@@ -36,11 +36,11 @@ class MovieRulzSX(CBaseHostClass):
         self.AJAX_HEADER = dict(self.HTTP_HEADER)
         self.AJAX_HEADER.update({'X-Requested-With': 'XMLHttpRequest', 'Accept-Encoding':'gzip, deflate', 'Content-Type':'application/x-www-form-urlencoded; charset=UTF-8', 'Accept':'application/json, text/javascript, */*; q=0.01'})
         
-        self.cacheLinks    = {}
+        self.cacheLinks = {}
         self.defaultParams = {'header':self.HTTP_HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
         
         self.MAIN_CAT_TAB = [                             
-                             {'category':'search',         'title': _('Search'),          'search_item':True}, 
+                             {'category':'search', 'title': _('Search'), 'search_item':True}, 
                              {'category':'search_history', 'title': _('Search history')},
                             ]
         self.cacheGenresSections = []
@@ -81,7 +81,7 @@ class MovieRulzSX(CBaseHostClass):
             cTree = cItem['c_tree']
             for item in cTree['list']:
                 title = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(item['dat'], '<a', '</a>')[1])
-                url   = self.getFullUrl(self.cm.ph.getSearchGroups(item['dat'], '''href=['"]([^'^"]+?)['"]''')[0])
+                url = self.getFullUrl(self.cm.ph.getSearchGroups(item['dat'], '''href=['"]([^'^"]+?)['"]''')[0])
                 if url.endswith('movies-by-genres-and-years/') or url.endswith('others-movies/'):
                         params = dict(cItem)
                         params.update({'good_for_fav':False, 'category':nextCategory2, 'title':title, 'url':url})
@@ -106,14 +106,14 @@ class MovieRulzSX(CBaseHostClass):
         if not sts:
             return
         
-        data = self.cm.ph.rgetAllItemsBeetwenNodes(data,  ('</table', '>'), ('<p', '>', 'center;'))
+        data = self.cm.ph.rgetAllItemsBeetwenNodes(data, ('</table', '>'), ('<p', '>', 'center;'))
         for section in data:
             sTitle = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(section, '<p', '</p>')[1])
             tabItems = []
             section = self.cm.ph.getAllItemsBeetwenMarkers(section, '<a', '</a>')
             for item in section:
                 title = self.cleanHtmlStr(item)
-                url   = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''href=['"]([^'^"]+?)['"]''')[0])
+                url = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''href=['"]([^'^"]+?)['"]''')[0])
                 tabItems.append({'title':title, 'url':url})
             if len(tabItems):
                 params = dict(cItem)
@@ -147,8 +147,8 @@ class MovieRulzSX(CBaseHostClass):
         reObjYer = re.compile('(\([0-9]{4}\))')
         data = self.cm.ph.getAllItemsBeetwenNodes(data, ('<div', '>', 'cont_display'), ('</li', '>'))
         for item in data:
-            url   = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''href=['"]([^'^"]+?)['"]''')[0])
-            icon  = self.getFullIconUrl(self.cm.ph.getSearchGroups(item, '''[\s\-]src=['"]([^'^"]+?)['"]''')[0])
+            url = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''href=['"]([^'^"]+?)['"]''')[0])
+            icon = self.getFullIconUrl(self.cm.ph.getSearchGroups(item, '''[\s\-]src=['"]([^'^"]+?)['"]''')[0])
             title = self.cleanHtmlStr(item)
             try:
                 title = ''.join(reObjYer.split(title)[:2])
@@ -162,7 +162,7 @@ class MovieRulzSX(CBaseHostClass):
         
         if self.cm.isValidUrl(nextPage):
             params = dict(cItem)
-            params.update({'good_for_fav':False, 'title':_("Next page"), 'url':nextPage, 'page':page+1})
+            params.update({'good_for_fav':False, 'title':_("Next page"), 'url':nextPage, 'page':page + 1})
             self.addDir(params)
         
     def listSearchResult(self, cItem, searchPattern, searchType):
@@ -265,28 +265,28 @@ class MovieRulzSX(CBaseHostClass):
         data = self.cm.ph.getDataBeetwenNodes(data, ('<header', '>'), ('<style', '>'))[1]
         desc = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(data, '<p', '</p>')[1])
         title = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(data, '<h1', '</h1>')[1])
-        icon  = self.getFullIconUrl(self.cm.ph.getSearchGroups(data, '''\ssrc=['"]([^'^"]+?)['"]''')[0])
+        icon = self.getFullIconUrl(self.cm.ph.getSearchGroups(data, '''\ssrc=['"]([^'^"]+?)['"]''')[0])
         
-        keysMap = {'دولة المسلسل':   'country',
-                   'حالة المسلسل':   'status',
-                   'اللغة':          'language',
-                   'توقيت الحلقات':  'duration',
-                   'الموسم':         'seasons',
-                   'الحلقات':        'episodes',
+        keysMap = {'دولة المسلسل': 'country',
+                   'حالة المسلسل': 'status',
+                   'اللغة': 'language',
+                   'توقيت الحلقات': 'duration',
+                   'الموسم': 'seasons',
+                   'الحلقات': 'episodes',
         
-                   'تصنيف الفيلم':   'genres',
+                   'تصنيف الفيلم': 'genres',
                    'مستوى المشاهدة': 'age_limit',
-                   'سنة الإنتاج':     'year',
-                   'مدة الفيلم':     'duration',
-                   'تقييم IMDB':     'imdb_rating',
-                   'بطولة':          'actors',
-                   'جودة الفيلم':    'quality'}
+                   'سنة الإنتاج': 'year',
+                   'مدة الفيلم': 'duration',
+                   'تقييم IMDB': 'imdb_rating',
+                   'بطولة': 'actors',
+                   'جودة الفيلم': 'quality'}
         data = self.cm.ph.getAllItemsBeetwenNodes(data, ('<i', '>', 'fa-'), ('</span', '>'))
         printDBG(data)
         for item in data:
             tmp = self.cleanHtmlStr(item).split(':')
             marker = tmp[0].strip()
-            value  = tmp[-1].strip().replace(' , ', ', ')
+            value = tmp[-1].strip().replace(' , ', ', ')
             
             printDBG(">>>>>>>>>>>>>>>>>> marker[%s] -> value[%s]" % (marker, value))
             
@@ -312,9 +312,9 @@ class MovieRulzSX(CBaseHostClass):
         
         CBaseHostClass.handleService(self, index, refresh, searchPattern, searchType)
 
-        name     = self.currItem.get("name", '')
+        name = self.currItem.get("name", '')
         category = self.currItem.get("category", '')
-        mode     = self.currItem.get("mode", '')
+        mode = self.currItem.get("mode", '')
         
         printDBG("handleService: |||| name[%s], category[%s] " % (name, category))
         self.cacheLinks = {}

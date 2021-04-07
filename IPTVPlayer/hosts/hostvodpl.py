@@ -54,18 +54,18 @@ class VODPL(CBaseHostClass):
         self.AJAX_HEADER = dict(self.HEADER)
         self.AJAX_HEADER.update({'X-Requested-With': 'XMLHttpRequest'})
         self.MAIN_URL = 'https://vod.pl/'
-        self.cacheFilters  = {}
+        self.cacheFilters = {}
         self.cacheFiltersKeys = []
         self.defaultParams = {'header':self.HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
     
-        self.MAIN_CAT_TAB = [{'category': 'list_filters',  'title': _('Movies'),         'url': self.getFullUrl('filmy'),              'f_element': 'SiteFilmy',},
-                             {'category': 'list_items',    'title': _('Series'),         'url': self.getFullUrl('seriale'),            'f_element': 'SiteSeriale',},
-                             {'category': 'list_filters',  'title': 'Programy onetu',    'url': self.getFullUrl('programy-onetu'),     'f_element': 'SiteProgramyOnetu',},
-                             {'category': 'list_filters',  'title': 'Dokumentalne',      'url': self.getFullUrl('filmy-dokumentalne'), 'f_element': 'SiteDokumenty',},
+        self.MAIN_CAT_TAB = [{'category': 'list_filters', 'title': _('Movies'), 'url': self.getFullUrl('filmy'), 'f_element': 'SiteFilmy',},
+                             {'category': 'list_items', 'title': _('Series'), 'url': self.getFullUrl('seriale'), 'f_element': 'SiteSeriale',},
+                             {'category': 'list_filters', 'title': 'Programy onetu', 'url': self.getFullUrl('programy-onetu'), 'f_element': 'SiteProgramyOnetu',},
+                             {'category': 'list_filters', 'title': 'Dokumentalne', 'url': self.getFullUrl('filmy-dokumentalne'), 'f_element': 'SiteDokumenty',},
                              
                              
-                             {'category': 'search',            'title': _('Search'), 'search_item': True,},
-                             {'category': 'search_history',    'title': _('Search history'),} 
+                             {'category': 'search', 'title': _('Search'), 'search_item': True,},
+                             {'category': 'search_history', 'title': _('Search history'),} 
                             ]
                             
     def getFullIconUrl(self, url):
@@ -138,7 +138,7 @@ class VODPL(CBaseHostClass):
         filter = self.cacheFiltersKeys[f_idx]
         f_idx += 1
         cItem['f_idx'] = f_idx
-        if f_idx  == len(self.cacheFiltersKeys):
+        if f_idx == len(self.cacheFiltersKeys):
             cItem['category'] = nextCategory
         self.listsTab(self.cacheFilters.get(filter, []), cItem)
         
@@ -232,7 +232,7 @@ class VODPL(CBaseHostClass):
                 return
             if 'v_itemTitle' in data:
                 params = dict(cItem)
-                params.update({'title':_("Next page"), 'page':page+1})
+                params.update({'title':_("Next page"), 'page':page + 1})
                 self.addDir(params)
         
     def exploreItem(self, cItem, nextCategory):
@@ -242,10 +242,10 @@ class VODPL(CBaseHostClass):
         if not sts:
             return
         
-        desc  = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(data, '<p class="hyphenate"', '</p>')[1])
+        desc = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(data, '<p class="hyphenate"', '</p>')[1])
         tmpDesc = cItem.get('desc', '') + '[/br]' + desc
         if 'serialDetail' in data:
-            seriesId    = self.cm.ph.getSearchGroups(data, '''\s*['"]?series['"]?\s*:\s*['"]([^'^"]+?)['"]''')[0]
+            seriesId = self.cm.ph.getSearchGroups(data, '''\s*['"]?series['"]?\s*:\s*['"]([^'^"]+?)['"]''')[0]
             data = self.cm.ph.getDataBeetwenMarkers(data, 'v_seasonListContainer', '</ul>')[1]
             seasonTitle = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(data, '<p', '</p>')[1])
             data = self.cm.ph.getAllItemsBeetwenMarkers(data, '<li', '</li>')
@@ -276,7 +276,7 @@ class VODPL(CBaseHostClass):
             episodeTitle = cItem.get('episode_title', '')
             title = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(data, '<div class="v_videoTitle">', '</div>')[1].split('</span>')[0])
             if episodeTitle != '':
-                title +=  ', ' + episodeTitle
+                title += ', ' + episodeTitle
             
             params = dict(cItem)
             params.update({'title':title, 'desc':desc})
@@ -297,12 +297,12 @@ class VODPL(CBaseHostClass):
         tm = str(int(time.time() * 1000))
         jQ = str(random.randrange(562674473039806, 962674473039806))
         authKey = 'FDF9406DE81BE0B573142F380CFA6043'
-        contentUrl = 'http://qi.ckm.onetapi.pl/?callback=jQuery183040'+ jQ + '_' + tm + '&body%5Bid%5D=' + authKey + '&body%5Bjsonrpc%5D=2.0&body%5Bmethod%5D=get_asset_detail&body%5Bparams%5D%5BID_Publikacji%5D=' + ckmId + '&body%5Bparams%5D%5BService%5D=ekstraklasa.onet.pl&content-type=application%2Fjsonp&x-onet-app=player.front.onetapi.pl&_=' + tm
+        contentUrl = 'http://qi.ckm.onetapi.pl/?callback=jQuery183040' + jQ + '_' + tm + '&body%5Bid%5D=' + authKey + '&body%5Bjsonrpc%5D=2.0&body%5Bmethod%5D=get_asset_detail&body%5Bparams%5D%5BID_Publikacji%5D=' + ckmId + '&body%5Bparams%5D%5BService%5D=ekstraklasa.onet.pl&content-type=application%2Fjsonp&x-onet-app=player.front.onetapi.pl&_=' + tm
         sts, data = self.cm.getPage(contentUrl)
         valTab = []
         if sts:
             try:
-                result = byteify(json.loads(data[data.find("(")+1:-2]))
+                result = byteify(json.loads(data[data.find("(") + 1:-2]))
                 strTab = []
                 valTab = []
                 for items in result['result']['0']['formats']['wideo']:
@@ -337,7 +337,7 @@ class VODPL(CBaseHostClass):
                 tmpTab = self._getVideoTab(ckmId)
                 break
             data = self.cm.ph.getDataBeetwenMarkers(data, 'pulsembed_embed', '</div>')[1]
-            url  = self.cm.ph.getSearchGroups(data, 'href="([^"]+?)"')[0] 
+            url = self.cm.ph.getSearchGroups(data, 'href="([^"]+?)"')[0] 
         
         tab = []
         for item in tmpTab:
@@ -357,7 +357,7 @@ class VODPL(CBaseHostClass):
         
         for item in tab:
             name = "type: %s \t bitrate: %s" % (item[0], item[2])
-            url  = item[1]
+            url = item[1]
             videoUrls.append({'name':name, 'url':url, 'need_resolve':0})
             
         return videoUrls
@@ -405,24 +405,24 @@ class VODPL(CBaseHostClass):
         data = self.cm.ph.getDataBeetwenMarkers(data, '<div class="row" id="content-tab">', '<div id="zone')[1]
         
         title = '' #self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(data, '<div class="f_t_b">', '</div>')[1])
-        icon  = self.getFullIconUrl(self.cm.ph.getSearchGroups(data, '''<img[^>]+?src=['"]([^"^']+?\.jpe?g[^"^']*?)["']''')[0])
-        desc  = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(data, '<p>', '</p>', False)[1])
+        icon = self.getFullIconUrl(self.cm.ph.getSearchGroups(data, '''<img[^>]+?src=['"]([^"^']+?\.jpe?g[^"^']*?)["']''')[0])
+        desc = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(data, '<p>', '</p>', False)[1])
         
         for item in [('Rendező(k):', 'directors'),
-                     ('Színészek:',     'actors'),
-                     ('Kategoria:',      'genre')]:
+                     ('Színészek:', 'actors'),
+                     ('Kategoria:', 'genre')]:
             tmpTab = []
             tmp = self.cm.ph.getDataBeetwenMarkers(data, item[0], '</li>', False)[1].split('<br>')
             for t in tmp:
-                t = self.cleanHtmlStr(t).replace(' , ',  ', ')
+                t = self.cleanHtmlStr(t).replace(' , ', ', ')
                 if t != '':
                     tmpTab.append(t)
             if len(tmpTab):
                 otherInfo[item[1]] = ', '.join(tmpTab)
         
-        for item in [('Játékidő:',     'duration'),
+        for item in [('Játékidő:', 'duration'),
                      ('IMDB Pont:', 'imdb_rating'),
-                     ('Nézettség:',       'views')]:
+                     ('Nézettség:', 'views')]:
             tmp = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(data, item[0], '</li>', False)[1])
             if tmp != '':
                 otherInfo[item[1]] = tmp
@@ -441,9 +441,9 @@ class VODPL(CBaseHostClass):
         
         CBaseHostClass.handleService(self, index, refresh, searchPattern, searchType)
 
-        name     = self.currItem.get("name", '')
+        name = self.currItem.get("name", '')
         category = self.currItem.get("category", '')
-        mode     = self.currItem.get("mode", '')
+        mode = self.currItem.get("mode", '')
         
         printDBG("handleService: |||||||||||||||||||||||||||||||||||| name[%s], category[%s] " % (name, category))
         self.currList = []
@@ -477,11 +477,11 @@ class IPTVHost(CHostBase):
     
     def getSearchTypes(self):
         searchTypesOptions = []
-        searchTypesOptions.append(("Wszystkie",    "wszystkie"))
-        searchTypesOptions.append(("Filmy",            "filmy"))
-        searchTypesOptions.append(("Seriale",        "seriale"))
+        searchTypesOptions.append(("Wszystkie", "wszystkie"))
+        searchTypesOptions.append(("Filmy", "filmy"))
+        searchTypesOptions.append(("Seriale", "seriale"))
         searchTypesOptions.append(("Dokumentalne", "dokumenty"))
-        searchTypesOptions.append(("Programy TV",   "programy"))
+        searchTypesOptions.append(("Programy TV", "programy"))
         return searchTypesOptions
     
     #def withArticleContent(self, cItem):

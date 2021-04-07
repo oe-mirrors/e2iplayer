@@ -34,13 +34,13 @@ from Screens.MessageBox import MessageBox
 ###################################################
 # Config options for HOST
 ###################################################
-config.plugins.iptvplayer.efilmytv_login    = ConfigText(default="", fixed_size=False)
+config.plugins.iptvplayer.efilmytv_login = ConfigText(default="", fixed_size=False)
 config.plugins.iptvplayer.efilmytv_password = ConfigText(default="", fixed_size=False)
 
 def GetConfigList():
     optionList = []
-    optionList.append(getConfigListEntry(_("login")+":", config.plugins.iptvplayer.efilmytv_login))
-    optionList.append(getConfigListEntry(_("password")+":", config.plugins.iptvplayer.efilmytv_password))
+    optionList.append(getConfigListEntry(_("login") + ":", config.plugins.iptvplayer.efilmytv_login))
+    optionList.append(getConfigListEntry(_("password") + ":", config.plugins.iptvplayer.efilmytv_password))
     return optionList
 ###################################################
 
@@ -85,9 +85,9 @@ class EFilmyTv(CBaseHostClass):
     def listMainMenu(self, cItem, nextCategory):
         printDBG("EFilmyTv.listMainMenu")
         
-        CAT_TAB = [{'category':'movies',         'title': _('Movies'),     'url':self.getFullUrl('/filmy.html')},
-                   {'category':'series',         'title': _('Series'),     'url':self.getFullUrl('/seriale.html')},
-                   {'category':'search',         'title': _('Search'),          'search_item':True}, 
+        CAT_TAB = [{'category':'movies', 'title': _('Movies'), 'url':self.getFullUrl('/filmy.html')},
+                   {'category':'series', 'title': _('Series'), 'url':self.getFullUrl('/seriale.html')},
+                   {'category':'search', 'title': _('Search'), 'search_item':True}, 
                    {'category':'search_history', 'title': _('Search history')},]
         params = dict(cItem)
         params['desc'] = self.loginMessage
@@ -114,8 +114,8 @@ class EFilmyTv(CBaseHostClass):
             
     def listMoviesCats(self, cItem, nextCategory):
         printDBG("EFilmyTv.listSeriesCats")
-        CAT_TAB = [{'category':'movies_all',   'title': _('--All--')},
-                   {'category':'movies_top',   'title': _('Top')},]
+        CAT_TAB = [{'category':'movies_all', 'title': _('--All--')},
+                   {'category':'movies_top', 'title': _('Top')},]
         cItem = dict(cItem)
         cItem['desc'] = ''
         self.listsTab(CAT_TAB, cItem)
@@ -123,10 +123,10 @@ class EFilmyTv(CBaseHostClass):
         
     def listSeriesCats(self, cItem, nextCategory):
         printDBG("EFilmyTv.listSeriesCats")
-        CAT_TAB = [{'category':'series_all',         'title': _('--All--')},
-                   {'category':'series_abc',         'title': 'ABC'},
-                   {'category':'series_top',         'title': _('Top')},
-                   {'category':'series_last',        'title': 'Ostatnio Aktualizowane'},]
+        CAT_TAB = [{'category':'series_all', 'title': _('--All--')},
+                   {'category':'series_abc', 'title': 'ABC'},
+                   {'category':'series_top', 'title': _('Top')},
+                   {'category':'series_last', 'title': 'Ostatnio Aktualizowane'},]
         cItem = dict(cItem)
         cItem['desc'] = ''
         self.listsTab(CAT_TAB, cItem)
@@ -221,7 +221,7 @@ class EFilmyTv(CBaseHostClass):
         
         if len(self.currList):
             params = dict(cItem)
-            params.update({'good_for_fav':False, 'title':_('Next page'), 'page':page+1, 'desc':''})
+            params.update({'good_for_fav':False, 'title':_('Next page'), 'page':page + 1, 'desc':''})
             self.addDir(params)
             
     def fillSeriesCache(self, url):
@@ -381,7 +381,7 @@ class EFilmyTv(CBaseHostClass):
             url = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''\shref=['"]([^'^"]+?)['"]''')[0])
             icon = self.getFullIconUrl(self.cm.ph.getSearchGroups(item, '''\ssrc=['"]([^'^"]+?)['"]''')[0])
             
-            desc  = []
+            desc = []
             title = ''
             tmp = self.cm.ph.getAllItemsBeetwenNodes(item, ('<a', '>', 'title_'), ('</a', '>'), False)
             for t in tmp:
@@ -726,7 +726,7 @@ class EFilmyTv(CBaseHostClass):
             data = self.cm.ph.getAllItemsBeetwenMarkers(data, '<input', '>')
             post_data = {}
             for item in data:
-                name  = self.cm.ph.getSearchGroups(item, '''name=['"]([^'^"]+?)['"]''')[0]
+                name = self.cm.ph.getSearchGroups(item, '''name=['"]([^'^"]+?)['"]''')[0]
                 value = self.cm.ph.getSearchGroups(item, '''value=['"]([^'^"]+?)['"]''')[0]
                 post_data[name] = value
             
@@ -740,7 +740,7 @@ class EFilmyTv(CBaseHostClass):
             self.loggedIn = True
             data = self.cm.ph.getDataBeetwenNodes(data, ('<div', '>', 'po-zalogowaniu'), ('<a', '>', 'logout.html'))[1]
             data = data.split('</a>')
-            self.loginMessage =  []
+            self.loginMessage = []
             for t in data:
                 t = self.cleanHtmlStr(t)
                 if t not in ['', '>']:
@@ -759,9 +759,9 @@ class EFilmyTv(CBaseHostClass):
         
         CBaseHostClass.handleService(self, index, refresh, searchPattern, searchType)
 
-        name     = self.currItem.get("name", '')
+        name = self.currItem.get("name", '')
         category = self.currItem.get("category", '')
-        mode     = self.currItem.get("mode", '')
+        mode = self.currItem.get("mode", '')
         
         printDBG("handleService: |||| name[%s], category[%s] " % (name, category))
         self.cacheLinks = {}

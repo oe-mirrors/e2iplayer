@@ -5,7 +5,7 @@
 ###################################################
 from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _
 from Plugins.Extensions.IPTVPlayer.components.ihost import IHost, CHostBase, CBaseHostClass, CDisplayListItem, RetHost, CUrlItem, CFavItem
-from Plugins.Extensions.IPTVPlayer.tools.iptvtools import  printDBG, printExc, GetLogoDir, GetFavouritesDir, mkdirs, rm, touch
+from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, GetLogoDir, GetFavouritesDir, mkdirs, rm, touch
 from Plugins.Extensions.IPTVPlayer.tools.iptvfavourites import IPTVFavourites
 from Plugins.Extensions.IPTVPlayer.components.iptvchoicebox import IPTVChoiceBoxItem
 from Plugins.Extensions.IPTVPlayer.libs.crypto.hash.md5Hash import MD5
@@ -118,7 +118,7 @@ class Favourites(CBaseHostClass):
             urlList = self.up.getVideoLinkExt(item.data)
             for item in urlList:
                 name = self.host.cleanHtmlStr(item["name"])
-                url  = item["url"]
+                url = item["url"]
                 retlist.append(CUrlItem(name, url, 0))
             ret = RetHost(RetHost.OK, value=retlist)
         elif CFavItem.RESOLVER_DIRECT_LINK == item.resolver:
@@ -142,7 +142,7 @@ class Favourites(CBaseHostClass):
         printDBG('Favourites.handleService start')
 
         CBaseHostClass.handleService(self, index, refresh, searchPattern, searchType)
-        name     = self.currItem.get("name", None)
+        name = self.currItem.get("name", None)
         category = self.currItem.get("category", '')
         self.currList = [] 
 

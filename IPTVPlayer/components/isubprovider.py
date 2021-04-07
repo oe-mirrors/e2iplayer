@@ -32,7 +32,7 @@ class CSubItem:
         self.name = name
         self.lang = lang
         self.imdbid = imdbid
-        self.subId  = subId
+        self.subId = subId
         
 ## class ISubProvider
 # interface base class with method used to
@@ -169,8 +169,8 @@ class CSubProviderBase(ISubProvider):
         elif 'more' == cItem['type']:
             type = CDisplayListItem.TYPE_MORE
             
-        title       =  cItem.get('title', '')
-        description =  cItem.get('desc', '')
+        title = cItem.get('title', '')
+        description = cItem.get('desc', '')
         
         return CDisplayListItem(name=title,
                                 description=description,
@@ -181,7 +181,7 @@ class CBaseSubProviderClass:
     
     def __init__(self, params={}):
         self.TMP_FILE_NAME = '.iptv_subtitles.file'
-        self.TMP_DIR_NAME  = '/.iptv_subtitles.dir/'
+        self.TMP_DIR_NAME = '/.iptv_subtitles.dir/'
         self.sessionEx = MainSessionWrapper(mainThreadIdx=1) 
         
         proxyURL = params.get('proxyURL', '')
@@ -212,7 +212,7 @@ class CBaseSubProviderClass:
         for item in tab:
             params = dict(cItem)
             params.update(item)
-            params['name']  = 'category'
+            params['name'] = 'category'
             self.addDir(params)
             
     def iptv_execute(self, cmd):
@@ -294,7 +294,7 @@ class CBaseSubProviderClass:
             url = mainUrl + url[1:]
         elif 0 < len(url) and '://' not in url:
             if currUrl == None or not self.cm.isValidUrl(currUrl):
-                url =  mainUrl + url
+                url = mainUrl + url
             else:
                 url = urljoin(currUrl, url)
         return url
@@ -313,7 +313,7 @@ class CBaseSubProviderClass:
             printDBG("CBaseSubProviderClass endHandleService index[%s]" % index)
             # remove item more and store items before and after item more
             self.beforeMoreItemList = self.currList[0:index]
-            self.afterMoreItemList = self.currList[index+1:]
+            self.afterMoreItemList = self.currList[index + 1:]
             self.moreMode = True
             if -1 == index:
                 self.currItem = {"name": None}
@@ -329,7 +329,7 @@ class CBaseSubProviderClass:
                     self.currList.append(item)
             self.currList.extend(self.afterMoreItemList)
             self.beforeMoreItemList = []
-            self.afterMoreItemList  = []
+            self.afterMoreItemList = []
         self.moreMode = False
         
     def imdbGetSeasons(self, imdbid, promSeason=None):
@@ -343,7 +343,7 @@ class CBaseSubProviderClass:
         data = self.cm.ph.getDataBeetwenMarkers(data, '<select id="bySeason"', '</select>', False)[1]
         seasons = re.compile('value="([0-9]+?)"').findall(data)
         for season in seasons:
-            if None != promSeason and  season == str(promSeason):
+            if None != promSeason and season == str(promSeason):
                 promotItem = season
             else:
                 list.append(season)
@@ -373,7 +373,7 @@ class CBaseSubProviderClass:
             episode = self.cm.ph.getSearchGroups(item, 'content="([0-9]+?)"')[0]
             params = {"episode_title":episodeTitle, "episode":episode, "eimdbid":eimdbid}
             
-            if None != promEpisode and  episode == str(promEpisode):
+            if None != promEpisode and episode == str(promEpisode):
                 promotItem = params
             else:
                 list.append(params)

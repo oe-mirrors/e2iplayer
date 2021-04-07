@@ -28,9 +28,9 @@ class Sovdub(CBaseHostClass):
         self.MAIN_URL = 'http://sovdub.ru/'
         self.DEFAULT_ICON_URL = self.getFullIconUrl('/templates/simplefilms/images/logo.png')
 
-        self.MAIN_CAT_TAB = [{'category': 'genres',         'title': _('Genres'),    'url': self.getMainUrl()},
-                             {'category': 'countries',      'title': _('Countries'), 'url': self.getMainUrl()},
-                             {'category': 'search',         'title': _('Search'),    'search_item': True},
+        self.MAIN_CAT_TAB = [{'category': 'genres', 'title': _('Genres'), 'url': self.getMainUrl()},
+                             {'category': 'countries', 'title': _('Countries'), 'url': self.getMainUrl()},
+                             {'category': 'search', 'title': _('Search'), 'search_item': True},
                              {'category': 'search_history', 'title': _('Search history')}
                             ]
         self.encoding = ''
@@ -77,7 +77,7 @@ class Sovdub(CBaseHostClass):
         url = cItem['url']
         if '?' in url:
             post = url.split('?')
-            url  = post[0]
+            url = post[0]
             post = post[1]
         else:
             post = ''
@@ -104,8 +104,8 @@ class Sovdub(CBaseHostClass):
         data = re.compile('src="(.*jpg)".*alt="(.*)" />*\s.*<a href="(.*?)"></a></div>').findall(data)
         for item in data:
             title = item[1]
-            icon  = self.getFullIconUrl(item[0])
-            url   = self.getFullUrl(item[2])
+            icon = self.getFullIconUrl(item[0])
+            url = self.getFullUrl(item[2])
             printDBG(icon)
             params = dict(cItem)
             params.update({'category': category, 'title': title, 'icon': icon, 'desc': title, 'url': url})
@@ -113,7 +113,7 @@ class Sovdub(CBaseHostClass):
 
         if nextPage:
             params = dict(cItem)
-            params.update({'title': _('Next page'), 'page': cItem.get('page', 1)+1})
+            params.update({'title': _('Next page'), 'page': cItem.get('page', 1) + 1})
             self.addDir(params)
 
     def listContent(self, cItem):
@@ -126,12 +126,12 @@ class Sovdub(CBaseHostClass):
         
         url = ''
         hasLinks = False
-        data = self.cm.ph.getAllItemsBeetwenNodes(data, ('<iframe', '>'),  ('</iframe', '>'), caseSensitive=False)
+        data = self.cm.ph.getAllItemsBeetwenNodes(data, ('<iframe', '>'), ('</iframe', '>'), caseSensitive=False)
         for item in data:
             url = self.cm.ph.getSearchGroups(item, '''<iframe[^>]+?src=["']([^"^']+?)['"]''', 1, True)[0]
             url = url.replace('amp;', '')
             url = self.getFullUrl(url)
-            if 'money.' not in url and 1  == self.up.checkHostSupport(url):
+            if 'money.' not in url and 1 == self.up.checkHostSupport(url):
                 hasLinks = True
             
         if self.cm.isValidUrl(url):
@@ -169,9 +169,9 @@ class Sovdub(CBaseHostClass):
             title = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(item, '<h2', '</h2>')[1])
             if title == '':
                 title = self.cleanHtmlStr(self.cm.ph.getSearchGroups(item, '''alt=['"]([^'^"]+?)['"]''')[0])
-            icon  = self.getFullIconUrl(self.cm.ph.getSearchGroups(item, '''src=['"]([^'^"]+?)['"]''')[0])
-            url   = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''href=['"]([^'^"]+?)['"]''')[0])
-            desc  = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(item, '</h2>', '</div>')[1])
+            icon = self.getFullIconUrl(self.cm.ph.getSearchGroups(item, '''src=['"]([^'^"]+?)['"]''')[0])
+            url = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''href=['"]([^'^"]+?)['"]''')[0])
+            desc = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(item, '</h2>', '</div>')[1])
             if self.cm.isValidUrl(url):
                 params = dict(cItem)
                 params.update({'category': 'list_content', 'title': title, 'icon': icon, 'desc': desc, 'url': url})
@@ -185,7 +185,7 @@ class Sovdub(CBaseHostClass):
         if not sts:
             return []
 
-        data = self.cm.ph.getAllItemsBeetwenNodes(data, ('<iframe', '>'),  ('</iframe', '>'), caseSensitive=False)
+        data = self.cm.ph.getAllItemsBeetwenNodes(data, ('<iframe', '>'), ('</iframe', '>'), caseSensitive=False)
         for item in data:
             url = self.cm.ph.getSearchGroups(item, '''<iframe[^>]+?src=["']([^"^']+?)['"]''', 1, True)[0]
             url = url.replace('amp;', '')
@@ -211,7 +211,7 @@ class Sovdub(CBaseHostClass):
 
         CBaseHostClass.handleService(self, index, refresh, searchPattern, searchType)
 
-        name     = self.currItem.get("name", '')
+        name = self.currItem.get("name", '')
         category = self.currItem.get("category", '')
         printDBG("handleService: |||||||||||||||||||||||||||||||||||| name[%s], category[%s] " % (name, category))
         self.currList = []

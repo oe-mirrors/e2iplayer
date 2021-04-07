@@ -34,7 +34,7 @@ from Screens.MessageBox import MessageBox
 ###################################################
 # Config options for HOST
 ###################################################
-config.plugins.iptvplayer.firstonetv_login    = ConfigText(default="", fixed_size=False)
+config.plugins.iptvplayer.firstonetv_login = ConfigText(default="", fixed_size=False)
 config.plugins.iptvplayer.firstonetv_password = ConfigText(default="", fixed_size=False)
 
 def GetConfigList():
@@ -227,8 +227,8 @@ class FirstOneTvApi(CBaseHostClass):
                 jscode2 = tmp[idx]
             elif 'var LOGGEDIN' in tmp[idx]:
                 jscode1 = tmp[idx]
-            elif 'stream:' in tmp[idx-1]:
-                streamJs = ph.search(tmp[idx-1], SRC_URI_RE)[1]
+            elif 'stream:' in tmp[idx - 1]:
+                streamJs = ph.search(tmp[idx - 1], SRC_URI_RE)[1]
 
         country = ph.search(jscode2, '''country\s*?=\s*?['"]([^'^"]+?)['"]''')[0]
         cToken = ph.search(jscode2, '''cToken\s*?=\s*?['"]([^'^"]+?)['"]''')[0]

@@ -35,13 +35,13 @@ from Screens.MessageBox import MessageBox
 ###################################################
 # Config options for HOST
 ###################################################
-config.plugins.iptvplayer.rtbfbe_login    = ConfigText(default="", fixed_size=False)
+config.plugins.iptvplayer.rtbfbe_login = ConfigText(default="", fixed_size=False)
 config.plugins.iptvplayer.rtbfbe_password = ConfigText(default="", fixed_size=False)
 
 def GetConfigList():
     optionList = []
-    optionList.append(getConfigListEntry(_("e-mail")+":", config.plugins.iptvplayer.rtbfbe_login))
-    optionList.append(getConfigListEntry(_("password")+":", config.plugins.iptvplayer.rtbfbe_password))
+    optionList.append(getConfigListEntry(_("e-mail") + ":", config.plugins.iptvplayer.rtbfbe_login))
+    optionList.append(getConfigListEntry(_("password") + ":", config.plugins.iptvplayer.rtbfbe_password))
     return optionList
 ###################################################
 
@@ -49,7 +49,7 @@ def gettytul():
     return 'https://www.rtbf.be/'
 
 class RTBFBE(CBaseHostClass):
-    CHECK_GEO_LOCK=True
+    CHECK_GEO_LOCK = True
     def __init__(self):
         CBaseHostClass.__init__(self, {'history':'rtbf.be', 'cookie':'rtbf.be.cookie'})
         self.USER_AGENT = 'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:40.0) Gecko/20100101 Firefox/40.0'
@@ -95,12 +95,12 @@ class RTBFBE(CBaseHostClass):
     def listMainMenu(self, cItem, nextCategory):
         printDBG("RTBFBE.listMainMenu")
         
-        CAT_TAB = [{'category':'sections',       'title': _('Main'),       'url':self.getFullUrl('/auvio/')},
-                   {'category':'live_categories','title': 'En Direct',     'url':self.getFullUrl('/auvio/direct')},
-                   {'category':'channels',       'title': 'Chaînes',       'url':self.getFullUrl('/news/api/menu?site=media')},
-                   {'category':'sections',       'title': 'Émissions',     'url':self.getFullUrl('/auvio/emissions')},
-                   {'category':'categories',     'title': 'Catégories',    'url':self.getFullUrl('/news/api/menu?site=media')},
-                   {'category':'search',         'title': _('Search'),          'search_item':True}, 
+        CAT_TAB = [{'category':'sections', 'title': _('Main'), 'url':self.getFullUrl('/auvio/')},
+                   {'category':'live_categories','title': 'En Direct', 'url':self.getFullUrl('/auvio/direct')},
+                   {'category':'channels', 'title': 'Chaînes', 'url':self.getFullUrl('/news/api/menu?site=media')},
+                   {'category':'sections', 'title': 'Émissions', 'url':self.getFullUrl('/auvio/emissions')},
+                   {'category':'categories', 'title': 'Catégories', 'url':self.getFullUrl('/news/api/menu?site=media')},
+                   {'category':'search', 'title': _('Search'), 'search_item':True}, 
                    {'category':'search_history', 'title': _('Search history')},]
         
         params = dict(cItem)
@@ -220,7 +220,7 @@ class RTBFBE(CBaseHostClass):
             
             if NUM_ITEMS == len(self.currList):
                 params = dict(cItem)
-                params.update({'good_for_fav':False, 'title':_('Next page'), 'page':page+1})
+                params.update({'good_for_fav':False, 'title':_('Next page'), 'page':page + 1})
                 self.addDir(params)
         except Exception:
             printExc()
@@ -394,7 +394,7 @@ class RTBFBE(CBaseHostClass):
                 
         if nextPage != '' and len(self.currList):
             params = dict(cItem)
-            params.update({'good_for_fav':False, 'default_media_type':defaultMediaType, 'category':nextCategory2, 'url':nextPage,  'title':_('Next page'), 'page':page+1})
+            params.update({'good_for_fav':False, 'default_media_type':defaultMediaType, 'category':nextCategory2, 'url':nextPage, 'title':_('Next page'), 'page':page + 1})
             self.addDir(params)
         
     def listSubItems(self, cItem):
@@ -508,7 +508,7 @@ class RTBFBE(CBaseHostClass):
                         if name == '':
                             name = type
                         if self.cm.isValidUrl(url):
-                            mp4Tab.append({'name':'[mp4] %sp'% name, 'url':url, 'quality':name})
+                            mp4Tab.append({'name':'[mp4] %sp' % name, 'url':url, 'quality':name})
                     mp4Tab = CSelOneLink(mp4Tab, lambda item: int(item['quality']), 999999999).getSortedLinks()
                 except Exception:
                     printExc()
@@ -627,20 +627,20 @@ class RTBFBE(CBaseHostClass):
         if sts: 
             requestId = 'R%s' % random.randint(1000000000, 9999999999)
             url = 'https://login.rtbf.be/accounts.login?context=%s&&saveResponseID=%s' % (requestId, requestId)
-            post_data = {'loginID':            self.login,
-                         'password':           self.password,
-                         'sessionExpiration':  '-2',
-                         'targetEnv':          'jssdk',
-                         'include':            'profile,data,emails,subscriptions,preferences,',
-                         'includeUserInfo':    'true',
-                         'loginMode':          'standard',
-                         'APIKey':             self.dataKey,
-                         'source':             'showScreenSet',
-                         'sdk':                'js_8.1.20',
-                         'authMode':           'cookie',
-                         'pageURL':            self.getFullUrl('/auvio/'),
+            post_data = {'loginID': self.login,
+                         'password': self.password,
+                         'sessionExpiration': '-2',
+                         'targetEnv': 'jssdk',
+                         'include': 'profile,data,emails,subscriptions,preferences,',
+                         'includeUserInfo': 'true',
+                         'loginMode': 'standard',
+                         'APIKey': self.dataKey,
+                         'source': 'showScreenSet',
+                         'sdk': 'js_8.1.20',
+                         'authMode': 'cookie',
+                         'pageURL': self.getFullUrl('/auvio/'),
                          'format'              'json'
-                         'context':            requestId
+                         'context': requestId
                          }
             sts, data = self.getPage(url, post_data=post_data)
         if sts: 
@@ -655,7 +655,7 @@ class RTBFBE(CBaseHostClass):
                 if 200 == data['statusCode']:
                     self.loginData = data
                     url = 'https://www.rtbf.be/api/sso/login'
-                    post_data = {'gigyaId':   data['UID'], 
+                    post_data = {'gigyaId': data['UID'], 
                                  'signature': data['UIDSignature'], 
                                  'timestamp': data['signatureTimestamp']}
                     urlParams = dict(self.defaultParams)
@@ -691,9 +691,9 @@ class RTBFBE(CBaseHostClass):
             RTBFBE.CHECK_GEO_LOCK = False
             self.informAboutGeoBlockingIfNeeded('BE')
 
-        name     = self.currItem.get("name", '')
+        name = self.currItem.get("name", '')
         category = self.currItem.get("category", '')
-        mode     = self.currItem.get("mode", '')
+        mode = self.currItem.get("mode", '')
         
         printDBG("handleService: |||| name[%s], category[%s] " % (name, category))
         self.cacheLinks = {}

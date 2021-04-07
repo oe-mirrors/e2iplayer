@@ -23,9 +23,9 @@ from Components.config import config, ConfigSelection, ConfigText, getConfigList
 ###################################################
 # Config options for HOST
 ###################################################
-config.plugins.iptvplayer.gomovies_proxy = ConfigSelection(default="None", choices=[("None",         _("None")),
-                                                                                        ("proxy_1",  _("Alternative proxy server (1)")),
-                                                                                        ("proxy_2",  _("Alternative proxy server (2)"))])
+config.plugins.iptvplayer.gomovies_proxy = ConfigSelection(default="None", choices=[("None", _("None")),
+                                                                                        ("proxy_1", _("Alternative proxy server (1)")),
+                                                                                        ("proxy_2", _("Alternative proxy server (2)"))])
 config.plugins.iptvplayer.gomovies_alt_domain = ConfigText(default="", fixed_size=False)
 
 def GetConfigList():
@@ -123,10 +123,10 @@ class GoMovies(CBaseHostClass):
         printDBG("GoMovies.listMain")
         if self.MAIN_URL == None:
             self.selectDomain()
-        MAIN_CAT_TAB = [{'category':'list_filter_genre', 'title': 'Movies',    'url':self.getFullUrl('/movie/filter/movies/')},
+        MAIN_CAT_TAB = [{'category':'list_filter_genre', 'title': 'Movies', 'url':self.getFullUrl('/movie/filter/movies/')},
                         {'category':'list_filter_genre', 'title': 'TV-Series', 'url':self.getFullUrl('/movie/filter/seasons/')},
-                        {'category': 'search',          'title': _('Search'), 'search_item': True,},
-                        {'category': 'search_history',  'title': _('Search history'),} 
+                        {'category': 'search', 'title': _('Search'), 'search_item': True,},
+                        {'category': 'search_history', 'title': _('Search history'),} 
                        ]
         self.listsTab(MAIN_CAT_TAB, cItem)
         
@@ -147,9 +147,9 @@ class GoMovies(CBaseHostClass):
             self.cacheFilters['sort_by'].append({'sort_by':value, 'title':self.cleanHtmlStr(item)})
             
         for filter in [{'key':'quality', 'marker':'Quality</span>'},
-                       {'key':'genre',   'marker':'Genre</span>'},
+                       {'key':'genre', 'marker':'Genre</span>'},
                        {'key':'country', 'marker':'Country</span>'},
-                       {'key':'year',    'marker':'Release</span>'}]:
+                       {'key':'year', 'marker':'Release</span>'}]:
             self.cacheFilters[filter['key']] = []
             tmp = self.cm.ph.getDataBeetwenMarkers(data, filter['marker'], '</ul>', False)[1]
             tmp = self.cm.ph.getAllItemsBeetwenMarkers(tmp, '<li', '</li>', withMarkers=True, caseSensitive=False)
@@ -195,7 +195,7 @@ class GoMovies(CBaseHostClass):
         
         data = self.cm.ph.getAllItemsBeetwenNodes(data, ('<div', '>', 'item'), ('</div', '>'), False)
         for item in data:
-            url  = self.getFullUrl(self.cm.ph.getSearchGroups(item, 'href="([^"]+?)"')[0])
+            url = self.getFullUrl(self.cm.ph.getSearchGroups(item, 'href="([^"]+?)"')[0])
             icon = self.getFullIconUrl(self.cm.ph.getSearchGroups(item, 'data\-original="([^"]+?)"')[0])
             
             movieId = self.cm.ph.getSearchGroups(item, 'data-movie-id="([^"]+?)"')[0]
@@ -204,9 +204,9 @@ class GoMovies(CBaseHostClass):
             desc = self.cleanHtmlStr(item)
             title = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(item, '<h2', '</h2>')[1])
             if title == '':
-                title  = self.cleanHtmlStr(self.cm.ph.getSearchGroups(item, 'title="([^"]+?)"')[0])
+                title = self.cleanHtmlStr(self.cm.ph.getSearchGroups(item, 'title="([^"]+?)"')[0])
             if title == '':
-                title  = self.cleanHtmlStr(self.cm.ph.getSearchGroups(item, 'alt="([^"]+?)"')[0])
+                title = self.cleanHtmlStr(self.cm.ph.getSearchGroups(item, 'alt="([^"]+?)"')[0])
             if url.startswith('http'):
                 params = dict(cItem)
                 params.update({'good_for_fav': True, 'category':nextCategory, 'title':title, 'url':url, 'movie_id':movieId, 'desc':desc, 'info_url':url, 'icon':icon})
@@ -214,7 +214,7 @@ class GoMovies(CBaseHostClass):
         
         if nextPage != '':
             params = dict(cItem)
-            params.update({'title':_("Next page"), 'url':self.getFullUrl(nextPage), 'page':page+1})
+            params.update({'title':_("Next page"), 'url':self.getFullUrl(nextPage), 'page':page + 1})
             self.addDir(params)
     
     def exploreItem(self, cItem):
@@ -243,12 +243,12 @@ class GoMovies(CBaseHostClass):
             return
         
         titlesTab = []
-        self.cacheLinks  = {}
+        self.cacheLinks = {}
         
         data = ph.findall(data, ('<div', '>', 'server-'), ('<div', '>', 'clearfix'))
         for tmp in data:
             serverName = ph.clean_html(ph.find(tmp, '<strong', '</strong>')[1])
-            serverId   = ph.search(tmp, '''server\-([0-9]+)''')[0]
+            serverId = ph.search(tmp, '''server\-([0-9]+)''')[0]
             tmp = ph.findall(tmp, '<a', '</a>')
             for item in tmp:
                 title = ph.clean_html(item)
@@ -320,8 +320,8 @@ class GoMovies(CBaseHostClass):
             return retTab
         
         title = self.cleanHtmlStr(self.cm.ph.getSearchGroups(data, '<meta property="og:title"[^>]+?content="([^"]+?)"')[0])
-        desc  = self.cleanHtmlStr(self.cm.ph.getSearchGroups(data, '<meta property="og:description"[^>]+?content="([^"]+?)"')[0])
-        icon  = self.getFullUrl(self.cm.ph.getSearchGroups(data, '<meta property="og:image"[^>]+?content="([^"]+?)"')[0])
+        desc = self.cleanHtmlStr(self.cm.ph.getSearchGroups(data, '<meta property="og:description"[^>]+?content="([^"]+?)"')[0])
+        icon = self.getFullUrl(self.cm.ph.getSearchGroups(data, '<meta property="og:image"[^>]+?content="([^"]+?)"')[0])
         
         if title == '':
             title = cItem['title']
@@ -332,14 +332,14 @@ class GoMovies(CBaseHostClass):
         
         descData = self.cm.ph.getDataBeetwenMarkers(data, '<div class="mvic-info">', '<div class="clearfix">', False)[1]
         descData = self.cm.ph.getAllItemsBeetwenMarkers(descData, '<p', '</p>')
-        descTabMap = {"Director":     "director",
-                      "Actor":        "actors",
-                      "Genre":        "genre",
-                      "Country":      "country",
-                      "Release":      "released",
-                      "Duration":     "duration",
-                      "Quality":      "quality",
-                      "IMDb":         "rated"}
+        descTabMap = {"Director": "director",
+                      "Actor": "actors",
+                      "Genre": "genre",
+                      "Country": "country",
+                      "Release": "released",
+                      "Duration": "duration",
+                      "Quality": "quality",
+                      "IMDb": "rated"}
         
         otherInfo = {}
         for item in descData:
@@ -374,9 +374,9 @@ class GoMovies(CBaseHostClass):
             #rm(self.COOKIE_FILE)
             self.selectDomain()
 
-        name     = self.currItem.get("name", '')
+        name = self.currItem.get("name", '')
         category = self.currItem.get("category", '')
-        mode     = self.currItem.get("mode", '')
+        mode = self.currItem.get("mode", '')
         
         printDBG("handleService: || name[%s], category[%s] " % (name, category))
         self.currList = []

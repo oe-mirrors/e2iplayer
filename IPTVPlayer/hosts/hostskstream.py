@@ -26,9 +26,9 @@ from Components.config import config, ConfigSelection, ConfigText, getConfigList
 ###################################################
 # Config options for HOST
 ###################################################
-config.plugins.iptvplayer.skstream_proxy = ConfigSelection(default="None", choices=[("None",     _("None")),
-                                                                                        ("proxy_1",  _("Alternative proxy server (1)")),
-                                                                                        ("proxy_2",  _("Alternative proxy server (2)"))])
+config.plugins.iptvplayer.skstream_proxy = ConfigSelection(default="None", choices=[("None", _("None")),
+                                                                                        ("proxy_1", _("Alternative proxy server (1)")),
+                                                                                        ("proxy_2", _("Alternative proxy server (2)"))])
 config.plugins.iptvplayer.skstream_alt_domain = ConfigText(default="", fixed_size=False)
 
 def GetConfigList():
@@ -118,12 +118,12 @@ class SKStream(CBaseHostClass):
         self.DEFAULT_ICON_URL = self.getFullIconUrl('/apple-touch-icon.png')
         
     def listMainMenu(self, cItem):
-        MAIN_CAT_TAB = [{'category':'list_categories',         'title': 'Films',                    'url':self.getFullUrl('/films')},
-                        {'category':'list_categories',         'title': 'Séries',                   'url':self.getFullUrl('/series')},
-                        {'category':'list_categories',         'title': 'Mangas',                   'url':self.getFullUrl('/mangas')},
+        MAIN_CAT_TAB = [{'category':'list_categories', 'title': 'Films', 'url':self.getFullUrl('/films')},
+                        {'category':'list_categories', 'title': 'Séries', 'url':self.getFullUrl('/series')},
+                        {'category':'list_categories', 'title': 'Mangas', 'url':self.getFullUrl('/mangas')},
                         
-                        {'category': 'search',          'title': _('Search'), 'search_item': True, },
-                        {'category': 'search_history',  'title': _('Search history'),} 
+                        {'category': 'search', 'title': _('Search'), 'search_item': True, },
+                        {'category': 'search_history', 'title': _('Search history'),} 
                        ]
         self.listsTab(MAIN_CAT_TAB, cItem)
         
@@ -146,17 +146,17 @@ class SKStream(CBaseHostClass):
         for section in data:
             sectionTitle = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(section, '<div class="panel-heading">', '</div>')[1])
             
-            groupsTitles  = self.cm.ph.getAllItemsBeetwenMarkers(section, '<span data-target="md-tab', '</span>')
+            groupsTitles = self.cm.ph.getAllItemsBeetwenMarkers(section, '<span data-target="md-tab', '</span>')
             groupsDataTab = self.cm.ph.getAllItemsBeetwenMarkers(section, '<div class="list-group', '</div>')
             for idx in range(len(groupsDataTab)):
                 groupTitle = sectionTitle + ' '
                 if idx < len(groupsTitles):
                     groupTitle += self.cleanHtmlStr(groupsTitles[idx])
-                tmp   = self.cm.ph.getAllItemsBeetwenMarkers(groupsDataTab[idx], '<a', '</a>')
+                tmp = self.cm.ph.getAllItemsBeetwenMarkers(groupsDataTab[idx], '<a', '</a>')
                 tab = []
                 for item in tmp:
                     title = self.cleanHtmlStr(item)
-                    url   = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''href=['"]([^'^"]+?)['"]''')[0])
+                    url = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''href=['"]([^'^"]+?)['"]''')[0])
                     if not self.cm.isValidUrl(url):
                         continue
                     tab.append({'title':title, 'url':url})
@@ -192,11 +192,11 @@ class SKStream(CBaseHostClass):
         data = self.cm.ph.getAllItemsBeetwenMarkers(data, '<a', '</a>')
         printDBG(data)
         for item in data:
-            url   = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''href=['"]([^'^"]+?)['"]''', ignoreCase=True)[0])
+            url = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''href=['"]([^'^"]+?)['"]''', ignoreCase=True)[0])
             if not self.cm.isValidUrl(url):
                 continue
             title = self.cleanHtmlStr(item)
-            icon  = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''<img[^>]+?src=['"]([^'^"]+?)['"]''', ignoreCase=True)[0])
+            icon = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''<img[^>]+?src=['"]([^'^"]+?)['"]''', ignoreCase=True)[0])
             
             params = dict(cItem)
             params.update({'good_for_fav':True, 'category':nextCategory, 'title':title, 'url':url, 'icon':icon})
@@ -204,7 +204,7 @@ class SKStream(CBaseHostClass):
         
         if self.cm.isValidUrl(nextPage):
             params = dict(cItem)
-            params.update({'good_for_fav':False, 'title':_('Next page'), 'url':nextPage, 'page':page+1})
+            params.update({'good_for_fav':False, 'title':_('Next page'), 'url':nextPage, 'page':page + 1})
             self.addDir(params)
             
     def exploreItem(self, cItem, nextCategory):
@@ -230,7 +230,7 @@ class SKStream(CBaseHostClass):
                 tab = []
                 for item in season:
                     title = self.cleanHtmlStr(self.cm.ph.getSearchGroups(item, '''title=['"]([^'^"]+?)['"]''')[0])
-                    url   = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''href=['"]([^'^"]+?)['"]''')[0])
+                    url = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''href=['"]([^'^"]+?)['"]''')[0])
                     if not self.cm.isValidUrl(url):
                         continue
                     tab.append({'title':title, 'url':url})
@@ -264,7 +264,7 @@ class SKStream(CBaseHostClass):
         printDBG("SKStream.getLinksForVideo [%s]" % cItem)
         self.selectDomain()
         
-        urlTab = self.cacheLinks.get(cItem['url'],  [])
+        urlTab = self.cacheLinks.get(cItem['url'], [])
         if len(urlTab):
             return urlTab
             
@@ -335,7 +335,7 @@ class SKStream(CBaseHostClass):
                     attempt = 0
                     params['header'] = dict(params['header'])
                     params['header']['Referer'] = videoUrl.meta['Referer']
-                    params['max_data_size'] = 1024*1024*1024
+                    params['max_data_size'] = 1024 * 1024 * 1024
                     post_data = None
                     while attempt < maxAttempt:
                         attempt += 1
@@ -443,9 +443,9 @@ class SKStream(CBaseHostClass):
         CBaseHostClass.handleService(self, index, refresh, searchPattern, searchType)
         self.selectDomain()
 
-        name     = self.currItem.get("name", '')
+        name = self.currItem.get("name", '')
         category = self.currItem.get("category", '')
-        mode     = self.currItem.get("mode", '')
+        mode = self.currItem.get("mode", '')
         
         printDBG("handleService: |||||||||||||||||||||||||||||||||||| name[%s], category[%s] " % (name, category))
         self.currList = []

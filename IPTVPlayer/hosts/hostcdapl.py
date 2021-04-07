@@ -6,7 +6,7 @@
 from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _
 from Plugins.Extensions.IPTVPlayer.components.ihost import CHostBase, CBaseHostClass, CDisplayListItem
 from Plugins.Extensions.IPTVPlayer.components.recaptcha_v2helper import CaptchaHelper
-from Plugins.Extensions.IPTVPlayer.tools.iptvtools import  printDBG, printExc, MergeDicts, rm, GetCookieDir, ReadTextFile, WriteTextFile
+from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, MergeDicts, rm, GetCookieDir, ReadTextFile, WriteTextFile
 from Plugins.Extensions.IPTVPlayer.libs.e2ijson import loads as json_loads
 from Plugins.Extensions.IPTVPlayer.libs import ph
 ###################################################
@@ -34,8 +34,8 @@ from Screens.MessageBox import MessageBox
 # Config options for HOST
 ###################################################
 config.plugins.iptvplayer.cda_searchsort = ConfigSelection(default="best", choices=[("best", "Najtrafniejsze"), ("date", "Najnowsze"), ("rate", "Najlepiej oceniane"), ("alf", "Alfabetycznie")])
-config.plugins.iptvplayer.cda_login      = ConfigText(default="", fixed_size=False)
-config.plugins.iptvplayer.cda_password   = ConfigText(default="", fixed_size=False)
+config.plugins.iptvplayer.cda_login = ConfigText(default="", fixed_size=False)
+config.plugins.iptvplayer.cda_password = ConfigText(default="", fixed_size=False)
 
 def GetConfigList():
     optionList = []
@@ -62,16 +62,16 @@ class cda(CBaseHostClass, CaptchaHelper):
         self.SEARCH_URL = self.getFullUrl('video/show/%s/p%d?s=%s')
         self.DEFAULT_ICON_URL = 'http://www.download.net.pl/upload/NewsSeptember2015/CDA-Filmy/cdalogo.jpg'
         
-        self.MAIN_TAB = [{'category':'video',             'title': 'Filmy wideo',  'url':''},
-                         {'category':'premium',           'title': 'CDA Premium',  'url':self.getFullUrl('premium')},
-                         {'category':'channels_cats',     'title': 'Kanały',       'url':''},
-                         {'category':'search',            'title': _('Search'), 'search_item':True},
-                         {'category':'search_history',    'title': _('Search history')}]
+        self.MAIN_TAB = [{'category':'video', 'title': 'Filmy wideo', 'url':''},
+                         {'category':'premium', 'title': 'CDA Premium', 'url':self.getFullUrl('premium')},
+                         {'category':'channels_cats', 'title': 'Kanały', 'url':''},
+                         {'category':'search', 'title': _('Search'), 'search_item':True},
+                         {'category':'search_history', 'title': _('Search history')}]
         
-        self.VIDEO_TAB = [{'category':'categories',       'title': 'Główna',       'base_url':'video'},
-                          {'category':'categories',       'title': 'Poczekalnia',  'base_url':'video/poczekalnia'}]
+        self.VIDEO_TAB = [{'category':'categories', 'title': 'Główna', 'base_url':'video'},
+                          {'category':'categories', 'title': 'Poczekalnia', 'base_url':'video/poczekalnia'}]
 
-        self.CATEGORIES_TAB = [{'url': '',       'category':'category', 'title': '--Wszystkie--'}, 
+        self.CATEGORIES_TAB = [{'url': '', 'category':'category', 'title': '--Wszystkie--'}, 
                                {'url': '/kat26', 'category':'category', 'title': 'Krótkie filmy i animacje'}, 
                                {'url': '/kat24', 'category':'category', 'title': 'Filmy Extremalne'}, 
                                {'url': '/kat27', 'category':'category', 'title': 'Motoryzacja, wypadki'}, 
@@ -85,7 +85,7 @@ class cda(CBaseHostClass, CaptchaHelper):
         self.cacheFilters = {}
         self.filtersTab = []
         self.loggedIn = None
-        self.login    = ''
+        self.login = ''
         self.password = ''
 
     def getPage(self, url, addParams={}, post_data=None):
@@ -194,7 +194,7 @@ class cda(CBaseHostClass, CaptchaHelper):
             params = dict(self.defaultParams)
             params['header'] = HEADER
             nextPageData = cItem.get('next_page_data', {})
-            post_data = '{"jsonrpc":"2.0","method":"katalogLoadMore","params":[%s,"%s","%s",{}],"id":%s}' % (page, nextPageData.get('cat', 'all'), nextPageData.get('sort', 'new'), nextPageData.get('id', page-1))
+            post_data = '{"jsonrpc":"2.0","method":"katalogLoadMore","params":[%s,"%s","%s",{}],"id":%s}' % (page, nextPageData.get('cat', 'all'), nextPageData.get('sort', 'new'), nextPageData.get('id', page - 1))
             params['raw_post_data'] = True
             sts, data = self.getPage(self.getFullUrl('premium'), params, post_data)
             if not sts:
@@ -228,7 +228,7 @@ class cda(CBaseHostClass, CaptchaHelper):
             
         if nextPage:
             params = dict(cItem)
-            params.update({'title':_('Next page'), 'page':page+1, 'next_page_data':nextPageData})
+            params.update({'title':_('Next page'), 'page':page + 1, 'next_page_data':nextPageData})
             self.addDir(params)
         
     def listCategory(self, cItem):
@@ -247,7 +247,7 @@ class cda(CBaseHostClass, CaptchaHelper):
             if not sts:
                 return
             if '/info/' in self.cm.meta['url']:
-                searchPattern = ph.search(self.cm.meta['url']+'/', '/info/([^/^\?]+?)[/\?]')[0]
+                searchPattern = ph.search(self.cm.meta['url'] + '/', '/info/([^/^\?]+?)[/\?]')[0]
                 url = self.SEARCH_URL % (searchPattern, 1, searchsort)
                 url += '&duration=' + searchType
 
@@ -287,7 +287,7 @@ class cda(CBaseHostClass, CaptchaHelper):
                 desc = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(item, '<div class="text text-video">', '</div>', False)[1])
                 if '' != desc:
                     descTab.append(desc)
-                desc  = self.cleanHtmlStr(self.cm.ph.getSearchGroups(item, '''<label[^>]+title=['"]([^"^']+?)["']''', 1, True)[0])
+                desc = self.cleanHtmlStr(self.cm.ph.getSearchGroups(item, '''<label[^>]+title=['"]([^"^']+?)["']''', 1, True)[0])
                 if '' == desc: 
                     desc = self.cm.ph.getDataBeetwenMarkers(item, '<div class="text"', '</div>')[1]
                     desc = self.cleanHtmlStr(self.cm.ph.getSearchGroups(item, '''title=['"]([^"^']+?)["']''', 1, True)[0])
@@ -297,16 +297,16 @@ class cda(CBaseHostClass, CaptchaHelper):
                 if desc == '':
                     desc = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(item, ('<', '>', 'count-files'), ('</a', '>'))[1])  
                 
-                title  = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(item, '<div class="text">', '</div>', False)[1])
+                title = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(item, '<div class="text">', '</div>', False)[1])
                 if '' == title:
-                    title  = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(item, '<span style="color: #B82D2D; font-size: 14px">', '</a>', False)[1])
+                    title = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(item, '<span style="color: #B82D2D; font-size: 14px">', '</a>', False)[1])
                 if '' == title:
-                    title  = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(item, 'alt="', '"', False)[1])
+                    title = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(item, 'alt="', '"', False)[1])
                 if '' == title:
                     title = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(item, ('<a', '>', 'link-title'), ('</a', '>'))[1])
                 
-                url    = self.getFullUrl(self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(item, 'href="', '"', False)[1]))
-                icon   = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(item, 'src="', '"', False)[1])
+                url = self.getFullUrl(self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(item, 'href="', '"', False)[1]))
+                icon = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(item, 'src="', '"', False)[1])
                 params = {'good_for_fav':True, 'title':self.cleanHtmlStr(title), 'url':url, 'icon':icon, 'desc':desc}
                 if '/video' in url:
                     self.addVideo(params)
@@ -315,7 +315,7 @@ class cda(CBaseHostClass, CaptchaHelper):
                     self.addDir(params)
 
             if nextPage:
-                self.addDir(MergeDicts(cItem, {'good_for_fav':False, 'url':nextPage, 'title':'Następna strona', 'page':page+1}))
+                self.addDir(MergeDicts(cItem, {'good_for_fav':False, 'url':nextPage, 'title':'Następna strona', 'page':page + 1}))
 
     def listChannelsCategories(self, cItem, nextCategory):
         printDBG("cda.listChannelsCategories [%s]" % cItem['url'])
@@ -334,10 +334,10 @@ class cda(CBaseHostClass, CaptchaHelper):
             for item in tmp:
                 data.append('"%s"' % item)
             data = '[%s]' % ','.join(data)
-            data   = json_loads(data, '')
-            cats   = json_loads(cats, '')
+            data = json_loads(data, '')
+            cats = json_loads(cats, '')
             counts = json_loads(counts, '')
-            maps   = json_loads(maps, '')
+            maps = json_loads(maps, '')
             for item in data:
                 url = self.getFullUrl('/video/' + maps.get(item, item.lower()))
                 printDBG("+++++++++++++++++++++++++++++++++")
@@ -363,7 +363,7 @@ class cda(CBaseHostClass, CaptchaHelper):
             url = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''href=['"]([^'^"]+?)['"]''')[0])
             icon = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''src=['"]([^'^"]+?)['"]''')[0])
             title = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(item, ('<', '>', 'tube-name'), ('</span', '>'), False)[1])
-            desc  = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(item, ('<', '>', 'tube-count'), ('</span', '>'), False)[1])
+            desc = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(item, ('<', '>', 'tube-count'), ('</span', '>'), False)[1])
             
             params = dict(cItem)
             params.update({'good_for_fav':True, 'category':nextCategory, 'title':title, 'url':url, 'desc':desc, 'icon':icon})
@@ -541,7 +541,7 @@ class cda(CBaseHostClass, CaptchaHelper):
 
         self.tryTologin()
 
-        name     = self.currItem.get("name", None)
+        name = self.currItem.get("name", None)
         category = self.currItem.get("category", '')
         printDBG("cda.handleService: ---------> name[%s], category[%s] " % (name, category))
         searchPattern = self.currItem.get("search_pattern", searchPattern)
@@ -598,7 +598,7 @@ class IPTVHost(CHostBase):
     def getSearchTypes(self):
         searchTypesOptions = []
         searchTypesOptions.append(("każda długość", "all"))
-        searchTypesOptions.append(("krótkie (poniżej 5 minut)",  "krotkie"))
+        searchTypesOptions.append(("krótkie (poniżej 5 minut)", "krotkie"))
         searchTypesOptions.append(("średnie (powyżej 20 minut)", "srednie"))
-        searchTypesOptions.append(("długie (powyżej 60 minut)",  "dlugie"))
+        searchTypesOptions.append(("długie (powyżej 60 minut)", "dlugie"))
         return searchTypesOptions

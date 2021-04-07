@@ -32,10 +32,10 @@ class DardarkomCom(CBaseHostClass):
         self.AJAX_HEADER.update({'X-Requested-With': 'XMLHttpRequest'})
         
         self.MAIN_URL = 'http://www.dardarkom.com/'
-        self.DEFAULT_ICON_URL  = "https://lh5.ggpht.com/xTFuZwF3HX9yPcDhbyCNnjDtZZ1l9qEwUVwoWsPW9Pxry9JsNLSPvWpbvL9waHbHMg=h900"
+        self.DEFAULT_ICON_URL = "https://lh5.ggpht.com/xTFuZwF3HX9yPcDhbyCNnjDtZZ1l9qEwUVwoWsPW9Pxry9JsNLSPvWpbvL9waHbHMg=h900"
         
-        self.MAIN_CAT_TAB = [{'category':'search',          'title': _('Search'), 'search_item':True},
-                             {'category':'search_history',  'title': _('Search history')}]
+        self.MAIN_CAT_TAB = [{'category':'search', 'title': _('Search'), 'search_item':True},
+                             {'category':'search_history', 'title': _('Search history')}]
         
         self.cacheLinks = {}
         
@@ -93,9 +93,9 @@ class DardarkomCom(CBaseHostClass):
     
     def listItems(self, cItem, nextCategory):
         printDBG("DardarkomCom.listItems")
-        page      = cItem.get('page', 1)
+        page = cItem.get('page', 1)
         post_data = cItem.get('post_data', None) 
-        url       = cItem['url'] 
+        url = cItem['url'] 
         
         attempt = 0
         while attempt < 3:
@@ -112,10 +112,10 @@ class DardarkomCom(CBaseHostClass):
             break
         
         nextPage = self.cm.ph.getDataBeetwenNodes(data, ('<div', '>', 'pagi-nav'), ('</div', '>'), False)[1]
-        nextPage = self.cm.ph.getSearchGroups(nextPage, '''<a[^>]+?href=['"]([^"^']+?)['"][^>]*?>{0}</a>'''.format(page+1))[0]
+        nextPage = self.cm.ph.getSearchGroups(nextPage, '''<a[^>]+?href=['"]([^"^']+?)['"][^>]*?>{0}</a>'''.format(page + 1))[0]
         if '#' == nextPage:
             if '&' in url and post_data == None:
-                nextPage = url.split('&search_start')[0] + '&search_start=%s' % (page+1)
+                nextPage = url.split('&search_start')[0] + '&search_start=%s' % (page + 1)
             elif post_data != None:
                 nextPage = url
         
@@ -126,10 +126,10 @@ class DardarkomCom(CBaseHostClass):
         #printDBG(tmp)
         data = self.cm.ph.getAllItemsBeetwenMarkers(tmp, '<a', '</a>')
         for item in data:
-            url   = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''href=['"]([^"^']+?)['"]''')[0])
+            url = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''href=['"]([^"^']+?)['"]''')[0])
             if not self.cm.isValidUrl(url):
                 continue
-            icon  = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''src=['"]([^"^']+?(:?\.jpe?g|\.png)(:?\?[^'^"]*?)?)['"]''')[0])
+            icon = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''src=['"]([^"^']+?(:?\.jpe?g|\.png)(:?\?[^'^"]*?)?)['"]''')[0])
             title = ''
             desc = []
             item = self.cm.ph.getAllItemsBeetwenNodes(item, ('<div', '>', 'short-'), ('</div', '>'))
@@ -153,25 +153,25 @@ class DardarkomCom(CBaseHostClass):
         
     def listSearchItems(self, cItem, nextCategory):
         printDBG("DardarkomCom.listSearchItems")
-        page      = cItem.get('page', 1)
+        page = cItem.get('page', 1)
         post_data = cItem.get('post_data', None) 
-        url       = cItem['url'] 
+        url = cItem['url'] 
         
-        post_data.update({'search_start':page, 'result_from':12 * (page-1) + 1})
+        post_data.update({'search_start':page, 'result_from':12 * (page - 1) + 1})
         sts, data = self.cm.getPage(url, post_data=post_data)
         if not sts:
             return
         
         nextPage = self.cm.ph.getDataBeetwenNodes(data, ('<div', '>', 'pagi-nav'), ('</div', '>'), False)[1]
-        nextPage = self.cm.ph.getSearchGroups(nextPage, '''<a[^>]+?href=['"]([^"^']+?)['"][^>]*?>{0}</a>'''.format(page+1))[0]
+        nextPage = self.cm.ph.getSearchGroups(nextPage, '''<a[^>]+?href=['"]([^"^']+?)['"][^>]*?>{0}</a>'''.format(page + 1))[0]
         
         #printDBG(data)
         data = self.cm.ph.getAllItemsBeetwenNodes(data, ('<a', '>', 'sres-wrap'), ('</a', '>'))
         for item in data:
-            url   = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''href=['"]([^"^']+?)['"]''')[0])
+            url = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''href=['"]([^"^']+?)['"]''')[0])
             if not self.cm.isValidUrl(url):
                 continue
-            icon  = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''src=['"]([^"^']+?(:?\.jpe?g|\.png)(:?\?[^'^"]*?)?)['"]''')[0])
+            icon = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''src=['"]([^"^']+?(:?\.jpe?g|\.png)(:?\?[^'^"]*?)?)['"]''')[0])
             title = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(item, ('<h', '>'), ('</h', '>'))[1])
             
             desc = []
@@ -227,7 +227,7 @@ class DardarkomCom(CBaseHostClass):
             tmp = self.cm.ph.getAllItemsBeetwenMarkers(tmp, '<li', '</li>')
             for item in tmp:
                 title = self.cleanHtmlStr(item)
-                url   = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''<a[^>]+?href=['"](https?://[^"^']+?)['"]''')[0])
+                url = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''<a[^>]+?href=['"](https?://[^"^']+?)['"]''')[0])
                 params = dict(cItem)
                 params.update({'good_for_fav':False, 'title':title, 'episode': True, 'url':url})
                 self.addVideo(params)
@@ -237,7 +237,7 @@ class DardarkomCom(CBaseHostClass):
         urlTab = []
         
         if cItem.get('trailer', False):
-            return  self.up.getVideoLinkExt(cItem['url'])
+            return self.up.getVideoLinkExt(cItem['url'])
         
         cacheKey = cItem['url']
         urlTab = self.cacheLinks.get(cacheKey, [])
@@ -321,7 +321,7 @@ class DardarkomCom(CBaseHostClass):
         
         m1 = '?s=http'
         if m1 in videoUrl:
-            videoUrl = videoUrl[videoUrl.find(m1)+3:]
+            videoUrl = videoUrl[videoUrl.find(m1) + 3:]
         
         referer = ''
         urlParams = dict(self.defaultParams)
@@ -407,9 +407,9 @@ class DardarkomCom(CBaseHostClass):
         
         CBaseHostClass.handleService(self, index, refresh, searchPattern, searchType)
 
-        name     = self.currItem.get("name", '')
+        name = self.currItem.get("name", '')
         category = self.currItem.get("category", '')
-        mode     = self.currItem.get("mode", '')
+        mode = self.currItem.get("mode", '')
         
         printDBG("handleService: |||||||||||||||||||||||||||||||||||| name[%s], category[%s] " % (name, category))
         self.currList = []

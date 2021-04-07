@@ -96,9 +96,9 @@ class WgetDownloader(BaseDownloader):
         
     def _checkWorkingCallBack(self, callBackFun, code, data):
         reason = ''
-        sts    = True
+        sts = True
         if code != 0:
-            sts    = False
+            sts = False
             reason = data
         self.iptv_sys = None
         callBackFun(sts, reason)
@@ -107,16 +107,16 @@ class WgetDownloader(BaseDownloader):
         '''
             Owervrite start from BaseDownloader
         '''
-        self.url              = url
-        self.filePath         = filePath
+        self.url = url
+        self.filePath = filePath
         self.downloaderParams = params
-        self.fileExtension    = '' # should be implemented in future
+        self.fileExtension = '' # should be implemented in future
         
         self.outData = ''
         self.contentType = 'unknown'
         if None == info_from:
             info_from = WgetDownloader.INFO.FROM_FILE
-        self.infoFrom    = info_from
+        self.infoFrom = info_from
         
         if self.infoFrom == WgetDownloader.INFO.FROM_DOTS:
             info = "--progress=dot:default"
@@ -134,12 +134,12 @@ class WgetDownloader(BaseDownloader):
             self.maxContinueRetry = 3
         
         self.console = eConsoleAppContainer()
-        self.console_appClosed_conn  = eConnectCallback(self.console.appClosed, self._cmdFinished)
+        self.console_appClosed_conn = eConnectCallback(self.console.appClosed, self._cmdFinished)
         self.console_stderrAvail_conn = eConnectCallback(self.console.stderrAvail, self._dataAvail)
         self.console.execute(E2PrioFix(self.downloadCmd))
 
         self.wgetStatus = self.WGET_STS.CONNECTING
-        self.status     = DMHelper.STS.DOWNLOADING
+        self.status = DMHelper.STS.DOWNLOADING
         
         self.onStart()
         return BaseDownloader.CODE_OK
@@ -167,14 +167,14 @@ class WgetDownloader(BaseDownloader):
                     if lines[idx].startswith('Length:'):
                         match = re.search("Length: ([0-9]+?) \([^)]+?\) (\[[^]]+?\])", lines[idx])
                         if match: 
-                            self.remoteFileSize    = int(match.group(1))
+                            self.remoteFileSize = int(match.group(1))
                             self.remoteContentType = match.group(2)
                     elif lines[idx].startswith('Saving to:'):
                         if len(lines) > idx:
-                            self.outData = '\n'.join(lines[idx+1:])
+                            self.outData = '\n'.join(lines[idx + 1:])
                         else:
                             self.outData = ''
-                        self.wgetStatus  = self.WGET_STS.DOWNLOADING
+                        self.wgetStatus = self.WGET_STS.DOWNLOADING
                         if self.infoFrom != WgetDownloader.INFO.FROM_DOTS:
                             self.console_stderrAvail_conn = None
                         break
@@ -210,7 +210,7 @@ class WgetDownloader(BaseDownloader):
         self._setLastError(code)
         
         # break circular references
-        self.console_appClosed_conn  = None
+        self.console_appClosed_conn = None
         self.console_stderrAvail_conn = None
         self.console = None
     
@@ -238,9 +238,9 @@ class WgetDownloader(BaseDownloader):
             print(self.outData)
             dataLen = len(self.outData)
             for idx in range(dataLen):
-                if idx+1 < dataLen:
+                if idx + 1 < dataLen:
                     # default style - one dot = 1K
-                    if '.' == self.outData[idx] and self.outData[idx+1] in ['.', ' ']: 
+                    if '.' == self.outData[idx] and self.outData[idx + 1] in ['.', ' ']: 
                        self.localFileSize += 1024
                 else:
                     self.outData = self.outData[idx:]

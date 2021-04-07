@@ -76,7 +76,7 @@ class IPTVDownloadManagerList(IPTVListComponentBase):
         self._nullPIX()
             
     def buildEntry(self, item):
-        width  = self.l.getItemSize().width()
+        width = self.l.getItemSize().width()
         height = self.l.getItemSize().height()
         res = [None]
         
@@ -109,8 +109,8 @@ class IPTVDownloadManagerList(IPTVListComponentBase):
             fileName = item.fileName.split('/')[-1]
         except Exception:
             fileName = ''
-        res.append((eListboxPythonMultiContent.TYPE_TEXT, 70, 0, width-70, self.fonts[0][2], 0, RT_HALIGN_LEFT|RT_VALIGN_CENTER, fileName))
-        res.append((eListboxPythonMultiContent.TYPE_TEXT, 70, self.fonts[0][2], width-70, self.fonts[1][2], 1, RT_HALIGN_LEFT|RT_VALIGN_CENTER, item.url))
+        res.append((eListboxPythonMultiContent.TYPE_TEXT, 70, 0, width - 70, self.fonts[0][2], 0, RT_HALIGN_LEFT | RT_VALIGN_CENTER, fileName))
+        res.append((eListboxPythonMultiContent.TYPE_TEXT, 70, self.fonts[0][2], width - 70, self.fonts[1][2], 1, RT_HALIGN_LEFT | RT_VALIGN_CENTER, item.url))
         
         status = ""
         info = ""
@@ -128,8 +128,8 @@ class IPTVDownloadManagerList(IPTVListComponentBase):
         elif DMHelper.STS.ERROR == item.status:
             status += _("DOWNLOAD ERROR")
             
-        res.append((eListboxPythonMultiContent.TYPE_TEXT, width - 240, self.fonts[0][2]+self.fonts[1][2], 240, self.fonts[2][2], 2, RT_HALIGN_RIGHT|RT_VALIGN_CENTER, status))
-        res.append((eListboxPythonMultiContent.TYPE_TEXT, 45, self.fonts[0][2]+self.fonts[1][2], width - 45 - 240, self.fonts[2][2], 2, RT_HALIGN_LEFT|RT_VALIGN_CENTER, info))
+        res.append((eListboxPythonMultiContent.TYPE_TEXT, width - 240, self.fonts[0][2] + self.fonts[1][2], 240, self.fonts[2][2], 2, RT_HALIGN_RIGHT | RT_VALIGN_CENTER, status))
+        res.append((eListboxPythonMultiContent.TYPE_TEXT, 45, self.fonts[0][2] + self.fonts[1][2], width - 45 - 240, self.fonts[2][2], 2, RT_HALIGN_LEFT | RT_VALIGN_CENTER, info))
         
         res.append((eListboxPythonMultiContent.TYPE_PIXMAP_ALPHABLEND, 3, 1, 64, 64, self.dictPIX.get(item.status, None)))
          

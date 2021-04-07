@@ -23,7 +23,7 @@
 """
 
 from crypto.cipher.base import BlockCipherWithIntegrity, padWithPadLen, noPadding
-from crypto.cipher.rijndael import  *
+from crypto.cipher.rijndael import *
 from binascii_plus import b2a_hex
 from copy import deepcopy
 
@@ -34,27 +34,27 @@ class Icedoll(Rijndael):
     """
     def __init__(self,key=None,padding=padWithPadLen(),keySize=16,blockSize=16,tapRound=6,extraRounds=6):
         """ key, keysize, blockSize same as Rijndael, tapROund is feedback tap, """
-        self.tapRound    = tapRound     # <------- !!! change from Rijndael !!!
+        self.tapRound = tapRound     # <------- !!! change from Rijndael !!!
         self.extraRounds = extraRounds  # <------- !!! change from Rijndael !!!
-        self.name        = 'ICEDOLL'
-        self.keySize     = keySize
-        self.strength    = keySize
-        self.blockSize   = blockSize  # blockSize is in bytes
-        self.padding     = padding    # change default to noPadding() to get normal ECB behavior
+        self.name = 'ICEDOLL'
+        self.keySize = keySize
+        self.strength = keySize
+        self.blockSize = blockSize  # blockSize is in bytes
+        self.padding = padding    # change default to noPadding() to get normal ECB behavior
 
-        assert(keySize%4==0 and keySize/4 in NrTable[4]), 'key size must be 16,20,24,29 or 32 bytes'
-        assert(blockSize%4==0 and blockSize/4 in NrTable), 'block size must be 16,20,24,29 or 32 bytes'
+        assert(keySize % 4 == 0 and keySize / 4 in NrTable[4]), 'key size must be 16,20,24,29 or 32 bytes'
+        assert(blockSize % 4 == 0 and blockSize / 4 in NrTable), 'block size must be 16,20,24,29 or 32 bytes'
 
-        self.Nb = self.blockSize/4          # Nb is number of columns of 32 bit words
-        self.Nk = keySize/4                 # Nk is the key length in 32-bit words
-        self.Nr = NrTable[self.Nb][self.Nk]+extraRounds # <------- !!! change from Rijndael !!!
+        self.Nb = self.blockSize / 4          # Nb is number of columns of 32 bit words
+        self.Nk = keySize / 4                 # Nk is the key length in 32-bit words
+        self.Nr = NrTable[self.Nb][self.Nk] + extraRounds # <------- !!! change from Rijndael !!!
 
         if key != None:
             self.setKey(key)
 
     def setKey(self, key):
         """ Set a key and generate the expanded key """
-        assert(len(key) == (self.Nk*4)), 'Key length must be same as keySize parameter'
+        assert(len(key) == (self.Nk * 4)), 'Key length must be same as keySize parameter'
         self.__expandedKey = keyExpansion(self, key)
         self.reset()                   # BlockCipher.reset()
 
@@ -62,7 +62,7 @@ class Icedoll(Rijndael):
         """ Encrypt a block, plainTextBlock must be a array of bytes [Nb by 4] """
         self.state = self._toBlock(plainTextBlock)
         if self.encryptBlockCount == 0:   # first call, set frdd back
-            self.priorFeedBack = self._toBlock(chr(0)*(4*self.Nb)) # <------- !!! change from Rijndael !!!
+            self.priorFeedBack = self._toBlock(chr(0) * (4 * self.Nb)) # <------- !!! change from Rijndael !!!
         AddRoundKey(self, self.priorFeedBack)                      # <------- !!! change from Rijndael !!!
         AddRoundKey(self, self.__expandedKey[0:self.Nb])
         for round in range(1, self.Nr):          #for round = 1 step 1 to Nr�1
@@ -71,10 +71,10 @@ class Icedoll(Rijndael):
             MixColumns(self)
             if round == self.tapRound:
                         nextFeedBack = deepcopy(self.state)        # <------- !!! change from Rijndael !!!
-            AddRoundKey(self, self.__expandedKey[round*self.Nb:(round+1)*self.Nb])
+            AddRoundKey(self, self.__expandedKey[round * self.Nb:(round + 1) * self.Nb])
         SubBytes(self)
         ShiftRows(self)
-        AddRoundKey(self, self.__expandedKey[self.Nr*self.Nb:(self.Nr+1)*self.Nb])
+        AddRoundKey(self, self.__expandedKey[self.Nr * self.Nb:(self.Nr + 1) * self.Nb])
         AddRoundKey(self, self.priorFeedBack)                      # <------- !!! change from Rijndael !!!
         self.priorFeedBack = nextFeedBack                          # <------- !!! change from Rijndael !!!
         return self._toBString(self.state)
@@ -83,13 +83,13 @@ class Icedoll(Rijndael):
         """ decrypt a block (array of bytes) """
         self.state = self._toBlock(encryptedBlock)
         if self.decryptBlockCount == 0:   # first call, set frdd back
-            self.priorFeedBack = self._toBlock(chr(0)*(4*self.Nb)) # <------- !!! change from Rijndael !!!
+            self.priorFeedBack = self._toBlock(chr(0) * (4 * self.Nb)) # <------- !!! change from Rijndael !!!
         AddRoundKey(self, self.priorFeedBack)                        # <------- !!! change from Rijndael !!!
-        AddRoundKey(self, self.__expandedKey[self.Nr*self.Nb:(self.Nr+1)*self.Nb])
-        for round in range(self.Nr-1, 0, -1):
+        AddRoundKey(self, self.__expandedKey[self.Nr * self.Nb:(self.Nr + 1) * self.Nb])
+        for round in range(self.Nr - 1, 0, -1):
             InvShiftRows(self)
             InvSubBytes(self)
-            AddRoundKey(self, self.__expandedKey[round*self.Nb:(round+1)*self.Nb])
+            AddRoundKey(self, self.__expandedKey[round * self.Nb:(round + 1) * self.Nb])
             if round == self.tapRound:
                         nextFeedBack = deepcopy(self.state)          # <------- !!! change from Rijndael !!!
             InvMixColumns(self)

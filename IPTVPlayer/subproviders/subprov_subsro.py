@@ -50,8 +50,8 @@ class SubsRoProvider(CBaseSubProviderClass):
         params['cookie'] = 'subsro.cookie'
         CBaseSubProviderClass.__init__(self, params)
         
-        self.USER_AGENT    = 'Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/64.0.3282.168 Safari/537.36'
-        self.HTTP_HEADER   = {'User-Agent':self.USER_AGENT, 'Referer':self.getMainUrl(), 'Accept':'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8', 'Accept-Encoding':'gzip, deflate'}
+        self.USER_AGENT = 'Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/64.0.3282.168 Safari/537.36'
+        self.HTTP_HEADER = {'User-Agent':self.USER_AGENT, 'Referer':self.getMainUrl(), 'Accept':'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8', 'Accept-Encoding':'gzip, deflate'}
         
         self.defaultParams = {'header':self.HTTP_HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
         self.dInfo = params['discover_info']
@@ -68,7 +68,7 @@ class SubsRoProvider(CBaseSubProviderClass):
         actionUrl = self.getFullUrl(self.cm.ph.getSearchGroups(data, '''action=['"]([^'^"]+?)['"]''')[0])
         data = re.compile('''(<input[^>]+?>)''', re.I).findall(data)
         for item in data:
-            name  = self.cm.ph.getSearchGroups(item, '''name=['"]([^'^"]+?)['"]''', ignoreCase=True)[0]
+            name = self.cm.ph.getSearchGroups(item, '''name=['"]([^'^"]+?)['"]''', ignoreCase=True)[0]
             value = self.cm.ph.getSearchGroups(item, '''value=['"]([^'^"]+?)['"]''', ignoreCase=True)[0]
             if '' != name:
                 query[name] = value
@@ -114,8 +114,8 @@ class SubsRoProvider(CBaseSubProviderClass):
             if url == '':
                 continue
             
-            title  = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(item, ('<h', '>', 'title'), ('</h', '>'), False)[1])
-            lang   = self.cm.ph.getSearchGroups(item, 'flag\-([a-z]+?)\-big\.png')[0] 
+            title = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(item, ('<h', '>', 'title'), ('</h', '>'), False)[1])
+            lang = self.cm.ph.getSearchGroups(item, 'flag\-([a-z]+?)\-big\.png')[0] 
             
             descTab = []
             tmp = self.cm.ph.getAllItemsBeetwenMarkers(item, '<p', '</p>')
@@ -138,8 +138,8 @@ class SubsRoProvider(CBaseSubProviderClass):
         if not sts:
             return
         imdbid = self.cm.ph.getSearchGroups(data, '/title/(tt[0-9]+?)[^0-9]')[0]
-        url    = self.getFullUrl(self.cm.ph.getSearchGroups(data, 'href="([^"]*?/descarca/[^"]+?)"')[0])
-        subId  = url.rsplit('/', 1)[-1]
+        url = self.getFullUrl(self.cm.ph.getSearchGroups(data, 'href="([^"]*?/descarca/[^"]+?)"')[0])
+        subId = url.rsplit('/', 1)[-1]
 
         try:
             fps = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(data, 'FPS', '</p>', False)[1])
@@ -180,13 +180,13 @@ class SubsRoProvider(CBaseSubProviderClass):
     def downloadSubtitleFile(self, cItem):
         printDBG("SubsceneComProvider.downloadSubtitleFile")
         retData = {}
-        title    = cItem['title']
-        lang     = cItem['lang']
-        subId    = cItem['sub_id']
-        imdbid   = cItem['imdbid']
+        title = cItem['title']
+        lang = cItem['lang']
+        subId = cItem['sub_id']
+        imdbid = cItem['imdbid']
         inFilePath = cItem['file_path']
-        ext      = cItem.get('ext', 'srt')
-        fps      = cItem.get('fps', 0)
+        ext = cItem.get('ext', 'srt')
+        fps = cItem.get('fps', 0)
         
         outFileName = self._getFileName(title, lang, subId, imdbid, fps, ext)
         outFileName = GetSubtitlesDir(outFileName)
@@ -206,7 +206,7 @@ class SubsRoProvider(CBaseSubProviderClass):
         
         CBaseSubProviderClass.handleService(self, index, refresh)
 
-        name     = self.currItem.get("name", '')
+        name = self.currItem.get("name", '')
         category = self.currItem.get("category", '')
         
         printDBG("handleService: |||||||||||||||||||||||||||||||||||| name[%s], category[%s] " % (name, category))

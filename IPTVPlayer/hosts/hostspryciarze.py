@@ -204,10 +204,10 @@ class Spryciarze(CBaseHostClass):
         for i in range(pageNum):
             tmpItem = {}
             tmpItem['type'] = 'subSubPage'
-            tmpItem['url'] =  self.MAIN_URL + 'szukaj/' + pattern + ('/film/page:%d' % (i+1)) + '/sort:ocena'
+            tmpItem['url'] = self.MAIN_URL + 'szukaj/' + pattern + ('/film/page:%d' % (i + 1)) + '/sort:ocena'
             tmpItem['name'] = 'Strona %d' % (i + 1)
             
-            if (i+1) < pageNum:
+            if (i + 1) < pageNum:
                 tmpItem['opis'] = 'Wyniki wyszukiwania od %d do %d' % (i * self.SEARCH_RES_PER_PAGE + 1, (i + 1) * self.SEARCH_RES_PER_PAGE)
             else:
                 tmpItem['opis'] = 'Wyniki wyszukiwania od %d do %d' % (i * self.SEARCH_RES_PER_PAGE + 1, itemNum)
@@ -309,7 +309,7 @@ class Spryciarze(CBaseHostClass):
                 if len(linkstTab):
                     break
             
-            player =  self.getFullUrl(self.cm.ph.getSearchGroups(data, '''<iframe[^>]+?src=['"]([^"^']*?player\.spryciarze\.pl[^"^']+?)['"]''', 1, True)[0])
+            player = self.getFullUrl(self.cm.ph.getSearchGroups(data, '''<iframe[^>]+?src=['"]([^"^']*?player\.spryciarze\.pl[^"^']+?)['"]''', 1, True)[0])
             if '' != player:
                 sts, player = self.cm.getPage(player, {'use_cookie': True, 'save_cookie': False, 'load_cookie': True, 'cookiefile': self.COOKIE_FILE})
                 if not sts:
@@ -330,7 +330,7 @@ class Spryciarze(CBaseHostClass):
                 except Exception:
                     printExc()
             else:
-                player  = self.cm.ph.getSearchGroups(data, '(spryciarze.pl/player/[^"]+?\.swf?[^"]+?)"')[0]
+                player = self.cm.ph.getSearchGroups(data, '(spryciarze.pl/player/[^"]+?\.swf?[^"]+?)"')[0]
                 videoID = self.cm.ph.getSearchGroups(player + '|', 'VideoID=([0-9]+?)[^0-9]')[0]
                 sts, data = self.cm.getPage(self.getFullUrl('/player/player/xml_connect.php?code=%s&ra=2' % videoID), {'use_cookie': True, 'save_cookie': False, 'load_cookie': True, 'cookiefile': self.COOKIE_FILE})
                 if not sts:
@@ -477,9 +477,9 @@ class IPTVHost(IHost):
     def getSearchResults(self, searchpattern, searchType=None):
         self.isSearch = True
         retList = []
-        self.searchPattern = searchpattern.replace(' ',  '%20')
+        self.searchPattern = searchpattern.replace(' ', '%20')
         
-        return self.getListForItem(len(self.host.getCurrList()) -1)
+        return self.getListForItem(len(self.host.getCurrList()) - 1)
             
     # return full path to player logo
     def getLogoPath(self):  
@@ -494,15 +494,15 @@ class IPTVHost(IHost):
             hostLinks = []
             type = CDisplayListItem.TYPE_UNKNOWN
             
-            if cItem['type'] in ['main', 'sub',  'subSub', 'subSubPage']:
+            if cItem['type'] in ['main', 'sub', 'subSub', 'subSubPage']:
                     type = CDisplayListItem.TYPE_CATEGORY
-            elif cItem['type']  == 'video':
+            elif cItem['type'] == 'video':
                 type = CDisplayListItem.TYPE_VIDEO
                 videoID = ''
                 if 'url' in cItem:
                     url = cItem['url']
                 hostLinks.append(CUrlItem('', url, 0))
-            elif cItem['type']  == 'search':
+            elif cItem['type'] == 'search':
                 type = CDisplayListItem.TYPE_SEARCH
                 
             name = ' '

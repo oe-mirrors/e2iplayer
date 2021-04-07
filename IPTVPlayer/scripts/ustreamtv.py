@@ -89,7 +89,7 @@ def getLink(width, mediaId, referer, userAgent):
     marker = 'RESOLUTION=%sx' % width
     for idx in range(len(data)):
         if marker in data[idx]:
-            m3u8Url = data[idx+1].strip()
+            m3u8Url = data[idx + 1].strip()
             print('\n%s\n' % m3u8Url, file=sys.stderr)
             return url
     return ''
@@ -99,17 +99,17 @@ if __name__ == "__main__":
         print('Refresh and referer urls are needed', file=sys.stderr)
         sys.exit(1)
     try:
-        width      = sys.argv[1]
-        mediaId    = sys.argv[2]
-        referer    = sys.argv[3]
-        userAgent  = sys.argv[4]
+        width = sys.argv[1]
+        mediaId = sys.argv[2]
+        referer = sys.argv[3]
+        userAgent = sys.argv[4]
         
         refreshUrl = getLink(width, mediaId, referer, userAgent)
         if refreshUrl != '':
             while True:
                 printDBG("Refreshing....")
                 tm = str(time.time())
-                url = refreshUrl + "&_="+tm+"&callback=?"
+                url = refreshUrl + "&_=" + tm + "&callback=?"
                 getPage(url, {'Referer':referer, 'User-Agent':userAgent})
                 time.sleep(1)
     except Exception:

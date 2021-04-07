@@ -31,8 +31,8 @@ class FilmeHD(CBaseHostClass):
         self.AJAX_HEADER = dict(self.HEADER)
         self.AJAX_HEADER.update({'X-Requested-With': 'XMLHttpRequest'})
         self.MAIN_URL = 'http://filmehd.net/'
-        self.cacheLinks    = {}
-        self.cacheFilters  = {}
+        self.cacheLinks = {}
+        self.cacheFilters = {}
         self.cacheFiltersKeys = []
         self.defaultParams = {'with_metadata':True, 'header':self.HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
         self._myFun = None
@@ -45,12 +45,12 @@ class FilmeHD(CBaseHostClass):
         
     def listMainMenu(self, cItem):
         url = self.getFullUrl('/page/1')
-        MAIN_CAT_TAB = [{'category':'list_sort',       'title': 'TOATE FILMELE',  'url':url},
-                        {'category':'list_categories', 'title': 'GEN FILM',       'url':url},
-                        {'category':'list_years',      'title': 'FILME DUPA AN',  'url':url},
-                        {'category':'list_sort',       'title': 'SERIALE',        'url':self.getFullUrl('/seriale')},
-                        {'category': 'search',          'title': _('Search'), 'search_item': True, },
-                        {'category': 'search_history',  'title': _('Search history'),}]
+        MAIN_CAT_TAB = [{'category':'list_sort', 'title': 'TOATE FILMELE', 'url':url},
+                        {'category':'list_categories', 'title': 'GEN FILM', 'url':url},
+                        {'category':'list_years', 'title': 'FILME DUPA AN', 'url':url},
+                        {'category':'list_sort', 'title': 'SERIALE', 'url':self.getFullUrl('/seriale')},
+                        {'category': 'search', 'title': _('Search'), 'search_item': True, },
+                        {'category': 'search_history', 'title': _('Search history'),}]
         self.listsTab(MAIN_CAT_TAB, cItem)
     
     def listSort(self, cItem, nextCategory1, nextCategory2):
@@ -133,7 +133,7 @@ class FilmeHD(CBaseHostClass):
         
         if nextPage and len(self.currList) > 0:
             params = dict(cItem)
-            params.update({'good_for_fav': False, 'title':_("Next page"), 'url':nextPage, 'page':page+1})
+            params.update({'good_for_fav': False, 'title':_("Next page"), 'url':nextPage, 'page':page + 1})
             self.addDir(params)
     
     def exploreItem(self, cItem):
@@ -157,7 +157,7 @@ class FilmeHD(CBaseHostClass):
         data = re.compile('''(<div[^>]+?tabpanel[^>]+?>)''').split(data)
         
         titlesTab = []
-        self.cacheLinks  = {}
+        self.cacheLinks = {}
         serverNameDict = {}
         if len(data) > 1:
             # episodes mode
@@ -168,7 +168,7 @@ class FilmeHD(CBaseHostClass):
                 serverNameDict[tabId] = title
             
             for idx in range(2, len(data), 2):
-                tabId = self.cm.ph.getSearchGroups(data[idx-1], '''id=['"]([^'^"]+?)['"]''')[0]
+                tabId = self.cm.ph.getSearchGroups(data[idx - 1], '''id=['"]([^'^"]+?)['"]''')[0]
                 playersData = data[idx].split('<center')
                 if len(playersData):
                     del playersData[0]
@@ -355,9 +355,9 @@ class FilmeHD(CBaseHostClass):
         
         CBaseHostClass.handleService(self, index, refresh, searchPattern, searchType)
 
-        name     = self.currItem.get("name", '')
+        name = self.currItem.get("name", '')
         category = self.currItem.get("category", '')
-        mode     = self.currItem.get("mode", '')
+        mode = self.currItem.get("mode", '')
         
         printDBG("handleService: |||||||||||||||||||||||||||||||||||| name[%s], category[%s] " % (name, category))
         self.currList = []

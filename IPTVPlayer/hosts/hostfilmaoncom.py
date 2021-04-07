@@ -37,7 +37,7 @@ class FilmaonCom(CBaseHostClass):
         self.AJAX_HEADER = dict(self.HTTP_HEADER)
         self.AJAX_HEADER.update({'X-Requested-With': 'XMLHttpRequest', 'Accept-Encoding':'gzip, deflate', 'Content-Type':'application/x-www-form-urlencoded; charset=UTF-8', 'Accept':'application/json, text/javascript, */*; q=0.01'})
         
-        self.cacheLinks    = {}
+        self.cacheLinks = {}
         self.defaultParams = {'header':self.HTTP_HEADER, 'with_metadata':True, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
     
     def getPage(self, baseUrl, addParams={}, post_data=None):
@@ -76,19 +76,19 @@ class FilmaonCom(CBaseHostClass):
                     continue
                 url = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''href=['"]([^"^']+?)['"]''')[0])
                 title = self.cleanHtmlStr(item)
-                params =  {'name':'category', 'type':'category', 'category':nextCategory2, 'title':title, 'url':url}
+                params = {'name':'category', 'type':'category', 'category':nextCategory2, 'title':title, 'url':url}
                 subItems.append(params)
                 if url.endswith('/seriale/'):
                     for it in [('/seasons/', 'SEZONET E SERIALEV'), ('/episodes/', 'EPISODET E REJA')]:
-                        params =  {'name':'category', 'type':'category', 'category':nextCategory2, 'title':it[1], 'url':self.getFullUrl(it[0])}
+                        params = {'name':'category', 'type':'category', 'category':nextCategory2, 'title':it[1], 'url':self.getFullUrl(it[0])}
                         subItems.append(params)
             
             if len(subItems):
-                params =  {'name':'category', 'type':'category', 'category':nextCategory1, 'title':sTitle, 'sub_items':subItems}
+                params = {'name':'category', 'type':'category', 'category':nextCategory1, 'title':sTitle, 'sub_items':subItems}
                 self.addDir(params)
         
-        MAIN_CAT_TAB = [{'category':'top',            'title': 'TOP IMDb 50',      'url':self.getFullUrl('/top-imdb/')}, 
-                        {'category':'search',         'title': _('Search'),        'search_item':True}, 
+        MAIN_CAT_TAB = [{'category':'top', 'title': 'TOP IMDb 50', 'url':self.getFullUrl('/top-imdb/')}, 
+                        {'category':'search', 'title': _('Search'), 'search_item':True}, 
                         {'category':'search_history', 'title': _('Search history')},]
         self.listsTab(MAIN_CAT_TAB, cItem)
         
@@ -113,7 +113,7 @@ class FilmaonCom(CBaseHostClass):
             url = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''href=['"]([^"^']+?)['"]''')[0])
             icon = self.getFullIconUrl(self.cm.ph.getSearchGroups(item, '''src=['"]([^"^']+?)['"]''')[0])
             title = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(item, '<h3', '</h3>')[1])
-            if title  == '':
+            if title == '':
                 title = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(item, ('<div', '>', 'title'), ('</div', '>'))[1])
             if cItem['url'].endswith('/seasons/'):
                 title = self.cleanHtmlStr(self.cm.ph.getSearchGroups(item, '''alt=['"]([^"^']+?)['"]''')[0])
@@ -124,7 +124,7 @@ class FilmaonCom(CBaseHostClass):
             desc = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(item, '<p', '</p>')[1])
             descTab = []
             rating = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(item, ('<div', '>', 'rating'), ('</div', '>'))[1])
-            item =  self.cm.ph.getAllItemsBeetwenMarkers(item, '<span', '</span>')
+            item = self.cm.ph.getAllItemsBeetwenMarkers(item, '<span', '</span>')
             for t in item:
                 t = self.cleanHtmlStr(t)
                 if t != '':
@@ -161,19 +161,19 @@ class FilmaonCom(CBaseHostClass):
                 del section[0]
             subItems = []
             for item in section:
-                url   = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''href=['"]([^"^']+?)['"]''')[0])
-                icon  = self.getFullIconUrl(self.cm.ph.getSearchGroups(item, '''src=['"]([^"^']+?)['"]''')[0])
+                url = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''href=['"]([^"^']+?)['"]''')[0])
+                icon = self.getFullIconUrl(self.cm.ph.getSearchGroups(item, '''src=['"]([^"^']+?)['"]''')[0])
                 title = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(item, ('<div', '>', 'title'), ('</div', '>'))[1])
                 descTab = []
                 number = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(item, ('<div', '>', 'puesto'), ('</div', '>'))[1])
                 rating = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(item, ('<div', '>', 'rating'), ('</div', '>'))[1])
                 descTab.append(number)
                 descTab.append('%s/10' % (rating))
-                params =  {'good_for_fav':True, 'priv_has_art':True, 'name':'category', 'type':'category', 'category':nextCategory2, 'title':title, 'url':url, 'desc':' '.join(descTab), 'icon':icon}
+                params = {'good_for_fav':True, 'priv_has_art':True, 'name':'category', 'type':'category', 'category':nextCategory2, 'title':title, 'url':url, 'desc':' '.join(descTab), 'icon':icon}
                 subItems.append(params)
             
             if len(subItems):
-                params =  {'name':'category', 'type':'category', 'category':nextCategory1, 'title':sTitle, 'sub_items':subItems}
+                params = {'name':'category', 'type':'category', 'category':nextCategory1, 'title':sTitle, 'sub_items':subItems}
                 self.addDir(params)
     
     def listSearchResult(self, cItem, searchPattern, searchType):
@@ -437,9 +437,9 @@ class FilmaonCom(CBaseHostClass):
         
         CBaseHostClass.handleService(self, index, refresh, searchPattern, searchType)
 
-        name     = self.currItem.get("name", '')
+        name = self.currItem.get("name", '')
         category = self.currItem.get("category", '')
-        mode     = self.currItem.get("mode", '')
+        mode = self.currItem.get("mode", '')
         
         printDBG("handleService: |||| name[%s], category[%s] " % (name, category))
         self.cacheLinks = {}

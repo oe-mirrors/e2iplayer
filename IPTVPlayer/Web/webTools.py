@@ -97,7 +97,7 @@ def initActiveHost(hostName):
 		settings.activeHost['PIC'] = settings.activeHost['Obj'].getLogoPath().value[0]
 		settings.activeHost['SupportedTypes'] = settings.activeHost['Obj'].getSupportedFavoritesTypes().value
 		settings.activeHost['PathLevel'] = 1
-		settings.activeHost['Status'] =  ''
+		settings.activeHost['Status'] = ''
 		settings.retObj = settings.activeHost['Obj'].getInitList()
 		settings.activeHost['ListType'] = 'ListForItem'
 		settings.activeHost['SearchTypes'] = settings.activeHost['Obj'].getSearchTypes()

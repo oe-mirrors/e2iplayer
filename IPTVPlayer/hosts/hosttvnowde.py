@@ -27,8 +27,8 @@ from Components.config import config, ConfigSelection, ConfigYesNo, getConfigLis
 ###################################################
 config.plugins.iptvplayer.tvnowde_show_paid_items = ConfigYesNo(default=False)
 config.plugins.iptvplayer.tvnowde_show_drm_items = ConfigYesNo(default=False)
-config.plugins.iptvplayer.tvnowde_prefered_format     = ConfigSelection(default="hls", choices=[
-("hls",  _("HLS/m3u8")),
+config.plugins.iptvplayer.tvnowde_prefered_format = ConfigSelection(default="hls", choices=[
+("hls", _("HLS/m3u8")),
 ("dash", _("DASH/mpd"))
 ])
 
@@ -59,17 +59,17 @@ class TVNowDE(CBaseHostClass):
         self.cacheAZ = {'list':[], 'cache':{}}
         self.defaultParams = {'header':self.HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
     
-        self.MAIN_CAT_TAB = [{'category':'az',              'title': _('A-Z')},
-                             {'category':'missed',          'title': _('Missed the program?')},
-                             {'category':'channels',        'title': _('Channels')},
-                             {'category':'list_cats',       'title': _('Categories')},
+        self.MAIN_CAT_TAB = [{'category':'az', 'title': _('A-Z')},
+                             {'category':'missed', 'title': _('Missed the program?')},
+                             {'category':'channels', 'title': _('Channels')},
+                             {'category':'list_cats', 'title': _('Categories')},
                             ]
-        self.CHANNELS_TAB = [{'title':'RTL',      'f_channel':'rtl'},
-                             {'title':'Vox',      'f_channel':'vox'},
-                             {'title':'RTL 2',    'f_channel':'rtl2'},
-                             {'title':'Nitro',    'f_channel':'nitro'},
-                             {'title':'N-TV',     'f_channel':'ntv'},
-                             {'title':'RTLplus',  'f_channel':'rtlplus'},
+        self.CHANNELS_TAB = [{'title':'RTL', 'f_channel':'rtl'},
+                             {'title':'Vox', 'f_channel':'vox'},
+                             {'title':'RTL 2', 'f_channel':'rtl2'},
+                             {'title':'Nitro', 'f_channel':'nitro'},
+                             {'title':'N-TV', 'f_channel':'ntv'},
+                             {'title':'RTLplus', 'f_channel':'rtlplus'},
                              {'title':'Super RTL','f_channel':'superrtl'},
                             ]
         
@@ -204,17 +204,17 @@ class TVNowDE(CBaseHostClass):
             for item in self.cacheAllAZ:  
                 if not config.plugins.iptvplayer.tvnowde_show_paid_items.value and not item.get('hasFreeEpisodes', False): 
                     continue
-                station  = self.getStr(item, 'station')
+                station = self.getStr(item, 'station')
                 if len(fChannels) and station not in fChannels:
                     continue
-                letter   = self.getStr(item, 'titleGroup')
-                title    = self.getStr(item, 'title')
-                name     = self.cleanHtmlStr(self.getStr(item, 'seoUrl'))
-                desc     = item.get('genres', [])
+                letter = self.getStr(item, 'titleGroup')
+                title = self.getStr(item, 'title')
+                name = self.cleanHtmlStr(self.getStr(item, 'seoUrl'))
+                desc = item.get('genres', [])
                 if isinstance(desc, list):
                     desc = ' | '.join(desc)
                 else:
-                    desc  = ''
+                    desc = ''
                 
                 params = {'good_for_fav':True, 'orig_item':item, 'f_station':station, 'f_name':name, 'title':title, 'desc':desc}
                 if not letter in self.cacheAZ['list']:
@@ -270,10 +270,10 @@ class TVNowDE(CBaseHostClass):
                 icon = self.getStr(item, 'defaultDvdImage')
                 if icon == '':
                     icon = self.getStr(item, 'defaultDvdImage')
-                title    = self.getStr(item, 'title')
-                station  = self.getStr(item, 'station')
-                name     = self.cleanHtmlStr(self.getStr(item, 'seoUrl'))
-                desc     = self.cleanHtmlStr(self.getStr(item, 'metaDescription'))
+                title = self.getStr(item, 'title')
+                station = self.getStr(item, 'station')
+                name = self.cleanHtmlStr(self.getStr(item, 'seoUrl'))
+                desc = self.cleanHtmlStr(self.getStr(item, 'metaDescription'))
                 
                 params = {'name':'category', 'good_for_fav':True, 'orig_item':item, 'category':nextCategory, 'f_station':station, 'f_name':name, 'title':title, 'icon':icon, 'desc':desc}
                 self.addDir(params)
@@ -323,7 +323,7 @@ class TVNowDE(CBaseHostClass):
                         m1 = (m + 1)
                         if m1 > 12:
                             m1 = m1 % 12
-                        days = (date(year + m/12, m1, 1)  - date(year, m, 1)).days
+                        days = (date(year + m / 12, m1, 1) - date(year, m, 1)).days
                         
                         m = str(m)
                         if not m in months:
@@ -353,7 +353,7 @@ class TVNowDE(CBaseHostClass):
     def listVideoItems(self, cItem):
         printDBG("TVNowDE.listVideoItems [%s]" % cItem)
         page = cItem.get('page', 1)
-        url  = cItem['url'] + '&page=%s' % page 
+        url = cItem['url'] + '&page=%s' % page 
         fChannels = cItem.get('f_channels', [])
         
         sts, data = self.getPage(url)
@@ -383,8 +383,8 @@ class TVNowDE(CBaseHostClass):
                     
                     id = self.getStr(item, 'id')
                     icon = 'https://ais.tvnow.de/tvnow/movie/{0}/600x716/title.jpg'.format(id)
-                    title    = self.getStr(item, 'title')
-                    desc     = self.cleanHtmlStr(self.getStr(item, 'articleLong'))
+                    title = self.getStr(item, 'title')
+                    desc = self.cleanHtmlStr(self.getStr(item, 'articleLong'))
                     seoUrlItem = self.getStr(item, 'seoUrl')
                     seoUrlFormat = self.getStr(item['format'], 'seoUrl')
                     
@@ -449,10 +449,10 @@ class TVNowDE(CBaseHostClass):
             urlHlsClear = urlDashClear.replace('/vodnowusodash.', '/vodnowusohls.').split('?', 1)
             urlHlsClear[0] = urlHlsClear[0][:-3] + 'm3u8'
             urlHlsClear = '?'.join(urlHlsClear)
-            hlsTab  = getDirectM3U8Playlist(urlHlsClear, checkContent=True)
+            hlsTab = getDirectM3U8Playlist(urlHlsClear, checkContent=True)
             dashTab = getMPDLinksWithMeta(urlDashClear, False)
             try:
-                hlsTab  = sorted(hlsTab, key=lambda item: -1 * int(item.get('bitrate', 0)))
+                hlsTab = sorted(hlsTab, key=lambda item: -1 * int(item.get('bitrate', 0)))
                 dashTab = sorted(dashTab, key=lambda item: -1 * int(item.get('bandwidth', 0)))
             except Exception:
                 printExc()
@@ -499,9 +499,9 @@ class TVNowDE(CBaseHostClass):
         
         CBaseHostClass.handleService(self, index, refresh, searchPattern, searchType)
 
-        name     = self.currItem.get("name", '')
+        name = self.currItem.get("name", '')
         category = self.currItem.get("category", '')
-        mode     = self.currItem.get("mode", '')
+        mode = self.currItem.get("mode", '')
         
         printDBG("handleService: || name[%s], category[%s] " % (name, category))
         self.currList = []

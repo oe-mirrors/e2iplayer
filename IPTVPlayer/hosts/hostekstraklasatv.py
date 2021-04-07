@@ -34,7 +34,7 @@ from Components.config import config, ConfigText, ConfigSelection, ConfigYesNo, 
 #config.plugins.iptvplayer.ekstraklasa_proxy = ConfigYesNo(default = False)
 
 config.plugins.iptvplayer.ekstraklasa_defaultres = ConfigSelection(default="0", choices=[("0", _("Ask")), ("800", "800 kbps"), ("1000", "1000 kbps"), ("1800", "1800 kbps"), ("3600", "3600 kbps"), ("6000", "6000 kbps"), ("99999", "Max")])
-config.plugins.iptvplayer.ekstraklasa_login    = ConfigText(default="", fixed_size=False)
+config.plugins.iptvplayer.ekstraklasa_login = ConfigText(default="", fixed_size=False)
 config.plugins.iptvplayer.ekstraklasa_password = ConfigText(default="", fixed_size=False)
 
 
@@ -73,15 +73,15 @@ class Ekstraklasa(CBaseHostClass):
         #self.defaultParams = {'header':self.HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
         
         self.MAIN_CAT_TAB = [
-                            {'category':'matches',          'title': _('Matches'),                      'url': self.MAIN_URL + 'ekstraklasa/schedule'},
-                            {'category':'categories',       'title': _('Videos'),                       'url': self.MAIN_URL + 'ekstraklasa/browse'},
+                            {'category':'matches', 'title': _('Matches'), 'url': self.MAIN_URL + 'ekstraklasa/schedule'},
+                            {'category':'categories', 'title': _('Videos'), 'url': self.MAIN_URL + 'ekstraklasa/browse'},
                             #{'category':'search',           'title': _('Search'), 'search_item':True,   },
                             #{'category':'search_history',   'title': _('Search history'),               } 
                             ]
         
         self.loggedIn = None
         self.token = ""
-        self.login    = ''
+        self.login = ''
         self.password = ''
 
         self.timeoffset = datetime.datetime.now() - datetime.datetime.utcnow() + datetime.timedelta(milliseconds=500)
@@ -108,7 +108,7 @@ class Ekstraklasa(CBaseHostClass):
             clid = "ClubWebClient"
             #UA = 'Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:68.0) Gecko/20100101 Firefox/68.0'
 
-            postData={
+            postData = {
                 "client_id": clid,
                 "client_secret": clsecret,
                 "grant_type": "password",
@@ -131,7 +131,7 @@ class Ekstraklasa(CBaseHostClass):
                 return True
 
             except:
-                msg =  _('Login failed. Invalid email or password.')
+                msg = _('Login failed. Invalid email or password.')
                 GetIPTVNotify().push(msg, 'error', 10)
                 return False
 
@@ -161,7 +161,7 @@ class Ekstraklasa(CBaseHostClass):
         icon = video_json.get('posterUrl', '')
 
         duration = video_json.get("duration", 0)
-        if duration>0:
+        if duration > 0:
             descStr.append(_("Duration") + ": " + str(datetime.timedelta(seconds=int(duration))))
 
         vtype = video_json.get("sourceType", "")
@@ -200,7 +200,7 @@ class Ekstraklasa(CBaseHostClass):
         icon = coll_json.get('posterUrl', '')
         title = coll_json.get('name', '') 
         count = coll_json.get('videoCount', 0)
-        if count>0:
+        if count > 0:
             title = '%s [%s]' % (title, count)
 
         url = coll_json['_links']['videosCollectionsV2']
@@ -223,7 +223,7 @@ class Ekstraklasa(CBaseHostClass):
         if sts:
 
             response = json_loads(data)
-            nextUrl= response['data'][0]['_links']['scheduleV2']
+            nextUrl = response['data'][0]['_links']['scheduleV2']
             
             printDBG("schedule collection url ------> '%s'" % nextUrl)
             sts, data = self.cm.getPage(nextUrl)
@@ -240,7 +240,7 @@ class Ekstraklasa(CBaseHostClass):
                         v_json = item.get('video', '')
                         
                         if v_json:
-                            params2= self.getVideoInfo(v_json)
+                            params2 = self.getVideoInfo(v_json)
 
                             if playing:
                                 params2['title'] = '\c00????00 ' + params2['title'] + ' [Live]'
@@ -264,7 +264,7 @@ class Ekstraklasa(CBaseHostClass):
         if sts:
 
             response = json_loads(data)
-            nextUrl= response['data'][0]['_links']['videosCollectionsV2']
+            nextUrl = response['data'][0]['_links']['videosCollectionsV2']
             
             printDBG("video collection url ------> '%s'" % nextUrl)
             sts, data = self.cm.getPage(nextUrl)
@@ -400,9 +400,9 @@ class Ekstraklasa(CBaseHostClass):
         
         CBaseHostClass.handleService(self, index, refresh, searchPattern, searchType)
 
-        name     = self.currItem.get("name", '')
+        name = self.currItem.get("name", '')
         category = self.currItem.get("category", '')
-        mode     = self.currItem.get("mode", '')
+        mode = self.currItem.get("mode", '')
         
         printDBG("handleService: || name[%s], category[%s] " % (name, category))
         self.currList = []

@@ -33,26 +33,26 @@ from Screens.MessageBox import MessageBox
 ###################################################
 # Config options for HOST
 ###################################################
-config.plugins.iptvplayer.tvplayercom_login    = ConfigText(default="", fixed_size=False)
+config.plugins.iptvplayer.tvplayercom_login = ConfigText(default="", fixed_size=False)
 config.plugins.iptvplayer.tvplayercom_password = ConfigText(default="", fixed_size=False)
 config.plugins.iptvplayer.tvplayercom_password = ConfigText(default="", fixed_size=False)
 config.plugins.iptvplayer.tvplayercom_drmbypass = ConfigYesNo(default=False)
 config.plugins.iptvplayer.tvplayercom_preferredbitrate = ConfigSelection(default="99999999", choices=[("99999999", _("highest")),
-                                                                                               ("2564000",  "2564k"),
-                                                                                               ("1864000",  "1864k"),
+                                                                                               ("2564000", "2564k"),
+                                                                                               ("1864000", "1864k"),
                                                                                                ("1064000", "1064k"),
                                                                                                ("564000", "564k"),
                                                                                                ("214000", "214k"),
-                                                                                               ("0",  _("lowest"))])
+                                                                                               ("0", _("lowest"))])
 config.plugins.iptvplayer.tvplayercom_usepreferredbitrate = ConfigYesNo(default=False)
 
 def GetConfigList():
     optionList = []
-    optionList.append(getConfigListEntry(_("Preferred bitrate")+":", config.plugins.iptvplayer.tvplayercom_preferredbitrate))
-    optionList.append(getConfigListEntry(_("Use preferred bitrate")+":", config.plugins.iptvplayer.tvplayercom_usepreferredbitrate))
-    optionList.append(getConfigListEntry(_("email")+":", config.plugins.iptvplayer.tvplayercom_login))
-    optionList.append(getConfigListEntry(_("password")+":", config.plugins.iptvplayer.tvplayercom_password))
-    optionList.append(getConfigListEntry(_("Try to bypass DRM (it may be illegal)")+":", config.plugins.iptvplayer.tvplayercom_drmbypass))
+    optionList.append(getConfigListEntry(_("Preferred bitrate") + ":", config.plugins.iptvplayer.tvplayercom_preferredbitrate))
+    optionList.append(getConfigListEntry(_("Use preferred bitrate") + ":", config.plugins.iptvplayer.tvplayercom_usepreferredbitrate))
+    optionList.append(getConfigListEntry(_("email") + ":", config.plugins.iptvplayer.tvplayercom_login))
+    optionList.append(getConfigListEntry(_("password") + ":", config.plugins.iptvplayer.tvplayercom_password))
+    optionList.append(getConfigListEntry(_("Try to bypass DRM (it may be illegal)") + ":", config.plugins.iptvplayer.tvplayercom_drmbypass))
     return optionList
 ###################################################
 
@@ -77,7 +77,7 @@ class TVPlayer(CBaseHostClass):
         
         self.defaultParams = {'header':self.HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE, 'ignore_http_code_ranges':[(404, 500)]}
     
-        self.MAIN_CAT_TAB = [{'category':'list_channels_genres',         'title': _('Channels'),    'url':self.getFullUrl('/channels')},
+        self.MAIN_CAT_TAB = [{'category':'list_channels_genres', 'title': _('Channels'), 'url':self.getFullUrl('/channels')},
                              
                              #{'category':'search',           'title': _('Search'), 'search_item':True,},
                              #{'category':'search_history',   'title': _('Search history'),            } 
@@ -101,7 +101,7 @@ class TVPlayer(CBaseHostClass):
         for item in data:
             item = self.cm.ph.getAllItemsBeetwenMarkers(item, '<li', '</li>')
             for it in item:
-                url  = self.cm.ph.getSearchGroups(it, '''href=['"]([^'^"]+?)['"]''')[0]
+                url = self.cm.ph.getSearchGroups(it, '''href=['"]([^'^"]+?)['"]''')[0]
                 icon = self.cm.ph.getSearchGroups(it, '''src=['"]([^'^"]+?)['"]''')[0]
                 id = url.split('/watch/')
                 if len(id) != 2:
@@ -165,7 +165,7 @@ class TVPlayer(CBaseHostClass):
             
             url = self.getFullUrl(url)
             title = self.cleanHtmlStr(self.cm.ph.getSearchGroups(item, '''data-name=['"]([^'^"]+?)['"]''')[0])
-            icon  = self.getFullIconUrl(self.cm.ph.getSearchGroups(item, '''src=['"]([^'^"]+?)['"]''')[0])
+            icon = self.getFullIconUrl(self.cm.ph.getSearchGroups(item, '''src=['"]([^'^"]+?)['"]''')[0])
             
             params = dict(cItem)
             params.update({'good_for_fav': True, 'title':title, 'url':url, 'icon':icon, 'desc':flagType.title()})
@@ -255,7 +255,7 @@ class TVPlayer(CBaseHostClass):
             if len(retTab):
                 cookieHeader = self.cm.getCookieHeader(self.COOKIE_FILE)
                 for idx in range(len(retTab)):
-                    retTab[idx]['url'] =  strwithmeta(retTab[idx]['url'], {'iptv_proto':'m3u8', 'Cookie':cookieHeader, 'User-Agent': self.defaultParams['header']['User-Agent']})
+                    retTab[idx]['url'] = strwithmeta(retTab[idx]['url'], {'iptv_proto':'m3u8', 'Cookie':cookieHeader, 'User-Agent': self.defaultParams['header']['User-Agent']})
                     
                 def __getLinkQuality(itemLink):
                     try: 
@@ -264,7 +264,7 @@ class TVPlayer(CBaseHostClass):
                         printExc()
                         return 0
                 
-                retTab = CSelOneLink(retTab, __getLinkQuality, int(int(config.plugins.iptvplayer.tvplayercom_preferredbitrate.value)*1.2)).getSortedLinks()
+                retTab = CSelOneLink(retTab, __getLinkQuality, int(int(config.plugins.iptvplayer.tvplayercom_preferredbitrate.value) * 1.2)).getSortedLinks()
                 if len(retTab) and config.plugins.iptvplayer.tvplayercom_usepreferredbitrate.value:
                     retTab = [retTab[0]] 
                 printDBG(retTab)
@@ -362,7 +362,7 @@ class TVPlayer(CBaseHostClass):
             data = self.cm.ph.getAllItemsBeetwenMarkers(data, '<input', '>')
             post_data = {}
             for item in data:
-                name  = self.cm.ph.getSearchGroups(item, '''name=['"]([^'^"]+?)['"]''')[0]
+                name = self.cm.ph.getSearchGroups(item, '''name=['"]([^'^"]+?)['"]''')[0]
                 value = self.cm.ph.getSearchGroups(item, '''value=['"]([^'^"]+?)['"]''')[0]
                 post_data[name] = value
             
@@ -388,9 +388,9 @@ class TVPlayer(CBaseHostClass):
         
         CBaseHostClass.handleService(self, index, refresh, searchPattern, searchType)
 
-        name     = self.currItem.get("name", '')
+        name = self.currItem.get("name", '')
         category = self.currItem.get("category", '')
-        mode     = self.currItem.get("mode", '')
+        mode = self.currItem.get("mode", '')
         
         printDBG("handleService: |||||||||||||||||||||||||||||||||||| name[%s], category[%s] " % (name, category))
         self.currList = []

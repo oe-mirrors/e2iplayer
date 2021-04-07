@@ -26,9 +26,9 @@ from Components.config import config, ConfigSelection, ConfigText, getConfigList
 ###################################################
 # Config options for HOST
 ###################################################
-config.plugins.iptvplayer.seriesonlineio_proxy = ConfigSelection(default="None", choices=[("None",     _("None")),
-                                                                                              ("proxy_1",  _("Alternative proxy server (1)")),
-                                                                                              ("proxy_2",  _("Alternative proxy server (2)"))])
+config.plugins.iptvplayer.seriesonlineio_proxy = ConfigSelection(default="None", choices=[("None", _("None")),
+                                                                                              ("proxy_1", _("Alternative proxy server (1)")),
+                                                                                              ("proxy_2", _("Alternative proxy server (2)"))])
 config.plugins.iptvplayer.seriesonlineio_alt_domain = ConfigText(default="", fixed_size=False)
 
 def GetConfigList():
@@ -88,7 +88,7 @@ class SeriesOnlineIO(CBaseHostClass):
             break
 
         if captcha:
-            message =_('This site is protected with Google reCaptcha v2.')
+            message = _('This site is protected with Google reCaptcha v2.')
             SetIPTVPlayerLastHostError(message)
             if not self.userInformedAboutCaptchaProtection:
                 self.userInformedAboutCaptchaProtection = True
@@ -137,11 +137,11 @@ class SeriesOnlineIO(CBaseHostClass):
             self.MAIN_URL = domains[0]
         
         self.SEARCH_URL = self.MAIN_URL + 'movie/search'
-        self.MAIN_CAT_TAB = [{'category':'list_filter_genre', 'title': 'Movies',    'url':self.MAIN_URL+'movie/filter/movie'},
-                             {'category':'list_filter_genre', 'title': 'TV-Series', 'url':self.MAIN_URL+'movie/filter/series'},
-                             {'category':'list_filter_genre', 'title': 'Cinema',    'url':self.MAIN_URL+'movie/filter/cinema'},
-                             {'category': 'search',          'title': _('Search'), 'search_item': True,},
-                             {'category': 'search_history',  'title': _('Search history'),} 
+        self.MAIN_CAT_TAB = [{'category':'list_filter_genre', 'title': 'Movies', 'url':self.MAIN_URL + 'movie/filter/movie'},
+                             {'category':'list_filter_genre', 'title': 'TV-Series', 'url':self.MAIN_URL + 'movie/filter/series'},
+                             {'category':'list_filter_genre', 'title': 'Cinema', 'url':self.MAIN_URL + 'movie/filter/cinema'},
+                             {'category': 'search', 'title': _('Search'), 'search_item': True,},
+                             {'category': 'search_history', 'title': _('Search history'),} 
                             ]
         
     def fillCacheFilters(self):
@@ -160,9 +160,9 @@ class SeriesOnlineIO(CBaseHostClass):
             self.cacheFilters['sort_by'].append({'sort_by':value, 'title':self.cleanHtmlStr(item)})
             
         for filter in [{'key':'quality', 'marker':'Quality</span>'},
-                       {'key':'genre',   'marker':'Genre</span>'},
+                       {'key':'genre', 'marker':'Genre</span>'},
                        {'key':'country', 'marker':'Country</span>'},
-                       {'key':'year',    'marker':'Release</span>'}]:
+                       {'key':'year', 'marker':'Release</span>'}]:
             self.cacheFilters[filter['key']] = []
             tmp = self.cm.ph.getDataBeetwenMarkers(data, filter['marker'], '</ul>', False)[1]
             tmp = self.cm.ph.getAllItemsBeetwenMarkers(tmp, '<li', '</li>', withMarkers=True, caseSensitive=False)
@@ -200,14 +200,14 @@ class SeriesOnlineIO(CBaseHostClass):
             return
         
         nextPage = self.cm.ph.getDataBeetwenMarkers(data, 'pagination', '</ul>', False)[1]
-        if '' != self.cm.ph.getSearchGroups(nextPage, 'page=(%s)[^0-9]' % (page+1))[0]:
+        if '' != self.cm.ph.getSearchGroups(nextPage, 'page=(%s)[^0-9]' % (page + 1))[0]:
             nextPage = True
         else:
             nextPage = False
         
         data = self.cm.ph.getAllItemsBeetwenMarkers(data, '<div class="ml-item">', '</a>', withMarkers=True)
         for item in data:
-            url  = self.getFullUrl(self.cm.ph.getSearchGroups(item, 'href="([^"]+?)"')[0])
+            url = self.getFullUrl(self.cm.ph.getSearchGroups(item, 'href="([^"]+?)"')[0])
             icon = self.getFullUrl(self.cm.ph.getSearchGroups(item, 'data-original="([^"]+?)"')[0])
             dataUrl = self.cm.ph.getSearchGroups(item, 'data-url="([^"]+?)"')[0]
             if icon == '':
@@ -215,9 +215,9 @@ class SeriesOnlineIO(CBaseHostClass):
             desc = self.cleanHtmlStr(item)
             title = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(item, '<h2', '</h2>')[1])
             if title == '':
-                title  = self.cleanHtmlStr(self.cm.ph.getSearchGroups(item, 'title="([^"]+?)"')[0])
+                title = self.cleanHtmlStr(self.cm.ph.getSearchGroups(item, 'title="([^"]+?)"')[0])
             if title == '':
-                title  = self.cleanHtmlStr(self.cm.ph.getSearchGroups(item, 'alt="([^"]+?)"')[0])
+                title = self.cleanHtmlStr(self.cm.ph.getSearchGroups(item, 'alt="([^"]+?)"')[0])
             if url.startswith('http'):
                 params = {'good_for_fav': True, 'title':title, 'url':url, 'data_url':dataUrl, 'desc':desc, 'info_url':url, 'icon':icon}
                 if '-season-' not in url and 'class="mli-eps"' not in item:
@@ -230,7 +230,7 @@ class SeriesOnlineIO(CBaseHostClass):
         
         if nextPage and len(self.currList) > 0:
             params = dict(cItem)
-            params.update({'title':_("Next page"), 'page':page+1})
+            params.update({'title':_("Next page"), 'page':page + 1})
             self.addDir(params)
     
     def listEpisodes(self, cItem):
@@ -262,11 +262,11 @@ class SeriesOnlineIO(CBaseHostClass):
             printDBG("key [%s]" % key)
             episodeLinks[key].append(item)
         
-        seasonNum = self.cm.ph.getSearchGroups(cItem['url']+'|', '''-season-([0-9]+?)[^0-9]''', 1, True)[0]
+        seasonNum = self.cm.ph.getSearchGroups(cItem['url'] + '|', '''-season-([0-9]+?)[^0-9]''', 1, True)[0]
         for item in episodeKeys:
             episodeNum = self.cm.ph.getSearchGroups(item + '|', '''Episode\s+?([0-9]+?)[^0-9]''', 1, True)[0]
             if '' != episodeNum and '' != seasonNum:
-                title = 's%se%s'% (seasonNum.zfill(2), episodeNum.zfill(2)) + ' ' + item.replace('Episode %s' % episodeNum, '')
+                title = 's%se%s' % (seasonNum.zfill(2), episodeNum.zfill(2)) + ' ' + item.replace('Episode %s' % episodeNum, '')
             else:
                 title = item
             baseTitle = re.sub('Season\s[0-9]+?[^0-9]', '', cItem['title'] + ' ')
@@ -316,7 +316,7 @@ class SeriesOnlineIO(CBaseHostClass):
         if 'urls' in cItem:
             return cItem['urls']
         
-        urlTab = self.cacheLinks.get(cItem['url'],  [])
+        urlTab = self.cacheLinks.get(cItem['url'], [])
         if len(urlTab):
             return urlTab
         self.cacheLinks = {}
@@ -331,7 +331,7 @@ class SeriesOnlineIO(CBaseHostClass):
         trailer = self.cm.ph.getSearchGroups(trailer, '''['"](http[^"^']+?)['"]''')[0]
         
         data = self.cm.ph.getDataBeetwenMarkers(data, 'id="mv-info"', '</a>')[1]
-        url  = self.getFullUrl(self.cm.ph.getSearchGroups(data, '''href=['"]([^'^"]+?)['"]''')[0])
+        url = self.getFullUrl(self.cm.ph.getSearchGroups(data, '''href=['"]([^'^"]+?)['"]''')[0])
         
         params = dict(self.defaultParams)
         params['header'] = dict(params['header'])
@@ -405,7 +405,7 @@ class SeriesOnlineIO(CBaseHostClass):
             sp = '='
         
         for item in tmp:
-            url  = self.cm.ph.getSearchGroups(item, r'''['"]?{0}['"]?\s*{1}\s*['"]((:?https?:)?//[^"^']+)['"]'''.format(urlAttrName, sp))[0]
+            url = self.cm.ph.getSearchGroups(item, r'''['"]?{0}['"]?\s*{1}\s*['"]((:?https?:)?//[^"^']+)['"]'''.format(urlAttrName, sp))[0]
             name = self.cm.ph.getSearchGroups(item, r'''['"]?label['"]?\s*{0}\s*['"]([^"^']+)['"]'''.format(sp))[0]
             if url == '' or 'error.com' in url:
                 continue
@@ -441,8 +441,8 @@ class SeriesOnlineIO(CBaseHostClass):
             return retTab
         
         title = self.cleanHtmlStr(self.cm.ph.getSearchGroups(data, '<meta property="og:title"[^>]+?content="([^"]+?)"')[0])
-        desc  = self.cleanHtmlStr(self.cm.ph.getSearchGroups(data, '<meta property="og:description"[^>]+?content="([^"]+?)"')[0])
-        icon  = self.getFullUrl(self.cm.ph.getSearchGroups(data, '<meta property="og:image"[^>]+?content="([^"]+?)"')[0])
+        desc = self.cleanHtmlStr(self.cm.ph.getSearchGroups(data, '<meta property="og:description"[^>]+?content="([^"]+?)"')[0])
+        icon = self.getFullUrl(self.cm.ph.getSearchGroups(data, '<meta property="og:image"[^>]+?content="([^"]+?)"')[0])
         
         if title == '':
             title = cItem['title']
@@ -453,14 +453,14 @@ class SeriesOnlineIO(CBaseHostClass):
         
         descData = self.cm.ph.getDataBeetwenMarkers(data, '<div class="mvic-info">', '<div class="clearfix">', False)[1]
         descData = self.cm.ph.getAllItemsBeetwenMarkers(descData, '<p', '</p>')
-        descTabMap = {"Director":     "director",
-                      "Actor":        "actors",
-                      "Genre":        "genre",
-                      "Country":      "country",
-                      "Release":      "released",
-                      "Duration":     "duration",
-                      "Quality":      "quality",
-                      "IMDb":         "rated"}
+        descTabMap = {"Director": "director",
+                      "Actor": "actors",
+                      "Genre": "genre",
+                      "Country": "country",
+                      "Release": "released",
+                      "Duration": "duration",
+                      "Quality": "quality",
+                      "IMDb": "rated"}
         
         otherInfo = {}
         for item in descData:
@@ -492,9 +492,9 @@ class SeriesOnlineIO(CBaseHostClass):
             #rm(self.COOKIE_FILE)
             self.selectDomain()
 
-        name     = self.currItem.get("name", '')
+        name = self.currItem.get("name", '')
         category = self.currItem.get("category", '')
-        mode     = self.currItem.get("mode", '')
+        mode = self.currItem.get("mode", '')
         
         printDBG("handleService: |||||||||||||||||||||||||||||||||||| name[%s], category[%s] " % (name, category))
         self.currList = []

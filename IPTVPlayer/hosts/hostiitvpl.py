@@ -37,9 +37,9 @@ class IITVPL(CBaseHostClass):
         self.MAIN_URL = 'http://iitvx.pl/'
         self.DEFAULT_ICON_URL = self.MAIN_URL + 'assets/img/logo-iitvx.png'
         
-        self.MAIN_CAT_TAB = [{'category':'list_abc',           'title': 'Lista ABC',                       'url':self.MAIN_URL,  'icon':self.DEFAULT_ICON_URL},
-                             {'category':'list_series2',       'title': 'Popularne seriale',               'url':self.MAIN_URL,  'icon':self.DEFAULT_ICON_URL},
-                             {'category':'list_series1',       'title': 'Wszystkie seriale',               'url':self.MAIN_URL,  'icon':self.DEFAULT_ICON_URL},
+        self.MAIN_CAT_TAB = [{'category':'list_abc', 'title': 'Lista ABC', 'url':self.MAIN_URL, 'icon':self.DEFAULT_ICON_URL},
+                             {'category':'list_series2', 'title': 'Popularne seriale', 'url':self.MAIN_URL, 'icon':self.DEFAULT_ICON_URL},
+                             {'category':'list_series1', 'title': 'Wszystkie seriale', 'url':self.MAIN_URL, 'icon':self.DEFAULT_ICON_URL},
                              
                              #{'category':'search',            'title': _('Search'), 'search_item':True,         'icon':self.DEFAULT_ICON_URL},
                              #{'category':'search_history',    'title': _('Search history'),                     'icon':self.DEFAULT_ICON_URL} 
@@ -53,14 +53,14 @@ class IITVPL(CBaseHostClass):
         info = {}
         data = self.cm.ph.getDataBeetwenMarkers(data, '<div class="group series-info"', '</div>')[1]
         info['title'] = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(data, '<h1', '</h1>')[1])
-        info['icon']  = self.getFullUrl(self.cm.ph.getSearchGroups(data, 'src="([^"]+?)"')[0])
-        info['desc']  = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(data, '<p class="description"', '</p>')[1].split('</strong>')[-1])
-        info['full_desc']  = self.cleanHtmlStr(data.split('</h1>')[-1])
+        info['icon'] = self.getFullUrl(self.cm.ph.getSearchGroups(data, 'src="([^"]+?)"')[0])
+        info['desc'] = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(data, '<p class="description"', '</p>')[1].split('</strong>')[-1])
+        info['full_desc'] = self.cleanHtmlStr(data.split('</h1>')[-1])
         keysMap = {'Gatunek:':'genre', 'Stacja:':'station'}
         data = self.cm.ph.getAllItemsBeetwenNodes(data, ('<strong>', '</strong>'), ('<', '>', '/'), withNodes=True)
         for item in data:
-            tmp   = item.split('</strong>', 1)
-            key   = self.cleanHtmlStr(tmp[0])
+            tmp = item.split('</strong>', 1)
+            key = self.cleanHtmlStr(tmp[0])
             value = self.cleanHtmlStr(tmp[-1])
             if key in keysMap:
                 info[keysMap[key]] = value
@@ -76,7 +76,7 @@ class IITVPL(CBaseHostClass):
         data = self.cm.ph.getAllItemsBeetwenMarkers(data, '<li', '</li>', withMarkers=True)
         for item in data:
             title = self.cleanHtmlStr(item)
-            url   = self.cm.ph.getSearchGroups(item, 'href="([^"]+?)"')[0]
+            url = self.cm.ph.getSearchGroups(item, 'href="([^"]+?)"')[0]
             
             if url.startswith('http://') or url.startswith('https://'):
                 letter = title.decode('utf-8')[0].encode('utf-8').upper()
@@ -117,7 +117,7 @@ class IITVPL(CBaseHostClass):
         data = self.cm.ph.getAllItemsBeetwenMarkers(data, '<li', '</li>', withMarkers=True)
         for item in data:
             title = self.cleanHtmlStr(item)
-            url   = self.cm.ph.getSearchGroups(item, 'href="([^"]+?)"')[0]
+            url = self.cm.ph.getSearchGroups(item, 'href="([^"]+?)"')[0]
             if url.startswith('http://') or url.startswith('https://'):
                 params = dict(cItem)
                 params.update({'category':nextCategory, 'good_for_fav': True, 'title':title, 'url':url})
@@ -138,11 +138,11 @@ class IITVPL(CBaseHostClass):
             del data[-1]
         
         for sItem in data:
-            season   = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(sItem, '<h2', '</h2>')[1])
+            season = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(sItem, '<h2', '</h2>')[1])
             eDataTab = self.cm.ph.getAllItemsBeetwenMarkers(sItem, '<li', '</li>', withMarkers=True)
             for item in eDataTab:
                 title = info['title'] + ': ' + self.cleanHtmlStr(item)
-                url   = self.cm.ph.getSearchGroups(item, 'href="([^"]+?)"')[0]
+                url = self.cm.ph.getSearchGroups(item, 'href="([^"]+?)"')[0]
                 if url.startswith('http://') or url.startswith('https://'):
                     params = dict(cItem)
                     params.update({'good_for_fav': True, 'title':title, 'url':url, 'desc':info['full_desc'], 'icon':info['icon']})
@@ -157,7 +157,7 @@ class IITVPL(CBaseHostClass):
     def getLinksForVideo(self, cItem):
         printDBG("IITVPL.getLinksForVideo [%s]" % cItem)
         
-        urlTab = self.cacheLinks.get(cItem['url'],  [])
+        urlTab = self.cacheLinks.get(cItem['url'], [])
         if len(urlTab):
             return urlTab
         self.cacheLinks = {}
@@ -186,7 +186,7 @@ class IITVPL(CBaseHostClass):
                 for it in item:
                     if 'data-link-id' not in it and 'class="_?video-link"' not in it:
                         continue
-                    tmp   = self.cm.ph.getSearchGroups(it, '<a[^>]+?href="([^"]+?)"[^>]*?>([^<]+?)<', 2)
+                    tmp = self.cm.ph.getSearchGroups(it, '<a[^>]+?href="([^"]+?)"[^>]*?>([^<]+?)<', 2)
                     if self.cm.isValidUrl(tmp[0]):
                         links[tabTitle].append({'name':'[{0}] '.format(tabTitle) + self.cleanHtmlStr(tmp[1]), 'url':tmp[0], 'need_resolve':1})
         
@@ -262,7 +262,7 @@ class IITVPL(CBaseHostClass):
         if not sts:
             return retTab
         
-        info  = self.getSeriesInfo(data)
+        info = self.getSeriesInfo(data)
         
         otherInfo = {}
         if 'genre' in info:
@@ -277,9 +277,9 @@ class IITVPL(CBaseHostClass):
         
         CBaseHostClass.handleService(self, index, refresh, searchPattern, searchType)
 
-        name     = self.currItem.get("name", '')
+        name = self.currItem.get("name", '')
         category = self.currItem.get("category", '')
-        mode     = self.currItem.get("mode", '')
+        mode = self.currItem.get("mode", '')
         
         printDBG("handleService: |||||||||||||||||||||||||||||||||||| name[%s], category[%s] " % (name, category))
         self.currList = []

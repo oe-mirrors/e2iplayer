@@ -24,8 +24,8 @@ from Components.ActionMap import ActionMap
 ###################################################
 
 class IPTVChoiceBoxItem:
-    TYPE_ON   = "on"
-    TYPE_OFF  = "off"
+    TYPE_ON = "on"
+    TYPE_OFF = "off"
     TYPE_NONE = None
     
     def __init__(self, name="",
@@ -40,14 +40,14 @@ class IPTVChoiceBoxItem:
 class IPTVChoiceBoxWidget(Screen):
 
     def __prepareSkin(self):
-        width  = self.params.get('width', 300)
+        width = self.params.get('width', 300)
         height = self.params.get('height', 300)
         
         skin = """
             <screen name="IPTVChoiceBoxWidget" position="center,center" title="%s" size="%d,%d">
                 <widget name="title" position="5,10"  zPosition="1" size="%d,30" font="Regular;20"            transparent="1"  backgroundColor="#00000000"/>
                 <widget name="list"  position="5,50"  zPosition="2" size="%d,%d" scrollbarMode="showOnDemand" transparent="1"  backgroundColor="#00000000" enableWrapAround="1" />
-            </screen>""" %(
+            </screen>""" % (
                 self.params.get('title', _("Select option")),
                 width, height, # size
                 width - 10, # title width
@@ -65,7 +65,7 @@ class IPTVChoiceBoxWidget(Screen):
         self.onClose.append(self.__onClose)
 
         
-        self["title"]= Label(self.params.get('title', _("Select option")))        
+        self["title"] = Label(self.params.get('title', _("Select option")))        
         self["list"] = IPTVRadioButtonList()
         
         self["actions"] = ActionMap(["ColorActions", "SetupActions", "WizardActions", "ListboxActions"],

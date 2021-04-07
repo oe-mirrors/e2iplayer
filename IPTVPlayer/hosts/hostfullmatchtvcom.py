@@ -32,10 +32,10 @@ class Fullmatchtv(CBaseHostClass):
         self.MAIN_URL = 'https://fullmatchtv.com/'
         self.defaultParams = {'with_metadata':True, 'header':self.HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
 
-        self.login      = ''
-        self.password   = ''
+        self.login = ''
+        self.password = ''
         self.categoryId = ''
-        self.maxPage    = ''
+        self.maxPage = ''
 
     def getPage(self, url, addParams={}, post_data=None):
         if addParams == {}:
@@ -75,7 +75,7 @@ class Fullmatchtv(CBaseHostClass):
 
         if page == 1:
             data = self.cm.ph.getDataBeetwenNodes(data, ('jQuery(window)', '{'), '});')[1]
-            self.categoryId  =self.cm.ph.getSearchGroups(data, '''['"]category_id['"]\s*?:?\s*?([0-9]+?)[^0-9]''')[0]
+            self.categoryId = self.cm.ph.getSearchGroups(data, '''['"]category_id['"]\s*?:?\s*?([0-9]+?)[^0-9]''')[0]
             data = self.cm.ph.getDataBeetwenNodes(data, ('else', '{'), '}')[1]
             self.maxPage = self.cm.ph.getSearchGroups(data, '''max_num_pages\s=\s([0-9]+?);''')[0]
             printDBG("fullmatchtv.listItems categoryId[%s] maxPage[%s]" % (self.categoryId, self.maxPage))
@@ -115,7 +115,7 @@ class Fullmatchtv(CBaseHostClass):
         tmp = self.cm.ph.getAllItemsBeetwenNodes(data, ('<iframe', '>'), ('</iframe', '>'))
         if len(tmp):
             for item in tmp:
-                url  = self.cm.ph.getSearchGroups(item, '''src=['"]([^'^"]+?)['"]''')[0]
+                url = self.cm.ph.getSearchGroups(item, '''src=['"]([^'^"]+?)['"]''')[0]
                 if url.startswith('//'):
                     url = 'http:' + url
                 if 1 != self.up.checkHostSupport(url):
@@ -137,9 +137,9 @@ class Fullmatchtv(CBaseHostClass):
 
         CBaseHostClass.handleService(self, index, refresh, searchPattern, searchType)
 
-        name     = self.currItem.get("name", '')
+        name = self.currItem.get("name", '')
         category = self.currItem.get("category", '')
-        mode     = self.currItem.get("mode", '')
+        mode = self.currItem.get("mode", '')
         
         printDBG("handleService: >> name[%s], category[%s] " % (name, category))
         self.currList = []

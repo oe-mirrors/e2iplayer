@@ -27,9 +27,9 @@ from Components.config import config, ConfigSelection, ConfigText, getConfigList
 ###################################################
 # Config options for HOST
 ###################################################
-config.plugins.iptvplayer.icefilmsinfo_proxy = ConfigSelection(default="None", choices=[("None",         _("None")),
-                                                                                            ("proxy_1",  _("Alternative proxy server (1)")),
-                                                                                            ("proxy_2",  _("Alternative proxy server (2)"))])
+config.plugins.iptvplayer.icefilmsinfo_proxy = ConfigSelection(default="None", choices=[("None", _("None")),
+                                                                                            ("proxy_1", _("Alternative proxy server (1)")),
+                                                                                            ("proxy_2", _("Alternative proxy server (2)"))])
 config.plugins.iptvplayer.icefilmsinfo_alt_domain = ConfigText(default="", fixed_size=False)
 def GetConfigList():
     optionList = []
@@ -67,18 +67,18 @@ class IceFilms(CBaseHostClass):
 
         for domain in domains:
             sts, data = self.getPage(domain)
-            if sts and  'donate.php' in data:
+            if sts and 'donate.php' in data:
                 if self.setMainUrl(self.cm.meta['url']):
                     break
         
         if self.MAIN_URL == None:
             self.MAIN_URL = 'http://www.icefilms.info/'
         
-        self.MAIN_CAT_TAB = [{'category':'list_filters',    'title': _('TV Shows'),                       'url':self.getFullUrl('tv/popular/1'),      'f_idx':0},
-                             {'category':'list_filters',    'title': _('Movies'),                         'url':self.getFullUrl('movies/popular/1'),  'f_idx':0},
-                             {'category':'list_filters',    'title': _('Stand-Up'),                       'url':self.getFullUrl('standup/popular/1'), 'f_idx':0},
-                             {'category': 'search',          'title': _('Search'), 'search_item': True,},
-                             {'category': 'search_history',  'title': _('Search history'),} 
+        self.MAIN_CAT_TAB = [{'category':'list_filters', 'title': _('TV Shows'), 'url':self.getFullUrl('tv/popular/1'), 'f_idx':0},
+                             {'category':'list_filters', 'title': _('Movies'), 'url':self.getFullUrl('movies/popular/1'), 'f_idx':0},
+                             {'category':'list_filters', 'title': _('Stand-Up'), 'url':self.getFullUrl('standup/popular/1'), 'f_idx':0},
+                             {'category': 'search', 'title': _('Search'), 'search_item': True,},
+                             {'category': 'search_history', 'title': _('Search history'),} 
                             ]
         
         self.cacheFilters = {}
@@ -137,7 +137,7 @@ class IceFilms(CBaseHostClass):
             firstItem = True
             for item in data:
                 if firstItem:
-                    item = item[item.find('>')+1:]
+                    item = item[item.find('>') + 1:]
                     firstItem = False
                 # there can be sub item 
                 item = item.split('</b>')
@@ -174,12 +174,12 @@ class IceFilms(CBaseHostClass):
             return
         url = self.cm.meta['url']
         
-        tmp  = self.cm.ph.getDataBeetwenMarkers(data, '<title>', '</span>', False)[1]
+        tmp = self.cm.ph.getDataBeetwenMarkers(data, '<title>', '</span>', False)[1]
         mainDesc = self.cleanHtmlStr(tmp)
-        title  = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(data, '<span', '</span>')[1])
+        title = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(data, '<span', '</span>')[1])
         
-        tmp  = self.cm.ph.getDataBeetwenMarkers(data, 'imdb', '>')[1]
-        id   = self._getAttrVal(tmp, 'id')
+        tmp = self.cm.ph.getDataBeetwenMarkers(data, 'imdb', '>')[1]
+        id = self._getAttrVal(tmp, 'id')
         
         params = {'good_for_fav': True, 'title':title, 'url':url, 'desc':mainDesc}
         if id != '':
@@ -207,8 +207,8 @@ class IceFilms(CBaseHostClass):
             tmpTab = self.cm.ph.getAllItemsBeetwenMarkers(item, "<a", '<br>', withMarkers=True)
             for tmpItem in tmpTab:
                 url = self._getAttrVal(tmpItem, 'href')
-                id  = self._getAttrVal(tmpItem, 'id')
-                title  = self.cleanHtmlStr(tmpItem)
+                id = self._getAttrVal(tmpItem, 'id')
+                title = self.cleanHtmlStr(tmpItem)
                 params = {'good_for_fav': True, 'title':title, 'url':self.getFullUrl(url), 'desc':desc}
                 if id != '':
                     params.update({'imdb_id':id, 'icon':'http://www.imdb.com/title/tt%s/?fake=need_resolve.jpeg' % id})
@@ -229,11 +229,11 @@ class IceFilms(CBaseHostClass):
         if not sts:
             return
         
-        tmp  = self.cm.ph.getDataBeetwenMarkers(data, '<title>', '<div', False)[1]
+        tmp = self.cm.ph.getDataBeetwenMarkers(data, '<title>', '<div', False)[1]
         mainDesc = self.cleanHtmlStr(tmp)
         
-        tmp  = self.cm.ph.getDataBeetwenMarkers(data, 'imdb', '>')[1]
-        id   = self._getAttrVal(tmp, 'id')
+        tmp = self.cm.ph.getDataBeetwenMarkers(data, 'imdb', '>')[1]
+        id = self._getAttrVal(tmp, 'id')
         printDBG('series old imdb_id[%s]' % cItem.get('imdb_id', ''))
         printDBG('series new imdb_id[%s]' % id)
         if id == '':
@@ -242,11 +242,11 @@ class IceFilms(CBaseHostClass):
         data = self.cm.ph.getDataBeetwenReMarkers(data, re.compile('<span class="?list"?'), re.compile('</span>'), withMarkers=False)[1]
         data = data.split('</h3>')
         for item in data:
-            desc   = mainDesc
+            desc = mainDesc
             tmpTab = self.cm.ph.getAllItemsBeetwenMarkers(item, "<a", '<br>', withMarkers=True)
             for tmpItem in tmpTab:
                 url = self._getAttrVal(tmpItem, 'href')
-                title  = self.cleanHtmlStr(tmpItem)
+                title = self.cleanHtmlStr(tmpItem)
                 params = {'good_for_fav': True, 'title':'{0}: {1}'.format(cItem['title'], title), 'url':self.getFullUrl(url), 'desc':desc}
                 if id != '':
                     params.update({'imdb_id':id, 'icon':'http://www.imdb.com/title/tt%s/?fake=need_resolve.jpeg' % id})
@@ -263,11 +263,11 @@ class IceFilms(CBaseHostClass):
         data = self.cm.ph.getDataBeetwenReMarkers(data, re.compile('''<div class=['"]?number['"]?'''), re.compile('</table>'), withMarkers=True)[1]
         data = data.split('</tr>')
         for item in data:
-            url    = self.getFullUrl(self._getAttrVal(item, 'href'))
+            url = self.getFullUrl(self._getAttrVal(item, 'href'))
             if not self.cm.isValidUrl(url):
                 continue
-            desc   = self.cleanHtmlStr(self.cm.ph.getDataBeetwenReMarkers(item, re.compile('''<div class=['"]?desc['"]?'''), re.compile('</div>'), withMarkers=True)[1])
-            title  = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(item, '<a', '</a>', withMarkers=True)[1])
+            desc = self.cleanHtmlStr(self.cm.ph.getDataBeetwenReMarkers(item, re.compile('''<div class=['"]?desc['"]?'''), re.compile('</div>'), withMarkers=True)[1])
+            title = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(item, '<a', '</a>', withMarkers=True)[1])
             params = {'good_for_fav': True, 'title':title, 'url':url, 'desc':desc}
             if '/tv/' not in url:
                 self.addVideo(params)
@@ -339,7 +339,7 @@ class IceFilms(CBaseHostClass):
             return []
         
         baseUrl = '/membersonly/components/com_iceplayer/video.php-link.php?s=%s&t=%s'
-        secret  = self.cm.ph.getSearchGroups(data, '<input[^>]+?name="secret"[^>]+?value="([^"]+?)"')[0]
+        secret = self.cm.ph.getSearchGroups(data, '<input[^>]+?name="secret"[^>]+?value="([^"]+?)"')[0]
         
         try:
             match = re.search('lastChild\.value="([^"]+)"(?:\s*\+\s*"([^"]+))?', data)
@@ -406,10 +406,10 @@ class IceFilms(CBaseHostClass):
         if not sts:
             return retTab
         title = self.cleanHtmlStr(self.cm.ph.getSearchGroups(data, '''<meta property=['"]?og\:title['"]?[^>]+?content=['"]([^"^']+?)['"]''')[0])
-        desc  = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(data, '<div class="summary_text"', '</div>')[1])
+        desc = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(data, '<div class="summary_text"', '</div>')[1])
         if desc == '':
-            desc  = self.cleanHtmlStr(self.cm.ph.getSearchGroups(data, '''<meta property=['"]?og\:description['"]?[^>]+?content=['"]([^"^']+?)['"]''')[0])
-        icon  = self.getFullUrl(self.cm.ph.getSearchGroups(data, '''<meta property=['"]?og\:image['"]?[^>]+?content=['"]([^"^']+?)['"]''')[0])
+            desc = self.cleanHtmlStr(self.cm.ph.getSearchGroups(data, '''<meta property=['"]?og\:description['"]?[^>]+?content=['"]([^"^']+?)['"]''')[0])
+        icon = self.getFullUrl(self.cm.ph.getSearchGroups(data, '''<meta property=['"]?og\:image['"]?[^>]+?content=['"]([^"^']+?)['"]''')[0])
         
         if title == '':
             title = cItem['title']
@@ -419,16 +419,16 @@ class IceFilms(CBaseHostClass):
         descData = self.cm.ph.getAllItemsBeetwenMarkers(data, '<h4 class="inline"', '</div>')
         descKeyMap = {"also known as": "alternate_title",
                       "production co": "production",
-                      "director":      "director",
-                      "directors":     "directors",
-                      "creators":      "creators",
-                      "creator":      "creator",
-                      "Stars":         "stars",
-                      "genres":        "genres",
-                      "country":       "country",
-                      "language":      "language",
-                      "release date":  "released",
-                      "runtime":       "duration"}
+                      "director": "director",
+                      "directors": "directors",
+                      "creators": "creators",
+                      "creator": "creator",
+                      "Stars": "stars",
+                      "genres": "genres",
+                      "country": "country",
+                      "language": "language",
+                      "release date": "released",
+                      "runtime": "duration"}
         
         otherInfo = {}
         for item in descData:
@@ -453,9 +453,9 @@ class IceFilms(CBaseHostClass):
         if self.MAIN_URL == None:
             self.selectDomain()
         
-        name     = self.currItem.get("name", '')
+        name = self.currItem.get("name", '')
         category = self.currItem.get("category", '')
-        mode     = self.currItem.get("mode", '')
+        mode = self.currItem.get("mode", '')
         
         printDBG("handleService: |||||||||||||||||||||||||||||||||||| name[%s], category[%s] " % (name, category))
         self.currList = []

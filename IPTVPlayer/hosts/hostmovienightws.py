@@ -25,15 +25,15 @@ def gettytul():
     return 'http://movienight.ws/'
 
 class MoviesNight(CBaseHostClass):
-    MAIN_URL    = 'http://movienight.ws/'
-    SRCH_URL    = MAIN_URL + '?s='
+    MAIN_URL = 'http://movienight.ws/'
+    SRCH_URL = MAIN_URL + '?s='
     DEFAULT_ICON_URL = 'http://movienight.ws/wp-content/uploads/2017/07/movineight-logo-125-2.png'
     
-    MAIN_CAT_TAB = [{'category':'list_items',     'title': _('Latest movies'),                          'url':MAIN_URL,             'icon':DEFAULT_ICON_URL},
-                    {'category':'movies_genres',  'title': _('Movies genres'),   'filter':'genres',     'url':MAIN_URL,             'icon':DEFAULT_ICON_URL},
-                    {'category':'movies_genres',  'title': _('Movies by year'),  'filter':'years',      'url':MAIN_URL,             'icon':DEFAULT_ICON_URL},
-                    {'category':'list_items',     'title': _('TV Series'),                              'url':MAIN_URL+'tvshows/',  'icon':DEFAULT_ICON_URL},
-                    {'category':'search',         'title': _('Search'),       'search_item':True},
+    MAIN_CAT_TAB = [{'category':'list_items', 'title': _('Latest movies'), 'url':MAIN_URL, 'icon':DEFAULT_ICON_URL},
+                    {'category':'movies_genres', 'title': _('Movies genres'), 'filter':'genres', 'url':MAIN_URL, 'icon':DEFAULT_ICON_URL},
+                    {'category':'movies_genres', 'title': _('Movies by year'), 'filter':'years', 'url':MAIN_URL, 'icon':DEFAULT_ICON_URL},
+                    {'category':'list_items', 'title': _('TV Series'), 'url':MAIN_URL + 'tvshows/', 'icon':DEFAULT_ICON_URL},
+                    {'category':'search', 'title': _('Search'), 'search_item':True},
                     {'category':'search_history', 'title': _('Search history')} 
                    ]
 
@@ -67,7 +67,7 @@ class MoviesNight(CBaseHostClass):
         tmp = self.cm.ph.getAllItemsBeetwenMarkers(tmp, '<a ', '</a>')
         for item in tmp:
             title = self.cleanHtmlStr(item)
-            url   = self._getFullUrl(self.cm.ph.getSearchGroups(item, '''href=['"]([^"^']+?)["']''', 1, True)[0])
+            url = self._getFullUrl(self.cm.ph.getSearchGroups(item, '''href=['"]([^"^']+?)["']''', 1, True)[0])
             if url.startswith('http'):
                 cache['years'].append({'title':title, 'url':url})
         
@@ -75,7 +75,7 @@ class MoviesNight(CBaseHostClass):
         data = data.split('</li>')
         for item in data:
             title = self.cleanHtmlStr(item)
-            url   = self._getFullUrl(self.cm.ph.getSearchGroups(item, '''href=['"]([^"^']+?)["']''', 1, True)[0])
+            url = self._getFullUrl(self.cm.ph.getSearchGroups(item, '''href=['"]([^"^']+?)["']''', 1, True)[0])
             if url.startswith('http'):
                 cache['genres'].append({'title':title, 'url':url})
         return cache
@@ -103,7 +103,7 @@ class MoviesNight(CBaseHostClass):
         url = cItem['url']
         if '?' in url:
             post = url.split('?')
-            url  = post[0]
+            url = post[0]
             post = post[1] 
         else:
             post = ''
@@ -128,10 +128,10 @@ class MoviesNight(CBaseHostClass):
             data[-1] = data[-1].split('<div id="paginador">')[0]
         
         for item in data:
-            url    = self.cm.ph.getSearchGroups(item, 'href="([^"]+?)"')[0]
+            url = self.cm.ph.getSearchGroups(item, 'href="([^"]+?)"')[0]
             if url == '':
                 continue
-            icon   = self.cm.ph.getSearchGroups(item, 'src="([^"]+?)"')[0]
+            icon = self.cm.ph.getSearchGroups(item, 'src="([^"]+?)"')[0]
             title = self.cm.ph.getDataBeetwenMarkers(item, '<h2>', '</h2>', False)[1]
             desc = self.cleanHtmlStr(item)
             
@@ -146,7 +146,7 @@ class MoviesNight(CBaseHostClass):
         
         if nextPage:
             params = dict(cItem)
-            params.update({'title':_('Next page'), 'page':page+1})
+            params.update({'title':_('Next page'), 'page':page + 1})
             self.addDir(params)
             
     def listSeasons(self, cItem, category):
@@ -173,10 +173,10 @@ class MoviesNight(CBaseHostClass):
             for eItem in episodesData:
                 eTmp = re.split('''<span class=['"]datix['"]>''', eItem)
                 title = self.cleanHtmlStr(eTmp[0])
-                desc  = self.cleanHtmlStr(eTmp[-1])
-                url   = self._getFullUrl(self.cm.ph.getSearchGroups(eItem, '''href=['"]([^"^']+?)["']''', 1, True)[0])
+                desc = self.cleanHtmlStr(eTmp[-1])
+                url = self._getFullUrl(self.cm.ph.getSearchGroups(eItem, '''href=['"]([^"^']+?)["']''', 1, True)[0])
                 if url.startswith('http'):
-                    episodesTab.append({'title':'{0} - {1}: {2}'.format(cItem['title'], seasonTitle, title),  'url':url, 'desc':desc})
+                    episodesTab.append({'title':'{0} - {1}: {2}'.format(cItem['title'], seasonTitle, title), 'url':url, 'desc':desc})
             
             if len(episodesTab):
                 self.episodesCache[seasonTitle] = episodesTab
@@ -258,8 +258,8 @@ class MoviesNight(CBaseHostClass):
         
         data = self.cm.ph.getDataBeetwenMarkers(data, '<div class="post">', m2)[1]
         title = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(data, '<h1', '</h1>')[1])
-        icon  = self.getFullIconUrl(self.cm.ph.getSearchGroups(data, '''<img[^>]+?src=['"]([^"^']+?\.jpe?g[^"^']*?)["']''')[0])
-        desc  = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(data, '<div id="dato-2"', '</p>')[1].split('</h2>')[-1])
+        icon = self.getFullIconUrl(self.cm.ph.getSearchGroups(data, '''<img[^>]+?src=['"]([^"^']+?\.jpe?g[^"^']*?)["']''')[0])
+        desc = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(data, '<div id="dato-2"', '</p>')[1].split('</h2>')[-1])
         
         if '/episode/' in url:
             data = self.cm.ph.getAllItemsBeetwenMarkers(data, '<p', '</p>')
@@ -307,7 +307,7 @@ class MoviesNight(CBaseHostClass):
         
         CBaseHostClass.handleService(self, index, refresh, searchPattern, searchType)
 
-        name     = self.currItem.get("name", '')
+        name = self.currItem.get("name", '')
         category = self.currItem.get("category", '')
         printDBG("handleService: |||||||||||||||||||||||||||||||||||| name[%s], category[%s] " % (name, category))
         self.currList = []

@@ -22,7 +22,7 @@ from Components.config import config, ConfigText, getConfigListEntry
 ###################################################
 # Config options for HOST
 ###################################################
-config.plugins.iptvplayer.drdk_myip    = ConfigText(default="213.173.226.190", fixed_size=False)
+config.plugins.iptvplayer.drdk_myip = ConfigText(default="213.173.226.190", fixed_size=False)
 
 def GetConfigList():
     optionList = []
@@ -35,10 +35,10 @@ def gettytul():
     return 'http://dr.dk/'
 
 class DRDK(CBaseHostClass):
-    MAIN_URL    = 'http://dr.dk/'
+    MAIN_URL = 'http://dr.dk/'
 
-    MAIN_CAT_TAB = [{'category':'dr_live_channels', 'channel_type':'video', 'title': _('TV channels'), 'url':MAIN_URL+'mu-online/api/1.0/channel/all-active-dr-tv-channels', 'icon':''},
-                    {'category':'dr_live_channels', 'channel_type':'audio', 'title': _('Radio stations'), 'url':MAIN_URL+'mu-online/api/1.0/channel/all-active-dr-radio-channels', 'icon':''},
+    MAIN_CAT_TAB = [{'category':'dr_live_channels', 'channel_type':'video', 'title': _('TV channels'), 'url':MAIN_URL + 'mu-online/api/1.0/channel/all-active-dr-tv-channels', 'icon':''},
+                    {'category':'dr_live_channels', 'channel_type':'audio', 'title': _('Radio stations'), 'url':MAIN_URL + 'mu-online/api/1.0/channel/all-active-dr-radio-channels', 'icon':''},
                     #{'category':'latest_series',      'title': _('Latest series'), 'url':MAIN_URL, 'icon':''},
                     #{'category':'genres_movies',      'title': _('Movies'), 'url':MAIN_URL+'filmy', 'icon':''},
                     #{'category':'genres_series',      'title': _('Series'), 'url':MAIN_URL+'seriale', 'icon':''},
@@ -54,7 +54,7 @@ class DRDK(CBaseHostClass):
         
     def _getFullUrl(self, url):
         if 0 < len(url) and not url.startswith('http'):
-            url =  self.MAIN_URL + url
+            url = self.MAIN_URL + url
         if not self.MAIN_URL.startswith('https://'):
             url = url.replace('https://', 'http://')
         return url
@@ -67,7 +67,7 @@ class DRDK(CBaseHostClass):
         for item in tab:
             params = dict(cItem)
             params.update(item)
-            params['name']  = 'category'
+            params['name'] = 'category'
             if type == 'dir':
                 self.addDir(params)
             else:
@@ -112,18 +112,18 @@ class DRDK(CBaseHostClass):
                         continue 
                     for qual in serv["Qualities"]:
                         for stream in qual["Streams"]:
-                            url   = self.up.decorateUrl(serv["Server"] + "/" + stream["Stream"])
+                            url = self.up.decorateUrl(serv["Server"] + "/" + stream["Stream"])
                             title = serv["LinkType"] #+ " [{0}Kbps]".format(qual["Kbps"])
-                            ip    = config.plugins.iptvplayer.drdk_myip.value
+                            ip = config.plugins.iptvplayer.drdk_myip.value
                             if '' != ip:
                                 url.meta['X-Forwarded-For'] = ip
                             urlTab.append({'name':title, 'url': url, 'need_resolve':1})
             elif cItem["Type"] == "tv2r":
                 urls = self.tv2r.getLinksForChannel(cItem['tv2r_data'])
                 for item in urls:
-                    url   = self.up.decorateUrl(item['url'])
+                    url = self.up.decorateUrl(item['url'])
                     title = item['name']
-                    ip    = config.plugins.iptvplayer.drdk_myip.value
+                    ip = config.plugins.iptvplayer.drdk_myip.value
                     if '' != ip:
                         url.meta['X-Forwarded-For'] = ip
                     urlTab.append({'name':title, 'url': url, 'need_resolve':1})
@@ -155,7 +155,7 @@ class DRDK(CBaseHostClass):
         
         CBaseHostClass.handleService(self, index, refresh, searchPattern, searchType)
 
-        name     = self.currItem.get("name", '')
+        name = self.currItem.get("name", '')
         category = self.currItem.get("category", '')
         printDBG("handleService: |||||||||||||||||||||||||||||||||||| name[%s], category[%s] " % (name, category))
         self.currList = []
@@ -237,9 +237,9 @@ class IPTVHost(CHostBase):
             if '' != url:
                 hostLinks.append(CUrlItem("Link", url, 1))
             
-        title       =  cItem.get('title', '')
-        description =  cItem.get('desc', '')
-        icon        =  cItem.get('icon', '')
+        title = cItem.get('title', '')
+        description = cItem.get('desc', '')
+        icon = cItem.get('icon', '')
         
         return CDisplayListItem(name=title,
                                     description=description,

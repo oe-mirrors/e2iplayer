@@ -44,9 +44,9 @@ def GetConfigList():
 class Napisy24plProvider(CBaseSubProviderClass): 
     
     def __init__(self, params={}):
-        self.MAIN_URL      = 'http://napisy24.pl/'
-        self.USER_AGENT    = 'DMnapi 13.1.30'
-        self.HTTP_HEADER   = {'User-Agent':self.USER_AGENT, 'Referer':self.MAIN_URL, 'Accept':'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8', 'Accept-Encoding':'gzip, deflate'}
+        self.MAIN_URL = 'http://napisy24.pl/'
+        self.USER_AGENT = 'DMnapi 13.1.30'
+        self.HTTP_HEADER = {'User-Agent':self.USER_AGENT, 'Referer':self.MAIN_URL, 'Accept':'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8', 'Accept-Encoding':'gzip, deflate'}
 
         params['cookie'] = 'napisy24pl.cookie'
         CBaseSubProviderClass.__init__(self, params)
@@ -79,7 +79,7 @@ class Napisy24plProvider(CBaseSubProviderClass):
             return
         
         # login user 
-        login  = config.plugins.iptvplayer.napisy24pl_login.value
+        login = config.plugins.iptvplayer.napisy24pl_login.value
         passwd = config.plugins.iptvplayer.napisy24pl_password.value
         if login != '' and passwd != '':
             errMsg = _('Failed to connect to server "%s".') % self.getMainUrl()
@@ -150,11 +150,11 @@ class Napisy24plProvider(CBaseSubProviderClass):
                 tmp = self.cm.ph.getAllItemsBeetwenMarkers(tmp, '<div class="tbl">', '<div class="clear">')
                 for item in tmp:
                     imdbid = self.cm.ph.getSearchGroups(item, 'data-imdb="(tt[0-9]+?)"')[0]
-                    url    = self.cm.ph.getSearchGroups(item, 'href="([^"]+?)"')[0]
-                    title  = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(item, '<h2', '</h2>')[1])
+                    url = self.cm.ph.getSearchGroups(item, 'href="([^"]+?)"')[0]
+                    title = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(item, '<h2', '</h2>')[1])
                     if title == '':
                         title = self.cleanHtmlStr(urllib.parse.unquote_plus(url.split('/')[-1]).title())
-                    desc   = item.split('</h2>')[-1]
+                    desc = item.split('</h2>')[-1]
                     
                     params = dict(cItem)
                     params.update({'sub_item_type':'series', 'category':nextCategoryMovie, 'title':title, 'url': self.getFullUrl(url), 'imdbid':imdbid, 'desc':self.cleanHtmlStr(desc)})
@@ -164,9 +164,9 @@ class Napisy24plProvider(CBaseSubProviderClass):
         data = self.cm.ph.getAllItemsBeetwenMarkers(data, '<div class="tbl" data-napis-id', '<div class="footertext">')
         for item in data:
             imdbid = self.cm.ph.getSearchGroups(item, 'data-imdb="(tt[0-9]+?)"')[0]
-            subId  = self.cm.ph.getSearchGroups(item, 'napisId=([0-9]+?)[^0-9]')[0]
-            title  = self.cm.ph.getDataBeetwenMarkers(item, '<h2', '</h3>')[1]
-            lang   =self.cm.ph.getSearchGroups(item, 'flags/(..)\.png')[0]
+            subId = self.cm.ph.getSearchGroups(item, 'napisId=([0-9]+?)[^0-9]')[0]
+            title = self.cm.ph.getDataBeetwenMarkers(item, '<h2', '</h3>')[1]
+            lang = self.cm.ph.getSearchGroups(item, 'flags/(..)\.png')[0]
             
             descTab = []
             columnsTitles = self.cm.ph.getDataBeetwenMarkers(item, '<div class="infoColumn1">', '</div>', False)[1].split('<br>')
@@ -181,7 +181,7 @@ class Napisy24plProvider(CBaseSubProviderClass):
                 
         if nextPage:
             params = dict(cItem)
-            params.update({'title':_('Next page'), 'page':page+1})
+            params.update({'title':_('Next page'), 'page':page + 1})
             self.addDir(params)
             
     def getSeasons(self, cItem, nextCategory):
@@ -262,9 +262,9 @@ class Napisy24plProvider(CBaseSubProviderClass):
         try:
             data = byteify(json.loads(data))
             for item in data:
-                subId  = str(item['napisid'])
-                title  = self.cm.ph.getDataBeetwenMarkers(item['table'], '<h6', '</h6>')[1]
-                lang   = 'pl'
+                subId = str(item['napisid'])
+                title = self.cm.ph.getDataBeetwenMarkers(item['table'], '<h6', '</h6>')[1]
+                lang = 'pl'
                 
                 descTab = []
                 columnsTitles = self.cm.ph.getDataBeetwenMarkers(item['table'], '<div class="infoColumn1tab">', '</div>', False)[1].split('<br>')
@@ -299,10 +299,10 @@ class Napisy24plProvider(CBaseSubProviderClass):
     def downloadSubtitleFile(self, cItem):
         printDBG("Napisy24plProvider.downloadSubtitleFile")
         retData = {}
-        title    = cItem['title']
-        lang     = cItem['lang']
-        subId    = cItem['sub_id']
-        imdbid   = cItem['imdbid']
+        title = cItem['title']
+        lang = cItem['lang']
+        subId = cItem['sub_id']
+        imdbid = cItem['imdbid']
         fileName = self._getFileName(title, lang, subId, imdbid)
         fileName = GetSubtitlesDir(fileName)
         
@@ -395,7 +395,7 @@ class Napisy24plProvider(CBaseSubProviderClass):
         
         CBaseSubProviderClass.handleService(self, index, refresh)
 
-        name     = self.currItem.get("name", '')
+        name = self.currItem.get("name", '')
         category = self.currItem.get("category", '')
         
         printDBG("handleService: name[%s], category[%s] " % (name, category))

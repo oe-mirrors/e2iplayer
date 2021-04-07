@@ -71,12 +71,12 @@ class IPTVDirectorySelectorWidget(Screen):
         printDBG("IPTVDirectorySelectorWidget.__init__ -------------------------------")
         Screen.__init__(self, session)
         if type(self) == IPTVDirectorySelectorWidget:
-            self["key_red"]    = Label(_("Cancel"))
+            self["key_red"] = Label(_("Cancel"))
             #self["key_yellow"] = Label(_("Odśwież"))
-            self["key_blue"]   = Label(_("New dir"))
-            self["key_green"]  = Label(_("Apply"))
-            self["curr_dir"]   = Label(_(" "))
-            self["list"]   = IPTVDirBrowserList()
+            self["key_blue"] = Label(_("New dir"))
+            self["key_green"] = Label(_("Apply"))
+            self["curr_dir"] = Label(_(" "))
+            self["list"] = IPTVDirBrowserList()
             self["FilelistActions"] = ActionMap(["ColorActions", "SetupActions"],
                 {
                     "red": self.requestCancel,
@@ -92,11 +92,11 @@ class IPTVDirectorySelectorWidget(Screen):
         self.onClose.append(self.__onClose)
         
         self.console = eConsoleAppContainer()
-        self.console_appClosed_conn   = eConnectCallback(self.console.appClosed, self.refreshFinished)
+        self.console_appClosed_conn = eConnectCallback(self.console.appClosed, self.refreshFinished)
         self.console_stderrAvail_conn = eConnectCallback(self.console.stderrAvail, self.refreshNewData)
-        self.underRefreshing  = False
-        self.underClosing     = False
-        self.deferredAction   = None
+        self.underRefreshing = False
+        self.underClosing = False
+        self.deferredAction = None
         
         try:
             while not os_path.isdir(currDir):
@@ -108,8 +108,8 @@ class IPTVDirectorySelectorWidget(Screen):
             currDir = ''
             printExc()
         
-        self.currDir   = currDir
-        self.currList  = []
+        self.currDir = currDir
+        self.currList = []
         
         self.tmpData = ''
         self.tmpList = []
@@ -120,7 +120,7 @@ class IPTVDirectorySelectorWidget(Screen):
     def __onClose(self):
         printDBG("IPTVDirectorySelectorWidget.__onClose -----------------------------")
         if None != self.console:
-            self.console_appClosed_conn   = None
+            self.console_appClosed_conn = None
             self.console_stderrAvail_conn = None
             self.console_stdoutAvail_conn = None
             self.console.sendCtrlC()
@@ -190,7 +190,7 @@ class IPTVDirectorySelectorWidget(Screen):
             self.tmpList.sort(key=lambda x: x.name.lower())
             self.currList = self.tmpList
             if('/' != self.currDir):
-                self.currList.insert(0,  CListItem(name='..', fullDir='', type='dir')) # add back item
+                self.currList.insert(0, CListItem(name='..', fullDir='', type='dir')) # add back item
             self["list"].setList([(x,) for x in self.currList])
             self.tmpList = []
             self.tmpData = ''
@@ -316,9 +316,9 @@ class IPTVFileSelectorWidget(IPTVDirectorySelectorWidget):
         IPTVDirectorySelectorWidget.__init__(self, session, currDir, title)
 
         if type(self) == IPTVFileSelectorWidget:
-            self["key_red"]    = Label(_("Cancel"))
-            self["curr_dir"]   = Label(_(" "))
-            self["list"]   = IPTVDirBrowserList()
+            self["key_red"] = Label(_("Cancel"))
+            self["curr_dir"] = Label(_(" "))
+            self["list"] = IPTVDirBrowserList()
             self["FilelistActions"] = ActionMap(["ColorActions", "SetupActions"],
                 {
                     "red": self.requestCancel,

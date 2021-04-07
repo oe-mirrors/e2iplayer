@@ -32,13 +32,13 @@ from Screens.MessageBox import MessageBox
 # Config options for HOST
 ###################################################
 config.plugins.iptvplayer.movieshdco_sortby = ConfigSelection(default="date", choices=[("date", _("Lastest")), ("views", _("Most viewed")), ("duree", _("Longest")), ("rate", _("Top rated")), ("random", _("Random"))]) 
-config.plugins.iptvplayer.cartoonhd_login    = ConfigText(default="", fixed_size=False)
+config.plugins.iptvplayer.cartoonhd_login = ConfigText(default="", fixed_size=False)
 config.plugins.iptvplayer.cartoonhd_password = ConfigText(default="", fixed_size=False)
 
 def GetConfigList():
     optionList = []
-    optionList.append(getConfigListEntry(_("login")+":", config.plugins.iptvplayer.cartoonhd_login))
-    optionList.append(getConfigListEntry(_("password")+":", config.plugins.iptvplayer.cartoonhd_password))
+    optionList.append(getConfigListEntry(_("login") + ":", config.plugins.iptvplayer.cartoonhd_login))
+    optionList.append(getConfigListEntry(_("password") + ":", config.plugins.iptvplayer.cartoonhd_password))
     return optionList
 ###################################################
 
@@ -79,11 +79,11 @@ class CartoonHD(CBaseHostClass):
     def listMainMenu(self, cItem):
         if self.MAIN_URL == None:
             return
-        MAIN_CAT_TAB = [{'category':'new',             'title': 'Featured',  'url':self.getMainUrl()},
-                        {'category':'list_genres',     'title': 'Movies',    'url':self.getFullUrl('/full-movies')},
-                        {'category':'list_genres',     'title': 'TV shows',  'url':self.getFullUrl('/tv-shows')},
-                        {'category':'search',          'title': _('Search'), 'search_item':True},
-                        {'category':'search_history',  'title': _('Search history')}]
+        MAIN_CAT_TAB = [{'category':'new', 'title': 'Featured', 'url':self.getMainUrl()},
+                        {'category':'list_genres', 'title': 'Movies', 'url':self.getFullUrl('/full-movies')},
+                        {'category':'list_genres', 'title': 'TV shows', 'url':self.getFullUrl('/tv-shows')},
+                        {'category':'search', 'title': _('Search'), 'search_item':True},
+                        {'category':'search_history', 'title': _('Search history')}]
         self.listsTab(MAIN_CAT_TAB, cItem)
     
     def _getToken(self, data):
@@ -163,7 +163,7 @@ class CartoonHD(CBaseHostClass):
             icon = self.getFullUrl(self.cm.ph.getSearchGroups(item, 'src="([^"]+?\.jpg[^"]*?)"')[0])
             desc = 'IMDb ' + self.cm.ph.getSearchGroups(item, '>([ 0-9.]+?)<')[0] + ', '
             desc += self.cleanHtmlStr(' '.join(self.cm.ph.getAllItemsBeetwenMarkers(item, '<p>', '</p>', False)))
-            tmp   = self.cm.ph.rgetAllItemsBeetwenMarkers(item, '</a>', '<a', True)
+            tmp = self.cm.ph.rgetAllItemsBeetwenMarkers(item, '</a>', '<a', True)
             url = ''
             for t in tmp:
                 if url == '':
@@ -181,13 +181,13 @@ class CartoonHD(CBaseHostClass):
         
         if nextPage != '':
             params = dict(cItem)
-            params.update({'title':_("Next page"), 'url':nextPage, 'page':page+1})
+            params.update({'title':_("Next page"), 'url':nextPage, 'page':page + 1})
             self.addDir(params)
 
     def _addTrailer(self, cItem, title, data):
         printDBG("CartoonHD._addTrailer")
         httpParams = dict(self.defaultParams)
-        httpParams['header'] =  {'Referer':self.cm.meta['url'], 'User-Agent':self.cm.HOST, 'X-Requested-With':'XMLHttpRequest', 'Accept':'application/json, text/javascript, */*; q=0.01', 'Content-Type':'application/x-www-form-urlencoded; charset=UTF-8'}
+        httpParams['header'] = {'Referer':self.cm.meta['url'], 'User-Agent':self.cm.HOST, 'X-Requested-With':'XMLHttpRequest', 'Accept':'application/json, text/javascript, */*; q=0.01', 'Content-Type':'application/x-www-form-urlencoded; charset=UTF-8'}
         
         tmp = self.cm.ph.getDataBeetwenNodes(data, ('<a', '>', 'watch-trailer'), ('</a', '>'))[1]
         tmp = dict(re.compile('''\sdata\-([^=]+?)=['"]([^'^"]+?)['"]''').findall(tmp))
@@ -250,15 +250,15 @@ class CartoonHD(CBaseHostClass):
 
         showTitle = cItem.get('show_title', '')
 
-        self._addTrailer(cItem, '{0}, {1} - {2}'.format(showTitle, cItem['title'],  _('trailer')), data)
+        self._addTrailer(cItem, '{0}, {1} - {2}'.format(showTitle, cItem['title'], _('trailer')), data)
 
         data = self.cm.ph.getDataBeetwenMarkers(data, '<div class="episode', '</article>', False)[1]
         data = data.split('<div class="episode')
         for item in data:
-            url   = self.getFullUrl(self.cm.ph.getSearchGroups(item, 'href="([^"#]+?)"')[0])
-            desc  = self.cm.ph.getDataBeetwenMarkers(item, '<p>', '</p>', False)[1]
+            url = self.getFullUrl(self.cm.ph.getSearchGroups(item, 'href="([^"#]+?)"')[0])
+            desc = self.cm.ph.getDataBeetwenMarkers(item, '<p>', '</p>', False)[1]
             title = self.cm.ph.getSearchGroups(item, 'title="([^"]+?)"')[0]
-            icon  = self.getFullUrl(self.cm.ph.getSearchGroups(item, 'data-src="([^"]+?)"')[0])
+            icon = self.getFullUrl(self.cm.ph.getSearchGroups(item, 'data-src="([^"]+?)"')[0])
             if '' == icon:
                 icon = cItem.get('icon', '')
             
@@ -293,7 +293,7 @@ class CartoonHD(CBaseHostClass):
         else:
             jsdata = ''
         
-        post_data = {'q':searchPattern, 'limit':100, 'timestamp':str(int(time.time()*1000))}
+        post_data = {'q':searchPattern, 'limit':100, 'timestamp':str(int(time.time() * 1000))}
         try:
             js_params = [{'path':GetJSScriptFile('cartoonhd.byte')}]
             js_params.append({'code':vars})
@@ -309,7 +309,7 @@ class CartoonHD(CBaseHostClass):
             printExc()
         
         httpParams = dict(self.defaultParams)
-        httpParams['header'] =  {'Referer':self.MAIN_URL, 'User-Agent':self.cm.HOST, 'X-Requested-With':'XMLHttpRequest', 'Content-Type':'application/x-www-form-urlencoded; charset=UTF-8'}
+        httpParams['header'] = {'Referer':self.MAIN_URL, 'User-Agent':self.cm.HOST, 'X-Requested-With':'XMLHttpRequest', 'Content-Type':'application/x-www-form-urlencoded; charset=UTF-8'}
         sts, data = self.cm.getPage(self.SEARCH_URL, httpParams, post_data=post_data)
         if not sts:
             return
@@ -327,8 +327,8 @@ class CartoonHD(CBaseHostClass):
                 
                 if None != category:
                     title = item['title']
-                    url   = item['permalink'].replace('\\/', '/')
-                    icon  = item.get('image', '').replace('\\/', '/')
+                    url = item['permalink'].replace('\\/', '/')
+                    icon = item.get('image', '').replace('\\/', '/')
                     if '' != url:
                         params = {'good_for_fav':True, 'name':'category', 'title':title, 'url':self.getFullUrl(url), 'desc':desc, 'icon':self.getFullUrl(icon), 'category':category}
                         if category == 'explore_item':
@@ -346,11 +346,11 @@ class CartoonHD(CBaseHostClass):
 
         def gettt():
             data = str(int(time.time()))
-            b64="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/="
-            i       = 0
-            enc     = ""
+            b64 = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/="
+            i = 0
+            enc = ""
             tmp_arr = []
-            mask    = 0x3f
+            mask = 0x3f
             while True:
                 o1 = ord(data[i])
                 i += 1
@@ -365,18 +365,18 @@ class CartoonHD(CBaseHostClass):
                     o3 = 0
                 i += 1
                 bits = o1 << 16 | o2 << 8 | o3
-                h1   = bits >> 18 & mask
-                h2   = bits >> 12 & mask
-                h3   = bits >> 6 & mask
-                h4   = bits & mask
+                h1 = bits >> 18 & mask
+                h2 = bits >> 12 & mask
+                h3 = bits >> 6 & mask
+                h4 = bits & mask
                 tmp_arr.append(b64[h1] + b64[h2] + b64[h3] + b64[h4])
                 if i >= len(data):
                     break
             enc = ''.join(tmp_arr)
-            r   = len(data) % 3
+            r = len(data) % 3
             if r > 0:
                 fill = '==='
-                enc  = enc[0:r-3] + fill[r:]
+                enc = enc[0:r - 3] + fill[r:]
             return enc
         
         def getCookieItem(name):
@@ -387,7 +387,7 @@ class CartoonHD(CBaseHostClass):
                 printExc()
             return value
         
-        urlTab = self.cacheLinks.get(cItem['url'],  [])
+        urlTab = self.cacheLinks.get(cItem['url'], [])
         if len(urlTab):
             return urlTab
         self.cacheLinks = {}
@@ -424,7 +424,7 @@ class CartoonHD(CBaseHostClass):
         if not self.cm.isValidUrl(baseurl):
             return []
         
-        tor  = self._getToken(data)
+        tor = self._getToken(data)
         elid = self.cm.ph.getSearchGroups(data, '''elid[\s]*=[\s]['"]([^"^']+?)['"]''')[0]
         if '' == elid:
             elid = self.cm.ph.getSearchGroups(data, 'data-id="([^"]+?)"')[0]
@@ -448,7 +448,7 @@ class CartoonHD(CBaseHostClass):
             hostings.append({'id':item[0], 'name':item[1]})
         
         httpParams = dict(self.defaultParams)
-        httpParams['header'] =  {'Referer':cItem['url'], 'User-Agent':self.cm.HOST, 'X-Requested-With':'XMLHttpRequest', 'Accept':'application/json, text/javascript, */*; q=0.01', 'Content-Type':'application/x-www-form-urlencoded; charset=UTF-8'}
+        httpParams['header'] = {'Referer':cItem['url'], 'User-Agent':self.cm.HOST, 'X-Requested-With':'XMLHttpRequest', 'Accept':'application/json, text/javascript, */*; q=0.01', 'Content-Type':'application/x-www-form-urlencoded; charset=UTF-8'}
         encElid = gettt()
         __utmx = getCookieItem('__utmx')
         httpParams['header']['Authorization'] = 'Bearer ' + urllib.parse.unquote(__utmx)
@@ -476,8 +476,8 @@ class CartoonHD(CBaseHostClass):
                 for key in keys:
                     if key not in keys:
                         continue
-                    url  = data[key]['embed'].replace('\\/', '/')
-                    url  = self.cm.ph.getSearchGroups(url, '''src=['"]([^"^']+?)['"]''', 1, ignoreCase=True)[0]
+                    url = data[key]['embed'].replace('\\/', '/')
+                    url = self.cm.ph.getSearchGroups(url, '''src=['"]([^"^']+?)['"]''', 1, ignoreCase=True)[0]
                     name = data[key]['type'] 
                     if 'googlevideo.com' in url or 'googleusercontent.com' in url:
                         need_resolve = 0
@@ -576,9 +576,9 @@ class CartoonHD(CBaseHostClass):
         if title == '':
             title = cItem['title']
         if icon == '':
-            icon  = cItem.get('icon', self.DEFAULT_ICON_URL)
+            icon = cItem.get('icon', self.DEFAULT_ICON_URL)
         if desc == '':
-            desc  = cItem.get('desc', '')
+            desc = cItem.get('desc', '')
         
         return [{'title':self.cleanHtmlStr(title), 'text': self.cleanHtmlStr(desc), 'images':[{'title':'', 'url':self.getFullUrl(icon)}], 'other_info':{'custom_items_list':itemsList}}]
 
@@ -626,7 +626,7 @@ class CartoonHD(CBaseHostClass):
         
         CBaseHostClass.handleService(self, index, refresh, searchPattern, searchType)
 
-        name     = self.currItem.get("name", '')
+        name = self.currItem.get("name", '')
         category = self.currItem.get("category", '')
         
         printDBG("handleService: |||||||||||||||||||||||||||||||||||| name[%s], category[%s] " % (name, category))
@@ -670,7 +670,7 @@ class IPTVHost(CHostBase):
         CHostBase.__init__(self, CartoonHD(), True, [CDisplayListItem.TYPE_VIDEO, CDisplayListItem.TYPE_AUDIO])
 
     def withArticleContent(self, cItem):
-        if cItem.get('prev_url') or cItem.get('type') == 'video' or  cItem.get('category') in ('explore_item', 'list_seasons', 'list_episodes'):
+        if cItem.get('prev_url') or cItem.get('type') == 'video' or cItem.get('category') in ('explore_item', 'list_seasons', 'list_episodes'):
             return True
         else:
             return False

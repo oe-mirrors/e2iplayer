@@ -20,7 +20,7 @@ import time
 import urllib.request
 import urllib.parse
 import urllib.error
-from datetime import  timedelta
+from datetime import timedelta
 ###################################################
 ###################################################
 # Config options for HOST
@@ -43,18 +43,18 @@ class Redbull(CBaseHostClass):
         self.HTTP_HEADER = self.cm.getDefaultHeader(browser='chrome')
         self.defaultParams = {'header':self.HTTP_HEADER}
         self.REDBULL_API = "https://appletv.redbull.tv/" 
-        self.MAIN_URL   = 'http://redbull.tv/'
+        self.MAIN_URL = 'http://redbull.tv/'
         self.DEFAULT_ICON_URL = 'https://www.redbull.com/v3/resources/images/appicon/android-chrome-192.png'
 
     def listMain(self, cItem, nextCategory):
         printDBG("Redbull.listMain")
 
-        MAIN_CAT_TAB = [{'category':'explore_item',         'title': _('Discover'),  'url':self.REDBULL_API + "products/discover"},
-                         {'category':'explore_item',          'title': _('TV'),      'url':self.REDBULL_API + "products/tv"},
-                         {'category':'explore_item',         'title': _('Channels'), 'url':self.REDBULL_API + "products/channels"},
-                         {'category':'explore_item',          'title': _('Calendar'),'url':self.REDBULL_API + "products/calendar"},
-                         {'category': 'search',             'title': _('Search'), 'search_item': True,},
-                         {'category': 'search_history',     'title': _('Search history'),} 
+        MAIN_CAT_TAB = [{'category':'explore_item', 'title': _('Discover'), 'url':self.REDBULL_API + "products/discover"},
+                         {'category':'explore_item', 'title': _('TV'), 'url':self.REDBULL_API + "products/tv"},
+                         {'category':'explore_item', 'title': _('Channels'), 'url':self.REDBULL_API + "products/channels"},
+                         {'category':'explore_item', 'title': _('Calendar'),'url':self.REDBULL_API + "products/calendar"},
+                         {'category': 'search', 'title': _('Search'), 'search_item': True,},
+                         {'category': 'search_history', 'title': _('Search history'),} 
                         ]
 
         self.listsTab(MAIN_CAT_TAB, cItem)
@@ -171,7 +171,7 @@ class Redbull(CBaseHostClass):
             if not title:
                 title = self.cleanHtmlStr(ph.search(item, '''<title>([^>]+?)</title>''')[0])
             time = self.cleanHtmlStr(ph.search(item, '''Duration: ([^'^"]+?)<''')[0])
-            params = {'title':title, 'icon':icon, 'desc':'['+time+']', 'url':url}
+            params = {'title':title, 'icon':icon, 'desc':'[' + time + ']', 'url':url}
             self.addVideo(params)
 
         data2 = ph.findall(data, '<moviePoster', '</moviePoster>')
@@ -182,7 +182,7 @@ class Redbull(CBaseHostClass):
             if not title:
                 title = self.cleanHtmlStr(ph.search(item, '''<title>([^>]+?)</title>''')[0])
             time = self.cleanHtmlStr(ph.search(item, '''Duration: ([^'^"]+?)<''')[0])
-            params = {'title':title, 'icon':icon, 'desc':'['+time+']', 'url':url}
+            params = {'title':title, 'icon':icon, 'desc':'[' + time + ']', 'url':url}
             self.addVideo(params)
 
     def listSearchResult(self, cItem, searchPattern, searchType):
@@ -213,7 +213,7 @@ class Redbull(CBaseHostClass):
             if not title:
                 title = self.cleanHtmlStr(ph.search(item, '''Label=['"]([^'^"]+?)['"]''')[0])
             time = self.cleanHtmlStr(ph.search(item, '''Duration: ([^'^"]+?)<''')[0])
-            params = {'title':title, 'icon':icon, 'desc':'['+time+']', 'url':url}
+            params = {'title':title, 'icon':icon, 'desc':'[' + time + ']', 'url':url}
             self.addVideo(params)
 
 
@@ -252,7 +252,7 @@ class Redbull(CBaseHostClass):
         
         CBaseHostClass.handleService(self, index, refresh, searchPattern, searchType)
 
-        name     = self.currItem.get("name", '')
+        name = self.currItem.get("name", '')
         category = self.currItem.get("category", '')
         printDBG("handleService: ||| name[%s], category[%s] " % (name, category))
         self.currList = []

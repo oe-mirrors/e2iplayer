@@ -27,15 +27,15 @@ from Plugins.Extensions.IPTVPlayer.components.iptvimageselector import IPTVMulti
 ###################################################
 # Config options for HOST
 ###################################################
-config.plugins.iptvplayer.kissanime_defaultformat = ConfigSelection(default="999999", choices=[("0", _("the worst")), ("360", "360p"), ("480", "480p"), ("720", "720p"),  ("1080", "1080p"), ("999999", "the best")])
-config.plugins.iptvplayer.kissanime_proxy = ConfigSelection(default="None", choices=[("None",     _("None")),
-                                                                                         ("proxy_1",  _("Alternative proxy server (1)")),
-                                                                                         ("proxy_2",  _("Alternative proxy server (2)"))])
+config.plugins.iptvplayer.kissanime_defaultformat = ConfigSelection(default="999999", choices=[("0", _("the worst")), ("360", "360p"), ("480", "480p"), ("720", "720p"), ("1080", "1080p"), ("999999", "the best")])
+config.plugins.iptvplayer.kissanime_proxy = ConfigSelection(default="None", choices=[("None", _("None")),
+                                                                                         ("proxy_1", _("Alternative proxy server (1)")),
+                                                                                         ("proxy_2", _("Alternative proxy server (2)"))])
 
 def GetConfigList():
     optionList = []
-    optionList.append(getConfigListEntry(_("Default video quality:"),   config.plugins.iptvplayer.kissanime_defaultformat))
-    optionList.append(getConfigListEntry(_("Use proxy server:"),        config.plugins.iptvplayer.kissanime_proxy))
+    optionList.append(getConfigListEntry(_("Default video quality:"), config.plugins.iptvplayer.kissanime_defaultformat))
+    optionList.append(getConfigListEntry(_("Use proxy server:"), config.plugins.iptvplayer.kissanime_proxy))
     return optionList
 ###################################################
 
@@ -56,15 +56,15 @@ class KissAnimeTo(CBaseHostClass):
         self.MAIN_URL = 'http://kissanime.ru/'
         self.DEFAULT_ICON_URL = "https://ausanimecons.files.wordpress.com/2015/01/kissanime-logo.jpg"
         
-        self.MAIN_CAT_TAB = [{'category': 'home',            'title': _('Home'),              'url': self.getMainUrl(),},
-                             {'category': 'list_cats',       'title': _('Anime list'),        'url': self.getFullUrl('AnimeList'),},
-                             {'category': 'search',          'title': _('Search'), 'search_item': True,},
-                             {'category': 'search_history',  'title': _('Search history'),}]
+        self.MAIN_CAT_TAB = [{'category': 'home', 'title': _('Home'), 'url': self.getMainUrl(),},
+                             {'category': 'list_cats', 'title': _('Anime list'), 'url': self.getFullUrl('AnimeList'),},
+                             {'category': 'search', 'title': _('Search'), 'search_item': True,},
+                             {'category': 'search_history', 'title': _('Search history'),}]
         
         self.SORT_BY_TAB = [{'title':_('Sort by alphabet')},
                             {'title':_('Sort by popularity'), 'sort_by':'MostPopular'},
-                            {'title':_('Latest update'),      'sort_by':'LatestUpdate'},
-                            {'title':_('New cartoon'),        'sort_by':'Newest'}]
+                            {'title':_('Latest update'), 'sort_by':'LatestUpdate'},
+                            {'title':_('New cartoon'), 'sort_by':'Newest'}]
         self.cacheHome = {}
         self.cache = {}
         
@@ -115,7 +115,7 @@ class KissAnimeTo(CBaseHostClass):
                 tmp = self.cm.ph.getAllItemsBeetwenMarkers(formData, '<input', '>', False, False)
                 post_data2 = {}
                 for item in tmp:
-                    name  = self.cm.ph.getSearchGroups(item, '''name=['"]([^'^"]+?)['"]''', ignoreCase=True)[0]
+                    name = self.cm.ph.getSearchGroups(item, '''name=['"]([^'^"]+?)['"]''', ignoreCase=True)[0]
                     value = self.cm.ph.getSearchGroups(item, '''value=['"]([^'^"]+?)['"]''', ignoreCase=True)[0]
                     if name != '':
                         post_data2[name] = value
@@ -207,19 +207,19 @@ class KissAnimeTo(CBaseHostClass):
             del data[0]
         tab = []
         for item in data:
-            url   = self.cm.ph.getSearchGroups(item, '''href=["']([^"^']+?)["']''')[0]
+            url = self.cm.ph.getSearchGroups(item, '''href=["']([^"^']+?)["']''')[0]
             if '' == url:
                 continue
             title = self.cm.ph.getDataBeetwenMarkers(item, '<span class="title">', '</span>', False)[1]
             if '' == title:
                 title = self.cm.ph.getDataBeetwenMarkers(item, '<a ', '</a>')[1]
             if forceIcon == '':
-                icon  = self.cm.ph.getSearchGroups(item, '''src=["']([^"^']+?)["']''')[0]
+                icon = self.cm.ph.getSearchGroups(item, '''src=["']([^"^']+?)["']''')[0]
             else:
                 icon = forceIcon
-            desc  = self.cm.ph.getDataBeetwenMarkers(item, '<p>', '</p>', False)[1]
+            desc = self.cm.ph.getDataBeetwenMarkers(item, '<p>', '</p>', False)[1]
             if '' == desc:
-                desc = '<'+item
+                desc = '<' + item
             tab.append({'title':self.cleanHtmlStr(title), 'url':self.getFullUrl(url), 'icon':self.getFullIconUrl(icon), 'desc':self.cleanHtmlStr(desc)})
         return tab
             
@@ -307,9 +307,9 @@ class KissAnimeTo(CBaseHostClass):
             self.cache[catTitle] = []
             tmp2 = self.cm.ph.getAllItemsBeetwenMarkers(item, '<a ', '</a>')
             for item2 in tmp2:
-                url  = self.cm.ph.getSearchGroups(item2, '''href="([^"]+?)"''')[0]
+                url = self.cm.ph.getSearchGroups(item2, '''href="([^"]+?)"''')[0]
                 title = self.cleanHtmlStr(item2)
-                desc  = self.cm.ph.getSearchGroups(item2, '''title="([^"]+?)"''')[0]
+                desc = self.cm.ph.getSearchGroups(item2, '''title="([^"]+?)"''')[0]
                 self.cache[catTitle].append({'title':title, 'desc':desc, 'url':self.getFullUrl(url)})
             
             if len(self.cache[catTitle]) > 0:
@@ -331,7 +331,7 @@ class KissAnimeTo(CBaseHostClass):
         if sortBy != '':
             if not url.endswith('/'):
                 url += '/'
-            url += sortBy+'/'
+            url += sortBy + '/'
         if page > 1:
             if '?' in url:
                 url += '&'
@@ -343,14 +343,14 @@ class KissAnimeTo(CBaseHostClass):
     def listItems(self, cItem, category):
         printDBG("KissAnimeTo.listItems [%s]" % cItem)
         page = cItem.get('page', 1)
-        sort_by   = cItem.get('sort_by', '')
+        sort_by = cItem.get('sort_by', '')
         post_data, url = self._urlAppendPage(cItem['url'], page, sort_by, cItem.get('keyword', ''))
         sts, data = self.getPage(url, {}, post_data)
         if not sts:
             return
         
         nextPage = False
-        if ('page=%d"' % (page+1)) in data:
+        if ('page=%d"' % (page + 1)) in data:
             nextPage = True
             
         data = self.cm.ph.getDataBeetwenMarkers(data, 'Latest episode', '</table>')[1]
@@ -363,7 +363,7 @@ class KissAnimeTo(CBaseHostClass):
         
         if nextPage:
             params = dict(cItem)
-            params.update({'good_for_fav':False, 'title':_('Next page'), 'page':page+1})
+            params.update({'good_for_fav':False, 'title':_('Next page'), 'page':page + 1})
             self.addDir(params)
             
     def listEpisodes(self, cItem):
@@ -408,7 +408,7 @@ class KissAnimeTo(CBaseHostClass):
             data = self.cm.ph.getAllItemsBeetwenMarkers(data, '<option', '</option>')
             for item in data:
                 serverTitle = self.cleanHtmlStr(item)
-                serverUrl   = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''value="([^"]+?)"''')[0])
+                serverUrl = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''value="([^"]+?)"''')[0])
                 if self.cm.isValidUrl(serverUrl):
                     urlTab.append({'name':serverTitle, 'url':serverUrl, 'need_resolve':1})
             
@@ -461,7 +461,7 @@ class KissAnimeTo(CBaseHostClass):
                 tmp = base64.b64decode(tmp)
                 tmp = self.cm.ph.getAllItemsBeetwenMarkers(tmp, '<a ', '</a>')
                 for item in tmp:
-                    url  = self.cm.ph.getSearchGroups(item, '''href="([^"]+?)"''')[0]
+                    url = self.cm.ph.getSearchGroups(item, '''href="([^"]+?)"''')[0]
                     if 'googlevideo.com' not in url:
                         continue
                     name = self.cleanHtmlStr(item)
@@ -473,7 +473,7 @@ class KissAnimeTo(CBaseHostClass):
         tmpTab = self.cm.ph.getDataBeetwenMarkers(data, '<select id="slcQualix">', '</select>', False)[1]
         tmpTab = self.cm.ph.getAllItemsBeetwenMarkers(tmpTab, '<option', '</option>')
         for item in tmpTab:
-            url  = self.cm.ph.getSearchGroups(item, '''value="([^"]+?)"''')[0]
+            url = self.cm.ph.getSearchGroups(item, '''value="([^"]+?)"''')[0]
             if '' == url:
                 continue
             try:
@@ -493,7 +493,7 @@ class KissAnimeTo(CBaseHostClass):
             max_bitrate = int(config.plugins.iptvplayer.kissanime_defaultformat.value)
             def __getLinkQuality(itemLink):
                 try:
-                    return int(self.cm.ph.getSearchGroups('|'+itemLink['name']+'|', '[^0-9]([0-9]+?)[^0-9]')[0])
+                    return int(self.cm.ph.getSearchGroups('|' + itemLink['name'] + '|', '[^0-9]([0-9]+?)[^0-9]')[0])
                 except Exception:
                     return 0
             urlTab = CSelOneLink(urlTab, __getLinkQuality, max_bitrate).getBestSortedList()
@@ -503,7 +503,7 @@ class KissAnimeTo(CBaseHostClass):
             
         data = self.cm.ph.getAllItemsBeetwenMarkers(data, '<iframe ', '>', withMarkers=True, caseSensitive=False)
         for item in data:
-            url  = self.cm.ph.getSearchGroups(item, '''<iframe[^>]+?src=['"]([^'^"]+?)['"]''',  grupsNum=1, ignoreCase=True)[0]
+            url = self.cm.ph.getSearchGroups(item, '''<iframe[^>]+?src=['"]([^'^"]+?)['"]''', grupsNum=1, ignoreCase=True)[0]
             url = self.getFullUrl(url)
             if url.startswith('http') and 'facebook.com' not in url and 1 == self.up.checkHostSupport(url):
                 urlTab.extend(self.up.getVideoLinkExt(url))
@@ -521,9 +521,9 @@ class KissAnimeTo(CBaseHostClass):
         
         CBaseHostClass.handleService(self, index, refresh, searchPattern, searchType)
 
-        name     = self.currItem.get("name", '')
+        name = self.currItem.get("name", '')
         category = self.currItem.get("category", '')
-        mode     = self.currItem.get("mode", '')
+        mode = self.currItem.get("mode", '')
         
         printDBG("handleService: |||||||||||||||||||||||||||||||||||| name[%s], category[%s] " % (name, category))
         self.currList = []

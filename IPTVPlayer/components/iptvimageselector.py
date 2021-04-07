@@ -54,7 +54,7 @@ class IPTVImagesSelectionList(IPTVListComponentBase):
     
     def buildEntry(self, item):
         res = [None]
-        width  = self.l.getItemSize().width()
+        width = self.l.getItemSize().width()
         height = self.l.getItemSize().height()
         try:
             printDBG('--- buildEntry ---')
@@ -107,10 +107,10 @@ class IPTVMultipleImageSelectorWidget(Screen):
                 list_width += 30 # added for scrollbar
             skin.append('<widget name="col_%d" position="%d,%d" zPosition="1" size="%d,%d" scrollbarMode="%s" transparent="1"  backgroundColor="#00000000" enableWrapAround="1" />' % (idx, x, y, list_width, list_height, scrollbar_mode))
             x += 10 + list_width
-        y  += list_height + 10 
+        y += list_height + 10 
         
         if self.iptv_accep_label != None:
-            skin.append('<widget name="accept_button"  position="10,%d"  zPosition="1" size="%d,%d"  valign="center" halign="center" font="Regular;22" foregroundColor="#00FFFFFF" backgroundColor="#320F0F0F" />' % (y, self.iptv_width-20, self.iptv_accep_height))
+            skin.append('<widget name="accept_button"  position="10,%d"  zPosition="1" size="%d,%d"  valign="center" halign="center" font="Regular;22" foregroundColor="#00FFFFFF" backgroundColor="#320F0F0F" />' % (y, self.iptv_width - 20, self.iptv_accep_height))
         skin.append('</screen>')
         skin = '\n'.join(skin)
         printDBG(">>>")
@@ -154,7 +154,7 @@ class IPTVMultipleImageSelectorWidget(Screen):
         self.onClose.append(self.__onClose)
 
         # create controls
-        self["title"]= Label(self.iptv_title)
+        self["title"] = Label(self.iptv_title)
         if self.iptv_message != None:
             self["message"] = Label(str(self.iptv_message))
         

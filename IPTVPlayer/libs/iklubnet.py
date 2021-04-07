@@ -27,7 +27,7 @@ except Exception:
 ###################################################
 # Config options for HOST
 ###################################################
-config.plugins.iptvplayer.iklubnet_categorization  = ConfigYesNo(default=True)
+config.plugins.iptvplayer.iklubnet_categorization = ConfigYesNo(default=True)
 
 def GetConfigList():
     optionList = []
@@ -40,7 +40,7 @@ class IKlubNetApi(CBaseHostClass):
 
     def __init__(self):
         CBaseHostClass.__init__(self)
-        self.MAIN_URL    = 'http://iklub.net/'
+        self.MAIN_URL = 'http://iklub.net/'
         self.HEADER = {'User-Agent': 'Mozilla/5.0', 'Accept': 'text/html'}
         self.COOKIE_FILE = GetCookieDir('iklubnet.cookie')
         
@@ -105,7 +105,7 @@ class IKlubNetApi(CBaseHostClass):
                 for item in data:
                     uri = self.cm.ph.getSearchGroups(item, 'value="([^"]+?)"')[0]
                     if uri != '':
-                        title  = self.cleanHtmlStr(item)
+                        title = self.cleanHtmlStr(item)
                         params = dict(cItem)
                         params.update({'type':'video', 'title':title, 'vlc':True, 'url':uri})
                         retList.append(params)
@@ -117,10 +117,10 @@ class IKlubNetApi(CBaseHostClass):
                 retList = []
                 data = self.cm.ph.getAllItemsBeetwenMarkers(data, '<div class="button', '</div>', withMarkers=True, caseSensitive=False)
                 for item in data:
-                    id    = self.cm.ph.getSearchGroups(item, 'data-video_id="([0-9]+?)"')[0]
+                    id = self.cm.ph.getSearchGroups(item, 'data-video_id="([0-9]+?)"')[0]
                     if id != '':
-                        desc  = self.cleanHtmlStr(self.cm.ph.getSearchGroups(item, 'titlte="([^"]+?)"')[0])
-                        icon  = self.cm.ph.getSearchGroups(item, 'src="(http[^"]+?)"')[0]
+                        desc = self.cleanHtmlStr(self.cm.ph.getSearchGroups(item, 'titlte="([^"]+?)"')[0])
+                        icon = self.cm.ph.getSearchGroups(item, 'src="(http[^"]+?)"')[0]
                         title = self.cm.ph.getSearchGroups(item, 'alt="([^"]+?)"')[0].replace('-', ' ').title()
                         params = dict(cItem)
                         params.update({'type':'video', 'title':title, 'url':'http://tvpstream.tvp.pl/sess/tvplayer.php?object_id=%s&autoplay=true' % id, 'icon':icon, 'desc':desc})
@@ -199,13 +199,13 @@ class IKlubNetApi(CBaseHostClass):
                 printDBG("++++++++++++++++++++++++++++++++++++++++++++++++++++")
                 
                 funName = self.cm.ph.getSearchGroups(ddata, '''function\s*([^\(]+?)''')[0].strip()
-                sp      = self.cm.ph.getSearchGroups(ddata, '''split\(\s*['"]([^'^"]+?)['"]''')[0]
-                modStr  = self.cm.ph.getSearchGroups(ddata, '''\+\s*['"]([^'^"]+?)['"]''')[0] 
-                modInt  = int(self.cm.ph.getSearchGroups(ddata, '''\+\s*(-?[0-9]+?)[^0-9]''')[0])
+                sp = self.cm.ph.getSearchGroups(ddata, '''split\(\s*['"]([^'^"]+?)['"]''')[0]
+                modStr = self.cm.ph.getSearchGroups(ddata, '''\+\s*['"]([^'^"]+?)['"]''')[0] 
+                modInt = int(self.cm.ph.getSearchGroups(ddata, '''\+\s*(-?[0-9]+?)[^0-9]''')[0])
                 
-                ddata =  self.cm.ph.getSearchGroups(ddata, '''document\.write[^'^"]+?['"]([^'^"]+?)['"]''')[0]
-                data  = ''
-                tmp   = ddata.split(sp)
+                ddata = self.cm.ph.getSearchGroups(ddata, '''document\.write[^'^"]+?['"]([^'^"]+?)['"]''')[0]
+                data = ''
+                tmp = ddata.split(sp)
                 ddata = urllib.parse.unquote(tmp[0])
                 k = urllib.parse.unquote(tmp[1] + modStr)
                 for idx in range(len(ddata)):

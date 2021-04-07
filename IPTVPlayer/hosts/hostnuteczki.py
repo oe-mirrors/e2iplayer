@@ -24,8 +24,8 @@ from Screens.MessageBox import MessageBox
 ###################################################
 # Config options for HOST
 ###################################################
-config.plugins.iptvplayer.nuteczki_login      = ConfigText(default="", fixed_size=False)
-config.plugins.iptvplayer.nuteczki_password   = ConfigText(default="", fixed_size=False)
+config.plugins.iptvplayer.nuteczki_login = ConfigText(default="", fixed_size=False)
+config.plugins.iptvplayer.nuteczki_password = ConfigText(default="", fixed_size=False)
 
 def GetConfigList():
     optionList = []
@@ -56,7 +56,7 @@ class NuteczkiEU(CBaseHostClass):
         self.cacheFiltersKeys = []
         
         self.loggedIn = None
-        self.login    = ''
+        self.login = ''
         self.password = ''
     
     def getPage(self, baseUrl, addParams={}, post_data=None):
@@ -90,10 +90,10 @@ class NuteczkiEU(CBaseHostClass):
                 printExc()
         
         MAIN_CAT_TAB = [
-                        {'category':'top10',           'title': _('TOP 10'),      'url':self.getFullUrl('/top10/')},
-                        {'category':'filters',         'title': _('Filters'),     'url':self.getFullUrl('/muzyka/'), 'post_data':{}},
-                        {'category':'search',          'title': _('Search'), 'search_item':True},
-                        {'category':'search_history',  'title': _('Search history')}]
+                        {'category':'top10', 'title': _('TOP 10'), 'url':self.getFullUrl('/top10/')},
+                        {'category':'filters', 'title': _('Filters'), 'url':self.getFullUrl('/muzyka/'), 'post_data':{}},
+                        {'category':'search', 'title': _('Search'), 'search_item':True},
+                        {'category':'search_history', 'title': _('Search history')}]
         self.listsTab(MAIN_CAT_TAB, cItem)
         
        
@@ -147,7 +147,7 @@ class NuteczkiEU(CBaseHostClass):
             mainTitle = mainMap[data[mainIdx]]
             
             subMap = {}
-            tmp = self.cm.ph.getDataBeetwenMarkers(data[mainIdx+1], '<ul', '</ul>')[1]
+            tmp = self.cm.ph.getDataBeetwenMarkers(data[mainIdx + 1], '<ul', '</ul>')[1]
             tmp = self.cm.ph.getAllItemsBeetwenMarkers(tmp, '<li', '</li>')
             for item in tmp:
                 title = self.cleanHtmlStr(item)
@@ -156,12 +156,12 @@ class NuteczkiEU(CBaseHostClass):
                     subMap[marker] = title
             
             subItems = []
-            subData = re.compile('''<div[^>]+?id=['"](%s)['"][^>]*?>''' % '|'.join(list(subMap.keys()))).split(data[mainIdx+1])
+            subData = re.compile('''<div[^>]+?id=['"](%s)['"][^>]*?>''' % '|'.join(list(subMap.keys()))).split(data[mainIdx + 1])
             for subIdx in range(1, len(subData), 2):
                 subTitle = subMap[subData[subIdx]]
                 
                 items = []
-                tmp = self.cm.ph.rgetAllItemsBeetwenNodes(subData[subIdx+1], ('</div', '>'), ('<div', '>', 'row'), False)
+                tmp = self.cm.ph.rgetAllItemsBeetwenNodes(subData[subIdx + 1], ('</div', '>'), ('<div', '>', 'row'), False)
                 for item in tmp:
                     icon = self.getFullIconUrl(self.cm.ph.getSearchGroups(item, '''<img[^>]+?src=['"]([^"^']+?)['"]''')[0])
                     url = self.cm.ph.getSearchGroups(item, '''href=['"]([^"^']+?)['"]''')[0]
@@ -240,7 +240,7 @@ class NuteczkiEU(CBaseHostClass):
         filter = self.cacheFiltersKeys[f_idx]
         f_idx += 1
         cItem['f_idx'] = f_idx
-        if f_idx  == len(self.cacheFiltersKeys):
+        if f_idx == len(self.cacheFiltersKeys):
             cItem['category'] = nextCategory
             
         for item in self.cacheFilters.get(filter, []):
@@ -314,9 +314,9 @@ class NuteczkiEU(CBaseHostClass):
             if 'post_data' in params and 'do=search' in cItem['url']:
                 nextPage = cItem['url']
                 params['post_data'] = dict(params['post_data'])
-                params['post_data'].update({'search_start':page+1, 'full_search':'0', 'result_from':params['post_data'].get('result_from', 1) + len(self.currList)})
+                params['post_data'].update({'search_start':page + 1, 'full_search':'0', 'result_from':params['post_data'].get('result_from', 1) + len(self.currList)})
             
-            params.update({'title':_("Next page"), 'url':self.getFullUrl(nextPage), 'page':page+1})
+            params.update({'title':_("Next page"), 'url':self.getFullUrl(nextPage), 'page':page + 1})
             self.addDir(params)
         
     def listSearchResult(self, cItem, searchPattern, searchType):
@@ -362,7 +362,7 @@ class NuteczkiEU(CBaseHostClass):
                         data += ret['data'].strip()
                     
             elif 'facebook' not in url.lower(): 
-                name = _('Player %s: %s') % (idx+1, self.up.getHostName(url))
+                name = _('Player %s: %s') % (idx + 1, self.up.getHostName(url))
                 urlTab.append({'url':url, 'name':name, 'need_resolve':1})
         
         tmp = self.cm.ph.getAllItemsBeetwenMarkers(data, '<iframe', '</iframe>', caseSensitive=False)
@@ -448,9 +448,9 @@ class NuteczkiEU(CBaseHostClass):
         
         CBaseHostClass.handleService(self, index, refresh, searchPattern, searchType)
 
-        name     = self.currItem.get("name", '')
+        name = self.currItem.get("name", '')
         category = self.currItem.get("category", '')
-        mode     = self.currItem.get("mode", '')
+        mode = self.currItem.get("mode", '')
         
         printDBG("handleService: || name[%s], category[%s] " % (name, category))
         self.currList = []

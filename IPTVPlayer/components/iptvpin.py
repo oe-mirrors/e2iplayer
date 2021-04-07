@@ -133,7 +133,7 @@ class IPTVPinWidget(Screen):
     def readIcons(self):
         for itF in ['n', 'y']:
             for itS in ['n', 'y']:
-                self.icoDict['F'+itF+'S'+itS] = LoadPixmap(GetIconDir('Pin/PinF%sS%s.png' % (itF, itS)))
+                self.icoDict['F' + itF + 'S' + itS] = LoadPixmap(GetIconDir('Pin/PinF%sS%s.png' % (itF, itS)))
                   
     def keyNum1(self):
         self.keyNumPressed(1)

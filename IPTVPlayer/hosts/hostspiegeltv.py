@@ -47,7 +47,7 @@ class SpiegelTv(CBaseHostClass):
         self.AJAX_HEADER = dict(self.HTTP_HEADER)
         self.AJAX_HEADER.update({'X-Requested-With': 'XMLHttpRequest', 'Accept-Encoding':'gzip, deflate', 'Content-Type':'application/x-www-form-urlencoded; charset=UTF-8', 'Accept':'application/json, text/javascript, */*; q=0.01'})
         
-        self.cacheLinks    = {}
+        self.cacheLinks = {}
         self.defaultParams = {'header':self.HTTP_HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
         self.oneconfig = {'client_id':'748'}
 
@@ -74,7 +74,7 @@ class SpiegelTv(CBaseHostClass):
                     self.listCategories(params, 'list_items')
                 except Exception:
                     printExc()
-        MAIN_CAT_TAB = [{'category':'search',         'title': _('Search'), 'search_item':True}, 
+        MAIN_CAT_TAB = [{'category':'search', 'title': _('Search'), 'search_item':True}, 
                         {'category':'search_history', 'title': _('Search history')},]
                         
         params = dict(cItem)
@@ -88,7 +88,7 @@ class SpiegelTv(CBaseHostClass):
             cTree = cItem['c_tree']
             for item in cTree['list']:
                 title = self.cleanHtmlStr(item['dat']) #self.cm.ph.getDataBeetwenNodes(item['dat'], ('<div', '>', 'title'), ('</div', '>'))[1]
-                url   = self.getFullUrl(self.cm.ph.getSearchGroups(item['dat'], '''href=['"]([^'^"]+?)['"]''')[0])
+                url = self.getFullUrl(self.cm.ph.getSearchGroups(item['dat'], '''href=['"]([^'^"]+?)['"]''')[0])
                 if 'livestreams' in url:
                         params = dict(cItem)
                         params.update({'good_for_fav':False, 'category':nextCategory, 'title':title, 'url':url})
@@ -263,7 +263,7 @@ class SpiegelTv(CBaseHostClass):
         else:
             method = cItem.get('f_method', '')
             param = cItem.get('f_param', '')
-            start = cItem.get('f_start', page*20)
+            start = cItem.get('f_start', page * 20)
         
         try:
             url = self.getFullUrl('/gateway/service.php')
@@ -303,7 +303,7 @@ class SpiegelTv(CBaseHostClass):
             
             if 3 == len(nextPageParams):
                 params = dict(cItem)
-                params.update({'good_for_fav':False, 'title':_("Next page"), 'page':page+1, 'f_method':nextPageParams[0], 'f_param':nextPageParams[1], 'f_start':nextPageParams[2]})
+                params.update({'good_for_fav':False, 'title':_("Next page"), 'page':page + 1, 'f_method':nextPageParams[0], 'f_param':nextPageParams[1], 'f_start':nextPageParams[2]})
                 self.addDir(params)
         except Exception:
             printExc()
@@ -494,9 +494,9 @@ class SpiegelTv(CBaseHostClass):
         
         CBaseHostClass.handleService(self, index, refresh, searchPattern, searchType)
 
-        name     = self.currItem.get("name", '')
+        name = self.currItem.get("name", '')
         category = self.currItem.get("category", '')
-        mode     = self.currItem.get("mode", '')
+        mode = self.currItem.get("mode", '')
         
         printDBG("handleService: |||| name[%s], category[%s] " % (name, category))
         self.cacheLinks = {}

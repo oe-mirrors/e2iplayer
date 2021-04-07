@@ -22,9 +22,9 @@ class ArticleView(Screen):
     skin = """
         <screen position="center,center" size="%d,%d" title="Info..." >
             <widget name="text" position="10,10" size="%d,%d" font="Regular;24" />
-        </screen>""" % (sz_w, sz_h, sz_w-20, sz_h-20)
+        </screen>""" % (sz_w, sz_h, sz_w - 20, sz_h - 20)
         
-    def __init__(self, session,  artItem):
+    def __init__(self, session, artItem):
         printDBG("ArticleView.__init__ -------------------------------")
         self.session = session
         Screen.__init__(self, session)
@@ -38,8 +38,8 @@ class ArticleView(Screen):
             "down": self["text"].pageDown
         }, -1)
         
-        self.title        = artItem.title
-        self.textContent  = artItem.text
+        self.title = artItem.title
+        self.textContent = artItem.text
         
         self.onClose.append(self.__onClose)
         self.onShown.append(self.updateTitle)

@@ -21,7 +21,7 @@ class HD1080Online(CBaseHostClass):
         self.HTTP_HEADER = self.cm.getDefaultHeader(browser='chrome')
         self.defaultParams = {'header':self.HTTP_HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
 
-        self.MAIN_URL    = 'https://hd1080.online/'
+        self.MAIN_URL = 'https://hd1080.online/'
         self.DEFAULT_ICON_URL = 'https://spliffmobile.com/1080-x-1920-wallpapers/hd/images/big-next-0001-focus.png'
 
         self.cacheLinks = {}
@@ -60,7 +60,7 @@ class HD1080Online(CBaseHostClass):
             if len(subItems):
                 self.addDir(MergeDicts(cItem, {'category':'sub_items', 'sub_items':subItems, 'title':sTitle}))
 
-        MAIN_CAT_TAB = [{'category':'search',         'title': _('Search'),       'search_item':True},
+        MAIN_CAT_TAB = [{'category':'search', 'title': _('Search'), 'search_item':True},
                         {'category': 'search_history', 'title': _('Search history'),}]
         self.listsTab(MAIN_CAT_TAB, cItem)
 
@@ -179,7 +179,7 @@ class HD1080Online(CBaseHostClass):
         page = cItem.get('page', 1)
         post_data = cItem['post_data']
         if page > 1:
-            post_data.update({'search_start':page, 'full_search':0, 'result_from':(page-1)*10+1})
+            post_data.update({'search_start':page, 'full_search':0, 'result_from':(page - 1) * 10 + 1})
 
         sts, data = self.getPage(cItem['url'], post_data=post_data)
         if not sts:
@@ -263,7 +263,7 @@ class HD1080Online(CBaseHostClass):
         data = ph.find(data, ('<ul', '>', 'opisanie'), '</ul>', flags=0)[1]
         data = ph.findall(data, ('<b', '</b>'), '</li>', flags=ph.START_S)
         for idx in range(1, len(data), 2):
-            label = ph.clean_html(data[idx-1])
+            label = ph.clean_html(data[idx - 1])
             value = ph.clean_html(data[idx])
             if label and value:
                 itemsList.append((label, value))
@@ -283,7 +283,7 @@ class HD1080Online(CBaseHostClass):
         
         CBaseHostClass.handleService(self, index, refresh, searchPattern, searchType)
 
-        name     = self.currItem.get("name", '')
+        name = self.currItem.get("name", '')
         category = self.currItem.get("category", '')
         printDBG("handleService: ||| name[%s], category[%s] " % (name, category))
         self.currList = []

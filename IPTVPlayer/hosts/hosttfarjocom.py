@@ -34,7 +34,7 @@ class TfarjoCom(CBaseHostClass):
         self.AJAX_HEADER = dict(self.HTTP_HEADER)
         self.AJAX_HEADER.update({'X-Requested-With': 'XMLHttpRequest', 'Accept-Encoding':'gzip, deflate', 'Content-Type':'application/x-www-form-urlencoded; charset=UTF-8', 'Accept':'application/json, text/javascript, */*; q=0.01'})
         
-        self.cacheLinks    = {}
+        self.cacheLinks = {}
         self.defaultParams = {'header':self.HTTP_HEADER, 'with_metadata':True, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
         
         self.cacheSeriesLetter = []
@@ -71,9 +71,9 @@ class TfarjoCom(CBaseHostClass):
             return
         
         self.setMainUrl(data.meta['url'])
-        MAIN_CAT_TAB = [{'category':'movies',         'title': 'Films',            'url':self.getFullUrl('/films')},
-                        {'category':'series',         'title': 'Series',           'url':self.getFullUrl('/series')},
-                        {'category':'search',         'title': _('Search'),        'search_item':True}, 
+        MAIN_CAT_TAB = [{'category':'movies', 'title': 'Films', 'url':self.getFullUrl('/films')},
+                        {'category':'series', 'title': 'Series', 'url':self.getFullUrl('/series')},
+                        {'category':'search', 'title': _('Search'), 'search_item':True}, 
                         {'category':'search_history', 'title': _('Search history')},]
         self.listsTab(MAIN_CAT_TAB, cItem)
     
@@ -159,7 +159,7 @@ class TfarjoCom(CBaseHostClass):
             icon = self.getFullIconUrl(self.cm.ph.getSearchGroups(item, '''src=['"]([^"^']+?)['"]''')[0])
             title = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(item, '<p', '</p>')[1])
             desc = []
-            item =  self.cm.ph.getAllItemsBeetwenMarkers(item, '<span', '</span>')
+            item = self.cm.ph.getAllItemsBeetwenMarkers(item, '<span', '</span>')
             for t in item:
                 if 'VO' in t:
                     desc.append('VO')
@@ -191,7 +191,7 @@ class TfarjoCom(CBaseHostClass):
         data = self.cm.ph.getAllItemsBeetwenMarkers(data, '<input', '>')
         post_data = {}
         for item in data:
-            name  = self.cm.ph.getSearchGroups(item, '''name=['"]([^'^"]+?)['"]''')[0]
+            name = self.cm.ph.getSearchGroups(item, '''name=['"]([^'^"]+?)['"]''')[0]
             value = self.cm.ph.getSearchGroups(item, '''value=['"]([^'^"]+?)['"]''')[0]
             post_data[name] = value
         post_data.update({'search':searchPattern, 'view':'list'}) 
@@ -365,15 +365,15 @@ class TfarjoCom(CBaseHostClass):
         icon = self.getFullIconUrl(self.cm.ph.getSearchGroups(icon, '''<img[^>]+?src=['"]([^"^']+?)['"]''', 1, True)[0])
         desc = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(data, ('<p', '>', 'vtext'), ('</p', '>'))[1])
         
-        keysMap = {'genre:':               'genre',
-                   'imdb:':                'imdb_rating',
-                   'durée:':               'duration',
-                   'créée par:':           'writer',
-                   'acteurs:':             'actors',
+        keysMap = {'genre:': 'genre',
+                   'imdb:': 'imdb_rating',
+                   'durée:': 'duration',
+                   'créée par:': 'writer',
+                   'acteurs:': 'actors',
                    'année de production:': 'year',
-                   'date de production:':  'production',
-                   'qualité:':             'quality',
-                   'langue:':              'language'}
+                   'date de production:': 'production',
+                   'qualité:': 'quality',
+                   'langue:': 'language'}
         
         tmp = self.cm.ph.getAllItemsBeetwenNodes(data, ('<h5', '>'), ('</h5', '>'))
         reObj = re.compile('<span[^>]*?>')
@@ -400,9 +400,9 @@ class TfarjoCom(CBaseHostClass):
         
         CBaseHostClass.handleService(self, index, refresh, searchPattern, searchType)
 
-        name     = self.currItem.get("name", '')
+        name = self.currItem.get("name", '')
         category = self.currItem.get("category", '')
-        mode     = self.currItem.get("mode", '')
+        mode = self.currItem.get("mode", '')
         
         printDBG("handleService: |||| name[%s], category[%s] " % (name, category))
         self.cacheLinks = {}

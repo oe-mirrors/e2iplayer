@@ -40,7 +40,7 @@ class proxy_info(object):
         self.host = options.get("http_proxy_host", None)
         if self.host:
             self.port = options.get("http_proxy_port", 0)
-            self.auth =  options.get("http_proxy_auth", None)
+            self.auth = options.get("http_proxy_auth", None)
             self.no_proxy = options.get("http_no_proxy", None)
         else:
             self.port = 0

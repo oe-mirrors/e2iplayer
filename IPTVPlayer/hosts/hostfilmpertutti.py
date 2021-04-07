@@ -24,7 +24,7 @@ class FilmPertutti(CBaseHostClass):
 
     def __init__(self):
         CBaseHostClass.__init__(self, {'history':'FilmPertutti', 'cookie':'FilmPertutti.cookie'})
-        self.MAIN_URL    = 'https://www.filmpertutti.club/'
+        self.MAIN_URL = 'https://www.filmpertutti.club/'
         self.DEFAULT_ICON_URL = 'https://thumbnails.webinfcdn.net/thumbnails/280x202/f/filmpertutti.click.png'
         self.cacheLinks = {}
     
@@ -38,12 +38,12 @@ class FilmPertutti(CBaseHostClass):
             return
         self.setMainUrl(self.cm.meta['url'])
         
-        MAIN_CAT_TAB = [{'category':'list_cats',       'title':'Film',                   'url':self.getFullUrl('/category/film/')},
-                        {'category':'list_cats',       'title':'Serie TV',               'url':self.getFullUrl('/category/serie-tv/')},
-                        {'category':'list_items',      'title':'Prime visioni',          'url':self.getFullUrl('/prime-visioni/')},
-                        {'category':'list_items',      'title':'Aggiornamenti Serie TV', 'url':self.getFullUrl('/aggiornamenti-serie-tv/')},
-                        {'category':'search',          'title': _('Search'),       'search_item':True},
-                        {'category': 'search_history',  'title': _('Search history'),}]
+        MAIN_CAT_TAB = [{'category':'list_cats', 'title':'Film', 'url':self.getFullUrl('/category/film/')},
+                        {'category':'list_cats', 'title':'Serie TV', 'url':self.getFullUrl('/category/serie-tv/')},
+                        {'category':'list_items', 'title':'Prime visioni', 'url':self.getFullUrl('/prime-visioni/')},
+                        {'category':'list_items', 'title':'Aggiornamenti Serie TV', 'url':self.getFullUrl('/aggiornamenti-serie-tv/')},
+                        {'category':'search', 'title': _('Search'), 'search_item':True},
+                        {'category': 'search_history', 'title': _('Search history'),}]
         self.listsTab(MAIN_CAT_TAB, cItem)
     
     def listCategories(self, cItem, nextCategory):
@@ -112,7 +112,7 @@ class FilmPertutti(CBaseHostClass):
         
         if nextPage != '':
             params = dict(cItem)
-            params.update({'good_for_fav': False, 'title':_('Next page'), 'page':page+1, 'url':nextPage})
+            params.update({'good_for_fav': False, 'title':_('Next page'), 'page':page + 1, 'url':nextPage})
             self.addDir(params)
         
     def exploreItem(self, cItem):
@@ -128,7 +128,7 @@ class FilmPertutti(CBaseHostClass):
         desc = []
         try:
             descObj = self.getArticleContent(cItem, data)[0]
-            for item in  descObj['other_info']['custom_items_list']:
+            for item in descObj['other_info']['custom_items_list']:
                 desc.append(item[1])
             desc = ' | '.join(desc) + '[/br]' + descObj['text'] 
         except Exception:
@@ -182,7 +182,7 @@ class FilmPertutti(CBaseHostClass):
                     except Exception:
                         pass
                 
-                if  linksCategory == '' and episodeName == '':
+                if linksCategory == '' and episodeName == '':
                     continue
                 typeName = linksCategory.split(' – ', 1)[-1] if episodeName != '' else linksCategory
                 
@@ -285,7 +285,7 @@ class FilmPertutti(CBaseHostClass):
         if title == '':
             title = cItem['title']
         if icon == '':
-            icon  = cItem.get('icon', self.DEFAULT_ICON_URL)
+            icon = cItem.get('icon', self.DEFAULT_ICON_URL)
         
         return [{'title':self.cleanHtmlStr(title), 'text': '[/br][/br]'.join(descTab), 'images':[{'title':'', 'url':self.getFullUrl(icon)}], 'other_info':{'custom_items_list':itemsList}}]
         
@@ -294,7 +294,7 @@ class FilmPertutti(CBaseHostClass):
         
         CBaseHostClass.handleService(self, index, refresh, searchPattern, searchType)
 
-        name     = self.currItem.get("name", '')
+        name = self.currItem.get("name", '')
         category = self.currItem.get("category", '')
         printDBG("handleService: ||| name[%s], category[%s] " % (name, category))
         self.currList = []

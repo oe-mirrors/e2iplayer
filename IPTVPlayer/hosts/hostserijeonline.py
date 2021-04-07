@@ -32,13 +32,13 @@ from Screens.MessageBox import MessageBox
 ###################################################
 # Config options for HOST
 ###################################################
-config.plugins.iptvplayer.serijeonline_login    = ConfigText(default="", fixed_size=False)
+config.plugins.iptvplayer.serijeonline_login = ConfigText(default="", fixed_size=False)
 config.plugins.iptvplayer.serijeonline_password = ConfigText(default="", fixed_size=False)
 
 def GetConfigList():
     optionList = []
-    optionList.append(getConfigListEntry(_("login")+":",    config.plugins.iptvplayer.serijeonline_login))
-    optionList.append(getConfigListEntry(_("password")+":", config.plugins.iptvplayer.serijeonline_password))
+    optionList.append(getConfigListEntry(_("login") + ":", config.plugins.iptvplayer.serijeonline_login))
+    optionList.append(getConfigListEntry(_("password") + ":", config.plugins.iptvplayer.serijeonline_password))
     return optionList
 ###################################################
 def gettytul():
@@ -55,18 +55,18 @@ class SerijeOnline(CBaseHostClass):
         self.AJAX_HEADER = dict(self.HTTP_HEADER)
         self.AJAX_HEADER.update({'X-Requested-With': 'XMLHttpRequest', 'Accept-Encoding':'gzip, deflate', 'Content-Type':'application/x-www-form-urlencoded; charset=UTF-8', 'Accept':'application/json, text/javascript, */*; q=0.01'})
         
-        self.MAIN_CAT_TAB = [{'category':'list_items',        'title': _('Top Videos'), 'url':self.getFullUrl('/topvideos.html')},
-                             {'category':'list_items',        'title': _('Newest Videos'), 'url':self.getFullUrl('/newvideos.html')},
-                             {'category':'list_categories',   'title': _('Categories'),    'url':self.getFullUrl('/index.html')},
-                             {'category':'search',            'title': _('Search'),          'search_item':True}, 
-                             {'category':'search_history',    'title': _('Search history')},
+        self.MAIN_CAT_TAB = [{'category':'list_items', 'title': _('Top Videos'), 'url':self.getFullUrl('/topvideos.html')},
+                             {'category':'list_items', 'title': _('Newest Videos'), 'url':self.getFullUrl('/newvideos.html')},
+                             {'category':'list_categories', 'title': _('Categories'), 'url':self.getFullUrl('/index.html')},
+                             {'category':'search', 'title': _('Search'), 'search_item':True}, 
+                             {'category':'search_history', 'title': _('Search history')},
                             ]
         
-        self.cacheLinks    = {}
+        self.cacheLinks = {}
         self.cacheSubCategories = {}
         self.defaultParams = {'header':self.HTTP_HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
         self.loggedIn = None
-        self.login    = ''
+        self.login = ''
         self.password = ''
         
     def getPage(self, baseUrl, addParams={}, post_data=None):
@@ -96,7 +96,7 @@ class SerijeOnline(CBaseHostClass):
         if sts:
             data = self.cm.ph.getAllItemsBeetwenNodes(data, ('<div', '>', 'pm-li-category'), ('</a', '>'))
             for item in data:
-                catUrl  = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''href=['"]([^'^"]+?)['"]''')[0])
+                catUrl = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''href=['"]([^'^"]+?)['"]''')[0])
                 catIcon = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''src=['"]([^'^"]+?)['"]''')[0])
                 cacheIcons[catUrl] = catIcon
         printDBG(cacheIcons)
@@ -116,11 +116,11 @@ class SerijeOnline(CBaseHostClass):
                 # fill sub-categories
                 tmp = self.cm.ph.getAllItemsBeetwenMarkers(catItem[1], '<a', '</a>')
                 for item in tmp:
-                    url   = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''href=['"]([^'^"]+?)['"]''')[0])
+                    url = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''href=['"]([^'^"]+?)['"]''')[0])
                     title = self.cleanHtmlStr(item)
                     subCategories.append({'title':title, 'url':url, 'cat_url':url})
                 catTitle = self.cleanHtmlStr(catItem[0])
-                catUrl   = self.getFullUrl(self.cm.ph.getSearchGroups(catItem[0], '''href=['"]([^'^"]+?)['"]''')[0])
+                catUrl = self.getFullUrl(self.cm.ph.getSearchGroups(catItem[0], '''href=['"]([^'^"]+?)['"]''')[0])
                 subCategories.insert(0, {'title':_('--All--'), 'url':catUrl})
                 self.cacheSubCategories[catUrl] = subCategories
                 params = dict(cItem)
@@ -131,7 +131,7 @@ class SerijeOnline(CBaseHostClass):
             tmp = self.cm.ph.getAllItemsBeetwenMarkers(catItem[0], '<a', '</a>')
             for item in tmp:
                 catTitle = self.cleanHtmlStr(item)
-                catUrl   = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''href=['"]([^'^"]+?)['"]''')[0])
+                catUrl = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''href=['"]([^'^"]+?)['"]''')[0])
                 params = dict(cItem)
                 params.update({'good_for_fav':False, 'category':nextCategory2, 'title':catTitle, 'url':catUrl, 'cat_url':catUrl, 'icon':cacheIcons.get(catUrl, '')})
                 self.addDir(params)
@@ -154,7 +154,7 @@ class SerijeOnline(CBaseHostClass):
         data = self.cm.ph.getDataBeetwenNodes(data, ('<div', '>', 'btn-group btn-group-sort'), ('</ul', '>'))[1]
         data = self.cm.ph.getAllItemsBeetwenMarkers(data, '<a', '</a>')
         for item in data:
-            url   = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''href=['"]([^'^"]+?)['"]''')[0])
+            url = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''href=['"]([^'^"]+?)['"]''')[0])
             if not self.cm.isValidUrl(url):
                 continue
             title = self.cleanHtmlStr(item)
@@ -179,8 +179,8 @@ class SerijeOnline(CBaseHostClass):
         nextPage = self.getFullUrl(self.cm.ph.getSearchGroups(data, '''<a[^>]+?href=['"]([^'^"]+?)['"][^>]*?>&raquo;</a>''')[0])
         data = self.cm.ph.getAllItemsBeetwenNodes(data, ('<div', '>', 'pm-li-video'), ('</li', '>'))
         for item in data:
-            url   = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''href=['"]([^'^"]+?)['"]''')[0])
-            icon  = self.getFullIconUrl(self.cm.ph.getSearchGroups(item, '''src=['"]([^'^"]+?)['"]''')[0])
+            url = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''href=['"]([^'^"]+?)['"]''')[0])
+            icon = self.getFullIconUrl(self.cm.ph.getSearchGroups(item, '''src=['"]([^'^"]+?)['"]''')[0])
             title = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(item, '<h3', '</h3>')[1])
             
             desc = []
@@ -196,7 +196,7 @@ class SerijeOnline(CBaseHostClass):
         
         if self.cm.isValidUrl(nextPage):
             params = dict(cItem)
-            params.update({'good_for_fav':False, 'title':_("Next page"), 'url':nextPage, 'page':page+1})
+            params.update({'good_for_fav':False, 'title':_("Next page"), 'url':nextPage, 'page':page + 1})
             self.addDir(params)
         
     def exploreItem(self, cItem, nextCategory):
@@ -216,10 +216,10 @@ class SerijeOnline(CBaseHostClass):
         tmp = self.cm.ph.getDataBeetwenNodes(data, ('<div', '>', 'pm-submit-data'), ('</div', '>'))[1]
         tmp = self.cm.ph.getAllItemsBeetwenMarkers(tmp, '<a', '</a>')
         if len(tmp) > 1:
-            catUrl   = self.getFullUrl(self.cm.ph.getSearchGroups(tmp[-1], '''href=['"]([^'^"]+?)['"]''')[0])
+            catUrl = self.getFullUrl(self.cm.ph.getSearchGroups(tmp[-1], '''href=['"]([^'^"]+?)['"]''')[0])
             catTitle = self.cleanHtmlStr(tmp[-1])
         else: 
-            catUrl   = ''
+            catUrl = ''
             catTitle = ''
         
         printDBG("################# catUrl[%s] catTitle[%s]" % (catUrl, catTitle))
@@ -235,7 +235,7 @@ class SerijeOnline(CBaseHostClass):
                     try:
                         query = byteify(json.loads(item + '}'), '', True)
                         query = urllib.parse.urlencode(query)
-                        url = self.getFullUrl("/ajax.php") + '?' +  query
+                        url = self.getFullUrl("/ajax.php") + '?' + query
                         sts, data = self.getPage(url)
                         printDBG("---------------")
                         printDBG(data)
@@ -267,7 +267,7 @@ class SerijeOnline(CBaseHostClass):
             params.update({'good_for_fav':False, 'title':title, 'desc':desc, 'url':url})
             self.addVideo(params)
         
-        if self.cm.isValidUrl(catUrl) and catUrl != cItem['url'] and  catUrl != cItem.get('cat_url', ''):
+        if self.cm.isValidUrl(catUrl) and catUrl != cItem['url'] and catUrl != cItem.get('cat_url', ''):
             params = dict(cItem)
             params.update({'good_for_fav':True, 'category':nextCategory, 'title':catTitle, 'url':catUrl, 'cat_url':catUrl, 'desc':''})
             self.addDir(params)
@@ -313,7 +313,7 @@ class SerijeOnline(CBaseHostClass):
             tmp.extend(self.cm.ph.getAllItemsBeetwenMarkers(data, '<button', '>'))
             post_data = {}
             for item in tmp:
-                name  = self.cm.ph.getSearchGroups(item, '''name=['"]([^'^"]+?)['"]''')[0]
+                name = self.cm.ph.getSearchGroups(item, '''name=['"]([^'^"]+?)['"]''')[0]
                 value = self.cm.ph.getSearchGroups(item, '''value=['"]([^'^"]+?)['"]''')[0]
                 post_data[name] = value
             
@@ -338,9 +338,9 @@ class SerijeOnline(CBaseHostClass):
         
         CBaseHostClass.handleService(self, index, refresh, searchPattern, searchType)
 
-        name     = self.currItem.get("name", '')
+        name = self.currItem.get("name", '')
         category = self.currItem.get("category", '')
-        mode     = self.currItem.get("mode", '')
+        mode = self.currItem.get("mode", '')
         
         printDBG("handleService: |||||||||||||||||||||||||||||||||||| name[%s], category[%s] " % (name, category))
         self.currList = []

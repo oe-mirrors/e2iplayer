@@ -52,7 +52,7 @@ class MediayouNet(CBaseHostClass):
         self.defaultParams = {'header':self.HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
         self.cacheFilters = {}
         self.cacheFiltersKeys = []
-        self.cacheLinks    = {}
+        self.cacheLinks = {}
         
         self.countryCode = config.plugins.iptvplayer.mediayou_language.value
         
@@ -65,12 +65,12 @@ class MediayouNet(CBaseHostClass):
         printDBG("MediayouNet.listMainMenu")
         
         MAIN_CAT_TAB = [
-                        {'category':'list_items',      'title': 'TOP',               'url':self.getFullUrl('/web/getdata.php'), 'post_data':{'option':'TOP','id':'global'}},
-                        {'category':'list_items',      'title': 'Polskie',           'url':self.getFullUrl('/web/getdata.php'), 'post_data':{'option':'RADIO_Country','id':'70'}},
-                        {'category':'categories',      'title': _('Countries'),      'url':self.getFullUrl('/web/getdata.php'), 'post_data':{'option':'LOCATION','id':self.countryCode}, 'option':'RADIO_Country'},
-                        {'category':'categories',      'title': _('Categories'),     'url':self.getFullUrl('/web/getdata.php'), 'post_data':{'option':'GENRE','id':self.countryCode}, 'option':'RADIO_Genre'},
-                        {'category':'search',          'title': _('Search'), 'search_item':True},
-                        {'category':'search_history',  'title': _('Search history')}]
+                        {'category':'list_items', 'title': 'TOP', 'url':self.getFullUrl('/web/getdata.php'), 'post_data':{'option':'TOP','id':'global'}},
+                        {'category':'list_items', 'title': 'Polskie', 'url':self.getFullUrl('/web/getdata.php'), 'post_data':{'option':'RADIO_Country','id':'70'}},
+                        {'category':'categories', 'title': _('Countries'), 'url':self.getFullUrl('/web/getdata.php'), 'post_data':{'option':'LOCATION','id':self.countryCode}, 'option':'RADIO_Country'},
+                        {'category':'categories', 'title': _('Categories'), 'url':self.getFullUrl('/web/getdata.php'), 'post_data':{'option':'GENRE','id':self.countryCode}, 'option':'RADIO_Genre'},
+                        {'category':'search', 'title': _('Search'), 'search_item':True},
+                        {'category':'search_history', 'title': _('Search history')}]
         self.listsTab(MAIN_CAT_TAB, cItem)
         
        
@@ -189,9 +189,9 @@ class MediayouNet(CBaseHostClass):
 
         CBaseHostClass.handleService(self, index, refresh, searchPattern, searchType)
 
-        name     = self.currItem.get("name", '')
+        name = self.currItem.get("name", '')
         category = self.currItem.get("category", '')
-        mode     = self.currItem.get("mode", '')
+        mode = self.currItem.get("mode", '')
         
         printDBG("handleService: || name[%s], category[%s] " % (name, category))
         self.currList = []

@@ -56,69 +56,69 @@ def GetConfigList():
 ###################################################
 
 def GetLanguageTab():
-    tab = [["Albanian",     "sq", "alb"],
-            ["Arabic",       "ar", "ara"],
-            ["Belarusian",   "hy", "arm"],
-            ["Bosnian",      "bs", "bos"],
-            ["Bulgarian",    "bg", "bul"],
-            ["Brazilian",    "pb", "pob"],
-            ["Catalan",      "ca", "cat"],
-            ["Chinese",      "zh", "chi"],
-            ["Croatian",     "hr", "hrv"],
-            ["Czech",        "cs", "cze"],
-            ["Danish",       "da", "dan"],
-            ["Dutch",        "nl", "dut"],
-            ["English",      "en", "eng"],
-            ["Estonian",     "et", "est"],
-            ["Persian",      "fa", "per"],
-            ["Finnish",      "fi", "fin"],
-            ["French",       "fr", "fre"],
-            ["German",       "de", "ger"],
-            ["Greek",        "el", "ell"],
-            ["Hebrew",       "he", "heb"],
-            ["Hindi",        "hi", "hin"],
-            ["Hungarian",    "hu", "hun"],
-            ["Icelandic",    "is", "ice"],
-            ["Indonesian",   "id", "ind"],
-            ["Italian",      "it", "ita"],
-            ["Japanese",     "ja", "jpn"],
-            ["Korean",       "ko", "kor"],
-            ["Latvian",      "lv", "lav"],
-            ["Lithuanian",   "lt", "lit"],
-            ["Macedonian",   "mk", "mac"],
-            ["Malay",        "ms", "may"],
-            ["Norwegian",    "no", "nor"],
-            ["Polish",       "pl", "pol"],
-            ["Portuguese",   "pt", "por"],
-            ["Romanian",     "ro", "rum"],
-            ["Russian",      "ru", "rus"],
-            ["Serbian",      "sr", "scc"],
-            ["Slovak",       "sk", "slo"],
-            ["Slovenian",    "sl", "slv"],
-            ["Spanish",      "es", "spa"],
-            ["Swedish",      "sv", "swe"],
-            ["Thai",         "th", "tha"],
-            ["Turkish",      "tr", "tur"],
-            ["Ukrainian",    "uk", "ukr"],
-            ["Vietnamese",   "vi", "vie"],
+    tab = [["Albanian", "sq", "alb"],
+            ["Arabic", "ar", "ara"],
+            ["Belarusian", "hy", "arm"],
+            ["Bosnian", "bs", "bos"],
+            ["Bulgarian", "bg", "bul"],
+            ["Brazilian", "pb", "pob"],
+            ["Catalan", "ca", "cat"],
+            ["Chinese", "zh", "chi"],
+            ["Croatian", "hr", "hrv"],
+            ["Czech", "cs", "cze"],
+            ["Danish", "da", "dan"],
+            ["Dutch", "nl", "dut"],
+            ["English", "en", "eng"],
+            ["Estonian", "et", "est"],
+            ["Persian", "fa", "per"],
+            ["Finnish", "fi", "fin"],
+            ["French", "fr", "fre"],
+            ["German", "de", "ger"],
+            ["Greek", "el", "ell"],
+            ["Hebrew", "he", "heb"],
+            ["Hindi", "hi", "hin"],
+            ["Hungarian", "hu", "hun"],
+            ["Icelandic", "is", "ice"],
+            ["Indonesian", "id", "ind"],
+            ["Italian", "it", "ita"],
+            ["Japanese", "ja", "jpn"],
+            ["Korean", "ko", "kor"],
+            ["Latvian", "lv", "lav"],
+            ["Lithuanian", "lt", "lit"],
+            ["Macedonian", "mk", "mac"],
+            ["Malay", "ms", "may"],
+            ["Norwegian", "no", "nor"],
+            ["Polish", "pl", "pol"],
+            ["Portuguese", "pt", "por"],
+            ["Romanian", "ro", "rum"],
+            ["Russian", "ru", "rus"],
+            ["Serbian", "sr", "scc"],
+            ["Slovak", "sk", "slo"],
+            ["Slovenian", "sl", "slv"],
+            ["Spanish", "es", "spa"],
+            ["Swedish", "sv", "swe"],
+            ["Thai", "th", "tha"],
+            ["Turkish", "tr", "tur"],
+            ["Ukrainian", "uk", "ukr"],
+            ["Vietnamese", "vi", "vie"],
             ["BosnianLatin", "bs", "bos"],
-            ["Farsi",        "fa", "per"],
-            ["Espanol",      "es", "spa"]]
+            ["Farsi", "fa", "per"],
+            ["Espanol", "es", "spa"]]
     return tab
 
 class SubsceneComProvider(CBaseSubProviderClass): 
     LANGUAGE_CACHE = []
     
     def __init__(self, params={}):
-        self.MAIN_URL      = 'https://subscene.com/'
-        self.USER_AGENT    = 'Mozilla/5.0 (X11; Linux i686) AppleWebKit/537.36 (KHTML, like Gecko) Ubuntu Chromium/37.0.2062.120 Chrome/37.0.2062.120 Safari/537.36'
-        self.HTTP_HEADER   = {'User-Agent':self.USER_AGENT, 'Referer':self.MAIN_URL, 'Accept':'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8', 'Accept-Encoding':'gzip, deflate'}
+        self.MAIN_URL = 'https://subscene.com/'
+        self.USER_AGENT = 'Mozilla/5.0 (X11; Linux i686) AppleWebKit/537.36 (KHTML, like Gecko) Ubuntu Chromium/37.0.2062.120 Chrome/37.0.2062.120 Safari/537.36'
+        self.HTTP_HEADER = {'User-Agent':self.USER_AGENT, 'Referer':self.MAIN_URL, 'Accept':'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8', 'Accept-Encoding':'gzip, deflate'}
 
         params['cookie'] = 'subscenecom.cookie'
         CBaseSubProviderClass.__init__(self, params)
         
         self.defaultParams = {'header':self.HTTP_HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
-        self.SEARCH_TYPE_TAB = [{'title':_('By media title'),  'category':'search_by_title'},
+        self.SEARCH_TYPE_TAB = [{'title':_('By media title'), 'category':'search_by_title'},
                                 {'title':_('By release name'), 'category':'search_by_release'}]
         self.cache = {} 
     
@@ -138,7 +138,7 @@ class SubsceneComProvider(CBaseSubProviderClass):
                 if item[0] in langName:
                     return True
         
-        url  = self.getFullUrl('/filter/edit')
+        url = self.getFullUrl('/filter/edit')
         sts, data = self.cm.getPage(url, self.defaultParams)
         if not sts:
             return []
@@ -261,7 +261,7 @@ class SubsceneComProvider(CBaseSubProviderClass):
             title = t1 + ' ' + self.cleanHtmlStr(bodyData[0])
             
             #lang 
-            lang  = _getLangCode(self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(bodyData[0], '<span class="l', '</span>')[1]))
+            lang = _getLangCode(self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(bodyData[0], '<span class="l', '</span>')[1]))
             
             # desc
             descTab = []
@@ -291,8 +291,8 @@ class SubsceneComProvider(CBaseSubProviderClass):
         cUrl = data.meta['url']
         
         imdbid = self.cm.ph.getSearchGroups(data, '/title/(tt[0-9]+?)[^0-9]')[0]
-        subId  = self.cm.ph.getSearchGroups(data, 'SubtitleId[^0-9]*?([0-9]+?)[^0-9]')[0]
-        url    = self.getFullUrl(self.cm.ph.getSearchGroups(data, 'href="([^"]*?/subtitle/download[^"]+?)"')[0], cUrl)
+        subId = self.cm.ph.getSearchGroups(data, 'SubtitleId[^0-9]*?([0-9]+?)[^0-9]')[0]
+        url = self.getFullUrl(self.cm.ph.getSearchGroups(data, 'href="([^"]*?/subtitle/download[^"]+?)"')[0], cUrl)
         if url == '':
             url = self.cm.ph.getDataBeetwenNodes(data, ('<a', '>', 'downloadButton'), ('</a', '>'))[1]
             url = self.getFullUrl(self.cm.ph.getSearchGroups(url, 'href="([^"]+?)"')[0], cUrl)
@@ -309,7 +309,7 @@ class SubsceneComProvider(CBaseSubProviderClass):
     def listSubsInPackedFile(self, cItem, nextCategory):
         printDBG("SubsceneComProvider.listSubsInPackedFile")
         tmpFile = cItem['file_path']
-        tmpDIR  = tmpFile[:-4]
+        tmpDIR = tmpFile[:-4]
         
         if not self.unpackArchive(tmpFile, tmpDIR):
             return
@@ -331,10 +331,10 @@ class SubsceneComProvider(CBaseSubProviderClass):
     def downloadSubtitleFile(self, cItem):
         printDBG("SubsceneComProvider.downloadSubtitleFile")
         retData = {}
-        title    = cItem['title']
-        lang     = cItem['lang']
-        subId    = cItem['sub_id']
-        imdbid   = cItem['imdbid']
+        title = cItem['title']
+        lang = cItem['lang']
+        subId = cItem['sub_id']
+        imdbid = cItem['imdbid']
         inFilePath = cItem['file_path']
         
         outFileName = self._getFileName(title, lang, subId, imdbid)
@@ -355,7 +355,7 @@ class SubsceneComProvider(CBaseSubProviderClass):
         
         CBaseSubProviderClass.handleService(self, index, refresh)
 
-        name     = self.currItem.get("name", '')
+        name = self.currItem.get("name", '')
         category = self.currItem.get("category", '')
         
         printDBG("handleService: |||||||||||||||||||||||||||||||||||| name[%s], category[%s] " % (name, category))

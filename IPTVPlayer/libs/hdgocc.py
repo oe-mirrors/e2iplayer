@@ -28,7 +28,7 @@ class HdgoccParser():
     def __init__(self):
         self.up = urlparser()
         self.cm = common()
-        self.HTTP_HEADER= {'User-Agent':self.USER_AGENT, 'Referer':''}
+        self.HTTP_HEADER = {'User-Agent':self.USER_AGENT, 'Referer':''}
         self.COOKIEFILE = GetCookieDir("hdgocc.cookie")
         self.defaultParams = {'header':self.HTTP_HEADER, 'use_cookie': True, 'save_cookie': True, 'load_cookie': False, 'cookiefile': self.COOKIEFILE}
 
@@ -107,7 +107,7 @@ class HdgoccParser():
             idx = 0
             for idx in range(len(data)):
                 vidUrl = self.getFullUrl(seasonUrl, data[idx])
-                episodesTab.append({'title': itemTitle + str(idx+1), 'id':(idx+1), 'url':strwithmeta(vidUrl, {'Referer':refUrl})})
+                episodesTab.append({'title': itemTitle + str(idx + 1), 'id':(idx + 1), 'url':strwithmeta(vidUrl, {'Referer':refUrl})})
                 
         elif '/serials/' in seasonUrl:
             episodeData = self.cm.ph.getDataBeetwenMarkers(data, 'id="episode"', '</select>', False)[1]

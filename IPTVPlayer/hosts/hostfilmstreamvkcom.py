@@ -26,9 +26,9 @@ from Components.config import config, ConfigSelection, ConfigText, getConfigList
 ###################################################
 # Config options for HOST
 ###################################################
-config.plugins.iptvplayer.filmstreamvk_proxy = ConfigSelection(default="None", choices=[("None",     _("None")),
-                                                                                            ("proxy_1",  _("Alternative proxy server (1)")),
-                                                                                            ("proxy_2",  _("Alternative proxy server (2)"))])
+config.plugins.iptvplayer.filmstreamvk_proxy = ConfigSelection(default="None", choices=[("None", _("None")),
+                                                                                            ("proxy_1", _("Alternative proxy server (1)")),
+                                                                                            ("proxy_2", _("Alternative proxy server (2)"))])
 config.plugins.iptvplayer.filmstreamvk_alt_domain = ConfigText(default="", fixed_size=False)
 
 def GetConfigList():
@@ -101,12 +101,12 @@ class FilmstreamvkCom(CBaseHostClass):
         
     def listMain(self, cItem):
         printDBG("FilmstreamvkCom.listMain")
-        MAIN_CAT_TAB = [{'category':'main',            'title':_('Main'),         'url':self.getMainUrl()},
-                        {'category':'categories',      'title':_('Categories'),   'url':self.getMainUrl()},
-                        {'category':'list_items',      'title':_('Series'),       'url':self.getFullUrl('serie')},
-                        {'category':'list_items',      'title':_('Manga'),        'url':self.getFullUrl('manga')},
-                        {'category': 'search',          'title': _('Search'), 'search_item': True,},
-                        {'category': 'search_history',  'title': _('Search history'),}]
+        MAIN_CAT_TAB = [{'category':'main', 'title':_('Main'), 'url':self.getMainUrl()},
+                        {'category':'categories', 'title':_('Categories'), 'url':self.getMainUrl()},
+                        {'category':'list_items', 'title':_('Series'), 'url':self.getFullUrl('serie')},
+                        {'category':'list_items', 'title':_('Manga'), 'url':self.getFullUrl('manga')},
+                        {'category': 'search', 'title': _('Search'), 'search_item': True,},
+                        {'category': 'search_history', 'title': _('Search history'),}]
         
         self.listsTab(MAIN_CAT_TAB, cItem)
     
@@ -147,15 +147,15 @@ class FilmstreamvkCom(CBaseHostClass):
         if len(data):
             del data[0]
         for item in data:
-            url   = self.cm.ph.getSearchGroups(item, '''href=['"]([^'^"]+?)['"]''')[0]
-            icon  = self.cm.ph.getSearchGroups(item, '''src=['"]([^'^"]+?)['"]''')[0]
+            url = self.cm.ph.getSearchGroups(item, '''href=['"]([^'^"]+?)['"]''')[0]
+            icon = self.cm.ph.getSearchGroups(item, '''src=['"]([^'^"]+?)['"]''')[0]
             title = self.cm.ph.getSearchGroups(item, '<a[^<]+?>([^<]+?)</a>')[0]
-            desc  = self.cleanHtmlStr(item.replace(title, '').replace('</div>', '[/br]'))
+            desc = self.cleanHtmlStr(item.replace(title, '').replace('</div>', '[/br]'))
             
             params = dict(cItem)
             params.update({'category':category, 'url':url, 'title':self.cleanHtmlStr(title), 'icon':icon, 'desc':desc})
             if 'saison-' in url or '/manga/' in url or '/serie/' in url:
-                season = self.cm.ph.getSearchGroups(url+'-', 'aison-([0-9]+?)-')[0]
+                season = self.cm.ph.getSearchGroups(url + '-', 'aison-([0-9]+?)-')[0]
                 params['season'] = season
                 self.addDir(params)
             else:
@@ -187,7 +187,7 @@ class FilmstreamvkCom(CBaseHostClass):
         if not sts:
             return
         
-        descData  = self.cm.ph.getDataBeetwenMarkers(data, '<div class="filmalti">', '<div class="filmborder">')[1]
+        descData = self.cm.ph.getDataBeetwenMarkers(data, '<div class="filmalti">', '<div class="filmborder">')[1]
         desc = self.cleanHtmlStr(descData)
         icon = self.cm.ph.getSearchGroups(descData, '''src=['"]([^'^"]+?)['"]''')[0]
         titleSeason = self.cleanHtmlStr(cItem.get('s_title', '').split('Saison')[0])
@@ -201,7 +201,7 @@ class FilmstreamvkCom(CBaseHostClass):
         
         data = self.cm.ph.getAllItemsBeetwenMarkers(data, '<a', '</a>')
         for item in data:
-            url   = self.cm.ph.getSearchGroups(item, '''href=['"]([^'^"]+?)['"]''')[0]
+            url = self.cm.ph.getSearchGroups(item, '''href=['"]([^'^"]+?)['"]''')[0]
             if self.cm.isValidUrl(url):
                 title = self.cleanHtmlStr(item)
                 fullTitle = titleSeason + ' '
@@ -215,7 +215,7 @@ class FilmstreamvkCom(CBaseHostClass):
                 
                 urlName = url.split('-')[-1]
                 if urlName != '':
-                    fullTitle += ' [%s]' %  urlName
+                    fullTitle += ' [%s]' % urlName
                 
                 params = dict(cItem)
                 params.update({'url':url, 'title':fullTitle, 'icon':icon, 'desc':desc})
@@ -233,7 +233,7 @@ class FilmstreamvkCom(CBaseHostClass):
         tmpUrls = []
         data = self.cm.ph.getAllItemsBeetwenMarkers(wholeData, '<iframe ', '</iframe>', withMarkers=True, caseSensitive=False)
         for item in data:
-            url  = self.cm.ph.getSearchGroups(item, '''src=['"]([^'^"]+?)['"]''',  grupsNum=1, ignoreCase=True)[0]
+            url = self.cm.ph.getSearchGroups(item, '''src=['"]([^'^"]+?)['"]''', grupsNum=1, ignoreCase=True)[0]
             if url in tmpUrls:
                 continue
             tmpUrls.append(url)
@@ -263,7 +263,7 @@ class FilmstreamvkCom(CBaseHostClass):
         data = self.cm.ph.getDataBeetwenMarkers(data, '<div class="keremiya_part">', '</div>')[1]
         data = self.cm.ph.getAllItemsBeetwenMarkers(data, '<a ', '</a>')
         for item in data:
-            url  = self.cm.ph.getSearchGroups(item, '''href=['"]([^'^"]+?)['"]''')[0]
+            url = self.cm.ph.getSearchGroups(item, '''href=['"]([^'^"]+?)['"]''')[0]
             name = self.cleanHtmlStr(item)
             if url.startswith('http'):
                 urlTab.append({'name': name, 'url':url, 'need_resolve':1})
@@ -304,9 +304,9 @@ class FilmstreamvkCom(CBaseHostClass):
         
         CBaseHostClass.handleService(self, index, refresh, searchPattern, searchType)
 
-        name     = self.currItem.get("name", '')
+        name = self.currItem.get("name", '')
         category = self.currItem.get("category", '')
-        mode     = self.currItem.get("mode", '')
+        mode = self.currItem.get("mode", '')
         
         printDBG("handleService: |||||||||||||||||||||||||||||||||||| name[%s], category[%s] " % (name, category))
         self.currList = []

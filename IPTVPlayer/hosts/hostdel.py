@@ -28,7 +28,7 @@ class Del(CBaseHostClass):
         self.HTTP_HEADER = self.cm.getDefaultHeader(browser='iphone_3_0')
         self.defaultParams = {'header':self.HTTP_HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
 
-        self.MAIN_URL   = 'https://www.del.org/'
+        self.MAIN_URL = 'https://www.del.org/'
         self.MAIN_URL_2 = 'https://www.del-2.org/'
         self.DEFAULT_ICON_URL = self.MAIN_URL + 'assets/img/DEL_Logo.png'
 
@@ -39,8 +39,8 @@ class Del(CBaseHostClass):
 
     def listMain(self, cItem):
         printDBG("Del.listMain")
-        MAIN_CAT_TAB = [{'category':'del',    'title': self.MAIN_URL,   'url':self.MAIN_URL,   'icon':self.DEFAULT_ICON_URL},
-                        {'category':'del2',   'title': self.MAIN_URL_2, 'url':self.MAIN_URL_2, 'icon':self.MAIN_URL_2 + 'images/background/logo.png'},]
+        MAIN_CAT_TAB = [{'category':'del', 'title': self.MAIN_URL, 'url':self.MAIN_URL, 'icon':self.DEFAULT_ICON_URL},
+                        {'category':'del2', 'title': self.MAIN_URL_2, 'url':self.MAIN_URL_2, 'icon':self.MAIN_URL_2 + 'images/background/logo.png'},]
         self.listsTab(MAIN_CAT_TAB, cItem)
 
     def del2Filters(self, cItem, nextCategory):
@@ -52,7 +52,7 @@ class Del(CBaseHostClass):
         data = ph.find(data, ('<div', '>', 'select_rechts'), '</div>', flags=0)[1]
         data = ph.findall(data, ('<option', '>'), '</option>', flags=ph.START_S)
         for idx in range(1, len(data), 2):
-            url = self.cm.getFullUrl(ph.getattr(data[idx-1], 'value'), self.cm.meta['url'])
+            url = self.cm.getFullUrl(ph.getattr(data[idx - 1], 'value'), self.cm.meta['url'])
             title = self.cleanHtmlStr(data[idx])
             self.addDir(MergeDicts(cItem, {'good_for_fav':True, 'category':nextCategory, 'title':title, 'url':url}))
 
@@ -156,7 +156,7 @@ class Del(CBaseHostClass):
             playerData = ph.find(data, 'getPlayer(', ');', flags=0)[1].split(',')
             printDBG("playerData <<< %s" % playerData)
             if len(playerData) == 6:
-                url = self.cm.getFullUrl('/videoplayer/playerhls.php?play=%s&key=%d&identifier=web&v5partner=%s&autoplay=true&event' % (playerData[1].strip(), int(time.time()*1000), playerData[3].strip()), self.cm.meta['url'])
+                url = self.cm.getFullUrl('/videoplayer/playerhls.php?play=%s&key=%d&identifier=web&v5partner=%s&autoplay=true&event' % (playerData[1].strip(), int(time.time() * 1000), playerData[3].strip()), self.cm.meta['url'])
                 sts, data = self.getPage(url, urlParams)
                 urlParams['header'] = MergeDicts(urlParams['header'], {'Referer':self.cm.meta['url']})
 
@@ -193,7 +193,7 @@ class Del(CBaseHostClass):
         
         CBaseHostClass.handleService(self, index, refresh, searchPattern, searchType)
 
-        name     = self.currItem.get("name", '')
+        name = self.currItem.get("name", '')
         category = self.currItem.get("category", '')
         printDBG("handleService: ||| name[%s], category[%s] " % (name, category))
         self.currList = []

@@ -30,9 +30,9 @@ from Components.config import config, getConfigListEntry
 ###################################################
 def GetConfigList():
     optionList = []
-    optionList.append(getConfigListEntry(_("Default video quality:"),             config.plugins.iptvplayer.bbc_default_quality))
-    optionList.append(getConfigListEntry(_("Use default video quality:"),         config.plugins.iptvplayer.bbc_use_default_quality))
-    optionList.append(getConfigListEntry(_("Preferred format:"),                  config.plugins.iptvplayer.bbc_prefered_format))
+    optionList.append(getConfigListEntry(_("Default video quality:"), config.plugins.iptvplayer.bbc_default_quality))
+    optionList.append(getConfigListEntry(_("Use default video quality:"), config.plugins.iptvplayer.bbc_use_default_quality))
+    optionList.append(getConfigListEntry(_("Preferred format:"), config.plugins.iptvplayer.bbc_prefered_format))
     optionList.append(getConfigListEntry(_("Use web-proxy (it may be illegal):"), config.plugins.iptvplayer.bbc_use_web_proxy))
     return optionList
 ###################################################
@@ -55,12 +55,12 @@ class BBCiPlayer(CBaseHostClass):
         self.DEFAULT_ICON_URL = 'http://iplayer-web.files.bbci.co.uk/tviplayer-static-assets/10.75.0-1/img/navigation/iplayer_pink.png' 
         #'http://iplayer-web.files.bbci.co.uk/tviplayer-static-assets/10.75.0-1/img/navigation/iplayer_white.png'
         
-        self.MAIN_CAT_TAB = [{'category':'list_channels',      'title': _('Channels'),                           'url':self.getFullUrl('iplayer')},
-                             {'category':'list_categories',    'title': _('Categories'),                         'url':self.getFullUrl('iplayer')},
-                             {'category':'list_az_menu',       'title': _('A-Z'),                                'url':self.getFullUrl('iplayer/a-z/')},
-                             {'category':'list_items',         'title': _('Most Popular'),                       'url':self.getFullUrl('iplayer/group/most-popular')},
-                             {'category':'search',             'title': _('Search'), 'search_item':True,         'icon':'https://raw.githubusercontent.com/vonH/plugin.video.iplayerwww/master/media/search.png'},
-                             {'category': 'search_history',     'title': _('Search history'),}]
+        self.MAIN_CAT_TAB = [{'category':'list_channels', 'title': _('Channels'), 'url':self.getFullUrl('iplayer')},
+                             {'category':'list_categories', 'title': _('Categories'), 'url':self.getFullUrl('iplayer')},
+                             {'category':'list_az_menu', 'title': _('A-Z'), 'url':self.getFullUrl('iplayer/a-z/')},
+                             {'category':'list_items', 'title': _('Most Popular'), 'url':self.getFullUrl('iplayer/group/most-popular')},
+                             {'category':'search', 'title': _('Search'), 'search_item':True, 'icon':'https://raw.githubusercontent.com/vonH/plugin.video.iplayerwww/master/media/search.png'},
+                             {'category': 'search_history', 'title': _('Search history'),}]
         self.otherIconsTemplate = 'https://raw.githubusercontent.com/vonH/plugin.video.iplayerwww/master/media/%s.png'
     
     def getFullUrl(self, url):
@@ -108,36 +108,36 @@ class BBCiPlayer(CBaseHostClass):
     def listLive(self, cItem):
         printDBG("BBCiPlayer.listLive")
         channel_list = [
-            ('bbc_one_hd',                       'BBC One'),
-            ('bbc_two_hd',                       'BBC Two'),
-            ('bbc_four_hd',                      'BBC Four'),
-            ('cbbc_hd',                          'CBBC'),
-            ('cbeebies_hd',                      'CBeebies'),
-            ('bbc_news24',                       'BBC News Channel'),
-            ('bbc_parliament',                   'BBC Parliament'),
-            ('bbc_alba',                         'Alba'),
-            ('s4cpbs',                           'S4C'),
-            ('bbc_one_london',                   'BBC One London'),
-            ('bbc_one_scotland_hd',              'BBC One Scotland'),
-            ('bbc_one_northern_ireland_hd',      'BBC One Northern Ireland'),
-            ('bbc_one_wales_hd',                 'BBC One Wales'),
-            ('bbc_two_scotland',                 'BBC Two Scotland'),
+            ('bbc_one_hd', 'BBC One'),
+            ('bbc_two_hd', 'BBC Two'),
+            ('bbc_four_hd', 'BBC Four'),
+            ('cbbc_hd', 'CBBC'),
+            ('cbeebies_hd', 'CBeebies'),
+            ('bbc_news24', 'BBC News Channel'),
+            ('bbc_parliament', 'BBC Parliament'),
+            ('bbc_alba', 'Alba'),
+            ('s4cpbs', 'S4C'),
+            ('bbc_one_london', 'BBC One London'),
+            ('bbc_one_scotland_hd', 'BBC One Scotland'),
+            ('bbc_one_northern_ireland_hd', 'BBC One Northern Ireland'),
+            ('bbc_one_wales_hd', 'BBC One Wales'),
+            ('bbc_two_scotland', 'BBC Two Scotland'),
             ('bbc_two_northern_ireland_digital', 'BBC Two Northern Ireland'),
-            ('bbc_two_wales_digital',            'BBC Two Wales'),
-            ('bbc_two_england',                  'BBC Two England'),
-            ('bbc_one_cambridge',                'BBC One Cambridge'),
-            ('bbc_one_channel_islands',          'BBC One Channel Islands'),
-            ('bbc_one_east',                     'BBC One East'),
-            ('bbc_one_east_midlands',            'BBC One East Midlands'),
-            ('bbc_one_east_yorkshire',           'BBC One East Yorkshire'),
-            ('bbc_one_north_east',               'BBC One North East'),
-            ('bbc_one_north_west',               'BBC One North West'),
-            ('bbc_one_oxford',                   'BBC One Oxford'),
-            ('bbc_one_south',                    'BBC One South'),
-            ('bbc_one_south_east',               'BBC One South East'),
-            ('bbc_one_west',                     'BBC One West'),
-            ('bbc_one_west_midlands',            'BBC One West Midlands'),
-            ('bbc_one_yorks',                    'BBC One Yorks')]
+            ('bbc_two_wales_digital', 'BBC Two Wales'),
+            ('bbc_two_england', 'BBC Two England'),
+            ('bbc_one_cambridge', 'BBC One Cambridge'),
+            ('bbc_one_channel_islands', 'BBC One Channel Islands'),
+            ('bbc_one_east', 'BBC One East'),
+            ('bbc_one_east_midlands', 'BBC One East Midlands'),
+            ('bbc_one_east_yorkshire', 'BBC One East Yorkshire'),
+            ('bbc_one_north_east', 'BBC One North East'),
+            ('bbc_one_north_west', 'BBC One North West'),
+            ('bbc_one_oxford', 'BBC One Oxford'),
+            ('bbc_one_south', 'BBC One South'),
+            ('bbc_one_south_east', 'BBC One South East'),
+            ('bbc_one_west', 'BBC One West'),
+            ('bbc_one_west_midlands', 'BBC One West Midlands'),
+            ('bbc_one_yorks', 'BBC One Yorks')]
 
         for id, title in channel_list:
             params = {'good_for_fav': True, 'title':title, 'url':self.getFullUrl('vpid/' + id + '/'), 'icon':self.otherIconsTemplate % id}
@@ -149,16 +149,16 @@ class BBCiPlayer(CBaseHostClass):
         self.addDir(params)
         
         channel_list = [
-            ('bbcone',           'bbc_one_hd',              'BBC One'),
-            ('bbctwo',           'bbc_two_hd',              'BBC Two'),
-            ('tv/bbcthree',      'bbc_three_hd',          'BBC Three'),
-            ('bbcfour',          'bbc_four_hd',            'BBC Four'),
-            ('tv/cbbc',          'cbbc_hd',                    'CBBC'),
-            ('tv/cbeebies',      'cbeebies_hd',            'CBeebies'),
-            ('tv/bbcnews',       'bbc_news24',     'BBC News Channel'),
-            ('tv/bbcparliament', 'bbc_parliament',   'BBC Parliament'),
-            ('tv/bbcalba',       'bbc_alba',                   'Alba'),
-            ('tv/s4c',           's4cpbs',                      'S4C')]
+            ('bbcone', 'bbc_one_hd', 'BBC One'),
+            ('bbctwo', 'bbc_two_hd', 'BBC Two'),
+            ('tv/bbcthree', 'bbc_three_hd', 'BBC Three'),
+            ('bbcfour', 'bbc_four_hd', 'BBC Four'),
+            ('tv/cbbc', 'cbbc_hd', 'CBBC'),
+            ('tv/cbeebies', 'cbeebies_hd', 'CBeebies'),
+            ('tv/bbcnews', 'bbc_news24', 'BBC News Channel'),
+            ('tv/bbcparliament', 'bbc_parliament', 'BBC Parliament'),
+            ('tv/bbcalba', 'bbc_alba', 'Alba'),
+            ('tv/s4c', 's4cpbs', 'S4C')]
         
         for url, icon, title in channel_list:
             params = {'good_for_fav': True, 'category':nextCategory, 'title':title, 'url':self.getFullUrl(url), 'icon':self.otherIconsTemplate % icon}
@@ -181,7 +181,7 @@ class BBCiPlayer(CBaseHostClass):
             if url == '':
                 continue
             title = self.cleanHtmlStr(item)
-            icon  = self.cm.ph.getSearchGroups(item, '''<source[^>]+?srcset=['"]([^'^"^\s]+?)['"\s]''')[0]
+            icon = self.cm.ph.getSearchGroups(item, '''<source[^>]+?srcset=['"]([^'^"^\s]+?)['"\s]''')[0]
             
             params = {'good_for_fav': True, 'title':title, 'url':self.getFullUrl(url), 'icon':self.getFullIconUrl(icon), 'desc':''}
             if '/a-z' in url:
@@ -193,7 +193,7 @@ class BBCiPlayer(CBaseHostClass):
         
         if not azItem:
             params = dict(cItem)
-            params.update({'good_for_fav': True, 'title':cItem['title']+' '+_('A-Z'), 'category':nextCategory, 'url':cItem['url']+'/a-z'})
+            params.update({'good_for_fav': True, 'title':cItem['title'] + ' ' + _('A-Z'), 'category':nextCategory, 'url':cItem['url'] + '/a-z'})
             self.addDir(params)
         
         params = dict(cItem)
@@ -217,7 +217,7 @@ class BBCiPlayer(CBaseHostClass):
             try:
                 for item in json_data['navigation']['items'][1]['subItems']:
                     title = item['title']
-                    url   = item['href']
+                    url = item['href']
                     params = dict(cItem)
                     params.update({'category':nextCategory, 'title':title, 'url':self.getFullUrl(url)})
                     self.addDir(params)
@@ -241,7 +241,7 @@ class BBCiPlayer(CBaseHostClass):
             data = self.cm.ph.getAllItemsBeetwenMarkers(data, "<li", '</li>', withMarkers=True)
             for item in data:
                 title = self.cleanHtmlStr(item)
-                url   = self.cm.ph.getSearchGroups(item, '''href=['"]([^'^"]+?)['"]''')[0]
+                url = self.cm.ph.getSearchGroups(item, '''href=['"]([^'^"]+?)['"]''')[0]
                 params = dict(cItem)
                 params.update({'title':title, 'category':nextCategory, 'url':self.getFullUrl(url)})
                 self.addDir(params)
@@ -262,7 +262,7 @@ class BBCiPlayer(CBaseHostClass):
                 data = self.cm.ph.getAllItemsBeetwenMarkers(data, "<li", '</li>', withMarkers=True)
                 for item in data:
                     title = self.cleanHtmlStr(item)
-                    url   = self.cm.ph.getSearchGroups(item, '''href=['"]([^'^"]+?)['"]''')[0]
+                    url = self.cm.ph.getSearchGroups(item, '''href=['"]([^'^"]+?)['"]''')[0]
                     if url == '':
                         url = baseUrl
                     params = dict(cItem)
@@ -296,8 +296,8 @@ class BBCiPlayer(CBaseHostClass):
                 title = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(item, '<h3', '</h3>')[1])
                 if title == '':
                     continue
-                icon  = self.cm.ph.getSearchGroups(item, '''src=['"]([^'^"]+?)['"]''')[0]
-                desc  = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(item, '<p', '</p>')[1])
+                icon = self.cm.ph.getSearchGroups(item, '''src=['"]([^'^"]+?)['"]''')[0]
+                desc = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(item, '<p', '</p>')[1])
                 params = {'good_for_fav': True, 'category':nextCategory, 'title':title, 'url':self.getFullUrl(url), 'icon':self.getFullIconUrl(icon), 'desc':'[/br]'.join(descTab)}
                 self.addDir(params)
             else:
@@ -308,7 +308,7 @@ class BBCiPlayer(CBaseHostClass):
                 if title == '':
                     continue
                 
-                icon  = self.cm.ph.getSearchGroups(item, '''<source[^>]+?srcset=['"]([^'^"^\s]+?)['"\s]''')[0]
+                icon = self.cm.ph.getSearchGroups(item, '''<source[^>]+?srcset=['"]([^'^"^\s]+?)['"\s]''')[0]
                 
                 tmp = self.cm.ph.getAllItemsBeetwenMarkers(item, '<p', '</p>', withMarkers=True)
                 descTab = []
@@ -340,8 +340,8 @@ class BBCiPlayer(CBaseHostClass):
                 title = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(item, '<h3', '</h3>')[1])
                 if title == '':
                     continue
-                icon  = self.cm.ph.getSearchGroups(item, '''src=['"]([^'^"]+?)['"]''')[0]
-                desc  = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(item, '<p', '</p>')[1])
+                icon = self.cm.ph.getSearchGroups(item, '''src=['"]([^'^"]+?)['"]''')[0]
+                desc = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(item, '<p', '</p>')[1])
                 params = {'good_for_fav': True, 'category':nextCategory, 'title':title, 'url':self.getFullUrl(url), 'icon':self.getFullIconUrl(icon), 'desc':'[/br]'.join(descTab)}
                 self.addDir(params)
             else:
@@ -354,7 +354,7 @@ class BBCiPlayer(CBaseHostClass):
                     if title == '':
                         continue
                     
-                    icon  = self.cm.ph.getSearchGroups(item, '''<source[^>]+?srcset=['"]([^'^"^\s]+?)['"\s]''')[0]
+                    icon = self.cm.ph.getSearchGroups(item, '''<source[^>]+?srcset=['"]([^'^"^\s]+?)['"\s]''')[0]
                     
                     tmp = self.cm.ph.getAllItemsBeetwenMarkers(item, '<p', '</p>', withMarkers=True)
                     descTab = []
@@ -391,7 +391,7 @@ class BBCiPlayer(CBaseHostClass):
     def listItems(self, cItem, nextCategory):
         printDBG("BBCiPlayer.listItems")
         
-        url  = cItem['url']
+        url = cItem['url']
         page = cItem.get('page', 1)
         if page > 1:
             if '?' in url:
@@ -417,7 +417,7 @@ class BBCiPlayer(CBaseHostClass):
         
         nextPage = self.cm.ph.getDataBeetwenNodes(data, ('<ol', '>', 'pagination'), ('</ol', '>'))[1]
         if nextPage != '':
-            nextPage = self.cm.ph.getSearchGroups(nextPage, '''page=(%s)[^0-9]''' % (page+1))[0]
+            nextPage = self.cm.ph.getSearchGroups(nextPage, '''page=(%s)[^0-9]''' % (page + 1))[0]
             if '' != nextPage:
                 nextPage = True
             else:
@@ -427,7 +427,7 @@ class BBCiPlayer(CBaseHostClass):
             mTag = '<div class="paginate">'
             nextPage = self.cm.ph.getDataBeetwenMarkers(data, mTag, '</div>', withMarkers=False)[1]
             if '' != nextPage: 
-                if '' != self.cm.ph.getSearchGroups(nextPage, '''page=(%s)[^0-9]''' % (page+1))[0]:
+                if '' != self.cm.ph.getSearchGroups(nextPage, '''page=(%s)[^0-9]''' % (page + 1))[0]:
                     nextPage = True
                 else:
                     nextPage = False
@@ -436,7 +436,7 @@ class BBCiPlayer(CBaseHostClass):
                 mTag = '<ul class="pagination'
                 nextPage = self.cm.ph.getDataBeetwenMarkers(data, mTag, '</ul>', withMarkers=False)[1]
                 if '' != nextPage: 
-                    if '' != self.cm.ph.getSearchGroups(nextPage, '''page&#x3D;(%s)[^0-9]''' % (page+1))[0]:
+                    if '' != self.cm.ph.getSearchGroups(nextPage, '''page&#x3D;(%s)[^0-9]''' % (page + 1))[0]:
                         nextPage = True
                     else:
                         nextPage = False
@@ -452,7 +452,7 @@ class BBCiPlayer(CBaseHostClass):
             title = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(item, ('<div', '>', 'title'), ('</div', '>'))[1])
             if title == '':
                 title = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(item, '<h1 class="list-item__title', '</h1>')[1])
-            icon  = self.cm.ph.getSearchGroups(item, '''<source[^>]+?srcset=['"]([^'^"]+?)['"]''', ignoreCase=True)[0]
+            icon = self.cm.ph.getSearchGroups(item, '''<source[^>]+?srcset=['"]([^'^"]+?)['"]''', ignoreCase=True)[0]
             
             printDBG(item)
             descTab = []
@@ -498,7 +498,7 @@ class BBCiPlayer(CBaseHostClass):
         
         if nextPage:
             params = dict(cItem)
-            params.update({'good_for_fav': False, 'title':_('Next page'), 'page':page+1})
+            params.update({'good_for_fav': False, 'title':_('Next page'), 'page':page + 1})
             self.addDir(params)
 
     def listSearchResult(self, cItem, searchPattern, searchType):
@@ -568,7 +568,7 @@ class BBCiPlayer(CBaseHostClass):
                     else:
                         continue
 
-                    url  = self.getFullUrl('/iplayer/vpid/%s/' % item_id)
+                    url = self.getFullUrl('/iplayer/vpid/%s/' % item_id)
                     if url in uniqueTab:
                         continue
 
@@ -603,9 +603,9 @@ class BBCiPlayer(CBaseHostClass):
         
         self.informAboutGeoBlockingIfNeeded('GB')
         
-        name     = self.currItem.get("name", '')
+        name = self.currItem.get("name", '')
         category = self.currItem.get("category", '')
-        mode     = self.currItem.get("mode", '')
+        mode = self.currItem.get("mode", '')
         
         printDBG("handleService: |||||||||||||||||||||||||||||||||||| name[%s], category[%s] " % (name, category))
         self.currList = []

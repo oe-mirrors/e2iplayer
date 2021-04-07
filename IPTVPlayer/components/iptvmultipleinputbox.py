@@ -53,43 +53,43 @@ class IPTVMultipleInputBox(Screen):
                 maxWidth = item['label_size'][0]
             if item['input_size'][0] > maxWidth:
                 maxWidth = item['input_size'][0]
-        maxWidth += pX*2
+        maxWidth += pX * 2
         
         if len(self.statusText):
-            skinItems = '<widget name="statustext"   position="10,%d"  zPosition="2" size="%d,%d"  valign="center" halign="center" font="Regular;22" transparent="1" />' % (pY+dY, maxWidth-20, statusTextHight)
-            pY += statusTextHight + dY*2
+            skinItems = '<widget name="statustext"   position="10,%d"  zPosition="2" size="%d,%d"  valign="center" halign="center" font="Regular;22" transparent="1" />' % (pY + dY, maxWidth - 20, statusTextHight)
+            pY += statusTextHight + dY * 2
             
         
         for idx in range(len(self.list)):
             item = self.list[idx]
             if 'icon_path' in item:
-                self["cover_%d"%idx] = Cover2()
-                self.icons.append({'name':"cover_%d"%idx, 'path':item['icon_path']})
+                self["cover_%d" % idx] = Cover2()
+                self.icons.append({'name':"cover_%d" % idx, 'path':item['icon_path']})
             else:
-                self["text_%d"%idx] = Label(item.get('title', ''))
-            self["input_%d"%idx] = Input(**item['input'])
-            self["border_%d"%idx] = Label("")
+                self["text_%d" % idx] = Label(item.get('title', ''))
+            self["input_%d" % idx] = Input(**item['input'])
+            self["border_%d" % idx] = Label("")
             if item.get('useable_chars', None) is not None:
-                self["input_%d"%idx].setUseableChars(item['useable_chars'])
+                self["input_%d" % idx].setUseableChars(item['useable_chars'])
             
             if 'icon_path' in item:
-                skinItems +=  '<widget name="cover_%d" position="%d,%d" size="%d,%d" zPosition="8" />' % (idx, (maxWidth - item['label_size'][0]) / 2, pY, item['label_size'][0], item['label_size'][1])
+                skinItems += '<widget name="cover_%d" position="%d,%d" size="%d,%d" zPosition="8" />' % (idx, (maxWidth - item['label_size'][0]) / 2, pY, item['label_size'][0], item['label_size'][1])
             else:
-                skinItems +=  '<widget name="text_%d" position="%d,%d" size="%d,%d" font="%s" zPosition="2" />' % (idx, 10, pY, item['label_size'][0], item['label_size'][1], item['label_font'])
+                skinItems += '<widget name="text_%d" position="%d,%d" size="%d,%d" font="%s" zPosition="2" />' % (idx, 10, pY, item['label_size'][0], item['label_size'][1], item['label_font'])
             
             pY += dY + item['label_size'][1]
-            skinItems +=  '<widget name="input_%d" position="%d,%d" size="%d,%d" font="%s" zPosition="2" />' % (idx, pX, pY, item['input_size'][0], item['input_size'][1], item['input_font'])
-            skinItems +=  '<widget name="border_%d" position="%d,%d" size="%d,%d" font="%s" zPosition="1" transparent="0" backgroundColor="#331F93B9" />' % (idx, pX-5, pY-5, item['input_size'][0]+10, item['input_size'][1]+10, item['input_font'])
+            skinItems += '<widget name="input_%d" position="%d,%d" size="%d,%d" font="%s" zPosition="2" />' % (idx, pX, pY, item['input_size'][0], item['input_size'][1], item['input_font'])
+            skinItems += '<widget name="border_%d" position="%d,%d" size="%d,%d" font="%s" zPosition="1" transparent="0" backgroundColor="#331F93B9" />' % (idx, pX - 5, pY - 5, item['input_size'][0] + 10, item['input_size'][1] + 10, item['input_font'])
             if 0 == idx: 
                 self['marker'] = Cover3()
-                skinItems +=  '<widget name="marker" zPosition="2" position="10,%d" size="16,16" transparent="1" alphatest="blend" />' % (pY + (item['input_size'][1]-16) / 2)
-            skinItems +=  '<widget name="marker_%d" zPosition="1" position="10,%d" size="16,16" transparent="1" alphatest="blend" />' % (idx, pY + (item['input_size'][1]-16) / 2)
-            self['marker_%d'%idx] = Cover3()
-            pY += dY*2 + item['input_size'][1]
+                skinItems += '<widget name="marker" zPosition="2" position="10,%d" size="16,16" transparent="1" alphatest="blend" />' % (pY + (item['input_size'][1] - 16) / 2)
+            skinItems += '<widget name="marker_%d" zPosition="1" position="10,%d" size="16,16" transparent="1" alphatest="blend" />' % (idx, pY + (item['input_size'][1] - 16) / 2)
+            self['marker_%d' % idx] = Cover3()
+            pY += dY * 2 + item['input_size'][1]
             
         if self.withAcceptButton:
-            skinItems += '<widget name="accept_button"  position="10,%d"  zPosition="2" size="%d,50"  valign="center" halign="center" font="Regular;22" foregroundColor="#00FFFFFF" backgroundColor="#320F0F0F" />' % (pY, maxWidth-20)
-            pY += dY*2 + 50
+            skinItems += '<widget name="accept_button"  position="10,%d"  zPosition="2" size="%d,50"  valign="center" halign="center" font="Regular;22" foregroundColor="#00FFFFFF" backgroundColor="#320F0F0F" />' % (pY, maxWidth - 20)
+            pY += dY * 2 + 50
         self.skin = """
         <screen name="IPTVMultipleInputBox" position="center,center" size="%d,%d" title="%s">
             <widget name="key_red"   position="10,10" zPosition="2" size="%d,35" valign="center" halign="left"   font="Regular;22" transparent="1" foregroundColor="red" />
@@ -97,11 +97,11 @@ class IPTVMultipleInputBox(Screen):
             <widget name="key_green" position="10,10" zPosition="2" size="%d,35" valign="center" halign="right"  font="Regular;22" transparent="1" foregroundColor="green" />
             %s
         </screen>
-        """ % (maxWidth, pY, params.get('title', _("Input")), maxWidth-20, maxWidth-20, maxWidth-20, skinItems)
+        """ % (maxWidth, pY, params.get('title', _("Input")), maxWidth - 20, maxWidth - 20, maxWidth - 20, skinItems)
         
         self["key_green"] = Label(params.get('accep_label', _("Save")))
-        self["key_ok"]    = Label(_("OK"))
-        self["key_red"]   = Label(_("Cancel"))
+        self["key_ok"] = Label(_("OK"))
+        self["key_red"] = Label(_("Cancel"))
         if len(self.statusText):
             self["statustext"] = Label(str(self.statusText))
         if self.withAcceptButton:
@@ -143,7 +143,7 @@ class IPTVMultipleInputBox(Screen):
             "0": self.keyNumberGlobal
         }, -1)
         
-        self.idx   = 0
+        self.idx = 0
         self.activeInput = "input_0"
         self.markerPixmap = [LoadPixmap(GetIconDir('radio_button_on.png')), LoadPixmap(GetIconDir('radio_button_off.png'))]
         
@@ -178,7 +178,7 @@ class IPTVMultipleInputBox(Screen):
             if "marker" in self:
                 self["marker"].setPixmap(self.markerPixmap[0])
                 for idx in range(len(self.list)):
-                    self['marker_%d'%idx].setPixmap(self.markerPixmap[1])
+                    self['marker_%d' % idx].setPixmap(self.markerPixmap[1])
         except Exception:
             printExc()
         
@@ -192,7 +192,7 @@ class IPTVMultipleInputBox(Screen):
                 self.idx = len(self.list)
             else:
                 self.idx = len(self.list) - 1
-        if self.idx  < len(self.list):
+        if self.idx < len(self.list):
             self.activeInput = "input_%d" % self.idx
             self.setKeyboardMode()
         else:
@@ -209,7 +209,7 @@ class IPTVMultipleInputBox(Screen):
                 self.idx = len(self.list)
             else:
                 self.idx = 0
-        if self.idx  < len(self.list):
+        if self.idx < len(self.list):
             self.activeInput = "input_%d" % self.idx
             self.setKeyboardMode()
         else:
@@ -227,7 +227,7 @@ class IPTVMultipleInputBox(Screen):
         
         if "marker" in self:
             if self.idx < len(self.list):
-                x, y = self["marker_%d"%self.idx].getPosition()
+                x, y = self["marker_%d" % self.idx].getPosition()
                 self["marker"].setPosition(x, y)
                 self["marker"].show()
             else:
@@ -235,12 +235,12 @@ class IPTVMultipleInputBox(Screen):
         try:
             if None != prevIdx: 
                 if prevIdx < len(self.list):
-                    self["border_%d"%prevIdx].hide()
+                    self["border_%d" % prevIdx].hide()
             else:
                 for idx in range(len(self.list)):
-                    self["border_%d"%idx].hide()
+                    self["border_%d" % idx].hide()
             if self.idx < len(self.list):
-                self["border_%d"%self.idx].show()
+                self["border_%d" % self.idx].show()
         except Exception:
             printExc()
         
@@ -286,14 +286,14 @@ class IPTVMultipleInputBox(Screen):
         retList = []
         for idx in range(len(self.list)):
             if None != self.list[idx]['validator']:
-                sts, msg = self.list[idx]['validator'](self["input_%d"%idx].getText())
+                sts, msg = self.list[idx]['validator'](self["input_%d" % idx].getText())
                 if not sts: 
                     self.session.open(MessageBox, msg, type=MessageBox.TYPE_ERROR)
                     self.idx = idx
-                    self.activeInput = "input_%d"%idx
+                    self.activeInput = "input_%d" % idx
                     self.setMarker()
                     return
-            retList.append(self["input_%d"%idx].getText())
+            retList.append(self["input_%d" % idx].getText())
         self.close(retList)
         
     def keyOK(self):

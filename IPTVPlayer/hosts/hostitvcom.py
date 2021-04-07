@@ -48,15 +48,15 @@ class ITV(CBaseHostClass):
         self.AJAX_HEADER = dict(self.HEADER)
         self.AJAX_HEADER.update({'X-Requested-With': 'XMLHttpRequest', 'Accept-Encoding':'gzip, deflate', 'Content-Type':'application/x-www-form-urlencoded; charset=UTF-8', 'Accept':'application/json, text/javascript, */*; q=0.01'})
         
-        self.cacheShows    = {}
+        self.cacheShows = {}
         self.cacheShowsKeys = []
         self.cacheLive = {}
         self.defaultParams = {'header':self.HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
         
         self.MAIN_CAT_TAB = [
-                             {'category':'channels',   'title': _('Channels'),     'url':self.getFullUrl('/hub/itv')},
-                             {'category':'shows',      'title': _('Shows'),        'url':self.getFullUrl('/hub/shows')},
-                             {'category':'categories', 'title': _('Categories'),   'url':self.getFullUrl('/hub/categories')},
+                             {'category':'channels', 'title': _('Channels'), 'url':self.getFullUrl('/hub/itv')},
+                             {'category':'shows', 'title': _('Shows'), 'url':self.getFullUrl('/hub/shows')},
+                             {'category':'categories', 'title': _('Categories'), 'url':self.getFullUrl('/hub/categories')},
                             ]
         self.forwardedIP = ''
         
@@ -102,7 +102,7 @@ class ITV(CBaseHostClass):
         data = self.cm.ph.getDataBeetwenNodes(data, ('<ul', '>', 'nav-secondary'), ('</ul', '>'), False)[1]
         data = self.cm.ph.getAllItemsBeetwenMarkers(data, '<li', '</li>')
         for item in data:
-            url   = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''href=['"]([^'^"]+?)['"]''')[0])
+            url = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''href=['"]([^'^"]+?)['"]''')[0])
             if '/hub/' not in url:
                 continue
             title = self.cleanHtmlStr(item.split('<span', 1)[0])
@@ -127,17 +127,17 @@ class ITV(CBaseHostClass):
         data = self.cm.ph.getAllItemsBeetwenNodes(data, ('<h2', '>', 'az__group-heading'), ('</ul', '>'))
         for item in data:
             letter = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(item, '<h2', '</h2>')[1])
-            item   = self.cm.ph.getAllItemsBeetwenNodes(item, ('<li', '>', 'grid-list__item'), ('</li', '>'))
+            item = self.cm.ph.getAllItemsBeetwenNodes(item, ('<li', '>', 'grid-list__item'), ('</li', '>'))
             self.cacheShows[letter] = []
             self.cacheShowsKeys.append(letter)
             for it in item:
                 it = it.split('</h3>', 1)
-                url  = self.getFullUrl(self.cm.ph.getSearchGroups(it[0], '''href=['"]([^'^"]+?)['"]''')[0])
+                url = self.getFullUrl(self.cm.ph.getSearchGroups(it[0], '''href=['"]([^'^"]+?)['"]''')[0])
                 if '/hub/' not in url:
                     continue
                 icon = self.getFullIconUrl(self.cm.ph.getSearchGroups(it[0], '''src=['"]([^'^"]+?)['"]''')[0])
                 title = self.cleanHtmlStr(it[0])
-                desc  = self.cleanHtmlStr(it[1])
+                desc = self.cleanHtmlStr(it[1])
                 self.cacheShows[letter].append({'title':title, 'url':url, 'icon':icon, 'desc':desc})
             params = dict(cItem)
             params.update({'category':nextCategory, 'title':letter, 'f_letter':letter})
@@ -184,15 +184,15 @@ class ITV(CBaseHostClass):
             params.update({'is_live':True})
             self.addVideo(params)
         
-        tmp  = self.cm.ph.getAllItemsBeetwenNodes(data, ('<section', '>', 'episode-list'), ('</section', '>'))
+        tmp = self.cm.ph.getAllItemsBeetwenNodes(data, ('<section', '>', 'episode-list'), ('</section', '>'))
         tmp.extend(self.cm.ph.getAllItemsBeetwenNodes(data, ('<section', '>', 'class="block'), ('</section', '>')))
         tmp.extend(self.cm.ph.getAllItemsBeetwenNodes(data, ('<aside', '>'), ('</aside', '>')))
         data = tmp
         for section in data:
-            sTtile  = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(section, '<h2', '</h2>')[1])
+            sTtile = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(section, '<h2', '</h2>')[1])
             section = self.cm.ph.getAllItemsBeetwenNodes(section, ('<li', '>', 'grid-list__item'), ('</li', '>'))
             if 'Series' in sTtile or 'pisodes' in sTtile:
-                title  = '%s - %s' % (cItem['title'], sTtile)
+                title = '%s - %s' % (cItem['title'], sTtile)
             else:
                 title = sTtile
             if title != '':
@@ -200,7 +200,7 @@ class ITV(CBaseHostClass):
             
             for item in section:
                 item = item.split('</h3>', 1)
-                url  = self.getFullUrl(self.cm.ph.getSearchGroups(item[0], '''href=['"]([^'^"]+?)['"]''')[0])
+                url = self.getFullUrl(self.cm.ph.getSearchGroups(item[0], '''href=['"]([^'^"]+?)['"]''')[0])
                 if '/hub/' not in url:
                     continue
                 icon = self.getFullIconUrl(self.cm.ph.getSearchGroups(item[0], '''src=['"]([^'^"]+?)['"]''')[0])
@@ -210,7 +210,7 @@ class ITV(CBaseHostClass):
                     title = '%s - %s' % (cItem['title'], self.cleanHtmlStr(item[0]))
                 else:
                     title = self.cleanHtmlStr(item[0])
-                desc  = self.cleanHtmlStr(item[-1])
+                desc = self.cleanHtmlStr(item[-1])
                 
                 params = dict(cItem)
                 params.update({'title':title, 'url':url, 'icon':icon, 'desc':desc})
@@ -253,8 +253,8 @@ class ITV(CBaseHostClass):
             if not sts:
                 return []
             
-            url   = self.cm.ph.getSearchGroups(data, '''data\-video\-id=['"]([^'^"]+?)['"]''')[0]
-            hmac  = self.cm.ph.getSearchGroups(data, '''data\-video\-hmac=['"]([^'^"]+?)['"]''')[0]
+            url = self.cm.ph.getSearchGroups(data, '''data\-video\-id=['"]([^'^"]+?)['"]''')[0]
+            hmac = self.cm.ph.getSearchGroups(data, '''data\-video\-hmac=['"]([^'^"]+?)['"]''')[0]
             
             params['header'].update({'Content-Type':'application/json', 'Accept':'application/vnd.itv.vod.playlist.v2+json', 'Origin':self.getMainUrl(), 'Referer':cItem['url'], 'hmac':hmac})
             params['raw_post_data'] = True
@@ -286,9 +286,9 @@ class ITV(CBaseHostClass):
         
         self.informAboutGeoBlockingIfNeeded('GB')
 
-        name     = self.currItem.get("name", '')
+        name = self.currItem.get("name", '')
         category = self.currItem.get("category", '')
-        mode     = self.currItem.get("mode", '')
+        mode = self.currItem.get("mode", '')
         
         printDBG("handleService: |||||||||||||||||||||||||||||||||||| name[%s], category[%s] " % (name, category))
         self.currList = []

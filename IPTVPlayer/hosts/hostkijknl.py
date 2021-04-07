@@ -37,8 +37,8 @@ class KijkNL(CBaseHostClass):
         self.AJAX_HEADER = dict(self.HEADER)
         self.AJAX_HEADER.update({'X-Requested-With': 'XMLHttpRequest', 'Accept-Encoding':'gzip, deflate', 'Content-Type':'application/x-www-form-urlencoded; charset=UTF-8', 'Accept':'application/json, text/javascript, */*; q=0.01'})
         
-        self.cacheLinks    = {}
-        self.cacheFilters  = {}
+        self.cacheLinks = {}
+        self.cacheFilters = {}
         self.cacheFiltersKeys = []
         self.defaultParams = {'header':self.HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
         self.tmpUrl = 'http://api.kijk.nl/'
@@ -52,24 +52,24 @@ class KijkNL(CBaseHostClass):
     def listMainMenu(self, cItem):
         printDBG("KijkNL.listMainMenu")
         self.MAIN_CAT_TAB = [
-                             {'category':'list_home',       'title': 'Home',                 'url':''},
-                             {'category':'list_missed',     'title': 'Gemist',               'url':''},
-                             {'category':'list_popular',    'title': 'Populair',             'url':self.tmpUrl+'v2/templates/page/popular'},
-                             {'category':'list_letters',    'title': 'A-Z',                  'url':''},
-                             {'category':'list_themas',     'title': "THEMA'S",              'url':self.getMainUrl()},
-                             {'category':'search',          'title': _('Search'),          'search_item':True}, 
-                             {'category':'search_history',  'title': _('Search history')},
+                             {'category':'list_home', 'title': 'Home', 'url':''},
+                             {'category':'list_missed', 'title': 'Gemist', 'url':''},
+                             {'category':'list_popular', 'title': 'Populair', 'url':self.tmpUrl + 'v2/templates/page/popular'},
+                             {'category':'list_letters', 'title': 'A-Z', 'url':''},
+                             {'category':'list_themas', 'title': "THEMA'S", 'url':self.getMainUrl()},
+                             {'category':'search', 'title': _('Search'), 'search_item':True}, 
+                             {'category':'search_history', 'title': _('Search history')},
                             ]
         self.HOME_CAT_TAB = [
-                                {'category':'list_items', 'title': _("Episodes"), 'url':self.tmpUrl+'v1/default/sections/home_Episodes-popular'},
-                                {'category':'list_items', 'title': _("Clips"),    'url':self.tmpUrl+'v1/default/sections/home_Clips-popular'},
-                                {'category':'list_items', 'title': _("Missed"),   'url':self.tmpUrl+'v1/default/sections/home_HomeMissed'},
-                                {'category':'list_items', 'title': _("Series"),   'url':self.tmpUrl+'v1/default/sections/home_Series-popularPrograms'},
+                                {'category':'list_items', 'title': _("Episodes"), 'url':self.tmpUrl + 'v1/default/sections/home_Episodes-popular'},
+                                {'category':'list_items', 'title': _("Clips"), 'url':self.tmpUrl + 'v1/default/sections/home_Clips-popular'},
+                                {'category':'list_items', 'title': _("Missed"), 'url':self.tmpUrl + 'v1/default/sections/home_HomeMissed'},
+                                {'category':'list_items', 'title': _("Series"), 'url':self.tmpUrl + 'v1/default/sections/home_Series-popularPrograms'},
                                ]
         self.POPULAR_CAT_TAB = [
-                                {'category':'list_items', 'title': "Populaire afleveringen", 'url':self.tmpUrl+'v2/default/sections/popular_PopularVODs'},
-                                {'category':'list_items', 'title': "Populaire programma's",  'url':self.tmpUrl+'v2/default/sections/popular_PopularFormats'},
-                                {'category':'list_items', 'title': "Populaire clips",        'url':self.tmpUrl+'v2/default/sections/popular_PopularClips'},
+                                {'category':'list_items', 'title': "Populaire afleveringen", 'url':self.tmpUrl + 'v2/default/sections/popular_PopularVODs'},
+                                {'category':'list_items', 'title': "Populaire programma's", 'url':self.tmpUrl + 'v2/default/sections/popular_PopularFormats'},
+                                {'category':'list_items', 'title': "Populaire clips", 'url':self.tmpUrl + 'v2/default/sections/popular_PopularClips'},
                                ]
         self.listsTab(self.MAIN_CAT_TAB, cItem)
         
@@ -155,7 +155,7 @@ class KijkNL(CBaseHostClass):
         
         def _doHasItems(url):
             try:
-                sts, data = self.getPage(url+'?limit=1&offset=0')
+                sts, data = self.getPage(url + '?limit=1&offset=0')
                 return json.loads(data)['totalItemsAvailable'] > 0 
             except Exception:
                 printExc()
@@ -207,9 +207,9 @@ class KijkNL(CBaseHostClass):
             
             for item in items:
                 if item['type'] in ['clip', 'episode', 'series']: #and item['available']
-                    icon  = item['images'].get('nonretina_image', '')
+                    icon = item['images'].get('nonretina_image', '')
                     if icon == '':
-                        icon  = item['images'].get('retina_image', '')
+                        icon = item['images'].get('retina_image', '')
                     title = self.cleanHtmlStr(item['title'])
                     id = item['id']
                     url = item['_links']['self']
@@ -226,14 +226,14 @@ class KijkNL(CBaseHostClass):
                     descTab.append(item.get('dateStringNoTime', item.get('dateString', '')))
                     if 'channel' in item:
                         descTab.append(item['channel'])
-                    if 'genres'  in item:
+                    if 'genres' in item:
                         descTab.append(', '.join(item['genres']))
-                    if 'nicam'   in item:
+                    if 'nicam' in item:
                         descTab.append(', '.join(item['nicam']))
                     
                     desc = self.cleanHtmlStr(' | '.join(descTab)) + '[/br]' + self.cleanHtmlStr(item.get('synopsis', ''))
                     params = {'good_for_fav':True, 'title':title, 'url':url, 'icon':icon, 'desc':desc, 'f_type':item['type'], 'f_id':id}
-                    if item['type']  in ['clip', 'episode']:
+                    if item['type'] in ['clip', 'episode']:
                         self.addVideo(params)
                     else:
                         params['category'] = nextCategory
@@ -245,7 +245,7 @@ class KijkNL(CBaseHostClass):
                     printDBG('++++++++++++++++++++++++++++++++++++++++++++++++++++')
             if data.get('hasMoreItems', False):
                 params = dict(cItem)
-                params.update({'good_for_fav':False, 'title':_('Next page'), 'page':page+1})
+                params.update({'good_for_fav':False, 'title':_('Next page'), 'page':page + 1})
                 self.addDir(params)
         except Exception:
             printExc()
@@ -293,7 +293,7 @@ class KijkNL(CBaseHostClass):
             try:
                 vidData = self.cm.ph.getDataBeetwenMarkers(data, '<video', '>')[1]
                 account = self.cm.ph.getSearchGroups(vidData, '''data\-account=['"]([^'^"]+?)['"]''')[0]
-                video   = self.cm.ph.getSearchGroups(vidData, '''data\-video\-id=['"]([^'^"]+?)['"]''')[0]
+                video = self.cm.ph.getSearchGroups(vidData, '''data\-video\-id=['"]([^'^"]+?)['"]''')[0]
                 
                 if self.policyKeyCache == '':
                     data = re.compile('''<script[^>]+?src=['"]([^'^"]+?)['"]''').findall(data)
@@ -343,9 +343,9 @@ class KijkNL(CBaseHostClass):
         
         self.informAboutGeoBlockingIfNeeded('NL')
         
-        name     = self.currItem.get("name", '')
+        name = self.currItem.get("name", '')
         category = self.currItem.get("category", '')
-        mode     = self.currItem.get("mode", '')
+        mode = self.currItem.get("mode", '')
         
         printDBG("handleService: |||||||||||||||||||||||||||||||||||| name[%s], category[%s] " % (name, category))
         self.currList = []

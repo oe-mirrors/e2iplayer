@@ -37,7 +37,7 @@ class Cinemaxx(CBaseHostClass):
         self.HTTP_HEADER = self.cm.getDefaultHeader(browser='chrome')
         self.defaultParams = {'header':self.HTTP_HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
 
-        self.MAIN_URL    = 'http://cinemaxx.cc/'
+        self.MAIN_URL = 'http://cinemaxx.cc/'
         self.DEFAULT_ICON_URL = 'https://fdtech.pl/wp-content/uploads/2017/01/kinowy-40-100k-765x509.jpg' #self.getFullIconUrl('/templates/flat-cinema/images/logo.png')
 
         self.cacheLinks = {}
@@ -65,7 +65,7 @@ class Cinemaxx(CBaseHostClass):
                     if 'xhr.open' in item:
                         jscode = item
                         break
-                js_params= [{'path':GetJSScriptFile('cinemaxx1.byte')}]
+                js_params = [{'path':GetJSScriptFile('cinemaxx1.byte')}]
                 js_params.append({'code':jscode})
                 ret = js_execute_ext(js_params)
                 if ret['sts'] and 0 == ret['code']:
@@ -79,19 +79,19 @@ class Cinemaxx(CBaseHostClass):
                         sts2, data2 = self.cm.getPage(url, params)
                         if not sts2:
                             break
-                        js_params= [{'path':GetJSScriptFile('cinemaxx2.byte')}]
+                        js_params = [{'path':GetJSScriptFile('cinemaxx2.byte')}]
                         js_params.append({'code':data2 + 'print(JSON.stringify(e2iobj));'})
                         ret = js_execute_ext(js_params)
                         if ret['sts'] and 0 == ret['code']:
                             cj = self.cm.getCookie(self.COOKIE_FILE)
                             for item in json_loads(ret['data'])['cookies']:
                                 for cookieKey, cookieValue in item.items():
-                                    cookieItem = http.cookiejar.Cookie(version=0, name=cookieKey, value=cookieValue, port=None, port_specified=False, domain='.'+self.cm.getBaseUrl(cUrl, True), domain_specified=True, domain_initial_dot=True, path='/', path_specified=True, secure=False, expires=time.time()+3600*48, discard=True, comment=None, comment_url=None, rest={'HttpOnly': None}, rfc2109=False)
+                                    cookieItem = http.cookiejar.Cookie(version=0, name=cookieKey, value=cookieValue, port=None, port_specified=False, domain='.' + self.cm.getBaseUrl(cUrl, True), domain_specified=True, domain_initial_dot=True, path='/', path_specified=True, secure=False, expires=time.time() + 3600 * 48, discard=True, comment=None, comment_url=None, rest={'HttpOnly': None}, rfc2109=False)
                                     cj.set_cookie(cookieItem)
                             cj.save(self.COOKIE_FILE, ignore_discard=True)
 
                             sleep_time -= time.time() * 1000 - timestamp
-                            if  sleep_time > 0:
+                            if sleep_time > 0:
                                 GetIPTVSleep().Sleep(int(math.ceil(sleep_time / 1000.0)))
                             continue
                         else:
@@ -144,7 +144,7 @@ class Cinemaxx(CBaseHostClass):
             else:
                 self.addDir(MergeDicts(cItem, {'category':nextCategory, 'url':self.getFullUrl(sUrl), 'title':sTitle}))
 
-        MAIN_CAT_TAB = [{'category':'search',         'title': _('Search'),       'search_item':True},
+        MAIN_CAT_TAB = [{'category':'search', 'title': _('Search'), 'search_item':True},
                         {'category': 'search_history', 'title': _('Search history'),}]
         self.listsTab(MAIN_CAT_TAB, cItem)
 
@@ -210,7 +210,7 @@ class Cinemaxx(CBaseHostClass):
         title = self.cleanHtmlStr(trailer)
         trailer = self.getFullUrl(ph.search(trailer, ph.IFRAME_SRC_URI_RE)[1])
         if trailer:
-            self.addVideo({'good_for_fav':True, 'prev_url':cUrl, 'title':'%s %s' %(title, baseTitle), 'url':trailer, 'icon':icon, 'desc':desc})
+            self.addVideo({'good_for_fav':True, 'prev_url':cUrl, 'title':'%s %s' % (title, baseTitle), 'url':trailer, 'icon':icon, 'desc':desc})
 
         data = ph.find(data, ('<div', '>', 'full-video'), '</div>', flags=0)[1]
         url = self.getFullUrl(ph.search(data, ph.IFRAME_SRC_URI_RE)[1])
@@ -342,7 +342,7 @@ class Cinemaxx(CBaseHostClass):
         
         CBaseHostClass.handleService(self, index, refresh, searchPattern, searchType)
 
-        name     = self.currItem.get("name", '')
+        name = self.currItem.get("name", '')
         category = self.currItem.get("category", '')
         printDBG("handleService: ||| name[%s], category[%s] " % (name, category))
         self.currList = []

@@ -62,12 +62,12 @@ class FFMPEGDownloader(BaseDownloader):
         
     def _checkWorkingCallBack(self, callBackFun, code, data):
         reason = ''
-        sts    = True
+        sts = True
         if code != 0:
             ffmpegBinaryName = DMHelper.GET_FFMPEG_PATH()
             if ffmpegBinaryName == '':
                 ffmpegBinaryName = 'ffmpeg'
-            sts    = False
+            sts = False
             if code == 127:
                 reason = _('Utility "%s" can not be found.' % ffmpegBinaryName)
             else:
@@ -79,10 +79,10 @@ class FFMPEGDownloader(BaseDownloader):
         '''
             Owervrite start from BaseDownloader
         '''
-        self.url              = url
-        self.filePath         = filePath
+        self.url = url
+        self.filePath = filePath
         self.downloaderParams = params
-        self.fileExtension    = '' # should be implemented in future
+        self.fileExtension = '' # should be implemented in future
         self.outData = ''
         self.contentType = 'unknown'
         
@@ -131,7 +131,7 @@ class FFMPEGDownloader(BaseDownloader):
         rm(self.fileCmdPath)
         WriteTextFile(self.fileCmdPath, '|'.join(cmdTab))
         
-        cmd = GetCmdwrapPath() + (' "%s" "|" %s ' % (self.fileCmdPath, GetNice()+2))
+        cmd = GetCmdwrapPath() + (' "%s" "|" %s ' % (self.fileCmdPath, GetNice() + 2))
 
         printDBG("FFMPEGDownloader::start cmd[%s]" % cmd)
         

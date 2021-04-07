@@ -32,7 +32,7 @@ import datetime
 
 def DebugToFile(message, file="/home/sulge/tmp/m3u8.txt"):
     with open(file, "a") as myfile:
-        myfile.write(message+"\n")
+        myfile.write(message + "\n")
 
 class M3U8Downloader(BaseDownloader):
     MIN_REFRESH_DELAY = 1
@@ -53,14 +53,14 @@ class M3U8Downloader(BaseDownloader):
         printDBG('M3U8Downloader.__init__ ----------------------------------')
         BaseDownloader.__init__(self)
         
-        self.wgetStatus   = self.WGET_STS.NONE
+        self.wgetStatus = self.WGET_STS.NONE
         # instance of E2 console
         self.console = eConsoleAppContainer()
         self.iptv_sys = None
         
         # M3U8 list updater
         self.M3U8Updater = eConsoleAppContainer()
-        self.M3U8Updater_appClosed_conn   = eConnectCallback(self.M3U8Updater.appClosed, self._updateM3U8Finished)
+        self.M3U8Updater_appClosed_conn = eConnectCallback(self.M3U8Updater.appClosed, self._updateM3U8Finished)
         self.M3U8Updater_stdoutAvail_conn = eConnectCallback(self.M3U8Updater.stdoutAvail, self._updateM3U8DataAvail)
         
         self.M3U8ListData = ''
@@ -95,9 +95,9 @@ class M3U8Downloader(BaseDownloader):
         
     def _checkWorkingCallBack(self, callBackFun, code, data):
         reason = ''
-        sts    = True
+        sts = True
         if code != 0:
-            sts    = False
+            sts = False
             reason = data
         self.iptv_sys = None
         callBackFun(sts, reason)
@@ -106,17 +106,17 @@ class M3U8Downloader(BaseDownloader):
         '''
             Owervrite start from BaseDownloader
         '''
-        self.filePath             = filePath
-        self.downloaderParams     = params
-        self.fileExtension        = '' # should be implemented in future
+        self.filePath = filePath
+        self.downloaderParams = params
+        self.fileExtension = '' # should be implemented in future
         
-        self.status       = DMHelper.STS.DOWNLOADING
+        self.status = DMHelper.STS.DOWNLOADING
         self.updateThread = None
         self.fragmentList = []
         self.lastMediaSequence = -1
         self.currentFragment = -1
         self.tries = 0
-        self.liveStream   = False
+        self.liveStream = False
         self.skipFirstSegFromList = strwithmeta(url).meta.get('iptv_m3u8_skip_seg', 0)
         self.m3u8Url = url
         self._startM3U8()
@@ -184,7 +184,7 @@ class M3U8Downloader(BaseDownloader):
         #newFragments = self.fixFragmentsList(newFragments) 
         try: 
             idx = newFragments.index(self.fragmentList[-1])
-            newFragments = newFragments[idx+1:]
+            newFragments = newFragments[idx + 1:]
         except Exception:
             printDBG('m3u8 update thread - last fragment from last list not available in new list!')
         
@@ -214,11 +214,11 @@ class M3U8Downloader(BaseDownloader):
                 self.lastMediaSequence = media_sequence
         else:
             try: 
-                tmpCurrFragmentList = [seg[seg.rfind('/')+1:] for seg in self.fragmentList]
-                tmpNewFragments = [seg[seg.rfind('/')+1:] for seg in newFragments]
+                tmpCurrFragmentList = [seg[seg.rfind('/') + 1:] for seg in self.fragmentList]
+                tmpNewFragments = [seg[seg.rfind('/') + 1:] for seg in newFragments]
                 
                 idx = tmpNewFragments.index(tmpCurrFragmentList[-1])
-                newFragments = newFragments[idx+1:]
+                newFragments = newFragments[idx + 1:]
             except Exception:
                 printDBG('m3u8 update thread - last fragment from last list not available in new list!')
             
@@ -277,7 +277,7 @@ class M3U8Downloader(BaseDownloader):
         if wait > 0:
             cmd = (' sleep %s && ' % wait) + cmd
         printDBG("Download cmd[%s]" % cmd)
-        self.console_appClosed_conn = eConnectCallback(self.console.appClosed,  self._cmdFinished)
+        self.console_appClosed_conn = eConnectCallback(self.console.appClosed, self._cmdFinished)
         self.console_stdoutAvail_conn = eConnectCallback(self.console.stdoutAvail, self._dataAvail)
         self.console.execute(E2PrioFix(cmd))
         ##############################################################################
@@ -301,7 +301,7 @@ class M3U8Downloader(BaseDownloader):
             self.console_appClosed_conn = None
             self.console_stderrAvail_conn = None
         #self.console = eConsoleAppContainer()
-        self.console_appClosed_conn = eConnectCallback(self.console.appClosed,  self._cmdFinished)
+        self.console_appClosed_conn = eConnectCallback(self.console.appClosed, self._cmdFinished)
         self.console_stderrAvail_conn = eConnectCallback(self.console.stderrAvail, self._dataAvail)
         
         if tryAgain and self.tries >= self.MAX_RETRIES:
@@ -468,13 +468,13 @@ class M3U8Downloader(BaseDownloader):
             #elif not self.liveStream and self.remoteFragmentSize > 0 and self.remoteFragmentSize > (self.localFileSize - self.m3u8_prevLocalFileSize):
             #    localStatus = DMHelper.STS.INTERRUPTED
             elif 0 < (self.localFileSize - self.m3u8_prevLocalFileSize):
-                if  self.totalDuration > 0:
+                if self.totalDuration > 0:
                     try:
                         self.downloadDuration += self.fragmentDurationList[self.currentFragment]
                     except Exception:
                         printExc()
                 localStatus = self._startFragment()
-            elif  0 == (self.localFileSize - self.m3u8_prevLocalFileSize):
+            elif 0 == (self.localFileSize - self.m3u8_prevLocalFileSize):
                 localStatus = self._startFragment(True) # retry
             else:
                 localStatus = DMHelper.STS.INTERRUPTED
@@ -485,7 +485,7 @@ class M3U8Downloader(BaseDownloader):
             
         # clean up at finish
         if self.M3U8Updater:
-            self.M3U8Updater_appClosed_conn   = None
+            self.M3U8Updater_appClosed_conn = None
             self.M3U8Updater_stdoutAvail_conn = None
             self.M3U8Updater = None
         

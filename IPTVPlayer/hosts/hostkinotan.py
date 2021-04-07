@@ -38,19 +38,19 @@ class Kinotan(CBaseHostClass):
         self.DEFAULT_ICON_URL = 'http://ipic.su/img/img7/fs/logo2.1460442551.png'
 
 
-        self.MAIN_CAT_TAB = [{'category':'cat_serials',  'title':_('Serials'),    'url':self.getFullUrl('/serial/')},
-                             {'category':'cat_tv_shows', 'title':_('TV shows'),   'url':self.getFullUrl('/tv-shou/')},
-                             {'category':'cat_mult',     'title':_('Cartoons'),   'url':self.getFullUrl('/multserial/')},
+        self.MAIN_CAT_TAB = [{'category':'cat_serials', 'title':_('Serials'), 'url':self.getFullUrl('/serial/')},
+                             {'category':'cat_tv_shows', 'title':_('TV shows'), 'url':self.getFullUrl('/tv-shou/')},
+                             {'category':'cat_mult', 'title':_('Cartoons'), 'url':self.getFullUrl('/multserial/')},
                              
-                             {'category':'search',         'title':_('Search'), 'search_item':True},
+                             {'category':'search', 'title':_('Search'), 'search_item':True},
                              {'category':'search_history', 'title':_('Search history')}
                              ]
 
-        self.SERIALS_CAT_TAB = [{'category':'genre',   'title':_('Genre selection'), 'url':self.getFullUrl('/serial/')},
-                                {'category':'country', 'title':_('By country'),      'url':self.getFullUrl('/serial/')},
-                                {'category':'trans',   'title':_('Translations'),    'url':self.getFullUrl('/serial/')},
-                                {'category':'sel',     'title':_('Collections'),     'url':self.getFullUrl('/serial/')},
-                                {'category':'years',   'title':_('By Year'),         'url':self.getFullUrl('/serial/')}
+        self.SERIALS_CAT_TAB = [{'category':'genre', 'title':_('Genre selection'), 'url':self.getFullUrl('/serial/')},
+                                {'category':'country', 'title':_('By country'), 'url':self.getFullUrl('/serial/')},
+                                {'category':'trans', 'title':_('Translations'), 'url':self.getFullUrl('/serial/')},
+                                {'category':'sel', 'title':_('Collections'), 'url':self.getFullUrl('/serial/')},
+                                {'category':'years', 'title':_('By Year'), 'url':self.getFullUrl('/serial/')}
                                ]
         self.cacheContentTab = {}
 
@@ -142,7 +142,7 @@ class Kinotan(CBaseHostClass):
         url = tmp[0]
         if len(tmp) > 1:
             args = cItem.get('title', None)
-            url = self.SRCH_URL+args
+            url = self.SRCH_URL + args
 
         page = cItem.get('page', 1)
         if page > 1:
@@ -215,10 +215,10 @@ class Kinotan(CBaseHostClass):
         tmp = self.cm.ph.getAllItemsBeetwenMarkers(data, '<div id="videotabs_', '</div>')
         printDBG(tmp)
         for item in tmp:
-            title  = self.cleanHtmlStr(item)
+            title = self.cleanHtmlStr(item)
             tab_block = self.cm.ph.getSearchGroups(item, '''re_xfn="([^"]+?)"''')[0]
-            tab_id    = self.cm.ph.getSearchGroups(item, '''re_idnews="([0-9]+?)"''')[0]
-            tab_page  = self.cm.ph.getSearchGroups(item, '''re_page="([0-9]+?)"''')[0]
+            tab_id = self.cm.ph.getSearchGroups(item, '''re_idnews="([0-9]+?)"''')[0]
+            tab_page = self.cm.ph.getSearchGroups(item, '''re_page="([0-9]+?)"''')[0]
             printDBG('>>>>>>>>> tab_block[%s] tab_id[%s] tab_page[%s]' % (tab_block, tab_id, tab_page))
             if '' != tab_block and '' != tab_id and '' != tab_page:
                 post_data = {'block':tab_block, 'id':tab_id, 'page':tab_page}
@@ -371,9 +371,9 @@ class Kinotan(CBaseHostClass):
             title = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(item, '<h3', '</h3>')[1])
             if title == '':
                 title = self.cleanHtmlStr(self.cm.ph.getSearchGroups(item, '''alt=['"]([^'^"]+?)['"]''')[0])
-            icon  = self.getFullIconUrl(self.cm.ph.getSearchGroups(item, '''src=['"]([^'^"]+?)['"]''')[0])
-            url   = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''href=['"]([^'^"]+?)['"]''')[0])
-            desc  = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(item, '<a', '</a>')[1])
+            icon = self.getFullIconUrl(self.cm.ph.getSearchGroups(item, '''src=['"]([^'^"]+?)['"]''')[0])
+            url = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''href=['"]([^'^"]+?)['"]''')[0])
+            desc = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(item, '<a', '</a>')[1])
             if self.cm.isValidUrl(url):
                 params = dict(cItem)
                 params.update({'category': 'list_content', 'title': title, 'icon': icon, 'desc': desc, 'url': url})

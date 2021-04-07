@@ -33,7 +33,7 @@ from Screens.MessageBox import MessageBox
 ###################################################
 # Config options for HOST
 ###################################################
-config.plugins.iptvplayer.edemtv_login    = ConfigText(default="", fixed_size=False)
+config.plugins.iptvplayer.edemtv_login = ConfigText(default="", fixed_size=False)
 config.plugins.iptvplayer.edemtv_password = ConfigText(default="", fixed_size=False)
 
 def GetConfigList():
@@ -47,8 +47,8 @@ def GetConfigList():
 class EdemTvApi:
 
     def __init__(self):
-        self.MAIN_URL   = 'https://edem.tv/'
-        self.HTTP_HEADER  = {'User-Agent': 'Mozilla/5.0 (X11; Ubuntu; Linux i686; rv:12.0) Gecko/20100101 Firefox/12.0', 'Referer': self.MAIN_URL}
+        self.MAIN_URL = 'https://edem.tv/'
+        self.HTTP_HEADER = {'User-Agent': 'Mozilla/5.0 (X11; Ubuntu; Linux i686; rv:12.0) Gecko/20100101 Firefox/12.0', 'Referer': self.MAIN_URL}
         self.COOKIE_FILE = GetCookieDir('edemtv.cookie')
         self.cm = common()
         self.up = urlparser()
@@ -69,12 +69,12 @@ class EdemTvApi:
         
     def doLogin(self, login, password):
         logged = False
-        HTTP_HEADER= dict(self.HTTP_HEADER)
+        HTTP_HEADER = dict(self.HTTP_HEADER)
         HTTP_HEADER.update({'Content-Type':'application/x-www-form-urlencoded; charset=UTF-8', 'X-Requested-With': 'XMLHttpRequest'})
 
         post_data = {'email': login, 'password': password}
-        params    = {'header': HTTP_HEADER, 'cookiefile': self.COOKIE_FILE, 'save_cookie': True}
-        loginUrl  = self.getFullUrl('account/login')
+        params = {'header': HTTP_HEADER, 'cookiefile': self.COOKIE_FILE, 'save_cookie': True}
+        loginUrl = self.getFullUrl('account/login')
         sts, data = self.cm.getPage(loginUrl, params, post_data)
         if sts and '/account/logout' in data:
             logged = True
@@ -85,7 +85,7 @@ class EdemTvApi:
         channelsTab = []
         getList = cItem.get('get_list', True)
         if getList:
-            login  = config.plugins.iptvplayer.edemtv_login.value
+            login = config.plugins.iptvplayer.edemtv_login.value
             passwd = config.plugins.iptvplayer.edemtv_password .value
             if '' != login.strip() and '' != passwd.strip():
                 if not self.doLogin(login, passwd):
@@ -110,7 +110,7 @@ class EdemTvApi:
                     continue
                 channelsPerCat = self.cm.ph.getAllItemsBeetwenMarkers(catItem, '<a ', '</a>')
                 for item in channelsPerCat:
-                    url  = self.cm.ph.getSearchGroups(item, ''' href=['"]([^'^"]+?)['"]''')[0]
+                    url = self.cm.ph.getSearchGroups(item, ''' href=['"]([^'^"]+?)['"]''')[0]
                     icon = self.cm.ph.getSearchGroups(item, ''' src=['"]([^'^"]+?)['"]''')[0]
                     alt = self.cm.ph.getSearchGroups(item, ''' alt=['"]([^'^"]+?)['"]''')[0]
                     
@@ -167,14 +167,14 @@ class EdemTvApi:
             subdomain = self.cm.ph.getSearchGroups(data, '''<input[^>]*?name=['"]subdomain['"][^>]*?value=['"]([^'^"]+?)['"]''')[0]
             domainTab = self.cm.ph.getSearchGroups(data, '''<option[^>]*?value="([0-9]+?)"[^>]*?selected[^>]*?>([^<]+?)</option>''', 2)
             if subdomain == '' or '' == domainTab[0] or '' == domainTab[1]:
-                HTTP_HEADER= dict(self.HTTP_HEADER)
+                HTTP_HEADER = dict(self.HTTP_HEADER)
                 HTTP_HEADER.update({'Referer':playlistUrl, 'Content-Type':'application/x-www-form-urlencoded; charset=UTF-8', 'X-Requested-With': 'XMLHttpRequest'})
                 
                 login = config.plugins.iptvplayer.edemtv_login.value
                 passwd = config.plugins.iptvplayer.edemtv_password.value
-                subdomain = md5(login+passwd).hexdigest()
+                subdomain = md5(login + passwd).hexdigest()
                 post_data = {'server_id':tries, 'name':subdomain}
-                params    = dict(self.http_params)
+                params = dict(self.http_params)
                 params['header'] = HTTP_HEADER
                 url = self.getFullUrl('ajax/user_server')
                 sts, data = self.cm.getPage(url, params, post_data)
@@ -193,7 +193,7 @@ class EdemTvApi:
         
         #printDBG(data)
         
-        data =  self.cm.ph.getDataBeetwenMarkers(data, 'playlist:', ']', False)[1]
+        data = self.cm.ph.getDataBeetwenMarkers(data, 'playlist:', ']', False)[1]
         
         hlsUrl = self.cm.ph.getSearchGroups(data, '''['"](http[^'^"]+?)['"]''')[0]
         rmpUrl = self.cm.ph.getSearchGroups(data, '''['"](rtmp[^'^"]+?)['"]''')[0]

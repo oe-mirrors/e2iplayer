@@ -81,10 +81,10 @@ class CYTSignAlgoExtractor:
         while idxStart < len(data):
             idxStart = data.find(marker, idxStart)
             if idxStart > 1:
-                if data[idxStart-1] in (' ', ',', ';', '\n', '\r', '\t'):
+                if data[idxStart - 1] in (' ', ',', ';', '\n', '\r', '\t'):
                     idxEnd = data.find('}', idxStart)
                     if idxEnd > 0:
-                        return data[idxStart:idxEnd+1]
+                        return data[idxStart:idxEnd + 1]
             else:
                 return ''
             idxStart += len(marker)
@@ -103,11 +103,11 @@ class CYTSignAlgoExtractor:
         while idxStart < len(data):
             idxStart = data.find(marker, idxStart)
             if idxStart > 1:
-                if data[idxStart-1] in (' ', ',', ';', '\n', '\r', '\t'):
+                if data[idxStart - 1] in (' ', ',', ';', '\n', '\r', '\t'):
                     idxEnd = data.find('};', idxStart)
                     if idxEnd > 0:
                         if ph.all(methods, data, idxStart, idxEnd):
-                            return data[idxStart:idxEnd+2]
+                            return data[idxStart:idxEnd + 2]
             else:
                 return ''
             idxStart += len(marker)
@@ -415,7 +415,7 @@ class YoutubeIE(object):
         if not sts:
             return sub_tracks
         try:
-            player_config = json_loads(data.strip()+'}')
+            player_config = json_loads(data.strip() + '}')
             args = player_config['args']
             caption_url = args.get('ttsurl')
             if caption_url:
@@ -523,7 +523,7 @@ class YoutubeIE(object):
             url = 'http://www.youtube.com/' + compat_urllib_parse.unquote(mobj.group(1)).lstrip('/')
         video_id = self._extract_id(url)
         if 'yt-video-id' == video_id:
-            video_id = self.cm.ph.getSearchGroups(url+'&', '[\?&]docid=([^\?^&]+)[\?&]')[0]
+            video_id = self.cm.ph.getSearchGroups(url + '&', '[\?&]docid=([^\?^&]+)[\?&]')[0]
             isGoogleDoc = True
             url = url
             videoKey = 'docid'
@@ -567,7 +567,7 @@ class YoutubeIE(object):
             while (tries < 5) and (not tokenFound):
                 for el_type in ['&el=detailpage', '&el=embedded', '&el=vevo', '']:
                     #https
-                    video_info_url = videoInfoBase + ('%s&ps=default&eurl=&gl=US&hl=en'% (el_type))
+                    video_info_url = videoInfoBase + ('%s&ps=default&eurl=&gl=US&hl=en' % (el_type))
                     sts, video_info = self.cm.getPage(video_info_url, videoInfoparams)
                     if not sts: 
                         continue
@@ -810,16 +810,16 @@ class YoutubeIE(object):
                 video_real_url = strwithmeta(video_real_url, {'Cookie':cookieHeader})
 
             results.append({
-                'id':       video_id,
-                'url':      video_real_url,
+                'id': video_id,
+                'url': video_real_url,
                 'uploader': '',
-                'title':    '',
-                'ext':      video_extension,
-                'format':   video_format,
-                'thumbnail':    '',
-                'duration':     video_duration,
-                'player_url':   '',
-                'm3u8':   is_m3u8,
+                'title': '',
+                'ext': video_extension,
+                'format': video_format,
+                'thumbnail': '',
+                'duration': video_duration,
+                'player_url': '',
+                'm3u8': is_m3u8,
             })
             
         return results

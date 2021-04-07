@@ -58,7 +58,7 @@ class NGolosCOM(CBaseHostClass):
             self.MAIN_URL = self.cm.getBaseUrl(url)
     
     def selectDomain(self):
-        self.MAIN_URL   = 'https://www.ngolos.com/'
+        self.MAIN_URL = 'https://www.ngolos.com/'
         self.DEFAULT_ICON_URL = self.getFullIconUrl('/assets/images/thumbnail.png')
     
     def getPage(self, baseUrl, addParams={}, post_data=None):
@@ -101,11 +101,11 @@ class NGolosCOM(CBaseHostClass):
             parent = self.cm.ph.getSearchGroups(data[idx], '''data\-parent=['"]([^'^"]+?)['"]''')[0]
             current = self.cm.ph.getSearchGroups(data[idx], '''href=['"](#[^'^"]+?)['"]''')[0]
             
-            tmp = self.cm.ph.getDataBeetwenNodes(data[idx+1], ('<a', '>', 'card-title'), ('</a', '>'))[1]
+            tmp = self.cm.ph.getDataBeetwenNodes(data[idx + 1], ('<a', '>', 'card-title'), ('</a', '>'))[1]
             cUrl = self.getFullUrl(self.cm.ph.getSearchGroups(tmp, '''href=['"]([^'^"]+?)['"]''')[0])
             cTitle = self.cleanHtmlStr(tmp)
             if cTitle == '':
-                cTitle = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(data[idx+1], '<i', '</a>')[1])
+                cTitle = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(data[idx + 1], '<i', '</a>')[1])
             
             if parent == '.competitions':
                 params = dict(cItem)
@@ -113,7 +113,7 @@ class NGolosCOM(CBaseHostClass):
                 self.addDir(params)
             else:
                 subItems = []
-                tmp = self.cm.ph.getAllItemsBeetwenMarkers(data[idx+1].split('card-body', 1)[-1], '<a', '</a>')
+                tmp = self.cm.ph.getAllItemsBeetwenMarkers(data[idx + 1].split('card-body', 1)[-1], '<a', '</a>')
                 for item in tmp:
                     url = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''href=['"]([^'^"]+?)['"]''')[0])
                     title = self.cleanHtmlStr(item)
@@ -162,10 +162,10 @@ class NGolosCOM(CBaseHostClass):
                 try:
                     for item in self.cacheTeams['data'][team]:
                         title = self.cleanHtmlStr(item['name'])
-                        url   = self.getFullUrl('/team/' + item['url'])
-                        desc  = [self.cleanHtmlStr(item['location'])]
+                        url = self.getFullUrl('/team/' + item['url'])
+                        desc = [self.cleanHtmlStr(item['location'])]
                         desc.append(self.cleanHtmlStr(item['alias']))
-                        icon  = self.getFullIconUrl('/assets/images/logos/' + item['logo']) 
+                        icon = self.getFullIconUrl('/assets/images/logos/' + item['logo']) 
                         params = dict(cItem)
                         params.update({'good_for_fav':True, 'title':title, 'url':url, 'team':team, 'icon':icon, 'desc':' | '.join(desc)})
                         self.addDir(params)
@@ -203,8 +203,8 @@ class NGolosCOM(CBaseHostClass):
             item = self.cm.ph.getAllItemsBeetwenMarkers(item, '<a', '</a>')
             
             title = self.cleanHtmlStr(item[0])
-            url   = self.getFullUrl(self.cm.ph.getSearchGroups(item[0], '''href=['"]([^'^"]+?)['"]''')[0])
-            desc  = self.cleanHtmlStr(item[-1])
+            url = self.getFullUrl(self.cm.ph.getSearchGroups(item[0], '''href=['"]([^'^"]+?)['"]''')[0])
+            desc = self.cleanHtmlStr(item[-1])
             
             params = dict(cItem)
             params.update({'good_for_fav':True, 'category':nextCategory, 'title':title, 'url':url, 'desc':desc})
@@ -213,7 +213,7 @@ class NGolosCOM(CBaseHostClass):
         
         if self.cm.isValidUrl(nextPage):
             params = dict(cItem)
-            params.update({'good_for_fav':False, 'title':_('Next page'), 'url':nextPage, 'page':page+1})
+            params.update({'good_for_fav':False, 'title':_('Next page'), 'url':nextPage, 'page':page + 1})
             self.addDir(params)
         
     def exploreItem(self, cItem, nextCategory):
@@ -298,7 +298,7 @@ class NGolosCOM(CBaseHostClass):
             url = self.getFullUrl(tmp[idx])
             if not self.cm.isValidUrl(url):
                 continue
-            if 'playwire.com' not in url and  self.up.checkHostSupport(url) != 1:
+            if 'playwire.com' not in url and self.up.checkHostSupport(url) != 1:
                 try:
                     url = self.getFullUrl(base64.b64decode(url.split('link=', 1)[-1]))
                     if self.up.checkHostSupport(url) != 1:
@@ -347,7 +347,7 @@ class NGolosCOM(CBaseHostClass):
                 baseUrl = self.cm.ph.getDataBeetwenMarkers(data, '<baseURL>', '</baseURL>', False)[1].strip()
                 data = self.cm.ph.getAllItemsBeetwenMarkers(data, '<media ', '>')
                 for item in data:
-                    url  = self.cm.ph.getSearchGroups(item, '''url=['"]([^'^"]+?)['"]''')[0]
+                    url = self.cm.ph.getSearchGroups(item, '''url=['"]([^'^"]+?)['"]''')[0]
                     height = self.cm.ph.getSearchGroups(item, '''height=['"]([^'^"]+?)['"]''')[0]
                     bitrate = self.cm.ph.getSearchGroups(item, '''bitrate=['"]([^'^"]+?)['"]''')[0]
                     name = '[%s] bitrate:%s height: %s' % (url.split('.')[-1], bitrate, height)
@@ -387,9 +387,9 @@ class NGolosCOM(CBaseHostClass):
             #rm(self.COOKIE_FILE)
             self.selectDomain()
 
-        name     = self.currItem.get("name", '')
+        name = self.currItem.get("name", '')
         category = self.currItem.get("category", '')
-        mode     = self.currItem.get("mode", '')
+        mode = self.currItem.get("mode", '')
         
         printDBG("handleService: || name[%s], category[%s] " % (name, category))
         self.currList = []

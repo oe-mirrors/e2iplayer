@@ -27,8 +27,8 @@ from Screens.MessageBox import MessageBox
 ###################################################
 # Config options for HOST
 ###################################################
-config.plugins.iptvplayer.weebtv_premium  = ConfigYesNo(default=True)
-config.plugins.iptvplayer.weebtv_login    = ConfigText(default="", fixed_size=False)
+config.plugins.iptvplayer.weebtv_premium = ConfigYesNo(default=True)
+config.plugins.iptvplayer.weebtv_login = ConfigText(default="", fixed_size=False)
 config.plugins.iptvplayer.weebtv_password = ConfigText(default="", fixed_size=False)
 config.plugins.iptvplayer.weebtv_videoquality = ConfigSelection(default="1", choices=[("0", _("Low")), ("1", _("Standard")), ("2", _("High (or HD)"))])
 
@@ -43,20 +43,20 @@ def GetConfigList():
 ###################################################
 
 class WeebTvApi:
-    HOST        = 'XBMC'
-    HEADER      = {'User-Agent': HOST, 'ContentType': 'application/x-www-form-urlencoded'}
-    DEFPARAMS   = {'header':HEADER}
-    MAINURL     = 'http://weeb.tv'
-    checkUrl    = MAINURL + '/api/checkPluginVersionXBMC'
-    PLAYERURL   = MAINURL + '/api/setPlayer'
-    JSONURL     = MAINURL + '/api/getChannelList'
+    HOST = 'XBMC'
+    HEADER = {'User-Agent': HOST, 'ContentType': 'application/x-www-form-urlencoded'}
+    DEFPARAMS = {'header':HEADER}
+    MAINURL = 'http://weeb.tv'
+    checkUrl = MAINURL + '/api/checkPluginVersionXBMC'
+    PLAYERURL = MAINURL + '/api/setPlayer'
+    JSONURL = MAINURL + '/api/getChannelList'
     VERSION = 140
     
-    MAIN_TAB  = [{'category':'main', 'url':JSONURL + '&option=online-alphabetical', 'title':_('Sorted channels A-Z [live]')},
-                 {'category':'main', 'url':JSONURL + '&option=online-now-viewed',   'title':_('Sorted most viewed channels now [live]')},
-                 {'category':'main', 'url':JSONURL + '&option=online-most-viewed',  'title':_('Sorted most viewed channels general [live]')},
-                 {'category':'main', 'url':JSONURL + '&option=offline-ranking',     'title':_('Offline channels')},
-                 {'category':'main', 'url':JSONURL + '&option=all-ranking',         'title':_('Show all channels')}]
+    MAIN_TAB = [{'category':'main', 'url':JSONURL + '&option=online-alphabetical', 'title':_('Sorted channels A-Z [live]')},
+                 {'category':'main', 'url':JSONURL + '&option=online-now-viewed', 'title':_('Sorted most viewed channels now [live]')},
+                 {'category':'main', 'url':JSONURL + '&option=online-most-viewed', 'title':_('Sorted most viewed channels general [live]')},
+                 {'category':'main', 'url':JSONURL + '&option=offline-ranking', 'title':_('Offline channels')},
+                 {'category':'main', 'url':JSONURL + '&option=all-ranking', 'title':_('Show all channels')}]
 
     def __init__(self):
         self.cm = common()
@@ -101,7 +101,7 @@ class WeebTvApi:
         retTab = []
         for item in WeebTvApi.MAIN_TAB:
             params = dict(item)
-            params['name']  = 'category'
+            params['name'] = 'category'
             retTab.append(params)
         return retTab
 
@@ -115,15 +115,15 @@ class WeebTvApi:
                     for i in range(len(channelsArray)):
                         try:
                             k = channelsArray[i][1]
-                            name    = self._getStr(k['channel_name']).replace("\"", '')
-                            title   = self._getStr(k['channel_title']).replace("\"", '')
-                            desc    = self._getStr(k['channel_description']).replace("\"", '')
-                            tags    = self._getStr(k['channel_tags']).replace("\"", '')
-                            image   = self._getStr(k['channel_logo_url'])
-                            online  = int(k['channel_online'])
-                            rank    = k['rank']
+                            name = self._getStr(k['channel_name']).replace("\"", '')
+                            title = self._getStr(k['channel_title']).replace("\"", '')
+                            desc = self._getStr(k['channel_description']).replace("\"", '')
+                            tags = self._getStr(k['channel_tags']).replace("\"", '')
+                            image = self._getStr(k['channel_logo_url'])
+                            online = int(k['channel_online'])
+                            rank = k['rank']
                             bitrate = k['multibitrate']
-                            user    = self._getStr(k['user_name']).replace("\"", '')
+                            user = self._getStr(k['user_name']).replace("\"", '')
                             if 0 == len(title):
                                 title = name
                             if 0 == online: 
@@ -163,14 +163,14 @@ class WeebTvApi:
                 printDBG("||||||||||||||||||||||||||||| " + data)
                 parser = UrlParser()
                 params = parser.getParams(data)
-                status   = parser.getParam(params, '0')
-                premium  = parser.getIntParam(params, '5')
-                imgLink  = parser.getParam(params, '8')
+                status = parser.getParam(params, '0')
+                premium = parser.getIntParam(params, '5')
+                imgLink = parser.getParam(params, '8')
                 rtmpLink = parser.getParam(params, '10')
                 playPath = parser.getParam(params, '11')
-                bitrate  = parser.getIntParam(params, '20')
-                token    = parser.getParam(params, '73')
-                title    = parser.getParam(params, '6')
+                bitrate = parser.getIntParam(params, '20')
+                token = parser.getParam(params, '73')
+                title = parser.getParam(params, '6')
                 
                 if title == '':
                     title = parser.getParam(params, '7')
@@ -221,12 +221,12 @@ class UrlParser:
             return None
     
     def getParams(self, paramstring=''):
-        param=[]
+        param = []
         if len(paramstring) >= 2:
             params = paramstring
             cleanedparams = params.replace('?', '')
-            if (params[len(params)-1] == '/'):
-                params = params[0:len(params)-2]
+            if (params[len(params) - 1] == '/'):
+                params = params[0:len(params) - 2]
             pairsofparams = cleanedparams.split('&')
             param = {}
             for i in range(len(pairsofparams)):

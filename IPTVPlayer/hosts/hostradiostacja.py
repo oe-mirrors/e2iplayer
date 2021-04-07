@@ -40,9 +40,9 @@ class RadiostacjaPl(CBaseHostClass):
     def listMainMenu(self, cItem):
         printDBG("RadiostacjaPl.listMainMenu")
         
-        MAIN_CAT_TAB = [{'category':'live',           'title': 'Stacje Radiowe',  'f_cache':'live',     'url':self.getFullUrl('/data/mobile/live.json')}, 
-                        {'category':'channels',       'title': 'Kanały Muzyczne', 'f_cache':'muzyczne', 'url':self.getFullUrl('/data/mobile/muzyczne_android.json')}, 
-                        {'category':'djsety',         'title': 'Sety Muzyczne',   'f_cache':'podcasty', 'url':self.getFullUrl('/data/mobile/podcasty_android.json'), 'f_key':'djsety'}, 
+        MAIN_CAT_TAB = [{'category':'live', 'title': 'Stacje Radiowe', 'f_cache':'live', 'url':self.getFullUrl('/data/mobile/live.json')}, 
+                        {'category':'channels', 'title': 'Kanały Muzyczne', 'f_cache':'muzyczne', 'url':self.getFullUrl('/data/mobile/muzyczne_android.json')}, 
+                        {'category':'djsety', 'title': 'Sety Muzyczne', 'f_cache':'podcasty', 'url':self.getFullUrl('/data/mobile/podcasty_android.json'), 'f_key':'djsety'}, 
                        ]
         
         self.listsTab(MAIN_CAT_TAB, cItem)
@@ -59,8 +59,8 @@ class RadiostacjaPl(CBaseHostClass):
         params.update({'good_for_fav':True, 'title': 'Radia RMFON', 'category':nextCategory2, 'f_cache':'rmfon', 'url':'http://rmfon.pl/json/app.txt', 'icon':'http://www.programosy.pl/download/screens/13748/android-rmfon-1_s.png'})
         self.addDir(params)
         
-        CAT_TAB = [{'good_for_fav':True, 'title': 'Radia ZET',      'f_key':'eurozet'},
-                   {'good_for_fav':True, 'title': 'Radia Lokalne',  'f_key':'lokalne'}]
+        CAT_TAB = [{'good_for_fav':True, 'title': 'Radia ZET', 'f_key':'eurozet'},
+                   {'good_for_fav':True, 'title': 'Radia Lokalne', 'f_key':'lokalne'}]
         
         cItem = dict(cItem)
         cItem['category'] = nextCategory1
@@ -94,8 +94,8 @@ class RadiostacjaPl(CBaseHostClass):
         printDBG("RadiostacjaPl.listItems [%s]" % cItem)
         for item in data:
             title = self.cleanHtmlStr(item['name'])
-            icon  = self.cleanHtmlStr(item['image'])
-            url   = self.cleanHtmlStr(item['stream'])
+            icon = self.cleanHtmlStr(item['image'])
+            url = self.cleanHtmlStr(item['stream'])
             params = {'title':title, 'url':url, 'icon':icon}
             self.addAudio(params)
             
@@ -103,8 +103,8 @@ class RadiostacjaPl(CBaseHostClass):
         printDBG("RadiostacjaPl.listGenres [%s]" % cItem)
         self._fillCache(cItem)
         
-        CAT_TAB = [{'good_for_fav':True, 'category':'list_items',  'title': 'Wszystkie', 'f_key':'muzyczne'},
-                   {'good_for_fav':True, 'category':'list_genres', 'title': 'Nastroje',  'f_key':'kategorie'}]
+        CAT_TAB = [{'good_for_fav':True, 'category':'list_items', 'title': 'Wszystkie', 'f_key':'muzyczne'},
+                   {'good_for_fav':True, 'category':'list_genres', 'title': 'Nastroje', 'f_key':'kategorie'}]
         
         cItem = dict(cItem)
         cItem.pop('category', None)
@@ -121,7 +121,7 @@ class RadiostacjaPl(CBaseHostClass):
             for idx in range(len(self.cache[cacheKey][tabKey])):
                 channel = self.cache[cacheKey][tabKey][idx]
                 title = self.cleanHtmlStr(channel['name'])
-                icon  = self.cleanHtmlStr(channel['logo'])
+                icon = self.cleanHtmlStr(channel['logo'])
                 params = dict(cItem)
                 params.update({'good_for_fav':False, 'category':nextCategory, 'title':title, 'icon':icon, 'f_idx':idx})
                 self.addDir(params)
@@ -133,7 +133,7 @@ class RadiostacjaPl(CBaseHostClass):
         try:
             cacheKey = cItem['f_cache']
             tabKey = cItem['f_key']
-            idx    = cItem['f_idx']
+            idx = cItem['f_idx']
             data = self.cache[cacheKey][tabKey][idx]['channels']
             self.listItems(cItem, data)
         except Exception:
@@ -149,7 +149,7 @@ class RadiostacjaPl(CBaseHostClass):
             for idx in range(len(self.cache[cacheKey][tabKey])):
                 content = self.cache[cacheKey][tabKey][idx]['content']
                 title = self.cleanHtmlStr(content['name'])
-                icon  = self.cleanHtmlStr(content['logo'])
+                icon = self.cleanHtmlStr(content['logo'])
                 params = dict(cItem)
                 params.update({'good_for_fav':False, 'category':nextCategory, 'title':title, 'icon':icon, 'f_idx':idx})
                 self.addDir(params)
@@ -161,11 +161,11 @@ class RadiostacjaPl(CBaseHostClass):
         try:
             cacheKey = cItem['f_cache']
             tabKey = cItem['f_key']
-            idx    = cItem['f_idx']
+            idx = cItem['f_idx']
             data = self.cache[cacheKey][tabKey][idx]['content']['data']
             for item in data:
                 title = self.cleanHtmlStr(item['name'])
-                url   = self.cleanHtmlStr(item['file'])
+                url = self.cleanHtmlStr(item['file'])
                 params = {'title':title, 'url':url, 'icon':cItem.get('icon', '')}
                 self.addAudio(params)
         except Exception:
@@ -249,9 +249,9 @@ class RadiostacjaPl(CBaseHostClass):
         
         CBaseHostClass.handleService(self, index, refresh, searchPattern, searchType)
 
-        name     = self.currItem.get("name", '')
+        name = self.currItem.get("name", '')
         category = self.currItem.get("category", '')
-        mode     = self.currItem.get("mode", '')
+        mode = self.currItem.get("mode", '')
         
         printDBG("handleService: |||| name[%s], category[%s] " % (name, category))
         self.cacheLinks = {}

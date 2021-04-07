@@ -51,7 +51,7 @@ class Wiziwig1Api(CBaseHostClass):
         items = re.findall("(<tr>\n<td class='icon'.*?</tr>)", data, re.S)
 
         for item in items:
-            urls=[]
+            urls = []
             n_link = 0
             anchors = re.findall("href=['\"](.*?)['\"]", item, re.S)
             if anchors:
@@ -66,7 +66,7 @@ class Wiziwig1Api(CBaseHostClass):
                 if title:
                     title = ph.clean_html(title[0])
 
-                    cat= re.findall("<td class='category'>(.*?)</td>", item)
+                    cat = re.findall("<td class='category'>(.*?)</td>", item)
                     if cat:
                         cat = ph.clean_html(cat[0])
                         title = cat + ' - ' + title
@@ -105,13 +105,13 @@ class Wiziwig1Api(CBaseHostClass):
                 name = u["name"] + " - " + self.up.getDomain(url, onlyDomain=True)
                 if self.up.checkHostSupport(url): 
                     if len(name) > 18:
-                        name = name[:18]+ "..."
+                        name = name[:18] + "..."
                     uuu = self.up.getVideoLinkExt(url)
                     printDBG("getVideoLinkExt %s " % str(uuu))
                     urlsTab2 = [] 
                     for u2 in uuu:
                         printDBG(str(u2))
-                        u2['name']= name + ' '+ u2.get('name', '')
+                        u2['name'] = name + ' ' + u2.get('name', '')
                         urlsTab2.append(u2)
                         
                     urlsTab.extend(urlsTab2)

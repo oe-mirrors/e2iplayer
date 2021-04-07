@@ -105,11 +105,11 @@ class Body():
 		tempText = '<body bgcolor=\"#666666\" text=\"#FFFFFF\">\n'
 		tempText += IncludeMENU(MenuStatusMSG)
 		tempText += '<div class="main">\n'
-		if htmlError ==  'deleteLogOK':
+		if htmlError == 'deleteLogOK':
 			tempText += '<p align="center"><b><font color="#ccE4C4">%s</font></b></p>' % _('Debug file has been deleted')
-		elif htmlError ==  'deleteLogError':
+		elif htmlError == 'deleteLogError':
 			tempText += '<p align="center"><b><font color="#FFE4C4">%s</font></b></p>' % _('Error during deletion of the debug file.')
-		elif htmlError ==  'deleteLogNO':
+		elif htmlError == 'deleteLogNO':
 			tempText += '<p align="center"><b><font color="#ccE4C4">%s</font></b></p>' % _('Debug file does not exist - nothing to delete')
 		elif getDebugMode() not in ['console', 'debugfile']:
 			tempText += '<p align="center"><b><font color="#FFE4C4">%s</font></b></p>' % _('Debug option is disabled - nothing to display')
@@ -131,7 +131,7 @@ class Body():
 			tempText += '<p><b><font color="#FFE4C4">%s</font></b></p>' % LogDescr
 			tempText += '<table border="1: style="width:520px; table-layout: fixed"><td><tt><p><font size="2">'
 			tempText += settings.tempLogsHTML + '</font></p></tt></td></table>' #<<< data from thread
-			if  settings.tempLogsHTML != '' and not isThreadRunning('buildtempLogsHTML'):
+			if settings.tempLogsHTML != '' and not isThreadRunning('buildtempLogsHTML'):
 				settings.tempLogsHTML = ''
 			tempText += formSUBMITvalue([('cmd', 'downloadLog')], _("Download log file"))
 		tempText += '</div></body>\n'
@@ -170,13 +170,13 @@ class Body():
 					#print ConfName, '=' , CFGtype
 					if CFGtype in ['ConfigYesNo', 'ConfigOnOff', 'ConfigEnableDisable', 'ConfigBoolean']:
 						if int(confKey[1].getValue()) == 0:
-							CFGElements =  '<input type="radio" name="cmd" value="ON:%s">%s</input>' % (ConfName, _('Yes'))
+							CFGElements = '<input type="radio" name="cmd" value="ON:%s">%s</input>' % (ConfName, _('Yes'))
 							CFGElements += '<input type="radio" name="cmd" value="OFF:%s" checked="checked">%s</input>' % (ConfName, _('No'))
 						else:
-							CFGElements =  '<input type="radio" name="cmd" value="ON:%s" checked="checked">%s</input>' % (ConfName, _('Yes'))
+							CFGElements = '<input type="radio" name="cmd" value="ON:%s" checked="checked">%s</input>' % (ConfName, _('Yes'))
 							CFGElements += '<input type="radio" name="cmd" value="OFF:%s">%s</input>' % (ConfName, _('No'))
 					elif CFGtype in ['ConfigInteger']:
-						CFGElements = '<input type="number" name="%s" value="%d" />' %('INT:' + ConfName, int(confKey[1].getValue()))
+						CFGElements = '<input type="number" name="%s" value="%d" />' % ('INT:' + ConfName, int(confKey[1].getValue()))
 					else:
 						try:
 							CFGElements = confKey[1].getHTML('CFG:' + ConfName)
@@ -349,7 +349,7 @@ class Body():
 				tempText += tableHorizontalRedLine(colspan=3)
 				tempText += '<tr><td rowspan="4" align="center">%s</td><td colspan="2"><b>%s</b></td></tr>\n' % (icon, fileName)
 				tempText += '<tr><td><div style="text-indent: 20px">%s</div></td></tr>\n' % item.url
-				tempText += '<tr><td>%s</td><td align="right">%s</td></tr>\n' %(info, status)
+				tempText += '<tr><td>%s</td><td align="right">%s</td></tr>\n' % (info, status)
 				tempText += '<tr><td colspan="3" align="right">%s</td></tr>\n' % (buttons)
 			tempText += tableHorizontalRedLine(colspan=3)
 			tempText += '</tbody></table>\n'
@@ -381,7 +381,7 @@ class Body():
 	def buildItemsListTable(self, item, index, allowedCategories=[], destinationURL=None):
 		iIndex = index
 		iName = removeSpecialChars(item.name)
-		iDescr= removeSpecialChars(item.description)
+		iDescr = removeSpecialChars(item.description)
 		iType = item.type
 		if len(allowedCategories) > 0 and iType not in allowedCategories:
 			return ''
@@ -414,11 +414,11 @@ class Body():
 		return txt
 	########################################################
 	def buildUrlsTable(self, item, index):
-		iName= removeSpecialChars(item.name)
-		iUrl= item.url #.replace("ext://url/","") #to chyba sss zrobil do wymuszenia extplayera przyklad pierwszatv
-		iurlNeedsResolve= int(item.urlNeedsResolve)
+		iName = removeSpecialChars(item.name)
+		iUrl = item.url #.replace("ext://url/","") #to chyba sss zrobil do wymuszenia extplayera przyklad pierwszatv
+		iurlNeedsResolve = int(item.urlNeedsResolve)
 		txt = tableHorizontalRedLine(colspan=3)
-		if iUrl	in ['', 'fake', 'fakeUrl']:
+		if iUrl in ['', 'fake', 'fakeUrl']:
 			txt += '<td colspan="2" align="center">%s</td></tr>' % (iName)
 		else:
 			if int(item.urlNeedsResolve) == 1:
@@ -434,7 +434,7 @@ class Body():
 		tempText += IncludeMENU(MenuStatusMSG, ShowCancelButton)
 		tempText += '<div class="main">\n'
 		#Status table
-		if not isNewHostListShown() and not isThreadRunning('doUseHostAction') and 'Name' in  list(settings.activeHost.keys()):
+		if not isNewHostListShown() and not isThreadRunning('doUseHostAction') and 'Name' in list(settings.activeHost.keys()):
 			tempText += '<table border="0" cellspacing="5px"><tbody>\n'
 			tempText += '<tr>'
 			tempText += '<td align="right"><font color="#f0f0f0">%s</font></td><td><b><font color="#FFE4C4">%s</font></b></td>' % (_('host:'), settings.activeHost['Name'])
@@ -453,7 +453,7 @@ class Body():
 			else:
 				tempText += '<table border="0" width="800px" cellspacing="5px"><tbody>\n'
 			#if type(settings.retObj.value) is list:
-			index=0
+			index = 0
 			try:
 				if len(settings.retObj.value) > 0:
 					for item in settings.retObj.value:
@@ -495,7 +495,7 @@ class Body():
 			for key in list(settings.GlobalSearchResults.keys()):
 				_tempHeader = '<tr><td colspan="2" align="left" style="color: #00A9d1;background: none;border: none;font-size:24px;">%s</td></tr>' % key
 				_tempBody = ''
-	      			index=0
+	      			index = 0
 				try:
 		      			for item in settings.GlobalSearchResults.get(key, None)[1]:
 						Totest = removeSpecialChars(item.name + item.description).lower()

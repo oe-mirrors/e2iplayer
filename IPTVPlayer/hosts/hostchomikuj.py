@@ -5,7 +5,7 @@
 ###################################################
 from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _
 from Plugins.Extensions.IPTVPlayer.components.ihost import CHostBase, CBaseHostClass
-from Plugins.Extensions.IPTVPlayer.tools.iptvtools import  printDBG, printExc, formatBytes, byteify
+from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, formatBytes, byteify
 from Plugins.Extensions.IPTVPlayer.libs.youtube_dl.utils import clean_html
 from Plugins.Extensions.IPTVPlayer.tools.iptvtypes import strwithmeta
 ###################################################
@@ -60,15 +60,15 @@ class Chomikuj(CBaseHostClass):
         CBaseHostClass.__init__(self, {'history':'Chomikuj'})
         self.DEFAULT_ICON_URL = 'https://superrepo.org/static/images/icons/original/plugin.audio.polish.CAP.png.pagespeed.ce.m3al56qs_A.png'
         self.MAINURL = 'http://mobile.chomikuj.pl/'
-        self.LIST_FOLDER_URL  = 'api/v3/folders?Parent=%s&Page=%s'
-        self.LIST_FOREIGN_FOLDER_URL  = 'api/v3/folders?AccountId=%s&Parent=%s&page=%s'
+        self.LIST_FOLDER_URL = 'api/v3/folders?Parent=%s&Page=%s'
+        self.LIST_FOREIGN_FOLDER_URL = 'api/v3/folders?AccountId=%s&Parent=%s&page=%s'
         
-        self.FILE_REQUEST_URL   = 'api/v3/files/download?fileId='
-        self.SEARCH_URL         = 'api/v3/files/search?Query=%s&PageNumber=%s&SizeMin=0&MediaType=%s'
+        self.FILE_REQUEST_URL = 'api/v3/files/download?fileId='
+        self.SEARCH_URL = 'api/v3/files/search?Query=%s&PageNumber=%s&SizeMin=0&MediaType=%s'
         self.SEARCH_ACCOUNT_URL = 'api/v3/account/search?PageNumber=%s&Query=%s'
-        self.HTTP_JSON_HEADER   = {'User-Agent': "android/2.1.01 (a675e974-0def-4cbc-a955-ac6c6f99707b; unknown androVM for VirtualBox ('Tablet' version with phone caps))", 
+        self.HTTP_JSON_HEADER = {'User-Agent': "android/2.1.01 (a675e974-0def-4cbc-a955-ac6c6f99707b; unknown androVM for VirtualBox ('Tablet' version with phone caps))", 
                                    'Content-Type': "application/json; charset=utf-8",
-                                   'Accept-Encoding':  'gzip'
+                                   'Accept-Encoding': 'gzip'
                                   }
         self.loginData = {}
             
@@ -104,8 +104,8 @@ class Chomikuj(CBaseHostClass):
         else:
             data = ''
         if addToken:
-            token    = "wzrwYua$.DSe8suk!`'2"
-            token    = md5(url + data + token).hexdigest()
+            token = "wzrwYua$.DSe8suk!`'2"
+            token = md5(url + data + token).hexdigest()
             addParams['header']['Token'] = token
         if 'ApiKey' in self.loginData: 
             addParams['header']['Api-Key'] = self.loginData['ApiKey']            
@@ -127,19 +127,19 @@ class Chomikuj(CBaseHostClass):
     
     def listsMainMenu(self):
         printDBG("Chomikuj.listsMainMenu")
-        data    = self.loginData['AccountBalance']
-        quota   = formatBytes(1024 * (self._getJItemNum(data, 'QuotaAdditional', 0) + self._getJItemNum(data, 'QuotaLeft', 0)))
+        data = self.loginData['AccountBalance']
+        quota = formatBytes(1024 * (self._getJItemNum(data, 'QuotaAdditional', 0) + self._getJItemNum(data, 'QuotaLeft', 0)))
         account = self._getJItemStr(self.loginData, 'AccountName', '')
-        title   = 'Chomik "%s" (%s transferu)' % (account, quota)
-        self.addDir({'name':'category', 'title':title,                       'category':'account'})
-        self.addDir({'name':'category', 'title':'Wyszukaj',                  'category':'search', 'search_item':True})
-        self.addDir({'name':'category', 'title':'Historia wyszukiwania',     'category':'search_history'})
+        title = 'Chomik "%s" (%s transferu)' % (account, quota)
+        self.addDir({'name':'category', 'title':title, 'category':'account'})
+        self.addDir({'name':'category', 'title':'Wyszukaj', 'category':'search', 'search_item':True})
+        self.addDir({'name':'category', 'title':'Historia wyszukiwania', 'category':'search_history'})
         
     def requestLoginData(self):
-        url      = "api/v3/account/login"
-        login    = config.plugins.iptvplayer.Chomikuj_login.value
+        url = "api/v3/account/login"
+        login = config.plugins.iptvplayer.Chomikuj_login.value
         password = config.plugins.iptvplayer.Chomikuj_password.value
-        loginData='{"AccountName":"%s","RefreshToken":"","Password":"%s"}' % (login, password)
+        loginData = '{"AccountName":"%s","RefreshToken":"","Password":"%s"}' % (login, password)
         
         sts = False
         if '' == login or '' == password:
@@ -163,7 +163,7 @@ class Chomikuj(CBaseHostClass):
 
     def listSearchResult(self, cItem, searchPattern, searchType):
         printDBG("Chomikuj.listSearchResult cItem[%s], searchPattern[%s], searchType[%s]" % (cItem, searchPattern, searchType))
-        page   = cItem.get('page', 1)
+        page = cItem.get('page', 1)
         
         if 'accounts' == searchType:
             url = self.SEARCH_ACCOUNT_URL % (page, urllib.parse.quote_plus(searchPattern))
@@ -195,14 +195,14 @@ class Chomikuj(CBaseHostClass):
     def handleProfile(self, cItem):
         printDBG("Chomikuj.handleProfile cItem[%s]" % cItem)
         parent = cItem.get('parent', 0)
-        page   = cItem.get('page', 1)
+        page = cItem.get('page', 1)
         self.handleDataRequest(cItem, self.LIST_FOLDER_URL % (parent, page))
         
     def handleForeignFolder(self, cItem):
         printDBG("Chomikuj.handleForeignFolder cItem[%s]" % cItem)
-        owner  = cItem['owner']
+        owner = cItem['owner']
         parent = cItem['parent']
-        page   = cItem.get('page', 1)
+        page = cItem.get('page', 1)
         self.handleDataRequest(cItem, self.LIST_FOREIGN_FOLDER_URL % (owner, parent, page))
         
     def handleDataRequest(self, cItem, url):
@@ -234,7 +234,7 @@ class Chomikuj(CBaseHostClass):
                     size = formatBytes(1024 * self._getJItemNum(item, 'Size', 0))
                     desc = '%s, %s, %s' % (size, self._getJItemStr(item, 'MediaType', ''), self._getJItemStr(item, 'FileType', ''))
                     if item.get('IsFileFreeForUser', False):
-                        desc = 'Darmowy[/br]'+desc
+                        desc = 'Darmowy[/br]' + desc
                     params.update({'title': title,
                                    'file_id': self._getJItemNum(item, 'FileId', -1),
                                    'icon': self._getJItemStr(item, 'SmallThumbnailImg', ''),
@@ -279,7 +279,7 @@ class Chomikuj(CBaseHostClass):
         item = cItem.get('raw_item', {})
         cItem.pop('raw_item', None)
         
-        owner  = None
+        owner = None
         parent = None
         if 'FolderId' in item and 'Owner' in item and 'Id' in item['Owner'] and 'Name' in item['Owner']:
             owner = self._getJItemNum(item['Owner'], 'Id')
@@ -289,7 +289,7 @@ class Chomikuj(CBaseHostClass):
             self.addDir(params)
             
             params = dict(cItem)
-            params.update({'good_for_fav': True, 'category':'foreign_folder', 'title':'do folderu: ' +self._getJItemStr(item, 'FolderName'), 'parent':parent, 'owner':owner})
+            params.update({'good_for_fav': True, 'category':'foreign_folder', 'title':'do folderu: ' + self._getJItemStr(item, 'FolderName'), 'parent':parent, 'owner':owner})
             self.addDir(params)
         
         params = dict(cItem)
@@ -301,7 +301,7 @@ class Chomikuj(CBaseHostClass):
         
     def getLinksForItem(self, cItem):
         printDBG("Chomikuj.getLinksForItem [%s]" % cItem)
-        videoUrls =[]
+        videoUrls = []
         
         if -1 != cItem['file_id']:
             # free
@@ -330,10 +330,10 @@ class Chomikuj(CBaseHostClass):
                 directUrl = self._getJItemStr(data, 'FileUrl', '')
                 urlTab.append({'name':'direct', 'url':directUrl})
             elif fileId.meta.get('priv_demo', False):
-                url    = fileId.meta['priv_url']
-                owner  = fileId.meta['priv_owner']
+                url = fileId.meta['priv_url']
+                owner = fileId.meta['priv_owner']
                 parent = fileId.meta['priv_parent']
-                page   = fileId.meta['priv_page']
+                page = fileId.meta['priv_page']
                 
                 if parent != None:
                     url = self.LIST_FOLDER_URL % (parent, page)
@@ -381,7 +381,7 @@ class Chomikuj(CBaseHostClass):
     def handleService(self, index, refresh=0, searchPattern='', searchType=''):
         printDBG('Chomikuj.handleService start')
         CBaseHostClass.handleService(self, index, refresh, searchPattern, searchType)
-        name     = self.currItem.get("name", None)
+        name = self.currItem.get("name", None)
         category = self.currItem.get("category", '')
         printDBG("Chomikuj.handleService: ---------> name[%s], category[%s] " % (name, category))
         self.currList = []

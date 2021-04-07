@@ -295,12 +295,12 @@ class IPTVDMApi():
         printDBG("Downloading started downloadIdx[%s] File[%s] URL[%s]" % (item.downloadIdx, item.fileName, item.url))
       
         listUDIdx = self.findIdxInQueueUD(item.downloadIdx)
-        self.queueUD[listUDIdx].status      = DMHelper.STS.DOWNLOADING
-        self.queueUD[listUDIdx].fileName    = item.fileName
+        self.queueUD[listUDIdx].status = DMHelper.STS.DOWNLOADING
+        self.queueUD[listUDIdx].fileName = item.fileName
         
         url, downloaderParams = DMHelper.getDownloaderParamFromUrl(item.url)
         self.queueUD[listUDIdx].downloader = DownloaderCreator(url)
-        self.queueUD[listUDIdx].callback   = boundFunction(self.cmdFinished, item.downloadIdx)
+        self.queueUD[listUDIdx].callback = boundFunction(self.cmdFinished, item.downloadIdx)
         self.queueUD[listUDIdx].downloader.subscribeFor_Finish(self.queueUD[listUDIdx].callback)
         self.queueUD[listUDIdx].downloader.start(url, item.fileName, downloaderParams)
    
@@ -314,10 +314,10 @@ class IPTVDMApi():
             return
         
         self.updateDownloadedItemStatus(listUDIdx)
-        self.queueUD[listUDIdx].processed  = True
+        self.queueUD[listUDIdx].processed = True
         self.queueUD[listUDIdx].downloader.unsubscribeFor_Finish(self.queueUD[listUDIdx].callback)
         self.queueUD[listUDIdx].downloader = None
-        self.queueUD[listUDIdx].callback   = None
+        self.queueUD[listUDIdx].callback = None
         
         item = self.queueUD[listUDIdx]
         printDBG("Downloading finished idx[%s] File[%s] URL[%s]" % (downloadIdx, item.fileName, item.url))
@@ -384,8 +384,8 @@ class IPTVDMApi():
     def updateItemSTS(self, downloadItem):
         printDBG("updateItemSTS downloadIdx[%d]" % downloadItem.downloadIdx)
         downloadItem.downloader.updateStatistic()
-        downloadItem.downloadedSize  = downloadItem.downloader.getLocalFileSize()
-        downloadItem.fileSize        = downloadItem.downloader.getRemoteFileSize()
+        downloadItem.downloadedSize = downloadItem.downloader.getLocalFileSize()
+        downloadItem.fileSize = downloadItem.downloader.getRemoteFileSize()
         downloadItem.downloadedSpeed = downloadItem.downloader.getDownloadSpeed()
         
         if downloadItem.downloader.hasDurationInfo():

@@ -30,7 +30,7 @@ class WebCameraApi(CBaseHostClass):
 
     def __init__(self):
         CBaseHostClass.__init__(self)
-        self.MAIN_URL    = 'https://www.webcamera.pl/'
+        self.MAIN_URL = 'https://www.webcamera.pl/'
         self.DEFAULT_ICON_URL = 'http://static.webcamera.pl/webcamera/img/loader-min.png'
         self.HEADER = {'User-Agent': 'Mozilla/5.0 (X11; Ubuntu; Linux i686; rv:21.0) Gecko/20100101 Firefox/21.0', 'Referer':self.getMainUrl(), 'Accept': 'text/html'}
         self.AJAX_HEADER = dict(self.HEADER)
@@ -75,14 +75,14 @@ class WebCameraApi(CBaseHostClass):
                 data = self.cm.ph.getDataBeetwenMarkers(data, '<nav', '</nav>', False)[1]
                 data = self.cm.ph.getAllItemsBeetwenMarkers(data, '<a', '</a>')
                 for item in data:
-                    catUrl   = self.getFullUrl(self.cm.ph.getSearchGroups(item, """href=['"]([^'^"]+?)['"]""")[0])
+                    catUrl = self.getFullUrl(self.cm.ph.getSearchGroups(item, """href=['"]([^'^"]+?)['"]""")[0])
                     if catUrl == '' or '#' in catUrl:
                         continue
-                    info = ' ['+catUrl.split(',')[-1]+']'
+                    info = ' [' + catUrl.split(',')[-1] + ']'
                     catTitle = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(item, '<a', '</a>')[1])
                     if 'Wszystkie' in catTitle:
                         catTitle = catTitle + info
-                    catIcon  = self.getFullUrl('images/logo_mobile.png')
+                    catIcon = self.getFullUrl('images/logo_mobile.png')
 
                     subCats = []
                     item = self.cm.ph.getAllItemsBeetwenMarkers(item.split('<ul', 1)[-1], '<li', '</li>')
@@ -141,9 +141,9 @@ class WebCameraApi(CBaseHostClass):
                         if limiter in item: 
                             title = self.cleanHtmlStr(item.split(limiter)[0])
                             desc = self.cleanHtmlStr(item.split(limiter)[-1])
-                        icon  = self.cm.ph.getSearchGroups(item, """data\-src=['"]([^'^"]+?)['"]""")[0]
+                        icon = self.cm.ph.getSearchGroups(item, """data\-src=['"]([^'^"]+?)['"]""")[0]
                         if icon == '':
-                            icon  = self.cm.ph.getSearchGroups(item, """src=['"]([^'^"]+?\.jpg[^'^"]*?)['"]""")[0]
+                            icon = self.cm.ph.getSearchGroups(item, """src=['"]([^'^"]+?\.jpg[^'^"]*?)['"]""")[0]
                         if 'instagramie' in title:
                             continue
                         params = dict(cItem)
@@ -174,7 +174,7 @@ class WebCameraApi(CBaseHostClass):
 
                     if sts and data.startswith('{') and '"last":true' not in data: 
                         params = dict(cItem)
-                        params.update({'title':_('Next page'), 'url':url, 'page':page+1})
+                        params.update({'title':_('Next page'), 'url':url, 'page':page + 1})
                         self.addDir(params)
         except Exception:
             printExc()
@@ -205,8 +205,8 @@ class WebCameraApi(CBaseHostClass):
             cTree = cItem['c_tree']
             for item in cTree['list']:
                 title = self.cleanHtmlStr(item['dat'])
-                url   = self.getFullUrl(self.cm.ph.getSearchGroups(item['dat'], '''href=['"]([^'^"]+?)['"]''')[0])
-                icon  = self.getFullIconUrl(self.cm.ph.getSearchGroups(item['dat'], '''src=['"]([^'^"]+?\.jpe?g(:?\?[^'^"]+?)?)['"]''')[0])
+                url = self.getFullUrl(self.cm.ph.getSearchGroups(item['dat'], '''href=['"]([^'^"]+?)['"]''')[0])
+                icon = self.getFullIconUrl(self.cm.ph.getSearchGroups(item['dat'], '''src=['"]([^'^"]+?\.jpe?g(:?\?[^'^"]+?)?)['"]''')[0])
                 if '/mapa' in url:
                     break
                 elif 'list' not in item:

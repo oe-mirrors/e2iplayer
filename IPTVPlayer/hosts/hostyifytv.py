@@ -31,9 +31,9 @@ from copy import deepcopy
 ###################################################
 # Config options for HOST
 ###################################################
-config.plugins.iptvplayer.yify_proxy = ConfigSelection(default="None", choices=[("None",     _("None")),
-                                                                                    ("proxy_1",  _("Alternative proxy server (1)")),
-                                                                                    ("proxy_2",  _("Alternative proxy server (2)"))])
+config.plugins.iptvplayer.yify_proxy = ConfigSelection(default="None", choices=[("None", _("None")),
+                                                                                    ("proxy_1", _("Alternative proxy server (1)")),
+                                                                                    ("proxy_2", _("Alternative proxy server (2)"))])
 
 def GetConfigList():
     optionList = []
@@ -60,22 +60,22 @@ class YifyTV(CBaseHostClass):
         self.AJAX_HEADER.update({'X-Requested-With': 'XMLHttpRequest'})
         
         
-        self.MAIN_URL    = 'https://ymovies.tv/'
-        self.SRCH_URL    = self.getFullUrl('?s=')
+        self.MAIN_URL = 'https://ymovies.tv/'
+        self.SRCH_URL = self.getFullUrl('?s=')
         
-        self.MAIN_CAT_TAB = [{'category':'list_items',            'title': _('Releases'),          'url':self.getFullUrl('files/releases/')},
-                             {'category':'list_popular',          'title': _('Popular'),           'url':self.getFullUrl('wp-admin/admin-ajax.php?action=noprivate_movies_loop&asec=get_pop&needcap=1')},
-                             {'category':'list_items',            'title': _('Top +250'),          'url':self.getFullUrl('files/movies/?meta_key=imdbRating&orderby=meta_value&order=desc')},
-                             {'category':'list_genres_filter',    'title': _('Genres'),            'url':self.getFullUrl('files/movies/')},
-                             {'category':'list_languages_filter', 'title': _('Languages'),         'url':self.getFullUrl('languages/')},
-                             {'category':'list_countries_filter', 'title': _('Countries'),         'url':self.getFullUrl('countries/')},
-                             {'category': 'search',                'title': _('Search'), 'search_item': True, },
-                             {'category': 'search_history',        'title': _('Search history'),}]
+        self.MAIN_CAT_TAB = [{'category':'list_items', 'title': _('Releases'), 'url':self.getFullUrl('files/releases/')},
+                             {'category':'list_popular', 'title': _('Popular'), 'url':self.getFullUrl('wp-admin/admin-ajax.php?action=noprivate_movies_loop&asec=get_pop&needcap=1')},
+                             {'category':'list_items', 'title': _('Top +250'), 'url':self.getFullUrl('files/movies/?meta_key=imdbRating&orderby=meta_value&order=desc')},
+                             {'category':'list_genres_filter', 'title': _('Genres'), 'url':self.getFullUrl('files/movies/')},
+                             {'category':'list_languages_filter', 'title': _('Languages'), 'url':self.getFullUrl('languages/')},
+                             {'category':'list_countries_filter', 'title': _('Countries'), 'url':self.getFullUrl('countries/')},
+                             {'category': 'search', 'title': _('Search'), 'search_item': True, },
+                             {'category': 'search_history', 'title': _('Search history'),}]
                         
-        self.POPULAR_TAB = [{'category':'list_items2', 'title': _('All'),        'url':self.getFullUrl('wp-admin/admin-ajax.php?action=noprivate_movies_loop&asec=get_pop&needcap=1')},
-                            {'category':'list_items2', 'title': _('Comedies'),   'url':self.getFullUrl('wp-admin/admin-ajax.php?action=noprivate_movies_loop&asec=get_pop&genre=comedy')},
+        self.POPULAR_TAB = [{'category':'list_items2', 'title': _('All'), 'url':self.getFullUrl('wp-admin/admin-ajax.php?action=noprivate_movies_loop&asec=get_pop&needcap=1')},
+                            {'category':'list_items2', 'title': _('Comedies'), 'url':self.getFullUrl('wp-admin/admin-ajax.php?action=noprivate_movies_loop&asec=get_pop&genre=comedy')},
                             {'category':'list_items2', 'title': _('Animations'), 'url':self.getFullUrl('wp-admin/admin-ajax.php?action=noprivate_movies_loop&asec=get_pop&genre=animation')},
-                            {'category':'list_items2', 'title': _('Dramas'),     'url':self.getFullUrl('wp-admin/admin-ajax.php?action=noprivate_movies_loop&asec=get_pop&genre=drama')}]
+                            {'category':'list_items2', 'title': _('Dramas'), 'url':self.getFullUrl('wp-admin/admin-ajax.php?action=noprivate_movies_loop&asec=get_pop&genre=drama')}]
         
         self.defaultParams = {'header':self.HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
         
@@ -213,7 +213,7 @@ class YifyTV(CBaseHostClass):
     def listItems(self, cItem):
         printDBG("YifyTV.listItems")
         
-        tmp     = cItem['url'].split('?')
+        tmp = cItem['url'].split('?')
         baseUrl = tmp[0]
         getArgs = []
         if 2 == len(tmp):
@@ -268,12 +268,12 @@ class YifyTV(CBaseHostClass):
             data = byteify(json.loads(data), noneReplacement='', baseTypesAsString=True)
             #printDBG(data)
             for item in data['posts']:
-                item['url']   = self.getFullUrl(item['link'])
+                item['url'] = self.getFullUrl(item['link'])
                 item['title'] = self.cleanHtmlStr(item['title'])
                 desc = ' | '.join([item['year'], item['runtime'], item['genre']])
                 desc += '[/br]' + self.cleanHtmlStr(item['post_content'])
-                item['desc']  = desc
-                item['icon']  = self.getFullUrl(item['image'])
+                item['desc'] = desc
+                item['icon'] = self.getFullUrl(item['image'])
                 self.addVideo(item)
         except Exception:
             printExc()
@@ -281,7 +281,7 @@ class YifyTV(CBaseHostClass):
         if nextPage:
             page = cItem.get('page', 1)
             params = dict(cItem)
-            params.update({'title':_('Next page'), 'page':page+1})
+            params.update({'title':_('Next page'), 'page':page + 1})
             self.addDir(params)
         
     def listSearchResult(self, cItem, searchPattern, searchType):
@@ -310,7 +310,7 @@ class YifyTV(CBaseHostClass):
         printDBG("+++++++++++++++++++++++++++++++++++++++++++++++++++++++")
         
         trailer = self.cm.ph.getDataBeetwenReMarkers(data, re.compile('''<a[^>]+?class=['"]video'''), re.compile('''</a>'''))[1]
-        trailerUrl  = self.cm.ph.getSearchGroups(trailer, '''href=['"](https?://[^'^"]+?)['"]''')[0]
+        trailerUrl = self.cm.ph.getSearchGroups(trailer, '''href=['"](https?://[^'^"]+?)['"]''')[0]
         
         imdbid = self.cm.ph.getSearchGroups(data, '''var\s+imdbid\s*=\s*['"]([^'^"]+?)['"]''')[0]
         
@@ -341,9 +341,9 @@ class YifyTV(CBaseHostClass):
                     break
         
         if subLangs != '':
-            subID    = self.cm.ph.getSearchGroups(data, '&id=(tt[^&]+?)&')[0]
+            subID = self.cm.ph.getSearchGroups(data, '&id=(tt[^&]+?)&')[0]
             if subID == '':
-                subID    = self.cm.ph.getSearchGroups(data, '&pic=(tt[^&]+?)&')[0]
+                subID = self.cm.ph.getSearchGroups(data, '&pic=(tt[^&]+?)&')[0]
             subLangs = subLangs.split(',')
             for lang in subLangs:
                 if subID != '':
@@ -353,7 +353,7 @@ class YifyTV(CBaseHostClass):
         idx = 1
         for item in data:
             tmp = item.split('=')
-            if len(tmp)!= 2:
+            if len(tmp) != 2:
                 continue
             if tmp[1].endswith('enc'):
                 url = strwithmeta(tmp[1], {'Referer': cItem['url'], 'sou':tmp[0], 'imdbid':imdbid, 'external_sub_tracks':sub_tracks})
@@ -387,7 +387,7 @@ class YifyTV(CBaseHostClass):
         urlTab = []
         
         baseUrl = strwithmeta(baseUrl)
-        imdbid  = baseUrl.meta.get('imdbid', '')
+        imdbid = baseUrl.meta.get('imdbid', '')
         sub_tracks = baseUrl.meta.get('external_sub_tracks', [])
         
         header = dict(self.AJAX_HEADER)
@@ -431,7 +431,7 @@ class YifyTV(CBaseHostClass):
                                     printDBG(jscode)
                                     printDBG("+++++++++++++++++++++++++++++++++++++++++++++++++++++++")
                                     ret = js_execute(jscode)
-                                    if not ret['sts'] or  0 != ret['code']:
+                                    if not ret['sts'] or 0 != ret['code']:
                                         ret = js_execute(jscode.replace('eval(', 'print('))
                                     if ret['sts'] and 0 == ret['code']:
                                         decoded = ret['data'].strip()
@@ -439,7 +439,7 @@ class YifyTV(CBaseHostClass):
                                         data = decoded
                                         break
                                 if 'jscode' in data:
-                                    data = data[data.find("["):data.rfind("]")+1]
+                                    data = data[data.find("["):data.rfind("]") + 1]
                                     data = byteify(json.loads('"%s"' % data))
                                     continue
                             except Exception:
@@ -460,8 +460,8 @@ class YifyTV(CBaseHostClass):
                                 except Exception:
                                     printExc()
                             
-                            g3 = self.cm.ph.getSearchGroups(data+'&', '''[&\?]g3=([^&]+?)&''')[0]
-                            emb = self.cm.ph.getSearchGroups(data+'&', '''[&\?]emb=([^&^\*]+?)[&\*]''')[0]
+                            g3 = self.cm.ph.getSearchGroups(data + '&', '''[&\?]g3=([^&]+?)&''')[0]
+                            emb = self.cm.ph.getSearchGroups(data + '&', '''[&\?]emb=([^&^\*]+?)[&\*]''')[0]
                             if emb != '':
                                 data = urllib.parse.unquote(emb)
                             if g3 != '':
@@ -556,14 +556,14 @@ class YifyTV(CBaseHostClass):
         printDBG("MoviesHDCO.getArticleContent [%s]" % cItem)
         
         title = cItem['title']
-        icon  = cItem['image']
-        desc  = cItem['post_content']
+        icon = cItem['image']
+        desc = cItem['post_content']
         otherInfo = {}
-        otherInfo['year']     = cItem['year']
+        otherInfo['year'] = cItem['year']
         otherInfo['duration'] = cItem['runtime']
-        otherInfo['genre']    = cItem['genre']
+        otherInfo['genre'] = cItem['genre']
         otherInfo['director'] = cItem['director']
-        otherInfo['actors']   = cItem['actors']
+        otherInfo['actors'] = cItem['actors']
         return [{'title':self.cleanHtmlStr(title), 'text': self.cleanHtmlStr(desc), 'images':[{'title':'', 'url':self.getFullUrl(icon)}], 'other_info':otherInfo}]
 
     def handleService(self, index, refresh=0, searchPattern='', searchType=''):
@@ -571,7 +571,7 @@ class YifyTV(CBaseHostClass):
         
         CBaseHostClass.handleService(self, index, refresh, searchPattern, searchType)
 
-        name     = self.currItem.get("name", '')
+        name = self.currItem.get("name", '')
         category = self.currItem.get("category", '')
         printDBG("handleService: |||||||||||||||||||||||||||||||||||| name[%s], category[%s] " % (name, category))
         self.currList = []

@@ -21,11 +21,11 @@ def decrypt_file(file, key):
         while True:
             for enc in [True, False]:
                 if enc:
-                    chunk = data[offset:offset+len(key)]
+                    chunk = data[offset:offset + len(key)]
                     offset += len(key)
                 else:
-                    chunk = data[offset:offset+len(key)*1000]
-                    offset += len(key)*1000
+                    chunk = data[offset:offset + len(key) * 1000]
+                    offset += len(key) * 1000
 
                 if len(chunk) == len(key):
                     chunk = cipher.decrypt(chunk)

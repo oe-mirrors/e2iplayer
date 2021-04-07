@@ -32,7 +32,7 @@ from Screens.MessageBox import MessageBox
 # Config options for HOST
 ###################################################
 
-config.plugins.iptvplayer.joemonsterorg_login    = ConfigText(default="", fixed_size=False)
+config.plugins.iptvplayer.joemonsterorg_login = ConfigText(default="", fixed_size=False)
 config.plugins.iptvplayer.joemonsterorg_password = ConfigText(default="", fixed_size=False)
 
 def GetConfigList():
@@ -57,7 +57,7 @@ class JoeMonster(CBaseHostClass):
         self.MAIN_URL = 'https://joemonster.org/'
         self.defaultParams = {'with_metadata':True, 'header':self.HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
 
-        self.login    = ''
+        self.login = ''
         self.password = ''
 
     def getPage(self, url, addParams={}, post_data=None):
@@ -67,10 +67,10 @@ class JoeMonster(CBaseHostClass):
         return self.cm.getPage(url, addParams, post_data)
         
     def listMainMenu(self, cItem):
-        MAIN_CAT_TAB = [{'category':'list_items',       'title': 'Monster TV - Najnowsze filmy',   'url':self.getFullUrl('/filmy')},
-                        {'category':'list_items',       'title': 'Monster TV - Najlepsze filmy',   'url':self.getFullUrl('/filmy/ulubione')},
-                        {'category':'list_poczekalnia', 'title': 'Monster TV - Poczekalnia',       'url':self.getFullUrl('/filmy/poczekalnia')},
-                        {'category':'list_poczekalnia', 'title': 'Monster TV - Kolejka',           'url':self.getFullUrl('/filmy/kolejka')},]
+        MAIN_CAT_TAB = [{'category':'list_items', 'title': 'Monster TV - Najnowsze filmy', 'url':self.getFullUrl('/filmy')},
+                        {'category':'list_items', 'title': 'Monster TV - Najlepsze filmy', 'url':self.getFullUrl('/filmy/ulubione')},
+                        {'category':'list_poczekalnia', 'title': 'Monster TV - Poczekalnia', 'url':self.getFullUrl('/filmy/poczekalnia')},
+                        {'category':'list_poczekalnia', 'title': 'Monster TV - Kolejka', 'url':self.getFullUrl('/filmy/kolejka')},]
         self.listsTab(MAIN_CAT_TAB, cItem)
     
     def listItems(self, cItem):
@@ -91,10 +91,10 @@ class JoeMonster(CBaseHostClass):
         for item in data:
             url = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''\shref=['"]([^"^']+?)['"]''')[0])
             title = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(item, ('<div', '>', 'mtv-desc'), ('</a', '>'))[1])
-            time  = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(item, ('<time', '>', 'video-time'), ('</time', '>'))[1])
+            time = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(item, ('<time', '>', 'video-time'), ('</time', '>'))[1])
             if len(time) > 0:
                 time = '[%s] ' % time
-            desc  = time + self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(item, ('<div', '>', 'mtv-desc-text'), ('</div', '>'))[1])
+            desc = time + self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(item, ('<div', '>', 'mtv-desc-text'), ('</div', '>'))[1])
             if not self.cm.isValidUrl(url):
                 continue
             icon = self.getFullIconUrl(self.cm.ph.getSearchGroups(item, '''\ssrc=['"]([^"^']+?)['"]''')[0])
@@ -104,7 +104,7 @@ class JoeMonster(CBaseHostClass):
 
         if nextPage != '':
             params = dict(cItem)
-            params.update({'title':_("Next page"), 'url':self.getFullUrl(nextPage), 'page':page+1})
+            params.update({'title':_("Next page"), 'url':self.getFullUrl(nextPage), 'page':page + 1})
             self.addDir(params)
         
     def listPoczekalnia(self, cItem):
@@ -124,10 +124,10 @@ class JoeMonster(CBaseHostClass):
         data = self.cm.ph.getAllItemsBeetwenNodes(data, ('<div', '>', 'mtvPoczekalniaFilm'), ('<!--', '>'))
         for item in data:
             url = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''\shref=['"]([^"^']+?)['"]''')[0])
-            title  = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(item, ('<h2', '>'), ('</h2', '>'))[1])
+            title = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(item, ('<h2', '>'), ('</h2', '>'))[1])
             if title == "":
-                title  = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(item, ('<a', '>', 'movie-title-link'), ('</a', '>'))[1])
-            time  = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(item, ('<time', '>', 'video-time'), ('</time', '>'))[1])
+                title = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(item, ('<a', '>', 'movie-title-link'), ('</a', '>'))[1])
+            time = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(item, ('<time', '>', 'video-time'), ('</time', '>'))[1])
             if len(time) > 0:
                 time = '[%s] ' % time
             if not self.cm.isValidUrl(url):
@@ -139,7 +139,7 @@ class JoeMonster(CBaseHostClass):
 
         if nextPage != '':
             params = dict(cItem)
-            params.update({'title':_("Next page"), 'url':self.getFullUrl(nextPage), 'page':page+1})
+            params.update({'title':_("Next page"), 'url':self.getFullUrl(nextPage), 'page':page + 1})
             self.addDir(params)
     
     def getLinksForVideo(self, cItem):
@@ -156,8 +156,8 @@ class JoeMonster(CBaseHostClass):
         if len(tmp):
             for item in tmp:
                 type = self.cm.ph.getSearchGroups(item, '''type=['"]([^'^"]+?)['"]''')[0].lower()
-                url  = self.cm.ph.getSearchGroups(item, '''src=['"]([^'^"]+?)['"]''')[0]
-                name = '%s. %s' % (str(len(urlTab)+1), type)
+                url = self.cm.ph.getSearchGroups(item, '''src=['"]([^'^"]+?)['"]''')[0]
+                name = '%s. %s' % (str(len(urlTab) + 1), type)
                 
                 if 'video/mp4' == type: 
                     urlTab.append({'name':name, 'url':self.getFullUrl(url), 'need_resolve':0})
@@ -167,7 +167,7 @@ class JoeMonster(CBaseHostClass):
         if 0 == len(urlTab):
             tmp = self.cm.ph.getAllItemsBeetwenNodes(data, ('<iframe', '>'), ('</iframe', '>'))
             for item in tmp:
-                url  = self.cm.ph.getSearchGroups(item, '''src=['"]([^'^"]+?)['"]''')[0]
+                url = self.cm.ph.getSearchGroups(item, '''src=['"]([^'^"]+?)['"]''')[0]
                 if 'joe.pl' in url:
                     url = urllib.parse.unquote(self.cm.ph.getSearchGroups(url + '&', '[\?&]v=([^&]+?)&')[0])
                 urlTab.append({'name':'name', 'url':self.getFullUrl(url), 'need_resolve':1})
@@ -186,7 +186,7 @@ class JoeMonster(CBaseHostClass):
         connFailed = _('Connection to server failed!')
 
         rm(self.COOKIE_FILE)
-        sts, data = self.cm.getPage(self.MAIN_URL+'user.php', self.defaultParams)
+        sts, data = self.cm.getPage(self.MAIN_URL + 'user.php', self.defaultParams)
         if not sts:
             return False, connFailed
 
@@ -212,14 +212,14 @@ class JoeMonster(CBaseHostClass):
             if not loggedIn:
                 self.sessionEx.open(MessageBox, 'Problem z zalogowaniem użytkownika "%s".' % config.plugins.iptvplayer.joemonsterorg_login.value, type=MessageBox.TYPE_INFO, timeout=10)
             else:
-                self.login    = config.plugins.iptvplayer.joemonsterorg_login.value
+                self.login = config.plugins.iptvplayer.joemonsterorg_login.value
                 self.password = config.plugins.iptvplayer.joemonsterorg_password.value
         
         CBaseHostClass.handleService(self, index, refresh, searchPattern, searchType)
 
-        name     = self.currItem.get("name", '')
+        name = self.currItem.get("name", '')
         category = self.currItem.get("category", '')
-        mode     = self.currItem.get("mode", '')
+        mode = self.currItem.get("mode", '')
         
         printDBG("handleService: >> name[%s], category[%s] " % (name, category))
         self.currList = []

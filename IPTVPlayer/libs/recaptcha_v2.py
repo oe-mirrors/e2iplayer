@@ -6,7 +6,7 @@
 from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _, SetIPTVPlayerLastHostError
 from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, GetTmpDir, GetCookieDir
 from Plugins.Extensions.IPTVPlayer.libs.pCommon import common
-from Plugins.Extensions.IPTVPlayer.components.asynccall import  MainSessionWrapper
+from Plugins.Extensions.IPTVPlayer.components.asynccall import MainSessionWrapper
 from Plugins.Extensions.IPTVPlayer.components.recaptcha_v2widget import UnCaptchaReCaptchaWidget
 from Plugins.Extensions.IPTVPlayer.libs import ph
 

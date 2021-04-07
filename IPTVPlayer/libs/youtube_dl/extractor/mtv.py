@@ -78,12 +78,12 @@ class MTVServicesInfoExtractor(InfoExtractor):
                 if rtmp_video_url.endswith('siteunavail.png'):
                     continue
                 params = {}
-                params['type']    = self.xmlGetArg(rendition, 'type')
+                params['type'] = self.xmlGetArg(rendition, 'type')
                 if 'video/' not in params['type']: 
                     continue
-                params['url']     = self._transform_rtmp_url(rtmp_video_url)
-                params['width']   = self.xmlGetArg(rendition, 'width')
-                params['height']  = self.xmlGetArg(rendition, 'height')
+                params['url'] = self._transform_rtmp_url(rtmp_video_url)
+                params['width'] = self.xmlGetArg(rendition, 'width')
+                params['height'] = self.xmlGetArg(rendition, 'height')
                 params['bitrate'] = self.xmlGetArg(rendition, 'bitrate')
                 formats.append(params)
             except Exception:
@@ -121,7 +121,7 @@ class MTVServicesInfoExtractor(InfoExtractor):
         if mtvn_id_node != '':
             mtvn_id = mtvn_id_node
         
-        formats   = self._extract_video_formats(mediagen_doc, mtvn_id)
+        formats = self._extract_video_formats(mediagen_doc, mtvn_id)
         #subtitles = self._extract_subtitles(mediagen_doc, mtvn_id)
         #thumbnail = self._get_thumbnail_url(uri, itemdoc)
         return {'formats':formats}

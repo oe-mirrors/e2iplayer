@@ -47,11 +47,11 @@ class RteIE(CBaseHostClass):
         if self.MAIN_URL == None:
             self.MAIN_URL = 'http://www.rte.ie/'
         
-        self.MAIN_CAT_TAB = [{'category':'list_live',            'title': _('Live'),             'url':self.getFullUrl('player/live')},
-                             {'category':'list_categories',      'title': _('Programmes'),       'url':self.getFullUrl('/player/date/latest/')},
+        self.MAIN_CAT_TAB = [{'category':'list_live', 'title': _('Live'), 'url':self.getFullUrl('player/live')},
+                             {'category':'list_categories', 'title': _('Programmes'), 'url':self.getFullUrl('/player/date/latest/')},
                              
-                             {'category': 'search',          'title': _('Search'), 'search_item': True, },
-                             {'category': 'search_history',  'title': _('Search history'),} 
+                             {'category': 'search', 'title': _('Search'), 'search_item': True, },
+                             {'category': 'search_history', 'title': _('Search history'),} 
                             ]
     
     def _getIdFromUrl(self, url):
@@ -80,7 +80,7 @@ class RteIE(CBaseHostClass):
             title = self.cleanHtmlStr(tmp[0])
             descTab = []
             for desc in tmp[1:]:
-                desc =self.cleanHtmlStr(desc) 
+                desc = self.cleanHtmlStr(desc) 
                 if len(desc):
                     descTab.append(desc)
             chId = self._getIdFromUrl(url)
@@ -110,7 +110,7 @@ class RteIE(CBaseHostClass):
             url = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''href=['"]([^"^']+)['"]''')[0])
             title = self.cleanHtmlStr(item)
             
-            if  '/a-z/' in url:
+            if '/a-z/' in url:
                 category = 'list_az'
             else:
                 category = nextCategory
@@ -192,7 +192,7 @@ class RteIE(CBaseHostClass):
                 if tmp != '' and tmp not in titleTab:
                     titleTab.append(tmp)
                 title = ' '.join(titleTab)
-                desc  = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(item, '<span class="thumbnail-date">', '</span>')[1])
+                desc = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(item, '<span class="thumbnail-date">', '</span>')[1])
             else:
                 tmp = item.split('</h3>')
                 title = self.cleanHtmlStr(tmp[0])
@@ -313,7 +313,7 @@ class RteIE(CBaseHostClass):
             
             desc = self.cleanHtmlStr(self.cm.ph.getDataBeetwenReMarkers(data, re.compile('<h2[^>]+?"description"[^>]*?>'), re.compile('</h2>'))[1])
             title = self.cleanHtmlStr(self.cm.ph.getDataBeetwenReMarkers(data, re.compile('<h1[^>]+?"name"[^>]*?>'), re.compile('</h1>'))[1])
-            icon  = self.getFullIconUrl(self.cm.ph.getSearchGroups(data, '''src=['"]([^"^']+)['"]''')[0])
+            icon = self.getFullIconUrl(self.cm.ph.getSearchGroups(data, '''src=['"]([^"^']+)['"]''')[0])
             
             otherInfo = {}
             tmp = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(data, 'Duration</strong>', '</li>', False, False)[1])
@@ -347,9 +347,9 @@ class RteIE(CBaseHostClass):
         
         self.informAboutGeoBlockingIfNeeded('IE')
         
-        name     = self.currItem.get("name", '')
+        name = self.currItem.get("name", '')
         category = self.currItem.get("category", '')
-        mode     = self.currItem.get("mode", '')
+        mode = self.currItem.get("mode", '')
         
         printDBG("handleService: || name[%s], category[%s] " % (name, category))
         self.currList = []

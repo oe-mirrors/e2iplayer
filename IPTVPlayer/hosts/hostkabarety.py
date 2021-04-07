@@ -32,16 +32,16 @@ class Kabarety(CBaseHostClass):
         self.AJAX_HEADER = dict(self.HEADER)
         self.AJAX_HEADER.update({'X-Requested-With': 'XMLHttpRequest'})
         self.MAIN_URL = 'http://kabaret.tworzymyhistorie.pl/'
-        self.cacheLinks    = {}
-        self.cacheFilters  = {}
+        self.cacheLinks = {}
+        self.cacheFilters = {}
         self.cacheFiltersKeys = []
         self.defaultParams = {'header':self.HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
     
-        self.MAIN_CAT_TAB = [{'category':'list_filters',   'title': _('Main'),     'url':self.getFullUrl('kabarety/')},
-                             {'category':'list_popular',   'title': _('Popular'),  'url':self.getFullUrl('kabarety/')},
-                             {'category':'list_all',       'title': _('All'),      'url':self.getFullUrl('kabarety/')},
+        self.MAIN_CAT_TAB = [{'category':'list_filters', 'title': _('Main'), 'url':self.getFullUrl('kabarety/')},
+                             {'category':'list_popular', 'title': _('Popular'), 'url':self.getFullUrl('kabarety/')},
+                             {'category':'list_all', 'title': _('All'), 'url':self.getFullUrl('kabarety/')},
 
-                             {'category': 'search',         'title': _('Search'), 'search_item': True,},
+                             {'category': 'search', 'title': _('Search'), 'search_item': True,},
                              {'category': 'search_history', 'title': _('Search history'),} 
                             ]
     
@@ -127,7 +127,7 @@ class Kabarety(CBaseHostClass):
         filter = self.cacheFiltersKeys[f_idx]
         f_idx += 1
         cItem['f_idx'] = f_idx
-        if f_idx  == len(self.cacheFiltersKeys):
+        if f_idx == len(self.cacheFiltersKeys):
             cItem['category'] = nextCategory
         self.listsTab(self.cacheFilters.get(filter, []), cItem)
         
@@ -199,7 +199,7 @@ class Kabarety(CBaseHostClass):
         
         if num >= perPage:
             params = dict(cItem)
-            params.update({'title':_('Next page'), 'page':page+1})
+            params.update({'title':_('Next page'), 'page':page + 1})
             self.addDir(params)
 
     def listSearchResult(self, cItem, searchPattern, searchType):
@@ -304,9 +304,9 @@ class Kabarety(CBaseHostClass):
         
         CBaseHostClass.handleService(self, index, refresh, searchPattern, searchType)
 
-        name     = self.currItem.get("name", '')
+        name = self.currItem.get("name", '')
         category = self.currItem.get("category", '')
-        mode     = self.currItem.get("mode", '')
+        mode = self.currItem.get("mode", '')
         
         printDBG("handleService: |||||||||||||||||||||||||||||||||||| name[%s], category[%s] " % (name, category))
         self.currList = []
@@ -343,8 +343,8 @@ class IPTVHost(CHostBase):
     
     def getSearchTypes(self):
         searchTypesOptions = []
-        searchTypesOptions.append(('Skecze',   "sketches"))
+        searchTypesOptions.append(('Skecze', "sketches"))
         searchTypesOptions.append(('Kabarety', "cabarets"))
-        searchTypesOptions.append(('Wywiady',  "interviews"))
+        searchTypesOptions.append(('Wywiady', "interviews"))
         return searchTypesOptions
     

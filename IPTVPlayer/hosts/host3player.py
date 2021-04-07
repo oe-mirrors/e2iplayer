@@ -54,12 +54,12 @@ class C3player(CBaseHostClass):
         
     def listMainMenu(self, cItem):
         printDBG("C3player.listMainMenu")
-        MAIN_CAT_TAB = [{'category':'list_live',       'title': _('LIVE'),   'url':self.getFullUrl('/player/assets/ajax/live_drop_down.php?layout=top_nav')},
-                        {'category':'list_by_day',     'title': _('BY DAY'), 'url':self.getFullUrl('/3player/byday')},
-                        {'category':'list_az',         'title': _('A-Z'),    'url':self.getFullUrl('/3player/a-z')},
+        MAIN_CAT_TAB = [{'category':'list_live', 'title': _('LIVE'), 'url':self.getFullUrl('/player/assets/ajax/live_drop_down.php?layout=top_nav')},
+                        {'category':'list_by_day', 'title': _('BY DAY'), 'url':self.getFullUrl('/3player/byday')},
+                        {'category':'list_az', 'title': _('A-Z'), 'url':self.getFullUrl('/3player/a-z')},
                         
-                        {'category': 'search',          'title': _('Search'), 'search_item': True, },
-                        {'category': 'search_history',  'title': _('Search history'),} 
+                        {'category': 'search', 'title': _('Search'), 'search_item': True, },
+                        {'category': 'search_history', 'title': _('Search history'),} 
                        ]
         self.listsTab(MAIN_CAT_TAB, cItem)
     
@@ -195,7 +195,7 @@ class C3player(CBaseHostClass):
             if '' not in (showId, offset, id):
                 url = self.getFullUrl('/player/assets/ajax/{0}.php?showID={1}&videoID=&offset={2}&type={3}'.format(id, showId, offset, cItem['f_data_type']))
                 params = dict(cItem)
-                params.update({'good_for_fav':False, 'url':url, 'title':_('Next page'), 'page':page+1})
+                params.update({'good_for_fav':False, 'url':url, 'title':_('Next page'), 'page':page + 1})
                 self.addDir(params)
                 
     def listByDay(self, cItem, nextCategory1, nextCategory2):
@@ -406,9 +406,9 @@ class C3player(CBaseHostClass):
         
         self.informAboutGeoBlockingIfNeeded('IE')
         
-        name     = self.currItem.get("name", '')
+        name = self.currItem.get("name", '')
         category = self.currItem.get("category", '')
-        mode     = self.currItem.get("mode", '')
+        mode = self.currItem.get("mode", '')
         
         printDBG("handleService: |||||||||||||||||||||||||||||||||||| name[%s], category[%s] " % (name, category))
         self.currList = []

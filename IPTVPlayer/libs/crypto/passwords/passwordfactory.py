@@ -37,13 +37,13 @@ class PasswordFactory:
     def entropy(self):
         """ Calculate the security of the password generation as a power of 2 """
         total = 0
-        for pwSize in range(self.minSize, self.maxSize+1):
+        for pwSize in range(self.minSize, self.maxSize + 1):
             total = total + self.passwordsForSize(pwSize)
         return powof2(total)
 
 def powof2(x):
     """ Convert x to a power of 2 """
-    return  log(x)/log(2)
+    return log(x) / log(2)
 
 class PasswordFactorySimple(PasswordFactory):
     """ This class implements a very secure but simple selection of numbers and letters.
@@ -53,21 +53,21 @@ class PasswordFactorySimple(PasswordFactory):
     def __init__(self, pwFactorySeed, minSize=10, maxSize=10):
         """ Initialize password generation """
         PasswordFactory.__init__(self, pwFactorySeed, minSize, maxSize)
-        self.lettersReduced    = 'abcdefghijkmnpqrstwxyzABCDEFGHJKLMNPQRSTWXYZ'
-        self.digitsReduced     = '23456789'
+        self.lettersReduced = 'abcdefghijkmnpqrstwxyzABCDEFGHJKLMNPQRSTWXYZ'
+        self.digitsReduced = '23456789'
         self.specialCharacters = '#%*+$'
 
     def getPassword(self, pwSeed):
         """ Create a new password from pwSeed. """
         self.rand.seed(pwSeed + 'getPassword' + self._factorySeed)   # reset prf sequence
-        self.passwordSize = self.rand.randrange(self.minSize, self.maxSize+1)
+        self.passwordSize = self.rand.randrange(self.minSize, self.maxSize + 1)
         password = ''
         for i in range(self.passwordSize):
-                password = password + self.rand.choice(self.lettersReduced+self.digitsReduced)
+                password = password + self.rand.choice(self.lettersReduced + self.digitsReduced)
         return password
 
     def passwordsForSize(self, pwSize):
-        return (len(self.lettersReduced)+len(self.digitsReduced))**pwSize
+        return (len(self.lettersReduced) + len(self.digitsReduced))**pwSize
 
 consonants_01 = 'bcdfghjklmnpqrstvwxz'
 vowels_01 = 'aeiouy'
@@ -77,7 +77,7 @@ class PasswordFactoryReadable_01(PasswordFactory):
     def getPassword(self, pwSeed):
         """ Create a new password. Also used to recover passwords by using same pwSeed """
         #self.rand.seed( 'getPassword'+self.__factorySeed+pwSeed )   # reset prf sequence
-        self.passwordSize = self.rand.randrange(self.minSize, self.maxSize+1)
+        self.passwordSize = self.rand.randrange(self.minSize, self.maxSize + 1)
         password = ''
         for i in range(self.passwordSize):
             if i == 0:
@@ -90,6 +90,6 @@ class PasswordFactoryReadable_01(PasswordFactory):
         return password
 
     def passwordsForSize(self, pwSize):
-        return (len(vowels_01)**(pwSize/2))*(len(consonants_01)**ceil(pwSize/2))
+        return (len(vowels_01)**(pwSize / 2)) * (len(consonants_01)**ceil(pwSize / 2))
 
 

@@ -2,16 +2,16 @@
 
 import re
 from Plugins.Extensions.IPTVPlayer.libs.youtube_dl.utils import clean_html as yt_clean_html
-from Plugins.Extensions.IPTVPlayer.tools.iptvtools import  printExc
+from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printExc
 
 # flags:
-NONE=0
-START_E=1
-START_S=2
-END_E=4
-END_S=8
-IGNORECASE=16
-I=16
+NONE = 0
+START_E = 1
+START_S = 2
+END_E = 4
+END_S = 8
+IGNORECASE = 16
+I = 16
 
 # pre-compiled regular expressions
 IFRAME_SRC_URI_RE = re.compile(r'''<iframe[^>]+?src=(['"])([^>]*?)(?:\1)''', re.I)
@@ -46,7 +46,7 @@ def getattr(data, attrmame, flags=0):
     eidx = sidx + 1
     while eidx < len(data):
         if data[eidx] == z:
-            return data[sidx+1:eidx]
+            return data[sidx + 1:eidx]
         eidx += 1
     return ''
 
@@ -89,7 +89,7 @@ def check(arg1, arg2=None):
     
     return lambda data, ldata, s, e: arg1(arg2, ldata, s, e)
 
-def findall(data, start, end=('',), flags=START_E|END_E, limits=-1):
+def findall(data, start, end=('',), flags=START_E | END_E, limits=-1):
 
     start = start if isinstance(start, tuple) or isinstance(start, list) else (start,)
     end = end if isinstance(end, tuple) or isinstance(end, list) else (end,)
@@ -133,7 +133,7 @@ def findall(data, start, end=('',), flags=START_E|END_E, limits=-1):
                 return itemsTab
             lastIdx = idx2 + len(n1E)
 
-            if match1P and not  match1P(data, sData, idx1 + len(n1S), idx2):
+            if match1P and not match1P(data, sData, idx1 + len(n1S), idx2):
                 continue
 
             search = 2
@@ -148,7 +148,7 @@ def findall(data, start, end=('',), flags=START_E|END_E, limits=-1):
                 return itemsTab
             lastIdx = tIdx2 + len(n2E)
 
-            if match2P and not  match2P(data, sData, tIdx1 + len(n2S), tIdx2):
+            if match2P and not match2P(data, sData, tIdx1 + len(n2S), tIdx2):
                 continue
 
             if flags & START_S:
@@ -168,7 +168,7 @@ def findall(data, start, end=('',), flags=START_E|END_E, limits=-1):
             break
     return itemsTab
 
-def rfindall(data, start, end=('',), flags=START_E|END_E, limits=-1):
+def rfindall(data, start, end=('',), flags=START_E | END_E, limits=-1):
 
     start = start if isinstance(start, tuple) or isinstance(start, list) else (start,)
     end = end if isinstance(end, tuple) or isinstance(end, list) else (end,)
@@ -207,11 +207,11 @@ def rfindall(data, start, end=('',), flags=START_E|END_E, limits=-1):
             if -1 == idx1:
                 return itemsTab
             lastIdx = idx1
-            idx2 = sData.find(n1E, idx1+len(n1S))
+            idx2 = sData.find(n1E, idx1 + len(n1S))
             if -1 == idx2:
                 return itemsTab
 
-            if match1P and not  match1P(data, sData, idx1 + len(n1S), idx2):
+            if match1P and not match1P(data, sData, idx1 + len(n1S), idx2):
                 continue
 
             search = 2
@@ -221,11 +221,11 @@ def rfindall(data, start, end=('',), flags=START_E|END_E, limits=-1):
             if -1 == tIdx1:
                 return itemsTab
             lastIdx = tIdx1
-            tIdx2 = sData.find(n2E, tIdx1+len(n2S), idx1)
+            tIdx2 = sData.find(n2E, tIdx1 + len(n2S), idx1)
             if -1 == tIdx2:
                 return itemsTab
 
-            if match2P and not  match2P(data, sData, tIdx1 + len(n2S), tIdx2):
+            if match2P and not match2P(data, sData, tIdx1 + len(n2S), tIdx2):
                 continue
 
             if flags & START_S:
@@ -246,14 +246,14 @@ def rfindall(data, start, end=('',), flags=START_E|END_E, limits=-1):
     return itemsTab
 
 
-def find(data, start, end=('',), flags=START_E|END_E):
+def find(data, start, end=('',), flags=START_E | END_E):
     ret = findall(data, start, end, flags, 1)
     if len(ret):
         return True, ret[0]
     else:
         return False, ''
 
-def rfind(data, start, end=('',), flags=START_E|END_E):
+def rfind(data, start, end=('',), flags=START_E | END_E):
     ret = rfindall(data, start, end, flags, 1)
     if len(ret):
         return True, ret[0]
@@ -261,8 +261,8 @@ def rfind(data, start, end=('',), flags=START_E|END_E):
         return False, ''
 
 def strip_doubles(data, pattern):
-    while -1 < data.find(pattern+pattern) and '' != pattern:
-        data = data.replace(pattern+pattern, pattern)
+    while -1 < data.find(pattern + pattern) and '' != pattern:
+        data = data.replace(pattern + pattern, pattern)
     return data 
 
 STRIP_HTML_TAGS_C = None

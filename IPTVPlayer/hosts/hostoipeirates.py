@@ -78,8 +78,8 @@ class OipeiratesOnline(CBaseHostClass):
                 except Exception:
                     printExc()
                 
-        MAIN_CAT_TAB = [{'category':'search',          'title': _('Search'), 'search_item':True},
-                        {'category':'search_history',  'title': _('Search history')}]
+        MAIN_CAT_TAB = [{'category':'search', 'title': _('Search'), 'search_item':True},
+                        {'category':'search_history', 'title': _('Search history')}]
         self.listsTab(MAIN_CAT_TAB, cItem)
     
     def listCategories(self, cItem, nextCategory):
@@ -88,7 +88,7 @@ class OipeiratesOnline(CBaseHostClass):
             cTree = cItem['c_tree']
             for item in cTree['list']:
                 title = self.cleanHtmlStr(item['dat'])
-                url   = self.getFullUrl(self.cm.ph.getSearchGroups(item['dat'], '''href=['"]([^'^"]+?)['"]''')[0])
+                url = self.getFullUrl(self.cm.ph.getSearchGroups(item['dat'], '''href=['"]([^'^"]+?)['"]''')[0])
                 if 'facebook' in url:
                     break
                 elif 'list' not in item:
@@ -184,16 +184,16 @@ class OipeiratesOnline(CBaseHostClass):
                 if not data:
                     data = ''
                 if tmp['meta']['postcount'] == int(query['posts_per_page']):
-                    if tmp['meta']['totalposts'] > (page+1) * int(query['posts_per_page']):
+                    if tmp['meta']['totalposts'] > (page + 1) * int(query['posts_per_page']):
                         ajaxurl = cItem['ajaxurl']
             except Exception:
                 printExc()
 
         data = self.cm.ph.getAllItemsBeetwenNodes(data, ('<div', '>', 'moviefilm'), ('</div', '>'), False)
         for item in data:
-            url  = self.getFullUrl(self.cm.ph.getSearchGroups(item, 'href="([^"]+?)"')[0])
+            url = self.getFullUrl(self.cm.ph.getSearchGroups(item, 'href="([^"]+?)"')[0])
             icon = self.getFullUrl(self.cm.ph.getSearchGroups(item, 'src="([^"]+?)"')[0])
-            title  = self.cleanHtmlStr(self.cm.ph.getSearchGroups(item, 'alt="([^"]+?)"')[0])
+            title = self.cleanHtmlStr(self.cm.ph.getSearchGroups(item, 'alt="([^"]+?)"')[0])
             if url != '':
                 params = dict(cItem)
                 params.update({'category':nextCategory, 'good_for_fav': True, 'title':title, 'url':url, 'icon':icon})
@@ -203,7 +203,7 @@ class OipeiratesOnline(CBaseHostClass):
             printDBG(ajaxurl)
             printDBG(query)
             params = dict(cItem)
-            params.update({'title':_("Next page"), 'page':page+1, 'ajaxurl':ajaxurl, 'query':query})
+            params.update({'title':_("Next page"), 'page':page + 1, 'ajaxurl':ajaxurl, 'query':query})
             self.addDir(params)
             
     def exploreItem(self, cItem):
@@ -212,25 +212,25 @@ class OipeiratesOnline(CBaseHostClass):
         if not sts:
             return
 
-        desc  = self.cleanHtmlStr(self.cm.ph.getSearchGroups(data, '<meta[^>]*?property="og:description"[^>]*?content="([^"]+?)"')[0])
+        desc = self.cleanHtmlStr(self.cm.ph.getSearchGroups(data, '<meta[^>]*?property="og:description"[^>]*?content="([^"]+?)"')[0])
         title = self.cleanHtmlStr(self.cm.ph.getSearchGroups(data, '<meta[^>]*?property="og:title"[^>]*?content="([^"]+?)"')[0])
         if '' == title:
             title = cItem['title']
 
         # trailer link extraction
         trailerMarker = '/trailer'
-        trailer = ph.find(data, trailerMarker, '</iframe>', flags=ph.I|ph.START_E)[1]
+        trailer = ph.find(data, trailerMarker, '</iframe>', flags=ph.I | ph.START_E)[1]
         if not trailer:
-            trailer = ph.find(data, ('<iframe', '>', 'youtube'), '</iframe>', flags=ph.I|ph.START_E)[1]
+            trailer = ph.find(data, ('<iframe', '>', 'youtube'), '</iframe>', flags=ph.I | ph.START_E)[1]
         trailer = ph.search(trailer, ph.IFRAME_SRC_URI_RE)[1]
         if trailer.startswith('//'):
             trailer = 'http:' + trailer
         if trailer.startswith('http'):
             params = dict(cItem)
             params['title'] = 'TRAILER'
-            params['mode']  = 'trailer'
+            params['mode'] = 'trailer'
             params['links'] = [{'name':'TRAILER', 'url':trailer, 'need_resolve':1}]
-            params['desc']  = desc
+            params['desc'] = desc
             self.addVideo(params)
 
         # check 
@@ -302,14 +302,14 @@ class OipeiratesOnline(CBaseHostClass):
                 seasonID = item.find('<')
                 if seasonID < 0:
                     continue
-                seasonID = item[:seasonID+1]
+                seasonID = item[:seasonID + 1]
                 seasonID = self.cm.ph.getSearchGroups(seasonID, '([0-9]+?)[^0-9]')[0]
                 if '' == seasonID:
                     continue
                 episodesData = re.compile('<a[^>]*?href="([^"]+?)"[^>]*?>([^<]+?)</a>').findall(item)
                 for eItem in episodesData:
                     eUrl = eItem[0]
-                    eID  = self.cleanHtmlStr(eItem[1].replace(chr(160), ' '))
+                    eID = self.cleanHtmlStr(eItem[1].replace(chr(160), ' '))
                     if eUrl.startswith('//'):
                         eUrl = self.getFullUrl(eUrl)
                     if 1 != self.up.checkHostSupport(eUrl):
@@ -326,22 +326,22 @@ class OipeiratesOnline(CBaseHostClass):
                 linksID = item['linksID']
                 if len(eLinks[linksID]):
                     params = dict(cItem)
-                    params.update({'title':title +  ' ' + linksID, 'mode':mode, 'episode':item['episode'], 'season':item['season'], 'links':eLinks[linksID], 'desc':desc})
+                    params.update({'title':title + ' ' + linksID, 'mode':mode, 'episode':item['episode'], 'season':item['season'], 'links':eLinks[linksID], 'desc':desc})
                     self.addVideo(params)
         else:
             links = self.getLinksForMovie(linksData)
             if len(links):
                 params = dict(cItem)
-                params['mode']  = 'movie'
+                params['mode'] = 'movie'
                 params['links'] = links
-                params['desc']  = desc
+                params['desc'] = desc
                 self.addVideo(params)
             
     def getLinksForMovie(self, data):
         urlTab = []
         linksData = re.compile('<a[^>]*?href="([^"]+?)"[^>]*?>([^<]*?)<').findall(data)
         for item in linksData:
-            url   = item[0]
+            url = item[0]
             title = item[1]
             # only supported hosts will be displayed
             if 1 != self.up.checkHostSupport(url):
@@ -366,7 +366,7 @@ class OipeiratesOnline(CBaseHostClass):
         printDBG("OipeiratesOnline.getLinksForVideo [%s]" % cItem)
         # Use Season and Episode information when exist for cache index
         idx = cItem['mode'] + cItem['url'] + cItem.get('season', '') + cItem.get('episode', '')
-        urlTab = self.cacheLinks.get(idx,  [])
+        urlTab = self.cacheLinks.get(idx, [])
         if len(urlTab):
             return urlTab
         self.cacheLinks = {}
@@ -413,9 +413,9 @@ class OipeiratesOnline(CBaseHostClass):
         
         CBaseHostClass.handleService(self, index, refresh, searchPattern, searchType)
 
-        name     = self.currItem.get("name", '')
+        name = self.currItem.get("name", '')
         category = self.currItem.get("category", '')
-        mode     = self.currItem.get("mode", '')
+        mode = self.currItem.get("mode", '')
         
         printDBG("handleService: |||||||||||||||||||||||||||||||||||| name[%s], category[%s] " % (name, category))
         self.currList = []

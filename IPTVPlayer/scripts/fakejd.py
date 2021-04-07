@@ -27,8 +27,8 @@ def signal_handler(sig, frame):
     os.kill(os.getpid(), signal.SIGTERM)
 signal.signal(signal.SIGINT, signal_handler)
 
-LAST_HTTP_ERROR_CODE =  -1
-LAST_HTTP_ERROR_DATA =  ''
+LAST_HTTP_ERROR_CODE = -1
+LAST_HTTP_ERROR_DATA = ''
 
 def updateStatus(type, data, code=None):
     obj = {'type':type, 'data':data, 'code':code}
@@ -109,11 +109,11 @@ class Jddevice:
         return response['data']
 
     def __action_url(self):
-        return "/t_"+self.myjd.get_session_token()+"_"+self.device_id
+        return "/t_" + self.myjd.get_session_token() + "_" + self.device_id
 
 def decrypt(secret_token, data):
-    iv = secret_token[:len(secret_token)//2]
-    key = secret_token[len(secret_token)//2:]
+    iv = secret_token[:len(secret_token) // 2]
+    key = secret_token[len(secret_token) // 2:]
     
     cipher = AES_CBC(key=key, keySize=16)
     decrypted_data = cipher.decrypt(base64.b64decode(data), iv).strip()
@@ -122,8 +122,8 @@ def decrypt(secret_token, data):
 
 def encrypt(secret_token, data):
     data = data.encode('utf-8')
-    iv = secret_token[:len(secret_token)//2]
-    key = secret_token[len(secret_token)//2:]
+    iv = secret_token[:len(secret_token) // 2]
+    key = secret_token[len(secret_token) // 2:]
     
     cipher = AES_CBC(key=key, keySize=16)
     encrypted_data = base64.b64encode(cipher.encrypt(data, iv)) 
@@ -132,7 +132,7 @@ def encrypt(secret_token, data):
 
 class Myjdapi:
     def __init__(self):
-        self._request_id = int(time.time()*1000)
+        self._request_id = int(time.time() * 1000)
         self._api_url = "http://api.jdownloader.org"
         self._app_key = "http://git.io/vmcsk"
         self._api_version = 1
@@ -239,41 +239,41 @@ class Myjdapi:
                     query += ["%s=%s" % (param[0], urllib.parse.quote(param[1]))]
                 else:
                     query += ["&%s=%s" % (param[0], param[1])]
-            query += ["rid="+str(self._request_id)]
+            query += ["rid=" + str(self._request_id)]
             if self._server_encryption_token is None:
                 query += ["signature=" +
-                          str(self._signature_create(self._login_secret, query[0]+"&".join(query[1:])))]
+                          str(self._signature_create(self._login_secret, query[0] + "&".join(query[1:])))]
             else:
                 query += ["signature=" +
-                          str(self._signature_create(self._server_encryption_token, query[0]+"&".join(query[1:])))]
-            query = query[0]+"&".join(query[1:])
-            encrypted_response_status_code, encrypted_response_text = getPage(self._api_url+query)
+                          str(self._signature_create(self._server_encryption_token, query[0] + "&".join(query[1:])))]
+            query = query[0] + "&".join(query[1:])
+            encrypted_response_status_code, encrypted_response_text = getPage(self._api_url + query)
         else:
-            params_request=[]
+            params_request = []
             for param in params:
                 if not isinstance(param, list):
                     # params_request+=[str(param).replace("'",'\"').replace("True","true").replace("False","false").replace('None',"null")]
-                    params_request+=[json.dumps(param)]
+                    params_request += [json.dumps(param)]
                 else:
-                    params_request+=[param]
+                    params_request += [param]
             params_request = {"apiVer": self._api_version, "url": path, "params":params_request, "rid":self._request_id}
             data = json.dumps(params_request).replace('"null"', "null").replace("'null'", "null")
             encrypted_data = self._encrypt(self._device_encryption_token, data)
             if action is not None:
-                request_url=self._api_url+action+path
+                request_url = self._api_url + action + path
             else:
-                request_url=self._api_url+path
+                request_url = self._api_url + path
             encrypted_response_status_code, encrypted_response_text = getPage(request_url, headers={"Content-Type": "application/aesjson-jd; charset=utf-8"}, data=encrypted_data)
         if encrypted_response_status_code != 200:
-            error_msg=json.loads(encrypted_response_text)
-            msg="\n\tSOURCE: "+error_msg["src"]+"\n\tTYPE: "+ \
-                                error_msg["type"]+"\n------\nREQUEST_URL: "+ \
-                                self._api_url+path
+            error_msg = json.loads(encrypted_response_text)
+            msg = "\n\tSOURCE: " + error_msg["src"] + "\n\tTYPE: " + \
+                                error_msg["type"] + "\n------\nREQUEST_URL: " + \
+                                self._api_url + path
             if http_method == "GET":
-                msg+=query
-            msg+="\n"
+                msg += query
+            msg += "\n"
             if data is not None:
-                msg+="DATA:\n"+data
+                msg += "DATA:\n" + data
             raise MYJDException
         if action is None:
             if not self._server_encryption_token:
@@ -296,19 +296,19 @@ class MyjdRequestHandler(BaseHTTPRequestHandler):
     server_version = 'IPTVPlayer HttpServer' #'AppWork GmbH HttpServer'
     
     def log_message(self, format, *args):
-        printDBG(format%args)
+        printDBG(format % args)
     
     def parse_request(self):
         idx = -1
         for i in range(len(self.raw_requestline)):
-            if self.raw_requestline[i:i+4] == 'POST':
+            if self.raw_requestline[i:i + 4] == 'POST':
                 idx = i
                 break
-            elif self.raw_requestline[i:i+3] == 'GET':
+            elif self.raw_requestline[i:i + 3] == 'GET':
                 idx = i
                 break
         if idx > 0:
-            self.raw_requestline =  self.raw_requestline[idx:]
+            self.raw_requestline = self.raw_requestline[idx:]
         if idx == -1:
             printDBG("Wrong request %s..." % self.raw_requestline[:256])
             #sys.exit(-1)
@@ -370,7 +370,7 @@ class MyjdRequestHandler(BaseHTTPRequestHandler):
             else:
                 return_data = []
         elif data['url'] == '/events/subscribe':
-            return_data = {"subscriptionid": jd.subscription_id, "subscribed": True, "subscriptions": None,  "exclusions": None,  "maxPolltimeout": 25000, "maxKeepalive": 120000}
+            return_data = {"subscriptionid": jd.subscription_id, "subscribed": True, "subscriptions": None, "exclusions": None, "maxPolltimeout": 25000, "maxKeepalive": 120000}
             jd.captcha_notified = False
         elif data['url'] == '/events/setsubscription':
             #'^downloads', '^extraction', '^linkcrawler', '^dialogs', '^downloadwatchdog'
@@ -469,7 +469,7 @@ if __name__ == "__main__":
         sys.stderr.write('Wrong parameters\n')
         sys.exit(1)
         
-    libsPath   = sys.argv[1]
+    libsPath = sys.argv[1]
     sys.path.insert(1, libsPath)
     from crypto.cipher.aes_cbc import AES_CBC
         
@@ -478,12 +478,12 @@ if __name__ == "__main__":
     PASSWORD = sys.argv[3]
     JDNAME = "IPTVPlayer@" + sys.argv[4]
     CAPTCHA_DATA = json.loads(base64.b64decode(sys.argv[5]))
-    CAPTCHA_DATA['id'] = int(time.time()*1000)
+    CAPTCHA_DATA['id'] = int(time.time() * 1000)
 
     hash = hashlib.sha256()
     hash.update(LOGIN + JDNAME)
     DEVICEID = hexlify(hash.digest()[:16])
-    SUBSCRIPTION_ID = int(time.time()*1000)
+    SUBSCRIPTION_ID = int(time.time() * 1000)
     DEBUGE = int(sys.argv[6])
     returnCode = 0
     

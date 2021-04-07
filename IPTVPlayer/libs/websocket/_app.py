@@ -241,7 +241,7 @@ class WebSocketApp(object):
                 return []
 
         if data and len(data) >= 2:
-            code = 256*ord(data[0:1][0]) + ord(data[1:2][0])
+            code = 256 * ord(data[0:1][0]) + ord(data[1:2][0])
             reason = data[2:].decode('utf-8')
             return [code, reason]
 

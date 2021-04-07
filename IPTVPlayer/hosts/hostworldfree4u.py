@@ -41,10 +41,10 @@ class WorldFree4u(CBaseHostClass):
         if addParams == {}:
             addParams = dict(self.defaultParams)
             
-        self.MAIN_CAT_TAB = [{'category':'list_items', 'title': _('LATEST'),    'url':self.getFullUrl('/seeAll/latestMovies/')},
-                             {'category':'list_items', 'title': _('RECENT'),    'url':self.getFullUrl('/seeAll/recentAdded/')},
-                             {'category': 'search',          'title': _('Search'), 'search_item': True,},
-                             {'category': 'search_history',  'title': _('Search history'),} 
+        self.MAIN_CAT_TAB = [{'category':'list_items', 'title': _('LATEST'), 'url':self.getFullUrl('/seeAll/latestMovies/')},
+                             {'category':'list_items', 'title': _('RECENT'), 'url':self.getFullUrl('/seeAll/recentAdded/')},
+                             {'category': 'search', 'title': _('Search'), 'search_item': True,},
+                             {'category': 'search_history', 'title': _('Search history'),} 
                             ]
         
         return self.cm.getPage(baseUrl, addParams, post_data)
@@ -120,7 +120,7 @@ class WorldFree4u(CBaseHostClass):
         
         data = self.cm.ph.getAllItemsBeetwenNodes(data, ('<div', '>', 'item'), ('</div', '>'))
         for item in data:
-            url  = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''href=['"]([^"^']+?)['"]''')[0])
+            url = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''href=['"]([^"^']+?)['"]''')[0])
             icon = self.getFullIconUrl(self.cm.ph.getSearchGroups(item, '''src=['"]([^"^']+?)['"]''')[0])
             title = self.cleanHtmlStr(item)
             
@@ -129,7 +129,7 @@ class WorldFree4u(CBaseHostClass):
         
         if nextPage and len(self.currList) > 0:
             params = dict(cItem)
-            params.update({'title':_("Next page"), 'page':page+1})
+            params.update({'title':_("Next page"), 'page':page + 1})
             self.addDir(params)
 
     def listSearchResult(self, cItem, searchPattern, searchType):
@@ -170,7 +170,7 @@ class WorldFree4u(CBaseHostClass):
                 printDBG(linksCandidates)
                 uniqueLinks = []
                 for item in linksCandidates:
-                    url  = self.cm.ph.getSearchGroups(item, '''file['"]?\s*[=:]\s*['"]([^"^']+?)['"]''')[0]
+                    url = self.cm.ph.getSearchGroups(item, '''file['"]?\s*[=:]\s*['"]([^"^']+?)['"]''')[0]
                     if url.startswith('//'):
                         url = 'http:' + url
                     if not url.startswith('http'):
@@ -181,7 +181,7 @@ class WorldFree4u(CBaseHostClass):
                     
                     if 'mp4' in item:
                         type = self.cm.ph.getSearchGroups(item, '''[\s'"]type['"]?\s*[=:]\s*['"]([^"^']+?)['"]''')[0]
-                        res  = self.cm.ph.getSearchGroups(item, '''[\s'"]res['"]?\s*[=:]\s*['"]([^"^']+?)['"]''')[0]
+                        res = self.cm.ph.getSearchGroups(item, '''[\s'"]res['"]?\s*[=:]\s*['"]([^"^']+?)['"]''')[0]
                         label = self.cm.ph.getSearchGroups(item, '''[\s'"]label['"]?\s*[=:]\s*['"]([^"^']+?)['"]''')[0]
                         if label == '':
                             label = res
@@ -222,9 +222,9 @@ class WorldFree4u(CBaseHostClass):
             return retTab
         
         title = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(data, '<h3>', '</h3>')[1])
-        desc  = self.cleanHtmlStr(self.cm.ph.getDataBeetwenReMarkers(data, re.compile('''<div[^>]+?class=['"]desc['"][^>]*?>'''), re.compile('''</div>'''))[1])
-        icon  = self.cm.ph.getDataBeetwenMarkers(data, 'mvic-thumb', '>')[1]
-        icon  = self.getFullUrl(self.cm.ph.getSearchGroups(icon, '''url\(\s*['"]([^'^"]+?\.jpg[^'^"]*?)['"]''', 1, True)[0])
+        desc = self.cleanHtmlStr(self.cm.ph.getDataBeetwenReMarkers(data, re.compile('''<div[^>]+?class=['"]desc['"][^>]*?>'''), re.compile('''</div>'''))[1])
+        icon = self.cm.ph.getDataBeetwenMarkers(data, 'mvic-thumb', '>')[1]
+        icon = self.getFullUrl(self.cm.ph.getSearchGroups(icon, '''url\(\s*['"]([^'^"]+?\.jpg[^'^"]*?)['"]''', 1, True)[0])
         
         if title == '':
             title = cItem['title']
@@ -235,13 +235,13 @@ class WorldFree4u(CBaseHostClass):
         
         descData = self.cm.ph.getDataBeetwenMarkers(data, '<div class="mvic-info">', '<div class="clearfix">', False)[1]
         descData = self.cm.ph.getAllItemsBeetwenMarkers(descData, '<p', '</p>')
-        descTabMap = {"director":     "director",
-                      "actor":        "actors",
-                      "genre":        "genre",
-                      "country":      "country",
-                      "release":      "released",
-                      "duration":     "duration",
-                      "quality":      "quality",
+        descTabMap = {"director": "director",
+                      "actor": "actors",
+                      "genre": "genre",
+                      "country": "country",
+                      "release": "released",
+                      "duration": "duration",
+                      "quality": "quality",
                       "imdbratings": "imdb_rating"}
         
         otherInfo = {}
@@ -269,9 +269,9 @@ class WorldFree4u(CBaseHostClass):
             #rm(self.COOKIE_FILE)
             self.selectDomain()
 
-        name     = self.currItem.get("name", '')
+        name = self.currItem.get("name", '')
         category = self.currItem.get("category", '')
-        mode     = self.currItem.get("mode", '')
+        mode = self.currItem.get("mode", '')
         
         printDBG("handleService: |||||||||||||||||||||||||||||||||||| name[%s], category[%s] " % (name, category))
         self.currList = []

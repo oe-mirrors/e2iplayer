@@ -32,13 +32,13 @@ from Screens.MessageBox import MessageBox
 ###################################################
 # Config options for HOST
 ###################################################
-config.plugins.iptvplayer.vumedicom_login    = ConfigText(default="", fixed_size=False)
+config.plugins.iptvplayer.vumedicom_login = ConfigText(default="", fixed_size=False)
 config.plugins.iptvplayer.vumedicom_password = ConfigText(default="", fixed_size=False)
 
 def GetConfigList():
     optionList = []
-    optionList.append(getConfigListEntry(_("login")+":",    config.plugins.iptvplayer.vumedicom_login))
-    optionList.append(getConfigListEntry(_("password")+":", config.plugins.iptvplayer.vumedicom_password))
+    optionList.append(getConfigListEntry(_("login") + ":", config.plugins.iptvplayer.vumedicom_login))
+    optionList.append(getConfigListEntry(_("password") + ":", config.plugins.iptvplayer.vumedicom_password))
     return optionList
 ###################################################
 
@@ -61,7 +61,7 @@ class VUMEDI(CBaseHostClass):
         
         self.defaultParams = {'header':self.HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
         self.loggedIn = None
-        self.login    = ''
+        self.login = ''
         self.password = ''
     
     def getPage(self, baseUrl, addParams={}, post_data=None):
@@ -80,10 +80,10 @@ class VUMEDI(CBaseHostClass):
     def listMainMenu(self, cItem):
         printDBG("VUMEDI.listMainMenu")
 
-        MAIN_CAT_TAB = [{'category':'list_spec',       'title': _('Specialities'),        'url':self.getMainUrl()},
-                        {'category':'list_sort',       'title': _('Browse videos'),       'url':self.getFullUrl('/video/browse/')},
-                        {'category':'search',          'title': _('Search'), 'search_item':True},
-                        {'category':'search_history',  'title': _('Search history')}]
+        MAIN_CAT_TAB = [{'category':'list_spec', 'title': _('Specialities'), 'url':self.getMainUrl()},
+                        {'category':'list_sort', 'title': _('Browse videos'), 'url':self.getFullUrl('/video/browse/')},
+                        {'category':'search', 'title': _('Search'), 'search_item':True},
+                        {'category':'search_history', 'title': _('Search history')}]
         self.listsTab(MAIN_CAT_TAB, cItem)
         
     def listCategories(self, cItem, nextCategory1, nextCategory2):
@@ -280,7 +280,7 @@ class VUMEDI(CBaseHostClass):
         
         if nextPage:
             params = dict(cItem)
-            params.update({'good_for_fav':False, 'title':_("Next page"), 'page':page+1, 'url':self.getFullUrl(nextPage, cUrl)})
+            params.update({'good_for_fav':False, 'title':_("Next page"), 'page':page + 1, 'url':self.getFullUrl(nextPage, cUrl)})
             self.addDir(params)
 
     def listSearchResult(self, cItem, searchPattern, searchType):
@@ -379,7 +379,7 @@ class VUMEDI(CBaseHostClass):
             inputData = self.cm.ph.getAllItemsBeetwenMarkers(data, '<input', '>')
             inputData.extend(self.cm.ph.getAllItemsBeetwenMarkers(data, '<button', '>'))
             for item in inputData:
-                name  = self.cm.ph.getSearchGroups(item, '''name=['"]([^'^"]+?)['"]''')[0]
+                name = self.cm.ph.getSearchGroups(item, '''name=['"]([^'^"]+?)['"]''')[0]
                 value = self.cm.ph.getSearchGroups(item, '''value=['"]([^'^"]+?)['"]''')[0].replace('&amp;', '&')
                 post_data[name] = value
             
@@ -409,9 +409,9 @@ class VUMEDI(CBaseHostClass):
 
         self.tryTologin()
 
-        name     = self.currItem.get("name", '')
+        name = self.currItem.get("name", '')
         category = self.currItem.get("category", '')
-        mode     = self.currItem.get("mode", '')
+        mode = self.currItem.get("mode", '')
         
         printDBG("handleService: || name[%s], category[%s] " % (name, category))
         self.currList = []

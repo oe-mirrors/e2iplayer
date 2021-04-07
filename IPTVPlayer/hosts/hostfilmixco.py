@@ -28,8 +28,8 @@ from Screens.MessageBox import MessageBox
 # Config options for HOST
 ###################################################
 config.plugins.iptvplayer.filmixco_alt_domain = ConfigText(default="", fixed_size=False)
-config.plugins.iptvplayer.filmixco_login     = ConfigText(default="", fixed_size=False)
-config.plugins.iptvplayer.filmixco_password  = ConfigText(default="", fixed_size=False)
+config.plugins.iptvplayer.filmixco_login = ConfigText(default="", fixed_size=False)
+config.plugins.iptvplayer.filmixco_password = ConfigText(default="", fixed_size=False)
 
 def GetConfigList():
     optionList = []
@@ -61,7 +61,7 @@ class FilmixCO(CBaseHostClass):
         self.domainSelected = False
 
         self.loggedIn = None
-        self.login    = ''
+        self.login = ''
         self.password = ''
 
     def getUtf8Str(self, st):
@@ -113,7 +113,7 @@ class FilmixCO(CBaseHostClass):
             tmp = self.cm.ph.rgetAllItemsBeetwenNodes(data, ('</div', '>'), ('<div', '>', 'filter-category'),)
             for item in tmp:
                 scope = self.cm.ph.getSearchGroups(item, '''\sdata\-scope=['"]([^'^"]+?)['"]''')[0]
-                type  = self.cm.ph.getSearchGroups(item, '''\sdata\-type=['"]([^'^"]+?)['"]''')[0]
+                type = self.cm.ph.getSearchGroups(item, '''\sdata\-type=['"]([^'^"]+?)['"]''')[0]
                 if type != '':
                     # need separate request, https://filmix.co/engine/ajax/get_filter.php, to get value of filters
                     self.cacheFilters.append({'scope':scope, 'type':type})
@@ -129,10 +129,10 @@ class FilmixCO(CBaseHostClass):
                     if len(values):
                         self.cacheFilters.append({'scope':scope, 'values':values})
        
-        MAIN_CAT_TAB = [{'category':'top250',          'title':'ТОП 250', 'url':self.getFullUrl('/top250')},
-                        {'category':'filters',         'title': _('Filters')},
-                        {'category':'search',          'title': _('Search'), 'search_item':True},
-                        {'category':'search_history',  'title': _('Search history')}]
+        MAIN_CAT_TAB = [{'category':'top250', 'title':'ТОП 250', 'url':self.getFullUrl('/top250')},
+                        {'category':'filters', 'title': _('Filters')},
+                        {'category':'search', 'title': _('Search'), 'search_item':True},
+                        {'category':'search_history', 'title': _('Search history')}]
         self.listsTab(MAIN_CAT_TAB, cItem)
         
     def top250Type(self, cItem, nextCategory):
@@ -180,7 +180,7 @@ class FilmixCO(CBaseHostClass):
                 values = []
                 if 'rating' == filter['type']:
                     for i in range(9, 0, -1):
-                        values.append({'title':'%s-%s'% (str(i).zfill(2), str(i+1).zfill(2)), ('f_%s' % filter['scope']):'%s%s' % (str(i).zfill(2), str(i+1).zfill(2))})
+                        values.append({'title':'%s-%s' % (str(i).zfill(2), str(i + 1).zfill(2)), ('f_%s' % filter['scope']):'%s%s' % (str(i).zfill(2), str(i + 1).zfill(2))})
                     if len(values):
                         values.insert(0, {'title':_('--Any--')})
                 else:
@@ -195,7 +195,7 @@ class FilmixCO(CBaseHostClass):
                         printDBG(data)
                         data = json_loads('[%s]' % data.replace('":"', '","')[1:-1])
                         for i in range(0, len(data), 2):
-                            title = self.cleanHtmlStr(data[i+1])
+                            title = self.cleanHtmlStr(data[i + 1])
                             value = data[i]
                             if value.startswith('f'):
                                 value = value[1:]
@@ -313,7 +313,7 @@ class FilmixCO(CBaseHostClass):
             params = dict(cItem)
             params.pop('post_data', None)
             params.pop('desc', None)
-            params.update({'title':_("Next page"), 'url':nextPage, 'page':page+1})
+            params.update({'title':_("Next page"), 'url':nextPage, 'page':page + 1})
             self.addDir(params)
             
     def exploreItem(self, cItem, nextCategory):
@@ -497,9 +497,9 @@ class FilmixCO(CBaseHostClass):
         
         CBaseHostClass.handleService(self, index, refresh, searchPattern, searchType)
 
-        name     = self.currItem.get("name", '')
+        name = self.currItem.get("name", '')
         category = self.currItem.get("category", '')
-        mode     = self.currItem.get("mode", '')
+        mode = self.currItem.get("mode", '')
 
         printDBG("handleService: || name[%s], category[%s] " % (name, category))
         self.currList = []

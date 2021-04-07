@@ -44,9 +44,9 @@ class BuxyboxWgetDownloader(WgetDownloader):
         
     def _checkWorkingCallBack(self, callBackFun, code, data):
         reason = ''
-        sts    = True
+        sts = True
         if 'Usage: wget' not in data:
-            sts    = False
+            sts = False
             reason = data
         self.iptv_sys = None
         callBackFun(sts, reason)
@@ -55,16 +55,16 @@ class BuxyboxWgetDownloader(WgetDownloader):
         '''
             Owervrite start from BaseDownloader
         '''
-        self.url              = url
-        self.filePath         = filePath
+        self.url = url
+        self.filePath = filePath
         self.downloaderParams = params
-        self.fileExtension    = '' # should be implemented in future
+        self.fileExtension = '' # should be implemented in future
         
         self.outData = ''
         self.contentType = 'unknown'
         if None == info_from:
             info_from = WgetDownloader.INFO.FROM_FILE
-        self.infoFrom    = info_from
+        self.infoFrom = info_from
         
         cmd = 'wget ' + '"' + self.url + '" -O "' + self.filePath + '" > /dev/null'
         printDBG("Download cmd[%s]" % cmd)
@@ -74,7 +74,7 @@ class BuxyboxWgetDownloader(WgetDownloader):
         self.console.execute(E2PrioFix(cmd))
 
         self.wgetStatus = self.WGET_STS.CONNECTING
-        self.status     = DMHelper.STS.DOWNLOADING
+        self.status = DMHelper.STS.DOWNLOADING
         
         self.onStart()
         return BaseDownloader.CODE_OK

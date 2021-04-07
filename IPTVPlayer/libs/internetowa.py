@@ -25,7 +25,7 @@ from Screens.MessageBox import MessageBox
 ###################################################
 # Config options for HOST
 ###################################################
-config.plugins.iptvplayer.internetowa_login    = ConfigText(default="", fixed_size=False)
+config.plugins.iptvplayer.internetowa_login = ConfigText(default="", fixed_size=False)
 config.plugins.iptvplayer.internetowa_password = ConfigText(default="", fixed_size=False)
 
 def GetConfigList():
@@ -117,7 +117,7 @@ class InternetowaApi(CBaseHostClass):
                 section = section.split('</h2>')
 
                 for idx in range(1, len(section), 2):
-                    sTitle2 = self.cleanHtmlStr(section[idx-1])
+                    sTitle2 = self.cleanHtmlStr(section[idx - 1])
                     subItems2 = []
                     subSections = self.cm.ph.getAllItemsBeetwenMarkers(section[idx], '<a', '</a>')
                     for item in subSections:

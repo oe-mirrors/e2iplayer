@@ -24,9 +24,9 @@ from Components.config import config, ConfigSelection, ConfigText, getConfigList
 ###################################################
 # Config options for HOST
 ###################################################
-config.plugins.iptvplayer.kkiste_proxy = ConfigSelection(default="None", choices=[("None",     _("None")),
-                                                                                           ("proxy_1",  _("Alternative proxy server (1)")),
-                                                                                           ("proxy_2",  _("Alternative proxy server (2)"))])
+config.plugins.iptvplayer.kkiste_proxy = ConfigSelection(default="None", choices=[("None", _("None")),
+                                                                                           ("proxy_1", _("Alternative proxy server (1)")),
+                                                                                           ("proxy_2", _("Alternative proxy server (2)"))])
 config.plugins.iptvplayer.kkiste_alt_domain = ConfigText(default="", fixed_size=False)
 
 def GetConfigList():
@@ -112,7 +112,7 @@ class KKisteAG(CBaseHostClass):
                 subItems = []
                 section = ph.findall(section, ('<a', '>'), '</a>', flags=ph.START_S)
                 for idx in range(1, len(section), 2):
-                    url = ph.search(section[idx-1], ph.A)[1]
+                    url = ph.search(section[idx - 1], ph.A)[1]
                     title = ph.clean_html(section[idx])
                     if url == '#':
                         continue
@@ -133,7 +133,7 @@ class KKisteAG(CBaseHostClass):
             tmp = ph.find(data, ('<div', '>', 'tag_cloud'), ('<div', '>', 'loop-'), flags=0)[1]
             tmp = ph.rfindall(tmp, '</div>', ('<h3', '</h3>'), flags=ph.END_S)
             for idx in range(1, len(tmp), 2):
-                sTitle = ph.clean_html(tmp[idx-1])
+                sTitle = ph.clean_html(tmp[idx - 1])
                 key = filtersMap.get(sTitle, '')
                 if not key:
                     continue
@@ -141,7 +141,7 @@ class KKisteAG(CBaseHostClass):
                 filters = []
                 items = ph.findall(tmp[idx], ('<a', '>'), '</a>', flags=ph.START_S)
                 for i in range(1, len(items), 2):
-                    value = ph.search(ph.getattr(items[i-1], 'href'), '%s=([^&]+)' % key)[0]
+                    value = ph.search(ph.getattr(items[i - 1], 'href'), '%s=([^&]+)' % key)[0]
                     self.cacheFilters[key].append({'f_%s' % key:value, 'title':ph.clean_html(items[i])})
 
                 if self.cacheFilters[key]:
@@ -154,7 +154,7 @@ class KKisteAG(CBaseHostClass):
             pass
             # ToDo
 
-        MAIN_CAT_TAB = [{'category':'search',         'title': _('Search'),       'search_item':True},
+        MAIN_CAT_TAB = [{'category':'search', 'title': _('Search'), 'search_item':True},
                         {'category': 'search_history', 'title': _('Search history'),}]
         self.listsTab(MAIN_CAT_TAB, cItem)
 
@@ -169,7 +169,7 @@ class KKisteAG(CBaseHostClass):
         filter = self.cacheFiltersKeys[f_idx]
         f_idx += 1
         cItem['f_idx'] = f_idx
-        if f_idx  == len(self.cacheFiltersKeys):
+        if f_idx == len(self.cacheFiltersKeys):
             cItem['category'] = nextCategory
         self.listsTab(self.cacheFilters.get(filter, []), cItem)
 
@@ -292,7 +292,7 @@ class KKisteAG(CBaseHostClass):
             elif data[idx] == '}':
                 num -= 1
             if num == 0:
-                funData = data[start:idx+1]
+                funData = data[start:idx + 1]
                 break
             idx += 1
         return funData
@@ -435,7 +435,7 @@ class KKisteAG(CBaseHostClass):
         
         CBaseHostClass.handleService(self, index, refresh, searchPattern, searchType)
 
-        name     = self.currItem.get("name", '')
+        name = self.currItem.get("name", '')
         category = self.currItem.get("category", '')
         printDBG("handleService: ||| name[%s], category[%s] " % (name, category))
         self.currList = []

@@ -45,7 +45,7 @@ def Plugins(**kwargs):
     list.append(PluginDescriptor(name=(("E2iPlayer")), description=desc, where=PluginDescriptor.WHERE_MENU, fnc=startIPTVfromMenu))
     if config.plugins.iptvplayer.showinextensions.value:
         list.append(PluginDescriptor(name=(("E2iPlayer")), description=desc, where=[PluginDescriptor.WHERE_EXTENSIONSMENU], fnc=main))
-    if  IsWebInterfaceModuleAvailable() and config.plugins.iptvplayer.IPTVWebIterface.value:
+    if IsWebInterfaceModuleAvailable() and config.plugins.iptvplayer.IPTVWebIterface.value:
         try:
             list.append(PluginDescriptor(where=PluginDescriptor.WHERE_SESSIONSTART, fnc=sessionstart, needsRestart=False)) # activating IPTV web interface
         except Exception:
@@ -123,10 +123,10 @@ def doRunMain(session):
     session.open(E2iPlayerWidget)
 
 def runMain(session, nextFunction=doRunMain):
-    wgetpath     = IsExecutable(config.plugins.iptvplayer.wgetpath.value)
+    wgetpath = IsExecutable(config.plugins.iptvplayer.wgetpath.value)
     rtmpdumppath = IsExecutable(config.plugins.iptvplayer.rtmpdumppath.value)
-    f4mdumppath  = IsExecutable(config.plugins.iptvplayer.f4mdumppath.value)
-    platform     = config.plugins.iptvplayer.plarform.value
+    f4mdumppath = IsExecutable(config.plugins.iptvplayer.f4mdumppath.value)
+    platform = config.plugins.iptvplayer.plarform.value
     if platform in ["auto", "unknown"] or not wgetpath or not rtmpdumppath or not f4mdumppath:
         session.openWithCallback(boundFunction(nextFunction, session), IPTVSetupMainWidget)
     elif IPTVPlayerNeedInit():

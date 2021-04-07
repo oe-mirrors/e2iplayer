@@ -30,8 +30,8 @@ from Screens.MessageBox import MessageBox
 ###################################################
 # Config options for HOST
 ###################################################
-config.plugins.iptvplayer.vidcorn_login     = ConfigText(default="", fixed_size=False)
-config.plugins.iptvplayer.vidcorn_password  = ConfigText(default="", fixed_size=False)
+config.plugins.iptvplayer.vidcorn_login = ConfigText(default="", fixed_size=False)
+config.plugins.iptvplayer.vidcorn_password = ConfigText(default="", fixed_size=False)
 
 def GetConfigList():
     optionList = []
@@ -51,13 +51,13 @@ class VidCorn(CBaseHostClass, CaptchaHelper):
         self.HTTP_HEADER = self.cm.getDefaultHeader(browser='chrome')
         self.defaultParams = {'header':self.HTTP_HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
 
-        self.MAIN_URL    = 'https://vidcorn.org/'
+        self.MAIN_URL = 'https://vidcorn.org/'
         self.DEFAULT_ICON_URL = 'https://www.trackalytics.com/assets/thumbnails/vidcorn.com.jpg'
 
         self.filters = []
         self.cacheLinks = {}
         self.loggedIn = None
-        self.login    = ''
+        self.login = ''
         self.password = ''
 
     def getPage(self, baseUrl, addParams={}, post_data=None):
@@ -85,7 +85,7 @@ class VidCorn(CBaseHostClass, CaptchaHelper):
             params = MergeDicts(cItem, {'category':category, 'f_type':category, 'title':title, 'url':self.getFullUrl(url)})
             self.addDir(params)
         
-        MAIN_CAT_TAB = [{'category':'search',         'title': _('Search'),       'search_item':True},
+        MAIN_CAT_TAB = [{'category':'search', 'title': _('Search'), 'search_item':True},
                         {'category': 'search_history', 'title': _('Search history'),}]
         self.listsTab(MAIN_CAT_TAB, cItem)
 
@@ -162,9 +162,9 @@ class VidCorn(CBaseHostClass, CaptchaHelper):
         post_data['page'] = str(page)
         post_data['data_type'] = cItem['f_type']
         post_data['filter_by'] = cItem.get('f_filter', 'all')
-        post_data['order_by']  = cItem.get('f_order', '8')
-        post_data['keyword']   = cItem.get('f_keyword', '0')
-        post_data['optradio']  = cItem.get('f_optradio', '0')
+        post_data['order_by'] = cItem.get('f_order', '8')
+        post_data['keyword'] = cItem.get('f_keyword', '0')
+        post_data['optradio'] = cItem.get('f_optradio', '0')
 
         url = self.getFullUrl('/services/fetch_pages')
         
@@ -205,8 +205,8 @@ class VidCorn(CBaseHostClass, CaptchaHelper):
         post_data = {}
         page = cItem.get('page', 0)
         post_data['page'] = str(page)
-        post_data['order_by']  = cItem.get('f_order', '1')
-        post_data['keyword']   = cItem.get('f_keyword', '0')
+        post_data['order_by'] = cItem.get('f_order', '1')
+        post_data['keyword'] = cItem.get('f_keyword', '0')
 
         url = self.getFullUrl('/services/fetch_lists')
 
@@ -226,7 +226,7 @@ class VidCorn(CBaseHostClass, CaptchaHelper):
         post_data = {}
         page = cItem.get('page', 0)
         post_data['page'] = str(page)
-        post_data['list']   = cItem.get('list_id', '0')
+        post_data['list'] = cItem.get('list_id', '0')
 
         url = self.getFullUrl('/services/fetch_list_content')
 
@@ -247,7 +247,7 @@ class VidCorn(CBaseHostClass, CaptchaHelper):
         page = cItem.get('page', 0)
         post_data['page'] = str(page)
         post_data['filter_by'] = cItem.get('f_filter', '0')
-        post_data['keyword']   = cItem.get('f_keyword', '0')
+        post_data['keyword'] = cItem.get('f_keyword', '0')
 
         url = self.getFullUrl('/services/fetch_people')
 
@@ -505,7 +505,7 @@ class VidCorn(CBaseHostClass, CaptchaHelper):
         title = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(tmp, ('<h1', '>'), ('</h1', '>'), False)[1])
         title1 = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(tmp, ('<h3', '>'), ('</h3', '>'), False)[1])
         if title1:
-            title  = '%s (%s)' % (title, title1)
+            title = '%s (%s)' % (title, title1)
 
         desc = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(tmp, ('<div', '>', 'description'), ('</div', '>'), False)[1])
 
@@ -542,9 +542,9 @@ class VidCorn(CBaseHostClass, CaptchaHelper):
         if title == '':
             title = cItem['title']
         if icon == '':
-            icon  = cItem.get('icon', self.DEFAULT_ICON_URL)
+            icon = cItem.get('icon', self.DEFAULT_ICON_URL)
         if desc == '':
-            desc  = cItem.get('desc', '')
+            desc = cItem.get('desc', '')
         
         return [{'title':self.cleanHtmlStr(title), 'text': self.cleanHtmlStr(desc), 'images':[{'title':'', 'url':self.getFullUrl(icon)}], 'other_info':{'custom_items_list':itemsList}}]
         
@@ -627,7 +627,7 @@ class VidCorn(CBaseHostClass, CaptchaHelper):
         
         CBaseHostClass.handleService(self, index, refresh, searchPattern, searchType)
 
-        name     = self.currItem.get("name", '')
+        name = self.currItem.get("name", '')
         category = self.currItem.get("category", '')
         printDBG("handleService: ||| name[%s], category[%s] " % (name, category))
         self.currList = []

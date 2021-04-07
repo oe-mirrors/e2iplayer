@@ -63,9 +63,9 @@ class MergeDownloader(BaseDownloader):
         
     def _checkWorkingCallBack(self, callBackFun, code, data):
         reason = ''
-        sts    = True
+        sts = True
         if code != 0:
-            sts    = False
+            sts = False
             reason = data
             self.iptv_sys = None
             callBackFun(sts, reason)
@@ -78,18 +78,18 @@ class MergeDownloader(BaseDownloader):
         
     def _checkWgetWorkingCallBack(self, callBackFun, code, data):
         reason = ''
-        sts    = True
+        sts = True
         if code != 0:
-            sts    = False
+            sts = False
             reason = data
         self.iptv_sys = None
         callBackFun(sts, reason)
     
     def start(self, url, filePath, params={}):
         self.downloaderParams = params
-        self.fileExtension    = '' # should be implemented in future
-        self.url              = url
-        self.filePath         = filePath
+        self.fileExtension = '' # should be implemented in future
+        self.url = url
+        self.filePath = filePath
         
         try:
             urlsKeys = self.url.split('merge://')[1].split('|')
@@ -114,9 +114,9 @@ class MergeDownloader(BaseDownloader):
         self.outData = ''
         self.contentType = 'unknown'
         filePath = self.multi['files'][self.currIdx]
-        url      = self.multi['urls'][self.currIdx]
+        url = self.multi['urls'][self.currIdx]
         
-        info    = ""
+        info = ""
         retries = 0
         
         cmd = DMHelper.getBaseWgetCmd(self.downloaderParams) + (' %s -t %d ' % (info, retries)) + '"' + url + '" -O "' + filePath + '" > /dev/null'
@@ -164,7 +164,7 @@ class MergeDownloader(BaseDownloader):
         if None != self.iptv_sys:
             self.iptv_sys.kill()
             self.iptv_sys = None
-        if  self.status in [DMHelper.STS.DOWNLOADING, DMHelper.STS.POSTPROCESSING]:
+        if self.status in [DMHelper.STS.DOWNLOADING, DMHelper.STS.POSTPROCESSING]:
             if self.console:
                 self.console.sendCtrlC() # kill # produce zombies
                 self._cmdFinished(-1, True)

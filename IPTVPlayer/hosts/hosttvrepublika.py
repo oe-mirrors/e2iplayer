@@ -44,9 +44,9 @@ class TVRepublkaPL(CBaseHostClass):
         params = {'good_for_fav': True, 'title':'Telewizja Republika - na żywo', 'url':'http://live.telewizjarepublika.pl/live.php', 'icon':self.getFullIconUrl('/imgcache/750x400/c/uploads/news/republika.png')}
         self.addVideo(params)
         
-        MAIN_CAT_TAB = [{'category':'list_items',      'title': 'Poland Daily',   'url':self.getFullUrl('/poland-daily')},
-                        {'category':'list_items',      'title': 'Wideo',          'url':self.getFullUrl('/wideo')},
-                        {'category':'magazines',       'title': 'Magazyny',       'url':self.getFullUrl('/wideo')},]
+        MAIN_CAT_TAB = [{'category':'list_items', 'title': 'Poland Daily', 'url':self.getFullUrl('/poland-daily')},
+                        {'category':'list_items', 'title': 'Wideo', 'url':self.getFullUrl('/wideo')},
+                        {'category':'magazines', 'title': 'Magazyny', 'url':self.getFullUrl('/wideo')},]
         self.listsTab(MAIN_CAT_TAB, cItem)
     
     def listItems(self, cItem):
@@ -61,7 +61,7 @@ class TVRepublkaPL(CBaseHostClass):
         for item in data:
             url = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''\shref=['"]([^"^']+?)['"]''')[0])
             title = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(item, ('<div', '>', 'video-title'), ('</div', '>'))[1])
-            desc  = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(item, ('<div', '>', 'video-date'), ('</div', '>'))[1])
+            desc = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(item, ('<div', '>', 'video-date'), ('</div', '>'))[1])
             if not self.cm.isValidUrl(url):
                 continue
             icon = self.getFullIconUrl(self.cm.ph.getSearchGroups(item, '''\ssrc=['"]([^"^']+?)['"]''')[0])
@@ -105,9 +105,9 @@ class TVRepublkaPL(CBaseHostClass):
             for item in tmp:
                 type = self.cm.ph.getSearchGroups(item, '''type=['"]([^'^"]+?)['"]''')[0].lower()
                 name = self.cm.ph.getSearchGroups(item, '''label=['"]([^'^"]+?)['"]''')[0]
-                url  = self.cm.ph.getSearchGroups(item, '''src=['"]([^'^"]+?)['"]''')[0]
+                url = self.cm.ph.getSearchGroups(item, '''src=['"]([^'^"]+?)['"]''')[0]
                 if name == '':
-                    name = '%s. %s' % (str(len(urlTab)+1), type)
+                    name = '%s. %s' % (str(len(urlTab) + 1), type)
                 
                 if 'video/mp4' == type: 
                     urlTab.append({'name':name, 'url':self.getFullUrl(url), 'need_resolve':0})
@@ -125,8 +125,8 @@ class TVRepublkaPL(CBaseHostClass):
         if 0 == len(urlTab):
             tmp = self.cm.ph.getAllItemsBeetwenNodes(data, ('<iframe', '>', 'player'), ('</div', '>'))
             for item in tmp:
-                url  = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''src=['"]([^'^"]+?)['"]''')[0])
-                name = '%s. %s' % (str(len(urlTab)+1), self.up.getHostName(url))
+                url = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''src=['"]([^'^"]+?)['"]''')[0])
+                name = '%s. %s' % (str(len(urlTab) + 1), self.up.getHostName(url))
                 urlTab.append({'name':name, 'url':url, 'need_resolve':1})
             
         return urlTab
@@ -149,9 +149,9 @@ class TVRepublkaPL(CBaseHostClass):
         
         CBaseHostClass.handleService(self, index, refresh, searchPattern, searchType)
 
-        name     = self.currItem.get("name", '')
+        name = self.currItem.get("name", '')
         category = self.currItem.get("category", '')
-        mode     = self.currItem.get("mode", '')
+        mode = self.currItem.get("mode", '')
         
         printDBG("handleService: >> name[%s], category[%s] " % (name, category))
         self.currList = []

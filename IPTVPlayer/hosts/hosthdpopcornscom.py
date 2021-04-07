@@ -39,9 +39,9 @@ class HDPopcornsCom(CBaseHostClass):
         self.MAIN_URL = 'http://hdpopcorns.co/'
         self.DEFAULT_ICON_URL = 'http://7428.net/wp-content/uploads/2014/07/Movie-Time-Ticket-Vector.jpg' 
         
-        self.MAIN_CAT_TAB = [{'category':'list_items',        'title': _('Categories'),           'url':self.getMainUrl()},
-                             {'category': 'search',            'title': _('Search'),               'search_item': True,},
-                             {'category': 'search_history',    'title': _('Search history'),} 
+        self.MAIN_CAT_TAB = [{'category':'list_items', 'title': _('Categories'), 'url':self.getMainUrl()},
+                             {'category': 'search', 'title': _('Search'), 'search_item': True,},
+                             {'category': 'search_history', 'title': _('Search history'),} 
                             ]
         
         self.cacheFilters = {}
@@ -170,9 +170,9 @@ class HDPopcornsCom(CBaseHostClass):
         
         data = self.cm.ph.getAllItemsBeetwenMarkers(data, '<article', '</article>', withMarkers=True)
         for item in data:
-            url    = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''href=['"]([^'^"]+?)['"]''')[0])
-            icon   = self.getFullIconUrl(self.cm.ph.getSearchGroups(item, '''src=['"]([^'^"]+?)['"]''')[0].strip())
-            desc  = self.cleanHtmlStr(self.cm.ph.getSearchGroups(item, '''alt=['"]([^'^"]+?)['"]''')[0])
+            url = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''href=['"]([^'^"]+?)['"]''')[0])
+            icon = self.getFullIconUrl(self.cm.ph.getSearchGroups(item, '''src=['"]([^'^"]+?)['"]''')[0].strip())
+            desc = self.cleanHtmlStr(self.cm.ph.getSearchGroups(item, '''alt=['"]([^'^"]+?)['"]''')[0])
             if desc == '':
                 desc = self.cleanHtmlStr(self.cm.ph.getSearchGroups(item, '''title=['"]([^'^"]+?)['"]''')[0])
             title = self.cleanHtmlStr(item)
@@ -216,7 +216,7 @@ class HDPopcornsCom(CBaseHostClass):
             if 1 != self.up.checkHostSupport(url):
                 continue 
             
-            title = '%s - Trailer %s' % (cItem['title'], len(self.currList)+1)
+            title = '%s - Trailer %s' % (cItem['title'], len(self.currList) + 1)
             params = dict(cItem)
             params.update({'good_for_fav': True, 'title':title, 'url':url})
             self.addVideo(params)
@@ -229,7 +229,7 @@ class HDPopcornsCom(CBaseHostClass):
         data = self.cm.ph.getDataBeetwenMarkers(data, '<table', '</table>')[1]
         data = self.cm.ph.getAllItemsBeetwenMarkers(data, '<tr', '</tr>')
         for item in data:
-            url   = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''href=['"]([^'^"]+?)['"]''')[0])
+            url = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''href=['"]([^'^"]+?)['"]''')[0])
             title = self.cleanHtmlStr(item)
             if not self.cm.isValidUrl(url):
                 continue
@@ -278,7 +278,7 @@ class HDPopcornsCom(CBaseHostClass):
             
             data = self.cm.ph.getAllItemsBeetwenMarkers(data, '<div id="btn', '</a>', withMarkers=True)
             for item in data:
-                url  = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''href=['"]([^'^"]+?)['"]''')[0])
+                url = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''href=['"]([^'^"]+?)['"]''')[0])
                 if '///downloads/' in url:
                     continue
                 if not self.cm.isValidUrl(url):
@@ -339,20 +339,20 @@ class HDPopcornsCom(CBaseHostClass):
             return retTab
         self.setMainUrl(self.cm.meta['url'])
         
-        desc  = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(data, '<h2>Synopsis</h2>', '</p>', False)[1])
+        desc = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(data, '<h2>Synopsis</h2>', '</p>', False)[1])
         
         data = self.cm.ph.getDataBeetwenMarkers(data, '<div class="single_post">', '</h2>')[1]
         title = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(data, '<header', '</header>')[1])
-        icon  = self.getFullIconUrl(self.cm.ph.getSearchGroups(data, '''<img[^>]+?src=['"]([^"^']+?\.jpe?g[^"^']*?)["']''')[0])
+        icon = self.getFullIconUrl(self.cm.ph.getSearchGroups(data, '''<img[^>]+?src=['"]([^"^']+?\.jpe?g[^"^']*?)["']''')[0])
         
-        mapDesc = {'Year':'year', 'Quality':'quality', 'Language':'language',  'Genre': 'genres', 'Cast:':'cast', 'Episodes':'episodes'}
+        mapDesc = {'Year':'year', 'Quality':'quality', 'Language':'language', 'Genre': 'genres', 'Cast:':'cast', 'Episodes':'episodes'}
         tmp = re.compile('''>\s*([^\:]+?)\:(.+?)<br''').findall(data)
         for item in tmp:
             key = self.cleanHtmlStr(item[0])
             key = mapDesc.get(key, '')
             if key == '':
                 continue
-            value  = self.cleanHtmlStr(item[1]).replace(' , ', ', ')
+            value = self.cleanHtmlStr(item[1]).replace(' , ', ', ')
             if value != '':
                 otherInfo[key] = value
             
@@ -374,9 +374,9 @@ class HDPopcornsCom(CBaseHostClass):
         
         CBaseHostClass.handleService(self, index, refresh, searchPattern, searchType)
 
-        name     = self.currItem.get("name", '')
+        name = self.currItem.get("name", '')
         category = self.currItem.get("category", '')
-        mode     = self.currItem.get("mode", '')
+        mode = self.currItem.get("mode", '')
         
         printDBG("handleService: |||||||||||||||||||||||||||||||||||| name[%s], category[%s] " % (name, category))
         self.currList = []

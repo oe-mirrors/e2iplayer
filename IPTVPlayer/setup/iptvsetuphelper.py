@@ -4,7 +4,7 @@
 # LOCAL import
 ###################################################
 from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, iptv_system, IsExecutable
-from Plugins.Extensions.IPTVPlayer.iptvdm.iptvdh   import DMHelper
+from Plugins.Extensions.IPTVPlayer.iptvdm.iptvdh import DMHelper
 ###################################################
 
 ###################################################
@@ -39,14 +39,14 @@ def SetupDownloaderCmdCreator(url, file):
 class CCmdValidator:
     def __init__(self, finishCallback, validatorFun, cmdTabs):
         printDBG("CCmdValidator.__init__ ---------------------------------")
-        self.cmdTabs        = cmdTabs
-        self.stsTab         = []
-        self.dataTab        = []
+        self.cmdTabs = cmdTabs
+        self.stsTab = []
+        self.dataTab = []
         self.finishCallback = finishCallback
-        self.validatorFun   = validatorFun
-        self.detectIdx      = 0
+        self.validatorFun = validatorFun
+        self.detectIdx = 0
         
-        self.outData   = ""
+        self.outData = ""
         # flags
         self.termination = False
         self.cmd = None
@@ -56,14 +56,14 @@ class CCmdValidator:
     
     def start(self):
         printDBG("CCmdValidator.start")
-        self.outData   = ""
+        self.outData = ""
         self.detectIdx = 0
         self._detect()
         
     def terminate(self):
         self.termination = True
-        self.finishCallback  = None
-        self.validatorFun    = None
+        self.finishCallback = None
+        self.validatorFun = None
         if self.cmd:
             self.cmd.kill(False)
         self.cmd = None
@@ -74,11 +74,11 @@ class CCmdValidator:
             return
         
         finishCallback = self.finishCallback
-        self.finishCallback  = None
-        self.validatorFun    = None
+        self.finishCallback = None
+        self.validatorFun = None
         
-        self.cmdTabs      = []
-        self.outData      = ""
+        self.cmdTabs = []
+        self.outData = ""
         finishCallback(self.stsTab, self.dataTab)
 
     def _cmdFinished(self, code, data):
@@ -101,43 +101,43 @@ class CCmdValidator:
 class CBinaryStepHelper:
     def __init__(self, name, platform, openSSLVersion, configOption):
         # members
-        self.name           = name
-        self.platform       = platform
+        self.name = name
+        self.platform = platform
         self.openSSLVersion = openSSLVersion
-        self.configOption   = configOption
+        self.configOption = configOption
         
         self.paths = []
         self.debugMessagesAllowed = False
         self.installChoiseList = []
         
         # handlers to functions
-        self.detectCmdBuilder        = self._detectCmdBuilder
-        self.detectValidator         = self._detectValidator
+        self.detectCmdBuilder = self._detectCmdBuilder
+        self.detectValidator = self._detectValidator
         
-        self.downloadCmdBuilder      = self._downloadCmdBuilder
-        self.downloadValidator       = self._downloadValidator
+        self.downloadCmdBuilder = self._downloadCmdBuilder
+        self.downloadValidator = self._downloadValidator
         
-        self.installCmdBuilder      = self._installCmdBuilder
-        self.installValidator       = self._installValidator
+        self.installCmdBuilder = self._installCmdBuilder
+        self.installValidator = self._installValidator
         
         self.saveConfigOptionHandler = self._saveConfigOptionHandler
-        self.deprecatedHandler       = None
-        self.finishHandler           = None
+        self.deprecatedHandler = None
+        self.finishHandler = None
         
-        self.messages = {'detection':       [_('Detection of the "%s" utility.') % self.name, _('The "%s" utility is used by IPTVPlayer.') % self.name],
-                         'download':        [_('Downloading "%s".') % self.name, None],
-                         'dwn_failed':      [None, _('Downloading "%s" failed. \nDo you want to retry?') % self.name],
-                         'not_detected_1':  [None, _('Utility "%s" has not been detected. \nWhat do you want to do?') % self.name],
-                         'not_detected_2':  [None, _('Utility "%s" has not been detected. \nDo you want to install it?') % self.name],
-                         'deprecated_1':    [None, _('Utility "%s" is deprecated. \nWhat do you want to do?') % self.name],
-                         'deprecated_2':    [None, _('Utility "%s" is deprecated. \nDo you want to install new one?') % self.name],
-                         'install':         [_('Installing "%s".') % self.name, None]}
+        self.messages = {'detection': [_('Detection of the "%s" utility.') % self.name, _('The "%s" utility is used by IPTVPlayer.') % self.name],
+                         'download': [_('Downloading "%s".') % self.name, None],
+                         'dwn_failed': [None, _('Downloading "%s" failed. \nDo you want to retry?') % self.name],
+                         'not_detected_1': [None, _('Utility "%s" has not been detected. \nWhat do you want to do?') % self.name],
+                         'not_detected_2': [None, _('Utility "%s" has not been detected. \nDo you want to install it?') % self.name],
+                         'deprecated_1': [None, _('Utility "%s" is deprecated. \nWhat do you want to do?') % self.name],
+                         'deprecated_2': [None, _('Utility "%s" is deprecated. \nDo you want to install new one?') % self.name],
+                         'install': [_('Installing "%s".') % self.name, None]}
          
     def _detectCmdBuilder(self, path):
         return path + " 2>&1 "
         
     def _detectValidator(self, code, data):
-        if 0==code:
+        if 0 == code:
             return True, False
         else:
             return False, True
@@ -149,7 +149,7 @@ class CBinaryStepHelper:
         return cmd
         
     def _downloadValidator(self, code, data):
-        if 0==code:
+        if 0 == code:
             return True, False
         else:
             return False, True
@@ -160,7 +160,7 @@ class CBinaryStepHelper:
         return cmd
     
     def _installValidator(self, code, data):
-        if 0==code:
+        if 0 == code:
             return True, False
         else:
             return False, True

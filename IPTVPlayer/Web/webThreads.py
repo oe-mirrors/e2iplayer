@@ -159,13 +159,13 @@ class buildConfigsHTML(threading.Thread):
 					#print ConfName, '=' , CFGtype
 					if CFGtype in ['ConfigYesNo', 'ConfigOnOff', 'ConfigEnableDisable', 'ConfigBoolean']:
 						if int(confKey[1].getValue()) == 0:
-							CFGElements =  '<input type="radio" name="cmd" value="ON:%s">%s</input>' % (ConfName, _('Yes'))
+							CFGElements = '<input type="radio" name="cmd" value="ON:%s">%s</input>' % (ConfName, _('Yes'))
 							CFGElements += '<input type="radio" name="cmd" value="OFF:%s" checked="checked">%s</input>' % (ConfName, _('No'))
 						else:
-							CFGElements =  '<input type="radio" name="cmd" value="ON:%s" checked="checked">%s</input>' % (ConfName, _('Yes'))
+							CFGElements = '<input type="radio" name="cmd" value="ON:%s" checked="checked">%s</input>' % (ConfName, _('Yes'))
 							CFGElements += '<input type="radio" name="cmd" value="OFF:%s">%s</input>' % (ConfName, _('No'))
 					elif CFGtype in ['ConfigInteger']:
-						CFGElements = '<input type="number" name="%s" value="%d" />' %('INT:' + ConfName, int(confKey[1].getValue()))
+						CFGElements = '<input type="number" name="%s" value="%d" />' % ('INT:' + ConfName, int(confKey[1].getValue()))
 					else:
 						try:
 							CFGElements = confKey[1].getHTML('CFG:' + ConfName)
@@ -198,9 +198,9 @@ class buildConfigsHTML(threading.Thread):
 	
 			# Column 3 enable/disable host in GUI
 			if IsHostEnabled(hostName):
-				OnOffState = formSUBMITvalue([('cmd', 'OFF:host'+ hostName)], _('Disable'))
+				OnOffState = formSUBMITvalue([('cmd', 'OFF:host' + hostName)], _('Disable'))
 			else:
-				OnOffState = formSUBMITvalue([('cmd', 'ON:host'+ hostName)],  _('Enable'))
+				OnOffState = formSUBMITvalue([('cmd', 'ON:host' + hostName)], _('Enable'))
 
 			# Column 4 host configuration options
 			try:
@@ -304,7 +304,7 @@ class doUseHostAction(threading.Thread):
 					links = settings.retObj.value[myID].urlItems
 				except Exception as e:
 					print("ListForItem>urlItems exception:", str(e))
-					links='NOVALIDURLS'
+					links = 'NOVALIDURLS'
 				try:
 					settings.retObj = settings.activeHost['Obj'].getLinksForVideo(myID, settings.retObj.value[myID]) #returns "NOT_IMPLEMENTED" when host is using curlitem
 				except Exception as e:
@@ -313,8 +313,8 @@ class doUseHostAction(threading.Thread):
 				
 				if settings.retObj.status == RetHost.NOT_IMPLEMENTED and links != 'NOVALIDURLS':
 					print("getLinksForVideo not implemented, using CUrlItem")
-					tempUrls=[]
-					iindex=1
+					tempUrls = []
+					iindex = 1
 					for link in links:
 						if link.name == '':
 							tempUrls.append(CUrlItem('link %d' % iindex, link.url, link.urlNeedsResolve))
@@ -393,7 +393,7 @@ class doGlobalSearch(threading.Thread):
 			if len(searchTypes) == 0:
 				ret = self.host.getSearchResults(settings.GlobalSearchQuery, '')
 				self.stopIfRequested()
-				if len(ret.value) >0:
+				if len(ret.value) > 0:
 					settings.GlobalSearchResults[hostName] = (None, ret.value)
 			else:
 				for SearchType in searchTypes:

@@ -39,9 +39,9 @@ class OpenSubOrgProvider(CBaseSubProviderClass):
     LANGUAGE_CACHE = []
     
     def __init__(self, params={}):
-        self.USER_AGENT   = 'IPTVPlayer v1'
-        self.HTTP_HEADER   = {'User-Agent':self.USER_AGENT, 'Accept':'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8', 'Accept-Encoding':'gzip, deflate'}
-        self.MAIN_URL      = 'http://api.opensubtitles.org/xml-rpc'
+        self.USER_AGENT = 'IPTVPlayer v1'
+        self.HTTP_HEADER = {'User-Agent':self.USER_AGENT, 'Accept':'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8', 'Accept-Encoding':'gzip, deflate'}
+        self.MAIN_URL = 'http://api.opensubtitles.org/xml-rpc'
         
         params['cookie'] = 'opensubtitlesorg.cookie'
         CBaseSubProviderClass.__init__(self, params)
@@ -49,7 +49,7 @@ class OpenSubOrgProvider(CBaseSubProviderClass):
         
         self.defaultParams = {'header':self.HTTP_HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
         self.lastApiError = {'code':0, 'message':''}
-        self.loginToken   = ''
+        self.loginToken = ''
         
         self.dInfo = params['discover_info']
         
@@ -58,13 +58,13 @@ class OpenSubOrgProvider(CBaseSubProviderClass):
         
         stage = 'none'
         tagsStack = []
-        tagName   = ''
-        startTag  = False
-        endTag    = False
+        tagName = ''
+        startTag = False
+        endTag = False
         codingTag = False
         
         value = None
-        name  = None
+        name = None
         obj = {}
         
         for idx in range(len(data)):
@@ -72,9 +72,9 @@ class OpenSubOrgProvider(CBaseSubProviderClass):
             if it == '<':
                 if stage in ['text', 'none']: 
                     stage = 'tag'
-                    tagName   = ''
-                    startTag  = False
-                    endTag    = False
+                    tagName = ''
+                    startTag = False
+                    endTag = False
                     codingTag = False
                 else: 
                     raise Exception("Not expected < stage[%s] idx[%d]\n========================%s\n" % (stage, idx, data[idx:]))
@@ -94,7 +94,7 @@ class OpenSubOrgProvider(CBaseSubProviderClass):
                                 raise Exception("Empty tag name detected")
                             tagsStack.append(tagName)
                             text = ''
-                            if  '/' != tagName[-1]:
+                            if '/' != tagName[-1]:
                                 stage = 'text'
                                 continue
                             else:
@@ -104,15 +104,15 @@ class OpenSubOrgProvider(CBaseSubProviderClass):
                                 raise Exception("End not existing start tag [%s][%s]" % (tagName, tagsStack[-1]))
                             del tagsStack[-1]
                             if tagName == 'name':
-                                name  = text
+                                name = text
                             elif tagName == 'value':
-                                value  = text
+                                value = text
                             elif 'double' == tagName:
                                 text = float(text)
                             elif 'member' == tagName:
                                 if name != None:
                                     obj[name] = value
-                                    name  = None
+                                    name = None
                                     value = None
                             elif 'struct' == tagName:
                                 retJson.append(obj)
@@ -222,7 +222,7 @@ class OpenSubOrgProvider(CBaseSubProviderClass):
                 for item in data:
                     if 'LanguageName' in item and 'SubLanguageID' in item and 'ISO639' in item:
                         params = {'title':'{0} [{1}]'.format(item['LanguageName'], item['SubLanguageID']), 'lang':item['SubLanguageID']}
-                        if lang !=  item['ISO639']:
+                        if lang != item['ISO639']:
                             list.append(params)
                         else:
                             defaultLanguageItem = params
@@ -242,7 +242,7 @@ class OpenSubOrgProvider(CBaseSubProviderClass):
             title = item.get('MovieName', '')
         
         cdMax = item.get('SubSumCD', '1')
-        cd    = item.get('SubActualCD', '1')
+        cd = item.get('SubActualCD', '1')
         if cdMax != '1':
             title += ' CD[{0}/{1}]'.format(cdMax, cd)
         
@@ -253,7 +253,7 @@ class OpenSubOrgProvider(CBaseSubProviderClass):
         return RemoveDisallowedFilenameChars(title)
         
     def _getFileName(self, subItem):
-        title = self._getSubtitleTitle(subItem).replace('_', '.').replace('.'+subItem['SubFormat'], '').replace(' ', '.')
+        title = self._getSubtitleTitle(subItem).replace('_', '.').replace('.' + subItem['SubFormat'], '').replace(' ', '.')
         match = re.search(r'[^.]', title)
         if match:
             title = title[match.start():]
@@ -301,7 +301,7 @@ class OpenSubOrgProvider(CBaseSubProviderClass):
     def getType(self, cItem):
         printDBG("OpenSubOrgProvider.getType")
         imdbid = cItem['imdbid']
-        title  = cItem['title']
+        title = cItem['title']
         type = self.getTypeFromThemoviedb(imdbid, title)
         if type == 'series':
             promSeason = self.dInfo.get('season')
@@ -317,9 +317,9 @@ class OpenSubOrgProvider(CBaseSubProviderClass):
             
     def getEpisodes(self, cItem, nextCategory):
         printDBG("OpenSubOrgProvider.getEpisodes")
-        imdbid    = cItem['imdbid']
+        imdbid = cItem['imdbid']
         itemTitle = cItem['item_title']
-        season    = cItem['season']
+        season = cItem['season']
         
         promEpisode = self.dInfo.get('episode')
         sts, tab = self.imdbGetEpisodesForSeason(imdbid, season, promEpisode)
@@ -355,12 +355,12 @@ class OpenSubOrgProvider(CBaseSubProviderClass):
     def downloadSubtitleFile(self, cItem):
         printDBG("OpenSubOrgProvider.downloadSubtitleFile")
         retData = {}
-        title    = cItem['title']
+        title = cItem['title']
         fileName = cItem['file_name']
-        url      = cItem['url']
-        lang     = cItem['lang']
+        url = cItem['url']
+        lang = cItem['lang']
         encoding = cItem['encoding']
-        imdbid   = cItem['imdbid']
+        imdbid = cItem['imdbid']
         
         urlParams = dict(self.defaultParams)
         urlParams['max_data_size'] = self.getMaxFileSize()
@@ -402,7 +402,7 @@ class OpenSubOrgProvider(CBaseSubProviderClass):
         
         CBaseSubProviderClass.handleService(self, index, refresh)
 
-        name     = self.currItem.get("name", '')
+        name = self.currItem.get("name", '')
         category = self.currItem.get("category", '')
         
         printDBG("handleService: name[%s], category[%s] " % (name, category))

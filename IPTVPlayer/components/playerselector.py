@@ -69,7 +69,7 @@ class PlayerSelectorWidget(Screen):
             offsetCoverY = 80
         
         # image size
-        coverWidth  = iconSize
+        coverWidth = iconSize
         coverHeight = iconSize
         
         # space/distance between images
@@ -81,8 +81,8 @@ class PlayerSelectorWidget(Screen):
         markerHeight = 45 + coverHeight
         
         # position of first marker 
-        offsetMarkerX = offsetCoverX - (markerWidth - coverWidth)/2
-        offsetMarkerY = offsetCoverY - (markerHeight - coverHeight)/2
+        offsetMarkerX = offsetCoverX - (markerWidth - coverWidth) / 2
+        offsetMarkerY = offsetCoverY - (markerHeight - coverHeight) / 2
         
         # how to calculate position of image with indexes indxX, indxY:
         #posX = offsetCoverX + (coverWidth + disWidth) * indxX
@@ -110,15 +110,15 @@ class PlayerSelectorWidget(Screen):
         self.markerWidth = markerWidth
         self.markerHeight = markerHeight
         
-        self.inList    = list(inList)
-        self.currList  = self.inList
-        self.outList   = outList
+        self.inList = list(inList)
+        self.currList = self.inList
+        self.outList = outList
 
         self.groupName = groupName
-        self.groupObj  = groupObj
+        self.groupObj = groupObj
         self.numOfLockedItems = numOfLockedItems
         
-        self.IconsSize  = iconSize #do ladowania ikon
+        self.IconsSize = iconSize #do ladowania ikon
         self.MarkerSize = self.IconsSize + 45
         
         self.lastSelection = PlayerSelectorWidget.LAST_SELECTION.get(self.groupName, 0)
@@ -139,7 +139,7 @@ class PlayerSelectorWidget(Screen):
             <widget name="marker" zPosition="2" position="%d,%d" size="%d,%d" transparent="1" alphatest="blend" />
             <widget name="page_marker" zPosition="3" position="%d,%d" size="%d,%d" transparent="1" alphatest="blend" />
             <widget name="menu" zPosition="3" position="%d,10" size="70,30" transparent="1" alphatest="blend" />
-            """  %(
+            """ % (
               GetIPTVPlayerVerstion(),
               offsetCoverX + tmpX * numOfCol + offsetCoverX - disWidth,  # width of window
               offsetCoverY + tmpY * numOfRow + offsetCoverX - disHeight, # height of window
@@ -157,7 +157,7 @@ class PlayerSelectorWidget(Screen):
             <widget name="marker" zPosition="2" position="%d,%d" size="%d,%d" transparent="1" alphatest="blend" />
             <widget name="page_marker" zPosition="3" position="%d,%d" size="%d,%d" transparent="1" alphatest="blend" />
             <widget name="menu" zPosition="3" position="%d,10" size="70,30" transparent="1" alphatest="blend" />
-            """  %(
+            """ % (
               GetIPTVPlayerVerstion(),
               offsetCoverX + tmpX * numOfCol + offsetCoverX - disWidth,  # width of window
               offsetCoverY + tmpY * numOfRow + offsetCoverX - disHeight, # height of window
@@ -169,8 +169,8 @@ class PlayerSelectorWidget(Screen):
               offsetCoverX + tmpX * numOfCol + offsetCoverX - disWidth - 70,
               )
         
-        for y in range(1, numOfRow+1):
-            for x in range(1, numOfCol+1):
+        for y in range(1, numOfRow + 1):
+            for x in range(1, numOfCol + 1):
                 skinCoverLine = """<widget name="cover_%s%s" zPosition="4" position="%d,%d" size="%d,%d" transparent="1" alphatest="blend" />""" % (x, y, 
                     (offsetCoverX + tmpX * (x - 1)), # pos X image
                     (offsetCoverY + tmpY * (y - 1)), # pos Y image
@@ -205,14 +205,14 @@ class PlayerSelectorWidget(Screen):
         
         self["actions"] = ActionMap(["WizardActions", "DirectionActions", "ColorActions", "IPTVPlayerListActions"],
         {
-            "ok":    self.ok_pressed,
-            "back":  self.back_pressed,
-            "left":  self.keyLeft,
+            "ok": self.ok_pressed,
+            "back": self.back_pressed,
+            "left": self.keyLeft,
             "right": self.keyRight,
-            "up":    self.keyUp,
-            "down":  self.keyDown,
-            "blue":  self.keyBlue,
-            "menu":  self.keyMenu,
+            "up": self.keyUp,
+            "down": self.keyDown,
+            "blue": self.keyBlue,
+            "menu": self.keyMenu,
         }, -1)
         
 
@@ -221,8 +221,8 @@ class PlayerSelectorWidget(Screen):
         self["menu"] = Cover3()
         
         
-        for y in range(1, self.numOfRow+1):
-            for x in range(1, self.numOfCol+1):
+        for y in range(1, self.numOfRow + 1):
+            for x in range(1, self.numOfCol + 1):
                 strIndex = "cover_%s%s" % (x, y)
                 self[strIndex] = Cover3()
                 
@@ -241,21 +241,21 @@ class PlayerSelectorWidget(Screen):
         self.onClose.remove(self.__onClose)
         try:
             if self.reorderingMode and self.numOfLockedItems > 0:
-                self.currList.extend(self.inList[len(self.inList)-self.numOfLockedItems:])
+                self.currList.extend(self.inList[len(self.inList) - self.numOfLockedItems:])
             
             if self.outList != self.currList:
                 for item in self.currList:
                     self.outList.append(item)
         except Exception:
             printExc()
-        idx = self.currLine * self.numOfCol +  self.dispX
+        idx = self.currLine * self.numOfCol + self.dispX
         printDBG(">>>>>>>>>>>>>>>>>>>>>>>>>>> __onClose idx[%s]" % idx)
         PlayerSelectorWidget.LAST_SELECTION[self.groupName] = idx
     
     #Calculate marker position Y
     def calcMarkerPosY(self):
         
-        if self.currLine >  (self.numOfLines - 1):
+        if self.currLine > (self.numOfLines - 1):
             self.currLine = 0
         elif self.currLine < 0:
             self.currLine = (self.numOfLines - 1)
@@ -271,7 +271,7 @@ class PlayerSelectorWidget(Screen):
         
         # if we are in last line dispX pos 
         # must be also corrected
-        if self.currLine ==  (self.numOfLines - 1):
+        if self.currLine == (self.numOfLines - 1):
             self.numItemsInLine = self.numOfItems - ((self.numOfLines - 1) * self.numOfCol) 
             if self.dispX > (self.numItemsInLine - 1):
                 self.dispX = self.numItemsInLine - 1
@@ -298,15 +298,15 @@ class PlayerSelectorWidget(Screen):
         self["marker"].setPixmap(self.markerPixmap)
         self["page_marker"].setPixmap(self.pageMarkerPixmap)
         self["menu"].setPixmap(self.menuPixmap)
-        self.offsetCoverX = self['marker'].position[0] + (self.markerWidth - self.coverWidth)/2
-        self.offsetCoverY = self['marker'].position[1] + (self.markerHeight - self.coverHeight)/2
+        self.offsetCoverX = self['marker'].position[0] + (self.markerWidth - self.coverWidth) / 2
+        self.offsetCoverY = self['marker'].position[1] + (self.markerHeight - self.coverHeight) / 2
         self.pageItemStartX = self['page_marker'].position[0]
         self.pageItemStartY = self['page_marker'].position[1]
         self.initDisplayList()
         return
         
     def reInitDisplayList(self):
-        self.lastSelection = self.currLine * self.numOfCol +  self.dispX
+        self.lastSelection = self.currLine * self.numOfCol + self.dispX
         self.calcDisplayVariables()
         self.initDisplayList()
         
@@ -338,9 +338,9 @@ class PlayerSelectorWidget(Screen):
         self.dispY = 0
         
     def updateIconsList(self, rangeList):
-        idx = self.currPage * (self.numOfCol*self.numOfRow)
-        for y in range(1, self.numOfRow+1):
-            for x in range(1, self.numOfCol+1):
+        idx = self.currPage * (self.numOfCol * self.numOfRow)
+        for y in range(1, self.numOfRow + 1):
+            for x in range(1, self.numOfCol + 1):
                 if idx >= rangeList[0] and idx <= rangeList[1]:
                     strIndex = "cover_%s%s" % (x, y)
                     printDBG("updateIconsList [%s]" % strIndex)
@@ -348,9 +348,9 @@ class PlayerSelectorWidget(Screen):
                 idx += 1
     
     def updateIcons(self):
-        idx = self.currPage * (self.numOfCol*self.numOfRow)
-        for y in range(1, self.numOfRow+1):
-            for x in range(1, self.numOfCol+1):
+        idx = self.currPage * (self.numOfCol * self.numOfRow)
+        for y in range(1, self.numOfRow + 1):
+            for x in range(1, self.numOfCol + 1):
                 strIndex = "cover_%s%s" % (x, y)
                 printDBG("updateIcon for self[%s]" % strIndex)
                 if idx < self.numOfItems:
@@ -377,37 +377,37 @@ class PlayerSelectorWidget(Screen):
         return
         
     def keyRight(self):
-        prev_idx = self.currLine * self.numOfCol +  self.dispX
+        prev_idx = self.currLine * self.numOfCol + self.dispX
         self.dispX += 1
         self.calcMarkerPosX()
         self.moveMarker(prev_idx)
         return
     def keyLeft(self):
-        prev_idx = self.currLine * self.numOfCol +  self.dispX
+        prev_idx = self.currLine * self.numOfCol + self.dispX
         self.dispX -= 1
         self.calcMarkerPosX()
         self.moveMarker(prev_idx)
         return
 
     def keyDown(self):
-        prev_idx = self.currLine * self.numOfCol +  self.dispX
+        prev_idx = self.currLine * self.numOfCol + self.dispX
         self.currLine += 1
         self.calcMarkerPosY()
         self.moveMarker(prev_idx)
         return
     def keyUp(self):
-        prev_idx = self.currLine * self.numOfCol +  self.dispX
+        prev_idx = self.currLine * self.numOfCol + self.dispX
         self.currLine -= 1
         self.calcMarkerPosY()
         self.moveMarker(prev_idx)
         return
     
     def moveMarker(self, prev_idx=0):
-        new_idx = self.currLine * self.numOfCol +  self.dispX
+        new_idx = self.currLine * self.numOfCol + self.dispX
         
         if self.reorderingItemSelected:
             if prev_idx != new_idx:
-                prevHost   = self.currList[prev_idx]
+                prevHost = self.currList[prev_idx]
                 prevPixmap = self.pixmapList[prev_idx]
                 del self.currList[prev_idx]
                 del self.pixmapList[prev_idx]
@@ -421,8 +421,8 @@ class PlayerSelectorWidget(Screen):
         imgPosY = self.offsetCoverY + (self.coverHeight + self.disHeight) * self.dispY
 
         # calculate postion of marker for current image
-        x = imgPosX - (self.markerWidth - self.coverWidth)/2
-        y = imgPosY - (self.markerHeight - self.coverHeight)/2
+        x = imgPosX - (self.markerWidth - self.coverWidth) / 2
+        y = imgPosY - (self.markerHeight - self.coverHeight) / 2
         
         #x =  30 + self.dispX * 180
         #y = 130 + self.dispY * 125
@@ -432,7 +432,7 @@ class PlayerSelectorWidget(Screen):
         
     def getSelectedItem(self):
         printDBG(">> PlayerSelectorWidget.getSelectedItem")
-        idx = self.currLine * self.numOfCol +  self.dispX
+        idx = self.currLine * self.numOfCol + self.dispX
         if idx < self.numOfItems:
             return self.currList[idx]
         return None
@@ -451,7 +451,7 @@ class PlayerSelectorWidget(Screen):
                 self.reorderingItemSelected = True
             return
         
-        idx = self.currLine * self.numOfCol +  self.dispX
+        idx = self.currLine * self.numOfCol + self.dispX
         PlayerSelectorWidget.LAST_SELECTION[self.groupName] = idx
         
         if idx < self.numOfItems:
@@ -504,7 +504,7 @@ class PlayerSelectorWidget(Screen):
             elif ret == "ADD_HOST_TO_GROUP":
                 self.addHostToGroup()
             elif ret == 'DEL_ITEM':
-                idx = self.currLine * self.numOfCol +  self.dispX
+                idx = self.currLine * self.numOfCol + self.dispX
                 if idx < self.numOfItems:
                     del self.currList[idx]
                     del self.pixmapList[idx]
@@ -532,17 +532,17 @@ class PlayerSelectorWidget(Screen):
         if not self.reorderingMode and (self.numOfItems - self.numOfLockedItems) > 0:
             self.reorderingMode = True
             if self.numOfLockedItems > 0:
-                self.currList = self.currList[:self.numOfLockedItems*-1]
+                self.currList = self.currList[:self.numOfLockedItems * -1]
                 self.reInitDisplayList()
         else:
             if self.reorderingItemSelected:
                 self["marker"].setPixmap(self.markerPixmap)
             self.reorderingMode = False
             if self.numOfLockedItems > 0:
-                self.currList.extend(self.inList[len(self.inList)-self.numOfLockedItems:])
+                self.currList.extend(self.inList[len(self.inList) - self.numOfLockedItems:])
                 self.reInitDisplayList()
         
-        self.reorderingItemSelected  = False
+        self.reorderingItemSelected = False
     
     def hideWindow(self):
         self.visible = False

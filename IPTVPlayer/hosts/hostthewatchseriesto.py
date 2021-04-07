@@ -25,7 +25,7 @@ from Components.config import config, ConfigSelection, getConfigListEntry
 ###################################################
 # Config options for HOST
 ###################################################
-config.plugins.iptvplayer.swatchseries_web_proxy_gateway = ConfigSelection(default="auto", choices=[("auto", _("Auto")), ("always", _("Always")), ("never",  _("Never"))])
+config.plugins.iptvplayer.swatchseries_web_proxy_gateway = ConfigSelection(default="auto", choices=[("auto", _("Auto")), ("always", _("Always")), ("never", _("Never"))])
 
 def GetConfigList():
     optionList = []
@@ -38,22 +38,22 @@ def gettytul():
     return 'https://swatchseries.to/'
 
 class TheWatchseriesTo(CBaseHostClass):
-    DOMAIN        = 'www1.swatchseries.to'
-    MAIN_URL      = 'https://%s/' % DOMAIN
-    SEARCH_URL    = MAIN_URL + 'search/'
-    DEFAULT_ICON  = "https://%s/templates/default/images/apple-touch-icon.png" % DOMAIN
+    DOMAIN = 'www1.swatchseries.to'
+    MAIN_URL = 'https://%s/' % DOMAIN
+    SEARCH_URL = MAIN_URL + 'search/'
+    DEFAULT_ICON = "https://%s/templates/default/images/apple-touch-icon.png" % DOMAIN
     
     HEADER = {'User-Agent': 'Mozilla/5.0', 'Accept': 'text/html', 'Accept-Encoding':'gzip, deflate', 'Referer':MAIN_URL}
     AJAX_HEADER = dict(HEADER)
     AJAX_HEADER.update({'X-Requested-With': 'XMLHttpRequest'})
     
-    MAIN_CAT_TAB = [{'icon':DEFAULT_ICON, 'category':'list_series',     'title': _('Series list'),           'url':MAIN_URL+'series'},
-                    {'icon':DEFAULT_ICON, 'category':'episodes',        'title': _('Popular Episodes'),      'url':MAIN_URL+'new'},
-                    {'icon':DEFAULT_ICON, 'category':'episodes',        'title': _('Newest Episodes'),       'url':MAIN_URL+'latest'},
-                    {'icon':DEFAULT_ICON, 'category':'categories',      'title': _('All A-Z'),               'url':MAIN_URL+'letters/A'},
-                    {'icon':DEFAULT_ICON, 'category':'categories',      'title': _('Genres'),                'url':MAIN_URL+'genres/action'},
-                    {'icon':DEFAULT_ICON, 'category':'search',          'title': _('Search'), 'search_item':True},
-                    {'icon':DEFAULT_ICON, 'category':'search_history',  'title': _('Search history')}]
+    MAIN_CAT_TAB = [{'icon':DEFAULT_ICON, 'category':'list_series', 'title': _('Series list'), 'url':MAIN_URL + 'series'},
+                    {'icon':DEFAULT_ICON, 'category':'episodes', 'title': _('Popular Episodes'), 'url':MAIN_URL + 'new'},
+                    {'icon':DEFAULT_ICON, 'category':'episodes', 'title': _('Newest Episodes'), 'url':MAIN_URL + 'latest'},
+                    {'icon':DEFAULT_ICON, 'category':'categories', 'title': _('All A-Z'), 'url':MAIN_URL + 'letters/A'},
+                    {'icon':DEFAULT_ICON, 'category':'categories', 'title': _('Genres'), 'url':MAIN_URL + 'genres/action'},
+                    {'icon':DEFAULT_ICON, 'category':'search', 'title': _('Search'), 'search_item':True},
+                    {'icon':DEFAULT_ICON, 'category':'search_history', 'title': _('Search history')}]
  
     def __init__(self):
         CBaseHostClass.__init__(self, {'history':'TheWatchseriesTo.tv', 'cookie':'thewatchseriesto.cookie'})
@@ -78,7 +78,7 @@ class TheWatchseriesTo(CBaseHostClass):
         return self.needProxy
     
     def getPage(self, url, params={}, post_data=None):
-        HTTP_HEADER= dict(self.HEADER)
+        HTTP_HEADER = dict(self.HEADER)
         params.update({'header':HTTP_HEADER})
         
         if self.isNeedProxy() and ('thewatchseries.to' in url or 'watch-series.to' in url or 'the-watch-series.to' in url or self.DOMAIN in url):
@@ -104,7 +104,7 @@ class TheWatchseriesTo(CBaseHostClass):
         
     def getFullUrl(self, url):
         if self.isNeedProxy() and ('securefor.com' in url or '/browse.php' in url):
-            url2 = urllib.parse.unquote(self.cm.ph.getSearchGroups(url+'&', '''\?u=(http[^&]+?)&''')[0]).replace('&amp;', '&')
+            url2 = urllib.parse.unquote(self.cm.ph.getSearchGroups(url + '&', '''\?u=(http[^&]+?)&''')[0]).replace('&amp;', '&')
             printDBG("[%s] --> [%s]" % (url, url2))
             url = url2
         return CBaseHostClass.getFullUrl(self, url)
@@ -123,7 +123,7 @@ class TheWatchseriesTo(CBaseHostClass):
         for item in tab:
             params = dict(cItem)
             params.update(item)
-            params['name']  = 'category'
+            params['name'] = 'category'
             if type == 'dir':
                 self.addDir(params)
             else:
@@ -151,9 +151,9 @@ class TheWatchseriesTo(CBaseHostClass):
             
     def listItems(self, cItem, nextCategory):
         printDBG("TheWatchseriesTo.listItems")
-        page      = cItem.get('page', 1)
+        page = cItem.get('page', 1)
         post_data = cItem.get('post_data', None) 
-        url       = cItem['url']
+        url = cItem['url']
         
         if cItem.get('page', 0) > 0:
             if not url.endswith('/'):
@@ -185,7 +185,7 @@ class TheWatchseriesTo(CBaseHostClass):
             data = self.cm.ph.getAllItemsBeetwenMarkers(data, '<div style="float:left; margin-right:10px;">', 'Latest Episode:', False)
             ta = True
         for item in data:
-            icon  = self.cm.ph.getSearchGroups(item, '''src=['"]([^'^"]+?)['"]''')[0]
+            icon = self.cm.ph.getSearchGroups(item, '''src=['"]([^'^"]+?)['"]''')[0]
             icon = self.getFullUrl(icon)
             if icon == '':
                 icon = cItem['icon']
@@ -212,7 +212,7 @@ class TheWatchseriesTo(CBaseHostClass):
                 self.addDir(params)
         if nextPage:
                 params = dict(cItem)
-                params.update({'title':_('Next page'), 'page':page+1})
+                params.update({'title':_('Next page'), 'page':page + 1})
                 self.addDir(params)
         
     def listSeasons(self, cItem, nextCateogry):
@@ -226,7 +226,7 @@ class TheWatchseriesTo(CBaseHostClass):
         seasons = self.cm.ph.getAllItemsBeetwenMarkers(data, '<h2 class="lists"', '</ul>')
         for season in seasons:
             seasonName = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(season, 'itemprop="name">', '</span>', False)[1])
-            seasonNum = self.cm.ph.getSearchGroups(seasonName+'|', '''Season\s+?([0-9]+?)[^0-9]''', 1, True)[0]
+            seasonNum = self.cm.ph.getSearchGroups(seasonName + '|', '''Season\s+?([0-9]+?)[^0-9]''', 1, True)[0]
             
             episodesTab = []
             data = self.cm.ph.getAllItemsBeetwenMarkers(season, '<li ', '</li>')
@@ -238,7 +238,7 @@ class TheWatchseriesTo(CBaseHostClass):
                 episodeNum = self.cm.ph.getSearchGroups(title + '|', '''Episode\s+?([0-9]+?)[^0-9]''', 1, True)[0]
                 printDBG(">> e[%s] s[%s]" % (episodeNum, seasonNum))
                 if '' != episodeNum and '' != seasonNum:
-                    title = 's%se%s'% (seasonNum.zfill(2), episodeNum.zfill(2)) + ' - ' + title.replace('Episode %s' % episodeNum, '')
+                    title = 's%se%s' % (seasonNum.zfill(2), episodeNum.zfill(2)) + ' - ' + title.replace('Episode %s' % episodeNum, '')
                 params = dict(cItem)
                 params.update({'good_for_fav': True, 'title':'{0}: {1}'.format(cItem['title'], title), 'url':self.getFullUrl(url), 'desc':self.cleanHtmlStr(item)})
                 episodesTab.append(params)
@@ -324,9 +324,9 @@ class TheWatchseriesTo(CBaseHostClass):
         
         CBaseHostClass.handleService(self, index, refresh, searchPattern, searchType)
 
-        name     = self.currItem.get("name", '')
+        name = self.currItem.get("name", '')
         category = self.currItem.get("category", '')
-        mode     = self.currItem.get("mode", '')
+        mode = self.currItem.get("mode", '')
         
         printDBG("handleService: || name[%s], category[%s] " % (name, category))
         self.currList = []

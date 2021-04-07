@@ -30,7 +30,7 @@ import codecs
 
 
 class IPTVSubSimpleDownloaderWidget(Screen):
-    _TMP_FILE_NAME='.externaltmpsub'
+    _TMP_FILE_NAME = '.externaltmpsub'
     sz_w = getDesktop(0).size().width() - 190
     sz_h = getDesktop(0).size().height() - 195
     if sz_h < 500:
@@ -47,12 +47,12 @@ class IPTVSubSimpleDownloaderWidget(Screen):
          <widget name="title" position="5,47"  zPosition="1" size="%d,23" font="Regular;20"            transparent="1"  backgroundColor="#00000000"/>
          
          <widget name="console"      position="10,%d"   zPosition="2" size="%d,160" valign="center" halign="center"   font="Regular;24" transparent="0" foregroundColor="white" backgroundColor="black"/>
-        </screen>""" %(
+        </screen>""" % (
             _("Simple subtitles downloader"),
             sz_w, sz_h, # size
             sz_w - 10, sz_h - 105, # size list
             sz_w - 135, # size title
-            (sz_h - 160)/2, sz_w - 20, # console
+            (sz_h - 160) / 2, sz_w - 20, # console
             )
     
     def __init__(self, session, params={}):
@@ -65,15 +65,15 @@ class IPTVSubSimpleDownloaderWidget(Screen):
         self.onShown.append(self.onStart)
         self.onClose.append(self.__onClose)
         
-        self["title"]         = Label(" ")
-        self["console"]       = Label(" ")
+        self["title"] = Label(" ")
+        self["console"] = Label(" ")
         
-        self["label_red"]     = Label(_("Cancel"))
-        self["label_yellow"]  = Label(_("Move group"))
-        self["label_green"]   = Label(_("Apply"))
+        self["label_red"] = Label(_("Cancel"))
+        self["label_yellow"] = Label(_("Move group"))
+        self["label_green"] = Label(_("Apply"))
         
-        self["icon_red"]     = Cover3()
-        self["icon_green"]   = Cover3()
+        self["icon_red"] = Cover3()
+        self["icon_green"] = Cover3()
         
         self["list"] = IPTVMainNavigatorList()
         self["list"].connectSelChanged(self.onSelectionChanged)
@@ -88,10 +88,10 @@ class IPTVSubSimpleDownloaderWidget(Screen):
         
         self.iconPixmap = {}
         for icon in ['red', 'green']:
-            self.iconPixmap[icon] = LoadPixmap(GetIconDir(icon+'.png'))
+            self.iconPixmap[icon] = LoadPixmap(GetIconDir(icon + '.png'))
             
         self.movieTitle = ''
-        self.stackList  = []
+        self.stackList = []
         self.stackItems = []
         
         self.defaultLanguage = GetDefaultLang()
@@ -179,23 +179,23 @@ class IPTVSubSimpleDownloaderWidget(Screen):
     def loadIcons(self):
         try:
             for icon in self.iconPixmap:
-                self['icon_'+icon].setPixmap(self.iconPixmap[icon])
+                self['icon_' + icon].setPixmap(self.iconPixmap[icon])
         except Exception:
             printExc()
         
     def hideButtons(self, buttons=['red', 'green']):
         try:
             for button in buttons:
-                self['icon_'+button].hide()
-                self['label_'+button].hide()
+                self['icon_' + button].hide()
+                self['label_' + button].hide()
         except Exception:
             printExc()
         
     def showButtons(self, buttons=['red', 'green']):
         try:
             for button in buttons:
-                self['icon_'+button].show()
-                self['label_'+button].show()
+                self['icon_' + button].show()
+                self['label_' + button].show()
         except Exception:
             printExc()
     

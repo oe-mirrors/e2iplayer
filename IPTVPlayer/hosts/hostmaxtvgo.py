@@ -33,13 +33,13 @@ from Screens.MessageBox import MessageBox
 ###################################################
 # Config options for HOST
 ###################################################
-config.plugins.iptvplayer.maxtvgo_login    = ConfigText(default="", fixed_size=False)
+config.plugins.iptvplayer.maxtvgo_login = ConfigText(default="", fixed_size=False)
 config.plugins.iptvplayer.maxtvgo_password = ConfigText(default="", fixed_size=False)
 
 def GetConfigList():
     optionList = []
-    optionList.append(getConfigListEntry(_("login")+":",    config.plugins.iptvplayer.maxtvgo_login))
-    optionList.append(getConfigListEntry(_("password")+":", config.plugins.iptvplayer.maxtvgo_password))
+    optionList.append(getConfigListEntry(_("login") + ":", config.plugins.iptvplayer.maxtvgo_login))
+    optionList.append(getConfigListEntry(_("password") + ":", config.plugins.iptvplayer.maxtvgo_password))
     return optionList
 ###################################################
 def gettytul():
@@ -58,15 +58,15 @@ class MaxtvGO(CBaseHostClass):
         
         self.defaultParams = {'header':self.HTTP_HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
         
-        self.MAIN_CAT_TAB = [{'category':'list_items',        'title': 'MaxTVGo',             'url':self.getFullUrl('/api/videos.php?action=find')},
-                             {'category':'list_yt_channel',   'title': 'Max Kolonko - MaxTV', 'url':'https://www.youtube.com/user/Media2000Corp/videos'},
-                             {'category':'list_yt_channel',   'title': 'MaxTVNews',           'url':'https://www.youtube.com/user/MaxTVTUBE/videos'},
-                             {'category': 'search',          'title': _('Search'), 'search_item': True, },
-                             {'category': 'search_history',  'title': _('Search history'),} 
+        self.MAIN_CAT_TAB = [{'category':'list_items', 'title': 'MaxTVGo', 'url':self.getFullUrl('/api/videos.php?action=find')},
+                             {'category':'list_yt_channel', 'title': 'Max Kolonko - MaxTV', 'url':'https://www.youtube.com/user/Media2000Corp/videos'},
+                             {'category':'list_yt_channel', 'title': 'MaxTVNews', 'url':'https://www.youtube.com/user/MaxTVTUBE/videos'},
+                             {'category': 'search', 'title': _('Search'), 'search_item': True, },
+                             {'category': 'search_history', 'title': _('Search history'),} 
                             ]
         self.ytp = YouTubeParser()
         self.loggedIn = None
-        self.login    = ''
+        self.login = ''
         self.password = ''
         
     def getPage(self, baseUrl, addParams={}, post_data=None):
@@ -134,8 +134,8 @@ class MaxtvGO(CBaseHostClass):
         printDBG('MaxtvGO.getVideos cItem[%s]' % (cItem))
         
         category = cItem.get("category", '')
-        url      = cItem.get("url", '')
-        page     = cItem.get("page", '1')
+        url = cItem.get("url", '')
+        page = cItem.get("page", '1')
         if -1 == url.find('browse_ajax'):
             if url.endswith('/videos'): 
                 url = url + '?flow=list&view=0&sort=dd'
@@ -220,7 +220,7 @@ class MaxtvGO(CBaseHostClass):
             data = self.cm.ph.getAllItemsBeetwenMarkers(data, '<input', '>')
             post_data = {}
             for item in data:
-                name  = self.cm.ph.getSearchGroups(item, '''name=['"]([^'^"]+?)['"]''')[0]
+                name = self.cm.ph.getSearchGroups(item, '''name=['"]([^'^"]+?)['"]''')[0]
                 value = self.cm.ph.getSearchGroups(item, '''value=['"]([^'^"]+?)['"]''')[0]
                 post_data[name] = value
             
@@ -279,8 +279,8 @@ class MaxtvGO(CBaseHostClass):
                     data = byteify(json.loads(data))
                     for item in data['data']:
                         author = self.cleanHtmlStr(item['nick'])
-                        date   = self.cleanHtmlStr(item['date'])
-                        text   = self.cleanHtmlStr(item['text'])
+                        date = self.cleanHtmlStr(item['date'])
+                        text = self.cleanHtmlStr(item['text'])
                         desc.append('%s | %s[/br]%s[/br]' % (date, author, text))
                         printDBG("============================================================================")
                         printDBG('%s\t%s\n%s\n' % (author, date, text))
@@ -305,9 +305,9 @@ class MaxtvGO(CBaseHostClass):
         
         CBaseHostClass.handleService(self, index, refresh, searchPattern, searchType)
 
-        name     = self.currItem.get("name", '')
+        name = self.currItem.get("name", '')
         category = self.currItem.get("category", '')
-        mode     = self.currItem.get("mode", '')
+        mode = self.currItem.get("mode", '')
         
         printDBG("handleService: || name[%s], category[%s] " % (name, category))
         self.currList = []

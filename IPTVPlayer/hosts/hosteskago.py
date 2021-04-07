@@ -36,8 +36,8 @@ class EskaGo(CBaseHostClass):
         self.DEFAULT_ICON_URL = self.MAIN_URL + 'html/img/fb.jpg'
         
         self.MAIN_CAT_TAB = [#{'category':'list_vod_casts',          'title': 'VOD',                      'url':self.getFullUrl('vod')     },
-                             {'category':'list_radio_cats',         'title': 'Radio Eska Go',            'url':self.getFullUrl('radio')},
-                             {'category':'list_radio_eskapl',       'title': 'Radio Eska PL',            'url':self.MAIN_ESKAPL_URL,       'icon':'https://www.press.pl/images/contents/photo_51546_1515158162_big.jpg'},
+                             {'category':'list_radio_cats', 'title': 'Radio Eska Go', 'url':self.getFullUrl('radio')},
+                             {'category':'list_radio_eskapl', 'title': 'Radio Eska PL', 'url':self.MAIN_ESKAPL_URL, 'icon':'https://www.press.pl/images/contents/photo_51546_1515158162_big.jpg'},
                              ]
                             # {'category':'search',                  'title': _('Search'),                'search_item':True,              },
                             # {'category':'search_history',          'title': _('Search history'),                                         } 
@@ -64,11 +64,11 @@ class EskaGo(CBaseHostClass):
             tmpTab = self.cm.ph.getAllItemsBeetwenMarkers(listData, headMarker, '</ul>')
             for tmp in tmpTab:
                 desc = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(tmp, headMarker, '</div>', False)[1])
-                tmp  = self.cm.ph.getAllItemsBeetwenMarkers(tmp, '<li>', '</li>')
+                tmp = self.cm.ph.getAllItemsBeetwenMarkers(tmp, '<li>', '</li>')
                 for item in tmp:
                     if 'play_icon' not in item:
                         continue
-                    url   = self.getFullIconUrl(self.cm.ph.getSearchGroups(item, '''href=['"]([^'^"]+?)['"]''')[0])
+                    url = self.getFullIconUrl(self.cm.ph.getSearchGroups(item, '''href=['"]([^'^"]+?)['"]''')[0])
                     title = self.cleanHtmlStr(item)
                     self.cacheItems[listId].append({'good_for_fav':True, 'type':'audio', 'title':title, 'url':url, 'desc':desc})
         printDBG('#########################################')
@@ -79,8 +79,8 @@ class EskaGo(CBaseHostClass):
         tmp = self.cm.ph.getDataBeetwenMarkers(data, '<div class="new-radio-box">', '<div class="row radio-list">', False)[1]
         tmp = self.cm.ph.getAllItemsBeetwenMarkers(tmp, '<a', '</a>')
         for item in tmp:
-            url   = self.cm.ph.getSearchGroups(item, '''href=['"]([^'^"]+?)['"]''')[0]
-            icon  = self.getFullIconUrl(self.cm.ph.getSearchGroups(item, '''color[^>]+?src=['"]([^'^"]+?)['"]''')[0])
+            url = self.cm.ph.getSearchGroups(item, '''href=['"]([^'^"]+?)['"]''')[0]
+            icon = self.getFullIconUrl(self.cm.ph.getSearchGroups(item, '''color[^>]+?src=['"]([^'^"]+?)['"]''')[0])
             if url != '#':
                 url = self.getFullUrl(url)
             if self.cm.isValidUrl(url):
@@ -120,7 +120,7 @@ class EskaGo(CBaseHostClass):
             if url == '':
                 continue
             url = self.cm.getFullUrl(url, self.cm.meta['url'])
-            icon   = self.cm.getFullUrl(ph.search(item, ph.IMAGE_SRC_URI_RE)[1], self.cm.meta['url'])
+            icon = self.cm.getFullUrl(ph.search(item, ph.IMAGE_SRC_URI_RE)[1], self.cm.meta['url'])
             tmp = ph.findall(item, '<span', '</span>')
             title = self.cleanHtmlStr(tmp[-1]) if len(tmp) else self.cleanHtmlStr(item)
 
@@ -151,7 +151,7 @@ class EskaGo(CBaseHostClass):
                 sData = ph.findall(sData, '<a', '</a>')
                 for item in sData:
                     url = self.cm.getFullUrl(ph.search(item, ph.A_HREF_URI_RE)[1], self.cm.meta['url'])
-                    icon   = self.cm.getFullUrl(ph.search(item, ph.IMAGE_SRC_URI_RE)[1], self.cm.meta['url'])
+                    icon = self.cm.getFullUrl(ph.search(item, ph.IMAGE_SRC_URI_RE)[1], self.cm.meta['url'])
                     title = self.cleanHtmlStr(item)
                     subItems.append(MergeDicts(cItem, {'url':url, 'title':title, 'icon':icon, 'f_idx':idx + 1}))
                 if len(subItems):
@@ -216,7 +216,7 @@ class EskaGo(CBaseHostClass):
                 self.addDir(MergeDicts(cItem, {'good_for_fav':True, 'category':nextCategory, 'title':title, 'url':url, 'icon':icon, 'desc':desc}))
 
         if nextPage:
-            self.addDir(MergeDicts(cItem, {'title':_('Next page'), 'url':nextPage, 'page':page+1}))
+            self.addDir(MergeDicts(cItem, {'title':_('Next page'), 'url':nextPage, 'page':page + 1}))
 
     def listVodItem(self, cItem, nextCategory):
         printDBG("EskaGo.listVodItem")
@@ -239,7 +239,7 @@ class EskaGo(CBaseHostClass):
             icon = cItem.get('icon', '')
 
         if type != 'vod':
-            tmp = ph.find(data, ('<div', '>', 'seasons'),  ('<div', '>', 'clear'), flags=0)[1]
+            tmp = ph.find(data, ('<div', '>', 'seasons'), ('<div', '>', 'clear'), flags=0)[1]
             tmp = ph.findall(tmp, '<a', '</a>')
             for item in tmp:
                 url = self.cm.getFullUrl(ph.search(item, ph.A_HREF_URI_RE)[1], self.cm.meta['url'])
@@ -288,12 +288,12 @@ class EskaGo(CBaseHostClass):
         data = self.cm.ph.getAllItemsBeetwenMarkers(data, '"stream": ', '},', False)
         for item in data:
 #            printDBG("EskaGo.listRadioEskaPL item [%s]" % item)
-            tmp = json_loads(item+'}')
-            title  = tmp['name']
-            url    = tmp['stream_url']
+            tmp = json_loads(item + '}')
+            title = tmp['name']
+            url = tmp['stream_url']
             if url == '':
                 continue
-            desc   = ''
+            desc = ''
             params = {'good_for_fav': True, 'title':title, 'url':url, 'desc':desc, 'is_trailer':True}
             self.addAudio(params)
 
@@ -341,9 +341,9 @@ class EskaGo(CBaseHostClass):
         if not sts:
             data = ''
 
-        if '/radio/' in  url:
+        if '/radio/' in url:
             tmp = self.cm.ph.getDataBeetwenMarkers(data, 'input[name="data-radio-url"]', ';', withMarkers=False)[1]
-            url  =  self.cm.ph.getSearchGroups(tmp, '''(https?://[^'^"]+?)['"]''')[0]
+            url = self.cm.ph.getSearchGroups(tmp, '''(https?://[^'^"]+?)['"]''')[0]
             if url != '' and url.endswith('.pls'):
                 sts, tmp = self.cm.getPage(url)
                 if not sts:
@@ -354,7 +354,7 @@ class EskaGo(CBaseHostClass):
                     del tmp[0]
                 for item in tmp:
                     printDBG('ITEM [%s]' % item)
-                    url  = self.cm.ph.getSearchGroups(item, '''(https?://[^\s]+?)\s''')[0]
+                    url = self.cm.ph.getSearchGroups(item, '''(https?://[^\s]+?)\s''')[0]
                     name = self.cm.ph.getSearchGroups(item, '''Title[^=]*?=([^\s]+?)\s''')[0].strip()
                     urlTab.append({'name':name, 'url':url})
             else:
@@ -363,7 +363,7 @@ class EskaGo(CBaseHostClass):
                     tmp = self.cm.ph.getAllItemsBeetwenMarkers(tmp, '{', '}')
                     for item in tmp:
                         if 'streamUrl' in item:
-                            streamUrl  = self.cm.ph.getSearchGroups(item, '''streamUrl\s*=\s*['"](https?://[^'^"]+?)['"]''')[0]
+                            streamUrl = self.cm.ph.getSearchGroups(item, '''streamUrl\s*=\s*['"](https?://[^'^"]+?)['"]''')[0]
                             streamType = self.cm.ph.getSearchGroups(item, '''streamType\s*=\s*['"]([^'^"]+?)['"]''')[0]
                             if 'aac' in streamType:
                                 streamUrl = streamUrl.replace('.mp3', '.aac')
@@ -394,9 +394,9 @@ class EskaGo(CBaseHostClass):
         
         CBaseHostClass.handleService(self, index, refresh, searchPattern, searchType)
 
-        name     = self.currItem.get("name", '')
+        name = self.currItem.get("name", '')
         category = self.currItem.get("category", '')
-        mode     = self.currItem.get("mode", '')
+        mode = self.currItem.get("mode", '')
         
         printDBG("handleService: |||||||||||||||||||||||||||||||||||| name[%s], category[%s] " % (name, category))
         self.currList = []

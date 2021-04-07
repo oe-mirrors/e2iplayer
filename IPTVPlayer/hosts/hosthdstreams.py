@@ -30,8 +30,8 @@ import base64
 config.plugins.iptvplayer.api_key_9kweu = ConfigText(default="", fixed_size=False)
 config.plugins.iptvplayer.api_key_2captcha = ConfigText(default="", fixed_size=False)
 config.plugins.iptvplayer.hdstreams_linkcache = ConfigYesNo(default=True)
-config.plugins.iptvplayer.hdstreams_bypassrecaptcha = ConfigSelection(default="None", choices=[("None",        _("None")),
-                                                                                                 ("9kw.eu",       "https://9kw.eu/"),
+config.plugins.iptvplayer.hdstreams_bypassrecaptcha = ConfigSelection(default="None", choices=[("None", _("None")),
+                                                                                                 ("9kw.eu", "https://9kw.eu/"),
                                                                                                  ("2captcha.com", "http://2captcha.com/")])
 
 def GetConfigList():
@@ -62,18 +62,18 @@ class HDStreams(CBaseHostClass):
         
         self.DEFAULT_ICON_URL = 'http://s-media-cache-ak0.pinimg.com/originals/82/63/59/826359efee44e19824912cdf45b3bd59.jpg'
         self.MAIN_URL = None
-        self.cacheLinks    = {}
-        self.cacheFilters  = {}
+        self.cacheLinks = {}
+        self.cacheFilters = {}
         self.cacheFiltersKeys = []
         
     def selectDomain(self):
         
         self.MAIN_URL = 'https://hd-streams.org/'
-        self.MAIN_CAT_TAB = [{'category':'list_filters',    'title': _('MOVIES'),      'url':self.getFullUrl('/movies')},
-                             {'category':'list_filters',    'title': _('TV SERIES'),   'url':self.getFullUrl('/seasons')},
+        self.MAIN_CAT_TAB = [{'category':'list_filters', 'title': _('MOVIES'), 'url':self.getFullUrl('/movies')},
+                             {'category':'list_filters', 'title': _('TV SERIES'), 'url':self.getFullUrl('/seasons')},
                              
-                             {'category': 'search',          'title': _('Search'), 'search_item': True, },
-                             {'category': 'search_history',  'title': _('Search history'),} 
+                             {'category': 'search', 'title': _('Search'), 'search_item': True, },
+                             {'category': 'search_history', 'title': _('Search history'),} 
                             ]
     
     def getPage(self, baseUrl, addParams={}, post_data=None):
@@ -95,7 +95,7 @@ class HDStreams(CBaseHostClass):
             while len(d) < key_length + iv_length:
                 d_i = md5(d_i + password + salt).digest()
                 d += d_i
-            return d[:key_length], d[key_length:key_length+iv_length]
+            return d[:key_length], d[key_length:key_length + iv_length]
         bs = 16
         key, iv = derive_key_and_iv(password, salt, 32, 16)
         cipher = AES_CBC(key=key, keySize=32)
@@ -172,7 +172,7 @@ class HDStreams(CBaseHostClass):
         filter = self.cacheFiltersKeys[f_idx]
         f_idx += 1
         cItem['f_idx'] = f_idx
-        if f_idx  == len(self.cacheFiltersKeys):
+        if f_idx == len(self.cacheFiltersKeys):
             cItem['category'] = nextCategory
         self.listsTab(self.cacheFilters.get(filter, []), cItem)
         
@@ -199,7 +199,7 @@ class HDStreams(CBaseHostClass):
             return
         
         nextPage = ph.find(data, ('<ul', '>', 'pagination'), '</ul>', flags=0)[1]
-        nextPage = ph.search(nextPage, '''page=(%s)[^0-9]''' % (page+1))[0]
+        nextPage = ph.search(nextPage, '''page=(%s)[^0-9]''' % (page + 1))[0]
         if nextPage != '':
             nextPage = True
         else:
@@ -223,7 +223,7 @@ class HDStreams(CBaseHostClass):
         
         if nextPage:
             params = dict(cItem)
-            params.update({'good_for_fav':False, 'title':_('Next page'), 'page':page+1})
+            params.update({'good_for_fav':False, 'title':_('Next page'), 'page':page + 1})
             self.addDir(params)
         
     def exploreItem(self, cItem):
@@ -313,7 +313,7 @@ class HDStreams(CBaseHostClass):
                 eIcon = self.getFullIconUrl(eIcon)
                 eTitle = self.cleanHtmlStr(self.cm.ph.getDataBeetwenReMarkers(episodeItem, re.compile('''<p[^>]+?episode\-name'''), re.compile('</p>'))[1])
                 eNum = self.cleanHtmlStr(self.cm.ph.getDataBeetwenReMarkers(episodeItem, re.compile('''<p[^>]+?episode\-number'''), re.compile('</p>'))[1])
-                eNum = self.cm.ph.getSearchGroups(eNum+'|', '[^0-9]([0-9]+?)[^0-9]')[0]
+                eNum = self.cm.ph.getSearchGroups(eNum + '|', '[^0-9]([0-9]+?)[^0-9]')[0]
                 linksKey = '%s?s_num=%s&e_num=%s' % (cItem['url'], sNum, eNum)
                 linksTab = []
                 
@@ -364,7 +364,7 @@ class HDStreams(CBaseHostClass):
         
         url = self.getFullUrl('/search')
         query = urllib.parse.urlencode({'q':searchPattern, 'movies':movies, 'seasons':series, 'didyoumean':'true', 'actors':'false'})
-        sts, data = self.getPage(url+'?'+query, urlParams)
+        sts, data = self.getPage(url + '?' + query, urlParams)
         if not sts:
             return
         
@@ -375,7 +375,7 @@ class HDStreams(CBaseHostClass):
             data = json_loads(data, '', True)
             for key in keys:
                 for item in data[key]:
-                    icon  = self.getFullIconUrl(item.get('src', ''))
+                    icon = self.getFullIconUrl(item.get('src', ''))
                     url = self.getFullUrl(item.get('url', ''))
                     if url == '':
                         continue
@@ -468,7 +468,7 @@ class HDStreams(CBaseHostClass):
             salt = unhexlify(tmp['s'])
             b = ''
             a = urlParams['header']['x-csrf-token']
-            for idx in range(len(a)-1, 0, -2):
+            for idx in range(len(a) - 1, 0, -2):
                 b += a[idx]
             if mainData.get('e', None):
                 b += '1'
@@ -503,11 +503,11 @@ class HDStreams(CBaseHostClass):
         fullTtitle = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(data, '<h4', '</h4>')[1])
         
         title = self.cleanHtmlStr(self.cm.ph.getSearchGroups(data, '''\.title\s*=\s*['"]([^'^"]+?)['"]''')[0])
-        desc  = self.cleanHtmlStr(self.cm.ph.getDataBeetwenReMarkers(data, re.compile('''<div[^>]*?card__text[^>]*?>'''), re.compile('</div>'))[1])
+        desc = self.cleanHtmlStr(self.cm.ph.getDataBeetwenReMarkers(data, re.compile('''<div[^>]*?card__text[^>]*?>'''), re.compile('</div>'))[1])
         if desc == '':
-            desc =  self.cleanHtmlStr(self.cm.ph.getDataBeetwenReMarkers(data, re.compile('''Handlung'''), re.compile('</p>'), False)[1])
-        icon  = self.cm.ph.getDataBeetwenReMarkers(data, re.compile('''<div[^>]*?movie\-cover[^>]*?>'''), re.compile('</div>'))[1]
-        icon  = self.getFullIconUrl(self.cm.ph.getSearchGroups(icon, '''src=['"]([^"^']+\.jpe?g)['"]''')[0])
+            desc = self.cleanHtmlStr(self.cm.ph.getDataBeetwenReMarkers(data, re.compile('''Handlung'''), re.compile('</p>'), False)[1])
+        icon = self.cm.ph.getDataBeetwenReMarkers(data, re.compile('''<div[^>]*?movie\-cover[^>]*?>'''), re.compile('</div>'))[1]
+        icon = self.getFullIconUrl(self.cm.ph.getSearchGroups(icon, '''src=['"]([^"^']+\.jpe?g)['"]''')[0])
         
         tmp = self.cleanHtmlStr(self.cm.ph.getSearchGroups(data, '''\.rating\s*=([^;]+?);''')[0])
         if tmp != '':
@@ -554,9 +554,9 @@ class HDStreams(CBaseHostClass):
             #rm(self.COOKIE_FILE)
             self.selectDomain()
 
-        name     = self.currItem.get("name", '')
+        name = self.currItem.get("name", '')
         category = self.currItem.get("category", '')
-        mode     = self.currItem.get("mode", '')
+        mode = self.currItem.get("mode", '')
         
         printDBG("handleService: |||||||||||||||||||||||||||||||||||| name[%s], category[%s] " % (name, category))
         self.currList = []

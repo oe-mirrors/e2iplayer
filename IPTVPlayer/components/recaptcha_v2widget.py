@@ -25,12 +25,12 @@ class UnCaptchaReCaptchaWidget(Screen):
         self.imgFilePath = imgFilePath
         self.numOfRow = self.params.get('rows', 3)
         self.numOfCol = self.params.get('cols', 3)
-        self.markerWidth  = self.params.get('marker_width', 100)
+        self.markerWidth = self.params.get('marker_width', 100)
         self.markerHeight = self.params.get('marker_height', 100)
         self.offsetCoverX = 100
         self.offsetCoverY = 100
         
-        windowWidth  = self.markerWidth * self.numOfCol + self.offsetCoverX*2
+        windowWidth = self.markerWidth * self.numOfCol + self.offsetCoverX * 2
         windowHeight = self.markerWidth * self.numOfRow + self.offsetCoverY + 70
         
 
@@ -40,7 +40,7 @@ class UnCaptchaReCaptchaWidget(Screen):
             self.coversSelection.append([])
             for y in range(self.numOfRow):
                 coversSkin += """<widget name="cover_%s%s" zPosition="5" position="%d,%d" size="%d,%d" transparent="1" alphatest="blend" />""" % (x, y, 
-                    (self.offsetCoverX + self.markerWidth  * x), # pos X image
+                    (self.offsetCoverX + self.markerWidth * x), # pos X image
                     (self.offsetCoverY + self.markerHeight * y), # pos Y image
                     self.markerWidth, 
                     self.markerHeight
@@ -68,7 +68,7 @@ class UnCaptchaReCaptchaWidget(Screen):
                self.markerWidth,
                self.markerHeight,
                self.offsetCoverY + self.markerWidth * self.numOfCol + 10,
-               windowWidth-20,
+               windowWidth - 20,
                coversSkin)
         
         self.session = session
@@ -91,7 +91,7 @@ class UnCaptchaReCaptchaWidget(Screen):
         self["accept"] = Label(self.params.get('accep_label', _("Verify")))
         
         self['puzzle_image'] = Cover2()
-        self["marker"]       = Cover3()
+        self["marker"] = Cover3()
         
         for x in range(self.numOfCol):
             for y in range(self.numOfRow):
@@ -133,10 +133,10 @@ class UnCaptchaReCaptchaWidget(Screen):
 
     #Calculate marker position Y
     def calcMarkerPosY(self):
-        if self.currY >  (self.numOfRow+1 - 1):
+        if self.currY > (self.numOfRow + 1 - 1):
             self.currY = 0
         elif self.currY < 0:
-            self.currY = (self.numOfRow+1 - 1)
+            self.currY = (self.numOfRow + 1 - 1)
         return
 
     #Calculate marker position X

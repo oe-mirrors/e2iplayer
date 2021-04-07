@@ -5,7 +5,7 @@
 from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _
 from Plugins.Extensions.IPTVPlayer.components.ihost import CHostBase, CBaseHostClass
 from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, byteify
-from Plugins.Extensions.IPTVPlayer.libs.pCommon import  CParsingHelper
+from Plugins.Extensions.IPTVPlayer.libs.pCommon import CParsingHelper
 ###################################################
 
 ###################################################
@@ -50,11 +50,11 @@ class XrysoiSE(CBaseHostClass):
     MAIN_URL = 'https://xrysoi.tv/'
     SEARCH_SUFFIX = '?s='
     
-    MAIN_CAT_TAB = [{'category':'movies',         'mode':'movies',     'title': 'Ταινιες',      'url':'',                                     'icon':''},
-                    {'category':'list_items',     'mode':'series',     'title': 'Ξένες σειρές', 'url':MAIN_URL + 'category/ξένες-σειρές/',    'icon':''},
+    MAIN_CAT_TAB = [{'category':'movies', 'mode':'movies', 'title': 'Ταινιες', 'url':'', 'icon':''},
+                    {'category':'list_items', 'mode':'series', 'title': 'Ξένες σειρές', 'url':MAIN_URL + 'category/ξένες-σειρές/', 'icon':''},
                     #{'category':'list_items',     'mode':'collection', 'title': 'Συλλογες',     'url':MAIN_URL + 'category/collection/',      'icon':''},
-                    {'category':'search',          'title': _('Search'), 'search_item':True},
-                    {'category':'search_history',  'title': _('Search history')}]
+                    {'category':'search', 'title': _('Search'), 'search_item':True},
+                    {'category':'search_history', 'title': _('Search history')}]
  
     def __init__(self):
         CBaseHostClass.__init__(self, {'history':'XrysoiSE.tv', 'cookie':'XrysoiSEtv.cookie'})
@@ -65,7 +65,7 @@ class XrysoiSE(CBaseHostClass):
         
     def _getFullUrl(self, url):
         if 0 < len(url) and not url.startswith('http'):
-            url =  self.MAIN_URL + url
+            url = self.MAIN_URL + url
         if not self.MAIN_URL.startswith('https://'):
             url = url.replace('https://', 'http://')
         return url
@@ -80,7 +80,7 @@ class XrysoiSE(CBaseHostClass):
         for item in tab:
             params = dict(cItem)
             params.update(item)
-            params['name']  = 'category'
+            params['name'] = 'category'
             if type == 'dir':
                 self.addDir(params)
             else:
@@ -111,7 +111,7 @@ class XrysoiSE(CBaseHostClass):
         moviesTab.append({'title': 'Κινούμενα Σχέδια (με μετάφραση)', 'url':self._getFullUrl('category/κιν-σχέδια/')})
         moviesTab.append({'title': 'Κινούμενα Σχέδια (με υπότιτλους)', 'url':self._getFullUrl('category/κιν-σχέδια-subs/')})
         moviesTab.append({'title': 'Anime Movies', 'url':self._getFullUrl('category/animemovies/')})
-        self.cacheFilters['movies']   = moviesTab
+        self.cacheFilters['movies'] = moviesTab
         
     def listMoviesCategory(self, cItem, nextCategory):
         printDBG("XrysoiSE.listMoviesCategory")
@@ -146,9 +146,9 @@ class XrysoiSE(CBaseHostClass):
         data = self.cm.ph.getDataBeetwenMarkers(data, '<h1 class=', 'class="filmborder">', False)[1]
         data = data.split('class="moviefilm">')
         for item in data:
-            url  = self._getFullUrl(self.cm.ph.getSearchGroups(item, 'href="([^"]+?)"')[0])
+            url = self._getFullUrl(self.cm.ph.getSearchGroups(item, 'href="([^"]+?)"')[0])
             icon = self._getFullUrl(self.cm.ph.getSearchGroups(item, 'src="([^"]+?)"')[0])
-            title  = self.cleanHtmlStr(self.cm.ph.getSearchGroups(item, 'alt="([^"]+?)"')[0])
+            title = self.cleanHtmlStr(self.cm.ph.getSearchGroups(item, 'alt="([^"]+?)"')[0])
             #if 'search' == cItem.get('mode'):
             #    if '-collection' in url: continue
             if url.startswith('http'):
@@ -157,7 +157,7 @@ class XrysoiSE(CBaseHostClass):
                 self.addDir(params)
         if nextPage:
             params = dict(cItem)
-            params.update({'title':_("Next page"), 'page':page+1})
+            params.update({'title':_("Next page"), 'page':page + 1})
             self.addDir(params)
             
     def exploreItem(self, cItem):
@@ -166,7 +166,7 @@ class XrysoiSE(CBaseHostClass):
         if not sts:
             return
         
-        desc  = self.cleanHtmlStr(self.cm.ph.getSearchGroups(data, '<meta[^>]*?property="og:description"[^>]*?content="([^"]+?)"')[0])
+        desc = self.cleanHtmlStr(self.cm.ph.getSearchGroups(data, '<meta[^>]*?property="og:description"[^>]*?content="([^"]+?)"')[0])
         title = self.cleanHtmlStr(self.cm.ph.getSearchGroups(data, '<meta[^>]*?property="og:title"[^>]*?content="([^"]+?)"')[0])
         if '' == title:
             title = cItem['title']
@@ -181,9 +181,9 @@ class XrysoiSE(CBaseHostClass):
             if trailer.startswith('http'):
                 params = dict(cItem)
                 params['title'] = 'TRAILER'
-                params['mode']  = 'trailer'
+                params['mode'] = 'trailer'
                 params['links'] = [{'name':'TRAILER', 'url':trailer, 'need_resolve':1}]
-                params['desc']  = desc
+                params['desc'] = desc
                 self.addVideo(params)
         
         # check 
@@ -241,14 +241,14 @@ class XrysoiSE(CBaseHostClass):
                 seasonID = item.find('<')
                 if seasonID < 0:
                     continue
-                seasonID = item[:seasonID+1]
+                seasonID = item[:seasonID + 1]
                 seasonID = self.cm.ph.getSearchGroups(seasonID, '([0-9]+?)[^0-9]')[0]
                 if '' == seasonID:
                     continue
                 episodesData = re.compile('<a[^>]*?href="([^"]+?)"[^>]*?>([^<]+?)</a>').findall(item)
                 for eItem in episodesData:
                     eUrl = eItem[0]
-                    eID  = eItem[1].strip()
+                    eID = eItem[1].strip()
                     if eUrl.startswith('//'):
                         eUrl += 'http'
                     if 1 != self.up.checkHostSupport(eUrl):
@@ -269,16 +269,16 @@ class XrysoiSE(CBaseHostClass):
             links = self.getLinksForMovie(linksData)
             if len(links):
                 params = dict(cItem)
-                params['mode']  = 'movie'
+                params['mode'] = 'movie'
                 params['links'] = links
-                params['desc']  = desc
+                params['desc'] = desc
                 self.addVideo(params)
             
     def getLinksForMovie(self, data):
         urlTab = []
         linksData = re.compile('<a[^>]*?href="([^"]+?)"[^>]*?>([^<]*?)<').findall(data)
         for item in linksData:
-            url   = item[0]
+            url = item[0]
             title = item[1]
             # only supported hosts will be displayed
             if 1 != self.up.checkHostSupport(url):
@@ -303,7 +303,7 @@ class XrysoiSE(CBaseHostClass):
         printDBG("XrysoiSE.getLinksForVideo [%s]" % cItem)
         # Use Season and Episode information when exist for cache index
         idx = cItem['mode'] + cItem['url'] + cItem.get('season', '') + cItem.get('episode', '')
-        urlTab = self.cacheLinks.get(idx,  [])
+        urlTab = self.cacheLinks.get(idx, [])
         if len(urlTab):
             return urlTab
         self.cacheLinks = {}
@@ -334,9 +334,9 @@ class XrysoiSE(CBaseHostClass):
             if not sts:
                 return retTab
             
-            icon  = self.cm.ph.getSearchGroups(data, '<meta[^>]*?property="og:image"[^>]*?content="(http[^"]+?)"')[0]
+            icon = self.cm.ph.getSearchGroups(data, '<meta[^>]*?property="og:image"[^>]*?content="(http[^"]+?)"')[0]
             title = self.cm.ph.getSearchGroups(data, '<meta[^>]*?property="og:title"[^>]*?content="([^"]+?)"')[0]
-            desc  = self.cm.ph.getSearchGroups(data, '<meta[^>]*?property="og:description"[^>]*?content="([^"]+?)"')[0]
+            desc = self.cm.ph.getSearchGroups(data, '<meta[^>]*?property="og:description"[^>]*?content="([^"]+?)"')[0]
             return [{'title':self.cleanHtmlStr(title), 'text': self.cleanHtmlStr(desc), 'images':[{'title':'', 'url':self._getFullUrl(icon)}], 'other_info':{}}]
         else:
              return retTab
@@ -361,9 +361,9 @@ class XrysoiSE(CBaseHostClass):
         
         CBaseHostClass.handleService(self, index, refresh, searchPattern, searchType)
 
-        name     = self.currItem.get("name", '')
+        name = self.currItem.get("name", '')
         category = self.currItem.get("category", '')
-        mode     = self.currItem.get("mode", '')
+        mode = self.currItem.get("mode", '')
         
         printDBG("handleService: |||||||||||||||||||||||||||||||||||| name[%s], category[%s] " % (name, category))
         self.currList = []

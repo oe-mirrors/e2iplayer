@@ -39,7 +39,7 @@ class govodtv(CBaseHostClass):
         self.AJAX_HEADER.update({'X-Requested-With': 'XMLHttpRequest', 'Accept-Encoding':'gzip, deflate', 'Content-Type':'application/x-www-form-urlencoded; charset=UTF-8', 'Accept':'application/json, text/javascript, */*; q=0.01'})
 
         self.cacheMovieFilters = {'cats':[], 'sort':[], 'years':[], 'az':[]}        
-        self.cacheLinks    = {}
+        self.cacheLinks = {}
         self.defaultParams = {'header':self.HTTP_HEADER, 'with_metadata':True, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
 
     def getFullIconUrl(self, icon, baseUrl=None):
@@ -65,14 +65,14 @@ class govodtv(CBaseHostClass):
     def listMainMenu(self, cItem):
         printDBG("govodtv.listMainMenu")
 
-        MAIN_CAT_TAB = [{'category':'list_sort',       'title': _('Movies'),         'url':self.getFullUrl('/filmy-online')},
-                        {'category':'list_sort',       'title': _('Series'),         'url':self.getFullUrl('/seriale-online')},
-                        {'category':'list_items',      'title': _('News'),           'url':self.getFullUrl('/najnowsze')},
+        MAIN_CAT_TAB = [{'category':'list_sort', 'title': _('Movies'), 'url':self.getFullUrl('/filmy-online')},
+                        {'category':'list_sort', 'title': _('Series'), 'url':self.getFullUrl('/seriale-online')},
+                        {'category':'list_items', 'title': _('News'), 'url':self.getFullUrl('/najnowsze')},
 #                        {'category':'list_items',     'title': _('Highlights'),     'url':self.getFullUrl('/polecane/')},
 #                        {'category':'list_years',     'title': _('Movies by year'), 'url':self.MAIN_URL},
-                        {'category':'list_cats',      'title': _('Categories'),     'url':self.MAIN_URL},
+                        {'category':'list_cats', 'title': _('Categories'), 'url':self.MAIN_URL},
 #                        {'category':'list_az',        'title': _('Alphabetically'), 'url':self.MAIN_URL},
-                        {'category':'search',         'title': _('Search'),         'search_item':True}, 
+                        {'category':'search', 'title': _('Search'), 'search_item':True}, 
                         {'category':'search_history', 'title': _('Search history')},]
         self.listsTab(MAIN_CAT_TAB, cItem)
     
@@ -150,7 +150,7 @@ class govodtv(CBaseHostClass):
             
         nextPage = self.cm.ph.getDataBeetwenNodes(data, ('<div', '>', 'pagination'), ('</div', '>'))[1]
         nextPage = self.cm.ph.getDataBeetwenNodes(nextPage, ('<a', '>', 'next'), ('</a', '>'))[1]
-        if '' != self.cm.ph.getSearchGroups(nextPage, 'page=(%s)[^0-9]' % (page+1))[0]:
+        if '' != self.cm.ph.getSearchGroups(nextPage, 'page=(%s)[^0-9]' % (page + 1))[0]:
             nextPage = True
         else:
             nextPage = False
@@ -233,7 +233,7 @@ class govodtv(CBaseHostClass):
 
             tmp = self.cm.ph.getAllItemsBeetwenNodes(data, ('<iframe', '>'), ('</iframe', '>'))
             for item in tmp:
-                url  = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''src=['"]([^'^"]+?)['"]''')[0])
+                url = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''src=['"]([^'^"]+?)['"]''')[0])
                 urlTab.append({'name':self.up.getHostName(url), 'url':strwithmeta(url, {'Referer':cItem['url']}), 'need_resolve':1})
 
         return urlTab
@@ -277,10 +277,10 @@ class govodtv(CBaseHostClass):
 
         if title == '':
             title = cItem['title']
-        if icon  == '':
-            icon  = cItem.get('icon', '')
-        if desc  == '':
-            desc  = cItem.get('desc', '')
+        if icon == '':
+            icon = cItem.get('icon', '')
+        if desc == '':
+            desc = cItem.get('desc', '')
 
         return [{'title':self.cleanHtmlStr(title), 'text': self.cleanHtmlStr(desc), 'images':[{'title':'', 'url':self.getFullUrl(icon)}], 'other_info':{'custom_items_list':itemsList}}]
 
@@ -289,9 +289,9 @@ class govodtv(CBaseHostClass):
         
         CBaseHostClass.handleService(self, index, refresh, searchPattern, searchType)
 
-        name     = self.currItem.get("name", '')
+        name = self.currItem.get("name", '')
         category = self.currItem.get("category", '')
-        mode     = self.currItem.get("mode", '')
+        mode = self.currItem.get("mode", '')
         
         printDBG("handleService: |||| name[%s], category[%s] " % (name, category))
         self.cacheLinks = {}

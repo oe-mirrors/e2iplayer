@@ -55,9 +55,9 @@ class PwgetDownloader(BaseDownloader):
         
     def _checkWorkingCallBack(self, callBackFun, code, data):
         reason = ''
-        sts    = True
+        sts = True
         if 'Usage: python pwget url file' not in data:
-            sts    = False
+            sts = False
             reason = data
         self.iptv_sys = None
         callBackFun(sts, reason)
@@ -66,10 +66,10 @@ class PwgetDownloader(BaseDownloader):
         '''
             Owervrite start from BaseDownloader
         '''
-        self.url              = url
-        self.filePath         = filePath
+        self.url = url
+        self.filePath = filePath
         self.downloaderParams = params
-        self.fileExtension    = '' # should be implemented in future
+        self.fileExtension = '' # should be implemented in future
         
         self.outData = ''
         self.contentType = 'unknown'
@@ -84,7 +84,7 @@ class PwgetDownloader(BaseDownloader):
         self.console.execute(E2PrioFix(cmd))
 
         self.wgetStatus = self.WGET_STS.CONNECTING
-        self.status     = DMHelper.STS.DOWNLOADING
+        self.status = DMHelper.STS.DOWNLOADING
         
         self.onStart()
         return BaseDownloader.CODE_OK
@@ -123,7 +123,7 @@ class PwgetDownloader(BaseDownloader):
             printDBG("PwgetDownloader._cmdFinished [%s]" % self.outData)
             match = re.search("Content-Length: ([0-9]+?)[^0-9]", self.outData)
             if match: 
-                self.remoteFileSize    = int(match.group(1))
+                self.remoteFileSize = int(match.group(1))
 
         if terminated:
             self.status = DMHelper.STS.INTERRUPTED

@@ -20,13 +20,13 @@ from Components.config import config, ConfigSelection, ConfigYesNo, ConfigText, 
 
 config.plugins.iptvplayer.bbc_default_quality = ConfigSelection(default="900", choices=[
 ("0", _("the worst")),
-("500",  "360p"), 
-("600",  "480p"), 
-("900",  "720p"), 
+("500", "360p"), 
+("600", "480p"), 
+("900", "720p"), 
 ("99999999", _("the best"))
 ])
 config.plugins.iptvplayer.bbc_use_default_quality = ConfigYesNo(default=False)
-config.plugins.iptvplayer.bbc_prefered_format     = ConfigSelection(default="hls", choices=[
+config.plugins.iptvplayer.bbc_prefered_format = ConfigSelection(default="hls", choices=[
 ("hls", _("HLS/m3u8")),
 ("dash", _("DASH/mpd")),
 ])
@@ -79,13 +79,13 @@ class BBCCoUkIE(InfoExtractor):
     def getFullUrl(self, url):
         if config.plugins.iptvplayer.bbc_use_web_proxy.value and 'englandproxy.co.uk' not in url:
             try:
-                url = 'https://www.englandproxy.co.uk/' + url[url.find('://')+3:]
+                url = 'https://www.englandproxy.co.uk/' + url[url.find('://') + 3:]
             except Exception:
                 pass
         return url
         
     def getPage(self, url, params={}, post_data=None):
-        HTTP_HEADER= dict(self.HEADER)
+        HTTP_HEADER = dict(self.HEADER)
         params.update({'header':HTTP_HEADER})
         return self.cm.getPage(self.getFullUrl(url), params, post_data)
 
@@ -173,11 +173,11 @@ class BBCCoUkIE(InfoExtractor):
         for media in self._extract_medias(media_selection):
             kind = self.xmlGetArg(media, 'kind')
             if kind in ('video', 'audio'):
-                bitrate   = int_or_none(self.xmlGetArg(media, 'bitrate'))
-                encoding  = self.xmlGetArg(media, 'encoding')
-                service   = self.xmlGetArg(media, 'service')
-                width     = int_or_none(self.xmlGetArg(media, 'width'))
-                height    = int_or_none(self.xmlGetArg(media, 'height'))
+                bitrate = int_or_none(self.xmlGetArg(media, 'bitrate'))
+                encoding = self.xmlGetArg(media, 'encoding')
+                service = self.xmlGetArg(media, 'service')
+                width = int_or_none(self.xmlGetArg(media, 'width'))
+                height = int_or_none(self.xmlGetArg(media, 'height'))
                 file_size = int_or_none(self.xmlGetArg(media, 'media_file_size'))
                 for connection in self.xmlGetAllNodes(media, 'connection'):
                     href = self.xmlGetArg(connection, 'href')
@@ -185,9 +185,9 @@ class BBCCoUkIE(InfoExtractor):
                         continue
                     if href:
                         urls.append(href)
-                    conn_kind       = self.xmlGetArg(connection, 'kind')
-                    protocol        = self.xmlGetArg(connection, 'protocol')
-                    supplier        = self.xmlGetArg(connection, 'supplier')
+                    conn_kind = self.xmlGetArg(connection, 'kind')
+                    protocol = self.xmlGetArg(connection, 'protocol')
+                    supplier = self.xmlGetArg(connection, 'supplier')
                     transfer_format = self.xmlGetArg(connection, 'transferFormat')
                     for format_id in [supplier, conn_kind, protocol]:
                         if format_id != '':
@@ -237,8 +237,8 @@ class BBCCoUkIE(InfoExtractor):
                             if application == '':
                                 application = 'ondemand'
                             auth_string = self.xmlGetArg(connection, 'authString')
-                            identifier  = self.xmlGetArg(connection, 'identifier')
-                            server      = self.xmlGetArg(connection, 'server')
+                            identifier = self.xmlGetArg(connection, 'identifier')
+                            server = self.xmlGetArg(connection, 'server')
                             fmt.update({
                                 'url': '%s://%s/%s?%s' % (protocol, server, application, auth_string),
                                 'play_path': identifier,

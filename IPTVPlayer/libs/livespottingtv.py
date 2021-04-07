@@ -46,9 +46,9 @@ class LivespottingTvApi:
             for item in data:
                 try:
                     title = item['title']
-                    icon  = item['image']
-                    desc  = item['description'] 
-                    url  = str(item['sources'])
+                    icon = item['image']
+                    desc = item['description'] 
+                    url = str(item['sources'])
                     url = ph.search(url, '''file['"]:\s*['"]([^"^']+?)['"]''')[0]
                     list.append({'title':title, 'url':url, 'icon':icon, 'desc':desc})
                 except Exception:

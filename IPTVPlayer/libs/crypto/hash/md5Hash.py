@@ -9,9 +9,9 @@ class MD5(Hash):
 
     def __init__(self):
         self.name = 'MD5'
-        self.blocksize      = 1   # single octets can be hashed by padding to raw block size
+        self.blocksize = 1   # single octets can be hashed by padding to raw block size
         self.raw_block_size = 64  # MD5 operates on 512 bits or 64 byte blocks
-        self.digest_size    = 16  # or 128 bits
+        self.digest_size = 16  # or 128 bits
         self.reset()
 
     def reset(self):

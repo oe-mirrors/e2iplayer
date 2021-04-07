@@ -32,22 +32,22 @@ from Components.config import config, ConfigSelection, ConfigYesNo, getConfigLis
 ###################################################
 config.plugins.iptvplayer.svt_default_quality = ConfigSelection(default="99999999", choices=[
 ("0", _("the worst")),
-("500",  "360p"), 
-("600",  "480p"), 
-("900",  "720p"), 
+("500", "360p"), 
+("600", "480p"), 
+("900", "720p"), 
 ("99999999", _("the best"))
 ])
 config.plugins.iptvplayer.svt_use_default_quality = ConfigYesNo(default=False)
-config.plugins.iptvplayer.svt_prefered_format     = ConfigSelection(default="hls", choices=[
-("hls",  _("HLS/m3u8")),
+config.plugins.iptvplayer.svt_prefered_format = ConfigSelection(default="hls", choices=[
+("hls", _("HLS/m3u8")),
 ("dash", _("DASH/mpd"))
 ])
 
 def GetConfigList():
     optionList = []
-    optionList.append(getConfigListEntry(_("Default video quality:"),             config.plugins.iptvplayer.svt_default_quality))
-    optionList.append(getConfigListEntry(_("Use default video quality:"),         config.plugins.iptvplayer.svt_use_default_quality))
-    optionList.append(getConfigListEntry(_("Preferred format:"),                  config.plugins.iptvplayer.svt_prefered_format))
+    optionList.append(getConfigListEntry(_("Default video quality:"), config.plugins.iptvplayer.svt_default_quality))
+    optionList.append(getConfigListEntry(_("Use default video quality:"), config.plugins.iptvplayer.svt_use_default_quality))
+    optionList.append(getConfigListEntry(_("Preferred format:"), config.plugins.iptvplayer.svt_prefered_format))
     
     return optionList
 ###################################################
@@ -76,17 +76,17 @@ class SVTPlaySE(CBaseHostClass):
                              #{'category':'list_items2',        'title': 'SISTA CHANSEN',                       'url':'/sista-chansen'   },
                              #{'category':'list_items2',        'title': 'LIVESÄNDNINGAR',                      'url':'/live'            },
         
-                             {'category':'list_items',        'title': _('Popular'),                            'url':'/popular'},
-                             {'category':'list_items',        'title': _('Latest programs'),                    'url':'/latest'},
-                             {'category':'list_items',        'title': _('Latest news broadcast'),              'url':'/cluster_latest?cluster=nyheter'},
-                             {'category':'list_items',        'title': _('Last chance'),                        'url':'/last_chance'},
-                             {'category':'list_items',        'title': _('Live broadcasts'),                    'url':'/live'},
-                             {'category':'list_channels',     'title': _('Channels'),                           'url':'/kanaler'},   
-                             {'category':'list_az_menu',      'title': _('Programs A-Ö'),                       'url':'/program'},   #/all_titles
-                             {'category':'list_items',        'title': _('Categories'),                         'url':'/active_clusters'},  
+                             {'category':'list_items', 'title': _('Popular'), 'url':'/popular'},
+                             {'category':'list_items', 'title': _('Latest programs'), 'url':'/latest'},
+                             {'category':'list_items', 'title': _('Latest news broadcast'), 'url':'/cluster_latest?cluster=nyheter'},
+                             {'category':'list_items', 'title': _('Last chance'), 'url':'/last_chance'},
+                             {'category':'list_items', 'title': _('Live broadcasts'), 'url':'/live'},
+                             {'category':'list_channels', 'title': _('Channels'), 'url':'/kanaler'},   
+                             {'category':'list_az_menu', 'title': _('Programs A-Ö'), 'url':'/program'},   #/all_titles
+                             {'category':'list_items', 'title': _('Categories'), 'url':'/active_clusters'},  
                              
-                             {'category':'search',             'title': _('Search'), 'search_item':True,           'icon':'https://raw.githubusercontent.com/vonH/plugin.video.iplayerwww/master/media/search.png'},
-                             {'category': 'search_history',     'title': _('Search history'),}]
+                             {'category':'search', 'title': _('Search'), 'search_item':True, 'icon':'https://raw.githubusercontent.com/vonH/plugin.video.iplayerwww/master/media/search.png'},
+                             {'category': 'search_history', 'title': _('Search history'),}]
         self.itemsPerPage = 48
         self.programsAZCache = {'keys':[], 'dict':{}}
         
@@ -150,7 +150,7 @@ class SVTPlaySE(CBaseHostClass):
             for item in self.programsAZCache['dict'].get(letter, []):
                 try:
                     title = self.cleanHtmlStr(item['programTitle'])
-                    url   = item['contentUrl']
+                    url = item['contentUrl']
                     descTab = []
                     if item.get('onlyAvailableInSweden', False):
                         descTab.append(_('Only available in Sweden.'))
@@ -199,7 +199,7 @@ class SVTPlaySE(CBaseHostClass):
                         # get description
                         descTab = []
                         try:
-                            utc_date =_parseDate(item['publishingTime'])
+                            utc_date = _parseDate(item['publishingTime'])
                             if utc_date.day == datetime.now().day:
                                 timeHeader = utc_date.strftime('%H:%M:%S')
                             else:
@@ -222,7 +222,7 @@ class SVTPlaySE(CBaseHostClass):
     def listItems(self, cItem, nextCategory):
         printDBG("SVTPlaySE.listItems")
         
-        url  = cItem['url']
+        url = cItem['url']
         page = cItem.get('page', 1)
         if page > 1:
             if '?' in url:
@@ -251,13 +251,13 @@ class SVTPlaySE(CBaseHostClass):
             
             for item in data:
                 title = self.cleanHtmlStr(item.get('programTitle', ''))
-                url   = self.getFullUrl(item['contentUrl'])
-                desc  = item.get('description', '')
+                url = self.getFullUrl(item['contentUrl'])
+                desc = item.get('description', '')
                 if desc == None:
                     desc = ''
                 else:
                     self.cleanHtmlStr(desc)
-                icon  = self.getIcon(item)
+                icon = self.getIcon(item)
                 
                 descTab = []
                 if item.get('onlyAvailableInSweden', False):
@@ -270,7 +270,7 @@ class SVTPlaySE(CBaseHostClass):
                 if title == '':
                     title = item.get('name', '')
                 
-                params = {'good_for_fav': True, 'title':title,  'url': url, 'icon':icon, 'desc':'[/br]'.join(descTab)}
+                params = {'good_for_fav': True, 'title':title, 'url': url, 'icon':icon, 'desc':'[/br]'.join(descTab)}
                 #if not item.get('hasEpisodes', False):
                 if '/klipp/' in url or '/video/' in url:
                     self.addVideo(params)
@@ -282,7 +282,7 @@ class SVTPlaySE(CBaseHostClass):
         
         if nextPage:
             params = dict(cItem)
-            params.update({'good_for_fav': False, 'title':_('Next page'), 'page':page+1})
+            params.update({'good_for_fav': False, 'title':_('Next page'), 'page':page + 1})
             self.addDir(params)
             
     def explorePage(self, cItem, nextCategory):
@@ -322,7 +322,7 @@ class SVTPlaySE(CBaseHostClass):
         data = self.cm.ph.getAllItemsBeetwenMarkers(data, '<li class="play_tab-list', '</li>', withMarkers=True)
         for item in data:
             title = self.cleanHtmlStr(item)
-            url   = self.cm.ph.getSearchGroups(item, '''href=['"]([^'^"]+?)['"]''')[0]
+            url = self.cm.ph.getSearchGroups(item, '''href=['"]([^'^"]+?)['"]''')[0]
             if url == '':
                 tmp = self.cm.ph.getSearchGroups(item, '''<a[^>]+?id=['"]([^'^"]+?)['"]''')[0].split('-')
                 if len(tmp) >= 2:
@@ -355,10 +355,10 @@ class SVTPlaySE(CBaseHostClass):
         data = self.cm.ph.getAllItemsBeetwenMarkers(data, '<article', '</article>', withMarkers=True)
         for item in data:
             title = self.cleanHtmlStr(self.cm.ph.getDataBeetwenReMarkers(item, re.compile('<h'), re.compile('</h[0-9]>'), withMarkers=True)[1])
-            url   = self.cm.ph.getSearchGroups(item, '''href=['"]([^'^"]+?)['"]''')[0]
-            icon  = self.cm.ph.getSearchGroups(item, '''data-src=['"]([^'^"]+?)['"]''')[0]
+            url = self.cm.ph.getSearchGroups(item, '''href=['"]([^'^"]+?)['"]''')[0]
+            icon = self.cm.ph.getSearchGroups(item, '''data-src=['"]([^'^"]+?)['"]''')[0]
             if icon == '':
-                icon  = self.cm.ph.getSearchGroups(item, '''src=['"]([^'^"]+?)['"]''')[0]
+                icon = self.cm.ph.getSearchGroups(item, '''src=['"]([^'^"]+?)['"]''')[0]
             descTab = []
             if '-geo-block' in item:
                 descTab.append(_('Only available in Sweden.'))
@@ -377,7 +377,7 @@ class SVTPlaySE(CBaseHostClass):
     def listTabItems(self, cItem, nextCategory):
         printDBG("SVTPlaySE.listTabItems")
         
-        url  = cItem['url']
+        url = cItem['url']
         page = cItem.get('page', 1)
         if page > 1:
             if '?' in url:
@@ -423,7 +423,7 @@ class SVTPlaySE(CBaseHostClass):
             
         if nextPage:
             params = dict(cItem)
-            params.update({'good_for_fav': False, 'title':_('Next page'), 'page':page+1})
+            params.update({'good_for_fav': False, 'title':_('Next page'), 'page':page + 1})
             self.addDir(params)
 
     def listSearchResult(self, cItem, searchPattern, searchType):
@@ -438,7 +438,7 @@ class SVTPlaySE(CBaseHostClass):
         printDBG("SVTPlaySE.getLinksForVideo [%s]" % cItem)
         videoUrls = []
         
-        hlsUrl  = cItem.get('hls_url')
+        hlsUrl = cItem.get('hls_url')
         dashUrl = cItem.get('dash_url')
         
         subtitlesTab = []
@@ -464,7 +464,7 @@ class SVTPlaySE(CBaseHostClass):
                 data = byteify(json.loads(data))
                 
                 videoItem = data.get('video', None)
-                if videoItem  == None:
+                if videoItem == None:
                     videoItem = data
                 for item in videoItem['videoReferences']:
                     if self.cm.isValidUrl(item['url']):
@@ -564,9 +564,9 @@ class SVTPlaySE(CBaseHostClass):
         
         CBaseHostClass.handleService(self, index, refresh, searchPattern, searchType)
 
-        name     = self.currItem.get("name", '')
+        name = self.currItem.get("name", '')
         category = self.currItem.get("category", '')
-        mode     = self.currItem.get("mode", '')
+        mode = self.currItem.get("mode", '')
         
         printDBG("handleService: |||||||||||||||||||||||||||||||||||| name[%s], category[%s] " % (name, category))
         self.currList = []

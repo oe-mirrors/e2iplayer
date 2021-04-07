@@ -29,12 +29,12 @@ from Screens.MessageBox import MessageBox
 # Config options for HOST
 ###################################################
 
-config.plugins.iptvplayer.videostar_streamprotocol     = ConfigSelection(default="2", choices=[("1", "rtmp"), ("2", "HLS - m3u8"), ("3", "DASHS - mpd"), ("4", "DASH - mpd")]) 
-config.plugins.iptvplayer.videostar_defquality         = ConfigSelection(default="9999999999", choices=[("0", _("the worst")), ("400000", _("low")), ("950000", _("average")), ("1600000", _("high")), ("9999999999", _("the best"))])
-config.plugins.iptvplayer.videostar_use_defquality     = ConfigYesNo(default=True)
-config.plugins.iptvplayer.videostar_show_all_channels  = ConfigYesNo(default=False)
-config.plugins.iptvplayer.videostar_login              = ConfigText(default="", fixed_size=False)
-config.plugins.iptvplayer.videostar_password           = ConfigText(default="", fixed_size=False)
+config.plugins.iptvplayer.videostar_streamprotocol = ConfigSelection(default="2", choices=[("1", "rtmp"), ("2", "HLS - m3u8"), ("3", "DASHS - mpd"), ("4", "DASH - mpd")]) 
+config.plugins.iptvplayer.videostar_defquality = ConfigSelection(default="9999999999", choices=[("0", _("the worst")), ("400000", _("low")), ("950000", _("average")), ("1600000", _("high")), ("9999999999", _("the best"))])
+config.plugins.iptvplayer.videostar_use_defquality = ConfigYesNo(default=True)
+config.plugins.iptvplayer.videostar_show_all_channels = ConfigYesNo(default=False)
+config.plugins.iptvplayer.videostar_login = ConfigText(default="", fixed_size=False)
+config.plugins.iptvplayer.videostar_password = ConfigText(default="", fixed_size=False)
 
 def GetConfigList():
     optionList = []
@@ -53,12 +53,12 @@ class VideoStarApi(CBaseHostClass, CaptchaHelper):
 
     def __init__(self):
         CBaseHostClass.__init__(self)
-        self.MAIN_URL          = 'https://pilot.wp.pl/'
-        self.API_BASE_URL      = 'https://api-pilot.wp.pl/'
-        self.STATIC_BASE_URL   = 'https://static-pilot.wp.pl/'
+        self.MAIN_URL = 'https://pilot.wp.pl/'
+        self.API_BASE_URL = 'https://api-pilot.wp.pl/'
+        self.STATIC_BASE_URL = 'https://static-pilot.wp.pl/'
     
         self.DEFAULT_ICON_URL = 'http://satkurier.pl/uploads/53612.jpg'
-        self.USER_AGENT  = 'Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/62.0.3202.94 Safari/537.36'
+        self.USER_AGENT = 'Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/62.0.3202.94 Safari/537.36'
         self.HTTP_HEADER = {'User-Agent': self.USER_AGENT, 'Accept': 'text/html', 'Accept-Encoding':'gzip, deflate'}
         self.AJAX_HEADER = dict(self.HTTP_HEADER)
         self.AJAX_HEADER.update({'X-Requested-With': 'XMLHttpRequest'})
@@ -167,7 +167,7 @@ class VideoStarApi(CBaseHostClass, CaptchaHelper):
         
         self.informAboutGeoBlockingIfNeeded('PL')
         
-        login    = config.plugins.iptvplayer.videostar_login.value
+        login = config.plugins.iptvplayer.videostar_login.value
         password = config.plugins.iptvplayer.videostar_password.value
         if login != '' and password != '':
             self.accountInfo = ''
@@ -205,8 +205,8 @@ class VideoStarApi(CBaseHostClass, CaptchaHelper):
                 if not config.plugins.iptvplayer.videostar_show_all_channels.value and (item['access_status'] == 'unsubscribed' or (not self.loggedIn and guestTimeout == '0')):
                     continue
                 title = self.cleanHtmlStr(item['name'])
-                icon  = self.getFullUrl(item.get('thumbnail', '')) 
-                url   = self.getFullUrl(item['slug'])
+                icon = self.getFullUrl(item.get('thumbnail', '')) 
+                url = self.getFullUrl(item['slug'])
                 
                 desc = []
                 if item.get('hd', False):

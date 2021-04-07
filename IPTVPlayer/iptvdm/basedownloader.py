@@ -36,13 +36,13 @@ class BaseDownloader:
 
     def __init__(self):
         self.status = DMHelper.STS.WAITING
-        self.tries  = DMHelper.DOWNLOAD_TYPE.INITIAL
+        self.tries = DMHelper.DOWNLOAD_TYPE.INITIAL
         self.subscribersFor_Finish = []
-        self.subscribersFor_Start  = []
+        self.subscribersFor_Start = []
         
         self.remoteFileSize = -1
-        self.localFileSize  = -1
-        self.downloadSpeed  = -1
+        self.localFileSize = -1
+        self.downloadSpeed = -1
         
         self.downloaderParams = {}
         self.url = ''
@@ -75,7 +75,7 @@ class BaseDownloader:
             and can be used for download, this method can be 
             called only from main thread
         ''' 
-        sts    = False
+        sts = False
         reason = 'This is base class. Download cannot be done with it.'
         callBackFun(sts, reason)
         
@@ -107,10 +107,10 @@ class BaseDownloader:
         return self.url
 
     def start(self, url, filePath, params={}):
-        self.url              = url
-        self.filePath         = filePath
+        self.url = url
+        self.filePath = filePath
         self.downloaderParams = params
-        self.fileExtension    = '' # should be implemented in future
+        self.fileExtension = '' # should be implemented in future
         
         sts, remoteInfo = DMHelper.getRemoteContentInfoByUrllib(url, params)
         if False == sts:

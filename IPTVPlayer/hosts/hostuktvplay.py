@@ -38,8 +38,8 @@ class UKTVPlay(CBaseHostClass):
         self.AJAX_HEADER = dict(self.HEADER)
         self.AJAX_HEADER.update({'X-Requested-With': 'XMLHttpRequest', 'Accept-Encoding':'gzip, deflate', 'Content-Type':'application/x-www-form-urlencoded; charset=UTF-8', 'Accept':'application/json, text/javascript, */*; q=0.01'})
         
-        self.cacheLinks    = {}
-        self.cacheFilters  = {}
+        self.cacheLinks = {}
+        self.cacheFilters = {}
         self.cacheFiltersKeys = []
         self.defaultParams = {'header':self.HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
         self.tmpUrl = 'http://vschedules.uktv.co.uk/mobile/v2/%splatform=android&app_ver=4.3.2'
@@ -63,16 +63,16 @@ class UKTVPlay(CBaseHostClass):
     def listMainMenu(self, cItem):
         printDBG("UKTVPlay.listMainMenu")
         self.MAIN_CAT_TAB = [
-                             {'category':'list_items',   'title': 'DAVE',               'url':self.getChannelUrl('dave')},
-                             {'category':'list_items',   'title': 'REALLY',             'url':self.getChannelUrl('really')},
-                             {'category':'list_items',   'title': 'YESTERDAY',          'url':self.getChannelUrl('yesterday')},
-                             {'category':'list_items',   'title': 'DRAMA',              'url':self.getChannelUrl('drama')},
-                             {'category':'list_items',   'title': 'BOX SET',            'url':'collections?collection_type=boxset&'},
-                             {'category':'list_items',   'title': 'COLLECTIONS',        'url':'collections?collection_type=collection&'},
-                             {'category':'list_genres',  'title': 'GENRES',             'url':'genres?'},
-                             {'category':'list_letters', 'title': 'A-Z',                'url':'brand_list?channel=&'},
+                             {'category':'list_items', 'title': 'DAVE', 'url':self.getChannelUrl('dave')},
+                             {'category':'list_items', 'title': 'REALLY', 'url':self.getChannelUrl('really')},
+                             {'category':'list_items', 'title': 'YESTERDAY', 'url':self.getChannelUrl('yesterday')},
+                             {'category':'list_items', 'title': 'DRAMA', 'url':self.getChannelUrl('drama')},
+                             {'category':'list_items', 'title': 'BOX SET', 'url':'collections?collection_type=boxset&'},
+                             {'category':'list_items', 'title': 'COLLECTIONS', 'url':'collections?collection_type=collection&'},
+                             {'category':'list_genres', 'title': 'GENRES', 'url':'genres?'},
+                             {'category':'list_letters', 'title': 'A-Z', 'url':'brand_list?channel=&'},
                              
-                             {'category':'search',         'title': _('Search'),          'search_item':True}, 
+                             {'category':'search', 'title': _('Search'), 'search_item':True}, 
                              {'category':'search_history', 'title': _('Search history')},
                             ]
         self.listsTab(self.MAIN_CAT_TAB, cItem)
@@ -131,12 +131,12 @@ class UKTVPlay(CBaseHostClass):
                     continue
                 descTab = []
 
-                icon  = item.get('image', '')
+                icon = item.get('image', '')
                 house = item.get('top_house_number', '')
                 title = self.cleanHtmlStr(item.get('title', ''))
                 
                 if icon == '':
-                    icon  = item['brand_image']
+                    icon = item['brand_image']
                 if house == '':
                     house = item['house_num']
                 if title == '':
@@ -155,7 +155,7 @@ class UKTVPlay(CBaseHostClass):
                 if '' != item.get('video_count', ''):
                     descTab.append(_('Videos count: %s') % item['video_count'])
                 
-                desc  = '[/br]'.join(descTab)
+                desc = '[/br]'.join(descTab)
                 
                 params = {'good_for_fav':True, 'category':nextCategory, 'title':title, 'icon':icon, 'desc':desc, 'f_house':house}
                 self.addDir(params)
@@ -199,17 +199,17 @@ class UKTVPlay(CBaseHostClass):
             
             data = byteify(json.loads(data), '', True)
             for item in data['episodes']:
-                vidId  = item['brightcove_video_id']
-                icon   = self.getFullIconUrl(item['episode_image'])
+                vidId = item['brightcove_video_id']
+                icon = self.getFullIconUrl(item['episode_image'])
                 sTitle = self.cleanHtmlStr(item['brand_name'])
                 eTitle = self.cleanHtmlStr(item['episode_title'])
-                sNum   = item['series_txt']
-                eNum   = item['episode_txt']
+                sNum = item['series_txt']
+                eNum = item['episode_txt']
                 if 1 == len(data['episodes']) and sTitle == eTitle:
                     title = sTitle
                 else:
-                    title  = '%s - s%se%s %s' % (sTitle, sNum.zfill(2), eNum.zfill(2), eTitle)
-                url    = self.getFullUrl(item['watch_online_link'])
+                    title = '%s - s%se%s %s' % (sTitle, sNum.zfill(2), eNum.zfill(2), eTitle)
+                url = self.getFullUrl(item['watch_online_link'])
                 
                 descTab = []
                 pg = []
@@ -225,7 +225,7 @@ class UKTVPlay(CBaseHostClass):
                     descTab.append(_('Channel: %s') % item['channel'].title())
                 
                 descTab.append(item.get('teaser_text', ''))
-                desc  = '[/br]'.join(descTab)
+                desc = '[/br]'.join(descTab)
                 
                 params = {'good_for_fav':True, 'title':title, 'f_video_id':vidId, 'url':url, 'icon':icon, 'desc':desc}
                 self.addVideo(params)
@@ -273,9 +273,9 @@ class UKTVPlay(CBaseHostClass):
         
         self.informAboutGeoBlockingIfNeeded('GB')
         
-        name     = self.currItem.get("name", '')
+        name = self.currItem.get("name", '')
         category = self.currItem.get("category", '')
-        mode     = self.currItem.get("mode", '')
+        mode = self.currItem.get("mode", '')
         
         printDBG("handleService: |||||||||||||||||||||||||||||||||||| name[%s], category[%s] " % (name, category))
         self.currList = []

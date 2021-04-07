@@ -41,7 +41,7 @@ class Vizjer(CBaseHostClass):
         self.AJAX_HEADER.update({'X-Requested-With': 'XMLHttpRequest', 'Accept-Encoding':'gzip, deflate', 'Content-Type':'application/x-www-form-urlencoded; charset=UTF-8', 'Accept':'application/json, text/javascript, */*; q=0.01'})
 
         self.cacheMovieFilters = {'cats':[], 'sort':[], 'years':[], 'az':[]}        
-        self.cacheLinks    = {}
+        self.cacheLinks = {}
         self.defaultParams = {'header':self.HTTP_HEADER, 'with_metadata':True, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
 
     def getPage(self, baseUrl, addParams={}, post_data=None):
@@ -72,13 +72,13 @@ class Vizjer(CBaseHostClass):
     def listMainMenu(self, cItem):
         printDBG("Vizjer.listMainMenu")
 
-        MAIN_CAT_TAB = [{'category':'list_sort',       'title': _('Movies'),         'url':self.getFullUrl('/filmy-online/')},
-                        {'category':'list_items',      'title': _('Children'),       'url':self.getFullUrl('/dla-dzieci/')},
-                        {'category':'list_sort',       'title': _('Series'),         'url':self.getFullUrl('/series/index/')},
+        MAIN_CAT_TAB = [{'category':'list_sort', 'title': _('Movies'), 'url':self.getFullUrl('/filmy-online/')},
+                        {'category':'list_items', 'title': _('Children'), 'url':self.getFullUrl('/dla-dzieci/')},
+                        {'category':'list_sort', 'title': _('Series'), 'url':self.getFullUrl('/series/index/')},
 #                        {'category':'list_years',     'title': _('Movies by year'), 'url':self.MAIN_URL},
-                        {'category':'list_cats',       'title': _('Movies genres'),  'url':self.getFullUrl('/filmy-online/')},
+                        {'category':'list_cats', 'title': _('Movies genres'), 'url':self.getFullUrl('/filmy-online/')},
 #                        {'category':'list_az',        'title': _('Alphabetically'), 'url':self.MAIN_URL},
-                        {'category':'search',         'title': _('Search'),         'search_item':True}, 
+                        {'category':'search', 'title': _('Search'), 'search_item':True}, 
                         {'category':'search_history', 'title': _('Search history')},]
         self.listsTab(MAIN_CAT_TAB, cItem)
     
@@ -103,7 +103,7 @@ class Vizjer(CBaseHostClass):
         dat = self.cm.ph.getDataBeetwenMarkers(data, '<ul id="filter-category"', '</ul>', False)[1]
         dat = re.compile('<li[^>]+?data-id="([^"]+?)".*?<a[^>]*?>(.+?)</a>').findall(dat)
         for item in dat:
-            self.cacheMovieFilters['cats'].append({'title': self.cleanHtmlStr(item[1]), 'url': cItem['url']+'category:%s/' % item[0]})
+            self.cacheMovieFilters['cats'].append({'title': self.cleanHtmlStr(item[1]), 'url': cItem['url'] + 'category:%s/' % item[0]})
             
         # fill years
 #        dat = self.cm.ph.getDataBeetwenMarkers(data, '<ul class="dropdown-menu year-dropdown"', '</ul>', False)[1]
@@ -141,7 +141,7 @@ class Vizjer(CBaseHostClass):
         printDBG("Vizjer.listItems %s" % cItem)
         page = cItem.get('page', 1)
 
-        url  = cItem['url']
+        url = cItem['url']
         sort = cItem.get('sort', '')
         if sort not in url:
             url = url + sort
@@ -159,7 +159,7 @@ class Vizjer(CBaseHostClass):
         self.setMainUrl(data.meta['url'])
             
         nextPage = self.cm.ph.getDataBeetwenNodes(data, ('<ul', '>', 'pagination'), ('</u', '>'))[1]
-        if '' != self.cm.ph.getSearchGroups(nextPage, 'page=(%s)[^0-9]' % (page+1))[0]:
+        if '' != self.cm.ph.getSearchGroups(nextPage, 'page=(%s)[^0-9]' % (page + 1))[0]:
             nextPage = True
         else:
             nextPage = False
@@ -312,10 +312,10 @@ class Vizjer(CBaseHostClass):
 
         if title == '':
             title = cItem['title']
-        if icon  == '':
-            icon  = cItem.get('icon', '')
-        if desc  == '':
-            desc  = cItem.get('desc', '')
+        if icon == '':
+            icon = cItem.get('icon', '')
+        if desc == '':
+            desc = cItem.get('desc', '')
 
         return [{'title':self.cleanHtmlStr(title), 'text': self.cleanHtmlStr(desc), 'images':[{'title':'', 'url':self.getFullUrl(icon)}], 'other_info':{'custom_items_list':itemsList}}]
         
@@ -324,9 +324,9 @@ class Vizjer(CBaseHostClass):
         
         CBaseHostClass.handleService(self, index, refresh, searchPattern, searchType)
 
-        name     = self.currItem.get("name", '')
+        name = self.currItem.get("name", '')
         category = self.currItem.get("category", '')
-        mode     = self.currItem.get("mode", '')
+        mode = self.currItem.get("mode", '')
         
         printDBG("handleService: |||| name[%s], category[%s] " % (name, category))
         self.cacheLinks = {}

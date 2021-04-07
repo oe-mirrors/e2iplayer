@@ -33,7 +33,7 @@ from Screens.MessageBox import MessageBox
 ###################################################
 # Config options for HOST
 ###################################################
-config.plugins.iptvplayer.goldvodtv_login    = ConfigText(default="", fixed_size=False)
+config.plugins.iptvplayer.goldvodtv_login = ConfigText(default="", fixed_size=False)
 config.plugins.iptvplayer.goldvodtv_password = ConfigText(default="", fixed_size=False)
 
 def GetConfigList():
@@ -45,8 +45,8 @@ def GetConfigList():
 ###################################################
 
 class GoldVodTVApi:
-    MAIN_URL   = 'http://goldvod.tv/'
-    HTTP_HEADER  = {'User-Agent': 'Mozilla/5.0 (X11; Ubuntu; Linux i686; rv:12.0) Gecko/20100101 Firefox/12.0', 'Referer': MAIN_URL}
+    MAIN_URL = 'http://goldvod.tv/'
+    HTTP_HEADER = {'User-Agent': 'Mozilla/5.0 (X11; Ubuntu; Linux i686; rv:12.0) Gecko/20100101 Firefox/12.0', 'Referer': MAIN_URL}
     
     def __init__(self):
         self.COOKIE_FILE = GetCookieDir('goldvodtv.cookie')
@@ -73,7 +73,7 @@ class GoldVodTVApi:
     def getChannelsList(self, cItem):
         printDBG("TelewizjadaNetApi.getChannelsList")
         
-        login    = config.plugins.iptvplayer.goldvodtv_login.value
+        login = config.plugins.iptvplayer.goldvodtv_login.value
         password = config.plugins.iptvplayer.goldvodtv_password.value
         if login != '' and password != '':        
             if self.doLogin(login, password):
@@ -93,19 +93,19 @@ class GoldVodTVApi:
         data = self.cm.ph.getAllItemsBeetwenMarkers(data, '<a ', '</a>')
         for item in data:
             printDBG("item [%r]" % item)
-            url  = self.cm.ph.getSearchGroups(item, '''href=['"]([^"^']+?)['"]''')[0]
+            url = self.cm.ph.getSearchGroups(item, '''href=['"]([^"^']+?)['"]''')[0]
             icon = self.cm.ph.getSearchGroups(item, '''src=['"]([^"^']+?)['"]''')[0]
-            id   = self.cm.ph.getSearchGroups(url, '''[^0-9]([0-9]+?)[^0-9]''')[0]
+            id = self.cm.ph.getSearchGroups(url, '''[^0-9]([0-9]+?)[^0-9]''')[0]
             if '' != url:
                 params = dict(cItem)
-                params['url']   = self.getFullUrl(url)
-                params['icon']  = self.getFullUrl(icon)
+                params['url'] = self.getFullUrl(url)
+                params['icon'] = self.getFullUrl(icon)
                 params['title'] = self.cm.ph.getSearchGroups(item, '''title=['"]([^"^']+?)['"]''')[0]
                 if '' == params['title']:
                     params['title'] = self.cm.ph.getSearchGroups(item, '''alt=['"]([^"^']+?)['"]''')[0]
                 if '' == params['title']:
                     params['title'] = url.replace('.html', '').replace(',', ' ').title()
-                params['desc']  = params['url']
+                params['desc'] = params['url']
                 channelsTab.append(params)
             
         return channelsTab
@@ -128,11 +128,11 @@ class GoldVodTVApi:
         if not sts:
             return False
         
-        HTTP_HEADER= dict(GoldVodTVApi.HTTP_HEADER)
+        HTTP_HEADER = dict(GoldVodTVApi.HTTP_HEADER)
         HTTP_HEADER.update({'Referer':loginUrl})
         
         post_data = {'login': login, 'pass': password, 'remember': 1, 'logged': ''}
-        params    = {'header': HTTP_HEADER, 'cookiefile': self.COOKIE_FILE, 'save_cookie': True, 'load_cookie': True}
+        params = {'header': HTTP_HEADER, 'cookiefile': self.COOKIE_FILE, 'save_cookie': True, 'load_cookie': True}
         sts, data = self.cm.getPage(loginUrl, params, post_data)
         if sts:
             if os_path.isfile(self.COOKIE_FILE):

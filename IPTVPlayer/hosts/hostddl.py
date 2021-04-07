@@ -26,11 +26,11 @@ from Components.config import config, ConfigSelection, getConfigListEntry
 ###################################################
 # Config options for HOST
 ###################################################
-config.plugins.iptvplayer.ddlme_proxy = ConfigSelection(default="None", choices=[("None",     _("None")),
+config.plugins.iptvplayer.ddlme_proxy = ConfigSelection(default="None", choices=[("None", _("None")),
                                                                                      ("webproxy", _("Web proxy")),
-                                                                                     ("proxy_1",  _("Alternative proxy server (1)")),
-                                                                                     ("proxy_2",  _("Alternative proxy server (2)"))])
-config.plugins.iptvplayer.ddlme_lang = ConfigSelection(default="", choices=[("",   _("default")),
+                                                                                     ("proxy_1", _("Alternative proxy server (1)")),
+                                                                                     ("proxy_2", _("Alternative proxy server (2)"))])
+config.plugins.iptvplayer.ddlme_lang = ConfigSelection(default="", choices=[("", _("default")),
                                                                                 ("de", "de"),
                                                                                 ("en", "en")])
 
@@ -59,7 +59,7 @@ class DDLMe(CBaseHostClass):
     
     def getRealUrl(self, url):
         if config.plugins.iptvplayer.ddlme_proxy.value == 'webproxy' and url != None and 'browse.php?u=' in url:
-            url = urllib.parse.unquote(self.cm.ph.getSearchGroups(url+'&', '''\?u=(http[^&]+?)&''')[0])
+            url = urllib.parse.unquote(self.cm.ph.getSearchGroups(url + '&', '''\?u=(http[^&]+?)&''')[0])
         return url
     
     def getFullUrl(self, url, baseUrl=None):
@@ -73,7 +73,7 @@ class DDLMe(CBaseHostClass):
         return CBaseHostClass.getFullUrl(self, url.replace('&#038;', '&'), baseUrl)
         
     def getMainUrl(self):
-        lang  = config.plugins.iptvplayer.ddlme_lang.value
+        lang = config.plugins.iptvplayer.ddlme_lang.value
         if lang == '': 
             lang = GetDefaultLang()
         if lang not in ['en', 'de']:
@@ -145,7 +145,7 @@ class DDLMe(CBaseHostClass):
             params.update({'good_for_fav':False, 'category':type[1], 'title':title, 'url':url, 'desc':desc, 'f_type':type[0]})
             self.addDir(params)
         
-        MAIN_CAT_TAB = [{'category':'search',         'title': _('Search'),       'search_item':True},
+        MAIN_CAT_TAB = [{'category':'search', 'title': _('Search'), 'search_item':True},
                         {'category': 'search_history', 'title': _('Search history'),}]
         self.listsTab(MAIN_CAT_TAB, cItem)
         
@@ -170,7 +170,7 @@ class DDLMe(CBaseHostClass):
             if '/movies' not in url and '/tv' not in url:
                 continue
             title = self.cleanHtmlStr(item)
-            if title  == '':
+            if title == '':
                 title = self.cleanHtmlStr(self.cm.ph.getSearchGroups(item, '''title=['"]([^'^"]+?)['"]''')[0])
             self.addDir(MergeDicts(cItem, {'title':title, 'url':url, 'category':nextCategory, 'desc':''}))
         
@@ -226,7 +226,7 @@ class DDLMe(CBaseHostClass):
         for item in data:
             url = self.cm.ph.getSearchGroups(item, '''href=['"]([^'^"]+?)['"]''')[0]
             title = self.cleanHtmlStr(item)
-            if title  == '':
+            if title == '':
                 title = self.cleanHtmlStr(self.cm.ph.getSearchGroups(item, '''title=['"]([^'^"]+?)['"]''')[0])
             self.addDir(MergeDicts(cItem, {'title':title, 'url':url, 'category':nextCategory, 'desc':''}))
         
@@ -572,38 +572,38 @@ class DDLMe(CBaseHostClass):
         
         if len(genre) == 1:
             itemsList.append((_('Genre:'), genre[0]))
-        elif len(genre) >1:
+        elif len(genre) > 1:
             itemsList.append((_('Genres:'), ', '.join(genre)))
         
         if len(director) == 1:
             itemsList.append((_('Director:'), director[0]))
-        elif len(director) >1:
+        elif len(director) > 1:
             itemsList.append((_('Directors:'), ', '.join(director)))
         
         if len(mood) == 1:
             itemsList.append((_('Mood:'), mood[0]))
-        elif len(mood) >1:
+        elif len(mood) > 1:
             itemsList.append((_('Moods:'), ', '.join(mood)))
         
         if len(actor) == 1:
             itemsList.append((_('Actor:'), actor[0]))
-        elif len(actor) >1:
+        elif len(actor) > 1:
             itemsList.append((_('Actors:'), ', '.join(actor)))
         
         if len(praise) == 1:
             itemsList.append((_('Praise:'), praise[0]))
-        elif len(praise) >1:
+        elif len(praise) > 1:
             itemsList.append((_('Praises:'), ', '.join(praise)))
         
-        if len(othersTags) >1:
+        if len(othersTags) > 1:
             itemsList.append((_('Others tags:'), ', '.join(othersTags)))
         
         if title == '':
             title = cItem['title']
         if icon == '':
-            icon  = cItem.get('icon', self.DEFAULT_ICON_URL)
+            icon = cItem.get('icon', self.DEFAULT_ICON_URL)
         if desc == '':
-            desc  = cItem.get('desc', '')
+            desc = cItem.get('desc', '')
         
         printDBG('++++++++++++++++++++++++++++++++++++++++++++++++++++++')
         printDBG(itemsList)
@@ -616,7 +616,7 @@ class DDLMe(CBaseHostClass):
         
         CBaseHostClass.handleService(self, index, refresh, searchPattern, searchType)
 
-        name     = self.currItem.get("name", '')
+        name = self.currItem.get("name", '')
         category = self.currItem.get("category", '')
         printDBG("handleService: ||| name[%s], category[%s] " % (name, category))
         self.currList = []
