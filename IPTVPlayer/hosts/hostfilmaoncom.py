@@ -29,16 +29,16 @@ def gettytul():
 class FilmaonCom(CBaseHostClass):
     
     def __init__(self):
-        CBaseHostClass.__init__(self, {'history':'filmaon.com', 'cookie':'filmaon.com.cookie'})
+        CBaseHostClass.__init__(self, {'history': 'filmaon.com', 'cookie': 'filmaon.com.cookie'})
         self.USER_AGENT = 'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:40.0) Gecko/20100101 Firefox/40.0'
         self.MAIN_URL = 'http://www.filmaon.com/'
         self.DEFAULT_ICON_URL = 'http://www.filmaon.com/wp-content/themes/Dooplay_/assets/img/Logomakr1.png'
-        self.HTTP_HEADER = {'User-Agent': self.USER_AGENT, 'DNT':'1', 'Accept': 'text/html', 'Accept-Encoding':'gzip, deflate', 'Referer':self.getMainUrl(), 'Origin':self.getMainUrl()}
+        self.HTTP_HEADER = {'User-Agent': self.USER_AGENT, 'DNT': '1', 'Accept': 'text/html', 'Accept-Encoding': 'gzip, deflate', 'Referer': self.getMainUrl(), 'Origin': self.getMainUrl()}
         self.AJAX_HEADER = dict(self.HTTP_HEADER)
-        self.AJAX_HEADER.update({'X-Requested-With': 'XMLHttpRequest', 'Accept-Encoding':'gzip, deflate', 'Content-Type':'application/x-www-form-urlencoded; charset=UTF-8', 'Accept':'application/json, text/javascript, */*; q=0.01'})
+        self.AJAX_HEADER.update({'X-Requested-With': 'XMLHttpRequest', 'Accept-Encoding': 'gzip, deflate', 'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8', 'Accept': 'application/json, text/javascript, */*; q=0.01'})
         
         self.cacheLinks = {}
-        self.defaultParams = {'header':self.HTTP_HEADER, 'with_metadata':True, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
+        self.defaultParams = {'header': self.HTTP_HEADER, 'with_metadata': True, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
     
     def getPage(self, baseUrl, addParams={}, post_data=None):
         if addParams == {}:
@@ -50,13 +50,13 @@ class FilmaonCom(CBaseHostClass):
                 return url
             else:
                 return urllib.parse.urljoin(baseUrl, url)
-        addParams['cloudflare_params'] = {'domain':self.up.getDomain(baseUrl), 'cookie_file':self.COOKIE_FILE, 'User-Agent':self.USER_AGENT, 'full_url_handle':_getFullUrl}
+        addParams['cloudflare_params'] = {'domain': self.up.getDomain(baseUrl), 'cookie_file': self.COOKIE_FILE, 'User-Agent': self.USER_AGENT, 'full_url_handle': _getFullUrl}
         return self.cm.getPageCFProtection(baseUrl, addParams, post_data)
     
     def getFullIconUrl(self, url, baseUrl=None):
         url = CBaseHostClass.getFullIconUrl(self, url, baseUrl)
         if url != '':
-            url = strwithmeta(url, {'Referer':self.getMainUrl()})
+            url = strwithmeta(url, {'Referer': self.getMainUrl()})
         return url
     
     def listMainMenu(self, cItem, nextCategory1, nextCategory2):
@@ -76,20 +76,20 @@ class FilmaonCom(CBaseHostClass):
                     continue
                 url = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''href=['"]([^"^']+?)['"]''')[0])
                 title = self.cleanHtmlStr(item)
-                params = {'name':'category', 'type':'category', 'category':nextCategory2, 'title':title, 'url':url}
+                params = {'name': 'category', 'type': 'category', 'category': nextCategory2, 'title': title, 'url': url}
                 subItems.append(params)
                 if url.endswith('/seriale/'):
                     for it in [('/seasons/', 'SEZONET E SERIALEV'), ('/episodes/', 'EPISODET E REJA')]:
-                        params = {'name':'category', 'type':'category', 'category':nextCategory2, 'title':it[1], 'url':self.getFullUrl(it[0])}
+                        params = {'name': 'category', 'type': 'category', 'category': nextCategory2, 'title': it[1], 'url': self.getFullUrl(it[0])}
                         subItems.append(params)
             
             if len(subItems):
-                params = {'name':'category', 'type':'category', 'category':nextCategory1, 'title':sTitle, 'sub_items':subItems}
+                params = {'name': 'category', 'type': 'category', 'category': nextCategory1, 'title': sTitle, 'sub_items': subItems}
                 self.addDir(params)
         
-        MAIN_CAT_TAB = [{'category':'top', 'title': 'TOP IMDb 50', 'url':self.getFullUrl('/top-imdb/')}, 
-                        {'category':'search', 'title': _('Search'), 'search_item':True}, 
-                        {'category':'search_history', 'title': _('Search history')},]
+        MAIN_CAT_TAB = [{'category': 'top', 'title': 'TOP IMDb 50', 'url': self.getFullUrl('/top-imdb/')}, 
+                        {'category': 'search', 'title': _('Search'), 'search_item': True}, 
+                        {'category': 'search_history', 'title': _('Search history')}, ]
         self.listsTab(MAIN_CAT_TAB, cItem)
         
     def listSubItems(self, cItem):
@@ -132,7 +132,7 @@ class FilmaonCom(CBaseHostClass):
             if rating != '':
                 descTab.append('%s/10' % rating)
             desc = ' | '.join(descTab) + '[/br]' + desc
-            params = {'good_for_fav':True, 'priv_has_art':True, 'category':nextCategory, 'url':url, 'title':title, 'desc':desc, 'icon':icon}
+            params = {'good_for_fav': True, 'priv_has_art': True, 'category': nextCategory, 'url': url, 'title': title, 'desc': desc, 'icon': icon}
             if '/episodes/' in url or '-episodi' in url:
                 self.addVideo(params)
             else:
@@ -140,7 +140,7 @@ class FilmaonCom(CBaseHostClass):
         
         if nextPage != '':
             params = dict(cItem)
-            params.update({'title':_('Next page'), 'url':nextPage, 'page':page + 1})
+            params.update({'title': _('Next page'), 'url': nextPage, 'page': page + 1})
             self.addDir(params)
         
     def listTop(self, cItem, nextCategory1, nextCategory2):
@@ -169,11 +169,11 @@ class FilmaonCom(CBaseHostClass):
                 rating = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(item, ('<div', '>', 'rating'), ('</div', '>'))[1])
                 descTab.append(number)
                 descTab.append('%s/10' % (rating))
-                params = {'good_for_fav':True, 'priv_has_art':True, 'name':'category', 'type':'category', 'category':nextCategory2, 'title':title, 'url':url, 'desc':' '.join(descTab), 'icon':icon}
+                params = {'good_for_fav': True, 'priv_has_art': True, 'name': 'category', 'type': 'category', 'category': nextCategory2, 'title': title, 'url': url, 'desc': ' '.join(descTab), 'icon': icon}
                 subItems.append(params)
             
             if len(subItems):
-                params = {'name':'category', 'type':'category', 'category':nextCategory1, 'title':sTitle, 'sub_items':subItems}
+                params = {'name': 'category', 'type': 'category', 'category': nextCategory1, 'title': sTitle, 'sub_items': subItems}
                 self.addDir(params)
     
     def listSearchResult(self, cItem, searchPattern, searchType):
@@ -181,7 +181,7 @@ class FilmaonCom(CBaseHostClass):
         
         url = self.getFullUrl('?s=') + urllib.parse.quote_plus(searchPattern)
         cItem = dict(cItem)
-        cItem.update({'url':url, 'category':'list_items'})
+        cItem.update({'url': url, 'category': 'list_items'})
         self.listItems(cItem, 'explore_item')
         
     def getEpisodes(self, data, iTitle, iIcon):
@@ -198,7 +198,7 @@ class FilmaonCom(CBaseHostClass):
             desc = self.cleanHtmlStr(title[-1])
             title = self.cleanHtmlStr(title[0])
             
-            params = {'good_for_fav':True, 'priv_has_art':True, 'type':'video', 'url':url, 'title':'%s: %s %s' % (iTitle, numer, title), 'desc':desc, 'icon':icon}
+            params = {'good_for_fav': True, 'priv_has_art': True, 'type': 'video', 'url': url, 'title': '%s: %s %s' % (iTitle, numer, title), 'desc': desc, 'icon': icon}
             episodesTab.append(params)
         return episodesTab
         
@@ -231,14 +231,14 @@ class FilmaonCom(CBaseHostClass):
                         sTitle = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(season, ('<span', '>', 'title'), ('</span', '>'))[1])
                     episodesTab = self.getEpisodes(season, iTitle, iIcon)
                     if len(episodesTab):
-                        params = {'good_for_fav':False, 'category':nextCategory, 'title':sTitle, 'sub_items':episodesTab, 'desc':'', 'icon':iIcon}
+                        params = {'good_for_fav': False, 'category': nextCategory, 'title': sTitle, 'sub_items': episodesTab, 'desc': '', 'icon': iIcon}
                         self.addDir(params)
         elif '/seasons/' in cUrl:
             data = self.cm.ph.getDataBeetwenNodes(data, ('<ul', '>', 'episodios'), ('</ul', '>'))[1]
             self.currList = self.getEpisodes(data, iTitle, iIcon)
             
         if iTrailer != '':
-            params = {'good_for_fav':False, 'url':iTrailer, 'title':'%s - %s' % (iTitle, _('trailer')), 'icon':iIcon}
+            params = {'good_for_fav': False, 'url': iTrailer, 'title': '%s - %s' % (iTitle, _('trailer')), 'icon': iIcon}
             self.addVideo(params)
         
     def getLinksForVideo(self, cItem):
@@ -280,7 +280,7 @@ class FilmaonCom(CBaseHostClass):
             name = namesData.get(id, '')
             if name == '':
                 name = self.up.getHostName(url)
-            retTab.append({'name':name, 'url':strwithmeta(url, {'Referer':cUrl}), 'need_resolve':1})
+            retTab.append({'name': name, 'url': strwithmeta(url, {'Referer': cUrl}), 'need_resolve': 1})
             
         data = self.cm.ph.getDataBeetwenNodes(data, ('<div', '>', 'links_table'), ('</table', '>'))[1].split('<tbody', 1)[-1]
         data = self.cm.ph.getAllItemsBeetwenNodes(data, ('<tr', '>'), ('</tr', '>'))
@@ -296,7 +296,7 @@ class FilmaonCom(CBaseHostClass):
             for idx in range(1, len(item)):
                 title.append(self.cleanHtmlStr(item[idx]))
             title = ' | '.join(title)
-            retTab.append({'name':title, 'url':strwithmeta(url, {'Referer':cUrl}), 'need_resolve':1})
+            retTab.append({'name': title, 'url': strwithmeta(url, {'Referer': cUrl}), 'need_resolve': 1})
         
         if len(retTab):
             self.cacheLinks[cacheKey] = retTab
@@ -430,7 +430,7 @@ class FilmaonCom(CBaseHostClass):
         if icon == '':
             icon = cItem.get('icon', self.DEFAULT_ICON_URL)
         
-        return [{'title':self.cleanHtmlStr(title), 'text': self.cleanHtmlStr(desc), 'images':[{'title':'', 'url':self.getFullUrl(icon)}], 'other_info':otherInfo}]
+        return [{'title': self.cleanHtmlStr(title), 'text': self.cleanHtmlStr(desc), 'images': [{'title': '', 'url': self.getFullUrl(icon)}], 'other_info': otherInfo}]
     
     def handleService(self, index, refresh=0, searchPattern='', searchType=''):
         printDBG('handleService start')
@@ -448,7 +448,7 @@ class FilmaonCom(CBaseHostClass):
     #MAIN MENU
         if name == None and category == '':
             rm(self.COOKIE_FILE)
-            self.listMainMenu({'name':'category'}, 'sub_items', 'list_items')
+            self.listMainMenu({'name': 'category'}, 'sub_items', 'list_items')
         elif category == 'list_items':
             self.listItems(self.currItem, 'explore_item')
         elif category == 'sub_items':
@@ -460,11 +460,11 @@ class FilmaonCom(CBaseHostClass):
     #SEARCH
         elif category in ["search", "search_next_page"]:
             cItem = dict(self.currItem)
-            cItem.update({'search_item':False, 'name':'category'}) 
+            cItem.update({'search_item': False, 'name': 'category'}) 
             self.listSearchResult(cItem, searchPattern, searchType)
     #HISTORIA SEARCH
         elif category == "search_history":
-            self.listsHistory({'name':'history', 'category': 'search'}, 'desc', _("Type: "))
+            self.listsHistory({'name': 'history', 'category': 'search'}, 'desc', _("Type: "))
         else:
             printExc()
         

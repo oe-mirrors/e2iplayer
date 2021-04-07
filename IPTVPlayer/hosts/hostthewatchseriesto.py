@@ -43,20 +43,20 @@ class TheWatchseriesTo(CBaseHostClass):
     SEARCH_URL = MAIN_URL + 'search/'
     DEFAULT_ICON = "https://%s/templates/default/images/apple-touch-icon.png" % DOMAIN
     
-    HEADER = {'User-Agent': 'Mozilla/5.0', 'Accept': 'text/html', 'Accept-Encoding':'gzip, deflate', 'Referer':MAIN_URL}
+    HEADER = {'User-Agent': 'Mozilla/5.0', 'Accept': 'text/html', 'Accept-Encoding': 'gzip, deflate', 'Referer': MAIN_URL}
     AJAX_HEADER = dict(HEADER)
     AJAX_HEADER.update({'X-Requested-With': 'XMLHttpRequest'})
     
-    MAIN_CAT_TAB = [{'icon':DEFAULT_ICON, 'category':'list_series', 'title': _('Series list'), 'url':MAIN_URL + 'series'},
-                    {'icon':DEFAULT_ICON, 'category':'episodes', 'title': _('Popular Episodes'), 'url':MAIN_URL + 'new'},
-                    {'icon':DEFAULT_ICON, 'category':'episodes', 'title': _('Newest Episodes'), 'url':MAIN_URL + 'latest'},
-                    {'icon':DEFAULT_ICON, 'category':'categories', 'title': _('All A-Z'), 'url':MAIN_URL + 'letters/A'},
-                    {'icon':DEFAULT_ICON, 'category':'categories', 'title': _('Genres'), 'url':MAIN_URL + 'genres/action'},
-                    {'icon':DEFAULT_ICON, 'category':'search', 'title': _('Search'), 'search_item':True},
-                    {'icon':DEFAULT_ICON, 'category':'search_history', 'title': _('Search history')}]
+    MAIN_CAT_TAB = [{'icon': DEFAULT_ICON, 'category': 'list_series', 'title': _('Series list'), 'url': MAIN_URL + 'series'},
+                    {'icon': DEFAULT_ICON, 'category': 'episodes', 'title': _('Popular Episodes'), 'url': MAIN_URL + 'new'},
+                    {'icon': DEFAULT_ICON, 'category': 'episodes', 'title': _('Newest Episodes'), 'url': MAIN_URL + 'latest'},
+                    {'icon': DEFAULT_ICON, 'category': 'categories', 'title': _('All A-Z'), 'url': MAIN_URL + 'letters/A'},
+                    {'icon': DEFAULT_ICON, 'category': 'categories', 'title': _('Genres'), 'url': MAIN_URL + 'genres/action'},
+                    {'icon': DEFAULT_ICON, 'category': 'search', 'title': _('Search'), 'search_item': True},
+                    {'icon': DEFAULT_ICON, 'category': 'search_history', 'title': _('Search history')}]
  
     def __init__(self):
-        CBaseHostClass.__init__(self, {'history':'TheWatchseriesTo.tv', 'cookie':'thewatchseriesto.cookie'})
+        CBaseHostClass.__init__(self, {'history': 'TheWatchseriesTo.tv', 'cookie': 'thewatchseriesto.cookie'})
         self.defaultParams = {'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
         self.seasonCache = {}
         self.cacheLinks = {}
@@ -79,7 +79,7 @@ class TheWatchseriesTo(CBaseHostClass):
     
     def getPage(self, url, params={}, post_data=None):
         HTTP_HEADER = dict(self.HEADER)
-        params.update({'header':HTTP_HEADER})
+        params.update({'header': HTTP_HEADER})
         
         if self.isNeedProxy() and ('thewatchseries.to' in url or 'watch-series.to' in url or 'the-watch-series.to' in url or self.DOMAIN in url):
             proxy = 'http:/securefor.com/browse.php?u={0}&b=4'.format(urllib.parse.quote(url, ''))
@@ -146,7 +146,7 @@ class TheWatchseriesTo(CBaseHostClass):
                 continue
             title = self.cleanHtmlStr(item)
             params = dict(cItem)
-            params.update({'category':nextCategory, 'title':title, 'url':url, 'page':0})
+            params.update({'category': nextCategory, 'title': title, 'url': url, 'page': 0})
             self.addDir(params)
             
     def listItems(self, cItem, nextCategory):
@@ -204,7 +204,7 @@ class TheWatchseriesTo(CBaseHostClass):
                 desc = self.cleanHtmlStr(item)
             
             params = dict(cItem)
-            params.update({'good_for_fav': True, 'category':nextCategory, 'title':self.cleanHtmlStr(title), 'url':self.getFullUrl(url), 'icon':icon, 'desc':desc})
+            params.update({'good_for_fav': True, 'category': nextCategory, 'title': self.cleanHtmlStr(title), 'url': self.getFullUrl(url), 'icon': icon, 'desc': desc})
             
             if nextCategory == 'video' or '/episode/' in url:
                 self.addVideo(params)
@@ -212,7 +212,7 @@ class TheWatchseriesTo(CBaseHostClass):
                 self.addDir(params)
         if nextPage:
                 params = dict(cItem)
-                params.update({'title':_('Next page'), 'page':page + 1})
+                params.update({'title': _('Next page'), 'page': page + 1})
                 self.addDir(params)
         
     def listSeasons(self, cItem, nextCateogry):
@@ -240,13 +240,13 @@ class TheWatchseriesTo(CBaseHostClass):
                 if '' != episodeNum and '' != seasonNum:
                     title = 's%se%s' % (seasonNum.zfill(2), episodeNum.zfill(2)) + ' - ' + title.replace('Episode %s' % episodeNum, '')
                 params = dict(cItem)
-                params.update({'good_for_fav': True, 'title':'{0}: {1}'.format(cItem['title'], title), 'url':self.getFullUrl(url), 'desc':self.cleanHtmlStr(item)})
+                params.update({'good_for_fav': True, 'title': '{0}: {1}'.format(cItem['title'], title), 'url': self.getFullUrl(url), 'desc': self.cleanHtmlStr(item)})
                 episodesTab.append(params)
             
             if len(episodesTab):
                 self.seasonCache[seasonName] = episodesTab
                 params = dict(cItem)
-                params.update({'good_for_fav': False, 'category':nextCateogry, 'title':seasonName, 'season_key':seasonName})
+                params.update({'good_for_fav': False, 'category': nextCateogry, 'title': seasonName, 'season_key': seasonName})
                 self.addDir(params)
                 
     def listEpisodes(self, cItem):
@@ -290,8 +290,8 @@ class TheWatchseriesTo(CBaseHostClass):
                 url = self.cm.ph.getSearchGroups(item, '''['"]Delete\slink\s(http.+?)['"]''')[0]
             if self.up.checkHostSupport(url) != 1:
                 continue
-            url = strwithmeta(self.getFullUrl(url), {'Referer':self.cm.meta['url']})
-            urlTab.append({'name':host, 'url':url, 'need_resolve':1})
+            url = strwithmeta(self.getFullUrl(url), {'Referer': self.cm.meta['url']})
+            urlTab.append({'name': host, 'url': url, 'need_resolve': 1})
         if len(urlTab):
             self.cacheLinks[cItem['url']] = urlTab
         return urlTab
@@ -316,7 +316,7 @@ class TheWatchseriesTo(CBaseHostClass):
         
     def getFavouriteData(self, cItem):
         printDBG('TheWatchseriesTo.getFavouriteData')
-        params = {'type':cItem['type'], 'category':cItem.get('category', ''), 'title':cItem['title'], 'url':cItem['url'], 'desc':cItem['desc'], 'icon':cItem['icon']}
+        params = {'type': cItem['type'], 'category': cItem.get('category', ''), 'title': cItem['title'], 'url': cItem['url'], 'desc': cItem['desc'], 'icon': cItem['icon']}
         return json_dumps(params) 
 
     def handleService(self, index, refresh=0, searchPattern='', searchType=''):
@@ -333,7 +333,7 @@ class TheWatchseriesTo(CBaseHostClass):
         
     #MAIN MENU
         if name == None:
-            self.listsTab(self.MAIN_CAT_TAB, {'name':'category'})
+            self.listsTab(self.MAIN_CAT_TAB, {'name': 'category'})
         elif category == 'categories':
             self.listCategories(self.currItem, 'list_series')
         elif category == 'list_series':
@@ -349,11 +349,11 @@ class TheWatchseriesTo(CBaseHostClass):
     #SEARCH
         elif category in ["search", "search_next_page"]:
             cItem = dict(self.currItem)
-            cItem.update({'search_item':False, 'name':'category'}) 
+            cItem.update({'search_item': False, 'name': 'category'}) 
             self.listSearchResult(cItem, searchPattern, searchType)
     #HISTORIA SEARCH
         elif category == "search_history":
-            self.listsHistory({'name':'history', 'category': 'search'}, 'desc', _("Type: "))
+            self.listsHistory({'name': 'history', 'category': 'search'}, 'desc', _("Type: "))
         else:
             printExc()
         

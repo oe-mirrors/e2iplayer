@@ -46,17 +46,17 @@ def gettytul():
 class SeriesOnlineIO(CBaseHostClass):
  
     def __init__(self):
-        CBaseHostClass.__init__(self, {'history':'SeriesOnlineIO.tv', 'cookie':'seriesonlineio.cookie'})
+        CBaseHostClass.__init__(self, {'history': 'SeriesOnlineIO.tv', 'cookie': 'seriesonlineio.cookie'})
         self.DEFAULT_ICON_URL = 'https://www2.series9.io/images/gomovies-logo-light.png'
         self.USER_AGENT = 'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:56.0) Gecko/20100101 Firefox/56.0'
-        self.HEADER = {'User-Agent': self.USER_AGENT, 'DNT':'1', 'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8', 'Accept-Encoding':'gzip, deflate'}
+        self.HEADER = {'User-Agent': self.USER_AGENT, 'DNT': '1', 'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8', 'Accept-Encoding': 'gzip, deflate'}
         
         self.AJAX_HEADER = dict(self.HEADER)
         self.AJAX_HEADER.update({'X-Requested-With': 'XMLHttpRequest'})
         self.MAIN_URL = None
         self.cacheFilters = {}
         self.cacheLinks = {}
-        self.defaultParams = {'header':self.HEADER, 'use_new_session':True, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
+        self.defaultParams = {'header': self.HEADER, 'use_new_session': True, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
         self.MAIN_CAT_TAB = []
         
         self.userInformedAboutCaptchaProtection = False
@@ -72,9 +72,9 @@ class SeriesOnlineIO(CBaseHostClass):
             else:
                 proxy = config.plugins.iptvplayer.alternative_proxy2.value
             addParams = dict(addParams)
-            addParams.update({'http_proxy':proxy})
+            addParams.update({'http_proxy': proxy})
 
-        addParams['cloudflare_params'] = {'cookie_file':self.COOKIE_FILE, 'User-Agent':self.USER_AGENT}
+        addParams['cloudflare_params'] = {'cookie_file': self.COOKIE_FILE, 'User-Agent': self.USER_AGENT}
 
         tries = 0
         while tries < 2:
@@ -111,10 +111,10 @@ class SeriesOnlineIO(CBaseHostClass):
                 proxy = config.plugins.iptvplayer.alternative_proxy1.value
             else:
                 proxy = config.plugins.iptvplayer.alternative_proxy2.value
-            url = strwithmeta(url, {'iptv_http_proxy':proxy})
+            url = strwithmeta(url, {'iptv_http_proxy': proxy})
             
         cookieHeader = self.cm.getCookieHeader(self.COOKIE_FILE)
-        return strwithmeta(url, {'Cookie':cookieHeader, 'User-Agent':self.USER_AGENT})
+        return strwithmeta(url, {'Cookie': cookieHeader, 'User-Agent': self.USER_AGENT})
         
     def selectDomain(self):
         domains = ['https://www2.series9.io/'] #'http://123movieshd.us/'
@@ -137,11 +137,11 @@ class SeriesOnlineIO(CBaseHostClass):
             self.MAIN_URL = domains[0]
         
         self.SEARCH_URL = self.MAIN_URL + 'movie/search'
-        self.MAIN_CAT_TAB = [{'category':'list_filter_genre', 'title': 'Movies', 'url':self.MAIN_URL + 'movie/filter/movie'},
-                             {'category':'list_filter_genre', 'title': 'TV-Series', 'url':self.MAIN_URL + 'movie/filter/series'},
-                             {'category':'list_filter_genre', 'title': 'Cinema', 'url':self.MAIN_URL + 'movie/filter/cinema'},
-                             {'category': 'search', 'title': _('Search'), 'search_item': True,},
-                             {'category': 'search_history', 'title': _('Search history'),} 
+        self.MAIN_CAT_TAB = [{'category': 'list_filter_genre', 'title': 'Movies', 'url': self.MAIN_URL + 'movie/filter/movie'},
+                             {'category': 'list_filter_genre', 'title': 'TV-Series', 'url': self.MAIN_URL + 'movie/filter/series'},
+                             {'category': 'list_filter_genre', 'title': 'Cinema', 'url': self.MAIN_URL + 'movie/filter/cinema'},
+                             {'category': 'search', 'title': _('Search'), 'search_item': True, },
+                             {'category': 'search_history', 'title': _('Search history'), } 
                             ]
         
     def fillCacheFilters(self):
@@ -157,23 +157,23 @@ class SeriesOnlineIO(CBaseHostClass):
         tmp = self.cm.ph.getAllItemsBeetwenMarkers(tmp, '<li', '</li>', withMarkers=True, caseSensitive=False)
         for item in tmp:
             value = self.cm.ph.getSearchGroups(item, 'href="[^"]+?/filter/all/all/all/all/all/([^"^/]+?)/')[0]
-            self.cacheFilters['sort_by'].append({'sort_by':value, 'title':self.cleanHtmlStr(item)})
+            self.cacheFilters['sort_by'].append({'sort_by': value, 'title': self.cleanHtmlStr(item)})
             
-        for filter in [{'key':'quality', 'marker':'Quality</span>'},
-                       {'key':'genre', 'marker':'Genre</span>'},
-                       {'key':'country', 'marker':'Country</span>'},
-                       {'key':'year', 'marker':'Release</span>'}]:
+        for filter in [{'key': 'quality', 'marker': 'Quality</span>'},
+                       {'key': 'genre', 'marker': 'Genre</span>'},
+                       {'key': 'country', 'marker': 'Country</span>'},
+                       {'key': 'year', 'marker': 'Release</span>'}]:
             self.cacheFilters[filter['key']] = []
             tmp = self.cm.ph.getDataBeetwenMarkers(data, filter['marker'], '</ul>', False)[1]
             tmp = self.cm.ph.getAllItemsBeetwenMarkers(tmp, '<li', '</li>', withMarkers=True, caseSensitive=False)
             allItemAdded = False
             for item in tmp:
                 value = self.cm.ph.getSearchGroups(item, 'value="([^"]+?)"')[0]
-                self.cacheFilters[filter['key']].append({filter['key']:value, 'title':self.cleanHtmlStr(item)})
+                self.cacheFilters[filter['key']].append({filter['key']: value, 'title': self.cleanHtmlStr(item)})
                 if value == 'all':
                     allItemAdded = True
             if not allItemAdded:
-                self.cacheFilters[filter['key']].insert(0, {filter['key']:'all', 'title':'All'})
+                self.cacheFilters[filter['key']].insert(0, {filter['key']: 'all', 'title': 'All'})
         
         printDBG(self.cacheFilters)
         
@@ -219,7 +219,7 @@ class SeriesOnlineIO(CBaseHostClass):
             if title == '':
                 title = self.cleanHtmlStr(self.cm.ph.getSearchGroups(item, 'alt="([^"]+?)"')[0])
             if url.startswith('http'):
-                params = {'good_for_fav': True, 'title':title, 'url':url, 'data_url':dataUrl, 'desc':desc, 'info_url':url, 'icon':icon}
+                params = {'good_for_fav': True, 'title': title, 'url': url, 'data_url': dataUrl, 'desc': desc, 'info_url': url, 'icon': icon}
                 if '-season-' not in url and 'class="mli-eps"' not in item:
                     self.addVideo(params)
                 else:
@@ -230,7 +230,7 @@ class SeriesOnlineIO(CBaseHostClass):
         
         if nextPage and len(self.currList) > 0:
             params = dict(cItem)
-            params.update({'title':_("Next page"), 'page':page + 1})
+            params.update({'title': _("Next page"), 'page': page + 1})
             self.addDir(params)
     
     def listEpisodes(self, cItem):
@@ -271,7 +271,7 @@ class SeriesOnlineIO(CBaseHostClass):
                 title = item
             baseTitle = re.sub('Season\s[0-9]+?[^0-9]', '', cItem['title'] + ' ')
             params = dict(cItem)
-            params.update({'good_for_fav':False, 'title':self.cleanHtmlStr(baseTitle + ' ' + title), 'urls':episodeLinks[item]})
+            params.update({'good_for_fav': False, 'title': self.cleanHtmlStr(baseTitle + ' ' + title), 'urls': episodeLinks[item]})
             self.addVideo(params)
 
     def listSearchResult(self, cItem, searchPattern, searchType):
@@ -352,10 +352,10 @@ class SeriesOnlineIO(CBaseHostClass):
                     name = serverTitle + ': ' + title
                 else:
                     name = ''
-                urlTab.append({'name':name, 'title':title, 'server_title':serverTitle, 'url':url, 'need_resolve':1})
+                urlTab.append({'name': name, 'title': title, 'server_title': serverTitle, 'url': url, 'need_resolve': 1})
             
         if len(urlTab) and self.cm.isValidUrl(trailer) and len(trailer) > 10:
-            urlTab.insert(0, {'name':'Trailer', 'title':'Trailer', 'server_title':'Trailer', 'url':trailer, 'need_resolve':1})
+            urlTab.insert(0, {'name': 'Trailer', 'title': 'Trailer', 'server_title': 'Trailer', 'url': trailer, 'need_resolve': 1})
         
         self.cacheLinks[cItem['url']] = urlTab
         return urlTab
@@ -375,7 +375,7 @@ class SeriesOnlineIO(CBaseHostClass):
         contentType = self.cm.meta['content-type']
         if 'text' not in contentType:
             if 'video' in contentType:
-                return [{'name':self.up.getDomain(videoUrl), 'url':videoUrl}]
+                return [{'name': self.up.getDomain(videoUrl), 'url': videoUrl}]
             else:
                 return []
         
@@ -419,16 +419,16 @@ class SeriesOnlineIO(CBaseHostClass):
             printDBG(item)
             
             if 'mp4' in item:
-                urlTab.append({'name':self.up.getDomain(url) + ' ' + name, 'url':url})
+                urlTab.append({'name': self.up.getDomain(url) + ' ' + name, 'url': url})
             elif 'captions' in item:
                 format = url[-3:]
                 if format in ['srt', 'vtt']:
-                    subTracks.append({'title':name, 'url':self.getFullIconUrl(url), 'lang':name, 'format':format})
+                    subTracks.append({'title': name, 'url': self.getFullIconUrl(url), 'lang': name, 'format': format})
             
         printDBG(subTracks)
         if len(subTracks):
             for idx in range(len(urlTab)):
-                urlTab[idx]['url'] = strwithmeta(urlTab[idx]['url'], {'external_sub_tracks':subTracks})
+                urlTab[idx]['url'] = strwithmeta(urlTab[idx]['url'], {'external_sub_tracks': subTracks})
         
         return urlTab
         
@@ -477,11 +477,11 @@ class SeriesOnlineIO(CBaseHostClass):
                 except Exception:
                     continue
         
-        return [{'title':self.cleanHtmlStr(title), 'text': self.cleanHtmlStr(desc), 'images':[{'title':'', 'url':self.getFullUrl(icon)}], 'other_info':otherInfo}]
+        return [{'title': self.cleanHtmlStr(title), 'text': self.cleanHtmlStr(desc), 'images': [{'title': '', 'url': self.getFullUrl(icon)}], 'other_info': otherInfo}]
     
     def getFavouriteData(self, cItem):
         printDBG('SeriesOnlineIO.getFavouriteData')
-        params = {'type':cItem['type'], 'category':cItem.get('category', ''), 'title':cItem['title'], 'url':cItem['url'], 'data_url':cItem['data_url'], 'desc':cItem['desc'], 'info_url':cItem['info_url'], 'icon':cItem['icon']}
+        params = {'type': cItem['type'], 'category': cItem.get('category', ''), 'title': cItem['title'], 'url': cItem['url'], 'data_url': cItem['data_url'], 'desc': cItem['desc'], 'info_url': cItem['info_url'], 'icon': cItem['icon']}
         return json.dumps(params)
 
     def handleService(self, index, refresh=0, searchPattern='', searchType=''):
@@ -502,7 +502,7 @@ class SeriesOnlineIO(CBaseHostClass):
     #MAIN MENU
         if name == None:
             self.fillCacheFilters()
-            self.listsTab(self.MAIN_CAT_TAB, {'name':'category'})
+            self.listsTab(self.MAIN_CAT_TAB, {'name': 'category'})
         elif category.startswith('list_filter_'):
             filter = category.replace('list_filter_', '')
             if filter == 'genre':
@@ -522,11 +522,11 @@ class SeriesOnlineIO(CBaseHostClass):
     #SEARCH
         elif category in ["search", "search_next_page"]:
             cItem = dict(self.currItem)
-            cItem.update({'search_item':False, 'name':'category'}) 
+            cItem.update({'search_item': False, 'name': 'category'}) 
             self.listSearchResult(cItem, searchPattern, searchType)
     #HISTORIA SEARCH
         elif category == "search_history":
-            self.listsHistory({'name':'history', 'category': 'search'}, 'desc', _("Type: "))
+            self.listsHistory({'name': 'history', 'category': 'search'}, 'desc', _("Type: "))
         else:
             printExc()
         

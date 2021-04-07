@@ -170,37 +170,37 @@ def gettytul():
 
 class HasBahCa(CBaseHostClass):
     HTTP_HEADER = {'User-Agent': 'Mozilla/5.0 (Windows; U; Windows NT 5.1; en-GB; rv:1.9.0.3 Gecko/2008092417 Firefox/3.0.3'}
-    MAIN_GROUPED_TAB = [{'alias_id':'weeb.tv', 'name': 'weeb.tv', 'title': 'http://weeb.tv/', 'url': '', 'icon': 'http://xmtvplayer.com/wp-content/uploads/2014/07/weebtv.png'},
-                        {'alias_id':'videostar.pl', 'name': 'videostar.pl', 'title': 'https://pilot.wp.pl/', 'url': '', 'icon': 'http://satkurier.pl/uploads/53612.jpg'},
-                        {'alias_id':'internetowa.ws', 'name': 'internetowa.ws', 'title': 'https://internetowa.ws/', 'url': '', 'icon': 'https://internetowa.ws/img/internetowa-logo-new-3.png'}, \
+    MAIN_GROUPED_TAB = [{'alias_id': 'weeb.tv', 'name': 'weeb.tv', 'title': 'http://weeb.tv/', 'url': '', 'icon': 'http://xmtvplayer.com/wp-content/uploads/2014/07/weebtv.png'},
+                        {'alias_id': 'videostar.pl', 'name': 'videostar.pl', 'title': 'https://pilot.wp.pl/', 'url': '', 'icon': 'http://satkurier.pl/uploads/53612.jpg'},
+                        {'alias_id': 'internetowa.ws', 'name': 'internetowa.ws', 'title': 'https://internetowa.ws/', 'url': '', 'icon': 'https://internetowa.ws/img/internetowa-logo-new-3.png'}, \
 #                        {'alias_id':'firstonetv.net',          'name': 'firstonetv.net',      'title': 'https://firstonetv.net/',           'url': '',                                                                   'icon': 'https://www.firstonetv.net/images/logo.png'}, \
-                        {'alias_id':'prognoza.pogody.tv', 'name': 'prognoza.pogody.tv', 'title': 'http://pogody.tv/', 'url': 'http://prognoza.pogody.tv', 'icon': 'http://pogody.pl/images/pogodytv.png'}, \
-                        {'alias_id':'meteo.pl', 'name': 'meteo.pl', 'title': 'http://meteo.pl/', 'url': 'http://meteo.pl/', 'icon': 'http://www.meteo.pl/img/napis_glowny_pl_2.png'}, \
-                        {'alias_id':'webcamera.pl', 'name': 'webcamera.pl', 'title': 'https://webcamera.pl/', 'url': 'https://www.webcamera.pl/', 'icon': 'http://static.webcamera.pl/webcamera/img/loader-min.png'}, \
-                        {'alias_id':'skylinewebcams.com', 'name': 'skylinewebcams.com', 'title': 'https://skylinewebcams.com/', 'url': 'https://www.skylinewebcams.com/', 'icon': 'https://cdn.skylinewebcams.com/skylinewebcams.png'}, \
-                        {'alias_id':'livespotting.tv', 'name': 'livespotting.tv', 'title': 'http://livespotting.tv/', 'url': 'http://livespotting.tv/', 'icon': 'https://livespotting.com/static/images/apple-touch-icon.png'},\
-                        {'alias_id':'filmon.com', 'name': 'filmon_groups', 'title': 'http://filmon.com/', 'url': 'http://www.filmon.com/', 'icon': 'http://static.filmon.com/theme/img/filmon_tv_logo_white.png'}, \
-                        {'alias_id':'ustvnow.com', 'name': 'ustvnow', 'title': 'https://ustvnow.com/', 'url': 'https://www.ustvnow.com/', 'icon': 'http://2.bp.blogspot.com/-SVJ4uZ2-zPc/UBAZGxREYRI/AAAAAAAAAKo/lpbo8OFLISU/s1600/ustvnow.png'}, \
-                        {'alias_id':'showsport-tv.com', 'name': 'showsport-tv.com', 'title': 'http://showsport-tv.com/', 'url': 'http://showsport-tv.com/', 'icon': 'http://showsport-tv.com/images/sstv-logo.png'}, \
-                        {'alias_id':'sport365.live', 'name': 'sport365.live', 'title': 'http://sport365.live/', 'url': 'http://www.sport365.live/', 'icon': 'http://s1.medianetworkinternational.com/images/icons/48x48px.png'}, \
-                        {'alias_id':'sportstream365.com', 'name': 'sportstream365.com', 'title': 'http://sportstream365.com/', 'url': 'http://sportstream365.com/', 'icon': 'http://sportstream365.com/img/logo.png'}, \
-                        {'alias_id':'bilasport.com', 'name': 'bilasport.com', 'title': 'http://bilasport.com/', 'url': '', 'icon': 'https://projects.fivethirtyeight.com/2016-mlb-predictions/images/logos.png'}, \
-                        {'alias_id':'mlbstream.tv', 'name': 'mlbstream.tv', 'title': 'http://mlbstream.tv/ && http://nhlstream.tv/', 'url': '', 'icon': 'http://mlbstream.tv/wp-content/uploads/2018/03/mlb-network-291x300.png'}, \
+                        {'alias_id': 'prognoza.pogody.tv', 'name': 'prognoza.pogody.tv', 'title': 'http://pogody.tv/', 'url': 'http://prognoza.pogody.tv', 'icon': 'http://pogody.pl/images/pogodytv.png'}, \
+                        {'alias_id': 'meteo.pl', 'name': 'meteo.pl', 'title': 'http://meteo.pl/', 'url': 'http://meteo.pl/', 'icon': 'http://www.meteo.pl/img/napis_glowny_pl_2.png'}, \
+                        {'alias_id': 'webcamera.pl', 'name': 'webcamera.pl', 'title': 'https://webcamera.pl/', 'url': 'https://www.webcamera.pl/', 'icon': 'http://static.webcamera.pl/webcamera/img/loader-min.png'}, \
+                        {'alias_id': 'skylinewebcams.com', 'name': 'skylinewebcams.com', 'title': 'https://skylinewebcams.com/', 'url': 'https://www.skylinewebcams.com/', 'icon': 'https://cdn.skylinewebcams.com/skylinewebcams.png'}, \
+                        {'alias_id': 'livespotting.tv', 'name': 'livespotting.tv', 'title': 'http://livespotting.tv/', 'url': 'http://livespotting.tv/', 'icon': 'https://livespotting.com/static/images/apple-touch-icon.png'},\
+                        {'alias_id': 'filmon.com', 'name': 'filmon_groups', 'title': 'http://filmon.com/', 'url': 'http://www.filmon.com/', 'icon': 'http://static.filmon.com/theme/img/filmon_tv_logo_white.png'}, \
+                        {'alias_id': 'ustvnow.com', 'name': 'ustvnow', 'title': 'https://ustvnow.com/', 'url': 'https://www.ustvnow.com/', 'icon': 'http://2.bp.blogspot.com/-SVJ4uZ2-zPc/UBAZGxREYRI/AAAAAAAAAKo/lpbo8OFLISU/s1600/ustvnow.png'}, \
+                        {'alias_id': 'showsport-tv.com', 'name': 'showsport-tv.com', 'title': 'http://showsport-tv.com/', 'url': 'http://showsport-tv.com/', 'icon': 'http://showsport-tv.com/images/sstv-logo.png'}, \
+                        {'alias_id': 'sport365.live', 'name': 'sport365.live', 'title': 'http://sport365.live/', 'url': 'http://www.sport365.live/', 'icon': 'http://s1.medianetworkinternational.com/images/icons/48x48px.png'}, \
+                        {'alias_id': 'sportstream365.com', 'name': 'sportstream365.com', 'title': 'http://sportstream365.com/', 'url': 'http://sportstream365.com/', 'icon': 'http://sportstream365.com/img/logo.png'}, \
+                        {'alias_id': 'bilasport.com', 'name': 'bilasport.com', 'title': 'http://bilasport.com/', 'url': '', 'icon': 'https://projects.fivethirtyeight.com/2016-mlb-predictions/images/logos.png'}, \
+                        {'alias_id': 'mlbstream.tv', 'name': 'mlbstream.tv', 'title': 'http://mlbstream.tv/ && http://nhlstream.tv/', 'url': '', 'icon': 'http://mlbstream.tv/wp-content/uploads/2018/03/mlb-network-291x300.png'}, \
 #                        {'alias_id':'livetvhd.net',            'name': 'livetvhd.net',        'title': 'https://livetvhd.net/',             'url': 'https://livetvhd.net/',                                              'icon': 'https://livetvhd.net/images/logo.png'}, \
-                        {'alias_id':'karwan.tv', 'name': 'karwan.tv', 'title': 'http://karwan.tv/', 'url': 'http://karwan.tv/', 'icon': 'http://karwan.tv//logo/karwan-tv/karwan-tv-1.png'}, \
-                        {'alias_id':'canlitvlive.io', 'name': 'canlitvlive.io', 'title': 'http://canlitvlive.io/', 'url': 'http://www.canlitvlive.io/', 'icon': 'http://www.canlitvlive.io/images/footer_simge.png'}, \
-                        {'alias_id':'beinmatch.com', 'name': 'beinmatch.com', 'title': 'http://beinmatch.com/', 'url': '', 'icon': 'http://www.beinmatch.com/assets/images/bim/logo.png'}, \
-                        {'alias_id':'wiz1.net', 'name': 'wiz1.net', 'title': 'http://wiz1.net/', 'url': '', 'icon': 'http://i.imgur.com/yBX7fZA.jpg'}, \
+                        {'alias_id': 'karwan.tv', 'name': 'karwan.tv', 'title': 'http://karwan.tv/', 'url': 'http://karwan.tv/', 'icon': 'http://karwan.tv//logo/karwan-tv/karwan-tv-1.png'}, \
+                        {'alias_id': 'canlitvlive.io', 'name': 'canlitvlive.io', 'title': 'http://canlitvlive.io/', 'url': 'http://www.canlitvlive.io/', 'icon': 'http://www.canlitvlive.io/images/footer_simge.png'}, \
+                        {'alias_id': 'beinmatch.com', 'name': 'beinmatch.com', 'title': 'http://beinmatch.com/', 'url': '', 'icon': 'http://www.beinmatch.com/assets/images/bim/logo.png'}, \
+                        {'alias_id': 'wiz1.net', 'name': 'wiz1.net', 'title': 'http://wiz1.net/', 'url': '', 'icon': 'http://i.imgur.com/yBX7fZA.jpg'}, \
                         {'alias_id': 'wiziwig1.eu', 'name': 'wiziwig1.eu', 'title': 'http://wiziwig1.eu/', 'url': '', 'icon': 'http://i.imgur.com/yBX7fZA.jpg'},\
 #                        {'alias_id':'wagasworld',              'name': 'wagasworld.com',      'title': 'http://wagasworld.com/',            'url': 'http://www.wagasworld.com/channels.php',                             'icon': 'http://upload.wikimedia.org/wikipedia/commons/thumb/b/ba/Flag_of_Germany.svg/1000px-Flag_of_Germany.svg.png'}, \
-                        {'alias_id':'djing.com', 'name': 'djing.com', 'title': 'https://djing.com/', 'url': 'https://djing.com/', 'icon': 'https://www.djing.com/newimages/content/c01.jpg'}, \
-                        {'alias_id':'live_stream_tv', 'name': 'live-stream.tv', 'title': 'http://live-stream.tv/', 'url': 'http://www.live-stream.tv/', 'icon': 'http://www.live-stream.tv/images/lstv-logo.png'}, \
-                        {'alias_id':'edem_tv', 'name': 'edem.tv', 'title': 'https://edem.tv/', 'url': 'https://edem.tv/', 'icon': 'https://edem.tv/public/images/logo_edem.png'}, \
-                        {'alias_id':'goldvod.tv', 'name': 'goldvod.tv', 'title': 'http://goldvod.tv/', 'url': '', 'icon': 'http://goldvod.tv/assets/images/logo.png'}, \
-                        {'alias_id':'livemass.net', 'name': 'livemass.net', 'title': 'http://livemass.net/', 'url': 'http://www.livemass.net/', 'icon': 'http://s3.amazonaws.com/livemass/warrington/images/warrington/iconclr.png'}, \
+                        {'alias_id': 'djing.com', 'name': 'djing.com', 'title': 'https://djing.com/', 'url': 'https://djing.com/', 'icon': 'https://www.djing.com/newimages/content/c01.jpg'}, \
+                        {'alias_id': 'live_stream_tv', 'name': 'live-stream.tv', 'title': 'http://live-stream.tv/', 'url': 'http://www.live-stream.tv/', 'icon': 'http://www.live-stream.tv/images/lstv-logo.png'}, \
+                        {'alias_id': 'edem_tv', 'name': 'edem.tv', 'title': 'https://edem.tv/', 'url': 'https://edem.tv/', 'icon': 'https://edem.tv/public/images/logo_edem.png'}, \
+                        {'alias_id': 'goldvod.tv', 'name': 'goldvod.tv', 'title': 'http://goldvod.tv/', 'url': '', 'icon': 'http://goldvod.tv/assets/images/logo.png'}, \
+                        {'alias_id': 'livemass.net', 'name': 'livemass.net', 'title': 'http://livemass.net/', 'url': 'http://www.livemass.net/', 'icon': 'http://s3.amazonaws.com/livemass/warrington/images/warrington/iconclr.png'}, \
 #                        {'alias_id':'wizja.tv',                'name': 'wizja.tv',            'title': 'http://wizja.tv/',                  'url': 'http://wizja.tv/',                                                   'icon': 'http://wizja.tv/logo.png'}, \
-                        {'alias_id':'crackstreams.net', 'name': 'crackstreams.net', 'title': 'http://crackstreams.net/', 'url': 'http://crackstreams.net/', 'icon': ''}, \
-                        {'alias_id':'nhl66.ir', 'name': 'nhl66.ir', 'title': 'https://nhl66.ir', 'url': 'https://api.nhl66.ir/api/sport/schedule', 'icon': 'https://nhl66.ir/cassets/logo.png'}, \
+                        {'alias_id': 'crackstreams.net', 'name': 'crackstreams.net', 'title': 'http://crackstreams.net/', 'url': 'http://crackstreams.net/', 'icon': ''}, \
+                        {'alias_id': 'nhl66.ir', 'name': 'nhl66.ir', 'title': 'https://nhl66.ir', 'url': 'https://api.nhl66.ir/api/sport/schedule', 'icon': 'https://nhl66.ir/cassets/logo.png'}, \
                        ] 
     
     def __init__(self):
@@ -248,8 +248,8 @@ class HasBahCa(CBaseHostClass):
         self.webCameraParams = {}
         
     def getPage(self, url, params={}, post_data=None):
-        HTTP_HEADER = {'User-Agent':'Mozilla/5.0 (X11; Ubuntu; Linux i686; rv:21.0) Gecko/20100101 Firefox/21.0'}
-        params.update({'header':HTTP_HEADER})
+        HTTP_HEADER = {'User-Agent': 'Mozilla/5.0 (X11; Ubuntu; Linux i686; rv:21.0) Gecko/20100101 Firefox/21.0'}
+        params.update({'header': HTTP_HEADER})
         
         if False and 'hasbahcaiptv.com' in url:
             printDBG(url)
@@ -323,7 +323,7 @@ class HasBahCa(CBaseHostClass):
                 self.hasbahcaiptv['login'] = login.replace('&nbsp;', '').replace('\xc2\xa0', '').strip() 
                 self.hasbahcaiptv['password'] = password.replace('&nbsp;', '').replace('\xc2\xa0', '').strip()
             
-        sts, data = self.getPage(url, {'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': GetCookieDir('hasbahcaiptv')}, {'username':self.hasbahcaiptv.get('login', 'downloader'), 'password':self.hasbahcaiptv.get('password', 'hasbahcaiptv.com')})
+        sts, data = self.getPage(url, {'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': GetCookieDir('hasbahcaiptv')}, {'username': self.hasbahcaiptv.get('login', 'downloader'), 'password': self.hasbahcaiptv.get('password', 'hasbahcaiptv.com')})
         if not sts:
             return
         
@@ -354,8 +354,8 @@ class HasBahCa(CBaseHostClass):
                 new_url = BASE_URL + new_url
             new_url = new_url.replace("&amp;", "&")
 
-            new_url = strwithmeta(new_url, {'cookiefile':'hasbahcaiptv'})
-            params = {'name':name, 'title':title.strip(), 'url':new_url, 'desc':desc}
+            new_url = strwithmeta(new_url, {'cookiefile': 'hasbahcaiptv'})
+            params = {'name': name, 'title': title.strip(), 'url': new_url, 'desc': desc}
             self.addDir(params)
             
     def getDirectVideoHasBahCa(self, name, url):
@@ -369,7 +369,7 @@ class HasBahCa(CBaseHostClass):
         if sts:
             data = data.strip()
             if data.startswith('http'):
-                videoTabs.append({'name':name, 'url':data})
+                videoTabs.append({'name': name, 'url': data})
         return videoTabs
             
     def __getFilmOnIconUrl(self, item):
@@ -484,7 +484,7 @@ class HasBahCa(CBaseHostClass):
                             itemUrl = urlparser.decorateUrl(itemUrl, headers)
                         except Exception:
                             printExc()
-                    params = {'title': title, 'url': itemUrl, 'icon':icon, 'desc':desc}
+                    params = {'title': title, 'url': itemUrl, 'icon': icon, 'desc': desc}
                     if listURL.endswith('radio.m3u'):
                         if icon == '': 
                             params['icon'] = 'http://www.darmowe-na-telefon.pl/uploads/tapeta_240x320_muzyka_23.jpg'
@@ -500,7 +500,7 @@ class HasBahCa(CBaseHostClass):
         tmpList = self.wagasWorldApi.getChannelsList(cItem)
         for item in tmpList: 
             params = dict(item)
-            params.update({'name':'wagasworld.com'})
+            params.update({'name': 'wagasworld.com'})
             if 'video' == item['type']:
                 self.addVideo(params)
             elif 'more' == item['type']:
@@ -515,11 +515,11 @@ class HasBahCa(CBaseHostClass):
         sts, data = self.cm.getPage("http://www.elevensports.pl/")
         if not sts:
             return
-        channels = {0:"ELEVEN", 1:"ELEVEN SPORTS"}
+        channels = {0: "ELEVEN", 1: "ELEVEN SPORTS"}
         data = re.compile('''stream=(http[^"']+?)["']''').findall(data)
         for idx in range(len(data)):
             params = dict(cItem)
-            params.update({'title':channels.get(idx, 'Unknown'), 'provider':'elevensports', 'url':data[idx].replace('~', '=')})
+            params.update({'title': channels.get(idx, 'Unknown'), 'provider': 'elevensports', 'url': data[idx].replace('~', '=')})
             self.addVideo(params)
     
     def getOthersLinks(self, cItem):
@@ -532,7 +532,7 @@ class HasBahCa(CBaseHostClass):
             else:
                 hlsTab = getDirectM3U8Playlist(url, checkContent=True, sortWithMaxBitrate=9000000)
                 for idx in range(len(hlsTab)):
-                    hlsTab[idx]['url'] = strwithmeta(hlsTab[idx]['url'], {'iptv_m3u8_key_uri_replace_old':cItem['replacekey'], 'iptv_m3u8_key_uri_replace_new':cItem['urlkey']})
+                    hlsTab[idx]['url'] = strwithmeta(hlsTab[idx]['url'], {'iptv_m3u8_key_uri_replace_old': cItem['replacekey'], 'iptv_m3u8_key_uri_replace_new': cItem['urlkey']})
 
         return hlsTab
     
@@ -544,12 +544,12 @@ class HasBahCa(CBaseHostClass):
             tmpList = self.weebTvApi.getCategoriesList()
             for item in tmpList:
                 params = dict(item)
-                params.update({'name':'weeb.tv'})
+                params.update({'name': 'weeb.tv'})
                 self.addDir(params)
         else:
             tmpList = self.weebTvApi.getChannelsList(url)
             for item in tmpList: 
-                item.update({'name':'weeb.tv'})
+                item.update({'name': 'weeb.tv'})
                 self.addVideo(item)
             
     def getWeebTvLink(self, url):
@@ -1001,7 +1001,7 @@ class HasBahCa(CBaseHostClass):
     def prognozaPogodyList(self, url):
         printDBG("prognozaPogodyList start")
         if config.plugins.iptvplayer.weather_useproxy.value:
-            params = {'http_proxy':config.plugins.iptvplayer.proxyurl.value}
+            params = {'http_proxy': config.plugins.iptvplayer.proxyurl.value}
         else:
             params = {}
         sts, data = self.cm.getPage(url, params)
@@ -1012,7 +1012,7 @@ class HasBahCa(CBaseHostClass):
         if len(data):
             del data[-1]
         for item in data:
-            params = {'name':"prognoza.pogody.tv"}
+            params = {'name': "prognoza.pogody.tv"}
             params['url'] = self.cm.ph.getSearchGroups(item, 'href="([^"]+?)"')[0]
             params['icon'] = self.cm.ph.getSearchGroups(item, 'src="([^"]+?)"')[0]
             params['title'] = self.cleanHtmlStr(item)
@@ -1025,7 +1025,7 @@ class HasBahCa(CBaseHostClass):
     def prognozaPogodyLink(self, url):
         printDBG("prognozaPogodyLink url[%r]" % url)
         if config.plugins.iptvplayer.weather_useproxy.value:
-            params = {'http_proxy':config.plugins.iptvplayer.proxyurl.value}
+            params = {'http_proxy': config.plugins.iptvplayer.proxyurl.value}
         else:
             params = {}
         sts, data = self.cm.getPage(url, params)
@@ -1040,11 +1040,11 @@ class HasBahCa(CBaseHostClass):
             urlMeta['http_proxy'] = config.plugins.iptvplayer.proxyurl.value
             
         url = self.up.decorateUrl(url, urlMeta)
-        return [{'name':'prognoza.pogody.tv', 'url':url}]
+        return [{'name': 'prognoza.pogody.tv', 'url': url}]
 
     def getCrackstreamsGroups(self, url):
         printDBG("crackstreamsGroups start")
-        sts, data = self.getPage(url, {'use_cookie': True, 'cookie_items':{'challenge':'BitMitigate.com'}})
+        sts, data = self.getPage(url, {'use_cookie': True, 'cookie_items': {'challenge': 'BitMitigate.com'}})
 #        sts,data = self.cm.getPage(url)
         if not sts:
             return
@@ -1068,13 +1068,13 @@ class HasBahCa(CBaseHostClass):
 
     def getCrackstreamsList(self, url):
         printDBG("crackstreamsList start")
-        sts, data = self.getPage(url, {'use_cookie': True, 'cookie_items':{'challenge':'BitMitigate.com'}})
+        sts, data = self.getPage(url, {'use_cookie': True, 'cookie_items': {'challenge': 'BitMitigate.com'}})
 #        sts,data = self.cm.getPage(url)
         if not sts:
             return
         data = self.cm.ph.getAllItemsBeetwenNodes(data, ('<a', '>', 'btn btn-default'), ('</a', '>'))
         for item in data:
-            params = {'name':"crackstreams.net"}
+            params = {'name': "crackstreams.net"}
             params['url'] = self.cm.ph.getSearchGroups(item, '''\shref=['"]([^"^']+?)['"]''')[0]
             params['icon'] = self.cm.ph.getSearchGroups(item, '''\ssrc=['"]([^"^']+?)['"]''')[0]
             params['title'] = self.cleanHtmlStr(CParsingHelper.getDataBeetwenNodes(item, ('<h4', '>'), ('</div', '>'))[1])
@@ -1086,7 +1086,7 @@ class HasBahCa(CBaseHostClass):
 
     def getCrackstreamsLink(self, url):
         printDBG("crackstreamsLink url[%r]" % url)
-        sts, data = self.getPage(url, {'use_cookie': True, 'cookie_items':{'challenge':'BitMitigate.com'}})
+        sts, data = self.getPage(url, {'use_cookie': True, 'cookie_items': {'challenge': 'BitMitigate.com'}})
 #        sts,data = self.cm.getPage(url)
         if not sts:
             return []
@@ -1111,10 +1111,10 @@ class HasBahCa(CBaseHostClass):
         _url = self.cm.ph.getSearchGroups(data, '''source:\swindow.atob\(['"]([^"^']+?)['"]''')[0]
         if _url != '':
             import base64
-            return [{'name':'others', 'url':urllib.parse.unquote(base64.b64decode(_url))}]
+            return [{'name': 'others', 'url': urllib.parse.unquote(base64.b64decode(_url))}]
         else:
             _url = self.cm.ph.getSearchGroups(data, '''source:\s['"]([^"^']+?)['"]''')[0]
-            return [{'name':'others', 'url':_url}]
+            return [{'name': 'others', 'url': _url}]
         if '///' in _url:
             return []
 
@@ -1138,7 +1138,7 @@ class HasBahCa(CBaseHostClass):
                     dtime = item['start_datetime'].replace('T', ' - ').replace('Z', ' GMT')
                     title = title + item['away_abr'] + ' vs. ' + item['home_abr'] + ' - ' + dtime + ' - ' + name
                     desc = dtime + '[/br]' + item['away_name'] + ' vs. ' + item['home_name'] + '[/br]' + name
-                    params = {'good_for_fav':True, 'name':"others", 'url':url, 'title':title, 'desc':desc, 'replacekey':'https://mf.svc.nhl.com/', 'urlkey':'https://api.nhl66.ir/api/get_key_url/'}
+                    params = {'good_for_fav': True, 'name': "others", 'url': url, 'title': title, 'desc': desc, 'replacekey': 'https://mf.svc.nhl.com/', 'urlkey': 'https://api.nhl66.ir/api/get_key_url/'}
                     self.addVideo(params)
         except Exception:
             printExc()

@@ -484,10 +484,10 @@ class IPTVSubDownloaderWidget(Screen):
             try:
                 if type == 'Refresh':
                     self["statustext"].setText(IDS_REFRESHING)
-                    self.workThread = asynccall.AsyncMethod(self.host.getCurrentList, boundFunction(self.callbackGetList, {'refresh':1, 'selIndex':currSelIndex}), True)(1)
+                    self.workThread = asynccall.AsyncMethod(self.host.getCurrentList, boundFunction(self.callbackGetList, {'refresh': 1, 'selIndex': currSelIndex}), True)(1)
                 elif type == 'ForMore':
                     self["statustext"].setText(IDS_DOWNLOADING)
-                    self.workThread = asynccall.AsyncMethod(self.host.getMoreForItem, boundFunction(self.callbackGetList, {'refresh':2, 'selIndex':currSelIndex}), True)(currSelIndex)
+                    self.workThread = asynccall.AsyncMethod(self.host.getMoreForItem, boundFunction(self.callbackGetList, {'refresh': 2, 'selIndex': currSelIndex}), True)(currSelIndex)
                 elif type == 'Initial':
                     self["statustext"].setText(IDS_DOWNLOADING)
                     self.workThread = asynccall.AsyncMethod(self.host.getInitList, boundFunction(self.callbackGetList, {}), True)()
@@ -509,10 +509,10 @@ class IPTVSubDownloaderWidget(Screen):
     #end requestListFromHost(self, type, currSelIndex = -1, privateData = ''):
     
     def callbackGetList(self, addParam, thread, ret):
-        asynccall.gMainFunctionsQueueTab[1].addToQueue("reloadList", [thread, {'add_param':addParam, 'ret':ret}])
+        asynccall.gMainFunctionsQueueTab[1].addToQueue("reloadList", [thread, {'add_param': addParam, 'ret': ret}])
         
     def downloadSubtitleFileCallback(self, addParam, thread, ret):
-        asynccall.gMainFunctionsQueueTab[1].addToQueue("subtitleFileDownloaded", [thread, {'add_param':addParam, 'ret':ret}])
+        asynccall.gMainFunctionsQueueTab[1].addToQueue("subtitleFileDownloaded", [thread, {'add_param': addParam, 'ret': ret}])
         
     def subtitleFileDownloaded(self, params):
         printDBG("IPTVSubDownloaderWidget.subtitleFileDownloaded")
@@ -540,7 +540,7 @@ class IPTVSubDownloaderWidget(Screen):
         try:
             if ret: 
                 item = self.downloadedSubItems[-1]
-                track = {'title':item.name, 'lang':item.lang, 'path':item.path, 'id':item.imdbid}
+                track = {'title': item.name, 'lang': item.lang, 'path': item.path, 'id': item.imdbid}
                 self.close(track)
         except Exception:
             printExc()
@@ -587,19 +587,19 @@ class IPTVSubDownloaderWidget(Screen):
     def listSubtitlesProviders(self):
         printDBG("IPTVSubDownloaderWidget.listSubtitlesProviders")
         subProvidersList = []
-        napisy24pl = {'title':"Napisy24.pl", 'sub_provider':'napisy24pl'}
-        openSubtitles = {'title':"OpenSubtitles.org API", 'sub_provider':'opensubtitlesorg'}
-        openSubtitles2 = {'title':"OpenSubtitles.org WWW", 'sub_provider':'opensubtitlesorg2'}
-        openSubtitles3 = {'title':"OpenSubtitles.org REST", 'sub_provider':'opensubtitlesorg3'}
-        napiprojektpl = {'title':"Napiprojekt.pl", 'sub_provider':'napiprojektpl'}
-        podnapisinet = {'title':"Podnapisi.net", 'sub_provider':'podnapisinet'}
-        titlovi = {'title':"Titlovi.com", 'sub_provider':'titlovicom'}
-        subscene = {'title':"Subscene.com", 'sub_provider':'subscenecom'}
-        youtube = {'title':"Youtube.com", 'sub_provider':'youtubecom'}
-        popcornsubtitles = {'title':"PopcornSubtitles.com", 'sub_provider':'popcornsubtitles'}
-        subtitlesgr = {'title':"Subtitles.gr", 'sub_provider':'subtitlesgr'}
-        prijevodi = {'title':"Prijevodi-Online.org", 'sub_provider':'prijevodi'}
-        subsro = {'title':"Subs.ro", 'sub_provider':'subsro'}
+        napisy24pl = {'title': "Napisy24.pl", 'sub_provider': 'napisy24pl'}
+        openSubtitles = {'title': "OpenSubtitles.org API", 'sub_provider': 'opensubtitlesorg'}
+        openSubtitles2 = {'title': "OpenSubtitles.org WWW", 'sub_provider': 'opensubtitlesorg2'}
+        openSubtitles3 = {'title': "OpenSubtitles.org REST", 'sub_provider': 'opensubtitlesorg3'}
+        napiprojektpl = {'title': "Napiprojekt.pl", 'sub_provider': 'napiprojektpl'}
+        podnapisinet = {'title': "Podnapisi.net", 'sub_provider': 'podnapisinet'}
+        titlovi = {'title': "Titlovi.com", 'sub_provider': 'titlovicom'}
+        subscene = {'title': "Subscene.com", 'sub_provider': 'subscenecom'}
+        youtube = {'title': "Youtube.com", 'sub_provider': 'youtubecom'}
+        popcornsubtitles = {'title': "PopcornSubtitles.com", 'sub_provider': 'popcornsubtitles'}
+        subtitlesgr = {'title': "Subtitles.gr", 'sub_provider': 'subtitlesgr'}
+        prijevodi = {'title': "Prijevodi-Online.org", 'sub_provider': 'prijevodi'}
+        subsro = {'title': "Subs.ro", 'sub_provider': 'subsro'}
         
         defaultLang = GetDefaultLang()
         
@@ -647,7 +647,7 @@ class IPTVSubDownloaderWidget(Screen):
         self.currList = []
         for item in subProvidersList:
             params = CDisplayListItem(item['title'], item.get('desc', ''), CDisplayListItem.TYPE_SUB_PROVIDER)
-            params.privateData = {'sub_provider':item['sub_provider']}
+            params.privateData = {'sub_provider': item['sub_provider']}
             self.currList.append(params)
             
         idx = 0
@@ -698,21 +698,21 @@ class IPTVSubDownloaderWidget(Screen):
         self.show()
         
     def discoverInfoFromTitle(self, movieTitle=None):
-        dInfo = {'movie_title':None, 'season':None, 'episode':None}
+        dInfo = {'movie_title': None, 'season': None, 'episode': None}
         if movieTitle == None:
             movieTitle = self.params.get('movie_title', '')
         
         # discovered information
-        dInfo = {'movie_title':None, 'season':None, 'episode':None}
+        dInfo = {'movie_title': None, 'season': None, 'episode': None}
         dInfo['movie_title'] = CParsingHelper.getNormalizeStr(movieTitle)
         # try to guess season and episode number
         try:
             tmp = CParsingHelper.getSearchGroups(' ' + dInfo['movie_title'] + ' ', 's([0-9]+?)e([0-9]+?)[^0-9]', 2)
-            dInfo.update({'season': int(tmp[0]), 'episode':int(tmp[1])})
+            dInfo.update({'season': int(tmp[0]), 'episode': int(tmp[1])})
         except Exception:
             try:
                 tmp = CParsingHelper.getSearchGroups(' ' + dInfo['movie_title'] + ' ', '[^0-9]([0-9]+?)x([0-9]+?)[^0-9]', 2)
-                dInfo.update({'season': int(tmp[0]), 'episode':int(tmp[1])})
+                dInfo.update({'season': int(tmp[0]), 'episode': int(tmp[1])})
             except Exception:
                 pass
         return dInfo

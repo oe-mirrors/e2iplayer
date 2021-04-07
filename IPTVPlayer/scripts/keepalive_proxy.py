@@ -47,7 +47,7 @@ def getPage(url, params={}, post_data=None):
         printExc()
     return sts, data
 
-HTTP_HEADER = {'Connection':'keep-alive', 'return_data':False}
+HTTP_HEADER = {'Connection': 'keep-alive', 'return_data': False}
 class Proxy(http.server.SimpleHTTPRequestHandler):
     def do_GET(self):
         try:
@@ -94,7 +94,7 @@ if __name__ == "__main__":
         opener = urllib.request.build_opener(keepalive_handler)    
         urllib.request.install_opener(opener)    
         
-        HTTP_HEADER.update({'User-Agent':userAgent, 'Referer':refererUrl})
+        HTTP_HEADER.update({'User-Agent': userAgent, 'Referer': refererUrl})
         socketserver.TCPServer.allow_reuse_address = True
         httpd = socketserver.TCPServer(('127.0.0.1', port), Proxy)
         port = httpd.server_address[1]

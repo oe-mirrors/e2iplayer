@@ -49,17 +49,17 @@ def gettytul():
 class VUMEDI(CBaseHostClass):
 
     def __init__(self):
-        CBaseHostClass.__init__(self, {'history':'vumedi.com', 'cookie':'vumedi.comcookie'})
+        CBaseHostClass.__init__(self, {'history': 'vumedi.com', 'cookie': 'vumedi.comcookie'})
         
         self.USER_AGENT = 'Mozilla/5.0'
         self.HEADER = {'User-Agent': self.USER_AGENT, 'Accept': 'text/html'}
         self.AJAX_HEADER = dict(self.HEADER)
-        self.AJAX_HEADER.update({'X-Requested-With':'XMLHttpRequest', 'Content-Type':'application/x-www-form-urlencoded; charset=UTF-8'})
+        self.AJAX_HEADER.update({'X-Requested-With': 'XMLHttpRequest', 'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8'})
         
         self.MAIN_URL = 'https://www.vumedi.com/'
         self.DEFAULT_ICON_URL = 'https://pbs.twimg.com/media/DZTZrVhW4AAekGB.jpg'
         
-        self.defaultParams = {'header':self.HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
+        self.defaultParams = {'header': self.HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
         self.loggedIn = None
         self.login = ''
         self.password = ''
@@ -80,10 +80,10 @@ class VUMEDI(CBaseHostClass):
     def listMainMenu(self, cItem):
         printDBG("VUMEDI.listMainMenu")
 
-        MAIN_CAT_TAB = [{'category':'list_spec', 'title': _('Specialities'), 'url':self.getMainUrl()},
-                        {'category':'list_sort', 'title': _('Browse videos'), 'url':self.getFullUrl('/video/browse/')},
-                        {'category':'search', 'title': _('Search'), 'search_item':True},
-                        {'category':'search_history', 'title': _('Search history')}]
+        MAIN_CAT_TAB = [{'category': 'list_spec', 'title': _('Specialities'), 'url': self.getMainUrl()},
+                        {'category': 'list_sort', 'title': _('Browse videos'), 'url': self.getFullUrl('/video/browse/')},
+                        {'category': 'search', 'title': _('Search'), 'search_item': True},
+                        {'category': 'search_history', 'title': _('Search history')}]
         self.listsTab(MAIN_CAT_TAB, cItem)
         
     def listCategories(self, cItem, nextCategory1, nextCategory2):
@@ -95,7 +95,7 @@ class VUMEDI(CBaseHostClass):
         
         if 'news-feeds' in data:
             params = dict(cItem)
-            params.update({'good_for_fav':False, 'name':'category', 'category':nextCategory1, 'url':cUrl, 'title':_('News Feed')})
+            params.update({'good_for_fav': False, 'name': 'category', 'category': nextCategory1, 'url': cUrl, 'title': _('News Feed')})
             self.addDir(params)
         
         data = self.cm.ph.getDataBeetwenNodes(data, ('<nav', '>', 'secondary-nav'), ('</nav', '>'), False)[1]
@@ -112,20 +112,20 @@ class VUMEDI(CBaseHostClass):
                 url = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''href=['"]([^"^']+?)['"]''')[0], cUrl)
                 title = self.cleanHtmlStr(item)
                 params = dict(cItem)
-                params.update({'good_for_fav':True, 'name':'category', 'category':nextCategory2, 'title':title, 'url':url})
+                params.update({'good_for_fav': True, 'name': 'category', 'category': nextCategory2, 'title': title, 'url': url})
                 categories.append(params)
             
             if len(categories):
                 if sUrl != '':
                     params = dict(cItem)
-                    params.update({'good_for_fav':True, 'name':'category', 'category':nextCategory2, 'title':_('--All--'), 'url':sUrl})
+                    params.update({'good_for_fav': True, 'name': 'category', 'category': nextCategory2, 'title': _('--All--'), 'url': sUrl})
                     categories.insert(0, params)
                 params = dict(cItem)
-                params.update({'name':'category', 'category':'sub_items', 'title':sTitle, 'sub_items':categories})
+                params.update({'name': 'category', 'category': 'sub_items', 'title': sTitle, 'sub_items': categories})
                 self.addDir(params)
             elif sUrl != '':
                 params = dict(cItem)
-                params.update({'good_for_fav':True, 'name':'category', 'category':nextCategory2, 'title':sTitle, 'url':sUrl})
+                params.update({'good_for_fav': True, 'name': 'category', 'category': nextCategory2, 'title': sTitle, 'url': sUrl})
                 self.addDir(params)
                 
     def listTopics(self, cItem, nextCategory):
@@ -149,16 +149,16 @@ class VUMEDI(CBaseHostClass):
                 url = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''href=['"]([^"^']+?)['"]''')[0], cUrl)
                 title = self.cleanHtmlStr(item)
                 params = dict(cItem)
-                params.update({'good_for_fav':True, 'name':'category', 'category':nextCategory, 'title':title, 'url':url})
+                params.update({'good_for_fav': True, 'name': 'category', 'category': nextCategory, 'title': title, 'url': url})
                 categories.append(params)
             
             if len(categories):
                 params = dict(cItem)
-                params.update({'name':'category', 'category':'sub_items', 'title':sTitle, 'sub_items':categories})
+                params.update({'name': 'category', 'category': 'sub_items', 'title': sTitle, 'sub_items': categories})
                 self.addDir(params)
         
         params = dict(cItem)
-        params.update({'good_for_fav':True, 'name':'category', 'category':nextCategory, 'url':cUrl, 'title':_('--All--')})
+        params.update({'good_for_fav': True, 'name': 'category', 'category': nextCategory, 'url': cUrl, 'title': _('--All--')})
         if len(self.currList):
             self.currList.insert(0, params)
         else:
@@ -177,7 +177,7 @@ class VUMEDI(CBaseHostClass):
             url = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''href=['"]([^"^']+?)['"]''')[0], cUrl)
             title = self.cleanHtmlStr(item)
             params = dict(cItem)
-            params.update({'good_for_fav':True, 'name':'category', 'category':nextCategory, 'title':title, 'url':url})
+            params.update({'good_for_fav': True, 'name': 'category', 'category': nextCategory, 'title': title, 'url': url})
             self.addDir(params)
             
     def listSort(self, cItem, nextCategory):
@@ -197,7 +197,7 @@ class VUMEDI(CBaseHostClass):
                 url = cUrl
             title = self.cleanHtmlStr(item)
             params = dict(cItem)
-            params.update({'name':'category', 'category':nextCategory, 'title':title, 'url':url})
+            params.update({'name': 'category', 'category': nextCategory, 'title': title, 'url': url})
             self.addDir(params)
             
     def listNewsFeed(self, cItem):
@@ -206,7 +206,7 @@ class VUMEDI(CBaseHostClass):
         url = self.getFullUrl('/beats/{0}/?is_long=true'.format(page))
         
         params = dict(self.defaultParams)
-        params['header'] = MergeDicts(self.AJAX_HEADER, {'Referer':cItem['url']})
+        params['header'] = MergeDicts(self.AJAX_HEADER, {'Referer': cItem['url']})
         
         sts, data = self.getPage(url, params)
         if not sts:
@@ -220,7 +220,7 @@ class VUMEDI(CBaseHostClass):
             
             if nextPage > page:
                 params = dict(cItem)
-                params.update({'good_for_fav':False, 'title':_("Next page"), 'page':nextPage})
+                params.update({'good_for_fav': False, 'title': _("Next page"), 'page': nextPage})
                 self.addDir(params)
             
         except Exception:
@@ -260,7 +260,7 @@ class VUMEDI(CBaseHostClass):
             desc.append(' | '.join(tmp))
             
             params = dict(cItem)
-            params.update({'good_for_fav':True, 'title':title, 'url':url, 'icon':icon, 'desc':'[/br]'.join(desc)})
+            params.update({'good_for_fav': True, 'title': title, 'url': url, 'icon': icon, 'desc': '[/br]'.join(desc)})
             self.addVideo(params)
 
     def listItems(self, cItem):
@@ -280,7 +280,7 @@ class VUMEDI(CBaseHostClass):
         
         if nextPage:
             params = dict(cItem)
-            params.update({'good_for_fav':False, 'title':_("Next page"), 'page':page + 1, 'url':self.getFullUrl(nextPage, cUrl)})
+            params.update({'good_for_fav': False, 'title': _("Next page"), 'page': page + 1, 'url': self.getFullUrl(nextPage, cUrl)})
             self.addDir(params)
 
     def listSearchResult(self, cItem, searchPattern, searchType):
@@ -339,7 +339,7 @@ class VUMEDI(CBaseHostClass):
                     
                     if item['delivery_type'] == 'mp4':
                         name = 'mp4 %s %sx%s %sfps' % (item['video_codec'], item['width'], item['height'], item['framerate'])
-                        retTab.append({'name':name, 'url':url, 'need_resolve':0})
+                        retTab.append({'name': name, 'url': url, 'need_resolve': 0})
                     elif item['delivery_type'] == 'hls':
                         retTab.extend(getDirectM3U8Playlist(url, checkExt=False, checkContent=True, sortWithMaxBitrate=999999999))
             except Exception:
@@ -383,7 +383,7 @@ class VUMEDI(CBaseHostClass):
                 value = self.cm.ph.getSearchGroups(item, '''value=['"]([^'^"]+?)['"]''')[0].replace('&amp;', '&')
                 post_data[name] = value
             
-            post_data.update({'username':self.login, 'password':self.password})
+            post_data.update({'username': self.login, 'password': self.password})
             
             httpParams = dict(self.defaultParams)
             httpParams['header'] = dict(httpParams['header'])
@@ -418,7 +418,7 @@ class VUMEDI(CBaseHostClass):
         
     #MAIN MENU
         if name == None:
-            self.listMainMenu({'name':'category', 'type':'category'})
+            self.listMainMenu({'name': 'category', 'type': 'category'})
         elif category == 'list_spec':
             self.listSpecialities(self.currItem, 'list_cats')
         elif category == 'news_feed':
@@ -436,11 +436,11 @@ class VUMEDI(CBaseHostClass):
     #SEARCH
         elif category in ["search", "search_next_page"]:
             cItem = dict(self.currItem)
-            cItem.update({'search_item':False, 'name':'category'}) 
+            cItem.update({'search_item': False, 'name': 'category'}) 
             self.listSearchResult(cItem, searchPattern, searchType)
     #HISTORIA SEARCH
         elif category == "search_history":
-            self.listsHistory({'name':'history', 'category': 'search'}, 'desc', _("Type: "))
+            self.listsHistory({'name': 'history', 'category': 'search'}, 'desc', _("Type: "))
         else:
             printExc()
         

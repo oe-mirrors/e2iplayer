@@ -64,12 +64,12 @@ class TitlovicomProvider(CBaseSubProviderClass):
         CBaseSubProviderClass.__init__(self, params)
         
         self.LANGUAGE_CACHE = ['hr', 'ba', 'mk', 'si', 'rs']
-        self.BASE_URL_CACHE = {'hr':'titlovi', 'ba':'prijevodi', 'mk':'prevodi', 'si':'podnapisi', 'rs':'prevodi'}
+        self.BASE_URL_CACHE = {'hr': 'titlovi', 'ba': 'prijevodi', 'mk': 'prevodi', 'si': 'podnapisi', 'rs': 'prevodi'}
         self.pageLang = 'hr'
         self.USER_AGENT = 'Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/64.0.3282.168 Safari/537.36'
-        self.HTTP_HEADER = {'User-Agent':self.USER_AGENT, 'Referer':self.getMainUrl(), 'Accept':'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8', 'Accept-Encoding':'gzip, deflate'}
+        self.HTTP_HEADER = {'User-Agent': self.USER_AGENT, 'Referer': self.getMainUrl(), 'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8', 'Accept-Encoding': 'gzip, deflate'}
         
-        self.defaultParams = {'header':self.HTTP_HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
+        self.defaultParams = {'header': self.HTTP_HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
         self.dInfo = params['discover_info']
         
     def getBaseGet(self):
@@ -92,7 +92,7 @@ class TitlovicomProvider(CBaseSubProviderClass):
         for item in tab:
             params = dict(cItem)
             params.update(item) # item = {'title', 'imdbid'}
-            params.update({'category':nextCategory})
+            params.update({'category': nextCategory})
             self.addDir(params)
                 
     def getType(self, cItem):
@@ -107,7 +107,7 @@ class TitlovicomProvider(CBaseSubProviderClass):
                 return
             for item in tab:
                 params = dict(cItem)
-                params.update({'category':'get_episodes', 'item_title':cItem['title'], 'season':item, 'title':_('Season %s') % item})
+                params.update({'category': 'get_episodes', 'item_title': cItem['title'], 'season': item, 'title': _('Season %s') % item})
                 self.addDir(params)
         elif type == 'movie':
             self.getLanguages(cItem, 'get_search')
@@ -126,7 +126,7 @@ class TitlovicomProvider(CBaseSubProviderClass):
             params = dict(cItem)
             params.update(item) # item = "episode_title", "episode", "eimdbid"
             title = 's{0}e{1} {2}'.format(str(season).zfill(2), str(item['episode']).zfill(2), item['episode_title'])
-            params.update({'category':nextCategory, 'title':title})
+            params.update({'category': nextCategory, 'title': title})
             self.addDir(params)
         
     def getLanguages(self, cItem, nextCategory):
@@ -142,14 +142,14 @@ class TitlovicomProvider(CBaseSubProviderClass):
         
         if len(data):
             params = dict(cItem)
-            params.update({'title':_('All'), 'search_lang':''})
-            params.update({'category':nextCategory})
+            params.update({'title': _('All'), 'search_lang': ''})
+            params.update({'category': nextCategory})
             self.addDir(params)
         
         for item in data:
             params = dict(cItem)
-            params.update({'title':item[1], 'search_lang':item[0]})
-            params.update({'category':nextCategory})
+            params.update({'title': item[1], 'search_lang': item[0]})
+            params.update({'category': nextCategory})
             self.addDir(params)
         
     def getSearchList(self, cItem, nextCategory):
@@ -236,13 +236,13 @@ class TitlovicomProvider(CBaseSubProviderClass):
                 descTab.append(desc)
             
             params = dict(cItem)
-            params.update({'category':nextCategory, 'url':self.getFullUrl(url), 'title':self.cleanHtmlStr(title), 'lang':lang, 'desc':self.cleanHtmlStr(item)}) #'[/br]'.join(descTab)
+            params.update({'category': nextCategory, 'url': self.getFullUrl(url), 'title': self.cleanHtmlStr(title), 'lang': lang, 'desc': self.cleanHtmlStr(item)}) #'[/br]'.join(descTab)
             params['title'] = ('[%s] ' % lang) + params['title']
             self.addDir(params)
             
         if nextPage != '':
             params = dict(cItem) 
-            params.update({'title':_('Next page'), 'page':page + 1, 'next_page_url':self.getFullUrl(nextPage)})
+            params.update({'title': _('Next page'), 'page': page + 1, 'next_page_url': self.getFullUrl(nextPage)})
             self.addDir(params)
             
     def getSubtitlesList(self, cItem):
@@ -268,7 +268,7 @@ class TitlovicomProvider(CBaseSubProviderClass):
             return
         
         cItem = dict(cItem)
-        cItem.update({'category':'', 'path':tmpDIR, 'fps':fps, 'imdbid':imdbid, 'sub_id':subId})
+        cItem.update({'category': '', 'path': tmpDIR, 'fps': fps, 'imdbid': imdbid, 'sub_id': subId})
         self.listSupportedFilesFromPath(cItem, self.getSupportedFormats(all=True))
             
     def _getFileName(self, title, lang, subId, imdbid, fps, ext):
@@ -303,7 +303,7 @@ class TitlovicomProvider(CBaseSubProviderClass):
         printDBG(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>")
         
         if self.converFileToUtf8(inFilePath, outFileName, lang):
-            retData = {'title':title, 'path':outFileName, 'lang':lang, 'imdbid':imdbid, 'sub_id':subId, 'fps':fps}
+            retData = {'title': title, 'path': outFileName, 'lang': lang, 'imdbid': imdbid, 'sub_id': subId, 'fps': fps}
         
         return retData
     
@@ -320,7 +320,7 @@ class TitlovicomProvider(CBaseSubProviderClass):
         
     #MAIN MENU
         if name == None:
-            self.getMoviesTitles({'name':'category'}, 'get_type')
+            self.getMoviesTitles({'name': 'category'}, 'get_type')
         elif category == 'get_type':
             # take actions depending on the type
             self.getType(self.currItem)

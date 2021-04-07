@@ -26,7 +26,7 @@ def gettytul():
 class HDKinoMir(CBaseHostClass):
  
     def __init__(self):
-        CBaseHostClass.__init__(self, {'history':'HDKinoMir', 'cookie':'HDKinoMir.cookie'})
+        CBaseHostClass.__init__(self, {'history': 'HDKinoMir', 'cookie': 'HDKinoMir.cookie'})
         self.USER_AGENT = "Mozilla/5.0 (Linux; U; Android 4.1.1; en-us; androVM for VirtualBox ('Tablet' version with phone caps) Build/JRO03S) AppleWebKit/534.30 (KHTML, like Gecko) Version/4.0 Safari/534.30"
         self.HEADER = {'User-Agent': self.USER_AGENT, 'Accept': 'text/html'}
         
@@ -39,9 +39,9 @@ class HDKinoMir(CBaseHostClass):
         self.MAIN_URL = 'http://hdkinomir.com/'
         self.DEFAULT_ICON_URL = self.getFullIconUrl('/templates/prokino/images/logo.png')
         
-        self.MAIN_CAT_TAB = [{'category':'categories', 'title': _('Movie categories'), 'url':self.getMainUrl()},
-                             {'category':'search', 'title': _('Search'), 'search_item':True},
-                             {'category':'search_history', 'title': _('Search history')} 
+        self.MAIN_CAT_TAB = [{'category': 'categories', 'title': _('Movie categories'), 'url': self.getMainUrl()},
+                             {'category': 'search', 'title': _('Search'), 'search_item': True},
+                             {'category': 'search_history', 'title': _('Search history')} 
                             ]
         
         self.encoding = ''
@@ -68,8 +68,8 @@ class HDKinoMir(CBaseHostClass):
             sorData = self.cm.ph.getDataBeetwenMarkers(data, '<form name="news_set_sort"', '/> ', False)[1]
             sorData = re.compile("dle_change_sort\('([^']+?)','([^']+?)'\)[^>]*?>([^<]+?)<").findall(sorData)
             for item in sorData:
-                post_data = {'dlenewssortby':item[0], 'dledirection':item[1], 'set_new_sort':'dle_sort_cat', 'set_direction_sort':'dle_direction_cat'}
-                params = {'title':item[2], 'post_data':post_data}
+                post_data = {'dlenewssortby': item[0], 'dledirection': item[1], 'set_new_sort': 'dle_sort_cat', 'set_direction_sort': 'dle_direction_cat'}
+                params = {'title': item[2], 'post_data': post_data}
                 self.sortCache.append(params)
         
         if 0 == len(self.catCache):
@@ -77,7 +77,7 @@ class HDKinoMir(CBaseHostClass):
             catData = re.compile('href="([^"]+?)"[^>]*?>([^<]+?)<').findall(catData)
             for item in catData:
                 params = dict(cItem)
-                params.update({'category':category, 'title':item[1], 'url':self.getFullUrl(item[0])})
+                params.update({'category': category, 'title': item[1], 'url': self.getFullUrl(item[0])})
                 self.catCache.append(params)
         
         mainMenuData = self.cm.ph.getDataBeetwenMarkers(data, '<div class="top-menu-block">', '</ul>', False)[1]
@@ -86,10 +86,10 @@ class HDKinoMir(CBaseHostClass):
             if item[0] in ['/actors/', '/podborki-filmov.html']:
                 continue
             params = dict(cItem)
-            params.update({'category':category, 'title':item[1], 'url':self.getFullUrl(item[0])})
+            params.update({'category': category, 'title': item[1], 'url': self.getFullUrl(item[0])})
             self.addDir(params)
         
-        self.listsTab(self.MAIN_CAT_TAB, {'name':'category'})
+        self.listsTab(self.MAIN_CAT_TAB, {'name': 'category'})
             
     def listContent(self, cItem, category):
         printDBG("HDKinoMir.listContent")
@@ -112,7 +112,7 @@ class HDKinoMir(CBaseHostClass):
                 params['url'] = url
                 hostName = self.up.getHostName(url)
                 if 'youtube' in hostName and 'list=' in url:
-                    params.update({'host_name':'youtube_tray', 'category':category, 'title':self.cleanHtmlStr(item), 'serie_title':title})
+                    params.update({'host_name': 'youtube_tray', 'category': category, 'title': self.cleanHtmlStr(item), 'serie_title': title})
                     self.addDir(params)
                     continue
                 if 1 == self.up.checkHostSupport(url):
@@ -132,11 +132,11 @@ class HDKinoMir(CBaseHostClass):
                 hostName = 'moonwalk.cc'
             
             if hostName == 'moonwalk.cc' and '/serial/' in url:
-                    params.update({'category':category, 'serie_title':title})
+                    params.update({'category': category, 'serie_title': title})
                     season = self.moonwalkParser.getSeasonsList(url)
                     for item in season:
                         param = dict(params)
-                        param.update({'host_name':'moonwalk', 'title':item['title'], 'season_id':item['id'], 'url':item['url']})
+                        param.update({'host_name': 'moonwalk', 'title': item['title'], 'season_id': item['id'], 'url': item['url']})
                         self.addDir(param)
                     return
             if 1 == self.up.checkHostSupport(url):
@@ -153,7 +153,7 @@ class HDKinoMir(CBaseHostClass):
             
             for item in episodes:
                 params = dict(cItem)
-                params.update({'title':'{0} - s{1}e{2} {3}'.format(title, id, item['id'], item['title']), 'url':item['url']})
+                params.update({'title': '{0} - s{1}e{2} {3}'.format(title, id, item['id'], item['title']), 'url': item['url']})
                 self.addVideo(params)
         elif hostName == 'youtube_tray':
             try: 
@@ -209,12 +209,12 @@ class HDKinoMir(CBaseHostClass):
             icon = self.cm.ph.getSearchGroups(item, 'src="([^"]+?)"')[0]
             desc = self.cleanHtmlStr(item.split('<div class="ribbon">')[-1])
             params = dict(cItem)
-            params.update({'category':category, 'title':title, 'icon':self.getFullUrl(icon), 'desc':desc, 'url':self.getFullUrl(url)})
+            params.update({'category': category, 'title': title, 'icon': self.getFullUrl(icon), 'desc': desc, 'url': self.getFullUrl(url)})
             self.addDir(params)
         
         if nextPage:
             params = dict(cItem)
-            params.update({'title':_('Next page'), 'page':cItem.get('page', 1) + 1})
+            params.update({'title': _('Next page'), 'page': cItem.get('page', 1) + 1})
             self.addDir(params)
         
     def listSearchResult(self, cItem, searchPattern, searchType):
@@ -230,7 +230,7 @@ class HDKinoMir(CBaseHostClass):
         except Exception:
             searchPattern = ''
         
-        post_data = {'do':'search', 'subaction':'search', 'story':searchPattern, 'x': 0, 'y': 0}
+        post_data = {'do': 'search', 'subaction': 'search', 'story': searchPattern, 'x': 0, 'y': 0}
         
         sts, data = self.getPage(self.getMainUrl(), post_data=post_data)
         if not sts:
@@ -254,7 +254,7 @@ class HDKinoMir(CBaseHostClass):
     def getLinksForVideo(self, cItem):
         printDBG("HDKinoMir.getLinksForVideo [%s]" % cItem)
         urlTab = []
-        urlTab.append({'name':'Main url', 'url':cItem['url'], 'need_resolve':1})
+        urlTab.append({'name': 'Main url', 'url': cItem['url'], 'need_resolve': 1})
         return urlTab
         
     def getVideoLinks(self, videoUrl):
@@ -276,7 +276,7 @@ class HDKinoMir(CBaseHostClass):
         return cItem['url']
         
     def getLinksForFavourite(self, fav_data):
-        return self.getLinksForVideo({'url':fav_data})
+        return self.getLinksForVideo({'url': fav_data})
     
     def handleService(self, index, refresh=0, searchPattern='', searchType=''):
         printDBG('handleService start')
@@ -290,7 +290,7 @@ class HDKinoMir(CBaseHostClass):
         
     #MAIN MENU
         if name == None:
-            self.listMainMenu({'name':'category', 'icon':self.DEFAULT_ICON_URL, 'url':self.MAIN_URL}, 'show_sort')
+            self.listMainMenu({'name': 'category', 'icon': self.DEFAULT_ICON_URL, 'url': self.MAIN_URL}, 'show_sort')
         elif category == 'categories':
             self.listsTab(self.catCache, self.currItem)
         elif category == 'show_sort':
@@ -306,11 +306,11 @@ class HDKinoMir(CBaseHostClass):
     #SEARCH
         elif category in ["search", "search_next_page"]:
             cItem = dict(self.currItem)
-            cItem.update({'search_item':False, 'name':'category'}) 
+            cItem.update({'search_item': False, 'name': 'category'}) 
             self.listSearchResult(cItem, searchPattern, searchType)
     #HISTORIA SEARCH
         elif category == "search_history":
-            self.listsHistory({'name':'history', 'category': 'search'}, 'desc', _("Type: "))
+            self.listsHistory({'name': 'history', 'category': 'search'}, 'desc', _("Type: "))
         else:
             printExc()
         

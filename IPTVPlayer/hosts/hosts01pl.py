@@ -32,19 +32,19 @@ def gettytul():
 class S01pl(CBaseHostClass):
     
     def __init__(self):
-        CBaseHostClass.__init__(self, {'history':'s01.pl', 'cookie':'s01.pl.cookie'})
+        CBaseHostClass.__init__(self, {'history': 's01.pl', 'cookie': 's01.pl.cookie'})
         self.USER_AGENT = 'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:40.0) Gecko/20100101 Firefox/40.0'
         self.MAIN_URL = 'http://s01.pl/'
         self.API_URL = self.getFullUrl('secure/titles')
         self.DEFAULT_ICON_URL = 'http://s01.pl/storage/branding_media/OLh3Gg0Bv1jRmDjeHBDibsQNXx5GllOHjOAAEkJh.png'
-        self.HTTP_HEADER = {'User-Agent': self.USER_AGENT, 'DNT':'1', 'Accept': 'text/html', 'Accept-Encoding':'gzip, deflate', 'Referer':self.getMainUrl(), 'Origin':self.getMainUrl(), 'Upgrade-Insecure-Requests':'1', 'Connection':'keep-alive'}
+        self.HTTP_HEADER = {'User-Agent': self.USER_AGENT, 'DNT': '1', 'Accept': 'text/html', 'Accept-Encoding': 'gzip, deflate', 'Referer': self.getMainUrl(), 'Origin': self.getMainUrl(), 'Upgrade-Insecure-Requests': '1', 'Connection': 'keep-alive'}
         self.AJAX_HEADER = dict(self.HTTP_HEADER)
-        self.AJAX_HEADER.update({'X-Requested-With': 'XMLHttpRequest', 'Accept-Encoding':'gzip, deflate', 'Content-Type':'application/x-www-form-urlencoded; charset=UTF-8', 'Accept':'application/json, text/javascript, */*; q=0.01'})
+        self.AJAX_HEADER.update({'X-Requested-With': 'XMLHttpRequest', 'Accept-Encoding': 'gzip, deflate', 'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8', 'Accept': 'application/json, text/javascript, */*; q=0.01'})
 
         self.itemsPerPage = 30
-        self.cacheMovieFilters = {'cats':[], 'sort':[], 'years':[], 'az':[]}
+        self.cacheMovieFilters = {'cats': [], 'sort': [], 'years': [], 'az': []}
         self.cacheLinks = {}
-        self.defaultParams = {'header':self.HTTP_HEADER, 'with_metadata':True, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
+        self.defaultParams = {'header': self.HTTP_HEADER, 'with_metadata': True, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
 
     def getPage(self, baseUrl, addParams={}, post_data=None):
         if addParams == {}:
@@ -56,7 +56,7 @@ class S01pl(CBaseHostClass):
                 return url
             else:
                 return urllib.parse.urljoin(baseUrl, url)
-        addParams['cloudflare_params'] = {'domain':self.up.getDomain(baseUrl), 'cookie_file':self.COOKIE_FILE, 'User-Agent':self.USER_AGENT, 'full_url_handle':_getFullUrl}
+        addParams['cloudflare_params'] = {'domain': self.up.getDomain(baseUrl), 'cookie_file': self.COOKIE_FILE, 'User-Agent': self.USER_AGENT, 'full_url_handle': _getFullUrl}
         return self.cm.getPageCFProtection(baseUrl, addParams, post_data)
         
     def setMainUrl(self, url):
@@ -66,18 +66,18 @@ class S01pl(CBaseHostClass):
     def listMainMenu(self, cItem):
         printDBG("S01pl.listMainMenu")
 
-        MAIN_CAT_TAB = [{'category':'list_sort', 'title': _('Movies'), 'url':self.API_URL + '?type=movie&onlyStreamable=true&perPage=%d' % self.itemsPerPage},
-                        {'category':'list_sort', 'title': _('Series'), 'url':self.API_URL + '?type=series&onlyStreamable=true&perPage=%d' % self.itemsPerPage},
+        MAIN_CAT_TAB = [{'category': 'list_sort', 'title': _('Movies'), 'url': self.API_URL + '?type=movie&onlyStreamable=true&perPage=%d' % self.itemsPerPage},
+                        {'category': 'list_sort', 'title': _('Series'), 'url': self.API_URL + '?type=series&onlyStreamable=true&perPage=%d' % self.itemsPerPage},
 #                        {'category':'list_years',     'title': _('Filter By Year'),    'url':self.MAIN_URL},
-                        {'category':'list_cats', 'title': _('Movies genres'), 'url':self.API_URL + '?onlyStreamable=true&perPage=%d' % self.itemsPerPage},
+                        {'category': 'list_cats', 'title': _('Movies genres'), 'url': self.API_URL + '?onlyStreamable=true&perPage=%d' % self.itemsPerPage},
 #                        {'category':'list_az',        'title': _('Alphabetically'),    'url':self.MAIN_URL},
-                        {'category':'search', 'title': _('Search'), 'search_item':True}, 
-                        {'category':'search_history', 'title': _('Search history')},]
+                        {'category': 'search', 'title': _('Search'), 'search_item': True}, 
+                        {'category': 'search_history', 'title': _('Search history')}, ]
         self.listsTab(MAIN_CAT_TAB, cItem)
     
     ###################################################
     def _fillMovieFilters(self, cItem):
-        self.cacheMovieFilters = {'cats':[], 'sort':[], 'years':[], 'az':[]}
+        self.cacheMovieFilters = {'cats': [], 'sort': [], 'years': [], 'az': []}
 
         # fill sort
         dat = [('&order=created_at:desc', 'Data dodania'),
@@ -173,15 +173,15 @@ class S01pl(CBaseHostClass):
             title = item.get('name', '')
             desc = item.get('description', '')
             if item['is_series']:
-                params = {'good_for_fav':True,'category':'list_seasons', 'url':url, 'title':title, 'desc':desc, 'icon':icon}
+                params = {'good_for_fav': True, 'category': 'list_seasons', 'url': url, 'title': title, 'desc': desc, 'icon': icon}
                 self.addDir(params)
             else:
-                params = {'good_for_fav':True, 'url':url, 'title':title, 'desc':desc, 'icon':icon}
+                params = {'good_for_fav': True, 'url': url, 'title': title, 'desc': desc, 'icon': icon}
                 self.addVideo(params)
             
         if nextPage:
             params = dict(cItem)
-            params.update({'title':_('Next page'), 'page':page + 1})
+            params.update({'title': _('Next page'), 'page': page + 1})
             self.addDir(params)
 
     def listSeriesSeasons(self, cItem, nextCategory):
@@ -213,10 +213,10 @@ class S01pl(CBaseHostClass):
                     icon = icon.replace('/original/', '/w500/')
                 title = item.get('name', '')
                 desc = item.get('description', '')
-                tabItems.append({'url':url, 'title':title, 'desc':desc, 'icon':icon})
+                tabItems.append({'url': url, 'title': title, 'desc': desc, 'icon': icon})
             if len(tabItems):
                 params = dict(cItem)
-                params.update({'good_for_fav':False, 'category':nextCategory, 'title':sTitle, 'episodes':tabItems, 'icon':cItem['icon'], 'desc':''})
+                params.update({'good_for_fav': False, 'category': nextCategory, 'title': sTitle, 'episodes': tabItems, 'icon': cItem['icon'], 'desc': ''})
                 self.addDir(params)
                 
     def listSeriesEpisodes(self, cItem):
@@ -229,7 +229,7 @@ class S01pl(CBaseHostClass):
     def listSearchResult(self, cItem, searchPattern, searchType):
         printDBG("S01pl.listSearchResult cItem[%s], searchPattern[%s] searchType[%s]" % (cItem, searchPattern, searchType))
         url = self.getFullUrl('/secure/search/%s?limit=20') % urllib.parse.quote_plus(searchPattern)
-        params = {'name':'category', 'category':'list_items', 'good_for_fav':False, 'url':url}
+        params = {'name': 'category', 'category': 'list_items', 'good_for_fav': False, 'url': url}
         self.listItems(params)
         
     def getLinksForVideo(self, cItem):
@@ -266,7 +266,7 @@ class S01pl(CBaseHostClass):
             name = self.cm.ph.getDataBeetwenMarkers(item.get('name', ''), '[', ']', True)[1] + ' ' + self.up.getHostName(playerUrl)
             if item['category'] == 'trailer':
                 name = '[trailer] ' + name
-            retTab.append({'name':name, 'url':strwithmeta(playerUrl, {'Referer':url}), 'need_resolve':1})
+            retTab.append({'name': name, 'url': strwithmeta(playerUrl, {'Referer': url}), 'need_resolve': 1})
              
         if len(retTab):
             self.cacheLinks[cacheKey] = retTab
@@ -304,7 +304,7 @@ class S01pl(CBaseHostClass):
     #MAIN MENU
         if name == None and category == '':
             rm(self.COOKIE_FILE)
-            self.listMainMenu({'name':'category'})
+            self.listMainMenu({'name': 'category'})
         elif 'list_cats' == category:
             self.listMovieFilters(self.currItem, 'list_sort')
         elif 'list_years' == category:
@@ -323,11 +323,11 @@ class S01pl(CBaseHostClass):
     #SEARCH
         elif category in ["search", "search_next_page"]:
             cItem = dict(self.currItem)
-            cItem.update({'search_item':False, 'name':'category'}) 
+            cItem.update({'search_item': False, 'name': 'category'}) 
             self.listSearchResult(cItem, searchPattern, searchType)
     #HISTORIA SEARCH
         elif category == "search_history":
-            self.listsHistory({'name':'history', 'category': 'search'}, 'desc', _("Type: "))
+            self.listsHistory({'name': 'history', 'category': 'search'}, 'desc', _("Type: "))
         else:
             printExc()
         

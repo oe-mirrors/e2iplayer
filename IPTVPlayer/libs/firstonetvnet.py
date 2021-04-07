@@ -56,7 +56,7 @@ class FirstOneTvApi(CBaseHostClass):
         self.COOKIE_FILE = GetCookieDir('firstonetv.net.cookie')
 
         self.http_params = {}
-        self.http_params.update({'header':self.HTTP_HEADER, 'save_cookie': True, 'load_cookie': True, 'cookiefile': self.COOKIE_FILE})
+        self.http_params.update({'header': self.HTTP_HEADER, 'save_cookie': True, 'load_cookie': True, 'cookiefile': self.COOKIE_FILE})
         self.loggedIn = False
         self.login = None
         self.password = None
@@ -89,16 +89,16 @@ class FirstOneTvApi(CBaseHostClass):
                     return true
 
             rm(self.COOKIE_FILE)
-            params = MergeDicts(self.http_params, {'use_new_session':True})
+            params = MergeDicts(self.http_params, {'use_new_session': True})
             sts, data = self.cm.getPage(self.getFullUrl('/Register-Login'), params)
             if sts:
                 self.setMainUrl(self.cm.meta['url'])
 
             if sts:
                 params = dict(self.http_params)
-                params['header'] = MergeDicts(self.HTTP_HEADER, {'Referer':self.cm.meta['url']})
+                params['header'] = MergeDicts(self.HTTP_HEADER, {'Referer': self.cm.meta['url']})
 
-                post_data = {'usrmail': self.login, 'password': self.password, 'login':''}
+                post_data = {'usrmail': self.login, 'password': self.password, 'login': ''}
                 sts, data = self.cm.getPage(self.getFullUrl('/Register-Login'), params, post_data)
 
             if sts and '/Logout' in data:
@@ -136,7 +136,7 @@ class FirstOneTvApi(CBaseHostClass):
                     t = ph.clean_html(t)
                     if t:
                         desc.append(t)
-                params = MergeDicts(cItem, {'title':title, 'priv_cat':'list_channels', 'url':self.getFullUrl(url), 'icon':self.getFullIconUrl(icon), 'desc':' | '.join(desc)})
+                params = MergeDicts(cItem, {'title': title, 'priv_cat': 'list_channels', 'url': self.getFullUrl(url), 'icon': self.getFullIconUrl(icon), 'desc': ' | '.join(desc)})
                 lang = icon.split('?', 1)[0].rsplit('/', 1)[-1].split('.', 1)[0].lower()
                 if lang == defLang:
                     channelsTab.insert(0, params)
@@ -152,7 +152,7 @@ class FirstOneTvApi(CBaseHostClass):
                         if int(tmp) > 0:
                             url = ph.search(data, ph.A_HREF_URI_RE)[1]
                             title = ph.clean_html(data)
-                            channelsTab.insert(0, MergeDicts(cItem, {'title':title, 'priv_cat':'list_channels', 'url':self.getFullUrl(url)}))
+                            channelsTab.insert(0, MergeDicts(cItem, {'title': title, 'priv_cat': 'list_channels', 'url': self.getFullUrl(url)}))
                     except Exception:
                         printExc()
         else:
@@ -176,7 +176,7 @@ class FirstOneTvApi(CBaseHostClass):
                     if t:
                         desc.append(t)
                 desc = ' | '.join(desc) + '[/br]' + ph.clean_html(reObj.sub('[/br]', ph.find(item, ('<a', '>'), '</a>', flags=0)[1]))
-                channelsTab.append(MergeDicts(cItem, {'type':'video', 'title':title, 'priv_cat':'list_channels', 'url':self.getFullUrl(url), 'icon':self.getFullIconUrl(icon), 'desc':desc}))
+                channelsTab.append(MergeDicts(cItem, {'type': 'video', 'title': title, 'priv_cat': 'list_channels', 'url': self.getFullUrl(url), 'icon': self.getFullIconUrl(icon), 'desc': desc}))
         return channelsTab
        
     def _getLinks(self, cUrl, params, post_data):
@@ -197,11 +197,11 @@ class FirstOneTvApi(CBaseHostClass):
                 if surl.startswith('{'):
                     surl = json_loads(surl)
                     for name, url in surl.items():
-                        url = strwithmeta(url, {'Referer':cUrl, 'name':'firstonetv.net'})
-                        links.append({'name':name, 'url':self.getFullUrl(url, cUrl), 'need_resolve':1})
+                        url = strwithmeta(url, {'Referer': cUrl, 'name': 'firstonetv.net'})
+                        links.append({'name': name, 'url': self.getFullUrl(url, cUrl), 'need_resolve': 1})
                 else:
-                    url = strwithmeta(surl, {'Referer':cUrl, 'name':'firstonetv.net'})
-                    links.append({'name':'single', 'url':self.getFullUrl(url, cUrl), 'need_resolve':1})
+                    url = strwithmeta(surl, {'Referer': cUrl, 'name': 'firstonetv.net'})
+                    links.append({'name': 'single', 'url': self.getFullUrl(url, cUrl), 'need_resolve': 1})
             else:
                 ret = -2
         except Exception:
@@ -233,12 +233,12 @@ class FirstOneTvApi(CBaseHostClass):
         country = ph.search(jscode2, '''country\s*?=\s*?['"]([^'^"]+?)['"]''')[0]
         cToken = ph.search(jscode2, '''cToken\s*?=\s*?['"]([^'^"]+?)['"]''')[0]
         channelID = ph.search(jscode2, '''channelID\s*?=\s*?['"]([^'^"]+?)['"]''')[0]
-        channel_post_data = {'action':'channel', 'ctoken':cToken, 'c':country, 'id':channelID, 'native_hls':'0', 'unsecure_hls':'0'}
+        channel_post_data = {'action': 'channel', 'ctoken': cToken, 'c': country, 'id': channelID, 'native_hls': '0', 'unsecure_hls': '0'}
 
         url = self.getFullUrl('/api/?cacheFucker=' + str(random.random()), cUrl)
-        post_data = {'action':'tracking', 'act':'get', 'c':country, 'id':channelID}
+        post_data = {'action': 'tracking', 'act': 'get', 'c': country, 'id': channelID}
         params = dict(self.http_params)
-        params['header'] = MergeDicts(self.HTTP_HEADER, {'Referer':cUrl, 'Content-Type':'application/x-www-form-urlencoded; charset=UTF-8', 'X-Requested-With':'XMLHttpRequest'})
+        params['header'] = MergeDicts(self.HTTP_HEADER, {'Referer': cUrl, 'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8', 'X-Requested-With': 'XMLHttpRequest'})
         sts, tmp = self.cm.getPage(url, params, post_data)
         if not sts:
             return []
@@ -255,7 +255,7 @@ class FirstOneTvApi(CBaseHostClass):
         while hiroRetry < 3:
             hiroRetry += 1
             url = self.getFullUrl('/api/?cacheFucker=' + str(random.random()), cUrl)
-            post_data = {'action':'hiro', 'result':'get'}
+            post_data = {'action': 'hiro', 'result': 'get'}
             sts, tmp = self.cm.getPage(url, params, post_data)
             if not sts:
                 return []
@@ -265,7 +265,7 @@ class FirstOneTvApi(CBaseHostClass):
             hiroErrorCode = -1 
             try:
                 tmp = json_loads(tmp)
-                post_data = {'action':'hiro', 'result':'', 'hash':tmp['hash'], 'time':tmp['time']}
+                post_data = {'action': 'hiro', 'result': '', 'hash': tmp['hash'], 'time': tmp['time']}
 
                 streamJsData = None
                 tries = 0
@@ -291,7 +291,7 @@ class FirstOneTvApi(CBaseHostClass):
                             if not value:
                                 raise Exception('can not find in the "%s" stream script' % identifier)
                             if streamJs not in self.CACHE_VARS:
-                                self.CACHE_VARS = {streamJs:[]}
+                                self.CACHE_VARS = {streamJs: []}
                             self.CACHE_VARS[streamJs].append(value)
                             continue
                     elif ret['code'] == 0:
@@ -327,7 +327,7 @@ class FirstOneTvApi(CBaseHostClass):
                     return []
                 try:
                     data = json_loads(data)
-                    post_data = {'action':'captcha', 'response':'', 'hash':data['hash'], 'time':data['time']}
+                    post_data = {'action': 'captcha', 'response': '', 'hash': data['hash'], 'time': data['time']}
                     pictureMarker = 'data:image/png;base64,'
                     if not data['image'].startswith(pictureMarker):
                         SetIPTVPlayerLastHostError(_('Wrong captcha image data!'))
@@ -354,7 +354,7 @@ class FirstOneTvApi(CBaseHostClass):
                 item['title'] = _('Answer')
                 item['input']['text'] = ''
                 params['list'].append(item)
-                params['vk_params'] = {'invert_letters_case':True}
+                params['vk_params'] = {'invert_letters_case': True}
 
                 ret = 0
                 retArg = self.sessionEx.waitForFinishOpen(IPTVMultipleInputBox, params)

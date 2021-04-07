@@ -46,12 +46,12 @@ class BilaSportPwApi(CBaseHostClass):
         self.AJAX_HEADER = dict(self.HTTP_HEADER)
         self.AJAX_HEADER.update({'X-Requested-With': 'XMLHttpRequest'})
         self.COOKIE_FILE = GetCookieDir('bilasport.pw.cookie')
-        self.defaultParams = {'header':self.HTTP_HEADER, 'save_cookie': True, 'load_cookie': True, 'cookiefile': self.COOKIE_FILE}
+        self.defaultParams = {'header': self.HTTP_HEADER, 'save_cookie': True, 'load_cookie': True, 'cookiefile': self.COOKIE_FILE}
 
     def getPage(self, baseUrl, params={}, post_data=None):
         if params == {}:
             params = dict(self.defaultParams)
-        params['cloudflare_params'] = {'cookie_file':self.COOKIE_FILE, 'User-Agent':self.HTTP_HEADER['User-Agent']}
+        params['cloudflare_params'] = {'cookie_file': self.COOKIE_FILE, 'User-Agent': self.HTTP_HEADER['User-Agent']}
         return self.cm.getPageCFProtection(baseUrl, params, post_data)
 
     def getFullIconUrl(self, url, currUrl=None):
@@ -59,7 +59,7 @@ class BilaSportPwApi(CBaseHostClass):
         if url == '':
             return ''
         cookieHeader = self.cm.getCookieHeader(self.COOKIE_FILE, ['PHPSESSID', 'cf_clearance'])
-        return strwithmeta(url, {'Cookie':cookieHeader, 'User-Agent':self.HTTP_HEADER['User-Agent']})
+        return strwithmeta(url, {'Cookie': cookieHeader, 'User-Agent': self.HTTP_HEADER['User-Agent']})
 
     def getList(self, cItem):
         printDBG("BilaSportPwApi.getChannelsList")
@@ -82,7 +82,7 @@ class BilaSportPwApi(CBaseHostClass):
             if start and end:
                 title = '[%s - %s] %s' % (start, end, title)
             desc = ph.clean_html(item[-1].split('</div>', 1)[-1])
-            mainItemsTab.append(MergeDicts(cItem, {'type':'video', 'title':title, 'url':url, 'icon':icon, 'desc':desc}))
+            mainItemsTab.append(MergeDicts(cItem, {'type': 'video', 'title': title, 'url': url, 'icon': icon, 'desc': desc}))
         return mainItemsTab
         
     def getVideoLink(self, cItem):
@@ -130,13 +130,13 @@ class BilaSportPwApi(CBaseHostClass):
             hlsTab = getDirectM3U8Playlist(hlsUrl, checkContent=True, sortWithMaxBitrate=9000000)
             for idx in range(len(hlsTab)):
                 hlsTab[idx]['need_resolve'] = 1
-                hlsTab[idx]['url'] = strwithmeta(hlsTab[idx]['url'], {'name':cItem['name'], 'Referer':url, 'priv_script_url':scriptUrl})
+                hlsTab[idx]['url'] = strwithmeta(hlsTab[idx]['url'], {'name': cItem['name'], 'Referer': url, 'priv_script_url': scriptUrl})
 
         if hlsTab:
             return hlsTab
 
         if 1 == self.up.checkHostSupport(cUrl): 
-            return self.up.getVideoLinkExt(strwithmeta(cUrl, {'Referer':baseUrl}))
+            return self.up.getVideoLinkExt(strwithmeta(cUrl, {'Referer': baseUrl}))
 
         return []
 
@@ -173,11 +173,11 @@ class BilaSportPwApi(CBaseHostClass):
             keyUrl = keyUrl.pop()
             proto = keyUrl.split('://', 1)[0]
             pyCmd = GetPyScriptCmd('livesports') + ' "%s" "%s" "%s" "%s" "%s" "%s" "%s" ' % (config.plugins.iptvplayer.bilasportpw_port.value, videoUrl, baseUrl, scriptUrl, self.HTTP_HEADER['User-Agent'], self.COOKIE_FILE, GetDukPath())
-            meta = {'iptv_proto':'em3u8'}
+            meta = {'iptv_proto': 'em3u8'}
             meta['iptv_m3u8_key_uri_replace_old'] = '%s://' % proto 
             meta['iptv_m3u8_key_uri_replace_new'] = 'http://127.0.0.1:{0}/{1}/'.format(config.plugins.iptvplayer.bilasportpw_port.value, proto)
             meta['iptv_refresh_cmd'] = pyCmd
             videoUrl = urlparser.decorateUrl("ext://url/" + videoUrl, meta)
         else:
             videoUrl = urlparser.decorateUrl(videoUrl, meta)
-        return [{'name':'direct', 'url':videoUrl}]
+        return [{'name': 'direct', 'url': videoUrl}]

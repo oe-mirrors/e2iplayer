@@ -51,9 +51,9 @@ class SubsRoProvider(CBaseSubProviderClass):
         CBaseSubProviderClass.__init__(self, params)
         
         self.USER_AGENT = 'Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/64.0.3282.168 Safari/537.36'
-        self.HTTP_HEADER = {'User-Agent':self.USER_AGENT, 'Referer':self.getMainUrl(), 'Accept':'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8', 'Accept-Encoding':'gzip, deflate'}
+        self.HTTP_HEADER = {'User-Agent': self.USER_AGENT, 'Referer': self.getMainUrl(), 'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8', 'Accept-Encoding': 'gzip, deflate'}
         
-        self.defaultParams = {'header':self.HTTP_HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
+        self.defaultParams = {'header': self.HTTP_HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
         self.dInfo = params['discover_info']
         
     def getMainUrl(self):
@@ -101,7 +101,7 @@ class SubsRoProvider(CBaseSubProviderClass):
         if not sts:
             return
         
-        urlParams['header'].update({'Referer':actionUrl, 'Accept':'*/*', 'Content-Type':'application/x-www-form-urlencoded; charset=UTF-8', 'X-Requested-With':'XMLHttpRequest'})
+        urlParams['header'].update({'Referer': actionUrl, 'Accept': '*/*', 'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8', 'X-Requested-With': 'XMLHttpRequest'})
         actionUrl, query = self.getFormQuery(data, 'search-subtitrari', self.params['confirmed_title'])
         sts, data = self.cm.getPage(actionUrl, urlParams, query)
         if not sts:
@@ -127,7 +127,7 @@ class SubsRoProvider(CBaseSubProviderClass):
             descTab.append(self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(item, ('<div', '>', 'sub-comment'), ('</div', '>'), False)[1]))
             
             params = dict(cItem)
-            params.update({'category':nextCategory, 'url':self.getFullUrl(url), 'title':self.cleanHtmlStr(title), 'lang':lang, 'desc':'[/br]'.join(descTab)})
+            params.update({'category': nextCategory, 'url': self.getFullUrl(url), 'title': self.cleanHtmlStr(title), 'lang': lang, 'desc': '[/br]'.join(descTab)})
             params['title'] = ('[%s] ' % lang) + params['title']
             self.addDir(params)
             
@@ -154,13 +154,13 @@ class SubsRoProvider(CBaseSubProviderClass):
             return
         
         cItem = dict(cItem)
-        cItem.update({'path':tmpDIR, 'fps':fps, 'imdbid':imdbid, 'sub_id':subId})
+        cItem.update({'path': tmpDIR, 'fps': fps, 'imdbid': imdbid, 'sub_id': subId})
         self.listDir(cItem)
         
     def listDir(self, cItem):
         printDBG("SubsRoProvider.listDir")
         cItem = dict(cItem)
-        cItem.update({'category':''})
+        cItem.update({'category': ''})
         self.listSupportedFilesFromPath(cItem, self.getSupportedFormats(all=True), dirCategory='list_dir')
         for item in self.currList:
             item['desc'] = cItem.get('path', '') + '/'
@@ -197,7 +197,7 @@ class SubsRoProvider(CBaseSubProviderClass):
         printDBG(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>")
         
         if self.converFileToUtf8(inFilePath, outFileName, lang):
-            retData = {'title':title, 'path':outFileName, 'lang':lang, 'imdbid':imdbid, 'sub_id':subId, 'fps':fps}
+            retData = {'title': title, 'path': outFileName, 'lang': lang, 'imdbid': imdbid, 'sub_id': subId, 'fps': fps}
         
         return retData
     
@@ -214,7 +214,7 @@ class SubsRoProvider(CBaseSubProviderClass):
         
     #MAIN MENU
         if name == None:
-            self.getSearchList({'name':'category'}, 'get_subtitles')
+            self.getSearchList({'name': 'category'}, 'get_subtitles')
         if category == 'list_dir':
             self.listDir(self.currItem)
         elif category == 'get_subtitles':

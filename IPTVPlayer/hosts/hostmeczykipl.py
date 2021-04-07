@@ -25,13 +25,13 @@ def gettytul():
 class MeczykiPL(CBaseHostClass):
  
     def __init__(self):
-        CBaseHostClass.__init__(self, {'history':'meczykipl', 'cookie':'meczykipl.cookie'})
+        CBaseHostClass.__init__(self, {'history': 'meczykipl', 'cookie': 'meczykipl.cookie'})
         self.USER_AGENT = 'Mozilla/5.0'
         self.HEADER = {'User-Agent': self.USER_AGENT, 'Accept': 'text/html'}
         self.AJAX_HEADER = dict(self.HEADER)
         self.AJAX_HEADER.update({'X-Requested-With': 'XMLHttpRequest'})
         
-        self.defaultParams = {'header':self.HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
+        self.defaultParams = {'header': self.HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
         
         self.DEFAULT_ICON_URL = 'http://www.meczyki.pl/images/logo.png'
         self.MAIN_URL = None
@@ -46,7 +46,7 @@ class MeczykiPL(CBaseHostClass):
         printDBG("MeczykiPL.listMainMenu")
         
         params = dict(cItem)
-        params.update({'category':nextCategory, 'title':_('--All--'), 'f_cat':'0'})
+        params.update({'category': nextCategory, 'title': _('--All--'), 'f_cat': '0'})
         self.addDir(params)
         
         sts, data = self.getPage(self.getFullUrl('/najnowsze_skroty.html'))
@@ -60,7 +60,7 @@ class MeczykiPL(CBaseHostClass):
             url = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''href=['"]([^'^"]+?)['"]''')[0])
             title = self.cleanHtmlStr(item)
             params = dict(cItem)
-            params.update({'category':nextCategory, 'title':title, 'url':url, 'icon':icon, 'f_cat':cat})
+            params.update({'category': nextCategory, 'title': title, 'url': url, 'icon': icon, 'f_cat': cat})
             self.addDir(params)
     
     def listItems(self, cItem, nextCategory):
@@ -70,7 +70,7 @@ class MeczykiPL(CBaseHostClass):
         page = cItem.get('page', 1)
         cat = cItem.get('f_cat', '0')
         
-        query = {'category':cat, 'page':page}
+        query = {'category': cat, 'page': page}
         url = baseUrl + '?' + urllib.parse.urlencode(query)
         
         sts, data = self.getPage(url)
@@ -91,7 +91,7 @@ class MeczykiPL(CBaseHostClass):
                         icon = self.getFullIconUrl(item['area'])
                     desc = '%s | %s' % (item['competition'], item['event_date'])
                     params = dict(cItem)
-                    params.update({'good_for_fav':True, 'category':nextCategory, 'title':title, 'url':url, 'icon':icon, 'desc':desc})
+                    params.update({'good_for_fav': True, 'category': nextCategory, 'title': title, 'url': url, 'icon': icon, 'desc': desc})
                     self.addDir(params)
         except Exception:
             printExc()
@@ -108,7 +108,7 @@ class MeczykiPL(CBaseHostClass):
         try:
             if len(list(json_loads(data)['shortcuts'].keys())):
                 params = dict(cItem)
-                params.update({'good_for_fav':False, 'title':_('Next page'), 'page':page + 1})
+                params.update({'good_for_fav': False, 'title': _('Next page'), 'page': page + 1})
                 self.addDir(params)
         except Exception:
             printExc()
@@ -154,7 +154,7 @@ class MeczykiPL(CBaseHostClass):
                 desc = titles[idx][1]
             
             params = dict(cItem)
-            params.update({'good_for_fav': False, 'title':title, 'url':url, 'desc':desc})
+            params.update({'good_for_fav': False, 'title': title, 'url': url, 'desc': desc})
             self.addVideo(params)
     
     def getLinksForVideo(self, cItem):
@@ -188,7 +188,7 @@ class MeczykiPL(CBaseHostClass):
                                 hlsTab[idx]['name'] = '[hls] bitrate:%s height: %s' % (hlsTab[idx]['bitrate'], hlsTab[idx]['height'])
                             urlTab.extend(hlsTab)
                         else:
-                            urlTab.append({'name':name, 'url':url})
+                            urlTab.append({'name': name, 'url': url})
             except Exception:
                 printExc()
         elif videoUrl.startswith('http'):
@@ -212,7 +212,7 @@ class MeczykiPL(CBaseHostClass):
         
     #MAIN MENU
         if name == None:
-            self.listMainMenu({'name':'category'}, 'list_items')
+            self.listMainMenu({'name': 'category'}, 'list_items')
         elif 'list_items' == category:
             self.listItems(self.currItem, 'explore_item')
         elif 'explore_item' == category:

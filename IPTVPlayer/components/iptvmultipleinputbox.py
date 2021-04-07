@@ -31,8 +31,8 @@ from skin import parseColor
 ###################################################
 
 class IPTVMultipleInputBox(Screen):
-    DEF_INPUT_PARAMS = {'validator':None, 'title':'', 'useable_chars':None, 'label_font':'Regular;23', 'label_size':(550, 25), 'input_font':'Regular;20', 'input_size':(550, 25), 'input':dict(text="", maxSize=False, visible_width=False, type=Input.TEXT)}
-    DEF_PARAMS = {'title':_("Input"), 'with_accept_button':False, 'accep_label':_("Save"), 'list':[]}
+    DEF_INPUT_PARAMS = {'validator': None, 'title': '', 'useable_chars': None, 'label_font': 'Regular;23', 'label_size': (550, 25), 'input_font': 'Regular;20', 'input_size': (550, 25), 'input': dict(text="", maxSize=False, visible_width=False, type=Input.TEXT)}
+    DEF_PARAMS = {'title': _("Input"), 'with_accept_button': False, 'accep_label': _("Save"), 'list': []}
     def __init__(self, session, params={}):
         
         # Skin generator
@@ -64,7 +64,7 @@ class IPTVMultipleInputBox(Screen):
             item = self.list[idx]
             if 'icon_path' in item:
                 self["cover_%d" % idx] = Cover2()
-                self.icons.append({'name':"cover_%d" % idx, 'path':item['icon_path']})
+                self.icons.append({'name': "cover_%d" % idx, 'path': item['icon_path']})
             else:
                 self["text_%d" % idx] = Label(item.get('title', ''))
             self["input_%d" % idx] = Input(**item['input'])
@@ -320,7 +320,7 @@ class IPTVMultipleInputBox(Screen):
                 captchaSize = self.list[self.idx]['label_size']
                 captchaPath = self.list[self.idx]['icon_path']
                 params = dict(self.params.get('vk_params', {}))
-                params.update({'captcha_size':captchaSize, 'captcha_path':captchaPath})
+                params.update({'captcha_size': captchaSize, 'captcha_path': captchaPath})
         except Exception:
             printExc()
         

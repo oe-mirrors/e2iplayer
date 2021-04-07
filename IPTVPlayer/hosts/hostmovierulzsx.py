@@ -28,20 +28,20 @@ def gettytul():
 class MovieRulzSX(CBaseHostClass):
     
     def __init__(self):
-        CBaseHostClass.__init__(self, {'history':'movierulz.sx', 'cookie':'movierulz.sx.cookie'})
+        CBaseHostClass.__init__(self, {'history': 'movierulz.sx', 'cookie': 'movierulz.sx.cookie'})
         self.USER_AGENT = 'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:40.0) Gecko/20100101 Firefox/40.0'
         self.MAIN_URL = 'https://movierulz.be/'
         self.DEFAULT_ICON_URL = 'https://superrepo.org/static/images/icons/original/xplugin.video.movierulz.png.pagespeed.ic.em3U-ZIgpV.png'
-        self.HTTP_HEADER = {'User-Agent': self.USER_AGENT, 'DNT':'1', 'Accept': 'text/html', 'Accept-Encoding':'gzip, deflate', 'Referer':self.getMainUrl(), 'Origin':self.getMainUrl()}
+        self.HTTP_HEADER = {'User-Agent': self.USER_AGENT, 'DNT': '1', 'Accept': 'text/html', 'Accept-Encoding': 'gzip, deflate', 'Referer': self.getMainUrl(), 'Origin': self.getMainUrl()}
         self.AJAX_HEADER = dict(self.HTTP_HEADER)
-        self.AJAX_HEADER.update({'X-Requested-With': 'XMLHttpRequest', 'Accept-Encoding':'gzip, deflate', 'Content-Type':'application/x-www-form-urlencoded; charset=UTF-8', 'Accept':'application/json, text/javascript, */*; q=0.01'})
+        self.AJAX_HEADER.update({'X-Requested-With': 'XMLHttpRequest', 'Accept-Encoding': 'gzip, deflate', 'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8', 'Accept': 'application/json, text/javascript, */*; q=0.01'})
         
         self.cacheLinks = {}
-        self.defaultParams = {'header':self.HTTP_HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
+        self.defaultParams = {'header': self.HTTP_HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
         
         self.MAIN_CAT_TAB = [                             
-                             {'category':'search', 'title': _('Search'), 'search_item':True}, 
-                             {'category':'search_history', 'title': _('Search history')},
+                             {'category': 'search', 'title': _('Search'), 'search_item': True}, 
+                             {'category': 'search_history', 'title': _('Search history')},
                             ]
         self.cacheGenresSections = []
         
@@ -55,7 +55,7 @@ class MovieRulzSX(CBaseHostClass):
                 return url
             else:
                 return urllib.parse.urljoin(baseUrl, url)
-        addParams['cloudflare_params'] = {'domain':self.up.getDomain(baseUrl), 'cookie_file':self.COOKIE_FILE, 'User-Agent':self.USER_AGENT, 'full_url_handle':_getFullUrl}
+        addParams['cloudflare_params'] = {'domain': self.up.getDomain(baseUrl), 'cookie_file': self.COOKIE_FILE, 'User-Agent': self.USER_AGENT, 'full_url_handle': _getFullUrl}
         return self.cm.getPageCFProtection(baseUrl, addParams, post_data)
     
     def listMainMenu(self, cItem):
@@ -84,16 +84,16 @@ class MovieRulzSX(CBaseHostClass):
                 url = self.getFullUrl(self.cm.ph.getSearchGroups(item['dat'], '''href=['"]([^'^"]+?)['"]''')[0])
                 if url.endswith('movies-by-genres-and-years/') or url.endswith('others-movies/'):
                         params = dict(cItem)
-                        params.update({'good_for_fav':False, 'category':nextCategory2, 'title':title, 'url':url})
+                        params.update({'good_for_fav': False, 'category': nextCategory2, 'title': title, 'url': url})
                         self.addDir(params)
                 elif 'list' not in item:
                     if self.cm.isValidUrl(url) and title != '':
                         params = dict(cItem)
-                        params.update({'good_for_fav':False, 'category':nextCategory1, 'title':title, 'url':url})
+                        params.update({'good_for_fav': False, 'category': nextCategory1, 'title': title, 'url': url})
                         self.addDir(params)
                 elif len(item['list']) == 1 and title != '':
                     params = dict(cItem)
-                    params.update({'good_for_fav':False, 'c_tree':item['list'][0], 'title':title, 'url':url})
+                    params.update({'good_for_fav': False, 'c_tree': item['list'][0], 'title': title, 'url': url})
                     self.addDir(params)
         except Exception:
             printExc()
@@ -114,10 +114,10 @@ class MovieRulzSX(CBaseHostClass):
             for item in section:
                 title = self.cleanHtmlStr(item)
                 url = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''href=['"]([^'^"]+?)['"]''')[0])
-                tabItems.append({'title':title, 'url':url})
+                tabItems.append({'title': title, 'url': url})
             if len(tabItems):
                 params = dict(cItem)
-                params.update({'good_for_fav':False, 'category':nextCategory, 'title':sTitle, 'f_sec_idx':len(self.cacheGenresSections)})
+                params.update({'good_for_fav': False, 'category': nextCategory, 'title': sTitle, 'f_sec_idx': len(self.cacheGenresSections)})
                 self.addDir(params)
                 self.cacheGenresSections.append(tabItems)
         
@@ -130,7 +130,7 @@ class MovieRulzSX(CBaseHostClass):
         
         idx = cItem.get('f_sec_idx', 0)
         params = dict(cItem)
-        params.update({'category':nextCategory})
+        params.update({'category': nextCategory})
         self.listsTab(self.cacheGenresSections[idx], params)
         
     def listItems(self, cItem):
@@ -157,12 +157,12 @@ class MovieRulzSX(CBaseHostClass):
             desc = self.cleanHtmlStr(item)
             
             params = dict(cItem)
-            params.update({'good_for_fav':True, 'title':title, 'url':url, 'icon':icon, 'desc':desc})
+            params.update({'good_for_fav': True, 'title': title, 'url': url, 'icon': icon, 'desc': desc})
             self.addVideo(params)
         
         if self.cm.isValidUrl(nextPage):
             params = dict(cItem)
-            params.update({'good_for_fav':False, 'title':_("Next page"), 'url':nextPage, 'page':page + 1})
+            params.update({'good_for_fav': False, 'title': _("Next page"), 'url': nextPage, 'page': page + 1})
             self.addDir(params)
         
     def listSearchResult(self, cItem, searchPattern, searchType):
@@ -197,7 +197,7 @@ class MovieRulzSX(CBaseHostClass):
             url = self.getFullUrl(self.cm.ph.getSearchGroups(data, '''<iframe[^>]+?src=['"]([^"^']+?)['"]''', 1, True)[0])
             if url != '':
                 name = self.up.getDomain(url)
-                retTab.append({'name':name, 'url':url, 'need_resolve':1})
+                retTab.append({'name': name, 'url': url, 'need_resolve': 1})
         
         data = self.cm.ph.rgetDataBeetwenNodes(data, ('<', '>', 'post-nav'), ('<div', '>', 'entry-content'))[1]
         tmp = self.cm.ph.getAllItemsBeetwenMarkers(data, '<p', '</a>')
@@ -206,7 +206,7 @@ class MovieRulzSX(CBaseHostClass):
             if url == '':
                 continue
             name = self.cleanHtmlStr(item.split('<a', 1)[0])
-            retTab.append({'name':name, 'url':url, 'need_resolve':1})
+            retTab.append({'name': name, 'url': url, 'need_resolve': 1})
         
         if len(retTab):
             self.cacheLinks[cacheKey] = retTab
@@ -239,7 +239,7 @@ class MovieRulzSX(CBaseHostClass):
                 for item in tmp:
                     url = self.getFullUrl(self.cm.ph.getSearchGroups(data, '''<iframe[^>]+?src=['"]([^"^']+?)['"]''', 1, True)[0])
                     if 1 == self.up.checkHostSupport(url):
-                        videoUrl = strwithmeta(url, {'Referer':baseUrl})
+                        videoUrl = strwithmeta(url, {'Referer': baseUrl})
             
         return self.up.getVideoLinkExt(videoUrl)
         
@@ -305,7 +305,7 @@ class MovieRulzSX(CBaseHostClass):
         if icon == '':
             icon = cItem.get('icon', self.DEFAULT_ICON_URL)
         
-        return [{'title':self.cleanHtmlStr(title), 'text': self.cleanHtmlStr(desc), 'images':[{'title':'', 'url':self.getFullUrl(icon)}], 'other_info':otherInfo}]
+        return [{'title': self.cleanHtmlStr(title), 'text': self.cleanHtmlStr(desc), 'images': [{'title': '', 'url': self.getFullUrl(icon)}], 'other_info': otherInfo}]
     
     def handleService(self, index, refresh=0, searchPattern='', searchType=''):
         printDBG('handleService start')
@@ -322,7 +322,7 @@ class MovieRulzSX(CBaseHostClass):
         
     #MAIN MENU
         if name == None:
-            self.listMainMenu({'name':'category'})
+            self.listMainMenu({'name': 'category'})
         elif category == 'list_categories':
             self.listCategories(self.currItem, 'list_items', 'list_genres_sections')
         elif category == 'list_genres_sections':
@@ -334,11 +334,11 @@ class MovieRulzSX(CBaseHostClass):
     #SEARCH
         elif category in ["search", "search_next_page"]:
             cItem = dict(self.currItem)
-            cItem.update({'search_item':False, 'name':'category'}) 
+            cItem.update({'search_item': False, 'name': 'category'}) 
             self.listSearchResult(cItem, searchPattern, searchType)
     #HISTORIA SEARCH
         elif category == "search_history":
-            self.listsHistory({'name':'history', 'category': 'search'}, 'desc', _("Type: "))
+            self.listsHistory({'name': 'history', 'category': 'search'}, 'desc', _("Type: "))
         else:
             printExc()
         

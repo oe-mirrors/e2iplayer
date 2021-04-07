@@ -17,7 +17,7 @@ def GetVirtualKeyboard(caps={}):
             if getDesktop(0).size().width() >= 1050:
                 from Plugins.Extensions.IPTVPlayer.components.e2ivk import E2iVirtualKeyBoard
                 
-                caps.update({'has_additional_params':True, 'has_suggestions':True})
+                caps.update({'has_additional_params': True, 'has_suggestions': True})
                 return E2iVirtualKeyBoard
         except Exception:
             printExc()

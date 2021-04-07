@@ -65,7 +65,7 @@ class IPTVFavouritesAddNewGroupWidget(Screen):
     def iptvRetCallback(self, retArg):
         self.group = None
         if retArg and 2 == len(retArg):
-            group = {"title":retArg[0], "group_id":retArg[0].lower(), "desc":retArg[1]}
+            group = {"title": retArg[0], "group_id": retArg[0].lower(), "desc": retArg[1]}
             result = self.favourites.addGroup(group)
             if result:
                 self.group = group

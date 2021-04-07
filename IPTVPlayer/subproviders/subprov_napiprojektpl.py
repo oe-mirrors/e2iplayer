@@ -62,19 +62,19 @@ class NapiProjektProvider(CBaseSubProviderClass):
     def __init__(self, params={}):
         self.MAIN_URL = 'http://www.napiprojekt.pl/'
         self.USER_AGENT = 'DMnapi 13.1.30'
-        self.HTTP_HEADER = {'User-Agent':'Mozilla/5.0', 'Referer':self.MAIN_URL, 'Accept':'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8', 'Accept-Encoding':'gzip, deflate'}
-        self.AJAX_HEADER = {'User-Agent':'Mozilla/5.0', 'Referer':self.MAIN_URL, 'Accept':'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8', 'Accept-Encoding':'gzip, deflate', 'X-Requested-With': 'XMLHttpRequest'}
+        self.HTTP_HEADER = {'User-Agent': 'Mozilla/5.0', 'Referer': self.MAIN_URL, 'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8', 'Accept-Encoding': 'gzip, deflate'}
+        self.AJAX_HEADER = {'User-Agent': 'Mozilla/5.0', 'Referer': self.MAIN_URL, 'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8', 'Accept-Encoding': 'gzip, deflate', 'X-Requested-With': 'XMLHttpRequest'}
 
         params['cookie'] = 'napiprojektpl.cookie'
         CBaseSubProviderClass.__init__(self, params)
         
-        self.defaultParams = {'header':self.HTTP_HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
-        self.defaultAjaxParams = {'header':self.AJAX_HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
+        self.defaultParams = {'header': self.HTTP_HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
+        self.defaultAjaxParams = {'header': self.AJAX_HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
         self.dInfo = params['discover_info']
         
-        self.kaindTab = [{'title':'Film & Serial', 'kind':0},
-                         {'title':'Serial', 'kind':1},
-                         {'title':'Film', 'kind':2}]
+        self.kaindTab = [{'title': 'Film & Serial', 'kind': 0},
+                         {'title': 'Serial', 'kind': 1},
+                         {'title': 'Film', 'kind': 2}]
         
     def sortSubtitlesByDurationMatch(self):
         # we need duration to sort
@@ -114,7 +114,7 @@ class NapiProjektProvider(CBaseSubProviderClass):
         title = urllib.parse.quote_plus(self.params['confirmed_title'])
         url = self.getFullUrl('/ajax/search_catalog.php')
         
-        post_data = {'queryString':title, 'queryKind':cItem.get('kind', 0), 'queryYear':'', 'associate':''}
+        post_data = {'queryString': title, 'queryKind': cItem.get('kind', 0), 'queryYear': '', 'associate': ''}
         sts, data = self.cm.getPage(url, self.defaultAjaxParams, post_data)
         if not sts:
             return
@@ -135,7 +135,7 @@ class NapiProjektProvider(CBaseSubProviderClass):
             
             desc = self.cm.ph.getDataBeetwenMarkers(item, '<p', '</p>')[1]
             params = dict(cItem)
-            params.update({'category':nextCategoryMovie, 'title':self.cleanHtmlStr(title), 'url':self.getFullUrl(url), 'sub_id':subId, 'imdbid':imdbid, 'desc':self.cleanHtmlStr(desc)})
+            params.update({'category': nextCategoryMovie, 'title': self.cleanHtmlStr(title), 'url': self.getFullUrl(url), 'sub_id': subId, 'imdbid': imdbid, 'desc': self.cleanHtmlStr(desc)})
             self.addDir(params)
             
     def exploreSubtitlesItem(self, cItem):
@@ -177,7 +177,7 @@ class NapiProjektProvider(CBaseSubProviderClass):
                     season = int(item.strip())
                 except Exception:
                     continue
-                params = {'category':'get_episodes', 'title':str(season), 'season':str(season), 'movie_id': movieId, 'url_pattern':urlPattern}
+                params = {'category': 'get_episodes', 'title': str(season), 'season': str(season), 'movie_id': movieId, 'url_pattern': urlPattern}
                 if None == promItem and promSeason == str(season):
                     promItem = params
                 else:
@@ -193,7 +193,7 @@ class NapiProjektProvider(CBaseSubProviderClass):
         
         # if not series then 
         cItem = dict(cItem)
-        cItem.update({'category':'list_subtitles', 'url':url})
+        cItem.update({'category': 'list_subtitles', 'url': url})
         self.listSubtitles(cItem)
         
     def listSubtitles(self, cItem):
@@ -230,13 +230,13 @@ class NapiProjektProvider(CBaseSubProviderClass):
                 durationSec = 0
             
             params = dict(cItem)
-            params.update({'title':_('Season') + ' ' + title + ' ' + duration, 'duration_sec':durationSec, 'fps':fps, 'sub_id':subId, 'lang':'pl', 'desc':desc, 'size':tmp[1].strip(), 'translator':item[4].strip(), 'added':item[5], 'downloaded':item[6]})
+            params.update({'title': _('Season') + ' ' + title + ' ' + duration, 'duration_sec': durationSec, 'fps': fps, 'sub_id': subId, 'lang': 'pl', 'desc': desc, 'size': tmp[1].strip(), 'translator': item[4].strip(), 'added': item[5], 'downloaded': item[6]})
             self.addSubtitle(params)
         self.sortSubtitlesByDurationMatch()
         
         if '' != nextPage:
             params = dict(cItem)
-            params.update({'title':_('Next page'), 'url':self.getFullUrl(nextPage), 'page':page + 1})
+            params.update({'title': _('Next page'), 'url': self.getFullUrl(nextPage), 'page': page + 1})
             self.addDir(params)
             
     def getEpisodes(self, cItem, nextCategory):
@@ -244,7 +244,7 @@ class NapiProjektProvider(CBaseSubProviderClass):
         
         url = self.getFullUrl('/ajax/search_episodes.php')
         
-        post_data = {'sezon':cItem['season'], 'movieID':cItem['movie_id']}
+        post_data = {'sezon': cItem['season'], 'movieID': cItem['movie_id']}
         sts, data = self.cm.getPage(url, self.defaultAjaxParams, post_data)
         if not sts:
             return
@@ -259,7 +259,7 @@ class NapiProjektProvider(CBaseSubProviderClass):
                 episode = int(item.strip())
             except Exception:
                 continue
-            params = {'category':nextCategory, 'title':_('Episode') + ' ' + str(episode), 'episode':str(episode), 'url':self.getFullUrl(urlPattern.replace('+sezon+', str(cItem['season'])).replace('+odcinek+', str(episode)))}
+            params = {'category': nextCategory, 'title': _('Episode') + ' ' + str(episode), 'episode': str(episode), 'url': self.getFullUrl(urlPattern.replace('+sezon+', str(cItem['season'])).replace('+odcinek+', str(episode)))}
             if None == promItem and promEpisode == str(episode):
                 promItem = params
             else:
@@ -327,10 +327,10 @@ class NapiProjektProvider(CBaseSubProviderClass):
             if IsSubtitlesParserExtensionCanBeUsed(): 
                 from Plugins.Extensions.IPTVPlayer.libs.iptvsubparser import _subparser as subparser
                 subsObj = subparser.parse(data, 0, False, False)
-                typeExtMap = {'microdvd':'sub', 'subrip':'srt', 'subviewer':'sub', 'ssa1':'ssa', 'ssa2-4':'ssa',
-                              'ass':'ssa', 'vplayer':'txt', 'sami':'smi', 'mpl2':'mpl','aqt':'aqt', 'pjs':'pjs', 
-                              'mpsub':'sub', 'jacosub':'jss', 'psb':'psb', 'realtext':'rt',
-                              'dks':'dks', 'subviewer1':'sub', 'text/vtt':'vtt', 'sbv':'sbv'}
+                typeExtMap = {'microdvd': 'sub', 'subrip': 'srt', 'subviewer': 'sub', 'ssa1': 'ssa', 'ssa2-4': 'ssa',
+                              'ass': 'ssa', 'vplayer': 'txt', 'sami': 'smi', 'mpl2': 'mpl', 'aqt': 'aqt', 'pjs': 'pjs', 
+                              'mpsub': 'sub', 'jacosub': 'jss', 'psb': 'psb', 'realtext': 'rt',
+                              'dks': 'dks', 'subviewer1': 'sub', 'text/vtt': 'vtt', 'sbv': 'sbv'}
                 ext = typeExtMap.get(subsObj['type'], '')
                 if ext == '':
                     SetIPTVPlayerLastHostError(_('Unknown subtitle parser for format "%s".') % subsObj['type'])
@@ -343,7 +343,7 @@ class NapiProjektProvider(CBaseSubProviderClass):
                 if not self.converFileToUtf8(tmpFile, fileName):
                     rm(tmpFile)
                     return retData
-                retData = {'title':title, 'path':fileName, 'lang':lang, 'imdbid':imdbid, 'sub_id':subId}
+                retData = {'title': title, 'path': fileName, 'lang': lang, 'imdbid': imdbid, 'sub_id': subId}
         except Exception:
             printExc()
             return retData
@@ -363,7 +363,7 @@ class NapiProjektProvider(CBaseSubProviderClass):
         
     #MAIN MENU
         if name == None:
-            self.listKinds({'name':'category'}, 'get_movies_list')
+            self.listKinds({'name': 'category'}, 'get_movies_list')
         elif category == 'get_movies_list':
             self.getMoviesList(self.currItem, 'explore_sub_item')
         elif category == 'explore_sub_item':

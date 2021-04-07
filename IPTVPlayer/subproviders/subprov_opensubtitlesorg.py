@@ -40,15 +40,15 @@ class OpenSubOrgProvider(CBaseSubProviderClass):
     
     def __init__(self, params={}):
         self.USER_AGENT = 'IPTVPlayer v1'
-        self.HTTP_HEADER = {'User-Agent':self.USER_AGENT, 'Accept':'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8', 'Accept-Encoding':'gzip, deflate'}
+        self.HTTP_HEADER = {'User-Agent': self.USER_AGENT, 'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8', 'Accept-Encoding': 'gzip, deflate'}
         self.MAIN_URL = 'http://api.opensubtitles.org/xml-rpc'
         
         params['cookie'] = 'opensubtitlesorg.cookie'
         CBaseSubProviderClass.__init__(self, params)
         self.cm.HEADER = self.HTTP_HEADER
         
-        self.defaultParams = {'header':self.HTTP_HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
-        self.lastApiError = {'code':0, 'message':''}
+        self.defaultParams = {'header': self.HTTP_HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
+        self.lastApiError = {'code': 0, 'message': ''}
         self.loginToken = ''
         
         self.dInfo = params['discover_info']
@@ -165,11 +165,11 @@ class OpenSubOrgProvider(CBaseSubProviderClass):
             code = int(item['status'].split(' ')[0])
             if code >= 200 and code < 300:
                 return True
-            self.lastApiError = {'code':code, 'message':item['status']}
+            self.lastApiError = {'code': code, 'message': item['status']}
             
         except Exception:
             printExc()
-            self.lastApiError = {'code':-999, 'message':_('_checkStatus except error')}
+            self.lastApiError = {'code': -999, 'message': _('_checkStatus except error')}
         return False
         
     def _serializeValue(self, item):
@@ -210,7 +210,7 @@ class OpenSubOrgProvider(CBaseSubProviderClass):
         
     def _getLanguages(self):        
         lang = GetDefaultLang()
-        subParams = [{'name':'sublanguageid', 'value':lang}]
+        subParams = [{'name': 'sublanguageid', 'value': lang}]
         params = [self.loginToken, self._getArraryParam(subParams)]
         
         sts, data = self._rpcMethodCall("GetSubLanguages", params)
@@ -221,7 +221,7 @@ class OpenSubOrgProvider(CBaseSubProviderClass):
                 defaultLanguageItem = None
                 for item in data:
                     if 'LanguageName' in item and 'SubLanguageID' in item and 'ISO639' in item:
-                        params = {'title':'{0} [{1}]'.format(item['LanguageName'], item['SubLanguageID']), 'lang':item['SubLanguageID']}
+                        params = {'title': '{0} [{1}]'.format(item['LanguageName'], item['SubLanguageID']), 'lang': item['SubLanguageID']}
                         if lang != item['ISO639']:
                             list.append(params)
                         else:
@@ -266,7 +266,7 @@ class OpenSubOrgProvider(CBaseSubProviderClass):
         imdbid = cItem.get('eimdbid', cItem['imdbid'])
         sublanguageid = cItem['lang'] 
         
-        subParams = [{'name':'sublanguageid', 'value':sublanguageid}, {'name':'imdbid', 'value':imdbid}]
+        subParams = [{'name': 'sublanguageid', 'value': sublanguageid}, {'name': 'imdbid', 'value': imdbid}]
         params = [self.loginToken, self._getArraryParam(subParams)]
         
         sts, data = self._rpcMethodCall("SearchSubtitles", params)
@@ -280,7 +280,7 @@ class OpenSubOrgProvider(CBaseSubProviderClass):
                     if 'SubEncoding' in item and item.get('SubFormat', '') in subFormats and link.startswith('http') and link.endswith('.gz'):
                         title = self._getSubtitleTitle(item)
                         fileName = self._getFileName(item)
-                        list.append({'title':title, 'file_name':fileName, 'encoding':item['SubEncoding'], 'url':link})
+                        list.append({'title': title, 'file_name': fileName, 'encoding': item['SubEncoding'], 'url': link})
                 return list
             except Exception:
                 printExc()
@@ -295,7 +295,7 @@ class OpenSubOrgProvider(CBaseSubProviderClass):
         for item in tab:
             params = dict(cItem)
             params.update(item) # item = {'title', 'imdbid'}
-            params.update({'category':nextCategory})
+            params.update({'category': nextCategory})
             self.addDir(params)
                 
     def getType(self, cItem):
@@ -310,7 +310,7 @@ class OpenSubOrgProvider(CBaseSubProviderClass):
                 return
             for item in tab:
                 params = dict(cItem)
-                params.update({'category':'get_episodes', 'item_title':cItem['title'], 'season':item, 'title':_('Season %s') % item})
+                params.update({'category': 'get_episodes', 'item_title': cItem['title'], 'season': item, 'title': _('Season %s') % item})
                 self.addDir(params)
         elif type == 'movie':
             self.getLanguages(cItem, 'get_subtitles')
@@ -329,7 +329,7 @@ class OpenSubOrgProvider(CBaseSubProviderClass):
             params = dict(cItem)
             params.update(item) # item = "episode_title", "episode", "eimdbid"
             title = 's{0}e{1} {2}'.format(str(season).zfill(2), str(item['episode']).zfill(2), item['episode_title'])
-            params.update({'category':nextCategory, 'title':title})
+            params.update({'category': nextCategory, 'title': title})
             self.addDir(params)
         
     def getLanguages(self, cItem, nextCategory):
@@ -341,7 +341,7 @@ class OpenSubOrgProvider(CBaseSubProviderClass):
         for item in OpenSubOrgProvider.LANGUAGE_CACHE:
             params = dict(cItem)
             params.update(item)
-            params.update({'category':nextCategory, 'item_title':itemTitle})
+            params.update({'category': nextCategory, 'item_title': itemTitle})
             self.addDir(params)
             
     def getSubtitles(self, cItem):
@@ -391,7 +391,7 @@ class OpenSubOrgProvider(CBaseSubProviderClass):
         try:
             with open(fileName, 'w') as f:
                 f.write(data)
-            retData = {'title':title, 'path':fileName, 'lang':lang, 'imdbid':imdbid}
+            retData = {'title': title, 'path': fileName, 'lang': lang, 'imdbid': imdbid}
         except Exception: 
             SetIPTVPlayerLastHostError(_('Failed to write file "%s".') % fileName)
             printExc()
@@ -415,7 +415,7 @@ class OpenSubOrgProvider(CBaseSubProviderClass):
             password = config.plugins.iptvplayer.opensuborg_password.value
             self._doLogin(login, password)
             if self.loginToken != '':
-                self.getMoviesTitles({'name':'category'}, 'get_type')
+                self.getMoviesTitles({'name': 'category'}, 'get_type')
         elif category == 'get_type':
             # take actions depending on the type
             self.getType(self.currItem)

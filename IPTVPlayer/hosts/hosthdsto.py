@@ -54,10 +54,10 @@ def gettytul():
 class HDSTo(CBaseHostClass):
 
     def __init__(self):
-        CBaseHostClass.__init__(self, {'history':'HDSTo', 'cookie':'HDSTo.cookie'})
+        CBaseHostClass.__init__(self, {'history': 'HDSTo', 'cookie': 'HDSTo.cookie'})
 
         self.HTTP_HEADER = self.cm.getDefaultHeader(browser='chrome')
-        self.defaultParams = {'header':self.HTTP_HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
+        self.defaultParams = {'header': self.HTTP_HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
 
         self.MAIN_URL = 'http://www.hds.to/'
         self.DEFAULT_ICON_URL = self.getFullIconUrl('/images/logox2.png')
@@ -102,7 +102,7 @@ class HDSTo(CBaseHostClass):
             else:
                 proxy = config.plugins.iptvplayer.alternative_proxy2.value
             addParams = dict(addParams)
-            addParams.update({'http_proxy':proxy})
+            addParams.update({'http_proxy': proxy})
         tries = 0
         while tries < 2:
             tries += 1
@@ -126,7 +126,7 @@ class HDSTo(CBaseHostClass):
                 proxy = config.plugins.iptvplayer.alternative_proxy1.value
             else:
                 proxy = config.plugins.iptvplayer.alternative_proxy2.value
-            url = strwithmeta(url, {'iptv_http_proxy':proxy})
+            url = strwithmeta(url, {'iptv_http_proxy': proxy})
         return url
     
     def listMain(self, cItem):
@@ -152,8 +152,8 @@ class HDSTo(CBaseHostClass):
             except Exception:
                 printExc()
         
-        MAIN_CAT_TAB = [{'category':'search', 'title': _('Search'), 'search_item':True},
-                        {'category': 'search_history', 'title': _('Search history'),}]
+        MAIN_CAT_TAB = [{'category': 'search', 'title': _('Search'), 'search_item': True},
+                        {'category': 'search_history', 'title': _('Search history'), }]
         self.listsTab(MAIN_CAT_TAB, cItem)
         
     def searchUrl(self, data):
@@ -178,13 +178,13 @@ class HDSTo(CBaseHostClass):
                     if 'list' in cTree:
                         title = _('--All--')
                     params = dict(cItem)
-                    params.update({'good_for_fav':False, 'category':nextCategory, 'title':title, 'url':url})
+                    params.update({'good_for_fav': False, 'category': nextCategory, 'title': title, 'url': url})
                     params.pop('c_tree')
                     self.addDir(params)
                 
                 if len(cTree.get('list', [])) and title != '':
                     params = dict(cItem)
-                    params.update({'good_for_fav':False, 'title':title, 'c_tree':cTree})
+                    params.update({'good_for_fav': False, 'title': title, 'c_tree': cTree})
                     self.addDir(params)
                 
                 for item in cTree.get('list', []):
@@ -195,16 +195,16 @@ class HDSTo(CBaseHostClass):
                         if url != '' and title != '':
                             params = dict(cItem)
                             params.pop('c_tree')
-                            params.update({'good_for_fav':False, 'category':nextCategory, 'title':title, 'url':url})
+                            params.update({'good_for_fav': False, 'category': nextCategory, 'title': title, 'url': url})
                             self.addDir(params)
                     elif len(item['list']) == 1 and title != '':
                         item['list'][0]['dat'] = item['dat']
                         params = dict(cItem)
-                        params.update({'good_for_fav':False, 'c_tree':item['list'][0], 'title':title, 'url':url})
+                        params.update({'good_for_fav': False, 'c_tree': item['list'][0], 'title': title, 'url': url})
                         self.addDir(params)
                     elif len(item['list']) > 1 and title != '':
                         params = dict(cItem)
-                        params.update({'good_for_fav':False, 'title':title, 'c_tree':item})
+                        params.update({'good_for_fav': False, 'title': title, 'c_tree': item})
                         self.addDir(params)
         except Exception:
             printExc()
@@ -246,13 +246,13 @@ class HDSTo(CBaseHostClass):
             desc = ' | '.join(descTab)
             params = dict(cItem)
             if 'tout_voir' in icon:
-                params.update({'good_for_fav': False, 'title':'TOUT VOIR >>'})
+                params.update({'good_for_fav': False, 'title': 'TOUT VOIR >>'})
             elif 'details-serie' in url:
-                params.update({'good_for_fav': True, 'title':title})
+                params.update({'good_for_fav': True, 'title': title})
             else:
-                params.update({'good_for_fav': True, 'category':nextCategory, 'title':title})
+                params.update({'good_for_fav': True, 'category': nextCategory, 'title': title})
                 
-            params.update({'url':url, 'desc':desc, 'icon':self.getFullIconUrl(icon)})
+            params.update({'url': url, 'desc': desc, 'icon': self.getFullIconUrl(icon)})
             retList.append(params)
         return retList
         
@@ -277,12 +277,12 @@ class HDSTo(CBaseHostClass):
                 subItems = self.getItems(cItem, nextCategory, item)
                 if len(subItems):
                     params = dict(cItem)
-                    params.update({'good_for_fav': False, 'title':title, 'category':'sub_items', 'sub_items':subItems})
+                    params.update({'good_for_fav': False, 'title': title, 'category': 'sub_items', 'sub_items': subItems})
                     self.addDir(params)
         
         if nextPage != '':
             params = dict(cItem)
-            params.update({'good_for_fav': False, 'title':_('Next page'), 'page':page + 1, 'url':nextPage})
+            params.update({'good_for_fav': False, 'title': _('Next page'), 'page': page + 1, 'url': nextPage})
             self.addDir(params)
         
     def exploreItem(self, cItem):
@@ -306,26 +306,26 @@ class HDSTo(CBaseHostClass):
             url = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''href=['"]([^"^']+?)["']''', 1, True)[0], cUrl)
             if url == '':
                 continue
-            self.cacheLinks[url] = [{'name':'', 'url':strwithmeta(url, {'Referer':cUrl}), 'need_resolve':1}]
+            self.cacheLinks[url] = [{'name': '', 'url': strwithmeta(url, {'Referer': cUrl}), 'need_resolve': 1}]
             
             params = dict(cItem)
-            params.update({'good_for_fav': False, 'title':sTtile + '- ' + title, 'url':strwithmeta(url, {'Referer':cUrl}), 'desc':desc, 'prev_url':cUrl})
+            params.update({'good_for_fav': False, 'title': sTtile + '- ' + title, 'url': strwithmeta(url, {'Referer': cUrl}), 'desc': desc, 'prev_url': cUrl})
             self.addVideo(params)
         
         sts, tmp = self.cm.ph.getDataBeetwenNodes(data, ('<a', '</a>', 'fa-language'), ('<', '>'))
         if sts:
             params = dict(cItem)
-            params.update({'good_for_fav': False, 'title':sTtile, 'url':strwithmeta(cUrl, {'Referer':cUrl}), 'desc':desc, 'prev_url':cUrl})
+            params.update({'good_for_fav': False, 'title': sTtile, 'url': strwithmeta(cUrl, {'Referer': cUrl}), 'desc': desc, 'prev_url': cUrl})
             self.addVideo(params)
-            self.cacheLinks[cUrl] = [{'name':'', 'url':strwithmeta(cUrl, {'Referer':cUrl}), 'need_resolve':1}]
+            self.cacheLinks[cUrl] = [{'name': '', 'url': strwithmeta(cUrl, {'Referer': cUrl}), 'need_resolve': 1}]
             
             url = self.getFullUrl(self.cm.ph.getSearchGroups(tmp, '''href=['"]([^"^']+?)["']''', 1, True)[0], cUrl)
             title = self.cleanHtmlStr(tmp)
             if url != '':
                 params = dict(cItem)
-                params.update({'good_for_fav': False, 'title':sTtile + '- ' + title, 'url':strwithmeta(url, {'Referer':cUrl}), 'desc':desc, 'prev_url':cUrl})
+                params.update({'good_for_fav': False, 'title': sTtile + '- ' + title, 'url': strwithmeta(url, {'Referer': cUrl}), 'desc': desc, 'prev_url': cUrl})
                 self.addVideo(params)
-                self.cacheLinks[url] = [{'name':'', 'url':strwithmeta(url, {'Referer':cUrl}), 'need_resolve':1}]
+                self.cacheLinks[url] = [{'name': '', 'url': strwithmeta(url, {'Referer': cUrl}), 'need_resolve': 1}]
         
         tmp = self.cm.ph.getDataBeetwenNodes(data, ('<ul', '>', 'collapsible'), ('</ul', '>'), False)[1]
         tmp = self.cm.ph.getAllItemsBeetwenMarkers(tmp, '<li', '</li>')
@@ -339,13 +339,13 @@ class HDSTo(CBaseHostClass):
                 linkUrl = self.getFullUrl(self.cm.ph.getSearchGroups(it, '''href=['"]([^"^']+?)["']''', 1, True)[0], cUrl)
                 if linkUrl == '':
                     continue
-                urls.append({'name':linkName, 'url':strwithmeta(linkUrl, {'Referer':cUrl}), 'need_resolve':1})
+                urls.append({'name': linkName, 'url': strwithmeta(linkUrl, {'Referer': cUrl}), 'need_resolve': 1})
             
             if len(urls):
                 url = cUrl + '#' + title
                 self.cacheLinks[url] = urls
                 params = dict(cItem)
-                params.update({'good_for_fav': False, 'title':sTtile + ' ' + title, 'url':strwithmeta(url, {'Referer':cUrl}), 'desc':desc, 'prev_url':cUrl})
+                params.update({'good_for_fav': False, 'title': sTtile + ' ' + title, 'url': strwithmeta(url, {'Referer': cUrl}), 'desc': desc, 'prev_url': cUrl})
                 self.addVideo(params)
         
     def listSearchResult(self, cItem, searchPattern, searchType):
@@ -391,7 +391,7 @@ class HDSTo(CBaseHostClass):
                         if 'video/mp4' in item.lower():
                             url = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''src=['"]([^"^']+?)['"]''')[0])
                             if url != '':
-                                linksTab.append({'name':str(len(linksTab) + 1) + ' mp4', 'url':url})
+                                linksTab.append({'name': str(len(linksTab) + 1) + ' mp4', 'url': url})
                 
                 jwplayer = False
                 jscode = []
@@ -422,7 +422,7 @@ class HDSTo(CBaseHostClass):
                                     lang = item['file'].rsplit('-', 1)[-1].split('.', 1)[0]
                                     if lang == '':
                                         lang = title
-                                    subsTab.append({'title':title, 'url':self.getFullUrl(item['file'], cUrl), 'lang':lang, 'format':item['file'].rsplit('.', 1)[-1]})
+                                    subsTab.append({'title': title, 'url': self.getFullUrl(item['file'], cUrl), 'lang': lang, 'format': item['file'].rsplit('.', 1)[-1]})
                                 except Exception:
                                     pass
                             
@@ -438,11 +438,11 @@ class HDSTo(CBaseHostClass):
                                 if type == 'm3u8':
                                     tmpLinksTab.extend(getDirectM3U8Playlist(url, checkExt=False, checkContent=True))
                                 elif type == 'mp4':
-                                    tmpLinksTab.append({'name':name, 'url':url})
+                                    tmpLinksTab.append({'name': name, 'url': url})
                             
                             if len(subsTab):
                                 for idx in range(len(tmpLinksTab)):
-                                    tmpLinksTab[idx]['url'] = strwithmeta(tmpLinksTab[idx]['url'], {'external_sub_tracks':subsTab})
+                                    tmpLinksTab[idx]['url'] = strwithmeta(tmpLinksTab[idx]['url'], {'external_sub_tracks': subsTab})
                             
                             linksTab.extend(tmpLinksTab)
                     else:
@@ -451,7 +451,7 @@ class HDSTo(CBaseHostClass):
                             for item in dat.get('ccFiles', []):
                                 if len(item) < 3:
                                     continue
-                                subsTab.append({'title':self.cleanHtmlStr(item[1]), 'url':self.getFullUrl(item[2], cUrl), 'lang':self.cleanHtmlStr(item[0]), 'format':self.cleanHtmlStr(item[0]).rsplit('.', 1)[-1]})
+                                subsTab.append({'title': self.cleanHtmlStr(item[1]), 'url': self.getFullUrl(item[2], cUrl), 'lang': self.cleanHtmlStr(item[0]), 'format': self.cleanHtmlStr(item[0]).rsplit('.', 1)[-1]})
                             
                             tmpLinksTab = []
                             for type, item in dat.get('bitrates', {}).items():
@@ -463,11 +463,11 @@ class HDSTo(CBaseHostClass):
                                             name = url.rsplit('-', 1)[-1].replace('.', ' ')
                                         else:
                                             name = 'mp4'
-                                        tmpLinksTab.append({'name':name, 'url':url})
+                                        tmpLinksTab.append({'name': name, 'url': url})
                             
                             if len(subsTab):
                                 for idx in range(len(tmpLinksTab)):
-                                    tmpLinksTab[idx]['url'] = strwithmeta(tmpLinksTab[idx]['url'], {'external_sub_tracks':subsTab})
+                                    tmpLinksTab[idx]['url'] = strwithmeta(tmpLinksTab[idx]['url'], {'external_sub_tracks': subsTab})
                             
                             linksTab.extend(tmpLinksTab)
                 except Exception:
@@ -517,7 +517,7 @@ class HDSTo(CBaseHostClass):
         if desc == '':
             desc = cItem.get('desc', '')
         
-        return [{'title':self.cleanHtmlStr(title), 'text': self.cleanHtmlStr(desc), 'images':[{'title':'', 'url':self.getFullUrl(icon)}], 'other_info':{'custom_items_list':itemsList}}]
+        return [{'title': self.cleanHtmlStr(title), 'text': self.cleanHtmlStr(desc), 'images': [{'title': '', 'url': self.getFullUrl(icon)}], 'other_info': {'custom_items_list': itemsList}}]
         
     def tryTologin(self):
         printDBG('tryTologin start')
@@ -540,7 +540,7 @@ class HDSTo(CBaseHostClass):
                 return False
             
             actionUrl = self.getFullUrl(self.cm.meta['url'])
-            post_data = {'email':self.login, 'password':self.password, 'submit_form':'Login'}
+            post_data = {'email': self.login, 'password': self.password, 'submit_form': 'Login'}
 
             httpParams = dict(self.defaultParams)
             httpParams['header'] = dict(httpParams['header'])
@@ -576,7 +576,7 @@ class HDSTo(CBaseHostClass):
 
     #MAIN MENU
         if name == None:
-            self.listMain({'name':'category', 'type':'category'})
+            self.listMain({'name': 'category', 'type': 'category'})
         elif category == 'cat_items':
             self.listCatItems(self.currItem, 'list_items')
         elif category == 'sub_items':
@@ -588,11 +588,11 @@ class HDSTo(CBaseHostClass):
     #SEARCH
         elif category in ["search", "search_next_page"]:
             cItem = dict(self.currItem)
-            cItem.update({'search_item':False, 'name':'category'}) 
+            cItem.update({'search_item': False, 'name': 'category'}) 
             self.listSearchResult(cItem, searchPattern, searchType)
     #HISTORIA SEARCH
         elif category == "search_history":
-            self.listsHistory({'name':'history', 'category': 'search'}, 'desc', _("Type: "))
+            self.listsHistory({'name': 'history', 'category': 'search'}, 'desc', _("Type: "))
         else:
             printExc()
         

@@ -41,17 +41,17 @@ def gettytul():
 class NuteczkiEU(CBaseHostClass):
 
     def __init__(self):
-        CBaseHostClass.__init__(self, {'history':'nuteczki.eu', 'cookie':'nuteczki.eu.cookie'})
+        CBaseHostClass.__init__(self, {'history': 'nuteczki.eu', 'cookie': 'nuteczki.eu.cookie'})
         
         self.USER_AGENT = 'Mozilla/5.0'
         self.HEADER = {'User-Agent': self.USER_AGENT, 'Accept': 'text/html'}
         self.AJAX_HEADER = dict(self.HEADER)
-        self.AJAX_HEADER.update({'X-Requested-With':'XMLHttpRequest', 'Content-Type':'application/x-www-form-urlencoded; charset=UTF-8'})
+        self.AJAX_HEADER.update({'X-Requested-With': 'XMLHttpRequest', 'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8'})
         
         self.MAIN_URL = 'https://nuteczki.eu/'
         self.DEFAULT_ICON_URL = 'https://i.pinimg.com/736x/2d/07/83/2d0783d156a48860691667dadd8de458--note-music-music-wallpaper.jpg'
         
-        self.defaultParams = {'header':self.HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
+        self.defaultParams = {'header': self.HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
         self.cacheFilters = {}
         self.cacheFiltersKeys = []
         
@@ -81,19 +81,19 @@ class NuteczkiEU(CBaseHostClass):
                 tmpList = []
                 for item in cTree['list']:
                     tmpList.extend(item['list'])
-                cTree = {'data':'', 'list':tmpList}
+                cTree = {'data': '', 'list': tmpList}
                 
                 params = dict(cItem)
-                params.update({'category':'categories', 'title':_('Main menu'), 'c_tree':cTree})
+                params.update({'category': 'categories', 'title': _('Main menu'), 'c_tree': cTree})
                 self.addDir(params)
             except Exception:
                 printExc()
         
         MAIN_CAT_TAB = [
-                        {'category':'top10', 'title': _('TOP 10'), 'url':self.getFullUrl('/top10/')},
-                        {'category':'filters', 'title': _('Filters'), 'url':self.getFullUrl('/muzyka/'), 'post_data':{}},
-                        {'category':'search', 'title': _('Search'), 'search_item':True},
-                        {'category':'search_history', 'title': _('Search history')}]
+                        {'category': 'top10', 'title': _('TOP 10'), 'url': self.getFullUrl('/top10/')},
+                        {'category': 'filters', 'title': _('Filters'), 'url': self.getFullUrl('/muzyka/'), 'post_data': {}},
+                        {'category': 'search', 'title': _('Search'), 'search_item': True},
+                        {'category': 'search_history', 'title': _('Search history')}]
         self.listsTab(MAIN_CAT_TAB, cItem)
         
        
@@ -111,14 +111,14 @@ class NuteczkiEU(CBaseHostClass):
                 if 'list' not in item:
                     if self.cm.isValidUrl(url) and title != '':
                         params = dict(cItem)
-                        params.update({'good_for_fav':False, 'category':nextCategory, 'title':title, 'url':url})
+                        params.update({'good_for_fav': False, 'category': nextCategory, 'title': title, 'url': url})
                         self.addDir(params)
                 elif len(item['list']) == 1 and title != '':
                     obj = item['list'][0]
                     if url != '' and 'list' in obj:
-                        obj['list'].insert(0, {'dat':'<a href="%s">%s</a>' % (url, _('--All--'))})
+                        obj['list'].insert(0, {'dat': '<a href="%s">%s</a>' % (url, _('--All--'))})
                     params = dict(cItem)
-                    params.update({'good_for_fav':False, 'c_tree':obj, 'title':title, 'url':url})
+                    params.update({'good_for_fav': False, 'c_tree': obj, 'title': title, 'url': url})
                     self.addDir(params)
         except Exception:
             printExc()
@@ -175,7 +175,7 @@ class NuteczkiEU(CBaseHostClass):
                     title = self.cleanHtmlStr(self.cm.ph.getSearchGroups(item, '''alt="([^"]+?)"''')[0])
                     desc = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(item, ('<div', '>', 'news-meta'), ('</div', '>'), False)[1])
                     params = dict(cItem)
-                    params.update({'good_for_fav': True, 'title':title, 'url':url, 'desc':desc, 'icon':icon})
+                    params.update({'good_for_fav': True, 'title': title, 'url': url, 'desc': desc, 'icon': icon})
                     if url != '':
                         params['type'] = 'audio'
                     else:
@@ -185,11 +185,11 @@ class NuteczkiEU(CBaseHostClass):
                 
                 if len(items):
                     params = dict(cItem)
-                    params.update({'good_for_fav': False, 'category':nextCategory, 'title':subTitle, 'sub_items':items})
+                    params.update({'good_for_fav': False, 'category': nextCategory, 'title': subTitle, 'sub_items': items})
                     subItems.append(params)
             if len(subItems):
                 params = dict(cItem)
-                params.update({'good_for_fav': False, 'category':nextCategory, 'title':mainTitle, 'sub_items':subItems})
+                params.update({'good_for_fav': False, 'category': nextCategory, 'title': mainTitle, 'sub_items': subItems})
                 self.addDir(params)
         
     def fillCacheFilters(self, cItem):
@@ -209,7 +209,7 @@ class NuteczkiEU(CBaseHostClass):
                 if value == '':
                     continue
                 title = self.cleanHtmlStr(item)
-                self.cacheFilters[key].append({'title':title, 'post_data':{key:value}})
+                self.cacheFilters[key].append({'title': title, 'post_data': {key: value}})
                 
             if len(self.cacheFilters[key]):
                 self.cacheFiltersKeys.append(key)
@@ -300,7 +300,7 @@ class NuteczkiEU(CBaseHostClass):
                         desc.append(t.replace(' , ', ', '))
 
             params = dict(cItem)
-            params.update({'good_for_fav': True, 'title':title, 'url':url, 'desc':'[/br]'.join(desc), 'icon':icon})
+            params.update({'good_for_fav': True, 'title': title, 'url': url, 'desc': '[/br]'.join(desc), 'icon': icon})
             if url != '':
                 self.addAudio(params)
             elif 'playerMask' in item:
@@ -314,16 +314,16 @@ class NuteczkiEU(CBaseHostClass):
             if 'post_data' in params and 'do=search' in cItem['url']:
                 nextPage = cItem['url']
                 params['post_data'] = dict(params['post_data'])
-                params['post_data'].update({'search_start':page + 1, 'full_search':'0', 'result_from':params['post_data'].get('result_from', 1) + len(self.currList)})
+                params['post_data'].update({'search_start': page + 1, 'full_search': '0', 'result_from': params['post_data'].get('result_from', 1) + len(self.currList)})
             
-            params.update({'title':_("Next page"), 'url':self.getFullUrl(nextPage), 'page':page + 1})
+            params.update({'title': _("Next page"), 'url': self.getFullUrl(nextPage), 'page': page + 1})
             self.addDir(params)
         
     def listSearchResult(self, cItem, searchPattern, searchType):
         printDBG("NuteczkiEU.listSearchResult cItem[%s], searchPattern[%s] searchType[%s]" % (cItem, searchPattern, searchType))
         cItem = dict(cItem)
         cItem['url'] = self.getFullUrl('/index.php?do=search')
-        cItem['post_data'] = {'do':'search', 'subaction':'search', 'story':searchPattern}
+        cItem['post_data'] = {'do': 'search', 'subaction': 'search', 'story': searchPattern}
         cItem['category'] = 'list_items'
         self.listItems(cItem)
     
@@ -356,14 +356,14 @@ class NuteczkiEU(CBaseHostClass):
                             jscode.append(jsItem)
                 if len(jscode):
                     jscode.insert(0, 'window={}; window.location={}; window.location.protocol="%s"; var document={}; document.write=function(txt){print(txt);}' % self.getMainUrl().split('//', 1)[0])
-                    ret = js_execute('\n'.join(jscode), {'timeout_sec':15})
+                    ret = js_execute('\n'.join(jscode), {'timeout_sec': 15})
                     if ret['sts'] and 0 == ret['code']:
                         printDBG(ret['data'])
                         data += ret['data'].strip()
                     
             elif 'facebook' not in url.lower(): 
                 name = _('Player %s: %s') % (idx + 1, self.up.getHostName(url))
-                urlTab.append({'url':url, 'name':name, 'need_resolve':1})
+                urlTab.append({'url': url, 'name': name, 'need_resolve': 1})
         
         tmp = self.cm.ph.getAllItemsBeetwenMarkers(data, '<iframe', '</iframe>', caseSensitive=False)
         for idx in range(len(tmp)):
@@ -371,7 +371,7 @@ class NuteczkiEU(CBaseHostClass):
             if url == '' or 'facebook' in url.lower():
                 continue
             name = _('Player %s') % (idx + 1)
-            urlTab.append({'url':url, 'name':name, 'need_resolve':1})
+            urlTab.append({'url': url, 'name': name, 'need_resolve': 1})
         
         return urlTab
         
@@ -398,7 +398,7 @@ class NuteczkiEU(CBaseHostClass):
             name = self.cm.ph.getSearchGroups(url, '''/music([^'^"]*?)/''')[0]
             if name == '':
                 name = 'SD'
-            urlTab.append({'name':name, 'url':url})
+            urlTab.append({'name': name, 'url': url})
         urlTab.sort(key=lambda item: item['name'])
         return urlTab
         
@@ -424,7 +424,7 @@ class NuteczkiEU(CBaseHostClass):
             self.setMainUrl(self.cm.meta['url'])
             
             actionUrl = self.cm.meta['url']
-            post_data = {'login_name':self.login, 'login_password':self.password, 'login':'submit'}
+            post_data = {'login_name': self.login, 'login_password': self.password, 'login': 'submit'}
 
             httpParams = dict(self.defaultParams)
             httpParams['header'] = dict(self.AJAX_HEADER)
@@ -459,7 +459,7 @@ class NuteczkiEU(CBaseHostClass):
         
     #MAIN MENU
         if name == None:
-            self.listMainMenu({'name':'category'})
+            self.listMainMenu({'name': 'category'})
         
         elif category == 'categories':
             self.listCategories(self.currItem, 'list_items')
@@ -478,11 +478,11 @@ class NuteczkiEU(CBaseHostClass):
     #SEARCH
         elif category in ["search", "search_next_page"]:
             cItem = dict(self.currItem)
-            cItem.update({'search_item':False, 'name':'category'}) 
+            cItem.update({'search_item': False, 'name': 'category'}) 
             self.listSearchResult(cItem, searchPattern, searchType)
     #HISTORIA SEARCH
         elif category == "search_history":
-            self.listsHistory({'name':'history', 'category': 'search'}, 'desc', _("Type: "))
+            self.listsHistory({'name': 'history', 'category': 'search'}, 'desc', _("Type: "))
         else:
             printExc()
         

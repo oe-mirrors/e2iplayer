@@ -28,17 +28,17 @@ def gettytul():
 class FightVideo(CBaseHostClass):
  
     def __init__(self):
-        CBaseHostClass.__init__(self, {'history':'paczamy.pl', 'cookie':'fightvideommatd.cookie'})
+        CBaseHostClass.__init__(self, {'history': 'paczamy.pl', 'cookie': 'fightvideommatd.cookie'})
         self.DEFAULT_ICON_URL = 'http://fight.mmashare.club/images/big-mmashare.png'
         self.USER_AGENT = 'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:40.0) Gecko/20100101 Firefox/40.0'
-        self.HEADER = {'User-Agent': self.USER_AGENT, 'DNT':'1', 'Accept': 'text/html'}
+        self.HEADER = {'User-Agent': self.USER_AGENT, 'DNT': '1', 'Accept': 'text/html'}
         self.AJAX_HEADER = dict(self.HEADER)
         self.AJAX_HEADER.update({'X-Requested-With': 'XMLHttpRequest'})
         self.MAIN_URL = 'http://fight.mmashare.club/'
         self.cacheLinks = {}
         self.cacheFilters = {}
         self.cacheFiltersKeys = []
-        self.defaultParams = {'header':self.HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
+        self.defaultParams = {'header': self.HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
         
     def getPage(self, baseUrl, addParams={}, post_data=None):
         if addParams == {}:
@@ -50,7 +50,7 @@ class FightVideo(CBaseHostClass):
             else:
                 return urllib.parse.urljoin(baseUrl, url)
             
-        addParams['cloudflare_params'] = {'domain':self.up.getDomain(baseUrl), 'cookie_file':self.COOKIE_FILE, 'User-Agent':self.USER_AGENT, 'full_url_handle':_getFullUrl}
+        addParams['cloudflare_params'] = {'domain': self.up.getDomain(baseUrl), 'cookie_file': self.COOKIE_FILE, 'User-Agent': self.USER_AGENT, 'full_url_handle': _getFullUrl}
         sts, data = self.cm.getPageCFProtection(baseUrl, addParams, post_data)
         return sts, data
     
@@ -72,11 +72,11 @@ class FightVideo(CBaseHostClass):
                 if value == '':
                     continue
                 title = self.cleanHtmlStr(item)
-                self.cacheFilters[key].append({'title':title.title(), key:value})
+                self.cacheFilters[key].append({'title': title.title(), key: value})
                 
             if len(self.cacheFilters[key]):
                 if addAll:
-                    self.cacheFilters[key].insert(0, {'title':_('All')})
+                    self.cacheFilters[key].insert(0, {'title': _('All')})
                 self.cacheFiltersKeys.append(key)
         
         # Display topics from previous
@@ -101,7 +101,7 @@ class FightVideo(CBaseHostClass):
                 else: 
                     title = '\xe2\x86\x91 '
                     value = 'a'
-                params.update({'title':title + ' ' + item['title'], 'f_sd': value})
+                params.update({'title': title + ' ' + item['title'], 'f_sd': value})
                 sortByTab.append(params)
         self.cacheFilters['f_sk'] = sortByTab
         printDBG(self.cacheFilters)
@@ -171,12 +171,12 @@ class FightVideo(CBaseHostClass):
             title = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(item, '<a ', '</a>')[1])
             
             params = dict(cItem)
-            params = {'good_for_fav': True, 'category':nextCategory, 'title':title, 'url':url, 'desc':'[/br]'.join(descTab)}
+            params = {'good_for_fav': True, 'category': nextCategory, 'title': title, 'url': url, 'desc': '[/br]'.join(descTab)}
             self.addDir(params)
         
         if nextPage and len(self.currList) > 0:
             params = dict(cItem)
-            params.update({'title':_("Next page"), 'page':page + 1})
+            params.update({'title': _("Next page"), 'page': page + 1})
             self.addDir(params)
             
     def exploreItem(self, cItem):
@@ -230,7 +230,7 @@ class FightVideo(CBaseHostClass):
                         allUrls.append(url)
                         if title == '':
                             title = 'Video %d - %s' % (idx, self.up.getDomain(url))
-                        params = {'title':title, 'url':url, 'direct_url':directUrl}
+                        params = {'title': title, 'url': url, 'direct_url': directUrl}
                         self.addVideo(params)
                         idx += 1
             else:
@@ -240,7 +240,7 @@ class FightVideo(CBaseHostClass):
                     if url not in allUrls and self.cm.isValidUrl(url):
                         allUrls.append(url)
                         title = 'Video %d - %s' % (idx, self.up.getDomain(url))
-                        params = {'title':title, 'url':url, 'direct_url':True}
+                        params = {'title': title, 'url': url, 'direct_url': True}
                         self.addVideo(params)
                         idx += 1
                 
@@ -250,13 +250,13 @@ class FightVideo(CBaseHostClass):
                     if url not in allUrls and self.cm.isValidUrl(url) and 1 == self.up.checkHostSupport(url):
                         allUrls.append(url)
                         title = 'Video %d - %s' % (idx, self.up.getDomain(url))
-                        params = {'title':title, 'url':url, 'direct_url':False}
+                        params = {'title': title, 'url': url, 'direct_url': False}
                         self.addVideo(params)
                         idx += 1
                         
         if nextPage:
             params = dict(cItem)
-            params.update({'title':_("Next page"), 'video_idx':idx, 'page':page + 1})
+            params.update({'title': _("Next page"), 'video_idx': idx, 'page': page + 1})
             self.addDir(params)
         
     def getLinksForVideo(self, cItem):
@@ -264,7 +264,7 @@ class FightVideo(CBaseHostClass):
         urlTab = []
         
         if cItem['direct_url']:
-            urlTab.append({'name':'direct', 'url':cItem['url'], 'need_resolve':0})
+            urlTab.append({'name': 'direct', 'url': cItem['url'], 'need_resolve': 0})
         else:
             urlTab = self.up.getVideoLinkExt(cItem['url'])
         

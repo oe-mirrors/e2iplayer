@@ -46,8 +46,8 @@ def localPrintDBG(txt):
     pass
 
 class IPTVMovieMetaDataHandler():
-    META_DATA = {"host":"", "title":"", "file_path":"", "aspect_ratio":-1, "last_position":-1,"tracks":{"audio":-1, "video":-1, "subtitle":-1, "subtitles":{"idx":-1, "tracks":[]}}}
-    SUBTITLE_TRACK = {"title":"", "id":"", "provider":"", "lang":"", "delay_ms":0, "path":""}
+    META_DATA = {"host": "", "title": "", "file_path": "", "aspect_ratio": -1, "last_position": -1, "tracks": {"audio": -1, "video": -1, "subtitle": -1, "subtitles": {"idx": -1, "tracks": []}}}
+    SUBTITLE_TRACK = {"title": "", "id": "", "provider": "", "lang": "", "delay_ms": 0, "path": ""}
     EXTENSION = 'iptv'
     ENCODING = 'utf-8'
     
@@ -61,7 +61,7 @@ class IPTVMovieMetaDataHandler():
         
         self.filePath = GetMovieMetaDataDir(RemoveDisallowedFilenameChars(fileName))
         self.data = deepcopy(self.META_DATA)
-        self.data.update({"host":host, "title":title, "file_path":filePath})
+        self.data.update({"host": host, "title": title, "file_path": filePath})
         self.isModified = False
         
     def load(self):

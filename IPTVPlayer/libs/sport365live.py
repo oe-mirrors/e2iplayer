@@ -50,7 +50,7 @@ def GetConfigList():
 
 class Sport365LiveApi:
     MAIN_URL = 'http://www.sport365.live/'
-    HTTP_HEADER = {'User-Agent':'Mozilla/5.0 (X11; Linux i686) AppleWebKit/537.36 (KHTML, like Gecko) Ubuntu Chromium/37.0.2062.120 Chrome/37.0.2062.120 Safari/537.36', 'Accept-Encoding':'gzip, deflate', 'Referer': MAIN_URL}
+    HTTP_HEADER = {'User-Agent': 'Mozilla/5.0 (X11; Linux i686) AppleWebKit/537.36 (KHTML, like Gecko) Ubuntu Chromium/37.0.2062.120 Chrome/37.0.2062.120 Safari/537.36', 'Accept-Encoding': 'gzip, deflate', 'Referer': MAIN_URL}
     CACHE_AES_PASSWORD = ''
     
     def __init__(self):
@@ -58,7 +58,7 @@ class Sport365LiveApi:
         self.sessionEx = MainSessionWrapper()
         self.cm = common()
         self.up = urlparser()
-        self.http_params = {'header': dict(self.HTTP_HEADER), 'use_cookie':True, 'save_cookie': True, 'load_cookie': True, 'cookiefile': self.COOKIE_FILE}
+        self.http_params = {'header': dict(self.HTTP_HEADER), 'use_cookie': True, 'save_cookie': True, 'load_cookie': True, 'cookiefile': self.COOKIE_FILE}
         self.needRefreshAdvert = True
         
     def getPage(self, url, params={}, post_data=None):
@@ -233,7 +233,7 @@ class Sport365LiveApi:
                 for t in tmp:
                     linksData.append(t.replace('"', '').strip())
                 params = dict(cItem)
-                params.update({'type':'category', 'priv_cat':'streams_links', 'links_data':linksData, 'title':title, 'desc':desc})
+                params.update({'type': 'category', 'priv_cat': 'streams_links', 'links_data': linksData, 'title': title, 'desc': desc})
                 printDBG(str(params))
                 channelsTab.append(params)
 
@@ -265,7 +265,7 @@ class Sport365LiveApi:
                 linkData = self.cm.ph.getSearchGroups(link, '''onClick=[^(]*?\(([^)]+?)\)''')[0].split(',')[0].replace('"', '').replace("'", '').strip()
                 if linkData != '':
                     params = dict(cItem)
-                    params.update({'type':'video', 'link_data':linkData, 'event_id':eventId, 'desc':desc, 'title':sourceTitle + ' ' + linkTitle})
+                    params.update({'type': 'video', 'link_data': linkData, 'event_id': eventId, 'desc': desc, 'title': sourceTitle + ' ' + linkTitle})
                     printDBG(str(params))
                     channelsTab.append(params)
         
@@ -482,7 +482,7 @@ class Sport365LiveApi:
                                         playerUrl = strwithmeta(playerUrl, {'User-Agent': h['header']['User-Agent'], 'Referer': action[0]})
 
                                         COOKIE_FILE_M3U8 = GetCookieDir('sport365live.cookie')
-                                        params = {'cookiefile':COOKIE_FILE_M3U8, 'use_cookie': True, 'load_cookie':False, 'save_cookie':True}
+                                        params = {'cookiefile': COOKIE_FILE_M3U8, 'use_cookie': True, 'load_cookie': False, 'save_cookie': True}
 
                                         urlsTab.extend(getDirectM3U8Playlist(playerUrl, checkExt=False, variantCheck=True, cookieParams=params, checkContent=True, sortWithMaxBitrate=99999999))
 
@@ -496,7 +496,7 @@ class Sport365LiveApi:
                             data = self.cm.ph.getDataBeetwenMarkers(data, 'document.write(', '(')[1]
                             playerUrl = self.cleanHtmlStr(self.cm.ph.getSearchGroups(data, '''<iframe[^>]+?src=['"](http[^"^']+?)['"]''', 1, True)[0])
 
-                        urlsTab = self.up.getVideoLinkExt(strwithmeta(playerUrl, {'aes_key':aes}))
+                        urlsTab = self.up.getVideoLinkExt(strwithmeta(playerUrl, {'aes_key': aes}))
                         if len(urlsTab):
                             break
 

@@ -72,9 +72,9 @@ class BBCCoUkIE(InfoExtractor):
             
         InfoExtractor.__init__(self)
         self.COOKIE_FILE = GetCookieDir('bbciplayer.cookie')
-        self.HEADER = {'User-Agent':'Mozilla/5.0', 'Accept':'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8', 'Accept-Encoding':'gzip, deflate'}
+        self.HEADER = {'User-Agent': 'Mozilla/5.0', 'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8', 'Accept-Encoding': 'gzip, deflate'}
         self.cm.HEADER = self.HEADER # default header
-        self.defaultParams = {'header':self.HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
+        self.defaultParams = {'header': self.HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
     
     def getFullUrl(self, url):
         if config.plugins.iptvplayer.bbc_use_web_proxy.value and 'englandproxy.co.uk' not in url:
@@ -86,7 +86,7 @@ class BBCCoUkIE(InfoExtractor):
         
     def getPage(self, url, params={}, post_data=None):
         HTTP_HEADER = dict(self.HEADER)
-        params.update({'header':HTTP_HEADER})
+        params.update({'header': HTTP_HEADER})
         return self.cm.getPage(self.getFullUrl(url), params, post_data)
 
         
@@ -118,7 +118,7 @@ class BBCCoUkIE(InfoExtractor):
             lang = self.cm.ph.getSearchGroups(captions, '''[\:\s]lang="([^"]+?)"''')[0]
             if lang == '':
                 lang = 'en'
-            subtitles.append({'lang':lang, 'url': subUrl, 'ext': 'ttml'})
+            subtitles.append({'lang': lang, 'url': subUrl, 'ext': 'ttml'})
         return subtitles
 
     def _raise_extractor_error(self, media_selection_error):
@@ -202,11 +202,11 @@ class BBCCoUkIE(InfoExtractor):
                                 'format_id': 'ref%s_%s' % (i, format_id),
                             })
                     elif transfer_format == 'dash':
-                        formats.append({'url':href, 'ext':'mpd', 'format_id':format_id})
+                        formats.append({'url': href, 'ext': 'mpd', 'format_id': format_id})
                     elif transfer_format == 'hls':
-                        formats.append({'url':href, 'ext':'hls', 'format_id':format_id})
+                        formats.append({'url': href, 'ext': 'hls', 'format_id': format_id})
                     elif transfer_format == 'hds':
-                        formats.append({'url':href, 'ext':'hds', 'format_id':format_id})
+                        formats.append({'url': href, 'ext': 'hds', 'format_id': format_id})
                     else:
                         if not service and not supplier and bitrate:
                             format_id += '-%d' % bitrate

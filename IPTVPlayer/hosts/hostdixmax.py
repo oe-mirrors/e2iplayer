@@ -50,8 +50,8 @@ class SuggestionsProvider:
     COOKIE_FILE = ''
     def __init__(self):
         self.cm = common()
-        self.HTTP_HEADER = {'User-Agent':self.cm.getDefaultHeader(browser='chrome')['User-Agent'], 'X-Requested-With':'XMLHttpRequest'}
-        self.defaultParams = {'header':self.HTTP_HEADER, 'use_cookie': True, 'load_cookie': True, 'cookiefile': self.COOKIE_FILE}
+        self.HTTP_HEADER = {'User-Agent': self.cm.getDefaultHeader(browser='chrome')['User-Agent'], 'X-Requested-With': 'XMLHttpRequest'}
+        self.defaultParams = {'header': self.HTTP_HEADER, 'use_cookie': True, 'load_cookie': True, 'cookiefile': self.COOKIE_FILE}
 
     def getName(self):
         return _("DixMax Suggestions")
@@ -69,11 +69,11 @@ class SuggestionsProvider:
 class DixMax(CBaseHostClass):
 
     def __init__(self):
-        CBaseHostClass.__init__(self, {'history':'dixmax.com', 'cookie':'dixmax.com.cookie'})
+        CBaseHostClass.__init__(self, {'history': 'dixmax.com', 'cookie': 'dixmax.com.cookie'})
         SuggestionsProvider.COOKIE_FILE = self.COOKIE_FILE
 
         self.HTTP_HEADER = self.cm.getDefaultHeader(browser='chrome')
-        self.defaultParams = {'header':self.HTTP_HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
+        self.defaultParams = {'header': self.HTTP_HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
 
         self.MAIN_URL = 'https://dixmax.com/'
         self.DEFAULT_ICON_URL = 'https://tuelectronica.es/wp-content/uploads/2018/09/dixmax-portada.jpg'
@@ -124,10 +124,10 @@ class DixMax(CBaseHostClass):
         self.fillCacheFilters(cItem, data)
         self.getDBApiKey(data)
 
-        MAIN_CAT_TAB = [{'category':'list_popular', 'title': title1, 'url':self.getFullUrl('/api/private/get/popular')},
-                        {'category':'list_filters', 'title': title2, 'url':self.getFullUrl('/api/private/get/popular')},
-                        {'category':'search', 'title': _('Search'), 'search_item':True},
-                        {'category': 'search_history', 'title': _('Search history'),}]
+        MAIN_CAT_TAB = [{'category': 'list_popular', 'title': title1, 'url': self.getFullUrl('/api/private/get/popular')},
+                        {'category': 'list_filters', 'title': title2, 'url': self.getFullUrl('/api/private/get/popular')},
+                        {'category': 'search', 'title': _('Search'), 'search_item': True},
+                        {'category': 'search_history', 'title': _('Search history'), }]
         self.listsTab(MAIN_CAT_TAB, cItem)
 
     def fillCacheFilters(self, cItem, data):
@@ -144,16 +144,16 @@ class DixMax(CBaseHostClass):
             for idx in range(1, len(section), 2):
                 title = self.cleanHtmlStr(section[idx])
                 value = ph.getattr(section[idx - 1], 'value')
-                self.cacheFilters[key].append({'title':title, key:value, key + '_t':title})
+                self.cacheFilters[key].append({'title': title, key: value, key + '_t': title})
             if len(self.cacheFilters[key]):
-                self.cacheFilters[key].insert(0, {'title':_('--All--')})
+                self.cacheFilters[key].insert(0, {'title': _('--All--')})
                 self.cacheFiltersKeys.append(key)
 
         key = 'f_year'
-        self.cacheFilters[key] = [{'title':_('--All--')}]
+        self.cacheFilters[key] = [{'title': _('--All--')}]
         currYear = datetime.now().year
         for year in range(currYear, currYear - 20, -1):
-            self.cacheFilters[key].append({'title':'%d-%d' % (year - 1, year), key:year})
+            self.cacheFilters[key].append({'title': '%d-%d' % (year - 1, year), key: year})
         self.cacheFiltersKeys.append(key)
 
         printDBG(self.cacheFilters)
@@ -185,7 +185,7 @@ class DixMax(CBaseHostClass):
             for item in (('series', 'Series mas populares'), ('movie', 'Peliculas mas populares'), ('latest', 'Ultimas fichas agregadas')):
                 subItems = self._listItems(cItem, 'explore_item', data['result'][item[0]])
                 if subItems:
-                    self.addDir(MergeDicts(cItem, {'title':item[1], 'category':'sub_items', 'sub_items':subItems}))
+                    self.addDir(MergeDicts(cItem, {'title': item[1], 'category': 'sub_items', 'sub_items': subItems}))
         except Exception:
             printExc()
 
@@ -221,10 +221,10 @@ class DixMax(CBaseHostClass):
             desc.append(item['popularity'])
             desc = ' | '.join(desc) + '[/br]' + item['sinopsis']
 
-            article = {'f_type':type, 'f_isserie':int(item['isSerie']), 'f_year':item['year'], 'f_duration':duration, 'f_rating':rating, 'f_country':item['country'], 'f_genres':item['genres'], 'f_sinopsis':item['sinopsis'], 'f_popularity':item['popularity']}
+            article = {'f_type': type, 'f_isserie': int(item['isSerie']), 'f_year': item['year'], 'f_duration': duration, 'f_rating': rating, 'f_country': item['country'], 'f_genres': item['genres'], 'f_sinopsis': item['sinopsis'], 'f_popularity': item['popularity']}
             if article['f_isserie']:
-                article.update({'f_seasons':item['seasons'], 'f_episodes':item['episodes']})
-            params = MergeDicts(cItem, {'good_for_fav':True, 'category':nextCategory, 'title':title, 'icon':icon, 'desc':desc, 'f_id':item['id']}, article) 
+                article.update({'f_seasons': item['seasons'], 'f_episodes': item['episodes']})
+            params = MergeDicts(cItem, {'good_for_fav': True, 'category': nextCategory, 'title': title, 'icon': icon, 'desc': desc, 'f_id': item['id']}, article) 
             retList.append(params)
         return retList
 
@@ -251,7 +251,7 @@ class DixMax(CBaseHostClass):
             for key in data['result']:
                 subItems = self._listItems(cItem, nextCategory, data['result'][key])
                 if subItems:
-                    self.addDir(MergeDicts(cItem, {'title':key.title(), 'category':'sub_items', 'sub_items':subItems}))
+                    self.addDir(MergeDicts(cItem, {'title': key.title(), 'category': 'sub_items', 'sub_items': subItems}))
         except Exception:
             printExc()
 
@@ -259,7 +259,7 @@ class DixMax(CBaseHostClass):
             self.currList = self.currList[0]['sub_items']
 
         if ITEMS_NUM == len(self.currList):
-            self.addDir(MergeDicts(cItem, {'title':_('Next page'), 'page':page + 1}))
+            self.addDir(MergeDicts(cItem, {'title': _('Next page'), 'page': page + 1}))
 
     def exploreItem(self, cItem, nextCategory):
         printDBG("DixMax.exploreItem")
@@ -278,7 +278,7 @@ class DixMax(CBaseHostClass):
                 if item['site'].lower() == 'youtube':
                     title = '[%s][%s] %s ' % (item['iso_3166_1'], item['size'], item['name'])
                     url = 'https://www.youtube.com/watch?v=%s' % item['key']
-                    self.addVideo(MergeDicts(cItem, {'good_for_fav': True, 'title':title, 'url':url}))
+                    self.addVideo(MergeDicts(cItem, {'good_for_fav': True, 'title': title, 'url': url}))
         except Exception:
             printExc()
 
@@ -312,8 +312,8 @@ class DixMax(CBaseHostClass):
                         desc.append(item['dateText'])
                         desc = ' | '.join(desc) + '[/br]' + item['sinopsis']
 
-                        params = {'f_type':type, 'f_isepisode':1, 'f_date':item['dateText'], 'f_sinopsis':item['sinopsis'], 'f_season':sNum, 'f_episode':eNum}
-                        params = MergeDicts(cItem, {'good_for_fav':True, 'type':'video', 'title':title, 'icon':icon, 'desc':desc, 'f_eid':item['id']}, params) 
+                        params = {'f_type': type, 'f_isepisode': 1, 'f_date': item['dateText'], 'f_sinopsis': item['sinopsis'], 'f_season': sNum, 'f_episode': eNum}
+                        params = MergeDicts(cItem, {'good_for_fav': True, 'type': 'video', 'title': title, 'icon': icon, 'desc': desc, 'f_eid': item['id']}, params) 
                         params.pop('f_seasons')
                         params.pop('f_episodes')
 
@@ -321,8 +321,8 @@ class DixMax(CBaseHostClass):
                         subItems.append(params)
 
                     if len(subItems):
-                        params = {'f_type':_('Season'), 'f_isseason':1, 'f_season':sNum}
-                        params = MergeDicts(cItem, {'good_for_fav':False, 'category':nextCategory, 'sub_items':subItems, 'title':_('Season %s (%s)') % (sNum.zfill(2), sEpisodes), 'icon':sIcon}, params) 
+                        params = {'f_type': _('Season'), 'f_isseason': 1, 'f_season': sNum}
+                        params = MergeDicts(cItem, {'good_for_fav': False, 'category': nextCategory, 'sub_items': subItems, 'title': _('Season %s (%s)') % (sNum.zfill(2), sEpisodes), 'icon': sIcon}, params) 
                         self.addDir(params)
             except Exception:
                 printExc()
@@ -343,7 +343,7 @@ class DixMax(CBaseHostClass):
             for key in data['result']:
                 subItems = self._listItems(cItem, 'explore_item', data['result'][key])
                 if subItems:
-                    self.addDir(MergeDicts(cItem, {'title':key.title(), 'category':'sub_items', 'sub_items':subItems}))
+                    self.addDir(MergeDicts(cItem, {'title': key.title(), 'category': 'sub_items', 'sub_items': subItems}))
         except Exception:
             printExc()
 
@@ -353,13 +353,13 @@ class DixMax(CBaseHostClass):
     def _getLinks(self, key, cItem):
         printDBG("DixMax._getLinks [%s]" % cItem['f_id'])
 
-        post_data = {'id':cItem['f_id']}
+        post_data = {'id': cItem['f_id']}
         
         isSeries = cItem.get('f_isepisode') or cItem.get('f_isserie')
         if isSeries:
-            post_data.update({'i':'true', 't':cItem.get('f_season'), 'e':cItem.get('f_episode')})
+            post_data.update({'i': 'true', 't': cItem.get('f_season'), 'e': cItem.get('f_episode')})
         else:
-            post_data.update({'i':'false'})
+            post_data.update({'i': 'false'})
 
         url = self.getFullUrl('/get_links.php') #get_all_links
         sts, data = self.getPage(url, post_data=post_data)
@@ -374,7 +374,7 @@ class DixMax(CBaseHostClass):
                     self.cacheLinks[key] = []
                 name = '[%s] %s | %s (%s) | %s | %s | %s ' % (item['host'], item['calidad'], item['audio'], item['sonido'], item['sub'], item['fecha'], item['autor_name'])
                 url = self.getFullUrl(item['link'])
-                self.cacheLinks[key].append({'name':name, 'url':strwithmeta(url, {'Referer':self.getMainUrl()}), 'need_resolve':1})
+                self.cacheLinks[key].append({'name': name, 'url': strwithmeta(url, {'Referer': self.getMainUrl()}), 'need_resolve': 1})
         except Exception:
             printExc()
 
@@ -433,7 +433,7 @@ class DixMax(CBaseHostClass):
         if desc == '':
             desc = cItem.get('desc', '')
         
-        return [{'title':self.cleanHtmlStr(title), 'text': self.cleanHtmlStr(desc), 'images':[{'title':'', 'url':self.getFullUrl(icon)}], 'other_info':otherInfo}]
+        return [{'title': self.cleanHtmlStr(title), 'text': self.cleanHtmlStr(desc), 'images': [{'title': '', 'url': self.getFullUrl(icon)}], 'other_info': otherInfo}]
         
     def tryTologin(self):
         printDBG('tryTologin start')
@@ -465,7 +465,7 @@ class DixMax(CBaseHostClass):
             rm(loginCookie)
             rm(self.COOKIE_FILE)
             if freshSession:
-                sts, data = self.getPage(self.getMainUrl(), MergeDicts(self.defaultParams, {'use_new_session':True}))
+                sts, data = self.getPage(self.getMainUrl(), MergeDicts(self.defaultParams, {'use_new_session': True}))
 
             self.loggedIn = False
             if '' == self.login.strip() or '' == self.password.strip():
@@ -476,10 +476,10 @@ class DixMax(CBaseHostClass):
             msgTab = [_('Login failed.')]
             if sts:
                 actionUrl = self.getFullUrl('/session.php?action=1')
-                post_data = {'username':self.login, 'password':self.password, 'remember':'1'}
+                post_data = {'username': self.login, 'password': self.password, 'remember': '1'}
 
                 httpParams = dict(self.defaultParams)
-                httpParams['header'] = MergeDicts(httpParams['header'], {'Referer':self.cm.meta['url'], 'Accept':'*/*'})
+                httpParams['header'] = MergeDicts(httpParams['header'], {'Referer': self.cm.meta['url'], 'Accept': '*/*'})
 
                 sts, data = self.getPage(actionUrl, httpParams, post_data)
                 printDBG(data)
@@ -515,7 +515,7 @@ class DixMax(CBaseHostClass):
 
     #MAIN MENU
         if name == None:
-            self.listMain({'name':'category', 'type':'category'})
+            self.listMain({'name': 'category', 'type': 'category'})
 
         elif category == 'list_filters':
             self.listFilters(self.currItem, 'list_items')
@@ -535,11 +535,11 @@ class DixMax(CBaseHostClass):
     #SEARCH
         elif category in ["search", "search_next_page"]:
             cItem = dict(self.currItem)
-            cItem.update({'search_item':False, 'name':'category'}) 
+            cItem.update({'search_item': False, 'name': 'category'}) 
             self.listSearchResult(cItem, searchPattern, searchType)
     #HISTORIA SEARCH
         elif category == "search_history":
-            self.listsHistory({'name':'history', 'category': 'search'}, 'desc', _("Type: "))
+            self.listsHistory({'name': 'history', 'category': 'search'}, 'desc', _("Type: "))
         else:
             printExc()
         

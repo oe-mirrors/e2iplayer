@@ -140,7 +140,7 @@ def getPageCF(url, params={}):
                 verUrl += '?jschl_vc=%s&pass=%s&jschl_answer=%s' % (get_data['jschl_vc'], get_data['pass'], get_data['jschl_answer'])
                 verUrl = urljoin(cUrl, verUrl)
                 params2 = dict(params)
-                params2.update({'Referer':cUrl, 'Accept-Encoding':'text', 'Accept':'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8'})
+                params2.update({'Referer': cUrl, 'Accept-Encoding': 'text', 'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8'})
                 printDBG("Time spent: [%s]" % (time.time() - start_time))
                 if current == 1:
                     time.sleep(1 + (decoded['timeout'] / 1000.0) - (time.time() - start_time))
@@ -190,7 +190,7 @@ class Proxy(http.server.SimpleHTTPRequestHandler):
                 keyUrl = keyUrl[1:]
             keyUrl = mainUrl + keyUrl
         parsedUri = urlparse(mainUrl)
-        sts, data = getPageCF(keyUrl, {'User-Agent':userAgent, 'Referer':mainUrl, 'Origin':'{uri.scheme}://{uri.netloc}'.format(uri=parsedUri), 'cookiefile':cookiefile})
+        sts, data = getPageCF(keyUrl, {'User-Agent': userAgent, 'Referer': mainUrl, 'Origin': '{uri.scheme}://{uri.netloc}'.format(uri=parsedUri), 'cookiefile': cookiefile})
         #printDBG("sts [%s] data[%s]" % (sts, data))
         if sts:
             self.send_response(200)

@@ -240,7 +240,7 @@ def unpackJS(data, decryptionFun, addCode=''):
     except Exception:
         printExc('unpackJS compile algo code EXCEPTION')
         return ''
-    vGlobals = {"__builtins__": None, 'string': string, 'decodeURIComponent':urllib.parse.unquote, 'unescape':urllib.parse.unquote}
+    vGlobals = {"__builtins__": None, 'string': string, 'decodeURIComponent': urllib.parse.unquote, 'unescape': urllib.parse.unquote}
     vLocals = {'paramsTouple': None}
 
     try:
@@ -402,7 +402,7 @@ def getDirectM3U8Playlist(M3U8Url, checkExt=True, variantCheck=True, cookieParam
             for playlist in m3u8Obj.playlists:
                 item = {}
                 if not variantCheck or playlist.absolute_uri.split('?')[-1].endswith('.m3u8'):
-                    meta.update({'iptv_proto':'m3u8', 'iptv_bitrate':playlist.stream_info.bandwidth})
+                    meta.update({'iptv_proto': 'm3u8', 'iptv_bitrate': playlist.stream_info.bandwidth})
                     item['url'] = strwithmeta(playlist.absolute_uri, meta)
                 else:
                     meta.pop('iptv_proto', None)
@@ -436,7 +436,7 @@ def getDirectM3U8Playlist(M3U8Url, checkExt=True, variantCheck=True, cookieParam
                         audioUrl = strwithmeta(audio_stream.absolute_uri, item['url'].meta)
                         altItem = dict(item)
                         altItem['name'] = '[%s] %s' % (audio_stream.name, altItem['name'])
-                        altItem['url'] = decorateUrl("merge://audio_url|video_url", {'audio_url':audioUrl, 'video_url':altItem['url'], 'ff_out_container':'mpegts', 'prefered_merger':'hlsdl'})
+                        altItem['url'] = decorateUrl("merge://audio_url|video_url", {'audio_url': audioUrl, 'video_url': altItem['url'], 'ff_out_container': 'mpegts', 'prefered_merger': 'hlsdl'})
                         retPlaylists.append(altItem)
                 else:
                     item['alt_audio_streams'] = playlist.alt_audio_streams
@@ -453,7 +453,7 @@ def getDirectM3U8Playlist(M3U8Url, checkExt=True, variantCheck=True, cookieParam
         else:
             if checkContent and 0 == len(m3u8Obj.segments):
                 return []
-            item = {'name':'m3u8', 'url':M3U8Url, 'codec':'unknown', 'with':0, 'heigth':0, 'width':0, 'height':0, 'bitrate':'unknown'}
+            item = {'name': 'm3u8', 'url': M3U8Url, 'codec': 'unknown', 'with': 0, 'heigth': 0, 'width': 0, 'height': 0, 'bitrate': 'unknown'}
             retPlaylists.append(item)
     except Exception:
         printExc()
@@ -489,25 +489,25 @@ def getF4MLinksWithMeta(manifestUrl, checkExt=True, cookieParams={}, sortWithMax
                     bitrate = int(cm.ph.getSearchGroups(item, '''bitrate=['"]([^'^"]+)['"]''')[0])
                 except Exception:
                     bitrate = 0
-                retPlaylists.append({'name':'[f4m/hds] bitrate[%s]' % bitrate, 'bitrate':bitrate, 'url':link})
+                retPlaylists.append({'name': '[f4m/hds] bitrate[%s]' % bitrate, 'bitrate': bitrate, 'url': link})
         
         if 0 == len(retPlaylists):
             bitrates = re.compile('bitrate="([0-9]+?)"').findall(data)
             for item in bitrates:
-                link = strwithmeta(manifestUrl, {'iptv_proto':'f4m', 'iptv_bitrate':item})
+                link = strwithmeta(manifestUrl, {'iptv_proto': 'f4m', 'iptv_bitrate': item})
                 if liveStreamDetected:
                     link.meta['iptv_livestream'] = True
                 try:
                     bitrate = int(item)
                 except Exception:
                     bitrate = 0
-                retPlaylists.append({'name':'[f4m/hds] bitrate[%s]' % item, 'bitrate':bitrate, 'url':link})
+                retPlaylists.append({'name': '[f4m/hds] bitrate[%s]' % item, 'bitrate': bitrate, 'url': link})
         
         if 0 == len(retPlaylists):
-            link = strwithmeta(manifestUrl, {'iptv_proto':'f4m'})
+            link = strwithmeta(manifestUrl, {'iptv_proto': 'f4m'})
             if liveStreamDetected:
                 link.meta['iptv_livestream'] = True
-            retPlaylists.append({'name':'[f4m/hds]', 'bitrate':0, 'url':link})
+            retPlaylists.append({'name': '[f4m/hds]', 'bitrate': 0, 'url': link})
         
         if sortWithMaxBitrate > -1:
             def __getLinkQuality(itemLink):
@@ -541,7 +541,7 @@ def getMPDLinksWithMeta(manifestUrl, checkExt=True, cookieParams={}, sortWithMax
         if 'type="dynamic"' in data:
             liveStreamDetected = True
         
-        representation = {'audio':[], 'video':[]}
+        representation = {'audio': [], 'video': []}
         tmp = cm.ph.getAllItemsBeetwenMarkers(data, "<Period", '</Period>', withMarkers=True)
         if len(tmp):
             data = tmp[-1]
@@ -612,14 +612,14 @@ def getMPDLinksWithMeta(manifestUrl, checkExt=True, cookieParams={}, sortWithMax
                                                                                videoItem['height'],
                                                                                videoItem['codecs'],
                                                                                videoItem['frame_rate'])
-                    videoItem['url'] = strwithmeta(manifestUrl, {'iptv_proto':'mpd', 'iptv_audio_rep_idx':audioIdx, 'iptv_video_rep_idx':videoIdx, 'iptv_livestream':videoItem['livestream']})
+                    videoItem['url'] = strwithmeta(manifestUrl, {'iptv_proto': 'mpd', 'iptv_audio_rep_idx': audioIdx, 'iptv_video_rep_idx': videoIdx, 'iptv_livestream': videoItem['livestream']})
                     retPlaylists.append(videoItem)
                     videoIdx += 1
             else:
                 audioItem['name'] = "[%s] bandwidth: %s %s" % (audioItem['lang'],
                                                                  audioItem['bandwidth'],
                                                                  audioItem['codecs'])
-                audioItem['url'] = strwithmeta(manifestUrl, {'iptv_proto':'mpd', 'iptv_audio_rep_idx':audioIdx, 'iptv_livestream':audioItem['livestream']})
+                audioItem['url'] = strwithmeta(manifestUrl, {'iptv_proto': 'mpd', 'iptv_audio_rep_idx': audioIdx, 'iptv_livestream': audioItem['livestream']})
                 retPlaylists.append(audioItem)
             
             audioIdx += 1

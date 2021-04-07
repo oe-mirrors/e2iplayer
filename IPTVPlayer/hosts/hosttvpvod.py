@@ -72,8 +72,8 @@ class TvpVod(CBaseHostClass, CaptchaHelper):
     DEFAULT_ICON_URL = 'https://s.tvp.pl/files/vod.tvp.pl/img/menu/logo_vod.png' #'http://sd-xbmc.org/repository/xbmc-addons/tvpvod.png'
     PAGE_SIZE = 12
     SPORT_PAGE_SIZE = 20
-    ALL_FORMATS = [{"video/mp4":"mp4"}, {"application/x-mpegurl":"m3u8"}, {"video/x-ms-wmv":"wmv"}] 
-    REAL_FORMATS = {'m3u8':'ts', 'mp4':'mp4', 'wmv':'wmv'}
+    ALL_FORMATS = [{"video/mp4": "mp4"}, {"application/x-mpegurl": "m3u8"}, {"video/x-ms-wmv": "wmv"}] 
+    REAL_FORMATS = {'m3u8': 'ts', 'mp4': 'mp4', 'wmv': 'wmv'}
     MAIN_VOD_URL = "https://vod.tvp.pl/"
     LOGIN_URL = "https://www.tvp.pl/sess/user-2.0/login.php?ref="
     ACCOUNT_URL = "https://www.tvp.pl/sess/user-2.0/account.php"
@@ -84,29 +84,29 @@ class TvpVod(CBaseHostClass, CaptchaHelper):
     
     RIGI_DEFAULT_ICON_URL = 'https://pbs.twimg.com/profile_images/999586990650638337/YHEsWRTs_400x400.jpg'
     
-    VOD_CAT_TAB = [{'category':'tvp_sport', 'title':'TVP Sport', 'url':'http://sport.tvp.pl/wideo'},
-                    {'category':'streams', 'title':'TVP na żywo', 'url':'http://tvpstream.tvp.pl/'},
-                    {'category':'vods_explore_item', 'title':'Przegapiłeś w TV?', 'url':MAIN_VOD_URL + 'przegapiles-w-tv'},
-                    {'category':'vods_list_cats', 'title':'Katalog', 'url':MAIN_VOD_URL},
-                    {'category':'digi_menu', 'title':'Rekonstrukcja cyfrowa TVP', 'url':'https://cyfrowa.tvp.pl/', 'icon':RIGI_DEFAULT_ICON_URL},
+    VOD_CAT_TAB = [{'category': 'tvp_sport', 'title': 'TVP Sport', 'url': 'http://sport.tvp.pl/wideo'},
+                    {'category': 'streams', 'title': 'TVP na żywo', 'url': 'http://tvpstream.tvp.pl/'},
+                    {'category': 'vods_explore_item', 'title': 'Przegapiłeś w TV?', 'url': MAIN_VOD_URL + 'przegapiles-w-tv'},
+                    {'category': 'vods_list_cats', 'title': 'Katalog', 'url': MAIN_VOD_URL},
+                    {'category': 'digi_menu', 'title': 'Rekonstrukcja cyfrowa TVP', 'url': 'https://cyfrowa.tvp.pl/', 'icon': RIGI_DEFAULT_ICON_URL},
                     
                     #{'category':'vods_list_items1',    'title':'Polecamy',                  'url':MAIN_VOD_URL},
                     #{'category':'vods_sub_categories', 'title':'Polecane',                  'marker':'Polecane'},
                     #{'category':'vods_sub_categories', 'title':'VOD',                       'marker':'VOD'},
                     #{'category':'vods_sub_categories', 'title':'Programy',                  'marker':'Programy'},
                     #{'category':'vods_sub_categories', 'title':'Informacje i publicystyka', 'marker':'Informacje i publicystyka'},
-                    {'category':'search', 'title':_('Search'), 'search_item':True},
-                    {'category':'search_history', 'title':_('Search history')}]
+                    {'category': 'search', 'title': _('Search'), 'search_item': True},
+                    {'category': 'search_history', 'title': _('Search history')}]
                     
-    STREAMS_CAT_TAB = [{'category':'tvp3_streams', 'title':'TVP 3', 'url':'http://tvpstream.tvp.pl/', 'icon':'http://ncplus.pl/~/media/n/npl/kanaly/logo%20na%20strony%20kanalow/tvp3.png?bc=white&w=480'},
-                       {'category':'week_epg', 'title':'TVP SPORT', 'url':STREAMS_URL_TEMPLATE, 'icon':'https://upload.wikimedia.org/wikipedia/commons/9/9d/TVP_Sport_HD_Logo.png'},
-                       {'category':'tvpsport_streams', 'title':'Transmisje sport.tvp.pl', 'url':'http://sport.tvp.pl/transmisje', 'icon':'https://upload.wikimedia.org/wikipedia/commons/9/9d/TVP_Sport_HD_Logo.png'},
+    STREAMS_CAT_TAB = [{'category': 'tvp3_streams', 'title': 'TVP 3', 'url': 'http://tvpstream.tvp.pl/', 'icon': 'http://ncplus.pl/~/media/n/npl/kanaly/logo%20na%20strony%20kanalow/tvp3.png?bc=white&w=480'},
+                       {'category': 'week_epg', 'title': 'TVP SPORT', 'url': STREAMS_URL_TEMPLATE, 'icon': 'https://upload.wikimedia.org/wikipedia/commons/9/9d/TVP_Sport_HD_Logo.png'},
+                       {'category': 'tvpsport_streams', 'title': 'Transmisje sport.tvp.pl', 'url': 'http://sport.tvp.pl/transmisje', 'icon': 'https://upload.wikimedia.org/wikipedia/commons/9/9d/TVP_Sport_HD_Logo.png'},
                       ]
     
     def __init__(self):
         printDBG("TvpVod.__init__")
-        CBaseHostClass.__init__(self, {'history':'TvpVod', 'cookie':'tvpvod.cookie', 'proxyURL': config.plugins.iptvplayer.proxyurl.value, 'useProxy': config.plugins.iptvplayer.tvpVodProxyEnable.value})
-        self.defaultParams = {'with_metadata':True, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE, 'header':TvpVod.HTTP_HEADERS}
+        CBaseHostClass.__init__(self, {'history': 'TvpVod', 'cookie': 'tvpvod.cookie', 'proxyURL': config.plugins.iptvplayer.proxyurl.value, 'useProxy': config.plugins.iptvplayer.tvpVodProxyEnable.value})
+        self.defaultParams = {'with_metadata': True, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE, 'header': TvpVod.HTTP_HEADERS}
         self.loggedIn = None
         self.fixUrlMap = {'nadobre.tvp.pl': 'http://vod.tvp.pl/8514270/na-dobre-i-na-zle',
                           'mjakmilosc.tvp.pl': 'http://vod.tvp.pl/1654521/m-jak-milosc',
@@ -218,7 +218,7 @@ class TvpVod(CBaseHostClass, CaptchaHelper):
             sts, data = self._getPage(TvpVod.LOGIN_URL, params)
             if sts:
                 ref = self.cm.ph.getSearchGroups(data, 'name="ref".+?value="([^"]+?)"')[0]
-                post_data = {'ref':ref, 'email':email, 'password':password, 'action':'login'}
+                post_data = {'ref': ref, 'email': email, 'password': password, 'action': 'login'}
                 sitekey = self.cm.ph.getSearchGroups(data, '''sitekey=['"]([^'^"]+?)['"]''')[0]
                 if sitekey != '':
                     token, errorMsgTab = self.processCaptcha(sitekey, self.cm.meta['url'])
@@ -246,7 +246,7 @@ class TvpVod(CBaseHostClass, CaptchaHelper):
         data = re.findall('href="([^"]+?)"[^>]*?>([^<]+?)<', data)
         for item in data:
             params = dict(cItem)
-            params.update({'category':category, 'title':self.cleanHtmlStr(item[1]), 'url':item[0]})
+            params.update({'category': category, 'title': self.cleanHtmlStr(item[1]), 'url': item[0]})
             self.addDir(params)
             
     def _getAjaxUrl(self, parent_id, location):
@@ -293,7 +293,7 @@ class TvpVod(CBaseHostClass, CaptchaHelper):
                 icon = self.cm.ph.getSearchGroups(item, 'src="(http[^"]+?)"')[0]
                 title = self.cm.ph.getSearchGroups(item, 'alt="([^"]+?)"')[0].replace('-', ' ').title()
                 params = dict(cItem)
-                params.update({'title':title, 'url':'http://tvpstream.tvp.pl/sess/tvplayer.php?object_id=%s&autoplay=true' % id, 'icon':icon, 'desc':desc})
+                params.update({'title': title, 'url': 'http://tvpstream.tvp.pl/sess/tvplayer.php?object_id=%s&autoplay=true' % id, 'icon': icon, 'desc': desc})
                 self.addVideo(params)
                 
     def listTVPSportStreams(self, cItem, nextCategory):
@@ -324,7 +324,7 @@ class TvpVod(CBaseHostClass, CaptchaHelper):
                 title = '%s - %s' % (time, self.cleanHtmlStr(t))
                 
                 params = dict(cItem)
-                params.update({'good_for_fav':False, 'title':title, 'url':url, 'desc':desc})
+                params.update({'good_for_fav': False, 'title': title, 'url': url, 'desc': desc})
                 if url == '':
                     params['type'] = 'article'
                 else:
@@ -332,7 +332,7 @@ class TvpVod(CBaseHostClass, CaptchaHelper):
                 subItems.append(params)
             if len(subItems):
                 params = dict(cItem)
-                params.update({'category':nextCategory, 'good_for_fav':True, 'title':dateTitle, 'sub_items':subItems})
+                params.update({'category': nextCategory, 'good_for_fav': True, 'title': dateTitle, 'sub_items': subItems})
                 self.addDir(params)
         
     def listWeekEPG(self, cItem, nextCategory):
@@ -344,7 +344,7 @@ class TvpVod(CBaseHostClass, CaptchaHelper):
             url = urlTemplate.replace('[iptv_date]', d.strftime('%Y-%m-%d'))
             title = d.strftime('%a %d.%m.%Y')
             params = dict(cItem)
-            params.update({'category':nextCategory, 'title':title, 'url':url})
+            params.update({'category': nextCategory, 'title': title, 'url': url})
             self.addDir(params)
             d += timedelta(days=1)
             
@@ -366,7 +366,7 @@ class TvpVod(CBaseHostClass, CaptchaHelper):
                 asset_id = str(item['video_id'])
                 icon = self.getImageUrl(item)
                 desc = item['release_date_hour'] + ' - ' + item['broadcast_end_date_hour'] + '[/br]' + desc 
-                self.addVideo({'title':title, 'url':'', 'object_id':asset_id, 'icon':icon, 'desc':desc})
+                self.addVideo({'title': title, 'url': '', 'object_id': asset_id, 'icon': icon, 'desc': desc})
             printDBG(data)
         except Exception:
             printExc()
@@ -391,7 +391,7 @@ class TvpVod(CBaseHostClass, CaptchaHelper):
                 url = self.cm.ph.getSearchGroups(tmp, '''['"]urlShowMore['"]\s*:\s*['"]([^'^"]+?)['"]''')[0]
                 url = self._getFullUrl(url.replace('\\', ''), 'http://sport.tvp.pl')
                 params = dict(cItem)
-                params.update({'category':nextCategory, 'good_for_fav':True, 'title':item['title'], 'url':url})
+                params.update({'category': nextCategory, 'good_for_fav': True, 'title': item['title'], 'url': url})
                 self.addDir(params)
         except Exception:
             printExc()
@@ -419,14 +419,14 @@ class TvpVod(CBaseHostClass, CaptchaHelper):
                 if url.startswith('http'):
                     videosNum += 1
                     params = dict(cItem)
-                    params.update({'title':title, 'icon':icon, 'url':url, 'desc':desc})
+                    params.update({'title': title, 'icon': icon, 'url': url, 'desc': desc})
                     self.addVideo(params)
         except Exception:
             printExc()
                 
         if videosNum >= self.SPORT_PAGE_SIZE:
             params = dict(cItem)
-            params.update({'page':page + 1})
+            params.update({'page': page + 1})
             if config.plugins.iptvplayer.tvpVodNextPage.value:
                 params['title'] = _('Next page')
                 self.addDir(params)
@@ -449,7 +449,7 @@ class TvpVod(CBaseHostClass, CaptchaHelper):
             if 'cyfrowa.tvp.pl' in url:
                 continue
             params = dict(cItem)
-            params.update({'good_for_fav': False, 'category':nextCategory, 'title':self.cleanHtmlStr(item).title(), 'url':url, 'desc':''})
+            params.update({'good_for_fav': False, 'category': nextCategory, 'title': self.cleanHtmlStr(item).title(), 'url': url, 'desc': ''})
             self.addDir(params)
             
     def mapHoeverItem(self, cItem, item, rawItem, nextCategory):
@@ -458,7 +458,7 @@ class TvpVod(CBaseHostClass, CaptchaHelper):
             title = self.getJItemStr(item, 'title')
             icon = self._getFullUrl(self.getJItemStr(item, 'image'))
             tmp = []
-            labelMap = {'age':'Wiek: %s'}
+            labelMap = {'age': 'Wiek: %s'}
             for key in ['transmision', 'antena', 'age']:
                 val = self.getJItemStr(item, key)
                 if val != '':
@@ -470,16 +470,16 @@ class TvpVod(CBaseHostClass, CaptchaHelper):
             desc = ' | '.join(tmp)
             desc += '[/br]' + self.getJItemStr(item, 'description')
             
-            params = {'good_for_fav': True, 'icon':icon, 'desc':self.cleanHtmlStr(desc)}
+            params = {'good_for_fav': True, 'icon': icon, 'desc': self.cleanHtmlStr(desc)}
             seriesLink = self._getFullUrl(self.getJItemStr(item, 'seriesLink'))
             episodeUrl = self._getFullUrl(self.getJItemStr(item, 'episodeLink'))
             
             if self.cm.isValidUrl(episodeUrl) and '/video/' in episodeUrl:
                 title += ' ' + self.getJItemStr(item, 'episodeCount')
-                params.update({'title':title, 'url':episodeUrl})
+                params.update({'title': title, 'url': episodeUrl})
                 self.addVideo(params)
             else:
-                params.update({'category':nextCategory, 'title':title, 'url':seriesLink})
+                params.update({'category': nextCategory, 'title': title, 'url': seriesLink})
                 self.addDir(params)
             
             printDBG("======================")
@@ -538,7 +538,7 @@ class TvpVod(CBaseHostClass, CaptchaHelper):
                 if not self.cm.isValidUrl(url):
                     continue
                 params = dict(cItem)
-                params.update({'good_for_fav': False, 'category':nextCategory, 'title':self.cleanHtmlStr(item), 'url':url, 'desc':''})
+                params.update({'good_for_fav': False, 'category': nextCategory, 'title': self.cleanHtmlStr(item), 'url': url, 'desc': ''})
                 subFiltersTab.append(params)
             if len(subFiltersTab):
                 allSubFiltersTab.append(subFiltersTab)
@@ -613,20 +613,20 @@ class TvpVod(CBaseHostClass, CaptchaHelper):
                         if title.startswith('odc.'): 
                             title = cItem['title'] + ' ' + title
                         params = dict(cItem)
-                        params.update({'good_for_fav': False, 'title':title, 'url':url, 'icon':icon, 'desc':''})
+                        params.update({'good_for_fav': False, 'title': title, 'url': url, 'icon': icon, 'desc': ''})
                         if '/video/' in url:
-                            params.update({'good_for_fav':True, 'type':'video'})
+                            params.update({'good_for_fav': True, 'type': 'video'})
                             itemsTab.append(params)
                         else:
-                            params.update({'category': nextCategory,})
+                            params.update({'category': nextCategory, })
                             itemsTab.append(params)
                             
                 if self.cm.isValidUrl(sectionUrl) and (len(itemsTab) > 1 or 0 == len(itemsTab)):
                     params = dict(cItem)
-                    params.update({'good_for_fav': False, 'category':nextCategory, 'title':sectionTitle, 'url':sectionUrl, 'icon':sectionIcon, 'desc':''})
-                    sectionItems.append({'title':sectionTitle, 'items':[params]})
+                    params.update({'good_for_fav': False, 'category': nextCategory, 'title': sectionTitle, 'url': sectionUrl, 'icon': sectionIcon, 'desc': ''})
+                    sectionItems.append({'title': sectionTitle, 'items': [params]})
                 elif len(itemsTab):
-                    sectionItems.append({'title':sectionTitle, 'items':itemsTab})
+                    sectionItems.append({'title': sectionTitle, 'items': itemsTab})
             
             allItems = []
             for sectionItem in sectionItems:
@@ -641,7 +641,7 @@ class TvpVod(CBaseHostClass, CaptchaHelper):
         
         if self.cm.isValidUrl(nextPageUrl):
             params = dict(cItem)
-            params.update({'good_for_fav': False, 'category':nextCategory, 'title':_("Next page"), 'url':nextPageUrl, 'page':page + 1})
+            params.update({'good_for_fav': False, 'category': nextCategory, 'title': _("Next page"), 'url': nextPageUrl, 'page': page + 1})
             self.addDir(params)
             
     def listSearchResult(self, cItem, searchPattern, searchType):
@@ -680,7 +680,7 @@ class TvpVod(CBaseHostClass, CaptchaHelper):
             url = self.cm.ph.getSearchGroups(item, 'href="([^"]+?)"')[0]
             title = self.cleanHtmlStr('<' + item)
             params = dict(cItem)
-            params.update({'category':category, 'title':title, 'url':url, 'icon':icon, 'desc':desc, 'page':0})
+            params.update({'category': category, 'title': title, 'url': url, 'icon': icon, 'desc': desc, 'page': 0})
             self.addVideo(params)
             
     def getObjectID(self, url):
@@ -789,7 +789,7 @@ class TvpVod(CBaseHostClass, CaptchaHelper):
                             if 'm3u8' == formatType:
                                 videoTab.extend(getDirectM3U8Playlist(url, checkExt=False, variantCheck=False))
                             else:
-                                meta = {'iptv_format':format}
+                                meta = {'iptv_format': format}
                                 if config.plugins.iptvplayer.tvpVodProxyEnable.value:
                                     meta['http_proxy'] = config.plugins.iptvplayer.proxyurl.value
                                 videoTab.append({'name': name, 'bitrate': str(item['totalBitrate']), 'url': self.up.decorateUrl(url, meta)})
@@ -809,10 +809,10 @@ class TvpVod(CBaseHostClass, CaptchaHelper):
         
         # fallback routine
         if len(videoTab) == 0: 
-            formatMap = {'1':("320x180", 360000), '2':('398x224', 590000), '3':('480x270', 820000), '4':('640x360', 1250000), '5':('800x450', 1750000), '6':('960x540', 2850000), '7':('1280x720', 5420000), '8':("1600x900", 6500000), '9':('1920x1080', 9100000)}
+            formatMap = {'1': ("320x180", 360000), '2': ('398x224', 590000), '3': ('480x270', 820000), '4': ('640x360', 1250000), '5': ('800x450', 1750000), '6': ('960x540', 2850000), '7': ('1280x720', 5420000), '8': ("1600x900", 6500000), '9': ('1920x1080', 9100000)}
             
             params = dict(self.defaultParams)
-            params['header'] = {'User-Agent':'okhttp/3.8.1', 'Authorization':'Basic YXBpOnZvZA==', 'Accept-Encoding':'gzip'}
+            params['header'] = {'User-Agent': 'okhttp/3.8.1', 'Authorization': 'Basic YXBpOnZvZA==', 'Accept-Encoding': 'gzip'}
 #            sts, data = self.cm.getPage( 'https://apivod.tvp.pl/tv/video/%s/default/default?device=android' % asset_id, params)
             sts, data = self.cm.getPage('https://apivod.tvp.pl/tv/video/%s/' % asset_id, params)
             printDBG("%s -> [%s]" % (sts, data))
@@ -832,7 +832,7 @@ class TvpVod(CBaseHostClass, CaptchaHelper):
                     elif item.get('mimeType', '').lower() == "video/mp4":
                         id = self.cm.ph.getSearchGroups(item['url'], '''/video\-([1-9])\.mp4$''')[0]
                         fItem = formatMap.get(id, ('0x0', 0))
-                        mp4Tab.append({'name':'%s \t mp4' % fItem[0], 'url':item['url'], 'bitrate':fItem[1], 'id':id})
+                        mp4Tab.append({'name': '%s \t mp4' % fItem[0], 'url': item['url'], 'bitrate': fItem[1], 'id': id})
                 
                 if len(hlsTab) > 0 and 1 == len(mp4Tab) and mp4Tab[0]['id'] != '':
                     for item in hlsTab:
@@ -844,7 +844,7 @@ class TvpVod(CBaseHostClass, CaptchaHelper):
                                 continue
                             url = mp4Tab[0]['url']
                             url = url[:url.rfind('/')] + ('/video-%s.mp4' % key)
-                            mp4Tab.append({'name':'%s \t mp4' % formatMap[key][0], 'url':url, 'bitrate':formatMap[key][1], 'id':key})
+                            mp4Tab.append({'name': '%s \t mp4' % formatMap[key][0], 'url': url, 'bitrate': formatMap[key][1], 'id': key})
                
                 hlsTab = _sortVideoLinks(hlsTab)
                 mp4Tab = _sortVideoLinks(mp4Tab)
@@ -872,7 +872,7 @@ class TvpVod(CBaseHostClass, CaptchaHelper):
             cItem = json_loads(fav_data)
             links = self.getLinksForVideo(cItem)
         except Exception:
-            cItem = {'url':fav_data}
+            cItem = {'url': fav_data}
             try:
                 ok = int(cItem['url'])
                 if ok:
@@ -883,7 +883,7 @@ class TvpVod(CBaseHostClass, CaptchaHelper):
         
     def getFavouriteData(self, cItem):
         printDBG('TvpVod.getFavouriteData')
-        params = {'type':cItem['type'], 'category':cItem.get('category', ''), 'title':cItem['title'], 'url':cItem['url'], 'desc':cItem.get('desc', ''), 'icon':cItem.get('icon', '')}
+        params = {'type': cItem['type'], 'category': cItem.get('category', ''), 'title': cItem['title'], 'url': cItem['url'], 'desc': cItem.get('desc', ''), 'icon': cItem.get('icon', '')}
         if 'list_episodes' in cItem:
             params['list_episodes'] = cItem['list_episodes']
         return json_dumps(params) 
@@ -919,11 +919,11 @@ class TvpVod(CBaseHostClass, CaptchaHelper):
                 for it in item:
                     title = ph.clean_html(ph.find(it, ('<a', '>'), '</a>', flags=0)[1])
                     url = self.getFullUrl(ph.getattr(it, 'href'), cUrl)
-                    subItems.append(MergeDicts(cItem, {'category':nextCategory, 'title':title, 'url':url}))
+                    subItems.append(MergeDicts(cItem, {'category': nextCategory, 'title': title, 'url': url}))
             if len(subItems):
-                self.addDir(MergeDicts(cItem, {'good_for_fav':False, 'category':'sub_items', 'title':sTitle, 'sub_items':subItems}))
+                self.addDir(MergeDicts(cItem, {'good_for_fav': False, 'category': 'sub_items', 'title': sTitle, 'sub_items': subItems}))
             else:
-                self.addDir(MergeDicts(cItem, {'good_for_fav':True, 'category':nextCategory, 'title':sTitle, 'url':sUrl}))
+                self.addDir(MergeDicts(cItem, {'good_for_fav': True, 'category': nextCategory, 'title': sTitle, 'url': sUrl}))
 
     def exploreDigiSite(self, cItem):
         printDBG("exploreDigiSite")
@@ -939,7 +939,7 @@ class TvpVod(CBaseHostClass, CaptchaHelper):
             for item in tmp:
                 title = ph.clean_html(item)
                 url = self.getFullUrl(ph.getattr(item, 'href'), cUrl)
-                self.addDir(MergeDicts(cItem, {'good_for_fav':False, 'allow_sort':False, 'title':title, 'url':url}))
+                self.addDir(MergeDicts(cItem, {'good_for_fav': False, 'allow_sort': False, 'title': title, 'url': url}))
 
             if self.currList:
                 return
@@ -953,7 +953,7 @@ class TvpVod(CBaseHostClass, CaptchaHelper):
                 tmp2 = section.split('<ul', 1)[0]
                 url = self.getFullUrl(ph.search(tmp2, ph.A_HREF_URI_RE)[1], cUrl)
                 if url.endswith('/video'):
-                    self.exploreDigiSite(MergeDicts(cItem, {'url':url}))
+                    self.exploreDigiSite(MergeDicts(cItem, {'url': url}))
 
                 if self.currList:
                     return
@@ -978,14 +978,14 @@ class TvpVod(CBaseHostClass, CaptchaHelper):
                     if t:
                         desc.append(t)
                 desc = ' | '.join(desc) + '[/br]' + ph.clean_html(item[-1])
-                params = MergeDicts(cItem, {'good_for_fav':True, 'allow_sort':True, 'url':url, 'desc':desc, 'icon':icon})
+                params = MergeDicts(cItem, {'good_for_fav': True, 'allow_sort': True, 'url': url, 'desc': desc, 'icon': icon})
                 if '/video/' in url:
                     if title.startswith('odc.') and cItem.get('prev_title'):
                         title = '%s: %s' % (cItem['prev_title'], title)
-                    params.update({'title':title})
+                    params.update({'title': title})
                     self.addVideo(params)
                 else:
-                    params.update({'title':title, 'prev_title':title})
+                    params.update({'title': title, 'prev_title': title})
                     self.addDir(params)
 
             if self.currList:
@@ -993,7 +993,7 @@ class TvpVod(CBaseHostClass, CaptchaHelper):
                 nextPage = ph.find(nextPage, ('<li', '>', 'page="%s"' % (page + 1)), '</li>', flags=0)[1]
                 nextPage = self.getFullUrl(ph.search(nextPage, ph.A_HREF_URI_RE)[1], cUrl)
                 if nextPage:
-                    self.addDir(MergeDicts(cItem, {'good_for_fav':False, 'title':_('Next page'), 'url':nextPage}))
+                    self.addDir(MergeDicts(cItem, {'good_for_fav': False, 'title': _('Next page'), 'url': nextPage}))
                 return
 
     def handleService(self, index, refresh=0, searchPattern='', searchType=''):
@@ -1021,7 +1021,7 @@ class TvpVod(CBaseHostClass, CaptchaHelper):
             currItem.pop('desc', None)
         
         if None == name:
-            self.listsTab(TvpVod.VOD_CAT_TAB, {'name':'category', 'desc':self.loginMessage})
+            self.listsTab(TvpVod.VOD_CAT_TAB, {'name': 'category', 'desc': self.loginMessage})
     # STREAMS
         elif category == 'streams':
             self.listsTab(TvpVod.STREAMS_CAT_TAB, currItem)
@@ -1056,7 +1056,7 @@ class TvpVod(CBaseHostClass, CaptchaHelper):
     #WYSZUKAJ
         elif category == "search":
             cItem = dict(currItem)
-            cItem.update({'category':'list_search', 'searchPattern':searchPattern, 'searchType':searchType, 'search_item':False})            
+            cItem.update({'category': 'list_search', 'searchPattern': searchPattern, 'searchType': searchType, 'search_item': False})            
             self.listSearchResult(cItem, searchPattern, searchType)
         elif category == "list_search":
             cItem = dict(currItem)
@@ -1065,7 +1065,7 @@ class TvpVod(CBaseHostClass, CaptchaHelper):
             self.listSearchResult(cItem, searchPattern, searchType)
     #HISTORIA WYSZUKIWANIA
         elif category == "search_history":
-            self.listsHistory({'name':'history', 'category': 'search'}, 'desc', _("Type: "))
+            self.listsHistory({'name': 'history', 'category': 'search'}, 'desc', _("Type: "))
         else:
             printExc()
         CBaseHostClass.endHandleService(self, index, refresh)

@@ -42,25 +42,25 @@ def gettytul():
 class PlayRTSIW(CBaseHostClass): 
  
     def __init__(self):
-        CBaseHostClass.__init__(self, {'history':'PlayRTSIW.tv', 'cookie':'rte.ie.cookie'})
+        CBaseHostClass.__init__(self, {'history': 'PlayRTSIW.tv', 'cookie': 'rte.ie.cookie'})
         self.USER_AGENT = 'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:40.0) Gecko/20100101 Firefox/40.0'
-        self.HEADER = {'User-Agent': self.USER_AGENT, 'DNT':'1', 'Accept': 'text/html'}
+        self.HEADER = {'User-Agent': self.USER_AGENT, 'DNT': '1', 'Accept': 'text/html'}
         self.AJAX_HEADER = dict(self.HEADER)
         self.AJAX_HEADER.update({'X-Requested-With': 'XMLHttpRequest'})
         
-        self.defaultParams = {'header':self.HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
-        self.ITEMS_TYPE_MAP = {'tv':'videos', 'radio':'audios'}
+        self.defaultParams = {'header': self.HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
+        self.ITEMS_TYPE_MAP = {'tv': 'videos', 'radio': 'audios'}
         self.PLAYER_MAP = ['rtr', 'srf', 'rsi', 'swi', 'rts']
-        self.URL_MAP = {'rtr':'https://www.rtr.ch/',
-                        'srf':'https://www.srf.ch/',
-                        'rsi':'https://www.rsi.ch/',
-                        'swi':'https://play.swissinfo.ch/',
-                        'rts':'http://www.rts.ch/'}
+        self.URL_MAP = {'rtr': 'https://www.rtr.ch/',
+                        'srf': 'https://www.srf.ch/',
+                        'rsi': 'https://www.rsi.ch/',
+                        'swi': 'https://play.swissinfo.ch/',
+                        'rts': 'http://www.rts.ch/'}
         
         self.PORTALS_MAP = {}
         for item in self.PLAYER_MAP:
             self.URL_MAP['%s_icon' % item] = self.URL_MAP[item] + 'play/static/img/srg/%s/play%s_logo.png' % (item, item)
-            self.PORTALS_MAP[item] = {'title':item.upper(), 'url':self.URL_MAP[item] + 'play/tv', 'icon':self.URL_MAP['%s_icon' % item]}
+            self.PORTALS_MAP[item] = {'title': item.upper(), 'url': self.URL_MAP[item] + 'play/tv', 'icon': self.URL_MAP['%s_icon' % item]}
         self.SEARCH_ICON_URL = 'https://www.srgssr.ch/fileadmin/dam/images/quicklinks/srgssr-auf-einen-blick.png'
         self.DEFAULT_ICON_URL = 'https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/SRG_SSR_2011_logo.svg/2000px-SRG_SSR_2011_logo.svg.png'
         self.MAIN_URL = None
@@ -87,15 +87,15 @@ class PlayRTSIW(CBaseHostClass):
         for portal in ['rtr', 'rsi', 'srf', 'rts', 'swi']:
             params = dict(cItem)
             params.update(self.PORTALS_MAP[portal])
-            params.update({'portal':portal, 'desc':params['url']})
+            params.update({'portal': portal, 'desc': params['url']})
             if portal == 'swi':
-                params.update({'f_type':'tv', 'category':nextCategory2})
+                params.update({'f_type': 'tv', 'category': nextCategory2})
             else:
-                params.update({'category':nextCategory1})
+                params.update({'category': nextCategory1})
             self.addDir(params)
         
-        MAIN_CAT_TAB = [{'category':'search', 'title': _('Search'), 'search_item':True, 'icon':self.SEARCH_ICON_URL},
-                        {'category':'search_history', 'title': _('Search history'), 'icon':self.SEARCH_ICON_URL}]
+        MAIN_CAT_TAB = [{'category': 'search', 'title': _('Search'), 'search_item': True, 'icon': self.SEARCH_ICON_URL},
+                        {'category': 'search_history', 'title': _('Search history'), 'icon': self.SEARCH_ICON_URL}]
         self.listsTab(MAIN_CAT_TAB, cItem)
         
     def listType(self, cItem):
@@ -105,11 +105,11 @@ class PlayRTSIW(CBaseHostClass):
         
         for item in [('tv', _('TV')), ('radio', _('Radio'))]:
             params = dict(cItem)
-            params.update({'f_type':item[0], 'title':item[1], 'desc':self.getFullUrl('/play/' + item[0])})
+            params.update({'f_type': item[0], 'title': item[1], 'desc': self.getFullUrl('/play/' + item[0])})
             if item[0] == 'tv':
-                params.update({'category':'portal'})
+                params.update({'category': 'portal'})
             else:
-                params.update({'category':'radio_channels'})
+                params.update({'category': 'radio_channels'})
             self.addDir(params)
             
     def listRadioChannels(self, cItem, nextCategory):
@@ -127,13 +127,13 @@ class PlayRTSIW(CBaseHostClass):
             if title == '':
                 title = self.cm.ph.getSearchGroups(item, '''channelNavigationLogo__([^'^"]+?)['"]''')[0].upper()
             params = dict(cItem)
-            params.update({'title':title, 'url':url})
+            params.update({'title': title, 'url': url})
             if 'station=' in url:
                 channelId = self.cm.ph.getSearchGroups(item, '''station=([^'^"]+?)['"]''')[0]
-                params.update({'category':nextCategory, 'f_channel_id':channelId})
+                params.update({'category': nextCategory, 'f_channel_id': channelId})
                 self.addDir(params)
             else:
-                params.update({'good_for_fav':True, 'desc':url})
+                params.update({'good_for_fav': True, 'desc': url})
                 self.addAudio(params)
         
     def listPortalMain(self, cItem):
@@ -149,7 +149,7 @@ class PlayRTSIW(CBaseHostClass):
         
         if type == 'tv':
             params = dict(cItem)
-            params.update({'category':'list_live', 'title':_('Live'), 'url':self.getFullUrl('/play/v2/tv/live/overview'), 'desc':self.getFullUrl('/play/tv/live')})
+            params.update({'category': 'list_live', 'title': _('Live'), 'url': self.getFullUrl('/play/v2/tv/live/overview'), 'desc': self.getFullUrl('/play/tv/live')})
             self.addDir(params)
         
         if type == 'tv':
@@ -157,7 +157,7 @@ class PlayRTSIW(CBaseHostClass):
         else:
             url = '/play/radio/latest/audios?numberOfAudios=100&moduleContext=homepage&channelId=' + cItem['f_channel_id']
         params = dict(cItem)
-        params.update({'category':'list_teaser_items', 'title':_('Latest'), 'url':self.getFullUrl(url)})
+        params.update({'category': 'list_teaser_items', 'title': _('Latest'), 'url': self.getFullUrl(url)})
         self.addDir(params)
         
         if type == 'tv':
@@ -165,12 +165,12 @@ class PlayRTSIW(CBaseHostClass):
         else:
             url = '/play/radio/mostclicked/audios?numberOfAudios=23&moduleContext=homepage&channelId=' + cItem['f_channel_id']
         params = dict(cItem)
-        params.update({'category':'list_teaser_items', 'title':_('Most popular'), 'url':self.getFullUrl(url)})
+        params.update({'category': 'list_teaser_items', 'title': _('Most popular'), 'url': self.getFullUrl(url)})
         self.addDir(params)
         
         if portal != 'swi':
             params = dict(cItem)
-            params.update({'category':'list_days', 'title':_('List by day'), 'icon':'http://icons.iconarchive.com/icons/paomedia/small-n-flat/1024/calendar-icon.png'})
+            params.update({'category': 'list_days', 'title': _('List by day'), 'icon': 'http://icons.iconarchive.com/icons/paomedia/small-n-flat/1024/calendar-icon.png'})
             self.addDir(params)
         
         # chek if categories are available
@@ -181,7 +181,7 @@ class PlayRTSIW(CBaseHostClass):
         try:
             if len(json.loads(data)):
                 params = dict(cItem)
-                params.update({'category':'list_cats', 'title':_('Categories')})
+                params.update({'category': 'list_cats', 'title': _('Categories')})
                 self.addDir(params)
         except Exception:
             printExc()
@@ -201,7 +201,7 @@ class PlayRTSIW(CBaseHostClass):
                 printExc()
             if len(self.cacheShowsAZ):
                 params = dict(cItem)
-                params.update({'category':'list_az', 'title':_('AZ')})
+                params.update({'category': 'list_az', 'title': _('AZ')})
                 self.addDir(params)
     
     def listSubItems(self, cItem):
@@ -231,12 +231,12 @@ class PlayRTSIW(CBaseHostClass):
                     
                     if 'latestModuleUrl' in it: 
                         params = dict(cItem)
-                        params.update({'category':nextCategory2, 'url':self.getFullUrl(it['latestModuleUrl']), 'title':title})
+                        params.update({'category': nextCategory2, 'url': self.getFullUrl(it['latestModuleUrl']), 'title': title})
                         latestSubItems.append(params)
                         
                     if 'mostClickedModuleUrl' in it: 
                         params = dict(cItem)
-                        params.update({'category':nextCategory2, 'url':self.getFullUrl(it['mostClickedModuleUrl']), 'title':title})
+                        params.update({'category': nextCategory2, 'url': self.getFullUrl(it['mostClickedModuleUrl']), 'title': title})
                         mostSubItems.append(params)
                 
                 subItems = []
@@ -244,37 +244,37 @@ class PlayRTSIW(CBaseHostClass):
                 if len(latestSubItems):
                     if 'latestModuleUrl' in item:
                         params = dict(cItem)
-                        params.update({'category':nextCategory2, 'url':self.getFullUrl(item['latestModuleUrl']), 'title':_('--All--')})
+                        params.update({'category': nextCategory2, 'url': self.getFullUrl(item['latestModuleUrl']), 'title': _('--All--')})
                         latestSubItems.insert(0, params)
                     params = dict(cItem)
-                    params.update({'category':nextCategory1, 'title':_('Most recent'), 'sub_items':latestSubItems})
+                    params.update({'category': nextCategory1, 'title': _('Most recent'), 'sub_items': latestSubItems})
                     subItems.append(params)
                 else:
                     if 'latestModuleUrl' in item:
                         params = dict(cItem)
-                        params.update({'category':nextCategory2, 'url':self.getFullUrl(item['latestModuleUrl']), 'title':_('Most recent')})
+                        params.update({'category': nextCategory2, 'url': self.getFullUrl(item['latestModuleUrl']), 'title': _('Most recent')})
                         subItems.append(params)
                 
                 if len(mostSubItems):
                     if 'mostClickedModuleUrl' in item:
                         params = dict(cItem)
-                        params.update({'category':nextCategory2, 'url':self.getFullUrl(item['mostClickedModuleUrl']), 'title':_('--All--')})
+                        params.update({'category': nextCategory2, 'url': self.getFullUrl(item['mostClickedModuleUrl']), 'title': _('--All--')})
                         mostSubItems.insert(0, params)
                     params = dict(cItem)
-                    params.update({'category':nextCategory1, 'title':_('Most recent'), 'sub_items':mostSubItems})
+                    params.update({'category': nextCategory1, 'title': _('Most recent'), 'sub_items': mostSubItems})
                     subItems.append(params)
                 else:
                     if 'mostClickedModuleUrl' in item:
                         params = dict(cItem)
-                        params.update({'category':nextCategory2, 'url':self.getFullUrl(item['mostClickedModuleUrl']), 'title':_('Most recent')})
+                        params.update({'category': nextCategory2, 'url': self.getFullUrl(item['mostClickedModuleUrl']), 'title': _('Most recent')})
                         subItems.append(params)
                 
                 params = dict(cItem)
                 if len(subItems) > 1:
-                    params.update({'category':nextCategory1, 'url':sUrl, 'title':sTitle, 'sub_items':subItems})
+                    params.update({'category': nextCategory1, 'url': sUrl, 'title': sTitle, 'sub_items': subItems})
                     self.addDir(params)
                 elif len(subItems) == 1 and 'sub_items' not in subItems[0]:
-                    params.update({'category':nextCategory2, 'url':subItems[0]['url'], 'title':sTitle})
+                    params.update({'category': nextCategory2, 'url': subItems[0]['url'], 'title': sTitle})
                     self.addDir(params)
         except Exception:
             printExc()
@@ -292,12 +292,12 @@ class PlayRTSIW(CBaseHostClass):
             title = dt.strftime('%d-%m-%Y')
             url = baseUrl % title
             params = dict(cItem)
-            params.update({'good_for_fav':False, 'category':nextCategory, 'title':title, 'url':url})
+            params.update({'good_for_fav': False, 'category': nextCategory, 'title': title, 'url': url})
             self.addDir(params)
             dt = PrevDay(dt)
         
         params = dict(cItem)
-        params.update({'good_for_fav':False, 'title':_('Older'), 'f_date':dt.strftime('%d-%m-%Y')})
+        params.update({'good_for_fav': False, 'title': _('Older'), 'f_date': dt.strftime('%d-%m-%Y')})
         self.addDir(params)
         
     def _listItems(self, cItem, data):
@@ -317,7 +317,7 @@ class PlayRTSIW(CBaseHostClass):
                 descTab.append(item.get('description', ''))
                 
                 params = dict(cItem)
-                params.update({'good_for_fav':True, 'title':title, 'url':url, 'item_id':item['id'], 'popup_url':self.getFullUrl(item['popupUrl']), 'detail_url':self.getFullUrl(item['detailUrl']), 'icon':icon, 'desc':'[/br]'.join(descTab)})
+                params.update({'good_for_fav': True, 'title': title, 'url': url, 'item_id': item['id'], 'popup_url': self.getFullUrl(item['popupUrl']), 'detail_url': self.getFullUrl(item['detailUrl']), 'icon': icon, 'desc': '[/br]'.join(descTab)})
                 if 'downloadHdUrl' in item:
                     params['download_hd_url'] = item['downloadHdUrl']
                 if 'downloadSdUrl' in item:
@@ -343,7 +343,7 @@ class PlayRTSIW(CBaseHostClass):
             sUrl = self.getFullUrl('/play/%s/show/%s/latestEpisodes' % (type, item['id']))
             
             params = dict(cItem)
-            params.update({'good_for_fav':True, 'title':title, 'url':url, 'f_show_url':sUrl, 'icon':icon, 'desc':'[/br]'.join(desc)})
+            params.update({'good_for_fav': True, 'title': title, 'url': url, 'f_show_url': sUrl, 'icon': icon, 'desc': '[/br]'.join(desc)})
             self.addDir(params)
         
     def listTeaserItems(self, cItem):
@@ -370,7 +370,7 @@ class PlayRTSIW(CBaseHostClass):
                 if not item['hasShows']:
                     continue
                 params = dict(cItem)
-                params.update({'good_for_fav':False, 'title':item['id'], 'category':nextCategory, 'f_letters':[item['id']]})
+                params.update({'good_for_fav': False, 'title': item['id'], 'category': nextCategory, 'f_letters': [item['id']]})
                 self.addDir(params)
                 allLetters.append(item['id'])
         except Exception:
@@ -378,7 +378,7 @@ class PlayRTSIW(CBaseHostClass):
         
         if len(allLetters):
             params = dict(cItem)
-            params.update({'good_for_fav':False, 'title':_('All'), 'category':nextCategory, 'f_letters':allLetters})
+            params.update({'good_for_fav': False, 'title': _('All'), 'category': nextCategory, 'f_letters': allLetters})
             self.currList.insert(0, params)
             
     def listAZItems(self, cItem, nextCategory):
@@ -423,7 +423,7 @@ class PlayRTSIW(CBaseHostClass):
             nextPage = self.getFullUrl(data['nextPageUrl'])
             if nextPage != '':
                 params = dict(cItem)
-                params.update({'good_for_fav':False, 'title':_('Next page'), 'f_show_url':nextPage})
+                params.update({'good_for_fav': False, 'title': _('Next page'), 'f_show_url': nextPage})
                 self.addDir(params)
         except Exception:
             printExc()
@@ -444,7 +444,7 @@ class PlayRTSIW(CBaseHostClass):
                 descTab = []
                 
                 params = dict(cItem)
-                params.update({'good_for_fav':True, 'title':title, 'url':url, 'item_id':item['id'], 'popup_url':url, 'url_to_player':urlToPlayer, 'icon':icon, 'desc':'[/br]'.join(descTab)})
+                params.update({'good_for_fav': True, 'title': title, 'url': url, 'item_id': item['id'], 'popup_url': url, 'url_to_player': urlToPlayer, 'icon': icon, 'desc': '[/br]'.join(descTab)})
                 self.addVideo(params)
         except Exception:
             printExc()
@@ -458,7 +458,7 @@ class PlayRTSIW(CBaseHostClass):
         
         baseUrl = 'search?searchQuery={0}&numberOf'.format(pattern)
         for type in ['tv', 'radio']:
-            baseItem = {'name':'category', 'type':'category', 'f_type':type}
+            baseItem = {'name': 'category', 'type': 'category', 'f_type': type}
             subItems = []
             
             countDesc = []
@@ -471,7 +471,7 @@ class PlayRTSIW(CBaseHostClass):
                 data = json.loads(data)
                 if data['numberOfAvailableShows'] > 0:
                     params = dict(baseItem)
-                    params.update({'category':'search_shows', 'title':_('SHOWS'), 'url':cUrl + '100', 'desc':_('Search for "%s", %s, %s %s') % (searchPattern, _(type), data['numberOfAvailableShows'], _('shows'))})
+                    params.update({'category': 'search_shows', 'title': _('SHOWS'), 'url': cUrl + '100', 'desc': _('Search for "%s", %s, %s %s') % (searchPattern, _(type), data['numberOfAvailableShows'], _('shows'))})
                     subItems.append(params)
                 countDesc.append(_('%s shows') % data['numberOfAvailableShows'])
             except Exception:
@@ -488,7 +488,7 @@ class PlayRTSIW(CBaseHostClass):
                 countKey = 'numberOfAvailable' + self.ITEMS_TYPE_MAP[type].title()
                 if data[countKey] > 0:
                     params = dict(baseItem)
-                    params.update({'category':'search_items', 'title':_(self.ITEMS_TYPE_MAP[type].upper()), 'url':cUrl + '100', 'desc':_('Search for "%s", %s, %s %s') % (searchPattern, _(type), data[countKey], _(self.ITEMS_TYPE_MAP[type]))})
+                    params.update({'category': 'search_items', 'title': _(self.ITEMS_TYPE_MAP[type].upper()), 'url': cUrl + '100', 'desc': _('Search for "%s", %s, %s %s') % (searchPattern, _(type), data[countKey], _(self.ITEMS_TYPE_MAP[type]))})
                     subItems.append(params)
                 countDesc.append(_('%s ' + self.ITEMS_TYPE_MAP[type]) % (data[countKey]))
             except Exception:
@@ -497,7 +497,7 @@ class PlayRTSIW(CBaseHostClass):
             
             if len(subItems):
                 params = dict(baseItem)
-                params.update({'category':'sub_items', 'title':_(type.upper()), 'desc':', '.join(countDesc), 'sub_items':subItems})
+                params.update({'category': 'sub_items', 'title': _(type.upper()), 'desc': ', '.join(countDesc), 'sub_items': subItems})
                 self.addDir(params)
                 
     def listSearchItems(self, cItem):
@@ -513,7 +513,7 @@ class PlayRTSIW(CBaseHostClass):
             nextPage = self.getFullUrl(data['nextPageUrl'])
             if nextPage != '':
                 params = dict(cItem)
-                params.update({'good_for_fav':False, 'title':_('Next page'), 'url':nextPage})
+                params.update({'good_for_fav': False, 'title': _('Next page'), 'url': nextPage})
                 self.addDir(params)
         except Exception:
             printExc()
@@ -541,13 +541,13 @@ class PlayRTSIW(CBaseHostClass):
                 return []
             url = self.cm.ph.getSearchGroups(data, '''ATR\.stream\s*?=\s*?\{[^\}]*?['"](https?://[^'^"]+?)['"]''')[0]
             if url != '':
-                linksTab.append({'name':'stream', 'url':url, 'need_resolve':0})
+                linksTab.append({'name': 'stream', 'url': url, 'need_resolve': 0})
             return linksTab
         
         if 'download_sd_url' in cItem:
-            linksTab.append({'url':cItem['download_sd_url'], 'name':_('Download %s') % 'SD', 'need_resolve':0})
+            linksTab.append({'url': cItem['download_sd_url'], 'name': _('Download %s') % 'SD', 'need_resolve': 0})
         if 'download_hd_url' in cItem:
-            linksTab.append({'url':cItem['download_hd_url'], 'name':_('Download %s') % 'HD', 'need_resolve':0})
+            linksTab.append({'url': cItem['download_hd_url'], 'name': _('Download %s') % 'HD', 'need_resolve': 0})
         
         if '/tv/' in cItem['popup_url']: 
             if 'url_to_player' in cItem:
@@ -595,9 +595,9 @@ class PlayRTSIW(CBaseHostClass):
                 else:
                     continue
                 n = item['url'].split('/')
-                url = strwithmeta(item['url'], {'priv_token_url':tokenUrl + '%2F{0}%2F{1}%2F*'.format(n[3], n[4]), 'priv_type':mimeType.lower()})
+                url = strwithmeta(item['url'], {'priv_token_url': tokenUrl + '%2F{0}%2F{1}%2F*'.format(n[3], n[4]), 'priv_type': mimeType.lower()})
                 name = '[%s/%s] %s' % (mimeType, url.split('://', 1)[0].upper(), item['quality'])
-                params = {'name':name, 'url':url, 'need_resolve':1}
+                params = {'name': name, 'url': url, 'need_resolve': 1}
                 if item['quality'].upper() == 'HD':
                     linksTab.append(params)
                 else:
@@ -627,7 +627,7 @@ class PlayRTSIW(CBaseHostClass):
         if type == 'hls':
             urlTab = getDirectM3U8Playlist(videoUrl, checkContent=True, sortWithMaxBitrate=999999999)
         else:
-            urlTab.append({'name':'direct', 'url':videoUrl})
+            urlTab.append({'name': 'direct', 'url': videoUrl})
         return urlTab
         
     def handleService(self, index, refresh=0, searchPattern='', searchType=''):
@@ -644,7 +644,7 @@ class PlayRTSIW(CBaseHostClass):
         
     #MAIN MENU
         if name == None:
-            self.listMainMenu({'name':'category'}, 'type', 'portal')
+            self.listMainMenu({'name': 'category'}, 'type', 'portal')
         elif category == 'type':
             self.listType(self.currItem)
         elif category == 'radio_channels':
@@ -674,11 +674,11 @@ class PlayRTSIW(CBaseHostClass):
     #SEARCH
         elif category in ["search", "search_next_page"]:
             cItem = dict(self.currItem)
-            cItem.update({'search_item':False, 'name':'category'}) 
+            cItem.update({'search_item': False, 'name': 'category'}) 
             self.listSearchResult(cItem, searchPattern, searchType)
     #HISTORIA SEARCH
         elif category == "search_history":
-            self.listsHistory({'name':'history', 'category': 'search'}, 'desc', _("Type: "))
+            self.listsHistory({'name': 'history', 'category': 'search'}, 'desc', _("Type: "))
         else:
             printExc()
         

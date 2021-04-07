@@ -40,7 +40,7 @@ class LivetvhdNetApi(CBaseHostClass):
         self.COOKIE_FILE = GetCookieDir('livetvhdnet.cookie')
         
         self.http_params = {}
-        self.http_params.update({'header':self.HEADER, 'save_cookie': True, 'load_cookie': True, 'cookiefile': self.COOKIE_FILE})
+        self.http_params.update({'header': self.HEADER, 'save_cookie': True, 'load_cookie': True, 'cookiefile': self.COOKIE_FILE})
         
         self.cacheList = {}
         
@@ -72,7 +72,7 @@ class LivetvhdNetApi(CBaseHostClass):
             if initList:
                 rm(self.COOKIE_FILE)
                 params = dict(cItem)
-                params.update({'init_list':False, 'url':'https://livetvhd.net/api/videos', 'title':_('--All--')})
+                params.update({'init_list': False, 'url': 'https://livetvhd.net/api/videos', 'title': _('--All--')})
                 channelsTab.append(params)
                     
                 sts, data = self.cm.getPage('https://livetvhd.net/api/categories')
@@ -81,7 +81,7 @@ class LivetvhdNetApi(CBaseHostClass):
                 data = json_loads(data)
                 for item in data:
                     params = dict(cItem)
-                    params.update({'init_list':False, 'url':'https://livetvhd.net/api/videos/category/' + item['seo_name'], 'title':self.cleanHtmlStr(item['name'])})
+                    params.update({'init_list': False, 'url': 'https://livetvhd.net/api/videos/category/' + item['seo_name'], 'title': self.cleanHtmlStr(item['name'])})
                     channelsTab.append(params)
             else:
                 sts, data = self.cm.getPage(cItem['url'])
@@ -96,7 +96,7 @@ class LivetvhdNetApi(CBaseHostClass):
                     title = self.cleanHtmlStr(item['title'])
                     desc = _('Views: ') + str(item.get('views', ''))
                     params = dict(cItem)
-                    params.update({'type':'video', 'title':title, 'url':url, 'desc':desc, 'icon':self.getFullIconUrl(icon)})
+                    params.update({'type': 'video', 'title': title, 'url': url, 'desc': desc, 'icon': self.getFullIconUrl(icon)})
                     channelsTab.append(params)
         except Exception:
             printExc()
@@ -118,6 +118,6 @@ class LivetvhdNetApi(CBaseHostClass):
         
         videoUrl = cItem['url'] + '?token=' + token 
         
-        videoUrl = strwithmeta(videoUrl, {'Referer':self.MAIN_URL, 'User-Agent':self.HEADER['User-Agent']})
+        videoUrl = strwithmeta(videoUrl, {'Referer': self.MAIN_URL, 'User-Agent': self.HEADER['User-Agent']})
         urlsTab = getDirectM3U8Playlist(videoUrl, checkContent=True)
         return urlsTab

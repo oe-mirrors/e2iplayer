@@ -46,27 +46,27 @@ def gettytul():
     return 'https://freedisc.pl/'
 
 class FreeDiscPL(CBaseHostClass):
-    HTTP_HEADER = {'User-Agent': 'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:40.0) Gecko/20100101 Firefox/40.0', 'Accept': 'text/html', 'Accept-Encoding':'gzip, deflate'}
+    HTTP_HEADER = {'User-Agent': 'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:40.0) Gecko/20100101 Firefox/40.0', 'Accept': 'text/html', 'Accept-Encoding': 'gzip, deflate'}
     AJAX_HEADER = dict(HTTP_HEADER)
-    AJAX_HEADER.update({'X-Requested-With': 'XMLHttpRequest', 'Accept':'application/json, text/javascript, */*; q=0.01', 'Content-Type':'application/json; charset=UTF-8'})
+    AJAX_HEADER.update({'X-Requested-With': 'XMLHttpRequest', 'Accept': 'application/json, text/javascript, */*; q=0.01', 'Content-Type': 'application/json; charset=UTF-8'})
     
     MAIN_URL = 'https://freedisc.pl/'
     SEARCH_URL = MAIN_URL + 'search/get'
     DEFAULT_ICON_URL = "http://i.imgur.com/mANjWqL.png"
 
-    MAIN_CAT_TAB = [{'category':'list_filters', 'title': 'Najnowsze publiczne pliki użytkowników', 'url':MAIN_URL + 'explore/start/get_tabs_pages_data/%s/newest/'},
-                    {'category':'list_filters', 'title': 'Ostatnio przeglądane pliki', 'url':MAIN_URL + 'explore/start/get_tabs_pages_data/%s/visited/'},
-                    {'category':'search', 'title': _('Search'), 'search_item':True},
-                    {'category':'search_history','title': _('Search history')}]
+    MAIN_CAT_TAB = [{'category': 'list_filters', 'title': 'Najnowsze publiczne pliki użytkowników', 'url': MAIN_URL + 'explore/start/get_tabs_pages_data/%s/newest/'},
+                    {'category': 'list_filters', 'title': 'Ostatnio przeglądane pliki', 'url': MAIN_URL + 'explore/start/get_tabs_pages_data/%s/visited/'},
+                    {'category': 'search', 'title': _('Search'), 'search_item': True},
+                    {'category': 'search_history', 'title': _('Search history')}]
     
-    FILTERS_TAB = [{'title':_('Movies'), 'filter':'movies'},
-                   {'title':_('Music'), 'filter':'music'}]
+    FILTERS_TAB = [{'title': _('Movies'), 'filter': 'movies'},
+                   {'title': _('Music'), 'filter': 'music'}]
                    #{'title':_('Pictures'),  'filter':'pictures'} ]
-    TYPES = {'movies':7, 'music':6}#, 'pictures':2}
+    TYPES = {'movies': 7, 'music': 6}#, 'pictures':2}
     
     def __init__(self):
-        CBaseHostClass.__init__(self, {'history':'  FreeDiscPL.tv', 'cookie':'FreeDiscPL.cookie'})
-        self.defaultParams = {'with_metadata':True, 'ignore_http_code_ranges':[(410, 410), (404, 404)], 'header':self.HTTP_HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
+        CBaseHostClass.__init__(self, {'history': '  FreeDiscPL.tv', 'cookie': 'FreeDiscPL.cookie'})
+        self.defaultParams = {'with_metadata': True, 'ignore_http_code_ranges': [(410, 410), (404, 404)], 'header': self.HTTP_HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
         self.loggedIn = None
         self.login = ''
         self.password = ''
@@ -131,7 +131,7 @@ class FreeDiscPL(CBaseHostClass):
                     header = dict(self.HTTP_HEADER)
                     header['Accept'] = 'image/png,image/*;q=0.8,*/*;q=0.5'
                     params = dict(self.defaultParams)
-                    params.update({'maintype': 'image', 'subtypes':['jpeg', 'png'], 'check_first_bytes':['\xFF\xD8', '\xFF\xD9', '\x89\x50\x4E\x47'], 'header':header})
+                    params.update({'maintype': 'image', 'subtypes': ['jpeg', 'png'], 'check_first_bytes': ['\xFF\xD8', '\xFF\xD9', '\x89\x50\x4E\x47'], 'header': header})
                     filePath = GetTmpDir('.iptvplayer_captcha.jpg')
                     rm(filePath)
                     ret = self.cm.saveWebFile(filePath, imgUrl.replace('&amp;', '&'), params)
@@ -154,7 +154,7 @@ class FreeDiscPL(CBaseHostClass):
                     item['title'] = _('Answer')
                     item['input']['text'] = ''
                     params['list'].append(item)
-                    params['vk_params'] = {'invert_letters_case':True}
+                    params['vk_params'] = {'invert_letters_case': True}
 
                     ret = 0
                     retArg = self.sessionEx.waitForFinishOpen(IPTVMultipleInputBox, params)
@@ -214,7 +214,7 @@ class FreeDiscPL(CBaseHostClass):
                 title = self.cm.ph.getSearchGroups(item, '''title=['"]([^'^"]+?)['"]''')[0]
                 
                 params = dict(cItem)
-                params.update({'title':self.cleanHtmlStr(title), 'url':self.getFullUrl(url), 'icon':self.getFullIconUrl(icon), 'desc': self.cleanHtmlStr(item)})
+                params.update({'title': self.cleanHtmlStr(title), 'url': self.getFullUrl(url), 'icon': self.getFullIconUrl(icon), 'desc': self.cleanHtmlStr(item)})
                 
                 if 'file_icon_7' in item:
                     self.addVideo(params)
@@ -226,14 +226,14 @@ class FreeDiscPL(CBaseHostClass):
             printExc()
         
         params = dict(cItem)
-        params.update({'title':_('Next page'), 'page':page + 1})
+        params.update({'title': _('Next page'), 'page': page + 1})
         self.addDir(params)
         
     def listItems2(self, cItem, nextCategory):
         printDBG("FreeDiscPL.listItems2 cItem[%s]" % (cItem))
         page = cItem.get('page', 0)
         
-        post_data = {"search_phrase":cItem.get('f_search_pattern', ''), "search_type":cItem.get('f_search_type', ''), "search_saved":0, "pages":0, "limit":0}
+        post_data = {"search_phrase": cItem.get('f_search_pattern', ''), "search_type": cItem.get('f_search_type', ''), "search_saved": 0, "pages": 0, "limit": 0}
         if page > 0:
             post_data['search_page'] = page
         
@@ -261,12 +261,12 @@ class FreeDiscPL(CBaseHostClass):
                 desc = ' | '.join([item['date_add_format'], item['size_format']])
                 desc += '[/br]' + (_('Added by: %s, directory: %s') % (userItem['display'], dirItem['name']))
                 params = dict(cItem)
-                params.update({'good_for_fav':True, 'f_user_item':userItem, 'f_dir_item':dirItem, 'category':nextCategory, 'title':self.cleanHtmlStr(title), 'url':self.getFullUrl(url), 'icon':self.getFullIconUrl(icon), 'desc':desc, 'f_type':item.get('type_fk', '')})
+                params.update({'good_for_fav': True, 'f_user_item': userItem, 'f_dir_item': dirItem, 'category': nextCategory, 'title': self.cleanHtmlStr(title), 'url': self.getFullUrl(url), 'icon': self.getFullIconUrl(icon), 'desc': desc, 'f_type': item.get('type_fk', '')})
                 if params['f_type'] in ['7', '6']:
                     self.addDir(params)
             if data['pages'] > page:
                 params = dict(cItem)
-                params.update({'good_for_fav':False, 'title':_('Next page'), 'page':page + 1})
+                params.update({'good_for_fav': False, 'title': _('Next page'), 'page': page + 1})
                 self.addDir(params)
         except Exception:
             printExc()
@@ -293,14 +293,14 @@ class FreeDiscPL(CBaseHostClass):
                 desc.append('Rozmiar plików: %s' % userItem['files_size_format'])
                 desc.append('Ilość pobrań: %s' % userItem['filesCount'])
                 params = dict(cItem)
-                params.update({'good_for_fav':True, 'category':nextCategory, 'title':userItem['display'], 'url':self.getFullUrl(url), 'f_user_id':userItem['url'], 'f_dir_id':userItem['userRootDirID'], 'icon':'', 'desc':'[/br]'.join(desc)})
+                params.update({'good_for_fav': True, 'category': nextCategory, 'title': userItem['display'], 'url': self.getFullUrl(url), 'f_user_id': userItem['url'], 'f_dir_id': userItem['userRootDirID'], 'icon': '', 'desc': '[/br]'.join(desc)})
                 self.addDir(params)
             if dirItem != {}:
                 url = '/%s,d-%s,%s' % (userItem['url'], dirItem['id'], dirItem['name_url'])
                 desc = ['Katalogów: %s' % dirItem['dir_count']]
                 desc.append('Plików: %s' % dirItem['file_count'])
                 params = dict(cItem)
-                params.update({'good_for_fav':True, 'category':nextCategory, 'title':dirItem['name'], 'url':self.getFullUrl(url), 'f_user_id':userItem['url'], 'f_dir_id':dirItem['id'], 'icon':'', 'desc':'[/br]'.join(desc)})
+                params.update({'good_for_fav': True, 'category': nextCategory, 'title': dirItem['name'], 'url': self.getFullUrl(url), 'f_user_id': userItem['url'], 'f_dir_id': dirItem['id'], 'icon': '', 'desc': '[/br]'.join(desc)})
                 self.addDir(params)
         except Exception:
             printExc()
@@ -347,7 +347,7 @@ class FreeDiscPL(CBaseHostClass):
                     desc = ['Katalogów: %s' % item['dir_count']]
                     desc.append('Plików: %s' % item['file_count'])
                     params = dict(cItem)
-                    params.update({'good_for_fav':True, 'title':title, 'url':self.getFullUrl(url), 'icon':dirIcon, 'f_dir_id':item['id'], 'f_prev_dir_id':dirId, 'prev_url':cItem['url'], 'desc':'[/br]'.join(desc)})
+                    params.update({'good_for_fav': True, 'title': title, 'url': self.getFullUrl(url), 'icon': dirIcon, 'f_dir_id': item['id'], 'f_prev_dir_id': dirId, 'prev_url': cItem['url'], 'desc': '[/br]'.join(desc)})
                     self.addDir(params)
             
             # now files data
@@ -374,7 +374,7 @@ class FreeDiscPL(CBaseHostClass):
                     title = self.cleanHtmlStr(item['name'])
                     desc = ' | '.join([item['date_add_format'], item['size_format']])
                     params = dict(cItem)
-                    params.update({'good_for_fav':True, 'title':title, 'url':self.getFullUrl(url), 'icon':self.getFullIconUrl(icon), 'desc':desc, 'f_type':item.get('type_fk', '')})
+                    params.update({'good_for_fav': True, 'title': title, 'url': self.getFullUrl(url), 'icon': self.getFullIconUrl(icon), 'desc': desc, 'f_type': item.get('type_fk', '')})
                     if params['f_type'] == '7':
                         self.addVideo(params)
                     else:
@@ -407,7 +407,7 @@ class FreeDiscPL(CBaseHostClass):
                 desc = ['Katalogów: %s' % item['dir_count']]
                 desc.append('Plików: %s' % item['file_count'])
                 params = dict(cItem)
-                params.update({'good_for_fav':True, 'title':title, 'url':self.getFullUrl(url), 'icon':dirIcon, 'f_dir_id':item['id'], 'f_prev_dir_id':dirId, 'prev_url':cItem['url'], 'desc':'[/br]'.join(desc)})
+                params.update({'good_for_fav': True, 'title': title, 'url': self.getFullUrl(url), 'icon': dirIcon, 'f_dir_id': item['id'], 'f_prev_dir_id': dirId, 'prev_url': cItem['url'], 'desc': '[/br]'.join(desc)})
                 self.currList.insert(0, params)
         except Exception:
             printExc()
@@ -423,7 +423,7 @@ class FreeDiscPL(CBaseHostClass):
         
         links = []
         if self.cm.isValidUrl(fav_data):
-            links = self.getLinksForVideo({'url':fav_data})
+            links = self.getLinksForVideo({'url': fav_data})
         else:
             try:
                 cItem = json_loads(fav_data)
@@ -461,7 +461,7 @@ class FreeDiscPL(CBaseHostClass):
             params['header'] = dict(self.AJAX_HEADER)
             params['header']['Referer'] = self.getMainUrl()
             
-            post_data = {"email_login":self.login,"password_login":self.password,"remember_login":1,"provider_login":""}
+            post_data = {"email_login": self.login, "password_login": self.password, "remember_login": 1, "provider_login": ""}
             sts, data = self.getPage(self.getFullUrl('/account/signin_set'), params, json_dumps(post_data))
             if not sts:
                 return None
@@ -482,7 +482,7 @@ class FreeDiscPL(CBaseHostClass):
     def listSearchResult(self, cItem, searchPattern, searchType):
         printDBG("FreeDiscPL.listSearchResult cItem[%s], searchPattern[%s] searchType[%s]" % (cItem, searchPattern, searchType))
         cItem = dict(cItem)
-        cItem.update({'url':self.SEARCH_URL, 'category':'list_items2', 'f_search_pattern':searchPattern, 'f_search_type':searchType})
+        cItem.update({'url': self.SEARCH_URL, 'category': 'list_items2', 'f_search_pattern': searchPattern, 'f_search_type': searchType})
         self.listItems2(cItem, 'explore_item')
 
     def handleService(self, index, refresh=0, searchPattern='', searchType=''):
@@ -501,7 +501,7 @@ class FreeDiscPL(CBaseHostClass):
         
     #MAIN MENU
         if name == None:
-            self.listsTab(self.MAIN_CAT_TAB, {'name':'category'})
+            self.listsTab(self.MAIN_CAT_TAB, {'name': 'category'})
         elif category == 'list_filters':
             cItem = dict(self.currItem)
             cItem['category'] = 'list_items'
@@ -517,11 +517,11 @@ class FreeDiscPL(CBaseHostClass):
     #SEARCH
         elif category in ["search", "search_next_page"]:
             cItem = dict(self.currItem)
-            cItem.update({'search_item':False, 'name':'category'}) 
+            cItem.update({'search_item': False, 'name': 'category'}) 
             self.listSearchResult(cItem, searchPattern, searchType)
     #HISTORIA SEARCH
         elif category == "search_history":
-            self.listsHistory({'name':'history', 'category': 'search'}, 'desc', _("Type: "))
+            self.listsHistory({'name': 'history', 'category': 'search'}, 'desc', _("Type: "))
         else:
             printExc()
         

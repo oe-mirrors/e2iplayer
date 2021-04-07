@@ -47,12 +47,12 @@ def gettytul():
 
 class ustvgo(CBaseHostClass):
     def __init__(self):
-        CBaseHostClass.__init__(self, {'history':'ustvgo.tv', 'cookie':'ustvgo.cookie'})
+        CBaseHostClass.__init__(self, {'history': 'ustvgo.tv', 'cookie': 'ustvgo.cookie'})
         
         self.USER_AGENT = 'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:40.0) Gecko/20100101 Firefox/40.0'
-        self.HEADER = {'User-Agent': self.USER_AGENT, 'DNT':'1', 'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8', 'Accept-Language':'pl,en-US;q=0.7,en;q=0.3', 'Accept-Encoding':'gzip, deflate'}
+        self.HEADER = {'User-Agent': self.USER_AGENT, 'DNT': '1', 'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8', 'Accept-Language': 'pl,en-US;q=0.7,en;q=0.3', 'Accept-Encoding': 'gzip, deflate'}
         self.MAIN_URL = None
-        self.defaultParams = {'with_metadata':True, 'header':self.HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
+        self.defaultParams = {'with_metadata': True, 'header': self.HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
 
     def getPage(self, baseUrl, addParams={}, post_data=None):
         if addParams == {}:
@@ -67,7 +67,7 @@ class ustvgo(CBaseHostClass):
             else:
                 return urllib.parse.urljoin(baseUrl, url)
             
-        addParams['cloudflare_params'] = {'domain':self.up.getDomain(baseUrl), 'cookie_file':self.COOKIE_FILE, 'User-Agent':self.USER_AGENT, 'full_url_handle':_getFullUrl}
+        addParams['cloudflare_params'] = {'domain': self.up.getDomain(baseUrl), 'cookie_file': self.COOKIE_FILE, 'User-Agent': self.USER_AGENT, 'full_url_handle': _getFullUrl}
         
         url = baseUrl
         urlParams = deepcopy(addParams)
@@ -138,12 +138,12 @@ class ustvgo(CBaseHostClass):
     def listMainMenu(self, cItem):
         if self.MAIN_URL == None:
             self.selectDomain()
-        MAIN_CAT_TAB = [{'category':'list_category', 'title': 'Home', 'url':self.getFullUrl('/')},
-                        {'category':'list_category', 'title': 'Entertainment', 'url':self.getFullUrl('/category/entertainment/')},
-                        {'category':'list_category', 'title': 'News', 'url':self.getFullUrl('/category/news/')},
-                        {'category':'list_category', 'title': 'Sports', 'url':self.getFullUrl('/category/sports/')},
-                        {'category':'list_category', 'title': 'Kids', 'url':self.getFullUrl('/category/kids/')},
-                        {'category':'list_items', 'title': _('All'), 'url':self.getFullUrl('/')},]
+        MAIN_CAT_TAB = [{'category': 'list_category', 'title': 'Home', 'url': self.getFullUrl('/')},
+                        {'category': 'list_category', 'title': 'Entertainment', 'url': self.getFullUrl('/category/entertainment/')},
+                        {'category': 'list_category', 'title': 'News', 'url': self.getFullUrl('/category/news/')},
+                        {'category': 'list_category', 'title': 'Sports', 'url': self.getFullUrl('/category/sports/')},
+                        {'category': 'list_category', 'title': 'Kids', 'url': self.getFullUrl('/category/kids/')},
+                        {'category': 'list_items', 'title': _('All'), 'url': self.getFullUrl('/')}, ]
         self.listsTab(MAIN_CAT_TAB, cItem)
     
     def listItems(self, cItem):
@@ -159,7 +159,7 @@ class ustvgo(CBaseHostClass):
             url = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''\shref=['"]([^"^']+?)['"]''')[0])
             title = self.cleanHtmlStr(item)
             params = dict(cItem)
-            params = {'good_for_fav': True, 'title':title, 'url':url}
+            params = {'good_for_fav': True, 'title': title, 'url': url}
             self.addVideo(params)
 
     def listCategory(self, cItem):
@@ -184,12 +184,12 @@ class ustvgo(CBaseHostClass):
                 continue
             icon = self.getFullIconUrl(self.cm.ph.getSearchGroups(item, '''\sdata-lazy-src=['"]([^"^']+?)['"]''')[0])
             params = dict(cItem)
-            params = {'good_for_fav': True, 'title':title, 'url':url, 'icon':icon}
+            params = {'good_for_fav': True, 'title': title, 'url': url, 'icon': icon}
             self.addVideo(params)
 
         if nextPage != '':
             params = dict(cItem)
-            params.update({'title':_("Next page"), 'url':self.getFullUrl(nextPage), 'page':page + 1})
+            params.update({'title': _("Next page"), 'url': self.getFullUrl(nextPage), 'page': page + 1})
             self.addDir(params)
         
     def getLinksForVideo(self, cItem):
@@ -228,7 +228,7 @@ class ustvgo(CBaseHostClass):
         ret = js_execute('\n'.join(jscode))
         if ret['sts'] and 0 == ret['code']:
             url = "".join(ret['data'].split())
-            url = strwithmeta(url, {'User-Agent': self.USER_AGENT, 'Origin':self.MAIN_URL, 'Referer':cItem['url']})
+            url = strwithmeta(url, {'User-Agent': self.USER_AGENT, 'Origin': self.MAIN_URL, 'Referer': cItem['url']})
             return getDirectM3U8Playlist(url)
         else:
             return []
@@ -250,7 +250,7 @@ class ustvgo(CBaseHostClass):
         
     #MAIN MENU
         if name == None:
-            self.listMainMenu({'name':'category'})
+            self.listMainMenu({'name': 'category'})
         elif category == 'list_category':
             self.listCategory(self.currItem)
         elif category == 'list_items':

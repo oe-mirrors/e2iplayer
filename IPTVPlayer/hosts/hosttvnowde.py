@@ -47,30 +47,30 @@ def gettytul():
 class TVNowDE(CBaseHostClass):
  
     def __init__(self):
-        CBaseHostClass.__init__(self, {'history':'movs4u.com', 'cookie':'movs4u.com.cookie'})
+        CBaseHostClass.__init__(self, {'history': 'movs4u.com', 'cookie': 'movs4u.com.cookie'})
         self.DEFAULT_ICON_URL = 'https://www.tvnow.de/styles/modules/header/tvnow.png'
         self.USER_AGENT = 'User-Agent=Mozilla/5.0 (Windows NT 6.1; WOW64; rv:40.0) Gecko/20100101 Firefox/40.0'
-        self.HEADER = {'User-Agent': self.USER_AGENT, 'DNT':'1', 'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8', 'Accept-Encoding':'gzip, deflate'}
+        self.HEADER = {'User-Agent': self.USER_AGENT, 'DNT': '1', 'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8', 'Accept-Encoding': 'gzip, deflate'}
         self.AJAX_HEADER = dict(self.HEADER)
         self.AJAX_HEADER.update({'X-Requested-With': 'XMLHttpRequest'})
         self.MAIN_URL = 'https://api.tvnow.de/v3/'
         self.cacheLinks = {}
         self.cacheAllAZ = []
-        self.cacheAZ = {'list':[], 'cache':{}}
-        self.defaultParams = {'header':self.HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
+        self.cacheAZ = {'list': [], 'cache': {}}
+        self.defaultParams = {'header': self.HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
     
-        self.MAIN_CAT_TAB = [{'category':'az', 'title': _('A-Z')},
-                             {'category':'missed', 'title': _('Missed the program?')},
-                             {'category':'channels', 'title': _('Channels')},
-                             {'category':'list_cats', 'title': _('Categories')},
+        self.MAIN_CAT_TAB = [{'category': 'az', 'title': _('A-Z')},
+                             {'category': 'missed', 'title': _('Missed the program?')},
+                             {'category': 'channels', 'title': _('Channels')},
+                             {'category': 'list_cats', 'title': _('Categories')},
                             ]
-        self.CHANNELS_TAB = [{'title':'RTL', 'f_channel':'rtl'},
-                             {'title':'Vox', 'f_channel':'vox'},
-                             {'title':'RTL 2', 'f_channel':'rtl2'},
-                             {'title':'Nitro', 'f_channel':'nitro'},
-                             {'title':'N-TV', 'f_channel':'ntv'},
-                             {'title':'RTLplus', 'f_channel':'rtlplus'},
-                             {'title':'Super RTL','f_channel':'superrtl'},
+        self.CHANNELS_TAB = [{'title': 'RTL', 'f_channel': 'rtl'},
+                             {'title': 'Vox', 'f_channel': 'vox'},
+                             {'title': 'RTL 2', 'f_channel': 'rtl2'},
+                             {'title': 'Nitro', 'f_channel': 'nitro'},
+                             {'title': 'N-TV', 'f_channel': 'ntv'},
+                             {'title': 'RTLplus', 'f_channel': 'rtlplus'},
+                             {'title': 'Super RTL', 'f_channel': 'superrtl'},
                             ]
         
     def getPage(self, baseUrl, addParams={}, post_data=None):
@@ -83,7 +83,7 @@ class TVNowDE(CBaseHostClass):
             else:
                 return urllib.parse.urljoin(baseUrl, url)
             
-        addParams['cloudflare_params'] = {'domain':self.up.getDomain(baseUrl), 'cookie_file':self.COOKIE_FILE, 'User-Agent':self.USER_AGENT, 'full_url_handle':_getFullUrl}
+        addParams['cloudflare_params'] = {'domain': self.up.getDomain(baseUrl), 'cookie_file': self.COOKIE_FILE, 'User-Agent': self.USER_AGENT, 'full_url_handle': _getFullUrl}
         sts, data = self.cm.getPageCFProtection(baseUrl, addParams, post_data)
         return sts, data
         
@@ -112,7 +112,7 @@ class TVNowDE(CBaseHostClass):
                 title = self.getStr(item, 'title')
                 icon = 'https://ais.tvnow.de/tvnow/cms/{0}/300x169/image2.jpg'.format(self.getStr(item, 'defaultImage'))
                 params = dict(cItem)
-                params.update({'category':nextCategory, 'sub_key':'movies', 'title':title, 'url':url, 'icon':icon})
+                params.update({'category': nextCategory, 'sub_key': 'movies', 'title': title, 'url': url, 'icon': icon})
                 self.addDir(params)
         except Exception:
             printExc()
@@ -123,12 +123,12 @@ class TVNowDE(CBaseHostClass):
         channelList = list(self.CHANNELS_TAB)
         
         if withWatchBox:
-            channelList.append({'title':'WatchBox','f_channel':'watchbox'})
+            channelList.append({'title': 'WatchBox', 'f_channel': 'watchbox'})
         else:
             for item in self.CHANNELS_TAB:
                 allChannels.append(item['f_channel'])
         
-        channelList.insert(0, {'title':_('--All--'), 'f_channels':allChannels})
+        channelList.insert(0, {'title': _('--All--'), 'f_channels': allChannels})
         for item in channelList:
             if 'f_channel' in item:
                 icon = 'https://www.tvnow.de/styles/modules/headerstations/%s_active.png' % item['f_channel']
@@ -138,7 +138,7 @@ class TVNowDE(CBaseHostClass):
                 fChannels = item['f_channels']
             
             params = dict(cItem)
-            params.update({'category':nextCategory, 'title':item['title'], 'icon':icon, 'f_channels':fChannels})
+            params.update({'category': nextCategory, 'title': item['title'], 'icon': icon, 'f_channels': fChannels})
             self.addDir(params)
             
     def addMissedDay(self, cItem, nextCategory):
@@ -156,7 +156,7 @@ class TVNowDE(CBaseHostClass):
             url = '/movies?fields=*,format,paymentPaytypes,pictures,trailers,packages&filter=%7B%22BroadcastStartDate%22:%7B%22between%22:%7B%22start%22:%22{0}+00:00:00%22,%22end%22:%22{1}+23:59:59%22%7D%7D%7D&maxPerPage=200&order=BroadcastStartDate+asc'.format(t, t)
             url = self.getFullUrl(url)
             params = dict(cItem)
-            params.update({'category':nextCategory, 'url':url, 'title':title, 'icon':cItem.get('icon', '')})
+            params.update({'category': nextCategory, 'url': url, 'title': title, 'icon': cItem.get('icon', '')})
             self.addDir(params)
         
     def listCats(self, cItem, nextCategory):
@@ -166,7 +166,7 @@ class TVNowDE(CBaseHostClass):
         #["Soap", "Action", "Crime", "Ratgeber", "Comedy", "Show", "Docutainment", "Drama", "Tiere", "News", "Mags", "Romantik", "Horror", "Familie", "Kochen", "Auto", "Sport", "Reportage und Dokumentationen", "Sitcom", "Mystery", "Lifestyle", "Musik", "Spielfilm", "Anime"]
         for item in genres:
             params = dict(cItem)
-            params = {'good_for_fav': False, 'title':item, 'f_genre':item.lower()}
+            params = {'good_for_fav': False, 'title': item, 'f_genre': item.lower()}
             params['category'] = nextCategory
             self.addDir(params)
             
@@ -197,7 +197,7 @@ class TVNowDE(CBaseHostClass):
         printDBG("TVNowDE.listAZ")
         
         self.fillAZCache(cItem)
-        self.cacheAZ = {'list':[], 'cache':{}}
+        self.cacheAZ = {'list': [], 'cache': {}}
         fChannels = cItem.get('f_channels', [])
         
         try:
@@ -216,7 +216,7 @@ class TVNowDE(CBaseHostClass):
                 else:
                     desc = ''
                 
-                params = {'good_for_fav':True, 'orig_item':item, 'f_station':station, 'f_name':name, 'title':title, 'desc':desc}
+                params = {'good_for_fav': True, 'orig_item': item, 'f_station': station, 'f_name': name, 'title': title, 'desc': desc}
                 if not letter in self.cacheAZ['list']:
                     self.cacheAZ['list'].append(letter)
                     self.cacheAZ['cache'][letter] = []
@@ -233,12 +233,12 @@ class TVNowDE(CBaseHostClass):
         self.cacheAZ['list'].sort()
         if len(fChannels) and len(self.cacheAZ['list']) > 1:
             params = dict(cItem)
-            params = {'name':'category', 'category':nextCategory, 'f_letter':'all', 'title':_('--All--')}
+            params = {'name': 'category', 'category': nextCategory, 'f_letter': 'all', 'title': _('--All--')}
             self.addDir(params)
             
         for letter in self.cacheAZ['list']:
             params = dict(cItem)
-            params = {'name':'category', 'category':nextCategory, 'f_letter':letter, 'title':letter}
+            params = {'name': 'category', 'category': nextCategory, 'f_letter': letter, 'title': letter}
             self.addDir(params)
                 
     def listItemsByLetter(self, cItem, nextCategory):
@@ -249,7 +249,7 @@ class TVNowDE(CBaseHostClass):
                 tab = self.cacheAZ['cache'].get(letter, [])
                 for item in tab:
                     params = dict(item)
-                    params.update({'name':'category', 'category':nextCategory})
+                    params.update({'name': 'category', 'category': nextCategory})
                     self.addDir(params)
             
     def listCatsItems(self, cItem, nextCategory):
@@ -275,7 +275,7 @@ class TVNowDE(CBaseHostClass):
                 name = self.cleanHtmlStr(self.getStr(item, 'seoUrl'))
                 desc = self.cleanHtmlStr(self.getStr(item, 'metaDescription'))
                 
-                params = {'name':'category', 'good_for_fav':True, 'orig_item':item, 'category':nextCategory, 'f_station':station, 'f_name':name, 'title':title, 'icon':icon, 'desc':desc}
+                params = {'name': 'category', 'good_for_fav': True, 'orig_item': item, 'category': nextCategory, 'f_station': station, 'f_name': name, 'title': title, 'icon': icon, 'desc': desc}
                 self.addDir(params)
 
                 categoryId = self.getStr(item, 'categoryId')
@@ -310,7 +310,7 @@ class TVNowDE(CBaseHostClass):
                         
                         if 0 == len(containers):
                             continue
-                        params = {'name':'category', 'category':'list_tab_items', 'f_containers_items':containers, 'title':title, 'icon':cItem.get('icon', ''), 'desc':cItem.get('desc', '')}
+                        params = {'name': 'category', 'category': 'list_tab_items', 'f_containers_items': containers, 'title': title, 'icon': cItem.get('icon', ''), 'desc': cItem.get('desc', '')}
                         self.addDir(params)
                     except Exception:
                         printExc()
@@ -330,7 +330,7 @@ class TVNowDE(CBaseHostClass):
                             continue
                         title = '%s/%s' % (year, m.zfill(2))
                         url = self.getFullUrl('/movies?fields=*,format,paymentPaytypes,pictures,trailers,packages&filter=%7B%22BroadcastStartDate%22:%7B%22between%22:%7B%22start%22:%22{0}-{1}-{2}+00:00:00%22,%22end%22:+%22{3}-{4}-{5}+23:59:59%22%7D%7D,+%22FormatId%22+:+{6}%7D&maxPerPage=300&order=BroadcastStartDate+desc'.format(year, m.zfill(2), '01', year, m.zfill(2), str(days).zfill(2), id))
-                        params = {'name':'category', 'category':'list_video_items', 'url':url, 'title':title, 'icon':cItem.get('icon', ''), 'desc':cItem.get('desc', '')}
+                        params = {'name': 'category', 'category': 'list_video_items', 'url': url, 'title': title, 'icon': cItem.get('icon', ''), 'desc': cItem.get('desc', '')}
                         self.addDir(params)
                 self.currList.reverse()
                     
@@ -397,7 +397,7 @@ class TVNowDE(CBaseHostClass):
                         desc = ' | '.join(descTab) + '[/br]' + desc
                     
                     url = '/%s/%s' % (seoUrlFormat, seoUrlItem)
-                    params = {'good_for_fav':True, 'orig_item':item, 'dashclear':urlDashClear, 'f_seo_url_format':seoUrlFormat, 'f_seo_url_item':seoUrlItem, 'f_station':station, 'title':title, 'url':url, 'icon':icon, 'desc':desc}
+                    params = {'good_for_fav': True, 'orig_item': item, 'dashclear': urlDashClear, 'f_seo_url_format': seoUrlFormat, 'f_seo_url_item': seoUrlItem, 'f_station': station, 'title': title, 'url': url, 'icon': icon, 'desc': desc}
                     self.addVideo(params)
                 except Exception:
                     printExc()
@@ -508,7 +508,7 @@ class TVNowDE(CBaseHostClass):
         
     #MAIN MENU
         if name == None:
-            self.listsTab(self.MAIN_CAT_TAB, {'name':'category'})
+            self.listsTab(self.MAIN_CAT_TAB, {'name': 'category'})
         elif category == 'channels':
             self.listChannelsCats(self.currItem, 'list_video_items')
         elif category == 'missed':
@@ -536,11 +536,11 @@ class TVNowDE(CBaseHostClass):
     #SEARCH
         elif category in ["search", "search_next_page"]:
             cItem = dict(self.currItem)
-            cItem.update({'search_item':False, 'name':'category'}) 
+            cItem.update({'search_item': False, 'name': 'category'}) 
             self.listSearchResult(cItem, searchPattern, searchType)
     #HISTORIA SEARCH
         elif category == "search_history":
-            self.listsHistory({'name':'history', 'category': 'search'}, 'desc', _("Type: "))
+            self.listsHistory({'name': 'history', 'category': 'search'}, 'desc', _("Type: "))
         else:
             printExc()
         

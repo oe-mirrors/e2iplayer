@@ -75,7 +75,7 @@ class ShowsportTVApi(CBaseHostClass):
             if not url.startswith('http'):
                 continue
             params = dict(cItem)
-            params.update({'abc_cat':'list_videos', 'title':title, 'url':url, 'icon':icon, 'desc':desc})
+            params.update({'abc_cat': 'list_videos', 'title': title, 'url': url, 'icon': icon, 'desc': desc})
             channelsTab.append(params)
         return channelsTab
         
@@ -104,7 +104,7 @@ class ShowsportTVApi(CBaseHostClass):
             else:
                 url = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''switchServer\(\s*['"]([^'^"]+?)['"]''')[0])
             params = dict(cItem)
-            params.update({'type':'video', 'title':'%s [%s]' % (cItem['title'], self.cleanHtmlStr(item)), 'url':url})
+            params.update({'type': 'video', 'title': '%s [%s]' % (cItem['title'], self.cleanHtmlStr(item)), 'url': url})
             channelsTab.append(params)
         return channelsTab
         
@@ -124,7 +124,7 @@ class ShowsportTVApi(CBaseHostClass):
         for dat in data:
             desc = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(dat, '<i', '</td>')[1])
             params = dict(cItem)
-            params.update({'type':'marker', 'title':desc})
+            params.update({'type': 'marker', 'title': desc})
             channelsTab.append(params)
                 
             dat = self.cm.ph.getAllItemsBeetwenNodes(dat, ('<tr', '>', 'e_row'), ('</tr', '>'))
@@ -140,7 +140,7 @@ class ShowsportTVApi(CBaseHostClass):
                 if 'blink' in item:
                     title = '[LIVE] ' + title
                 params = dict(cItem)
-                params.update({'abc_cat':'list_videos', 'title':title, 'url':url, 'icon':icon, 'desc':desc})
+                params.update({'abc_cat': 'list_videos', 'title': title, 'url': url, 'icon': icon, 'desc': desc})
                 channelsTab.append(params)
         return channelsTab
         
@@ -150,7 +150,7 @@ class ShowsportTVApi(CBaseHostClass):
         
         category = cItem.get('abc_cat', None)
         if category == None:
-            for item in [{'title':_('Channels'), 'abc_cat':'list_channels'}, {'title':_('Schedule'), 'abc_cat':'list_schedule'}]:
+            for item in [{'title': _('Channels'), 'abc_cat': 'list_channels'}, {'title': _('Schedule'), 'abc_cat': 'list_schedule'}]:
                 params = dict(cItem)
                 params.update(item)
                 channelsTab.append(params)

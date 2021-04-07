@@ -47,7 +47,7 @@ class InternetowaApi(CBaseHostClass):
         self.COOKIE_FILE = GetCookieDir('internetowa.ws.cookie')
 
         self.http_params = {}
-        self.http_params.update({'header':self.HTTP_HEADER, 'save_cookie': True, 'load_cookie': True, 'cookiefile': self.COOKIE_FILE})
+        self.http_params.update({'header': self.HTTP_HEADER, 'save_cookie': True, 'load_cookie': True, 'cookiefile': self.COOKIE_FILE})
         self.loggedIn = False
         self.login = None
         self.password = None
@@ -74,7 +74,7 @@ class InternetowaApi(CBaseHostClass):
 
             if sts:
                 params = dict(self.http_params)
-                params['header'] = MergeDicts(self.HTTP_HEADER, {'Referer':self.getFullUrl('/logowanie/')})
+                params['header'] = MergeDicts(self.HTTP_HEADER, {'Referer': self.getFullUrl('/logowanie/')})
 
                 post_data = {'email': self.login, 'password': self.password}
                 sts, data = self.cm.getPage(self.getFullUrl('/logowanie/'), params, post_data)
@@ -130,13 +130,13 @@ class InternetowaApi(CBaseHostClass):
                         icon = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''src=['"]([^"^']+?)['"]''')[0])
                         type = title.lower()
                         type = 'audio' if 'radio' in type or 'rmf ' in type else 'video'
-                        subItems2.append(MergeDicts(cItem, {'type':type, 'title':title, 'url':url, 'icon':icon}))
+                        subItems2.append(MergeDicts(cItem, {'type': type, 'title': title, 'url': url, 'icon': icon}))
                     if len(subItems2):
-                        subItems.append(MergeDicts(cItem, {'priv_cat':'sub_items', 'title':sTitle2, 'sub_items':subItems2}))
+                        subItems.append(MergeDicts(cItem, {'priv_cat': 'sub_items', 'title': sTitle2, 'sub_items': subItems2}))
                 if len(subItems) == 1:
                     channelsTab.append(subItems[0])
                 elif len(subItems):
-                    channelsTab.append(MergeDicts(cItem, {'priv_cat':'sub_items', 'title':sTitle, 'sub_items':subItems}))
+                    channelsTab.append(MergeDicts(cItem, {'priv_cat': 'sub_items', 'title': sTitle, 'sub_items': subItems}))
         else:
             channelsTab = cItem['sub_items']
         return channelsTab
@@ -159,11 +159,11 @@ class InternetowaApi(CBaseHostClass):
             if not self.cm.isValidUrl(url):
                 continue
             if 1 == self.up.checkHostSupport(url):
-                url = strwithmeta(url, {'Referer':cUrl})
+                url = strwithmeta(url, {'Referer': cUrl})
                 urlsTab.extend(self.up.getVideoLinkExt(url))
             else:
                 params = dict(self.http_params)
-                params['header'] = MergeDicts(self.HTTP_HEADER, {'Referer':cUrl})
+                params['header'] = MergeDicts(self.HTTP_HEADER, {'Referer': cUrl})
                 sts, tmp = self.cm.getPage(url, params)
                 if not sts:
                     continue
@@ -175,6 +175,6 @@ class InternetowaApi(CBaseHostClass):
                     type = self.cm.ph.getSearchGroups(it, '''type=['"]([^"^']+?)['"]''')[0].lower().split('/', 1)
                     mediaUrl = self.cm.getFullUrl(self.cm.ph.getSearchGroups(it, '''src=['"]([^"^']+?)['"]''')[0], self.cm.meta['url'])
                     if type[0] in ('audio', 'video'):
-                        mediaUrl = strwithmeta(mediaUrl, {'User-Agent':params['header']['User-Agent'], 'Referer':self.cm.meta['url']})
-                        urlsTab.append({'name':'[%s] %s' % (type[1], self.cm.getBaseUrl(url, True)), 'url':mediaUrl, 'need_resolve':0})
+                        mediaUrl = strwithmeta(mediaUrl, {'User-Agent': params['header']['User-Agent'], 'Referer': self.cm.meta['url']})
+                        urlsTab.append({'name': '[%s] %s' % (type[1], self.cm.getBaseUrl(url, True)), 'url': mediaUrl, 'need_resolve': 0})
         return urlsTab

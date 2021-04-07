@@ -45,7 +45,7 @@ class MergeDownloader(BaseDownloader):
         self.console = None
         self.iptv_sys = None
         
-        self.multi = {'urls':[], 'files':[], 'remote_size':[], 'remote_content_type':[], 'local_size':[]}
+        self.multi = {'urls': [], 'files': [], 'remote_size': [], 'remote_content_type': [], 'local_size': []}
         self.currIdx = 0
         
     def __del__(self):

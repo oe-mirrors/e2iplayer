@@ -47,10 +47,10 @@ def gettytul():
 class DDLMe(CBaseHostClass):
 
     def __init__(self):
-        CBaseHostClass.__init__(self, {'history':'DDLMe', 'cookie':'DDLMe.cookie'})
+        CBaseHostClass.__init__(self, {'history': 'DDLMe', 'cookie': 'DDLMe.cookie'})
 
         self.HTTP_HEADER = self.cm.getDefaultHeader(browser='chrome')
-        self.defaultParams = {'header':self.HTTP_HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
+        self.defaultParams = {'header': self.HTTP_HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
 
         self.DEFAULT_ICON_URL = 'https://static.kino.de/wp-content/uploads/2018/06/DDLme.jpg'
         self.cacheLinks = {}
@@ -99,7 +99,7 @@ class DDLMe(CBaseHostClass):
             else:
                 proxy = config.plugins.iptvplayer.alternative_proxy2.value
             addParams = dict(addParams)
-            addParams.update({'http_proxy':proxy})
+            addParams.update({'http_proxy': proxy})
         tries = 0
         while tries < 3:
             tries += 1
@@ -125,7 +125,7 @@ class DDLMe(CBaseHostClass):
                 proxy = config.plugins.iptvplayer.alternative_proxy1.value
             else:
                 proxy = config.plugins.iptvplayer.alternative_proxy2.value
-            url = strwithmeta(url, {'iptv_http_proxy':proxy})
+            url = strwithmeta(url, {'iptv_http_proxy': proxy})
         return url
     
     def listMain(self, cItem):
@@ -142,11 +142,11 @@ class DDLMe(CBaseHostClass):
             title = self.cleanHtmlStr(item[0])
             desc = self.cleanHtmlStr(item[-1])
             params = dict(cItem)
-            params.update({'good_for_fav':False, 'category':type[1], 'title':title, 'url':url, 'desc':desc, 'f_type':type[0]})
+            params.update({'good_for_fav': False, 'category': type[1], 'title': title, 'url': url, 'desc': desc, 'f_type': type[0]})
             self.addDir(params)
         
-        MAIN_CAT_TAB = [{'category':'search', 'title': _('Search'), 'search_item':True},
-                        {'category': 'search_history', 'title': _('Search history'),}]
+        MAIN_CAT_TAB = [{'category': 'search', 'title': _('Search'), 'search_item': True},
+                        {'category': 'search_history', 'title': _('Search history'), }]
         self.listsTab(MAIN_CAT_TAB, cItem)
         
     def searchUrl(self, data):
@@ -172,10 +172,10 @@ class DDLMe(CBaseHostClass):
             title = self.cleanHtmlStr(item)
             if title == '':
                 title = self.cleanHtmlStr(self.cm.ph.getSearchGroups(item, '''title=['"]([^'^"]+?)['"]''')[0])
-            self.addDir(MergeDicts(cItem, {'title':title, 'url':url, 'category':nextCategory, 'desc':''}))
+            self.addDir(MergeDicts(cItem, {'title': title, 'url': url, 'category': nextCategory, 'desc': ''}))
         
         if len(self.currList) == 0:
-            self.listTabItems(MergeDicts(cItem, {'category':nextCategory}), 'explore_item')
+            self.listTabItems(MergeDicts(cItem, {'category': nextCategory}), 'explore_item')
         
     def listTabs(self, cItem, nextCategory):
         printDBG("DDLMe.listTabs")
@@ -194,12 +194,12 @@ class DDLMe(CBaseHostClass):
             title = self.cleanHtmlStr(item)
             if title == '' and 'all' in url:
                 title = _('--All--')
-            params = {'title':title, 'url':url}
+            params = {'title': title, 'url': url}
             list.append(params)
         
         for item in list:
             if not tabTypes or 'filme' in item['url'] or 'serien' in item['url']:
-                self.addDir(MergeDicts(cItem, item, {'category':nextCategory, 'desc':''}))
+                self.addDir(MergeDicts(cItem, item, {'category': nextCategory, 'desc': ''}))
     
     def listTags(self, cItem, nextCategory):
         printDBG("DDLMe.listTags")
@@ -213,7 +213,7 @@ class DDLMe(CBaseHostClass):
             url = self.cm.ph.getSearchGroups(item, '''href=['"]([^'^"]+?)['"]''')[0]
             title = self.cleanHtmlStr(item)
             desc = self.cm.ph.getSearchGroups(item, '''/explore/([^/]+?)/''')[0].title()
-            self.addDir(MergeDicts(cItem, {'title':title, 'url':url, 'category':nextCategory, 'desc':desc}))
+            self.addDir(MergeDicts(cItem, {'title': title, 'url': url, 'category': nextCategory, 'desc': desc}))
             
     def listSortTags(self, cItem, nextCategory):
         printDBG("DDLMe.listSortTags")
@@ -228,7 +228,7 @@ class DDLMe(CBaseHostClass):
             title = self.cleanHtmlStr(item)
             if title == '':
                 title = self.cleanHtmlStr(self.cm.ph.getSearchGroups(item, '''title=['"]([^'^"]+?)['"]''')[0])
-            self.addDir(MergeDicts(cItem, {'title':title, 'url':url, 'category':nextCategory, 'desc':''}))
+            self.addDir(MergeDicts(cItem, {'title': title, 'url': url, 'category': nextCategory, 'desc': ''}))
         
     def listCatItems(self, cItem, nextCategory):
         printDBG("DDLMe.listCatItems")
@@ -245,7 +245,7 @@ class DDLMe(CBaseHostClass):
             url = self.cm.ph.getSearchGroups(item, '''href=['"]([^'^"]+?)['"]''')[0]
             cat = self.cm.ph.getSearchGroups(item, '''_([0-9]+)_''')[0]
             title = self.cleanHtmlStr(item)
-            self.cacheCats.append({'title':title, 'f_cat':cat})
+            self.cacheCats.append({'title': title, 'f_cat': cat})
         
         tmp = self.cm.ph.getDataBeetwenNodes(data, ('<div', '>', 'float:right'), ('</div', '>'), False)[1]
         tmp = self.cm.ph.getAllItemsBeetwenMarkers(tmp, '<a', '</a>')
@@ -253,13 +253,13 @@ class DDLMe(CBaseHostClass):
             url = self.cm.ph.getSearchGroups(item, '''href=['"]([^'^"]+?)['"]''')[0]
             sort = self.cm.ph.getSearchGroups(item, '''_[0-9]+_([0-9]+)_''')[0]
             title = self.cleanHtmlStr(self.cm.ph.getSearchGroups(item, '''title=['"]([^'^"]+?)['"]''')[0])
-            self.cacheSort.append({'title':title, 'f_sort':sort})
+            self.cacheSort.append({'title': title, 'f_sort': sort})
         
-        self.listsTab(self.cacheCats, MergeDicts(cItem, {'category':nextCategory}))
+        self.listsTab(self.cacheCats, MergeDicts(cItem, {'category': nextCategory}))
         
     def listSortItems(self, cItem, nextCategory):
         printDBG("DDLMe.listSortItems")
-        self.listsTab(self.cacheSort, MergeDicts(cItem, {'category':nextCategory}))
+        self.listsTab(self.cacheSort, MergeDicts(cItem, {'category': nextCategory}))
     
     def listSubItems(self, cItem):
         printDBG("DDLMe.listSubItems")
@@ -286,7 +286,7 @@ class DDLMe(CBaseHostClass):
             desc = desc[::-1]
             
             params = dict(cItem)
-            params.update({'good_for_fav': True, 'title':title, 'category':nextCategory, 'year':self.cleanHtmlStr(item[-1]), 'url':url, 'icon':icon, 'desc':'[/br]'.join(desc)})
+            params.update({'good_for_fav': True, 'title': title, 'category': nextCategory, 'year': self.cleanHtmlStr(item[-1]), 'url': url, 'icon': icon, 'desc': '[/br]'.join(desc)})
             self.addDir(params)
         
     def listTagItems(self, cItem, nextCategory):
@@ -311,7 +311,7 @@ class DDLMe(CBaseHostClass):
             desc = self.cleanHtmlStr(self.cm.ph.getSearchGroups(item[-1], '''rel=['"]([^"^']+?)["']''', 1, True)[0]) + ' | ' + self.cleanHtmlStr(item[-1])
             
             params = dict(cItem)
-            params.update({'good_for_fav': True, 'title':title, 'category':nextCategory, 'year':self.cleanHtmlStr(item[-1].split('#', 1)[0]), 'url':url, 'icon':icon, 'desc':desc})
+            params.update({'good_for_fav': True, 'title': title, 'category': nextCategory, 'year': self.cleanHtmlStr(item[-1].split('#', 1)[0]), 'url': url, 'icon': icon, 'desc': desc})
             self.addDir(params)
 
         if nextPage and len(self.currList):
@@ -319,7 +319,7 @@ class DDLMe(CBaseHostClass):
                 tmp = int(self.cm.ph.getSearchGroups(nextPage, '''/([0-9]+)/?$''')[0])
                 if tmp > page:
                     params = dict(cItem)
-                    params.update({'good_for_fav': False, 'title':_('Next page'), 'url':nextPage, 'page':tmp})
+                    params.update({'good_for_fav': False, 'title': _('Next page'), 'url': nextPage, 'page': tmp})
                     self.addDir(params)
             except Exception:
                 printExc()
@@ -343,7 +343,7 @@ class DDLMe(CBaseHostClass):
                 tmp = int(self.cm.ph.getSearchGroups(nextPage, '''/([0-9]+)/?$''')[0])
                 if tmp > page:
                     params = dict(cItem)
-                    params.update({'good_for_fav': False, 'title':_('Next page'), 'url':nextPage, 'page':tmp})
+                    params.update({'good_for_fav': False, 'title': _('Next page'), 'url': nextPage, 'page': tmp})
                     self.addDir(params)
             except Exception:
                 printExc()
@@ -367,7 +367,7 @@ class DDLMe(CBaseHostClass):
         
         if nextPage:
             params = dict(cItem)
-            params.update({'good_for_fav': False, 'title':_('Next page'), 'page':page + 1})
+            params.update({'good_for_fav': False, 'title': _('Next page'), 'page': page + 1})
             self.addDir(params)
         
     def exploreItem(self, cItem):
@@ -386,9 +386,9 @@ class DDLMe(CBaseHostClass):
         trailer = self.cm.ph.getSearchGroups(data.rsplit('</ul>', 1)[0], '''<([^>]+?trailerbtn[^>]+?)>''')[0]
         url = self.getFullUrl(self.cm.ph.getSearchGroups(trailer, '''rel=['"]([^"^']+?)["']''', 1, True)[0], cUrl)
         if url != '':
-            self.cacheLinks[url] = [{'name':'trailer', 'url':strwithmeta(url, {'Referer':cUrl}), 'need_resolve':1}]
+            self.cacheLinks[url] = [{'name': 'trailer', 'url': strwithmeta(url, {'Referer': cUrl}), 'need_resolve': 1}]
             params = dict(cItem)
-            params.update({'good_for_fav': False, 'title':cItem['title'] + ' - ' + _('trailer'), 'url':url, 'desc':desc, 'prev_url':cUrl})
+            params.update({'good_for_fav': False, 'title': cItem['title'] + ' - ' + _('trailer'), 'url': url, 'desc': desc, 'prev_url': cUrl})
             self.addVideo(params)
 
         tmp = ''
@@ -445,9 +445,9 @@ class DDLMe(CBaseHostClass):
                         
                             if urlKey not in self.cacheLinks:
                                 self.cacheLinks[urlKey] = []
-                                playableItems.append({'title': title, 'url':urlKey, 's_num':sNum, 'e_num':eNum, 'prev_url':cUrl})
+                                playableItems.append({'title': title, 'url': urlKey, 's_num': sNum, 'e_num': eNum, 'prev_url': cUrl})
                             
-                            self.cacheLinks[urlKey] .append({'name':name, 'url':url, 'need_resolve':1})
+                            self.cacheLinks[urlKey] .append({'name': name, 'url': url, 'need_resolve': 1})
                 
                 tmpList = []
                 seasons.sort()
@@ -457,9 +457,9 @@ class DDLMe(CBaseHostClass):
                     for eNum in episodes[sNum]:
                         for item in playableItems:
                             if item['s_num'] == sNum and item['e_num'] == eNum:
-                                subItems.append(MergeDicts(cItem, item, {'good_for_fav':False, 'type':'video'}))
+                                subItems.append(MergeDicts(cItem, item, {'good_for_fav': False, 'type': 'video'}))
                     if len(subItems):
-                        tmpList.append(MergeDicts(cItem, {'good_for_fav':False, 'title':_('Season') + ' {0}'.format(sNum), 'category':'sub_items', 'sub_items':subItems, 'prev_url':cUrl}))
+                        tmpList.append(MergeDicts(cItem, {'good_for_fav': False, 'title': _('Season') + ' {0}'.format(sNum), 'category': 'sub_items', 'sub_items': subItems, 'prev_url': cUrl}))
                 
             if len(tmpList) == 1:
                 for item in tmpList[0]['sub_items']:
@@ -493,7 +493,7 @@ class DDLMe(CBaseHostClass):
             title = self.cleanHtmlStr(item[0])
             desc = self.cleanHtmlStr(item[-1] + self.cm.ph.getSearchGroups(item[-1], '''rel=['"]([^"^']+?)["']''', 1, True)[0])
             params = dict(cItem)
-            params.update({'good_for_fav': True, 'title':title, 'category':'explore_item', 'url':url, 'icon':icon, 'desc':desc})
+            params.update({'good_for_fav': True, 'title': title, 'category': 'explore_item', 'url': url, 'icon': icon, 'desc': desc})
             self.addDir(params)
         
     def getLinksForVideo(self, cItem):
@@ -609,7 +609,7 @@ class DDLMe(CBaseHostClass):
         printDBG(itemsList)
         printDBG(icon)
         
-        return [{'title':self.cleanHtmlStr(title), 'text': self.cleanHtmlStr(desc), 'images':[{'title':'', 'url':icon}], 'other_info':{'custom_items_list':itemsList}}]
+        return [{'title': self.cleanHtmlStr(title), 'text': self.cleanHtmlStr(desc), 'images': [{'title': '', 'url': icon}], 'other_info': {'custom_items_list': itemsList}}]
         
     def handleService(self, index, refresh=0, searchPattern='', searchType=''):
         printDBG('handleService start')
@@ -623,7 +623,7 @@ class DDLMe(CBaseHostClass):
 
     #MAIN MENU
         if name == None:
-            self.listMain({'name':'category', 'type':'category'})
+            self.listMain({'name': 'category', 'type': 'category'})
         
         elif category == 'release_tab':
             self.listTabs(self.currItem, 'tab_items')
@@ -659,11 +659,11 @@ class DDLMe(CBaseHostClass):
     #SEARCH
         elif category in ["search", "search_next_page"]:
             cItem = dict(self.currItem)
-            cItem.update({'search_item':False, 'name':'category'}) 
+            cItem.update({'search_item': False, 'name': 'category'}) 
             self.listSearchResult(cItem, searchPattern, searchType)
     #HISTORIA SEARCH
         elif category == "search_history":
-            self.listsHistory({'name':'history', 'category': 'search'}, 'desc', _("Type: "))
+            self.listsHistory({'name': 'history', 'category': 'search'}, 'desc', _("Type: "))
         else:
             printExc()
         

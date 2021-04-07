@@ -27,16 +27,16 @@ def gettytul():
 class KinogoCC(CBaseHostClass):
     
     def __init__(self):
-        CBaseHostClass.__init__(self, {'history':'kinogo.cc', 'cookie':'kinogo.cc.cookie'})
+        CBaseHostClass.__init__(self, {'history': 'kinogo.cc', 'cookie': 'kinogo.cc.cookie'})
         self.USER_AGENT = 'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:40.0) Gecko/20100101 Firefox/40.0'
         self.MAIN_URL = 'http://kinogo.cc/'
         self.DEFAULT_ICON_URL = 'https://image.winudf.com/v2/image/Y29tLndQbGVlcmRseWFraW5vZ29fc2NyZWVuc2hvdHNfMF9iMzUzZjkyNw/screen-0.jpg?h=355&fakeurl=1&type=.jpg'
-        self.HTTP_HEADER = {'User-Agent': self.USER_AGENT, 'DNT':'1', 'Accept': 'text/html', 'Accept-Encoding':'gzip, deflate', 'Referer':self.getMainUrl(), 'Origin':self.getMainUrl()}
+        self.HTTP_HEADER = {'User-Agent': self.USER_AGENT, 'DNT': '1', 'Accept': 'text/html', 'Accept-Encoding': 'gzip, deflate', 'Referer': self.getMainUrl(), 'Origin': self.getMainUrl()}
         self.AJAX_HEADER = dict(self.HTTP_HEADER)
-        self.AJAX_HEADER.update({'X-Requested-With': 'XMLHttpRequest', 'Accept-Encoding':'gzip, deflate', 'Content-Type':'application/x-www-form-urlencoded; charset=UTF-8', 'Accept':'application/json, text/javascript, */*; q=0.01'})
+        self.AJAX_HEADER.update({'X-Requested-With': 'XMLHttpRequest', 'Accept-Encoding': 'gzip, deflate', 'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8', 'Accept': 'application/json, text/javascript, */*; q=0.01'})
         
         self.cacheLinks = {}
-        self.defaultParams = {'header':self.HTTP_HEADER, 'search_charset':True, 'with_metadata':True, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
+        self.defaultParams = {'header': self.HTTP_HEADER, 'search_charset': True, 'with_metadata': True, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
         
         self.cacheSeriesLetter = []
         self.cacheSetiesByLetter = {}
@@ -53,7 +53,7 @@ class KinogoCC(CBaseHostClass):
                 return url
             else:
                 return urllib.parse.urljoin(baseUrl, url)
-        addParams['cloudflare_params'] = {'domain':self.up.getDomain(baseUrl), 'cookie_file':self.COOKIE_FILE, 'User-Agent':self.USER_AGENT, 'full_url_handle':_getFullUrl}
+        addParams['cloudflare_params'] = {'domain': self.up.getDomain(baseUrl), 'cookie_file': self.COOKIE_FILE, 'User-Agent': self.USER_AGENT, 'full_url_handle': _getFullUrl}
         return self.cm.getPageCFProtection(baseUrl, addParams, post_data)
         
     def listMainMenu(self, cItem):
@@ -71,7 +71,7 @@ class KinogoCC(CBaseHostClass):
                 continue
             title = self.cleanHtmlStr(item)
             params = dict(cItem)
-            params.update({'good_for_fav':True, 'category':'list_items', 'title':title, 'url':url})
+            params.update({'good_for_fav': True, 'category': 'list_items', 'title': title, 'url': url})
             self.addDir(params)
         
         data = self.cm.ph.getAllItemsBeetwenNodes(data, ('<div', '>', '"mini"'), ('</div', '>'), False)
@@ -86,23 +86,23 @@ class KinogoCC(CBaseHostClass):
                 title = self.cleanHtmlStr(it)
                 printDBG("\t> title[%s]" % title)
                 params = dict(cItem)
-                params.update({'good_for_fav':True, 'category':'list_items', 'title':title, 'url':url})
+                params.update({'good_for_fav': True, 'category': 'list_items', 'title': title, 'url': url})
                 subItems.append(params)
         
             if len(subItems):
                 params = dict(cItem)
-                params.update({'good_for_fav':True, 'category':'sub_items', 'title':sTitle, 'sub_items':subItems})
+                params.update({'good_for_fav': True, 'category': 'sub_items', 'title': sTitle, 'sub_items': subItems})
                 self.addDir(params)
         
-        MAIN_CAT_TAB = [{'category':'search', 'title': _('Search'), 'search_item':True}, 
-                        {'category':'search_history', 'title': _('Search history')},]
+        MAIN_CAT_TAB = [{'category': 'search', 'title': _('Search'), 'search_item': True}, 
+                        {'category': 'search_history', 'title': _('Search history')}, ]
         self.listsTab(MAIN_CAT_TAB, cItem)
         
     def listSubItems(self, cItem):
         printDBG("KinogoCC.listSubItems")
         subList = cItem['sub_items']
         for item in subList:
-            params = {'name':'category', 'type':'category'}
+            params = {'name': 'category', 'type': 'category'}
             params.update(item)
             if item.get('type', 'category') == 'category':
                 self.addDir(params)
@@ -149,17 +149,17 @@ class KinogoCC(CBaseHostClass):
                 else:
                     descTab.insert(1, t)
             descTab.append('Дата: %s, %s/5' % (date, rating))
-            params = {'good_for_fav':True, 'category':nextCategory, 'url':url, 'title':title, 'desc':'[/br]'.join(descTab[::-1]), 'icon':icon}
+            params = {'good_for_fav': True, 'category': nextCategory, 'url': url, 'title': title, 'desc': '[/br]'.join(descTab[::-1]), 'icon': icon}
             self.addDir(params)
         
         if nextPage != '':
             params = dict(cItem)
             if nextPage != '#':
-                params.update({'title':_('Next page'), 'url':self.getFullUrl(nextPage), 'page':page + 1})
+                params.update({'title': _('Next page'), 'url': self.getFullUrl(nextPage), 'page': page + 1})
                 self.addDir(params)
             elif post_data != None:
-                params['post_data'].update({'search_start':page + 1, 'result_from':(page) * 30 + 1})
-                params.update({'title':_('Next page'), 'page':page + 1})
+                params['post_data'].update({'search_start': page + 1, 'result_from': (page) * 30 + 1})
+                params.update({'title': _('Next page'), 'page': page + 1})
                 self.addDir(params)
     
     def listSearchResult(self, cItem, searchPattern, searchType):
@@ -176,8 +176,8 @@ class KinogoCC(CBaseHostClass):
                 printExc()
         
         searchPattern = self.cm.urlEncodeNonAscii(searchPattern)
-        post_data = {'do':'search', 'subaction':'search', 'search_start':1, 'full_search':0, 'result_from':1, 'story':searchPattern}
-        cItem = {'name':'category', 'type':'category', 'category':'list_items', 'post_data':post_data, 'url':url}
+        post_data = {'do': 'search', 'subaction': 'search', 'search_start': 1, 'full_search': 0, 'result_from': 1, 'story': searchPattern}
+        cItem = {'name': 'category', 'type': 'category', 'category': 'list_items', 'post_data': post_data, 'url': url}
         self.listItems(cItem, 'explore_item')
         
     def exploreItem(self, cItem, nextCategory):
@@ -201,7 +201,7 @@ class KinogoCC(CBaseHostClass):
         iTrailer = self.cm.ph.getSearchGroups(data, '''['"](https?://[^'^"]*?youtube[^'^"]*?watch[^'^"]*?)['"]''')[0]
         if iTrailer != '':
             params = dict(cItem)
-            params.update({'good_for_fav':False, 'url':iTrailer, 'title':'%s - %s' % (cItem['title'], self.cleanHtmlStr(titles[-1]))})
+            params.update({'good_for_fav': False, 'url': iTrailer, 'title': '%s - %s' % (cItem['title'], self.cleanHtmlStr(titles[-1]))})
             self.addVideo(params)
         
         # watch online
@@ -224,7 +224,7 @@ class KinogoCC(CBaseHostClass):
                         if self.cm.isValidUrl(url) and \
                            tmp.split('.')[-1] in ['flv', 'mp4']:
                             params = dict(cItem)
-                            params.update({'good_for_fav':False, 'url':url})
+                            params.update({'good_for_fav': False, 'url': url})
                             self.addVideo(params)
                             
                     if item.startswith(playlistMarker):
@@ -246,7 +246,7 @@ class KinogoCC(CBaseHostClass):
                                 if url == '':
                                     continue
                                 params = dict(cItem)
-                                params.update({'good_for_fav':False, 'title':'%s %s' % (cItem['title'], title), 'url':url})
+                                params.update({'good_for_fav': False, 'title': '%s %s' % (cItem['title'], title), 'url': url})
                                 self.addVideo(params)
             except Exception:
                 printExc()
@@ -255,7 +255,7 @@ class KinogoCC(CBaseHostClass):
             data = re.compile('''['"]?file['"]?\s*?:\s*?['"](https?://[^'^"]+?(?:\.flv|\.mp4)(?:\?[^'^"]*?)?)['"]''', re.I).findall(data)
             for item in data:
                 name = item.split('?', 1)[0].split('.')[-1]
-                params = {'name':name, 'url':strwithmeta(item, {'Referer':self.getMainUrl()}), 'need_resolve':0}
+                params = {'name': name, 'url': strwithmeta(item, {'Referer': self.getMainUrl()}), 'need_resolve': 0}
                 if name == 'flv':
                     urlsTab.insert(0, params)
                 else:
@@ -263,7 +263,7 @@ class KinogoCC(CBaseHostClass):
             
             if len(urlsTab):
                 params = dict(cItem)
-                params.update({'good_for_fav':False, 'urls_tab':urlsTab})
+                params.update({'good_for_fav': False, 'urls_tab': urlsTab})
                 self.addVideo(params)
                 
     def getLinksForVideo(self, cItem):
@@ -274,7 +274,7 @@ class KinogoCC(CBaseHostClass):
             return self.up.getVideoLinkExt(videoUrl)
         if 'urls_tab' in cItem:
             return cItem['urls_tab']
-        return [{'name':'direct', 'url':strwithmeta(cItem['url'], {'Referer':self.getMainUrl()}), 'need_resolve':0}]
+        return [{'name': 'direct', 'url': strwithmeta(cItem['url'], {'Referer': self.getMainUrl()}), 'need_resolve': 0}]
     
     def handleService(self, index, refresh=0, searchPattern='', searchType=''):
         printDBG('handleService start')
@@ -292,7 +292,7 @@ class KinogoCC(CBaseHostClass):
     #MAIN MENU
         if name == None and category == '':
             rm(self.COOKIE_FILE)
-            self.listMainMenu({'name':'category'})
+            self.listMainMenu({'name': 'category'})
         elif category == 'movies':
             self.listMovies(self.currItem, 'sub_items', 'list_items')
         elif category == 'series':
@@ -307,11 +307,11 @@ class KinogoCC(CBaseHostClass):
     #SEARCH
         elif category in ["search", "search_next_page"]:
             cItem = dict(self.currItem)
-            cItem.update({'search_item':False, 'name':'category'}) 
+            cItem.update({'search_item': False, 'name': 'category'}) 
             self.listSearchResult(cItem, searchPattern, searchType)
     #HISTORIA SEARCH
         elif category == "search_history":
-            self.listsHistory({'name':'history', 'category': 'search'}, 'desc', _("Type: "))
+            self.listsHistory({'name': 'history', 'category': 'search'}, 'desc', _("Type: "))
         else:
             printExc()
         

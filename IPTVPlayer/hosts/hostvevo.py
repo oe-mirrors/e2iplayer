@@ -42,20 +42,20 @@ def gettytul():
 class VevoCom(CBaseHostClass):
     
     def __init__(self):
-        CBaseHostClass.__init__(self, {'history':'vevo.com', 'cookie':'vevo.com.cookie'})
+        CBaseHostClass.__init__(self, {'history': 'vevo.com', 'cookie': 'vevo.com.cookie'})
         self.USER_AGENT = 'Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3239.132 Safari/537.36'
         self.MAIN_URL = 'https://vevo.com/'
         self.API_URL = 'https://veil.vevoprd.com/graphql'
         self.DEFAULT_ICON_URL = 'http://1.bp.blogspot.com/-pSTjDlSgahQ/VVsbLaM40NI/AAAAAAAAHvU/wr8F9v9gPoE/s1600/Vevo.png'
-        self.HTTP_HEADER = {'User-Agent': self.USER_AGENT, 'Accept': 'text/html', 'Accept-Encoding':'gzip, deflate'}
+        self.HTTP_HEADER = {'User-Agent': self.USER_AGENT, 'Accept': 'text/html', 'Accept-Encoding': 'gzip, deflate'}
         self.AJAX_HEADER = dict(self.HTTP_HEADER)
-        self.AJAX_HEADER.update({'X-Requested-With': 'XMLHttpRequest', 'Accept-Encoding':'gzip, deflate', 'Content-Type':'application/x-www-form-urlencoded; charset=UTF-8', 'Accept':'application/json, text/javascript, */*; q=0.01'})
+        self.AJAX_HEADER.update({'X-Requested-With': 'XMLHttpRequest', 'Accept-Encoding': 'gzip, deflate', 'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8', 'Accept': 'application/json, text/javascript, */*; q=0.01'})
         
-        self.defaultParams = {'ignore_http_code_ranges':[], 'header':self.HTTP_HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
+        self.defaultParams = {'ignore_http_code_ranges': [], 'header': self.HTTP_HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
         
         self.translations = {}
         self.webDataCache = {}
-        self.authData = {'key':'', 'expires':0, 'token':''}
+        self.authData = {'key': '', 'expires': 0, 'token': ''}
         
     def getPage(self, baseUrl, addParams={}, post_data=None):
         self._getAuthToken()
@@ -84,7 +84,7 @@ class VevoCom(CBaseHostClass):
         
         self.fillBrowse(data)
         
-        catsMAp = {'genres':'list_genres', 'moods':'list_containers', 'recently-added':'list_genres_filters', 'trending-now':'list_genres_filters', 'artists':'list_artists'}
+        catsMAp = {'genres': 'list_genres', 'moods': 'list_containers', 'recently-added': 'list_genres_filters', 'trending-now': 'list_genres_filters', 'artists': 'list_artists'}
         
         data = self.cm.ph.getDataBeetwenNodes(data, ('<div', '>', 'sub-menu'), ('</ul', '>'), False)[1]
         data = self.cm.ph.getAllItemsBeetwenMarkers(data, '<a', '</a>')
@@ -97,11 +97,11 @@ class VevoCom(CBaseHostClass):
             
             params = dict(cItem)
             params.pop('page', 0)
-            params.update({'good_for_fav':False, 'category':nextCategory, 'title':title, 'url':url})
+            params.update({'good_for_fav': False, 'category': nextCategory, 'title': title, 'url': url})
             self.addDir(params)
             
-        MAIN_CAT_TAB = [{'category':'search', 'title': _('Search'), 'search_item':True}, 
-                        {'category':'search_history', 'title': _('Search history')},]
+        MAIN_CAT_TAB = [{'category': 'search', 'title': _('Search'), 'search_item': True}, 
+                        {'category': 'search_history', 'title': _('Search history')}, ]
         
         self.listsTab(MAIN_CAT_TAB, cItem)
         
@@ -112,17 +112,17 @@ class VevoCom(CBaseHostClass):
         if baseUrl.endswith('/'):
             baseUrl = baseUrl[:-1]
         
-        genresList = [{'title':_('all'), 'url':baseUrl}]
+        genresList = [{'title': _('all'), 'url': baseUrl}]
         try:
             for item in self.webDataCache['apollo']['data']['ROOT_QUERY']['genres']:
                 url = item['id']
                 title = self.translations.get(url, url)
-                genresList.append({'title':title, 'url':baseUrl + '/' + url})
+                genresList.append({'title': title, 'url': baseUrl + '/' + url})
         except Exception:
             printExc()
         
         params = dict(cItem)
-        params.update({'good_for_fav':False, 'category':nextCategory})
+        params.update({'good_for_fav': False, 'category': nextCategory})
         self.listsTab(genresList, params)
         
     def listItems(self, cItem):
@@ -150,7 +150,7 @@ class VevoCom(CBaseHostClass):
                 titleTab.append(subtitle)
             params = dict(cItem)
             params.pop('page', 0)
-            params.update({'good_for_fav':True, 'title':' - '.join(titleTab), 'url':url, 'icon':icon})
+            params.update({'good_for_fav': True, 'title': ' - '.join(titleTab), 'url': url, 'icon': icon})
             if '/playlist/' in url:
                 nextCategory = 'list_playlist'
             elif '/artist/' in url:
@@ -169,7 +169,7 @@ class VevoCom(CBaseHostClass):
         
         if nextPage != '':
             params = dict(cItem)
-            params.update({'good_for_fav':False, 'title':_('Next page'), 'url':nextPage, 'page':page + 1})
+            params.update({'good_for_fav': False, 'title': _('Next page'), 'url': nextPage, 'page': page + 1})
             self.addDir(params)
             
     def listContainers(self, cItem, nextCategory1, nextCategory2):
@@ -211,15 +211,15 @@ class VevoCom(CBaseHostClass):
                     elif '/watch/' in url:
                         itemNextCategory = 'video'
                     
-                    itemsTab.append({'good_for_fav':True, 'category':itemNextCategory, 'title':' - '.join(titleTab), 'url':url, 'icon':icon})
+                    itemsTab.append({'good_for_fav': True, 'category': itemNextCategory, 'title': ' - '.join(titleTab), 'url': url, 'icon': icon})
             
             params = dict(cItem)
             params.pop('page', 0)
             if len(itemsTab):
-                params.update({'good_for_fav':False, 'category':nextCategory1, 'title':containerTitle, 'desc':containerDesc, 'container_items':itemsTab})
+                params.update({'good_for_fav': False, 'category': nextCategory1, 'title': containerTitle, 'desc': containerDesc, 'container_items': itemsTab})
                 self.addDir(params)
             elif moreUrl != '':
-                params.update({'good_for_fav':False, 'category':nextCategory2, 'url':moreUrl, 'title':containerTitle, 'desc':containerDesc})
+                params.update({'good_for_fav': False, 'category': nextCategory2, 'url': moreUrl, 'title': containerTitle, 'desc': containerDesc})
                 self.addDir(params)
         
     def listContainerItems(self, cItem):
@@ -261,7 +261,7 @@ class VevoCom(CBaseHostClass):
             printDBG(data)
             try:
                 data = byteify(json.loads(data), '', True)
-                self.defaultParams['cookie_items'] = {'ApiToken':str(data['legacy_token']), 'ApiTokenRefresh':str(data['refresh_token'])}
+                self.defaultParams['cookie_items'] = {'ApiToken': str(data['legacy_token']), 'ApiTokenRefresh': str(data['refresh_token'])}
                 self.authData['token'] = str(data['legacy_token'])
                 self.authData['expires'] = int(time.time()) + int(data['expires_in'])
                 return self.authData['token']
@@ -307,7 +307,7 @@ class VevoCom(CBaseHostClass):
                 desc.append(', '.join(item['categories']))
                 params = dict(cItem)
                 params.pop('page', 0)
-                params.update({'good_for_fav':True, 'title':' - '.join(titleTab), 'url':url, 'icon':icon, 'desc':' | '.join(desc)})
+                params.update({'good_for_fav': True, 'title': ' - '.join(titleTab), 'url': url, 'icon': icon, 'desc': ' | '.join(desc)})
                 self.addVideo(params)
         except Exception:
             printExc()
@@ -338,7 +338,7 @@ class VevoCom(CBaseHostClass):
             if data['basicMeta']['videoCount'] > (page + 1) * 20:
                 params = dict(cItem)
                 params.pop('page', 0)
-                params.update({'good_for_fav':False, 'title':_('Next page'), 'page':page + 1})
+                params.update({'good_for_fav': False, 'title': _('Next page'), 'page': page + 1})
                 self.addDir(params)
         except Exception:
             printExc()
@@ -367,7 +367,7 @@ class VevoCom(CBaseHostClass):
             if data['videoData']['videos']['paging']['page'] < data['videoData']['videos']['paging']['pages']:
                 params = dict(cItem)
                 params.pop('page', 0)
-                params.update({'good_for_fav':False, 'title':_('Next page'), 'page':page + 1})
+                params.update({'good_for_fav': False, 'title': _('Next page'), 'page': page + 1})
                 self.addDir(params)
         except Exception:
             printExc()
@@ -376,7 +376,7 @@ class VevoCom(CBaseHostClass):
         printDBG("VevoCom.listSearchResult cItem[%s], searchPattern[%s] searchType[%s]" % (cItem, searchPattern, searchType))
         query = 'search?q=%s' % urllib.parse.quote_plus(searchPattern)
         url = 'https://quest.vevo.com/%s' % query
-        params = self._getApiHeaders({'url':self.getFullUrl(query)})
+        params = self._getApiHeaders({'url': self.getFullUrl(query)})
         
         sts, data = self.getPage(url, params)
         if not sts:
@@ -393,7 +393,7 @@ class VevoCom(CBaseHostClass):
                 icon = self.getFullIconUrl(item['thumbnailUrl'])
                 title = self.cleanHtmlStr(item['name'])
                 url = self.getFullUrl('/artist/%s' % item['urlSafeName'])
-                params = {'good_for_fav':True, 'category':'list_artist_videos', 'title':title, 'url':url, 'icon':icon}
+                params = {'good_for_fav': True, 'category': 'list_artist_videos', 'title': title, 'url': url, 'icon': icon}
                 artistsTab.append(params)
             
             for item in data.get('videos', []):
@@ -402,7 +402,7 @@ class VevoCom(CBaseHostClass):
                 titleTab = []
                 titleTab.append(self.cleanHtmlStr(item['artists'][0]['name']))
                 titleTab.append(self.cleanHtmlStr(item['title']))
-                params = {'good_for_fav':True, 'category':'video', 'title':' - '.join(titleTab), 'url':url, 'icon':icon}
+                params = {'good_for_fav': True, 'category': 'video', 'title': ' - '.join(titleTab), 'url': url, 'icon': icon}
                 videosTab.append(params)
                 
             for item in data.get('playlists', []):
@@ -411,7 +411,7 @@ class VevoCom(CBaseHostClass):
                 url = self.getFullUrl('/watch/playlist/%s' % item['playlistId'])
                 desc = [_('Count: %s') % item['videoCount']]
                 desc.append(self.cleanHtmlStr(item.get('description', '')))
-                params = {'good_for_fav':True, 'category':'list_playlist', 'title':title, 'url':url, 'icon':icon, 'desc':'[/br]'.join(desc)}
+                params = {'good_for_fav': True, 'category': 'list_playlist', 'title': title, 'url': url, 'icon': icon, 'desc': '[/br]'.join(desc)}
                 playlists.append(params)
             
             for item in [(_('Videos'), videosTab), (_('Playlists'), playlists), (_('Artists'), artistsTab)]:
@@ -419,7 +419,7 @@ class VevoCom(CBaseHostClass):
                     continue
                 params = dict(cItem)
                 params.pop('page', 0)
-                params.update({'good_for_fav':False, 'category':'list_container_items', 'title':'%s (%s)' % (item[0], len(item[1])), 'container_items':item[1]})
+                params.update({'good_for_fav': False, 'category': 'list_container_items', 'title': '%s (%s)' % (item[0], len(item[1])), 'container_items': item[1]})
                 self.addDir(params)
             
         except Exception:
@@ -450,7 +450,7 @@ class VevoCom(CBaseHostClass):
         
     #MAIN MENU
         if name == None:
-            self.listMainMenu({'name':'category'})
+            self.listMainMenu({'name': 'category'})
         elif category == 'list_genres_filters':
             self.listGenresFilters(self.currItem, 'list_items')
         elif category == 'list_genres':
@@ -471,11 +471,11 @@ class VevoCom(CBaseHostClass):
     #SEARCH
         elif category in ["search", "search_next_page"]:
             cItem = dict(self.currItem)
-            cItem.update({'search_item':False, 'name':'category'}) 
+            cItem.update({'search_item': False, 'name': 'category'}) 
             self.listSearchResult(cItem, searchPattern, searchType)
     #HISTORIA SEARCH
         elif category == "search_history":
-            self.listsHistory({'name':'history', 'category': 'search'}, 'desc', _("Type: "))
+            self.listsHistory({'name': 'history', 'category': 'search'}, 'desc', _("Type: "))
         else:
             printExc()
         

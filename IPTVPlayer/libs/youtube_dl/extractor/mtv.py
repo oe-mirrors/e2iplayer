@@ -52,7 +52,7 @@ class MTVServicesInfoExtractor(InfoExtractor):
 
     def _extract_mobile_video_formats(self, mtvn_id):
         webpage_url = self._MOBILE_TEMPLATE % mtvn_id
-        webpage = self._download_webpage(webpage_url, mtvn_id, params={'header':{'User-Agent':'curl/7'}})
+        webpage = self._download_webpage(webpage_url, mtvn_id, params={'header': {'User-Agent': 'curl/7'}})
         metrics_url = unescapeHTML(self._search_regex(r'<a href="(http://metrics.+?)"', webpage, 'url'))
         req = HEADRequest(metrics_url)
         response = self._request_webpage(req, mtvn_id, 'Resolving url')
@@ -124,7 +124,7 @@ class MTVServicesInfoExtractor(InfoExtractor):
         formats = self._extract_video_formats(mediagen_doc, mtvn_id)
         #subtitles = self._extract_subtitles(mediagen_doc, mtvn_id)
         #thumbnail = self._get_thumbnail_url(uri, itemdoc)
-        return {'formats':formats}
+        return {'formats': formats}
 
     def _get_videos_info(self, uri):
         video_id = self._id_from_uri(uri)

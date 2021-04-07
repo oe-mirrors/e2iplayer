@@ -32,10 +32,10 @@ def GetConfigList():
 
 class SportStream365Api(CBaseHostClass):
     def __init__(self):
-        CBaseHostClass.__init__(self, {'cookie':'sportstream365.com.cookie'})
+        CBaseHostClass.__init__(self, {'cookie': 'sportstream365.com.cookie'})
         self.HTTP_HEADER = self.cm.getDefaultHeader(browser='iphone_3_0')
         self.AJAX_HEADER = MergeDicts(self.HTTP_HEADER, {'X-Requested-With': 'XMLHttpRequest'})
-        self.defaultParams = {'header':self.HTTP_HEADER, 'ignore_http_code_ranges':[], 'save_cookie': True, 'load_cookie': True, 'cookiefile': self.COOKIE_FILE}
+        self.defaultParams = {'header': self.HTTP_HEADER, 'ignore_http_code_ranges': [], 'save_cookie': True, 'load_cookie': True, 'cookiefile': self.COOKIE_FILE}
         self.MAIN_URL = 'http://sportstream365.com/'
         self.DEFAULT_ICON_URL = self.getFullUrl('/img/logo.png')
         self.lang = None
@@ -86,9 +86,9 @@ class SportStream365Api(CBaseHostClass):
                 if userLang in ['de', 'en', 'es', 'fr', 'it', 'pt', 'ru', 'tr', 'cn']:
                     lang = userLang
             if lang != '':
-                self.defaultParams['cookie_items'] = {'lng':lang}
+                self.defaultParams['cookie_items'] = {'lng': lang}
             else:
-                self.defaultParams['cookie_items'] = {'lng':'en'} #self.defaultParams.pop('cookie_items', None)
+                self.defaultParams['cookie_items'] = {'lng': 'en'} #self.defaultParams.pop('cookie_items', None)
         
         category = cItem.get('priv_cat')
         if category == None:
@@ -109,9 +109,9 @@ class SportStream365Api(CBaseHostClass):
                     icon = 'f1'
                 icon = self.getFullIconUrl('/img/%s.jpg' % icon)
                 title = self.cleanHtmlStr(item)
-                channelsList.append({'name':'sportstream365.com', 'type':'dir', 'priv_cat':'list_items', 'title':title, 'url':self.getFullUrl(url), 'icon':icon})
+                channelsList.append({'name': 'sportstream365.com', 'type': 'dir', 'priv_cat': 'list_items', 'title': title, 'url': self.getFullUrl(url), 'icon': icon})
         else:
-            iconsMap = {0:'other', 1:'football', 2:'hockey', 3:'basketball', 6:'volleyball', 26:'f1', 4:'footballtennis', 9:'boxing'}
+            iconsMap = {0: 'other', 1: 'football', 2: 'hockey', 3: 'basketball', 6: 'volleyball', 26: 'f1', 4: 'footballtennis', 9: 'boxing'}
             sts, data = self.cm.getPage(cItem['url'], self.defaultParams)
             if not sts:
                 return []
@@ -125,7 +125,7 @@ class SportStream365Api(CBaseHostClass):
                 lang = self.defaultParams['cookie_items']['lng']
                 for i in range(3):
                     url = self.getFullUrl('/signcon/negotiate')
-                    sts, data = self.cm.getPage(url, MergeDicts(self.defaultParams, {'header':self.AJAX_HEADER, 'raw_post_data':True}), post_data='')
+                    sts, data = self.cm.getPage(url, MergeDicts(self.defaultParams, {'header': self.AJAX_HEADER, 'raw_post_data': True}), post_data='')
                     if not sts:
                         return []
                     
@@ -191,7 +191,7 @@ class SportStream365Api(CBaseHostClass):
                     desc += '[/br]' + datetime.fromtimestamp(int(item['Start'] / 1000)).strftime('%A, %-d %B %H:%M')
                     if self.GMTOffset != '':
                         desc += ' (GMT %s)' % self.GMTOffset
-                    channelsList.append({'name':'sportstream365.com', 'type':'video', 'title':self.cleanHtmlStr(title), 'url':url, 'icon':icon, 'desc':self.cleanHtmlStr(desc)})
+                    channelsList.append({'name': 'sportstream365.com', 'type': 'video', 'title': self.cleanHtmlStr(title), 'url': url, 'icon': icon, 'desc': self.cleanHtmlStr(desc)})
             except Exception:
                 printExc()
 

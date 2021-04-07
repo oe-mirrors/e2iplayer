@@ -23,13 +23,13 @@ def gettytul():
 class MyTheWatchseries(CBaseHostClass):
  
     def __init__(self):
-        CBaseHostClass.__init__(self, {'history':'mythewatchseries', 'cookie':'mythewatchseries.cookie'})
+        CBaseHostClass.__init__(self, {'history': 'mythewatchseries', 'cookie': 'mythewatchseries.cookie'})
         self.USER_AGENT = 'Mozilla/5.0'
         self.HEADER = {'User-Agent': self.USER_AGENT, 'Accept': 'text/html'}
         self.AJAX_HEADER = dict(self.HEADER)
         self.AJAX_HEADER.update({'X-Requested-With': 'XMLHttpRequest'})
         
-        self.defaultParams = {'header':self.HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
+        self.defaultParams = {'header': self.HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
         
         self.DEFAULT_ICON_URL = 'https://gowatchseries.io/img/icon/logo.png'
         self.MAIN_URL = None
@@ -49,7 +49,7 @@ class MyTheWatchseries(CBaseHostClass):
         if addParams == {}:
             addParams = dict(self.defaultParams)
 
-        addParams['cloudflare_params'] = {'cookie_file':self.COOKIE_FILE, 'User-Agent':self.USER_AGENT}
+        addParams['cloudflare_params'] = {'cookie_file': self.COOKIE_FILE, 'User-Agent': self.USER_AGENT}
         return self.cm.getPageCFProtection(baseUrl, addParams, post_data)
         
     def getFullIconUrl(self, url):
@@ -57,22 +57,22 @@ class MyTheWatchseries(CBaseHostClass):
         if url == '':
             return ''
         cookieHeader = self.cm.getCookieHeader(self.COOKIE_FILE)
-        return strwithmeta(url, {'Cookie':cookieHeader, 'User-Agent':self.USER_AGENT})
+        return strwithmeta(url, {'Cookie': cookieHeader, 'User-Agent': self.USER_AGENT})
         
     def listMain(self, cItem):
         printDBG("MyTheWatchseries.listMain")
         if self.MAIN_URL == None:
             self.selectDomain()
-        MAIN_CAT_TAB = [{'category':'list_filters', 'title': _("LIST"), 'url':self.getFullUrl('/list')},
-                        {'category':'list_items', 'title': _("MOVIES"), 'url':self.getFullUrl('/movies')},
-                        {'category':'list_items', 'title': _("CINEMA MOVIES"), 'url':self.getFullUrl('/cinema-movies')},
-                        {'category':'list_items', 'title': _("THIS WEEK'S SERIES POPULAR"), 'url':self.getFullUrl('/recommended-series')},
-                        {'category':'list_items', 'title': _("NEW RELEASE LIST"), 'url':self.getFullUrl('/new-release')},
+        MAIN_CAT_TAB = [{'category': 'list_filters', 'title': _("LIST"), 'url': self.getFullUrl('/list')},
+                        {'category': 'list_items', 'title': _("MOVIES"), 'url': self.getFullUrl('/movies')},
+                        {'category': 'list_items', 'title': _("CINEMA MOVIES"), 'url': self.getFullUrl('/cinema-movies')},
+                        {'category': 'list_items', 'title': _("THIS WEEK'S SERIES POPULAR"), 'url': self.getFullUrl('/recommended-series')},
+                        {'category': 'list_items', 'title': _("NEW RELEASE LIST"), 'url': self.getFullUrl('/new-release')},
                         
                         #{'category':'list_categories', 'title': _('CATEGORIES'),  'url':self.getMainUrl()}, 
                         
                         {'category': 'search', 'title': _('Search'), 'search_item': True, },
-                        {'category': 'search_history', 'title': _('Search history'),} 
+                        {'category': 'search_history', 'title': _('Search history'), } 
                        ]
         self.listsTab(MAIN_CAT_TAB, cItem)
         
@@ -95,11 +95,11 @@ class MyTheWatchseries(CBaseHostClass):
                 title = self.cleanHtmlStr(item)
                 if title.lower() in ['all', 'default', 'any']:
                     addAll = False
-                self.cacheFilters[key].append({'title':title.title(), key:value})
+                self.cacheFilters[key].append({'title': title.title(), key: value})
                 
             if len(self.cacheFilters[key]):
                 if addAll:
-                    self.cacheFilters[key].insert(0, {'title':_('All')})
+                    self.cacheFilters[key].insert(0, {'title': _('All')})
                 self.cacheFiltersKeys.append(key)
         
         tmp = self.cm.ph.getAllItemsBeetwenNodes(data, ('<li', '>', 'first-char'), ('</li', '>'))
@@ -169,12 +169,12 @@ class MyTheWatchseries(CBaseHostClass):
                 title = self.cleanHtmlStr(self.cm.ph.getSearchGroups(item, '''title=['"]([^'^"]+?)['"]''')[0])
             desc = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(item, '<span', '</span>')[1])
             params = dict(cItem)
-            params.update({'good_for_fav':True, 'category':nextCategory, 'title':title, 'url':url, 'icon':icon, 'desc':desc})
+            params.update({'good_for_fav': True, 'category': nextCategory, 'title': title, 'url': url, 'icon': icon, 'desc': desc})
             self.addDir(params)
         
         if nextPage:
             params = dict(cItem)
-            params.update({'good_for_fav':False, 'title':_("Next page"), 'page':page + 1})
+            params.update({'good_for_fav': False, 'title': _("Next page"), 'page': page + 1})
             self.addDir(params)
         
     def listItems(self, cItem, nextCategory='', searchPattern=''):
@@ -227,12 +227,12 @@ class MyTheWatchseries(CBaseHostClass):
             desc = ' | '.join(descTab) + '[/br]' + self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(item, '<div class="des"', '</div>')[1])
             
             params = dict(cItem)
-            params.update({'good_for_fav':True, 'category':nextCategory, 'title':title, 'url':url, 'icon':icon, 'desc':desc})
+            params.update({'good_for_fav': True, 'category': nextCategory, 'title': title, 'url': url, 'icon': icon, 'desc': desc})
             self.addDir(params)
         
         if nextPage:
             params = dict(cItem)
-            params.update({'good_for_fav':False, 'title':_('Next page'), 'page':page + 1})
+            params.update({'good_for_fav': False, 'title': _('Next page'), 'page': page + 1})
             self.addDir(params)
             
     def exploreItem(self, cItem):
@@ -280,7 +280,7 @@ class MyTheWatchseries(CBaseHostClass):
         # add trailer item
         if self.cm.isValidUrl(trailerUrl):
             params = dict(cItem)
-            params.update({'good_for_fav':False, 'is_trailer':True, 'title':_('%s - trailer') % cItem['title'], 'url':trailerUrl, 'icon':icon, 'desc':mainDesc})
+            params.update({'good_for_fav': False, 'is_trailer': True, 'title': _('%s - trailer') % cItem['title'], 'url': trailerUrl, 'icon': icon, 'desc': mainDesc})
             self.addVideo(params)
         
         data = self.cm.ph.getAllItemsBeetwenMarkers(data, '<li class="child_episode"', '</li>')
@@ -300,7 +300,7 @@ class MyTheWatchseries(CBaseHostClass):
             desc = ' | '.join(descTab) + '[/br]' + mainDesc
             
             params = dict(cItem)
-            params.update({'good_for_fav':True, 'title':title, 'url':url, 'icon':icon, 'desc':desc})
+            params.update({'good_for_fav': True, 'title': title, 'url': url, 'icon': icon, 'desc': desc})
             self.addVideo(params)
         
     def listSearchResult(self, cItem, searchPattern, searchType):
@@ -313,7 +313,7 @@ class MyTheWatchseries(CBaseHostClass):
         printDBG("MyTheWatchseries.getLinksForVideo [%s]" % cItem)
         linksTab = []
         if cItem.get('is_trailer'):
-            linksTab.append({'name':'trailer', 'url':cItem['url'], 'need_resolve':1})
+            linksTab.append({'name': 'trailer', 'url': cItem['url'], 'need_resolve': 1})
         else:
             linksTab = self.cacheLinks.get(cItem['url'], [])
             if len(linksTab) > 0:
@@ -331,7 +331,7 @@ class MyTheWatchseries(CBaseHostClass):
                 if title == '':
                     title = self.cleanHtmlStr(item)
                 
-                linksTab.append({'name':title, 'url':strwithmeta(url, {'links_key':cItem['url']}), 'need_resolve':1})
+                linksTab.append({'name': title, 'url': strwithmeta(url, {'links_key': cItem['url']}), 'need_resolve': 1})
         
         if len(linksTab):
             self.cacheLinks[cItem['url']] = linksTab
@@ -367,11 +367,11 @@ class MyTheWatchseries(CBaseHostClass):
                     type = self.cm.ph.getSearchGroups(item, '''type=['"]([^'^"]+?)['"]''')[0]
                     url = self.cm.ph.getSearchGroups(item, '''src=['"](https?://[^'^"]+?)['"]''')[0]
                     if self.cm.isValidUrl(url) and 'mp4' in type:
-                        linksTab.append({'name':label, 'url':url})
+                        linksTab.append({'name': label, 'url': url})
                 videoUrl = self.cm.ph.getSearchGroups(data, '''<iframe[^>]+?src=['"](https?://[^"]+?)['"]''', 1, True)[0]
         
         if 0 == len(linksTab):
-            videoUrl = strwithmeta(videoUrl, {'Referer':self.getMainUrl()})
+            videoUrl = strwithmeta(videoUrl, {'Referer': self.getMainUrl()})
             linksTab = self.up.getVideoLinkExt(videoUrl)
         
         return linksTab
@@ -403,7 +403,7 @@ class MyTheWatchseries(CBaseHostClass):
         icon = self.cm.ph.getSearchGroups(icon, '<img[^>]+?src="([^"]+?)"')[0]
         
         keysMap = {'release': 'released',
-                   'country': 'country',}
+                   'country': 'country', }
         
         data = self.cm.ph.getDataBeetwenNodes(data, ('<ul', '>', '"three"'), ('</ul', '>'))[1]
         data = self.cm.ph.getAllItemsBeetwenMarkers(data, '<li', '</li>')
@@ -424,7 +424,7 @@ class MyTheWatchseries(CBaseHostClass):
         if icon == '':
             icon = cItem.get('icon', self.DEFAULT_ICON_URL)
         
-        return [{'title':self.cleanHtmlStr(title), 'text': self.cleanHtmlStr(desc), 'images':[{'title':'', 'url':self.getFullUrl(icon)}], 'other_info':otherInfo}]
+        return [{'title': self.cleanHtmlStr(title), 'text': self.cleanHtmlStr(desc), 'images': [{'title': '', 'url': self.getFullUrl(icon)}], 'other_info': otherInfo}]
         
     def handleService(self, index, refresh=0, searchPattern='', searchType=''):
         printDBG('handleService start')
@@ -443,7 +443,7 @@ class MyTheWatchseries(CBaseHostClass):
         
     #MAIN MENU
         if name == None:
-            self.listMain({'name':'category'})
+            self.listMain({'name': 'category'})
         elif category == 'list_filters':
             self.listFilters(self.currItem, 'list_items_2')
         elif category == 'list_items_2':
@@ -455,11 +455,11 @@ class MyTheWatchseries(CBaseHostClass):
     #SEARCH
         elif category in ["search", "search_next_page"]:
             cItem = dict(self.currItem)
-            cItem.update({'search_item':False, 'name':'category'}) 
+            cItem.update({'search_item': False, 'name': 'category'}) 
             self.listSearchResult(cItem, searchPattern, searchType)
     #HISTORIA SEARCH
         elif category == "search_history":
-            self.listsHistory({'name':'history', 'category': 'search'}, 'desc', _("Type: "))
+            self.listsHistory({'name': 'history', 'category': 'search'}, 'desc', _("Type: "))
         else:
             printExc()
         

@@ -28,10 +28,10 @@ def gettytul():
 class Fenixsite(CBaseHostClass):
 
     def __init__(self):
-        CBaseHostClass.__init__(self, {'history':'fenixsite.com', 'cookie':'fenixsite.com.cookie'})
+        CBaseHostClass.__init__(self, {'history': 'fenixsite.com', 'cookie': 'fenixsite.com.cookie'})
 
         self.HTTP_HEADER = self.cm.getDefaultHeader(browser='chrome')
-        self.defaultParams = {'header':self.HTTP_HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
+        self.defaultParams = {'header': self.HTTP_HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
 
         self.MAIN_URL = 'http://www.fenixsite.com/'
         self.DEFAULT_ICON_URL = 'https://i.pinimg.com/originals/67/70/a3/6770a3fa9bdcc1bd33770106cd70fb22.png'
@@ -58,11 +58,11 @@ class Fenixsite(CBaseHostClass):
             url = ph.getattr(item, 'href')
             if '/strani_filmovi/' in url or '/strane_serije/' in url:
                 title = self.cleanHtmlStr(item)
-                self.addDir(MergeDicts(cItem, {'category':nextCategory, 'url':self.getFullUrl(url), 'title':title}))
+                self.addDir(MergeDicts(cItem, {'category': nextCategory, 'url': self.getFullUrl(url), 'title': title}))
 
-        MAIN_CAT_TAB = [{'category':nextCategory, 'title': 'Anime', 'url':self.getFullUrl('/load/anime_serije/95')},
-                        {'category':'search', 'title': _('Search'), 'search_item':True},
-                        {'category': 'search_history', 'title': _('Search history'),}]
+        MAIN_CAT_TAB = [{'category': nextCategory, 'title': 'Anime', 'url': self.getFullUrl('/load/anime_serije/95')},
+                        {'category': 'search', 'title': _('Search'), 'search_item': True},
+                        {'category': 'search_history', 'title': _('Search history'), }]
         self.listsTab(MAIN_CAT_TAB, cItem)
 
     def listCategories(self, cItem, nextCategory):
@@ -79,7 +79,7 @@ class Fenixsite(CBaseHostClass):
         for idx in range(1, len(data), 2):
             url = self.getFullUrl(ph.getattr(data[idx - 1], 'href'))
             title = self.cleanHtmlStr(data[idx])
-            itemsList.append(MergeDicts(cItem, {'good_for_fav':True, 'category':nextCategory, 'url':url, 'title':title}))
+            itemsList.append(MergeDicts(cItem, {'good_for_fav': True, 'category': nextCategory, 'url': url, 'title': title}))
 
         if '/strane_serije/' in cItem['url']:
             subItems = {}
@@ -93,11 +93,11 @@ class Fenixsite(CBaseHostClass):
                     letters.append(letter)
                 subItems[letter].append(item)
 
-            self.addDir(MergeDicts(cItem, {'title':_('--All--'), 'category':nextCategory}))
+            self.addDir(MergeDicts(cItem, {'title': _('--All--'), 'category': nextCategory}))
             for letter in letters:
-                self.addDir(MergeDicts(cItem, {'good_for_fav':False, 'category':'sub_items', 'sub_items':subItems[letter], 'title':'%s [%d]' % (letter.encode('utf-8'), len(subItems[letter]))}))
+                self.addDir(MergeDicts(cItem, {'good_for_fav': False, 'category': 'sub_items', 'sub_items': subItems[letter], 'title': '%s [%d]' % (letter.encode('utf-8'), len(subItems[letter]))}))
         else:
-            self.currList.append(MergeDicts(cItem, {'title':_('--All--'), 'category':nextCategory}))
+            self.currList.append(MergeDicts(cItem, {'title': _('--All--'), 'category': nextCategory}))
             self.currList.extend(itemsList)
 
     def listSort(self, cItem, nextCategory):
@@ -107,7 +107,7 @@ class Fenixsite(CBaseHostClass):
             return
         self.setMainUrl(self.cm.meta['url'])
 
-        directionsTitle = {1:'\xe2\x86\x91', 0:'\xe2\x86\x93'}
+        directionsTitle = {1: '\xe2\x86\x91', 0: '\xe2\x86\x93'}
         data = ph.find(data, ('<span', '>', 'sortBlock'), '</span>')[1]
         data = ph.findall(data, ('<a', '>'), '</a>', flags=ph.START_S)
 
@@ -123,7 +123,7 @@ class Fenixsite(CBaseHostClass):
                 sort = sort + 1 if sort % 2 else sort
                 for i in range(2):
                     sort -= i
-                    items[i].append(MergeDicts(cItem, {'good_for_fav':True, 'category':nextCategory, 'url':url, 'title':'%s %s' % (directionsTitle[i], title), 'f_sort':sort}))
+                    items[i].append(MergeDicts(cItem, {'good_for_fav': True, 'category': nextCategory, 'url': url, 'title': '%s %s' % (directionsTitle[i], title), 'f_sort': sort}))
             except Exception:
                 printExc()
         self.currList = items[0]
@@ -166,10 +166,10 @@ class Fenixsite(CBaseHostClass):
                     desc.append(t)
             tmp = ph.find(item, ('<ul', '>', 'title'))[1]
             desc.append(ph.getattr(tmp, 'title').replace('/', ' (') + ')')
-            self.addVideo({'good_for_fav':True, 'title':title, 'url':url, 'icon':icon, 'desc':' | '.join(desc) + '[/br]' + mainDesc})
+            self.addVideo({'good_for_fav': True, 'title': title, 'url': url, 'icon': icon, 'desc': ' | '.join(desc) + '[/br]' + mainDesc})
 
         if nextPage:
-            self.addDir(MergeDicts(cItem, {'good_for_fav':False, 'title':_('Next page'), 'url':nextPage, 'page':page + 1}))
+            self.addDir(MergeDicts(cItem, {'good_for_fav': False, 'title': _('Next page'), 'url': nextPage, 'page': page + 1}))
 
     def listSearchResult(self, cItem, searchPattern, searchType):
 
@@ -184,7 +184,7 @@ class Fenixsite(CBaseHostClass):
             for key in data['result']:
                 subItems = self._listItems(cItem, 'explore_item', data['result'][key])
                 if subItems:
-                    self.addDir(MergeDicts(cItem, {'title':key.title(), 'category':'sub_items', 'sub_items':subItems}))
+                    self.addDir(MergeDicts(cItem, {'title': key.title(), 'category': 'sub_items', 'sub_items': subItems}))
         except Exception:
             printExc()
 
@@ -251,7 +251,7 @@ class Fenixsite(CBaseHostClass):
             title = titlesMap.get('#%s' % id, '')
             url = ph.search(item, ph.IFRAME_SRC_URI_RE)[1]
             if url:
-                linksTab.append({'name':'%s | %s' % (title, self.up.getDomain(url)), 'url':self.getFullUrl(url), 'need_resolve':1})
+                linksTab.append({'name': '%s | %s' % (title, self.up.getDomain(url)), 'url': self.getFullUrl(url), 'need_resolve': 1})
             elif 'gkpluginsphp' in item:
                 idx1 = item.find('{')
                 idx2 = item.rfind('}')
@@ -264,19 +264,19 @@ class Fenixsite(CBaseHostClass):
                                 subTrack = self.getFullUrl(item['subtitle'])
                             for it in item['gklist']:
                                 if it['link']:
-                                    linksTab.append({'name':'%s | %s | %s' % (title, it['title'], self.up.getDomain(it['link'])), 'url':self.getFullUrl(it['link']), 'need_resolve':1})
+                                    linksTab.append({'name': '%s | %s | %s' % (title, it['title'], self.up.getDomain(it['link'])), 'url': self.getFullUrl(it['link']), 'need_resolve': 1})
                         except Exception:
                             printExc()
 
         if len(linksTab):
             if subTrack:
-                subTrack = [{'title':_('Default'), 'url':subTrack, 'lang':'default', 'format':'vtt'}]
+                subTrack = [{'title': _('Default'), 'url': subTrack, 'lang': 'default', 'format': 'vtt'}]
                 for item in linksTab:
-                    item['url'] = strwithmeta(item['url'], {'Referer':cUrl, 'external_sub_tracks':subTrack})
+                    item['url'] = strwithmeta(item['url'], {'Referer': cUrl, 'external_sub_tracks': subTrack})
             self.cacheLinks[cItem['url']] = linksTab
 
         if trailerUrl:
-            linksTab.append({'name':_('Trailer'), 'url':trailerUrl, 'need_resolve':1})
+            linksTab.append({'name': _('Trailer'), 'url': trailerUrl, 'need_resolve': 1})
 
         return linksTab
 
@@ -296,7 +296,7 @@ class Fenixsite(CBaseHostClass):
             subTracks = meta.get('external_sub_tracks')
             if subTracks:
                 for item in linksTab:
-                    item['url'] = strwithmeta(item['url'], MergeDicts(meta, {'external_sub_tracks':subTracks + strwithmeta(item['url']).meta.get('external_sub_tracks', [])}))
+                    item['url'] = strwithmeta(item['url'], MergeDicts(meta, {'external_sub_tracks': subTracks + strwithmeta(item['url']).meta.get('external_sub_tracks', [])}))
         return linksTab
 
     def getArticleContent(self, cItem, data=None):
@@ -343,7 +343,7 @@ class Fenixsite(CBaseHostClass):
         if desc == '':
             desc = cItem.get('desc', '')
         
-        return [{'title':self.cleanHtmlStr(title), 'text': self.cleanHtmlStr(desc), 'images':[{'title':'', 'url':self.getFullUrl(icon)}], 'other_info':{'custom_items_list':itemsList}}]
+        return [{'title': self.cleanHtmlStr(title), 'text': self.cleanHtmlStr(desc), 'images': [{'title': '', 'url': self.getFullUrl(icon)}], 'other_info': {'custom_items_list': itemsList}}]
 
     def handleService(self, index, refresh=0, searchPattern='', searchType=''):
         printDBG('handleService start')
@@ -357,7 +357,7 @@ class Fenixsite(CBaseHostClass):
 
     #MAIN MENU
         if name == None:
-            self.listMain({'name':'category', 'type':'category'}, 'list_categories')
+            self.listMain({'name': 'category', 'type': 'category'}, 'list_categories')
 
         elif category == 'list_filters':
             self.listFilters(self.currItem, 'list_items')
@@ -377,11 +377,11 @@ class Fenixsite(CBaseHostClass):
     #SEARCH
         elif category in ["search", "search_next_page"]:
             cItem = dict(self.currItem)
-            cItem.update({'search_item':False, 'name':'category'}) 
+            cItem.update({'search_item': False, 'name': 'category'}) 
             self.listSearchResult(cItem, searchPattern, searchType)
     #HISTORIA SEARCH
         elif category == "search_history":
-            self.listsHistory({'name':'history', 'category': 'search'}, 'desc', _("Type: "))
+            self.listsHistory({'name': 'history', 'category': 'search'}, 'desc', _("Type: "))
         else:
             printExc()
 

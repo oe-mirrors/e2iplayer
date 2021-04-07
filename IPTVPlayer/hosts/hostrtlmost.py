@@ -74,7 +74,7 @@ def _updateOtherInfo(otherInfo, item):
 class RtlMostHU(CBaseHostClass):
 
     def __init__(self):
-        CBaseHostClass.__init__(self, {'history':'rtlmost.hu', 'cookie':'rtlmosthu.cookie'})
+        CBaseHostClass.__init__(self, {'history': 'rtlmost.hu', 'cookie': 'rtlmosthu.cookie'})
 
         self.SEARCH_TYPES = [
             (_("Program"), "Program"),
@@ -131,13 +131,13 @@ class RtlMostHU(CBaseHostClass):
             'Ag7uzKC2XugHkZ+sfpTWEhlYHBRBnt1O+bE4F2V5/XuQ9GLJ4oaJdcDqMNk2dcA4JElYixTSaB3F'
             'uxTeF2ZLTA=='))
         self.queryParams = {'header': self.HEADER, 'raw_post_data': True}
-        self.apiParams = {'header':self.API_HEADER}
-        self.loginParams = {'header':self.HEADER}
+        self.apiParams = {'header': self.API_HEADER}
+        self.loginParams = {'header': self.HEADER}
         self.loggedIn = False
 
         self.login = config.plugins.iptvplayer.rtlmosthu_login.value
         self.password = config.plugins.iptvplayer.rtlmosthu_password.value
-        self.defaultParams = {'header':self.HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
+        self.defaultParams = {'header': self.HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
 
     def getFullIconUrl(self, url):
         if not url:
@@ -175,12 +175,12 @@ class RtlMostHU(CBaseHostClass):
                 title = i['name']
                 url = str(i['id'])
                 params = dict(cItem)
-                params.update({'category':'list_programs', 'title': title, 'url': url})
+                params.update({'category': 'list_programs', 'title': title, 'url': url})
                 self.addDir(params)
         except Exception:
             printExc()
-        MAIN_CAT_TAB = [{'category':'search', 'title': _('Search'), 'search_item':True},
-                        {'category': 'search_history', 'title': _('Search history'),}]
+        MAIN_CAT_TAB = [{'category': 'search', 'title': _('Search'), 'search_item': True},
+                        {'category': 'search_history', 'title': _('Search history'), }]
         self.listsTab(MAIN_CAT_TAB, cItem)
 
     def listPrograms(self, cItem):
@@ -199,7 +199,7 @@ class RtlMostHU(CBaseHostClass):
                 params = dict(cItem)
                 if icon:
                     params['icon'] = 'tj' + icon
-                params.update({'good_for_fav': True, 'category':'list_subcategories', 'title': title, 'url': url, 'desc':desc, 'other_info':{}})
+                params.update({'good_for_fav': True, 'category': 'list_subcategories', 'title': title, 'url': url, 'desc': desc, 'other_info': {}})
                 self.addDir(params)
         except Exception:
             printExc()
@@ -287,7 +287,7 @@ class RtlMostHU(CBaseHostClass):
                 title = i['title']
                 subcat = str(i['id'])
                 params = dict(cItem)
-                params.update({'good_for_fav': True, 'category':'list_episodes', 'title': title, 'url': url, 'subcat': subcat})
+                params.update({'good_for_fav': True, 'category': 'list_episodes', 'title': title, 'url': url, 'subcat': subcat})
                 self.addDir(params)
         except Exception:
             printExc()
@@ -349,7 +349,7 @@ class RtlMostHU(CBaseHostClass):
             page += 1
             if page < nbPages and len(self.currList) > 0:
                 params = dict(cItem)
-                params.update({'title':_("Next page"), 'page':page})
+                params.update({'title': _("Next page"), 'page': page})
                 self.addDir(params)
 
         except Exception:
@@ -385,12 +385,12 @@ class RtlMostHU(CBaseHostClass):
             retTab = getMPDLinksWithMeta(uri, False)
             videoUrls.extend(retTab)
         else:
-            videoUrls.append({'name':'direct link', 'url':uri})
+            videoUrls.append({'name': 'direct link', 'url': uri})
         return videoUrls
 
     def getFavouriteData(self, cItem):
         printDBG('RtlMostHU.getFavouriteData')
-        params = {'type':cItem['type'], 'category':cItem.get('category', ''), 'title':cItem['title'], 'url':cItem['url'], 'desc':cItem['desc'], 'icon':cItem['icon']}
+        params = {'type': cItem['type'], 'category': cItem.get('category', ''), 'title': cItem['title'], 'url': cItem['url'], 'desc': cItem['desc'], 'icon': cItem['icon']}
         if 'subcat' in cItem:
             params['subcat'] = cItem['subcat']
         if 'other_info' in cItem:
@@ -399,7 +399,7 @@ class RtlMostHU(CBaseHostClass):
 
     def getArticleContent(self, cItem):
         printDBG("RtlMostHU.getArticleContent [%s]" % cItem)
-        retTab = {'title':cItem['title'], 'text': cItem['desc'], 'images':[{'title':'', 'url':self.getFullIconUrl(cItem.get('icon'))}]}
+        retTab = {'title': cItem['title'], 'text': cItem['desc'], 'images': [{'title': '', 'url': self.getFullIconUrl(cItem.get('icon'))}]}
         if 'other_info' in cItem:
             retTab['other_info'] = cItem['other_info']
         return [retTab]
@@ -498,7 +498,7 @@ class RtlMostHU(CBaseHostClass):
         if self.tryTologin():
     #MAIN MENU
             if name == None:
-                self.listMainMenu({'name':'category'})
+                self.listMainMenu({'name': 'category'})
             elif category == 'list_programs':
                 self.listPrograms(self.currItem)
             elif category == 'list_subcategories':
@@ -510,11 +510,11 @@ class RtlMostHU(CBaseHostClass):
     #SEARCH
             elif category in ["search", "search_next_page"]:
                 cItem = dict(self.currItem)
-                cItem.update({'search_item':False, 'name':'category'})
+                cItem.update({'search_item': False, 'name': 'category'})
                 self.listSearchResult(cItem, searchPattern, searchType)
     #HISTORIA SEARCH
             elif category == "search_history":
-                self.listsHistory({'name':'history', 'category': 'search'}, 'desc', _("Type: "))
+                self.listsHistory({'name': 'history', 'category': 'search'}, 'desc', _("Type: "))
             else:
                 printExc()
 

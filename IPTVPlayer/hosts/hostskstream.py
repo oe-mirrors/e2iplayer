@@ -45,9 +45,9 @@ def gettytul():
 class SKStream(CBaseHostClass):
  
     def __init__(self):
-        CBaseHostClass.__init__(self, {'history':'skstream.co', 'cookie':'skstream.co.cookie'})
+        CBaseHostClass.__init__(self, {'history': 'skstream.co', 'cookie': 'skstream.co.cookie'})
         self.USER_AGENT = 'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:40.0) Gecko/20100101 Firefox/40.0'
-        self.HEADER = {'User-Agent': self.USER_AGENT, 'DNT':'1', 'Accept': 'text/html'}
+        self.HEADER = {'User-Agent': self.USER_AGENT, 'DNT': '1', 'Accept': 'text/html'}
         self.AJAX_HEADER = dict(self.HEADER)
         self.AJAX_HEADER.update({'X-Requested-With': 'XMLHttpRequest'})
         
@@ -56,7 +56,7 @@ class SKStream(CBaseHostClass):
         self.episodesCache = []
         self.cacheLinks = {}
         
-        self.defaultParams = {'header':self.HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
+        self.defaultParams = {'header': self.HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
         self._getHeaders = None
         
     def getPage(self, baseUrl, addParams={}, post_data=None):
@@ -70,9 +70,9 @@ class SKStream(CBaseHostClass):
             else:
                 proxy = config.plugins.iptvplayer.alternative_proxy2.value
             addParams = dict(addParams)
-            addParams.update({'http_proxy':proxy})
+            addParams.update({'http_proxy': proxy})
         
-        addParams['cloudflare_params'] = {'cookie_file':self.COOKIE_FILE, 'User-Agent':self.USER_AGENT}
+        addParams['cloudflare_params'] = {'cookie_file': self.COOKIE_FILE, 'User-Agent': self.USER_AGENT}
         return self.cm.getPageCFProtection(baseUrl, addParams, post_data)
         
     def getFullIconUrl(self, url):
@@ -83,7 +83,7 @@ class SKStream(CBaseHostClass):
                 proxy = config.plugins.iptvplayer.alternative_proxy1.value
             else:
                 proxy = config.plugins.iptvplayer.alternative_proxy2.value
-            url = strwithmeta(url, {'iptv_http_proxy':proxy})
+            url = strwithmeta(url, {'iptv_http_proxy': proxy})
         return url
         
     def getFullUrl(self, url):
@@ -118,12 +118,12 @@ class SKStream(CBaseHostClass):
         self.DEFAULT_ICON_URL = self.getFullIconUrl('/apple-touch-icon.png')
         
     def listMainMenu(self, cItem):
-        MAIN_CAT_TAB = [{'category':'list_categories', 'title': 'Films', 'url':self.getFullUrl('/films')},
-                        {'category':'list_categories', 'title': 'Séries', 'url':self.getFullUrl('/series')},
-                        {'category':'list_categories', 'title': 'Mangas', 'url':self.getFullUrl('/mangas')},
+        MAIN_CAT_TAB = [{'category': 'list_categories', 'title': 'Films', 'url': self.getFullUrl('/films')},
+                        {'category': 'list_categories', 'title': 'Séries', 'url': self.getFullUrl('/series')},
+                        {'category': 'list_categories', 'title': 'Mangas', 'url': self.getFullUrl('/mangas')},
                         
                         {'category': 'search', 'title': _('Search'), 'search_item': True, },
-                        {'category': 'search_history', 'title': _('Search history'),} 
+                        {'category': 'search_history', 'title': _('Search history'), } 
                        ]
         self.listsTab(MAIN_CAT_TAB, cItem)
         
@@ -136,7 +136,7 @@ class SKStream(CBaseHostClass):
             return
         
         params = dict(cItem)
-        params.update({'good_for_fav':False, 'category':'list_items', 'title':_('--All--')})
+        params.update({'good_for_fav': False, 'category': 'list_items', 'title': _('--All--')})
         self.addDir(params)
         
         data = self.cm.ph.getDataBeetwenMarkers(data, '<nav ', '</nav>')[1]
@@ -159,10 +159,10 @@ class SKStream(CBaseHostClass):
                     url = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''href=['"]([^'^"]+?)['"]''')[0])
                     if not self.cm.isValidUrl(url):
                         continue
-                    tab.append({'title':title, 'url':url})
+                    tab.append({'title': title, 'url': url})
                 if len(tab):
                     params = dict(cItem)
-                    params.update({'good_for_fav':False, 'category':nextCategory, 'title':groupTitle, 'c_idx':len(self.cacheCategories)})
+                    params.update({'good_for_fav': False, 'category': nextCategory, 'title': groupTitle, 'c_idx': len(self.cacheCategories)})
                     self.addDir(params)
                     self.cacheCategories.append(tab)
 
@@ -174,7 +174,7 @@ class SKStream(CBaseHostClass):
             for item in tab:
                 params = dict(cItem)
                 params.update(item)
-                params.update({'good_for_fav':False, 'category':nextCategory})
+                params.update({'good_for_fav': False, 'category': nextCategory})
                 self.addDir(params)
             
     def listItems(self, cItem, nextCategory):
@@ -199,12 +199,12 @@ class SKStream(CBaseHostClass):
             icon = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''<img[^>]+?src=['"]([^'^"]+?)['"]''', ignoreCase=True)[0])
             
             params = dict(cItem)
-            params.update({'good_for_fav':True, 'category':nextCategory, 'title':title, 'url':url, 'icon':icon})
+            params.update({'good_for_fav': True, 'category': nextCategory, 'title': title, 'url': url, 'icon': icon})
             self.addDir(params)
         
         if self.cm.isValidUrl(nextPage):
             params = dict(cItem)
-            params.update({'good_for_fav':False, 'title':_('Next page'), 'url':nextPage, 'page':page + 1})
+            params.update({'good_for_fav': False, 'title': _('Next page'), 'url': nextPage, 'page': page + 1})
             self.addDir(params)
             
     def exploreItem(self, cItem, nextCategory):
@@ -218,7 +218,7 @@ class SKStream(CBaseHostClass):
         
         if 'data-embedlien' in data:
             params = dict(cItem)
-            params.update({'desc':desc})
+            params.update({'desc': desc})
             self.addVideo(params)
         elif 'class="episode-' in data:
             self.episodesCache = []
@@ -233,10 +233,10 @@ class SKStream(CBaseHostClass):
                     url = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''href=['"]([^'^"]+?)['"]''')[0])
                     if not self.cm.isValidUrl(url):
                         continue
-                    tab.append({'title':title, 'url':url})
+                    tab.append({'title': title, 'url': url})
                 if len(tab):
                     params = dict(cItem)
-                    params.update({'good_for_fav':False, 'category':nextCategory, 'title':seasonTitle, 'desc':desc, 's_idx':len(self.episodesCache)})
+                    params.update({'good_for_fav': False, 'category': nextCategory, 'title': seasonTitle, 'desc': desc, 's_idx': len(self.episodesCache)})
                     self.addDir(params)
                     self.episodesCache.append(tab)
     
@@ -248,7 +248,7 @@ class SKStream(CBaseHostClass):
             for item in tab:
                 params = dict(cItem)
                 params.update(item)
-                params.update({'good_for_fav':True})
+                params.update({'good_for_fav': True})
                 self.addVideo(params)
         
     def listSearchResult(self, cItem, searchPattern, searchType):
@@ -294,8 +294,8 @@ class SKStream(CBaseHostClass):
                 if n != '':
                     nameTab.append(n)
             
-            url = strwithmeta('|><|'.join(linksTab), {'Referer':cItem['url']})
-            urlTab.append({'name':' | '.join(nameTab), 'url':url, 'need_resolve':1})
+            url = strwithmeta('|><|'.join(linksTab), {'Referer': cItem['url']})
+            urlTab.append({'name': ' | '.join(nameTab), 'url': url, 'need_resolve': 1})
             
         if len(urlTab):
             self.cacheLinks[cItem['url']] = urlTab
@@ -357,7 +357,7 @@ class SKStream(CBaseHostClass):
                                 data = byteify(json.loads(data))
                                 for item in data:
                                     if "mp4" == item['type']:
-                                        urlTab.append({'name':str(item.get('label', 'default')), 'url':item['file']})
+                                        urlTab.append({'name': str(item.get('label', 'default')), 'url': item['file']})
                             break
                         else:
                             if 1 != self.up.checkHostSupport(url):
@@ -381,7 +381,7 @@ class SKStream(CBaseHostClass):
                                     break
                                 
                                 qaptchaKey = self._generatePass(37)
-                                post_data2 = {'action':'qaptcha', 'qaptcha_key':qaptchaKey}
+                                post_data2 = {'action': 'qaptcha', 'qaptcha_key': qaptchaKey}
                                 params2 = dict(self.defaultParams)
                                 params2['header'] = dict(self.AJAX_HEADER)
                                 params2['header']['Referer'] = url
@@ -390,7 +390,7 @@ class SKStream(CBaseHostClass):
                                     break
                                 printDBG(">>>>>>\n%s\n<<<<<<" % data)
                                 
-                                post_data2 = {'submit':'Valider', qaptchaKey:''}
+                                post_data2 = {'submit': 'Valider', qaptchaKey: ''}
                                 sts, data = self.getPage(url, params2, post_data2)
                                 if not sts:
                                     break
@@ -452,7 +452,7 @@ class SKStream(CBaseHostClass):
         
     #MAIN MENU
         if name == None:
-            self.listMainMenu({'name':'category'})
+            self.listMainMenu({'name': 'category'})
         elif category == 'list_categories':
             self.listCategories(self.currItem, 'list_cats_items')
         elif category == 'list_cats_items':
@@ -466,11 +466,11 @@ class SKStream(CBaseHostClass):
     #SEARCH
         elif category in ["search", "search_next_page"]:
             cItem = dict(self.currItem)
-            cItem.update({'search_item':False, 'name':'category'}) 
+            cItem.update({'search_item': False, 'name': 'category'}) 
             self.listSearchResult(cItem, searchPattern, searchType)
     #HISTORIA SEARCH
         elif category == "search_history":
-            self.listsHistory({'name':'history', 'category': 'search'}, 'desc', _("Type: "))
+            self.listsHistory({'name': 'history', 'category': 'search'}, 'desc', _("Type: "))
         else:
             printExc()
         

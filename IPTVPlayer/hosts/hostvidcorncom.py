@@ -46,10 +46,10 @@ def gettytul():
 class VidCorn(CBaseHostClass, CaptchaHelper):
 
     def __init__(self):
-        CBaseHostClass.__init__(self, {'history':'vidcorn.com', 'cookie':'vidcorn.com.cookie'})
+        CBaseHostClass.__init__(self, {'history': 'vidcorn.com', 'cookie': 'vidcorn.com.cookie'})
 
         self.HTTP_HEADER = self.cm.getDefaultHeader(browser='chrome')
-        self.defaultParams = {'header':self.HTTP_HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
+        self.defaultParams = {'header': self.HTTP_HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
 
         self.MAIN_URL = 'https://vidcorn.org/'
         self.DEFAULT_ICON_URL = 'https://www.trackalytics.com/assets/thumbnails/vidcorn.com.jpg'
@@ -82,11 +82,11 @@ class VidCorn(CBaseHostClass, CaptchaHelper):
             if category not in ['series', 'peliculas', 'listas', 'gente']:
                 continue
             title = self.cleanHtmlStr(item)
-            params = MergeDicts(cItem, {'category':category, 'f_type':category, 'title':title, 'url':self.getFullUrl(url)})
+            params = MergeDicts(cItem, {'category': category, 'f_type': category, 'title': title, 'url': self.getFullUrl(url)})
             self.addDir(params)
         
-        MAIN_CAT_TAB = [{'category':'search', 'title': _('Search'), 'search_item':True},
-                        {'category': 'search_history', 'title': _('Search history'),}]
+        MAIN_CAT_TAB = [{'category': 'search', 'title': _('Search'), 'search_item': True},
+                        {'category': 'search_history', 'title': _('Search history'), }]
         self.listsTab(MAIN_CAT_TAB, cItem)
 
     def listFilters(self, cItem, nextCategory):
@@ -105,7 +105,7 @@ class VidCorn(CBaseHostClass, CaptchaHelper):
                 if 'data-filter' in filterData[0]:
                     key = 'f_filter'
                     val = self.cm.ph.getSearchGroups(filterData[0], '''data\-filter=['"]([^'^"]+?)['"]''')[0]
-                    filtersTab.append({'title':title, key:val})
+                    filtersTab.append({'title': title, key: val})
                 elif 'data-order-by' in filterData[0]:
                     key = 'f_order'
                     val = self.cm.ph.getSearchGroups(filterData[0], '''data\-order\-by=['"]([^'^"]+?)['"]''')[0]
@@ -116,7 +116,7 @@ class VidCorn(CBaseHostClass, CaptchaHelper):
                 for item in filterData:
                     title = self.cleanHtmlStr(item)
                     val = self.cm.ph.getSearchGroups(item, '''value=['"]([^'^"]+?)['"]''')[0]
-                    filtersTab.append({'title':title, key:val})
+                    filtersTab.append({'title': title, key: val})
 
                 self.filters.append(filtersTab)
 
@@ -151,7 +151,7 @@ class VidCorn(CBaseHostClass, CaptchaHelper):
                 nextCategory = 'explore_item'
             elif type == 'actores':
                 nextCategory = 'list_actor_items'
-            params = MergeDicts(cItem, {'good_for_fav':True, 'category':nextCategory, 'title':title, 'url':url, 'f_type':type, 'icon':icon, 'desc':' | '.join(descTab)})
+            params = MergeDicts(cItem, {'good_for_fav': True, 'category': nextCategory, 'title': title, 'url': url, 'f_type': type, 'icon': icon, 'desc': ' | '.join(descTab)})
             retList.append(params)
         return retList
 
@@ -176,7 +176,7 @@ class VidCorn(CBaseHostClass, CaptchaHelper):
         self.currList.extend(self._listItems(cItem, data))
 
         if nextPage:
-            params = MergeDicts(cItem, {'title':_('Next page'), 'page':page + 1})
+            params = MergeDicts(cItem, {'title': _('Next page'), 'page': page + 1})
             self.addDir(params)
 
     def _listLists(self, cItem, nextCategory, data):
@@ -196,7 +196,7 @@ class VidCorn(CBaseHostClass, CaptchaHelper):
                 if it:
                     descTab.append(it)
 
-            params = MergeDicts(cItem, {'good_for_fav':True, 'category':nextCategory, 'title':title, 'url':url, 'list_id':listId, 'f_type':'listas', 'icon':icon, 'desc':'[/br]'.join(descTab)})
+            params = MergeDicts(cItem, {'good_for_fav': True, 'category': nextCategory, 'title': title, 'url': url, 'list_id': listId, 'f_type': 'listas', 'icon': icon, 'desc': '[/br]'.join(descTab)})
             retList.append(params)
         return retList
 
@@ -218,7 +218,7 @@ class VidCorn(CBaseHostClass, CaptchaHelper):
         self.currList.extend(self._listLists(cItem, nextCategory, data))
 
         if nextPage:
-            params = MergeDicts(cItem, {'title':_('Next page'), 'page':page + 1})
+            params = MergeDicts(cItem, {'title': _('Next page'), 'page': page + 1})
             self.addDir(params)
 
     def listListItems(self, cItem, nextCategory):
@@ -238,7 +238,7 @@ class VidCorn(CBaseHostClass, CaptchaHelper):
         self.currList.extend(self._listItems(cItem, data))
 
         if nextPage:
-            params = MergeDicts(cItem, {'title':_('Next page'), 'page':page + 1})
+            params = MergeDicts(cItem, {'title': _('Next page'), 'page': page + 1})
             self.addDir(params)
 
     def listPeoples(self, cItem):
@@ -259,7 +259,7 @@ class VidCorn(CBaseHostClass, CaptchaHelper):
         self.currList.extend(self._listItems(cItem, data))
 
         if nextPage:
-            params = MergeDicts(cItem, {'title':_('Next page'), 'page':page + 1})
+            params = MergeDicts(cItem, {'title': _('Next page'), 'page': page + 1})
             self.addDir(params)
 
     def listActorItems(self, cItem):
@@ -310,7 +310,7 @@ class VidCorn(CBaseHostClass, CaptchaHelper):
                     if t:
                         title.append(t)
                 title = '[%s] %s' % (linksType, ' | '.join(title))
-                linksTab.append({'name':title, 'url':strwithmeta(url, {'Referer':cUrl}), 'need_resolve':1})
+                linksTab.append({'name': title, 'url': strwithmeta(url, {'Referer': cUrl}), 'need_resolve': 1})
         return linksTab
 
     def exploreItem(self, cItem):
@@ -338,7 +338,7 @@ class VidCorn(CBaseHostClass, CaptchaHelper):
         trailer = self.getFullUrl(self.cm.ph.getSearchGroups(trailer, '''<iframe[^>]+?src=['"]([^"^']+?)["']''', 1, True)[0], cUrl)
         if trailer:
             params = dict(cItem)
-            params.update({'good_for_fav': False, 'title':title, 'url':strwithmeta(trailer, {'Referer':cUrl}), 'desc':desc, 'prev_url':cUrl})
+            params.update({'good_for_fav': False, 'title': title, 'url': strwithmeta(trailer, {'Referer': cUrl}), 'desc': desc, 'prev_url': cUrl})
             self.addVideo(params)
         
         movieId = self.cm.ph.getSearchGroups(data, '''data\-movie\-id=['"]([^"^']+?)["']''', 1, True)[0]
@@ -346,7 +346,7 @@ class VidCorn(CBaseHostClass, CaptchaHelper):
             return
 
         url = self.getFullUrl('/services/fetch_links')
-        sts, data = self.getPage(url, post_data={'movie':movieId, 'data_type':cItem['f_type']})
+        sts, data = self.getPage(url, post_data={'movie': movieId, 'data_type': cItem['f_type']})
         if not sts:
             return
 
@@ -354,7 +354,7 @@ class VidCorn(CBaseHostClass, CaptchaHelper):
         if len(linksTab):
             self.cacheLinks[cUrl] = linksTab
             params = dict(cItem)
-            params.update({'good_for_fav': False, 'url':cUrl, 'desc':desc, 'prev_url':cUrl})
+            params.update({'good_for_fav': False, 'url': cUrl, 'desc': desc, 'prev_url': cUrl})
             self.addVideo(params)
         else:
             data = self.cm.ph.rgetAllItemsBeetwenNodes(data, ('</div', '>'), ('<a', '>', 'data-season'))
@@ -392,12 +392,12 @@ class VidCorn(CBaseHostClass, CaptchaHelper):
                             tab.append(t)
                     #desc += '[/br]' + ' | '.join(tab)
                     title = '%s: s%se%s %s' % (cItem['title'], sNum.zfill(2), eNum.zfill(2), title)
-                    params = MergeDicts(cItem, {'good_for_fav': False, 'type':'video', 'title':title, 'url':url, 'episode_id':episodeId, 'desc':desc, 'prev_url':cUrl})
+                    params = MergeDicts(cItem, {'good_for_fav': False, 'type': 'video', 'title': title, 'url': url, 'episode_id': episodeId, 'desc': desc, 'prev_url': cUrl})
                     episodes.append(params)
 
                 if len(episodes):
                     params = dict(cItem)
-                    params.update({'good_for_fav': False, 'category':'sub_items', 'title':sTitle, 'sub_items':episodes, 'prev_url':cUrl, 'desc':desc})
+                    params.update({'good_for_fav': False, 'category': 'sub_items', 'title': sTitle, 'sub_items': episodes, 'prev_url': cUrl, 'desc': desc})
                     self.addDir(params)
 
     def listSearchResult(self, cItem, searchPattern, searchType):
@@ -425,7 +425,7 @@ class VidCorn(CBaseHostClass, CaptchaHelper):
                 subItem = self._listItems(cItem, itemData)
 
             if len(subItem):
-                params = MergeDicts(cItem, {'good_for_fav':False, 'category':'sub_items', 'title':headersTitles[idx], 'sub_items':subItem})
+                params = MergeDicts(cItem, {'good_for_fav': False, 'category': 'sub_items', 'title': headersTitles[idx], 'sub_items': subItem})
                 self.addDir(params)
 
     def getLinksForVideo(self, cItem):
@@ -440,7 +440,7 @@ class VidCorn(CBaseHostClass, CaptchaHelper):
 
         if cItem.get('episode_id'):
             url = self.getFullUrl('/services/fetch_links_from_episode')
-            sts, data = self.getPage(url, post_data={'episode':cItem['episode_id']})
+            sts, data = self.getPage(url, post_data={'episode': cItem['episode_id']})
             if not sts:
                 return linksTab
 
@@ -465,7 +465,7 @@ class VidCorn(CBaseHostClass, CaptchaHelper):
 
         linksTab = []
         urlParams = dict(self.defaultParams)
-        urlParams['header'] = MergeDicts(urlParams['header'], {'Referer':videoUrl.meta['Referer']})
+        urlParams['header'] = MergeDicts(urlParams['header'], {'Referer': videoUrl.meta['Referer']})
         
         sts, data = self.getPage(videoUrl, urlParams)
         if not sts:
@@ -479,9 +479,9 @@ class VidCorn(CBaseHostClass, CaptchaHelper):
             urlParams['max_data_size'] = 0
             sts, data = self.getPage(videoUrl, urlParams)
             if sts: 
-                videoUrl = strwithmeta(self.cm.meta['url'], {'Referer':urlParams['header']['Referer']})
+                videoUrl = strwithmeta(self.cm.meta['url'], {'Referer': urlParams['header']['Referer']})
         else:
-            videoUrl = strwithmeta(videoUrl, {'Referer':self.cm.meta['url']})
+            videoUrl = strwithmeta(videoUrl, {'Referer': self.cm.meta['url']})
 
         if 1 == self.up.checkHostSupport(videoUrl):
             linksTab = self.up.getVideoLinkExt(videoUrl)
@@ -546,7 +546,7 @@ class VidCorn(CBaseHostClass, CaptchaHelper):
         if desc == '':
             desc = cItem.get('desc', '')
         
-        return [{'title':self.cleanHtmlStr(title), 'text': self.cleanHtmlStr(desc), 'images':[{'title':'', 'url':self.getFullUrl(icon)}], 'other_info':{'custom_items_list':itemsList}}]
+        return [{'title': self.cleanHtmlStr(title), 'text': self.cleanHtmlStr(desc), 'images': [{'title': '', 'url': self.getFullUrl(icon)}], 'other_info': {'custom_items_list': itemsList}}]
         
     def tryTologin(self):
         printDBG('tryTologin start')
@@ -578,7 +578,7 @@ class VidCorn(CBaseHostClass, CaptchaHelper):
             rm(loginCookie)
             rm(self.COOKIE_FILE)
             if freshSession:
-                sts, data = self.getPage(self.getMainUrl(), MergeDicts(self.defaultParams, {'use_new_session':True}))
+                sts, data = self.getPage(self.getMainUrl(), MergeDicts(self.defaultParams, {'use_new_session': True}))
 
             self.loggedIn = False
             if '' == self.login.strip() or '' == self.password.strip():
@@ -588,7 +588,7 @@ class VidCorn(CBaseHostClass, CaptchaHelper):
                 data = self.cm.ph.getDataBeetwenNodes(data, ('<form', '>', 'login-form'), ('</form', '>'), True, False)[1]
 
                 actionUrl = self.getFullUrl('/services/login')
-                post_data = {'username':self.login, 'password':self.password}
+                post_data = {'username': self.login, 'password': self.password}
 
                 sitekey = self.cm.ph.getSearchGroups(data, '''sitekey=['"]([^'^"]+?)['"]''')[0]
                 if sitekey != '':
@@ -598,7 +598,7 @@ class VidCorn(CBaseHostClass, CaptchaHelper):
                     post_data['g-recaptcha-response'] = token 
 
                 httpParams = dict(self.defaultParams)
-                httpParams['header'] = MergeDicts(httpParams['header'], {'Referer':self.cm.meta['url'], 'X-Requested-With':'XMLHttpRequest', 'Content-Type':'application/x-www-form-urlencoded; charset=UTF-8'})
+                httpParams['header'] = MergeDicts(httpParams['header'], {'Referer': self.cm.meta['url'], 'X-Requested-With': 'XMLHttpRequest', 'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8'})
 
                 sts, data = self.getPage(actionUrl, httpParams, post_data)
 
@@ -636,7 +636,7 @@ class VidCorn(CBaseHostClass, CaptchaHelper):
 
     #MAIN MENU
         if name == None:
-            self.listMain({'name':'category', 'type':'category'})
+            self.listMain({'name': 'category', 'type': 'category'})
         elif category in ['series', 'peliculas']:
             self.listFilters(self.currItem, 'list_items')
         elif category == 'listas':
@@ -661,11 +661,11 @@ class VidCorn(CBaseHostClass, CaptchaHelper):
     #SEARCH
         elif category in ["search", "search_next_page"]:
             cItem = dict(self.currItem)
-            cItem.update({'search_item':False, 'name':'category'}) 
+            cItem.update({'search_item': False, 'name': 'category'}) 
             self.listSearchResult(cItem, searchPattern, searchType)
     #HISTORIA SEARCH
         elif category == "search_history":
-            self.listsHistory({'name':'history', 'category': 'search'}, 'desc', _("Type: "))
+            self.listsHistory({'name': 'history', 'category': 'search'}, 'desc', _("Type: "))
         else:
             printExc()
         

@@ -73,7 +73,7 @@ class LocalMedia(CBaseHostClass):
     ISO_FILES_EXTENSIONS = ['iso']
     
     def __init__(self):
-        CBaseHostClass.__init__(self, {'history':'LocalMedia'})
+        CBaseHostClass.__init__(self, {'history': 'LocalMedia'})
         self.currDir = ''
 
     def getCurrDir(self):
@@ -122,7 +122,7 @@ class LocalMedia(CBaseHostClass):
     def listsMainMenu(self, cItem):
         printDBG("LocalMedia.listsMainMenu [%s]" % cItem)
         # list mount points
-        predefined = [{'title':_('Downloads'), 'path':config.plugins.iptvplayer.NaszaSciezka.value}, {'title':_('rootfs'), 'path':'/'}]
+        predefined = [{'title': _('Downloads'), 'path': config.plugins.iptvplayer.NaszaSciezka.value}, {'title': _('rootfs'), 'path': '/'}]
         for item in predefined:
             params = dict(cItem)
             params.update(item) 
@@ -137,7 +137,7 @@ class LocalMedia(CBaseHostClass):
                 
             if '/' != item['node'] and item['filesystem'] in self.FILE_SYSTEMS:
                 params = dict(cItem)
-                params.update({'title':item['node'], 'path':item['node']}) 
+                params.update({'title': item['node'], 'path': item['node']}) 
                 self.addDir(params)
         
     def _getM3uIcon(self, item, cItem):
@@ -195,7 +195,7 @@ class LocalMedia(CBaseHostClass):
             if item['f_type'] == 'inf':
                 if group == '':
                     need_resolve, url = self._getM3uPlayableUrl(baseUrl, url, item)
-                    params.update({'good_for_fav':True, 'title':item['title'], 'category':'m3u_item', 'url':url, 'desc':item.get('tvg-name', ''), 'icon':icon, 'need_resolve':need_resolve})
+                    params.update({'good_for_fav': True, 'title': item['title'], 'category': 'm3u_item', 'url': url, 'desc': item.get('tvg-name', ''), 'icon': icon, 'need_resolve': need_resolve})
                     self.addVideo(params)
                 else:
                     if group not in groups:
@@ -205,13 +205,13 @@ class LocalMedia(CBaseHostClass):
                         if not self.cm.isValidUrl(groupIcon):
                             groupIcon = icon
                         groups[group] = []
-                        params.update({'good_for_fav':False, 'title':group, 'category':nextCategory, 'f_group':group, 'url':baseUrl, 'desc':'', 'icon':groupIcon})
+                        params.update({'good_for_fav': False, 'title': group, 'category': nextCategory, 'f_group': group, 'url': baseUrl, 'desc': '', 'icon': groupIcon})
                         if 'parent-code' in item:
-                            params.update({'pin_locked':True, 'pin_code':item['parent-code']})
+                            params.update({'pin_locked': True, 'pin_code': item['parent-code']})
                         self.addDir(params)
                     groups[group].append(item)
             elif item['f_type'] == 'import' and self.cm.isValidUrl(url):
-                params.update({'good_for_fav':True, 'title':item['title'], 'path':url, 'desc':'', 'icon':icon})
+                params.update({'good_for_fav': True, 'title': item['title'], 'path': url, 'desc': '', 'icon': icon})
                 self.addDir(params)
         
         if groups != {}:
@@ -228,7 +228,7 @@ class LocalMedia(CBaseHostClass):
             url = item['uri']
             icon = self._getM3uIcon(item, cItem)
             need_resolve, url = self._getM3uPlayableUrl(baseUrl, url, item)
-            params.update({'good_for_fav':True, 'title':item['title'], 'category':'m3u_item', 'url':url, 'desc':item.get('tvg-name', ''), 'icon':icon, 'need_resolve':need_resolve})
+            params.update({'good_for_fav': True, 'title': item['title'], 'category': 'm3u_item', 'url': url, 'desc': item.get('tvg-name', ''), 'icon': icon, 'need_resolve': need_resolve})
             self.addVideo(params)
             
     def showErrorMessage(self, message):
@@ -249,7 +249,7 @@ class LocalMedia(CBaseHostClass):
                     item = self.cm.ph.getSearchGroups(line, '(.+?) on (.+?) type ([^ ]+?) (\([^\)]+?\))', 4)
                     if len(item) < 4:
                         continue
-                    table.append({'device':item[0], 'node':item[1], 'filesystem':item[2], 'options':item[3]})
+                    table.append({'device': item[0], 'node': item[1], 'filesystem': item[2], 'options': item[3]})
             else:
                 message = _('Can not get mount points - cmd mount failed.\nReturn code[%s].\nReturn data[%s].') % (ret['code'], data)
         return table
@@ -322,7 +322,7 @@ class LocalMedia(CBaseHostClass):
         
         if '' != mountPoint:
             params = dict(cItem)
-            params.update({'next_good_for_fav':False, 'path':mountPoint, 'category':'dir'})
+            params.update({'next_good_for_fav': False, 'path': mountPoint, 'category': 'dir'})
             self.listDir(params)
         
     def listDir(self, cItem):
@@ -378,7 +378,7 @@ class LocalMedia(CBaseHostClass):
                 except Exception:
                     title = item[0]
                     printExc()
-                params = {'title':title, 'raw_name':item[0]}
+                params = {'title': title, 'raw_name': item[0]}
                 if 'd' == item[1]:
                     dirTab.append(params)
                 elif 'r' == item[1]:
@@ -405,7 +405,7 @@ class LocalMedia(CBaseHostClass):
             if start > end:
                 params = dict(cItem)
                 params.pop('good_for_fav', None)
-                params.update({'category':'more', 'title':_('More'), 'start':end})
+                params.update({'category': 'more', 'title': _('More'), 'start': end})
                 self.addMore(params)
 
     def addFromTab(self, params, tab, path, category='', need_resolve=0):
@@ -420,7 +420,7 @@ class LocalMedia(CBaseHostClass):
                 printExc()
         for item in tab:
             params = dict(params)
-            params.update({'good_for_fav':params.get('next_good_for_fav', True), 'title':item['title'], 'category':category, 'desc':''})
+            params.update({'good_for_fav': params.get('next_good_for_fav', True), 'title': item['title'], 'category': category, 'desc': ''})
             if category in ['m3u', 'dir', 'iso']:
                 fullPath = os_path.join(path, item['raw_name'])
                 params['path'] = fullPath
@@ -485,7 +485,7 @@ class LocalMedia(CBaseHostClass):
                 retTab = getF4MLinksWithMeta(uri)
                 videoUrls.extend(retTab)
             else:
-                videoUrls.append({'name':'direct link', 'url':uri})
+                videoUrls.append({'name': 'direct link', 'url': uri})
         return videoUrls
         
     def getFavouriteData(self, cItem):
@@ -509,7 +509,7 @@ class LocalMedia(CBaseHostClass):
         need_resolve = 0
         if not fav_data.startswith('file://'):
             need_resolve = 1
-        return [{'name':'', 'url':fav_data, 'need_resolve':need_resolve}]
+        return [{'name': '', 'url': fav_data, 'need_resolve': need_resolve}]
 
     def handleService(self, index, refresh=0, searchPattern='', searchType=''):
         printDBG('handleService start')
@@ -523,7 +523,7 @@ class LocalMedia(CBaseHostClass):
         
     #MAIN MENU
         if name == None:
-            self.listsMainMenu({'name':'category', 'good_for_fav':True})
+            self.listsMainMenu({'name': 'category', 'good_for_fav': True})
         elif category == 'm3u':
             self.listM3u(self.currItem, 'list_m3u_groups')
         elif category == 'list_m3u_groups':
@@ -573,7 +573,7 @@ class IPTVHost(CHostBase):
             if os_path.isdir(path):
                 if '' != self.cFilePath:
                     cutPath, cutFileName = os_path.split(self.cFilePath)
-                    params = IPTVChoiceBoxItem(_('Paste "%s"') % cutFileName, "", {'action':'paste_file', 'path':path})
+                    params = IPTVChoiceBoxItem(_('Paste "%s"') % cutFileName, "", {'action': 'paste_file', 'path': path})
                     retlist.append(params)
         
         ok = False
@@ -601,19 +601,19 @@ class IPTVHost(CHostBase):
             name, ext = os_path.splitext(fileName)
             
             if '' != self.host.currList[Index].get("iso_mount_path", ''):
-                params = IPTVChoiceBoxItem(_('Umount iso file'), "", {'action':'umount_iso_file', 'file_path':fullPath, 'iso_mount_path':self.host.currList[Index]['iso_mount_path']})
+                params = IPTVChoiceBoxItem(_('Umount iso file'), "", {'action': 'umount_iso_file', 'file_path': fullPath, 'iso_mount_path': self.host.currList[Index]['iso_mount_path']})
                 retlist.append(params)
             
             if os_path.isfile(fullPath):
-                params = IPTVChoiceBoxItem(_('Rename'), "", {'action':'rename_file', 'file_path':fullPath})
+                params = IPTVChoiceBoxItem(_('Rename'), "", {'action': 'rename_file', 'file_path': fullPath})
                 retlist.append(params)
-                params = IPTVChoiceBoxItem(_('Remove'), "", {'action':'remove_file', 'file_path':fullPath})
-                retlist.append(params)
-                
-                params = IPTVChoiceBoxItem(_('Copy'), "", {'action':'copy_file', 'file_path':fullPath})
+                params = IPTVChoiceBoxItem(_('Remove'), "", {'action': 'remove_file', 'file_path': fullPath})
                 retlist.append(params)
                 
-                params = IPTVChoiceBoxItem(_('Cut'), "", {'action':'cut_file', 'file_path':fullPath})
+                params = IPTVChoiceBoxItem(_('Copy'), "", {'action': 'copy_file', 'file_path': fullPath})
+                retlist.append(params)
+                
+                params = IPTVChoiceBoxItem(_('Cut'), "", {'action': 'cut_file', 'file_path': fullPath})
                 retlist.append(params)
             
             addPasteAction(path)
@@ -667,7 +667,7 @@ class IPTVHost(CHostBase):
                     retlist = [_('File "%s" already exists') % newPath]
                     ok = False
                 else:
-                    ret = {'sts':True, 'code':0, 'data':''}
+                    ret = {'sts': True, 'code': 0, 'data': ''}
                     if self.cType == 'cut':
                         try:
                             os_rename(self.cFilePath, newPath)

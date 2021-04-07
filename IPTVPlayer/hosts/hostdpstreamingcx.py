@@ -30,18 +30,18 @@ def gettytul():
 class StreamingSeriesWatch(CBaseHostClass):
     
     def __init__(self):
-        CBaseHostClass.__init__(self, {'history':'dpstreaming.cx', 'cookie':'dpstreaming.cx.cookie'})
+        CBaseHostClass.__init__(self, {'history': 'dpstreaming.cx', 'cookie': 'dpstreaming.cx.cookie'})
         
         self.USER_AGENT = 'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:40.0) Gecko/20100101 Firefox/40.0'
         self.HTTP_HEADER = {'User-Agent': self.USER_AGENT, 'Accept': 'text/html'}
         self.MAIN_URL = 'https://www.streaming-series.watch/'
         self.DEFAULT_ICON_URL = 'http://reviewme.co.za/wp-content/uploads/2013/06/lista_series_7327_622x.jpg'
-        self.MAIN_CAT_TAB = [{'category':'list_items', 'title':'Nouveaux Films', 'url':self.getMainUrl()},
-                             {'category':'sort', 'title':'Parcourir', 'url':self.getFullUrl('/parcourir/')},
-                             {'category':'search', 'title': _('Search'), 'search_item':True},
-                             {'category': 'search_history', 'title': _('Search history'),}]
+        self.MAIN_CAT_TAB = [{'category': 'list_items', 'title': 'Nouveaux Films', 'url': self.getMainUrl()},
+                             {'category': 'sort', 'title': 'Parcourir', 'url': self.getFullUrl('/parcourir/')},
+                             {'category': 'search', 'title': _('Search'), 'search_item': True},
+                             {'category': 'search_history', 'title': _('Search history'), }]
                         
-        self.defaultParams = {'header':self.HTTP_HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
+        self.defaultParams = {'header': self.HTTP_HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
         
     def getPage(self, baseUrl, addParams={}, post_data=None):
         if addParams == {}:
@@ -53,7 +53,7 @@ class StreamingSeriesWatch(CBaseHostClass):
             else:
                 return urllib.parse.urljoin(baseUrl, url)
             
-        addParams['cloudflare_params'] = {'domain':self.up.getDomain(baseUrl), 'cookie_file':self.COOKIE_FILE, 'User-Agent':self.USER_AGENT, 'full_url_handle':_getFullUrl}
+        addParams['cloudflare_params'] = {'domain': self.up.getDomain(baseUrl), 'cookie_file': self.COOKIE_FILE, 'User-Agent': self.USER_AGENT, 'full_url_handle': _getFullUrl}
         sts, data = self.cm.getPageCFProtection(baseUrl, addParams, post_data)
         return sts, data
         
@@ -62,7 +62,7 @@ class StreamingSeriesWatch(CBaseHostClass):
         if url == '':
             return ''
         cookieHeader = self.cm.getCookieHeader(self.COOKIE_FILE)
-        return strwithmeta(url, {'Cookie':cookieHeader, 'User-Agent':self.USER_AGENT})
+        return strwithmeta(url, {'Cookie': cookieHeader, 'User-Agent': self.USER_AGENT})
             
     def listSort(self, cItem, nextCategory):
         printDBG("StreamingSeriesWatch.listSort")
@@ -76,7 +76,7 @@ class StreamingSeriesWatch(CBaseHostClass):
             url = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''href=['"]([^'^"]+?)['"]''')[0])
             title = self.cleanHtmlStr(item)
             params = dict(cItem)
-            params.update({'category':nextCategory, 'url':url, 'title':title})
+            params.update({'category': nextCategory, 'url': url, 'title': title})
             self.addDir(params)
     
     def listItems(self, cItem, category):
@@ -106,12 +106,12 @@ class StreamingSeriesWatch(CBaseHostClass):
                     desc.append(t)
             season = self.cm.ph.getSearchGroups(url, 'saison-([0-9]+?)-')[0]
             params = dict(cItem)
-            params.update({'good_for_fav': True, 'category':category, 'url':url, 'title':title, 'desc':'[/br]'.join(desc), 'icon':icon, 'season':season})
+            params.update({'good_for_fav': True, 'category': category, 'url': url, 'title': title, 'desc': '[/br]'.join(desc), 'icon': icon, 'season': season})
             self.addDir(params)
             
         if nextPage != '':
             params = dict(cItem)
-            params.update({'title':_("Next page"), 'url':nextPage})
+            params.update({'title': _("Next page"), 'url': nextPage})
             self.addDir(params)
         
     def listEpisodes(self, cItem):
@@ -132,7 +132,7 @@ class StreamingSeriesWatch(CBaseHostClass):
             url = self.cm.ph.getSearchGroups(item, '''href=['"]([^'^"]+?)['"]''')[0]
             title = self.cleanHtmlStr(item)
             params = dict(cItem)
-            params.update({'good_for_fav': False, 'url':url, 'title':titleSeason + ' s%se%s' % (cItem['season'], title), 'icon':icon, 'desc':desc})
+            params.update({'good_for_fav': False, 'url': url, 'title': titleSeason + ' s%se%s' % (cItem['season'], title), 'icon': icon, 'desc': desc})
             self.addVideo(params)
     
     def listSearchResult(self, cItem, searchPattern, searchType):
@@ -164,7 +164,7 @@ class StreamingSeriesWatch(CBaseHostClass):
                 name = '%s: %s' % (lang, name)
             url = self.cm.ph.getSearchGroups(item, '''<iframe[^>]+?src=['"]([^'^"]+?)['"]''')[0]
             if self.cm.isValidUrl(url):
-                urlTab.append({'name': name, 'url':url, 'need_resolve':1})
+                urlTab.append({'name': name, 'url': url, 'need_resolve': 1})
         return urlTab
         
     def getVideoLinks(self, url):
@@ -199,7 +199,7 @@ class StreamingSeriesWatch(CBaseHostClass):
         params['header'] = header
         params['use_cookie'] = False
         
-        sts, data = self.getPage('https://www.protect-stream.com/%s.php' % secure, params, {'k':k})
+        sts, data = self.getPage('https://www.protect-stream.com/%s.php' % secure, params, {'k': k})
         if not sts:
             return []
         printDBG('==========================================')
@@ -276,7 +276,7 @@ class StreamingSeriesWatch(CBaseHostClass):
         except Exception:
             printExc()
         
-        return [{'title':self.cleanHtmlStr(title), 'text': self.cleanHtmlStr(desc), 'images':[{'title':'', 'url':icon}], 'other_info':otherInfo}]
+        return [{'title': self.cleanHtmlStr(title), 'text': self.cleanHtmlStr(desc), 'images': [{'title': '', 'url': icon}], 'other_info': otherInfo}]
         
     def handleService(self, index, refresh=0, searchPattern='', searchType=''):
         printDBG('handleService start')
@@ -292,7 +292,7 @@ class StreamingSeriesWatch(CBaseHostClass):
         
     #MAIN MENU
         if name == None:
-            self.listsTab(self.MAIN_CAT_TAB, {'name':'category'})
+            self.listsTab(self.MAIN_CAT_TAB, {'name': 'category'})
         elif category == 'sort':
             self.listSort(self.currItem, 'list_items')
         elif category == 'list_items':
@@ -302,11 +302,11 @@ class StreamingSeriesWatch(CBaseHostClass):
     #SEARCH
         elif category in ["search", "search_next_page"]:
             cItem = dict(self.currItem)
-            cItem.update({'search_item':False, 'name':'category'}) 
+            cItem.update({'search_item': False, 'name': 'category'}) 
             self.listSearchResult(cItem, searchPattern, searchType)
     #HISTORIA SEARCH
         elif category == "search_history":
-            self.listsHistory({'name':'history', 'category': 'search'}, 'desc', _("Type: "))
+            self.listsHistory({'name': 'history', 'category': 'search'}, 'desc', _("Type: "))
         else:
             printExc()
         

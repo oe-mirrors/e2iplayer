@@ -29,15 +29,15 @@ def gettytul():
 class MusicMp3Ru(CBaseHostClass):
     
     def __init__(self):
-        CBaseHostClass.__init__(self, {'history':'musicmp3.ru', 'cookie':'musicmp3.ru.cookie'})
+        CBaseHostClass.__init__(self, {'history': 'musicmp3.ru', 'cookie': 'musicmp3.ru.cookie'})
         self.USER_AGENT = 'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:40.0) Gecko/20100101 Firefox/40.0'
         self.MAIN_URL = 'https://musicmp3.ru/'
         self.DEFAULT_ICON_URL = 'http://www.darmowe-na-telefon.pl/uploads/tapeta_240x320_muzyka_23.jpg'
-        self.HTTP_HEADER = {'User-Agent': self.USER_AGENT, 'DNT':'1', 'Accept': 'text/html', 'Accept-Encoding':'gzip, deflate', 'Referer':self.getMainUrl(), 'Origin':self.getMainUrl()}
+        self.HTTP_HEADER = {'User-Agent': self.USER_AGENT, 'DNT': '1', 'Accept': 'text/html', 'Accept-Encoding': 'gzip, deflate', 'Referer': self.getMainUrl(), 'Origin': self.getMainUrl()}
         self.AJAX_HEADER = dict(self.HTTP_HEADER)
-        self.AJAX_HEADER.update({'X-Requested-With': 'XMLHttpRequest', 'Accept-Encoding':'gzip, deflate', 'Content-Type':'application/x-www-form-urlencoded; charset=UTF-8', 'Accept':'application/json, text/javascript, */*; q=0.01'})
+        self.AJAX_HEADER.update({'X-Requested-With': 'XMLHttpRequest', 'Accept-Encoding': 'gzip, deflate', 'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8', 'Accept': 'application/json, text/javascript, */*; q=0.01'})
         
-        self.defaultParams = {'header':self.HTTP_HEADER, 'with_metadata':True, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
+        self.defaultParams = {'header': self.HTTP_HEADER, 'with_metadata': True, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
         self.jscode = []
         
     def getPage(self, baseUrl, addParams={}, post_data=None):
@@ -45,7 +45,7 @@ class MusicMp3Ru(CBaseHostClass):
             addParams = dict(self.defaultParams)
         origBaseUrl = baseUrl
         baseUrl = self.cm.iriToUri(baseUrl)
-        addParams['cloudflare_params'] = {'cookie_file':self.COOKIE_FILE, 'User-Agent':self.USER_AGENT}
+        addParams['cloudflare_params'] = {'cookie_file': self.COOKIE_FILE, 'User-Agent': self.USER_AGENT}
         return self.cm.getPageCFProtection(baseUrl, addParams, post_data)
         
     def getMoreItem(self, cUrl, data):
@@ -81,11 +81,11 @@ class MusicMp3Ru(CBaseHostClass):
                 type = 'albums'
             title = self.cleanHtmlStr(item)
             params = dict(cItem)
-            params.update({'good_for_fav':False, 'category':nextCategory, 'url':self.getFullUrl(url, cUrl), 'title':title, 'f_type':type})
+            params.update({'good_for_fav': False, 'category': nextCategory, 'url': self.getFullUrl(url, cUrl), 'title': title, 'f_type': type})
             self.addDir(params)
         
-        MAIN_CAT_TAB = [{'category':'search', 'title': _('Search'), 'search_item':True}, 
-                        {'category':'search_history', 'title': _('Search history')},]
+        MAIN_CAT_TAB = [{'category': 'search', 'title': _('Search'), 'search_item': True}, 
+                        {'category': 'search_history', 'title': _('Search history')}, ]
         self.listsTab(MAIN_CAT_TAB, cItem)
         
     def listSubMenu(self, cItem):
@@ -105,14 +105,14 @@ class MusicMp3Ru(CBaseHostClass):
             url = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''\shref=['"]([^'^"]+?)['"]''')[0], cUrl)
             title = self.cleanHtmlStr(item)
             params = dict(cItem)
-            params.update({'good_for_fav':False, 'url':url, 'title':title, 'sub_menu_idx':subMenuIdx + 1})
+            params.update({'good_for_fav': False, 'url': url, 'title': title, 'sub_menu_idx': subMenuIdx + 1})
             if subMenuIdx > 0:
-                params.update({'good_for_fav':True, 'category':nextCategory})
+                params.update({'good_for_fav': True, 'category': nextCategory})
             self.addDir(params)
         
         if len(self.currList):
             params = dict(cItem)
-            params.update({'good_for_fav':False, 'category':nextCategory, 'title':_('--All--')})
+            params.update({'good_for_fav': False, 'category': nextCategory, 'title': _('--All--')})
             self.currList.insert(0, params)
             
     def _addBaseItem(self, cItem, nextCategory, item):
@@ -121,7 +121,7 @@ class MusicMp3Ru(CBaseHostClass):
         params.pop('page', None)
         url = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''\shref=['"]([^'^"]+?)['"]''')[0])
         title = self.cleanHtmlStr(item)
-        params.update({'good_for_fav':True, 'category':nextCategory, 'url':url, 'title':title})
+        params.update({'good_for_fav': True, 'category': nextCategory, 'url': url, 'title': title})
         self.addDir(params)
     
     def _getData(self, cItem):
@@ -147,7 +147,7 @@ class MusicMp3Ru(CBaseHostClass):
         page = cItem.get('page', 1)
         if len(self.currList) and moreItem.get('next', '') != '':
             params = dict(cItem)
-            params.update({'good_for_fav':False, 'f_more':moreItem, 'title':_('Next page'), 'page':page + 1})
+            params.update({'good_for_fav': False, 'f_more': moreItem, 'title': _('Next page'), 'page': page + 1})
             self.addDir(params)
         
     def listArtists(self, cItem, nextCategory):
@@ -204,7 +204,7 @@ class MusicMp3Ru(CBaseHostClass):
             params = dict(cItem)
             params.pop('f_more', None)
             params.pop('page', None)
-            params.update({'good_for_fav':True, 'category':nextCategory, 'url':url, 'title':title, 'desc':'[/br]'.join(desc), 'icon':icon})
+            params.update({'good_for_fav': True, 'category': nextCategory, 'url': url, 'title': title, 'desc': '[/br]'.join(desc), 'icon': icon})
             self.addDir(params)
         self._addNextPage(cItem, moreItem)
         
@@ -237,7 +237,7 @@ class MusicMp3Ru(CBaseHostClass):
             desc = ' | '.join(desc)
             if title == '':
                 continue
-            params = {'good_for_fav':True, 'title':title, 'url':basePlaybackUrl, 'rel':rel, 'id':id, 'desc':desc}
+            params = {'good_for_fav': True, 'title': title, 'url': basePlaybackUrl, 'rel': rel, 'id': id, 'desc': desc}
             self.addAudio(params)
         
     def listSearchResult(self, cItem, searchPattern, searchType):
@@ -274,7 +274,7 @@ class MusicMp3Ru(CBaseHostClass):
                 params = dict(cItem)
                 params.pop('f_more', None)
                 params.pop('page', None)
-                params.update({'good_for_fav':True, 'category':'list_albums', 'url':url, 'title':title, 'desc':'[/br]'.join(desc)})
+                params.update({'good_for_fav': True, 'category': 'list_albums', 'url': url, 'title': title, 'desc': '[/br]'.join(desc)})
                 self.addDir(params)
             
     def getLinksForVideo(self, cItem):
@@ -306,7 +306,7 @@ class MusicMp3Ru(CBaseHostClass):
         ret = js_execute(jscode)
         if ret['sts'] and 0 == ret['code']:
             url = playbackUrl + '/' + ret['data'].strip() + "/" + rel
-            return [{'name':'direct', 'url':strwithmeta(url, {'User-Agent':self.USER_AGENT, 'Referer':self.getMainUrl(), 'Cookie':'SessionId=%s;' % cookieVal}), 'need_resolve':0}]
+            return [{'name': 'direct', 'url': strwithmeta(url, {'User-Agent': self.USER_AGENT, 'Referer': self.getMainUrl(), 'Cookie': 'SessionId=%s;' % cookieVal}), 'need_resolve': 0}]
         return []
     
     def handleService(self, index, refresh=0, searchPattern='', searchType=''):
@@ -324,7 +324,7 @@ class MusicMp3Ru(CBaseHostClass):
         
     #MAIN MENU
         if name == None:
-            self.listMainMenu({'name':'category'}, 'sub_menu')
+            self.listMainMenu({'name': 'category'}, 'sub_menu')
         elif category == 'sub_menu':
             self.listSubMenu(self.currItem)
         elif category == 'list_artists':
@@ -336,11 +336,11 @@ class MusicMp3Ru(CBaseHostClass):
     #SEARCH
         elif category in ["search", "search_next_page"]:
             cItem = dict(self.currItem)
-            cItem.update({'search_item':False, 'name':'category'}) 
+            cItem.update({'search_item': False, 'name': 'category'}) 
             self.listSearchResult(cItem, searchPattern, searchType)
     #HISTORIA SEARCH
         elif category == "search_history":
-            self.listsHistory({'name':'history', 'category': 'search'}, 'desc', _("Type: "))
+            self.listsHistory({'name': 'history', 'category': 'search'}, 'desc', _("Type: "))
         else:
             printExc()
         

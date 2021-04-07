@@ -26,7 +26,7 @@ def gettytul():
 class TrailersApple(CBaseHostClass):
 
     def __init__(self):
-        CBaseHostClass.__init__(self, {'history':'TrailersApple', 'cookie':'TrailersApple.cookie'})
+        CBaseHostClass.__init__(self, {'history': 'TrailersApple', 'cookie': 'TrailersApple.cookie'})
         self.MAIN_URL = 'https://trailers.apple.com/'
         self.DEFAULT_ICON_URL = 'http://www.userlogos.org/files/logos/mafi0z/apple%20trailers.png'
         self.cacheLinks = {}
@@ -40,13 +40,13 @@ class TrailersApple(CBaseHostClass):
     def listMain(self, cItem):
         printDBG("TrailersApple.listMain")
         
-        MAIN_CAT_TAB = [{'category':'list_items', 'title':'Just Added', 'url':self.getFullUrl('/trailers/home/feeds/just_added.json')},
-                        {'category':'list_items', 'title':'Exclusive', 'url':self.getFullUrl('/trailers/home/feeds/exclusive.json')},
-                        {'category':'list_items', 'title':'Just HD', 'url':self.getFullUrl('/trailers/home/feeds/just_hd.json')},
-                        {'category':'list_items', 'title':'Most Popular', 'url':self.getFullUrl('/trailers/home/feeds/most_pop.json')},
-                        {'category':'list_items', 'title':'Movie Studios', 'url':self.getFullUrl('/trailers/home/feeds/studios.json')},
-                        {'category':'search', 'title': _('Search'), 'search_item':True},
-                        {'category': 'search_history', 'title': _('Search history'),}]
+        MAIN_CAT_TAB = [{'category': 'list_items', 'title': 'Just Added', 'url': self.getFullUrl('/trailers/home/feeds/just_added.json')},
+                        {'category': 'list_items', 'title': 'Exclusive', 'url': self.getFullUrl('/trailers/home/feeds/exclusive.json')},
+                        {'category': 'list_items', 'title': 'Just HD', 'url': self.getFullUrl('/trailers/home/feeds/just_hd.json')},
+                        {'category': 'list_items', 'title': 'Most Popular', 'url': self.getFullUrl('/trailers/home/feeds/most_pop.json')},
+                        {'category': 'list_items', 'title': 'Movie Studios', 'url': self.getFullUrl('/trailers/home/feeds/studios.json')},
+                        {'category': 'search', 'title': _('Search'), 'search_item': True},
+                        {'category': 'search_history', 'title': _('Search history'), }]
         self.listsTab(MAIN_CAT_TAB, cItem)
     
     def listCatItems(self, cItem, nextCategory):
@@ -57,7 +57,7 @@ class TrailersApple(CBaseHostClass):
             url = self.getFullUrl(self.cm.ph.getSearchGroups(cTree['dat'], '''href=['"]([^'^"]+?)['"]''')[0])
             if url != '':
                 params = dict(cItem)
-                params.update({'good_for_fav':False, 'category':nextCategory, 'title':_('--All--'), 'url':url})
+                params.update({'good_for_fav': False, 'category': nextCategory, 'title': _('--All--'), 'url': url})
                 self.addDir(params)
             
             for item in cTree['list']:
@@ -66,12 +66,12 @@ class TrailersApple(CBaseHostClass):
                 if 'list' not in item:
                     if url != '' and title != '':
                         params = dict(cItem)
-                        params.update({'good_for_fav':False, 'category':nextCategory, 'title':title, 'url':url})
+                        params.update({'good_for_fav': False, 'category': nextCategory, 'title': title, 'url': url})
                         self.addDir(params)
                 elif len(item['list']) == 1 and title != '':
                     item['list'][0]['dat'] = item['dat']
                     params = dict(cItem)
-                    params.update({'good_for_fav':False, 'c_tree':item['list'][0], 'title':title, 'url':url})
+                    params.update({'good_for_fav': False, 'c_tree': item['list'][0], 'title': title, 'url': url})
                     self.addDir(params)
         except Exception:
             printExc()
@@ -109,7 +109,7 @@ class TrailersApple(CBaseHostClass):
                     else:
                         value = item[it[1]]
                     desc.append('%s %s' % (it[0], value))
-                params = {'good_for_fav':True, 'name':'category', 'category':nextCategory, 'title':title, 'url':url, 'icon':icon, 'desc':'[/br]'.join(desc)}
+                params = {'good_for_fav': True, 'name': 'category', 'category': nextCategory, 'title': title, 'url': url, 'icon': icon, 'desc': '[/br]'.join(desc)}
                 self.addDir(params)
         except Exception:
             printExc()
@@ -155,7 +155,7 @@ class TrailersApple(CBaseHostClass):
                 url = cItem['url'] + '#clip_' + str(key)
                 self.cacheLinks[url] = urls
                 params = dict(cItem)
-                params.update({'good_for_fav': False, 'url':url, 'title':cItem['title'] + ': ' + title, 'icon':icon, 'desc':desc})
+                params.update({'good_for_fav': False, 'url': url, 'title': cItem['title'] + ': ' + title, 'icon': icon, 'desc': desc})
                 self.addVideo(params)
         except Exception:
             printExc()
@@ -164,7 +164,7 @@ class TrailersApple(CBaseHostClass):
         searchPattern = urllib.parse.quote_plus(searchPattern)
         
         url = self.getFullUrl('/trailers/home/scripts/quickfind.php?q=') + urllib.parse.quote_plus(searchPattern)
-        self.listItems({'url':url}, 'explore_item')
+        self.listItems({'url': url}, 'explore_item')
         
     def getLinksForVideo(self, cItem):
         printDBG("TrailersApple.getLinksForVideo [%s]" % cItem)
@@ -180,7 +180,7 @@ class TrailersApple(CBaseHostClass):
                         if not self.cacheLinks[key][idx]['name'].startswith('*'):
                             self.cacheLinks[key][idx]['name'] = '*' + self.cacheLinks[key][idx]['name']
         
-        return [{'name':'direct', 'url':videoUrl}]
+        return [{'name': 'direct', 'url': videoUrl}]
         
     def handleService(self, index, refresh=0, searchPattern='', searchType=''):
         printDBG('handleService start')
@@ -194,7 +194,7 @@ class TrailersApple(CBaseHostClass):
         
     #MAIN MENU
         if name == None:
-            self.listMain({'name':'category', 'type':'category'})
+            self.listMain({'name': 'category', 'type': 'category'})
         elif category == 'cat_items':
             self.listCatItems(self.currItem, 'list_items')
         elif category == 'sub_items':
@@ -206,11 +206,11 @@ class TrailersApple(CBaseHostClass):
     #SEARCH
         elif category in ["search", "search_next_page"]:
             cItem = dict(self.currItem)
-            cItem.update({'search_item':False, 'name':'category'}) 
+            cItem.update({'search_item': False, 'name': 'category'}) 
             self.listSearchResult(cItem, searchPattern, searchType)
     #HISTORIA SEARCH
         elif category == "search_history":
-            self.listsHistory({'name':'history', 'category': 'search'}, 'desc', _("Type: "))
+            self.listsHistory({'name': 'history', 'category': 'search'}, 'desc', _("Type: "))
         else:
             printExc()
         

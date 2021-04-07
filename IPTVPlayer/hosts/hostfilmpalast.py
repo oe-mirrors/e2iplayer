@@ -25,13 +25,13 @@ def gettytul():
 class FilmPalastTo(CBaseHostClass):
  
     def __init__(self):
-        CBaseHostClass.__init__(self, {'history':'filmpalast.to', 'cookie':'filmpalast.to.cookie'})
+        CBaseHostClass.__init__(self, {'history': 'filmpalast.to', 'cookie': 'filmpalast.to.cookie'})
         self.USER_AGENT = 'Mozilla/5.0'
         self.HEADER = {'User-Agent': self.USER_AGENT, 'Accept': 'text/html'}
         self.AJAX_HEADER = dict(self.HEADER)
         self.AJAX_HEADER.update({'X-Requested-With': 'XMLHttpRequest'})
         
-        self.defaultParams = {'header':self.HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
+        self.defaultParams = {'header': self.HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
         
         self.DEFAULT_ICON_URL = 'https://filmpalast.to/themes/downloadarchive/images/logo.png'
         self.MAIN_URL = None
@@ -41,28 +41,28 @@ class FilmPalastTo(CBaseHostClass):
         
     def selectDomain(self):
         self.MAIN_URL = 'http://filmpalast.to/'
-        self.MAIN_CAT_TAB = [{'category':'list_items', 'title': _("Main"), 'url':self.getMainUrl()},
-                             {'category':'movies', 'title': _("Movies")},
-                             {'category': 'series', 'title': _("Series"),},
+        self.MAIN_CAT_TAB = [{'category': 'list_items', 'title': _("Main"), 'url': self.getMainUrl()},
+                             {'category': 'movies', 'title': _("Movies")},
+                             {'category': 'series', 'title': _("Series"), },
                              
                              {'category': 'search', 'title': _('Search'), 'search_item': True, },
-                             {'category': 'search_history', 'title': _('Search history'),},
+                             {'category': 'search_history', 'title': _('Search history'), },
                             ]
                             
-        self.MOVIES_CAT_TAB = [{'category':'list_items', 'title': _("New"), 'url':self.getFullUrl('/movies/new')},
-                               {'category':'list_items', 'title': _("Top"), 'url':self.getFullUrl('/movies/top')},
-                               {'category':'movies_cats', 'title': _("Categories"), 'url':self.getFullUrl('/movies/new')},
-                               {'category':'movies_abc', 'title': _("Alphabetically"), 'url':self.getFullUrl('/movies/new')},
+        self.MOVIES_CAT_TAB = [{'category': 'list_items', 'title': _("New"), 'url': self.getFullUrl('/movies/new')},
+                               {'category': 'list_items', 'title': _("Top"), 'url': self.getFullUrl('/movies/top')},
+                               {'category': 'movies_cats', 'title': _("Categories"), 'url': self.getFullUrl('/movies/new')},
+                               {'category': 'movies_abc', 'title': _("Alphabetically"), 'url': self.getFullUrl('/movies/new')},
                               ]
                             
-        self.SERIES_CAT_TAB = [{'category':'list_items', 'title': _("--All Episodes--"), 'url':self.getFullUrl('/serien/view')},
-                               {'category':'series_abc', 'title': _("Alphabetically"), 'url':self.getFullUrl('/serien/view')},
+        self.SERIES_CAT_TAB = [{'category': 'list_items', 'title': _("--All Episodes--"), 'url': self.getFullUrl('/serien/view')},
+                               {'category': 'series_abc', 'title': _("Alphabetically"), 'url': self.getFullUrl('/serien/view')},
                               ]
     
     def getPage(self, baseUrl, addParams={}, post_data=None):
         if addParams == {}:
             addParams = dict(self.defaultParams)
-        addParams['cloudflare_params'] = {'cookie_file':self.COOKIE_FILE, 'User-Agent':self.USER_AGENT}
+        addParams['cloudflare_params'] = {'cookie_file': self.COOKIE_FILE, 'User-Agent': self.USER_AGENT}
         return self.cm.getPageCFProtection(baseUrl, addParams, post_data)
         
     def getFullIconUrl(self, url):
@@ -70,7 +70,7 @@ class FilmPalastTo(CBaseHostClass):
         if url == '':
             return ''
         cookieHeader = self.cm.getCookieHeader(self.COOKIE_FILE)
-        return strwithmeta(url, {'Cookie':cookieHeader, 'User-Agent':self.USER_AGENT})
+        return strwithmeta(url, {'Cookie': cookieHeader, 'User-Agent': self.USER_AGENT})
         
     def _listLinks(self, cItem, m1, m2):
         sts, data = self.getPage(cItem['url'])
@@ -83,12 +83,12 @@ class FilmPalastTo(CBaseHostClass):
         for item in data:
             url = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''href=['"]([^'^"]+?)['"]''')[0])
             title = self.cleanHtmlStr(item)
-            retTab.append({'title':title, 'url':url})
+            retTab.append({'title': title, 'url': url})
         return retTab
         
     def listSeriesABC(self, cItem, nextCategory):
         printDBG("FilmPalastTo.listSeriesABC |%s|" % cItem)
-        self.cacheSeries = {'letters':[]}
+        self.cacheSeries = {'letters': []}
         tab = self._listLinks(cItem, 'id="serien"', '</ul>')
         for item in tab:
             letter = item['title'][0]
@@ -98,12 +98,12 @@ class FilmPalastTo(CBaseHostClass):
                 self.cacheSeries['letters'].append(letter)
                 self.cacheSeries[letter] = []
                 params = dict(cItem)
-                params.update({'category':nextCategory, 'title':letter, 'f_letter':letter})
+                params.update({'category': nextCategory, 'title': letter, 'f_letter': letter})
                 self.addDir(params)
             self.cacheSeries[letter].append(item)
             
         params = dict(cItem)
-        params.update({'category':nextCategory, 'title':_('--All--'), 'f_letter':''})
+        params.update({'category': nextCategory, 'title': _('--All--'), 'f_letter': ''})
         self.currList.insert(0, params)
         
     def listSeriesByLetter(self, cItem, nextCategory):
@@ -180,12 +180,12 @@ class FilmPalastTo(CBaseHostClass):
             # get desc end
             
             params = dict(cItem)
-            params.update({'good_for_fav':True, 'category':nextCategory, 'title':title, 'url':url, 'icon':icon, 'desc':desc})
+            params.update({'good_for_fav': True, 'category': nextCategory, 'title': title, 'url': url, 'icon': icon, 'desc': desc})
             self.addDir(params)
         
         if nextPage:
             params = dict(cItem)
-            params.update({'good_for_fav':False, 'title':_('Next page'), 'page':page + 1})
+            params.update({'good_for_fav': False, 'title': _('Next page'), 'page': page + 1})
             self.addDir(params)
         
     def listEpisodes(self, cItem):
@@ -239,9 +239,9 @@ class FilmPalastTo(CBaseHostClass):
                 if seasonId not in self.cacheSeasons:
                     self.cacheSeasons[seasonId] = []
                     params = dict(cItem)
-                    params.update({'good_for_fav':False, 'category':nextCategory, 'title':seasonTitles.get(seasonId, seasonId), 'f_season':seasonId})
+                    params.update({'good_for_fav': False, 'category': nextCategory, 'title': seasonTitles.get(seasonId, seasonId), 'f_season': seasonId})
                     self.addDir(params)
-                self.cacheSeasons[seasonId].append({'good_for_fav':True, 'title':title, 'url':url})
+                self.cacheSeasons[seasonId].append({'good_for_fav': True, 'title': title, 'url': url})
     
     def listSearchResult(self, cItem, searchPattern, searchType):
         printDBG("FilmPalastTo.listSearchResult cItem[%s], searchPattern[%s] searchType[%s]" % (cItem, searchPattern, searchType))
@@ -267,15 +267,15 @@ class FilmPalastTo(CBaseHostClass):
             data_id = ph.getattr(item, 'data-id')
             data_stamp = ph.getattr(item, 'data-stamp')
             if data_id and data_stamp:
-                url = strwithmeta('%s|%s' % (data_id, data_stamp), {'data_id':data_id, 'data_stamp':data_stamp, 'links_key':cItem['url']}) 
+                url = strwithmeta('%s|%s' % (data_id, data_stamp), {'data_id': data_id, 'data_stamp': data_stamp, 'links_key': cItem['url']}) 
             else:
-                url = strwithmeta(self.getFullUrl(self.cm.ph.getSearchGroups(item, '''url=['"]([^'^"]+?)['"]''')[0]), {'links_key':cItem['url']})
+                url = strwithmeta(self.getFullUrl(self.cm.ph.getSearchGroups(item, '''url=['"]([^'^"]+?)['"]''')[0]), {'links_key': cItem['url']})
             if url == '':
                 continue
             title = ph.clean_html(ph.find(item, ('<p', '>'), '</p>', flags=0)[1])
             if title == '':
                 title = ph.clean_html(item)
-            linksTab.append({'name':title, 'url':strwithmeta(url, {'Referer':cItem['url']}), 'need_resolve':1})
+            linksTab.append({'name': title, 'url': strwithmeta(url, {'Referer': cItem['url']}), 'need_resolve': 1})
         
         if len(linksTab):
             self.cacheLinks[cItem['url']] = linksTab
@@ -306,7 +306,7 @@ class FilmPalastTo(CBaseHostClass):
             urlParams = dict(self.defaultParams)
             urlParams['header'] = dict(self.AJAX_HEADER)
             urlParams['header']['Referer'] = key
-            sts, data = self.getPage(url, urlParams, {'streamID':data_id})
+            sts, data = self.getPage(url, urlParams, {'streamID': data_id})
             if not sts:
                 return []
             
@@ -398,7 +398,7 @@ class FilmPalastTo(CBaseHostClass):
         if icon == '':
             icon = cItem.get('icon', self.DEFAULT_ICON_URL)
         
-        return [{'title':self.cleanHtmlStr(title), 'text': self.cleanHtmlStr(desc), 'images':[{'title':'', 'url':self.getFullUrl(icon)}], 'other_info':otherInfo}]
+        return [{'title': self.cleanHtmlStr(title), 'text': self.cleanHtmlStr(desc), 'images': [{'title': '', 'url': self.getFullUrl(icon)}], 'other_info': otherInfo}]
 
     def handleService(self, index, refresh=0, searchPattern='', searchType=''):
         printDBG('handleService start')
@@ -417,7 +417,7 @@ class FilmPalastTo(CBaseHostClass):
         
     #MAIN MENU
         if name == None:
-            self.listsTab(self.MAIN_CAT_TAB, {'name':'category'})
+            self.listsTab(self.MAIN_CAT_TAB, {'name': 'category'})
         elif 'movies' == category:
             self.listsTab(self.MOVIES_CAT_TAB, self.currItem)
         elif 'movies_cats' == category:
@@ -442,11 +442,11 @@ class FilmPalastTo(CBaseHostClass):
     #SEARCH
         elif category in ["search", "search_next_page"]:
             cItem = dict(self.currItem)
-            cItem.update({'search_item':False, 'name':'category'}) 
+            cItem.update({'search_item': False, 'name': 'category'}) 
             self.listSearchResult(cItem, searchPattern, searchType)
     #HISTORIA SEARCH
         elif category == "search_history":
-            self.listsHistory({'name':'history', 'category': 'search'}, 'desc', _("Type: "))
+            self.listsHistory({'name': 'history', 'category': 'search'}, 'desc', _("Type: "))
         else:
             printExc()
         

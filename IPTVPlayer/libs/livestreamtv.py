@@ -49,7 +49,7 @@ class LiveStreamTvApi(CBaseHostClass):
             else:
                 desc = '[online] ' + desc
             if self.cm.isValidUrl(url):
-                channelsList.append({'name':'live-stream.tv', 'title':title, 'url':url, 'desc':desc, 'icon':icon})
+                channelsList.append({'name': 'live-stream.tv', 'title': title, 'url': url, 'desc': desc, 'icon': icon})
         return channelsList
     
     def getVideoLink(self, cItem):

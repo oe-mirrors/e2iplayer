@@ -64,12 +64,12 @@ class SubtitlesGrProvider(CBaseSubProviderClass):
     def __init__(self, params={}):
         self.MAIN_URL = 'http://gr.greek-subtitles.com/'
         self.USER_AGENT = 'Mozilla/5.0 (X11; Linux i686) AppleWebKit/537.36 (KHTML, like Gecko) Ubuntu Chromium/37.0.2062.120 Chrome/37.0.2062.120 Safari/537.36'
-        self.HTTP_HEADER = {'User-Agent':self.USER_AGENT, 'Referer':self.MAIN_URL, 'Accept':'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8', 'Accept-Encoding':'gzip, deflate'}
+        self.HTTP_HEADER = {'User-Agent': self.USER_AGENT, 'Referer': self.MAIN_URL, 'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8', 'Accept-Encoding': 'gzip, deflate'}
         
         params['cookie'] = 'subtitlesgr.cookie'
         CBaseSubProviderClass.__init__(self, params)
         
-        self.defaultParams = {'header':self.HTTP_HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
+        self.defaultParams = {'header': self.HTTP_HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
         self.cacheFilters = {}
         
         self.dInfo = params['discover_info']
@@ -102,12 +102,12 @@ class SubtitlesGrProvider(CBaseSubProviderClass):
             title = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(item, '<a', '</a>')[1])
             desc = self.cleanHtmlStr(item.replace('</td>', ' | ').replace('</a>', ' | '))
             params = dict(cItem)
-            params.update({'name':'category', 'category':nextCategory, 'title':title, 'url':url, 'lang':lang, 'fps':0, 'desc':desc})
+            params.update({'name': 'category', 'category': nextCategory, 'title': title, 'url': url, 'lang': lang, 'fps': 0, 'desc': desc})
             self.addDir(params)
             
         if nextPage:
             params = dict(cItem)
-            params.update({'title':_('Next page'), 'page':page + 1})
+            params.update({'title': _('Next page'), 'page': page + 1})
             self.addDir(params)
         
     def getSubtitlesList(self, cItem):
@@ -132,7 +132,7 @@ class SubtitlesGrProvider(CBaseSubProviderClass):
             return
         
         cItem = dict(cItem)
-        cItem.update({'category':'', 'path':tmpDIR + '/subs', 'fps':fps, 'imdbid':imdbid, 'sub_id':subId})
+        cItem.update({'category': '', 'path': tmpDIR + '/subs', 'fps': fps, 'imdbid': imdbid, 'sub_id': subId})
         self.listSupportedFilesFromPath(cItem, self.getSupportedFormats(all=True))
             
     def _getFileName(self, title, lang, subId, imdbid, fps, ext):
@@ -167,7 +167,7 @@ class SubtitlesGrProvider(CBaseSubProviderClass):
         printDBG(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>")
         
         if self.converFileToUtf8(inFilePath, outFileName, lang):
-            retData = {'title':title, 'path':outFileName, 'lang':lang, 'imdbid':imdbid, 'sub_id':subId, 'fps':fps}
+            retData = {'title': title, 'path': outFileName, 'lang': lang, 'imdbid': imdbid, 'sub_id': subId, 'fps': fps}
         
         return retData
     

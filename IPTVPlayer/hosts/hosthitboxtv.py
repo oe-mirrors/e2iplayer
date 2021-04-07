@@ -42,18 +42,18 @@ class Hitbox(CBaseHostClass):
     MAIN_URL = 'http://api.hitbox.tv/'
     MAIN_URLS = 'https://api.hitbox.tv/'
 
-    MAIN_CAT_TAB = [{'category':'games_list', 'title':_('Games played Now'), 'url': MAIN_URL + 'api/games?fast=true&limit={0}&media=true&offset={1}&size=list&liveonly=true'},
-                    {'category':'media', 'title':_('Live'), 'url':MAIN_URL + 'api/media/live/list?filter=popular&game=0&hiddenOnly=false&showHidden=true&fast=true&limit={0}&media=true&offset={1}&size=list&liveonly=true'},
-                    {'category':'media', 'title':_('Videos'), 'url':MAIN_URL + 'api/media/video/list?filter=weekly&follower_id=&game=0&fast=true&limit={0}&media=true&offset={1}&size=list'},
-                    {'category':'search', 'title':_('Search'), 'search_item':True},
-                    {'category':'search_history', 'title':_('Search history')}]
+    MAIN_CAT_TAB = [{'category': 'games_list', 'title': _('Games played Now'), 'url': MAIN_URL + 'api/games?fast=true&limit={0}&media=true&offset={1}&size=list&liveonly=true'},
+                    {'category': 'media', 'title': _('Live'), 'url': MAIN_URL + 'api/media/live/list?filter=popular&game=0&hiddenOnly=false&showHidden=true&fast=true&limit={0}&media=true&offset={1}&size=list&liveonly=true'},
+                    {'category': 'media', 'title': _('Videos'), 'url': MAIN_URL + 'api/media/video/list?filter=weekly&follower_id=&game=0&fast=true&limit={0}&media=true&offset={1}&size=list'},
+                    {'category': 'search', 'title': _('Search'), 'search_item': True},
+                    {'category': 'search_history', 'title': _('Search history')}]
                     
-    GAME_CAT_TAB = [{'category':'media', 'title':_('Live Channels'), 'url':'live'},
-                    {'category':'media', 'title':_('Videos'), 'url':'video'}]
+    GAME_CAT_TAB = [{'category': 'media', 'title': _('Live Channels'), 'url': 'live'},
+                    {'category': 'media', 'title': _('Videos'), 'url': 'video'}]
     
     def __init__(self):
         printDBG("Hitbox.__init__")
-        CBaseHostClass.__init__(self, {'history':'Hitbox.tv'})
+        CBaseHostClass.__init__(self, {'history': 'Hitbox.tv'})
         
     def _getFullUrl(self, url, baseUrl=None):
         if None == baseUrl:
@@ -131,7 +131,7 @@ class Hitbox(CBaseHostClass):
                 return 
             if len(json.loads(data)["categories"]):
                 params = dict(cItem)
-                params.update({'title':_('Next page'), 'page':page + 1})
+                params.update({'title': _('Next page'), 'page': page + 1})
                 self.addDir(params)
         except Exception:
             printExc()
@@ -176,7 +176,7 @@ class Hitbox(CBaseHostClass):
                 return 
             if len(json.loads(data)[key]):
                 params = dict(cItem)
-                params.update({'title':_('Next page'), 'page':page + 1})
+                params.update({'title': _('Next page'), 'page': page + 1})
                 self.addDir(params)
         except Exception:
             printExc()
@@ -196,7 +196,7 @@ class Hitbox(CBaseHostClass):
         urls = []
         if 'channel_link' in cItem:
             live = True
-            urls.append({'name':'hls', 'type':'hls', 'url':Hitbox.MAIN_URL + 'player/hls/%s.m3u8' % cItem['channel_link'].split('/')[-1]})
+            urls.append({'name': 'hls', 'type': 'hls', 'url': Hitbox.MAIN_URL + 'player/hls/%s.m3u8' % cItem['channel_link'].split('/')[-1]})
         elif 'media_id' in cItem:
             live = False
             sts, data = self.cm.getPage(Hitbox.MAIN_URL + 'api/player/config/video/%s?redis=true&embed=false&qos=false&redis=true&showHidden=true' % cItem['media_id'])
@@ -220,7 +220,7 @@ class Hitbox(CBaseHostClass):
                                 url = Hitbox.MAIN_URL + '/' + url
                             
                         if url.startswith('http'):
-                            urls.append({'name':item.get('label', 'vod'), 'type':type, 'url':url})
+                            urls.append({'name': item.get('label', 'vod'), 'type': type, 'url': url})
                             if 'vod' == type:
                                 break
                 except Exception:
@@ -232,11 +232,11 @@ class Hitbox(CBaseHostClass):
                 url = urlItem['url']
                 data = getDirectM3U8Playlist(url, checkExt=False)
                 if 1 == len(data):
-                    urlItem['url'] = urlparser.decorateUrl(urlItem['url'], {'iptv_proto':'m3u8', 'iptv_livestream':live})
+                    urlItem['url'] = urlparser.decorateUrl(urlItem['url'], {'iptv_proto': 'm3u8', 'iptv_livestream': live})
                     urlTab.append(urlItem)
                 else:
                     for item in data:
-                        item['url'] = urlparser.decorateUrl(item['url'], {'iptv_proto':'m3u8', 'iptv_livestream':live})
+                        item['url'] = urlparser.decorateUrl(item['url'], {'iptv_proto': 'm3u8', 'iptv_livestream': live})
                         urlTab.append(item)
             else:
                 urlTab.append(urlItem)
@@ -252,7 +252,7 @@ class Hitbox(CBaseHostClass):
         self.currList = [] 
 
         if None == name:
-            self.listsTab(Hitbox.MAIN_CAT_TAB, {'name':'category'})
+            self.listsTab(Hitbox.MAIN_CAT_TAB, {'name': 'category'})
     #GAMES
         elif 'games_list' == category:
             self.listGames(self.currItem, 'games_tab')
@@ -264,11 +264,11 @@ class Hitbox(CBaseHostClass):
     #WYSZUKAJ
         elif category in ["search"]:
             cItem = dict(self.currItem)
-            cItem.update({'search_item':False, 'name':'category'}) 
+            cItem.update({'search_item': False, 'name': 'category'}) 
             self.listSearchResult(cItem, searchPattern, searchType)
     #HISTORIA WYSZUKIWANIA
         elif category == "search_history":
-            self.listsHistory({'name':'history', 'category': 'search'}, 'desc', _("Type: "))
+            self.listsHistory({'name': 'history', 'category': 'search'}, 'desc', _("Type: "))
         else:
             printExc()
         CBaseHostClass.endHandleService(self, index, refresh)

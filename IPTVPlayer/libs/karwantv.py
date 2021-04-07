@@ -41,7 +41,7 @@ class KarwanTvApi(CBaseHostClass):
         self.COOKIE_FILE = GetCookieDir('karwantv.cookie')
         
         self.http_params = {}
-        self.http_params.update({'header':self.HEADER, 'save_cookie': True, 'load_cookie': True, 'cookiefile': self.COOKIE_FILE})
+        self.http_params.update({'header': self.HEADER, 'save_cookie': True, 'load_cookie': True, 'cookiefile': self.COOKIE_FILE})
     
     def getMainUrl24(self):
         return 'http://www.karwan24.com/'
@@ -61,7 +61,7 @@ class KarwanTvApi(CBaseHostClass):
             initList = cItem.get('init_list', True)
             if initList:
                 rm(self.COOKIE_FILE)
-                for item in [{'title':'TV', 'priv_cat':'tv'}, {'url':self.getFullUrl('radio.html'), 'title':'Radio', 'priv_cat':'radio'}]: #{'url':self.getMainUrl24(), 'title':'Karwan24.com', 'priv_cat':'karwan24_tv'}
+                for item in [{'title': 'TV', 'priv_cat': 'tv'}, {'url': self.getFullUrl('radio.html'), 'title': 'Radio', 'priv_cat': 'radio'}]: #{'url':self.getMainUrl24(), 'title':'Karwan24.com', 'priv_cat':'karwan24_tv'}
                     params = dict(cItem)
                     params.update(item)
                     params['init_list'] = False
@@ -78,7 +78,7 @@ class KarwanTvApi(CBaseHostClass):
                         icon = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''src=['"]([^"^']+?)['"]''')[0])
                         url = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''href=['"]([^'^"]+?)['"]''')[0])
                         title = self.cleanHtmlStr(item)                
-                        params = {'name':'karwan.tv', 'title':title, 'url':url, 'icon':icon}
+                        params = {'name': 'karwan.tv', 'title': title, 'url': url, 'icon': icon}
                         if category == 'radio':
                             params['type'] = 'audio'
                         else:
@@ -94,7 +94,7 @@ class KarwanTvApi(CBaseHostClass):
                         url = self.getFullUrl24(self.cm.ph.getSearchGroups(item, '''href=['"]([^'^"]+?)['"]''')[0])
                         title = self.cleanHtmlStr(self.cm.ph.getSearchGroups(item, '''title=['"]([^'^"]+?)['"]''')[0])
                         desc = self.cleanHtmlStr(item)                
-                        params = {'name':'karwan.tv', 'title':title, 'url':url, 'desc':desc, 'icon':icon}
+                        params = {'name': 'karwan.tv', 'title': title, 'url': url, 'desc': desc, 'icon': icon}
                         if category == 'radio':
                             params['type'] = 'audio'
                         else:

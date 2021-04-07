@@ -32,15 +32,15 @@ class Filma24hdCom(CBaseHostClass):
     MAIN_TV_SERIES_URL = 'http://seriale.filma24hd.com/'
     DEFAULT_TV_SERIES_ICON_URL = 'http://seriale.filma24hd.com/wp-content/uploads/2015/12/f24hdserie.png'
     
-    MAIN_CAT_TAB = [{'category':'movies', 'title': _('Movies'), 'url':MAIN_URL, 'icon':DEFAULT_ICON_URL},
-                    {'category':'series', 'title': _('TV Series'), 'url':MAIN_TV_SERIES_URL, 'icon':DEFAULT_TV_SERIES_ICON_URL},
-                    {'category':'search', 'title': _('Search'), 'search_item':True, 'icon':DEFAULT_ICON_URL},
-                    {'category':'search_history', 'title': _('Search history'), 'icon':DEFAULT_ICON_URL} 
+    MAIN_CAT_TAB = [{'category': 'movies', 'title': _('Movies'), 'url': MAIN_URL, 'icon': DEFAULT_ICON_URL},
+                    {'category': 'series', 'title': _('TV Series'), 'url': MAIN_TV_SERIES_URL, 'icon': DEFAULT_TV_SERIES_ICON_URL},
+                    {'category': 'search', 'title': _('Search'), 'search_item': True, 'icon': DEFAULT_ICON_URL},
+                    {'category': 'search_history', 'title': _('Search history'), 'icon': DEFAULT_ICON_URL} 
                    ]
 
  
     def __init__(self):
-        CBaseHostClass.__init__(self, {'history':'Filma24hdCom', 'cookie':'Filma24hdCom.cookie'})
+        CBaseHostClass.__init__(self, {'history': 'Filma24hdCom', 'cookie': 'Filma24hdCom.cookie'})
         self.seriesSubCategoryCache = []
         
     def _getFullUrl(self, url, series=False):
@@ -73,7 +73,7 @@ class Filma24hdCom(CBaseHostClass):
             if url == '' or 'seriale' in url:
                 continue
             params = dict(cItem)
-            params.update({'category':nextCategory, 'url':self._getFullUrl(url), 'title':title})
+            params.update({'category': nextCategory, 'url': self._getFullUrl(url), 'title': title})
             self.addDir(params)
         
     def listSeriesCategory(self, cItem, nextCategory):
@@ -100,11 +100,11 @@ class Filma24hdCom(CBaseHostClass):
             for subItem in subItems:
                 title = self.cleanHtmlStr(subItem)
                 url = self.cm.ph.getSearchGroups(subItem, '''href=['"]([^"^']+?)["']''', 1, True)[0]
-                subItemsTab.append({'title':title, 'url':self._getFullUrl(url)})
+                subItemsTab.append({'title': title, 'url': self._getFullUrl(url)})
                 
             if len(subItemsTab):
                 params = dict(cItem)
-                params.update({'category':nextCategory, 'sub_idx':len(self.seriesSubCategoryCache), 'url':self._getFullUrl(subCategoryUrl), 'title':subCategoryTitle})
+                params.update({'category': nextCategory, 'sub_idx': len(self.seriesSubCategoryCache), 'url': self._getFullUrl(subCategoryUrl), 'title': subCategoryTitle})
                 self.addDir(params)
                 self.seriesSubCategoryCache.append(subItemsTab)
 
@@ -161,12 +161,12 @@ class Filma24hdCom(CBaseHostClass):
             desc = self.cleanHtmlStr(item.split('<p class="entry-meta">')[-1])
             
             params = dict(cItem)
-            params.update({'title': self.cleanHtmlStr(title), 'url':self._getFullUrl(url), 'desc': desc, 'icon':self._getFullUrl(icon)})
+            params.update({'title': self.cleanHtmlStr(title), 'url': self._getFullUrl(url), 'desc': desc, 'icon': self._getFullUrl(icon)})
             self.addVideo(params)
         
         if nextPage:
             params = dict(cItem)
-            params.update({'title':_('Next page'), 'page':page + 1})
+            params.update({'title': _('Next page'), 'page': page + 1})
             self.addDir(params)
             
     def listSeasons(self, cItem, nextCategory):
@@ -197,12 +197,12 @@ class Filma24hdCom(CBaseHostClass):
         
         videoUrl = self.cm.ph.getSearchGroups(data, '''<iframe[^>]+?src=['"](http[^"^']+?)['"]''', 1, True)[0]
         if 1 == self.up.checkHostSupport(videoUrl):
-            urlTab.append({'name':self.up.getHostName(videoUrl), 'url':videoUrl, 'need_resolve':1})
+            urlTab.append({'name': self.up.getHostName(videoUrl), 'url': videoUrl, 'need_resolve': 1})
         
         videoUrlTab = self.cm.ph.getDataBeetwenMarkers(data, '<video ', '</video>', caseSensitive=False)[1]
         videoUrlTab = re.compile('''<source[^>]*?src=['"](http[^"]+?)['"][^>]*?mp4[^>]*?''', re.IGNORECASE).findall(videoUrlTab)
         for idx in range(len(videoUrlTab)):
-            urlTab.append({'name':'direct %d' % (idx + 1), 'url':videoUrlTab[idx], 'need_resolve':0})
+            urlTab.append({'name': 'direct %d' % (idx + 1), 'url': videoUrlTab[idx], 'need_resolve': 0})
         
         videoUrlTab = self.cm.ph.getDataBeetwenMarkers(data, '<tbody>', '</tbody>', caseSensitive=False)[1]
         videoUrlTab += self.cm.ph.getDataBeetwenMarkers(data, '<map ', '</map>', caseSensitive=False)[1]
@@ -210,7 +210,7 @@ class Filma24hdCom(CBaseHostClass):
         for item in videoUrlTab:
             if 1 != self.up.checkHostSupport(item):
                 continue
-            urlTab.append({'name':self.up.getHostName(item), 'url':item, 'need_resolve':1})
+            urlTab.append({'name': self.up.getHostName(item), 'url': item, 'need_resolve': 1})
         return urlTab
         
     def getVideoLinks(self, videoUrl):
@@ -221,7 +221,7 @@ class Filma24hdCom(CBaseHostClass):
         return cItem['url']
         
     def getLinksForFavourite(self, fav_data):
-        return self.getLinksForVideo({'url':fav_data})
+        return self.getLinksForVideo({'url': fav_data})
 
     def getArticleContent(self, cItem):
         printDBG("Filma24hdCom.getArticleContent [%s]" % cItem)
@@ -244,7 +244,7 @@ class Filma24hdCom(CBaseHostClass):
         title = cItem.get('title', '')
         otherInfo = {}
         
-        return [{'title':self.cleanHtmlStr(title), 'text': self.cleanHtmlStr(desc), 'images':[{'title':'', 'url':self._getFullUrl(icon)}], 'other_info':otherInfo}]
+        return [{'title': self.cleanHtmlStr(title), 'text': self.cleanHtmlStr(desc), 'images': [{'title': '', 'url': self._getFullUrl(icon)}], 'other_info': otherInfo}]
         
     def handleService(self, index, refresh=0, searchPattern='', searchType=''):
         printDBG('handleService start')
@@ -258,7 +258,7 @@ class Filma24hdCom(CBaseHostClass):
         
     #MAIN MENU
         if name == None:
-            self.listsTab(self.MAIN_CAT_TAB, {'name':'category'})
+            self.listsTab(self.MAIN_CAT_TAB, {'name': 'category'})
     #MOVIES
         elif category == 'movies':
             self.listMoviesCategory(self.currItem, 'list_items')
@@ -267,7 +267,7 @@ class Filma24hdCom(CBaseHostClass):
     #TVSERIES
         elif category == 'series':
             params = dict(self.currItem)
-            params.update({'category':'list_items', 'title':_('--All--')})
+            params.update({'category': 'list_items', 'title': _('--All--')})
             self.addDir(params)
             self.listSeriesCategory(self.currItem, 'list_seasons')
         elif category == 'list_seasons':
@@ -275,11 +275,11 @@ class Filma24hdCom(CBaseHostClass):
     #SEARCH
         elif category in ["search", "search_next_page"]:
             cItem = dict(self.currItem)
-            cItem.update({'search_item':False, 'name':'category'}) 
+            cItem.update({'search_item': False, 'name': 'category'}) 
             self.listSearchResult(cItem, searchPattern, searchType)
     #HISTORIA SEARCH
         elif category == "search_history":
-            self.listsHistory({'name':'history', 'category': 'search'}, 'desc', _("Type: "))
+            self.listsHistory({'name': 'history', 'category': 'search'}, 'desc', _("Type: "))
         else:
             printExc()
         

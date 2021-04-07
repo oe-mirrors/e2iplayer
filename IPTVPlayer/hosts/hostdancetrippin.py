@@ -24,8 +24,8 @@ def gettytul():
 class DancetrippinTV(CBaseHostClass):
  
     def __init__(self):
-        CBaseHostClass.__init__(self, {'history':'DancetrippinTV.tv', 'cookie':'kinomantv.cookie'})
-        self.defaultParams = {'with_metadata':True, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
+        CBaseHostClass.__init__(self, {'history': 'DancetrippinTV.tv', 'cookie': 'kinomantv.cookie'})
+        self.defaultParams = {'with_metadata': True, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
         
         self.HEADER = {'User-Agent': 'Mozilla/5.0', 'Accept': 'text/html'}
         self.AJAX_HEADER = dict(self.HEADER)
@@ -34,16 +34,16 @@ class DancetrippinTV(CBaseHostClass):
         self.MAIN_URL = "http://www.dancetelevision.net/"
         self.DEFAULT_ICON_URL = 'https://frenezy.files.wordpress.com/2010/10/dancetrippin.jpg'
         
-        self.MAIN_CAT_TAB = [{'category':'fill_items', 'title': _('LATEST CONTENT'), 'url':self.getMainUrl()},
-                             {'category':'channels', 'title': _('CHANNELS '), 'url':self.getMainUrl()},
-                             {'category':'artists', 'title': _('ARTISTS'), 'url':self.getMainUrl()},
-                             {'category':'fill_items', 'title': _('PARTIES'), 'url':self.getFullUrl('/parties')},
-                             {'category':'fill_items', 'title': _('VENUES'), 'url':self.getFullUrl('/venues')},
-                             {'category':'search', 'title': _('Search'), 'search_item':True},
-                             {'category':'search_history', 'title': _('Search history')}]
+        self.MAIN_CAT_TAB = [{'category': 'fill_items', 'title': _('LATEST CONTENT'), 'url': self.getMainUrl()},
+                             {'category': 'channels', 'title': _('CHANNELS '), 'url': self.getMainUrl()},
+                             {'category': 'artists', 'title': _('ARTISTS'), 'url': self.getMainUrl()},
+                             {'category': 'fill_items', 'title': _('PARTIES'), 'url': self.getFullUrl('/parties')},
+                             {'category': 'fill_items', 'title': _('VENUES'), 'url': self.getFullUrl('/venues')},
+                             {'category': 'search', 'title': _('Search'), 'search_item': True},
+                             {'category': 'search_history', 'title': _('Search history')}]
         
-        self.ARTISTS_CAT_TAB = [{'category':'fill_items', 'title': _('Most featured'), 'url':self.getFullUrl('/artists')},
-                                {'category':'fill_items', 'title': _('Alphabetical '), 'url':self.getFullUrl('/artists/sort/alphabetical')}]
+        self.ARTISTS_CAT_TAB = [{'category': 'fill_items', 'title': _('Most featured'), 'url': self.getFullUrl('/artists')},
+                                {'category': 'fill_items', 'title': _('Alphabetical '), 'url': self.getFullUrl('/artists/sort/alphabetical')}]
         
         self.cacheItems = []
         self.cacheFilters = []
@@ -74,7 +74,7 @@ class DancetrippinTV(CBaseHostClass):
             icon = self.getFullIconUrl(self.cm.ph.getSearchGroups(item, '''\ssrc=['"]([^'^"]+?)['"]''')[0])
             title = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(item, ('<a', '>'), ('</a', '>'), False)[1])
             params = dict(cItem)
-            params.update({'good_for_fav':False, 'category':nextCategory, 'url':url, 'title':title, 'icon':icon})
+            params.update({'good_for_fav': False, 'category': nextCategory, 'url': url, 'title': title, 'icon': icon})
             self.addDir(params)
         
     def listChannel(self, cItem):
@@ -100,7 +100,7 @@ class DancetrippinTV(CBaseHostClass):
             
             title = self.cleanHtmlStr(tmp)
             params = dict(cItem)
-            params.update({'good_for_fav':False, 'category':nextCategory, 'url':url, 'title':title})
+            params.update({'good_for_fav': False, 'category': nextCategory, 'url': url, 'title': title})
             self.addDir(params)
         
     def listPlaylists24(self, cItem, nextCategory):
@@ -121,7 +121,7 @@ class DancetrippinTV(CBaseHostClass):
             title = self.cleanHtmlStr(self.cleanHtmlStr(item[0]))
             desc = self.cleanHtmlStr(item[-1]) 
             params = dict(cItem)
-            params.update({'good_for_fav':True, 'category':nextCategory, 'url':url, 'title':title, 'icon':icon, 'desc':desc})
+            params.update({'good_for_fav': True, 'category': nextCategory, 'url': url, 'title': title, 'icon': icon, 'desc': desc})
             self.addDir(params)
             
     def listPlaylist(self, cItem):
@@ -149,12 +149,12 @@ class DancetrippinTV(CBaseHostClass):
             title = self.cleanHtmlStr(self.cm.ph.rgetDataBeetwenMarkers2(item, '</div>', '<div')[1])
             
             params = dict(cItem)
-            params.update({'good_for_fav':False, 'url':streamUrl, 'stream_type':streamType, 'title':title, 'icon':icon})
+            params.update({'good_for_fav': False, 'url': streamUrl, 'stream_type': streamType, 'title': title, 'icon': icon})
             self.addVideo(params)
         
         if len(self.currList) or pevId != '':
             cItem = dict(cItem)
-            cItem.update({'title':_('More'), 'last_id':lastId})
+            cItem.update({'title': _('More'), 'last_id': lastId})
             self.addMore(cItem)
         
     def fillItems(self, cItem, nextCategory1, nextCategory2):
@@ -228,7 +228,7 @@ class DancetrippinTV(CBaseHostClass):
                 continue
             
             params = dict(cItem)
-            params.update({'good_for_fav':True, 'type':type, 'url':url, 'title':title, 'icon':icon, 'filters':filters, 'desc':' | '.join(filters)})
+            params.update({'good_for_fav': True, 'type': type, 'url': url, 'title': title, 'icon': icon, 'filters': filters, 'desc': ' | '.join(filters)})
             self.cacheItems.append(params)
         
         if hasVideos and hasAudios:
@@ -243,16 +243,16 @@ class DancetrippinTV(CBaseHostClass):
     
     def listTypes(self, cItem, nextCategory):
         printDBG("DancetrippinTV.listTypes")
-        tab = [{'title':_('All')}, {'title':_('Video'), 'f_type':'video'}, {'title':_('Audio'), 'f_type':'audio'}]
+        tab = [{'title': _('All')}, {'title': _('Video'), 'f_type': 'video'}, {'title': _('Audio'), 'f_type': 'audio'}]
         cItem = dict(cItem)
-        cItem.update({'category':nextCategory})
+        cItem.update({'category': nextCategory})
         self.listsTab(tab, cItem)
     
     def listFilters(self, cItem, nextCategory):
         printDBG("DancetrippinTV.listFilters")
         for item in self.cacheFilters:
             params = dict(cItem)
-            params.update({'good_for_fav':False, 'category':nextCategory, 'title':item})
+            params.update({'good_for_fav': False, 'category': nextCategory, 'title': item})
             if ' all' not in item.lower():
                 params['f_filter'] = item
             self.addDir(params)
@@ -281,7 +281,7 @@ class DancetrippinTV(CBaseHostClass):
         
         if 'stream_type' in cItem:
             if 'video/mp4' == cItem['stream_type']: 
-                urlTab.append({'name':'direct', 'url':cItem['url'], 'need_resolve':0})
+                urlTab.append({'name': 'direct', 'url': cItem['url'], 'need_resolve': 0})
             elif 'application/x-mpegurl' == cItem['stream_type']:
                 urlTab.extend(getDirectM3U8Playlist(cItem['url'], checkExt=False, checkContent=True, sortWithMaxBitrate=999999999))
             return urlTab
@@ -304,7 +304,7 @@ class DancetrippinTV(CBaseHostClass):
                 url = self.cm.ph.getSearchGroups(item, '''src=['"]([^'^"]+?)['"]''')[0]
                 
                 if 'video/mp4' == type: 
-                    urlTab.append({'name':name, 'url':self.getFullUrl(url), 'need_resolve':0})
+                    urlTab.append({'name': name, 'url': self.getFullUrl(url), 'need_resolve': 0})
                 elif 'application/x-mpegurl' == type:
                     urlTab.extend(getDirectM3U8Playlist(url, checkExt=False, checkContent=True, sortWithMaxBitrate=999999999))
         else:
@@ -338,7 +338,7 @@ class DancetrippinTV(CBaseHostClass):
         
     #MAIN MENU
         if name == None:
-            self.listsTab(self.MAIN_CAT_TAB, {'name':'category'})
+            self.listsTab(self.MAIN_CAT_TAB, {'name': 'category'})
         elif category == 'artists':
             self.listsTab(self.ARTISTS_CAT_TAB, self.currItem)
         elif category == 'channels':
@@ -358,11 +358,11 @@ class DancetrippinTV(CBaseHostClass):
     #SEARCH
         elif category in ["search", "search_next_page"]:
             cItem = dict(self.currItem)
-            cItem.update({'search_item':False, 'name':'category'}) 
+            cItem.update({'search_item': False, 'name': 'category'}) 
             self.listSearchResult(cItem, searchPattern, searchType)
     #HISTORIA SEARCH
         elif category == "search_history":
-            self.listsHistory({'name':'history', 'category': 'search'}, 'desc', _("Type: "))
+            self.listsHistory({'name': 'history', 'category': 'search'}, 'desc', _("Type: "))
         else:
             printExc()
         CBaseHostClass.endHandleService(self, index, refresh)

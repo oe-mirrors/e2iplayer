@@ -37,8 +37,8 @@ def gettytul():
 class DRDK(CBaseHostClass):
     MAIN_URL = 'http://dr.dk/'
 
-    MAIN_CAT_TAB = [{'category':'dr_live_channels', 'channel_type':'video', 'title': _('TV channels'), 'url':MAIN_URL + 'mu-online/api/1.0/channel/all-active-dr-tv-channels', 'icon':''},
-                    {'category':'dr_live_channels', 'channel_type':'audio', 'title': _('Radio stations'), 'url':MAIN_URL + 'mu-online/api/1.0/channel/all-active-dr-radio-channels', 'icon':''},
+    MAIN_CAT_TAB = [{'category': 'dr_live_channels', 'channel_type': 'video', 'title': _('TV channels'), 'url': MAIN_URL + 'mu-online/api/1.0/channel/all-active-dr-tv-channels', 'icon': ''},
+                    {'category': 'dr_live_channels', 'channel_type': 'audio', 'title': _('Radio stations'), 'url': MAIN_URL + 'mu-online/api/1.0/channel/all-active-dr-radio-channels', 'icon': ''},
                     #{'category':'latest_series',      'title': _('Latest series'), 'url':MAIN_URL, 'icon':''},
                     #{'category':'genres_movies',      'title': _('Movies'), 'url':MAIN_URL+'filmy', 'icon':''},
                     #{'category':'genres_series',      'title': _('Series'), 'url':MAIN_URL+'seriale', 'icon':''},
@@ -47,9 +47,9 @@ class DRDK(CBaseHostClass):
                     ]
  
     def __init__(self):
-        CBaseHostClass.__init__(self, {'history':'DRDK', 'cookie':'dr.dk.cookie'})
+        CBaseHostClass.__init__(self, {'history': 'DRDK', 'cookie': 'dr.dk.cookie'})
         if '' != config.plugins.iptvplayer.drdk_myip.value:
-            self.cm.HEADER = {'X-Forwarded-For':config.plugins.iptvplayer.drdk_myip.value}
+            self.cm.HEADER = {'X-Forwarded-For': config.plugins.iptvplayer.drdk_myip.value}
         self.tv2r = TV2RChannel()
         
     def _getFullUrl(self, url):
@@ -88,7 +88,7 @@ class DRDK(CBaseHostClass):
             for item in data:
                 if item.get("WebChannel", False):
                     continue
-                item.update({'title':item['Title'], 'icon':item.get('PrimaryImageUri')})
+                item.update({'title': item['Title'], 'icon': item.get('PrimaryImageUri')})
                 if video:
                     self.addVideo(item)
                 else:
@@ -96,7 +96,7 @@ class DRDK(CBaseHostClass):
             if video:
                 data = self.tv2r.getChannels()
                 for item in data:
-                    params = {'title':item['title'], 'Type':'tv2r', 'tv2r_data':item}
+                    params = {'title': item['title'], 'Type': 'tv2r', 'tv2r_data': item}
                     self.addVideo(params)
         except Exception:
             printExc()
@@ -117,7 +117,7 @@ class DRDK(CBaseHostClass):
                             ip = config.plugins.iptvplayer.drdk_myip.value
                             if '' != ip:
                                 url.meta['X-Forwarded-For'] = ip
-                            urlTab.append({'name':title, 'url': url, 'need_resolve':1})
+                            urlTab.append({'name': title, 'url': url, 'need_resolve': 1})
             elif cItem["Type"] == "tv2r":
                 urls = self.tv2r.getLinksForChannel(cItem['tv2r_data'])
                 for item in urls:
@@ -126,7 +126,7 @@ class DRDK(CBaseHostClass):
                     ip = config.plugins.iptvplayer.drdk_myip.value
                     if '' != ip:
                         url.meta['X-Forwarded-For'] = ip
-                    urlTab.append({'name':title, 'url': url, 'need_resolve':1})
+                    urlTab.append({'name': title, 'url': url, 'need_resolve': 1})
         except Exception:
             printExc()
         
@@ -141,14 +141,14 @@ class DRDK(CBaseHostClass):
         elif iptvProto == 'f4m':
             urlTab = getF4MLinksWithMeta(baseUrl)
         else:
-            urlTab = [{'name':'direct', 'url':baseUrl}]
+            urlTab = [{'name': 'direct', 'url': baseUrl}]
         return urlTab
         
     def getFavouriteData(self, cItem):
         return cItem['url']
         
     def getLinksForFavourite(self, fav_data):
-        return self.getLinksForVideo({'url':fav_data})
+        return self.getLinksForVideo({'url': fav_data})
 
     def handleService(self, index, refresh=0, searchPattern='', searchType=''):
         printDBG('handleService start')
@@ -162,18 +162,18 @@ class DRDK(CBaseHostClass):
         
     #MAIN MENU
         if name == None:
-            self.listsTab(self.MAIN_CAT_TAB, {'name':'category'})
+            self.listsTab(self.MAIN_CAT_TAB, {'name': 'category'})
     #MOVIES
         elif category == 'dr_live_channels':
             self.listLiveChannels(self.currItem)
     #SEARCH
         elif category in ["search", "search_next_page"]:
             cItem = dict(self.currItem)
-            cItem.update({'search_item':False, 'name':'category'}) 
+            cItem.update({'search_item': False, 'name': 'category'}) 
             self.listSearchResult(cItem, searchPattern, searchType)
     #HISTORIA SEARCH
         elif category == "search_history":
-            self.listsHistory({'name':'history', 'category': 'search'}, 'desc', _("Type: "))
+            self.listsHistory({'name': 'history', 'category': 'search'}, 'desc', _("Type: "))
         else:
             printExc()
         

@@ -53,17 +53,17 @@ def ParseM3u(data):
     printDBG("ParseM3u: data0[%s]" % data[0])
     if '#EXT' not in data[0]:
         return list
-    params = {'title':'', 'length':'', 'uri':''}
+    params = {'title': '', 'length': '', 'uri': ''}
     for line in data:
         line = line.strip()
         printDBG(line)
         if line.startswith('#EXTINF:'):
             tmp = line[8:].split(',', 1)
-            params = {'f_type':'inf', 'title':tmp[-1].strip(), 'length':'', 'uri':''}
+            params = {'f_type': 'inf', 'title': tmp[-1].strip(), 'length': '', 'uri': ''}
             params.update(GetM3uAttribs(tmp[0], True))
         elif line.startswith('#EXTIMPORT:'):
             tmp = line[11:].split(',', 1)
-            params = {'f_type':'import', 'title':tmp[-1].strip(), 'length':'', 'uri':''}
+            params = {'f_type': 'import', 'title': tmp[-1].strip(), 'length': '', 'uri': ''}
             params.update(GetM3uAttribs(tmp[0], True))
         elif line.startswith('#EXTGRP:'):
             params['group-title'] = line[8:].strip()
@@ -85,5 +85,5 @@ def ParseM3u(data):
                     params['title'] = cTitle
                 params['uri'] = urlparser.decorateParamsFromUrl(line)
                 list.append(params)
-            params = {'title':'', 'length':'', 'uri':''}
+            params = {'title': '', 'length': '', 'uri': ''}
     return list

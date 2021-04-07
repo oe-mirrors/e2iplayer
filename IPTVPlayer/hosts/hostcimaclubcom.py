@@ -39,20 +39,20 @@ def gettytul():
 class CimaClubCom(CBaseHostClass):
     
     def __init__(self):
-        CBaseHostClass.__init__(self, {'history':'cimaclub.com', 'cookie':'cimaclub.com.cookie'})
+        CBaseHostClass.__init__(self, {'history': 'cimaclub.com', 'cookie': 'cimaclub.com.cookie'})
         self.USER_AGENT = self.cm.getDefaultHeader()['User-Agent']
         self.MAIN_URL = 'http://cimaclub.com/'
         self.DEFAULT_ICON_URL = 'https://i.pinimg.com/originals/f2/67/05/f267052cb0ba96d70dd21e41a20a522e.jpg'
-        self.HTTP_HEADER = {'User-Agent': self.USER_AGENT, 'DNT':'1', 'Accept': 'text/html', 'Accept-Encoding':'gzip, deflate', 'Referer':self.getMainUrl(), 'Origin':self.getMainUrl()}
+        self.HTTP_HEADER = {'User-Agent': self.USER_AGENT, 'DNT': '1', 'Accept': 'text/html', 'Accept-Encoding': 'gzip, deflate', 'Referer': self.getMainUrl(), 'Origin': self.getMainUrl()}
         self.AJAX_HEADER = dict(self.HTTP_HEADER)
-        self.AJAX_HEADER.update({'X-Requested-With': 'XMLHttpRequest', 'Accept-Encoding':'gzip, deflate', 'Content-Type':'application/x-www-form-urlencoded; charset=UTF-8', 'Accept':'application/json, text/javascript, */*; q=0.01'})
+        self.AJAX_HEADER.update({'X-Requested-With': 'XMLHttpRequest', 'Accept-Encoding': 'gzip, deflate', 'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8', 'Accept': 'application/json, text/javascript, */*; q=0.01'})
         
         self.cacheLinks = {}
-        self.defaultParams = {'header':self.HTTP_HEADER, 'with_metadata':True, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
+        self.defaultParams = {'header': self.HTTP_HEADER, 'with_metadata': True, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
         
         self.MAIN_CAT_TAB = [
-                             {'category':'search', 'title': _('Search'), 'search_item':True}, 
-                             {'category':'search_history', 'title': _('Search history')},
+                             {'category': 'search', 'title': _('Search'), 'search_item': True}, 
+                             {'category': 'search_history', 'title': _('Search history')},
                             ]
         self.cacheSubSections = {}
         self.cacheMainMenu = []
@@ -76,8 +76,8 @@ class CimaClubCom(CBaseHostClass):
             addParams = dict(self.defaultParams)
         proxy = self.getProxy()
         if proxy != None:
-            addParams = MergeDicts(addParams, {'http_proxy':proxy})
-        addParams['cloudflare_params'] = {'cookie_file':self.COOKIE_FILE, 'User-Agent':self.USER_AGENT}
+            addParams = MergeDicts(addParams, {'http_proxy': proxy})
+        addParams['cloudflare_params'] = {'cookie_file': self.COOKIE_FILE, 'User-Agent': self.USER_AGENT}
         return self.cm.getPageCFProtection(baseUrl, addParams, post_data)
         
     def getFullIconUrl(self, url):
@@ -86,9 +86,9 @@ class CimaClubCom(CBaseHostClass):
             return url
         proxy = self.getProxy()
         if proxy != None:
-            url = strwithmeta(url, {'iptv_http_proxy':proxy})
+            url = strwithmeta(url, {'iptv_http_proxy': proxy})
         cookieHeader = self.cm.getCookieHeader(self.COOKIE_FILE, ['PHPSESSID', 'cf_clearance', '__cfduid'])
-        url = strwithmeta(url, {'Cookie':cookieHeader, 'User-Agent':self.HTTP_HEADER['User-Agent']})
+        url = strwithmeta(url, {'Cookie': cookieHeader, 'User-Agent': self.HTTP_HEADER['User-Agent']})
         return url
         
     def _addSubSection(self, cItem, sectionTitle, key, data, revert=False):
@@ -96,7 +96,7 @@ class CimaClubCom(CBaseHostClass):
         for item in data:
             url = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''href=['"]([^'^"]+?)['"]''')[0])
             title = self.cleanHtmlStr(item)
-            params = {'title':title, 'url':url}
+            params = {'title': title, 'url': url}
             if revert:
                 self.cacheSubSections[key].insert(0, params)
             else:
@@ -104,7 +104,7 @@ class CimaClubCom(CBaseHostClass):
         
         if len(self.cacheSubSections[key]):
             params = dict(cItem)
-            params.update({'title':sectionTitle, 'category':'list_sub_section', 'f_sub_key':key})
+            params.update({'title': sectionTitle, 'category': 'list_sub_section', 'f_sub_key': key})
             self.addDir(params)
         
     def listMainMenu(self, cItem):
@@ -115,7 +115,7 @@ class CimaClubCom(CBaseHostClass):
             return
         self.setMainUrl(data.meta['url'])
         
-        self.cacheSubSections = {'sub_1':[]}
+        self.cacheSubSections = {'sub_1': []}
         
         # main menu
         tmp = self.cm.ph.getDataBeetwenNodes(data, ('<div', '>', 'MainMenu'), ('</div', '>'))[1]
@@ -123,15 +123,15 @@ class CimaClubCom(CBaseHostClass):
         for item in tmp:
             url = self.cm.ph.getSearchGroups(item, '''href=['"]([^'^"]+?)['"]''')[0]
             title = self.cleanHtmlStr(item)
-            self.cacheMainMenu.append({'title':title, 'url':url})
-        self.addDir({'name':'category', 'type':'category', 'category':'list_sub_main', 'title': _('Main menu')})
+            self.cacheMainMenu.append({'title': title, 'url': url})
+        self.addDir({'name': 'category', 'type': 'category', 'category': 'list_sub_main', 'title': _('Main menu')})
         
-        mapUrls = {'toprating':'/top-imdb/', 'featured':'/most-views/'}
+        mapUrls = {'toprating': '/top-imdb/', 'featured': '/most-views/'}
         tmp = self.cm.ph.getAllItemsBeetwenNodes(data, ('<li', '>', 'data-filter'), ('</li', '>'))
         for item in tmp:
             url = self.cm.ph.getSearchGroups(item, '''data\-filter=['"]([^'^"]+?)['"]''')[0]
             url = mapUrls.get(url, '/wp-content/themes/Cimaclub/filter/{0}.php'.format(url))
-            self.cacheSubSections['sub_1'].append({'title':self.cleanHtmlStr(item), 'url':self.getFullUrl(url)})
+            self.cacheSubSections['sub_1'].append({'title': self.cleanHtmlStr(item), 'url': self.getFullUrl(url)})
         
         tmp = self.cm.ph.getDataBeetwenNodes(data, ('<div', '>', 'dataFilter'), ('</ul', '>'))[1]
         tmp = self.cm.ph.getAllItemsBeetwenMarkers(tmp, '<li', '</li>')
@@ -142,7 +142,7 @@ class CimaClubCom(CBaseHostClass):
         
         self.fillCacheFilters(cItem, data)
         if len(self.cacheFiltersKeys):
-            self.addDir({'name':'category', 'type':'category', 'category':'list_filters', 'title': _('Filters'), 'url':self.getMainUrl()})
+            self.addDir({'name': 'category', 'type': 'category', 'category': 'list_filters', 'title': _('Filters'), 'url': self.getMainUrl()})
 
         self.listsTab(self.MAIN_CAT_TAB, cItem)
         
@@ -151,9 +151,9 @@ class CimaClubCom(CBaseHostClass):
         
         for item in self.cacheMainMenu:
             if item['url'] == '#':
-                self.addMarker({'title':item['title']})
+                self.addMarker({'title': item['title']})
                 continue
-            params = {'name':'category', 'type':'category', 'category':'list_items'}
+            params = {'name': 'category', 'type': 'category', 'category': 'list_items'}
             params.update(item)
             self.addDir(params)
         
@@ -161,7 +161,7 @@ class CimaClubCom(CBaseHostClass):
         printDBG("CimaClubCom.listSubSections [%s]" % cItem)
         key = cItem.get('f_sub_key', '')
         tab = self.cacheSubSections.get(key, [])
-        self.listsTab(tab, {'name':'category', 'type':'category', 'category':'list_items'})
+        self.listsTab(tab, {'name': 'category', 'type': 'category', 'category': 'list_items'})
         
     def fillCacheFilters(self, cItem, data):
         printDBG("CimaClubCom.listCategories")
@@ -176,11 +176,11 @@ class CimaClubCom(CBaseHostClass):
                 title = self.cleanHtmlStr(item)
                 if title.lower() in ['all', 'default', 'any']:
                     addAll = False
-                self.cacheFilters[key].append({'title':title.title(), key:value})
+                self.cacheFilters[key].append({'title': title.title(), key: value})
                 
             if len(self.cacheFilters[key]):
                 if addAll:
-                    self.cacheFilters[key].insert(0, {'title':_('All')})
+                    self.cacheFilters[key].insert(0, {'title': _('All')})
                 self.cacheFiltersKeys.append(key)
         
         data = self.cm.ph.getDataBeetwenNodes(data, ('<form', '>', 'searchandfilter'), ('</form', '>'))[1]
@@ -189,7 +189,7 @@ class CimaClubCom(CBaseHostClass):
         for item in tmp:
             name = self.cm.ph.getSearchGroups(item, '''name=['"]([^"^']+?)['"]''')[0]
             value = self.cm.ph.getSearchGroups(item, '''value=['"]([^"^']+?)['"]''')[0]
-            self.cacheFilters['operators'].append({name:value})
+            self.cacheFilters['operators'].append({name: value})
         
         data = self.cm.ph.getAllItemsBeetwenNodes(data, ('<li', '>'), ('</li', '>'))
         for tmp in data:
@@ -234,7 +234,7 @@ class CimaClubCom(CBaseHostClass):
             return
         
         self.setMainUrl(data.meta['url'])
-        baseItem = {'good_for_fav':False, 'name':'category', 'type':'category', 'category':cItem['category']}
+        baseItem = {'good_for_fav': False, 'name': 'category', 'type': 'category', 'category': cItem['category']}
         
         idx1 = data.find('overlayBOBOB')
         idx2 = data.rfind('footerEndSection')
@@ -266,12 +266,12 @@ class CimaClubCom(CBaseHostClass):
             desc = ' | '.join(desc)
             desc += '[/br]' + self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(item, '<p', '</p>')[1])
             
-            params = {'good_for_fav':True, 'category':nextCategory, 'title':title, 'url':url, 'icon':icon, 'desc':desc}
+            params = {'good_for_fav': True, 'category': nextCategory, 'title': title, 'url': url, 'icon': icon, 'desc': desc}
             self.addDir(params)
         
         if self.cm.isValidUrl(nextPage):
             params = dict(baseItem)
-            params.update({'title':_("Next page"), 'url':nextPage, 'page':page + 1})
+            params.update({'title': _("Next page"), 'url': nextPage, 'page': page + 1})
             self.addDir(params)
             
     def exploreItem(self, cItem, nextCategory):
@@ -288,7 +288,7 @@ class CimaClubCom(CBaseHostClass):
             title = self.cleanHtmlStr(item)
             sId = self.cm.ph.getSearchGroups(item, '''data\-season=['"]([^'^"]+?)['"]''')[0]
             url = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''href=['"]([^'^"]+?)['"]''')[0])
-            self.cacheEpisodes.append({'title':title, 'url':url, 's_id':sId})
+            self.cacheEpisodes.append({'title': title, 'url': url, 's_id': sId})
         
         # series title
         sTitle = ''
@@ -297,13 +297,13 @@ class CimaClubCom(CBaseHostClass):
         if len(tmp):
             sTitle = self.cleanHtmlStr(tmp[-1])
         
-        baseItem = {'good_for_fav':False, 'name':'category', 'type':'category', 'category':nextCategory, 'icon':cItem.get('icon', '')}
+        baseItem = {'good_for_fav': False, 'name': 'category', 'type': 'category', 'category': nextCategory, 'icon': cItem.get('icon', '')}
         tmp = self.cm.ph.getAllItemsBeetwenNodes(data, ('<div', '>', 'data-filter'), ('</div', '>'))
         for item in tmp:
             sId = self.cm.ph.getSearchGroups(item, '''data\-filter=['"]([^'^"]+?)['"]''')[0]
             title = self.cleanHtmlStr(item)
             params = dict(baseItem)
-            params.update({'title':title, 's_title':sTitle, 's_id':sId})
+            params.update({'title': title, 's_title': sTitle, 's_id': sId})
             self.addDir(params)
             
         if 0 == len(self.currList) and 'embedServer' in data:
@@ -324,7 +324,7 @@ class CimaClubCom(CBaseHostClass):
             title = '%s - %s - %s' % (sTitle, cItem['title'], item['title'])
             params = dict(cItem)
             params.update(item)
-            params.update({'good_for_fav':True, 'title':title})
+            params.update({'good_for_fav': True, 'title': title})
             self.addVideo(params)
         
     def listSearchResult(self, cItem, searchPattern, searchType):
@@ -372,7 +372,7 @@ class CimaClubCom(CBaseHostClass):
         tmp = self.cm.ph.getDataBeetwenNodes(data, ('<div', '>', 'embedServer'), ('<div', '>'))[1]
         url = self.getFullUrl(self.cm.ph.getSearchGroups(data, '''<iframe[^>]+?src=['"]([^"^']+?)['"]''', 1, True)[0])
         if 1 == self.up.checkHostSupport(url): 
-            retTab.append({'name':self.up.getDomain(url), 'url':strwithmeta(url, {'Referer':cUrl}), 'need_resolve':1})
+            retTab.append({'name': self.up.getDomain(url), 'url': strwithmeta(url, {'Referer': cUrl}), 'need_resolve': 1})
         
         tmp = self.cm.ph.getDataBeetwenMarkers(data, 'serversList ', '</script>')[1]
         serwerUrl = self.cm.ph.getSearchGroups(tmp, '''['"\s]url['"]?\s*?:\s*?['"]([^"^']+?)['"]''')[0]
@@ -383,7 +383,7 @@ class CimaClubCom(CBaseHostClass):
             sId = self.cm.ph.getSearchGroups(item, '''data\-server=['"]([^'^"]+?)['"]''')[0]
             name = self.cleanHtmlStr(item)
             url = self.getFullUrl(serwerUrl + '?' + serwerQuery + sId)
-            retTab.append({'name':name, 'url':strwithmeta(url, {'Referer':viewUrl}), 'need_resolve':1})
+            retTab.append({'name': name, 'url': strwithmeta(url, {'Referer': viewUrl}), 'need_resolve': 1})
         
         if len(retTab):
             self.cacheLinks[cacheKey] = retTab
@@ -415,7 +415,7 @@ class CimaClubCom(CBaseHostClass):
             return
         
         videoUrl = self.getFullUrl(self.cm.ph.getSearchGroups(data, '''<iframe[^>]+?src=['"]([^"^']+?)['"]''', 1, True)[0])
-        videoUrl = strwithmeta(videoUrl, {'Referer':urlParams['header']['Referer']})
+        videoUrl = strwithmeta(videoUrl, {'Referer': urlParams['header']['Referer']})
         return self.up.getVideoLinkExt(videoUrl)
         
     def getArticleContent(self, cItem, data=None):
@@ -447,7 +447,7 @@ class CimaClubCom(CBaseHostClass):
                    'genre': 'genre',
                    'year': 'year',
                    'runtime': 'duration',
-                   'datePublished': 'released',}
+                   'datePublished': 'released', }
         data = self.cm.ph.getAllItemsBeetwenNodes(data, ('<span', '>', 'class='), ('</span', '>'))
         printDBG(data)
         for item in data:
@@ -472,7 +472,7 @@ class CimaClubCom(CBaseHostClass):
         if icon == '':
             icon = cItem.get('icon', self.DEFAULT_ICON_URL)
         
-        return [{'title':self.cleanHtmlStr(title), 'text': self.cleanHtmlStr(desc), 'images':[{'title':'', 'url':self.getFullUrl(icon)}], 'other_info':otherInfo}]
+        return [{'title': self.cleanHtmlStr(title), 'text': self.cleanHtmlStr(desc), 'images': [{'title': '', 'url': self.getFullUrl(icon)}], 'other_info': otherInfo}]
     
     def handleService(self, index, refresh=0, searchPattern='', searchType=''):
         printDBG('handleService start')
@@ -489,7 +489,7 @@ class CimaClubCom(CBaseHostClass):
         
     #MAIN MENU
         if name == None:
-            self.listMainMenu({'name':'category'})
+            self.listMainMenu({'name': 'category'})
         elif category == 'list_sub_main':
             self.listSubMenu(self.currItem, 'list_items')
         elif category == 'list_sub_section':
@@ -505,11 +505,11 @@ class CimaClubCom(CBaseHostClass):
     #SEARCH
         elif category in ["search", "search_next_page"]:
             cItem = dict(self.currItem)
-            cItem.update({'search_item':False, 'name':'category'}) 
+            cItem.update({'search_item': False, 'name': 'category'}) 
             self.listSearchResult(cItem, searchPattern, searchType)
     #HISTORIA SEARCH
         elif category == "search_history":
-            self.listsHistory({'name':'history', 'category': 'search'}, 'desc', _("Type: "))
+            self.listsHistory({'name': 'history', 'category': 'search'}, 'desc', _("Type: "))
         else:
             printExc()
         

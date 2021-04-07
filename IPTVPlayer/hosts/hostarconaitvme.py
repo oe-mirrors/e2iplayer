@@ -40,7 +40,7 @@ def gettytul():
 class ArconaitvME(CBaseHostClass):
  
     def __init__(self):
-        CBaseHostClass.__init__(self, {'history':'  ArconaitvME.tv', 'cookie':'ArconaitvME.cookie'})
+        CBaseHostClass.__init__(self, {'history': '  ArconaitvME.tv', 'cookie': 'ArconaitvME.cookie'})
         self.defaultParams = {'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
 
         self.HEADER = {'User-Agent': 'Mozilla/5.0', 'Accept': 'text/html'}
@@ -50,13 +50,13 @@ class ArconaitvME(CBaseHostClass):
         self.MAIN_URL = 'https://www.arconaitv.us/'
         self.DEFAULT_ICON_URL = "https://raw.githubusercontent.com/piplongrun/arconaitv.bundle/master/Contents/Resources/icon-default.jpg"
 
-        self.MAIN_CAT_TAB = [{'category':'list_main', 'title': _('Main'), 'url':self.MAIN_URL},
-                             {'category':'list_shows', 'title': _('Shows'), 'url':self.MAIN_URL},
-                             {'category':'list_cabletv', 'title': _('Cable'), 'url':self.MAIN_URL},
-                             {'category':'list_movies', 'title': _('Movies'), 'url':self.MAIN_URL},
+        self.MAIN_CAT_TAB = [{'category': 'list_main', 'title': _('Main'), 'url': self.MAIN_URL},
+                             {'category': 'list_shows', 'title': _('Shows'), 'url': self.MAIN_URL},
+                             {'category': 'list_cabletv', 'title': _('Cable'), 'url': self.MAIN_URL},
+                             {'category': 'list_movies', 'title': _('Movies'), 'url': self.MAIN_URL},
                              
-                             {'category': 'search', 'title': _('Search'), 'search_item': True,},
-                             {'category': 'search_history', 'title': _('Search history'),} 
+                             {'category': 'search', 'title': _('Search'), 'search_item': True, },
+                             {'category': 'search_history', 'title': _('Search history'), } 
                             ]
         self.proxyUrl = 'http://myproxysite.ga/browse.php?u={0}&b=4&f=norefer'
         
@@ -70,7 +70,7 @@ class ArconaitvME(CBaseHostClass):
         HTTP_HEADER = dict(self.HEADER)
         if post_data != None:
             HTTP_HEADER['Content-Type'] = 'application/x-www-form-urlencoded'
-        params.update({'header':HTTP_HEADER})
+        params.update({'header': HTTP_HEADER})
         if self.isProxyNeeded(url):
             proxy = self.proxyUrl.format(urllib.parse.quote(url, ''))
             params['header']['Referer'] = proxy
@@ -114,7 +114,7 @@ class ArconaitvME(CBaseHostClass):
             title = self.cleanHtmlStr(self.cm.ph.getSearchGroups(item, '''title=['"]([^'^"]+?)['"]''')[0])
             
             params = dict(cItem)
-            params.update({'title':title, 'url':url, 'icon':self.getFullIconUrl(icon)})
+            params.update({'title': title, 'url': url, 'icon': self.getFullIconUrl(icon)})
             self.addVideo(params)
         
     def listMain(self, cItem):
@@ -138,7 +138,7 @@ class ArconaitvME(CBaseHostClass):
         url = self.getFullUrl('/search.php')
         cItem = dict(cItem)
         cItem['url'] = url
-        self.listItems(cItem, '<div class="searchresults">', '<div class="acontainer">', post_data={'q':searchPattern})
+        self.listItems(cItem, '<div class="searchresults">', '<div class="acontainer">', post_data={'q': searchPattern})
         
     def getLinksForVideo(self, cItem):
         printDBG("ArconaitvME.getLinksForVideo [%s]" % cItem)
@@ -181,7 +181,7 @@ class ArconaitvME(CBaseHostClass):
                     playerUrl = decoded
             except Exception:
                 printExc()
-        playerUrl = strwithmeta(playerUrl, {'User-Agent':self.HEADER['User-Agent'], 'Referer':cItem['url'], 'Origin':self.getMainUrl()})
+        playerUrl = strwithmeta(playerUrl, {'User-Agent': self.HEADER['User-Agent'], 'Referer': cItem['url'], 'Origin': self.getMainUrl()})
         
         if self.cm.isValidUrl(playerUrl):
             tmp = getDirectM3U8Playlist(playerUrl, checkContent=True)
@@ -194,7 +194,7 @@ class ArconaitvME(CBaseHostClass):
         return cItem['url']
         
     def getLinksForFavourite(self, fav_data):
-        return self.getLinksForVideo({'url':fav_data})
+        return self.getLinksForVideo({'url': fav_data})
         
     def handleService(self, index, refresh=0, searchPattern='', searchType=''):
         printDBG('handleService start')
@@ -211,7 +211,7 @@ class ArconaitvME(CBaseHostClass):
         
     #MAIN MENU
         if name == None:
-            self.listsTab(self.MAIN_CAT_TAB, {'name':'category'})
+            self.listsTab(self.MAIN_CAT_TAB, {'name': 'category'})
         elif category == 'list_main':
             self.listMain(self.currItem)
         elif category == 'list_shows':
@@ -223,11 +223,11 @@ class ArconaitvME(CBaseHostClass):
     #SEARCH
         elif category in ["search", "search_next_page"]:
             cItem = dict(self.currItem)
-            cItem.update({'search_item':False, 'name':'category'}) 
+            cItem.update({'search_item': False, 'name': 'category'}) 
             self.listSearchResult(cItem, searchPattern, searchType)
     #HISTORIA SEARCH
         elif category == "search_history":
-            self.listsHistory({'name':'history', 'category': 'search'}, 'desc', _("Type: "))
+            self.listsHistory({'name': 'history', 'category': 'search'}, 'desc', _("Type: "))
         else:
             printExc()
         

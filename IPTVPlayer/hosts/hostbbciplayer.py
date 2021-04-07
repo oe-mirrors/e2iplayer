@@ -44,23 +44,23 @@ def gettytul():
 class BBCiPlayer(CBaseHostClass):
  
     def __init__(self):
-        CBaseHostClass.__init__(self, {'history':'BBCiPlayer.tv', 'cookie':'bbciplayer.cookie'})
-        self.HEADER = {'User-Agent':'Mozilla/5.0', 'Accept':'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8', 'Accept-Encoding':'gzip, deflate'}
+        CBaseHostClass.__init__(self, {'history': 'BBCiPlayer.tv', 'cookie': 'bbciplayer.cookie'})
+        self.HEADER = {'User-Agent': 'Mozilla/5.0', 'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8', 'Accept-Encoding': 'gzip, deflate'}
         self.AJAX_HEADER = dict(self.HEADER)
         self.AJAX_HEADER.update({'X-Requested-With': 'XMLHttpRequest'})
         self.cm.HEADER = self.HEADER # default header
-        self.defaultParams = {'header':self.HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
+        self.defaultParams = {'header': self.HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
         
         self.MAIN_URL = 'http://www.bbc.co.uk/'
         self.DEFAULT_ICON_URL = 'http://iplayer-web.files.bbci.co.uk/tviplayer-static-assets/10.75.0-1/img/navigation/iplayer_pink.png' 
         #'http://iplayer-web.files.bbci.co.uk/tviplayer-static-assets/10.75.0-1/img/navigation/iplayer_white.png'
         
-        self.MAIN_CAT_TAB = [{'category':'list_channels', 'title': _('Channels'), 'url':self.getFullUrl('iplayer')},
-                             {'category':'list_categories', 'title': _('Categories'), 'url':self.getFullUrl('iplayer')},
-                             {'category':'list_az_menu', 'title': _('A-Z'), 'url':self.getFullUrl('iplayer/a-z/')},
-                             {'category':'list_items', 'title': _('Most Popular'), 'url':self.getFullUrl('iplayer/group/most-popular')},
-                             {'category':'search', 'title': _('Search'), 'search_item':True, 'icon':'https://raw.githubusercontent.com/vonH/plugin.video.iplayerwww/master/media/search.png'},
-                             {'category': 'search_history', 'title': _('Search history'),}]
+        self.MAIN_CAT_TAB = [{'category': 'list_channels', 'title': _('Channels'), 'url': self.getFullUrl('iplayer')},
+                             {'category': 'list_categories', 'title': _('Categories'), 'url': self.getFullUrl('iplayer')},
+                             {'category': 'list_az_menu', 'title': _('A-Z'), 'url': self.getFullUrl('iplayer/a-z/')},
+                             {'category': 'list_items', 'title': _('Most Popular'), 'url': self.getFullUrl('iplayer/group/most-popular')},
+                             {'category': 'search', 'title': _('Search'), 'search_item': True, 'icon': 'https://raw.githubusercontent.com/vonH/plugin.video.iplayerwww/master/media/search.png'},
+                             {'category': 'search_history', 'title': _('Search history'), }]
         self.otherIconsTemplate = 'https://raw.githubusercontent.com/vonH/plugin.video.iplayerwww/master/media/%s.png'
     
     def getFullUrl(self, url):
@@ -73,7 +73,7 @@ class BBCiPlayer(CBaseHostClass):
                       ('S', 's'), ('T', 't'), ('U', 'u'), ('V', 'v'), ('W', 'w'), ('X', 'x'),
                       ('Y', 'y'), ('Z', 'z'), ('0-9', '0-9')]
         for title, url in characters:
-            params = {'good_for_fav': True, 'category':nextCategory, 'title':title, 'url':cItem['url'] + url}
+            params = {'good_for_fav': True, 'category': nextCategory, 'title': title, 'url': cItem['url'] + url}
             self.addDir(params)
     
     def listAZ(self, cItem, nextCategory):
@@ -96,7 +96,7 @@ class BBCiPlayer(CBaseHostClass):
                     title = item['props']['title']
                     
                     params = dict(cItem)
-                    params.update({'good_for_fav': True, 'title':title, 'url':self.getFullUrl(url)})
+                    params.update({'good_for_fav': True, 'title': title, 'url': self.getFullUrl(url)})
                     if episodesAvailable > 1:
                         params['category'] = nextCategory
                         self.addDir(params)
@@ -140,12 +140,12 @@ class BBCiPlayer(CBaseHostClass):
             ('bbc_one_yorks', 'BBC One Yorks')]
 
         for id, title in channel_list:
-            params = {'good_for_fav': True, 'title':title, 'url':self.getFullUrl('vpid/' + id + '/'), 'icon':self.otherIconsTemplate % id}
+            params = {'good_for_fav': True, 'title': title, 'url': self.getFullUrl('vpid/' + id + '/'), 'icon': self.otherIconsTemplate % id}
             self.addVideo(params)
     
     def listChannels(self, cItem, nextCategory):
         printDBG("BBCiPlayer.listChannels")
-        params = {'good_for_fav': True, 'category':'live_streams', 'title':_('Live'), 'icon':'https://raw.githubusercontent.com/vonH/plugin.video.iplayerwww/master/media/live.png'}
+        params = {'good_for_fav': True, 'category': 'live_streams', 'title': _('Live'), 'icon': 'https://raw.githubusercontent.com/vonH/plugin.video.iplayerwww/master/media/live.png'}
         self.addDir(params)
         
         channel_list = [
@@ -161,7 +161,7 @@ class BBCiPlayer(CBaseHostClass):
             ('tv/s4c', 's4cpbs', 'S4C')]
         
         for url, icon, title in channel_list:
-            params = {'good_for_fav': True, 'category':nextCategory, 'title':title, 'url':self.getFullUrl(url), 'icon':self.otherIconsTemplate % icon}
+            params = {'good_for_fav': True, 'category': nextCategory, 'title': title, 'url': self.getFullUrl(url), 'icon': self.otherIconsTemplate % icon}
             self.addDir(params)
         
     def listChannelMenu(self, cItem, nextCategory):
@@ -183,7 +183,7 @@ class BBCiPlayer(CBaseHostClass):
             title = self.cleanHtmlStr(item)
             icon = self.cm.ph.getSearchGroups(item, '''<source[^>]+?srcset=['"]([^'^"^\s]+?)['"\s]''')[0]
             
-            params = {'good_for_fav': True, 'title':title, 'url':self.getFullUrl(url), 'icon':self.getFullIconUrl(icon), 'desc':''}
+            params = {'good_for_fav': True, 'title': title, 'url': self.getFullUrl(url), 'icon': self.getFullIconUrl(icon), 'desc': ''}
             if '/a-z' in url:
                 azItem = True
                 params['category'] = nextCategory
@@ -193,11 +193,11 @@ class BBCiPlayer(CBaseHostClass):
         
         if not azItem:
             params = dict(cItem)
-            params.update({'good_for_fav': True, 'title':cItem['title'] + ' ' + _('A-Z'), 'category':nextCategory, 'url':cItem['url'] + '/a-z'})
+            params.update({'good_for_fav': True, 'title': cItem['title'] + ' ' + _('A-Z'), 'category': nextCategory, 'url': cItem['url'] + '/a-z'})
             self.addDir(params)
         
         params = dict(cItem)
-        params.update({'title':_('Highlights'), 'category':'list_items3'})
+        params.update({'title': _('Highlights'), 'category': 'list_items3'})
         self.addDir(params)
         
     def listMainMenu(self, cItem, nextCategory):
@@ -219,7 +219,7 @@ class BBCiPlayer(CBaseHostClass):
                     title = item['title']
                     url = item['href']
                     params = dict(cItem)
-                    params.update({'category':nextCategory, 'title':title, 'url':self.getFullUrl(url)})
+                    params.update({'category': nextCategory, 'title': title, 'url': self.getFullUrl(url)})
                     self.addDir(params)
             except Exception:
                 printExc()
@@ -235,7 +235,7 @@ class BBCiPlayer(CBaseHostClass):
         data = self.cm.ph.getDataBeetwenMarkers(data, '<div class="filters">', '</ul>', withMarkers=False)[1]
         if '' != data:
             params = dict(cItem)
-            params.update({'title':_('All'), 'category':nextCategory, 'url':baseUrl})
+            params.update({'title': _('All'), 'category': nextCategory, 'url': baseUrl})
             self.addDir(params)
             
             data = self.cm.ph.getAllItemsBeetwenMarkers(data, "<li", '</li>', withMarkers=True)
@@ -243,7 +243,7 @@ class BBCiPlayer(CBaseHostClass):
                 title = self.cleanHtmlStr(item)
                 url = self.cm.ph.getSearchGroups(item, '''href=['"]([^'^"]+?)['"]''')[0]
                 params = dict(cItem)
-                params.update({'title':title, 'category':nextCategory, 'url':self.getFullUrl(url)})
+                params.update({'title': title, 'category': nextCategory, 'url': self.getFullUrl(url)})
                 self.addDir(params)
             return
         self.listCategory(cItem)
@@ -266,7 +266,7 @@ class BBCiPlayer(CBaseHostClass):
                     if url == '':
                         url = baseUrl
                     params = dict(cItem)
-                    params.update({'is_sub_cat':True, 'title':title, 'url':self.getFullUrl(url)})
+                    params.update({'is_sub_cat': True, 'title': title, 'url': self.getFullUrl(url)})
                     self.addDir(params)
                 return
         
@@ -298,7 +298,7 @@ class BBCiPlayer(CBaseHostClass):
                     continue
                 icon = self.cm.ph.getSearchGroups(item, '''src=['"]([^'^"]+?)['"]''')[0]
                 desc = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(item, '<p', '</p>')[1])
-                params = {'good_for_fav': True, 'category':nextCategory, 'title':title, 'url':self.getFullUrl(url), 'icon':self.getFullIconUrl(icon), 'desc':'[/br]'.join(descTab)}
+                params = {'good_for_fav': True, 'category': nextCategory, 'title': title, 'url': self.getFullUrl(url), 'icon': self.getFullIconUrl(icon), 'desc': '[/br]'.join(descTab)}
                 self.addDir(params)
             else:
                 url = self.cm.ph.getSearchGroups(item, '''href=['"]([^'^"]+?)['"]''')[0]
@@ -315,7 +315,7 @@ class BBCiPlayer(CBaseHostClass):
                 for tmpItem in tmp:
                     descTab.append(self.cleanHtmlStr(tmpItem))
                 
-                params = {'good_for_fav': True, 'title':title, 'url':self.getFullUrl(url), 'icon':self.getFullIconUrl(icon), 'desc':'[/br]'.join(descTab)}
+                params = {'good_for_fav': True, 'title': title, 'url': self.getFullUrl(url), 'icon': self.getFullIconUrl(icon), 'desc': '[/br]'.join(descTab)}
                 if 'tviplayericon-iplayer' in item:
                     self.addVideo(params)
                 else:
@@ -342,7 +342,7 @@ class BBCiPlayer(CBaseHostClass):
                     continue
                 icon = self.cm.ph.getSearchGroups(item, '''src=['"]([^'^"]+?)['"]''')[0]
                 desc = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(item, '<p', '</p>')[1])
-                params = {'good_for_fav': True, 'category':nextCategory, 'title':title, 'url':self.getFullUrl(url), 'icon':self.getFullIconUrl(icon), 'desc':'[/br]'.join(descTab)}
+                params = {'good_for_fav': True, 'category': nextCategory, 'title': title, 'url': self.getFullUrl(url), 'icon': self.getFullIconUrl(icon), 'desc': '[/br]'.join(descTab)}
                 self.addDir(params)
             else:
                 group = group.split('</li>')
@@ -361,7 +361,7 @@ class BBCiPlayer(CBaseHostClass):
                     for tmpItem in tmp:
                         descTab.append(self.cleanHtmlStr(tmpItem))
                     
-                    params = {'good_for_fav': True, 'title':title, 'url':self.getFullUrl(url), 'icon':self.getFullIconUrl(icon), 'desc':'[/br]'.join(descTab)}
+                    params = {'good_for_fav': True, 'title': title, 'url': self.getFullUrl(url), 'icon': self.getFullIconUrl(icon), 'desc': '[/br]'.join(descTab)}
                     if 'tviplayericon-iplayer' in item:
                         self.addVideo(params)
                     else:
@@ -383,7 +383,7 @@ class BBCiPlayer(CBaseHostClass):
             try:
                 tleo_id = json_data['episode']['tleoId']
                 
-                cItem.update({'url':self.getFullUrl('/iplayer/episodes/' + tleo_id), 'category':'list_episodes'}) 
+                cItem.update({'url': self.getFullUrl('/iplayer/episodes/' + tleo_id), 'category': 'list_episodes'}) 
                 self.listItems(cItem, nextCategory)
             except Exception:
                 printExc()
@@ -489,7 +489,7 @@ class BBCiPlayer(CBaseHostClass):
                 printDBG("+++++++++++++++ URL NOT SUPPORTED AT NOW url[%s], title[%s]" % (url, title))
                 continue
                 
-            params = {'good_for_fav': True, 'title':title, 'url':self.getFullUrl(url), 'icon':self.getFullIconUrl(icon), 'desc':'[/br]'.join(descTab)}
+            params = {'good_for_fav': True, 'title': title, 'url': self.getFullUrl(url), 'icon': self.getFullIconUrl(icon), 'desc': '[/br]'.join(descTab)}
             if type == 'video':
                 self.addVideo(params)
             else:
@@ -498,7 +498,7 @@ class BBCiPlayer(CBaseHostClass):
         
         if nextPage:
             params = dict(cItem)
-            params.update({'good_for_fav': False, 'title':_('Next page'), 'page':page + 1})
+            params.update({'good_for_fav': False, 'title': _('Next page'), 'page': page + 1})
             self.addDir(params)
 
     def listSearchResult(self, cItem, searchPattern, searchType):
@@ -580,14 +580,14 @@ class BBCiPlayer(CBaseHostClass):
                     else:
                         name = item_id
 
-                    retTab.append({'name':name, 'url':url, 'need_resolve':1})
+                    retTab.append({'name': name, 'url': url, 'need_resolve': 1})
             except Exception:
                 printExc()
 
             if len(retTab):
                 return retTab
             else:
-                retTab.append({'name':'', 'url':cItem['url'], 'need_resolve':1})
+                retTab.append({'name': '', 'url': cItem['url'], 'need_resolve': 1})
         else:
             printDBG("Failed to retrieve JSON.")
         return retTab
@@ -613,7 +613,7 @@ class BBCiPlayer(CBaseHostClass):
     #MAIN MENU
         if name == None:
             rm(self.COOKIE_FILE)
-            self.listMainMenu({'name':'category', 'url':self.MAIN_URL}, 'list_items')
+            self.listMainMenu({'name': 'category', 'url': self.MAIN_URL}, 'list_items')
         elif 'live_streams' == category:
             self.listLive(self.currItem)
         elif 'list_channels' == category:
@@ -644,11 +644,11 @@ class BBCiPlayer(CBaseHostClass):
     #SEARCH
         elif category in ["search", "search_next_page"]:
             cItem = dict(self.currItem)
-            cItem.update({'search_item':False, 'name':'category'}) 
+            cItem.update({'search_item': False, 'name': 'category'}) 
             self.listSearchResult(cItem, searchPattern, searchType)
     #HISTORIA SEARCH
         elif category == "search_history":
-            self.listsHistory({'name':'history', 'category': 'search'}, 'desc', _("Type: "))
+            self.listsHistory({'name': 'history', 'category': 'search'}, 'desc', _("Type: "))
         else:
             printExc()
         

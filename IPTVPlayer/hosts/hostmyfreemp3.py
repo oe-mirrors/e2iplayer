@@ -26,19 +26,19 @@ def gettytul():
 class MyFreeMp3(CBaseHostClass):
     
     def __init__(self):
-        CBaseHostClass.__init__(self, {'history':'my-free-mp3.net', 'cookie':'my-free-mp3.net.cookie'})
+        CBaseHostClass.__init__(self, {'history': 'my-free-mp3.net', 'cookie': 'my-free-mp3.net.cookie'})
         self.USER_AGENT = 'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:40.0) Gecko/20100101 Firefox/40.0'
         self.MAIN_URL = 'https://my-free-mp3.net/'
         self.DEFAULT_ICON_URL = 'https://my-free-mp3.net/img/logo.png'
-        self.HTTP_HEADER = {'User-Agent': self.USER_AGENT, 'DNT':'1', 'Accept': 'text/html', 'Accept-Encoding':'gzip, deflate', 'Referer':self.getMainUrl(), 'Origin':self.getMainUrl()}
+        self.HTTP_HEADER = {'User-Agent': self.USER_AGENT, 'DNT': '1', 'Accept': 'text/html', 'Accept-Encoding': 'gzip, deflate', 'Referer': self.getMainUrl(), 'Origin': self.getMainUrl()}
         self.AJAX_HEADER = dict(self.HTTP_HEADER)
-        self.AJAX_HEADER.update({'X-Requested-With': 'XMLHttpRequest', 'Accept-Encoding':'gzip, deflate', 'Content-Type':'application/x-www-form-urlencoded; charset=UTF-8', 'Accept':'application/json, text/javascript, */*; q=0.01'})
+        self.AJAX_HEADER.update({'X-Requested-With': 'XMLHttpRequest', 'Accept-Encoding': 'gzip, deflate', 'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8', 'Accept': 'application/json, text/javascript, */*; q=0.01'})
         
-        self.defaultParams = {'header':self.HTTP_HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
+        self.defaultParams = {'header': self.HTTP_HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
         
         self.MAIN_CAT_TAB = [
-                             {'category':'search', 'title': _('Search'), 'search_item':True}, 
-                             {'category':'search_history', 'title': _('Search history')},
+                             {'category': 'search', 'title': _('Search'), 'search_item': True}, 
+                             {'category': 'search_history', 'title': _('Search history')},
                             ]
         self.streamUrl = 'http://s.mp3-music-downloads.com/'
         
@@ -52,7 +52,7 @@ class MyFreeMp3(CBaseHostClass):
                 return url
             else:
                 return urllib.parse.urljoin(baseUrl, url)
-        addParams['cloudflare_params'] = {'domain':self.up.getDomain(baseUrl), 'cookie_file':self.COOKIE_FILE, 'User-Agent':self.USER_AGENT, 'full_url_handle':_getFullUrl}
+        addParams['cloudflare_params'] = {'domain': self.up.getDomain(baseUrl), 'cookie_file': self.COOKIE_FILE, 'User-Agent': self.USER_AGENT, 'full_url_handle': _getFullUrl}
         return self.cm.getPageCFProtection(baseUrl, addParams, post_data)
     
     def listMainMenu(self, cItem):
@@ -83,13 +83,13 @@ class MyFreeMp3(CBaseHostClass):
         for item in data:
             sort = self.cm.ph.getSearchGroups(item, '''value=['"]([^'^"]+?)['"]''')[0]
             params = dict(cItem)
-            params.update({'category':'list_items', 'url':url})
-            params['post_data'] = {'q':searchPattern} #'sort':'2', 'count':'300', 'performer_only':'0'
+            params.update({'category': 'list_items', 'url': url})
+            params['post_data'] = {'q': searchPattern} #'sort':'2', 'count':'300', 'performer_only':'0'
             if sort == '':
                 params['title'] = _('Default')
             else:
                 params['title'] = self.cleanHtmlStr(item)
-                params['post_data'].update({'sort':sort})
+                params['post_data'].update({'sort': sort})
             self.addDir(params)
         
     def listItems(self, cItem):
@@ -134,7 +134,7 @@ class MyFreeMp3(CBaseHostClass):
                         pass
                         #printExc()
                     params = dict(cItem)
-                    params.update({'good_for_fav':True, 'title':title, 'desc':desc, 'icon':icon, 'priv_data':item})
+                    params.update({'good_for_fav': True, 'title': title, 'desc': desc, 'icon': icon, 'priv_data': item})
                     self.addAudio(params)
                 except Exception:
                     printExc()
@@ -143,7 +143,7 @@ class MyFreeMp3(CBaseHostClass):
         
         if len(self.currList):
             params = dict(cItem)
-            params.update({'post_data':post_data, 'page':page + 1, 'title':_('Next page')})
+            params.update({'post_data': post_data, 'page': page + 1, 'title': _('Next page')})
             self.addDir(params)
         
     def getLinksForVideo(self, cItem):
@@ -173,7 +173,7 @@ class MyFreeMp3(CBaseHostClass):
             
             url = self.streamUrl + 'stream/%s:%s' % (encode(item['owner_id']), encode(id))
             #url  = 'http://streams.my-free-mp3.net/stream/%s:%s' % (encode(item['owner_id']), encode(item['aid']))
-            return [{'name':'direct', 'url':strwithmeta(url, {'User-Agent':self.USER_AGENT, 'Referer':self.getMainUrl()})}]
+            return [{'name': 'direct', 'url': strwithmeta(url, {'User-Agent': self.USER_AGENT, 'Referer': self.getMainUrl()})}]
         except Exception:
             printExc()
         
@@ -194,17 +194,17 @@ class MyFreeMp3(CBaseHostClass):
         
     #MAIN MENU
         if name == None:
-            self.listMainMenu({'name':'category'})
+            self.listMainMenu({'name': 'category'})
         elif category == 'list_items':
             self.listItems(self.currItem)
     #SEARCH
         elif category in ["search", "search_next_page"]:
             cItem = dict(self.currItem)
-            cItem.update({'search_item':False, 'name':'category'}) 
+            cItem.update({'search_item': False, 'name': 'category'}) 
             self.listSearchResult(cItem, searchPattern, searchType)
     #HISTORIA SEARCH
         elif category == "search_history":
-            self.listsHistory({'name':'history', 'category': 'search'}, 'desc', _("Type: "))
+            self.listsHistory({'name': 'history', 'category': 'search'}, 'desc', _("Type: "))
         else:
             printExc()
         

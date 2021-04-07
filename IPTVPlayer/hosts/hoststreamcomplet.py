@@ -31,13 +31,13 @@ class StreamComplet(CBaseHostClass):
     SRCH_URL = MAIN_URL + '?s='
     DEFAULT_ICON_URL = 'https://streamcomplet.me/wp-content/themes/streaming/logo/logo.png'
     
-    MAIN_CAT_TAB = [{'category':'categories', 'title': _('Categories'), 'icon':DEFAULT_ICON_URL, 'filters':{}},
-                    {'category':'search', 'title': _('Search'), 'icon':DEFAULT_ICON_URL, 'search_item':True},
-                    {'category':'search_history', 'title': _('Search history'), 'icon':DEFAULT_ICON_URL} 
+    MAIN_CAT_TAB = [{'category': 'categories', 'title': _('Categories'), 'icon': DEFAULT_ICON_URL, 'filters': {}},
+                    {'category': 'search', 'title': _('Search'), 'icon': DEFAULT_ICON_URL, 'search_item': True},
+                    {'category': 'search_history', 'title': _('Search history'), 'icon': DEFAULT_ICON_URL} 
                    ]
  
     def __init__(self):
-        CBaseHostClass.__init__(self, {'history':'StreamComplet', 'cookie':'StreamComplet.cookie'})
+        CBaseHostClass.__init__(self, {'history': 'StreamComplet', 'cookie': 'StreamComplet.cookie'})
         self.cacheFilters = {}
         self.USER_AGENT = "Mozilla/5.0 (Windows NT 6.1; WOW64; Trident/7.0; rv:11.0) like Gecko"
         self.USER_AGENT2 = "Mozilla/5.0 (X11; Linux x86_64; rv:10.0) Gecko/20150101 Firefox/44.0 (Chrome)"
@@ -55,7 +55,7 @@ class StreamComplet(CBaseHostClass):
         data = re.compile('<a href="([^"]+?)"[^>]*?>([^<]+?)<').findall(data)
         for item in data:
             params = dict(cItem)
-            params.update({'category':category, 'title':item[1].strip(), 'url':self.getFullUrl(item[0])})
+            params.update({'category': category, 'title': item[1].strip(), 'url': self.getFullUrl(item[0])})
             self.addDir(params)
     
     def listItems(self, cItem):
@@ -94,12 +94,12 @@ class StreamComplet(CBaseHostClass):
                 continue
             icon = self.cm.ph.getSearchGroups(item, 'src="([^"]+?)"')[0]
             desc = self.cleanHtmlStr(item)
-            params.update({'title':title, 'icon':self.getFullUrl(icon), 'desc':desc, 'url':self.getFullUrl(url)})
+            params.update({'title': title, 'icon': self.getFullUrl(icon), 'desc': desc, 'url': self.getFullUrl(url)})
             self.addVideo(params)
         
         if nextPage:
             params = dict(cItem)
-            params.update({'title':_('Next page'), 'page':cItem.get('page', 1) + 1})
+            params.update({'title': _('Next page'), 'page': cItem.get('page', 1) + 1})
             self.addDir(params)
         
     def listSearchResult(self, cItem, searchPattern, searchType):
@@ -110,7 +110,7 @@ class StreamComplet(CBaseHostClass):
         
     def _unpackJS(self, data, name):
         try:
-            vGlobals = {"__builtins__": None, 'str':str, 'chr':chr, 'list':list}
+            vGlobals = {"__builtins__": None, 'str': str, 'chr': chr, 'list': list}
             vLocals = {name: None}
             exec(data, vGlobals, vLocals)
         except Exception:
@@ -227,7 +227,7 @@ class StreamComplet(CBaseHostClass):
                         else:
                             item = self.up.getDomain(frameUrl, False) + item[1:]
                     if 1 == self.up.checkHostSupport(item):
-                        urlTab.append({'name':self.up.getHostName(item), 'url':item, 'need_resolve':1})
+                        urlTab.append({'name': self.up.getHostName(item), 'url': item, 'need_resolve': 1})
                     else:
                         newFrameUrlsTab.append(item)
             frameUrlsTab = newFrameUrlsTab
@@ -242,7 +242,7 @@ class StreamComplet(CBaseHostClass):
         return cItem['url']
         
     def getLinksForFavourite(self, fav_data):
-        return self.getLinksForVideo({'url':fav_data})
+        return self.getLinksForVideo({'url': fav_data})
     
     def handleService(self, index, refresh=0, searchPattern='', searchType=''):
         printDBG('handleService start')
@@ -256,7 +256,7 @@ class StreamComplet(CBaseHostClass):
         
     #MAIN MENU
         if name == None:
-            self.listsTab(self.MAIN_CAT_TAB, {'name':'category'})
+            self.listsTab(self.MAIN_CAT_TAB, {'name': 'category'})
         elif category == 'categories':
             self.listCategories(self.currItem, 'items')
     #ITEMS
@@ -265,11 +265,11 @@ class StreamComplet(CBaseHostClass):
     #SEARCH
         elif category in ["search", "search_next_page"]:
             cItem = dict(self.currItem)
-            cItem.update({'search_item':False, 'name':'category'}) 
+            cItem.update({'search_item': False, 'name': 'category'}) 
             self.listSearchResult(cItem, searchPattern, searchType)
     #HISTORIA SEARCH
         elif category == "search_history":
-            self.listsHistory({'name':'history', 'category': 'search'}, 'desc', _("Type: "))
+            self.listsHistory({'name': 'history', 'category': 'search'}, 'desc', _("Type: "))
         else:
             printExc()
         

@@ -131,7 +131,7 @@ class ArticleContent:
     # Posible args and values for richDescParams:
     RICH_DESC_PARAMS = ["alternate_title", "original_title", "station", "price", "age_limit", "views", "status", "type", "first_air_date", "last_air_date", "seasons", "episodes", "country", "language", "duration", "quality", "subtitles", "year", "imdb_rating", "tmdb_rating",
                                "released", "broadcast", "remaining", "rating", "rated", "genre", "genres", "category", "categories", "production", "director", "directors", "writer", "writers",
-                               "creator", "creators", "cast", "actors", "stars", "awards", "budget", "translation",]
+                               "creator", "creators", "cast", "actors", "stars", "awards", "budget", "translation", ]
     # labels here must be in english language 
     # translation should be done before presentation using "locals" mechanism
     RICH_DESC_LABELS = {"alternate_title": "Alternate Title:",

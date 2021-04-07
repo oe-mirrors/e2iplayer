@@ -47,9 +47,9 @@ class YouTubeParser():
                             'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/79.0.3945.130 Safari/537.36',
                             'X-YouTube-Client-Name': '1', 
                             'X-YouTube-Client-Version': '2.20201112.04.01', 
-                            'X-Requested-With':'XMLHttpRequest'
+                            'X-Requested-With': 'XMLHttpRequest'
                             }
-        self.http_params = {'header':self.HTTP_HEADER, 'return_data': True}
+        self.http_params = {'header': self.HTTP_HEADER, 'return_data': True}
         self.postdata = {}
         self.sessionToken = ""
         
@@ -150,7 +150,7 @@ class YouTubeParser():
                     if format != None:
                         item['format'] = format.group(1) + "x"
                         item['ext'] = item['ext'] + "_M3U8"
-                        item['url'] = decorateUrl(item['url'], {"iptv_proto":"m3u8"})
+                        item['url'] = decorateUrl(item['url'], {"iptv_proto": "m3u8"})
                         retHLSList.append(item)
                 else:
                     format = re.search('([0-9]+?x[0-9]+?$)', item['format'])
@@ -163,7 +163,7 @@ class YouTubeParser():
             # use best audio
             for item in dashVideoLists:
                 item = dict(item)
-                item["url"] = decorateUrl("merge://audio_url|video_url", {'audio_url':dashAudioLists[0]['url'], 'video_url':item['url']})
+                item["url"] = decorateUrl("merge://audio_url|video_url", {'audio_url': dashAudioLists[0]['url'], 'video_url': item['url']})
                 dashList.append(item)
         
         # try to get hls format with alternative method 
@@ -171,7 +171,7 @@ class YouTubeParser():
             try:
                 video_id = YoutubeIE()._extract_id(url)
                 url = 'http://www.youtube.com/watch?v=%s&gl=US&hl=en&has_verified=1' % video_id
-                sts, data = self.cm.getPage(url, {'header':{'User-agent':'Mozilla/5.0 (iPad; U; CPU OS 3_2 like Mac OS X; en-us) AppleWebKit/531.21.10 (KHTML, like Gecko) Version/4.0.4 Mobile/7B334b Safari/531.21.10'}})
+                sts, data = self.cm.getPage(url, {'header': {'User-agent': 'Mozilla/5.0 (iPad; U; CPU OS 3_2 like Mac OS X; en-us) AppleWebKit/531.21.10 (KHTML, like Gecko) Version/4.0.4 Mobile/7B334b Safari/531.21.10'}})
                 if sts:
                     data = data.replace('\\"', '"').replace('\\\\\\/', '/')
                     hlsUrl = self.cm.ph.getSearchGroups(data, '''"hlsvp"\s*:\s*"(https?://[^"]+?)"''')[0]
@@ -192,7 +192,7 @@ class YouTubeParser():
             
             if dash:
                 try:
-                    sts, data = self.cm.getPage(url, {'header':{'User-agent':'Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/59.0.3071.115 Safari/537.36'}})
+                    sts, data = self.cm.getPage(url, {'header': {'User-agent': 'Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/59.0.3071.115 Safari/537.36'}})
                     data = data.replace('\\"', '"').replace('\\\\\\/', '/').replace('\\/', '/')
                     dashUrl = self.cm.ph.getSearchGroups(data, '''"dashmpd"\s*:\s*"(https?://[^"]+?)"''')[0]
                     dashUrl = json_loads('"%s"' % dashUrl)
@@ -213,7 +213,7 @@ class YouTubeParser():
         
         for idx in range(len(retList)):
             if retList[idx].get('m3u8', False):
-                retList[idx]['url'] = strwithmeta(retList[idx]['url'], {'iptv_m3u8_live_start_index':-30})
+                retList[idx]['url'] = strwithmeta(retList[idx]['url'], {'iptv_m3u8_live_start_index': -30})
         
         if dashSepareteList:
             return retList, dashList
@@ -356,7 +356,7 @@ class YouTubeParser():
             except:
                 desc = ""
                 
-            return {'type': 'category', 'category': 'channel', 'title': title, 'url': url, 'icon': icon, 'time': '','desc': desc}
+            return {'type': 'category', 'category': 'channel', 'title': title, 'url': url, 'icon': icon, 'time': '', 'desc': desc}
 
         else:
             return {}
@@ -376,7 +376,7 @@ class YouTubeParser():
                 desc = desc + "\n" + by
             except:
                 pass
-            return {'type': 'category', 'category': 'playlist', 'title': title, 'url': url, 'icon': icon, 'time': '','desc': desc}
+            return {'type': 'category', 'category': 'playlist', 'title': title, 'url': url, 'icon': icon, 'time': '', 'desc': desc}
         else:
             return {}
     
@@ -398,9 +398,9 @@ class YouTubeParser():
                     return {}
 
             if '/channel/' in url:
-                return {'type': 'category', 'category': 'channel', 'title': title, 'url': url, 'icon': icon, 'time': '','desc': ''}
+                return {'type': 'category', 'category': 'channel', 'title': title, 'url': url, 'icon': icon, 'time': '', 'desc': ''}
             else:
-                return {'type': 'feed', 'category': cat, 'title': title, 'url': url, 'icon': icon, 'time': '','desc': ''}
+                return {'type': 'feed', 'category': cat, 'title': title, 'url': url, 'icon': icon, 'time': '', 'desc': ''}
                 
         except:
             printExc()
@@ -646,8 +646,8 @@ class YouTubeParser():
                     post_data['continuation'] = ctoken
                     post_data['context']['clickTracking'] = {'clickTrackingParams': ctit}
                     post_data = json_dumps(post_data).encode('utf-8')
-                    urlNextPage = strwithmeta(urlNextPage, {'post_data':post_data})
-                    params = {'type':'more', 'category': category, 'title': label, 'page': str(int(page) + 1), 'url': urlNextPage}
+                    urlNextPage = strwithmeta(urlNextPage, {'post_data': post_data})
+                    params = {'type': 'more', 'category': category, 'title': label, 'page': str(int(page) + 1), 'url': urlNextPage}
                     printDBG(str(params))
                     currList.append(params)
                 
@@ -774,8 +774,8 @@ class YouTubeParser():
                 except:
                     label = _("Next Page")
                 
-                urlNextPage = self.updateQueryUrl(url, {'pbj':'1', 'ctoken': ctoken, 'continuation': ctoken, 'itct': itct}) 
-                params = {'type':'more', 'category': "search_next_page", 'title': label, 'page': str(int(page) + 1), 'url': urlNextPage}
+                urlNextPage = self.updateQueryUrl(url, {'pbj': '1', 'ctoken': ctoken, 'continuation': ctoken, 'itct': itct}) 
+                params = {'type': 'more', 'category': "search_next_page", 'title': label, 'page': str(int(page) + 1), 'url': urlNextPage}
                 printDBG(str(params))
                 currList.append(params)
 
@@ -789,8 +789,8 @@ class YouTubeParser():
                 itct = nextPage["clickTrackingParams"]
                 label = _("Next Page")
                 
-                urlNextPage = self.updateQueryUrl(url, {'pbj':'1', 'ctoken': ctoken, 'continuation': ctoken, 'itct': itct}) 
-                params = {'type':'more', 'category': "search_next_page", 'title': label, 'page': str(int(page) + 1), 'url': urlNextPage}
+                urlNextPage = self.updateQueryUrl(url, {'pbj': '1', 'ctoken': ctoken, 'continuation': ctoken, 'itct': itct}) 
+                params = {'type': 'more', 'category': "search_next_page", 'title': label, 'page': str(int(page) + 1), 'url': urlNextPage}
                 printDBG(str(params))
                 currList.append(params)
          

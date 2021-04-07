@@ -33,16 +33,16 @@ class GreekDocumentaries3(CBaseHostClass):
     SEARCH_URL = MAIN_URL + '/search?sitesearch=http%3A%2F%2Fjohny-jossbanget.blogspot.com&q='
     DEFAULT_ICON = "http://3.bp.blogspot.com/-s80VMsgUq0w/VsYj0rd4nrI/AAAAAAAAAAw/y-ix9jhy1Gg/s1600-r/%25CF%2586%25CE%25BF%25CF%2584%25CE%25BF%2Bblog%2BHeader.png"
     
-    MAIN_CAT_TAB = [{'category':'list_items', 'title': _('Recent'), 'url':MAIN_URL, 'icon':DEFAULT_ICON},
-                    {'category':'categories', 'title': _('Categories'), 'url':MAIN_URL, 'icon':DEFAULT_ICON, 'filter':'categories'},
-                    {'category':'categories', 'title': _('Programs'), 'url':MAIN_URL, 'icon':DEFAULT_ICON, 'filter':'programs'},
-                    {'category':'categories', 'title': _('Labels'), 'url':MAIN_URL, 'icon':DEFAULT_ICON, 'filter':'labels'},
-                    {'category':'list_items', 'title': _('TV series'), 'url':MAIN_URL + 'search/label/TV-Series', 'icon':DEFAULT_ICON},
-                    {'category':'search', 'title': _('Search'), 'search_item':True, 'icon':DEFAULT_ICON},
-                    {'category':'search_history', 'title': _('Search history'), 'icon':DEFAULT_ICON}]
+    MAIN_CAT_TAB = [{'category': 'list_items', 'title': _('Recent'), 'url': MAIN_URL, 'icon': DEFAULT_ICON},
+                    {'category': 'categories', 'title': _('Categories'), 'url': MAIN_URL, 'icon': DEFAULT_ICON, 'filter': 'categories'},
+                    {'category': 'categories', 'title': _('Programs'), 'url': MAIN_URL, 'icon': DEFAULT_ICON, 'filter': 'programs'},
+                    {'category': 'categories', 'title': _('Labels'), 'url': MAIN_URL, 'icon': DEFAULT_ICON, 'filter': 'labels'},
+                    {'category': 'list_items', 'title': _('TV series'), 'url': MAIN_URL + 'search/label/TV-Series', 'icon': DEFAULT_ICON},
+                    {'category': 'search', 'title': _('Search'), 'search_item': True, 'icon': DEFAULT_ICON},
+                    {'category': 'search_history', 'title': _('Search history'), 'icon': DEFAULT_ICON}]
  
     def __init__(self):
-        CBaseHostClass.__init__(self, {'history':'  GreekDocumentaries3.tv', 'cookie':'GreekDocumentaries3tv.cookie'})
+        CBaseHostClass.__init__(self, {'history': '  GreekDocumentaries3.tv', 'cookie': 'GreekDocumentaries3tv.cookie'})
         self.defaultParams = {'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
         self.cacheFilters = {}
         self.cacheLinks = {}
@@ -95,7 +95,7 @@ class GreekDocumentaries3(CBaseHostClass):
             tmp = self.cm.ph.getDataBeetwenMarkers(data, cat[1], cat[2], False)[1]
             tmp = re.compile('''<a[^>]+?href=['"]([^'^"]+?)['"][^>]*?>([^<]+?)<''').findall(tmp)
             for item in tmp:
-                self.cacheFilters[cat[0]].append({'title':self.cleanHtmlStr(item[1]), 'url':item[0]})
+                self.cacheFilters[cat[0]].append({'title': self.cleanHtmlStr(item[1]), 'url': item[0]})
         
     def listCategories(self, cItem, nextCategory):
         printDBG("GreekDocumentaries3.listCategories")
@@ -135,12 +135,12 @@ class GreekDocumentaries3(CBaseHostClass):
             desc = self.cleanHtmlStr(item.split('<br />\n<br />')[0])
             if url.startswith('http'):
                 params = dict(cItem)
-                params.update({'title':title, 'url':url, 'icon':icon, 'desc':desc})
+                params.update({'title': title, 'url': url, 'icon': icon, 'desc': desc})
                 params['category'] = nextCategory
                 self.addDir(params)
         if nextPageUrl != '':
             params = dict(cItem)
-            params.update({'title':_('Next page'), 'page':cItem.get('page', 1) + 1, 'url':self._getFullUrl(nextPageUrl)})
+            params.update({'title': _('Next page'), 'page': cItem.get('page', 1) + 1, 'url': self._getFullUrl(nextPageUrl)})
             self.addDir(params)
             
     def exploreItem(self, cItem):
@@ -158,7 +158,7 @@ class GreekDocumentaries3(CBaseHostClass):
             videoUrl = self._getFullUrl(videoUrl)
             if videoUrl.startswith('http'):
                 params = dict(cItem)
-                params.update({'title':_('Watch Trailer'), 'url':videoUrl})
+                params.update({'title': _('Watch Trailer'), 'url': videoUrl})
                 self.addVideo(params)
             del data[0]
         data = data[0]
@@ -199,7 +199,7 @@ class GreekDocumentaries3(CBaseHostClass):
                 if not videoUrl.startswith('http'):
                     continue
                 params = dict(cItem)
-                params.update({'title':title, 'url':videoUrl})
+                params.update({'title': title, 'url': videoUrl})
                 self.addVideo(params)
                 added = True
             if added:
@@ -207,7 +207,7 @@ class GreekDocumentaries3(CBaseHostClass):
     
     def getLinksForVideo(self, cItem):
         printDBG("GreekDocumentaries3.getLinksForVideo [%s]" % cItem)
-        urlTab = [{'name':'', 'url':cItem['url'], 'need_resolve':1}]
+        urlTab = [{'name': '', 'url': cItem['url'], 'need_resolve':1}]
         return urlTab
         
     def getVideoLinks(self, videoUrl):
@@ -237,7 +237,7 @@ class GreekDocumentaries3(CBaseHostClass):
         
     #MAIN MENU
         if name == None:
-            self.listsTab(self.MAIN_CAT_TAB, {'name':'category'})
+            self.listsTab(self.MAIN_CAT_TAB, {'name': 'category'})
         elif category == 'categories':
             self.listCategories(self.currItem, 'list_items')
         elif category == 'list_items':
@@ -248,11 +248,11 @@ class GreekDocumentaries3(CBaseHostClass):
     #SEARCH
         elif category in ["search", "search_next_page"]:
             cItem = dict(self.currItem)
-            cItem.update({'search_item':False, 'name':'category'}) 
+            cItem.update({'search_item': False, 'name': 'category'}) 
             self.listSearchResult(cItem, searchPattern, searchType)
     #HISTORIA SEARCH
         elif category == "search_history":
-            self.listsHistory({'name':'history', 'category': 'search'}, 'desc', _("Type: "))
+            self.listsHistory({'name': 'history', 'category': 'search'}, 'desc', _("Type: "))
         else:
             printExc()
         

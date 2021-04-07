@@ -62,10 +62,10 @@ def gettytul():
 class TVPlayer(CBaseHostClass):
  
     def __init__(self):
-        CBaseHostClass.__init__(self, {'history':'tvplayer.com', 'cookie':'tvplayer.com.cookie'})
+        CBaseHostClass.__init__(self, {'history': 'tvplayer.com', 'cookie': 'tvplayer.com.cookie'})
         self.DEFAULT_ICON_URL = 'http://ww1.prweb.com/prfiles/2012/03/21/9313945/TVPlayer%20Logo%20New%20USE%20THIS%20ONE.jpg'
         self.USER_AGENT = 'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:40.0) Gecko/20100101 Firefox/40.0'
-        self.HEADER = {'User-Agent': self.USER_AGENT, 'DNT':'1', 'Accept-Encoding':'gzip, deflate', 'Accept': 'text/html'}
+        self.HEADER = {'User-Agent': self.USER_AGENT, 'DNT': '1', 'Accept-Encoding': 'gzip, deflate', 'Accept': 'text/html'}
         self.AJAX_HEADER = dict(self.HEADER)
         self.AJAX_HEADER.update({'X-Requested-With': 'XMLHttpRequest'})
         self.MAIN_URL = 'https://tvplayer.com/'
@@ -75,9 +75,9 @@ class TVPlayer(CBaseHostClass):
         self.login = ''
         self.password = ''
         
-        self.defaultParams = {'header':self.HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE, 'ignore_http_code_ranges':[(404, 500)]}
+        self.defaultParams = {'header': self.HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE, 'ignore_http_code_ranges': [(404, 500)]}
     
-        self.MAIN_CAT_TAB = [{'category':'list_channels_genres', 'title': _('Channels'), 'url':self.getFullUrl('/channels')},
+        self.MAIN_CAT_TAB = [{'category': 'list_channels_genres', 'title': _('Channels'), 'url': self.getFullUrl('/channels')},
                              
                              #{'category':'search',           'title': _('Search'), 'search_item':True,},
                              #{'category':'search_history',   'title': _('Search history'),            } 
@@ -108,7 +108,7 @@ class TVPlayer(CBaseHostClass):
                     continue
                 title = self.cm.ph.getSearchGroups(it, '''data-name=['"]([^'^"]+?)['"]''')[0]
                 type = self.cm.ph.getSearchGroups(it, '''class=['"]online\s*([^'^"]+?)['"]''')[0].lower()
-                self.cacheChannelsFlags[id[1]] = {'title':self.cleanHtmlStr(title), 'url':self.getFullUrl(url), 'icon':self.getFullIconUrl(icon), 'f_type':type}
+                self.cacheChannelsFlags[id[1]] = {'title': self.cleanHtmlStr(title), 'url': self.getFullUrl(url), 'icon': self.getFullIconUrl(icon), 'f_type': type}
                 
     def listChannelsGenres(self, cItem, nextCategory):
         printDBG("TVPlayer.listChannelsGenres")
@@ -123,7 +123,7 @@ class TVPlayer(CBaseHostClass):
                 genre = self.cm.ph.getSearchGroups(item, '''data-genre=['"]([^'^"]+?)['"]''')[0].lower()
                 if genre == '':
                     continue
-                params = {'title':self.cleanHtmlStr(item), 'f_genre':genre}
+                params = {'title': self.cleanHtmlStr(item), 'f_genre': genre}
                 self.cacheChannelsGenres.append(params)
         
         cItem = dict(cItem)
@@ -132,7 +132,7 @@ class TVPlayer(CBaseHostClass):
     
     def listTypeFilter(self, cItem, nextCategory):
         printDBG("TVPlayer.listTypeFilter")
-        tab = [{'title':_('All'), 'f_type':''}, {'title':_('Free'), 'f_type':'free'}, {'title':_('Paid'), 'f_type':'paid'}]
+        tab = [{'title': _('All'), 'f_type': ''}, {'title': _('Free'), 'f_type': 'free'}, {'title': _('Paid'), 'f_type': 'paid'}]
         cItem = dict(cItem)
         cItem['category'] = nextCategory
         self.listsTab(tab, cItem)
@@ -168,7 +168,7 @@ class TVPlayer(CBaseHostClass):
             icon = self.getFullIconUrl(self.cm.ph.getSearchGroups(item, '''src=['"]([^'^"]+?)['"]''')[0])
             
             params = dict(cItem)
-            params.update({'good_for_fav': True, 'title':title, 'url':url, 'icon':icon, 'desc':flagType.title()})
+            params.update({'good_for_fav': True, 'title': title, 'url': url, 'icon': icon, 'desc': flagType.title()})
             self.addVideo(params)
 
     def listSearchResult(self, cItem, searchPattern, searchType):
@@ -218,7 +218,7 @@ class TVPlayer(CBaseHostClass):
                 platform: e.platform.key,
                 validate: e.validate
             '''
-            post_data = {'id':data['resource'], 'service':1, 'platform':data['platform']['key'], 'validate':data['validate']}
+            post_data = {'id': data['resource'], 'service': 1, 'platform': data['platform']['key'], 'validate': data['validate']}
             if 'token' in data:
                 post_data['token'] = data['token']
                 
@@ -236,14 +236,14 @@ class TVPlayer(CBaseHostClass):
                 _SetIPTVPlayerLastHostError(data['error'])
                 if not config.plugins.iptvplayer.tvplayercom_drmbypass.value or cItem.get('next_try', False):
                     return []
-                self.getLinksForVideo({'next_try':True, 'url':self.defUrl})
+                self.getLinksForVideo({'next_try': True, 'url': self.defUrl})
                 streamUrl = 'https://live.tvplayer.com/stream.m3u8?id=%s' % post_data['id']
             else:
                 if None != data.get('drmToken'):
                     _SetIPTVPlayerLastHostError(_('DRM protected streams are not supported.'))
                     if not config.plugins.iptvplayer.tvplayercom_drmbypass.value or cItem.get('next_try', False):
                         return []
-                    self.getLinksForVideo({'next_try':True, 'url':self.defUrl})
+                    self.getLinksForVideo({'next_try': True, 'url': self.defUrl})
                     streamUrl = 'https://live.tvplayer.com/stream.m3u8?id=%s' % post_data['id']
                 else:
                     streamUrl = data.get('stream', '')
@@ -255,7 +255,7 @@ class TVPlayer(CBaseHostClass):
             if len(retTab):
                 cookieHeader = self.cm.getCookieHeader(self.COOKIE_FILE)
                 for idx in range(len(retTab)):
-                    retTab[idx]['url'] = strwithmeta(retTab[idx]['url'], {'iptv_proto':'m3u8', 'Cookie':cookieHeader, 'User-Agent': self.defaultParams['header']['User-Agent']})
+                    retTab[idx]['url'] = strwithmeta(retTab[idx]['url'], {'iptv_proto': 'm3u8', 'Cookie': cookieHeader, 'User-Agent': self.defaultParams['header']['User-Agent']})
                     
                 def __getLinkQuality(itemLink):
                     try: 
@@ -331,7 +331,7 @@ class TVPlayer(CBaseHostClass):
             desc += '[/br]'.join(tab)
             desc += '[/br][/br]'
         
-        return [{'title':self.cleanHtmlStr(title), 'text': self.cleanHtmlStr(desc), 'images':[{'title':'', 'url':self.DEFAULT_ICON_URL}], 'other_info':{}}]
+        return [{'title': self.cleanHtmlStr(title), 'text': self.cleanHtmlStr(desc), 'images': [{'title': '', 'url': self.DEFAULT_ICON_URL}], 'other_info': {}}]
         
     def tryTologin(self):
         printDBG('tryTologin start')
@@ -366,7 +366,7 @@ class TVPlayer(CBaseHostClass):
                 value = self.cm.ph.getSearchGroups(item, '''value=['"]([^'^"]+?)['"]''')[0]
                 post_data[name] = value
             
-            post_data.update({'email':self.login, 'password':self.password, 'remember_me':1})
+            post_data.update({'email': self.login, 'password': self.password, 'remember_me': 1})
             
             httpParams = dict(self.defaultParams)
             httpParams['header'] = dict(httpParams['header'])
@@ -410,11 +410,11 @@ class TVPlayer(CBaseHostClass):
     #SEARCH
         elif category in ["search", "search_next_page"]:
             cItem = dict(self.currItem)
-            cItem.update({'search_item':False, 'name':'category'}) 
+            cItem.update({'search_item': False, 'name': 'category'}) 
             self.listSearchResult(cItem, searchPattern, searchType)
     #HISTORIA SEARCH
         elif category == "search_history":
-            self.listsHistory({'name':'history', 'category': 'search'}, 'desc', _("Type: "))
+            self.listsHistory({'name': 'history', 'category': 'search'}, 'desc', _("Type: "))
         else:
             printExc()
         

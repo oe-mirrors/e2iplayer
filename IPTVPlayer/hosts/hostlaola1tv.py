@@ -51,15 +51,15 @@ def gettytul():
     return 'http://laola1.tv/'
 
 class Laola1TV(CBaseHostClass):
-    HTTP_HEADER = {'User-Agent':'Mozilla/5.0 (iPad; U; CPU OS 3_2 like Mac OS X; en-us) AppleWebKit/531.21.10 (KHTML, like Gecko) Version/4.0.4 Mobile/7B334b Safari/531.21.10'}
+    HTTP_HEADER = {'User-Agent': 'Mozilla/5.0 (iPad; U; CPU OS 3_2 like Mac OS X; en-us) AppleWebKit/531.21.10 (KHTML, like Gecko) Version/4.0.4 Mobile/7B334b Safari/531.21.10'}
     MAIN_URL = 'http://laola1.tv/'
     
     #'http://www.laola1.tv/img/laola1_logo.png'
-    MAIN_CAT_TAB = [{'category':'search', 'title': _('Search'), 'search_item':True},
-                    {'category':'search_history', 'title': _('Search history')}]
+    MAIN_CAT_TAB = [{'category': 'search', 'title': _('Search'), 'search_item': True},
+                    {'category': 'search_history', 'title': _('Search history')}]
     
     def __init__(self):
-        CBaseHostClass.__init__(self, {'history':'Laola1TV', 'cookie':'Laola1TV.cookie'})
+        CBaseHostClass.__init__(self, {'history': 'Laola1TV', 'cookie': 'Laola1TV.cookie'})
         self.mainCache = {}
         
     def _getFullUrl(self, url, baseUrl=None):
@@ -116,7 +116,7 @@ class Laola1TV(CBaseHostClass):
         liveUrl = self.cm.ph.getSearchGroups(data, '<a href="([^"]+?)" class="live">')[0]
         liveTitle = self.cm.ph.getDataBeetwenMarkers(data, 'class="live">', '</a>', False)[1]
         params = dict(cItem)
-        params.update({'category':'calendar', 'title':self.cleanHtmlStr(liveTitle), 'url':self._getFullUrl(liveUrl)})
+        params.update({'category': 'calendar', 'title': self.cleanHtmlStr(liveTitle), 'url': self._getFullUrl(liveUrl)})
         self.addDir(params)
         
         data = self.cm.ph.getDataBeetwenMarkers(data, '<ul class="level1">', '</div>', False)[1]
@@ -133,7 +133,7 @@ class Laola1TV(CBaseHostClass):
                 params = dict(baseItem)
                 url = self.cm.ph.getSearchGroups(item, 'href="([^"]+?)"')[0]
                 title = self.cleanHtmlStr(item)
-                params.update({'url':self._getFullUrl(url), 'title':title})
+                params.update({'url': self._getFullUrl(url), 'title': title})
                 retTab.append(params)
             return retTab
                 
@@ -142,7 +142,7 @@ class Laola1TV(CBaseHostClass):
         for itemL1 in data:
             dataL2 = itemL1.split('<ul class="level2">')
             if 1 == len(dataL2):
-                subItems = _getLastItems(itemL1, {'category':'explore_page', 'level':'1'})
+                subItems = _getLastItems(itemL1, {'category': 'explore_page', 'level': '1'})
                 self.mainCache['level_1'].extend(subItems)
             elif 1 < len(dataL2):
                 titleL2 = self.cleanHtmlStr(dataL2[0])
@@ -156,9 +156,9 @@ class Laola1TV(CBaseHostClass):
                     else:
                         dataL3 = [itemL2]
                     if 1 == len(dataL3):
-                        subItems = _getLastItems(itemL2, {'category':'explore_page', 'level':'2'})
+                        subItems = _getLastItems(itemL2, {'category': 'explore_page', 'level': '2'})
                         self.mainCache[cacheKey2].extend(subItems)
-                        self.mainCache['level_1'].append({'title':titleL2, 'category':'list_cache_cat', 'cache_key':cacheKey2, 'level':'2'})
+                        self.mainCache['level_1'].append({'title': titleL2, 'category': 'list_cache_cat', 'cache_key': cacheKey2, 'level': '2'})
                     elif 1 < len(dataL3):
                         for itemL3 in dataL3:
                             tmp = itemL3.split('<ul class="level3">')
@@ -166,10 +166,10 @@ class Laola1TV(CBaseHostClass):
                                 continue
                             titleL3 = self.cleanHtmlStr(tmp[0])
                             cacheKey3 = 'level_3_%s_%s' % (titleL2, titleL3)
-                            subItems = _getLastItems(tmp[1], {'category':'explore_page', 'level':'3'})
-                            self.mainCache[cacheKey2].append({'title':titleL3, 'category':'list_cache_cat', 'cache_key':cacheKey3, 'level':'3'})
+                            subItems = _getLastItems(tmp[1], {'category': 'explore_page', 'level': '3'})
+                            self.mainCache[cacheKey2].append({'title': titleL3, 'category': 'list_cache_cat', 'cache_key': cacheKey3, 'level': '3'})
                             self.mainCache[cacheKey3] = subItems
-                        self.mainCache['level_1'].append({'title':titleL2, 'category':'list_cache_cat', 'cache_key':cacheKey2, 'level':'2'})
+                        self.mainCache['level_1'].append({'title': titleL2, 'category': 'list_cache_cat', 'cache_key': cacheKey2, 'level': '2'})
         
         self.listFromCache(cItem, 'level_1')
         
@@ -193,7 +193,7 @@ class Laola1TV(CBaseHostClass):
             desc = self.cm.ph.getDataBeetwenMarkers(tmp[0], '<p>', '</p>', False)[1]
             if url != '':
                 params = dict(cItem)
-                params.update({'category':'videos_list', 'url':self._getFullUrl(url), 'title':self.cleanHtmlStr(title), 'icon':self._getFullUrl(icon), 'desc':self.cleanHtmlStr(desc)})
+                params.update({'category': 'videos_list', 'url': self._getFullUrl(url), 'title': self.cleanHtmlStr(title), 'icon': self._getFullUrl(icon), 'desc': self.cleanHtmlStr(desc)})
                 self.addDir(params)
         
     def listCalendary(self, cItem):
@@ -211,7 +211,7 @@ class Laola1TV(CBaseHostClass):
             url = self._getFullUrl(self.cm.ph.getSearchGroups(tmp[0], 'href="([^"]+?)"')[0])
             desc = self.cleanHtmlStr(tmp[1])
             params = dict(cItem)
-            params.update({'title':title, 'url':url, 'desc': desc, 'icon':icon})
+            params.update({'title': title, 'url': url, 'desc': desc, 'icon': icon})
             self.addVideo(params)
 
     def listVideos(self, cItem):
@@ -245,12 +245,12 @@ class Laola1TV(CBaseHostClass):
             title = self.cm.ph.getDataBeetwenMarkers(item, '<p>', '</p>', False)[1]
             desc = item.split('</p>')[-1]
             if url != '':
-                params = {'category':'videos_list', 'url':self._getFullUrl(url), 'title':self.cleanHtmlStr(title), 'icon':self._getFullUrl(icon), 'desc':self.cleanHtmlStr(desc)}
+                params = {'category': 'videos_list', 'url': self._getFullUrl(url), 'title': self.cleanHtmlStr(title), 'icon': self._getFullUrl(icon), 'desc': self.cleanHtmlStr(desc)}
                 self.addVideo(params)
         
         if nextPage:
             params = dict(cItem)
-            params.update({'title':_("Next page"), 'page':page + 1})
+            params.update({'title': _("Next page"), 'page': page + 1})
             self.addDir(params)
         
     def listSearchResult(self, cItem, searchPattern, searchType):
@@ -293,12 +293,12 @@ class Laola1TV(CBaseHostClass):
                 
                 desc = ' \n'.join([datetime, rubric, text])
                 params = dict(cItem)
-                params.update({'title':title, 'url':url, 'desc': desc, 'icon':icon})
+                params.update({'title': title, 'url': url, 'desc': desc, 'icon': icon})
                 self.addVideo(params)
             
             if (page * pagesize) < total:
                 params = dict(cItem)
-                params.update({'title':_("Next page"), 'page':page + 1})
+                params.update({'title': _("Next page"), 'page': page + 1})
                 self.addDir(params) 
         except Exception:
             printExc()
@@ -357,10 +357,10 @@ class Laola1TV(CBaseHostClass):
         for streamaccess in streamaccessTab:
             for myip in ['', config.plugins.iptvplayer.laola1tv_myip1.value, config.plugins.iptvplayer.laola1tv_myip2.value]:
                 if '' != myip:
-                    header = {'X-Forwarded-For':myip}
+                    header = {'X-Forwarded-For': myip}
                 else:
                     header = {}
-                sts, data = self.getPage(streamaccess, {'header':header})
+                sts, data = self.getPage(streamaccess, {'header': header})
                 if not sts:
                     return urlTab
                 data = self.cm.ph.getDataBeetwenMarkers(data, '<data>', '</data>', False)[1]
@@ -373,14 +373,14 @@ class Laola1TV(CBaseHostClass):
                 url = url + '?hdnea=' + auth
                 
                 if myip != '':
-                    url = strwithmeta(url, {'X-Forwarded-For':myip})
+                    url = strwithmeta(url, {'X-Forwarded-For': myip})
                 
                 COOKIE_FILE = GetCookieDir('m3u8_laola1.tv')
                 rm(COOKIE_FILE)
                 cookieParams = {'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': COOKIE_FILE}
                 tmp = getDirectM3U8Playlist(url, checkExt=False, cookieParams=cookieParams, checkContent=True)
                 if len(tmp):
-                    urlMeta = {'iptv_proto':'m3u8', 'Origin':self.up.getDomain(baseUrl, False), 'Cookie':self.cm.getCookieHeader(COOKIE_FILE), 'User-Agent':self.cm.HOST, 'Referer':baseUrl}
+                    urlMeta = {'iptv_proto': 'm3u8', 'Origin': self.up.getDomain(baseUrl, False), 'Cookie': self.cm.getCookieHeader(COOKIE_FILE), 'User-Agent': self.cm.HOST, 'Referer': baseUrl}
                 for idx in range(len(tmp)):
                     tmp[idx]['need_resolve'] = 0
                     tmp[idx]['url'] = strwithmeta(tmp[idx]['url'], urlMeta)
@@ -418,7 +418,7 @@ class Laola1TV(CBaseHostClass):
         return cItem['url']
         
     def getLinksForFavourite(self, fav_data):
-        return self.getLinksForVideo({'url':fav_data})
+        return self.getLinksForVideo({'url': fav_data})
 
     def handleService(self, index, refresh=0, searchPattern='', searchType=''):
         printDBG('handleService start')
@@ -432,8 +432,8 @@ class Laola1TV(CBaseHostClass):
         
     #MAIN MENU
         if name == None:
-            self.listMainMenu({'name':'category'})
-            self.listsTab(self.MAIN_CAT_TAB, {'name':'category'}, 'dir')
+            self.listMainMenu({'name': 'category'})
+            self.listsTab(self.MAIN_CAT_TAB, {'name': 'category'}, 'dir')
         elif category == 'list_cache_cat':
             self.listFromCache(self.currItem)
         elif category == 'explore_page':
@@ -445,11 +445,11 @@ class Laola1TV(CBaseHostClass):
     #SEARCH
         elif category in ["search", "search_next_page"]:
             cItem = dict(self.currItem)
-            cItem.update({'search_item':False, 'name':'category'}) 
+            cItem.update({'search_item': False, 'name': 'category'}) 
             self.listSearchResult(cItem, searchPattern, searchType)
     #HISTORIA SEARCH
         elif category == "search_history":
-            self.listsHistory({'name':'history', 'category': 'search'}, 'desc', _("Type: "))
+            self.listsHistory({'name': 'history', 'category': 'search'}, 'desc', _("Type: "))
         else:
             printExc()
         

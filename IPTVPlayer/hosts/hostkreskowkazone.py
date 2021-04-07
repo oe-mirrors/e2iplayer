@@ -50,7 +50,7 @@ def gettytul():
 class KreskowkaZonePL(CBaseHostClass):
  
     def __init__(self):
-        CBaseHostClass.__init__(self, {'history':'KreskowkaZonePL.tv', 'cookie':'kreskowkazoneonline.cookie'})
+        CBaseHostClass.__init__(self, {'history': 'KreskowkaZonePL.tv', 'cookie': 'kreskowkazoneonline.cookie'})
         self.HEADER = {'User-Agent': 'Mozilla/5.0', 'Accept': 'text/html'}
         self.defaultParams = {'header': self.HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
         self.AJAX_HEADER = dict(self.HEADER)
@@ -59,21 +59,21 @@ class KreskowkaZonePL(CBaseHostClass):
         self.MAIN_URL = 'https://www.kreskowkazone.pl/'
         self.DEFAULT_ICON_URL = self.MAIN_URL + 'images/sprites.png'
         
-        self.MAIN_TAB = [{'category':'main', 'title': 'Główna', 'url':self.MAIN_URL, 'icon':self.DEFAULT_ICON_URL},
-                         {'category':'cartoons', 'title': 'Kreskówki', 'url':self.MAIN_URL, 'icon':self.DEFAULT_ICON_URL},
-                         {'category':'list_items', 'title': 'Seriale', 'url':self.MAIN_URL + 'seriale', 'icon':self.DEFAULT_ICON_URL},
-                         {'category':'rank', 'title': 'Ranking', 'url':self.MAIN_URL + 'ranking_anime', 'icon':self.DEFAULT_ICON_URL},
-                         {'category':'search', 'title': _('Search'), 'search_item':True, 'icon':self.DEFAULT_ICON_URL},
-                         {'category':'search_history', 'title': _('Search history'), 'icon':self.DEFAULT_ICON_URL}]
+        self.MAIN_TAB = [{'category': 'main', 'title': 'Główna', 'url': self.MAIN_URL, 'icon': self.DEFAULT_ICON_URL},
+                         {'category': 'cartoons', 'title': 'Kreskówki', 'url': self.MAIN_URL, 'icon': self.DEFAULT_ICON_URL},
+                         {'category': 'list_items', 'title': 'Seriale', 'url': self.MAIN_URL + 'seriale', 'icon': self.DEFAULT_ICON_URL},
+                         {'category': 'rank', 'title': 'Ranking', 'url': self.MAIN_URL + 'ranking_anime', 'icon': self.DEFAULT_ICON_URL},
+                         {'category': 'search', 'title': _('Search'), 'search_item': True, 'icon': self.DEFAULT_ICON_URL},
+                         {'category': 'search_history', 'title': _('Search history'), 'icon': self.DEFAULT_ICON_URL}]
                              
-        self.CARTOONS_CAT_TAB = [{'category':'list_abc', 'title': 'Lista kreskówek', 'url':self.MAIN_URL + 'lista_kreskowek-0'},
-                                 {'category':'list_abc', 'title': 'Lista filmów', 'url':self.MAIN_URL + 'lista_filmow-0'},
-                                 {'category':'list_items', 'title': 'Wychodzące kreskówki', 'url':self.MAIN_URL + 'wychodzace'},
-                                 {'category':'list_items', 'title': 'Wychodzące seriale', 'url':self.MAIN_URL + 'wychodzace-seriale'},
-                                 {'category':'list_items', 'title': 'Nadchodzące', 'url':self.MAIN_URL + 'nadchodzace'}]
+        self.CARTOONS_CAT_TAB = [{'category': 'list_abc', 'title': 'Lista kreskówek', 'url': self.MAIN_URL + 'lista_kreskowek-0'},
+                                 {'category': 'list_abc', 'title': 'Lista filmów', 'url': self.MAIN_URL + 'lista_filmow-0'},
+                                 {'category': 'list_items', 'title': 'Wychodzące kreskówki', 'url': self.MAIN_URL + 'wychodzace'},
+                                 {'category': 'list_items', 'title': 'Wychodzące seriale', 'url': self.MAIN_URL + 'wychodzace-seriale'},
+                                 {'category': 'list_items', 'title': 'Nadchodzące', 'url': self.MAIN_URL + 'nadchodzace'}]
                                  
-        self.MAIN_CAT_TAB = [{'category':'list_items', 'title': 'Najnowsze seriale', 'url':self.MAIN_URL},
-                             {'category':'list_items', 'm1':'Najnowsze serie', 'title': 'Lista filmów', 'url':self.MAIN_URL}]
+        self.MAIN_CAT_TAB = [{'category': 'list_items', 'title': 'Najnowsze seriale', 'url': self.MAIN_URL},
+                             {'category': 'list_items', 'm1': 'Najnowsze serie', 'title': 'Lista filmów', 'url': self.MAIN_URL}]
 
         self.login = ''
         self.password = ''
@@ -101,18 +101,18 @@ class KreskowkaZonePL(CBaseHostClass):
             for item in items:
                 url = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''href=['"]([^'^"]+?)['"]''')[0])
                 title = self.cleanHtmlStr(item)
-                rankItems.append({'title':title, 'url':url})
+                rankItems.append({'title': title, 'url': url})
                 
             if len(rankItems):
                 self.rankCache[rankTile] = rankItems
                 params = dict(cItem)
-                params.update({'good_for_fav': False, 'category':nextCategory, 'title':rankTile})
+                params.update({'good_for_fav': False, 'category': nextCategory, 'title': rankTile})
                 self.addDir(params)
                 
     def listRankItems(self, cItem, nextCategory):
         printDBG("KreskowkaZonePL.listRankItems")
         params = dict(cItem)
-        params.update({'good_for_fav': True, 'category':nextCategory})
+        params.update({'good_for_fav': True, 'category': nextCategory})
         self.listsTab(self.rankCache.get(cItem['title'], []), params)
         
     def listABC(self, cItem, nextCategory):
@@ -128,7 +128,7 @@ class KreskowkaZonePL(CBaseHostClass):
             url = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''href=['"]([^'^"]+?)['"]''')[0])
             title = self.cleanHtmlStr(item)
             params = dict(cItem)
-            params.update({'good_for_fav': False, 'category':nextCategory, 'title':title, 'url':url})
+            params.update({'good_for_fav': False, 'category': nextCategory, 'title': title, 'url': url})
             self.addDir(params)
     
     def listItems(self, cItem, nextCategory):
@@ -162,7 +162,7 @@ class KreskowkaZonePL(CBaseHostClass):
             
             desc = self.cleanHtmlStr(item)
             params = dict(cItem)
-            params.update({'good_for_fav': True, 'category':nextCategory, 'title':title, 'url':url, 'icon':icon, 'desc':desc})
+            params.update({'good_for_fav': True, 'category': nextCategory, 'title': title, 'url': url, 'icon': icon, 'desc': desc})
             self.addDir(params)
             
     def listEpisodes(self, cItem):
@@ -178,7 +178,7 @@ class KreskowkaZonePL(CBaseHostClass):
             tmp = self.cm.ph.getAllItemsBeetwenMarkers(item, '<td ', '</td>', withMarkers=True)
             title = self.cleanHtmlStr(' '.join(tmp[:-1]))
             params = dict(cItem)
-            params.update({'good_for_fav': True, 'title':cItem['title'] + ': ' + title, 'url':url})
+            params.update({'good_for_fav': True, 'title': cItem['title'] + ': ' + title, 'url': url})
             self.addVideo(params)
 
     def listSearchResult(self, cItem, searchPattern, searchType):
@@ -205,8 +205,8 @@ class KreskowkaZonePL(CBaseHostClass):
             url = self.cm.ph.getSearchGroups(item, '''%s=['"]([^'^"]+?)['"]''' % varName)[0]
             tmp = self.cm.ph.getAllItemsBeetwenMarkers(item, '<td ', '</td>', withMarkers=True)
             title = self.cleanHtmlStr(' '.join(tmp))
-            url = strwithmeta(url, {'origin_url':cItem['url']})
-            urlTab.append({'name':title, 'url':url, 'need_resolve':1})
+            url = strwithmeta(url, {'origin_url': cItem['url']})
+            urlTab.append({'name': title, 'url': url, 'need_resolve': 1})
         
         self.cacheLinks[cItem['url']] = urlTab
         return urlTab
@@ -230,7 +230,7 @@ class KreskowkaZonePL(CBaseHostClass):
                 params = dict(self.defaultParams)
                 params['header'] = dict(self.AJAX_HEADER)
                 params['header']['Referer'] = originUrl
-                sts, data = self.cm.getPage(url, params, {'o':str(videoUrl)})
+                sts, data = self.cm.getPage(url, params, {'o': str(videoUrl)})
                 if not sts:
                     return []
                 printDBG('+++++++++++++++++++++++++++++++++++++++++++++++')
@@ -288,9 +288,9 @@ class KreskowkaZonePL(CBaseHostClass):
             return False, connFailed 
         
         md5Password = md5(password).hexdigest()
-        post_data = {"vb_login_username":login, "vb_login_password_hint":"Hasło", "vb_login_password":"", "do":"login", "s":"", "securitytoken":"guest", "cookieuser":"1", "vb_login_md5password":md5Password, "vb_login_md5password_utf8":md5Password}
+        post_data = {"vb_login_username": login, "vb_login_password_hint": "Hasło", "vb_login_password": "", "do": "login", "s": "", "securitytoken": "guest", "cookieuser": "1", "vb_login_md5password": md5Password, "vb_login_md5password_utf8": md5Password}
         params = dict(self.defaultParams)
-        params.update({'header':self.AJAX_HEADER}) #, 'raw_post_data':True
+        params.update({'header': self.AJAX_HEADER}) #, 'raw_post_data':True
         
         # login
         sts, data = self.cm.getPage(self.getFullUrl('login.php?s=&do=login'), params, post_data)
@@ -335,7 +335,7 @@ class KreskowkaZonePL(CBaseHostClass):
         if name == None:
             if self.login == '' or self.password == '':
                 rm(self.COOKIE_FILE)
-            self.listsTab(self.MAIN_TAB, {'name':'category'})
+            self.listsTab(self.MAIN_TAB, {'name': 'category'})
         elif 'main' == category:
             self.listsTab(self.MAIN_CAT_TAB, self.currItem)
         elif 'cartoons' == category:
@@ -353,11 +353,11 @@ class KreskowkaZonePL(CBaseHostClass):
     #SEARCH
         elif category in ["search", "search_next_page"]:
             cItem = dict(self.currItem)
-            cItem.update({'search_item':False, 'name':'category'}) 
+            cItem.update({'search_item': False, 'name': 'category'}) 
             self.listSearchResult(cItem, searchPattern, searchType)
     #HISTORIA SEARCH
         elif category == "search_history":
-            self.listsHistory({'name':'history', 'category': 'search'}, 'desc', _("Type: "))
+            self.listsHistory({'name': 'history', 'category': 'search'}, 'desc', _("Type: "))
         else:
             printExc()
         CBaseHostClass.endHandleService(self, index, refresh)

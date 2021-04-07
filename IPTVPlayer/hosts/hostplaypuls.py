@@ -51,7 +51,7 @@ class Playpuls(CBaseHostClass):
         self.DEFAULT_ICON_URL = self.getMainUrl() + 'sites/all/themes/play/logo.png'
         self.HOST = 'Mozilla/5.0 (X11; U; Linux i686; en-US; rv:1.9.2.18) Gecko/20110621 Mandriva Linux/1.9.2.18-0.1mdv2010.2 (2010.2) Firefox/3.6.18'
         self.HEADER = {'User-Agent': self.HOST, 'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8'}
-        CBaseHostClass.__init__(self, {'history':'Playpuls', 'proxyURL': config.plugins.iptvplayer.proxyurl.value, 'useProxy': config.plugins.iptvplayer.playpuls_proxy.value, 'cookie':'playpuls.cookie'})        
+        CBaseHostClass.__init__(self, {'history': 'Playpuls', 'proxyURL': config.plugins.iptvplayer.proxyurl.value, 'useProxy': config.plugins.iptvplayer.playpuls_proxy.value, 'cookie': 'playpuls.cookie'})        
         self.cacheMenuTree = []
     
     def cleanHtmlStr(self, str):
@@ -66,11 +66,11 @@ class Playpuls(CBaseHostClass):
             for item in menuData:
                 if item[1] in 'Filmy':
                     continue
-                params = {'name':'category', 'title':item[1], 'category':'menu', 'url':self.getFullUrl(item[0]), 'icon':self.DEFAULT_ICON_URL}
+                params = {'name': 'category', 'title': item[1], 'category': 'menu', 'url': self.getFullUrl(item[0]), 'icon': self.DEFAULT_ICON_URL}
                 self.addDir(params)
             #
-            self.addDir({'name':'category', 'title':_('Search'), 'category':'search', 'search_item':True})
-            self.addDir({'name':'category', 'title':_('Search history'), 'category':'search_history'})
+            self.addDir({'name': 'category', 'title': _('Search'), 'category': 'search', 'search_item': True})
+            self.addDir({'name': 'category', 'title': _('Search history'), 'category': 'search_history'})
         
     def listCategory(self, cItem, searchMode=False):
         printDBG("Playpuls.listCategory cItem[%s]" % cItem)
@@ -90,7 +90,7 @@ class Playpuls(CBaseHostClass):
                     title = self.cm.ph.getDataBeetwenReMarkers(item, re.compile('<h2[^>]*?>'), re.compile('</h2>'), False)[1].strip()
                     if '' == title or 'Zobacz również' in title:
                         continue
-                    tmpList.append({'title':title, 'data':item})
+                    tmpList.append({'title': title, 'data': item})
                 if 1 == len(tmpList):
                     data = tmpList[0]['data']
                 elif 1 < len(tmpList):
@@ -145,7 +145,7 @@ class Playpuls(CBaseHostClass):
             else:
                 category = 'menu'
             if '' != url:
-                params = {'name':'category', 'category':category, 'title':title, 'url':self.getFullUrl(url), 'icon':icon, 'desc':desc}
+                params = {'name': 'category', 'category': category, 'title': title, 'url': self.getFullUrl(url), 'icon': icon, 'desc': desc}
                 if 'vod' == category:
                     self.addVideo(params)
                 else:
@@ -156,10 +156,10 @@ class Playpuls(CBaseHostClass):
         videoUrls = []
         header = dict(self.HEADER)
         header['Referer'] = cItem['url']
-        sts, data = self.cm.getPage(cItem['url'], {'use_cookie': True, 'load_cookie': False, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE, 'header':header})
+        sts, data = self.cm.getPage(cItem['url'], {'use_cookie': True, 'load_cookie': False, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE, 'header': header})
         if not sts:
             return videoUrls
-        sts, data = self.cm.getPage(cItem['url'], {'use_cookie': True, 'load_cookie': True, 'save_cookie': False, 'cookiefile': self.COOKIE_FILE, 'header':header, 'cookie_items':{'has_js':'1'}})
+        sts, data = self.cm.getPage(cItem['url'], {'use_cookie': True, 'load_cookie': True, 'save_cookie': False, 'cookiefile': self.COOKIE_FILE, 'header': header, 'cookie_items': {'has_js': '1'}})
         if not sts:
             return videoUrls
         
@@ -181,7 +181,7 @@ class Playpuls(CBaseHostClass):
             post_data = None #{'id':id}
             url += '?id=%s' % id
             header['Content-Type'] = 'application/x-www-form-urlencoded; charset=UTF-8'
-            sts, source3Data = self.cm.getPage(url, {'use_cookie': True, 'load_cookie': True, 'save_cookie': False, 'cookiefile': self.COOKIE_FILE, 'header':header, 'cookie_items':{'has_js':'1'}}, post_data=post_data)
+            sts, source3Data = self.cm.getPage(url, {'use_cookie': True, 'load_cookie': True, 'save_cookie': False, 'cookiefile': self.COOKIE_FILE, 'header': header, 'cookie_items': {'has_js': '1'}}, post_data=post_data)
             if not sts:
                 return videoUrls
             printDBG(source3Data)
@@ -199,40 +199,40 @@ class Playpuls(CBaseHostClass):
                     desktopHtmlHdHighSrc = urlBase + '/mp4/1280x720_2500_hp.mp4'
                     desktopHtmlHdMediumSrc = urlBase + '/mp4/864x486_1600_hp.mp4'
                     desktopHtmlHdLowSrc = urlBase + '/mp4/864x486_800_bp.mp4'
-                    videoUrls.append({'bitrate':'2500', 'name':'High - 2500', 'url':desktopHtmlHdHighSrc})
-                    videoUrls.append({'bitrate':'1600', 'name':'Medium - 1600', 'url':desktopHtmlHdMediumSrc})
-                    videoUrls.append({'bitrate':'800', 'name':'Low - 800', 'url':desktopHtmlHdLowSrc})
+                    videoUrls.append({'bitrate': '2500', 'name': 'High - 2500', 'url': desktopHtmlHdHighSrc})
+                    videoUrls.append({'bitrate': '1600', 'name': 'Medium - 1600', 'url': desktopHtmlHdMediumSrc})
+                    videoUrls.append({'bitrate': '800', 'name': 'Low - 800', 'url': desktopHtmlHdLowSrc})
         
                 elif '0' == quality:
                     if 'hls' != proto:
                         mobileSrc = urlBase + '/mp4/720x576_800_bp.mp4'
                     desktopHtmlSdHighSrc = urlBase + '/mp4/720x576_1600_hp.mp4'
                     desktopHtmlSdLowSrc = urlBase + '/mp4/720x576_800_bp.mp4'
-                    videoUrls.append({'bitrate':'1600', 'name':'Medium - 1600', 'url':desktopHtmlSdHighSrc})
-                    videoUrls.append({'bitrate':'800', 'name':'Low - 800', 'url':desktopHtmlSdLowSrc})
+                    videoUrls.append({'bitrate': '1600', 'name': 'Medium - 1600', 'url': desktopHtmlSdHighSrc})
+                    videoUrls.append({'bitrate': '800', 'name': 'Low - 800', 'url': desktopHtmlSdLowSrc})
                 
                 if '' != mobileSrc:
-                    videoUrls.append({'bitrate':'800', 'name':'Mobile - 800', 'url':mobileSrc})
+                    videoUrls.append({'bitrate': '800', 'name': 'Mobile - 800', 'url': mobileSrc})
                 else:
                     mobileSrc = 'http://redir.atmcdn.pl/hls/o2/pulstv/vod/' + source1Data + '/hls/playlist.hls/playlist.m3u8'
                     mobileSrc = getDirectM3U8Playlist(mobileSrc, checkExt=False)
                     for item in mobileSrc:
-                        item['url'] = self.up.decorateUrl(item['url'], {'iptv_proto':'m3u8', 'iptv_livestream':False})
+                        item['url'] = self.up.decorateUrl(item['url'], {'iptv_proto': 'm3u8', 'iptv_livestream': False})
                         item['bitrate'] = str(int(item.get('bitrate', '800000')) / 1000)
                         item['name'] = 'Mobile(hls) - %s' % item['bitrate']
                         videoUrls.append(item)
             else:
-                sources.append({'quality':'M1', 'src': '/bucket/%s/m1.mp4' % source1Data})
-                sources.append({'quality':'M2', 'src': '/bucket/%s/m2.mp4' % source1Data})
-                sources.append({'quality':'D1', 'src': '/bucket/%s/d1.mp4' % source1Data})
-                sources.append({'quality':'D2', 'src': '/bucket/%s/d2.mp4' % source1Data})
-                sources.append({'quality':'D3', 'src': '/bucket/%s/d3.mp4' % source1Data})
+                sources.append({'quality': 'M1', 'src': '/bucket/%s/m1.mp4' % source1Data})
+                sources.append({'quality': 'M2', 'src': '/bucket/%s/m2.mp4' % source1Data})
+                sources.append({'quality': 'D1', 'src': '/bucket/%s/d1.mp4' % source1Data})
+                sources.append({'quality': 'D2', 'src': '/bucket/%s/d2.mp4' % source1Data})
+                sources.append({'quality': 'D3', 'src': '/bucket/%s/d3.mp4' % source1Data})
         elif len(source2Data) > 0:
             for item in source2Data:
-                sources.append({'quality':item[0].upper(), 'src': '/play/%s' % item[1]})
+                sources.append({'quality': item[0].upper(), 'src': '/play/%s' % item[1]})
         elif len(source4Data) > 0:
             for item in source4Data:
-                sources.append({'quality':item[0].upper(), 'src': '/play/%s' % item[1]})
+                sources.append({'quality': item[0].upper(), 'src': '/play/%s' % item[1]})
         elif source3Data != '':
             try:
                 source3Data = byteify(json.loads(source3Data))
@@ -241,12 +241,12 @@ class Playpuls(CBaseHostClass):
                 for key, val in source3Data.items():
                     if val != '':
                         key = key.replace('src', '')
-                        sources.append({'quality':key, 'src': '/play/%s' % val})
+                        sources.append({'quality': key, 'src': '/play/%s' % val})
             except Exception:
                 printExc()
         
         if len(sources):
-            qualityMap = {'M1':'400', 'M2':'600', 'D1':'600', 'D2':'800', 'D3':'1000'}
+            qualityMap = {'M1': '400', 'M2': '600', 'D1': '600', 'D2': '800', 'D3': '1000'}
             for item in sources:
                 # ["http://vod1.playpuls.pl:1716/Edge/_definst_/amlst:", "http://vod6.playpuls.pl:1935/Edge/_definst_/amlst:"]
                 servers = ["http://vod1.playpuls.pl:1716/Edge/_definst_/mp4:s3", "http://vod6.playpuls.pl:1716/Edge/_definst_/mp4:s3"]
@@ -256,7 +256,7 @@ class Playpuls(CBaseHostClass):
                     url += '/playlist.m3u8'
                 else:
                     url += '/manifest.mpd'
-                videoUrls.append({'bitrate':qualityMap.get(item['quality'], '0'), 'name':'%s - %s' % (item['quality'], qualityMap.get(item['quality'], '0')), 'url':url})
+                videoUrls.append({'bitrate': qualityMap.get(item['quality'], '0'), 'name': '%s - %s' % (item['quality'], qualityMap.get(item['quality'], '0')), 'url': url})
             
         if 0 < len(videoUrls):
             max_bitrate = int(config.plugins.iptvplayer.playpuls_defaultformat.value)
@@ -288,11 +288,11 @@ class Playpuls(CBaseHostClass):
     #SEARCH
         elif category in ["search", "search_next_page"]:
             cItem = dict(self.currItem)
-            cItem.update({'search_item':False, 'name':'category'}) 
+            cItem.update({'search_item': False, 'name': 'category'}) 
             self.listSearchResult(cItem, searchPattern, searchType)
     #HISTORIA SEARCH
         elif category == "search_history":
-            self.listsHistory({'name':'history', 'category': 'search'}, 'desc', _("Type: "))
+            self.listsHistory({'name': 'history', 'category': 'search'}, 'desc', _("Type: "))
         else:
             printExc()
 

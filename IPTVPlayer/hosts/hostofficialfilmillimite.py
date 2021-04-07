@@ -23,7 +23,7 @@ def gettytul():
 class OfficialFilmIllimite(CBaseHostClass):
 
     def __init__(self):
-        CBaseHostClass.__init__(self, {'history':'OfficialFilmIllimite', 'cookie':'OfficialFilmIllimite.cookie'})
+        CBaseHostClass.__init__(self, {'history': 'OfficialFilmIllimite', 'cookie': 'OfficialFilmIllimite.cookie'})
         self.MAIN_URL = 'https://official-film-illimite.ws/'
         self.DEFAULT_ICON_URL = self.getFullIconUrl('/wp-content/uploads/2016/10/official-film-illimite.png')
         self.cacheLinks = {}
@@ -68,17 +68,17 @@ class OfficialFilmIllimite(CBaseHostClass):
                     url = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''href=['"]([^"^']+?)["']''', 1, True)[0])
                     title = self.cleanHtmlStr(item)
                     params = dict(cItem)
-                    params.update({'title':title, 'url':url, 'category':'list_items'})
+                    params.update({'title': title, 'url': url, 'category': 'list_items'})
                     subItems.append(params)
                 if len(subItems):
                     params = dict(cItem)
-                    params.update({'title':baseTitle % self.cleanHtmlStr(tabsTitles[idx]), 'category':'sub_items', 'sub_items':subItems})
+                    params.update({'title': baseTitle % self.cleanHtmlStr(tabsTitles[idx]), 'category': 'sub_items', 'sub_items': subItems})
                     self.addDir(params)
         else:
             GetIPTVNotify().push("Parsing error. Number of tab titles mismatched number of tabs!", 'error', 10)
         
-        MAIN_CAT_TAB = [{'category':'search', 'title': _('Search'), 'search_item':True},
-                        {'category': 'search_history', 'title': _('Search history'),}]
+        MAIN_CAT_TAB = [{'category': 'search', 'title': _('Search'), 'search_item': True},
+                        {'category': 'search_history', 'title': _('Search history'), }]
         self.listsTab(MAIN_CAT_TAB, cItem)
     
     def listCatItems(self, cItem, nextCategory):
@@ -89,7 +89,7 @@ class OfficialFilmIllimite(CBaseHostClass):
             url = self.getFullUrl(self.cm.ph.getSearchGroups(cTree['dat'], '''href=['"]([^'^"]+?)['"]''')[0])
             if url != '':
                 params = dict(cItem)
-                params.update({'good_for_fav':False, 'category':nextCategory, 'title':_('--All--'), 'url':url})
+                params.update({'good_for_fav': False, 'category': nextCategory, 'title': _('--All--'), 'url': url})
                 self.addDir(params)
             
             for item in cTree['list']:
@@ -98,12 +98,12 @@ class OfficialFilmIllimite(CBaseHostClass):
                 if 'list' not in item:
                     if url != '' and title != '':
                         params = dict(cItem)
-                        params.update({'good_for_fav':False, 'category':nextCategory, 'title':title, 'url':url})
+                        params.update({'good_for_fav': False, 'category': nextCategory, 'title': title, 'url': url})
                         self.addDir(params)
                 elif len(item['list']) == 1 and title != '':
                     item['list'][0]['dat'] = item['dat']
                     params = dict(cItem)
-                    params.update({'good_for_fav':False, 'c_tree':item['list'][0], 'title':title, 'url':url})
+                    params.update({'good_for_fav': False, 'c_tree': item['list'][0], 'title': title, 'url': url})
                     self.addDir(params)
         except Exception:
             printExc()
@@ -150,12 +150,12 @@ class OfficialFilmIllimite(CBaseHostClass):
                     descTab.append(d)
             desc = ' | '.join(descTab[1:2] + descTab[2:3] + descTab[0:1] + descTab[3:]) + '[/br]' + desc
             params = dict(cItem)
-            params.update({'good_for_fav': True, 'title':title, 'category':nextCategory, 'url':url, 'desc':desc, 'icon':self.getFullIconUrl(icon)})
+            params.update({'good_for_fav': True, 'title': title, 'category': nextCategory, 'url': url, 'desc': desc, 'icon': self.getFullIconUrl(icon)})
             self.addDir(params)
         
         if nextPage != '':
             params = dict(cItem)
-            params.update({'good_for_fav': False, 'title':_('Next page'), 'page':page + 1, 'url':nextPage})
+            params.update({'good_for_fav': False, 'title': _('Next page'), 'page': page + 1, 'url': nextPage})
             self.addDir(params)
         
     def exploreItem(self, cItem):
@@ -188,11 +188,11 @@ class OfficialFilmIllimite(CBaseHostClass):
             link = self.cm.ph.getDataBeetwenNodes(playerData, ('<div', '>', link), ('</div', '>'), False)[1]
             url = self.getFullUrl(self.cm.ph.getSearchGroups(link, '''<iframe[^>]+?src=['"]([^"^']+?)['"]''', 1, True)[0])
             if url != '':
-                self.cacheLinks[cUrl].append({'name':name, 'url':strwithmeta(url, {'Referer':cUrl}), 'need_resolve':1})
+                self.cacheLinks[cUrl].append({'name': name, 'url': strwithmeta(url, {'Referer': cUrl}), 'need_resolve': 1})
         
         if len(self.cacheLinks[cUrl]):
             params = dict(cItem)
-            params.update({'good_for_fav': False, 'url':cUrl, 'desc':desc, 'prev_url':cItem['url']})
+            params.update({'good_for_fav': False, 'url': cUrl, 'desc': desc, 'prev_url': cItem['url']})
             self.addVideo(params)
         else:
             playerData = self.cm.ph.rgetAllItemsBeetwenNodes(data, ('</iframe', '>'), ('<div', '>', 'id'), caseSensitive=False)
@@ -202,9 +202,9 @@ class OfficialFilmIllimite(CBaseHostClass):
                 if url == '':
                     continue
                 name = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(data, ('<a', '>', '#' + frameId), ('</a', '>'), False)[1])
-                self.cacheLinks[url] = [{'name':name, 'url':strwithmeta(url, {'Referer':cUrl}), 'need_resolve':1}]
+                self.cacheLinks[url] = [{'name': name, 'url': strwithmeta(url, {'Referer': cUrl}), 'need_resolve': 1}]
                 params = dict(cItem)
-                params.update({'good_for_fav': False, 'url':url, 'title':cItem['title'] + ': ' + name, 'desc':desc, 'prev_url':cItem['url']})
+                params.update({'good_for_fav': False, 'url': url, 'title': cItem['title'] + ': ' + name, 'desc': desc, 'prev_url': cItem['url']})
                 self.addVideo(params)
             
     def listSearchResult(self, cItem, searchPattern, searchType):
@@ -231,7 +231,7 @@ class OfficialFilmIllimite(CBaseHostClass):
                             self.cacheLinks[key][idx]['name'] = '*' + self.cacheLinks[key][idx]['name']
         
         if 0 == self.up.checkHostSupport(videoUrl): 
-            sts, data = self.getPage(videoUrl, {'max_data_size':0, 'header': MergeDicts(self.cm.getDefaultHeader(), {'Referer':videoUrl.meta['Referer']})})
+            sts, data = self.getPage(videoUrl, {'max_data_size': 0, 'header': MergeDicts(self.cm.getDefaultHeader(), {'Referer': videoUrl.meta['Referer']})})
             try:
                 videoUrl = strwithmeta(self.cm.meta['url'], videoUrl.meta)
             except Exception:
@@ -288,7 +288,7 @@ class OfficialFilmIllimite(CBaseHostClass):
         if desc == '':
             desc = cItem.get('desc', '')
         
-        return [{'title':self.cleanHtmlStr(title), 'text': self.cleanHtmlStr(desc), 'images':[{'title':'', 'url':self.getFullUrl(icon)}], 'other_info':{'custom_items_list':itemsList}}]
+        return [{'title': self.cleanHtmlStr(title), 'text': self.cleanHtmlStr(desc), 'images': [{'title': '', 'url': self.getFullUrl(icon)}], 'other_info': {'custom_items_list': itemsList}}]
         
     def handleService(self, index, refresh=0, searchPattern='', searchType=''):
         printDBG('handleService start')
@@ -302,7 +302,7 @@ class OfficialFilmIllimite(CBaseHostClass):
         
     #MAIN MENU
         if name == None:
-            self.listMain({'name':'category', 'type':'category'})
+            self.listMain({'name': 'category', 'type': 'category'})
         elif category == 'cat_items':
             self.listCatItems(self.currItem, 'list_items')
         elif category == 'sub_items':
@@ -314,11 +314,11 @@ class OfficialFilmIllimite(CBaseHostClass):
     #SEARCH
         elif category in ["search", "search_next_page"]:
             cItem = dict(self.currItem)
-            cItem.update({'search_item':False, 'name':'category'}) 
+            cItem.update({'search_item': False, 'name': 'category'}) 
             self.listSearchResult(cItem, searchPattern, searchType)
     #HISTORIA SEARCH
         elif category == "search_history":
-            self.listsHistory({'name':'history', 'category': 'search'}, 'desc', _("Type: "))
+            self.listsHistory({'name': 'history', 'category': 'search'}, 'desc', _("Type: "))
         else:
             printExc()
         

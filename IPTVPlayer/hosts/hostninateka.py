@@ -38,7 +38,7 @@ def gettytul():
 
 class Ninateka(CBaseHostClass):
     def __init__(self):
-        CBaseHostClass.__init__(self, {'history':'ninateka', 'cookie':'ninateka.cookie'})
+        CBaseHostClass.__init__(self, {'history': 'ninateka', 'cookie': 'ninateka.cookie'})
         self.DEFAULT_ICON_URL = 'http://ninateka.pl/Content/images/ninateka_logo.png'
         
         self.menuHTML = ''
@@ -53,11 +53,11 @@ class Ninateka(CBaseHostClass):
         
         #DEFAULT_GET_PARAM = 'MediaType=video&Paid=False'
         
-        self.MAIN_CAT_TAB = [{'category':'list_all', 'title': 'Wszystkie', 'url':self.VIDEOS_URL},
-                             {'category':'list_cats', 'title': 'Kategorie', 'url':self.MAIN_URL},
+        self.MAIN_CAT_TAB = [{'category': 'list_all', 'title': 'Wszystkie', 'url': self.VIDEOS_URL},
+                             {'category': 'list_cats', 'title': 'Kategorie', 'url': self.MAIN_URL},
                              
-                             {'category': 'search', 'title': _('Search'), 'search_item': True,},
-                             {'category': 'search_history', 'title': _('Search history'),} 
+                             {'category': 'search', 'title': _('Search'), 'search_item': True, },
+                             {'category': 'search_history', 'title': _('Search history'), } 
                             ]
         
     def getMenuHTML(self):
@@ -117,7 +117,7 @@ class Ninateka(CBaseHostClass):
                 type = item.get('type', '').lower()
                 if '/mp4' in type:
                     url = _repFun(item['src'])
-                    linksTab.append({'name': 'mp4', 'url': url, 'need_resolve':0})
+                    linksTab.append({'name': 'mp4', 'url': url, 'need_resolve': 0})
                 if '/x-mpegurl' in type:
                     url = _repFun(item['src'])
                     linksTab.extend(getDirectM3U8Playlist(url))
@@ -227,7 +227,7 @@ class Ninateka(CBaseHostClass):
 
     #MAIN MENU
         if name == None:
-            self.listsTab(self.MAIN_CAT_TAB, {'name':'category'})
+            self.listsTab(self.MAIN_CAT_TAB, {'name': 'category'})
     #WSZYSTKIE
         elif category == 'list_all':
             self.getVideosList(self.currItem['url'])
@@ -242,11 +242,11 @@ class Ninateka(CBaseHostClass):
     #SEARCH
         elif category in ["search", "search_next_page"]:
             cItem = dict(self.currItem)
-            cItem.update({'search_item':False, 'name':'category'}) 
+            cItem.update({'search_item': False, 'name': 'category'}) 
             self.listSearchResult(cItem, searchPattern, searchType)
     #HISTORIA SEARCH
         elif category == "search_history":
-            self.listsHistory({'name':'history', 'category': 'search'}, 'desc', _("Type: "))
+            self.listsHistory({'name': 'history', 'category': 'search'}, 'desc', _("Type: "))
     #WRONG WAY
         else:
             printDBG('handleService WRONG WAY')

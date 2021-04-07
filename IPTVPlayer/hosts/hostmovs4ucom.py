@@ -29,31 +29,31 @@ def gettytul():
 class Movs4uCOM(CBaseHostClass):
  
     def __init__(self):
-        CBaseHostClass.__init__(self, {'history':'movs4u.com', 'cookie':'movs4u.com.cookie'})
+        CBaseHostClass.__init__(self, {'history': 'movs4u.com', 'cookie': 'movs4u.com.cookie'})
         self.USER_AGENT = 'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:40.0) Gecko/20100101 Firefox/40.0'
-        self.HEADER = {'User-Agent': self.USER_AGENT, 'DNT':'1', 'Accept': 'text/html'}
+        self.HEADER = {'User-Agent': self.USER_AGENT, 'DNT': '1', 'Accept': 'text/html'}
         self.AJAX_HEADER = dict(self.HEADER)
         self.AJAX_HEADER.update({'X-Requested-With': 'XMLHttpRequest'})
         self.MAIN_URL = 'http://www.movs4u.tv/' 
         self.DEFAULT_ICON_URL = self.getFullIconUrl('/wp-content/uploads/2018/03/TcCsO2w.png')
         self.cacheLinks = {}
         self.cacheSeasons = {}
-        self.defaultParams = {'header':self.HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
+        self.defaultParams = {'header': self.HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
     
-        self.MAIN_CAT_TAB = [{'category':'list_items', 'title': _('Movies'), 'url':self.getFullUrl('/movie/')},
-                             {'category':'list_items', 'title': _('Series'), 'url':self.getFullUrl('/tvshows/')},
-                             {'category':'list_items', 'title': _('Collections'), 'url':self.getFullUrl('/collection/')},
-                             {'category': 'list_filters', 'title': _('Filters'),},
+        self.MAIN_CAT_TAB = [{'category': 'list_items', 'title': _('Movies'), 'url': self.getFullUrl('/movie/')},
+                             {'category': 'list_items', 'title': _('Series'), 'url': self.getFullUrl('/tvshows/')},
+                             {'category': 'list_items', 'title': _('Collections'), 'url': self.getFullUrl('/collection/')},
+                             {'category': 'list_filters', 'title': _('Filters'), },
                              
-                             {'category': 'search', 'title': _('Search'), 'search_item': True,},
-                             {'category': 'search_history', 'title': _('Search history'),} 
+                             {'category': 'search', 'title': _('Search'), 'search_item': True, },
+                             {'category': 'search_history', 'title': _('Search history'), } 
                             ]
                             
-        self.FILTERS_CAT_TAB = [{'category':'list_main', 'title': _('Alphabetically'), 'tab_id':'abc'},
-                                {'category':'list_main', 'title': _('Categories'), 'tab_id':'categories'},
-                                {'category':'list_main', 'title': _('Genres'), 'tab_id':'genres'},
-                                {'category':'list_main', 'title': _('Qualities'), 'tab_id':'qualities'},
-                                {'category':'list_main', 'title': _('Releases'), 'tab_id':'releases'},
+        self.FILTERS_CAT_TAB = [{'category': 'list_main', 'title': _('Alphabetically'), 'tab_id': 'abc'},
+                                {'category': 'list_main', 'title': _('Categories'), 'tab_id': 'categories'},
+                                {'category': 'list_main', 'title': _('Genres'), 'tab_id': 'genres'},
+                                {'category': 'list_main', 'title': _('Qualities'), 'tab_id': 'qualities'},
+                                {'category': 'list_main', 'title': _('Releases'), 'tab_id': 'releases'},
                                ]
         
     def getPage(self, baseUrl, addParams={}, post_data=None):
@@ -70,7 +70,7 @@ class Movs4uCOM(CBaseHostClass):
             else:
                 return urllib.parse.urljoin(baseUrl, url)
             
-        addParams['cloudflare_params'] = {'domain':self.up.getDomain(baseUrl), 'cookie_file':self.COOKIE_FILE, 'User-Agent':self.USER_AGENT, 'full_url_handle':_getFullUrl}
+        addParams['cloudflare_params'] = {'domain': self.up.getDomain(baseUrl), 'cookie_file': self.COOKIE_FILE, 'User-Agent': self.USER_AGENT, 'full_url_handle': _getFullUrl}
         sts, data = self.cm.getPageCFProtection(baseUrl, addParams, post_data)
         
         return sts, data
@@ -108,7 +108,7 @@ class Movs4uCOM(CBaseHostClass):
                 continue
             title = self.cleanHtmlStr(item)
             params = dict(cItem)
-            params = {'good_for_fav': True, 'title':title, 'url':url}
+            params = {'good_for_fav': True, 'title': title, 'url': url}
             params['category'] = nextCategory
             self.addDir(params)
         
@@ -185,7 +185,7 @@ class Movs4uCOM(CBaseHostClass):
                 desc += '[/br]' + tmp
             
             params = dict(cItem)
-            params = {'good_for_fav': True, 'title':title, 'url':url, 'desc':desc, 'icon':icon}
+            params = {'good_for_fav': True, 'title': title, 'url': url, 'desc': desc, 'icon': icon}
             if '/collection/' in item:
                 category = 'list_items'
             else:
@@ -195,7 +195,7 @@ class Movs4uCOM(CBaseHostClass):
         
         if nextPage and len(self.currList) > 0:
             params = dict(cItem)
-            params.update({'title':_("Next page"), 'page':page + 1})
+            params.update({'title': _("Next page"), 'page': page + 1})
             self.addDir(params)
     
     def exploreItem(self, cItem, nextCategory=''):
@@ -218,7 +218,7 @@ class Movs4uCOM(CBaseHostClass):
             title = self.cleanHtmlStr(tmp)
             title = '%s - %s' % (cItem['title'], title)
             params = dict(cItem)
-            params.update({'good_for_fav': False, 'title':title, 'prev_title':cItem['title'], 'url':url, 'prev_url':cItem['url'], 'prev_desc':cItem.get('desc', ''), 'icon':mainIcon, 'desc':mainDesc})
+            params.update({'good_for_fav': False, 'title': title, 'prev_title': cItem['title'], 'url': url, 'prev_url': cItem['url'], 'prev_desc': cItem.get('desc', ''), 'icon': mainIcon, 'desc': mainDesc})
             self.addVideo(params)
         
         mainTitle = self.cleanHtmlStr(self.cm.ph.getSearchGroups(data, '''<meta[^>]+?itemprop="name"[^>]+?content=['"]([^"^']+?)['"]''')[0])
@@ -257,7 +257,7 @@ class Movs4uCOM(CBaseHostClass):
                     if desc != '':
                         desc += '[/br]'
                     desc += mainDesc
-                    params = {'title':title, 'url':url, 'icon':icon, 'desc':desc}
+                    params = {'title': title, 'url': url, 'icon': icon, 'desc': desc}
                     episodesList.append(params)
                 
                 if len(episodesList):
@@ -274,12 +274,12 @@ class Movs4uCOM(CBaseHostClass):
                     desc += mainDesc
                     
                     params = dict(cItem)
-                    params.update({'good_for_fav': False, 'category':nextCategory, 'title':sTtile, 's_key':sKey, 'prev_title':mainTitle, 'url':url, 'prev_url':cItem['url'], 'prev_desc':cItem.get('desc', ''), 'icon':icon, 'desc':desc})
+                    params.update({'good_for_fav': False, 'category': nextCategory, 'title': sTtile, 's_key': sKey, 'prev_title': mainTitle, 'url': url, 'prev_url': cItem['url'], 'prev_desc': cItem.get('desc', ''), 'icon': icon, 'desc': desc})
                     self.addDir(params)
                     sKey += 1
         else:
             params = dict(cItem)
-            params.update({'good_for_fav': True, 'title':mainTitle, 'icon':mainIcon, 'desc':mainDesc})
+            params.update({'good_for_fav': True, 'title': mainTitle, 'icon': mainIcon, 'desc': mainDesc})
             self.addVideo(params)
             
     def listEpisodes(self, cItem):
@@ -339,7 +339,7 @@ class Movs4uCOM(CBaseHostClass):
                 name = self.cleanHtmlStr(item)
                 url = linksMap.get(id, '')
                 if self.cm.isValidUrl(url):
-                    retTab.append({'name':name, 'url':url, 'need_resolve':1})
+                    retTab.append({'name': name, 'url': url, 'need_resolve': 1})
             
             if len(retTab):
                 self.cacheLinks[cItem['url']] = retTab
@@ -440,8 +440,8 @@ class Movs4uCOM(CBaseHostClass):
         icon = self.getFullIconUrl(self.cm.ph.getSearchGroups(icon, '''<img[^>]+?src=['"]([^"^']+?\.jpe?g[^"^']*?)["']''')[0])
         desc = self.cleanHtmlStr(self.cm.ph.getDataBeetwenReMarkers(data, re.compile('<div[^>]+?class="wp-content"[^>]*?>'), re.compile('</div>'))[1])
         
-        mapDesc = {'Original title': 'alternate_title', 'IMDb Rating':'imdb_rating', 'TMDb Rating':'tmdb_rating', 'Status':'status',
-                   'Firt air date':'first_air_date', 'Last air date':'last_air_date', 'Seasons':'seasons', 'Episodes':'episodes'}
+        mapDesc = {'Original title': 'alternate_title', 'IMDb Rating': 'imdb_rating', 'TMDb Rating': 'tmdb_rating', 'Status': 'status',
+                   'Firt air date': 'first_air_date', 'Last air date': 'last_air_date', 'Seasons': 'seasons', 'Episodes': 'episodes'}
         tmp = self.cm.ph.getAllItemsBeetwenMarkers(data, '<div class="custom_fields">', '</div>')
         for item in tmp:
             item = item.split('<span class="valor">')
@@ -455,7 +455,7 @@ class Movs4uCOM(CBaseHostClass):
             if value != '':
                 otherInfo[key] = value
         
-        mapDesc = {'Director': 'directors', 'Cast':'cast', 'Creator':'creators'}
+        mapDesc = {'Director': 'directors', 'Cast': 'cast', 'Creator': 'creators'}
         
         tmp = self.cm.ph.getDataBeetwenReMarkers(data, re.compile('<div id="cast"[^>]+?>'), re.compile('fixidtab'))[1]
         tmp = self.cm.ph.rgetAllItemsBeetwenMarkers(tmp, '</div>', '<h2>')
@@ -507,7 +507,7 @@ class Movs4uCOM(CBaseHostClass):
         if icon == '':
             icon = cItem.get('icon', self.DEFAULT_ICON_URL)
         
-        return [{'title':self.cleanHtmlStr(title), 'text': self.cleanHtmlStr(desc), 'images':[{'title':'', 'url':self.getFullUrl(icon)}], 'other_info':otherInfo}]
+        return [{'title': self.cleanHtmlStr(title), 'text': self.cleanHtmlStr(desc), 'images': [{'title': '', 'url': self.getFullUrl(icon)}], 'other_info': otherInfo}]
     
     def handleService(self, index, refresh=0, searchPattern='', searchType=''):
         printDBG('handleService start')
@@ -524,7 +524,7 @@ class Movs4uCOM(CBaseHostClass):
     #MAIN MENU
         if name == None:
             self.cacheLinks = {}
-            self.listsTab(self.MAIN_CAT_TAB, {'name':'category'})
+            self.listsTab(self.MAIN_CAT_TAB, {'name': 'category'})
         elif category == 'list_filters':
             self.listsTab(self.FILTERS_CAT_TAB, self.currItem)
         elif category == 'list_main':
@@ -538,11 +538,11 @@ class Movs4uCOM(CBaseHostClass):
     #SEARCH
         elif category in ["search", "search_next_page"]:
             cItem = dict(self.currItem)
-            cItem.update({'search_item':False, 'name':'category'}) 
+            cItem.update({'search_item': False, 'name': 'category'}) 
             self.listSearchResult(cItem, searchPattern, searchType)
     #HISTORIA SEARCH
         elif category == "search_history":
-            self.listsHistory({'name':'history', 'category': 'search'}, 'desc', _("Type: "))
+            self.listsHistory({'name': 'history', 'category': 'search'}, 'desc', _("Type: "))
         else:
             printExc()
         

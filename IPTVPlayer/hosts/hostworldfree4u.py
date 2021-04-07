@@ -23,28 +23,28 @@ def gettytul():
 class WorldFree4u(CBaseHostClass):
  
     def __init__(self):
-        CBaseHostClass.__init__(self, {'history':'worldfree4u.ws', 'cookie':'worldfree4u.ws.cookie'})
+        CBaseHostClass.__init__(self, {'history': 'worldfree4u.ws', 'cookie': 'worldfree4u.ws.cookie'})
         self.defaultParams = {'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
         
         self.DEFAULT_ICON_URL = 'https://www.worldfree4u.ws/themes/logo.png'
         self.USER_AGENT = 'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:40.0) Gecko/20100101 Firefox/40.0'
-        self.HEADER = {'User-Agent': self.USER_AGENT, 'DNT':'1', 'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8', 'Accept-Language':'pl,en-US;q=0.7,en;q=0.3', 'Accept-Encoding':'gzip, deflate'}
+        self.HEADER = {'User-Agent': self.USER_AGENT, 'DNT': '1', 'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8', 'Accept-Language': 'pl,en-US;q=0.7,en;q=0.3', 'Accept-Encoding': 'gzip, deflate'}
         
         self.AJAX_HEADER = dict(self.HEADER)
         self.AJAX_HEADER.update({'X-Requested-With': 'XMLHttpRequest'})
         self.MAIN_URL = None
         self.cacheFilters = {}
         self.cacheFiltersKey = []
-        self.defaultParams = {'header':self.HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
+        self.defaultParams = {'header': self.HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
         
     def getPage(self, baseUrl, addParams={}, post_data=None):
         if addParams == {}:
             addParams = dict(self.defaultParams)
             
-        self.MAIN_CAT_TAB = [{'category':'list_items', 'title': _('LATEST'), 'url':self.getFullUrl('/seeAll/latestMovies/')},
-                             {'category':'list_items', 'title': _('RECENT'), 'url':self.getFullUrl('/seeAll/recentAdded/')},
-                             {'category': 'search', 'title': _('Search'), 'search_item': True,},
-                             {'category': 'search_history', 'title': _('Search history'),} 
+        self.MAIN_CAT_TAB = [{'category': 'list_items', 'title': _('LATEST'), 'url': self.getFullUrl('/seeAll/latestMovies/')},
+                             {'category': 'list_items', 'title': _('RECENT'), 'url': self.getFullUrl('/seeAll/recentAdded/')},
+                             {'category': 'search', 'title': _('Search'), 'search_item': True, },
+                             {'category': 'search_history', 'title': _('Search history'), } 
                             ]
         
         return self.cm.getPage(baseUrl, addParams, post_data)
@@ -58,10 +58,10 @@ class WorldFree4u(CBaseHostClass):
         
         for item in self.cacheFiltersKey:
             params = dict(cItem)
-            params.update({'good_for_fav':False, 'title':item, 'category':nextCategory, 'f_key':item})
+            params.update({'good_for_fav': False, 'title': item, 'category': nextCategory, 'f_key': item})
             self.addDir(params)
         
-        self.listsTab(self.MAIN_CAT_TAB, {'name':'category'})
+        self.listsTab(self.MAIN_CAT_TAB, {'name': 'category'})
         
     def fillCacheFilters(self):
         self.cacheFilters = {}
@@ -84,7 +84,7 @@ class WorldFree4u(CBaseHostClass):
                 if url.endswith('/1'):
                     url = url[:-1]
                 title = self.cleanHtmlStr(it)
-                tabItems.append({'title':title, 'url':url})
+                tabItems.append({'title': title, 'url': url})
             if len(tabItems):
                 self.cacheFilters[filterName] = tabItems
                 self.cacheFiltersKey.append(filterName)
@@ -97,7 +97,7 @@ class WorldFree4u(CBaseHostClass):
         for item in tab:
             params = dict(cItem)
             params.update(item)
-            params.update({'good_for_fav':False, 'category':nextCategory})
+            params.update({'good_for_fav': False, 'category': nextCategory})
             self.addDir(params)
         
     def listItems(self, cItem):
@@ -124,12 +124,12 @@ class WorldFree4u(CBaseHostClass):
             icon = self.getFullIconUrl(self.cm.ph.getSearchGroups(item, '''src=['"]([^"^']+?)['"]''')[0])
             title = self.cleanHtmlStr(item)
             
-            params = {'good_for_fav': True, 'title':title, 'url':url, 'icon':icon}
+            params = {'good_for_fav': True, 'title': title, 'url': url, 'icon': icon}
             self.addVideo(params)
         
         if nextPage and len(self.currList) > 0:
             params = dict(cItem)
-            params.update({'title':_("Next page"), 'page':page + 1})
+            params.update({'title': _("Next page"), 'page': page + 1})
             self.addDir(params)
 
     def listSearchResult(self, cItem, searchPattern, searchType):
@@ -185,10 +185,10 @@ class WorldFree4u(CBaseHostClass):
                         label = self.cm.ph.getSearchGroups(item, '''[\s'"]label['"]?\s*[=:]\s*['"]([^"^']+?)['"]''')[0]
                         if label == '':
                             label = res
-                        url = strwithmeta(url, {'Referer':cItem['url'], 'User-Agent':self.USER_AGENT})
-                        urlTab.append({'name':'[{1}] {0}'.format(type, label), 'url':url})
+                        url = strwithmeta(url, {'Referer': cItem['url'], 'User-Agent': self.USER_AGENT})
+                        urlTab.append({'name': '[{1}] {0}'.format(type, label), 'url': url})
                     elif 'mpegurl' in item:
-                        url = strwithmeta(url, {'iptv_proto':'m3u8', 'Referer':cItem['url'], 'Origin':urlparser.getDomain(cItem['url'], False), 'User-Agent':self.USER_AGENT})
+                        url = strwithmeta(url, {'iptv_proto': 'm3u8', 'Referer': cItem['url'], 'Origin': urlparser.getDomain(cItem['url'], False), 'User-Agent': self.USER_AGENT})
                         tmpTab = getDirectM3U8Playlist(url, checkExt=True, checkContent=True)
                         urlTab.extend(tmpTab)
         
@@ -259,7 +259,7 @@ class WorldFree4u(CBaseHostClass):
                 except Exception:
                     continue
         
-        return [{'title':self.cleanHtmlStr(title), 'text': self.cleanHtmlStr(desc), 'images':[{'title':'', 'url':self.getFullUrl(icon)}], 'other_info':otherInfo}]
+        return [{'title': self.cleanHtmlStr(title), 'text': self.cleanHtmlStr(desc), 'images': [{'title': '', 'url': self.getFullUrl(icon)}], 'other_info': otherInfo}]
     
     def handleService(self, index, refresh=0, searchPattern='', searchType=''):
         printDBG('handleService start')
@@ -278,7 +278,7 @@ class WorldFree4u(CBaseHostClass):
         
     #MAIN MENU
         if name == None:
-            self.listMainMenu({'name':'category'}, 'list_filter')
+            self.listMainMenu({'name': 'category'}, 'list_filter')
         elif category.startswith('list_filter'):
             self.listFilters(self.currItem, 'list_items')
         elif category == 'list_items':
@@ -286,11 +286,11 @@ class WorldFree4u(CBaseHostClass):
     #SEARCH
         elif category in ["search", "search_next_page"]:
             cItem = dict(self.currItem)
-            cItem.update({'search_item':False, 'name':'category'}) 
+            cItem.update({'search_item': False, 'name': 'category'}) 
             self.listSearchResult(cItem, searchPattern, searchType)
     #HISTORIA SEARCH
         elif category == "search_history":
-            self.listsHistory({'name':'history', 'category': 'search'}, 'desc', _("Type: "))
+            self.listsHistory({'name': 'history', 'category': 'search'}, 'desc', _("Type: "))
         else:
             printExc()
         

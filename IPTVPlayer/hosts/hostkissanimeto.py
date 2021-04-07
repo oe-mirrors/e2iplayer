@@ -45,26 +45,26 @@ def gettytul():
 class KissAnimeTo(CBaseHostClass):
 
     def __init__(self):
-        CBaseHostClass.__init__(self, {'history':'kissanime.to', 'cookie':'kissanimeto.cookie'})
+        CBaseHostClass.__init__(self, {'history': 'kissanime.to', 'cookie': 'kissanimeto.cookie'})
         
         self.USER_AGENT = 'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:56.0) Gecko/20100101 Firefox/56.0'
         self.HTTP_HEADER = {'User-Agent': self.USER_AGENT, 'Accept': 'text/html'}
         self.AJAX_HEADER = dict(self.HTTP_HEADER)
         self.AJAX_HEADER.update({'X-Requested-With': 'XMLHttpRequest'})
-        self.defaultParams = {'header':self.HTTP_HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
+        self.defaultParams = {'header': self.HTTP_HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
         
         self.MAIN_URL = 'http://kissanime.ru/'
         self.DEFAULT_ICON_URL = "https://ausanimecons.files.wordpress.com/2015/01/kissanime-logo.jpg"
         
-        self.MAIN_CAT_TAB = [{'category': 'home', 'title': _('Home'), 'url': self.getMainUrl(),},
-                             {'category': 'list_cats', 'title': _('Anime list'), 'url': self.getFullUrl('AnimeList'),},
-                             {'category': 'search', 'title': _('Search'), 'search_item': True,},
-                             {'category': 'search_history', 'title': _('Search history'),}]
+        self.MAIN_CAT_TAB = [{'category': 'home', 'title': _('Home'), 'url': self.getMainUrl(), },
+                             {'category': 'list_cats', 'title': _('Anime list'), 'url': self.getFullUrl('AnimeList'), },
+                             {'category': 'search', 'title': _('Search'), 'search_item': True, },
+                             {'category': 'search_history', 'title': _('Search history'), }]
         
-        self.SORT_BY_TAB = [{'title':_('Sort by alphabet')},
-                            {'title':_('Sort by popularity'), 'sort_by':'MostPopular'},
-                            {'title':_('Latest update'), 'sort_by':'LatestUpdate'},
-                            {'title':_('New cartoon'), 'sort_by':'Newest'}]
+        self.SORT_BY_TAB = [{'title': _('Sort by alphabet')},
+                            {'title': _('Sort by popularity'), 'sort_by': 'MostPopular'},
+                            {'title': _('Latest update'), 'sort_by': 'LatestUpdate'},
+                            {'title': _('New cartoon'), 'sort_by': 'Newest'}]
         self.cacheHome = {}
         self.cache = {}
         
@@ -83,9 +83,9 @@ class KissAnimeTo(CBaseHostClass):
             else:
                 proxy = config.plugins.iptvplayer.alternative_proxy2.value
             addParams = dict(addParams)
-            addParams.update({'http_proxy':proxy})
+            addParams.update({'http_proxy': proxy})
         
-        addParams['cloudflare_params'] = {'domain':self.up.getDomain(baseUrl), 'cookie_file':self.COOKIE_FILE, 'User-Agent':self.USER_AGENT, 'full_url_handle':self.getFullUrl}
+        addParams['cloudflare_params'] = {'domain': self.up.getDomain(baseUrl), 'cookie_file': self.COOKIE_FILE, 'User-Agent': self.USER_AGENT, 'full_url_handle': self.getFullUrl}
         while True:
             sts, data = self.cm.getPageCFProtection(baseUrl, addParams, post_data)
             if sts and 'areyouhuman' in self.cm.meta['url'].lower():
@@ -123,7 +123,7 @@ class KissAnimeTo(CBaseHostClass):
                 header = dict(self.HTTP_HEADER)
                 header['Accept'] = 'image/png,image/*;q=0.8,*/*;q=0.5'
                 params = dict(self.defaultParams)
-                params.update({'maintype': 'image', 'subtypes':['jpeg', 'jpg', 'png'], 'check_first_bytes':['\xFF\xD8', '\xFF\xD9', '\x89\x50\x4E\x47'], 'header':header})
+                params.update({'maintype': 'image', 'subtypes': ['jpeg', 'jpg', 'png'], 'check_first_bytes': ['\xFF\xD8', '\xFF\xD9', '\x89\x50\x4E\x47'], 'header': header})
                 
                 prevMeta = self.cm.meta
                 images = []
@@ -136,7 +136,7 @@ class KissAnimeTo(CBaseHostClass):
                         rm(filePath)
                         ret = self.cm.saveWebFile(filePath, imgUrl.replace('&amp;', '&'), params)
                         if ret.get('sts'):
-                            images.append({'path':filePath, 'id':index})
+                            images.append({'path': filePath, 'id': index})
                             continue
                         errorMessages.append(_('Download "%s" in to "%s" failed!') % (imgUrl, filePath))
                     else:
@@ -196,7 +196,7 @@ class KissAnimeTo(CBaseHostClass):
         if url == '':
             return ''
         cookieHeader = self.cm.getCookieHeader(self.COOKIE_FILE, ['cf_clearance'])
-        return strwithmeta(url, {'Cookie':cookieHeader, 'User-Agent':self.USER_AGENT})
+        return strwithmeta(url, {'Cookie': cookieHeader, 'User-Agent': self.USER_AGENT})
 
     def _getItems(self, data, sp='', forceIcon=''):
         printDBG("listHome._getItems")
@@ -220,7 +220,7 @@ class KissAnimeTo(CBaseHostClass):
             desc = self.cm.ph.getDataBeetwenMarkers(item, '<p>', '</p>', False)[1]
             if '' == desc:
                 desc = '<' + item
-            tab.append({'title':self.cleanHtmlStr(title), 'url':self.getFullUrl(url), 'icon':self.getFullIconUrl(icon), 'desc':self.cleanHtmlStr(desc)})
+            tab.append({'title': self.cleanHtmlStr(title), 'url': self.getFullUrl(url), 'icon': self.getFullIconUrl(icon), 'desc': self.cleanHtmlStr(desc)})
         return tab
             
     def listHome(self, cItem, category):
@@ -242,7 +242,7 @@ class KissAnimeTo(CBaseHostClass):
         for item in tmp:
             tabId = self.cm.ph.getSearchGroups(item, '''showTabData\('([^']+?)'\)''')[0]
             tabTitle = self.cleanHtmlStr(item)
-            tabs.append({'id':tabId, 'title':tabTitle})
+            tabs.append({'id': tabId, 'title': tabTitle})
         
         printDBG(tabs)
         
@@ -265,14 +265,14 @@ class KissAnimeTo(CBaseHostClass):
             moreUrl = self.cm.ph.getSearchGroups(item, '''<a href="([^"]+?)">More\.\.\.</a>''')[0]
             if moreUrl != '':
                 params = dict(cItem)
-                params.update({'category':category, 'title':tab['title'], 'url':self.getFullUrl(moreUrl)})
+                params.update({'category': category, 'title': tab['title'], 'url': self.getFullUrl(moreUrl)})
                 self.addDir(params)
                 continue
             itemsTab = self._getItems(item)
             if len(itemsTab):
                 self.cacheHome[tab['id']] = itemsTab
                 params = dict(cItem)
-                params.update({'category':'list_cached_items', 'tab_id':tab['id'], 'title':tab['title']})
+                params.update({'category': 'list_cached_items', 'tab_id': tab['id'], 'title': tab['title']})
                 self.addDir(params)
             
     def listCats(self, cItem, category):
@@ -292,10 +292,10 @@ class KissAnimeTo(CBaseHostClass):
             if '://' not in url and not url.startswith('/'):
                 url = 'CartoonList/' + url
             title = self.cleanHtmlStr(item)
-            self.cache[cacheKey].append({'title':title, 'url':self.getFullUrl(url)})
+            self.cache[cacheKey].append({'title': title, 'url': self.getFullUrl(url)})
         if len(self.cache[cacheKey]) > 0:
             params = dict(cItem)
-            params.update({'category':category, 'title':_('Alphabetically'), 'cache_key':cacheKey})
+            params.update({'category': category, 'title': _('Alphabetically'), 'cache_key': cacheKey})
             self.addDir(params)
         
         # left tab
@@ -310,11 +310,11 @@ class KissAnimeTo(CBaseHostClass):
                 url = self.cm.ph.getSearchGroups(item2, '''href="([^"]+?)"''')[0]
                 title = self.cleanHtmlStr(item2)
                 desc = self.cm.ph.getSearchGroups(item2, '''title="([^"]+?)"''')[0]
-                self.cache[catTitle].append({'title':title, 'desc':desc, 'url':self.getFullUrl(url)})
+                self.cache[catTitle].append({'title': title, 'desc': desc, 'url': self.getFullUrl(url)})
             
             if len(self.cache[catTitle]) > 0:
                 params = dict(cItem)
-                params.update({'category':category, 'title':self.cleanHtmlStr(catTitle), 'cache_key':catTitle})
+                params.update({'category': category, 'title': self.cleanHtmlStr(catTitle), 'cache_key': catTitle})
                 self.addDir(params)
         
     def listSubCats(self, cItem, category):
@@ -327,7 +327,7 @@ class KissAnimeTo(CBaseHostClass):
     def _urlAppendPage(self, url, page, sortBy, keyword=''):
         post_data = None
         if '' != keyword:
-            post_data = {'keyword':keyword}
+            post_data = {'keyword': keyword}
         if sortBy != '':
             if not url.endswith('/'):
                 url += '/'
@@ -363,7 +363,7 @@ class KissAnimeTo(CBaseHostClass):
         
         if nextPage:
             params = dict(cItem)
-            params.update({'good_for_fav':False, 'title':_('Next page'), 'page':page + 1})
+            params.update({'good_for_fav': False, 'title': _('Next page'), 'page': page + 1})
             self.addDir(params)
             
     def listEpisodes(self, cItem):
@@ -410,10 +410,10 @@ class KissAnimeTo(CBaseHostClass):
                 serverTitle = self.cleanHtmlStr(item)
                 serverUrl = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''value="([^"]+?)"''')[0])
                 if self.cm.isValidUrl(serverUrl):
-                    urlTab.append({'name':serverTitle, 'url':serverUrl, 'need_resolve':1})
+                    urlTab.append({'name': serverTitle, 'url': serverUrl, 'need_resolve': 1})
             
             if 0 == len(urlTab):
-                urlTab.append({'name':'default', 'url':cItem['url'], 'need_resolve':1})
+                urlTab.append({'name': 'default', 'url': cItem['url'], 'need_resolve': 1})
             break
         return urlTab
         
@@ -465,7 +465,7 @@ class KissAnimeTo(CBaseHostClass):
                     if 'googlevideo.com' not in url:
                         continue
                     name = self.cleanHtmlStr(item)
-                    urlTab.append({'name':name, 'url':url, 'need_resolve':0})
+                    urlTab.append({'name': name, 'url': url, 'need_resolve': 0})
             except Exception:
                 printExc()
                 continue
@@ -480,14 +480,14 @@ class KissAnimeTo(CBaseHostClass):
                 printDBG(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> url[%s]" % url)
                 url = _decUrl(url, base64.b64decode('bmhjc2NzZGJjc2R0ZW5lNzIzMGNzYjZuMjNuY2NzZGxuMjEzem5zZGJjc2QwMTI5MzM0NzM='))
                 printDBG("<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< url[%s]" % url)
-                url = strwithmeta(url, {'Referer':'http://kissanime.ru/Scripts/jwplayer/jwplayer.flash.swf'})
+                url = strwithmeta(url, {'Referer': 'http://kissanime.ru/Scripts/jwplayer/jwplayer.flash.swf'})
             except Exception:
                 printExc()
                 continue
             if not self.cm.isValidUrl(url):
                 continue
             name = self.cleanHtmlStr(item)
-            urlTab.append({'name':name, 'url':url, 'need_resolve':0})
+            urlTab.append({'name': name, 'url': url, 'need_resolve': 0})
             
         if 0 < len(urlTab):
             max_bitrate = int(config.plugins.iptvplayer.kissanime_defaultformat.value)
@@ -498,7 +498,7 @@ class KissAnimeTo(CBaseHostClass):
                     return 0
             urlTab = CSelOneLink(urlTab, __getLinkQuality, max_bitrate).getBestSortedList()
             for idx in range(len(urlTab)):
-                urlTab[idx]['url'] = strwithmeta(urlTab[idx]['url'], {'iptv_wget_retry_on_http_error':'429', 'iptv_wget_waitretry':'0.1', 'iptv_wget_tries':'1000'})
+                urlTab[idx]['url'] = strwithmeta(urlTab[idx]['url'], {'iptv_wget_retry_on_http_error': '429', 'iptv_wget_waitretry': '0.1', 'iptv_wget_tries': '1000'})
                 
             
         data = self.cm.ph.getAllItemsBeetwenMarkers(data, '<iframe ', '>', withMarkers=True, caseSensitive=False)
@@ -513,7 +513,7 @@ class KissAnimeTo(CBaseHostClass):
     def listSearchResult(self, cItem, searchPattern, searchType):
         printDBG("KissAnimeTo.listSearchResult cItem[%s], searchPattern[%s] searchType[%s]" % (cItem, searchPattern, searchType))
         cItem = dict(cItem)
-        cItem.update({'keyword':searchPattern, 'url':self.getFullUrl('/Search/Anime')})
+        cItem.update({'keyword': searchPattern, 'url': self.getFullUrl('/Search/Anime')})
         self.listItems(cItem, 'list_episodes')
     
     def handleService(self, index, refresh=0, searchPattern='', searchType=''):
@@ -530,7 +530,7 @@ class KissAnimeTo(CBaseHostClass):
         
     #MAIN MENU
         if name == None:
-            self.listsTab(self.MAIN_CAT_TAB, {'name':'category'})
+            self.listsTab(self.MAIN_CAT_TAB, {'name': 'category'})
         elif category == 'home':
             self.listHome(self.currItem, 'list_items')
         elif category == 'list_cached_items':
@@ -555,11 +555,11 @@ class KissAnimeTo(CBaseHostClass):
     #SEARCH
         elif category in ["search", "search_next_page"]:
             cItem = dict(self.currItem)
-            cItem.update({'search_item':False, 'name':'category'}) 
+            cItem.update({'search_item': False, 'name': 'category'}) 
             self.listSearchResult(cItem, searchPattern, searchType)
     #HISTORIA SEARCH
         elif category == "search_history":
-            self.listsHistory({'name':'history', 'category': 'search'}, 'desc', _("Type: "))
+            self.listsHistory({'name': 'history', 'category': 'search'}, 'desc', _("Type: "))
         else:
             printExc()
         

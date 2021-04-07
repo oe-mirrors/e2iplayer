@@ -30,14 +30,14 @@ class UstreamTV(CBaseHostClass):
     SRCH_URL = MAIN_URL + 'search?q='
     DEFAULT_ICON_URL = 'http://occopwatch-com.secure40.ezhostingserver.com/wp-content/uploads/2013/10/ustream-logo.jpg'
     
-    MAIN_CAT_TAB = [{'category':'items', 'title': _('Popular'), 'icon':DEFAULT_ICON_URL, 'cat_id':'all', 'filters':{'subCategory':'', 'type':'no-offline', 'location':'anywhere'}},
-                    {'category':'categories', 'title': _('Categories'), 'icon':DEFAULT_ICON_URL, 'filters':{}},
-                    {'category':'search', 'title': _('Search'), 'icon':DEFAULT_ICON_URL, 'search_item':True},
-                    {'category':'search_history', 'title': _('Search history'), 'icon':DEFAULT_ICON_URL} 
+    MAIN_CAT_TAB = [{'category': 'items', 'title': _('Popular'), 'icon': DEFAULT_ICON_URL, 'cat_id': 'all', 'filters': {'subCategory': '', 'type': 'no-offline', 'location': 'anywhere'}},
+                    {'category': 'categories', 'title': _('Categories'), 'icon': DEFAULT_ICON_URL, 'filters': {}},
+                    {'category': 'search', 'title': _('Search'), 'icon': DEFAULT_ICON_URL, 'search_item': True},
+                    {'category': 'search_history', 'title': _('Search history'), 'icon': DEFAULT_ICON_URL} 
                    ]
  
     def __init__(self):
-        CBaseHostClass.__init__(self, {'history':'UstreamTV', 'cookie':'UstreamTV.cookie'})
+        CBaseHostClass.__init__(self, {'history': 'UstreamTV', 'cookie': 'UstreamTV.cookie'})
         self.cacheFilters = {}
         
     def _getFullUrl(self, url):
@@ -63,7 +63,7 @@ class UstreamTV(CBaseHostClass):
             filterData = re.compile('<option value="([^"]*?)"[^>]*?>([^<]+?)</option>').findall(filterData)
             self.cacheFilters[filterName] = []
             for item in filterData:
-                self.cacheFilters[filterName].append({'title':self.cleanHtmlStr(item[1]), 'value':item[0]})
+                self.cacheFilters[filterName].append({'title': self.cleanHtmlStr(item[1]), 'value': item[0]})
         #printDBG("KKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKK [%s]" % )
         
     def listFilters(self, cItem, filterName, category):
@@ -126,7 +126,7 @@ class UstreamTV(CBaseHostClass):
             if item[0] == 'all':
                 continue
             params = dict(cItem)
-            params.update({'category':category, 'title':self.cleanHtmlStr(item[1]), 'cat_id':item[0]})
+            params.update({'category': category, 'title': self.cleanHtmlStr(item[1]), 'cat_id': item[0]})
             self.addDir(params)
         
     def listRegular(self, cItem):
@@ -155,14 +155,14 @@ class UstreamTV(CBaseHostClass):
                 title = self.cm.ph.getSearchGroups(item, 'title="([^"]+?)"')[0]
                 icon = self.cm.ph.getSearchGroups(item, 'src="([^"]+?)"')[0]
                 desc = self.cleanHtmlStr(item)
-                params.update({'title':self.cleanHtmlStr(title), 'icon':self._getFullUrl(icon), 'desc':desc, 'url':self._getFullUrl(url)})
+                params.update({'title': self.cleanHtmlStr(title), 'icon': self._getFullUrl(icon), 'desc': desc, 'url': self._getFullUrl(url)})
                 self.addVideo(params)
         except Exception:
             printExc()
         
         if nextPage:
             params = dict(cItem)
-            params.update({'title':_('Next page'), 'page':cItem.get('page', 1) + 1})
+            params.update({'title': _('Next page'), 'page': cItem.get('page', 1) + 1})
             self.addDir(params)
         
     def listSearchResult(self, cItem, searchPattern, searchType):
@@ -185,7 +185,7 @@ class UstreamTV(CBaseHostClass):
         return cItem['url']
         
     def getLinksForFavourite(self, fav_data):
-        return self.getLinksForVideo({'url':fav_data})
+        return self.getLinksForVideo({'url': fav_data})
     
     def handleService(self, index, refresh=0, searchPattern='', searchType=''):
         printDBG('handleService start')
@@ -199,7 +199,7 @@ class UstreamTV(CBaseHostClass):
         
     #MAIN MENU
         if name == None:
-            self.listsTab(self.MAIN_CAT_TAB, {'name':'category'})
+            self.listsTab(self.MAIN_CAT_TAB, {'name': 'category'})
         elif category == 'categories':
             self.listCategories(self.currItem, 'filter_subCategory')
     # FILTERS
@@ -215,11 +215,11 @@ class UstreamTV(CBaseHostClass):
     #SEARCH
         elif category in ["search", "search_next_page"]:
             cItem = dict(self.currItem)
-            cItem.update({'search_item':False, 'name':'category'}) 
+            cItem.update({'search_item': False, 'name': 'category'}) 
             self.listSearchResult(cItem, searchPattern, searchType)
     #HISTORIA SEARCH
         elif category == "search_history":
-            self.listsHistory({'name':'history', 'category': 'search'}, 'desc', _("Type: "))
+            self.listsHistory({'name': 'history', 'category': 'search'}, 'desc', _("Type: "))
         else:
             printExc()
         

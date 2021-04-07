@@ -27,7 +27,7 @@ def gettytul():
 class Filma24IO(CBaseHostClass):
 
     def __init__(self):
-        CBaseHostClass.__init__(self, {'history':'Filma24IO', 'cookie':'Filma24IO.cookie'})
+        CBaseHostClass.__init__(self, {'history': 'Filma24IO', 'cookie': 'Filma24IO.cookie'})
         self.MAIN_URL = 'http://www.filma24.io/'
         self.DEFAULT_ICON_URL = 'http://www.filma24.io/wp-content/themes/cr_filma_greenv2/assets/img/logo2018.png'
         self.cacheLinks = {}
@@ -49,7 +49,7 @@ class Filma24IO(CBaseHostClass):
             url = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''href=['"]([^"^']+?)["']''', 1, True)[0])
             title = self.cleanHtmlStr(item)
             params = dict(cItem)
-            params.update({'title':title, 'url':url, 'category':'list_items'})
+            params.update({'title': title, 'url': url, 'category': 'list_items'})
             subItems.append(params)
         
         tmp = self.cm.ph.getDataBeetwenNodes(data, ('<ul', '>', 'main_menu'), ('</ul', '>'), False)[1]
@@ -64,8 +64,8 @@ class Filma24IO(CBaseHostClass):
             if len(self.currList):
                 params['category'] = 'list_items'
             else:
-                params.update({'category':'sub_items', 'sub_items':subItems})
-            params.update({'title':title, 'url':url, 'icon':icon})
+                params.update({'category': 'sub_items', 'sub_items': subItems})
+            params.update({'title': title, 'url': url, 'icon': icon})
             self.addDir(params)
             
         subItems = []
@@ -75,16 +75,16 @@ class Filma24IO(CBaseHostClass):
             url = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''href=['"]([^"^']+?)["']''', 1, True)[0])
             title = self.cleanHtmlStr(item)
             params = dict(cItem)
-            params.update({'title':title, 'url':url, 'category':'list_items'})
+            params.update({'title': title, 'url': url, 'category': 'list_items'})
             subItems.append(params)
         
         if len(subItems):
             params = dict(cItem)
-            params.update({'title':_('Categories'), 'category':'sub_items', 'sub_items':subItems})
+            params.update({'title': _('Categories'), 'category': 'sub_items', 'sub_items': subItems})
             self.addDir(params)
             
-        MAIN_CAT_TAB = [{'category':'search', 'title': _('Search'), 'search_item':True},
-                        {'category': 'search_history', 'title': _('Search history'),}]
+        MAIN_CAT_TAB = [{'category': 'search', 'title': _('Search'), 'search_item': True},
+                        {'category': 'search_history', 'title': _('Search history'), }]
         self.listsTab(MAIN_CAT_TAB, cItem)
     
     def listSubItems(self, cItem):
@@ -132,14 +132,14 @@ class Filma24IO(CBaseHostClass):
                     desc.append(t)
             
             params = dict(cItem)
-            params.update({'good_for_fav': True, 'title':baseTitle % title, 'url':url, 'desc':' | '.join(desc), 'icon':self.getFullIconUrl(icon)})
+            params.update({'good_for_fav': True, 'title': baseTitle % title, 'url': url, 'desc': ' | '.join(desc), 'icon': self.getFullIconUrl(icon)})
             if '/seriale/' not in url:
                 params['category'] = nextCategory
             self.addDir(params)
         
         if nextPage != '':
             params = dict(cItem)
-            params.update({'good_for_fav': False, 'title':_('Next page'), 'page':page + 1, 'url':nextPage})
+            params.update({'good_for_fav': False, 'title': _('Next page'), 'page': page + 1, 'url': nextPage})
             self.addDir(params)
         
     def exploreItem(self, cItem):
@@ -165,9 +165,9 @@ class Filma24IO(CBaseHostClass):
         trailerUrl = self.cm.ph.getDataBeetwenNodes(data, ('<div', '>', 'trailer-player'), ('</div', '>'), False)[1]
         trailerUrl = self.getFullUrl(self.cm.ph.getSearchGroups(trailerUrl, '''<iframe[^>]+?src=['"]([^"^']+?)['"]''', 1, ignoreCase=True)[0])
         if trailerUrl != '':
-            trailerUrl = strwithmeta(trailerUrl, {'Referer':cItem['url']})
+            trailerUrl = strwithmeta(trailerUrl, {'Referer': cItem['url']})
             params = dict(cItem)
-            params.update({'good_for_fav': False, 'title':'%s - %s' % (cItem['title'], _('trailer')), 'url':trailerUrl, 'trailer':True, 'desc':desc, 'prev_url':cItem['url']})
+            params.update({'good_for_fav': False, 'title': '%s - %s' % (cItem['title'], _('trailer')), 'url': trailerUrl, 'trailer': True, 'desc': desc, 'prev_url': cItem['url']})
             self.addVideo(params)
         
         self.cacheLinks[cUrl] = []
@@ -177,11 +177,11 @@ class Filma24IO(CBaseHostClass):
             for item in tmpItem:
                 name = self.cleanHtmlStr(item)
                 url = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''href=['"]([^"^']+?)['"]''')[0])
-                self.cacheLinks[cUrl].append({'name':name, 'url':url, 'need_resolve':1})
+                self.cacheLinks[cUrl].append({'name': name, 'url': url, 'need_resolve': 1})
         
         if len(self.cacheLinks[cUrl]):
             params = dict(cItem)
-            params.update({'good_for_fav': False, 'url':cUrl, 'desc':desc, 'prev_url':cItem['url']})
+            params.update({'good_for_fav': False, 'url': cUrl, 'desc': desc, 'prev_url': cItem['url']})
             self.addVideo(params)
         
     def listSearchResult(self, cItem, searchPattern, searchType):
@@ -265,7 +265,7 @@ class Filma24IO(CBaseHostClass):
         if desc == '':
             desc = cItem.get('desc', '')
         
-        return [{'title':self.cleanHtmlStr(title), 'text': self.cleanHtmlStr(desc), 'images':[{'title':'', 'url':self.getFullUrl(icon)}], 'other_info':{'custom_items_list':itemsList}}]
+        return [{'title': self.cleanHtmlStr(title), 'text': self.cleanHtmlStr(desc), 'images': [{'title': '', 'url': self.getFullUrl(icon)}], 'other_info': {'custom_items_list': itemsList}}]
         
     def handleService(self, index, refresh=0, searchPattern='', searchType=''):
         printDBG('handleService start')
@@ -279,7 +279,7 @@ class Filma24IO(CBaseHostClass):
         
     #MAIN MENU
         if name == None:
-            self.listMain({'name':'category', 'type':'category'})
+            self.listMain({'name': 'category', 'type': 'category'})
         elif category == 'sub_items':
             self.listSubItems(self.currItem)
         elif category == 'list_items':
@@ -289,11 +289,11 @@ class Filma24IO(CBaseHostClass):
     #SEARCH
         elif category in ["search", "search_next_page"]:
             cItem = dict(self.currItem)
-            cItem.update({'search_item':False, 'name':'category'}) 
+            cItem.update({'search_item': False, 'name': 'category'}) 
             self.listSearchResult(cItem, searchPattern, searchType)
     #HISTORIA SEARCH
         elif category == "search_history":
-            self.listsHistory({'name':'history', 'category': 'search'}, 'desc', _("Type: "))
+            self.listsHistory({'name': 'history', 'category': 'search'}, 'desc', _("Type: "))
         else:
             printExc()
         

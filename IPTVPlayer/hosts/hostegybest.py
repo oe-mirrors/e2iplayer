@@ -48,26 +48,26 @@ def gettytul():
 class EgyBest(CBaseHostClass):
     
     def __init__(self):
-        CBaseHostClass.__init__(self, {'history':'egy.best', 'cookie':'egy.best.cookie'})
+        CBaseHostClass.__init__(self, {'history': 'egy.best', 'cookie': 'egy.best.cookie'})
         self.DEFAULT_ICON_URL = 'http://cdn.egy.best/static/img/egybest_logo.png'
         self.USER_AGENT = 'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:40.0) Gecko/20100101 Firefox/40.0'
         self.MAIN_URL = 'http://egy.best/'
-        self.HEADER = {'User-Agent': self.USER_AGENT, 'DNT':'1', 'Accept': 'text/html', 'Accept-Encoding':'gzip, deflate', 'Referer':self.getMainUrl(), 'Origin':self.getMainUrl()}
+        self.HEADER = {'User-Agent': self.USER_AGENT, 'DNT': '1', 'Accept': 'text/html', 'Accept-Encoding': 'gzip, deflate', 'Referer': self.getMainUrl(), 'Origin': self.getMainUrl()}
         self.AJAX_HEADER = dict(self.HEADER)
-        self.AJAX_HEADER.update({'X-Requested-With': 'XMLHttpRequest', 'Accept-Encoding':'gzip, deflate', 'Content-Type':'application/x-www-form-urlencoded; charset=UTF-8', 'Accept':'application/json, text/javascript, */*; q=0.01'})
+        self.AJAX_HEADER.update({'X-Requested-With': 'XMLHttpRequest', 'Accept-Encoding': 'gzip, deflate', 'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8', 'Accept': 'application/json, text/javascript, */*; q=0.01'})
         
         self.cacheLinks = {}
         self.cacheFilters = {}
         self.cacheFiltersKeys = []
-        self.defaultParams = {'header':self.HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
+        self.defaultParams = {'header': self.HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
         
-        self.MAIN_CAT_TAB = [{'category':'list_filters', 'title': _('Trending'), 'url':self.getFullUrl('/trending/')},
-                             {'category':'list_filters', 'title': _('Movies'), 'url':self.getFullUrl('/movies/')},
-                             {'category':'list_filters', 'title': _('Arabic movies'), 'url':self.getFullUrl('/movies/'), 'f_sort':'arab'},
-                             {'category':'list_filters', 'title': _('With subtitles'), 'url':self.getFullUrl('/movies/'), 'f_sort':'subbed'},
-                             {'category':'list_filters', 'title': _('TV series'), 'url':self.getFullUrl('/tv/')},
-                             {'category':'search', 'title': _('Search'), 'search_item':True}, 
-                             {'category':'search_history', 'title': _('Search history')},
+        self.MAIN_CAT_TAB = [{'category': 'list_filters', 'title': _('Trending'), 'url': self.getFullUrl('/trending/')},
+                             {'category': 'list_filters', 'title': _('Movies'), 'url': self.getFullUrl('/movies/')},
+                             {'category': 'list_filters', 'title': _('Arabic movies'), 'url': self.getFullUrl('/movies/'), 'f_sort': 'arab'},
+                             {'category': 'list_filters', 'title': _('With subtitles'), 'url': self.getFullUrl('/movies/'), 'f_sort': 'subbed'},
+                             {'category': 'list_filters', 'title': _('TV series'), 'url': self.getFullUrl('/tv/')},
+                             {'category': 'search', 'title': _('Search'), 'search_item': True}, 
+                             {'category': 'search_history', 'title': _('Search history')},
                             ]
         self.loggedIn = None
         self.login = ''
@@ -83,7 +83,7 @@ class EgyBest(CBaseHostClass):
                 return url
             else:
                 return urllib.parse.urljoin(baseUrl, url)
-        addParams['cloudflare_params'] = {'domain':self.up.getDomain(baseUrl), 'cookie_file':self.COOKIE_FILE, 'User-Agent':self.USER_AGENT, 'full_url_handle':_getFullUrl}
+        addParams['cloudflare_params'] = {'domain': self.up.getDomain(baseUrl), 'cookie_file': self.COOKIE_FILE, 'User-Agent': self.USER_AGENT, 'full_url_handle': _getFullUrl}
         return self.cm.getPageCFProtection(baseUrl, addParams, post_data)
         
     def fillCacheFilters(self, cItem):
@@ -105,11 +105,11 @@ class EgyBest(CBaseHostClass):
                     if allTitle == None:
                         allTitle = title
                     continue
-                self.cacheFilters[key].append({'title':title.title(), key:value})
+                self.cacheFilters[key].append({'title': title.title(), key: value})
                 
             if len(self.cacheFilters[key]):
                 if allTitle != None:
-                    self.cacheFilters[key].insert(0, {'title':_('All')})
+                    self.cacheFilters[key].insert(0, {'title': _('All')})
                 self.cacheFiltersKeys.append(key)
         
         if '' == cItem.get('f_sort', ''):
@@ -117,7 +117,7 @@ class EgyBest(CBaseHostClass):
             tmp = self.cm.ph.getAllItemsBeetwenMarkers(tmp, '<a', '</a>')
             addFilter(tmp, 'href', 'sort')
         
-        keyMap = {0:'year', 1:'language', 2:'country', 3:'genre', 4:'category', 5:'quality', 6:'resolution'}
+        keyMap = {0: 'year', 1: 'language', 2: 'country', 3: 'genre', 4: 'category', 5: 'quality', 6: 'resolution'}
         data = self.cm.ph.getAllItemsBeetwenNodes(data, ('<div', '>', 'dropdown'), ('</div', '>'))
         for idx in range(len(data)):
             tmp = data[idx]
@@ -193,14 +193,14 @@ class EgyBest(CBaseHostClass):
                     if d != '':
                         desc = d + '[/br]'
                 params = dict(cItem)
-                params.update({'good_for_fav':True, 'category':nextCategory, 'title':title, 'url':url, 'icon':icon, 'desc':desc})
+                params.update({'good_for_fav': True, 'category': nextCategory, 'title': title, 'url': url, 'icon': icon, 'desc': desc})
                 self.addDir(params)
         except Exception: 
             printExc()
         
         if nextPage:
             params = dict(cItem)
-            params.update({'good_for_fav':False, 'title':_("Next page"), 'page':page + 1})
+            params.update({'good_for_fav': False, 'title': _("Next page"), 'page': page + 1})
             self.addDir(params)
         
     def exploreItem(self, cItem, nextCategory):
@@ -221,14 +221,14 @@ class EgyBest(CBaseHostClass):
             if num > 1:
                 title += ' %s' % num
             params = dict(cItem)
-            params.update({'good_for_fav':False, 'url':url, 'title':title, 'icon':icon})
+            params.update({'good_for_fav': False, 'url': url, 'title': title, 'icon': icon})
             self.addVideo(params)
             num += 1
 
         # embedded player
         frame_url = self.cm.ph.getSearchGroups(data, '''<iframe.*?src=['"]([^'^"]+?)['"]''')[0]
         params = dict(cItem)
-        params.update({'good_for_fav':False, 'url': frame_url, 'title': (cItem['title'] + ' - embed player'), 'icon':cItem['icon'], 'need_resolve':1})
+        params.update({'good_for_fav': False, 'url': frame_url, 'title': (cItem['title'] + ' - embed player'), 'icon': cItem['icon'], 'need_resolve': 1})
         printDBG(str(params))
         self.addVideo(params)
 
@@ -249,7 +249,7 @@ class EgyBest(CBaseHostClass):
                 icon = self.getFullIconUrl(self.cm.ph.getSearchGroups(item, '''src=['"]([^'^"]+?)['"]''')[0])
                 title = self.cleanHtmlStr(item) 
                 params = dict(cItem)
-                params.update({'good_for_fav':True, 'category':nextCategory, 'title':title, 'url':url, 'icon':icon})
+                params.update({'good_for_fav': True, 'category': nextCategory, 'title': title, 'url': url, 'icon': icon})
                 self.addDir(params)
         elif 'watch_video' in data or 'data-call' in data:
             params = dict(cItem)
@@ -268,7 +268,7 @@ class EgyBest(CBaseHostClass):
             icon = self.getFullIconUrl(self.cm.ph.getSearchGroups(item, '''src=['"]([^'^"]+?)['"]''')[0])
             title = self.cleanHtmlStr(item) 
             params = dict(cItem)
-            params.update({'good_for_fav':True, 'title':title, 'url':url, 'icon':icon})
+            params.update({'good_for_fav': True, 'title': title, 'url': url, 'icon': icon})
             self.addVideo(params)
         
         
@@ -313,14 +313,14 @@ class EgyBest(CBaseHostClass):
                 continue
             if 'application/x-mpegurl' == type:
                 name = '[HLS/m3u8]'
-                meta = {'iptv_proto':'m3u8'}
+                meta = {'iptv_proto': 'm3u8'}
             elif 'video/mp4' == type:
                 name = '[mp4]'
-                meta = {'direct':True}
+                meta = {'direct': True}
             else:
                 continue
-            meta.update({'Referer':cUrl})
-            playTab.append({'name':name, 'url':strwithmeta(self.getFullUrl(url, cUrl), meta), 'need_resolve':1})
+            meta.update({'Referer': cUrl})
+            playTab.append({'name': name, 'url': strwithmeta(self.getFullUrl(url, cUrl), meta), 'need_resolve': 1})
         
         data = self.cm.ph.getDataBeetwenNodes(data, ('<table', '>', 'dls_table'), ('</table', '>'), False)[1]
         data = self.cm.ph.getDataBeetwenMarkers(data, '<tbody>', '</tbody>')[1]
@@ -338,9 +338,9 @@ class EgyBest(CBaseHostClass):
                     url = self.cm.ph.getSearchGroups(it, '''url=['"]([^'^"]+?)['"]''')[0]
                 call = self.cm.ph.getSearchGroups(it, '''data\-call=['"]([^'^"]+?)['"]''')[0]
                 if url != '' and '&v=1' in url:
-                    retTab.append({'name':'%s: %s' % (self.cleanHtmlStr(it), name), 'url':strwithmeta(self.getFullUrl(url), {'Referer':cItem['url']}), 'need_resolve':1})
+                    retTab.append({'name': '%s: %s' % (self.cleanHtmlStr(it), name), 'url': strwithmeta(self.getFullUrl(url), {'Referer': cItem['url']}), 'need_resolve': 1})
                 if call != '':
-                    dwnTab.append({'name':'%s: %s' % (self.cleanHtmlStr(it), name), 'url':strwithmeta(call, {'priv_api_call':True, 'Referer':cItem['url']}), 'need_resolve':1})
+                    dwnTab.append({'name': '%s: %s' % (self.cleanHtmlStr(it), name), 'url': strwithmeta(call, {'priv_api_call': True, 'Referer': cItem['url']}), 'need_resolve': 1})
         
         retTab.extend(playTab)
         retTab.extend(dwnTab)
@@ -365,7 +365,7 @@ class EgyBest(CBaseHostClass):
         if videoUrl.meta.get('iptv_proto', '') == 'm3u8':
             return getDirectM3U8Playlist(videoUrl, False, checkContent=True, sortWithMaxBitrate=999999999)
         elif videoUrl.meta.get('direct', False):
-            return [{'name':'direct', 'url':videoUrl}]
+            return [{'name': 'direct', 'url': videoUrl}]
         
         params = dict(self.defaultParams)
         params['header'] = dict(self.AJAX_HEADER)
@@ -391,7 +391,7 @@ class EgyBest(CBaseHostClass):
                         if self.cm.isValidUrl(url) and self.cm.isValidUrl(authUrl): 
                             sts, tmp = self.getPage(authUrl)
                             if sts:
-                                urlTab.append({'name':'direct', 'url':url})
+                                urlTab.append({'name': 'direct', 'url': url})
                     elif data.get('action', '') == 'message':
                         SetIPTVPlayerLastHostError(self.cleanHtmlStr(data['message']))
                         printDBG(self.cleanHtmlStr(data['message']))
@@ -423,13 +423,13 @@ class EgyBest(CBaseHostClass):
         icon = self.getFullIconUrl(self.cm.ph.getSearchGroups(icon, '''src=['"]([^'^"]+?)['"]''')[0])
         title = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(tmp, ('<div', '>', 'movie_title'), ('</div', '>'), False)[1])
         
-        keysMap = {'اللغة • البلد':'country',
-                   'التصنيف':'type',
-                   'النوع':'genres',
-                   'التقييم العالمي':'rating',
-                   'المدة':'duration',
-                   'الجودة':'quality',
-                   'الترجمة':'translation'}
+        keysMap = {'اللغة • البلد': 'country',
+                   'التصنيف': 'type',
+                   'النوع': 'genres',
+                   'التقييم العالمي': 'rating',
+                   'المدة': 'duration',
+                   'الجودة': 'quality',
+                   'الترجمة': 'translation'}
         
         tmp = self.cm.ph.getAllItemsBeetwenMarkers(tmp, '<tr>', '</tr>')
         for item in tmp:
@@ -460,7 +460,7 @@ class EgyBest(CBaseHostClass):
         if icon == '':
             icon = cItem.get('icon', self.DEFAULT_ICON_URL)
         
-        return [{'title':self.cleanHtmlStr(title), 'text': self.cleanHtmlStr(desc), 'images':[{'title':'', 'url':self.getFullUrl(icon)}], 'other_info':otherInfo}]
+        return [{'title': self.cleanHtmlStr(title), 'text': self.cleanHtmlStr(desc), 'images': [{'title': '', 'url': self.getFullUrl(icon)}], 'other_info': otherInfo}]
     
     def tryTologin(self):
         printDBG('tryTologin start')
@@ -499,7 +499,7 @@ class EgyBest(CBaseHostClass):
                 value = self.cm.ph.getSearchGroups(item, '''value=['"]([^'^"]+?)['"]''')[0]
                 post_data[name] = value
             
-            post_data.update({'username':self.login, 'password':self.password})
+            post_data.update({'username': self.login, 'password': self.password})
             
             httpParams = dict(self.defaultParams)
             httpParams['header'] = dict(httpParams['header'])
@@ -529,7 +529,7 @@ class EgyBest(CBaseHostClass):
         
     #MAIN MENU
         if name == None:
-            self.listMainMenu({'name':'category'}, 'list_genres')
+            self.listMainMenu({'name': 'category'}, 'list_genres')
         elif category == 'list_filters':
             self.listFilters(self.currItem, 'list_items')
         elif category == 'list_items':
@@ -541,11 +541,11 @@ class EgyBest(CBaseHostClass):
     #SEARCH
         elif category in ["search", "search_next_page"]:
             cItem = dict(self.currItem)
-            cItem.update({'search_item':False, 'name':'category'}) 
+            cItem.update({'search_item': False, 'name': 'category'}) 
             self.listSearchResult(cItem, searchPattern, searchType)
     #HISTORIA SEARCH
         elif category == "search_history":
-            self.listsHistory({'name':'history', 'category': 'search'}, 'desc', _("Type: "))
+            self.listsHistory({'name': 'history', 'category': 'search'}, 'desc', _("Type: "))
         else:
             printExc()
         

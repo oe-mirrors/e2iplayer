@@ -70,7 +70,7 @@ class EdemTvApi:
     def doLogin(self, login, password):
         logged = False
         HTTP_HEADER = dict(self.HTTP_HEADER)
-        HTTP_HEADER.update({'Content-Type':'application/x-www-form-urlencoded; charset=UTF-8', 'X-Requested-With': 'XMLHttpRequest'})
+        HTTP_HEADER.update({'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8', 'X-Requested-With': 'XMLHttpRequest'})
 
         post_data = {'email': login, 'password': password}
         params = {'header': HTTP_HEADER, 'cookiefile': self.COOKIE_FILE, 'save_cookie': True}
@@ -114,7 +114,7 @@ class EdemTvApi:
                     icon = self.cm.ph.getSearchGroups(item, ''' src=['"]([^'^"]+?)['"]''')[0]
                     alt = self.cm.ph.getSearchGroups(item, ''' alt=['"]([^'^"]+?)['"]''')[0]
                     
-                    params = {'type':'video', 'url':self.getFullUrl(url), 'title':self.cleanHtmlStr(alt), 'icon':self.getFullUrl(icon), 'desc':self.cleanHtmlStr(item)}
+                    params = {'type': 'video', 'url': self.getFullUrl(url), 'title': self.cleanHtmlStr(alt), 'icon': self.getFullUrl(icon), 'desc': self.cleanHtmlStr(item)}
                     if catId not in self.cacheChannels:
                         self.cacheChannels[catId] = [params]
                     else:
@@ -134,7 +134,7 @@ class EdemTvApi:
                     adult = False
                 
                 params = dict(cItem)
-                params.update({'title':catTitle, 'cat_id':catId, 'get_list':False, 'pin_locked':adult})
+                params.update({'title': catTitle, 'cat_id': catId, 'get_list': False, 'pin_locked': adult})
                 channelsTab.append(params)
         else:
             catId = cItem.get('cat_id', '')
@@ -168,19 +168,19 @@ class EdemTvApi:
             domainTab = self.cm.ph.getSearchGroups(data, '''<option[^>]*?value="([0-9]+?)"[^>]*?selected[^>]*?>([^<]+?)</option>''', 2)
             if subdomain == '' or '' == domainTab[0] or '' == domainTab[1]:
                 HTTP_HEADER = dict(self.HTTP_HEADER)
-                HTTP_HEADER.update({'Referer':playlistUrl, 'Content-Type':'application/x-www-form-urlencoded; charset=UTF-8', 'X-Requested-With': 'XMLHttpRequest'})
+                HTTP_HEADER.update({'Referer': playlistUrl, 'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8', 'X-Requested-With': 'XMLHttpRequest'})
                 
                 login = config.plugins.iptvplayer.edemtv_login.value
                 passwd = config.plugins.iptvplayer.edemtv_password.value
                 subdomain = md5(login + passwd).hexdigest()
-                post_data = {'server_id':tries, 'name':subdomain}
+                post_data = {'server_id': tries, 'name': subdomain}
                 params = dict(self.http_params)
                 params['header'] = HTTP_HEADER
                 url = self.getFullUrl('ajax/user_server')
                 sts, data = self.cm.getPage(url, params, post_data)
                 printDBG(data)
                 if 'success' in data:
-                    post_data = {'server':tries, 'subdomain':subdomain, 'type':1}
+                    post_data = {'server': tries, 'subdomain': subdomain, 'type': 1}
                     sts, data = self.cm.getPage(playlistUrl, params, post_data)
                     printDBG(data)
             else:
@@ -201,7 +201,7 @@ class EdemTvApi:
         urlsTab = []
         if hlsUrl.startswith('http://') and 'm3u8' in hlsUrl:
             hlsUrl = 'http://{0}.{1}/iptv/'.format(subdomain, domainTab[1]) + hlsUrl.split('/iptv/')[-1]
-            hlsUrl = strwithmeta(hlsUrl, {'Cookie':'session=%s;' % self.getCookieItem('session'), 'Referer':cItem['url'], 'User-Agent':self.HTTP_HEADER['User-Agent']})
+            hlsUrl = strwithmeta(hlsUrl, {'Cookie': 'session=%s;' % self.getCookieItem('session'), 'Referer': cItem['url'], 'User-Agent': self.HTTP_HEADER['User-Agent']})
             urlsTab = getDirectM3U8Playlist(hlsUrl)
         #if rmpUrl.startswith('rtmp'):
         #    urlsTab.append({'name':'rtmp', 'url':rmpUrl + ' live=1'})

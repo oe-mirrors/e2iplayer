@@ -56,25 +56,25 @@ def gettytul():
 class SerienStreamTo(CBaseHostClass, CaptchaHelper):
  
     def __init__(self):
-        CBaseHostClass.__init__(self, {'history':'SerienStreamTo.tv', 'cookie':'serienstreamto.cookie'})
+        CBaseHostClass.__init__(self, {'history': 'SerienStreamTo.tv', 'cookie': 'serienstreamto.cookie'})
         self.USER_AGENT = 'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/52.0.2743.116 Safari/537.36'
-        self.HEADER = {'User-Agent':self.USER_AGENT, 'Accept': 'text/html'}
+        self.HEADER = {'User-Agent': self.USER_AGENT, 'Accept': 'text/html'}
         self.AJAX_HEADER = dict(self.HEADER)
         self.AJAX_HEADER.update({'X-Requested-With': 'XMLHttpRequest'})
         
-        self.defaultParams = {'header':self.HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
+        self.defaultParams = {'header': self.HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
         
         self.MAIN_URL = 'https://s.to/'
         self.DEFAULT_ICON_URL = 'https://s.to/public/img/facebook.jpg'
         
         
-        self.MAIN_CAT_TAB = [{'category':'all_series', 'title': 'Alle Serien', 'url':self.getFullUrl('/serien-alphabet')},
-                             {'category':'list_abc', 'title': _('A-Z'), 'url':self.MAIN_URL},
-                             {'category':'list_genres', 'title': _('Genres'), 'url':self.MAIN_URL},
-                             {'category':'list_items', 'title': _('New'), 'url':self.getFullUrl('/neu')},
-                             {'category':'list_items', 'title': _('Popular'), 'url':self.getFullUrl('/beliebte-serien')},
-                             {'category': 'search', 'title': _('Search'), 'search_item': True,},
-                             {'category': 'search_history', 'title': _('Search history'),} 
+        self.MAIN_CAT_TAB = [{'category': 'all_series', 'title': 'Alle Serien', 'url': self.getFullUrl('/serien-alphabet')},
+                             {'category': 'list_abc', 'title': _('A-Z'), 'url': self.MAIN_URL},
+                             {'category': 'list_genres', 'title': _('Genres'), 'url': self.MAIN_URL},
+                             {'category': 'list_items', 'title': _('New'), 'url': self.getFullUrl('/neu')},
+                             {'category': 'list_items', 'title': _('Popular'), 'url': self.getFullUrl('/beliebte-serien')},
+                             {'category': 'search', 'title': _('Search'), 'search_item': True, },
+                             {'category': 'search_history', 'title': _('Search history'), } 
                             ]
         
         self.cacheLinks = {}
@@ -84,15 +84,15 @@ class SerienStreamTo(CBaseHostClass, CaptchaHelper):
         self.password = ''
         self.loggedIn = None
         
-        self.ALL_SERIES_TAB = [{'category':'all_letters', 'title': 'Alphabet', 'url':self.getFullUrl('/serien-alphabet')},
-                               {'category':'all_genres', 'title': 'Genres', 'url':self.getFullUrl('/serien-genres')},]
+        self.ALL_SERIES_TAB = [{'category': 'all_letters', 'title': 'Alphabet', 'url': self.getFullUrl('/serien-alphabet')},
+                               {'category': 'all_genres', 'title': 'Genres', 'url': self.getFullUrl('/serien-genres')}, ]
         
-        self.allCache = {'genres_list':[], 'genres_keys':{}, 'letters_list':[], 'letters_keys':{}}
+        self.allCache = {'genres_list': [], 'genres_keys': {}, 'letters_list': [], 'letters_keys': {}}
         
     def getPage(self, baseUrl, params={}, post_data=None):
         if params == {}:
             params = dict(self.defaultParams)
-        params['cloudflare_params'] = {'cookie_file':self.COOKIE_FILE, 'User-Agent':self.USER_AGENT}
+        params['cloudflare_params'] = {'cookie_file': self.COOKIE_FILE, 'User-Agent': self.USER_AGENT}
         return self.cm.getPageCFProtection(baseUrl, params, post_data)
        
     def refreshCookieHeader(self):
@@ -104,12 +104,12 @@ class SerienStreamTo(CBaseHostClass, CaptchaHelper):
             return ''
         if refreshCookieHeader:
             self.refreshCookieHeader()
-        return strwithmeta(url, {'Cookie':self.cookieHeader, 'User-Agent':self.USER_AGENT})
+        return strwithmeta(url, {'Cookie': self.cookieHeader, 'User-Agent': self.USER_AGENT})
     
     def fillFilters(self, url):
         printDBG("SerienStreamTo.listABC")
         
-        self.cacheFilters = {'abc':[], 'genres':[]}
+        self.cacheFilters = {'abc': [], 'genres': []}
         
         sts, data = self.getPage(url)
         if not sts:
@@ -123,7 +123,7 @@ class SerienStreamTo(CBaseHostClass, CaptchaHelper):
                 title = self.cleanHtmlStr(item)
                 if title == '':
                     title = self.cleanHtmlStr(self.cm.ph.getSearchGroups(item, '''title=['"]([^'^"]+?)['"]''')[0])
-                params = {'good_for_fav': True, 'title':title, 'url':url}
+                params = {'good_for_fav': True, 'title': title, 'url': url}
                 self.cacheFilters[filter[0]].append(params)
         
     def listFilter(self, cItem, nextCategory, filter):
@@ -158,11 +158,11 @@ class SerienStreamTo(CBaseHostClass, CaptchaHelper):
                 if letter not in self.allCache['letters_list']:
                     self.allCache['letters_list'].append(letter)
                     self.allCache['letters_keys'][letter] = []
-                self.allCache['letters_keys'][letter].append({'url':url, 'title':title})
+                self.allCache['letters_keys'][letter].append({'url': url, 'title': title})
         
         for letter in self.allCache['letters_list']:
             params = dict(cItem)
-            params.update({'category':nextCategory, 'title':letter, 'all_key':letter, 'all_mode':'letters'})
+            params.update({'category': nextCategory, 'title': letter, 'all_key': letter, 'all_mode': 'letters'})
             self.addDir(params)
     
     def listsAllGenres(self, cItem, nextCategory):
@@ -182,11 +182,11 @@ class SerienStreamTo(CBaseHostClass, CaptchaHelper):
                     if genre not in self.allCache['genres_list']:
                         self.allCache['genres_list'].append(genre)
                         self.allCache['genres_keys'][genre] = []
-                    self.allCache['genres_keys'][genre].append({'url':url, 'title':title})
+                    self.allCache['genres_keys'][genre].append({'url': url, 'title': title})
         
         for genre in self.allCache['genres_list']:
             params = dict(cItem)
-            params.update({'category':nextCategory, 'title':genre, 'all_key':genre, 'all_mode':'genres'})
+            params.update({'category': nextCategory, 'title': genre, 'all_key': genre, 'all_mode': 'genres'})
             self.addDir(params)
     
     def listsAllItems(self, cItem, nextCategory):
@@ -196,7 +196,7 @@ class SerienStreamTo(CBaseHostClass, CaptchaHelper):
         for item in self.allCache['%s_keys' % mode][key]:
             params = dict(cItem)
             params.update(item)
-            params.update({'category':nextCategory, 'good_for_fav':True})
+            params.update({'category': nextCategory, 'good_for_fav': True})
             self.addDir(params)
     
     def listItems(self, cItem, nextCategory):
@@ -222,12 +222,12 @@ class SerienStreamTo(CBaseHostClass, CaptchaHelper):
                 title = self.cleanHtmlStr(self.cm.ph.getSearchGroups(item, '''alt=['"]([^'^"]+?)['"]''')[0])
             desc = self.cleanHtmlStr(item)
             params = dict(cItem)
-            params.update({'category':nextCategory, 'good_for_fav':True, 'title':title, 'url':url, 'icon':icon, 'desc':desc})
+            params.update({'category': nextCategory, 'good_for_fav': True, 'title': title, 'url': url, 'icon': icon, 'desc': desc})
             self.addDir(params)
         
         if nextPage != '':
             params = dict(cItem)
-            params.update({'good_for_fav':False, 'title':_('Next page'), 'url':nextPage, 'page':page + 1, 'desc':''})
+            params.update({'good_for_fav': False, 'title': _('Next page'), 'url': nextPage, 'page': page + 1, 'desc': ''})
             self.addDir(params)
             
     def listSeasons(self, cItem, nextCategory):
@@ -245,7 +245,7 @@ class SerienStreamTo(CBaseHostClass, CaptchaHelper):
         
         trailerUrl = self.getFullUrl(self.cm.ph.getSearchGroups(tmp, '''href=['"]([^'^"]+?)['"][^>]+?itemprop=['"]trailer['"]''')[0])
         if self.cm.isValidUrl(trailerUrl):
-            params = {'good_for_fav':True, 'title':_('Trailer'), 'url':trailerUrl, 'icon':icon, 'desc':desc}
+            params = {'good_for_fav': True, 'title': _('Trailer'), 'url': trailerUrl, 'icon': icon, 'desc': desc}
             self.addVideo(params)
         
         data = self.cm.ph.getDataBeetwenMarkers(data, 'Staffeln:', '</ul>')[1]
@@ -261,7 +261,7 @@ class SerienStreamTo(CBaseHostClass, CaptchaHelper):
             except Exception:
                 seasonNum = ''
             params = dict(cItem)
-            params.update({'category':nextCategory, 'good_for_fav':True, 'season_num':seasonNum, 'series_title':cItem['title'], 'title':cItem['title'] + ': ' + title, 'url':url, 'icon':icon, 'desc':desc})
+            params.update({'category': nextCategory, 'good_for_fav': True, 'season_num': seasonNum, 'series_title': cItem['title'], 'title': cItem['title'] + ': ' + title, 'url': url, 'icon': icon, 'desc': desc})
             self.addDir(params)
             
     def listEpisodes(self, cItem):
@@ -298,14 +298,14 @@ class SerienStreamTo(CBaseHostClass, CaptchaHelper):
             langs = re.compile('/public/img/([a-z]+?)\.png').findall(item)
             desc = '[{0}]'.format(' | '.join(langs)) + '[/br]' + cItem.get('desc', '')
             params = dict(cItem)
-            params.update({'good_for_fav':True, 'title':'{0}: {1}'.format(seriesTitle, title), 'url':url, 'desc':desc})
+            params.update({'good_for_fav': True, 'title': '{0}: {1}'.format(seriesTitle, title), 'url': url, 'desc': desc})
             self.addVideo(params)
         
     def listSearchResult(self, cItem, searchPattern, searchType):
         printDBG("SerienStreamTo.listSearchResult cItem[%s], searchPattern[%s] searchType[%s]" % (cItem, searchPattern, searchType))
         
         baseUrl = self.getFullUrl('ajax/search')
-        post_data = {'keyword':searchPattern}
+        post_data = {'keyword': searchPattern}
         sts, data = self.getPage(baseUrl, {}, post_data)
         if not sts:
             return
@@ -318,7 +318,7 @@ class SerienStreamTo(CBaseHostClass, CaptchaHelper):
                 title = self.cleanHtmlStr(item['title'])
                 desc = self.cleanHtmlStr(item['description'])
                 url = self.getFullUrl(item['link'])
-                params = {'name':'category', 'category':'list_seasons', 'good_for_fav':True, 'title':title, 'url':url, 'desc':desc}
+                params = {'name': 'category', 'category': 'list_seasons', 'good_for_fav': True, 'title': title, 'url': url, 'desc': desc}
                 self.addDir(params)
         except Exception:
             printExc()
@@ -364,10 +364,10 @@ class SerienStreamTo(CBaseHostClass, CaptchaHelper):
                 for item in data:
                     langId = self.cm.ph.getSearchGroups(item, '''data-lang-key=['"]([^'^"]+?)['"]''')[0]
                     title = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(item, '<h4>', '</h4>', withMarkers=False)[1])
-                    url = strwithmeta(self.getFullUrl(self.cm.ph.getSearchGroups(item, '''href=['"]([^'^"]+?)['"]''')[0]), {'base_url':cItem['url']})
+                    url = strwithmeta(self.getFullUrl(self.cm.ph.getSearchGroups(item, '''href=['"]([^'^"]+?)['"]''')[0]), {'base_url': cItem['url']})
                     if url == '':
-                        url = strwithmeta(self.getFullUrl(self.cm.ph.getSearchGroups(item, '''data\-link\-target=['"]([^'^"]+?)['"]''')[0]), {'base_url':cItem['url']})
-                    urlTab.append({'name': '[{0}] {1}'.format(langMap.get(langId, _('Unknown')), title), 'lang_id':langId, 'url':url, 'need_resolve':1})
+                        url = strwithmeta(self.getFullUrl(self.cm.ph.getSearchGroups(item, '''data\-link\-target=['"]([^'^"]+?)['"]''')[0]), {'base_url': cItem['url']})
+                    urlTab.append({'name': '[{0}] {1}'.format(langMap.get(langId, _('Unknown')), title), 'lang_id': langId, 'url': url, 'need_resolve': 1})
                 
                 if len(urlTab):
                     self.cacheLinks[cItem['url']] = urlTab
@@ -449,7 +449,7 @@ class SerienStreamTo(CBaseHostClass, CaptchaHelper):
             
         url = self.getFullUrl('/login')
         
-        post_data = {'email':self.login, 'password':self.password, 'autoLogin':'on'}
+        post_data = {'email': self.login, 'password': self.password, 'autoLogin': 'on'}
 
         while True:
             errorMsg = ''
@@ -501,14 +501,14 @@ class SerienStreamTo(CBaseHostClass, CaptchaHelper):
             rm(loginCookie)
             rm(self.COOKIE_FILE)
             if freshSession:
-                sts, data = self.cm.getPage(self.getMainUrl(), MergeDicts(self.defaultParams, {'use_new_session':True}))
+                sts, data = self.cm.getPage(self.getMainUrl(), MergeDicts(self.defaultParams, {'use_new_session': True}))
 
             self.loggedIn = False
             if '' == self.login.strip() or '' == self.password.strip():
                 return False
 
             actionUrl = self.getFullUrl('/login')
-            post_data = {'email':self.login, 'password':self.password, 'autoLogin':'on'}
+            post_data = {'email': self.login, 'password': self.password, 'autoLogin': 'on'}
             tries = 0
             while tries < 3:
                 tries += 1
@@ -539,7 +539,7 @@ class SerienStreamTo(CBaseHostClass, CaptchaHelper):
                         header = dict(httpParams['header'])
                         header['Accept'] = 'image/png,image/*;q=0.8,*/*;q=0.5'
                         params = dict(self.defaultParams)
-                        params.update({'maintype': 'image', 'subtypes':['jpeg', 'png'], 'check_first_bytes':['\xFF\xD8', '\xFF\xD9', '\x89\x50\x4E\x47'], 'header':header})
+                        params.update({'maintype': 'image', 'subtypes': ['jpeg', 'png'], 'check_first_bytes': ['\xFF\xD8', '\xFF\xD9', '\x89\x50\x4E\x47'], 'header': header})
                         filePath = GetTmpDir('.iptvplayer_captcha.jpg')
                         rm(filePath)
                         ret = self.cm.saveWebFile(filePath, imgUrl.replace('&amp;', '&'), params)
@@ -596,9 +596,9 @@ class SerienStreamTo(CBaseHostClass, CaptchaHelper):
         
     #MAIN MENU
         if name == None:
-            self.listsTab(self.MAIN_CAT_TAB, {'name':'category'})
+            self.listsTab(self.MAIN_CAT_TAB, {'name': 'category'})
         elif 'all_series' == category:
-            self.listsTab(self.ALL_SERIES_TAB, {'name':'category'})
+            self.listsTab(self.ALL_SERIES_TAB, {'name': 'category'})
         elif 'all_letters' == category:
             self.listsAllLetters(self.currItem, 'all_items')
         elif 'all_genres' == category:
@@ -618,11 +618,11 @@ class SerienStreamTo(CBaseHostClass, CaptchaHelper):
     #SEARCH
         elif category in ["search", "search_next_page"]:
             cItem = dict(self.currItem)
-            cItem.update({'search_item':False, 'name':'category'}) 
+            cItem.update({'search_item': False, 'name': 'category'}) 
             self.listSearchResult(cItem, searchPattern, searchType)
     #HISTORIA SEARCH
         elif category == "search_history":
-            self.listsHistory({'name':'history', 'category': 'search'}, 'desc', _("Type: "))
+            self.listsHistory({'name': 'history', 'category': 'search'}, 'desc', _("Type: "))
         else:
             printExc()
         

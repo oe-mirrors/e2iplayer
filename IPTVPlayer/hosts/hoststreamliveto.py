@@ -50,14 +50,14 @@ class StreamLiveTo(CBaseHostClass):
     HTTP_MOBILE_HEADER = {'User-Agent': 'Mozilla/5.0 (iPad; U; CPU OS 3_2 like Mac OS X; en-us) AppleWebKit/531.21.10 (KHTML, like Gecko) Version/4.0.4 Mobile/7B334b Safari/531.21.10', 'Accept': 'text/html'}
     MAIN_URL = 'https://www.streamlive.to/'
     
-    MAIN_CAT_TAB = [{'category':'list_filters', 'title': 'Live Channels', 'icon':''},
-                    {'category':'search', 'title': _('Search'), 'search_item':True},
-                    {'category':'search_history', 'title': _('Search history')}]
+    MAIN_CAT_TAB = [{'category': 'list_filters', 'title': 'Live Channels', 'icon': ''},
+                    {'category': 'search', 'title': _('Search'), 'search_item': True},
+                    {'category': 'search_history', 'title': _('Search history')}]
 
  
     def __init__(self):
-        CBaseHostClass.__init__(self, {'history':'StreamLiveTo.tv', 'cookie':'streamliveto.cookie'})
-        self.defaultParams = {'header':self.HTTP_HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
+        CBaseHostClass.__init__(self, {'history': 'StreamLiveTo.tv', 'cookie': 'streamliveto.cookie'})
+        self.defaultParams = {'header': self.HTTP_HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
         self.cacheFilters = {}
         self.cacheFiltersKeys = []
         self.DEFAULT_ICON_URL = self.MAIN_URL + 'images/logo.png' 
@@ -104,7 +104,7 @@ class StreamLiveTo(CBaseHostClass):
         tmp = self.cm.ph.getDataBeetwenMarkers(data, '<select name="category"', '</select>', False)[1]
         tmp = re.compile('<option [^>]*?value="([^"]*?)"[^>]*?>([^<]+?)</option>').findall(tmp)
         for item in tmp:
-            tmpTab.append({'title':item[1], 'f_cat':urllib.parse.quote(item[0])})
+            tmpTab.append({'title': item[1], 'f_cat': urllib.parse.quote(item[0])})
         if len(tmpTab): 
             self.cacheFilters['f_cat'] = tmpTab
             self.cacheFiltersKeys.append('f_cat')
@@ -113,7 +113,7 @@ class StreamLiveTo(CBaseHostClass):
         tmp = self.cm.ph.getDataBeetwenMarkers(data, '<select name="language"', '</select>', False)[1]
         tmp = re.compile('<option [^>]*?value="([^"]*?)"[^>]*?>([^<]+?)</option>').findall(tmp)
         for item in tmp:
-            tmpTab.append({'title':item[1], 'f_lang':item[0]})
+            tmpTab.append({'title': item[1], 'f_lang': item[0]})
         if len(tmpTab): 
             self.cacheFilters['f_lang'] = tmpTab
             self.cacheFiltersKeys.append('f_lang')
@@ -122,7 +122,7 @@ class StreamLiveTo(CBaseHostClass):
         tmp = self.cm.ph.getDataBeetwenMarkers(data, '<select name="sortBy"', '</select>', False)[1]
         tmp = re.compile('<option [^>]*?value="([^"]*?)"[^>]*?>([^<]+?)</option>').findall(tmp)
         for item in tmp:
-            tmpTab.append({'title':item[1], 'f_sort':item[0]})
+            tmpTab.append({'title': item[1], 'f_sort': item[0]})
             
         if len(tmpTab): 
             self.cacheFilters['f_sort'] = tmpTab
@@ -138,10 +138,10 @@ class StreamLiveTo(CBaseHostClass):
         for item in data:
             val = self.cm.ph.getSearchGroups(item, '''[\?&]list=([^'^"^&]+?)['"&]''')[0]
             title = self.cleanHtmlStr(item)
-            tmpTab.append({'title':title, 'f_type':val})
+            tmpTab.append({'title': title, 'f_type': val})
         if len(tmpTab) == 0:
             for item in [(_('Any'), ''), (_('Free'), 'free'), (_('Premium'), 'premium')]:
-                tmpTab.append({'title':item[0], 'f_type':item[1]})
+                tmpTab.append({'title': item[0], 'f_type': item[1]})
         if len(tmpTab): 
             self.cacheFilters['f_type'] = tmpTab
             self.cacheFiltersKeys.insert(0, 'f_type')
@@ -167,9 +167,9 @@ class StreamLiveTo(CBaseHostClass):
     def listChannels(self, cItem):
         printDBG("StreamLiveTo.listChannels")
         page = cItem.get('page', 1)
-        post_data = {'page':page}
+        post_data = {'page': page}
         
-        keysMap = {'cat':'category', 'lang':'language', 'sort':'sortBy', 'q':'query', 'type':'list'}
+        keysMap = {'cat': 'category', 'lang': 'language', 'sort': 'sortBy', 'q': 'query', 'type': 'list'}
         if 'f_q' in cItem:
             keys = ['f_q']
         else:
@@ -222,11 +222,11 @@ class StreamLiveTo(CBaseHostClass):
                 if t != '':
                     desc += '[/br]' + t
             if self.cm.isValidUrl(url):
-                params = {'title':title, 'url':url, 'desc':desc, 'icon':icon}
+                params = {'title': title, 'url': url, 'desc': desc, 'icon': icon}
                 self.addVideo(params)
         if nextPage:
             params = dict(cItem)
-            params.update({'title':_("Next page"), 'page':page + 1})
+            params.update({'title': _("Next page"), 'page': page + 1})
             self.addDir(params)
     
     def listSearchResult(self, cItem, searchPattern, searchType):
@@ -270,7 +270,7 @@ class StreamLiveTo(CBaseHostClass):
         return cItem['url']
         
     def getLinksForFavourite(self, fav_data):
-        return self.getLinksForVideo({'url':fav_data})
+        return self.getLinksForVideo({'url': fav_data})
         
     def listGetFreeCredits(self):
         printDBG("StreamLiveTo.listGetFreeCredits")
@@ -317,7 +317,7 @@ class StreamLiveTo(CBaseHostClass):
         
         imgUrl = 'http://www.google.com/recaptcha/api/image?c=' + challenge
         #return
-        params = {'maintype': 'image', 'subtypes':['jpeg'], 'check_first_bytes':['\xFF\xD8', '\xFF\xD9']}
+        params = {'maintype': 'image', 'subtypes': ['jpeg'], 'check_first_bytes': ['\xFF\xD8', '\xFF\xD9']}
         filePath = GetTmpDir('.iptvplayer_captcha.jpg')
         ret = self.cm.saveWebFile(filePath, imgUrl, params)
         if not ret.get('sts'):
@@ -341,7 +341,7 @@ class StreamLiveTo(CBaseHostClass):
         printDBG(retArg)
         if retArg and len(retArg) and retArg[0]:
             printDBG(retArg[0])
-            sts, data = self.cm.getPage(baseUrl, httpParams, {'recaptcha_challenge_field':challenge, 'recaptcha_response_field':retArg[0], 'submit':'Get Free 10 Credits'})
+            sts, data = self.cm.getPage(baseUrl, httpParams, {'recaptcha_challenge_field': challenge, 'recaptcha_response_field': retArg[0], 'submit': 'Get Free 10 Credits'})
             printDBG(data)
             if 'got free' in data:
                 ret = 1
@@ -392,7 +392,7 @@ class StreamLiveTo(CBaseHostClass):
             newHeader['Referer'] = url
             newHttpParams['header'] = newHttpParams
             
-            sts, data = self.cm.getPage(url, newHttpParams, {'captcha':answer})
+            sts, data = self.cm.getPage(url, newHttpParams, {'captcha': answer})
             if not sts:
                 return False, None
             resultMarker = 'Your answer is wrong.'
@@ -405,9 +405,9 @@ class StreamLiveTo(CBaseHostClass):
     def doLogin(self, login, password):
         logged = False
         HTTP_HEADER = dict(self.HTTP_MOBILE_HEADER)
-        HTTP_HEADER.update({'Content-Type':'application/x-www-form-urlencoded; charset=UTF-8', 'X-Requested-With': 'XMLHttpRequest'})
+        HTTP_HEADER.update({'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8', 'X-Requested-With': 'XMLHttpRequest'})
 
-        post_data = {'username':login, 'password':password, 'accessed_by':'web', 'submit':'Login', 'x':0, 'y':0}
+        post_data = {'username': login, 'password': password, 'accessed_by': 'web', 'submit': 'Login', 'x': 0, 'y': 0}
         params = {'header': HTTP_HEADER, 'cookiefile': self.COOKIE_FILE, 'save_cookie': True}
         loginUrl = 'https://www.streamlive.to/login.php'
         sts, data = self.cm.getPage(loginUrl, params, post_data)
@@ -436,7 +436,7 @@ class StreamLiveTo(CBaseHostClass):
                 logged = self.doLogin(login, passwd)
                 if not logged:
                     self.sessionEx.open(MessageBox, _('Login failed.'), type=MessageBox.TYPE_INFO, timeout=10)
-            self.listsTab(self.MAIN_CAT_TAB, {'name':'category'})
+            self.listsTab(self.MAIN_CAT_TAB, {'name': 'category'})
             #if logged:  
             #    self.addDir({'name':'category', 'title':_('Get free credits'), 'category':'get_free_credits'})
         elif category == 'get_free_credits':
@@ -448,11 +448,11 @@ class StreamLiveTo(CBaseHostClass):
     #SEARCH
         elif category in ["search", "search_next_page"]:
             cItem = dict(self.currItem)
-            cItem.update({'search_item':False, 'name':'category'}) 
+            cItem.update({'search_item': False, 'name': 'category'}) 
             self.listSearchResult(cItem, searchPattern, searchType)
     #HISTORIA SEARCH
         elif category == "search_history":
-            self.listsHistory({'name':'history', 'category': 'search'}, 'desc', _("Type: "))
+            self.listsHistory({'name': 'history', 'category': 'search'}, 'desc', _("Type: "))
         else:
             printExc()
         

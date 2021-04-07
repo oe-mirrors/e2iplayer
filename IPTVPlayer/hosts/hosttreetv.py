@@ -54,25 +54,25 @@ def gettytul():
 class TreeTv(CBaseHostClass):
  
     def __init__(self):
-        CBaseHostClass.__init__(self, {'history':'TreeTv.tv', 'cookie':'treetv.cookie'})
+        CBaseHostClass.__init__(self, {'history': 'TreeTv.tv', 'cookie': 'treetv.cookie'})
         self.HEADER = {'User-Agent': 'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/52.0.2743.116 Safari/537.36', 'Accept': 'text/html'}
         self.AJAX_HEADER = dict(self.HEADER)
         self.AJAX_HEADER.update({'X-Requested-With': 'XMLHttpRequest'})
         
-        self.defaultParams = {'header':self.HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE, 'cookie_items':{'mycook':md5(str(time.time())).hexdigest()}}
+        self.defaultParams = {'header': self.HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE, 'cookie_items': {'mycook': md5(str(time.time())).hexdigest()}}
         
         self.MAIN_URL = 'http://tree.tv/'
         self.DEFAULT_ICON_URL = 'https://superrepo.org/static/images/icons/original/xplugin.video.tree.tv.dev.png.pagespeed.ic.bFRA1qn2nT.png'
         
-        self.MAIN_CAT_TAB = [{'category':'list_items', 'title': _('Movies'), 'url':self.getFullUrl('/films'), 'icon':self.DEFAULT_ICON_URL},
-                             {'category':'list_items', 'title': _('Series'), 'url':self.getFullUrl('/serials'), 'icon':self.DEFAULT_ICON_URL},
-                             {'category':'list_items', 'title': _('Cartoons'), 'url':self.getFullUrl('/multfilms'), 'icon':self.DEFAULT_ICON_URL},
-                             {'category':'list_items', 'title': _('Anime'), 'url':self.getFullUrl('/anime'), 'icon':self.DEFAULT_ICON_URL},
-                             {'category':'list_items', 'title': _('TV Shows'), 'url':self.getFullUrl('/onlinetv'), 'icon':self.DEFAULT_ICON_URL},
-                             {'category':'list_collections', 'title': _('Collections'), 'url':self.getFullUrl('/collection'), 'icon':self.DEFAULT_ICON_URL},
+        self.MAIN_CAT_TAB = [{'category': 'list_items', 'title': _('Movies'), 'url': self.getFullUrl('/films'), 'icon': self.DEFAULT_ICON_URL},
+                             {'category': 'list_items', 'title': _('Series'), 'url': self.getFullUrl('/serials'), 'icon': self.DEFAULT_ICON_URL},
+                             {'category': 'list_items', 'title': _('Cartoons'), 'url': self.getFullUrl('/multfilms'), 'icon': self.DEFAULT_ICON_URL},
+                             {'category': 'list_items', 'title': _('Anime'), 'url': self.getFullUrl('/anime'), 'icon': self.DEFAULT_ICON_URL},
+                             {'category': 'list_items', 'title': _('TV Shows'), 'url': self.getFullUrl('/onlinetv'), 'icon': self.DEFAULT_ICON_URL},
+                             {'category': 'list_collections', 'title': _('Collections'), 'url': self.getFullUrl('/collection'), 'icon': self.DEFAULT_ICON_URL},
                              
-                             {'category':'search', 'title': _('Search'), 'search_item':True, 'icon':self.DEFAULT_ICON_URL},
-                             {'category':'search_history', 'title': _('Search history'), 'icon':self.DEFAULT_ICON_URL} 
+                             {'category': 'search', 'title': _('Search'), 'search_item': True, 'icon': self.DEFAULT_ICON_URL},
+                             {'category': 'search_history', 'title': _('Search history'), 'icon': self.DEFAULT_ICON_URL} 
                             ]
         
         self.cacheFilters = {}
@@ -119,9 +119,9 @@ class TreeTv(CBaseHostClass):
                 if value == '':
                     continue
                 title = self.cleanHtmlStr(item)
-                self.cacheFilters[key].append({'title':titleBase + title, key:value})
+                self.cacheFilters[key].append({'title': titleBase + title, key: value})
             if addAny and len(self.cacheFilters[key]):
-                self.cacheFilters[key].insert(0, {'title':_('Any')})
+                self.cacheFilters[key].insert(0, {'title': _('Any')})
         
         # production -> production
         tmpData = self.cm.ph.getDataBeetwenMarkers(data, 'production_links', '</div')[1]
@@ -145,7 +145,7 @@ class TreeTv(CBaseHostClass):
             self.cacheFilters['year'].append({'title': _('Year: ') + str(year), 'year': year})
             year -= 1
         if len(self.cacheFilters['year']):
-            self.cacheFilters['year'].insert(0, {'title':_('Year: ') + _('Any')})
+            self.cacheFilters['year'].insert(0, {'title': _('Year: ') + _('Any')})
             self.filtersTab.append('year')
         
         # quality -> quality
@@ -228,12 +228,12 @@ class TreeTv(CBaseHostClass):
             if title == '':
                 title = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(item, '<h2>', '</h2>', withMarkers=False)[1])
             desc = self.cleanHtmlStr(item)
-            params = {'category': nextCategory, 'good_for_fav': True, 'title':title, 'url':url, 'icon':icon, 'desc':desc}
+            params = {'category': nextCategory, 'good_for_fav': True, 'title': title, 'url': url, 'icon': icon, 'desc': desc}
             self.addDir(params)
         
         if nextPage:
             params = dict(cItem)
-            params.update({'title':_('Next page'), 'page':page + 1})
+            params.update({'title': _('Next page'), 'page': page + 1})
             self.addDir(params)
         
     def exploreItem(self, cItem):
@@ -249,7 +249,7 @@ class TreeTv(CBaseHostClass):
         url = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''href=['"]([^'^"]+?)['"]''')[0])
         title = self.cleanHtmlStr(item)
         if self.cm.isValidUrl(url):
-            self.addVideo({'good_for_fav': False, 'title':title, 'icon':cItem['icon'], 'urls':[{'name':'', 'url':url}]})
+            self.addVideo({'good_for_fav': False, 'title': title, 'icon': cItem['icon'], 'urls': [{'name': '', 'url': url}]})
 
         printDBG(data)
 
@@ -268,11 +268,11 @@ class TreeTv(CBaseHostClass):
                 key = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(tmp, '<a ', '</a>', withMarkers=True)[1]).upper()
                 if key not in keyTab:
                     keyTab.append(key)
-                    linksTab[key] = {'urls':[], 'title':linksTitle}
-                linksTab[key]['urls'].append({'name':title, 'url':url})
+                    linksTab[key] = {'urls': [], 'title': linksTitle}
+                linksTab[key]['urls'].append({'name': title, 'url': url})
         
         for key in keyTab:
-            self.addVideo({'good_for_fav': False, 'title':linksTab[key]['title'], 'desc': key, 'icon':cItem['icon'], 'urls':linksTab[key]['urls']})
+            self.addVideo({'good_for_fav': False, 'title': linksTab[key]['title'], 'desc': key, 'icon': cItem['icon'], 'urls': linksTab[key]['urls']})
 
     def listSearchResult(self, cItem, searchPattern, searchType):
         printDBG("TreeTv.listSearchResult cItem[%s], searchPattern[%s] searchType[%s]" % (cItem, searchPattern, searchType))
@@ -298,7 +298,7 @@ class TreeTv(CBaseHostClass):
         for item in self.cacheLinks:
             url = item['url']
             name = item['name']
-            urlTab.append({'name':name, 'url':url, 'need_resolve':1})
+            urlTab.append({'name': name, 'url': url, 'need_resolve': 1})
         
         return urlTab
         
@@ -357,8 +357,8 @@ class TreeTv(CBaseHostClass):
         params['header'] = dict(self.AJAX_HEADER)
         params['header']['Referer'] = str(url)
         
-        playerKeyParams = {'key':'', 'g':2, 'p':293}
-        serverData = {'g':-1, 'p':-1, 's_key':''}
+        playerKeyParams = {'key': '', 'g': 2, 'p': 293}
+        serverData = {'g': -1, 'p': -1, 's_key': ''}
         tmpurl = 'http://player.tree.tv/guard'
         tries = 0
         try:
@@ -372,7 +372,7 @@ class TreeTv(CBaseHostClass):
                     numClient = math.pow(playerKeyParams['g'], playerKeyParams['key'])
                     clientKey = math.fmod(numClient, playerKeyParams['p'])
                 
-                    post_data = {'key':int(clientKey)}
+                    post_data = {'key': int(clientKey)}
                     sts, data = self.getPage(tmpurl, params, post_data)
                     if not sts:
                         return []
@@ -397,7 +397,7 @@ class TreeTv(CBaseHostClass):
             printExc()
             return []
         
-        post_data = {'file':fileId, 'source':source, 'skc':skc}
+        post_data = {'file': fileId, 'source': source, 'skc': skc}
         sts, data = self.getPage(sourceUrl, params, post_data)
         if not sts:
             return []
@@ -423,7 +423,7 @@ class TreeTv(CBaseHostClass):
                     uri = self.cm.ph.getSearchGroups(item, '''['"]?src['"]?\s*:\s*['"]([^'^"]+?)['"]''', 1, True)[0]
                     if not self.cm.isValidUrl(uri):
                         continue
-                    uri = strwithmeta(uri, {'User-Agent':params['header']['User-Agent'], 'Referer':params['header']['Referer'], 'Origin':'http://player.tree.tv'})
+                    uri = strwithmeta(uri, {'User-Agent': params['header']['User-Agent'], 'Referer': params['header']['Referer'], 'Origin': 'http://player.tree.tv'})
                     point = self.cm.ph.getSearchGroups(item, '''['"]?point['"]?\s*:\s*['"]([^'^"]+?)['"]''', 1, True)[0]
                     label = self.cm.ph.getSearchGroups(item, '''['"]?label['"]?\s*:\s*['"]([^'^"]+?)['"]''', 1, True)[0]
                     if label == '':
@@ -432,7 +432,7 @@ class TreeTv(CBaseHostClass):
                         if '/playlist/' in uri:
                             urlTab.extend(getDirectM3U8Playlist(uri, checkExt=False, cookieParams=params, checkContent=True))
                         elif source == '3':
-                            urlTab.extend([{'name':label, 'url':uri}])
+                            urlTab.extend([{'name': label, 'url': uri}])
         except Exception:
             printExc()
         return urlTab
@@ -452,11 +452,11 @@ class TreeTv(CBaseHostClass):
 
         loginUrl = self.getFullUrl('users/index/auth')
 
-        post_data = {"mail":login, "pass":password, "social":"0", 'from':'def'}
+        post_data = {"mail": login, "pass": password, "social": "0", 'from': 'def'}
         HEADER = dict(self.AJAX_HEADER)
         HEADER['Referer'] = self.cm.getBaseUrl(self.cm.meta['url'])
         HEADER['Content-Type'] = 'application/x-www-form-urlencoded; charset=UTF-8'
-        params.update({'header':HEADER})
+        params.update({'header': HEADER})
         
         # login
         sts, data = self.getPage(loginUrl, params, post_data)
@@ -500,11 +500,11 @@ class TreeTv(CBaseHostClass):
         
     #MAIN MENU
         if name == None:
-            self.listsTab(self.MAIN_CAT_TAB, {'name':'category'})
+            self.listsTab(self.MAIN_CAT_TAB, {'name': 'category'})
         elif 'list_items' == category:
             idx = self.currItem.get('f_idx', 0)
             if idx == 0:
-                self.fillFilters({'name':'category', 'url':self.getFullUrl('/films')})
+                self.fillFilters({'name': 'category', 'url': self.getFullUrl('/films')})
             if idx < len(self.filtersTab):
                 self.listFilter(self.currItem, self.filtersTab)
             else:
@@ -518,11 +518,11 @@ class TreeTv(CBaseHostClass):
     #SEARCH
         elif category in ["search", "search_next_page"]:
             cItem = dict(self.currItem)
-            cItem.update({'search_item':False, 'name':'category'}) 
+            cItem.update({'search_item': False, 'name': 'category'}) 
             self.listSearchResult(cItem, searchPattern, searchType)
     #HISTORIA SEARCH
         elif category == "search_history":
-            self.listsHistory({'name':'history', 'category': 'search'}, 'desc', _("Type: "))
+            self.listsHistory({'name': 'history', 'category': 'search'}, 'desc', _("Type: "))
         else:
             printExc()
         

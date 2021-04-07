@@ -37,11 +37,11 @@ def gettytul():
 class MediasetPlay(CBaseHostClass):
 
     def __init__(self):
-        CBaseHostClass.__init__(self, {'history':'mediasetplay.it', 'cookie':'mediasetplay.it.cookie'})
+        CBaseHostClass.__init__(self, {'history': 'mediasetplay.it', 'cookie': 'mediasetplay.it.cookie'})
 
         self.HTTP_HEADER = self.cm.getDefaultHeader(browser='firefox')
-        self.HTTP_HEADER.update({'Referer':'https://www.mediasetplay.mediaset.it/', 'Accept':'application/json', 'Content-Type':'application/json'})
-        self.defaultParams = {'header':self.HTTP_HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
+        self.HTTP_HEADER.update({'Referer': 'https://www.mediasetplay.mediaset.it/', 'Accept': 'application/json', 'Content-Type': 'application/json'})
+        self.defaultParams = {'header': self.HTTP_HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
 
         self.MAIN_URL = 'https://www.mediasetplay.mediaset.it/'
         self.API_BASE_URL = 'https://api-ott-prod-fe.mediaset.net/PROD/play/'
@@ -72,7 +72,7 @@ class MediasetPlay(CBaseHostClass):
         if self.initData:
             return 
         url = self.API_BASE_URL + 'idm/anonymous/login/v1.0'
-        params = MergeDicts(self.defaultParams, {'raw_post_data':True, 'collect_all_headers':True})
+        params = MergeDicts(self.defaultParams, {'raw_post_data': True, 'collect_all_headers': True})
         cid = str(uuid.uuid4())
         post_data = '{"cid":"%s","platform":"pc","appName":"web/mediasetplay-web/18be850"}' % cid
 
@@ -81,11 +81,11 @@ class MediasetPlay(CBaseHostClass):
             return
         printDBG(data)
         try:
-            headers = {'t-apigw':self.cm.meta['t-apigw'], 't-cts':self.cm.meta['t-cts']}
+            headers = {'t-apigw': self.cm.meta['t-apigw'], 't-cts': self.cm.meta['t-cts']}
             data = json_loads(data)
             if data['isOk']:
                 tmp = data['response']
-                self.initData.update({'traceCid':tmp['traceCid'], 'cwId':tmp['cwId'], 'cid':cid})
+                self.initData.update({'traceCid': tmp['traceCid'], 'cwId': tmp['cwId'], 'cid': cid})
                 self.HTTP_HEADER.update(headers)
         except Exception:
             printExc()
@@ -100,17 +100,17 @@ class MediasetPlay(CBaseHostClass):
         self.setMainUrl(self.cm.meta['url'])
 
         subItems = []
-        subItems.append(MergeDicts(cItem, {'category':'cat_az', 'title':'Tutto A-Z'}))
-        subItems.append(MergeDicts(cItem, {'category':'cat_series', 'title':'Fiction e Serie TV', 'url':self.getFullUrl('/fiction')}))
-        subItems.append(MergeDicts(cItem, {'category':'cat_movies', 'title':'Film', 'url':self.getFullUrl('/film')}))
+        subItems.append(MergeDicts(cItem, {'category': 'cat_az', 'title': 'Tutto A-Z'}))
+        subItems.append(MergeDicts(cItem, {'category': 'cat_series', 'title': 'Fiction e Serie TV', 'url': self.getFullUrl('/fiction')}))
+        subItems.append(MergeDicts(cItem, {'category': 'cat_movies', 'title': 'Film', 'url': self.getFullUrl('/film')}))
 
-        self.addDir(MergeDicts(cItem, {'category': 'sub_items', 'title': 'On Demand', 'sub_items': subItems,}))
-        self.addDir(MergeDicts(cItem, {'category':'on_air', 'title':'Ora in onda', 'url':self.getMainUrl()}))
-        self.addDir(MergeDicts(cItem, {'category':'cat_channels', 'title':'Canali', 'url':self.getMainUrl()}))
-        self.addDir(MergeDicts(cItem, {'category':'list_catalog_items', 'title':_('Top day'), 'f_ref':'CWTOPVIEWEDDAY'}))
+        self.addDir(MergeDicts(cItem, {'category': 'sub_items', 'title': 'On Demand', 'sub_items': subItems, }))
+        self.addDir(MergeDicts(cItem, {'category': 'on_air', 'title': 'Ora in onda', 'url': self.getMainUrl()}))
+        self.addDir(MergeDicts(cItem, {'category': 'cat_channels', 'title': 'Canali', 'url': self.getMainUrl()}))
+        self.addDir(MergeDicts(cItem, {'category': 'list_catalog_items', 'title': _('Top day'), 'f_ref': 'CWTOPVIEWEDDAY'}))
 
-        MAIN_CAT_TAB = [{'category':'search', 'title': _('Search'), 'search_item':True},
-                        {'category': 'search_history', 'title': _('Search history'),}]
+        MAIN_CAT_TAB = [{'category': 'search', 'title': _('Search'), 'search_item': True},
+                        {'category': 'search_history', 'title': _('Search history'), }]
         self.listsTab(MAIN_CAT_TAB, cItem)
 
     def listSubItems(self, cItem):
@@ -130,7 +130,7 @@ class MediasetPlay(CBaseHostClass):
                 icon = self.getFullIconUrl(item['thumbnails']['channel_logo-100x100']['url']) #next(iter(item['thumbnails']))['url'] )
                 title = item['title']
                 url = self.getFullIconUrl(item['mediasetstation$pageUrl'])
-                self.addVideo(MergeDicts(cItem, {'good_for_fav':True, 'title':title, 'url':url, 'icon':icon, 'call_sign':item['callSign'], 'is_live':True}))
+                self.addVideo(MergeDicts(cItem, {'good_for_fav': True, 'title': title, 'url': url, 'icon': icon, 'call_sign': item['callSign'], 'is_live': True}))
         except Exception:
             printExc()
 
@@ -146,7 +146,7 @@ class MediasetPlay(CBaseHostClass):
         for idx in range(1, len(data), 2):
             url = self.getFullUrl(ph.getattr(data[idx - 1], 'href'), cUrl)
             title = ph.clean_html(data[idx])
-            self.addDir(MergeDicts(cItem, {'good_for_fav':True, 'category':nextCategory, 'title':title, 'url':url}))
+            self.addDir(MergeDicts(cItem, {'good_for_fav': True, 'category': nextCategory, 'title': title, 'url': url}))
 
     def listChannelItems(self, cItem, nextCategory):
         printDBG("MediasetPlay.listChannelItems")
@@ -171,10 +171,10 @@ class MediasetPlay(CBaseHostClass):
             title = 'Oggi' if i == 0 else ABBREVIATED_DAYS_NAME_TAB[start.weekday()] + ' ' + str(start.day).zfill(2)
             url = self.API_BASE_URL + 'alive/allListingFeedFilter/v1.0?byListingTime=%s~%s&byVod=true&byCallSign=%s' % (s, e, channelId)
 
-            subItems.append(MergeDicts(cItem, {'good_for_fav':False, 'category':nextCategory, 'title':title, 'url':url}))
+            subItems.append(MergeDicts(cItem, {'good_for_fav': False, 'category': nextCategory, 'title': title, 'url': url}))
             start = PrevDay(start)
             end = PrevDay(end)
-        self.addDir(MergeDicts(cItem, {'category': 'sub_items', 'title': 'Ultima settimana', 'sub_items': subItems,}))
+        self.addDir(MergeDicts(cItem, {'category': 'sub_items', 'title': 'Ultima settimana', 'sub_items': subItems, }))
 
     def listTime(self, cItem, nextCategory):
         printDBG("MediasetPlay.listTime")
@@ -201,9 +201,9 @@ class MediasetPlay(CBaseHostClass):
                     icon = item['thumbnails']['image_vertical-264x396']['url']
                     url = self.getFullUrl(item['mediasetprogram$pageUrl'])
                 desc.append(item.get('description', ''))
-                params = {'good_for_fav':True, 'category':nextCategory, 'title':title, 'url':url, 'icon':icon, 'desc':'[/br]'.join(desc)}
+                params = {'good_for_fav': True, 'category': nextCategory, 'title': title, 'url': url, 'icon': icon, 'desc': '[/br]'.join(desc)}
                 if videoUrl:
-                    self.addVideo(MergeDicts(cItem, params, {'guid':guid}))
+                    self.addVideo(MergeDicts(cItem, params, {'guid': guid}))
                 else:
                     self.addDir(MergeDicts(cItem, params))
         except Exception:
@@ -212,29 +212,29 @@ class MediasetPlay(CBaseHostClass):
     def listAZFilters(self, cItem, nextCategory):
         printDBG('MediasetPlay.listAZFilters')
         idx = cItem.get('az_filter_idx', 0)
-        cItem = MergeDicts(cItem, {'az_filter_idx':idx + 1})
+        cItem = MergeDicts(cItem, {'az_filter_idx': idx + 1})
         if idx == 0:
             filtersTab = [{'title': 'Tutti generi'},
-                          {'title': 'Cinema', 'f_category':'Cinema'},
-                          {'title': 'Fiction', 'f_category':'Fiction'},
-                          {'title': 'Documentari', 'f_category':'Documentari'},
-                          {'title': 'Programmi Tv', 'f_category':'Programmi Tv'},]
+                          {'title': 'Cinema', 'f_category': 'Cinema'},
+                          {'title': 'Fiction', 'f_category': 'Fiction'},
+                          {'title': 'Documentari', 'f_category': 'Documentari'},
+                          {'title': 'Programmi Tv', 'f_category': 'Programmi Tv'}, ]
         elif idx == 1:
             filtersTab = [{'title': 'Tutti'},
-                          {'title': 'In onda', 'f_onair':True},]
+                          {'title': 'In onda', 'f_onair': True}, ]
         elif idx == 2:
             cItem['category'] = nextCategory
             filtersTab = []
-            filtersTab.append({'title': 'Tutti', 'f_query':'*:*'})
+            filtersTab.append({'title': 'Tutti', 'f_query': '*:*'})
             for i in range(0, 24): 
-                filtersTab.append({'title':chr(ord('A') + i), 'f_query':'TitleFullSearch:%s*' % chr(ord('a') + i)})
-            filtersTab.append({'title': '#', 'f_query':'-(TitleFullSearch:{A TO *})'})
+                filtersTab.append({'title': chr(ord('A') + i), 'f_query': 'TitleFullSearch:%s*' % chr(ord('a') + i)})
+            filtersTab.append({'title': '#', 'f_query': '-(TitleFullSearch:{A TO *})'})
         self.listsTab(filtersTab, cItem)
 
     def listAZItems(self, cItem, nextCategory):
         printDBG('MediasetPlay.listAZItems')
 
-        query = {'hitsPerPage':50}
+        query = {'hitsPerPage': 50}
         if 'f_onair' in cItem:
             query['inOnda'] = 'true'
         url = self.API_BASE_URL + 'rec/azlisting/v1.0?' + urllib.parse.urlencode(query)
@@ -243,7 +243,7 @@ class MediasetPlay(CBaseHostClass):
         if 'f_category' in cItem:
             url += '&categories=%s' % cItem['f_category'] #query['categories'] = cItem['f_category']
 
-        cItem = MergeDicts(cItem, {'category':'list_items', 'url':url})
+        cItem = MergeDicts(cItem, {'category': 'list_items', 'url': url})
         self.listItems(cItem, nextCategory)
 
     def listItems(self, cItem, nextCategory):
@@ -272,14 +272,14 @@ class MediasetPlay(CBaseHostClass):
                     icon = item['thumbnails']['image_vertical-264x396']['url']
                     url = self.getFullUrl(item['mediasetprogram$pageUrl'])
                 desc.append(item.get('description', ''))
-                params = {'good_for_fav':True, 'category':nextCategory, 'title':title, 'url':url, 'icon':icon, 'desc':'[/br]'.join(desc)}
+                params = {'good_for_fav': True, 'category': nextCategory, 'title': title, 'url': url, 'icon': icon, 'desc': '[/br]'.join(desc)}
                 if videoUrl:
-                    self.addVideo(MergeDicts(cItem, params, {'guid':guid}))
+                    self.addVideo(MergeDicts(cItem, params, {'guid': guid}))
                 else:
                     self.addDir(MergeDicts(cItem, params))
 
             if data.get('hasMore'):
-                self.addDir(MergeDicts(cItem, {'title':_('Next page'), 'page':page + 1}))
+                self.addDir(MergeDicts(cItem, {'title': _('Next page'), 'page': page + 1}))
         except Exception:
             printExc()
 
@@ -291,7 +291,7 @@ class MediasetPlay(CBaseHostClass):
                 return
             self.setMainUrl(self.cm.meta['url'])
 
-        exports = {"button-special": "_1u_k9 _3Pqi-", "wrapper": "C6FJZ", "description": "_3XiTc", "sub-title-banner": "_1tNlk", "title-banner": "_1KV50", "airing-time": "_3pYTW", "description-wrapper": "glxlH", "title-hero":"dTamS", "title-hero-small":"_1AN7g"}
+        exports = {"button-special": "_1u_k9 _3Pqi-", "wrapper": "C6FJZ", "description": "_3XiTc", "sub-title-banner": "_1tNlk", "title-banner": "_1KV50", "airing-time": "_3pYTW", "description-wrapper": "glxlH", "title-hero": "dTamS", "title-hero-small": "_1AN7g"}
 
         data = ph.find(data, ('<article', '>'), '</article>', flags=0)[1]
         data = ph.findall(data, ('<section', '>'), '</section>', flags=0)
@@ -307,7 +307,7 @@ class MediasetPlay(CBaseHostClass):
             desc = ph.clean_html(ph.find(item, ('<div', '>', exports['description']), '</div>', flags=0)[1])
             title = ph.clean_html(ph.find(item, ('<div', '>', exports['button-special']), '</div>', flags=0)[1])
             if url and title:
-                subItems.append(MergeDicts(cItem, {'good_for_fav':True, 'category':nextCategory2, 'url':url, 'title':title, 'icon':sIcon, 'desc':desc}))
+                subItems.append(MergeDicts(cItem, {'good_for_fav': True, 'category': nextCategory2, 'url': url, 'title': title, 'icon': sIcon, 'desc': desc}))
 
             sectionItem = ph.rfindall(sectionItem[-1], '</div>', ('<a', '>'), flags=ph.END_S)
             for idx in range(1, len(sectionItem), 2):
@@ -335,45 +335,45 @@ class MediasetPlay(CBaseHostClass):
                 desc = []
                 desc.append(ph.clean_html(ph.find(item, ('<div', '>', exports['airing-time']), '</div>', flags=0)[1]))
                 desc.append(ph.clean_html(ph.find(item, ('<div', '>', exports['description-wrapper']), '</div>', flags=0)[1]))
-                params = {'good_for_fav':True, 'url':url, 'title':' - '.join(title), 'icon':icon, 'desc':'[/br]'.join(desc)}
+                params = {'good_for_fav': True, 'url': url, 'title': ' - '.join(title), 'icon': icon, 'desc': '[/br]'.join(desc)}
                 if '/diretta/' in url:
-                    subItems.append(MergeDicts(params, {'type':'video', 'is_live':True, 'desc':_('live')}))
+                    subItems.append(MergeDicts(params, {'type': 'video', 'is_live': True, 'desc': _('live')}))
                 elif '/video' in url:
-                    subItems.append(MergeDicts(params, {'type':'video'}))
+                    subItems.append(MergeDicts(params, {'type': 'video'}))
                 else:
-                    subItems.append(MergeDicts(cItem, params, {'category':nextCategory2}))
+                    subItems.append(MergeDicts(cItem, params, {'category': nextCategory2}))
             if len(subItems) == 1:
                 self.currList.extend(subItems)
             elif len(subItems) > 1:
-                self.addDir(MergeDicts(cItem, {'good_for_fav':False, 'category':'sub_items', 'title':sTitle, 'icon':sIcon, 'sub_items':subItems}))
+                self.addDir(MergeDicts(cItem, {'good_for_fav': False, 'category': 'sub_items', 'title': sTitle, 'icon': sIcon, 'sub_items': subItems}))
         
         if len(self.currList) == 1 and self.currList[0].get('category') == 'sub_items':
             self.currList = self.currList[0]['sub_items']
         
         tab = []
         category = cItem['category']
-        cItem = MergeDicts(cItem, {'good_for_fav':True, 'category':nextCategory1})
+        cItem = MergeDicts(cItem, {'good_for_fav': True, 'category': nextCategory1})
         if category == 'cat_movies':
-            tab = [{'title':'Film più visti', 'f_ref':'CWFILMTOPVIEWED'},
-                   {'title':'Commedia', 'f_ref':'CWFILMCOMEDY'},
-                   {'title':'Drammatico', 'f_ref':'CWFILMDRAMATIC'},
-                   {'title':'Thriller, Azione e Avventura', 'f_ref':'CWFILMACTION'},
-                   {'title':'Documentari', 'f_ref':'CWFILMDOCU'},]
+            tab = [{'title': 'Film più visti', 'f_ref': 'CWFILMTOPVIEWED'},
+                   {'title': 'Commedia', 'f_ref': 'CWFILMCOMEDY'},
+                   {'title': 'Drammatico', 'f_ref': 'CWFILMDRAMATIC'},
+                   {'title': 'Thriller, Azione e Avventura', 'f_ref': 'CWFILMACTION'},
+                   {'title': 'Documentari', 'f_ref': 'CWFILMDOCU'}, ]
         elif category == 'cat_series':
-            tab = [{'title':'Poliziesco', 'f_ref':'CWFICTIONPOLICE'},
-                   {'title':'Sentimentale', 'f_ref':'CWFICTIONSENTIMENTAL'},
-                   {'title':'Commedia', 'f_ref':'CWFICTIONCOMEDY'},
-                   {'title':'Thriller, Azione e Avventura', 'f_ref':'CWFICTIONACTION'},
-                   {'title':'Biografico', 'f_ref':'CWFICTIONBIOGRAPHICAL'},
-                   {'title':'Sit-Com', 'f_ref':'CWFICTIONSITCOM'},
-                   {'title':'Drammatico', 'f_ref':'CWFICTIONDRAMATIC'},
-                   {'title':'Avventura', 'f_ref':'CWFICTIONADVENTURE'},]
+            tab = [{'title': 'Poliziesco', 'f_ref': 'CWFICTIONPOLICE'},
+                   {'title': 'Sentimentale', 'f_ref': 'CWFICTIONSENTIMENTAL'},
+                   {'title': 'Commedia', 'f_ref': 'CWFICTIONCOMEDY'},
+                   {'title': 'Thriller, Azione e Avventura', 'f_ref': 'CWFICTIONACTION'},
+                   {'title': 'Biografico', 'f_ref': 'CWFICTIONBIOGRAPHICAL'},
+                   {'title': 'Sit-Com', 'f_ref': 'CWFICTIONSITCOM'},
+                   {'title': 'Drammatico', 'f_ref': 'CWFICTIONDRAMATIC'},
+                   {'title': 'Avventura', 'f_ref': 'CWFICTIONADVENTURE'}, ]
         self.listsTab(tab, cItem)
 
             
     def listCatalogItems(self, cItem, nextCategory):
         printDBG("MediasetPlay.listCatalogItems")
-        query = {'uxReference':cItem['f_ref'], 'platform':'pc'}
+        query = {'uxReference': cItem['f_ref'], 'platform': 'pc'}
         query.update(self.initData)
         url = self.API_BASE_URL + 'rec/cataloguelisting/v1.0?' + urllib.parse.urlencode(query)
 
@@ -387,10 +387,10 @@ class MediasetPlay(CBaseHostClass):
                 desc = item['description']
                 icon = item['thumbnails']['image_vertical-264x396']['url']
                 url = self.getFullUrl(item['mediasetprogram$pageUrl'])
-                self.addDir(MergeDicts(cItem, {'good_for_fav':True, 'category':nextCategory, 'title':title, 'url':url, 'icon':icon, 'desc':desc}))
+                self.addDir(MergeDicts(cItem, {'good_for_fav': True, 'category': nextCategory, 'title': title, 'url': url, 'icon': icon, 'desc': desc}))
 
             if data.get('hasMore'):
-                self.addDir(MergeDicts(cItem, {'title':_('Next page'), 'page':page + 1}))
+                self.addDir(MergeDicts(cItem, {'title': _('Next page'), 'page': page + 1}))
         except Exception:
             printExc()
 
@@ -420,11 +420,11 @@ class MediasetPlay(CBaseHostClass):
                 desc = [ph.clean_html(ph.find(item, ('<h3', '>'), '</h3>', flags=0)[1])]
                 desc.append(ph.clean_html(ph.find(item, ('<div', '>', exports['airing-time']), '</div>', flags=0)[1]))
                 desc.append(ph.clean_html(ph.find(item, ('<div', '>', exports['description-wrapper']), '</div>', flags=0)[1]))
-                subItems.append({'type':'video', 'good_for_fav':True, 'url':url, 'title':title, 'icon':icon, 'desc':'[/br]'.join(desc)})
+                subItems.append({'type': 'video', 'good_for_fav': True, 'url': url, 'title': title, 'icon': icon, 'desc': '[/br]'.join(desc)})
             if len(subItems) == 1:
                 self.currList.extend(subItems)
             elif len(subItems) > 1:
-                self.addDir(MergeDicts(cItem, {'good_for_fav':False, 'category':'sub_items', 'title':sTitle, 'sub_items':subItems}))
+                self.addDir(MergeDicts(cItem, {'good_for_fav': False, 'category': 'sub_items', 'title': sTitle, 'sub_items': subItems}))
         
         if len(self.currList) == 1 and self.currList[0].get('category') == 'sub_items':
             self.currList = self.currList[0]['sub_items']
@@ -436,14 +436,14 @@ class MediasetPlay(CBaseHostClass):
     def listSearchResult(self, cItem, searchPattern, searchType):
         self.initApi()
 
-        query = {'uxReference':'CWSEARCH%s' % searchType.upper(), 'query':searchPattern, 'platform':'pc'}
+        query = {'uxReference': 'CWSEARCH%s' % searchType.upper(), 'query': searchPattern, 'platform': 'pc'}
         query.update(self.initData)
 
         url = self.API_BASE_URL + 'rec/search/v1.0?' + urllib.parse.urlencode(query)
         if 'clip' == searchType:
             url += '&sort=Viewers=DESC'
 
-        cItem = MergeDicts(cItem, {'category':'list_items', 'url':url})
+        cItem = MergeDicts(cItem, {'category': 'list_items', 'url': url})
         self.listItems(cItem, 'video_mixed')
         
         #'CWSEARCHBRAND'
@@ -488,7 +488,7 @@ class MediasetPlay(CBaseHostClass):
                             f = 'DASH/MPD'
                         else:
                             continue
-                        linksTab.append({'name':f, 'url':strwithmeta(url, {'priv_type':f}), 'need_resolve': 1})
+                        linksTab.append({'name': f, 'url': strwithmeta(url, {'priv_type': f}), 'need_resolve': 1})
             except Exception:
                 printExc()
         else:
@@ -518,7 +518,7 @@ class MediasetPlay(CBaseHostClass):
                             continue
                         if url not in uniqueUrls:
                             uniqueUrls.add(url)
-                            linksTab.append({'name':'%s - %s' % (f[1], asset_type), 'url':strwithmeta(url, {'priv_type':f[1]}), 'need_resolve':f[2]})
+                            linksTab.append({'name': '%s - %s' % (f[1], asset_type), 'url': strwithmeta(url, {'priv_type': f[1]}), 'need_resolve': f[2]})
         if len(linksTab):
             self.cacheLinks[cItem['url']] = linksTab
 
@@ -555,7 +555,7 @@ class MediasetPlay(CBaseHostClass):
 
     #MAIN MENU
         if name == None:
-            self.listMain({'name':'category', 'type':'category'}, 'list_items')
+            self.listMain({'name': 'category', 'type': 'category'}, 'list_items')
 
         elif category == 'sub_items':
             self.listSubItems(self.currItem)
@@ -593,11 +593,11 @@ class MediasetPlay(CBaseHostClass):
     #SEARCH
         elif category in ["search", "search_next_page"]:
             cItem = dict(self.currItem)
-            cItem.update({'search_item':False, 'name':'category'}) 
+            cItem.update({'search_item': False, 'name': 'category'}) 
             self.listSearchResult(cItem, searchPattern, searchType)
     #HISTORIA SEARCH
         elif category == "search_history":
-            self.listsHistory({'name':'history', 'category': 'search'}, 'desc', _("Type: "))
+            self.listsHistory({'name': 'history', 'category': 'search'}, 'desc', _("Type: "))
         else:
             printExc()
 

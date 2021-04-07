@@ -23,10 +23,10 @@ def gettytul():
 class Del(CBaseHostClass):
 
     def __init__(self):
-        CBaseHostClass.__init__(self, {'history':'del.org', 'cookie':'del.org.cookie'})
+        CBaseHostClass.__init__(self, {'history': 'del.org', 'cookie': 'del.org.cookie'})
 
         self.HTTP_HEADER = self.cm.getDefaultHeader(browser='iphone_3_0')
-        self.defaultParams = {'header':self.HTTP_HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
+        self.defaultParams = {'header': self.HTTP_HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
 
         self.MAIN_URL = 'https://www.del.org/'
         self.MAIN_URL_2 = 'https://www.del-2.org/'
@@ -39,8 +39,8 @@ class Del(CBaseHostClass):
 
     def listMain(self, cItem):
         printDBG("Del.listMain")
-        MAIN_CAT_TAB = [{'category':'del', 'title': self.MAIN_URL, 'url':self.MAIN_URL, 'icon':self.DEFAULT_ICON_URL},
-                        {'category':'del2', 'title': self.MAIN_URL_2, 'url':self.MAIN_URL_2, 'icon':self.MAIN_URL_2 + 'images/background/logo.png'},]
+        MAIN_CAT_TAB = [{'category': 'del', 'title': self.MAIN_URL, 'url': self.MAIN_URL, 'icon': self.DEFAULT_ICON_URL},
+                        {'category': 'del2', 'title': self.MAIN_URL_2, 'url': self.MAIN_URL_2, 'icon': self.MAIN_URL_2 + 'images/background/logo.png'}, ]
         self.listsTab(MAIN_CAT_TAB, cItem)
 
     def del2Filters(self, cItem, nextCategory):
@@ -54,7 +54,7 @@ class Del(CBaseHostClass):
         for idx in range(1, len(data), 2):
             url = self.cm.getFullUrl(ph.getattr(data[idx - 1], 'value'), self.cm.meta['url'])
             title = self.cleanHtmlStr(data[idx])
-            self.addDir(MergeDicts(cItem, {'good_for_fav':True, 'category':nextCategory, 'title':title, 'url':url}))
+            self.addDir(MergeDicts(cItem, {'good_for_fav': True, 'category': nextCategory, 'title': title, 'url': url}))
 
     def listDel2(self, cItem):
         printDBG("Del.listDel2")
@@ -81,10 +81,10 @@ class Del(CBaseHostClass):
                     if t:
                         desc.append(t)
 
-                subItems.append({'good_for_fav':True, 'type':'video', 'title':title, 'url':url, 'icon':icon, 'desc':' | '.join(desc)})
+                subItems.append({'good_for_fav': True, 'type': 'video', 'title': title, 'url': url, 'icon': icon, 'desc': ' | '.join(desc)})
 
             if len(subItems):
-                self.addDir(MergeDicts(cItem, {'title':sTitle, 'category':'sub_items', 'sub_items':subItems}))
+                self.addDir(MergeDicts(cItem, {'title': sTitle, 'category': 'sub_items', 'sub_items': subItems}))
 
     def listDel(self, cItem):
         printDBG("Del.listDel")
@@ -108,10 +108,10 @@ class Del(CBaseHostClass):
                     desc.append(t)
             desc = ' | '.join(desc) + '[/br]' + self.cleanHtmlStr(ph.find(item, ('<p', '>'), '</p>', flags=0)[1])
 
-            self.addVideo({'good_for_fav':True, 'type':'video', 'title':title, 'url':url, 'icon':icon, 'desc':desc})
+            self.addVideo({'good_for_fav': True, 'type': 'video', 'title': title, 'url': url, 'icon': icon, 'desc': desc})
 
         if len(self.currList):
-            self.addDir(MergeDicts(cItem, {'title':_('Next page'), 'page':page + 1}))
+            self.addDir(MergeDicts(cItem, {'title': _('Next page'), 'page': page + 1}))
 
     def listSubItems(self, cItem):
         printDBG("Del.listSubItems")
@@ -139,17 +139,17 @@ class Del(CBaseHostClass):
                     hlsUrl = self.cm.getFullUrl(data['hls'], self.cm.meta['url'])
                     urlsTab = getDirectM3U8Playlist(hlsUrl, checkContent=True, sortWithMaxBitrate=999999999, mergeAltAudio=True)
                     if len(urlsTab):
-                        urlsTab.append({'name':'Variable M3U8/HLS', 'url':hlsUrl, 'need_resolve':0})
+                        urlsTab.append({'name': 'Variable M3U8/HLS', 'url': hlsUrl, 'need_resolve': 0})
 
                 # progressive links seem do not work why?
                 if False and data.get('progressive'):
                     mp4Url = self.cm.getFullUrl(data['progressive'], self.cm.meta['url'])
-                    urlsTab.append({'name':'progressive mp4', 'url':mp4Url, 'need_resolve':0})
+                    urlsTab.append({'name': 'progressive mp4', 'url': mp4Url, 'need_resolve': 0})
             except Exception:
                 printExc()
         else:
             urlParams = dict(self.defaultParams)
-            urlParams['header'] = MergeDicts(urlParams['header'], {'Referer':self.cm.meta['url']})
+            urlParams['header'] = MergeDicts(urlParams['header'], {'Referer': self.cm.meta['url']})
             urlParams['raw_post_data'] = True
             urlParams['use_new_session'] = True
 
@@ -158,7 +158,7 @@ class Del(CBaseHostClass):
             if len(playerData) == 6:
                 url = self.cm.getFullUrl('/videoplayer/playerhls.php?play=%s&key=%d&identifier=web&v5partner=%s&autoplay=true&event' % (playerData[1].strip(), int(time.time() * 1000), playerData[3].strip()), self.cm.meta['url'])
                 sts, data = self.getPage(url, urlParams)
-                urlParams['header'] = MergeDicts(urlParams['header'], {'Referer':self.cm.meta['url']})
+                urlParams['header'] = MergeDicts(urlParams['header'], {'Referer': self.cm.meta['url']})
 
                 url = self.cm.getFullUrl('/server/videoConfig.php?videoid=%s&partnerid=%s&language=%s&format=iphone' % (playerData[1].strip(), playerData[3].strip(), playerData[5].strip()[1:-1]), self.cm.meta['url'])
                 sts, data = self.getPage(url, urlParams)
@@ -200,7 +200,7 @@ class Del(CBaseHostClass):
 
     #MAIN MENU
         if name == None:
-            self.listMain({'name':'category', 'type':'category'})
+            self.listMain({'name': 'category', 'type': 'category'})
 
         elif category == 'del':
             self.listDel(self.currItem)

@@ -27,21 +27,21 @@ def gettytul():
 class TVProart(CBaseHostClass):
 
     def __init__(self):
-        CBaseHostClass.__init__(self, {'history':'TVProart', 'cookie':'tvproart.cookie'})
+        CBaseHostClass.__init__(self, {'history': 'TVProart', 'cookie': 'tvproart.cookie'})
         self.DEFAULT_ICON_URL = 'http://www.ostrowwlkp.info/images/firmy-i-instytucje/39/logo.jpg'
         self.MAIN_URL = 'http://tvproart.pl/'
         self.API_URL = self.getFullUrl('ajaxVod/')
         self.SEARCH_URL = self.getFullUrl('search?q=')
         
-        self.MAIN_CAT_TAB = [{'category':'categories', 'title': 'VOD'},
-                             {'category':'search', 'title': _('Search'), 'search_item':True},
-                             {'category':'search_history', 'title': _('Search history')}]
+        self.MAIN_CAT_TAB = [{'category': 'categories', 'title': 'VOD'},
+                             {'category': 'search', 'title': _('Search'), 'search_item': True},
+                             {'category': 'search_history', 'title': _('Search history')}]
         self.categories = {}
             
     def addNextPage(self, cItem, nextPage, page):
         if nextPage:
             params = dict(cItem)
-            params.update({'title':_('Next page'), 'page':page + 1})
+            params.update({'title': _('Next page'), 'page': page + 1})
             self.addDir(params)
         
     def listCategories(self, cItem, category):
@@ -60,7 +60,7 @@ class TVProart(CBaseHostClass):
         try:
             for item in self.categories['cats']:
                 params = dict(cItem)
-                params.update({'title':item['title'], 'id':item['id'], 'slug':item['slug'], 'icon':self.getFullUrl(item['image']), 'category':category})
+                params.update({'title': item['title'], 'id': item['id'], 'slug': item['slug'], 'icon': self.getFullUrl(item['image']), 'category': category})
                 self.addDir(params)
         except Exception:
             printExc()
@@ -85,7 +85,7 @@ class TVProart(CBaseHostClass):
                 date = item['date'].encode('utf-8')
                 if date not in title:
                     title += ' [%s]' % date
-                params = {'title':title, 'url':url, 'icon':icon, 'desc':date}
+                params = {'title': title, 'url': url, 'icon': icon, 'desc': date}
                 self.addVideo(params)
         except Exception:
             printExc()
@@ -115,7 +115,7 @@ class TVProart(CBaseHostClass):
             for item in data['content']['movies']:
                 tmp = item['href'].split('/')
                 url = self.API_URL + 'video?id={0}&slug={1}'.format(tmp[-2], tmp[-1])
-                params = {'title':item['text'], 'url':url}
+                params = {'title': item['text'], 'url': url}
                 self.addVideo(params)
         except Exception:
             printExc()
@@ -128,7 +128,7 @@ class TVProart(CBaseHostClass):
             return []
         try:
             data = byteify(json.loads(data))
-            urlTab.append({'name':'vod', 'url':data['content']['video']['movieFile'], 'need_resolve':0})
+            urlTab.append({'name': 'vod', 'url': data['content']['video']['movieFile'], 'need_resolve': 0})
         except Exception:
             pass
         return urlTab
@@ -137,7 +137,7 @@ class TVProart(CBaseHostClass):
         return cItem['url']
         
     def getLinksForFavourite(self, fav_data):
-        return self.getLinksForVideo({'url':fav_data})
+        return self.getLinksForVideo({'url': fav_data})
 
     def handleService(self, index, refresh=0, searchPattern='', searchType=''):
         printDBG('handleService start')
@@ -151,7 +151,7 @@ class TVProart(CBaseHostClass):
         
     #MAIN MENU
         if name == None:
-            self.listsTab(self.MAIN_CAT_TAB, {'name':'category'})
+            self.listsTab(self.MAIN_CAT_TAB, {'name': 'category'})
     #CATEGORIES
         elif category == 'categories':
             self.listCategories(self.currItem, 'category')
@@ -161,11 +161,11 @@ class TVProart(CBaseHostClass):
     #SEARCH
         elif category in ["search", "search_next_page"]:
             cItem = dict(self.currItem)
-            cItem.update({'search_item':False, 'name':'category'}) 
+            cItem.update({'search_item': False, 'name': 'category'}) 
             self.listSearchResult(cItem, searchPattern, searchType)
     #HISTORIA SEARCH
         elif category == "search_history":
-            self.listsHistory({'name':'history', 'category': 'search'}, 'desc', _("Type: "))
+            self.listsHistory({'name': 'history', 'category': 'search'}, 'desc', _("Type: "))
         else:
             printExc()
         

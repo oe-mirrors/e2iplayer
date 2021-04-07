@@ -32,12 +32,12 @@ class WebCameraApi(CBaseHostClass):
         CBaseHostClass.__init__(self)
         self.MAIN_URL = 'https://www.webcamera.pl/'
         self.DEFAULT_ICON_URL = 'http://static.webcamera.pl/webcamera/img/loader-min.png'
-        self.HEADER = {'User-Agent': 'Mozilla/5.0 (X11; Ubuntu; Linux i686; rv:21.0) Gecko/20100101 Firefox/21.0', 'Referer':self.getMainUrl(), 'Accept': 'text/html'}
+        self.HEADER = {'User-Agent': 'Mozilla/5.0 (X11; Ubuntu; Linux i686; rv:21.0) Gecko/20100101 Firefox/21.0', 'Referer': self.getMainUrl(), 'Accept': 'text/html'}
         self.AJAX_HEADER = dict(self.HEADER)
         self.AJAX_HEADER.update({'X-Requested-With': 'XMLHttpRequest'})
         
         self.COOKIE_FILE = GetCookieDir('webcamerapl')
-        self.defaultParams = {'with_metadata':True, 'header':self.HEADER, 'save_cookie': True, 'load_cookie': True, 'cookiefile': self.COOKIE_FILE}
+        self.defaultParams = {'with_metadata': True, 'header': self.HEADER, 'save_cookie': True, 'load_cookie': True, 'cookiefile': self.COOKIE_FILE}
         self.cacheList = {}
         
     def getFullIconUrl(self, url, baseUrl=None):
@@ -66,7 +66,7 @@ class WebCameraApi(CBaseHostClass):
             category = cItem.get('priv_category', '')
             if category == '':
                 params = dict(cItem)
-                params.update({'title':_('main'), 'priv_category':'list_items'})
+                params.update({'title': _('main'), 'priv_category': 'list_items'})
                 self.addDir(params)
                 
                 sts, data = self.getPage(self.getMainUrl())
@@ -90,12 +90,12 @@ class WebCameraApi(CBaseHostClass):
                         url = self.getFullUrl(self.cm.ph.getSearchGroups(it, """href=['"]([^'^"]+?)['"]""")[0])
                         if 'kategoria' not in url:
                             continue
-                        subCats.append({'title':self._cleanHtmlStr(it), 'url':url, 'icon':catIcon, catKey:'list_videos'})
+                        subCats.append({'title': self._cleanHtmlStr(it), 'url': url, 'icon': catIcon, catKey: 'list_videos'})
 
                     if catTitle == '':
                         continue
                     params = dict(cItem)
-                    params.update({'title':catTitle, 'url':catUrl, 'icon':catIcon})
+                    params.update({'title': catTitle, 'url': catUrl, 'icon': catIcon})
                     if len(subCats):
                         self.webcameraSubCats[catUrl] = subCats
                         params[catKey] = 'sub_cat'
@@ -147,7 +147,7 @@ class WebCameraApi(CBaseHostClass):
                         if 'instagramie' in title:
                             continue
                         params = dict(cItem)
-                        params.update({'title':title, 'url':self.getFullUrl(url), 'icon':self.getFullIconUrl(icon), 'desc': desc})
+                        params.update({'title': title, 'url': self.getFullUrl(url), 'icon': self.getFullIconUrl(icon), 'desc': desc})
                         self.addVideo(params)
                         vidCount += 1
 
@@ -174,7 +174,7 @@ class WebCameraApi(CBaseHostClass):
 
                     if sts and data.startswith('{') and '"last":true' not in data: 
                         params = dict(cItem)
-                        params.update({'title':_('Next page'), 'url':url, 'page':page + 1})
+                        params.update({'title': _('Next page'), 'url': url, 'page': page + 1})
                         self.addDir(params)
         except Exception:
             printExc()
@@ -215,7 +215,7 @@ class WebCameraApi(CBaseHostClass):
                             continue # not handled at now
                         params = dict(cItem)
                         params.pop('c_tree', None)
-                        params.update({'priv_category':nextCategory, 'title':title, 'url':url, 'icon':icon})
+                        params.update({'priv_category': nextCategory, 'title': title, 'url': url, 'icon': icon})
                         if url.endswith('/tv'):
                             self.addVideo(params)
                         else:
@@ -223,9 +223,9 @@ class WebCameraApi(CBaseHostClass):
                 elif len(item['list']) == 1 and title != '':
                     obj = item['list'][0]
                     if url != '' and 'list' in obj:
-                        obj['list'].insert(0, {'dat':'<a href="%s">%s</a>' % (url, _('--All--'))})
+                        obj['list'].insert(0, {'dat': '<a href="%s">%s</a>' % (url, _('--All--'))})
                     params = dict(cItem)
-                    params.update({'c_tree':obj, 'title':title, 'url':url, 'icon':icon})
+                    params.update({'c_tree': obj, 'title': title, 'url': url, 'icon': icon})
                     self.addDir(params)
         except Exception:
             printExc()

@@ -55,7 +55,7 @@ class IPTVChoiceBoxWidget(Screen):
                 )
         return skin
             
-    def __init__(self, session, params={'width':300, 'height':300, 'title':'', 'current_idx':0, 'options':[]}):
+    def __init__(self, session, params={'width': 300, 'height': 300, 'title': '', 'current_idx': 0, 'options': []}):
         self.params = params
         self.skin = self.__prepareSkin()
         Screen.__init__(self, session)

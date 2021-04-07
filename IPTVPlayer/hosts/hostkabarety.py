@@ -25,24 +25,24 @@ def gettytul():
 class Kabarety(CBaseHostClass):
  
     def __init__(self):
-        CBaseHostClass.__init__(self, {'history':'kabaret.tworzymyhistorie.pl', 'cookie':'kabarettworzymyhistoriepl.cookie'})
+        CBaseHostClass.__init__(self, {'history': 'kabaret.tworzymyhistorie.pl', 'cookie': 'kabarettworzymyhistoriepl.cookie'})
         self.DEFAULT_ICON_URL = 'http://m.ocdn.eu/_m/3db4aef7dfc39ec1230c837335a6ddfe,10,19,0.jpg'
         self.USER_AGENT = 'User-Agent=Mozilla/5.0 (Windows NT 6.1; WOW64; rv:40.0) Gecko/20100101 Firefox/40.0'
-        self.HEADER = {'User-Agent': self.USER_AGENT, 'DNT':'1', 'Accept': 'text/html'}
+        self.HEADER = {'User-Agent': self.USER_AGENT, 'DNT': '1', 'Accept': 'text/html'}
         self.AJAX_HEADER = dict(self.HEADER)
         self.AJAX_HEADER.update({'X-Requested-With': 'XMLHttpRequest'})
         self.MAIN_URL = 'http://kabaret.tworzymyhistorie.pl/'
         self.cacheLinks = {}
         self.cacheFilters = {}
         self.cacheFiltersKeys = []
-        self.defaultParams = {'header':self.HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
+        self.defaultParams = {'header': self.HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
     
-        self.MAIN_CAT_TAB = [{'category':'list_filters', 'title': _('Main'), 'url':self.getFullUrl('kabarety/')},
-                             {'category':'list_popular', 'title': _('Popular'), 'url':self.getFullUrl('kabarety/')},
-                             {'category':'list_all', 'title': _('All'), 'url':self.getFullUrl('kabarety/')},
+        self.MAIN_CAT_TAB = [{'category': 'list_filters', 'title': _('Main'), 'url': self.getFullUrl('kabarety/')},
+                             {'category': 'list_popular', 'title': _('Popular'), 'url': self.getFullUrl('kabarety/')},
+                             {'category': 'list_all', 'title': _('All'), 'url': self.getFullUrl('kabarety/')},
 
-                             {'category': 'search', 'title': _('Search'), 'search_item': True,},
-                             {'category': 'search_history', 'title': _('Search history'),} 
+                             {'category': 'search', 'title': _('Search'), 'search_item': True, },
+                             {'category': 'search_history', 'title': _('Search history'), } 
                             ]
     
     def getPage(self, baseUrl, addParams={}, post_data=None):
@@ -55,7 +55,7 @@ class Kabarety(CBaseHostClass):
             else:
                 return urllib.parse.urljoin(baseUrl, url)
             
-        addParams['cloudflare_params'] = {'domain':self.up.getDomain(baseUrl), 'cookie_file':self.COOKIE_FILE, 'User-Agent':self.USER_AGENT, 'full_url_handle':_getFullUrl}
+        addParams['cloudflare_params'] = {'domain': self.up.getDomain(baseUrl), 'cookie_file': self.COOKIE_FILE, 'User-Agent': self.USER_AGENT, 'full_url_handle': _getFullUrl}
         sts, data = self.cm.getPageCFProtection(baseUrl, addParams, post_data)
         return sts, data
         
@@ -84,11 +84,11 @@ class Kabarety(CBaseHostClass):
                 if value == '':
                     continue
                 title = self.cleanHtmlStr(item)
-                self.cacheFilters[key].append({'title':title.title(), key:value})
+                self.cacheFilters[key].append({'title': title.title(), key: value})
                 
             if len(self.cacheFilters[key]):
                 if addAll:
-                    self.cacheFilters[key].insert(0, {'title':_('All')})
+                    self.cacheFilters[key].insert(0, {'title': _('All')})
                 self.cacheFiltersKeys.append(key)
         
         # type
@@ -106,9 +106,9 @@ class Kabarety(CBaseHostClass):
         for idx in range(orderLen):
             item = deepcopy(self.cacheFilters['f_sort'][idx])
             # desc
-            self.cacheFilters['f_sort'][idx].update({'title':'\xe2\x86\x93 ' + self.cacheFilters['f_sort'][idx]['title'], 'f_order':'desc'})
+            self.cacheFilters['f_sort'][idx].update({'title': '\xe2\x86\x93 ' + self.cacheFilters['f_sort'][idx]['title'], 'f_order': 'desc'})
             # asc
-            item.update({'title': '\xe2\x86\x91 ' + item['title'], 'f_order':'asc'})
+            item.update({'title': '\xe2\x86\x91 ' + item['title'], 'f_order': 'asc'})
             self.cacheFilters['f_sort'].append(item)
         
         printDBG(self.cacheFilters)
@@ -150,7 +150,7 @@ class Kabarety(CBaseHostClass):
                 continue
             title = self.cleanHtmlStr(item)
             params = dict(cItem)
-            params.update({'good_for_fav': True, 'title':title, 'url':url})
+            params.update({'good_for_fav': True, 'title': title, 'url': url})
             params['category'] = nextCategory
             self.addDir(params)
         
@@ -176,7 +176,7 @@ class Kabarety(CBaseHostClass):
         HEADER = dict(self.AJAX_HEADER)
         HEADER['Referer'] = cItem['url']
         
-        sts, data = self.getPage(self.getFullUrl(baseUrl), {'header':HEADER})
+        sts, data = self.getPage(self.getFullUrl(baseUrl), {'header': HEADER})
         if not sts:
             return
         
@@ -193,19 +193,19 @@ class Kabarety(CBaseHostClass):
             title = self.cleanHtmlStr(item)
             
             params = dict(cItem)
-            params.update({'good_for_fav': True, 'title':title, 'url':url, 'desc':'', 'icon':icon})
+            params.update({'good_for_fav': True, 'title': title, 'url': url, 'desc': '', 'icon': icon})
             self.addVideo(params)
             num += 1
         
         if num >= perPage:
             params = dict(cItem)
-            params.update({'title':_('Next page'), 'page':page + 1})
+            params.update({'title': _('Next page'), 'page': page + 1})
             self.addDir(params)
 
     def listSearchResult(self, cItem, searchPattern, searchType):
         printDBG("Kabarety.listSearchResult cItem[%s], searchPattern[%s] searchType[%s]" % (cItem, searchPattern, searchType))
         
-        sts, data = self.getPage(self.getFullUrl('szukaj'), post_data={'szukaj':searchPattern})
+        sts, data = self.getPage(self.getFullUrl('szukaj'), post_data={'szukaj': searchPattern})
         if not sts:
             return
         
@@ -232,7 +232,7 @@ class Kabarety(CBaseHostClass):
             title = self.cleanHtmlStr(item)
             
             params = dict(cItem)
-            params.update({'good_for_fav': True, 'title':title, 'url':url, 'desc':'', 'icon':icon})
+            params.update({'good_for_fav': True, 'title': title, 'url': url, 'desc': '', 'icon': icon})
             if searchType in ['sketches', 'interviews']: 
                 self.addVideo(params)
             else:
@@ -263,7 +263,7 @@ class Kabarety(CBaseHostClass):
                 HEADER['Referer'] = cItem['url']
                 
                 url = self.getFullUrl('index/exec/load.php?tod=vidplay&name=' + videoId)
-                sts, data = self.getPage(url, {'header':HEADER})
+                sts, data = self.getPage(url, {'header': HEADER})
                 if sts:
                     videoUrl = self.cm.ph.getSearchGroups(data, '''<iframe[^>]+?src=['"](https?://[^"^']+?)['"]''', 1, True)[0]
                     if self.cm.isValidUrl(videoUrl):
@@ -314,7 +314,7 @@ class Kabarety(CBaseHostClass):
     #MAIN MENU
         if name == None:
             self.cacheLinks = {}
-            self.listsTab(self.MAIN_CAT_TAB, {'name':'category'})
+            self.listsTab(self.MAIN_CAT_TAB, {'name': 'category'})
         elif category == 'list_popular':
             self.listCategory(self.currItem, 0, 'list_filters')
         elif category == 'list_all':
@@ -326,11 +326,11 @@ class Kabarety(CBaseHostClass):
     #SEARCH
         elif category in ["search", "search_next_page"]:
             cItem = dict(self.currItem)
-            cItem.update({'search_item':False, 'name':'category'}) 
+            cItem.update({'search_item': False, 'name': 'category'}) 
             self.listSearchResult(cItem, searchPattern, searchType)
     #HISTORIA SEARCH
         elif category == "search_history":
-            self.listsHistory({'name':'history', 'category': 'search'}, 'desc', _("Type: "))
+            self.listsHistory({'name': 'history', 'category': 'search'}, 'desc', _("Type: "))
         else:
             printExc()
         

@@ -50,14 +50,14 @@ class XrysoiSE(CBaseHostClass):
     MAIN_URL = 'https://xrysoi.tv/'
     SEARCH_SUFFIX = '?s='
     
-    MAIN_CAT_TAB = [{'category':'movies', 'mode':'movies', 'title': 'Ταινιες', 'url':'', 'icon':''},
-                    {'category':'list_items', 'mode':'series', 'title': 'Ξένες σειρές', 'url':MAIN_URL + 'category/ξένες-σειρές/', 'icon':''},
+    MAIN_CAT_TAB = [{'category': 'movies', 'mode': 'movies', 'title': 'Ταινιες', 'url': '', 'icon': ''},
+                    {'category': 'list_items', 'mode': 'series', 'title': 'Ξένες σειρές', 'url': MAIN_URL + 'category/ξένες-σειρές/', 'icon': ''},
                     #{'category':'list_items',     'mode':'collection', 'title': 'Συλλογες',     'url':MAIN_URL + 'category/collection/',      'icon':''},
-                    {'category':'search', 'title': _('Search'), 'search_item':True},
-                    {'category':'search_history', 'title': _('Search history')}]
+                    {'category': 'search', 'title': _('Search'), 'search_item': True},
+                    {'category': 'search_history', 'title': _('Search history')}]
  
     def __init__(self):
-        CBaseHostClass.__init__(self, {'history':'XrysoiSE.tv', 'cookie':'XrysoiSEtv.cookie'})
+        CBaseHostClass.__init__(self, {'history': 'XrysoiSE.tv', 'cookie': 'XrysoiSEtv.cookie'})
         self.DEFAULT_ICON_URL = self.MAIN_URL + 'wp-content/uploads/2015/03/logo-GM.png'
         self.defaultParams = {'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
         self.cacheFilters = {}
@@ -93,12 +93,12 @@ class XrysoiSE(CBaseHostClass):
         if not sts:
             return
 
-        moviesTab = [{'title':'2019', 'url':self._getFullUrl('category/tainiesonline/2019/')},
-                     {'title':'2018', 'url':self._getFullUrl('category/tainiesonline/2018/')},
-                     {'title':'2017', 'url':self._getFullUrl('category/tainiesonline/2017/')},
-                     {'title':'2016', 'url':self._getFullUrl('category/2016/')},
-                     {'title':'2013-2015', 'url':self._getFullUrl('category/new-good/')},
-                     {'title':'Ελληνικές Ταινίες', 'url':self._getFullUrl('category/ελλ-ταινίες/')}]
+        moviesTab = [{'title': '2019', 'url': self._getFullUrl('category/tainiesonline/2019/')},
+                     {'title': '2018', 'url': self._getFullUrl('category/tainiesonline/2018/')},
+                     {'title': '2017', 'url': self._getFullUrl('category/tainiesonline/2017/')},
+                     {'title': '2016', 'url': self._getFullUrl('category/2016/')},
+                     {'title': '2013-2015', 'url': self._getFullUrl('category/new-good/')},
+                     {'title': 'Ελληνικές Ταινίες', 'url': self._getFullUrl('category/ελλ-ταινίες/')}]
         tmp = self.cm.ph.getDataBeetwenMarkers(data, '>Ταινιες<', '</ul>', False)[1]
         tmp = re.compile('<a[^>]*?href="([^"]+?)"[^>]*?>([^<]+?)<').findall(tmp)
         for item in tmp:
@@ -106,11 +106,11 @@ class XrysoiSE(CBaseHostClass):
                 continue # at now we are not able to handle colletion
             if item[0].endswith('προσεχώς/'):
                 continue # soon, so there is only trailer link available
-            moviesTab.append({'title':self.cleanHtmlStr(item[1]), 'url':self._getFullUrl(item[0])})
+            moviesTab.append({'title': self.cleanHtmlStr(item[1]), 'url': self._getFullUrl(item[0])})
 
-        moviesTab.append({'title': 'Κινούμενα Σχέδια (με μετάφραση)', 'url':self._getFullUrl('category/κιν-σχέδια/')})
-        moviesTab.append({'title': 'Κινούμενα Σχέδια (με υπότιτλους)', 'url':self._getFullUrl('category/κιν-σχέδια-subs/')})
-        moviesTab.append({'title': 'Anime Movies', 'url':self._getFullUrl('category/animemovies/')})
+        moviesTab.append({'title': 'Κινούμενα Σχέδια (με μετάφραση)', 'url': self._getFullUrl('category/κιν-σχέδια/')})
+        moviesTab.append({'title': 'Κινούμενα Σχέδια (με υπότιτλους)', 'url': self._getFullUrl('category/κιν-σχέδια-subs/')})
+        moviesTab.append({'title': 'Anime Movies', 'url': self._getFullUrl('category/animemovies/')})
         self.cacheFilters['movies'] = moviesTab
         
     def listMoviesCategory(self, cItem, nextCategory):
@@ -153,11 +153,11 @@ class XrysoiSE(CBaseHostClass):
             #    if '-collection' in url: continue
             if url.startswith('http'):
                 params = dict(cItem)
-                params.update({'category':nextCategory, 'good_for_fav': True, 'title':title, 'url':url, 'icon':icon})
+                params.update({'category': nextCategory, 'good_for_fav': True, 'title': title, 'url': url, 'icon': icon})
                 self.addDir(params)
         if nextPage:
             params = dict(cItem)
-            params.update({'title':_("Next page"), 'page':page + 1})
+            params.update({'title': _("Next page"), 'page': page + 1})
             self.addDir(params)
             
     def exploreItem(self, cItem):
@@ -182,7 +182,7 @@ class XrysoiSE(CBaseHostClass):
                 params = dict(cItem)
                 params['title'] = 'TRAILER'
                 params['mode'] = 'trailer'
-                params['links'] = [{'name':'TRAILER', 'url':trailer, 'need_resolve':1}]
+                params['links'] = [{'name': 'TRAILER', 'url': trailer, 'need_resolve': 1}]
                 params['desc'] = desc
                 self.addVideo(params)
         
@@ -223,10 +223,10 @@ class XrysoiSE(CBaseHostClass):
                 for itemUrl in linksData:
                     if 1 != self.up.checkHostSupport(itemUrl):
                         continue 
-                    links.append({'name':self.up.getHostName(itemUrl), 'url':itemUrl, 'need_resolve':1})
+                    links.append({'name': self.up.getHostName(itemUrl), 'url': itemUrl, 'need_resolve': 1})
                 if len(links):
                     params = dict(cItem)
-                    params.update({'title':itemTitle, 'mode':mode, 'links':links, 'desc':desc})
+                    params.update({'title': itemTitle, 'mode': mode, 'links': links, 'desc': desc})
                     self.addVideo(params)
         elif '>Season' in linksData or '>Σεζόν' in linksData:
             if '>Season' in linksData:
@@ -257,13 +257,13 @@ class XrysoiSE(CBaseHostClass):
                     linksID = '-s{0}e{1}'.format(seasonID, eID)
                     if linksID not in eLinks:
                         eLinks[linksID] = []
-                        episodes.append({'linksID':linksID, 'episode':eID, 'season':seasonID})
-                    eLinks[linksID].append({'name':self.up.getHostName(eUrl), 'url':eUrl, 'need_resolve':1})
+                        episodes.append({'linksID': linksID, 'episode': eID, 'season': seasonID})
+                    eLinks[linksID].append({'name': self.up.getHostName(eUrl), 'url': eUrl, 'need_resolve': 1})
             for item in episodes:
                 linksID = item['linksID']
                 if len(eLinks[linksID]):
                     params = dict(cItem)
-                    params.update({'title':title + linksID, 'mode':mode, 'episode':item['episode'], 'season':item['season'], 'links':eLinks[linksID], 'desc':desc})
+                    params.update({'title': title + linksID, 'mode': mode, 'episode': item['episode'], 'season': item['season'], 'links': eLinks[linksID], 'desc': desc})
                     self.addVideo(params)
         else:
             links = self.getLinksForMovie(linksData)
@@ -288,7 +288,7 @@ class XrysoiSE(CBaseHostClass):
             if url.startswith('//'):
                 url += 'http'
             if url.startswith('http'):
-                urlTab.append({'name':title + ': ' + name, 'url':url, 'need_resolve':1})
+                urlTab.append({'name': title + ': ' + name, 'url': url, 'need_resolve': 1})
         return urlTab
 
     def listSearchResult(self, cItem, searchPattern, searchType):
@@ -337,13 +337,13 @@ class XrysoiSE(CBaseHostClass):
             icon = self.cm.ph.getSearchGroups(data, '<meta[^>]*?property="og:image"[^>]*?content="(http[^"]+?)"')[0]
             title = self.cm.ph.getSearchGroups(data, '<meta[^>]*?property="og:title"[^>]*?content="([^"]+?)"')[0]
             desc = self.cm.ph.getSearchGroups(data, '<meta[^>]*?property="og:description"[^>]*?content="([^"]+?)"')[0]
-            return [{'title':self.cleanHtmlStr(title), 'text': self.cleanHtmlStr(desc), 'images':[{'title':'', 'url':self._getFullUrl(icon)}], 'other_info':{}}]
+            return [{'title': self.cleanHtmlStr(title), 'text': self.cleanHtmlStr(desc), 'images': [{'title': '', 'url': self._getFullUrl(icon)}], 'other_info': {}}]
         else:
              return retTab
         
     def getFavouriteData(self, cItem):
         printDBG('XrysoiSE.getFavouriteData')
-        params = {'type':cItem['type'], 'category':cItem.get('category', ''), 'title':cItem['title'], 'url':cItem['url'], 'desc':cItem.get('desc', ''), 'icon':cItem['icon']}
+        params = {'type': cItem['type'], 'category': cItem.get('category', ''), 'title': cItem['title'], 'url': cItem['url'], 'desc': cItem.get('desc', ''), 'icon': cItem['icon']}
         return json.dumps(params) 
         
     def setInitListFromFavouriteItem(self, fav_data):
@@ -372,7 +372,7 @@ class XrysoiSE(CBaseHostClass):
         
     #MAIN MENU
         if name == None:
-            self.listsTab(self.MAIN_CAT_TAB, {'name':'category'})
+            self.listsTab(self.MAIN_CAT_TAB, {'name': 'category'})
         elif category == 'movies':
             self.listMoviesCategory(self.currItem, 'list_items')
         elif category == 'list_items':
@@ -383,11 +383,11 @@ class XrysoiSE(CBaseHostClass):
     #SEARCH
         elif category in ["search", "search_next_page"]:
             cItem = dict(self.currItem)
-            cItem.update({'search_item':False, 'name':'category'}) 
+            cItem.update({'search_item': False, 'name': 'category'}) 
             self.listSearchResult(cItem, searchPattern, searchType)
     #HISTORIA SEARCH
         elif category == "search_history":
-            self.listsHistory({'name':'history', 'category': 'search'}, 'desc', _("Type: "))
+            self.listsHistory({'name': 'history', 'category': 'search'}, 'desc', _("Type: "))
         else:
             printExc()
         

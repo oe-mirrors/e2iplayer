@@ -368,10 +368,10 @@ _signals = [Clamped, DivisionByZero, Inexact, Overflow, Rounded,
            Underflow, InvalidOperation, Subnormal]
 
 # Map conditions (per the spec) to signals
-_condition_map = {ConversionSyntax:InvalidOperation,
-                  DivisionImpossible:InvalidOperation,
-                  DivisionUndefined:InvalidOperation,
-                  InvalidContext:InvalidOperation}
+_condition_map = {ConversionSyntax: InvalidOperation,
+                  DivisionImpossible: InvalidOperation,
+                  DivisionUndefined: InvalidOperation,
+                  InvalidContext: InvalidOperation}
 
 ##### Context Functions ##################################################
 

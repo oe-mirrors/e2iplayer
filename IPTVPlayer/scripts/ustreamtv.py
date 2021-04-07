@@ -59,7 +59,7 @@ def getLink(width, mediaId, referer, userAgent):
     apiUrl = WS_URL.format(randint(0, 0xffffff), mediaId, 'channel', 'lp-live') + '/1/ustream'
     url = apiUrl + '?' + urllib.parse.urlencode([('media', mediaId), ('referrer', referer), ('appVersion', 2), ('application', 'channel'), ('rsid', rsid), ('appId', 11), ('rpin', rpin), ('type', 'viewer')])
     
-    params = {'Referer':referer, 'User-Agent':userAgent}
+    params = {'Referer': referer, 'User-Agent': userAgent}
     sts, data = getPage(url, params)
     if not sts:
         return ''
@@ -110,7 +110,7 @@ if __name__ == "__main__":
                 printDBG("Refreshing....")
                 tm = str(time.time())
                 url = refreshUrl + "&_=" + tm + "&callback=?"
-                getPage(url, {'Referer':referer, 'User-Agent':userAgent})
+                getPage(url, {'Referer': referer, 'User-Agent': userAgent})
                 time.sleep(1)
     except Exception:
         printExc()

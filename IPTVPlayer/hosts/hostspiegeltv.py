@@ -39,17 +39,17 @@ def gettytul():
 class SpiegelTv(CBaseHostClass):
     
     def __init__(self):
-        CBaseHostClass.__init__(self, {'history':'spiegel.tv', 'cookie':'spiegel.tv.cookie'})
+        CBaseHostClass.__init__(self, {'history': 'spiegel.tv', 'cookie': 'spiegel.tv.cookie'})
         self.USER_AGENT = 'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:40.0) Gecko/20100101 Firefox/40.0'
         self.MAIN_URL = 'http://www.spiegel.tv/'
         self.DEFAULT_ICON_URL = 'https://images-na.ssl-images-amazon.com/images/I/31bnL4xLAkL.png'
-        self.HTTP_HEADER = {'User-Agent': self.USER_AGENT, 'DNT':'1', 'Accept': 'text/html', 'Accept-Encoding':'gzip, deflate', 'Referer':self.getMainUrl(), 'Origin':self.getMainUrl()}
+        self.HTTP_HEADER = {'User-Agent': self.USER_AGENT, 'DNT': '1', 'Accept': 'text/html', 'Accept-Encoding': 'gzip, deflate', 'Referer': self.getMainUrl(), 'Origin': self.getMainUrl()}
         self.AJAX_HEADER = dict(self.HTTP_HEADER)
-        self.AJAX_HEADER.update({'X-Requested-With': 'XMLHttpRequest', 'Accept-Encoding':'gzip, deflate', 'Content-Type':'application/x-www-form-urlencoded; charset=UTF-8', 'Accept':'application/json, text/javascript, */*; q=0.01'})
+        self.AJAX_HEADER.update({'X-Requested-With': 'XMLHttpRequest', 'Accept-Encoding': 'gzip, deflate', 'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8', 'Accept': 'application/json, text/javascript, */*; q=0.01'})
         
         self.cacheLinks = {}
-        self.defaultParams = {'header':self.HTTP_HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
-        self.oneconfig = {'client_id':'748'}
+        self.defaultParams = {'header': self.HTTP_HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
+        self.oneconfig = {'client_id': '748'}
 
     def getPage(self, baseUrl, addParams={}, post_data=None):
         if addParams == {}:
@@ -74,11 +74,11 @@ class SpiegelTv(CBaseHostClass):
                     self.listCategories(params, 'list_items')
                 except Exception:
                     printExc()
-        MAIN_CAT_TAB = [{'category':'search', 'title': _('Search'), 'search_item':True}, 
-                        {'category':'search_history', 'title': _('Search history')},]
+        MAIN_CAT_TAB = [{'category': 'search', 'title': _('Search'), 'search_item': True}, 
+                        {'category': 'search_history', 'title': _('Search history')}, ]
                         
         params = dict(cItem)
-        params.update({'type':'category', 'good_for_fav':False, 'category':'list_main_items', 'title':_('Main'), 'url':self.getMainUrl()})
+        params.update({'type': 'category', 'good_for_fav': False, 'category': 'list_main_items', 'title': _('Main'), 'url': self.getMainUrl()})
         self.currList.insert(0, params)
         self.listsTab(MAIN_CAT_TAB, cItem)
         
@@ -91,16 +91,16 @@ class SpiegelTv(CBaseHostClass):
                 url = self.getFullUrl(self.cm.ph.getSearchGroups(item['dat'], '''href=['"]([^'^"]+?)['"]''')[0])
                 if 'livestreams' in url:
                         params = dict(cItem)
-                        params.update({'good_for_fav':False, 'category':nextCategory, 'title':title, 'url':url})
+                        params.update({'good_for_fav': False, 'category': nextCategory, 'title': title, 'url': url})
                         self.addDir(params)
                 elif 'list' not in item:
                     if self.cm.isValidUrl(url) and title != '':
                         params = dict(cItem)
-                        params.update({'good_for_fav':False, 'category':nextCategory, 'title':title, 'url':url})
+                        params.update({'good_for_fav': False, 'category': nextCategory, 'title': title, 'url': url})
                         self.addDir(params)
                 elif len(item['list']) == 1 and title != '':
                     params = dict(cItem)
-                    params.update({'good_for_fav':False, 'c_tree':item['list'][0], 'title':title, 'url':url})
+                    params.update({'good_for_fav': False, 'c_tree': item['list'][0], 'title': title, 'url': url})
                     self.addDir(params)
         except Exception:
             printExc()
@@ -119,7 +119,7 @@ class SpiegelTv(CBaseHostClass):
             param = self.cm.ph.getSearchGroups(item, '''data\-navigateparam=['"]([^'^"]+?)['"]''')[0]
             url = self.getFullUrl('/%s/%s' % (method, param))
             params = dict(cItem)
-            params.update({'good_for_fav':True, 'category':nextCategory, 'title':title, 'url':url, 'icon':icon, 'f_method':method, 'f_param':param})
+            params.update({'good_for_fav': True, 'category': nextCategory, 'title': title, 'url': url, 'icon': icon, 'f_method': method, 'f_param': param})
             self.addDir(params)
             
     def _fillOneConfig(self, cItem, data=None):
@@ -148,7 +148,7 @@ class SpiegelTv(CBaseHostClass):
             
             urlParams = dict(self.defaultParams)
             urlParams['header'] = dict(self.AJAX_HEADER)
-            urlParams['header'].update({'Referer':cItem['url'], 'X-Request-Enable-Auth-Fallback':'1'})
+            urlParams['header'].update({'Referer': cItem['url'], 'X-Request-Enable-Auth-Fallback': '1'})
             
             post_data = {'nxp_devh': deviceId,
                          'nxp_userh': '',
@@ -196,7 +196,7 @@ class SpiegelTv(CBaseHostClass):
             
             urlParams = dict(self.defaultParams)
             urlParams['header'] = dict(self.AJAX_HEADER)
-            urlParams['header'].update({'Referer':cItem['url'], 'X-Request-Enable-Auth-Fallback':'1', 'X-Request-CID':cid, 'X-Request-Token':requestToken})
+            urlParams['header'].update({'Referer': cItem['url'], 'X-Request-Enable-Auth-Fallback': '1', 'X-Request-CID': cid, 'X-Request-Token': requestToken})
             post_data = {'additionalfields': 'language,channel,actors,studio,licenseby,slug,fileversion,subtitle,teaser,description,releasedate',
                          'addInteractionOptions': '1',
                          'addStatusDetails': '1',
@@ -207,7 +207,7 @@ class SpiegelTv(CBaseHostClass):
                          'addHotSpots': '1',
                          'addBumpers': '1',
                          'captionFormat': 'data',
-                         'addItemData': '1',}
+                         'addItemData': '1', }
             
             url = 'https://api.nexx.cloud/v3/%s/playlists/%s/%s' % (self.oneconfig['client_id'], op, playlistId)
             sts, data = self.getPage(url, urlParams, post_data)
@@ -222,7 +222,7 @@ class SpiegelTv(CBaseHostClass):
                 desc.append(self.cleanHtmlStr(item['general']['subtitle']))
                 desc.append(self.cleanHtmlStr(item['general']['teaser']))
                 desc.append(self.cleanHtmlStr(item['general']['description']))
-                params = {'good_for_fav':True, 'title':title, 'url':url, 'icon':icon, 'desc':'[/br]'.join(desc)}
+                params = {'good_for_fav': True, 'title': title, 'url': url, 'icon': icon, 'desc': '[/br]'.join(desc)}
                 self.addVideo(params)
         except Exception:
             printExc()
@@ -248,7 +248,7 @@ class SpiegelTv(CBaseHostClass):
                         if t:
                             desc.append(t)
 
-                    self.addVideo(MergeDicts(cItem, {'title':title, 'icon':icon, 'desc':'[/br]'.join(desc)}))
+                    self.addVideo(MergeDicts(cItem, {'title': title, 'icon': icon, 'desc': '[/br]'.join(desc)}))
                     return
 
         page = cItem.get('page', 0)
@@ -267,7 +267,7 @@ class SpiegelTv(CBaseHostClass):
         
         try:
             url = self.getFullUrl('/gateway/service.php')
-            post_data = {'cid':self.oneconfig['cid'], 'client':self.oneconfig['client_id'], 'method':method, 'param':param, 'start':start, 'cgw':self.oneconfig['gw'], 'isu':'0', 'uhs':'0', 'agc':'0', 'wbp':'0', 'cdlang':self.oneconfig['language']}
+            post_data = {'cid': self.oneconfig['cid'], 'client': self.oneconfig['client_id'], 'method': method, 'param': param, 'start': start, 'cgw': self.oneconfig['gw'], 'isu': '0', 'uhs': '0', 'agc': '0', 'wbp': '0', 'cdlang': self.oneconfig['language']}
             sts, data = self.getPage(url, post_data=post_data)
             if not sts:
                 return
@@ -295,7 +295,7 @@ class SpiegelTv(CBaseHostClass):
                         desc.insert(0, t)
                     else:
                         desc.append(t)
-                params = {'good_for_fav':True, 'category':cItem['category'], 'title':title, 'url':url, 'icon':icon, 'desc':'[/br]'.join(desc)}
+                params = {'good_for_fav': True, 'category': cItem['category'], 'title': title, 'url': url, 'icon': icon, 'desc': '[/br]'.join(desc)}
                 if '/videos/' in url:
                     self.addVideo(params)
                 else:
@@ -303,7 +303,7 @@ class SpiegelTv(CBaseHostClass):
             
             if 3 == len(nextPageParams):
                 params = dict(cItem)
-                params.update({'good_for_fav':False, 'title':_("Next page"), 'page':page + 1, 'f_method':nextPageParams[0], 'f_param':nextPageParams[1], 'f_start':nextPageParams[2]})
+                params.update({'good_for_fav': False, 'title': _("Next page"), 'page': page + 1, 'f_method': nextPageParams[0], 'f_param': nextPageParams[1], 'f_start': nextPageParams[2]})
                 self.addDir(params)
         except Exception:
             printExc()
@@ -352,7 +352,7 @@ class SpiegelTv(CBaseHostClass):
             
             urlParams = dict(self.defaultParams)
             urlParams['header'] = dict(self.AJAX_HEADER)
-            urlParams['header'].update({'Referer':cItem['url'], 'X-Request-Enable-Auth-Fallback':'1', 'X-Request-CID':cid, 'X-Request-Token':requestToken})
+            urlParams['header'].update({'Referer': cItem['url'], 'X-Request-Enable-Auth-Fallback': '1', 'X-Request-CID': cid, 'X-Request-Token': requestToken})
             post_data = {'additionalfields': 'language,channel,actors,studio,licenseby,slug,subtitle,teaser,description',
                          'addInteractionOptions': '1',
                          'addStatusDetails': '1',
@@ -361,7 +361,7 @@ class SpiegelTv(CBaseHostClass):
                          'addScenes': '1',
                          'addHotSpots': '1',
                          'addBumpers': '1',
-                         'captionFormat': 'data',}
+                         'captionFormat': 'data', }
             
             url = 'https://api.nexx.cloud/v3/%s/videos/%s/%s' % (clientId, op, videoId)
             sts, data = self.getPage(url, urlParams, post_data)
@@ -409,7 +409,7 @@ class SpiegelTv(CBaseHostClass):
                                 tbr = int(ss[0] or 0)
                                 if not tbr:
                                     continue
-                                retTab.append({'name':'[%s] %s' % (tbr, ss[1]), 'tbr':tbr, 'url': '%s%s/%s_src_%s_%d.mp4' % (azureProgressiveBase, azureLocator, videoId, ss[1], tbr)})
+                                retTab.append({'name': '[%s] %s' % (tbr, ss[1]), 'tbr': tbr, 'url': '%s%s/%s_src_%s_%d.mp4' % (azureProgressiveBase, azureLocator, videoId, ss[1], tbr)})
                 except Exception:
                     printExc()
                 retTab.sort(key=lambda item: item['tbr'], reverse=True)
@@ -450,7 +450,7 @@ class SpiegelTv(CBaseHostClass):
                         p = i.split(':')
                         tbr = int(p[0])
                         filename = '%s%s%s.mp4' % (h, p[1], p0(tbr))
-                        retTab.append({'name':'[%s] %s' % (tbr, p[1]), 'tbr':tbr, 'url': httpBase + '/' + filename})
+                        retTab.append({'name': '[%s] %s' % (tbr, p[1]), 'tbr': tbr, 'url': httpBase + '/' + filename})
                         a = filename + ':%s' % (tbr * 1000)
                         t += a + ','
                     t = t[:-1] + '&audiostream=' + a.split(':')[0]
@@ -487,7 +487,7 @@ class SpiegelTv(CBaseHostClass):
                             self.cacheLinks[key][idx]['name'] = '*' + self.cacheLinks[key][idx]['name'] + '*'
                         break
         
-        return [{'name':'sel', 'url':videoUrl}]
+        return [{'name': 'sel', 'url': videoUrl}]
     
     def handleService(self, index, refresh=0, searchPattern='', searchType=''):
         printDBG('handleService start')
@@ -504,7 +504,7 @@ class SpiegelTv(CBaseHostClass):
         
     #MAIN MENU
         if name == None:
-            self.listMainMenu({'name':'category'})
+            self.listMainMenu({'name': 'category'})
         elif category == 'list_main_items':
             self.listMainItems(self.currItem, 'list_items')
         elif category == 'list_categories':
@@ -514,11 +514,11 @@ class SpiegelTv(CBaseHostClass):
     #SEARCH
         elif category in ["search", "search_next_page"]:
             cItem = dict(self.currItem)
-            cItem.update({'search_item':False, 'name':'category'}) 
+            cItem.update({'search_item': False, 'name': 'category'}) 
             self.listSearchResult(cItem, searchPattern, searchType)
     #HISTORIA SEARCH
         elif category == "search_history":
-            self.listsHistory({'name':'history', 'category': 'search'}, 'desc', _("Type: "))
+            self.listsHistory({'name': 'history', 'category': 'search'}, 'desc', _("Type: "))
         else:
             printExc()
         

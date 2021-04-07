@@ -52,7 +52,7 @@ class cda(CBaseHostClass, CaptchaHelper):
     
     def __init__(self):
         printDBG("cda.__init__")
-        CBaseHostClass.__init__(self, {'history':'cda.pl', 'cookie':'cdapl.cookie'})
+        CBaseHostClass.__init__(self, {'history': 'cda.pl', 'cookie': 'cdapl.cookie'})
         self.HEADER = {'User-Agent': 'Mozilla/5.0', 'Accept': 'text/html'}
         self.defaultParams = {'header': self.HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
         self.AJAX_HEADER = dict(self.HEADER)
@@ -62,26 +62,26 @@ class cda(CBaseHostClass, CaptchaHelper):
         self.SEARCH_URL = self.getFullUrl('video/show/%s/p%d?s=%s')
         self.DEFAULT_ICON_URL = 'http://www.download.net.pl/upload/NewsSeptember2015/CDA-Filmy/cdalogo.jpg'
         
-        self.MAIN_TAB = [{'category':'video', 'title': 'Filmy wideo', 'url':''},
-                         {'category':'premium', 'title': 'CDA Premium', 'url':self.getFullUrl('premium')},
-                         {'category':'channels_cats', 'title': 'Kanały', 'url':''},
-                         {'category':'search', 'title': _('Search'), 'search_item':True},
-                         {'category':'search_history', 'title': _('Search history')}]
+        self.MAIN_TAB = [{'category': 'video', 'title': 'Filmy wideo', 'url': ''},
+                         {'category': 'premium', 'title': 'CDA Premium', 'url': self.getFullUrl('premium')},
+                         {'category': 'channels_cats', 'title': 'Kanały', 'url': ''},
+                         {'category': 'search', 'title': _('Search'), 'search_item': True},
+                         {'category': 'search_history', 'title': _('Search history')}]
         
-        self.VIDEO_TAB = [{'category':'categories', 'title': 'Główna', 'base_url':'video'},
-                          {'category':'categories', 'title': 'Poczekalnia', 'base_url':'video/poczekalnia'}]
+        self.VIDEO_TAB = [{'category': 'categories', 'title': 'Główna', 'base_url': 'video'},
+                          {'category': 'categories', 'title': 'Poczekalnia', 'base_url': 'video/poczekalnia'}]
 
-        self.CATEGORIES_TAB = [{'url': '', 'category':'category', 'title': '--Wszystkie--'}, 
-                               {'url': '/kat26', 'category':'category', 'title': 'Krótkie filmy i animacje'}, 
-                               {'url': '/kat24', 'category':'category', 'title': 'Filmy Extremalne'}, 
-                               {'url': '/kat27', 'category':'category', 'title': 'Motoryzacja, wypadki'}, 
-                               {'url': '/kat28', 'category':'category', 'title': 'Muzyka'}, 
-                               {'url': '/kat29', 'category':'category', 'title': 'Prosto z Polski'}, 
-                               {'url': '/kat30', 'category':'category', 'title': 'Rozrywka'}, 
-                               {'url': '/kat31', 'category':'category', 'title': 'Sport'}, 
-                               {'url': '/kat32', 'category':'category', 'title': 'Śmieszne filmy'}, 
-                               {'url': '/kat33', 'category':'category', 'title': 'Różności'}, 
-                               {'url': '/kat34', 'category':'category', 'title': 'Życie studenckie'}]
+        self.CATEGORIES_TAB = [{'url': '', 'category': 'category', 'title': '--Wszystkie--'}, 
+                               {'url': '/kat26', 'category': 'category', 'title': 'Krótkie filmy i animacje'}, 
+                               {'url': '/kat24', 'category': 'category', 'title': 'Filmy Extremalne'}, 
+                               {'url': '/kat27', 'category': 'category', 'title': 'Motoryzacja, wypadki'}, 
+                               {'url': '/kat28', 'category': 'category', 'title': 'Muzyka'}, 
+                               {'url': '/kat29', 'category': 'category', 'title': 'Prosto z Polski'}, 
+                               {'url': '/kat30', 'category': 'category', 'title': 'Rozrywka'}, 
+                               {'url': '/kat31', 'category': 'category', 'title': 'Sport'}, 
+                               {'url': '/kat32', 'category': 'category', 'title': 'Śmieszne filmy'}, 
+                               {'url': '/kat33', 'category': 'category', 'title': 'Różności'}, 
+                               {'url': '/kat34', 'category': 'category', 'title': 'Życie studenckie'}]
         self.cacheFilters = {}
         self.filtersTab = []
         self.loggedIn = None
@@ -108,9 +108,9 @@ class cda(CBaseHostClass, CaptchaHelper):
                 if value == '':
                     continue
                 title = self.cleanHtmlStr(item)
-                self.cacheFilters[key].append({'title':titleBase + title, key:value})
+                self.cacheFilters[key].append({'title': titleBase + title, key: value})
             if addAny and len(self.cacheFilters[key]):
-                self.cacheFilters[key].insert(0, {'title':'Wszystkie'})
+                self.cacheFilters[key].insert(0, {'title': 'Wszystkie'})
         
         # premium categories
         tmp = self.cm.ph.getAllItemsBeetwenMarkers(data, '<ul class="kat-kino">', '</ul>', withMarkers=True)
@@ -122,7 +122,7 @@ class cda(CBaseHostClass, CaptchaHelper):
                 if not self.cm.isValidUrl(url):
                     continue
                 title = self.cleanHtmlStr(item)
-                self.cacheFilters['premium_cat'].append({'title':title, 'url':url})
+                self.cacheFilters['premium_cat'].append({'title': title, 'url': url})
         if len(self.cacheFilters.get('premium_cat', [])):
             self.filtersTab.append('premium_cat')
         
@@ -185,7 +185,7 @@ class cda(CBaseHostClass, CaptchaHelper):
             if not sts:
                 return
             tmp = self.cm.ph.getSearchGroups(data, '''katalogLoadMore\([^\,]+?\,\s*"([^"]+?)"\s*,\s*"([^"]+?)"''', 2)
-            nextPageData = {'cat':tmp[0], 'sort':tmp[1]}
+            nextPageData = {'cat': tmp[0], 'sort': tmp[1]}
             nextPage = True
             data = self.cm.ph.getDataBeetwenMarkers(data, '<div class="covers-container">', '<div id="loadMore">', False)[1]
         else:
@@ -220,15 +220,15 @@ class cda(CBaseHostClass, CaptchaHelper):
             
             params = dict(cItem)
             if '/video' in url:
-                params.update({'title':title, 'url':url, 'icon':icon, 'desc':desc})
+                params.update({'title': title, 'url': url, 'icon': icon, 'desc': desc})
                 self.addVideo(params)
             elif '/folder/' in url:
-                params.update({'title':title, 'url':url, 'icon':icon, 'desc':desc, 'name':'dir', 'category':'list_folder_items'})
+                params.update({'title': title, 'url': url, 'icon': icon, 'desc': desc, 'name': 'dir', 'category': 'list_folder_items'})
                 self.addDir(params)
             
         if nextPage:
             params = dict(cItem)
-            params.update({'title':_('Next page'), 'page':page + 1, 'next_page_data':nextPageData})
+            params.update({'title': _('Next page'), 'page': page + 1, 'next_page_data': nextPageData})
             self.addDir(params)
         
     def listCategory(self, cItem):
@@ -251,7 +251,7 @@ class cda(CBaseHostClass, CaptchaHelper):
                 url = self.SEARCH_URL % (searchPattern, 1, searchsort)
                 url += '&duration=' + searchType
 
-        self.listItems(MergeDicts(cItem, {'category':'search_next_page'}), url, search=True)
+        self.listItems(MergeDicts(cItem, {'category': 'search_next_page'}), url, search=True)
         
     def listItems(self, cItem, url=None, page=None, search=False):
         if url == None:
@@ -307,15 +307,15 @@ class cda(CBaseHostClass, CaptchaHelper):
                 
                 url = self.getFullUrl(self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(item, 'href="', '"', False)[1]))
                 icon = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(item, 'src="', '"', False)[1])
-                params = {'good_for_fav':True, 'title':self.cleanHtmlStr(title), 'url':url, 'icon':icon, 'desc':desc}
+                params = {'good_for_fav': True, 'title': self.cleanHtmlStr(title), 'url': url, 'icon': icon, 'desc': desc}
                 if '/video' in url:
                     self.addVideo(params)
                 elif '/folder/' in url:
-                    params.update({'name':'dir', 'category':'list_folder_sort'})
+                    params.update({'name': 'dir', 'category': 'list_folder_sort'})
                     self.addDir(params)
 
             if nextPage:
-                self.addDir(MergeDicts(cItem, {'good_for_fav':False, 'url':nextPage, 'title':'Następna strona', 'page':page + 1}))
+                self.addDir(MergeDicts(cItem, {'good_for_fav': False, 'url': nextPage, 'title': 'Następna strona', 'page': page + 1}))
 
     def listChannelsCategories(self, cItem, nextCategory):
         printDBG("cda.listChannelsCategories [%s]" % cItem['url'])
@@ -346,7 +346,7 @@ class cda(CBaseHostClass, CaptchaHelper):
                 title = item
                 desc = counts.get(kid, '')
                 params = dict(cItem)
-                params.update({'good_for_fav':False, 'category':nextCategory, 'title':title, 'desc':desc, 'url':url})
+                params.update({'good_for_fav': False, 'category': nextCategory, 'title': title, 'desc': desc, 'url': url})
                 self.addDir(params)
         except Exception:
             printExc()
@@ -366,7 +366,7 @@ class cda(CBaseHostClass, CaptchaHelper):
             desc = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(item, ('<', '>', 'tube-count'), ('</span', '>'), False)[1])
             
             params = dict(cItem)
-            params.update({'good_for_fav':True, 'category':nextCategory, 'title':title, 'url':url, 'desc':desc, 'icon':icon})
+            params.update({'good_for_fav': True, 'category': nextCategory, 'title': title, 'url': url, 'desc': desc, 'icon': icon})
             self.addDir(params)
             
     def listFolders(self, cItem, nextCategory):
@@ -381,7 +381,7 @@ class cda(CBaseHostClass, CaptchaHelper):
             url = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''href=['"]([^'^"]+?)['"]''')[0])
             title = self.cleanHtmlStr(item)
             params = dict(cItem)
-            params.update({'good_for_fav':True, 'category':nextCategory, 'title':title, 'url':url, 'desc':''})
+            params.update({'good_for_fav': True, 'category': nextCategory, 'title': title, 'url': url, 'desc': ''})
             self.addDir(params)
             
     def listFolderSort(self, cItem, nextCategory):
@@ -394,7 +394,7 @@ class cda(CBaseHostClass, CaptchaHelper):
                 url += '?' + item[1]
             title = item[0]
             params = dict(cItem)
-            params.update({'good_for_fav':False, 'category':nextCategory, 'title':title, 'url':url})
+            params.update({'good_for_fav': False, 'category': nextCategory, 'title': title, 'url': url})
             self.addDir(params)
             
     def listFolderItems(self, cItem):
@@ -425,11 +425,11 @@ class cda(CBaseHostClass, CaptchaHelper):
             
             title = self.cleanHtmlStr(tmp)
             params = dict(cItem)
-            params.update({'good_for_fav':True, 'title':title, 'url':url, 'icon':icon, 'desc':'[/br]'.join(desc)})
+            params.update({'good_for_fav': True, 'title': title, 'url': url, 'icon': icon, 'desc': '[/br]'.join(desc)})
             self.addVideo(params)
 
         if nextPage:
-            self.addDir(MergeDicts(cItem, {'good_for_fav':False, 'url':nextPage, 'title':'Następna strona'}))
+            self.addDir(MergeDicts(cItem, {'good_for_fav': False, 'url': nextPage, 'title': 'Następna strona'}))
         
     def getLinksForVideo(self, cItem):
         self.tryTologin()
@@ -478,7 +478,7 @@ class cda(CBaseHostClass, CaptchaHelper):
             rm(loginCookie)
             rm(self.COOKIE_FILE)
             if freshSession:
-                sts, data = self.getPage(self.getMainUrl(), MergeDicts(self.defaultParams, {'use_new_session':True}))
+                sts, data = self.getPage(self.getMainUrl(), MergeDicts(self.defaultParams, {'use_new_session': True}))
 
             self.loggedIn = False
             if '' == self.login.strip() or '' == self.password.strip():
@@ -494,11 +494,11 @@ class cda(CBaseHostClass, CaptchaHelper):
                 tries += 1
                 if sts:
                     r = ph.search(data, '''name=['"]r['"][^>]+?value=['"]([^'^"]+?)['"]''', flags=ph.I)[0]
-                    post_data = {"r":r, "username":self.login, "password":self.password, "login":"zaloguj"}
+                    post_data = {"r": r, "username": self.login, "password": self.password, "login": "zaloguj"}
                     params = dict(self.defaultParams)
                     HEADER = dict(self.AJAX_HEADER)
                     HEADER['Referer'] = self.MAIN_URL
-                    params.update({'header':HEADER})
+                    params.update({'header': HEADER})
 
                     tmp = ph.findall(data, ('<form', '>', '/login'), '</form>', flags=ph.I)
                     for item in tmp:
@@ -548,11 +548,11 @@ class cda(CBaseHostClass, CaptchaHelper):
         self.currList = []
         
         if None == name:
-            self.listsTab(self.MAIN_TAB, {'name':'category'})
+            self.listsTab(self.MAIN_TAB, {'name': 'category'})
         elif 'premium' == category:
             idx = self.currItem.get('f_idx', 0)
             if idx == 0:
-                self.fillFilters({'name':'category', 'url':self.getFullUrl('premium')})
+                self.fillFilters({'name': 'category', 'url': self.getFullUrl('premium')})
             if idx < len(self.filtersTab):
                 self.listFilter(self.currItem, self.filtersTab)
             else:
@@ -578,13 +578,13 @@ class cda(CBaseHostClass, CaptchaHelper):
     #SEARCH
         elif category == "search":
             cItem = dict(self.currItem)
-            cItem.update({'search_item':False, 'name':'category'}) 
+            cItem.update({'search_item': False, 'name': 'category'}) 
             self.listSearchResult(cItem, searchPattern, searchType)
         elif 'search_next_page' == category:
             self.listItems(self.currItem, search=True)
     #HISTORIA SEARCH
         elif category == "search_history":
-            self.listsHistory({'name':'history', 'category': 'search'}, 'desc', _("Type: "))
+            self.listsHistory({'name': 'history', 'category': 'search'}, 'desc', _("Type: "))
         else:
             printExc()
         

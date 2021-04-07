@@ -159,8 +159,8 @@ class CYTSignAlgoExtractor:
         else:
             printDBG("USE ALGO FROM CACHE: %s" % jshash)
 
-        js_params = [{'code':'e2i_enc = %s;' % json_dumps(encSignatures)}]
-        js_params.append({'name':jsname, 'code':code, 'hash':jshash})
+        js_params = [{'code': 'e2i_enc = %s;' % json_dumps(encSignatures)}]
+        js_params.append({'name': jsname, 'code': code, 'hash': jshash})
         ret = js_execute_ext(js_params)
         if ret['sts'] and 0 == ret['code']:
             try:
@@ -476,7 +476,7 @@ class YoutubeIE(object):
                 })
                 sub_url = urlunparse(parsed_caption_url._replace(
                     query=urllib.parse.urlencode(caption_qs, True)))
-                sub_tracks.append({'title':lang_qs['n'][0].encode('utf-8'), 'url':sub_url, 'lang':sub_lang.encode('utf-8'), 'ytid':len(sub_tracks), 'format':'vtt'})
+                sub_tracks.append({'title': lang_qs['n'][0].encode('utf-8'), 'url': sub_url, 'lang': sub_lang.encode('utf-8'), 'ytid': len(sub_tracks), 'format': 'vtt'})
         except Exception:
             printExc()
         return sub_tracks
@@ -506,9 +506,9 @@ class YoutubeIE(object):
                 lang_translated = getArg(item, 'lang_translated')
 
                 title = (name + ' ' + lang_translated).strip()
-                params = {'lang':lang_code, 'v':video_id, 'fmt':'vtt', 'name':name}
+                params = {'lang': lang_code, 'v': video_id, 'fmt': 'vtt', 'name': name}
                 url = 'https://www.youtube.com/api/timedtext?' + urllib.parse.urlencode(params)
-                sub_tracks.append({'title':title, 'url':url, 'lang':lang_code, 'ytid':id, 'format':'vtt'})
+                sub_tracks.append({'title': title, 'url': url, 'lang': lang_code, 'ytid': id, 'format': 'vtt'})
         except Exception:
             printExc()
         printDBG(sub_tracks)
@@ -529,7 +529,7 @@ class YoutubeIE(object):
             videoKey = 'docid'
             videoInfoBase = 'https://docs.google.com/get_video_info?docid=%s' % video_id
             COOKIE_FILE = GetCookieDir('docs.google.com.cookie')
-            videoInfoparams = {'cookiefile':COOKIE_FILE, 'use_cookie': True, 'load_cookie':False, 'save_cookie':True}
+            videoInfoparams = {'cookiefile': COOKIE_FILE, 'use_cookie': True, 'load_cookie': False, 'save_cookie': True}
         else:
             url = 'http://www.youtube.com/watch?v=%s&' % video_id
             isGoogleDoc = False
@@ -668,7 +668,7 @@ class YoutubeIE(object):
                     if not supported:
                         continue
 
-                    url_item = {'url':_unquote(url_data['url'], None)}
+                    url_item = {'url': _unquote(url_data['url'], None)}
                     if 'sig' in url_data:
                         signature = url_data['sig']
                         url_item['url'] += '&signature=' + signature
@@ -724,7 +724,7 @@ class YoutubeIE(object):
                             #s_item = ''
                             #sp_item = ''
                             if 'url=' in item:
-                                url_item = {'url':_unquote(item.replace('url=', ''), None)}
+                                url_item = {'url': _unquote(item.replace('url=', ''), None)}
                             if 'sig=' in item:
                                 sig_item = item.replace('sig=', '')
                             if 's=' in item:
@@ -755,7 +755,7 @@ class YoutubeIE(object):
             sign = ph.search(dashmpd, r'/s/([a-fA-F0-9\.]+)')[0]
             if sign:
                 dashmpd = dashmpd.replace(sign, '{0}')
-            video_url_list.append(('mpd', {'url':dashmpd}))
+            video_url_list.append(('mpd', {'url': dashmpd}))
             if sign:
                 video_url_list[-1][1]['esign'] = sign
 
@@ -805,9 +805,9 @@ class YoutubeIE(object):
             video_format = self._video_dimensions.get(format_param, '???')
             video_real_url = url_item['url']
             if len(sub_tracks):
-                video_real_url = strwithmeta(video_real_url, {'external_sub_tracks':sub_tracks})
+                video_real_url = strwithmeta(video_real_url, {'external_sub_tracks': sub_tracks})
             if isGoogleDoc:
-                video_real_url = strwithmeta(video_real_url, {'Cookie':cookieHeader})
+                video_real_url = strwithmeta(video_real_url, {'Cookie': cookieHeader})
 
             results.append({
                 'id': video_id,
@@ -834,7 +834,7 @@ class YoutubeIE(object):
         formats_urls = _get_urls(manifest)
         for format_url in formats_urls:
             itag = self._search_regex(r'itag/(\d+?)/', format_url, 'itag')
-            url_map[itag] = {'url':format_url}
+            url_map[itag] = {'url': format_url}
         return url_map
 
     def _search_regex(self, pattern, string, name, default=None, fatal=True, flags=0):

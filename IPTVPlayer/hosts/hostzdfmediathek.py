@@ -79,29 +79,29 @@ class ZDFmediathek(CBaseHostClass):
     AUTH_TOKEN_API_URL = MAIN_API_URL + 'mediathekV2/token'
     AKAMAI_TOKEN_API_URL = 'https://tg2cl15.zdf.de/generate'
     
-    MAIN_CAT_TAB = [{'category':'list_start', 'title':_('Home page'), 'url': START_PAGE_API_URL},
-                    {'category':'missed_date', 'title':_('Missed the show?')},
-                    {'category':'list_cluster', 'title':_('Program A-Z'), 'simplify':False, 'url': BRANDS_ALPHABETICAL_API_URL},
-                    {'category':'list_cluster', 'title':_('Categories'), 'url': CATEGORIES_PAGE_API_URL},
+    MAIN_CAT_TAB = [{'category': 'list_start', 'title': _('Home page'), 'url': START_PAGE_API_URL},
+                    {'category': 'missed_date', 'title': _('Missed the show?')},
+                    {'category': 'list_cluster', 'title': _('Program A-Z'), 'simplify': False, 'url': BRANDS_ALPHABETICAL_API_URL},
+                    {'category': 'list_cluster', 'title': _('Categories'), 'url': CATEGORIES_PAGE_API_URL},
                     #{'category':'themen',         'title':_('Topics'), 'url': NEWS_API_URL},
-                    {'category':'kinder', 'title':_('Children')},
-                    {'category':'search', 'title':_('Search'), 'search_item':True},
-                    {'category':'search_history', 'title':_('Search history')}]
+                    {'category': 'kinder', 'title': _('Children')},
+                    {'category': 'search', 'title': _('Search'), 'search_item': True},
+                    {'category': 'search_history', 'title': _('Search history')}]
                        
-    QUALITY_MAP = {'hd':4, 'veryhigh':3, 'high':2, 'med':1, 'low':0}
+    QUALITY_MAP = {'hd': 4, 'veryhigh': 3, 'high': 2, 'med': 1, 'low': 0}
     
     def __init__(self):
         printDBG("ZDFmediathek.__init__")
-        CBaseHostClass.__init__(self, {'history':'ZDFmediathek.tv', 'cookie':'zdfde.cookie'})
+        CBaseHostClass.__init__(self, {'history': 'ZDFmediathek.tv', 'cookie': 'zdfde.cookie'})
         self.DEFAULT_ICON_URL = 'https://www.zdf.de/static//img/bgs/zdf-typical-fallback-314x314.jpg'
         
-        self.KINDER_TAB = [{'category':'explore_item', 'title':_('Home page'), 'url': self.getFullUrl('/kinder'), 'icon':self.getIconUrl('/assets/zdftivi-home-100~384x216')},
-                           {'category':'kinder_list_abc', 'title':_('Program A-Z'), 'url': self.getFullUrl('/kinder/sendungen-a-z'), 'icon':self.getIconUrl('/assets/a-z-teaser-100~384x216')},
-                           {'category':'explore_item', 'title':_('Missed the show?'), 'url': self.getFullUrl('/kinder/sendung-verpasst'),'icon':self.getIconUrl('/assets/buehne-tivi-sendung-verpasst-100~384x216')}]
+        self.KINDER_TAB = [{'category': 'explore_item', 'title': _('Home page'), 'url': self.getFullUrl('/kinder'), 'icon': self.getIconUrl('/assets/zdftivi-home-100~384x216')},
+                           {'category': 'kinder_list_abc', 'title': _('Program A-Z'), 'url': self.getFullUrl('/kinder/sendungen-a-z'), 'icon': self.getIconUrl('/assets/a-z-teaser-100~384x216')},
+                           {'category': 'explore_item', 'title': _('Missed the show?'), 'url': self.getFullUrl('/kinder/sendung-verpasst'), 'icon': self.getIconUrl('/assets/buehne-tivi-sendung-verpasst-100~384x216')}]
     
     def getPage(self, url, params={}, post_data=None):
         HTTP_HEADER = dict(self.HEADER)
-        params.update({'header':HTTP_HEADER})
+        params.update({'header': HTTP_HEADER})
         
         if 'zdf-cdn.live.cellular.de' in url and False:
             proxy = 'http://www.proxy-german.de/index.php?q={0}&hl=2e1'.format(urllib.parse.quote(url, ''))
@@ -157,7 +157,7 @@ class ZDFmediathek(CBaseHostClass):
         for item in list(iconsItem.keys()):
             item = iconsItem[item]
             if "/assets/" in item["url"]:
-                iconsTab.append({'size':item["width"], 'url':item["url"]})
+                iconsTab.append({'size': item["width"], 'url': item["url"]})
         idx = len(iconsTab)
         if idx:
             iconsTab.sort(key=lambda k: k['size'])
@@ -184,7 +184,7 @@ class ZDFmediathek(CBaseHostClass):
                 continue
             title = self.cleanHtmlStr(item)
             params = dict(cItem)
-            params.update({'good_for_fav':False, 'category':nextCategory, 'url':url, 'title':title})
+            params.update({'good_for_fav': False, 'category': nextCategory, 'url': url, 'title': title})
             self.addDir(params)
         
     def exploreItem(self, cItem, nextCategory):
@@ -244,16 +244,16 @@ class ZDFmediathek(CBaseHostClass):
                     if 'assets/a-z-teaser' in icon:
                         continue
                     
-                    params = {'url':url, 'title':title, 'icon':icon, 'desc':desc}
+                    params = {'url': url, 'title': title, 'icon': icon, 'desc': desc}
                     if '_play' in item:
-                        params.update({'type':'video', 'good_for_fav':False})
+                        params.update({'type': 'video', 'good_for_fav': False})
                         items.append(params)
                     elif 'class="media-content"' not in item and ' min<' not in item:
-                        params.update({'type':'category', 'good_for_fav':False})
+                        params.update({'type': 'category', 'good_for_fav': False})
                         items.append(params)
             if sectionTitle != '' and len(items) > 1:
                 params = dict(cItem)
-                params.update({'good_for_fav':False, 'category':nextCategory, 'title':sectionTitle, 'icon':items[0]['icon'], 'sub_items':items})
+                params.update({'good_for_fav': False, 'category': nextCategory, 'title': sectionTitle, 'icon': items[0]['icon'], 'sub_items': items})
                 self.addDir(params)
             else:
                 for it in items:
@@ -277,7 +277,7 @@ class ZDFmediathek(CBaseHostClass):
             params = dict(cItem)
             params.update(item)
             if item['type'] == 'category':
-                params.update({'category':nextCategory})
+                params.update({'category': nextCategory})
             self.currList.append(params)
         
     def listStart(self, cItem):
@@ -331,7 +331,7 @@ class ZDFmediathek(CBaseHostClass):
                 elif 'teaserLivevideo' == item['type']:
                     title = _('Live')
                 params = dict(cItem)
-                params.update({'category':'list_content', 'title':title, 'content':tab})
+                params.update({'category': 'list_content', 'title': title, 'content': tab})
                 self.addDir(params)
                 
     def listContent(self, cItem):
@@ -352,7 +352,7 @@ class ZDFmediathek(CBaseHostClass):
                 descTab.append(self.cleanHtmlStr(item['headline']))
                 descTab.append(self.cleanHtmlStr(item['channel']))
                 descTab.append(self.cleanHtmlStr(item['beschreibung']))
-                params = {'name':'category', 'category':'list_cluster', 'title':title, 'url':self.getFullUrl(item['url']), 'desc':' | '.join(descTab), 'icon':self.getIconUrl(icon), 'id':item['id'], 'sharing_url':item['sharingUrl'], 'good_for_fav': True}
+                params = {'name': 'category', 'category': 'list_cluster', 'title': title, 'url': self.getFullUrl(item['url']), 'desc': ' | '.join(descTab), 'icon': self.getIconUrl(icon), 'id': item['id'], 'sharing_url': item['sharingUrl'], 'good_for_fav': True}
                 self.addDir(params)
             elif item['type'] in ["video", "livevideo"]:    
                 descTab = []
@@ -361,7 +361,7 @@ class ZDFmediathek(CBaseHostClass):
                 if 'length' in item:
                     descTab.append(str(timedelta(seconds=int(item["length"]))))
                 descTab.append(self.cleanHtmlStr(item['beschreibung']))
-                params = {'title':title, 'url':self.getFullUrl(item['url']), 'desc':'| '.join(descTab), 'icon':self.getIconUrl(icon), 'id':item['id'], 'sharing_url':item['sharingUrl'], 'good_for_fav': True}
+                params = {'title': title, 'url': self.getFullUrl(item['url']), 'desc': '| '.join(descTab), 'icon': self.getIconUrl(icon), 'id': item['id'], 'sharing_url': item['sharingUrl'], 'good_for_fav': True}
                 self.addVideo(params)
         except Exception:
             printExc()
@@ -373,7 +373,7 @@ class ZDFmediathek(CBaseHostClass):
         for item in range(7):
             date = datetime.fromtimestamp(now - item * 24 * 3600).strftime('%Y-%m-%d')
             params = dict(cItem)
-            params.update({'category':'list_missed', 'title':date, 'url':self.BROADSCAST_MISSED_API_URL % date})
+            params.update({'category': 'list_missed', 'title': date, 'url': self.BROADSCAST_MISSED_API_URL % date})
             self.addDir(params)
 
     def listSearchResult(self, cItem, searchPattern, searchType):
@@ -393,7 +393,7 @@ class ZDFmediathek(CBaseHostClass):
                 self._addItem(cItem, item)
             if data['nextPage']:
                 params = dict(cItem)
-                params.update({'title':_('Next page'), 'url':self.getFullUrl(data['nextPageUrl']), 'page':page + 1})
+                params.update({'title': _('Next page'), 'url': self.getFullUrl(data['nextPageUrl']), 'page': page + 1})
                 self.addDir(params)
         except Exception:
             printExc()
@@ -428,7 +428,7 @@ class ZDFmediathek(CBaseHostClass):
             try:
                 for item in data['captions']:
                     if 'vtt' in item['format'] and self.cm.isValidUrl(item['uri']):
-                        subTracks.append({'title':item['language'], 'url':item['uri'], 'lang':item['language'], 'format':'vtt'})
+                        subTracks.append({'title': item['language'], 'url': item['uri'], 'lang': item['language'], 'format': 'vtt'})
             except Exception:
                 printExc()
             
@@ -440,7 +440,7 @@ class ZDFmediathek(CBaseHostClass):
                     url = item['url']
                     if url.startswith('https://'):
                         url = 'http' + url[5:]
-                    for type in [{'pattern':'http_m3u8_http', 'name':'m3u8'}, {'pattern':'mp4_http', 'name':'mp4'}]:
+                    for type in [{'pattern': 'http_m3u8_http', 'name': 'm3u8'}, {'pattern': 'mp4_http', 'name': 'mp4'}]:
                         if type['pattern'] not in item['type']:
                             continue
                         if type['name'] == 'mp4':
@@ -449,7 +449,7 @@ class ZDFmediathek(CBaseHostClass):
                             qualityVal = ZDFmediathek.QUALITY_MAP.get(quality, 10)
                             qualityPref = abs(qualityVal - preferedQuality)
                             formatPref = formatMap.get(type['name'], 10)
-                            tmpUrlTab.append({'url':url, 'quality_name':quality, 'quality':qualityVal, 'quality_pref':qualityPref, 'format_name':type['name'], 'format_pref':formatPref})
+                            tmpUrlTab.append({'url': url, 'quality_name': quality, 'quality': qualityVal, 'quality_pref': qualityPref, 'format_name': type['name'], 'format_pref': formatPref})
                         elif type['name'] == 'm3u8':
                             tmpList = getDirectM3U8Playlist(url, checkExt=False)
                             for tmpItem in tmpList:
@@ -469,7 +469,7 @@ class ZDFmediathek(CBaseHostClass):
                                 qualityVal = ZDFmediathek.QUALITY_MAP.get(quality, 10)
                                 qualityPref = abs(qualityVal - preferedQuality)
                                 formatPref = formatMap.get(type['name'], 10)
-                                tmpUrlTab.append({'url':tmpItem['url'], 'quality_name':quality, 'quality':qualityVal, 'quality_pref':qualityPref, 'format_name':type['name'], 'format_pref':formatPref})
+                                tmpUrlTab.append({'url': tmpItem['url'], 'quality_name': quality, 'quality': qualityVal, 'quality_pref': qualityPref, 'format_name': type['name'], 'format_pref': formatPref})
             except Exception:
                 printExc()
             def _cmpLinks(it1, it2):
@@ -518,7 +518,7 @@ class ZDFmediathek(CBaseHostClass):
                         live = True
                     else: 
                         live = False
-                    urlTab.append({'need_resolve':0, 'name':name, 'url':self.up.decorateUrl(url, {'iptv_livestream':live, 'external_sub_tracks':subTracks})})
+                    urlTab.append({'need_resolve': 0, 'name': name, 'url': self.up.decorateUrl(url, {'iptv_livestream': live, 'external_sub_tracks': subTracks})})
                     if onelinkmode:
                         break
             printDBG(tmpUrlTab)
@@ -537,7 +537,7 @@ class ZDFmediathek(CBaseHostClass):
         self.currList = [] 
 
         if None == name:
-            self.listsTab(self.MAIN_CAT_TAB, {'name':'category'})
+            self.listsTab(self.MAIN_CAT_TAB, {'name': 'category'})
         elif 'kinder' == category:
             self.listsTab(self.KINDER_TAB, self.currItem)
         elif 'kinder_list_abc' == category:
@@ -559,11 +559,11 @@ class ZDFmediathek(CBaseHostClass):
     #WYSZUKAJ
         elif category in ["search", "search_next_page"]:
             cItem = dict(self.currItem)
-            cItem.update({'search_item':False, 'name':'category', 'category':'search_next_page'}) 
+            cItem.update({'search_item': False, 'name': 'category', 'category': 'search_next_page'}) 
             self.listSearchResult(cItem, searchPattern, searchType)
     #HISTORIA WYSZUKIWANIA
         elif category == "search_history":
-            self.listsHistory({'name':'history', 'category': 'search'}, 'desc', _("Type: "))
+            self.listsHistory({'name': 'history', 'category': 'search'}, 'desc', _("Type: "))
         else:
             printExc()
         CBaseHostClass.endHandleService(self, index, refresh)

@@ -417,7 +417,7 @@ class IPTVExtMoviePlayer(Screen):
         self.subHandler['latach_time'] = -1
         self.subHandler['last_time'] = -1
         self.subHandler['marker'] = None
-        self.subHandler['synchro'] = {'visible':False, 'guiElemNames':['subSynchroLabel', 'subSynchroIcon'], 'icon':None}
+        self.subHandler['synchro'] = {'visible': False, 'guiElemNames': ['subSynchroLabel', 'subSynchroIcon'], 'icon': None}
         self.subHandler['pos_y_offset'] = 0
         self['subSynchroLabel'] = Label("0.0s")
         self['subSynchroIcon'] = Cover3() 
@@ -428,12 +428,12 @@ class IPTVExtMoviePlayer(Screen):
         self.hideSubSynchroControl()
         
         # VIDEO options
-        self.defVideoOptions = {'aspect':None, 'aspect_choices':[], 'policy':None, 'policy_choices':[], 'policy2':None, 'policy2_choices':[], 'videomode':additionalParams.get('defaul_videomode', None), 'videomode_choices':GetE2VideoModeChoices()}
-        self.videoOptSetters = {'aspect':SetE2VideoAspect, 'policy':SetE2VideoPolicy, 'policy2':SetE2VideoPolicy} 
-        self.currVideoOptions = {'aspect':None, 'policy':None, 'policy2':None, 'videomode':None}
+        self.defVideoOptions = {'aspect': None, 'aspect_choices': [], 'policy': None, 'policy_choices': [], 'policy2': None, 'policy2_choices': [], 'videomode': additionalParams.get('defaul_videomode', None), 'videomode_choices': GetE2VideoModeChoices()}
+        self.videoOptSetters = {'aspect': SetE2VideoAspect, 'policy': SetE2VideoPolicy, 'policy2': SetE2VideoPolicy} 
+        self.currVideoOptions = {'aspect': None, 'policy': None, 'policy2': None, 'videomode': None}
         
         # AUDIO options
-        self.defAudioOptions = {'ac3':None, 'aac':None}
+        self.defAudioOptions = {'ac3': None, 'aac': None}
         
         # meta data
         self.metaHandler = IPTVMovieMetaDataHandler(self.hostName, self.title, self.fileSRC)
@@ -461,8 +461,8 @@ class IPTVExtMoviePlayer(Screen):
                                'SubtitleTracks': [],
                               })
         # load pixmaps for statusIcon
-        self.playback['loopIcons'] = {'On':None, 'Off':None}
-        self.playback['statusIcons'] = {'Play':None, 'Pause':None, 'FastForward':None, 'SlowMotion':None}
+        self.playback['loopIcons'] = {'On': None, 'Off': None}
+        self.playback['statusIcons'] = {'Play': None, 'Pause': None, 'FastForward': None, 'SlowMotion': None}
         try:
             self.playback['statusIcons']['Play'] = LoadPixmap(GetIPTVDMImgDir("playback_a_play.png"))
             self.playback['statusIcons']['Pause'] = LoadPixmap(GetIPTVDMImgDir("playback_a_pause.png"))
@@ -480,7 +480,7 @@ class IPTVExtMoviePlayer(Screen):
         # show hide info bar functionality
         self.goToSeekRepeatCount = 0
         self.goToSeekStep = 0
-        self.playbackInfoBar = {'visible':False, 'blocked':False, 'guiElemNames':['playbackInfoBaner', 'progressBar', 'bufferingCBar', 'bufferingBar', 'goToSeekPointer', 'goToSeekLabel', 'infoBarTitle', 'currTimeLabel', 'remainedLabel', 'lengthTimeLabel', 'videoInfo', 'statusIcon', 'loopIcon', 'logoIcon']}
+        self.playbackInfoBar = {'visible': False, 'blocked': False, 'guiElemNames': ['playbackInfoBaner', 'progressBar', 'bufferingCBar', 'bufferingBar', 'goToSeekPointer', 'goToSeekLabel', 'infoBarTitle', 'currTimeLabel', 'remainedLabel', 'lengthTimeLabel', 'videoInfo', 'statusIcon', 'loopIcon', 'logoIcon']}
         if self.clockFormat: 
             self.playbackInfoBar['guiElemNames'].append('clockTime')
             self.playbackInfoBar['clock_timer'] = eTimer()
@@ -495,12 +495,12 @@ class IPTVExtMoviePlayer(Screen):
         self.waitEOSAbortedFix['timer'] = eTimer()
         self.waitEOSAbortedFix['timer_conn'] = eConnectCallback(self.waitEOSAbortedFix['timer'].timeout, self.waitEOSAbortedFixTimeoutCallback)
         
-        self.waitCloseFix = {'waiting':False}
+        self.waitCloseFix = {'waiting': False}
         self.waitCloseFix['timer'] = eTimer()
         self.waitCloseFix['timer_conn'] = eConnectCallback(self.waitCloseFix['timer'].timeout, self.waitCloseTimeoutCallback)
         
         self.closeRequestedByUser = None
-        self.playerBinaryInfo = {'version':None, 'data':''}
+        self.playerBinaryInfo = {'version': None, 'data': ''}
         self.messageQueue = []
         self.underMessage = False
         
@@ -532,7 +532,7 @@ class IPTVExtMoviePlayer(Screen):
         if self.isDownladManagerAvailable and self.downloader:
             options.append(IPTVChoiceBoxItem(_("Stop playback with buffer save"), "", "close_with_buffer_save"))
         
-        self.openChild(boundFunction(self.childClosed, self.showMenuOptionsCallback), IPTVChoiceBoxWidget, {'width':500, 'height':340, 'current_idx':0, 'title':_("Menu"), 'options':options})
+        self.openChild(boundFunction(self.childClosed, self.showMenuOptionsCallback), IPTVChoiceBoxWidget, {'width': 500, 'height': 340, 'current_idx': 0, 'title': _("Menu"), 'options': options})
         
     def showMenuOptionsCallback(self, ret=None):
         printDBG("showMenuOptionsCallback ret[%r]" % [ret])
@@ -592,7 +592,7 @@ class IPTVExtMoviePlayer(Screen):
                 self[subLabel].instance.setVAlign(1)
             else:
                 try:
-                    valignMap = {'bottom':2,'center':1, 'top':0}
+                    valignMap = {'bottom': 2, 'center': 1, 'top': 0}
                     self[subLabel].instance.setVAlign(valignMap.get(sub['box_valign'], 2))
                     
                     self[subLabel].instance.resize(eSize(getDesktop(0).size().width() - 20, sub['box_height']))
@@ -653,7 +653,7 @@ class IPTVExtMoviePlayer(Screen):
                             'policy': GetE2VideoPolicy(), 
                             'policy_choices': GetE2VideoPolicyChoices(), 
                             'policy2': GetE2VideoPolicy('2'), 
-                            'policy2_choices':GetE2VideoPolicyChoices(),
+                            'policy2_choices': GetE2VideoPolicyChoices(),
                             'active': None
                            }
         printDBG(">>>>>>>>>>>>>>>>>>>>> getE2VideoOptions[%s]" % defVideoOptions)
@@ -671,7 +671,7 @@ class IPTVExtMoviePlayer(Screen):
         printDBG("selectVideoOptions")
         options = []
         currIdx = 0
-        optionsTab = [{'title':_('Video policy'), 'name': 'policy'}, {'title':_('Video policy for 4:3'), 'name': 'policy2'}, {'title':_('Aspect'), 'name': 'aspect'}, {'title':_('Video mode'), 'name': 'videomode'}]
+        optionsTab = [{'title': _('Video policy'), 'name': 'policy'}, {'title': _('Video policy for 4:3'), 'name': 'policy2'}, {'title': _('Aspect'), 'name': 'aspect'}, {'title': _('Video mode'), 'name': 'videomode'}]
         for option in optionsTab:
             if len(self.defVideoOptions[option['name'] + '_choices']) < 2:
                 continue
@@ -682,7 +682,7 @@ class IPTVExtMoviePlayer(Screen):
             options.append(IPTVChoiceBoxItem(option['title'], "", option["name"]))
         
         if len(options):
-            self.openChild(boundFunction(self.childClosed, self.selectVideoOptionsCallback), IPTVChoiceBoxWidget, {'width':500, 'current_idx':currIdx, 'title':_("Select video option"), 'options':options})
+            self.openChild(boundFunction(self.childClosed, self.selectVideoOptionsCallback), IPTVChoiceBoxWidget, {'width': 500, 'current_idx': currIdx, 'title': _("Select video option"), 'options': options})
         
     def selectVideoOptionsCallback(self, ret=None):
         printDBG("selectVideoOptionsCallback ret[%r]" % [ret])
@@ -704,7 +704,7 @@ class IPTVExtMoviePlayer(Screen):
                 if item == currValue:
                     currIdx = len(options)
                 options.append(IPTVChoiceBoxItem(_(item), "", item))
-            self.openChild(boundFunction(self.childClosed, self.selectVideoOptionCallback), IPTVChoiceBoxWidget, {'selection_changed':self.videoOptionSelectionChanged, 'width':500, 'current_idx':currIdx, 'title':_("Select %s") % ret.name, 'options':options})
+            self.openChild(boundFunction(self.childClosed, self.selectVideoOptionCallback), IPTVChoiceBoxWidget, {'selection_changed': self.videoOptionSelectionChanged, 'width': 500, 'current_idx': currIdx, 'title': _("Select %s") % ret.name, 'options': options})
         else:
             printDBG('choices %s' % (choices))
             filteredChoices = []
@@ -720,7 +720,7 @@ class IPTVExtMoviePlayer(Screen):
                 else:
                     item.type = IPTVChoiceBoxItem.TYPE_OFF
                 options.append(item)
-            self.openChild(boundFunction(self.childClosed, self.selectVideoModeCallback), IPTVChoiceBoxWidget, {'width':500, 'current_idx':currIdx, 'title':_("Select %s") % ret.name, 'options':options})
+            self.openChild(boundFunction(self.childClosed, self.selectVideoModeCallback), IPTVChoiceBoxWidget, {'width': 500, 'current_idx': currIdx, 'title': _("Select %s") % ret.name, 'options': options})
         
     def selectVideoModeCallback(self, ret=None):
         printDBG("selectVideoModeCallback ret[%r]" % [ret])
@@ -771,14 +771,14 @@ class IPTVExtMoviePlayer(Screen):
             currIdx = 0
             for trackIdx in range(len(tracksTab)):
                 name = '[{0}] {1}'.format(tracksTab[trackIdx]['encode'], _(tracksTab[trackIdx]['name']))
-                item = IPTVChoiceBoxItem(name, "", {'track_id':tracksTab[trackIdx]['id'], 'track_idx':trackIdx})
+                item = IPTVChoiceBoxItem(name, "", {'track_id': tracksTab[trackIdx]['id'], 'track_idx': trackIdx})
                 if tracksTab[trackIdx]['id'] == currentId:
                     item.type = IPTVChoiceBoxItem.TYPE_ON
                     currIdx = trackIdx
                 else:
                     item.type = IPTVChoiceBoxItem.TYPE_OFF
                 options.append(item)
-            self.openChild(boundFunction(self.childClosed, self.selectAudioTrackCallback), IPTVChoiceBoxWidget, {'width':500, 'height':240, 'current_idx':currIdx, 'title':_("Select audio track"), 'options':options})
+            self.openChild(boundFunction(self.childClosed, self.selectAudioTrackCallback), IPTVChoiceBoxWidget, {'width': 500, 'height': 240, 'current_idx': currIdx, 'title': _("Select audio track"), 'options': options})
         else:
             self.showMessage(_("Information about audio tracks not available."), MessageBox.TYPE_INFO, None)
             
@@ -802,7 +802,7 @@ class IPTVExtMoviePlayer(Screen):
             currIdx = 0
         ####################################
         
-        item = IPTVChoiceBoxItem(_('None'), "", {'other':'none'})
+        item = IPTVChoiceBoxItem(_('None'), "", {'other': 'none'})
         if 0 == currIdx and -1 == embeddedTrackId:
             item.type = IPTVChoiceBoxItem.TYPE_ON
         else:
@@ -812,7 +812,7 @@ class IPTVExtMoviePlayer(Screen):
         #####################################
         for trackIdx in range(len(embeddedTracksTab)):
             name = '[{0}] {1}'.format(embeddedTracksTab[trackIdx]['encode'], _(embeddedTracksTab[trackIdx]['name']))
-            item = IPTVChoiceBoxItem(name, "", {'track_id': embeddedTracksTab[trackIdx]['id'], 'track_idx':trackIdx})
+            item = IPTVChoiceBoxItem(name, "", {'track_id': embeddedTracksTab[trackIdx]['id'], 'track_idx': trackIdx})
             if embeddedTracksTab[trackIdx]['id'] == embeddedTrackId:
                 item.type = IPTVChoiceBoxItem.TYPE_ON
             else:
@@ -823,21 +823,21 @@ class IPTVExtMoviePlayer(Screen):
         tracksTab = self.metaHandler.getSubtitlesTracks()
         for trackIdx in range(len(tracksTab)):
             name = '[{0}] {1}'.format(tracksTab[trackIdx]['lang'], tracksTab[trackIdx]['title'])
-            item = IPTVChoiceBoxItem(name, "", {'track_idx':trackIdx})
+            item = IPTVChoiceBoxItem(name, "", {'track_idx': trackIdx})
             if (trackIdx + 1) == currIdx:
                 item.type = IPTVChoiceBoxItem.TYPE_ON
             else:
                 item.type = IPTVChoiceBoxItem.TYPE_OFF
             options.append(item)
         if self.subHandler['enabled'] and None != self.metaHandler.getSubtitleTrack():
-            options.append(IPTVChoiceBoxItem(_('Synchronize'), "", {'other':'synchro'}))
+            options.append(IPTVChoiceBoxItem(_('Synchronize'), "", {'other': 'synchro'}))
         if len(self.externalSubTracks):
             for item in self.externalSubTracks:
                 title = '[{0}] {1} ({2})'.format(item.get('lang', ''), item['title'], _('Download suggested'))
-                options.append(IPTVChoiceBoxItem(title, "", {'other':'download_suggested', 'track':item}))
-        options.append(IPTVChoiceBoxItem(_('Load'), "", {'other':'load'}))
-        options.append(IPTVChoiceBoxItem(_('Download'), "", {'other':'download'}))
-        self.openChild(boundFunction(self.childClosed, self.selectSubtitleCallback), IPTVChoiceBoxWidget, {'width':600, 'current_idx':currIdx, 'title':_("Select subtitles track"), 'options':options})
+                options.append(IPTVChoiceBoxItem(title, "", {'other': 'download_suggested', 'track': item}))
+        options.append(IPTVChoiceBoxItem(_('Load'), "", {'other': 'load'}))
+        options.append(IPTVChoiceBoxItem(_('Download'), "", {'other': 'download'}))
+        self.openChild(boundFunction(self.childClosed, self.selectSubtitleCallback), IPTVChoiceBoxWidget, {'width': 600, 'current_idx': currIdx, 'title': _("Select subtitles track"), 'options': options})
     
     def selectSubtitleCallback(self, ret):
         printDBG("selectSubtitleCallback ret[%r]" % [ret])
@@ -847,7 +847,7 @@ class IPTVExtMoviePlayer(Screen):
                 option = ret['other']
                 if option == 'none':
                     # to speed up, should be set also as output from exteplayer3
-                    self.playback['SubtitleTrack'] = {'id':-1}
+                    self.playback['SubtitleTrack'] = {'id': -1}
                     self.metaHandler.setSubtitleIdx(-1)
                     self.metaHandler.setEmbeddedSubtileTrackIdx(-1)
                     self.disableSubtitles()
@@ -866,7 +866,7 @@ class IPTVExtMoviePlayer(Screen):
             elif 'track_idx' in ret:
                 self.metaHandler.setSubtitleIdx(ret['track_idx'])
                 # to speed up, should be set also as output from exteplayer3
-                self.playback['SubtitleTrack'] = {'id':-1}
+                self.playback['SubtitleTrack'] = {'id': -1}
                 self.metaHandler.setEmbeddedSubtileTrackIdx(-1)
                 self.extPlayerCmddDispatcher.setSubtitleTrack(-1)
                 self.subHandler['embedded_handler'].flushSubtitles()
@@ -930,7 +930,7 @@ class IPTVExtMoviePlayer(Screen):
                 except Exception:
                     printExc()
             if -1 == trackIdx:
-                trackIdx = self.metaHandler.addSubtitleTrack({"title":fileName, "id":"", "provider":"", "lang":lang, "delay_ms":0, "path":filePath})
+                trackIdx = self.metaHandler.addSubtitleTrack({"title": fileName, "id": "", "provider": "", "lang": lang, "delay_ms": 0, "path": filePath})
             self.metaHandler.setSubtitleIdx(trackIdx)
             self.enableSubtitles(encoding)
 
@@ -1153,7 +1153,7 @@ class IPTVExtMoviePlayer(Screen):
         printDBG("IPTVExtMoviePlayer.showMessage")
         if self.isClosing and type != None:
             return
-        messageItem = {'msg':message, 'type':type, 'callback':callback}
+        messageItem = {'msg': message, 'type': type, 'callback': callback}
         self.messageQueue.append(messageItem)
         self.processMessageQueue()
         
@@ -1602,11 +1602,11 @@ class IPTVExtMoviePlayer(Screen):
                 elif "PLAYBACK_STOP" == key:
                     self.onLeavePlayer()
                 elif "PLAYBACK_LENGTH" == key and 0 == obj['sts']:
-                    self.playbackUpdateInfo({'Length':int(obj['length'])})
+                    self.playbackUpdateInfo({'Length': int(obj['length'])})
                 elif "PLAYBACK_CURRENT_TIME" == key and 0 == obj['sts']:
-                    self.playbackUpdateInfo({'CurrentTime':int(obj['sec'])})
+                    self.playbackUpdateInfo({'CurrentTime': int(obj['sec'])})
                 elif "J" == key and obj['ms'] > 0:
-                    updateInfoParams = {'CurrentTime':int(obj['ms'] / 1000)}
+                    updateInfoParams = {'CurrentTime': int(obj['ms'] / 1000)}
                     if 'lms' in obj:
                         updateInfoParams['BufferCTime'] = int(obj['lms'] / 1000)
                     self.playbackUpdateInfo(updateInfoParams)
@@ -1615,26 +1615,26 @@ class IPTVExtMoviePlayer(Screen):
                 elif "v_c" == key:
                     tmpTrack = _mapTrack(obj, True)
                     if tmpTrack.get('id', -1) > -1:
-                        self.playbackUpdateInfo({'VideoTrack':tmpTrack})
+                        self.playbackUpdateInfo({'VideoTrack': tmpTrack})
                 elif "a_c" == key:
                     tmpTrack = _mapTrack(obj)
                     if tmpTrack.get('id', -1) > -1:
-                        self.playbackUpdateInfo({'AudioTrack':tmpTrack})
+                        self.playbackUpdateInfo({'AudioTrack': tmpTrack})
                 elif "a_l" == key:
                     tracks = []
                     for item in obj:
                         tracks.append(_mapTrack(item))
-                    self.playbackUpdateInfo({'AudioTracks':tracks})
+                    self.playbackUpdateInfo({'AudioTracks': tracks})
                 elif "s_c" == key:
                     tmpTrack = _mapTrack(obj)
                     if tmpTrack.get('id', -1) > -1: 
-                        self.playbackUpdateInfo({'SubtitleTrack':tmpTrack})
+                        self.playbackUpdateInfo({'SubtitleTrack': tmpTrack})
                         self.enableEmbeddedSubtitles(tmpTrack['id'])
                 elif "s_l" == key:
                     tracks = []
                     for item in obj:
                         tracks.append(_mapTrack(item))
-                    self.playbackUpdateInfo({'SubtitleTracks':tracks})
+                    self.playbackUpdateInfo({'SubtitleTracks': tracks})
                 elif "s_a" == key:
                     if self.subHandler['enabled']:
                         subAtom = _mapSubAtom(obj)
@@ -1839,9 +1839,9 @@ class IPTVExtMoviePlayer(Screen):
         else:
             url = strwithmeta(self.fileSRC)
         if 0 == len(simpleTracksTab):
-            self.openChild(boundFunction(self.childClosed, self.downloadSubCallback), IPTVSubDownloaderWidget, {'duration_sec':self.playback['Length'], 'movie_url':url, 'movie_title':self.title})
+            self.openChild(boundFunction(self.childClosed, self.downloadSubCallback), IPTVSubDownloaderWidget, {'duration_sec': self.playback['Length'], 'movie_url': url, 'movie_title': self.title})
         else:
-            self.openChild(boundFunction(self.childClosed, self.downloadSubCallback), IPTVSubSimpleDownloaderWidget, {'movie_url':url, 'movie_title':self.title, 'sub_list':simpleTracksTab})
+            self.openChild(boundFunction(self.childClosed, self.downloadSubCallback), IPTVSubSimpleDownloaderWidget, {'movie_url': url, 'movie_title': self.title, 'sub_list': simpleTracksTab})
         
     def downloadSubCallback(self, ret=None):
         if None != ret:

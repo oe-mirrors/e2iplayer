@@ -47,18 +47,18 @@ def gettytul():
 class FilmeOnlineTo(CBaseHostClass):
  
     def __init__(self):
-        CBaseHostClass.__init__(self, {'history':'filme-online.to.tv', 'cookie':'filme-online.to.cookie'})
+        CBaseHostClass.__init__(self, {'history': 'filme-online.to.tv', 'cookie': 'filme-online.to.cookie'})
         self.defaultParams = {'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
         
         self.DEFAULT_ICON_URL = 'https://filme-online.to/assets/images/filme-online-logo4e.png'
-        self.HEADER = {'User-Agent': 'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:40.0) Gecko/20100101 Firefox/40.0', 'DNT':'1', 'Accept':'text/html', 'Accept-Encoding':'gzip, deflate'}
+        self.HEADER = {'User-Agent': 'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:40.0) Gecko/20100101 Firefox/40.0', 'DNT': '1', 'Accept': 'text/html', 'Accept-Encoding': 'gzip, deflate'}
         self.AJAX_HEADER = dict(self.HEADER)
-        self.AJAX_HEADER.update({'X-Requested-With': 'XMLHttpRequest', 'Content-Type':'application/x-www-form-urlencoded; charset=UTF-8', 'Accept':'*/*'})
+        self.AJAX_HEADER.update({'X-Requested-With': 'XMLHttpRequest', 'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8', 'Accept': '*/*'})
         self.MAIN_URL = None
         self.cacheLinks = {}
         self.cacheFilters = {}
         self.cacheFiltersKeys = []
-        self.defaultParams = {'header':self.HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
+        self.defaultParams = {'header': self.HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
         
     def getPage(self, url, addParams={}, post_data=None):
         if addParams == {}:
@@ -71,7 +71,7 @@ class FilmeOnlineTo(CBaseHostClass):
             else:
                 proxy = config.plugins.iptvplayer.alternative_proxy2.value
             addParams = dict(addParams)
-            addParams.update({'http_proxy':proxy})
+            addParams.update({'http_proxy': proxy})
         return self.cm.getPage(url, addParams, post_data)
         
     def getFullIconUrl(self, url):
@@ -82,7 +82,7 @@ class FilmeOnlineTo(CBaseHostClass):
                 proxy = config.plugins.iptvplayer.alternative_proxy1.value
             else:
                 proxy = config.plugins.iptvplayer.alternative_proxy2.value
-            url = strwithmeta(url, {'iptv_http_proxy':proxy})
+            url = strwithmeta(url, {'iptv_http_proxy': proxy})
         return url
         
     def selectDomain(self):
@@ -112,10 +112,10 @@ class FilmeOnlineTo(CBaseHostClass):
         if self.MAIN_URL == None:
             self.MAIN_URL = domains[-1]
         
-        self.MAIN_CAT_TAB = [{'category':'list_filters', 'title': _('Movies'), 'url':self.getFullUrl('/filter'), 'f_tip':'film'},
-                             {'category':'list_filters', 'title': _('TV-Series'), 'url':self.getFullUrl('/filter'), 'f_tip':'tv'},
-                             {'category': 'search', 'title': _('Search'), 'search_item': True,},
-                             {'category': 'search_history', 'title': _('Search history'),}]
+        self.MAIN_CAT_TAB = [{'category': 'list_filters', 'title': _('Movies'), 'url': self.getFullUrl('/filter'), 'f_tip': 'film'},
+                             {'category': 'list_filters', 'title': _('TV-Series'), 'url': self.getFullUrl('/filter'), 'f_tip': 'tv'},
+                             {'category': 'search', 'title': _('Search'), 'search_item': True, },
+                             {'category': 'search_history', 'title': _('Search history'), }]
                             
     def fillCacheFilters(self, cItem):
         printDBG("FilmeOnlineTo.listCategories")
@@ -140,11 +140,11 @@ class FilmeOnlineTo(CBaseHostClass):
                     addAll = False
                 if value in ['all', 'default', 'any']:
                     addAll = False
-                self.cacheFilters[key].append({'title':title.title(), key:value})
+                self.cacheFilters[key].append({'title': title.title(), key: value})
                 
             if len(self.cacheFilters[key]):
                 if addAll:
-                    self.cacheFilters[key].insert(0, {'title':_('All')})
+                    self.cacheFilters[key].insert(0, {'title': _('All')})
                 self.cacheFiltersKeys.append(key)
         
         filtersData = self.cm.ph.getAllItemsBeetwenNodes(data, ('<ul', '>', '-list'), ('</ul', '>'))
@@ -161,7 +161,7 @@ class FilmeOnlineTo(CBaseHostClass):
         tmp = self.cm.ph.getAllItemsBeetwenMarkers(tmp, '<li', '</li>')
         for item in tmp:
             value = self.cm.ph.getSearchGroups(item, '''sortby\(\s*?['"]([^'^"]+?)['"]''')[0]
-            self.cacheFilters[key].append({key:value, 'title':self.cleanHtmlStr(item)})
+            self.cacheFilters[key].append({key: value, 'title': self.cleanHtmlStr(item)})
         if len(self.cacheFilters[key]):
             self.cacheFiltersKeys.append(key)
         
@@ -251,12 +251,12 @@ class FilmeOnlineTo(CBaseHostClass):
             if title == '':
                 title = self.cleanHtmlStr(self.cm.ph.getSearchGroups(item, 'alt="([^"]+?)"')[0])
             movieId = self.cm.ph.getSearchGroups(item, '''data\-movie\-id=['"]([^"^']+?)['"]''')[0]
-            params = {'good_for_fav': True, 'name':'category', 'category':nextCategory, 'title':title, 'url':url, 'movie_id':movieId, 'desc':' | '.join(desc), 'info_url':url, 'icon':icon}
+            params = {'good_for_fav': True, 'name': 'category', 'category': nextCategory, 'title': title, 'url': url, 'movie_id': movieId, 'desc': ' | '.join(desc), 'info_url': url, 'icon': icon}
             self.addDir(params)
         
         if nextPage and len(self.currList) > 0:
             params = dict(cItem)
-            params.update({'title':_("Next page"), 'page':page + 1})
+            params.update({'title': _("Next page"), 'page': page + 1})
             self.addDir(params)
         
     def exploreItem(self, cItem, nextCategory):
@@ -275,7 +275,7 @@ class FilmeOnlineTo(CBaseHostClass):
             url = movieData.get('trailer', '')
             if self.cm.isValidUrl(url):
                 params = dict(cItem)
-                params.update({'title':'%s %s' % (_('[trailer]'), self.cleanHtmlStr(movieData['name'])), 'url':url})
+                params.update({'title': '%s %s' % (_('[trailer]'), self.cleanHtmlStr(movieData['name'])), 'url': url})
                 self.addVideo(params)
 
             params = dict(self.defaultParams)
@@ -317,15 +317,15 @@ class FilmeOnlineTo(CBaseHostClass):
                         linksLinks[key] = []
                         linksTiles[key] = title
                     url = '%s?ep=%s' % (cItem['url'], params.get('id', str(key) + title))
-                    url = strwithmeta(url, {'params':params})
-                    linksLinks[key].append({'name':sTitle, 'title':title, 'url':url, 'need_resolve':1})
+                    url = strwithmeta(url, {'params': params})
+                    linksLinks[key].append({'name': sTitle, 'title': title, 'url': url, 'need_resolve': 1})
             
             if movieData.get('type', '') == 'tv':
                 linksKeys.sort()
                 for key in linksKeys:
                     url = '%s#ep=%s' % (cItem['url'], key)
                     params = dict(cItem)
-                    params.update({'good_for_fav': False, 'title':linksTiles[key], 'url':url})
+                    params.update({'good_for_fav': False, 'title': linksTiles[key], 'url': url})
                     self.addVideo(params)
                     self.cacheLinks[url] = linksLinks[key]
             else:
@@ -333,7 +333,7 @@ class FilmeOnlineTo(CBaseHostClass):
                 self.cacheLinks[url] = []
                 for key in linksKeys:
                     for item in linksLinks[key]:
-                        item.update({'name':'%s - %s' % (item['name'], item['title'])})
+                        item.update({'name': '%s - %s' % (item['name'], item['title'])})
                         self.cacheLinks[url].append(item)
                 if len(self.cacheLinks[url]):
                     params = dict(cItem)
@@ -398,12 +398,12 @@ class FilmeOnlineTo(CBaseHostClass):
                     return
                 data = byteify(json.loads(data), '', True)
                 url = data['src'].replace('&amp;', '&')
-                urlParams = {'Referer':str(videoUrl), 'User-Agent':self.HEADER['User-Agent']}
+                urlParams = {'Referer': str(videoUrl), 'User-Agent': self.HEADER['User-Agent']}
                 subsLinks = re.compile('''c([0-9]+?)_file=(https?://[^&^$]+?\.srt)[&$]''').findall(url)
                 subsLabels = dict(re.compile('''c([0-9]+?)_label=([^&^/]+?)[&/]''').findall(url + '&'))
                 for item in subsLinks:
                     label = subsLabels.get(item[0], 'unk')
-                    subTracks.append({'title':label, 'url':strwithmeta(item[1], urlParams), 'lang':label, 'format':'srt'})
+                    subTracks.append({'title': label, 'url': strwithmeta(item[1], urlParams), 'lang': label, 'format': 'srt'})
                 urlTab = self.up.getVideoLinkExt(url)
             elif params.get('tip', '') == 'vip':
                 url = '/ajax/mtoken.php?eid=%s&mid=%s&so=%s&server=NaN&epNr=%s&srvr=NaN&_=%s' % (params['id'], movieData['id'], params['so'], params['epNr'], int(time.time() * 1000))
@@ -416,24 +416,24 @@ class FilmeOnlineTo(CBaseHostClass):
                 if not sts:
                     return
                 
-                urlParams = {'Referer':str(videoUrl), 'User-Agent':self.HEADER['User-Agent']}
+                urlParams = {'Referer': str(videoUrl), 'User-Agent': self.HEADER['User-Agent']}
                 data = byteify(json.loads(data), '', True)
                 url = self.getFullUrl(data['playlist'][0]['sources']['file'])
                 if 'mp4' in data['playlist'][0]['sources']['type'].lower():
-                    urlTab.append({'name':'mp4', 'url':strwithmeta(url, urlParams), 'need_resolve':0})
+                    urlTab.append({'name': 'mp4', 'url': strwithmeta(url, urlParams), 'need_resolve': 0})
                 for item in data['playlist'][0]['tracks']:
                     if item.get('kind', '').lower() != 'captions':
                         continue
                     url = self.getFullUrl(item['file'])
                     label = self.cleanHtmlStr(item['label'])
-                    subTracks.append({'title':label, 'url':strwithmeta(url, urlParams), 'lang':label, 'format':'srt'})
+                    subTracks.append({'title': label, 'url': strwithmeta(url, urlParams), 'lang': label, 'format': 'srt'})
                 printDBG(data)
         except Exception:
             printExc()
             
-        urlParams = {'Referer':str(videoUrl), 'User-Agent':self.HEADER['User-Agent']}
+        urlParams = {'Referer': str(videoUrl), 'User-Agent': self.HEADER['User-Agent']}
         if len(subTracks):
-            urlParams.update({'external_sub_tracks':subTracks})
+            urlParams.update({'external_sub_tracks': subTracks})
 
         for idx in range(len(urlTab)):
             urlTab[idx]['url'] = strwithmeta(urlTab[idx]['url'], urlParams)
@@ -495,7 +495,7 @@ class FilmeOnlineTo(CBaseHostClass):
                 except Exception:
                     continue
         
-        return [{'title':self.cleanHtmlStr(title), 'text': self.cleanHtmlStr(desc), 'images':[{'title':'', 'url':self.getFullUrl(icon)}], 'other_info':otherInfo}]
+        return [{'title': self.cleanHtmlStr(title), 'text': self.cleanHtmlStr(desc), 'images': [{'title': '', 'url': self.getFullUrl(icon)}], 'other_info': otherInfo}]
         
     def handleService(self, index, refresh=0, searchPattern='', searchType=''):
         printDBG('handleService start')
@@ -515,7 +515,7 @@ class FilmeOnlineTo(CBaseHostClass):
     #MAIN MENU
         if name == None:
             self.cacheLinks = {}
-            self.listsTab(self.MAIN_CAT_TAB, {'name':'category'})
+            self.listsTab(self.MAIN_CAT_TAB, {'name': 'category'})
         elif category == 'list_filters':
             self.listFilters(self.currItem, 'list_items')
         elif category == 'list_items':
@@ -525,11 +525,11 @@ class FilmeOnlineTo(CBaseHostClass):
     #SEARCH
         elif category in ["search", "search_next_page"]:
             cItem = dict(self.currItem)
-            cItem.update({'search_item':False, 'name':'category'}) 
+            cItem.update({'search_item': False, 'name': 'category'}) 
             self.listSearchResult(cItem, searchPattern, searchType)
     #HISTORIA SEARCH
         elif category == "search_history":
-            self.listsHistory({'name':'history', 'category': 'search'}, 'desc', _("Type: "))
+            self.listsHistory({'name': 'history', 'category': 'search'}, 'desc', _("Type: "))
         else:
             printExc()
         

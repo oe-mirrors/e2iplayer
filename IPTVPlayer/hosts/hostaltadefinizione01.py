@@ -24,17 +24,17 @@ def gettytul():
 class Altadefinizione(CBaseHostClass):
 
     def __init__(self):
-        CBaseHostClass.__init__(self, {'history':'altadefinizione01.zone', 'cookie':'altadefinizione01.zone.cookie'})
+        CBaseHostClass.__init__(self, {'history': 'altadefinizione01.zone', 'cookie': 'altadefinizione01.zone.cookie'})
         
         self.USER_AGENT = 'Mozilla/5.0'
         self.HEADER = {'User-Agent': self.USER_AGENT, 'Accept': 'text/html'}
         self.AJAX_HEADER = dict(self.HEADER)
-        self.AJAX_HEADER.update({'X-Requested-With':'XMLHttpRequest', 'Content-Type':'application/x-www-form-urlencoded; charset=UTF-8'})
+        self.AJAX_HEADER.update({'X-Requested-With': 'XMLHttpRequest', 'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8'})
         
         self.MAIN_URL = 'https://www.altadefinizione01.film/'
         self.DEFAULT_ICON_URL = 'https://previews.123rf.com/images/yusufsangdes89/yusufsangdes891507/yusufsangdes89150700042/42557652-cinema-camera-icon-movie-lover-series-icon.jpg'
         
-        self.defaultParams = {'header':self.HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
+        self.defaultParams = {'header': self.HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
     
     def getPage(self, baseUrl, addParams={}, post_data=None):
         if addParams == {}:
@@ -44,7 +44,7 @@ class Altadefinizione(CBaseHostClass):
                 return url
             else:
                 return urljoin(baseUrl, url)
-        addParams['cloudflare_params'] = {'domain':self.up.getDomain(baseUrl), 'cookie_file':self.COOKIE_FILE, 'User-Agent':self.USER_AGENT, 'full_url_handle':_getFullUrl}
+        addParams['cloudflare_params'] = {'domain': self.up.getDomain(baseUrl), 'cookie_file': self.COOKIE_FILE, 'User-Agent': self.USER_AGENT, 'full_url_handle': _getFullUrl}
         return self.cm.getPageCFProtection(baseUrl, addParams, post_data)
     
     def listMainMenu(self, cItem):
@@ -73,17 +73,17 @@ class Altadefinizione(CBaseHostClass):
                     url = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''href=['"]([^"^']+?)['"]''')[0])
                     title = self.cleanHtmlStr(item)
                     params = dict(cItem)
-                    params.update({'name':'category', 'category':'list_items', 'title':title, 'url':url})
+                    params.update({'name': 'category', 'category': 'list_items', 'title': title, 'url': url})
                     categories.append(params)
 
                 if len(categories):
                     params = dict(cItem)
-                    params.update({'name':'category', 'category':'sub_items', 'title':tabTitle, 'sub_items':categories})
+                    params.update({'name': 'category', 'category': 'sub_items', 'title': tabTitle, 'sub_items': categories})
                     tabs.append(params)
 
             if len(tabs):
                 params = dict(cItem)
-                params.update({'name':'category', 'category':'sub_items', 'title':mainTitle, 'sub_items':tabs})
+                params.update({'name': 'category', 'category': 'sub_items', 'title': mainTitle, 'sub_items': tabs})
                 self.addDir(params)
 
         data = self.cm.ph.getDataBeetwenNodes(data, ('<ul', '>', 'menu-menu'), ('</ul', '>'), False)[1]
@@ -94,15 +94,15 @@ class Altadefinizione(CBaseHostClass):
                 continue
             title = self.cleanHtmlStr(item)
             params = dict(cItem)
-            params.update({'name':'category', 'title':title, 'url':self.getFullUrl(url)})
+            params.update({'name': 'category', 'title': title, 'url': self.getFullUrl(url)})
             if '/catalog' in url:
                 params['category'] = 'list_abc'
             else:
                 params['category'] = 'list_items'
             self.addDir(params)
 
-        MAIN_CAT_TAB = [{'category':'search', 'title': _('Search'), 'search_item':True},
-                        {'category':'search_history', 'title': _('Search history')}]
+        MAIN_CAT_TAB = [{'category': 'search', 'title': _('Search'), 'search_item': True},
+                        {'category': 'search_history', 'title': _('Search history')}]
         self.listsTab(MAIN_CAT_TAB, cItem)
         
     def listItems(self, cItem, nextCategory):
@@ -125,7 +125,7 @@ class Altadefinizione(CBaseHostClass):
 
         for dataItem in data:
             if len(self.currList):
-                self.addMarker({'title':''})
+                self.addMarker({'title': ''})
             dataItem = self.cm.ph.rgetAllItemsBeetwenNodes(dataItem, ('</div', '>'), ('<div', '>', 'boxgrid_shadow'), False)
             for item in dataItem:
                 tmp = self.cm.ph.getDataBeetwenNodes(item, ('<h', '>'), ('</h', '>'), False)[1]
@@ -153,19 +153,19 @@ class Altadefinizione(CBaseHostClass):
                         desc.append(t)
 
                 params = dict(cItem)
-                params.update({'good_for_fav': True, 'category':nextCategory, 'title':title, 'url':url, 'icon':icon, 'desc':'[/br]'.join(desc)})
+                params.update({'good_for_fav': True, 'category': nextCategory, 'title': title, 'url': url, 'icon': icon, 'desc': '[/br]'.join(desc)})
                 self.addDir(params)
 
         if nextPage != '':
             params = dict(cItem)
-            params.update({'title':_("Next page"), 'page':page + 1})
+            params.update({'title': _("Next page"), 'page': page + 1})
             if nextPage != '#':
                 params['url'] = self.getFullUrl(nextPage)
                 self.addDir(params)
             elif postData != {}:
                 postData = dict(postData)
                 postData.pop('titleonly', None)
-                postData.update({'search_start':page + 1, 'full_search':'0', 'result_from':10 * page + 1})
+                postData.update({'search_start': page + 1, 'full_search': '0', 'result_from': 10 * page + 1})
                 params['post_data'] = postData
                 self.addDir(params)
             else:
@@ -185,7 +185,7 @@ class Altadefinizione(CBaseHostClass):
             title = self.cleanHtmlStr(item)
             url = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''href=['"]([^"^']+?)['"]''', 1, True)[0])
             params = dict(cItem)
-            params.update({'good_for_fav':False, 'category':nextCategory, 'title':title, 'url':url})
+            params.update({'good_for_fav': False, 'category': nextCategory, 'title': title, 'url': url})
             self.addDir(params)
 
     def listABCItems(self, cItem, nextCategory):
@@ -218,12 +218,12 @@ class Altadefinizione(CBaseHostClass):
                     desc.append(t)
 
             params = dict(cItem)
-            params.update({'good_for_fav': True, 'category':nextCategory, 'title':title, 'url':url, 'icon':icon, 'desc':' | '.join(desc)})
+            params.update({'good_for_fav': True, 'category': nextCategory, 'title': title, 'url': url, 'icon': icon, 'desc': ' | '.join(desc)})
             self.addDir(params)
         
         if nextPage != '':
             params = dict(cItem)
-            params.update({'title':_("Next page"), 'url':self.getFullUrl(nextPage), 'page':page + 1})
+            params.update({'title': _("Next page"), 'url': self.getFullUrl(nextPage), 'page': page + 1})
             self.addDir(params)
 
     def exploreItem(self, cItem):
@@ -242,7 +242,7 @@ class Altadefinizione(CBaseHostClass):
         if self.cm.isValidUrl(url):
             title = self.cleanHtmlStr(trailer)
             params = dict(cItem)
-            params.update({'good_for_fav':False, 'url':url, 'title':'%s %s' % (title, cItem['title'])})
+            params.update({'good_for_fav': False, 'url': url, 'title': '%s %s' % (title, cItem['title'])})
             self.addVideo(params)
  
         urlTab = []
@@ -253,19 +253,19 @@ class Altadefinizione(CBaseHostClass):
                 url = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''data\-link=['"]([^"^']+?)['"]''', 1, True)[0])
                 if 1 == self.up.checkHostSupport(url): 
                     name = self.cleanHtmlStr(item)
-                    url = strwithmeta(url, {'Referer':cItem['url']})
-                    urlTab.append({'name':name, 'url':url, 'need_resolve':1})
+                    url = strwithmeta(url, {'Referer': cItem['url']})
+                    urlTab.append({'name': name, 'url': url, 'need_resolve': 1})
 
         if len(urlTab):
             params = dict(cItem)
-            params.update({'good_for_fav':False, 'urls_tab':urlTab})
+            params.update({'good_for_fav': False, 'urls_tab': urlTab})
             self.addVideo(params)
 
     def listSearchResult(self, cItem, searchPattern, searchType):
         printDBG("Altadefinizione.listSearchResult cItem[%s], searchPattern[%s] searchType[%s]" % (cItem, searchPattern, searchType))
         cItem = dict(cItem)
         cItem['url'] = self.getFullUrl('index.php?do=search') 
-        cItem['post_data'] = {'do':'search', 'subaction':'search', 'titleonly':'3', 'story':searchPattern}
+        cItem['post_data'] = {'do': 'search', 'subaction': 'search', 'titleonly': '3', 'story': searchPattern}
         cItem['category'] = 'list_items'
         self.listItems(cItem, 'explore_item')
 
@@ -332,7 +332,7 @@ class Altadefinizione(CBaseHostClass):
         if desc == '':
             desc = cItem.get('desc', '')
         
-        return [{'title':self.cleanHtmlStr(title), 'text': self.cleanHtmlStr(desc), 'images':[{'title':'', 'url':self.getFullUrl(icon)}], 'other_info':{'custom_items_list':itemsList}}]
+        return [{'title': self.cleanHtmlStr(title), 'text': self.cleanHtmlStr(desc), 'images': [{'title': '', 'url': self.getFullUrl(icon)}], 'other_info': {'custom_items_list': itemsList}}]
 
     def handleService(self, index, refresh=0, searchPattern='', searchType=''):
         printDBG('handleService start')
@@ -350,7 +350,7 @@ class Altadefinizione(CBaseHostClass):
         
     #MAIN MENU
         if name == None:
-            self.listMainMenu({'name':'category', 'type':'category'})
+            self.listMainMenu({'name': 'category', 'type': 'category'})
         elif category == 'list_items':
             self.listItems(self.currItem, 'explore_item')
         elif category == 'explore_item':
@@ -364,11 +364,11 @@ class Altadefinizione(CBaseHostClass):
     #SEARCH
         elif category in ["search", "search_next_page"]:
             cItem = dict(self.currItem)
-            cItem.update({'search_item':False, 'name':'category'}) 
+            cItem.update({'search_item': False, 'name': 'category'}) 
             self.listSearchResult(cItem, searchPattern, searchType)
     #HISTORIA SEARCH
         elif category == "search_history":
-            self.listsHistory({'name':'history', 'category': 'search'}, 'desc', _("Type: "))
+            self.listsHistory({'name': 'history', 'category': 'search'}, 'desc', _("Type: "))
         else:
             printExc()
         

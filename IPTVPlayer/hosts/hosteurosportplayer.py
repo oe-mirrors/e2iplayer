@@ -43,7 +43,7 @@ def gettytul():
 class EuroSportPlayer(CBaseHostClass):
     
     def __init__(self):
-        CBaseHostClass.__init__(self, {'history':'eurosportplayer.com', 'cookie':'eurosportplayer.com.cookie'})
+        CBaseHostClass.__init__(self, {'history': 'eurosportplayer.com', 'cookie': 'eurosportplayer.com.cookie'})
         self.USER_AGENT = 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/76.0.3809.132 Safari/537.36'
         self.MAIN_URL = 'https://www.eurosportplayer.com/'
         self.LOGIN_URL = 'https://auth.eurosportplayer.com/login?flow=login'
@@ -59,7 +59,7 @@ class EuroSportPlayer(CBaseHostClass):
         
         self.DEFAULT_ICON_URL = 'http://mirrors.kodi.tv/addons/leia/plugin.video.eurosportplayer/resources/icon.png'
         
-        self.HTTP_HEADER = {'User-Agent': self.USER_AGENT, 'Referer':self.getMainUrl(), 'Origin':self.getMainUrl(), 'X-disco-client': 'WEB:UNKNOWN:esp-web:prod'}
+        self.HTTP_HEADER = {'User-Agent': self.USER_AGENT, 'Referer': self.getMainUrl(), 'Origin': self.getMainUrl(), 'X-disco-client': 'WEB:UNKNOWN:esp-web:prod'}
         self.defaultParams = {'header': {'User-Agent': self.USER_AGENT}, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
         
         self.recaptcha_sitekey = "6LfvErIUAAAAABlpqACnxRiUhqhX4p14sPxx_sKf"
@@ -106,9 +106,9 @@ class EuroSportPlayer(CBaseHostClass):
         
         try:
             CAT_TAB = [
-                       {'category': 'on_air', 'title': _('On Air'),}, 
-                       {'category': 'schedule', 'title': _('Schedule'),},
-                       {'category': 'vod_sport_filters', 'title': _('All Sports'),} #,
+                       {'category': 'on_air', 'title': _('On Air'), }, 
+                       {'category': 'schedule', 'title': _('Schedule'), },
+                       {'category': 'vod_sport_filters', 'title': _('All Sports'), } #,
                        #{'category':'search',             'title': _('Search'),          'search_item':True    }, 
                        #{'category':'search_history',     'title': _('Search history')}
                       ]
@@ -321,7 +321,7 @@ class EuroSportPlayer(CBaseHostClass):
                 title = node['attributes']['name']
                 icon = iconData['attributes']['src']
                 url = self.getFullPath(routeData['attributes']['url'], 'route')
-                params = {'good_for_fav':False, 'category':nextCategory, 'title':title, 'icon':icon, 'url': url}
+                params = {'good_for_fav': False, 'category': nextCategory, 'title': title, 'icon': icon, 'url': url}
                 printDBG(str(params))
                 self.addDir(params)
                 printDBG("-------------------------------------------")                                   
@@ -422,7 +422,7 @@ class EuroSportPlayer(CBaseHostClass):
                                 if date == NOW:
                                     title = title + (" - [%s]" % _('Today')).upper()
                                 params = dict(cItem)
-                                params.update({'good_for_fav':False, 'category':nextCategory, 'title': title, 'filter': day_filter, 'schedule_id': schedule_id})
+                                params.update({'good_for_fav': False, 'category': nextCategory, 'title': title, 'filter': day_filter, 'schedule_id': schedule_id})
                                 printDBG(str(params))
                                 self.addDir(params)
 
@@ -560,7 +560,7 @@ class EuroSportPlayer(CBaseHostClass):
                 postData = {'credentials': {'username': self.login, 'password': self.password}}
                 url = "https://eu3-prod-direct.eurosportplayer.com/login"
                 
-                httpParams = {'header': header, 'with_metadata':True, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE, 'raw_post_data': True}
+                httpParams = {'header': header, 'with_metadata': True, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE, 'raw_post_data': True}
                                     
                 sts, data = self.getPage(url, httpParams, post_data=json_dumps(postData))
                 
@@ -619,7 +619,7 @@ class EuroSportPlayer(CBaseHostClass):
         printDBG("EuroSportPlayer.listSearchResult cItem[%s], searchPattern[%s] searchType[%s]" % (cItem, searchPattern, searchType))
         
         params = dict(cItem)
-        params.update({'category':'list_search_items', 'f_query':searchPattern})
+        params.update({'category': 'list_search_items', 'f_query': searchPattern})
         self.listSearchItems(params)
         
     def getLinksForVideo(self, cItem):
@@ -670,7 +670,7 @@ class EuroSportPlayer(CBaseHostClass):
             
             if 'hls' in s:
                 link_url = strwithmeta(s['hls']['url'], {'User-Agent': self.USER_AGENT, 'Referer': video_page_url})
-                linksTab.append({'name':'auto hls', 'url': link_url})
+                linksTab.append({'name': 'auto hls', 'url': link_url})
                 linksTab.extend(getDirectM3U8Playlist(link_url, checkExt=False, variantCheck=True, checkContent=True, sortWithMaxBitrate=99999999)) 
             #if 'dash' in s:
             #    link_url = strwithmeta(s['dash']['url'], {'User-Agent': self.USER_AGENT, 'Referer' : video_page_url})
@@ -700,7 +700,7 @@ class EuroSportPlayer(CBaseHostClass):
         
         #MAIN MENU
         if name == None:
-            self.listMainMenu({'name':'category'})
+            self.listMainMenu({'name': 'category'})
         
         # ON AIR
         elif category == 'on_air':
@@ -723,12 +723,12 @@ class EuroSportPlayer(CBaseHostClass):
             self.listSearchItems(self.currItem)
         elif category in ["search", "search_next_page"]:
             cItem = dict(self.currItem)
-            cItem.update({'search_item':False, 'name':'category'}) 
+            cItem.update({'search_item': False, 'name': 'category'}) 
             self.listSearchResult(cItem, searchPattern, searchType)
         
         #HISTORIA SEARCH
         elif category == "search_history":
-            self.listsHistory({'name':'history', 'category': 'search'}, 'desc', _("Type: "))
+            self.listsHistory({'name': 'history', 'category': 'search'}, 'desc', _("Type: "))
         else:
             printExc()
         

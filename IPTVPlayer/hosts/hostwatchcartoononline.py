@@ -23,17 +23,17 @@ def gettytul():
 class WatchCartoonOnline(CBaseHostClass):
 
     def __init__(self):
-        CBaseHostClass.__init__(self, {'history':'watchcartoononline.com', 'cookie':'watchcartoononline.com.cookie'})
+        CBaseHostClass.__init__(self, {'history': 'watchcartoononline.com', 'cookie': 'watchcartoononline.com.cookie'})
         
         self.USER_AGENT = 'Mozilla/5.0'
         self.HEADER = {'User-Agent': self.USER_AGENT, 'Accept': 'text/html'}
         self.AJAX_HEADER = dict(self.HEADER)
-        self.AJAX_HEADER.update({'X-Requested-With':'XMLHttpRequest', 'Content-Type':'application/x-www-form-urlencoded; charset=UTF-8'})
+        self.AJAX_HEADER.update({'X-Requested-With': 'XMLHttpRequest', 'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8'})
         
         self.MAIN_URL = 'https://www.watchcartoononline.com/'
         self.DEFAULT_ICON_URL = 'https://mk0echouaawhk9ls0i7l.kinstacdn.com/wp-content/uploads/websites/website%20to%20watch%20cartoons/www.watchcartoononline.com.1280.jpg'
         
-        self.defaultParams = {'header':self.HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
+        self.defaultParams = {'header': self.HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
         self.cacheLinks = {}
         
     def getPage(self, baseUrl, addParams={}, post_data=None):
@@ -44,7 +44,7 @@ class WatchCartoonOnline(CBaseHostClass):
                 return url
             else:
                 return urljoin(baseUrl, url)
-        addParams['cloudflare_params'] = {'domain':self.up.getDomain(baseUrl), 'cookie_file':self.COOKIE_FILE, 'User-Agent':self.USER_AGENT, 'full_url_handle':_getFullUrl}
+        addParams['cloudflare_params'] = {'domain': self.up.getDomain(baseUrl), 'cookie_file': self.COOKIE_FILE, 'User-Agent': self.USER_AGENT, 'full_url_handle': _getFullUrl}
         return self.cm.getPageCFProtection(baseUrl, addParams, post_data)
     
     def listMainMenu(self, cItem):
@@ -66,7 +66,7 @@ class WatchCartoonOnline(CBaseHostClass):
             url = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''href=['"]([^"^']+?)['"]''')[0])
             title = self.cleanHtmlStr(item)
             params = dict(cItem)
-            params.update({'category':'list_abc', 'title':title, 'url':url})
+            params.update({'category': 'list_abc', 'title': title, 'url': url})
             self.addDir(params)
         
         def _fillItems(data):
@@ -87,16 +87,16 @@ class WatchCartoonOnline(CBaseHostClass):
                 icon = self.getFullIconUrl(self.cm.ph.getSearchGroups(item, '''<img[^>]+?src=['"]([^"^']+?)['"]''')[0])
                 
                 params = dict(cItem)
-                params.update({'title':title, 'url':url, 'icon':icon})
+                params.update({'title': title, 'url': url, 'icon': icon})
                 if url.endswith('-list') or genre:
-                    params.update({'category':'list_abc'})
+                    params.update({'category': 'list_abc'})
                 else:
-                    params.update({'good_for_fav':True, 'category':'explore_item'})
+                    params.update({'good_for_fav': True, 'category': 'explore_item'})
                 tabItems.append(params)
             
             if len(tabItems):
                 params = dict(cItem)
-                params.update({'category':'sub_items', 'title':tabTitle, 'sub_items':tabItems})
+                params.update({'category': 'sub_items', 'title': tabTitle, 'sub_items': tabItems})
                 self.addDir(params)
         
         tmp = self.cm.ph.getDataBeetwenNodes(data, ('<div', '>', 'recent-release-main'), ('<div', '>', 'sidebar-'), False)[1]
@@ -105,8 +105,8 @@ class WatchCartoonOnline(CBaseHostClass):
         for item in tmp:
             _fillItems(item)
 
-        MAIN_CAT_TAB = [{'category':'search', 'title': _('Search'), 'search_item':True},
-                        {'category':'search_history', 'title': _('Search history')}]
+        MAIN_CAT_TAB = [{'category': 'search', 'title': _('Search'), 'search_item': True},
+                        {'category': 'search_history', 'title': _('Search history')}]
         self.listsTab(MAIN_CAT_TAB, cItem)
         
     def listABC(self, cItem, nextCategory):
@@ -128,12 +128,12 @@ class WatchCartoonOnline(CBaseHostClass):
                 icon = self.getFullIconUrl(self.cm.ph.getSearchGroups(item, '''<img[^>]+?src=['"]([^"^']+?)['"]''')[0])
                 
                 params = dict(cItem)
-                params.update({'good_for_fav':True, 'category':'explore_item', 'title':title, 'url':url, 'icon':icon})
+                params.update({'good_for_fav': True, 'category': 'explore_item', 'title': title, 'url': url, 'icon': icon})
                 tabItems.append(params)
             
             if len(tabItems):
                 params = dict(cItem)
-                params.update({'category':'sub_items', 'title':tabTitle + ' ({0}) '.format(len(tabItems)), 'sub_items':tabItems})
+                params.update({'category': 'sub_items', 'title': tabTitle + ' ({0}) '.format(len(tabItems)), 'sub_items': tabItems})
                 self.addDir(params)
 
     def exploreItem(self, cItem):
@@ -161,7 +161,7 @@ class WatchCartoonOnline(CBaseHostClass):
         desc = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(descData, '<b', '</b>')[1]) + ' ' + ', '.join(desc)
         desc += '[/br]' + self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(descData, '<p', '</p>')[1])
         
-        cItem.update({'desc':desc, 'icon':icon})
+        cItem.update({'desc': desc, 'icon': icon})
         
         # main item
         if '-video-0' in data or 'video too slow' in data:
@@ -177,7 +177,7 @@ class WatchCartoonOnline(CBaseHostClass):
         printDBG(">>>>>>>>>>>>>>>> " + self.cm.meta['url'])
         if '' not in [catTitle, catUrl] and catUrl != self.cm.meta['url']:
             params = dict(cItem)
-            params.update({'good_for_fav':False, 'url':catUrl, 'title':catTitle})
+            params.update({'good_for_fav': False, 'url': catUrl, 'title': catTitle})
             self.addDir(params)
         
         # episodes
@@ -188,7 +188,7 @@ class WatchCartoonOnline(CBaseHostClass):
             title = self.cleanHtmlStr(item)
             
             params = dict(cItem)
-            params.update({'title':title, 'url':url})
+            params.update({'title': title, 'url': url})
             self.addVideo(params)
 
     def listSearchResult(self, cItem, searchPattern, searchType):
@@ -200,7 +200,7 @@ class WatchCartoonOnline(CBaseHostClass):
         self.setMainUrl(self.cm.meta['url'])
         
         url = self.getFullUrl('/search')
-        sts, data = self.getPage(url, {}, {'catara':searchPattern, 'konuara':searchType})
+        sts, data = self.getPage(url, {}, {'catara': searchPattern, 'konuara': searchType})
         if not sts:
             return
         
@@ -217,7 +217,7 @@ class WatchCartoonOnline(CBaseHostClass):
                 printExc()
             
             params = dict(cItem)
-            params.update({'good_for_fav':True, 'category':'explore_item', 'title':title, 'url':url, 'icon':icon})
+            params.update({'good_for_fav': True, 'category': 'explore_item', 'title': title, 'url': url, 'icon': icon})
             self.addDir(params)
     
     def _getPlayerData(self, data):
@@ -249,7 +249,7 @@ class WatchCartoonOnline(CBaseHostClass):
         data = self.cm.ph.getDataBeetwenNodes(data, ('<div', '>', '-video-'), ('</script', '>'))[1]
         playerUrl = self._getPlayerData(data)
         if playerUrl != '':
-            urlTab.append({'name':self.up.getDomain(self.cm.meta['url']).replace('www.', ''), 'url':self.cm.getFullUrl(playerUrl, self.cm.getBaseUrl(cUrl)), 'need_resolve':1})
+            urlTab.append({'name': self.up.getDomain(self.cm.meta['url']).replace('www.', ''), 'url': self.cm.getFullUrl(playerUrl, self.cm.getBaseUrl(cUrl)), 'need_resolve': 1})
         
         # alternative player
         altUrl = self.getFullUrl(self.cm.ph.getSearchGroups(data, '''<a[^>]+?href=['"]([^"^']+?)['"]''', 1, True)[0])
@@ -262,10 +262,10 @@ class WatchCartoonOnline(CBaseHostClass):
         data = self.cm.ph.getDataBeetwenNodes(data, ('<meta', '>', 'embedURL'), ('</script', '>'))[1]
         playerUrl = self._getPlayerData(data)
         if playerUrl != '':
-            urlTab.append({'cache_key':cacheKey, 'name':self.up.getDomain(self.cm.meta['url']).replace('www.', ''), 'url':self.cm.getFullUrl(playerUrl, self.cm.getBaseUrl(cUrl)), 'need_resolve':1})
+            urlTab.append({'cache_key': cacheKey, 'name': self.up.getDomain(self.cm.meta['url']).replace('www.', ''), 'url': self.cm.getFullUrl(playerUrl, self.cm.getBaseUrl(cUrl)), 'need_resolve': 1})
         
         if len(urlTab):
-            self.cacheLinks = {cacheKey:urlTab}
+            self.cacheLinks = {cacheKey: urlTab}
         
         return urlTab
 
@@ -308,7 +308,7 @@ class WatchCartoonOnline(CBaseHostClass):
             if url not in uniqueUrls:
                 uniqueUrls.append(url)
                 url = self.cm.getFullUrl(url, self.cm.getBaseUrl(cUrl))
-                urlTab.append({'name':'[{0}] {1} {2}'.format(type.split('/', 1)[0], label, domain), 'url':strwithmeta(url, {'Referer':referer})})
+                urlTab.append({'name': '[{0}] {1} {2}'.format(type.split('/', 1)[0], label, domain), 'url': strwithmeta(url, {'Referer': referer})})
         
         return urlTab
 
@@ -328,7 +328,7 @@ class WatchCartoonOnline(CBaseHostClass):
         
     #MAIN MENU
         if name == None:
-            self.listMainMenu({'name':'category', 'type':'category'})
+            self.listMainMenu({'name': 'category', 'type': 'category'})
         elif category == 'list_abc':
             self.listABC(self.currItem, 'sub_items')
         elif category == 'list_items':
@@ -340,11 +340,11 @@ class WatchCartoonOnline(CBaseHostClass):
     #SEARCH
         elif category in ["search", "search_next_page"]:
             cItem = dict(self.currItem)
-            cItem.update({'search_item':False, 'name':'category'}) 
+            cItem.update({'search_item': False, 'name': 'category'}) 
             self.listSearchResult(cItem, searchPattern, searchType)
     #HISTORIA SEARCH
         elif category == "search_history":
-            self.listsHistory({'name':'history', 'category': 'search'}, 'desc', _("Type: "))
+            self.listsHistory({'name': 'history', 'category': 'search'}, 'desc', _("Type: "))
         else:
             printExc()
         

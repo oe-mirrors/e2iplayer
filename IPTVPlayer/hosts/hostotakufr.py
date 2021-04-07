@@ -21,9 +21,9 @@ def gettytul():
 class OtakuFR(CBaseHostClass):
  
     def __init__(self):
-        CBaseHostClass.__init__(self, {'history':'otakufr.com', 'cookie':'otakufr.cookie'})
+        CBaseHostClass.__init__(self, {'history': 'otakufr.com', 'cookie': 'otakufr.cookie'})
         self.USER_AGENT = 'User-Agent=Mozilla/5.0 (Windows NT 6.1; WOW64; rv:40.0) Gecko/20100101 Firefox/40.0'
-        self.HEADER = {'User-Agent': self.USER_AGENT, 'DNT':'1', 'Accept': 'text/html'}
+        self.HEADER = {'User-Agent': self.USER_AGENT, 'DNT': '1', 'Accept': 'text/html'}
         self.AJAX_HEADER = dict(self.HEADER)
         self.AJAX_HEADER.update({'X-Requested-With': 'XMLHttpRequest'})
         
@@ -35,14 +35,14 @@ class OtakuFR(CBaseHostClass):
         self.cachePrograms = []
         self.cacheLast = {}
 
-        self.defaultParams = {'header':self.HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
+        self.defaultParams = {'header': self.HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
         self._getHeaders = None
 
     def getPage(self, baseUrl, addParams={}, post_data=None):
         if addParams == {}:
             addParams = dict(self.defaultParams)
 
-        addParams['cloudflare_params'] = {'cookie_file':self.COOKIE_FILE, 'User-Agent':self.USER_AGENT}
+        addParams['cloudflare_params'] = {'cookie_file': self.COOKIE_FILE, 'User-Agent': self.USER_AGENT}
         return self.cm.getPageCFProtection(baseUrl, addParams, post_data)
 
     def getFullUrl(self, url):
@@ -56,14 +56,14 @@ class OtakuFR(CBaseHostClass):
         
     def selectDomain(self):                
         self.MAIN_URL = 'http://www.otakufr.com/'
-        self.MAIN_CAT_TAB = [{'category':'list_abc', 'title': 'Toute La Liste', 'url':self.getFullUrl('/anime-list-all/')},
-                             {'category':'list_abc', 'title': 'En Cours', 'url':self.getFullUrl('/anime-en-cours/')},
-                             {'category':'list_rank_items', 'title': 'Populaire', 'url':self.getFullUrl('/anime-list/all/any/most-popular/')},
-                             {'category':'list_abc', 'title': 'Terminé', 'url':self.getFullUrl('/anime-termine/')},
-                             {'category':'list_rank_items', 'title': 'Film', 'url':self.getFullUrl('/anime-list/tag/Film/')},
+        self.MAIN_CAT_TAB = [{'category': 'list_abc', 'title': 'Toute La Liste', 'url': self.getFullUrl('/anime-list-all/')},
+                             {'category': 'list_abc', 'title': 'En Cours', 'url': self.getFullUrl('/anime-en-cours/')},
+                             {'category': 'list_rank_items', 'title': 'Populaire', 'url': self.getFullUrl('/anime-list/all/any/most-popular/')},
+                             {'category': 'list_abc', 'title': 'Terminé', 'url': self.getFullUrl('/anime-termine/')},
+                             {'category': 'list_rank_items', 'title': 'Film', 'url': self.getFullUrl('/anime-list/tag/Film/')},
                              
                              {'category': 'search', 'title': _('Search'), 'search_item': True, },
-                             {'category': 'search_history', 'title': _('Search history'),} 
+                             {'category': 'search_history', 'title': _('Search history'), } 
                             ]
     def listABC(self, cItem, nextCategory):
         printDBG("OtakuFR.listABC")
@@ -88,12 +88,12 @@ class OtakuFR(CBaseHostClass):
                 title = self.cleanHtmlStr(self.cm.ph.getSearchGroups(item, '''title=['"]([^'^"]+?)['"]''')[0])
                 if title == '':
                     title = self.cleanHtmlStr(item)
-                itemsTab.append({'title':title, 'url':url})
+                itemsTab.append({'title': title, 'url': url})
             
             if len(itemsTab):
                 self.cacheABC[sectionTitle] = itemsTab
                 params = dict(cItem)
-                params.update({'good_for_fav':False, 'category':nextCategory, 'title':sectionTitle + (' [%s]' % len(itemsTab)), 'abc_key':sectionTitle})
+                params.update({'good_for_fav': False, 'category': nextCategory, 'title': sectionTitle + (' [%s]' % len(itemsTab)), 'abc_key': sectionTitle})
                 self.addDir(params)
                 
     def listABCItems(self, cItem, nextCategory):
@@ -103,7 +103,7 @@ class OtakuFR(CBaseHostClass):
         for item in tab:
             params = dict(cItem)
             params.update(item)
-            params.update({'good_for_fav':True, 'category':nextCategory})
+            params.update({'good_for_fav': True, 'category': nextCategory})
             self.addDir(params)
             
     def listRankItems(self, cItem, nextCategory, post_data=None):
@@ -135,12 +135,12 @@ class OtakuFR(CBaseHostClass):
                     descTab.append(tmpDesc)
             
             params = dict(cItem)
-            params.update({'good_for_fav':True, 'category':nextCategory, 'title':title, 'url':url, 'icon':icon, 'desc':'[/br]'.join(descTab)})
+            params.update({'good_for_fav': True, 'category': nextCategory, 'title': title, 'url': url, 'icon': icon, 'desc': '[/br]'.join(descTab)})
             self.addDir(params)
         
         if self.cm.isValidUrl(nextPage):
             params = dict(cItem)
-            params.update({'good_for_fav':False, 'title':_('Next page'), 'url':nextPage, 'page':page + 1})
+            params.update({'good_for_fav': False, 'title': _('Next page'), 'url': nextPage, 'page': page + 1})
             self.addDir(params)
             
     def exploreItem(self, cItem):
@@ -170,7 +170,7 @@ class OtakuFR(CBaseHostClass):
                     descTab.append(tmpDesc)
                
             params = dict(cItem)
-            params.update({'good_for_fav':True, 'title':title, 'url':url, 'icon':icon, 'desc':'[/br]'.join(descTab)})
+            params.update({'good_for_fav': True, 'title': title, 'url': url, 'icon': icon, 'desc': '[/br]'.join(descTab)})
             self.addVideo(params)
     
     def listSortFilters(self, cItem, nextCategory):
@@ -188,7 +188,7 @@ class OtakuFR(CBaseHostClass):
                 continue
             title = self.cleanHtmlStr(item)
             params = dict(cItem)
-            params.update({'good_for_fav':False, 'title':title, 'url':url, 'category':nextCategory})
+            params.update({'good_for_fav': False, 'title': title, 'url': url, 'category': nextCategory})
             self.addDir(params)
             
     def listLast(self, cItem, nextCategory):
@@ -220,12 +220,12 @@ class OtakuFR(CBaseHostClass):
                     title = self.cleanHtmlStr(self.cm.ph.getSearchGroups(item, '''title=['"]([^'^"]+?)['"]''')[0])
                 icon = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''data-lazy-src=['"]([^'^"]+?)['"]''')[0])
                 desc = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(item, '<p>', '</p>')[1])
-                itemsTab.append({'good_for_fav':True, 'title':title, 'url':url, 'icon':icon, 'desc':desc})
+                itemsTab.append({'good_for_fav': True, 'title': title, 'url': url, 'icon': icon, 'desc': desc})
             
             if len(itemsTab):
                 self.cacheLast[sectionTitle] = itemsTab
                 params = dict(cItem)
-                params.update({'good_for_fav':False, 'category':nextCategory, 'title':sectionTitle, 'cache_key':sectionTitle})
+                params.update({'good_for_fav': False, 'category': nextCategory, 'title': sectionTitle, 'cache_key': sectionTitle})
                 self.addDir(params)
     
     def listLastItems(self, cItem):
@@ -243,7 +243,7 @@ class OtakuFR(CBaseHostClass):
         
         cItem = dict(cItem)
         cItem['url'] = self.getFullUrl('/anime-list/search/')
-        post_data = {'txt_wpa_wgt_anm_sch_nme':searchPattern, 'cmd_wpa_wgt_anm_sch_sbm':'Search'}
+        post_data = {'txt_wpa_wgt_anm_sch_nme': searchPattern, 'cmd_wpa_wgt_anm_sch_sbm': 'Search'}
         self.listRankItems(cItem, 'explore_item', post_data)
     
     def getLinksForVideo(self, cItem):
@@ -260,7 +260,7 @@ class OtakuFR(CBaseHostClass):
             playerUrl = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''href=['"]([^'^"]+?)['"]''')[0])
             if not self.cm.isValidUrl(playerUrl):
                 continue
-            urlTab.append({'name':self.cleanHtmlStr(item), 'url':playerUrl, 'need_resolve':1})
+            urlTab.append({'name': self.cleanHtmlStr(item), 'url': playerUrl, 'need_resolve': 1})
         return urlTab
         
     def getVideoLinks(self, videoUrl):
@@ -295,7 +295,7 @@ class OtakuFR(CBaseHostClass):
         
     #MAIN MENU
         if name == None:
-            self.listsTab(self.MAIN_CAT_TAB, {'name':'category'})
+            self.listsTab(self.MAIN_CAT_TAB, {'name': 'category'})
         elif category == 'list_abc':
             self.listABC(self.currItem, 'list_abc_items')
         elif category == 'list_abc_items':
@@ -317,11 +317,11 @@ class OtakuFR(CBaseHostClass):
     #SEARCH
         elif category in ["search", "search_next_page"]:
             cItem = dict(self.currItem)
-            cItem.update({'search_item':False, 'name':'category'}) 
+            cItem.update({'search_item': False, 'name': 'category'}) 
             self.listSearchResult(cItem, searchPattern, searchType)
     #HISTORIA SEARCH
         elif category == "search_history":
-            self.listsHistory({'name':'history', 'category': 'search'}, 'desc', _("Type: "))
+            self.listsHistory({'name': 'history', 'category': 'search'}, 'desc', _("Type: "))
         else:
             printExc()
         

@@ -27,17 +27,17 @@ def gettytul():
 class TainieskaiSeiresTv(CBaseHostClass):
  
     def __init__(self):
-        CBaseHostClass.__init__(self, {'history':'tainieskaiseires.tv', 'cookie':'tainieskaiseires.tv.cookie'})
+        CBaseHostClass.__init__(self, {'history': 'tainieskaiseires.tv', 'cookie': 'tainieskaiseires.tv.cookie'})
         self.defaultParams = {'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
         
         self.DEFAULT_ICON_URL = 'http://www.tainieskaiseires.tv/wp-content/uploads/2017/01/Logo-002.png'
-        self.HEADER = {'User-Agent': 'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:40.0) Gecko/20100101 Firefox/40.0', 'DNT':'1', 'Accept':'text/html', 'Accept-Encoding':'gzip, deflate'}
+        self.HEADER = {'User-Agent': 'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:40.0) Gecko/20100101 Firefox/40.0', 'DNT': '1', 'Accept': 'text/html', 'Accept-Encoding': 'gzip, deflate'}
         self.AJAX_HEADER = dict(self.HEADER)
-        self.AJAX_HEADER.update({'X-Requested-With': 'XMLHttpRequest', 'Content-Type':'application/x-www-form-urlencoded; charset=UTF-8', 'Accept':'*/*'})
+        self.AJAX_HEADER.update({'X-Requested-With': 'XMLHttpRequest', 'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8', 'Accept': '*/*'})
         self.MAIN_URL = None
         self.cacheLinks = {}
         self.seasonsCache = {}
-        self.defaultParams = {'header':self.HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
+        self.defaultParams = {'header': self.HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
         
     def getPage(self, url, addParams={}, post_data=None):
         if addParams == {}:
@@ -55,8 +55,8 @@ class TainieskaiSeiresTv(CBaseHostClass):
         else:
             self.MAIN_URL = domain
         
-        self.MAIN_CAT_TAB = [{'category': 'search', 'title': _('Search'), 'search_item': True,},
-                             {'category': 'search_history', 'title': _('Search history'),}]
+        self.MAIN_CAT_TAB = [{'category': 'search', 'title': _('Search'), 'search_item': True, },
+                             {'category': 'search_history', 'title': _('Search history'), }]
     
     def listMainMenu(self, cItem):
         printDBG("TainieskaiSeiresTv.listMainMenu")
@@ -86,18 +86,18 @@ class TainieskaiSeiresTv(CBaseHostClass):
                     if self.cm.isValidUrl(url) and title != '':
                         params = dict(cItem)
                         params.pop('c_tree', None)
-                        params.update({'good_for_fav':False, 'category':nextCategory, 'title':title, 'url':url})
+                        params.update({'good_for_fav': False, 'category': nextCategory, 'title': title, 'url': url})
                         self.addDir(params)
                 elif len(item['list']) == 1 and title != '':
                     params = dict(cItem)
                     params.pop('c_tree', None)
-                    params.update({'good_for_fav':False, 'c_tree':item['list'][0], 'title':title, 'url':url})
+                    params.update({'good_for_fav': False, 'c_tree': item['list'][0], 'title': title, 'url': url})
                     self.addDir(params)
             url = cItem.get('url', '')
             if len(self.currList) and self.cm.isValidUrl(url) and '@' not in url:
                 params = dict(cItem)
                 params.pop('c_tree', None)
-                params.update({'good_for_fav':False, 'category':nextCategory, 'title':_('--All--'), 'url':url})
+                params.update({'good_for_fav': False, 'category': nextCategory, 'title': _('--All--'), 'url': url})
                 self.currList.insert(0, params)
         except Exception:
             printExc()
@@ -121,7 +121,7 @@ class TainieskaiSeiresTv(CBaseHostClass):
                 icon = self.getFullIconUrl(self.cm.ph.getSearchGroups(item, '''\ssrc=['"]([^'^"]+?)['"]''')[0])
                 title = self.cleanHtmlStr(item)
                 params = dict(cItem)
-                params.update({'good_for_fav':False, 'title':title, 'url':url, 'icon':icon})
+                params.update({'good_for_fav': False, 'title': title, 'url': url, 'icon': icon})
                 self.addDir(params)
         elif '/category/' in cItem['url'] or '/?s=' in cItem['url']:
             page = cItem.get('page', 1)
@@ -140,12 +140,12 @@ class TainieskaiSeiresTv(CBaseHostClass):
                 desc += '[/br]' + self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(item, '<p', '</p>')[1])
                 
                 params = dict(cItem)
-                params.update({'good_for_fav':True, 'category':nextCategory2, 'title':title, 'url':url, 'info_url':url, 'icon':icon, 'desc':desc})
+                params.update({'good_for_fav': True, 'category': nextCategory2, 'title': title, 'url': url, 'info_url': url, 'icon': icon, 'desc': desc})
                 self.addDir(params)
                 
             if nextPage != '':
                 params = dict(cItem)
-                params.update({'title':_("Next page"), 'url':nextPage, 'page':page + 1})
+                params.update({'title': _("Next page"), 'url': nextPage, 'page': page + 1})
                 self.addDir(params)
         else:
             data = self.cm.ph.getDataBeetwenMarkers(data, '<article', '</article>')[1]
@@ -163,17 +163,17 @@ class TainieskaiSeiresTv(CBaseHostClass):
                     if title == '':
                         title = self.cleanHtmlStr(self.cm.ph.getSearchGroups(item, '''\salt=['"]([^"^']+?)['"]''')[0])
                     desc = self.cleanHtmlStr(item)
-                    itemsTab.append({'title':title, 'url':url, 'info_url':url, 'icon':icon, 'desc':desc})
+                    itemsTab.append({'title': title, 'url': url, 'info_url': url, 'icon': icon, 'desc': desc})
                 if len(itemsTab):
                     params = dict(cItem)
-                    params.update({'title':sTitle, 'category':nextCategory1, 'items_tab':itemsTab})
+                    params.update({'title': sTitle, 'category': nextCategory1, 'items_tab': itemsTab})
                     self.addDir(params)
                     
     def listSectionItems(self, cItem, nextCategory):
         printDBG("TainieskaiSeiresTv.listSectionItems [%s]" % cItem)
         cItem = dict(cItem)
         listTab = cItem.pop('items_tab', [])
-        cItem.update({'good_for_fav':True, 'category':nextCategory})
+        cItem.update({'good_for_fav': True, 'category': nextCategory})
         self.listsTab(listTab, cItem)
         
     def exploreItem(self, cItem, nextCategory):
@@ -195,7 +195,7 @@ class TainieskaiSeiresTv(CBaseHostClass):
         url = self.getFullUrl(self.cm.ph.getSearchGroups(tmp, '''<(?:iframe|embed)[^>]+?src=['"]([^"^']+?)['"]''', 1, True)[0])
         if self.cm.isValidUrl(url):
             params = dict(cItem)
-            params.update({'good_for_fav':False, 'title':'%s %s' % (_('[trailer]'), cItem['title']), 'url':url})
+            params.update({'good_for_fav': False, 'title': '%s %s' % (_('[trailer]'), cItem['title']), 'url': url})
             self.addVideo(params)
         
         reObjSeasons = re.compile('(<strong[^>]*?>[^>]*?SEASON[^>]*?</strong>)', re.IGNORECASE)
@@ -213,7 +213,7 @@ class TainieskaiSeiresTv(CBaseHostClass):
                 name = self.cleanHtmlStr(item)
                 url = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''\shref=['"]([^"^']+?)['"]''')[0])
                 if 1 == self.up.checkHostSupport(url):
-                    linksTab.append({'name':name, 'url':url, 'need_resolve':1})
+                    linksTab.append({'name': name, 'url': url, 'need_resolve': 1})
         elif 'SEASON' in self.cleanHtmlStr(seasonsData[0]).upper():
             seasonsKeys = []
             self.seasonsCache = {}
@@ -227,7 +227,7 @@ class TainieskaiSeiresTv(CBaseHostClass):
                 printDBG("++ SEASON ID -> \"%s\" \"%s\"" % (seasonId, sSubTitle))
                 if seasonId not in seasonsKeys:
                     seasonsKeys.append(seasonId)
-                    self.seasonsCache[seasonId] = {'title':sTitle.replace(sSubTitle, ''), 'season_id':seasonId, 'episodes':[]}
+                    self.seasonsCache[seasonId] = {'title': sTitle.replace(sSubTitle, ''), 'season_id': seasonId, 'episodes': []}
                 
                 tmp = self.cm.ph.getAllItemsBeetwenMarkers(seasonsData[idx + 1], '<a', '</a>')
                 for item in tmp:
@@ -246,7 +246,7 @@ class TainieskaiSeiresTv(CBaseHostClass):
                             title = '%s - S%s%s %s' % (baseTitle, seasonId.zfill(2), episodeId, eSubTitle)
                         else:
                             title = ('%s - %s %s') % (baseTitle, sTitle.replace(sSubTitle, ''), eTitle)
-                        self.seasonsCache[seasonId]['episodes'].append({'title':title, 'episode_id':seasonId, 'url':fakeUrl})
+                        self.seasonsCache[seasonId]['episodes'].append({'title': title, 'episode_id': seasonId, 'url': fakeUrl})
                     
                     if domain not in url: 
                         name = self.up.getHostName(url)
@@ -254,14 +254,14 @@ class TainieskaiSeiresTv(CBaseHostClass):
                             name += ' ' + sSubTitle
                     else:
                         name = sSubTitle
-                    self.cacheLinks[fakeUrl].append({'name':name, 'url':url, 'need_resolve':1})
+                    self.cacheLinks[fakeUrl].append({'name': name, 'url': url, 'need_resolve': 1})
                 
             for seasonKey in seasonsKeys:
                 season = self.seasonsCache[seasonKey]
                 if 0 == len(season['episodes']):
                     continue
                 params = dict(cItem)
-                params.update({'good_for_fav':False, 'category':nextCategory, 'title':season['title'], 'season_id':season['season_id']})
+                params.update({'good_for_fav': False, 'category': nextCategory, 'title': season['title'], 'season_id': season['season_id']})
                 self.addDir(params)
             
             if 1 == len(self.currList):
@@ -274,19 +274,19 @@ class TainieskaiSeiresTv(CBaseHostClass):
                 for item in tmp:
                     name = self.cleanHtmlStr(item)
                     url = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''\shref=['"]([^"^']+?)['"]''')[0])
-                    linksTab.append({'name':'%s - %s' % (quality, name), 'url':url, 'need_resolve':1})
+                    linksTab.append({'name': '%s - %s' % (quality, name), 'url': url, 'need_resolve': 1})
             
         if len(linksTab):
             self.cacheLinks[cItem['url']] = linksTab
             params = dict(cItem)
-            params.update({'good_for_fav':False, 'title':baseTitle})
+            params.update({'good_for_fav': False, 'title': baseTitle})
             self.addVideo(params)
         
     def listEpisodes(self, cItem):
         printDBG("TainieskaiSeiresTv.listEpisodes")
         listTab = self.seasonsCache[cItem['season_id']]['episodes']
         cItem = dict(cItem)
-        cItem.update({'good_for_fav':False})
+        cItem.update({'good_for_fav': False})
         self.listsTab(listTab, cItem, 'video')
     
     def listSearchResult(self, cItem, searchPattern, searchType):
@@ -373,7 +373,7 @@ class TainieskaiSeiresTv(CBaseHostClass):
                 except Exception:
                     continue
         
-        return [{'title':self.cleanHtmlStr(title), 'text': self.cleanHtmlStr(desc), 'images':[{'title':'', 'url':self.getFullUrl(icon)}], 'other_info':otherInfo}]
+        return [{'title': self.cleanHtmlStr(title), 'text': self.cleanHtmlStr(desc), 'images': [{'title': '', 'url': self.getFullUrl(icon)}], 'other_info': otherInfo}]
         
     def handleService(self, index, refresh=0, searchPattern='', searchType=''):
         printDBG('handleService start')
@@ -392,7 +392,7 @@ class TainieskaiSeiresTv(CBaseHostClass):
         
     #MAIN MENU
         if name == None:
-            self.listMainMenu({'name':'category'})
+            self.listMainMenu({'name': 'category'})
         elif category == 'list_categories':
             self.listCategories(self.currItem, 'list_items')
         elif category == 'list_filters':
@@ -408,11 +408,11 @@ class TainieskaiSeiresTv(CBaseHostClass):
     #SEARCH
         elif category in ["search", "search_next_page"]:
             cItem = dict(self.currItem)
-            cItem.update({'search_item':False, 'name':'category'}) 
+            cItem.update({'search_item': False, 'name': 'category'}) 
             self.listSearchResult(cItem, searchPattern, searchType)
     #HISTORIA SEARCH
         elif category == "search_history":
-            self.listsHistory({'name':'history', 'category': 'search'}, 'desc', _("Type: "))
+            self.listsHistory({'name': 'history', 'category': 'search'}, 'desc', _("Type: "))
         else:
             printExc()
         

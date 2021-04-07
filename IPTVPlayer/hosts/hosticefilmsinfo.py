@@ -47,13 +47,13 @@ def gettytul():
 class IceFilms(CBaseHostClass):
  
     def __init__(self):
-        CBaseHostClass.__init__(self, {'history':'IceFilms.tv', 'cookie':'IceFilms.cookie'})
+        CBaseHostClass.__init__(self, {'history': 'IceFilms.tv', 'cookie': 'IceFilms.cookie'})
         self.USER_AGENT = 'Mozilla/5.0'
-        self.HEADER = {'User-Agent':self.USER_AGENT, 'Accept':'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8', 'Accept-Encoding':'gzip, deflate'}
+        self.HEADER = {'User-Agent': self.USER_AGENT, 'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8', 'Accept-Encoding': 'gzip, deflate'}
         self.AJAX_HEADER = dict(self.HEADER)
         self.AJAX_HEADER.update({'X-Requested-With': 'XMLHttpRequest'})
         self.cm.HEADER = self.HEADER # default header
-        self.defaultParams = {'header':self.HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
+        self.defaultParams = {'header': self.HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
         self.DEFAULT_ICON_URL = 'http://whatyouremissing.weebly.com/uploads/1/9/6/3/19639721/144535_orig.jpg'
         self.MAIN_URL = None
 
@@ -74,11 +74,11 @@ class IceFilms(CBaseHostClass):
         if self.MAIN_URL == None:
             self.MAIN_URL = 'http://www.icefilms.info/'
         
-        self.MAIN_CAT_TAB = [{'category':'list_filters', 'title': _('TV Shows'), 'url':self.getFullUrl('tv/popular/1'), 'f_idx':0},
-                             {'category':'list_filters', 'title': _('Movies'), 'url':self.getFullUrl('movies/popular/1'), 'f_idx':0},
-                             {'category':'list_filters', 'title': _('Stand-Up'), 'url':self.getFullUrl('standup/popular/1'), 'f_idx':0},
-                             {'category': 'search', 'title': _('Search'), 'search_item': True,},
-                             {'category': 'search_history', 'title': _('Search history'),} 
+        self.MAIN_CAT_TAB = [{'category': 'list_filters', 'title': _('TV Shows'), 'url': self.getFullUrl('tv/popular/1'), 'f_idx': 0},
+                             {'category': 'list_filters', 'title': _('Movies'), 'url': self.getFullUrl('movies/popular/1'), 'f_idx': 0},
+                             {'category': 'list_filters', 'title': _('Stand-Up'), 'url': self.getFullUrl('standup/popular/1'), 'f_idx': 0},
+                             {'category': 'search', 'title': _('Search'), 'search_item': True, },
+                             {'category': 'search_history', 'title': _('Search history'), } 
                             ]
         
         self.cacheFilters = {}
@@ -99,9 +99,9 @@ class IceFilms(CBaseHostClass):
             else:
                 proxy = config.plugins.iptvplayer.alternative_proxy2.value
             addParams = dict(addParams)
-            addParams.update({'http_proxy':proxy})
+            addParams.update({'http_proxy': proxy})
 
-        addParams['cloudflare_params'] = {'cookie_file':self.COOKIE_FILE, 'User-Agent':self.USER_AGENT}
+        addParams['cloudflare_params'] = {'cookie_file': self.COOKIE_FILE, 'User-Agent': self.USER_AGENT}
         return self.cm.getPageCFProtection(baseUrl, addParams, post_data)
     
     #def getFullIconUrl(self, url, baseUrl=None):
@@ -149,7 +149,7 @@ class IceFilms(CBaseHostClass):
                     title = self.cleanHtmlStr(item[idx])
                     if self.cm.isValidUrl(url):
                         params = dict(cItem)
-                        params.update({'title':title, 'url':url})
+                        params.update({'title': title, 'url': url})
                         if 'rand.php' in url:
                             params.pop('f_idx', None)
                             params['category'] = 'list_random'
@@ -181,9 +181,9 @@ class IceFilms(CBaseHostClass):
         tmp = self.cm.ph.getDataBeetwenMarkers(data, 'imdb', '>')[1]
         id = self._getAttrVal(tmp, 'id')
         
-        params = {'good_for_fav': True, 'title':title, 'url':url, 'desc':mainDesc}
+        params = {'good_for_fav': True, 'title': title, 'url': url, 'desc': mainDesc}
         if id != '':
-            params.update({'imdb_id':id, 'icon':'http://www.imdb.com/title/tt%s/?fake=need_resolve.jpeg' % id})
+            params.update({'imdb_id': id, 'icon': 'http://www.imdb.com/title/tt%s/?fake=need_resolve.jpeg' % id})
         if '/tv/' not in url:
             self.addVideo(params)
         else:
@@ -209,9 +209,9 @@ class IceFilms(CBaseHostClass):
                 url = self._getAttrVal(tmpItem, 'href')
                 id = self._getAttrVal(tmpItem, 'id')
                 title = self.cleanHtmlStr(tmpItem)
-                params = {'good_for_fav': True, 'title':title, 'url':self.getFullUrl(url), 'desc':desc}
+                params = {'good_for_fav': True, 'title': title, 'url': self.getFullUrl(url), 'desc': desc}
                 if id != '':
-                    params.update({'imdb_id':id, 'icon':'http://www.imdb.com/title/tt%s/?fake=need_resolve.jpeg' % id})
+                    params.update({'imdb_id': id, 'icon': 'http://www.imdb.com/title/tt%s/?fake=need_resolve.jpeg' % id})
                 if '/tv/' not in url:
                     self.addVideo(params)
                 else:
@@ -247,9 +247,9 @@ class IceFilms(CBaseHostClass):
             for tmpItem in tmpTab:
                 url = self._getAttrVal(tmpItem, 'href')
                 title = self.cleanHtmlStr(tmpItem)
-                params = {'good_for_fav': True, 'title':'{0}: {1}'.format(cItem['title'], title), 'url':self.getFullUrl(url), 'desc':desc}
+                params = {'good_for_fav': True, 'title': '{0}: {1}'.format(cItem['title'], title), 'url': self.getFullUrl(url), 'desc': desc}
                 if id != '':
-                    params.update({'imdb_id':id, 'icon':'http://www.imdb.com/title/tt%s/?fake=need_resolve.jpeg' % id})
+                    params.update({'imdb_id': id, 'icon': 'http://www.imdb.com/title/tt%s/?fake=need_resolve.jpeg' % id})
                 self.addVideo(params)
 
     def listSearchResult(self, cItem, searchPattern, searchType):
@@ -268,7 +268,7 @@ class IceFilms(CBaseHostClass):
                 continue
             desc = self.cleanHtmlStr(self.cm.ph.getDataBeetwenReMarkers(item, re.compile('''<div class=['"]?desc['"]?'''), re.compile('</div>'), withMarkers=True)[1])
             title = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(item, '<a', '</a>', withMarkers=True)[1])
-            params = {'good_for_fav': True, 'title':title, 'url':url, 'desc':desc}
+            params = {'good_for_fav': True, 'title': title, 'url': url, 'desc': desc}
             if '/tv/' not in url:
                 self.addVideo(params)
             else:
@@ -306,7 +306,7 @@ class IceFilms(CBaseHostClass):
                     continue
                 sourceName = self.cleanHtmlStr(clean_html(source.replace('</a>', ' ')))
                 
-                urlTab.append({'name':'[{0}] {1}'.format(mainTitle, sourceName), 'url':strwithmeta(sourceId, {'url':cItem['url']}), 'need_resolve':1})
+                urlTab.append({'name': '[{0}] {1}'.format(mainTitle, sourceName), 'url': strwithmeta(sourceId, {'url': cItem['url']}), 'need_resolve': 1})
         
         self.cacheLinks[cItem['url']] = urlTab
         return urlTab
@@ -378,7 +378,7 @@ class IceFilms(CBaseHostClass):
         params['header'] = dict(params['header'])
         params['header']['Referer'] = frameUrl
         
-        sts, data = self.getPage(url, params, post_data={'id':sourceId, 's':s, 'iqs':iqs, 'url':uri, 'm':m, 'captcha':' ', 'secret':secret, 't':t})
+        sts, data = self.getPage(url, params, post_data={'id': sourceId, 's': s, 'iqs': iqs, 'url': uri, 'm': m, 'captcha': ' ', 'secret': secret, 't': t})
         if not sts:
             return []
         printDBG(data)
@@ -444,7 +444,7 @@ class IceFilms(CBaseHostClass):
         data = self.cm.ph.getDataBeetwenMarkers(data, '<div class="ratingValue">', '</div>')[1]
         otherInfo['imdb_rating'] = self.cm.ph.getSearchGroups(data, '''title=['"]([^"^']+?)['"]''')[0]
         
-        return [{'title':title, 'text': desc, 'images':[{'title':'', 'url':icon}], 'other_info':otherInfo}]
+        return [{'title': title, 'text': desc, 'images': [{'title': '', 'url': icon}], 'other_info': otherInfo}]
         
     def handleService(self, index, refresh=0, searchPattern='', searchType=''):
         printDBG('handleService start')
@@ -462,7 +462,7 @@ class IceFilms(CBaseHostClass):
         
     #MAIN MENU
         if name == None:
-            self.listsTab(self.MAIN_CAT_TAB, {'name':'category'})
+            self.listsTab(self.MAIN_CAT_TAB, {'name': 'category'})
         elif 'list_filters' == category:
             self.listFilters(self.currItem, 'list_items')
         elif 'list_random' == category:
@@ -474,11 +474,11 @@ class IceFilms(CBaseHostClass):
     #SEARCH
         elif category in ["search", "search_next_page"]:
             cItem = dict(self.currItem)
-            cItem.update({'search_item':False, 'name':'category'}) 
+            cItem.update({'search_item': False, 'name': 'category'}) 
             self.listSearchResult(cItem, searchPattern, searchType)
     #HISTORIA SEARCH
         elif category == "search_history":
-            self.listsHistory({'name':'history', 'category': 'search'}, 'desc', _("Type: "))
+            self.listsHistory({'name': 'history', 'category': 'search'}, 'desc', _("Type: "))
         else:
             printExc()
         

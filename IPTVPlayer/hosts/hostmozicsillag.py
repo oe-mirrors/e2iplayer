@@ -30,25 +30,25 @@ def gettytul():
 class MuziCsillangCC(CBaseHostClass):
  
     def __init__(self):
-        CBaseHostClass.__init__(self, {'history':'mozicsillag.cc', 'cookie':'mozicsillag.cc.cookie'})
+        CBaseHostClass.__init__(self, {'history': 'mozicsillag.cc', 'cookie': 'mozicsillag.cc.cookie'})
         self.USER_AGENT = 'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:40.0) Gecko/20100101 Firefox/40.0'
-        self.HEADER = {'User-Agent': self.USER_AGENT, 'DNT':'1', 'Accept': 'text/html'}
+        self.HEADER = {'User-Agent': self.USER_AGENT, 'DNT': '1', 'Accept': 'text/html'}
         self.AJAX_HEADER = dict(self.HEADER)
         self.AJAX_HEADER.update({'X-Requested-With': 'XMLHttpRequest'})
         self.MAIN_URL = 'https://mozicsillag.me/'
-        self.DEFAULT_ICON_URL = strwithmeta('https://mozicsillag.me/img/logo.png', {'Referer':self.getMainUrl()})
+        self.DEFAULT_ICON_URL = strwithmeta('https://mozicsillag.me/img/logo.png', {'Referer': self.getMainUrl()})
         self.cacheLinks = {}
         self.cacheFilters = {}
         self.cacheFiltersKeys = []
         self.cacheSortOrder = []
-        self.defaultParams = {'header':self.HEADER, 'with_metadata':True, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
+        self.defaultParams = {'header': self.HEADER, 'with_metadata': True, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
     
-        self.MAIN_CAT_TAB = [{'category':'list_filters', 'title': _('Catalog'), 'url':self.getMainUrl(), 'use_query':True},
-                             {'category':'list_movies', 'title': _('Movies'), 'url':self.getMainUrl()},
-                             {'category':'list_series', 'title': _('Series'), 'url':self.getMainUrl()},
+        self.MAIN_CAT_TAB = [{'category': 'list_filters', 'title': _('Catalog'), 'url': self.getMainUrl(), 'use_query': True},
+                             {'category': 'list_movies', 'title': _('Movies'), 'url': self.getMainUrl()},
+                             {'category': 'list_series', 'title': _('Series'), 'url': self.getMainUrl()},
                              
-                             {'category': 'search', 'title': _('Search'), 'search_item': True,},
-                             {'category': 'search_history', 'title': _('Search history'),} 
+                             {'category': 'search', 'title': _('Search'), 'search_item': True, },
+                             {'category': 'search_history', 'title': _('Search history'), } 
                             ]
                             
     def getFullIconUrl(self, url):
@@ -56,7 +56,7 @@ class MuziCsillangCC(CBaseHostClass):
             return url
         url = url.replace('&amp;', '&')
         url = CBaseHostClass.getFullIconUrl(self, url)
-        return strwithmeta(url, {'Referer':self.getMainUrl()})
+        return strwithmeta(url, {'Referer': self.getMainUrl()})
         
     def setMainUrl(self, url):
         if self.cm.isValidUrl(url):
@@ -72,7 +72,7 @@ class MuziCsillangCC(CBaseHostClass):
             else:
                 return urllib.parse.urljoin(baseUrl, url)
             
-        addParams['cloudflare_params'] = {'domain':self.up.getDomain(baseUrl), 'cookie_file':self.COOKIE_FILE, 'User-Agent':self.USER_AGENT, 'full_url_handle':_getFullUrl}
+        addParams['cloudflare_params'] = {'domain': self.up.getDomain(baseUrl), 'cookie_file': self.COOKIE_FILE, 'User-Agent': self.USER_AGENT, 'full_url_handle': _getFullUrl}
         sts, data = self.cm.getPageCFProtection(baseUrl, addParams, post_data)
         return sts, data
     
@@ -97,11 +97,11 @@ class MuziCsillangCC(CBaseHostClass):
                 title = self.cleanHtmlStr(item)
                 if title in ['Összes']:
                     allTitle = ''
-                self.cacheFilters[key].append({'title':title.title(), key:value, ('%s_type' % key):type})
+                self.cacheFilters[key].append({'title': title.title(), key: value, ('%s_type' % key): type})
                 
             if len(self.cacheFilters[key]):
                 if allTitle != '':
-                    self.cacheFilters[key].insert(0, {'title':allTitle})
+                    self.cacheFilters[key].insert(0, {'title': allTitle})
                 self.cacheFiltersKeys.append(key)
                 
         # search_type
@@ -235,13 +235,13 @@ class MuziCsillangCC(CBaseHostClass):
             ######
             
             params = dict(cItem)
-            params = {'good_for_fav': True, 'title':title, 'url':url, 'desc':'[/br]'.join(descTab), 'icon':icon}
+            params = {'good_for_fav': True, 'title': title, 'url': url, 'desc': '[/br]'.join(descTab), 'icon': icon}
             params['category'] = nextCategory
             self.addDir(params)
         
         if nextPage and len(self.currList) > 0:
             params = dict(cItem)
-            params.update({'title':_("Next page"), 'page':page + 1})
+            params.update({'title': _("Next page"), 'page': page + 1})
             self.addDir(params)
             
     def _listCategories(self, cItem, nextCategory, m1, m2):
@@ -256,7 +256,7 @@ class MuziCsillangCC(CBaseHostClass):
             url = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''href=['"]([^'^"]+?)['"]''')[0])
             title = self.cleanHtmlStr(item)
             params = dict(cItem)
-            params.update({'category':nextCategory, 'title':title, 'url':url})
+            params.update({'category': nextCategory, 'title': title, 'url': url})
             self.addDir(params)
         
     def listMovies(self, cItem, nextCategory):
@@ -280,11 +280,11 @@ class MuziCsillangCC(CBaseHostClass):
                 if sort == '':
                     continue
                 title = self.cleanHtmlStr(item)
-                self.cacheSortOrder.append({'title':title, 'f_sort':sort})
+                self.cacheSortOrder.append({'title': title, 'f_sort': sort})
         
         for item in self.cacheSortOrder:
             params = dict(cItem)
-            params.update({'category':nextCategory})
+            params.update({'category': nextCategory})
             params.update(item)
             self.addDir(params)
         
@@ -311,7 +311,7 @@ class MuziCsillangCC(CBaseHostClass):
                 title = '%s - %s' % (cItem['title'], _('trailer'))
             if 1 == self.up.checkHostSupport(url):
                 params = dict(cItem)
-                params.update({'good_for_fav': False, 'title':'%s. %s' % (idx + 1, title), 'prev_title':cItem['title'], 'url':url, 'prev_url':cItem['url'], 'prev_desc':cItem.get('desc', ''), 'desc':desc})
+                params.update({'good_for_fav': False, 'title': '%s. %s' % (idx + 1, title), 'prev_title': cItem['title'], 'url': url, 'prev_url': cItem['url'], 'prev_desc': cItem.get('desc', ''), 'desc': desc})
                 self.addVideo(params)
         
         sourcesLink = self.cm.ph.rgetDataBeetwenMarkers2(data, 'Beküldött linkek megtekintése', '<a', caseSensitive=False)[1]
@@ -363,14 +363,14 @@ class MuziCsillangCC(CBaseHostClass):
                 if episodeName not in episodesTab:
                     episodesTab.append(episodeName)
                     self.cacheLinks[episodeName] = []
-                self.cacheLinks[episodeName].append({'name':serverName, 'url':url, 'need_resolve':1})
+                self.cacheLinks[episodeName].append({'name': serverName, 'url': url, 'need_resolve': 1})
         
         for item in episodesTab:
             params = dict(cItem)
             title = cItem['title']
             if item != '':
                 title += ' : ' + item
-            params.update({'good_for_fav': False, 'title':title, 'links_key':item, 'prev_desc':cItem.get('desc', ''), 'desc':desc})
+            params.update({'good_for_fav': False, 'title': title, 'links_key': item, 'prev_desc': cItem.get('desc', ''), 'desc': desc})
             self.addVideo(params)
 
     def listSearchResult(self, cItem, searchPattern, searchType):
@@ -424,7 +424,7 @@ class MuziCsillangCC(CBaseHostClass):
     
     def getFavouriteData(self, cItem):
         printDBG('MuziCsillangCC.getFavouriteData')
-        params = {'type':cItem['type'], 'category':cItem.get('category', ''), 'title':cItem['title'], 'url':cItem['url'], 'desc':cItem['desc'], 'icon':cItem['icon']}
+        params = {'type': cItem['type'], 'category': cItem.get('category', ''), 'title': cItem['title'], 'url': cItem['url'], 'desc': cItem['desc'], 'icon': cItem['icon']}
         return json.dumps(params) 
         
     def getLinksForFavourite(self, fav_data):
@@ -497,7 +497,7 @@ class MuziCsillangCC(CBaseHostClass):
         if icon == '':
             icon = cItem.get('icon', self.DEFAULT_ICON_URL)
         
-        return [{'title':self.cleanHtmlStr(title), 'text': self.cleanHtmlStr(desc), 'images':[{'title':'', 'url':self.getFullUrl(icon)}], 'other_info':otherInfo}]
+        return [{'title': self.cleanHtmlStr(title), 'text': self.cleanHtmlStr(desc), 'images': [{'title': '', 'url': self.getFullUrl(icon)}], 'other_info': otherInfo}]
     
     def handleService(self, index, refresh=0, searchPattern='', searchType=''):
         printDBG('handleService start')
@@ -514,7 +514,7 @@ class MuziCsillangCC(CBaseHostClass):
     #MAIN MENU
         if name == None:
             self.cacheLinks = {}
-            self.listsTab(self.MAIN_CAT_TAB, {'name':'category'})
+            self.listsTab(self.MAIN_CAT_TAB, {'name': 'category'})
         elif category == 'list_filters':
             self.listFilters(self.currItem, 'list_sort')
         elif category == 'list_movies':
@@ -530,11 +530,11 @@ class MuziCsillangCC(CBaseHostClass):
     #SEARCH
         elif category in ["search", "search_next_page"]:
             cItem = dict(self.currItem)
-            cItem.update({'search_item':False, 'name':'category'}) 
+            cItem.update({'search_item': False, 'name': 'category'}) 
             self.listSearchResult(cItem, searchPattern, searchType)
     #HISTORIA SEARCH
         elif category == "search_history":
-            self.listsHistory({'name':'history', 'category': 'search'}, 'desc', _("Type: "))
+            self.listsHistory({'name': 'history', 'category': 'search'}, 'desc', _("Type: "))
         else:
             printExc()
         

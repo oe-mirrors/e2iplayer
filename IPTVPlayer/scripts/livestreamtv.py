@@ -61,7 +61,7 @@ if __name__ == "__main__":
             start_time = time.time()
             tm = str(int(start_time * 1000))
             url = refreshUrl + "&_=" + tm + "&callback=?"
-            getPage(url, {'Referer':referer, 'User-Agent':userAgent})
+            getPage(url, {'Referer': referer, 'User-Agent': userAgent})
             dt = time.time() - start_time
             if dt > 0 and dt < 20:
                 time.sleep(20 - dt)

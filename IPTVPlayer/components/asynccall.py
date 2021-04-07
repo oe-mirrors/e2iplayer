@@ -82,7 +82,7 @@ class AsyncCall(object):
     def __call__(self, *args, **kwargs):
         SetIPTVPlayerLastHostError()
         self.Thread = threading.Thread(target=self.run, name=self.Callable.__name__, args=args, kwargs=kwargs)
-        self.Thread._iptvplayer_ext = {'kill_lock':threading.Lock(), 'killable':True, 'terminated':False, 'iptv_execute':None}
+        self.Thread._iptvplayer_ext = {'kill_lock': threading.Lock(), 'killable': True, 'terminated': False, 'iptv_execute': None}
         self.Thread.start()
         return self
         
@@ -316,7 +316,7 @@ class iptv_execute(object):
             self.retVal = None
             return ret
         else: 
-            return {'sts':False}
+            return {'sts': False}
 
     def _system(self, session, cmd):
         printDBG("iptv_execute._system: Here we must be in main thread context: [%s]" % threading.current_thread())
@@ -340,7 +340,7 @@ class iptv_execute(object):
     def _callBack(self, code, outData):
         printDBG("iptv_execute._callBack: Here we must be in main thread context: [%s]" % threading.current_thread())
         self.iptv_system = None
-        self.retVal = {'sts':True, 'code':code, 'data':outData}
+        self.retVal = {'sts': True, 'code': code, 'data': outData}
         self.event.set()
         
         try:

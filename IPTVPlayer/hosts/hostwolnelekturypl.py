@@ -28,15 +28,15 @@ class WolnelekturyPL(CBaseHostClass):
 
     
     def __init__(self):
-        CBaseHostClass.__init__(self, {'history':'wolnelektury.pl', 'cookie':'WolnelekturyPL.cookie'})
+        CBaseHostClass.__init__(self, {'history': 'wolnelektury.pl', 'cookie': 'WolnelekturyPL.cookie'})
         self.HTTP_HEADER = {'User-Agent': 'Mozilla/5.0', 'Accept': 'text/html'}
         self.MAIN_URL = 'http://wolnelektury.pl/'
         self.DEFAULT_ICON_URL = 'http://m.img.brothersoft.com/android/598/1352446551_icon.png'
-        MAIN_CAT_TAB = [{'category':'categories', 'key':'author', 'title':'Autorzy'},
-                        {'category':'categories', 'key':'epoch', 'title':'Epoki'},
-                        {'category':'categories', 'key':'genre', 'title':'Gatunki'},
-                        {'category':'categories', 'key':'kind', 'title':'Rodzaje'}]
-        self.defaultParams = {'header':self.HTTP_HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
+        MAIN_CAT_TAB = [{'category': 'categories', 'key': 'author', 'title': 'Autorzy'},
+                        {'category': 'categories', 'key': 'epoch', 'title': 'Epoki'},
+                        {'category': 'categories', 'key': 'genre', 'title': 'Gatunki'},
+                        {'category': 'categories', 'key': 'kind', 'title': 'Rodzaje'}]
+        self.defaultParams = {'header': self.HTTP_HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
         self.cacheFilters = {}
         
     def getPage(self, baseUrl, addParams={}, post_data=None):
@@ -69,14 +69,14 @@ class WolnelekturyPL(CBaseHostClass):
             for item in section:
                 title = self.cleanHtmlStr(item)
                 url = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''\shref=['"]([^"^']+?)['"]''')[0])
-                itemsTab.append({'title':title, 'url':url})
+                itemsTab.append({'title': title, 'url': url})
             if len(itemsTab):
                 params = dict(cItem)
-                params.update({'good_for_fav':False, 'category':nextCategory, 'title':sTitle, 'items_tab':itemsTab})
+                params.update({'good_for_fav': False, 'category': nextCategory, 'title': sTitle, 'items_tab': itemsTab})
                 self.addDir(params)
         
-        MAIN_CAT_TAB = [{'category':'search', 'title': _('Search'), 'search_item':True}, 
-                        {'category':'search_history', 'title': _('Search history')},]
+        MAIN_CAT_TAB = [{'category': 'search', 'title': _('Search'), 'search_item': True}, 
+                        {'category': 'search_history', 'title': _('Search history')}, ]
         
         self.listsTab(MAIN_CAT_TAB, cItem)
     
@@ -95,7 +95,7 @@ class WolnelekturyPL(CBaseHostClass):
         
         for item in categories:
             params = dict(cItem)
-            params.update({'title':item, 'cat':item, 'category':category})
+            params.update({'title': item, 'cat': item, 'category': category})
             self.addDir(params)
     
     def listItems(self, cItem, nextCategory1, nextCategory2, checkPlayable=False):
@@ -128,7 +128,7 @@ class WolnelekturyPL(CBaseHostClass):
                 desc.append(' ' + tmp)
             
             params = dict(cItem)
-            params.update({'good_for_fav':True, 'category':nextCategory2, 'title':title, 'url':url, 'icon':icon, 'desc':'[/br]'.join(desc)})
+            params.update({'good_for_fav': True, 'category': nextCategory2, 'title': title, 'url': url, 'icon': icon, 'desc': '[/br]'.join(desc)})
             self.addDir(params)
         
         if nextCategory1 == '':
@@ -156,11 +156,11 @@ class WolnelekturyPL(CBaseHostClass):
                     icon = icon.split('/')
                 icon = self.getFullIconUrl('/media/book/cover_thumb/%s.jpg' % icon[-1])
                 title = self.cleanHtmlStr(item)
-                itemsTab.append({'title':title, 'url':url, 'icon':icon, 'desc':author})
+                itemsTab.append({'title': title, 'url': url, 'icon': icon, 'desc': author})
             
             if len(itemsTab):
                 params = dict(cItem)
-                params.update({'good_for_fav':False, 'category':nextCategory1, 'title':sTitle, 'items_tab':itemsTab})
+                params.update({'good_for_fav': False, 'category': nextCategory1, 'title': sTitle, 'items_tab': itemsTab})
                 self.addDir(params)
             
     def listSubItems(self, cItem, nextCategory):
@@ -189,11 +189,11 @@ class WolnelekturyPL(CBaseHostClass):
             mp3Url = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''\sdata\-mp3=['"]([^"^']+?)['"]''')[0])
             oggUrl = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''\sdata\-ogg=['"]([^"^']+?)['"]''')[0])
             if mp3Url != '':
-                urlTab.append({'name': 'mp3', 'url':mp3Url, 'need_resolve':0})
+                urlTab.append({'name': 'mp3', 'url': mp3Url, 'need_resolve': 0})
             if oggUrl != '':
-                urlTab.append({'name': 'ogg', 'url':mp3Url, 'need_resolve':0})
+                urlTab.append({'name': 'ogg', 'url': mp3Url, 'need_resolve': 0})
             params = dict(cItem)
-            params.update({'good_for_fav':False, 'title':title, 'urls':urlTab, 'desc':desc})
+            params.update({'good_for_fav': False, 'title': title, 'urls': urlTab, 'desc': desc})
             self.addAudio(params)
             
     def listSearchResult(self, cItem, searchPattern, searchType):
@@ -221,7 +221,7 @@ class WolnelekturyPL(CBaseHostClass):
             if not sts:
                 desc = ''
             otherInfo = {}
-            return [{'title':self.cleanHtmlStr(data['title']), 'text': self.cleanHtmlStr(desc), 'images':[{'title':'', 'url':data['cover']}], 'other_info':otherInfo}]
+            return [{'title': self.cleanHtmlStr(data['title']), 'text': self.cleanHtmlStr(desc), 'images':[{'title': '', 'url': data['cover']}], 'other_info':otherInfo}]
         except Exception:
             printExc()
         
@@ -260,7 +260,7 @@ class WolnelekturyPL(CBaseHostClass):
         
     #MAIN MENU
         if name == None:
-            self.listFilters({'name':'category', 'url':self.getFullUrl('/katalog/audiobooki/')}, 'list_sub_items_1')
+            self.listFilters({'name': 'category', 'url': self.getFullUrl('/katalog/audiobooki/')}, 'list_sub_items_1')
         elif category == 'list_sub_items_1':
             self.listSubItems(self.currItem, 'list_items')
         elif category == 'list_items':
@@ -272,11 +272,11 @@ class WolnelekturyPL(CBaseHostClass):
     #SEARCH
         elif category in ["search", "search_next_page"]:
             cItem = dict(self.currItem)
-            cItem.update({'search_item':False, 'name':'category'}) 
+            cItem.update({'search_item': False, 'name': 'category'}) 
             self.listSearchResult(cItem, searchPattern, searchType)
     #HISTORIA SEARCH
         elif category == "search_history":
-            self.listsHistory({'name':'history', 'category': 'search'}, 'desc', _("Type: "))
+            self.listsHistory({'name': 'history', 'category': 'search'}, 'desc', _("Type: "))
         else:
             printExc()
         

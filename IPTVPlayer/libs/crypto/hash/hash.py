@@ -13,7 +13,7 @@ class Hash:
         raise Exception('must overload')
     def __call__(self, data, more=None):
         return self.hash(data, more)
-    def hash(self,data,more=None):
+    def hash(self, data, more=None):
         self.update(data)
         digest = self.digest()
         if more == None:

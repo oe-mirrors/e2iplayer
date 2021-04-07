@@ -30,18 +30,18 @@ def gettytul():
 class UKTVPlay(CBaseHostClass):
     
     def __init__(self):
-        CBaseHostClass.__init__(self, {'history':'uktvplay.uktv.co.uk', 'cookie':'uktvplay.uktv.co.uk.cookie'})
+        CBaseHostClass.__init__(self, {'history': 'uktvplay.uktv.co.uk', 'cookie': 'uktvplay.uktv.co.uk.cookie'})
         self.DEFAULT_ICON_URL = 'https://uktv-static.s3.amazonaws.com/prod/uktvplay/img/logo.png?9b58be2039a7'
         self.USER_AGENT = 'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:40.0) Gecko/20100101 Firefox/40.0'
         self.MAIN_URL = 'https://uktvplay.uktv.co.uk/'
-        self.HEADER = {'User-Agent': self.USER_AGENT, 'DNT':'1', 'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8', 'Accept-Encoding':'gzip, deflate', 'Referer':self.getMainUrl(), 'Origin':self.getMainUrl()}
+        self.HEADER = {'User-Agent': self.USER_AGENT, 'DNT': '1', 'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8', 'Accept-Encoding': 'gzip, deflate', 'Referer': self.getMainUrl(), 'Origin': self.getMainUrl()}
         self.AJAX_HEADER = dict(self.HEADER)
-        self.AJAX_HEADER.update({'X-Requested-With': 'XMLHttpRequest', 'Accept-Encoding':'gzip, deflate', 'Content-Type':'application/x-www-form-urlencoded; charset=UTF-8', 'Accept':'application/json, text/javascript, */*; q=0.01'})
+        self.AJAX_HEADER.update({'X-Requested-With': 'XMLHttpRequest', 'Accept-Encoding': 'gzip, deflate', 'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8', 'Accept': 'application/json, text/javascript, */*; q=0.01'})
         
         self.cacheLinks = {}
         self.cacheFilters = {}
         self.cacheFiltersKeys = []
-        self.defaultParams = {'header':self.HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
+        self.defaultParams = {'header': self.HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
         self.tmpUrl = 'http://vschedules.uktv.co.uk/mobile/v2/%splatform=android&app_ver=4.3.2'
         
     def getPage(self, baseUrl, addParams={}, post_data=None):
@@ -54,7 +54,7 @@ class UKTVPlay(CBaseHostClass):
                 return url
             else:
                 return urllib.parse.urljoin(baseUrl, url)
-        addParams['cloudflare_params'] = {'domain':self.up.getDomain(baseUrl), 'cookie_file':self.COOKIE_FILE, 'User-Agent':self.USER_AGENT, 'full_url_handle':_getFullUrl}
+        addParams['cloudflare_params'] = {'domain': self.up.getDomain(baseUrl), 'cookie_file': self.COOKIE_FILE, 'User-Agent': self.USER_AGENT, 'full_url_handle': _getFullUrl}
         return self.cm.getPageCFProtection(baseUrl, addParams, post_data)
     
     def getChannelUrl(self, channel):
@@ -63,17 +63,17 @@ class UKTVPlay(CBaseHostClass):
     def listMainMenu(self, cItem):
         printDBG("UKTVPlay.listMainMenu")
         self.MAIN_CAT_TAB = [
-                             {'category':'list_items', 'title': 'DAVE', 'url':self.getChannelUrl('dave')},
-                             {'category':'list_items', 'title': 'REALLY', 'url':self.getChannelUrl('really')},
-                             {'category':'list_items', 'title': 'YESTERDAY', 'url':self.getChannelUrl('yesterday')},
-                             {'category':'list_items', 'title': 'DRAMA', 'url':self.getChannelUrl('drama')},
-                             {'category':'list_items', 'title': 'BOX SET', 'url':'collections?collection_type=boxset&'},
-                             {'category':'list_items', 'title': 'COLLECTIONS', 'url':'collections?collection_type=collection&'},
-                             {'category':'list_genres', 'title': 'GENRES', 'url':'genres?'},
-                             {'category':'list_letters', 'title': 'A-Z', 'url':'brand_list?channel=&'},
+                             {'category': 'list_items', 'title': 'DAVE', 'url': self.getChannelUrl('dave')},
+                             {'category': 'list_items', 'title': 'REALLY', 'url': self.getChannelUrl('really')},
+                             {'category': 'list_items', 'title': 'YESTERDAY', 'url': self.getChannelUrl('yesterday')},
+                             {'category': 'list_items', 'title': 'DRAMA', 'url': self.getChannelUrl('drama')},
+                             {'category': 'list_items', 'title': 'BOX SET', 'url': 'collections?collection_type=boxset&'},
+                             {'category': 'list_items', 'title': 'COLLECTIONS', 'url': 'collections?collection_type=collection&'},
+                             {'category': 'list_genres', 'title': 'GENRES', 'url': 'genres?'},
+                             {'category': 'list_letters', 'title': 'A-Z', 'url': 'brand_list?channel=&'},
                              
-                             {'category':'search', 'title': _('Search'), 'search_item':True}, 
-                             {'category':'search_history', 'title': _('Search history')},
+                             {'category': 'search', 'title': _('Search'), 'search_item': True}, 
+                             {'category': 'search_history', 'title': _('Search history')},
                             ]
         self.listsTab(self.MAIN_CAT_TAB, cItem)
             
@@ -93,7 +93,7 @@ class UKTVPlay(CBaseHostClass):
                 url = 'genre_items?genre_name=%s&' % item['name'].upper()
                 title = self.cleanHtmlStr(item['title'])
                 icon = self.getFullIconUrl(item['image'])
-                params = {'good_for_fav':False, 'category':nextCategory, 'url':url, 'title':title, 'icon':icon}
+                params = {'good_for_fav': False, 'category': nextCategory, 'url': url, 'title': title, 'icon': icon}
                 self.addDir(params)
         except Exception:
             printExc()
@@ -112,7 +112,7 @@ class UKTVPlay(CBaseHostClass):
             for item in data:
                 url = 'brand_list?channel=&letter=%s&' % item[0]
                 title = self.cleanHtmlStr(item)
-                params = {'good_for_fav':False, 'category':nextCategory, 'url':url, 'title':title}
+                params = {'good_for_fav': False, 'category': nextCategory, 'url': url, 'title': title}
                 self.addDir(params)
         except Exception:
             printExc()
@@ -157,7 +157,7 @@ class UKTVPlay(CBaseHostClass):
                 
                 desc = '[/br]'.join(descTab)
                 
-                params = {'good_for_fav':True, 'category':nextCategory, 'title':title, 'icon':icon, 'desc':desc, 'f_house':house}
+                params = {'good_for_fav': True, 'category': nextCategory, 'title': title, 'icon': icon, 'desc': desc, 'f_house': house}
                 self.addDir(params)
         except Exception:
             printExc()
@@ -179,7 +179,7 @@ class UKTVPlay(CBaseHostClass):
             for key in keys:
                 seriesId = data['available_series'][key]
                 params = dict(cItem)
-                params.update({'good_for_fav':False, 'category':nextCategory, 'title':_('Season %s') % key, 'f_series_id':seriesId, 'f_brand_id':brandId})
+                params.update({'good_for_fav': False, 'category': nextCategory, 'title': _('Season %s') % key, 'f_series_id': seriesId, 'f_brand_id': brandId})
                 self.addDir(params)
                 
             if len(self.currList) == 1:
@@ -227,7 +227,7 @@ class UKTVPlay(CBaseHostClass):
                 descTab.append(item.get('teaser_text', ''))
                 desc = '[/br]'.join(descTab)
                 
-                params = {'good_for_fav':True, 'title':title, 'f_video_id':vidId, 'url':url, 'icon':icon, 'desc':desc}
+                params = {'good_for_fav': True, 'title': title, 'f_video_id': vidId, 'url': url, 'icon': icon, 'desc': desc}
                 self.addVideo(params)
         except Exception: 
             printExc()
@@ -282,7 +282,7 @@ class UKTVPlay(CBaseHostClass):
         
     #MAIN MENU
         if name == None:
-            self.listMainMenu({'name':'category'})
+            self.listMainMenu({'name': 'category'})
         elif category == 'list_items':
             self.listItems(self.currItem, 'list_seasons')
         elif category == 'list_genres':
@@ -296,11 +296,11 @@ class UKTVPlay(CBaseHostClass):
     #SEARCH
         elif category in ["search", "search_next_page"]:
             cItem = dict(self.currItem)
-            cItem.update({'search_item':False, 'name':'category'}) 
+            cItem.update({'search_item': False, 'name': 'category'}) 
             self.listSearchResult(cItem, searchPattern, searchType)
     #HISTORIA SEARCH
         elif category == "search_history":
-            self.listsHistory({'name':'history', 'category': 'search'}, 'desc', _("Type: "))
+            self.listsHistory({'name': 'history', 'category': 'search'}, 'desc', _("Type: "))
         else:
             printExc()
         

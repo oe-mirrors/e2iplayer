@@ -52,8 +52,8 @@ class SuggestionsProvider:
     def __init__(self):
         self.cm = common()
         self.lang = config.plugins.iptvplayer.hdfull_language.value
-        self.HTTP_HEADER = {'User-Agent':self.cm.getDefaultHeader(browser='chrome')['User-Agent'], 'X-Requested-With':'XMLHttpRequest'}
-        self.defaultParams = {'header':self.HTTP_HEADER, 'use_cookie': True, 'load_cookie': True, 'cookiefile': self.COOKIE_FILE, 'cookie_items':{'language':self.lang}}
+        self.HTTP_HEADER = {'User-Agent': self.cm.getDefaultHeader(browser='chrome')['User-Agent'], 'X-Requested-With': 'XMLHttpRequest'}
+        self.defaultParams = {'header': self.HTTP_HEADER, 'use_cookie': True, 'load_cookie': True, 'cookiefile': self.COOKIE_FILE, 'cookie_items': {'language': self.lang}}
 
     def getName(self):
         return _("HDFull Suggestions")
@@ -65,7 +65,7 @@ class SuggestionsProvider:
             self.lang = lang
 
         url = self.MAIN_URL + '/ajax/search.php'
-        sts, data = self.cm.getPage(url, post_data={'q':text, 'limit':'10', 'timestamp':str(int(time.time() * 1000)), 'verifiedCheck':''})
+        sts, data = self.cm.getPage(url, post_data={'q': text, 'limit': '10', 'timestamp': str(int(time.time() * 1000)), 'verifiedCheck': ''})
         if sts:
             retList = []
             for item in json_loads(data):
@@ -85,12 +85,12 @@ def jstr(item, key, default=''):
 class HDFull(CBaseHostClass, CaptchaHelper):
 
     def __init__(self):
-        CBaseHostClass.__init__(self, {'history':'hdfull.me', 'cookie':'hdfull.me.cookie'})
+        CBaseHostClass.__init__(self, {'history': 'hdfull.me', 'cookie': 'hdfull.me.cookie'})
         SuggestionsProvider.COOKIE_FILE = self.COOKIE_FILE
 
         self.HTTP_HEADER = self.cm.getDefaultHeader(browser='chrome')
         language = config.plugins.iptvplayer.hdfull_language.value
-        self.defaultParams = {'header':self.HTTP_HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE, 'cookie_items':{'language':language}}
+        self.defaultParams = {'header': self.HTTP_HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE, 'cookie_items': {'language': language}}
 
         self.MAIN_URL = 'https://hdfull.me/'
         self.DEFAULT_ICON_URL = 'https://ocio.farodevigo.es/img_contenido/noticias/2018/02/642946/web_cine_pirata.jpg'
@@ -137,27 +137,27 @@ class HDFull(CBaseHostClass, CaptchaHelper):
 
             subItems = []
             if category:
-                subItems = [MergeDicts(cItem, {'url':menuUrl, 'title':_('All'), 'category':category})]
+                subItems = [MergeDicts(cItem, {'url': menuUrl, 'title': _('All'), 'category': category})]
             
             for item in menuData:
                 title = self.cleanHtmlStr(item)
                 url = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''\shref=['"]([^'^"]+?)['"]''')[0])
-                params = {'url':url, 'title':title}
+                params = {'url': url, 'title': title}
                 if category:
                     params['category'] = category
                 else:
                     tmp = url.split('#', 1)
                     if len(tmp) == 2:
-                        params.update({'category':'list_episodes_langs', 'url':tmp[0], 'f_action':tmp[1]})
+                        params.update({'category': 'list_episodes_langs', 'url': tmp[0], 'f_action': tmp[1]})
                     else:
                         params['category'] = 'list_items'
                 subItems.append(MergeDicts(cItem, params))
 
             if len(subItems):
-                self.addDir(MergeDicts(cItem, {'url':menuUrl, 'title':menuTitle, 'category':'sub_items', 'sub_items':subItems}))
+                self.addDir(MergeDicts(cItem, {'url': menuUrl, 'title': menuTitle, 'category': 'sub_items', 'sub_items': subItems}))
 
-        MAIN_CAT_TAB = [{'category':'search', 'title': _('Search'), 'search_item':True},
-                        {'category': 'search_history', 'title': _('Search history'),}]
+        MAIN_CAT_TAB = [{'category': 'search', 'title': _('Search'), 'search_item': True},
+                        {'category': 'search_history', 'title': _('Search history'), }]
         self.listsTab(MAIN_CAT_TAB, cItem)
 
     def listSubItems(self, cItem):
@@ -189,7 +189,7 @@ class HDFull(CBaseHostClass, CaptchaHelper):
                 printDBG("SKIP >> [%s] [%s] item[%s]" % (category, url, item))
                 continue
             title = self.cleanHtmlStr(item)
-            self.addDir(MergeDicts(cItem, {'url':url, 'title':title, 'category':category, 'fix_next_page':fixNextPage}))
+            self.addDir(MergeDicts(cItem, {'url': url, 'title': title, 'category': category, 'fix_next_page': fixNextPage}))
 
     def listSeriesABC(self, cItem, nextCategory):
         printDBG("HDFull.listSeriesABC")
@@ -203,7 +203,7 @@ class HDFull(CBaseHostClass, CaptchaHelper):
         for item in data:
             url = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''\shref=['"]([^'^"]+?)['"]''')[0])
             title = self.cleanHtmlStr(item)
-            self.addDir(MergeDicts(cItem, {'url':url, 'title':title, 'category':nextCategory}))
+            self.addDir(MergeDicts(cItem, {'url': url, 'title': title, 'category': nextCategory}))
 
     def _listItems(self, cItem, nextCategory, data):
         printDBG("HDFull._listItems")
@@ -238,7 +238,7 @@ class HDFull(CBaseHostClass, CaptchaHelper):
             if tmp[0]:
                 desc.append('.'.join(tmp))
 
-            retList.append(MergeDicts(cItem, {'good_for_fav':True, 'category':nextCategory, 'title':title, 'url':url, 'icon':icon, 'desc':' | '.join(desc)}))
+            retList.append(MergeDicts(cItem, {'good_for_fav': True, 'category': nextCategory, 'title': title, 'url': url, 'icon': icon, 'desc': ' | '.join(desc)}))
         return retList
 
     def listItems(self, cItem, nextCategory):
@@ -266,7 +266,7 @@ class HDFull(CBaseHostClass, CaptchaHelper):
         self.currList.extend(self._listItems(cItem, nextCategory, data))
 
         if nextPage and len(self.currList):
-            self.addDir(MergeDicts(cItem, {'url':nextPage, 'title':_('Next page'), 'page':page + 1}))
+            self.addDir(MergeDicts(cItem, {'url': nextPage, 'title': _('Next page'), 'page': page + 1}))
 
     def _getLinks(self, cUrl, data):
         linksTab = []
@@ -277,9 +277,9 @@ class HDFull(CBaseHostClass, CaptchaHelper):
         for item in tmp:
             version = item.split('?', 1)[-1]
             if 'providers' in item:
-                tabJs['providers'] = {'url':self.getFullUrl(item), 'hash':version + '.1'}
+                tabJs['providers'] = {'url': self.getFullUrl(item), 'hash': version + '.1'}
             elif 'view' in item:
-                tabJs['view'] = {'url':self.getFullUrl(item), 'hash':version + '.1'}
+                tabJs['view'] = {'url': self.getFullUrl(item), 'hash': version + '.1'}
 
         for key in tabJs.keys():
             tabJs[key]['name'] = 'hdfull.me_%s' % key
@@ -328,7 +328,7 @@ class HDFull(CBaseHostClass, CaptchaHelper):
         try:
             js_params = [tabJs['providers']]
             js_params.append(tabJs['view'])
-            js_params.append({'code':'e2iLinks("%s");' % ad})
+            js_params.append({'code': 'e2iLinks("%s");' % ad})
             ret = js_execute_ext(js_params)
 
             data = json_loads(ret['data'])
@@ -337,7 +337,7 @@ class HDFull(CBaseHostClass, CaptchaHelper):
                 url = item['embed']
                 if not url:
                     url = item['download']
-                linksTab.append({'name':name, 'url':strwithmeta(url, {'Referer':cUrl}), 'need_resolve':1})
+                linksTab.append({'name': name, 'url': strwithmeta(url, {'Referer': cUrl}), 'need_resolve': 1})
         except Exception:
             printExc()
 
@@ -362,14 +362,14 @@ class HDFull(CBaseHostClass, CaptchaHelper):
         trailer = self.getFullUrl(self.cm.ph.getSearchGroups(data, '''var\s+?trailer\s*?=\s*?['"]([^'^"]+?)['"]''', 1, True)[0], cUrl)
         if trailer:
             params = dict(cItem)
-            params.update({'good_for_fav': False, 'title':'%s - %s' % (cItem['title'], _('trailer')), 'url':strwithmeta(trailer, {'Referer':cUrl}), 'desc':desc, 'prev_url':cUrl})
+            params.update({'good_for_fav': False, 'title': '%s - %s' % (cItem['title'], _('trailer')), 'url': strwithmeta(trailer, {'Referer': cUrl}), 'desc': desc, 'prev_url': cUrl})
             self.addVideo(params)
 
         linksTab = self._getLinks(cUrl, data)
         if len(linksTab):
             self.cacheLinks[cUrl] = linksTab
             params = dict(cItem)
-            params.update({'good_for_fav': False, 'url':cUrl, 'desc':desc, 'prev_url':cUrl})
+            params.update({'good_for_fav': False, 'url': cUrl, 'desc': desc, 'prev_url': cUrl})
             self.addVideo(params)
         else:
             data = self.cm.ph.getAllItemsBeetwenNodes(data, ('<div', '>', 'itemprop="season"'), ('</div', '>'))
@@ -379,7 +379,7 @@ class HDFull(CBaseHostClass, CaptchaHelper):
                 title = self.cleanHtmlStr(item)
 
                 params = dict(cItem)
-                params.update({'good_for_fav': True, 'category':nextCategory, 's_title':cItem['title'], 'title':title, 'url':url, 'icon':icon, 'prev_url':cUrl, 'desc':desc})
+                params.update({'good_for_fav': True, 'category': nextCategory, 's_title': cItem['title'], 'title': title, 'url': url, 'icon': icon, 'prev_url': cUrl, 'desc': desc})
                 self.addDir(params)
 
     def listEpisodes(self, cItem):
@@ -392,7 +392,7 @@ class HDFull(CBaseHostClass, CaptchaHelper):
         self.setMainUrl(cUrl)
 
         sid = self.cm.ph.getSearchGroups(data, '''var\s+?sid\s*?=\s*?['"]([0-9]+)['"]?;''')[0]
-        cItem = MergeDicts(cItem, {'category':'list_episodes2', 'url':cUrl, 'f_action':'season', 'f_show':sid, 'f_season':cUrl.rsplit('-', 1)[-1]})
+        cItem = MergeDicts(cItem, {'category': 'list_episodes2', 'url': cUrl, 'f_action': 'season', 'f_show': sid, 'f_season': cUrl.rsplit('-', 1)[-1]})
         self.listEpisodes2(cItem)
 
     def listEpisodes2(self, cItem):
@@ -405,7 +405,7 @@ class HDFull(CBaseHostClass, CaptchaHelper):
         page = cItem.get('page', 0)
 
         baseEpisodeUrl = '/show/%s/season-%s/episode-%s' if lang == 'en' else '/serie/%s/temporada-%s/episodio-%s'
-        post_data = {'action':cItem['f_action'], 'start':page * ITEMS, 'limit':ITEMS}
+        post_data = {'action': cItem['f_action'], 'start': page * ITEMS, 'limit': ITEMS}
         if 'f_show' in cItem:
             post_data['show'] = cItem['f_show']
         if 'f_season' in cItem:
@@ -414,7 +414,7 @@ class HDFull(CBaseHostClass, CaptchaHelper):
             post_data['elang'] = cItem['f_elang'].upper()
 
         params = dict(self.defaultParams)
-        params['header'] = MergeDicts(params['header'], {'Referer':cItem['url'], 'Content-Type':'application/x-www-form-urlencoded; charset=UTF-8'})
+        params['header'] = MergeDicts(params['header'], {'Referer': cItem['url'], 'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8'})
         
         sts, data = self.getPage(self.getFullUrl('/a/episodes'), params, post_data)
         if not sts:
@@ -431,12 +431,12 @@ class HDFull(CBaseHostClass, CaptchaHelper):
                 desc = jstr(item, 'date_aired') + ' | ' + (', '.join(item.get('languages', [])))
                 url = self.getFullUrl(baseEpisodeUrl % (jstr(item, 'permalink'), sNum, eNum))
                 
-                self.addVideo({'good_for_fav': True, 'title':title, 'url':url, 'icon':icon, 'desc':desc})
+                self.addVideo({'good_for_fav': True, 'title': title, 'url': url, 'icon': icon, 'desc': desc})
         except Exception:
             printExc()
 
         if len(self.currList) == ITEMS:
-            self.addDir(MergeDicts(cItem, {'title':_('Next page'), 'page':page + 1}))
+            self.addDir(MergeDicts(cItem, {'title': _('Next page'), 'page': page + 1}))
 
     def listEpisodesLangs(self, cItem, nextCategory):
         printDBG("HDFull.listEpisodesLangs")
@@ -452,7 +452,7 @@ class HDFull(CBaseHostClass, CaptchaHelper):
         for item in data:
             lang = self.cm.ph.getSearchGroups(item, '''data\-lang=['"]([^"^']+?)['"]''')[0]
             title = self.cleanHtmlStr(item)
-            self.addDir(MergeDicts(cItem, {'category':nextCategory, 'title':title, 'f_elang':lang}))
+            self.addDir(MergeDicts(cItem, {'category': nextCategory, 'title': title, 'f_elang': lang}))
 
     def listSearchResult(self, cItem, searchPattern, searchType):
         self.tryTologin()
@@ -471,10 +471,10 @@ class HDFull(CBaseHostClass, CaptchaHelper):
             value = self.cm.ph.getSearchGroups(item, '''value=['"]([^"^']+?)['"]''')[0]
             if name != '':
                 post_data[name] = value
-        post_data.update({'query':searchPattern})
+        post_data.update({'query': searchPattern})
         
         httpParams = dict(self.defaultParams)
-        httpParams['header'] = MergeDicts(httpParams['header'], {'Referer':self.cm.meta['url'], 'Content-Type':'application/x-www-form-urlencoded'})
+        httpParams['header'] = MergeDicts(httpParams['header'], {'Referer': self.cm.meta['url'], 'Content-Type': 'application/x-www-form-urlencoded'})
 
         sts, data = self.getPage(actionUrl, httpParams, post_data)
         if sts:
@@ -485,7 +485,7 @@ class HDFull(CBaseHostClass, CaptchaHelper):
                 subItem = self._listItems(cItem, 'explore_item', sData[1])
 
                 if len(subItem):
-                    params = MergeDicts(cItem, {'good_for_fav':False, 'category':'sub_items', 'title':sTtile, 'sub_items':subItem})
+                    params = MergeDicts(cItem, {'good_for_fav': False, 'category': 'sub_items', 'title': sTtile, 'sub_items': subItem})
                     self.addDir(params)
 
     def getLinksForVideo(self, cItem):
@@ -580,7 +580,7 @@ class HDFull(CBaseHostClass, CaptchaHelper):
         if desc == '':
             desc = cItem.get('desc', '')
         
-        return [{'title':self.cleanHtmlStr(title), 'text': self.cleanHtmlStr(desc), 'images':[{'title':'', 'url':self.getFullUrl(icon)}], 'other_info':{'custom_items_list':itemsList}}]
+        return [{'title': self.cleanHtmlStr(title), 'text': self.cleanHtmlStr(desc), 'images': [{'title': '', 'url': self.getFullUrl(icon)}], 'other_info': {'custom_items_list': itemsList}}]
         
     def tryTologin(self):
         printDBG('tryTologin start')
@@ -614,7 +614,7 @@ class HDFull(CBaseHostClass, CaptchaHelper):
             rm(loginCookie)
             rm(self.COOKIE_FILE)
             if freshSession:
-                sts, data = self.getPage(self.getMainUrl(), MergeDicts(self.defaultParams, {'use_new_session':True}))
+                sts, data = self.getPage(self.getMainUrl(), MergeDicts(self.defaultParams, {'use_new_session': True}))
 
             self.loggedIn = False
             if '' == self.login.strip() or '' == self.password.strip():
@@ -630,10 +630,10 @@ class HDFull(CBaseHostClass, CaptchaHelper):
                     value = self.cm.ph.getSearchGroups(item, '''value=['"]([^"^']+?)['"]''')[0]
                     if name != '':
                         post_data[name] = value
-                post_data.update({'username':self.login, 'password':self.password, 'action':'login'})
+                post_data.update({'username': self.login, 'password': self.password, 'action': 'login'})
 
                 httpParams = dict(self.defaultParams)
-                httpParams['header'] = MergeDicts(httpParams['header'], {'Referer':self.cm.meta['url'], 'Content-Type':'application/x-www-form-urlencoded'})
+                httpParams['header'] = MergeDicts(httpParams['header'], {'Referer': self.cm.meta['url'], 'Content-Type': 'application/x-www-form-urlencoded'})
 
                 sts, data = self.getPage(actionUrl, httpParams, post_data)
 
@@ -665,7 +665,7 @@ class HDFull(CBaseHostClass, CaptchaHelper):
 
     #MAIN MENU
         if name == None:
-            self.listMain({'name':'category', 'type':'category'})
+            self.listMain({'name': 'category', 'type': 'category'})
 
         elif category in ['list_sort_series', 'list_sort_movies']:
             self.listSortMoviesSeries(self.currItem, 'list_items', 'list_series_abc')
@@ -693,11 +693,11 @@ class HDFull(CBaseHostClass, CaptchaHelper):
     #SEARCH
         elif category in ["search", "search_next_page"]:
             cItem = dict(self.currItem)
-            cItem.update({'search_item':False, 'name':'category'}) 
+            cItem.update({'search_item': False, 'name': 'category'}) 
             self.listSearchResult(cItem, searchPattern, searchType)
     #HISTORIA SEARCH
         elif category == "search_history":
-            self.listsHistory({'name':'history', 'category': 'search'}, 'desc', _("Type: "))
+            self.listsHistory({'name': 'history', 'category': 'search'}, 'desc', _("Type: "))
         else:
             printExc()
 

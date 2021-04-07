@@ -337,10 +337,10 @@ class E2iPlayerBufferingWidget(Screen):
         playerAdditionalParams = dict(self.playerAdditionalParams)
         playerAdditionalParams['downloader'] = self.downloader
         if self.isMOOVAtomAtTheBeginning:
-            playerAdditionalParams['moov_atom_info'] = {'offset':0, 'size':self.moovAtomOffset + self.moovAtomSize, 'file':''}
+            playerAdditionalParams['moov_atom_info'] = {'offset': 0, 'size': self.moovAtomOffset + self.moovAtomSize, 'file': ''}
         elif self.moovAtomStatus == self.MOOV_STS.DOWNLOADED and \
              DMHelper.STS.DOWNLOADED != self.downloader.getStatus(): 
-            playerAdditionalParams['moov_atom_info'] = {'offset':self.moovAtomOffset, 'size': self.moovAtomSize, 'file':self.moovAtomPath}
+            playerAdditionalParams['moov_atom_info'] = {'offset': self.moovAtomOffset, 'size': self.moovAtomSize, 'file': self.moovAtomPath}
         
         if strwithmeta(self.url).meta.get('iptv_proto', '') in ['f4m', 'uds', 'm3u8']:
             playerAdditionalParams['file-download-timeout'] = 90000 # 90s

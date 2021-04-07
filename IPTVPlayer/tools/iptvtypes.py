@@ -42,7 +42,7 @@ def enum(**enums):
 #   "Origin": http header field
 #   "X-Forwarded-For": http header field
 class strwithmeta(str):
-    def __new__(cls,value,meta={}):
+    def __new__(cls, value, meta={}):
         obj = str.__new__(cls, value)
         obj.meta = {}
         if isinstance(value, strwithmeta):

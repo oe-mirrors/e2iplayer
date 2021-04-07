@@ -45,18 +45,18 @@ def GetConfigList():
 class WeebTvApi:
     HOST = 'XBMC'
     HEADER = {'User-Agent': HOST, 'ContentType': 'application/x-www-form-urlencoded'}
-    DEFPARAMS = {'header':HEADER}
+    DEFPARAMS = {'header': HEADER}
     MAINURL = 'http://weeb.tv'
     checkUrl = MAINURL + '/api/checkPluginVersionXBMC'
     PLAYERURL = MAINURL + '/api/setPlayer'
     JSONURL = MAINURL + '/api/getChannelList'
     VERSION = 140
     
-    MAIN_TAB = [{'category':'main', 'url':JSONURL + '&option=online-alphabetical', 'title':_('Sorted channels A-Z [live]')},
-                 {'category':'main', 'url':JSONURL + '&option=online-now-viewed', 'title':_('Sorted most viewed channels now [live]')},
-                 {'category':'main', 'url':JSONURL + '&option=online-most-viewed', 'title':_('Sorted most viewed channels general [live]')},
-                 {'category':'main', 'url':JSONURL + '&option=offline-ranking', 'title':_('Offline channels')},
-                 {'category':'main', 'url':JSONURL + '&option=all-ranking', 'title':_('Show all channels')}]
+    MAIN_TAB = [{'category': 'main', 'url': JSONURL + '&option=online-alphabetical', 'title': _('Sorted channels A-Z [live]')},
+                 {'category': 'main', 'url': JSONURL + '&option=online-now-viewed', 'title': _('Sorted most viewed channels now [live]')},
+                 {'category': 'main', 'url': JSONURL + '&option=online-most-viewed', 'title': _('Sorted most viewed channels general [live]')},
+                 {'category': 'main', 'url': JSONURL + '&option=offline-ranking', 'title': _('Offline channels')},
+                 {'category': 'main', 'url': JSONURL + '&option=all-ranking', 'title': _('Show all channels')}]
 
     def __init__(self):
         self.cm = common()
@@ -133,7 +133,7 @@ class WeebTvApi:
                                 online = 'online'
                                 channel = name
                             title = '%s - %s %s' % (title, user, online)
-                            params = {'url':channel, 'title':title, 'desc':desc, 'icon':image, 'rank':rank, 'bitrate':bitrate, 'user':user}
+                            params = {'url': channel, 'title': title, 'desc': desc, 'icon': image, 'rank': rank, 'bitrate': bitrate, 'user': user}
                             channelsList.append(params)
                         except Exception:
                             printExc()

@@ -52,9 +52,9 @@ def gettytul():
 class BSTO(CBaseHostClass, CaptchaHelper):
     LINKS_CACHE = {}
     def __init__(self):
-        CBaseHostClass.__init__(self, {'history':'bs.to', 'cookie':'bsto.cookie'})
+        CBaseHostClass.__init__(self, {'history': 'bs.to', 'cookie': 'bsto.cookie'})
         self.USER_AGENT = 'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:40.0) Gecko/20100101 Firefox/40.0'
-        self.HEADER = {'User-Agent': self.USER_AGENT, 'DNT':'1', 'Accept': 'text/html'}
+        self.HEADER = {'User-Agent': self.USER_AGENT, 'DNT': '1', 'Accept': 'text/html'}
         self.AJAX_HEADER = dict(self.HEADER)
         self.AJAX_HEADER.update({'X-Requested-With': 'XMLHttpRequest'})
         
@@ -63,14 +63,14 @@ class BSTO(CBaseHostClass, CaptchaHelper):
         self.cacheSeries = []
         self.cacheGenres = {}
         self.cacheLinks = {}
-        self.defaultParams = {'with_metadata':True, 'header':self.HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
+        self.defaultParams = {'with_metadata': True, 'header': self.HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
         self._getHeaders = None
     
     def getPage(self, baseUrl, addParams={}, post_data=None):
         if addParams == {}:
             addParams = dict(self.defaultParams)
 
-        addParams['cloudflare_params'] = {'cookie_file':self.COOKIE_FILE, 'User-Agent':self.USER_AGENT}
+        addParams['cloudflare_params'] = {'cookie_file': self.COOKIE_FILE, 'User-Agent': self.USER_AGENT}
         return self.cm.getPageCFProtection(baseUrl, addParams, post_data)
         
     def getFullIconUrl(self, url):
@@ -78,10 +78,10 @@ class BSTO(CBaseHostClass, CaptchaHelper):
         
     def selectDomain(self):                
         self.MAIN_URL = 'https://bs.to/'
-        self.MAIN_CAT_TAB = [{'category':'list_genres', 'title': 'Genres', 'url':self.getFullUrl('/serie-genre')},
-                             {'category':'list_genres', 'title': 'Alphabet', 'url':self.getFullUrl('/serie-alphabet')},
+        self.MAIN_CAT_TAB = [{'category': 'list_genres', 'title': 'Genres', 'url': self.getFullUrl('/serie-genre')},
+                             {'category': 'list_genres', 'title': 'Alphabet', 'url': self.getFullUrl('/serie-alphabet')},
                              {'category': 'search', 'title': _('Search'), 'search_item': True, },
-                             {'category': 'search_history', 'title': _('Search history'),} 
+                             {'category': 'search_history', 'title': _('Search history'), } 
                             ]
         
     def listGenres(self, cItem, nextCategory):
@@ -102,9 +102,9 @@ class BSTO(CBaseHostClass, CaptchaHelper):
                 title = self.cleanHtmlStr(item)
                 if title == '':
                     title = self.cleanHtmlStr(self.cm.ph.getSearchGroups(item, '''title=['"]([^'^"]+?)['"]''')[0])
-                self.cacheGenres[genreTitle].append({'title':title, 'url':url})
+                self.cacheGenres[genreTitle].append({'title': title, 'url': url})
             params = dict(cItem)
-            params.update({'title':genreTitle, 'category':nextCategory})
+            params.update({'title': genreTitle, 'category': nextCategory})
             self.addDir(params)
                 
     def listItems(self, cItem, nextCategory):
@@ -113,7 +113,7 @@ class BSTO(CBaseHostClass, CaptchaHelper):
         for item in tab:
             params = dict(cItem)
             params.update(item)
-            params.update({'good_for_fav':True, 'category':nextCategory, 'icon':item['url'] + '?fake=need_resolve.jpeg'})
+            params.update({'good_for_fav': True, 'category': nextCategory, 'icon': item['url'] + '?fake=need_resolve.jpeg'})
             self.addDir(params)
     
     def listSeasons(self, cItem, nextCategory):
@@ -133,7 +133,7 @@ class BSTO(CBaseHostClass, CaptchaHelper):
             url = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''href=['"]([^'^"]+?)['"]''')[0])
             title = self.cleanHtmlStr(item)
             params = dict(cItem)
-            params.update({'good_for_fav':False, 'category':nextCategory, 'title':'%s %s' % (seasonLabel, title), 's_num':title, 'series_title':cItem['title'], 'url':url, 'icon':icon, 'desc':desc})
+            params.update({'good_for_fav': False, 'category': nextCategory, 'title': '%s %s' % (seasonLabel, title), 's_num': title, 'series_title': cItem['title'], 'url': url, 'icon': icon, 'desc': desc})
             self.addDir(params)
         
     def listEpisodes(self, cItem):
@@ -169,10 +169,10 @@ class BSTO(CBaseHostClass, CaptchaHelper):
                 url = self.getFullUrl(self.cm.ph.getSearchGroups(link, '''href=['"]([^'^"]+?)['"]''')[0])
                 if name == '':
                     name = url.rsplit('/', 1)[-1]
-                self.cacheLinks[key].append({'name':name, 'url':strwithmeta(url, {'links_key':key}), 'need_resolve':1})
+                self.cacheLinks[key].append({'name': name, 'url': strwithmeta(url, {'links_key': key}), 'need_resolve': 1})
             if len(self.cacheLinks[key]):
                 params = dict(cItem)
-                params.update({'good_for_fav':False, 'title':title, 'url':url, 'links_key':key})
+                params.update({'good_for_fav': False, 'title': title, 'url': url, 'links_key': key})
                 self.addVideo(params)
         
     def listSearchResult(self, cItem, searchPattern, searchType):
@@ -191,7 +191,7 @@ class BSTO(CBaseHostClass, CaptchaHelper):
                 title = self.cleanHtmlStr(item)
                 if title == '':
                     title = self.cleanHtmlStr(self.cm.ph.getSearchGroups(item, '''title=['"]([^'^"]+?)['"]''')[0])
-                self.cacheSeries.append({'title':title, 'url':url})
+                self.cacheSeries.append({'title': title, 'url': url})
         
         searchResults = []
         words = ' '.join(searchPattern.lower().split())
@@ -203,14 +203,14 @@ class BSTO(CBaseHostClass, CaptchaHelper):
                 if word in title:
                     score += 1
             if score > 0:
-                searchResults.append({'idx':idx, 'score':score})
+                searchResults.append({'idx': idx, 'score': score})
         
         searchResults.sort(key=lambda k: k['score'], reverse=True) 
         for item in searchResults:
             item = self.cacheSeries[item['idx']]
             params = dict(cItem)
             params.update(item)
-            params.update({'good_for_fav':True, 'category':'list_seasons', 'icon':item['url'] + '?fake=need_resolve.jpeg'})
+            params.update({'good_for_fav': True, 'category': 'list_seasons', 'icon': item['url'] + '?fake=need_resolve.jpeg'})
             self.addDir(params)
     
     def getLinksForVideo(self, cItem, forEpisodes=False):
@@ -239,7 +239,7 @@ class BSTO(CBaseHostClass, CaptchaHelper):
                 tmp = self._cryptoJS_AES_decrypt(unhexlify(tmp), ''.join(GetPluginDir().split('/')[-5:]))
                 tmp = base64.b64decode(tmp.split('\r')[-1]).replace('\r', '')
                 _getHeaders = compile(tmp, '', 'exec')
-                vGlobals = {"__builtins__": None, 'len': len, 'list': list, 'dict':dict, 'time':time, 'base64':base64, 'hashlib':hashlib, 'hmac':hmac, 'json':json, 'int':int, 'str':str}
+                vGlobals = {"__builtins__": None, 'len': len, 'list': list, 'dict': dict, 'time': time, 'base64': base64, 'hashlib': hashlib, 'hmac': hmac, 'json': json, 'int': int, 'str': str}
                 vLocals = {'_getHeaders': ''}
                 exec(_getHeaders, vGlobals, vLocals)
                 self._getHeaders = vLocals['_getHeaders']
@@ -376,7 +376,7 @@ class BSTO(CBaseHostClass, CaptchaHelper):
                 except Exception:
                     continue
         
-        return [{'title':self.cleanHtmlStr(title), 'text': self.cleanHtmlStr(desc), 'images':[{'title':'', 'url':self.getFullIconUrl(icon)}], 'other_info':otherInfo}]
+        return [{'title': self.cleanHtmlStr(title), 'text': self.cleanHtmlStr(desc), 'images': [{'title': '', 'url': self.getFullIconUrl(icon)}], 'other_info': otherInfo}]
     
     def handleService(self, index, refresh=0, searchPattern='', searchType=''):
         printDBG('handleService start')
@@ -395,7 +395,7 @@ class BSTO(CBaseHostClass, CaptchaHelper):
         
     #MAIN MENU
         if name == None:
-            self.listsTab(self.MAIN_CAT_TAB, {'name':'category'})
+            self.listsTab(self.MAIN_CAT_TAB, {'name': 'category'})
         elif category == 'list_genres':
             self.listGenres(self.currItem, 'list_items')
         if category == 'list_items':
@@ -407,11 +407,11 @@ class BSTO(CBaseHostClass, CaptchaHelper):
     #SEARCH
         elif category in ["search", "search_next_page"]:
             cItem = dict(self.currItem)
-            cItem.update({'search_item':False, 'name':'category'}) 
+            cItem.update({'search_item': False, 'name': 'category'}) 
             self.listSearchResult(cItem, searchPattern, searchType)
     #HISTORIA SEARCH
         elif category == "search_history":
-            self.listsHistory({'name':'history', 'category': 'search'}, 'desc', _("Type: "))
+            self.listsHistory({'name': 'history', 'category': 'search'}, 'desc', _("Type: "))
         else:
             printExc()
         

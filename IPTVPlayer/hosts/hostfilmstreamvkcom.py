@@ -46,10 +46,10 @@ def gettytul():
 class FilmstreamvkCom(CBaseHostClass):
     
     def __init__(self):
-        CBaseHostClass.__init__(self, {'history':'filmstreamvk.com', 'cookie':'filmstreamvkcom.cookie'})
+        CBaseHostClass.__init__(self, {'history': 'filmstreamvk.com', 'cookie': 'filmstreamvkcom.cookie'})
         self.HTTP_HEADER = {'User-Agent': 'Mozilla/5.0', 'Accept': 'text/html'}
         self.MAIN_URL = None
-        self.defaultParams = {'header':self.HTTP_HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
+        self.defaultParams = {'header': self.HTTP_HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
     
     def getPage(self, baseUrl, addParams={}, post_data=None):
         if addParams == {}:
@@ -62,7 +62,7 @@ class FilmstreamvkCom(CBaseHostClass):
             else:
                 proxy = config.plugins.iptvplayer.alternative_proxy2.value
             addParams = dict(addParams)
-            addParams.update({'http_proxy':proxy})
+            addParams.update({'http_proxy': proxy})
         
         return self.cm.getPage(baseUrl, addParams, post_data)
     
@@ -74,7 +74,7 @@ class FilmstreamvkCom(CBaseHostClass):
                 proxy = config.plugins.iptvplayer.alternative_proxy1.value
             else:
                 proxy = config.plugins.iptvplayer.alternative_proxy2.value
-            url = strwithmeta(url, {'iptv_http_proxy':proxy})
+            url = strwithmeta(url, {'iptv_http_proxy': proxy})
         return url
     
     def selectDomain(self):
@@ -101,12 +101,12 @@ class FilmstreamvkCom(CBaseHostClass):
         
     def listMain(self, cItem):
         printDBG("FilmstreamvkCom.listMain")
-        MAIN_CAT_TAB = [{'category':'main', 'title':_('Main'), 'url':self.getMainUrl()},
-                        {'category':'categories', 'title':_('Categories'), 'url':self.getMainUrl()},
-                        {'category':'list_items', 'title':_('Series'), 'url':self.getFullUrl('serie')},
-                        {'category':'list_items', 'title':_('Manga'), 'url':self.getFullUrl('manga')},
-                        {'category': 'search', 'title': _('Search'), 'search_item': True,},
-                        {'category': 'search_history', 'title': _('Search history'),}]
+        MAIN_CAT_TAB = [{'category': 'main', 'title': _('Main'), 'url': self.getMainUrl()},
+                        {'category': 'categories', 'title': _('Categories'), 'url': self.getMainUrl()},
+                        {'category': 'list_items', 'title': _('Series'), 'url': self.getFullUrl('serie')},
+                        {'category': 'list_items', 'title': _('Manga'), 'url': self.getFullUrl('manga')},
+                        {'category': 'search', 'title': _('Search'), 'search_item': True, },
+                        {'category': 'search_history', 'title': _('Search history'), }]
         
         self.listsTab(MAIN_CAT_TAB, cItem)
     
@@ -131,7 +131,7 @@ class FilmstreamvkCom(CBaseHostClass):
         data = re.compile('<a[^>]+?href="([^"]+?)"[^>]*?>([^<]+?)<').findall(data)
         for item in data:
             params = dict(cItem)
-            params.update({'category':category, 'url':item[0], 'title':item[1]})
+            params.update({'category': category, 'url': item[0], 'title': item[1]})
             self.addDir(params)
     
     def listItems(self, cItem, category):
@@ -153,7 +153,7 @@ class FilmstreamvkCom(CBaseHostClass):
             desc = self.cleanHtmlStr(item.replace(title, '').replace('</div>', '[/br]'))
             
             params = dict(cItem)
-            params.update({'category':category, 'url':url, 'title':self.cleanHtmlStr(title), 'icon':icon, 'desc':desc})
+            params.update({'category': category, 'url': url, 'title': self.cleanHtmlStr(title), 'icon': icon, 'desc': desc})
             if 'saison-' in url or '/manga/' in url or '/serie/' in url:
                 season = self.cm.ph.getSearchGroups(url + '-', 'aison-([0-9]+?)-')[0]
                 params['season'] = season
@@ -163,7 +163,7 @@ class FilmstreamvkCom(CBaseHostClass):
             
         if nextPage != '':
             params = dict(cItem)
-            params.update({'title':_("Next page"), 'url':nextPage})
+            params.update({'title': _("Next page"), 'url': nextPage})
             self.addDir(params)
     
     def listEpisodes(self, cItem, nextCategory):
@@ -177,7 +177,7 @@ class FilmstreamvkCom(CBaseHostClass):
         for idx in range(len(data)):
             title = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(data[idx], '>', '<', False)[1])
             params = dict(cItem)
-            params.update({'category':nextCategory, 'title':title, 's_title':cItem['title'], 'erow_idx':idx})
+            params.update({'category': nextCategory, 'title': title, 's_title': cItem['title'], 'erow_idx': idx})
             self.addDir(params)
             
     def listEpisodesByLanguage(self, cItem):
@@ -218,7 +218,7 @@ class FilmstreamvkCom(CBaseHostClass):
                     fullTitle += ' [%s]' % urlName
                 
                 params = dict(cItem)
-                params.update({'url':url, 'title':fullTitle, 'icon':icon, 'desc':desc})
+                params.update({'url': url, 'title': fullTitle, 'icon': icon, 'desc': desc})
                 self.addVideo(params)
         
     def listSearchResult(self, cItem, searchPattern, searchType):
@@ -238,7 +238,7 @@ class FilmstreamvkCom(CBaseHostClass):
                 continue
             tmpUrls.append(url)
             if url.startswith('http') and 'facebook.com' not in url and 1 == self.up.checkHostSupport(url):
-                videoUrlParams.append({'name': self.up.getHostName(url), 'url':url, 'need_resolve':1})
+                videoUrlParams.append({'name': self.up.getHostName(url), 'url': url, 'need_resolve': 1})
                 
         data = re.compile('''onclick=[^>]*?['"](http[^'^"]+?)['"]''').findall(wholeData)
         for url in data:
@@ -246,7 +246,7 @@ class FilmstreamvkCom(CBaseHostClass):
                 continue
             tmpUrls.append(url)
             if 'facebook.com' not in url and 1 == self.up.checkHostSupport(url):
-                videoUrlParams.append({'name': self.up.getHostName(url), 'url':url, 'need_resolve':1})
+                videoUrlParams.append({'name': self.up.getHostName(url), 'url': url, 'need_resolve': 1})
         return videoUrlParams
     
     def getLinksForVideo(self, cItem):
@@ -266,7 +266,7 @@ class FilmstreamvkCom(CBaseHostClass):
             url = self.cm.ph.getSearchGroups(item, '''href=['"]([^'^"]+?)['"]''')[0]
             name = self.cleanHtmlStr(item)
             if url.startswith('http'):
-                urlTab.append({'name': name, 'url':url, 'need_resolve':1})
+                urlTab.append({'name': name, 'url': url, 'need_resolve': 1})
         
         if 1 == len(urlTab) and 'filmstreamvk' in self.up.getDomain(urlTab[0]['url']):
             sts, data = self.getPage(urlTab[0]['url'])
@@ -314,7 +314,7 @@ class FilmstreamvkCom(CBaseHostClass):
         self.selectDomain()
     #MAIN MENU
         if name == None:
-            self.listMain({'name':'category'})
+            self.listMain({'name': 'category'})
         elif category == 'main':
             self.listMainCategories(self.currItem, 'list_items')
         elif category == 'categories':
@@ -328,11 +328,11 @@ class FilmstreamvkCom(CBaseHostClass):
     #SEARCH
         elif category in ["search", "search_next_page"]:
             cItem = dict(self.currItem)
-            cItem.update({'search_item':False, 'name':'category'}) 
+            cItem.update({'search_item': False, 'name': 'category'}) 
             self.listSearchResult(cItem, searchPattern, searchType)
     #HISTORIA SEARCH
         elif category == "search_history":
-            self.listsHistory({'name':'history', 'category': 'search'}, 'desc', _("Type: "))
+            self.listsHistory({'name': 'history', 'category': 'search'}, 'desc', _("Type: "))
         else:
             printExc()
         

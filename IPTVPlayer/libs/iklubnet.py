@@ -65,7 +65,7 @@ class IKlubNetApi(CBaseHostClass):
             if url == '':
                 continue
             params = dict(cItem)
-            params.update({'type':'video', 'url':self.getFullUrl(url), 'title':title, 'icon':self.getFullUrl(icon)})
+            params.update({'type': 'video', 'url': self.getFullUrl(url), 'title': title, 'icon': self.getFullUrl(icon)})
             retList.append(params)
         return retList
         
@@ -88,7 +88,7 @@ class IKlubNetApi(CBaseHostClass):
                         continue
                     #if 'vlc-channel' in url: continue
                     params = dict(cItem)
-                    params.update({'init_list':False, 'url':self.getFullUrl(url), 'title':title})
+                    params.update({'init_list': False, 'url': self.getFullUrl(url), 'title': title})
                     retList.append(params)
                 channelsTab = retList
             else:
@@ -107,7 +107,7 @@ class IKlubNetApi(CBaseHostClass):
                     if uri != '':
                         title = self.cleanHtmlStr(item)
                         params = dict(cItem)
-                        params.update({'type':'video', 'title':title, 'vlc':True, 'url':uri})
+                        params.update({'type': 'video', 'title': title, 'vlc': True, 'url': uri})
                         retList.append(params)
                 return retList
             elif 'tvpregionalna' in cItem['url']:
@@ -123,7 +123,7 @@ class IKlubNetApi(CBaseHostClass):
                         icon = self.cm.ph.getSearchGroups(item, 'src="(http[^"]+?)"')[0]
                         title = self.cm.ph.getSearchGroups(item, 'alt="([^"]+?)"')[0].replace('-', ' ').title()
                         params = dict(cItem)
-                        params.update({'type':'video', 'title':title, 'url':'http://tvpstream.tvp.pl/sess/tvplayer.php?object_id=%s&autoplay=true' % id, 'icon':icon, 'desc':desc})
+                        params.update({'type': 'video', 'title': title, 'url': 'http://tvpstream.tvp.pl/sess/tvplayer.php?object_id=%s&autoplay=true' % id, 'icon': icon, 'desc': desc})
                         retList.append(params)
                 return retList
             else:
@@ -144,9 +144,9 @@ class IKlubNetApi(CBaseHostClass):
             if uri.startswith('http') and uri.split('?')[-1].endswith('.m3u8'):
                 urlsTab.extend(getDirectM3U8Playlist(uri))
             elif uri.startswith('rtmp'):
-                urlsTab.append({'name':'[rtmp]', 'url':uri + ' live=1 '})
+                urlsTab.append({'name': '[rtmp]', 'url': uri + ' live=1 '})
             elif uri.startswith('http'):
-                urlsTab.append({'name':'[rtmp]', 'url':urlparser.decorateUrl(uri, {'iptv_livestream':True})})
+                urlsTab.append({'name': '[rtmp]', 'url': urlparser.decorateUrl(uri, {'iptv_livestream': True})})
             return urlsTab
         
         url = cItem['url']
@@ -219,7 +219,7 @@ class IKlubNetApi(CBaseHostClass):
                     rtmpUrl = self.cm.ph.getDataBeetwenMarkers(data, '&source=', '&', False)[1]
                     if rtmpUrl == '':
                         rtmpUrl = self.cm.ph.getSearchGroups(data, r'''['"](rtmp[^"^']+?)['"]''')[0]
-                    urlsTab.append({'name':title + ' [rtmp]', 'url':rtmpUrl + ' live=1 '})
+                    urlsTab.append({'name': title + ' [rtmp]', 'url': rtmpUrl + ' live=1 '})
                 elif '.m3u8' in data:
                     file = self.cm.ph.getSearchGroups(data, r'''['"](http[^"^']+?\.m3u8[^"^']*?)['"]''')[0]
                     if file == '':
@@ -233,10 +233,10 @@ class IKlubNetApi(CBaseHostClass):
                     urlsTab.extend(self.getTvpStreamLink(data))
                 elif 'mrl=' in data:
                     file = self.cm.ph.getSearchGroups(data, '''mrl=['"](http[^'^"]+?)['"]''')[0]
-                    urlsTab.append({'name':title + ' [mrl]', 'url':file})
+                    urlsTab.append({'name': title + ' [mrl]', 'url': file})
                 elif '<source ' in data:
                     file = self.cm.ph.getSearchGroups(data, '''<source[^>]+?src=['"](http[^'^"]+?)['"]''')[0]
-                    urlsTab.append({'name':title + ' [src]', 'url':file})
+                    urlsTab.append({'name': title + ' [src]', 'url': file})
                 else:
                     urlsTab.extend(self.up.getAutoDetectedStreamLink(url, data))
                     
@@ -251,7 +251,7 @@ class IKlubNetApi(CBaseHostClass):
                         vidUrl = self.cm.ph.getSearchGroups(data, '''['"](https?[^'^"]+?/players/[^'^"]+?\.js)['"]''')[0]
                         HEADER = dict(self.HEADER)
                         HEADER['Referer'] = vidUrl
-                        sts, data = self.cm.getPage(vidUrl, {'header':HEADER})
+                        sts, data = self.cm.getPage(vidUrl, {'header': HEADER})
                         if not sts:
                             continue
                     
@@ -261,7 +261,7 @@ class IKlubNetApi(CBaseHostClass):
                     if file.startswith('http') and file.split('?')[-1].endswith('.m3u8'):
                         urlsTab.extend(getDirectM3U8Playlist(file))
                     elif file.startswith('rtmp'):
-                        urlsTab.append({'name':title + ' [rtmp]', 'url':file + ' live=1 '})
+                        urlsTab.append({'name': title + ' [rtmp]', 'url': file + ' live=1 '})
             except Exception:
                 printExc()
                 continue

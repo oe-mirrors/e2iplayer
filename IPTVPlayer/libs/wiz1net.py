@@ -15,8 +15,8 @@ class Wiz1NetApi(CBaseHostClass):
         CBaseHostClass.__init__(self)
         self.MAIN_URL = 'http://www.wiz1.net/'
         self.DEFAULT_ICON_URL = 'http://i.imgur.com/yBX7fZA.jpg'
-        self.HTTP_HEADER = MergeDicts(self.cm.getDefaultHeader(browser='chrome'), {'Referer':self.getMainUrl()})
-        self.http_params = {'header':self.HTTP_HEADER}
+        self.HTTP_HEADER = MergeDicts(self.cm.getDefaultHeader(browser='chrome'), {'Referer': self.getMainUrl()})
+        self.http_params = {'header': self.HTTP_HEADER}
         self.getLinkJS = ''
 
     def getPage(self, baseUrl, addParams={}, post_data=None):
@@ -47,7 +47,7 @@ class Wiz1NetApi(CBaseHostClass):
         for item in data:
             title = ph.clean_html(item)
             url = self.getFullUrl(ph.search(item, ph.A)[1])
-            channelsTab.append(MergeDicts(cItem, {'type':'video', 'title':title, 'url':url, 'desc':desc}))
+            channelsTab.append(MergeDicts(cItem, {'type': 'video', 'title': title, 'url': url, 'desc': desc}))
 
         return channelsTab
 

@@ -28,21 +28,21 @@ class CineTO(CBaseHostClass, CaptchaHelper):
     LINKS_CACHE = {}
     
     def __init__(self):
-        CBaseHostClass.__init__(self, {'history':'cine.to', 'cookie':'cine.to.cookie'})
+        CBaseHostClass.__init__(self, {'history': 'cine.to', 'cookie': 'cine.to.cookie'})
         self.DEFAULT_ICON_URL = 'https://cine.to/opengraph.jpg'
         self.USER_AGENT = 'Mozilla / 5.0 (SMART-TV; Linux; Tizen 2.4.0) AppleWebkit / 538.1 (KHTML, podobnie jak Gecko) SamsungBrowser / 1.1 TV Safari / 538.1'
         self.MAIN_URL = 'https://cine.to/'
-        self.HEADER = {'User-Agent': self.USER_AGENT, 'DNT':'1', 'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8', 'Accept-Encoding':'gzip, deflate', 'Referer':self.getMainUrl(), 'Accept-Language':GetDefaultLang()}
+        self.HEADER = {'User-Agent': self.USER_AGENT, 'DNT': '1', 'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8', 'Accept-Encoding': 'gzip, deflate', 'Referer': self.getMainUrl(), 'Accept-Language': GetDefaultLang()}
         self.AJAX_HEADER = dict(self.HEADER)
-        self.AJAX_HEADER.update({'X-Requested-With': 'XMLHttpRequest', 'Accept-Encoding':'gzip, deflate', 'Content-Type':'application/x-www-form-urlencoded; charset=UTF-8', 'Accept':'application/json, text/javascript, */*; q=0.01'})
+        self.AJAX_HEADER.update({'X-Requested-With': 'XMLHttpRequest', 'Accept-Encoding': 'gzip, deflate', 'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8', 'Accept': 'application/json, text/javascript, */*; q=0.01'})
         
         self.cacheFilters = {}
         self.cacheLinks = {}
-        self.defaultParams = {'with_metadata':True, 'header':self.HEADER, 'raw_post_data':True, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
+        self.defaultParams = {'with_metadata': True, 'header': self.HEADER, 'raw_post_data': True, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
         
         self.MAIN_CAT_TAB = [
                              {'category': 'search', 'title': _('Search'), 'search_item': True, },
-                             {'category': 'search_history', 'title': _('Search history'),} 
+                             {'category': 'search_history', 'title': _('Search history'), } 
                             ]
         
     def _getStr(self, item, key, default=''):
@@ -66,7 +66,7 @@ class CineTO(CBaseHostClass, CaptchaHelper):
             else:
                 return urllib.parse.urljoin(baseUrl, url)
             
-        addParams['cloudflare_params'] = {'domain':self.up.getDomain(baseUrl), 'cookie_file':self.COOKIE_FILE, 'User-Agent':self.USER_AGENT, 'full_url_handle':_getFullUrl}
+        addParams['cloudflare_params'] = {'domain': self.up.getDomain(baseUrl), 'cookie_file': self.COOKIE_FILE, 'User-Agent': self.USER_AGENT, 'full_url_handle': _getFullUrl}
         return self.cm.getPageCFProtection(baseUrl, addParams, post_data)
         
     def _getSearchParams(self, cItem, count=1):
@@ -87,7 +87,7 @@ class CineTO(CBaseHostClass, CaptchaHelper):
         return post_data
     
     def listMainMenu(self, cItem, nextCategory):
-        self.cacheFilters = {'kind':[], 'genres':[], 'rating':[], 'year':[]}
+        self.cacheFilters = {'kind': [], 'genres': [], 'rating': [], 'year': []}
         
         sts, data = self.getPage(self.getMainUrl())
         if not sts:
@@ -100,7 +100,7 @@ class CineTO(CBaseHostClass, CaptchaHelper):
             for item in tmp:
                 value = self.cm.ph.getSearchGroups(item, '''value=['"]([^'^"]+?)['"]''')[0]
                 title = self.cleanHtmlStr(item)
-                self.cacheFilters['kind'].append({'f_kind':value, 'title':title})
+                self.cacheFilters['kind'].append({'f_kind': value, 'title': title})
             
             # genres
             tmp = self.cm.ph.getDataBeetwenMarkers(data, '<ul id="genres"', '</ul>')[1]
@@ -108,14 +108,14 @@ class CineTO(CBaseHostClass, CaptchaHelper):
             for item in tmp:
                 value = self.cm.ph.getSearchGroups(item, '''data-id=['"]([^'^"]+?)['"]''')[0]
                 title = self.cleanHtmlStr(item)
-                self.cacheFilters['genres'].append({'f_genres':value, 'title':title})
+                self.cacheFilters['genres'].append({'f_genres': value, 'title': title})
             
             # rating
             for idx in range(10, 0, -1):
                 value = str(idx)
                 title = _('Rating %s') % idx
-                self.cacheFilters['rating'].append({'f_rating':value, 'title':title})
-            self.cacheFilters['rating'].insert(0, {'f_rating':1, 'title':_('Any')})
+                self.cacheFilters['rating'].append({'f_rating': value, 'title': title})
+            self.cacheFilters['rating'].insert(0, {'f_rating': 1, 'title': _('Any')})
             
             # year
             tmp = self.cm.ph.getDataBeetwenMarkers(data, '<ul id="year"', '</ul>')[1]
@@ -124,8 +124,8 @@ class CineTO(CBaseHostClass, CaptchaHelper):
             for idx in range(end, start - 1, -1):
                 value = str(idx)
                 title = _('Year %s') % idx
-                self.cacheFilters['year'].append({'f_year':value, 'title':title})
-            self.cacheFilters['year'].insert(0, {'title':_('Any')})
+                self.cacheFilters['year'].append({'f_year': value, 'title': title})
+            self.cacheFilters['year'].insert(0, {'title': _('Any')})
         except Exception:
             printExc()
             return
@@ -191,7 +191,7 @@ class CineTO(CBaseHostClass, CaptchaHelper):
         desc = ' | '.join(descTab)
         
         params = dict(cItem)
-        params.update({'good_for_fav':True, 'title':title, 'imdb':item['imdb'], 'icon':icon, 'desc':desc})
+        params.update({'good_for_fav': True, 'title': title, 'imdb': item['imdb'], 'icon': icon, 'desc': desc})
         params['category'] = nextCategory
         self.addDir(params)
         
@@ -222,7 +222,7 @@ class CineTO(CBaseHostClass, CaptchaHelper):
         
         if nextPage:
             params = dict(cItem)
-            params.update({'good_for_fav':False, 'title':_("Next page"), 'page':page + 1})
+            params.update({'good_for_fav': False, 'title': _("Next page"), 'page': page + 1})
             self.addDir(params)
             
     def exploreItem(self, cItem, nextCategory):
@@ -262,8 +262,8 @@ class CineTO(CBaseHostClass, CaptchaHelper):
             langIdsTab = []
             for lang in data['lang']:
                 langIdsTab.append(str(lang))
-            langsIdDict = {'en':'1', 'de':'2'}
-            langsDict = {'1':'en', '2':'de'}
+            langsIdDict = {'en': '1', 'de': '2'}
+            langsDict = {'1': 'en', '2': 'de'}
             
             # move better language at top
             defIdLang = langsIdDict.get(GetDefaultLang(), '1')
@@ -284,11 +284,11 @@ class CineTO(CBaseHostClass, CaptchaHelper):
                 if trailerUrl != '':
                     url = 'https://www.youtube.com/watch?v=%s' % trailerUrl
                     title = '[TRAILER] [%s] %s' % (langName, baseTitle)
-                    params = {'title':title, 'imdb':cItem['imdb'], 'f_lang_id':langId, 'f_lang':lang, 'url':url, 'icon':icon, 'desc':desc}
+                    params = {'title': title, 'imdb': cItem['imdb'], 'f_lang_id': langId, 'f_lang': lang, 'url': url, 'icon': icon, 'desc': desc}
                     self.addVideo(params)
                 
                 title = '[%s] %s (%s)' % (langName, baseTitle, data.get('year', ''))
-                params = {'title':title, 'imdb':cItem['imdb'], 'f_lang_id':langId, 'f_lang':lang, 'icon':icon, 'desc':desc}
+                params = {'title': title, 'imdb': cItem['imdb'], 'f_lang_id': langId, 'f_lang': lang, 'icon': icon, 'desc': desc}
                 self.addVideo(params)
         except Exception:
             printExc()
@@ -333,7 +333,7 @@ class CineTO(CBaseHostClass, CaptchaHelper):
                 for idx in range(1, len(links), 1):
                     name = '[%s] %s' % (quality, hosting)
                     url = self.getFullUrl('/out/' + links[idx]) 
-                    retTab.append({'name':name, 'url':url, 'need_resolve':1})
+                    retTab.append({'name': name, 'url': url, 'need_resolve': 1})
         except Exception:
             printExc()
         
@@ -371,8 +371,8 @@ class CineTO(CBaseHostClass, CaptchaHelper):
                         token, errorMsgTab = self.processCaptcha(sitekey, self.cm.meta['url'])
                         
                         if token != '':
-                            params = MergeDicts(self.defaultParams, {'max_data_size':0})
-                            params['header'] = MergeDicts(params['header'], {'Referer':self.cm.meta['url']})
+                            params = MergeDicts(self.defaultParams, {'max_data_size': 0})
+                            params['header'] = MergeDicts(params['header'], {'Referer': self.cm.meta['url']})
                             sts, data = self.getPage(videoUrl + '?token=' + token, params)
                             if sts:
                                 videoUrl = self.cm.meta['url']
@@ -461,7 +461,7 @@ class CineTO(CBaseHostClass, CaptchaHelper):
         if icon == '':
             icon = cItem.get('icon', self.DEFAULT_ICON_URL)
         
-        return [{'title':self.cleanHtmlStr(title), 'text': self.cleanHtmlStr(desc), 'images':[{'title':'', 'url':self.getFullUrl(icon)}], 'other_info':otherInfo}]
+        return [{'title': self.cleanHtmlStr(title), 'text': self.cleanHtmlStr(desc), 'images': [{'title': '', 'url': self.getFullUrl(icon)}], 'other_info': otherInfo}]
     
     def handleService(self, index, refresh=0, searchPattern='', searchType=''):
         printDBG('handleService start')
@@ -477,7 +477,7 @@ class CineTO(CBaseHostClass, CaptchaHelper):
         
     #MAIN MENU
         if name == None:
-            self.listMainMenu({'name':'category'}, 'list_genres')
+            self.listMainMenu({'name': 'category'}, 'list_genres')
         elif category == 'list_genres':
             self.listGenres(self.currItem, 'list_rating')
         elif category == 'list_rating':
@@ -493,11 +493,11 @@ class CineTO(CBaseHostClass, CaptchaHelper):
     #SEARCH
         elif category in ["search", "search_next_page"]:
             cItem = dict(self.currItem)
-            cItem.update({'search_item':False, 'name':'category'}) 
+            cItem.update({'search_item': False, 'name': 'category'}) 
             self.listSearchResult(cItem, searchPattern, searchType)
     #HISTORIA SEARCH
         elif category == "search_history":
-            self.listsHistory({'name':'history', 'category': 'search'}, 'desc', _("Type: "))
+            self.listsHistory({'name': 'history', 'category': 'search'}, 'desc', _("Type: "))
         else:
             printExc()
         

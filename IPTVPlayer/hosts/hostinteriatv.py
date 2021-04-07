@@ -23,14 +23,14 @@ def gettytul():
 class InteriaTv(CBaseHostClass):
     
     def __init__(self):
-        CBaseHostClass.__init__(self, {'history':'interia.tv', 'cookie':'interia.tv.cookie'})
+        CBaseHostClass.__init__(self, {'history': 'interia.tv', 'cookie': 'interia.tv.cookie'})
         self.USER_AGENT = 'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:40.0) Gecko/20100101 Firefox/40.0'
         self.MAIN_URL = 'http://interia.tv/'
         self.DEFAULT_ICON_URL = 'http://static.wirtualnemedia.pl/media/top/interia-2015logohaslo-655.png'
-        self.HTTP_HEADER = {'User-Agent': self.USER_AGENT, 'DNT':'1', 'Accept': 'text/html', 'Accept-Encoding':'gzip, deflate', 'Referer':self.getMainUrl(), 'Origin':self.getMainUrl()}
+        self.HTTP_HEADER = {'User-Agent': self.USER_AGENT, 'DNT': '1', 'Accept': 'text/html', 'Accept-Encoding': 'gzip, deflate', 'Referer': self.getMainUrl(), 'Origin': self.getMainUrl()}
         self.AJAX_HEADER = dict(self.HTTP_HEADER)
-        self.AJAX_HEADER.update({'X-Requested-With': 'XMLHttpRequest', 'Accept-Encoding':'gzip, deflate', 'Content-Type':'application/x-www-form-urlencoded; charset=UTF-8', 'Accept':'application/json, text/javascript, */*; q=0.01'})
-        self.defaultParams = {'header':self.HTTP_HEADER, 'with_metadata':True, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
+        self.AJAX_HEADER.update({'X-Requested-With': 'XMLHttpRequest', 'Accept-Encoding': 'gzip, deflate', 'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8', 'Accept': 'application/json, text/javascript, */*; q=0.01'})
+        self.defaultParams = {'header': self.HTTP_HEADER, 'with_metadata': True, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
         self.searchFiltersData = []
         
     def getPage(self, baseUrl, addParams={}, post_data=None):
@@ -54,11 +54,11 @@ class InteriaTv(CBaseHostClass):
                 except Exception:
                     printExc()
         
-        MAIN_CAT_TAB = [{'category':'search', 'title': _('Search'), 'search_item':True}, 
-                        {'category':'search_history', 'title': _('Search history')},]
+        MAIN_CAT_TAB = [{'category': 'search', 'title': _('Search'), 'search_item': True}, 
+                        {'category': 'search_history', 'title': _('Search history')}, ]
                         
         params = dict(cItem)
-        params.update({'type':'category', 'good_for_fav':False, 'category':nextCategory2, 'title':'TOP TYGODNIA', 'url':self.getFullUrl('/top-tygodnia')})
+        params.update({'type': 'category', 'good_for_fav': False, 'category': nextCategory2, 'title': 'TOP TYGODNIA', 'url': self.getFullUrl('/top-tygodnia')})
         if len(self.currList):
             self.currList[0] = params
         self.listsTab(MAIN_CAT_TAB, cItem)
@@ -73,11 +73,11 @@ class InteriaTv(CBaseHostClass):
                 if 'list' not in item:
                     if self.cm.isValidUrl(url) and title != '':
                         params = dict(cItem)
-                        params.update({'good_for_fav':False, 'category':nextCategory, 'title':title, 'url':url})
+                        params.update({'good_for_fav': False, 'category': nextCategory, 'title': title, 'url': url})
                         self.addDir(params)
                 elif len(item['list']) == 1 and title != '':
                     params = dict(cItem)
-                    params.update({'good_for_fav':False, 'c_tree':item['list'][0], 'title':title, 'url':url})
+                    params.update({'good_for_fav': False, 'c_tree': item['list'][0], 'title': title, 'url': url})
                     self.addDir(params)
         except Exception:
             printExc()
@@ -96,7 +96,7 @@ class InteriaTv(CBaseHostClass):
             url = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''href=['"]([^"^']+?)['"]''')[0])
             if url == '':
                 url = cItem['url']
-            params = {'good_for_fav':True, 'category':nextCategory, 'title':title, 'url':url, 'desc':desc}
+            params = {'good_for_fav': True, 'category': nextCategory, 'title': title, 'url': url, 'desc': desc}
             self.addDir(params)
                 
         if len(self.currList) < 2:
@@ -134,7 +134,7 @@ class InteriaTv(CBaseHostClass):
                 desc += '[/br]'
             desc += self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(item, ('<p', '>', 'description'), ('</p', '>'))[1])
             
-            params = {'good_for_fav':True, 'category':nextCategory, 'title':title, 'url':url, 'icon':icon, 'desc':desc}
+            params = {'good_for_fav': True, 'category': nextCategory, 'title': title, 'url': url, 'icon': icon, 'desc': desc}
             if 'stat count' in item:
                 self.addDir(params)
             else:
@@ -142,7 +142,7 @@ class InteriaTv(CBaseHostClass):
         
         if nextPage:
             params = dict(cItem)
-            params.update({'good_for_fav':False, 'title':_("Next page"), 'page':page + 1, 'url':nextPage})
+            params.update({'good_for_fav': False, 'title': _("Next page"), 'page': page + 1, 'url': nextPage})
             self.addDir(params)
         
     def listSearchItems(self, cItem, nextCategory, data=None):
@@ -179,7 +179,7 @@ class InteriaTv(CBaseHostClass):
                 desc += '[/br]'
             desc += self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(item, ('<', '>', 'description'), ('</', '>'), False)[1])
             
-            params = {'good_for_fav':True, 'category':nextCategory, 'title':title, 'url':url, 'icon':icon, 'desc':desc}
+            params = {'good_for_fav': True, 'category': nextCategory, 'title': title, 'url': url, 'icon': icon, 'desc': desc}
             if 'stat count' in item:
                 self.addDir(params)
             else:
@@ -187,7 +187,7 @@ class InteriaTv(CBaseHostClass):
         
         if nextPage:
             params = dict(cItem)
-            params.update({'good_for_fav':False, 'title':_("Next page"), 'page':page + 1, 'url':nextPage})
+            params.update({'good_for_fav': False, 'title': _("Next page"), 'page': page + 1, 'url': nextPage})
             self.addDir(params)
             
     def listPlaylistItems(self, cItem):
@@ -204,7 +204,7 @@ class InteriaTv(CBaseHostClass):
                 icon = self.getFullIconUrl(self.cm.ph.getSearchGroups(item, '''src=['"]([^'^"]+?)['"]''')[0])
                 title = self.cleanHtmlStr(self.cm.ph.getSearchGroups(item, '''title=['"]([^'^"]+?)['"]''')[0])
                 desc = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(item, ('<span', '>', 'video-desc'), ('</span', '>'))[1])
-                params = {'good_for_fav':True, 'title':title, 'url':url, 'icon':icon, 'desc':desc}
+                params = {'good_for_fav': True, 'title': title, 'url': url, 'icon': icon, 'desc': desc}
                 self.addVideo(params)
         
     def listSearchResult(self, cItem, searchPattern, searchType):
@@ -228,19 +228,19 @@ class InteriaTv(CBaseHostClass):
                     url = cUrl
                 if url == '':
                     continue
-                tab.append({'title':title, 'url':url})
+                tab.append({'title': title, 'url': url})
             
             if len(tab):
                 self.searchFiltersData.append(tab)
         if len(self.searchFiltersData):
-            self.listSearchFilters({'name':'category', 'type':'category', 'category':'search_filters', 'f_idx':0}, 'list_search_items')
+            self.listSearchFilters({'name': 'category', 'type': 'category', 'category': 'search_filters', 'f_idx': 0}, 'list_search_items')
             
     def listSearchFilters(self, cItem, nextCategory):
         for idx in range(len(self.searchFiltersData[cItem['f_idx']])):
             item = self.searchFiltersData[cItem['f_idx']][idx]
             params = dict(cItem)
             params.update(item)
-            params.update({'category':nextCategory, 'f_idx':cItem['f_idx'] + 1})
+            params.update({'category': nextCategory, 'f_idx': cItem['f_idx'] + 1})
             if idx == 0 and cItem['f_idx'] + 1 < len(self.searchFiltersData):
                 params['category'] = cItem['category']
             self.addDir(params)
@@ -264,7 +264,7 @@ class InteriaTv(CBaseHostClass):
         
     #MAIN MENU
         if name == None:
-            self.listMainMenu({'name':'category'}, 'list_categories', 'list_sort')
+            self.listMainMenu({'name': 'category'}, 'list_categories', 'list_sort')
         elif category == 'list_categories':
             self.listCategories(self.currItem, 'list_sort')
         elif category == 'list_sort':
@@ -281,11 +281,11 @@ class InteriaTv(CBaseHostClass):
     #SEARCH
         elif category in ["search", "search_next_page"]:
             cItem = dict(self.currItem)
-            cItem.update({'search_item':False, 'name':'category'}) 
+            cItem.update({'search_item': False, 'name': 'category'}) 
             self.listSearchResult(cItem, searchPattern, searchType)
     #HISTORIA SEARCH
         elif category == "search_history":
-            self.listsHistory({'name':'history', 'category': 'search'}, 'desc', _("Type: "))
+            self.listsHistory({'name': 'history', 'category': 'search'}, 'desc', _("Type: "))
         else:
             printExc()
         

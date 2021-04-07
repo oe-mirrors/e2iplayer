@@ -48,21 +48,21 @@ def gettytul():
 class MaxtvGO(CBaseHostClass):
     
     def __init__(self):
-        CBaseHostClass.__init__(self, {'history':'maxtvgo.com', 'cookie':'maxtvgo.com.cookie'})
+        CBaseHostClass.__init__(self, {'history': 'maxtvgo.com', 'cookie': 'maxtvgo.com.cookie'})
         self.DEFAULT_ICON_URL = 'https://maxtvgo.com/images/logo_37.png'
         self.USER_AGENT = 'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:40.0) Gecko/20100101 Firefox/40.0'
         self.MAIN_URL = 'https://maxtvgo.com/'
-        self.HTTP_HEADER = {'User-Agent': self.USER_AGENT, 'DNT':'1', 'Accept': 'text/html', 'Accept-Encoding':'gzip, deflate', 'Referer':self.getMainUrl(), 'Origin':self.getMainUrl()}
+        self.HTTP_HEADER = {'User-Agent': self.USER_AGENT, 'DNT': '1', 'Accept': 'text/html', 'Accept-Encoding': 'gzip, deflate', 'Referer': self.getMainUrl(), 'Origin': self.getMainUrl()}
         self.AJAX_HEADER = dict(self.HTTP_HEADER)
-        self.AJAX_HEADER.update({'X-Requested-With': 'XMLHttpRequest', 'Accept-Encoding':'gzip, deflate', 'Content-Type':'application/x-www-form-urlencoded; charset=UTF-8', 'Accept':'application/json, text/javascript, */*; q=0.01'})
+        self.AJAX_HEADER.update({'X-Requested-With': 'XMLHttpRequest', 'Accept-Encoding': 'gzip, deflate', 'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8', 'Accept': 'application/json, text/javascript, */*; q=0.01'})
         
-        self.defaultParams = {'header':self.HTTP_HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
+        self.defaultParams = {'header': self.HTTP_HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
         
-        self.MAIN_CAT_TAB = [{'category':'list_items', 'title': 'MaxTVGo', 'url':self.getFullUrl('/api/videos.php?action=find')},
-                             {'category':'list_yt_channel', 'title': 'Max Kolonko - MaxTV', 'url':'https://www.youtube.com/user/Media2000Corp/videos'},
-                             {'category':'list_yt_channel', 'title': 'MaxTVNews', 'url':'https://www.youtube.com/user/MaxTVTUBE/videos'},
+        self.MAIN_CAT_TAB = [{'category': 'list_items', 'title': 'MaxTVGo', 'url': self.getFullUrl('/api/videos.php?action=find')},
+                             {'category': 'list_yt_channel', 'title': 'Max Kolonko - MaxTV', 'url': 'https://www.youtube.com/user/Media2000Corp/videos'},
+                             {'category': 'list_yt_channel', 'title': 'MaxTVNews', 'url': 'https://www.youtube.com/user/MaxTVTUBE/videos'},
                              {'category': 'search', 'title': _('Search'), 'search_item': True, },
-                             {'category': 'search_history', 'title': _('Search history'),} 
+                             {'category': 'search_history', 'title': _('Search history'), } 
                             ]
         self.ytp = YouTubeParser()
         self.loggedIn = None
@@ -79,7 +79,7 @@ class MaxtvGO(CBaseHostClass):
                 return url
             else:
                 return urllib.parse.urljoin(baseUrl, url)
-        addParams['cloudflare_params'] = {'domain':self.up.getDomain(baseUrl), 'cookie_file':self.COOKIE_FILE, 'User-Agent':self.USER_AGENT, 'full_url_handle':_getFullUrl}
+        addParams['cloudflare_params'] = {'domain': self.up.getDomain(baseUrl), 'cookie_file': self.COOKIE_FILE, 'User-Agent': self.USER_AGENT, 'full_url_handle': _getFullUrl}
         return self.cm.getPageCFProtection(baseUrl, addParams, post_data)
         
     def listMainMenu(self, cItem, nextCategory):
@@ -91,7 +91,7 @@ class MaxtvGO(CBaseHostClass):
         if url == '':
             return ''
         cookieHeader = self.cm.getCookieHeader(self.COOKIE_FILE)
-        return strwithmeta(url, {'Cookie':cookieHeader, 'User-Agent':self.USER_AGENT, 'Referer':self.getMainUrl()})
+        return strwithmeta(url, {'Cookie': cookieHeader, 'User-Agent': self.USER_AGENT, 'Referer': self.getMainUrl()})
         
     def listItems(self, cItem, nextCategory):
         printDBG("MaxtvGO.listItems [%s]" % cItem)
@@ -115,12 +115,12 @@ class MaxtvGO(CBaseHostClass):
                         icon = 'http://i.vimeocdn.com/video/%s.jpg?mw=300' % icon
                     url = self.getFullUrl('video.php?film=') + it['code']
                     params = dict(cItem)
-                    params.update({'type':'video', 'good_for_fav':True, 'title':title, 'url':url, 'icon':icon})
+                    params.update({'type': 'video', 'good_for_fav': True, 'title': title, 'url': url, 'icon': icon})
                     subItems.append(params)
                 
                 if len(subItems):
                     params = dict(cItem)
-                    params.update({'category':nextCategory, 'good_for_fav':False, 'title':sTitle, 'sub_items':subItems})
+                    params.update({'category': nextCategory, 'good_for_fav': False, 'title': sTitle, 'sub_items': subItems})
                     self.addDir(params)
             
         except Exception:
@@ -172,15 +172,15 @@ class MaxtvGO(CBaseHostClass):
                 continue
             type = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''type=['"]([^'^"]+?)['"]''')[0]).lower()
             if 'mp4' in type:
-                url = strwithmeta(self.getFullUrl(url), {'Cookie':cookieHeader, 'User-Agent':self.USER_AGENT, 'Referer':cItem['url']})
-                retTab.append({'name':'direct', 'url':url, 'need_resolve':0})
+                url = strwithmeta(self.getFullUrl(url), {'Cookie': cookieHeader, 'User-Agent': self.USER_AGENT, 'Referer': cItem['url']})
+                retTab.append({'name': 'direct', 'url': url, 'need_resolve': 0})
             else:
                 printDBG("Unknown source: [%s]" % item)
         
         data = self.cm.ph.getDataBeetwenNodes(data, ('<div', '>', 'player'), ('</div', '>'), False)[1]
         videoUrl = self.getFullUrl(self.cm.ph.getSearchGroups(data, '''<iframe[^>]+?src=['"]([^"^']+?)['"]''', 1, True)[0], self.cm.meta['url'])
         if videoUrl != '':
-            videoUrl = strwithmeta(videoUrl, {'User-Agent':self.USER_AGENT, 'Referer':self.cm.meta['url']})
+            videoUrl = strwithmeta(videoUrl, {'User-Agent': self.USER_AGENT, 'Referer': self.cm.meta['url']})
             retTab.extend(self.up.getVideoLinkExt(videoUrl))
         
         return retTab
@@ -224,7 +224,7 @@ class MaxtvGO(CBaseHostClass):
                 value = self.cm.ph.getSearchGroups(item, '''value=['"]([^'^"]+?)['"]''')[0]
                 post_data[name] = value
             
-            post_data.update({'email':self.login, 'pass':self.password})
+            post_data.update({'email': self.login, 'pass': self.password})
             
             httpParams = dict(self.defaultParams)
             httpParams['header'] = dict(httpParams['header'])
@@ -296,7 +296,7 @@ class MaxtvGO(CBaseHostClass):
         if icon == '':
             icon = cItem.get('icon', self.DEFAULT_ICON_URL)
         
-        return [{'title':self.cleanHtmlStr(title), 'text': self.cleanHtmlStr(desc), 'images':[{'title':'', 'url':self.getFullIconUrl(icon)}], 'other_info':otherInfo}]
+        return [{'title': self.cleanHtmlStr(title), 'text': self.cleanHtmlStr(desc), 'images': [{'title': '', 'url': self.getFullIconUrl(icon)}], 'other_info': otherInfo}]
     
     def handleService(self, index, refresh=0, searchPattern='', searchType=''):
         printDBG('handleService start')
@@ -314,7 +314,7 @@ class MaxtvGO(CBaseHostClass):
         
     #MAIN MENU
         if name == None:
-            self.listMainMenu({'name':'category'}, 'list_genres')
+            self.listMainMenu({'name': 'category'}, 'list_genres')
         elif category == 'list_filters':
             self.listFilters(self.currItem, 'list_items')
         elif category == 'list_items':
@@ -326,11 +326,11 @@ class MaxtvGO(CBaseHostClass):
     #SEARCH
         elif category in ["search", "search_next_page"]:
             cItem = dict(self.currItem)
-            cItem.update({'search_item':False, 'name':'category'}) 
+            cItem.update({'search_item': False, 'name': 'category'}) 
             self.listSearchResult(cItem, searchPattern, searchType)
     #HISTORIA SEARCH
         elif category == "search_history":
-            self.listsHistory({'name':'history', 'category': 'search'}, 'desc', _("Type: "))
+            self.listsHistory({'name': 'history', 'category': 'search'}, 'desc', _("Type: "))
         else:
             printExc()
         

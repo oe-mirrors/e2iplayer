@@ -179,7 +179,7 @@ class IPTVHostsGroups:
         printDBG("IPTVHostsGroups.setHostsList groupName[%s], hostsList[%s]" % (groupName, hostsList))
         # hostsList - must be updated with host which were not disabled in this group but they are not 
         # available or they are disabled globally
-        outObj = {"version":0, "hosts":hostsList, "disabled_hosts":[]}
+        outObj = {"version": 0, "hosts": hostsList, "disabled_hosts": []}
         
         #check if some host from diabled one has been enabled
         disabledHosts = []
@@ -272,14 +272,14 @@ class IPTVHostsGroups:
     def setGroupList(self, groupList):
         printDBG("IPTVHostsGroups.setGroupList groupList[%s]" % groupList)
         # update disabled groups
-        outObj = {"version":0, "groups":[], "disabled_groups":[]}
+        outObj = {"version": 0, "groups": [], "disabled_groups": []}
         
         for group in self.PREDEFINED_GROUPS:
             if group not in groupList:
                 outObj['disabled_groups'].append(group)
         
         for group in groupList:
-            outObj['groups'].append({'name':group})
+            outObj['groups'].append({'name': group})
             if group in self.LOADED_GROUPS_TITLES:
                 outObj['groups']['title'] = self.LOADED_GROUPS_TITLES[group]
                 

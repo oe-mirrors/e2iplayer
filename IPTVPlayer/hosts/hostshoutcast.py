@@ -25,15 +25,15 @@ def gettytul():
 class ShoutcastCom(CBaseHostClass):
     
     def __init__(self):
-        CBaseHostClass.__init__(self, {'history':'shoutcast.com', 'cookie':'shoutcast.com.cookie'})
+        CBaseHostClass.__init__(self, {'history': 'shoutcast.com', 'cookie': 'shoutcast.com.cookie'})
         self.USER_AGENT = 'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:40.0) Gecko/20100101 Firefox/40.0'
         self.MAIN_URL = 'https://directory.shoutcast.com/'
         self.DEFAULT_ICON_URL = 'http://wiki.shoutcast.com/images/b/bd/Shoutcast.png'
-        self.HTTP_HEADER = {'User-Agent': self.USER_AGENT, 'DNT':'1', 'Accept': 'text/html', 'Accept-Encoding':'gzip, deflate', 'Referer':self.getMainUrl(), 'Origin':self.getMainUrl()}
+        self.HTTP_HEADER = {'User-Agent': self.USER_AGENT, 'DNT': '1', 'Accept': 'text/html', 'Accept-Encoding': 'gzip, deflate', 'Referer': self.getMainUrl(), 'Origin': self.getMainUrl()}
         self.AJAX_HEADER = dict(self.HTTP_HEADER)
-        self.AJAX_HEADER.update({'X-Requested-With': 'XMLHttpRequest', 'Accept-Encoding':'gzip, deflate', 'Content-Type':'application/x-www-form-urlencoded; charset=UTF-8', 'Accept':'*/*', 'Origin':self.getMainUrl()[:-1]})
+        self.AJAX_HEADER.update({'X-Requested-With': 'XMLHttpRequest', 'Accept-Encoding': 'gzip, deflate', 'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8', 'Accept': '*/*', 'Origin': self.getMainUrl()[:-1]})
         
-        self.defaultParams = {'header':self.HTTP_HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
+        self.defaultParams = {'header': self.HTTP_HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
         self.cacheGenres = {}
         
     def getPage(self, baseUrl, addParams={}, post_data=None):
@@ -44,9 +44,9 @@ class ShoutcastCom(CBaseHostClass):
     def listMainMenu(self, cItem):
         printDBG("ShoutcastCom.listMainMenu")
         
-        MAIN_CAT_TAB = [{'category':'genres', 'title': _('Genres'), 'url':self.getMainUrl()}, 
-                        {'category':'search', 'title': _('Search'), 'search_item':True}, 
-                        {'category':'search_history', 'title': _('Search history')},]
+        MAIN_CAT_TAB = [{'category': 'genres', 'title': _('Genres'), 'url': self.getMainUrl()}, 
+                        {'category': 'search', 'title': _('Search'), 'search_item': True}, 
+                        {'category': 'search_history', 'title': _('Search history')}, ]
         
         self.listsTab(MAIN_CAT_TAB, cItem)
         
@@ -65,17 +65,17 @@ class ShoutcastCom(CBaseHostClass):
             tmp = self.cm.ph.getDataBeetwenMarkers(genreItem, '<a', '</a>')[1]
             genreTitle = self.cleanHtmlStr(tmp)
             url = self.getFullUrl(self.cm.ph.getSearchGroups(genreItem, '''\shref=['"]([^'^"]+?)['"]''')[0])
-            itemsTab.append({'title':_('All'), 'url':url})
+            itemsTab.append({'title': _('All'), 'url': url})
             
             genreItem = genreItem.split('<ul', 1)[-1]
             genreItem = self.cm.ph.getAllItemsBeetwenMarkers(genreItem, '<a', '</a>')
             for item in genreItem:
                 url = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''\shref=['"]([^'^"]+?)['"]''')[0])
                 title = self.cleanHtmlStr(item)
-                itemsTab.append({'title':title, 'url':url})
+                itemsTab.append({'title': title, 'url': url})
                 
             if len(itemsTab):
-                params = {'good_for_fav':False, 'name':'category', 'category':nextCategory, 'title':genreTitle, 'items':itemsTab}
+                params = {'good_for_fav': False, 'name': 'category', 'category': nextCategory, 'title': genreTitle, 'items': itemsTab}
                 self.addDir(params)
             
     def listSubGenres(self, cItem, nextCategory):
@@ -108,16 +108,16 @@ class ShoutcastCom(CBaseHostClass):
                 params.append(item)
             
             url = self.getFullUrl('/Home/BrowseByGenre')
-            post_data = {'genrename':params[0]}
+            post_data = {'genrename': params[0]}
         else:
             url = self.getFullUrl('/Search')
-            post_data = {'query':searchPattern}
+            post_data = {'query': searchPattern}
             sts, data = self.getPage(url, post_data=post_data)
             if not sts:
                 return
             
             url = self.getFullUrl('/Search/UpdateSearch')
-            post_data = {'query':searchPattern}
+            post_data = {'query': searchPattern}
         
         sts, data = self.getPage(url, post_data=post_data)
         if not sts:
@@ -140,7 +140,7 @@ class ShoutcastCom(CBaseHostClass):
                 desc = ' | '.join(desc)
                 #desc += '[/br] ' + self.cleanHtmlStr(item['CurrentTrack'])
                 
-                params = {'good_for_fav':True, 'station_id':stationId, 'title':title, 'url':self.getFullUrl('?station_id=' + stationId), 'desc':desc}
+                params = {'good_for_fav': True, 'station_id': stationId, 'title': title, 'url': self.getFullUrl('?station_id=' + stationId), 'desc': desc}
                 self.addAudio(params)
                 
         except Exception:
@@ -164,7 +164,7 @@ class ShoutcastCom(CBaseHostClass):
         
         data = ParseM3u(data)
         for item in data:
-            linksTab.append({'name':item['title'], 'url':item['uri'], 'need_resolve':0})
+            linksTab.append({'name': item['title'], 'url': item['uri'], 'need_resolve': 0})
         
         return linksTab
     
@@ -183,7 +183,7 @@ class ShoutcastCom(CBaseHostClass):
         
     #MAIN MENU
         if name == None:
-            self.listMainMenu({'name':'category'})
+            self.listMainMenu({'name': 'category'})
         elif category == 'genres':
             self.listGenres(self.currItem, 'list_sub_genres')
         elif category == 'list_sub_genres':
@@ -195,11 +195,11 @@ class ShoutcastCom(CBaseHostClass):
     #SEARCH
         elif category in ["search", "search_next_page"]:
             cItem = dict(self.currItem)
-            cItem.update({'search_item':False, 'name':'category'}) 
+            cItem.update({'search_item': False, 'name': 'category'}) 
             self.listSearchResult(cItem, searchPattern, searchType)
     #HISTORIA SEARCH
         elif category == "search_history":
-            self.listsHistory({'name':'history', 'category': 'search'}, 'desc', _("Type: "))
+            self.listsHistory({'name': 'history', 'category': 'search'}, 'desc', _("Type: "))
         else:
             printExc()
         

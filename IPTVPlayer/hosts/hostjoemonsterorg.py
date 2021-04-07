@@ -48,14 +48,14 @@ def gettytul():
 class JoeMonster(CBaseHostClass):
  
     def __init__(self):
-        CBaseHostClass.__init__(self, {'history':'joemonster.org', 'cookie':'joemonster.cookie'})
+        CBaseHostClass.__init__(self, {'history': 'joemonster.org', 'cookie': 'joemonster.cookie'})
         
         self.DEFAULT_ICON_URL = 'https://joemonster.org/images/logo/jm-logo-1450873307.png'
-        self.HEADER = {'User-Agent': 'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:40.0) Gecko/20100101 Firefox/40.0', 'DNT':'1', 'Accept': 'text/html'}
+        self.HEADER = {'User-Agent': 'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:40.0) Gecko/20100101 Firefox/40.0', 'DNT': '1', 'Accept': 'text/html'}
         self.AJAX_HEADER = dict(self.HEADER)
         self.AJAX_HEADER.update({'X-Requested-With': 'XMLHttpRequest'})
         self.MAIN_URL = 'https://joemonster.org/'
-        self.defaultParams = {'with_metadata':True, 'header':self.HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
+        self.defaultParams = {'with_metadata': True, 'header': self.HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
 
         self.login = ''
         self.password = ''
@@ -67,10 +67,10 @@ class JoeMonster(CBaseHostClass):
         return self.cm.getPage(url, addParams, post_data)
         
     def listMainMenu(self, cItem):
-        MAIN_CAT_TAB = [{'category':'list_items', 'title': 'Monster TV - Najnowsze filmy', 'url':self.getFullUrl('/filmy')},
-                        {'category':'list_items', 'title': 'Monster TV - Najlepsze filmy', 'url':self.getFullUrl('/filmy/ulubione')},
-                        {'category':'list_poczekalnia', 'title': 'Monster TV - Poczekalnia', 'url':self.getFullUrl('/filmy/poczekalnia')},
-                        {'category':'list_poczekalnia', 'title': 'Monster TV - Kolejka', 'url':self.getFullUrl('/filmy/kolejka')},]
+        MAIN_CAT_TAB = [{'category': 'list_items', 'title': 'Monster TV - Najnowsze filmy', 'url': self.getFullUrl('/filmy')},
+                        {'category': 'list_items', 'title': 'Monster TV - Najlepsze filmy', 'url': self.getFullUrl('/filmy/ulubione')},
+                        {'category': 'list_poczekalnia', 'title': 'Monster TV - Poczekalnia', 'url': self.getFullUrl('/filmy/poczekalnia')},
+                        {'category': 'list_poczekalnia', 'title': 'Monster TV - Kolejka', 'url': self.getFullUrl('/filmy/kolejka')}, ]
         self.listsTab(MAIN_CAT_TAB, cItem)
     
     def listItems(self, cItem):
@@ -99,12 +99,12 @@ class JoeMonster(CBaseHostClass):
                 continue
             icon = self.getFullIconUrl(self.cm.ph.getSearchGroups(item, '''\ssrc=['"]([^"^']+?)['"]''')[0])
             params = dict(cItem)
-            params = {'good_for_fav': True, 'title':title, 'url':url, 'icon':icon, 'desc':desc}
+            params = {'good_for_fav': True, 'title': title, 'url': url, 'icon': icon, 'desc': desc}
             self.addVideo(params)
 
         if nextPage != '':
             params = dict(cItem)
-            params.update({'title':_("Next page"), 'url':self.getFullUrl(nextPage), 'page':page + 1})
+            params.update({'title': _("Next page"), 'url': self.getFullUrl(nextPage), 'page': page + 1})
             self.addDir(params)
         
     def listPoczekalnia(self, cItem):
@@ -134,12 +134,12 @@ class JoeMonster(CBaseHostClass):
                 continue
             icon = self.getFullIconUrl(self.cm.ph.getSearchGroups(item, '''\ssrc=['"]([^"^']+?)['"]''')[0])
             params = dict(cItem)
-            params = {'good_for_fav': True, 'title':title, 'url':url, 'icon':icon, 'desc':time}
+            params = {'good_for_fav': True, 'title': title, 'url': url, 'icon': icon, 'desc': time}
             self.addVideo(params)
 
         if nextPage != '':
             params = dict(cItem)
-            params.update({'title':_("Next page"), 'url':self.getFullUrl(nextPage), 'page':page + 1})
+            params.update({'title': _("Next page"), 'url': self.getFullUrl(nextPage), 'page': page + 1})
             self.addDir(params)
     
     def getLinksForVideo(self, cItem):
@@ -160,17 +160,17 @@ class JoeMonster(CBaseHostClass):
                 name = '%s. %s' % (str(len(urlTab) + 1), type)
                 
                 if 'video/mp4' == type: 
-                    urlTab.append({'name':name, 'url':self.getFullUrl(url), 'need_resolve':0})
+                    urlTab.append({'name': name, 'url': self.getFullUrl(url), 'need_resolve': 0})
 #                elif 'video/youtube' == type:
                 else:
-                    urlTab.append({'name':name, 'url':self.getFullUrl(url), 'need_resolve':1})
+                    urlTab.append({'name': name, 'url': self.getFullUrl(url), 'need_resolve': 1})
         if 0 == len(urlTab):
             tmp = self.cm.ph.getAllItemsBeetwenNodes(data, ('<iframe', '>'), ('</iframe', '>'))
             for item in tmp:
                 url = self.cm.ph.getSearchGroups(item, '''src=['"]([^'^"]+?)['"]''')[0]
                 if 'joe.pl' in url:
                     url = urllib.parse.unquote(self.cm.ph.getSearchGroups(url + '&', '[\?&]v=([^&]+?)&')[0])
-                urlTab.append({'name':'name', 'url':self.getFullUrl(url), 'need_resolve':1})
+                urlTab.append({'name': 'name', 'url': self.getFullUrl(url), 'need_resolve': 1})
 
         return urlTab
     
@@ -191,7 +191,7 @@ class JoeMonster(CBaseHostClass):
             return False, connFailed
 
         # login
-        post_data = {'_username':login, '_password':password, 'op':'login'}
+        post_data = {'_username': login, '_password': password, 'op': 'login'}
         sts, data = self.cm.getPage('https://joemonster.org/login_check', self.defaultParams, post_data)
         if not sts:
             return False, connFailed
@@ -226,7 +226,7 @@ class JoeMonster(CBaseHostClass):
         
     #MAIN MENU
         if name == None:
-            self.listMainMenu({'name':'category'})
+            self.listMainMenu({'name': 'category'})
         elif category == 'list_poczekalnia':
             self.listPoczekalnia(self.currItem)
         elif category == 'list_items':

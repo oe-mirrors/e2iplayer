@@ -23,10 +23,10 @@ def gettytul():
 class Kkiste(CBaseHostClass):
  
     def __init__(self):
-        CBaseHostClass.__init__(self, {'history':'szenestreamz.com', 'cookie':'szenestreamz.com.cookie'})
+        CBaseHostClass.__init__(self, {'history': 'szenestreamz.com', 'cookie': 'szenestreamz.com.cookie'})
         self.DEFAULT_ICON_URL = 'http://www.szene-streamz.com/Original_Header.png'
         self.USER_AGENT = 'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:40.0) Gecko/20100101 Firefox/40.0'
-        self.HEADER = {'User-Agent': self.USER_AGENT, 'DNT':'1', 'Accept': 'text/html'}
+        self.HEADER = {'User-Agent': self.USER_AGENT, 'DNT': '1', 'Accept': 'text/html'}
         self.AJAX_HEADER = dict(self.HEADER)
         self.AJAX_HEADER.update({'X-Requested-With': 'XMLHttpRequest'})
         self.MAIN_URL = 'http://szene-streamz.com/'
@@ -36,13 +36,13 @@ class Kkiste(CBaseHostClass):
         self.cacheSeasons = {}
         self.MOVIES_GENRE_CAT = []
         self.SERIES_GENRE_CAT = []
-        self.defaultParams = {'header':self.HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
-        self.MAIN_CAT_TAB = [{'category':'list_items', 'title': _('Movies'), 'url':self.getFullUrl('publ/')},
-                             {'category':'list_cats', 'title': _('Genre selection') + ': ' + _('Movies'), 'url':self.getFullUrl('publ/')},
-                             {'category':'list_items', 'title': _('Series'), 'url':self.getFullUrl('load/')},
-                             {'category':'list_cats', 'title': _('Genre selection') + ': ' + _('Series'), 'url':self.getFullUrl('load/')},
-                             {'category': 'search', 'title': _('Search'), 'search_item': True,},
-                             {'category': 'search_history', 'title': _('Search history'),} 
+        self.defaultParams = {'header': self.HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
+        self.MAIN_CAT_TAB = [{'category': 'list_items', 'title': _('Movies'), 'url': self.getFullUrl('publ/')},
+                             {'category': 'list_cats', 'title': _('Genre selection') + ': ' + _('Movies'), 'url': self.getFullUrl('publ/')},
+                             {'category': 'list_items', 'title': _('Series'), 'url': self.getFullUrl('load/')},
+                             {'category': 'list_cats', 'title': _('Genre selection') + ': ' + _('Series'), 'url': self.getFullUrl('load/')},
+                             {'category': 'search', 'title': _('Search'), 'search_item': True, },
+                             {'category': 'search_history', 'title': _('Search history'), } 
                             ]
         
 
@@ -72,7 +72,7 @@ class Kkiste(CBaseHostClass):
                 title = ph.search(item, '''class="CatNameInf">([^<]+)<''')[0]
                 if title.startswith('S-'):
                     title = title.replace('S-', '')
-                cats.append({'category':'list_items', 'title':title, 'url':url})
+                cats.append({'category': 'list_items', 'title': title, 'url': url})
 
         self.listsTab(cats, nextCat)
         
@@ -120,7 +120,7 @@ class Kkiste(CBaseHostClass):
             if genre != '':
                 desc = genre
             params = dict(cItem)
-            params.update({'good_for_fav':True, 'category':nextCategory, 'title':title, 'url':url, 'desc':desc, 'icon':icon})
+            params.update({'good_for_fav': True, 'category': nextCategory, 'title': title, 'url': url, 'desc': desc, 'icon': icon})
             self.addDir(params)
             index += 1
             printDBG("hostszenestreamz.title [%s]" % title)
@@ -139,7 +139,7 @@ class Kkiste(CBaseHostClass):
 
             if url != '':
                 params = dict(cItem)
-                params.update({'good_for_fav':False, 'title':_('Next page'), 'page':page + 1, 'url':url})
+                params.update({'good_for_fav': False, 'title': _('Next page'), 'page': page + 1, 'url': url})
                 self.addDir(params)
         
     def exploreItem(self, cItem):
@@ -181,9 +181,9 @@ class Kkiste(CBaseHostClass):
 
         if trailerurl != '':
             trailerurl = self.getFullUrl(trailerurl)
-            trailerurl = strwithmeta(trailerurl, {'Referer':url})
+            trailerurl = strwithmeta(trailerurl, {'Referer': url})
             params = dict(cItem)
-            params.update({'good_for_fav': False, 'title':'%s %s' % (title, '[Trailer]'), 'url':trailerurl, 'desc':desc})
+            params.update({'good_for_fav': False, 'title': '%s %s' % (title, '[Trailer]'), 'url': trailerurl, 'desc': desc})
             self.addVideo(params)
 
         if '/publ/' in url:
@@ -203,12 +203,12 @@ class Kkiste(CBaseHostClass):
                 if len(nameparts) != 2:
                     name = nameparts[-2] + '.' + nameparts[-1]
                 url = self.getFullUrl(url)
-                url = strwithmeta(url, {'Referer':linksKey})
-                self.cacheLinks[linksKey].append({'name':name, 'url':url, 'need_resolve':1})
+                url = strwithmeta(url, {'Referer': linksKey})
+                self.cacheLinks[linksKey].append({'name': name, 'url': url, 'need_resolve': 1})
 
             if self.cacheLinks != {}:
                 params = dict(cItem)
-                params.update({'good_for_fav': False, 'title':'%s' % title, 'links_key':linksKey, 'url':linksKey, 'desc':desc})
+                params.update({'good_for_fav': False, 'title': '%s' % title, 'links_key': linksKey, 'url': linksKey, 'desc': desc})
                 self.addVideo(params)
         else:
             seasons = ph.findall(data, '<div class="spoiler', '</fieldset>')
@@ -229,10 +229,10 @@ class Kkiste(CBaseHostClass):
                     eNum = 1
                     for litem in links:
                         url = ph.search(litem, ph.A_HREF_URI_RE)[1]
-                        url = strwithmeta(url, {'Referer':cItem['url']})
+                        url = strwithmeta(url, {'Referer': cItem['url']})
                         episode = str(eNum)
                         etitle = '%s s%se%s' % (cItem['title'], season.zfill(2), episode.zfill(2))
-                        params = {'title':etitle, 'url':url, 'prev_url':cItem['url']}
+                        params = {'title': etitle, 'url': url, 'prev_url': cItem['url']}
                         episodesList.append(params)
                         eNum += 1
 
@@ -240,17 +240,17 @@ class Kkiste(CBaseHostClass):
                         self.cacheSeasons[sKey] = episodesList
 
                     params = dict(cItem)
-                    params.update({'good_for_fav':False, 'category':'list_episodes', 'title':title + ' ' + _('Season %s') % season, 'url':url, 'desc':desc, 'icon':icon, 's_key':sKey})
+                    params.update({'good_for_fav': False, 'category': 'list_episodes', 'title': title + ' ' + _('Season %s') % season, 'url': url, 'desc': desc, 'icon': icon, 's_key': sKey})
                     self.addDir(params)
                     sKey += 1
                 else:
                     onlyEpisodes = True
                     season = '1'
                     url = ph.search(item, ph.A_HREF_URI_RE)[1]
-                    url = strwithmeta(url, {'Referer':cItem['url']})
+                    url = strwithmeta(url, {'Referer': cItem['url']})
                     episode = str(eNum)
                     etitle = '%s s%se%s' % (cItem['title'], season.zfill(2), episode.zfill(2))
-                    params = {'title':etitle, 'url':url, 'prev_url':cItem['url']}
+                    params = {'title': etitle, 'url': url, 'prev_url': cItem['url']}
                     episodesList.append(params)
                     eNum += 1
 
@@ -259,7 +259,7 @@ class Kkiste(CBaseHostClass):
                     self.cacheSeasons[sKey] = episodesList
 
                 params = dict(cItem)
-                params.update({'good_for_fav':False, 'category':'list_episodes', 'title':title + ' ' + _('Season %s') % season, 'url':url, 'desc':desc, 'icon':icon, 's_key':sKey})
+                params.update({'good_for_fav': False, 'category': 'list_episodes', 'title': title + ' ' + _('Season %s') % season, 'url': url, 'desc': desc, 'icon': icon, 's_key': sKey})
                 self.addDir(params)
 
     def listEpisodes(self, cItem):
@@ -308,7 +308,7 @@ class Kkiste(CBaseHostClass):
     
     def listSearchResult(self, cItem, searchPattern, searchType):
         printDBG("hostszenestreamz.listSearchResult cItem[%s], searchPattern[%s] searchType[%s]" % (cItem, searchPattern, searchType))
-        post_data = {'query':urllib.parse.unquote(searchPattern), 'sfSbm':'', 'a':'2'}
+        post_data = {'query': urllib.parse.unquote(searchPattern), 'sfSbm': '', 'a': '2'}
         cItem = dict(cItem)
         cItem['url'] = self.getFullUrl('/publ/')
         self.listItems(cItem, 'explore_item', post_data)
@@ -327,9 +327,9 @@ class Kkiste(CBaseHostClass):
         
     #MAIN MENU
         if name == None:
-            self.listsTab(self.MAIN_CAT_TAB, {'name':'category'})
+            self.listsTab(self.MAIN_CAT_TAB, {'name': 'category'})
         elif category == 'list_cats':
-            self.listsCats(self.currItem, {'name':'category'})
+            self.listsCats(self.currItem, {'name': 'category'})
         elif category == 'list_items':
             self.listItems(self.currItem, 'explore_item')
         elif category == 'explore_item':
@@ -339,11 +339,11 @@ class Kkiste(CBaseHostClass):
     #SEARCH
         elif category in ["search", "search_next_page"]:
             cItem = dict(self.currItem)
-            cItem.update({'search_item':False, 'name':'category'}) 
+            cItem.update({'search_item': False, 'name': 'category'}) 
             self.listSearchResult(cItem, searchPattern, searchType)
     #HISTORY SEARCH
         elif category == "search_history":
-            self.listsHistory({'name':'history', 'category': 'search'}, 'desc', _("Type: "))
+            self.listsHistory({'name': 'history', 'category': 'search'}, 'desc', _("Type: "))
         else:
             printExc()
         

@@ -50,15 +50,15 @@ def gettytul():
 class EFilmyTv(CBaseHostClass):
     
     def __init__(self):
-        CBaseHostClass.__init__(self, {'history':'efilmy.tv', 'cookie':'efilmy.tv.cookie'})
+        CBaseHostClass.__init__(self, {'history': 'efilmy.tv', 'cookie': 'efilmy.tv.cookie'})
         self.USER_AGENT = 'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:40.0) Gecko/20100101 Firefox/40.0'
         self.MAIN_URL = 'http://www.efilmy.tv/'
         self.DEFAULT_ICON_URL = 'https://superrepo.org/static/images/icons/original/xplugin.video.efilmy.png.pagespeed.ic.ISN8CDQxwg.png'
-        self.HTTP_HEADER = {'User-Agent': self.USER_AGENT, 'DNT':'1', 'Accept': 'text/html', 'Accept-Encoding':'gzip, deflate', 'Referer':self.getMainUrl(), 'Origin':self.getMainUrl()}
+        self.HTTP_HEADER = {'User-Agent': self.USER_AGENT, 'DNT': '1', 'Accept': 'text/html', 'Accept-Encoding': 'gzip, deflate', 'Referer': self.getMainUrl(), 'Origin': self.getMainUrl()}
         self.AJAX_HEADER = dict(self.HTTP_HEADER)
-        self.AJAX_HEADER.update({'X-Requested-With': 'XMLHttpRequest', 'Accept-Encoding':'gzip, deflate', 'Content-Type':'application/x-www-form-urlencoded; charset=UTF-8', 'Accept':'application/json, text/javascript, */*; q=0.01'})
+        self.AJAX_HEADER.update({'X-Requested-With': 'XMLHttpRequest', 'Accept-Encoding': 'gzip, deflate', 'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8', 'Accept': 'application/json, text/javascript, */*; q=0.01'})
         
-        self.defaultParams = {'header':self.HTTP_HEADER, 'with_metadata':True, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
+        self.defaultParams = {'header': self.HTTP_HEADER, 'with_metadata': True, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
         self.login = ''
         self.password = ''
         self.loggedIn = None
@@ -79,16 +79,16 @@ class EFilmyTv(CBaseHostClass):
                 return url
             else:
                 return urllib.parse.urljoin(baseUrl, url)
-        addParams['cloudflare_params'] = {'domain':self.up.getDomain(baseUrl), 'cookie_file':self.COOKIE_FILE, 'User-Agent':self.USER_AGENT, 'full_url_handle':_getFullUrl}
+        addParams['cloudflare_params'] = {'domain': self.up.getDomain(baseUrl), 'cookie_file': self.COOKIE_FILE, 'User-Agent': self.USER_AGENT, 'full_url_handle': _getFullUrl}
         return self.cm.getPageCFProtection(baseUrl, addParams, post_data)
         
     def listMainMenu(self, cItem, nextCategory):
         printDBG("EFilmyTv.listMainMenu")
         
-        CAT_TAB = [{'category':'movies', 'title': _('Movies'), 'url':self.getFullUrl('/filmy.html')},
-                   {'category':'series', 'title': _('Series'), 'url':self.getFullUrl('/seriale.html')},
-                   {'category':'search', 'title': _('Search'), 'search_item':True}, 
-                   {'category':'search_history', 'title': _('Search history')},]
+        CAT_TAB = [{'category': 'movies', 'title': _('Movies'), 'url': self.getFullUrl('/filmy.html')},
+                   {'category': 'series', 'title': _('Series'), 'url': self.getFullUrl('/seriale.html')},
+                   {'category': 'search', 'title': _('Search'), 'search_item': True}, 
+                   {'category': 'search_history', 'title': _('Search history')}, ]
         params = dict(cItem)
         params['desc'] = self.loginMessage
         self.listsTab(CAT_TAB, params)
@@ -109,13 +109,13 @@ class EFilmyTv(CBaseHostClass):
             url = self.getFullUrl(baseUrl.format(id), cUrl)
             title = self.cleanHtmlStr(item)
             params = dict(cItem)
-            params.update({'good_for_fav':False, 'category':nextCategory, 'title':title, 'url':url, 'desc':''})
+            params.update({'good_for_fav': False, 'category': nextCategory, 'title': title, 'url': url, 'desc': ''})
             self.addDir(params)
             
     def listMoviesCats(self, cItem, nextCategory):
         printDBG("EFilmyTv.listSeriesCats")
-        CAT_TAB = [{'category':'movies_all', 'title': _('--All--')},
-                   {'category':'movies_top', 'title': _('Top')},]
+        CAT_TAB = [{'category': 'movies_all', 'title': _('--All--')},
+                   {'category': 'movies_top', 'title': _('Top')}, ]
         cItem = dict(cItem)
         cItem['desc'] = ''
         self.listsTab(CAT_TAB, cItem)
@@ -123,10 +123,10 @@ class EFilmyTv(CBaseHostClass):
         
     def listSeriesCats(self, cItem, nextCategory):
         printDBG("EFilmyTv.listSeriesCats")
-        CAT_TAB = [{'category':'series_all', 'title': _('--All--')},
-                   {'category':'series_abc', 'title': 'ABC'},
-                   {'category':'series_top', 'title': _('Top')},
-                   {'category':'series_last', 'title': 'Ostatnio Aktualizowane'},]
+        CAT_TAB = [{'category': 'series_all', 'title': _('--All--')},
+                   {'category': 'series_abc', 'title': 'ABC'},
+                   {'category': 'series_top', 'title': _('Top')},
+                   {'category': 'series_last', 'title': 'Ostatnio Aktualizowane'}, ]
         cItem = dict(cItem)
         cItem['desc'] = ''
         self.listsTab(CAT_TAB, cItem)
@@ -148,7 +148,7 @@ class EFilmyTv(CBaseHostClass):
             url = self.getFullUrl(baseUrl.format(id), cUrl)
             title = self.cleanHtmlStr(item)
             params = dict(cItem)
-            params.update({'good_for_fav':False, 'category':nextCategory, 'title':title, 'url':url, 'desc':''})
+            params.update({'good_for_fav': False, 'category': nextCategory, 'title': title, 'url': url, 'desc': ''})
             if nextCategory == 'video':
                 self.addVideo(params)
             else:
@@ -193,7 +193,7 @@ class EFilmyTv(CBaseHostClass):
                     desc.append(t)
             
             params = dict(cItem)
-            params.update({'good_for_fav':True, 'category':nextCategory, 'title':' - '.join(title), 'url':url, 'icon':icon, 'desc':'[/br]'.join(desc)})
+            params.update({'good_for_fav': True, 'category': nextCategory, 'title': ' - '.join(title), 'url': url, 'icon': icon, 'desc': '[/br]'.join(desc)})
             if isEpisode or nextCategory == 'video':
                 self.addVideo(params)
             else:
@@ -216,12 +216,12 @@ class EFilmyTv(CBaseHostClass):
             title = self.cleanHtmlStr(item.split('<script', 1)[0])
             url = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''\shref=['"]([^'^"]+?)['"]''')[0], cUrl)
             params = dict(cItem)
-            params.update({'good_for_fav':True, 'category':nextCategory, 'title':title, 'url':url, 'icon':url + '?fake=need_resolve.jpeg', 'desc':''})
+            params.update({'good_for_fav': True, 'category': nextCategory, 'title': title, 'url': url, 'icon': url + '?fake=need_resolve.jpeg', 'desc': ''})
             self.addDir(params)
         
         if len(self.currList):
             params = dict(cItem)
-            params.update({'good_for_fav':False, 'title':_('Next page'), 'page':page + 1, 'desc':''})
+            params.update({'good_for_fav': False, 'title': _('Next page'), 'page': page + 1, 'desc': ''})
             self.addDir(params)
             
     def fillSeriesCache(self, url):
@@ -276,7 +276,7 @@ class EFilmyTv(CBaseHostClass):
                     if letter not in keysTab:
                         keysTab.append(letter)
                         self.cacheABC[letter] = []
-                    self.cacheABC[letter].append({'title':title, 'url':url, 'icon':url + '?fake=need_resolve.jpeg', 'desc':''})
+                    self.cacheABC[letter].append({'title': title, 'url': url, 'icon': url + '?fake=need_resolve.jpeg', 'desc': ''})
                 keysTab.sort()
                 self.cacheABC['f_keys'] = keysTab
             except Exception:
@@ -285,7 +285,7 @@ class EFilmyTv(CBaseHostClass):
         letters = self.cacheABC.get('f_keys', [])
         for letter in letters:
             params = dict(cItem)
-            params.update({'good_for_fav':False, 'category':nextCategory, 'title':letter, 'f_letter':letter, 'desc':'', 'icon':''})
+            params.update({'good_for_fav': False, 'category': nextCategory, 'title': letter, 'f_letter': letter, 'desc': '', 'icon': ''})
             self.addDir(params)
             
     def listSeriesByLetter(self, cItem, nextCategory):
@@ -298,7 +298,7 @@ class EFilmyTv(CBaseHostClass):
         
     def fillMoviesCache(self, cItem):
         printDBG("EFilmyTv.fillMoviesCache")
-        self.cacheMovies = {'f_keys':[]}
+        self.cacheMovies = {'f_keys': []}
         
         sts, data = self.getPage(cItem['url'])
         if not sts:
@@ -315,9 +315,9 @@ class EFilmyTv(CBaseHostClass):
             for item in secItem:
                 url = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''\shref=['"]([^'^"]+?)['"]''')[0], cUrl)
                 title = self.cleanHtmlStr(item)
-                tab.append({'title':title, 'url':url})
+                tab.append({'title': title, 'url': url})
             if len(tab):
-                tab.insert(0, {'title':_('--All--')})
+                tab.insert(0, {'title': _('--All--')})
                 self.cacheMovies[filterName] = tab
                 self.cacheMovies['f_keys'].append(filterName) 
         
@@ -353,7 +353,7 @@ class EFilmyTv(CBaseHostClass):
                 tmp = self.cm.ph.getSearchGroups(item, '''sort\-([A-Za-z]+?)\-([A-Za-z]+?)[^A-Za-z]''', 2)
                 title = self.cleanHtmlStr(self.cm.ph.getSearchGroups(item, '''\stitle=['"]([^'^"]+?)['"]''')[0])
                 title = title.split(',', 1)[-1].strip()
-                sortTabe.append({'title':title, 'f_sort_key':tmp[0], 'f_sort_dir':tmp[1]})
+                sortTabe.append({'title': title, 'f_sort_key': tmp[0], 'f_sort_dir': tmp[1]})
             self.cacheSort = sortTabe
         
         cItem = dict(cItem)
@@ -364,7 +364,7 @@ class EFilmyTv(CBaseHostClass):
         printDBG("EFilmyTv.listMovies")
         paramsUrl = dict(self.defaultParams)
         if 'f_sort_key' in cItem and 'f_sort_dir' in cItem:
-            paramsUrl['cookie_items'] = {'uart_sort':'%s+%s' % (cItem['f_sort_key'], cItem['f_sort_dir'])}
+            paramsUrl['cookie_items'] = {'uart_sort': '%s+%s' % (cItem['f_sort_key'], cItem['f_sort_dir'])}
         
         post_data = cItem.get('post_data', None)
         sts, data = self.getPage(cItem['url'], paramsUrl, post_data)
@@ -401,12 +401,12 @@ class EFilmyTv(CBaseHostClass):
                 desc.append(t)
             desc.append(self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(item, '<p', '</p>')[1]))
             params = dict(cItem)
-            params.update({'good_for_fav':True, 'title':title, 'url':url, 'icon':icon, 'desc':'[/br]'.join(desc)})
+            params.update({'good_for_fav': True, 'title': title, 'url': url, 'icon': icon, 'desc': '[/br]'.join(desc)})
             self.addVideo(params)
             
         if nextPage != '':
             params = dict(cItem)
-            params.update({'title':_('Next page'), 'url':nextPage})
+            params.update({'title': _('Next page'), 'url': nextPage})
             self.addDir(params)
     
     def listSeriesUpdated(self, cItem, nextCategory):
@@ -429,12 +429,12 @@ class EFilmyTv(CBaseHostClass):
             title = self.cleanHtmlStr(tmp[0])
             desc = self.cleanHtmlStr(tmp[-1].replace('<br>', '[/br]'))
             params = dict(cItem)
-            params.update({'good_for_fav':True, 'category':nextCategory, 'title':title, 'url':url, 'icon':icon, 'desc':desc})
+            params.update({'good_for_fav': True, 'category': nextCategory, 'title': title, 'url': url, 'icon': icon, 'desc': desc})
             self.addDir(params)
             
         if nextPage != '':
             params = dict(cItem)
-            params.update({'title':_('Next page'), 'url':nextPage})
+            params.update({'title': _('Next page'), 'url': nextPage})
             self.addDir(params)
             
     def listSeriesSeasons(self, cItem, nextCategory):
@@ -458,17 +458,17 @@ class EFilmyTv(CBaseHostClass):
             for item in sItem:
                 url = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''\shref=['"]([^'^"]+?)['"]''')[0])
                 title = self.cleanHtmlStr(item)
-                tabItems.append({'title':'%s - %s' % (serieTitle, title), 'url':url, 'icon':serieIcon, 'desc':''})
+                tabItems.append({'title': '%s - %s' % (serieTitle, title), 'url': url, 'icon': serieIcon, 'desc': ''})
             if len(tabItems):
                 params = dict(cItem)
-                params.update({'good_for_fav':False, 'category':nextCategory, 'title':sTitle, 'episodes':tabItems, 'icon':serieIcon, 'desc':serieDesc})
+                params.update({'good_for_fav': False, 'category': nextCategory, 'title': sTitle, 'episodes': tabItems, 'icon': serieIcon, 'desc': serieDesc})
                 self.addDir(params)
                 
     def listSeriesEpisodes(self, cItem):
         printDBG("EFilmyTv.listSeriesEpisodes")
         episodes = cItem.get('episodes', [])
         cItem = dict(cItem)
-        cItem.update({'good_for_fav':True})
+        cItem.update({'good_for_fav': True})
         self.listsTab(episodes, cItem, 'video')
     
     def listSearchResult(self, cItem, searchPattern, searchType):
@@ -478,7 +478,7 @@ class EFilmyTv(CBaseHostClass):
             cItem = dict(cItem)
             cItem['url'] = self.getFullUrl('/szukaj.html')
             cItem['category'] = 'list_movies'
-            cItem['post_data'] = {'word':searchPattern, 'as_values_movie_title':'hidden'}
+            cItem['post_data'] = {'word': searchPattern, 'as_values_movie_title': 'hidden'}
             self.listMovies(cItem)
         else:
             try:
@@ -489,7 +489,7 @@ class EFilmyTv(CBaseHostClass):
                         title = self.cleanHtmlStr(self.cacheSeries['pl'][idx])
                         url = self.getFullUrl('/serial,%s.html' % self.cacheSeries['seo'][idx])
                         params = dict(cItem)
-                        params.update({'good_for_fav':True, 'category':'list_seasons', 'title':title, 'url':url, 'icon':url + '?fake=need_resolve.jpeg', 'desc':''})
+                        params.update({'good_for_fav': True, 'category': 'list_seasons', 'title': title, 'url': url, 'icon': url + '?fake=need_resolve.jpeg', 'desc': ''})
                         self.addDir(params)
             except Exception:
                 printExc()
@@ -537,7 +537,7 @@ class EFilmyTv(CBaseHostClass):
                 else: 
                     type = 'show_player'
                 url = self.getFullUrl(baseUrl + '?cmd=%s&id=%s' % (type, movieId), cUrl)
-                retTab.append({'name':'%s - %s' % (name, val), 'url':strwithmeta(url, {'Referer':cUrl, 'f_type':type}), 'need_resolve':1})
+                retTab.append({'name': '%s - %s' % (name, val), 'url': strwithmeta(url, {'Referer': cUrl, 'f_type': type}), 'need_resolve': 1})
         if len(retTab):
             self.cacheLinks[cacheKey] = retTab
         return retTab
@@ -588,7 +588,7 @@ class EFilmyTv(CBaseHostClass):
             header = dict(self.HTTP_HEADER)
             header['Accept'] = 'image/png,image/*;q=0.8,*/*;q=0.5'
             params = dict(self.defaultParams)
-            params.update({'maintype': 'image', 'subtypes':['jpeg', 'png'], 'check_first_bytes':['\xFF\xD8', '\xFF\xD9', '\x89\x50\x4E\x47'], 'header':header})
+            params.update({'maintype': 'image', 'subtypes': ['jpeg', 'png'], 'check_first_bytes': ['\xFF\xD8', '\xFF\xD9', '\x89\x50\x4E\x47'], 'header': header})
             filePath = GetTmpDir('.iptvplayer_captcha.jpg')
             rm(filePath)
             ret = self.cm.saveWebFile(filePath, imgUrl.replace('&amp;', '&'), params)
@@ -643,12 +643,12 @@ class EFilmyTv(CBaseHostClass):
             data = self.cm.ph.getDataBeetwenMarkers(data, 'clip:', '}')[1]
             videoUrl = self.cm.ph.getSearchGroups(data, '''\surl\s*?:\s*?['"](https?://[^'^"]+?)['"]''', 1, True)[0]
             if videoUrl != '':
-                urlTab.append({'name':'direct_link', 'url':strwithmeta(videoUrl, {'Referer':cUrl})})
+                urlTab.append({'name': 'direct_link', 'url': strwithmeta(videoUrl, {'Referer': cUrl})})
         else:
             videoUrl = self.getFullUrl(self.cm.ph.getSearchGroups(data, '''href=['"]([^'^"]+?)['"]''', 1, True)[0], cUrl)
             if 'clipwatching' in videoUrl:
                 videoUrl = self.getFullUrl(self.cm.ph.getSearchGroups(data, '''<iframe[^>]+?src=['"]([^"^']+?)['"]''', 1, True)[0], cUrl)
-            urlTab = self.up.getVideoLinkExt(strwithmeta(videoUrl, {'Referer':cUrl}))
+            urlTab = self.up.getVideoLinkExt(strwithmeta(videoUrl, {'Referer': cUrl}))
         
         return urlTab
         
@@ -691,7 +691,7 @@ class EFilmyTv(CBaseHostClass):
         if icon == '':
             icon = cItem.get('icon', self.DEFAULT_ICON_URL)
         
-        return [{'title':self.cleanHtmlStr(title), 'text': self.cleanHtmlStr(desc), 'images':[{'title':'', 'url':self.getFullIconUrl(icon)}], 'other_info':otherInfo}]
+        return [{'title': self.cleanHtmlStr(title), 'text': self.cleanHtmlStr(desc), 'images': [{'title': '', 'url': self.getFullIconUrl(icon)}], 'other_info': otherInfo}]
         
     def tryTologin(self):
         printDBG('EFilmyTv.tryTologin start')
@@ -730,7 +730,7 @@ class EFilmyTv(CBaseHostClass):
                 value = self.cm.ph.getSearchGroups(item, '''value=['"]([^'^"]+?)['"]''')[0]
                 post_data[name] = value
             
-            post_data.update({'ga10':self.login, 'gb10':self.password, 'gautolog':'t'})
+            post_data.update({'ga10': self.login, 'gb10': self.password, 'gautolog': 't'})
             
             httpParams = dict(self.defaultParams)
             httpParams['header'] = dict(httpParams['header'])
@@ -769,7 +769,7 @@ class EFilmyTv(CBaseHostClass):
         
     #MAIN MENU
         if name == None:
-            self.listMainMenu({'name':'category'}, 'sub_menu')
+            self.listMainMenu({'name': 'category'}, 'sub_menu')
     #MOVIES
         elif category == 'movies':
             self.listMoviesCats(self.currItem, 'list_movies_cmd')
@@ -805,11 +805,11 @@ class EFilmyTv(CBaseHostClass):
     #SEARCH
         elif category in ["search", "search_next_page"]:
             cItem = dict(self.currItem)
-            cItem.update({'search_item':False, 'name':'category'}) 
+            cItem.update({'search_item': False, 'name': 'category'}) 
             self.listSearchResult(cItem, searchPattern, searchType)
     #HISTORIA SEARCH
         elif category == "search_history":
-            self.listsHistory({'name':'history', 'category': 'search'}, 'desc', _("Type: "))
+            self.listsHistory({'name': 'history', 'category': 'search'}, 'desc', _("Type: "))
         else:
             printExc()
         

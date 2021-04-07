@@ -57,7 +57,7 @@ class Chomikuj(CBaseHostClass):
     
     def __init__(self):
         printDBG("Chomikuj.__init__")
-        CBaseHostClass.__init__(self, {'history':'Chomikuj'})
+        CBaseHostClass.__init__(self, {'history': 'Chomikuj'})
         self.DEFAULT_ICON_URL = 'https://superrepo.org/static/images/icons/original/plugin.audio.polish.CAP.png.pagespeed.ce.m3al56qs_A.png'
         self.MAINURL = 'http://mobile.chomikuj.pl/'
         self.LIST_FOLDER_URL = 'api/v3/folders?Parent=%s&Page=%s'
@@ -131,9 +131,9 @@ class Chomikuj(CBaseHostClass):
         quota = formatBytes(1024 * (self._getJItemNum(data, 'QuotaAdditional', 0) + self._getJItemNum(data, 'QuotaLeft', 0)))
         account = self._getJItemStr(self.loginData, 'AccountName', '')
         title = 'Chomik "%s" (%s transferu)' % (account, quota)
-        self.addDir({'name':'category', 'title':title, 'category':'account'})
-        self.addDir({'name':'category', 'title':'Wyszukaj', 'category':'search', 'search_item':True})
-        self.addDir({'name':'category', 'title':'Historia wyszukiwania', 'category':'search_history'})
+        self.addDir({'name': 'category', 'title': title, 'category': 'account'})
+        self.addDir({'name': 'category', 'title': 'Wyszukaj', 'category': 'search', 'search_item': True})
+        self.addDir({'name': 'category', 'title': 'Historia wyszukiwania', 'category': 'search_history'})
         
     def requestLoginData(self):
         url = "api/v3/account/login"
@@ -186,10 +186,10 @@ class Chomikuj(CBaseHostClass):
                 
             if data.get('IsNextPageAvailable', False):
                 params = dict(cItem)
-                params.update({'good_for_fav': True, 'title':'Następna strona', 'page': cItem.get('page', 1) + 1})
+                params.update({'good_for_fav': True, 'title': 'Następna strona', 'page': cItem.get('page', 1) + 1})
                 self.addDir(params)
         else:
-            map = {"images":"Image", "video":"Video", "music":"Music"}
+            map = {"images": "Image", "video": "Video", "music": "Music"}
             self.handleDataRequest(cItem, self.SEARCH_URL % (urllib.parse.quote_plus(searchPattern), page, map[searchType]))
 
     def handleProfile(self, cItem):
@@ -214,13 +214,13 @@ class Chomikuj(CBaseHostClass):
                 if 'ParentId' in data and 'ParentName' in data and len(self._getJItemStr(data, 'ParentName')) and 'Owner' in data and 'Id' in data['Owner']:
                     if cItem.get('prev_parent', None) != self._getJItemNum(data, 'ParentId'):
                         params = dict(cItem)
-                        params.update({'good_for_fav': True, 'category':'foreign_folder', 'title':'\xe2\x86\x91 ' + self._getJItemStr(data, 'ParentName'), 'prev_parent':cItem.get('parent', None), 'parent':self._getJItemNum(data, 'ParentId'), 'owner':self._getJItemNum(data['Owner'], 'Id')})
+                        params.update({'good_for_fav': True, 'category': 'foreign_folder', 'title': '\xe2\x86\x91 ' + self._getJItemStr(data, 'ParentName'), 'prev_parent': cItem.get('parent', None), 'parent': self._getJItemNum(data, 'ParentId'), 'owner': self._getJItemNum(data['Owner'], 'Id')})
                         self.addDir(params)
                 
                 # list folders
                 for item in data.get('Folders', []):
                     params = dict(cItem)
-                    params.update({'good_for_fav': True, 'title':self._getJItemStr(item, 'Name', ''), 'page': 1, 'prev_parent':cItem.get('parent', None), 'parent':self._getJItemNum(item, 'Id', 0)})
+                    params.update({'good_for_fav': True, 'title': self._getJItemStr(item, 'Name', ''), 'page': 1, 'prev_parent': cItem.get('parent', None), 'parent': self._getJItemNum(item, 'Id', 0)})
                     self.addDir(params)
                 
                 # list files
@@ -244,14 +244,14 @@ class Chomikuj(CBaseHostClass):
                                    'page': 1})
                     
                     if 'FolderId' in item and 'Owner' in item and 'Id' in item['Owner'] and 'Name' in item['Owner']:
-                        params.update({'category':'explore_item', 'raw_item':dict(item)})
+                        params.update({'category': 'explore_item', 'raw_item': dict(item)})
                         self.addDir(params)
                     else:
                         self._addItem(item, params)
                 
                 if data.get('IsNextPageAvailable', False):
                     params = dict(cItem)
-                    params.update({'title':'Następna strona', 'page': cItem.get('page', 1) + 1})
+                    params.update({'title': 'Następna strona', 'page': cItem.get('page', 1) + 1})
                     self.addDir(params)
                     
     def _addItem(self, item, params):
@@ -261,13 +261,13 @@ class Chomikuj(CBaseHostClass):
         
         mediaType = self._getJItemStr(item, 'MediaType', '')
         if mediaType in ['Music', 'Video']:
-            params.update({'url':self._getJItemStr(item, 'StreamingUrl', '')})
+            params.update({'url': self._getJItemStr(item, 'StreamingUrl', '')})
             if mediaType == 'Video':
                 self.addVideo(params)
             else:
                 self.addAudio(params)
         elif 'Image' == mediaType:
-            params.update({'url':self._getJItemStr(item, 'ThumbnailImg', '')})
+            params.update({'url': self._getJItemStr(item, 'ThumbnailImg', '')})
             self.addPicture(params)
         else:
             printDBG('Chomikuj list file: unknown mediaType [%s]' % mediaType)
@@ -285,11 +285,11 @@ class Chomikuj(CBaseHostClass):
             owner = self._getJItemNum(item['Owner'], 'Id')
             parent = self._getJItemNum(item, 'FolderId')
             params = dict(cItem)
-            params.update({'good_for_fav': True, 'category':'foreign_folder', 'title':'do chomika: ' + self._getJItemStr(item['Owner'], 'Name'), 'parent':0, 'owner':owner})
+            params.update({'good_for_fav': True, 'category': 'foreign_folder', 'title': 'do chomika: ' + self._getJItemStr(item['Owner'], 'Name'), 'parent': 0, 'owner': owner})
             self.addDir(params)
             
             params = dict(cItem)
-            params.update({'good_for_fav': True, 'category':'foreign_folder', 'title':'do folderu: ' + self._getJItemStr(item, 'FolderName'), 'parent':parent, 'owner':owner})
+            params.update({'good_for_fav': True, 'category': 'foreign_folder', 'title': 'do folderu: ' + self._getJItemStr(item, 'FolderName'), 'parent': parent, 'owner': owner})
             self.addDir(params)
         
         params = dict(cItem)
@@ -305,8 +305,8 @@ class Chomikuj(CBaseHostClass):
         
         if -1 != cItem['file_id']:
             # free
-            url = strwithmeta(cItem['file_id'], {'priv_demo':True, 'priv_url':cItem['url'], 'priv_parent':cItem.get('parent', None), 'priv_page':cItem.get('page', 1), 'priv_owner':cItem.get('owner', None)})
-            videoUrls.append({'name':'Demo | darmowe', 'url':url, 'need_resolve':1})
+            url = strwithmeta(cItem['file_id'], {'priv_demo': True, 'priv_url': cItem['url'], 'priv_parent': cItem.get('parent', None), 'priv_page': cItem.get('page', 1), 'priv_owner': cItem.get('owner', None)})
+            videoUrls.append({'name': 'Demo | darmowe', 'url': url, 'need_resolve': 1})
             
             # full
             name = 'Full (%s)' % cItem['size']
@@ -314,8 +314,8 @@ class Chomikuj(CBaseHostClass):
                 name += ' | darmowy'
             else:
                 name += ' | odliczy transfer z konta'
-            url = strwithmeta(cItem['file_id'], {'priv_type':cItem['type'], 'priv_download':True})
-            videoUrls.append({'name':name, 'url':url, 'need_resolve':1})
+            url = strwithmeta(cItem['file_id'], {'priv_type': cItem['type'], 'priv_download': True})
+            videoUrls.append({'name': name, 'url': url, 'need_resolve': 1})
             
         return videoUrls
         
@@ -328,7 +328,7 @@ class Chomikuj(CBaseHostClass):
                 if not sts:
                     return urlTab
                 directUrl = self._getJItemStr(data, 'FileUrl', '')
-                urlTab.append({'name':'direct', 'url':directUrl})
+                urlTab.append({'name': 'direct', 'url': directUrl})
             elif fileId.meta.get('priv_demo', False):
                 url = fileId.meta['priv_url']
                 owner = fileId.meta['priv_owner']
@@ -361,7 +361,7 @@ class Chomikuj(CBaseHostClass):
                     directUrl = fileId.meta.get('priv_url', '')
                 
                 if self.cm.isValidUrl(directUrl):
-                    urlTab.append({'name':'direct', 'url':directUrl})
+                    urlTab.append({'name': 'direct', 'url': directUrl})
         except Exception:
             printExc()
         return urlTab
@@ -399,11 +399,11 @@ class Chomikuj(CBaseHostClass):
     #SEARCH
         elif category in ["search", "search_next_page"]:
             cItem = dict(self.currItem)
-            cItem.update({'search_item':False, 'name':'category'}) 
+            cItem.update({'search_item': False, 'name': 'category'}) 
             self.listSearchResult(cItem, searchPattern, searchType)
     #HISTORIA SEARCH
         elif category == "search_history":
-            self.listsHistory({'name':'history', 'category': 'search'}, 'desc', _("Type: "))
+            self.listsHistory({'name': 'history', 'category': 'search'}, 'desc', _("Type: "))
         else:
             printExc()
 

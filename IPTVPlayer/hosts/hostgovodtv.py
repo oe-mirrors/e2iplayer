@@ -30,17 +30,17 @@ def gettytul():
 class govodtv(CBaseHostClass):
     
     def __init__(self):
-        CBaseHostClass.__init__(self, {'history':'govod.tv', 'cookie':'govod.tv.cookie'})
+        CBaseHostClass.__init__(self, {'history': 'govod.tv', 'cookie': 'govod.tv.cookie'})
         self.USER_AGENT = 'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:40.0) Gecko/20100101 Firefox/40.0'
         self.MAIN_URL = 'https://govod.tv/'
         self.DEFAULT_ICON_URL = 'https://govod.tv/images/logo-dark.png'
-        self.HTTP_HEADER = {'User-Agent': self.USER_AGENT, 'DNT':'1', 'Accept': 'text/html', 'Accept-Encoding':'gzip, deflate', 'Referer':self.getMainUrl(), 'Origin':self.getMainUrl()}
+        self.HTTP_HEADER = {'User-Agent': self.USER_AGENT, 'DNT': '1', 'Accept': 'text/html', 'Accept-Encoding': 'gzip, deflate', 'Referer': self.getMainUrl(), 'Origin': self.getMainUrl()}
         self.AJAX_HEADER = dict(self.HTTP_HEADER)
-        self.AJAX_HEADER.update({'X-Requested-With': 'XMLHttpRequest', 'Accept-Encoding':'gzip, deflate', 'Content-Type':'application/x-www-form-urlencoded; charset=UTF-8', 'Accept':'application/json, text/javascript, */*; q=0.01'})
+        self.AJAX_HEADER.update({'X-Requested-With': 'XMLHttpRequest', 'Accept-Encoding': 'gzip, deflate', 'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8', 'Accept': 'application/json, text/javascript, */*; q=0.01'})
 
-        self.cacheMovieFilters = {'cats':[], 'sort':[], 'years':[], 'az':[]}        
+        self.cacheMovieFilters = {'cats': [], 'sort': [], 'years': [], 'az': []}        
         self.cacheLinks = {}
-        self.defaultParams = {'header':self.HTTP_HEADER, 'with_metadata':True, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
+        self.defaultParams = {'header': self.HTTP_HEADER, 'with_metadata': True, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
 
     def getFullIconUrl(self, icon, baseUrl=None):
         return CBaseHostClass.getFullIconUrl(self, icon.replace('.webp', '.jpg').replace('/pictures/posters/t', '/posters/'), baseUrl)
@@ -55,7 +55,7 @@ class govodtv(CBaseHostClass):
                 return url
             else:
                 return urllib.parse.urljoin(baseUrl, url)
-        addParams['cloudflare_params'] = {'domain':self.up.getDomain(baseUrl), 'cookie_file':self.COOKIE_FILE, 'User-Agent':self.USER_AGENT, 'full_url_handle':_getFullUrl}
+        addParams['cloudflare_params'] = {'domain': self.up.getDomain(baseUrl), 'cookie_file': self.COOKIE_FILE, 'User-Agent': self.USER_AGENT, 'full_url_handle': _getFullUrl}
         return self.cm.getPageCFProtection(baseUrl, addParams, post_data)
         
     def setMainUrl(self, url):
@@ -65,20 +65,20 @@ class govodtv(CBaseHostClass):
     def listMainMenu(self, cItem):
         printDBG("govodtv.listMainMenu")
 
-        MAIN_CAT_TAB = [{'category':'list_sort', 'title': _('Movies'), 'url':self.getFullUrl('/filmy-online')},
-                        {'category':'list_sort', 'title': _('Series'), 'url':self.getFullUrl('/seriale-online')},
-                        {'category':'list_items', 'title': _('News'), 'url':self.getFullUrl('/najnowsze')},
+        MAIN_CAT_TAB = [{'category': 'list_sort', 'title': _('Movies'), 'url': self.getFullUrl('/filmy-online')},
+                        {'category': 'list_sort', 'title': _('Series'), 'url': self.getFullUrl('/seriale-online')},
+                        {'category': 'list_items', 'title': _('News'), 'url': self.getFullUrl('/najnowsze')},
 #                        {'category':'list_items',     'title': _('Highlights'),     'url':self.getFullUrl('/polecane/')},
 #                        {'category':'list_years',     'title': _('Movies by year'), 'url':self.MAIN_URL},
-                        {'category':'list_cats', 'title': _('Categories'), 'url':self.MAIN_URL},
+                        {'category': 'list_cats', 'title': _('Categories'), 'url': self.MAIN_URL},
 #                        {'category':'list_az',        'title': _('Alphabetically'), 'url':self.MAIN_URL},
-                        {'category':'search', 'title': _('Search'), 'search_item':True}, 
-                        {'category':'search_history', 'title': _('Search history')},]
+                        {'category': 'search', 'title': _('Search'), 'search_item': True}, 
+                        {'category': 'search_history', 'title': _('Search history')}, ]
         self.listsTab(MAIN_CAT_TAB, cItem)
     
     ###################################################
     def _fillMovieFilters(self, cItem):
-        self.cacheMovieFilters = {'cats':[], 'sort':[], 'years':[], 'az':[]}
+        self.cacheMovieFilters = {'cats': [], 'sort': [], 'years': [], 'az': []}
 
         sts, data = self.getPage(self.getFullUrl(cItem['url']))
         if not sts:
@@ -166,15 +166,15 @@ class govodtv(CBaseHostClass):
             title = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(item, ('<h3', '>'), ('</h3', '>'), False)[1])
             desc = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(item, ('<p', '>'), ('</i', '>'), False)[1])
             if '/serial/' in url:
-                params = {'good_for_fav':True,'category':'list_seasons', 'url':url, 'title':title, 'desc':desc, 'icon':icon}
+                params = {'good_for_fav': True, 'category': 'list_seasons', 'url': url, 'title': title, 'desc': desc, 'icon': icon}
                 self.addDir(params)
             else:
-                params = {'good_for_fav':True, 'url':url, 'title':title, 'desc':desc, 'icon':icon}
+                params = {'good_for_fav': True, 'url': url, 'title': title, 'desc': desc, 'icon': icon}
                 self.addVideo(params)
             
         if nextPage:
             params = dict(cItem)
-            params.update({'title':_('Next page'), 'url':cUrl, 'page':page + 1})
+            params.update({'title': _('Next page'), 'url': cUrl, 'page': page + 1})
             self.addDir(params)
 
     def listSeriesSeasons(self, cItem, nextCategory):
@@ -199,10 +199,10 @@ class govodtv(CBaseHostClass):
             for item in sItem:
                 url = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''\sdata-href=['"]([^'^"]+?)['"]''')[0])
                 title = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(item, ('<td', '>'), ('</td', '>'), False)[1])
-                tabItems.append({'title':'%s' % title, 'url':url, 'icon':serieIcon, 'desc':''})
+                tabItems.append({'title': '%s' % title, 'url': url, 'icon': serieIcon, 'desc': ''})
             if len(tabItems):
                 params = dict(cItem)
-                params.update({'good_for_fav':False, 'category':nextCategory, 'title':sTitle, 'episodes':tabItems, 'icon':serieIcon, 'desc':serieDesc})
+                params.update({'good_for_fav': False, 'category': nextCategory, 'title': sTitle, 'episodes': tabItems, 'icon': serieIcon, 'desc': serieDesc})
                 self.addDir(params)
                 
     def listSeriesEpisodes(self, cItem):
@@ -216,7 +216,7 @@ class govodtv(CBaseHostClass):
         printDBG("govodtv.listSearchResult cItem[%s], searchPattern[%s] searchType[%s]" % (cItem, searchPattern, searchType))
 
         url = self.getFullUrl('/szukaj?s=%s') % urllib.parse.quote_plus(searchPattern)
-        params = {'name':'category', 'category':'list_items', 'good_for_fav':False, 'url':url}
+        params = {'name': 'category', 'category': 'list_items', 'good_for_fav': False, 'url': url}
         self.listItems(params)
         
     def getLinksForVideo(self, cItem):
@@ -225,7 +225,7 @@ class govodtv(CBaseHostClass):
         urlTab = []
         
         if '/player/' in cItem['url']:
-            urlTab.append({'name':cItem['url'], 'url':strwithmeta(cItem['url'], {'Referer':cItem['url']}), 'need_resolve':1})
+            urlTab.append({'name': cItem['url'], 'url': strwithmeta(cItem['url'], {'Referer': cItem['url']}), 'need_resolve': 1})
         else:
             sts, data = self.getPage(cItem['url'])
             if not sts:
@@ -234,7 +234,7 @@ class govodtv(CBaseHostClass):
             tmp = self.cm.ph.getAllItemsBeetwenNodes(data, ('<iframe', '>'), ('</iframe', '>'))
             for item in tmp:
                 url = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''src=['"]([^'^"]+?)['"]''')[0])
-                urlTab.append({'name':self.up.getHostName(url), 'url':strwithmeta(url, {'Referer':cItem['url']}), 'need_resolve':1})
+                urlTab.append({'name': self.up.getHostName(url), 'url': strwithmeta(url, {'Referer': cItem['url']}), 'need_resolve': 1})
 
         return urlTab
         
@@ -282,7 +282,7 @@ class govodtv(CBaseHostClass):
         if desc == '':
             desc = cItem.get('desc', '')
 
-        return [{'title':self.cleanHtmlStr(title), 'text': self.cleanHtmlStr(desc), 'images':[{'title':'', 'url':self.getFullUrl(icon)}], 'other_info':{'custom_items_list':itemsList}}]
+        return [{'title': self.cleanHtmlStr(title), 'text': self.cleanHtmlStr(desc), 'images': [{'title': '', 'url': self.getFullUrl(icon)}], 'other_info': {'custom_items_list': itemsList}}]
 
     def handleService(self, index, refresh=0, searchPattern='', searchType=''):
         printDBG('handleService start')
@@ -300,7 +300,7 @@ class govodtv(CBaseHostClass):
     #MAIN MENU
         if name == None and category == '':
             rm(self.COOKIE_FILE)
-            self.listMainMenu({'name':'category'})
+            self.listMainMenu({'name': 'category'})
         elif 'list_cats' == category:
             self.listMovieFilters(self.currItem, 'list_items')
         elif 'list_years' == category:
@@ -319,11 +319,11 @@ class govodtv(CBaseHostClass):
     #SEARCH
         elif category in ["search", "search_next_page"]:
             cItem = dict(self.currItem)
-            cItem.update({'search_item':False, 'name':'category'}) 
+            cItem.update({'search_item': False, 'name': 'category'}) 
             self.listSearchResult(cItem, searchPattern, searchType)
     #HISTORIA SEARCH
         elif category == "search_history":
-            self.listsHistory({'name':'history', 'category': 'search'}, 'desc', _("Type: "))
+            self.listsHistory({'name': 'history', 'category': 'search'}, 'desc', _("Type: "))
         else:
             printExc()
         

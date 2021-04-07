@@ -72,10 +72,10 @@ class UnCaptchaReCaptchaMyJDWidget(Screen):
                 "red": self.keyRed,
             }, -2)
         
-        self.workconsole = {'console':None, 'close_conn':None, 'stderr_conn':None, 'stdout_conn':None, 'stderr':'', 'stdout':''}
+        self.workconsole = {'console': None, 'close_conn': None, 'stderr_conn': None, 'stdout_conn': None, 'stderr': '', 'stdout': ''}
         self.result = ''
         
-        self.timer = {'timer':eTimer(), 'is_started':False}
+        self.timer = {'timer': eTimer(), 'is_started': False}
         self.timer['callback_conn'] = eConnectCallback(self.timer['timer'].timeout, self._timoutCallback)
         self.errorCodeSet = False
         

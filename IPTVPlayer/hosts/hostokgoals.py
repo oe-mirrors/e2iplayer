@@ -28,20 +28,20 @@ def gettytul():
 class OkGoals(CBaseHostClass):
  
     def __init__(self):
-        CBaseHostClass.__init__(self, {'history':'OkGoals.tv', 'cookie':'filisertv.cookie'})
+        CBaseHostClass.__init__(self, {'history': 'OkGoals.tv', 'cookie': 'filisertv.cookie'})
         
         self.HEADER = {'User-Agent': 'Mozilla/5.0', 'Accept': 'text/html'}
         self.AJAX_HEADER = dict(self.HEADER)
         self.AJAX_HEADER.update({'X-Requested-With': 'XMLHttpRequest'})
-        self.defaultParams = {'header':self.HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
+        self.defaultParams = {'header': self.HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
         
         self.MAIN_URL = 'http://www.okgoals.com/'
         self.DEFAULT_ICON_URL = self.getFullUrl('/okgoals_logo.jpg')
         
-        self.MAIN_CAT_TAB = [{'category':'list_items', 'title': _('Main'), 'url':self.getFullUrl('index.php')},
-                             {'category':'list_categories', 'title': _('Categories'), 'url':self.getMainUrl()},
-                             {'category': 'search', 'title': _('Search'), 'search_item': True,},
-                             {'category': 'search_history', 'title': _('Search history'),},
+        self.MAIN_CAT_TAB = [{'category': 'list_items', 'title': _('Main'), 'url': self.getFullUrl('index.php')},
+                             {'category': 'list_categories', 'title': _('Categories'), 'url': self.getMainUrl()},
+                             {'category': 'search', 'title': _('Search'), 'search_item': True, },
+                             {'category': 'search_history', 'title': _('Search history'), },
                             ]
     def getFullUrl(self, url):
         if url.startswith('//'):
@@ -51,12 +51,12 @@ class OkGoals(CBaseHostClass):
     
     def getBiggerImage(self, icon):
         ICON_PATH = [
-                    {'orig':'images/it.png', 'new':'https://www.bandiere-mondo.it/data/flags/h80/it.png'},
-                    {'orig':'images/pt.png', 'new':'https://www.bandiere-mondo.it/data/flags/h80/pt.png'},
-                    {'orig':'images/fr.png', 'new':'https://www.bandiere-mondo.it/data/flags/h80/fr.png'},
-                    {'orig':'images/de.png', 'new':'https://www.bandiere-mondo.it/data/flags/h80/de.png'},
-                    {'orig':'images/cl.png', 'new':'https://www.calcioweb.eu/wp-content/uploads/2014/04/Logo-Champions-League-bianco.jpg'},
-                    {'orig':'images/uef.png', 'new':'https://img.uefa.com/imgml/uefaorg/new/logo.png'},
+                    {'orig': 'images/it.png', 'new': 'https://www.bandiere-mondo.it/data/flags/h80/it.png'},
+                    {'orig': 'images/pt.png', 'new': 'https://www.bandiere-mondo.it/data/flags/h80/pt.png'},
+                    {'orig': 'images/fr.png', 'new': 'https://www.bandiere-mondo.it/data/flags/h80/fr.png'},
+                    {'orig': 'images/de.png', 'new': 'https://www.bandiere-mondo.it/data/flags/h80/de.png'},
+                    {'orig': 'images/cl.png', 'new': 'https://www.calcioweb.eu/wp-content/uploads/2014/04/Logo-Champions-League-bianco.jpg'},
+                    {'orig': 'images/uef.png', 'new': 'https://img.uefa.com/imgml/uefaorg/new/logo.png'},
                      ]
 
         for i in ICON_PATH:
@@ -82,7 +82,7 @@ class OkGoals(CBaseHostClass):
             icon = self.getBiggerImage(self.cm.ph.getSearchGroups(item, '''src=['"]([^'^"]+?)['"]''')[0])
             title = self.cleanHtmlStr(item)
             title = _(title.capitalize())
-            params = {'good_for_fav': True, 'category':nextCategory, 'title':title, 'url':url, 'icon':icon}
+            params = {'good_for_fav': True, 'category': nextCategory, 'title': title, 'url': url, 'icon': icon}
             self.addDir(params)
         
     def listItems(self, cItem, nextCategory):
@@ -104,12 +104,12 @@ class OkGoals(CBaseHostClass):
             desc = self.cleanHtmlStr(self.cm.ph.getSearchGroups(item, '''alt=['"]([^'^"]+?)['"]''')[0].replace('icon', ''))
             title = self.cleanHtmlStr(item)
 
-            params = {'good_for_fav': True, 'category':nextCategory, 'title':title, 'url':url, 'icon':icon, 'desc':desc}
+            params = {'good_for_fav': True, 'category': nextCategory, 'title': title, 'url': url, 'icon': icon, 'desc': desc}
             self.addDir(params)
         
         if nextPage != '':
             params = dict(cItem)
-            params.update({'title':_('Next page'), 'page':page + 1, 'url':self.getFullUrl(nextPage)})
+            params.update({'title': _('Next page'), 'page': page + 1, 'url': self.getFullUrl(nextPage)})
             self.addDir(params)
             
     def exploreItem(self, cItem):
@@ -132,7 +132,7 @@ class OkGoals(CBaseHostClass):
             
             if self.cm.isValidUrl(url): 
                 title = cItem['title']
-                params = {'good_for_fav': True, 'title':title, 'url':url}
+                params = {'good_for_fav': True, 'title': title, 'url': url}
                 self.addVideo(params)
     
     def getLinksForVideo(self, cItem):
@@ -174,7 +174,7 @@ class OkGoals(CBaseHostClass):
                                 hlsTab[idx]['name'] = '[hls] bitrate:%s height: %s' % (hlsTab[idx]['bitrate'], hlsTab[idx]['height'])
                             urlTab.extend(hlsTab)
                         else:
-                            urlTab.append({'name':name, 'url':url})
+                            urlTab.append({'name': name, 'url': url})
             except Exception:
                 printExc()
         elif videoUrl.startswith('http'):
@@ -201,7 +201,7 @@ class OkGoals(CBaseHostClass):
             url = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''href=['"]([^'^"]+?)['"]''')[0])
             title = self.cleanHtmlStr(item)
 
-            params = {'good_for_fav': True, 'category':'explore_item', 'title':title, 'url':url}
+            params = {'good_for_fav': True, 'category': 'explore_item', 'title': title, 'url': url}
             self.addDir(params)
         
     def getFavouriteData(self, cItem):
@@ -242,7 +242,7 @@ class OkGoals(CBaseHostClass):
         
     #MAIN MENU
         if name == None:
-            self.listsTab(self.MAIN_CAT_TAB, {'name':'category'})
+            self.listsTab(self.MAIN_CAT_TAB, {'name': 'category'})
         elif category == 'list_categories':
             self.listCategories(self.currItem, 'list_items')
         elif 'list_items' == category:
@@ -252,11 +252,11 @@ class OkGoals(CBaseHostClass):
     #SEARCH
         elif category in ["search", "search_next_page"]:
             cItem = dict(self.currItem)
-            cItem.update({'search_item':False, 'name':'category'}) 
+            cItem.update({'search_item': False, 'name': 'category'}) 
             self.listSearchResult(cItem, searchPattern, searchType)
     #HISTORIA SEARCH
         elif category == "search_history":
-            self.listsHistory({'name':'history', 'category': 'search'}, 'desc', _("Type: "))
+            self.listsHistory({'name': 'history', 'category': 'search'}, 'desc', _("Type: "))
         else:
             printExc()
         

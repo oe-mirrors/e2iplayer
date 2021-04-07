@@ -56,11 +56,11 @@ class TVJWORG(CBaseHostClass):
     DEFAULT_ICON = 'https://s-media-cache-ak0.pinimg.com/236x/3b/aa/32/3baa3268cdbc9dc5114bbe1ab0b00ce0.jpg'
     
     ICONS_KEYS = ["xl", "lg", "md", "sm", "xs"]
-    ICONS_TYPES = {'vertical':['pss', 'psr', 'sqr', 'sqs'], 'horizontal':['lsr', 'lss', 'wss', 'wsr', 'pnr']}
+    ICONS_TYPES = {'vertical': ['pss', 'psr', 'sqr', 'sqs'], 'horizontal': ['lsr', 'lss', 'wss', 'wsr', 'pnr']}
     
     def __init__(self):
-        CBaseHostClass.__init__(self, {'history':'filmydokumentalne.eu', 'cookie':'filmydokumentalne.eu.cookie'})
-        self.defaultParams = {'header':self.HTTP_HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
+        CBaseHostClass.__init__(self, {'history': 'filmydokumentalne.eu', 'cookie': 'filmydokumentalne.eu.cookie'})
+        self.defaultParams = {'header': self.HTTP_HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
         self.cacheCats = {}
         self.defaultLangCode = ''
         
@@ -164,7 +164,7 @@ class TVJWORG(CBaseHostClass):
                 category = item['type']
                 desc = item['description']
                 params = dict(cItem)
-                params.update({'category':category, 'key':key, 'title':title, 'icon':icon, 'desc':desc})
+                params.update({'category': category, 'key': key, 'title': title, 'icon': icon, 'desc': desc})
                 self.addDir(params)
         except Exception:
             printExc()
@@ -195,7 +195,7 @@ class TVJWORG(CBaseHostClass):
                     desc = ''
                 desc += item['description']
                 files = item['files']
-                params = {'title':title, 'icon':icon, 'desc':desc, 'files':files}
+                params = {'title': title, 'icon': icon, 'desc': desc, 'files': files}
                 if type == 'video':
                     self.addVideo(params)
                 elif type == 'audio':
@@ -232,7 +232,7 @@ class TVJWORG(CBaseHostClass):
                     desc = ''
                 desc += item['description']
                 files = item['files']
-                params = {'title':title, 'icon':icon, 'desc':desc, 'files':files}
+                params = {'title': title, 'icon': icon, 'desc': desc, 'files': files}
                 if type == 'video':
                     self.addVideo(params)
                 elif type == 'audio':
@@ -254,7 +254,7 @@ class TVJWORG(CBaseHostClass):
                 try:
                     linkVideo = item['progressiveDownloadURL']
                     linkVideo = urlparser.decorateUrl(linkVideo, {'Referer': 'http://tv.jw.org/'})
-                    urlTab.append({'name':item['label'], 'url': linkVideo, 'need_resolve':0})
+                    urlTab.append({'name': item['label'], 'url': linkVideo, 'need_resolve': 0})
                 except Exception:
                     printExc()
                 
@@ -291,7 +291,7 @@ class TVJWORG(CBaseHostClass):
         
     #MAIN MENU
         if name == None:
-            self.listCategories({'name':'category'})
+            self.listCategories({'name': 'category'})
         elif category == 'ondemand':
             self.listMedia(self.currItem)
         elif category == 'pseudostreaming':

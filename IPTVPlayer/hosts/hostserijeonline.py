@@ -47,24 +47,24 @@ def gettytul():
 class SerijeOnline(CBaseHostClass):
     
     def __init__(self):
-        CBaseHostClass.__init__(self, {'history':'serije.online', 'cookie':'serije.online.cookie'})
+        CBaseHostClass.__init__(self, {'history': 'serije.online', 'cookie': 'serije.online.cookie'})
         self.DEFAULT_ICON_URL = 'http://www.serije.online/uploads/custom-logo.jpg'
         self.USER_AGENT = 'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:40.0) Gecko/20100101 Firefox/40.0'
         self.MAIN_URL = 'http://www.serije.online/'
-        self.HTTP_HEADER = {'User-Agent': self.USER_AGENT, 'DNT':'1', 'Accept': 'text/html', 'Accept-Encoding':'gzip, deflate', 'Referer':self.getMainUrl(), 'Origin':self.getMainUrl()}
+        self.HTTP_HEADER = {'User-Agent': self.USER_AGENT, 'DNT': '1', 'Accept': 'text/html', 'Accept-Encoding': 'gzip, deflate', 'Referer': self.getMainUrl(), 'Origin': self.getMainUrl()}
         self.AJAX_HEADER = dict(self.HTTP_HEADER)
-        self.AJAX_HEADER.update({'X-Requested-With': 'XMLHttpRequest', 'Accept-Encoding':'gzip, deflate', 'Content-Type':'application/x-www-form-urlencoded; charset=UTF-8', 'Accept':'application/json, text/javascript, */*; q=0.01'})
+        self.AJAX_HEADER.update({'X-Requested-With': 'XMLHttpRequest', 'Accept-Encoding': 'gzip, deflate', 'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8', 'Accept': 'application/json, text/javascript, */*; q=0.01'})
         
-        self.MAIN_CAT_TAB = [{'category':'list_items', 'title': _('Top Videos'), 'url':self.getFullUrl('/topvideos.html')},
-                             {'category':'list_items', 'title': _('Newest Videos'), 'url':self.getFullUrl('/newvideos.html')},
-                             {'category':'list_categories', 'title': _('Categories'), 'url':self.getFullUrl('/index.html')},
-                             {'category':'search', 'title': _('Search'), 'search_item':True}, 
-                             {'category':'search_history', 'title': _('Search history')},
+        self.MAIN_CAT_TAB = [{'category': 'list_items', 'title': _('Top Videos'), 'url': self.getFullUrl('/topvideos.html')},
+                             {'category': 'list_items', 'title': _('Newest Videos'), 'url': self.getFullUrl('/newvideos.html')},
+                             {'category': 'list_categories', 'title': _('Categories'), 'url': self.getFullUrl('/index.html')},
+                             {'category': 'search', 'title': _('Search'), 'search_item': True}, 
+                             {'category': 'search_history', 'title': _('Search history')},
                             ]
         
         self.cacheLinks = {}
         self.cacheSubCategories = {}
-        self.defaultParams = {'header':self.HTTP_HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
+        self.defaultParams = {'header': self.HTTP_HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
         self.loggedIn = None
         self.login = ''
         self.password = ''
@@ -79,7 +79,7 @@ class SerijeOnline(CBaseHostClass):
                 return url
             else:
                 return urllib.parse.urljoin(baseUrl, url)
-        addParams['cloudflare_params'] = {'domain':self.up.getDomain(baseUrl), 'cookie_file':self.COOKIE_FILE, 'User-Agent':self.USER_AGENT, 'full_url_handle':_getFullUrl}
+        addParams['cloudflare_params'] = {'domain': self.up.getDomain(baseUrl), 'cookie_file': self.COOKIE_FILE, 'User-Agent': self.USER_AGENT, 'full_url_handle': _getFullUrl}
         return self.cm.getPageCFProtection(baseUrl, addParams, post_data)
         
     def listMainMenu(self, cItem, nextCategory):
@@ -118,13 +118,13 @@ class SerijeOnline(CBaseHostClass):
                 for item in tmp:
                     url = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''href=['"]([^'^"]+?)['"]''')[0])
                     title = self.cleanHtmlStr(item)
-                    subCategories.append({'title':title, 'url':url, 'cat_url':url})
+                    subCategories.append({'title': title, 'url': url, 'cat_url': url})
                 catTitle = self.cleanHtmlStr(catItem[0])
                 catUrl = self.getFullUrl(self.cm.ph.getSearchGroups(catItem[0], '''href=['"]([^'^"]+?)['"]''')[0])
-                subCategories.insert(0, {'title':_('--All--'), 'url':catUrl})
+                subCategories.insert(0, {'title': _('--All--'), 'url': catUrl})
                 self.cacheSubCategories[catUrl] = subCategories
                 params = dict(cItem)
-                params.update({'good_for_fav':False, 'category':nextCategory1, 'title':catTitle, 'url':catUrl, 'cat_url':catUrl, 'icon':cacheIcons.get(catUrl, '')})
+                params.update({'good_for_fav': False, 'category': nextCategory1, 'title': catTitle, 'url': catUrl, 'cat_url': catUrl, 'icon': cacheIcons.get(catUrl, '')})
                 self.addDir(params)
                 continue
             
@@ -133,7 +133,7 @@ class SerijeOnline(CBaseHostClass):
                 catTitle = self.cleanHtmlStr(item)
                 catUrl = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''href=['"]([^'^"]+?)['"]''')[0])
                 params = dict(cItem)
-                params.update({'good_for_fav':False, 'category':nextCategory2, 'title':catTitle, 'url':catUrl, 'cat_url':catUrl, 'icon':cacheIcons.get(catUrl, '')})
+                params.update({'good_for_fav': False, 'category': nextCategory2, 'title': catTitle, 'url': catUrl, 'cat_url': catUrl, 'icon': cacheIcons.get(catUrl, '')})
                 self.addDir(params)
         
     def listSubCategories(self, cItem, nextCategory):
@@ -141,7 +141,7 @@ class SerijeOnline(CBaseHostClass):
         
         tab = self.cacheSubCategories.get(cItem['url'], [])
         params = dict(cItem)
-        params.update({'good_for_fav':True, 'category':nextCategory})
+        params.update({'good_for_fav': True, 'category': nextCategory})
         self.listsTab(tab, params)
         
     def listSort(self, cItem, nextCategory):
@@ -159,7 +159,7 @@ class SerijeOnline(CBaseHostClass):
                 continue
             title = self.cleanHtmlStr(item)
             params = dict(cItem)
-            params.update({'good_for_fav':False, 'category':nextCategory, 'url':url, 'title':title})
+            params.update({'good_for_fav': False, 'category': nextCategory, 'url': url, 'title': title})
             self.addDir(params)
         
         if len(self.currList) < 2:
@@ -191,12 +191,12 @@ class SerijeOnline(CBaseHostClass):
                     desc.append(t)
             desc = ' | '.join(desc) + '[/br]' + self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(item, '<p', '</p>')[1])
             params = dict(cItem)
-            params.update({'good_for_fav':True, 'category':nextCategory, 'title':title, 'url':url, 'icon':icon, 'desc':desc})
+            params.update({'good_for_fav': True, 'category': nextCategory, 'title': title, 'url': url, 'icon': icon, 'desc': desc})
             self.addDir(params)
         
         if self.cm.isValidUrl(nextPage):
             params = dict(cItem)
-            params.update({'good_for_fav':False, 'title':_("Next page"), 'url':nextPage, 'page':page + 1})
+            params.update({'good_for_fav': False, 'title': _("Next page"), 'url': nextPage, 'page': page + 1})
             self.addDir(params)
         
     def exploreItem(self, cItem, nextCategory):
@@ -264,12 +264,12 @@ class SerijeOnline(CBaseHostClass):
             else:
                 title = cItem['title']
             params = dict(cItem)
-            params.update({'good_for_fav':False, 'title':title, 'desc':desc, 'url':url})
+            params.update({'good_for_fav': False, 'title': title, 'desc': desc, 'url': url})
             self.addVideo(params)
         
         if self.cm.isValidUrl(catUrl) and catUrl != cItem['url'] and catUrl != cItem.get('cat_url', ''):
             params = dict(cItem)
-            params.update({'good_for_fav':True, 'category':nextCategory, 'title':catTitle, 'url':catUrl, 'cat_url':catUrl, 'desc':''})
+            params.update({'good_for_fav': True, 'category': nextCategory, 'title': catTitle, 'url': catUrl, 'cat_url': catUrl, 'desc': ''})
             self.addDir(params)
         
     def listSearchResult(self, cItem, searchPattern, searchType):
@@ -317,7 +317,7 @@ class SerijeOnline(CBaseHostClass):
                 value = self.cm.ph.getSearchGroups(item, '''value=['"]([^'^"]+?)['"]''')[0]
                 post_data[name] = value
             
-            post_data.update({'username':self.login, 'pass':self.password})
+            post_data.update({'username': self.login, 'pass': self.password})
             
             httpParams = dict(self.defaultParams)
             httpParams['header'] = dict(httpParams['header'])
@@ -347,7 +347,7 @@ class SerijeOnline(CBaseHostClass):
         
     #MAIN MENU
         if name == None:
-            self.listMainMenu({'name':'category'}, 'list_genres')
+            self.listMainMenu({'name': 'category'}, 'list_genres')
         elif category == 'list_categories':
             self.listCategories(self.currItem, 'list_sub_categories', 'list_sort')
         elif category == 'list_sub_categories':
@@ -363,11 +363,11 @@ class SerijeOnline(CBaseHostClass):
     #SEARCH
         elif category in ["search", "search_next_page"]:
             cItem = dict(self.currItem)
-            cItem.update({'search_item':False, 'name':'category'}) 
+            cItem.update({'search_item': False, 'name': 'category'}) 
             self.listSearchResult(cItem, searchPattern, searchType)
     #HISTORIA SEARCH
         elif category == "search_history":
-            self.listsHistory({'name':'history', 'category': 'search'}, 'desc', _("Type: "))
+            self.listsHistory({'name': 'history', 'category': 'search'}, 'desc', _("Type: "))
         else:
             printExc()
         

@@ -38,29 +38,29 @@ def gettytul():
 class Dailymotion(CBaseHostClass):
 
     def __init__(self):
-        CBaseHostClass.__init__(self, {'history':'Dailymotion', 'cookie':'dailymotion.cookie'})
-        self.HTTP_HEADER = {'User-Agent':self.cm.getDefaultHeader(browser='chrome')['User-Agent'], 'X-Requested-With':'XMLHttpRequest'}
-        self.defaultParams = {'header':self.HTTP_HEADER, 'use_cookie': True, 'save_cookie': True, 'load_cookie': True, 'cookiefile': self.COOKIE_FILE}
+        CBaseHostClass.__init__(self, {'history': 'Dailymotion', 'cookie': 'dailymotion.cookie'})
+        self.HTTP_HEADER = {'User-Agent': self.cm.getDefaultHeader(browser='chrome')['User-Agent'], 'X-Requested-With': 'XMLHttpRequest'}
+        self.defaultParams = {'header': self.HTTP_HEADER, 'use_cookie': True, 'save_cookie': True, 'load_cookie': True, 'cookiefile': self.COOKIE_FILE}
         
         self.SITE_URL = 'https://www.dailymotion.com/'
         self.MAIN_URL = 'https://api.dailymotion.com/'
         self.DEFAULT_ICON_URL = 'http://static1.dmcdn.net/images/dailymotion-logo-ogtag.png'
-        self.MAIN_CAT_TAB = [{'category':'categories', 'title': _('Categories')},
-                             {'category':'search', 'title': _('Search'), 'search_item':True},
-                             {'category':'search_history', 'title': _('Search history')}]
+        self.MAIN_CAT_TAB = [{'category': 'categories', 'title': _('Categories')},
+                             {'category': 'search', 'title': _('Search'), 'search_item': True},
+                             {'category': 'search_history', 'title': _('Search history')}]
 
-        self.SORT_TAB = [{'title':_('Most viewed'), 'sort':'visited'},
-                         {'title':_('Most recent'), 'sort':'recent'},
-                         {'title':_('Most rated'), 'sort':'rated'},
-                         {'title':_('Ranking'), 'sort':'ranking'},
-                         {'title':_('Trending'), 'sort':'trending'},
-                         {'title':_('Random'), 'sort':'random'},]
+        self.SORT_TAB = [{'title': _('Most viewed'), 'sort': 'visited'},
+                         {'title': _('Most recent'), 'sort': 'recent'},
+                         {'title': _('Most rated'), 'sort': 'rated'},
+                         {'title': _('Ranking'), 'sort': 'ranking'},
+                         {'title': _('Trending'), 'sort': 'trending'},
+                         {'title': _('Random'), 'sort': 'random'}, ]
                          #{'title':_('Most relevant'), 'sort':'relevance'}
                          #recent, visited, visited-hour, visited-today, visited-week, visited-month, commented, commented-hour, commented-today, commented-week, commented-month, rated, rated-hour, rated-today, rated-week, rated-month, relevance, random, ranking, trending, old, live-audience
 
         self.filterCache = {}
-        self.apiData = {'client_type': 'androidapp', 'client_version': '4775', 'family_filter':'false'}
-        self.authData = {'client_id':'', 'client_secret':'', 'visitor_id':'', 'traffic_segment':'', 'url':'', 'auth_url':'', 'grant_type':'client_credentials', 'expires':0, 'token':''}
+        self.apiData = {'client_type': 'androidapp', 'client_version': '4775', 'family_filter': 'false'}
+        self.authData = {'client_id': '', 'client_secret': '', 'visitor_id': '', 'traffic_segment': '', 'url': '', 'auth_url': '', 'grant_type': 'client_credentials', 'expires': 0, 'token': ''}
 
     def getLocale(self):
         locale = config.plugins.iptvplayer.dailymotion_localization.value
@@ -91,7 +91,7 @@ class Dailymotion(CBaseHostClass):
     def addNextPage(self, cItem, nextPage, page):
         if nextPage:
             params = dict(cItem)
-            params.update({'title':_('Next page'), 'page':page + 1})
+            params.update({'title': _('Next page'), 'page': page + 1})
             self.addDir(params)
         
     def listCategories(self, cItem, category):
@@ -103,14 +103,14 @@ class Dailymotion(CBaseHostClass):
             return
         nextPage = False
         params = dict(cItem)
-        params.update({'title':_('All'), 'category':category})
+        params.update({'title': _('All'), 'category': category})
         self.addDir(params)
         try:
             data = json_loads(data)
             nextPage = data['has_more']
             for item in data['list']:
                 params = dict(cItem)
-                params.update({'title':item['name'], 'cat_id':item['id'], 'desc':item['description'], 'category':category})
+                params.update({'title': item['name'], 'cat_id': item['id'], 'desc': item['description'], 'category': category})
                 self.addDir(params)
         except Exception:
             printExc()
@@ -167,7 +167,7 @@ class Dailymotion(CBaseHostClass):
                     params = dict(cItem)
                     desc = str(timedelta(seconds=item[duration_key])) + ' | '
                     desc += _('views') + ': {0}'.format(item[views_key])
-                    params.update({'title':item[title_key], 'url':item[url_key], 'icon':item.get(icon_key, ''), 'desc':desc})
+                    params.update({'title': item[title_key], 'url': item[url_key], 'icon': item.get(icon_key, ''), 'desc': desc})
                     self.addVideo(params)
         except Exception:
             printExc()
@@ -197,7 +197,7 @@ class Dailymotion(CBaseHostClass):
             cj = self.cm.getCookieItems(self.COOKIE_FILE)
             self.authData['visitor_id'] = cj.get('v1st', '')
             self.authData['traffic_segment'] = cj.get('ts', '')
-            post_data = {'client_id':self.authData['client_id'], 'client_secret':self.authData['client_secret'], 'grant_type':self.authData['grant_type'], 'visitor_id':self.authData['visitor_id'], 'traffic_segment':self.authData['traffic_segment']}
+            post_data = {'client_id': self.authData['client_id'], 'client_secret': self.authData['client_secret'], 'grant_type': self.authData['grant_type'], 'visitor_id': self.authData['visitor_id'], 'traffic_segment': self.authData['traffic_segment']}
             sts, data = self.cm.getPage(self.authData['auth_url'], params, post_data)
             if not sts:
                 return ''
@@ -231,8 +231,8 @@ class Dailymotion(CBaseHostClass):
         type = cItem['f_type']
         page = cItem.get('page', 1)
 
-        limits = {type:20}
-        pages = {type:page}
+        limits = {type: 20}
+        pages = {type: page}
 
         params = self.getApiHeaders(cItem)
         post_data = '{"operationName":"SEARCH_QUERY","variables":{"query":"%s","pageVideo":%d,"pageLive":%d,"pageChannel":%d,"pageCollection":%d,"limitVideo":%d,"limitLive":%d,"limitChannel":%d,"limitCollection":%d,"uri":"/search/%s/%s"},"query":"fragment METADATA_FRAGMENT on Neon { web(uri: $uri) { author description title metadatas { attributes { name content __typename } __typename } language { codeAlpha2 __typename } country { codeAlpha2 __typename } __typename } __typename } fragment LOCALIZATION_FRAGMENT on Localization { me { id country { codeAlpha2 name __typename } __typename } __typename } query SEARCH_QUERY($query: String!, $pageVideo: Int, $pageLive: Int, $pageChannel: Int, $pageCollection: Int, $limitVideo: Int, $limitLive: Int, $limitChannel: Int, $limitCollection: Int, $uri: String!) { views { id neon { id ...METADATA_FRAGMENT __typename } __typename } localization { ...LOCALIZATION_FRAGMENT __typename } search { lives(query: $query, first: $limitLive, page: $pageLive) { pageInfo { hasNextPage nextPage __typename } edges { node { id xid title thumbURLx240: thumbnailURL(size: \\"x240\\") thumbURLx360: thumbnailURL(size: \\"x360\\") __typename } __typename } __typename } videos(query: $query, first: $limitVideo, page: $pageVideo) { pageInfo { hasNextPage nextPage __typename } edges { node { id xid title channel { id displayName __typename } duration thumbURLx240: thumbnailURL(size: \\"x240\\") thumbURLx360: thumbnailURL(size: \\"x360\\") __typename } __typename } __typename } channels(query: $query, first: $limitChannel, page: $pageChannel) { pageInfo { hasNextPage nextPage __typename } edges { node { id xid name description displayName accountType logoURL(size: \\"x60\\") __typename } __typename } __typename } playlists: collections(query: $query, first: $limitCollection, page: $pageCollection) { pageInfo { hasNextPage nextPage __typename } edges { node { id xid name channel { id displayName __typename } description thumbURLx240: thumbnailURL(size: \\"x240\\") thumbURLx480: thumbnailURL(size: \\"x480\\") stats { videos { total __typename } __typename } __typename } __typename } __typename } topics(query: $query, first: 5, page: 1) { pageInfo { hasNextPage nextPage __typename } edges { node { id xid name isFollowed __typename } __typename } __typename } __typename } } "}'
@@ -252,14 +252,14 @@ class Dailymotion(CBaseHostClass):
                     desc.append('%s: %s' % (item['channel']['__typename'], item['channel']['displayName']))
                     if item.get('description'):
                         desc.append(item['description'])
-                    params = {'good_for_fav':True, 'name':'category', 'category':'list_playlist', 'title':title, 'f_xid':item['xid'], 'icon':item['thumbURLx480'], 'desc':'[/br]'.join(desc)}
+                    params = {'good_for_fav': True, 'name': 'category', 'category': 'list_playlist', 'title': title, 'f_xid': item['xid'], 'icon': item['thumbURLx480'], 'desc': '[/br]'.join(desc)}
                     self.addDir(params)
                 elif item['__typename'] == 'Channel':
                     title = item['displayName']
                     desc = [item['accountType']]
                     if item.get('description'):
                         desc.append(item['description'])
-                    params = {'good_for_fav':True, 'name':'category', 'category':'list_channel', 'title':item['displayName'], 'f_xid':item['xid'], 'f_name':item['name'], 'icon':item['logoURL'], 'desc':'[/br]'.join(desc)}
+                    params = {'good_for_fav': True, 'name': 'category', 'category': 'list_channel', 'title': item['displayName'], 'f_xid': item['xid'], 'f_name': item['name'], 'icon': item['logoURL'], 'desc': '[/br]'.join(desc)}
                     self.addDir(params)
             self.addNextPage(cItem, data['pageInfo']['hasNextPage'], data['pageInfo']['nextPage'])
         except Exception:
@@ -296,7 +296,7 @@ class Dailymotion(CBaseHostClass):
             item = json_loads(fav_data)
         except Exception:
             printExc(fav_data)
-            item = {'url':fav_data}
+            item = {'url': fav_data}
         return self.getLinksForVideo(item)
 
     def handleService(self, index, refresh=0, searchPattern='', searchType=''):
@@ -311,7 +311,7 @@ class Dailymotion(CBaseHostClass):
         
     #MAIN MENU
         if name == None:
-            self.listsTab(self.MAIN_CAT_TAB, {'name':'category'})
+            self.listsTab(self.MAIN_CAT_TAB, {'name': 'category'})
     #CATEGORIES
         elif category == 'categories':
             self.listCategories(self.currItem, 'category')
@@ -332,11 +332,11 @@ class Dailymotion(CBaseHostClass):
     #SEARCH
         elif category in ["search", "search_next_page"]:
             cItem = dict(self.currItem)
-            cItem.update({'search_item':False, 'name':'category'}) 
+            cItem.update({'search_item': False, 'name': 'category'}) 
             self.listSearchResult(cItem, searchPattern, searchType)
     #HISTORIA SEARCH
         elif category == "search_history":
-            self.listsHistory({'name':'history', 'category': 'search'}, 'desc', _("Type: "))
+            self.listsHistory({'name': 'history', 'category': 'search'}, 'desc', _("Type: "))
         else:
             printExc()
         

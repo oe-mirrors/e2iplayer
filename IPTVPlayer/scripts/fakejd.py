@@ -31,7 +31,7 @@ LAST_HTTP_ERROR_CODE = -1
 LAST_HTTP_ERROR_DATA = ''
 
 def updateStatus(type, data, code=None):
-    obj = {'type':type, 'data':data, 'code':code}
+    obj = {'type': type, 'data': data, 'code': code}
     sys.stderr.write('\n%s\n' % json.dumps(obj).encode('utf-8'))
 
 DEBUGE = False 
@@ -228,7 +228,7 @@ class Myjdapi:
         self.update_request_id()
         self._devices = response["list"]
 
-    def request_api(self, path, http_method="GET",params=None, action=None):
+    def request_api(self, path, http_method="GET", params=None, action=None):
         data = None
         if not self.is_connected() and path != "/my/connect":
             raise MYJDException
@@ -256,7 +256,7 @@ class Myjdapi:
                     params_request += [json.dumps(param)]
                 else:
                     params_request += [param]
-            params_request = {"apiVer": self._api_version, "url": path, "params":params_request, "rid":self._request_id}
+            params_request = {"apiVer": self._api_version, "url": path, "params": params_request, "rid": self._request_id}
             data = json.dumps(params_request).replace('"null"', "null").replace("'null'", "null")
             encrypted_data = self._encrypt(self._device_encryption_token, data)
             if action is not None:
@@ -522,7 +522,7 @@ if __name__ == "__main__":
         if True:
             threads = [None, None, None] #None, None, None
             for i in range(len(threads)):
-                threads[i] = threading.Thread(target=PoolConnection, name='PoolConnection %d' % i, kwargs={'params':parameters})
+                threads[i] = threading.Thread(target=PoolConnection, name='PoolConnection %d' % i, kwargs={'params': parameters})
                 threads[i].daemon = True 
                 threads[i].start()
         

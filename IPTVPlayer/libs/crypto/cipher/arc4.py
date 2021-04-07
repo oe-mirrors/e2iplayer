@@ -20,7 +20,7 @@
 class ARC4:
     """ ARC4 Stream Cipher Algorithm
     """
-    def __init__(self,key=None):
+    def __init__(self, key=None):
         """ key -> octet string for key """
         self.name = 'ARC4'
         self.strength = None # depends on keySize

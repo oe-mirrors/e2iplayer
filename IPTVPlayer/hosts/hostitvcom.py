@@ -39,24 +39,24 @@ def gettytul():
 class ITV(CBaseHostClass):
     
     def __init__(self):
-        CBaseHostClass.__init__(self, {'history':'itv.com', 'cookie':'itv.com.cookie'})
+        CBaseHostClass.__init__(self, {'history': 'itv.com', 'cookie': 'itv.com.cookie'})
         self.DEFAULT_ICON_URL = 'https://upload.wikimedia.org/wikipedia/en/thumb/9/92/ITV_logo_2013.svg/800px-ITV_logo_2013.svg.png'
         self.USER_AGENT = 'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:40.0) Gecko/20100101 Firefox/40.0'
         self.MOBILE_USER_AGENT = 'Mozilla/5.0 (iPhone; CPU iPhone OS 6_0 like Mac OS X) AppleWebKit/536.26 (KHTML, like Gecko) Version/6.0 Mobile/10A5376e Safari/8536.25'
         self.MAIN_URL = 'https://www.itv.com/'
-        self.HEADER = {'User-Agent': self.USER_AGENT, 'DNT':'1', 'Accept': 'text/html', 'Accept-Encoding':'gzip, deflate', 'Referer':self.getMainUrl(), 'Origin':self.getMainUrl()}
+        self.HEADER = {'User-Agent': self.USER_AGENT, 'DNT': '1', 'Accept': 'text/html', 'Accept-Encoding': 'gzip, deflate', 'Referer': self.getMainUrl(), 'Origin': self.getMainUrl()}
         self.AJAX_HEADER = dict(self.HEADER)
-        self.AJAX_HEADER.update({'X-Requested-With': 'XMLHttpRequest', 'Accept-Encoding':'gzip, deflate', 'Content-Type':'application/x-www-form-urlencoded; charset=UTF-8', 'Accept':'application/json, text/javascript, */*; q=0.01'})
+        self.AJAX_HEADER.update({'X-Requested-With': 'XMLHttpRequest', 'Accept-Encoding': 'gzip, deflate', 'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8', 'Accept': 'application/json, text/javascript, */*; q=0.01'})
         
         self.cacheShows = {}
         self.cacheShowsKeys = []
         self.cacheLive = {}
-        self.defaultParams = {'header':self.HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
+        self.defaultParams = {'header': self.HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
         
         self.MAIN_CAT_TAB = [
-                             {'category':'channels', 'title': _('Channels'), 'url':self.getFullUrl('/hub/itv')},
-                             {'category':'shows', 'title': _('Shows'), 'url':self.getFullUrl('/hub/shows')},
-                             {'category':'categories', 'title': _('Categories'), 'url':self.getFullUrl('/hub/categories')},
+                             {'category': 'channels', 'title': _('Channels'), 'url': self.getFullUrl('/hub/itv')},
+                             {'category': 'shows', 'title': _('Shows'), 'url': self.getFullUrl('/hub/shows')},
+                             {'category': 'categories', 'title': _('Categories'), 'url': self.getFullUrl('/hub/categories')},
                             ]
         self.forwardedIP = ''
         
@@ -70,7 +70,7 @@ class ITV(CBaseHostClass):
                 return url
             else:
                 return urllib.parse.urljoin(baseUrl, url)
-        addParams['cloudflare_params'] = {'domain':self.up.getDomain(baseUrl), 'cookie_file':self.COOKIE_FILE, 'User-Agent':self.USER_AGENT, 'full_url_handle':_getFullUrl}
+        addParams['cloudflare_params'] = {'domain': self.up.getDomain(baseUrl), 'cookie_file': self.COOKIE_FILE, 'User-Agent': self.USER_AGENT, 'full_url_handle': _getFullUrl}
         return self.cm.getPageCFProtection(baseUrl, addParams, post_data)
         
     def getFullIconUrl(self, icon):
@@ -107,7 +107,7 @@ class ITV(CBaseHostClass):
                 continue
             title = self.cleanHtmlStr(item.split('<span', 1)[0])
             params = dict(cItem)
-            params.update({'category':nextCategory, 'title':title, 'url':url})
+            params.update({'category': nextCategory, 'title': title, 'url': url})
             self.addDir(params)
             
     def listShowsABC(self, cItem, nextCategory):
@@ -120,7 +120,7 @@ class ITV(CBaseHostClass):
             return
         
         params = dict(cItem)
-        params.update({'category':nextCategory, 'title':_('--All--')})
+        params.update({'category': nextCategory, 'title': _('--All--')})
         self.addDir(params)
         
         data = self.cm.ph.getDataBeetwenNodes(data, ('<ul', '>', 'az-list'), ('</section', '>'), False)[1] 
@@ -138,9 +138,9 @@ class ITV(CBaseHostClass):
                 icon = self.getFullIconUrl(self.cm.ph.getSearchGroups(it[0], '''src=['"]([^'^"]+?)['"]''')[0])
                 title = self.cleanHtmlStr(it[0])
                 desc = self.cleanHtmlStr(it[1])
-                self.cacheShows[letter].append({'title':title, 'url':url, 'icon':icon, 'desc':desc})
+                self.cacheShows[letter].append({'title': title, 'url': url, 'icon': icon, 'desc': desc})
             params = dict(cItem)
-            params.update({'category':nextCategory, 'title':letter, 'f_letter':letter})
+            params.update({'category': nextCategory, 'title': letter, 'f_letter': letter})
             self.addDir(params)
             
     def listShowsByLetter(self, cItem, nextCategory):
@@ -177,11 +177,11 @@ class ITV(CBaseHostClass):
             desc = ' | '.join(descTab) + '[/br]' + desc
             
             params = dict(cItem)
-            params.update({'title':title, 'desc':desc})
+            params.update({'title': title, 'desc': desc})
             self.addVideo(params)
         elif addLive:
             params = dict(cItem)
-            params.update({'is_live':True})
+            params.update({'is_live': True})
             self.addVideo(params)
         
         tmp = self.cm.ph.getAllItemsBeetwenNodes(data, ('<section', '>', 'episode-list'), ('</section', '>'))
@@ -196,7 +196,7 @@ class ITV(CBaseHostClass):
             else:
                 title = sTtile
             if title != '':
-                self.addMarker({'title':title})
+                self.addMarker({'title': title})
             
             for item in section:
                 item = item.split('</h3>', 1)
@@ -213,7 +213,7 @@ class ITV(CBaseHostClass):
                 desc = self.cleanHtmlStr(item[-1])
                 
                 params = dict(cItem)
-                params.update({'title':title, 'url':url, 'icon':icon, 'desc':desc})
+                params.update({'title': title, 'url': url, 'icon': icon, 'desc': desc})
                 tmp = url.split('/')
                 if 'Series' in sTtile or 'pisodes' in sTtile:
                     self.addVideo(params)
@@ -240,7 +240,7 @@ class ITV(CBaseHostClass):
                     printExc()
             videoUrl = self.cacheLive.get(cItem['url'].split('/')[-1], '')
             if forwardedIP != '':
-                videoUrl = strwithmeta(videoUrl, {'X-Forwarded-For':forwardedIP})
+                videoUrl = strwithmeta(videoUrl, {'X-Forwarded-For': forwardedIP})
             retTab = getDirectM3U8Playlist(videoUrl, checkContent=True)
         else:
             params = dict(self.defaultParams)
@@ -256,9 +256,9 @@ class ITV(CBaseHostClass):
             url = self.cm.ph.getSearchGroups(data, '''data\-video\-id=['"]([^'^"]+?)['"]''')[0]
             hmac = self.cm.ph.getSearchGroups(data, '''data\-video\-hmac=['"]([^'^"]+?)['"]''')[0]
             
-            params['header'].update({'Content-Type':'application/json', 'Accept':'application/vnd.itv.vod.playlist.v2+json', 'Origin':self.getMainUrl(), 'Referer':cItem['url'], 'hmac':hmac})
+            params['header'].update({'Content-Type': 'application/json', 'Accept': 'application/vnd.itv.vod.playlist.v2+json', 'Origin': self.getMainUrl(), 'Referer': cItem['url'], 'hmac': hmac})
             params['raw_post_data'] = True
-            post_data = {"user":{"itvUserId":"","entitlements":[],"token":""},"device":{"manufacturer":"Apple","model":"iPhone","os":{"name":"iPad OS","version":"9.3","type":"ios"}},"client":{"version":"4.1","id":"browser"},"variantAvailability":{"featureset":{"min":["hls", "aes"],"max":["hls", "aes"]},"platformTag":"mobile"}}
+            post_data = {"user": {"itvUserId": "", "entitlements": [], "token": ""}, "device": {"manufacturer": "Apple", "model": "iPhone", "os": {"name": "iPad OS", "version": "9.3", "type": "ios"}}, "client": {"version": "4.1", "id": "browser"}, "variantAvailability": {"featureset": {"min": ["hls", "aes"], "max": ["hls", "aes"]}, "platformTag": "mobile"}}
             try:
                 sts, data = self.getPage(url, params, json.dumps(post_data))
                 if not sts:
@@ -295,7 +295,7 @@ class ITV(CBaseHostClass):
         
     #MAIN MENU
         if name == None:
-            self.listMainMenu({'name':'category'}, 'list_genres')
+            self.listMainMenu({'name': 'category'}, 'list_genres')
         elif category == 'channels':
             self.listSubCategory(self.currItem, 'explore_channel')
         elif category == 'categories':

@@ -64,7 +64,7 @@ class IPTVFileHost:
                             groupTitle, titleInGroup = self._getGroup(fullTitle)
                             if groupTitle not in self.groups:
                                 self.groups.append(groupTitle)
-                            params = {'full_title':fullTitle, 'url':url, 'icon':icon, 'desc':desc, 'group':groupTitle, 'title_in_group':titleInGroup}
+                            params = {'full_title': fullTitle, 'url': url, 'icon': icon, 'desc': desc, 'group': groupTitle, 'title_in_group': titleInGroup}
                             params.update(addItemParams)
                             self.items.append(params)
                             continue

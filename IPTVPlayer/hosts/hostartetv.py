@@ -25,15 +25,15 @@ def gettytul():
 class ArteTV(CBaseHostClass):
     
     def __init__(self):
-        CBaseHostClass.__init__(self, {'history':'arte.tv', 'cookie':'arte.tv.cookie'})
+        CBaseHostClass.__init__(self, {'history': 'arte.tv', 'cookie': 'arte.tv.cookie'})
         self.USER_AGENT = 'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:40.0) Gecko/20100101 Firefox/40.0'
         self.MAIN_URL = 'https://www.arte.tv/'
         self.DEFAULT_ICON_URL = 'https://i.pinimg.com/originals/3c/e6/54/3ce6543cf583480fa6d0e233384f336e.jpg'
-        self.HTTP_HEADER = {'User-Agent': self.USER_AGENT, 'DNT':'1', 'Accept': 'text/html', 'Accept-Encoding':'gzip, deflate', 'Referer':self.getMainUrl(), 'Origin':self.getMainUrl()}
+        self.HTTP_HEADER = {'User-Agent': self.USER_AGENT, 'DNT': '1', 'Accept': 'text/html', 'Accept-Encoding': 'gzip, deflate', 'Referer': self.getMainUrl(), 'Origin': self.getMainUrl()}
         self.AJAX_HEADER = dict(self.HTTP_HEADER)
-        self.AJAX_HEADER.update({'X-Requested-With': 'XMLHttpRequest', 'Accept-Encoding':'gzip, deflate', 'Content-Type':'application/x-www-form-urlencoded; charset=UTF-8', 'Accept':'application/json, text/javascript, */*; q=0.01'})
+        self.AJAX_HEADER.update({'X-Requested-With': 'XMLHttpRequest', 'Accept-Encoding': 'gzip, deflate', 'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8', 'Accept': 'application/json, text/javascript, */*; q=0.01'})
         
-        self.defaultParams = {'header':self.HTTP_HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
+        self.defaultParams = {'header': self.HTTP_HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
         
     def getPage(self, baseUrl, addParams={}, post_data=None):
         if addParams == {}:
@@ -59,11 +59,11 @@ class ArteTV(CBaseHostClass):
             lang = url.split('/')[3]
             printDBG("+++> lang[%s] title[%s]" % (lang, title))
             params = dict(cItem)
-            params.update({'good_for_fav':False, 'category':nextCategory, 'title':title, 'url':url, 'f_lang':lang})
+            params.update({'good_for_fav': False, 'category': nextCategory, 'title': title, 'url': url, 'f_lang': lang})
             self.addDir(params)
             
-        MAIN_CAT_TAB = [{'category':'search', 'title': _('Search'), 'search_item':True}, 
-                        {'category':'search_history', 'title': _('Search history')},]
+        MAIN_CAT_TAB = [{'category': 'search', 'title': _('Search'), 'search_item': True}, 
+                        {'category': 'search_history', 'title': _('Search history')}, ]
         
         self.listsTab(MAIN_CAT_TAB, cItem)
         
@@ -80,11 +80,11 @@ class ArteTV(CBaseHostClass):
             if url != '':
                 title = self.cleanHtmlStr(tmp)
                 params = dict(cItem)
-                params.update({'good_for_fav':True, 'title':title, 'url':url})
+                params.update({'good_for_fav': True, 'title': title, 'url': url})
                 self.addVideo(params)
         
         params = dict(cItem)
-        params.update({'good_for_fav':False, 'category':nextCategory, 'title':_('Main'), 'url':cItem['url']})
+        params.update({'good_for_fav': False, 'category': nextCategory, 'title': _('Main'), 'url': cItem['url']})
         self.addDir(params)
         
         tmp = self.cm.ph.getDataBeetwenNodes(data, ('<a', '>', '/search/'), ('</a', '>'))[1]
@@ -99,7 +99,7 @@ class ArteTV(CBaseHostClass):
                 url = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''\shref=['"]([^'^"]+?)['"]''')[0])
                 title = self.cleanHtmlStr(item)
                 params = dict(cItem)
-                params.update({'good_for_fav':False, 'category':nextCategory, 'title':title, 'url':url})
+                params.update({'good_for_fav': False, 'category': nextCategory, 'title': title, 'url': url})
                 self.addDir(params)
             
             data = self.cm.ph.getDataBeetwenNodes(data, ('<nav', '>', 'navigation'), ('</nav', '>'))[1]
@@ -110,7 +110,7 @@ class ArteTV(CBaseHostClass):
                     continue
                 title = self.cleanHtmlStr(item)
                 params = dict(cItem)
-                params.update({'good_for_fav':False, 'category':nextCategory, 'title':title, 'url':self.getFullUrl(url)})
+                params.update({'good_for_fav': False, 'category': nextCategory, 'title': title, 'url': self.getFullUrl(url)})
                 self.addDir(params)
         
     def listItems(self, cItem, nextCategory):
@@ -171,7 +171,7 @@ class ArteTV(CBaseHostClass):
                         if sectionTitle == '':
                             sectionTitle = sectionUrl.split('/')[-2].replace('-', ' ').upper()
                         params = dict(baseParams)
-                        params.update({'good_for_fav':True, 'title':sectionTitle, 'url':sectionUrl})
+                        params.update({'good_for_fav': True, 'title': sectionTitle, 'url': sectionUrl})
                         self.addDir(params)
                     idx += 2
                     sectionTitle = ''
@@ -200,7 +200,7 @@ class ArteTV(CBaseHostClass):
                     title = url.split('/')[-2].replace('-', ' ').upper()
                 desc = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(item, '<p', '</p>')[1])
                 icon = iconsMap.get(url, icon)
-                params = {'title':title, 'url':url, 'icon':icon, 'desc':desc}
+                params = {'title': title, 'url': url, 'icon': icon, 'desc': desc}
                 if 'next-playlist' in item:
                     params['type'] = 'dir_2'
                 elif ('next-collection' in item or 'reportage/' in tmp[idx] or '/RC-' in url) and '_duration' not in item:
@@ -215,7 +215,7 @@ class ArteTV(CBaseHostClass):
             
             if sectionTitle != '':
                 params = dict(baseParams)
-                params.update({'good_for_fav':False, 'category':nextCategory, 'title':sectionTitle, 'items_tab':itemsTab})
+                params.update({'good_for_fav': False, 'category': nextCategory, 'title': sectionTitle, 'items_tab': itemsTab})
                 self.addDir(params)
             else:
                 nextPage = True
@@ -229,7 +229,7 @@ class ArteTV(CBaseHostClass):
         if nextPage and len(self.currList):
             if '/search/' in baseUrl and '"hasNextPage":true' in data:
                 params = dict(cItem)
-                params.update({'good_for_fav':False, 'title':_("Next page"), 'page':page + 1})
+                params.update({'good_for_fav': False, 'title': _("Next page"), 'page': page + 1})
                 self.addDir(params)
             else:
                 try:
@@ -256,14 +256,14 @@ class ArteTV(CBaseHostClass):
                             #url = self.getFullUrl('/guide/api/api/zones/%s/%s/%s?limit=20' % (lang, web, code))\
                             url = self.getFullUrl('/guide/api/api/zones/%s/%s?limit=20' % (lang, code))
                         params = dict(cItem)
-                        params.update({'good_for_fav':False, 'category':'list_json_items', 'title':_("Next page"), 'page':page + 1, 'url':url})
+                        params.update({'good_for_fav': False, 'category': 'list_json_items', 'title': _("Next page"), 'page': page + 1, 'url': url})
                         self.addDir(params)
                     elif 'videos' in jsonData and jsonData['videos'] != None and len(self.currList) < jsonData['videos']['total']:
                         lang = jsonData['videos']['locale']
                         code = jsonData['videos']['type']
                         url = self.getFullUrl('/guide/api/api/videos/%s/%s/' % (lang, code))
                         params = dict(cItem)
-                        params.update({'good_for_fav':False, 'category':'list_json_items', 'title':_("Next page"), 'page':page + 1, 'url':url})
+                        params.update({'good_for_fav': False, 'category': 'list_json_items', 'title': _("Next page"), 'page': page + 1, 'url': url})
                         self.addDir(params)
                 except Exception:
                     printExc()
@@ -321,7 +321,7 @@ class ArteTV(CBaseHostClass):
                 if None != item.get('description', None):
                     desc.append(self.cleanHtmlStr(str(item['description'])))
                 params = dict(cItem)
-                params.update({'good_for_fav':True, 'title':title, 'url':url, 'icon':icon, 'desc':'[/br]'.join(desc)})
+                params.update({'good_for_fav': True, 'title': title, 'url': url, 'icon': icon, 'desc': '[/br]'.join(desc)})
                 if item.get('duration', 0) > 0:
                     self.addVideo(params)
                 else:
@@ -330,7 +330,7 @@ class ArteTV(CBaseHostClass):
                 
             if len(self.currList) and (('zone' == type and '://' in data['nextPage']) or ('video' == type and data['meta']['videos']['page'] < data['meta']['videos']['pages'])):
                 params = dict(cItem)
-                params.update({'good_for_fav':False, 'title':_("Next page"), 'page':page + 1})
+                params.update({'good_for_fav': False, 'title': _("Next page"), 'page': page + 1})
                 self.addDir(params)
         except Exception:
             printExc()
@@ -375,7 +375,7 @@ class ArteTV(CBaseHostClass):
                 desc = [self.cleanHtmlStr(item.get('originalTitle', ''))]
                 desc.append('%s min' % int(round(item['durationSeconds'] / 60.0)))
                 params = dict(cItem)
-                params.update({'good_for_fav':True, 'title':title, 'url':url, 'icon':icon, 'desc':' | '.join(desc)})
+                params.update({'good_for_fav': True, 'title': title, 'url': url, 'icon': icon, 'desc': ' | '.join(desc)})
                 self.addVideo(params)
         except Exception:
             printExc()
@@ -385,7 +385,7 @@ class ArteTV(CBaseHostClass):
         
         url = self.getFullUrl('/%s/search/?q=%s' % (searchType, urllib.parse.quote_plus(searchPattern)))
         params = dict(cItem)
-        params.update({'url':url, 'category':'list_items', 'f_lang':searchType})
+        params.update({'url': url, 'category': 'list_items', 'f_lang': searchType})
         self.listItems(params, 'list_section_items')
             
     def getLinksForVideo(self, cItem):
@@ -412,7 +412,7 @@ class ArteTV(CBaseHostClass):
 
         linksTab = []
         try:
-            langsMap = {'FR':'fr', 'ESP':'es', 'DE':'de', 'POL':'pl', 'ANG':'en'}
+            langsMap = {'FR': 'fr', 'ESP': 'es', 'DE': 'de', 'POL': 'pl', 'ANG': 'en'}
             self.cacheLinks = {}
             cacheLabels = {}
             
@@ -428,18 +428,18 @@ class ArteTV(CBaseHostClass):
                 if lang not in self.cacheLinks:
                     self.cacheLinks[lang] = []
                     cacheLabels[lang] = item['versionLibelle']
-                self.cacheLinks[lang].append({'name':name, 'url':item['url'], 'bitrate':item['bitrate'], 'type':item['mediaType'], 'quality':item['quality']})
+                self.cacheLinks[lang].append({'name': name, 'url': item['url'], 'bitrate': item['bitrate'], 'type': item['mediaType'], 'quality': item['quality']})
             
             currLang = cItem.get('f_lang', '')
             printDBG("+++> lang[%s]" % currLang)
             
             if currLang in self.cacheLinks:
-                linksTab.append({'name':cacheLabels.get(currLang, currLang), 'url':'https://|' + currLang, 'need_resolve':1})
+                linksTab.append({'name': cacheLabels.get(currLang, currLang), 'url': 'https://|' + currLang, 'need_resolve': 1})
             
             for lang in self.cacheLinks:
                 if lang == currLang:
                     continue
-                linksTab.append({'name':cacheLabels.get(lang, lang), 'url':'https://|' + lang, 'need_resolve':1})
+                linksTab.append({'name': cacheLabels.get(lang, lang), 'url': 'https://|' + lang, 'need_resolve': 1})
             
         except Exception:
             printExc()
@@ -479,7 +479,7 @@ class ArteTV(CBaseHostClass):
         
     #MAIN MENU
         if name == None:
-            self.listMainMenu({'name':'category'}, 'list_lang')
+            self.listMainMenu({'name': 'category'}, 'list_lang')
         elif category == 'list_lang':
             self.listLang(self.currItem, 'list_items')
         elif category == 'list_items':
@@ -493,11 +493,11 @@ class ArteTV(CBaseHostClass):
     #SEARCH
         elif category in ["search", "search_next_page"]:
             cItem = dict(self.currItem)
-            cItem.update({'search_item':False, 'name':'category'}) 
+            cItem.update({'search_item': False, 'name': 'category'}) 
             self.listSearchResult(cItem, searchPattern, searchType)
     #HISTORIA SEARCH
         elif category == "search_history":
-            self.listsHistory({'name':'history', 'category': 'search'}, 'desc', _("Type: "))
+            self.listsHistory({'name': 'history', 'category': 'search'}, 'desc', _("Type: "))
         else:
             printExc()
         

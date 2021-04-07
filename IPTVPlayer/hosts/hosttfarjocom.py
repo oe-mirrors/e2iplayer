@@ -26,16 +26,16 @@ def gettytul():
 class TfarjoCom(CBaseHostClass):
     
     def __init__(self):
-        CBaseHostClass.__init__(self, {'history':'tfarjo.com', 'cookie':'tfarjo.com.cookie'})
+        CBaseHostClass.__init__(self, {'history': 'tfarjo.com', 'cookie': 'tfarjo.com.cookie'})
         self.USER_AGENT = 'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:40.0) Gecko/20100101 Firefox/40.0'
         self.MAIN_URL = 'https://www1.tfarjo.ws/'
         self.DEFAULT_ICON_URL = 'https://www1.tfarjo.ws/assets/theme/img/tfarjo-logo.png'
-        self.HTTP_HEADER = {'User-Agent': self.USER_AGENT, 'DNT':'1', 'Accept': 'text/html', 'Accept-Encoding':'gzip, deflate', 'Referer':self.getMainUrl(), 'Origin':self.getMainUrl()}
+        self.HTTP_HEADER = {'User-Agent': self.USER_AGENT, 'DNT': '1', 'Accept': 'text/html', 'Accept-Encoding': 'gzip, deflate', 'Referer': self.getMainUrl(), 'Origin': self.getMainUrl()}
         self.AJAX_HEADER = dict(self.HTTP_HEADER)
-        self.AJAX_HEADER.update({'X-Requested-With': 'XMLHttpRequest', 'Accept-Encoding':'gzip, deflate', 'Content-Type':'application/x-www-form-urlencoded; charset=UTF-8', 'Accept':'application/json, text/javascript, */*; q=0.01'})
+        self.AJAX_HEADER.update({'X-Requested-With': 'XMLHttpRequest', 'Accept-Encoding': 'gzip, deflate', 'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8', 'Accept': 'application/json, text/javascript, */*; q=0.01'})
         
         self.cacheLinks = {}
-        self.defaultParams = {'header':self.HTTP_HEADER, 'with_metadata':True, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
+        self.defaultParams = {'header': self.HTTP_HEADER, 'with_metadata': True, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
         
         self.cacheSeriesLetter = []
         self.cacheSetiesByLetter = {}
@@ -47,7 +47,7 @@ class TfarjoCom(CBaseHostClass):
             addParams = dict(self.defaultParams)
         origBaseUrl = baseUrl
         baseUrl = self.cm.iriToUri(baseUrl)
-        addParams['cloudflare_params'] = {'cookie_file':self.COOKIE_FILE, 'User-Agent':self.USER_AGENT}
+        addParams['cloudflare_params'] = {'cookie_file': self.COOKIE_FILE, 'User-Agent': self.USER_AGENT}
         return self.cm.getPageCFProtection(baseUrl, addParams, post_data)
         
     def setMainUrl(self, url):
@@ -59,7 +59,7 @@ class TfarjoCom(CBaseHostClass):
         if url == '':
             return ''
         cookieHeader = self.cm.getCookieHeader(self.COOKIE_FILE, ['PHPSESSID', 'cf_clearance'])
-        return strwithmeta(url, {'Cookie':cookieHeader, 'User-Agent':self.USER_AGENT})
+        return strwithmeta(url, {'Cookie': cookieHeader, 'User-Agent': self.USER_AGENT})
     
     def getDefaulIcon(self, cItem=None):
         return self.getFullIconUrl(self.DEFAULT_ICON_URL)
@@ -71,10 +71,10 @@ class TfarjoCom(CBaseHostClass):
             return
         
         self.setMainUrl(data.meta['url'])
-        MAIN_CAT_TAB = [{'category':'movies', 'title': 'Films', 'url':self.getFullUrl('/films')},
-                        {'category':'series', 'title': 'Series', 'url':self.getFullUrl('/series')},
-                        {'category':'search', 'title': _('Search'), 'search_item':True}, 
-                        {'category':'search_history', 'title': _('Search history')},]
+        MAIN_CAT_TAB = [{'category': 'movies', 'title': 'Films', 'url': self.getFullUrl('/films')},
+                        {'category': 'series', 'title': 'Series', 'url': self.getFullUrl('/series')},
+                        {'category': 'search', 'title': _('Search'), 'search_item': True}, 
+                        {'category': 'search_history', 'title': _('Search history')}, ]
         self.listsTab(MAIN_CAT_TAB, cItem)
     
     def listMovies(self, cItem, nextCategory1, nextCategory2):
@@ -85,7 +85,7 @@ class TfarjoCom(CBaseHostClass):
         self.setMainUrl(data.meta['url'])
         
         params = dict(cItem)
-        params.update({'category':nextCategory2, 'title':_('--All--')})
+        params.update({'category': nextCategory2, 'title': _('--All--')})
         self.addDir(params)
         
         data = self.cm.ph.getDataBeetwenNodes(data, ('<div', '>', 'buttons_filtre'), ('<div', '>', 'row'))[1]
@@ -101,11 +101,11 @@ class TfarjoCom(CBaseHostClass):
                 title = self.cleanHtmlStr(item)
                 if title == '':
                     continue
-                params = {'category':nextCategory2, 'title':title, 'url':url}
+                params = {'category': nextCategory2, 'title': title, 'url': url}
                 subItems.append(params)
             
             if len(subItems):
-                self.addDir({'category':nextCategory1, 'title':fTitle, 'sub_items':subItems})
+                self.addDir({'category': nextCategory1, 'title': fTitle, 'sub_items': subItems})
                 
     def listSeries(self, cItem, nextCategory):
         printDBG("TfarjoCom.listSeries [%s]" % cItem)
@@ -115,7 +115,7 @@ class TfarjoCom(CBaseHostClass):
         self.setMainUrl(data.meta['url'])
         
         params = dict(cItem)
-        params.update({'category':nextCategory, 'title':_('--All--')})
+        params.update({'category': nextCategory, 'title': _('--All--')})
         self.addDir(params)
         
         tmp = self.cm.ph.getDataBeetwenNodes(data, ('<h4', '</h4>', 'Voir Séries'), ('<li', '>', 'genre'))[1]
@@ -126,14 +126,14 @@ class TfarjoCom(CBaseHostClass):
             if title == '':
                 continue
             params = dict(cItem)
-            params.update({'category':nextCategory, 'title':title, 'url':url})
+            params.update({'category': nextCategory, 'title': title, 'url': url})
             self.addDir(params)
         
     def listSubItems(self, cItem):
         printDBG("TfarjoCom.listSubItems")
         subList = cItem['sub_items']
         for item in subList:
-            params = {'name':'category', 'type':'category'}
+            params = {'name': 'category', 'type': 'category'}
             params.update(item)
             if item.get('type', 'category') == 'category':
                 self.addDir(params)
@@ -168,12 +168,12 @@ class TfarjoCom(CBaseHostClass):
                 t = self.cleanHtmlStr(t)
                 if t != '':
                     desc.append(t)
-            params = {'good_for_fav':True, 'priv_has_art':True, 'category':nextCategory, 'url':url, 'title':title, 'desc':' | '.join(desc), 'icon':icon}
+            params = {'good_for_fav': True, 'priv_has_art': True, 'category': nextCategory, 'url': url, 'title': title, 'desc': ' | '.join(desc), 'icon': icon}
             self.addDir(params)
         
         if nextPage != '':
             params = dict(cItem)
-            params.update({'title':_('Next page'), 'url':nextPage, 'page':page + 1})
+            params.update({'title': _('Next page'), 'url': nextPage, 'page': page + 1})
             self.addDir(params)
     
     def listSearchResult(self, cItem, searchPattern, searchType):
@@ -194,7 +194,7 @@ class TfarjoCom(CBaseHostClass):
             name = self.cm.ph.getSearchGroups(item, '''name=['"]([^'^"]+?)['"]''')[0]
             value = self.cm.ph.getSearchGroups(item, '''value=['"]([^'^"]+?)['"]''')[0]
             post_data[name] = value
-        post_data.update({'search':searchPattern, 'view':'list'}) 
+        post_data.update({'search': searchPattern, 'view': 'list'}) 
         
         paramsUrl = dict(self.defaultParams)
         paramsUrl['header'] = dict(self.AJAX_HEADER)
@@ -213,7 +213,7 @@ class TfarjoCom(CBaseHostClass):
                 url = self.getFullUrl(item['url'])
                 icon = self.getFullIconUrl(item.get('avatar', ''))
                 title = '%s %s' % (item['name'], item['year'])
-                params = {'good_for_fav':True, 'priv_has_art':True, 'category':'explore_item', 'url':url, 'title':title, 'desc':'', 'icon':icon}
+                params = {'good_for_fav': True, 'priv_has_art': True, 'category': 'explore_item', 'url': url, 'title': title, 'desc': '', 'icon': icon}
                 self.addDir(params)
         except Exception:
             printExc()
@@ -244,7 +244,7 @@ class TfarjoCom(CBaseHostClass):
         if '/film/' in cUrl:
             if '"players' in data or "'players" in data:
                 params = dict(cItem)
-                params.update({'priv_has_art':True})
+                params.update({'priv_has_art': True})
                 self.addVideo(params)
         else:
             data = self.cm.ph.getAllItemsBeetwenNodes(data, ('<div', '>', 'panel-heading'), ('<div', '>', 'row'))
@@ -257,18 +257,18 @@ class TfarjoCom(CBaseHostClass):
                     url = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''href=['"]([^"^']+?)['"]''')[0])
                     title = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(item, '<a', '</a>')[1])
                     desc = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(item, ('<span', '>', 'ddcheck'), ('</span', '>'))[1])
-                    params = {'good_for_fav':True, 'priv_has_art':True, 'url':url, 'title':'%s - %s' % (iTitle, title), 'desc':desc, 'icon':iIcon}
+                    params = {'good_for_fav': True, 'priv_has_art': True, 'url': url, 'title': '%s - %s' % (iTitle, title), 'desc': desc, 'icon': iIcon}
                     if 'glyphicon-time' in item:
                         params['type'] = 'article'
                     else:
                         params['type'] = 'video'
                     episodesTab.append(params)
                 if len(episodesTab):
-                    params = {'good_for_fav':False, 'priv_has_art':True, 'category':nextCategory, 'title':sTitle, 'url':sUrl, 'sub_items':episodesTab, 'desc':'', 'icon':iIcon}
+                    params = {'good_for_fav': False, 'priv_has_art': True, 'category': nextCategory, 'title': sTitle, 'url': sUrl, 'sub_items': episodesTab, 'desc': '', 'icon': iIcon}
                     self.addDir(params)
             
         if iTrailer != '':
-            params = {'good_for_fav':False, 'url':iTrailer, 'title':'%s - %s' % (iTitle, _('trailer')), 'icon':iIcon}
+            params = {'good_for_fav': False, 'url': iTrailer, 'title': '%s - %s' % (iTitle, _('trailer')), 'icon': iIcon}
             self.addVideo(params)
         
     def getLinksForVideo(self, cItem):
@@ -308,7 +308,7 @@ class TfarjoCom(CBaseHostClass):
             verType = self.cm.ph.getSearchGroups(item, '''class=['"]players([^'^"]+?)['"]''')[0].upper()
             linkData = self.cm.ph.getDataBeetwenMarkers(item, 'getIframe(', ')', False)[1].strip()[1:-1]
             url = linkUrl + '#' + linkData
-            retTab.append({'name':'[%s] %s' % (verType, name), 'url':strwithmeta(url, {'Referer':cUrl, 'iptv_link_data':linkData, 'iptv_link_test':linkTest, 'iptv_link_type':itemType}), 'need_resolve':1})
+            retTab.append({'name': '[%s] %s' % (verType, name), 'url': strwithmeta(url, {'Referer': cUrl, 'iptv_link_data': linkData, 'iptv_link_test': linkTest, 'iptv_link_type': itemType}), 'need_resolve': 1})
         
         if len(retTab):
             self.cacheLinks[cacheKey] = retTab
@@ -331,7 +331,7 @@ class TfarjoCom(CBaseHostClass):
         paramsUrl = dict(self.defaultParams)
         paramsUrl['header'] = dict(self.AJAX_HEADER)
         paramsUrl['header']['Referer'] = baseUrl.meta['Referer']
-        post_data = {'csrf_test_name':baseUrl.meta['iptv_link_test'], baseUrl.meta['iptv_link_type']:baseUrl.meta['iptv_link_data']}
+        post_data = {'csrf_test_name': baseUrl.meta['iptv_link_test'], baseUrl.meta['iptv_link_type']: baseUrl.meta['iptv_link_data']}
         sts, data = self.getPage(baseUrl.split('#', 1)[0], paramsUrl, post_data)
         if not sts:
             return
@@ -393,7 +393,7 @@ class TfarjoCom(CBaseHostClass):
         if icon == '':
             icon = cItem.get('icon', self.DEFAULT_ICON_URL)
         
-        return [{'title':self.cleanHtmlStr(title), 'text': self.cleanHtmlStr(desc), 'images':[{'title':'', 'url':self.getFullUrl(icon)}], 'other_info':otherInfo}]
+        return [{'title': self.cleanHtmlStr(title), 'text': self.cleanHtmlStr(desc), 'images': [{'title': '', 'url': self.getFullUrl(icon)}], 'other_info': otherInfo}]
     
     def handleService(self, index, refresh=0, searchPattern='', searchType=''):
         printDBG('handleService start')
@@ -411,7 +411,7 @@ class TfarjoCom(CBaseHostClass):
     #MAIN MENU
         if name == None and category == '':
             self.cm.clearCookie(self.COOKIE_FILE, ['PHPSESSID', '__cfduid', 'cf_clearance'])
-            self.listMainMenu({'name':'category'})
+            self.listMainMenu({'name': 'category'})
         elif category == 'movies':
             self.listMovies(self.currItem, 'sub_items', 'list_items')
         elif category == 'series':
@@ -426,11 +426,11 @@ class TfarjoCom(CBaseHostClass):
     #SEARCH
         elif category in ["search", "search_next_page"]:
             cItem = dict(self.currItem)
-            cItem.update({'search_item':False, 'name':'category'}) 
+            cItem.update({'search_item': False, 'name': 'category'}) 
             self.listSearchResult(cItem, searchPattern, searchType)
     #HISTORIA SEARCH
         elif category == "search_history":
-            self.listsHistory({'name':'history', 'category': 'search'}, 'desc', _("Type: "))
+            self.listsHistory({'name': 'history', 'category': 'search'}, 'desc', _("Type: "))
         else:
             printExc()
         

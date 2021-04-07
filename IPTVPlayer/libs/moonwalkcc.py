@@ -37,9 +37,9 @@ class MoonwalkParser():
     USER_AGENT = 'Mozilla/5.0'
     def __init__(self):
         self.cm = common()
-        self.HTTP_HEADER = {'User-Agent':self.USER_AGENT, 'Referer':''}
+        self.HTTP_HEADER = {'User-Agent': self.USER_AGENT, 'Referer': ''}
         self.COOKIEFILE = GetCookieDir("moonwalkcc.cookie")
-        self.defaultParams = {'header':self.HTTP_HEADER, 'with_metadata':True, 'use_cookie': True, 'save_cookie': True, 'load_cookie': False, 'cookiefile': self.COOKIEFILE}
+        self.defaultParams = {'header': self.HTTP_HEADER, 'with_metadata': True, 'use_cookie': True, 'save_cookie': True, 'load_cookie': False, 'cookiefile': self.COOKIEFILE}
         self.baseUrl = ''
         
     def _setBaseUrl(self, url):
@@ -72,7 +72,7 @@ class MoonwalkParser():
     def _getSecurityData(self, data, params):
         printDBG('MoonwalkParser._getSecurityData')
         baseUrl = ''
-        sec_header = {'Referer':data.meta['url']}
+        sec_header = {'Referer': data.meta['url']}
         post_data = {}
         
         scriptUrl = self.cm.ph.getSearchGroups(data, '''<script[^>]+?src=['"]([^'^"]+?)['"]''')[0]
@@ -114,7 +114,7 @@ class MoonwalkParser():
         printDBG('Code start:')
         printDBG(jscode)
         printDBG('Code end:')
-        ret = js_execute(jscode, {'timeout_sec':30})
+        ret = js_execute(jscode, {'timeout_sec': 30})
         if ret['sts'] and 0 == ret['code']:
             printDBG(ret['data'])
             try:
@@ -173,15 +173,15 @@ class MoonwalkParser():
             except Exception:
                 printExc()
             try:
-                mp4Url = strwithmeta(data["mp4"], {'User-Agent':'Mozilla/5.0', 'Referer':url})
-                sts, tmp = self.cm.getPage(mp4Url, {'User-Agent':'Mozilla/5.0', 'Referer':url})
+                mp4Url = strwithmeta(data["mp4"], {'User-Agent': 'Mozilla/5.0', 'Referer': url})
+                sts, tmp = self.cm.getPage(mp4Url, {'User-Agent': 'Mozilla/5.0', 'Referer': url})
                 tmpTab = []
                 tmp = json_loads(tmp)
                 printDBG(tmp)
                 for key in tmp:
                     mp4Url = tmp[key]
                     if mp4Url.split('?')[0].endswith('.mp4'):
-                        tmpTab.append({'url':mp4Url, 'heigth':key})
+                        tmpTab.append({'url': mp4Url, 'heigth': key})
                     
                 def __getLinkQuality(itemLink):
                     return int(itemLink['heigth'])
@@ -191,12 +191,12 @@ class MoonwalkParser():
                 if config.plugins.iptvplayer.moonwalk_use_df.value:
                     tmpTab = [tmpTab[0]]
                 for item in tmpTab:
-                    linksTab.append({'name':'[mp4] %sp' % __getLinkQuality(item), 'url':item['url']})
+                    linksTab.append({'name': '[mp4] %sp' % __getLinkQuality(item), 'url': item['url']})
             except Exception:
                 printExc()
 
             if 'm3u8' == config.plugins.iptvplayer.moonwalk_format.value:
-                hlsUrl = strwithmeta(data['m3u8'], {'User-Agent':'Mozilla/5.0 (iPad; U; CPU OS 3_2 like Mac OS X; en-us) AppleWebKit/531.21.10 (KHTML, like Gecko) Version/4.0.4 Mobile/7B334b Safari/531.21.10', 'Referer':url})
+                hlsUrl = strwithmeta(data['m3u8'], {'User-Agent': 'Mozilla/5.0 (iPad; U; CPU OS 3_2 like Mac OS X; en-us) AppleWebKit/531.21.10 (KHTML, like Gecko) Version/4.0.4 Mobile/7B334b Safari/531.21.10', 'Referer': url})
                 tmpTab = getDirectM3U8Playlist(hlsUrl)
                 def __getLinkQuality(itemLink):
                     return int(itemLink['heigth'])
@@ -205,7 +205,7 @@ class MoonwalkParser():
                 if config.plugins.iptvplayer.moonwalk_use_df.value:
                     tmpTab = [tmpTab[0]]
                 for item in tmpTab:
-                    linksTab.append({'name':'[hls/m3u8] %sp' % __getLinkQuality(item), 'url':item['url']})
+                    linksTab.append({'name': '[hls/m3u8] %sp' % __getLinkQuality(item), 'url': item['url']})
             else:
                 tmpTab = getF4MLinksWithMeta(data["manifest_f4m"])
                 def __getLinkQuality(itemLink):
@@ -223,7 +223,7 @@ class MoonwalkParser():
                 if config.plugins.iptvplayer.moonwalk_use_df.value:
                     tmpTab = [tmpTab[0]]
                 for item in tmpTab:
-                    linksTab.append({'name':'[f4m/hds] %sp' % __getLinkQuality(item), 'url':item['url']})
+                    linksTab.append({'name': '[f4m/hds] %sp' % __getLinkQuality(item), 'url': item['url']})
         except Exception:
             printExc()
         return linksTab
@@ -263,7 +263,7 @@ class MoonwalkParser():
                 if item[0] in ['"', "'"]:
                     item = item[1:-1]
                 query['season'] = item
-                seasonsTab.append({'title':_('Season') + ' ' + item, 'id':int(item), 'url': '%s?%s' % (baseUrl, urllib.parse.urlencode(query))})
+                seasonsTab.append({'title': _('Season') + ' ' + item, 'id': int(item), 'url': '%s?%s' % (baseUrl, urllib.parse.urlencode(query))})
             seasonsTab.sort(key=lambda item: item['id'])
         except Exception:
             printExc()
@@ -298,7 +298,7 @@ class MoonwalkParser():
                     query['episode'] = item
                     url = '%s?%s' % (baseUrl, urllib.parse.urlencode(query))
                     
-                    episodesTab.append({'title':_('Episode') + ' ' + item, 'id':int(item), 'url': strwithmeta(url, {'host_name':'moonwalk.cc'})})
+                    episodesTab.append({'title': _('Episode') + ' ' + item, 'id': int(item), 'url': strwithmeta(url, {'host_name': 'moonwalk.cc'})})
                     
             else:
                 episodeData = self.cm.ph.getSearchGroups(data, '''episodes\s*:\s*\[([^\]]+?)\]''')[0]
@@ -309,7 +309,7 @@ class MoonwalkParser():
                         item = item[1:-1]
                     query['episode'] = item
                     url = '%s?%s' % (baseUrl, urllib.parse.urlencode(query))
-                    episodesTab.append({'title':_('Episode') + ' ' + item, 'id':int(item), 'url': strwithmeta(url, {'host_name':'moonwalk.cc'})})
+                    episodesTab.append({'title': _('Episode') + ' ' + item, 'id': int(item), 'url': strwithmeta(url, {'host_name': 'moonwalk.cc'})})
             episodesTab.sort(key=lambda item: item['id'])
         except Exception:
             printExc()

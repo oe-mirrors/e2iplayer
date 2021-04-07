@@ -113,7 +113,7 @@ class GoldVodTVApi:
     def getVideoLink(self, cItem):
         printDBG("GoldVodTVApi.getVideoLink")
         if self.loggedIn:
-            url = strwithmeta(cItem['url'], {'params':{'load_cookie': True}})
+            url = strwithmeta(cItem['url'], {'params': {'load_cookie': True}})
         else:
             url = cItem['url']
         return self.up.getVideoLinkExt(url)
@@ -129,7 +129,7 @@ class GoldVodTVApi:
             return False
         
         HTTP_HEADER = dict(GoldVodTVApi.HTTP_HEADER)
-        HTTP_HEADER.update({'Referer':loginUrl})
+        HTTP_HEADER.update({'Referer': loginUrl})
         
         post_data = {'login': login, 'pass': password, 'remember': 1, 'logged': ''}
         params = {'header': HTTP_HEADER, 'cookiefile': self.COOKIE_FILE, 'save_cookie': True, 'load_cookie': True}

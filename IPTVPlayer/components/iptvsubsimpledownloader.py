@@ -274,7 +274,7 @@ class IPTVSubSimpleDownloaderWidget(Screen):
     def acceptSub(self):
         try: 
             if self["icon_green"].visible:
-                track = {'title':self.currItem.get('lang', _('default')), 'lang':self.currItem.get('lang', _('default')), 'path':self.downloadedSubFilePath}
+                track = {'title': self.currItem.get('lang', _('default')), 'lang': self.currItem.get('lang', _('default')), 'path': self.downloadedSubFilePath}
                 track['id'] = self.currItem.get('url', '')
                 self.close(track)
         except Exception:

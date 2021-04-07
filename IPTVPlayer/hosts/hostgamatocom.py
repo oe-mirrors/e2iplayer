@@ -27,7 +27,7 @@ def gettytul():
 class GamatoMovies(CBaseHostClass):
  
     def __init__(self):
-        CBaseHostClass.__init__(self, {'history':'GamatoMovies.tv', 'cookie':'gamatomoviescom.cookie'})
+        CBaseHostClass.__init__(self, {'history': 'GamatoMovies.tv', 'cookie': 'gamatomoviescom.cookie'})
         self.defaultParams = {'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
         
         self.HEADER = {'User-Agent': 'Mozilla/5.0', 'Accept': 'text/html'}
@@ -37,10 +37,10 @@ class GamatoMovies(CBaseHostClass):
         self.MAIN_URL = 'http://gamato-movies.com/'
         self.DEFAULT_ICON_URL = self.MAIN_URL + 'assets/uploads/images/aaw81QHKtm.png'
         
-        self.MAIN_CAT_TAB = [{'category':'movies', 'title': _('Movies'), 'priv_type':'movie', 'url':self.getFullUrl('movies'), 'icon':self.DEFAULT_ICON_URL},
-                             {'category':'series', 'title': _('Series'), 'priv_type':'series', 'url':self.getFullUrl('series'), 'icon':self.DEFAULT_ICON_URL},
-                             {'category':'search', 'title': _('Search'), 'search_item':True, 'icon':self.DEFAULT_ICON_URL},
-                             {'category':'search_history', 'title': _('Search history'), 'icon':self.DEFAULT_ICON_URL} 
+        self.MAIN_CAT_TAB = [{'category': 'movies', 'title': _('Movies'), 'priv_type': 'movie', 'url': self.getFullUrl('movies'), 'icon': self.DEFAULT_ICON_URL},
+                             {'category': 'series', 'title': _('Series'), 'priv_type': 'series', 'url': self.getFullUrl('series'), 'icon': self.DEFAULT_ICON_URL},
+                             {'category': 'search', 'title': _('Search'), 'search_item': True, 'icon': self.DEFAULT_ICON_URL},
+                             {'category': 'search_history', 'title': _('Search history'), 'icon': self.DEFAULT_ICON_URL} 
                             ]
         
         self.cacheFilters = {}
@@ -68,9 +68,9 @@ class GamatoMovies(CBaseHostClass):
                 if value == '':
                     continue
                 title = self.cleanHtmlStr(item)
-                self.cacheFilters[key].append({'title':titleBase + title, key:value})
+                self.cacheFilters[key].append({'title': titleBase + title, key: value})
             if addAny and len(self.cacheFilters[key]):
-                self.cacheFilters[key].insert(0, {'title':titleBase + _('any')})
+                self.cacheFilters[key].insert(0, {'title': titleBase + _('any')})
         
         # genres
         tmpData = self.cm.ph.getDataBeetwenMarkers(data, '<select name="genres"', '</select')[1]
@@ -90,7 +90,7 @@ class GamatoMovies(CBaseHostClass):
                 self.cacheFilters['year'].append({'title': _('Year: ') + str(year), 'year': year})
                 year -= 1
             if len(self.cacheFilters['year']):
-                self.cacheFilters['year'].insert(0, {'title':_('Year: ') + _('any')})
+                self.cacheFilters['year'].insert(0, {'title': _('Year: ') + _('any')})
 
         # Rating
         tmpData = self.cm.ph.getDataBeetwenMarkers(data, '<select name="minRating"', '</select>')[1]
@@ -125,7 +125,7 @@ class GamatoMovies(CBaseHostClass):
         if 'query' in cItem:
             baseUrl += '&query={0}'.format(cItem['query'])
             
-        sts, data = self.cm.getPage(self.getFullUrl(baseUrl), {'header':self.AJAX_HEADER})
+        sts, data = self.cm.getPage(self.getFullUrl(baseUrl), {'header': self.AJAX_HEADER})
         if not sts:
             return
         try:
@@ -140,7 +140,7 @@ class GamatoMovies(CBaseHostClass):
                     title = '{0} ({1})'.format(self.getStr(item, 'title'), self.getStr(item, 'year'))
                     desc = '{0}/10|{1}[/br]{2}'.format(self.getStr(item, 'imdb_rating'), self.getStr(item, 'genre'), self.getStr(item, 'plot'))
                     params = dict(cItem)
-                    params.update({'good_for_fav': True, 'title':title, 'url':url, 'priv_type':self.getStr(item, 'type'), 'priv_id':self.getStr(item, 'id'), 'icon':self.getStr(item, 'poster'), 'desc':desc})
+                    params.update({'good_for_fav': True, 'title': title, 'url': url, 'priv_type': self.getStr(item, 'type'), 'priv_id': self.getStr(item, 'id'), 'icon': self.getStr(item, 'poster'), 'desc': desc})
                     if item['type'] == 'movie':
                         self.addVideo(params)
                     else:
@@ -150,7 +150,7 @@ class GamatoMovies(CBaseHostClass):
                     printExc()
             if data['totalItems'] > page * perPage:
                 params = dict(cItem)
-                params.update({'title':_('Next page'), 'page':page + 1})
+                params.update({'title': _('Next page'), 'page': page + 1})
                 self.addDir(params)
         except Exception:
             printExc()
@@ -163,7 +163,7 @@ class GamatoMovies(CBaseHostClass):
         info['icon'] = self.getFullUrl(self.cm.ph.getSearchGroups(data, 'src="([^"]+?)"')[0])
         info['desc'] = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(data, '<p class="description"', '</p>')[1].split('</strong>')[-1])
         info['full_desc'] = self.cleanHtmlStr(data.split('</h1>')[-1])
-        keysMap = {'Gatunek:':'genre'}
+        keysMap = {'Gatunek:': 'genre'}
         data = self.cm.ph.getAllItemsBeetwenMarkers(data, '<strong>', '<br/>', withMarkers=True)
         for item in data:
             tmp = item.split('</strong>')
@@ -186,7 +186,7 @@ class GamatoMovies(CBaseHostClass):
             trailerUrl = byteify(json.loads(trailerUrl))
             if self.cm.isValidUrl(trailerUrl):
                 params = dict(cItem)
-                params.update({'good_for_fav': True, 'title':cItem['title'] + ' - ' + _('trailer'), 'priv_type':'trailer', 'url':trailerUrl})
+                params.update({'good_for_fav': True, 'title': cItem['title'] + ' - ' + _('trailer'), 'priv_type': 'trailer', 'url': trailerUrl})
                 self.addVideo(params)
         except Exception:
             printExc()
@@ -203,7 +203,7 @@ class GamatoMovies(CBaseHostClass):
                     desc = cItem['desc']
                 else:
                     desc = '{0}[/br]{1}'.format(self.getStr(item, 'release_date'), overview)
-                params = {'good_for_fav': True, 'category':nextCategory, 'priv_type':cItem['priv_type'], 'title':title, 'url':url, 'priv_stitle':cItem['title'], 'priv_snum':self.getStr(item, 'number'), 'priv_id':self.getStr(item, 'id'), 'icon':self.getStr(item, 'poster'), 'desc':desc}
+                params = {'good_for_fav': True, 'category': nextCategory, 'priv_type': cItem['priv_type'], 'title': title, 'url': url, 'priv_stitle': cItem['title'], 'priv_snum': self.getStr(item, 'number'), 'priv_id': self.getStr(item, 'id'), 'icon': self.getStr(item, 'poster'), 'desc': desc}
                 self.addDir(params)
         except Exception:
             printExc()
@@ -225,7 +225,7 @@ class GamatoMovies(CBaseHostClass):
             desc = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(item, '<strong', '</div>')[1].replace('</strong>', '[/br]'))
             eNum = url.split('/')[-1]
             title = cItem['priv_stitle'] + ': s{0}e{1} {2}'.format(sNum.zfill(2), eNum.zfill(2), title)
-            params = {'good_for_fav': True, 'priv_type':cItem['priv_type'], 'title':title, 'url':url, 'icon':icon, 'desc':status + '[/br]' + desc}
+            params = {'good_for_fav': True, 'priv_type': cItem['priv_type'], 'title': title, 'url': url, 'icon': icon, 'desc': status + '[/br]' + desc}
             self.addVideo(params)
 
     def listSearchResult(self, cItem, searchPattern, searchType):
@@ -236,7 +236,7 @@ class GamatoMovies(CBaseHostClass):
                 return
             self.cacheFilters['token'] = self.cm.ph.getSearchGroups(data, '''token\s*:\s*['"]([^'^"]+?)['"]''')[0]
         cItem = dict(cItem)
-        cItem.update({'priv_type':searchType, 'query':urllib.parse.quote_plus(searchPattern)})
+        cItem.update({'priv_type': searchType, 'query': urllib.parse.quote_plus(searchPattern)})
         self.listItems(cItem, 'list_seasons')
     
     def getLinksForVideo(self, cItem):
@@ -261,7 +261,7 @@ class GamatoMovies(CBaseHostClass):
                 trailerUrl = self.cm.ph.getSearchGroups(jsonData, '''"trailer"\s*:\s*(['"]http[^'^"]+?['"])''')[0] 
                 trailerUrl = byteify(json.loads(trailerUrl))
                 if self.cm.isValidUrl(trailerUrl):
-                    urlTab.append({'name':_('Trailer'), 'url':trailerUrl, 'need_resolve':1})
+                    urlTab.append({'name': _('Trailer'), 'url': trailerUrl, 'need_resolve': 1})
             except Exception:
                 printExc()
         
@@ -269,7 +269,7 @@ class GamatoMovies(CBaseHostClass):
         for item in data:
             name = self.cleanHtmlStr(item)
             url = self.cm.ph.getSearchGroups(item, '''playVideo[^'^"]+?['"](http[^'^"]+?)['"]''')[0].strip()
-            urlTab.append({'name':name, 'url':url, 'need_resolve':1})
+            urlTab.append({'name': name, 'url': url, 'need_resolve': 1})
         #try:
         #    data = '[' + self.cm.ph.getDataBeetwenMarkers(data, '"link":[', ']', False)[1] + ']'
         #    printDBG(data)
@@ -363,7 +363,7 @@ class GamatoMovies(CBaseHostClass):
         
     #MAIN MENU
         if name == None:
-            self.listsTab(self.MAIN_CAT_TAB, {'name':'category'})
+            self.listsTab(self.MAIN_CAT_TAB, {'name': 'category'})
         elif category in ['movies', 'series']:
             if category == 'movies':
                 filtersTab = ['genres', 'order', 'year'] #min_rating
@@ -381,11 +381,11 @@ class GamatoMovies(CBaseHostClass):
     #SEARCH
         elif category in ["search", "search_next_page"]:
             cItem = dict(self.currItem)
-            cItem.update({'search_item':False, 'name':'category'}) 
+            cItem.update({'search_item': False, 'name': 'category'}) 
             self.listSearchResult(cItem, searchPattern, searchType)
     #HISTORIA SEARCH
         elif category == "search_history":
-            self.listsHistory({'name':'history', 'category': 'search'}, 'desc', _("Type: "))
+            self.listsHistory({'name': 'history', 'category': 'search'}, 'desc', _("Type: "))
         else:
             printExc()
         

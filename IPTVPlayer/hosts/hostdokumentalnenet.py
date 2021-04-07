@@ -40,16 +40,16 @@ def gettytul():
 class DokumentalneNET(CBaseHostClass):
     
     def __init__(self):
-        CBaseHostClass.__init__(self, {'history':'dokumentalne.net', 'cookie':'dokumentalne.net.cookie'})
+        CBaseHostClass.__init__(self, {'history': 'dokumentalne.net', 'cookie': 'dokumentalne.net.cookie'})
         self.DEFAULT_ICON_URL = 'https://dokumentalne.net/wp-content/uploads/2016/11/dokumentalne_logo_1.png'
         self.USER_AGENT = 'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:40.0) Gecko/20100101 Firefox/40.0'
         self.MAIN_URL = 'https://dokumentalne.net/'
-        self.HTTP_HEADER = {'User-Agent': self.USER_AGENT, 'DNT':'1', 'Accept': 'text/html', 'Accept-Encoding':'gzip, deflate', 'Referer':self.getMainUrl(), 'Origin':self.getMainUrl()}
-        self.defaultParams = {'header':self.HTTP_HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
-        self.MAIN_CAT_TAB = [{'category':'list_categories', 'title': 'Kategorie', 'url':self.getMainUrl()},
+        self.HTTP_HEADER = {'User-Agent': self.USER_AGENT, 'DNT': '1', 'Accept': 'text/html', 'Accept-Encoding': 'gzip, deflate', 'Referer': self.getMainUrl(), 'Origin': self.getMainUrl()}
+        self.defaultParams = {'header': self.HTTP_HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
+        self.MAIN_CAT_TAB = [{'category': 'list_categories', 'title': 'Kategorie', 'url': self.getMainUrl()},
                              
-                             {'category':'search', 'title': _('Search'), 'search_item':True}, 
-                             {'category':'search_history', 'title': _('Search history')},
+                             {'category': 'search', 'title': _('Search'), 'search_item': True}, 
+                             {'category': 'search_history', 'title': _('Search history')},
                             ]
         
     def getFullUrl(self, url):
@@ -65,7 +65,7 @@ class DokumentalneNET(CBaseHostClass):
                 return url
             else:
                 return urllib.parse.urljoin(baseUrl, url)
-        addParams['cloudflare_params'] = {'domain':self.up.getDomain(baseUrl), 'cookie_file':self.COOKIE_FILE, 'User-Agent':self.USER_AGENT, 'full_url_handle':_getFullUrl}
+        addParams['cloudflare_params'] = {'domain': self.up.getDomain(baseUrl), 'cookie_file': self.COOKIE_FILE, 'User-Agent': self.USER_AGENT, 'full_url_handle': _getFullUrl}
         return self.cm.getPageCFProtection(baseUrl, addParams, post_data)
         
     def listCategories(self, cItem, nextCategory):
@@ -81,7 +81,7 @@ class DokumentalneNET(CBaseHostClass):
             url = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''href=['"]([^'^"]+?)['"]''')[0])
             title = self.cleanHtmlStr(item)
             params = dict(cItem)
-            params.update({'category':nextCategory, 'title':title, 'url':url})
+            params.update({'category': nextCategory, 'title': title, 'url': url})
             self.addDir(params)
         
         if len(self.currList):
@@ -102,7 +102,7 @@ class DokumentalneNET(CBaseHostClass):
             url = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''href=['"]([^'^"]+?)['"]''')[0])
             title = self.cleanHtmlStr(item)
             params = dict(cItem)
-            params.update({'category':nextCategory, 'title':title, 'url':url})
+            params.update({'category': nextCategory, 'title': title, 'url': url})
             self.addDir(params)
     
     def listMainMenu(self, cItem, nextCategory):
@@ -138,12 +138,12 @@ class DokumentalneNET(CBaseHostClass):
             desc += '[/br]' + self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(item, ('<div', '>', 'excerpt '), ('</div', '>'), False)[1])
             
             params = dict(cItem)
-            params.update({'good_for_fav':True, 'title':title, 'url':url, 'icon':icon, 'desc':desc})
+            params.update({'good_for_fav': True, 'title': title, 'url': url, 'icon': icon, 'desc': desc})
             self.addVideo(params)
         
         if self.cm.isValidUrl(nextPage):
             params = dict(cItem)
-            params.update({'good_for_fav':False, 'title':_("Next page"), 'url':nextPage, 'page':page + 1})
+            params.update({'good_for_fav': False, 'title': _("Next page"), 'url': nextPage, 'page': page + 1})
             self.addDir(params)
         
     def listSearchResult(self, cItem, searchPattern, searchType):
@@ -168,12 +168,12 @@ class DokumentalneNET(CBaseHostClass):
         for item in tmp:
             if 'video/mp4' in item:
                 url = self.cm.ph.getSearchGroups(item, '''src=['"]([^"^']+?)['"]''')[0]
-                retTab.append({'name':self.up.getDomain(url), 'url':url})
+                retTab.append({'name': self.up.getDomain(url), 'url': url})
         
         if len(retTab) == 0:
             tmp = re.compile('''['">\s](https?://[^'^"^<^\s]+?\.mp4)''').findall(data)
             for url in tmp:
-                retTab.append({'name':self.up.getDomain(url), 'url':url})
+                retTab.append({'name': self.up.getDomain(url), 'url': url})
             
         return retTab
         
@@ -191,7 +191,7 @@ class DokumentalneNET(CBaseHostClass):
         
     #MAIN MENU
         if name == None:
-            self.listMainMenu({'name':'category'}, 'list_genres')
+            self.listMainMenu({'name': 'category'}, 'list_genres')
         elif category == 'list_categories':
             self.listCategories(self.currItem, 'list_sort')
         elif category == 'list_sort':
@@ -201,11 +201,11 @@ class DokumentalneNET(CBaseHostClass):
     #SEARCH
         elif category in ["search", "search_next_page"]:
             cItem = dict(self.currItem)
-            cItem.update({'search_item':False, 'name':'category'}) 
+            cItem.update({'search_item': False, 'name': 'category'}) 
             self.listSearchResult(cItem, searchPattern, searchType)
     #HISTORIA SEARCH
         elif category == "search_history":
-            self.listsHistory({'name':'history', 'category': 'search'}, 'desc', _("Type: "))
+            self.listsHistory({'name': 'history', 'category': 'search'}, 'desc', _("Type: "))
         else:
             printExc()
         

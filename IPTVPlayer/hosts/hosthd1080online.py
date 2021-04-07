@@ -16,10 +16,10 @@ def gettytul():
 class HD1080Online(CBaseHostClass):
 
     def __init__(self):
-        CBaseHostClass.__init__(self, {'history':'hd1080.online', 'cookie':'hd1080.online.cookie'})
+        CBaseHostClass.__init__(self, {'history': 'hd1080.online', 'cookie': 'hd1080.online.cookie'})
 
         self.HTTP_HEADER = self.cm.getDefaultHeader(browser='chrome')
-        self.defaultParams = {'header':self.HTTP_HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
+        self.defaultParams = {'header': self.HTTP_HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
 
         self.MAIN_URL = 'https://hd1080.online/'
         self.DEFAULT_ICON_URL = 'https://spliffmobile.com/1080-x-1920-wallpapers/hd/images/big-next-0001-focus.png'
@@ -44,7 +44,7 @@ class HD1080Online(CBaseHostClass):
         for item in tmp:
             url = self.getFullUrl(ph.search(item, ph.A)[1])
             title = ph.clean_html(item)
-            self.addDir(MergeDicts(cItem, {'category':nextCategory, 'url':url, 'title':title}))
+            self.addDir(MergeDicts(cItem, {'category': nextCategory, 'url': url, 'title': title}))
 
         data = ph.find(data, ('<aside', '>'), '</aside>')[1]
         tmp = ph.rfindall(data, '</ul>', ('<div', '>'), flags=0)
@@ -56,12 +56,12 @@ class HD1080Online(CBaseHostClass):
             for item in section:
                 url = self.getFullUrl(ph.search(item, ph.A)[1])
                 title = ph.clean_html(item)
-                subItems.append(MergeDicts(cItem, {'good_for_fav':True, 'category':nextCategory, 'title':title, 'url':url}))
+                subItems.append(MergeDicts(cItem, {'good_for_fav': True, 'category': nextCategory, 'title': title, 'url': url}))
             if len(subItems):
-                self.addDir(MergeDicts(cItem, {'category':'sub_items', 'sub_items':subItems, 'title':sTitle}))
+                self.addDir(MergeDicts(cItem, {'category': 'sub_items', 'sub_items': subItems, 'title': sTitle}))
 
-        MAIN_CAT_TAB = [{'category':'search', 'title': _('Search'), 'search_item':True},
-                        {'category': 'search_history', 'title': _('Search history'),}]
+        MAIN_CAT_TAB = [{'category': 'search', 'title': _('Search'), 'search_item': True},
+                        {'category': 'search_history', 'title': _('Search history'), }]
         self.listsTab(MAIN_CAT_TAB, cItem)
 
     def listSubItems(self, cItem):
@@ -105,10 +105,10 @@ class HD1080Online(CBaseHostClass):
                 desc[-1] += ' %s/10' % str(int(t) / 10.0)
 
             desc.append(ph.clean_html(ph.find(item, ('<div', '>', 'desc'), '</div>', flags=0)[1]))
-            self.addDir(MergeDicts(cItem, {'good_for_fav':True, 'category':nextCategory, 'title':title, 'url':url, 'icon':icon, 'desc':'[/br]'.join(desc)}))
+            self.addDir(MergeDicts(cItem, {'good_for_fav': True, 'category': nextCategory, 'title': title, 'url': url, 'icon': icon, 'desc': '[/br]'.join(desc)}))
 
         if nextPage:
-            self.addDir(MergeDicts(cItem, {'good_for_fav':False, 'title':_('Next page'), 'url':nextPage, 'page':page + 1}))
+            self.addDir(MergeDicts(cItem, {'good_for_fav': False, 'title': _('Next page'), 'url': nextPage, 'page': page + 1}))
 
     def exploreItem(self, cItem, nextCategory):
         printDBG("HD1080Online.exploreItem")
@@ -146,21 +146,21 @@ class HD1080Online(CBaseHostClass):
                 title += ' - ' + titles[idx]
 
             if ('/video/' in url and '/serials/' in url) or 'playlist' in url:
-                url = strwithmeta(url, {'Referer':cUrl})
+                url = strwithmeta(url, {'Referer': cUrl})
                 seasons = self.hdgocc.getSeasonsList(url)
                 for item in seasons:
-                    self.addDir(MergeDicts(cItem, {'good_for_fav':False, 'prev_url':cUrl, 'category':nextCategory, 'serie_title':baseTitle, 'title': _('Season %s') % item['title'], 'season_id': item['id'], 'url': item['url'], 'icon':icon, 'desc':desc}))
+                    self.addDir(MergeDicts(cItem, {'good_for_fav': False, 'prev_url': cUrl, 'category': nextCategory, 'serie_title': baseTitle, 'title': _('Season %s') % item['title'], 'season_id': item['id'], 'url': item['url'], 'icon': icon, 'desc': desc}))
 
                 if 0 == len(seasons):
                     seasonUrl = url
                     episodes = self.hdgocc.getEpiodesList(seasonUrl, -1)
                     for item in episodes:
                         title = '{0} - {1} - s01e{2} '.format(baseTitle, item['title'], str(item['id']).zfill(2))
-                        self.addVideo({'good_for_fav':False, 'type':'video', 'prev_url':cUrl, 'title':title, 'url':item['url'], 'icon':icon, 'desc':desc})
+                        self.addVideo({'good_for_fav': False, 'type': 'video', 'prev_url': cUrl, 'title': title, 'url': item['url'], 'icon': icon, 'desc': desc})
             elif '/video/' in url:
-                self.addVideo({'good_for_fav':False, 'prev_url':cUrl, 'title':title, 'url':url, 'icon':icon, 'desc':desc})
+                self.addVideo({'good_for_fav': False, 'prev_url': cUrl, 'title': title, 'url': url, 'icon': icon, 'desc': desc})
             else: # trailes ??
-                self.addVideo({'good_for_fav':False, 'prev_url':cUrl, 'title':title, 'url':url, 'icon':icon, 'desc':desc})
+                self.addVideo({'good_for_fav': False, 'prev_url': cUrl, 'title': title, 'url': url, 'icon': icon, 'desc': desc})
 
     def listEpisodes(self, cItem):
         printDBG("HD1080Online.listEpisodes")
@@ -179,7 +179,7 @@ class HD1080Online(CBaseHostClass):
         page = cItem.get('page', 1)
         post_data = cItem['post_data']
         if page > 1:
-            post_data.update({'search_start':page, 'full_search':0, 'result_from':(page - 1) * 10 + 1})
+            post_data.update({'search_start': page, 'full_search': 0, 'result_from': (page - 1) * 10 + 1})
 
         sts, data = self.getPage(cItem['url'], post_data=post_data)
         if not sts:
@@ -199,10 +199,10 @@ class HD1080Online(CBaseHostClass):
             desc.append(ph.clean_html(ph.find(item, ('<div', '>', 'date'), '</div>', flags=0)[1]))
             desc.append(ph.clean_html(ph.find(item, ('<div', '>', 'desc'), '</div>', flags=0)[1]))
 
-            self.addDir(MergeDicts(cItem, {'good_for_fav':True, 'category':nextCategory, 'title':title, 'url':url, 'icon':icon, 'desc':'[/br]'.join(desc)}))
+            self.addDir(MergeDicts(cItem, {'good_for_fav': True, 'category': nextCategory, 'title': title, 'url': url, 'icon': icon, 'desc': '[/br]'.join(desc)}))
 
         if nextPage:
-            self.addDir(MergeDicts(cItem, {'good_for_fav':False, 'title':_('Next page'), 'page':page + 1}))
+            self.addDir(MergeDicts(cItem, {'good_for_fav': False, 'title': _('Next page'), 'page': page + 1}))
 
     def listSearchResult(self, cItem, searchPattern, searchType):
         #searchPattern = 'Человек'
@@ -212,8 +212,8 @@ class HD1080Online(CBaseHostClass):
         self.setMainUrl(self.cm.meta['url'])
         
         value = ph.search(data, '''var\s*?dle_login_hash\s*?=\s*?['"]([^'^"]+?)['"]''')[0]
-        post_data = {'query':searchPattern, 'user_hash':value, 'do':'search', 'subaction':'search', 'story':searchPattern}
-        self.listSearchItems(MergeDicts(cItem, {'category':'list_search_items', 'url':self.getFullUrl('/index.php?do=search'), 'post_data':post_data}), 'explore_item')
+        post_data = {'query': searchPattern, 'user_hash': value, 'do': 'search', 'subaction': 'search', 'story': searchPattern}
+        self.listSearchItems(MergeDicts(cItem, {'category': 'list_search_items', 'url': self.getFullUrl('/index.php?do=search'), 'post_data': post_data}), 'explore_item')
 
     def getLinksForVideo(self, cItem):
         linksTab = self.cacheLinks.get(cItem['url'], [])
@@ -239,7 +239,7 @@ class HD1080Online(CBaseHostClass):
                         if not self.cacheLinks[key][idx]['name'].startswith('*'):
                             self.cacheLinks[key][idx]['name'] = '*' + self.cacheLinks[key][idx]['name']
 
-        return [{'name':'direct', 'url':videoUrl}]
+        return [{'name': 'direct', 'url': videoUrl}]
 
     def getArticleContent(self, cItem, data=None):
         printDBG("HD1080Online.getArticleContent [%s]" % cItem)
@@ -276,7 +276,7 @@ class HD1080Online(CBaseHostClass):
         if desc == '':
             desc = cItem.get('desc', '')
         
-        return [{'title':self.cleanHtmlStr(title), 'text': self.cleanHtmlStr(desc), 'images':[{'title':'', 'url':self.getFullUrl(icon)}], 'other_info':{'custom_items_list':itemsList}}]
+        return [{'title': self.cleanHtmlStr(title), 'text': self.cleanHtmlStr(desc), 'images': [{'title': '', 'url': self.getFullUrl(icon)}], 'other_info': {'custom_items_list': itemsList}}]
 
     def handleService(self, index, refresh=0, searchPattern='', searchType=''):
         printDBG('handleService start')
@@ -290,7 +290,7 @@ class HD1080Online(CBaseHostClass):
 
     #MAIN MENU
         if name == None:
-            self.listMain({'name':'category', 'type':'category'}, 'list_items')
+            self.listMain({'name': 'category', 'type': 'category'}, 'list_items')
 
         elif category == 'sub_items':
             self.listSubItems(self.currItem)
@@ -308,10 +308,10 @@ class HD1080Online(CBaseHostClass):
             self.listEpisodes(self.currItem)
     #SEARCH
         elif category == 'search':
-            self.listSearchResult(MergeDicts(self.currItem, {'search_item':False, 'name':'category'}), searchPattern, searchType)
+            self.listSearchResult(MergeDicts(self.currItem, {'search_item': False, 'name': 'category'}), searchPattern, searchType)
     #HISTORIA SEARCH
         elif category == "search_history":
-            self.listsHistory({'name':'history', 'category': 'search'}, 'desc', _("Type: "))
+            self.listsHistory({'name': 'history', 'category': 'search'}, 'desc', _("Type: "))
         else:
             printExc()
 

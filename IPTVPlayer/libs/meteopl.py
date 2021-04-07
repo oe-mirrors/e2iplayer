@@ -59,7 +59,7 @@ class MeteoPLApi(CBaseHostClass):
             if '' != config.plugins.iptvplayer.meteopl_locality.value:
                 try:
                     params = dict(cItem)
-                    params.update({'init_list':False, 'meteo_cat':'name', 'meteo_name':config.plugins.iptvplayer.meteopl_locality.value.decode('utf-8').encode('iso-8859-2'), 'url':self.getFullUrl('um/php/gpp/next.php'), 'title':config.plugins.iptvplayer.meteopl_locality.value})
+                    params.update({'init_list': False, 'meteo_cat': 'name', 'meteo_name': config.plugins.iptvplayer.meteopl_locality.value.decode('utf-8').encode('iso-8859-2'), 'url': self.getFullUrl('um/php/gpp/next.php'), 'title': config.plugins.iptvplayer.meteopl_locality.value})
                     channelsTab.append(params)
                 except Exception:
                     printExc()
@@ -73,15 +73,15 @@ class MeteoPLApi(CBaseHostClass):
                 cat = self.cm.ph.getSearchGroups(item, 'value=([^\s^>]+?)[\s>]')[0].replace('"', '').replace("'", "")
                 title = self.cleanHtmlStr(self.cm.ph.getSearchGroups(item, '>([^<]+?)<')[0]).strip()
                 params = dict(cItem)
-                params.update({'init_list':False, 'meteo_cat':'woj', 'meteo_woj':cat, 'url':self.getFullUrl('um/php/gpp/next.php'), 'title':title})
+                params.update({'init_list': False, 'meteo_cat': 'woj', 'meteo_woj': cat, 'url': self.getFullUrl('um/php/gpp/next.php'), 'title': title})
                 channelsTab.append(params)
         else:
             post_data = None
             cat = cItem.get('meteo_cat', '')
             if 'woj' == cat:
-                post_data = {'woj':cItem['meteo_woj'], 'litera':''}
+                post_data = {'woj': cItem['meteo_woj'], 'litera': ''}
             elif 'name' == cat:
-                post_data = {'name':cItem['meteo_name']}
+                post_data = {'name': cItem['meteo_name']}
             if post_data != None:
                 sts, data = self.getPage(cItem['url'], post_data=post_data)
                 if not sts:
@@ -93,7 +93,7 @@ class MeteoPLApi(CBaseHostClass):
                         continue
                     title = self.cleanHtmlStr(item)
                     params = dict(cItem)
-                    params.update({'type':'picture', 'title':title, 'meteo_cat':True, 'url':self.getFullUrl('um/php/meteorogram_id_um.php?ntype=0u&id=' + mgram)})
+                    params.update({'type': 'picture', 'title': title, 'meteo_cat': True, 'url': self.getFullUrl('um/php/meteorogram_id_um.php?ntype=0u&id=' + mgram)})
                     channelsTab.append(params)
         return channelsTab
         
@@ -114,6 +114,6 @@ class MeteoPLApi(CBaseHostClass):
         id = self.cm.ph.getSearchGroups(data, '''var\s*id\s*=\s*['"]([^'^"]+?)['"]''')[0]
         act_x = self.cm.ph.getSearchGroups(data, '''var\s*act_x\s*=([^;]+?);''')[0].strip()
         act_y = self.cm.ph.getSearchGroups(data, '''var\s*act_y\s*=([^;]+?);''')[0].strip()
-        urlsTab.append({'name':'mgram', 'url':self.getFullUrl('um/metco/mgram_pict.php?ntype=%s&fdate=%s&row=%s&col=%s&lang=%s' % (ntype, fcstdate, act_y, act_x, lang))})
+        urlsTab.append({'name': 'mgram', 'url': self.getFullUrl('um/metco/mgram_pict.php?ntype=%s&fdate=%s&row=%s&col=%s&lang=%s' % (ntype, fcstdate, act_y, act_x, lang))})
         
         return urlsTab

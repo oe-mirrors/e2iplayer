@@ -100,7 +100,7 @@ class FilmOnComApi:
                             url = url + '/' + stream['name'] + ' swfUrl=' + flashplayer + ' pageUrl=' + url
                         url = urlparser.decorateUrl(url)
                         url.meta.update({'iptv_urlwithlimit': False, 'iptv_livestream': not seekable})
-                        urlsList.append({'name':name, 'url':url})
+                        urlsList.append({'name': name, 'url': url})
                 except Exception:
                     printExc()
                 

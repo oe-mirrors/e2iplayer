@@ -46,12 +46,12 @@ class Napisy24plProvider(CBaseSubProviderClass):
     def __init__(self, params={}):
         self.MAIN_URL = 'http://napisy24.pl/'
         self.USER_AGENT = 'DMnapi 13.1.30'
-        self.HTTP_HEADER = {'User-Agent':self.USER_AGENT, 'Referer':self.MAIN_URL, 'Accept':'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8', 'Accept-Encoding':'gzip, deflate'}
+        self.HTTP_HEADER = {'User-Agent': self.USER_AGENT, 'Referer': self.MAIN_URL, 'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8', 'Accept-Encoding': 'gzip, deflate'}
 
         params['cookie'] = 'napisy24pl.cookie'
         CBaseSubProviderClass.__init__(self, params)
         
-        self.defaultParams = {'header':self.HTTP_HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
+        self.defaultParams = {'header': self.HTTP_HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
         self.dInfo = params['discover_info']
         
         self.cacheSeasons = {}
@@ -90,7 +90,7 @@ class Napisy24plProvider(CBaseSubProviderClass):
             post_data = {}
             for item in data:
                 post_data[item[0]] = item[1]
-            post_data.update({'username':login, 'passwd':passwd, 'remember':'yes', 'Submit':''})
+            post_data.update({'username': login, 'passwd': passwd, 'remember': 'yes', 'Submit': ''})
             
             sts, data = self.getPage(loginUrl, post_data=post_data)
             if not sts:
@@ -157,7 +157,7 @@ class Napisy24plProvider(CBaseSubProviderClass):
                     desc = item.split('</h2>')[-1]
                     
                     params = dict(cItem)
-                    params.update({'sub_item_type':'series', 'category':nextCategoryMovie, 'title':title, 'url': self.getFullUrl(url), 'imdbid':imdbid, 'desc':self.cleanHtmlStr(desc)})
+                    params.update({'sub_item_type': 'series', 'category': nextCategoryMovie, 'title': title, 'url': self.getFullUrl(url), 'imdbid': imdbid, 'desc': self.cleanHtmlStr(desc)})
                     self.addDir(params)
         
         #subtitles items
@@ -176,12 +176,12 @@ class Napisy24plProvider(CBaseSubProviderClass):
                     descTab.append("%s: %s" % (columnsTitles[idx], columnsValues[idx]))
             desc = '[/br]'.join(descTab)
             params = dict(cItem)
-            params.update({'title':self.cleanHtmlStr(title), 'sub_id':subId, 'lang':lang, 'imdbid':imdbid, 'desc':self.cleanHtmlStr(desc)})
+            params.update({'title': self.cleanHtmlStr(title), 'sub_id': subId, 'lang': lang, 'imdbid': imdbid, 'desc': self.cleanHtmlStr(desc)})
             self.addSubtitle(params)
                 
         if nextPage:
             params = dict(cItem)
-            params.update({'title':_('Next page'), 'page':page + 1})
+            params.update({'title': _('Next page'), 'page': page + 1})
             self.addDir(params)
             
     def getSeasons(self, cItem, nextCategory):
@@ -217,7 +217,7 @@ class Napisy24plProvider(CBaseSubProviderClass):
                 if dSeazon not in self.cacheSeasons:
                     self.cacheSeasons[season] = []
                 title = self.cleanHtmlStr(tmpItem)
-                eParams = {'title':title, 'd_id':dId, 'd_nid':dNid, 'd_seazon':dSeazon, 'd_episode':dEpizod}
+                eParams = {'title': title, 'd_id': dId, 'd_nid': dNid, 'd_seazon': dSeazon, 'd_episode': dEpizod}
                 if promEpisode != dEpizod:
                     self.cacheSeasons[season].append(eParams)
                 else:
@@ -225,7 +225,7 @@ class Napisy24plProvider(CBaseSubProviderClass):
             if None != promEpisodeItem:
                 self.cacheSeasons[season].insert(0, promEpisodeItem)
             
-            params = {'season':season, 'serie_title':titleN24, 'imdbid':imdbid}
+            params = {'season': season, 'serie_title': titleN24, 'imdbid': imdbid}
             if promSeason == season:
                 promItem = params
             else:
@@ -237,7 +237,7 @@ class Napisy24plProvider(CBaseSubProviderClass):
         for item in tab:
             params = dict(cItem)
             params.update(item)
-            params.update({'category':nextCategory, 'title':_('Season %s') % item['season']})
+            params.update({'category': nextCategory, 'title': _('Season %s') % item['season']})
             self.addDir(params)
     
     def getEpisodes(self, cItem, nextCategory):
@@ -247,12 +247,12 @@ class Napisy24plProvider(CBaseSubProviderClass):
         for item in episodesTab:
             params = dict(cItem)
             params.update(item)
-            params.update({'category':nextCategory})
+            params.update({'category': nextCategory})
             self.addDir(params)
             
     def getSubtitles(self, cItem):
         printDBG("Napisy24plProvider.getSubtitles")
-        post_data = {'serial':cItem['serie_title'], 'sezon':cItem['d_seazon'], 'epizod':cItem['d_episode'], 'nid':cItem['d_nid']}
+        post_data = {'serial': cItem['serie_title'], 'sezon': cItem['d_seazon'], 'epizod': cItem['d_episode'], 'nid': cItem['d_nid']}
         
         url = self.getFullUrl('run/pages/serial_napis.php')
         sts, data = self.getPage(url, self.defaultParams, post_data)
@@ -280,7 +280,7 @@ class Napisy24plProvider(CBaseSubProviderClass):
                     durationSec = 0
                 printDBG("DUTATION >>>>>>>>>>>>>>>>>>>>>>> [%s]s" % durationSec)
                 params = dict(cItem)
-                params.update({'title':self.cleanHtmlStr(title), 'duration_sec':durationSec, 'sub_id':subId, 'lang':lang, 'desc':self.cleanHtmlStr(desc)})
+                params.update({'title': self.cleanHtmlStr(title), 'duration_sec': durationSec, 'sub_id': subId, 'lang': lang, 'desc': self.cleanHtmlStr(desc)})
                 self.addSubtitle(params)
         except Exception:
             printExc()
@@ -376,7 +376,7 @@ class Napisy24plProvider(CBaseSubProviderClass):
                 try:
                     with open(fileName, 'w') as f:
                         f.write(data)
-                    retData = {'title':title, 'path':fileName, 'lang':lang, 'imdbid':imdbid, 'sub_id':subId}
+                    retData = {'title': title, 'path': fileName, 'lang': lang, 'imdbid': imdbid, 'sub_id': subId}
                 except Exception:
                     printExc()
                     SetIPTVPlayerLastHostError(_('Failed to write the file "%s".') % fileName)
@@ -404,7 +404,7 @@ class Napisy24plProvider(CBaseSubProviderClass):
     #MAIN MENU
         if name == None:
             self.initSubProvider(self.currItem)
-            self.getMoviesList({'name':'category', 'category':'get_movies_list'}, 'get_seasons')
+            self.getMoviesList({'name': 'category', 'category': 'get_movies_list'}, 'get_seasons')
         elif category == 'get_movies_list':
             self.getMoviesList(self.currItem, 'get_seasons')
         elif category == 'get_seasons':

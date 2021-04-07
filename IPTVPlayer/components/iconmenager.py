@@ -269,7 +269,7 @@ class IconMenager:
         
         if img_url.endswith('|cf'):
             img_url = img_url[:-3]
-            params_cfad = {'with_metadata':True, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True} 
+            params_cfad = {'with_metadata': True, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True} 
             domain = urlparser.getDomain(img_url, onlyDomain=True)
             
             params_cfad['cookiefile'] = '/hdd/IPTVCache//cookies/{0}.cookie'.format(domain)

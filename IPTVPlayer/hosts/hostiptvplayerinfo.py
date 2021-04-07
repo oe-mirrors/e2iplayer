@@ -36,24 +36,24 @@ def gettytul():
 class IPTVPlayerInfo(CBaseHostClass):
  
     def __init__(self):
-        CBaseHostClass.__init__(self, {'history':'iptvplayer.pl', 'cookie':'iptvplayer.pl.cookie'})
+        CBaseHostClass.__init__(self, {'history': 'iptvplayer.pl', 'cookie': 'iptvplayer.pl.cookie'})
         self.DEFAULT_ICON_URL = 'https://about.gitlab.com/images/press/logo/png/gitlab-logo-white-stacked-rgb.png'
         self.USER_AGENT = 'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:40.0) Gecko/20100101 Firefox/40.0'
-        self.HEADER = {'User-Agent': self.USER_AGENT, 'DNT':'1', 'Accept': 'text/html'}
+        self.HEADER = {'User-Agent': self.USER_AGENT, 'DNT': '1', 'Accept': 'text/html'}
         self.AJAX_HEADER = dict(self.HEADER)
-        self.AJAX_HEADER.update({'X-Requested-With': 'XMLHttpRequest', 'Accept': 'application/json, text/javascript, */*; q=0.01', 'Accept-Encoding':'gzip, deflate'})
-        self.defaultParams = {'header':self.AJAX_HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
+        self.AJAX_HEADER.update({'X-Requested-With': 'XMLHttpRequest', 'Accept': 'application/json, text/javascript, */*; q=0.01', 'Accept-Encoding': 'gzip, deflate'})
+        self.defaultParams = {'header': self.AJAX_HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
         self.MAIN_URL = 'https://gitlab.com/'
         self.MAIN_CAT_TAB = [
-                             {'category': 'commits', 'title': _('Commits'),},
-                             {'category': 'tutorial', 'title': _('Tutorials'),} 
+                             {'category': 'commits', 'title': _('Commits'), },
+                             {'category': 'tutorial', 'title': _('Tutorials'), } 
                             ]
                             
-        self.TUTORIALS_TAB = [{'title': _('Services management'), 'url':'https://www.youtube.com/watch?v=pG-_csh2TDk'},
-                             {'title': _('%s - service overview') % 'http://rte.ie/player', 'url':'https://www.youtube.com/watch?v=IhC8m8K1jkg'},
-                             {'title': _('%s subtitles download - how to') % _('[en]'), 'url':'https://www.youtube.com/watch?v=ZO6w6Pr5z_4'},
-                             {'title': _('%s subtitles download - how to') % _('[pl]'), 'url':'https://www.youtube.com/watch?v=3onH5vxlDcg'},
-                             {'title': _('%s - subtitles provider') % 'http://prijevodi-online.org/', 'url':'https://www.youtube.com/watch?v=lb8QvViUYq4'},
+        self.TUTORIALS_TAB = [{'title': _('Services management'), 'url': 'https://www.youtube.com/watch?v=pG-_csh2TDk'},
+                             {'title': _('%s - service overview') % 'http://rte.ie/player', 'url': 'https://www.youtube.com/watch?v=IhC8m8K1jkg'},
+                             {'title': _('%s subtitles download - how to') % _('[en]'), 'url': 'https://www.youtube.com/watch?v=ZO6w6Pr5z_4'},
+                             {'title': _('%s subtitles download - how to') % _('[pl]'), 'url': 'https://www.youtube.com/watch?v=3onH5vxlDcg'},
+                             {'title': _('%s - subtitles provider') % 'http://prijevodi-online.org/', 'url': 'https://www.youtube.com/watch?v=lb8QvViUYq4'},
                             ]
                             
                             
@@ -99,7 +99,7 @@ class IPTVPlayerInfo(CBaseHostClass):
                 item = item.split('</li>', 1)
                 title = self.cm.ph.getSearchGroups(item[0], '''data-day=['"]([^'^"]+?)['"]''')[0].replace('-', '.')
                 desc = self.cleanHtmlStr(item[0]) 
-                self.addMarker({'title':title, 'desc':desc})
+                self.addMarker({'title': title, 'desc': desc})
                 
                 item = self.cm.ph.getAllItemsBeetwenMarkers(item[1], '<li', '</li>')
                 for it in item:
@@ -111,7 +111,7 @@ class IPTVPlayerInfo(CBaseHostClass):
                     title = self.cleanHtmlStr(it[0])
                     desc = self.cleanHtmlStr(it[1])
                     
-                    params = {'title':title, 'url':url, 'desc':desc, 'icon':icon}
+                    params = {'title': title, 'url': url, 'desc': desc, 'icon': icon}
                     if currCommitStamp != '' and currCommitStamp == stamp:
                         params['text_color'] = config.plugins.iptvplayer.iptvplayerinfo_currversion_color.value
                     self.addArticle(params)
@@ -120,7 +120,7 @@ class IPTVPlayerInfo(CBaseHostClass):
         
         if nextPage:
             params = dict(cItem)
-            params.update({'title':_("Next page"), 'page':page + 1})
+            params.update({'title': _("Next page"), 'page': page + 1})
             self.addDir(params)
         
     def getLinksForVideo(self, cItem):
@@ -141,7 +141,7 @@ class IPTVPlayerInfo(CBaseHostClass):
         
     #MAIN MENU
         if name == None:
-            self.listsTab(self.MAIN_CAT_TAB, {'name':'category'})
+            self.listsTab(self.MAIN_CAT_TAB, {'name': 'category'})
         elif category == 'commits':
             self.listCommits(self.currItem, 'list_items')
         elif category == 'tutorial':

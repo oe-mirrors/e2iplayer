@@ -29,19 +29,19 @@ def gettytul():
 class HDPopcornsCom(CBaseHostClass):
  
     def __init__(self):
-        CBaseHostClass.__init__(self, {'history':'HDPopcornsCom.tv', 'cookie':'HDPopcornsCom.cookie'})
+        CBaseHostClass.__init__(self, {'history': 'HDPopcornsCom.tv', 'cookie': 'HDPopcornsCom.cookie'})
         self.USER_AGENT = 'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:40.0) Gecko/20100101 Firefox/40.0'
         self.HEADER = {'User-Agent': self.USER_AGENT, 'Accept': 'text/html'}
         self.AJAX_HEADER = dict(self.HEADER)
         self.AJAX_HEADER.update({'X-Requested-With': 'XMLHttpRequest'})
-        self.defaultParams = {'header':self.HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
+        self.defaultParams = {'header': self.HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
         
         self.MAIN_URL = 'http://hdpopcorns.co/'
         self.DEFAULT_ICON_URL = 'http://7428.net/wp-content/uploads/2014/07/Movie-Time-Ticket-Vector.jpg' 
         
-        self.MAIN_CAT_TAB = [{'category':'list_items', 'title': _('Categories'), 'url':self.getMainUrl()},
-                             {'category': 'search', 'title': _('Search'), 'search_item': True,},
-                             {'category': 'search_history', 'title': _('Search history'),} 
+        self.MAIN_CAT_TAB = [{'category': 'list_items', 'title': _('Categories'), 'url': self.getMainUrl()},
+                             {'category': 'search', 'title': _('Search'), 'search_item': True, },
+                             {'category': 'search_history', 'title': _('Search history'), } 
                             ]
         
         self.cacheFilters = {}
@@ -56,7 +56,7 @@ class HDPopcornsCom(CBaseHostClass):
                 return url
             else:
                 return urllib.parse.urljoin(baseUrl, url)
-        addParams['cloudflare_params'] = {'domain':self.up.getDomain(baseUrl), 'cookie_file':self.COOKIE_FILE, 'User-Agent':self.USER_AGENT, 'full_url_handle':_getFullUrl}
+        addParams['cloudflare_params'] = {'domain': self.up.getDomain(baseUrl), 'cookie_file': self.COOKIE_FILE, 'User-Agent': self.USER_AGENT, 'full_url_handle': _getFullUrl}
         return self.cm.getPageCFProtection(baseUrl, addParams, post_data)
     
     def getFullUrl(self, url):
@@ -69,7 +69,7 @@ class HDPopcornsCom(CBaseHostClass):
         if url == '':
             return ''
         cookieHeader = self.cm.getCookieHeader(self.COOKIE_FILE)
-        return strwithmeta(url, {'Cookie':cookieHeader, 'User-Agent':self.USER_AGENT})
+        return strwithmeta(url, {'Cookie': cookieHeader, 'User-Agent': self.USER_AGENT})
         
     def fillFilters(self, cItem):
         self.cacheFilters = {}
@@ -87,9 +87,9 @@ class HDPopcornsCom(CBaseHostClass):
                 title = self.cleanHtmlStr(item)
                 if titleBase == '':
                     title = title.title()
-                self.cacheFilters[key].append({'title':titleBase + title, key:value})
+                self.cacheFilters[key].append({'title': titleBase + title, key: value})
             if addAny and len(self.cacheFilters[key]):
-                self.cacheFilters[key].insert(0, {'title':'Wszystkie'})
+                self.cacheFilters[key].insert(0, {'title': 'Wszystkie'})
         
         # category
         tmpData = self.cm.ph.getDataBeetwenMarkers(data, 'ofcategory', '</select>')[1]
@@ -97,7 +97,7 @@ class HDPopcornsCom(CBaseHostClass):
         addFilter(tmpData, 'ofcategory', False, '', 'value') 
         if 0 == len(self.cacheFilters['ofcategory']):
             for item in [("46", "Action"), ("24", "Adventure"), ("25", "Animation"), ("26", "Biography"), ("27", "Comedy"), ("28", "Crime"), ("29", "Documentary"), ("30", "Drama"), ("31", "Family"), ("32", "Fantasy"), ("33", "Film-Noir"), ("35", "History"), ("36", "Horror"), ("37", "Music"), ("38", "Musical"), ("39", "Mystery"), ("40", "Romance"), ("41", "Sci-Fi"), ("42", "Sports"), ("43", "Thriller")]:
-                self.cacheFilters['ofcategory'].append({'title':item[1], 'ofcategory':item[0]})
+                self.cacheFilters['ofcategory'].append({'title': item[1], 'ofcategory': item[0]})
         
         # rating
         tmpData = self.cm.ph.getDataBeetwenMarkers(data, 'ofrating', '</select>')[1]
@@ -110,7 +110,7 @@ class HDPopcornsCom(CBaseHostClass):
                     title = 'All Ratings'
                 else:
                     title = i
-                self.cacheFilters['ofrating'].append({'title':title, 'ofrating':i})
+                self.cacheFilters['ofrating'].append({'title': title, 'ofrating': i})
         
         
         # quality
@@ -119,7 +119,7 @@ class HDPopcornsCom(CBaseHostClass):
         addFilter(tmpData, 'ofquality', False, '', 'value') 
         if 0 == len(self.cacheFilters['ofquality']):
             for item in [("0", "All Qualities"), ("47", "1080p"), ("48", "720p")]:
-                self.cacheFilters['ofquality'].append({'title':item[1], 'ofquality':item[0]})
+                self.cacheFilters['ofquality'].append({'title': item[1], 'ofquality': item[0]})
         
         printDBG(self.cacheFilters)
         
@@ -176,12 +176,12 @@ class HDPopcornsCom(CBaseHostClass):
             if desc == '':
                 desc = self.cleanHtmlStr(self.cm.ph.getSearchGroups(item, '''title=['"]([^'^"]+?)['"]''')[0])
             title = self.cleanHtmlStr(item)
-            params = {'good_for_fav': True, 'category':nextCategory, 'title':title, 'url':url, 'icon':icon, 'desc':desc}
+            params = {'good_for_fav': True, 'category': nextCategory, 'title': title, 'url': url, 'icon': icon, 'desc': desc}
             self.addDir(params)
         
         if self.cm.isValidUrl(nextPage):
             params = dict(cItem)
-            params.update({'title':_('Next page'), 'page':page + 1, 'url':nextPage})
+            params.update({'title': _('Next page'), 'page': page + 1, 'url': nextPage})
             self.addDir(params)
         
     def listEpisodes(self, cItem):
@@ -204,7 +204,7 @@ class HDPopcornsCom(CBaseHostClass):
             title = self.cleanHtmlStr(item)
             
             params = dict(cItem)
-            params.update({'good_for_fav': True, 'title':title, 'url':url})
+            params.update({'good_for_fav': True, 'title': title, 'url': url})
             self.addVideo(params)
             
         tmp = self.cm.ph.getAllItemsBeetwenMarkers(data, '<a ', '>', withMarkers=True, caseSensitive=False)
@@ -218,7 +218,7 @@ class HDPopcornsCom(CBaseHostClass):
             
             title = '%s - Trailer %s' % (cItem['title'], len(self.currList) + 1)
             params = dict(cItem)
-            params.update({'good_for_fav': True, 'title':title, 'url':url})
+            params.update({'good_for_fav': True, 'title': title, 'url': url})
             self.addVideo(params)
             
         if '<form action' in data:
@@ -234,7 +234,7 @@ class HDPopcornsCom(CBaseHostClass):
             if not self.cm.isValidUrl(url):
                 continue
             params = dict(cItem)
-            params.update({'good_for_fav': True, 'title':title, 'urls':[{'name':'default', 'url':url, 'need_resolve':False}]})
+            params.update({'good_for_fav': True, 'title': title, 'urls': [{'name': 'default', 'url': url, 'need_resolve': False}]})
             self.addVideo(params)
 
     def listSearchResult(self, cItem, searchPattern, searchType):
@@ -284,8 +284,8 @@ class HDPopcornsCom(CBaseHostClass):
                 if not self.cm.isValidUrl(url):
                     continue
                 name = self.cleanHtmlStr(item)
-                url = strwithmeta(url.replace('&#038;', '&'), {'popcornsubtitles_url':popcornsubtitlesUrl})
-                urlTab.append({'name':name, 'url':url, 'need_resolve':0})
+                url = strwithmeta(url.replace('&#038;', '&'), {'popcornsubtitles_url': popcornsubtitlesUrl})
+                urlTab.append({'name': name, 'url': url, 'need_resolve': 0})
         except Exception:
             printExc()
         
@@ -345,7 +345,7 @@ class HDPopcornsCom(CBaseHostClass):
         title = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(data, '<header', '</header>')[1])
         icon = self.getFullIconUrl(self.cm.ph.getSearchGroups(data, '''<img[^>]+?src=['"]([^"^']+?\.jpe?g[^"^']*?)["']''')[0])
         
-        mapDesc = {'Year':'year', 'Quality':'quality', 'Language':'language', 'Genre': 'genres', 'Cast:':'cast', 'Episodes':'episodes'}
+        mapDesc = {'Year': 'year', 'Quality': 'quality', 'Language': 'language', 'Genre': 'genres', 'Cast:': 'cast', 'Episodes': 'episodes'}
         tmp = re.compile('''>\s*([^\:]+?)\:(.+?)<br''').findall(data)
         for item in tmp:
             key = self.cleanHtmlStr(item[0])
@@ -367,7 +367,7 @@ class HDPopcornsCom(CBaseHostClass):
         if icon == '':
             icon = cItem.get('icon', self.DEFAULT_ICON_URL)
         
-        return [{'title':self.cleanHtmlStr(title), 'text': self.cleanHtmlStr(desc), 'images':[{'title':'', 'url':self.getFullUrl(icon)}], 'other_info':otherInfo}]
+        return [{'title': self.cleanHtmlStr(title), 'text': self.cleanHtmlStr(desc), 'images': [{'title': '', 'url': self.getFullUrl(icon)}], 'other_info': otherInfo}]
         
     def handleService(self, index, refresh=0, searchPattern='', searchType=''):
         printDBG('handleService start')
@@ -383,7 +383,7 @@ class HDPopcornsCom(CBaseHostClass):
         
     #MAIN MENU
         if name == None:
-            self.listsTab(self.MAIN_CAT_TAB, {'name':'category'})
+            self.listsTab(self.MAIN_CAT_TAB, {'name': 'category'})
         elif 'list_items' == category:
             filtersTab = ['ofcategory', 'ofrating', 'ofquality']
             idx = self.currItem.get('f_idx', 0)
@@ -396,11 +396,11 @@ class HDPopcornsCom(CBaseHostClass):
     #SEARCH
         elif category in ["search", "search_next_page"]:
             cItem = dict(self.currItem)
-            cItem.update({'search_item':False, 'name':'category'}) 
+            cItem.update({'search_item': False, 'name': 'category'}) 
             self.listSearchResult(cItem, searchPattern, searchType)
     #HISTORIA SEARCH
         elif category == "search_history":
-            self.listsHistory({'name':'history', 'category': 'search'}, 'desc', _("Type: "))
+            self.listsHistory({'name': 'history', 'category': 'search'}, 'desc', _("Type: "))
         else:
             printExc()
         

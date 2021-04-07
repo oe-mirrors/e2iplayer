@@ -28,16 +28,16 @@ def gettytul():
 class FilmStreamHD(CBaseHostClass):
  
     def __init__(self):
-        CBaseHostClass.__init__(self, {'history':'filmstreamhd.it', 'cookie':'filmstreamhd.it.cookie'})
+        CBaseHostClass.__init__(self, {'history': 'filmstreamhd.it', 'cookie': 'filmstreamhd.it.cookie'})
         self.USER_AGENT = 'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:40.0) Gecko/20100101 Firefox/40.0'
         self.MAIN_URL = 'http://filmstreamhd.it/'
         self.DEFAULT_ICON_URL = self.getFullIconUrl('/wp-content/uploads/2018/09/logonuovoHD.png')
-        self.HTTP_HEADER = {'User-Agent': self.USER_AGENT, 'DNT':'1', 'Accept': 'text/html', 'Accept-Encoding':'gzip, deflate', 'Referer':self.getMainUrl(), 'Origin':self.getMainUrl()}
-        self.defaultParams = {'header':self.HTTP_HEADER, 'with_metadata':True, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
+        self.HTTP_HEADER = {'User-Agent': self.USER_AGENT, 'DNT': '1', 'Accept': 'text/html', 'Accept-Encoding': 'gzip, deflate', 'Referer': self.getMainUrl(), 'Origin': self.getMainUrl()}
+        self.defaultParams = {'header': self.HTTP_HEADER, 'with_metadata': True, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
         
-        self.MAIN_CAT_TAB = [{'category':'list_items', 'title': _('HOME'), 'url':self.getMainUrl()},
-                             {'category':'genres', 'title': _('FILM ARCHIVE'), 'url':self.getFullUrl('/film-archivio')},
-                             {'category':'search', 'title': _('Search'), 'search_item':True},
+        self.MAIN_CAT_TAB = [{'category': 'list_items', 'title': _('HOME'), 'url': self.getMainUrl()},
+                             {'category': 'genres', 'title': _('FILM ARCHIVE'), 'url': self.getFullUrl('/film-archivio')},
+                             {'category': 'search', 'title': _('Search'), 'search_item': True},
                              {'category': 'search_history', 'title': _('Search history'), } 
                             ]
 
@@ -51,7 +51,7 @@ class FilmStreamHD(CBaseHostClass):
                 return url
             else:
                 return urlparse.urljoin(baseUrl, url)
-        addParams['cloudflare_params'] = {'domain':self.up.getDomain(baseUrl), 'cookie_file':self.COOKIE_FILE, 'User-Agent':self.USER_AGENT, 'full_url_handle':_getFullUrl}
+        addParams['cloudflare_params'] = {'domain': self.up.getDomain(baseUrl), 'cookie_file': self.COOKIE_FILE, 'User-Agent': self.USER_AGENT, 'full_url_handle': _getFullUrl}
         return self.cm.getPageCFProtection(baseUrl, addParams, post_data)
         
     def setMainUrl(self, url):
@@ -67,7 +67,7 @@ class FilmStreamHD(CBaseHostClass):
         
         if addAll:
             params = dict(cItem)
-            params.update({'category':nextCategory, 'title':_('--All--'), 'url':data.meta['url']})
+            params.update({'category': nextCategory, 'title': _('--All--'), 'url': data.meta['url']})
             self.addDir(params)
             
         data = self.cm.ph.getDataBeetwenMarkers(data, m1, '</ul>', False)[1]
@@ -78,7 +78,7 @@ class FilmStreamHD(CBaseHostClass):
             if title == '':
                 title = self.cleanHtmlStr(self.cm.ph.getSearchGroups(item, '''title=['"]([^"^']+?)['"]''')[0])
             params = dict(cItem)
-            params.update({'category':nextCategory, 'title':title, 'url':url})
+            params.update({'category': nextCategory, 'title': title, 'url': url})
             self.addDir(params)
     
     def listItems(self, cItem):
@@ -121,12 +121,12 @@ class FilmStreamHD(CBaseHostClass):
                     desc.append(tmp)
 
                 params = dict(cItem)
-                params.update({'good_for_fav':True, 'title':title, 'url':url, 'icon':icon, 'desc':'[/br]'.join(desc)})
+                params.update({'good_for_fav': True, 'title': title, 'url': url, 'icon': icon, 'desc': '[/br]'.join(desc)})
                 self.addVideo(params)
         
         if nextPage:
             params = dict(cItem)
-            params.update({'good_for_fav':False, 'title':_('Next page'), 'url':nextPage, 'page':cItem.get('page', 1) + 1})
+            params.update({'good_for_fav': False, 'title': _('Next page'), 'url': nextPage, 'page': cItem.get('page', 1) + 1})
             self.addDir(params)
         
     def listSearchResult(self, cItem, searchPattern, searchType):
@@ -150,7 +150,7 @@ class FilmStreamHD(CBaseHostClass):
         data = re.compile('''['"]url['"]\s*?:\s*?['"]([^'^"]+?)['"]''').findall(data)
         for item in data:
             url = self.getFullUrl(item.replace('\\/', '/'))
-            urlTab.append({'name':self.up.getHostName(url), 'url':strwithmeta(url, {'Referer':cUrl, 'User-Agent':self.USER_AGENT}), 'need_resolve':0})
+            urlTab.append({'name': self.up.getHostName(url), 'url': strwithmeta(url, {'Referer': cUrl, 'User-Agent': self.USER_AGENT}), 'need_resolve': 0})
 
         return urlTab
         
@@ -202,7 +202,7 @@ class FilmStreamHD(CBaseHostClass):
         if desc == '':
             desc = cItem.get('desc', '')
         
-        return [{'title':self.cleanHtmlStr(title), 'text': self.cleanHtmlStr(desc), 'images':[{'title':'', 'url':self.getFullUrl(icon)}], 'other_info':{'custom_items_list':itemsList}}]
+        return [{'title': self.cleanHtmlStr(title), 'text': self.cleanHtmlStr(desc), 'images': [{'title': '', 'url': self.getFullUrl(icon)}], 'other_info': {'custom_items_list': itemsList}}]
     
     def handleService(self, index, refresh=0, searchPattern='', searchType=''):
         printDBG('handleService start')
@@ -216,7 +216,7 @@ class FilmStreamHD(CBaseHostClass):
         
     #MAIN MENU
         if name == None:
-            self.listsTab(self.MAIN_CAT_TAB, {'name':'category'})
+            self.listsTab(self.MAIN_CAT_TAB, {'name': 'category'})
         elif category == 'genres':
             self.listCategories(self.currItem, 'release', '>Genere<', True)
         elif category == 'release':
@@ -229,11 +229,11 @@ class FilmStreamHD(CBaseHostClass):
     #SEARCH
         elif category in ["search", "search_next_page"]:
             cItem = dict(self.currItem)
-            cItem.update({'search_item':False, 'name':'category'}) 
+            cItem.update({'search_item': False, 'name': 'category'}) 
             self.listSearchResult(cItem, searchPattern, searchType)
     #HISTORIA SEARCH
         elif category == "search_history":
-            self.listsHistory({'name':'history', 'category': 'search'}, 'desc', _("Type: "))
+            self.listsHistory({'name': 'history', 'category': 'search'}, 'desc', _("Type: "))
         else:
             printExc()
         

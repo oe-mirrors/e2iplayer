@@ -38,35 +38,35 @@ class LiveLeak(CBaseHostClass):
     
     def __init__(self):
         printDBG("LiveLeak.__init__")
-        CBaseHostClass.__init__(self, {'history':'LiveLeak.com'})
+        CBaseHostClass.__init__(self, {'history': 'LiveLeak.com'})
         
         self.MAIN_URL = 'https://www.liveleak.com/'
         ITEMS_BROWSE_URL = self.getFullUrl('browse?')
         CHANNEL_URL = self.getFullUrl('c/')
         self.DEFAULT_ICON_URL = 'https://cdn.liveleak.com/80281E/ll_a_u/ll3/images/img_logo.png'
-        self.MAIN_CAT_TAB = [{'category':'tab_items', 'title': _('Items')},
-                             {'category': 'tab_channels', 'title': _('Channels'),},
+        self.MAIN_CAT_TAB = [{'category': 'tab_items', 'title': _('Items')},
+                             {'category': 'tab_channels', 'title': _('Channels'), },
                              {'category': 'search', 'title': _('Search'), 'search_item': True, },
-                             {'category': 'search_history', 'title': _('Search history'),}]
+                             {'category': 'search_history', 'title': _('Search history'), }]
         
-        self.ITEMS_CAT_TAB = [{'category':'recent_items', 'title':'Recent Items (Popular)', 'url':ITEMS_BROWSE_URL + 'selection=popular'},
-                              {'category':'recent_items', 'title':'Recent Items (All)', 'url':ITEMS_BROWSE_URL + 'selection=all'},
-                              {'category':'recent_items', 'title':'Feature Potential Items', 'url':ITEMS_BROWSE_URL + 'upcoming=1'},
-                              {'category':'recent_items', 'title':'Top Items (Today)', 'url':ITEMS_BROWSE_URL + 'rank_by=day'},
-                              {'category':'recent_items', 'title':'Top Items (This Week)', 'url':ITEMS_BROWSE_URL + 'rank_by=week'},
-                              {'category':'recent_items', 'title':'Top Items (This Month)', 'url':ITEMS_BROWSE_URL + 'rank_by=month'},
-                              {'category':'recent_items', 'title':'Top Items (All time)', 'url':ITEMS_BROWSE_URL + 'rank_by=all_time'}]
+        self.ITEMS_CAT_TAB = [{'category': 'recent_items', 'title': 'Recent Items (Popular)', 'url': ITEMS_BROWSE_URL + 'selection=popular'},
+                              {'category': 'recent_items', 'title': 'Recent Items (All)', 'url': ITEMS_BROWSE_URL + 'selection=all'},
+                              {'category': 'recent_items', 'title': 'Feature Potential Items', 'url': ITEMS_BROWSE_URL + 'upcoming=1'},
+                              {'category': 'recent_items', 'title': 'Top Items (Today)', 'url': ITEMS_BROWSE_URL + 'rank_by=day'},
+                              {'category': 'recent_items', 'title': 'Top Items (This Week)', 'url': ITEMS_BROWSE_URL + 'rank_by=week'},
+                              {'category': 'recent_items', 'title': 'Top Items (This Month)', 'url': ITEMS_BROWSE_URL + 'rank_by=month'},
+                              {'category': 'recent_items', 'title': 'Top Items (All time)', 'url': ITEMS_BROWSE_URL + 'rank_by=all_time'}]
         
-        self.CHANNEL_CAT_TAB = [{'category':'channel', 'title':'News & Politics', 'url':CHANNEL_URL + 'news'},
-                                 {'category':'channel', 'title':'Yoursay', 'url':CHANNEL_URL + 'yoursay'},
-                                 {'category':'channel', 'title':'Liveleakers', 'url':CHANNEL_URL + 'liveleakers'},
-                                 {'category':'channel', 'title':'Must See', 'url':CHANNEL_URL + 'must_see'},
-                                 {'category':'channel', 'title':'Ukraine', 'url':CHANNEL_URL + 'ukraine'},
-                                 {'category':'channel', 'title':'Syria', 'url':CHANNEL_URL + 'syria'},
-                                 {'category':'channel', 'title':'Entertainment', 'url':CHANNEL_URL + 'entertainment'},
-                                 {'category':'channel', 'title':'WTF', 'url':CHANNEL_URL + 'wtf'},
-                                 {'category':'channel', 'title':'Russia', 'url':CHANNEL_URL + 'russia'},
-                                 {'category':'channels', 'title':'More', 'url':self.getFullUrl('/channels')} 
+        self.CHANNEL_CAT_TAB = [{'category': 'channel', 'title': 'News & Politics', 'url': CHANNEL_URL + 'news'},
+                                 {'category': 'channel', 'title': 'Yoursay', 'url': CHANNEL_URL + 'yoursay'},
+                                 {'category': 'channel', 'title': 'Liveleakers', 'url': CHANNEL_URL + 'liveleakers'},
+                                 {'category': 'channel', 'title': 'Must See', 'url': CHANNEL_URL + 'must_see'},
+                                 {'category': 'channel', 'title': 'Ukraine', 'url': CHANNEL_URL + 'ukraine'},
+                                 {'category': 'channel', 'title': 'Syria', 'url': CHANNEL_URL + 'syria'},
+                                 {'category': 'channel', 'title': 'Entertainment', 'url': CHANNEL_URL + 'entertainment'},
+                                 {'category': 'channel', 'title': 'WTF', 'url': CHANNEL_URL + 'wtf'},
+                                 {'category': 'channel', 'title': 'Russia', 'url': CHANNEL_URL + 'russia'},
+                                 {'category': 'channels', 'title': 'More', 'url': self.getFullUrl('/channels')} 
                                ] 
     
     def _checkNexPage(self, data, page):
@@ -114,7 +114,7 @@ class LiveLeak(CBaseHostClass):
                     self.addDir(params)
         if nextPage != '':
             params = dict(cItem)
-            params.update({'name':'category', 'title':_('Next page'), 'url':nextPage, 'page':str(int(cItem.get('page', '1')) + 1)})
+            params.update({'name': 'category', 'title': _('Next page'), 'url': nextPage, 'page': str(int(cItem.get('page', '1')) + 1)})
             self.addDir(params)
                 
     def listRecentItems(self, cItem):
@@ -151,11 +151,11 @@ class LiveLeak(CBaseHostClass):
         if 'items' == searchType:
             sort = config.plugins.iptvplayer.liveleak_searchsort.value
             params = dict(cItem)
-            params.update({'category':'recent_items', 'url':self.getFullUrl('browse?q=%s&sort_by=%s' % (searchPattern.replace(' ', '+'), sort))})
+            params.update({'category': 'recent_items', 'url': self.getFullUrl('browse?q=%s&sort_by=%s' % (searchPattern.replace(' ', '+'), sort))})
             self.listRecentItems(params)
         else:
             params = dict(cItem)
-            params.update({'category':'channels', 'url':self.getFullUrl('/channel?a=list&q=' + (searchPattern.replace(' ', '+')))})
+            params.update({'category': 'channels', 'url': self.getFullUrl('/channel?a=list&q=' + (searchPattern.replace(' ', '+')))})
             self.listChannels(params)
         
     def getLinksForVideo(self, cItem):
@@ -172,7 +172,7 @@ class LiveLeak(CBaseHostClass):
         self.currList = []
         
         if None == name:
-            self.listsTab(self.MAIN_CAT_TAB, {'name':'category'})
+            self.listsTab(self.MAIN_CAT_TAB, {'name': 'category'})
     #ITEMS TAB
         elif 'tab_items' == category:
             self.listsTab(self.ITEMS_CAT_TAB, self.currItem)
@@ -192,11 +192,11 @@ class LiveLeak(CBaseHostClass):
     #SEARCH
         elif category in ["search", "search_next_page"]:
             cItem = dict(self.currItem)
-            cItem.update({'search_item':False, 'name':'category'}) 
+            cItem.update({'search_item': False, 'name': 'category'}) 
             self.listSearchResult(cItem, searchPattern, searchType)
     #HISTORIA SEARCH
         elif category == "search_history":
-            self.listsHistory({'name':'history', 'category': 'search'}, 'desc', _("Type: "))
+            self.listsHistory({'name': 'history', 'category': 'search'}, 'desc', _("Type: "))
         else:
             printExc()
 

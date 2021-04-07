@@ -28,9 +28,9 @@ class HdgoccParser():
     def __init__(self):
         self.up = urlparser()
         self.cm = common()
-        self.HTTP_HEADER = {'User-Agent':self.USER_AGENT, 'Referer':''}
+        self.HTTP_HEADER = {'User-Agent': self.USER_AGENT, 'Referer': ''}
         self.COOKIEFILE = GetCookieDir("hdgocc.cookie")
-        self.defaultParams = {'header':self.HTTP_HEADER, 'use_cookie': True, 'save_cookie': True, 'load_cookie': False, 'cookiefile': self.COOKIEFILE}
+        self.defaultParams = {'header': self.HTTP_HEADER, 'use_cookie': True, 'save_cookie': True, 'load_cookie': False, 'cookiefile': self.COOKIEFILE}
 
     def getFullUrl(self, url, pathUrl):
         printDBG('HdgoccParser.getFullUrl')
@@ -76,7 +76,7 @@ class HdgoccParser():
         seasonMainUrl = self.getFullUrl(pageUrl, seasonMainUrl)
         
         for item in seasonData:
-            seasonsTab.append({'title':item[1], 'id':int(item[0]), 'url': strwithmeta(seasonMainUrl + item[0], {'Referer':refUrl})})
+            seasonsTab.append({'title': item[1], 'id': int(item[0]), 'url': strwithmeta(seasonMainUrl + item[0], {'Referer': refUrl})})
         seasonsTab.sort(key=lambda item: item['id'])
         return seasonsTab
         
@@ -107,7 +107,7 @@ class HdgoccParser():
             idx = 0
             for idx in range(len(data)):
                 vidUrl = self.getFullUrl(seasonUrl, data[idx])
-                episodesTab.append({'title': itemTitle + str(idx + 1), 'id':(idx + 1), 'url':strwithmeta(vidUrl, {'Referer':refUrl})})
+                episodesTab.append({'title': itemTitle + str(idx + 1), 'id': (idx + 1), 'url': strwithmeta(vidUrl, {'Referer': refUrl})})
                 
         elif '/serials/' in seasonUrl:
             episodeData = self.cm.ph.getDataBeetwenMarkers(data, 'id="episode"', '</select>', False)[1]
@@ -125,7 +125,7 @@ class HdgoccParser():
                 except Exception: 
                     printExc()
                     id = idx
-                episodesTab.append({'title':item[1], 'id':id, 'url': strwithmeta(episodeMainUrl + item[0], {'host_name':'hdgo.cc', 'Referer':refUrl})})
+                episodesTab.append({'title': item[1], 'id': id, 'url': strwithmeta(episodeMainUrl + item[0], {'host_name': 'hdgo.cc', 'Referer': refUrl})})
                 idx += 1
         episodesTab.sort(key=lambda item: item['id'])
         return episodesTab

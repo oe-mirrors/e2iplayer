@@ -34,7 +34,7 @@ import time
 class IPTVSimpleAudioPlayer():
     def __init__(self):
         additionalParams = {}
-        self.gstAdditionalParams = {'buffer-duration':2}
+        self.gstAdditionalParams = {'buffer-duration': 2}
         self.gstAdditionalParams['download-buffer-path'] = additionalParams.get('download-buffer-path', '') # File template to store temporary files in, should contain directory and XXXXXX
         self.gstAdditionalParams['ring-buffer-max-size'] = additionalParams.get('ring-buffer-max-size', 0) # in MB
         self.gstAdditionalParams['buffer-duration'] = additionalParams.get('buffer-duration', -1) # in s
@@ -165,7 +165,7 @@ class IPTVPicturePlayerWidget(Screen):
             self.filePath = ''
             printExc()
         
-        self.addParams = {'seq_mode':False}
+        self.addParams = {'seq_mode': False}
         self.addParams.update(addParams)
         
         self.url = url

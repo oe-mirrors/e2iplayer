@@ -25,7 +25,7 @@ class Filmativa(CBaseHostClass):
     
  
     def __init__(self):
-        CBaseHostClass.__init__(self, {'history':'Filmativa', 'cookie':'filmativa.cookie'})
+        CBaseHostClass.__init__(self, {'history': 'Filmativa', 'cookie': 'filmativa.cookie'})
 
         self.MAIN_URL = 'https://filmativa.xyz/'
         self.SRCH_URL = self.MAIN_URL + '?s='
@@ -35,25 +35,25 @@ class Filmativa(CBaseHostClass):
         self.S_SRCH_URL = self.S_MAIN_URL + '?s='
         self.S_DEFAULT_ICON_URL = "https://zoxh.com/screenshot/bupxbupx/pxlr/pxjk/pxos/filmativa.ws-desktop.jpg"
 
-        self.MAIN_CAT_TAB = [{'category':'movies', 'title': _('Movies'), 'url':self.MAIN_URL, 'icon':self.DEFAULT_ICON_URL},
-                            {'category':'series', 'title': _('TV series'), 'url':self.S_MAIN_URL, 'icon':self.S_DEFAULT_ICON_URL},
-                            {'category':'search', 'title': _('Search'), 'search_item':True},
-                            {'category':'search_history', 'title': _('Search history')} 
+        self.MAIN_CAT_TAB = [{'category': 'movies', 'title': _('Movies'), 'url': self.MAIN_URL, 'icon': self.DEFAULT_ICON_URL},
+                            {'category': 'series', 'title': _('TV series'), 'url': self.S_MAIN_URL, 'icon': self.S_DEFAULT_ICON_URL},
+                            {'category': 'search', 'title': _('Search'), 'search_item': True},
+                            {'category': 'search_history', 'title': _('Search history')} 
                             ]
         
-        self.MOVIES_TAB = [{'category': 'list_movies', 'title': _('New'), 'url': self.MAIN_URL,},
-                            {'category':'list_movies', 'title': _('Popular'), 'url':self.MAIN_URL + 'popularno/'},
+        self.MOVIES_TAB = [{'category': 'list_movies', 'title': _('New'), 'url': self.MAIN_URL, },
+                            {'category': 'list_movies', 'title': _('Popular'), 'url': self.MAIN_URL + 'popularno/'},
                             ]
         
-        self.SERIES_TAB = [{'category': 'list_series', 'title': _('New'), 'url': self.S_MAIN_URL,},
-                      {'category':'list_series', 'title': _('New episodes'), 'url':self.S_MAIN_URL + 'nove-epizode/'},
-                      {'category':'list_series', 'title': _('Popular'), 'url':self.S_MAIN_URL + 'popularno/'},
+        self.SERIES_TAB = [{'category': 'list_series', 'title': _('New'), 'url': self.S_MAIN_URL, },
+                      {'category': 'list_series', 'title': _('New episodes'), 'url': self.S_MAIN_URL + 'nove-epizode/'},
+                      {'category': 'list_series', 'title': _('Popular'), 'url': self.S_MAIN_URL + 'popularno/'},
                  ]
 
 
         self.USER_AGENT = 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/73.0.3683.103 Safari/537.36'
         self.HEADER = {'User-Agent': self.USER_AGENT, 'Accept': 'text/html', 'Accept-Encoding': 'gzip'}
-        self.defaultParams = {'header':self.HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
+        self.defaultParams = {'header': self.HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
 
         self.seriesCache = {}
         self.seasons = []
@@ -61,7 +61,7 @@ class Filmativa(CBaseHostClass):
     def getPageCF(self, baseUrl, params={}, post_data=None):
         if params == {}: 
             params = self.defaultParams
-        params['cloudflare_params'] = {'domain':'filmativa.xyz', 'cookie_file': self.COOKIE_FILE, 'User-Agent':self.USER_AGENT}
+        params['cloudflare_params'] = {'domain': 'filmativa.xyz', 'cookie_file': self.COOKIE_FILE, 'User-Agent': self.USER_AGENT}
         return self.cm.getPageCFProtection(baseUrl, params, post_data)
 
     def getPage(self, baseUrl, addParams={}, post_data=None):
@@ -129,7 +129,7 @@ class Filmativa(CBaseHostClass):
             if len(tmp) > 1:
                 desc = self.cm.ph.getSearchGroups(tmp[1], 'title="([^"]+?)"')[0]
             params = dict(cItem)
-            params.update({'title': self.cleanHtmlStr(title), 'url':self._getFullUrl(url), 'desc': self.cleanHtmlStr(desc), 'icon':self._getFullUrl(icon)})
+            params.update({'title': self.cleanHtmlStr(title), 'url': self._getFullUrl(url), 'desc': self.cleanHtmlStr(desc), 'icon': self._getFullUrl(icon)})
             if category == 'video':
                 self.addVideo(params)
             else:
@@ -138,7 +138,7 @@ class Filmativa(CBaseHostClass):
         
         if nextPage:
             params = dict(cItem)
-            params.update({'title':_('Next page'), 'page':page + 1})
+            params.update({'title': _('Next page'), 'page': page + 1})
             self.addDir(params)
             
     def listMovies(self, cItem):
@@ -166,7 +166,7 @@ class Filmativa(CBaseHostClass):
             if item.find('</dt>') > 0:
                 season = item[:item.find('</dt>')]
                 sNum = season.upper().replace('SEZONA', '').strip()
-                self.seasons.append({'title':season, 'season':season})
+                self.seasons.append({'title': season, 'season': season})
 
                 if not self.seriesCache.get(season, []):
                     self.seriesCache[season] = []
@@ -189,18 +189,18 @@ class Filmativa(CBaseHostClass):
 
                     if dataDood:
                         url = "https://dood.watch/e/%s" % dataDood
-                        self.seriesCache[season].append({'title':'{0}: s{1} - {2} [{3}]'.format(tvShowTitle, sNum, episodeTitle, "Doodstream"), 'url':url, 'direct':True})
+                        self.seriesCache[season].append({'title': '{0}: s{1} - {2} [{3}]'.format(tvShowTitle, sNum, episodeTitle, "Doodstream"), 'url': url, 'direct': True})
                     elif dataMix:
                         url = "https://mixdrop.co/e/%s" % dataMix
-                        self.seriesCache[season].append({'title':'{0}: s{1} - {2} [{3}]'.format(tvShowTitle, sNum, episodeTitle, "Mixdrop"), 'url':url, 'direct':True, 'subtitles': subtitleUrl})
+                        self.seriesCache[season].append({'title': '{0}: s{1} - {2} [{3}]'.format(tvShowTitle, sNum, episodeTitle, "Mixdrop"), 'url': url, 'direct': True, 'subtitles': subtitleUrl})
                     elif dataOnly:
                         url = "https://onlystream.tv/e/%s" % dataOnly
-                        self.seriesCache[season].append({'title':'{0}: s{1} - {2} [{3}]'.format(tvShowTitle, sNum, episodeTitle, "Onlystream"), 'url':url, 'direct':True})
+                        self.seriesCache[season].append({'title': '{0}: s{1} - {2} [{3}]'.format(tvShowTitle, sNum, episodeTitle, "Onlystream"), 'url': url, 'direct': True})
                     elif dataVidoza:
                         url = "https://vidoza.net/embed-%s" % dataVidoza
-                        self.seriesCache[season].append({'title':'{0}: s{1} - {2} [{3}]'.format(tvShowTitle, sNum, episodeTitle, "Vidoza"), 'url':url, 'direct':True})
+                        self.seriesCache[season].append({'title': '{0}: s{1} - {2} [{3}]'.format(tvShowTitle, sNum, episodeTitle, "Vidoza"), 'url': url, 'direct': True})
                     else:
-                        self.seriesCache[season].append({'title':'{0}: s{1} - {2} [{3}]'.format(tvShowTitle, sNum, episodeTitle, _("No valid links available.")), 'url': ''})
+                        self.seriesCache[season].append({'title': '{0}: s{1} - {2} [{3}]'.format(tvShowTitle, sNum, episodeTitle, _("No valid links available.")), 'url': ''})
                         
         cItem = dict(cItem)
         cItem['category'] = category
@@ -232,10 +232,10 @@ class Filmativa(CBaseHostClass):
         if cItem.get('direct', False):
             if cItem.get('subtitles', ''):
                 subtitlesTab = [{'title': 'Serbian', 'url': cItem.get('subtitles', ''), 'lang': 'srp', 'format': 'vtt'}]
-                url = strwithmeta(cItem['url'], {'external_sub_tracks':subtitlesTab})
-                urlTab.append({'name':'link', 'url': url, 'need_resolve':1})
+                url = strwithmeta(cItem['url'], {'external_sub_tracks': subtitlesTab})
+                urlTab.append({'name': 'link', 'url': url, 'need_resolve': 1})
             else:
-                urlTab.append({'name':'link', 'url':cItem['url'], 'need_resolve':1})
+                urlTab.append({'name': 'link', 'url': cItem['url'], 'need_resolve': 1})
         
         else:
             sts, data = self.cm.getPage(cItem['url'])
@@ -249,13 +249,13 @@ class Filmativa(CBaseHostClass):
             divIframe = self.cm.ph.getDataBeetwenMarkers(data, ('<div', '>', 'trailer'), '</div>', False)[1]
             url = self.cm.ph.getSearchGroups(divIframe, 'src="([^"]+?)"')[0]
             if 'videomega.tv/validatehash.php?' in url:
-                sts, data = self.cm.getPage(url, {'header':{'Referer':cItem['url'], 'User-Agent':'Mozilla/5.0'}})
+                sts, data = self.cm.getPage(url, {'header': {'Referer': cItem['url'], 'User-Agent': 'Mozilla/5.0'}})
                 if sts:
                     data = self.cm.ph.getSearchGroups(data, 'ref="([^"]+?)"')[0]
                     linkUrl = 'http://videomega.tv/view.php?ref={0}&width=700&height=460&val=1'.format(data)
-                    urlTab.append({'name':'videomega.tv', 'url':linkUrl, 'need_resolve':1})
+                    urlTab.append({'name': 'videomega.tv', 'url': linkUrl, 'need_resolve': 1})
             elif self.cm.isValidUrl(url): 
-                urlTab.append({'name':'link', 'url':url, 'need_resolve':1})
+                urlTab.append({'name': 'link', 'url': url, 'need_resolve': 1})
         
         return urlTab
         
@@ -283,7 +283,7 @@ class Filmativa(CBaseHostClass):
         return cItem['url']
         
     def getLinksForFavourite(self, fav_data):
-        return self.getLinksForVideo({'url':fav_data})
+        return self.getLinksForVideo({'url': fav_data})
 
     def handleService(self, index, refresh=0, searchPattern='', searchType=''):
         printDBG('handleService start')
@@ -297,7 +297,7 @@ class Filmativa(CBaseHostClass):
         
     #MAIN MENU
         if name == None:
-            self.listsTab(self.MAIN_CAT_TAB, {'name':'category'})
+            self.listsTab(self.MAIN_CAT_TAB, {'name': 'category'})
     #MOVIES
         elif category == 'movies':
             self.listMoviesTab(self.currItem, 'list_movies')
@@ -315,11 +315,11 @@ class Filmativa(CBaseHostClass):
     #SEARCH
         elif category in ["search", "search_next_page"]:
             cItem = dict(self.currItem)
-            cItem.update({'search_item':False, 'name':'category'}) 
+            cItem.update({'search_item': False, 'name': 'category'}) 
             self.listSearchResult(cItem, searchPattern, searchType)
     #HISTORIA SEARCH
         elif category == "search_history":
-            self.listsHistory({'name':'history', 'category': 'search'}, 'desc', _("Type: "))
+            self.listsHistory({'name': 'history', 'category': 'search'}, 'desc', _("Type: "))
         else:
             printExc()
         

@@ -49,17 +49,17 @@ def gettytul():
 class OrthoBullets(CBaseHostClass):
 
     def __init__(self):
-        CBaseHostClass.__init__(self, {'history':'orthobullets.com', 'cookie':'orthobullets.com.cookie'})
+        CBaseHostClass.__init__(self, {'history': 'orthobullets.com', 'cookie': 'orthobullets.com.cookie'})
         
         self.USER_AGENT = 'Mozilla/5.0'
         self.HEADER = {'User-Agent': self.USER_AGENT, 'Accept': 'text/html'}
         self.AJAX_HEADER = dict(self.HEADER)
-        self.AJAX_HEADER.update({'X-Requested-With':'XMLHttpRequest', 'Content-Type':'application/x-www-form-urlencoded; charset=UTF-8'})
+        self.AJAX_HEADER.update({'X-Requested-With': 'XMLHttpRequest', 'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8'})
         
         self.MAIN_URL = 'https://www.orthobullets.com/'
         self.DEFAULT_ICON_URL = 'http://pic.accessify.com/thumbnails/777x423/o/orthobullets.com.png'
         
-        self.defaultParams = {'header':self.HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
+        self.defaultParams = {'header': self.HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
         self.loggedIn = None
         self.login = ''
         self.password = ''
@@ -72,7 +72,7 @@ class OrthoBullets(CBaseHostClass):
                 return url
             else:
                 return urljoin(baseUrl, url)
-        addParams['cloudflare_params'] = {'domain':self.up.getDomain(baseUrl), 'cookie_file':self.COOKIE_FILE, 'User-Agent':self.USER_AGENT, 'full_url_handle':_getFullUrl}
+        addParams['cloudflare_params'] = {'domain': self.up.getDomain(baseUrl), 'cookie_file': self.COOKIE_FILE, 'User-Agent': self.USER_AGENT, 'full_url_handle': _getFullUrl}
         return self.cm.getPageCFProtection(baseUrl, addParams, post_data)
     
     def listMainMenu(self, cItem):
@@ -97,16 +97,16 @@ class OrthoBullets(CBaseHostClass):
                 url = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''href=['"]([^"^']+?)['"]''')[0])
                 title = self.cleanHtmlStr(item)
                 params = dict(cItem)
-                params.update({'name':'category', 'category':'list_sort', 'title':title, 'url':url})
+                params.update({'name': 'category', 'category': 'list_sort', 'title': title, 'url': url})
                 categories.append(params)
             
             if len(categories):
                 params = dict(cItem)
-                params.update({'name':'category', 'category':'sub_items', 'title':sTitle, 'sub_items':categories})
+                params.update({'name': 'category', 'category': 'sub_items', 'title': sTitle, 'sub_items': categories})
                 self.addDir(params)
 
-        MAIN_CAT_TAB = [{'category':'search', 'title': _('Search'), 'search_item':True},
-                        {'category':'search_history', 'title': _('Search history')}]
+        MAIN_CAT_TAB = [{'category': 'search', 'title': _('Search'), 'search_item': True},
+                        {'category': 'search_history', 'title': _('Search history')}]
         self.listsTab(MAIN_CAT_TAB, cItem)
         
     def listSort(self, cItem, nextCategory):
@@ -123,7 +123,7 @@ class OrthoBullets(CBaseHostClass):
             url = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''href=['"]([^"^']+?)['"]''')[0])
             title = self.cleanHtmlStr(item)
             params = dict(cItem)
-            params.update({'name':'category', 'category':nextCategory, 'title':title, 'url':url})
+            params.update({'name': 'category', 'category': nextCategory, 'title': title, 'url': url})
             self.addDir(params)
     
     def listItems(self, cItem):
@@ -167,12 +167,12 @@ class OrthoBullets(CBaseHostClass):
                 desc.append(tmp)
             
             params = dict(cItem)
-            params.update({'good_for_fav':True, 'title':title, 'url':url, 'icon':icon, 'desc':'[/br]'.join(desc)})
+            params.update({'good_for_fav': True, 'title': title, 'url': url, 'icon': icon, 'desc': '[/br]'.join(desc)})
             self.addVideo(params)
         
         if nextPage:
             params = dict(cItem)
-            params.update({'good_for_fav':False, 'title':_("Next page"), 'page':page + 1, 'url':self.getFullUrl(nextPage)})
+            params.update({'good_for_fav': False, 'title': _("Next page"), 'page': page + 1, 'url': self.getFullUrl(nextPage)})
             self.addDir(params)
 
     def listSearchResult(self, cItem, searchPattern, searchType):
@@ -194,7 +194,7 @@ class OrthoBullets(CBaseHostClass):
         self.setMainUrl(self.cm.meta['url'])
         
         url = self.getFullUrl(self.cm.ph.getSearchGroups(data, '''<iframe[^>]+?src=['"]([^"^']+?)['"]''', 1, True)[0])
-        return self.up.getVideoLinkExt(strwithmeta(url, {'Referer':self.cm.meta['url']}))
+        return self.up.getVideoLinkExt(strwithmeta(url, {'Referer': self.cm.meta['url']}))
 
     def tryTologin(self):
         printDBG('tryTologin start')
@@ -232,7 +232,7 @@ class OrthoBullets(CBaseHostClass):
                 value = self.cm.ph.getSearchGroups(item, '''value=['"]([^'^"]+?)['"]''')[0].replace('&amp;', '&')
                 post_data[name] = value
             
-            post_data.update({'Username':self.login, 'Password':self.password})
+            post_data.update({'Username': self.login, 'Password': self.password})
             
             httpParams = dict(self.defaultParams)
             httpParams['header'] = dict(httpParams['header'])
@@ -282,7 +282,7 @@ class OrthoBullets(CBaseHostClass):
         
     #MAIN MENU
         if name == None:
-            self.listMainMenu({'name':'category', 'type':'category'})
+            self.listMainMenu({'name': 'category', 'type': 'category'})
         elif category == 'list_sort':
             self.listSort(self.currItem, 'list_items')
         elif category == 'list_items':
@@ -292,11 +292,11 @@ class OrthoBullets(CBaseHostClass):
     #SEARCH
         elif category in ["search", "search_next_page"]:
             cItem = dict(self.currItem)
-            cItem.update({'search_item':False, 'name':'category'}) 
+            cItem.update({'search_item': False, 'name': 'category'}) 
             self.listSearchResult(cItem, searchPattern, searchType)
     #HISTORIA SEARCH
         elif category == "search_history":
-            self.listsHistory({'name':'history', 'category': 'search'}, 'desc', _("Type: "))
+            self.listsHistory({'name': 'history', 'category': 'search'}, 'desc', _("Type: "))
         else:
             printExc()
         

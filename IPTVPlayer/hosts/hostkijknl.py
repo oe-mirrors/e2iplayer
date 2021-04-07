@@ -29,18 +29,18 @@ def gettytul():
 class KijkNL(CBaseHostClass):
     
     def __init__(self):
-        CBaseHostClass.__init__(self, {'history':'kijk.nl.uk', 'cookie':'kijk.nl.cookie'})
+        CBaseHostClass.__init__(self, {'history': 'kijk.nl.uk', 'cookie': 'kijk.nl.cookie'})
         self.DEFAULT_ICON_URL = 'http://is2.mzstatic.com/image/thumb/Purple128/v4/81/1d/19/811d19eb-3de6-1456-ab00-f68204e7dae4/source/1200x630bb.jpg'
         self.USER_AGENT = 'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:40.0) Gecko/20100101 Firefox/40.0'
         self.MAIN_URL = 'http://www.kijk.nl/'
-        self.HEADER = {'User-Agent': self.USER_AGENT, 'DNT':'1', 'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8', 'Accept-Encoding':'gzip, deflate'}
+        self.HEADER = {'User-Agent': self.USER_AGENT, 'DNT': '1', 'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8', 'Accept-Encoding': 'gzip, deflate'}
         self.AJAX_HEADER = dict(self.HEADER)
-        self.AJAX_HEADER.update({'X-Requested-With': 'XMLHttpRequest', 'Accept-Encoding':'gzip, deflate', 'Content-Type':'application/x-www-form-urlencoded; charset=UTF-8', 'Accept':'application/json, text/javascript, */*; q=0.01'})
+        self.AJAX_HEADER.update({'X-Requested-With': 'XMLHttpRequest', 'Accept-Encoding': 'gzip, deflate', 'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8', 'Accept': 'application/json, text/javascript, */*; q=0.01'})
         
         self.cacheLinks = {}
         self.cacheFilters = {}
         self.cacheFiltersKeys = []
-        self.defaultParams = {'header':self.HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
+        self.defaultParams = {'header': self.HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
         self.tmpUrl = 'http://api.kijk.nl/'
         self.policyKeyCache = ''
         
@@ -52,24 +52,24 @@ class KijkNL(CBaseHostClass):
     def listMainMenu(self, cItem):
         printDBG("KijkNL.listMainMenu")
         self.MAIN_CAT_TAB = [
-                             {'category':'list_home', 'title': 'Home', 'url':''},
-                             {'category':'list_missed', 'title': 'Gemist', 'url':''},
-                             {'category':'list_popular', 'title': 'Populair', 'url':self.tmpUrl + 'v2/templates/page/popular'},
-                             {'category':'list_letters', 'title': 'A-Z', 'url':''},
-                             {'category':'list_themas', 'title': "THEMA'S", 'url':self.getMainUrl()},
-                             {'category':'search', 'title': _('Search'), 'search_item':True}, 
-                             {'category':'search_history', 'title': _('Search history')},
+                             {'category': 'list_home', 'title': 'Home', 'url': ''},
+                             {'category': 'list_missed', 'title': 'Gemist', 'url': ''},
+                             {'category': 'list_popular', 'title': 'Populair', 'url': self.tmpUrl + 'v2/templates/page/popular'},
+                             {'category': 'list_letters', 'title': 'A-Z', 'url': ''},
+                             {'category': 'list_themas', 'title': "THEMA'S", 'url': self.getMainUrl()},
+                             {'category': 'search', 'title': _('Search'), 'search_item': True}, 
+                             {'category': 'search_history', 'title': _('Search history')},
                             ]
         self.HOME_CAT_TAB = [
-                                {'category':'list_items', 'title': _("Episodes"), 'url':self.tmpUrl + 'v1/default/sections/home_Episodes-popular'},
-                                {'category':'list_items', 'title': _("Clips"), 'url':self.tmpUrl + 'v1/default/sections/home_Clips-popular'},
-                                {'category':'list_items', 'title': _("Missed"), 'url':self.tmpUrl + 'v1/default/sections/home_HomeMissed'},
-                                {'category':'list_items', 'title': _("Series"), 'url':self.tmpUrl + 'v1/default/sections/home_Series-popularPrograms'},
+                                {'category': 'list_items', 'title': _("Episodes"), 'url': self.tmpUrl + 'v1/default/sections/home_Episodes-popular'},
+                                {'category': 'list_items', 'title': _("Clips"), 'url': self.tmpUrl + 'v1/default/sections/home_Clips-popular'},
+                                {'category': 'list_items', 'title': _("Missed"), 'url': self.tmpUrl + 'v1/default/sections/home_HomeMissed'},
+                                {'category': 'list_items', 'title': _("Series"), 'url': self.tmpUrl + 'v1/default/sections/home_Series-popularPrograms'},
                                ]
         self.POPULAR_CAT_TAB = [
-                                {'category':'list_items', 'title': "Populaire afleveringen", 'url':self.tmpUrl + 'v2/default/sections/popular_PopularVODs'},
-                                {'category':'list_items', 'title': "Populaire programma's", 'url':self.tmpUrl + 'v2/default/sections/popular_PopularFormats'},
-                                {'category':'list_items', 'title': "Populaire clips", 'url':self.tmpUrl + 'v2/default/sections/popular_PopularClips'},
+                                {'category': 'list_items', 'title': "Populaire afleveringen", 'url': self.tmpUrl + 'v2/default/sections/popular_PopularVODs'},
+                                {'category': 'list_items', 'title': "Populaire programma's", 'url': self.tmpUrl + 'v2/default/sections/popular_PopularFormats'},
+                                {'category': 'list_items', 'title': "Populaire clips", 'url': self.tmpUrl + 'v2/default/sections/popular_PopularClips'},
                                ]
         self.listsTab(self.MAIN_CAT_TAB, cItem)
         
@@ -94,12 +94,12 @@ class KijkNL(CBaseHostClass):
         dtIt = dt
         for m in range(ITEMS_PER_PAGE):
             url = self.tmpUrl + 'v1/default/sections/missed-all-' + dtIt.strftime("%Y%m%d")
-            params = {'good_for_fav':False, 'category':nextCategory, 'title':dtIt.strftime("%d-%m-%Y"), 'url':url}
+            params = {'good_for_fav': False, 'category': nextCategory, 'title': dtIt.strftime("%d-%m-%Y"), 'url': url}
             self.addDir(params)
             dtIt = PrevDay(dtIt)
             
         params = dict(cItem)
-        params.update({'good_for_fav':False, 'title':_('Next page'), 'f_date': dtIt.strftime('%Y-%m-%d')})
+        params.update({'good_for_fav': False, 'title': _('Next page'), 'f_date': dtIt.strftime('%Y-%m-%d')})
         self.addDir(params)
         
     def listPopular(self, cItem):
@@ -110,12 +110,12 @@ class KijkNL(CBaseHostClass):
         
     def listLetters(self, cItem, nextCategory):
         printDBG("KijkNL.listLetters [%s]" % cItem)
-        catList = [{'title':'0 T/M 9', 'url':'0123456789'},
-                  {'title': 'ABCD',},
-                  {'title': 'EFGH',},
-                  {'title': 'IJKL',},
-                  {'title': 'MNOP',},
-                  {'title': 'QRST',},
+        catList = [{'title': '0 T/M 9', 'url': '0123456789'},
+                  {'title': 'ABCD', },
+                  {'title': 'EFGH', },
+                  {'title': 'IJKL', },
+                  {'title': 'MNOP', },
+                  {'title': 'QRST', },
                   {'title': 'UVW', },
                   {'title': 'XYZ', }]
         
@@ -124,7 +124,7 @@ class KijkNL(CBaseHostClass):
             if url == '':
                 url = item['title'].lower()
             url = self.tmpUrl + 'v1/default/sections/programs-abc-' + url
-            params = {'good_for_fav':True, 'category':nextCategory, 'title':item['title'], 'url':url}
+            params = {'good_for_fav': True, 'category': nextCategory, 'title': item['title'], 'url': url}
             self.addDir(params)
         
     def listThemas(self, cItem, nextCategory):
@@ -132,7 +132,7 @@ class KijkNL(CBaseHostClass):
         
         urlparams = dict(self.defaultParams)
         urlparams['header'] = dict(urlparams['header'])
-        urlparams['cookie_items'] = {'OPTOUTMULTI':'0:0%7Cc5:0%7Cc1:0%7Cc4:0%7Cc3:0%7Cc2:0'} #{'OPTOUTMULTI':'0:0|c5:0|c1:0|c4:0|c3:0|c2:0'}
+        urlparams['cookie_items'] = {'OPTOUTMULTI': '0:0%7Cc5:0%7Cc1:0%7Cc4:0%7Cc3:0%7Cc2:0'} #{'OPTOUTMULTI':'0:0|c5:0|c1:0|c4:0|c3:0|c2:0'}
         urlparams['header']['Referer'] = 'http://consent.kijk.nl/?url=' + urllib.parse.quote('http://www.kijk.nl/')
         
         sts, data = self.getPage(cItem['url'], urlparams)
@@ -147,7 +147,7 @@ class KijkNL(CBaseHostClass):
                 continue
             url = self.tmpUrl + 'v2/templates/page/theme/' + url
             title = self.cleanHtmlStr(item)
-            params = {'good_for_fav':True, 'category':nextCategory, 'title':title, 'url':url}
+            params = {'good_for_fav': True, 'category': nextCategory, 'title': title, 'url': url}
             self.addDir(params)
             
     def listComponents(self, cItem, nextCategory):
@@ -177,7 +177,7 @@ class KijkNL(CBaseHostClass):
                     if type == 'series' and item['more']['parameters']['type'] != 'episodes' and not _doHasItems(url):
                         continue
                     title = self.cleanHtmlStr(item['title'])
-                    params = {'good_for_fav':True, 'category':nextCategory, 'title':title, 'url':url, 'f_id':id}
+                    params = {'good_for_fav': True, 'category': nextCategory, 'title': title, 'url': url, 'f_id': id}
                     self.addDir(params)
         except Exception:
             printExc()
@@ -232,7 +232,7 @@ class KijkNL(CBaseHostClass):
                         descTab.append(', '.join(item['nicam']))
                     
                     desc = self.cleanHtmlStr(' | '.join(descTab)) + '[/br]' + self.cleanHtmlStr(item.get('synopsis', ''))
-                    params = {'good_for_fav':True, 'title':title, 'url':url, 'icon':icon, 'desc':desc, 'f_type':item['type'], 'f_id':id}
+                    params = {'good_for_fav': True, 'title': title, 'url': url, 'icon': icon, 'desc': desc, 'f_type': item['type'], 'f_id': id}
                     if item['type'] in ['clip', 'episode']:
                         self.addVideo(params)
                     else:
@@ -245,7 +245,7 @@ class KijkNL(CBaseHostClass):
                     printDBG('++++++++++++++++++++++++++++++++++++++++++++++++++++')
             if data.get('hasMoreItems', False):
                 params = dict(cItem)
-                params.update({'good_for_fav':False, 'title':_('Next page'), 'page':page + 1})
+                params.update({'good_for_fav': False, 'title': _('Next page'), 'page': page + 1})
                 self.addDir(params)
         except Exception:
             printExc()
@@ -354,7 +354,7 @@ class KijkNL(CBaseHostClass):
         
     #MAIN MENU
         if name == None:
-            self.listMainMenu({'name':'category'})
+            self.listMainMenu({'name': 'category'})
         elif category == 'list_home':
             self.listHome(cItem)
         elif category == 'list_missed':
@@ -375,11 +375,11 @@ class KijkNL(CBaseHostClass):
     #SEARCH
         elif category in ["search", "search_next_page"]:
             cItem = dict(cItem)
-            cItem.update({'search_item':False, 'name':'category'}) 
+            cItem.update({'search_item': False, 'name': 'category'}) 
             self.listSearchResult(cItem, searchPattern, searchType)
     #HISTORIA SEARCH
         elif category == "search_history":
-            self.listsHistory({'name':'history', 'category': 'search'}, 'desc', _("Type: "))
+            self.listsHistory({'name': 'history', 'category': 'search'}, 'desc', _("Type: "))
         else:
             printExc()
         

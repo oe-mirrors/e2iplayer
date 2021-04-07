@@ -108,5 +108,5 @@ class UnCaptchaSweetCaptchaWidget(Screen):
         return
 
     def keyOK(self):
-        self.close({'resp_idx':self.selIdx})
+        self.close({'resp_idx': self.selIdx})
         return

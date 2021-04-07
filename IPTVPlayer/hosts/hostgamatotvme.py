@@ -29,21 +29,21 @@ def gettytul():
 class GamatoTV(CBaseHostClass):
  
     def __init__(self):
-        CBaseHostClass.__init__(self, {'history':'gamatotv.me', 'cookie':'gamatotv.me.cookie'})
+        CBaseHostClass.__init__(self, {'history': 'gamatotv.me', 'cookie': 'gamatotv.me.cookie'})
         self.DEFAULT_ICON_URL = 'http://se5revolution.s3.amazonaws.com/uploads/10101/4200d40a-fb00-4534-ab3c-9aabaab7d4ab.jpeg'
         self.USER_AGENT = 'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:40.0) Gecko/20100101 Firefox/40.0'
-        self.HEADER = {'User-Agent': self.USER_AGENT, 'DNT':'1', 'Accept': 'text/html'}
+        self.HEADER = {'User-Agent': self.USER_AGENT, 'DNT': '1', 'Accept': 'text/html'}
         self.AJAX_HEADER = dict(self.HEADER)
         self.AJAX_HEADER.update({'X-Requested-With': 'XMLHttpRequest'})
         self.MAIN_URL = 'http://gamatotv.co/'
         self.cacheLinks = {}
         self.cacheFilters = {}
         self.cacheFiltersKeys = []
-        self.defaultParams = {'header':self.HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
+        self.defaultParams = {'header': self.HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
     
         self.MAIN_CAT_TAB = [
-                             {'category': 'search', 'title': _('Search'), 'search_item': True,},
-                             {'category': 'search_history', 'title': _('Search history'),} 
+                             {'category': 'search', 'title': _('Search'), 'search_item': True, },
+                             {'category': 'search_history', 'title': _('Search history'), } 
                             ]
         
     def getPage(self, baseUrl, addParams={}, post_data=None):
@@ -59,7 +59,7 @@ class GamatoTV(CBaseHostClass):
             else:
                 return urllib.parse.urljoin(baseUrl, url)
         
-        addParams['cloudflare_params'] = {'domain':self.up.getDomain(baseUrl), 'cookie_file':self.COOKIE_FILE, 'User-Agent':self.USER_AGENT, 'full_url_handle':_getFullUrl}
+        addParams['cloudflare_params'] = {'domain': self.up.getDomain(baseUrl), 'cookie_file': self.COOKIE_FILE, 'User-Agent': self.USER_AGENT, 'full_url_handle': _getFullUrl}
         return self.cm.getPageCFProtection(baseUrl, addParams, post_data)
         
     def listMainMenu(self, cItem, nextCategory1, nextCategory2, nextCategory3):
@@ -84,7 +84,7 @@ class GamatoTV(CBaseHostClass):
                 category = nextCategory1
             title = self.cleanHtmlStr(item)
             params = dict(cItem)
-            params.update({'good_for_fav':False, 'category':category, 'title':title, 'url':self.getFullIconUrl(url)})
+            params.update({'good_for_fav': False, 'category': category, 'title': title, 'url': self.getFullIconUrl(url)})
             self.addDir(params)
         
         self.listsTab(self.MAIN_CAT_TAB, cItem)
@@ -100,7 +100,7 @@ class GamatoTV(CBaseHostClass):
             title = self.cleanHtmlStr(item)
             url = self.getFullIconUrl(self.cm.ph.getSearchGroups(item, '''value=['"]([^'^"]+?)['"]''')[0].replace('&amp;', '&'))
             params = dict(cItem)
-            params.update({'good_for_fav':False, 'category':nextCategory, 'title':title, 'url':url})
+            params.update({'good_for_fav': False, 'category': nextCategory, 'title': title, 'url': url})
             self.addDir(params)
         
         if 0 == len(self.currList):
@@ -125,11 +125,11 @@ class GamatoTV(CBaseHostClass):
                 if not self.cm.isValidUrl(url):
                     continue
                 title = self.cleanHtmlStr(it)
-                self.cacheFilters[key].append({'title':title, 'url':url})
+                self.cacheFilters[key].append({'title': title, 'url': url})
             
             if len(self.cacheFilters[key]):
                 params = dict(cItem)
-                params.update({'good_for_fav':False, 'category':nextCategory, 'title':key, 'f_key':key})
+                params.update({'good_for_fav': False, 'category': nextCategory, 'title': key, 'f_key': key})
                 self.addDir(params)
     
     def listSubFilters(self, cItem, nextCategory):
@@ -178,12 +178,12 @@ class GamatoTV(CBaseHostClass):
                     desc.append(t)
             
             params = dict(cItem)
-            params = {'good_for_fav': True, 'category':nextCategory, 'title':title, 'url':url, 'desc':'[/br]'.join(desc), 'icon':icon}
+            params = {'good_for_fav': True, 'category': nextCategory, 'title': title, 'url': url, 'desc': '[/br]'.join(desc), 'icon': icon}
             self.addDir(params)
         
         if nextPage and len(self.currList) > 0:
             params = dict(cItem)
-            params.update({'title':_("Next page"), 'page':page + 1})
+            params.update({'title': _("Next page"), 'page': page + 1})
             self.addDir(params)
     
     def exploreItem(self, cItem, nextCategory=''):
@@ -206,9 +206,9 @@ class GamatoTV(CBaseHostClass):
             url = url.replace('youtu.be/', 'youtube.com/watch?v=')
             if 1 == self.up.checkHostSupport(url):
                 if 'youtube' in url or 'trailer' in name.lower():
-                    trailer = {'name':name, 'url':url, 'need_resolve':1}
+                    trailer = {'name': name, 'url': url, 'need_resolve': 1}
                 else:
-                    linksTab.append({'name':'%s - %s' % (name, self.up.getHostName(url)), 'url':url, 'need_resolve':1})
+                    linksTab.append({'name': '%s - %s' % (name, self.up.getHostName(url)), 'url': url, 'need_resolve': 1})
         
         items = re.sub('''<a[^>]+?>[^>]*?</a>''', "", tmp)
         items = self.cm.ph.getAllItemsBeetwenMarkers(items, '<p', '</p>')
@@ -224,13 +224,13 @@ class GamatoTV(CBaseHostClass):
         if trailer != None:
             title = '%s - %s' % (cItem['title'], _('TRAILER'))
             params = dict(cItem)
-            params.update({'good_for_fav': False, 'title':title, 'url':trailer['url'], 'desc':trailer['name']})
+            params.update({'good_for_fav': False, 'title': title, 'url': trailer['url'], 'desc': trailer['name']})
             self.addVideo(params)
         
         if len(linksTab):
             self.cacheLinks[cItem['url']] = linksTab
             params = dict(cItem)
-            params.update({'good_for_fav': False, 'desc':mainDesc})
+            params.update({'good_for_fav': False, 'desc': mainDesc})
             self.addVideo(params)
         else:
             self.cacheSeasons = {}
@@ -256,11 +256,11 @@ class GamatoTV(CBaseHostClass):
                         if title not in episodesList:
                             episodesList.append(title)
                             episodesLinks[title] = []
-                        episodesLinks[title].append({'name':self.up.getHostName(url), 'url':url, 'need_resolve':1})
+                        episodesLinks[title].append({'name': self.up.getHostName(url), 'url': url, 'need_resolve': 1})
                     
                     if len(episodesList):
                         params = dict(cItem)
-                        params.update({'good_for_fav': False, 'category':nextCategory, 'series_title':cItem['title'], 's_num':sNum, 'title':sTitle, 'e_list':episodesList, 'e_links':episodesLinks, 'desc':mainDesc})
+                        params.update({'good_for_fav': False, 'category': nextCategory, 'series_title': cItem['title'], 's_num': sNum, 'title': sTitle, 'e_list': episodesList, 'e_links': episodesLinks, 'desc': mainDesc})
                         self.addDir(params)
             
                 return
@@ -292,17 +292,17 @@ class GamatoTV(CBaseHostClass):
                         if 0 == len(linksTab) and 'gamato' in url and '/group/' in url:
                             url = self.getFullUrl('/group/' + url.split('/group/')[-1])
                             params = dict(cItem)
-                            params.update({'good_for_fav': True, 'url':url, 'title':title, 'icon':icon, 'desc':mainDesc})
+                            params.update({'good_for_fav': True, 'url': url, 'title': title, 'icon': icon, 'desc': mainDesc})
                             self.addDir(params)
                             break
                         elif 1 == self.up.checkHostSupport(url): 
-                            linksTab.append({'name':self.up.getHostName(url), 'url':url, 'need_resolve':1})
+                            linksTab.append({'name': self.up.getHostName(url), 'url': url, 'need_resolve': 1})
                     
                     if len(linksTab):
                         url = cItem['url'] + '&title=' + title
                         self.cacheLinks[url] = linksTab
                         params = dict(cItem)
-                        params.update({'good_for_fav': False, 'url':url, 'title':title, 'icon':icon, 'desc':mainDesc})
+                        params.update({'good_for_fav': False, 'url': url, 'title': title, 'icon': icon, 'desc': mainDesc})
                         self.addVideo(params)
             
     def listEpisodes(self, cItem):
@@ -320,7 +320,7 @@ class GamatoTV(CBaseHostClass):
             self.cacheLinks[url] = episodesLinks[eNum]
             
             params = dict(cItem)
-            params.update({'good_for_fav': False, 'title':title, 'url':url})
+            params.update({'good_for_fav': False, 'title': title, 'url': url})
             self.addVideo(params)
 
     def listSearchResult(self, cItem, searchPattern, searchType):
@@ -406,8 +406,8 @@ class GamatoTV(CBaseHostClass):
         icon = self.getFullIconUrl(self.cm.ph.getSearchGroups(icon, '''<img[^>]+?src=['"]([^"^']+?\.jpe?g[^"^']*?)["']''')[0])
         desc = self.cleanHtmlStr(self.cm.ph.getDataBeetwenReMarkers(data, re.compile('<div[^>]+?class="wp-content"[^>]*?>'), re.compile('</div>'))[1])
         
-        mapDesc = {'Original title': 'alternate_title', 'IMDb Rating':'imdb_rating', 'TMDb Rating':'tmdb_rating', 'Status':'status',
-                   'Firt air date':'first_air_date', 'Last air date':'last_air_date', 'Seasons':'seasons', 'Episodes':'episodes'}
+        mapDesc = {'Original title': 'alternate_title', 'IMDb Rating': 'imdb_rating', 'TMDb Rating': 'tmdb_rating', 'Status': 'status',
+                   'Firt air date': 'first_air_date', 'Last air date': 'last_air_date', 'Seasons': 'seasons', 'Episodes': 'episodes'}
         tmp = self.cm.ph.getAllItemsBeetwenMarkers(data, '<div class="custom_fields">', '</div>')
         for item in tmp:
             item = item.split('<span class="valor">')
@@ -421,7 +421,7 @@ class GamatoTV(CBaseHostClass):
             if value != '':
                 otherInfo[key] = value
         
-        mapDesc = {'Director': 'directors', 'Cast':'cast', 'Creator':'creators'}
+        mapDesc = {'Director': 'directors', 'Cast': 'cast', 'Creator': 'creators'}
         
         tmp = self.cm.ph.getDataBeetwenReMarkers(data, re.compile('<div id="cast"[^>]+?>'), re.compile('fixidtab'))[1]
         tmp = self.cm.ph.rgetAllItemsBeetwenMarkers(tmp, '</div>', '<h2>')
@@ -473,7 +473,7 @@ class GamatoTV(CBaseHostClass):
         if icon == '':
             icon = cItem.get('icon', self.DEFAULT_ICON_URL)
         
-        return [{'title':self.cleanHtmlStr(title), 'text': self.cleanHtmlStr(desc), 'images':[{'title':'', 'url':self.getFullUrl(icon)}], 'other_info':otherInfo}]
+        return [{'title': self.cleanHtmlStr(title), 'text': self.cleanHtmlStr(desc), 'images': [{'title': '', 'url': self.getFullUrl(icon)}], 'other_info': otherInfo}]
     
     def handleService(self, index, refresh=0, searchPattern='', searchType=''):
         printDBG('handleService start')
@@ -489,7 +489,7 @@ class GamatoTV(CBaseHostClass):
         
     #MAIN MENU
         if name == None:
-            self.listMainMenu({'name':'category', 'url':self.getFullUrl('groups')}, 'list_sort_filters', 'list_items', 'list_filters')
+            self.listMainMenu({'name': 'category', 'url': self.getFullUrl('groups')}, 'list_sort_filters', 'list_items', 'list_filters')
         elif category == 'list_sort_filters':
             self.listSortFilters(self.currItem, 'list_items')
         elif category == 'list_filters':
@@ -505,11 +505,11 @@ class GamatoTV(CBaseHostClass):
     #SEARCH
         elif category in ["search", "search_next_page"]:
             cItem = dict(self.currItem)
-            cItem.update({'search_item':False, 'name':'category'}) 
+            cItem.update({'search_item': False, 'name': 'category'}) 
             self.listSearchResult(cItem, searchPattern, searchType)
     #HISTORIA SEARCH
         elif category == "search_history":
-            self.listsHistory({'name':'history', 'category': 'search'}, 'desc', _("Type: "))
+            self.listsHistory({'name': 'history', 'category': 'search'}, 'desc', _("Type: "))
         else:
             printExc()
         

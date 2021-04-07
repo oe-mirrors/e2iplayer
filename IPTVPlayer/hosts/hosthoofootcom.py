@@ -29,14 +29,14 @@ class HoofootCom(CBaseHostClass):
     MAIN_URL = 'https://hoofoot.com/'
     DEFAULT_ICON_URL = "http://th.hoofoot.com/pics/default.jpg"
     
-    MAIN_CAT_TAB = [{'category': 'list_cats', 'title': _('Main'), 'url': MAIN_URL,},
-                    {'category': 'list_cats2', 'title': _('Popular'), 'url': MAIN_URL,},
-                    {'category': 'list_cats3', 'title': _('Promoted'), 'url': MAIN_URL,},
-                    {'category': 'search', 'title': _('Search'), 'search_item': True,},
-                    {'category': 'search_history', 'title': _('Search history'),}]
+    MAIN_CAT_TAB = [{'category': 'list_cats', 'title': _('Main'), 'url': MAIN_URL, },
+                    {'category': 'list_cats2', 'title': _('Popular'), 'url': MAIN_URL, },
+                    {'category': 'list_cats3', 'title': _('Promoted'), 'url': MAIN_URL, },
+                    {'category': 'search', 'title': _('Search'), 'search_item': True, },
+                    {'category': 'search_history', 'title': _('Search history'), }]
  
     def __init__(self):
-        CBaseHostClass.__init__(self, {'history':'hoofoot.com', 'cookie':'hoofootcom.cookie'})
+        CBaseHostClass.__init__(self, {'history': 'hoofoot.com', 'cookie': 'hoofootcom.cookie'})
         self.defaultParams = {'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
         self.cache = []
         
@@ -103,18 +103,18 @@ class HoofootCom(CBaseHostClass):
                     if '' == url:
                         continue
                     title = self.cleanHtmlStr(catItem) 
-                    params = {'title': _(title), 'url':self._getFullUrl(url)}
+                    params = {'title': _(title), 'url': self._getFullUrl(url)}
                     printDBG(params)
                     catTab.append(params)
             
             params = dict(cItem)
             params['title'] = _(catTitle)
             if len(catTab):
-                params.update({'category':category, 'idx':len(self.cache)})
+                params.update({'category': category, 'idx': len(self.cache)})
                 self.cache.append(catTab)
                 self.addDir(params)
             elif catUrl != '#' and catUrl != '':
-                params.update({'category':'list_items', 'url':self._getFullUrl(catUrl)})
+                params.update({'category': 'list_items', 'url': self._getFullUrl(catUrl)})
                 self.addDir(params)
                 
     def listCats2(self, cItem, category):
@@ -131,7 +131,7 @@ class HoofootCom(CBaseHostClass):
                 continue
             title = self.cleanHtmlStr(catItem)
             params = dict(cItem)
-            params.update({'category':category, 'title':_(title), 'url':self._getFullUrl(url)})
+            params.update({'category': category, 'title': _(title), 'url': self._getFullUrl(url)})
             self.addDir(params)
             
     def listCats3(self, cItem, category):
@@ -157,7 +157,7 @@ class HoofootCom(CBaseHostClass):
                 title = self.cleanHtmlStr(self.cm.ph.getSearchGroups(catItem, '''alt=['"]([^'^"]+?)['"]''')[0])
             icon = self.cm.ph.getSearchGroups(catItem, '''src=['"]([^'^"]+?)['"]''')[0]
             params = dict(cItem)
-            params.update({'category':category, 'title':_(title), 'ff':ff, 'url':self._getFullUrl('/pagerg.php'), 'icon':self._getFullUrl(icon)})
+            params.update({'category': category, 'title': _(title), 'ff': ff, 'url': self._getFullUrl('/pagerg.php'), 'icon': self._getFullUrl(icon)})
             self.addDir(params)
         
     def listSubCats(self, cItem, category):
@@ -166,14 +166,14 @@ class HoofootCom(CBaseHostClass):
         for idx in range(len(tab)):
             item = tab[idx]
             params = dict(cItem)
-            params.update({'category':category, 'title':item['title'], 'url':item['url']})
+            params.update({'category': category, 'title': item['title'], 'url': item['url']})
             self.addDir(params)
             
     def _urlAppendPage(self, url, page, ff):
         if ff == '':
             post_data = None
         else:
-            post_data = {'ff':'%s' % (ff)}
+            post_data = {'ff': '%s' % (ff)}
         if page > 1:
             if ff == '':
                 if '?' in url:
@@ -182,7 +182,7 @@ class HoofootCom(CBaseHostClass):
                     url += '?'
                 url += 'page=%d' % page
             else:
-                post_data = {'ff':'%s,%d' % (ff, page)}
+                post_data = {'ff': '%s,%d' % (ff, page)}
         return post_data, url
         
     def listItems(self, cItem):
@@ -207,7 +207,7 @@ class HoofootCom(CBaseHostClass):
             
             desc = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(item, 'class="info">', '</div>', False)[1])
             params = dict(cItem)
-            params.update({'title': _(title), 'url':self._getFullUrl(url), 'icon':icon, 'desc':desc})
+            params.update({'title': _(title), 'url': self._getFullUrl(url), 'icon': icon, 'desc': desc})
             self.addVideo(params)
             hasItems = True
         
@@ -218,7 +218,7 @@ class HoofootCom(CBaseHostClass):
                 return
             if '<div id="port"' in data:
                 params = dict(cItem)
-                params.update({'title':_('Next page'), 'page':page + 1})
+                params.update({'title': _('Next page'), 'page': page + 1})
                 self.addDir(params)
         
     def getLinksForVideo(self, cItem):
@@ -243,7 +243,7 @@ class HoofootCom(CBaseHostClass):
                 continue
             n_link += 1
             name = _("Alternative") + " %s - %s" % (n_link, name)
-            urlTab.append({'name':name, 'url':url, 'need_resolve':1})
+            urlTab.append({'name': name, 'url': url, 'need_resolve': 1})
         return urlTab
         
     def getVideoLinks(self, videoUrl):
@@ -252,7 +252,7 @@ class HoofootCom(CBaseHostClass):
         
         post_data = None
         if not videoUrl.startswith('http'):
-            post_data = {'rr':videoUrl}
+            post_data = {'rr': videoUrl}
             videoUrl = self._getFullUrl('videosx.php')
         
         sts, data = self.cm.getPage(videoUrl, {}, post_data)
@@ -276,14 +276,14 @@ class HoofootCom(CBaseHostClass):
     def listSearchResult(self, cItem, searchPattern, searchType):
         printDBG("HoofootCom.listSearchResult cItem[%s], searchPattern[%s] searchType[%s]" % (cItem, searchPattern, searchType))
         cItem = dict(cItem)
-        cItem.update({'ff':searchPattern, 'url':self._getFullUrl('/pagerg.php')})
+        cItem.update({'ff': searchPattern, 'url': self._getFullUrl('/pagerg.php')})
         self.listItems(cItem)
 
     def getFavouriteData(self, cItem):
         return cItem['url']
         
     def getLinksForFavourite(self, fav_data):
-        return self.getLinksForVideo({'url':fav_data})
+        return self.getLinksForVideo({'url': fav_data})
     
     def handleService(self, index, refresh=0, searchPattern='', searchType=''):
         printDBG('handleService start')
@@ -299,7 +299,7 @@ class HoofootCom(CBaseHostClass):
         
     #MAIN MENU
         if name == None:
-            self.listsTab(self.MAIN_CAT_TAB, {'name':'category'})
+            self.listsTab(self.MAIN_CAT_TAB, {'name': 'category'})
         elif category == 'list_cats':
             self.listCats(self.currItem, 'list_sub_cats')
         elif category == 'list_cats2':
@@ -313,11 +313,11 @@ class HoofootCom(CBaseHostClass):
     #SEARCH
         elif category in ["search", "search_next_page"]:
             cItem = dict(self.currItem)
-            cItem.update({'search_item':False, 'name':'category'}) 
+            cItem.update({'search_item': False, 'name': 'category'}) 
             self.listSearchResult(cItem, searchPattern, searchType)
     #HISTORIA SEARCH
         elif category == "search_history":
-            self.listsHistory({'name':'history', 'category': 'search'}, 'desc', _("Type: "))
+            self.listsHistory({'name': 'history', 'category': 'search'}, 'desc', _("Type: "))
         else:
             printExc()
         CBaseHostClass.endHandleService(self, index, refresh)

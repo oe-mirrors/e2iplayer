@@ -26,21 +26,21 @@ def gettytul():
 class GuardaSerieClick(CBaseHostClass):
 
     def __init__(self):
-        CBaseHostClass.__init__(self, {'history':'guardaserie.click', 'cookie':'guardaserie.click.cookie'})
+        CBaseHostClass.__init__(self, {'history': 'guardaserie.click', 'cookie': 'guardaserie.click.cookie'})
         
         self.USER_AGENT = 'Mozilla/5.0'
         self.HEADER = {'User-Agent': self.USER_AGENT, 'Accept': 'text/html'}
-        self.AJAX_HEADER = MergeDicts(self.HEADER, {'X-Requested-With':'XMLHttpRequest', 'Content-Type':'application/x-www-form-urlencoded; charset=UTF-8'})
+        self.AJAX_HEADER = MergeDicts(self.HEADER, {'X-Requested-With': 'XMLHttpRequest', 'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8'})
         
         self.MAIN_URL = 'https://www.guardaserie.digital/'
         self.DEFAULT_ICON_URL = self.getFullIconUrl('/wp-content/themes/guardaserie/images/logogd.png')
         
-        self.defaultParams = {'header':self.HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
+        self.defaultParams = {'header': self.HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
     
     def getPage(self, baseUrl, addParams={}, post_data=None):
         if addParams == {}:
             addParams = dict(self.defaultParams)
-        addParams['cloudflare_params'] = {'domain': 'guardaserie.digital', 'cookie_file':self.COOKIE_FILE, 'User-Agent':self.USER_AGENT}
+        addParams['cloudflare_params'] = {'domain': 'guardaserie.digital', 'cookie_file': self.COOKIE_FILE, 'User-Agent': self.USER_AGENT}
         return self.cm.getPageCFProtection(baseUrl, addParams, post_data)
     
     def listMainMenu(self, cItem):
@@ -55,7 +55,7 @@ class GuardaSerieClick(CBaseHostClass):
         title = self.cleanHtmlStr(item)
         url = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''href=['"]([^"^']+?)['"]''')[0])
         params = dict(cItem)
-        params.update({'name':'category', 'category':'sections', 'title':title, 'url':url})
+        params.update({'name': 'category', 'category': 'sections', 'title': title, 'url': url})
         self.addDir(params)
         
         data = self.cm.ph.getDataBeetwenNodes(data, ('<a', '>', 'dropdown'), ('</ul', '>'))[1].split('<ul', 1)
@@ -66,15 +66,15 @@ class GuardaSerieClick(CBaseHostClass):
             url = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''href=['"]([^"^']+?)['"]''')[0])
             title = self.cleanHtmlStr(item)
             params = dict(cItem)
-            params.update({'name':'category', 'category':'list_items', 'title':title, 'url':url})
+            params.update({'name': 'category', 'category': 'list_items', 'title': title, 'url': url})
             subtItems.append(params)
             
         params = dict(cItem)
-        params.update({'name':'category', 'category':'sub_items', 'sub_items':subtItems, 'title':sTitle})
+        params.update({'name': 'category', 'category': 'sub_items', 'sub_items': subtItems, 'title': sTitle})
         self.addDir(params)
         
-        MAIN_CAT_TAB = [{'category':'search', 'title': _('Search'), 'search_item':True},
-                        {'category':'search_history', 'title': _('Search history')}]
+        MAIN_CAT_TAB = [{'category': 'search', 'title': _('Search'), 'search_item': True},
+                        {'category': 'search_history', 'title': _('Search history')}]
         self.listsTab(MAIN_CAT_TAB, cItem)
         
     def getSeriesItems(self, cItem, nextCategory, rawItems):
@@ -103,7 +103,7 @@ class GuardaSerieClick(CBaseHostClass):
             except Exception:
                 printExc()
             params = dict(cItem)
-            params.update({'name':'category', 'category':nextCategory, 'good_for_fav':True, 'title':title, 'url':url, 'icon':icon, 'desc':' | '.join(desc)})
+            params.update({'name': 'category', 'category': nextCategory, 'good_for_fav': True, 'title': title, 'url': url, 'icon': icon, 'desc': ' | '.join(desc)})
             items.append(params)
         return items
     
@@ -122,7 +122,7 @@ class GuardaSerieClick(CBaseHostClass):
             subtItems = self.getSeriesItems(cItem, nextCategory, self.cm.ph.getAllItemsBeetwenMarkers(sData, '<a', '</a>'))
             if len(subtItems):
                 params = dict(cItem)
-                params.update({'name':'category', 'category':'sub_items', 'sub_items':subtItems, 'title':sTitle})
+                params.update({'name': 'category', 'category': 'sub_items', 'sub_items': subtItems, 'title': sTitle})
                 self.addDir(params)
     
     def listItems(self, cItem, nextCategory):
@@ -163,11 +163,11 @@ class GuardaSerieClick(CBaseHostClass):
                 season = self.cm.ph.getSearchGroups(item, '''meta\-stag=['"]([^"^']+?)['"]''')[0]
                 episode = self.cm.ph.getSearchGroups(item, '''meta\-ep=['"]([^"^']+?)['"]''')[0]
                 params = dict(cItem)
-                params.update({'type':'video', 'good_for_fav':False, 'title':title, 'urls':reObj.findall(item), 'url':cItem['url'] + '?s={0}&e={1}'.format(season, episode), 'desc':desc, 'icon':self.getFullIconUrl(icon)})
+                params.update({'type': 'video', 'good_for_fav': False, 'title': title, 'urls': reObj.findall(item), 'url': cItem['url'] + '?s={0}&e={1}'.format(season, episode), 'desc': desc, 'icon': self.getFullIconUrl(icon)})
                 subtItems.append(params)
             
             params = dict(cItem)
-            params.update({'name':'category', 'category':'sub_items', 'sub_items':subtItems, 'good_for_fav':False, 'title':sTitle})
+            params.update({'name': 'category', 'category': 'sub_items', 'sub_items': subtItems, 'good_for_fav': False, 'title': sTitle})
             self.addDir(params)
 
     def listSearchResult(self, cItem, searchPattern, searchType):
@@ -181,7 +181,7 @@ class GuardaSerieClick(CBaseHostClass):
         printDBG("GuardaSerieClick.getLinksForVideo [%s]" % cItem)
         urlsTab = []
         for item in cItem['urls']:
-            urlsTab.append({'name':self.cm.getBaseUrl(item, True), 'url':self.getFullUrl(item), 'need_resolve':1})
+            urlsTab.append({'name': self.cm.getBaseUrl(item, True), 'url': self.getFullUrl(item), 'need_resolve': 1})
         return urlsTab
 
     def getVideoLinks(self, videoUrl):
@@ -194,7 +194,7 @@ class GuardaSerieClick(CBaseHostClass):
             if url == '':
                 videoUrl = 'http://www.safersurf.org/browse.php?u={0}&b=8&f=norefer'.format(urllib.parse.quote_plus(videoUrl, ''))
                 params = dict(self.defaultParams)
-                params['header'] = MergeDicts(params['header'], {'Referer':videoUrl})
+                params['header'] = MergeDicts(params['header'], {'Referer': videoUrl})
                 sts, data = self.cm.getPage(videoUrl, params)
                 if sts:
                     printDBG(data)
@@ -254,7 +254,7 @@ class GuardaSerieClick(CBaseHostClass):
         if desc == '':
             desc = cItem.get('desc', '')
         
-        return [{'title':self.cleanHtmlStr(title), 'text': self.cleanHtmlStr(desc), 'images':[{'title':'', 'url':self.getFullUrl(icon)}], 'other_info':{'custom_items_list':itemsList}}]
+        return [{'title': self.cleanHtmlStr(title), 'text': self.cleanHtmlStr(desc), 'images': [{'title': '', 'url': self.getFullUrl(icon)}], 'other_info': {'custom_items_list': itemsList}}]
 
     def handleService(self, index, refresh=0, searchPattern='', searchType=''):
         printDBG('handleService start')
@@ -272,7 +272,7 @@ class GuardaSerieClick(CBaseHostClass):
         
     #MAIN MENU
         if name == None:
-            self.listMainMenu({'name':'category', 'type':'category'})
+            self.listMainMenu({'name': 'category', 'type': 'category'})
         elif category == 'list_items':
             self.listItems(self.currItem, 'explore_item')
         elif category == 'sub_items':
@@ -289,11 +289,11 @@ class GuardaSerieClick(CBaseHostClass):
     #SEARCH
         elif category in ["search", "search_next_page"]:
             cItem = dict(self.currItem)
-            cItem.update({'search_item':False, 'name':'category'}) 
+            cItem.update({'search_item': False, 'name': 'category'}) 
             self.listSearchResult(cItem, searchPattern, searchType)
     #HISTORIA SEARCH
         elif category == "search_history":
-            self.listsHistory({'name':'history', 'category': 'search'}, 'desc', _("Type: "))
+            self.listsHistory({'name': 'history', 'category': 'search'}, 'desc', _("Type: "))
         else:
             printExc()
         

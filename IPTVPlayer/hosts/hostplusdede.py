@@ -51,27 +51,27 @@ class PlusDEDE(CBaseHostClass):
     password = None
     
     def __init__(self):
-        CBaseHostClass.__init__(self, {'history':'plusdede.com', 'cookie':'plusdede.com.cookie'})
+        CBaseHostClass.__init__(self, {'history': 'plusdede.com', 'cookie': 'plusdede.com.cookie'})
         self.DEFAULT_ICON_URL = 'https://img15.androidappsapk.co/300/f/d/3/com.joramun.plusdede.png'
         self.USER_AGENT = 'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:40.0) Gecko/20100101 Firefox/40.0'
         self.MAIN_URL = 'https://www.megadede.com/'
-        self.HTTP_HEADER = {'User-Agent': self.USER_AGENT, 'DNT':'1', 'Accept': 'text/html', 'Accept-Encoding':'gzip, deflate', 'Referer':self.getMainUrl(), 'Origin':self.getMainUrl()}
+        self.HTTP_HEADER = {'User-Agent': self.USER_AGENT, 'DNT': '1', 'Accept': 'text/html', 'Accept-Encoding': 'gzip, deflate', 'Referer': self.getMainUrl(), 'Origin': self.getMainUrl()}
         self.AJAX_HEADER = dict(self.HTTP_HEADER)
-        self.AJAX_HEADER.update({'X-Requested-With': 'XMLHttpRequest', 'Accept-Encoding':'gzip, deflate', 'Content-Type':'application/x-www-form-urlencoded; charset=UTF-8', 'Accept':'application/json, text/javascript, */*; q=0.01'})
+        self.AJAX_HEADER.update({'X-Requested-With': 'XMLHttpRequest', 'Accept-Encoding': 'gzip, deflate', 'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8', 'Accept': 'application/json, text/javascript, */*; q=0.01'})
         
         self.cacheLinks = {}
         self.cacheFilters = {}
         self.cacheFiltersKeys = []
         self.cacheEpisodes = {}
-        self.defaultParams = {'header':self.HTTP_HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
+        self.defaultParams = {'header': self.HTTP_HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
         
-        self.MAIN_CAT_TAB = [{'category':'list_filters', 'title': 'Series', 'url':self.getFullUrl('/series')},
-                             {'category':'list_filters', 'title': 'Pelis', 'url':self.getFullUrl('/pelis')},
-                             {'category':'list_lists', 'title': 'Listas', 'url':self.getFullUrl('/listas')},
+        self.MAIN_CAT_TAB = [{'category': 'list_filters', 'title': 'Series', 'url': self.getFullUrl('/series')},
+                             {'category': 'list_filters', 'title': 'Pelis', 'url': self.getFullUrl('/pelis')},
+                             {'category': 'list_lists', 'title': 'Listas', 'url': self.getFullUrl('/listas')},
 
                              
-                             {'category':'search', 'title': _('Search'), 'search_item':True}, 
-                             {'category':'search_history', 'title': _('Search history')},
+                             {'category': 'search', 'title': _('Search'), 'search_item': True}, 
+                             {'category': 'search_history', 'title': _('Search history')},
                             ]
         self.loggedIn = None
         self.LOGIN_MARKER_FILE = self.COOKIE_FILE + '.mark'
@@ -81,7 +81,7 @@ class PlusDEDE(CBaseHostClass):
             addParams = dict(self.defaultParams)
         origBaseUrl = baseUrl
         baseUrl = self.cm.iriToUri(baseUrl)
-        addParams['cloudflare_params'] = {'cookie_file':self.COOKIE_FILE, 'User-Agent':self.USER_AGENT}
+        addParams['cloudflare_params'] = {'cookie_file': self.COOKIE_FILE, 'User-Agent': self.USER_AGENT}
         return self.cm.getPageCFProtection(baseUrl, addParams, post_data)
         
     def calcLoginMarker(self, login, password):
@@ -125,11 +125,11 @@ class PlusDEDE(CBaseHostClass):
                     if allTitle == None:
                         allTitle = title
                     continue
-                self.cacheFilters[key].append({'title':title.title(), key:value})
+                self.cacheFilters[key].append({'title': title.title(), key: value})
                 
             if len(self.cacheFilters[key]):
                 if allTitle != None:
-                    self.cacheFilters[key].insert(0, {'title':allTitle, key:''})
+                    self.cacheFilters[key].insert(0, {'title': allTitle, key: ''})
                 self.cacheFiltersKeys.append(key)
                 
         # get sub categories
@@ -143,7 +143,7 @@ class PlusDEDE(CBaseHostClass):
                 continue
             title = self.cleanHtmlStr(item)
             title = re.sub("&[^;]+?;", "", title).strip()
-            tmpTab.append({'title':title, 'url':url})
+            tmpTab.append({'title': title, 'url': url})
         if len(tmpTab):
             self.cacheFilters[key] = tmpTab
             self.cacheFiltersKeys.append(key)
@@ -160,9 +160,9 @@ class PlusDEDE(CBaseHostClass):
                     end = 1900 #int(val[0])
                     self.cacheFilters[key] = []
                     for val in range(start, end - 1, -1):
-                        self.cacheFilters[key].append({'title':str(val), key:'%s;%s' % (val, val)})
+                        self.cacheFilters[key].append({'title': str(val), key: '%s;%s' % (val, val)})
                     if len(self.cacheFilters[key]):
-                        self.cacheFilters[key].insert(0, {'title':_('--Any--'), key:'%s;%s' % (end, start)})
+                        self.cacheFilters[key].insert(0, {'title': _('--Any--'), key: '%s;%s' % (end, start)})
                         self.cacheFiltersKeys.append(key)
                 except Exception:
                     printExc()
@@ -177,7 +177,7 @@ class PlusDEDE(CBaseHostClass):
             if [] != self.cacheFilters.get(key, []):
                 title = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(data[idx], '<label', '</label>')[1])
                 if len(title):
-                    self.cacheFilters[key].insert(0, {'title':title, 'type':'marker'})
+                    self.cacheFilters[key].insert(0, {'title': title, 'type': 'marker'})
         
         printDBG(self.cacheFilters)
         
@@ -230,12 +230,12 @@ class PlusDEDE(CBaseHostClass):
             desc += '[/br]' + self.cleanHtmlStr(item.split('</h4>', 1)[-1])
 
             params = dict(cItem)
-            params.update({'good_for_fav':True, 'category':nextCategory, 'title':title, 'url':url, 'icon':icon, 'desc':desc})
+            params.update({'good_for_fav': True, 'category': nextCategory, 'title': title, 'url': url, 'icon': icon, 'desc': desc})
             self.addDir(params)
         
         if self.cm.isValidUrl(nextPage):
             params = dict(cItem)
-            params.update({'good_for_fav':False, 'title':_("Next page"), 'url':nextPage, 'page':page + 1})
+            params.update({'good_for_fav': False, 'title': _("Next page"), 'url': nextPage, 'page': page + 1})
             self.addDir(params)
         
         
@@ -286,12 +286,12 @@ class PlusDEDE(CBaseHostClass):
                     desc.append(title)
                     title = reSeriesTitle.sub('', title)
                 params = dict(cItem)
-                params.update({'good_for_fav':True, 'category':nextCategory, 'title':title, 'url':url, 'icon':icon, 'desc':' | '.join(desc)})
+                params.update({'good_for_fav': True, 'category': nextCategory, 'title': title, 'url': url, 'icon': icon, 'desc': ' | '.join(desc)})
                 self.addDir(params)
         
         if self.cm.isValidUrl(nextPage):
             params = dict(cItem)
-            params.update({'good_for_fav':False, 'title':_("Next page"), 'url':nextPage, 'page':page + 1})
+            params.update({'good_for_fav': False, 'title': _("Next page"), 'url': nextPage, 'page': page + 1})
             self.addDir(params)
         
     def exploreItem(self, cItem, nextCategory):
@@ -309,7 +309,7 @@ class PlusDEDE(CBaseHostClass):
             title = '%s - %s' % (cItem['title'], self.cleanHtmlStr(tmp))
             url = 'https://www.youtube.com/watch?v=' + url
             params = dict(cItem)
-            params.update({'good_for_fav':False, 'title':title, 'url':url})
+            params.update({'good_for_fav': False, 'title': title, 'url': url})
             self.addVideo(params)
         
         # movie <button class="show-close-footer btn btn-primary" data-modal-class="modal-lg" data-toggle="modal" data-target="#myModal" data-href="/aportes/4/58254">ver enlaces</button>
@@ -349,18 +349,18 @@ class PlusDEDE(CBaseHostClass):
                     tmp = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(item, ('<i', '>', 'comment'), ('</div', '>'))[1])
                     if tmp != '':
                         desc.append(_('Comments: %s') % tmp)
-                    episodesTab.append({'title':title, 'url':url, 'desc':'[/br]'.join(desc)})
+                    episodesTab.append({'title': title, 'url': url, 'desc': '[/br]'.join(desc)})
                 if len(episodesTab):
                     self.cacheEpisodes[sNum] = episodesTab
                     params = dict(cItem)
-                    params.update({'good_for_fav':False, 'category':nextCategory, 'title':sTitle, 's_num':sNum})
+                    params.update({'good_for_fav': False, 'category': nextCategory, 'title': sTitle, 's_num': sNum})
                     self.addDir(params)
         else:
             tmp = self.cm.ph.getDataBeetwenNodes(data, ('<button', '>', 'show-close'), ('</button', '>'))[1]
             url = self.getFullUrl(self.cm.ph.getSearchGroups(tmp, '''data\-href=['"]([^'^"]+?)['"]''')[0])
             if self.cm.isValidUrl(url):
                 params = dict(cItem)
-                params.update({'good_for_fav':True, 'url':url, 'prev_url':cItem['url']})
+                params.update({'good_for_fav': True, 'url': url, 'prev_url': cItem['url']})
                 self.addVideo(params)
             
     def listEpisodes(self, cItem):
@@ -370,7 +370,7 @@ class PlusDEDE(CBaseHostClass):
         tab = self.cacheEpisodes.get(sNum, [])
         for item in tab:
             params = dict(cItem)
-            params.update({'good_for_fav':True, 'prev_url':cItem['url']})
+            params.update({'good_for_fav': True, 'prev_url': cItem['url']})
             params.update(item)
             self.addVideo(params)
         
@@ -423,9 +423,9 @@ class PlusDEDE(CBaseHostClass):
                     if t != '':
                         titleTab.append(t)
                 if idx == 0:
-                    retTab.append({'name':'%s' % (' | '.join(titleTab)), 'url':self.getFullUrl(url), 'need_resolve':1})
+                    retTab.append({'name': '%s' % (' | '.join(titleTab)), 'url': self.getFullUrl(url), 'need_resolve': 1})
                 else:
-                    dwnTab.append({'name':'%s' % (' | '.join(titleTab)), 'url':self.getFullUrl(url), 'need_resolve':1})
+                    dwnTab.append({'name': '%s' % (' | '.join(titleTab)), 'url': self.getFullUrl(url), 'need_resolve': 1})
         
         #retTab.extend(dwnTab)
         if len(retTab):
@@ -518,7 +518,7 @@ class PlusDEDE(CBaseHostClass):
         if icon == '':
             icon = cItem.get('icon', self.DEFAULT_ICON_URL)
         
-        return [{'title':self.cleanHtmlStr(title), 'text': self.cleanHtmlStr(desc), 'images':[{'title':'', 'url':self.getFullUrl(icon)}], 'other_info':otherInfo}]
+        return [{'title': self.cleanHtmlStr(title), 'text': self.cleanHtmlStr(desc), 'images': [{'title': '', 'url': self.getFullUrl(icon)}], 'other_info': otherInfo}]
     
     def tryTologin(self):
         printDBG('tryTologin start')
@@ -576,7 +576,7 @@ class PlusDEDE(CBaseHostClass):
                 value = self.cm.ph.getSearchGroups(item, '''value=['"]([^'^"]+?)['"]''')[0]
                 post_data[name] = value
             
-            post_data.update({'email':PlusDEDE.login, 'password':PlusDEDE.password})
+            post_data.update({'email': PlusDEDE.login, 'password': PlusDEDE.password})
             
             # fill captcha
             #############################################################################################
@@ -585,7 +585,7 @@ class PlusDEDE(CBaseHostClass):
                 header = dict(self.HTTP_HEADER)
                 header['Accept'] = 'image/png,image/*;q=0.8,*/*;q=0.5'
                 params = dict(self.defaultParams)
-                params.update({'maintype': 'image', 'subtypes':['jpeg', 'png'], 'check_first_bytes':['\xFF\xD8', '\xFF\xD9', '\x89\x50\x4E\x47'], 'header':header})
+                params.update({'maintype': 'image', 'subtypes': ['jpeg', 'png'], 'check_first_bytes': ['\xFF\xD8', '\xFF\xD9', '\x89\x50\x4E\x47'], 'header': header})
                 filePath = GetTmpDir('.iptvplayer_captcha.jpg')
                 ret = self.cm.saveWebFile(filePath, imgUrl.replace('&amp;', '&'), params)
                 if not ret.get('sts'):
@@ -668,7 +668,7 @@ class PlusDEDE(CBaseHostClass):
         
     #MAIN MENU
         if name == None:
-            self.listMainMenu({'name':'category'}, 'list_genres')
+            self.listMainMenu({'name': 'category'}, 'list_genres')
         elif category == 'list_filters':
             self.listFilters(self.currItem, 'list_items')
         elif category == 'list_items':
@@ -682,11 +682,11 @@ class PlusDEDE(CBaseHostClass):
     #SEARCH
         elif category in ["search", "search_next_page"]:
             cItem = dict(self.currItem)
-            cItem.update({'search_item':False, 'name':'category'}) 
+            cItem.update({'search_item': False, 'name': 'category'}) 
             self.listSearchResult(cItem, searchPattern, searchType)
     #HISTORIA SEARCH
         elif category == "search_history":
-            self.listsHistory({'name':'history', 'category': 'search'}, 'desc', _("Type: "))
+            self.listsHistory({'name': 'history', 'category': 'search'}, 'desc', _("Type: "))
         else:
             printExc()
         

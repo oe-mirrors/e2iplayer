@@ -29,19 +29,19 @@ def gettytul():
 class WPolscePL(CBaseHostClass):
     
     def __init__(self):
-        CBaseHostClass.__init__(self, {'history':'wpolsce.pl', 'cookie':'wpolsce.pl.cookie'})
+        CBaseHostClass.__init__(self, {'history': 'wpolsce.pl', 'cookie': 'wpolsce.pl.cookie'})
         self.USER_AGENT = 'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:40.0) Gecko/20100101 Firefox/40.0'
         self.MAIN_URL = 'http://wpolsce.pl/'
         self.DEFAULT_ICON_URL = 'http://satkurier.pl/uploads/52818.jpg'
-        self.HTTP_HEADER = {'User-Agent': self.USER_AGENT, 'DNT':'1', 'Accept': 'text/html', 'Accept-Encoding':'gzip, deflate', 'Referer':self.getMainUrl(), 'Origin':self.getMainUrl()}
+        self.HTTP_HEADER = {'User-Agent': self.USER_AGENT, 'DNT': '1', 'Accept': 'text/html', 'Accept-Encoding': 'gzip, deflate', 'Referer': self.getMainUrl(), 'Origin': self.getMainUrl()}
         self.AJAX_HEADER = dict(self.HTTP_HEADER)
-        self.AJAX_HEADER.update({'X-Requested-With': 'XMLHttpRequest', 'Accept-Encoding':'gzip, deflate', 'Content-Type':'application/x-www-form-urlencoded; charset=UTF-8', 'Accept':'application/json, text/javascript, */*; q=0.01'})
+        self.AJAX_HEADER.update({'X-Requested-With': 'XMLHttpRequest', 'Accept-Encoding': 'gzip, deflate', 'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8', 'Accept': 'application/json, text/javascript, */*; q=0.01'})
         
-        self.defaultParams = {'header':self.HTTP_HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
+        self.defaultParams = {'header': self.HTTP_HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
         
         self.MAIN_CAT_TAB = [                             
-                             {'category':'search', 'title': _('Search'), 'search_item':True}, 
-                             {'category':'search_history', 'title': _('Search history')},
+                             {'category': 'search', 'title': _('Search'), 'search_item': True}, 
+                             {'category': 'search_history', 'title': _('Search history')},
                             ]
         
     def getPage(self, baseUrl, addParams={}, post_data=None):
@@ -54,18 +54,18 @@ class WPolscePL(CBaseHostClass):
                 return url
             else:
                 return urllib.parse.urljoin(baseUrl, url)
-        addParams['cloudflare_params'] = {'domain':self.up.getDomain(baseUrl), 'cookie_file':self.COOKIE_FILE, 'User-Agent':self.USER_AGENT, 'full_url_handle':_getFullUrl}
+        addParams['cloudflare_params'] = {'domain': self.up.getDomain(baseUrl), 'cookie_file': self.COOKIE_FILE, 'User-Agent': self.USER_AGENT, 'full_url_handle': _getFullUrl}
         return self.cm.getPageCFProtection(baseUrl, addParams, post_data)
     
     def listMainMenu(self, cItem):
         printDBG("WPolscePL.listMainMenu")
         
         params = dict(cItem)
-        params.update({'good_for_fav':True, 'title':'Na żywo', 'category':'list_live', 'url':self.getMainUrl()})
+        params.update({'good_for_fav': True, 'title': 'Na żywo', 'category': 'list_live', 'url': self.getMainUrl()})
         self.addDir(params)
         
         params = dict(cItem)
-        params.update({'good_for_fav':True, 'title':'Ramówka', 'category':'list_days', 'url':self.getMainUrl()})
+        params.update({'good_for_fav': True, 'title': 'Ramówka', 'category': 'list_days', 'url': self.getMainUrl()})
         self.addDir(params)
         
         sts, data = self.getPage(self.getMainUrl())
@@ -82,7 +82,7 @@ class WPolscePL(CBaseHostClass):
                     continue
                 
                 params = dict(cItem)
-                params.update({'good_for_fav':True, 'title':title, 'category':'list_items', 'priv_cat':cat, 'url':self.getFullUrl(url)})
+                params.update({'good_for_fav': True, 'title': title, 'category': 'list_items', 'priv_cat': cat, 'url': self.getFullUrl(url)})
                 self.addDir(params)
         
         self.listsTab(self.MAIN_CAT_TAB, cItem)
@@ -138,7 +138,7 @@ class WPolscePL(CBaseHostClass):
                 title = date
                 
             params = dict(cItem)
-            params.update({'good_for_fav':False, 'category':nextCategory, 'title':title, 'f_date':date})
+            params.update({'good_for_fav': False, 'category': nextCategory, 'title': title, 'f_date': date})
             self.addDir(params)
         
     def listDay(self, cItem):
@@ -175,7 +175,7 @@ class WPolscePL(CBaseHostClass):
                 if item['duration'] != '':
                     desc.append(self.delta2str(timedelta(seconds=item['duration'])))
                 params = dict(cItem)
-                params.update({'good_for_fav':True, 'title':title, 'url':url, 'icon':icon, 'desc':' | '.join(desc)})
+                params.update({'good_for_fav': True, 'title': title, 'url': url, 'icon': icon, 'desc': ' | '.join(desc)})
                 if item['is_future_publication']: 
                     params['good_for_fav'] = False
                     self.addArticle(params)
@@ -192,7 +192,7 @@ class WPolscePL(CBaseHostClass):
                 url = data['main_video']['video_url']
                 if self.cm.isValidUrl(url) and onlyLiveItems:
                     params = dict(cItem)
-                    params.update({'good_for_fav':False, 'type':'video', 'title':'Na żywo', 'url':url, 'icon':'', 'desc':''})
+                    params.update({'good_for_fav': False, 'type': 'video', 'title': 'Na żywo', 'url': url, 'icon': '', 'desc': ''})
                     self.currList.insert(0, params)
         except Exception:
             printExc()
@@ -225,7 +225,7 @@ class WPolscePL(CBaseHostClass):
                 if item['duration'] != '':
                     desc.append(self.delta2str(timedelta(seconds=item['duration'])))
                 params = dict(cItem)
-                params.update({'good_for_fav':True, 'title':title, 'url':url, 'icon':icon, 'desc':' | '.join(desc)})
+                params.update({'good_for_fav': True, 'title': title, 'url': url, 'icon': icon, 'desc': ' | '.join(desc)})
                 if item['is_future_publication']: 
                     params['good_for_fav'] = False
                     self.addArticle(params)
@@ -236,7 +236,7 @@ class WPolscePL(CBaseHostClass):
         
         if nextPage:
             params = dict(cItem)
-            params.update({'good_for_fav':False, 'title':_("Next page"), 'page':page + 1})
+            params.update({'good_for_fav': False, 'title': _("Next page"), 'page': page + 1})
             self.addDir(params)
         
     def listSearchResult(self, cItem, searchPattern, searchType):
@@ -268,7 +268,7 @@ class WPolscePL(CBaseHostClass):
                     desc.append(self.cleanHtmlStr(t))
             
             params = dict(cItem)
-            params.update({'good_for_fav':True, 'title':title, 'url':url, 'icon':icon, 'desc':' | '.join(desc)})
+            params.update({'good_for_fav': True, 'title': title, 'url': url, 'icon': icon, 'desc': ' | '.join(desc)})
             self.addVideo(params)
             
     def getLinksForVideo(self, cItem):
@@ -304,7 +304,7 @@ class WPolscePL(CBaseHostClass):
         
     #MAIN MENU
         if name == None:
-            self.listMainMenu({'name':'category'})
+            self.listMainMenu({'name': 'category'})
         elif category == 'list_items':
             self.listItems(self.currItem)
         elif category == 'list_live':
@@ -316,11 +316,11 @@ class WPolscePL(CBaseHostClass):
     #SEARCH
         elif category in ["search", "search_next_page"]:
             cItem = dict(self.currItem)
-            cItem.update({'search_item':False, 'name':'category'}) 
+            cItem.update({'search_item': False, 'name': 'category'}) 
             self.listSearchResult(cItem, searchPattern, searchType)
     #HISTORIA SEARCH
         elif category == "search_history":
-            self.listsHistory({'name':'history', 'category': 'search'}, 'desc', _("Type: "))
+            self.listsHistory({'name': 'history', 'category': 'search'}, 'desc', _("Type: "))
         else:
             printExc()
         

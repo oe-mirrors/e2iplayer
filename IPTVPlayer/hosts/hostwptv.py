@@ -41,22 +41,22 @@ def gettytul():
 class WpTV(CBaseHostClass):
  
     def __init__(self):
-        CBaseHostClass.__init__(self, {'history':'WpTV.tv', 'cookie':'WpTV.cookie'})
-        self.HEADER = {'User-Agent':'Mozilla/5.0', 'Accept':'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8', 'Accept-Encoding':'gzip, deflate'}
+        CBaseHostClass.__init__(self, {'history': 'WpTV.tv', 'cookie': 'WpTV.cookie'})
+        self.HEADER = {'User-Agent': 'Mozilla/5.0', 'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8', 'Accept-Encoding': 'gzip, deflate'}
         self.AJAX_HEADER = dict(self.HEADER)
         self.AJAX_HEADER.update({'X-Requested-With': 'XMLHttpRequest'})
         self.cm.HEADER = self.HEADER # default header
-        self.defaultParams = {'header':self.HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
+        self.defaultParams = {'header': self.HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
         
         self.MAIN_URL = 'http://wp.tv/'
         self.DEFAULT_ICON_URL = 'http://static.wirtualnemedia.pl/media/top/wp-kanaltv-logo655ciemne.png'
         
-        self.MAIN_CAT_TAB = [{'category':'list_sections', 'title': _('Main'), 'url':self.MAIN_URL},
-                             {'category':'list_sections', 'title': _('Series'), 'url':self.getFullUrl('seriale')},
-                             {'category':'list_sections', 'title': _('Programs'), 'url':self.getFullUrl('programy')},
-                             {'category':'list_groups', 'title': _('Others'), 'url':self.getFullUrl('inne')},
-                             {'category':'search', 'title': _('Search'), 'search_item':True},
-                             {'category':'search_history', 'title': _('Search history')} 
+        self.MAIN_CAT_TAB = [{'category': 'list_sections', 'title': _('Main'), 'url': self.MAIN_URL},
+                             {'category': 'list_sections', 'title': _('Series'), 'url': self.getFullUrl('seriale')},
+                             {'category': 'list_sections', 'title': _('Programs'), 'url': self.getFullUrl('programy')},
+                             {'category': 'list_groups', 'title': _('Others'), 'url': self.getFullUrl('inne')},
+                             {'category': 'search', 'title': _('Search'), 'search_item': True},
+                             {'category': 'search_history', 'title': _('Search history')} 
                             ]
         
         self.cacheSections = {}
@@ -100,11 +100,11 @@ class WpTV(CBaseHostClass):
                 desc = self.cleanHtmlStr(item)
             if not self.cm.isValidUrl(url):
                 continue
-            params = {'title':title, 'url':url, 'icon':self.getFullUrl(icon), 'desc':desc}
+            params = {'title': title, 'url': url, 'icon': self.getFullUrl(icon), 'desc': desc}
             if ',klip.html' in url:
                 params['type'] = 'video'
             else:
-                params.update({'type':'category'})
+                params.update({'type': 'category'})
             sectionItemsTab.append(params)
         return sectionItemsTab
     
@@ -132,17 +132,17 @@ class WpTV(CBaseHostClass):
         if len(titlesTab) > 1:
             for title in titlesTab:
                 params = dict(cItem)
-                params.update({'title':title, 'category':nextCategory})
+                params.update({'title': title, 'category': nextCategory})
                 self.addDir(params)
         elif len(titlesTab) == 1:
             params = dict(cItem)
-            params.update({'title':titlesTab[0]})
+            params.update({'title': titlesTab[0]})
             self.listSectionItems(params, 'list_episodes')
             
         if self.cm.isValidUrl(nextPage):
             params = dict(cItem)
             params.pop('good_for_fav', None)
-            params.update({'title':_('Next page'), 'url':nextPage, 'page':page + 1})
+            params.update({'title': _('Next page'), 'url': nextPage, 'page': page + 1})
             self.addDir(params)
         
     def listSectionItems(self, cItem, nextCategory):
@@ -154,7 +154,7 @@ class WpTV(CBaseHostClass):
             params = dict(params)
             params.update({'good_for_fav': True})
             if params['type'] != 'video':
-                params.update({'category':nextCategory})
+                params.update({'category': nextCategory})
                 self.addDir(params)
             else:
                 self.addVideo(params)
@@ -178,12 +178,12 @@ class WpTV(CBaseHostClass):
             for item in group:
                 url = self.getFullUrl(self._getAttrVal(item, 'href'))
                 title = self.cleanHtmlStr(item)
-                itemTab.append({'title':title, 'url':url})
+                itemTab.append({'title': title, 'url': url})
             
             if len(itemTab):
                 self.cacheGroups[groupTitle] = itemTab
                 params = dict(cItem)
-                params.update({'title':groupTitle, 'category':nextCategory})
+                params.update({'title': groupTitle, 'category': nextCategory})
                 self.addDir(params)
                 
     def listGroupItems(self, cItem, nextCategory):
@@ -192,7 +192,7 @@ class WpTV(CBaseHostClass):
         tab = self.cacheGroups.get(key, [])
         
         cItem = dict(cItem)
-        cItem.update({'good_for_fav': True, 'category':nextCategory})
+        cItem.update({'good_for_fav': True, 'category': nextCategory})
         self.listsTab(tab, cItem)
            
     def listEpisodes(self, cItem):
@@ -211,7 +211,7 @@ class WpTV(CBaseHostClass):
             trailerTitle = '{0} - {1}'.format(cItem['title'], self.cleanHtmlStr(trailerData))
             trailerUrl = self.getFullUrl(self._getAttrVal(trailerData, 'href'))
             if self.cm.isValidUrl(trailerUrl) and ',klip.html' in trailerUrl:
-                params = {'good_for_fav': True, 'url':trailerUrl, 'title':trailerTitle, 'icon':cItem.get('icon', ''), 'desc':mainDesc}
+                params = {'good_for_fav': True, 'url': trailerUrl, 'title': trailerTitle, 'icon': cItem.get('icon', ''), 'desc': mainDesc}
                 self.addVideo(params)
         
         data = self.cm.ph.getAllItemsBeetwenMarkers(data, '<section', '</section>')
@@ -220,13 +220,13 @@ class WpTV(CBaseHostClass):
                 continue
             itemsTab = self.getSectionItems(section)
             for item in itemsTab:
-                item.update({'good_for_fav': True, 'desc':item['desc'] + '[/br]' + mainDesc}) #, 'title':item['desc']
+                item.update({'good_for_fav': True, 'desc': item['desc'] + '[/br]' + mainDesc}) #, 'title':item['desc']
                 self.addVideo(item)
         
         if self.cm.isValidUrl(nextPage):
             params = dict(cItem)
             params.pop('good_for_fav', None)
-            params.update({'title':_('Next page'), 'url':nextPage, 'page':page + 1})
+            params.update({'title': _('Next page'), 'url': nextPage, 'page': page + 1})
             self.addDir(params)
 
     def listSearchResult(self, cItem, searchPattern, searchType):
@@ -255,12 +255,12 @@ class WpTV(CBaseHostClass):
                 return []
             
             tmpTab = []
-            qMap = {"HQ":'2', "LQ":'1'}
+            qMap = {"HQ": '2', "LQ": '1'}
             data = byteify(json.loads(data))
             for item in data['clip']['url']:
                 if 'mp4' not in item['type']:
                     continue
-                urlTab.append({'name':item['quality'] + ' ' + item['type'], 'url':self.getFullUrl(item['url']), 'quality':qMap.get(item['quality'], '3'), 'need_resolve':0})
+                urlTab.append({'name': item['quality'] + ' ' + item['type'], 'url': self.getFullUrl(item['url']), 'quality': qMap.get(item['quality'], '3'), 'need_resolve': 0})
                 
             if 0 < len(urlTab):
                 max_bitrate = int(config.plugins.iptvplayer.wpDefaultformat.value)
@@ -313,7 +313,7 @@ class WpTV(CBaseHostClass):
         
     #MAIN MENU
         if name == None:
-            self.listsTab(self.MAIN_CAT_TAB, {'name':'category'})
+            self.listsTab(self.MAIN_CAT_TAB, {'name': 'category'})
         elif 'list_sections' == category:
             self.listSections(self.currItem, 'list_section_items')
         elif 'list_section_items' == category:
@@ -327,11 +327,11 @@ class WpTV(CBaseHostClass):
     #SEARCH
         elif category in ["search", "search_next_page"]:
             cItem = dict(self.currItem)
-            cItem.update({'search_item':False, 'name':'category'}) 
+            cItem.update({'search_item': False, 'name': 'category'}) 
             self.listSearchResult(cItem, searchPattern, searchType)
     #HISTORIA SEARCH
         elif category == "search_history":
-            self.listsHistory({'name':'history', 'category': 'search'}, 'desc', _("Type: "))
+            self.listsHistory({'name': 'history', 'category': 'search'}, 'desc', _("Type: "))
         else:
             printExc()
         

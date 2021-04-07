@@ -27,7 +27,7 @@ def gettytul():
 class KreskoweczkiPL(CBaseHostClass):
  
     def __init__(self):
-        CBaseHostClass.__init__(self, {'history':'  KreskoweczkiPL.tv', 'cookie':'kreskoweczkipl.cookie'})
+        CBaseHostClass.__init__(self, {'history': '  KreskoweczkiPL.tv', 'cookie': 'kreskoweczkipl.cookie'})
         self.defaultParams = {'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
         self.abcCache = {}
         
@@ -38,20 +38,20 @@ class KreskoweczkiPL(CBaseHostClass):
         self.MAIN_URL = 'https://www.kreskoweczki.pl/'
         self.DEFAULT_ICON = "http://svn.sd-xbmc.org/filedetails.php?repname=sd-xbmc&path=%2Ftrunk%2Fxbmc-addons%2Fsrc%2Fxbmc-addons%2Fkreskoweczki.png&rev=936&peg=936"
 
-        self.MAIN_CAT_TAB = [{'icon':self.DEFAULT_ICON, 'category':'list_abc', 'title': 'Alfabetycznie', 'url':self.MAIN_URL},
-                             {'icon':self.DEFAULT_ICON, 'category':'list_items', 'title': 'Ostatnio dodane', 'url':self.MAIN_URL + 'ostatnio-dodane/wszystkie'},
-                             {'icon':self.DEFAULT_ICON, 'category':'list_items', 'title': 'Anime', 'url':self.MAIN_URL + 'typ/anime/'},
-                             {'icon':self.DEFAULT_ICON, 'category':'list_items', 'title': 'Bajki', 'url':self.MAIN_URL + 'typ/toon/'},
-                             {'icon':self.DEFAULT_ICON, 'category':'list_items', 'title': 'Seriale', 'url':self.MAIN_URL + 'typ/serial/'},
-                             {'icon':self.DEFAULT_ICON, 'category':'list_items', 'title': 'Pozostałe', 'url':self.MAIN_URL + 'typ/pozostale/'},
-                             {'icon':self.DEFAULT_ICON, 'category':'search', 'title': _('Search'), 'search_item':True},
-                             {'icon':self.DEFAULT_ICON, 'category':'search_history', 'title': _('Search history')}]
+        self.MAIN_CAT_TAB = [{'icon': self.DEFAULT_ICON, 'category': 'list_abc', 'title': 'Alfabetycznie', 'url': self.MAIN_URL},
+                             {'icon': self.DEFAULT_ICON, 'category': 'list_items', 'title': 'Ostatnio dodane', 'url': self.MAIN_URL + 'ostatnio-dodane/wszystkie'},
+                             {'icon': self.DEFAULT_ICON, 'category': 'list_items', 'title': 'Anime', 'url': self.MAIN_URL + 'typ/anime/'},
+                             {'icon': self.DEFAULT_ICON, 'category': 'list_items', 'title': 'Bajki', 'url': self.MAIN_URL + 'typ/toon/'},
+                             {'icon': self.DEFAULT_ICON, 'category': 'list_items', 'title': 'Seriale', 'url': self.MAIN_URL + 'typ/serial/'},
+                             {'icon': self.DEFAULT_ICON, 'category': 'list_items', 'title': 'Pozostałe', 'url': self.MAIN_URL + 'typ/pozostale/'},
+                             {'icon': self.DEFAULT_ICON, 'category': 'search', 'title': _('Search'), 'search_item': True},
+                             {'icon': self.DEFAULT_ICON, 'category': 'search_history', 'title': _('Search history')}]
         self.needProxy = None
         
     def getPage(self, url, params={}, post_data=None):
         if 'header' not in params:
             HTTP_HEADER = dict(self.HEADER)
-            params.update({'header':HTTP_HEADER})
+            params.update({'header': HTTP_HEADER})
         
         sts, data = self.cm.getPage(url, params, post_data)
         if sts and None == data:
@@ -79,7 +79,7 @@ class KreskoweczkiPL(CBaseHostClass):
             title = self.cleanHtmlStr(item)
             url = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''href=['"]([^'^"]+?)['"]''')[0])
             params = dict(cItem)
-            params.update({'category':category, 'title':title, 'url':url})
+            params.update({'category': category, 'title': title, 'url': url})
             self.addDir(params)
             
     def listTitles(self, cItem, nextCategory):
@@ -160,7 +160,7 @@ class KreskoweczkiPL(CBaseHostClass):
             
             params = dict(cItem)
             params.pop('post_data', None)
-            params.update({'good_for_fav':True, 'page':1, 'title':self.cleanHtmlStr(title), 'url':self.getFullUrl(url), 'icon':self.getFullUrl(icon), 'desc':'[/br]'.join(desc).replace('[/br][/br]', '[/br]')})
+            params.update({'good_for_fav': True, 'page': 1, 'title': self.cleanHtmlStr(title), 'url': self.getFullUrl(url), 'icon': self.getFullUrl(icon), 'desc': '[/br]'.join(desc).replace('[/br][/br]', '[/br]')})
 
             if video:
                 #params.update({'desc':self.cleanHtmlStr(item)})
@@ -171,7 +171,7 @@ class KreskoweczkiPL(CBaseHostClass):
         
         if nextPage != '':
             params = dict(cItem)
-            params.update({'good_for_fav':False, 'title':_('Next page'), 'url':nextPage, 'page':page + 1})
+            params.update({'good_for_fav': False, 'title': _('Next page'), 'url': nextPage, 'page': page + 1})
             self.addDir(params)
         
     def getLinksForVideo(self, cItem):
@@ -188,8 +188,8 @@ class KreskoweczkiPL(CBaseHostClass):
             url = self.cm.ph.getSearchGroups(item, '''action="([^"]+?)"''')[0]
             vid = self.cm.ph.getSearchGroups(item, '''value="([0-9]+?)"''')[0]
             if url != '' and vid != '':
-                url = strwithmeta(self.getFullUrl(url), {'Referer':cItem['url'], 'vid':vid})
-                urlTab.append({'name':self.cleanHtmlStr(item), 'url':url, 'need_resolve':1})
+                url = strwithmeta(self.getFullUrl(url), {'Referer': cItem['url'], 'vid': vid})
+                urlTab.append({'name': self.cleanHtmlStr(item), 'url': url, 'need_resolve': 1})
         
         return urlTab
         
@@ -250,7 +250,7 @@ class KreskoweczkiPL(CBaseHostClass):
             cItem = byteify(json.loads(fav_data))
             links = self.getLinksForVideo(cItem)
         except Exception:
-            return self.getLinksForVideo({'url':fav_data})
+            return self.getLinksForVideo({'url': fav_data})
         return links
         
     def setInitListFromFavouriteItem(self, fav_data):
@@ -278,7 +278,7 @@ class KreskoweczkiPL(CBaseHostClass):
         
     #MAIN MENU
         if name == None:
-            self.listsTab(self.MAIN_CAT_TAB, {'name':'category'})
+            self.listsTab(self.MAIN_CAT_TAB, {'name': 'category'})
         elif category == 'list_abc':
             self.listABC(self.currItem, 'list_items')
         elif category == 'list_titles':
@@ -288,11 +288,11 @@ class KreskoweczkiPL(CBaseHostClass):
     #SEARCH
         elif category in ["search", "search_next_page"]:
             cItem = dict(self.currItem)
-            cItem.update({'search_item':False, 'name':'category'}) 
+            cItem.update({'search_item': False, 'name': 'category'}) 
             self.listSearchResult(cItem, searchPattern, searchType)
     #HISTORIA SEARCH
         elif category == "search_history":
-            self.listsHistory({'name':'history', 'category': 'search'}, 'desc', _("Type: "))
+            self.listsHistory({'name': 'history', 'category': 'search'}, 'desc', _("Type: "))
         else:
             printExc()
         

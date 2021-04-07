@@ -37,14 +37,14 @@ class DjingComApi(CBaseHostClass):
         CBaseHostClass.__init__(self)
         self.MAIN_URL = 'https://www.djing.com/'
         self.DEFAULT_ICON_URL = 'https://www.djing.com/newimages/content/c01.jpg'
-        self.HTTP_HEADER = {'User-Agent': 'Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/62.0.3202.94 Safari/537.36', 'Accept': 'text/html', 'Accept-Encoding':'gzip, deflate'}
+        self.HTTP_HEADER = {'User-Agent': 'Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/62.0.3202.94 Safari/537.36', 'Accept': 'text/html', 'Accept-Encoding': 'gzip, deflate'}
         self.AJAX_HEADER = dict(self.HTTP_HEADER)
         self.AJAX_HEADER.update({'X-Requested-With': 'XMLHttpRequest'})
         
         self.COOKIE_FILE = GetCookieDir('viortv.cookie')
         
         self.defaultParams = {}
-        self.defaultParams.update({'header':self.HTTP_HEADER, 'cookiefile': self.COOKIE_FILE}) #'save_cookie': True, 'load_cookie': True,
+        self.defaultParams.update({'header': self.HTTP_HEADER, 'cookiefile': self.COOKIE_FILE}) #'save_cookie': True, 'load_cookie': True,
         self.loggedIn = False
         self.accountInfo = ''
     
@@ -67,7 +67,7 @@ class DjingComApi(CBaseHostClass):
             
             title = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(item, '<h3', '</h3>')[1])
             desc = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(item, '<p', '</p>')[1])
-            params = {'name':cItem['name'], 'type':'video', 'title':title, 'url':self.getMainUrl(), 'iptv_hls_url':url, 'icon':icon, 'desc':desc}
+            params = {'name': cItem['name'], 'type': 'video', 'title': title, 'url': self.getMainUrl(), 'iptv_hls_url': url, 'icon': icon, 'desc': desc}
             channelsTab.append(params)
         
         return channelsTab
@@ -78,7 +78,7 @@ class DjingComApi(CBaseHostClass):
         hlsUrl = cItem.get('iptv_hls_url', '')
         printDBG("hlsUrl||||||||||||||||| " + hlsUrl)
         if hlsUrl != '':
-            hlsUrl = strwithmeta(hlsUrl, {'User-Agent':self.defaultParams['header']['User-Agent'], 'Referer':cItem['url']})
+            hlsUrl = strwithmeta(hlsUrl, {'User-Agent': self.defaultParams['header']['User-Agent'], 'Referer': cItem['url']})
             urlsTab = getDirectM3U8Playlist(hlsUrl, checkContent=True)
             
         def __getLinkQuality(itemLink):

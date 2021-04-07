@@ -222,7 +222,7 @@ class IPTVMultipleImageSelectorWidget(Screen):
         i = 0
         for y in range(self.iptv_row_num):
             for x in range(self.iptv_col_num):
-                item = {'pixmap':None, 'id':None, 'width':self.iptv_image_width, 'height':self.iptv_image_height, 'selected':False}
+                item = {'pixmap': None, 'id': None, 'width': self.iptv_image_width, 'height': self.iptv_image_height, 'selected': False}
                 if i < len(self.iptv_images): 
                     item['id'] = self.iptv_images[i]['id']
                     item['pixmap'] = self.iptv_images_data[i]

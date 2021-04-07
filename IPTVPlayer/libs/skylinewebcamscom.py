@@ -68,9 +68,9 @@ class WkylinewebcamsComApi:
         
     def getMainMenu(self, cItem):
         printDBG("WkylinewebcamsCom.getMainMenu")
-        STATIC_TAB = [{'title':_('NEW'), 'url':self.getFullUrl('/skyline/morewebcams.php?w=new&l=' + self.lang), 'cat':'list_cams2'},
-                      {'title':_('NEARBY CAMS'), 'url':self.getFullUrl('/skyline/morewebcams.php?w=you&l=' + self.lang), 'cat':'list_cams2'},
-                      {'title':_('TOP live cams'), 'url':self.getFullUrl(self.lang + '/top-live-cams.html'), 'cat':'list_cams'},
+        STATIC_TAB = [{'title': _('NEW'), 'url': self.getFullUrl('/skyline/morewebcams.php?w=new&l=' + self.lang), 'cat': 'list_cams2'},
+                      {'title': _('NEARBY CAMS'), 'url': self.getFullUrl('/skyline/morewebcams.php?w=you&l=' + self.lang), 'cat': 'list_cams2'},
+                      {'title': _('TOP live cams'), 'url': self.getFullUrl(self.lang + '/top-live-cams.html'), 'cat': 'list_cams'},
                       ]
         
         list = []
@@ -94,12 +94,12 @@ class WkylinewebcamsComApi:
                 url = self.cm.ph.getSearchGroups(item, '''href="([^"]+?)"''', 1, True)[0]
                 title = self.cleanHtmlStr(item)
                 if url != '' and title != '':
-                    tab.append({'url':self.getFullUrl(url), 'title':title, 'cat':'list_cams'}) #explore_item
+                    tab.append({'url': self.getFullUrl(url), 'title': title, 'cat': 'list_cams'}) #explore_item
             if len(tab):
-                tab.insert(0, {'url':self.getFullUrl(catUrl), 'title':_('All'), 'cat':'list_cams'})
+                tab.insert(0, {'url': self.getFullUrl(catUrl), 'title': _('All'), 'cat': 'list_cams'})
                 self.mainMenuCache[idx] = tab
                 params = dict(cItem)
-                params.update({'title':catTitle, 'cat':'list_main_category', 'idx':idx})
+                params.update({'title': catTitle, 'cat': 'list_main_category', 'idx': idx})
                 list.append(params)
         
         for item in STATIC_TAB:
@@ -122,7 +122,7 @@ class WkylinewebcamsComApi:
                 continue
             title = self.cleanHtmlStr(item)
             params = dict(cItem)
-            params.update({'title':title, 'url':self.getFullUrl(url), 'icon':self.getFullUrl(icon), 'type':'video'})
+            params.update({'title': title, 'url': self.getFullUrl(url), 'icon': self.getFullUrl(icon), 'type': 'video'})
             list.append(params)
         return list
         
@@ -141,7 +141,7 @@ class WkylinewebcamsComApi:
             title = self.cleanHtmlStr(self.cm.ph.getSearchGroups(item, '''alt="([^"]+?)"''', 1, True)[0])
             desc = self.cleanHtmlStr(item)
             params = dict(cItem)
-            params.update({'title':title, 'url':self.getFullUrl(url), 'icon':self.getFullUrl(icon), 'desc':desc, 'type':'video'})
+            params.update({'title': title, 'url': self.getFullUrl(url), 'icon': self.getFullUrl(icon), 'desc': desc, 'type': 'video'})
             list.append(params)
         return list
         
@@ -160,7 +160,7 @@ class WkylinewebcamsComApi:
             title = self.cleanHtmlStr(self.cm.ph.getSearchGroups(item, '''alt="([^"]+?)"''', 1, True)[0])
             desc = self.cleanHtmlStr(item)
             params = dict(cItem)
-            params.update({'title':title, 'url':self.getFullUrl(url), 'icon':self.getFullUrl(icon), 'desc':desc, 'type':'video'})
+            params.update({'title': title, 'url': self.getFullUrl(url), 'icon': self.getFullUrl(icon), 'desc': desc, 'type': 'video'})
             list.append(params)
         return list
         
@@ -208,5 +208,5 @@ class WkylinewebcamsComApi:
             return urlsTab
         url = self.cm.ph.getSearchGroups(data, '''url:['"]([^"^']+?)["']''', 1, True)[0]
         if '://' in url:
-            urlsTab.append({'name':name, 'url':url})
+            urlsTab.append({'name': name, 'url': url})
         return urlsTab

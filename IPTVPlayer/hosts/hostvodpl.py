@@ -47,25 +47,25 @@ class VODPL(CBaseHostClass):
         proxyUrl = config.plugins.iptvplayer.proxyurl.value
         useProxy = config.plugins.iptvplayer.proxyOnet.value
     
-        CBaseHostClass.__init__(self, {'proxyURL':proxyUrl, 'useProxy':useProxy, 'history':'vod.pl', 'cookie':'vod.pl.cookie'})
+        CBaseHostClass.__init__(self, {'proxyURL': proxyUrl, 'useProxy': useProxy, 'history': 'vod.pl', 'cookie': 'vod.pl.cookie'})
         self.DEFAULT_ICON_URL = 'https://ocdn.eu/static/ucs/ZTc7MDA_/3981e069a1f7f560017885aaad40ea1a/assets/img/logo.png'
         self.USER_AGENT = 'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:40.0) Gecko/20100101 Firefox/40.0'
-        self.HEADER = {'User-Agent': self.USER_AGENT, 'DNT':'1', 'Accept': 'text/html'}
+        self.HEADER = {'User-Agent': self.USER_AGENT, 'DNT': '1', 'Accept': 'text/html'}
         self.AJAX_HEADER = dict(self.HEADER)
         self.AJAX_HEADER.update({'X-Requested-With': 'XMLHttpRequest'})
         self.MAIN_URL = 'https://vod.pl/'
         self.cacheFilters = {}
         self.cacheFiltersKeys = []
-        self.defaultParams = {'header':self.HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
+        self.defaultParams = {'header': self.HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
     
-        self.MAIN_CAT_TAB = [{'category': 'list_filters', 'title': _('Movies'), 'url': self.getFullUrl('filmy'), 'f_element': 'SiteFilmy',},
-                             {'category': 'list_items', 'title': _('Series'), 'url': self.getFullUrl('seriale'), 'f_element': 'SiteSeriale',},
-                             {'category': 'list_filters', 'title': 'Programy onetu', 'url': self.getFullUrl('programy-onetu'), 'f_element': 'SiteProgramyOnetu',},
-                             {'category': 'list_filters', 'title': 'Dokumentalne', 'url': self.getFullUrl('filmy-dokumentalne'), 'f_element': 'SiteDokumenty',},
+        self.MAIN_CAT_TAB = [{'category': 'list_filters', 'title': _('Movies'), 'url': self.getFullUrl('filmy'), 'f_element': 'SiteFilmy', },
+                             {'category': 'list_items', 'title': _('Series'), 'url': self.getFullUrl('seriale'), 'f_element': 'SiteSeriale', },
+                             {'category': 'list_filters', 'title': 'Programy onetu', 'url': self.getFullUrl('programy-onetu'), 'f_element': 'SiteProgramyOnetu', },
+                             {'category': 'list_filters', 'title': 'Dokumentalne', 'url': self.getFullUrl('filmy-dokumentalne'), 'f_element': 'SiteDokumenty', },
                              
                              
-                             {'category': 'search', 'title': _('Search'), 'search_item': True,},
-                             {'category': 'search_history', 'title': _('Search history'),} 
+                             {'category': 'search', 'title': _('Search'), 'search_item': True, },
+                             {'category': 'search_history', 'title': _('Search history'), } 
                             ]
                             
     def getFullIconUrl(self, url):
@@ -96,11 +96,11 @@ class VODPL(CBaseHostClass):
                 if value == '':
                     continue
                 title = self.cleanHtmlStr(item)
-                self.cacheFilters[key].append({'title':title.title(), key:value})
+                self.cacheFilters[key].append({'title': title.title(), key: value})
                 
             if len(self.cacheFilters[key]):
                 if allTitle != '':
-                    self.cacheFilters[key].insert(0, {'title':allTitle})
+                    self.cacheFilters[key].insert(0, {'title': allTitle})
                 self.cacheFiltersKeys.append(key)
         
         
@@ -169,13 +169,13 @@ class VODPL(CBaseHostClass):
         if 'f_channel' in cItem:
             filters['channel'] = cItem['f_channel']
         
-        reqParams = {elementId:{'elementId':elementId, 'site':page}}
+        reqParams = {elementId: {'elementId': elementId, 'site': page}}
         if 'f_genres' in cItem:
             reqParams[elementId]['genres'] = urllib.parse.quote(cItem.get('f_genres', ''))
         if 'f_query' in cItem:
             reqParams[elementId]['query'] = urllib.parse.quote(cItem.get('f_query', ''))
         if 'f_sort' in cItem:
-            reqParams[elementId]['sort'] = {cItem['f_sort']:'desc'}
+            reqParams[elementId]['sort'] = {cItem['f_sort']: 'desc'}
         if 'f_series' in cItem:
             reqParams[elementId]['series'] = cItem['f_series']
         if 'f_season' in cItem:
@@ -220,7 +220,7 @@ class VODPL(CBaseHostClass):
                 title += ', ' + episodeTitle
             
             params = dict(cItem)
-            params = {'good_for_fav': True, 'title':title, 'url':url, 'desc':' | '.join(descTab) + '[/br]' + mainDesc, 'icon':icon, 'episode_title':episodeTitle}
+            params = {'good_for_fav': True, 'title': title, 'url': url, 'desc': ' | '.join(descTab) + '[/br]' + mainDesc, 'icon': icon, 'episode_title': episodeTitle}
             params['category'] = nextCategory
             self.addDir(params)
         
@@ -232,7 +232,7 @@ class VODPL(CBaseHostClass):
                 return
             if 'v_itemTitle' in data:
                 params = dict(cItem)
-                params.update({'title':_("Next page"), 'page':page + 1})
+                params.update({'title': _("Next page"), 'page': page + 1})
                 self.addDir(params)
         
     def exploreItem(self, cItem, nextCategory):
@@ -256,11 +256,11 @@ class VODPL(CBaseHostClass):
                         continue
                     title = self.cleanHtmlStr(item)
                     params = dict(cItem)
-                    params.update({'good_for_fav':False, 'category':nextCategory, 'title':'%s %s' % (seasonTitle, title), 'f_series':seriesId, 'f_season':sNum, 'f_element':'v_seasonEpisodes', 'desc':tmpDesc})
+                    params.update({'good_for_fav': False, 'category': nextCategory, 'title': '%s %s' % (seasonTitle, title), 'f_series': seriesId, 'f_season': sNum, 'f_element': 'v_seasonEpisodes', 'desc': tmpDesc})
                     self.addDir(params)
             else:
                 cItem = dict(cItem)
-                cItem.update({'category':nextCategory, 'f_series':seriesId, 'f_element':'v_seasonEpisodes', 'desc':tmpDesc})
+                cItem.update({'category': nextCategory, 'f_series': seriesId, 'f_element': 'v_seasonEpisodes', 'desc': tmpDesc})
                 self.listItems(cItem, 'explore_item')
         else:
             tmp = self.cm.ph.getDataBeetwenMarkers(data, '<ul class="v_videoAttributes"', '</ul>')[1]
@@ -279,7 +279,7 @@ class VODPL(CBaseHostClass):
                 title += ', ' + episodeTitle
             
             params = dict(cItem)
-            params.update({'title':title, 'desc':desc})
+            params.update({'title': title, 'desc': desc})
             self.addVideo(params)
 
     def listSearchResult(self, cItem, searchPattern, searchType):
@@ -289,7 +289,7 @@ class VODPL(CBaseHostClass):
         if searchType == 'wszystkie':
             searchType = "0"
         
-        cItem.update({'f_element':'SearchResults', 'f_limit':48, 'f_sort':'score', 'f_channel':searchType, 'f_query':searchPattern})
+        cItem.update({'f_element': 'SearchResults', 'f_limit': 48, 'f_sort': 'score', 'f_channel': searchType, 'f_query': searchPattern})
         self.listItems(cItem, 'explore_item')
         
     def _getVideoTab(self, ckmId):
@@ -358,7 +358,7 @@ class VODPL(CBaseHostClass):
         for item in tab:
             name = "type: %s \t bitrate: %s" % (item[0], item[2])
             url = item[1]
-            videoUrls.append({'name':name, 'url':url, 'need_resolve':0})
+            videoUrls.append({'name': name, 'url': url, 'need_resolve': 0})
             
         return videoUrls
         
@@ -434,7 +434,7 @@ class VODPL(CBaseHostClass):
         if icon == '':
             icon = cItem.get('icon', self.DEFAULT_ICON_URL)
         
-        return [{'title':self.cleanHtmlStr(title), 'text': self.cleanHtmlStr(desc), 'images':[{'title':'', 'url':self.getFullUrl(icon)}], 'other_info':otherInfo}]
+        return [{'title': self.cleanHtmlStr(title), 'text': self.cleanHtmlStr(desc), 'images': [{'title': '', 'url': self.getFullUrl(icon)}], 'other_info': otherInfo}]
     
     def handleService(self, index, refresh=0, searchPattern='', searchType=''):
         printDBG('handleService start')
@@ -450,7 +450,7 @@ class VODPL(CBaseHostClass):
         
     #MAIN MENU
         if name == None:
-            self.listsTab(self.MAIN_CAT_TAB, {'name':'category'})
+            self.listsTab(self.MAIN_CAT_TAB, {'name': 'category'})
         elif category == 'list_filters':
             self.listFilters(self.currItem, 'list_items')
         elif category == 'list_items':
@@ -460,11 +460,11 @@ class VODPL(CBaseHostClass):
     #SEARCH
         elif category in ["search", "search_next_page"]:
             cItem = dict(self.currItem)
-            cItem.update({'search_item':False, 'name':'category'}) 
+            cItem.update({'search_item': False, 'name': 'category'}) 
             self.listSearchResult(cItem, searchPattern, searchType)
     #HISTORIA SEARCH
         elif category == "search_history":
-            self.listsHistory({'name':'history', 'category': 'search'}, 'desc', _("Type: "))
+            self.listsHistory({'name': 'history', 'category': 'search'}, 'desc', _("Type: "))
         else:
             printExc()
         

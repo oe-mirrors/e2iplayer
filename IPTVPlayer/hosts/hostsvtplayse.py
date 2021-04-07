@@ -60,12 +60,12 @@ def gettytul():
 class SVTPlaySE(CBaseHostClass):
  
     def __init__(self):
-        CBaseHostClass.__init__(self, {'history':'SVTPlaySE.tv', 'cookie':'svtplayse.cookie'})
-        self.HEADER = {'User-Agent':'Mozilla/5.0', 'Accept':'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8', 'Accept-Encoding':'gzip, deflate'}
+        CBaseHostClass.__init__(self, {'history': 'SVTPlaySE.tv', 'cookie': 'svtplayse.cookie'})
+        self.HEADER = {'User-Agent': 'Mozilla/5.0', 'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8', 'Accept-Encoding': 'gzip, deflate'}
         self.AJAX_HEADER = dict(self.HEADER)
         self.AJAX_HEADER.update({'X-Requested-With': 'XMLHttpRequest'})
         self.cm.HEADER = self.HEADER # default header
-        self.defaultParams = {'header':self.HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
+        self.defaultParams = {'header': self.HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
         
         self.MAIN_URL = 'https://www.svtplay.se/'
         self.DEFAULT_ICON_URL = 'https://upload.wikimedia.org/wikipedia/en/5/54/SVT_Play.png' 
@@ -76,19 +76,19 @@ class SVTPlaySE(CBaseHostClass):
                              #{'category':'list_items2',        'title': 'SISTA CHANSEN',                       'url':'/sista-chansen'   },
                              #{'category':'list_items2',        'title': 'LIVESÄNDNINGAR',                      'url':'/live'            },
         
-                             {'category':'list_items', 'title': _('Popular'), 'url':'/popular'},
-                             {'category':'list_items', 'title': _('Latest programs'), 'url':'/latest'},
-                             {'category':'list_items', 'title': _('Latest news broadcast'), 'url':'/cluster_latest?cluster=nyheter'},
-                             {'category':'list_items', 'title': _('Last chance'), 'url':'/last_chance'},
-                             {'category':'list_items', 'title': _('Live broadcasts'), 'url':'/live'},
-                             {'category':'list_channels', 'title': _('Channels'), 'url':'/kanaler'},   
-                             {'category':'list_az_menu', 'title': _('Programs A-Ö'), 'url':'/program'},   #/all_titles
-                             {'category':'list_items', 'title': _('Categories'), 'url':'/active_clusters'},  
+                             {'category': 'list_items', 'title': _('Popular'), 'url': '/popular'},
+                             {'category': 'list_items', 'title': _('Latest programs'), 'url': '/latest'},
+                             {'category': 'list_items', 'title': _('Latest news broadcast'), 'url': '/cluster_latest?cluster=nyheter'},
+                             {'category': 'list_items', 'title': _('Last chance'), 'url': '/last_chance'},
+                             {'category': 'list_items', 'title': _('Live broadcasts'), 'url': '/live'},
+                             {'category': 'list_channels', 'title': _('Channels'), 'url': '/kanaler'},   
+                             {'category': 'list_az_menu', 'title': _('Programs A-Ö'), 'url': '/program'},   #/all_titles
+                             {'category': 'list_items', 'title': _('Categories'), 'url': '/active_clusters'},  
                              
-                             {'category':'search', 'title': _('Search'), 'search_item':True, 'icon':'https://raw.githubusercontent.com/vonH/plugin.video.iplayerwww/master/media/search.png'},
-                             {'category': 'search_history', 'title': _('Search history'),}]
+                             {'category': 'search', 'title': _('Search'), 'search_item': True, 'icon': 'https://raw.githubusercontent.com/vonH/plugin.video.iplayerwww/master/media/search.png'},
+                             {'category': 'search_history', 'title': _('Search history'), }]
         self.itemsPerPage = 48
-        self.programsAZCache = {'keys':[], 'dict':{}}
+        self.programsAZCache = {'keys': [], 'dict': {}}
         
     
     def getFullApiUrl(self, url):
@@ -115,7 +115,7 @@ class SVTPlaySE(CBaseHostClass):
         self.listsTab(self.MAIN_CAT_TAB, cItem)
 
     def listAZMenu(self, cItem, nextCategory):
-        self.programsAZCache = {'keys':[], 'dict':{}}
+        self.programsAZCache = {'keys': [], 'dict': {}}
         
         url = self.getFullUrl(cItem['url'])
         
@@ -136,11 +136,11 @@ class SVTPlaySE(CBaseHostClass):
         except Exception:
             printExc()
         
-        params = {'good_for_fav': False, 'category':nextCategory, 'title':_('--All--'), 'letters':list(self.programsAZCache['keys'])}
+        params = {'good_for_fav': False, 'category': nextCategory, 'title': _('--All--'), 'letters': list(self.programsAZCache['keys'])}
         self.addDir(params)
         
         for letter in self.programsAZCache['keys']:
-            params = {'good_for_fav': False, 'category':nextCategory, 'title':letter, 'letters':[letter]}
+            params = {'good_for_fav': False, 'category': nextCategory, 'title': letter, 'letters': [letter]}
             self.addDir(params)
     
     def listAZ(self, cItem, nextCategory):
@@ -157,7 +157,7 @@ class SVTPlaySE(CBaseHostClass):
                     if item.get('closedCaptioned', False):
                         descTab.append(_('With closed captioned.'))
                     params = dict(cItem)
-                    params.update({'good_for_fav': True, 'category':nextCategory, 'title':title, 'url':self.getFullUrl(url), 'desc':'[/br]'.join(descTab)})
+                    params.update({'good_for_fav': True, 'category': nextCategory, 'title': title, 'url': self.getFullUrl(url), 'desc': '[/br]'.join(descTab)})
                     self.addDir(params)
                 except Exception:
                     printExc()
@@ -212,7 +212,7 @@ class SVTPlaySE(CBaseHostClass):
                         except Exception:
                             printExc()
                     
-                        self.addVideo({'title':item['channelName'], 'url':self.getFullUrl('/kanaler/' + item['channel']), 'icon':icon, 'desc':'[/br]'.join(descTab)})
+                        self.addVideo({'title': item['channelName'], 'url': self.getFullUrl('/kanaler/' + item['channel']), 'icon': icon, 'desc': '[/br]'.join(descTab)})
                 except Exception:
                     printExc()
 
@@ -270,7 +270,7 @@ class SVTPlaySE(CBaseHostClass):
                 if title == '':
                     title = item.get('name', '')
                 
-                params = {'good_for_fav': True, 'title':title, 'url': url, 'icon':icon, 'desc':'[/br]'.join(descTab)}
+                params = {'good_for_fav': True, 'title': title, 'url': url, 'icon': icon, 'desc': '[/br]'.join(descTab)}
                 #if not item.get('hasEpisodes', False):
                 if '/klipp/' in url or '/video/' in url:
                     self.addVideo(params)
@@ -282,7 +282,7 @@ class SVTPlaySE(CBaseHostClass):
         
         if nextPage:
             params = dict(cItem)
-            params.update({'good_for_fav': False, 'title':_('Next page'), 'page':page + 1})
+            params.update({'good_for_fav': False, 'title': _('Next page'), 'page': page + 1})
             self.addDir(params)
             
     def explorePage(self, cItem, nextCategory):
@@ -315,7 +315,7 @@ class SVTPlaySE(CBaseHostClass):
                 articleItems = self.getArticleItems(section[idx:])
                 if len(articleItems):
                     params = dict(cItem)
-                    params.update({'good_for_fav': False, 'category':'list_section_items', 'title':title, 'article_items':articleItems})
+                    params.update({'good_for_fav': False, 'category': 'list_section_items', 'title': title, 'article_items': articleItems})
                     self.addDir(params)
         
         # list tabs if available
@@ -333,7 +333,7 @@ class SVTPlaySE(CBaseHostClass):
             params = dict(cItem)
             if 'klip' not in url:
                 params['program_title'] = cItem['title']
-            params.update({'good_for_fav': False, 'category':nextCategory, 'title':title, 'url':url})
+            params.update({'good_for_fav': False, 'category': nextCategory, 'title': title, 'url': url})
             self.addDir(params)
             
     def listSectionItems(self, cItem, nextCategory):
@@ -366,7 +366,7 @@ class SVTPlaySE(CBaseHostClass):
             for desc in tmp:
                 descTab.append(self.cleanHtmlStr(desc))
             
-            params = {'title':title, 'url':url, 'icon':self.getFullIconUrl(icon), 'desc':'[/br]'.join(descTab)}
+            params = {'title': title, 'url': url, 'icon': self.getFullIconUrl(icon), 'desc': '[/br]'.join(descTab)}
             if '/klipp/' in url or '/video/' in url:
                 params['type'] = 'video'
             else:
@@ -423,7 +423,7 @@ class SVTPlaySE(CBaseHostClass):
             
         if nextPage:
             params = dict(cItem)
-            params.update({'good_for_fav': False, 'title':_('Next page'), 'page':page + 1})
+            params.update({'good_for_fav': False, 'title': _('Next page'), 'page': page + 1})
             self.addDir(params)
 
     def listSearchResult(self, cItem, searchPattern, searchType):
@@ -476,7 +476,7 @@ class SVTPlaySE(CBaseHostClass):
                 for item in videoItem['subtitleReferences']:
                     format = item['url'][-3:]
                     if format in ['srt', 'vtt']:
-                        subtitlesTab.append({'title':format, 'url':self.getFullIconUrl(item['url']), 'lang':'n/a', 'format':format})
+                        subtitlesTab.append({'title': format, 'url': self.getFullIconUrl(item['url']), 'lang': 'n/a', 'format': format})
             except Exception: 
                 printExc()
         
@@ -524,7 +524,7 @@ class SVTPlaySE(CBaseHostClass):
         
         if len(subtitlesTab):
             for idx in range(len(videoUrls)):
-                videoUrls[idx]['url'] = strwithmeta(videoUrls[idx]['url'], {'external_sub_tracks':subtitlesTab})
+                videoUrls[idx]['url'] = strwithmeta(videoUrls[idx]['url'], {'external_sub_tracks': subtitlesTab})
                 videoUrls[idx]['need_resolve'] = 0
         
         return videoUrls
@@ -573,7 +573,7 @@ class SVTPlaySE(CBaseHostClass):
         
     #MAIN MENU
         if name == None:
-            self.listMainMenu({'name':'category', 'url':self.MAIN_URL}, 'list_items')
+            self.listMainMenu({'name': 'category', 'url': self.MAIN_URL}, 'list_items')
         elif 'live_streams' == category:
             self.listLive(self.currItem)
         elif 'list_channels' == category:
@@ -596,11 +596,11 @@ class SVTPlaySE(CBaseHostClass):
     #SEARCH
         elif category in ["search", "search_next_page"]:
             cItem = dict(self.currItem)
-            cItem.update({'search_item':False, 'name':'category'}) 
+            cItem.update({'search_item': False, 'name': 'category'}) 
             self.listSearchResult(cItem, searchPattern, searchType)
     #HISTORIA SEARCH
         elif category == "search_history":
-            self.listsHistory({'name':'history', 'category': 'search'}, 'desc', _("Type: "))
+            self.listsHistory({'name': 'history', 'category': 'search'}, 'desc', _("Type: "))
         else:
             printExc()
         

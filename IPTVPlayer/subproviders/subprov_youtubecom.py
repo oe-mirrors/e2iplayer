@@ -37,12 +37,12 @@ class YoutubeComProvider(CBaseSubProviderClass):
     def __init__(self, params={}):
         self.MAIN_URL = 'http://youtube.com/'
         self.USER_AGENT = 'Mozilla/5.0 (X11; Linux i686) AppleWebKit/537.36 (KHTML, like Gecko) Ubuntu Chromium/37.0.2062.120 Chrome/37.0.2062.120 Safari/537.36'
-        self.HTTP_HEADER = {'User-Agent':self.USER_AGENT, 'Referer':self.MAIN_URL, 'Accept':'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8', 'Accept-Encoding':'gzip, deflate'}
+        self.HTTP_HEADER = {'User-Agent': self.USER_AGENT, 'Referer': self.MAIN_URL, 'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8', 'Accept-Encoding': 'gzip, deflate'}
 
         params['cookie'] = 'youtubecom.cookie'
         CBaseSubProviderClass.__init__(self, params)
         
-        self.defaultParams = {'header':self.HTTP_HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
+        self.defaultParams = {'header': self.HTTP_HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
         if 'youtube_id' in self.params['url_params'] and '' != self.params['url_params']['youtube_id']:
             self.youtubeId = self.params['url_params']['youtube_id']
         else:
@@ -111,7 +111,7 @@ class YoutubeComProvider(CBaseSubProviderClass):
         printDBG(">>")
         printDBG(fileName)
         printDBG("<<")
-        retData = {'title':title, 'path':fileName, 'lang':lang, 'ytid':self.youtubeId, 'sub_id':subId}
+        retData = {'title': title, 'path': fileName, 'lang': lang, 'ytid': self.youtubeId, 'sub_id': subId}
         
         return retData
     

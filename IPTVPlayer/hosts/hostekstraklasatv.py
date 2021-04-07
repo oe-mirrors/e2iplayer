@@ -55,7 +55,7 @@ def gettytul():
 class Ekstraklasa(CBaseHostClass):
 
     def __init__(self):
-        CBaseHostClass.__init__(self, {'history':'ekstraklasa.tv', 'cookie':'ektraklasa.cookie'})
+        CBaseHostClass.__init__(self, {'history': 'ekstraklasa.tv', 'cookie': 'ektraklasa.cookie'})
 
         self.MAIN_URL = 'https://ekstraklasa.tv/'
         self.ORG_URL = 'https://ekstraklasa.org/'
@@ -73,8 +73,8 @@ class Ekstraklasa(CBaseHostClass):
         #self.defaultParams = {'header':self.HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
         
         self.MAIN_CAT_TAB = [
-                            {'category':'matches', 'title': _('Matches'), 'url': self.MAIN_URL + 'ekstraklasa/schedule'},
-                            {'category':'categories', 'title': _('Videos'), 'url': self.MAIN_URL + 'ekstraklasa/browse'},
+                            {'category': 'matches', 'title': _('Matches'), 'url': self.MAIN_URL + 'ekstraklasa/schedule'},
+                            {'category': 'categories', 'title': _('Videos'), 'url': self.MAIN_URL + 'ekstraklasa/browse'},
                             #{'category':'search',           'title': _('Search'), 'search_item':True,   },
                             #{'category':'search_history',   'title': _('Search history'),               } 
                             ]
@@ -186,9 +186,9 @@ class Ekstraklasa(CBaseHostClass):
         desc = '|'.join(descStr)
         
         if url:
-            params = {'url': url, 'title':title, 'icon':icon, 'desc': desc}
+            params = {'url': url, 'title': title, 'icon': icon, 'desc': desc}
         else:
-            params = {'url': '', 'title':title, 'icon':icon, 'desc': desc, 'schedule_date': scheduleDate}
+            params = {'url': '', 'title': title, 'icon': icon, 'desc': desc, 'schedule_date': scheduleDate}
         
         return params
     
@@ -207,7 +207,7 @@ class Ekstraklasa(CBaseHostClass):
 
         desc = '|'.join(descStr)
 
-        params = {'title': title,'url': url, 'icon': icon, 'category': 'cat', 'desc': desc}    
+        params = {'title': title, 'url': url, 'icon': icon, 'category': 'cat', 'desc': desc}    
 
         return params
         

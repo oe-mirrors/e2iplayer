@@ -53,8 +53,8 @@ class WagasWorldApi(CBaseHostClass):
     def getMainCategories(self, cItem):
         printDBG("WagasWorldApi.getMainCategories")
         list = []
-        list.append({'type':'waga_cat', 'waga_cat':'groups', 'title':_('Channel'), 'url':self.MAIN_URL + 'channel'})
-        list.append({'type':'waga_cat', 'waga_cat':'groups', 'title':_('LiveTv'), 'url':self.MAIN_URL + 'LiveTv'})
+        list.append({'type': 'waga_cat', 'waga_cat': 'groups', 'title': _('Channel'), 'url': self.MAIN_URL + 'channel'})
+        list.append({'type': 'waga_cat', 'waga_cat': 'groups', 'title': _('LiveTv'), 'url': self.MAIN_URL + 'LiveTv'})
         return list
 
     def getGroups(self, cItem):
@@ -66,7 +66,7 @@ class WagasWorldApi(CBaseHostClass):
         data = ph.find(data, ('<div', '>', 'form-item'), '<select', flags=0)[1]
         data = re.compile('<a[^>]+?href="([^"]+?)"[^>]*?>([^<]+?)</a>').findall(data)
         for item in data:
-            list.append({'type':'waga_cat', 'waga_cat':'items', 'title':ph.clean_html(item[1]), 'icon':self.DEFAULT_URL_ICON, 'url':self.getFullUrl(item[0])})
+            list.append({'type': 'waga_cat', 'waga_cat': 'items', 'title': ph.clean_html(item[1]), 'icon': self.DEFAULT_URL_ICON, 'url': self.getFullUrl(item[0])})
         return list
 
     def getItems(self, cItem):
@@ -96,9 +96,9 @@ class WagasWorldApi(CBaseHostClass):
             url = self.getFullUrl(ph.getattr(item, 'href'))
             icon = self.getFullIconUrl(ph.search(item, ph.IMG)[1])
             if '' != url and '' != title:
-                list.append({'waga_cat':'explore', 'type':'waga_cat', 'title':ph.clean_html(title), 'icon':icon, 'url':url})
+                list.append({'waga_cat': 'explore', 'type': 'waga_cat', 'title': ph.clean_html(title), 'icon': icon, 'url': url})
         if nextPage:
-            list.append({'type':'waga_cat', 'waga_cat':'items', 'title':_('Next page'), 'url':cItem['url'], 'page':page + 1})
+            list.append({'type': 'waga_cat', 'waga_cat': 'items', 'title': _('Next page'), 'url': cItem['url'], 'page': page + 1})
         return list
         
     def getChannelsList(self, cItem):
@@ -115,7 +115,7 @@ class WagasWorldApi(CBaseHostClass):
                 else:
                     self.sessionEx.open(MessageBox, _('"%s" login failed! Please check your login and password.') % login, type=MessageBox.TYPE_INFO, timeout=10)
         
-            list = self.getGroups({'url':self.MAIN_URL + 'channel'})
+            list = self.getGroups({'url': self.MAIN_URL + 'channel'})
             #list = self.getMainCategories(cItem)
         elif 'groups' == waga_cat:
             list = self.getGroups(cItem)
@@ -139,7 +139,7 @@ class WagasWorldApi(CBaseHostClass):
         HTTP_HEADER = dict(self.HTTP_HEADER)
         HTTP_HEADER['Referer'] = baseUrl
         HTTP_HEADER['X-Requested-With'] = 'XMLHttpRequest'
-        sts, data = self.cm.getPage(url, {'header':HTTP_HEADER})
+        sts, data = self.cm.getPage(url, {'header': HTTP_HEADER})
         if not sts:
             return []
         
@@ -148,7 +148,7 @@ class WagasWorldApi(CBaseHostClass):
         try:
             data = json_loads(data)
             errorMsg = self.cleanHtmlStr(data.get('err', ''))
-            ret = {'url':data['url'], 'episode':data['episode'], 'title':data['name']}
+            ret = {'url': data['url'], 'episode': data['episode'], 'title': data['name']}
         except Exception:
             printExc()
             if errorMsg != '':
@@ -174,11 +174,11 @@ class WagasWorldApi(CBaseHostClass):
         data = self._getEpisode(url)
         if data:
             params = dict(cItem)
-            params.update({'type':'video', 'title':cItem['title'] + ' ' + data['title'], 'waga_url':url, 'waga_episode':int(data['episode'])})
+            params.update({'type': 'video', 'title': cItem['title'] + ' ' + data['title'], 'waga_url': url, 'waga_episode': int(data['episode'])})
             retTab.append(params)
 
             params = dict(cItem)
-            params.update({'type':'more', 'waga_cat':'more', 'title':_('More'), 'waga_title':cItem['title'], 'waga_url':url, 'waga_episode':int(data['episode']) + 1})
+            params.update({'type': 'more', 'waga_cat': 'more', 'title': _('More'), 'waga_title': cItem['title'], 'waga_url': url, 'waga_episode': int(data['episode']) + 1})
             retTab.append(params)
         return retTab
 
@@ -193,11 +193,11 @@ class WagasWorldApi(CBaseHostClass):
         data = self._getEpisode(baseUrl, episode)
         if data:
             params = dict(cItem)
-            params.update({'type':'video', 'title':title + ' ' + data['title'], 'waga_url':baseUrl, 'waga_episode':int(data['episode'])})
+            params.update({'type': 'video', 'title': title + ' ' + data['title'], 'waga_url': baseUrl, 'waga_episode': int(data['episode'])})
             retTab.append(params)
             
             params = dict(cItem)
-            params.update({'waga_episode':int(data['episode']) + 1})
+            params.update({'waga_episode': int(data['episode']) + 1})
             retTab.append(params)
         
         return retTab
@@ -210,7 +210,7 @@ class WagasWorldApi(CBaseHostClass):
         if url != '':
             data = self._getEpisode(url, cItem.get('waga_episode', 1))
             if data:
-                return [{'name':data['title'], 'url':data['url']}]
+                return [{'name': data['title'], 'url':data['url']}]
         else:
             sts, data = self.cm.getPage(baseUrl, self.http_params)
             if not sts:
@@ -236,10 +236,10 @@ class WagasWorldApi(CBaseHostClass):
         
         printDBG(data)
         post_data = dict(re.findall(r'<(?:input|button)[^>]*name="([^"]*)"[^>]*value="([^"]*)"[^>]*>', data))
-        post_data.update({'name':login, 'pass':password})
+        post_data.update({'name': login, 'pass': password})
         
         HTTP_HEADER = dict(self.HTTP_HEADER)
-        HTTP_HEADER.update({'Referer':loginUrl})
+        HTTP_HEADER.update({'Referer': loginUrl})
         
         params = {'header': HTTP_HEADER, 'cookiefile': self.COOKIE_FILE, 'save_cookie': True, 'load_cookie': True}
         sts, data = self.cm.getPage(loginUrl, params, post_data)

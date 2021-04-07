@@ -27,13 +27,13 @@ def gettytul():
 class BajeczkiOrg(CBaseHostClass):
  
     def __init__(self):
-        CBaseHostClass.__init__(self, {'history':'bajeczki.org', 'cookie':'bajeczki.org.cookie'})
+        CBaseHostClass.__init__(self, {'history': 'bajeczki.org', 'cookie': 'bajeczki.org.cookie'})
         self.MAIN_URL = 'http://bajeczki.org/'
         self.DEFAULT_ICON_URL = self.getFullIconUrl('/wp-content/uploads/1397134512_5b47d5c61cb3523b0ff67e3168ded910-1-640x360.jpg')
-        self.HEADER = {'User-Agent': 'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:40.0) Gecko/20100101 Firefox/40.0', 'DNT':'1', 'Accept': 'text/html'}
+        self.HEADER = {'User-Agent': 'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:40.0) Gecko/20100101 Firefox/40.0', 'DNT': '1', 'Accept': 'text/html'}
         self.AJAX_HEADER = dict(self.HEADER)
         self.AJAX_HEADER.update({'X-Requested-With': 'XMLHttpRequest'})
-        self.defaultParams = {'with_metadata':True, 'header':self.HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
+        self.defaultParams = {'with_metadata': True, 'header': self.HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
         self.cacheLinks = {}
     
     def getPage(self, url, addParams={}, post_data=None):
@@ -42,11 +42,11 @@ class BajeczkiOrg(CBaseHostClass):
         return self.cm.getPage(url, addParams, post_data)
         
     def listMainMenu(self, cItem):
-        MAIN_CAT_TAB = [{'category':'categories', 'title': 'Wszystkie bajki', 'url':self.getFullUrl('/all-categories/')},
-                        {'category':'list_items', 'title': 'Ostatnio dodane', 'url':self.getFullUrl('/?s=')},
-                        {'category':'list_items', 'title': 'Filmy', 'url':self.getFullUrl('/pelnometrazowe/')},
+        MAIN_CAT_TAB = [{'category': 'categories', 'title': 'Wszystkie bajki', 'url': self.getFullUrl('/all-categories/')},
+                        {'category': 'list_items', 'title': 'Ostatnio dodane', 'url': self.getFullUrl('/?s=')},
+                        {'category': 'list_items', 'title': 'Filmy', 'url': self.getFullUrl('/pelnometrazowe/')},
                         {'category': 'search', 'title': _('Search'), 'search_item': True, },
-                        {'category': 'search_history', 'title': _('Search history'),}]
+                        {'category': 'search_history', 'title': _('Search history'), }]
         self.listsTab(MAIN_CAT_TAB, cItem)
     
     def listCategories(self, cItem, nextCategory):
@@ -66,7 +66,7 @@ class BajeczkiOrg(CBaseHostClass):
             desc = ph.clean_html(item[-1])
             icon = url + '?fake=need_resolve.jpeg'
             params = dict(cItem)
-            params = {'good_for_fav': True, 'category':nextCategory, 'title':title, 'url':url, 'icon':icon, 'desc':desc}
+            params = {'good_for_fav': True, 'category': nextCategory, 'title': title, 'url': url, 'icon': icon, 'desc': desc}
             self.addDir(params)
     
     def listItems(self, cItem):
@@ -100,11 +100,11 @@ class BajeczkiOrg(CBaseHostClass):
                 if t != '':
                     desc.append(t)
             params = dict(cItem)
-            params = {'good_for_fav': True, 'title':title, 'url':url, 'icon':icon, 'desc':'[/br]'.join(desc)}
+            params = {'good_for_fav': True, 'title': title, 'url': url, 'icon': icon, 'desc': '[/br]'.join(desc)}
             self.addVideo(params)
 
         if nextPage:
-            self.addDir(MergeDicts(cItem, {'good_for_fav':False, 'title':_('Next page'), 'url':nextPage}))
+            self.addDir(MergeDicts(cItem, {'good_for_fav': False, 'title': _('Next page'), 'url': nextPage}))
 
     def listSubItems(self, cItem):
         printDBG("BajeczkiOrg.listSubItems")
@@ -132,7 +132,7 @@ class BajeczkiOrg(CBaseHostClass):
             type = self.cm.ph.getSearchGroups(item, '''type=['"]([^'^"]+?)['"]''', ignoreCase=True)[0].lower()
             if 'mp4' in type:
                 name = self.up.getDomain(url)
-                urlTab.append({'name':name, 'url':strwithmeta(url, {'direct_link':True, 'Referer':self.cm.meta['url']}), 'need_resolve':1})
+                urlTab.append({'name': name, 'url': strwithmeta(url, {'direct_link': True, 'Referer': self.cm.meta['url']}), 'need_resolve': 1})
 
         tmp = ph.findall(data, ('<div', '>', 'data-item'), flags=ph.IGNORECASE | ph.START_E)
         for item in tmp:
@@ -143,9 +143,9 @@ class BajeczkiOrg(CBaseHostClass):
                 item = json_loads(item)
                 for it in item['sources']:
                     it['type'] = it.get('type', it['src'].split('?', 1)[0].rsplit('.', 1)[-1]).lower()
-                    url = strwithmeta(it['src'], {'direct_link':True, 'Referer':self.cm.meta['url']})
+                    url = strwithmeta(it['src'], {'direct_link': True, 'Referer': self.cm.meta['url']})
                     if 'mp4' in it['type']:
-                        urlTab.append({'name':it['type'], 'url':url, 'need_resolve':1})
+                        urlTab.append({'name': it['type'], 'url': url, 'need_resolve': 1})
                     elif 'mpeg' in it['type']:
                         urlTab.extend(getDirectM3U8Playlist(url))
             except Exception:
@@ -156,14 +156,14 @@ class BajeczkiOrg(CBaseHostClass):
             url = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''src=['"]([^'^"]+?)['"]''', ignoreCase=True)[0])
             if 1 == self.up.checkHostSupport(url):
                 name = self.up.getDomain(url)
-                urlTab.append({'name':name, 'url':strwithmeta(url, {'Referer':cItem['url']}), 'need_resolve':1})
+                urlTab.append({'name': name, 'url': strwithmeta(url, {'Referer': cItem['url']}), 'need_resolve': 1})
 
         if not urlTab:
             unique = set()
             data = re.compile('''['">]\s*?(https?://[^'^"^<]*?/watch\?v=[^'^"]+?)\s*?[<'"]''').findall(data)
             for url in data:
                 if url not in unique:
-                    urlTab.append({'name':'Youtube', 'url':strwithmeta(url, {'Referer':cItem['url']}), 'need_resolve':1})
+                    urlTab.append({'name': 'Youtube', 'url': strwithmeta(url, {'Referer': cItem['url']}), 'need_resolve': 1})
                     unique.add(url)
 
         if urlTab:
@@ -185,14 +185,14 @@ class BajeczkiOrg(CBaseHostClass):
                             self.cacheLinks[key][idx]['name'] = '*' + self.cacheLinks[key][idx]['name']
                         break
         if videoUrl.meta.get('direct_link'):
-            return [{'name':'direct', 'url':videoUrl}]
+            return [{'name': 'direct', 'url': videoUrl}]
         urlTab = self.up.getVideoLinkExt(videoUrl)
         return urlTab
         
     def listSearchResult(self, cItem, searchPattern, searchType):
         printDBG("FilmeHD.listSearchResult cItem[%s], searchPattern[%s] searchType[%s]" % (cItem, searchPattern, searchType))
         cItem = dict(cItem)
-        cItem.update({'category':'list_items', 'url':self.getFullUrl('/?s=') + urllib.parse.quote_plus(searchPattern)})
+        cItem.update({'category': 'list_items', 'url': self.getFullUrl('/?s=') + urllib.parse.quote_plus(searchPattern)})
         self.listItems(cItem)
         
     def handleService(self, index, refresh=0, searchPattern='', searchType=''):
@@ -209,7 +209,7 @@ class BajeczkiOrg(CBaseHostClass):
         
     #MAIN MENU
         if name == None:
-            self.listMainMenu({'name':'category'})
+            self.listMainMenu({'name': 'category'})
         elif category == 'categories':
             self.listCategories(self.currItem, 'list_items')
         elif category == 'list_items':
@@ -217,11 +217,11 @@ class BajeczkiOrg(CBaseHostClass):
     #SEARCH
         elif category in ["search", "search_next_page"]:
             cItem = dict(self.currItem)
-            cItem.update({'search_item':False, 'name':'category'}) 
+            cItem.update({'search_item': False, 'name': 'category'}) 
             self.listSearchResult(cItem, searchPattern, searchType)
     #HISTORIA SEARCH
         elif category == "search_history":
-            self.listsHistory({'name':'history', 'category': 'search'}, 'desc', _("Type: "))
+            self.listsHistory({'name': 'history', 'category': 'search'}, 'desc', _("Type: "))
         else:
             printExc()
         

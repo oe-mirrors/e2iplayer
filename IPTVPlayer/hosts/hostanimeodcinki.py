@@ -31,27 +31,27 @@ def gettytul():
 class AnimeOdcinkiPL(CBaseHostClass):
  
     def __init__(self):
-        CBaseHostClass.__init__(self, {'history':'AnimeOdcinki.pl', 'cookie':'animeodcinkipl.cookie'})
+        CBaseHostClass.__init__(self, {'history': 'AnimeOdcinki.pl', 'cookie': 'animeodcinkipl.cookie'})
         
         self.HEADER = {'User-Agent': 'Mozilla/5.0', 'Accept': 'text/html'}
         self.AJAX_HEADER = dict(self.HEADER)
         self.AJAX_HEADER.update({'X-Requested-With': 'XMLHttpRequest'})
-        self.defaultParams = {'header':self.HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
+        self.defaultParams = {'header': self.HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
         
         self.MAIN_URL = 'https://anime-odcinki.pl/'
         self.DEFAULT_ICON_URL = 'https://anime-odcinki.pl/wp-content/uploads/2017/07/A-O_logo.png'
         
-        self.MAIN_CAT_TAB = [{'category':'new', 'title': _('New'), 'url':self.MAIN_URL},
-                             {'category':'list_emitowane', 'title': 'Emitowane', 'url':self.MAIN_URL},
-                             {'category':'list_abc', 'title': _('Anime list'), 'url':self.getFullUrl('anime')},
-                             {'category':'list_abc', 'title': _('Movies list'), 'url':self.getFullUrl('filmy')},
-                             {'category':'list_filters', 'title': _('Genres'), 'url':self.getFullUrl('gatunki')},
-                             {'category': 'search', 'title': _('Search'), 'search_item': True,},
-                             {'category': 'search_history', 'title': _('Search history'),} 
+        self.MAIN_CAT_TAB = [{'category': 'new', 'title': _('New'), 'url': self.MAIN_URL},
+                             {'category': 'list_emitowane', 'title': 'Emitowane', 'url': self.MAIN_URL},
+                             {'category': 'list_abc', 'title': _('Anime list'), 'url': self.getFullUrl('anime')},
+                             {'category': 'list_abc', 'title': _('Movies list'), 'url': self.getFullUrl('filmy')},
+                             {'category': 'list_filters', 'title': _('Genres'), 'url': self.getFullUrl('gatunki')},
+                             {'category': 'search', 'title': _('Search'), 'search_item': True, },
+                             {'category': 'search_history', 'title': _('Search history'), } 
                             ]
         
-        self.NEW_CAT_TAB = [{'category':'list_new', 'title': 'Nowe odcinki emitowane', 'm1':'>Nowe'},
-                            {'category':'list_new', 'title': 'Ostatnio dodane odcinki z poprzednich sezonów', 'm1':'>Ostatnio'}]
+        self.NEW_CAT_TAB = [{'category': 'list_new', 'title': 'Nowe odcinki emitowane', 'm1': '>Nowe'},
+                            {'category': 'list_new', 'title': 'Ostatnio dodane odcinki z poprzednich sezonów', 'm1': '>Ostatnio'}]
                             
         self.filtersTab = []
         self.cacheFilters = {}
@@ -88,9 +88,9 @@ class AnimeOdcinkiPL(CBaseHostClass):
             key = self.cm.ph.getSearchGroups(item, '''name=['"]([^'^"]+?)['"]''')[0]
             value = self.cm.ph.getSearchGroups(item, '''value=['"]([^'^"]+?)['"]''')[0]
             if key not in self.cacheFilters:
-                self.cacheFilters[key] = [{'title':_('All')}]
+                self.cacheFilters[key] = [{'title': _('All')}]
                 self.filtersTab.append(key)
-            self.cacheFilters[key].append({'title':title, 'f_' + key:value})
+            self.cacheFilters[key].append({'title': title, 'f_' + key: value})
         
     def listFilter(self, cItem, filters):
         params = dict(cItem)
@@ -103,7 +103,7 @@ class AnimeOdcinkiPL(CBaseHostClass):
     def fillItemsCache(self, cItem):
         baseUrl = cItem['url']
         
-        self.cacheItems[baseUrl] = {'items':[], 'letters':[]}
+        self.cacheItems[baseUrl] = {'items': [], 'letters': []}
         sts, data = self.cm.getPage(baseUrl)
         if not sts:
             return
@@ -113,14 +113,14 @@ class AnimeOdcinkiPL(CBaseHostClass):
         for item in tmp:
             letter = self.cm.ph.getSearchGroups(item, '''data-index=['"]([^'^"]+?)['"]''')[0]
             title = self.cleanHtmlStr(item.replace('|', ''))
-            self.cacheItems[baseUrl]['letters'].append({'title':title, 'letter':letter})
+            self.cacheItems[baseUrl]['letters'].append({'title': title, 'letter': letter})
         
         data = self.cm.ph.getAllItemsBeetwenMarkers(data, '<tr class="list-item" data-fl=', '</td>')
         for item in data:
             url = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''href=['"]([^'^"]+?)['"]''')[0])
             title = self.cleanHtmlStr(item)
             letter = self.cm.ph.getSearchGroups(item, '''data-fl=['"]([^'^"]+?)['"]''')[0]
-            self.cacheItems[baseUrl]['items'].append({'title':title, 'url':url, 'letter':letter})
+            self.cacheItems[baseUrl]['items'].append({'title': title, 'url': url, 'letter': letter})
    
     def listABC(self, cItem, nextCategory):
         printDBG("AnimeOdcinkiPL.listABC")
@@ -135,7 +135,7 @@ class AnimeOdcinkiPL(CBaseHostClass):
             letter = item['letter'] 
             title = item['title']
             params = dict(cItem)
-            params.update({'category':nextCategory, 'title':title, 'f_abc':letter})
+            params.update({'category': nextCategory, 'title': title, 'f_abc': letter})
             self.addDir(params)
             
     def listItems(self, cItem, nextCategory):
@@ -153,8 +153,8 @@ class AnimeOdcinkiPL(CBaseHostClass):
                 continue
             url = item['url'] 
             title = item['title']
-            icon = strwithmeta(url, {'icon_resolver':AnimeOdcinkiPL.resolveIconUrl})
-            params = {'good_for_fav': True, 'title':title, 'url':url, 'icon':icon}
+            icon = strwithmeta(url, {'icon_resolver': AnimeOdcinkiPL.resolveIconUrl})
+            params = {'good_for_fav': True, 'title': title, 'url': url, 'icon': icon}
             params['category'] = nextCategory
             self.addDir(params)
         
@@ -174,14 +174,14 @@ class AnimeOdcinkiPL(CBaseHostClass):
                 continue
             #icon   = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''src=['"]([^'^"]+?)['"]''')[0])
             #if icon == '': icon   = strwithmeta(url, {'icon_resolver':AnimeOdcinkiPL.resolveIconUrl})
-            params = {'good_for_fav': True, 'title':title, 'url':url}
+            params = {'good_for_fav': True, 'title': title, 'url': url}
             if nextCategory != 'video':
-                icon = strwithmeta(url, {'icon_resolver':AnimeOdcinkiPL.resolveIconUrl})
-                params.update({'category':nextCategory, 'icon':icon})
+                icon = strwithmeta(url, {'icon_resolver': AnimeOdcinkiPL.resolveIconUrl})
+                params.update({'category': nextCategory, 'icon': icon})
                 self.addDir(params)
             else:
-                icon = strwithmeta(url[:url.rfind('/')], {'icon_resolver':AnimeOdcinkiPL.resolveIconUrl})
-                params.update({'category':nextCategory, 'icon':icon})
+                icon = strwithmeta(url[:url.rfind('/')], {'icon_resolver': AnimeOdcinkiPL.resolveIconUrl})
+                params.update({'category': nextCategory, 'icon': icon})
                 self.addVideo(params)
         
     def listSearchItems(self, cItem, nextCategory):
@@ -218,8 +218,8 @@ class AnimeOdcinkiPL(CBaseHostClass):
             icon = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''src=['"]([^'^"]+?)['"]''')[0])
             desc = self.cleanHtmlStr(item.split('</h3>')[-1])
             if icon == '':
-                icon = strwithmeta(url, {'icon_resolver':AnimeOdcinkiPL.resolveIconUrl})
-            params = {'good_for_fav': True, 'title':title, 'url':url, 'icon':icon, 'desc':desc}
+                icon = strwithmeta(url, {'icon_resolver': AnimeOdcinkiPL.resolveIconUrl})
+            params = {'good_for_fav': True, 'title': title, 'url': url, 'icon': icon, 'desc': desc}
             try:
                 episodeNum = int(url.split('/')[-1])
                 self.addVideo(params)
@@ -230,7 +230,7 @@ class AnimeOdcinkiPL(CBaseHostClass):
         if nextPage:
             params = dict(cItem)
             params.pop('good_for_fav', None)
-            params.update({'title':_('Next page'), 'page':page + 1})
+            params.update({'title': _('Next page'), 'page': page + 1})
             self.addDir(params)
         
     def listEpisodes(self, cItem):
@@ -248,7 +248,7 @@ class AnimeOdcinkiPL(CBaseHostClass):
             url = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''href=['"]([^'^"]+?)['"]''')[0])
             title = self.cleanHtmlStr(item)
             params = dict(cItem)
-            params.update({'good_for_fav': True, 'title':title, 'url':url, 'desc':desc})
+            params.update({'good_for_fav': True, 'title': title, 'url': url, 'desc': desc})
             self.addVideo(params)
 
     def listSearchResult(self, cItem, searchPattern, searchType):
@@ -309,7 +309,7 @@ class AnimeOdcinkiPL(CBaseHostClass):
             if not self.cm.isValidUrl(url):
                 continue
             name = self.cleanHtmlStr(item)
-            urlTab.append({'name':name, 'url':strwithmeta(url, {'Referer':cItem['url']}), 'need_resolve':1})
+            urlTab.append({'name': name, 'url': strwithmeta(url, {'Referer': cItem['url']}), 'need_resolve': 1})
         
         self.cacheLinks[cItem['url']] = urlTab
         return urlTab
@@ -351,7 +351,7 @@ class AnimeOdcinkiPL(CBaseHostClass):
         if icon == '':
             icon = self.getDefaulIcon()
         
-        return [{'title':title, 'text':desc, 'images':[{'title':'', 'url':self.getFullUrl(icon)}], 'other_info':{}}]
+        return [{'title': title, 'text': desc, 'images': [{'title': '', 'url': self.getFullUrl(icon)}], 'other_info': {}}]
         
     def handleService(self, index, refresh=0, searchPattern='', searchType=''):
         printDBG('handleService start')
@@ -367,7 +367,7 @@ class AnimeOdcinkiPL(CBaseHostClass):
         
     #MAIN MENU
         if name == None:
-            self.listsTab(self.MAIN_CAT_TAB, {'name':'category'})
+            self.listsTab(self.MAIN_CAT_TAB, {'name': 'category'})
         elif category == 'new':
             self.listsTab(self.NEW_CAT_TAB, self.currItem)
         elif 'list_new' == category:
@@ -405,11 +405,11 @@ class AnimeOdcinkiPL(CBaseHostClass):
     #SEARCH
         elif category in ["search", "search_next_page"]:
             cItem = dict(self.currItem)
-            cItem.update({'search_item':False, 'name':'category'}) 
+            cItem.update({'search_item': False, 'name': 'category'}) 
             self.listSearchResult(cItem, searchPattern, searchType)
     #HISTORIA SEARCH
         elif category == "search_history":
-            self.listsHistory({'name':'history', 'category': 'search'}, 'desc', _("Type: "))
+            self.listsHistory({'name': 'history', 'category': 'search'}, 'desc', _("Type: "))
         else:
             printExc()
         

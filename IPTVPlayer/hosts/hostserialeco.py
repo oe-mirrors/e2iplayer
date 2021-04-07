@@ -28,21 +28,21 @@ def gettytul():
 class SerialeCO(CBaseHostClass):
     
     def __init__(self):
-        CBaseHostClass.__init__(self, {'history':'seriale.co', 'cookie':'seriale.co.cookie'})
+        CBaseHostClass.__init__(self, {'history': 'seriale.co', 'cookie': 'seriale.co.cookie'})
         self.DEFAULT_ICON_URL = 'https://www.alekinoplus.pl/images/2015/sierpien/kino-mowi/km-seriale-logo.png'
         self.USER_AGENT = 'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:40.0) Gecko/20100101 Firefox/40.0'
         self.MAIN_URL = 'http://seriale.co/'
-        self.HTTP_HEADER = {'User-Agent': self.USER_AGENT, 'DNT':'1', 'Accept': 'text/html', 'Accept-Encoding':'gzip, deflate', 'Referer':self.getMainUrl(), 'Origin':self.getMainUrl()}
+        self.HTTP_HEADER = {'User-Agent': self.USER_AGENT, 'DNT': '1', 'Accept': 'text/html', 'Accept-Encoding': 'gzip, deflate', 'Referer': self.getMainUrl(), 'Origin': self.getMainUrl()}
         self.AJAX_HEADER = dict(self.HTTP_HEADER)
-        self.AJAX_HEADER.update({'X-Requested-With': 'XMLHttpRequest', 'Accept-Encoding':'gzip, deflate', 'Content-Type':'application/x-www-form-urlencoded; charset=UTF-8', 'Accept':'application/json, text/javascript, */*; q=0.01'})
+        self.AJAX_HEADER.update({'X-Requested-With': 'XMLHttpRequest', 'Accept-Encoding': 'gzip, deflate', 'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8', 'Accept': 'application/json, text/javascript, */*; q=0.01'})
         
-        self.defaultParams = {'header':self.HTTP_HEADER, 'with_metadata':True, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
+        self.defaultParams = {'header': self.HTTP_HEADER, 'with_metadata': True, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
         
-        self.MAIN_CAT_TAB = [{'category':'list_items', 'title': 'START', 'url':self.getMainUrl()},
-                             {'category':'list_series', 'title': 'SPIS ALFABETYCZNY', 'url':self.getMainUrl()},
+        self.MAIN_CAT_TAB = [{'category': 'list_items', 'title': 'START', 'url': self.getMainUrl()},
+                             {'category': 'list_series', 'title': 'SPIS ALFABETYCZNY', 'url': self.getMainUrl()},
                              
-                             {'category':'search', 'title': _('Search'), 'search_item':True}, 
-                             {'category':'search_history', 'title': _('Search history')},
+                             {'category': 'search', 'title': _('Search'), 'search_item': True}, 
+                             {'category': 'search_history', 'title': _('Search history')},
                             ]
         self.playerData = {}
         self.cacheLinks = {}
@@ -52,7 +52,7 @@ class SerialeCO(CBaseHostClass):
             addParams = dict(self.defaultParams)
         origBaseUrl = baseUrl
         baseUrl = self.cm.iriToUri(baseUrl)
-        addParams['cloudflare_params'] = {'cookie_file':self.COOKIE_FILE, 'User-Agent':self.USER_AGENT}
+        addParams['cloudflare_params'] = {'cookie_file': self.COOKIE_FILE, 'User-Agent': self.USER_AGENT}
         return self.cm.getPageCFProtection(baseUrl, addParams, post_data)
     
     def listMainMenu(self, cItem):
@@ -72,7 +72,7 @@ class SerialeCO(CBaseHostClass):
             url = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''href=['"]([^'^"]+?)['"]''')[0])
             title = self.cleanHtmlStr(item)
             params = dict(cItem)
-            params.update({'good_for_fav':True, 'category':nextCategory, 'title':title, 'url':url})
+            params.update({'good_for_fav': True, 'category': nextCategory, 'title': title, 'url': url})
             self.addDir(params)
     
     def listItems(self, cItem, nextCategory):
@@ -98,12 +98,12 @@ class SerialeCO(CBaseHostClass):
             desc = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(item, ('<div', '>', 'excerpt'), ('</div', '>'))[1])
             
             params = dict(cItem)
-            params.update({'good_for_fav':True, 'category':nextCategory, 'title':title, 'url':url, 'icon':icon, 'desc':desc})
+            params.update({'good_for_fav': True, 'category': nextCategory, 'title': title, 'url': url, 'icon': icon, 'desc': desc})
             self.addDir(params)
         
         if self.cm.isValidUrl(nextPage):
             params = dict(cItem)
-            params.update({'good_for_fav':False, 'title':_("Next page"), 'url':nextPage, 'page':cItem.get('page', 1) + 1})
+            params.update({'good_for_fav': False, 'title': _("Next page"), 'url': nextPage, 'page': cItem.get('page', 1) + 1})
             self.addDir(params)
         
     def listSeasons(self, cItem, nextCategory):
@@ -156,7 +156,7 @@ class SerialeCO(CBaseHostClass):
         httpParams['header']['Referer'] = cItem['url']
         httpParams['header']['Origin'] = self.getMainUrl()[:-1]
         
-        sts, seasons = self.getPage(seasonUrl, httpParams, {'nazwa':self.playerData.get('fid', '')})
+        sts, seasons = self.getPage(seasonUrl, httpParams, {'nazwa': self.playerData.get('fid', '')})
         if sts:
             printDBG(">>>>>>>\n%s\n>>>>>>>" % seasons)
             self.playerData['odc'] = seasons
@@ -167,7 +167,7 @@ class SerialeCO(CBaseHostClass):
                 continue
             sNum = str(idx + 1)
             params = dict(cItem)
-            params.update({'good_for_fav':False, 'category':nextCategory, 'title': _('Season %s') % sNum.zfill(2), 's_title':cItem['title'], 's_num':sNum, 'e_count':seasons[idx]})
+            params.update({'good_for_fav': False, 'category': nextCategory, 'title': _('Season %s') % sNum.zfill(2), 's_title': cItem['title'], 's_num': sNum, 'e_count': seasons[idx]})
             self.addDir(params)
         
         if 0 == len(self.currList) and ajaxInfoVarName != '' and ajaxInfoData != '':
@@ -196,11 +196,11 @@ class SerialeCO(CBaseHostClass):
                             if data[sKey][eKey].get('title', '') != '':
                                 title += ' ' + data[sKey][eKey]['title']
                             desc = data[sKey][eKey].get('data', '')
-                            params = {'good_for_fav':False, 'title': title, 'desc':desc, 's_num':sNum, 'e_num':eNum}
+                            params = {'good_for_fav': False, 'title': title, 'desc': desc, 's_num': sNum, 'e_num': eNum}
                             eItems.append(params)
                         if len(eItems):
                             params = dict(cItem)
-                            params.update({'good_for_fav':False, 'category':nextCategory, 'title': _('Season %s') % sNum.zfill(2), 's_title':cItem['title'], 's_num':sNum, 'e_items':eItems})
+                            params.update({'good_for_fav': False, 'category': nextCategory, 'title': _('Season %s') % sNum.zfill(2), 's_title': cItem['title'], 's_num': sNum, 'e_items': eItems})
                             self.addDir(params)
                 except Exception:
                     printExc()
@@ -228,7 +228,7 @@ class SerialeCO(CBaseHostClass):
             for idx in range(eCount):
                 eNum = str(idx + 1)
                 params = dict(cItem)
-                params.update({'good_for_fav':False, 'title': _('%s s%se%s') % (cItem['s_title'], sNum.zfill(2), eNum.zfill(2)), 's_num':sNum, 'e_num':eNum})
+                params.update({'good_for_fav': False, 'title': _('%s s%se%s') % (cItem['s_title'], sNum.zfill(2), eNum.zfill(2)), 's_num': sNum, 'e_num': eNum})
                 self.addVideo(params)
         
     def listSearchResult(self, cItem, searchPattern, searchType):
@@ -258,12 +258,12 @@ class SerialeCO(CBaseHostClass):
         httpParams['header']['Referer'] = cItem['url']
         httpParams['header']['Origin'] = self.getMainUrl()[:-1]
         
-        sts, data = self.getPage(playerUrl, httpParams, {'fid_name':fid, 'sezon':sNum, 'odcinek':eNum, 'title': fid, 'blocked':''})
+        sts, data = self.getPage(playerUrl, httpParams, {'fid_name': fid, 'sezon': sNum, 'odcinek': eNum, 'title': fid, 'blocked': ''})
         if not sts:
             return []
         
         printDBG(data)
-        verMap = {'1':'ENG', '2':'NAPISY', '3':'PL'}
+        verMap = {'1': 'ENG', '2': 'NAPISY', '3': 'PL'}
         urlTab = []
         data = self.cm.ph.getAllItemsBeetwenNodes(data, ('<div', '>', 'host'), ('</div', '>'))
         for item in data:
@@ -273,7 +273,7 @@ class SerialeCO(CBaseHostClass):
             name = self.cm.ph.getSearchGroups(item, '''host=['"]([^'^"]+?)['"]''')[0]
             ver = self.cm.ph.getSearchGroups(item, '''wersja=['"]([^'^"]+?)['"]''')[0]
             name = '[%s] %s' % (verMap.get(ver, ver), name)
-            urlTab.append({'name':name, 'url':strwithmeta(self.getFullUrl(url), {'Referer':cItem['url']}), 'need_resolve':1})
+            urlTab.append({'name': name, 'url': strwithmeta(self.getFullUrl(url), {'Referer': cItem['url']}), 'need_resolve': 1})
         
         if len(urlTab):
             self.cacheLinks[cacheKey] = urlTab
@@ -317,7 +317,7 @@ class SerialeCO(CBaseHostClass):
         
     #MAIN MENU
         if name == None:
-            self.listMainMenu({'name':'category'})
+            self.listMainMenu({'name': 'category'})
         elif category == 'list_series':
             self.listSeries(self.currItem, 'list_seasons')
         elif category == 'list_items':
@@ -329,11 +329,11 @@ class SerialeCO(CBaseHostClass):
     #SEARCH
         elif category in ["search", "search_next_page"]:
             cItem = dict(self.currItem)
-            cItem.update({'search_item':False, 'name':'category'}) 
+            cItem.update({'search_item': False, 'name': 'category'}) 
             self.listSearchResult(cItem, searchPattern, searchType)
     #HISTORIA SEARCH
         elif category == "search_history":
-            self.listsHistory({'name':'history', 'category': 'search'}, 'desc', _("Type: "))
+            self.listsHistory({'name': 'history', 'category': 'search'}, 'desc', _("Type: "))
         else:
             printExc()
         

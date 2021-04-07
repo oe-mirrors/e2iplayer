@@ -41,13 +41,13 @@ def gettytul():
 class NGolosCOM(CBaseHostClass):
  
     def __init__(self):
-        CBaseHostClass.__init__(self, {'history':'ngolos.com', 'cookie':'ngolos.com.cookie'})
+        CBaseHostClass.__init__(self, {'history': 'ngolos.com', 'cookie': 'ngolos.com.cookie'})
         self.USER_AGENT = 'Mozilla/5.0'
-        self.HEADER = {'User-Agent': self.USER_AGENT, 'Accept': 'text/html', 'Accept-Encoding':'gzip, deflate'}
+        self.HEADER = {'User-Agent': self.USER_AGENT, 'Accept': 'text/html', 'Accept-Encoding': 'gzip, deflate'}
         self.AJAX_HEADER = dict(self.HEADER)
         self.AJAX_HEADER.update({'X-Requested-With': 'XMLHttpRequest'})
         
-        self.defaultParams = {'with_metadata':True, 'header':self.HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
+        self.defaultParams = {'with_metadata': True, 'header': self.HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
         
         self.MAIN_URL = None
         self.cacheCategories = []
@@ -66,7 +66,7 @@ class NGolosCOM(CBaseHostClass):
             addParams = dict(self.defaultParams)
         lang = config.plugins.iptvplayer.ngolos_language.value
         cookieItems = addParams.get('cookie_items', {})
-        cookieItems.update({'language':lang})
+        cookieItems.update({'language': lang})
         addParams['cookie_items'] = cookieItems
         return self.cm.getPage(baseUrl, addParams, post_data)
         
@@ -75,7 +75,7 @@ class NGolosCOM(CBaseHostClass):
         self.cacheCategories = []
         
         params = dict(cItem)
-        params.update({'category':'list_items', 'title':_('Home page'), 'url':cItem['url']})
+        params.update({'category': 'list_items', 'title': _('Home page'), 'url': cItem['url']})
         self.addDir(params)
         self.addMarker({})
         
@@ -90,7 +90,7 @@ class NGolosCOM(CBaseHostClass):
             url = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''href=['"]([^'^"]+?)['"]''')[0])
             title = self.cleanHtmlStr(item)
             params = dict(cItem)
-            params.update({'category':'list_items', 'title':title, 'url':url})
+            params.update({'category': 'list_items', 'title': title, 'url': url})
             self.addDir(params)
         
         self.addMarker({})
@@ -109,7 +109,7 @@ class NGolosCOM(CBaseHostClass):
             
             if parent == '.competitions':
                 params = dict(cItem)
-                params.update({'category':nextCategory, 'title':cTitle, 'cat_id':current})
+                params.update({'category': nextCategory, 'title': cTitle, 'cat_id': current})
                 self.addDir(params)
             else:
                 subItems = []
@@ -118,16 +118,16 @@ class NGolosCOM(CBaseHostClass):
                     url = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''href=['"]([^'^"]+?)['"]''')[0])
                     title = self.cleanHtmlStr(item)
                     params = dict(cItem)
-                    params.update({'category':'list_items', 'title':title, 'url':url, 'parent':current})
+                    params.update({'category': 'list_items', 'title': title, 'url': url, 'parent': current})
                     subItems.append(params)
                 
                 if len(subItems):
                     if self.cm.isValidUrl(cUrl):
                         params = dict(cItem)
-                        params.update({'category':'list_items', 'title':_('--All--'), 'url':cUrl, 'parent':current})
+                        params.update({'category': 'list_items', 'title': _('--All--'), 'url': cUrl, 'parent': current})
                         subItems.insert(0, params)
                     params = dict(cItem)
-                    params.update({'category':'sub_items', 'title':cTitle, 'parent':parent, 'sub_items':subItems})
+                    params.update({'category': 'sub_items', 'title': cTitle, 'parent': parent, 'sub_items': subItems})
                     self.cacheCategories.append(params)
         
     def listCatItems(self, cItem, nextCategory):
@@ -143,7 +143,7 @@ class NGolosCOM(CBaseHostClass):
         page = cItem.get('page', 1)
         
         params = dict(self.defaultParams)
-        params['cookie_items'] = {'orderby':cItem.get('orderby', '')} #'latest'
+        params['cookie_items'] = {'orderby': cItem.get('orderby', '')} #'latest'
         sts, data = self.getPage(cItem['url'], params)
         if not sts:
             return
@@ -167,14 +167,14 @@ class NGolosCOM(CBaseHostClass):
                         desc.append(self.cleanHtmlStr(item['alias']))
                         icon = self.getFullIconUrl('/assets/images/logos/' + item['logo']) 
                         params = dict(cItem)
-                        params.update({'good_for_fav':True, 'title':title, 'url':url, 'team':team, 'icon':icon, 'desc':' | '.join(desc)})
+                        params.update({'good_for_fav': True, 'title': title, 'url': url, 'team': team, 'icon': icon, 'desc': ' | '.join(desc)})
                         self.addDir(params)
                 except Exception:
                     printExc()
                 
                 if len(self.currList):
                     params = dict(cItem)
-                    params.update({'title':_('--All--'), 'team':''})
+                    params.update({'title': _('--All--'), 'team': ''})
                     self.currList.insert(0, params)
                     return
             
@@ -188,7 +188,7 @@ class NGolosCOM(CBaseHostClass):
                     else:
                         value = ''
                     params = dict(cItem)
-                    params.update({'good_for_fav':False, 'title':title, 'orderby':value})
+                    params.update({'good_for_fav': False, 'title': title, 'orderby': value})
                     self.addDir(params)
                 
                 if len(self.currList):
@@ -207,13 +207,13 @@ class NGolosCOM(CBaseHostClass):
             desc = self.cleanHtmlStr(item[-1])
             
             params = dict(cItem)
-            params.update({'good_for_fav':True, 'category':nextCategory, 'title':title, 'url':url, 'desc':desc})
+            params.update({'good_for_fav': True, 'category': nextCategory, 'title': title, 'url': url, 'desc': desc})
             self.addDir(params)
         
         
         if self.cm.isValidUrl(nextPage):
             params = dict(cItem)
-            params.update({'good_for_fav':False, 'title':_('Next page'), 'url':nextPage, 'page':page + 1})
+            params.update({'good_for_fav': False, 'title': _('Next page'), 'url': nextPage, 'page': page + 1})
             self.addDir(params)
         
     def exploreItem(self, cItem, nextCategory):
@@ -243,12 +243,12 @@ class NGolosCOM(CBaseHostClass):
                     continue
                 title = '%s : %s' % (cItem['title'], self.cleanHtmlStr(item))
                 params = dict(cItem)
-                params.update({'good_for_fav': False, 'type':'video', 'title':title, 'url':url})
+                params.update({'good_for_fav': False, 'type': 'video', 'title': title, 'url': url})
                 subItems.append(params)
             
             if len(subItems) and '' != tabs.get(sId, ''):
                 params = dict(cItem)
-                params.update({'good_for_fav': False, 'category':nextCategory, 'title':tabs[sId], 'sub_items':subItems})
+                params.update({'good_for_fav': False, 'category': nextCategory, 'title': tabs[sId], 'sub_items': subItems})
                 self.addDir(params)
             else:
                 self.currList.extend(subItems)
@@ -263,7 +263,7 @@ class NGolosCOM(CBaseHostClass):
                     continue
                 title = '%s : %s' % (cItem['title'], self.cleanHtmlStr(item))
                 params = dict(cItem)
-                params.update({'good_for_fav': False, 'title':title, 'url':url})
+                params.update({'good_for_fav': False, 'title': title, 'url': url})
                 self.addVideo(params)
             
         return
@@ -314,7 +314,7 @@ class NGolosCOM(CBaseHostClass):
             if len(titles) == len(urlsTab):
                 title += ' - ' + titles[idx]
             params = dict(cItem)
-            params.update({'good_for_fav': False, 'title':title, 'url':urlsTab[idx]})
+            params.update({'good_for_fav': False, 'title': title, 'url': urlsTab[idx]})
             self.addVideo(params)
             
     def listSubItems(self, cItem):
@@ -360,7 +360,7 @@ class NGolosCOM(CBaseHostClass):
                                 hlsTab[idx]['name'] = '[hls] bitrate:%s height: %s' % (hlsTab[idx]['bitrate'], hlsTab[idx]['height'])
                             urlTab.extend(hlsTab)
                         else:
-                            urlTab.append({'name':name, 'url':url})
+                            urlTab.append({'name': name, 'url': url})
             except Exception:
                 printExc()
         elif '.me/player' in videoUrl:
@@ -368,7 +368,7 @@ class NGolosCOM(CBaseHostClass):
             if not sts:
                 return []
             url = self.cm.ph.getSearchGroups(data, '''file:[^"^']*?["'](http[^'^"]+?)["']''')[0]
-            urlTab.append({'name':self.up.getDomain(videoUrl), 'url':url})
+            urlTab.append({'name': self.up.getDomain(videoUrl), 'url': url})
         elif videoUrl.startswith('http'):
             urlTab.extend(self.up.getVideoLinkExt(videoUrl))
         return urlTab
@@ -396,7 +396,7 @@ class NGolosCOM(CBaseHostClass):
         
     #MAIN MENU
         if name == None:
-            baseItem = {'type':'category', 'name':'category', 'url':self.getMainUrl()}
+            baseItem = {'type': 'category', 'name': 'category', 'url': self.getMainUrl()}
             self.listMainMenu(baseItem, 'list_cat_items')
         elif 'list_cat_items' == category:
             self.listCatItems(self.currItem, 'list_items')
@@ -409,11 +409,11 @@ class NGolosCOM(CBaseHostClass):
     #SEARCH
         elif category in ["search", "search_next_page"]:
             cItem = dict(self.currItem)
-            cItem.update({'search_item':False, 'name':'category'}) 
+            cItem.update({'search_item': False, 'name': 'category'}) 
             self.listSearchResult(cItem, searchPattern, searchType)
     #HISTORIA SEARCH
         elif category == "search_history":
-            self.listsHistory({'name':'history', 'category': 'search'}, 'desc', _("Type: "))
+            self.listsHistory({'name': 'history', 'category': 'search'}, 'desc', _("Type: "))
         else:
             printExc()
         

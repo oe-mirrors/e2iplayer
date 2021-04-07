@@ -28,7 +28,7 @@ def gettytul():
 class WgranePL(CBaseHostClass):
 
     def __init__(self):
-        CBaseHostClass.__init__(self, {'history':'wgrane.pl.online', 'cookie':'wgrane.pl.cookie'})
+        CBaseHostClass.__init__(self, {'history': 'wgrane.pl.online', 'cookie': 'wgrane.pl.cookie'})
         
         self.USER_AGENT = 'Mozilla/5.0'
         self.HEADER = {'User-Agent': self.USER_AGENT, 'Accept': 'text/html'}
@@ -38,7 +38,7 @@ class WgranePL(CBaseHostClass):
         self.MAIN_URL = 'http://www.wgrane.pl/'
         self.DEFAULT_ICON_URL = 'https://i.ytimg.com/vi/HpTrVOZVNhA/maxresdefault.jpg'
         
-        self.defaultParams = {'with_metadata':True, 'header':self.HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
+        self.defaultParams = {'with_metadata': True, 'header': self.HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
         self.cacheFilters = {}
         self.cacheLinks = {}
     
@@ -58,17 +58,17 @@ class WgranePL(CBaseHostClass):
                 return url
             else:
                 return urljoin(baseUrl, url)
-        addParams['cloudflare_params'] = {'domain':self.up.getDomain(baseUrl), 'cookie_file':self.COOKIE_FILE, 'User-Agent':self.USER_AGENT, 'full_url_handle':_getFullUrl}
+        addParams['cloudflare_params'] = {'domain': self.up.getDomain(baseUrl), 'cookie_file': self.COOKIE_FILE, 'User-Agent': self.USER_AGENT, 'full_url_handle': _getFullUrl}
         return self.cm.getPageCFProtection(baseUrl, addParams, post_data)
     
     def listMainMenu(self, cItem):
         printDBG("WgranePL.listMainMenu")
 
 
-        MAIN_CAT_TAB = [{'category':'list_sort', 'title': 'Przeglądaj pliki', 'url':self.getFullUrl('/watch.html')},
-                        {'category':'categories', 'title': 'Kategorie', 'url':self.getFullUrl('/categories.html')},
-                        {'category':'search', 'title': _('Search'), 'search_item':True},
-                        {'category':'search_history', 'title': _('Search history')}]
+        MAIN_CAT_TAB = [{'category': 'list_sort', 'title': 'Przeglądaj pliki', 'url': self.getFullUrl('/watch.html')},
+                        {'category': 'categories', 'title': 'Kategorie', 'url': self.getFullUrl('/categories.html')},
+                        {'category': 'search', 'title': _('Search'), 'search_item': True},
+                        {'category': 'search_history', 'title': _('Search history')}]
         self.listsTab(MAIN_CAT_TAB, cItem)
     
     def listCategories(self, cItem, nextCategory):
@@ -107,7 +107,7 @@ class WgranePL(CBaseHostClass):
                 self.cleanHtmlStr(self.cm.ph.getSearchGroups(item, '''\salt=['"]([^"^']+?)['"]''')[0])
 
             params = dict(cItem)
-            params.update({'good_for_fav': True, 'category':nextCategory, 'title':title, 'url':url, 'icon':icon, 'desc':desc})
+            params.update({'good_for_fav': True, 'category': nextCategory, 'title': title, 'url': url, 'icon': icon, 'desc': desc})
             self.addDir(params)
 
     def listSort(self, cItem, nextCategory):
@@ -123,7 +123,7 @@ class WgranePL(CBaseHostClass):
             title = self.cleanHtmlStr(item)
             url = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''href=['"]([^'^"]+?)['"]''')[0])
             params = dict(cItem)
-            params.update({'good_for_fav':False, 'category':nextCategory, 'title':title, 'url':url})
+            params.update({'good_for_fav': False, 'category': nextCategory, 'title': title, 'url': url})
             self.addDir(params)
 
     def listItems(self, cItem, nextCategory):
@@ -162,9 +162,9 @@ class WgranePL(CBaseHostClass):
             desc = self.cleanHtmlStr(descObj.sub('[/br]', desc))
 
             params = dict(cItem)
-            params.update({'good_for_fav': True, 'title':title, 'url':url, 'icon':icon, 'desc':desc})
+            params.update({'good_for_fav': True, 'title': title, 'url': url, 'icon': icon, 'desc': desc})
             if 'playlist=' in url:
-                params.update({'category':nextCategory})
+                params.update({'category': nextCategory})
                 self.addDir(params)
             elif 'PlaylistItemAdd' in item:
                 self.addVideo(params) # how to know if this is audio or video item?
@@ -173,7 +173,7 @@ class WgranePL(CBaseHostClass):
         
         if nextPage != '':
             params = dict(cItem)
-            params.update({'title':_("Next page"), 'url':self.getFullUrl(nextPage), 'page':page + 1})
+            params.update({'title': _("Next page"), 'url': self.getFullUrl(nextPage), 'page': page + 1})
             self.addDir(params)
 
     def listSearchResult(self, cItem, searchPattern, searchType):
@@ -196,7 +196,7 @@ class WgranePL(CBaseHostClass):
             if icon == '':
                 icon = cItem.get('icon', '')
             if icon != '':
-                urlTab = [{'name':'link', 'url':icon, 'need_resolve':0}]
+                urlTab = [{'name': 'link', 'url': icon, 'need_resolve': 0}]
         else:
             urlTab = self.up.getVideoLinkExt(cItem['url'])
         return urlTab
@@ -217,7 +217,7 @@ class WgranePL(CBaseHostClass):
         
     #MAIN MENU
         if name == None:
-            self.listMainMenu({'name':'category'})
+            self.listMainMenu({'name': 'category'})
         elif category == 'main':
             self.listMainItems(self.currItem, 'list_items')
         elif category == 'categories':
@@ -231,11 +231,11 @@ class WgranePL(CBaseHostClass):
     #SEARCH
         elif category in ["search", "search_next_page"]:
             cItem = dict(self.currItem)
-            cItem.update({'search_item':False, 'name':'category'}) 
+            cItem.update({'search_item': False, 'name': 'category'}) 
             self.listSearchResult(cItem, searchPattern, searchType)
     #HISTORIA SEARCH
         elif category == "search_history":
-            self.listsHistory({'name':'history', 'category': 'search'}, 'desc', _("Type: "))
+            self.listsHistory({'name': 'history', 'category': 'search'}, 'desc', _("Type: "))
         else:
             printExc()
         

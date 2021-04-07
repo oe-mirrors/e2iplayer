@@ -48,17 +48,17 @@ def gettytul():
 class YesMovies(CBaseHostClass):
  
     def __init__(self):
-        CBaseHostClass.__init__(self, {'history':'yesmovies.to', 'cookie':'yesmovies.to.cookie'})
+        CBaseHostClass.__init__(self, {'history': 'yesmovies.to', 'cookie': 'yesmovies.to.cookie'})
         self.defaultParams = {'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
         
         self.DEFAULT_ICON_URL = 'https://cdn.yescdn.ru/images/logo.png'
-        self.HEADER = {'User-Agent': 'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:40.0) Gecko/20100101 Firefox/40.0', 'DNT':'1', 'Accept': 'text/html'}
+        self.HEADER = {'User-Agent': 'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:40.0) Gecko/20100101 Firefox/40.0', 'DNT': '1', 'Accept': 'text/html'}
         self.AJAX_HEADER = dict(self.HEADER)
         self.AJAX_HEADER.update({'X-Requested-With': 'XMLHttpRequest'})
         self.MAIN_URL = None
         self.cacheFilters = {}
         self.cacheLinks = {}
-        self.defaultParams = {'header':self.HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
+        self.defaultParams = {'header': self.HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
         
     def getPage(self, url, addParams={}, post_data=None):
         if addParams == {}:
@@ -71,7 +71,7 @@ class YesMovies(CBaseHostClass):
             else:
                 proxy = config.plugins.iptvplayer.alternative_proxy2.value
             addParams = dict(addParams)
-            addParams.update({'http_proxy':proxy})
+            addParams.update({'http_proxy': proxy})
         
         return self.cm.getPage(url, addParams, post_data)
         
@@ -83,7 +83,7 @@ class YesMovies(CBaseHostClass):
                 proxy = config.plugins.iptvplayer.alternative_proxy1.value
             else:
                 proxy = config.plugins.iptvplayer.alternative_proxy2.value
-            url = strwithmeta(url, {'iptv_http_proxy':proxy})
+            url = strwithmeta(url, {'iptv_http_proxy': proxy})
         return url
         
     def selectDomain(self):
@@ -106,10 +106,10 @@ class YesMovies(CBaseHostClass):
     def listMainMenu(self, cItem):
         if self.MAIN_URL == None:
             return
-        MAIN_CAT_TAB = [{'category':'list_filter_genre', 'title': 'Movies', 'url':self.getFullUrl('movie/filter/movie')},
-                        {'category':'list_filter_genre', 'title': 'TV-Series', 'url':self.getFullUrl('movie/filter/series')},
-                        {'category': 'search', 'title': _('Search'), 'search_item': True,},
-                        {'category': 'search_history', 'title': _('Search history'),} 
+        MAIN_CAT_TAB = [{'category': 'list_filter_genre', 'title': 'Movies', 'url': self.getFullUrl('movie/filter/movie')},
+                        {'category': 'list_filter_genre', 'title': 'TV-Series', 'url': self.getFullUrl('movie/filter/series')},
+                        {'category': 'search', 'title': _('Search'), 'search_item': True, },
+                        {'category': 'search_history', 'title': _('Search history'), } 
                        ]
         self.listsTab(MAIN_CAT_TAB, cItem)
         
@@ -126,23 +126,23 @@ class YesMovies(CBaseHostClass):
         tmp = self.cm.ph.getAllItemsBeetwenMarkers(tmp, '<li', '</li>', withMarkers=True, caseSensitive=False)
         for item in tmp:
             value = self.cm.ph.getSearchGroups(item, 'href="[^"]+?/filter/all/([^"^/]+?)/')[0]
-            self.cacheFilters['sort_by'].append({'sort_by':value, 'title':self.cleanHtmlStr(item)})
+            self.cacheFilters['sort_by'].append({'sort_by': value, 'title': self.cleanHtmlStr(item)})
             
-        for filter in [{'key':'quality', 'marker':'quality-list'},
-                       {'key':'genre', 'marker':'genre-list'},
-                       {'key':'country', 'marker':'country-list'},
-                       {'key':'year', 'marker':'release-list'}]:
+        for filter in [{'key': 'quality', 'marker': 'quality-list'},
+                       {'key': 'genre', 'marker': 'genre-list'},
+                       {'key': 'country', 'marker': 'country-list'},
+                       {'key': 'year', 'marker': 'release-list'}]:
             self.cacheFilters[filter['key']] = []
             tmp = self.cm.ph.getDataBeetwenMarkers(data, filter['marker'], '</ul>', False)[1]
             tmp = self.cm.ph.getAllItemsBeetwenMarkers(tmp, '<li', '</li>', withMarkers=True, caseSensitive=False)
             allItemAdded = False
             for item in tmp:
                 value = self.cm.ph.getSearchGroups(item, 'value="([^"]+?)"')[0]
-                self.cacheFilters[filter['key']].append({filter['key']:value, 'title':self.cleanHtmlStr(item)})
+                self.cacheFilters[filter['key']].append({filter['key']: value, 'title': self.cleanHtmlStr(item)})
                 if value == 'all':
                     allItemAdded = True
             if not allItemAdded:
-                self.cacheFilters[filter['key']].insert(0, {filter['key']:'all', 'title':'All'})
+                self.cacheFilters[filter['key']].insert(0, {filter['key']: 'all', 'title': 'All'})
         
         printDBG(self.cacheFilters)
         
@@ -189,7 +189,7 @@ class YesMovies(CBaseHostClass):
             if title == '':
                 title = self.cleanHtmlStr(self.cm.ph.getSearchGroups(item, 'alt="([^"]+?)"')[0])
             if url.startswith('http'):
-                params = {'good_for_fav': True, 'title':title, 'url':url, 'data_url':dataUrl, 'desc':desc, 'info_url':url, 'icon':icon}
+                params = {'good_for_fav': True, 'title': title, 'url': url, 'data_url': dataUrl, 'desc': desc, 'info_url': url, 'icon': icon}
                 if '-season-' not in url and 'class="mli-eps"' not in item:
                     self.addVideo(params)
                 else:
@@ -200,7 +200,7 @@ class YesMovies(CBaseHostClass):
         
         if nextPage and len(self.currList) > 0:
             params = dict(cItem)
-            params.update({'good_for_fav': False, 'title':_("Next page"), 'page':page + 1})
+            params.update({'good_for_fav': False, 'title': _("Next page"), 'page': page + 1})
             self.addDir(params)
     
     def listEpisodes(self, cItem):
@@ -231,7 +231,7 @@ class YesMovies(CBaseHostClass):
                 title = item
             baseTitle = re.sub('Season\s[0-9]+?[^0-9]', '', cItem['title'] + ' ')
             params = dict(cItem)
-            params.update({'good_for_fav':False, 'title':self.cleanHtmlStr(baseTitle + ' ' + title), 'urls':episodeLinks[item]})
+            params.update({'good_for_fav': False, 'title': self.cleanHtmlStr(baseTitle + ' ' + title), 'urls': episodeLinks[item]})
             self.addVideo(params)
 
     def listSearchResult(self, cItem, searchPattern, searchType):
@@ -307,7 +307,7 @@ class YesMovies(CBaseHostClass):
                     name = serverTitle + ': ' + title
                 else:
                     name = ''
-                urlTab.append({'name':name, 'title':title, 'server_title':serverTitle, 'url':serverId + '|' + episodeId + '|' + cItem['url'], 'server_id':serverId, 'episode_id':episodeId, 'need_resolve':1})
+                urlTab.append({'name': name, 'title': title, 'server_title': serverTitle, 'url': serverId + '|' + episodeId + '|' + cItem['url'], 'server_id': serverId, 'episode_id': episodeId, 'need_resolve': 1})
         
         printDBG(urlTab)
         def _sortKey(item):
@@ -320,7 +320,7 @@ class YesMovies(CBaseHostClass):
         urlTab.sort(key=_sortKey)
         
         if len(urlTab) and self.cm.isValidUrl(trailer) and len(trailer) > 10:
-            urlTab.insert(0, {'name':'Trailer', 'title':'Trailer', 'server_title':'Trailer', 'url':trailer, 'need_resolve':1})
+            urlTab.insert(0, {'name': 'Trailer', 'title': 'Trailer', 'server_title': 'Trailer', 'url': trailer, 'need_resolve': 1})
         
         self.cacheLinks[cItem['url']] = urlTab
         return urlTab
@@ -409,14 +409,14 @@ class YesMovies(CBaseHostClass):
                     url = self.cm.ph.getSearchGroups(item, 'file="(http[^"]+?)"')[0].replace('&amp;', '&')
                     name = self.cm.ph.getSearchGroups(item, 'label="([^"]+?)"')[0]
                     if 'type="mp4"' in item:
-                        urlTab.append({'name':name, 'url':url})
+                        urlTab.append({'name': name, 'url': url})
                     elif 'type="m3u8"' in item:
-                        url = strwithmeta(url, {'Referer':referer, 'User-Agent':params['header']['User-Agent']})
+                        url = strwithmeta(url, {'Referer': referer, 'User-Agent': params['header']['User-Agent']})
                         urlTab.extend(getDirectM3U8Playlist(url, checkContent=True, sortWithMaxBitrate=999999999))
                     elif 'kind="captions"' in item:
                         format = url[-3:]
                         if format in ['srt', 'vtt']:
-                            subTracks.append({'title':name, 'url':self.getFullIconUrl(url), 'lang':name, 'format':format})
+                            subTracks.append({'title': name, 'url': self.getFullIconUrl(url), 'lang': name, 'format': format})
             else:
                 try:
                     tmp = byteify(json.loads(data))
@@ -425,22 +425,22 @@ class YesMovies(CBaseHostClass):
                         tmp['playlist'][0]['sources'] = [tmp['playlist'][0]['sources']]
                     for item in tmp['playlist'][0]['sources']:
                         if "mp4" == item['type']:
-                            urlTab.append({'name':str(item.get('label', 'default')), 'url':item['file']})
+                            urlTab.append({'name': str(item.get('label', 'default')), 'url': item['file']})
                         elif "m3u8" == item['type']:
-                            url = strwithmeta(item['file'], {'Referer':referer, 'User-Agent':params['header']['User-Agent']})
+                            url = strwithmeta(item['file'], {'Referer': referer, 'User-Agent': params['header']['User-Agent']})
                             urlTab.extend(getDirectM3U8Playlist(url, checkContent=True, sortWithMaxBitrate=999999999))
                     if isinstance(tmp['playlist'][0]['tracks'], dict):
                         tmp['playlist'][0]['tracks'] = [tmp['playlist'][0]['tracks']]
                     for item in tmp['playlist'][0]['tracks']:
                         format = item['file'][-3:]
                         if format in ['srt', 'vtt'] and "captions" == item['kind']:
-                            subTracks.append({'title':str(item['label']), 'url':self.getFullIconUrl(item['file']), 'lang':item['label'], 'format':format})
+                            subTracks.append({'title': str(item['label']), 'url': self.getFullIconUrl(item['file']), 'lang': item['label'], 'format': format})
                 except Exception:
                     printExc()
             printDBG(subTracks)
-            urlParams = {'Referer':referer, 'User-Agent':params['header']['User-Agent']}
+            urlParams = {'Referer': referer, 'User-Agent': params['header']['User-Agent']}
             if len(subTracks):
-                urlParams.update({'external_sub_tracks':subTracks})
+                urlParams.update({'external_sub_tracks': subTracks})
             
             for idx in range(len(urlTab)):
                 urlTab[idx]['url'] = strwithmeta(urlTab[idx]['url'], urlParams)
@@ -500,7 +500,7 @@ class YesMovies(CBaseHostClass):
             if rating != '':
                 otherInfo['rating'] = self.cleanHtmlStr(rating)
         
-        return [{'title':self.cleanHtmlStr(title), 'text': self.cleanHtmlStr(desc), 'images':[{'title':'', 'url':self.getFullUrl(icon)}], 'other_info':otherInfo}]
+        return [{'title': self.cleanHtmlStr(title), 'text': self.cleanHtmlStr(desc), 'images': [{'title': '', 'url': self.getFullUrl(icon)}], 'other_info': otherInfo}]
         
     def handleService(self, index, refresh=0, searchPattern='', searchType=''):
         printDBG('handleService start')
@@ -520,7 +520,7 @@ class YesMovies(CBaseHostClass):
     #MAIN MENU
         if name == None:
             self.fillCacheFilters()
-            self.listMainMenu({'name':'category'})
+            self.listMainMenu({'name': 'category'})
         elif category.startswith('list_filter_'):
             filter = category.replace('list_filter_', '')
             if filter == 'genre':
@@ -540,11 +540,11 @@ class YesMovies(CBaseHostClass):
     #SEARCH
         elif category in ["search", "search_next_page"]:
             cItem = dict(self.currItem)
-            cItem.update({'search_item':False, 'name':'category'}) 
+            cItem.update({'search_item': False, 'name': 'category'}) 
             self.listSearchResult(cItem, searchPattern, searchType)
     #HISTORIA SEARCH
         elif category == "search_history":
-            self.listsHistory({'name':'history', 'category': 'search'}, 'desc', _("Type: "))
+            self.listsHistory({'name': 'history', 'category': 'search'}, 'desc', _("Type: "))
         else:
             printExc()
         

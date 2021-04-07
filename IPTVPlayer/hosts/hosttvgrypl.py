@@ -41,22 +41,22 @@ class TvGryPL(CBaseHostClass):
 
     def __init__(self):
         printDBG("TvGryPL.__init__")
-        CBaseHostClass.__init__(self, {'history':'TvGryPL.tv', 'cookie':'grypl.cookie'})
+        CBaseHostClass.__init__(self, {'history': 'TvGryPL.tv', 'cookie': 'grypl.cookie'})
         self.USER_AGENT = 'User-Agent=Mozilla/5.0 (Windows NT 6.1; WOW64; rv:40.0) Gecko/20100101 Firefox/40.0'
-        self.HEADER = {'User-Agent': self.USER_AGENT, 'DNT':'1', 'Accept': 'text/html'}
+        self.HEADER = {'User-Agent': self.USER_AGENT, 'DNT': '1', 'Accept': 'text/html'}
         self.AJAX_HEADER = dict(self.HEADER)
         self.AJAX_HEADER.update({'X-Requested-With': 'XMLHttpRequest'})
-        self.defaultParams = {'header':self.HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
+        self.defaultParams = {'header': self.HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
         
         self.DEFAULT_ICON_URL = 'http://www.gry-online.pl/apple-touch-icon-120x120.png'
         self.MAIN_URL = 'https://tvgry.pl/'
         self.SEARCH_URL = self.getFullUrl('wyszukiwanie.asp')
-        self.MAIN_CAT_TAB = [{'category':'list_tabs', 'title':'Materiały', 'url': self.getFullUrl('/wideo-tvgry.asp')},
-                             {'category':'list_items', 'title':'Tematy', 'url': self.getFullUrl('/tematy.asp')},
-                             {'category':'list_tabs', 'title':'Zwiastuny gier', 'url': self.getFullUrl('/trailery-z-gier.asp')},
-                             {'category':'list_tabs', 'title':'Zwiastuny filmów', 'url': self.getFullUrl('/trailery-filmowe.asp')},
-                             {'category':'search', 'title':_('Search'), 'search_item':True},
-                             {'category':'search_history', 'title':_('Search history')}]
+        self.MAIN_CAT_TAB = [{'category': 'list_tabs', 'title': 'Materiały', 'url': self.getFullUrl('/wideo-tvgry.asp')},
+                             {'category': 'list_items', 'title': 'Tematy', 'url': self.getFullUrl('/tematy.asp')},
+                             {'category': 'list_tabs', 'title': 'Zwiastuny gier', 'url': self.getFullUrl('/trailery-z-gier.asp')},
+                             {'category': 'list_tabs', 'title': 'Zwiastuny filmów', 'url': self.getFullUrl('/trailery-filmowe.asp')},
+                             {'category': 'search', 'title': _('Search'), 'search_item': True},
+                             {'category': 'search_history', 'title': _('Search history')}]
     
     def getPage(self, url, params={}, post_data=None):
         return self.cm.getPage(url, params, post_data)
@@ -77,7 +77,7 @@ class TvGryPL(CBaseHostClass):
                 title = self.cleanHtmlStr(item)
                 if self.cm.isValidUrl(url):
                     params = dict(cItem)
-                    params.update({'tab_idx':tabIdx + 1, 'title':title, 'url':url})
+                    params.update({'tab_idx': tabIdx + 1, 'title': title, 'url': url})
                     self.addDir(params)
                 
         if 0 == len(self.currList):
@@ -127,26 +127,26 @@ class TvGryPL(CBaseHostClass):
             if tmp != '':
                 descTab.append(tmp)
             
-            params = {'good_for_fav': True, 'title':title, 'url':url, 'icon':icon, 'desc':' | '.join(descTab)}
+            params = {'good_for_fav': True, 'title': title, 'url': url, 'icon': icon, 'desc': ' | '.join(descTab)}
             if '/wideo.asp' in url:
                 self.addVideo(params)
             elif '/temat.asp' in url:
-                params.update({'name':'category', 'category':'list_tabs'})
+                params.update({'name': 'category', 'category': 'list_tabs'})
                 self.addDir(params)
             
         if nextPage:
             params = dict(cItem)
-            params.update({'name':'category', 'category':'list_items', 'title':_('Next page'), 'page':page + 1})
+            params.update({'name': 'category', 'category': 'list_items', 'title': _('Next page'), 'page': page + 1})
             self.addDir(params)
         
     def listSearchResult(self, cItem, searchPattern, searchType):
         printDBG("TvGryPL.listSearchResult cItem[%s], searchPattern[%s] searchType[%s]" % (cItem, searchPattern, searchType))
         
         baseUrl = 'https://tvgry.pl/wyszukiwanie.asp'
-        post_data = {'search':searchPattern}
+        post_data = {'search': searchPattern}
         
         cItem = dict(cItem)
-        cItem.update({'url':baseUrl})
+        cItem.update({'url': baseUrl})
         self.listItems(cItem, post_data)
     
     def getLinksForVideo(self, cItem):
@@ -169,7 +169,7 @@ class TvGryPL(CBaseHostClass):
                 urlParams['header'] = dict(self.AJAX_HEADER)
                 urlParams['header']['Referer'] = cItem['url']
                 
-                sts, data = self.getPage('https://tvgry.pl/ajax/agegate.asp', urlParams, {'day':int(tmp[2]), 'month':int(tmp[1]), 'year':int(tmp[0])})
+                sts, data = self.getPage('https://tvgry.pl/ajax/agegate.asp', urlParams, {'day': int(tmp[2]), 'month': int(tmp[1]), 'year': int(tmp[0])})
                 if not sts:
                     return []
                 
@@ -209,7 +209,7 @@ class TvGryPL(CBaseHostClass):
                 elif '/1280_' in url or "720p" in url:
                     q = 'HD'
                 if q != '':
-                    urlTab.append({'name':name, 'url':strwithmeta(url, {"Range": "bytes=0-"}), 'q':q, 'need_resolve':0})
+                    urlTab.append({'name': name, 'url': strwithmeta(url, {"Range": "bytes=0-"}), 'q': q, 'need_resolve': 0})
         
         if urlTemplate != '':
             params = dict(self.defaultParams)
@@ -223,10 +223,10 @@ class TvGryPL(CBaseHostClass):
                 url = urlTemplate.format(item[0])
                 sts = self.cm.getPage(url, params)[0]
                 if sts and 'mp4' in self.cm.meta.get('content-type', '').lower():
-                    urlTab.append({'name':item[1], 'url':strwithmeta(url, {"Range": "bytes=0-"}), 'q':item[1], 'need_resolve':0})
+                    urlTab.append({'name': item[1], 'url': strwithmeta(url, {"Range": "bytes=0-"}), 'q': item[1], 'need_resolve': 0})
         
         if 1 < len(urlTab):
-            map = {'MOB':0, 'SD':1, 'HD':2, 'FHD':3}
+            map = {'MOB': 0, 'SD': 1, 'HD': 2, 'FHD': 3}
             oneLink = CSelOneLink(urlTab, lambda x: map[x['q']], map[config.plugins.iptvplayer.tvgrypl_default_quality.value])
             if config.plugins.iptvplayer.tvgrypl_use_dq.value:
                 urlTab = oneLink.getOneLink()
@@ -272,7 +272,7 @@ class TvGryPL(CBaseHostClass):
         self.currList = [] 
 
         if None == name:
-            self.listsTab(self.MAIN_CAT_TAB, {'name':'category'})
+            self.listsTab(self.MAIN_CAT_TAB, {'name': 'category'})
     #ITEMS
         elif 'list_tabs' == category:
             self.listTabs(self.currItem)
@@ -281,11 +281,11 @@ class TvGryPL(CBaseHostClass):
     #SEARCH
         elif category in ["search", "search_next_page"]:
             cItem = dict(self.currItem)
-            cItem.update({'search_item':False, 'name':'category'}) 
+            cItem.update({'search_item': False, 'name': 'category'}) 
             self.listSearchResult(cItem, searchPattern, searchType)
     #HISTORIA SEARCH
         elif category == "search_history":
-            self.listsHistory({'name':'history', 'category': 'search'}, 'desc', _("Type: "))
+            self.listsHistory({'name': 'history', 'category': 'search'}, 'desc', _("Type: "))
         else:
             printExc()
         CBaseHostClass.endHandleService(self, index, refresh)

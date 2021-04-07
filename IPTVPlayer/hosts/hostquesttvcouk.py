@@ -27,15 +27,15 @@ def gettytul():
 class QuesttvCoUK(CBaseHostClass):
     
     def __init__(self):
-        CBaseHostClass.__init__(self, {'history':'questtv.co.uk', 'cookie':'questtv.co.uk.cookie'})
+        CBaseHostClass.__init__(self, {'history': 'questtv.co.uk', 'cookie': 'questtv.co.uk.cookie'})
         self.DEFAULT_ICON_URL = 'http://www.questtv.co.uk/wp-content/themes/dni_wp_theme_quest_uk/img/quest_logo.png'
         self.USER_AGENT = 'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:40.0) Gecko/20100101 Firefox/40.0'
         self.MAIN_URL = 'http://www.questtv.co.uk/'
-        self.HTTP_HEADER = {'User-Agent': self.USER_AGENT, 'DNT':'1', 'Accept': 'text/html', 'Accept-Encoding':'gzip, deflate', 'Referer':self.getMainUrl(), 'Origin':self.getMainUrl()}
+        self.HTTP_HEADER = {'User-Agent': self.USER_AGENT, 'DNT': '1', 'Accept': 'text/html', 'Accept-Encoding': 'gzip, deflate', 'Referer': self.getMainUrl(), 'Origin': self.getMainUrl()}
         self.AJAX_HEADER = dict(self.HTTP_HEADER)
-        self.AJAX_HEADER.update({'X-Requested-With': 'XMLHttpRequest', 'Accept-Encoding':'gzip, deflate', 'Content-Type':'application/x-www-form-urlencoded; charset=UTF-8', 'Accept':'application/json, text/javascript, */*; q=0.01'})
+        self.AJAX_HEADER.update({'X-Requested-With': 'XMLHttpRequest', 'Accept-Encoding': 'gzip, deflate', 'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8', 'Accept': 'application/json, text/javascript, */*; q=0.01'})
         
-        self.defaultParams = {'header':self.HTTP_HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
+        self.defaultParams = {'header': self.HTTP_HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
         
     def getPage(self, baseUrl, addParams={}, post_data=None):
         if addParams == {}:
@@ -47,7 +47,7 @@ class QuesttvCoUK(CBaseHostClass):
                 return url
             else:
                 return urllib.parse.urljoin(baseUrl, url)
-        addParams['cloudflare_params'] = {'domain':self.up.getDomain(baseUrl), 'cookie_file':self.COOKIE_FILE, 'User-Agent':self.USER_AGENT, 'full_url_handle':_getFullUrl}
+        addParams['cloudflare_params'] = {'domain': self.up.getDomain(baseUrl), 'cookie_file': self.COOKIE_FILE, 'User-Agent': self.USER_AGENT, 'full_url_handle': _getFullUrl}
         return self.cm.getPageCFProtection(baseUrl, addParams, post_data)
         
     def listOnDemand(self, cItem):
@@ -78,7 +78,7 @@ class QuesttvCoUK(CBaseHostClass):
                 title = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(item, ('<h3', '>', 'descHidden'), ('</h3', '>'))[1])
             desc = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(item, ('<p', '>', 'descHidden'), ('</p', '>'))[1])
             icon = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''src=['"]([^'^"]+?)['"]''')[0])
-            params = {'type':'video', 'title':title, 'f_video_id':videoId, 'desc':desc, 'icon':icon}
+            params = {'type': 'video', 'title': title, 'f_video_id': videoId, 'desc': desc, 'icon': icon}
             self.addVideo(params)
         
     def getLinksForVideo(self, cItem):
@@ -122,7 +122,7 @@ class QuesttvCoUK(CBaseHostClass):
                         if not self.cm.isValidUrl(url):
                             continue
                         name = '[mp4] bitrate: %s, %sx%s' % (item['encodingRate'], item['frameWidth'], item['frameHeight'])
-                        mp4Tab.append({'name':name, 'url':url, 'bitrate':item['encodingRate']})
+                        mp4Tab.append({'name': name, 'url': url, 'bitrate': item['encodingRate']})
                         
                         def __getLinkQuality(itemLink):
                             try:
@@ -156,7 +156,7 @@ class QuesttvCoUK(CBaseHostClass):
         
     #MAIN MENU
         if name == None:
-            self.listOnDemand({'name':'category', 'url':self.getFullUrl('/video')})
+            self.listOnDemand({'name': 'category', 'url': self.getFullUrl('/video')})
         else:
             printExc()
         

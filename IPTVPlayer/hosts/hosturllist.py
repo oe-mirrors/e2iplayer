@@ -46,10 +46,10 @@ class Urllist(CBaseHostClass):
         printDBG("Urllist.__init__")
         path = config.plugins.iptvplayer.Sciezkaurllist.value + '/'
         
-        self.MAIN_GROUPED_TAB = [{'category': 'all', 'title': _("All in one"), 'desc': _("Links from all files without categories"), 'icon':'https://mikeharwood.files.wordpress.com/2011/01/all-in-one-logo-on-blue.jpg'}]
-        self.MAIN_GROUPED_TAB.extend([{'category': Urllist.URLLIST_FILE, 'title': _("Videos"), 'desc': _("Links from the file %s") % normpath(path + 'urllist.txt'), 'icon':'https://st2.depositphotos.com/3000465/12281/v/950/depositphotos_122812390-stock-illustration-video-play-sign-with-letter.jpg'},
-                                       {'category': Urllist.URRLIST_STREAMS, 'title': _("Live streams"), 'desc': _("Links from the file %s") % normpath(path + 'urllist.stream'), 'icon':'http://asiamh.ru.images.1c-bitrix-cdn.ru/images/media_logo.jpg?136879146733721'},
-                                       {'category': Urllist.URRLIST_USER, 'title': _("User files"), 'desc': _("Links from the file %s") % normpath(path + 'urllist.user'), 'icon':'http://kinovesti.ru/uploads/posts/2014-12/1419918660_1404722920_02.jpg'}])
+        self.MAIN_GROUPED_TAB = [{'category': 'all', 'title': _("All in one"), 'desc': _("Links from all files without categories"), 'icon': 'https://mikeharwood.files.wordpress.com/2011/01/all-in-one-logo-on-blue.jpg'}]
+        self.MAIN_GROUPED_TAB.extend([{'category': Urllist.URLLIST_FILE, 'title': _("Videos"), 'desc': _("Links from the file %s") % normpath(path + 'urllist.txt'), 'icon': 'https://st2.depositphotos.com/3000465/12281/v/950/depositphotos_122812390-stock-illustration-video-play-sign-with-letter.jpg'},
+                                       {'category': Urllist.URRLIST_STREAMS, 'title': _("Live streams"), 'desc': _("Links from the file %s") % normpath(path + 'urllist.stream'), 'icon': 'http://asiamh.ru.images.1c-bitrix-cdn.ru/images/media_logo.jpg?136879146733721'},
+                                       {'category': Urllist.URRLIST_USER, 'title': _("User files"), 'desc': _("Links from the file %s") % normpath(path + 'urllist.user'), 'icon': 'http://kinovesti.ru/uploads/posts/2014-12/1419918660_1404722920_02.jpg'}])
         CBaseHostClass.__init__(self)
         self.currFileHost = None
 
@@ -87,7 +87,7 @@ class Urllist(CBaseHostClass):
                         title = (_("Other"))
                     else:
                         title = item
-                    params = {'name': 'category', 'category':'group', 'title':title, 'group':item}
+                    params = {'name': 'category', 'category': 'group', 'title': title, 'group': item}
                     self.addDir(params)
             else:
                 tmpList = self.currFileHost.getAllItems(sortList)
@@ -95,7 +95,7 @@ class Urllist(CBaseHostClass):
                     desc = (_("Hosting: %s, %s")) % (self._getHostingName(item['url']), item['url'])
                     if item['desc'] != '':
                         desc = item['desc']
-                    params = {'title':item['full_title'], 'url':item['url'], 'desc':desc, 'icon':item['icon']}
+                    params = {'title': item['full_title'], 'url': item['url'], 'desc': desc, 'icon': item['icon']}
                     self.addVideo(params)
         elif 'group' in cItem:
             tmpList = self.currFileHost.getItemsInGroup(cItem['group'], sortList)
@@ -107,7 +107,7 @@ class Urllist(CBaseHostClass):
                 desc = (_("Hosting: %s, %s")) % (self._getHostingName(item['url']), item['url'])
                 if item.get('desc', '') != '':
                     desc = item['desc']
-                params = {'title':title, 'url':item['url'], 'desc': desc, 'icon':item.get('icon', '')}
+                params = {'title': title, 'url': item['url'], 'desc': desc, 'icon': item.get('icon', '')}
                 self.addVideo(params)
                 
     def getLinksForVideo(self, cItem):
@@ -133,7 +133,7 @@ class Urllist(CBaseHostClass):
                 retTab = getMPDLinksWithMeta(uri, False)
                 videoUrls.extend(retTab)
             else:
-                videoUrls.append({'name':'direct link', 'url':uri})
+                videoUrls.append({'name': 'direct link', 'url': uri})
         return videoUrls
     
     def handleService(self, index, refresh=0, searchPattern='', searchType=''):

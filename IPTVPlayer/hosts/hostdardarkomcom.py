@@ -24,8 +24,8 @@ def gettytul():
 class DardarkomCom(CBaseHostClass):
  
     def __init__(self):
-        CBaseHostClass.__init__(self, {'history':'  DardarkomCom.tv', 'cookie':'dardarkomcom.cookie'})
-        self.defaultParams = {'with_metadata':True, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
+        CBaseHostClass.__init__(self, {'history': '  DardarkomCom.tv', 'cookie': 'dardarkomcom.cookie'})
+        self.defaultParams = {'with_metadata': True, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
         
         self.HEADER = {'User-Agent': 'Mozilla/5.0', 'Accept': 'text/html'}
         self.AJAX_HEADER = dict(self.HEADER)
@@ -34,8 +34,8 @@ class DardarkomCom(CBaseHostClass):
         self.MAIN_URL = 'http://www.dardarkom.com/'
         self.DEFAULT_ICON_URL = "https://lh5.ggpht.com/xTFuZwF3HX9yPcDhbyCNnjDtZZ1l9qEwUVwoWsPW9Pxry9JsNLSPvWpbvL9waHbHMg=h900"
         
-        self.MAIN_CAT_TAB = [{'category':'search', 'title': _('Search'), 'search_item':True},
-                             {'category':'search_history', 'title': _('Search history')}]
+        self.MAIN_CAT_TAB = [{'category': 'search', 'title': _('Search'), 'search_item': True},
+                             {'category': 'search_history', 'title': _('Search history')}]
         
         self.cacheLinks = {}
         
@@ -43,7 +43,7 @@ class DardarkomCom(CBaseHostClass):
         printDBG("DardarkomCom.listFooterMenu")
         
         mobileSection = ''
-        sts, data = self.cm.getPage(self.getMainUrl(), {'header':{'User-Agent': 'Mozilla/5.0 (iPhone; U; CPU iPhone OS 3_0 like Mac OS X; en-us) AppleWebKit/528.18 (KHTML, like Gecko) Version/4.0 Mobile/7A341 Safari/528.16', 'Accept': 'text/html'}})
+        sts, data = self.cm.getPage(self.getMainUrl(), {'header': {'User-Agent': 'Mozilla/5.0 (iPhone; U; CPU iPhone OS 3_0 like Mac OS X; en-us) AppleWebKit/528.18 (KHTML, like Gecko) Version/4.0 Mobile/7A341 Safari/528.16', 'Accept': 'text/html'}})
         if sts:
             data = self.cm.ph.getAllItemsBeetwenNodes(data, ('<div', '>', 'collapsible-header'), ('</ul', '>'))
             if len(data) > 1:
@@ -79,12 +79,12 @@ class DardarkomCom(CBaseHostClass):
                     continue
                 title = self.cleanHtmlStr(item)
                 params = dict(cItem)
-                params.update({'title':title, 'category':nextCategory2, 'url':url})
+                params.update({'title': title, 'category': nextCategory2, 'url': url})
                 tabItems.append(params)
             
             if len(tabItems):
                 params = dict(cItem)
-                params.update({'title':sTitle, 'category':nextCategory1, 'sub_items':tabItems})
+                params.update({'title': sTitle, 'category': nextCategory1, 'sub_items': tabItems})
                 self.addDir(params)
         
     def listSubItems(self, cItem):
@@ -100,7 +100,7 @@ class DardarkomCom(CBaseHostClass):
         attempt = 0
         while attempt < 3:
             attempt += 1
-            sts, data = self.cm.getPage(url, {'with_metadata':True, 'ignore_http_code_ranges':[(404, 404), (500, 500)]}, post_data)
+            sts, data = self.cm.getPage(url, {'with_metadata': True, 'ignore_http_code_ranges': [(404, 404), (500, 500)]}, post_data)
             if not sts:
                 return
             if sts and 404 == data.meta.get('status_code', 200):
@@ -143,12 +143,12 @@ class DardarkomCom(CBaseHostClass):
                     desc.append(t)
             
             params = dict(cItem)
-            params.update({'good_for_fav':True, 'category':nextCategory, 'title':title, 'url':url, 'icon':icon, 'desc':'[/br]'.join(desc)})
+            params.update({'good_for_fav': True, 'category': nextCategory, 'title': title, 'url': url, 'icon': icon, 'desc': '[/br]'.join(desc)})
             self.addDir(params)
 
         if self.cm.isValidUrl(nextPage):
             params = dict(cItem)
-            params.update({'title':_('Next page'), 'page':page + 1, 'url':self.getFullUrl(nextPage)})
+            params.update({'title': _('Next page'), 'page': page + 1, 'url': self.getFullUrl(nextPage)})
             self.addDir(params)
         
     def listSearchItems(self, cItem, nextCategory):
@@ -157,7 +157,7 @@ class DardarkomCom(CBaseHostClass):
         post_data = cItem.get('post_data', None) 
         url = cItem['url'] 
         
-        post_data.update({'search_start':page, 'result_from':12 * (page - 1) + 1})
+        post_data.update({'search_start': page, 'result_from': 12 * (page - 1) + 1})
         sts, data = self.cm.getPage(url, post_data=post_data)
         if not sts:
             return
@@ -183,12 +183,12 @@ class DardarkomCom(CBaseHostClass):
                 desc.append(tmp)
             
             params = dict(cItem)
-            params.update({'good_for_fav':True, 'category':nextCategory, 'title':title, 'url':url, 'icon':icon, 'desc':'[/br]'.join(desc)})
+            params.update({'good_for_fav': True, 'category': nextCategory, 'title': title, 'url': url, 'icon': icon, 'desc': '[/br]'.join(desc)})
             self.addDir(params)
         
         if '' != nextPage:
             params = dict(cItem)
-            params.update({'title':_('Next page'), 'page':page + 1})
+            params.update({'title': _('Next page'), 'page': page + 1})
             self.addDir(params)
         
     def exploreItem(self, cItem):
@@ -208,7 +208,7 @@ class DardarkomCom(CBaseHostClass):
             if 'youtube' in url and url not in trailers:
                 trailers.append(url)
                 params = dict(cItem)
-                params.update({'good_for_fav':False, 'title':_('Trailer - %s') % cItem['title'], 'url':url, 'trailer':True})
+                params.update({'good_for_fav': False, 'title': _('Trailer - %s') % cItem['title'], 'url': url, 'trailer': True})
                 self.addVideo(params)
         
         if 'featurelist' in data:
@@ -229,7 +229,7 @@ class DardarkomCom(CBaseHostClass):
                 title = self.cleanHtmlStr(item)
                 url = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''<a[^>]+?href=['"](https?://[^"^']+?)['"]''')[0])
                 params = dict(cItem)
-                params.update({'good_for_fav':False, 'title':title, 'episode': True, 'url':url})
+                params.update({'good_for_fav': False, 'title': title, 'episode': True, 'url': url})
                 self.addVideo(params)
         
     def getLinksForVideo(self, cItem):
@@ -285,7 +285,7 @@ class DardarkomCom(CBaseHostClass):
                 if url == '' or url in uniqueUrls:
                     continue
                 name = self.cleanHtmlStr(server)
-                urlTab.append({'name':name, 'url':url, 'need_resolve':1})
+                urlTab.append({'name': name, 'url': url, 'need_resolve': 1})
                 uniqueUrls.append(url)
             
             tmp = self.cm.ph.getAllItemsBeetwenMarkers(data[idx], '<iframe', '</iframe>')
@@ -299,7 +299,7 @@ class DardarkomCom(CBaseHostClass):
                     continue
                 else:
                     name = tabName
-                urlTab.append({'name':name, 'url':url, 'need_resolve':1})
+                urlTab.append({'name': name, 'url': url, 'need_resolve': 1})
                 uniqueUrls.append(url)
             
         if len(urlTab):
@@ -347,7 +347,7 @@ class DardarkomCom(CBaseHostClass):
             printDBG(url)
             url = self.getFullUrl(url)
             urlParams['header']['Referer'] = videoUrl
-            videoUrl = strwithmeta(url, {'Referer':videoUrl})
+            videoUrl = strwithmeta(url, {'Referer': videoUrl})
         
         urlTab = []
         if self.cm.isValidUrl(videoUrl):
@@ -358,7 +358,7 @@ class DardarkomCom(CBaseHostClass):
         printDBG("DardarkomCom.listSearchResult cItem[%s], searchPattern[%s] searchType[%s]" % (cItem, searchPattern, searchType))
         cItem = dict(cItem)
         cItem['url'] = self.getFullUrl('/index.php?do=search')
-        cItem['post_data'] = {'do':'search', 'subaction':'search', 'story':searchPattern}
+        cItem['post_data'] = {'do': 'search', 'subaction': 'search', 'story': searchPattern}
         if cItem.get('page', 1) > 1:
             cItem['post_data']['search_start'] = cItem['page']
         cItem['category'] = 'list_search_items'
@@ -400,7 +400,7 @@ class DardarkomCom(CBaseHostClass):
                     continue
                 itemsList.append((key, val))
 
-        return [{'title':self.cleanHtmlStr(title), 'text': self.cleanHtmlStr(desc), 'images':[{'title':'', 'url':self.getFullUrl(icon)}], 'other_info':{'custom_items_list':itemsList}}]
+        return [{'title': self.cleanHtmlStr(title), 'text': self.cleanHtmlStr(desc), 'images': [{'title': '', 'url': self.getFullUrl(icon)}], 'other_info': {'custom_items_list': itemsList}}]
     
     def handleService(self, index, refresh=0, searchPattern='', searchType=''):
         printDBG('handleService start')
@@ -416,7 +416,7 @@ class DardarkomCom(CBaseHostClass):
         
     #MAIN MENU
         if name == None:
-            baseItem = {'type':'category', 'name':'category'}
+            baseItem = {'type': 'category', 'name': 'category'}
             self.listMainMenu(baseItem, 'sub_items', 'list_items')
             self.listsTab(self.MAIN_CAT_TAB, baseItem)
         elif category == 'sub_items':
@@ -430,13 +430,13 @@ class DardarkomCom(CBaseHostClass):
     #SEARCH
         elif category in ["search", "search_next_page"]:
             cItem = dict(self.currItem)
-            cItem.update({'search_item':False, 'name':'category'}) 
+            cItem.update({'search_item': False, 'name': 'category'}) 
             self.listSearchResult(cItem, searchPattern, searchType)
         elif category == 'list_search_items':
             self.listSearchItems(self.currItem, 'explore_item')
     #HISTORIA SEARCH
         elif category == "search_history":
-            self.listsHistory({'name':'history', 'category': 'search'}, 'desc', _("Type: "))
+            self.listsHistory({'name': 'history', 'category': 'search'}, 'desc', _("Type: "))
         else:
             printExc()
         

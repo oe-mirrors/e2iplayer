@@ -33,12 +33,12 @@ class MovizlandCom(CBaseHostClass):
     SEARCH_URL = MAIN_URL + '?s='
     DEFAULT_ICON_URL = "http://vb.movizland.com/movizland/images/logo.png"
     
-    MAIN_CAT_TAB = [{'category': 'categories', 'title': _('Categories'), 'url': MAIN_URL,},
-                    {'category': 'search', 'title': _('Search'), 'search_item': True,},
-                    {'category': 'search_history', 'title': _('Search history'),}]
+    MAIN_CAT_TAB = [{'category': 'categories', 'title': _('Categories'), 'url': MAIN_URL, },
+                    {'category': 'search', 'title': _('Search'), 'search_item': True, },
+                    {'category': 'search_history', 'title': _('Search history'), }]
  
     def __init__(self):
-        CBaseHostClass.__init__(self, {'history':'  MovizlandCom.tv', 'cookie':'movizlandcom.cookie'})
+        CBaseHostClass.__init__(self, {'history': '  MovizlandCom.tv', 'cookie': 'movizlandcom.cookie'})
         self.USER_AGENT = 'Mozilla/5.0 (X11; Linux i686) AppleWebKit/537.36 (KHTML, like Gecko) Ubuntu Chromium/37.0.2062.120 Chrome/37.0.2062.120 Safari/537.36'
         self.HEADER = {'User-Agent': self.USER_AGENT, 'Accept': 'text/html'}
         self.defaultParams = {'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
@@ -63,10 +63,10 @@ class MovizlandCom(CBaseHostClass):
         if url == '':
             return ''
         cookieHeader = self.cm.getCookieHeader(self.COOKIE_FILE)
-        return strwithmeta(url, {'Cookie':cookieHeader, 'User-Agent':self.USER_AGENT})
+        return strwithmeta(url, {'Cookie': cookieHeader, 'User-Agent': self.USER_AGENT})
         
     def getPage(self, baseUrl, params={}, post_data=None):
-        params['cloudflare_params'] = {'domain':'m.movizland.com', 'cookie_file':self.COOKIE_FILE, 'User-Agent':self.USER_AGENT, 'full_url_handle':self._getFullUrl}
+        params['cloudflare_params'] = {'domain': 'm.movizland.com', 'cookie_file': self.COOKIE_FILE, 'User-Agent': self.USER_AGENT, 'full_url_handle': self._getFullUrl}
         return self.cm.getPageCFProtection(baseUrl, params, post_data)
         
     def cleanHtmlStr(self, data):
@@ -106,7 +106,7 @@ class MovizlandCom(CBaseHostClass):
                 continue
             title = self.cleanHtmlStr(item)
             params = dict(cItem)
-            params.update({'category':nextCategory, 'title':title, 'url':url})
+            params.update({'category': nextCategory, 'title': title, 'url': url})
             self.addDir(params)
             
     def listItems(self, cItem, nextCategory='explore_item'):
@@ -155,7 +155,7 @@ class MovizlandCom(CBaseHostClass):
             url = self._getFullUrl(url)
             
             params = dict(cItem)
-            params.update({'category':nextCategory, 'title':title, 'url':self._getFullUrl(url), 'icon':self._getFullUrl(icon)})
+            params.update({'category': nextCategory, 'title': title, 'url': self._getFullUrl(url), 'icon': self._getFullUrl(icon)})
             
             if '/movies/ in url':
                 self.addVideo(params)
@@ -164,7 +164,7 @@ class MovizlandCom(CBaseHostClass):
         
         if nextPage:
             params = dict(cItem)
-            params.update({'title':_('Next page'), 'page':page + 1})
+            params.update({'title': _('Next page'), 'page': page + 1})
             self.addDir(params)
             
     def exploreItem(self, cItem):
@@ -194,14 +194,14 @@ class MovizlandCom(CBaseHostClass):
                 continue
             
             if '?view=1' in url or '?high' in url or '?download' in url or 'embedM-' in url:
-                urlTab.append({'name':title, 'url':url, 'need_resolve':0})
+                urlTab.append({'name': title, 'url': url, 'need_resolve': 0})
             elif 'movizland.com' in url:
                 continue
             elif 'moshahda.net' in url and ('embedM-' in url or '?download' in url):
                 continue
             elif self.up.checkHostSupport(url) == 1:
                 title = self.up.getHostName(url)
-                urlTab.append({'name':title, 'url':url, 'need_resolve':1})
+                urlTab.append({'name': title, 'url': url, 'need_resolve': 1})
         return urlTab
         
     def getVideoLinks(self, videoUrl):
@@ -223,7 +223,7 @@ class MovizlandCom(CBaseHostClass):
         
     def getLinksForFavourite(self, fav_data):
         printDBG("MovizlandCom.getLinksForFavourite")
-        return self.getLinksForVideo({'url':fav_data})
+        return self.getLinksForVideo({'url': fav_data})
 
     def getArticleContent(self, cItem):
         printDBG("MovizlandCom.getArticleContent [%s]" % cItem)
@@ -274,7 +274,7 @@ class MovizlandCom(CBaseHostClass):
         if desc == '':
             desc = cItem.get('desc', '')
         
-        return [{'title':self.cleanHtmlStr(title), 'text': self.cleanHtmlStr(desc), 'images':[{'title':'', 'url':self.getFullUrl(icon)}], 'other_info':{'custom_items_list':itemsList}}]
+        return [{'title': self.cleanHtmlStr(title), 'text': self.cleanHtmlStr(desc), 'images': [{'title': '', 'url': self.getFullUrl(icon)}], 'other_info': {'custom_items_list': itemsList}}]
 
     def handleService(self, index, refresh=0, searchPattern='', searchType=''):
         printDBG('handleService start')
@@ -290,7 +290,7 @@ class MovizlandCom(CBaseHostClass):
         
     #MAIN MENU
         if name == None:
-            self.listsTab(self.MAIN_CAT_TAB, {'name':'category'})
+            self.listsTab(self.MAIN_CAT_TAB, {'name': 'category'})
         elif category == 'categories':
                 self.listCategories(self.currItem, 'list_items')
         elif category == 'list_items':
@@ -301,11 +301,11 @@ class MovizlandCom(CBaseHostClass):
     #SEARCH
         elif category in ["search", "search_next_page"]:
             cItem = dict(self.currItem)
-            cItem.update({'search_item':False, 'name':'category'}) 
+            cItem.update({'search_item': False, 'name': 'category'}) 
             self.listSearchResult(cItem, searchPattern, searchType)
     #HISTORIA SEARCH
         elif category == "search_history":
-            self.listsHistory({'name':'history', 'category': 'search'}, 'desc', _("Type: "))
+            self.listsHistory({'name': 'history', 'category': 'search'}, 'desc', _("Type: "))
         else:
             printExc()
         

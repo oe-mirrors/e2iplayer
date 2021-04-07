@@ -29,22 +29,22 @@ def gettytul():
 class OroroTV(CBaseHostClass):
     
     def __init__(self):
-        CBaseHostClass.__init__(self, {'history':'ororo.tv', 'cookie':'ororo.tv.cookie'})
+        CBaseHostClass.__init__(self, {'history': 'ororo.tv', 'cookie': 'ororo.tv.cookie'})
         self.DEFAULT_ICON_URL = 'http://www.yourkodi.com/wp-content/uploads/2016/02/ororo.png'
         self.USER_AGENT = 'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:40.0) Gecko/20100101 Firefox/40.0'
         self.MAIN_URL = 'https://ororo.tv/'
-        self.HEADER = {'User-Agent': self.USER_AGENT, 'DNT':'1', 'Accept': 'text/html', 'Accept-Encoding':'gzip, deflate', 'Referer':self.getMainUrl(), 'Origin':self.getMainUrl()}
+        self.HEADER = {'User-Agent': self.USER_AGENT, 'DNT': '1', 'Accept': 'text/html', 'Accept-Encoding': 'gzip, deflate', 'Referer': self.getMainUrl(), 'Origin': self.getMainUrl()}
         self.AJAX_HEADER = dict(self.HEADER)
-        self.AJAX_HEADER.update({'X-Requested-With': 'XMLHttpRequest', 'Accept-Encoding':'gzip, deflate', 'Content-Type':'application/x-www-form-urlencoded; charset=UTF-8', 'Accept':'application/json, text/javascript, */*; q=0.01'})
+        self.AJAX_HEADER.update({'X-Requested-With': 'XMLHttpRequest', 'Accept-Encoding': 'gzip, deflate', 'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8', 'Accept': 'application/json, text/javascript, */*; q=0.01'})
         
         self.cacheFilters = {}
         self.cacheLinks = {}
-        self.defaultParams = {'header':self.HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
+        self.defaultParams = {'header': self.HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
         
         self.MAIN_CAT_TAB = [
-                             {'category':'list_channels', 'title': _('Channels'), 'url':self.getFullUrl('/channels')},
+                             {'category': 'list_channels', 'title': _('Channels'), 'url': self.getFullUrl('/channels')},
                              {'category': 'search', 'title': _('Search'), 'search_item': True, },
-                             {'category': 'search_history', 'title': _('Search history'),} 
+                             {'category': 'search_history', 'title': _('Search history'), } 
                             ]
     
     def getPage(self, baseUrl, addParams={}, post_data=None):
@@ -60,7 +60,7 @@ class OroroTV(CBaseHostClass):
             else:
                 return urllib.parse.urljoin(baseUrl, url)
             
-        addParams['cloudflare_params'] = {'domain':self.up.getDomain(baseUrl), 'cookie_file':self.COOKIE_FILE, 'User-Agent':self.USER_AGENT, 'full_url_handle':_getFullUrl}
+        addParams['cloudflare_params'] = {'domain': self.up.getDomain(baseUrl), 'cookie_file': self.COOKIE_FILE, 'User-Agent': self.USER_AGENT, 'full_url_handle': _getFullUrl}
         return self.cm.getPageCFProtection(baseUrl, addParams, post_data)
     
     def listChannels(self, cItem, nextCategory):
@@ -86,7 +86,7 @@ class OroroTV(CBaseHostClass):
                 desc += self.cleanHtmlStr(item.get('description', ''))
                 
                 params = dict(cItem)
-                params.update({'good_for_fav':True, 'category':nextCategory, 'title':title, 'desc':desc, 'url':url, 'icon':icon})
+                params.update({'good_for_fav': True, 'category': nextCategory, 'title': title, 'desc': desc, 'url': url, 'icon': icon})
                 self.addDir(params)
         except Exception:
             printExc()
@@ -143,7 +143,7 @@ class OroroTV(CBaseHostClass):
             desc += '[/br]'.join(tmpTab)
             
             params = dict(cItem)
-            params.update({'good_for_fav':True, 'title':title, 'url':url, 'desc':desc, 'icon':icon})
+            params.update({'good_for_fav': True, 'title': title, 'url': url, 'desc': desc, 'icon': icon})
             self.addVideo(params)
         
     def listSearchResult(self, cItem, searchPattern, searchType):
@@ -163,7 +163,7 @@ class OroroTV(CBaseHostClass):
             title = self.cleanHtmlStr(tmp[0])
             desc = self.cleanHtmlStr(tmp[1])
             params = dict(cItem)
-            params.update({'good_for_fav':True, 'title':title, 'url':url, 'desc':desc, 'icon':icon})
+            params.update({'good_for_fav': True, 'title': title, 'url': url, 'desc': desc, 'icon': icon})
             if '/channels/' in url and '/videos/' not in url: 
                 params['category'] = 'list_items'
                 self.addDir(params)
@@ -199,13 +199,13 @@ class OroroTV(CBaseHostClass):
             title = self.cm.ph.getSearchGroups(item, '''title=['"]([^'^"]+?)['"]''')[0]
             
             if url != '':
-                subTracks.append({'title':title, 'url':url, 'lang':lang, 'format':url[-3:]})
+                subTracks.append({'title': title, 'url': url, 'lang': lang, 'format': url[-3:]})
         
         if len(subTracks):
             for idx in range(len(retTab)):
                 tmp = list(subTracks)
                 tmp.extend(retTab[idx]['url'].meta.get('external_sub_tracks', []))
-                retTab[idx]['url'] = strwithmeta(retTab[idx]['url'], {'external_sub_tracks':list(tmp)})
+                retTab[idx]['url'] = strwithmeta(retTab[idx]['url'], {'external_sub_tracks': list(tmp)})
         
         return retTab
     
@@ -223,7 +223,7 @@ class OroroTV(CBaseHostClass):
         
     #MAIN MENU
         if name == None:
-            self.listsTab(self.MAIN_CAT_TAB, {'name':'category'})
+            self.listsTab(self.MAIN_CAT_TAB, {'name': 'category'})
         elif category == 'list_channels':
             self.listChannels(self.currItem, 'list_items')
         elif category == 'list_items':
@@ -231,11 +231,11 @@ class OroroTV(CBaseHostClass):
     #SEARCH
         elif category in ["search", "search_next_page"]:
             cItem = dict(self.currItem)
-            cItem.update({'search_item':False, 'name':'category'}) 
+            cItem.update({'search_item': False, 'name': 'category'}) 
             self.listSearchResult(cItem, searchPattern, searchType)
     #HISTORIA SEARCH
         elif category == "search_history":
-            self.listsHistory({'name':'history', 'category': 'search'}, 'desc', _("Type: "))
+            self.listsHistory({'name': 'history', 'category': 'search'}, 'desc', _("Type: "))
         else:
             printExc()
         

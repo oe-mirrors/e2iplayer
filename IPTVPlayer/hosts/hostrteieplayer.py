@@ -28,18 +28,18 @@ def gettytul():
 class RteIE(CBaseHostClass):
  
     def __init__(self):
-        CBaseHostClass.__init__(self, {'history':'RteIE.tv', 'cookie':'rte.ie.cookie'})
+        CBaseHostClass.__init__(self, {'history': 'RteIE.tv', 'cookie': 'rte.ie.cookie'})
         self.USER_AGENT = 'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:40.0) Gecko/20100101 Firefox/40.0'
-        self.HEADER = {'User-Agent': self.USER_AGENT, 'DNT':'1', 'Accept': 'text/html'}
+        self.HEADER = {'User-Agent': self.USER_AGENT, 'DNT': '1', 'Accept': 'text/html'}
         self.AJAX_HEADER = dict(self.HEADER)
         self.AJAX_HEADER.update({'X-Requested-With': 'XMLHttpRequest'})
         
-        self.defaultParams = {'header':self.HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
+        self.defaultParams = {'header': self.HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
         
         self.DEFAULT_ICON_URL = 'http://pbs.twimg.com/profile_images/533371112277557248/iJ7Xwp1i.png'
         self.MAIN_URL = None
         self.cacheLinks = {}
-        self.defaultParams = {'header':self.HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
+        self.defaultParams = {'header': self.HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
 
         
     def selectDomain(self):
@@ -47,11 +47,11 @@ class RteIE(CBaseHostClass):
         if self.MAIN_URL == None:
             self.MAIN_URL = 'http://www.rte.ie/'
         
-        self.MAIN_CAT_TAB = [{'category':'list_live', 'title': _('Live'), 'url':self.getFullUrl('player/live')},
-                             {'category':'list_categories', 'title': _('Programmes'), 'url':self.getFullUrl('/player/date/latest/')},
+        self.MAIN_CAT_TAB = [{'category': 'list_live', 'title': _('Live'), 'url': self.getFullUrl('player/live')},
+                             {'category': 'list_categories', 'title': _('Programmes'), 'url': self.getFullUrl('/player/date/latest/')},
                              
                              {'category': 'search', 'title': _('Search'), 'search_item': True, },
-                             {'category': 'search_history', 'title': _('Search history'),} 
+                             {'category': 'search_history', 'title': _('Search history'), } 
                             ]
     
     def _getIdFromUrl(self, url):
@@ -84,11 +84,11 @@ class RteIE(CBaseHostClass):
                 if len(desc):
                     descTab.append(desc)
             chId = self._getIdFromUrl(url)
-            descMap[chId] = {'title':title, 'url':url, 'desc':'[/br]'.join(descTab)}
+            descMap[chId] = {'title': title, 'url': url, 'desc': '[/br]'.join(descTab)}
         
         printDBG(descMap)
         
-        for item in [{'ch_id':'8', 'title':'RTÉ One'}, {'ch_id':'10', 'title':'RTÉ2'}, {'ch_id':'6', 'title':'RTÉjr'}, {'ch_id':'7', 'title':'RTÉ News Now'}]:
+        for item in [{'ch_id': '8', 'title': 'RTÉ One'}, {'ch_id': '10', 'title': 'RTÉ2'}, {'ch_id': '6', 'title': 'RTÉjr'}, {'ch_id': '7', 'title': 'RTÉ News Now'}]:
             params = dict(item)
             params['good_for_fav'] = True
             params['url'] = self.getFullUrl('/player/ie/live/%s/' % item['ch_id'])
@@ -114,12 +114,12 @@ class RteIE(CBaseHostClass):
                 category = 'list_az'
             else:
                 category = nextCategory
-            params = {'good_for_fav': False, 'category':category, 'title':title, 'url':url}
+            params = {'good_for_fav': False, 'category': category, 'title': title, 'url': url}
             self.addDir(params)
         
         if calendarTitle != '':
             params = dict(cItem)
-            params.update({'good_for_fav': False, 'category':'list_calendar', 'title':calendarTitle})
+            params.update({'good_for_fav': False, 'category': 'list_calendar', 'title': calendarTitle})
             self.addDir(params)
             
     def listAZ(self, cItem, nextCategory):
@@ -144,7 +144,7 @@ class RteIE(CBaseHostClass):
                 continue
             title = url.split('/')[-2] #self.cleanHtmlStr(item)
             params = dict(cItem)
-            params = {'good_for_fav': False, 'category':nextCategory, 'title':title, 'url':url}
+            params = {'good_for_fav': False, 'category': nextCategory, 'title': title, 'url': url}
             self.addDir(params)
             
     def listItems(self, cItem, nextCategory):
@@ -199,7 +199,7 @@ class RteIE(CBaseHostClass):
                 desc = self.cleanHtmlStr(tmp[-1])
 
             params = dict(cItem)
-            params = {'good_for_fav': True, 'category':nextCategory, 'title':title, 'url':url, 'desc':desc, 'icon':icon}
+            params = {'good_for_fav': True, 'category': nextCategory, 'title': title, 'url': url, 'desc': desc, 'icon': icon}
             if episodes:
                 self.addVideo(params)
             else:
@@ -232,7 +232,7 @@ class RteIE(CBaseHostClass):
                 printExc()
         elif '/live/' in cItem['url']:
 
-            idsMap = {'8':'rte1', '10':'rte2', '6':'rtejr', '7':'newsnow'}
+            idsMap = {'8': 'rte1', '10': 'rte2', '6': 'rtejr', '7': 'newsnow'}
             hdsUrl = self.getFullUrl('/manifests/%s.f4m' % idsMap.get(id, ''))
         
         if self.cm.isValidUrl(hdsUrl):
@@ -244,7 +244,7 @@ class RteIE(CBaseHostClass):
                     
                     if ('/hds-vod/' in item['url'] or '/hds-live/' in item['url']) and item['url'].endswith('.f4m'):
                         hlsUrl = item['url'].replace('/hds-vod/', '/hls-vod/').replace('/hds-live/', '/hls-live/')[:-3] + 'm3u8'
-                        hlsUrl = strwithmeta(hlsUrl, {'Referer':cItem['url'], 'User-Agent':self.USER_AGENT})
+                        hlsUrl = strwithmeta(hlsUrl, {'Referer': cItem['url'], 'User-Agent': self.USER_AGENT})
                         tmp = getDirectM3U8Playlist(hlsUrl, checkContent=True)
                         if 1 == len(tmp): 
                             tmp[0]['name'] = '[m3u8/hls] %sk' % item.get('bitrate', item['name'])
@@ -335,7 +335,7 @@ class RteIE(CBaseHostClass):
         if icon == '':
             icon = cItem.get('icon', self.DEFAULT_ICON_URL)
         
-        return [{'title':self.cleanHtmlStr(title), 'text': self.cleanHtmlStr(desc), 'images':[{'title':'', 'url':self.getFullUrl(icon)}], 'other_info':otherInfo}]
+        return [{'title': self.cleanHtmlStr(title), 'text': self.cleanHtmlStr(desc), 'images': [{'title': '', 'url': self.getFullUrl(icon)}], 'other_info': otherInfo}]
 
     def handleService(self, index, refresh=0, searchPattern='', searchType=''):
         printDBG('handleService start')
@@ -356,7 +356,7 @@ class RteIE(CBaseHostClass):
         
     #MAIN MENU
         if name == None:
-            self.listsTab(self.MAIN_CAT_TAB, {'name':'category'})
+            self.listsTab(self.MAIN_CAT_TAB, {'name': 'category'})
         elif category == 'list_live':
             self.listLiveChannels(self.currItem)
         elif category == 'list_categories':
@@ -370,11 +370,11 @@ class RteIE(CBaseHostClass):
     #SEARCH
         elif category in ["search", "search_next_page"]:
             cItem = dict(self.currItem)
-            cItem.update({'search_item':False, 'name':'category'}) 
+            cItem.update({'search_item': False, 'name': 'category'}) 
             self.listSearchResult(cItem, searchPattern, searchType)
     #HISTORIA SEARCH
         elif category == "search_history":
-            self.listsHistory({'name':'history', 'category': 'search'}, 'desc', _("Type: "))
+            self.listsHistory({'name': 'history', 'category': 'search'}, 'desc', _("Type: "))
         else:
             printExc()
         

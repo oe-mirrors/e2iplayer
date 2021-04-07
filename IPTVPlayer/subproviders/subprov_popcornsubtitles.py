@@ -37,12 +37,12 @@ class YoutubeComProvider(CBaseSubProviderClass):
     def __init__(self, params={}):
         self.MAIN_URL = 'http://popcornsubtitles.com/'
         self.USER_AGENT = 'Mozilla/5.0 (X11; Linux i686) AppleWebKit/537.36 (KHTML, like Gecko) Ubuntu Chromium/37.0.2062.120 Chrome/37.0.2062.120 Safari/537.36'
-        self.HTTP_HEADER = {'User-Agent':self.USER_AGENT, 'Referer':self.MAIN_URL, 'Accept':'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8', 'Accept-Encoding':'gzip, deflate'}
+        self.HTTP_HEADER = {'User-Agent': self.USER_AGENT, 'Referer': self.MAIN_URL, 'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8', 'Accept-Encoding': 'gzip, deflate'}
 
         params['cookie'] = 'popcornsubtitlescom.cookie'
         CBaseSubProviderClass.__init__(self, params)
         
-        self.defaultParams = {'header':self.HTTP_HEADER}
+        self.defaultParams = {'header': self.HTTP_HEADER}
         if 'popcornsubtitles_url' in self.params['url_params'] and '' != self.params['url_params']['popcornsubtitles_url']:
             self.popcornsubtitlesUrl = self.params['url_params']['popcornsubtitles_url']
         else:
@@ -70,7 +70,7 @@ class YoutubeComProvider(CBaseSubProviderClass):
             lang = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(item, '<td', '</td>')[1])
             if self.cm.isValidUrl(url):
                 params = dict(cItem)
-                params.update({'title':lang, 'url':url, 'lang':lang, 'imdbid':imdbid, 'desc':title})
+                params.update({'title': lang, 'url': url, 'lang': lang, 'imdbid': imdbid, 'desc': title})
                 self.addSubtitle(params)
             
     def _getFileName(self, title, lang, subId, imdbid):
@@ -147,7 +147,7 @@ class YoutubeComProvider(CBaseSubProviderClass):
                 try:
                     with open(fileName, 'w') as f:
                         f.write(data)
-                    retData = {'title':title, 'path':fileName, 'lang':lang, 'imdbid':imdbid, 'sub_id':subId}
+                    retData = {'title': title, 'path': fileName, 'lang': lang, 'imdbid': imdbid, 'sub_id': subId}
                 except Exception:
                     printExc()
                     SetIPTVPlayerLastHostError(_('Failed to write the file "%s".') % fileName)

@@ -57,27 +57,27 @@ class MusicBox(CBaseHostClass):
         
         self.DEFAULT_ICON_URL = 'http://www.darmowe-na-telefon.pl/uploads/tapeta_240x320_muzyka_23.jpg'
         self.BILLBOARD_URL = 'https://www.billboard.com/charts/'
-        self.SERVICE_MENU_TABLE = [{'category':'itunes', 'title':"Itunes - Top songs by country", 'item':'song', 'url':'http://www.geonames.org/flags/x/'},
-                                   {'category':'itunes', 'title':"Itunes - Top albums by country", 'item':'album', 'url':'http://www.geonames.org/flags/x/'},
-                                   {'category':'beatport', 'title':"Beatport - Top 100", 'url':'https://pro.beatport.com/top-100'},
+        self.SERVICE_MENU_TABLE = [{'category': 'itunes', 'title': "Itunes - Top songs by country", 'item': 'song', 'url': 'http://www.geonames.org/flags/x/'},
+                                   {'category': 'itunes', 'title': "Itunes - Top albums by country", 'item': 'album', 'url': 'http://www.geonames.org/flags/x/'},
+                                   {'category': 'beatport', 'title': "Beatport - Top 100", 'url': 'https://pro.beatport.com/top-100'},
                                    
-                                   {'category':'billboard_charts', 'title':"Bilboard - The Hot 100", 'url':self.BILLBOARD_URL + 'hot-100'},
-                                   {'category':'billboard_charts', 'title':"Bilboard - 200", 'url':self.BILLBOARD_URL + 'billboard-200'},
-                                   {'category':'billboard_charts', 'title':"Bilboard - Heatseekers Songs", 'url':self.BILLBOARD_URL + 'heatseekers-songs'},
-                                   {'category':'billboard_albums', 'title':"Bilboard - Heatseekers Albums", 'url':self.BILLBOARD_URL + 'heatseekers-albums'},
-                                   {'category':'billboard_charts', 'title':"Bilboard - Hot Pop Songs", 'url':self.BILLBOARD_URL + 'pop-songs'},
-                                   {'category':'billboard_charts', 'title':"Bilboard - Hot Country Songs", 'url':self.BILLBOARD_URL + 'country-songs'},
-                                   {'category':'billboard_albums', 'title':"Bilboard - Hot Country Albums", 'url':self.BILLBOARD_URL + 'country-albums'},
-                                   {'category':'billboard_charts', 'title':"Bilboard - Hot Rock Songs", 'url':self.BILLBOARD_URL + 'rock-songs'},
-                                   {'category':'billboard_albums', 'title':"Bilboard - Hot Rock Albums", 'url':self.BILLBOARD_URL + 'rock-albums'},
-                                   {'category':'billboard_charts', 'title':"Bilboard - Hot R&B/Hip-Hop Songs", 'url':self.BILLBOARD_URL + 'r-b-hip-hop-songs'},
-                                   {'category':'billboard_albums', 'title':"Bilboard - Hot R&B/Hip-Hop Albums", 'url':self.BILLBOARD_URL + 'r-b-hip-hop-albums'},
-                                   {'category':'billboard_charts', 'title':"Bilboard - Hot Dance/Electronic Songs", 'url':self.BILLBOARD_URL + 'dance-electronic-songs'},
-                                   {'category':'billboard_albums', 'title':"Bilboard - Hot Dance/Electronic Albums", 'url':self.BILLBOARD_URL + 'dance-electronic-albums'},
-                                   {'category':'billboard_charts', 'title':"Bilboard - Hot Latin Songs", 'url':self.BILLBOARD_URL + 'latin-songs'},
-                                   {'category':'billboard_albums', 'title':"Bilboard - Hot Latin Albums", 'url':self.BILLBOARD_URL + 'latin-albums'},
+                                   {'category': 'billboard_charts', 'title': "Bilboard - The Hot 100", 'url': self.BILLBOARD_URL + 'hot-100'},
+                                   {'category': 'billboard_charts', 'title': "Bilboard - 200", 'url': self.BILLBOARD_URL + 'billboard-200'},
+                                   {'category': 'billboard_charts', 'title': "Bilboard - Heatseekers Songs", 'url': self.BILLBOARD_URL + 'heatseekers-songs'},
+                                   {'category': 'billboard_albums', 'title': "Bilboard - Heatseekers Albums", 'url': self.BILLBOARD_URL + 'heatseekers-albums'},
+                                   {'category': 'billboard_charts', 'title': "Bilboard - Hot Pop Songs", 'url': self.BILLBOARD_URL + 'pop-songs'},
+                                   {'category': 'billboard_charts', 'title': "Bilboard - Hot Country Songs", 'url': self.BILLBOARD_URL + 'country-songs'},
+                                   {'category': 'billboard_albums', 'title': "Bilboard - Hot Country Albums", 'url': self.BILLBOARD_URL + 'country-albums'},
+                                   {'category': 'billboard_charts', 'title': "Bilboard - Hot Rock Songs", 'url': self.BILLBOARD_URL + 'rock-songs'},
+                                   {'category': 'billboard_albums', 'title': "Bilboard - Hot Rock Albums", 'url': self.BILLBOARD_URL + 'rock-albums'},
+                                   {'category': 'billboard_charts', 'title': "Bilboard - Hot R&B/Hip-Hop Songs", 'url': self.BILLBOARD_URL + 'r-b-hip-hop-songs'},
+                                   {'category': 'billboard_albums', 'title': "Bilboard - Hot R&B/Hip-Hop Albums", 'url': self.BILLBOARD_URL + 'r-b-hip-hop-albums'},
+                                   {'category': 'billboard_charts', 'title': "Bilboard - Hot Dance/Electronic Songs", 'url': self.BILLBOARD_URL + 'dance-electronic-songs'},
+                                   {'category': 'billboard_albums', 'title': "Bilboard - Hot Dance/Electronic Albums", 'url': self.BILLBOARD_URL + 'dance-electronic-albums'},
+                                   {'category': 'billboard_charts', 'title': "Bilboard - Hot Latin Songs", 'url': self.BILLBOARD_URL + 'latin-songs'},
+                                   {'category': 'billboard_albums', 'title': "Bilboard - Hot Latin Albums", 'url': self.BILLBOARD_URL + 'latin-albums'},
                                    
-                                   {'category':'lastfm', 'title':"Last.fm - Moja lista"},
+                                   {'category': 'lastfm', 'title': "Last.fm - Moja lista"},
                                    ]
     
     def listsMainMenu(self):
@@ -98,10 +98,10 @@ class MusicBox(CBaseHostClass):
                 icon = 'http://www.geonames.org/flags/x/' + country_code[x] + '.gif'
                 desc = title
                 if mode == 'song':
-                    params = {'good_for_fav':True, 'name': 'Itunes_track_charts', 'title': title, 'page': url, 'icon': icon, 'desc': desc}
+                    params = {'good_for_fav': True, 'name': 'Itunes_track_charts', 'title': title, 'page': url, 'icon': icon, 'desc': desc}
                     self.addDir(params)
                 elif mode == 'album':
-                    params = {'good_for_fav':True, 'good_for_fav':True, 'name': 'Itunes_album_charts', 'title': title, 'page': url, 'icon': icon, 'desc': desc}
+                    params = {'good_for_fav': True, 'good_for_fav': True, 'name': 'Itunes_album_charts', 'title': title, 'page': url, 'icon': icon, 'desc': desc}
                     self.addDir(params)
 
     def Itunes_track_charts(self, url):
@@ -121,7 +121,7 @@ class MusicBox(CBaseHostClass):
                     iconimage = ''
                 plot = ''
                 search_string = urllib.parse.quote(artist + ' ' + track_name + ' music video')
-                params = {'good_for_fav':True, 'title': str(x + 1) + '. ' + artist + '- ' + track_name, 'page': search_string, 'icon': iconimage, 'desc': plot}
+                params = {'good_for_fav': True, 'title': str(x + 1) + '. ' + artist + '- ' + track_name, 'page': search_string, 'icon': iconimage, 'desc': plot}
                 self.addVideo(params)
         except Exception:
             printExc()  # wypisz co poszło nie tak
@@ -142,7 +142,7 @@ class MusicBox(CBaseHostClass):
                     iconimage = item['im:image'][2]['label']
                 except Exception:
                     iconimage = ''
-                params = {'good_for_fav':True, 'name': 'Itunes_list_album_tracks','title': str(x + 1) + '. ' + artist + '- ' + album_name, 'page': idx, 'album': album_name, 'country': country, 'icon': iconimage}
+                params = {'good_for_fav': True, 'name': 'Itunes_list_album_tracks', 'title': str(x + 1) + '. ' + artist + '- ' + album_name, 'page': idx, 'album': album_name, 'country': country, 'icon': iconimage}
                 self.addDir(params)
         except Exception:
             printExc()  # wypisz co poszło nie tak
@@ -162,7 +162,7 @@ class MusicBox(CBaseHostClass):
                 except Exception:
                     iconimage = ''
                 search_string = urllib.parse.quote(artist + ' ' + track_name + ' music video')
-                params = {'good_for_fav':True, 'title': artist + '- ' + track_name, 'page': search_string, 'icon': iconimage}
+                params = {'good_for_fav': True, 'title': artist + '- ' + track_name, 'page': search_string, 'icon': iconimage}
                 self.addVideo(params)
         except Exception:
             printExc()
@@ -185,7 +185,7 @@ class MusicBox(CBaseHostClass):
             artist = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(item, ('<p', '>', 'track-artists'), ('</p', '>'), False)[1])
             icon = self.cm.getFullUrl(self.cm.ph.getSearchGroups(item, '''<img[^>]+?data\-src=['"]([^'^"]+?)['"]''')[0], self.cm.meta['url'])
             search_string = urllib.parse.quote(artist + ' ' + track_name + ' music video')
-            params = {'good_for_fav':True, 'title': track_number + '. ' + artist + '- ' + track_name, 'page': search_string, 'icon': icon}
+            params = {'good_for_fav': True, 'title': track_number + '. ' + artist + '- ' + track_name, 'page': search_string, 'icon': icon}
             self.addVideo(params)
 
 ###############################################################################
@@ -213,7 +213,7 @@ class MusicBox(CBaseHostClass):
                     printExc()
             track_name = name
             search_string = urllib.parse.quote(artist + ' ' + track_name + ' music video')
-            params = {'good_for_fav':True, 'title': name + ' - ' + artist, 'page': search_string, 'icon': icon}
+            params = {'good_for_fav': True, 'title': name + ' - ' + artist, 'page': search_string, 'icon': icon}
             self.addVideo(params)
 
     def Billboard_chartsalbums(self, url):
@@ -233,7 +233,7 @@ class MusicBox(CBaseHostClass):
             if not icon:
                 icon = ph.getattr(item, 'srcset').split(' ', 1)[0]
             album_name = name
-            params = {'good_for_fav':True, 'name': 'List_album_tracks','title': name + ' - ' + artist, 'page': 0, 'artist': artist, 'album': album_name, 'icon':self.cm.getFullUrl(icon, self.cm.meta['url'])}
+            params = {'good_for_fav': True, 'name': 'List_album_tracks', 'title': name + ' - ' + artist, 'page': 0, 'artist': artist, 'album': album_name, 'icon': self.cm.getFullUrl(icon, self.cm.meta['url'])}
             self.addDir(params)
 
 ###############################################################################
@@ -262,7 +262,7 @@ class MusicBox(CBaseHostClass):
                 artist = item['artist']['name']
                 track_name = item['name']
                 search_string = urllib.parse.quote(artist + ' ' + track_name + ' music video')
-                params = {'good_for_fav':True, 'title': track_name + ' - ' + artist, 'page': search_string, 'icon': albumIcon}
+                params = {'good_for_fav': True, 'title': track_name + ' - ' + artist, 'page': search_string, 'icon': albumIcon}
                 self.addVideo(params)
         except Exception:
             printExc()

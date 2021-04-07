@@ -26,7 +26,7 @@ def gettytul():
 class LuxVeritatisPL(CBaseHostClass):
     
     def __init__(self):
-        CBaseHostClass.__init__(self, {'history':'luxveritatis.pl', 'cookie':'luxveritatis.pl.cookie'})
+        CBaseHostClass.__init__(self, {'history': 'luxveritatis.pl', 'cookie': 'luxveritatis.pl.cookie'})
         self.USER_AGENT = 'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:40.0) Gecko/20100101 Firefox/40.0'
         self.MAIN_URL_T = 'http://tv-trwam.pl/'
         self.MAIN_URL_R = 'http://www.radiomaryja.pl/'
@@ -34,11 +34,11 @@ class LuxVeritatisPL(CBaseHostClass):
         self.DEFAULT_ICON_URL = 'https://luxveritatis.pl/sites/all/themes/luxveritatis/img/logo.png'
         self.ICON_URL_R = 'https://mir-s3-cdn-cf.behance.net/projects/404/84c55124983499.551bd47bd2b6a.png'
         self.ICON_URL_T = 'http://archidiecezjalubelska.pl/wp-content/uploads/2016/07/trwam.jpg'
-        self.HTTP_HEADER = {'User-Agent': self.USER_AGENT, 'DNT':'1', 'Accept': 'text/html', 'Accept-Encoding':'gzip, deflate'}
+        self.HTTP_HEADER = {'User-Agent': self.USER_AGENT, 'DNT': '1', 'Accept': 'text/html', 'Accept-Encoding': 'gzip, deflate'}
         self.AJAX_HEADER = dict(self.HTTP_HEADER)
-        self.AJAX_HEADER.update({'X-Requested-With': 'XMLHttpRequest', 'Accept-Encoding':'gzip, deflate', 'Content-Type':'application/x-www-form-urlencoded; charset=UTF-8', 'Accept':'*/*'})
+        self.AJAX_HEADER.update({'X-Requested-With': 'XMLHttpRequest', 'Accept-Encoding': 'gzip, deflate', 'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8', 'Accept': '*/*'})
         
-        self.defaultParams = {'header':self.HTTP_HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
+        self.defaultParams = {'header': self.HTTP_HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
         
     def getPage(self, baseUrl, addParams={}, post_data=None):
         if addParams == {}:
@@ -52,10 +52,10 @@ class LuxVeritatisPL(CBaseHostClass):
     def listMainMenu(self, cItem):
         printDBG("LuxVeritatisPL.listMainMenu")
         
-        MAIN_CAT_TAB = [{'category':'tv_trwam', 'title': 'TV Trwam', 'url':self.MAIN_URL_T, 'desc':self.MAIN_URL_T, 'icon':self.ICON_URL_T}, 
-                        {'category':'radio', 'title': 'Radio Maryja', 'url':self.MAIN_URL_R, 'desc':self.MAIN_URL_R, 'icon':self.ICON_URL_R}, 
-                        {'category':'search', 'title': _('Search'), 'search_item':True}, 
-                        {'category':'search_history', 'title': _('Search history')},]
+        MAIN_CAT_TAB = [{'category': 'tv_trwam', 'title': 'TV Trwam', 'url': self.MAIN_URL_T, 'desc': self.MAIN_URL_T, 'icon': self.ICON_URL_T}, 
+                        {'category': 'radio', 'title': 'Radio Maryja', 'url': self.MAIN_URL_R, 'desc': self.MAIN_URL_R, 'icon': self.ICON_URL_R}, 
+                        {'category': 'search', 'title': _('Search'), 'search_item': True}, 
+                        {'category': 'search_history', 'title': _('Search history')}, ]
         
         self.listsTab(MAIN_CAT_TAB, cItem)
         
@@ -65,7 +65,7 @@ class LuxVeritatisPL(CBaseHostClass):
         self.MAIN_URL = self.MAIN_URL_R
         
         desc = ''
-        sts, data = self.getPage(self.getFullUrl('/wp-admin/admin-ajax.php'), post_data={'action':'terazNaAntenie'})
+        sts, data = self.getPage(self.getFullUrl('/wp-admin/admin-ajax.php'), post_data={'action': 'terazNaAntenie'})
         if sts:
             try:
                 data = json_loads(data)
@@ -74,7 +74,7 @@ class LuxVeritatisPL(CBaseHostClass):
                 printExc()
         
         params = dict(cItem)
-        params.update({'good_for_fav':True, 'title':'Słuchaj - Radio Maryja', 'desc':desc, 'url':self.getFullUrl('/live/')})
+        params.update({'good_for_fav': True, 'title': 'Słuchaj - Radio Maryja', 'desc': desc, 'url': self.getFullUrl('/live/')})
         self.addAudio(params)
         
         sts, data = self.getPage(cItem['url'])
@@ -97,10 +97,10 @@ class LuxVeritatisPL(CBaseHostClass):
                 title = self.cleanHtmlStr(sectionItem[idx])
                 if idx == 0:
                     title = '--Wszystkie--'
-                tabItems.append({'title':title, 'url':url})
+                tabItems.append({'title': title, 'url': url})
             if len(tabItems):
                 params = dict(cItem)
-                params.update({'good_for_fav':False, 'category':nextCategory, 'title':sTitle, 'items':tabItems})
+                params.update({'good_for_fav': False, 'category': nextCategory, 'title': sTitle, 'items': tabItems})
                 self.addDir(params)
             
     def listRadioCats(self, cItem, nextCategory):
@@ -108,7 +108,7 @@ class LuxVeritatisPL(CBaseHostClass):
         
         cItem = dict(cItem)
         itemsTab = cItem.pop('items', [])
-        cItem.update({'good_for_fav':True, 'category':nextCategory})
+        cItem.update({'good_for_fav': True, 'category': nextCategory})
         self.listsTab(itemsTab, cItem)
             
     def listRadioItems(self, cItem, nextCategory):
@@ -137,12 +137,12 @@ class LuxVeritatisPL(CBaseHostClass):
             icon = self.getFullIconUrl(self.cm.ph.getSearchGroups(item, '''<img[^>]+?src=['"]([^'^"]+?)['"]''')[0])
             
             params = dict(cItem)
-            params.update({'good_for_fav':True, 'category':nextCategory, 'title':title, 'url':url, 'icon':icon, 'desc':'[/br]'.join(desc)})
+            params.update({'good_for_fav': True, 'category': nextCategory, 'title': title, 'url': url, 'icon': icon, 'desc': '[/br]'.join(desc)})
             self.addDir(params)
         
         if nextPage != '':
             params = dict(cItem)
-            params.update({'good_for_fav':False, 'title':_('Next page'), 'url':self.getFullUrl(nextPage)})
+            params.update({'good_for_fav': False, 'title': _('Next page'), 'url': self.getFullUrl(nextPage)})
             self.addDir(params)
             
     def exploreRadioItem(self, cItem):
@@ -160,7 +160,7 @@ class LuxVeritatisPL(CBaseHostClass):
             if 1 != self.up.checkHostSupport(url):
                 continue
             params = dict(cItem)
-            params.update({'good_for_fav':True, 'title':'[%s] %s' % ('wideo', cItem['title']), 'url':url})
+            params.update({'good_for_fav': True, 'title': '[%s] %s' % ('wideo', cItem['title']), 'url': url})
             self.addVideo(params)
         
         addedLinks = []
@@ -170,7 +170,7 @@ class LuxVeritatisPL(CBaseHostClass):
                 continue
             addedLinks.append(url)
             params = dict(cItem)
-            params.update({'good_for_fav':True, 'title':'[%s] %s' % ('audio', cItem['title']), 'url':url})
+            params.update({'good_for_fav': True, 'title': '[%s] %s' % ('audio', cItem['title']), 'url': url})
             self.addAudio(params)
     
     ###########################################################################################
@@ -181,11 +181,11 @@ class LuxVeritatisPL(CBaseHostClass):
         self.MAIN_URL = self.MAIN_URL_T
         
         params = dict(cItem)
-        params.update({'good_for_fav':True, 'title':'Transmisja live - TV Trwam', 'url':self.getFullUrl('/na-zywo')})
+        params.update({'good_for_fav': True, 'title': 'Transmisja live - TV Trwam', 'url': self.getFullUrl('/na-zywo')})
         self.addVideo(params)
         
         params = dict(cItem)
-        params.update({'good_for_fav':False, 'category':nextCategory2, 'title':'Polecane', 'url':self.getFullUrl('/filmy?Filter.Sort=Recommended')})
+        params.update({'good_for_fav': False, 'category': nextCategory2, 'title': 'Polecane', 'url': self.getFullUrl('/filmy?Filter.Sort=Recommended')})
         self.addDir(params)
         
         sts, data = self.getPage(cItem['url'])
@@ -204,10 +204,10 @@ class LuxVeritatisPL(CBaseHostClass):
             title = self.cleanHtmlStr(sectionItem[idx])
             if idx == 0:
                 title = '--Wszystkie--'
-            tabItems.append({'title':title, 'url':url})
+            tabItems.append({'title': title, 'url': url})
         if len(tabItems):
             params = dict(cItem)
-            params.update({'good_for_fav':False, 'category':nextCategory1, 'title':sTitle, 'items':tabItems})
+            params.update({'good_for_fav': False, 'category': nextCategory1, 'title': sTitle, 'items': tabItems})
             self.addDir(params)
             
     def listTVTrwamCats(self, cItem, nextCategory):
@@ -215,7 +215,7 @@ class LuxVeritatisPL(CBaseHostClass):
         
         cItem = dict(cItem)
         itemsTab = cItem.pop('items', [])
-        cItem.update({'good_for_fav':True, 'category':nextCategory})
+        cItem.update({'good_for_fav': True, 'category': nextCategory})
         self.listsTab(itemsTab, cItem)
         
     def listTVTrwamSort(self, cItem, nextCategory):
@@ -233,7 +233,7 @@ class LuxVeritatisPL(CBaseHostClass):
             title = self.cleanHtmlStr(item)
             url = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''\shref=['"]([^'^"]+?)['"]''')[0])
             params = dict(cItem)
-            params.update({'good_for_fav':False, 'category':nextCategory, 'title':title.title(), 'url':url})
+            params.update({'good_for_fav': False, 'category': nextCategory, 'title': title.title(), 'url': url})
             self.addDir(params)
         
     def listTVTrwamItems(self, cItem):
@@ -264,12 +264,12 @@ class LuxVeritatisPL(CBaseHostClass):
             desc.append('%s / %s' % (t1, t2))
             
             params = dict(cItem)
-            params.update({'good_for_fav':True, 'title':title, 'url':url, 'icon':icon, 'desc':'[/br]'.join(desc)})
+            params.update({'good_for_fav': True, 'title': title, 'url': url, 'icon': icon, 'desc': '[/br]'.join(desc)})
             self.addVideo(params)
         
         if nextPage != '':
             params = dict(cItem)
-            params.update({'good_for_fav':False, 'title':_('Next page'), 'url':self.getFullUrl(nextPage)})
+            params.update({'good_for_fav': False, 'title': _('Next page'), 'url': self.getFullUrl(nextPage)})
             self.addDir(params)
         
     def listSearchResult(self, cItem, searchPattern, searchType):
@@ -302,7 +302,7 @@ class LuxVeritatisPL(CBaseHostClass):
                 if sts:
                     tmp = re.compile('''(File[0-9]+?)=(https?://.+)''').findall(tmp)
                     for item in tmp:
-                        linksTab.append({'name':item[0], 'url':item[1], 'need_resolve':0})
+                        linksTab.append({'name': item[0], 'url': item[1], 'need_resolve': 0})
             url = ph.find(data, ('<a', '>', '/live2'))[1]
             url = self.getFullUrl(ph.getattr(url, 'href'))
             if url:
@@ -329,7 +329,7 @@ class LuxVeritatisPL(CBaseHostClass):
                     elif 'x-mpegurl' in type:
                         hlsTab.extend(getDirectM3U8Playlist(vidUrl, checkExt=False, checkContent=True, cookieParams=self.defaultParams, sortWithMaxBitrate=999999999))
                     elif 'mp4' in type:
-                        mp4Tab.append({'name':'[mp4] %s' % vidUrl.split('/')[-1].split('_', 1)[-1].split('.', 1)[0], 'url':vidUrl})
+                        mp4Tab.append({'name': '[mp4] %s' % vidUrl.split('/')[-1].split('_', 1)[-1].split('.', 1)[0], 'url': vidUrl})
                 linksTab.extend(hlsTab)
                 linksTab.extend(dashTab)
                 linksTab.extend(mp4Tab)
@@ -338,7 +338,7 @@ class LuxVeritatisPL(CBaseHostClass):
         elif 1 == self.up.checkHostSupport(url):
             return self.up.getVideoLinkExt(url)
         elif url.split('?', 1)[0].endswith('.mp3'):
-            return [{'name':'MP3', 'url':url}]
+            return [{'name': 'MP3', 'url': url}]
         
         return linksTab
     
@@ -357,7 +357,7 @@ class LuxVeritatisPL(CBaseHostClass):
         
     #MAIN MENU
         if name == None:
-            self.listMainMenu({'name':'category'})
+            self.listMainMenu({'name': 'category'})
     # RADIO MARYJA
         elif category == 'radio':
             self.listRadio(self.currItem, 'list_radio_cats')
@@ -379,11 +379,11 @@ class LuxVeritatisPL(CBaseHostClass):
     #SEARCH
         elif category in ["search", "search_next_page"]:
             cItem = dict(self.currItem)
-            cItem.update({'search_item':False, 'name':'category'}) 
+            cItem.update({'search_item': False, 'name': 'category'}) 
             self.listSearchResult(cItem, searchPattern, searchType)
     #HISTORIA SEARCH
         elif category == "search_history":
-            self.listsHistory({'name':'history', 'category': 'search'}, 'desc', _("Type: "))
+            self.listsHistory({'name': 'history', 'category': 'search'}, 'desc', _("Type: "))
         else:
             printExc()
         

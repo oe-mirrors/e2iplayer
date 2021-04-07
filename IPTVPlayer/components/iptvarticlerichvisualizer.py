@@ -87,7 +87,7 @@ class IPTVArticleRichVisualizer(Screen):
         #############################################
         # calculate num of rich desc items and pages
         #############################################
-        self.richDesc = {'items_count': 0, 'pages_count': 0, 'page': 0, 'avalable_params':[]}
+        self.richDesc = {'items_count': 0, 'pages_count': 0, 'page': 0, 'avalable_params': []}
         try:
             if 'custom_items_list' in artItem.richDescParams:
                 self.richDesc['custom_items_list'] = artItem.richDescParams['custom_items_list']
@@ -124,7 +124,7 @@ class IPTVArticleRichVisualizer(Screen):
         # COVER 
         #############################################
         self["cover"] = Cover()
-        self.cover = {'src':'', 'downloader':None, 'files_to_remove':[], 'image_path':''}
+        self.cover = {'src': '', 'downloader': None, 'files_to_remove': [], 'image_path': ''}
         try:
             self.cover['image_path'] = os.path.join(addParams['buffering_path'], '.iptv_buffering.jpg')
         except Exception:

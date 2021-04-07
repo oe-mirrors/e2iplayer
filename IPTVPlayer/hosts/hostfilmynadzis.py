@@ -41,15 +41,15 @@ def gettytul():
 class FilmyNaDzis(CBaseHostClass):
     
     def __init__(self):
-        CBaseHostClass.__init__(self, {'history':'filmynadzis.pl', 'cookie':'filmynadzis.pl.cookie'})
+        CBaseHostClass.__init__(self, {'history': 'filmynadzis.pl', 'cookie': 'filmynadzis.pl.cookie'})
         self.filmWebEpgMap = {}
         self.MAIN_URL = 'https://filmynadzis.pl/'
 
         self.DEFAULT_ICON_URL = 'https://filmynadzis.pl/wp-content/uploads/2016/07/logo2.png'
         self.HTTP_HEADER = self.cm.getDefaultHeader('chrome')
         #{'Referer':self.getMainUrl(), 'Origin':self.getMainUrl()})
-        self.AJAX_HEADER = MergeDicts(self.HTTP_HEADER, {'X-Requested-With': ' XMLHttpRequest', 'Accept':'*/*'})
-        self.defaultParams = {'header':self.HTTP_HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
+        self.AJAX_HEADER = MergeDicts(self.HTTP_HEADER, {'X-Requested-With': ' XMLHttpRequest', 'Accept': '*/*'})
+        self.defaultParams = {'header': self.HTTP_HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
 
         self.cacheLinks = {}
 
@@ -59,7 +59,7 @@ class FilmyNaDzis(CBaseHostClass):
 
     def getDefaultParams(self, forAjax=False):
         header = self.AJAX_HEADER if forAjax else self.HTTP_HEADER
-        return MergeDicts(self.defaultParams, {'header':header})
+        return MergeDicts(self.defaultParams, {'header': header})
 
     def getPage(self, baseUrl, params={}, post_data=None):
         if not params: 
@@ -130,10 +130,10 @@ class FilmyNaDzis(CBaseHostClass):
             if 'seriale' in url:
                 continue
 
-            params = {'good_for_fav':True, 'category':'list_items', 'url':url, 'title': title}
+            params = {'good_for_fav': True, 'category': 'list_items', 'url': url, 'title': title}
 
             if '/category/' in url:
-                params.update({'type':'category'})
+                params.update({'type': 'category'})
                 subItems.append(params)
                 printDBG("subItem: %s" % str(params))
 
@@ -142,12 +142,12 @@ class FilmyNaDzis(CBaseHostClass):
                 self.addDir(params)
 
         if subItems:
-            params = {'good_for_fav': False, 'title': _('Categories'), 'type':'category', 'category':'sub_items', 'sub_items': subItems}
+            params = {'good_for_fav': False, 'title': _('Categories'), 'type': 'category', 'category': 'sub_items', 'sub_items': subItems}
             printDBG("Categories: %s" % str(params))
             self.addDir(params)
 
-        tabs = [{'category':'search', 'title': _('Search'), 'search_item':True},
-                {'category': 'search_history', 'title': _('Search history'),}]
+        tabs = [{'category': 'search', 'title': _('Search'), 'search_item': True},
+                {'category': 'search_history', 'title': _('Search history'), }]
         self.listsTab(tabs, cItem)
 
     def listItems(self, cItem):
@@ -189,7 +189,7 @@ class FilmyNaDzis(CBaseHostClass):
             desc = ph.clean_html(ph.find(item, ('<div', '>', 'excerpt'), '</div', flags=0)[1])
 
             params = dict(cItem)
-            params.update({'good_for_fav':True, 'title':title, 'url':url, 'desc':desc, 'icon':icon})
+            params.update({'good_for_fav': True, 'title': title, 'url': url, 'desc': desc, 'icon': icon})
             printDBG(str(params))
             self.addVideo(params)
 
@@ -201,13 +201,13 @@ class FilmyNaDzis(CBaseHostClass):
 
         if nextPage and self.currList:
             params = dict(cItem)
-            params.update({'good_for_fav':False, 'title':_('Next page'), 'url':nextPage, 'page':page + 1})
+            params.update({'good_for_fav': False, 'title': _('Next page'), 'url': nextPage, 'page': page + 1})
             self.addMore(params)
 
     def listSearch(self, cItem, searchPattern, searchType):
         url = self.getFullIconUrl('/?s=' + quote_plus(searchPattern))
         params = cItem
-        params.update({'name':'category', 'type':'category', 'category':'list_items', 'url':url})
+        params.update({'name': 'category', 'type': 'category', 'category': 'list_items', 'url': url})
         self.listItems(params)
 
     def getLinksForVideo(self, cItem):
@@ -248,7 +248,7 @@ class FilmyNaDzis(CBaseHostClass):
         if tmp: 
             if self.cm.getBaseUrl(tmp) != self.cm.getBaseUrl(cUrl):
                 name = self.cm.getBaseUrl(tmp)
-                params = {'name': name, 'url':strwithmeta(tmp, {'Referer': cUrl, 'x-csrf-' + token_name: token_content}), 'need_resolve':1}
+                params = {'name': name, 'url': strwithmeta(tmp, {'Referer': cUrl, 'x-csrf-' + token_name: token_content}), 'need_resolve': 1}
                 printDBG("-------> link: %s" % str(params))
                 urlTab.append(params)
             else:
@@ -257,7 +257,7 @@ class FilmyNaDzis(CBaseHostClass):
         tmp = ph.find(data, ('<a', '>', ph.check(ph.all, ('data-id', ))))[1]
         tmp = re.compile('''data-([^=]+?)="([^"]*?)"''').findall(tmp)
         
-        sts, data = self.getPage(cUrl, urlParams, MergeDicts({'action':'get_video_player'}, dict(tmp)))
+        sts, data = self.getPage(cUrl, urlParams, MergeDicts({'action': 'get_video_player'}, dict(tmp)))
         if not sts: 
             return
 
@@ -268,7 +268,7 @@ class FilmyNaDzis(CBaseHostClass):
                 url = self.cm.ph.getSearchGroups(item, '''src=['"]([^'^"]+?)['"]''')[0]
                 
                 if 'video/mp4' == type: 
-                    urlTab.append({'name':self.up.getHostName(url), 'url':self.getFullUrl(url), 'need_resolve':0})
+                    urlTab.append({'name': self.up.getHostName(url), 'url': self.getFullUrl(url), 'need_resolve': 0})
                 elif 'm3u' in url:
                     urlTab.extend(getDirectM3U8Playlist(url, checkExt=False, checkContent=True, sortWithMaxBitrate=999999999))
 
@@ -294,7 +294,7 @@ class FilmyNaDzis(CBaseHostClass):
 
     #MAIN MENU
         if not category:
-            self.listMain({'name':'category'})
+            self.listMain({'name': 'category'})
         elif category == 'list_items':
             if title == 'PREMIUM':
                 self.tryToLogin()
@@ -314,7 +314,7 @@ class FilmyNaDzis(CBaseHostClass):
     
     #HISTORIA SEARCH
         elif category == "search_history":
-            self.listsHistory({'name':'history', 'category': 'search', 'desc': _("Type: ")})
+            self.listsHistory({'name': 'history', 'category': 'search', 'desc': _("Type: ")})
         else:
             printExc()
         

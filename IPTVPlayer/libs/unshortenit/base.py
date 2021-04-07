@@ -348,7 +348,7 @@ class UnshortenIt(object):
 
     def _unshorten_shst(self, uri):
         try:
-            sts, html = self.cm.getPage(uri, {'header':HTTP_HEADER})
+            sts, html = self.cm.getPage(uri, {'header': HTTP_HEADER})
 
             session_id = re.findall(r'sessionId\:(.*?)\"\,', html)
             if len(session_id) > 0:
@@ -364,7 +364,7 @@ class UnshortenIt(object):
                 GetIPTVSleep().Sleep(5)
 
                 payload = {'adSessionId': session_id, 'callback': 'c'}
-                sts, response = self.cm.getPage('http://sh.st/shortest-url/end-adsession', {'header':http_header}, payload)
+                sts, response = self.cm.getPage('http://sh.st/shortest-url/end-adsession', {'header': http_header}, payload)
 
                 resp_uri = json_loads(response[6:-2])['destinationUrl']
                 if resp_uri is not None:
@@ -380,8 +380,8 @@ class UnshortenIt(object):
         baseUri = strwithmeta(baseUri)
         ref = baseUri.meta.get('Referer', baseUri)
         USER_AGENT = 'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:40.0) Gecko/20100101 Firefox/40.0'
-        HTTP_HEADER = {'User-Agent':USER_AGENT, 'Accept':'*/*', 'Accept-Encoding':'gzip, deflate', 'Referer':ref}
-        HTTP_HEADER_AJAX = {'User-Agent':USER_AGENT, 'Accept':'*/*', 'Accept-Encoding':'gzip, deflate', 'Referer':baseUri, 'Content-Type':'application/x-www-form-urlencoded; charset=UTF-8', 'X-Requested-With':'XMLHttpRequest'}
+        HTTP_HEADER = {'User-Agent': USER_AGENT, 'Accept': '*/*', 'Accept-Encoding': 'gzip, deflate', 'Referer': ref}
+        HTTP_HEADER_AJAX = {'User-Agent': USER_AGENT, 'Accept': '*/*', 'Accept-Encoding': 'gzip, deflate', 'Referer': baseUri, 'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8', 'X-Requested-With': 'XMLHttpRequest'}
         
         COOKIE_FILE = GetCookieDir('iit.pl')
         tries = 0
@@ -390,7 +390,7 @@ class UnshortenIt(object):
             tries += 1
             rm(COOKIE_FILE)
             try:
-                params = {'header':HTTP_HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': COOKIE_FILE}
+                params = {'header': HTTP_HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': COOKIE_FILE}
                 
                 sts, data = self.cm.getPage(baseUri, params)
                 
@@ -417,7 +417,7 @@ class UnshortenIt(object):
                     elif 'PARTIALS' in header:
                         HTTP_HEADER_AJAX[header] = partials
                 
-                post_data = {'salt':salt, 'banner':banner, 'blocker':0}
+                post_data = {'salt': salt, 'banner': banner, 'blocker': 0}
                 params['header'] = HTTP_HEADER_AJAX
                 sts, data = self.cm.getPage(baseUri, params, post_data)
                 data = json_loads(data)
@@ -433,7 +433,7 @@ class UnshortenIt(object):
             
     def _unshorten_viidme(self, uri):
         try:
-            sts, html = self.cm.getPage(uri, {'header':HTTP_HEADER})
+            sts, html = self.cm.getPage(uri, {'header': HTTP_HEADER})
 
             session_id = re.findall(r'sessionId\:(.*?)\"\,', html)
             if len(session_id) > 0:
@@ -449,7 +449,7 @@ class UnshortenIt(object):
                 GetIPTVSleep().Sleep(5)
 
                 payload = {'adSessionId': session_id, 'callback': 'c'}
-                sts, response = self.cm.getPage('http://viid.me/shortest-url/end-adsession', {'header':http_header}, payload)
+                sts, response = self.cm.getPage('http://viid.me/shortest-url/end-adsession', {'header': http_header}, payload)
 
                 resp_uri = json_loads(response[6:-2])['destinationUrl']
                 if resp_uri is not None:
@@ -463,7 +463,7 @@ class UnshortenIt(object):
 
     def _unshorten_short24(self, uri):
         try:
-            sts, data = self.cm.getPage(uri, {'header':HTTP_HEADER})
+            sts, data = self.cm.getPage(uri, {'header': HTTP_HEADER})
             uri = self.cm.getFullUrl(self.cm.ph.getSearchGroups(data, '''window\.location\s*?=\s*?['"]([^'^"]+?)['"]''')[0], self.cm.getBaseUrl(self.cm.meta['url']))
             return uri, 'OK'
         except Exception as e:
@@ -473,8 +473,8 @@ class UnshortenIt(object):
     def _unshorten_rapidcrypt(self, uri):
         try:
             COOKIE_FILE = GetCookieDir('rapidcrypt.net')
-            params = {'header':HTTP_HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': COOKIE_FILE}
-            params['cloudflare_params'] = {'cookie_file':COOKIE_FILE, 'User-Agent':HTTP_HEADER['User-Agent']}
+            params = {'header': HTTP_HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': COOKIE_FILE}
+            params['cloudflare_params'] = {'cookie_file': COOKIE_FILE, 'User-Agent': HTTP_HEADER['User-Agent']}
             sts, data = self.cm.getPageCFProtection(uri, params)
             uri = self.cm.ph.getDataBeetwenNodes(data, ('<a', '>', 'push_button'), ('</a', '>'))[1]
             printDBG(uri)
@@ -493,8 +493,8 @@ class UnshortenIt(object):
     def _unshorten_vcryptnet(self, uri):
         try:
             COOKIE_FILE = GetCookieDir('vcrypt.net')
-            params = {'header':HTTP_HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': COOKIE_FILE}
-            params['cloudflare_params'] = {'cookie_file':COOKIE_FILE, 'User-Agent':HTTP_HEADER['User-Agent']}
+            params = {'header': HTTP_HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': COOKIE_FILE}
+            params['cloudflare_params'] = {'cookie_file': COOKIE_FILE, 'User-Agent': HTTP_HEADER['User-Agent']}
             sts, data = self.cm.getPageCFProtection(uri, params)
             uri = self.cm.ph.getDataBeetwenNodes(data, ('<a', '>', 'push_button'), ('</a', '>'))[1]
             

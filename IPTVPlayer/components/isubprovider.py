@@ -371,7 +371,7 @@ class CBaseSubProviderClass:
             episodeTitle = self.cm.ph.getSearchGroups(item, 'title="([^"]+?)"')[0]
             eimdbid = self.cm.ph.getSearchGroups(item, 'data-const="tt([0-9]+?)"')[0]
             episode = self.cm.ph.getSearchGroups(item, 'content="([0-9]+?)"')[0]
-            params = {"episode_title":episodeTitle, "episode":episode, "eimdbid":eimdbid}
+            params = {"episode_title": episodeTitle, "episode": episode, "eimdbid": eimdbid}
             
             if None != promEpisode and episode == str(promEpisode):
                 promotItem = params
@@ -407,7 +407,7 @@ class CBaseSubProviderClass:
                 year = self.cm.ph.getSearchGroups(item, '\((20[0-9]{2})\)')[0]
             if title.endswith('-'):
                 title = title[:-1].strip()
-            list.append({'title':title, 'base_title':self.cleanHtmlStr(baseTtitle), 'year':year, 'imdbid':imdbid})
+            list.append({'title': title, 'base_title': self.cleanHtmlStr(baseTtitle), 'year': year, 'imdbid': imdbid})
         return True, list
         
     def imdbGetOrginalByTitle(self, imdbid):
@@ -419,7 +419,7 @@ class CBaseSubProviderClass:
         if not sts:
             return False, {}
         title = self.cm.ph.getSearchGroups(data, '''<meta property='og:title' content="([^\(^"]+?)["\(]''')[0].strip()
-        return True, {'title':title}
+        return True, {'title': title}
         
         
     def getTypeFromThemoviedb(self, imdbid, title):
@@ -579,14 +579,14 @@ class CBaseSubProviderClass:
             params = dict(cItem)
             if os_path.isfile(filePath):
                 ext = file.rsplit('.', 1)[-1].lower()
-                params.update({'file_path':filePath, 'title':os_path.splitext(file)[0]})
+                params.update({'file_path': filePath, 'title': os_path.splitext(file)[0]})
                 if ext in subExt:
                     params['ext'] = ext
                     self.addSubtitle(params)
                 elif ext in archExt:
                     self.addDir(params)
             elif dirCategory != None and os_path.isdir(filePath):
-                params.update({'category':dirCategory, 'path':filePath, 'title':file})
+                params.update({'category': dirCategory, 'path': filePath, 'title': file})
                 self.addDir(params)
             if numItems >= maxItems:
                 break

@@ -44,16 +44,16 @@ class OpenSubtitles(CBaseSubProviderClass):
     def __init__(self, params={}):
         self.MAIN_URL = 'https://www.opensubtitles.org/'
         self.USER_AGENT = 'Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/66.0.3359.139 Safari/537.36'
-        self.HTTP_HEADER = {'User-Agent':self.USER_AGENT, 'Referer':self.MAIN_URL, 'Accept':'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8', 'Accept-Encoding':'gzip, deflate'}
+        self.HTTP_HEADER = {'User-Agent': self.USER_AGENT, 'Referer': self.MAIN_URL, 'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8', 'Accept-Encoding': 'gzip, deflate'}
         
         params['cookie'] = 'opensubtitlesorg2.cookie'
         CBaseSubProviderClass.__init__(self, params)
         
-        self.defaultParams = {'header':self.HTTP_HEADER, 'with_metadata':True, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
+        self.defaultParams = {'header': self.HTTP_HEADER, 'with_metadata': True, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
         self.languages = []
         
         self.dInfo = params['discover_info']
-        self.searchTypes = [{'title':_('Search Movies and TV Series')}, {'title':_('Search only in Movies'), 'search_only_movies':'on'}, {'title':_('Search only in TV Series'), 'search_only_tv_series':'on'}]
+        self.searchTypes = [{'title': _('Search Movies and TV Series')}, {'title': _('Search only in Movies'), 'search_only_movies': 'on'}, {'title': _('Search only in TV Series'), 'search_only_tv_series': 'on'}]
         self.episodesCache = {}
         self.logedIn = None
         self.searchURL = ""
@@ -70,7 +70,7 @@ class OpenSubtitles(CBaseSubProviderClass):
             else:
                 return urllib.parse.urljoin(baseUrl, url)
         
-        addParams['cloudflare_params'] = {'domain':self.cm.getBaseUrl(baseUrl, domainOnly=True), 'cookie_file':self.COOKIE_FILE, 'User-Agent':self.USER_AGENT, 'full_url_handle':_getFullUrl}
+        addParams['cloudflare_params'] = {'domain': self.cm.getBaseUrl(baseUrl, domainOnly=True), 'cookie_file': self.COOKIE_FILE, 'User-Agent': self.USER_AGENT, 'full_url_handle': _getFullUrl}
         sts, data = self.cm.getPageCFProtection(baseUrl, addParams, post_data)
         try:
             if not self.wasInformedAboutReCaptcha and self.cm.meta['status_code'] == 429:
@@ -130,7 +130,7 @@ class OpenSubtitles(CBaseSubProviderClass):
         for item in tmp:
             title = self.cleanHtmlStr(item)
             subLanguageID = self.cm.ph.getSearchGroups(item, '''value=['"]([^"^']+?)['"]''')[0]
-            self.languages.append({'title':title, 'sub_language_id':subLanguageID})
+            self.languages.append({'title': title, 'sub_language_id': subLanguageID})
         
         # login user
         if login != '' and passwd != '':
@@ -155,7 +155,7 @@ class OpenSubtitles(CBaseSubProviderClass):
                 post_data = {}
                 for item in data:
                     post_data[item[0]] = item[1]
-                post_data.update({'user':login, 'password':passwd, 'remember':'on'})
+                post_data.update({'user': login, 'password': passwd, 'remember': 'on'})
                 
                 sts, data = self.getPage(loginUrl, post_data=post_data)
                 if not sts:
@@ -190,7 +190,7 @@ class OpenSubtitles(CBaseSubProviderClass):
         printDBG("OpenSubtitles.searchSubtitles")
         url = cItem.get('url', '')
         if url == '':
-            query = {'id':8, 'action':'search', 'SubSumCD':'', 'Genre':'', 'MovieByteSize':'', 'MovieLanguage':'', 'MovieImdbRatingSign':'1', 'MovieImdbRating':'', 'MovieCountry':'', 'MovieYearSign':'1', 'MovieYear':'', 'MovieFPS':'', 'SubFormat':'', 'SubAddDate':'', 'Uploader':'', 'IDUser':'', 'Translator':'', 'IMDBID':'', 'MovieHash':'', 'IDMovie':''}
+            query = {'id': 8, 'action': 'search', 'SubSumCD': '', 'Genre': '', 'MovieByteSize': '', 'MovieLanguage': '', 'MovieImdbRatingSign': '1', 'MovieImdbRating': '', 'MovieCountry': '', 'MovieYearSign': '1', 'MovieYear': '', 'MovieFPS': '', 'SubFormat': '', 'SubAddDate': '', 'Uploader': '', 'IDUser': '', 'Translator': '', 'IMDBID': '', 'MovieHash': '', 'IDMovie': ''}
             keywords = urllib.parse.quote_plus(self.params['confirmed_title'])
             subLanguageID = cItem.get('sub_language_id', '')
             searchOnlyTVSeries = cItem.get('search_only_tv_series', '')
@@ -270,12 +270,12 @@ class OpenSubtitles(CBaseSubProviderClass):
                 if t != '':
                     descTab.append(t)
             params = dict(cItem)
-            params.update({'category':nextCategory, 'title':title, 'imdbid':imdbid, 'url':self.getFullUrl(url), 'desc':' | '.join(descTab)})
+            params.update({'category': nextCategory, 'title': title, 'imdbid': imdbid, 'url': self.getFullUrl(url), 'desc': ' | '.join(descTab)})
             self.addDir(params)
         
         if self.cm.isValidUrl(nextPage):
             params = dict(cItem)
-            params.update({'title':_('Next page'), 'page':page + 1})
+            params.update({'title': _('Next page'), 'page': page + 1})
             self.addDir(params)
         
     def listDownloadItems(self, cItem, nextCategory, data=None):
@@ -312,12 +312,12 @@ class OpenSubtitles(CBaseSubProviderClass):
                 if t != '':
                     descTab.append(t)
             params = dict(cItem)
-            params.update({'category':nextCategory, 'lang':lang, 'fps':fps, 'format':format, 'title':'[%s | %s] %s' % (lang, format, title), 'imdbid':imdbid, 'url':self.getFullUrl(url), 'desc':' | '.join(descTab)})
+            params.update({'category': nextCategory, 'lang': lang, 'fps': fps, 'format': format, 'title': '[%s | %s] %s' % (lang, format, title), 'imdbid': imdbid, 'url': self.getFullUrl(url), 'desc': ' | '.join(descTab)})
             self.addDir(params)
         
         if self.cm.isValidUrl(nextPage):
             params = dict(cItem)
-            params.update({'title':_('Next page'), 'page':page + 1})
+            params.update({'title': _('Next page'), 'page': page + 1})
             self.addDir(params)
         
     def listSeasonsItems(self, cItem, nextCategory, data=None):
@@ -345,7 +345,7 @@ class OpenSubtitles(CBaseSubProviderClass):
                 if url == '':
                     continue
                 imdbid = self.cm.ph.getSearchGroups(item, '''/tt([0-9]+?)[^0-9]''')[0]
-                params = {'title':title, 'imdbid':imdbid, 'url':self.getFullUrl(url), 'desc':desc}
+                params = {'title': title, 'imdbid': imdbid, 'url': self.getFullUrl(url), 'desc': desc}
                 
                 numOfSubs = self.cleanHtmlStr(td[1])
                 if numOfSubs == '1':
@@ -355,7 +355,7 @@ class OpenSubtitles(CBaseSubProviderClass):
             if len(episodesTab):
                 self.episodesCache[seasonTitle] = episodesTab
                 params = dict(cItem)
-                params.update({'category':nextCategory, 'title':seasonTitle, 'season_key':seasonTitle})
+                params.update({'category': nextCategory, 'title': seasonTitle, 'season_key': seasonTitle})
                 self.addDir(params)
             
     def listEpisodesItems(self, cItem, nextCategory):
@@ -420,7 +420,7 @@ class OpenSubtitles(CBaseSubProviderClass):
             return
         
         cItem = dict(cItem)
-        cItem.update({'category':'', 'path':tmpDIR, 'fps':fps, 'imdbid':imdbid, 'sub_id':subId})
+        cItem.update({'category': '', 'path': tmpDIR, 'fps': fps, 'imdbid': imdbid, 'sub_id': subId})
         self.listSupportedFilesFromPath(cItem, self.getSupportedFormats(all=True))
     
     def listSubsInPackedFile(self, cItem, nextCategory):
@@ -432,7 +432,7 @@ class OpenSubtitles(CBaseSubProviderClass):
             return
         
         cItem = dict(cItem)
-        cItem.update({'category':nextCategory, 'path':tmpDIR})
+        cItem.update({'category': nextCategory, 'path': tmpDIR})
         self.listSupportedFilesFromPath(cItem, self.getSupportedFormats(all=True))
             
     def _getFileName(self, title, lang, subId, imdbid, fps, ext):
@@ -467,7 +467,7 @@ class OpenSubtitles(CBaseSubProviderClass):
         printDBG("<<")
         
         if self.converFileToUtf8(inFilePath, outFileName, lang):
-            retData = {'title':title, 'path':outFileName, 'lang':lang, 'imdbid':imdbid, 'sub_id':subId, 'fps':fps}
+            retData = {'title': title, 'path': outFileName, 'lang': lang, 'imdbid': imdbid, 'sub_id': subId, 'fps': fps}
         
         return retData
     

@@ -100,7 +100,7 @@ class MultipartPostHandler(urllib.request.BaseHandler):
 class CParsingHelper:
     @staticmethod
     def listToDir(cList, idx):
-        cTree = {'dat':''}
+        cTree = {'dat': ''}
         deep = 0 
         while (idx + 1) < len(cList):
             if cList[idx].startswith('<ul') or cList[idx].startswith('<li'):
@@ -279,10 +279,10 @@ class common:
         else:
             ua = 'Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/59.0.3071.115 Safari/537.36'
         
-        HTTP_HEADER = {'User-Agent':ua,
-                        'Accept':'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
-                        'Accept-Encoding':'gzip, deflate',
-                        'DNT':1 
+        HTTP_HEADER = {'User-Agent': ua,
+                        'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
+                        'Accept-Encoding': 'gzip, deflate',
+                        'DNT': 1 
                       }
         return dict(HTTP_HEADER)
     
@@ -981,9 +981,9 @@ class common:
             return url
         
         url = baseUrl
-        header = {'Referer':url, 'User-Agent':cfParams.get('User-Agent', ''), 'Accept-Encoding':'text'}
+        header = {'Referer': url, 'User-Agent': cfParams.get('User-Agent', ''), 'Accept-Encoding': 'text'}
         header.update(params.get('header', {}))
-        params.update({'with_metadata':True, 'use_cookie': True, 'save_cookie': True, 'load_cookie': True, 'cookiefile': cfParams.get('cookie_file', ''), 'header':header})
+        params.update({'with_metadata': True, 'use_cookie': True, 'save_cookie': True, 'load_cookie': True, 'cookiefile': cfParams.get('cookie_file', ''), 'header': header})
         sts, data = self.getPage(url, params, post_data)
         
         current = 0
@@ -1070,7 +1070,7 @@ class common:
                             if item[0] and re.search(r'\w+\d', item[0]):
                                 elemsText[item[0]] = item[1]
 
-                        js_params = [{'path':GetJSScriptFile('cf.byte')}]
+                        js_params = [{'path': GetJSScriptFile('cf.byte')}]
                         try:
                             dat = dat.replace(dat[dat.index('var isIE'):dat.index('setTimeout')], '')
                         except Exception:
@@ -1098,7 +1098,7 @@ class common:
                         params2['load_cookie'] = True
                         params2['save_cookie'] = True
                         params2['header'] = dict(params.get('header', {}))
-                        params2['header'].update({'Referer':url, 'User-Agent':cfParams.get('User-Agent', ''), 'Accept-Encoding':'text'})
+                        params2['header'].update({'Referer': url, 'User-Agent': cfParams.get('User-Agent', ''), 'Accept-Encoding': 'text'})
                         params2['raw_post_data'] = True
                         if 'Accept-Encoding' not in params2:
                             params2['Accept-Encoding'] = '*'
@@ -1342,8 +1342,8 @@ class common:
             http_proxy = params['http_proxy']
         if '' != http_proxy:
             printDBG('getURLRequestData USE PROXY')
-            customOpeners.append(urllib.request.ProxyHandler({"http":http_proxy}))
-            customOpeners.append(urllib.request.ProxyHandler({"https":http_proxy}))
+            customOpeners.append(urllib.request.ProxyHandler({"http": http_proxy}))
+            customOpeners.append(urllib.request.ProxyHandler({"https": http_proxy}))
         
         pageUrl = params['url']
         proxy_gateway = params.get('proxy_gateway', '')

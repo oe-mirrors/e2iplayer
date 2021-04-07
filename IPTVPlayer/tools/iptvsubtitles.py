@@ -93,7 +93,7 @@ class IPTVSubtitlesHandler:
                     if len(st) < (i + 2):
                         continue
                     split = st[i].split(' --> ')
-                    subAtoms.append({'start':self._srtTc2ms(split[0].strip()), 'end':self._srtTc2ms(split[1].strip()), 'text':self._srtClearText('\n'.join(j for j in st[i + 1:len(st)]))})
+                    subAtoms.append({'start': self._srtTc2ms(split[0].strip()), 'end': self._srtTc2ms(split[1].strip()), 'text': self._srtClearText('\n'.join(j for j in st[i + 1:len(st)]))})
                 except Exception:
                     printExc("Line number [%d]" % line)
         return subAtoms
@@ -118,7 +118,7 @@ class IPTVSubtitlesHandler:
         for s in mplData:
             tmp = reObj.search(s)
             if None != tmp:
-                subAtoms.append({'start':self._mplTc2ms(tmp.group(1)), 'end':self._mplTc2ms(tmp.group(2)), 'text':self._mplClearText(tmp.group(3))})
+                subAtoms.append({'start': self._mplTc2ms(tmp.group(1)), 'end': self._mplTc2ms(tmp.group(2)), 'text': self._mplClearText(tmp.group(3))})
         return subAtoms
     
     #def _preparPails(self, scope):
@@ -327,7 +327,7 @@ class IPTVEmbeddedSubtitlesHandler:
                 text = self._srtClearText(text).strip()
                 if text != '':
                     idx = len(self.subAtoms)
-                    self.subAtoms.append({'start':inAtom['start'], 'end':inAtom['end'], 'text':text})
+                    self.subAtoms.append({'start': inAtom['start'], 'end': inAtom['end'], 'text': text})
                     
                     tmp = self.subAtoms[idx]['start'] / self.CAPACITY
                     if tmp not in self.pailsOfAtoms:

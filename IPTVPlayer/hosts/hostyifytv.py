@@ -47,14 +47,14 @@ def gettytul():
 
 class YifyTV(CBaseHostClass):
     def __init__(self):
-        CBaseHostClass.__init__(self, {'history':'YifyTV', 'cookie':'yifybz.cookie'})
+        CBaseHostClass.__init__(self, {'history': 'YifyTV', 'cookie': 'yifybz.cookie'})
         self.filterCache = {}
         self.cacheLinks = {}
-        self.VIDEO_HOSTINGS_MAP = {"rpd":"https://www.rapidvideo.com/embed/{0}", "vza":"https://vidoza.net/embed-{0}.html", "akv":"https://akvideo.stream/embed-{0}.html", "rpt":"https://www.raptu.com/e/{0}", "lox":"https://vidlox.tv/embed-{0}.html", "vsh":"http://vshare.eu/embed-{0}.html"}
+        self.VIDEO_HOSTINGS_MAP = {"rpd": "https://www.rapidvideo.com/embed/{0}", "vza": "https://vidoza.net/embed-{0}.html", "akv": "https://akvideo.stream/embed-{0}.html", "rpt": "https://www.raptu.com/e/{0}", "lox": "https://vidlox.tv/embed-{0}.html", "vsh": "http://vshare.eu/embed-{0}.html"}
         
         self.DEFAULT_ICON_URL = 'https://superrepo.org/static/images/icons/original/xplugin.video.yifymovies.hd.png.pagespeed.ic.ZC96NZE8Y2.jpg'
         self.USER_AGENT = 'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:40.0) Gecko/20100101 Firefox/40.0'
-        self.HEADER = {'User-Agent': self.USER_AGENT, 'DNT':'1', 'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8', 'Accept-Language':'pl,en-US;q=0.7,en;q=0.3', 'Accept-Encoding':'gzip, deflate'}
+        self.HEADER = {'User-Agent': self.USER_AGENT, 'DNT': '1', 'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8', 'Accept-Language': 'pl,en-US;q=0.7,en;q=0.3', 'Accept-Encoding': 'gzip, deflate'}
         
         self.AJAX_HEADER = dict(self.HEADER)
         self.AJAX_HEADER.update({'X-Requested-With': 'XMLHttpRequest'})
@@ -63,21 +63,21 @@ class YifyTV(CBaseHostClass):
         self.MAIN_URL = 'https://ymovies.tv/'
         self.SRCH_URL = self.getFullUrl('?s=')
         
-        self.MAIN_CAT_TAB = [{'category':'list_items', 'title': _('Releases'), 'url':self.getFullUrl('files/releases/')},
-                             {'category':'list_popular', 'title': _('Popular'), 'url':self.getFullUrl('wp-admin/admin-ajax.php?action=noprivate_movies_loop&asec=get_pop&needcap=1')},
-                             {'category':'list_items', 'title': _('Top +250'), 'url':self.getFullUrl('files/movies/?meta_key=imdbRating&orderby=meta_value&order=desc')},
-                             {'category':'list_genres_filter', 'title': _('Genres'), 'url':self.getFullUrl('files/movies/')},
-                             {'category':'list_languages_filter', 'title': _('Languages'), 'url':self.getFullUrl('languages/')},
-                             {'category':'list_countries_filter', 'title': _('Countries'), 'url':self.getFullUrl('countries/')},
+        self.MAIN_CAT_TAB = [{'category': 'list_items', 'title': _('Releases'), 'url': self.getFullUrl('files/releases/')},
+                             {'category': 'list_popular', 'title': _('Popular'), 'url': self.getFullUrl('wp-admin/admin-ajax.php?action=noprivate_movies_loop&asec=get_pop&needcap=1')},
+                             {'category': 'list_items', 'title': _('Top +250'), 'url': self.getFullUrl('files/movies/?meta_key=imdbRating&orderby=meta_value&order=desc')},
+                             {'category': 'list_genres_filter', 'title': _('Genres'), 'url': self.getFullUrl('files/movies/')},
+                             {'category': 'list_languages_filter', 'title': _('Languages'), 'url': self.getFullUrl('languages/')},
+                             {'category': 'list_countries_filter', 'title': _('Countries'), 'url': self.getFullUrl('countries/')},
                              {'category': 'search', 'title': _('Search'), 'search_item': True, },
-                             {'category': 'search_history', 'title': _('Search history'),}]
+                             {'category': 'search_history', 'title': _('Search history'), }]
                         
-        self.POPULAR_TAB = [{'category':'list_items2', 'title': _('All'), 'url':self.getFullUrl('wp-admin/admin-ajax.php?action=noprivate_movies_loop&asec=get_pop&needcap=1')},
-                            {'category':'list_items2', 'title': _('Comedies'), 'url':self.getFullUrl('wp-admin/admin-ajax.php?action=noprivate_movies_loop&asec=get_pop&genre=comedy')},
-                            {'category':'list_items2', 'title': _('Animations'), 'url':self.getFullUrl('wp-admin/admin-ajax.php?action=noprivate_movies_loop&asec=get_pop&genre=animation')},
-                            {'category':'list_items2', 'title': _('Dramas'), 'url':self.getFullUrl('wp-admin/admin-ajax.php?action=noprivate_movies_loop&asec=get_pop&genre=drama')}]
+        self.POPULAR_TAB = [{'category': 'list_items2', 'title': _('All'), 'url': self.getFullUrl('wp-admin/admin-ajax.php?action=noprivate_movies_loop&asec=get_pop&needcap=1')},
+                            {'category': 'list_items2', 'title': _('Comedies'), 'url': self.getFullUrl('wp-admin/admin-ajax.php?action=noprivate_movies_loop&asec=get_pop&genre=comedy')},
+                            {'category': 'list_items2', 'title': _('Animations'), 'url': self.getFullUrl('wp-admin/admin-ajax.php?action=noprivate_movies_loop&asec=get_pop&genre=animation')},
+                            {'category': 'list_items2', 'title': _('Dramas'), 'url': self.getFullUrl('wp-admin/admin-ajax.php?action=noprivate_movies_loop&asec=get_pop&genre=drama')}]
         
-        self.defaultParams = {'header':self.HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
+        self.defaultParams = {'header': self.HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
         
     def getPage(self, baseUrl, addParams={}, post_data=None):
         if addParams == {}:
@@ -90,7 +90,7 @@ class YifyTV(CBaseHostClass):
             else:
                 proxy = config.plugins.iptvplayer.alternative_proxy2.value
             addParams = dict(addParams)
-            addParams.update({'http_proxy':proxy})
+            addParams.update({'http_proxy': proxy})
             
         def _getFullUrl(url):
             if url == '':
@@ -101,7 +101,7 @@ class YifyTV(CBaseHostClass):
             else:
                 return urlparse.urljoin(baseUrl, url)
             
-        addParams['cloudflare_params'] = {'domain':self.up.getDomain(baseUrl), 'cookie_file':self.COOKIE_FILE, 'User-Agent':self.USER_AGENT, 'full_url_handle':_getFullUrl}
+        addParams['cloudflare_params'] = {'domain': self.up.getDomain(baseUrl), 'cookie_file': self.COOKIE_FILE, 'User-Agent': self.USER_AGENT, 'full_url_handle': _getFullUrl}
         
         url = baseUrl
         urlParams = deepcopy(addParams)
@@ -160,7 +160,7 @@ class YifyTV(CBaseHostClass):
                     value = self.cm.ph.getSearchGroups(item[0], '''genre=([^'^"^\?^&]+?)$''')[0]
                     if value == '':
                         continue
-                    self.filterCache['genres'].append({'title': self.cleanHtmlStr(item[1]), 'genre':value})
+                    self.filterCache['genres'].append({'title': self.cleanHtmlStr(item[1]), 'genre': value})
                 
                 # orderby
                 orderby = self.cm.ph.getDataBeetwenNodes(data, ('<div', '</div>', '"orderby"'), ('</div', '>'), False)[1]
@@ -168,7 +168,7 @@ class YifyTV(CBaseHostClass):
                 self.filterCache['orderby'] = []
                 for item in orderby:
                     value = item[0].split('?', 1)[-1].replace('&#038;', '&')
-                    self.filterCache['orderby'].append({'title': self.cleanHtmlStr(item[1]), 'orderby':value})
+                    self.filterCache['orderby'].append({'title': self.cleanHtmlStr(item[1]), 'orderby': value})
                 
                 # years
                 years = self.cm.ph.getDataBeetwenNodes(data, ('<select', '>', 'years_min'), ('</select', '>'), False)[1]
@@ -178,7 +178,7 @@ class YifyTV(CBaseHostClass):
                     value = self.cm.ph.getSearchGroups(item[0], '''years=([0-9]{4})''')[0]
                     if value == '':
                         continue
-                    self.filterCache['years'].append({'title': self.cleanHtmlStr(item[1]), 'year':value})
+                    self.filterCache['years'].append({'title': self.cleanHtmlStr(item[1]), 'year': value})
                 
         if 0 == len(self.filterCache.get('languages', [])):
             sts, data = self.getPage(self.MAIN_URL + 'languages/')
@@ -188,7 +188,7 @@ class YifyTV(CBaseHostClass):
                 languages = re.compile('<a[^>]+?href="([^"]+?)"[^>]*?>([^<]+?)</a>').findall(languages)
                 self.filterCache['languages'] = []
                 for item in languages:
-                    self.filterCache['languages'].append({'title': self.cleanHtmlStr(item[1]), 'url':self.getFullUrl(item[0])})
+                    self.filterCache['languages'].append({'title': self.cleanHtmlStr(item[1]), 'url': self.getFullUrl(item[0])})
                     
         if 0 == len(self.filterCache.get('countries', [])):
             sts, data = self.getPage(self.MAIN_URL + 'countries/')
@@ -198,7 +198,7 @@ class YifyTV(CBaseHostClass):
                 countries = re.compile('<a[^>]+?href="([^"]+?)"[^>]*?>([^<]+?)</a>').findall(countries)
                 self.filterCache['countries'] = []
                 for item in countries:
-                    self.filterCache['countries'].append({'title': self.cleanHtmlStr(item[1]), 'url':self.getFullUrl(item[0])})
+                    self.filterCache['countries'].append({'title': self.cleanHtmlStr(item[1]), 'url': self.getFullUrl(item[0])})
                     
     def listFilters(self, cItem, filter, category):
         printDBG("YifyTV.listFilters")
@@ -281,7 +281,7 @@ class YifyTV(CBaseHostClass):
         if nextPage:
             page = cItem.get('page', 1)
             params = dict(cItem)
-            params.update({'title':_('Next page'), 'page':page + 1})
+            params.update({'title': _('Next page'), 'page': page + 1})
             self.addDir(params)
         
     def listSearchResult(self, cItem, searchPattern, searchType):
@@ -347,7 +347,7 @@ class YifyTV(CBaseHostClass):
             subLangs = subLangs.split(',')
             for lang in subLangs:
                 if subID != '':
-                    sub_tracks.append({'title':lang, 'url':'https://ymovies.tv/player/bajarsub.php?%s_%s' % (subID, lang), 'lang':lang, 'format':'srt'})
+                    sub_tracks.append({'title': lang, 'url': 'https://ymovies.tv/player/bajarsub.php?%s_%s' % (subID, lang), 'lang': lang, 'format': 'srt'})
         
         data = data.split('&')
         idx = 1
@@ -356,19 +356,19 @@ class YifyTV(CBaseHostClass):
             if len(tmp) != 2:
                 continue
             if tmp[1].endswith('enc'):
-                url = strwithmeta(tmp[1], {'Referer': cItem['url'], 'sou':tmp[0], 'imdbid':imdbid, 'external_sub_tracks':sub_tracks})
-                urlTab.append({'name':_('Mirror') + ' %s' % idx, 'url':url, 'need_resolve':1})
+                url = strwithmeta(tmp[1], {'Referer': cItem['url'], 'sou': tmp[0], 'imdbid': imdbid, 'external_sub_tracks': sub_tracks})
+                urlTab.append({'name': _('Mirror') + ' %s' % idx, 'url': url, 'need_resolve': 1})
             elif '' != self.VIDEO_HOSTINGS_MAP.get(tmp[0], ''):
                 url = self.VIDEO_HOSTINGS_MAP[tmp[0]].format(tmp[1])
-                url = strwithmeta(url, {'Referer': cItem['url'], 'imdbid':imdbid, 'external_sub_tracks':sub_tracks})
-                urlTab.append({'name':_('Mirror') + ' %s [%s]' % (idx, self.up.getHostName(url)), 'url':url, 'need_resolve':1})
+                url = strwithmeta(url, {'Referer': cItem['url'], 'imdbid': imdbid, 'external_sub_tracks': sub_tracks})
+                urlTab.append({'name': _('Mirror') + ' %s [%s]' % (idx, self.up.getHostName(url)), 'url': url, 'need_resolve': 1})
             idx += 1
         
         if len(urlTab):
             self.cacheLinks[cItem['url']] = urlTab
         
         if self.cm.isValidUrl(trailerUrl) and 1 == self.up.checkHostSupport(trailerUrl):
-            urlTab.insert(0, {'name':self.cleanHtmlStr(trailer), 'url':trailerUrl, 'need_resolve':1})
+            urlTab.insert(0, {'name': self.cleanHtmlStr(trailer), 'url': trailerUrl, 'need_resolve': 1})
         
         return urlTab
         
@@ -401,9 +401,9 @@ class YifyTV(CBaseHostClass):
                 souTab.append('pic')
             
             for sou in souTab:
-                post_data = {'fv':'27', 'url':baseUrl, 'sou':sou}
+                post_data = {'fv': '27', 'url': baseUrl, 'sou': sou}
                 url = 'https://ymovies.tv/playerlite/pk/pk/plugins/player_p2.php'
-                sts, data = self.getPage(url, {'header':header}, post_data)
+                sts, data = self.getPage(url, {'header': header}, post_data)
                 if not sts:
                     return []
                 
@@ -449,12 +449,12 @@ class YifyTV(CBaseHostClass):
                                 data = self.cm.ph.getDataBeetwenMarkers(data, 'IPTV_POST_START', 'IPTV_POST_END', 0)[1]
                                 try:
                                     tmp = byteify(json.loads(data.strip()))
-                                    sts, data = self.getPage(tmp['url'], {'header':header, 'raw_post_data':True}, tmp['params'])
+                                    sts, data = self.getPage(tmp['url'], {'header': header, 'raw_post_data': True}, tmp['params'])
                                     if not sts:
                                         return []
                                     tmp = byteify(json.loads(data))
                                     for hostDomain in tmp['hosts']:
-                                        urlTab.append({'name':hostDomain, 'url':'http://%s%s' % (hostDomain, tmp['path'])})
+                                        urlTab.append({'name': hostDomain, 'url': 'http://%s%s' % (hostDomain, tmp['path'])})
                                     if len(urlTab):
                                         break
                                 except Exception:
@@ -465,9 +465,9 @@ class YifyTV(CBaseHostClass):
                             if emb != '':
                                 data = urllib.parse.unquote(emb)
                             if g3 != '':
-                                post_data = {'fv':'0', 'g3':urllib.parse.unquote(g3)}
+                                post_data = {'fv': '0', 'g3': urllib.parse.unquote(g3)}
                                 url = 'https://ymovies.tv/playerlite/pk/pk/plugins/player_g3.php'
-                                sts, data = self.getPage(url, {'header':header}, post_data)
+                                sts, data = self.getPage(url, {'header': header}, post_data)
                                 if not sts:
                                     return []
                                 printDBG(data)
@@ -488,7 +488,7 @@ class YifyTV(CBaseHostClass):
                                     if self.cm.isValidUrl(subTrack):
                                         format = subTrack[-3:]
                                         for idx in range(len(tmpUrlTab)):
-                                            tmpUrlTab[idx]['url'] = strwithmeta(tmpUrlTab[idx]['url'], {'external_sub_tracks':[{'title':'', 'url':subTrack, 'lang':'en', 'format':format}]})
+                                            tmpUrlTab[idx]['url'] = strwithmeta(tmpUrlTab[idx]['url'], {'external_sub_tracks': [{'title': '', 'url': subTrack, 'lang': 'en', 'format': format}]})
                                     urlTab.extend(tmpUrlTab)
                                     printDBG(urlTab)
                                     break
@@ -521,7 +521,7 @@ class YifyTV(CBaseHostClass):
                         for item in data:
                             #printDBG('++++++++++++++++++++++\n%s\n++++++++++++++++++++++' % item)
                             if (item.get('type', '').startswith('video/') or item.get('type', '').startswith('application/x-shockwave-flash')) and self.cm.isValidUrl(item.get('url', '')):
-                                urlTab.append({'name':'{0}x{1}'.format(item.get('height', ''), item.get('width', '')), 'url':item['url'], 'need_resolve':0})
+                                urlTab.append({'name': '{0}x{1}'.format(item.get('height', ''), item.get('width', '')), 'url': item['url'], 'need_resolve': 0})
                     break
                 except Exception:
                     SetIPTVPlayerLastHostError('The Mirror is broken.\nIf available you can choose other source.')
@@ -540,7 +540,7 @@ class YifyTV(CBaseHostClass):
         for idx in range(len(urlTab)):
             subs = list(strwithmeta(urlTab[idx]['url']).meta.get('external_sub_tracks', []))
             subs.extend(sub_tracks)
-            urlTab[idx]['url'] = strwithmeta(urlTab[idx]['url'], {'external_sub_tracks':subs})
+            urlTab[idx]['url'] = strwithmeta(urlTab[idx]['url'], {'external_sub_tracks': subs})
         
         printDBG(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>")
         printDBG(urlTab)
@@ -550,7 +550,7 @@ class YifyTV(CBaseHostClass):
         return cItem['url']
         
     def getLinksForFavourite(self, fav_data):
-        return self.getLinksForVideo({'url':fav_data})
+        return self.getLinksForVideo({'url': fav_data})
         
     def getArticleContent(self, cItem):
         printDBG("MoviesHDCO.getArticleContent [%s]" % cItem)
@@ -564,7 +564,7 @@ class YifyTV(CBaseHostClass):
         otherInfo['genre'] = cItem['genre']
         otherInfo['director'] = cItem['director']
         otherInfo['actors'] = cItem['actors']
-        return [{'title':self.cleanHtmlStr(title), 'text': self.cleanHtmlStr(desc), 'images':[{'title':'', 'url':self.getFullUrl(icon)}], 'other_info':otherInfo}]
+        return [{'title': self.cleanHtmlStr(title), 'text': self.cleanHtmlStr(desc), 'images': [{'title': '', 'url': self.getFullUrl(icon)}], 'other_info': otherInfo}]
 
     def handleService(self, index, refresh=0, searchPattern='', searchType=''):
         printDBG('handleService start')
@@ -580,7 +580,7 @@ class YifyTV(CBaseHostClass):
         
     #MAIN MENU
         if name == None:
-            self.listsTab(self.MAIN_CAT_TAB, {'name':'category'})
+            self.listsTab(self.MAIN_CAT_TAB, {'name': 'category'})
         elif category == 'list_popular':
             self.listsTab(self.POPULAR_TAB, self.currItem)
     #MOVIES
@@ -601,11 +601,11 @@ class YifyTV(CBaseHostClass):
     #SEARCH
         elif category in ["search", "search_next_page"]:
             cItem = dict(self.currItem)
-            cItem.update({'search_item':False, 'name':'category'}) 
+            cItem.update({'search_item': False, 'name': 'category'}) 
             self.listSearchResult(cItem, searchPattern, searchType)
     #HISTORIA SEARCH
         elif category == "search_history":
-            self.listsHistory({'name':'history', 'category': 'search'}, 'desc', _("Type: "))
+            self.listsHistory({'name': 'history', 'category': 'search'}, 'desc', _("Type: "))
         else:
             printExc()
         

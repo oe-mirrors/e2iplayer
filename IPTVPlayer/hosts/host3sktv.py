@@ -25,17 +25,17 @@ def gettytul():
 class C3skTv(CBaseHostClass):
  
     def __init__(self):
-        CBaseHostClass.__init__(self, {'history':'3sk.tv', 'cookie':'3sk.tv.cookie'})
+        CBaseHostClass.__init__(self, {'history': '3sk.tv', 'cookie': '3sk.tv.cookie'})
         self.defaultParams = {'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
         
         self.DEFAULT_ICON_URL = 'http://33sk.tv/images/logo-footer.png'
-        self.HEADER = {'User-Agent': 'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:40.0) Gecko/20100101 Firefox/40.0', 'DNT':'1', 'Accept':'text/html', 'Accept-Encoding':'gzip, deflate'}
+        self.HEADER = {'User-Agent': 'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:40.0) Gecko/20100101 Firefox/40.0', 'DNT': '1', 'Accept': 'text/html', 'Accept-Encoding': 'gzip, deflate'}
         self.AJAX_HEADER = dict(self.HEADER)
-        self.AJAX_HEADER.update({'X-Requested-With': 'XMLHttpRequest', 'Content-Type':'application/x-www-form-urlencoded; charset=UTF-8', 'Accept':'*/*'})
+        self.AJAX_HEADER.update({'X-Requested-With': 'XMLHttpRequest', 'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8', 'Accept': '*/*'})
         self.MAIN_URL = None
         self.cacheLinks = {}
         self.seasonsCache = {}
-        self.defaultParams = {'header':self.HEADER, 'with_metadata':True, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
+        self.defaultParams = {'header': self.HEADER, 'with_metadata': True, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
         
     def getPage(self, url, addParams={}, post_data=None):
         if addParams == {}:
@@ -78,10 +78,10 @@ class C3skTv(CBaseHostClass):
                 title = self.cleanHtmlStr(item)
                 printDBG(">>>>>>>>>>>>>>>>> title[%s] url[%s] path[%s] query[%s]" % (title, url, parsedUri.path, parsedUri.query))
                 params = dict(cItem)
-                params.update({'good_for_fav':False, 'category':nextCategory, 'title':title, 'url':url})
+                params.update({'good_for_fav': False, 'category': nextCategory, 'title': title, 'url': url})
                 self.addDir(params)
-        MAIN_CAT_TAB = [{'category':'search', 'title': _('Search'), 'search_item':True},
-                        {'category': 'search_history', 'title': _('Search history'),}]
+        MAIN_CAT_TAB = [{'category': 'search', 'title': _('Search'), 'search_item': True},
+                        {'category': 'search_history', 'title': _('Search history'), }]
         self.listsTab(MAIN_CAT_TAB, cItem)
 
         
@@ -116,12 +116,12 @@ class C3skTv(CBaseHostClass):
             desc = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(item, '<p', '</p>')[1])
             
             params = dict(cItem)
-            params.update({'good_for_fav':True, 'category':nextCategory, 'title':title, 'url':url, 'icon':icon, 'desc':desc})
+            params.update({'good_for_fav': True, 'category': nextCategory, 'title': title, 'url': url, 'icon': icon, 'desc': desc})
             self.addDir(params)
             
         if nextPage != '':
             params = dict(cItem)
-            params.update({'good_for_fav':False, 'title':_('Next page'), 'url':nextPage, 'page':page + 1})
+            params.update({'good_for_fav': False, 'title': _('Next page'), 'url': nextPage, 'page': page + 1})
             self.addDir(params)
             
     def listThreads(self, cItem, nextCategory):
@@ -150,7 +150,7 @@ class C3skTv(CBaseHostClass):
             icon = self.getFullIconUrl(self.cm.ph.getSearchGroups(item, '''\ssrc=['"]([^'^"]+?)['"]''')[0], currentUrl)
             
             params = dict(cItem)
-            params.update({'good_for_fav':True, 'category':nextCategory, 'title':title, 'url':url, 'icon':icon})
+            params.update({'good_for_fav': True, 'category': nextCategory, 'title': title, 'url': url, 'icon': icon})
             self.addDir(params)
             
     def listThread(self, cItem):
@@ -175,7 +175,7 @@ class C3skTv(CBaseHostClass):
                     continue
                 title = self.cleanHtmlStr(item)
                 params = dict(cItem)
-                params.update({'good_for_fav':False, 'title':'%s - %s' % (cItem['title'], title), 'url':url})
+                params.update({'good_for_fav': False, 'title': '%s - %s' % (cItem['title'], title), 'url': url})
                 self.addVideo(params)
     
     def getLinksForVideo(self, cItem):
@@ -196,7 +196,7 @@ class C3skTv(CBaseHostClass):
         currentUrl = data.meta['url']
             
         if '/vid/' in currentUrl:
-            nameMap = {'1':"الاول", '2':"الثانى", '3':"الثالث", '4':"الرابع", '5':"الخامس", '6':"السادس", '7':"السابع", '8':"الثامن"}
+            nameMap = {'1': "الاول", '2': "الثانى", '3': "الثالث", '4': "الرابع", '5': "الخامس", '6': "السادس", '7': "السابع", '8': "الثامن"}
             data = self.cm.ph.getAllItemsBeetwenMarkers(data, '<iframe', '</iframe>', caseSensitive=False)
             for idx in range(len(data)):
                 url = self.getFullUrl(self.cm.ph.getSearchGroups(data[idx], '''\ssrc=['"]([^"^']+?)['"]''', 1, True)[0], currentUrl)
@@ -204,7 +204,7 @@ class C3skTv(CBaseHostClass):
                     continue
                 name = str(idx + 1)
                 name = 'الجزء ' + nameMap.get(name, name)
-                urlTab.append({'url':url, 'name':name, 'need_resolve':1})
+                urlTab.append({'url': url, 'name': name, 'need_resolve': 1})
         
         if len(urlTab):
             self.cacheLinks[videoUrl] = urlTab
@@ -281,10 +281,10 @@ class C3skTv(CBaseHostClass):
                 title = item['titleNoFormatting']
                 desc = item['contentNoFormatting']
 
-                self.addDir(MergeDicts(cItem, {'good_for_fav':True, 'category':nextCategory, 'title':title, 'url':url, 'desc':desc}))
+                self.addDir(MergeDicts(cItem, {'good_for_fav': True, 'category': nextCategory, 'title': title, 'url': url, 'desc': desc}))
             page += 1
             if page * 10 < int(data['cursor']['resultCount']):
-                self.addDir(MergeDicts(cItem, {'good_for_fav':False, 'title':_('Next page'), 'url':baseUrl, 'page':page}))
+                self.addDir(MergeDicts(cItem, {'good_for_fav': False, 'title': _('Next page'), 'url': baseUrl, 'page': page}))
         except Exception:
             printExc()
 
@@ -305,7 +305,7 @@ class C3skTv(CBaseHostClass):
         
     #MAIN MENU
         if name == None:
-            self.listMainMenu({'name':'category'})
+            self.listMainMenu({'name': 'category'})
         elif category == 'list_threads':
             self.listThreads(self.currItem, 'list_thread')
         elif category == 'list_thread':
@@ -315,11 +315,11 @@ class C3skTv(CBaseHostClass):
     #SEARCH
         elif category in ["search"]:
             cItem = dict(self.currItem)
-            cItem.update({'search_item':False, 'name':'category'}) 
+            cItem.update({'search_item': False, 'name': 'category'}) 
             self.listSearchResult(cItem, searchPattern, searchType)
     #HISTORIA SEARCH
         elif category == "search_history":
-            self.listsHistory({'name':'history', 'category': 'search'}, 'desc', _("Type: "))
+            self.listsHistory({'name': 'history', 'category': 'search'}, 'desc', _("Type: "))
         else:
             printExc()
         

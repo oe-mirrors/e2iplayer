@@ -54,13 +54,13 @@ class OpenSubtitlesRest(CBaseSubProviderClass):
         self.USER_AGENT = 'IPTVPlayer v1'
         #self.USER_AGENT    = 'Subliminal v0.3'
         self.MAIN_URL = 'https://rest.opensubtitles.org/'
-        self.HTTP_HEADER = {'User-Agent':self.USER_AGENT, 'Referer':self.MAIN_URL, 'Accept':'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8', 'Accept-Encoding':'gzip, deflate'}
+        self.HTTP_HEADER = {'User-Agent': self.USER_AGENT, 'Referer': self.MAIN_URL, 'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8', 'Accept-Encoding': 'gzip, deflate'}
         
         params['cookie'] = 'opensubtitlesorg3.cookie'
         CBaseSubProviderClass.__init__(self, params)
         
-        self.defaultParams = {'header':self.HTTP_HEADER, 'ignore_http_code_ranges':[], 'use_cookie': False, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
-        self.languages = [{"iso":"af","id":"afr","name":"Afrikaans"}, {"iso":"sq","id":"alb","name":"Albanian"}, {"iso":"ar","id":"ara","name":"Arabic"}, {"iso":"an","id":"arg","name":"Aragonese"}, {"iso":"hy","id":"arm","name":"Armenian"}, {"iso":"at","id":"ast","name":"Asturian"}, {"iso":"az","id":"aze","name":"Azerbaijani"}, {"iso":"eu","id":"baq","name":"Basque"}, {"iso":"be","id":"bel","name":"Belarusian"}, {"iso":"bn","id":"ben","name":"Bengali"}, {"iso":"bs","id":"bos","name":"Bosnian"}, {"iso":"br","id":"bre","name":"Breton"}, {"iso":"bg","id":"bul","name":"Bulgarian"}, {"iso":"my","id":"bur","name":"Burmese"}, {"iso":"ca","id":"cat","name":"Catalan"}, {"iso":"zh","id":"chi","name":"Chinese (simplified)"}, {"iso":"zt","id":"zht","name":"Chinese (traditional)"}, {"iso":"ze","id":"zhe","name":"Chinese bilingual"}, {"iso":"hr","id":"hrv","name":"Croatian"}, {"iso":"cs","id":"cze","name":"Czech"}, {"iso":"da","id":"dan","name":"Danish"}, {"iso":"nl","id":"dut","name":"Dutch"}, {"iso":"en","id":"eng","name":"English"}, {"iso":"eo","id":"epo","name":"Esperanto"}, {"iso":"et","id":"est","name":"Estonian"}, {"iso":"ex","id":"ext","name":"Extremaduran"}, {"iso":"fi","id":"fin","name":"Finnish"}, {"iso":"fr","id":"fre","name":"French"}, {"iso":"gl","id":"glg","name":"Galician"}, {"iso":"ka","id":"geo","name":"Georgian"}, {"iso":"de","id":"ger","name":"German"}, {"iso":"el","id":"ell","name":"Greek"}, {"iso":"he","id":"heb","name":"Hebrew"}, {"iso":"hi","id":"hin","name":"Hindi"}, {"iso":"hu","id":"hun","name":"Hungarian"}, {"iso":"is","id":"ice","name":"Icelandic"}, {"iso":"id","id":"ind","name":"Indonesian"}, {"iso":"it","id":"ita","name":"Italian"}, {"iso":"ja","id":"jpn","name":"Japanese"}, {"iso":"kn","id":"kan","name":"Kannada"}, {"iso":"kk","id":"kaz","name":"Kazakh"}, {"iso":"km","id":"khm","name":"Khmer"}, {"iso":"ko","id":"kor","name":"Korean"}, {"iso":"ku","id":"kur","name":"Kurdish"}, {"iso":"lv","id":"lav","name":"Latvian"}, {"iso":"lt","id":"lit","name":"Lithuanian"}, {"iso":"lb","id":"ltz","name":"Luxembourgish"}, {"iso":"mk","id":"mac","name":"Macedonian"}, {"iso":"ms","id":"may","name":"Malay"}, {"iso":"ml","id":"mal","name":"Malayalam"}, {"iso":"ma","id":"mni","name":"Manipuri"}, {"iso":"mn","id":"mon","name":"Mongolian"}, {"iso":"me","id":"mne","name":"Montenegrin"}, {"iso":"no","id":"nor","name":"Norwegian"}, {"iso":"oc","id":"oci","name":"Occitan"}, {"iso":"fa","id":"per","name":"Persian"}, {"iso":"pl","id":"pol","name":"Polish"}, {"iso":"pt","id":"por","name":"Portuguese"}, {"iso":"pb","id":"pob","name":"Portuguese (BR)"}, {"iso":"pm","id":"pom","name":"Portuguese (MZ)"}, {"iso":"ro","id":"rum","name":"Romanian"}, {"iso":"ru","id":"rus","name":"Russian"}, {"iso":"sr","id":"scc","name":"Serbian"}, {"iso":"si","id":"sin","name":"Sinhalese"}, {"iso":"sk","id":"slo","name":"Slovak"}, {"iso":"sl","id":"slv","name":"Slovenian"}, {"iso":"es","id":"spa","name":"Spanish"}, {"iso":"sw","id":"swa","name":"Swahili"}, {"iso":"sv","id":"swe","name":"Swedish"}, {"iso":"sy","id":"syr","name":"Syriac"}, {"iso":"tl","id":"tgl","name":"Tagalog"}, {"iso":"ta","id":"tam","name":"Tamil"}, {"iso":"te","id":"tel","name":"Telugu"}, {"iso":"th","id":"tha","name":"Thai"}, {"iso":"tr","id":"tur","name":"Turkish"}, {"iso":"uk","id":"ukr","name":"Ukrainian"}, {"iso":"ur","id":"urd","name":"Urdu"}, {"iso":"vi","id":"vie","name":"Vietnamese"}]
+        self.defaultParams = {'header': self.HTTP_HEADER, 'ignore_http_code_ranges': [], 'use_cookie': False, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
+        self.languages = [{"iso": "af", "id": "afr", "name": "Afrikaans"}, {"iso": "sq", "id": "alb", "name": "Albanian"}, {"iso": "ar", "id": "ara", "name": "Arabic"}, {"iso": "an", "id": "arg", "name": "Aragonese"}, {"iso": "hy", "id": "arm", "name": "Armenian"}, {"iso": "at", "id": "ast", "name": "Asturian"}, {"iso": "az", "id": "aze", "name": "Azerbaijani"}, {"iso": "eu", "id": "baq", "name": "Basque"}, {"iso": "be", "id": "bel", "name": "Belarusian"}, {"iso": "bn", "id": "ben", "name": "Bengali"}, {"iso": "bs", "id": "bos", "name": "Bosnian"}, {"iso": "br", "id": "bre", "name": "Breton"}, {"iso": "bg", "id": "bul", "name": "Bulgarian"}, {"iso": "my", "id": "bur", "name": "Burmese"}, {"iso": "ca", "id": "cat", "name": "Catalan"}, {"iso": "zh", "id": "chi", "name": "Chinese (simplified)"}, {"iso": "zt", "id": "zht", "name": "Chinese (traditional)"}, {"iso": "ze", "id": "zhe", "name": "Chinese bilingual"}, {"iso": "hr", "id": "hrv", "name": "Croatian"}, {"iso": "cs", "id": "cze", "name": "Czech"}, {"iso": "da", "id": "dan", "name": "Danish"}, {"iso": "nl", "id": "dut", "name": "Dutch"}, {"iso": "en", "id": "eng", "name": "English"}, {"iso": "eo", "id": "epo", "name": "Esperanto"}, {"iso": "et", "id": "est", "name": "Estonian"}, {"iso": "ex", "id": "ext", "name": "Extremaduran"}, {"iso": "fi", "id": "fin", "name": "Finnish"}, {"iso": "fr", "id": "fre", "name": "French"}, {"iso": "gl", "id": "glg", "name": "Galician"}, {"iso": "ka", "id": "geo", "name": "Georgian"}, {"iso": "de", "id": "ger", "name": "German"}, {"iso": "el", "id": "ell", "name": "Greek"}, {"iso": "he", "id": "heb", "name": "Hebrew"}, {"iso": "hi", "id": "hin", "name": "Hindi"}, {"iso": "hu", "id": "hun", "name": "Hungarian"}, {"iso": "is", "id": "ice", "name": "Icelandic"}, {"iso": "id", "id": "ind", "name": "Indonesian"}, {"iso": "it", "id": "ita", "name": "Italian"}, {"iso": "ja", "id": "jpn", "name": "Japanese"}, {"iso": "kn", "id": "kan", "name": "Kannada"}, {"iso": "kk", "id": "kaz", "name": "Kazakh"}, {"iso": "km", "id": "khm", "name": "Khmer"}, {"iso": "ko", "id": "kor", "name": "Korean"}, {"iso": "ku", "id": "kur", "name": "Kurdish"}, {"iso": "lv", "id": "lav", "name": "Latvian"}, {"iso": "lt", "id": "lit", "name": "Lithuanian"}, {"iso": "lb", "id": "ltz", "name": "Luxembourgish"}, {"iso": "mk", "id": "mac", "name": "Macedonian"}, {"iso": "ms", "id": "may", "name": "Malay"}, {"iso": "ml", "id": "mal", "name": "Malayalam"}, {"iso": "ma", "id": "mni", "name": "Manipuri"}, {"iso": "mn", "id": "mon", "name": "Mongolian"}, {"iso": "me", "id": "mne", "name": "Montenegrin"}, {"iso": "no", "id": "nor", "name": "Norwegian"}, {"iso": "oc", "id": "oci", "name": "Occitan"}, {"iso": "fa", "id": "per", "name": "Persian"}, {"iso": "pl", "id": "pol", "name": "Polish"}, {"iso": "pt", "id": "por", "name": "Portuguese"}, {"iso": "pb", "id": "pob", "name": "Portuguese (BR)"}, {"iso": "pm", "id": "pom", "name": "Portuguese (MZ)"}, {"iso": "ro", "id": "rum", "name": "Romanian"}, {"iso": "ru", "id": "rus", "name": "Russian"}, {"iso": "sr", "id": "scc", "name": "Serbian"}, {"iso": "si", "id": "sin", "name": "Sinhalese"}, {"iso": "sk", "id": "slo", "name": "Slovak"}, {"iso": "sl", "id": "slv", "name": "Slovenian"}, {"iso": "es", "id": "spa", "name": "Spanish"}, {"iso": "sw", "id": "swa", "name": "Swahili"}, {"iso": "sv", "id": "swe", "name": "Swedish"}, {"iso": "sy", "id": "syr", "name": "Syriac"}, {"iso": "tl", "id": "tgl", "name": "Tagalog"}, {"iso": "ta", "id": "tam", "name": "Tamil"}, {"iso": "te", "id": "tel", "name": "Telugu"}, {"iso": "th", "id": "tha", "name": "Thai"}, {"iso": "tr", "id": "tur", "name": "Turkish"}, {"iso": "uk", "id": "ukr", "name": "Ukrainian"}, {"iso": "ur", "id": "urd", "name": "Urdu"}, {"iso": "vi", "id": "vie", "name": "Vietnamese"}]
         
         self.dInfo = params['discover_info']
         
@@ -73,7 +73,7 @@ class OpenSubtitlesRest(CBaseSubProviderClass):
         for item in tab:
             params = dict(cItem)
             params.update(item) # item = {'title', 'imdbid'}
-            params.update({'category':nextCategory})
+            params.update({'category': nextCategory})
             self.addDir(params)
         
         if 0 == len(self.currList):
@@ -91,7 +91,7 @@ class OpenSubtitlesRest(CBaseSubProviderClass):
                 return
             for item in tab:
                 params = dict(cItem)
-                params.update({'category':'get_episodes', 'item_title':cItem['title'], 'season':item, 'title':_('Season %s') % item})
+                params.update({'category': 'get_episodes', 'item_title': cItem['title'], 'season': item, 'title': _('Season %s') % item})
                 self.addDir(params)
         elif type == 'movie':
             self.getLanguages(cItem, 'get_search')
@@ -110,7 +110,7 @@ class OpenSubtitlesRest(CBaseSubProviderClass):
             params = dict(cItem)
             params.update(item) # item = "episode_title", "episode", "eimdbid"
             title = 's{0}e{1} {2}'.format(str(season).zfill(2), str(item['episode']).zfill(2), item['episode_title'])
-            params.update({'category':nextCategory, 'title':title})
+            params.update({'category': nextCategory, 'title': title})
             self.addDir(params)
         
     def getLanguages(self, cItem, nextCategory):
@@ -121,7 +121,7 @@ class OpenSubtitlesRest(CBaseSubProviderClass):
         defaultLanguageItem = None
         engLanguageItem = None
         for item in self.languages:
-            params = {'title':'{0} [{1}]'.format(_(item['name']), item['id']), 'search_lang':item['id']}
+            params = {'title': '{0} [{1}]'.format(_(item['name']), item['id']), 'search_lang': item['id']}
             if lang == item['iso']:
                 defaultLanguageItem = params
             elif 'en' == item['iso']:
@@ -140,7 +140,7 @@ class OpenSubtitlesRest(CBaseSubProviderClass):
         for item in tmpList:
             params = dict(cItem)
             params.update(item)
-            params.update({'category':nextCategory})
+            params.update({'category': nextCategory})
             self.addDir(params)
             
     def _getSubtitleTitle(self, item):
@@ -217,7 +217,7 @@ class OpenSubtitlesRest(CBaseSubProviderClass):
                     except Exception:
                         fps = 0
                     params = dict(cItem)
-                    params.update({'title':title, 'file_name':fileName, 'lang':item['ISO639'], 'fps':fps, 'encoding':item.get('SubEncoding', ''), 'imdbid':item['IDMovieImdb'], 'url':link})
+                    params.update({'title': title, 'file_name': fileName, 'lang': item['ISO639'], 'fps': fps, 'encoding': item.get('SubEncoding', ''), 'imdbid': item['IDMovieImdb'], 'url': link})
                     self.addSubtitle(params)
         except Exception:
             printExc()
@@ -304,9 +304,9 @@ class OpenSubtitlesRest(CBaseSubProviderClass):
         filePath = GetSubtitlesDir(fileName)
         if self.writeFile(filePath, data):
             if encoding != '':
-                retData = {'title':title, 'path':filePath, 'lang':lang, 'imdbid':imdbid, 'fps':fps}
+                retData = {'title': title, 'path': filePath, 'lang': lang, 'imdbid': imdbid, 'fps': fps}
             elif self.converFileToUtf8(filePath, filePath, lang):
-                retData = {'title':title, 'path':filePath, 'lang':lang, 'imdbid':imdbid, 'fps':fps}
+                retData = {'title': title, 'path': filePath, 'lang': lang, 'imdbid': imdbid, 'fps': fps}
             
         return retData
     
@@ -323,7 +323,7 @@ class OpenSubtitlesRest(CBaseSubProviderClass):
         
     #MAIN MENU
         if name == None:
-            self.getMoviesTitles({'name':'category'}, 'get_type')
+            self.getMoviesTitles({'name': 'category'}, 'get_type')
         elif category == 'get_type':
             # take actions depending on the type
             self.getType(self.currItem)

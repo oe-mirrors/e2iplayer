@@ -36,7 +36,7 @@ class Tvn24(CBaseHostClass):
     ITEMS_PER_PAGE = '20'
     
     def __init__(self):
-        CBaseHostClass.__init__(self, {'history':'SeansikTV'})
+        CBaseHostClass.__init__(self, {'history': 'SeansikTV'})
 
     def getStr(self, v, default=''):
         if None == v:
@@ -78,7 +78,7 @@ class Tvn24(CBaseHostClass):
             {'name': 'category', 'title': 'Najnowsze', 'category': 'end_cat', 'url': Tvn24.MAIN_URL + '/articles/newest/' + Tvn24.API_KEY + '/20'},
             {'name': 'category', 'title': 'Najważniejsze', 'category': 'end_cat', 'url': Tvn24.MAIN_URL + '/articles/important/' + Tvn24.API_KEY},
             {'name': 'category', 'title': 'Informacje', 'category': 'playlist', 'url': VIDEO_PLAYLIST + '/1'},
-            {'name': 'category', 'title': 'Magazyny', 'category': 'magazines', 'url': Tvn24.MAIN_URL + '/magazines/' + Tvn24.API_KEY + '/', 'page':'1'},
+            {'name': 'category', 'title': 'Magazyny', 'category': 'magazines', 'url': Tvn24.MAIN_URL + '/magazines/' + Tvn24.API_KEY + '/', 'page': '1'},
             {'name': 'category', 'title': 'Kategorie', 'category': 'categories', 'url': Tvn24.MAIN_URL + '/categories/' + Tvn24.API_KEY},
             ]
         for item in MAIN_CATEGORIES:
@@ -98,7 +98,7 @@ class Tvn24(CBaseHostClass):
                 if videosNum > 0:
                     videos = item.get('videos', [])
                     if len(videos) > 0:
-                        params = {'name': 'category', 'title': title, 'plot':plot, 'icon':icon, 'videos':list(videos), 'category': 'end_playlist', 'url': ''}
+                        params = {'name': 'category', 'title': title, 'plot': plot, 'icon': icon, 'videos': list(videos), 'category': 'end_playlist', 'url': ''}
                         self.addDir(params)
         except Exception:
             printExc()
@@ -113,7 +113,7 @@ class Tvn24(CBaseHostClass):
                 url = self.getStr(item.get('url', ''))
 
                 if url != '':
-                    params = {'title': title, 'url':url, 'icon':icon, 'plot':plot, 'tar_id':'', 'id':''}
+                    params = {'title': title, 'url': url, 'icon': icon, 'plot': plot, 'tar_id': '', 'id': ''}
                     self.addVideo(params)
         except Exception:
             printExc()
@@ -126,7 +126,7 @@ class Tvn24(CBaseHostClass):
                 id = int(self.getStr(item.get('id', '-1'), '-1'))
                 if id != -1:
                     url = Tvn24.MAIN_URL + '/categories/articles/' + Tvn24.API_KEY + '/' + str(id)
-                    params = {'name': 'category', 'category': 'end_cat', 'parent_cat': category, 'title': title, 'url':url, 'page':'1'}
+                    params = {'name': 'category', 'category': 'end_cat', 'parent_cat': category, 'title': title, 'url': url, 'page': '1'}
                     self.addDir(params)
         except Exception:
             printExc()
@@ -143,11 +143,11 @@ class Tvn24(CBaseHostClass):
                 pagination = True
         nextPage = None
         if 'magazines' == category and page == '1':
-            STATIC_MAGAZINES = [{'id':'FAKTY', 'name':'Fakty', 'icon':'http://www.tvnfakty.pl/assets/images/newsy_2012/nowaczolowka_big.jpg'},
-                                {'id':'SPORT', 'name':'Sport', 'icon':''},]
+            STATIC_MAGAZINES = [{'id': 'FAKTY', 'name': 'Fakty', 'icon': 'http://www.tvnfakty.pl/assets/images/newsy_2012/nowaczolowka_big.jpg'},
+                                {'id': 'SPORT', 'name': 'Sport', 'icon': ''}, ]
             for item in STATIC_MAGAZINES:
                 sUrl = Tvn24.MAIN_URL + '/magazines/articles/' + Tvn24.API_KEY + '/' + item['id']
-                params = {'name': 'category', 'category': 'end_cat', 'parent_cat': category, 'title': item['name'], 'url':sUrl, 'icon':item['icon'], 'page':'1'}
+                params = {'name': 'category', 'category': 'end_cat', 'parent_cat': category, 'title': item['name'], 'url': sUrl, 'icon': item['icon'], 'page': '1'}
                 self.addDir(params)
         try:
             sts, data = self.cm.getPage(url, {'host': Tvn24.HOST})
@@ -172,10 +172,10 @@ class Tvn24(CBaseHostClass):
                     else:
                         currCat = 'end_cat'
                         subCategiories = []
-                    params = {'name': 'category', 'category': currCat, 'parent_cat': category, 'title': title, 'url':url, 'icon':icon, 'plot':plot, 'page':'1', 'sub_categiories':subCategiories}
+                    params = {'name': 'category', 'category': currCat, 'parent_cat': category, 'title': title, 'url': url, 'icon': icon, 'plot': plot, 'page': '1', 'sub_categiories': subCategiories}
                     self.addDir(params)
             if None != nextPage:
-                params = {'name': 'category', 'title': 'Następna strona', 'category': category, 'url': baseUrl, 'page':nextPage}
+                params = {'name': 'category', 'title': 'Następna strona', 'category': category, 'url': baseUrl, 'page': nextPage}
                 self.addDir(params)
         except Exception:
             printExc()
@@ -226,14 +226,14 @@ class Tvn24(CBaseHostClass):
                         url = self.getStr(videoItem.get('url', ''))
                         
                 if url != '' or tar_id != '' or id != '':
-                    params = {'title': title, 'url':url, 'icon':icon, 'plot':plot, 'tar_id':tar_id, 'id':id}
+                    params = {'title': title, 'url': url, 'icon': icon, 'plot': plot, 'tar_id': tar_id, 'id': id}
                     if '' != url:
                         self.addVideo(params)
                     else:
                         self.addArticle(params)
                     
             if None != nextPage:
-                params = {'name': 'category', 'title': 'Następna strona', 'category': 'end_cat', 'parent_cat':parent_cat, 'url': baseUrl, 'page':nextPage}
+                params = {'name': 'category', 'title': 'Następna strona', 'category': 'end_cat', 'parent_cat': parent_cat, 'url': baseUrl, 'page': nextPage}
                 self.addDir(params)
         except Exception:
             printExc()
@@ -243,7 +243,7 @@ class Tvn24(CBaseHostClass):
         printDBG("getHostingTable idx[%d] = url[%s]" % (idx, url))
             
         if url.startswith('http'):
-            return [{'name':'tvn24', 'url':self.converUrl(url)}]
+            return [{'name': 'tvn24', 'url': self.converUrl(url)}]
         return []
         
     def getArticleContent(self, idx):
@@ -268,7 +268,7 @@ class Tvn24(CBaseHostClass):
                 img_author = self.getStr(data.get('pht_author', ''), '')
                 img_url = self.getStr(data.get('pht_url', ''), '')
                 
-                item['images'] = [{'title':img_title, 'author': img_author, 'url': img_url}]
+                item['images'] = [{'title': img_title, 'author': img_author, 'url': img_url}]
                 retList.append(item)
             except Exception:
                 printExc()

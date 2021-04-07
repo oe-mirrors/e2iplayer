@@ -20,7 +20,7 @@ class Wiziwig1Api(CBaseHostClass):
         self.MAIN_URL = 'http://wiziwig1.eu/'
         self.DEFAULT_ICON_URL = 'http://i.imgur.com/yBX7fZA.jpg'
         self.HTTP_HEADER = {}
-        self.http_params = {'header':self.HTTP_HEADER}
+        self.http_params = {'header': self.HTTP_HEADER}
         self.getLinkJS = ''
         self.timeoffset = datetime.datetime.now() - datetime.datetime.utcnow() + datetime.timedelta(milliseconds=500)
 
@@ -82,7 +82,7 @@ class Wiziwig1Api(CBaseHostClass):
                     else:
                         icon = ''
                         
-                    params = MergeDicts(cItem, {'type':'video', 'title':title, 'url_list': urls, 'icon': icon})
+                    params = MergeDicts(cItem, {'type': 'video', 'title': title, 'url_list': urls, 'icon': icon})
                     printDBG(str(params))
                     channelsTab.append(params)
 

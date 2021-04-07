@@ -21,29 +21,29 @@ def gettytul():
 class WRealu24TV(CBaseHostClass):
     
     def __init__(self):
-        CBaseHostClass.__init__(self, {'history':'wrealu24.tv', 'cookie':'wrealu24.tv.cookie'})
+        CBaseHostClass.__init__(self, {'history': 'wrealu24.tv', 'cookie': 'wrealu24.tv.cookie'})
         self.DEFAULT_ICON_URL = 'https://wrealu24.tv/images/screen_stream2.jpg'
         self.USER_AGENT = 'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:40.0) Gecko/20100101 Firefox/40.0'
         self.MAIN_URL = 'https://wrealu24.tv/'
-        self.HTTP_HEADER = {'User-Agent': self.USER_AGENT, 'DNT':'1', 'Accept': 'text/html', 'Accept-Encoding':'gzip, deflate', 'Referer':self.getMainUrl(), 'Origin':self.getMainUrl()}
+        self.HTTP_HEADER = {'User-Agent': self.USER_AGENT, 'DNT': '1', 'Accept': 'text/html', 'Accept-Encoding': 'gzip, deflate', 'Referer': self.getMainUrl(), 'Origin': self.getMainUrl()}
         self.AJAX_HEADER = dict(self.HTTP_HEADER)
-        self.AJAX_HEADER.update({'X-Requested-With': 'XMLHttpRequest', 'Accept-Encoding':'gzip, deflate', 'Content-Type':'application/x-www-form-urlencoded; charset=UTF-8', 'Accept':'application/json, text/javascript, */*; q=0.01'})
+        self.AJAX_HEADER.update({'X-Requested-With': 'XMLHttpRequest', 'Accept-Encoding': 'gzip, deflate', 'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8', 'Accept': 'application/json, text/javascript, */*; q=0.01'})
         
-        self.defaultParams = {'header':self.HTTP_HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
+        self.defaultParams = {'header': self.HTTP_HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
         
     def getPage(self, baseUrl, addParams={}, post_data=None):
         if addParams == {}:
             addParams = dict(self.defaultParams)
         origBaseUrl = baseUrl
         baseUrl = self.cm.iriToUri(baseUrl)
-        addParams['cloudflare_params'] = {'cookie_file':self.COOKIE_FILE, 'User-Agent':self.USER_AGENT}
+        addParams['cloudflare_params'] = {'cookie_file': self.COOKIE_FILE, 'User-Agent': self.USER_AGENT}
         return self.cm.getPageCFProtection(baseUrl, addParams, post_data)
         
     def listMainMenu(self, cItem):
         printDBG("WRealu24TV.listMainMenu")
         
-        MAIN_CAT_TAB = [{'category':'list_items', 'title': _('Main'), 'url':self.getMainUrl()}, 
-                        {'category':'list_items', 'title': _('Videos'), 'url':self.getFullUrl('/filmy')}, 
+        MAIN_CAT_TAB = [{'category': 'list_items', 'title': _('Main'), 'url': self.getMainUrl()}, 
+                        {'category': 'list_items', 'title': _('Videos'), 'url': self.getFullUrl('/filmy')}, 
                        ]
         
         self.listsTab(MAIN_CAT_TAB, cItem)
@@ -86,13 +86,13 @@ class WRealu24TV(CBaseHostClass):
                 desc.append(t)
             
             params = dict(cItem)
-            params.update({'good_for_fav':True, 'title':title, 'url':url, 'icon':icon, 'desc':' | '.join(desc)})
+            params.update({'good_for_fav': True, 'title': title, 'url': url, 'icon': icon, 'desc': ' | '.join(desc)})
             self.addVideo(params)
         
         if nextPage:
             params = dict(cItem)
             params = dict(cItem)
-            params.update({'good_for_fav':False, 'title':_('Next page'), 'page':page + 1})
+            params.update({'good_for_fav': False, 'title': _('Next page'), 'page': page + 1})
             self.addDir(params)
         
     def getLinksForVideo(self, cItem):
@@ -131,10 +131,10 @@ class WRealu24TV(CBaseHostClass):
                 label = res
             
             if 'mp4' in type:
-                url = self.up.decorateUrl(url, {'Cookie':cookieHeader, 'User-Agent':self.USER_AGENT, 'Referer':cItem['url']})
-                retTab.append({'name':label, 'url':url, 'res':res, 'need_resolve':0})
+                url = self.up.decorateUrl(url, {'Cookie': cookieHeader, 'User-Agent': self.USER_AGENT, 'Referer': cItem['url']})
+                retTab.append({'name': label, 'url': url, 'res': res, 'need_resolve': 0})
             elif 'mpegurl' in type:
-                url = self.up.decorateUrl(url, {'iptv_proto':'m3u8', 'Origin':self.up.getDomain(cItem['url'], False), 'Cookie':cookieHeader, 'User-Agent':self.USER_AGENT, 'Referer':cItem['url']}) 
+                url = self.up.decorateUrl(url, {'iptv_proto': 'm3u8', 'Origin': self.up.getDomain(cItem['url'], False), 'Cookie': cookieHeader, 'User-Agent': self.USER_AGENT, 'Referer': cItem['url']}) 
                 hlsTab.extend(getDirectM3U8Playlist(url, checkContent=True, sortWithMaxBitrate=999999999))
             else:
                 printDBG("Unknown source: [%s]" % item)
@@ -194,7 +194,7 @@ class WRealu24TV(CBaseHostClass):
         if icon == '':
             icon = cItem.get('icon', self.DEFAULT_ICON_URL)
         
-        return [{'title':self.cleanHtmlStr(title), 'text': self.cleanHtmlStr(desc), 'images':[{'title':'', 'url':self.getFullUrl(icon)}], 'other_info':otherInfo}]
+        return [{'title': self.cleanHtmlStr(title), 'text': self.cleanHtmlStr(desc), 'images': [{'title': '', 'url': self.getFullUrl(icon)}], 'other_info': otherInfo}]
     
     def handleService(self, index, refresh=0, searchPattern='', searchType=''):
         printDBG('handleService start')
@@ -210,7 +210,7 @@ class WRealu24TV(CBaseHostClass):
         
     #MAIN MENU
         if name == None:
-            self.listMainMenu({'name':'category'})
+            self.listMainMenu({'name': 'category'})
         elif category == 'list_items':
             self.listItems(self.currItem)
         else:

@@ -64,12 +64,12 @@ class PodnapisiNetProvider(CBaseSubProviderClass):
     def __init__(self, params={}):
         self.MAIN_URL = 'https://www.podnapisi.net/'
         self.USER_AGENT = 'Mozilla/5.0 (X11; Linux i686) AppleWebKit/537.36 (KHTML, like Gecko) Ubuntu Chromium/37.0.2062.120 Chrome/37.0.2062.120 Safari/537.36'
-        self.HTTP_HEADER = {'User-Agent':self.USER_AGENT, 'Referer':self.MAIN_URL, 'Accept':'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8', 'Accept-Encoding':'gzip, deflate'}
+        self.HTTP_HEADER = {'User-Agent': self.USER_AGENT, 'Referer': self.MAIN_URL, 'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8', 'Accept-Encoding': 'gzip, deflate'}
         
         params['cookie'] = 'podnapisinet.cookie'
         CBaseSubProviderClass.__init__(self, params)
         
-        self.defaultParams = {'header':self.HTTP_HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
+        self.defaultParams = {'header': self.HTTP_HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
         self.cacheFilters = {}
         
         self.dInfo = params['discover_info']
@@ -102,22 +102,22 @@ class PodnapisiNetProvider(CBaseSubProviderClass):
             return
         
         data = self.cm.ph.getDataBeetwenNodes(data, ('<div', '>', 'advanced_search_panel'), ('</form', '>'))[1]
-        for filter in [{'key':'movie_type', 'marker':'movie_type'},
-                       {'key':'episode_type', 'marker':'episode_type'},
-                       {'key':'flags', 'marker':'flags'},
-                       {'key':'fps', 'marker':'fps'},
-                       {'key':'language', 'marker':'language'}]:
+        for filter in [{'key': 'movie_type', 'marker': 'movie_type'},
+                       {'key': 'episode_type', 'marker': 'episode_type'},
+                       {'key': 'flags', 'marker': 'flags'},
+                       {'key': 'fps', 'marker': 'fps'},
+                       {'key': 'language', 'marker': 'language'}]:
             self.cacheFilters[filter['key']] = []
             tmp = self.cm.ph.getDataBeetwenMarkers(data, filter['marker'], '</select>', False)[1]
             tmp = self.cm.ph.getAllItemsBeetwenMarkers(tmp, '<option', '</option>', withMarkers=True, caseSensitive=False)
             allItemAdded = False
             for item in tmp:
                 value = self.cm.ph.getSearchGroups(item, '''value=["']?([^"^'^\s^>]+?)[\s"'>]''')[0].strip()
-                self.cacheFilters[filter['key']].append({filter['key']:value, 'title':self.cleanHtmlStr(item)})
+                self.cacheFilters[filter['key']].append({filter['key']: value, 'title': self.cleanHtmlStr(item)})
                 if value == '':
                     allItemAdded = True
             if not allItemAdded:
-                self.cacheFilters[filter['key']].insert(0, {filter['key']:'', 'title':_('Any')})
+                self.cacheFilters[filter['key']].insert(0, {filter['key']: '', 'title': _('Any')})
                 
         # prepare default values for filters
         season = self.dInfo.get('season', None)
@@ -132,7 +132,7 @@ class PodnapisiNetProvider(CBaseSubProviderClass):
         defaultLanguage = GetDefaultLang()
         
         # move default values to the begining of the list
-        for defItem in [{'key':'language', 'val':defaultLanguage}, {'key':'movie_type', 'val':defaultType}]:
+        for defItem in [{'key': 'language', 'val': defaultLanguage}, {'key': 'movie_type', 'val': defaultType}]:
             newList = []
             promotedItem = None
             for item in self.cacheFilters[defItem['key']]:
@@ -195,7 +195,7 @@ class PodnapisiNetProvider(CBaseSubProviderClass):
             key = self.cm.ph.getDataBeetwenMarkers(item, 'sort=', '&', False)[1]
             if name == '':
                 name = key.replace('.', ' ').title()
-            rawDesc.append({'key':key, 'name':name, 'val':''})
+            rawDesc.append({'key': key, 'name': name, 'val': ''})
         del tmp
         
         lang = ''
@@ -226,7 +226,7 @@ class PodnapisiNetProvider(CBaseSubProviderClass):
                         fps = 0
                 
             params = dict(cItem)
-            params.update({'category':nextCategory, 'title':title, 'url':self.getFullUrl(url), 'lang':lang, 'fps':fps, 'desc':', '.join(descTab)})
+            params.update({'category': nextCategory, 'title': title, 'url': self.getFullUrl(url), 'lang': lang, 'fps': fps, 'desc': ', '.join(descTab)})
             self.addDir(params)
         
     def getSubtitlesList(self, cItem, nextCategory):
@@ -242,7 +242,7 @@ class PodnapisiNetProvider(CBaseSubProviderClass):
             return
         
         cItem = dict(cItem)
-        cItem.update({'category':'', 'path':tmpDIR, 'fps':fps, 'imdbid':imdbid, 'sub_id':subId})
+        cItem.update({'category': '', 'path': tmpDIR, 'fps': fps, 'imdbid': imdbid, 'sub_id': subId})
         self.listSupportedFilesFromPath(cItem, self.getSupportedFormats(all=True))
     
     def listSubsInPackedFile(self, cItem, nextCategory):
@@ -254,7 +254,7 @@ class PodnapisiNetProvider(CBaseSubProviderClass):
             return
         
         cItem = dict(cItem)
-        cItem.update({'category':nextCategory, 'path':tmpDIR})
+        cItem.update({'category': nextCategory, 'path': tmpDIR})
         self.listSupportedFilesFromPath(cItem, self.getSupportedFormats(all=True))
             
     def _getFileName(self, title, lang, subId, imdbid, fps, ext):
@@ -289,7 +289,7 @@ class PodnapisiNetProvider(CBaseSubProviderClass):
         printDBG(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>")
         
         if self.converFileToUtf8(inFilePath, outFileName, lang):
-            retData = {'title':title, 'path':outFileName, 'lang':lang, 'imdbid':imdbid, 'sub_id':subId, 'fps':fps}
+            retData = {'title': title, 'path': outFileName, 'lang': lang, 'imdbid': imdbid, 'sub_id': subId, 'fps': fps}
         
         return retData
     

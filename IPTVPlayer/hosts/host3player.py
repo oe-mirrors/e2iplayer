@@ -40,13 +40,13 @@ def gettytul():
 class C3player(CBaseHostClass):
  
     def __init__(self):
-        CBaseHostClass.__init__(self, {'history':'C3player.tv', 'cookie':'rte.ie.cookie'})
+        CBaseHostClass.__init__(self, {'history': 'C3player.tv', 'cookie': 'rte.ie.cookie'})
         self.USER_AGENT = 'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:40.0) Gecko/20100101 Firefox/40.0'
-        self.HEADER = {'User-Agent': self.USER_AGENT, 'DNT':'1', 'Accept': 'text/html'}
+        self.HEADER = {'User-Agent': self.USER_AGENT, 'DNT': '1', 'Accept': 'text/html'}
         self.AJAX_HEADER = dict(self.HEADER)
         self.AJAX_HEADER.update({'X-Requested-With': 'XMLHttpRequest'})
         
-        self.defaultParams = {'header':self.HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
+        self.defaultParams = {'header': self.HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
         
         self.DEFAULT_ICON_URL = 'http://compass.xboxlive.com/assets/58/73/58738a5d-013b-4bf1-ac89-cdb72477dae9.png'
         self.MAIN_URL = 'https://virginmediatelevision.ie/player'
@@ -54,12 +54,12 @@ class C3player(CBaseHostClass):
         
     def listMainMenu(self, cItem):
         printDBG("C3player.listMainMenu")
-        MAIN_CAT_TAB = [{'category':'list_live', 'title': _('LIVE'), 'url':self.getFullUrl('/player/assets/ajax/live_drop_down.php?layout=top_nav')},
-                        {'category':'list_by_day', 'title': _('BY DAY'), 'url':self.getFullUrl('/3player/byday')},
-                        {'category':'list_az', 'title': _('A-Z'), 'url':self.getFullUrl('/3player/a-z')},
+        MAIN_CAT_TAB = [{'category': 'list_live', 'title': _('LIVE'), 'url': self.getFullUrl('/player/assets/ajax/live_drop_down.php?layout=top_nav')},
+                        {'category': 'list_by_day', 'title': _('BY DAY'), 'url': self.getFullUrl('/3player/byday')},
+                        {'category': 'list_az', 'title': _('A-Z'), 'url': self.getFullUrl('/3player/a-z')},
                         
                         {'category': 'search', 'title': _('Search'), 'search_item': True, },
-                        {'category': 'search_history', 'title': _('Search history'),} 
+                        {'category': 'search_history', 'title': _('Search history'), } 
                        ]
         self.listsTab(MAIN_CAT_TAB, cItem)
     
@@ -102,7 +102,7 @@ class C3player(CBaseHostClass):
                 descTab.append(tmp)
             
             params = dict(cItem)
-            params.update({'title':title, 'url':url, 'icon':icon, 'desc':'[/br]'.join(descTab)})
+            params.update({'title': title, 'url': url, 'icon': icon, 'desc': '[/br]'.join(descTab)})
             self.addVideo(params)
             
     def listSubItems(self, cItem):
@@ -140,7 +140,7 @@ class C3player(CBaseHostClass):
                     params['desc'] = ' | '.join(descTab[1:]) + '[/br]' + descTab[0]
                 self.addVideo(params)
             else: 
-                params.update({'name':'category', 'type':'category', 'category':nextCategory, 'desc':'[/br]'.join(descTab)})
+                params.update({'name': 'category', 'type': 'category', 'category': nextCategory, 'desc': '[/br]'.join(descTab)})
                 self.addDir(params)
             
     def exploreShow(self, cItem, nextCategory):
@@ -160,7 +160,7 @@ class C3player(CBaseHostClass):
             title = self.cleanHtmlStr(item)
             url = self.getFullUrl('/player/assets/ajax/filter_tiles.php?showID={0}&videoID=&type={1}'.format(showId, dataType))
             params = dict(cItem)
-            params.update({'good_for_fav':True, 'category':nextCategory, 'title':title.title(), 'f_show_title':cItem['title'], 'url':url, 'f_show_id':showId, 'f_data_type':dataType})
+            params.update({'good_for_fav': True, 'category': nextCategory, 'title': title.title(), 'f_show_title': cItem['title'], 'url': url, 'f_show_id': showId, 'f_data_type': dataType})
             self.addDir(params)
         
         if 0 == len(self.currList):
@@ -169,7 +169,7 @@ class C3player(CBaseHostClass):
             if showId != '':
                 url = self.getFullUrl('/player/assets/ajax/filter_tiles.php?showID={0}&videoID=&type={1}'.format(showId, dataType))
                 cItem = dict(cItem)
-                cItem.update({'good_for_fav':True, 'category':nextCategory, 'title':_('All'), 'f_show_title':cItem['title'], 'url':url, 'f_show_id':showId, 'f_data_type':dataType})
+                cItem.update({'good_for_fav': True, 'category': nextCategory, 'title': _('All'), 'f_show_title': cItem['title'], 'url': url, 'f_show_id': showId, 'f_data_type': dataType})
                 self.listItems(cItem, 'explore_show')
             
     def listItems(self, cItem, nextCategory):
@@ -195,7 +195,7 @@ class C3player(CBaseHostClass):
             if '' not in (showId, offset, id):
                 url = self.getFullUrl('/player/assets/ajax/{0}.php?showID={1}&videoID=&offset={2}&type={3}'.format(id, showId, offset, cItem['f_data_type']))
                 params = dict(cItem)
-                params.update({'good_for_fav':False, 'url':url, 'title':_('Next page'), 'page':page + 1})
+                params.update({'good_for_fav': False, 'url': url, 'title': _('Next page'), 'page': page + 1})
                 self.addDir(params)
                 
     def listByDay(self, cItem, nextCategory1, nextCategory2):
@@ -212,7 +212,7 @@ class C3player(CBaseHostClass):
             if showId == '':
                 continue
             title = showId.upper()
-            filters.append({'title':title, 'f_filter_id':showId})
+            filters.append({'title': title, 'f_filter_id': showId})
             
         data = self.cm.ph.getDataBeetwenNodes(data, ('<ul', '>', 'byday_bxslider'), ('</ul', '>'))[1]
         data = self.cm.ph.getAllItemsBeetwenMarkers(data, '<li', '</li>')
@@ -225,12 +225,12 @@ class C3player(CBaseHostClass):
             for it in filters:
                 url = self.getFullUrl('/player/assets/ajax/ajax_site.php?pageType=byday&showID=%s&videoID=%s' % (it['f_filter_id'], date))
                 params = dict(it)
-                params.update({'good_for_fav':True, 'name':'category', 'type':'category', 'category':nextCategory2, 'url':url})
+                params.update({'good_for_fav': True, 'name': 'category', 'type': 'category', 'category': nextCategory2, 'url': url})
                 subItems.append(params)
             
             if len(subItems):
                 params = dict(cItem)
-                params.update({'good_for_fav':True, 'title':title, 'category':nextCategory1, 'sub_items':subItems})
+                params.update({'good_for_fav': True, 'title': title, 'category': nextCategory1, 'sub_items': subItems})
                 self.addDir(params)
                 
     def listByDayItems(self, cItem, nextCategory):
@@ -275,7 +275,7 @@ class C3player(CBaseHostClass):
                 url += '&showID=%s' % showId
             
             params = dict(cItem)
-            params.update({'good_for_fav':True, 'title':title, 'category':nextCategory, 'url':url})
+            params.update({'good_for_fav': True, 'title': title, 'category': nextCategory, 'url': url})
             self.addDir(params)
             
     def listAZItems(self, cItem, nextCategory):
@@ -297,7 +297,7 @@ class C3player(CBaseHostClass):
                 title = self.cleanHtmlStr(item[0])
                 desc = self.cleanHtmlStr(item[-1])
                 params = dict(cItem)
-                params.update({'good_for_fav':True, 'title':title, 'category':nextCategory, 'url':url, 'desc':desc})
+                params.update({'good_for_fav': True, 'title': title, 'category': nextCategory, 'url': url, 'desc': desc})
                 self.addDir(params)
         except Exception:
             printExc()
@@ -306,7 +306,7 @@ class C3player(CBaseHostClass):
         printDBG("C3player.listSearchResult cItem[%s], searchPattern[%s] searchType[%s]" % (cItem, searchPattern, searchType))
         
         url = self.getFullUrl('/player/assets/ajax/search.php')
-        post_data = {'queryString':searchPattern, 'limit':100}
+        post_data = {'queryString': searchPattern, 'limit': 100}
         
         sts, data = self.cm.getPage(url, post_data=post_data)
         if not sts:
@@ -348,9 +348,9 @@ class C3player(CBaseHostClass):
             if embedToken == '' and config.plugins.iptvplayer.tv3player_use_web_proxy.value:
                 # http://getproxi.es/IE-proxies/
                 proxy = 'http://ruproxy.herokuapp.com/index.php?q={0}&hl=2e1'.format(urllib.parse.quote_plus(cItem['url']))
-                params = {'header':dict(self.HEADER)}
+                params = {'header': dict(self.HEADER)}
                 params['header']['Referer'] = proxy
-                params.update({'cookie_items':{'flags':'2e1'}, 'use_cookie':True})
+                params.update({'cookie_items': {'flags': '2e1'}, 'use_cookie': True})
                 sts, data = self.cm.getPage(proxy, params)
                 if not sts:
                     return []
@@ -390,10 +390,10 @@ class C3player(CBaseHostClass):
                 SetIPTVPlayerLastHostError(_('Link protected with DRM.'))
                 return []
         for idx in range(len(hlsLinksTab)):
-            hlsLinksTab[idx]['url'] = strwithmeta(hlsLinksTab[idx]['url'], {'iptv_proto':'m3u8'})
+            hlsLinksTab[idx]['url'] = strwithmeta(hlsLinksTab[idx]['url'], {'iptv_proto': 'm3u8'})
         
         for idx in range(len(hdsLinksTab)):
-            hdsLinksTab[idx]['url'] = strwithmeta(hdsLinksTab[idx]['url'], {'iptv_proto':'f4m'})
+            hdsLinksTab[idx]['url'] = strwithmeta(hdsLinksTab[idx]['url'], {'iptv_proto': 'f4m'})
         
         linksTab.extend(hlsLinksTab)
         linksTab.extend(hdsLinksTab)
@@ -415,7 +415,7 @@ class C3player(CBaseHostClass):
         
     #MAIN MENU
         if name == None:
-            self.listMainMenu({'name':'category'})
+            self.listMainMenu({'name': 'category'})
         elif category == 'sub_items':
             self.listSubItems(self.currItem)
         elif category == 'list_live':
@@ -435,11 +435,11 @@ class C3player(CBaseHostClass):
     #SEARCH
         elif category in ["search", "search_next_page"]:
             cItem = dict(self.currItem)
-            cItem.update({'search_item':False, 'name':'category'}) 
+            cItem.update({'search_item': False, 'name': 'category'}) 
             self.listSearchResult(cItem, searchPattern, searchType)
     #HISTORIA SEARCH
         elif category == "search_history":
-            self.listsHistory({'name':'history', 'category': 'search'}, 'desc', _("Type: "))
+            self.listsHistory({'name': 'history', 'category': 'search'}, 'desc', _("Type: "))
         else:
             printExc()
         

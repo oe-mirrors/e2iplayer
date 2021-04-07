@@ -75,7 +75,7 @@ class AutocompleteSearch:
     def set(self, txt, locale):
         if self.workThread != None:
             with self.lock:
-                self.requestParams = {'text':str(txt), 'locale':locale}
+                self.requestParams = {'text': str(txt), 'locale': locale}
                 self.requestStamp += 1
                 self.event.set()
                 stamp = int(self.requestStamp)

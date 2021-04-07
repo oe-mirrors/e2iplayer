@@ -15,7 +15,7 @@ import _thread
 DUKTAPE_VER = '226'
 
 def duktape_execute(cmd_params):
-    ret = {'sts':False, 'code':-12, 'data':''}
+    ret = {'sts': False, 'code': -12, 'data': ''}
     noDuk = False
     cmd = GetDukPath()
     if cmd != '':
@@ -38,7 +38,7 @@ def duktape_execute(cmd_params):
     return ret
 
 def js_execute(jscode, params={}):
-    ret = {'sts':False, 'code':-12, 'data':''}
+    ret = {'sts': False, 'code': -12, 'data': ''}
     sts, tmpPath = CreateTmpFile('.iptv_js.js', jscode)
     if sts: 
         ret = duktape_execute('-t %s ' % params.get('timeout_sec', 20) + ' ' + tmpPath)
@@ -56,7 +56,7 @@ def js_execute_ext(items, params={}):
 
     tid = _thread.get_ident()
     uniqueId = 0
-    ret = {'sts':False, 'code':-13, 'data':''}
+    ret = {'sts': False, 'code': -13, 'data': ''}
     try:
         for item in items:
             # we can have source file or source code

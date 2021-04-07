@@ -25,8 +25,8 @@ class BeinmatchApi(CBaseHostClass):
         CBaseHostClass.__init__(self)
         self.MAIN_URL = 'http://www.beinmatch.com/'
         self.DEFAULT_ICON_URL = self.getFullIconUrl('/assets/images/bim/logo.png')
-        self.HTTP_HEADER = MergeDicts(self.cm.getDefaultHeader(browser='chrome'), {'Referer':self.getMainUrl()})
-        self.http_params = {'header':self.HTTP_HEADER}
+        self.HTTP_HEADER = MergeDicts(self.cm.getDefaultHeader(browser='chrome'), {'Referer': self.getMainUrl()})
+        self.http_params = {'header': self.HTTP_HEADER}
         self.getLinkJS = ''
 
     def getPage(self, baseUrl, addParams={}, post_data=None):
@@ -64,7 +64,7 @@ class BeinmatchApi(CBaseHostClass):
             title = ph.clean_html(' vs '.join(ph.findall(item, ('<td', '>', 'tdTeam'), '</td>', flags=0)))
             url = ph.getattr(item, 'onclick')
             desc = ph.clean_html(ph.find(item, ('<td', '>', 'compStl'), '</table>', flags=0)[1])
-            channelsTab.append(MergeDicts(cItem, {'type':'video', 'title':title, 'url':url, 'icon':icon, 'desc':desc}))
+            channelsTab.append(MergeDicts(cItem, {'type': 'video', 'title': title, 'url': url, 'icon': icon, 'desc': desc}))
 
         return channelsTab
 
@@ -88,7 +88,7 @@ class BeinmatchApi(CBaseHostClass):
         printDBG(data)
         url = self.getFullUrl(ph.search(data, '''['"]([^'^"]+?\.m3u8(?:\?[^'^"]*?)?)['"]''')[0], cUrl)
         if url:
-            url = strwithmeta(url, {'Referer':cUrl, 'Origin':self.cm.getBaseUrl(cUrl)[:-1], 'User-Agent':self.HTTP_HEADER['User-Agent']})
+            url = strwithmeta(url, {'Referer': cUrl, 'Origin': self.cm.getBaseUrl(cUrl)[:-1], 'User-Agent': self.HTTP_HEADER['User-Agent']})
             return getDirectM3U8Playlist(url, checkContent=True, sortWithMaxBitrate=999999999)
         data = ph.find(data, ('<div', '>', 'video-container'), '</div>', flags=0)[1]
         url = self.getFullUrl(ph.search(data, ph.IFRAME)[1])

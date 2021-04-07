@@ -75,13 +75,13 @@ class IPTVSetupImpl:
                                           (_('Install into the "%s".') % "IPTVPlayer/bin/uchardet _static_libstdc++", GetBinDir("uchardet", "")),
                                           (_("Do not install (not recommended)"), "")]
         # gstplayer
-        self.gstplayerVersion = {'0.10':20, '1.0':10021}
+        self.gstplayerVersion = {'0.10': 20, '1.0': 10021}
         self.gstplayerpaths = ["/usr/bin/gstplayer", GetBinDir("gstplayer", "")]
         self._gstplayerInstallChoiseList = [(_('Install into the "%s".') % ("/usr/bin/gstplayer (%s)" % _("recommended")), "/usr/bin/gstplayer"),
                                           (_('Install into the "%s".') % "IPTVPlayer/bin/gstplayer", GetBinDir("gstplayer", "")),
                                           (_("Do not install (not recommended)"), "")]
         # exteplayer3
-        self.exteplayer3Version = {'sh4':50, 'mipsel':50, 'armv7':50, 'armv5t':50}
+        self.exteplayer3Version = {'sh4': 50, 'mipsel': 50, 'armv7': 50, 'armv5t': 50}
         self.exteplayer3paths = ["/usr/bin/exteplayer3", GetBinDir("exteplayer3", "")]
         self._exteplayer3InstallChoiseList = [(_('Install into the "%s".') % ("/usr/bin/exteplayer3 (%s)" % _("recommended")), "/usr/bin/exteplayer3"),
                                           (_('Install into the "%s".') % "IPTVPlayer/bin/exteplayer3", GetBinDir("exteplayer3", "")),
@@ -521,7 +521,7 @@ class IPTVSetupImpl:
         
         def _downloadCmdBuilder(binName, platform, openSSLVersion, server, tmpPath):
             old = ''
-            versions = {'sh4':2190, 'mipsel':2200}
+            versions = {'sh4': 2190, 'mipsel': 2200}
             
             if platform in ['sh4', 'mipsel'] and (self.binaryInstalledSuccessfully or self.glibcVersion < versions[platform]):
                 old = '_old'
@@ -577,7 +577,7 @@ class IPTVSetupImpl:
             return sts, retPath
         def _downloadCmdBuilder(binName, platform, openSSLVersion, server, tmpPath):
             old = ''
-            versions = {'sh4':2190, 'mipsel':2200}
+            versions = {'sh4': 2190, 'mipsel': 2200}
             
             if platform in ['sh4', 'mipsel'] and (self.binaryInstalledSuccessfully or self.glibcVersion < versions[platform]):
                 old = '_old'
@@ -871,7 +871,7 @@ class IPTVSetupImpl:
         
         def _downloadCmdBuilder(binName, platform, openSSLVersion, server, tmpPath):
             old = ''
-            versions = {'sh4':2190, 'mipsel':2200}
+            versions = {'sh4': 2190, 'mipsel': 2200}
             
             if platform in ['sh4', 'mipsel'] and (self.binaryInstalledSuccessfully or self.glibcVersion < versions[platform]):
                 old = '_old'
@@ -934,7 +934,7 @@ class IPTVSetupImpl:
         
         def _downloadCmdBuilder(binName, platform, openSSLVersion, server, tmpPath):
             old = ''
-            versions = {'sh4':2190, 'mipsel':2200}
+            versions = {'sh4': 2190, 'mipsel': 2200}
             
             if platform in ['sh4', 'mipsel'] and self.glibcVersion < versions[platform]:
                 old = '_old'
@@ -997,7 +997,7 @@ class IPTVSetupImpl:
         def _downloadCmdBuilder(binName, platform, openSSLVersion, server, tmpPath):
             old = ''
             softfpu = ''
-            versions = {'sh4':2190, 'mipsel':2200}
+            versions = {'sh4': 2190, 'mipsel': 2200}
             
             if platform in ['sh4', 'mipsel'] and (self.binaryInstalledSuccessfully or self.glibcVersion < versions[platform]):
                 old = '_old'

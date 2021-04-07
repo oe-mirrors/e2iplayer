@@ -65,19 +65,19 @@ class DMHelper:
     DOWNLOADER_TYPE = enum(WGET='WGET_DOWNLOADER',
                             F4F='F4F_DOWNLOADER')
                             
-    HEADER_PARAMS = [{'marker':'Host=', 'name':'Host'},
-                     {'marker':'Accept=', 'name':'Accept'},
-                     {'marker':'Cookie=', 'name':'Cookie'},
-                     {'marker':'Referer=', 'name':'Referer'},
-                     {'marker':'User-Agent=', 'name':'User-Agent'},
-                     {'marker':'Range=', 'name':'Range'},
-                     {'marker':'Orgin=', 'name':'Orgin'},
-                     {'marker':'Origin=', 'name':'Origin'},
-                     {'marker':'X-Playback-Session-Id=', 'name':'X-Playback-Session-Id'},
-                     {'marker':'If-Modified-Since=','name':'If-Modified-Since'},
-                     {'marker':'If-None-Match=', 'name':'If-None-Match'},
-                     {'marker':'X-Forwarded-For=', 'name':'X-Forwarded-For'},
-                     {'marker':'Authorization=', 'name':'Authorization'},
+    HEADER_PARAMS = [{'marker': 'Host=', 'name': 'Host'},
+                     {'marker': 'Accept=', 'name': 'Accept'},
+                     {'marker': 'Cookie=', 'name': 'Cookie'},
+                     {'marker': 'Referer=', 'name': 'Referer'},
+                     {'marker': 'User-Agent=', 'name': 'User-Agent'},
+                     {'marker': 'Range=', 'name': 'Range'},
+                     {'marker': 'Orgin=', 'name': 'Orgin'},
+                     {'marker': 'Origin=', 'name': 'Origin'},
+                     {'marker': 'X-Playback-Session-Id=', 'name': 'X-Playback-Session-Id'},
+                     {'marker': 'If-Modified-Since=', 'name': 'If-Modified-Since'},
+                     {'marker': 'If-None-Match=', 'name': 'If-None-Match'},
+                     {'marker': 'X-Forwarded-For=', 'name': 'X-Forwarded-For'},
+                     {'marker': 'Authorization=', 'name': 'Authorization'},
                      ]
                      
     HANDLED_HTTP_HEADER_PARAMS = ['Host', 'Accept', 'Cookie', 'Referer', 'User-Agent', 'Range', 'Orgin', 'Origin', 'X-Playback-Session-Id', 'If-Modified-Since', 'If-None-Match', 'X-Forwarded-For', 'Authorization']

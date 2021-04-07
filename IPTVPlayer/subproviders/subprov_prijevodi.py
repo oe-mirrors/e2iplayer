@@ -38,16 +38,16 @@ class PrijevodiOnline(CBaseSubProviderClass):
     def __init__(self, params={}):
         self.MAIN_URL = 'https://www.prijevodi-online.org/'
         self.USER_AGENT = 'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:39.0) Gecko/20100101 Firefox/39.0'
-        self.HTTP_HEADER = {'User-Agent':self.USER_AGENT, 'Referer':self.MAIN_URL, 'Accept':'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8'}
+        self.HTTP_HEADER = {'User-Agent': self.USER_AGENT, 'Referer': self.MAIN_URL, 'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8'}
         
         params['cookie'] = 'prijevodionlineorg.cookie'
         CBaseSubProviderClass.__init__(self, params)
         
-        self.defaultParams = {'header':self.HTTP_HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
+        self.defaultParams = {'header': self.HTTP_HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
         self.languages = []
         
         self.dInfo = params['discover_info']
-        self.searchTypes = [{'title':_('Series'), 'f_type':'series', 'url':self.getFullUrl('serije')}, {'title':_('Movies'), 'f_type':'movies', 'url':self.getFullUrl('filmovi')}]
+        self.searchTypes = [{'title': _('Series'), 'f_type': 'series', 'url': self.getFullUrl('serije')}, {'title': _('Movies'), 'f_type': 'movies', 'url': self.getFullUrl('filmovi')}]
         self.episodesCache = {}
         self.logedIn = None
         self.searchURL = ""
@@ -86,7 +86,7 @@ class PrijevodiOnline(CBaseSubProviderClass):
             if not self.cm.isValidUrl(url):
                 continue
             params = dict(cItem)
-            params.update({'category':nextCategory, 'title':title, 'url':url})
+            params.update({'category': nextCategory, 'title': title, 'url': url})
             if promItem == None and self.params['confirmed_title'].title().startswith(title.upper()):
                 promItem = params
             else:
@@ -122,7 +122,7 @@ class PrijevodiOnline(CBaseSubProviderClass):
                     descTab.append(t)
             
             params = dict(cItem)
-            params.update({'category':nextCategory, 'title':title, 'url':url, 'desc':' | '.join(descTab)})
+            params.update({'category': nextCategory, 'title': title, 'url': url, 'desc': ' | '.join(descTab)})
             if self.params['confirmed_title'].lower().startswith(title.lower()):
                 promItems.append(params)
             else:
@@ -176,7 +176,7 @@ class PrijevodiOnline(CBaseSubProviderClass):
                     if t != '':
                         descTab.append(t)
             
-                params = {'s_num':sNum, 'e_num':eNum, 'title':title, 'url':url, 'desc':' | '.join(descTab)}
+                params = {'s_num': sNum, 'e_num': eNum, 'title': title, 'url': url, 'desc': ' | '.join(descTab)}
                 if eNum == str(self.dInfo.get('episode')):
                     promEpisodesItems.append(params)
                 else:
@@ -187,7 +187,7 @@ class PrijevodiOnline(CBaseSubProviderClass):
             
             if len(self.episodesCache[sNum]):
                 params = dict(cItem)
-                params.update({'category':nextCategory, 'title':sTitle, 's_num':sNum})
+                params.update({'category': nextCategory, 'title': sTitle, 's_num': sNum})
                 if sNum == str(self.dInfo.get('season')):
                     promSeasonsItems.append(params)
                 else:
@@ -211,7 +211,7 @@ class PrijevodiOnline(CBaseSubProviderClass):
         imdbid = self.episodesCache['imdbid']
         key = self.episodesCache['key']
         
-        sts, data = self.getPage(cItem['url'], post_data={'key':key})
+        sts, data = self.getPage(cItem['url'], post_data={'key': key})
         if not sts:
             return
         
@@ -237,7 +237,7 @@ class PrijevodiOnline(CBaseSubProviderClass):
                 if t != '':
                     descTab.append(t)
             params = dict(cItem)
-            params.update({'category':nextCategory, 'lang':lang, 'fps':fps, 'format':format, 'title':title, 'imdbid':imdbid, 'subid':subId, 'url':url, 'desc':' | '.join(descTab)})
+            params.update({'category': nextCategory, 'lang': lang, 'fps': fps, 'format': format, 'title': title, 'imdbid': imdbid, 'subid': subId, 'url': url, 'desc': ' | '.join(descTab)})
             self.addDir(params)
         
     def listMoviesItems(self, cItem, nextCategory):
@@ -265,7 +265,7 @@ class PrijevodiOnline(CBaseSubProviderClass):
                     continue
                 
                 params = dict(cItem)
-                params.update({'category':nextCategory, 'title':title, 'url':url, 'desc':desc})
+                params.update({'category': nextCategory, 'title': title, 'url': url, 'desc': desc})
                 title = re.sub('\([0-9]{4}\)', '', title).strip()
                 if self.params['confirmed_title'].lower().startswith(title.lower()):
                     promItems.append(params)
@@ -291,7 +291,7 @@ class PrijevodiOnline(CBaseSubProviderClass):
                         descTab.append(t)
                 
                 params = dict(cItem)
-                params.update({'category':nextCategory, 'title':title, 'url':url, 'desc':' | '.join(descTab)})
+                params.update({'category': nextCategory, 'title': title, 'url': url, 'desc': ' | '.join(descTab)})
                 title = re.sub('\([0-9]{4}\)', '', title).strip()
                 if self.params['confirmed_title'].lower().startswith(title.lower()):
                     promItems.append(params)
@@ -324,7 +324,7 @@ class PrijevodiOnline(CBaseSubProviderClass):
             
             desc = self.cleanHtmlStr(item)
             params = dict(cItem)
-            params.update({'category':nextCategory, 'lang':lang, 'fps':fps, 'format':format, 'title':title, 'imdbid':imdbid, 'subid':subId, 'url':url, 'desc':desc})
+            params.update({'category': nextCategory, 'lang': lang, 'fps': fps, 'format': format, 'title': title, 'imdbid': imdbid, 'subid': subId, 'url': url, 'desc': desc})
             self.addDir(params)
         
     def getSubtitlesList(self, cItem, nextCategory):
@@ -341,7 +341,7 @@ class PrijevodiOnline(CBaseSubProviderClass):
             return
         
         cItem = dict(cItem)
-        cItem.update({'category':'', 'path':tmpDIR})
+        cItem.update({'category': '', 'path': tmpDIR})
         self.listSupportedFilesFromPath(cItem, self.getSupportedFormats(all=True))
     
     def listSubsInPackedFile(self, cItem, nextCategory):
@@ -353,7 +353,7 @@ class PrijevodiOnline(CBaseSubProviderClass):
             return
         
         cItem = dict(cItem)
-        cItem.update({'category':nextCategory, 'path':tmpDIR})
+        cItem.update({'category': nextCategory, 'path': tmpDIR})
         self.listSupportedFilesFromPath(cItem, self.getSupportedFormats(all=True))
             
     def _getFileName(self, title, lang, subId, imdbid, fps, ext):
@@ -388,7 +388,7 @@ class PrijevodiOnline(CBaseSubProviderClass):
         printDBG(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>")
         
         if self.converFileToUtf8(inFilePath, outFileName, lang):
-            retData = {'title':title, 'path':outFileName, 'lang':lang, 'imdbid':imdbid, 'sub_id':subId, 'fps':fps}
+            retData = {'title': title, 'path': outFileName, 'lang': lang, 'imdbid': imdbid, 'sub_id': subId, 'fps': fps}
         
         return retData
     

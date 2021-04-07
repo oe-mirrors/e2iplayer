@@ -50,18 +50,18 @@ def gettytul():
 class ogladajto(CBaseHostClass):
     
     def __init__(self):
-        CBaseHostClass.__init__(self, {'history':'ogladaj.to', 'cookie':'ogladaj.to.cookie'})
+        CBaseHostClass.__init__(self, {'history': 'ogladaj.to', 'cookie': 'ogladaj.to.cookie'})
         self.USER_AGENT = 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.61 Safari/537.36'
         self.MAIN_URL = 'https://ogladaj.to/'
         self.DEFAULT_ICON_URL = 'https://www.ogladaj.to/templates/oto/images/logo.png'
-        self.HTTP_HEADER = {'User-Agent': self.USER_AGENT, 'DNT':'1', 'Accept': 'text/html', 'Accept-Encoding':'gzip, deflate', 'Referer':self.getMainUrl(), 'Origin':self.getMainUrl(), 'Upgrade-Insecure-Requests':'1', 'Connection':'keep-alive'}
+        self.HTTP_HEADER = {'User-Agent': self.USER_AGENT, 'DNT': '1', 'Accept': 'text/html', 'Accept-Encoding': 'gzip, deflate', 'Referer': self.getMainUrl(), 'Origin': self.getMainUrl(), 'Upgrade-Insecure-Requests': '1', 'Connection': 'keep-alive'}
         self.AJAX_HEADER = dict(self.HTTP_HEADER)
-        self.AJAX_HEADER.update({'X-Requested-With': 'XMLHttpRequest', 'Accept-Encoding':'gzip, deflate', 'Content-Type':'application/x-www-form-urlencoded; charset=UTF-8', 'Accept':'application/json, text/javascript, */*; q=0.01'})
+        self.AJAX_HEADER.update({'X-Requested-With': 'XMLHttpRequest', 'Accept-Encoding': 'gzip, deflate', 'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8', 'Accept': 'application/json, text/javascript, */*; q=0.01'})
 
-        self.cacheMovieFilters = {'cats':[], 'sort':[], 'years':[], 'az':[]}        
+        self.cacheMovieFilters = {'cats': [], 'sort': [], 'years': [], 'az': []}        
         self.cacheLinks = {}
-        self.defaultParams = {'header':self.HTTP_HEADER, 'with_metadata':True, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
-        self.ajaxParams = {'header':self.AJAX_HEADER, 'with_metadata':True, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
+        self.defaultParams = {'header': self.HTTP_HEADER, 'with_metadata': True, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
+        self.ajaxParams = {'header': self.AJAX_HEADER, 'with_metadata': True, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
 
         self.loggedIn = None
         self.login = ''
@@ -78,7 +78,7 @@ class ogladajto(CBaseHostClass):
                 return url
             else:
                 return urllib.parse.urljoin(baseUrl, url)
-        addParams['cloudflare_params'] = {'domain':self.up.getDomain(baseUrl), 'cookie_file':self.COOKIE_FILE, 'User-Agent':self.USER_AGENT, 'full_url_handle':_getFullUrl}
+        addParams['cloudflare_params'] = {'domain': self.up.getDomain(baseUrl), 'cookie_file': self.COOKIE_FILE, 'User-Agent': self.USER_AGENT, 'full_url_handle': _getFullUrl}
         return self.cm.getPageCFProtection(baseUrl, addParams, post_data)
         
     def setMainUrl(self, url):
@@ -88,20 +88,20 @@ class ogladajto(CBaseHostClass):
     def listMainMenu(self, cItem):
         printDBG("ogladajto.listMainMenu")
 
-        MAIN_CAT_TAB = [{'category':'list_sort', 'title': _('Movies'), 'url':self.getFullUrl('/filmy/')},
-                        {'category':'list_sort', 'title': _('Series'), 'url':self.getFullUrl('/seriale/')},
-                        {'category':'list_sort', 'title': _('Children'), 'url':self.getFullUrl('/gatunek/dla-dzieci/')},
-                        {'category':'list_items', 'title': _('Highlights'), 'url':self.getFullUrl('/polecane/')},
+        MAIN_CAT_TAB = [{'category': 'list_sort', 'title': _('Movies'), 'url': self.getFullUrl('/filmy/')},
+                        {'category': 'list_sort', 'title': _('Series'), 'url': self.getFullUrl('/seriale/')},
+                        {'category': 'list_sort', 'title': _('Children'), 'url': self.getFullUrl('/gatunek/dla-dzieci/')},
+                        {'category': 'list_items', 'title': _('Highlights'), 'url': self.getFullUrl('/polecane/')},
 #                        {'category':'list_years',     'title': _('Movies by year'), 'url':self.MAIN_URL},
-                        {'category':'list_cats', 'title': _('Categories'), 'url':self.MAIN_URL},
+                        {'category': 'list_cats', 'title': _('Categories'), 'url': self.MAIN_URL},
 #                        {'category':'list_az',        'title': _('Alphabetically'), 'url':self.MAIN_URL},
-                        {'category':'search', 'title': _('Search'), 'search_item':True}, 
-                        {'category':'search_history', 'title': _('Search history')},]
+                        {'category': 'search', 'title': _('Search'), 'search_item': True}, 
+                        {'category': 'search_history', 'title': _('Search history')}, ]
         self.listsTab(MAIN_CAT_TAB, cItem)
     
     ###################################################
     def _fillMovieFilters(self, cItem):
-        self.cacheMovieFilters = {'cats':[], 'sort':[], 'years':[], 'az':[]}
+        self.cacheMovieFilters = {'cats': [], 'sort': [], 'years': [], 'az': []}
 
         sts, data = self.getPage(self.getFullUrl(cItem['url']))
         if not sts:
@@ -187,15 +187,15 @@ class ogladajto(CBaseHostClass):
             desc = self.cm.ph.getSearchGroups(item, '''data-tooltip="([^>]+?)"''')[0]
             desc = self.cleanHtmlStr(item) + '[/br]' + desc
             if '/serial/' in url:
-                params = {'good_for_fav':True,'category':'list_seasons', 'url':url, 'title':title, 'desc':desc, 'icon':icon}
+                params = {'good_for_fav': True, 'category': 'list_seasons', 'url': url, 'title': title, 'desc': desc, 'icon': icon}
                 self.addDir(params)
             else:
-                params = {'good_for_fav':True, 'url':url, 'title':title, 'desc':desc, 'icon':icon}
+                params = {'good_for_fav': True, 'url': url, 'title': title, 'desc': desc, 'icon': icon}
                 self.addVideo(params)
             
         if nextPage:
             params = dict(cItem)
-            params.update({'title':_('Next page'), 'url':cUrl, 'page':page + 1})
+            params.update({'title': _('Next page'), 'url': cUrl, 'page': page + 1})
             self.addDir(params)
 
     def listSeriesSeasons(self, cItem, nextCategory):
@@ -219,10 +219,10 @@ class ogladajto(CBaseHostClass):
             for item in sItem:
                 url = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''\shref=['"]([^'^"]+?)['"]''')[0])
                 title = self.cm.ph.getSearchGroups(item, '''\salt=['"]([^'^"]+?)['"]''')[0]
-                tabItems.append({'title':'%s - %s' % (serieTitle, title), 'url':url, 'icon':serieIcon, 'desc':''})
+                tabItems.append({'title': '%s - %s' % (serieTitle, title), 'url': url, 'icon': serieIcon, 'desc': ''})
             if len(tabItems):
                 params = dict(cItem)
-                params.update({'good_for_fav':False, 'category':nextCategory, 'title':sTitle, 'episodes':tabItems, 'icon':serieIcon, 'desc':serieDesc})
+                params.update({'good_for_fav': False, 'category': nextCategory, 'title': sTitle, 'episodes': tabItems, 'icon': serieIcon, 'desc': serieDesc})
                 self.addDir(params)
                 
     def listSeriesEpisodes(self, cItem):
@@ -235,7 +235,7 @@ class ogladajto(CBaseHostClass):
     def listSearchResult(self, cItem, searchPattern, searchType):
         printDBG("ogladajto.listSearchResult cItem[%s], searchPattern[%s] searchType[%s]" % (cItem, searchPattern, searchType))
         url = self.getFullUrl('/wyszukaj/%s/') % urllib.parse.quote_plus(searchPattern)
-        params = {'name':'category', 'category':'list_items', 'good_for_fav':False, 'url':url}
+        params = {'name': 'category', 'category': 'list_items', 'good_for_fav': False, 'url': url}
         self.listItems(params)
         
     def getLinksForVideo(self, cItem):
@@ -257,7 +257,7 @@ class ogladajto(CBaseHostClass):
         tmp = self.cm.ph.getAllItemsBeetwenNodes(data, ('<iframe', '>'), ('</iframe', '>'))
         for item in tmp:
             url = self.cm.ph.getSearchGroups(item, '''src=['"]([^'^"]+?)['"]''')[0]
-            urlTab.append({'name':self.up.getHostName(url), 'url':strwithmeta(url, {'Referer':cItem['url']}), 'need_resolve':1})
+            urlTab.append({'name': self.up.getHostName(url), 'url': strwithmeta(url, {'Referer': cItem['url']}), 'need_resolve': 1})
 
         return urlTab
         
@@ -298,7 +298,7 @@ class ogladajto(CBaseHostClass):
             if not sts:
                 return False
 
-            post_data = {'submit':'', 'ahd_username':self.login, 'ahd_password':self.password}
+            post_data = {'submit': '', 'ahd_username': self.login, 'ahd_password': self.password}
             data = self.cm.ph.getDataBeetwenNodes(data, ('<form', '>', 'zaloguj'), ('</form', '>'))[1]
             url = self.cm.ph.getSearchGroups(data, '''action=['"]([^'^"]+?)['"]''')[0]
             inputData = self.cm.ph.getAllItemsBeetwenMarkers(data, '<input type="hidden"', '>')
@@ -343,7 +343,7 @@ class ogladajto(CBaseHostClass):
     #MAIN MENU
         if name == None and category == '':
             rm(self.COOKIE_FILE)
-            self.listMainMenu({'name':'category'})
+            self.listMainMenu({'name': 'category'})
         elif 'list_cats' == category:
             self.listMovieFilters(self.currItem, 'list_sort')
         elif 'list_years' == category:
@@ -362,11 +362,11 @@ class ogladajto(CBaseHostClass):
     #SEARCH
         elif category in ["search", "search_next_page"]:
             cItem = dict(self.currItem)
-            cItem.update({'search_item':False, 'name':'category'}) 
+            cItem.update({'search_item': False, 'name': 'category'}) 
             self.listSearchResult(cItem, searchPattern, searchType)
     #HISTORIA SEARCH
         elif category == "search_history":
-            self.listsHistory({'name':'history', 'category': 'search'}, 'desc', _("Type: "))
+            self.listsHistory({'name': 'history', 'category': 'search'}, 'desc', _("Type: "))
         else:
             printExc()
         
