@@ -276,7 +276,7 @@ class HasBahCa(CBaseHostClass):
         
         def _url_path_join(*parts):
             """Normalize url parts and join them with a slash."""
-            schemes, netlocs, paths, queries, fragments = zip(*(urlsplit(part) for part in parts))
+            schemes, netlocs, paths, queries, fragments = list(zip(*(urlsplit(part) for part in parts)))
             scheme, netloc, query, fragment = _first_of_each(schemes, netlocs, queries, fragments)
             path = '/'.join(x.strip('/') for x in paths if x)
             return urlunsplit((scheme, netloc, path, query, fragment))
