@@ -319,7 +319,7 @@ class OurmatchNet(CBaseHostClass):
             if not sts:
                 return []
             try:
-                data = byteify(json.loads(data))
+                data = json.loads(data)
                 if 'content' in data:
                     url = data['content']['media']['f4m']
                 else:

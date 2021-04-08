@@ -314,7 +314,7 @@ class BSTO(CBaseHostClass, CaptchaHelper):
                     if not sts:
                         return []
 
-                    data = byteify(json.loads(data))
+                    data = json.loads(data)
                     printDBG(data)
 
                     hostUrl = data['fullurl']

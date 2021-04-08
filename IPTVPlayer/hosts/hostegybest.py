@@ -181,7 +181,7 @@ class EgyBest(CBaseHostClass):
 
         nextPage = False
         try:
-            data = byteify(json.loads(data), '', True)['html']
+            data = json.loads(data)['html']
             data = self.cm.ph.getAllItemsBeetwenMarkers(data, '<a', '</a>')
             if len(data) and '' != self.cm.ph.getSearchGroups(data[-1], '''[/\?&]page=(%s)[^0-9]''' % (page + 1))[0]:
                 nextPage = True
@@ -388,7 +388,7 @@ class EgyBest(CBaseHostClass):
             videoUrl = strwithmeta(data.meta['url'], videoUrl.meta)
             if 1 != self.up.checkHostSupport(videoUrl):
                 try:
-                    data = byteify(json.loads(data), '', True)
+                    data = json.loads(data)
                     if data.get('status', '') == '200':
                         authUrl = data.get('auth_url', '')
                         url = data.get('url', '')

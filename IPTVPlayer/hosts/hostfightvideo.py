@@ -281,7 +281,7 @@ class FightVideo(CBaseHostClass):
             self.selectDomain()
         links = []
         try:
-            cItem = byteify(json.loads(fav_data))
+            cItem = json.loads(fav_data)
             links = self.getLinksForVideo(cItem)
         except Exception:
             printExc()
@@ -292,7 +292,7 @@ class FightVideo(CBaseHostClass):
         if self.MAIN_URL == None:
             self.selectDomain()
         try:
-            params = byteify(json.loads(fav_data))
+            params = json.loads(fav_data)
         except Exception:
             params = {}
             printExc()

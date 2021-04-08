@@ -283,7 +283,7 @@ class SolarMovie(CBaseHostClass):
             return []
 
         try:
-            data = byteify(json.loads(data))['html']
+            data = json.loads(data)['html']
             printDBG(data)
         except Exception:
             printExc()
@@ -408,7 +408,7 @@ class SolarMovie(CBaseHostClass):
         videoUrl = ''
         subTrack = ''
         try:
-            data = byteify(json.loads(data))
+            data = json.loads(data)
             printDBG(data)
             subTrack = data.get('subtitle', '')
             if data['type'] == 'iframe':
@@ -427,7 +427,7 @@ class SolarMovie(CBaseHostClass):
                 sts, data = self.getPage(url, params)
                 if not sts:
                     return []
-                data = byteify(json.loads(data))
+                data = json.loads(data)
                 for item in data['data']:
                     if item['type'] != 'mp4':
                         continue
@@ -545,7 +545,7 @@ class SolarMovie(CBaseHostClass):
             self.selectDomain()
         links = []
         try:
-            cItem = byteify(json.loads(fav_data))
+            cItem = json.loads(fav_data)
             links = self.getLinksForVideo(cItem)
         except Exception:
             printExc()
@@ -556,7 +556,7 @@ class SolarMovie(CBaseHostClass):
         if self.MAIN_URL == None:
             self.selectDomain()
         try:
-            params = byteify(json.loads(fav_data))
+            params = json.loads(fav_data)
         except Exception:
             params = {}
             printExc()

@@ -271,7 +271,7 @@ class Laola1TV(CBaseHostClass):
             return
         try:
             data = data.strip()[4:-2]
-            data = byteify(json.loads(data))['result']
+            data = json.loads(data)['result']
 
             pagesize = int(self.cm.ph.getSearchGroups(data, 'pagesize="([0-9]+?)"')[0])
             total = int(self.cm.ph.getSearchGroups(data, 'total="([0-9]+?)"')[0])
@@ -333,7 +333,7 @@ class Laola1TV(CBaseHostClass):
             return []
 
         try:
-            data = byteify(json.loads(data))
+            data = json.loads(data)
             url = data['video']['streamAccess']
             req_abo = []
             for item in data['video']['abo']['required']:
@@ -349,7 +349,7 @@ class Laola1TV(CBaseHostClass):
             post_data[idx] = req_abo[idx]
         sts, data = self.getPage(url, {}, post_data)
         try:
-            data = byteify(json.loads(data))
+            data = json.loads(data)
             for item in data['data']['stream-access']:
                 streamaccessTab.append(item)
         except Exception:

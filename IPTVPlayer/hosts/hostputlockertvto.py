@@ -304,7 +304,7 @@ class PutlockerTvTo(CBaseHostClass):
             return []
 
         try:
-            data = byteify(json.loads(data))['html']
+            data = json.loads(data)['html']
             printDBG(data)
         except Exception:
             printExc()
@@ -443,7 +443,7 @@ class PutlockerTvTo(CBaseHostClass):
             printDBG('+++++\n%s\n+++++' % (data))
             if data[0] not in '[{':
                 data = data[data.find('{'):]
-            data = byteify(json.loads(data))
+            data = json.loads(data)
             printDBG(data)
             subTrack = data.get('subtitle', '')
             if data['type'] == 'iframe':
@@ -462,7 +462,7 @@ class PutlockerTvTo(CBaseHostClass):
                 sts, data = self.getPage(url, params)
                 if not sts:
                     return []
-                data = byteify(json.loads(data))
+                data = json.loads(data)
                 for item in data['data']:
                     if item['type'] != 'mp4':
                         continue

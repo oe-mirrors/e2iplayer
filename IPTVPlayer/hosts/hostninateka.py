@@ -115,7 +115,7 @@ class Ninateka(CBaseHostClass):
                 return url
             data = self.cm.ph.getDataBeetwenMarkers(data, 'playerOptionsWithMainSource =', '};', False)[1]
             printDBG(data)
-            data = byteify(json.loads(data + '}'))
+            data = json.loads(data + '}')
             for item in data['sources']:
                 type = item.get('type', '').lower()
                 if '/mp4' in type:
@@ -195,7 +195,7 @@ class Ninateka(CBaseHostClass):
         printDBG('getLinksForFavourite')
         links = []
         try:
-            cItem = byteify(json.loads(fav_data))
+            cItem = json.loads(fav_data)
             links = self.getLinksForVideo(cItem)
         except Exception:
             printExc()
@@ -204,7 +204,7 @@ class Ninateka(CBaseHostClass):
     def setInitListFromFavouriteItem(self, fav_data):
         printDBG('setInitListFromFavouriteItem')
         try:
-            params = byteify(json.loads(fav_data))
+            params = json.loads(fav_data)
         except Exception:
             params = {}
             printExc()

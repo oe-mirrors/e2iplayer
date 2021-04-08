@@ -89,7 +89,7 @@ class TrailersApple(CBaseHostClass):
             return
         self.setMainUrl(self.cm.meta['url'])
         try:
-            data = byteify(json.loads(data))
+            data = json.loads(data)
             if 'results' in data:
                 data = data['results']
             for item in data:
@@ -132,7 +132,7 @@ class TrailersApple(CBaseHostClass):
         if not sts:
             return
         try:
-            data = byteify(json.loads(data))
+            data = json.loads(data)
             key = 0
             for item in data['clips']:
                 title = item['title']

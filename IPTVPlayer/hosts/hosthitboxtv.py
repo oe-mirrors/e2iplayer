@@ -120,7 +120,7 @@ class Hitbox(CBaseHostClass):
         if not sts:
             return
         try:
-            data = byteify(json.loads(data))["categories"]
+            data = json.loads(data)["categories"]
             for item in data:
                 params = dict(cItem)
                 params['url'] = item['category_id']
@@ -155,7 +155,7 @@ class Hitbox(CBaseHostClass):
         if not sts:
             return
         try:
-            data = byteify(json.loads(data))
+            data = json.loads(data)
             if 'live' == data['media_type']:
                 key = 'livestream'
             elif 'video' == data['media_type']:
@@ -205,7 +205,7 @@ class Hitbox(CBaseHostClass):
             sts, data = self.cm.getPage(Hitbox.MAIN_URL + 'api/player/config/video/%s?redis=true&embed=false&qos=false&redis=true&showHidden=true' % cItem['media_id'])
             if sts:
                 try:
-                    data = byteify(json.loads(data))
+                    data = json.loads(data)
                     baseUrl = data['clip']['baseUrl']
                     if None == baseUrl:
                         baseUrl = ''

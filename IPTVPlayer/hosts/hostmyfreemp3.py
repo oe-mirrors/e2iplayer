@@ -112,7 +112,7 @@ class MyFreeMp3(CBaseHostClass):
 
         data = data[m1 + 1:m2]
         try:
-            data = byteify(json.loads(data), '')
+            data = json.loads(data)
             printDBG(data)
             for item in data['response']:
                 try:

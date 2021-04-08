@@ -151,19 +151,19 @@ class ArconaitvME(CBaseHostClass):
 
         playerUrl = self.cm.ph.getSearchGroups(data, '''<source[^>]*?src=['"](https?:[^"^']+?\.m3u8[^"^']*?)['"]''', 1, ignoreCase=True)[0]
         try:
-            playerUrl = byteify(json.loads('"%s"' % playerUrl))
+            playerUrl = json.loads('"%s"' % playerUrl)
         except Exception:
             printExc()
         if not self.cm.isValidUrl(playerUrl):
             playerUrl = self.cm.ph.getSearchGroups(data, '''"sources"\s*:\s*[^\]]*?"src"\s*:\s*"(https?:[^"]+?\.m3u8[^"]*?)"''', 1, ignoreCase=True)[0]
         try:
-            playerUrl = byteify(json.loads('"%s"' % playerUrl))
+            playerUrl = json.loads('"%s"' % playerUrl)
         except Exception:
             printExc()
         if not self.cm.isValidUrl(playerUrl):
             playerUrl = self.cm.ph.getSearchGroups(data, '''"(https?:[^"]+?\.m3u8[^"]*?)"''', 1, ignoreCase=True)[0]
         try:
-            playerUrl = byteify(json.loads('"%s"' % playerUrl))
+            playerUrl = json.loads('"%s"' % playerUrl)
         except Exception:
             printExc()
 

@@ -257,7 +257,7 @@ class WpTV(CBaseHostClass):
 
             tmpTab = []
             qMap = {"HQ": '2', "LQ": '1'}
-            data = byteify(json.loads(data))
+            data = json.loads(data)
             for item in data['clip']['url']:
                 if 'mp4' not in item['type']:
                     continue
@@ -285,7 +285,7 @@ class WpTV(CBaseHostClass):
         printDBG('WpTV.getLinksForFavourite')
         links = []
         try:
-            cItem = byteify(json.loads(fav_data))
+            cItem = json.loads(fav_data)
             links = self.getLinksForVideo(cItem)
         except Exception:
             printExc()
@@ -294,7 +294,7 @@ class WpTV(CBaseHostClass):
     def setInitListFromFavouriteItem(self, fav_data):
         printDBG('WpTV.setInitListFromFavouriteItem')
         try:
-            params = byteify(json.loads(fav_data))
+            params = json.loads(fav_data)
         except Exception:
             params = {}
             printExc()

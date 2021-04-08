@@ -216,7 +216,7 @@ class WolnelekturyPL(CBaseHostClass):
             return []
 
         try:
-            data = byteify(json.loads(data))
+            data = json.loads(data)
             url = data['txt']
             sts, desc = self.cm.getPage(url)
             if not sts:
@@ -231,7 +231,7 @@ class WolnelekturyPL(CBaseHostClass):
         icon = cItem.get('icon', '')
         otherInfo = {}
         try:
-            data = byteify(json.loads(data))
+            data = json.loads(data)
             icon = self._viaProxy(self._getFullUrl(data['poster'], False))
             title = data['title']
             desc = data['overview']

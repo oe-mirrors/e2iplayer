@@ -295,7 +295,7 @@ class Ipla(CBaseHostClass):
     def getLinksForFavourite(self, fav_data):
         links = []
         try:
-            favItem = byteify(json.loads(fav_data))
+            favItem = json.loads(fav_data)
             printDBG(favItem)
             sts, data = self.cm.getPage(favItem['url'], {'host': Ipla.HOST})
             if sts:

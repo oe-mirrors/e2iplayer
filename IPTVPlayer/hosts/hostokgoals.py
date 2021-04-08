@@ -154,7 +154,7 @@ class OkGoals(CBaseHostClass):
             if not sts:
                 return []
             try:
-                data = byteify(json.loads(data))
+                data = json.loads(data)
                 if 'content' in data:
                     url = data['content']['media']['f4m']
                 else:
@@ -213,7 +213,7 @@ class OkGoals(CBaseHostClass):
         printDBG('OkGoals.getLinksForFavourite')
         links = []
         try:
-            cItem = byteify(json.loads(fav_data))
+            cItem = json.loads(fav_data)
             links = self.getLinksForVideo(cItem)
         except Exception:
             printExc()
@@ -222,7 +222,7 @@ class OkGoals(CBaseHostClass):
     def setInitListFromFavouriteItem(self, fav_data):
         printDBG('OkGoals.setInitListFromFavouriteItem')
         try:
-            params = byteify(json.loads(fav_data))
+            params = json.loads(fav_data)
         except Exception:
             params = {}
             printExc()

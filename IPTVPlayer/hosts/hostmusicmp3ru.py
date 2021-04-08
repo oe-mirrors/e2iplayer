@@ -56,7 +56,7 @@ class MusicMp3Ru(CBaseHostClass):
         ajaxData = clean_html(self.cm.ph.getSearchGroups(data, '''\sdata\-infiniteAjaxScroll=['"]([^'^"]+?)['"]''')[0])
         queryData = clean_html(self.cm.ph.getSearchGroups(data, '''\sdata\-query=['"]([^'^"]+?)['"]''')[0])
         try:
-            data = byteify(json.loads(ajaxData))
+            data = json.loads(ajaxData)
             moreItem['params'] = data
             moreItem['query'] = queryData
             moreItem['next'] = self.getFullUrl(data['url'] + '?' + queryData + '&page={0}', cUrl)

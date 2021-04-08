@@ -247,7 +247,7 @@ class KreskoweczkiPL(CBaseHostClass):
         printDBG('KreskoweczkiPL.getLinksForFavourite')
         links = []
         try:
-            cItem = byteify(json.loads(fav_data))
+            cItem = json.loads(fav_data)
             links = self.getLinksForVideo(cItem)
         except Exception:
             return self.getLinksForVideo({'url': fav_data})
@@ -256,7 +256,7 @@ class KreskoweczkiPL(CBaseHostClass):
     def setInitListFromFavouriteItem(self, fav_data):
         printDBG('KreskoweczkiPL.setInitListFromFavouriteItem')
         try:
-            params = byteify(json.loads(fav_data))
+            params = json.loads(fav_data)
         except Exception:
             params = {}
             printExc()

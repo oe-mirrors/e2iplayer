@@ -30,13 +30,13 @@ def loads(input, noneReplacement=None, baseTypesAsString=False, utf8=True):
     if e2icjson:
         printDBG(">> cjson ACELERATION noneReplacement[%s] baseTypesAsString[%s]" % (noneReplacement, baseTypesAsString))
         out = e2icjson.decode(input, 2 if utf8 else 1)
-        if noneReplacement != None or baseTypesAsString != False:
-            printDBG(">> cjson ACELERATION byteify")
-            out = byteify(out, noneReplacement, baseTypesAsString)
+        #if noneReplacement != None or baseTypesAsString != False:
+        #    printDBG(">> cjson ACELERATION byteify")
+        #    out = byteify(out, noneReplacement, baseTypesAsString)
     else:
         out = json.loads(input)
-        if utf8 or noneReplacement != None or baseTypesAsString != False:
-            out = byteify(out, noneReplacement, baseTypesAsString)
+        #if utf8 or noneReplacement != None or baseTypesAsString != False:
+        #    out = byteify(out, noneReplacement, baseTypesAsString)
 
     return out
 

@@ -130,7 +130,7 @@ class GamatoMovies(CBaseHostClass):
         if not sts:
             return
         try:
-            data = byteify(json.loads(data))
+            data = json.loads(data)
             for item in data['items']:
                 try:
                     if item['type'] == 'movie':
@@ -184,7 +184,7 @@ class GamatoMovies(CBaseHostClass):
 
         try:
             trailerUrl = self.cm.ph.getSearchGroups(data, '''"trailer"\s*:\s*(['"]http[^'^"]+?['"])''')[0]
-            trailerUrl = byteify(json.loads(trailerUrl))
+            trailerUrl = json.loads(trailerUrl)
             if self.cm.isValidUrl(trailerUrl):
                 params = dict(cItem)
                 params.update({'good_for_fav': True, 'title': cItem['title'] + ' - ' + _('trailer'), 'priv_type': 'trailer', 'url': trailerUrl})
@@ -193,7 +193,7 @@ class GamatoMovies(CBaseHostClass):
             printExc()
 
         try:
-            data = byteify(json.loads(data))
+            data = json.loads(data)
             for item in data['season']:
                 title = self.getStr(item, 'title')
                 if '' == title:
@@ -260,7 +260,7 @@ class GamatoMovies(CBaseHostClass):
         if 'movie' == cItem['priv_type']:
             try:
                 trailerUrl = self.cm.ph.getSearchGroups(jsonData, '''"trailer"\s*:\s*(['"]http[^'^"]+?['"])''')[0]
-                trailerUrl = byteify(json.loads(trailerUrl))
+                trailerUrl = json.loads(trailerUrl)
                 if self.cm.isValidUrl(trailerUrl):
                     urlTab.append({'name': _('Trailer'), 'url': trailerUrl, 'need_resolve': 1})
             except Exception:
@@ -274,7 +274,7 @@ class GamatoMovies(CBaseHostClass):
         #try:
         #    data = '[' + self.cm.ph.getDataBeetwenMarkers(data, '"link":[', ']', False)[1] + ']'
         #    printDBG(data)
-        #    data = byteify(json.loads(data))
+        #    data = json.loads(data)
         #    for item in data:
         #        url = self.getStr(item, 'url')
         #        if not self.cm.isValidUrl(url): continue
@@ -334,7 +334,7 @@ class GamatoMovies(CBaseHostClass):
         printDBG('GamatoMovies.getLinksForFavourite')
         links = []
         try:
-            cItem = byteify(json.loads(fav_data))
+            cItem = json.loads(fav_data)
             links = self.getLinksForVideo(cItem)
         except Exception:
             printExc()
@@ -343,7 +343,7 @@ class GamatoMovies(CBaseHostClass):
     def setInitListFromFavouriteItem(self, fav_data):
         printDBG('GamatoMovies.setInitListFromFavouriteItem')
         try:
-            params = byteify(json.loads(fav_data))
+            params = json.loads(fav_data)
         except Exception:
             params = {}
             printExc()

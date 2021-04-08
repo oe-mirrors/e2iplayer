@@ -304,7 +304,7 @@ class VODPL(CBaseHostClass):
         valTab = []
         if sts:
             try:
-                result = byteify(json.loads(data[data.find("(") + 1:-2]))
+                result = json.loads(data[data.find("(") + 1:-2])
                 strTab = []
                 valTab = []
                 for items in result['result']['0']['formats']['wideo']:
@@ -374,7 +374,7 @@ class VODPL(CBaseHostClass):
             self.selectDomain()
         links = []
         try:
-            cItem = byteify(json.loads(fav_data))
+            cItem = json.loads(fav_data)
             links = self.getLinksForVideo(cItem)
         except Exception:
             printExc()
@@ -385,7 +385,7 @@ class VODPL(CBaseHostClass):
         if self.MAIN_URL == None:
             self.selectDomain()
         try:
-            params = byteify(json.loads(fav_data))
+            params = json.loads(fav_data)
         except Exception:
             params = {}
             printExc()

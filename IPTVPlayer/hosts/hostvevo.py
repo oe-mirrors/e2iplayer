@@ -68,7 +68,7 @@ class VevoCom(CBaseHostClass):
     def fillBrowse(self, data):
         data = self.cm.ph.getDataBeetwenNodes(data, ('window.__INITIAL_STORE__', '='), ('</script', '>'), False)[1]
         try:
-            data = byteify(json.loads(data.strip()[:-1]))
+            data = json.loads(data.strip()[:-1])
             language = list(data['default']['localeData'].keys())[0]
             self.language = language.split('-')
             self.translations = data['default']['localeData'][language]['translation']
@@ -261,7 +261,7 @@ class VevoCom(CBaseHostClass):
 
             printDBG(data)
             try:
-                data = byteify(json.loads(data), '', True)
+                data = json.loads(data)
                 self.defaultParams['cookie_items'] = {'ApiToken': str(data['legacy_token']), 'ApiTokenRefresh': str(data['refresh_token'])}
                 self.authData['token'] = str(data['legacy_token'])
                 self.authData['expires'] = int(time.time()) + int(data['expires_in'])
@@ -334,7 +334,7 @@ class VevoCom(CBaseHostClass):
             return
 
         try:
-            data = byteify(json.loads(data), '')['data']['playlists'][0]
+            data = json.loads(data)['data']['playlists'][0]
             self._listJsonVideos(cItem, data['videos']['items'])
             if data['basicMeta']['videoCount'] > (page + 1) * 20:
                 params = dict(cItem)
@@ -362,7 +362,7 @@ class VevoCom(CBaseHostClass):
             return
 
         try:
-            data = byteify(json.loads(data), '')['data']['artists'][0]
+            data = json.loads(data)['data']['artists'][0]
             self._listJsonVideos(cItem, data['videoData']['videos']['data'])
 
             if data['videoData']['videos']['paging']['page'] < data['videoData']['videos']['paging']['pages']:
@@ -388,7 +388,7 @@ class VevoCom(CBaseHostClass):
             videosTab = []
             playlists = []
 
-            data = byteify(json.loads(data), '', True)
+            data = json.loads(data)
 
             for item in data.get('artists', []):
                 icon = self.getFullIconUrl(item['thumbnailUrl'])

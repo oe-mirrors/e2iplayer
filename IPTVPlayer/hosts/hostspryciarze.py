@@ -321,7 +321,7 @@ class Spryciarze(CBaseHostClass):
 #                    printDBG(player)
                     player = player[:player.find('"relatedMovies"')].replace('}],', '}]}')
                     printDBG(player)
-                    player = byteify(json_loads(player))
+                    player = json_loads(player)
                     player = player['mediaFiles']
                     for item in player:
                         if 'mp4' in item['type']:

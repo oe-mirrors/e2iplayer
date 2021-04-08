@@ -125,7 +125,7 @@ class SVTPlaySE(CBaseHostClass):
 
         data = self.cm.ph.getDataBeetwenMarkers(data, "root['__svtplay'] = ", ";\n", withMarkers=False)[1]
         try:
-            data = byteify(json.loads(data))
+            data = json.loads(data)
             data = data['programsPage']['alphabeticList']
             for item in data:
                 letter = item['letter']
@@ -186,7 +186,7 @@ class SVTPlaySE(CBaseHostClass):
 
         data = self.cm.ph.getDataBeetwenMarkers(data, "root['__svtplay'] = ", ";\n", withMarkers=False)[1]
         try:
-            data = byteify(json.loads(data))
+            data = json.loads(data)
             for key in data['channelsPage']['schedule']:
                 try:
                     item = data['channelsPage']['schedule'][key]
@@ -238,7 +238,7 @@ class SVTPlaySE(CBaseHostClass):
 
         nextPage = False
         try:
-            data = byteify(json.loads(data))
+            data = json.loads(data)
 
             try:
                 if page < data.get('totalPages', 0):
@@ -461,7 +461,7 @@ class SVTPlaySE(CBaseHostClass):
             printDBG(data)
 
             try:
-                data = byteify(json.loads(data))
+                data = json.loads(data)
 
                 videoItem = data.get('video', None)
                 if videoItem == None:
@@ -543,7 +543,7 @@ class SVTPlaySE(CBaseHostClass):
         printDBG('SVTPlaySE.getLinksForFavourite')
         links = []
         try:
-            cItem = byteify(json.loads(fav_data))
+            cItem = json.loads(fav_data)
             links = self.getLinksForVideo(cItem)
         except Exception:
             printExc()
@@ -552,7 +552,7 @@ class SVTPlaySE(CBaseHostClass):
     def setInitListFromFavouriteItem(self, fav_data):
         printDBG('SVTPlaySE.setInitListFromFavouriteItem')
         try:
-            params = byteify(json.loads(fav_data))
+            params = json.loads(fav_data)
         except Exception:
             params = {}
             printExc()

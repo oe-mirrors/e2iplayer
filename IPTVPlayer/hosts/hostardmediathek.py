@@ -265,7 +265,7 @@ class ARDmediathek(CBaseHostClass):
 
         try:
             sectionIdx = 0
-            data = byteify(json.loads(data))
+            data = json.loads(data)
             if 1 == len(data['sections']):
                 self.listItem(cItem, data['sections'][0], sectionIdx)
             else:
@@ -343,7 +343,7 @@ class ARDmediathek(CBaseHostClass):
             return []
 
         try:
-            data = byteify(json.loads(data))
+            data = json.loads(data)
             url = data['sections'][0]['modCons'][0]['mods'][0]['inhalte'][0]['mediaCollection']['url']
         except Exception:
             printExc()
@@ -363,7 +363,7 @@ class ARDmediathek(CBaseHostClass):
         try:
             urlTab = []
             tmpUrlTab = []
-            data = byteify(json.loads(data))
+            data = json.loads(data)
             live = data['_isLive']
             subtitleUrl = data.get('_subtitleUrl', '')
             itemType = data['_type']

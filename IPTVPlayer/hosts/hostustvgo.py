@@ -97,7 +97,7 @@ class ustvgo(CBaseHostClass):
                     ret = js_execute(jscode)
                     if ret['sts'] and 0 == ret['code']:
                         try:
-                            cookies = byteify(json_loads(ret['data'].strip()))
+                            cookies = json_loads(ret['data'].strip())
                             for cookie in cookies:
                                 cookieItems.update(cookie)
                         except Exception:

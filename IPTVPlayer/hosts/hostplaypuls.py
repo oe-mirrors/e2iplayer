@@ -238,7 +238,7 @@ class Playpuls(CBaseHostClass):
                 sources.append({'quality': item[0].upper(), 'src': '/play/%s' % item[1]})
         elif source3Data != '':
             try:
-                source3Data = byteify(json.loads(source3Data))
+                source3Data = json.loads(source3Data)
                 if 'sources' in source3Data:
                     source3Data = source3Data['sources']
                 for key, val in source3Data.items():

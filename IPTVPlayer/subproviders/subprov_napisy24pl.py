@@ -262,7 +262,7 @@ class Napisy24plProvider(CBaseSubProviderClass):
             return
 
         try:
-            data = byteify(json.loads(data))
+            data = json.loads(data)
             for item in data:
                 subId = str(item['napisid'])
                 title = self.cm.ph.getDataBeetwenMarkers(item['table'], '<h6', '</h6>')[1]

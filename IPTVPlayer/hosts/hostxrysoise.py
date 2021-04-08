@@ -351,7 +351,7 @@ class XrysoiSE(CBaseHostClass):
     def setInitListFromFavouriteItem(self, fav_data):
         printDBG('XrysoiSE.setInitListFromFavouriteItem')
         try:
-            params = byteify(json.loads(fav_data))
+            params = json.loads(fav_data)
         except Exception:
             params = {}
             printExc()

@@ -206,7 +206,7 @@ class TfarjoCom(CBaseHostClass):
         printDBG(data)
 
         try:
-            data = byteify(json.loads(data), '', True)
+            data = json.loads(data)
             for item in data['data']['user']:
                 if not isinstance(item, dict):
                     continue
@@ -337,7 +337,7 @@ class TfarjoCom(CBaseHostClass):
             return
         printDBG(data)
         try:
-            data = byteify(json.loads(data), '', True)
+            data = json.loads(data)
             data = data['iframe']
             videoUrl = self.getFullUrl(self.cm.ph.getSearchGroups(data, '''<iframe[^>]+?src=['"]([^"^']+?)['"]''', 1, True)[0])
             urlTab = self.up.getVideoLinkExt(videoUrl)

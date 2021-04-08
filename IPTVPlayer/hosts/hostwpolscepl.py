@@ -158,7 +158,7 @@ class WPolscePL(CBaseHostClass):
         try:
             liveItem = None
             NOW = datetime.now()
-            data = byteify(json.loads(data), '')
+            data = json.loads(data)
             for item in data[key]:
                 if onlyLiveItems and not item.get('is_live', False):
                     continue
@@ -211,7 +211,7 @@ class WPolscePL(CBaseHostClass):
         nextPage = False
         try:
             NOW = datetime.now()
-            data = byteify(json.loads(data), '')
+            data = json.loads(data)
             if data.get('has_next', False):
                 nextPage = True
             for item in data['publications']:

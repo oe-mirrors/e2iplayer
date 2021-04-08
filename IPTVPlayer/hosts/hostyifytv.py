@@ -128,7 +128,7 @@ class YifyTV(CBaseHostClass):
                     ret = js_execute(jscode)
                     if ret['sts'] and 0 == ret['code']:
                         try:
-                            cookies = byteify(json.loads(ret['data'].strip()))
+                            cookies = json.loads(ret['data'].strip())
                             for cookie in cookies:
                                 cookieItems.update(cookie)
                         except Exception:
@@ -266,7 +266,7 @@ class YifyTV(CBaseHostClass):
     def _listItems(self, cItem, data, nextPage):
         printDBG("YifyTV.listItems")
         try:
-            data = byteify(json.loads(data), noneReplacement='', baseTypesAsString=True)
+            data = json.loads(data)
             #printDBG(data)
             for item in data['posts']:
                 item['url'] = self.getFullUrl(item['link'])
@@ -419,7 +419,7 @@ class YifyTV(CBaseHostClass):
                         printDBG(data)
                         if 'jscode' in data:
                             try:
-                                data = byteify(json.loads(data))[0]['jscode'][1:-1]#.replace('eval(', 'print(')
+                                data = json.loads(data)[0]['jscode'][1:-1]#.replace('eval(', 'print(')
                                 jsTab = ['']
                                 jsTab.append('''var iptv_href="%s"; var iptv_domain="%s"; var iptv_video_id="%s"; var iptv_jwpath="%s";\n''' % (self.getMainUrl(), self.up.getDomain(self.getMainUrl()), imdbid, url))
                                 jsTab.append(base64.b64decode('''ZnVuY3Rpb24gU2hvd0Rpdigpe31mdW5jdGlvbiBzaG93aUZyYW1lKCl7cHJpbnQoYXJndW1lbnRzWzBdKX1mdW5jdGlvbiBnZXRKd1BhdGgoKXtyZXR1cm4gaXB0dl9qd3BhdGh9ZnVuY3Rpb24gZ2V0X3BhcmFtc19ub19zb3JjZXMoKXtyZXR1cm4gaXB0dl92aWRlb19pZH1mdW5jdGlvbiBzZXRUaW1lb3V0KHQsbil7aWYoaXB0dl9kaXJlY3QpdHJ5e3QoKX1jYXRjaChlKXtwcmludCgiXG4iKX1lbHNlIHRoaXMudHJ5dXAoKX12YXIgZG9jdW1lbnQ9e30sd2luZG93PXRoaXMsbG9jYXRpb249e307bG9jYXRpb24uaHJlZj1pcHR2X2hyZWYsbG9jYXRpb24uaG9zdG5hbWU9aXB0dl9kb21haW4sbG9jYXRpb24udG9TdHJpbmc9ZnVuY3Rpb24oKXtyZXR1cm4gaXB0dl9ocmVmfSxkb2N1bWVudC5sb2NhdGlvbj1sb2NhdGlvbjt2YXIgZWxlbWVudD1mdW5jdGlvbih0KXt0aGlzLnRleHQ9ZnVuY3Rpb24oKXtyZXR1cm4ibm9uZSJ9LHRoaXMuZmlyc3Q9ZnVuY3Rpb24oKXtyZXR1cm4gbmV3IGVsZW1lbnR9fSwkPWZ1bmN0aW9uKHQpe3JldHVybiBuZXcgZWxlbWVudCh0KX0scGxheWVybW9kZT0iIixzb3VyY2VTZWxlY3RlZD0wLHNvdXJjZXM9W3tzdWJfZGVsYXk6MCxzdWJfZmFjdG9yOjF9XTskLmdldD1mdW5jdGlvbigpe3JldHVybiBwcmludChhcmd1bWVudHNbMF0pLHtkb25lOlNob3dEaXYsZXJyb3I6U2hvd0Rpdn19LCQucG9zdD1mdW5jdGlvbigpe3ByaW50KCJcbklQVFZfUE9TVF9TVEFSVFxuIikscHJpbnQoSlNPTi5zdHJpbmdpZnkoe3VybDphcmd1bWVudHNbMF0scGFyYW1zOmFyZ3VtZW50c1sxXX0pKSxwcmludCgiXG5JUFRWX1BPU1RfRU5EXG4iKX07'''))
@@ -441,7 +441,7 @@ class YifyTV(CBaseHostClass):
                                         break
                                 if 'jscode' in data:
                                     data = data[data.find("["):data.rfind("]") + 1]
-                                    data = byteify(json.loads('"%s"' % data))
+                                    data = json.loads('"%s"' % data)
                                     continue
                             except Exception:
                                 printExc()
@@ -449,11 +449,11 @@ class YifyTV(CBaseHostClass):
                             if 'IPTV_POST_START' in data:
                                 data = self.cm.ph.getDataBeetwenMarkers(data, 'IPTV_POST_START', 'IPTV_POST_END', 0)[1]
                                 try:
-                                    tmp = byteify(json.loads(data.strip()))
+                                    tmp = json.loads(data.strip())
                                     sts, data = self.getPage(tmp['url'], {'header': header, 'raw_post_data': True}, tmp['params'])
                                     if not sts:
                                         return []
-                                    tmp = byteify(json.loads(data))
+                                    tmp = json.loads(data)
                                     for hostDomain in tmp['hosts']:
                                         urlTab.append({'name': hostDomain, 'url': 'http://%s%s' % (hostDomain, tmp['path'])})
                                     if len(urlTab):
@@ -515,9 +515,9 @@ class YifyTV(CBaseHostClass):
 
                         if '("' in data:
                             data = self.cm.ph.getDataBeetwenMarkers(data, '(', ')', False)[1]
-                            data = byteify(json.loads(data))
+                            data = json.loads(data)
                         if isinstance(data, str):
-                            data = byteify(json.loads(data))
+                            data = json.loads(data)
                         printDBG(data)
                         for item in data:
                             #printDBG('++++++++++++++++++++++\n%s\n++++++++++++++++++++++' % item)

@@ -245,7 +245,7 @@ class EFilmyTv(CBaseHostClass):
             for item in data:
                 item = item.split('=', 1)
                 key = item[0].strip()
-                parseObj[key] = byteify(json.loads(item[1].strip() + ']'))
+                parseObj[key] = json.loads(item[1].strip() + ']')
             self.cacheSeries = parseObj
         except Exception:
             printExc()

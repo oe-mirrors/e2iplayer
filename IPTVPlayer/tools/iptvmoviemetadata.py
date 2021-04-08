@@ -72,7 +72,7 @@ class IPTVMovieMetaDataHandler():
         try:
             try:
                 with codecs.open(self.filePath, 'r', self.ENCODING, 'replace') as fp:
-                    data = byteify(json.loads(fp.read()))
+                    data = json.loads(fp.read())
                 if data != {}:
                     sts = True
                     self.data.update(data)

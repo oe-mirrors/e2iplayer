@@ -413,7 +413,7 @@ class HDSTo(CBaseHostClass):
 
                 ret = js_execute('\n'.join(jscode))
                 try:
-                    data = byteify(json.loads(ret['data'].strip()))
+                    data = json.loads(ret['data'].strip())
                     if jwplayer:
                         for dat in data['playlist']:
                             subsTab = []

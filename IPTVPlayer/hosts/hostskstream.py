@@ -357,7 +357,7 @@ class SKStream(CBaseHostClass):
                                 url = self.getFullUrl(self.cm.ph.getSearchGroups(data, '''iframe.src\s*=\s*['"]([^"^']+?)['"]''', 1, True)[0])
                             if not self.cm.isValidUrl(url):
                                 data = self.cm.ph.getDataBeetwenMarkers(data, 'sources:', '],', False)[1] + ']'
-                                data = byteify(json.loads(data))
+                                data = json.loads(data)
                                 for item in data:
                                     if "mp4" == item['type']:
                                         urlTab.append({'name': str(item.get('label', 'default')), 'url': item['file']})
@@ -424,7 +424,7 @@ class SKStream(CBaseHostClass):
         printDBG('SKStream.getLinksForFavourite')
         links = []
         try:
-            cItem = byteify(json.loads(fav_data))
+            cItem = json.loads(fav_data)
             links = self.getLinksForVideo(cItem)
         except Exception:
             printExc()
@@ -433,7 +433,7 @@ class SKStream(CBaseHostClass):
     def setInitListFromFavouriteItem(self, fav_data):
         printDBG('SKStream.setInitListFromFavouriteItem')
         try:
-            params = byteify(json.loads(fav_data))
+            params = json.loads(fav_data)
         except Exception:
             params = {}
             printExc()

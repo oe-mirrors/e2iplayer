@@ -327,7 +327,7 @@ class KissCartoonMe(CBaseHostClass):
             return urlTab
 
         try:
-            data = byteify(json.loads(data))
+            data = json.loads(data)
             if not data['status']:
                 return urlTab
             url = data['value']
@@ -362,7 +362,7 @@ class KissCartoonMe(CBaseHostClass):
             return urlTab
 
         try:
-            data = byteify(json.loads(data))
+            data = json.loads(data)
             printDBG(data)
             for item in data['playlist'][0].get('sources', []):
                 if 'mp4' not in item['type']:
@@ -411,7 +411,7 @@ class KissCartoonMe(CBaseHostClass):
         links = []
         try:
             try:
-                cItem = byteify(json.loads(fav_data))
+                cItem = json.loads(fav_data)
             except Exception:
                 cItem = {'url': fav_data}
                 pass
@@ -423,7 +423,7 @@ class KissCartoonMe(CBaseHostClass):
     def setInitListFromFavouriteItem(self, fav_data):
         printDBG('CartoonME.setInitListFromFavouriteItem')
         try:
-            params = byteify(json.loads(fav_data))
+            params = json.loads(fav_data)
         except Exception:
             params = {}
             printExc()

@@ -116,7 +116,7 @@ class QuesttvCoUK(CBaseHostClass):
                 data = self.cm.ph.getDataBeetwenMarkers(data, '"renditions":', ']', False)[1]
                 try:
                     printDBG(data)
-                    data = byteify(json.loads(data + ']'), '', True)
+                    data = json.loads(data + ']')
                     for item in data:
                         if item['videoCodec'] != 'H264':
                             continue

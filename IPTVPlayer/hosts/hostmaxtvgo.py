@@ -106,7 +106,7 @@ class MaxtvGO(CBaseHostClass):
             return
 
         try:
-            data = byteify(json.loads(data))
+            data = json.loads(data)
             if data.get('error') != None:
                 SetIPTVPlayerLastHostError(str(data['error']['message']))
             for item in data['data']:
@@ -281,7 +281,7 @@ class MaxtvGO(CBaseHostClass):
 
                 sts, data = self.getPage(url)
                 if sts:
-                    data = byteify(json.loads(data))
+                    data = json.loads(data)
                     for item in data['data']:
                         author = self.cleanHtmlStr(item['nick'])
                         date = self.cleanHtmlStr(item['date'])

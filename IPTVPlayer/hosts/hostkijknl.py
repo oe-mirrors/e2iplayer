@@ -167,7 +167,7 @@ class KijkNL(CBaseHostClass):
             sts, data = self.getPage(cItem['url'])
             if not sts:
                 return
-            data = byteify(json.loads(data), '', True)
+            data = json.loads(data)
             for item in data['components']:
                 if item['type'] == 'video_list':
                     id = item['id']
@@ -199,7 +199,7 @@ class KijkNL(CBaseHostClass):
             if not sts:
                 return
 
-            data = byteify(json.loads(data))
+            data = json.loads(data)
 
             if isinstance(data, list):
                 items = data
@@ -270,7 +270,7 @@ class KijkNL(CBaseHostClass):
             if not sts:
                 return
 
-            data = byteify(json.loads(data), '', True)
+            data = json.loads(data)
             if data['playerInfo']['hasDRM']:
                 SetIPTVPlayerLastHostError(_('DRM protection detected.'))
             embedVideoUrl = self.getFullUrl(data['playerInfo'].get('embed_video_url', ''))
@@ -279,7 +279,7 @@ class KijkNL(CBaseHostClass):
                 sts, data = self.getPage(url)
                 if not sts:
                     return
-                data = byteify(json.loads(data), '', True)
+                data = json.loads(data)
                 videoUrl = data['playlist']
                 retTab = getDirectM3U8Playlist(videoUrl, checkContent=True)
             else:
@@ -315,7 +315,7 @@ class KijkNL(CBaseHostClass):
                 sts, data = self.getPage(url, urlParams)
                 if not sts:
                     return
-                data = byteify(json.loads(data), '', True)
+                data = json.loads(data)
                 for item in data['sources']:
                     videoUrl = item.get('src', '')
                     if not self.cm.isValidUrl(videoUrl):

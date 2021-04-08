@@ -299,7 +299,7 @@ class SeriesOnlineIO(CBaseHostClass):
             decoded = ret['data'].strip()
             printDBG('DECODED DATA -> \n[%s]\n' % decoded)
             try:
-                decoded = byteify(json.loads(decoded))
+                decoded = json.loads(decoded)
                 searchUrl = self.getFullUrl(decoded.get('url', cUrl))
                 if '?' not in searchUrl:
                     searchUrl += '?'

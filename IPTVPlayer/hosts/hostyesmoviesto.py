@@ -281,7 +281,7 @@ class YesMovies(CBaseHostClass):
             return []
 
         try:
-            data = byteify(json.loads(data)['html'], '', True)
+            data = json.loads(data)['html']
         except Exception:
             printExc()
 
@@ -368,7 +368,7 @@ class YesMovies(CBaseHostClass):
             if not sts:
                 return []
             try:
-                data = byteify(json.loads(data), '', True)
+                data = json.loads(data)
                 if data['status']:
                     urlTab = self.up.getVideoLinkExt(data['src'])
             except Exception:
@@ -422,7 +422,7 @@ class YesMovies(CBaseHostClass):
                             subTracks.append({'title': name, 'url': self.getFullIconUrl(url), 'lang': name, 'format': format})
             else:
                 try:
-                    tmp = byteify(json.loads(data))
+                    tmp = json.loads(data)
                     printDBG("------------------------------------------------\n%s+++++++++++++++++++++++++++++++++++++++++++++\n" % tmp)
                     if isinstance(tmp['playlist'][0]['sources'], dict):
                         tmp['playlist'][0]['sources'] = [tmp['playlist'][0]['sources']]

@@ -405,7 +405,7 @@ class Kinox(CBaseHostClass):
                 return
 
             try:
-                data = byteify(json.loads(data))
+                data = json.loads(data)
                 if ((page + 1) * ITEMS_PER_PAGE) < data['Total']:
                    nextPage = True
                 data = data['Content']
@@ -552,7 +552,7 @@ class Kinox(CBaseHostClass):
             return []
 
         try:
-            data = byteify(json.loads(data))
+            data = json.loads(data)
             if 'Stream' in data:
                 data = data['Stream']
                 videoUrl = self.cm.ph.getSearchGroups(data, '''<iframe[^>]+?src=['"]([^"^']+?)['"]''', 1, True)[0]

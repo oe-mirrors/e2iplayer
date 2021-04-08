@@ -210,7 +210,7 @@ class Chomikuj(CBaseHostClass):
     def handleDataRequest(self, cItem, url):
         sts, data = self.requestJsonData(url)
         if sts:
-            printDBG(byteify(data))
+            printDBG(data)
             if 0 == self._getJItemNum(data, 'Code', -1):
                 # Parent Folder
                 if 'ParentId' in data and 'ParentName' in data and len(self._getJItemStr(data, 'ParentName')) and 'Owner' in data and 'Id' in data['Owner']:

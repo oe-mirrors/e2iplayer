@@ -227,7 +227,7 @@ class RteIE(CBaseHostClass):
         if '/show/' in cItem['url']:
             try:
                 sts, data = self.cm.getPage('http://feeds.rasset.ie/rteavgen/player/playlist/?type=iptv&format=json&showId=' + id, self.defaultParams)
-                data = byteify(json.loads(data))['shows'][0]["media:group"][0]
+                data = json.loads(data)['shows'][0]["media:group"][0]
                 hdsUrl = data['rte:server'] + data['url']
             except Exception:
                 printExc()

@@ -85,7 +85,7 @@ class DRDK(CBaseHostClass):
                 video = True
             else:
                 video = False
-            data = byteify(json.loads(data))
+            data = json.loads(data)
             #if video: data.sort(key=lambda item: item["WebChannel"])
             for item in data:
                 if item.get("WebChannel", False):

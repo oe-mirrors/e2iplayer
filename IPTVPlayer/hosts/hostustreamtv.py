@@ -143,7 +143,7 @@ class UstreamTV(CBaseHostClass):
 
         nextPage = False
         try:
-            data = byteify(json.loads(data))
+            data = json.loads(data)
             if not data['success']:
                 return
             nextPage = data['pageMeta']['infinite']

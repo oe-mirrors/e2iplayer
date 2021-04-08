@@ -240,7 +240,7 @@ class ITV(CBaseHostClass):
                 try:
                     data = base64.b64decode(data)
                     printDBG(data)
-                    self.cacheLive = byteify(json.loads(data), '', True)
+                    self.cacheLive = json.loads(data)
                 except Exception:
                     printExc()
             videoUrl = self.cacheLive.get(cItem['url'].split('/')[-1], '')
@@ -268,7 +268,7 @@ class ITV(CBaseHostClass):
                 sts, data = self.getPage(url, params, json.dumps(post_data))
                 if not sts:
                     return []
-                data = byteify(json.loads(data), '', True)['Playlist']['Video']
+                data = json.loads(data)['Playlist']['Video']
                 videoUrl = data['Base'] + data['MediaFiles'][-1]['Href']
                 retTab = getDirectM3U8Playlist(videoUrl, checkContent=True)
             except Exception:

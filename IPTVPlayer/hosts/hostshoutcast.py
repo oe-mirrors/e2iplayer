@@ -124,7 +124,7 @@ class ShoutcastCom(CBaseHostClass):
             return
 
         try:
-            data = byteify(json.loads(data))
+            data = json.loads(data)
             for item in data:
                 title = self.cleanHtmlStr(item['Name'])
                 stationId = str(item['ID'])

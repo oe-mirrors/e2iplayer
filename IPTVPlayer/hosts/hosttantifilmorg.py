@@ -79,7 +79,7 @@ class TantiFilmOrg(CBaseHostClass):
             ret = ret = js_execute('\n'.join(jscode), {'timeout_sec': 15})
             if ret['sts'] and 0 == ret['code']:
                 try:
-                    tmp = byteify(json.loads(ret['data']))
+                    tmp = json.loads(ret['data'])
                     item = tmp['cookie'].split(';', 1)[0].split('=', 1)
                     self.defaultParams['cookie_items'] = {item[0]: item[1]}
                     addParams['cookie_items'] = self.defaultParams['cookie_items']

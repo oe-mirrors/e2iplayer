@@ -538,7 +538,7 @@ class Twitch(CBaseHostClass):
             if not sts:
                 return urlTab
             try:
-                data = byteify(json.loads(data))
+                data = json.loads(data)
                 printDBG("Twitch.getLinksForVideo data: %s" % data)
                 for item in data[0]['data']['clip']['videoQualities']:
                     urlTab.append({'name': '%sp, %sfps' % (item['quality'], item['frameRate']), 'url': item['sourceURL'], 'need_resolve': 0})

@@ -238,7 +238,7 @@ class SerijeOnline(CBaseHostClass):
             for item in data:
                 if 'getplayer' in item:
                     try:
-                        query = byteify(json.loads(item + '}'), '', True)
+                        query = json.loads(item + '}')
                         query = urllib.parse.urlencode(query)
                         url = self.getFullUrl("/ajax.php") + '?' + query
                         sts, data = self.getPage(url)

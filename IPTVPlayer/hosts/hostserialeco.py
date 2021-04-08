@@ -178,7 +178,7 @@ class SerialeCO(CBaseHostClass):
                 data = ret['data'].strip()
                 printDBG('DECODED DATA -> \n[%s]\n' % data)
                 try:
-                    data = byteify(json.loads(data))
+                    data = json.loads(data)
                     searchUrl = self.getFullUrl(data['url'], cUrl)
                     post_data = data['data']
 
@@ -188,7 +188,7 @@ class SerialeCO(CBaseHostClass):
 
                     printDBG('DATA -> \n[%s]\n' % data)
 
-                    data = byteify(json.loads(data))
+                    data = json.loads(data)
                     for sKey in data:
                         sNum = sKey.strip()
                         eItems = []

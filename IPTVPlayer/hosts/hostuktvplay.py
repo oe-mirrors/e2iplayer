@@ -88,7 +88,7 @@ class UKTVPlay(CBaseHostClass):
                 sts, data = self.getPage(url)
                 if not sts:
                     return
-                data = byteify(json.loads(data), '', True)
+                data = json.loads(data)
 
             for item in data:
                 url = 'genre_items?genre_name=%s&' % item['name'].upper()
@@ -109,7 +109,7 @@ class UKTVPlay(CBaseHostClass):
             if not sts:
                 return
 
-            data = byteify(json.loads(data), '', True)
+            data = json.loads(data)
             for item in data:
                 url = 'brand_list?channel=&letter=%s&' % item[0]
                 title = self.cleanHtmlStr(item)
@@ -125,7 +125,7 @@ class UKTVPlay(CBaseHostClass):
                 sts, data = self.getPage(url)
                 if not sts:
                     return
-                data = byteify(json.loads(data), '', True)
+                data = json.loads(data)
 
             for item in data:
                 if item == '':
@@ -172,7 +172,7 @@ class UKTVPlay(CBaseHostClass):
             if not sts:
                 return
 
-            data = byteify(json.loads(data), '', True)[0]
+            data = json.loads(data)[0]
             brandId = data['brand_id']
             keys = list(data['available_series'].keys())
             keys.sort(reverse=True)
@@ -198,7 +198,7 @@ class UKTVPlay(CBaseHostClass):
             if not sts:
                 return
 
-            data = byteify(json.loads(data), '', True)
+            data = json.loads(data)
             for item in data['episodes']:
                 vidId = item['brightcove_video_id']
                 icon = self.getFullIconUrl(item['episode_image'])
@@ -242,7 +242,7 @@ class UKTVPlay(CBaseHostClass):
             if not sts:
                 return
 
-            data = byteify(json.loads(data), '', True)
+            data = json.loads(data)
             self.listItems(cItem, 'list_seasons', data.get('brands', []))
             self.listItems(cItem, 'list_seasons', data.get('collections', []))
             self.listGenres(cItem, 'list_items', data.get('genres', []))

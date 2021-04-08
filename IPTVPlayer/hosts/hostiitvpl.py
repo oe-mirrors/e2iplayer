@@ -224,7 +224,7 @@ class IITVPL(CBaseHostClass):
             if not sts:
                 return []
             try:
-                data = byteify(json.loads(data))
+                data = json.loads(data)
                 data = data['results']
                 printDBG(data)
                 if 'embed_code' in data:

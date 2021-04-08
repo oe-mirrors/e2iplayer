@@ -214,7 +214,7 @@ class VUMEDI(CBaseHostClass):
         if not sts:
             return
         try:
-            data = byteify(json.loads(data))
+            data = json.loads(data)
             nextPage = data.get('start', -1)
             data = data['beats']
 
@@ -319,7 +319,7 @@ class VUMEDI(CBaseHostClass):
                 return []
             try:
                 printDBG(data)
-                data = byteify(json.loads(data))['content_tree']
+                data = json.loads(data)['content_tree']
                 key = list(data.keys())[0]
                 data = data[key]
 
@@ -331,7 +331,7 @@ class VUMEDI(CBaseHostClass):
                 if not sts:
                     return []
                 printDBG(data)
-                data = byteify(json.loads(data))['authorization_data'][key]['streams']
+                data = json.loads(data)['authorization_data'][key]['streams']
                 for item in data:
                     url = ''
                     if item['url']['format'] == 'encoded':

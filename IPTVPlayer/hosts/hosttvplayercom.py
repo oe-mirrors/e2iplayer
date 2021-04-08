@@ -214,7 +214,7 @@ class TVPlayer(CBaseHostClass):
         printDBG("response: [%s]" % data)
 
         try:
-            data = byteify(json.loads(data))
+            data = json.loads(data)
             url = 'https://api.tvplayer.com/api/v2/stream/live'
             ''' id: e.resource,
                 service: 1,
@@ -234,7 +234,7 @@ class TVPlayer(CBaseHostClass):
                 return []
             printDBG("response: [%s]" % data)
 
-            data = byteify(json.loads(data))['tvplayer']['response']
+            data = json.loads(data)['tvplayer']['response']
             if 'error' in data:
                 _SetIPTVPlayerLastHostError(data['error'])
                 if not config.plugins.iptvplayer.tvplayercom_drmbypass.value or cItem.get('next_try', False):

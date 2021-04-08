@@ -446,7 +446,7 @@ class CBaseSubProviderClass:
             sts, data = self.cm.getPage(url)
             if not sts:
                 return itemType
-            data = byteify(json.loads(data))
+            data = json.loads(data)
             if len(data["tv_results"]):
                 itemType = 'series'
         except Exception:

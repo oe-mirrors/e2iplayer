@@ -273,7 +273,7 @@ class FilmeOnlineTo(CBaseHostClass):
         ret = js_execute(data + '; print(JSON.stringify(movie));')
         try:
             printDBG(ret['data'])
-            movieData = byteify(json.loads(ret['data']), '', True)
+            movieData = json.loads(ret['data'])
             url = movieData.get('trailer', '')
             if self.cm.isValidUrl(url):
                 params = dict(cItem)
@@ -288,7 +288,7 @@ class FilmeOnlineTo(CBaseHostClass):
             if not sts:
                 return
 
-            data = byteify(json.loads(data), '', True)
+            data = json.loads(data)
             printDBG("++++++++++++++++++++++++++++++++++++++++++++++++++++++++")
             printDBG(data['html'])
             printDBG("++++++++++++++++++++++++++++++++++++++++++++++++++++++++")
@@ -382,7 +382,7 @@ class FilmeOnlineTo(CBaseHostClass):
         data = self.cm.ph.getDataBeetwenReMarkers(data, re.compile('var\s*?movie\s*?\=\s*?\{'), re.compile('}'))[1]
         ret = js_execute(data + '; print(JSON.stringify(movie));')
         try:
-            movieData = byteify(json.loads(ret['data']), '', True)
+            movieData = json.loads(ret['data'])
             urlParams = dict(self.defaultParams)
             urlParams['header'] = dict(self.AJAX_HEADER)
             urlParams['header']['Referer'] = str(videoUrl)
@@ -390,7 +390,7 @@ class FilmeOnlineTo(CBaseHostClass):
             sts, data = self.getPage(url, urlParams)
             if not sts:
                 return
-            data = byteify(json.loads(data), '', True)
+            data = json.loads(data)
 
             params = dict(videoUrl.meta.get('params', {}))
             if params.get('tip', '') == 'embed':
@@ -398,7 +398,7 @@ class FilmeOnlineTo(CBaseHostClass):
                 sts, data = self.getPage(self.getFullUrl(url), urlParams)
                 if not sts:
                     return
-                data = byteify(json.loads(data), '', True)
+                data = json.loads(data)
                 url = data['src'].replace('&amp;', '&')
                 urlParams = {'Referer': str(videoUrl), 'User-Agent': self.HEADER['User-Agent']}
                 subsLinks = re.compile('''c([0-9]+?)_file=(https?://[^&^$]+?\.srt)[&$]''').findall(url)
@@ -419,7 +419,7 @@ class FilmeOnlineTo(CBaseHostClass):
                     return
 
                 urlParams = {'Referer': str(videoUrl), 'User-Agent': self.HEADER['User-Agent']}
-                data = byteify(json.loads(data), '', True)
+                data = json.loads(data)
                 url = self.getFullUrl(data['playlist'][0]['sources']['file'])
                 if 'mp4' in data['playlist'][0]['sources']['type'].lower():
                     urlTab.append({'name': 'mp4', 'url': strwithmeta(url, urlParams), 'need_resolve': 0})

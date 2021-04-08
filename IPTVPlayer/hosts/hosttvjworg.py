@@ -128,7 +128,7 @@ class TVJWORG(CBaseHostClass):
                 if sts:
                     try:
                         lang = GetDefaultLang()
-                        data = byteify(json.loads(data))
+                        data = json.loads(data)
                         for item in data['languages']:
                             if item['locale'] == lang:
                                 self.defaultLangCode = str(item['code'])
@@ -153,7 +153,7 @@ class TVJWORG(CBaseHostClass):
         if not sts:
             return
         try:
-            data = byteify(json.loads(data))
+            data = json.loads(data)
             if sub != '':
                 data = data['category'][sub]
             else:
@@ -181,7 +181,7 @@ class TVJWORG(CBaseHostClass):
             return
 
         try:
-            data = byteify(json.loads(data))
+            data = json.loads(data)
             for item in data['category']['media']:
                 icon = self._getIcon(item)
                 title = item['title']
@@ -218,7 +218,7 @@ class TVJWORG(CBaseHostClass):
             return
 
         try:
-            data = byteify(json.loads(data))
+            data = json.loads(data)
             for item in data['category']['media']:
                 icon = self._getIcon(item)
                 title = item['title']

@@ -73,7 +73,7 @@ class OroroTV(CBaseHostClass):
 
         data = self.cm.ph.getDataBeetwenMarkers(data, '"items":', '};', False)[1]
         try:
-            data = byteify(json.loads(data), '', True)
+            data = json.loads(data)
             for item in data:
                 url = self.getFullUrl(item.get('url', ''))
                 icon = self.getFullUrl(item.get('banner', ''))

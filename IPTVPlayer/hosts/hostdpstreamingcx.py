@@ -222,7 +222,7 @@ class StreamingSeriesWatch(CBaseHostClass):
         printDBG('StreamingSeriesWatch.getLinksForFavourite')
         links = []
         try:
-            cItem = byteify(json.loads(fav_data))
+            cItem = json.loads(fav_data)
             links = self.getLinksForVideo(cItem)
         except Exception:
             printExc()
@@ -231,7 +231,7 @@ class StreamingSeriesWatch(CBaseHostClass):
     def setInitListFromFavouriteItem(self, fav_data):
         printDBG('StreamingSeriesWatch.setInitListFromFavouriteItem')
         try:
-            params = byteify(json.loads(fav_data))
+            params = json.loads(fav_data)
         except Exception:
             params = {}
             printExc()
@@ -261,7 +261,7 @@ class StreamingSeriesWatch(CBaseHostClass):
         icon = cItem.get('icon', '')
         otherInfo = {}
         try:
-            data = byteify(json.loads(data))
+            data = json.loads(data)
             icon = self._viaProxy(self.getFullUrl(data['poster']))
             title = data['title']
             desc = data['overview']

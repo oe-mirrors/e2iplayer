@@ -410,7 +410,7 @@ class DDLMe(CBaseHostClass):
             ret = js_execute(jscode)
             if ret['sts'] and 0 == ret['code']:
                 data = ret['data'].strip()
-                data = byteify(json.loads(data))
+                data = json.loads(data)
 
                 for key, dat in data.items():
                     for name, item in dat['links'].items():

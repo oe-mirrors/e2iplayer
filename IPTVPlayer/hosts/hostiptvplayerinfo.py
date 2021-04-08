@@ -89,7 +89,7 @@ class IPTVPlayerInfo(CBaseHostClass):
 
             printDBG(">>>> currCommitStamp[%s]" % currCommitStamp)
 
-            data = byteify(json.loads(data))
+            data = json.loads(data)
             if data['count'] >= ITEMS_PER_PAGE:
                 nextPage = True
 

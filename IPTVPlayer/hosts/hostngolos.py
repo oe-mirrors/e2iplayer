@@ -158,7 +158,7 @@ class NGolosCOM(CBaseHostClass):
                     url = self.getFullUrl('/assets/json/clubs.json')
                     sts, tmp = self.getPage(url, params)
                     try:
-                        self.cacheTeams = byteify(json.loads(tmp))
+                        self.cacheTeams = json.loads(tmp)
                     except Exception:
                         printExc()
                 try:
@@ -339,7 +339,7 @@ class NGolosCOM(CBaseHostClass):
             if not sts:
                 return []
             try:
-                data = byteify(json.loads(data))
+                data = json.loads(data)
                 if 'content' in data:
                     url = data['content']['media']['f4m']
                 else:

@@ -264,7 +264,7 @@ class KreskowkaZonePL(CBaseHostClass):
         printDBG('KreskowkaZonePL.getLinksForFavourite')
         links = []
         try:
-            cItem = byteify(json.loads(fav_data))
+            cItem = json.loads(fav_data)
             links = self.getLinksForVideo(cItem)
         except Exception:
             printExc()
@@ -273,7 +273,7 @@ class KreskowkaZonePL(CBaseHostClass):
     def setInitListFromFavouriteItem(self, fav_data):
         printDBG('KreskowkaZonePL.setInitListFromFavouriteItem')
         try:
-            params = byteify(json.loads(fav_data))
+            params = json.loads(fav_data)
         except Exception:
             params = {}
             printExc()

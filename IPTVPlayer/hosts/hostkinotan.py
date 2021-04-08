@@ -233,7 +233,7 @@ class Kinotan(CBaseHostClass):
         tmp = self.cm.ph.getDataBeetwenMarkers(data, 'RalodePlayer.init(', '"});', False)[1]
         if tmp != '':
             try:
-                tmp = byteify(json.loads('[' + tmp + '"}]'))[0]
+                tmp = json.loads('[' + tmp + '"}]')[0]
                 for sKey in tmp:
                     tabs = []
                     sTitle = self.cleanHtmlStr(tmp[sKey]['name'])

@@ -187,7 +187,7 @@ class BBCSport(CBaseHostClass):
 
         mediaData = self.cm.ph.getDataBeetwenMarkers(mediaData, '"body":{', '});', False)[1].strip()[:-1]
         try:
-            mediaData = byteify(json.loads('{%s}' % mediaData), '', True)
+            mediaData = json.loads('{%s}' % mediaData)
             for item in [{'key': 'promoted', 'title': _('Promoted')}, {'key': 'live', 'title': _('Live')}, {'key': 'coming_up', 'title': _('Coming up')}, {'key': 'catch_up', 'title': _('Catch up')}]:
                 try:
                     if isinstance(mediaData[item['key']], list) and len(mediaData[item['key']]):
@@ -356,7 +356,7 @@ class BBCSport(CBaseHostClass):
         for mediaData in tmp:
             mediaData = self.cm.ph.getDataBeetwenMarkers(mediaData, '"body":{', '});', False)[1].strip()[:-1]
             try:
-                mediaData = byteify(json.loads('{%s}' % mediaData))
+                mediaData = json.loads('{%s}' % mediaData)
                 if 'components' in mediaData:
                     for item in mediaData['components']:
                         try:
@@ -542,7 +542,7 @@ class BBCSport(CBaseHostClass):
             mediaData = self.cm.ph.getDataBeetwenMarkers(mediaData, '"body":{', '});', False)[1].strip()[:-1]
             if mediaData != '':
                 try:
-                    mediaData = byteify(json.loads('{%s}' % mediaData), '', True)
+                    mediaData = json.loads('{%s}' % mediaData)
                     if mediaData['media'] and mediaData['media']['mediaType'].lower() == 'video' and '' != mediaData['media']['pid']:
                         url = self.getFullUrl('/iplayer/vpid/%s/' % mediaData['media']['pid'])
                         urlTab.append({'name': mediaData['media']['entityType'], 'url': url, 'need_resolve': 1})
@@ -553,7 +553,7 @@ class BBCSport(CBaseHostClass):
             if mediaData != '':
                 try:
                     uniqueTab = []
-                    mediaData = byteify(json.loads(mediaData), '', True)
+                    mediaData = json.loads(mediaData)
                     for tmp in mediaData:
                         title = self.cleanHtmlStr(tmp['smpConfig']['title'])
                         for item in tmp['smpConfig']['items']:

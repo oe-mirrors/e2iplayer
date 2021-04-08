@@ -208,7 +208,7 @@ class OpenSubtitlesRest(CBaseSubProviderClass):
 
         subFormats = self.getSupportedFormats(all=True)
         try:
-            data = byteify(json.loads(data))
+            data = json.loads(data)
             for item in data:
                 link = item.get('SubDownloadLink', '')
                 if self.cm.isValidUrl(link) and item.get('SubFormat', '') in subFormats and link.endswith('.gz'):
