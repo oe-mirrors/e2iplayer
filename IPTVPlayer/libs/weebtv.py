@@ -93,9 +93,9 @@ class WeebTvApi:
 
     def _getStr(self, v, default=''):
         if type(v) == type(''):
-            return v.encode('utf-8')
-        elif type(v) == type(''):
             return v
+        #elif type(v) == type(''):
+        #    return v
         return default
 
     def getCategoriesList(self):

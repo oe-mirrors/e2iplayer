@@ -966,6 +966,10 @@ class common:
             response = None
             status = False
 
+        if response != None:
+            if isinstance(response, bytes):
+                response = response.decode('utf-8', 'strict')
+
         if addParams['return_data'] and status and not isinstance(response, str):
             status = False
 
@@ -1359,12 +1363,16 @@ class common:
         if None != post_data:
             printDBG('pCommon - getURLRequestData() -> post data: ' + str(post_data))
             if params.get('raw_post_data', False):
+                print("dataPost1")
                 dataPost = post_data
             elif params.get('multipart_post_data', False):
+                print("dataPost2")
                 customOpeners.append(MultipartPostHandler())
                 dataPost = post_data
             else:
-                dataPost = urllib.parse.urlencode(post_data)
+                print("dataPost3")
+                dataPost = urllib.parse.urlencode(post_data).encode()
+            print(dataPost)
             req = urllib.request.Request(pageUrl, dataPost, headers)
         else:
             req = urllib.request.Request(pageUrl, None, headers)
@@ -1384,7 +1392,11 @@ class common:
                 except Exception:
                     pass
 
-                data = response.read(params.get('max_data_size', -1))
+                max = params.get('max_data_size', -1)
+                if max == -1:
+                    data = response.read()
+                else:
+                    data = response.read(max)
                 response.close()
             except urllib.error.HTTPError as e:
                 ignoreCodeRanges = params.get('ignore_http_code_ranges', [(404, 404), (500, 500)])
@@ -1449,6 +1461,9 @@ class common:
         return out_data
 
     def handleCharset(self, params, data, metadata):
+        _data = data
+        if isinstance(_data, bytes):
+            _data = data.decode('utf-8', 'strict')
         try:
             if params.get('return_data', False) and params.get('convert_charset', True):
                 encoding = ''
@@ -1456,18 +1471,19 @@ class common:
                     encoding = self.ph.getSearchGroups(metadata['content-type'], '''charset=([A-Za-z0-9\-]+)''', 1, True)[0].strip().upper()
 
                 if encoding == '' and params.get('search_charset', False):
-                    encoding = self.ph.getSearchGroups(data, '''(<meta[^>]+?Content-Type[^>]+?>)''', ignoreCase=True)[0]
+                    encoding = self.ph.getSearchGroups(_data, '''(<meta[^>]+?Content-Type[^>]+?>)''', ignoreCase=True)[0]
                     encoding = self.ph.getSearchGroups(encoding, '''charset=([A-Za-z0-9\-]+)''', 1, True)[0].strip().upper()
                 if encoding not in ['', 'UTF-8']:
                     printDBG(">> encoding[%s]" % encoding)
                     try:
-                        data = data.decode(encoding).encode('UTF-8')
+                        _data = data.decode(encoding)
                     except Exception:
                         printExc()
                     metadata['orig_charset'] = encoding
         except Exception:
             printExc()
-        return data, metadata
+            
+        return _data, metadata
 
     def urlEncodeNonAscii(self, b):
         return re.sub('[\x80-\xFF]', lambda c: '%%%02x' % ord(c.group(0)), b)
