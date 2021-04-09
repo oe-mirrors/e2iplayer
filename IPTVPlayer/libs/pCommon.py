@@ -34,9 +34,9 @@ try:
         from io import StringIO
     except Exception:
         from io import StringIO
-    import gzip
 except Exception:
     pass
+import gzip
 from urllib.parse import urljoin, urlparse, urlunparse
 from binascii import hexlify
 ###################################################
@@ -934,7 +934,7 @@ class common:
 
                     data = e.fp.read(addParams.get('max_data_size', -1))
                     if e.fp.info().get('Content-Encoding', '') == 'gzip':
-                        data = DecodeGzipped(data)
+                        data = gzip.decompress(data)
 
                     data, metadata = self.handleCharset(addParams, data, metadata)
                     response = strwithmeta(data, metadata)
@@ -1416,7 +1416,11 @@ class common:
                         self.fillHeaderItems(metadata, e.fp.info(), True, collectAllHeaders=params.get('collect_all_headers'))
                     except Exception:
                         pass
-                    data = e.fp.read(params.get('max_data_size', -1))
+                    max = params.get('max_data_size', -1)
+                    if max == -1:
+                        data = e.fp.read()
+                    else:
+                        data = e.fp.read(max)
                     #e.msg
                     #e.headers
                 elif e.code == 503:
@@ -1436,7 +1440,8 @@ class common:
             try:
                 if gzip_encoding:
                     printDBG('Content-Encoding == gzip')
-                    out_data = DecodeGzipped(data)
+                    out_data = gzip.decompress(data)
+#                    out_data = DecodeGzipped(data)
                 else:
                     out_data = data
             except Exception as e:
@@ -1461,29 +1466,32 @@ class common:
         return out_data
 
     def handleCharset(self, params, data, metadata):
-        _data = data
-        if isinstance(_data, bytes):
-            _data = data.decode('utf-8', 'strict')
         try:
             if params.get('return_data', False) and params.get('convert_charset', True):
                 encoding = ''
                 if 'content-type' in metadata:
                     encoding = self.ph.getSearchGroups(metadata['content-type'], '''charset=([A-Za-z0-9\-]+)''', 1, True)[0].strip().upper()
-
                 if encoding == '' and params.get('search_charset', False):
+                    if isinstance(_data, bytes):
+                        _data = data.decode('utf-8', 'ignore')
                     encoding = self.ph.getSearchGroups(_data, '''(<meta[^>]+?Content-Type[^>]+?>)''', ignoreCase=True)[0]
                     encoding = self.ph.getSearchGroups(encoding, '''charset=([A-Za-z0-9\-]+)''', 1, True)[0].strip().upper()
                 if encoding not in ['', 'UTF-8']:
                     printDBG(">> encoding[%s]" % encoding)
                     try:
-                        _data = data.decode(encoding)
+                        data = data.decode(encoding)
                     except Exception:
                         printExc()
                     metadata['orig_charset'] = encoding
+                else:
+                    try:
+                        data = data.decode('utf-8', 'strict')
+                    except Exception:
+                        data = data.decode('utf-8', 'ignore')
         except Exception:
             printExc()
             
-        return _data, metadata
+        return data, metadata
 
     def urlEncodeNonAscii(self, b):
         return re.sub('[\x80-\xFF]', lambda c: '%%%02x' % ord(c.group(0)), b)

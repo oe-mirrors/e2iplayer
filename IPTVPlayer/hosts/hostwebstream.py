@@ -403,8 +403,8 @@ class HasBahCa(CBaseHostClass):
         for item in tmpList:
             try:
                 params = {'name': 'filmon_channels',
-                           'title': item['title'].encode('utf-8'),
-                           'desc': item['description'].encode('utf-8'),
+                           'title': item['title'],
+                           'desc': item['description'],
                            'group_id': item['group_id'],
                            'icon': self.__getFilmOnIconUrl(item)
                            }
@@ -418,9 +418,9 @@ class HasBahCa(CBaseHostClass):
         for item in tmpList:
             try:
                 params = {'name': 'filmon_channel',
-                           'title': item['title'].encode('utf-8'),
+                           'title': item['title'],
                            'url': item['id'],
-                           'desc': item['group'].encode('utf-8'),
+                           'desc': item['group'],
                            'seekable': item['seekable'],
                            'icon': self.__getFilmOnIconUrl(item)
                            }
