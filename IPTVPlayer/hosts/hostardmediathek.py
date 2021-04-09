@@ -455,7 +455,8 @@ class ARDmediathek(CBaseHostClass):
                                 return 1
                             else:
                                 return 0
-            tmpUrlTab.sort(_cmpLinks)
+            # FIXME SORT
+            #tmpUrlTab.sort(_cmpLinks)
             onelinkmode = config.plugins.iptvplayer.ardmediathek_onelinkmode.value
             for item in tmpUrlTab:
                 url = item['url']
