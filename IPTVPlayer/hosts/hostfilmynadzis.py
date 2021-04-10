@@ -271,6 +271,12 @@ class FilmyNaDzis(CBaseHostClass):
                 elif 'm3u' in url:
                     urlTab.extend(getDirectM3U8Playlist(url, checkExt=False, checkContent=True, sortWithMaxBitrate=999999999))
 
+        tmp = self.cm.ph.getAllItemsBeetwenMarkers(data, '<iframe', '>')
+        if len(tmp):
+            for item in tmp:
+                url  = self.cm.ph.getSearchGroups(item, '''src=['"]([^'^"]+?)['"]''')[0]
+                urlTab.append({'name':self.up.getHostName(url), 'url':self.getFullUrl(url), 'need_resolve':1})
+
         if urlTab:
             self.cacheLinks[cacheKey] = urlTab
 
