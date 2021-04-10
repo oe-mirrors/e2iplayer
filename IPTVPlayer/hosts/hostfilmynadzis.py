@@ -118,7 +118,7 @@ class FilmyNaDzis(CBaseHostClass):
         
         subItems = []
         
-        data = ph.find(data, ('<ul', '>', 'navbar'), '</ul>', flags=0)[1]
+        data = ph.find(data, ('<div', '>', 'cactus-main-menu navigation-font'), '</div>', flags=0)[1]
         items = self.cm.ph.getAllItemsBeetwenMarkers(data, '<a', '</a>', withMarkers=True)
         
         for item in items:
@@ -127,7 +127,7 @@ class FilmyNaDzis(CBaseHostClass):
             url = self.getFullUrl(ph.getattr(item, 'href'), self.MAIN_URL)
             title = ph.clean_html(item)
             
-            if 'seriale' in url: continue
+            if 'seriale' in url or 'partnerski' in url or '#' in url: continue
 
             params = {'good_for_fav':True, 'category':'list_items', 'url':url, 'title': title}
 
