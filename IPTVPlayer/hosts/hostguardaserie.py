@@ -17,27 +17,27 @@ except Exception: import simplejson as json
 ###################################################
 
 def gettytul():
-    return 'https://guardaserie.page/'
+    return 'https://www.guardaserie.vision/'
 
 class GuardaSerieClick(CBaseHostClass):
 
     def __init__(self):
-        CBaseHostClass.__init__(self, {'history':'guardaserie.kim', 'cookie':'guardaserie.kim.cookie'})
+        CBaseHostClass.__init__(self, {'history':'guardaserie.vision', 'cookie':'guardaserie.vision.cookie'})
         
         self.USER_AGENT = 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/73.0.3683.103 Safari/537.36'
-        self.MAIN_URL = 'https://guardaserie.page/'
+        self.MAIN_URL = 'https://www.guardaserie.vision/'
 
         self.HEADER = {'User-Agent': self.USER_AGENT, 'Accept': 'text/html', 'Accept-Encoding': 'gzip', 'Referer': self.MAIN_URL}
         self.AJAX_HEADER = MergeDicts(self.HEADER, {'X-Requested-With':'XMLHttpRequest', 'Content-Type':'application/x-www-form-urlencoded; charset=UTF-8'})
         
-        self.DEFAULT_ICON_URL = 'https://guardaserie.page/wp-content/uploads/2015/05/logogd-1-1.png'
+        self.DEFAULT_ICON_URL = 'https://cdnimg.guardaserie.vision/wp-content/themes/guardaserie/images/logogd.png'
         
         self.defaultParams = {'header':self.HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
     
     def getPageCF(self, baseUrl, params = {}, post_data = None):
         if params == {}: 
             params = self.defaultParams
-        params['cloudflare_params'] = {'domain':'guardaserie.date', 'cookie_file':self.COOKIE_FILE, 'User-Agent':self.USER_AGENT}
+        params['cloudflare_params'] = {'domain':'guardaserie.vision', 'cookie_file':self.COOKIE_FILE, 'User-Agent':self.USER_AGENT}
         return self.cm.getPageCFProtection(baseUrl, params, post_data)
 
     def getPage(self, baseUrl, addParams = {}, post_data = None):
@@ -86,8 +86,7 @@ class GuardaSerieClick(CBaseHostClass):
         for item in rawItems:
             url = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''href=['"]([^"^']+?)['"]''')[0])
             icon  = self.getFullIconUrl( self.cm.ph.getSearchGroups(item, '''<img[^>]+?src=['"]([^"^']+?)['"]''')[0])  
-            if icon != '':
-                icon = icon + "|cf"
+            
 
             title = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(item, '<p', '</p>')[1])
             if title == '': continue
@@ -158,8 +157,7 @@ class GuardaSerieClick(CBaseHostClass):
                 icon  = self.cm.ph.getSearchGroups(item, '''<img[^>]+?src=['"]([^"^']+?)['"]''')[0]
                 if icon == '': 
                     icon  = self.cm.ph.getSearchGroups(item, '''<img[^>]+?data\-original=['"]([^"^']+?)['"]''')[0]
-                if icon != '':
-                    icon = icon + "|cf"
+                
                 desc  = self.cleanHtmlStr( self.cm.ph.getDataBeetwenNodes(item, ('<p', '>', 'desc'), ('</p', '>'))[1] )
                 season = self.cm.ph.getSearchGroups(item, '''meta\-stag=['"]([^"^']+?)['"]''')[0]
                 episode = self.cm.ph.getSearchGroups(item, '''meta\-ep=['"]([^"^']+?)['"]''')[0]
