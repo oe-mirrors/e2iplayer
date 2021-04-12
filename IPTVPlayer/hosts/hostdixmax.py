@@ -43,10 +43,10 @@ def GetConfigList():
 ###################################################
 
 def gettytul():
-    return 'https://dixmax.cc/'
+    return 'https://www.dixmax.io/'
     
 class SuggestionsProvider:
-    MAIN_URL = 'https://dixmax.cc/'
+    MAIN_URL = 'https://www.dixmax.io/'
     COOKIE_FILE = ''
     def __init__(self):
         self.cm = common()
@@ -75,10 +75,10 @@ class DixMax(CBaseHostClass):
         self.HTTP_HEADER = self.cm.getDefaultHeader(browser='chrome')
         self.defaultParams = {'header':self.HTTP_HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
 
-        self.MAIN_URL    = 'https://dixmax.cc/'
+        self.MAIN_URL    = 'https://dixmax.it/'
         self.SESSION_URL = self.MAIN_URL + "session.php?action=1"
         self.GETLINKS_URL = self.MAIN_URL + "api/private/get_links.php"
-        self.DEFAULT_ICON_URL = "https://dixmax.cc/img/logor.png"
+        self.DEFAULT_ICON_URL = "https://www.dixmax.io/img/logor.png"
         self.cacheFilters  = {}
         self.cacheFiltersKeys = []
         self.cacheLinks = {}
