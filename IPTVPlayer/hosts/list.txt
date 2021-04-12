@@ -16,6 +16,7 @@ hostartetv
 hostbajeczkiorg
 hostbbciplayer
 hostbbcsport
+hostbildde
 hostbsto
 hostcartoonhd
 hostcasacinema

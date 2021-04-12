@@ -17,6 +17,7 @@
 "hostbajeczkiorg": "http://bajeczki.org/",
 "hostbbciplayer": "http://www.bbc.co.uk/iplayer",
 "hostbbcsport": "https://www.bbc.co.uk/sport",
+"hostbildde": "https://www.bild.de",
 "hostbsto": "https://bs.to/",
 "hostcartoonhd": "https://cartoonhd.app/",
 "hostcasacinema": "https://www.casacinema.work/",

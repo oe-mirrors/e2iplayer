@@ -79,6 +79,7 @@ class IPTVHostsGroups:
         'bajeczkiorg' : [ 'cartoonsandanime', 'polish'] ,
         'bbciplayer' : [ 'english'] ,
         'bbcsport' : [ 'english', 'sport'] ,
+        'bildde':['german'],
         'bsto' : [ 'german', 'moviesandseries'] ,
         'cartoonhd' : [ 'english', 'moviesandseries'] ,
         'casacinema': [ 'italian', 'moviesandseries'] ,
