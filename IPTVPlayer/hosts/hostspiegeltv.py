@@ -6,7 +6,7 @@ from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT
 from Plugins.Extensions.IPTVPlayer.components.ihost import CHostBase, CBaseHostClass
 from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, MergeDicts
 from Plugins.Extensions.IPTVPlayer.tools.iptvtypes import strwithmeta
-from Plugins.Extensions.IPTVPlayer.libs.urlparserhelper import getDirectM3U8Playlist, getMPDLinksWithMeta
+from Plugins.Extensions.IPTVPlayer.libs.urlparserhelper import getDirectM3U8Playlist, getMPDLinksWithMeta, hex_md5
 from Plugins.Extensions.IPTVPlayer.tools.e2ijs import js_execute
 from Plugins.Extensions.IPTVPlayer.libs.e2ijson import loads as json_loads
 ###################################################
@@ -196,7 +196,7 @@ class SpiegelTv(CBaseHostClass):
             secret = clientToken[int(deviceId[0]):]
             secret = secret[0:len(secret) - int(deviceId[-1])]
             op = 'byid'
-            requestToken = hashlib.md5(''.join((op, clientId, secret))).hexdigest()
+            requestToken = hex_md5(''.join((op, clientId, secret)))
 
             urlParams = dict(self.defaultParams)
             urlParams['header'] = dict(self.AJAX_HEADER)
@@ -352,7 +352,7 @@ class SpiegelTv(CBaseHostClass):
             secret = clientToken[int(deviceId[0]):]
             secret = secret[0:len(secret) - int(deviceId[-1])]
             op = 'byid'
-            requestToken = hashlib.md5(''.join((op, clientId, secret))).hexdigest()
+            requestToken = hex_md5(''.join((op, clientId, secret)))
 
             urlParams = dict(self.defaultParams)
             urlParams['header'] = dict(self.AJAX_HEADER)

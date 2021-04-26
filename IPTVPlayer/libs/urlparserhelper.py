@@ -18,6 +18,7 @@ import codecs
 import urllib.request
 import urllib.parse
 import urllib.error
+import six
 try:
     from urllib.parse import urlsplit, urlunsplit, urljoin
 except Exception:
@@ -27,7 +28,7 @@ try:
     from hashlib import md5
 
     def hex_md5(e):
-        return md5(e).hexdigest()
+        return md5(six.ensure_binary(e)).hexdigest()
 except Exception:
     from Plugins.Extensions.IPTVPlayer.libs.crypto.hash.md5Hash import MD5 as md5
 

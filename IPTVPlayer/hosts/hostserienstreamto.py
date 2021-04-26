@@ -9,6 +9,7 @@ from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, Ge
 from Plugins.Extensions.IPTVPlayer.tools.iptvtypes import strwithmeta
 from Plugins.Extensions.IPTVPlayer.libs import ph
 from Plugins.Extensions.IPTVPlayer.libs.e2ijson import loads as json_loads
+from Plugins.Extensions.IPTVPlayer.libs.urlparserhelper import hex_md5
 ###################################################
 
 ###################################################
@@ -491,7 +492,7 @@ class SerienStreamTo(CBaseHostClass, CaptchaHelper):
             freshSession = False
             if sts and '/home/logout' in data:
                 printDBG("Check hash")
-                hash = hexlify(md5('%s@***@%s' % (self.login, self.password)).digest())
+                hash = hex_md5('%s@***@%s' % (self.login, self.password))
                 prevHash = ReadTextFile(loginCookie)[1].strip()
 
                 printDBG("$hash[%s] $prevHash[%s]" % (hash, prevHash))
@@ -576,7 +577,7 @@ class SerienStreamTo(CBaseHostClass, CaptchaHelper):
                             break
 
             if self.loggedIn:
-                hash = hexlify(md5('%s@***@%s' % (self.login, self.password)).digest())
+                hash = hex_md5('%s@***@%s' % (self.login, self.password))
                 WriteTextFile(loginCookie, hash)
             else:
                 self.sessionEx.open(MessageBox, _('Login failed.') + '\n' + errorMsg, type=MessageBox.TYPE_ERROR, timeout=10)

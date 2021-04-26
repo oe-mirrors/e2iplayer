@@ -8,7 +8,7 @@ from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, Ge
 from Plugins.Extensions.IPTVPlayer.tools.iptvtypes import strwithmeta
 from Plugins.Extensions.IPTVPlayer.libs.pCommon import common
 from Plugins.Extensions.IPTVPlayer.libs.urlparser import urlparser
-from Plugins.Extensions.IPTVPlayer.libs.urlparserhelper import getDirectM3U8Playlist
+from Plugins.Extensions.IPTVPlayer.libs.urlparserhelper import getDirectM3U8Playlist, hex_md5
 from Plugins.Extensions.IPTVPlayer.components.ihost import CBaseHostClass
 ###################################################
 
@@ -174,7 +174,7 @@ class EdemTvApi:
 
                 login = config.plugins.iptvplayer.edemtv_login.value
                 passwd = config.plugins.iptvplayer.edemtv_password.value
-                subdomain = md5(login + passwd).hexdigest()
+                subdomain = hex_md5(login + passwd)
                 post_data = {'server_id': tries, 'name': subdomain}
                 params = dict(self.http_params)
                 params['header'] = HTTP_HEADER

@@ -5,6 +5,7 @@
 from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _, SetIPTVPlayerLastHostError
 from Plugins.Extensions.IPTVPlayer.components.isubprovider import CSubProviderBase, CBaseSubProviderClass
 from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, GetDefaultLang, RemoveDisallowedFilenameChars, GetSubtitlesDir, rm
+from Plugins.Extensions.IPTVPlayer.libs.urlparserhelper import hex_md5
 ###################################################
 
 ###################################################
@@ -88,7 +89,7 @@ class OpenSubtitles(CBaseSubProviderClass):
 
         login = config.plugins.iptvplayer.opensuborg_login.value
         passwd = config.plugins.iptvplayer.opensuborg_password.value
-        currentHash = md5('\n\n--\n\n'.join((login, passwd))).hexdigest()
+        currentHash = hex_md5('\n\n--\n\n'.join((login, passwd)))
         cokieFile = self.COOKIE_FILE + '.hash'
         try:
             with open(cokieFile, 'r') as f:

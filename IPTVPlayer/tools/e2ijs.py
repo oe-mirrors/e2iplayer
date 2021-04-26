@@ -4,6 +4,7 @@ from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT
 from Plugins.Extensions.IPTVPlayer.components.asynccall import iptv_execute
 from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, GetDukPath, CreateTmpFile, rm, getDebugMode, GetJSCacheDir, \
                                                           ReadTextFile, WriteTextFile
+from Plugins.Extensions.IPTVPlayer.libs.urlparserhelper import hex_md5
 
 from Tools.Directories import fileExists
 
@@ -75,7 +76,7 @@ def js_execute_ext(items, params={}):
                         sts, code = ReadTextFile(path)
                         if not sts:
                             raise Exception('Faile to read file "%s"!' % path)
-                    hash = hexlify(md5(code).digest())
+                    hash = hex_md5(code)
                 byteFileName = GetJSCacheDir(name + '.byte')
                 metaFileName = GetJSCacheDir(name + '.meta')
                 if fileExists(byteFileName):

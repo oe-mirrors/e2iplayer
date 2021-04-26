@@ -6,6 +6,7 @@ from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT
 from Plugins.Extensions.IPTVPlayer.components.ihost import CHostBase, CBaseHostClass
 from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, rm
 from Plugins.Extensions.IPTVPlayer.tools.iptvtypes import strwithmeta
+from Plugins.Extensions.IPTVPlayer.libs.urlparserhelper import hex_md5
 ###################################################
 
 ###################################################
@@ -49,7 +50,7 @@ class AndrijaIAndjelka(CBaseHostClass):
             timestamp = int(time.time())
             if timestamp > self.timestam:
                 timestamp += 180
-                hash = hexlify(md5(str(timestamp)).digest())
+                hash = hex_md5(str(timestamp))
                 addParams['cookie_items']['token'] = '%s,%s' % (timestamp, hash)
 
         addParams['cloudflare_params'] = {'cookie_file': self.COOKIE_FILE, 'User-Agent': self.USER_AGENT}
