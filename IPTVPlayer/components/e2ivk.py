@@ -405,7 +405,7 @@ class E2iVirtualKeyBoard(Screen):
     def setText(self, text):
         self["text"].setText(text)
         self["text"].right()
-        self["text"].currPos = len(text.decode('utf-8'))
+        self["text"].currPos = len(text)
         self["text"].right()
         self.textUpdated()
 
@@ -657,7 +657,7 @@ class E2iVirtualKeyBoard(Screen):
         if layout != None:
             self.currentVKLayout = layout
         self.updateKeysLabels()
-        self['_56'].setText(self.currentVKLayout['locale'].encode('UTF-8').split('-', 1)[0].upper())
+        self['_56'].setText(self.currentVKLayout['locale'].split('-', 1)[0].upper())
         self['_56'].show()
         self.updateSuggestions()
 
