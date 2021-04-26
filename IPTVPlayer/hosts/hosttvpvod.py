@@ -87,12 +87,12 @@ class TvpVod(CBaseHostClass, CaptchaHelper):
 
     RIGI_DEFAULT_ICON_URL = 'https://pbs.twimg.com/profile_images/999586990650638337/YHEsWRTs_400x400.jpg'
 
-    VOD_CAT_TAB = [{'category': 'tvp_sport', 'title': 'TVP Sport', 'url': 'http://sport.tvp.pl/wideo'},
-                    {'category': 'streams', 'title': 'TVP na żywo', 'url': 'http://tvpstream.tvp.pl/'},
-                    {'category': 'vods_explore_item', 'title': 'Przegapiłeś w TV?', 'url': MAIN_VOD_URL + 'przegapiles-w-tv'},
-                    {'category': 'vods_list_cats', 'title': 'Katalog', 'url': MAIN_VOD_URL},
-                    {'category': 'digi_menu', 'title': 'Rekonstrukcja cyfrowa TVP', 'url': 'https://cyfrowa.tvp.pl/', 'icon': RIGI_DEFAULT_ICON_URL},
-
+    VOD_CAT_TAB  = [{'category':'tvp_sport',           'title':'TVP Sport',                 'url':'http://sport.tvp.pl/wideo'},
+                    {'category':'streams',             'title':'TVP na żywo',               'url':'http://tvpstream.tvp.pl/'},
+                    {'category':'vods_explore_item',   'title':'Przegapiłeś w TV?',         'url':MAIN_VOD_URL + 'przegapiles-w-tv'},
+                    {'category':'vods_list_cats',      'title':'Katalog',                   'url':MAIN_VOD_URL},
+                    {'category':'vods_explore_item',   'title':'Perły Archiwów',            'url':MAIN_VOD_URL + 'sub-category/archiwalne,1649991'},
+                    {'category':'digi_menu',           'title':'Rekonstrukcja cyfrowa TVP', 'url':'https://cyfrowa.tvp.pl/'},
                     #{'category':'vods_list_items1',    'title':'Polecamy',                  'url':MAIN_VOD_URL},
                     #{'category':'vods_sub_categories', 'title':'Polecane',                  'marker':'Polecane'},
                     #{'category':'vods_sub_categories', 'title':'VOD',                       'marker':'VOD'},
@@ -943,8 +943,10 @@ class TvpVod(CBaseHostClass, CaptchaHelper):
             tmp = ph.findall(tmp, ('<a', '>'), '</a>')
             for item in tmp:
                 title = ph.clean_html(item)
-                url = self.getFullUrl(ph.getattr(item, 'href'), cUrl)
-                self.addDir(MergeDicts(cItem, {'good_for_fav': False, 'allow_sort': False, 'title': title, 'url': url}))
+                url = self.getFullUrl(ph.getattr(item, 'href'),  cUrl)
+                if '{title},{id}' in url:
+                    url = cUrl + self.cm.ph.getSearchGroups(item, '''href=['"][^?]+?(\?[^'^"]+?)['"]''')[0]
+                self.addDir(MergeDicts(cItem, {'good_for_fav':False, 'allow_sort':False, 'title':title, 'url':url}))
 
             if self.currList:
                 return

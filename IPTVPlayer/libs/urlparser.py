@@ -570,67 +570,69 @@ class urlparser:
                        'veuclips.com': self.pp.parserVEUCLIPS,
 #                       'verystream.com':       self.pp.parserVERYSTREAM     ,
 #                       'woof.tube':            self.pp.parserVERYSTREAM     ,
-                       'rapidstream.co': self.pp.parserRAPIDSTREAMCO,
-                       'videohouse.me': self.pp.parserVIDEOHOUSE,
-                       'justupload.io': self.pp.parserJUSTUPLOAD,
-                       'vidspace.io': self.pp.parserVIDEOSPACE,
-                       'veuclips.com': self.pp.parserVIUCLIPS,
-                       'viuclips.net': self.pp.parserVIUCLIPS,
-                       'vidstreamup.com': self.pp.parserVIUCLIPS,
-                       'upclips.online': self.pp.parserVIUCLIPS,
-                       'toclipit.com': self.pp.parserVIUCLIPS,
-                       'forstreams.com': self.pp.parserVIUCLIPS,
-                       'veuclipstoday.tk': self.pp.parserVIUCLIPS,
-                       'streamatus.tk': self.pp.parserVIUCLIPS,
-                       'onlystream.tv': self.pp.parserONLYSTREAMTV,
-                       'tunestream.net': self.pp.parserONLYSTREAMTV,
-                       'vidia.tv': self.pp.parserONLYSTREAMTV,
-                       'youdbox.com': self.pp.parserONLYSTREAMTV,
-                       'upstream.to': self.pp.parserONLYSTREAMTV,
-                       'supervideo.tv': self.pp.parserONLYSTREAMTV,
-                       'streamwire.net': self.pp.parserONLYSTREAMTV,
-                       'vidoo.tv': self.pp.parserONLYSTREAMTV,
-                       'vup.to': self.pp.parserONLYSTREAMTV,
-                       'upvideo.cc': self.pp.parserONLYSTREAMTV,
-                       'playtube.ws': self.pp.parserONLYSTREAMTV,
-                       'vkprime.com': self.pp.parserONLYSTREAMTV,
-                       'anyvideo.org': self.pp.parserONLYSTREAMTV,
-                       'jetload.net': self.pp.parserJETLOADNET,
-                       'mixdrop.co': self.pp.parserMIXDROP,
-                       'mixdrop.club': self.pp.parserMIXDROP,
-                       'vidload.net': self.pp.parserVIDLOADNET,
-                       'vidcloud9.com': self.pp.parserVIDCLOUD9,
-                       'abcvideo.cc': self.pp.parserABCVIDEO,
-                       'easyload.io': self.pp.parserEASYLOAD,
-                       'videobin.co': self.pp.parserVIDEOBIN,
-                       'mirrorace.com': self.pp.parserMIRRORACE,
-                       'mstream.fun': self.pp.parserMSTREAMICU,
-                       'mstream.icu': self.pp.parserMSTREAMICU,
-                       'mstream.xyz': self.pp.parserMSTREAMICU,
-                       'mstream.press': self.pp.parserMSTREAMICU,
-                       'premiumserver.club': self.pp.parserMSTREAMICU,
-                       'mystream.streamango.to': self.pp.parserMSTREAMICU,
-                       'embed.mystream.to': self.pp.parserMSTREAMICU,
-                       'dood.so': self.pp.parserDOOD,
-                       'dood.to': self.pp.parserDOOD,
-                       'dood.watch': self.pp.parserDOOD,
-                       'doodstream.com': self.pp.parserDOOD,
-                       'govod.tv': self.pp.parserWIIZTV,
-                       'streamtape.com': self.pp.parserSTREAMTAPE,
-                       'ninjastream.to': self.pp.parserNINJASTREAMTO,
-                       'cryptodialynews.com': self.pp.parserTXNEWSNETWORK,
-                       'droonws.xyz': self.pp.parserTXNEWSNETWORK,
-                       'litcun.net': self.pp.parserTXNEWSNETWORK,
-                       'premiertvlive.com': self.pp.parserTXNEWSNETWORK,
-                       'pumpnews.xyz': self.pp.parserTXNEWSNETWORK,
-                       'superfastvideos.xyz': self.pp.parserTXNEWSNETWORK,
-                       'supergoodtvlive.com': self.pp.parserTXNEWSNETWORK,
-                       'talbol.net': self.pp.parserTXNEWSNETWORK,
-                       'txnewsnetwork.net': self.pp.parserTXNEWSNETWORK,
-                       'lookhd.xyz': self.pp.parserTXNEWSNETWORK,
-                       'highstream.tv': self.pp.parserCLIPWATCHINGCOM,
-                       'wolfstream.tv': self.pp.parserCLIPWATCHINGCOM,
-                       'userload.co': self.pp.parserUSERLOADCO,
+                       'rapidstream.co':       self.pp.parserRAPIDSTREAMCO  ,
+                       'videohouse.me':        self.pp.parserVIDEOHOUSE     ,
+                       'justupload.io':        self.pp.parserJUSTUPLOAD     ,
+                       'vidspace.io':          self.pp.parserVIDEOSPACE     ,
+                       'veuclips.com':         self.pp.parserVIUCLIPS       ,
+                       'viuclips.net':         self.pp.parserVIUCLIPS       ,
+                       'vidstreamup.com':      self.pp.parserVIUCLIPS       ,
+                       'upclips.online':       self.pp.parserVIUCLIPS       ,
+                       'toclipit.com':         self.pp.parserVIUCLIPS       ,
+                       'forstreams.com':       self.pp.parserVIUCLIPS       ,
+                       'veuclipstoday.tk':     self.pp.parserVIUCLIPS       ,
+                       'streamatus.tk':        self.pp.parserVIUCLIPS       ,
+                       'onlystream.tv':        self.pp.parserONLYSTREAMTV   ,
+                       'tunestream.net':       self.pp.parserONLYSTREAMTV   ,
+                       'vidia.tv':             self.pp.parserONLYSTREAMTV   ,
+                       'youdbox.com':          self.pp.parserONLYSTREAMTV   ,
+                       'upstream.to':          self.pp.parserONLYSTREAMTV   ,
+                       'supervideo.tv':        self.pp.parserONLYSTREAMTV   ,
+                       'streamwire.net':       self.pp.parserONLYSTREAMTV   ,
+                       'vidoo.tv':             self.pp.parserONLYSTREAMTV   ,
+                       'vup.to':               self.pp.parserONLYSTREAMTV   ,
+                       'upvideo.cc':           self.pp.parserONLYSTREAMTV   ,
+                       'playtube.ws':          self.pp.parserONLYSTREAMTV   ,
+                       'vkprime.com':          self.pp.parserONLYSTREAMTV   ,
+                       'anyvideo.org':         self.pp.parserONLYSTREAMTV   ,
+                       'jetload.net':          self.pp.parserJETLOADNET     ,
+                       'mixdrop.co':           self.pp.parserMIXDROP        ,
+                       'mixdrop.club':         self.pp.parserMIXDROP        ,
+                       'vidload.net':          self.pp.parserVIDLOADNET     ,
+                       'vidcloud9.com':        self.pp.parserVIDCLOUD9      ,
+                       'abcvideo.cc':          self.pp.parserABCVIDEO       ,
+                       'easyload.io':          self.pp.parserEASYLOAD       ,
+                       'videobin.co':          self.pp.parserVIDEOBIN       ,
+                       'mirrorace.com':        self.pp.parserMIRRORACE      ,
+                       'mstream.fun':          self.pp.parserMSTREAMICU     ,
+                       'mstream.icu':          self.pp.parserMSTREAMICU     ,
+                       'mstream.xyz':          self.pp.parserMSTREAMICU     ,
+                       'mstream.press':        self.pp.parserMSTREAMICU     ,
+                       'premiumserver.club':   self.pp.parserMSTREAMICU     ,
+                       'mystream.streamango.to': self.pp.parserMSTREAMICU   ,
+                       'embed.mystream.to':    self.pp.parserMSTREAMICU     ,
+                       'dood.so':              self.pp.parserDOOD           ,
+                       'dood.to':              self.pp.parserDOOD           ,
+                       'dood.watch':           self.pp.parserDOOD           ,
+                       'doodstream.com':       self.pp.parserDOOD           ,
+                       'govod.tv':             self.pp.parserWIIZTV         ,
+                       'streamtape.com':       self.pp.parserSTREAMTAPE     ,
+                       'ninjastream.to':       self.pp.parserNINJASTREAMTO  ,
+                       'cryptodialynews.com':  self.pp.parserTXNEWSNETWORK  ,
+                       'droonws.xyz':          self.pp.parserTXNEWSNETWORK  ,
+                       'litcun.net':           self.pp.parserTXNEWSNETWORK  ,
+                       'premiertvlive.com':    self.pp.parserTXNEWSNETWORK  ,
+                       'pumpnews.xyz':         self.pp.parserTXNEWSNETWORK  ,
+                       'superfastvideos.xyz':  self.pp.parserTXNEWSNETWORK  ,
+                       'supergoodtvlive.com':  self.pp.parserTXNEWSNETWORK  ,
+                       'talbol.net':           self.pp.parserTXNEWSNETWORK  ,
+                       'txnewsnetwork.net':    self.pp.parserTXNEWSNETWORK  ,
+                       'lookhd.xyz':           self.pp.parserTXNEWSNETWORK  ,
+                       'highstream.tv':        self.pp.parserCLIPWATCHINGCOM,
+                       'wolfstream.tv':        self.pp.parserCLIPWATCHINGCOM,
+                       'userload.co':          self.pp.parserUSERLOADCO     ,
+                       'fastshare.cz':         self.pp.parserFASTSHARECZ    ,
+                       'voe.sx':               self.pp.parserMATCHATONLINE  ,
                     }
         return
 
@@ -13843,16 +13845,17 @@ class pageParser(CaptchaHelper):
 
         sts, data = self.cm.getPage(baseUrl, httpParams)
         if sts:
-            r = self.cm.ph.getSearchGroups(data, r'v-bind:stream="([^"]+?)"')[0].replace('&quot;', '"')
+            r = self.cm.ph.getSearchGroups(data, r'v-bind:[n|s]*stream="([^"]+?)"')[0].replace('&quot;', '"')
+            if not r: r = self.cm.ph.getSearchGroups(data, r'v-bind:[n|s]*file="([^"]+?)"')[0].replace('&quot;', '"')
+            printDBG("parserNINJASTREAMTO r [%s]" % r)
             if r:
                 data = json_loads(r)
                 hash = data.get('hash')
-
-                host = "".join([chr(ord(i) ^ 50) for i in data.get('host')])
+                host = "".join([chr(ord(i) ^ ord(str(idx%2+1))) for idx, i in enumerate(data.get('host'))])
                 url = '%s%s/index.m3u8' % (host, hash)
                 urlsTab.extend(getDirectM3U8Playlist(url, checkContent=True, sortWithMaxBitrate=999999999))
 
-        return urlsTab
+        return urlsTab 
 
     def parserTXNEWSNETWORK(self, baseUrl):
         printDBG("parserTXNEWSNETWORK baseUrl[%s]" % baseUrl)
@@ -13966,5 +13969,29 @@ class pageParser(CaptchaHelper):
             urlTab.extend(getDirectM3U8Playlist(url, checkExt=False, variantCheck=True, checkContent=True, sortWithMaxBitrate=99999999))
         else:
             urlTab.append({'name': 'mp4', 'url': url})
+
+        return urlTab
+
+    def parserFASTSHARECZ(self, baseUrl):
+        printDBG("parserFASTSHARECZ baseUrl[%s]" % baseUrl)
+
+        HTTP_HEADER = self.cm.getDefaultHeader(browser='chrome')
+        referer = baseUrl.meta.get('Referer')
+        if referer: HTTP_HEADER['Referer'] = referer
+        urlParams = {'header': HTTP_HEADER}
+        sts, data = self.cm.getPage(baseUrl, urlParams)
+        if not sts: return False
+
+        url = self.cm.getFullUrl(self.cm.ph.getSearchGroups(data, '''action=(\/free\/[^>]+?)>''')[0], baseUrl)
+        urlParams['max_data_size'] = 0
+        urlParams['no_redirection'] = True
+        sts, data = self.cm.getPage(url, urlParams)
+        if not sts: return False
+
+        urlTab = []
+        url = self.cm.meta.get('location', '')
+        if self.cm.isValidUrl(url):
+            url = strwithmeta(url, {'Origin':"https://" + urlparser.getDomain(baseUrl), 'Referer':baseUrl})
+            urlTab.append({'name':'mp4', 'url':url})
 
         return urlTab
