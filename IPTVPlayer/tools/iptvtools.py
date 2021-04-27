@@ -1254,7 +1254,7 @@ class CSearchHistoryHelper():
                 value = line.replace('\n', '').strip()
                 if len(value) > 0:
                     try:
-                        historyList.insert(0, value.encode('utf-8', 'ignore'))
+                        historyList.insert(0, value)
                     except Exception:
                         printExc()
             file.close()
@@ -1384,7 +1384,7 @@ class CMoviePlayerPerHost():
                 sts = True
             else:
                 file = codecs.open(self.filePath, 'r', 'utf-8', 'ignore')
-                ret = file.read().encode('utf-8', 'ignore')
+                ret = file.read()
                 file.close()
                 activePlayer = {}
                 ret = json_loads(ret)
@@ -1406,7 +1406,7 @@ class CMoviePlayerPerHost():
                 data = {}
                 data['buffering'] = self.activePlayer['buffering']
                 data['player'] = {'value': self.activePlayer['player'].value, 'text': self.activePlayer['player'].getText()}
-                data = json_dumps(data).encode('utf-8')
+                data = json_dumps(data)
                 file = codecs.open(self.filePath, 'w', 'utf-8', 'replace')
                 file.write(data)
                 file.close
