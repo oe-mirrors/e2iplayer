@@ -125,7 +125,7 @@ class StartPage(resource.Resource):
         html = '<html lang="%s">' % language.getLanguage()[:2]
         html += webParts.IncludeHEADER()
         html += webParts.Body().StartPageContent(', '.join(resetStatusMSG))
-        return html
+        return html.encode()
 #######################################################
 
 
@@ -241,7 +241,7 @@ class hostsPage(resource.Resource):
 
         html += webParts.IncludeHEADER(extraMeta)
         html += webParts.Body().hostsPageContent(MenuStatusMSG, ShowCancelButton)
-        return html
+        return html.encode()
 ##########################################################
 
 
@@ -302,7 +302,7 @@ class logsPage(resource.Resource):
         html = '<html lang="%s">' % language.getLanguage()[:2]
         html += webParts.IncludeHEADER(extraMeta)
         html += webParts.Body().logsPageContent(MenuStatusMSG, htmlError, DBGFileName, DBGFileContent)
-        return html
+        return html.encode()
 #######################################################
 
 
@@ -368,7 +368,7 @@ class settingsPage(resource.Resource):
         html += webParts.IncludeHEADER(extraMeta)
         html += webParts.Body().settingsPageContent(MenuStatusMSG)
 
-        return html
+        return html.encode()
 #######################################################
 
 
@@ -484,7 +484,7 @@ class downloaderPage(resource.Resource):
         html = '<html lang="%s">' % language.getLanguage()[:2]
         html += webParts.IncludeHEADER(extraMeta)
         html += webParts.Body().downloaderPageContent(Plugins.Extensions.IPTVPlayer.components.iptvplayerwidget.gDownloadManager, DMlist)
-        return html
+        return html.encode()
 #######################################################
 
 
@@ -557,5 +557,5 @@ class useHostPage(resource.Resource):
         html += '<html lang="%s">' % language.getLanguage()[:2]
         html += webParts.IncludeHEADER(extraMeta)
         html += webParts.Body().useHostPageContent(MenuStatusMSG, True)
-        return html
+        return html.encode()
 ##########################################################
