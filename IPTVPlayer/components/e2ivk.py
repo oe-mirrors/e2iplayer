@@ -440,8 +440,8 @@ class E2iVirtualKeyBoard(Screen):
         self['_57'].setText('Ctrl')
         self['_58'].setText('Alt')
         self['_60'].setText('Alt')
-        self['_61'].setText('\\u2190'.encode('utf-8'))
-        self['_62'].setText('\\u2192'.encode('utf-8'))
+        self['_61'].setText('\\u2190')
+        self['_62'].setText('\\u2192')
 
     def handleArrowKey(self, dx=0, dy=0):
         oldKeyId = self.KEYIDMAP[self.rowIdx][self.colIdx]

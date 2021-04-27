@@ -105,7 +105,7 @@ class Body():
 		tempText += '<p align="left"><b>%s</b></p>' % _('<font color="#FE642E">REMEMBER:</font></b> E2iPlayer <b>IS ONLY</b> specialized Web browser. It does <b>NOT</b> host any materials!!!</font>')
 		tempText += '<p align="left">%s</p>' % resetStatusMSG
 		tempText += '</div></body>\n'
-		return tempText
+		return tempText.encode()
 	########################################################
 
 	def logsPageContent(self, MenuStatusMSG, htmlError, DebugFileName, DBGFileContent):
@@ -142,7 +142,7 @@ class Body():
 				settings.tempLogsHTML = ''
 			tempText += formSUBMITvalue([('cmd', 'downloadLog')], _("Download log file"))
 		tempText += '</div></body>\n'
-		return tempText
+		return tempText.encode()
 
 	########################################################
 	def buildSettingsTable(self, List1, List2, exclList, direction):  #direction = '1>2'|'2>1'
@@ -215,7 +215,7 @@ class Body():
 				pluginCFG += settings.configsHTML[item[0]]
 		pluginCFG += '</tbody></table>\n'
 		tempText += pluginCFG + '<p><br</p>\n' + hostsCFG + '</div></body>\n'
-		return tempText
+		return tempText.encode()
 	########################################################
 
 	def hostsPageContent(self, MenuStatusMSG, ShowCancelButton):
@@ -240,7 +240,7 @@ class Body():
 					tempText += '</tr>\n<tr>'
 		tempText += '</tr>'
 		tempText += '</tbody></table></div></body>\n'
-		return tempText
+		return tempText.encode()
 
 	########################################################
 	def downloaderPageContent(self, webDM, currList):
@@ -363,7 +363,7 @@ class Body():
 			tempText += tableHorizontalRedLine(colspan=3)
 			tempText += '</tbody></table>\n'
 		tempText += '</div></body>\n'
-		return tempText
+		return tempText.encode()
 	########################################################
 
 	def useHostSubMenu(self, isTop=True, LVL=1):
@@ -487,7 +487,7 @@ class Body():
 				tempText += self.useHostSubMenu(isTop=False) #Submenu table
 			setNewHostListShown(True)
 		tempText += '</div></body>\n'
-		return tempText
+		return tempText.encode()
 	########################################################
 
 	def SearchPageContent(self, MenuStatusMSG, ShowCancelButton):
@@ -509,9 +509,9 @@ class Body():
 			for key in list(settings.GlobalSearchResults.keys()):
 				_tempHeader = '<tr><td colspan="2" align="left" style="color: #00A9d1;background: none;border: none;font-size:24px;">%s</td></tr>' % key
 				_tempBody = ''
-	      			index = 0
+				index = 0
 				try:
-		      			for item in settings.GlobalSearchResults.get(key, None)[1]:
+					for item in settings.GlobalSearchResults.get(key, None)[1]:
 						Totest = removeSpecialChars(item.name + item.description).lower()
 						if Totest.find(settings.GlobalSearchQuery.lower()) != -1:
 							_tempBody += self.buildItemsListTable(item, index, allowedCategories=settings.GlobalSearchTypes,
@@ -526,4 +526,4 @@ class Body():
 					tempText += _tempHeader + _tempBody
 			tempText += '</tbody></table>\n'
 			settings.GlobalSearchListShown = True
-		return tempText
+		return tempText.encode()

@@ -377,8 +377,8 @@ class doGlobalSearch(threading.Thread):
 			self.stopIfRequested()
 			if hostName in ['localmedia', 'urllist']: # those are local hosts, nothing to do via web interface
 				continue
-                        elif hostName in ['localmedia', 'urllist']: # those are local hosts, nothing to do via web interface
-                                continue
+			elif hostName in ['localmedia', 'urllist']: # those are local hosts, nothing to do via web interface
+				continue
 			elif hostName in ['seriesonline']: # those hosts have issues wth global search, need more investigation
 				continue
 			elif not IsHostEnabled(hostName):
