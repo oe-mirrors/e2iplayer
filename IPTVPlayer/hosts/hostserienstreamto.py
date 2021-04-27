@@ -20,6 +20,8 @@ from binascii import hexlify
 from hashlib import md5
 from copy import deepcopy
 from Components.config import config, ConfigSelection, ConfigText, getConfigListEntry
+from functools import cmp_to_key
+
 ###################################################
 
 
@@ -376,7 +378,7 @@ class SerienStreamTo(CBaseHostClass, CaptchaHelper):
                 if len(urlTab):
                     self.cacheLinks[cItem['url']] = urlTab
 
-            urlTab = sorted(urlTab, cmp=compare)
+            urlTab = sorted(urlTab, key=cmp_to_key(compare))
         else:
             urlTab = self.up.getVideoLinkExt(cItem['url'])
         return urlTab
