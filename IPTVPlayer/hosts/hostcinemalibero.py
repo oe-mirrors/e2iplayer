@@ -32,7 +32,7 @@ import urllib
 ###################################################
 
 def gettytul():
-    return 'https://cinemalibero.pink/' # main url of host
+    return 'https://cinemalibero.shop/' # main url of host
 
 class Cinemalibero(CBaseHostClass):
  
@@ -43,10 +43,10 @@ class Cinemalibero(CBaseHostClass):
         
         # vars default values
         # various urls
-        self.MAIN_URL = 'https://cinemalibero.pink/'
+        self.MAIN_URL = 'https://cinemalibero.shop/'
 
         # url for default icon
-        self.DEFAULT_ICON_URL = "https://cinemalibero.pink/wp-content/themes/Cinemalibero%202.0/images/logo02.png"
+        self.DEFAULT_ICON_URL = "https://www.cinemalibero.win/wp-content/themes/Cinemalibero%202.0/images/logo02.png"
 
         # default header and http params
         self.HTTP_HEADER = self.cm.getDefaultHeader(browser='chrome')        
@@ -154,7 +154,7 @@ class Cinemalibero(CBaseHostClass):
             return
         
         # check if is a series
-        is_serie = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(data, '<a href="https://cinemalibero.plus/category/serie-tv/" rel="category tag">', '</a>')[1])
+        is_serie = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(data, '<a href="https://cinemalibero.shop/category/serie-tv/" rel="category tag">', '</a>')[1])
         #printDBG(is_serie)
         if 'Serie' in is_serie:
             # it is a series

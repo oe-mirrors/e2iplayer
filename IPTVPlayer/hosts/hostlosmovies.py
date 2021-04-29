@@ -37,7 +37,7 @@ def GetConfigList():
 
 
 def gettytul():
-    return 'http://losmovies.site'
+    return 'http://losmovies.xyz'
 
 class LosMovies(CBaseHostClass):
  
@@ -45,26 +45,26 @@ class LosMovies(CBaseHostClass):
         CBaseHostClass.__init__(self, {'history':'LosMovies.tv', 'cookie':'LosMovies.cookie'})
         self.defaultParams = {'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
         
-        self.DEFAULT_ICON_URL = 'https://superrepo.org/static/images/icons/original/xplugin.video.losmovies.png.pagespeed.ic.JtaWsQ6YWz.jpg'
+        self.DEFAULT_ICON_URL = 'http://losmovies.xyz/images/losmovies_logo.png'
         self.HEADER = self.cm.getDefaultHeader(browser='chrome')
         self.AJAX_HEADER = dict(self.HEADER)
         self.AJAX_HEADER.update( {'X-Requested-With': 'XMLHttpRequest'} )
-        self.MAIN_URL = 'http://losmovies.site'
+        self.MAIN_URL = 'http://losmovies.xyz'
         self.cacheEpisodes = {}
         self.cacheLinks = {}
         self.defaultParams = {'header':self.HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
         
         self.MAIN_CAT_TAB = [{'category':'list_cats',      'mode':'movie',   'title': 'Movies',           'url':self.getMainUrl()                         },
-                             {'category':'list_cats',      'mode':'serie',   'title': 'Popular TV Shows',         'url':self.getFullUrl('watch-popular-tv-shows') },
-                             {'category':'list_top_cats',  'mode':'movie',   'title': 'Top Movie Lists',  'url':self.getFullUrl('top-movie-lists')        },
+                             {'category':'list_cats',      'mode':'serie',   'title': 'Popular TV Shows',         'url':self.getFullUrl('/watch-popular-tv-shows') },
+                             {'category':'list_top_cats',  'mode':'movie',   'title': 'Top Movie Lists',  'url':self.getFullUrl('/top-movie-lists')        },
                              
                              {'category':'search',            'title': _('Search'), 'search_item':True,                                    },
                              {'category':'search_history',    'title': _('Search history'),                                                }
                             ]
                             
         self.MAIN_SUB_CATS_TAB = [{'category':'list_abc',        'title': 'Alphabetically',                                  },
-                                  {'category':'list_categories', 'title': 'Genres',    'url':self.getFullUrl('movie-genres') },
-                                  {'category':'list_categories', 'title': 'Countries', 'url':self.getFullUrl('countries')    },
+                                  {'category':'list_categories', 'title': 'Genres',    'url':self.getFullUrl('/movie-genres') },
+                                  {'category':'list_categories', 'title': 'Countries', 'url':self.getFullUrl('/countries')    },
                                  ]
         
     def getPage(self, baseUrl, addParams = {}, post_data = None):
@@ -110,9 +110,9 @@ class LosMovies(CBaseHostClass):
         
     def listABC(self, cItem, nextCategory):
         printDBG("LosMovies.listABC")
-        for letter in "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZAll":
+        for letter in "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ":
             params = dict(cItem)
-            params.update({'category':nextCategory, 'title':title, 'letter':letter})
+            params.update({'category':nextCategory, 'title':letter, 'letter':letter})
             self.addDir(params)
             
     def listCategories(self, cItem, nextCategory):
@@ -125,7 +125,7 @@ class LosMovies(CBaseHostClass):
         if not sts: return
         self.setMainUrl(self.cm.meta['url'])
         
-        data = self.cm.ph.getDataBeetwenMarkers(data, '<h1 class="centerHeader">', '<footer>')[1]
+        data = self.cm.ph.getDataBeetwenMarkers(data, '<div id="centerContainer">', '<footer>')[1]
         data = data.split('showEntityTeaser ')
         if len(data): del data[0]
         for item in data:
@@ -160,7 +160,7 @@ class LosMovies(CBaseHostClass):
         if cItem['category'] in ['list_items', 'search', 'search_next_page']: marker = 'movie'
         else: marker = 'rubric'
         
-        data = self.cm.ph.getAllItemsBeetwenMarkers(data, '<div id="' + marker, '</h4>', withMarkers=True)
+        data = self.cm.ph.getAllItemsBeetwenMarkers(data, '<div id="'+ marker, '</h4>', withMarkers=True)
         for item in data:
             url  = self.getFullUrl( self.cm.ph.getSearchGroups(item, 'href="([^"]+?)"')[0] )
             if not self.cm.isValidUrl(url): continue
@@ -211,7 +211,7 @@ class LosMovies(CBaseHostClass):
             seasonsTitlesTab[seasonKey] = seasonTitle
         
         marker = '<div id="movie-'
-        data = self.cm.ph.getDataBeetwenMarkers(data, marker, '<div class="aPlaceHolder', False)[1]
+        data = self.cm.ph.getDataBeetwenMarkers(data, marker, '<div class="aPlaceHolder aPlaceHolder Top', False)[1]
         data = data.split(marker)
         for sItem in data:
             seasonKey = self.cm.ph.getSearchGroups(sItem, '''([0-9]+?)['"]''')[0]
