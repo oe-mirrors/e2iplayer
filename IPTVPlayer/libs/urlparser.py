@@ -238,6 +238,7 @@ class urlparser:
                        'facebook.com':          self.pp.parserFACEBOOK      ,
                        'fastflash.pw':          self.pp.parserCASTFLASHPW    ,
                        'fastplay.cc':           self.pp.parserFASTPLAYCC     ,
+                       'fastshare.cz':          self.pp.parserFASTSHARECZ    ,
                        'faststream.in':         self.pp.parserVIDSTREAM     ,
                        'fastvideo.in':          self.pp.parserFASTVIDEOIN   ,
                        'fcdn.stream':           self.pp.parserFEMBED,
@@ -636,6 +637,7 @@ class urlparser:
                        'vk.com':                self.pp.parserVK            ,
                        'vodlocker.com':         self.pp.parserVODLOCKER     ,
                        'vod-share.com':         self.pp.parserVODSHARECOM   ,
+                       'voe.sx':                self.pp.parserMATCHATONLINE  ,
                        'voodaith7e.com':        self.pp.parserYOUWATCH      ,
                        'vshare.eu':             self.pp.parserVSHAREEU      ,
                        'vshare.io':             self.pp.parserVSHAREIO       ,
@@ -14631,6 +14633,8 @@ class pageParser(CaptchaHelper):
         sts, data = self.cm.getPage(baseUrl, httpParams)
         if sts:
             r = self.cm.ph.getSearchGroups(data, r'v-bind:[n|s]*stream="([^"]+?)"')[0].replace('&quot;', '"')
+            if not r: r = self.cm.ph.getSearchGroups(data, r'v-bind:[n|s]*file="([^"]+?)"')[0].replace('&quot;', '"')
+            printDBG("parserNINJASTREAMTO r [%s]" % r)
             if r:
                 data = json_loads(r)
                 hash = data.get('hash')
@@ -14760,6 +14764,30 @@ class pageParser(CaptchaHelper):
         if 'm3u8' in url:
             urlTab.extend(getDirectM3U8Playlist(url, checkExt=False, variantCheck=True, checkContent=True, sortWithMaxBitrate=99999999))
         else:
+            urlTab.append({'name':'mp4', 'url':url})
+
+        return urlTab
+
+    def parserFASTSHARECZ(self, baseUrl):
+        printDBG("parserFASTSHARECZ baseUrl[%s]" % baseUrl)
+
+        HTTP_HEADER = self.cm.getDefaultHeader(browser='chrome')
+        referer = baseUrl.meta.get('Referer')
+        if referer: HTTP_HEADER['Referer'] = referer
+        urlParams = {'header': HTTP_HEADER}
+        sts, data = self.cm.getPage(baseUrl, urlParams)
+        if not sts: return False
+
+        url = self.cm.getFullUrl(self.cm.ph.getSearchGroups(data, '''action=(\/free\/[^>]+?)>''')[0], baseUrl)
+        urlParams['max_data_size'] = 0
+        urlParams['no_redirection'] = True
+        sts, data = self.cm.getPage(url, urlParams)
+        if not sts: return False
+
+        urlTab = []
+        url = self.cm.meta.get('location', '')
+        if self.cm.isValidUrl(url):
+            url = strwithmeta(url, {'Origin':"https://" + urlparser.getDomain(baseUrl), 'Referer':baseUrl})
             urlTab.append({'name':'mp4', 'url':url})
 
         return urlTab

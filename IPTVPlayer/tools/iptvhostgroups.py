@@ -104,6 +104,7 @@ class IPTVHostsGroups:
         'dpstreamingcx' : [ 'french', 'moviesandseries'] ,
         'drdk' : [ 'others'] ,
         'dsda' : [ 'documentary', 'italian', 'science'] ,
+        'dudeplayercom' : ['polish', 'moviesandseries'] ,
         'efilmytv' : [ 'moviesandseries', 'polish'] ,
         'egybest' : [ 'arabic', 'moviesandseries'] ,
         'ekinotv' : [ 'moviesandseries', 'polish'] ,
@@ -119,6 +120,7 @@ class IPTVHostsGroups:
         'filma24hdcom' : [ 'balkans', 'moviesandseries'] ,
         'filma24io' : [ 'balkans', 'moviesandseries'] ,
         'filmaoncom' : [ 'balkans', 'moviesandseries'] ,
+        'filmancc' : ['polish', 'moviesandseries'] ,
         'filmativa' : [ 'balkans', 'moviesandseries'] ,
         'filmehdnet' : [ 'balkans', 'moviesandseries'] ,
         'filmeonlineto' : [ 'balkans', 'english', 'moviesandseries'] ,
@@ -172,6 +174,7 @@ class IPTVHostsGroups:
         'maxtvgo' : [ 'polish'] ,
         'meczykipl' : [ 'polish', 'sport'] ,
         'mediasetplay' : [ 'italian'] ,
+        'mediayou' : [ 'arabic', 'balkans', 'english', 'french', 'german', 'greek', 'hungarian', 'italian', 'latino', 'live', 'music', 'others', 'polish', 'russian', 'swedish'] ,
         'mooviecc' : [ 'hungarian', 'moviesandseries'] ,
         'movie4kto' : [ 'english', 'french', 'german', 'moviesandseries', 'russian'] ,
         'movienightws' : [ 'english', 'moviesandseries'] ,
@@ -208,6 +211,7 @@ class IPTVHostsGroups:
         'rtbfbe' : [ 'french', 'others'] ,
         'rteieplayer' : [ 'english'] ,
         'rtlmost' : [ 'hungarian', 'moviesandseries'] ,
+        's01pl' : ['polish', 'moviesandseries'] ,
         'serienstreamto' : [ 'german', 'moviesandseries'] ,
         'seriesonline' : [ 'english', 'moviesandseries'] ,
         'serijeonline' : [ 'balkans', 'moviesandseries'] ,
@@ -243,6 +247,7 @@ class IPTVHostsGroups:
         'vevo' : [ 'music'] ,
         'vidcorncom' : [ 'latino', 'moviesandseries'] ,
         'vimeo' : [ 'arabic', 'balkans', 'french', 'german', 'greek', 'hungarian', 'italian', 'latino', 'music', 'others', 'polish', 'russian', 'swedish'] ,
+        'vizjerpl' : ['polish', 'moviesandseries'] ,
         'vodpl' : [ 'polish'] ,
         'vumedicom' : [ 'documentary', 'english', 'science'] ,
         'vumooch' : [ 'english', 'moviesandseries'] ,
@@ -260,6 +265,7 @@ class IPTVHostsGroups:
         'yesmoviesto' : [ 'english', 'moviesandseries'] ,
         'yifytv' : [ 'english', 'moviesandseries'] ,
         'youtube' : [ 'arabic', 'balkans', 'english', 'french', 'german', 'greek', 'hungarian', 'italian', 'latino', 'live', 'music', 'others', 'polish', 'russian', 'swedish'] ,
+        'zaluknijcc' : ['polish', 'moviesandseries'] ,
         'zdfmediathek' : ['german']
         }        
         
