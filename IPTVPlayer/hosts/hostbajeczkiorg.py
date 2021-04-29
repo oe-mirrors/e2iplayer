@@ -42,6 +42,7 @@ class BajeczkiOrg(CBaseHostClass):
     def listMainMenu(self, cItem):
         MAIN_CAT_TAB = [{'category':'categories',      'title': 'Wszystkie bajki',    'url':self.getFullUrl('/all-categories/')},
                         {'category':'list_items',      'title': 'Ostatnio dodane',    'url':self.getFullUrl('/?s=')},
+                        {'category':'list_items',      'title': 'Filmy',              'url':self.getFullUrl('/pelnometrazowe/')},
                         {'category':'search',          'title': _('Search'), 'search_item':True, },
                         {'category':'search_history',  'title': _('Search history'),             }]
         self.listsTab(MAIN_CAT_TAB, cItem)
@@ -81,7 +82,8 @@ class BajeczkiOrg(CBaseHostClass):
 
             url = self.getFullUrl( ph.search(item, ph.A_HREF_URI_RE)[1] )
             if url == '': continue
-            icon = self.getFullUrl( ph.search(item, ph.IMAGE_SRC_URI_RE)[1] )
+#            icon = self.getFullUrl( ph.search(item, ph.IMAGE_SRC_URI_RE)[1] )
+            icon = self.getFullIconUrl(self.cm.ph.getSearchGroups(item, '''data-src=['"]([^'^"]+?)['"]''', ignoreCase=True)[0])
             item = item.split('</h2>', 1)
             title = ph.clean_html( item[0] )
 
