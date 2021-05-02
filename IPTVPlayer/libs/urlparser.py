@@ -12866,7 +12866,9 @@ class pageParser(CaptchaHelper):
             'use_cookie':True,
             'load_cookie':True,
             'save_cookie':True,
-            'cookiefile': GetCookieDir("dood.cookie")
+            'cookiefile': GetCookieDir("dood.cookie"),
+            'max_data_size': 0,
+            'no_redirection': True
         }
 
         urlsTab = []
@@ -12875,7 +12877,13 @@ class pageParser(CaptchaHelper):
             baseUrl = baseUrl.replace('/d/','/e/')
         
         sts, data = self.cm.getPage(baseUrl, httpParams)
-        
+        url = self.cm.meta.get('location', '')
+        if url != '':
+            baseUrl = url
+        del httpParams['max_data_size']
+        del httpParams['no_redirection']
+        sts, data = self.cm.getPage(baseUrl, httpParams)
+
 #        if sts:
 #            printDBG("-----------------------")
 #            printDBG(data)
@@ -12898,7 +12906,7 @@ class pageParser(CaptchaHelper):
         #function makePlay(){for(var a="",t="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789",n=t.length,o=0;10>o;o++)a+=t.charAt(Math.floor(Math.random()*n));return a+"?token=p3yuk59uqm525k1zc9boovu4&expiry="+Date.now();};
         pass_md5_url = self.cm.ph.getSearchGroups(data, "\$\.get\('(/pass_md5[^']+?)'")[0]
         makePlay= self.cm.ph.getSearchGroups(data, "(function makePlay\(\)\{.*?\};)")[0]
-        if pass_md5_url and makePlay:        
+        if pass_md5_url and makePlay:
             pass_md5_url = self.cm.getFullUrl(pass_md5_url, self.cm.getBaseUrl(baseUrl))
             sts, new_url = self.cm.getPage(pass_md5_url, httpParams)
 
