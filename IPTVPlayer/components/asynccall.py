@@ -107,6 +107,9 @@ class AsyncCall(object):
                 if hasattr(self.Thread, "_thread_id"):
                     thread_id = self.Thread._thread_id
 
+                if hasattr(self.Thread, "native_id"):
+                    thread_id = self.Thread.native_id
+
                 # no, look for it in the _active dict
                 for tid, tobj in list(threading._active.items()):
                     if tobj is self.Thread:
@@ -164,7 +167,8 @@ class AsyncCall(object):
             if self.finished == False:
                 if self.Thread.isAlive():
                     self._kill()
-                    self.Thread._Thread__stop()
+                    self.Thread._stop()
+#                    self.Thread._Thread__stop()
                 bRet = True
 
         self.mainLock.release()

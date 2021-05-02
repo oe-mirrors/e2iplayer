@@ -715,7 +715,7 @@ class E2iVirtualKeyBoard(Screen):
 
         skinKey = self['_%s' % keyid]
         skinKey.instance.setForegroundColor(color)
-        skinKey.setText(val.encode('utf-8'))
+        skinKey.setText(val)
 
     def updateKeysLabels(self):
         for rangeItem in [(2, 14), (17, 28), (31, 41), (44, 54), (59, 59)]:

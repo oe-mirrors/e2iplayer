@@ -5,10 +5,8 @@ import threading
 from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _
 from Plugins.Extensions.IPTVPlayer.components.asynccall import AsyncMethod
 from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, eConnectCallback
-
-
 from enigma import eTimer
-
+import six
 
 class AutocompleteSearch:
 
@@ -112,14 +110,16 @@ class AutocompleteSearch:
             if stamp != prevStamp:
                 if self.historyList:
                     try:
-                        text = text.decode('utf-8').lower()
+                        ltext = six.ensure_str(text).lower()
                         for item in self.historyList:
-                            if item[0] == text:
+                            if item[0] == ltext:
                                 retList.append(item[1])
                     except Exception:
                         printExc()
 
                 try:
+                    text = six.ensure_str(text).lower()
+                    locale = six.ensure_str(locale)
                     retList = provider.getSuggestions(text, locale)
                 except Exception:
                     retList = None
