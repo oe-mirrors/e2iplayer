@@ -41,11 +41,12 @@ class MyFreeMp3(CBaseHostClass):
                              {'category': 'search', 'title': _('Search'), 'search_item': True},
                              {'category': 'search_history', 'title': _('Search history')},
                             ]
-        self.streamUrl = 'http://s.mp3-music-downloads.com/'
+        self.streamUrl = 'https://play.idmp3s.com/'
 
     def getPage(self, baseUrl, addParams={}, post_data=None):
         if addParams == {}:
             addParams = dict(self.defaultParams)
+        
         origBaseUrl = baseUrl
         baseUrl = self.cm.iriToUri(baseUrl)
 
