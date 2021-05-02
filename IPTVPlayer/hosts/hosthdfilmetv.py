@@ -28,13 +28,13 @@ from copy import deepcopy
 
 
 def gettytul():
-    return 'https://hdfilme.cc/'
+    return 'https://hdfilme.cx/'
 
 
 class HDFilmeTV(CBaseHostClass):
     USER_AGENT = 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/73.0.3683.103 Safari/537.36'
 
-    MAIN_URL = 'https://hdfilme.cc/'
+    MAIN_URL = 'https://hdfilme.cx/'
     SEARCH_URL = MAIN_URL + 'movie-search'
     DEFAULT_ICON = "https://raw.githubusercontent.com/StoneOffStones/plugin.video.xstream/c88b2a6953febf6e46cf77f891d550a3c2ee5eea/resources/art/sites/hdfilme.png" #"http://hdfilme.tv/public/site/images/logo.png"
 
@@ -84,7 +84,7 @@ class HDFilmeTV(CBaseHostClass):
         #    var movieData = {
         #            id : 13810,
         #            name : "The Super",
-        #            url : "https://hdfilme.cc/the-super-13810-stream"
+        #            url : "https://hdfilme.cx/the-super-13810-stream"
         #    };
 
         movieData = {}
@@ -295,7 +295,7 @@ class HDFilmeTV(CBaseHostClass):
 
         # find links page url
         # example
-        #<a title="The Ranch staffel 4 Stream" class="btn btn-xemnow pull-right" style="margin-left:5px" href="https://hdfilme.cc/the-ranch-staffel-4-13803-stream/folge-1">
+        #<a title="The Ranch staffel 4 Stream" class="btn btn-xemnow pull-right" style="margin-left:5px" href="https://hdfilme.cx/the-ranch-staffel-4-13803-stream/folge-1">
         printDBG("HDFilmeTV.exploreItem. Find url of page with links - often url + '/deutsch' ")
 
         sts, linkspage_data = self.getPageCF(linksPageUrl, params)
