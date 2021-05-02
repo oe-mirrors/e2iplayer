@@ -9,6 +9,7 @@ from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc
 # FOREIGN import
 ###################################################
 import codecs
+from functools import cmp_to_key
 
 
 class IPTVFileHost:
@@ -85,7 +86,7 @@ class IPTVFileHost:
                 return 1
         tmpList = list(self.groups)
         if sort:
-            tmpList.sort(_compare)
+            tmpList.sort(key=cmp_to_key(_compare))
         return tmpList
 
     def getItemsInGroup(self, group, sort=False):
@@ -104,7 +105,7 @@ class IPTVFileHost:
             if item['group'] == group:
                 tmpList.append(item)
         if sort:
-            tmpList.sort(_compare)
+            tmpList.sort(key=cmp_to_key(_compare))
         return tmpList
 
     def getAllItems(self, sort=False):
@@ -121,5 +122,5 @@ class IPTVFileHost:
                 return 0
         tmpList = list(self.items)
         if sort:
-            tmpList.sort(_compare)
+            tmpList.sort(key=cmp_to_key(_compare))
         return tmpList

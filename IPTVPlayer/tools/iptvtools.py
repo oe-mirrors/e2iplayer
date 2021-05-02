@@ -34,6 +34,7 @@ import os
 import stat
 import codecs
 import datetime
+from functools import cmp_to_key
 
 SERVER_DOMAINS = {'vline': 'http://iptvplayer.vline.pl/', 'gitlab': 'http://zadmario.gitlab.io/', 'private': 'http://www.e2iplayer.gitlab.io/'}
 SERVER_UPDATE_PATH = {'vline': 'download/update2/', 'gitlab': 'update2/', 'private': 'update2/'}
@@ -596,7 +597,7 @@ class CSelOneLink():
     def getBestSortedList(self):
         printDBG('getBestSortedList')
         sortList = self.listOfLinks[::-1]
-        sortList.sort(self._cmpLinksBest)
+        sortList.sort(key=cmp_to_key(self._cmpLinksBest))
         retList = []
         tmpList = []
         for item in sortList:
@@ -611,7 +612,7 @@ class CSelOneLink():
     def getSortedLinks(self, defaultFirst=True):
         printDBG('getSortedLinks defaultFirst[%r]' % defaultFirst)
         sortList = self.listOfLinks[::-1]
-        sortList.sort(self._cmpLinks)
+        sortList.sort(key=cmp_to_key(self._cmpLinks))
         if len(self.listOfLinks) < 2 or None == self.maxRes:
             return self.listOfLinks
 
@@ -626,9 +627,9 @@ class CSelOneLink():
                     group1.append(self.listOfLinks[idx])
                 else:
                     group2.append(self.listOfLinks[idx])
-            group1.sort(self._cmpLinks)
+            group1.sort(key=cmp_to_key(self._cmpLinks))
             group1.reverse()
-            group2.sort(self._cmpLinks)
+            group2.sort(key=cmp_to_key(self._cmpLinks))
             group1.extend(group2)
             return group1
 

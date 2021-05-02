@@ -21,6 +21,8 @@ try:
     import simplejson as json
 except Exception:
     import json
+from functools import cmp_to_key
+
 ###################################################
 
 ###################################################
@@ -455,8 +457,7 @@ class ARDmediathek(CBaseHostClass):
                                 return 1
                             else:
                                 return 0
-            # FIXME SORT
-            #tmpUrlTab.sort(_cmpLinks)
+            tmpUrlTab.sort(key=cmp_to_key(_cmpLinks))
             onelinkmode = config.plugins.iptvplayer.ardmediathek_onelinkmode.value
             for item in tmpUrlTab:
                 url = item['url']

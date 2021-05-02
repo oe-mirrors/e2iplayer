@@ -56,6 +56,7 @@ class ArteTV(CBaseHostClass):
         data = self.cm.ph.getAllItemsBeetwenNodes(data, ('<a', '>', ' lang='), ('</a', '>'))
         for item in data:
             url = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''\shref=['"]([^'^"]+?)['"]''')[0])
+            item = re.sub('<style.*</style>','',item)
             title = self.cleanHtmlStr(item)
             lang = url.split('/')[3]
             printDBG("+++> lang[%s] title[%s]" % (lang, title))
@@ -95,6 +96,7 @@ class ArteTV(CBaseHostClass):
             if not sts:
                 return
 
+            # FIXME new page design
             tmp = self.cm.ph.getAllItemsBeetwenNodes(data, ('<article', '>'), ('</article', '>'))
             for item in tmp:
                 url = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''\shref=['"]([^'^"]+?)['"]''')[0])

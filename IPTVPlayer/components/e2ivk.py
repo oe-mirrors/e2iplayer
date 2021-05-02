@@ -549,7 +549,7 @@ class E2iVirtualKeyBoard(Screen):
         elif keyid == 42: # Enter
             try:
                 # make sure that Input component return valid UTF-8 data
-                text = self["text"].getText().decode('UTF-8').encode('UTF-8')
+                text = self["text"].getText()
             except Exception:
                 text = ''
                 printExc()

@@ -59,6 +59,7 @@ from urllib.parse import urlparse, urlunparse, parse_qs
 from binascii import hexlify, unhexlify, a2b_hex
 from hashlib import md5, sha256
 from Components.config import config
+from functools import cmp_to_key
 
 from Plugins.Extensions.IPTVPlayer.libs.youtube_dl.extractor.mtv import GametrailersIE
 try:
@@ -6091,7 +6092,7 @@ class pageParser(CaptchaHelper):
                 ret = 0
             return ret
 
-        data.sort(_cmpLinksBest)
+        data.sort(key=cmp_to_key(_cmpLinksBest))
         data = clean_html(''.join(data)).strip()
         if data != '':
             post_data['code'] = data

@@ -20,6 +20,7 @@ import urllib.request
 import urllib.parse
 import urllib.error
 import time
+from functools import cmp_to_key
 ###################################################
 
 
@@ -169,7 +170,7 @@ class ZDFmediathek(CBaseHostClass):
                 idx /= 2
             elif 'small' == iconssize:
                 idx = 0
-            return iconsTab[idx]['url']
+            return iconsTab[int(idx)]['url']
         return ''
 
     def kinderListABC(self, cItem, nextCategory):
@@ -511,7 +512,7 @@ class ZDFmediathek(CBaseHostClass):
                                 return 1
                             else:
                                 return 0
-            tmpUrlTab.sort(_cmpLinks)
+            tmpUrlTab.sort(key=cmp_to_key(_cmpLinks))
             onelinkmode = config.plugins.iptvplayer.zdfmediathek_onelinkmode.value
             for item in tmpUrlTab:
                 url = item['url']
