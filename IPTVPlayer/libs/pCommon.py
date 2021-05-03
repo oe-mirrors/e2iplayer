@@ -37,6 +37,7 @@ except Exception:
 import gzip
 from urllib.parse import urljoin, urlparse, urlunparse
 from binascii import hexlify
+import six
 ###################################################
 
 
@@ -1619,22 +1620,21 @@ class common:
                 fileHandler = None
                 while True:
                     buffer = downHandler.read(blockSize)
-
                     if len(checkFromFirstBytes):
                         OK = False
                         for item in checkFromFirstBytes:
-                            if buffer.startswith(item):
-
+                            bitem = six.ensure_binary(item)
+                            if buffer.startswith(bitem):
                                 # change extension of file
-                                if item in ['\xFF\xD8', '\xFF\xD9']:
+                                if bitem in [b'\xFF\xD8', b'\xFF\xD9']:
                                     printDBG("SaveWebFile. It's a jpeg")
-                                elif item == '\x89\x50\x4E\x47':
+                                elif bitem == b'\x89\x50\x4E\x47':
                                     printDBG("SaveWebFile. It's a png")
                                     #file_path = file_path.replace('.jpg','.png')
-                                elif item in ['GIF87a', 'GIF89a']:
+                                elif bitem in [b'GIF87a', b'GIF89a']:
                                     printDBG("SaveWebFile. It's a gif")
                                     #file_path = file_path.replace('.jpg','.gif')
-                                elif item == 'RI':
+                                elif bitem == b'RI':
                                     printDBG("SaveWebFile. It's a webp")
                                     file_path = file_path.replace('.jpg', '.webp')
                                 OK = True

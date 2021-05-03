@@ -8,7 +8,7 @@ from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc
 from Plugins.Extensions.IPTVPlayer.tools.iptvtypes import strwithmeta
 from Plugins.Extensions.IPTVPlayer.libs.e2ijson import loads as json_loads
 from Plugins.Extensions.IPTVPlayer.libs.urlparserhelper import getDirectM3U8Playlist
-
+import six
 
 DEFAULT_ICON = 'https://bilder.bild.de/fotos/bild-logo-35166394/Bild/45.bild.png'
 
@@ -41,7 +41,7 @@ class Bildde(CBaseHostClass):
             self.session = requests.Session()
         self.session.headers.update(self.HEADER)
         resp = self.session.get(baseUrl, verify=False)
-        return resp.content
+        return six.ensure_str(resp.content)
 
     def buildMainCatTab(self):
         urlTab = [
