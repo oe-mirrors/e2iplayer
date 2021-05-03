@@ -13,9 +13,7 @@ from Plugins.Extensions.IPTVPlayer.tools.iptvtypes import strwithmeta
 ###################################################
 import urllib.parse
 import re
-import urllib.request
-import urllib.parse
-import urllib.error
+import urllib.request, urllib.parse, urllib.error
 try:
     import json
 except Exception:
@@ -405,7 +403,7 @@ class Kinox(CBaseHostClass):
                 return
 
             try:
-                data = json.loads(data)
+                data = byteify(json.loads(data))
                 if ((page + 1) * ITEMS_PER_PAGE) < data['Total']:
                    nextPage = True
                 data = data['Content']
@@ -552,7 +550,7 @@ class Kinox(CBaseHostClass):
             return []
 
         try:
-            data = json.loads(data)
+            data = byteify(json.loads(data))
             if 'Stream' in data:
                 data = data['Stream']
                 videoUrl = self.cm.ph.getSearchGroups(data, '''<iframe[^>]+?src=['"]([^"^']+?)['"]''', 1, True)[0]

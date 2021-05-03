@@ -14,9 +14,7 @@ from Plugins.Extensions.IPTVPlayer.libs.urlparser import urlparser
 # FOREIGN import
 ###################################################
 from Components.config import config, ConfigSelection
-import urllib.request
-import urllib.parse
-import urllib.error
+import urllib.request, urllib.parse, urllib.error
 try:
     import simplejson as json
 except Exception:
@@ -120,7 +118,7 @@ class Hitbox(CBaseHostClass):
         if not sts:
             return
         try:
-            data = json.loads(data)["categories"]
+            data = byteify(json.loads(data))["categories"]
             for item in data:
                 params = dict(cItem)
                 params['url'] = item['category_id']
@@ -155,7 +153,7 @@ class Hitbox(CBaseHostClass):
         if not sts:
             return
         try:
-            data = json.loads(data)
+            data = byteify(json.loads(data))
             if 'live' == data['media_type']:
                 key = 'livestream'
             elif 'video' == data['media_type']:
@@ -205,7 +203,7 @@ class Hitbox(CBaseHostClass):
             sts, data = self.cm.getPage(Hitbox.MAIN_URL + 'api/player/config/video/%s?redis=true&embed=false&qos=false&redis=true&showHidden=true' % cItem['media_id'])
             if sts:
                 try:
-                    data = json.loads(data)
+                    data = byteify(json.loads(data))
                     baseUrl = data['clip']['baseUrl']
                     if None == baseUrl:
                         baseUrl = ''

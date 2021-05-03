@@ -248,7 +248,7 @@ class TvGryPL(CBaseHostClass):
         printDBG('TvGryPL.getLinksForFavourite')
         links = []
         try:
-            cItem = json.loads(fav_data)
+            cItem = byteify(json.loads(fav_data))
             links = self.getLinksForVideo(cItem)
         except Exception:
             printExc()
@@ -257,7 +257,7 @@ class TvGryPL(CBaseHostClass):
     def setInitListFromFavouriteItem(self, fav_data):
         printDBG('TvGryPL.setInitListFromFavouriteItem')
         try:
-            params = json.loads(fav_data)
+            params = byteify(json.loads(fav_data))
         except Exception:
             params = {}
             printExc()

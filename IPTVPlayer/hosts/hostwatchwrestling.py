@@ -12,9 +12,7 @@ from Plugins.Extensions.IPTVPlayer.tools.iptvtypes import strwithmeta
 # FOREIGN import
 ###################################################
 import re
-import urllib.request
-import urllib.parse
-import urllib.error
+import urllib.request, urllib.parse, urllib.error
 try:
     import json
 except Exception:
@@ -33,7 +31,7 @@ def GetConfigList():
 
 
 def gettytul():
-    return 'http://watchwrestling.nl/'
+    return 'http://watchwrestlingup.live/'
 
 
 class Watchwrestling(CBaseHostClass):
@@ -42,57 +40,61 @@ class Watchwrestling(CBaseHostClass):
         CBaseHostClass.__init__(self, {'history': 'Watchwrestling', 'cookie': 'Watchwrestling.cookie'})
         self.serversCache = []
 
-        self.MAIN_URL = 'http://watchwrestling.nl/'
+        self.MAIN_URL = 'http://watchwrestlingup.live/'
         self.SRCH_URL = self.getFullUrl('index.php?s=')
-        self.DEFAULT_ICON_URL = 'http://watchwrestling.to/wp-content/uploads/2014/11/ww_fb.png'
+        self.DEFAULT_ICON_URL = 'http://watchwrestlingup.live/wp-content/uploads/2015/05/WatchWrestlingUp.in_1.png'
 
-        self.MAIN_CAT_TAB = [{'category': 'categories', 'title': _('Categories'), 'url': self.getMainUrl(), 'm1': 'Categories</h3>'},
-                             {'category': 'categories', 'title': _('Monthly'), 'url': self.getFullUrl('video/watch-wwe-raw-101915/'), 'm1': 'Monthly Posts</h3>'},
-                             {'category': 'live', 'title': _('LIVE 24/7'), 'url': self.getFullUrl('watch-wwe-network-live/')},
-                             {'category': 'categories', 'title': _('WWE'), 'url': self.getFullUrl('category/wwe/'), 'm1': '>WWE</a>'},
-                             {'category': 'list_filters', 'title': _('WWE Network'), 'url': self.getFullUrl('category/wwenetwork/')},
-                             {'category': 'categories', 'title': _('TNA'), 'url': self.getFullUrl('category/tna/'), 'm1': '>TNA</a>'},
-                             {'category': 'categories', 'title': _('Weekly Indys'), 'url': self.getFullUrl('category/weekly-indys/'), 'm1': '>Weekly Indys</a>'},
-                             {'category': 'list_filters', 'title': _('NJPW'), 'url': self.getFullUrl('category/njpw/')},
-                             {'category': 'categories', 'title': _('Other Sports'), 'url': self.getFullUrl('category/other-sports/'), 'm1': '>Other Sports</a>'},
-                             {'category': 'list_filters', 'title': _('RAW'), 'url': self.getFullUrl('category/wwe/raw/')},
-                             {'category': 'list_filters', 'title': _('Smackdown'), 'url': self.getFullUrl('category/wwe/smackdown/')},
-                             {'category': 'list_filters', 'title': _('Total Divas'), 'url': self.getFullUrl('category/wwe/totaldivas/')},
-                             {'category': 'list_filters', 'title': _('NXT'), 'url': self.getFullUrl('category/wwe/nxt/')},
-                             {'category': 'list_filters', 'title': _('Archives'), 'url': self.getFullUrl('category/archives/')},
-
-                             {'category': 'search', 'title': _('Search'), 'search_item': True},
-                             {'category': 'search_history', 'title': _('Search history')}
-                            ]
-
-        self.SORT_TAB = [{'sort': 'date', 'title': _('DATE')},
-                         {'sort': 'views', 'title': _('VIEWS')},
-                         {'sort': 'likes', 'title': _('LIKES')},
-                         {'sort': 'comments', 'title': _('COMMENTS')}
+        self.SORT_TAB = [{'sort': 'date', 'title': _('Order by date')},
+                         {'sort': 'views', 'title': _('Order by views')},
+                         {'sort': 'likes', 'title': _('Order by likes')},
+                         {'sort': 'comments', 'title': _('Order by comments')}
                         ]
 
-    def listCategories(self, cItem, nexCategory):
-        printDBG("Watchwrestling.listCategories")
-        sts, data = self.cm.getPage(cItem['url'])
+    def listMain(self):
+        printDBG("Watchwrestling.listMain")
+        sts, data = self.cm.getPage(self.MAIN_URL)
         if not sts:
             return
 
-        data = self.cm.ph.getDataBeetwenMarkers(data, cItem['m1'], '</ul>', False)[1]
+        menu = self.cm.ph.getDataBeetwenMarkers(data, '<!-- end #header-->', '<!-- end #main-nav -->', False)[1]
+        items = re.findall("(<li.*</a>(</li>|\n<ul(.|\n)*?</ul>))", menu)
 
-        if '"sub-menu"' in data:
-            params = dict(cItem)
-            params.update({'title': _('--All--'), 'category': nexCategory})
-            self.addDir(params)
-
-        data = self.cm.ph.getAllItemsBeetwenMarkers(data, '<a', '</a>')
-        for item in data:
-            url = self.cm.ph.getSearchGroups(item, '''href=['"]([^"^']+?)["']''')[0]
-            if url == '':
+        for i in items:
+            if 'Report Issues' in i[0]:
                 continue
-            title = self.cleanHtmlStr(item)
-            params = dict(cItem)
-            params.update({'title': title, 'url': self.getFullUrl(url), 'category': nexCategory})
-            self.addDir(params)
+            if '<ul' in i[0]:
+                # contains a sub menu
+                si = re.findall("(<li.*</a>)", i[0])
+                subItems = []
+                title_menu = self.cleanHtmlStr(si[0])
+
+                for j in range(1, len(si)):
+                    url = re.findall("href=\"(.*?)\"", si[j])
+                    if url:
+                        title = self.cleanHtmlStr(si[j])
+                        params = {'title': title, 'url': url[0], 'category': 'list_filters'}
+                        printDBG(str(params))
+                        subItems.append(params)
+
+                params = {'title': title_menu, 'category': 'list_subitems', 'sub_items': subItems}
+                printDBG(str(params))
+                self.addDir(params)
+
+            else:
+                # single item
+                url = re.findall("href=\"(.*?)\"", i[0])
+                if url:
+                    title = self.cleanHtmlStr(i[0])
+                    params = {'title': title, 'url': url[0], 'category': 'list_filters'}
+                    printDBG(str(params))
+                    self.addDir(params)
+
+    def listSubItems(self, cItem):
+        printDBG("Watchwrestling.listMain")
+
+        for i in cItem['sub_items']:
+            printDBG(str(i))
+            self.addDir(i)
 
     def listFilters(self, cItem, category):
         printDBG("Watchwrestling.listFilters")
@@ -136,9 +138,10 @@ class Watchwrestling(CBaseHostClass):
             url = self.cm.ph.getSearchGroups(item, 'href="([^"]+?)"')[0]
             icon = self.cm.ph.getSearchGroups(item, 'src="([^"]+?)"')[0]
             title = self.cm.ph.getSearchGroups(item, 'title="([^"]+?)"')[0]
-            desc = tmp[-1]
+            desc = tmp[-1].split('<p class="entry-summary">')[0]
             params = dict(cItem)
             params.update({'good_for_fav': True, 'category': nextCategory, 'title': self.cleanHtmlStr(title), 'url': self.getFullUrl(url), 'desc': self.cleanHtmlStr(desc), 'icon': self.getFullUrl(icon)})
+            printDBG(str(params))
             self.addDir(params)
 
         if nextPage:
@@ -151,26 +154,51 @@ class Watchwrestling(CBaseHostClass):
         sts, data = self.cm.getPage(cItem['url'])
         if not sts:
             return
-        self.serversCache = []
+
         matchObj = re.compile('href="([^"]+?)"[^>]*?>([^>]+?)</a>')
-        sp = '<div style="text-align: center;">'
-        data = self.cm.ph.getDataBeetwenMarkers(data, sp, '<div id="extras">', False)[1]
-        data = data.split(sp)
-        if len(data):
-            del data[0]
-        for item in data:
-            sts, serverName = self.cm.ph.getDataBeetwenMarkers(item, 'geneva;">', '</span>', False)
-            if not sts:
-                continue
-            parts = matchObj.findall(item)
-            partsTab = []
-            for part in parts:
-                partsTab.append({'title': cItem['title'] + '[%s]' % part[1], 'url': part[0], 'Referer': cItem['url']})
-            if len(partsTab):
-                params = dict(cItem)
-                params.update({'good_for_fav': False, 'category': nextCategory, 'title': serverName, 'part_idx': len(self.serversCache)})
-                self.addDir(params)
-                self.serversCache.append(partsTab)
+        if 'iframe' in data:
+            frame_url = re.findall("<iframe src=['\"](.*?)['\"]", data)
+            if frame_url:
+                sts, data = self.cm.getPage(frame_url[0])
+                if not sts:
+                    return
+                data = self.cm.ph.getDataBeetwenMarkers(data, '<!-- Type below this </br> -->', '<!-- Type above this -->', False)[1]
+
+                data = data.split('<span')
+                for item in data:
+                    item2 = '<span' + item
+                    sts, serverName = self.cm.ph.getDataBeetwenMarkers(item2, '<span', '</span>', True)
+                    if sts:
+                        serverName = self.cleanHtmlStr(serverName)
+                    else:
+                        serverName = ''
+                    parts = matchObj.findall(item)
+                    partsTab = []
+                    for part in parts:
+                        title = serverName + ' ' + part[1]
+                        params = dict(cItem)
+                        params.update({'good_for_fav': False, 'title': title, 'url': part[0], 'Referer': cItem['url']})
+                        printDBG(params)
+                        self.addVideo(params)
+
+        else:
+            data = self.cm.ph.getDataBeetwenMarkers(data, ('<div', '>', 'entry-content'), '<div id="extras">', False)[1]
+            data = data.split('</p>')
+
+            for item in data:
+                sts, serverName = self.cm.ph.getDataBeetwenMarkers(item, '<span', '</span>', True)
+                if sts:
+                    serverName = self.cleanHtmlStr(serverName)
+                else:
+                    serverName = ''
+                parts = matchObj.findall(item)
+                partsTab = []
+                for part in parts:
+                    title = serverName + ' ' + part[1]
+                    params = dict(cItem)
+                    params.update({'good_for_fav': False, 'title': title, 'url': part[0], 'Referer': cItem['url']})
+                    printDBG(params)
+                    self.addVideo(params)
 
     def listParts(self, cItem):
         printDBG("Watchwrestling.listServers [%s]" % cItem)
@@ -250,7 +278,7 @@ class Watchwrestling(CBaseHostClass):
         printDBG('Watchwrestling.getLinksForFavourite')
         links = []
         try:
-            cItem = json.loads(fav_data)
+            cItem = byteify(json.loads(fav_data))
             links = self.getLinksForVideo(cItem)
         except Exception:
             printExc()
@@ -259,7 +287,7 @@ class Watchwrestling(CBaseHostClass):
     def setInitListFromFavouriteItem(self, fav_data):
         printDBG('Watchwrestling.setInitListFromFavouriteItem')
         try:
-            params = json.loads(fav_data)
+            params = byteify(json.loads(fav_data))
         except Exception:
             params = {}
             printExc()
@@ -276,29 +304,29 @@ class Watchwrestling(CBaseHostClass):
         printDBG("handleService: |||||||||||||||||||||||||||||||||||| name[%s], category[%s] " % (name, category))
         self.currList = []
 
-    #MAIN MENU
+        #MAIN MENU
         if name == None:
-            self.listsTab(self.MAIN_CAT_TAB, {'name': 'category'})
-        elif category == 'categories':
-            self.listCategories(self.currItem, 'list_filters')
+            self.listMain()
+        elif category == 'list_subitems':
+            self.listSubItems(self.currItem)
         elif category == 'list_filters':
             self.listFilters(self.currItem, 'list_movies')
-    #MOVIES
+        #MOVIES
         elif category == 'list_movies':
             self.listMovies(self.currItem, 'list_server')
         elif category == 'list_server':
             self.listServers(self.currItem, 'list_parts')
         elif category == 'list_parts':
             self.listParts(self.currItem)
-    #LIVE
+        #LIVE
         elif category == 'live':
             self.listLiveStreams(self.currItem)
-    #SEARCH
+        #SEARCH
         elif category in ["search", "search_next_page"]:
             cItem = dict(self.currItem)
             cItem.update({'search_item': False, 'name': 'category'})
             self.listSearchResult(cItem, searchPattern, searchType)
-    #HISTORIA SEARCH
+        #HISTORIA SEARCH
         elif category == "search_history":
             self.listsHistory({'name': 'history', 'category': 'search'}, 'desc', _("Type: "))
         else:

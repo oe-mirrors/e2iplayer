@@ -13,9 +13,7 @@ from Plugins.Extensions.IPTVPlayer.tools.iptvtypes import strwithmeta
 ###################################################
 import time
 import re
-import urllib.request
-import urllib.parse
-import urllib.error
+import urllib.request, urllib.parse, urllib.error
 try:
     import json
 except Exception:
@@ -342,7 +340,7 @@ class AkoAm(CBaseHostClass):
                     data = data['golink']
                     printDBG(data)
                     data = urllib.parse.unquote(data)
-                    data = json.loads(data)
+                    data = byteify(json.loads(data))
                     printDBG(data)
                     baseUrl = data['route']
 
@@ -362,7 +360,7 @@ class AkoAm(CBaseHostClass):
                             sts, data = self.getPage(cUrl, paramsUrl, {})
                             if sts:
                                 printDBG(data)
-                                data = json.loads(data)
+                                data = byteify(json.loads(data))
                                 urlTab.append({'name': 'direct_link', 'url': self.getFullUrl(data['direct_link'])})
                         else:
                             baseUrl = strwithmeta(url, {'Referer': cUrl})

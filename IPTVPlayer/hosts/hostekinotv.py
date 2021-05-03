@@ -24,9 +24,7 @@ from Screens.MessageBox import MessageBox
 import base64
 import re
 import urllib.parse
-import urllib.request
-import urllib.parse
-import urllib.error
+import urllib.request, urllib.parse, urllib.error
 from Components.config import config, ConfigText, ConfigSelection, getConfigListEntry
 ###################################################
 
@@ -502,28 +500,31 @@ class EkinoTv(CBaseHostClass, CaptchaHelper):
             self.password != config.plugins.iptvplayer.ekinotv_password.value:
 
             sts, data = self.getPage(self.getMainUrl())
-            if not sts: return False
-            
+            if not sts:
+                return False
+
             if sts and 'user/logout' not in data:
                 self.login = config.plugins.iptvplayer.ekinotv_login.value
                 self.password = config.plugins.iptvplayer.ekinotv_password.value
-                
+
                 #rm(self.COOKIE_FILE)
                 self.cm.clearCookie(self.COOKIE_FILE, ['__cfduid', 'cf_clearance'])
-                
+
                 self.loggedIn = False
-                
+
                 if '' == self.login.strip() or '' == self.password.strip():
                     return False
-                
+
                 sts, data = self.getPage(self.getMainUrl())
-                if not sts: return False
-                
+                if not sts:
+                    return False
+
                 sts, data = self.cm.ph.getDataBeetwenNodes(data, ('<form', '>', 'login'), ('</form', '>'))
-                if not sts: return False
+                if not sts:
+                    return False
 
                 actionUrl = self.getFullUrl(self.cm.ph.getSearchGroups(data, '''action=['"]([^'^"]+?)['"]''')[0])
-                post_data = {'login':self.login, 'password':self.password, 'csrf_token':'1'}
+                post_data = {'login': self.login, 'password': self.password, 'csrf_token': '1'}
                 httpParams = dict(self.defaultParams)
                 httpParams['header'] = dict(httpParams['header'])
                 httpParams['header']['Referer'] = self.getMainUrl()
@@ -533,7 +534,8 @@ class EkinoTv(CBaseHostClass, CaptchaHelper):
 
                 if sitekey != '':
                     token, errorMsgTab = self.processCaptcha(sitekey, self.cm.meta['url'], bypassCaptchaService='2captcha.com')
-                    if token != '': post_data['g-recaptcha-response'] = token
+                    if token != '':
+                        post_data['g-recaptcha-response'] = token
 
                 sts, data = self.cm.getPage(actionUrl, httpParams, post_data)
 

@@ -13,9 +13,7 @@ from Plugins.Extensions.IPTVPlayer.libs.youtube_dl.extractor.bbc import BBCCoUkI
 ###################################################
 # FOREIGN import
 ###################################################
-import urllib.request
-import urllib.parse
-import urllib.error
+import urllib.request, urllib.parse, urllib.error
 from datetime import datetime, timedelta
 try:
     import json
@@ -187,7 +185,7 @@ class BBCSport(CBaseHostClass):
 
         mediaData = self.cm.ph.getDataBeetwenMarkers(mediaData, '"body":{', '});', False)[1].strip()[:-1]
         try:
-            mediaData = json.loads('{%s}' % mediaData)
+            mediaData = byteify(json.loads('{%s}' % mediaData), '', True)
             for item in [{'key': 'promoted', 'title': _('Promoted')}, {'key': 'live', 'title': _('Live')}, {'key': 'coming_up', 'title': _('Coming up')}, {'key': 'catch_up', 'title': _('Catch up')}]:
                 try:
                     if isinstance(mediaData[item['key']], list) and len(mediaData[item['key']]):
@@ -356,7 +354,7 @@ class BBCSport(CBaseHostClass):
         for mediaData in tmp:
             mediaData = self.cm.ph.getDataBeetwenMarkers(mediaData, '"body":{', '});', False)[1].strip()[:-1]
             try:
-                mediaData = json.loads('{%s}' % mediaData)
+                mediaData = byteify(json.loads('{%s}' % mediaData))
                 if 'components' in mediaData:
                     for item in mediaData['components']:
                         try:
@@ -542,7 +540,7 @@ class BBCSport(CBaseHostClass):
             mediaData = self.cm.ph.getDataBeetwenMarkers(mediaData, '"body":{', '});', False)[1].strip()[:-1]
             if mediaData != '':
                 try:
-                    mediaData = json.loads('{%s}' % mediaData)
+                    mediaData = byteify(json.loads('{%s}' % mediaData), '', True)
                     if mediaData['media'] and mediaData['media']['mediaType'].lower() == 'video' and '' != mediaData['media']['pid']:
                         url = self.getFullUrl('/iplayer/vpid/%s/' % mediaData['media']['pid'])
                         urlTab.append({'name': mediaData['media']['entityType'], 'url': url, 'need_resolve': 1})
@@ -553,7 +551,7 @@ class BBCSport(CBaseHostClass):
             if mediaData != '':
                 try:
                     uniqueTab = []
-                    mediaData = json.loads(mediaData)
+                    mediaData = byteify(json.loads(mediaData), '', True)
                     for tmp in mediaData:
                         title = self.cleanHtmlStr(tmp['smpConfig']['title'])
                         for item in tmp['smpConfig']['items']:

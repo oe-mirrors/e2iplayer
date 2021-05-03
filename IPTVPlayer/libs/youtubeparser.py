@@ -2,7 +2,6 @@
 ###################################################
 # LOCAL import
 ###################################################
-
 from Plugins.Extensions.IPTVPlayer.libs.youtube_dl.extractor.youtube import YoutubeIE
 from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, IsExecutable
 from Plugins.Extensions.IPTVPlayer.libs.pCommon import common, CParsingHelper
@@ -18,9 +17,7 @@ from Plugins.Extensions.IPTVPlayer.libs import ph
 # FOREIGN import
 ###################################################
 import re
-import urllib.request
-import urllib.parse
-import urllib.error
+import urllib.request, urllib.parse, urllib.error
 import codecs
 from urllib.parse import urlparse, urlunparse, parse_qsl
 from datetime import timedelta
@@ -31,12 +28,11 @@ from Components.config import config, ConfigSelection, ConfigYesNo
 # Config options for HOST
 ###################################################
 config.plugins.iptvplayer.ytformat = ConfigSelection(default="mp4", choices=[("flv, mp4", "flv, mp4"), ("flv", "flv"), ("mp4", "mp4")])
-config.plugins.iptvplayer.ytDefaultformat = ConfigSelection(default="720", choices=[("0", _("the worst")), ("144", "144p"), ("240", "240p"), ("360", "360p"), ("720", "720p"), ("1080", "1080p"), ("1440", "1440p"), ("2160", "2160p"), ("9999", _("the best"))])
+config.plugins.iptvplayer.ytDefaultformat = ConfigSelection(default="720", choices=[("0", _("the worst")), ("144", "144p"), ("240", "240p"), ("360", "360p"), ("720", "720p"), ("1080", "1080p"), ("9999", _("the best"))])
 config.plugins.iptvplayer.ytUseDF = ConfigYesNo(default=True)
 config.plugins.iptvplayer.ytAgeGate = ConfigYesNo(default=False)
-config.plugins.iptvplayer.ytVP9 = ConfigYesNo(default=False)
 config.plugins.iptvplayer.ytShowDash = ConfigSelection(default="auto", choices=[("auto", _("Auto")), ("true", _("Yes")), ("false", _("No"))])
-config.plugins.iptvplayer.ytSortBy = ConfigSelection(default="A", choices=[("A", _("Relevance")), ("I", _("Upload date")), ("M", _("View count")), ("E", _("Rating"))])
+config.plugins.iptvplayer.ytSortBy = ConfigSelection(default="", choices=[("", _("Relevance")), ("video_date_uploaded", _("Upload date")), ("video_view_count", _("View count")), ("video_avg_rating", _("Rating"))])
 
 
 class YouTubeParser():
@@ -67,14 +63,6 @@ class YouTubeParser():
             return False
 
     @staticmethod
-    def isVP9Allowed():
-        value = config.plugins.iptvplayer.ytVP9.value
-        printDBG("1. ALLOW VP9: >> %s" % value)
-        value = YouTubeParser.isDashAllowed() and value
-        printDBG("2. ALLOW VP9: >> %s" % value)
-        return value
-
-    @staticmethod
     def isAgeGateAllowed():
         value = config.plugins.iptvplayer.ytAgeGate.value
         printDBG("ALLOW Age-Gate bypass: >> %s" % value)
@@ -88,7 +76,7 @@ class YouTubeParser():
                 self.sessionToken = token
                 self.postdata = {"session_token": token}
 
-    def getDirectLinks(self, url, formats='flv, mp4', dash=True, dashSepareteList=False, allowVP9=None, allowAgeGate=None):
+    def getDirectLinks(self, url, formats='flv, mp4', dash=True, dashSepareteList=False, allowAgeGate=None):
         printDBG('YouTubeParser.getDirectLinks')
         list = []
         try:
@@ -100,7 +88,7 @@ class YouTubeParser():
                         videoId = self.cm.ph.getSearchGroups(data, '''['"]REDIRECT_TO_VIDEO['"]\s*\,\s*['"]([^'^"]+?)['"]''')[0]
                     if videoId != '':
                         url = 'https://www.youtube.com/watch?v=' + videoId
-            list = YoutubeIE()._real_extract(url, allowVP9=allowVP9, allowAgeGate=allowAgeGate)
+            list = YoutubeIE()._real_extract(url, allowAgeGate=allowAgeGate)
         except Exception:
             printExc()
             if dashSepareteList:
@@ -659,7 +647,7 @@ class YouTubeParser():
     # SEARCH PARSER
     ########################################################
     #def getVideosFromSearch(self, pattern, page='1'):
-    def getSearchResult(self, pattern, searchType, page, nextPageCategory, sortBy='A', url=''):
+    def getSearchResult(self, pattern, searchType, page, nextPageCategory, sortBy='', url=''):
         printDBG('YouTubeParser.getSearchResult pattern[%s], searchType[%s], page[%s]' % (pattern, searchType, page))
         currList = []
 
@@ -683,14 +671,11 @@ class YouTubeParser():
                 # url = 'http://www.youtube.com/results?search_query=%s&filters=%s&search_sort=%s' % (pattern, searchType, sortBy)
                 url = 'https://www.youtube.com/results?search_query=' + pattern + '&sp='
                 if searchType == 'video':
-#                    url += 'EgIQAQ%253D%253D'
-                    url += 'CA%sSAhAB' % sortBy
+                    url += 'EgIQAQ%253D%253D'
                 if searchType == 'channel':
-#                    url += 'EgIQAg%253D%253D'
-                    url += 'CA%sSAhAC' % sortBy
+                    url += 'EgIQAg%253D%253D'
                 if searchType == 'playlist':
-#                    url += 'EgIQAw%253D%253D'
-                    url += 'CA%sSAhAD' % sortBy
+                    url += 'EgIQAw%253D%253D'
                 if searchType == 'live':
                     url += 'EgJAAQ%253D%253D'
 

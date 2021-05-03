@@ -14,9 +14,7 @@ from Plugins.Extensions.IPTVPlayer.libs.e2ijson import loads as json_loads
 ###################################################
 import time
 import re
-import urllib.request
-import urllib.parse
-import urllib.error
+import urllib.request, urllib.parse, urllib.error
 from urllib.parse import urljoin
 from Components.config import config, ConfigSelection, ConfigText, getConfigListEntry
 ###################################################
@@ -45,7 +43,7 @@ def GetConfigList():
 
 
 def gettytul():
-    return 'https://cartoonhd.care/'
+    return 'https://cartoonhd.app/'
 
 
 class CartoonHD(CBaseHostClass):
@@ -55,7 +53,7 @@ class CartoonHD(CBaseHostClass):
         self.cacheFilters = {}
         self.cacheLinks = {}
         self.loggedIn = None
-        self.DEFAULT_ICON_URL = 'https://cartoonhd.care/templates/cartoonhd/assets/images/logochd.png'
+        self.DEFAULT_ICON_URL = 'https://cartoonhd.app/templates/cartoonhd/assets/images/logochd.png'
 
         self.HEADER = {'User-Agent': 'Mozilla/5.0', 'Accept': 'text/html'}
         self.AJAX_HEADER = dict(self.HEADER)
@@ -67,7 +65,7 @@ class CartoonHD(CBaseHostClass):
         self.SEARCH_URL = None
 
     def selectDomain(self):
-        domain = 'https://cartoonhd.care/'
+        domain = 'https://cartoonhd.app/'
         params = dict(self.defaultParams)
         params['max_data_size'] = False
         self.cm.getPage(domain, params)
@@ -407,6 +405,7 @@ class CartoonHD(CBaseHostClass):
                 continue
             jsUrl = self.getFullUrl(item)
 
+        printDBG("jsUrl: %s" % jsUrl)
         if not self.cm.isValidUrl(jsUrl):
             printDBG(">>>>>>\n%s\n" % data)
             return []
@@ -420,10 +419,10 @@ class CartoonHD(CBaseHostClass):
         if jsUrl == '':
             return []
 
-        baseurl = self.getFullUrl(self.cm.ph.getSearchGroups(data, '''var\s+?baseurl\s*=\s*['"]([^'^"]+?)['"]''')[0])
+        baseurl = self.getFullUrl(self.cm.ph.getSearchGroups(data, '''\s+?baseurl\s*=\s*['"]([^'^"]+?)['"]''')[0])
         printDBG("baseurl [%s]" % baseurl)
         if not self.cm.isValidUrl(baseurl):
-            return []
+            baseurl = self.cm.getBaseUrl(cItem['url'])
 
         tor = self._getToken(data)
         elid = self.cm.ph.getSearchGroups(data, '''elid[\s]*=[\s]['"]([^"^']+?)['"]''')[0]

@@ -12,9 +12,7 @@ from Plugins.Extensions.IPTVPlayer.libs.urlparserhelper import unpackJSPlayerPar
 ###################################################
 # FOREIGN import
 ###################################################
-import urllib.request
-import urllib.parse
-import urllib.error
+import urllib.request, urllib.parse, urllib.error
 import random
 try:
     import json
@@ -357,7 +355,7 @@ class SKStream(CBaseHostClass):
                                 url = self.getFullUrl(self.cm.ph.getSearchGroups(data, '''iframe.src\s*=\s*['"]([^"^']+?)['"]''', 1, True)[0])
                             if not self.cm.isValidUrl(url):
                                 data = self.cm.ph.getDataBeetwenMarkers(data, 'sources:', '],', False)[1] + ']'
-                                data = json.loads(data)
+                                data = byteify(json.loads(data))
                                 for item in data:
                                     if "mp4" == item['type']:
                                         urlTab.append({'name': str(item.get('label', 'default')), 'url': item['file']})
@@ -424,7 +422,7 @@ class SKStream(CBaseHostClass):
         printDBG('SKStream.getLinksForFavourite')
         links = []
         try:
-            cItem = json.loads(fav_data)
+            cItem = byteify(json.loads(fav_data))
             links = self.getLinksForVideo(cItem)
         except Exception:
             printExc()
@@ -433,7 +431,7 @@ class SKStream(CBaseHostClass):
     def setInitListFromFavouriteItem(self, fav_data):
         printDBG('SKStream.setInitListFromFavouriteItem')
         try:
-            params = json.loads(fav_data)
+            params = byteify(json.loads(fav_data))
         except Exception:
             params = {}
             printExc()

@@ -6,6 +6,8 @@ from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT
 from Plugins.Extensions.IPTVPlayer.components.ihost import CHostBase, CBaseHostClass
 from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, rm
 from Plugins.Extensions.IPTVPlayer.libs.e2ijson import loads as json_loads
+from Plugins.Extensions.IPTVPlayer.libs.urlparserhelper import getDirectM3U8Playlist
+from Plugins.Extensions.IPTVPlayer.libs.urlparser import urlparser
 
 # needed for option bbc_use_web_proxy definition
 from Plugins.Extensions.IPTVPlayer.libs.youtube_dl.extractor.bbc import BBCCoUkIE
@@ -15,9 +17,7 @@ from Plugins.Extensions.IPTVPlayer.libs.youtube_dl.extractor.bbc import BBCCoUkI
 # FOREIGN import
 ###################################################
 import re
-import urllib.request
-import urllib.parse
-import urllib.error
+import urllib.request, urllib.parse, urllib.error
 try:
     import json
 except Exception:
@@ -41,7 +41,7 @@ def GetConfigList():
 
 
 def gettytul():
-    return 'http://www.bbc.co.uk/iplayer'
+    return 'https://www.bbc.co.uk/iplayer'
 
 
 class BBCiPlayer(CBaseHostClass):
@@ -54,9 +54,8 @@ class BBCiPlayer(CBaseHostClass):
         self.cm.HEADER = self.HEADER # default header
         self.defaultParams = {'header': self.HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
 
-        self.MAIN_URL = 'http://www.bbc.co.uk/'
-        self.DEFAULT_ICON_URL = 'http://iplayer-web.files.bbci.co.uk/tviplayer-static-assets/10.75.0-1/img/navigation/iplayer_pink.png'
-        #'http://iplayer-web.files.bbci.co.uk/tviplayer-static-assets/10.75.0-1/img/navigation/iplayer_white.png'
+        self.MAIN_URL = 'https://www.bbc.co.uk/'
+        self.DEFAULT_ICON_URL = 'https://raw.githubusercontent.com/vonH/plugin.video.iplayerwww/master/icon.png'
 
         self.MAIN_CAT_TAB = [{'category': 'list_channels', 'title': _('Channels'), 'url': self.getFullUrl('iplayer')},
                              {'category': 'list_categories', 'title': _('Categories'), 'url': self.getFullUrl('iplayer')},
@@ -97,9 +96,12 @@ class BBCiPlayer(CBaseHostClass):
                     episodesAvailable = item['meta']['episodesAvailable']
                     url = self.getFullUrl(item['props']['href'])
                     title = item['props']['title']
+                    icon = item['props']['imageTemplate'].replace('{recipe}', '192x108')
+                    desc = item['props']['synopsis']
 
                     params = dict(cItem)
-                    params.update({'good_for_fav': True, 'title': title, 'url': self.getFullUrl(url)})
+                    params.update({'good_for_fav': True, 'title': title, 'url': self.getFullUrl(url), 'icon': self.getFullIconUrl(icon), 'desc': desc})
+
                     if episodesAvailable > 1:
                         params['category'] = nextCategory
                         self.addDir(params)
@@ -114,6 +116,7 @@ class BBCiPlayer(CBaseHostClass):
             ('bbc_one_hd', 'BBC One'),
             ('bbc_two_hd', 'BBC Two'),
             ('bbc_four_hd', 'BBC Four'),
+            ('bbc_scotland_hd', 'BBC Scotland'),
             ('cbbc_hd', 'CBBC'),
             ('cbeebies_hd', 'CBeebies'),
             ('bbc_news24', 'BBC News Channel'),
@@ -143,10 +146,14 @@ class BBCiPlayer(CBaseHostClass):
             ('bbc_one_yorks', 'BBC One Yorks')]
 
         for id, title in channel_list:
-            params = {'good_for_fav': True, 'title': title, 'url': self.getFullUrl('vpid/' + id + '/'), 'icon': self.otherIconsTemplate % id}
+            url = 'http://a.files.bbci.co.uk/media/live/manifesto/audio_video/simulcast/hls/uk/hls_pc/ak/' + id + '.m3u8'
+
+            params = {'good_for_fav': True, 'title': title, 'url': self.getFullUrl(url), 'icon': self.otherIconsTemplate % id}
+            printDBG("Params - title: %s, url: %s, icon: %s" % (params['title'], params['url'], params['icon']))
             self.addVideo(params)
 
     def listChannels(self, cItem, nextCategory):
+        # TODO support regionalised content, probably via config
         printDBG("BBCiPlayer.listChannels")
         params = {'good_for_fav': True, 'category': 'live_streams', 'title': _('Live'), 'icon': 'https://raw.githubusercontent.com/vonH/plugin.video.iplayerwww/master/media/live.png'}
         self.addDir(params)
@@ -156,6 +163,7 @@ class BBCiPlayer(CBaseHostClass):
             ('bbctwo', 'bbc_two_hd', 'BBC Two'),
             ('tv/bbcthree', 'bbc_three_hd', 'BBC Three'),
             ('bbcfour', 'bbc_four_hd', 'BBC Four'),
+            ('tv/bbcscotland', 'bbc_scotland_hd', 'BBC Scotland'),
             ('tv/cbbc', 'cbbc_hd', 'CBBC'),
             ('tv/cbeebies', 'cbeebies_hd', 'CBeebies'),
             ('tv/bbcnews', 'bbc_news24', 'BBC News Channel'),
@@ -169,38 +177,38 @@ class BBCiPlayer(CBaseHostClass):
 
     def listChannelMenu(self, cItem, nextCategory):
         printDBG("BBCiPlayer.listChannelMenu")
+
         sts, data = self.cm.getPage(cItem['url'], self.defaultParams)
         if not sts:
+            printDBG("Failed to get page.")
             return
 
-        azItem = False
-        data = self.cm.ph.getDataBeetwenMarkers(data, '<div id="main"', '</ul>', withMarkers=True)[1]
-        data = re.split('<div class="grid__item one-whole[^>]+?>', data)
-        for item in data:
-            item = item.split('</li>')[0]
-            url = self.cm.ph.getSearchGroups(item, '''href=['"]([^'^"]+?rewindTo[^'^"]+?)['"]''')[0]
-            if url == '':
-                url = self.cm.ph.getSearchGroups(item, '''href=['"]([^'^"]+?)['"]''')[0]
-            if url == '':
-                continue
-            title = self.cleanHtmlStr(item)
-            icon = self.cm.ph.getSearchGroups(item, '''<source[^>]+?srcset=['"]([^'^"^\s]+?)['"\s]''')[0]
+        json_data = self.scrapeJSON(data)
+        if json_data:
+            try:
+                item = json_data['broadcasts']['items'][0]
+                title = item['title']
+                icon = item['image'].replace('{recipe}', '192x108')
+                startTime = item['startTime']
 
-            params = {'good_for_fav': True, 'title': title, 'url': self.getFullUrl(url), 'icon': self.getFullIconUrl(icon), 'desc': ''}
-            if '/a-z' in url:
-                azItem = True
-                params['category'] = nextCategory
-                self.addDir(params)
-            else:
+                liveTitle = 'WATCH LIVE: ' + title + ' [' + startTime + ']'
+                channelId = json_data['channel']['id']
+                liveUrl = 'http://a.files.bbci.co.uk/media/live/manifesto/audio_video/simulcast/hls/uk/hls_pc/ak/' + channelId + '.m3u8'
+                params = {'title': liveTitle, 'url': self.getFullUrl(liveUrl), 'icon': self.getFullIconUrl(icon)}
+                printDBG("Params - title: %s, url: %s, icon: %s" % (params['title'], params['url'], params['icon']))
                 self.addVideo(params)
 
-        if not azItem:
-            params = dict(cItem)
-            params.update({'good_for_fav': True, 'title': cItem['title'] + ' ' + _('A-Z'), 'category': nextCategory, 'url': cItem['url'] + '/a-z'})
-            self.addDir(params)
+                #TODO add watch from start
+            except Exception:
+                printExc()
 
         params = dict(cItem)
-        params.update({'title': _('Highlights'), 'category': 'list_items3'})
+        params.update({'good_for_fav': True, 'title': cItem['title'] + ' ' + _('A-Z'), 'category': nextCategory, 'url': cItem['url'] + '/a-z'})
+        printDBG("Params title: %s, url: %s" % (params['title'], params['url']))
+        self.addDir(params)
+
+        params = dict(cItem)
+        params.update({'title': _('Featured'), 'category': 'list_episodes'})
         self.addDir(params)
 
     def listMainMenu(self, cItem, nextCategory):
@@ -405,99 +413,55 @@ class BBCiPlayer(CBaseHostClass):
 
         sts, data = self.cm.getPage(url, self.defaultParams)
         if not sts:
+            printDBG("Failed to get page: url[%s]" % url)
             return
 
-        printDBG("++++++++++++++++++++++++++++++++++++++++++++++++++++++++++")
-        printDBG(data)
-        printDBG("++++++++++++++++++++++++++++++++++++++++++++++++++++++++++")
+        json_data = self.scrapeJSON(data)
+        if json_data:
+            try:
+                if 'entities' in json_data:
+                    items = json_data['entities']
+                elif 'highlights' in json_data:
+                    items = json_data['highlights']['items']
 
-        t1 = '<div id="tvip-footer-wrap">'
-        t2 = '<div class="footer js-footer">'
-        if t1 in data:
-            endTag = t1
-        else:
-            endTag = t2
+                for item in items:
+                    if 'props' in item:
+                        props = item.get('props')
 
-        nextPage = self.cm.ph.getDataBeetwenNodes(data, ('<ol', '>', 'pagination'), ('</ol', '>'))[1]
-        if nextPage != '':
-            nextPage = self.cm.ph.getSearchGroups(nextPage, '''page=(%s)[^0-9]''' % (page + 1))[0]
-            if '' != nextPage:
-                nextPage = True
-            else:
-                nextPage = False
-            endTag = '<ol[^>]+?pagination[^>]+?>'
-        else:
-            mTag = '<div class="paginate">'
-            nextPage = self.cm.ph.getDataBeetwenMarkers(data, mTag, '</div>', withMarkers=False)[1]
-            if '' != nextPage:
-                if '' != self.cm.ph.getSearchGroups(nextPage, '''page=(%s)[^0-9]''' % (page + 1))[0]:
-                    nextPage = True
-                else:
-                    nextPage = False
-                endTag = mTag
-            else:
-                mTag = '<ul class="pagination'
-                nextPage = self.cm.ph.getDataBeetwenMarkers(data, mTag, '</ul>', withMarkers=False)[1]
-                if '' != nextPage:
-                    if '' != self.cm.ph.getSearchGroups(nextPage, '''page&#x3D;(%s)[^0-9]''' % (page + 1))[0]:
-                        nextPage = True
+                        title = props['title']
+                        url = props['href']
+                        icon = props['imageTemplate'].replace('{recipe}', '192x108')
+
+                        if 'synopsis' in props:
+                            desc = props['synopsis']
+                        elif 'subtitle' in props:
+                            desc = props['subtitle']
+
+                        params = {'good_for_fav': True, 'title': title, 'url': self.getFullUrl(url), 'icon': self.getFullIconUrl(icon), 'desc': desc}
+
+                        if 'duration' in props:
+                            duration = props['duration']
+                            params['title'] = title + ' [' + duration + ']'
+
+                        printDBG("Video found: title[%s], url[%s], icon[%s], desc[%s]" % (title, url, icon, desc))
+                        self.addVideo(params)
+
+                        # TODO sometimes these should actually be added as directories to link to the series (Categories, Search, etc)
                     else:
-                        nextPage = False
-                    endTag = mTag
+                        printDBG("Failed to find props in this item")
+                        continue
 
-        startTag = re.compile('''<li[^>]+?(?:class=['"]list-item|list__grid__item|layout__item)[^>]*?>''')
-        data = self.cm.ph.getDataBeetwenReMarkers(data, startTag, re.compile(endTag), withMarkers=False)[1]
-        data = startTag.split(data)
-
-        subTitleReOb1 = re.compile('<h2[^>]+?class="[^"]*?subtitle[^"]*?"')
-        subTitleReOb2 = re.compile('</h2>')
-        for item in data:
-            title = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(item, ('<div', '>', 'title'), ('</div', '>'))[1])
-            if title == '':
-                title = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(item, '<h1 class="list-item__title', '</h1>')[1])
-            icon = self.cm.ph.getSearchGroups(item, '''<source[^>]+?srcset=['"]([^'^"]+?)['"]''', ignoreCase=True)[0]
-
-            printDBG(item)
-            descTab = []
-            descTab.append(self.cleanHtmlStr(item.split('<div class="primary">')[-1]))
-
-            tmp = self.cm.ph.getDataBeetwenNodes(item, ('<a', '>', 'content-item__secondary'), ('</a', '>'))[1]
-            if tmp != '':
-                url = self.cm.ph.getSearchGroups(tmp, '''href=['"]([^'^"]+?)['"]''')[0]
-                #title += ' | ' + self.cleanHtmlStr(tmp)
-                type = 'category'
-            else:
-                url = self.cm.ph.getSearchGroups(item, '''href=['"]([^'^"]+?)['"]''')[0]
-                type = 'video'
-
-            if type == 'video':
-                subtitle = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(item, '<div class="subtitle', '</div>')[1])
-                if subtitle == '':
-                    subtitle = self.cleanHtmlStr(self.cm.ph.getDataBeetwenReMarkers(item, subTitleReOb1, subTitleReOb2)[1])
-                if subtitle != '':
-                    title += ' ' + subtitle
-
-            if 'data-timeliness-type="unavailable"' in item:
-                title = '[' + self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(item, '<span class="signpost editorial">', '</span>')[1]) + '] ' + title
-
-            if title.lower().startswith('episode '):
-                title = '%s - %s' % (cItem['title'], title)
-            elif cItem['category'] == 'list_episodes':
-                title = cItem['title'] + ' ' + title
-
-            if url == '' or title == '':
-                printDBG("+++++++++++++++ NO TITLE url[%s], title[%s]" % (url, title))
-                continue
-            if '/iplayer' not in url:
-                printDBG("+++++++++++++++ URL NOT SUPPORTED AT NOW url[%s], title[%s]" % (url, title))
-                continue
-
-            params = {'good_for_fav': True, 'title': title, 'url': self.getFullUrl(url), 'icon': self.getFullIconUrl(icon), 'desc': '[/br]'.join(descTab)}
-            if type == 'video':
-                self.addVideo(params)
-            else:
-                params['category'] = nextCategory
-                self.addDir(params)
+                nextPage = False
+                if 'pagination' in json_data:
+                    pagination = json_data.get('pagination')
+                    if 'currentPage' in pagination and 'totalPages' in pagination:
+                        currentPage = pagination['currentPage']
+                        totalPages = pagination['totalPages']
+                        nextPage = currentPage < totalPages
+            except Exception:
+                printExc()
+        else:
+            printDBG("Failed to scrape JSON")
 
         if nextPage:
             params = dict(cItem)
@@ -516,6 +480,7 @@ class BBCiPlayer(CBaseHostClass):
         self.listItems(cItem, 'list_episodes')
 
     def scrapeJSON(self, html):
+        # TODO format 1 never seems to work, so update to default to format 2
         printDBG("BBCiPlayer.scrapeJSON - scraping for video versions. Format 1.")
         json_data = None
         format = 1
@@ -553,9 +518,24 @@ class BBCiPlayer(CBaseHostClass):
 
     def getLinksForVideo(self, cItem):
         printDBG("BBCiPlayer.getLinksForVideo [%s]" % cItem)
+
         retTab = []
 
-        sts, data = self.cm.getPage(cItem['url'], self.defaultParams)
+        if cItem['url'].endswith('m3u8'):
+            url = cItem['url']
+            data = getDirectM3U8Playlist(url, checkExt=False)
+            if 1 == len(data):
+                cItem['url'] = urlparser.decorateUrl(cItem['url'], {'iptv_proto': 'm3u8', 'iptv_livestream': True})
+                retTab.append(cItem)
+            else:
+                for item in data:
+                    item['url'] = urlparser.decorateUrl(item['url'], {'iptv_proto': 'm3u8', 'iptv_livestream': True})
+                    retTab.append(item)
+
+            return retTab
+        else:
+            sts, data = self.cm.getPage(cItem['url'], self.defaultParams)
+
         if not sts:
             return retTab
 
@@ -593,6 +573,7 @@ class BBCiPlayer(CBaseHostClass):
                 retTab.append({'name': '', 'url': cItem['url'], 'need_resolve': 1})
         else:
             printDBG("Failed to retrieve JSON.")
+
         return retTab
 
     def getVideoLinks(self, url):
@@ -613,7 +594,7 @@ class BBCiPlayer(CBaseHostClass):
         printDBG("handleService: |||||||||||||||||||||||||||||||||||| name[%s], category[%s] " % (name, category))
         self.currList = []
 
-    #MAIN MENU
+        #MAIN MENU
         if name == None:
             rm(self.COOKIE_FILE)
             self.listMainMenu({'name': 'category', 'url': self.MAIN_URL}, 'list_items')
@@ -636,21 +617,23 @@ class BBCiPlayer(CBaseHostClass):
         elif 'list_items' == category:
             self.listItems(self.currItem, 'list_episodes')
         elif 'list_items2' == category:
+            #TODO list_items2 no longer used, remove after test
             self.listItems2(self.currItem, 'list_episodes')
         elif 'list_items3' == category:
+            #TODO list_items3 no longer used, remove after test
             self.listItems3(self.currItem, 'list_episodes')
         elif 'list_episodes' == category:
             self.listItems(self.currItem, 'video')
         elif 'list_episodes_view_all' == category:
             self.listItemsViewAll(self.currItem, 'video')
 
-    #SEARCH
+        #SEARCH
         elif category in ["search", "search_next_page"]:
             cItem = dict(self.currItem)
             cItem.update({'search_item': False, 'name': 'category'})
             self.listSearchResult(cItem, searchPattern, searchType)
-    #HISTORIA SEARCH
-        elif category == "search_history":
+        #HISTORIA SEARCH
+        elif 'search_history' == category:
             self.listsHistory({'name': 'history', 'category': 'search'}, 'desc', _("Type: "))
         else:
             printExc()

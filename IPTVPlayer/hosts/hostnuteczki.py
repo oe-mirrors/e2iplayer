@@ -355,7 +355,7 @@ class NuteczkiEU(CBaseHostClass):
                         if sts:
                             jscode.append(jsItem)
                 if len(jscode):
-                    jscode.insert(0, 'window={}; window.location={}; window.location.protocol="%s"; var document={}; document.write=function(txt){print(txt);}' % self.getMainUrl().split('//', 1)[0])
+                    jscode.insert(0, 'window=global; window.location={}; window.location.protocol="%s"; var document={}; document.write=function(txt){print(txt);}' % self.getMainUrl().split('//', 1)[0])
                     ret = js_execute('\n'.join(jscode), {'timeout_sec': 15})
                     if ret['sts'] and 0 == ret['code']:
                         printDBG(ret['data'])

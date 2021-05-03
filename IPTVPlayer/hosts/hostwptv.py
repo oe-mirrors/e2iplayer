@@ -10,9 +10,7 @@ from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, by
 ###################################################
 # FOREIGN import
 ###################################################
-import urllib.request
-import urllib.parse
-import urllib.error
+import urllib.request, urllib.parse, urllib.error
 try:
     import json
 except Exception:
@@ -257,7 +255,7 @@ class WpTV(CBaseHostClass):
 
             tmpTab = []
             qMap = {"HQ": '2', "LQ": '1'}
-            data = json.loads(data)
+            data = byteify(json.loads(data))
             for item in data['clip']['url']:
                 if 'mp4' not in item['type']:
                     continue
@@ -285,7 +283,7 @@ class WpTV(CBaseHostClass):
         printDBG('WpTV.getLinksForFavourite')
         links = []
         try:
-            cItem = json.loads(fav_data)
+            cItem = byteify(json.loads(fav_data))
             links = self.getLinksForVideo(cItem)
         except Exception:
             printExc()
@@ -294,7 +292,7 @@ class WpTV(CBaseHostClass):
     def setInitListFromFavouriteItem(self, fav_data):
         printDBG('WpTV.setInitListFromFavouriteItem')
         try:
-            params = json.loads(fav_data)
+            params = byteify(json.loads(fav_data))
         except Exception:
             params = {}
             printExc()

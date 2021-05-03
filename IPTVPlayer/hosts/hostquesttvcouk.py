@@ -11,9 +11,7 @@ from Plugins.Extensions.IPTVPlayer.libs.urlparserhelper import getDirectM3U8Play
 # FOREIGN import
 ###################################################
 import urllib.parse
-import urllib.request
-import urllib.parse
-import urllib.error
+import urllib.request, urllib.parse, urllib.error
 try:
     import json
 except Exception:
@@ -116,7 +114,7 @@ class QuesttvCoUK(CBaseHostClass):
                 data = self.cm.ph.getDataBeetwenMarkers(data, '"renditions":', ']', False)[1]
                 try:
                     printDBG(data)
-                    data = json.loads(data + ']')
+                    data = byteify(json.loads(data + ']'), '', True)
                     for item in data:
                         if item['videoCodec'] != 'H264':
                             continue

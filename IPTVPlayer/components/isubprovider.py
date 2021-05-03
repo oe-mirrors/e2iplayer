@@ -17,9 +17,7 @@ from Plugins.Extensions.IPTVPlayer.libs.youtube_dl.utils import clean_html
 from Plugins.Extensions.IPTVPlayer.components.ihost import CDisplayListItem, RetHost
 
 import re
-import urllib.request
-import urllib.parse
-import urllib.error
+import urllib.request, urllib.parse, urllib.error
 from os import listdir as os_listdir, path as os_path
 
 
@@ -446,7 +444,7 @@ class CBaseSubProviderClass:
             sts, data = self.cm.getPage(url)
             if not sts:
                 return itemType
-            data = json.loads(data)
+            data = byteify(json.loads(data))
             if len(data["tv_results"]):
                 itemType = 'series'
         except Exception:

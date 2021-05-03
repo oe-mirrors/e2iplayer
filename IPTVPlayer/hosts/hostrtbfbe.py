@@ -13,9 +13,7 @@ from Plugins.Extensions.IPTVPlayer.libs.urlparserhelper import getDirectM3U8Play
 # FOREIGN import
 ###################################################
 import re
-import urllib.request
-import urllib.parse
-import urllib.error
+import urllib.request, urllib.parse, urllib.error
 import random
 from datetime import datetime, timedelta
 try:
@@ -151,7 +149,7 @@ class RTBFBE(CBaseHostClass):
         data = self.cm.ph.getDataBeetwenMarkers(data, '<router-gateway', '</router-gateway>')[1]
         data = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(data, 'config="', '"', False)[1])
         try:
-            data = json.loads(data)
+            data = byteify(json.loads(data))
             baseUrl = data['api']['planninglist']
             if not self.cm.isValidUrl(baseUrl):
                 return
@@ -186,7 +184,7 @@ class RTBFBE(CBaseHostClass):
         if not sts:
             return
         try:
-            data = json.loads(data)
+            data = byteify(json.loads(data))
             for item in data:
                 title = self.cleanHtmlStr(item['title'])
                 subtitle = self.cleanHtmlStr(item['subtitle'])
@@ -240,7 +238,7 @@ class RTBFBE(CBaseHostClass):
         self.setMainUrl(cUrl)
 
         try:
-            data = json.loads(data)['item']
+            data = byteify(json.loads(data))['item']
             for item in data:
                 if item['@attributes']['id'] == key:
                     for it in item['item']:
@@ -306,7 +304,7 @@ class RTBFBE(CBaseHostClass):
                 if it[0] == 'uuid':
                     uuids.append(it[1])
                 try:
-                    obj[it[0]] = json.loads(self.cleanHtmlStr(it[1]))
+                    obj[it[0]] = byteify(json.loads(self.cleanHtmlStr(it[1])))
                 except Exception:
                     obj[it[0]] = it[1]
             query.append(obj)
@@ -319,7 +317,7 @@ class RTBFBE(CBaseHostClass):
                 return
 
             try:
-                data = json.loads(data)['blocks']
+                data = byteify(json.loads(data))['blocks']
                 for uuid in uuids:
                     if uuid not in data:
                         continue
@@ -440,7 +438,7 @@ class RTBFBE(CBaseHostClass):
         if 0 == len(self.userGeoLoc):
             sts, data = self.getPage(self.getFullUrl('/api/geoloc'))
             try:
-                json.loads(data)
+                byteify(json.loads(data), '', True)
                 self.userGeoLoc = data['country']
             except Exception:
                 printExc()
@@ -479,7 +477,7 @@ class RTBFBE(CBaseHostClass):
         geoLocRestriction = ''
         data = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(data, 'data-media="', '"', False)[1])
         try:
-            data = json.loads(data)
+            data = byteify(json.loads(data), '', True)
             printDBG("++++++++++++++++++++++++++++++++++++++++++++++")
             printDBG(data)
             geoLocRestriction = data.get('geoLocRestriction', '')
@@ -583,7 +581,7 @@ class RTBFBE(CBaseHostClass):
                 return []
 
             try:
-                data = json.loads(data)
+                data = byteify(json.loads(data))
                 videoUrl = data['streams'][type]
                 printDBG("+++++++++++++++++++++++++++++++++++++++++++++")
                 printDBG(videoUrl)
@@ -653,7 +651,7 @@ class RTBFBE(CBaseHostClass):
         if sts:
             try:
                 data = self.cm.ph.getDataBeetwenMarkers(data, 'gigya.callback(', ');', False)[1]
-                data = json.loads(data)
+                data = byteify(json.loads(data))
                 printDBG(data)
                 printDBG("++++++++++++++++++++++++++++++++++++")
                 if 200 == data['statusCode']:

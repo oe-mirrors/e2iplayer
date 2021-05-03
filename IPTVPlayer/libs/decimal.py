@@ -3427,9 +3427,11 @@ class Context(object):
         if _ignored_flags is None:
             _ignored_flags = []
         if not isinstance(flags, dict):
+            s = None
             flags = dict([(s, s in flags) for s in _signals])
             del s
         if traps is not None and not isinstance(traps, dict):
+            s = None
             traps = dict([(s, s in traps) for s in _signals])
             del s
         for name, val in list(locals().items()):

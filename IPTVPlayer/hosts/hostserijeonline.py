@@ -12,9 +12,7 @@ from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, by
 ###################################################
 import urllib.parse
 import re
-import urllib.request
-import urllib.parse
-import urllib.error
+import urllib.request, urllib.parse, urllib.error
 try:
     import json
 except Exception:
@@ -238,7 +236,7 @@ class SerijeOnline(CBaseHostClass):
             for item in data:
                 if 'getplayer' in item:
                     try:
-                        query = json.loads(item + '}')
+                        query = byteify(json.loads(item + '}'), '', True)
                         query = urllib.parse.urlencode(query)
                         url = self.getFullUrl("/ajax.php") + '?' + query
                         sts, data = self.getPage(url)

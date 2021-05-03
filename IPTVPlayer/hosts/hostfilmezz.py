@@ -13,9 +13,7 @@ from Plugins.Extensions.IPTVPlayer.tools.iptvtypes import strwithmeta
 ###################################################
 import urllib.parse
 import re
-import urllib.request
-import urllib.parse
-import urllib.error
+import urllib.request, urllib.parse, urllib.error
 from copy import deepcopy
 try:
     import json
@@ -428,7 +426,7 @@ class FilmezzEU(CBaseHostClass):
             self.selectDomain()
         links = []
         try:
-            cItem = json.loads(fav_data)
+            cItem = byteify(json.loads(fav_data))
             links = self.getLinksForVideo(cItem)
         except Exception:
             printExc()
@@ -439,7 +437,7 @@ class FilmezzEU(CBaseHostClass):
         if self.MAIN_URL == None:
             self.selectDomain()
         try:
-            params = json.loads(fav_data)
+            params = byteify(json.loads(fav_data))
         except Exception:
             params = {}
             printExc()

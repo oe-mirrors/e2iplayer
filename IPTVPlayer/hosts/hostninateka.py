@@ -13,9 +13,7 @@ from Plugins.Extensions.IPTVPlayer.libs.pCommon import common, CParsingHelper
 # FOREIGN import
 ###################################################
 import re
-import urllib.request
-import urllib.parse
-import urllib.error
+import urllib.request, urllib.parse, urllib.error
 try:
     import json
 except Exception:
@@ -115,7 +113,7 @@ class Ninateka(CBaseHostClass):
                 return url
             data = self.cm.ph.getDataBeetwenMarkers(data, 'playerOptionsWithMainSource =', '};', False)[1]
             printDBG(data)
-            data = json.loads(data + '}')
+            data = byteify(json.loads(data + '}'))
             for item in data['sources']:
                 type = item.get('type', '').lower()
                 if '/mp4' in type:
@@ -195,7 +193,7 @@ class Ninateka(CBaseHostClass):
         printDBG('getLinksForFavourite')
         links = []
         try:
-            cItem = json.loads(fav_data)
+            cItem = byteify(json.loads(fav_data))
             links = self.getLinksForVideo(cItem)
         except Exception:
             printExc()
@@ -204,7 +202,7 @@ class Ninateka(CBaseHostClass):
     def setInitListFromFavouriteItem(self, fav_data):
         printDBG('setInitListFromFavouriteItem')
         try:
-            params = json.loads(fav_data)
+            params = byteify(json.loads(fav_data))
         except Exception:
             params = {}
             printExc()

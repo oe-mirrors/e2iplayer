@@ -12,9 +12,7 @@ from Plugins.Extensions.IPTVPlayer.tools.iptvtypes import strwithmeta
 ###################################################
 # FOREIGN import
 ###################################################
-import urllib.request
-import urllib.parse
-import urllib.error
+import urllib.request, urllib.parse, urllib.error
 try:
     import json
 except Exception:
@@ -327,7 +325,7 @@ class KissCartoonMe(CBaseHostClass):
             return urlTab
 
         try:
-            data = json.loads(data)
+            data = byteify(json.loads(data))
             if not data['status']:
                 return urlTab
             url = data['value']
@@ -362,7 +360,7 @@ class KissCartoonMe(CBaseHostClass):
             return urlTab
 
         try:
-            data = json.loads(data)
+            data = byteify(json.loads(data))
             printDBG(data)
             for item in data['playlist'][0].get('sources', []):
                 if 'mp4' not in item['type']:
@@ -411,7 +409,7 @@ class KissCartoonMe(CBaseHostClass):
         links = []
         try:
             try:
-                cItem = json.loads(fav_data)
+                cItem = byteify(json.loads(fav_data))
             except Exception:
                 cItem = {'url': fav_data}
                 pass
@@ -423,7 +421,7 @@ class KissCartoonMe(CBaseHostClass):
     def setInitListFromFavouriteItem(self, fav_data):
         printDBG('CartoonME.setInitListFromFavouriteItem')
         try:
-            params = json.loads(fav_data)
+            params = byteify(json.loads(fav_data))
         except Exception:
             params = {}
             printExc()

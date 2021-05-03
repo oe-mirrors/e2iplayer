@@ -115,7 +115,7 @@ class UnCaptchaReCaptchaMyJDWidget(Screen):
             if line == '':
                 continue
             try:
-                line = json.loads(line)
+                line = byteify(json.loads(line))
                 if line['type'] == 'captcha_result':
                     self.result = line['data']
                     # timeout timer

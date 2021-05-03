@@ -17,9 +17,7 @@ from Plugins.Extensions.IPTVPlayer.libs.e2ijson import loads as json_loads
 ###################################################
 import re
 import time
-import urllib.request
-import urllib.parse
-import urllib.error
+import urllib.request, urllib.parse, urllib.error
 from datetime import timedelta
 ###################################################
 ###################################################
@@ -46,7 +44,7 @@ class Redbull(CBaseHostClass):
         self.defaultParams = {'header': self.HTTP_HEADER}
         self.REDBULL_API = "https://appletv.redbull.tv/"
         self.MAIN_URL = 'http://redbull.tv/'
-        self.DEFAULT_ICON_URL = 'https://www.redbull.com/v3/resources/images/appicon/android-chrome-192.png'
+        self.DEFAULT_ICON_URL = 'https://img.redbull.com/images/e_trim:10:transparent/c_limit,w_600/q_auto,f_png/redbullcom/2016/06/22/1331802019605_2/red-bull-tv-logo'
 
     def listMain(self, cItem, nextCategory):
         printDBG("Redbull.listMain")

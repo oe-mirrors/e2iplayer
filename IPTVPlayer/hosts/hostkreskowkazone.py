@@ -11,9 +11,7 @@ from Plugins.Extensions.IPTVPlayer.tools.iptvtypes import strwithmeta
 ###################################################
 # FOREIGN import
 ###################################################
-import urllib.request
-import urllib.parse
-import urllib.error
+import urllib.request, urllib.parse, urllib.error
 from hashlib import md5
 try:
     import json
@@ -58,7 +56,7 @@ class KreskowkaZonePL(CBaseHostClass):
         self.AJAX_HEADER = dict(self.HEADER)
         self.AJAX_HEADER.update({'X-Requested-With': 'XMLHttpRequest'})
 
-        self.MAIN_URL = 'https://www.kreskowkazone.pl/'
+        self.MAIN_URL = 'http://www.kreskowkazone.pl/'
         self.DEFAULT_ICON_URL = self.MAIN_URL + 'images/sprites.png'
 
         self.MAIN_TAB = [{'category': 'main', 'title': 'Główna', 'url': self.MAIN_URL, 'icon': self.DEFAULT_ICON_URL},
@@ -264,7 +262,7 @@ class KreskowkaZonePL(CBaseHostClass):
         printDBG('KreskowkaZonePL.getLinksForFavourite')
         links = []
         try:
-            cItem = json.loads(fav_data)
+            cItem = byteify(json.loads(fav_data))
             links = self.getLinksForVideo(cItem)
         except Exception:
             printExc()
@@ -273,7 +271,7 @@ class KreskowkaZonePL(CBaseHostClass):
     def setInitListFromFavouriteItem(self, fav_data):
         printDBG('KreskowkaZonePL.setInitListFromFavouriteItem')
         try:
-            params = json.loads(fav_data)
+            params = byteify(json.loads(fav_data))
         except Exception:
             params = {}
             printExc()

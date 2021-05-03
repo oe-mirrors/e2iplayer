@@ -14,9 +14,7 @@ from Plugins.Extensions.IPTVPlayer.libs.crypto.cipher.aes_cbc import AES_CBC
 # FOREIGN import
 ###################################################
 import re
-import urllib.request
-import urllib.parse
-import urllib.error
+import urllib.request, urllib.parse, urllib.error
 import base64
 from binascii import hexlify, unhexlify
 from hashlib import md5
@@ -304,7 +302,7 @@ class PutlockerTvTo(CBaseHostClass):
             return []
 
         try:
-            data = json.loads(data)['html']
+            data = byteify(json.loads(data))['html']
             printDBG(data)
         except Exception:
             printExc()
@@ -443,7 +441,7 @@ class PutlockerTvTo(CBaseHostClass):
             printDBG('+++++\n%s\n+++++' % (data))
             if data[0] not in '[{':
                 data = data[data.find('{'):]
-            data = json.loads(data)
+            data = byteify(json.loads(data))
             printDBG(data)
             subTrack = data.get('subtitle', '')
             if data['type'] == 'iframe':
@@ -462,7 +460,7 @@ class PutlockerTvTo(CBaseHostClass):
                 sts, data = self.getPage(url, params)
                 if not sts:
                     return []
-                data = json.loads(data)
+                data = byteify(json.loads(data))
                 for item in data['data']:
                     if item['type'] != 'mp4':
                         continue

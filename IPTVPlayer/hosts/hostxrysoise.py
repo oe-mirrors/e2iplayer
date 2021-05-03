@@ -12,9 +12,7 @@ from Plugins.Extensions.IPTVPlayer.libs.pCommon import CParsingHelper
 # FOREIGN import
 ###################################################
 import re
-import urllib.request
-import urllib.parse
-import urllib.error
+import urllib.request, urllib.parse, urllib.error
 try:
     import json
 except Exception:
@@ -351,7 +349,7 @@ class XrysoiSE(CBaseHostClass):
     def setInitListFromFavouriteItem(self, fav_data):
         printDBG('XrysoiSE.setInitListFromFavouriteItem')
         try:
-            params = json.loads(fav_data)
+            params = byteify(json.loads(fav_data))
         except Exception:
             params = {}
             printExc()

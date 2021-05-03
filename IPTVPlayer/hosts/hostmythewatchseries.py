@@ -11,14 +11,12 @@ from Plugins.Extensions.IPTVPlayer.tools.iptvtypes import strwithmeta
 ###################################################
 # FOREIGN import
 ###################################################
-import urllib.request
-import urllib.parse
-import urllib.error
+import urllib.request, urllib.parse, urllib.error
 ###################################################
 
 
 def gettytul():
-    return 'https://gowatchseries.io/'
+    return 'https://www5.gowatchseries.bz/'
 
 
 class MyTheWatchseries(CBaseHostClass):
@@ -39,7 +37,7 @@ class MyTheWatchseries(CBaseHostClass):
         self.cacheFiltersKeys = []
 
     def selectDomain(self):
-        self.MAIN_URL = 'https://gowatchseries.io/'
+        self.MAIN_URL = 'https://www5.gowatchseries.bz/'
         params = dict(self.defaultParams)
         params['with_metadata'] = True
         sts, data = self.getPage(self.getMainUrl(), params)

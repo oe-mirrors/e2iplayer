@@ -10,9 +10,7 @@ from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, by
 ###################################################
 # FOREIGN import
 ###################################################
-import urllib.request
-import urllib.parse
-import urllib.error
+import urllib.request, urllib.parse, urllib.error
 try:
     import json
 except Exception:
@@ -36,6 +34,7 @@ class GamatoMovies(CBaseHostClass):
         self.AJAX_HEADER.update({'X-Requested-With': 'XMLHttpRequest'})
 
         self.MAIN_URL = 'http://gamato-movies.com/'
+
         self.DEFAULT_ICON_URL = self.MAIN_URL + 'assets/uploads/images/aaw81QHKtm.png'
 
         self.MAIN_CAT_TAB = [{'category': 'movies', 'title': _('Movies'), 'priv_type': 'movie', 'url': self.getFullUrl('movies'), 'icon': self.DEFAULT_ICON_URL},
@@ -130,7 +129,7 @@ class GamatoMovies(CBaseHostClass):
         if not sts:
             return
         try:
-            data = json.loads(data)
+            data = byteify(json.loads(data))
             for item in data['items']:
                 try:
                     if item['type'] == 'movie':
@@ -184,7 +183,7 @@ class GamatoMovies(CBaseHostClass):
 
         try:
             trailerUrl = self.cm.ph.getSearchGroups(data, '''"trailer"\s*:\s*(['"]http[^'^"]+?['"])''')[0]
-            trailerUrl = json.loads(trailerUrl)
+            trailerUrl = byteify(json.loads(trailerUrl))
             if self.cm.isValidUrl(trailerUrl):
                 params = dict(cItem)
                 params.update({'good_for_fav': True, 'title': cItem['title'] + ' - ' + _('trailer'), 'priv_type': 'trailer', 'url': trailerUrl})
@@ -193,7 +192,7 @@ class GamatoMovies(CBaseHostClass):
             printExc()
 
         try:
-            data = json.loads(data)
+            data = byteify(json.loads(data))
             for item in data['season']:
                 title = self.getStr(item, 'title')
                 if '' == title:
@@ -260,7 +259,7 @@ class GamatoMovies(CBaseHostClass):
         if 'movie' == cItem['priv_type']:
             try:
                 trailerUrl = self.cm.ph.getSearchGroups(jsonData, '''"trailer"\s*:\s*(['"]http[^'^"]+?['"])''')[0]
-                trailerUrl = json.loads(trailerUrl)
+                trailerUrl = byteify(json.loads(trailerUrl))
                 if self.cm.isValidUrl(trailerUrl):
                     urlTab.append({'name': _('Trailer'), 'url': trailerUrl, 'need_resolve': 1})
             except Exception:
@@ -274,7 +273,7 @@ class GamatoMovies(CBaseHostClass):
         #try:
         #    data = '[' + self.cm.ph.getDataBeetwenMarkers(data, '"link":[', ']', False)[1] + ']'
         #    printDBG(data)
-        #    data = json.loads(data)
+        #    data = byteify(json.loads(data))
         #    for item in data:
         #        url = self.getStr(item, 'url')
         #        if not self.cm.isValidUrl(url): continue
@@ -303,11 +302,11 @@ class GamatoMovies(CBaseHostClass):
         shortUri = videoUrl
         domain = self.up.getDomain(videoUrl)
         sts, data = self.cm.getPage(videoUrl)
-        if sts and 'shorte.st/' in data:
-            videoUrl = videoUrl.replace(domain, 'sh.st')
-            domain = 'sh.st'
+        if sts and 'gosfd.eu' in data:
+            videoUrl = videoUrl.replace(domain, 'gosfd.eu')
+            domain = 'gosfd.eu'
 
-        if 'sh.st' in domain or 'viid.me' in domain or 'skiip.me' in domain or 'clkmein.com' in domain:
+        if 'gosfd.eu' in domain or 'streamtape.net' in domain:
             from Plugins.Extensions.IPTVPlayer.libs.unshortenit import unshorten
             uri, sts = unshorten(videoUrl)
             videoUrl = str(uri)
@@ -334,7 +333,7 @@ class GamatoMovies(CBaseHostClass):
         printDBG('GamatoMovies.getLinksForFavourite')
         links = []
         try:
-            cItem = json.loads(fav_data)
+            cItem = byteify(json.loads(fav_data))
             links = self.getLinksForVideo(cItem)
         except Exception:
             printExc()
@@ -343,7 +342,7 @@ class GamatoMovies(CBaseHostClass):
     def setInitListFromFavouriteItem(self, fav_data):
         printDBG('GamatoMovies.setInitListFromFavouriteItem')
         try:
-            params = json.loads(fav_data)
+            params = byteify(json.loads(fav_data))
         except Exception:
             params = {}
             printExc()

@@ -14,15 +14,11 @@ from Plugins.Extensions.IPTVPlayer.libs.urlparserhelper import getDirectM3U8Play
 ###################################################
 from Components.config import config, ConfigSelection, ConfigYesNo, getConfigListEntry
 from copy import deepcopy
-import urllib.request
-import urllib.parse
-import urllib.error
+import urllib.request, urllib.parse, urllib.error
 try:
     import simplejson as json
 except Exception:
     import json
-from functools import cmp_to_key
-
 ###################################################
 
 ###################################################
@@ -267,7 +263,7 @@ class ARDmediathek(CBaseHostClass):
 
         try:
             sectionIdx = 0
-            data = json.loads(data)
+            data = byteify(json.loads(data))
             if 1 == len(data['sections']):
                 self.listItem(cItem, data['sections'][0], sectionIdx)
             else:
@@ -345,7 +341,7 @@ class ARDmediathek(CBaseHostClass):
             return []
 
         try:
-            data = json.loads(data)
+            data = byteify(json.loads(data))
             url = data['sections'][0]['modCons'][0]['mods'][0]['inhalte'][0]['mediaCollection']['url']
         except Exception:
             printExc()
@@ -365,7 +361,7 @@ class ARDmediathek(CBaseHostClass):
         try:
             urlTab = []
             tmpUrlTab = []
-            data = json.loads(data)
+            data = byteify(json.loads(data))
             live = data['_isLive']
             subtitleUrl = data.get('_subtitleUrl', '')
             itemType = data['_type']
@@ -457,7 +453,7 @@ class ARDmediathek(CBaseHostClass):
                                 return 1
                             else:
                                 return 0
-            tmpUrlTab.sort(key=cmp_to_key(_cmpLinks))
+            tmpUrlTab.sort(_cmpLinks)
             onelinkmode = config.plugins.iptvplayer.ardmediathek_onelinkmode.value
             for item in tmpUrlTab:
                 url = item['url']

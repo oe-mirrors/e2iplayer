@@ -13,9 +13,7 @@ from Plugins.Extensions.IPTVPlayer.libs.urlparserhelper import getDirectM3U8Play
 # FOREIGN import
 ###################################################
 import re
-import urllib.request
-import urllib.parse
-import urllib.error
+import urllib.request, urllib.parse, urllib.error
 try:
     import json
 except Exception:
@@ -227,7 +225,7 @@ class RteIE(CBaseHostClass):
         if '/show/' in cItem['url']:
             try:
                 sts, data = self.cm.getPage('http://feeds.rasset.ie/rteavgen/player/playlist/?type=iptv&format=json&showId=' + id, self.defaultParams)
-                data = json.loads(data)['shows'][0]["media:group"][0]
+                data = byteify(json.loads(data))['shows'][0]["media:group"][0]
                 hdsUrl = data['rte:server'] + data['url']
             except Exception:
                 printExc()

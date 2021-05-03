@@ -5,7 +5,7 @@
 ###################################################
 from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _, GetIPTVNotify, GetIPTVSleep
 from Plugins.Extensions.IPTVPlayer.tools.iptvtypes import strwithmeta
-from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, IsHttpsCertValidationEnabled, byteify, GetDefaultLang, rm, UsePyCurl, GetJSScriptFile
+from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, IsHttpsCertValidationEnabled, byteify, GetDefaultLang, rm, UsePyCurl, GetJSScriptFile, IsExecutable, iptv_system
 from Plugins.Extensions.IPTVPlayer.components.asynccall import IsMainThread, IsThreadTerminated, SetThreadKillable
 from Plugins.Extensions.IPTVPlayer.tools.e2ijs import js_execute_ext
 from Plugins.Extensions.IPTVPlayer.libs import ph
@@ -13,9 +13,7 @@ from Plugins.Extensions.IPTVPlayer.libs.e2ijson import loads as json_loads, dump
 ###################################################
 # FOREIGN import
 ###################################################
-import urllib.request
-import urllib.error
-import urllib.parse
+import urllib.request, urllib.parse, urllib.error
 import base64
 try:
     import ssl
@@ -269,7 +267,7 @@ class CParsingHelper:
 
 
 class common:
-    HOST = 'Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/59.0.3071.115 Safari/537.36'
+    HOST = 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/81.0.4044.138 Safari/537.36'
     HEADER = None
     ph = CParsingHelper
 
@@ -280,7 +278,7 @@ class common:
         elif browser == 'iphone_3_0':
             ua = 'Mozilla/5.0 (iPhone; U; CPU iPhone OS 3_0 like Mac OS X; en-us) AppleWebKit/528.18 (KHTML, like Gecko) Version/4.0 Mobile/7A341 Safari/528.16'
         else:
-            ua = 'Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/59.0.3071.115 Safari/537.36'
+            ua = 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/81.0.4044.138 Safari/537.36'
 
         HTTP_HEADER = {'User-Agent': ua,
                         'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
@@ -500,6 +498,67 @@ class common:
         except Exception:
             printExc()
         return cookiesDict
+
+    def addCookieItem(self, cookiefile, cookieDict, ignoreDiscard=True, ignoreExpires=False):
+        printDBG("pCommon.addCookieItem %s to file '%s'" % (json_dumps(cookieDict), cookiefile))
+
+        cj = None
+        # create a Cookie object from cookieDict
+        cookieName = cookieDict.get('name', '')
+        cookieValue = cookieDict.get('value', '')
+        cookiePort = cookieDict.get('port', None)
+        domainParts = cookieDict.get('domain', '').split('/')
+        while len(domainParts) and ('http' in domainParts[0] or len(domainParts[0]) == 0):
+            del(domainParts[0])
+
+        cookiePath = cookieDict.get('path', '/')
+        cookieExpires = cookieDict.get('expires', None)
+
+        if cookiePort == None:
+            cookiePortSpecified = False
+        else:
+            cookiePortSpecified = True
+        if not domainParts:
+            cookieDomain = ''
+            cookieDomainSpecified = False
+            cookieDomainDot = False
+        else:
+            cookieDomain = domainParts[0]
+            cookieDomainSpecified = True
+            if cookieDomain.startswith("."):
+                cookieDomainDot = True
+            else:
+                cookieDomainDot = False
+
+        if not (cookieName and cookieValue):
+            printDBG("cookie not valid : %s " % json_dumps(cookieDict))
+            return
+
+        try:
+            c = http.cookiejar.Cookie(version=0, name=cookieName, value=cookieValue, port=cookiePort, port_specified=cookiePortSpecified, domain=cookieDomain, domain_specified=cookieDomainSpecified, domain_initial_dot=cookieDomainDot, path=cookiePath, path_specified=True, secure=False, expires=cookieExpires, discard=True, comment=None, comment_url=None, rest={'HttpOnly': None}, rfc2109=False)
+
+        except:
+            printExc()
+            return
+
+        try:
+            # load cookies from cookiefile
+            if self.usePyCurl():
+                cj = self._pyCurlLoadCookie(cookiefile, ignoreDiscard, ignoreExpires)
+            else:
+                cj = http.cookiejar.MozillaCookieJar()
+                cj.load(cookiefile, ignore_discard=ignoreDiscard)
+
+            #add new cookie
+            cj.set_cookie(c)
+
+            # save in cookiefile
+            #if self.usePyCurl():
+            #    cj = self._pyCurlLoadCookie(cookiefile, ignoreDiscard, ignoreExpires)
+            #else:
+            cj.save(cookiefile, ignore_discard=ignoreDiscard)
+        except Exception:
+            printExc()
 
     def getCookieHeader(self, cookiefile, allowedNames=[], unquote=True, ignoreDiscard=True, ignoreExpires=False):
         ret = ''
@@ -826,6 +885,14 @@ class common:
                             break
                 else:
                     sts = True
+                    if metadata['content-type'] == 'image/webp':
+                        new_name = params['save_to_file'].replace(".jpg", ".webp")
+                        printDBG("Change extension of webp image: %s" % new_name)
+                        try:
+                            os.rename(params['save_to_file'], new_name)
+                            self.convertWebp(new_name)
+                        except:
+                            pass
 
             if fileHandler:
                 fileHandler.close()
@@ -893,6 +960,9 @@ class common:
         for idx in range(len(returnKeys)):
             if sourceKeys[idx] in responseHeaders:
                 metadata[returnKeys[idx]] = responseHeaders[sourceKeys[idx]]
+                #printDBG(sourceKeys[idx] + " ---->  " + responseHeaders[sourceKeys[idx]])
+
+        #printDBG(str(responseHeaders))
 
         if collectAllHeaders:
             if "Access-Control-Allow-Headers" in responseHeaders:
@@ -903,9 +973,11 @@ class common:
                     key = key.strip()
                     if key in responseHeaders:
                         metadata[key.lower()] = responseHeaders[key]
+                        #printDBG(key + " ---->  " + responseHeaders[key])
 
             for header, value in responseHeaders.items():
                 metadata[header.lower()] = responseHeaders[header]
+                #printDBG(header + " ---->  " + value)
 
     def getPage(self, url, addParams={}, post_data=None):
         ''' wraps getURLRequestData '''
@@ -966,10 +1038,6 @@ class common:
             response = None
             status = False
 
-        if response != None:
-            if isinstance(response, bytes):
-                response = response.decode('utf-8', 'strict')
-
         if addParams['return_data'] and status and not isinstance(response, str):
             status = False
 
@@ -988,76 +1056,135 @@ class common:
                 return cfParams['full_url_handle2'](url)
             return url
 
+        r = ""
         url = baseUrl
         header = {'Referer': url, 'User-Agent': cfParams.get('User-Agent', ''), 'Accept-Encoding': 'text'}
         header.update(params.get('header', {}))
         params.update({'with_metadata': True, 'use_cookie': True, 'save_cookie': True, 'load_cookie': True, 'cookiefile': cfParams.get('cookie_file', ''), 'header': header})
         sts, data = self.getPage(url, params, post_data)
 
+        #printDBG("Cloudflare Url: %s" % data.meta["url"])
+
         current = 0
-        while current < 5:
+        while current < 3:
             #if True:
             if not sts and None != data:
                 start_time = time.time()
                 current += 1
+                printDBG("Cloudflare protection -- try n. %s" % current)
                 doRefresh = False
                 try:
                     domain = self.getBaseUrl(data.meta['url'])
                     verData = data
-                    printDBG("------------------")
-                    printDBG(verData)
-                    printDBG("------------------")
+                    #printDBG("------------------")
+                    #printDBG(verData)
+                    #printDBG("------------------")
                     if 'sitekey' not in verData and 'challenge' not in verData:
                         break
 
-                    printDBG(">>")
-                    printDBG(verData)
-                    printDBG("<<")
+                    #printDBG(">>")
+                    #printDBG(verData)
+                    #printDBG("<<")
 
                     sitekey = self.ph.getSearchGroups(verData, 'data-sitekey="([^"]+?)"')[0]
                     id = self.ph.getSearchGroups(verData, 'data-ray="([^"]+?)"')[0]
                     if sitekey != '':
-                        from Plugins.Extensions.IPTVPlayer.libs.hcaptcha_2captcha import UnCaptchahCaptcha
-                        # google captcha
-                        recaptcha = UnCaptchahCaptcha(lang=GetDefaultLang())
-#                        recaptcha.HTTP_HEADER['Referer'] = baseUrl
-#                        if '' != cfParams.get('User-Agent', ''): recaptcha.HTTP_HEADER['User-Agent'] = cfParams['User-Agent']
-                        token = recaptcha.processCaptcha(sitekey, domain)
-                        if token == '':
-                            return False, None
+                        if self.ph.getSearchGroups(verData, 'data-sitekey="([^"]+?)"')[0]:
+                            printDBG("*************** CloudFlare prompts hCaptcha *************")
 
-                        sts, tmp = self.ph.getDataBeetwenMarkers(verData, '<form', '</form>', caseSensitive=False)
-                        if not sts:
-                            return False, None
+                            challenge_form = re.findall("(<form class=\"challenge-form\".*?</form>)", verData, re.S)
+                            if not challenge_form:
+                                continue
 
-                        url = self.ph.getSearchGroups(tmp, 'action="([^"]+?)"')[0]
-                        if url != '':
-                            url = _getFullUrl(url, domain)
-                        else:
-                            url = data.meta['url']
-                        actionType = self.ph.getSearchGroups(tmp, 'method="([^"]+?)"', 1, True)[0].lower()
-#                        post_data2 = dict(re.findall(r'<input[^>]*name="([^"]*)"[^>]*value="([^"]*)"[^>]*>', tmp))
-                        post_data2 = {}
-                        verData = re.findall(r'(<input[^>]*)>', re.sub("<!--.*?-->", "<!-- -->", verData))
-                        for item in verData:
-                            name = self.ph.getSearchGroups(item, '''\sname=['"]([^'^"]+?)['"]''')[0]
-                            value = self.ph.getSearchGroups(item, '''\svalue=['"]([^'^"]+?)['"]''')[0]
-                            post_data2[name] = value
-                        #post_data2['id'] = id
-                        if '' != token:
+                            challenge_form = challenge_form[0]
+
+                            from Plugins.Extensions.IPTVPlayer.libs.hcaptcha import UnCaptchahCaptcha
+                            hcaptcha = UnCaptchahCaptcha(lang=GetDefaultLang(), params=params)
+
+                            token = hcaptcha.processCaptcha(challenge_form, domain, GetDefaultLang(), params)
+
+                            if token == '':
+                                return False, None
+
+                            action = re.findall('action="([^"]+?)"', challenge_form)[0]
+                            key = re.findall('data-sitekey="([^"]+?)"', challenge_form)[0]
+                            dataray = re.findall('data-ray="([^"]+?)"', challenge_form)[0]
+                            scriptUrl = re.findall('<script.*src="([^"]+?)"', challenge_form)[0]
+
+                            post_data2 = dict(re.findall(r'<input[^>]*name="([^"]*)"[^>]*value="([^"]*)"[^>]*>', challenge_form))
+                            post_data2['id'] = dataray
                             post_data2['h-captcha-response'] = token
+                            post_data2['g-recaptcha-response'] = token
+                            #if post_data2.get("r","") == "":
+                            #    post_data2["r"] = r
+
+                            printDBG("--------------- post data after captcha ------------")
+                            printDBG(json_dumps(post_data2))
+
+                            url = _getFullUrl(action, domain)
+
+                            params2 = {
+                                'use_cookie': True,
+                                'load_cookie': True,
+                                'save_cookie': True,
+                                'raw_post_data': True,
+                                'return_data': True,
+                                'cookiefile': params['cloudflare_params']['cookie_file']
+                            }
+
+                            params2['header'] = {
+                                'Referer': baseUrl,
+                                'Accept': 'text/html',
+                                'Accept-Encoding': 'gzip',
+                                'Content-Type': 'application/x-www-form-urlencoded',
+                                'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.106 Safari/537.36'
+                            }
+
+                            post_data2 = json_dumps(post_data2)
+
                         else:
-                            continue
-                        params2 = dict(params)
-                        params2['header'] = dict(params['header'])
-                        params2['header']['Referer'] = baseUrl
-                        if actionType == 'get':
-                            if '?' in url:
-                                url += '&'
+                            printDBG("*************** CloudFlare prompts reCaptcha *************")
+
+                            from Plugins.Extensions.IPTVPlayer.libs.recaptcha_v2 import UnCaptchaReCaptcha
+
+                            recaptcha = UnCaptchaReCaptcha(lang=GetDefaultLang())
+                            recaptcha.HTTP_HEADER['Referer'] = baseUrl
+                            if '' != cfParams.get('User-Agent', ''):
+                                recaptcha.HTTP_HEADER['User-Agent'] = cfParams['User-Agent']
+
+                            token = recaptcha.processCaptcha(sitekey)
+
+                            if token == '':
+                                return False, None
+
+                            sts, tmp = self.ph.getDataBeetwenMarkers(verData, '<form', '</form>', caseSensitive=False)
+                            if not sts:
+                                return False, None
+
+                            url = self.ph.getSearchGroups(tmp, 'action="([^"]+?)"')[0]
+                            if url != '':
+                                url = _getFullUrl(url, domain)
                             else:
-                                url += '?'
-                            url += urllib.parse.urlencode(post_data2)
-                            post_data2 = None
+                                url = data.meta['url']
+                            actionType = self.ph.getSearchGroups(tmp, 'method="([^"]+?)"', 1, True)[0].lower()
+                            post_data2 = dict(re.findall(r'<input[^>]*name="([^"]*)"[^>]*value="([^"]*)"[^>]*>', tmp))
+                            #post_data2['id'] = id
+
+                            if '' != token:
+                                post_data2['g-recaptcha-response'] = token
+                            else:
+                                continue
+                            params2 = dict(params)
+                            params2['header'] = dict(params['header'])
+                            params2['header']['Referer'] = baseUrl
+
+                            if actionType == 'get':
+                                if '?' in url:
+                                    url += '&'
+                                else:
+                                    url += '?'
+                                url += urllib.parse.urlencode(post_data2)
+                                post_data2 = None
 
                         sts, data = self.getPage(url, params2, post_data2)
                         printDBG("+++++++++++++")
@@ -1066,64 +1193,366 @@ class common:
                         printDBG(data)
                         printDBG("++++++++++++++")
                     else:
-                        dat = ph.findall(verData, ('<script', '>'), '</script>', flags=0)
-                        for item in dat:
+                        printDBG("*************** CloudFlare: Searching javascript code *************")
+
+                        dat = ""
+                        challengeType = 0
+
+                        datas = ph.findall(verData, ('<script', '>'), '</script>', flags=0)
+                        for item in datas:
                             if 'setTimeout' in item and 'submit()' in item:
                                 dat = item
+                                challengeType = 1
                                 break
-                        decoded = ''
-                        elemsText = {}
-                        tmp = re.findall("<div.*?id=\"([^\"]+)\">(.*?)</div>", verData)
-                        for item in tmp:
-                            if item[0] and re.search(r'\w+\d', item[0]):
-                                elemsText[item[0]] = item[1]
+                            elif 'window._cf_chl_opt' in item:
+                                dat = item
+                                challengeType = 2
+                                break
 
-                        js_params = [{'path': GetJSScriptFile('cf.byte')}]
-                        try:
-                            dat = dat.replace(dat[dat.index('var isIE'):dat.index('setTimeout')], '')
-                        except Exception:
-                            printExc()
-                        js_params.append({'code': "function setInterval(func, delay) { return 1 };var navigator={cookieEnabled:1}; var ELEMS_TEXT = %s; var location = {hash:''}; var iptv_domain='%s';\n%s\niptv_fun();" % (json_dumps(elemsText), domain, dat)})
-                        ret = js_execute_ext(js_params)
-                        decoded = json_loads(ret['data'].strip())
+                        if challengeType == 0:
+                            GetIPTVNotify().push(_("New javascript not yet supported!"), 'info', 5)
 
-                        verData = ph.find(verData, ('<form', '>', 'id="challenge-form"'), '</form>')[1]
-                        printDBG(">>")
-                        printDBG(verData)
-                        printDBG("<<")
-                        verUrl = _getFullUrl(ph.getattr(verData, 'action'), domain)
-                        get_data = {}
-                        verData = re.findall(r'(<input[^>]*)>', re.sub("<!--.*?-->", "<!-- -->", verData))
-                        for item in verData:
-                            name = self.ph.getSearchGroups(item, '''\sname=['"]([^'^"]+?)['"]''')[0]
-                            value = self.ph.getSearchGroups(item, '''\svalue=['"]([^'^"]+?)['"]''')[0]
-                            get_data[name] = value
-#                        get_data = dict(re.findall(r'<input[^>]*name="([^"]*)"[^>]*value="([^"]*)"[^>]*>', verData))
-                        get_data['jschl_answer'] = decoded['answer']
-                        post_data = 'r=%s&jschl_vc=%s&pass=%s&jschl_answer=%s' % (urllib.parse.quote(get_data['r'], safe=''), urllib.parse.quote(get_data['jschl_vc'], safe=''), urllib.parse.quote(get_data['pass'], safe=''), get_data['jschl_answer'])
-                        verUrl = _getFullUrl2(verUrl, domain).replace('&amp;', '&')
-                        params2 = dict(params)
-                        params2['load_cookie'] = True
-                        params2['save_cookie'] = True
-                        params2['header'] = dict(params.get('header', {}))
-                        params2['header'].update({'Referer': url, 'User-Agent': cfParams.get('User-Agent', ''), 'Accept-Encoding': 'text'})
-                        params2['raw_post_data'] = True
-                        if 'Accept-Encoding' not in params2:
-                            params2['Accept-Encoding'] = '*'
-                        printDBG("Time spent: [%s]" % (time.time() - start_time))
-                        if current == 1:
-                            GetIPTVSleep().Sleep(0.2 + (decoded['timeout'] / 1000.0) - (time.time() - start_time))
+                            sts, data = self.getPage(url, params, post_data)
+
+                        elif challengeType == 2:
+                            #new javascript challenge
+                            printDBG("Challenge type 2")
+                            #GetIPTVNotify().push(_("New javascript not yet supported!"), 'info', 5)
+
+                            # read data in input
+                            '''
+                                window._cf_chl_opt={
+                                  cvId: "1",
+                                  cType: "non-interactive",
+                                  cNounce: "26660",
+                                  cRay: "5ac74ed95fb0f933",
+                                  cHash: "eb58dc0fc80046a",
+                                  cRq: {
+                                    d: "2wOPpt6Rz0hp98w7LWqi2DCq40ly1Caj7tlM3OzjWh+x3STQIs92O5s1emIiqTUBgRI9LGqSs3KEjhhHtABOz48TWHrhvrSRErjPosaSt1fp4a3hVF06KFnNNyGYX00wdybYjMm7GTis3AlAT6kEWXKZ3m22o0IEPgbsDjV5HSlnjiV28fhf3OSadQlKe69HC5ntRLiXHDMwhMayLLbYqQIc/kbWej6PPjuDWCZqTNYGHNkBnQnRVVPN+JT5iMMvDCKxod5+6XzN2OBgwLES7++REiANKzjPcbNV0NviqU+rSVzoKwTIWL3iRWYTX+xrxXxPWEgrzyaj+GvHTUmvpfS865ulGhqMHOJYojIlIl7UFAXeXgUs4BqvHcCjLu+o",
+                                    t: "MTU5MzY4MTgwNi4zMDYwMDA=",
+                                    m: "YsUG/qEAi/HzONdr+WCreA0qbRGWCidXJeJdAfTrYQo=",
+                                    i1: "dXmQj8RI29F/GXqoNbw7Dg==",
+                                    i2: "FqoqVwUBuH8bcn9eSrnu3w==",
+                                  }
+                                }
+                                window._cf_chl_enter = function(){window._cf_chl_opt.p=1};
+                            '''
+
+                            data_input = re.findall("(window._cf_chl_opt=\{.*?\};)", data, re.S)
+                            if data_input:
+                                data_input = data_input[0]
+                                printDBG("-------------- data_input---------------")
+                                printDBG(data_input)
+
+                                jsch_url = re.findall("cpo.src\s?=\s?\"([^\"]+?)\"", data, re.S)
+                                if jsch_url:
+                                    jsch_url = urljoin(domain, jsch_url[0])
+                                    printDBG(jsch_url)
+
+                                    sts, jsCode = self.getPage(jsch_url, params)
+
+                                    printDBG("-------------  jsCode  -----------")
+                                    printDBG("----------------------------------")
+                                    printDBG(jsCode)
+                                    printDBG("----------------------------------")
+
+                                    codeType = 0
+
+                                    # first execution of duktape to decode strings
+                                    if "e=c[a],e}," in jsCode:
+                                        jsCode1 = jsCode[:(jsCode.find("e=c[a],e},") + 9)] + "; for(var i=0; i<c.length; i++){ console.log(d(i));}}();"
+                                        codeType = 1
+
+                                    elif "e=a[c],e}," in jsCode:
+                                        jsCode1 = jsCode[:jsCode.find("e=a[c],e}") + 9] + "; for(var i=0; i<a.length; i++){ console.log(b(i));}}();"
+                                        codeType = 2
+
+                                    printDBG("----- 1st duktape - only strings-----")
+                                    printDBG(jsCode1)
+                                    printDBG("----------------------------------")
+
+                                    js_params = [{'code': jsCode1}]
+                                    ret = js_execute_ext(js_params)
+
+                                    if ret['data']:
+                                        words = []
+                                        for w in ret['data'].split('\n'):
+                                            words.append(w)
+
+                                        # replace strings in jsCode
+                                        for i in range(len(words)):
+                                            if codeType == 1:
+                                                jsCode = re.sub("d\('" + hex(i) + "'\)", "'" + words[i] + "'", jsCode)
+                                            elif codeType == 2:
+                                                jsCode = re.sub("b\('" + hex(i) + "'\)", "'" + words[i] + "'", jsCode)
+
+                                    # first mod
+                                    if codeType == 1:
+                                        jsCode = re.sub("([fg])=function\(h,i\)\{.*?\},([fg])\(function\(h", "PIPPO1=function(h,i){ },PIPPO1(function(h", jsCode)
+                                    elif codeType == 2:
+                                        jsCode = re.sub("([defgh])=function\s[defgh]\(i\)\{.*?\},([defgh])\(function\(i", "PIPPO1 = function(i){window['_cf_chl_enter']()}, PIPPO1(function(i", jsCode)
+
+                                    jsCode = jsCode.replace("c=this||self,", "c=window,")
+                                    jsCode = jsCode.replace("new c[('XMLHttpRequest')]()", "window['XMLHttpRequest']")
+
+                                    js_params = [{'path': GetJSScriptFile('cf_new_max.byte')}]
+
+                                    finale = '''
+                                    LZString = window['LZString'];
+                                    window['JSON'] = JSON;
+                                    _ = window['_'];
+
+                                    window._cf_chl_enter();
+                                    '''
+
+                                    # second execution of duktape
+                                    code = data_input + '\n\n' + jsCode + '\n' + finale
+
+                                    printDBG("------ 1st duktape - all code ----")
+                                    printDBG("----------------------------------")
+                                    printDBG(code)
+                                    printDBG("----------------------------------")
+
+                                    js_params.append({'code': code})
+                                    ret = js_execute_ext(js_params)
+                                    # we hope it contains post data
+
+                                    try:
+                                        jsonPostData = json_loads(ret['data'])
+                                        postUrl = self.getFullUrl(jsonPostData["url"], baseUrl)
+                                        header = jsonPostData["header"]
+
+                                        params2 = dict(params)
+                                        params2['header'] = dict(params['header'])
+                                        params2['header'].update(jsonPostData["header"])
+                                        params2['header'].update({'Accept': '*/*'})
+                                        #header['Accept'] = '*/*'
+                                        #header['Accept-Encoding'] = 'gzip'
+
+                                        postData = dict(parse_qsl(jsonPostData["post_data"].replace(" ", "+")))
+
+                                        cookie = jsonPostData['cookie']
+                                        printDBG(cookie)
+                                        c2 = cookie.split(";")
+                                        c = c2[0].split("=")
+                                        self.addCookieItem(params['cookiefile'], {'name': c[0], 'value': c[1], 'domain': domain})
+                                        printDBG("new cookie: " + str(c))
+
+                                        sts, responseText = self.getPage(postUrl, params2, post_data=postData)
+
+                                        if sts:
+                                            string2 = responseText.encode('unicode-escape')
+
+                                            # insert responseTextin code and re-execute duktape
+                                            code = "window['XMLHttpRequest']['responseText']=\"" + string2 + "\";\nshowPost=false;\n" + code
+                                            if codeType == 2:
+                                                functionLetter = re.findall("([defgh]+?)=function\([ij]\)\{", code)
+                                                if functionLetter:
+                                                    code = code.replace("}()\n", "\nstr = " + functionLetter[0] + "(window['XMLHttpRequest']['responseText']);\nconsole.log(str);\n}()\n")
+                                                else:
+                                                    printDBG("function name letter not found!")
+
+                                            printDBG("----- code 2nd duktape ---with responseText from POST---")
+                                            printDBG(code)
+                                            printDBG("----------------------------------------------------")
+
+                                            js_params = [{'path': GetJSScriptFile('cf_new_max.byte')}]
+                                            js_params.append({'code': code})
+                                            ret = js_execute_ext(js_params)
+
+                                            if ret['data']:
+                                                jsCode2 = ret['data'].encode('unicode-escape')
+                                                printDBG("----------- jsCode2 -----------")
+                                                printDBG(jsCode2)
+                                                printDBG("-------------------------------")
+
+                                                # fix jsCode2
+                                                jsCode2 = jsCode2.replace("\\n", "\n")
+                                                jsCode2 = re.sub("const\s?\{(.*?)\}\s?=\s?([a-z0-9\(\)]+?)", r"const \2 = {\1}", jsCode2, flags=re.S)
+                                                jsCode2 = jsCode2.replace("window._=function(){};", "window._=function(){};\nn_ = window['_'];\n")
+                                                # third execution of duktape
+
+                                                code = data_input + '\n' + jsCode + '\n' + jsCode2 + '\n'
+                                                printDBG("--------  code 3rd duktape - with new code from POST ---")
+                                                printDBG(code)
+                                                printDBG("----------------------------------------")
+
+                                                js_params = [{'path': GetJSScriptFile('cf_new_max.byte')}]
+                                                js_params.append({'code': code})
+                                                ret = js_execute_ext(js_params)
+
+                                                printDBG(ret['data'])
+
+                                    except:
+                                        printExc()
+                                        printDBG(ret['data'])
+
+                            # retry to load challenge
+                            sts, data = self.getPage(url, params, post_data)
+
                         else:
-                            GetIPTVSleep().Sleep((decoded['timeout'] / 1000.0))
-                        printDBG("Time spent: [%s]" % (time.time() - start_time))
-                        printDBG("Timeout: [%s]" % decoded['timeout'])
-                        sts, data = self.getPage(verUrl, params2, post_data)
+
+                            # old javascript challenge
+
+                            # uncomment to solve
+                            #break
+
+                            decoded = ''
+
+                            #first part of code
+                            js_params = [{'path': GetJSScriptFile('cf_max.byte')}]
+                            #particular div element
+                            #tmp = ph.findall(verData, ('<div', '>', 'id'), '</div>', flags=ph.START_S)
+
+                            code2 = ''
+                            numChildren = 5
+                            #<div style="display:none;visibility:hidden;">
+
+                            divs = re.findall("<div.*?id=\"([^\"]+)\">(.*?)</div>", data)
+                            for t in divs:
+                                name_id = t[0]
+                                if len(name_id) >= 8 and len(name_id) <= 12:
+                                    numChildren = numChildren + 1
+                                    value_id = t[1]
+                                    code2 = code2 + "\ndocument.children.push ( new element('', '%s', 'div')); document.children[%d].innerHTML ='%s';" % (name_id, numChildren, value_id)
+
+                            printDBG("--------------- code 2 ------------------")
+                            printDBG(code2)
+                            printDBG("-----------------------------------------")
+                            #script part in variable called 'dat'
+                            printDBG("-------------- dat prima delle sostituzioni----------------------")
+                            printDBG(dat)
+                            printDBG("-----------------------------------------")
+                            #dat = dat.replace('(function(){\n\n    var a = function() {try{return !!window.addEventListener} catch(e) {return !1} },\n    b = function(b, c) {a() ? document.addEventListener("DOMContentLoaded", b, c) : document.attachEvent("onreadystatechange", b)};\n    b(function()','function pippo()')
+                            pattern = re.compile("\(function\(\)\{.*?b\(function\(\)", re.S)
+                            dat = re.sub(pattern, "function pippo()", dat)
+
+                            if 'return  f.submit();' in dat:
+                                dat = dat.replace('return  f.submit();', 'print(a.value); return (a.value);')
+                            else:
+                                dat = dat.replace('f.submit()', 'print(a.value);')
+                            dat = dat.replace('setTimeout(function(){', '')
+
+                            #var cookiesEnabled=(navigator.cookieEnabled)? true : false;
+                            #var cookieSupportInfix=cookiesEnabled?'/nocookie':'/cookie';
+                            dat = dat.replace("var cookiesEnabled=(navigator.cookieEnabled)? true : false;", "")
+                            dat = dat.replace("var cookieSupportInfix=cookiesEnabled?'/nocookie':'/cookie';", "")
+
+                            pattern2 = re.compile("\},4000\);.*?\)\(\)", re .S)
+                            dat = re.sub(pattern2, '}', dat)
+
+                            #new version
+                            #t = document.createElement('div');
+                            #t.innerHTML="<a href='/'>x</a>";
+                            #t = t.firstChild.href;r = (setInterval(function(){}, 100),t.match(/https?:\/\//)[0]);
+                            dat = dat.replace("r = (setInterval(function(){}, 100),t.match(/https?:\/\//)[0]);", "r = t.match(/https?:\/\//)[0];")
+                            #old version
+                            if 'cpo' in dat:
+                                dat = dat.replace("t = document.createElement('div');\n        cpo = {};\n        t.innerHTML=\"<a href='/'>x</a>\";\n        cpo.src = \"/cdn-cgi/challenge-platform/orchestrate/jsch/v1\";\n        t = t.firstChild.href;", 't="%domain%";').replace('%domain%', domain)
+                            else:
+                                dat = dat.replace("t = document.createElement('div');\n        t.innerHTML=\"<a href='/'>x</a>\";\n        t = t.firstChild.href;", 't="%domain%";').replace('%domain%', domain)
+
+                            pattern3 = re.compile("var a = document.*?appendChild\(.*?\);", re.S)
+                            dat = re.sub(pattern3, "", dat)
+
+                            printDBG("-------------- dat dopo le sostituzioni----------------------")
+                            printDBG(dat)
+                            printDBG("-----------------------------------------")
+
+                            js_params.append({'code': "%s\n%s\n\npippo(); " % (code2, dat)})
+                            ret = js_execute_ext(js_params)
+                            printDBG(ret)
+
+                            formTag = self.ph.getDataBeetwenNodes(verData, ('<form', '>', 'challenge'), ('</form', '>'))[1]
+                            formTag = re.sub("<!--.*?-->", "<!-- -->", formTag)
+
+                            printDBG("--------challenge form-----------")
+                            printDBG(formTag)
+                            printDBG("--------challenge form-----------")
+
+                            get_data_1 = dict(re.findall(r'<input[^>]*name="([^"]*)"[^>]*value="([^"]*)"[^>]*>', formTag))
+
+                            get_data_2 = dict(re.findall(r'<input[^>]*value="([^"]*)"[^>]*name="([^"]*)"[^>]*>', formTag))
+
+                            printDBG("get_data_1: %s" % str(get_data_1))
+                            printDBG("get_data_2: %s" % str(get_data_2))
+
+                            get_data = {}
+
+                            for xx in get_data_1:
+                                if not get_data.get(xx, ''):
+                                    get_data[xx] = get_data_1[xx]
+
+                            #get_data.update(get_data_1)
+
+                            for xx in get_data_2:
+                                if not get_data.get(get_data_2[xx], ''):
+                                    get_data[get_data_2[xx]] = xx
+
+                            #get_data.update(get_data_2_swap)
+                            #get_data['cf_ch_verify']='plat'
+
+                            get_data['jschl_answer'] = ret['data'].replace('\n', '')
+
+                            verUrl = _getFullUrl(ph.getattr(verData, 'action'), domain)
+
+                            #unescape html code of &
+                            verUrl = verUrl.replace("&amp;", '&')
+
+                            postDataCF = {}
+                            for key in get_data:
+                                #postDataCF[key] = urllib.quote(get_data[key])
+                                postDataCF[key] = get_data[key]
+                                if key == "r":
+                                    r = get_data[key]
+
+                            printDBG("CF verification url: %s" % verUrl)
+                            printDBG("CF post data: %s" % str(postDataCF))
+
+                            params2 = dict(params)
+                            params2['load_cookie'] = True
+                            params2['save_cookie'] = True
+                            params2['header'] = dict(params.get('header', {}))
+                            params2['header'].update({'Referer': url, 'User-Agent': cfParams.get('User-Agent', ''), 'Accept': 'text/html,application/xhtml+xml,application/xml', 'Accept-Encoding': 'gzip', 'Content-Type': 'application/x-www-form-urlencoded'})
+                            if params2.get('raw_post_data', False):
+                                params2.pop('raw_post_data')
+
+                            printDBG("Time spent: [%s]" % (time.time() - start_time))
+                            if current == 1:
+                                GetIPTVSleep().Sleep(4 - (time.time() - start_time))
+                            else:
+                                GetIPTVSleep().Sleep(4)
+                            printDBG("Time spent: [%s]" % (time.time() - start_time))
+                            printDBG("Timeout: [%s]" % 4000)
+
+                            sts, data = self.getPage(verUrl, params2, postDataCF)
+
+                    #printDBG("Cloudflare Url: %s" % data.meta["url"])
+
+                    #printDBG("--------- cf verification server answer -------")
+                    #printDBG(data)
+                    #printDBG(" ----------------------------------------------")
+
                 except Exception:
                     printExc()
                     break
             else:
                 break
         return sts, data
+
+    def convertWebp(self, file_path, png=False):
+        printDBG("PCommon.convertWebp %s" % file_path)
+
+        output_path = file_path.replace('.webp', '.jpg')
+        png_path = file_path.replace('.webp', '.png')
+        if IsExecutable('ffmpeg'):
+            if png:
+                command = "ffmpeg -i %s %s && test -e %s && rm %s && mv %s %s" % (file_path, png_path, png_path, file_path, png_path, output_path)
+            else:
+                command = "ffmpeg -i %s %s && test -e %s && rm %s " % (file_path, output_path, output_path, file_path)
+
+            printDBG("Send command %s" % command)
+            self.cmd = iptv_system(command)
 
     def saveWebFileWithPyCurl(self, file_path, url, add_params={}, post_data=None):
         bRet = False
@@ -1149,7 +1578,7 @@ class common:
         outParams, postData = self.getParamsFromUrlWithMeta(url)
         addParams.update(outParams)
         if 'header' not in addParams and 'host' not in addParams:
-            host = 'Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/59.0.3071.115 Safari/537.36'
+            host = 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.61 Safari/537.36'
             header = {'User-Agent': host, 'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8'}
             addParams['header'] = header
         addParams['return_data'] = False
@@ -1194,8 +1623,20 @@ class common:
                     if len(checkFromFirstBytes):
                         OK = False
                         for item in checkFromFirstBytes:
-                            _item = item.encode('utf-8', 'strict')
-                            if buffer.startswith(_item):
+                            if buffer.startswith(item):
+
+                                # change extension of file
+                                if item in ['\xFF\xD8', '\xFF\xD9']:
+                                    printDBG("SaveWebFile. It's a jpeg")
+                                elif item == '\x89\x50\x4E\x47':
+                                    printDBG("SaveWebFile. It's a png")
+                                    #file_path = file_path.replace('.jpg','.png')
+                                elif item in ['GIF87a', 'GIF89a']:
+                                    printDBG("SaveWebFile. It's a gif")
+                                    #file_path = file_path.replace('.jpg','.gif')
+                                elif item == 'RI':
+                                    printDBG("SaveWebFile. It's a webp")
+                                    file_path = file_path.replace('.jpg', '.webp')
                                 OK = True
                                 break
                         if not OK:
@@ -1218,6 +1659,14 @@ class common:
                         bRet = True
                 elif downDataSize > 0:
                     bRet = True
+
+                # decode webp to jpeg
+                if file_path.endswith(".webp"):
+                    if addParams.get('webp_convert_to_png', False):
+                        self.convertWebp(file_path, png=True)
+                    else:
+                        self.convertWebp(file_path)
+
         except Exception:
             printExc("common.getFile download file exception")
         dictRet.update({'sts': bRet, 'fsize': downDataSize})
@@ -1363,16 +1812,12 @@ class common:
         if None != post_data:
             printDBG('pCommon - getURLRequestData() -> post data: ' + str(post_data))
             if params.get('raw_post_data', False):
-                print("dataPost1")
                 dataPost = post_data
             elif params.get('multipart_post_data', False):
-                print("dataPost2")
                 customOpeners.append(MultipartPostHandler())
                 dataPost = post_data
             else:
-                print("dataPost3")
                 dataPost = urllib.parse.urlencode(post_data).encode()
-            print(dataPost)
             req = urllib.request.Request(pageUrl, dataPost, headers)
         else:
             req = urllib.request.Request(pageUrl, None, headers)

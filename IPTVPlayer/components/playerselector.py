@@ -184,7 +184,6 @@ class PlayerSelectorWidget(Screen):
         # add pagination items
         for pageItemOffset in range(self.numOfPages):
             pageItemX = self.pageItemStartX + pageItemOffset * self.pageItemSize
-            print(pageItemX)
             skinCoverLine = """<ePixmap zPosition="2" position="%d,%d" size="%d,%d" pixmap="%s" transparent="1" alphatest="blend" />""" % (pageItemX, self.pageItemStartY, self.pageItemSize, self.pageItemSize, GetIconDir('radio_button_off.png'))
             skin += '\n' + skinCoverLine
         skin += '</screen>'

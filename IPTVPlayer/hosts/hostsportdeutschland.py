@@ -179,7 +179,7 @@ class SportDeutschland(CBaseHostClass):
             sts, data = self.cm.getPage(cItem['url'])
             if sts:
                 try:
-                    data = json.loads(data)
+                    data = byteify(json.loads(data))
                     printDBG(data['asset']['videos'])
                     for item in data['asset']['videos']:
                         videoUrl = item['url']

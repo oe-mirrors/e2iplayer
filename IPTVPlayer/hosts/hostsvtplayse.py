@@ -14,9 +14,7 @@ from Plugins.Extensions.IPTVPlayer.libs.urlparserhelper import getDirectM3U8Play
 # FOREIGN import
 ###################################################
 import re
-import urllib.request
-import urllib.parse
-import urllib.error
+import urllib.request, urllib.parse, urllib.error
 import urllib.parse
 try:
     import json
@@ -125,7 +123,7 @@ class SVTPlaySE(CBaseHostClass):
 
         data = self.cm.ph.getDataBeetwenMarkers(data, "root['__svtplay'] = ", ";\n", withMarkers=False)[1]
         try:
-            data = json.loads(data)
+            data = byteify(json.loads(data))
             data = data['programsPage']['alphabeticList']
             for item in data:
                 letter = item['letter']
@@ -186,7 +184,7 @@ class SVTPlaySE(CBaseHostClass):
 
         data = self.cm.ph.getDataBeetwenMarkers(data, "root['__svtplay'] = ", ";\n", withMarkers=False)[1]
         try:
-            data = json.loads(data)
+            data = byteify(json.loads(data))
             for key in data['channelsPage']['schedule']:
                 try:
                     item = data['channelsPage']['schedule'][key]
@@ -238,7 +236,7 @@ class SVTPlaySE(CBaseHostClass):
 
         nextPage = False
         try:
-            data = json.loads(data)
+            data = byteify(json.loads(data))
 
             try:
                 if page < data.get('totalPages', 0):
@@ -461,7 +459,7 @@ class SVTPlaySE(CBaseHostClass):
             printDBG(data)
 
             try:
-                data = json.loads(data)
+                data = byteify(json.loads(data))
 
                 videoItem = data.get('video', None)
                 if videoItem == None:
@@ -543,7 +541,7 @@ class SVTPlaySE(CBaseHostClass):
         printDBG('SVTPlaySE.getLinksForFavourite')
         links = []
         try:
-            cItem = json.loads(fav_data)
+            cItem = byteify(json.loads(fav_data))
             links = self.getLinksForVideo(cItem)
         except Exception:
             printExc()
@@ -552,7 +550,7 @@ class SVTPlaySE(CBaseHostClass):
     def setInitListFromFavouriteItem(self, fav_data):
         printDBG('SVTPlaySE.setInitListFromFavouriteItem')
         try:
-            params = json.loads(fav_data)
+            params = byteify(json.loads(fav_data))
         except Exception:
             params = {}
             printExc()

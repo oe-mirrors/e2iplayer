@@ -9,7 +9,6 @@ from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, Ge
 from Plugins.Extensions.IPTVPlayer.tools.iptvtypes import strwithmeta
 from Plugins.Extensions.IPTVPlayer.libs import ph
 from Plugins.Extensions.IPTVPlayer.libs.e2ijson import loads as json_loads
-from Plugins.Extensions.IPTVPlayer.libs.urlparserhelper import hex_md5
 ###################################################
 
 ###################################################
@@ -20,8 +19,6 @@ from binascii import hexlify
 from hashlib import md5
 from copy import deepcopy
 from Components.config import config, ConfigSelection, ConfigText, getConfigListEntry
-from functools import cmp_to_key
-
 ###################################################
 
 
@@ -56,7 +53,7 @@ def GetConfigList():
 
 
 def gettytul():
-    return 'https://serienstream.to/'
+    return 'https://serien.sx/'
 
 
 class SerienStreamTo(CBaseHostClass, CaptchaHelper):
@@ -70,8 +67,8 @@ class SerienStreamTo(CBaseHostClass, CaptchaHelper):
 
         self.defaultParams = {'header': self.HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
 
-        self.MAIN_URL = 'https://s.to/'
-        self.DEFAULT_ICON_URL = 'https://s.to/public/img/facebook.jpg'
+        self.MAIN_URL = 'https://serien.sx/'
+        self.DEFAULT_ICON_URL = 'https://serienstream.sx/public/img/facebook.jpg'
 
         self.MAIN_CAT_TAB = [{'category': 'all_series', 'title': 'Alle Serien', 'url': self.getFullUrl('/serien-alphabet')},
                              {'category': 'list_abc', 'title': _('A-Z'), 'url': self.MAIN_URL},
@@ -243,7 +240,7 @@ class SerienStreamTo(CBaseHostClass, CaptchaHelper):
             return
 
         tmp = self.cm.ph.getDataBeetwenMarkers(data, '<div class="seriesContentBox"', '<div class="series-add')[1]
-        icon = self.getFullUrl(self.cm.ph.getSearchGroups(tmp, '''src=['"]([^'^"]+?)['"]''')[0])
+        icon = self.getFullUrl(self.cm.ph.getSearchGroups(tmp, '''data-src=['"]([^'^"]+?)['"]''')[0])
         if '' == icon:
             icon = cItem.get('series_title', '')
         desc = self.cleanHtmlStr(self.cm.ph.getSearchGroups(tmp, '''description=['"]([^'^"]+?)['"]''')[0])
@@ -378,7 +375,7 @@ class SerienStreamTo(CBaseHostClass, CaptchaHelper):
                 if len(urlTab):
                     self.cacheLinks[cItem['url']] = urlTab
 
-            urlTab = sorted(urlTab, key=cmp_to_key(compare))
+            urlTab = sorted(urlTab, cmp=compare)
         else:
             urlTab = self.up.getVideoLinkExt(cItem['url'])
         return urlTab
@@ -425,13 +422,26 @@ class SerienStreamTo(CBaseHostClass, CaptchaHelper):
                 printDBG(data)
                 printDBG("+++++++++++")
                 if sts and 'google.com/recaptcha/' in data and 'sitekey' in data:
-                    message = _('Link protected with google recaptcha v2.')
-                    if True != self.loggedIn:
-                        message += '\n' + _('Please fill your login and password in the host configuration (available under blue button) and try again.')
+                    token = ''
+
+                    sitekey = re.findall("'sitekey': '(.*?)'", data)
+                    if sitekey:
+                        (token, errorMsgTab) = CaptchaHelper.processCaptcha(self, sitekey[0], videoUrl)
+                        printDBG("Captcha Token: %s" % token)
+
+                    if not token:
+                        message = _('Link protected with google recaptcha v2.')
+                        if True != self.loggedIn:
+                            message += '\n' + _('Please fill your login and password in the host configuration (available under blue button) and try again.')
+                        else:
+                            message += '\n' + self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(data, '<small', '</small>')[1])
+                            message += '\n' + _('Please retry later.')
+                        SetIPTVPlayerLastHostError(message)
                     else:
-                        message += '\n' + self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(data, '<small', '</small>')[1])
-                        message += '\n' + _('Please retry later.')
-                    SetIPTVPlayerLastHostError(message)
+                        videoUrl = videoUrl + '?token=' + token
+                        sts, data = self.getPage(videoUrl)
+                        if sts:
+                            videoUrl = self.cm.meta['url']
 
             if 1 == self.up.checkHostSupport(videoUrl):
                 urlTab = self.up.getVideoLinkExt(videoUrl)
@@ -494,7 +504,7 @@ class SerienStreamTo(CBaseHostClass, CaptchaHelper):
             freshSession = False
             if sts and '/home/logout' in data:
                 printDBG("Check hash")
-                hash = hex_md5('%s@***@%s' % (self.login, self.password))
+                hash = hexlify(md5('%s@***@%s' % (self.login, self.password)).digest())
                 prevHash = ReadTextFile(loginCookie)[1].strip()
 
                 printDBG("$hash[%s] $prevHash[%s]" % (hash, prevHash))
@@ -579,7 +589,7 @@ class SerienStreamTo(CBaseHostClass, CaptchaHelper):
                             break
 
             if self.loggedIn:
-                hash = hex_md5('%s@***@%s' % (self.login, self.password))
+                hash = hexlify(md5('%s@***@%s' % (self.login, self.password)).digest())
                 WriteTextFile(loginCookie, hash)
             else:
                 self.sessionEx.open(MessageBox, _('Login failed.') + '\n' + errorMsg, type=MessageBox.TYPE_ERROR, timeout=10)

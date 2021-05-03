@@ -12,9 +12,7 @@ from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, by
 ###################################################
 import datetime
 import re
-import urllib.request
-import urllib.parse
-import urllib.error
+import urllib.request, urllib.parse, urllib.error
 try:
     import json
 except Exception:
@@ -216,7 +214,7 @@ class WolnelekturyPL(CBaseHostClass):
             return []
 
         try:
-            data = json.loads(data)
+            data = byteify(json.loads(data))
             url = data['txt']
             sts, desc = self.cm.getPage(url)
             if not sts:
@@ -231,7 +229,7 @@ class WolnelekturyPL(CBaseHostClass):
         icon = cItem.get('icon', '')
         otherInfo = {}
         try:
-            data = json.loads(data)
+            data = byteify(json.loads(data))
             icon = self._viaProxy(self._getFullUrl(data['poster'], False))
             title = data['title']
             desc = data['overview']

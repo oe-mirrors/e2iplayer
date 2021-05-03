@@ -13,9 +13,7 @@ from Plugins.Extensions.IPTVPlayer.tools.iptvtypes import strwithmeta
 ###################################################
 import datetime
 import re
-import urllib.request
-import urllib.parse
-import urllib.error
+import urllib.request, urllib.parse, urllib.error
 import urllib.parse
 try:
     import json
@@ -222,7 +220,7 @@ class StreamingSeriesWatch(CBaseHostClass):
         printDBG('StreamingSeriesWatch.getLinksForFavourite')
         links = []
         try:
-            cItem = json.loads(fav_data)
+            cItem = byteify(json.loads(fav_data))
             links = self.getLinksForVideo(cItem)
         except Exception:
             printExc()
@@ -231,7 +229,7 @@ class StreamingSeriesWatch(CBaseHostClass):
     def setInitListFromFavouriteItem(self, fav_data):
         printDBG('StreamingSeriesWatch.setInitListFromFavouriteItem')
         try:
-            params = json.loads(fav_data)
+            params = byteify(json.loads(fav_data))
         except Exception:
             params = {}
             printExc()
@@ -261,7 +259,7 @@ class StreamingSeriesWatch(CBaseHostClass):
         icon = cItem.get('icon', '')
         otherInfo = {}
         try:
-            data = json.loads(data)
+            data = byteify(json.loads(data))
             icon = self._viaProxy(self.getFullUrl(data['poster']))
             title = data['title']
             desc = data['overview']

@@ -11,9 +11,7 @@ from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, by
 # FOREIGN import
 ###################################################
 import urllib.parse
-import urllib.request
-import urllib.parse
-import urllib.error
+import urllib.request, urllib.parse, urllib.error
 from datetime import datetime, timedelta
 try:
     import json
@@ -158,7 +156,7 @@ class WPolscePL(CBaseHostClass):
         try:
             liveItem = None
             NOW = datetime.now()
-            data = json.loads(data)
+            data = byteify(json.loads(data), '')
             for item in data[key]:
                 if onlyLiveItems and not item.get('is_live', False):
                     continue
@@ -211,7 +209,7 @@ class WPolscePL(CBaseHostClass):
         nextPage = False
         try:
             NOW = datetime.now()
-            data = json.loads(data)
+            data = byteify(json.loads(data), '')
             if data.get('has_next', False):
                 nextPage = True
             for item in data['publications']:

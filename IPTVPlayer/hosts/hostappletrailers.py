@@ -11,9 +11,7 @@ from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, by
 # FOREIGN import
 ###################################################
 import re
-import urllib.request
-import urllib.parse
-import urllib.error
+import urllib.request, urllib.parse, urllib.error
 try:
     import json
 except Exception:
@@ -89,7 +87,7 @@ class TrailersApple(CBaseHostClass):
             return
         self.setMainUrl(self.cm.meta['url'])
         try:
-            data = json.loads(data)
+            data = byteify(json.loads(data))
             if 'results' in data:
                 data = data['results']
             for item in data:
@@ -132,7 +130,7 @@ class TrailersApple(CBaseHostClass):
         if not sts:
             return
         try:
-            data = json.loads(data)
+            data = byteify(json.loads(data))
             key = 0
             for item in data['clips']:
                 title = item['title']

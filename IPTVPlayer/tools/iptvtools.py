@@ -36,8 +36,8 @@ import codecs
 import datetime
 from functools import cmp_to_key
 
-SERVER_DOMAINS = {'vline': 'http://iptvplayer.vline.pl/', 'gitlab': 'http://zadmario.gitlab.io/', 'private': 'http://www.e2iplayer.gitlab.io/'}
-SERVER_UPDATE_PATH = {'vline': 'download/update2/', 'gitlab': 'update2/', 'private': 'update2/'}
+SERVER_DOMAINS = {'vline': 'http://iptvplayer.vline.pl/', 'gitlab': 'https://gitlab.com/maxbambi/e2iplayer/', 'private': 'http://www.e2iplayer.gitlab.io/'}
+SERVER_UPDATE_PATH = {'vline': 'download/update2/', 'gitlab': 'raw/master/IPTVPlayer/iptvupdate/', 'private': 'update2/'}
 
 
 def GetServerKey(serverNum=None):
@@ -63,7 +63,7 @@ def GetUpdateServerUri(file='', serverNum=None):
 
 def GetResourcesServerUri(file='', serverNum=None):
     serverKey = GetServerKey(serverNum)
-    uri = SERVER_DOMAINS[serverKey] + 'resources/' + file
+    uri = 'http://iptvplayer.vline.pl/resources/' + file
     printDBG("GetResourcesServerUri -> %s" % uri)
     return uri
 
@@ -533,6 +533,10 @@ def GetExtensionsDir(file=''):
 
 def GetSkinsDir(path=''):
     return resolveFilename(SCOPE_PLUGINS, 'Extensions/IPTVPlayer/skins/') + path
+
+
+def GetPlayerSkinDir(path=''):
+    return resolveFilename(SCOPE_PLUGINS, 'Extensions/IPTVPlayer/playerskins/') + path
 
 
 def GetConfigDir(path=''):
@@ -1425,18 +1429,18 @@ class CMoviePlayerPerHost():
 
 
 def byteify(input, noneReplacement=None, baseTypesAsString=False):
-    if isinstance(input, dict):
-        return dict([(byteify(key, noneReplacement, baseTypesAsString), byteify(value, noneReplacement, baseTypesAsString)) for key, value in input.items()])
-    elif isinstance(input, list):
-        return [byteify(element, noneReplacement, baseTypesAsString) for element in input]
-    elif isinstance(input, str):
-        return input.encode('utf-8')
-    elif input == None and noneReplacement != None:
-        return noneReplacement
-    elif baseTypesAsString:
-        return str(input)
-    else:
-        return input
+#    if isinstance(input, dict):
+#        return dict([(byteify(key, noneReplacement, baseTypesAsString), byteify(value, noneReplacement, baseTypesAsString)) for key, value in input.items()])
+#    elif isinstance(input, list):
+#        return [byteify(element, noneReplacement, baseTypesAsString) for element in input]
+#    elif isinstance(input, str):
+#        return input.encode('utf-8')
+#    elif input == None and noneReplacement != None:
+#        return noneReplacement
+#    elif baseTypesAsString:
+#        return str(input)
+#    else:
+    return input
 
 
 def printExc(msg=''):

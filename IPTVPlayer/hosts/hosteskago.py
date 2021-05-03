@@ -286,17 +286,19 @@ class EskaGo(CBaseHostClass):
         if not sts:
             return
 
-        data = self.cm.ph.getDataBeetwenMarkers(data, 'var radioConfig = ', '</script>', False)[1]
-        data = self.cm.ph.getAllItemsBeetwenMarkers(data, '"stream": ', '},', False)
+        data = ph.find(data, ('<div', '>', '__cities'), '</ul>')[1]
+        data = ph.findall(data, '<li', '</li>')
         for item in data:
-#            printDBG("EskaGo.listRadioEskaPL item [%s]" % item)
-            tmp = json_loads(item + '}')
-            title = tmp['name']
-            url = tmp['stream_url']
+            url = self.cm.ph.getSearchGroups(item, '''data-link=['"]([^'^"]+?)['"]''')[0]
             if url == '':
                 continue
+            if not self.cm.isValidUrl(url):
+                url = self.MAIN_URL + '/radio/' + url
+            url = url + self.cm.ph.getSearchGroups(item, '''value\s*=\s*['"](timestamp[^'^"]+?)['"]''')[0]
+            icon = cItem.get('icon', '')
+            title = self.cleanHtmlStr(item)
             desc = ''
-            params = {'good_for_fav': True, 'title': title, 'url': url, 'desc': desc, 'is_trailer': True}
+            params = {'good_for_fav': True, 'title': title, 'url': url, 'icon': icon, 'desc': desc}
             self.addAudio(params)
 
     def listSearchResult(self, cItem, searchPattern, searchType):
@@ -373,13 +375,6 @@ class EskaGo(CBaseHostClass):
                                 streamUrl = streamUrl.replace('.aac', '.mp3')
                             streamUrl = streamUrl + self.cm.ph.getSearchGroups(data, '''value\s*=\s*['"](timestamp[^'^"]+?)['"]''')[0]
                             urlTab.append({'name': streamType, 'url': streamUrl})
-            if len(urlTab) == 0:
-                tmp = self.cm.ph.getAllItemsBeetwenMarkers(data, '<source', '>', False, False)
-                for item in tmp:
-                    if 'video/mp4' in item:
-                        url = self.cm.ph.getSearchGroups(item, '''src=['"]([^"^']+?)['"]''')[0]
-                        urlTab.append({'name': self.up.getDomain(url), 'url': url})
-
         return urlTab
 
     def getVideoLinks(self, videoUrl):

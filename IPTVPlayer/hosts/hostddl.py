@@ -13,9 +13,7 @@ from Plugins.Extensions.IPTVPlayer.tools.iptvtypes import strwithmeta
 # FOREIGN import
 ###################################################
 import re
-import urllib.request
-import urllib.parse
-import urllib.error
+import urllib.request, urllib.parse, urllib.error
 try:
     import json
 except Exception:
@@ -410,7 +408,7 @@ class DDLMe(CBaseHostClass):
             ret = js_execute(jscode)
             if ret['sts'] and 0 == ret['code']:
                 data = ret['data'].strip()
-                data = json.loads(data)
+                data = byteify(json.loads(data))
 
                 for key, dat in data.items():
                     for name, item in dat['links'].items():

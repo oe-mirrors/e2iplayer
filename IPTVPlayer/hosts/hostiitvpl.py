@@ -11,9 +11,7 @@ from Plugins.Extensions.IPTVPlayer.libs.unshortenit import unshorten
 ###################################################
 # FOREIGN import
 ###################################################
-import urllib.request
-import urllib.parse
-import urllib.error
+import urllib.request, urllib.parse, urllib.error
 try:
     import json
 except Exception:
@@ -224,7 +222,7 @@ class IITVPL(CBaseHostClass):
             if not sts:
                 return []
             try:
-                data = json.loads(data)
+                data = byteify(json.loads(data))
                 data = data['results']
                 printDBG(data)
                 if 'embed_code' in data:

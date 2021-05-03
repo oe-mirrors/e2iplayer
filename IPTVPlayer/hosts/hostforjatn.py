@@ -148,7 +148,7 @@ class ForjaTN(CBaseHostClass):
             return
 
         try:
-            data = json.loads(data)
+            data = byteify(json.loads(data), '', True)
             for item in data[type]:
                 icon = self.getFullIconUrl(item.get('Poster', ''))
                 title = self.cleanHtmlStr(item.get('Title', ''))
@@ -261,7 +261,7 @@ class ForjaTN(CBaseHostClass):
             ret = js_execute('print(JSON.stringify(%s));' % data)
             if ret['sts'] and 0 == ret['code']:
                 try:
-                    data = json.loads(ret['data'])
+                    data = byteify(json.loads(ret['data']), '', True)
                     for eItem in data:
                         if episodeId not in eItem.get('poster', ''):
                             continue

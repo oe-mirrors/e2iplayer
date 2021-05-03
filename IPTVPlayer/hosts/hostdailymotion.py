@@ -13,9 +13,7 @@ from Plugins.Extensions.IPTVPlayer.libs import ph
 # FOREIGN import
 ###################################################
 from datetime import timedelta
-import urllib.request
-import urllib.parse
-import urllib.error
+import urllib.request, urllib.parse, urllib.error
 import time
 from Components.config import config, ConfigSelection, getConfigListEntry
 ###################################################
@@ -46,7 +44,7 @@ class Dailymotion(CBaseHostClass):
 
         self.SITE_URL = 'https://www.dailymotion.com/'
         self.MAIN_URL = 'https://api.dailymotion.com/'
-        self.DEFAULT_ICON_URL = 'http://static1.dmcdn.net/images/dailymotion-logo-ogtag.png'
+        self.DEFAULT_ICON_URL = 'https://www.drupal.org/files/styles/grid-3-2x/public/project-images/dailymotion.png'
         self.MAIN_CAT_TAB = [{'category': 'categories', 'title': _('Categories')},
                              {'category': 'search', 'title': _('Search'), 'search_item': True},
                              {'category': 'search_history', 'title': _('Search history')}]

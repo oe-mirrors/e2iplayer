@@ -8,16 +8,13 @@ from Plugins.Extensions.IPTVPlayer.components.ihost import CHostBase, CBaseHostC
 from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, formatBytes, byteify
 from Plugins.Extensions.IPTVPlayer.libs.youtube_dl.utils import clean_html
 from Plugins.Extensions.IPTVPlayer.tools.iptvtypes import strwithmeta
-from Plugins.Extensions.IPTVPlayer.libs.urlparserhelper import hex_md5
 ###################################################
 
 ###################################################
 # FOREIGN import
 ###################################################
 from Components.config import config, ConfigText, getConfigListEntry
-import urllib.request
-import urllib.parse
-import urllib.error
+import urllib.request, urllib.parse, urllib.error
 from hashlib import md5
 try:
     import simplejson as json
@@ -211,7 +208,7 @@ class Chomikuj(CBaseHostClass):
     def handleDataRequest(self, cItem, url):
         sts, data = self.requestJsonData(url)
         if sts:
-            printDBG(data)
+            printDBG(byteify(data))
             if 0 == self._getJItemNum(data, 'Code', -1):
                 # Parent Folder
                 if 'ParentId' in data and 'ParentName' in data and len(self._getJItemStr(data, 'ParentName')) and 'Owner' in data and 'Id' in data['Owner']:

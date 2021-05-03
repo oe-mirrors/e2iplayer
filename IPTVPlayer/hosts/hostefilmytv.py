@@ -56,7 +56,7 @@ class EFilmyTv(CBaseHostClass):
         CBaseHostClass.__init__(self, {'history': 'efilmy.tv', 'cookie': 'efilmy.tv.cookie'})
         self.USER_AGENT = 'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:40.0) Gecko/20100101 Firefox/40.0'
         self.MAIN_URL = 'http://www.efilmy.tv/'
-        self.DEFAULT_ICON_URL = 'https://superrepo.org/static/images/icons/original/xplugin.video.efilmy.png.pagespeed.ic.ISN8CDQxwg.png'
+        self.DEFAULT_ICON_URL = 'https://voucherforyou.pl/wp-content/uploads/2020/05/efilmy.jpg'
         self.HTTP_HEADER = {'User-Agent': self.USER_AGENT, 'DNT': '1', 'Accept': 'text/html', 'Accept-Encoding': 'gzip, deflate', 'Referer': self.getMainUrl(), 'Origin': self.getMainUrl()}
         self.AJAX_HEADER = dict(self.HTTP_HEADER)
         self.AJAX_HEADER.update({'X-Requested-With': 'XMLHttpRequest', 'Accept-Encoding': 'gzip, deflate', 'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8', 'Accept': 'application/json, text/javascript, */*; q=0.01'})
@@ -245,7 +245,7 @@ class EFilmyTv(CBaseHostClass):
             for item in data:
                 item = item.split('=', 1)
                 key = item[0].strip()
-                parseObj[key] = json.loads(item[1].strip() + ']')
+                parseObj[key] = byteify(json.loads(item[1].strip() + ']'))
             self.cacheSeries = parseObj
         except Exception:
             printExc()

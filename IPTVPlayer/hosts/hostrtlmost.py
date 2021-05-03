@@ -20,9 +20,7 @@ import datetime
 import time
 import zlib
 import http.cookiejar
-import urllib.request
-import urllib.parse
-import urllib.error
+import urllib.request, urllib.parse, urllib.error
 import base64
 from hashlib import sha1
 from Components.config import config, ConfigText, getConfigListEntry

@@ -79,7 +79,14 @@ class DjingComApi(CBaseHostClass):
         printDBG("hlsUrl||||||||||||||||| " + hlsUrl)
         if hlsUrl != '':
             hlsUrl = strwithmeta(hlsUrl, {'User-Agent': self.defaultParams['header']['User-Agent'], 'Referer': cItem['url']})
-            urlsTab = getDirectM3U8Playlist(hlsUrl, checkContent=True)
+            try:
+                urlsTab = getDirectM3U8Playlist(hlsUrl, checkContent=True)
+            except:
+                printExc()
+
+            if not urlsTab:
+                hlsUrl = "https://www" + hlsUrl[hlsUrl.find(".djing"):]
+                urlsTab = getDirectM3U8Playlist(hlsUrl, checkContent=True)
 
         def __getLinkQuality(itemLink):
             try:

@@ -688,10 +688,13 @@ class CBaseHostClass:
         if not sts:
             return
         try:
-            data = json_loads(data.strip()[1:-1], '', True)
-            if data['country'] != country:
+            data = json_loads(data)
+            mycountry = data.get('country', '')
+            if mycountry != country:
+                if not mycountry:
+                    mycountry = '?'
                 message = _('%s uses "geo-blocking" measures to prevent you from accessing the services from abroad.\n Host country: %s, your country: %s')
-                GetIPTVNotify().push(message % (self.getMainUrl(), country, data['country']), 'info', 5)
+                GetIPTVNotify().push(message % (self.getMainUrl(), country, mycountry), 'info', 5)
             self.isGeoBlockingChecked = True
         except Exception:
             printExc()

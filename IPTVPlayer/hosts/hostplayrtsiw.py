@@ -13,9 +13,7 @@ from Plugins.Extensions.IPTVPlayer.libs.urlparserhelper import getDirectM3U8Play
 ###################################################
 # FOREIGN import
 ###################################################
-import urllib.request
-import urllib.parse
-import urllib.error
+import urllib.request, urllib.parse, urllib.error
 try:
     import json
 except Exception:
@@ -198,7 +196,7 @@ class PlayRTSIW(CBaseHostClass):
             if not sts:
                 return
             try:
-                self.cacheShowsAZ = json.loads(data)
+                self.cacheShowsAZ = byteify(json.loads(data))
             except Exception:
                 printExc()
             if len(self.cacheShowsAZ):
@@ -219,7 +217,7 @@ class PlayRTSIW(CBaseHostClass):
         if not sts:
             return
         try:
-            data = json.loads(data)
+            data = byteify(json.loads(data))
             for item in data:
                 sTitle = self.cleanHtmlStr(item['title'])
                 sUrl = self.getFullUrl(item['url'])
@@ -358,7 +356,7 @@ class PlayRTSIW(CBaseHostClass):
         for data in tmp:
             data = clean_html(data)
             try:
-                data = json.loads(data)
+                data = byteify(json.loads(data))
                 self._listItems(cItem, data)
             except Exception:
                 printExc()
@@ -397,7 +395,7 @@ class PlayRTSIW(CBaseHostClass):
 
             data = clean_html(self.cm.ph.getDataBeetwenMarkers(data, 'data-alphabetical-sections="', '"', False)[1])
             try:
-                self.cacheShowsMap = json.loads(data)
+                self.cacheShowsMap = byteify(json.loads(data))
             except Exception:
                 printExc()
 
@@ -419,7 +417,7 @@ class PlayRTSIW(CBaseHostClass):
         if not sts:
             return
         try:
-            data = json.loads(data)
+            data = byteify(json.loads(data))
             self._listItems(cItem, data['episodes'])
 
             nextPage = self.getFullUrl(data['nextPageUrl'])
@@ -437,7 +435,7 @@ class PlayRTSIW(CBaseHostClass):
         if not sts:
             return
         try:
-            data = json.loads(data)
+            data = byteify(json.loads(data))
             for item in data['teaser']:
                 title = item['channelName']
                 url = self.getFullUrl(item['urlToLivePage'])
@@ -509,7 +507,7 @@ class PlayRTSIW(CBaseHostClass):
         if not sts:
             return
         try:
-            data = json.loads(data)
+            data = byteify(json.loads(data))
             self._listItems(cItem, data[type])
 
             nextPage = self.getFullUrl(data['nextPageUrl'])
@@ -526,7 +524,7 @@ class PlayRTSIW(CBaseHostClass):
         if not sts:
             return
         try:
-            data = json.loads(data)
+            data = byteify(json.loads(data))
             params = dict(cItem)
             params['category'] = nextCategory
             self._listShows(params, data['shows'])
@@ -575,7 +573,7 @@ class PlayRTSIW(CBaseHostClass):
         tokenUrl = baseUrl + 'akahd/token?acl='
         sts, data = self.cm.getPage(url)
         try:
-            data = json.loads(data)
+            data = byteify(json.loads(data))
             for item in data['chapterList']:
                 printDBG("> mediaType[%s] [%s]" % (item['mediaType'], mediaType))
                 if item['mediaType'] == mediaType:
@@ -617,7 +615,7 @@ class PlayRTSIW(CBaseHostClass):
 
         sts, data = self.cm.getPage(tokenUrl)
         try:
-            data = json.loads(data)['token']['authparams']
+            data = byteify(json.loads(data))['token']['authparams']
             if '?' not in videoUrl:
                 videoUrl += '?' + data
             else:

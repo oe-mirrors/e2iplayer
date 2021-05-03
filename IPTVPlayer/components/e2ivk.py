@@ -1019,7 +1019,7 @@ class E2iVirtualKeyBoard(Screen):
                 #self.autocomplete.stop()
             else:
                 self.autocomplete.start(self.setSuggestions)
-                self.autocomplete.set(self["text"].getText(), self.currentVKLayout['locale'].encode('UTF-8'))
+                self.autocomplete.set(self["text"].getText(), self.currentVKLayout['locale'])
 
     def setSuggestions(self, list, stamp):
         # we would not want to modify list when user

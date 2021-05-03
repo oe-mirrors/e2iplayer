@@ -12,9 +12,7 @@ from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, Ge
 ###################################################
 import copy
 import re
-import urllib.request
-import urllib.parse
-import urllib.error
+import urllib.request, urllib.parse, urllib.error
 try:
     import json
 except Exception:
@@ -143,7 +141,7 @@ class UstreamTV(CBaseHostClass):
 
         nextPage = False
         try:
-            data = json.loads(data)
+            data = byteify(json.loads(data))
             if not data['success']:
                 return
             nextPage = data['pageMeta']['infinite']

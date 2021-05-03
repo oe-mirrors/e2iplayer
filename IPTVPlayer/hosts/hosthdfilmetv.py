@@ -15,9 +15,7 @@ from Plugins.Extensions.IPTVPlayer.libs.e2ijson import loads as json_loads
 # FOREIGN import
 ###################################################
 import re
-import urllib.request
-import urllib.parse
-import urllib.error
+import urllib.request, urllib.parse, urllib.error
 import base64
 try:
     import json
@@ -68,7 +66,7 @@ class HDFilmeTV(CBaseHostClass):
     def getPageCF(self, baseUrl, params={}, post_data=None):
         if params == {}:
             params = self.defaultParams
-        params['cloudflare_params'] = {'domain': 'hdfilme.cc', 'cookie_file': self.COOKIE_FILE, 'User-Agent': self.USER_AGENT, 'full_url_handle': self.getFullUrl}
+        params['cloudflare_params'] = {'domain': 'hdfilme.cx', 'cookie_file': self.COOKIE_FILE, 'User-Agent': self.USER_AGENT, 'full_url_handle': self.getFullUrl}
         return self.cm.getPageCFProtection(baseUrl, params, post_data)
 
     def getIconUrl(self, url):
@@ -426,7 +424,7 @@ class HDFilmeTV(CBaseHostClass):
         printDBG('HDFilmeTV.getLinksForFavourite')
         links = []
         try:
-            cItem = json.loads(fav_data)
+            cItem = byteify(json.loads(fav_data))
             links = self.getLinksForVideo(cItem)
         except Exception:
             printExc()
@@ -435,7 +433,7 @@ class HDFilmeTV(CBaseHostClass):
     def setInitListFromFavouriteItem(self, fav_data):
         printDBG('HDFilmeTV.setInitListFromFavouriteItem')
         try:
-            params = json.loads(fav_data)
+            params = byteify(json.loads(fav_data))
         except Exception:
             params = {}
             printExc()

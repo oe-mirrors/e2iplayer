@@ -13,9 +13,7 @@ from Plugins.Extensions.IPTVPlayer.tools.iptvtypes import strwithmeta
 ###################################################
 import urllib.parse
 import re
-import urllib.request
-import urllib.parse
-import urllib.error
+import urllib.request, urllib.parse, urllib.error
 try:
     import json
 except Exception:
@@ -73,7 +71,7 @@ class OroroTV(CBaseHostClass):
 
         data = self.cm.ph.getDataBeetwenMarkers(data, '"items":', '};', False)[1]
         try:
-            data = json.loads(data)
+            data = byteify(json.loads(data), '', True)
             for item in data:
                 url = self.getFullUrl(item.get('url', ''))
                 icon = self.getFullUrl(item.get('banner', ''))

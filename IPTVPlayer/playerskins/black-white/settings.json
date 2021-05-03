@@ -1,0 +1,7 @@
+{
+"clockFontSize_SD" : 24,
+"clockFontSize_HD" : 24,
+"clockFontSize_FHD" : 24,
+"clockFormat_24H" : "%H:%M:%S   %A %d %B",
+"clockFormat_12H" : "%I:%M"  
+}

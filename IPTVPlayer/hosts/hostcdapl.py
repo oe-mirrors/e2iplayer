@@ -1,4 +1,4 @@
-﻿# -*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-
 
 ###################################################
 # LOCAL import
@@ -9,7 +9,6 @@ from Plugins.Extensions.IPTVPlayer.components.recaptcha_v2helper import CaptchaH
 from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, MergeDicts, rm, GetCookieDir, ReadTextFile, WriteTextFile
 from Plugins.Extensions.IPTVPlayer.libs.e2ijson import loads as json_loads
 from Plugins.Extensions.IPTVPlayer.libs import ph
-from Plugins.Extensions.IPTVPlayer.libs.urlparserhelper import hex_md5
 ###################################################
 
 ###################################################
@@ -17,9 +16,7 @@ from Plugins.Extensions.IPTVPlayer.libs.urlparserhelper import hex_md5
 ###################################################
 from Components.config import config, ConfigSelection, ConfigText, getConfigListEntry
 import re
-import urllib.request
-import urllib.parse
-import urllib.error
+import urllib.request, urllib.parse, urllib.error
 from binascii import hexlify
 from hashlib import md5
 ###################################################
@@ -64,7 +61,7 @@ class cda(CBaseHostClass, CaptchaHelper):
 
         self.MAIN_URL = 'https://www.cda.pl/'
         self.SEARCH_URL = self.getFullUrl('video/show/%s/p%d?s=%s')
-        self.DEFAULT_ICON_URL = 'http://www.download.net.pl/upload/NewsSeptember2015/CDA-Filmy/cdalogo.jpg'
+        self.DEFAULT_ICON_URL = 'https://scdn.2cda.pl/v001/img/logotypyv2/prasa/WI3L7077.jpg'
 
         self.MAIN_TAB = [{'category': 'video', 'title': 'Filmy wideo', 'url': ''},
                          {'category': 'premium', 'title': 'CDA Premium', 'url': self.getFullUrl('premium')},
@@ -223,12 +220,8 @@ class cda(CBaseHostClass, CaptchaHelper):
             desc = self.cleanHtmlStr(item.replace('<br />', '[/br]').replace('</a>', '[/br]'))
 
             params = dict(cItem)
-            if '/video' in url:
-                params.update({'title': title, 'url': url, 'icon': icon, 'desc': desc})
-                self.addVideo(params)
-            elif '/folder/' in url:
-                params.update({'title': title, 'url': url, 'icon': icon, 'desc': desc, 'name': 'dir', 'category': 'list_folder_items'})
-                self.addDir(params)
+            params.update({'title': title, 'url': url, 'icon': icon, 'desc': desc})
+            self.addVideo(params)
 
         if nextPage:
             params = dict(cItem)
@@ -266,7 +259,7 @@ class cda(CBaseHostClass, CaptchaHelper):
                 page = cItem.get('page', 1)
                 nextPage = ph.find(data, ('<span', '>', 'next-wrapper'), '</span>', flags=0)[1]
                 if not nextPage:
-                    nextPage = ph.find(data, ('<a', '>', 'btn-large '))[1]
+                    nextPage = ph.find(data, ('<a', '>', 'btn-large'))[1]
                 nextPage = self.getFullUrl(ph.clean_html(ph.getattr(nextPage, 'href')), self.cm.meta['url'])
             else:
                 nextPage = url if 'Następna strona' in data else ''
@@ -414,9 +407,6 @@ class cda(CBaseHostClass, CaptchaHelper):
         if not sts:
             return
 
-        nextPage = ph.find(data, ('<a', '>', 'btn-primary '))[1]
-        nextPage = self.getFullUrl(ph.clean_html(ph.getattr(nextPage, 'href')), self.cm.meta['url'])
-
         data = self.cm.ph.getAllItemsBeetwenNodes(data, ('<div', '>', 'list-when-small'), ('</div', '>'))
         for item in data:
             tmp = self.cm.ph.getDataBeetwenNodes(item, ('<a', '>', 'link-title'), ('</a', '>'))[1]
@@ -431,9 +421,6 @@ class cda(CBaseHostClass, CaptchaHelper):
             params = dict(cItem)
             params.update({'good_for_fav': True, 'title': title, 'url': url, 'icon': icon, 'desc': '[/br]'.join(desc)})
             self.addVideo(params)
-
-        if nextPage:
-            self.addDir(MergeDicts(cItem, {'good_for_fav': False, 'url': nextPage, 'title': 'Następna strona'}))
 
     def getLinksForVideo(self, cItem):
         self.tryTologin()
@@ -469,7 +456,7 @@ class cda(CBaseHostClass, CaptchaHelper):
             freshSession = False
             if sts and '/logout' in data:
                 printDBG("Check hash")
-                hash = hex_md5('%s@***@%s' % (self.login, self.password))
+                hash = hexlify(md5('%s@***@%s' % (self.login, self.password)).digest())
                 prevHash = ReadTextFile(loginCookie)[1].strip()
 
                 printDBG("$hash[%s] $prevHash[%s]" % (hash, prevHash))
@@ -534,7 +521,7 @@ class cda(CBaseHostClass, CaptchaHelper):
                 break
 
             if self.loggedIn:
-                hash = hex_md5('%s@***@%s' % (self.login, self.password))
+                hash = hexlify(md5('%s@***@%s' % (self.login, self.password)).digest())
                 WriteTextFile(loginCookie, hash)
 
         return self.loggedIn

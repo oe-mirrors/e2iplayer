@@ -184,7 +184,7 @@ class PodnapisiNetProvider(CBaseSubProviderClass):
                 baseUrl += '&' + key + '=' + cItem[key]
 
         url = self.getFullUrl(baseUrl)
-        sts, data = self.cm.getPage(url)
+        sts, data = self.getPage(url)
         if not sts:
             return
 

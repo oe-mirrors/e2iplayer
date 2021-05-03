@@ -18,9 +18,7 @@ from Plugins.Extensions.IPTVPlayer.libs.e2ijson import loads as json_loads
 import re
 import base64
 import copy
-import urllib.request
-import urllib.parse
-import urllib.error
+import urllib.request, urllib.parse, urllib.error
 from binascii import unhexlify
 from urllib.parse import urlparse, parse_qsl
 from Components.config import config, ConfigSelection, ConfigYesNo

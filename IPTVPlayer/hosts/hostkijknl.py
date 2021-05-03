@@ -12,9 +12,7 @@ from Plugins.Extensions.IPTVPlayer.libs.urlparserhelper import getDirectM3U8Play
 # FOREIGN import
 ###################################################
 import re
-import urllib.request
-import urllib.parse
-import urllib.error
+import urllib.request, urllib.parse, urllib.error
 import datetime
 try:
     import json
@@ -167,7 +165,7 @@ class KijkNL(CBaseHostClass):
             sts, data = self.getPage(cItem['url'])
             if not sts:
                 return
-            data = json.loads(data)
+            data = byteify(json.loads(data), '', True)
             for item in data['components']:
                 if item['type'] == 'video_list':
                     id = item['id']
@@ -199,7 +197,7 @@ class KijkNL(CBaseHostClass):
             if not sts:
                 return
 
-            data = json.loads(data)
+            data = byteify(json.loads(data))
 
             if isinstance(data, list):
                 items = data
@@ -270,7 +268,7 @@ class KijkNL(CBaseHostClass):
             if not sts:
                 return
 
-            data = json.loads(data)
+            data = byteify(json.loads(data), '', True)
             if data['playerInfo']['hasDRM']:
                 SetIPTVPlayerLastHostError(_('DRM protection detected.'))
             embedVideoUrl = self.getFullUrl(data['playerInfo'].get('embed_video_url', ''))
@@ -279,7 +277,7 @@ class KijkNL(CBaseHostClass):
                 sts, data = self.getPage(url)
                 if not sts:
                     return
-                data = json.loads(data)
+                data = byteify(json.loads(data), '', True)
                 videoUrl = data['playlist']
                 retTab = getDirectM3U8Playlist(videoUrl, checkContent=True)
             else:
@@ -315,7 +313,7 @@ class KijkNL(CBaseHostClass):
                 sts, data = self.getPage(url, urlParams)
                 if not sts:
                     return
-                data = json.loads(data)
+                data = byteify(json.loads(data), '', True)
                 for item in data['sources']:
                     videoUrl = item.get('src', '')
                     if not self.cm.isValidUrl(videoUrl):

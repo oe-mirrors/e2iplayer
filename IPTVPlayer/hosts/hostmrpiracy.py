@@ -14,9 +14,7 @@ from Plugins.Extensions.IPTVPlayer.tools.iptvtypes import strwithmeta
 # FOREIGN import
 ###################################################
 import re
-import urllib.request
-import urllib.parse
-import urllib.error
+import urllib.request, urllib.parse, urllib.error
 import base64
 from copy import deepcopy
 try:
@@ -420,7 +418,7 @@ class MRPiracyGQ(CBaseHostClass, CaptchaHelper):
             if sts:
                 try:
                     kodiLinks = []
-                    data = json.loads(data)
+                    data = byteify(json.loads(data))
                     for item in data:
                         for i in range(10):
                             if i == 0:
@@ -487,7 +485,7 @@ class MRPiracyGQ(CBaseHostClass, CaptchaHelper):
                 jscode += '''var iptv_fake_element={hide:function(){},show:function(){},addClass:function(){},removeClass:function(){}};playertype="iptv_player_data";var iptv_player_data=''' + json.dumps(playerData) + ''';$=function(){return 1==arguments.length&&arguments[0].endsWith(playertype)?{data:function(a){return iptv_player_data[a]}}:iptv_fake_element},$.ajax=function(){print(JSON.stringify(arguments[0]))},''' + playerData['callback'] + '''(iptv_player_data.sitekey);'''
                 ret = js_execute(jscode)
                 data = ret['data'].strip()
-                data = json.loads(data)
+                data = byteify(json.loads(data))
 
                 url = self.getFullUrl(data['url'])
                 post_data = data['data']
@@ -552,7 +550,7 @@ class MRPiracyGQ(CBaseHostClass, CaptchaHelper):
             self.selectDomain()
         links = []
         try:
-            cItem = json.loads(fav_data)
+            cItem = byteify(json.loads(fav_data))
             links = self.getLinksForVideo(cItem)
         except Exception:
             printExc()
@@ -563,7 +561,7 @@ class MRPiracyGQ(CBaseHostClass, CaptchaHelper):
         if self.MAIN_URL == None:
             self.selectDomain()
         try:
-            params = json.loads(fav_data)
+            params = byteify(json.loads(fav_data))
         except Exception:
             params = {}
             printExc()

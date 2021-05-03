@@ -40,7 +40,7 @@ class IPTVPlayerInfo(CBaseHostClass):
 
     def __init__(self):
         CBaseHostClass.__init__(self, {'history': 'iptvplayer.pl', 'cookie': 'iptvplayer.pl.cookie'})
-        self.DEFAULT_ICON_URL = 'https://about.gitlab.com/images/press/logo/png/gitlab-logo-white-stacked-rgb.png'
+        self.DEFAULT_ICON_URL = 'http://www.iptvplayer.gitlab.io/assets/logo.png'
         self.USER_AGENT = 'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:40.0) Gecko/20100101 Firefox/40.0'
         self.HEADER = {'User-Agent': self.USER_AGENT, 'DNT': '1', 'Accept': 'text/html'}
         self.AJAX_HEADER = dict(self.HEADER)
@@ -70,7 +70,7 @@ class IPTVPlayerInfo(CBaseHostClass):
         ITEMS_PER_PAGE = 40
 
         page = cItem.get('page', 0)
-        url = self.getFullUrl('/%s/e2iplayer/commits/master?limit=%d&offset=%d' % (config.plugins.iptvplayer.gitlab_repo.value, ITEMS_PER_PAGE, page * ITEMS_PER_PAGE))
+        url = self.getFullUrl('/iptvplayer-for-e2/iptvplayer-for-e2/commits/master?limit=%d&offset=%d' % (ITEMS_PER_PAGE, page * ITEMS_PER_PAGE))
 
         if page > 1:
             if '?' in url:
@@ -89,7 +89,7 @@ class IPTVPlayerInfo(CBaseHostClass):
 
             printDBG(">>>> currCommitStamp[%s]" % currCommitStamp)
 
-            data = json.loads(data)
+            data = byteify(json.loads(data))
             if data['count'] >= ITEMS_PER_PAGE:
                 nextPage = True
 

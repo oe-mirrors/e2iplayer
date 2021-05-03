@@ -14,9 +14,7 @@ from Plugins.Extensions.IPTVPlayer.libs.e2ijson import loads as json_loads
 # FOREIGN import
 ###################################################
 import time
-import urllib.request
-import urllib.parse
-import urllib.error
+import urllib.request, urllib.parse, urllib.error
 from Components.config import config
 ###################################################
 
@@ -35,12 +33,16 @@ class UnCaptchaReCaptcha:
             mainUrl = self.getMainUrl()
         return self.cm.getFullUrl(url, mainUrl)
 
-    def processCaptcha(self, sitekey, referer=''):
+    def processCaptcha(self, sitekey, referer='', invisible=False):
         sleepObj = None
         token = ''
         errorMsgTab = []
         apiKey = config.plugins.iptvplayer.api_key_2captcha.value
-        apiUrl = self.getFullUrl('/in.php?key=') + apiKey + '&method=userrecaptcha&invisible=1&googlekey=' + sitekey + '&json=1&pageurl=' + urllib.parse.quote(referer)
+        if invisible:
+            apiUrl = self.getFullUrl('/in.php?key=') + apiKey + '&method=userrecaptcha&invisible=1&googlekey=' + sitekey + '&json=1&pageurl=' + urllib.parse.quote(referer)
+        else:
+            apiUrl = self.getFullUrl('/in.php?key=') + apiKey + '&method=userrecaptcha&googlekey=' + sitekey + '&json=1&pageurl=' + urllib.parse.quote(referer)
+
         try:
             token = ''
             sts, data = self.cm.getPage(apiUrl)
@@ -73,6 +75,10 @@ class UnCaptchaReCaptcha:
                             data = json_loads(data, '', True)
                             if data['status'] == '1' and data['request'] != '':
                                 token = data['request']
+                                break
+                            if data["request"] == "ERROR_CAPTCHA_UNSOLVABLE":
+                                token = ""
+                                errorMsgTab.append(_("Message from 2Captcha: %s") % data['request'])
                                 break
                         if sleepObj.getTimeout() == 0:
                             errorMsgTab.append(_('%s timeout.') % self.getMainUrl())

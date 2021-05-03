@@ -19,7 +19,7 @@ import time
 
 
 def gettytul():
-    return 'https://del.org/'
+    return 'https://www.penny-del.org/'
 
 
 class Del(CBaseHostClass):
@@ -30,9 +30,9 @@ class Del(CBaseHostClass):
         self.HTTP_HEADER = self.cm.getDefaultHeader(browser='iphone_3_0')
         self.defaultParams = {'header': self.HTTP_HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
 
-        self.MAIN_URL = 'https://www.del.org/'
+        self.MAIN_URL = 'https://www.penny-del.org/'
         self.MAIN_URL_2 = 'https://www.del-2.org/'
-        self.DEFAULT_ICON_URL = self.MAIN_URL + 'assets/img/DEL_Logo.png'
+        self.DEFAULT_ICON_URL = 'https://www.penny-del.org/assets/img/penny-del-logo.png'
 
     def getPage(self, baseUrl, addParams={}, post_data=None):
         if addParams == {}:

@@ -10,9 +10,7 @@ from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, by
 ###################################################
 # FOREIGN import
 ###################################################
-import urllib.request
-import urllib.parse
-import urllib.error
+import urllib.request, urllib.parse, urllib.error
 try:
     import json
 except Exception:
@@ -51,7 +49,7 @@ class TVProart(CBaseHostClass):
             if not sts:
                 return
             try:
-                data = json.loads(data)
+                data = byteify(json.loads(data))
                 if data['status'] != '200':
                     return
                 self.categories = data['content']
@@ -93,7 +91,7 @@ class TVProart(CBaseHostClass):
         nextPage = False
         try:
             sts, data = self.cm.getPage(url + '&page={0}'.format(page + 1))
-            data = json.loads(data)
+            data = byteify(json.loads(data))
             if len(data['content']) > 0:
                 nextPage = True
         except Exception:
@@ -109,7 +107,7 @@ class TVProart(CBaseHostClass):
             return
         nextPage = False
         try:
-            data = json.loads(data)
+            data = byteify(json.loads(data))
             if data['status'] != '200':
                 return
             for item in data['content']['movies']:
@@ -127,7 +125,7 @@ class TVProart(CBaseHostClass):
         if not sts:
             return []
         try:
-            data = json.loads(data)
+            data = byteify(json.loads(data))
             urlTab.append({'name': 'vod', 'url': data['content']['video']['movieFile'], 'need_resolve': 0})
         except Exception:
             pass

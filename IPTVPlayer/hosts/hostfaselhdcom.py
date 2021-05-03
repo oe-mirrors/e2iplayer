@@ -15,9 +15,7 @@ from Plugins.Extensions.IPTVPlayer.libs import ph
 ###################################################
 import urllib.parse
 import re
-import urllib.request
-import urllib.parse
-import urllib.error
+import urllib.request, urllib.parse, urllib.error
 ###################################################
 
 

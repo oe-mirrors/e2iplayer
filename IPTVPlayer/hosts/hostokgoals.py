@@ -11,9 +11,7 @@ from Plugins.Extensions.IPTVPlayer.libs.urlparserhelper import getDirectM3U8Play
 ###################################################
 # FOREIGN import
 ###################################################
-import urllib.request
-import urllib.parse
-import urllib.error
+import urllib.request, urllib.parse, urllib.error
 try:
     import json
 except Exception:
@@ -154,7 +152,7 @@ class OkGoals(CBaseHostClass):
             if not sts:
                 return []
             try:
-                data = json.loads(data)
+                data = byteify(json.loads(data))
                 if 'content' in data:
                     url = data['content']['media']['f4m']
                 else:
@@ -213,7 +211,7 @@ class OkGoals(CBaseHostClass):
         printDBG('OkGoals.getLinksForFavourite')
         links = []
         try:
-            cItem = json.loads(fav_data)
+            cItem = byteify(json.loads(fav_data))
             links = self.getLinksForVideo(cItem)
         except Exception:
             printExc()
@@ -222,7 +220,7 @@ class OkGoals(CBaseHostClass):
     def setInitListFromFavouriteItem(self, fav_data):
         printDBG('OkGoals.setInitListFromFavouriteItem')
         try:
-            params = json.loads(fav_data)
+            params = byteify(json.loads(fav_data))
         except Exception:
             params = {}
             printExc()

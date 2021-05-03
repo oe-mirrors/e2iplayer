@@ -1,4 +1,4 @@
-﻿# -*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-
 
 ###################################################
 # LOCAL import
@@ -51,13 +51,13 @@ class Favourites(CBaseHostClass):
         self.host = None
         self.hostName = ''
         self.guestMode = False # main or guest
-        self.DEFAULT_ICON_URL = 'http://sarah-bauer.weebly.com/uploads/4/2/2/3/42234635/1922500_orig.png'
+        self.DEFAULT_ICON_URL = 'https://www.iconninja.com/files/637/891/649/512-favorites-icon.png'
 
     def _setHost(self, hostName):
         if hostName == self.hostName:
             return True
         try:
-            _temp = __import__('Plugins.Extensions.IPTVPlayer.hosts.host' + hostName, globals(), locals(), ['IPTVHost'], 0)
+            _temp = __import__('Plugins.Extensions.IPTVPlayer.hosts.host' + hostName, globals(), locals(), ['IPTVHost'], -1)
             host = _temp.IPTVHost()
             if isinstance(host, IHost):
                 self.hostName = hostName
@@ -100,7 +100,8 @@ class Favourites(CBaseHostClass):
         for idx in range(len(data)):
             item = data[idx]
             addFun = typesMap.get(item.type, None)
-            params = {'name': 'item', 'title': item.name, 'host': item.hostName, 'icon': item.iconimage, 'desc': item.description, 'group_id': cItem['group_id'], 'item_idx': idx}
+            desc = _("Source") + ": %s\n%s" % (item.hostName, item.description)
+            params = {'name': 'item', 'title': item.name, 'host': item.hostName, 'icon': item.iconimage, 'desc': desc, 'group_id': cItem['group_id'], 'item_idx': idx}
             if None != addFun:
                 addFun(params)
 

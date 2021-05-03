@@ -170,7 +170,7 @@ def _parse_simple_parameter(line, data, cast_to=str):
 
 
 def string_to_lines(string):
-    return string.strip().replace('\r\n', '\n').split('\n')
+    return string.strip().replace('\r\n', '\n').replace('\r', '\n').split('\n')
 
 
 def remove_quotes(string):

@@ -7,7 +7,6 @@ from Plugins.Extensions.IPTVPlayer.components.ihost import CHostBase, CBaseHostC
 from Plugins.Extensions.IPTVPlayer.components.recaptcha_v2helper import CaptchaHelper
 from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, MergeDicts, rm, GetCookieDir, ReadTextFile, WriteTextFile
 from Plugins.Extensions.IPTVPlayer.tools.iptvtypes import strwithmeta
-from Plugins.Extensions.IPTVPlayer.libs.urlparserhelper import hex_md5
 ###################################################
 
 ###################################################
@@ -16,9 +15,7 @@ from Plugins.Extensions.IPTVPlayer.libs.urlparserhelper import hex_md5
 from binascii import hexlify
 from hashlib import md5
 import re
-import urllib.request
-import urllib.parse
-import urllib.error
+import urllib.request, urllib.parse, urllib.error
 from Components.config import config, ConfigText, getConfigListEntry
 ###################################################
 
@@ -55,7 +52,7 @@ class VidCorn(CBaseHostClass, CaptchaHelper):
         self.HTTP_HEADER = self.cm.getDefaultHeader(browser='chrome')
         self.defaultParams = {'header': self.HTTP_HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
 
-        self.MAIN_URL = 'https://vidcorn.org/'
+        self.MAIN_URL = 'https://vidcorn.tv/'
         self.DEFAULT_ICON_URL = 'https://www.trackalytics.com/assets/thumbnails/vidcorn.com.jpg'
 
         self.filters = []
@@ -569,7 +566,7 @@ class VidCorn(CBaseHostClass, CaptchaHelper):
             freshSession = False
             if sts and '/logout' in data:
                 printDBG("Check hash")
-                hash = hex_md5('%s@***@%s' % (self.login, self.password))
+                hash = hexlify(md5('%s@***@%s' % (self.login, self.password)).digest())
                 prevHash = ReadTextFile(loginCookie)[1].strip()
 
                 printDBG("$hash[%s] $prevHash[%s]" % (hash, prevHash))
@@ -621,7 +618,7 @@ class VidCorn(CBaseHostClass, CaptchaHelper):
                 printDBG('tryTologin failed')
 
             if self.loggedIn:
-                hash = hex_md5('%s@***@%s' % (self.login, self.password))
+                hash = hexlify(md5('%s@***@%s' % (self.login, self.password)).digest())
                 WriteTextFile(loginCookie, hash)
 
         return self.loggedIn

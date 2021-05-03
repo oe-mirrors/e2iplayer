@@ -13,9 +13,7 @@ from Plugins.Extensions.IPTVPlayer.libs.youtubeparser import YouTubeParser
 # FOREIGN import
 ###################################################
 import urllib.parse
-import urllib.request
-import urllib.parse
-import urllib.error
+import urllib.request, urllib.parse, urllib.error
 try:
     import json
 except Exception:
@@ -106,7 +104,7 @@ class MaxtvGO(CBaseHostClass):
             return
 
         try:
-            data = json.loads(data)
+            data = byteify(json.loads(data))
             if data.get('error') != None:
                 SetIPTVPlayerLastHostError(str(data['error']['message']))
             for item in data['data']:
@@ -281,7 +279,7 @@ class MaxtvGO(CBaseHostClass):
 
                 sts, data = self.getPage(url)
                 if sts:
-                    data = json.loads(data)
+                    data = byteify(json.loads(data))
                     for item in data['data']:
                         author = self.cleanHtmlStr(item['nick'])
                         date = self.cleanHtmlStr(item['date'])

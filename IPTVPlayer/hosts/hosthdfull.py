@@ -10,7 +10,6 @@ from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, Me
 from Plugins.Extensions.IPTVPlayer.tools.iptvtypes import strwithmeta
 from Plugins.Extensions.IPTVPlayer.libs.pCommon import common
 from Plugins.Extensions.IPTVPlayer.libs.e2ijson import loads as json_loads
-from Plugins.Extensions.IPTVPlayer.libs.urlparserhelper import hex_md5
 ###################################################
 
 ###################################################
@@ -47,11 +46,11 @@ def GetConfigList():
 
 
 def gettytul():
-    return 'https://hdfull.me/'
+    return 'https://hdfull.org/'
 
 
 class SuggestionsProvider:
-    MAIN_URL = 'https://hdfull.me/'
+    MAIN_URL = 'https://hdfull.org/'
     COOKIE_FILE = ''
 
     def __init__(self):
@@ -92,15 +91,15 @@ def jstr(item, key, default=''):
 class HDFull(CBaseHostClass, CaptchaHelper):
 
     def __init__(self):
-        CBaseHostClass.__init__(self, {'history': 'hdfull.me', 'cookie': 'hdfull.me.cookie'})
+        CBaseHostClass.__init__(self, {'history': 'hdfull.cx', 'cookie': 'hdfull.cx.cookie'})
         SuggestionsProvider.COOKIE_FILE = self.COOKIE_FILE
 
         self.HTTP_HEADER = self.cm.getDefaultHeader(browser='chrome')
         language = config.plugins.iptvplayer.hdfull_language.value
         self.defaultParams = {'header': self.HTTP_HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE, 'cookie_items': {'language': language}}
 
-        self.MAIN_URL = 'https://hdfull.me/'
-        self.DEFAULT_ICON_URL = 'https://ocio.farodevigo.es/img_contenido/noticias/2018/02/642946/web_cine_pirata.jpg'
+        self.MAIN_URL = 'https://hdfull.org/'
+        self.DEFAULT_ICON_URL = 'https://hdfull.org/templates/hdfull/images/logo.png'
 
         self.filters = []
         self.cacheLinks = {}
@@ -289,19 +288,19 @@ class HDFull(CBaseHostClass, CaptchaHelper):
                 tabJs['view'] = {'url': self.getFullUrl(item), 'hash': version + '.1'}
 
         for key in tabJs.keys():
-            tabJs[key]['name'] = 'hdfull.me_%s' % key
+            tabJs[key]['name'] = 'hdfull.lv_%s' % key
             if not is_js_cached(tabJs[key]['name'], tabJs[key]['hash']):
                 sts, jsdata = self.getPage(tabJs[key]['url'])
                 if sts:
                     if 'providers' == key:
-                        idx1 = jsdata.find('providers')
-                        idx2 = jsdata.find(';', idx1 + 9)
-                        funName = self.cm.ph.getSearchGroups(jsdata[idx2 + 1:], '''function\s+?([^\(]+?)\(''')[0]
-                        tabJs[key]['code'] = 'function buildIframeEmbed(){return arguments[0];}\nbuildIframeGenericEmbed=buildIframeEmbed;\n' + jsdata[:idx2 + 1] + '; function %s(){return function(){};}' % funName
-                        printDBG(">>>>")
+
+                        tabJs[key]['code'] = jsdata + "\nfunction buildIframeEmbed(){return arguments[0];}\n"
+
+                        printDBG(">>>> javascript code from tabJs['%s'] >>>>" % key)
                         printDBG(tabJs[key]['code'])
                         printDBG("<<<<")
-                    else:
+
+                    elif 'view' == key:
                         tmp = ['window=this,window.atob=function(e){e.length%4==3&&(e+="="),e.length%4==2&&(e+="=="),e=Duktape.dec("base64",e),decText="";for(var t=0;t<e.byteLength;t++)decText+=String.fromCharCode(e[t]);return decText};']
                         start = 0
                         while True:
@@ -329,7 +328,7 @@ class HDFull(CBaseHostClass, CaptchaHelper):
                         tt = 'function e2iLinks(r){r=%s;for(var i in r)provider=providers[r[i].provider],r[i].provider=provider.d.split("://")[1],r[i].embed=provider.e(r[i].code,"800","600"),r[i].download=provider.l(r[i].code,"800","600");print(JSON.stringify(r))}'
                         tmp.append(tt % self.cm.ph.getDataBeetwenMarkers(jsdata, mark + '=', ';', False)[1].replace(mark, 'r'))
                         tabJs[key]['code'] = '\n'.join(tmp)
-                        printDBG(">>>>")
+                        printDBG(">>>> javascript code from tabJs['%s'] >>>>" % key)
                         printDBG(tabJs[key]['code'])
                         printDBG("<<<<")
         try:
@@ -362,6 +361,7 @@ class HDFull(CBaseHostClass, CaptchaHelper):
 
         desc = []
         descObj = self.getArticleContent(cItem, data)[0]
+
         for item in descObj['other_info']['custom_items_list']:
             desc.append(item[1])
         desc = ' | '.join(desc) + '[/br]' + descObj['text']
@@ -510,7 +510,7 @@ class HDFull(CBaseHostClass, CaptchaHelper):
             return linksTab
         cUrl = self.cm.meta['url']
 
-        printDBG(data)
+        #printDBG(data)
 
         linksTab = self._getLinks(cUrl, data)
 
@@ -552,6 +552,10 @@ class HDFull(CBaseHostClass, CaptchaHelper):
             sts, data = self.getPage(url)
             if not sts:
                 data = ''
+
+        #printDBG("***********************************")
+        #printDBG(data)
+        #printDBG("***********************************")
 
         data = self.cm.ph.getDataBeetwenNodes(data, ('<div', '>', 'summary-title'), ('<div', '>', 'breakaway-wrapper'), False)[1]
         title = self.cleanHtmlStr(data[:data.find('</div')])
@@ -597,7 +601,7 @@ class HDFull(CBaseHostClass, CaptchaHelper):
 
             self.cm.clearCookie(self.COOKIE_FILE, removeNames=['language'])
 
-            loginCookie = GetCookieDir('hdfull.me.login')
+            loginCookie = GetCookieDir('hdfull.lv.login')
             self.login = config.plugins.iptvplayer.hdfull_login.value
             self.password = config.plugins.iptvplayer.hdfull_password.value
 
@@ -608,7 +612,7 @@ class HDFull(CBaseHostClass, CaptchaHelper):
             freshSession = False
             if sts and '/logout' in data:
                 printDBG("Check hash")
-                hash = hex_md5('%s@***@%s' % (self.login, self.password))
+                hash = hexlify(md5('%s@***@%s' % (self.login, self.password)).digest())
                 prevHash = ReadTextFile(loginCookie)[1].strip()
 
                 printDBG("$hash[%s] $prevHash[%s]" % (hash, prevHash))
@@ -653,7 +657,7 @@ class HDFull(CBaseHostClass, CaptchaHelper):
                 printDBG('tryTologin failed')
 
             if self.loggedIn:
-                hash = hex_md5('%s@***@%s' % (self.login, self.password))
+                hash = hexlify(md5('%s@***@%s' % (self.login, self.password)).digest())
                 WriteTextFile(loginCookie, hash)
 
         return self.loggedIn

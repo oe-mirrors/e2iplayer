@@ -208,7 +208,6 @@ class YoutubeIE(object):
                           # Dash video
                           '138', '137', '248', '136', '247', '135', '246',
                           '245', '244', '134', '243', '133', '242', '160', '298', '299',
-                          '313', '271',
                           # Dash audio
                           '141', '172', '140', '171', '139',
                           ]
@@ -294,8 +293,6 @@ class YoutubeIE(object):
         '246': 'webm',
         '247': 'webm',
         '248': 'webm',
-        '271': 'webmv',
-        '313': 'webmv',
 
         'mpd': 'mpd'
     }
@@ -350,8 +347,6 @@ class YoutubeIE(object):
         '248': '1080p',
         '298': '720p60',
         '299': '1080p60',
-        '271': '1440p',
-        '313': '2160p',
     }
 
     _special_itags = {
@@ -383,8 +378,6 @@ class YoutubeIE(object):
         '248': 'DASH Video',
         '298': 'DASH Video',
         '299': 'DASH Video',
-        '271': 'DASH Video',
-        '313': 'DASH Video',
     }
     IE_NAME = 'youtube'
 
@@ -513,7 +506,7 @@ class YoutubeIE(object):
         printDBG(sub_tracks)
         return sub_tracks
 
-    def _real_extract(self, url, allowVP9=False, allowAgeGate=False):
+    def _real_extract(self, url, allowAgeGate=False):
         # Extract original video URL from URL with redirection, like age verification, using next_url parameter
 
         mobj = re.search(self._NEXT_URL_RE, url)
@@ -534,7 +527,8 @@ class YoutubeIE(object):
             isGoogleDoc = False
             videoKey = 'video_id'
             videoInfoBase = 'https://www.youtube.com/get_video_info?video_id=%s&' % video_id
-            videoInfoparams = {}
+            #videoInfoparams = {}
+            videoInfoparams = {'header': {'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/86.0.4240.75 Safari/537.36'}}
 
         sts, video_webpage = self.cm.getPage(url)
         if not sts:
@@ -557,7 +551,7 @@ class YoutubeIE(object):
             video_info_url = videoInfoBase + data
             sts, video_info = self.cm.getPage(video_info_url, videoInfoparams)
             if not sts:
-                raise ExtractorError('Faile to get "%s"' % video_info_url)
+                raise ExtractorError('Fail to get "%s"' % video_info_url)
         else:
             age_gate = False
             tries = 0
@@ -641,8 +635,7 @@ class YoutubeIE(object):
         if len(video_info.get('url_encoded_fmt_stream_map', [])) >= 1 or len(video_info.get('adaptive_fmts', [])) >= 1:
             encoded_url_map = video_info.get('url_encoded_fmt_stream_map', [''])[0] + ',' + video_info.get('adaptive_fmts', [''])[0]
             _supported_formats = self._supported_formats
-            if allowVP9:
-                _supported_formats.extend(['313', '271'])
+
             for url_data_str in encoded_url_map.split(','):
                 if 'index=' in url_data_str and 'index=0-0&' in url_data_str:
                     continue
@@ -680,13 +673,13 @@ class YoutubeIE(object):
                     if not 'ratebypass' in url_item['url']:
                         url_item['url'] += '&ratebypass=yes'
                     url_map[url_data['itag']] = url_item
-                video_url_list = self._get_video_url_list(url_map, allowVP9)
+                video_url_list = self._get_video_url_list(url_map)
 
         if video_info.get('hlsvp') and not video_url_list:
             is_m3u8 = 'yes'
             manifest_url = _unquote(video_info['hlsvp'], None)
             url_map = self._extract_from_m3u8(manifest_url, video_id)
-            video_url_list = self._get_video_url_list(url_map, allowVP9)
+            video_url_list = self._get_video_url_list(url_map)
 
         if video_info.get('player_response') and not video_url_list:
             is_m3u8 = 'yes'
@@ -695,7 +688,7 @@ class YoutubeIE(object):
             if manifest:
                 manifest_url = manifest.group(1)
                 url_map = self._extract_from_m3u8(manifest_url, video_id)
-                video_url_list = self._get_video_url_list(url_map, allowVP9)
+                video_url_list = self._get_video_url_list(url_map)
 
         if video_info.get('player_response') and not video_url_list:
             try:
@@ -743,7 +736,7 @@ class YoutubeIE(object):
                             url_item['url'] += '&ratebypass=yes'
 
                     url_map[str(url_data['itag'])] = url_item
-                video_url_list = self._get_video_url_list(url_map, allowVP9)
+                video_url_list = self._get_video_url_list(url_map)
             except Exception:
                 printExc()
 
@@ -859,10 +852,8 @@ class YoutubeIE(object):
             printDBG('unable to extract %s; please report this issue on http://yt-dl.org/bug' % name)
             return None
 
-    def _get_video_url_list(self, url_map, allowVP9=False):
+    def _get_video_url_list(self, url_map):
         format_list = list(self._available_formats_prefer_free) # available_formats
-        if allowVP9:
-            format_list.extend(['313', '271'])
         existing_formats = [x for x in format_list if x in url_map]
 
         return [(f, url_map[f]) for f in existing_formats] # All formats

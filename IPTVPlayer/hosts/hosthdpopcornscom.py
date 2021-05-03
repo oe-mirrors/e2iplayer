@@ -13,9 +13,7 @@ from Plugins.Extensions.IPTVPlayer.tools.iptvtypes import strwithmeta
 ###################################################
 import urllib.parse
 import re
-import urllib.request
-import urllib.parse
-import urllib.error
+import urllib.request, urllib.parse, urllib.error
 try:
     import json
 except Exception:
@@ -164,7 +162,7 @@ class HDPopcornsCom(CBaseHostClass):
 
         nextPage = self.cm.ph.getSearchGroups(data, 'var\s+?mts_ajax_loadposts\s*=\s*([^;]+?);')[0].strip()
         try:
-            nextPage = self.getFullUrl(str(json.loads(nextPage).get('nextLink', '')))
+            nextPage = self.getFullUrl(str(byteify(json.loads(nextPage)).get('nextLink', '')))
         except Exception:
             nextPage = ''
             printExc()
@@ -309,7 +307,7 @@ class HDPopcornsCom(CBaseHostClass):
         printDBG('HDPopcornsCom.getLinksForFavourite')
         links = []
         try:
-            cItem = json.loads(fav_data)
+            cItem = byteify(json.loads(fav_data))
             links = self.getLinksForVideo(cItem)
         except Exception:
             printExc()
@@ -318,7 +316,7 @@ class HDPopcornsCom(CBaseHostClass):
     def setInitListFromFavouriteItem(self, fav_data):
         printDBG('HDPopcornsCom.setInitListFromFavouriteItem')
         try:
-            params = json.loads(fav_data)
+            params = byteify(json.loads(fav_data))
         except Exception:
             params = {}
             printExc()

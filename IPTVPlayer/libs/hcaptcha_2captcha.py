@@ -14,9 +14,7 @@ from Plugins.Extensions.IPTVPlayer.libs.e2ijson import loads as json_loads
 # FOREIGN import
 ###################################################
 import time
-import urllib.request
-import urllib.parse
-import urllib.error
+import urllib.request, urllib.parse, urllib.error
 from Components.config import config
 ###################################################
 
@@ -40,7 +38,19 @@ class UnCaptchahCaptcha:
         token = ''
         errorMsgTab = []
         apiKey = config.plugins.iptvplayer.api_key_2captcha.value
-        apiUrl = self.getFullUrl('/in.php?key=') + apiKey + '&method=hcaptcha&sitekey=' + sitekey + '&json=1&pageurl=' + urllib.parse.quote(referer)
+
+        #read ip of box
+
+        sts, ip = self.cm.getPage('https://api.ipify.org')
+
+        if sts:
+            printDBG("Public IP of box: %s " % ip)
+            # add port 443?
+            # ip = ip + ":443"
+            apiUrl = self.getFullUrl('/in.php?key=') + apiKey + '&method=hcaptcha&sitekey=' + sitekey + '&json=1&pageurl=' + urllib.parse.quote(referer) + "&proxy=" + ip
+        else:
+            apiUrl = self.getFullUrl('/in.php?key=') + apiKey + '&method=hcaptcha&sitekey=' + sitekey + '&json=1&pageurl=' + urllib.parse.quote(referer)
+
         try:
             token = ''
             sts, data = self.cm.getPage(apiUrl)

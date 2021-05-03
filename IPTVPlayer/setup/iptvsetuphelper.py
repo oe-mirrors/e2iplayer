@@ -25,12 +25,12 @@ def SetupDownloaderCmdCreator(url, file):
             printDBG("SetupDownloaderCreator PwgetDownloader")
             return 'python "%s" "%s" "%s" ' % (DMHelper.GET_PWGET_PATH(), url, file)
     else:
-        if IsExecutable(DMHelper.GET_WGET_PATH()):
-            printDBG("SetupDownloaderCreator WgetDownloader")
-            return '%s "%s" -O "%s" ' % (DMHelper.GET_WGET_PATH(), url, file)
-        elif IsExecutable('wget'):
+        if IsExecutable('wget'):
             printDBG("SetupDownloaderCreator BuxyboxWgetDownloader")
             return 'wget "%s" -O "%s" ' % (url, file)
+        elif IsExecutable(DMHelper.GET_WGET_PATH()):
+            printDBG("SetupDownloaderCreator WgetDownloader")
+            return '%s "%s" -O "%s" ' % (DMHelper.GET_WGET_PATH(), url, file)
         elif IsExecutable('python'):
             printDBG("SetupDownloaderCreator PwgetDownloader")
             return 'python "%s" "%s" "%s" ' % (DMHelper.GET_PWGET_PATH(), url, file)

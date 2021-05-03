@@ -29,7 +29,7 @@ class SuggestionsProvider:
         if sts:
             retList = []
             for item in json.loads(data)[1]:
-                retList.append(item.encode('UTF-8'))
+                retList.append(item)
 
             return retList
         return None

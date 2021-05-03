@@ -397,7 +397,7 @@ class UpdateMainAppImpl(IUpdateObjectInterface):
         self.list.append(self.__getStepDesc(title=_("Checking version."), execFunction=self.stepCheckFiles))
         self.list.append(self.__getStepDesc(title=_("Removing unnecessary files."), execFunction=self.stepRemoveUnnecessaryFiles, breakable=True, ignoreError=True))
         self.list.append(self.__getStepDesc(title=_("Confirmation of installation."), execFunction=self.stepConfirmInstalation))
-        self.list.append(self.__getStepDesc(title=_("Removing the old version."), execFunction=self.stepRemoveOldVersion, breakable=False, ignoreError=True, repeatCount=2))
+        #self.list.append( self.__getStepDesc(title = _("Removing the old version."),       execFunction = self.stepRemoveOldVersion, breakable=False, ignoreError=True, repeatCount=2) )
         self.list.append(self.__getStepDesc(title=_("Installing new version."), execFunction=self.stepInstallNewVersion, breakable=False, ignoreError=False, repeatCount=3))
         return self.list
 
@@ -424,12 +424,13 @@ class UpdateMainAppImpl(IUpdateObjectInterface):
 
     def stepGetGitlab(self):
         printDBG('UpdateMainAppImpl.stepGetGitlab')
+        nick = config.plugins.iptvplayer.gitlab_repo.value
         self.clearTmpData()
         sts, msg = self.createPath(self.tmpDir)
         if not sts:
             self.stepFinished(-1, msg)
             return
-        serverUrl = "https://gitlab.com/{0}/e2iplayer/raw/master/IPTVPlayer/version.py".format(config.plugins.iptvplayer.gitlab_repo.value)
+        serverUrl = "https://gitlab.com/{0}/e2iplayer/raw/master/IPTVPlayer/version.py".format(nick)
         self.downloader = UpdateDownloaderCreator(serverUrl)
         self.downloader.subscribersFor_Finish.append(boundFunction(self.downloadFinished, self.__serversListGitlabFinished, None))
         self.downloader.start(serverUrl, os_path.join(self.tmpDir, 'lastversion.py'))
@@ -697,17 +698,18 @@ class UpdateMainAppImpl(IUpdateObjectInterface):
     # SERWERS LISTS STEP'S PRIVATES METHODS
     ##############################################################################
     def __addLastVersion(self, servers):
-        mainUrl = "https://gitlab.com/iptvplayer-for-e2/iptvplayer-for-e2"
+        nick = config.plugins.iptvplayer.gitlab_repo.value
+        mainUrl = "https://gitlab.com/{0}/e2iplayer".format(nick)
         sts, data = self.cm.getPage(mainUrl + '/tree/master')
         if sts:
-            crcSum = CParsingHelper.getSearchGroups(data, '"/iptvplayer-for-e2/iptvplayer-for-e2/commit/([^"]+?)">')[0]
+            crcSum = CParsingHelper.getSearchGroups(data, '"/{0}/e2iplayer/commit/([^"]+?)">'.format(nick))[0]
             if 40 == len(crcSum):
                 finalurl = mainUrl + '/blob/%s/IPTVPlayer/version.py' % crcSum
                 sts, data = self.cm.getPage(finalurl)
                 if sts:
                     newVerNum = CParsingHelper.getSearchGroups(data, '&quot;([0-9]+\.[0-9]+\.[0-9]+\.[0-9]+)&quot;')[0]
                     sourceUrl = mainUrl + "/repository/archive.tar.gz?ref=%s" % crcSum
-                    server = {'name': 'gitlab.com', 'version': newVerNum, 'url': sourceUrl, 'subdir': 'iptvplayer-for-e2.git/', 'pyver': 'X.X', 'packagetype': 'sourcecode'}
+                    server = {'name': 'gitlab.com/' + nick + '/', 'version': newVerNum, 'url': sourceUrl, 'subdir': 'iptvplayer-for-e2.git/', 'pyver': 'X.X', 'packagetype': 'sourcecode'}
                     printDBG("UpdateMainAppImpl.__addLastVersion server: [%s]" % str(server))
                     servers.append(server)
             else:
@@ -718,6 +720,7 @@ class UpdateMainAppImpl(IUpdateObjectInterface):
         filePath = self.downloader.getFullFileName()
         self.downloader = None
         printDBG('UpdateMainAppImpl.__serversListGitlabFinished url[%s], filePath[%s] ' % (url, filePath))
+        nick = config.plugins.iptvplayer.gitlab_repo.value
         if DMHelper.STS.DOWNLOADED != status:
             msg = _("Problem with downloading the packet:\n[%s].") % url
             self.stepFinished(-1, msg)
@@ -733,10 +736,10 @@ class UpdateMainAppImpl(IUpdateObjectInterface):
                 except Exception:
                     printExc()
                 if 13 == len(newVerNum):
-                    sourceUrl = "https://gitlab.com/{0}/e2iplayer/-/archive/master/e2iplayer-master.tar.gz".format(config.plugins.iptvplayer.gitlab_repo.value)
-                    self.gitlabList = {'name': 'gitlab.com', 'version': newVerNum, 'url': sourceUrl, 'subdir': 'e2iplayer-master/', 'pyver': 'X.X', 'packagetype': 'sourcecode'}
+                    sourceUrl = "https://gitlab.com/{0}/e2iplayer/-/archive/master/e2iplayer-master.tar.gz".format(nick)
+                    self.gitlabList = {'name': 'gitlab.com/' + nick + '/', 'version': newVerNum, 'url': sourceUrl, 'subdir': 'e2iplayer-master/', 'pyver': 'X.X', 'packagetype': 'sourcecode'}
                     printDBG("__serversListGitlabFinished: [%s]" % str(self.gitlabList))
-                    self.stepFinished(0, _("GitLab version from {0} was downloaded successfully.".format(config.plugins.iptvplayer.gitlab_repo.value)))
+                    self.stepFinished(0, _("GitLab version from {0} was downloaded successfully.".format(nick)))
                 else:
                     msg = _("Wrong version: [%s].") % str(self.gitlabList)
                     self.stepFinished(-1, msg)
@@ -895,10 +898,7 @@ class UpdateMainAppImpl(IUpdateObjectInterface):
                     elif config.plugins.iptvplayer.ListaGraficzna.value:
                         list.append(self.__getStepDesc(title=_("Copy icons."), execFunction=self.stepCopyOnlyIcons))
 
-            if config.plugins.iptvplayer.gitlab_repo.value and config.plugins.iptvplayer.preferredupdateserver.value == '2':
-                self.list[4:4] = list
-            else:
-                self.list[3:3] = list
+            self.list[3:3] = list
             if 'enc' in self.serversList[self.currServIdx]:
                 self.list.insert(1, self.__getStepDesc(title=_("Get decryption key."), execFunction=self.stepGetEncKey))
                 self.list.insert(3, self.__getStepDesc(title=_("Decrypt archive."), execFunction=self.stepDecryptArchive))

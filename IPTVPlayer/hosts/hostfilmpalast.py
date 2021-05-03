@@ -13,9 +13,8 @@ from Plugins.Extensions.IPTVPlayer.libs import ph
 ###################################################
 # FOREIGN import
 ###################################################
-import urllib.request
-import urllib.parse
-import urllib.error
+import re
+import urllib.request, urllib.parse, urllib.error
 from urllib.parse import urljoin
 ###################################################
 
@@ -35,7 +34,7 @@ class FilmPalastTo(CBaseHostClass):
 
         self.defaultParams = {'header': self.HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
 
-        self.DEFAULT_ICON_URL = 'https://filmpalast.to/themes/downloadarchive/images/logo.png'
+        self.DEFAULT_ICON_URL = 'https://www.free4fisher.de/wp-content/uploads/2017/02/filmpalast-Fanart.png'
         self.MAIN_URL = None
         self.cacheSeries = {}
         self.cacheSeasons = {}
@@ -263,21 +262,24 @@ class FilmPalastTo(CBaseHostClass):
         if not sts:
             return []
 
-        data = ph.findall(data, ('<ul', '>', 'currentStreamLinks'), '</ul>', flags=0)
-        for item in data:
-            printDBG("FilmPalastTo.getLinksForVideo item [%s]" % item)
-            data_id = ph.getattr(item, 'data-id')
-            data_stamp = ph.getattr(item, 'data-stamp')
-            if data_id and data_stamp:
-                url = strwithmeta('%s|%s' % (data_id, data_stamp), {'data_id': data_id, 'data_stamp': data_stamp, 'links_key': cItem['url']})
-            else:
-                url = strwithmeta(self.getFullUrl(self.cm.ph.getSearchGroups(item, '''url=['"]([^'^"]+?)['"]''')[0]), {'links_key': cItem['url']})
-            if url == '':
-                continue
+        items = ph.findall(data, ('<ul', '>', 'currentStreamLinks'), '</ul>', flags=0)
+        for item in items:
+            #printDBG(item)
             title = ph.clean_html(ph.find(item, ('<p', '>'), '</p>', flags=0)[1])
-            if title == '':
+            if not title:
                 title = ph.clean_html(item)
-            linksTab.append({'name': title, 'url': strwithmeta(url, {'Referer': cItem['url']}), 'need_resolve': 1})
+
+            url = re.findall("data-player-url=\"(.*?)\"", item)
+            if url:
+                url = url[0]
+            else:
+                url = re.findall("data-player-url=\"(.*?)\"", item)
+                if url:
+                    url = url[0]
+                else:
+                    continue
+
+            linksTab.append({'name': title, 'url': url, 'need_resolve': 1})
 
         if len(linksTab):
             self.cacheLinks[cItem['url']] = linksTab

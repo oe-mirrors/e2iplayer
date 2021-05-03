@@ -1,12 +1,7 @@
 # -*- coding: utf-8 -*-
 
 
-import urllib.request
-import urllib.parse
-import urllib.error
-import urllib.request
-import urllib.error
-import urllib.parse
+import urllib.request, urllib.parse, urllib.error
 import sys
 import time
 import traceback

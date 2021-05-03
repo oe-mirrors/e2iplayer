@@ -14,9 +14,7 @@ from Plugins.Extensions.IPTVPlayer.libs.urlparserhelper import getDirectM3U8Play
 ###################################################
 import time
 import re
-import urllib.request
-import urllib.parse
-import urllib.error
+import urllib.request, urllib.parse, urllib.error
 from urllib.parse import urlparse
 try:
     import json
@@ -281,7 +279,7 @@ class YesMovies(CBaseHostClass):
             return []
 
         try:
-            data = json.loads(data)['html']
+            data = byteify(json.loads(data)['html'], '', True)
         except Exception:
             printExc()
 
@@ -368,7 +366,7 @@ class YesMovies(CBaseHostClass):
             if not sts:
                 return []
             try:
-                data = json.loads(data)
+                data = byteify(json.loads(data), '', True)
                 if data['status']:
                     urlTab = self.up.getVideoLinkExt(data['src'])
             except Exception:
@@ -422,7 +420,7 @@ class YesMovies(CBaseHostClass):
                             subTracks.append({'title': name, 'url': self.getFullIconUrl(url), 'lang': name, 'format': format})
             else:
                 try:
-                    tmp = json.loads(data)
+                    tmp = byteify(json.loads(data))
                     printDBG("------------------------------------------------\n%s+++++++++++++++++++++++++++++++++++++++++++++\n" % tmp)
                     if isinstance(tmp['playlist'][0]['sources'], dict):
                         tmp['playlist'][0]['sources'] = [tmp['playlist'][0]['sources']]

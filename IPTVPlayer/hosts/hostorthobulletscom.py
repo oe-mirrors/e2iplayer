@@ -1,4 +1,6 @@
-﻿# -*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-
+# Codermik (codermik@tuta.io)
+
 ###################################################
 # LOCAL import
 ###################################################
@@ -6,15 +8,14 @@ from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT
 from Plugins.Extensions.IPTVPlayer.components.ihost import CHostBase, CBaseHostClass
 from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, rm
 from Plugins.Extensions.IPTVPlayer.tools.iptvtypes import strwithmeta
+from Plugins.Extensions.IPTVPlayer.libs import ph
 ###################################################
 
 ###################################################
 # FOREIGN import
 ###################################################
 import re
-import urllib.request
-import urllib.parse
-import urllib.error
+import urllib.request, urllib.parse, urllib.error
 try:
     import json
 except Exception:
@@ -51,6 +52,7 @@ def gettytul():
 class OrthoBullets(CBaseHostClass):
 
     def __init__(self):
+        printDBG("..:: E2iStream ::..   __init__(self):")
         CBaseHostClass.__init__(self, {'history': 'orthobullets.com', 'cookie': 'orthobullets.com.cookie'})
 
         self.USER_AGENT = 'Mozilla/5.0'
@@ -66,6 +68,59 @@ class OrthoBullets(CBaseHostClass):
         self.login = ''
         self.password = ''
 
+        self.MAIN_CAT_TAB = [
+                                    {'category': 'categories', 'title': _('Categories'), 'url': self.MAIN_URL, 'icon': self.DEFAULT_ICON_URL},
+                                    {'category': 'subspeciality', 'title': _('Subspecialities'), 'url': self.MAIN_URL, 'icon': self.DEFAULT_ICON_URL},
+                                    {'category': 'search', 'title': _('Search'), 'search_item': True},
+                                    {'category': 'search_history', 'title': _('Search history')}
+                                ]
+
+        self.CATEGORIES_TAB = [
+                                    {'category': 'list_categories', 'title': _('All'), 'url': self.MAIN_URL + 'video/list.aspx'},
+                                    {'category': 'list_categories', 'title': _('Board Review'), 'url': self.MAIN_URL + 'video/list.aspx?c=7'},
+                                    {'category': 'list_categories', 'title': _('CME SAE'), 'url': self.MAIN_URL + 'video/list.aspx?c=20'},
+                                    {'category': 'list_categories', 'title': _('Educational Animation'), 'url': self.MAIN_URL + 'video/list.aspx?c=109'},
+                                    {'category': 'list_categories', 'title': _('Ethical & Legal'), 'url': self.MAIN_URL + 'video/list.aspx?c=10'},
+                                    {'category': 'list_categories', 'title': _('Exam Review'), 'url': self.MAIN_URL + 'video/list.aspx?c=19'},
+                                    {'category': 'list_categories', 'title': _('Humanitarian'), 'url': self.MAIN_URL + 'video/list.aspx?c=8'},
+                                    {'category': 'list_categories', 'title': _('Industry'), 'url': self.MAIN_URL + 'video/list.aspx?c=107'},
+                                    {'category': 'list_categories', 'title': _('Interactive Learning Center(ILC)'), 'url': self.MAIN_URL + 'video/list.aspx?c=17'},
+                                    {'category': 'list_categories', 'title': _('Jobs & Positions'), 'url': self.MAIN_URL + 'video/list.aspx?c=14'},
+                                    {'category': 'list_categories', 'title': _('Journal Club'), 'url': self.MAIN_URL + 'video/list.aspx?c=9'},
+                                    {'category': 'list_categories', 'title': _('Medtryx Marketing'), 'url': self.MAIN_URL + 'video/list.aspx?c=24'},
+                                    {'category': 'list_categories', 'title': _('Meetings'), 'url': self.MAIN_URL + 'video/list.aspx?c=12'},
+                                    {'category': 'list_categories', 'title': _('Pathology Rounds'), 'url': self.MAIN_URL + 'video/list.aspx?c=16'},
+                                    {'category': 'list_categories', 'title': _('Physical Exam'), 'url': self.MAIN_URL + 'video/list.aspx?c=5'},
+                                    {'category': 'list_categories', 'title': _('Powerpoint Presentation'), 'url': self.MAIN_URL + 'video/list.aspx?c=108'},
+                                    {'category': 'list_categories', 'title': _('Practice Management'), 'url': self.MAIN_URL + 'video/list.aspx?c=11'},
+                                    {'category': 'list_categories', 'title': _('Professional Networks'), 'url': self.MAIN_URL + 'video/list.aspx?c=13'},
+                                    {'category': 'list_categories', 'title': _('Radiology Rounds'), 'url': self.MAIN_URL + 'video/list.aspx?c=15'},
+                                    {'category': 'list_categories', 'title': _('Study Plan'), 'url': self.MAIN_URL + 'video/list.aspx?c=21'},
+                                    {'category': 'list_categories', 'title': _('Surgical Approaches'), 'url': self.MAIN_URL + 'video/list.aspx?c=3'},
+                                    {'category': 'list_categories', 'title': _('Surgical Cases'), 'url': self.MAIN_URL + 'video/list.aspx?c=100'},
+                                    {'category': 'list_categories', 'title': _('Surgical Complications'), 'url': self.MAIN_URL + 'video/list.aspx?c=4'},
+                                    {'category': 'list_categories', 'title': _('Surgical Techniques'), 'url': self.MAIN_URL + 'video/list.aspx?c=2'},
+                                    {'category': 'list_categories', 'title': _('Techniques'), 'url': self.MAIN_URL + 'video/list.aspx?c=106'},
+                                    {'category': 'list_categories', 'title': _('Treatment Consult'), 'url': self.MAIN_URL + 'video/list.aspx?c=1'},
+                                    {'category': 'list_categories', 'title': _('Written Boards Review'), 'url': self.MAIN_URL + 'video/list.aspx?c=102'}
+                                ]
+
+        self.SPECIALITY_TAB = [
+                                    {'category': 'list_speciality', 'title': _('Trauma'), 'url': self.MAIN_URL + 'video/list.aspx?s=1'},
+                                    {'category': 'list_speciality', 'title': _('Spine'), 'url': self.MAIN_URL + 'video/list.aspx?s=2'},
+                                    {'category': 'list_speciality', 'title': _('Shoulder & Elbow'), 'url': self.MAIN_URL + 'video/list.aspx?s=3'},
+                                    {'category': 'list_speciality', 'title': _('Knee & Sports'), 'url': self.MAIN_URL + 'video/list.aspx?s=225'},
+                                    {'category': 'list_speciality', 'title': _('Pediatrics'), 'url': self.MAIN_URL + 'video/list.aspx?s=4'},
+                                    {'category': 'list_speciality', 'title': _('Recon'), 'url': self.MAIN_URL + 'video/list.aspx?s=5'},
+                                    {'category': 'list_speciality', 'title': _('Hand'), 'url': self.MAIN_URL + 'video/list.aspx?s=6'},
+                                    {'category': 'list_speciality', 'title': _('Foot & Ankle'), 'url': self.MAIN_URL + 'video/list.aspx?s=7'},
+                                    {'category': 'list_speciality', 'title': _('Pathology'), 'url': self.MAIN_URL + 'video/list.aspx?s=8'},
+                                    {'category': 'list_speciality', 'title': _('Basic Science'), 'url': self.MAIN_URL + 'video/list.aspx?s=9'},
+                                    {'category': 'list_speciality', 'title': _('Anatomy'), 'url': self.MAIN_URL + 'video/list.aspx?s=10'},
+                                    {'category': 'list_speciality', 'title': _('Approaches'), 'url': self.MAIN_URL + 'video/list.aspx?s=12'},
+                                    {'category': 'list_speciality', 'title': _('General'), 'url': self.MAIN_URL + 'video/list.aspx?s=13'},
+                                ]
+
     def getPage(self, baseUrl, addParams={}, post_data=None):
         if addParams == {}:
             addParams = dict(self.defaultParams)
@@ -78,59 +133,10 @@ class OrthoBullets(CBaseHostClass):
         addParams['cloudflare_params'] = {'domain': self.up.getDomain(baseUrl), 'cookie_file': self.COOKIE_FILE, 'User-Agent': self.USER_AGENT, 'full_url_handle': _getFullUrl}
         return self.cm.getPageCFProtection(baseUrl, addParams, post_data)
 
-    def listMainMenu(self, cItem):
-        printDBG("OrthoBullets.listMainMenu")
-
-        sts, data = self.getPage(self.getFullUrl('/video/list.aspx'))
-        if not sts:
-            return
-        self.setMainUrl(self.cm.meta['url'])
-
-        reObj = re.compile('''<ul[^>]+?subMenu[^>]*?>''')
-        data = self.cm.ph.getAllItemsBeetwenNodes(data, ('<ul', '>', 'dropList'), ('</ul', '>'))
-        printDBG(data)
-        for sItem in data:
-            sItem = reObj.split(sItem, 1)
-            if len(sItem) < 2:
-                continue
-            sTitle = self.cleanHtmlStr(sItem[0])
-            categories = []
-            sItem = self.cm.ph.getAllItemsBeetwenMarkers(sItem[1], '<li', '</li>')
-            for item in sItem:
-                url = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''href=['"]([^"^']+?)['"]''')[0])
-                title = self.cleanHtmlStr(item)
-                params = dict(cItem)
-                params.update({'name': 'category', 'category': 'list_sort', 'title': title, 'url': url})
-                categories.append(params)
-
-            if len(categories):
-                params = dict(cItem)
-                params.update({'name': 'category', 'category': 'sub_items', 'title': sTitle, 'sub_items': categories})
-                self.addDir(params)
-
-        MAIN_CAT_TAB = [{'category': 'search', 'title': _('Search'), 'search_item': True},
-                        {'category': 'search_history', 'title': _('Search history')}]
-        self.listsTab(MAIN_CAT_TAB, cItem)
-
-    def listSort(self, cItem, nextCategory):
-        printDBG("OrthoBullets.listItems [%s]" % cItem)
-
-        sts, data = self.getPage(cItem['url'])
-        if not sts:
-            return
-        self.setMainUrl(self.cm.meta['url'])
-
-        data = self.cm.ph.getDataBeetwenNodes(data, ('<div', '>', 'tabNavigation'), ('</div', '>'), False)[1]
-        data = self.cm.ph.getAllItemsBeetwenMarkers(data, '<a', '</a>')
-        for item in data:
-            url = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''href=['"]([^"^']+?)['"]''')[0])
-            title = self.cleanHtmlStr(item)
-            params = dict(cItem)
-            params.update({'name': 'category', 'category': nextCategory, 'title': title, 'url': url})
-            self.addDir(params)
-
     def listItems(self, cItem):
-        printDBG("OrthoBullets.listItems [%s]" % cItem)
+        printDBG("..:: E2iStream ::.. -  listItems(self, cItem): [%s]" % cItem)
+        i = 0
+
         page = cItem.get('page', 1)
 
         sts, data = self.getPage(cItem['url'])
@@ -138,39 +144,28 @@ class OrthoBullets(CBaseHostClass):
             return
         self.setMainUrl(self.cm.meta['url'])
 
-        nextPage = self.cm.ph.getDataBeetwenNodes(data, ('<div', '>', 'dashboardPaging'), ('</div', '>'))[1]
+        nextPage = self.cm.ph.getDataBeetwenNodes(data, ('<div class=', '>', 'paging paging--right paging--padding'), ('</div', '>'))[1]
         nextPage = self.cm.ph.getSearchGroups(nextPage, '''<a[^>]+?href=['"]([^'^"]+?)['"][^>]*?>%s</a>''' % (page + 1))[0]
+        nextPage = ph.clean_html(nextPage)
 
-        data = self.cm.ph.getDataBeetwenNodes(data, ('<div', '>', 'videos'), ('<script', '>'), False)[1].split('data-video-id')
-        for item in data:
-            url = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''\shref=['"]([^'^"]+?)['"]''')[0])
-            if url == '':
-                continue
-            icon = self.getFullIconUrl(self.cm.ph.getSearchGroups(item, '''\ssrc=['"]([^'^"]+?)['"]''')[0])
-            title = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(item, '<h3', '</h3>')[1])
+        block = self.cm.ph.getAllItemsBeetwenNodes(data, '<div class="videos ">', '<div class="group-items-list__bottom-paging"', False)[0]
+        block = self.cm.ph.getAllItemsBeetwenNodes(block, '<a class="dashboard-item__link"', '</a>')
 
-            desc = []
-            tmp = self.cm.ph.getDataBeetwenNodes(item, ('<div', '>', 'dashboardItem-right'), ('</div', '>'), False)[1]
-            t = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(tmp, '<time', '</time>')[1])
-            if t != '':
-                desc.append(t)
-            t = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(tmp, '<span', '</span>')[1])
-            if t != '':
-                desc.append(t)
-            stars = tmp.count('blank')
-            desc.append('%s/%s' % (5 - stars, 5))
-            desc = [' | '.join(desc)]
-
-            tmp = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(item, '<ul', '</ul>')[1])
-            if tmp != '':
-                desc.append(tmp)
-
-            tmp = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(item, '<p', '</p>')[1])
-            if tmp != '':
-                desc.append(tmp)
-
+        for videos in block:
+            title = self.cm.ph.getAllItemsBeetwenNodes(videos, '<div class="dashboard-item__title">', '</div>', False)
+            title = [cleanTitle.replace('\r\n                    ', '') for cleanTitle in title]
+            title = [cleanTitle.replace('\r\n                ', '') for cleanTitle in title]
+            title = title[0]
+            title = ph.clean_html(title)
+            videourl = self.MAIN_URL + self.cm.ph.getSearchGroups(videos, 'href="([^"]+?)"')[0]
+            imageurl = self.cm.ph.getAllItemsBeetwenNodes(videos, 'style="background-image: url(\'', ('\');">'), False)[1]
+            viddate = self.cm.ph.getAllItemsBeetwenNodes(videos, '<div class="dashboard-item__date">', '</div>', False)[0]
+            viddate = viddate.strip()
+            vidviews = self.cm.ph.getAllItemsBeetwenNodes(videos, '<div class="dashboard-item__views">', '</div>', False)[0]
+            vidviews = vidviews.strip()
+            desc = '\c00????00 Title: \c00??????%s\\n \c00????00Date: \c00??????%s\\n \c00????00Views: \c00??????%s\\n' % (title, viddate, vidviews)
             params = dict(cItem)
-            params.update({'good_for_fav': True, 'title': title, 'url': url, 'icon': icon, 'desc': '[/br]'.join(desc)})
+            params.update({'good_for_fav': True, 'title': title, 'url': videourl, 'icon': imageurl, 'desc': desc})
             self.addVideo(params)
 
         if nextPage:
@@ -267,10 +262,10 @@ class OrthoBullets(CBaseHostClass):
             if not self.loggedIn:
                 self.sessionEx.open(MessageBox, _('Login failed.'), type=MessageBox.TYPE_ERROR, timeout=10)
                 printDBG('tryTologin failed')
+
         return self.loggedIn
 
     def handleService(self, index, refresh=0, searchPattern='', searchType=''):
-        printDBG('handleService start')
 
         CBaseHostClass.handleService(self, index, refresh, searchPattern, searchType)
 
@@ -280,24 +275,33 @@ class OrthoBullets(CBaseHostClass):
         category = self.currItem.get("category", '')
         mode = self.currItem.get("mode", '')
 
-        printDBG("handleService: || name[%s], category[%s] " % (name, category))
+        printDBG("handleService: || name [%s], category [%s], mode [%s] " % (name, category, mode))
+
         self.currList = []
 
-    #MAIN MENU
+        # First Menu
+
         if name == None:
-            self.listMainMenu({'name': 'category', 'type': 'category'})
-        elif category == 'list_sort':
-            self.listSort(self.currItem, 'list_items')
+            self.listsTab(self.MAIN_CAT_TAB, self.currItem)
+        elif category == 'categories':
+            printDBG("handleService(self, index, refresh = 0, searchPattern = '', searchType = ''):   Category = %s" % category)
+            self.listsTab(self.CATEGORIES_TAB, self.currItem)
+        elif category == 'subspeciality':
+            printDBG("handleService(self, index, refresh = 0, searchPattern = '', searchType = ''):   Category = %s" % category)
+            self.listsTab(self.SPECIALITY_TAB, self.currItem)
         elif category == 'list_items':
             self.listItems(self.currItem)
-        elif category == 'sub_items':
-            self.currList = self.currItem.get('sub_items', [])
-    #SEARCH
+        elif category == 'list_categories':
+            self.listItems(self.currItem)
+        elif category == 'list_speciality':
+            self.listItems(self.currItem)
+
+        # Searching / Search History
+
         elif category in ["search", "search_next_page"]:
             cItem = dict(self.currItem)
             cItem.update({'search_item': False, 'name': 'category'})
             self.listSearchResult(cItem, searchPattern, searchType)
-    #HISTORIA SEARCH
         elif category == "search_history":
             self.listsHistory({'name': 'history', 'category': 'search'}, 'desc', _("Type: "))
         else:

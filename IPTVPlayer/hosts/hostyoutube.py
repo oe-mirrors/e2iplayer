@@ -20,9 +20,7 @@ try:
 except Exception:
     import simplejson as json
 import re
-import urllib.request
-import urllib.parse
-import urllib.error
+import urllib.request, urllib.parse, urllib.error
 from Components.config import config, ConfigDirectory, getConfigListEntry
 ###################################################
 
@@ -44,8 +42,6 @@ def GetConfigList():
     # checking should be moved to setup
     if IsExecutable('ffmpeg'):
         optionList.append(getConfigListEntry(_("Allow dash format:"), config.plugins.iptvplayer.ytShowDash))
-        if config.plugins.iptvplayer.ytShowDash.value != 'false':
-            optionList.append(getConfigListEntry(_("Allow VP9 codec:"), config.plugins.iptvplayer.ytVP9))
     return optionList
 ###################################################
 ###################################################
@@ -61,10 +57,10 @@ class Youtube(CBaseHostClass):
         printDBG("Youtube.__init__")
         CBaseHostClass.__init__(self, {'history': 'ytlist', 'cookie': 'youtube.cookie'})
         self.UTLIST_FILE = 'ytlist.txt'
-        self.DEFAULT_ICON_URL = 'https://www.vippng.com/png/full/85-853653_patreon-logo-png-transparent-background-youtube-logo.png'
+        self.DEFAULT_ICON_URL = 'https://lodz.adwent.pl/wp-content/uploads/YouTube-icon-full_color.png'
         self.MAIN_GROUPED_TAB = [{'category': 'from_file', 'title': _("User links"), 'desc': _("User links stored in the ytlist.txt file.")},
                                  {'category': 'search', 'title': _("Search"), 'desc': _("Search youtube materials "), 'search_item': True},
-                                 {'category': 'feeds', 'title': _("Trending Feeds"), 'desc': _("Browse youtube trending feeds")},
+                                 {'category': 'feeds', 'title': _("On Time"), 'desc': _("Browse youtube trending feeds")},
                                  {'category': 'search_history', 'title': _("Search history"), 'desc': _("History of searched phrases.")}]
 
         self.SEARCH_TYPES = [(_("Video"), "video"),
@@ -153,7 +149,7 @@ class Youtube(CBaseHostClass):
     def listItems(self, cItem):
         printDBG('Youtube.listItems cItem[%s]' % (cItem))
         category = cItem.get("category", '')
-        url = cItem.get("url", '')
+        url = strwithmeta(cItem.get("url", ''))
         page = cItem.get("page", '1')
 
         if "playlists" == category:
@@ -194,7 +190,7 @@ class Youtube(CBaseHostClass):
         printDBG('Youtube.getVideos cItem[%s]' % (cItem))
 
         category = cItem.get("category", '')
-        url = strwithmeta(cItem.get("url", ''))
+        url = cItem.get("url", '')
         page = cItem.get("page", '1')
 
         if "channel" == category:
@@ -247,7 +243,7 @@ class Youtube(CBaseHostClass):
         printDBG('Youtube.getLinksForFavourite')
         links = []
         try:
-            cItem = json.loads(fav_data)
+            cItem = byteify(json.loads(fav_data))
             links = self.getLinksForVideo(cItem)
         except Exception:
             printExc()
@@ -257,7 +253,7 @@ class Youtube(CBaseHostClass):
     def setInitListFromFavouriteItem(self, fav_data):
         printDBG('Youtube.setInitListFromFavouriteItem')
         try:
-            params = json.loads(fav_data)
+            params = byteify(json.loads(fav_data))
         except Exception:
             params = {}
             printExc()

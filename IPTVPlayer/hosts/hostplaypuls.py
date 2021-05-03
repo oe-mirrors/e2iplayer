@@ -14,9 +14,7 @@ from Plugins.Extensions.IPTVPlayer.libs.urlparserhelper import getDirectM3U8Play
 ###################################################
 from Components.config import config, ConfigSelection, ConfigYesNo, getConfigListEntry
 import re
-import urllib.request
-import urllib.parse
-import urllib.error
+import urllib.request, urllib.parse, urllib.error
 import random
 try:
     import simplejson as json
@@ -238,7 +236,7 @@ class Playpuls(CBaseHostClass):
                 sources.append({'quality': item[0].upper(), 'src': '/play/%s' % item[1]})
         elif source3Data != '':
             try:
-                source3Data = json.loads(source3Data)
+                source3Data = byteify(json.loads(source3Data))
                 if 'sources' in source3Data:
                     source3Data = source3Data['sources']
                 for key, val in source3Data.items():

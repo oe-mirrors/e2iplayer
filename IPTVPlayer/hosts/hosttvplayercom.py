@@ -13,9 +13,7 @@ from Plugins.Extensions.IPTVPlayer.libs.urlparserhelper import getDirectM3U8Play
 # FOREIGN import
 ###################################################
 import re
-import urllib.request
-import urllib.parse
-import urllib.error
+import urllib.request, urllib.parse, urllib.error
 try:
     import json
 except Exception:
@@ -214,7 +212,7 @@ class TVPlayer(CBaseHostClass):
         printDBG("response: [%s]" % data)
 
         try:
-            data = json.loads(data)
+            data = byteify(json.loads(data))
             url = 'https://api.tvplayer.com/api/v2/stream/live'
             ''' id: e.resource,
                 service: 1,
@@ -234,7 +232,7 @@ class TVPlayer(CBaseHostClass):
                 return []
             printDBG("response: [%s]" % data)
 
-            data = json.loads(data)['tvplayer']['response']
+            data = byteify(json.loads(data))['tvplayer']['response']
             if 'error' in data:
                 _SetIPTVPlayerLastHostError(data['error'])
                 if not config.plugins.iptvplayer.tvplayercom_drmbypass.value or cItem.get('next_try', False):

@@ -12,9 +12,7 @@ from Plugins.Extensions.IPTVPlayer.libs.urlparserhelper import getDirectM3U8Play
 # FOREIGN import
 ###################################################
 import re
-import urllib.request
-import urllib.parse
-import urllib.error
+import urllib.request, urllib.parse, urllib.error
 import base64
 try:
     import json
@@ -158,7 +156,7 @@ class NGolosCOM(CBaseHostClass):
                     url = self.getFullUrl('/assets/json/clubs.json')
                     sts, tmp = self.getPage(url, params)
                     try:
-                        self.cacheTeams = json.loads(tmp)
+                        self.cacheTeams = byteify(json.loads(tmp))
                     except Exception:
                         printExc()
                 try:
@@ -339,7 +337,7 @@ class NGolosCOM(CBaseHostClass):
             if not sts:
                 return []
             try:
-                data = json.loads(data)
+                data = byteify(json.loads(data))
                 if 'content' in data:
                     url = data['content']['media']['f4m']
                 else:
